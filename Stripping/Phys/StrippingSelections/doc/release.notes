@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-12 - Flavio Archilli
+ - added Velo raw banks to B->emu line.
+
 ! 2015-05-12 - Fred Blanc
  - Added file StrippingBnoC/StrippingB2CharmlessQuasi2Body.py
 

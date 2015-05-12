@@ -33,7 +33,7 @@ from GaudiKernel.PhysicalConstants import c_light
 default_config = {
     'NAME' : 'LFV',
     'BUILDERTYPE' : 'LFVLinesConf' ,
-    'STREAMS' : [ 'Dimuon' ],
+    'STREAMS' : [ 'Leptonic' ],
     'WGs'     : [ 'RD' ],
     'CONFIG'  : {
     'Postscale'           :1,
@@ -204,6 +204,7 @@ class LFVLinesConf(LineBuilder) :
                                        postscale = config['Postscale'],
                                        RelatedInfoTools = config['RelatedInfoTools'],
                                        MDSTFlag = True,
+                                       RequiredRawEvents = ["Velo"],
                                        algos = [ self.selB2eMu ]
                                      )
         #self.b2TauMuLine = StrippingLine(taumu_name+"Line",
