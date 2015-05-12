@@ -36,9 +36,9 @@ CaloElectronNtp::CaloElectronNtp( const std::string& name,
   declareProperty("ExtrapolatorType" , m_extrapolatorType = "TrackRungeKuttaExtrapolator" ) ;
   declareProperty("InputContainer" , m_input =  LHCb::ProtoParticleLocation::Charged );
   declareProperty("EFilter"   , m_e = std::make_pair(0.,99999999.));
-  declareProperty("EoPFilter" , m_eop = std::make_pair(0.3,2.5));
-  declareProperty("EtFilter"  , m_et = std::make_pair(150.,999999.));
-  declareProperty("PrsFilter" , m_prs  = std::make_pair(-1.,1024));
+  declareProperty("EoPFilter" , m_eop = std::make_pair(0.,2.5));
+  declareProperty("EtFilter"  , m_et = std::make_pair(200.,999999.));
+  declareProperty("PrsFilter" , m_prs  = std::make_pair(50.,9999999.));
   declareProperty("ElectronPairing", m_pairing = true );
   declareProperty( "Tuple"    , m_tuple = true);
   declareProperty( "Histo"    , m_histo = true);
@@ -46,9 +46,11 @@ CaloElectronNtp::CaloElectronNtp( const std::string& name,
   declareProperty( "VertexLoc", m_vertLoc =  LHCb::RecVertexLocation::Primary);
   declareProperty( "UsePV3D", m_usePV3D = false);
   declareProperty( "TrackTypes", m_tracks);
-  m_tracks.push_back(LHCb::Track::Long);
-  m_tracks.push_back(LHCb::Track::Downstream);
+  declareProperty( "splitFEBs", m_splitFEBs=false);
+  declareProperty( "splitE", m_splitE=false);
   
+  m_tracks.push_back(LHCb::Track::Long);
+  m_tracks.push_back(LHCb::Track::Downstream);  
 }
 //=============================================================================
 // Destructor
@@ -128,12 +130,22 @@ StatusCode CaloElectronNtp::execute() {
     counter("proto electron")+=1;
     LHCb::CaloHypo* hypo = m_caloElectron->electron();
     if ( NULL == hypo ) continue;
+
+    // track type selection
+    bool accept = m_tracks.empty() ? true : false;
+    for(std::vector<int>::iterator itr = m_tracks.begin();m_tracks.end() != itr;++itr){
+      if( (int)proto->track()->type() == *itr)accept=true;
+    }
+    if( !accept )continue;
+
+
     LHCb::CaloMomentum momentum( hypo );
     const double e = momentum.e();
     const double et= momentum.pt();
     if( !inRange(m_et , et ))continue;
     if( !inRange(m_e  , e  ))continue;
-    double ePrs = m_toPrs->energy ( *hypo , "Prs"  );
+    double ePrs = proto->info(LHCb::ProtoParticle::CaloPrsE, 0.);
+    //double ePrs = m_toPrs->energy ( *hypo , "Prs"  );
     int iSpd = m_toSpd->multiplicity ( *hypo , "Spd");
     
     if( !inRange(m_prs, ePrs))continue;
@@ -147,7 +159,6 @@ StatusCode CaloElectronNtp::execute() {
     if( !inRange( m_eop, eOp))continue;
 
     counter("Selected electron")+=1;
-
 
     Gaudi::XYZPoint hR( hypo->position()->x(),hypo->position()->y(),hypo->position()->z());
     Gaudi::XYZPoint cR( cluster->position().x() , cluster->position().y() , cluster->position().z() );
@@ -163,12 +174,6 @@ StatusCode CaloElectronNtp::execute() {
     double thetaX= atan2(tX,tZ);
     double thetaY= atan2(tY,tZ);
     
-    // track type selection
-    bool accept = m_tracks.empty() ? true : false;
-    for(std::vector<int>::iterator itr = m_tracks.begin();m_tracks.end() != itr;++itr){
-      if( (int)proto->track()->type() == *itr)accept=true;
-    }
-    if( !accept )continue;
 
     Gaudi::LorentzVector t(proto->track()->momentum().x(),
                            proto->track()->momentum().y(),
@@ -189,6 +194,67 @@ StatusCode CaloElectronNtp::execute() {
                                   bremM.momentum().z(),
                                   bremM.momentum().e());  
     }    
+
+
+    // dielectron filter
+    double mas = 999999.;
+    if( m_pairing){
+      for( LHCb::ProtoParticles::const_iterator pp = p+1 ; protos->end () != pp ; ++pp ){
+        const LHCb::ProtoParticle* proto2 = *pp;
+        if( !m_caloElectron->set(proto2))continue;;
+        LHCb::CaloHypo* hypo2 = m_caloElectron->electron();
+        if ( NULL == hypo2 ) continue;
+        if( hypo == hypo2 )continue;
+        LHCb::CaloMomentum momentum2( hypo2 );        
+        // filtering proto2
+        const double e2 = momentum2.e();
+        const double et2 = momentum2.pt();
+        if( !inRange(m_et , et2))continue;
+        if( !inRange(m_e  , e2  ))continue;
+        double ePrs2 = proto2->info(LHCb::ProtoParticle::CaloPrsE, 0.);
+        //double ePrs2 = m_toPrs->energy ( *hypo2 , "Prs"  );
+        if( !inRange(m_prs, ePrs2))continue;
+        double eOp2 = m_caloElectron->eOverP();
+        if( !inRange( m_eop, eOp2))continue;        
+        // compute mass
+        const LHCb::Track*  t1 = proto->track();
+        const LHCb::Track*  t2 = proto2->track();
+        if( NULL == t1 || NULL == t2)continue;
+        if( -1 != t1->charge()*t2->charge())continue;
+        // track type
+        bool accept2 = m_tracks.empty() ? true : false;
+        for(std::vector<int>::iterator itr = m_tracks.begin();m_tracks.end() != itr;++itr){
+          if( (int)t2->type() == *itr)accept2=true;
+        }
+        if( !accept2 )continue;
+
+        LHCb::State st1 = t1->firstState();
+        LHCb::State st2 = t2->firstState();        
+        if( NULL == extrapolator() ){
+          Warning("No extrapolator defined");
+          continue;
+        }
+        StatusCode sc = extrapolator()->propagate(st1, 0.);
+        if(sc.isFailure())Warning("Propagation 1 failed").ignore();
+        sc = extrapolator()->propagate(st2, 0.);
+        if(sc.isFailure())Warning("Propagation 2 failed").ignore();
+        Gaudi::XYZVector p1 = st1.momentum();
+        Gaudi::XYZVector p2 = st2.momentum();
+        double m2  = p1.R()*p2.R();
+        m2 -= p1.X()*p2.X();
+        m2 -= p1.Y()*p2.Y();
+        m2 -= p1.Z()*p2.Z();
+        m2 *= 2;
+        if( m2 > 0){
+          double m = sqrt(m2) ;
+          if( m < mas )mas = m;
+        }
+      }
+    }
+    if( mas > 0 && mas < 100)counter("Selected (di)electron")+=1;
+    
+
+
     
     // proto info
     if(m_tuple){
@@ -227,20 +293,20 @@ StatusCode CaloElectronNtp::execute() {
       sc=ntp->column("run"   , run         );
       sc=ntp->column("event" , (double) evt );
       sc=ntp->column("triggertype" , tty );
+      if(m_pairing){
+        sc = ntp->column("MinMee",mas);
+        sc = ntp->write();
+      }
     }
     
       
     // histogramming / channel    
-    if(m_histo){
-      std::ostringstream sid;
-      int feb = m_calo->cardNumber( id );
-      sid << "crate" << format("%02i", m_calo->cardCrate( feb ) ) <<  "/"
-          << "feb"   << format( "%02i" , m_calo->cardSlot( feb  ) )<< "/"
-        <<Gaudi::Utils::toString( m_calo->cardColumn( id ) + nColCaloCard * m_calo->cardRow( id ) );
-      plot1D(eOp, sid.str() , sid.str() , 0., 2.5, 100);
+
+    if(m_histo && iSpd != 0 && proto->info(LHCb::ProtoParticle::CaloTrMatch, 9999.) < 25){
+      fillH(eOp,t,id);
+      if( m_pairing && mas >0. && mas < 100. )fillH(eOp,t,id,"conversion/");
     }
-
-
+    
 
     // vertices
     int nVert = 0;
@@ -269,65 +335,35 @@ StatusCode CaloElectronNtp::execute() {
     } 
     
     
-
-    if(m_tuple){
-      // perform electron pairing
-      double mas = 999999.;
-      for( LHCb::ProtoParticles::const_iterator pp = p+1 ; protos->end () != pp ; ++pp ){
-        if( !m_pairing)continue;
-        const LHCb::ProtoParticle* proto2 = *pp;
-        if( !m_caloElectron->set(proto2))continue;;
-        LHCb::CaloHypo* hypo2 = m_caloElectron->electron();
-        if ( NULL == hypo2 ) continue;
-        if( hypo == hypo2 )continue;
-        LHCb::CaloMomentum momentum2( hypo2 );
-
-        
-        // filtering proto2
-        const double e2 = momentum2.e();
-        const double et2 = momentum2.pt();
-        if( !inRange(m_et , et2))continue;
-        if( !inRange(m_e  , e2  ))continue;
-        double ePrs2 = m_toPrs->energy ( *hypo2 , "Prs"  );
-        if( !inRange(m_prs, ePrs2))continue;
-        double eOp2 = m_caloElectron->eOverP();
-        if( !inRange( m_eop, eOp2))continue;
-        
-        
-        // compute mass
-        const LHCb::Track*  t1 = proto->track();
-        const LHCb::Track*  t2 = proto2->track();
-        
-        if( NULL == t1 || NULL == t2)continue;
-        if( -1 != t1->charge()*t2->charge())continue;
-        LHCb::State st1 = t1->firstState();
-        LHCb::State st2 = t2->firstState();
-        
-        if( NULL == extrapolator() ){
-          Warning("No extrapolator defined");
-          continue;
-        }
-        StatusCode sc = extrapolator()->propagate(st1, 0.);
-        if(sc.isFailure())Warning("Propagation 1 failed").ignore();
-        sc = extrapolator()->propagate(st2, 0.);
-        if(sc.isFailure())Warning("Propagation 2 failed").ignore();
-        Gaudi::XYZVector p1 = st1.momentum();
-        Gaudi::XYZVector p2 = st2.momentum();
-        double m2  = p1.R()*p2.R();
-        m2 -= p1.X()*p2.X();
-        m2 -= p1.Y()*p2.Y();
-        m2 -= p1.Z()*p2.Z();
-        m2 *= 2;
-        if( m2 > 0){
-          double m = sqrt(m2) ;
-          if( m < mas )mas = m;
-        }
-      }
-      // add mass
-      sc = ntp->column("MinMee",mas);
-      sc = ntp->write();
-    }
+    
   }
   return StatusCode::SUCCESS;
 }
 //=============================================================================
+
+
+
+void CaloElectronNtp::fillH(double eOp, Gaudi::LorentzVector t, LHCb::CaloCellID id,std::string hat){
+  if(!m_histo)return;  
+  plot1D(eOp, hat+"all/eOp","all/eOp",0.,3.,300);
+  std::string zone=id.areaName();
+  plot1D(eOp, hat+zone+"/eOp",zone+"/eOp",0.,3.,300);
+  if( m_splitFEBs){
+    std::ostringstream sid;
+    int feb = m_calo->cardNumber( id );
+    sid << hat << "crate" << format("%02i", m_calo->cardCrate( feb ) ) <<  "/"
+        << "feb"   << format( "%02i" , m_calo->cardSlot( feb  ) )<< "/"
+        <<Gaudi::Utils::toString( m_calo->cardColumn( id ) + nColCaloCard * m_calo->cardRow( id ) );
+    plot1D(eOp, sid.str() , sid.str() , 0., 3., 300);
+  }      
+  if( m_splitE && t.P() < 200. * Gaudi::Units::GeV ){  // put a limit at 200 GeV
+    int ebin=( t.P() / 5000.)*5; // 1 GeV binning
+    std::ostringstream sid ;
+    sid << "/E_"<< ebin<<"/eOp";
+    counter(sid.str()+"[<p>]") += t.P();
+    plot1D(eOp, hat+zone+sid.str(),zone+sid.str(),0.,3.,300);
+    plot1D(eOp, hat+"all"+sid.str(),"all"+sid.str(),0.,3.,300);        
+  }
+}
+
+

@@ -56,5 +56,9 @@ private:
   std::string m_vertLoc;
   bool m_usePV3D;
   std::vector<int> m_tracks;
+  bool m_splitFEBs;
+  bool m_splitE;
+  void fillH(double eOp,Gaudi::LorentzVector t, LHCb::CaloCellID id,std::string hat="");
 };
+
 #endif // CALOELECTRONNTP_H

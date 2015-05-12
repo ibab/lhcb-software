@@ -79,13 +79,13 @@ protected:
   CaloHypoMonitor( const std::string &name, ISvcLocator *pSvcLocator )
     : CaloMoniAlg( name, pSvcLocator ){
     declareProperty("NClusterMin" ,m_clusMin = 0.);
-    declareProperty("NClusterMin" ,m_clusMax = 5.);
-    declareProperty("NClusterMin" ,m_clusBin = 5);
-    declareProperty("NSpdMax" ,m_spdMin = 0.);
+    declareProperty("NClusterMax" ,m_clusMax = 5.);
+    declareProperty("NClusterBin" ,m_clusBin = 5);
+    declareProperty("NSpdMin" ,m_spdMin = 0.);
     declareProperty("NSpdMax" ,m_spdMax = 10.);
-    declareProperty("NSpdMax" ,m_spdBin = 10);
-    declareProperty("NPrsBin" ,m_prsMin = 0.);
-    declareProperty("NPrsBin" ,m_prsMax = 10.);
+    declareProperty("NSpdBin" ,m_spdBin = 10);
+    declareProperty("NPrsMin" ,m_prsMin = 0.);
+    declareProperty("NPrsMax" ,m_prsMax = 10.);
     declareProperty("NPrsBin" ,m_prsBin = 10);
 
     m_clLoc =  LHCb::CaloAlgUtils::CaloClusterLocation( name, context() ) ;

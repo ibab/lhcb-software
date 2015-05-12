@@ -16,10 +16,9 @@ CaloPi0Ntp::CaloPi0Ntp( const std::string &name, ISvcLocator *pSvcLocator )
   , m_odin(NULL)
   , m_calo(NULL)
   , m_toSpd(NULL)
-  , m_toPrs(NULL)
-{ 
+  , m_toPrs(NULL){ 
   declareProperty( "PhotonPt"      , m_ppt      = std::make_pair(250. , 15000.) );
-  declareProperty( "Isolation"     , m_isol     = std::make_pair(4.   , 9999. ) );
+  declareProperty( "Isolation"     , m_isol     = std::make_pair(0.   , 9999. ) ); // Warning  : a cut biases the pi0 mass
   declareProperty( "Conversion"    , m_conv     = std::make_pair(1    , 1 ) );
   declareProperty( "PrsE"          , m_prsE     = std::make_pair(0.   , 9999. ) );
   declareProperty( "Pt"            , m_pt       = std::make_pair(200.   , 15000 ) );
@@ -322,6 +321,10 @@ StatusCode CaloPi0Ntp::execute(){
           std::string base = "Trend/";
           plot1D(pi0m, base+"allPV/allRun/mass","di-photon mass spectrum for all run & allPV" , m_hMin, m_hMax, m_hBin);
           plot1D(pi0m, base+"allPV/"+sRun+"mass","di-photon mass spectrum for all PV & run = "+sRun , m_hMin, m_hMax, m_hBin); 
+          if(id1.area() == id2.area()){
+              std::string sarea = id1.areaName() ;
+              plot1D(pi0m, base+"allPV/"+sRun+sarea,"di-photon mass spectrum for all PV & run = "+sRun , m_hMin, m_hMax, m_hBin); 
+          }
           plot1D(pi0m, base+sNpv+sRun+"mass","di-photon mass spectrum for PV="+sNpv+" (run = "+sRun+")" , m_hMin, m_hMax, m_hBin);
           plot1D(pi0m, base+sNpv+"allRun/mass","di-photon mass spectrum for PV="+sNpv+" (all run)" , m_hMin, m_hMax, m_hBin);
         }
