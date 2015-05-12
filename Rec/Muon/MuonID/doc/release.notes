@@ -4,6 +4,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2015-05-12 - Marco Cattaneo
+ - Remove duplicate declarations of certain properties in MuonIDAlg.cpp
+
 !========================= MuonID v9r14 2015-03-31 =========================
 ! 2015-04-30 - Ricardo Vazquez Gomez
  - Remove the cleaning of muonPIDs as it prevent them to be written.

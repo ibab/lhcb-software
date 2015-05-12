@@ -267,11 +267,6 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   declareProperty( "nMupBinsR3", m_nMupBinsR3 = 4);
   declareProperty( "nMupBinsR4", m_nMupBinsR4 = 4);
 
-  declareProperty( "MupBinsR1", m_MupBinsR1);
-  declareProperty( "MupBinsR2", m_MupBinsR2);
-  declareProperty( "MupBinsR3", m_MupBinsR3);
-  declareProperty( "MupBinsR4", m_MupBinsR4);
-
   // hyperbolic tangent mapping of distances:
 
   // tanh scale factors
