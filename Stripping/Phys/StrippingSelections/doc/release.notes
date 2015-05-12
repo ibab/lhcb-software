@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-12 - Xabier Cid Vidal
+  - added StrippingWmuAKTJets.py, StrippingWeAKTJets.py and StrippingH24MuLines.py to StrippingQEE
+  - added StrippingBu2MuNu.py to StrippingRD
+
 ! 2015-05-12 - Marco Gersabeck
  - added StrippingDstarD2KShh.py to StrippingCharm
 
