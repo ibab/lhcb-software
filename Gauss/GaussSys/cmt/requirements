@@ -1,5 +1,5 @@
 package GaussSys
-version v48r1p1
+version v48r2
 
 branches cmt doc
 
@@ -14,26 +14,26 @@ use GaudiConf           v19r9
 use Gauss               v48r1p1 Sim
 
 # LCG interfaces to generators, until available in LCGCMT
-use LCG_Settings        v71r0p1g1 
-use lhapdf              v71r0p1 LCG_GeneratorsInterfaces
-use photospp            v71r0p1 LCG_GeneratorsInterfaces
-use tauolapp            v71r0p1 LCG_GeneratorsInterfaces
-use pythia6             v71r0p1 LCG_GeneratorsInterfaces
-use pythia8             v71r0p1 LCG_GeneratorsInterfaces
-use thepeg              v71r0p1 LCG_GeneratorsInterfaces
-use herwigpp            v71r0p1 LCG_GeneratorsInterfaces
-use rivet               v71r0p1 LCG_GeneratorsInterfaces
-use alpgen              v71r0p1 LCG_GeneratorsInterfaces
-use hijing              v71r0p1 LCG_GeneratorsInterfaces
-use powhegbox           v71r0p1 LCG_GeneratorsInterfaces
+use LCG_Settings        v74r0p1 
+use lhapdf              v74r0p1 LCG_GeneratorsInterfaces
+use photospp            v74r0p1 LCG_GeneratorsInterfaces
+use tauolapp            v74r0p1 LCG_GeneratorsInterfaces
+use pythia6             v74r0p1 LCG_GeneratorsInterfaces
+use pythia8             v74r0p1 LCG_GeneratorsInterfaces
+use thepeg              v74r0p1 LCG_GeneratorsInterfaces
+use herwigpp            v74r0p1 LCG_GeneratorsInterfaces
+use rivet               v74r0p1 LCG_GeneratorsInterfaces
+use alpgen              v74r0p1 LCG_GeneratorsInterfaces
+use hijing              v74r0p1 LCG_GeneratorsInterfaces
+use powhegbox           v74r0p1 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
-use GenCuts             v3r10   Gen
+use GenCuts             v3r11   Gen
 use GENSER              v16r0p1 Gen
 use EvtGen              v14r1   Gen
 use Mint                v3r3    Gen
 use EvtGenExtras        v3r11   Gen
-use Generators          v14r7   Gen
+use Generators          v14r8   Gen
 use LbPythia            v14r2p1 Gen
 
 # Generators packages: extensions to Pythia6
@@ -89,17 +89,17 @@ use VPMoniSim           v1r0      VP
 use HCMoniSim           v1r0      HC
 
 # Packages for MC generator tuning
-use GenTune             v2r2p1    Gen  
+use GenTune             v2r3      Gen  
 
 # GMDL
 use LbGDML              v1r0p2    Sim
 
 # Visualization configuration
-use XmlVis              v1r19     Vis
+use XmlVis              v1r20     Vis
 
 # Test packages for new releases or installations on new platforms
 use GenTests            v1r6p2    Gen
-use SimChecks           v1r4      Sim
+use SimChecks           v1r5      Sim
 
 # Allow to run the QMTests  
 apply_pattern QMTest
