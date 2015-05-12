@@ -1,6 +1,7 @@
 // Gaudi.
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/SystemOfUnits.h"
+#include "Kernel/ParticleProperty.h"
 
 // Generators.
 #include "Generators/StringParse.h"
@@ -30,17 +31,11 @@ BcVegPyProduction::BcVegPyProduction(const std::string &type,
 
   // Declare the tool properties.
   declareInterface<IProductionTool>(this);
-  declareProperty("BcVegPyCommands", m_userSettings,
-		  "DEPRECATED - equivalent to Commands.");
 
   // Create the default settings.
   m_defaultSettings.push_back("mixevnt imix 1");
   m_defaultSettings.push_back("mixevnt imixtype 1");
-  m_defaultSettings.push_back("counter ibcstate 1");  // Bc state.
-  m_defaultSettings.push_back("upcom pmb 4.95");      // Mass of the b-quark.
-  m_defaultSettings.push_back("upcom pmc 1.326");     // Mass of the c-quark. 
-  // Mass of B_c, note that pmBc = pmB + pCm.
-  m_defaultSettings.push_back("upcom pmbc 6.276");
+  m_defaultSettings.push_back("counter ibcstate 1");
   m_defaultSettings.push_back("confine ptcut 0.0");
   m_defaultSettings.push_back("confine etacut 1000000000.0");
   m_defaultSettings.push_back("funtrans nq2 3"); 
@@ -93,8 +88,34 @@ StatusCode BcVegPyProduction::hardInitialize() {
   if (sc.isFailure()) return Error("Failed to parse default settings.");
   sc = parseSettings(m_userSettings);
   if (sc.isFailure()) return Error("Failed to parse settings.");
+
+  // Set the energy.
+  if (!m_beamTool) return Error("Beam tool not initialized.");
+  Gaudi::XYZVector pBeam1, pBeam2;
+  m_beamTool->getMeanBeams(pBeam1, pBeam2);
+  double e1(sqrt(pBeam1.Mag2())), e2(sqrt(pBeam2.Mag2())),
+    ecm(sqrt((e1 + e2)*(e1 + e2) - (pBeam1 + pBeam2).Mag2())/Gaudi::Units::GeV);
+  BcVegPy::upcom().ecm() = ecm;
   BcVegPy::SetParameter();
   return sc;
+}
+
+//=============================================================================
+// Update Pythia particle and the B_c, c-quark, or b-quark mass.
+//=============================================================================
+void BcVegPyProduction::hardUpdateParticleProperties
+(const LHCb::ParticleProperty* thePP) {
+
+  // Set for Pythia.
+  if (!m_pythia->isSpecialParticle(thePP))
+    m_pythia->updateParticleProperties(thePP);
+
+  // Set the mass if B_c, c-quark, or b-quark.
+  int absid = abs(thePP->pid().pid());
+  double m0(thePP->mass() / Gaudi::Units::GeV);
+  if (absid == 541) BcVegPy::upcom().pmbc() = m0;
+  else if (absid == 4) BcVegPy::upcom().pmc() = m0;
+  else if (absid == 5) BcVegPy::upcom().pmb() = m0;
 }
 
 //=============================================================================

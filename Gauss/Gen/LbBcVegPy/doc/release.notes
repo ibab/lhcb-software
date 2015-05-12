@@ -2,6 +2,10 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+! 2015-05-12 - Philip Ilten
+ - Changed masses to be configured via the ParticlePropertySvc
+ - Moved beam energy configuration from Gauss/Configuration.py to tool
+
 ! 2015-05-07 - Gloria Corti
  - Added linking to LbHardLib in cmake
 

@@ -40,11 +40,14 @@ public:
    */
   StatusCode hardInitialize();
 
+  /// Update Pythia particle and the B_c, c-quark, or b-quark mass.
+  void hardUpdateParticleProperties(const LHCb::ParticleProperty *thePP);
+  
 protected:
   
   /// Parse the BcVegPy settings.
   StatusCode parseSettings(const CommandVector &settings);
-  
+
 private:
 
   // Members.
