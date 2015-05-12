@@ -34,7 +34,7 @@ class RichTrackCreatorConfig(RichConfigurableUser):
        ,"MaxInputTracks" : None
        ,"MaxUsedTracks"  : None
         }
-    
+
     ## Initialize 
     def initialize(self):
         # default values
@@ -129,6 +129,7 @@ class RichTrackCreatorConfig(RichConfigurableUser):
             trackCr.TrackSegmentTool = trSegNickName
             trSeg = self.richTools().trSegMaker()
             trSeg.UseRadiators = self.getProp("Radiators")
+            self.setOutputLevel(trSeg)
             trackCr.addTool( trSeg, trSegNickName )
 
         # OutputLevels

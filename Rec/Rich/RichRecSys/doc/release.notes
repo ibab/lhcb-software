@@ -4,6 +4,12 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2015-05-12 - Chris Jones
+ - No longer throw an exception if an instance of the RichRecSysConf is
+   created without its reconstruction sequence defined. Instead print
+   a warning and do nothing. Currently needed due to the changes in RecConf to 
+   support multiple track groupings. Might be improved in the future...
+
 !========================= RichRecSys v5r6 2015-04-21 =========================
 ! 2015-04-11 - Chris Jones
  - Small change in the RichRecSysConf trackTypeIsActive method to fix a 

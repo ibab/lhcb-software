@@ -50,7 +50,7 @@ class RichRecSysBaseConf(RichConfigurableUser):
        ,"InitPixels":      True   # Run an initialisation algorithm to create the pixels
        ,"InitTracks":      True   # Run an initialisation algorithm to create the tracks
        ,"InitPhotons":     True   # Run an initialisation algorithm to create the photons
-       ,"TrackTypeGroups":  [ ] # Track type groupings. Empty list means all at once.
+       ,"TrackTypeGroups": [ ] # Track type groupings. Empty list means all at once.
        ,"TracklessRingAlgs": ["ENN"] # Run the given Trackless ring finding algorithms
        ,"CheckProcStatus": True   # Check the status of the ProcStatus object
        ,"PidConfig": "FullGlobal" # The PID algorithm configuration
@@ -182,15 +182,19 @@ class RichRecSysBaseConf(RichConfigurableUser):
     ## Get the sequence to fill
     def getRecoSeq(self):
         # Check the sequencer is set
+        seq = None
         if not self.isPropertySet("RecoSequencer") :
-            raise RuntimeError("ERROR : Reconstruction Sequence not set")
-        return self.getProp("RecoSequencer")
+            log.warning("RICH Reconstruction Sequence not set. Will do nothing.")
+            #raise RuntimeError("ERROR : Reconstruction Sequence not set")
+        else:
+            seq = self.getProp("RecoSequencer")
+        return seq
 
     ## @brief Apply the configuration to the configured GaudiSequencer
     def applyConf(self) :
 
         self.applyCommonConf()
-        if self.getProp("ConfigureAlgs") : self.configAlgorithms( self.getRecoSeq() )
+        if self.getProp("ConfigureAlgs") : self.configAlgorithms()
 
     ## Propagate options
     def passOption(self,other,name):
@@ -284,12 +288,16 @@ class RichRecSysBaseConf(RichConfigurableUser):
             
     ## @brief Configure the RICH algorithms
     #  @param sequence The GaudiSequencer to add the RICH reconstruction to      
-    def configAlgorithms(self,sequence):
+    def configAlgorithms(self):
+
+        # Get the sequence to fill. If not set just return.
+        sequence = self.getRecoSeq()
+        if None == sequence : return
+
+        # Context
+        cont = self.getProp("Context")
 
         from Configurables import Rich__Rec__Initialise 
-
-        cont     = self.getProp("Context")
-        sequence = self.getRecoSeq()
 
         #-----------------------------------------------------------------------------
         # Initialisation
@@ -491,6 +499,16 @@ class RichRecSysBaseConf(RichConfigurableUser):
 #  @date   15/08/2008
 class RichRecSysConf(RichRecSysBaseConf) :
 
+    # Define the track group configurables
+    def setTrackGroups( self, tkGroups ):
+        # Set the property
+        self.setProp("TrackTypeGroups",tkGroups)
+        # Configure the used configurables
+        for tkTypeGroup in tkGroups:
+            # Group name
+            name = self.getConfName(tkTypeGroup)
+            self._ConfigurableUser__addActiveUseOf( RichRecSysBaseConf(name,_enabled=False) )
+
     ## Set context correctly in all configurables
     def propagateContext(self,groupConfig,context) :
         # Main configurable
@@ -523,16 +541,6 @@ class RichRecSysConf(RichRecSysBaseConf) :
         self.copyOptions( self.gpidConfig(),   groupConfig.gpidConfig()   )
         self.copyOptions( self.ckResConfig(),  groupConfig.ckResConfig()  )
 
-    def setTrackGroups( self, tkGroups ):
-        # Set the property
-        self.setProp("TrackTypeGroups",tkGroups)
-        selectedTkTypes = [ ]
-        # Configure the used configurables
-        for tkTypeGroup in tkGroups:
-            # Group name
-            name = self.getConfName(tkTypeGroup)
-            self._ConfigurableUser__addActiveUseOf( RichRecSysBaseConf(name,_enabled=False) )
-
     ## Get the configurable for a given track type
     def getTrackGroupConf(self,tktype):
         conf = None
@@ -552,11 +560,12 @@ class RichRecSysConf(RichRecSysBaseConf) :
     ## @brief Apply the configuration to the configured GaudiSequencer
     def applyConf(self) :
 
-        # Common stuff
-        self.applyCommonConf()
-
         # Get the sequence to fill
         sequence = self.getRecoSeq()
+        if None == sequence : return
+
+        # Common stuff
+        self.applyCommonConf()
 
         # Get the context
         cont = self.getProp("Context")
@@ -620,7 +629,7 @@ class RichRecSysConf(RichRecSysBaseConf) :
         if not self.usingTrackGroups() :
 
             # Run a single sequence for all track types
-            if self.getProp("ConfigureAlgs")  : self.configAlgorithms(sequence)
+            if self.getProp("ConfigureAlgs")  : self.configAlgorithms()
 
         else:
 
