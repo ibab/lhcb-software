@@ -12,12 +12,7 @@ def TaskListfromArch(arch, tasklist):
 def OptionsfromTasks(tasklist,level,ofile,pname,dohostdns):
     f = open(ofile,'w')
     f.write("//  Adder Level "+level+"\n")
-    if level == "1":
-        InDns = os.getenv("InDns","<dns>")
-        OutDns = os.getenv("OutDns","<dns>")
-        InDns = "\""+InDns+"\""
-        OutDns = "\""+OutDns+"\""
-        f.write("""#include "$INFO_OPTIONS"
+    f.write("""#include "$INFO_OPTIONS"
 
 ApplicationMgr.ExtSvc               += {"MonitorSvc","BusySvc"};
 
@@ -35,6 +30,27 @@ HistogramPersistencySvc.Warnings     = false;
 BusySvc.BogusMips                    = 0.0;
 MonitorSvc.CounterUpdateInterval     = 5;
 """)
+    if level=="1":
+      InDns = os.getenv("InDns","<dns>")
+      OutDns = os.getenv("OutDns","<dns>")
+      InDns = "\""+InDns+"\""
+      OutDns = "\""+OutDns+"\""
+    if level =="2":
+      InDns = os.getenv("InDns","<node>")
+      OutDns = os.getenv("OutDns","hlt01")
+      InDns = "\""+InDns+"\""
+      OutDns = "\""+OutDns+"\""
+    elif level == "3":      
+      InDns = os.getenv("InDns","hlt01")
+      OutDns = os.getenv("OutDns","mona08")
+      InDns = "\""+InDns+"\""
+      OutDns = "\""+OutDns+"\""
+    elif level == "4":
+      InDns = os.getenv("InDns","mona08")
+      OutDns = os.getenv("OutDns","mona08")
+      InDns = "\""+InDns+"\""
+      OutDns = "\""+OutDns+"\""
+    if level == "1":
         histsvc = []
         cntsvc = []
         for s in tasklist:
@@ -78,35 +94,12 @@ MonitorSvc.CounterUpdateInterval     = 5;
                 f.write(svc+".OutDNS = "+OutDns+";\n")
             f.write("\n")
     elif level == "2":
-        InDns = os.getenv("InDns","<node>")
-        OutDns = os.getenv("OutDns","hlt01")
-        InDns = "\""+InDns+"\""
-        OutDns = "\""+OutDns+"\""
-        f.write("""#include "$INFO_OPTIONS"
-
-ApplicationMgr.ExtSvc               += {"MonitorSvc","AdderSvc/BusyAdder"};
-
-ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
-ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
-ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.EvtSel                = "NONE";
-
-Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
-
-MessageSvc.fifoPath                  = "$LOGFIFO";
-MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
-MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
-HistogramPersistencySvc.Warnings     = false;
-BusySvc.BogusMips                    = 0.0;
-MonitorSvc.CounterUpdateInterval     = 5;
-
+        f.write("""
 BusyAdder.MyName                = "<part>_<node>_Busy";
 BusyAdder.PartitionName         = @OnlineEnv.PartitionName;
 BusyAdder.TaskPattern           = "<part>_<node>[0-9][0-9]_NodeAdder_0";
 BusyAdder.ServicePattern        = "MON_<part>_<node>[0-9][0-9]_NodeAdder_0/Counter/";
 BusyAdder.AdderClass            = "Counter";
-BusyAdder.InDNS                 = "<node>";
-BusyAdder.OutDNS                = "hlt01";
 BusyAdder.ReceiveTimeout          = 3;
 """)
         f.write("BusyAdder.InDns     = "+InDns+";\n")
@@ -152,29 +145,6 @@ BusyAdder.ReceiveTimeout          = 3;
               f.write(svc+".ReceiveTimeout = 0;\n")
             f.write("\n")
     elif level == "3":
-        InDns = os.getenv("InDns","hlt01")
-        OutDns = os.getenv("OutDns","mona08")
-        InDns = "\""+InDns+"\""
-        OutDns = "\""+OutDns+"\""
-        f.write("""#include "$INFO_OPTIONS"
-
-ApplicationMgr.ExtSvc               += {"MonitorSvc","AdderSvc/BusyCountAdder"};
-
-ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
-ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
-ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.EvtSel                = "NONE";
-
-Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
-
-MessageSvc.fifoPath                  = "$LOGFIFO";
-MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
-MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
-HistogramPersistencySvc.Warnings     = false;
-BusySvc.BogusMips                    = 0.0;
-MonitorSvc.CounterUpdateInterval     = 5;
-
-""")
         histsvc = []
         cntsvc = []
         histsvc.append("Adder")
@@ -220,29 +190,6 @@ MonitorSvc.CounterUpdateInterval     = 5;
 #              f.write(svc+".GotoPause = true;\n")
             f.write("\n")
     elif level == "4":
-        InDns = os.getenv("InDns","mona08")
-        OutDns = os.getenv("OutDns","mona08")
-        InDns = "\""+InDns+"\""
-        OutDns = "\""+OutDns+"\""
-        f.write("""#include "$INFO_OPTIONS"
-
-ApplicationMgr.ExtSvc               += {"MonitorSvc","AdderSvc/BusyCountAdder"};
-
-ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
-ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
-ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.EvtSel                = "NONE";
-
-Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
-
-MessageSvc.fifoPath                  = "$LOGFIFO";
-MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
-MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
-HistogramPersistencySvc.Warnings     = false;
-BusySvc.BogusMips                    = 0.0;
-MonitorSvc.CounterUpdateInterval     = 5;
-
-""")
         histsvc = []
         cntsvc = []
 #        histsvc.append("Adder")
