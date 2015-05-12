@@ -33,9 +33,6 @@
 // ROOT
 #include "TProfile.h"
 
-// boost
-#include "boost/assign/list_of.hpp"
-
 namespace Rich
 {
   namespace DAQ
