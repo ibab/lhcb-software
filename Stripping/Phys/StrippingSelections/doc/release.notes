@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-12 - Irina Nasteva
+ - Added Stripping21 BnoC/Bu2hhh lines
+
 ! 2015-05-12 - Pieter David
  - Add Stripping21 QEE/DisplVertices lines
  - Renamed HLT->HLT2 (including HltSelReports location for Hlt2 displaced vertex seeds)

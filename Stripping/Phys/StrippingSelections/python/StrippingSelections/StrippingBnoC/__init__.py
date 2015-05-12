@@ -5,7 +5,8 @@ for BnoC WG.
 
 _selections = [ 'StrippingHb2Charged2Body', 
                 'StrippingB2HHBDT', 
-                'StrippingBc2hhh_BnoC']
+                'StrippingBc2hhh_BnoC',
+                'StrippingBu2hhh']
 
 for _sel in _selections :
     try :
