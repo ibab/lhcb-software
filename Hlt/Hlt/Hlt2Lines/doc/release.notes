@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-12 - V. Gligorov
+ - CharmHad : Add DOCA cut to DV4B combiner
+ - CharmHad : update relevant dictionaries in CharmHad and PID
+
 ! 2015-05-11 - V. Gligorov
  - Add TisTos links to HLT1 for the LT unbiased PhiPhi and B2HH lines to HLT1 LT unbiased lines
  - Add TisTos link to the B2HH biased line to HLT1 1/2Track lines

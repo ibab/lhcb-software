@@ -667,15 +667,21 @@ class DV4BCombiner(Hlt2Combiner):
         for child in ['pi+','K+','p+'] :
             dc[child] = "(PT > %(Trk_ALL_PT_MIN)s) & (MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)"
         c12 = (" ( AM < (%(AM_MAX)s - %(AM_34)s) ) " +
-               "&( ACHI2DOCA(1,2) < %(ACHI2DOCA_MAX)s ) " )
+               "&( ACHI2DOCA(1,2) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ADOCA(1,2) < %(ADOCA_MAX)s ) " )
         c123 =(" ( AM < (%(AM_MAX)s - %(AM_4)s) ) " +
                "&( ACHI2DOCA(1,3) < %(ACHI2DOCA_MAX)s ) " +
-               "&( ACHI2DOCA(2,3) < %(ACHI2DOCA_MAX)s ) " )
+               "&( ACHI2DOCA(2,3) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ADOCA(1,3) < %(ADOCA_MAX)s ) " +
+               "&( ADOCA(2,3) < %(ADOCA_MAX)s ) " )
         cc =  (" (in_range( %(AM_MIN)s, AM, %(AM_MAX)s )) " +
                "&( (APT1+APT2+APT3+APT4) > %(ASUMPT_MIN)s )" +
                "&( ACHI2DOCA(1,4) < %(ACHI2DOCA_MAX)s ) " +
                "&( ACHI2DOCA(2,4) < %(ACHI2DOCA_MAX)s ) " +
-               "&( ACHI2DOCA(3,4) < %(ACHI2DOCA_MAX)s ) " )
+               "&( ACHI2DOCA(3,4) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ADOCA(1,4) < %(ADOCA_MAX)s ) " +
+               "&( ADOCA(2,4) < %(ADOCA_MAX)s ) " +
+               "&( ADOCA(3,4) < %(ADOCA_MAX)s ) " )
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
                  " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )")

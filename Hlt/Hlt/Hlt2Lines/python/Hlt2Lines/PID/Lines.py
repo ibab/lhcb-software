@@ -286,6 +286,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'AM_MIN'                   :  1780 * MeV,
                                 'AM_MAX'                   :  1950 * MeV,
                                 'ASUMPT_MIN'               :  2500.0 * MeV,
+                                'ADOCA_MAX'                :  100.0 * mm,
                                 'ACHI2DOCA_MAX'            :  10.0,
                                 'VCHI2PDOF_MAX'            :  12.0,
                                 'BPVDIRA_MIN'              :  0.9999,

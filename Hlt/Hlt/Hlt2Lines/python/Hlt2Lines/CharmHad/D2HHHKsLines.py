@@ -24,6 +24,7 @@ class CharmHadD2HHHKsLines() :
             'AM_4'                  : (139.5) * MeV,
             'AM_MIN'                :  1755.0 * MeV,
             'AM_MAX'                :  2055.0 * MeV,
+            'ADOCA_MAX'             :  100.0 * mm,
             'ACHI2DOCA_MAX'         :  10.0,
             'ASUMPT_MIN'            :  2.0 * GeV,
             'VCHI2PDOF_MAX'         :  12.0,
