@@ -62,6 +62,7 @@ class Hlt1Conf(LHCbConfigurableUser):
                               modules,
                               (CoreFactory("Hlt1Factory"),
                                CoreFactory("Hlt1CoreFactory"),
+                               CoreFactory("Hlt2CoreFactory"),
                                HybridFactory("Hlt1HybridFactory"),
                                HybridFactory("Hlt2HybridFactory")) :
                               modules + extra_modules}.iteritems():

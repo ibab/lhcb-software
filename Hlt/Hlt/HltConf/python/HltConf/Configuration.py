@@ -333,7 +333,7 @@ class HltConf(LHCbConfigurableUser):
                       # routing bit for Turbo stream, includes lumi events.
                       , 88 : "HLT_TURBOPASS_RE('Hlt2(?!DebugEvent)(?!Transparent)(?!PassThrough).*Decision') | HLT_PASS_RE('^Hlt1Lumi.*Decision$')"
                       # RB 89 is reserved for the parked stream but is not set for now
-                      # VVG 01-05-2015 
+                      # VVG 01-05-2015
                       }
         HltRoutingBitsWriter('Hlt1RoutingBitsWriter').RoutingBits = routingBits
         HltRoutingBitsWriter('Hlt2RoutingBitsWriter').RoutingBits = routingBits
@@ -758,7 +758,8 @@ class HltConf(LHCbConfigurableUser):
         ###             downstream, but eg. for MC they may be kept...
         ### So maybe the routingbits should be written in the end sequence instead, but then the code must take into
         ### account that Hlt2 missing on Hlt1 rejected events is not an error...
-        _hlt1postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter,   'Hlt1RoutingBitsWriter', {'Hlt1DecReportsLocation': hlt1_decrep_loc,
+        _hlt1postamble = ( ( "EnableHltRoutingBits" ,  type(l0decoder), l0decoder.getName(), {})
+                         , ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter,   'Hlt1RoutingBitsWriter', {'Hlt1DecReportsLocation': hlt1_decrep_loc,
                                                                                                          'Hlt2DecReportsLocation' : '',  } )
                          , ( "EnableHltDecReports"  ,  HltDecReportsWriter,    'Hlt1DecReportsWriter',  {'SourceID' : 1,
                                                                                                          'InputHltDecReportsLocation' : hlt1_decrep_loc } )
@@ -772,7 +773,8 @@ class HltConf(LHCbConfigurableUser):
                          , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt1VtxReporteWriter',  { 'SourceID' : 1,
                                                                                                           'InputHltVertexReportsLocation': hlt_vtxrep_loc } )
                          )
-        _hlt2postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter, 'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc,
+        _hlt2postamble = ( ( "EnableHltRoutingBits" ,  type(l0decoder), l0decoder.getName(), {})
+                         , ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter, 'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc,
                                                                                                         'Hlt2DecReportsLocation' : hlt2_decrep_loc,
                                                                                                         'UpdateExistingRawBank'  : True} )
                          , ( "EnableHltDecReports"  ,  HltDecReportsWriter,  'Hlt2DecReportsWriter',  { 'SourceID': 2,

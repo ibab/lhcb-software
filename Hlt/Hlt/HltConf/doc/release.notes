@@ -4,13 +4,16 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-05-12 - Roel Aaij
+ - Add L0DU decoding to the HLT1 and HLT2 postambles.
+
 - 2015-05-12 - V. Gligorov
  - Configuration.py : Add routing bits 5&6 for NoBias and leading crossing
 
 - 2015-05-06 - V. Gligorov
  - Configuration.py : change RB 49 which currently duplicates RB 35 for
                       BeamGas to 'Hlt1.*MVA.*Decision'
- - Configuration.py : change RB 53 to only use the ``detached'' KPi 
+ - Configuration.py : change RB 53 to only use the ``detached'' KPi
                       CalibTracking line
  - Configuration.py : add RB 60 for Hlt1TrackAllL0Decision
 
