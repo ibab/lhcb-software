@@ -5,14 +5,16 @@ for QEE WG.
 
 
 _selections = (
+  'StrippingDisplVertices',
+  'StrippingH24MuLines',
   'StrippingInclbJets',
+  'StrippingLowMultINC',
   'StrippingMuMuSS',
   'StrippingSingleTrackTIS',
   'StrippingWMu',
+  'StrippingWmuAKTJets',
+  'StrippingWeAKTJets',
   'StrippingZ02MuMu',
-  'StrippingDisplVertices',
-  'StrippingLowMultINC',
-  # 'StrippingLowMultL0',  
 )
 
 for _sel in _selections :  
