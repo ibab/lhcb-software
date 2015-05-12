@@ -1739,7 +1739,7 @@ class Gauss(LHCbConfigurableUser):
     def setBeamParameters( self, CrossingSlots, genInit):
 
         from Configurables import ( MinimumBias , FixedNInteractions , HijingProduction )
-        from Configurables import ( BcVegPyProduction , Special , Pythia8Production , LbLHAup )
+        from Configurables import ( Special , Pythia8Production , LbLHAup )
         from Configurables import ( Generation )
 
         #
@@ -1778,18 +1778,7 @@ class Gauss(LHCbConfigurableUser):
         # forced selecting the appropriate pileup tool in the eventtype
         gen_t0.addTool(FixedNInteractions,name="FixedNInteractions")
         gen_t0.FixedNInteractions.NInteractions = 1
-    
-        # Special signal  (Bc with BcVegPy)
-        pInGeV   = beamMom*SystemOfUnits.GeV/SystemOfUnits.TeV
-        ecmInGeV = 2*pInGeV
-        txtECM = "upcom ecm "+str(ecmInGeV)
-        gen_t0.addTool(Special,name="Special")
-        gen_t0.Special.addTool(BcVegPyProduction,name="BcVegPyProduction")
-        gen_t0.Special.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
-        gen_t0.Special.addTool( Pythia8Production , "Pythia8Production" ) 
-        gen_t0.Special.Pythia8Production.addTool( LbLHAup , "LbLHAup" )
-        gen_t0.Special.Pythia8Production.LbLHAup.addTool( BcVegPyProduction , "BcVegPyProduction" ) 
-        gen_t0.Special.Pythia8Production.LbLHAup.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
+        pInGeV = beamMom*SystemOfUnits.GeV/SystemOfUnits.TeV
 
         # or with LbPowheg
         from Configurables import PowhegProductionbb, PowhegProductiontt, PowhegProductionWbb

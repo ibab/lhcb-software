@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2015-05-12 - Philip Ilten
+ - Removed no longer needed configuration of BcVegPy
+
 !========================= Gauss v48r1p1 2015-03-19 ==========================
 ! 2015-03-19 - Gloria Corti
  - Dummy release for building against LHCB v38r3p1, Gaudi v25r6p1 and
