@@ -6,6 +6,7 @@
 
 ! 2015-05-12 - Chris Jones
  - Fix typo in property names in RawDataSize.
+ - Clean things up a little using C++11 syntax.
 
 !========================= RichRecQC v2r69 2015-04-21 =========================
 ! 2015-04-11 - Chris Jones

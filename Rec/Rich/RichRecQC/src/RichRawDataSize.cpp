@@ -145,11 +145,10 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
     const LHCb::RawBank::Vector & richBanks = rawEvent->banks( LHCb::RawBank::Rich );
 
     // Loop over data banks
-    for ( LHCb::RawBank::Vector::const_iterator iBank = richBanks.begin();
-          iBank != richBanks.end(); ++iBank )
+    for ( const auto* bank : richBanks )
     {
-      const unsigned int L1size = (*iBank)->size() / 4; // size in # 32 bit words
-      const Level1HardwareID L1ID ( (*iBank)->sourceID() );
+      const unsigned int L1size = bank->size() / 4; // size in # 32 bit words
+      const Level1HardwareID L1ID ( bank->sourceID() );
       l1SizeMap[L1ID] += L1size;
     } // raw banks
 
@@ -162,33 +161,30 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
     initHPDMap(hpdWordMap);
 
     // loop over decoded data
-    for ( Rich::DAQ::L1Map::const_iterator iL1Map = l1Map.begin();
-          iL1Map != l1Map.end(); ++iL1Map )
+    for ( const auto& l1Data : l1Map )
     {
-      const Rich::DAQ::Level1HardwareID l1HardID = iL1Map->first;
+      const Rich::DAQ::Level1HardwareID l1HardID = l1Data.first;
       const Rich::DAQ::Level1CopyNumber l1CopyN  = m_RichSys->copyNumber(l1HardID);
-      const Rich::DAQ::IngressMap & ingressMap   = iL1Map->second;
+      const Rich::DAQ::IngressMap & ingressMap   = l1Data.second;
 
       // Number words for this L1 board
       // Start with 1 word per HPD ingress header
       unsigned int nL1HeaderWords = ingressMap.size();
       unsigned int nL1Words       = nL1HeaderWords;
 
-      for ( Rich::DAQ::IngressMap::const_iterator iIngressMap = ingressMap.begin();
-            iIngressMap != ingressMap.end(); ++iIngressMap )
+      for ( const auto& ingress : ingressMap )
       {
-        const Rich::DAQ::IngressInfo & ingressInfo = iIngressMap->second;
-        const Rich::DAQ::HPDMap & hpdMap = ingressInfo.hpdData();
+        const Rich::DAQ::IngressInfo & ingressInfo = ingress.second;
+        const Rich::DAQ::HPDMap           & hpdMap = ingressInfo.hpdData();
         const Rich::DAQ::L1IngressID ingressID = ingressInfo.ingressHeader().ingressID();
 
         // Number words for this L1 ingress
         // Start with 1 for the header
         unsigned int nIngressWords(1);
 
-        for ( Rich::DAQ::HPDMap::const_iterator iHPDMap = hpdMap.begin();
-              iHPDMap != hpdMap.end(); ++iHPDMap )
+        for ( const auto& hpd : hpdMap )
         {
-          const Rich::DAQ::HPDInfo & hpdInfo           = iHPDMap->second;
+          const Rich::DAQ::HPDInfo & hpdInfo           = hpd.second;
           const LHCb::RichSmartID  & hpdID             = hpdInfo.hpdID();
           const Rich::DAQ::HPDInfo::Header & hpdHeader = hpdInfo.header();
           const Rich::DAQ::HPDInfo::Footer & hpdFooter = hpdInfo.footer();
