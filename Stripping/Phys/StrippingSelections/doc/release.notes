@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-12 - Marco Gersabeck
+ - added StrippingDstarD2KShh.py to StrippingCharm
+
 ! 2015-05-12 - Flavio Archilli
  - added Velo raw banks to B->emu line.
 
