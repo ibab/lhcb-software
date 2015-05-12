@@ -19,28 +19,22 @@
 
 using namespace Rich::DAQ;
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RawDataSize )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  RawDataSize::RawDataSize( const std::string& name,
-                            ISvcLocator* pSvcLocator)
-    : HistoAlgBase       ( name , pSvcLocator ),
-      m_SmartIDDecoder   ( NULL  ),
-      m_RichSys          ( NULL  ),
-      m_taeEvents        ( 1, "" )
+RawDataSize::RawDataSize( const std::string& name,
+                          ISvcLocator* pSvcLocator)
+  : HistoAlgBase       ( name , pSvcLocator ),
+    m_SmartIDDecoder   ( NULL  ),
+    m_RichSys          ( NULL  )
 {
-  declareProperty( "RawEventLocations", m_taeEvents );
+  declareProperty( "TAEEvents",                  m_taeEvents              = {""}  );
   declareProperty( "FillDetailedL1Plots",        m_detailedL1Plots        = true  );
   declareProperty( "FillDetailedL1IngressPlots", m_detailedL1IngressPlots = false );
   declareProperty( "FillDetailedHPDPlots",       m_detailedHPDPlots       = false );
   declareProperty( "WriteTextFile",              m_writeTextFile          = false );
-  std::vector<std::string> tmp = boost::assign::list_of
-                   ( LHCb::RawEventLocation::Rich    )
-                   ( LHCb::RawEventLocation::Default );
-  declareProperty( "RawEventLocations", m_rawEvLocs = tmp );
+  declareProperty( "RawEventLocations",
+                   m_rawEvLocs = {LHCb::RawEventLocation::Rich,LHCb::RawEventLocation::Default} );
   setProperty( "HistoPrint", false );
 }
 
@@ -109,11 +103,7 @@ void RawDataSize::initHPDMap( HPDWordMap & hpdMap )
   // get list of all HPDs
   const LHCb::RichSmartID::Vector & hpds = m_RichSys->allPDRichSmartIDs();
   // Loop over all HPDs and (re)set count to zero
-  for ( LHCb::RichSmartID::Vector::const_iterator iHPD = hpds.begin();
-        iHPD != hpds.end(); ++iHPD )
-  {
-    hpdMap[*iHPD] = 0;
-  }
+  for ( const auto& hpd : hpds ) { hpdMap[hpd] = 0; }
 }
 
 //=============================================================================
@@ -123,10 +113,9 @@ StatusCode RawDataSize::execute()
 {
   StatusCode sc = StatusCode::SUCCESS;
 
-  for ( std::vector<std::string>::const_iterator iLoc = m_taeEvents.begin();
-        iLoc != m_taeEvents.end(); ++iLoc )
+  for ( const auto& taeEv : m_taeEvents )
   {
-    sc = sc && processTAEEvent( *iLoc );
+    sc = sc && processTAEEvent(taeEv);
   }
 
   return sc;
@@ -143,10 +132,9 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
 
   // Try and load the RawEvent from the list of possible locations
   LHCb::RawEvent * rawEvent = NULL;
-  for ( std::vector<std::string>::const_iterator iEvLoc = m_rawEvLocs.begin();
-        iEvLoc != m_rawEvLocs.end(); ++iEvLoc )
+  for ( const auto& evLoc : m_rawEvLocs )
   {
-    rawEvent = getIfExists<LHCb::RawEvent>( prefixE + *iEvLoc );
+    rawEvent = getIfExists<LHCb::RawEvent>( prefixE + evLoc );
     if ( rawEvent ) break;
   }
 
@@ -375,3 +363,10 @@ StatusCode RawDataSize::finalize()
   // return
   return HistoAlgBase::finalize();
 }
+
+//=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( RawDataSize )
+
+//=============================================================================
