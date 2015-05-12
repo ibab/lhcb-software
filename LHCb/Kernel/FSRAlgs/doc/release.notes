@@ -4,6 +4,9 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-05-12 - Marco Clemencic
+ - Updated reference file after GAUDI-1030.
+
 ! 2015-05-04 - Marco Clemencic
  - Synchronized LHCbOutputStream with latest OutputStream in Gaudi.
    (requires Gaudi >= v26r2)
