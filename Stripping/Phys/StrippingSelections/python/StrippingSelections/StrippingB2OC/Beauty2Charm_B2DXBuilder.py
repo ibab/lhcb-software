@@ -44,9 +44,10 @@ class B2DXBuilder(object):
         self._makeB02D0KS('D2HH',self.d.hh,'DD') # B0  -> D0(HH)  KS
         self._makeB02D0KS('D2HH',self.d.hh,'LL') # B0  -> D0(HH)  KS
         self._makeB2D0HH('D2HH',self.d.hh) # B+- -> D0(HH) H+- H0
-        self._makeB2D0HH('D2KSHHLL',self.d.kshh_ll) # B+- -> D0(HH) H+- H0
-        self._makeB2D0HH('D2KSHHDD',self.d.kshh_dd) # B+- -> D0(HH) H+- H0
-        self._makeB2D0HH('D2K3Pi',self.d.k3pi_pid) # B+- -> D0(HH) H+- H0
+        self._makeB2D0HH('D2KSHHLL',self.d.kshh_ll) # B+- -> D0(Kshh,LL) H+- H0
+        self._makeB2D0HH('D2KSHHDD',self.d.kshh_dd) # B+- -> D0(Kshh,DD) H+- H0
+        self._makeB2D0HH('D2HHHH',self.d.hhhh) # B+- -> D0(HHHH) H+- H0
+        self._makeB2D0HH('D2HHHHWS',self.d.hhhh_ws) # B+- -> D0(HHHH,WS) H+- H0
         self._makeB02DHD2PhiMu('D2PhiMuNu',self.d.phimu) # B0 -> D( phi mu nu) H+-
         # B -> D+-(HHH) X
         self._makeB02DH('D2HHH',self.d.hhh) # B0  -> D+-(HHH) H-+   (+WS)
@@ -84,6 +85,8 @@ class B2DXBuilder(object):
         self._makeB02DstH('Dst2D0Pi_D2KSHHDD',self.dst.d0pi_kshh_dd)
         self._makeB02DstMuNu('Dst2D0Pi_D2KSHHLL',self.dst.d0pi_kshh_ll)
         self._makeB02DstMuNu('Dst2D0Pi_D2KSHHDD',self.dst.d0pi_kshh_dd)
+        self._makeB02DstMuNu('Dst2D0Pi_D2HHHH',self.dst.d0pi_hhhh)
+        self._makeB02DstMuNu('Dst2D0Pi_D2HHHHWS',self.dst.d0pi_hhhh_ws)
 
         self._makeB02DstKsH('Dst2D0Pi', self.dst.d0pi)
         # B -> D0(HHHH) X

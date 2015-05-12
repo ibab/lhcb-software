@@ -586,6 +586,8 @@ class DstarBuilder(object):
         self.config         = config
         self.d0pi           = self._makeDstar2D0pi('',self.d.hh)
         self.d0pi_k3pi      = self._makeDstar2D0pi('D2K3Pi',self.d.k3pi)
+        self.d0pi_hhhh      = self._makeDstar2D0pi('D2HHHH',self.d.hhhh)
+        self.d0pi_hhhh_ws      = self._makeDstar2D0pi('D2HHHHWS',self.d.hhhh_ws)
         self.d0pi_kshh_ll   = self._makeDstar2D0pi('D2KSHHLL',self.d.kshh_ll)
         self.d0pi_kshh_dd   = self._makeDstar2D0pi('D2KSHHDD',self.d.kshh_dd)
         self.d0pi_pid       = [filterPID('Dstar2D0PiPID',self.d0pi,config_pid,2)]

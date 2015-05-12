@@ -31,7 +31,24 @@ from StrippingSelections import buildersConf
 confs = buildersConf()
 from StrippingSelections.Utils import lineBuilder, buildStreamsFromBuilder
 streamall = buildStreamsFromBuilder(confs,confname)
-MyLines = ["StrippingB02DPiPiPiD2HHHPIDBeauty2CharmLine"]
+MyLines = [
+'StrippingB02DstarMuNuDst2D0Pi_D2HHHHBeauty2CharmLine',
+    'StrippingB02DstarMuNuWSDst2D0Pi_D2HHHHBeauty2CharmLine',
+    'StrippingB02DstarMuNuDst2D0Pi_D2HHHHWSBeauty2CharmLine',
+    'StrippingB02DstarMuNuWSDst2D0Pi_D2HHHHWSBeauty2CharmLine',
+    'StrippingB2D0KPi0MergedD2HHHHBeauty2CharmLine', 
+    'StrippingB2D0PiPi0MergedD2HHHHBeauty2CharmLine',
+    'StrippingB2D0KsPiDDD2HHHHBeauty2CharmLine',   
+    'StrippingB2D0KPi0ResolvedD2HHHHBeauty2CharmLine',
+    'StrippingB2D0KsPiLLD2HHHHBeauty2CharmLine',
+    'StrippingB2D0PiPi0ResolvedD2HHHHBeauty2CharmLine',  
+    'StrippingB2D0KPi0MergedD2HHHHWSBeauty2CharmLine',  
+    'StrippingB2D0PiPi0MergedD2HHHHWSBeauty2CharmLine',
+    'StrippingB2D0KsPiDDD2HHHHWSBeauty2CharmLine',  
+    'StrippingB2D0KPi0ResolvedD2HHHHWSBeauty2CharmLine',  
+    'StrippingB2D0KsPiLLD2HHHHWSBeauty2CharmLine',
+    'StrippingB2D0PiPi0ResolvedD2HHHHWSBeauty2CharmLine'   
+]
 streamsel = StrippingStream("Bhadron")
 for stream in streamall:
     for line in stream.lines:
