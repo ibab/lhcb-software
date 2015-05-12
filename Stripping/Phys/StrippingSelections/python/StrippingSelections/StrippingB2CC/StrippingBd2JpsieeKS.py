@@ -30,7 +30,7 @@ default_config = {
         , 'BdMassMax'             :  6000.    # MeV
         , 'Prescale'              :     0.1   # adamenssional
         },
-    'STREAMS' : [ 'Radiative' ],
+    'STREAMS' : [ 'Leptonic' ],
     'WGs'    : [ 'B2CC' ]
     }
 

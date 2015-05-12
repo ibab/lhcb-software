@@ -55,7 +55,7 @@ default_config = {
         , 'BsDIRA'                :     0.99  # adimensional
         , 'Prescale'              :     0.1   # adamenssional
         },
-    'STREAMS' : [ 'Radiative' ],
+    'STREAMS' : [ 'Leptonic' ],
     'WGs'    : [ 'B2CC' ]
     }
 
