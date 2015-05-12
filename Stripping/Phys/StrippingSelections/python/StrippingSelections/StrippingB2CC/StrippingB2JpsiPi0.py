@@ -47,7 +47,7 @@ class B2JpsiPi0Conf(LineBuilder) :
 
         self.WideJpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles")
 
-        self.JpsiList = self.createSubSel( OutputList = 'NarrowJpsiForBetaS' + self.name,
+        self.JpsiList = self.createSubSel( OutputList = 'NarrowJpsiForBetaSPi0' + self.name,
                                            InputList = self.WideJpsiList,
                                            Cuts = "(PFUNA(ADAMASS('J/psi(1S)')) < %(JpsiMassWindow)s * MeV)" % self.config)
 
