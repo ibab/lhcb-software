@@ -3,6 +3,9 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2015-05-12 - Maurizio Martinelli
+ - added AlignmentOutputParser scripts
+
 !========================= AlignmentDBVisualisationTool v1r3 2014-11-10 =========================
 
 ! 2014-10-21 - Jason Andrews
