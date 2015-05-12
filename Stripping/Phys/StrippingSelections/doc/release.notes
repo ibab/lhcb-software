@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-12 - Carlos Vazquez Sierra
+ - Moved Psi2S B2CC lines to tests/liaisons (keeping builders).
+ - Removed those lines from StrippingB2CC.
+
 ! 2015-05-12 - Ramon Niet
  - modified StrippingB2CC/StrippingBd2JpsieeKS.py
    - added 3 new lines:
