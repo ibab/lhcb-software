@@ -49,7 +49,6 @@ class GenXiccProduction : public HardProduction, public QQqBaryons {
 
   CommandVector m_defaultSettings;  ///< The default settings.
   std::string m_baryon;             ///< The baryon state to be produced.
-  double m_beamMomentum;            ///< The beam momentum.
 };
 
 #endif // LBGENXICC_GENXICCPRODUCTION_H

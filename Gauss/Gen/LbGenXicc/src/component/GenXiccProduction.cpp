@@ -32,10 +32,6 @@ GenXiccProduction::GenXiccProduction(const std::string &type,
   declareInterface<IProductionTool>(this);
   declareProperty("BaryonState", m_baryon= "Xi_cc+",
 		  "The baryon to be produced");
-  declareProperty("BeamMomentum", m_beamMomentum = 3500*Gaudi::Units::GeV,
-		  "DEPRECATED - the beam momentum, now set by beam tool.");
-  declareProperty("GenXiccCommands", m_userSettings,
-		  "DEPRECATED - equivalent to Commands.");
 
   // Create the default settings.
   m_defaultSettings.push_back("mixevnt imix 0");

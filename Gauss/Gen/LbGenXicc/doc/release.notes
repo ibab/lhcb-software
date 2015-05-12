@@ -2,6 +2,9 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
+! 2015-05-12 - Philip Ilten
+ - Removed deprecated configurable options
+
 ! 2015-05-07 - Gloria Corti
  - Added linking to LbHardLib for cmake
 
