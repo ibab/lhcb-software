@@ -48,7 +48,6 @@ default_config = {
          'StrippingBetaSBs2JpsiPhiPrescaledLine',
          'StrippingBetaSBd2JpsiKstarPrescaledLine',
          'StrippingBetaSBd2JpsiKsPrescaledLine',
-         'StrippingBetaSBd2JpsiKsDetachedLine',
          'StrippingBetaSBd2JpsiKsLDDetachedLine',
          'StrippingBetaSBs2JpsiKstarWideLine',
          'StrippingBetaSLambdab2JpsiLambdaUnbiasedLine'
@@ -57,7 +56,8 @@ default_config = {
          'StrippingBetaSBu2JpsiKDetachedLine',
          'StrippingBetaSBd2JpsiKstarDetachedLine',
          'StrippingBetaSBs2JpsiPhiDetachedLine',
-         'StrippingBetaSJpsi2MuMuLine'
+         'StrippingBetaSJpsi2MuMuLine',
+         'StrippingBetaSBd2JpsiKsDetachedLine'
         ]
     }
     }
@@ -203,7 +203,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                               "(BPVLTIME() > %(BPVLTIME)s*ps) & "\
                                               "(MINTREE('K+'==ABSID, PT) > 500.*MeV)" % self.config )
 
-        Bu2JpsiKDetachedLine  = StrippingLine( self.name + "Bu2JpsiKDetachedLine", algos = [ Bu2JpsiKDetached ], EnableFlavourTagging = True )
+        Bu2JpsiKDetachedLine  = StrippingLine( self.name + "Bu2JpsiKDetachedLine", algos = [ Bu2JpsiKDetached ], EnableFlavourTagging = False )
     
         self.registerLine(Bu2JpsiKDetachedLine)
         self.registerLine(Bu2JpsiKPrescaledLine)
@@ -224,7 +224,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                 Cuts = "(CHILD('Beauty -> ^J/psi(1S) X', PFUNA(ADAMASS('J/psi(1S)'))) < %(JpsiMassWindow)s * MeV) & "\
                                                 "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
 
-        Bs2JpsiPhiDetachedLine  = StrippingLine( self.name + "Bs2JpsiPhiDetachedLine", algos = [ Bs2JpsiPhiDetached ], EnableFlavourTagging = True )
+        Bs2JpsiPhiDetachedLine  = StrippingLine( self.name + "Bs2JpsiPhiDetachedLine", algos = [ Bs2JpsiPhiDetached ], EnableFlavourTagging = False )
         
         self.registerLine(Bs2JpsiPhiPrescaledLine)
         self.registerLine(Bs2JpsiPhiDetachedLine)
@@ -247,7 +247,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                   "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
 
         Bd2JpsiKstarDetachedLine  = StrippingLine( self.name + "Bd2JpsiKstarDetachedLine",
-                                          algos = [ Bd2JpsiKstarDetached ], EnableFlavourTagging = True  )
+                                          algos = [ Bd2JpsiKstarDetached ], EnableFlavourTagging = False  )
 
         self.registerLine(Bd2JpsiKstarPrescaledLine)
         self.registerLine(Bd2JpsiKstarDetachedLine)
@@ -270,7 +270,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config)
 
         Bd2JpsiKsDetachedLine = StrippingLine( self.name + "Bd2JpsiKsDetachedLine",
-                                        algos = [ Bd2JpsiKsDetached ], MDSTFlag = True, EnableFlavourTagging = True  )
+                                        algos = [ Bd2JpsiKsDetached ], MDSTFlag = False, EnableFlavourTagging = False  )
 
         self.registerLine(Bd2JpsiKsPrescaledLine)
         self.registerLine(Bd2JpsiKsDetachedLine)
