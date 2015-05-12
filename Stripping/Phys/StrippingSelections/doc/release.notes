@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-12 - Pieter David
+ - Add Stripping21 QEE/DisplVertices lines
+ - Renamed HLT->HLT2 (including HltSelReports location for Hlt2 displaced vertex seeds)
+
 ! 2015-05-12 - Carlos Vazquez Sierra
  - Added a subfolder tests/liaisons/B2CC and a script TestB2CC.py for B2CC testing.
  - Cleaned B2CC scripts and replaced HLT with HLT2.
