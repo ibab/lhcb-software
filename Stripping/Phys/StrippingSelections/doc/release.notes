@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-13 - Adlene Hicheur
+ - Added Vertex Isolation variables in StrippingBnoC/StrippingBc2hhh_BnoC.py 
+
 ! 2015-05-13 - Patrick Spradlin
  - Resurrected StrippingXicc.py in StrippingCharm (with full svn history).
 
