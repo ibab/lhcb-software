@@ -7,6 +7,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2015-05-13 - Jack Wimberley
+ - 
+
 ! 2015-05-10 - Julian Wishahi
  - Enabled the OS Charm tagger in default tunings for Stripping21(_MC).
 

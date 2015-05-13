@@ -245,6 +245,12 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
       Float_t purMistag = 0.5*(1.0-t_bdtPurity);
       Float_t natMistag = decay.natMistag;
       t_bdtMistag = purMistag + natMistag - 2.0*purMistag*natMistag;
+      // VETO BAD REGIONS
+      if (mode == CharmMode::Dp2kpipi || mode == CharmMode::Dz2kpiX) 
+      {
+        if (t_bdtMistag < 0.25)
+          return tcharm;
+      }
       t_bdtOmega = getOmega(t_bdtMistag,mode);
       t_bdtOmega = calModeOmega(t_bdtOmega,mode);
       t_bdtOmega = calOmega(t_bdtOmega);
