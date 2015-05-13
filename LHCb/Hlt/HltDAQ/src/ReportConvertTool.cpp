@@ -496,6 +496,44 @@ void ReportConvertTool::VertexObject2Summary( HltObjectSummary::Info* info, cons
 
 }
 
+void ReportConvertTool::RecSummaryObject2Summary( HltObjectSummary::Info* info, const LHCb::RecSummary* object ) {
+  unordered_map<int,unordered_map<string, pair<int,int> > > used_map;
+  if( m_version == -999 ){ 
+    Warning( "I have not been told a verision number to use, assuming the latest", StatusCode::SUCCESS, 20 );
+    m_version = m_LatestVersion;
+  }
+  
+  used_map = m_recsummary_unordered_map2;
+  
+  for(it_unordered_map recsummary_it = (used_map.at(m_version)).begin(); recsummary_it!=(used_map.at(m_version)).end(); recsummary_it++){
+    switch( recsummary_it->second.second )
+    {
+      case 0: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nLongTracks,0 ) ) ); break;
+      case 1: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nDownstreamTracks,0 ) ) ); break;
+      case 2: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nUpstreamTracks,0 ) ) ); break;
+      case 3: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nVeloTracks,0 ) ) ); break;
+      case 4: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nTTracks,0 ) ) ); break;
+      case 5: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nBackTracks,0 ) ) ); break;
+      case 6: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nTracks,0 ) ) ); break;
+      case 7: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nRich1Hits,0 ) ) ); break;
+      case 8: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nRich2Hits,0 ) ) ); break;
+      case 9: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nVeloClusters,0 ) ) ); break;
+      case 10: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nITClusters,0 ) ) ); break;
+      case 11: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nTTClusters,0 ) ) ); break;
+      case 12: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nUTClusters,0 ) ) ); break;
+      case 13: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nOTClusters,0 ) ) ); break;
+      case 14: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nFTClusters,0 ) ) ); break;
+      case 15: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nSPDhits,0 ) ) ); break;
+      case 16: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nMuonCoordsS0,0 ) ) ); break;
+      case 17: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nMuonCoordsS1,0 ) ) ); break;
+      case 18: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nMuonCoordsS2,0 ) ) ); break;
+      case 19: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nMuonCoordsS3,0 ) ) ); break;
+      case 20: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nMuonCoordsS4,0 ) ) ); break;
+      case 21: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nMuonTracks,0 ) ) ); break;
+    }
+  }
+
+}
 
 // Put the information in the summary back in the object
 void ReportConvertTool::ParticleObjectFromSummary( const HltObjectSummary::Info* info, LHCb::Particle* object, bool turbo) {
@@ -883,4 +921,42 @@ void ReportConvertTool::VertexObjectFromSummary( const HltObjectSummary::Info* i
     }
   }
   object->setPosition( xyz );
+}
+
+void ReportConvertTool::RecSummaryObjectFromSummary( const HltObjectSummary::Info* info, LHCb::RecSummary* object) {
+  if( m_version == -999 ){ 
+    Warning( "I have not been told a verision number to use, assuming the latest", StatusCode::SUCCESS, 20 );
+    m_version = m_LatestVersion;
+  }
+  
+  unordered_map<int,unordered_map<string, pair<int,int> > > used_map;
+  used_map = m_recsummary_unordered_map2;
+  
+  for(it_unordered_map recsummary_it = (used_map.at(m_version)).begin(); recsummary_it!=(used_map.at(m_version)).end(); recsummary_it++){
+    switch( recsummary_it->second.second )
+    {
+      case 0: ( object->addInfo( LHCb::RecSummary::nLongTracks, (*info)[ recsummary_it->first ] ) ); break;
+      case 1: ( object->addInfo( LHCb::RecSummary::nDownstreamTracks, (*info)[ recsummary_it->first ] ) ); break;
+      case 2: ( object->addInfo( LHCb::RecSummary::nUpstreamTracks, (*info)[ recsummary_it->first ] ) ); break;
+      case 3: ( object->addInfo( LHCb::RecSummary::nVeloTracks, (*info)[ recsummary_it->first ] ) ); break;
+      case 4: ( object->addInfo( LHCb::RecSummary::nTTracks, (*info)[ recsummary_it->first ] ) ); break;
+      case 5: ( object->addInfo( LHCb::RecSummary::nBackTracks, (*info)[ recsummary_it->first ] ) ); break;
+      case 6: ( object->addInfo( LHCb::RecSummary::nTracks, (*info)[ recsummary_it->first ] ) ); break;
+      case 7: ( object->addInfo( LHCb::RecSummary::nRich1Hits, (*info)[ recsummary_it->first ] ) ); break;
+      case 8: ( object->addInfo( LHCb::RecSummary::nRich2Hits, (*info)[ recsummary_it->first ] ) ); break;
+      case 9: ( object->addInfo( LHCb::RecSummary::nVeloClusters, (*info)[ recsummary_it->first ] ) ); break;
+      case 10: ( object->addInfo( LHCb::RecSummary::nITClusters, (*info)[ recsummary_it->first ] ) ); break;
+      case 11: ( object->addInfo( LHCb::RecSummary::nTTClusters, (*info)[ recsummary_it->first ] ) ); break;
+      case 12: ( object->addInfo( LHCb::RecSummary::nUTClusters, (*info)[ recsummary_it->first ] ) ); break;
+      case 13: ( object->addInfo( LHCb::RecSummary::nOTClusters, (*info)[ recsummary_it->first ] ) ); break;
+      case 14: ( object->addInfo( LHCb::RecSummary::nFTClusters, (*info)[ recsummary_it->first ] ) ); break;
+      case 15: ( object->addInfo( LHCb::RecSummary::nSPDhits, (*info)[ recsummary_it->first ] ) ); break;
+      case 16: ( object->addInfo( LHCb::RecSummary::nMuonCoordsS0, (*info)[ recsummary_it->first ] ) ); break;
+      case 17: ( object->addInfo( LHCb::RecSummary::nMuonCoordsS1, (*info)[ recsummary_it->first ] ) ); break;
+      case 18: ( object->addInfo( LHCb::RecSummary::nMuonCoordsS2, (*info)[ recsummary_it->first ] ) ); break;
+      case 19: ( object->addInfo( LHCb::RecSummary::nMuonCoordsS3, (*info)[ recsummary_it->first ] ) ); break;
+      case 20: ( object->addInfo( LHCb::RecSummary::nMuonCoordsS4, (*info)[ recsummary_it->first ] ) ); break;
+      case 21: ( object->addInfo( LHCb::RecSummary::nMuonTracks, (*info)[ recsummary_it->first ] ) ); break;
+    }
+  }
 }

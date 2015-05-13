@@ -77,6 +77,7 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
     void CaloClusterObject2Summary( HltObjectSummary::Info*, const LHCb::CaloCluster*, bool) ;
     void RecVertexObject2Summary( HltObjectSummary::Info*, const LHCb::RecVertex*, bool) ;
     void VertexObject2Summary( HltObjectSummary::Info*, const LHCb::Vertex*, bool) ;
+    void RecSummaryObject2Summary( HltObjectSummary::Info*, const LHCb::RecSummary*) ;
     //
     /// Put the information in the summary back in the object
     void ParticleObjectFromSummary( const HltObjectSummary::Info*, LHCb::Particle*,bool) ;
@@ -87,6 +88,7 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
     void CaloClusterObjectFromSummary( const HltObjectSummary::Info*, LHCb::CaloCluster*,bool) ;
     void RecVertexObjectFromSummary( const HltObjectSummary::Info*, LHCb::RecVertex*,bool) ;
     void VertexObjectFromSummary( const HltObjectSummary::Info*, LHCb::Vertex*,bool) ;
+    void RecSummaryObjectFromSummary( const HltObjectSummary::Info*, LHCb::RecSummary*) ;
 
   protected:
   
@@ -579,6 +581,35 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
     //===========================================================================
     /// Version unordered_map for LHCb::Vertex in the Full stream
     unordered_map<int, unordered_map<string,pair<int,int> > > const m_vertex_unordered_map2 {
+    };
+
+    //===========================================================================
+    /// Version unordered_map for LHCb::RecSummary
+    unordered_map<int, unordered_map<string,pair<int,int> > > const m_recsummary_unordered_map2 {
+      { 4
+        , {{"0#RecSummary.nLongTracks",                {0,0}}
+          , {"1#RecSummary.nDownstreamTracks",         {1,1}}
+          , {"2#RecSummary.nUpstreamTracks",           {12,2}}
+          , {"3#RecSummary.nVeloTracks",               {15,3}}
+          , {"4#RecSummary.nTTracks",                  {16,4}}
+          , {"5#RecSummary.nBackTracks",               {17,5}}
+          , {"6#RecSummary.nTracks",                   {18,6}}
+          , {"7#RecSummary.nRich1Hits",                {19,7}}
+          , {"8#RecSummary.nRich2Hits",                {20,8}}
+          , {"9#RecSummary.nVeloClusters",             {21,9}}
+          , {"10#RecSummary.nITClusters",              {2,10}}
+          , {"11#RecSummary.nTTClusters",              {3,11}}
+          , {"12#RecSummary.nUTClusters",              {4,12}}
+          , {"13#RecSummary.nOTClusters",              {5,13}}
+          , {"14#RecSummary.nFTClusters",              {6,14}}
+          , {"15#RecSummary.nSPDhits",                 {7,15}}
+          , {"16#RecSummary.nMuonCoordsS0",            {8,16}}
+          , {"17#RecSummary.nMuonCoordsS1",            {9,17}}
+          , {"18#RecSummary.nMuonCoordsS2",            {10,18}}
+          , {"19#RecSummary.nMuonCoordsS3",            {11,19}}
+          , {"20#RecSummary.nMuonCoordsS4",            {13,20}}
+          , {"21#RecSummary.nMuonTracks",              {14,21}}}
+      }
     };
 }; // End of class header. 
 

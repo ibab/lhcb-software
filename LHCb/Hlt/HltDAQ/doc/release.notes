@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-05-13 - Sean Benson
+ - Include helper functions for RecSummary..
+
 !========================= HltDAQ v4r13 2015-04-20 =========================
 ! 2015-04-19 - Sean Benson
  - isMuon in full.

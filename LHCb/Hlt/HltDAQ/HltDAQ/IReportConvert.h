@@ -11,6 +11,7 @@
 #include "Event/Particle.h"
 #include "Event/ProtoParticle.h"
 #include "Event/Track.h"
+#include "Event/RecSummary.h"
 #include "Event/RichPID.h"
 #include "Event/MuonPID.h"
 #include "Event/CaloCluster.h"
@@ -45,6 +46,7 @@ class IReportConvert : virtual public IAlgTool {
     virtual void CaloClusterObject2Summary( HltObjectSummary::Info*, const LHCb::CaloCluster*, bool) = 0;
     virtual void RecVertexObject2Summary( HltObjectSummary::Info*, const LHCb::RecVertex*, bool) = 0;
     virtual void VertexObject2Summary( HltObjectSummary::Info*, const LHCb::Vertex*, bool) = 0;
+    virtual void RecSummaryObject2Summary( HltObjectSummary::Info*, const LHCb::RecSummary*) = 0;
     //
     // Put the information in the summary back in the object
     virtual void ParticleObjectFromSummary( const HltObjectSummary::Info*, LHCb::Particle*, bool) = 0;
@@ -55,6 +57,7 @@ class IReportConvert : virtual public IAlgTool {
     virtual void CaloClusterObjectFromSummary( const HltObjectSummary::Info*, LHCb::CaloCluster*, bool) = 0;
     virtual void RecVertexObjectFromSummary( const HltObjectSummary::Info*, LHCb::RecVertex*, bool) = 0;
     virtual void VertexObjectFromSummary( const HltObjectSummary::Info*, LHCb::Vertex*, bool) = 0;
+    virtual void RecSummaryObjectFromSummary( const HltObjectSummary::Info*, LHCb::RecSummary*) = 0;
 
 };
 
