@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2015-05-15 - Mike Sokoloff
+  -  added StrippingChargedHyperons.py
+           StrippingKshort2MuMuMuMu.py
+           StrippingKshort2PiPiMuMu.py
+     in the StrippingCharm subdirectory.  These are copies of code which ran in 2012
+
 ! 2015-05-13 - Vanya Belyaev
  - Add StrippingBandQ/StrippingBc3h from Stripping21  
 
