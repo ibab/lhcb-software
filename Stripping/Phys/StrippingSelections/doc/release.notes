@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-13 - Hannah Mary Evans
+ - added StrippingBs2MuMuLines.py, changes from S21 now more cuts are defined in   default_config and LoKi::VertexFitter is used not OffLineVertexFitter
+
 ! 2015-05-13 - Stefanie Reichert
  - added StrippingCharmFromBSemi.py to StrippingCharm (copy of old lines)
 
