@@ -2,6 +2,9 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+! 2015-05-13 - Philip Ilten
+ - Added the MesonState and ViolateGaugeInvariance configruables
+
 ! 2015-05-12 - Philip Ilten
  - Changed masses to be configured via the ParticlePropertySvc
  - Moved beam energy configuration from Gauss/Configuration.py to tool

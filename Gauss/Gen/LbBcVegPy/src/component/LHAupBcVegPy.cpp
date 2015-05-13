@@ -13,7 +13,8 @@
 //=============================================================================
 // Default constructor.
 //=============================================================================
-Pythia8::LHAupBcVegPy::LHAupBcVegPy(HardProduction *hard) {m_hard = hard;}
+Pythia8::LHAupBcVegPy::LHAupBcVegPy(HardProduction *hard, int meson) {
+  m_hard = hard; m_meson = meson;}
 
 //=============================================================================
 // Fill the HEPRUP common block.
@@ -33,6 +34,8 @@ bool Pythia8::LHAupBcVegPy::fillHepEup() {
   ::Pythia::PyUpev();
   hepeup_.istup[0] = -1;
   hepeup_.istup[1] = -1;
+  if (m_meson != 541) 
+    hepeup_.idup[2] = (hepeup_.idup[2] > 0 ? 1 : -1) * m_meson;
   return true;
 }
 

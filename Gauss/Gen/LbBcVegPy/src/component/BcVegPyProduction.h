@@ -40,18 +40,47 @@ public:
    */
   StatusCode hardInitialize();
 
-  /// Update Pythia particle and the B_c, c-quark, or b-quark mass.
+  /**
+   * Generate an event.
+   *
+   * This method is re-implemented from HardProduction to allow the
+   * meson PDG ID to be changed in the event record if m_violate is
+   * set to true and m_meson is not 541. Please read the warning given
+   * for m_violate.
+   */
+  StatusCode generateEvent(HepMC::GenEvent *theEvent, 
+			   LHCb::GenCollision *theCollision);
+
+  /// Update Pythia particle and the meson, c-quark, or b-quark mass.
   void hardUpdateParticleProperties(const LHCb::ParticleProperty *thePP);
-  
+
 protected:
   
   /// Parse the BcVegPy settings.
-  StatusCode parseSettings(const CommandVector &settings);
+  StatusCode parseSettings(const CommandVector &settings, bool user = true);
 
 private:
 
   // Members.
   CommandVector m_defaultSettings; ///< The default settings.
+  int m_meson;                     ///< The PDG ID of the meson to generate.
+
+  /**
+   * Flag to allow changing of the default BcVegPy masses via the
+   * ParticlePropertyService.
+   *
+   * If false, then the default values from BcVegPy are used: the B_c
+   * mass (pmbc) is 6.276, the c-quark mass is 1.326, and the b-quark
+   * mass is 4.95. If set to true, then the type of B_c meson is set
+   * via m_meson (and the MesonState configurable) and the masses are
+   * set via the ParticlePropertyService. WARNING: the mass of the
+   * meson must be the sum of its constituent quark masses to ensure
+   * gauge invariance of the scattering amplitude. If m_violate is set
+   * to true, the validity of the physics result is not
+   * guaranteed. Please proceed with caution, fully understanding the
+   * implications of changing this flag.
+   */
+  bool m_violate;
 };
 
 #endif // LBBCVEGPY_BCVEGPYPRODUCTION_H

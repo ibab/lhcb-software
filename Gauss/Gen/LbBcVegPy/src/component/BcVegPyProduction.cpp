@@ -31,11 +31,24 @@ BcVegPyProduction::BcVegPyProduction(const std::string &type,
 
   // Declare the tool properties.
   declareInterface<IProductionTool>(this);
-
+  declareProperty("MesonState", m_meson = 541,
+		  "The meson to be produced (PDG ID). Only used if "
+		  "ViolateGaugeInvariance is set to true.");
+  declareProperty("ViolateGaugeInvariance", m_violate = false,
+		  "WARNING: if changed to true the validity of the physics "
+		  "results cannot be guaranteed. This sets the mass "
+		  "parameters via the ParticlePropertyService and PMBC from "
+		  "the MesonState.");
+  
   // Create the default settings.
+  m_meson = abs(m_meson);
   m_defaultSettings.push_back("mixevnt imix 1");
   m_defaultSettings.push_back("mixevnt imixtype 1");
   m_defaultSettings.push_back("counter ibcstate 1");
+  m_defaultSettings.push_back("upcom pmb 4.95");      // Mass of the b-quark. 
+  m_defaultSettings.push_back("upcom pmc 1.326");     // Mass of the c-quark.  
+  // Mass of B_c, note that pmBc = pmB + pCm. 
+  m_defaultSettings.push_back("upcom pmbc 6.276");
   m_defaultSettings.push_back("confine ptcut 0.0");
   m_defaultSettings.push_back("confine etacut 1000000000.0");
   m_defaultSettings.push_back("funtrans nq2 3"); 
@@ -81,10 +94,10 @@ StatusCode BcVegPyProduction::hardInitialize() {
   m_pythia->m_target      = "p+";
 
   // Set Pythia 8 LHAup and UserHooks (no UserHooks needed).
-  m_lhaup = new Pythia8::LHAupBcVegPy(this);
+  m_lhaup = new Pythia8::LHAupBcVegPy(this, m_violate ? m_meson : 541);
   
   // Read the BcVegPy settings.
-  StatusCode sc = parseSettings(m_defaultSettings);
+  StatusCode sc = parseSettings(m_defaultSettings, false);
   if (sc.isFailure()) return Error("Failed to parse default settings.");
   sc = parseSettings(m_userSettings);
   if (sc.isFailure()) return Error("Failed to parse settings.");
@@ -101,7 +114,27 @@ StatusCode BcVegPyProduction::hardInitialize() {
 }
 
 //=============================================================================
-// Update Pythia particle and the B_c, c-quark, or b-quark mass.
+// Generate an event.
+//=============================================================================
+StatusCode BcVegPyProduction::generateEvent(HepMC::GenEvent *theEvent, 
+					    LHCb::GenCollision *theCollision) {
+  if (!m_shower) return StatusCode::FAILURE;
+  ++m_nEvents;
+  StatusCode sc = m_shower->generateEvent(theEvent, theCollision);
+  if (m_violate && m_meson != 541 && m_shower == m_pythia && sc.isSuccess()) {
+    for (HepMC::GenEvent::particle_iterator p = theEvent->particles_begin();
+	 p != theEvent->particles_end(); ++p) {
+      if (abs((*p)->pdg_id()) == 541) {
+	(*p)->set_pdg_id(((*p)->pdg_id() > 0 ? 1 : -1) * m_meson);
+	return sc;
+      }
+    }
+  }
+  return sc;
+}
+
+//=============================================================================
+// Update Pythia particle and the meson, c-quark, or b-quark mass.
 //=============================================================================
 void BcVegPyProduction::hardUpdateParticleProperties
 (const LHCb::ParticleProperty* thePP) {
@@ -110,18 +143,21 @@ void BcVegPyProduction::hardUpdateParticleProperties
   if (!m_pythia->isSpecialParticle(thePP))
     m_pythia->updateParticleProperties(thePP);
 
-  // Set the mass if B_c, c-quark, or b-quark.
-  int absid = abs(thePP->pid().pid());
-  double m0(thePP->mass() / Gaudi::Units::GeV);
-  if (absid == 541) BcVegPy::upcom().pmbc() = m0;
-  else if (absid == 4) BcVegPy::upcom().pmc() = m0;
-  else if (absid == 5) BcVegPy::upcom().pmb() = m0;
+  // Set the mass of the meson, c-quark, or b-quark if gauge violation allowed.
+  if (m_violate) {
+    int absid = abs(thePP->pid().pid());
+    double m0(thePP->mass() / Gaudi::Units::GeV);
+    if (absid == m_meson) BcVegPy::upcom().pmbc() = m0;
+    else if (absid == 4)  BcVegPy::upcom().pmc()  = m0;
+    else if (absid == 5)  BcVegPy::upcom().pmb()  = m0;
+  }
 }
 
 //=============================================================================
 // Parse the BcVegPy settings.
 //=============================================================================
-StatusCode BcVegPyProduction::parseSettings(const CommandVector &settings) {
+StatusCode BcVegPyProduction::parseSettings(const CommandVector &settings,
+					    bool user) {
   // Loop over the settings.
   for (unsigned int i = 0; i < settings.size(); ++i) {
     debug() << " Command is: " << settings[i] << endmsg ;
@@ -143,7 +179,9 @@ StatusCode BcVegPyProduction::parseSettings(const CommandVector &settings) {
       if      ("ibcstate" == entry) BcVegPy::counter().ibcstate() = int1 ;
       else return Error("Unknown counter entry: " + entry);
     else if ("upcom" == block)
-      if      ("pmb" == entry) BcVegPy::upcom().pmb()  = fl1;
+      if (user) return Warning("All upcom variables should be set via the "
+			       "particle property service or the beam tool.");
+      else if ("pmb" == entry) BcVegPy::upcom().pmb()  = fl1;
       else if ("pmc" == entry) BcVegPy::upcom().pmc()  = fl1;
       else if ("pmbc"== entry) BcVegPy::upcom().pmbc() = fl1;
       else if ("ecm" == entry) BcVegPy::upcom().ecm()  = fl1;

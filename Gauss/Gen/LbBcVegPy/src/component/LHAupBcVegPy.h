@@ -22,7 +22,7 @@ namespace Pythia8 {
   public:  
 
     /// Standard constructor.
-    LHAupBcVegPy(HardProduction *hard);
+    LHAupBcVegPy(HardProduction *hard, int meson = 541);
 
     /// Fill the HEPRUP common block.
     bool fillHepRup();
@@ -41,6 +41,7 @@ namespace Pythia8 {
     
     // Members.
     HardProduction *m_hard; ///< The hard production tool.
+    int m_meson;            ///< The PDG ID of the meson state to produce.
   };
 }
 
