@@ -9,6 +9,7 @@ _selections = (
     'StrippingXibc'             ,
     'StrippingCC2DD'            ,
     'StrippingB2JpsiXforEM_s'   ,
+    'StrippingBc3h'             , 
     'StrippingPsiX0'            , ## no need to run in production 
     'StrippingPsiXForBandQ'     , ## no need to run in production
     'StrippingUpsilonExotic'    , ## no need to run in production
@@ -18,7 +19,7 @@ for _sel in _selections :
     try :
         __import__( '%s.%s'  % ( __name__, _sel ) )
     except Exception, x:
-        print '[WARNING] Submodule %s.%s raises the excetpion "%s" and will be skipped !' % ( __name__,_sel,x )
+        print '[WARNING] Submodule %s.%s raises the exception "%s" and will be skipped !' % ( __name__,_sel,x )
 
 from sys import modules as _modules
 _this = _modules[__name__]
