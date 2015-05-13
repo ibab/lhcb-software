@@ -14,6 +14,9 @@ _selections = (
     'StrippingPsiX0'            , ## no need to run in production 
     'StrippingPsiXForBandQ'     , ## no need to run in production
     'StrippingUpsilonExotic'    , ## no need to run in production
+    'StrippingDiMuonNew'        ,
+    'StrippingChiCJPsiGammaConv',
+    'StrippingXic2HHH'
     )
 
 for _sel in _selections :
