@@ -1669,12 +1669,16 @@ if '__main__' == __name__ :
     logger.info ( 'Prescale      keys are: %s' % prescale ) 
     logger.info ( 80*'*' ) 
 
-    from SelPy.graph import graph
-    selections = _conf._selections_private() 
-    for s in selections :
-        o = graph ( s , format = 'png' )
-        if o : logger.info  ( "Generate DOT-graph: %s"          % o        )
-        else : logger.error ( "Can't produce DOT=-graph for %s" % s.name() ) 
+    ## make dot-graphs 
+    try:    
+        selections = _conf._selections_private() 
+        for s in selections :
+            from SelPy.graph import graph
+            o = graph ( s , format = 'png' )
+            if o : logger.info  ( "Generate DOT-graph: %s"          % o        )
+            else : logger.error ( "Can't produce DOT=-graph for %s" % s.name() )
+            
+    except : pass
         
         
 # =============================================================================
