@@ -16,8 +16,8 @@
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
 #include "IIsMuonCandidateC.h"
-#include "ICLTool.h"
-#include "IGetArrival.h"
+//#include "ICLTool.h"
+//#include "IGetArrival.h"
 #include "SmartMuonMeasProvider.h"
 #include "ImuIDTool.h"
 
@@ -58,8 +58,8 @@ protected:
   IMeasurementProvider*  m_measProvider;
 
   IIsMuonCandidateC* m_IsMuonTool;
-  ICLTool* m_CLQuality;
-  IGetArrival* m_GetArrival;
+//  ICLTool* m_CLQuality;
+//  IGetArrival* m_GetArrival;
 
   DeMuonDetector*  m_mudet;
 

@@ -22,6 +22,7 @@ DLLMuonTool::DLLMuonTool(const std::string& type, const std::string& name,
       declareProperty("PreSelMomentum", preSelMomentum_);
       declareProperty("MomentumCuts", momentumCuts_);
       declareProperty("FOIfactor", foiFactor_);
+      declareProperty("FindQuality", m_FindQuality=true);
       // Same parameters for muons and non muons but different names
       // Muons 
       declareProperty( "MupBinsR1", m_MupBinsR1 );
