@@ -68,7 +68,7 @@ _default_configuration_ = {
     'PionCut'   : """
     ( CLONEDIST   > 5000   ) & 
     ( TRGHOSTPROB < 0.4    ) &
-    ( PT          > 750 * MeV               ) & 
+    ( PT          > 500 * MeV               ) & 
     in_range ( 2          , ETA , 4.9       ) &
     in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
     HASRICH                  &
@@ -79,7 +79,7 @@ _default_configuration_ = {
     'KaonCut'   : """
     ( CLONEDIST   > 5000   ) & 
     ( TRGHOSTPROB < 0.4    ) & 
-    ( PT          > 750 * MeV               ) & 
+    ( PT          > 500 * MeV               ) & 
     in_range ( 2          , ETA , 4.9       ) &
     in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
     HASRICH                  &
@@ -296,7 +296,7 @@ class Bc3hConf(LineBuilder) :
             FILTER          = self ['FILTER' ]         ,
             ODIN            = self ['ODIN'   ]         ,
             L0DU            = self ['L0DU'   ]         ,
-            HLT             = self ['L0DU'   ]         ,
+            HLT             = self ['HLT'    ]         ,
             algos           = [ self.Bc3pppi ()   ]  ) ,
             #
             StrippingLine (
@@ -306,7 +306,7 @@ class Bc3hConf(LineBuilder) :
             FILTER          = self ['FILTER' ]         ,
             ODIN            = self ['ODIN'   ]         ,
             L0DU            = self ['L0DU'   ]         ,
-            HLT             = self ['L0DU'   ]         ,
+            HLT             = self ['HLT'    ]         ,
             algos           = [ self.Bc3ppk ()   ]  )  ,
             #
             StrippingLine (
@@ -316,7 +316,7 @@ class Bc3hConf(LineBuilder) :
             FILTER          = self ['FILTER' ]         ,
             ODIN            = self ['ODIN'   ]         ,
             L0DU            = self ['L0DU'   ]         ,
-            HLT             = self ['L0DU'   ]         ,
+            HLT             = self ['HLT'    ]         ,
             algos           = [ self.Bc3pi ()      ]  ) ,
             ## 
             StrippingLine (
@@ -326,7 +326,7 @@ class Bc3hConf(LineBuilder) :
             FILTER          = self ['FILTER' ]         ,
             ODIN            = self ['ODIN'   ]         ,
             L0DU            = self ['L0DU'   ]         ,
-            HLT             = self ['L0DU'   ]         ,
+            HLT             = self ['HLT'    ]         ,
             algos           = [ self.Bc3k ()      ]  ) ,
             #
             StrippingLine (
@@ -336,7 +336,7 @@ class Bc3hConf(LineBuilder) :
             FILTER          = self ['FILTER' ]         ,
             ODIN            = self ['ODIN'   ]         ,
             L0DU            = self ['L0DU'   ]         ,
-            HLT             = self ['L0DU'   ]         ,
+            HLT             = self ['HLT'    ]         ,
             algos           = [ self.Bc3kpi ()    ]  ) ,
             ]
         ## 
