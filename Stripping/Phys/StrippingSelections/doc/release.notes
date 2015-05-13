@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-13 - Markward Britsch
+	- Add (old) StrippingD02KSKS.py in Charm
+
 ! 2015-05-13 - Roberta Cardinale
 	- Add StrippingB2pphh.py in BnoC
 

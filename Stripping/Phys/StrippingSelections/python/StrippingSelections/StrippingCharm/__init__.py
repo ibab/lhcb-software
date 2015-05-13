@@ -15,7 +15,8 @@ _selections = (
     'StrippingPromptCharm',
     'StrippingD2hh.py',
     'StrippingDstarD2hhpi0.py',
-    'StrippingDstarD2KShh.py'
+    'StrippingDstarD2KShh.py',
+    'StrippingD02KSKS.py'
     )
 
 for _sel in _selections :
