@@ -56,7 +56,7 @@ default_config = {
     'NAME'                                  : 'Xibc',
     'WGs'                                   : ['BandQ'],
     'BUILDERTYPE'                           : 'XibcBuilder',
-    'STREAMS'                               : {'Dimuon' : ['StrippingXibcXibc3LcJpsi',
+    'STREAMS'                               : {'Dimuon' : ['StrippingXibcXibc2LcJpsi',
                                                            'StrippingXibcX2JpsiProton'
                                                            ]
                                                },
