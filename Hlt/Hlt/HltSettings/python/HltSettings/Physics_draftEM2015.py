@@ -56,6 +56,7 @@ class Physics_draftEM2015( object ):
         from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
+        from Hlt1Lines.Hlt1HighMultLines       import Hlt1HighMultLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
         from Hlt1Lines.Hlt1CalibRICHMirrorLines     import Hlt1CalibRICHMirrorLinesConf
@@ -84,7 +85,7 @@ class Physics_draftEM2015( object ):
                                                , 'Muon_IPChi2'       : 4.0
                                                , 'Muon_TrChi2'       : 3.0
                                                , 'Muon_GEC'          : 'Loose'
-                                               , 'ODINFilter'        : {'AllL0'  : 'jbit( ODIN_EVTTYP,2 )'}
+                                               , 'ODINFilter'        : {'AllL0'  : '(ODIN_EVTTYP == LHCb.ODIN.NoBias)'}
                                                , 'L0Channels'        : {'AllL0'  : '',
                                                                         'Muon'   : ('Muon',)}
                                                }
@@ -109,11 +110,11 @@ class Physics_draftEM2015( object ):
                                                                   
                                                } 
                          , Hlt1L0LinesConf :     {  'Postscale' : { 'Hlt1L0AnyRateLimited'       : 'RATE(1)'
-                                                                , 'Hlt1L0AnyNoSPDRateLimited'  : 'RATE(1)'
-                                                                }
-                                               ,  'Prescale' : { 'Hlt1L0AnyNoSPD'     : 0.01
+                                                                  , 'Hlt1L0AnyNoSPDRateLimited'  : 'RATE(1)'
+                                                                  }
+                                                  , 'Prescale' : { 'Hlt1L0AnyNoSPD'     : 0.01
                                                                }
-                                               }
+                                                 }
 
                          , Hlt1BeamGasLinesConf : {'Prescale'  : { 'Hlt1BeamGasCrossingForcedRecoFullZ': 0.001 }
                                                  , 'Postscale' : { 'Hlt1BeamGasNoBeamBeam1'            : 'RATE(0.5)'
@@ -132,14 +133,18 @@ class Physics_draftEM2015( object ):
 
                                                        } 
                         , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBNoBias'                : 1.0
-                                                              ,  'Hlt1MBMicroBiasVelo'            : 0 
-                                                              , 'Hlt1MBMicroBiasTStation'            : 0 
-                                                              , 'Hlt1MBMicroBiasVeloRateLimited'     : 0
-                                                              , 'Hlt1MBMicroBiasTStationRateLimited' : 0 }
-                                               , 'Postscale' : { 'Hlt1MBNoBias'            : 'RATE(4000)'}
-                                               , 'MaxNoBiasRate' : 1000000.
-					       , 'NoBiasOdin'    : 'jbit( ODIN_EVTTYP,14 )' 
+                                                               , 'Hlt1MBMicroBiasVelo'            : 0 
+                                                               , 'Hlt1MBMicroBiasTStation'            : 0 
+                                                               , 'Hlt1MBMicroBiasVeloRateLimited'     : 0
+                                                               , 'Hlt1MBMicroBiasTStationRateLimited' : 0 }
+					       , 'NoBiasOdin'    : '(ODIN_EVTTYP == LHCb.ODIN.LeadingCrossing)' 
                                                }
+			, Hlt1HighMultLinesConf: { 'MinVeloHits'        : 2400,
+				                  'MaxVeloHits'        : 99999,
+				                  'nPVs'               :  1 ,
+				                  'MinVeloHits_PV'     : 2400,
+				                  'ODIN'               : '(ODIN_EVTTYP == LHCb.ODIN.NoBias)'
+				                  }
 
                     , DiMuonLines : {'Common' :        {'TrChi2Tight':    4},
                                      'JPsi' :          {'MassWindow' :   150 * MeV,
@@ -155,20 +160,18 @@ class Physics_draftEM2015( object ):
                  
                                      'B' :             {'MinMass'    :  4700 * MeV,
                                                         'VertexChi2' :    10},
-
-                                     'Z' :             {'MinMass'    : 40000 * MeV,
-                                                        'Pt'         :     0 * MeV},
                                      'Prescale' : {  'Hlt2DiMuon'         : 1.0
                                                    , 'Hlt2DiMuonJPsi'     : 1.0
                                                    , 'Hlt2DiMuonPsi2S'    : 1.0
                                                    , 'Hlt2DiMuonB'        : 1.0}
 
                     }
-		, SingleMuonLines : 	{'Prescale' : {},
+		, SingleMuonLines : 	{'Prescale' : {'SingleMuon'	: 0.5
+						      , 'LowPT'		: 0.1},
                 			 'HltReq'  : {"SingleMuon" :  "HLT_PASS_RE('Hlt1TrackMuonDecision')"
-			                              },
+			                             },
                 			 'Common' :        {'TrChi2'     :   3,    # Adimensional
-                                    			'Pt':            1300 * MeV },
+                                    			     'Pt':            1300 * MeV },
 
 			                 'SingleMuon' :    {'IP'     : 0.0 * mm,
                         			            'IPChi2' : 16, # Adimensional
@@ -176,28 +179,28 @@ class Physics_draftEM2015( object ):
 
 			                 'HighPT':         { 'HighPt' : 10000 *MeV },
 
-			                 'VHighPT':        { 'HighPt' : 15000 *MeV },
 
 			                 'LowPT'   :       { 'HighPt' : 4800 * MeV },
 
-			                 'Rare'    :       { 'RarePtMin'          : 5000 * MeV,
-                        			             'RarePtMax'       : 40000* MeV,
-			                                     'RareIPChi2'      : 400, # Adimensional
-                        			             'RareTrChi2Tight' : 3 ,
-			                                     'RarePMax'  : 500 * GeV,
-                       			              }
 
                 			 }
 
 			,CommissioningLines :  {'Prescale'    : {'Hlt2PassThrough' : 1.0,
 	   			                                  'Hlt2Forward'     : 0.00001,
                 	        			          'Hlt2DebugEvent'  : 0.00001},
-						 'PassThrough' : {'HLT1' : "HLT_PASS_RE('^Hlt1(MBNoBias|HighVeloMult|HighVeloMultSinglePV)Decision$')"},
+						'PassThrough' : {'HLT1' : "HLT_PASS_RE('^Hlt1(MBNoBias|HighVeloMult|HighVeloMultSinglePV)Decision$')"},
 				                'Postscale'   : {'Hlt2ErrorEvent'  : 'RATE(0.01)'}
 			        	        }
 
 
-    }
+   
+			, PIDLines : {	'L0Req'	:	{'Muon'     : '',
+							 'Electron' : ''},
+					'Hlt1Req' :       {'Muon'     : '',
+                                                         'Electron' : ''},
+					'Lc2KPPiPrompt':  {'PromptTisTosSpec'   : 'Hlt1TrackAllL0%TOS'}
+				     }
+	 }
 
 
 
@@ -208,10 +211,14 @@ class Physics_draftEM2015( object ):
         """
         Returns a list of active lines
         """
-        hlt2 = ['Hlt2PassThrough',
-	    'Hlt2SingleMuon',# single muon lines
+        hlt2 = [
+	    #single muon lines
+	    'Hlt2SingleMuon',
             'Hlt2SingleMuonHighPT'
-            ,'Hlt2LowMultDiMuon_PS' # CEP lines
+            ,'Hlt2SingleMuonLowPT'
+            ,'Hlt2TopoMu2Body' 
+	    #CEP lines
+	    ,'Hlt2LowMultDiMuon_PS' 
             ,'Hlt2LowMultDiMuon'
             ,'Hlt2LowMultMuon'
             ,'Hlt2LowMultDiElectron_noTrFilt'
@@ -248,61 +255,55 @@ class Physics_draftEM2015( object ):
             ,'Hlt2LowMultLMR2HH_heavyPS'
             ,'Hlt2LowMultD2KPiWS'
             ,'Hlt2LowMultLMR2HHHH_mediumPS'
-            ,'Hlt2LowMultTechnical_NoBias'
-            ,'Hlt2LowMultTechnical_MinBias',
-                #'Hlt2DiMuonJPsi',
-                #'Hlt2DiMuonPsi2S',
-                #'Hlt2DiMuonB',
-	        #'Hlt2PassThrough', 'Hlt2Lumi','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent', # technical lines
-		#'Hlt2TrackEffMuonTTPlusTagged',  # trackeff lines      
-		#'Hlt2TrackEffMuonTTMinusTagged',
-		#'Hlt2TrackEffVeloMuonPlusTagged',                
-		#'Hlt2TrackEffVeloMuonMinusTagged',                
-		#'Hlt2TrackEffDownstreamPlusTagged',                
-		#'Hlt2TrackEffDownstreamMinusTagged',                
-		#'Hlt2TrackEffMuonTTPlusMatched',                
-		#'Hlt2TrackEffMuonTTMinusMatched',
-		#'Hlt2TrackEffVeloMuonPlusMatched',                
-		#'Hlt2TrackEffVeloMuonMinusMatched',                
-		#'Hlt2TrackEffDownstreamPlusMatched',                
-		#'Hlt2TrackEffDownstreamMinusMatched',                
-	        'Hlt2DiMuonJPsiTurbo',		# dimuon lines
-                'Hlt2DiMuonPsi2STurbo',
-		'Hlt2DiMuonBTurbo',
-		'Hlt2PIDDetJPsiMuMuPosTaggedTurbo',   #PID calibration lines
-		'Hlt2PIDDetJPsiMuMuNegTaggedTurbo',
-		'Hlt2PIDDetJPsiEEPosTaggedTurbo',  
-		'Hlt2PIDDetJPsiEENegTaggedTurbo',
-		'Hlt2PIDLambda2PPiLLTurbo',
-		'Hlt2PIDLambda2PPiLLhighPTurbo',
-		'Hlt2PIDLambda2PPiLLisMuonTurbo',
-                'Hlt2Dpm2KPiPi_XSecTurbo', # charm lines
-                'Hlt2Dpm2KKPi_XSecTurbo', 
-                'Hlt2Ds2KKPi_XSecTurbo',
-                'Hlt2Ds2PiPiPi_XSecTurbo',
-                'Hlt2Lc2KPPi_XSecTurbo',
-		'Hlt2Lc2KPK_XSecTurbo',
-                'Hlt2Lc2PiPPi_XSecTurbo',
-		'Hlt2D02KPi_XSecTurbo',
-		'Hlt2Dst_2D0Pi_D02KPi_XSecTurbo',
-		'Hlt2Dst_2D0Pi0_D02KPi_XSecTurbo', 
-		'Hlt2Dst_2DsGamma_Ds2KKPi_XSecTurbo',
-		'Hlt2Dst_2D0Pi_D02K3Pi_XSecTurbo',
-                'Hlt2Sigmac_2LcPi_XSecTurbo',
-		'Hlt2TrackEffDiMuonMuonTTPlusTaggedTurbo', #trackeff lines                
-		'Hlt2TrackEffDiMuonMuonTTMinusTaggedTurbo',
-		'Hlt2TrackEffDiMuonVeloMuonPlusTaggedTurbo',                
-		'Hlt2TrackEffDiMuonVeloMuonMinusTaggedTurbo',                
-		'Hlt2TrackEffDiMuonDownstreamPlusTaggedTurbo',                
-		'Hlt2TrackEffDiMuonDownstreamMinusTaggedTurbo',                
-		'Hlt2TrackEffDiMuonMuonTTPlusMatchedTurbo',                
-		'Hlt2TrackEffDiMuonMuonTTMinusMatchedTurbo',
-		'Hlt2TrackEffDiMuonVeloMuonPlusMatchedTurbo',                
-		'Hlt2TrackEffDiMuonVeloMuonMinusMatchedTurbo',                
-		'Hlt2TrackEffDiMuonDownstreamPlusMatchedTurbo',                
-		'Hlt2TrackEffDiMuonDownstreamMinusMatchedTurbo',                
-	          
-]
+            ,'Hlt2LowMultTechnical_MinBias'
+            ,'Hlt2NonBeamBeamNoBias',
+	    #dimuon lines
+	    'Hlt2DiMuonJPsiTurbo',		
+            'Hlt2DiMuonPsi2STurbo',
+	    'Hlt2DiMuonBTurbo',
+	    # PID lines
+	    'Hlt2PIDDetJPsiMuMuPosTaggedTurbo', 
+	    'Hlt2PIDDetJPsiMuMuNegTaggedTurbo', 
+	    'Hlt2PIDB2KJPsiEESSTaggedTurbo',
+	    'Hlt2PIDB2KJPsiEEOSTaggedTurbo',
+	    'Hlt2PIDLambda2PPiLLTurbo',
+	    'Hlt2PIDLambda2PPiLLhighPTurbo',
+	    'Hlt2PIDLambda2PPiLLveryhighPTurbo',
+	    'Hlt2PIDLambda2PPiLLisMuonTurbo',
+	    'Hlt2PIDD02KPiTagTurbo',
+	    'Hlt2PIDLb2LcMuNuTurbo',
+	    'Hlt2PIDLb2LcPiTurbo',
+	    # charm lines
+	    'Hlt2CharmHadDpm2KPiPi_XSecTurbo',
+            'Hlt2CharmHadDpm2KKPi_XSecTurbo', 
+            'Hlt2CharmHadDs2KKPi_XSecTurbo',
+            'Hlt2CharmHadDs2PiPiPi_XSecTurbo',
+            'Hlt2CharmHadLc2KPPi_XSecTurbo',
+	    'Hlt2CharmHadLc2KPK_XSecTurbo',
+            'Hlt2CharmHadLc2PiPPi_XSecTurbo',
+	    'Hlt2CharmHadD02KPi_XSecTurbo',
+	    'Hlt2CharmHadDst_2D0Pi_D02KPi_XSecTurbo',
+	    'Hlt2CharmHadDst_2D0Pi0_D02KPi_XSecTurbo', 
+	    'Hlt2CharmHadDst_2DsGamma_Ds2KKPi_XSecTurbo',
+	    'Hlt2CharmHadDst_2D0Pi_D02K3Pi_XSecTurbo',
+            'Hlt2CharmHadSigmac_2LcPi_XSecTurbo',
+            #tracking efficiency lines
+	    'Hlt2TrackEffDiMuonMuonTTPlusTaggedTurbo', 
+	    'Hlt2TrackEffDiMuonMuonTTMinusTaggedTurbo',
+	    'Hlt2TrackEffDiMuonVeloMuonPlusTaggedTurbo',                
+            'Hlt2TrackEffDiMuonVeloMuonMinusTaggedTurbo',                
+	    'Hlt2TrackEffDiMuonDownstreamPlusTaggedTurbo',                
+	    'Hlt2TrackEffDiMuonDownstreamMinusTaggedTurbo',                
+	    'Hlt2TrackEffDiMuonMuonTTPlusMatchedTurbo',                
+	    'Hlt2TrackEffDiMuonMuonTTMinusMatchedTurbo',
+	    'Hlt2TrackEffDiMuonVeloMuonPlusMatchedTurbo',                
+	    'Hlt2TrackEffDiMuonVeloMuonMinusMatchedTurbo',                
+	    'Hlt2TrackEffDiMuonDownstreamPlusMatchedTurbo',                
+	    'Hlt2TrackEffDiMuonDownstreamMinusMatchedTurbo',                
+	    # pass through nobias
+	    'Hlt2PassThrough'	    
+            #'Hlt2Lumi','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent', # technical lines
+	 ]
 
 
         return hlt2
@@ -312,23 +313,23 @@ class Physics_draftEM2015( object ):
         Returns a list of active lines
         """
         lines =  [ 'Hlt1TrackAllL0', 'Hlt1TrackMuon'
-                 , 'Hlt1CalibRICHMirror'
                  , 'Hlt1SingleMuonHighPT'
                  , 'Hlt1DiMuonHighMass'
         	 , 'Hlt1HighVeloMult'
 		 , 'Hlt1HighVeloMultSinglePV' 
-		 , 'Hlt1CEP' 
 		 , 'Hlt1CEPVeloCut'
-	         , 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'   # technical lines
+                 , 'Hlt1NoPVPassThrough'
+	         , 'Hlt1NonBeamBeamNoBias'
+                 , 'Hlt1MBNoBias'  # nobias leading crossing
+                 , 'Hlt1CalibRICHMirror'
+		 , 'Hlt1Lumi' # lumi lines
+	         , 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'  
                  , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
                  , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
                  , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingForcedRecoFullZ'
                  , 'Hlt1BeamGasCrossingParasitic', 'Hlt1BeamGasHighRhoVertices'
-               #  , 'Hlt1NoPVPassThrough'
-               #  , 'Hlt1CharmCalibrationNoBias'
-                 , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
+               #  , 'Hlt1CharmCalibrationNoBias' # technical lines
                #  , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
-                 , 'Hlt1MBNoBias'  # nobias leading crossing
                #  , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent'  
                #  , 'Hlt1MBMicroBiasVelo','Hlt1MBMicroBiasTStation'
                #  , 'Hlt1VeloClosingMicroBias'
