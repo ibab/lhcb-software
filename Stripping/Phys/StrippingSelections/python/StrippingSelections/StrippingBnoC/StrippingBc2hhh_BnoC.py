@@ -138,7 +138,7 @@ default_config = {
                       'pppi_exclLinePostscale'  : 1.0,
                       'ppK_exclLinePrescale'  : 1.0,
                       'ppK_exclLinePostscale'  : 1.0,
-                    },
+                    }, 
     'STREAMS'     : ['Bhadron']
     }
 }
@@ -373,43 +373,170 @@ class Bc2hhhBuilder(LineBuilder) :
                                      prescale   = config['pipipi_exclLinePrescale'],
                                      postscale  = config['pipipi_exclLinePostscale'],
                                      algos      = self.algospipipi,
-                                     MDSTFlag = True,
-                                     EnableFlavourTagging = True)
+                                     RelatedInfoTools = [
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selpipipi : 'ConeIso05B', 
+                                                   'Phys/StdAllNoPIDsPions'   :                                                     ["ConeIso05pi1", "ConeIso05pi2", "ConeIso05pi3"],
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selpipipi : 'ConeIso10B', 
+                                                   'Phys/StdAllNoPIDsPions'   :                                                     ["ConeIso10pi1", "ConeIso10pi2", "ConeIso10pi3"],
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selpipipi : 'ConeIso15B', 
+                                                   'Phys/StdAllNoPIDsPions'   :                                                     ["ConeIso15pi1", "ConeIso15pi2", "ConeIso15pi3"],
+                                               }                                                                           },
+                                     ],
+
+)
 
         self.lineKpipi_excl = StrippingLine( _Kpipi_exclName + 'Line',
                                      prescale   = config['Kpipi_exclLinePrescale'],
                                      postscale  = config['Kpipi_exclLinePostscale'],
                                      algos      = self.algosKpipi,
-                                     MDSTFlag = True,
-                                     EnableFlavourTagging = True)
+                                     RelatedInfoTools = [
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKpipi : 'ConeIso05B', 
+                                                   'Phys/StdAllNoPIDsPions'   :                                                     ["ConeIso05pi1", "ConeIso05pi2"],
+                                                   'Phys/StdAllNoPIDsKaons'   : 'ConeIso05K'
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKpipi : 'ConeIso10B', 
+                                                   'Phys/StdAllNoPIDsPions'   :                                                     ["ConeIso10pi1", "ConeIso10pi2"],
+                                                   'Phys/StdAllNoPIDsKaons'   : 'ConeIso10K'
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKpipi : 'ConeIso15B', 
+                                                   'Phys/StdAllNoPIDsPions'   :                                                     ["ConeIso15pi1", "ConeIso15pi2"],
+                                                   'Phys/StdAllNoPIDsKaons'   : 'ConeIso15K'
+                                               }                                                                           },
+                                     ],
+)
 
         self.lineKKpi_excl = StrippingLine( _KKpi_exclName + 'Line',
                                      prescale   = config['KKpi_exclLinePrescale'],
                                      postscale  = config['KKpi_exclLinePostscale'],
                                      algos      = self.algosKKpi,
-                                     MDSTFlag = True,
-                                     EnableFlavourTagging = True)
+                                     RelatedInfoTools = [
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKpi : 'ConeIso05B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso05K1", "ConeIso05K2"],
+                                                   'Phys/StdAllNoPIDsPions'   : 'ConeIso05pi'
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKpi : 'ConeIso10B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso10K1", "ConeIso10K2"],
+                                                   'Phys/StdAllNoPIDsPions'   : 'ConeIso10pi'
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKpi : 'ConeIso15B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso15K1", "ConeIso15K2"],
+                                                   'Phys/StdAllNoPIDsPions'   : 'ConeIso15pi'
+                                               }                                                                           },
+                                     ],
+)
 
         self.lineKKK_excl = StrippingLine( _KKK_exclName + 'Line',
                                      prescale   = config['KKK_exclLinePrescale'],
                                      postscale  = config['KKK_exclLinePostscale'],
                                      algos      = self.algosKKK,
-                                     MDSTFlag = True,
-                                     EnableFlavourTagging = True)
+                                     RelatedInfoTools = [
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKK : 'ConeIso05B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso05K1", "ConeIso05K2", "ConeIso05K3"],
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKK : 'ConeIso10B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso10K1", "ConeIso10K2", "ConeIso10K3"],
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKK : 'ConeIso15B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso15K1", "ConeIso15K2", "ConeIso15K3"],
+                                               }                                                                           },
+                                     ],
+)
 
         self.linepppi_excl = StrippingLine( _pppi_exclName + 'Line',
                                      prescale   = config['pppi_exclLinePrescale'],
                                      postscale  = config['pppi_exclLinePostscale'],
                                      algos      = self.algospppi,
-                                     MDSTFlag = True,
-                                     EnableFlavourTagging = True)
+                                     RelatedInfoTools = [
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selpppi : 'ConeIso05B', 
+                                                   'Phys/StdAllLooseProtons'   :                                                     ["ConeIso05p1", "ConeIso05p2"],
+                                                   'Phys/StdAllNoPIDsPions'   : 'ConeIso05pi'
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selpppi : 'ConeIso10B', 
+                                                   'Phys/StdAllLooseProtons'   :                                                     ["ConeIso10p1", "ConeIso10p2"],
+                                                   'Phys/StdAllNoPIDsPions'   : 'ConeIso10pi'
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selpppi : 'ConeIso15B', 
+                                                   'Phys/StdAllLooseProtons'   :                                                     ["ConeIso15p1", "ConeIso15p2"],
+                                                   'Phys/StdAllNoPIDsPions'   : 'ConeIso15pi'
+                                               }                                                                           },
+                                     ],
+)
         
         self.lineppK_excl = StrippingLine( _ppK_exclName + 'Line',
                                      prescale   = config['ppK_exclLinePrescale'],
                                      postscale  = config['ppK_exclLinePostscale'],
                                      algos      = self.algosppK,
-                                     MDSTFlag = True,
-                                     EnableFlavourTagging = True)
+                                     RelatedInfoTools = [
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selppK : 'ConeIso05B', 
+                                                   'Phys/StdAllLooseProtons'   :                                                     ["ConeIso05p1", "ConeIso05p2"],
+                                                   'Phys/StdAllNoPIDsKaons'   : 'ConeIso05K'
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selppK : 'ConeIso10B', 
+                                                   'Phys/StdAllLooseProtons'   :                                                     ["ConeIso10p1", "ConeIso10p2"],
+                                                   'Phys/StdAllNoPIDsKaons'   : 'ConeIso10K'
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selppK : 'ConeIso15B', 
+                                                   'Phys/StdAllLooseProtons'   :                                                     ["ConeIso15p1", "ConeIso15p2"],
+                                                   'Phys/StdAllNoPIDsKaons'   : 'ConeIso15K'
+                                               }                                                                           },
+                                     ],
+)
 
         self.registerLine(self.linepipipi_excl)
         self.registerLine(self.lineKpipi_excl)
