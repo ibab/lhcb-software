@@ -20,7 +20,8 @@ _selections = (
     'StrippingCharmFromBSemi',
     'StrippingXicc',
     'StrippingChargedHyperons',
-    'StrippingD2KS0H_conf'
+    'StrippingD2KS0H_conf',
+    'StrippingDstarD2HHHH'
     )
 
 for _sel in _selections :
