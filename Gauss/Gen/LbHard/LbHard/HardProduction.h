@@ -35,8 +35,8 @@ class HardProduction : public GaudiTool, virtual public IProductionTool {
   StatusCode finalize(); 
   
   /// Generate an event.
-  StatusCode generateEvent(HepMC::GenEvent *theEvent, 
-			   LHCb::GenCollision *theCollision);
+  virtual StatusCode generateEvent(HepMC::GenEvent *theEvent, 
+				   LHCb::GenCollision *theCollision);
 
   /// Set a particle stable.
   void setStable(const LHCb::ParticleProperty *thePP);
