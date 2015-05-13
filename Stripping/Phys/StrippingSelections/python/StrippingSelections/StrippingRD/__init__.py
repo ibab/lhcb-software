@@ -16,7 +16,7 @@ _selections = [
     # 'StrippingDarkBoson',
     # 'StrippingB2XTau',
     # 'StrippingZVTOP',
-    # 'StrippingBs2MuMuLines',
+     'StrippingBs2MuMuLines',
     # 'StrippingBu2MuNu',
      'StrippingD23MuLines',
      'StrippingB23MuLines',
