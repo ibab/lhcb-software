@@ -220,7 +220,6 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   
 
   // Muons - Region1:
-  declareProperty( "MupbinsR1", m_MupBinsR1 );
   declareProperty( "MuLandauParameterR1_1", m_MuLanParR1_1 );
   declareProperty( "MuLandauParameterR1_2", m_MuLanParR1_2 );
   declareProperty( "MuLandauParameterR1_3", m_MuLanParR1_3 );
@@ -230,7 +229,6 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   declareProperty( "MuLandauParameterR1_7", m_MuLanParR1_7 );
 
   // Muons - Region2:
-  declareProperty( "MupbinsR2", m_MupBinsR2 );
   declareProperty( "MuLandauParameterR2_1", m_MuLanParR2_1 );
   declareProperty( "MuLandauParameterR2_2", m_MuLanParR2_2 );
   declareProperty( "MuLandauParameterR2_3", m_MuLanParR2_3 );
@@ -238,7 +236,6 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   declareProperty( "MuLandauParameterR2_5", m_MuLanParR2_5 );
 
   // Muons - Region3:
-  declareProperty( "MupbinsR3", m_MupBinsR3 );
   declareProperty( "MuLandauParameterR3_1", m_MuLanParR3_1 );
   declareProperty( "MuLandauParameterR3_2", m_MuLanParR3_2 );
   declareProperty( "MuLandauParameterR3_3", m_MuLanParR3_3 );
@@ -246,7 +243,6 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   declareProperty( "MuLandauParameterR3_5", m_MuLanParR3_5 );
 
   // Muons - Region4:
-  declareProperty( "MupbinsR4", m_MupBinsR4 );
   declareProperty( "MuLandauParameterR4_1", m_MuLanParR4_1 );
   declareProperty( "MuLandauParameterR4_2", m_MuLanParR4_2 );
   declareProperty( "MuLandauParameterR4_3", m_MuLanParR4_3 );

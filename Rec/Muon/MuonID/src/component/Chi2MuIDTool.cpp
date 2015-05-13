@@ -286,6 +286,7 @@ StatusCode Chi2MuIDTool::muonQuality(LHCb::Track& muTrack, double& Quality)
   
   // load these measurements into a track and perform fit
   // m_measProvider->load(muTrack);  
+  if(msgLevel(MSG::DEBUG)) debug() << "This is the track before the fit =" << muTrack << endmsg;
   StatusCode sc2 = m_fitter->fit(muTrack);
 
   if (msgLevel(MSG::DEBUG) ) {
@@ -519,9 +520,9 @@ StatusCode Chi2MuIDTool::makeStates(const LHCb::Track& seed){
 
   else m_mySeedState=muState;
   
-  
   m_states.clear();
-  if (msgLevel(MSG::DEBUG) ) debug()<< " seed state"<< *muState;
+  
+  if (msgLevel(MSG::DEBUG) ) debug()<< " seed state = "<< *muState << endmsg;
   
   //propagate state to each station
   //for control purpose, also check is extrapolation was succesful for every station
