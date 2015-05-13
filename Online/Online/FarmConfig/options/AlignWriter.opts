@@ -19,13 +19,15 @@ WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_Tr
 WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_Velo"};
 WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_Rich"};
 WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_Muon"};
-
+WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_Calo"};
+WrManager.WriterList                += { "LHCb::FileWriterSvc/AlignDataWriter_BWDivision"};
+Param.FileSizeLimit = 1000;
 MessageSvc.fifoPath              = "$LOGFIFO";
 MessageSvc.OutputLevel           = @OnlineEnv.OutputLevel;
 MonitorSvc.CounterUpdateInterval = 5;
 HistogramPersistencySvc.Warnings = 0;
 
-AlignDataWriter_Tracker.SizeLimit                 = 1000;
+AlignDataWriter_Tracker.SizeLimit                 = @Param.FileSizeLimit;
 AlignDataWriter_Tracker.PrintFreq                 = 1.0;
 //
 // Requirements for Physics
@@ -45,7 +47,7 @@ AlignDataWriter_Tracker.MaxEvents              = 1000;
 AlignDataWriter_Tracker.DIMSteering = 1;
 AlignDataWriter_Tracker.PartitionName             = @OnlineEnv.PartitionName;
 
-AlignDataWriter_Rich.SizeLimit            = 1000;
+AlignDataWriter_Rich.SizeLimit            = @Param.FileSizeLimit;
 AlignDataWriter_Rich.PrintFreq            = 1.0;
 AlignDataWriter_Rich.PartitionName             = @OnlineEnv.PartitionName;
 //
@@ -65,7 +67,7 @@ AlignDataWriter_Rich.MEPFilePrefix        = "/localdisk/Alignment/Rich/Run_";
 AlignDataWriter_Rich.EvtFilePrefix        = "/localdisk/Alignment/Rich/Run_";
 AlignDataWriter_Rich.MaxEvents            = 1000;
 
-AlignDataWriter_Velo.SizeLimit            = 1000;
+AlignDataWriter_Velo.SizeLimit            = @Param.FileSizeLimit;
 AlignDataWriter_Velo.PrintFreq            = 1.0;
 AlignDataWriter_Velo.PartitionName             = @OnlineEnv.PartitionName;
 AlignDataWriter_Velo.DIMSteering = 1;
@@ -85,7 +87,7 @@ AlignDataWriter_Velo.MEPFilePrefix        = "/localdisk/Alignment/Velo/Run_";
 AlignDataWriter_Velo.EvtFilePrefix        = "/localdisk/Alignment/Velo/Run_";
 AlignDataWriter_Velo.MaxEvents            = 1000;
 
-AlignDataWriter_Muon.SizeLimit            = 1000;
+AlignDataWriter_Muon.SizeLimit            = @Param.FileSizeLimit;
 AlignDataWriter_Muon.PrintFreq            = 1.0;
 AlignDataWriter_Muon.DIMSteering = 1;
 AlignDataWriter_Muon.PartitionName             = @OnlineEnv.PartitionName;
@@ -106,3 +108,47 @@ AlignDataWriter_Muon.EvtFilePrefix        = "/localdisk/Alignment/Muon/Run_";
 AlignDataWriter_Muon.MaxEvents            = 1000;
 AlignDataWriter_Muon.DIMSteering = 1;
 AlignDataWriter_Muon.PartitionName             = @OnlineEnv.PartitionName;
+
+AlignDataWriter_Calo.SizeLimit            = @Param.FileSizeLimit;
+AlignDataWriter_Calo.PrintFreq            = 1.0;
+AlignDataWriter_Calo.DIMSteering = 1;
+AlignDataWriter_Calo.PartitionName             = @OnlineEnv.PartitionName;
+//
+// Requirements for Physics
+//
+AlignDataWriter_Calo.Requirements         = {
+"EvType=2;TriggerMask=0x0,0x18000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+};
+//
+// Requirements for TED and other stuff
+//
+//AlignDataWriter_Calo.Requirements         = {
+//"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+//};
+AlignDataWriter_Calo.MEPFilePrefix        = "/localdisk/Alignment/Calo/Run_";
+AlignDataWriter_Calo.EvtFilePrefix        = "/localdisk/Alignment/Calo/Run_";
+AlignDataWriter_Calo.MaxEvents            = 1000;
+AlignDataWriter_Calo.DIMSteering = 1;
+AlignDataWriter_Calo.PartitionName             = @OnlineEnv.PartitionName;
+
+AlignDataWriter_BWDivision.SizeLimit            = @Param.FileSizeLimit;
+AlignDataWriter_BWDivision.PrintFreq            = 1.0;
+AlignDataWriter_BWDivision.DIMSteering = 1;
+AlignDataWriter_BWDivision.PartitionName             = @OnlineEnv.PartitionName;
+//
+// Requirements for Physics
+//
+AlignDataWriter_BWDivision.Requirements         = {
+"EvType=2;TriggerMask=0x20,0x0,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+};
+//
+// Requirements for TED and other stuff
+//
+//AlignDataWriter_BWDivision.Requirements         = {
+//"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+//};
+AlignDataWriter_BWDivision.MEPFilePrefix        = "/localdisk/Alignment/BWDivision/Run_";
+AlignDataWriter_BWDivision.EvtFilePrefix        = "/localdisk/Alignment/BWDivision/Run_";
+AlignDataWriter_BWDivision.MaxEvents            = 1000;
+AlignDataWriter_BWDivision.DIMSteering = 1;
+AlignDataWriter_BWDivision.PartitionName             = @OnlineEnv.PartitionName;
