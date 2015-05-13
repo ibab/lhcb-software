@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-13 - Vanya Belyaev
+ - add StrippingBandQ/StrippingCharmAssociative from Stripping21 
 
 ! 2015-05-15 - Mike Sokoloff
   -  added StrippingChargedHyperons.py

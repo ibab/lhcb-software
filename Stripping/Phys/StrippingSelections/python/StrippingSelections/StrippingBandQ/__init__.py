@@ -10,6 +10,7 @@ _selections = (
     'StrippingCC2DD'            ,
     'StrippingB2JpsiXforEM_s'   ,
     'StrippingBc3h'             , 
+    'StrippingCharmAssociative' , 
     'StrippingPsiX0'            , ## no need to run in production 
     'StrippingPsiXForBandQ'     , ## no need to run in production
     'StrippingUpsilonExotic'    , ## no need to run in production
