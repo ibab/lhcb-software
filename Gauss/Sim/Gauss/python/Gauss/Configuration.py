@@ -1739,7 +1739,7 @@ class Gauss(LHCbConfigurableUser):
     def setBeamParameters( self, CrossingSlots, genInit):
 
         from Configurables import ( MinimumBias , FixedNInteractions , HijingProduction )
-        from Configurables import ( Special , Pythia8Production , LbLHAup )
+        from Configurables import ( Special , Pythia8Production )
         from Configurables import ( Generation )
 
         #
