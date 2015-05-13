@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-13 - Stefano Perazzini
+ - added StrippingD2HHBDT.py to StrippingBnoC
+
 ! 2015-05-13 - Brais Sanmartin
  - added StrippingBs2Kst_0Kst_0.py to StrippingBnoC
 
