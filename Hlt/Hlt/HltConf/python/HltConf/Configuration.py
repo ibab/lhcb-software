@@ -10,6 +10,7 @@ from LHCbKernel.Configuration import LHCbConfigurableUser
 from Configurables       import GaudiSequencer as Sequence
 from Hlt1                import Hlt1Conf
 from Hlt2                import Hlt2Conf
+from HltAfterburner      import HltAfterburnerConf
 
 
 #############################################################################
@@ -55,7 +56,8 @@ class HltConf(LHCbConfigurableUser):
     Hlt configuration
     """
     __used_configurables__ = [ Hlt1Conf
-                             , Hlt2Conf ]
+                             , Hlt2Conf
+                             , HltAfterburnerConf ]
     __slots__ = { "L0TCK"                          : ''
                 , 'ForceSingleL0Configuration'     : True
                 , 'SkipDisabledL0Channels'         : False
@@ -73,6 +75,7 @@ class HltConf(LHCbConfigurableUser):
                 , "EnableHltVtxReports"            : True
                 , "EnableHltTrkReports"            : True
                 , "EnableHltRoutingBits"           : True
+                , "EnableHltAfterburner"           : True
                 , "EnableLumiEventWriting"         : True
                 , "EnableAcceptIfSlow"             : False      # Switch on AcceptIfSlow switch of HltLine
                 , "SlowHlt1Threshold"              : 500000     # microseconds
@@ -175,7 +178,7 @@ class HltConf(LHCbConfigurableUser):
         setRequestedHlt1Lines( activehlt1lines )
         setRequestedHlt2Lines( activehlt2lines )
 
-        Dec=Sequence('HltDecisionSequence',Members=[])
+        Dec = Sequence('HltDecisionSequence', Members = [])
 
         # Decoding at end of Hlt1 and beginning of HLT2. Make sure the decoders do not run, if location already exists.
         from DAQSys.Decoders import DecoderDB
@@ -210,6 +213,11 @@ class HltConf(LHCbConfigurableUser):
             if Hlt2Conf().getProp('Hlt1TrackOption') == "Rerun":
                 decoder = DecoderDB["HltTrackReportsDecoder"]
                 decoder.setup().Enable = False
+
+        # HLT Afterburner
+        if activehlt2lines and self.getProp("EnableHltAfterburner"):
+            Dec.Members.append(Sequence("HltAfterburner"))
+            HltAfterburnerConf()
 
         Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
                        , Members = [ Sequence('HltDecisionSequence')

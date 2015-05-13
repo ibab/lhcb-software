@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-05-14 - Roel Aaij
+ - Add HltAfterburner configurable.
+
 ! 2015-05-12 - Roel Aaij
  - Add L0DU decoding to the HLT1 and HLT2 postambles.
 
