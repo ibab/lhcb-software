@@ -1,4 +1,4 @@
-#ifndef RECSUMMARYALG_H 
+#ifndef RECSUMMARYALG_H
 #define RECSUMMARYALG_H 1
 
 // STL
@@ -13,7 +13,9 @@
 #include "Event/RecSummary.h"
 #include "Event/RecVertex.h"
 #include "Event/STCluster.h"
+#include "Event/STLiteCluster.h"
 #include "Event/VeloCluster.h"
+#include "Event/VeloLiteCluster.h"
 #include "Event/VPCluster.h"
 #include "Event/FTLiteCluster.h"
 #include "Event/CaloDigit.h"
@@ -29,17 +31,17 @@
 #include "boost/assign/list_of.hpp"
 
 /** @class RecSummaryAlg RecSummaryAlg.h
- *  
+ *
  *  Fill the LHCb::RecSummary class with summary information from the event
  *  reconstruction.
  *
  *  @author Chris Jones
  *  @date   2011-01-19
  */
-class RecSummaryAlg : public GaudiAlgorithm 
+class RecSummaryAlg : public GaudiAlgorithm
 {
 
-public: 
+public:
 
   /// Standard constructor
   RecSummaryAlg( const std::string& name, ISvcLocator* pSvcLocator );
@@ -48,11 +50,11 @@ public:
 
   virtual StatusCode execute(); ///< Algorithm execution
   virtual StatusCode initialize(); ///<  Algorithm initialization
-  
+
 private:
 
   /// Adds the number of objects at the given TES location to the summary object
-  template<class CLASS> 
+  template<class CLASS>
   inline void addSizeSummary( LHCb::RecSummary * summary,
                               const LHCb::RecSummary::DataTypes id,
                               const std::string& location ) const
@@ -63,11 +65,11 @@ private:
   }
 
   /// Access on demand the RICH decoding tool
-  inline Rich::DAQ::IRawBufferToSmartIDsTool * richTool() 
+  inline Rich::DAQ::IRawBufferToSmartIDsTool * richTool()
   {
     if ( !m_richTool )
     {
-      m_richTool = 
+      m_richTool =
         tool<Rich::DAQ::IRawBufferToSmartIDsTool>
         ("Rich::DAQ::RawBufferToSmartIDsTool","RichSmartIDDecoder");
     }
@@ -75,7 +77,7 @@ private:
   }
 
   /// Access on demand the OT decoder
-  const IOTRawBankDecoder* otTool() 
+  const IOTRawBankDecoder* otTool()
   {
     if ( !m_otTool )
     {
@@ -93,7 +95,7 @@ private:
     }
     return m_countVeloTracks;
   }
-  
+
 private:
 
   /// List of sub-detectors to add
@@ -146,6 +148,9 @@ private:
 
   /// CountVeloTracks tool
   const ICountContainedObjects* m_countVeloTracks;
+
+  /// Use Lite clusters for Velo and ST
+  bool m_liteClusters;
 
 };
 

@@ -4,9 +4,13 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-05-14 - Roel Aaij
+ - Use initializer list to initialize vectors.
+ - Add a property to use Velo and ST LiteClusters.
+
 !========================= RecAlgs v3r2 2014-09-08 =========================
 ! 2014-07-18 - Marco Cattaneo
- - Replace 'Other/RawEvent' with 'Calo/RawEvent' in default RecInit.cpp 
+ - Replace 'Other/RawEvent' with 'Calo/RawEvent' in default RecInit.cpp
    search list, for forward compatibility with RawEvent format 4.0
 
 !========================= RecAlgs v3r1 2014-05-13 =========================
@@ -22,8 +26,8 @@
 
 !========================= RecAlgs v2r15 2013-10-24 =========================
 ! 2013-10-22 - Patrick Koppenburg
- - TimingTuple: fix warning 
-  TimingTuple       WARNING TimingTuple:: Tuple 'TimingTuple' 'unsignedlong' has different sizes on 32/64 bit systems. Casting 'EventInSequence' to 'unsigned long long' 
+ - TimingTuple: fix warning
+  TimingTuple       WARNING TimingTuple:: Tuple 'TimingTuple' 'unsignedlong' has different sizes on 32/64 bit systems. Casting 'EventInSequence' to 'unsigned long long'
 
 !========================= RecAlgs v2r14 2013-04-30 =========================
 ! 2013-03-25 - Chris Jones
@@ -52,7 +56,7 @@
 
 ! 2012-11-16 - Marco Cattaneo
  - Fix gcc --pedantic warning
- - Use getIfExists in RecInit and EventTimeMonitor 
+ - Use getIfExists in RecInit and EventTimeMonitor
  - Remove finalize() in derived classes if it only calls the base class
 
 !========================= RecAlgs v2r10 2012-10-01 =========================
@@ -98,7 +102,7 @@
    the processing times from the ChronoSvc.
 
 ! 2011-04-27 - Chris Jones
- - Update TimingTuple to use information from RecSummary, instead of 
+ - Update TimingTuple to use information from RecSummary, instead of
    recomputing it from scratch.
 
 !========================= RecAlgs v2r3 2011-04-05 =========================
@@ -108,7 +112,7 @@
 !========================= RecAlgs v2r2 2011-03-09 =========================
 ! 2011-03-09 - Rob Lambert
  - Modified RecInit.cpp
-   Add raw file GUID to rec header. Requires Event/RecEvent 
+   Add raw file GUID to rec header. Requires Event/RecEvent
    >= v2r36
 
 !========================= RecAlgs v2r1 2011-02-28 =========================
@@ -141,7 +145,7 @@
  - Convert to using a map<int,int> for summary object
 
 ! 2011-01-20 - Chris Jones
- - Add new algorithm RecSummaryAlg that fills the new summary object, that 
+ - Add new algorithm RecSummaryAlg that fills the new summary object, that
    contains some basic information from the reconstruction.
 
 !========================= RecAlgs v1r11p1 2010-09-27 =========================
@@ -153,7 +157,7 @@
  - In RecInit.cpp: Copy gpsTime to RecHeader from ODIN Raw bank
 
 ! 2010-09-19 - Chris Jones
- - Fix the bug in the histogram booking, introduced below, where the arguments 
+ - Fix the bug in the histogram booking, introduced below, where the arguments
    are passed in the wrong order ...
 
 ! 2010-09-08 - Johan Blouw
@@ -195,7 +199,7 @@
 
 !========================== RecAlgs v1r7 2008-07-29 ==========================
 ! 2008-07-21 - Marco Cattaneo
- - Adapt to new location of IGenericTool.h (needs Gaudi v20r2) 
+ - Adapt to new location of IGenericTool.h (needs Gaudi v20r2)
 
 !========================== RecAlgs v1r6 2008-05-07 ==========================
 ! 2008-05-06 M Needham
@@ -226,5 +230,5 @@
 !========================== RecAlgs v1r0 2006-03-15 ==========================
 ! 2006-03-15 - Marco Cattaneo
  - First release of package. Contains:
-   . RecInit: algorithm to create RecHeader and ProcStatus at start of Reco 
+   . RecInit: algorithm to create RecHeader and ProcStatus at start of Reco
    . STSummaryCreator: moved from STAlgorithms
