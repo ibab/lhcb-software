@@ -4,6 +4,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2015-05-13 - Ricardo Vazquez Gomez
+ - Remove the algorithms committed to /src/ due to a mismatch in a previous commit.
+
 ! 2015-05-12 - Marco Cattaneo
  - Remove duplicate declarations of certain properties in MuonIDAlg.cpp
 

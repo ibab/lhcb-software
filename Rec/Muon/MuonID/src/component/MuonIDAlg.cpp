@@ -1189,7 +1189,6 @@ StatusCode MuonIDAlg::execute() {
   // Register the PIDTracksIsMuonLoose container to the TES
   if (m_DoAllMuonTracks){ 
       put(mutracks_all,m_MuonTracksPathAll);
-      if (msgLevel(MSG::ALWAYS) ) always()  << "execute:: All Muon Tracks registered " << endmsg;
   }
   else delete mutracks_all;
   if (msgLevel(MSG::DEBUG) ) debug()  << "execute:: All Muon Tracks registered or deleted " << endmsg;
@@ -1878,8 +1877,8 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const do
   pMuid->setMuonLLMu(log(ProbMu));
   pMuid->setMuonLLBg(log(ProbNonMu));
 
-  if (msgLevel(MSG::ALWAYS) ) {
-    always() << "calcMuonLL_tanhdist_landau: region: " << region << " momentum: " << p
+  if (msgLevel(MSG::DEBUG) ) {
+    debug() << "calcMuonLL_tanhdist_landau: region: " << region << " momentum: " << p
             << " pBin: " <<  pBin << " dist " << myDist << " tanh(dist2): "
             << tanhdist << " ProbMu: " << ProbMu << " ProbNonMu: " << ProbNonMu
             <<" DLL: " << log(ProbMu/ProbNonMu) << endmsg;
