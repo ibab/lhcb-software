@@ -3,8 +3,12 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
-! 2015-05-12 -Wenbin Qian
-  - Add D->4H decays for B->D0HH and B->DstMuNu 
+
+! 2015-05-12 - Stefano Perazzini
+ - Correct wrong indentation in StrippingBnoC/StrippingBu2hhh.py
+
+! 2015-05-12 - Wenbin Qian
+ - Add D->4H decays for B->D0HH and B->DstMuNu 
 
 ! 2015-05-12 - Carlos Vazquez Sierra
  - Moved Psi2S B2CC lines to tests/liaisons (keeping builders).

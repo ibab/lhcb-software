@@ -168,144 +168,143 @@ class Bu2hhhBuilder(LineBuilder) :
         _KpKpKp_inclName = name + '_KKK_samesign'
         _pph_inclName = name + '_pph_incl'
 	
-				      
-
-    self.selKKK = makeKKK_incl( 'KKKinclFor' + _KKK_inclName + 'Sel', 
-                             _h_PT           = config['_h_PT'],
-                             _h_P            = config['_h_P'],
-                             _h_IPCHI2       = config['_h_IPCHI2'],
-                             _h_TRCHI2DOF    = config['_h_TRCHI2DOF'],
-                             _h_TRGHP       = config['_h_TRGHP'],
-                             _3h_DOCA        = config['_3h_DOCA'],
-                             _3h_PTmax       = config['_3h_PTmax'],
-                             _3h_DIRA        = config['_3h_DIRA'],
-                             _3h_FDCHI2      = config['_3h_FDCHI2'],
-                             _3h_PVDOCAmin   = config['_3h_PVDOCAmin'],
-                             _3h_CHI2        = config['_3h_CHI2'],
-                             _3h_IPCHI2      = config['_3h_IPCHI2'],
-                             _3h_PT          = config['_3h_PT'],
-                             _3h_PTsum       = config['_3h_PTsum'],
-                             _3h_Psum        = config['_3h_Psum'],
-                             _3h_PVIPCHI2sum = config['_3h_PVIPCHI2sum'],
-                             _3h_TRKCHIDOFmin= config['_3h_TRKCHIDOFmin'],
-                             _3h_CORRMmax    = config['_3h_CORRMmax'],
-                             _3h_CORRMmin    = config['_3h_CORRMmin'],
-                             _3hKKK_Mmin     = config['_3hKKK_Mmin'],
-                             _3hKKK_Mmax     = config['_3hKKK_Mmax'])
-
-    self.selKpKpKp = makeKpKpKp_incl( 'KpKpKpinclFor' + _KpKpKp_inclName + 'Sel', 
-                             _h_PT           = config['_h_PT'],
-                             _h_P            = config['_h_P'],
-                             _h_IPCHI2       = config['_h_IPCHI2'],
-                             _h_TRCHI2DOF    = config['_h_TRCHI2DOF'],
-                             _h_TRGHP       = config['_h_TRGHP'],
-                             _3h_DOCA        = config['_3h_DOCA'],
-                             _3h_PTmax       = config['_3h_PTmax'],
-                             _3h_DIRA        = config['_3h_DIRA'],
-                             _3h_FDCHI2      = config['_3h_FDCHI2'],
-                             _3h_PVDOCAmin   = config['_3h_PVDOCAmin'],
-                             _3h_CHI2        = config['_3h_CHI2'],
-                             _3h_IPCHI2      = config['_3h_IPCHI2'],
-                             _3h_PT          = config['_3h_PT'],
-                             _3h_PTsum       = config['_3h_PTsum'],
-                             _3h_Psum        = config['_3h_Psum'],
-                             _3h_PVIPCHI2sum = config['_3h_PVIPCHI2sum'],
-                             _3h_TRKCHIDOFmin= config['_3h_TRKCHIDOFmin'],
-                             _3h_CORRMmax    = config['_3h_CORRMmax'],
-                             _3h_CORRMmin    = config['_3h_CORRMmin'],
-                             _3hKKK_Mmin     = config['_3hKKK_Mmin'],
-                             _3hKKK_Mmax     = config['_3hKKK_Mmax'])
-
-    self.selpph = makepph_incl( 'pphinclFor' + _pph_inclName + 'Sel', 
-                             _h_PT           = config['_h_PT'],
-                             _h_P            = config['_h_P'],
-                             _h_IPCHI2       = config['_h_IPCHI2'],
-                             _h_TRCHI2DOF    = config['_h_TRCHI2DOF'],
-                             _h_TRGHP       = config['_h_TRGHP'],       
-                             _3h_DOCA        = config['_3h_DOCA'],
-                             _3h_PTmax       = config['_3h_PTmax'],
-                             _3h_DIRA        = config['_3h_DIRA'],
-                             _3h_FDCHI2      = config['_3h_FDCHI2'],
-                             _3h_PVDOCAmin   = config['_3h_PVDOCAmin'],
-                             _3h_CHI2        = config['_3h_CHI2'],
-                             _3h_IPCHI2      = config['_3h_IPCHI2'],
-                             _3h_PT          = config['_3h_PT'],
-                             _3h_PTsum       = config['_3h_PTsum'],
-                             _3h_Psum        = config['_3h_Psum'],
-                             _3h_PVIPCHI2sum = config['_3h_PVIPCHI2sum'],
-                             _3h_TRKCHIDOFmin= config['_3h_TRKCHIDOFmin'],
-                             _3h_CORRMmax    = config['_3h_CORRMmax'],
-                             _3h_CORRMmin    = config['_3h_CORRMmin'],
-                             _3hpph_deltaMmax= config['_3hpph_deltaMmax'],
-                             _3hpph_deltaMmin= config['_3hpph_deltaMmin'])
-
-    self.gECFilter = globalEventCutFilter(name + 'GlobalEventCutFilter', MaxTrSIZE = config['MaxTrSIZE'])
-	
-    self.algosKKK = []
-    if self.gECFilter != None  : self.algosKKK.append(self.gECFilter)
-    self.algosKKK.append(self.selKKK)
-    
-    self.algosKpKpKp = []
-    if self.gECFilter != None  : self.algosKpKpKp.append(self.gECFilter)
-    self.algosKpKpKp.append(self.selKpKpKp)
-    
-    self.algospph = []
-    if self.gECFilter != None : self.algospph.append(self.gECFilter)
-    self.algospph.append(self.selpph)	
-	
-
-    self.lineKKK_incl = StrippingLine( _KKK_inclName + 'Line',
-                                     prescale   = config['KKK_inclLinePrescale'],
-                                     postscale  = config['KKK_inclLinePostscale'],
-                                     algos      = self.algosKKK)
         
-    self.lineKpKpKp_incl = StrippingLine( _KpKpKp_inclName + 'Line',
-                                     prescale   = config['KpKpKp_inclLinePrescale'],
-                                     postscale  = config['KpKpKp_inclLinePostscale'],
-                                     algos      = self.algosKpKpKp)
+        self.selKKK = makeKKK_incl( 'KKKinclFor' + _KKK_inclName + 'Sel', 
+                                    _h_PT           = config['_h_PT'],
+                                    _h_P            = config['_h_P'],
+                                    _h_IPCHI2       = config['_h_IPCHI2'],
+                                    _h_TRCHI2DOF    = config['_h_TRCHI2DOF'],
+                                    _h_TRGHP       = config['_h_TRGHP'],
+                                    _3h_DOCA        = config['_3h_DOCA'],
+                                    _3h_PTmax       = config['_3h_PTmax'],
+                                    _3h_DIRA        = config['_3h_DIRA'],
+                                    _3h_FDCHI2      = config['_3h_FDCHI2'],
+                                    _3h_PVDOCAmin   = config['_3h_PVDOCAmin'],
+                                    _3h_CHI2        = config['_3h_CHI2'],
+                                    _3h_IPCHI2      = config['_3h_IPCHI2'],
+                                    _3h_PT          = config['_3h_PT'],
+                                    _3h_PTsum       = config['_3h_PTsum'],
+                                    _3h_Psum        = config['_3h_Psum'],
+                                    _3h_PVIPCHI2sum = config['_3h_PVIPCHI2sum'],
+                                    _3h_TRKCHIDOFmin= config['_3h_TRKCHIDOFmin'],
+                                    _3h_CORRMmax    = config['_3h_CORRMmax'],
+                                    _3h_CORRMmin    = config['_3h_CORRMmin'],
+                                    _3hKKK_Mmin     = config['_3hKKK_Mmin'],
+                                    _3hKKK_Mmax     = config['_3hKKK_Mmax'])
         
-    self.linepph_incl = StrippingLine( _pph_inclName + 'Line',
-                                     prescale   = config['pph_inclLinePrescale'],
-                                     postscale  = config['pph_inclLinePostscale'],
-                                     algos      = self.algospph)
-
-    self.registerLine(self.lineKKK_incl)
-    self.registerLine(self.lineKpKpKp_incl)
-    self.registerLine(self.linepph_incl)
-
-
+        self.selKpKpKp = makeKpKpKp_incl( 'KpKpKpinclFor' + _KpKpKp_inclName + 'Sel', 
+                                          _h_PT           = config['_h_PT'],
+                                          _h_P            = config['_h_P'],
+                                          _h_IPCHI2       = config['_h_IPCHI2'],
+                                          _h_TRCHI2DOF    = config['_h_TRCHI2DOF'],
+                                          _h_TRGHP       = config['_h_TRGHP'],
+                                          _3h_DOCA        = config['_3h_DOCA'],
+                                          _3h_PTmax       = config['_3h_PTmax'],
+                                          _3h_DIRA        = config['_3h_DIRA'],
+                                          _3h_FDCHI2      = config['_3h_FDCHI2'],
+                                          _3h_PVDOCAmin   = config['_3h_PVDOCAmin'],
+                                          _3h_CHI2        = config['_3h_CHI2'],
+                                          _3h_IPCHI2      = config['_3h_IPCHI2'],
+                                          _3h_PT          = config['_3h_PT'],
+                                          _3h_PTsum       = config['_3h_PTsum'],
+                                          _3h_Psum        = config['_3h_Psum'],
+                                          _3h_PVIPCHI2sum = config['_3h_PVIPCHI2sum'],
+                                          _3h_TRKCHIDOFmin= config['_3h_TRKCHIDOFmin'],
+                                          _3h_CORRMmax    = config['_3h_CORRMmax'],
+                                          _3h_CORRMmin    = config['_3h_CORRMmin'],
+                                          _3hKKK_Mmin     = config['_3hKKK_Mmin'],
+                                          _3hKKK_Mmax     = config['_3hKKK_Mmax'])
+        
+        self.selpph = makepph_incl( 'pphinclFor' + _pph_inclName + 'Sel', 
+                                    _h_PT           = config['_h_PT'],
+                                    _h_P            = config['_h_P'],
+                                    _h_IPCHI2       = config['_h_IPCHI2'],
+                                    _h_TRCHI2DOF    = config['_h_TRCHI2DOF'],
+                                    _h_TRGHP       = config['_h_TRGHP'],       
+                                    _3h_DOCA        = config['_3h_DOCA'],
+                                    _3h_PTmax       = config['_3h_PTmax'],
+                                    _3h_DIRA        = config['_3h_DIRA'],
+                                    _3h_FDCHI2      = config['_3h_FDCHI2'],
+                                    _3h_PVDOCAmin   = config['_3h_PVDOCAmin'],
+                                    _3h_CHI2        = config['_3h_CHI2'],
+                                    _3h_IPCHI2      = config['_3h_IPCHI2'],
+                                    _3h_PT          = config['_3h_PT'],
+                                    _3h_PTsum       = config['_3h_PTsum'],
+                                    _3h_Psum        = config['_3h_Psum'],
+                                    _3h_PVIPCHI2sum = config['_3h_PVIPCHI2sum'],
+                                    _3h_TRKCHIDOFmin= config['_3h_TRKCHIDOFmin'],
+                                    _3h_CORRMmax    = config['_3h_CORRMmax'],
+                                    _3h_CORRMmin    = config['_3h_CORRMmin'],
+                                    _3hpph_deltaMmax= config['_3hpph_deltaMmax'],
+                                    _3hpph_deltaMmin= config['_3hpph_deltaMmin'])
+        
+        self.gECFilter = globalEventCutFilter(name + 'GlobalEventCutFilter', MaxTrSIZE = config['MaxTrSIZE'])
+	
+        self.algosKKK = []
+        if self.gECFilter != None  : self.algosKKK.append(self.gECFilter)
+        self.algosKKK.append(self.selKKK)
+        
+        self.algosKpKpKp = []
+        if self.gECFilter != None  : self.algosKpKpKp.append(self.gECFilter)
+        self.algosKpKpKp.append(self.selKpKpKp)
+        
+        self.algospph = []
+        if self.gECFilter != None : self.algospph.append(self.gECFilter)
+        self.algospph.append(self.selpph)	
+	
+        
+        self.lineKKK_incl = StrippingLine( _KKK_inclName + 'Line',
+                                           prescale   = config['KKK_inclLinePrescale'],
+                                           postscale  = config['KKK_inclLinePostscale'],
+                                           algos      = self.algosKKK)
+        
+        self.lineKpKpKp_incl = StrippingLine( _KpKpKp_inclName + 'Line',
+                                              prescale   = config['KpKpKp_inclLinePrescale'],
+                                              postscale  = config['KpKpKp_inclLinePostscale'],
+                                              algos      = self.algosKpKpKp)
+        
+        self.linepph_incl = StrippingLine( _pph_inclName + 'Line',
+                                           prescale   = config['pph_inclLinePrescale'],
+                                           postscale  = config['pph_inclLinePostscale'],
+                                           algos      = self.algospph)
+        
+        self.registerLine(self.lineKKK_incl)
+        self.registerLine(self.lineKpKpKp_incl)
+        self.registerLine(self.linepph_incl)
+        
+        
 def makeKKK_incl(name,
-           _h_PT,
-           _h_P,
-           _h_IPCHI2,
-           _h_TRCHI2DOF,
-           _h_TRGHP,      
-           _3h_DOCA,
-           _3h_PTmax,
-           _3h_DIRA,
-           _3h_FDCHI2,
-           _3h_PVDOCAmin,
-           _3h_CHI2,
-           _3h_IPCHI2,
-           _3h_PT,
-           _3h_PTsum,
-           _3h_Psum,
-           _3h_PVIPCHI2sum,
-	   _3h_TRKCHIDOFmin,
-           _3h_CORRMmax,
-           _3h_CORRMmin,
-           _3hKKK_Mmin,
-           _3hKKK_Mmax) :
-
-    _daughtersCuts = {"K+" : "(PT > %(_h_PT)s*MeV) \
+                 _h_PT,
+                 _h_P,
+                 _h_IPCHI2,
+                 _h_TRCHI2DOF,
+                 _h_TRGHP,      
+                 _3h_DOCA,
+                 _3h_PTmax,
+                 _3h_DIRA,
+                 _3h_FDCHI2,
+                 _3h_PVDOCAmin,
+                 _3h_CHI2,
+                 _3h_IPCHI2,
+                 _3h_PT,
+                 _3h_PTsum,
+                 _3h_Psum,
+                 _3h_PVIPCHI2sum,
+                 _3h_TRKCHIDOFmin,
+                 _3h_CORRMmax,
+                 _3h_CORRMmin,
+                 _3hKKK_Mmin,
+                 _3hKKK_Mmax) :
+  
+  _daughtersCuts = {"K+" : "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
-    _combinationCut = "(AM < %(_3hKKK_Mmax)s*MeV) \
+  _combinationCut = "(AM < %(_3hKKK_Mmax)s*MeV) \
                      & (AM > %(_3hKKK_Mmin)s*MeV) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
-    _motherCut = "(MAXTREE(((ABSID=='K+') | (ABSID=='K-')),PT) > %(_3h_PTmax)s*MeV) \
+  _motherCut = "(MAXTREE(((ABSID=='K+') | (ABSID=='K-')),PT) > %(_3h_PTmax)s*MeV) \
                 & (BPVDIRA > %(_3h_DIRA)s) \
 		& (BPVVDCHI2 > %(_3h_FDCHI2)s) \
 		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_PVDOCAmin)s) \
@@ -317,50 +316,50 @@ def makeKKK_incl(name,
 		& (SUMTREE(MIPCHI2DV(PRIMARY),((ABSID=='K+') | (ABSID=='K-')),0.0) > %(_3h_PVIPCHI2sum)s) \
 		& (MINTREE((('K+'==ABSID) | ('K-'==ABSID)),TRCHI2DOF) < %(_3h_TRKCHIDOFmin)s) \
 		& (BPVCORRM < %(_3h_CORRMmax)s * MeV)& (BPVCORRM > %(_3h_CORRMmin)s*MeV)" % locals()
-   
-    _KKK=CombineParticles()
-    _KKK.DecayDescriptors  = ["[B+ -> K+ K+ K-]cc"]
-    _KKK.MotherCut         = _motherCut
-    _KKK.CombinationCut    = _combinationCut
-    _KKK.DaughtersCuts     = _daughtersCuts
-
-    return Selection ( name,
-                       Algorithm = _KKK,
-                       RequiredSelections = [StdNoPIDsKaons])
+  
+  _KKK=CombineParticles()
+  _KKK.DecayDescriptors  = ["[B+ -> K+ K+ K-]cc"]
+  _KKK.MotherCut         = _motherCut
+  _KKK.CombinationCut    = _combinationCut
+  _KKK.DaughtersCuts     = _daughtersCuts
+  
+  return Selection ( name,
+                     Algorithm = _KKK,
+                     RequiredSelections = [StdNoPIDsKaons])
 
 
 def makeKpKpKp_incl(name,
-           _h_PT,
-           _h_P,
-           _h_IPCHI2,
-           _h_TRCHI2DOF,
-           _h_TRGHP,      
-           _3h_DOCA,
-           _3h_PTmax,
-           _3h_DIRA,
-           _3h_FDCHI2,
-           _3h_PVDOCAmin,
-           _3h_CHI2,
-           _3h_IPCHI2,
-           _3h_PT,
-           _3h_PTsum,
-           _3h_Psum,
-           _3h_PVIPCHI2sum,
-	   _3h_TRKCHIDOFmin,
-           _3h_CORRMmax,
-           _3h_CORRMmin,
-           _3hKKK_Mmin,
-           _3hKKK_Mmax) :
-
-    _daughtersCuts = {"K+" : "(PT > %(_h_PT)s*MeV) \
+                    _h_PT,
+                    _h_P,
+                    _h_IPCHI2,
+                    _h_TRCHI2DOF,
+                    _h_TRGHP,      
+                    _3h_DOCA,
+                    _3h_PTmax,
+                    _3h_DIRA,
+                    _3h_FDCHI2,
+                    _3h_PVDOCAmin,
+                    _3h_CHI2,
+                    _3h_IPCHI2,
+                    _3h_PT,
+                    _3h_PTsum,
+                    _3h_Psum,
+                    _3h_PVIPCHI2sum,
+                    _3h_TRKCHIDOFmin,
+                    _3h_CORRMmax,
+                    _3h_CORRMmin,
+                    _3hKKK_Mmin,
+                    _3hKKK_Mmax) :
+  
+  _daughtersCuts = {"K+" : "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
-    _combinationCut = "(AM < %(_3hKKK_Mmax)s*MeV) \
+  _combinationCut = "(AM < %(_3hKKK_Mmax)s*MeV) \
                      & (AM > %(_3hKKK_Mmin)s*MeV) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
-    _motherCut = "(MAXTREE(((ABSID=='K+') | (ABSID=='K-')),PT) > %(_3h_PTmax)s*MeV) \
+  _motherCut = "(MAXTREE(((ABSID=='K+') | (ABSID=='K-')),PT) > %(_3h_PTmax)s*MeV) \
                 & (BPVDIRA > %(_3h_DIRA)s) \
 		& (BPVVDCHI2 > %(_3h_FDCHI2)s) \
 		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_PVDOCAmin)s) \
@@ -372,55 +371,55 @@ def makeKpKpKp_incl(name,
 		& (SUMTREE(MIPCHI2DV(PRIMARY),((ABSID=='K+') | (ABSID=='K-')),0.0) > %(_3h_PVIPCHI2sum)s) \
 		& (MINTREE((('K+'==ABSID) | ('K-'==ABSID)),TRCHI2DOF) < %(_3h_TRKCHIDOFmin)s) \
 		& (BPVCORRM < %(_3h_CORRMmax)s * MeV)& (BPVCORRM > %(_3h_CORRMmin)s*MeV)" % locals()
-   
-    _KpKpKp=CombineParticles()
-    _KpKpKp.DecayDescriptors  = ["[B+ -> K+ K+ K+]cc"]
-    _KpKpKp.MotherCut         = _motherCut
-    _KpKpKp.CombinationCut    = _combinationCut
-    _KpKpKp.DaughtersCuts     = _daughtersCuts
-
-    return Selection ( name,
-                       Algorithm = _KpKpKp,
-                       RequiredSelections = [StdNoPIDsKaons])
+  
+  _KpKpKp=CombineParticles()
+  _KpKpKp.DecayDescriptors  = ["[B+ -> K+ K+ K+]cc"]
+  _KpKpKp.MotherCut         = _motherCut
+  _KpKpKp.CombinationCut    = _combinationCut
+  _KpKpKp.DaughtersCuts     = _daughtersCuts
+  
+  return Selection ( name,
+                     Algorithm = _KpKpKp,
+                     RequiredSelections = [StdNoPIDsKaons])
 
 
 def makepph_incl(name,
-           _h_PT,
-           _h_P,
-           _h_IPCHI2,
-           _h_TRCHI2DOF,
-           _h_TRGHP,            
-           _3h_DOCA,
-           _3h_PTmax,
-           _3h_DIRA,
-           _3h_FDCHI2,
-           _3h_PVDOCAmin,
-           _3h_CHI2,
-           _3h_IPCHI2,
-           _3h_PT,
-           _3h_PTsum,
-           _3h_Psum,
-           _3h_PVIPCHI2sum,
-	   _3h_TRKCHIDOFmin,
-           _3h_CORRMmax,
-           _3h_CORRMmin,
-           _3hpph_deltaMmax,
-           _3hpph_deltaMmin) :
-
-    _daughtersCuts = {"p+" : "(PT > %(_h_PT)s*MeV) \
+                 _h_PT,
+                 _h_P,
+                 _h_IPCHI2,
+                 _h_TRCHI2DOF,
+                 _h_TRGHP,            
+                 _3h_DOCA,
+                 _3h_PTmax,
+                 _3h_DIRA,
+                 _3h_FDCHI2,
+                 _3h_PVDOCAmin,
+                 _3h_CHI2,
+                 _3h_IPCHI2,
+                 _3h_PT,
+                 _3h_PTsum,
+                 _3h_Psum,
+                 _3h_PVIPCHI2sum,
+                 _3h_TRKCHIDOFmin,
+                 _3h_CORRMmax,
+                 _3h_CORRMmin,
+                 _3hpph_deltaMmax,
+                 _3hpph_deltaMmin) :
+  
+  _daughtersCuts = {"p+" : "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals(),
-		      "K+" :  "(PT > %(_h_PT)s*MeV) \
+                    "K+" :  "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
-    _combinationCut = "(AM < (5279.15 + %(_3hpph_deltaMmax)s)*MeV) \
+  _combinationCut = "(AM < (5279.15 + %(_3hpph_deltaMmax)s)*MeV) \
                      & (AM > (5279.15 - %(_3hpph_deltaMmin)s)*MeV) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
-    _motherCut = "(MAXTREE(((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),PT) > %(_3h_PTmax)s*MeV) \
+  _motherCut = "(MAXTREE(((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),PT) > %(_3h_PTmax)s*MeV) \
                 & (BPVDIRA > %(_3h_DIRA)s) \
 		& (BPVVDCHI2 > %(_3h_FDCHI2)s) \
 		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_PVDOCAmin)s) \
@@ -432,16 +431,16 @@ def makepph_incl(name,
 		& (SUMTREE(MIPCHI2DV(PRIMARY),((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),0.0) > %(_3h_PVIPCHI2sum)s) \
 		& (MINTREE(((ABSID=='p+') |(ABSID=='p~-') |('K+'==ABSID) | ('K-'==ABSID)),TRCHI2DOF) < %(_3h_TRKCHIDOFmin)s) \
 		& (BPVCORRM < %(_3h_CORRMmax)s * MeV)& (BPVCORRM > %(_3h_CORRMmin)s*MeV)" % locals()
-   
-    _pph=CombineParticles()
-    _pph.DecayDescriptors  = ["[B+ -> p+ p~- K+]cc"]
-    _pph.MotherCut         = _motherCut
-    _pph.CombinationCut    = _combinationCut
-    _pph.DaughtersCuts     = _daughtersCuts
-
-    return Selection ( name,
-                       Algorithm = _pph,
-                       RequiredSelections = [StdNoPIDsKaons,StdLooseProtons])
+  
+  _pph=CombineParticles()
+  _pph.DecayDescriptors  = ["[B+ -> p+ p~- K+]cc"]
+  _pph.MotherCut         = _motherCut
+  _pph.CombinationCut    = _combinationCut
+  _pph.DaughtersCuts     = _daughtersCuts
+  
+  return Selection ( name,
+                     Algorithm = _pph,
+                     RequiredSelections = [StdNoPIDsKaons,StdLooseProtons])
 
 
 def globalEventCutFilter(name, 
@@ -455,8 +454,8 @@ def globalEventCutFilter(name,
   from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
   modules = CoreFactory('CoreFactory').Modules
   for i in ['LoKiTracks.decorators']:
-     if i not in modules : modules.append(i)
-  if MaxTrSIZE != None : _code += "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(MaxTrSIZE)s )" %locals()
+    if i not in modules : modules.append(i)
+    if MaxTrSIZE != None : _code += "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(MaxTrSIZE)s )" %locals()
 
   globalFilter= VoidFilter(name)
   globalFilter.Code = _code
