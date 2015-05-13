@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-14 - Roberta Cardinale
+ - added StrippinDiMuonNew.py and StrippingChicJPsiGammaConv.py to BandQ
+
 ! 2015-05-13 - Maurizio Martinelli
  - added StrippingDstarD2HHHH.py to StrippingCharm 
 
