@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-13 - Ricardo Vazquez Gomez
+ - Create the folder Stripping23 for the config dictionaries.
+   Fill the MiniBias config file. Copied from S21
+
 ! 2015-05-11 - Ricardo Vazquez Gomez
  - Update the LineConfig dictionaries for EM in S22.
 
