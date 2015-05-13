@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-13 - Vanya Belyaev
+ - Add StrippingBandQ/StrippingBc3h from Stripping21  
+
 ! 2015-05-12 - Stefano Perazzini
  - Correct wrong indentation in StrippingBnoC/StrippingBu2hhh.py
 
