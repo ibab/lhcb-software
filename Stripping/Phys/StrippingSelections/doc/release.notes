@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-13 - Stefanie Reichert
+ - added StrippingCharmFromBSemi.py to StrippingCharm (copy of old lines)
+
 ! 2015-05-13 - Markward Britsch
 	- Add (old) StrippingD02KSKS.py in Charm
 
