@@ -13,11 +13,12 @@ _selections = (
     'StrippingXic2PKPiForXSec',
     "StrippingB2ppipiSigmacmm_Lcpi" ,
     'StrippingPromptCharm',
-    'StrippingD2hh.py',
-    'StrippingDstarD2hhpi0.py',
-    'StrippingDstarD2KShh.py',
-    'StrippingD02KSKS.py',
+    'StrippingD2hh',
+    'StrippingDstarD2hhpi0',
+    'StrippingDstarD2KShh',
+    'StrippingD02KSKS',
     'StrippingCharmFromBSemi'
+    'StrippingXicc'
     )
 
 for _sel in _selections :

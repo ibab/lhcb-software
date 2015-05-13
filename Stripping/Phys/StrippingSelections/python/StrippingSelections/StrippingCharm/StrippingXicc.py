@@ -19,8 +19,8 @@ for the Lambdac+, Xic0, and Xic+. It will certainly be necessary to prescale
 the Lambdac+ control line, and perhaps the others too.
 '''
 
-__author__ = ['Mat Charles', 'Patrick Spradlin', 'Stephen Ogilvy']
-__date__ = '20/Jan/2012'
+__author__ = ['Patrick Spradlin', 'Mat Charles']
+__date__ = '2015 May 13'
 __version__ = '$Revision: 1.1 $'
 
 __all__ = ( 'XiccBuilder'               ## LineBuilder class specialization
@@ -56,29 +56,32 @@ from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 from Configurables import TisTosParticleTagger
 
 
-default_name = "Xicc"
-
 default_config = {
-      'LongTrackGEC' : 150
-    , 'controlPrescaleLc' : 0.05
-    , 'controlPrescaleXic' : 1.0
-    , 'controlPrescaleDp' : 0.01
-    , 'controlPrescaleD0' : 0.01
-    , 'controlPrescaleDsp' : 0.01
-    , 'signalPrescaleViaLc' : 1.0
-    , 'signalPrescaleViaLcWC' : 1.0
-    , 'signalPrescaleViaLcDCS' : 1.0
-    , 'signalPrescaleViaXic' : 1.0
-    , 'signalPrescaleViaXicWC' : 1.0
-    , 'signalPrescaleViaDp'  : 1.0
-    , 'signalPrescaleViaDpWC': 1.0
-    , 'signalPrescaleViaD0'  : 1.0
-    , 'signalPrescaleViaD0WC'  : 1.0
-    , 'signalPrescaleViaD0DCS'  : 1.0
-    , 'LcHlt2TisTosSpec' : { 'Hlt2.*CharmHadLambdaC2KPPi.*Decision%TOS' : 0 }
-    , 'DzHlt2TisTosSpec' : { 'Hlt2.*CharmHadD02.*Decision%TOS' : 0 }
-    , 'DpHlt2TisTosSpec' : { 'Hlt2.*CharmHadD2HHH.*Decision%TOS' : 0 }
-    , 'XiHlt2TisTosSpec' : { 'Hlt2.*ChargedHyperon.*Decision%TOS' : 0 }
+    'NAME'  : 'Xicc'
+    , 'WGs'   : [ 'Charm' ]
+    , 'BUILDERTYPE' : 'XiccBuilder'
+    , 'CONFIG' : { 'LongTrackGEC' : 150
+                   , 'controlPrescaleLc'       : 0.05
+                   , 'controlPrescaleXic'      : 1.0
+                   , 'controlPrescaleDp'       : 0.01
+                   , 'controlPrescaleD0'       : 0.01
+                   , 'controlPrescaleDsp'      : 0.01
+                   , 'signalPrescaleViaLc'     : 1.0
+                   , 'signalPrescaleViaLcWC'   : 1.0
+                   , 'signalPrescaleViaLcDCS'  : 1.0
+                   , 'signalPrescaleViaXic'    : 1.0
+                   , 'signalPrescaleViaXicWC'  : 1.0
+                   , 'signalPrescaleViaDp'     : 1.0
+                   , 'signalPrescaleViaDpWC'   : 1.0
+                   , 'signalPrescaleViaD0'     : 1.0
+                   , 'signalPrescaleViaD0WC'   : 1.0
+                   , 'signalPrescaleViaD0DCS'  : 1.0
+                   , 'LcHlt2TisTosSpec' : { }
+                   , 'DzHlt2TisTosSpec' : { }
+                   , 'DpHlt2TisTosSpec' : { }
+                   , 'XiHlt2TisTosSpec' : { }
+                 }
+    , 'STREAMS' : [ 'Charm' ]
 }
 
 
@@ -191,7 +194,8 @@ class XiccBuilder(LineBuilder) :
                           prescale  = 1.0  ,   # prescale factor
                           ODIN      = None ,   # ODIN predicate
                           L0DU      = None ,   # L0DU predicate
-                          HLT       = None ,   # HltDecReports predicate
+                          HLT1      = None ,   # HltDecReports predicate
+                          HLT2      = None ,   # HltDecReports predicate
                           FILTER    = None ,   # 'VOID'-predicate, e.g. Global Event Cut
                           checkPV   = True ,   # Check PV before running algos
                           algos     = None ,   # the list of stripping members
@@ -207,7 +211,8 @@ class XiccBuilder(LineBuilder) :
                                   prescale        = prescale,
                                   ODIN            = ODIN,
                                   L0DU            = L0DU,
-                                  HLT             = HLT,
+                                  HLT1            = HLT1,
+                                  HLT2            = HLT2,
                                   FILTER          = FILTER,
                                   checkPV         = checkPV,
                                   algos           = algos,
