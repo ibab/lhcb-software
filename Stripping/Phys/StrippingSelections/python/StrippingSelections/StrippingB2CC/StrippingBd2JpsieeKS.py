@@ -37,7 +37,7 @@ default_config = {
         , 'Bd2JpsieeKstarPrescale':     0.1   # adimensional
         , 'Bu2JpsieeKPrescale'    :     0.1   # adimensional
         },
-    'STREAMS' : [ 'Radiative' ],
+    'STREAMS' : [ 'Leptonic' ],
     'WGs'    : [ 'B2CC' ]
     }
 
@@ -171,7 +171,8 @@ class Bd2JpsieeKSConf(LineBuilder):
         Bd2JpsieeKSFromTracksPrescaledLine = StrippingLine( self.name + "Bd2JpsieeKSFromTracksPrescaledLine",
                                                             prescale = self.config['Prescale'],
                                                             algos = [ Bd2JpsieeKSFromTracks ],
-                                                            MDSTFlag = False )
+                                                            EnableFlavourTagging = True,
+                                                            MDSTFlag = True )
 
         Bd2JpsieeKSFromTracksDetached = self.createSubSel( InputList = Bd2JpsieeKSFromTracks,
                                                            OutputList = Bd2JpsieeKSFromTracks.name() + "Detached",
@@ -180,7 +181,8 @@ class Bd2JpsieeKSConf(LineBuilder):
         Bd2JpsieeKSFromTracksDetachedLine = StrippingLine( self.name + "Bd2JpsieeKSFromTracksDetachedLine",
                                                            prescale = 1.0,
                                                            algos = [ Bd2JpsieeKSFromTracksDetached ],
-                                                           MDSTFlag = False )
+                                                           EnableFlavourTagging = True,
+                                                           MDSTFlag = True )
 
         Bd2JpsieeKSDetached = self.createSubSel( InputList = Bd2JpsieeKS,
                                                  OutputList = Bd2JpsieeKS.name() + "Detached",
@@ -189,7 +191,8 @@ class Bd2JpsieeKSConf(LineBuilder):
         Bd2JpsieeKSDetachedLine = StrippingLine( self.name + "Bd2JpsieeKSDetachedLine",
                                                  prescale = 1.0,
                                                  algos = [ Bd2JpsieeKSDetached ],
-                                                 MDSTFlag = False )
+                                                 EnableFlavourTagging = True,
+                                                 MDSTFlag = True )
         
         self.registerLine(Bd2JpsieeKSFromTracksPrescaledLine)
         self.registerLine(Bd2JpsieeKSFromTracksDetachedLine)
@@ -205,7 +208,8 @@ class Bd2JpsieeKSConf(LineBuilder):
         Bd2JpsieeKstarFromTracksPrescaledLine = StrippingLine( self.name + "Bd2JpsieeKstarFromTracksPrescaledLine",
                                                                algos = [ Bd2JpsieeKstarFromTracks ],
                                                                prescale = self.config['Bd2JpsieeKstarPrescale'],
-                                                               MDSTFlag = False )
+                                                               EnableFlavourTagging = True,
+                                                               MDSTFlag = True )
 
         Bd2JpsieeKstarFromTracksDetached = self.createSubSel( InputList = Bd2JpsieeKstarFromTracks,
                                                               OutputList = Bd2JpsieeKstarFromTracks.name() + "Detached" + self.name,
@@ -213,7 +217,8 @@ class Bd2JpsieeKSConf(LineBuilder):
 
         Bd2JpsieeKstarFromTracksDetachedLine  = StrippingLine( self.name + "Bd2JpsieeKstarFromTracksDetachedLine",
                                                                algos = [ Bd2JpsieeKstarFromTracksDetached ],
-                                                               MDSTFlag = False )
+                                                               EnableFlavourTagging = True,
+                                                               MDSTFlag = True )
 
         self.registerLine(Bd2JpsieeKstarFromTracksPrescaledLine)
         self.registerLine(Bd2JpsieeKstarFromTracksDetachedLine)
@@ -234,6 +239,7 @@ class Bd2JpsieeKSConf(LineBuilder):
 
         Bu2JpsieeKFromTracksDetachedLine  = StrippingLine( self.name + "Bu2JpsieeKFromTracksDetachedLine",
                                                           algos = [ Bu2JpsieeKFromTracksDetached ],
-                                                          MDSTFlag = False )
+                                                          EnableFlavourTagging = True,
+                                                          MDSTFlag = True )
     
         self.registerLine(Bu2JpsieeKFromTracksDetachedLine)

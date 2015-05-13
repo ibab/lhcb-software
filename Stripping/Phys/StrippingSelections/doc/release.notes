@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-13 - Carlos Vazquez Sierra
+ - moved JpsieeKS lines to Leptonic stream, modified some features.
+
 ! 2015-05-13 - Adlene Hicheur
  - Added Vertex Isolation variables in StrippingBnoC/StrippingBc2hhh_BnoC.py 
 
