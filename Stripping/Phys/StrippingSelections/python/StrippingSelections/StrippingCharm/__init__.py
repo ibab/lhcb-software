@@ -17,7 +17,7 @@ _selections = (
     'StrippingDstarD2hhpi0',
     'StrippingDstarD2KShh',
     'StrippingD02KSKS',
-    'StrippingCharmFromBSemi'
+    'StrippingCharmFromBSemi',
     'StrippingXicc'
     )
 
