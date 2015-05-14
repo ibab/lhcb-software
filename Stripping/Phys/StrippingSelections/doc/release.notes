@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-14 - Paula Alvarez Cartelle
+ - Added StrippingB2XTauMu.py
+
 ! 2015-05-14 - Konrad Klimaszewski
  - Enlarged mass windows for StrippingBs2JpsieePhi.py
 
