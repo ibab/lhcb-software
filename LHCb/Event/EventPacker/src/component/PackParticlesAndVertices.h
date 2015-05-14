@@ -74,7 +74,7 @@ private:
   /// Test if a TES container is Veto'ed from being packed
   bool isVetoed( const std::string& id ) const;
   
-  /// Build the CLassID to TES location(s) map
+  /// Build the ClassID to TES location(s) map
   void buildTESMap( const DataObject* obj,
                     ClassIDTESMap& tesmap ) const;
 
@@ -133,11 +133,11 @@ private:
 private:
 
   std::string m_inputStream; ///< Input stream root
-  bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
-  bool m_deleteInput;       ///< delete the containers after packing if true.
-  bool m_enableCheck;       ///< Flag to turn on automatic unpacking and checking of the output post-packing
+  bool m_alwaysOutput;       ///< Flag to turn on the creation of output, even when input is missing
+  bool m_deleteInput;        ///< Delete the containers after packing if true.
+  bool m_enableCheck;        ///< Flag to turn on automatic unpacking and checking of the output post-packing
   std::vector<std::string> m_vetoedConts; ///< Vetoed containers. Will not be packed.
-  StandardPacker m_pack;    ///< Standard packer
+  StandardPacker m_pack;     ///< Standard packer
 
 };
 
@@ -158,11 +158,12 @@ packAP2PRelationContainer ( const RELATION* rels,
   prel.container = m_pack.reference64( &prels, rels, 0 );
 
   // First object
-  prel.start     = prels.sources().size();
+  prel.start = prels.sources().size();
 
   // reserve size
-  prels.sources().reserve( prels.sources().size() + rels->relations().size() );
-  prels.dests()  .reserve( prels.dests().size()   + rels->relations().size() );
+  const auto newSize = prels.sources().size() + rels->relations().size();
+  prels.sources().reserve( newSize );
+  prels.dests()  .reserve( newSize );
 
   // Loop over relations
   for ( const auto & R : rels->relations() )
@@ -199,12 +200,13 @@ packAP2PRelationContainer ( const RELATION* rels,
   prel.container = m_pack.reference64( &prels, rels, 0 );
 
   // First object
-  prel.start     = prels.sources().size();
+  prel.start = prels.sources().size();
 
   // reserve size
-  prels.sources().reserve( prels.sources().size() + rels->relations().size() );
-  prels.dests()  .reserve( prels.dests().size()   + rels->relations().size() );
-  prels.weights().reserve( prels.weights().size() + rels->relations().size() );
+  const auto newSize = prels.sources().size() + rels->relations().size();
+  prels.sources().reserve( newSize );
+  prels.dests()  .reserve( newSize );
+  prels.weights().reserve( newSize );
 
   // Loop over relations
   for ( const auto & R : rels->relations() )
@@ -244,9 +246,10 @@ packAP2IntRelationContainer ( const RELATION* rels,
   // First object
   prel.start = prels.sources().size();
 
- // reserve size
-  prels.sources().reserve( prels.sources().size() + rels->relations().size() );
-  prels.dests()  .reserve( prels.dests().size()   + rels->relations().size() );
+  // reserve size
+  const auto newSize = prels.sources().size() + rels->relations().size();
+  prels.sources().reserve( newSize );
+  prels.dests()  .reserve( newSize );
 
   // Loop over relations
   for ( const auto & R : rels->relations() )

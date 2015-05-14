@@ -45,10 +45,18 @@ StatusCode PackCluster::execute()
   // If input does not exist, and we aren't making the output regardless, just return
   if ( !m_alwaysOutput && !exist<LHCb::Tracks>(m_inputName) ) return StatusCode::SUCCESS;
 
-  // Create and save the output container
-  LHCb::PackedClusters* out = new LHCb::PackedClusters();
-  put( out, m_outputName );
+  // Check to see if packed output already exists. If it does print a warning and return
+  LHCb::PackedClusters * out = getIfExists<LHCb::PackedClusters>(m_outputName);
+  if ( out )
+  {
+    return Warning( "Packed Clusters already exist at '"+m_outputName+"' -> Abort",
+                    StatusCode::SUCCESS, 3 );
+  }
 
+  // Create and save the output container
+  out = new LHCb::PackedClusters();
+  put( out, m_outputName );
+  
   // Load the input. If not existing just return
   const LHCb::Tracks* tracks = getIfExists<LHCb::Tracks>( m_inputName );
   if ( !tracks ) return StatusCode::SUCCESS;
@@ -56,13 +64,12 @@ StatusCode PackCluster::execute()
   // Select LHCbIDs from the input tracks
   std::vector<LHCb::LHCbID> allIds;
   allIds.reserve( tracks->size() * 40 );
-  for ( LHCb::Tracks::const_iterator itT = tracks->begin(); tracks->end() != itT; ++itT ) 
+  for ( const auto* tk : *tracks )
   {
-    for ( std::vector<LHCb::LHCbID>::const_iterator itI = (*itT)->lhcbIDs().begin();
-          (*itT)->lhcbIDs().end() != itI; ++itI )
+    for ( const auto& id : tk->lhcbIDs() )
     {
-      if ( (*itI).isOT() ) continue;
-      allIds.push_back( *itI );
+      // Skip OT hits ...
+      if ( !id.isOT() ) { allIds.push_back(id); }
     }
   }
  
@@ -77,64 +84,63 @@ StatusCode PackCluster::execute()
   const LHCb::STClusters*  itClus = NULL;
 
   // pack the clusters
-  for ( std::vector<LHCb::LHCbID>::const_iterator itI = allIds.begin();
-        allIds.end() != itI; ++itI ) 
+  for ( const auto& id : allIds )
   {
-    if ( msgLevel(MSG::VERBOSE) ) { verbose() << "Packing " << *itI << endmsg; }
+    if ( msgLevel(MSG::VERBOSE) ) { verbose() << "Packing " << id << endmsg; }
 
     // Pack by type
-    if ( (*itI).isVelo() )
+    if ( id.isVelo() )
     {
       if ( !vClus ) { vClus = getIfExists<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default); }
-      const LHCb::VeloCluster* cl = ( vClus ? vClus->object((*itI).veloID()) : NULL );
+      const LHCb::VeloCluster* cl = ( vClus ? vClus->object(id.veloID()) : NULL );
       if ( cl ) { out->addVeloCluster( cl ); }
       else 
       {
         std::ostringstream mess;
-        mess << "Unknown Velo cluster : " << *itI;
+        mess << "Unknown Velo cluster : " << id;
         Warning( mess.str() ).ignore();
       }
     } 
-    else if ( (*itI).isTT() )
+    else if ( id.isTT() )
     {
       if ( !ttClus ) { ttClus = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::TTClusters); }
-      const LHCb::STCluster* cl = ( ttClus ? ttClus->object((*itI).stID()) : NULL );
+      const LHCb::STCluster* cl = ( ttClus ? ttClus->object(id.stID()) : NULL );
       if ( cl ) { out->addTTCluster( cl ); }
       else 
       {
         std::ostringstream mess;
-        mess << "Unknown TT cluster : " << *itI;
+        mess << "Unknown TT cluster : " << id;
         Warning( mess.str() ).ignore();
       }
     } 
-    else if ( (*itI).isUT() )
+    else if ( id.isUT() )
     {
       if ( !utClus ) { utClus = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::UTClusters); }
-      const LHCb::STCluster* cl = ( utClus ? utClus->object((*itI).stID()) : NULL );
+      const LHCb::STCluster* cl = ( utClus ? utClus->object(id.stID()) : NULL );
       if ( cl ) { out->addUTCluster( cl ); }
       else 
       {
         std::ostringstream mess;
-        mess << "Unknown UT cluster : " << *itI;
+        mess << "Unknown UT cluster : " << id;
         Warning( mess.str() ).ignore();
       }
     } 
-    else if ( (*itI).isIT() ) 
+    else if ( id.isIT() ) 
     {
       if ( !itClus ) { itClus = getIfExists<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters); }
-      const LHCb::STCluster* cl = ( itClus ? itClus->object((*itI).stID()) : NULL );
+      const LHCb::STCluster* cl = ( itClus ? itClus->object(id.stID()) : NULL );
       if ( cl ) { out->addITCluster( cl ); }
       else
       {
         std::ostringstream mess;
-        mess << "Unknown IT cluster : " << *itI;
+        mess << "Unknown IT cluster : " << id;
         Warning( mess.str() ).ignore();
       }
     } 
     else 
     {
       std::ostringstream mess;
-      mess << "Unknown LHCbID type : " << *itI;
+      mess << "Unknown LHCbID type : " << id;
       Warning( mess.str() ).ignore();
     }
   }

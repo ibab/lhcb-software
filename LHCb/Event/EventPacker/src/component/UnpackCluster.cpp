@@ -97,21 +97,20 @@ StatusCode UnpackCluster::execute()
   }
 
   // Fill the clusters
-  for ( std::vector<LHCb::PackedCluster>::const_iterator itC = dst->clusters().begin();
-        dst->clusters().end() != itC; ++itC )
+  for ( const auto& clu : dst->clusters() )
   {
-
-    const int det = (*itC).id >> 29;
-    int id        = (*itC).id & 0x1FFFFFFF;
+    
+    const int det = clu.id >> 29;
+    int id        = clu.id & 0x1FFFFFFF;
     LHCb::VeloCluster::ADCVector adcs;
-    for ( unsigned int kk = (*itC).begin; (*itC).end != kk; ++kk )
+    for ( unsigned int kk = clu.begin; clu.end != kk; ++kk )
     {
       adcs.push_back( std::pair<int,unsigned int>( dst->strips()[kk],
                                                    dst->adcs()[kk]  ) );
     }
     if ( 1 == det )
     {
-      LHCb::VeloChannelID vId( id & 0xFFFFFF );
+      const LHCb::VeloChannelID vId( id & 0xFFFFFF );
       id = id >> 24;
       const double frac = 0.125 * ( id & 7 );
       int size = 1;
@@ -135,20 +134,20 @@ StatusCode UnpackCluster::execute()
     }
     else if ( 2 == det || 3 == det )
     {
-      LHCb::STChannelID sId( id & 0xFFFFFF );
+      const LHCb::STChannelID sId( id & 0xFFFFFF );
       id = id >> 24;
       const double frac = 0.25 * ( id & 3 );
       int size = 1;
       if ( 0 != frac ) size = 2;
       if ( ( id & 4 ) != 0 ) size = 3;
       bool high = ( id & 8 ) != 0;
-      LHCb::STLiteCluster sl( sId, frac, size, high );
-      if ( 0 == (*itC).spill )
+      const LHCb::STLiteCluster sl( sId, frac, size, high );
+      if ( 0 == clu.spill )
       {
         LHCb::STCluster* sCl = new LHCb::STCluster( sl, adcs,
-                                                    double( (*itC).sum ),
-                                                    (*itC).sourceID,
-                                                    (*itC).tell1Channel,
+                                                    double(clu.sum),
+                                                    clu.sourceID,
+                                                    clu.tell1Channel,
                                                     LHCb::STCluster::Central );
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " Unpacked " << sCl->channelID() << endmsg;
@@ -189,7 +188,7 @@ StatusCode UnpackCluster::execute()
   if ( m_itClus ) { std::sort( m_itClus->begin(), m_itClus->end(), compareKeys<LHCb::STCluster>   ); }
 
   //== If we stored in a different location, compare...
-  if ( !m_extension.empty() )
+  if ( UNLIKELY(!m_extension.empty()) )
   {
 
     LHCb::VeloClusters* vRef = get<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
