@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-14 - Roberta Cardinale
+ - Added StrippingHeavyBaryons.py to BandQ
+
 ! 2015-05-14 - Mika Vesterinen
  - A bit quick with previous commit. Now added the new dictionary formats, 
   and any useage of HLT rather than HLT1/2.
