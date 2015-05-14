@@ -16,6 +16,8 @@
 #include "Mint/GaussFct.h"
 #include "Mint/IGenFct.h"
 #include "Mint/ResonancePropertiesList.h"
+#include "Mint/FitParDependent.h"
+#include "ResonancePropertiesFitRef.h"
 
 #include "TRandom.h"
 
@@ -23,7 +25,7 @@ class ParticleProperties;
 
 // Breit-Wigner with Blatt-Weisskopf penetration factors.
 // Can only do 2 body decays for now... (it's the BW penetration factors)
-class BW_BW : virtual public ILineshape{
+class BW_BW : virtual public ILineshape, public MINT::FitParDependent{
  private:
   mutable IDalitzEvent* _eventPtr;
   //  mutable std::stack<IDalitzEvent*> _oldPointers;

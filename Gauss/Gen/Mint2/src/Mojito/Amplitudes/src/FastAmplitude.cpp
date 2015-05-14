@@ -11,13 +11,11 @@ FastAmplitude::FastAmplitude( const DecayTree& decay
 			      )
   : Amplitude(decay, SPD_Wave, opt)
   ,_rememberNumber(-9999)
-  ,_fitLineshapeParameters("FitLineshapeParameters",0)
 {}
 
 FastAmplitude::FastAmplitude( const AmpInitialiser& ampInit)
   : Amplitude(ampInit)
   ,_rememberNumber(-9999)
-  ,_fitLineshapeParameters("FitLineshapeParameters",0)
 {}
 
 FastAmplitude::FastAmplitude( const FastAmplitude& other)
@@ -26,13 +24,11 @@ FastAmplitude::FastAmplitude( const FastAmplitude& other)
   , Amplitude(other)
   , _resultMap(other._resultMap)
   ,_rememberNumber(-9999)
-  ,_fitLineshapeParameters(other._fitLineshapeParameters)
 {}
 
 FastAmplitude::FastAmplitude( const Amplitude& other)
   : Amplitude(other)
   ,_rememberNumber(-9999)
-  ,_fitLineshapeParameters("FitLineshapeParameters",0)
 {
   _resultMap.clear();
 }
@@ -53,47 +49,32 @@ std::complex<double> FastAmplitude::getVal(IDalitzEvent* evt){
 }
 
 complex<double> FastAmplitude::getVal(IDalitzEvent& evt){
-  if(_fitLineshapeParameters) {
-       if(evt.numPermutations()<2){
-            //return Amplitude::getVal(evt); 
-            complex<double> spinFactor(-9999.0, 0);
-            if(knownEvent(evt, spinFactor)) return Amplitude::LineshapeProduct(evt)*spinFactor;
-            spinFactor = Amplitude::SpinFactorValue(evt);
-            evt.setComplex(rememberNumber(),spinFactor);
-            return Amplitude::LineshapeProduct(evt)*spinFactor;
-      }
-      else return Amplitude::getVal(evt); 
-  } 
+  bool dbThis=false;
+  complex<double> result(-9999.0, 0);
   
-  else{  
-    
-      bool dbThis=false;
-      complex<double> result(-9999.0, 0);
-
-      if(dbThis){
-        cout << "FastAmplitude getting value:" << endl;
-        cout << " eventPtr = " << &evt << endl;
-        cout << " event = " << evt.p(1).E() << endl;
-      }
-      if(knownEvent(evt, result)){
-        if(dbThis){
-          cout << " this " << this  
+  if(dbThis){
+    cout << "FastAmplitude getting value:" << endl;
+    cout << " eventPtr = " << &evt << endl;
+    cout << " event = " << evt.p(1).E() << endl;
+  }
+  if(knownEvent(evt, result)){
+    if(dbThis){
+      cout << " this " << this  
            << " remembering result: " << result 
            << endl;
-          complex<double> newResult = Amplitude::getVal(evt);
-          cout << " compare to newly calculated: "
+      complex<double> newResult = Amplitude::getVal(evt);
+      cout << " compare to newly calculated: "
            << newResult << endl;
-          if(result != newResult) cout << " aaaaaaaaaaaaaaaaaa" << endl;
-        }
-        return result;
-      }
-      if(dbThis) cout << " result is not known - getting Amplitude " << endl;
-      result = Amplitude::getVal(evt);
-      evt.setComplex(rememberNumber(),result);
-      if(dbThis)cout << "FastAmplitude returning " << result << endl;
-      return result;
-          
+      if(result != newResult) cout << " aaaaaaaaaaaaaaaaaa" << endl;
+    }
+    return result;
   }
+  if(dbThis) cout << " result is not known - getting Amplitude " << endl;
+  result = Amplitude::getVal(evt);
+  evt.setComplex(rememberNumber(),result);
+  if(dbThis)cout << "FastAmplitude returning " << result << endl;
+  return result;
+  
 }
 
 

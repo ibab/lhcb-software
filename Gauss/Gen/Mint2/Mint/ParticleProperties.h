@@ -7,11 +7,15 @@
 #include <iostream>
 
 #include "Mint/MultiQuarkContent.h"
+#include "Mint/FitParameter.h"
+#include "Mint/FitParRef.h"
 
 class ParticleProperties{
   static const char* pionString;
  protected:
+  //MINT::FitParameter* _massPtr;
   double _mass, _mErrPlus, _mErrMinus;
+  //MINT::FitParameter* _widthPtr;
   double _width, _wErrPlus, _wErrMinus;
   std::string _Isospin; // isospin
   int _Gparity; // G-parity
@@ -40,11 +44,19 @@ class ParticleProperties{
   void antiQuarkContent();
   void antiCharge();
  public:
-  double mass()const{return _mass;} // mass
+  double mass() const{return _mass;}
+  //   double mass()const{
+  //   if(0 == _massPtr) return _pdgMass;
+  //   else return _massPtr->mean();} // mass
+  //  const MINT::FitParameter* massFitPtr()const{return _massPtr;} // mass
   double mErrPlus()const{return _mErrPlus;}
   double mErrMinus()const{return _mErrMinus;}
   
-  double width()const{return _width;} // width
+  double width() const{ return _width;}
+  //  double width()const{
+  //    if (0 == _widthPtr) return _pdgWidth;
+  //    else return _widthPtr->mean();} // width
+  //  const MINT::FitParameter* widthFitPtr()const{return _widthPtr;} // width
   double wErrPlus()const{return _wErrPlus;}
   double wErrMinus()const{return _wErrMinus;}
 

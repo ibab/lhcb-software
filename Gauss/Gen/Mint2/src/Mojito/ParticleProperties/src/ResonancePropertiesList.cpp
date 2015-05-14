@@ -72,10 +72,12 @@ void ResonancePropertiesList::AddToList(ResonanceProperties* rp){
     byID[rp->pid()] = rp;
 }
 
-const ResonanceProperties* ResonancePropertiesList::get(int id) const{
-    std::map<int, ResonanceProperties*>::const_iterator it = byID.find(id);
-    if(it == byID.end()) return 0;
-    return it->second;
+const ResonanceProperties* ResonancePropertiesList::get(int id_in) const{
+  // assume CPT holds
+  int id = abs(id_in);
+  std::map<int, ResonanceProperties*>::const_iterator it = byID.find(id);
+  if(it == byID.end()) return 0;
+  return it->second;
 }
 
 

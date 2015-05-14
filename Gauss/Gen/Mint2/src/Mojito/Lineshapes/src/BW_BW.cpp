@@ -359,7 +359,15 @@ const ParticleProperties* BW_BW::mumsProperties() const{
 }
 
 double BW_BW::mumsMass() const{
-    return _RPL->get(mumsPID())->mass();
+  bool dbThis=false;
+  if(dbThis){
+    cout << "BW_BW::mumsMass() called with "
+	 << "_RPL = " << _RPL
+	 << " mumsPID() " << mumsPID() << endl;
+    cout << "_RPL->get(mumsPID()) " << _RPL->get(mumsPID()) << endl;
+    cout << "... and finally " << _RPL->get(mumsPID())->mass() << endl;
+  }
+  return _RPL->get(mumsPID())->mass();
 }
 
 double BW_BW::mumsWidth() const{

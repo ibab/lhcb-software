@@ -176,17 +176,17 @@ int ampFit(){
   datH.save("plotsFromEventList.root");
   datH.draw("dataPlots_");
 
-  MinuitParameterSet fitMPS;
+  //  MinuitParameterSet fitMPS;
   DalitzPdfSaveInteg amps(pdg, integPrecision
                           , (std::string) IntegratorInputFile
                           , (std::string) IntegratorEventFile
                           , "topUp"
-                          , &fitMPS
+			  //			  , &fitMPS
                           );
 
 
 
-  Neg2LL fcn(amps, eventList, &fitMPS);
+  Neg2LL fcn(amps, eventList);//, &fitMPS);
 
   /*
   DalitzPdfNormChecker nc(&amps, pdg);

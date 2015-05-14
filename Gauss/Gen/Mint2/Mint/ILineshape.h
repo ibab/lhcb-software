@@ -11,12 +11,13 @@
 
 #include "Mint/IDalitzEvent.h"
 #include "Mint/IGenFct.h"
+#include "Mint/IFitParDependent.h"
 
 #include "Mint/counted_ptr.h"
 #include "Mint/DalitzCoordinate.h"
 
 
-class ILineshape{
+class ILineshape : virtual public MINT::IFitParDependent{
  public:
   virtual std::complex<double> getVal(IDalitzEvent& evt)=0;
 
@@ -25,6 +26,7 @@ class ILineshape{
   virtual std::string name() const=0;
   virtual MINT::counted_ptr<IGenFct> generatingFunction() const=0;
 
+  //  virtual bool changedSinceLastCall() const=0;// for IFitParDependent
   virtual ~ILineshape(){}
 };
 

@@ -8,6 +8,7 @@
 #include "Mint/ILineshape.h"
 #include "Mint/BW_BW.h"
 #include "Mint/NamedParameter.h"
+#include "Mint/FitParDependent.h"
 
 class SBW : public BW_BW, virtual public ILineshape{
  public:

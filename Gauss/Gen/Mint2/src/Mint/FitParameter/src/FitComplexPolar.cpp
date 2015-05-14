@@ -7,6 +7,7 @@
 
 #include "Mint/FitComplexPolar.h"
 #include "Mint/NamedParameter.h"
+#include "Mint/Utils.h"
 
 using namespace std;
 using namespace MINT;

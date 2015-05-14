@@ -39,12 +39,7 @@ DalitzPdfSaveInteg::DalitzPdfSaveInteg(const DalitzEventPattern& pat
    // number generator with randomised seed.
    _localRnd = new TRandom3(time(0));
     if("topUp" == topUpIntegOption){
-     if(0 == _amps){
-       cout << "cannot make SignalGenerator, _amps are empty" << endl;
-       cout << "bailing out" << endl;
-       throw "no amps, no signal generator";
-     }
-     if(_pat.empty()){
+      if(_pat.empty()){
        cout << "cannot make SignalGenerator, pattern is empty" << endl;
        cout << "bailing out" << endl;
        throw "no pattern, no signal generator";

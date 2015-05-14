@@ -19,6 +19,7 @@
 #include "Mint/GaussFct.h"
 
 #include "Mint/IGenFct.h"
+#include "Mint/FitParDependent.h"
 
 #include "TRandom.h"
 
@@ -26,7 +27,7 @@ class ParticleProperties;
 
 // Breit-Wigner with Blatt-Weisskopf penetration factors.
 // Can only do 2 body decays for now... (it's the BW penetration factors)
-class CLEO2012_BW_BW : virtual public ILineshape{
+class CLEO2012_BW_BW : virtual public ILineshape, public MINT::FitParDependent{
  private:
   mutable IDalitzEvent* _eventPtr;
 

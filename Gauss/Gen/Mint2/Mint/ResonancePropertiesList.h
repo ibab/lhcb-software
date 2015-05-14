@@ -1,5 +1,5 @@
 #ifndef RESONANCEPROPERTIESLIST_HH
-#define RESONANCEROPERTIESLIST_HH
+#define RESONANCEPROPERTIESLIST_HH
 // author: Philippe d'Argent (p.dargent@cern.ch)
 
 #include <string>
@@ -40,7 +40,7 @@ class ResonancePropertiesList{ // a singleton - ensures everyone
     
   //const ResonanceProperties* get(const std::string& name) const;
   const ResonanceProperties* get(int i) const;
-  const double radius() const {return _radius;}
+  double radius() const {return _radius;}
   //void print(std::ostream& out=std::cout) const;
 
     /*

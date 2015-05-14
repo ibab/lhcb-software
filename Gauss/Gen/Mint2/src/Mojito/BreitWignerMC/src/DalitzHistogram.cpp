@@ -603,6 +603,8 @@ bool DalitzHistogram::drawWithFit(const DalitzHistogram& fit
   counted_ptr<TH1> h_c( (TH1*) histo()->Clone());
   counted_ptr<TH1> fit_c( (TH1*) fit.histo()->Clone());
 
+  fit_c->Scale(h_c->Integral()/fit_c->Integral());
+
   double maxiThis = h_c->GetMaximum();//Stored();
   double maxiThat = fit_c->GetMaximum();//Stored();
 
@@ -631,6 +633,8 @@ bool DalitzHistogram::drawWithFit( TCanvas& can
 
   counted_ptr<TH1> h_c( (TH1*) histo()->Clone());
   counted_ptr<TH1> fit_c( (TH1*) fit.histo()->Clone());
+
+  fit_c->Scale(h_c->Integral()/fit_c->Integral());
 
   double maxiThis = h_c->GetMaximum();//Stored();
   double maxiThat = fit_c->GetMaximum();//Stored();

@@ -98,17 +98,17 @@ int ampFit(){
   
   DalitzHistoSet datH = eventList.histoSet();
   datH.save("plotsFromEventList.root");
-  MinuitParameterSet fitMPS;
-  DalitzPdfSaveInteg amps(&eventList, integPrecision
+  //  MinuitParameterSet fitMPS;
+  DalitzPdfSaveInteg amps(pdg, integPrecision
 			  , (std::string) IntegratorInputFile
 			  , (std::string) IntegratorEventFile
 			  , "topUp"
-			  , &fitMPS
+			  //			  , &fitMPS
 			  );
 
   //amps.setIntegratorFileName("sgIntegrator");
 
-  Neg2LL<IDalitzEvent> fcn(&amps, &eventList, &fitMPS);
+  Neg2LL fcn(amps, eventList);//, &fitMPS);
 
   if((int) doNormCheck){
     DalitzPdfNormChecker nc(&amps, pdg);
@@ -118,11 +118,23 @@ int ampFit(){
   
   Minimiser mini(&fcn);
   mini.doFit();
+
+  cout << "done the fit" << endl;
+  // return 0;
+
+
   mini.printResultVsInput();
   amps.saveEachAmpsHistograms("singleAmpHistos");
 
   //amps.saveIntegrator("sgIntegrator");
   amps.doFinalStats(&mini);
+
+  DalitzHistoSet fitH = amps.histoSet(); 
+  fitH.save("plotsFromIntegrator.root");
+  
+  datH.draw("dataPlots_");
+  fitH.draw("fitPlots_");
+  datH.drawWithFit(fitH, "datFit_");
 
   /*
   DalitzEventList integratorEvents;
