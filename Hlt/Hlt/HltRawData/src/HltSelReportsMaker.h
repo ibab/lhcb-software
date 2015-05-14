@@ -186,6 +186,8 @@ private:
   std::string m_lastPVSelectionName;
   int m_intPVSelID;
 
+  /// Where is the RecSummary location
+  string m_RecSummaryLoc;
   /// Do we want extended reports for Turbo stream
   bool m_Turbo;
 

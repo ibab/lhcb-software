@@ -19,6 +19,7 @@
 #include "Event/HltSelReports.h"
 #include "Event/HltObjectSummary.h"
 #include "Event/HltDecReports.h"
+#include "Event/RecSummary.h"
 
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"
@@ -80,29 +81,31 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
 {
 
   declareProperty("OutputHltSelReportsLocation",
-    m_outputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);  
+      m_outputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);  
   declareProperty("MuonIDSuffix", m_muonIDSuffix = "");
   declareProperty("InputHltDecReportsLocation",
-    m_inputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
+      m_inputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
 
+  declareProperty("RecSummaryLocation",m_RecSummaryLoc = "Hlt2/RecSummary" );
+  
   declareProperty("DebugEventPeriod",m_debugPeriod = 0 );
 
   declareProperty("MaxCandidatesDecision", m_maxCandidatesDecision = 1000);
   declareProperty("MaxCandidatesDecisionDebug", m_maxCandidatesDecisionDebug = 5000);
-  
+
   declareProperty("MaxCandidatesNonDecision", m_maxCandidatesNonDecision = 0);
   declareProperty("MaxCandidatesNonDecisionDebug", m_maxCandidatesNonDecisionDebug = 5000);
-  
+
   declareProperty("SelectionMaxCandidates", m_maxCandidates );
   declareProperty("SelectionMaxCandidatesDebug", m_maxCandidatesDebug );
 
   // changed on 2010/7/17  declareProperty("InfoLevelDecision", m_infoLevelDecision = ((unsigned int)kStandardInfoLevel) );
   declareProperty("InfoLevelDecision", m_infoLevelDecision = ((unsigned int)kMinInfoLevel ));
   declareProperty("InfoLevelDecisionDebug", m_infoLevelDecisionDebug = ((unsigned int)kMaxInfoLevel) );
-  
+
   declareProperty("InfoLevelNonDecision", m_infoLevelNonDecision = ((unsigned int)kMinInfoLevel) );
   declareProperty("InfoLevelNonDecisionDebug", m_infoLevelNonDecisionDebug = ((unsigned int)kMaxInfoLevel) );
-  
+
   declareProperty("SelectionInfoLevel", m_infoLevel );
   declareProperty("SelectionInfoLevelDebug", m_infoLevelDebug );
 
@@ -259,9 +262,36 @@ StatusCode HltSelReportsMaker::execute() {
   }
 #endif  
 
+  // Add a selection for event level data (make sure only done in the HLT2 level)
+  string outLoc = m_outputHltSelReportsLocation;
+  if( boost::algorithm::contains( outLoc, "Hlt2") ){
+    const LHCb::RecSummary* recsummary = getIfExists<LHCb::RecSummary>(m_RecSummaryLoc);
+
+    if( !recsummary ) Warning( "No RecSummary object found, you will not get event level information in the reports", StatusCode::SUCCESS, 10 );
+    else{
+      HltObjectSummary* eventObjectSummary = new HltObjectSummary();
+      HltObjectSummary* eventObjectSummarySub = new HltObjectSummary();
+      eventObjectSummarySub->setSummarizedObjectCLID( recsummary->clID() );
+      eventObjectSummary->setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
+
+      // integer selection id 
+      eventObjectSummary->addToInfo("0#SelectionID",float(m_hltANNSvc->item_map(Hlt2SelectionID)["Hlt2RecSummary"]));
+      HltObjectSummary::Info EventInfo;
+      m_conv->RecSummaryObject2Summary(&EventInfo,recsummary);
+      eventObjectSummarySub->setNumericalInfo(EventInfo);
+      //
+      m_objectSummaries->push_back(eventObjectSummary);
+      m_objectSummaries->push_back(eventObjectSummarySub);
+      eventObjectSummary->addToSubstructure(eventObjectSummarySub);
+      if( outputSummary->insert("Hlt2RecSummary",*eventObjectSummary) == StatusCode::FAILURE ){
+        Warning(" Failed to add RecSummary to its container ",StatusCode::SUCCESS, 10 );
+      }
+    }
+  }
+  
   // data compression requires that we store objects from early processing stages first
   // order selections accordingly 
-  //     filtering of selections for persistency also happens in this loop
+  // filtering of selections for persistency also happens in this loop
 
   std::vector< RankedSelection > sortedSelections;
   sortedSelections.reserve(m_selectionInfo.size());

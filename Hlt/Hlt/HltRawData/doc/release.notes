@@ -5,6 +5,9 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-05-14 - Sean Benson
+ - Add RecSummary to the reports.
+
 ! 2015-04-19 - Sean Benson
  - Objects with LHCbIDs first.
 
