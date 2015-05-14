@@ -1,6 +1,9 @@
 ! Package     : MuonPIDChecker
-! Responsible : E. Polycarpo, H. Lopes    
+! Responsible : E. Polycarpo, H. Lopes
 !----------------------------------------------------------------------------
+
+! 2015-05-14 - Roel Aaij
+ - Replace environment variable + execfile with importlib.
 
 !========================= MuonPIDChecker v5r4p1 2013-04-30 =======================
 ! 2013-04-09 - Marco Cattaneo
@@ -22,7 +25,7 @@
 
 !====================== MuonPIDChecker v5r2 2010-06-21 ======================
 ! 2010-06-19 - Erica Polycarpo
- - use strings instead of char for titles 
+ - use strings instead of char for titles
  - change level for some histos
  - book all histos at initialize
 
@@ -31,14 +34,14 @@
  - Review warning messages, and correct whitespace
 
 !====================== MuonPIDChecker v5r1p1 2010-04-26 ======================
-! 2010-04-21 - Erica Polycarpo 
+! 2010-04-21 - Erica Polycarpo
  - initialized vector with values of cuts in the cpp
- - fixed some cut definitions 
-! 2010-04-12 - Erica Polycarpo 
- - protect counters for different number of cuts used to monitore performance 
+ - fixed some cut definitions
+! 2010-04-12 - Erica Polycarpo
+ - protect counters for different number of cuts used to monitore performance
 
 !====================== MuonPIDChecker v5r1 2010-03-24 ======================
-! 2010-03-30 - Erica Polycarpo 
+! 2010-03-30 - Erica Polycarpo
  - change configurable to look at Downstream tracks also in OfflineFull mode
 
 !====================== MuonPIDChecker v5r0 2010-03-24 ======================
@@ -50,22 +53,22 @@
  - Enlarged the char[ def from 13 to 20 to be safe [Erica will change that soon to
 use strings instead!]
 
-!2010-03-21 - Erica Polycarpo 
+!2010-03-21 - Erica Polycarpo
  - Change configurable to take into account different levels of Histograms slot
  - Reorganize the code to make it cleaner
- - Drop old histograms and include new ones for DQ 
+ - Drop old histograms and include new ones for DQ
  - Do not use references values for performance anymore
  - Temporarily MC info is not used even if UseMC=True
 
 !====================== MuonPIDChecker v4r1 2010-02-15 ======================
 !2010-02-10 - Helder Lopes
  - Added compatibility with DLL_flag=3 (hyperbolic tangent of distance histos)
- 
+
 !====================== MuonPIDChecker v4r0 2009-07-14 ======================
 ! 2009-07-14 - Marco Cattaneo
  - Remove obsolete file MuonPIDChecker_dll.cpp
 
-!2009-07-03 - Erica Polycarpo 
+!2009-07-03 - Erica Polycarpo
  - add expert flag to select histos
  - fix untested StatusCode
 
@@ -74,9 +77,9 @@ use strings instead!]
  - The possible DataTypes so far are: DC06,2008,MC09,2009
  - The running options and the reference values vary according to the DataType chosen
 
-! 2009-06-20 - Erica Polycarpo   
+! 2009-06-20 - Erica Polycarpo
  - Add histograms of Eff,Misid vs DLL Cut
- - Add new histos to monitor multiplicity as a function of Track x,y and region 
+ - Add new histos to monitor multiplicity as a function of Track x,y and region
 
 ! 2009-06-20 - G. Lanfranchi, S. Furcas:
  - Added Properties:
@@ -87,22 +90,22 @@ use strings instead!]
      - hProbMu_[0,1,2,3,4]  (ProbMu for ghost, muons, decays in flight, hadrons, data)
      - hProbNMu_[0,1,2,3,4]  (ProbNMu for ghost, muons, decays in flight, hadrons, data)
 
-! 2009-06-20 - Erica Polycarpo   
- - Separate monitoring of MuonPIDs from monitoring of Muon tracks in 
+! 2009-06-20 - Erica Polycarpo
+ - Separate monitoring of MuonPIDs from monitoring of Muon tracks in
    methods getTrInfo and getMuTrInfo
  - Pass linker as argument in order to use it only in getTrType if RunningMC
  - Add new histos to monitor quantities introduced in the new MuonID v7r0
  - Put reference values as properties so that they can be changed more easily
 
 !====================== MuonPIDChecker v3r2 2009-05-22 ======================
-! 2009-05-22 - Miriam Gandelman 
+! 2009-05-22 - Miriam Gandelman
  - Bug fix on some array sizes
 
 !====================== MuonPIDChecker v3r1 2009-02-20 ======================
-! 2009-02-19 - Erica Polycarpo   
- - Fix lack of  Status Code testing 
+! 2009-02-19 - Erica Polycarpo
+ - Fix lack of  Status Code testing
 
-! 2009-02-18 - Erica Polycarpo   
+! 2009-02-18 - Erica Polycarpo
  - Add histos of hit multiplicity as a function of X,Y and region/station
 
 ! 2009-02-17 - Patrick Koppenburg
@@ -110,7 +113,7 @@ use strings instead!]
 
 !====================== MuonPIDChecker v3r0 2009-01-12 ======================
 ! 2009-01-12 - Marco Cattaneo
- - Remove empty python ConfigurableUser, python options are sufficient 
+ - Remove empty python ConfigurableUser, python options are sufficient
 
 ! 2009-01-09 - M. Gandelman
  - replaced the option files for python configurables
@@ -134,12 +137,12 @@ use strings instead!]
  - Fixed MuonPIDMonitor.opts to really run without MC
 
 ! 2008-09-09 -  M. Gandelman
- - added the options file MuonPIDMonitor.opts to be able to switch off the use 
+ - added the options file MuonPIDMonitor.opts to be able to switch off the use
    of MC true information
 
 !====================== MuonPIDChecker v2r3 2008-08-20 ====================
 ! 2008-08-20 -  E. Polycarpo, M. Gandelman
- - Edit reference numbers 
+ - Edit reference numbers
  - Add the possibility to save monitoring or checking histos
  - Modify some histos
 
@@ -179,4 +182,3 @@ use strings instead!]
 
 ! 20070116 - MuonPIDChecker v1r0
              First Checker algorithm for the MuonID package
- 
