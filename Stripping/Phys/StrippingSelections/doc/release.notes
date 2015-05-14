@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-14 - Simone Stracka
+ - Added StrippingD2PiPi0.py to StrippingCharm
+
 ! 2015-05-14 - Roberta Cardinale
  - Added StrippingHeavyBaryons.py to BandQ
 

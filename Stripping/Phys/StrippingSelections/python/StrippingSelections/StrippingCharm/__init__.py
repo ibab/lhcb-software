@@ -22,7 +22,8 @@ _selections = (
     'StrippingXicc',
     'StrippingChargedHyperons',
     'StrippingD2KS0H_conf',
-    'StrippingDstarD2HHHH'
+    'StrippingDstarD2HHHH',
+    'StrippingD2PiPi0'
     )
 
 for _sel in _selections :
