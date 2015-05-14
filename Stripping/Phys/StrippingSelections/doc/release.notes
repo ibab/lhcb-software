@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-14 - Ricardo Vazquez Gomez
+ - Added the StrippingDarkBoson.py to the RD for S23 round.
+
 ! 2015-05-14 - Mika Vesterinen
  * Added the following modules
  - StrippingCalib/StrippingCharmFromBSemiForHadronAsy.py
