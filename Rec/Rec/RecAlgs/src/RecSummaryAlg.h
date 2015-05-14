@@ -28,7 +28,8 @@
 #include "Kernel/ICountContainedObjects.h"
 
 // boost
-#include "boost/assign/list_of.hpp"
+#include "boost/optional.hpp"
+#include <boost/numeric/conversion/cast.hpp>
 
 /** @class RecSummaryAlg RecSummaryAlg.h
  *
@@ -54,14 +55,25 @@ public:
 private:
 
   /// Adds the number of objects at the given TES location to the summary object
-  template<class CLASS>
+   template<class CLASS, class FALLBACK = CLASS>
   inline void addSizeSummary( LHCb::RecSummary * summary,
                               const LHCb::RecSummary::DataTypes id,
                               const std::string& location ) const
   {
-    const CLASS * data = getIfExists<CLASS>(location);
-    if ( data ) { summary->addInfo( id, (int)data->size() );           }
-    else        { Warning( "No data at '" + location + "'" ).ignore(); }
+     boost::optional<int> size;
+     {
+        const CLASS * data = getIfExists<CLASS>(location);
+        if (data) size = boost::numeric_cast<int>(data->size());
+     }
+     if (!size && !std::is_same<CLASS, FALLBACK>::value) {
+        const FALLBACK * data = getIfExists<FALLBACK>(location);
+        if (data) size = boost::numeric_cast<int>(data->size());
+     }
+     if (size) {
+        summary->addInfo( id, *size );
+     } else {
+        Warning( "No data at '" + location + "'" ).ignore();
+     }
   }
 
   /// Access on demand the RICH decoding tool

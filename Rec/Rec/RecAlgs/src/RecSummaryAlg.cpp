@@ -48,7 +48,6 @@ RecSummaryAlg::RecSummaryAlg( const std::string& name,
                    m_muonCoordsLoc = LHCb::MuonCoordLocation::MuonCoords );
   declareProperty( "MuonTracksLocation",
                    m_muonTracksLoc = LHCb::TrackLocation::Muon );
-  declareProperty( "UseLiteClusters", m_liteClusters = false);
   // Upgrade detectors
   declareProperty( "VPClustersLocation",
                    m_vpLoc    = LHCb::VPClusterLocation::Default );
@@ -147,27 +146,18 @@ StatusCode RecSummaryAlg::execute()
     }
     else if ( "VELO" == *iDet )
     {
-      if (m_liteClusters) {
-         addSizeSummary<LHCb::VeloLiteCluster::VeloLiteClusters>( summary, LHCb::RecSummary::nVeloClusters, m_veloLoc );
-      } else {
-         addSizeSummary<LHCb::VeloClusters>( summary, LHCb::RecSummary::nVeloClusters, m_veloLoc );
-      }
+      addSizeSummary<LHCb::VeloLiteCluster::VeloLiteClusters, LHCb::VeloClusters>
+        ( summary, LHCb::RecSummary::nVeloClusters, m_veloLoc );
     }
     else if ( "TT" == *iDet )
     {
-      if (m_liteClusters) {
-         addSizeSummary<LHCb::STLiteCluster::STLiteClusters>( summary, LHCb::RecSummary::nTTClusters, m_ttLoc );
-      } else {
-         addSizeSummary<LHCb::STClusters>( summary, LHCb::RecSummary::nTTClusters, m_ttLoc );
-      }
+      addSizeSummary<LHCb::STLiteCluster::STLiteClusters, LHCb::STClusters>
+        ( summary, LHCb::RecSummary::nTTClusters, m_ttLoc );
     }
     else if ( "IT" == *iDet )
     {
-      if (m_liteClusters) {
-         addSizeSummary<LHCb::STLiteCluster::STLiteClusters>( summary, LHCb::RecSummary::nITClusters, m_itLoc );
-      } else {
-         addSizeSummary<LHCb::STClusters>( summary, LHCb::RecSummary::nITClusters, m_itLoc );
-      }
+      addSizeSummary<LHCb::STLiteCluster::STLiteClusters, LHCb::STClusters>
+        ( summary, LHCb::RecSummary::nITClusters, m_itLoc );
     }
     else if ( "OT" == *iDet )
     {
