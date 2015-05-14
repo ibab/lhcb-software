@@ -203,6 +203,9 @@ class HltConf(LHCbConfigurableUser):
         # don't do this if there are no HLT2 lines
         if activehlt2lines:
             Dec.Members.append(Sequence("Hlt2"))
+            if self.getProp("EnableHltAfterburner"):
+                Dec.Members.append(Sequence("HltAfterburner"))
+                HltAfterburnerConf()
             Dec.Members.append(Sequence("Hlt2Postamble"))
             Hlt2Conf()
             self.setOtherProps(Hlt2Conf(),[ "DataType" ])
@@ -213,11 +216,6 @@ class HltConf(LHCbConfigurableUser):
             if Hlt2Conf().getProp('Hlt1TrackOption') == "Rerun":
                 decoder = DecoderDB["HltTrackReportsDecoder"]
                 decoder.setup().Enable = False
-
-        # HLT Afterburner
-        if activehlt2lines and self.getProp("EnableHltAfterburner"):
-            Dec.Members.append(Sequence("HltAfterburner"))
-            HltAfterburnerConf()
 
         Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
                        , Members = [ Sequence('HltDecisionSequence')

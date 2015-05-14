@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-05-14 - Sean Benson
+ - Move afterburner so it is before the post amble.
+
 ! 2015-05-14 - Roel Aaij
  - Add HltAfterburner configurable.
 
