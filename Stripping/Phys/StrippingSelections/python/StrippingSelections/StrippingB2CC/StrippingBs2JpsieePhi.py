@@ -24,15 +24,15 @@ default_config = {
         , 'ElectronPIDLoose'           :     0.    # adimensional
         , 'ElectronTrackCHI2pDOFLoose' :     5.    # adimensional
         , 'JpsiVertexCHI2pDOFLoose'    :    15.    # adimensional
-        , 'JpsiMassMinLoose'           :  2500.    # MeV
-        , 'JpsiMassMaxLoose'           :  3300.    # MeV
+        , 'JpsiMassMinLoose'           :  1800.    # MeV
+        , 'JpsiMassMaxLoose'           :  3600.    # MeV
         , 'KaonTrackCHI2pDOFLoose'     :     5.    # adimensional
         , 'PhiPTLoose'                 :  1000.    # MeV
         , 'PhiVertexCHI2pDOFLoose'     :    15.    # adimensional
         , 'PhiMassMinLoose'            :   990.    # MeV
         , 'PhiMassMaxLoose'            :  1050.    # MeV
         , 'BsVertexCHI2pDOFLoose'      :    10.    # adimensional
-        , 'BsMassMinLoose'             :  4600.    # MeV
+        , 'BsMassMinLoose'             :  4000.    # MeV
         , 'BsMassMaxLoose'             :  6000.    # MeV
         , 'LifetimeCut'                : " & (BPVLTIME()>0.3*ps)"
         , 'PrescaleLoose'              :     1.    # adamenssional
@@ -41,8 +41,8 @@ default_config = {
         , 'ElectronPID'           :     0.    # adimensional
         , 'ElectronTrackCHI2pDOF' :     5.    # adimensional
         , 'JpsiVertexCHI2pDOF'    :    15.    # adimensional
-        , 'JpsiMassMin'           :  2500.    # MeV
-        , 'JpsiMassMax'           :  3300.    # MeV
+        , 'JpsiMassMin'           :  1800.    # MeV
+        , 'JpsiMassMax'           :  3600.    # MeV
         , 'KaonTrackCHI2pDOF'     :     5.    # adimensional
         , 'KaonPID'               :    -2.    # adimensional
         , 'PhiPT'                 :  1000.    # MeV
@@ -50,7 +50,7 @@ default_config = {
         , 'PhiMassMin'            :   990.    # MeV
         , 'PhiMassMax'            :  1050.    # MeV
         , 'BsVertexCHI2pDOF'      :    10.    # adimensional
-        , 'BsMassMin'             :  4600.    # MeV
+        , 'BsMassMin'             :  4000.    # MeV
         , 'BsMassMax'             :  6000.    # MeV
         , 'BsDIRA'                :     0.99  # adimensional
         , 'Prescale'              :     0.1   # adamenssional

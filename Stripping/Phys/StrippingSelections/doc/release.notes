@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-14 - Konrad Klimaszewski
+ - Enlarged mass windows for StrippingBs2JpsieePhi.py
+
 ! 2015-05-14 - Erica Polycarpo 
  - Added StrippingCharm/StrippingD2hhh_conf.py with additional lifetime cut wrt Stripping21 
 
