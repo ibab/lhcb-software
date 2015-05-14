@@ -206,8 +206,6 @@ default_config = {
     }
 }
 
-print "default_config = ",  default_config
-
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 class DarkBosonConf(LineBuilder):
