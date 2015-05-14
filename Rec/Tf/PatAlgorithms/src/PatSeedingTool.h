@@ -586,12 +586,12 @@ inline void PatSeedingTool::addNeighbour(PatSeedTrack& track,
   if (range.end() == (itH + 1)) return;
   PatFwdHit* hit2 = *(itH + 1);
   if (hit2->isUsed()) return;
-  if (hit2->x() - hit->x() > m_tolCollect) return;
+  if (hit2->hit()->xAtYEq0() - hit->hit()->xAtYEq0() > m_tolCollect) return;
   ++itH;			// consume hit
   restoreCoordinate(hit2);
   track.addCoord(hit2);	// and add to track
   if ( m_printing ) info() << "   + hit sta " << hit2->hit()->station() <<
-    " lay " << hit2->hit()->layer() << " x = " << hit2->x() << endmsg;
+    " lay " << hit2->hit()->layer() << " xAtYEq0 = " << hit2->hit()->xAtYEq0() << endmsg;
 }
 
 inline void PatSeedingTool::combineCluster(const PatFwdHit* h1, const PatFwdHit* h2,

@@ -4,6 +4,11 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-05-14 - Manuel Tobias Schiller
+ - PatSeedingTool: fix a bug where the PatSeeding output depended on the
+   "history" of the input hits (i.e. which other pattern reco algorithms ran
+   in which order)
+
 ! 2015-04-28 - Sascha Stahl
  - Fix configuration of GEC for PatForward for HLT2 for 2015.
 
