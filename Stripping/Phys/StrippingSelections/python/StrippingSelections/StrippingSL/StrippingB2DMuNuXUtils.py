@@ -83,8 +83,11 @@ def BtoDlnuLine(module_name,
                          ,BSel
                          ,CONFIG["TTSpecs"])
     
+    LINE_NAME = module_name + "_"+name
     _prescale = 1.0
-    main_line = StrippingLine(module_name + "_"+name + 'Line', 
+    if LINE_NAME in CONFIG["prescales"].keys():
+        _prescale = CONFIG["prescales"][LINE_NAME]
+    main_line = StrippingLine(LINE_NAME, 
                               selection = BSelTOS,
                               HLT1 = CONFIG["HLT1"],
                               HLT2 = CONFIG["HLT2"],
@@ -102,7 +105,7 @@ def BtoDlnuLine(module_name,
                                  ,BSelFake
                                  ,CONFIG["TTSpecs"])
         return {"RealMuon":main_line,
-                "FakeMuon":StrippingLine(module_name + "_"+name + 'FakeLine',
+                "FakeMuon":StrippingLine(LINE_NAME + '_FakeMuon',
                                          selection = BSelFakeTOS,
                                          HLT1 = CONFIG["HLT1"],
                                          HLT2 = CONFIG["HLT2"],

@@ -4,6 +4,18 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-14 - Mika Vesterinen
+ * Added the following modules
+ - StrippingCalib/StrippingCharmFromBSemiForHadronAsy.py
+ - StrippingCalib/StrippingTrackEffD0ToKPi.py
+ - StrippingCalib/StrippingTrackEffD0ToK3Pi.py
+ - StrippingCalib/StrippingCharmFromBSemiForProtonPID.py
+ - StrippingCharm/StrippingDstarD0ToHHPi0.py
+ * Modified
+ - StrippingSL/StrippingB2DMuNuX.py
+ - StrippingSL/StrippingB2DMuNuXUtils.py
+ - In particular, the electron-D0 line is moved to full DST but prescaled, as per Greg's request
+
 ! 2015-05-14 - Adlene Hicheur
  - Added neutral cone multiplicity to StrippingBnoC/StrippingBc2hhh_BnoC.py
 

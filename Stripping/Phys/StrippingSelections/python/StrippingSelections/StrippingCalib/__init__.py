@@ -9,6 +9,10 @@ _selections = [
     "StrippingNoPIDDstarWithD02RSKPi",
     "StrippingPIDCalib",
     "StrippingV0ForPID",
+    "StrippingCharmFromBSemiForHadronAsy",
+    "StrippingCharmFromBSemiForProtonPID",
+    "StrippingTrackEffD0ToKPi",
+    "StrippingTrackEffD0ToK3Pi",
     "StrippingTrackEffMuonTT",
     "StrippingTrackEffVeloMuon",
     "StrippingTrackEffDownMuon"

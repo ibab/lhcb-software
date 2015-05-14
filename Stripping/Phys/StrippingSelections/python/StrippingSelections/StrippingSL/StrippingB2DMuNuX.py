@@ -21,6 +21,7 @@ default_config = {
         'BUILDERTYPE' : 'B2DMuNuXAllLinesConf',
         'CONFIG'      : {
             "prescaleFakes": 0.02
+            ,"prescales":{'StrippingB2DMuNuX_D0_Electron':0.1}
             ,"GEC_nLongTrk" : 250 
             ,"TTSpecs"      : {}
             ,"HLT1"   : "HLT_PASS_RE('Hlt1.*Decision')"
@@ -37,7 +38,7 @@ default_config = {
             ,"HadronP"       : 2.0*GeV
             ,"HadronIPCHI2"  : 4.0 
             ,"ProtonPIDp"    : 0.0 
-            ,"ProtonPIDpK"   : -999.
+            ,"ProtonPIDpK"   : 0.0
             ,"ProtonP"       : 8.0*GeV
             ,"KaonPIDK"      : -2.0
             ,"KaonP"         : 5.0*GeV
@@ -57,13 +58,33 @@ default_config = {
             ,"B_MassMax"       : 8.0*GeV
             ,"B_DocaChi2Max"  : 10
             },
-        'STREAMS'     : ['Semileptonic']
+        'STREAMS'     : {
+            'Semileptonic' : [
+                'StrippingB2DMuNuX_D0_Electron',
+                'StrippingB2DMuNuX_D0',
+                'StrippingB2DMuNuX_Dp',
+                'StrippingB2DMuNuX_Ds',
+                'StrippingB2DMuNuX_Lc',
+                'StrippingB2DMuNuX_Omegac',
+                'StrippingB2DMuNuX_Xic',
+                'StrippingB2DMuNuX_Xic0',
+                'StrippingB2DMuNuX_D0_FakeMuon',
+                'StrippingB2DMuNuX_Dp_FakeMuon',
+                'StrippingB2DMuNuX_Ds_FakeMuon',
+                'StrippingB2DMuNuX_Lc_FakeMuon',
+                'StrippingB2DMuNuX_Omegac_FakeMuon',
+                'StrippingB2DMuNuX_Xic_FakeMuon',
+                'StrippingB2DMuNuX_Xic0_FakeMuon'],
+            'Charm' : ['StrippingB2DMuNuX_D0_KK',
+                       'StrippingB2DMuNuX_D0_PiPi'],
+            }
         }
     }
 class B2DMuNuXAllLinesConf(LineBuilder) :
     
     __configuration_keys__ = (
         "prescaleFakes"
+        ,"prescales"
         ,"GEC_nLongTrk"
         ,"TTSpecs"     
         ,"HLT1"   
@@ -181,16 +202,18 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         Lc_CONFIG = config.copy()
         Lc_CONFIG["CharmComboCuts"] = "(ADAMASS('Lambda_c+') < %(D_AMassWin)s )" %config
         Lc_CONFIG["CharmMotherCuts"] = "(ADMASS('Lambda_c+') < %(D_MassWin)s )"%config
-
+        
         Xic_CONFIG = config.copy()
         Xic_CONFIG["CharmComboCuts"] = "(ADAMASS('Xi_c+') < %(D_AMassWin)s )" % config
         Xic_CONFIG["CharmMotherCuts"] = "(ADMASS('Xi_c+') < %(D_MassWin)s )" % config
         
+        Xic0_CONFIG = config.copy()
+        Xic0_CONFIG["CharmComboCuts"] = "(ADAMASS('Xi_c0') < %(D_AMassWin)s )" % config
+        Xic0_CONFIG["CharmMotherCuts"] = "(ADMASS('Xi_c0') < %(D_MassWin)s )" % config
+        
         Omegac_CONFIG = config.copy()
-        Omegac_CONFIG["CharmComboCuts"] = "((ADAMASS('Omega_c0') < %(D_AMassWin)s )"\
-            "|(ADAMASS('Xi_c+') < %(D_AMassWin)s ))" % config
-        Omegac_CONFIG["CharmMotherCuts"] = "((ADMASS('Omega_c0') < %(D_MassWin)s )"\
-            "|(ADMASS('Xi_c+') < %(D_MassWin)s ))"  % config
+        Omegac_CONFIG["CharmComboCuts"] = "((ADAMASS('Omega_c0') < %(D_AMassWin)s ))" % config
+        Omegac_CONFIG["CharmMotherCuts"] = "((ADMASS('Omega_c0') < %(D_MassWin)s ))" % config
 
         self.b2D0MuXLine = BtoDlnuLine(name,
                                        'D0',
@@ -200,26 +223,25 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                        [self.selKaon, self.selPion],self.selMuon,self.selMuonFakes)
         
         self.b2D0eXLine = BtoDlnuLine(name,
-                                        'D0e',
+                                        'D0_Electron',
                                         ['[B- -> D0 e-]cc'],
                                         ['[D0 -> K- pi+]cc'],
                                         D0_CONFIG,
                                         [self.selKaon, self.selPion],self.selElectron)
         
         self.b2D0MuXKKLine = BtoDlnuLine(name,
-                                         'D0toKK',
+                                         'D0_KK',
                                          ['[B- -> D0 mu-]cc','[B+ -> D0 mu+]cc'],
                                          ['D0 -> K- K+'],
                                          D0_CONFIG,
                                          [self.selKaon],self.selMuon)
         
-        self.b2D0MuXpipiLine = BtoDlnuLine(name,
-                                           'D0topipi',
+        self.b2D0MuXPiPiLine = BtoDlnuLine(name,
+                                           'D0_PiPi',
                                            ['[B- -> D0 mu-]cc','[B+ -> D0 mu+]cc'],
                                            ['D0 -> pi- pi+'],
                                            D0_CONFIG,
                                            [self.selPion],self.selMuon)
-                
         
         self.b2DpMuXLine = BtoDlnuLine(name,
                                        'Dp',
@@ -249,6 +271,13 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                     Xic_CONFIG,
                                     [self.selProton,self.selKaon,self.selPion],self.selMuon,self.selMuonFakes)
 
+        self.Xic0_Line = BtoDlnuLine(name,
+                                     "Xic0",
+                                     [ '[Xi_b- -> Xi_c0 mu-]cc', '[Xi_b- -> Xi_c0 mu+]cc'],
+                                     [ '[Xi_c0 -> p+ K- K- pi+]cc'],
+                                     Xic0_CONFIG,
+                                     [self.selProton,self.selKaon,self.selPion],self.selMuon,self.selMuonFakes)
+
         self.Omegac_Line = BtoDlnuLine(name,
                                        "Omegac",
                                        [ '[Omega_b- -> Omega_c0 mu-]cc', '[Omega_b- -> Omega_c0 mu+]cc'],
@@ -258,6 +287,8 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
 
         ##### line registration
         self.registerLine(self.b2D0eXLine)        
+        self.registerLine(self.b2D0MuXKKLine)        
+        self.registerLine(self.b2D0MuXPiPiLine)        
         for Mu in ["RealMuon","FakeMuon"]:
             self.registerLine(self.b2D0MuXLine[Mu])        
             self.registerLine(self.b2DpMuXLine[Mu])        
@@ -265,5 +296,6 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
             self.registerLine(self.lb2LcMuXLine[Mu])        
             self.registerLine(self.Omegac_Line[Mu])        
             self.registerLine(self.Xic_Line[Mu])        
+            self.registerLine(self.Xic0_Line[Mu])        
         
 
