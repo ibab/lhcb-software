@@ -17,28 +17,35 @@ from Configurables import TisTosParticleTagger
 
 __all__ = ('DstarD0ToHHPi0AllLinesConf',
            'TOSFilter',
-           'confdict')
+           'default_config')
 
-confdict = {
-    "prescale_Pi0R_WIDEMASS" : 1.0 #adimensional
-    ,"Pi0R_PT" : 500  # MeV
-    ,"Pi0R_DMASS" : 15  # MeV
-    ,"Pi0M_PT" : 1000 #MeV
-    ,"Pi0_MassConstraint" : False # adimensional
-    ,"D0_M_WINDOW" : 150 #MeV
-    ,"DELTA_MASS_MAX" : 180 #MeV
-    ,"Pion_PIDK" : 0 #adimensional 
-    ,"Kaon_PIDK" : 7 #adimensional 
-    ,"Pion_PT" : 500 #MeV 
-    ,"Kaon_PT" : 500 #MeV
-    ,"Slowpion_PT" : 300 #MeV 
-    ,"Pion_TRGHOSTPROB" : 0.35 #adimensional
-    ,"Kaon_TRGHOSTPROB" : 0.35 #adimensional
-    ,"Slowpion_TRGHOSTPROB" : 0.35 #adimensional
-    ,"Slowpion_PIDe" : 5 #adimensional
-    ,"D0_APT" : 1400  #MeV
-    ,"useTOS" : True  #adimensional
-    ,"useHLT" : True  #adimensional
+default_config = {
+    'DstarD0ToHHPi0' : {
+        'WGs'         : ['Charm'],
+        'BUILDERTYPE' : 'DstarD0ToHHPi0AllLinesConf',
+        'STREAMS':["Charm"],
+        'CONFIG'      : {
+            "prescale_Pi0R_WIDEMASS" : 1.0 #adimensional
+            ,"Pi0R_PT" : 500  # MeV
+            ,"Pi0R_DMASS" : 15  # MeV
+            ,"Pi0M_PT" : 1000 #MeV
+            ,"Pi0_MassConstraint" : False # adimensional
+            ,"D0_M_WINDOW" : 150 #MeV
+            ,"DELTA_MASS_MAX" : 180 #MeV
+            ,"Pion_PIDK" : 0 #adimensional 
+            ,"Kaon_PIDK" : 7 #adimensional 
+            ,"Pion_PT" : 500 #MeV 
+            ,"Kaon_PT" : 500 #MeV
+            ,"Slowpion_PT" : 300 #MeV 
+            ,"Pion_TRGHOSTPROB" : 0.35 #adimensional
+            ,"Kaon_TRGHOSTPROB" : 0.35 #adimensional
+            ,"Slowpion_TRGHOSTPROB" : 0.35 #adimensional
+            ,"Slowpion_PIDe" : 5 #adimensional
+            ,"D0_APT" : 1400  #MeV
+            ,"useTOS" : True  #adimensional
+            ,"useHLT" : True  #adimensional
+            }
+        }
     }
 
 class DstarD0ToHHPi0AllLinesConf(LineBuilder) :
@@ -243,23 +250,23 @@ def DstarMaker(_name,_KstDecays,_D0Decays,_DstDecays,_ChargedTracks,_Pi0s,_Slowp
     
     DstSelTOS = TOSFilter( "SelDstKPiPi0_Hlt2TOS"+_name
                            ,DstSel
-                           ,{ 'Hlt2CharmHadD02HHXDst_hhXDecision%TOS' : 0})
+                           ,{ 'Hlt2CharmHad.*HHX.*Decision%TOS' : 0})
     
-    hlt = ""
-    if config["useHLT"] == True:
-        hlt = "HLT_PASS_RE('Hlt2.*CharmHadD02HHXDst_hhX.*Decision')"
+    hlt2 = ""
+    if config["useHLT2"] == True:
+        hlt2 = "HLT_PASS_RE('Hlt2CharmHad.*HHX.*Decision%TOS')"
         
     if config["useTOS"] == True:
         Line = StrippingLine(_name+'Line',
                              prescale = prescale,
                              FILTER=_Filter,
-                             HLT = hlt,
+                             HLT2 = hlt2,
                              selection = DstSelTOS) 
     else:
         Line = StrippingLine(_name+'Line',
                              prescale = prescale,
                              FILTER=_Filter,
-                             HLT = hlt,
+                             HLT2 = hlt2,
                              selection = DstSel) 
     return Line
                                                     

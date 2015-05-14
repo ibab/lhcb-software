@@ -25,28 +25,34 @@ __all__ = ('TrackEffD0ToK3PiAllLinesConf',
            'default_config')
 
 default_config = {
-    "HLT" : "HLT_PASS_RE('Hlt2.*CharmHadD02HHXDst.*Decision')",
-    "TTSpecs" : {'Hlt2.*CharmHadD02HHXDst.*Decision%TOS':0},
-    "VeloLineForTiming":False,
-    "VeloFitter":"SimplifiedGeometry",
-    "DoVeloDecoding": False,
-    "RequireDstFirst":False,
-    "Dst_MAX_M":2.035*GeV,
-    "Dst_MAX_DTFCHI2":3.0,
-    "Sc_MAX_M":2.5*GeV,
-    "Sc_MAX_DTFCHI2":3.0,
-    "D0_MIN_FD":5.0*mm,
-    "LC_MIN_FD":2.0*mm,
-    "D0_MAX_DOCA":0.05*mm,
-    "VeloMINIP":0.05*mm,
-    "Kaon_MIN_PIDK":7,
-    "Pion_MAX_PIDK":4
+    'TrackEffD0ToK3Pi' : {
+        'WGs'         : ['ALL'],
+        'BUILDERTYPE' : 'TrackEffD0ToK3PiAllLinesConf',
+        'STREAMS':["Charm"],
+        'CONFIG'      : {
+            "HLT2" : "HLT_PASS_RE('Hlt2.*CharmHad.*HHX.*Decision')",
+            "TTSpecs" : {'Hlt2.*CharmHad.*HHX.*Decision%TOS':0},
+            "VeloLineForTiming":False,
+            "VeloFitter":"SimplifiedGeometry",
+            "DoVeloDecoding": False,
+            "RequireDstFirst":False,
+            "Dst_MAX_M":2.035*GeV,
+            "Dst_MAX_DTFCHI2":3.0,
+            "Sc_MAX_M":2.5*GeV,
+            "Sc_MAX_DTFCHI2":3.0,
+            "D0_MIN_FD":5.0*mm,
+            "LC_MIN_FD":2.0*mm,
+            "D0_MAX_DOCA":0.05*mm,
+            "VeloMINIP":0.05*mm,
+            "Kaon_MIN_PIDK":7,
+            "Pion_MAX_PIDK":4
+            }
+        }
     }
-
 class TrackEffD0ToK3PiAllLinesConf(LineBuilder) :
     
     __configuration_keys__ = (
-        "HLT",
+        "HLT2",
         "TTSpecs",
         "VeloLineForTiming",
         "VeloFitter",
@@ -279,13 +285,13 @@ class TrackEffD0ToK3PiAllLinesConf(LineBuilder) :
         LineDstar = StrippingLine(name, 
                                   FILTER = { "Code":"( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 180 )",
                                              "Preambulo": ["from LoKiTracks.decorators import *"]},
-                                  HLT = self.__confdict__["HLT"],
+                                  HLT2 = self.__confdict__["HLT2"],
                                   selection = SelDstarTOS) 
         
         LineMatchLong = StrippingLine(name+'MatchLong', 
                                       FILTER = { "Code":"( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 180 )",
                                                  "Preambulo": ["from LoKiTracks.decorators import *"]},
-                                      HLT = self.__confdict__["HLT"],
+                                      HLT2 = self.__confdict__["HLT2"],
                                       selection = SelD0MatchLong)
         return [LineDstar,LineMatchLong]
 

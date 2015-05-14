@@ -16,30 +16,37 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLoosePions, StdLooseMuons, StdLooseKaons, StdLooseProtons, StdNoPIDsProtons
 
 __all__ = ('CharmFromBSemiForProtonPIDAllLinesConf',
-           'confdict')
+           'default_config')
 
-confdict = {
-    "prescale"              : 1 # adimensional
-    ,"GEC_nLongTrk"         : 250 # adimensional
-    ,"MAXGHOSTPROB"         : 0.35 # adimensional
-    ,"Mu_PT"                : 1000 # MeV
-    ,"Pi_PIDKMax"           : -2 # adimensional
-    ,"K_PIDKMin"            : 8 # adimensional
-    ,"H_PT"                 : 300 # MeV
-    ,"LambdaC_MASSWIN"      : 80 # MeV
-    ,"LambdaC_PTSUM"        : 2000 # MeV
-    ,"LambdaC_DOCACHI2_MAX" : 6 # adimensional
-    ,"LambdaC_VCHI2NDF"     : 3 # adimensional
-    ,"LambdaC_FDCHI2"       : 20 # adimensional
-    ,"LambdaC_DIRA"         : 0.99 # adimensional
-    ,"LambdaC_DZ"           : 0.5 # mm
-    ,"LambdaB_MASS_MIN"     : 3000 # MeV
-    ,"LambdaB_MASS_MAX"     : 5000 # MeV
-    ,"LambdaB_DOCACHI2_MAX" : 6 # adimensional
-    ,"LambdaB_DIRA"         : 0.999 # adimensional
-    ,"LambdaB_VCHI2NDF"     : 3 # adimentional
+default_config = {
+    'CharmFromBSemiForProtonPID' : {
+        'WGs'         : ['ALL'],
+        'BUILDERTYPE' : 'CharmFromBSemiForProtonPIDAllLinesConf',
+        'CONFIG'      : {
+            "prescale"              : 1 # adimensional
+            ,"GEC_nLongTrk"         : 250 # adimensional
+            ,"MAXGHOSTPROB"         : 0.35 # adimensional
+            ,"Mu_PT"                : 1000 # MeV
+            ,"Pi_PIDKMax"           : -2 # adimensional
+            ,"K_PIDKMin"            : 8 # adimensional
+            ,"H_PT"                 : 300 # MeV
+            ,"LambdaC_MASSWIN"      : 80 # MeV
+            ,"LambdaC_PTSUM"        : 2000 # MeV
+            ,"LambdaC_DOCACHI2_MAX" : 6 # adimensional
+            ,"LambdaC_VCHI2NDF"     : 3 # adimensional
+            ,"LambdaC_FDCHI2"       : 20 # adimensional
+            ,"LambdaC_DIRA"         : 0.99 # adimensional
+            ,"LambdaC_DZ"           : 0.5 # mm
+            ,"LambdaB_MASS_MIN"     : 3000 # MeV
+            ,"LambdaB_MASS_MAX"     : 5000 # MeV
+            ,"LambdaB_DOCACHI2_MAX" : 6 # adimensional
+            ,"LambdaB_DIRA"         : 0.999 # adimensional
+            ,"LambdaB_VCHI2NDF"     : 3 # adimentional
+            },
+        "STREAMS":["PID"]
+        }
     }
-
+        
 class CharmFromBSemiForProtonPIDAllLinesConf(LineBuilder) :
     
     __configuration_keys__ = (

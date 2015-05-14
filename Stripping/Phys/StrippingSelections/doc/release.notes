@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-14 - Mika Vesterinen
+ - A bit quick with previous commit. Now added the new dictionary formats, 
+  and any useage of HLT rather than HLT1/2.
+
 ! 2015-05-14 - Ricardo Vazquez Gomez
  - Added the StrippingDarkBoson.py to the RD for S23 round.
 

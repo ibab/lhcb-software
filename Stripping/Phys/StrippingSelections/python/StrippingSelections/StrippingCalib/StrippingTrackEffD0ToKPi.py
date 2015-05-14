@@ -24,21 +24,28 @@ __all__ = ('TrackEffD0ToKPiAllLinesConf',
            'default_config')
 
 default_config = {
-    "VeloLineForTiming":False,
-    "VeloFitter":"SimplifiedGeometry",
-    "HLT" : None, #"HLT_PASS_RE('Hlt2.*Charm.*Decision')",
-    "TTSpecs" : {}, #{'Hlt2.*Charm.*Decision%TIS':0},
-    "Tag_MIN_PT":1500.,
-    "Tag_MIN_IP":0.1,
-    "Tag_MAX_GHPROB":0.35,
-    "VeloMINIP":0.05,#mm
-    "Probe_MIN_IP":0.05,
-    "Probe_MIN_ETA":1.9,
-    "Probe_MAX_ETA":4.9,
-    "Kaon_MIN_PIDK":2,
-    "Pion_MAX_PIDK":20,
-    "Dst_M_MAX":2030,
-    "Dst_DTFCHI2_MAX":3
+    'TrackEffD0ToKPi' : {
+        'WGs'         : ['ALL'],
+        'BUILDERTYPE' : 'TrackEffD0ToKPiAllLinesConf',
+        'STREAMS':["Charm"],
+        'CONFIG'      : {
+            "VeloLineForTiming":False,
+            "VeloFitter":"SimplifiedGeometry",
+            "HLT2" : None, #"HLT_PASS_RE('Hlt2.*Charm.*Decision')",
+            "TTSpecs" : {}, #{'Hlt2.*Charm.*Decision%TIS':0},
+            "Tag_MIN_PT":1500.,
+            "Tag_MIN_IP":0.1,
+            "Tag_MAX_GHPROB":0.35,
+            "VeloMINIP":0.05,#mm
+            "Probe_MIN_IP":0.05,
+            "Probe_MIN_ETA":1.9,
+            "Probe_MAX_ETA":4.9,
+            "Kaon_MIN_PIDK":2,
+            "Pion_MAX_PIDK":20,
+            "Dst_M_MAX":2030,
+            "Dst_DTFCHI2_MAX":3
+            }
+        }
     }
 
 
@@ -48,7 +55,7 @@ class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
     __configuration_keys__ = (
         "VeloLineForTiming",
         "VeloFitter",
-        "HLT",
+        "HLT2",
         "TTSpecs",
         "Tag_MIN_PT",
         "Tag_MIN_IP",
@@ -156,7 +163,7 @@ class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
         LineDstar = StrippingLine(name+'DstarLine', 
                                   FILTER = { "Code":"( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 180 )",
                                              "Preambulo": ["from LoKiTracks.decorators import *"]},
-                                  HLT = self.__confdict__["HLT"],
+                                  HLT2 = self.__confdict__["HLT2"],
                                   selection = SelDstarTOS)
         return LineDstar
         

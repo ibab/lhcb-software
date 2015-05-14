@@ -20,71 +20,79 @@ from Configurables import TisTosParticleTagger
 
 __all__ = ('CharmFromBSemiForHadronAsyAllLinesConf',
            'TOSFilter',
-           'confdict')
+           'default_config')
 
-confdict = {
-    "prescale_LbRS" : 1.0
-    ,"prescale_LbWS" : 0.2 
-    ,"prescale_D0to3piRS" : 1.0
-    ,"prescale_D0to3piWS" : 0.2
-    ,"prescale_D0toK2piRS" : 1.0
-    ,"prescale_D0toK2piWS" : 0.2 
-    #### common to all modes
-    ,"GEC_nLongTrk" : 250. # adimensional
-    ,"GHOSTPROB_MAX" : 0.35 #adimensional
-    ,"Mu_PT" : 800. # MeV
-    ,"H_PT"  : 250. # MeV
-    ,"Pi_PIDKMax" : 6. # adimensional
-    ,"K_PIDKMin"  : 6. # adimensional
-    ,"Slowpi_PIDKMax" : 10. # adimensional
-    ,"Slowpi_PIDeMax" : 99. # adimensional
-    ,"Slowpi_PTMin"   : 200. # MeV
-    ##### specific to D0 modes
-    ,"MuPi_SUMPT_MIN" : 1300. # MeV
-    ,"MuPi_DOCACHI2_MAX" : 8.0 # adimensional
-    ,"MuPi_CHI2NDOF_MAX" : 3.0 # adimensional
-    ,"MuPi_DIRA_MIN" : -99. # adimensional
-    ,"MuPi_FDCHI2_MIN" : 20. # adimensional
-    ,"D0to3H_REQUIRE_TOS" : True # bool
-    ,"D0to3H_DOCACHI2_MAX" : 10. # adimensional
-    ,"D0to3H_VCHI2NDF_MAX" : 3.0 # adimensional
-    ,"D0to3H_SUMPT_MIN" : 1800. # MeV
-    ,"D0to3H_DZ" : 2.0 # mm
-    ,"D0to3H_3pi_DeltaMass_MAX" : 350. # MeV
-    ,"D0to3H_K2pi_DeltaMass_MAX" : 250. # MeV
-    ,"D0to3H_3pi_MASS_MIN" : 900. # MeV
-    ,"D0to3H_3pi_MASS_MAX" : 1400. # MeV
-    ,"D0to3H_K2pi_MASS_MIN" : 1300. # MeV
-    ,"D0to3H_K2pi_MASS_MAX" : 1800. # MeV
-    ,"D0to3H_B_MASS_MIN" : 1800. # MeV
-    ,"D0to3H_B_MASS_MAX" : 4900. # MeV
-    ,"D0to3H_B_DIRA_MIN" : 0.99 # adimensional
-    ,"D0to3H_B_VCHI2NDF_MAX" : 15. # adimensional
-    ,"D0to3H_B_DOCACHI2_MAX" : 50. # adimensional
-    #### specific to Lambda_c+ modes
-    ,"PiPi_MASS_MAX" : 500.  # MeV
-    ,"PiPi_DOCACHI2_MAX" : 15. # adimensional
-    ,"PiPi_CHI2NDF" : 3. # adimensional
-    ,"PiPi_SUMPT_MIN" : 600.  # MeV
-    ,"MuPiPi_DOCACHI2_MAX" : 15. 
-    ,"MuPiPi_CHI2NDF": 3.
-    ,"MuPiPi_FDCHI2_MIN" : 20. # adimensional
-    ,"Lc2Kpi_REQUIRE_TOS" : True # bool
-    ,"Lc2Kpi_DOCACHI2_MAX" : 10. # adimensional
-    ,"Lc2Kpi_VCHI2NDF_MAX" : 3.0 # adimensional
-    ,"Lc2Kpi_SUMPT_MIN" : 1500.  # MeV
-    ,"Lc2Kpi_FDCHI2_MIN" : 20. # adimensional
-    ,"Lc2Kpi_MASS_MIN" : 800.  # MeV
-    ,"Lc2Kpi_MASS_MAX" : 1350. # MeV
-    ,"Lc2Kpi_DeltaMass_MAX" : 700. # MeV
-    ,"Lc2Kpi_DZ" : 1.0 # mm
-    ,"Lc2Kpi_B_MASS_MIN" : 2200. # MeV
-    ,"Lc2Kpi_B_MASS_MAX" : 4300. # MeV
-    ,"Lc2Kpi_B_FDCHI2_MIN" : 20. # adimensional
-    ,"Lc2Kpi_B_DIRA_MIN" : 0.99 # adimensional
-    ,"Lc2Kpi_B_DOCACHI2_MAX" : 50. # adimensional
-    ,"Lc2Kpi_B_VCHI2NDF_MAX" : 15. # adimensional
-    }   
+default_config = {
+    'CharmFromBSemiForHadronAsy' : {
+        'WGs'         : ['ALL'],
+        'BUILDERTYPE' : 'CharmFromBSemiForHadronAsyAllLinesConf',
+        'CONFIG'      : {
+            "prescale_LbRS" : 1.0
+            ,"prescale_LbWS" : 0.2 
+            ,"prescale_D0to3piRS" : 1.0
+            ,"prescale_D0to3piWS" : 0.2
+            ,"prescale_D0toK2piRS" : 1.0
+            ,"prescale_D0toK2piWS" : 0.2 
+            #### common to all modes
+            ,"GEC_nLongTrk" : 250. # adimensional
+            ,"GHOSTPROB_MAX" : 0.35 #adimensional
+            ,"Mu_PT" : 800. # MeV
+            ,"H_PT"  : 250. # MeV
+            ,"Pi_PIDKMax" : 6. # adimensional
+            ,"K_PIDKMin"  : 6. # adimensional
+            ,"Slowpi_PIDKMax" : 10. # adimensional
+            ,"Slowpi_PIDeMax" : 99. # adimensional
+            ,"Slowpi_PTMin"   : 200. # MeV
+            ##### specific to D0 modes
+            ,"MuPi_SUMPT_MIN" : 1300. # MeV
+            ,"MuPi_DOCACHI2_MAX" : 8.0 # adimensional
+            ,"MuPi_CHI2NDOF_MAX" : 3.0 # adimensional
+            ,"MuPi_DIRA_MIN" : -99. # adimensional
+            ,"MuPi_FDCHI2_MIN" : 20. # adimensional
+            ,"D0to3H_REQUIRE_TOS" : True # bool
+            ,"D0to3H_DOCACHI2_MAX" : 10. # adimensional
+            ,"D0to3H_VCHI2NDF_MAX" : 3.0 # adimensional
+            ,"D0to3H_SUMPT_MIN" : 1800. # MeV
+            ,"D0to3H_DZ" : 2.0 # mm
+            ,"D0to3H_3pi_DeltaMass_MAX" : 350. # MeV
+            ,"D0to3H_K2pi_DeltaMass_MAX" : 250. # MeV
+            ,"D0to3H_3pi_MASS_MIN" : 900. # MeV
+            ,"D0to3H_3pi_MASS_MAX" : 1400. # MeV
+            ,"D0to3H_K2pi_MASS_MIN" : 1300. # MeV
+            ,"D0to3H_K2pi_MASS_MAX" : 1800. # MeV
+            ,"D0to3H_B_MASS_MIN" : 1800. # MeV
+            ,"D0to3H_B_MASS_MAX" : 4900. # MeV
+            ,"D0to3H_B_DIRA_MIN" : 0.99 # adimensional
+            ,"D0to3H_B_VCHI2NDF_MAX" : 15. # adimensional
+            ,"D0to3H_B_DOCACHI2_MAX" : 50. # adimensional
+            #### specific to Lambda_c+ modes
+            ,"PiPi_MASS_MAX" : 500.  # MeV
+            ,"PiPi_DOCACHI2_MAX" : 15. # adimensional
+            ,"PiPi_CHI2NDF" : 3. # adimensional
+            ,"PiPi_SUMPT_MIN" : 600.  # MeV
+            ,"MuPiPi_DOCACHI2_MAX" : 15. 
+            ,"MuPiPi_CHI2NDF": 3.
+            ,"MuPiPi_FDCHI2_MIN" : 20. # adimensional
+            ,"Lc2Kpi_REQUIRE_TOS" : True # bool
+            ,"Lc2Kpi_DOCACHI2_MAX" : 10. # adimensional
+            ,"Lc2Kpi_VCHI2NDF_MAX" : 3.0 # adimensional
+            ,"Lc2Kpi_SUMPT_MIN" : 1500.  # MeV
+            ,"Lc2Kpi_FDCHI2_MIN" : 20. # adimensional
+            ,"Lc2Kpi_MASS_MIN" : 800.  # MeV
+            ,"Lc2Kpi_MASS_MAX" : 1350. # MeV
+            ,"Lc2Kpi_DeltaMass_MAX" : 700. # MeV
+            ,"Lc2Kpi_DZ" : 1.0 # mm
+            ,"Lc2Kpi_B_MASS_MIN" : 2200. # MeV
+            ,"Lc2Kpi_B_MASS_MAX" : 4300. # MeV
+            ,"Lc2Kpi_B_FDCHI2_MIN" : 20. # adimensional
+            ,"Lc2Kpi_B_DIRA_MIN" : 0.99 # adimensional
+            ,"Lc2Kpi_B_DOCACHI2_MAX" : 50. # adimensional
+            ,"Lc2Kpi_B_VCHI2NDF_MAX" : 15. # adimensional
+            },
+        'STREAMS'     : ["Semileptonic"]
+        }
+    }
+
 
 class CharmFromBSemiForHadronAsyAllLinesConf(LineBuilder) :
     """

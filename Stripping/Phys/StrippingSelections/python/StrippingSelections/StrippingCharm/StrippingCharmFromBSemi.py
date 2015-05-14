@@ -27,8 +27,8 @@ __all__ = ('CharmFromBSemiAllLinesConf',
 
 confdict = {
     "GEC_nLongTrk"   : 250    # adimensional
-    ,"TTSpecs"      : {'Hlt1.*Track.*Decision%TOS':0,'Hlt2Topo(2|3|4)Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0,"Hlt2Global%TIS":0}
-    ,"HLT"   : "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision') | HLT_PASS_RE('Hlt2Topo(2|3|4)Body.*Decision')"
+    ,"TTSpecs"      : {'Hlt1.*Track.*Decision%TOS':0,'Hlt2Topo.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0,"Hlt2Global%TIS":0}
+    ,"HLT2"   : "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision')"
     ,"TrGhostProbMax": 0.5    # adimensional
     ,"MinBMass"      : 2500   # MeV
     ,"MaxBMass"      : 6000   # MeV
@@ -104,7 +104,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
     __configuration_keys__ = (
         "GEC_nLongTrk"
         ,"TTSpecs"
-        ,"HLT" 
+        ,"HLT2" 
         ,"TrGhostProbMax"
         ,"MinBMass"      
         ,"MaxBMass"      
@@ -647,7 +647,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
             self.registerLine( StrippingLine('%s%sLine'%(line[0],name),
                                              prescale = 1,
                                              FILTER = GECs,
-                                             HLT = config["HLT"],
+                                             HLT2 = config["HLT2"],
                                              selection = line[1]))
         ########### D* decays
         for line in [['b2DstarMuXHHPi0',self.selb2DstarMuXHHPi0],
@@ -669,7 +669,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
             self.registerLine( StrippingLine('%s%sLine'%(line[0],name),
                                              prescale = 1,
                                              FILTER = GECs,
-                                             HLT = config["HLT"],
+                                             HLT2 = config["HLT2"],
                                              selection = line[1]))
                 
         ########### D(s)+ decays
@@ -683,7 +683,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
             self.registerLine( StrippingLine('%s%sLine'%(line[0],name),
                                              prescale = 1,
                                              FILTER = GECs,
-                                             HLT = config["HLT"],
+                                             HLT2 = config["HLT2"],
                                              selection = line[1]))
         
         ########## Lambda_c+ -> decays
@@ -698,7 +698,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
             self.registerLine( StrippingLine('%s%sLine'%(line[0],name),
                                              prescale = 1,
                                              FILTER = GECs,
-                                             HLT = config["HLT"],
+                                             HLT2 = config["HLT2"],
                                              selection = line[1]))
         
         
