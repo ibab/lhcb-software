@@ -200,6 +200,7 @@ class Tesla(LHCbConfigurableUser):
         if not self.getProp('Pack'):
             writer.OptItemList+=[
                     self.base + "Primary#99"
+                    , self.base + "Rec/Summary#99"
                     ]
 
         if self.getProp('Pack'):
@@ -220,6 +221,7 @@ class Tesla(LHCbConfigurableUser):
                     ,self.base+"pRec/Muon/CustomPIDs#99"
                     ,self.base+"pRec/Rich/CustomPIDs#99"
                     ,self.base+"pRec/ProtoP/Custom#99"
+                    ,self.base+"Rec/Summary#99"
                     ]
             packer.OutputLevel = self.getProp('OutputLevel')
         
