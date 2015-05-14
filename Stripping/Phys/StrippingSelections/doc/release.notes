@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-14 - Jon Harrison
+ - Added S21 lines from StrippingPhiToKSKSLines to StrippingRD with addition of D0ToKsKs line
+
 ! 2015-05-14 - Paula Alvarez Cartelle
  - Added StrippingB2XTauMu.py
 
