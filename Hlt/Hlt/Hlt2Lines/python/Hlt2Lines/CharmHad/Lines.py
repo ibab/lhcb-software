@@ -186,7 +186,7 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KK'            : 0.1,
                                  'Neut_ALL_ADMASS_MAX'       :  60.0,
                                           },
                  'CharmHadSharedNeutralLowPtChild_eta' : {
-                                 'Neut_ALL_PT_MIN'           : 350.0 * MeV,
+                                 'Neut_ALL_PT_MIN'           : 200.0 * MeV,
                                  'Neut_ALL_ADMASS_MAX'       :  105.0,
                                           },
                 }
