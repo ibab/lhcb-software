@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-14 - Alessandro Morda'
+ - added StrippingB2XTau.py for B->TauTau analysis
+
+
 ! 2015-05-14 - Lucio Anderlini
  - Added StrippingBandQ/StrippingDiMuonInheritance.py 
 
