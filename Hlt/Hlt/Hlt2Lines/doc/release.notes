@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-14 - M. Alexander
+  - CharmHad/Hc2HHHHLines.py & D2HHHLines.py : 
+    - Tightened DIRA cut for Xic02PKKPi_LTUNB line.
+    - Added Lc2KPPi_LTUNB, Xic02PKKPi_LTUNB and Xic02PKKPi (lifetime biasing)
+      lines to the Turbo stream.
+      
 ! 2015-05-12 - V. Gligorov
  - CharmHad : Add DOCA cut to DV4B combiner
  - CharmHad : update relevant dictionaries in CharmHad and PID
