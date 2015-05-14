@@ -119,6 +119,30 @@ StatusCode TeslaReportAlgo::execute()
     return StatusCode::SUCCESS;
   }
 	
+  // Bring back RecSummary
+  const LHCb::HltObjectSummary* recsummaryObj = selReports->selReport("Hlt2RecSummary");
+  if ( recsummaryObj && !exist<LHCb::RecSummary>( "Turbo/Rec/Summary" ) ) { 
+    LHCb::RecSummary* recSummary = new LHCb::RecSummary() ;
+    put( recSummary , "Turbo/Rec/Summary" );
+    LHCb::HltObjectSummary::Info Rec_info = recsummaryObj->substructure()[0].target()->numericalInfo();
+    m_conv->RecSummaryObjectFromSummary(&Rec_info,recSummary);
+    if ( msgLevel(MSG::DEBUG) ){
+      debug() << "Expected RecSummary HLTOS has ID (106): " << recsummaryObj->substructure()[0].target()->summarizedObjectCLID() << endmsg;
+      debug() << "Global subdetector properties:" << endmsg;
+      debug() << "nTracks = " << recSummary->info(LHCb::RecSummary::nTracks,0) << endmsg;
+      debug() << "nLongTracks = " << recSummary->info(LHCb::RecSummary::nLongTracks,0) << endmsg;
+      debug() << "nDownstreamTracks = " << recSummary->info(LHCb::RecSummary::nDownstreamTracks,0) << endmsg;
+      debug() << "nVeloTracks = " << recSummary->info(LHCb::RecSummary::nVeloTracks,0) << endmsg;
+      debug() << "nSPDhits = " << recSummary->info(LHCb::RecSummary::nSPDhits,0) << endmsg;
+      debug() << "nRich1Hits = " << recSummary->info(LHCb::RecSummary::nRich1Hits,0) << endmsg;
+      debug() << "nRich2Hits = " << recSummary->info(LHCb::RecSummary::nRich2Hits,0) << endmsg;
+    }
+  } 
+  else if( !recsummaryObj && !exist<LHCb::RecSummary>( "Turbo/Rec/Summary" ) ){
+    info() << "RecSummary unavailable, global dectector information will not be resurrected" << endmsg;
+    //
+    return StatusCode::SUCCESS;
+  }
   
   
   // Go and get the information from the Hlt

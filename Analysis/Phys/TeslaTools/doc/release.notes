@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-5-14 - Sean Benson
+ - Resurrect RecSummary.
+
 ! 2015-5-09 - Sean Benson
  - Updates to truth helper functions. 
 
