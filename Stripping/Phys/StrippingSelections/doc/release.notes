@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-14 - Lucio Anderlini
+ - Added StrippingBandQ/StrippingDiMuonInheritance.py 
+
 ! 2015-05-14 - Simone Stracka
  - Added StrippingD2PiPi0.py to StrippingCharm
 
