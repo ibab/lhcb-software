@@ -158,6 +158,11 @@ void ReportConvertTool::SummaryFromRaw(HltObjectSummary::Info* info, HltSelRepRB
         else used_map = m_mpid_unordered_map2_Turbo;
       }
       break;
+    case LHCb::CLID_RecSummary:
+      {      
+        used_map = m_recsummary_unordered_map2;
+      }
+      break;
     case LHCb::CLID_CaloCluster:
       {      
         if(m_version<3) {
