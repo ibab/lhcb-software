@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Carlos Vazquez Sierra
+ - Fixed a typo in StrippingD02KSKS.py which caused to include these lines in any WG test.
+
 ! 2015-05-14 - Alex Pearce
  - Add Lambdac2V0H stripping module in StrippingCharm.
 

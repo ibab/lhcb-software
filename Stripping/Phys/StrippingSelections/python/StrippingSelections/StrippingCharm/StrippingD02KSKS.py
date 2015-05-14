@@ -31,7 +31,7 @@ from StandardParticles import StdNoPIDsUpPions as UpPions
 
 default_config = {
     'NAME'          : 'D02KSKS',
-    'WGs'           : '[Charm]',
+    'WGs'           : ['Charm'],
     'BUILDERTYPE'   : 'D02KSKSConf',
     'CONFIG'        : {'D0_MassWindowBeforeFit'          : 150.0, # D0 mass window cut in MeV before vertex fit
                        'D0_MassWindow'                   : 100.0, # D0 mass window cut in MeV 
