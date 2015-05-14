@@ -41,7 +41,6 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             seq = Sequence("RecSummarySequence")
 
             from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
-            Hlt2BiKalmanFittedForwardTracking().__apply_configuration__()
             tracks = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
             muonID = Hlt2BiKalmanFittedForwardTracking().hlt2MuonID()
 
