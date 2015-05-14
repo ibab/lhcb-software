@@ -109,9 +109,9 @@ namespace DecayTreeFitter
 
     // We refit invalid fits, kinematic fits and composites with beamspot
     // constraint if not at head of tree.
-    bool validfit = !config.forceFitAll() && particle.endVertex() != 0 
-      && particle.endVertex()->nDoF() > 0 
-      && particle.endVertex()->position() != Gaudi::XYZPoint(0,0,0) 
+    bool validfit = !config.forceFitAll() && particle.endVertex() != 0
+      && particle.endVertex()->nDoF() > 0
+      && particle.endVertex()->position() != Gaudi::XYZPoint(0,0,0)
       && particle.endVertex()->covMatrix()(2,2)>0 ;
     bool iscomposite = particle.daughters().size()>0 ;
     bool isresonance = iscomposite && prop && isAResonance(*prop) ;
@@ -119,7 +119,7 @@ namespace DecayTreeFitter
     const LHCb::ProtoParticle* proto = particle.proto() ;
     bool hastrack = proto && proto->track() ;
     bool hascalo  = proto && !(proto->calo().empty()) ;
-    
+
     if(!mother) { // 'head of tree' particles
       //if ( bsconstraint )
       //rc = new InteractionPoint(particle,forceFitAll) ;
@@ -142,7 +142,7 @@ namespace DecayTreeFitter
       else if( hascalo && particle.particleID().pid()==111)
 	rc = new RecoMergedPi0(particle,mother) ; // this better be a merged pi0!
       else if( hascalo )
-        rc = new RecoPhoton(particle,mother) ; // reconstructed photon	
+        rc = new RecoPhoton(particle,mother) ; // reconstructed photon
       else if( validfit ) {  // fitted composites w/o daughters?
         if( isresonance )
           rc = new RecoResonance(particle,mother) ;
@@ -150,7 +150,7 @@ namespace DecayTreeFitter
           rc = new RecoComposite(particle,mother) ;
       } else if(particle.particleID().pid()==22) { // jet constituent
 	rc = new JetMomentum(particle,mother) ;
-      } else // missing particle! 
+      } else // missing particle!
         rc = new MissingParticle(particle,mother) ;
     } else { // 'internal' particles
       if( validfit /*|| isconversion*/ ) {  // fitted composites
@@ -159,7 +159,7 @@ namespace DecayTreeFitter
         else
           rc = new RecoComposite(particle,mother) ;
       } else {         // unfited composites
-	if( isconversion ) 
+	if( isconversion )
 	  rc = new ConvertedPhoton(particle,mother,config) ;
         else if( isresonance )
           rc = new Resonance(particle,mother,config) ;
@@ -169,8 +169,8 @@ namespace DecayTreeFitter
     }
 
     if(vtxverbose>=2)
-      std::cout << "ParticleBase::createParticle returns " 
-	        << rc->name() << " " 
+      std::cout << "ParticleBase::createParticle returns "
+	        << rc->name() << " "
                 << rc->type() << " " << rc->index() << std::endl ;
     return rc ;
   }
@@ -212,7 +212,7 @@ namespace DecayTreeFitter
     for(daucontainer::const_iterator it = m_daughters.begin() ;
         it != m_daughters.end() ; ++it)
       status |= (*it)->initCov(fitparams) ;
-    
+
     if(vtxverbose>=2) {
       std::cout << "ParticleBase::initCov for " << name() << std::endl ;
     }
@@ -239,7 +239,7 @@ namespace DecayTreeFitter
 	  fitparams->cov() .fast (row,row) = sigmom*sigmom ;
       } else {
 	// what a mess!
-	for(int row=1; row<=3; ++row) 
+	for(int row=1; row<=3; ++row)
 	  fitparams->cov().fast(momindex+row,momindex+row) = 0 ;
 	for(daucontainer::const_iterator it = m_daughters.begin() ;
 	    it != m_daughters.end() ; ++it) {
@@ -305,8 +305,8 @@ namespace DecayTreeFitter
 
       double masserr = 0 ;
       if( !hasMassConstraint() ) {
-	HepSymMatrix cov = fitpar->cov().sub(momindex+1,momindex+4) ;
-	HepVector G(4,0) ;
+	CLHEP::HepSymMatrix cov = fitpar->cov().sub(momindex+1,momindex+4) ;
+	CLHEP::HepVector G(4,0) ;
 	G(1) = -px/mass ;
 	G(2) = -py/mass ;
 	G(3) = -pz/mass ;
@@ -317,7 +317,7 @@ namespace DecayTreeFitter
 	 << std::setw(15) << mass
 	 << std::setw(15) << masserr << std::endl ;
     }
-    
+
     for(daucontainer::const_iterator it = m_daughters.begin() ;
         it != m_daughters.end() ; ++it)
       (*it)->fillStream(os,fitpar) ;

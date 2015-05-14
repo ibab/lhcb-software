@@ -2,11 +2,14 @@
 ! Package     : Phys/DecayTreeFitter
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Implements TreeFitter, ported (and improved) from BaBar
-! 
-! See also: 
+!
+! See also:
 ! https://twiki.cern.ch/twiki/bin/view/LHCb/DecayTreeFitter
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
+
+! 2015-05-14 - Marco Clemencic
+ - Fixed compilation with CLHEP 2.
 
 !===================== DecayTreeFitter v1r19 2015-04-21 ======================
 
@@ -32,7 +35,7 @@
 ! 2013-10-25 - Wouter Hulsbergen
  - Fix printing message.
  - Added InternalRecoTrack and JetMomentum.
- 
+
 !========================= DecayTreeFitter v1r15p1 2013-08-01 =========================
 
 ! 2013-07-03 - Wouter Hulsbergen
@@ -44,7 +47,7 @@
  - Fixed bug in initialization of decay length.
  - Improved initialization of momentum for particles with mass constraint.
  - Improved identification of poorly converging fits.
- - Changed convergence criterion to a relative change in chisq 
+ - Changed convergence criterion to a relative change in chisq
    (rather than absolute change).
 
 ! 2013-05-16 - Chris Jones
@@ -114,40 +117,40 @@
 
  - ParticleBase.cpp
 
-     ParticleBase::removeDaughter  
+     ParticleBase::removeDaughter
 
-     tiny fix 
+     tiny fix
 
 ! 2010-06-09 - Vanya Belyaev
 
  - ParticleBase.cpp
 
-       fix the invalid call in ParticleBase::locate 
- 
-! 2010-05-31 - Vanya BELYAEV 
+       fix the invalid call in ParticleBase::locate
+
+! 2010-05-31 - Vanya BELYAEV
 
  - reenable the package for Win32 platform
 
 ! 2010-05-29 - Vanya Belyaev
 
- - move the tool into Phys/LoKiFitters package 
+ - move the tool into Phys/LoKiFitters package
 
 
 ! 2010-05-28 - Vanya Belyaev
 
  - clean DecayTree directory & fitter itself.
 
-   now only one class is vizible 
+   now only one class is vizible
 
  - Fitter
 
-    make use of Gaudi::Math:: classes 
+    make use of Gaudi::Math:: classes
 
-    remove Vtx*Err classes 
+    remove Vtx*Err classes
 
- - cmt/requirements 
+ - cmt/requirements
 
-    version increment to v2r0 
+    version increment to v2r0
 
 
 ! 2010-05-26 - Vanya Belyaev
@@ -156,11 +159,11 @@
 
    add "tool-based" verison of DecayTreeTuple
 
- - cmt/requirements 
+ - cmt/requirements
 
-    version increment to v1r8 
+    version increment to v1r8
 
- 
+
 
 !======================= DecayTreeFitter v1r7 2010-05-24 =====================
 
@@ -172,19 +175,19 @@
 
 ! 2009-10-16 - Wouter Hulsbergen
   - fixed bug in RecoPhoton found by Andrea Contu
- 
+
 !======================= DecayTreeFitter v1r5 2009-09-24 =====================
 
 ! 2009-08-19 - Vanya BELYAEV
 
  - move the class DecayTreeFitter::Tree into Phys/DaVinciKernel package
-   with the name LHCb::DecayTree 
+   with the name LHCb::DecayTree
 
  - cmt/requirements
 
      use Phys/LoKiCore instead of Phys/LoKi
-     use Phys/DaVinciKernel 
-     version increment to v1r5 
+     use Phys/DaVinciKernel
+     version increment to v1r5
 
 !======================= DecayTreeFitter v1r4p1 2009-07-02 ===================
 ! 2009-07-08 - Patrick Koppenburg

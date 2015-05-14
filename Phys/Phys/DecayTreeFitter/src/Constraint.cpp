@@ -63,8 +63,8 @@ namespace DecayTreeFitter
       if(vtxverbose>=3) { std::cout << "filtering "  ; print() ;}
       // save the unfiltered ('predicted') parameters. we need to
       // store them if we want to iterate constraints.
-      const HepVector* pred(0) ;
-      if(m_maxNIter>1) pred = new HepVector(fitpar.par()) ;
+      const CLHEP::HepVector* pred(0) ;
+      if(m_maxNIter>1) pred = new CLHEP::HepVector(fitpar.par()) ;
 
       Projection p(fitpar.dim(),m_dim) ;
       KalmanCalculator kalman ;
@@ -143,7 +143,7 @@ namespace DecayTreeFitter
       kalman.updatePar( fitpar ) ;
       kalman.updateCov( fitpar ) ;
       fitpar.addChiSquare( kalman.chisq(), m_dim, p.particle() ) ;
-      if( fitpar.cov( m_node->index()+1 ) < 0 || kalman.chisq()<0 || std::isnan(kalman.chisq()) ) 
+      if( fitpar.cov( m_node->index()+1 ) < 0 || kalman.chisq()<0 || std::isnan(kalman.chisq()) )
 	status |= ErrCode::filtererror ;
     }
     if( status.failure() && vtxverbose>=1)

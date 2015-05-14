@@ -7,7 +7,7 @@
 
 namespace DecayTreeFitter
 {
-  
+
   inline double fastsymmatrixaccess(double* m, int row, int col)
   {
     return *(m+(row*(row-1))/2+(col-1));
@@ -19,8 +19,8 @@ namespace DecayTreeFitter
   }
 
   ErrCode
-  KalmanCalculator::init(const HepVector& value, const HepMatrix& G, 
-			 const FitParams& fitparams, const HepSymMatrix* V, 
+  KalmanCalculator::init(const CLHEP::HepVector& value, const CLHEP::HepMatrix& G,
+			 const FitParams& fitparams, const CLHEP::HepSymMatrix* V,
 			 int weight)
   {
     ErrCode status ;
@@ -36,20 +36,20 @@ namespace DecayTreeFitter
 #endif
     m_value = &value ;
     m_matrixG     = &G ;
-    const HepSymMatrix& C = fitparams.cov() ;
+    const CLHEP::HepSymMatrix& C = fitparams.cov() ;
     // calculate C*G.T()
 #ifdef SLOWBUTSAFE
     m_matrixCGT = C * G.T() ;
 #else
     double tmp ;
-    m_matrixCGT = HepMatrix(statdim,valdim,0) ;
+    m_matrixCGT = CLHEP::HepMatrix(statdim,valdim,0) ;
     for(int col=1; col<=m_nconstraints; ++col)
       for(int k=1; k<=m_nparameters; ++k)
- 	if( (tmp=G.HepMatrix::operator()(col,k)) !=0 ) {
+ 	if( (tmp=G.CLHEP::HepMatrix::operator()(col,k)) !=0 ) {
 	  for(int row=1; row<k; ++row)
-	    m_matrixCGT.HepMatrix::operator()(row,col) += C.fast(k,row) * tmp ;
+	    m_matrixCGT.CLHEP::HepMatrix::operator()(row,col) += C.fast(k,row) * tmp ;
 	  for(int row=k; row<=statdim; ++row)
-	    m_matrixCGT.HepMatrix::operator()(row,col) += C.fast(row,k) * tmp ;
+	    m_matrixCGT.CLHEP::HepMatrix::operator()(row,col) += C.fast(row,k) * tmp ;
 	}
 #endif
 
@@ -62,28 +62,28 @@ namespace DecayTreeFitter
     if(V) {
       m_matrixRinv = *V ;
       if(weight!=1) m_matrixRinv *= weight ;
-    } else m_matrixRinv = HepSymMatrix(valdim,0) ;
-    
+    } else m_matrixRinv = CLHEP::HepSymMatrix(valdim,0) ;
+
     for(int row=1; row<=m_nconstraints; ++row)
       for(int k=1; k<=m_nparameters; ++k)
-	if( (tmp=G.HepMatrix::operator()(row,k)) != 0 )
+	if( (tmp=G.CLHEP::HepMatrix::operator()(row,k)) != 0 )
 	  for(int col=1; col<=row; ++col)
-	    m_matrixRinv.fast(row,col) += tmp*m_matrixCGT.HepMatrix::operator()(k,col) ;
-#endif    
+	    m_matrixRinv.fast(row,col) += tmp*m_matrixCGT.CLHEP::HepMatrix::operator()(k,col) ;
+#endif
     m_matrixR = m_matrixRinv ;
     m_matrixRinv.invert(m_ierr) ;
     if(m_ierr) {
-      status |= ErrCode::inversionerror; 
+      status |= ErrCode::inversionerror;
       std::cout << "Error inverting matrix. Vertex fit fails." << std::endl ;
     }
-    
+
     // calculate the gain matrix
     m_matrixK = m_matrixCGT * m_matrixRinv ;
     m_chisq = -1 ;
 //     // let's see if we get same results using sparce matrices
-//     VtkSparseMatrix Gs(G) ; 
+//     VtkSparseMatrix Gs(G) ;
 //     VtkSparseMatrix CGT = Gs.transposeAndMultiplyRight(fitparams.cov()) ;
-//     HepSymMatrix Rs(value.numrow()) ;
+//     CLHEP::HepSymMatrix Rs(value.numrow()) ;
 //     Gs.multiplyLeft(CGT,Rs) ;
 //     if(V) Rs += (*V) ;
 //     Rs.invert(m_ierr) ;
@@ -91,7 +91,7 @@ namespace DecayTreeFitter
     return status ;
   }
 
-  void 
+  void
   KalmanCalculator::updatePar(FitParams& fitparams)
   {
     //fitparams.par() -= fitparams.cov() * (G.T() * (R * value) ) ;
@@ -99,21 +99,21 @@ namespace DecayTreeFitter
     m_chisq = m_matrixRinv.similarity(*m_value) ;
   }
 
-  void 
-  KalmanCalculator::updatePar(const HepVector& pred, FitParams& fitparams)
+  void
+  KalmanCalculator::updatePar(const CLHEP::HepVector& pred, FitParams& fitparams)
   {
     // this is still very, very slow !
-    HepVector valueprime = (*m_value) + (*m_matrixG) * (pred-fitparams.par()) ;
+    CLHEP::HepVector valueprime = (*m_value) + (*m_matrixG) * (pred-fitparams.par()) ;
     fitparams.par() = pred - m_matrixK*valueprime ;
     m_chisq = m_matrixRinv.similarity( valueprime ) ;
   }
-  
-  void 
+
+  void
   KalmanCalculator::updateCov(FitParams& fitparams)
   {
 
 #ifdef SLOWBUTSAFE
-    HepSymMatrix deltaCov = m_matrixRinv.similarityT(*m_matrixG).similarity(fitparams.cov()) ;
+    CLHEP::HepSymMatrix deltaCov = m_matrixRinv.similarityT(*m_matrixG).similarity(fitparams.cov()) ;
     fitparams.cov() -= deltaCov ;
 #else
 
@@ -129,36 +129,36 @@ namespace DecayTreeFitter
 #ifndef SKIPHIGHACCURACYCORRECTION
     // substitute C*GT --> 2*C*GT - K*R. of course, this invalidates
     // C*GT, but we do not need it after this routine.
-    
+
     // we use the fact that _in principle_ C*GT = K*R, such that
     // they have the same zero elements
     for(int row=1; row<=m_nparameters; ++row)
-      for(int col=1; col<=m_nconstraints; ++col) 
-	if( (tmp =2*m_matrixCGT.HepMatrix::operator()(row,col))!=0 ) {
+      for(int col=1; col<=m_nconstraints; ++col)
+	if( (tmp =2*m_matrixCGT.CLHEP::HepMatrix::operator()(row,col))!=0 ) {
 	  for(int k=1; k<=m_nconstraints; ++k)
-	    tmp -= m_matrixK.HepMatrix::operator()(row,k) * m_matrixR.HepSymMatrix::operator()(k,col) ;
-	  m_matrixCGT.HepMatrix::operator()(row,col) = tmp ;
+	    tmp -= m_matrixK.CLHEP::HepMatrix::operator()(row,k) * m_matrixR.CLHEP::HepSymMatrix::operator()(k,col) ;
+	  m_matrixCGT.CLHEP::HepMatrix::operator()(row,col) = tmp ;
 	}
 #endif
-    
-//     HepMatrix KR = m_matrixK*m_matrixR ;
+
+//     CLHEP::HepMatrix KR = m_matrixK*m_matrixR ;
 //     double tmp ;
 //     for(int row=1; row<=m_nparameters; ++row)
-//       for(int k=1; k<=m_nconstraints; ++k) 
+//       for(int k=1; k<=m_nconstraints; ++k)
 // 	if( (tmp= (KR(row,k) - 2*m_matrixCGT(row,k))) != 0 )
-// 	  for(int col=1; col<=row; ++col) 
+// 	  for(int col=1; col<=row; ++col)
 // 	    fitparams.cov().fast(row,col) += tmp * m_matrixK(col,k) ;
 
-    // deltaCov = - C*GT*KT 
+    // deltaCov = - C*GT*KT
     for(int row=1; row<=m_nparameters; ++row)
-      for(int k=1; k<=m_nconstraints; ++k) 
-	if( (tmp = -(m_matrixCGT.HepMatrix::operator()(row,k))) != 0 )  // they have same size, and same 'emptiness'
-	  for(int col=1; col<=row; ++col) 
-	    fitparams.cov().fast(row,col) += tmp * m_matrixK.HepMatrix::operator()(col,k) ;
+      for(int k=1; k<=m_nconstraints; ++k)
+	if( (tmp = -(m_matrixCGT.CLHEP::HepMatrix::operator()(row,k))) != 0 )  // they have same size, and same 'emptiness'
+	  for(int col=1; col<=row; ++col)
+	    fitparams.cov().fast(row,col) += tmp * m_matrixK.CLHEP::HepMatrix::operator()(col,k) ;
 
 #endif
     for(int col=1; col<=m_nconstraints; ++col)
       for(int k=1; k<=m_nparameters; ++k)
- 	if( (*m_matrixG).HepMatrix::operator()(col,k) !=0 ) ++(fitparams.nConstraintsVec(k)) ;
+ 	if( (*m_matrixG).CLHEP::HepMatrix::operator()(col,k) !=0 ) ++(fitparams.nConstraintsVec(k)) ;
   }
 }

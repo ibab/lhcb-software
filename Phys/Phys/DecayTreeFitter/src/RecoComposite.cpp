@@ -9,18 +9,18 @@ namespace DecayTreeFitter
   extern int vtxverbose ;
 
   RecoComposite::RecoComposite(const LHCb::Particle& bc, const ParticleBase* mother)
-    : ParticleBase(bc,mother),m_m(),m_matrixV(),m_hasEnergy(true) 
-  { 
+    : ParticleBase(bc,mother),m_m(),m_matrixV(),m_hasEnergy(true)
+  {
     //bool massconstraint = bc && bc->constraint(RecoConstraint::Mass) ;
     //m_hasEnergy = !massconstraint ;
     updCache() ;
   }
 
   template<class Matrix>
-  HepSymMatrix convertToHepSymMatrix(const Matrix& M)
+  CLHEP::HepSymMatrix convertToHepSymMatrix(const Matrix& M)
   {
     size_t dim = M.kRows ;
-    HepSymMatrix rc(dim) ;
+    CLHEP::HepSymMatrix rc(dim) ;
     for(size_t irow=0; irow<dim; ++irow)
       for(size_t icol=0; icol<=irow; ++icol)
 	rc.fast(irow+1,icol+1) = M(irow,icol) ;
@@ -32,7 +32,7 @@ namespace DecayTreeFitter
     // cache par7 (x,y,z,px,py,pz,E) cov7
     Gaudi::XYZPoint pos = particle().referencePoint() ;
     Gaudi::LorentzVector mom = particle().momentum() ;
-    m_m = HepVector(dimM()) ;
+    m_m = CLHEP::HepVector(dimM()) ;
     m_m(1) = pos.x() ;
     m_m(2) = pos.y() ;
     m_m(3) = pos.z() ;
@@ -40,10 +40,10 @@ namespace DecayTreeFitter
     m_m(5) = mom.y() ;
     m_m(6) = mom.z() ;
     if(hasEnergy()) m_m(7) = mom.t() ;
-    HepSymMatrix cov7 = convertToHepSymMatrix( particle().covMatrix()) ;
+    CLHEP::HepSymMatrix cov7 = convertToHepSymMatrix( particle().covMatrix()) ;
     m_matrixV = cov7.sub(1,dimM()) ; // so either 7 or 6, depending on mass constraint
     if(vtxverbose>=4) {
-      std::cout << "cov matrix of external candidate: " << name().c_str() 
+      std::cout << "cov matrix of external candidate: " << name().c_str()
 		<< " " << dimM() << " " << m_matrixV << std::endl ;
     }
   }
@@ -58,12 +58,12 @@ namespace DecayTreeFitter
 
     //quick map for parameters
     int indexmap[7]  ;
-    for(int i=0; i<3; ++i) indexmap[i]   = posindex+i ; 
+    for(int i=0; i<3; ++i) indexmap[i]   = posindex+i ;
     for(int i=0; i<4; ++i) indexmap[i+3] = momindex+i ;
     // copy the 'measurement'
-    for(int row=1; row<=dimM(); ++row) 
+    for(int row=1; row<=dimM(); ++row)
       fitparams->par()(indexmap[row-1]+1) = m_m(row) ;
-    
+
     return ErrCode::success ;
   }
 
@@ -75,15 +75,15 @@ namespace DecayTreeFitter
   }
 
   ErrCode
-  RecoComposite::projectRecoComposite(const FitParams& fitparams, 
+  RecoComposite::projectRecoComposite(const FitParams& fitparams,
 				    Projection& p) const
   {
     int posindex = posIndex() ;
     int momindex = momIndex() ;
-    
+
     // quick map for parameters
     int indexmap[7]  ;
-    for(int i=0; i<3; ++i) indexmap[i]   = posindex+i ; 
+    for(int i=0; i<3; ++i) indexmap[i]   = posindex+i ;
     for(int i=0; i<4; ++i) indexmap[i+3] = momindex+i ;
     for(int row=1; row<=dimM(); ++row) {
       p.r(row)                   = fitparams.par()(indexmap[row-1]+1) - m_m(row) ;
@@ -91,14 +91,14 @@ namespace DecayTreeFitter
       for(int col=1; col<=row; ++col)
 	p.Vfast(row,col) = m_matrixV.fast(row,col) ;
     }
- 
+
     return ErrCode::success ;
   }
-  
-  ErrCode 
-  RecoComposite::projectConstraint(Constraint::Type type, 
-				  const FitParams& fitparams, 
-				  Projection& p) const 
+
+  ErrCode
+  RecoComposite::projectConstraint(Constraint::Type type,
+				  const FitParams& fitparams,
+				  Projection& p) const
   {
     ErrCode status ;
     switch(type) {
@@ -114,7 +114,7 @@ namespace DecayTreeFitter
     return status ;
   }
 
-  double 
+  double
   RecoComposite::chiSquare(const FitParams* fitparams) const
   {
     Projection p(fitparams->dim(),dimM()) ;

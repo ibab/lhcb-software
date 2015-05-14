@@ -1,4 +1,4 @@
-// $Id: Fitter.cpp,v 1.16 2010/06/09 17:55:46 ibelyaev Exp $ 
+// $Id: Fitter.cpp,v 1.16 2010/06/09 17:55:46 ibelyaev Exp $
 // ============================================================================
 
 // STL
@@ -168,7 +168,7 @@ namespace DecayTreeFitter
       double prevabsdeltachisq=-1 ;
 
       for(m_niter=0; m_niter<nitermax && !finished; ++m_niter) {
-        HepVector prevpar = m_fitparams->par() ;
+        CLHEP::HepVector prevpar = m_fitparams->par() ;
         bool firstpass = m_niter==0 ;
         m_errCode = m_decaychain->filter(*m_fitparams,firstpass).flag() ;
         double chisq = m_fitparams->chiSquare() ;
@@ -211,7 +211,7 @@ namespace DecayTreeFitter
           }
         }
 
-        if(vtxverbose>=1) 
+        if(vtxverbose>=1)
         {
           std::ostringstream mess;
           mess << "DecayTreeFitter::Fitter: step, chiSquare: "
@@ -224,7 +224,7 @@ namespace DecayTreeFitter
           print( mess.str(), MSG::VERBOSE );
         }
 
-        if(vtxverbose>=4) 
+        if(vtxverbose>=4)
         {
           fillStream(std::cout) ;
           std::cout << "press a key ...." << std::endl ;
@@ -695,7 +695,7 @@ namespace DecayTreeFitter
   {
     // Locate the context service
     const IAlgContextSvc * asvc = algContextSvc();
-    
+
     // return the current alg
     return ( asvc ? asvc->currentAlg() : NULL );
   }

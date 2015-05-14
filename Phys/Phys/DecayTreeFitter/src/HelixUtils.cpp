@@ -13,12 +13,12 @@ using std::endl;
 
 namespace DecayTreeFitter
 {
-  
+
   extern int vtxverbose ;
 
-  void VtkHelixUtils::vertexFromHelix(const HepVector& helixpar, 
+  void VtkHelixUtils::vertexFromHelix(const CLHEP::HepVector& helixpar,
 				      const BField& fieldmap,
-				      HepVector& vertexpar, int& charge)
+				      CLHEP::HepVector& vertexpar, int& charge)
   {
     double d0     = helixpar[ex_d0]     ;
     double phi0   = helixpar[ex_phi0]   ;
@@ -26,7 +26,7 @@ namespace DecayTreeFitter
     double z0     = helixpar[ex_z0]     ;
     double tandip = helixpar[ex_tanDip] ;
     double L      = helixpar[ex_flt]    ;
-    
+
     double r = 1/omega ;
     double l = L*cos(atan(tandip)) ;
     double phi = phi0 + omega*l ;
@@ -42,9 +42,9 @@ namespace DecayTreeFitter
     double px = pt*cos(phi) ;
     double py = pt*sin(phi) ;
     double pz = pt*tandip ;
-    
-    if(vertexpar.num_row()!=6)  vertexpar = HepVector(6) ;
-    vertexpar[in_x]  = x  ;  
+
+    if(vertexpar.num_row()!=6)  vertexpar = CLHEP::HepVector(6) ;
+    vertexpar[in_x]  = x  ;
     vertexpar[in_y]  = y  ;
     vertexpar[in_z]  = z  ;
     vertexpar[in_px] = px ;
@@ -52,29 +52,29 @@ namespace DecayTreeFitter
     vertexpar[in_pz] = pz ;
   }
 
-  void VtkHelixUtils::helixFromVertex(const HepVector& vertexpar, int charge, 
+  void VtkHelixUtils::helixFromVertex(const CLHEP::HepVector& vertexpar, int charge,
 				      const BField& fieldmap,
-				      HepVector& helixpar, HepMatrix& jacobian) 
+				      CLHEP::HepVector& helixpar, CLHEP::HepMatrix& jacobian)
   {
-    // first copy 
+    // first copy
     double x  = vertexpar[in_x] ;
     double y  = vertexpar[in_y] ;
     double z  = vertexpar[in_z] ;
     double px = vertexpar[in_px] ;
     double py = vertexpar[in_py] ;
     double pz = vertexpar[in_pz] ;
-    
+
     std::cout << "VtkHelixUtils never tested in LHCb" << std::endl ;
     const double Bz = fieldmap.z() ;
     const double a  = -Bz ; //BField::cmTeslaToGeVc*Bz ;
-    
+
     // omega
     //const double Bval = fieldmap.bFieldNominal();
     double aq    = a*charge ;
     double pt2   = px*px+py*py ;
     double pt    = sqrt(pt2) ;
     double omega = aq/pt ; //-BField::cmTeslaToGeVc*Bval*charge/pt;
-    
+
     // now tandip
     double tandip = pz/pt ;
 
@@ -83,24 +83,24 @@ namespace DecayTreeFitter
     double px0 = px + aq*y ;
     double py0 = py - aq*x ;
     double phi0    = atan2(py0,px0) ;
-    
+
     // now d0
     double pt02 = px0*px0+py0*py0 ;
     double pt0 = sqrt(pt02) ;
     double d0 = (pt0 - pt)/aq ;
-    
-    // now z0 
+
+    // now z0
     double deltaphi = phi-phi0 ;
     if(     deltaphi >  Gaudi::Units::pi ) deltaphi -= Gaudi::Units::twopi ;
     else if(deltaphi < -Gaudi::Units::pi ) deltaphi += Gaudi::Units::twopi ;
     double l  = deltaphi/omega ;
     double z0 = z - tandip*l ;
-    
+
     // now L
     double p2 = pt2 + pz*pz ;
     double p  = sqrt(p2) ;
     double L = l*p/pt ;
-    
+
     // all derivatives.
     double dptdpx    = px/pt ;
     double dptdpy    = py/pt ;
@@ -111,28 +111,28 @@ namespace DecayTreeFitter
     double dpt0dy    = aq*dpt0dpx ;
     double dpdpx     = px/p ;
     double dpdpy     = py/p ;
-    
+
     double domegadpx = domegadpt*dptdpx ;
     double domegadpy = domegadpt*dptdpy ;
-    
+
     double dphidpx = -py/pt2 ;
     double dphidpy = px/pt2 ;
-    
+
     double dphi0dpx = -py0/pt02 ;
     double dphi0dpy = px0/pt02 ;
     double dphi0dx  = -aq*dphi0dpy ;
     double dphi0dy  = aq*dphi0dpx ;
-    
+
     double dd0dpx = (dpt0dpx - dptdpx)/aq ;
     double dd0dpy = (dpt0dpy - dptdpy)/aq ;
     double dd0dx  = dpt0dx/aq ;
     double dd0dy  = dpt0dy/aq ;
-    
+
     double dldx  = -dphi0dx/omega ;
     double dldy  = -dphi0dy/omega ;
     double dldpx = ( dphidpx - dphi0dpx - l*domegadpx)/omega ;
     double dldpy = ( dphidpy - dphi0dpy - l*domegadpy)/omega ;
-    
+
     double dLdx  = dldx*L/l ;
     double dLdy  = dldy*L/l ;
     double dLdpx = L*(dldpx/l + dpdpx/p - dptdpx/pt) ;
@@ -140,71 +140,71 @@ namespace DecayTreeFitter
     //double dLdpx = L*(dldpx/l - px*pz*pz/(p2*pt2)) ;
     //double dLdpy = L*(dldpy/l - py*pz*pz/(p2*pt2)) ;
     double dLdpz = l*pz/(pt*p) ;
-    
-    double dtandipdpx = -dptdpx*tandip/pt ; 
-    double dtandipdpy = -dptdpy*tandip/pt ; 
+
+    double dtandipdpx = -dptdpx*tandip/pt ;
+    double dtandipdpy = -dptdpy*tandip/pt ;
     double dtandipdpz = 1/pt ;
-    
+
     double dz0dx  = -tandip*dldx ;
     double dz0dy  = -tandip*dldy ;
     double dz0dz  = 1;
     double dz0dpx = -tandip*dldpx - l*dtandipdpx ;
     double dz0dpy = -tandip*dldpy - l*dtandipdpy ;
     double dz0dpz = -l*dtandipdpz ;
-    
+
     //now copy everything back
-    if(helixpar.num_row()!=6) helixpar = HepVector(6) ;
+    if(helixpar.num_row()!=6) helixpar = CLHEP::HepVector(6) ;
     helixpar[ex_d0]     = d0 ;
     helixpar[ex_phi0]   = phi0 ;
     helixpar[ex_omega]  = omega ;
     helixpar[ex_z0]     = z0 ;
     helixpar[ex_tanDip] = tandip ;
     helixpar[ex_flt]    = L ;
-    
+
     // the row is helixpar, the column the vertexpar
-    //if(jacobian.num_col()!=6 || jacobian.num_row()!=6) 
-    //jacobian = HepMatrix(6,6) ;
+    //if(jacobian.num_col()!=6 || jacobian.num_row()!=6)
+    //jacobian = CLHEP::HepMatrix(6,6) ;
 
     if( jacobian.num_col()==6 && jacobian.num_row()==6 ) {
       for(int row=0; row<6; ++row)
 	for(int col=0; col<6; ++col)
 	  jacobian[row][col] = 0 ;
-         
+
       jacobian[ex_omega][in_x] = 0 ;
       jacobian[ex_omega][in_y] = 0 ;
       jacobian[ex_omega][in_z] = 0 ;
       jacobian[ex_omega][in_px] = domegadpx ;
       jacobian[ex_omega][in_py] = domegadpy ;
       jacobian[ex_omega][in_pz] = 0 ;
-      
+
       jacobian[ex_phi0][in_x]  = dphi0dx ;
       jacobian[ex_phi0][in_y]  = dphi0dy ;
       jacobian[ex_phi0][in_z]  = 0 ;
       jacobian[ex_phi0][in_px] = dphi0dpx ;
       jacobian[ex_phi0][in_py] = dphi0dpy ;
       jacobian[ex_phi0][in_pz] = 0 ;
-      
+
       jacobian[ex_d0][in_x]  = dd0dx ;
-      jacobian[ex_d0][in_y]  = dd0dy ; 
+      jacobian[ex_d0][in_y]  = dd0dy ;
       jacobian[ex_d0][in_z]  = 0 ;
       jacobian[ex_d0][in_px] = dd0dpx ;
       jacobian[ex_d0][in_py] = dd0dpy ;
       jacobian[ex_d0][in_pz] = 0 ;
-      
+
       jacobian[ex_tanDip][in_x] = 0 ;
       jacobian[ex_tanDip][in_y] = 0 ;
       jacobian[ex_tanDip][in_z] = 0 ;
       jacobian[ex_tanDip][in_px] = dtandipdpx ;
       jacobian[ex_tanDip][in_py] = dtandipdpy ;
       jacobian[ex_tanDip][in_pz] = dtandipdpz ;
-      
+
       jacobian[ex_z0][in_x]  = dz0dx ;
       jacobian[ex_z0][in_y]  = dz0dy ;
       jacobian[ex_z0][in_z]  = dz0dz ;
       jacobian[ex_z0][in_px] = dz0dpx ;
       jacobian[ex_z0][in_py] = dz0dpy ;
       jacobian[ex_z0][in_pz] = dz0dpz ;
-      
+
       jacobian[ex_flt][in_x]  = dLdx ;
       jacobian[ex_flt][in_y]  = dLdy ;
       jacobian[ex_flt][in_z]  = 0 ;
@@ -215,8 +215,8 @@ namespace DecayTreeFitter
   }
 
 
-  
-  std::string VtkHelixUtils::helixParName(int i) 
+
+  std::string VtkHelixUtils::helixParName(int i)
   {
     std::string rc ;
     switch(i) {
@@ -229,8 +229,8 @@ namespace DecayTreeFitter
     }
     return rc ;
   }
-  
-  std::string VtkHelixUtils::vertexParName(int i) 
+
+  std::string VtkHelixUtils::vertexParName(int i)
   {
     std::string rc ;
     switch(i) {
@@ -243,32 +243,32 @@ namespace DecayTreeFitter
     }
     return rc ;
   }
-  
-  void VtkHelixUtils::printHelixPar(const HepVector& helixpar)
+
+  void VtkHelixUtils::printHelixPar(const CLHEP::HepVector& helixpar)
   {
     for(int i=0; i<6; ++i)
       cout << helixParName(i).c_str() << helixpar[i] << endl ;
   }
-  
-  void VtkHelixUtils::printVertexPar(const HepVector& vertexpar, int charge)
+
+  void VtkHelixUtils::printVertexPar(const CLHEP::HepVector& vertexpar, int charge)
   {
     for(int i=0; i<6; ++i)
       cout << vertexParName(i).c_str() << vertexpar[i] << endl ;
     cout << "charge:    " << charge << endl ;
   }
 
-  void VtkHelixUtils::helixFromVertexNumerical(const HepVector& vertexpar, int charge, 
+  void VtkHelixUtils::helixFromVertexNumerical(const CLHEP::HepVector& vertexpar, int charge,
 					       const BField& fieldmap,
-					       HepVector& helixpar, HepMatrix& jacobian) 
+					       CLHEP::HepVector& helixpar, CLHEP::HepMatrix& jacobian)
   {
     // first call with dummy jacobian
-    HepMatrix dummy ;
+    CLHEP::HepMatrix dummy ;
     VtkHelixUtils::helixFromVertex(vertexpar,charge,fieldmap,helixpar,dummy) ;
 
     // numeric calculation of the jacobian
-    HepVector vertexpartmp(6) ;
-    HepVector helixpartmp(6) ;
-    HepMatrix jacobiantmp(6,6) ;
+    CLHEP::HepVector vertexpartmp(6) ;
+    CLHEP::HepVector helixpartmp(6) ;
+    CLHEP::HepMatrix jacobiantmp(6,6) ;
 
     for(int jin=0; jin<6; ++jin) {
       //double delta = 0.001*abs(vertexpar[jin]) ;
@@ -278,7 +278,7 @@ namespace DecayTreeFitter
       vertexpartmp = vertexpar ;
       vertexpartmp[jin] += delta ;
       VtkHelixUtils::helixFromVertex(vertexpartmp,charge,fieldmap,helixpartmp,jacobiantmp) ;
-      for(int iex=0; iex<6; ++iex) 
+      for(int iex=0; iex<6; ++iex)
 	jacobian[iex][jin] = (helixpartmp[iex]-helixpar[iex])/delta ;
     }
   }
@@ -293,9 +293,9 @@ namespace DecayTreeFitter
     return rc ;
   }
 
-  double VtkHelixUtils::helixPoca(const HepVector& helixpar1,
-				  const HepVector& helixpar2,
-				  double& flt1, double& flt2, 
+  double VtkHelixUtils::helixPoca(const CLHEP::HepVector& helixpar1,
+				  const CLHEP::HepVector& helixpar2,
+				  double& flt1, double& flt2,
 				  Gaudi::XYZPoint& vertex, bool parallel)
   {
     double d0_1     = helixpar1[ex_d0]     ;
@@ -304,14 +304,14 @@ namespace DecayTreeFitter
     double z0_1     = helixpar1[ex_z0]     ;
     double tandip_1 = helixpar1[ex_tanDip] ;
     double cosdip_1 = cos(atan(tandip_1))  ; // can do that faster
-    
+
     double d0_2     = helixpar2[ex_d0]     ;
     double phi0_2   = helixpar2[ex_phi0]   ;
     double omega_2  = helixpar2[ex_omega]  ;
     double z0_2     = helixpar2[ex_z0]     ;
     double tandip_2 = helixpar2[ex_tanDip] ;
     double cosdip_2 = cos(atan(tandip_2))  ;
-    
+
     double r_1 = 1/omega_1 ;
     double r_2 = 1/omega_2 ;
 
@@ -323,44 +323,44 @@ namespace DecayTreeFitter
 
     double deltax = x0_2 - x0_1 ;
     double deltay = y0_2 - y0_1 ;
-    
+
     double phi1[2] ;
     double phi2[2] ;
     int nsolutions = 1;
-   
+
     // the phi of the 'intersection'.
     const double pi = Gaudi::Units::pi ;
     double phi    = - atan2( deltax, deltay ) ;
     double phinot = phi > 0 ?  phi - pi : phi + pi ;
     phi1[0] = r_1<0 ? phi : phinot ;
     phi2[0] = r_2>0 ? phi : phinot ;
-    
+
     double R1 = fabs(r_1) ;
     double R2 = fabs(r_2) ;
     double Rmin = R1 < R2 ? R1 : R2 ;
     double Rmax = R1 > R2 ? R1 : R2 ;
     double dX = sqrt(deltax*deltax+deltay*deltay) ;
-    
+
     if(!parallel && dX + Rmin > Rmax && dX < R1 + R2 ) {
       // there are two solutions
       nsolutions = 2 ;
       double ddphi1 = acos((dX*dX - R2*R2 + R1*R1)/(2.*dX*R1)) ;
       phi1[1] = phidomain(phi1[0] + ddphi1) ;
       phi1[0] = phidomain(phi1[0] - ddphi1)  ;
-      
+
       double ddphi2 = acos((dX*dX - R1*R1 + R2*R2)/(2.*dX*R2)) ;
       phi2[1] = phidomain(phi2[0] - ddphi2) ;
       phi2[0] = phidomain(phi2[0] + ddphi2) ;
-      
+
     } else if( dX < Rmax ) {
       if( R1 > R2 ) phi2[0] = r_2<0 ? phi : phinot ;
       else          phi1[0] = r_1<0 ? phi : phinot ;
     }
-     
+
 //     cout << "nsolutions: " << nsolutions << endl ;
 //     cout << "xydist,R,r1,r2: " << dX << " " << Rmin << " " << Rmax << " "
 // 	 <<  r_1 << " " << r_2 << endl ;
-//     cout << "pars: " 
+//     cout << "pars: "
 // 	 << x0_1 << "," << y0_1 << "," << r_1 << ","
 //  	 << x0_2 << "," << y0_2 << "," << r_2 << endl ;
 
@@ -380,7 +380,7 @@ namespace DecayTreeFitter
 	    double l2 = (dphi2 + n2*Gaudi::Units::twopi)/omega_2 ;
 	    double tmpz2 = (z0_2 + l2*tandip_2) ;
 	    if( n2==0 || fabs(tmpz2)<100  ) {
-	      // 	    cout << "n1,n2: " << i << " " << n1 << " " << n2 << " " 
+	      // 	    cout << "n1,n2: " << i << " " << n1 << " " << n2 << " "
 	      // 		 << l1/cosdip_1<< " " << l2/cosdip_2 << endl ;
 	      if(first || fabs( tmpz1-tmpz2 ) < fabs(z1-z2)) {
 		ibest=i ;
@@ -411,7 +411,7 @@ namespace DecayTreeFitter
   }
 
 
-  double VtkHelixUtils::helixPoca(const HepVector& helixpar,
+  double VtkHelixUtils::helixPoca(const CLHEP::HepVector& helixpar,
 				  const Gaudi::XYZPoint& point,
 				  double& flt)
   {
@@ -421,7 +421,7 @@ namespace DecayTreeFitter
     double z0     = helixpar[ex_z0]     ;
     double tandip = helixpar[ex_tanDip] ;
     double cosdip = cos(atan(tandip))  ; // can do that faster
-  
+
     double r = 1/omega ;
 
     double x0 = - (r + d0)*sin(phi0) ;
@@ -429,7 +429,7 @@ namespace DecayTreeFitter
 
     double deltax = x0 - point.x() ;
     double deltay = y0 - point.y() ;
-    
+
     const double pi = Gaudi::Units::pi ;
     double phi    = - atan2( deltax, deltay ) ;
     if( r < 0 ) phi = phi > 0 ?  phi - pi : phi + pi ;
