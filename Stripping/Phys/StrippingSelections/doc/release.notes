@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-14 - Adlene Hicheur
+ - Added neutral cone multiplicity to StrippingBnoC/StrippingBc2hhh_BnoC.py
+
 ! 2015-05-14 - Jon Harrison
  - Added S21 lines from StrippingPhiToKSKSLines to StrippingRD with addition of D0ToKsKs line
 
