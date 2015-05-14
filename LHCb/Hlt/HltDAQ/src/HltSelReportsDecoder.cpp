@@ -310,6 +310,11 @@ StatusCode HltSelReportsDecoder::execute() {
             m_conv->SummaryFromRaw(&infoPersistent, &stdInfo, LHCb::CLID_Particle);
         }
         break;
+      case LHCb::CLID_RecSummary:
+        {      
+            m_conv->SummaryFromRaw(&infoPersistent, &stdInfo, LHCb::CLID_RecSummary);
+        }
+        break;
       case LHCb::CLID_CaloCluster:
         {      
             m_conv->SummaryFromRaw(&infoPersistent, &stdInfo, LHCb::CLID_CaloCluster);
