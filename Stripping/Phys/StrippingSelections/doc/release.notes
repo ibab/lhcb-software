@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-14 - Erica Polycarpo 
+ - Added StrippingCharm/StrippingD2hhh_conf.py with additional lifetime cut wrt Stripping21 
+
 ! 2015-05-14 - Roberta Cardinale
  - Added StrippingXic2HHH.py for Yury
 
