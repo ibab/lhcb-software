@@ -58,7 +58,6 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             summary = RecSummaryAlg('Hlt2RecSummary', SummaryLocation = "Hlt2/RecSummary",
                                     TracksLocation = tracks.outputSelection(),
                                     PVsLocation = PVs.output,
-                                    UseLiteClusters = True,
                                     VeloClustersLocation = decoders['Velo'][1],
                                     ITClustersLocation = decoders['IT'][1],
                                     TTClustersLocation = decoders['TT'][1],
