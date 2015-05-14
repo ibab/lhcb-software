@@ -5,7 +5,8 @@ from Configurables import HltANNSvc
 Hlt2ID = HltANNSvc().Hlt2SelectionID
 if "Hlt2Global" not in Hlt2ID : Hlt2ID.update( {  "Hlt2Global" : 2 } )
 Hlt2ID.update(  { 'Hlt2PileUpDecision'                    : 65534
-                , "Hlt2LumiDecision"                      : 65533 } )
+                , "Hlt2LumiDecision"                      : 65533 
+                , 'Hlt2RecSummary'                        : 65000 } )
 
 HltANNSvc().Hlt1SelectionID = {
     # Global

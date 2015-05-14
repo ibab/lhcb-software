@@ -6,6 +6,7 @@
 
 ! 2015-05-14 - Sean Benson
  - Move afterburner so it is before the post amble.
+ - Add RecSummary to known IDs.
 
 ! 2015-05-14 - Roel Aaij
  - Add HltAfterburner configurable.
