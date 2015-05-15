@@ -5,6 +5,7 @@ for QEE WG.
 
 
 _selections = (
+  'StrippingDitau',
   'StrippingDisplVertices',
   'StrippingH24MuLines',
   'StrippingInclbJets',

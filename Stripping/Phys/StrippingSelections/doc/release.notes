@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Chitsau Khurewathanakul
+ - Added StrippingDitau.py to StrippingQEE
+
 ! 2015-05-15 - Thomas Blake
  - Added B2XMuMu
 
