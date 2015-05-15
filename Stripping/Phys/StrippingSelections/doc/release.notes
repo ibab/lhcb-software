@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Roberta Cardinale
+ - Updated StrippingDiMuonNew.py
+
 ! 2015-05-15 - Carlos Vazquez Sierra
  - Modified StrippingB2JpsiPi0, last s23 commit from B2CC
 

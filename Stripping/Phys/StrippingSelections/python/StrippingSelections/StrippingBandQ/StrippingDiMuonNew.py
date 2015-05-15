@@ -200,7 +200,7 @@ default_config = {
         'Jpsi2MuMuDetached_Prescale'                       :     1.   ,
         'Jpsi2MuMuDetached_Postscale'                      :     1.   ,
         
-        'Jpsi2MuMuDetached_MuonPT'                         :   550.   ,  # MeV
+        'Jpsi2MuMuDetached_MuonPT'                         :   500.   ,  # MeV
         'Jpsi2MuMuDetached_MuonP'                          : -8000.   ,  # MeV, no cut now
         'Jpsi2MuMuDetached_MuonPIDmu'                      :     0.   , 
         'Jpsi2MuMuDetached_MuonTRCHI2DOF'                  :     5.   , 
@@ -208,21 +208,21 @@ default_config = {
         'Jpsi2MuMuDetached_MaxMass'                        :  3196.916,  # MeV
         'Jpsi2MuMuDetached_VCHI2PDOF'                      :    20.   ,
         'Jpsi2MuMuDetached_PT'                             : -1000.   ,  # MeV
-        'Jpsi2MuMuDetached_LTCuts'                         :    " & ((BPVDLS>3)|(BPVDLS<-3)) & (MINTREE('mu+'==ABSID,BPVIPCHI2())>4)",
+        'Jpsi2MuMuDetached_LTCuts'                         :    " & ((BPVDLS>3)|(BPVDLS<-3))",
 
         # Psi2MuMuDetachedDetached line
         'Psi2MuMuDetached_Prescale'                        :     1.   ,
         'Psi2MuMuDetached_Postscale'                       :     1.   ,
 
         'Psi2MuMuDetached_ParticleName'                    : "'psi(2S)'", # Particle Name, like "'psi(2S)'"   
-        'Psi2MuMuDetached_MuonPT'                          :   550.   ,  # MeV
+        'Psi2MuMuDetached_MuonPT'                          :   500.   ,  # MeV
         'Psi2MuMuDetached_MuonP'                           : -8000.   ,  # MeV, no cut now
         'Psi2MuMuDetached_MuonPIDmu'                       :     0.   , 
         'Psi2MuMuDetached_MuonTRCHI2DOF'                   :     5.   , 
         'Psi2MuMuDetached_MassWindow'                      :   100.   ,  # MeV
         'Psi2MuMuDetached_VCHI2PDOF'                       :    20.   ,
         'Psi2MuMuDetached_PT'                              : -1000.   ,   # MeV, no cut now
-        'Psi2MuMuDetached_LTCuts'                          :  " & ((BPVDLS>3)|(BPVDLS<-3)) & (MINTREE('mu+'==ABSID,BPVIPCHI2())>4)"
+        'Psi2MuMuDetached_LTCuts'                          :  " & ((BPVDLS>3)|(BPVDLS<-3))"
         },
     'STREAMS' : [ 'Dimuon' ],
     'WGs'    : [ 'BandQ' ]
