@@ -1587,7 +1587,9 @@ class StrippingPromptCharmConf(LineBuilder) :
             """,
             ##
             CombinationCut   = """
-            AM - AM1 < ( 500 * MeV + %s )
+            ( AM - AM1 < ( 500 * MeV + %s ) ) &
+            ( ACHI2DOCA(1,3)  < 16 ) & 
+            ( ACHI2DOCA(2,3)  < 16 ) 
             """ %  self['QvalueXiCPiK'] ,
             ##
             MotherCut      = """
@@ -1650,7 +1652,11 @@ class StrippingPromptCharmConf(LineBuilder) :
             ( ACHI2DOCA(1,2)  < 16 )  & ( AM < 6 * GeV ) 
             """,
             ##
-            CombinationCut   = " AM <  %s  " %  self['QvalueOmegaCC'],
+            CombinationCut   = """
+            ( AM <  %s )             &
+            ( ACHI2DOCA(1,3)  < 16 ) & 
+            ( ACHI2DOCA(2,3)  < 16 )              
+            """ %  self['QvalueOmegaCC'],
             ##
             MotherCut      = """
             ( chi2vx  < 16 ) & ( PT > %s )
@@ -1683,7 +1689,11 @@ class StrippingPromptCharmConf(LineBuilder) :
             ( ACHI2DOCA(1,2)  < 16 )  & ( AM < 6 * GeV ) 
             """,
             ##
-            CombinationCut   = " AM <  %s  " %  self['QvalueOmegaCC'],
+            CombinationCut   = """
+            ( AM <  %s )             &
+            ( ACHI2DOCA(1,3)  < 16 ) & 
+            ( ACHI2DOCA(2,3)  < 16 )              
+            """ %  self['QvalueOmegaCC'],
             ##
             MotherCut      = """
             ( chi2vx  < 16 ) & ( PT > %s )
