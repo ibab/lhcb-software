@@ -1,6 +1,6 @@
-__author__ = ['Carlos Vazquez Sierra']
-__date__ = '07/05/2015'
-__version__ = '$Revision: 1.0$'
+__author__ = ['Maximilien Chefdeville']
+__date__ = '15/05/2015'
+__version__ = '$Revision: 1.1$'
 
 __all__ = ('B2JpsiPi0Conf','default_config')
 
@@ -51,13 +51,17 @@ class B2JpsiPi0Conf(LineBuilder) :
                                            InputList = self.WideJpsiList,
                                            Cuts = "(PFUNA(ADAMASS('J/psi(1S)')) < %(JpsiMassWindow)s * MeV)" % self.config)
 
-        self.Pi0ListLoose = MergedSelection("StdLooseCocktailPi0ForBetaS" + self.name,
-                                             RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseResolvedPi0/Particles"),
-                                                                   DataOnDemand(Location = "Phys/StdLooseMergedPi0/Particles")])
+        self.Pi0ResolvedList = self.createSubSel( OutputList = "ResolvedPi0ForBetaS" + self.name,
+                                                  InputList = DataOnDemand(Location = "Phys/StdLooseResolvedPi0/Particles"),
+                                                  Cuts = "(PT > 1000.*MeV) & (MINTREE('gamma'==ABSID, CL) > 0.05 )")
+         
+        self.Pi0ListMix = MergedSelection("StdLooseCocktailPi0ForBetaS" + self.name,
+                                          RequiredSelections = [self.Pi0ResolvedList,
+                                                                DataOnDemand(Location = "Phys/StdLooseMergedPi0/Particles")])
 
         self.Pi0List = self.createSubSel( OutputList = "Pi0ForBetaS" + self.name,
-                                          InputList = self.Pi0ListLoose,
-                                          Cuts = "(PT > 1500.*MeV)")
+                                          InputList = self.Pi0ListMix,
+                                          Cuts = "(PT > 1000.*MeV)")
 
         self.makeBd2JpsiPi0()
 
@@ -65,10 +69,10 @@ class B2JpsiPi0Conf(LineBuilder) :
 
     def makeBd2JpsiPi0( self ):
         Bd2JpsiPi0 = self.createCombinationSel( OutputList = "Bd2JpsiPi0" + self.name,
-                                  DecayDescriptor = "B0 -> J/psi(1S) pi0",
-                                  DaughterLists  = [ self.JpsiList, self.Pi0List ],
-                                  PreVertexCuts = "in_range(4500,AM,6000)",
-                                  PostVertexCuts = "in_range(4700,M,5900) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config )
+                                                DecayDescriptor = "B0 -> J/psi(1S) pi0",
+                                                DaughterLists  = [ self.JpsiList, self.Pi0List ],
+                                                PreVertexCuts = "in_range(4500,AM,6000)",
+                                                PostVertexCuts = "in_range(4700,M,5900) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s) & (BPVDIRA>0.99755) & (BPVIP()<0.2) & (BPVIPCHI2()<20)" % self.config )
 
         Bd2JpsiPi0PrescaledLine = StrippingLine( self.name + "Bd2JpsiPi0PrescaledLine",
                                                  algos = [ Bd2JpsiPi0 ] ,
