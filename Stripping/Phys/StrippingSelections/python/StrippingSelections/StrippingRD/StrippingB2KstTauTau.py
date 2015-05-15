@@ -313,7 +313,7 @@ class B2KstTauXConf(LineBuilder) :
                                                   { "Type" : "RelInfoBKsttautauTrackIsolationBDT","RecursionLevel" : 0, "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
                                                   { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "B2KstTauTau_CDFIso"},
                                                   { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1,
-                                                    "Locations" : {"Phys/B2KstTauTau_TauTau_SS_Line" : "BVars_VertexIsoInfo",
+                                                    "Locations" : {"Phys/B2KstTauTau_TauTau_SameSign_Line" : "BVars_VertexIsoInfo",
                                                                    "Phys/StdTightDetachedTau3pi" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"],
                                                                    "Phys/KstarB2KstTauTau":"KstarVars_VtxIsoInfo"
                                                                    }
@@ -354,7 +354,7 @@ class B2KstTauXConf(LineBuilder) :
                                                   { "Type" : "RelInfoBKsttautauTrackIsolationBDT","RecursionLevel" : 0, "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
                                                   { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "B2KstTauTau_CDFIso"},
                                                   { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1,
-                                                    "Locations" : {"Phys/B2KstTauTau_TauMu_SS_Line" : "BVars_VertexIsoInfo",
+                                                    "Locations" : {"Phys/B2KstTauTau_TauMu_SameSign_Line" : "BVars_VertexIsoInfo",
                                                                    "Phys/StdTightDetachedTau3pi" : "TauVars_VertexIsoInfo_0",
                                                                    "Phys/KstarB2KstTauTau":"KstarVars_VtxIsoInfo"
                                                                    }
