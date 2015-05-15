@@ -140,8 +140,6 @@ StatusCode TeslaReportAlgo::execute()
   } 
   else if( !recsummaryObj && !exist<LHCb::RecSummary>( "Turbo/Rec/Summary" ) ){
     info() << "RecSummary unavailable, global dectector information will not be resurrected" << endmsg;
-    //
-    return StatusCode::SUCCESS;
   }
   
   
