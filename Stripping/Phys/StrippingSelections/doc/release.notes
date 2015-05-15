@@ -4,6 +4,16 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Pablo Ruiz Valls
+ - Added StrippingTau2LambdaMuLines,
+         StrippingBs2gammagamma,
+         StrippingBeauty2XGammaExclusive,
+         StrippingKshort2MuMuMuMu,
+         StrippingBeauty2XGamma,
+         StrippingLb2L0Gamma,
+         StrippingKshort2PiPiMuMu
+	To StrippingRD
+
 ! 2015-05-15 - Ricardo Vazquez Gomez
  - Added test for the coordinators
 
