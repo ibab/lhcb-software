@@ -3,19 +3,24 @@ StrippingD2Pi0HConf      : D+ -> h+ (pi0 -> e+ e- gamma) prompt and
                            D*+ -> (D0 -> pi0 pi0) pi+, with pi0 -> e+ e- gamma
 StrippingD2EtaHConf      : D+ -> h+ (eta -> pi+ pi- gamma, pi+ pi- pi0) prompt
 StrippingD2EtaPrimeHConf : D+ -> h+ (eta_prime -> pi+ pi- gamma, pi+ pi- eta) prompt
-StrippingD2PhiHConf      : D+ -> h+ (phi/omega -> pi+ pi- pi0) prompt 
+StrippingD2PhiHConf      : D+ -> h+ (phi/omega -> pi+ pi- pi0) prompt
+StrippingD2EtaEEGHConf   : D+ -> h+ (eta -> e+ e- gamma) prompt
+StrippingDst2PiD0EEGConf : D*+ -> (D0 -> e+ e- gamma) pi+
 '''
                                                                
 __author__ = ['Simone Stracka simone.stracka@unipi.it']
-__date__ = '13/05/2015'
+__date__ = '15/05/2015'
 __version__ = '$Revision$'
 
 __all__ = (
     'default_config',
     'StrippingD2Pi0HConf',
+    'StrippingD2EtaEEGHConf',
+    'StrippingDst2PiD0EEGConf',
     'StrippingD2EtaHConf',
     'StrippingD2EtaPrimeHConf',
     'StrippingD2PhiHConf',
+    
 )
 
 from GaudiKernel.SystemOfUnits import MeV, GeV, mrad, picosecond
@@ -106,6 +111,113 @@ default_config = {
                 'PostscaleD2PiPi0EEG': 1,
                 'PostscaleD2KPi0EEG' : 1,
                 'PostscaleDst2D0PiEEG' : 1
+                }
+          },
+    'D2EtaEEGH' : {
+          'WGs': ['Charm'],
+          'BUILDERTYPE': 'StrippingD2EtaEEGHConf',
+          'STREAMS': ['Charm'],
+          'CONFIG': {
+                # Minimum best primary vertex IP chi^2 for charged D daughters
+                'Bachelor_IPCHI2_MIN'      : 25.0,        
+                # Minimum PT for charged D daughters 
+                'Bachelor_PT_MIN'          : 350  *MeV,   
+                # Minimum momentum for charged D daughters 
+                'Bachelor_P_MIN'           : 1000 *MeV,
+                # Bachelor particle PID requirement 
+                'Bachelor_PIDK_MIN'        : -999.0, # not used if < -10
+                # Minimum best primary vertex IP chi^2 for charged D daughters
+                'Daug_IPCHI2_MIN'      : 25.0,     
+                # Minimum PT for charged D daughters 
+                'Daug_PT_MIN'          : 350  *MeV,   # 600 --> 300
+                # Minimum momentum for charged D daughters 
+                'Daug_P_MIN'           : 1000 *MeV,
+                # Maximum momentum for charged D daughters 
+                'Daug_P_MAX'           : 100000 *MeV,
+                # Minimum pseudorapidity for charged D daughters 
+                'Daug_ETA_MIN'         : 2.0,
+                # Maximum pseudorapidity for charged D daughters 
+                'Daug_ETA_MAX'         : 5.0,
+                # Track quality requirement for charged D daughters
+                'Daug_TRCHI2DOF_MAX'   : 5,    
+                # Maximum ghost probability for charged D daughters
+                'Daug_TRGHOSTPROB_MAX' : 0.5,
+                # Minimum PT for intermediate resonance neutral daughters
+                'Neut_PT_MIN'        : 350  *MeV,
+                # Maximum mass for dielectron                
+                'DiElectron_Mass_MAX'       : 650  *MeV,
+                # Minimum PT for dielectron                
+                'DiElectron_PT_MIN'       : 0  *MeV, 
+                # Minimum mass for intermediate resonance
+                'Res_Mass_MIN'       : 450  *MeV, 
+                # Maximum mass for intermediate resonance
+                'Res_Mass_MAX'       : 650  *MeV, 
+                # Minimum D PT
+                'D_PT_Min'           : 2000 *MeV, 
+                # Minimum D mass
+                'D_Mass_MIN'          : 1600 *MeV,
+                # Maximum D mass
+                'D_Mass_MAX'          : 2500 *MeV,
+                # Maximum chi^2 on D end vertex
+                'D_VCHI2PDOF_MAX'         : 5,
+                # minimum flight time                
+                'D_BPVLTIME_MIN'       : 0.15*picosecond,
+                # max chi^2 per DOF of DTF fit
+                'DTF_CHI2NDOF_MAX'   : 5,
+                # HLT filters, only process events firing triggers matching the RegEx
+                'Hlt1Filter'         : None,
+                'Hlt2Filter'         : None,
+                # prescale and postscale
+                'PrescaleD2PiEtaEEG' : 1,
+                'PrescaleD2KEtaEEG'  : 1,
+                'PostscaleD2PiEtaEEG': 1,
+                'PostscaleD2KEtaEEG' : 1,
+                }
+          },
+    'Dst2PiD0EEG' : {
+          'WGs': ['Charm'],
+          'BUILDERTYPE': 'StrippingDst2PiD0EEGConf',
+          'STREAMS': ['Charm'],
+          'CONFIG': {
+                # Minimum best primary vertex IP chi^2 for charged D daughters
+                'Daug_IPCHI2_MIN'      : 25.0,     
+                # Minimum PT for charged D daughters 
+                'Daug_PT_MIN'          : 350  *MeV,   # 600 --> 300
+                # Minimum momentum for charged D daughters 
+                'Daug_P_MIN'           : 1000 *MeV,
+                # Maximum momentum for charged D daughters 
+                'Daug_P_MAX'           : 100000 *MeV,
+                # Minimum pseudorapidity for charged D daughters 
+                'Daug_ETA_MIN'         : 2.0,
+                # Maximum pseudorapidity for charged D daughters 
+                'Daug_ETA_MAX'         : 5.0,
+                # Track quality requirement for charged D daughters
+                'Daug_TRCHI2DOF_MAX'   : 5,    
+                # Maximum ghost probability for charged D daughters
+                'Daug_TRGHOSTPROB_MAX' : 0.5,
+                # Minimum PT for intermediate resonance neutral daughters
+                'Neut_PT_MIN'        : 350  *MeV,
+                # Maximum mass for dielectron                
+                'DiElectron_Mass_MAX'       : 1914  *MeV,
+                # Minimum PT for dielectron                
+                'DiElectron_PT_MIN'       : 0  *MeV, 
+                # Minimum mass for intermediate resonance
+                'Res_Mass_MIN'       : 1814   *MeV, 
+                # Maximum mass for intermediate resonance
+                'Res_Mass_MAX'       : 1914  *MeV, 
+                # Track quality requirement for soft pion from Dstar
+                'Soft_TRCHI2DOF_MAX'   : 5,
+                # Maximum Dstar-D0 mass difference
+                'Dstar_AMDiff_MAX': 165. * MeV,
+                'Dstar_MDiff_MAX': 160. * MeV,                
+                # Maximum chi^2 on Dstar vertex
+                'Dstar_VCHI2VDOF_MAX': 100.,
+                # HLT filters, only process events firing triggers matching the RegEx
+                'Hlt1Filter'         : None,
+                'Hlt2Filter'         : None,
+                # prescale and postscale
+                'PrescaleDst2PiD0EEG' : 1,
+                'PostscaleDst2PiD0EEG' : 1
                 }
           },
     'D2EtaH' : {
@@ -324,7 +436,7 @@ default_config = {
                 'PostscaleD2KPhi3HM' : 1,
                 'PostscaleD2KPhi3HR' : 1
                 }
-          }
+          },
     }
 
 
@@ -429,6 +541,123 @@ class StrippingD2Pi0HConf(LineBuilder):
             HLT1=config['Hlt1Filter'],
             HLT2=config['Hlt2Filter']
             )
+
+class StrippingDst2PiD0EEGConf(LineBuilder):
+    """Creates LineBuilder object containing the stripping lines."""
+    
+    # Allowed configuration keys
+    __configuration_keys__ = default_config['Dst2PiD0EEG']['CONFIG'].keys()
+    
+    # Decay descriptors
+    Dst2D0Pi = ['D*(2010)+ -> D0 pi+','D*(2010)- -> D0 pi-']
+    D0EEG = ['D0 -> J/psi(1S) gamma']
+    
+    def __init__(self, name, config):
+        """Initialise this LineBuilder instance."""
+        self.name = name
+        self.config = config
+        LineBuilder.__init__(self, name, config)
+        
+        d0eeg_name = '{0}D0EEG'.format(name)
+        dst2pid0eeg_name = '{0}Dst2PiD0EEG'.format(name)
+
+        self.selD0EEG = makeEEGResonance(
+            d0eeg_name, 
+            config,
+            inputSel=[StdLooseAllPhotons,StdDiElectronFromTracks],
+            decDescriptors=self.D0EEG
+            )
+        
+        self.selDst2PiD0EEG = makeDstar(
+            dst2pid0eeg_name,
+            config,
+            inputSel=[self.selD0EEG, StdAllNoPIDsPions],
+            decDescriptors=self.Dst2D0Pi,
+            )
+
+        self.line_Dst2PiD0EEG = make_line(
+            self,
+            '{0}Line'.format(dst2pid0eeg_name),
+            prescale=config['PrescaleDst2PiD0EEG'],
+            postscale=config['PostscaleDst2PiD0EEG'],
+            selection=self.selDst2PiD0EEG,
+            HLT1=config['Hlt1Filter'],
+            HLT2=config['Hlt2Filter']
+            )
+
+
+class StrippingD2EtaEEGHConf(LineBuilder):
+    """Creates LineBuilder object containing the stripping lines."""
+    
+    # Allowed configuration keys
+    __configuration_keys__ = default_config['D2EtaEEGH']['CONFIG'].keys()
+    
+    # Decay descriptors
+    D2PiEta = ['[D+ -> eta pi+]cc']
+    D2KEta = ['[D+ -> eta K+]cc']
+    
+    EtaEEG = ['eta -> J/psi(1S) gamma']
+    
+    def __init__(self, name, config):
+        """Initialise this LineBuilder instance."""
+        self.name = name
+        self.config = config
+        LineBuilder.__init__(self, name, config)
+        
+        etaeeg_name = '{0}EtaEEG'.format(name)
+        
+        d2pietaeeg_name = '{0}D2PiEtaEEG'.format(name)        
+        d2ketaeeg_name = '{0}D2KEtaEEG'.format(name)
+
+        self.selEtaEEG = makeEEGResonance(
+            etaeeg_name, 
+            config,
+            inputSel=[StdLooseAllPhotons,StdDiElectronFromTracks],
+            decDescriptors=self.EtaEEG
+            )
+        
+        self.selD2PiEtaEEG = makeD(
+            d2pietaeeg_name,
+            config,
+            inputSel=[self.selEtaEEG, StdAllNoPIDsPions],
+            decDescriptors=self.D2PiEta,
+            useBachelorPID=False
+            )
+
+        usePIDforKaon = False
+        if (config['Bachelor_PIDK_MIN'] > -10):
+            usePIDforKaon = True
+        else :
+            usePIDforKaon = False
+            
+        self.selD2KEtaEEG = makeD(
+            d2ketaeeg_name, 
+            config,
+            inputSel=[self.selEtaEEG, StdAllNoPIDsKaons],
+            decDescriptors=self.D2KEta,
+            useBachelorPID=usePIDforKaon
+            )
+
+        self.line_D2PiEtaEEG = make_line(
+            self,
+            '{0}Line'.format(d2pietaeeg_name),
+            prescale=config['PrescaleD2PiEtaEEG'],
+            postscale=config['PostscaleD2PiEtaEEG'],
+            selection=self.selD2PiEtaEEG,
+            HLT1=config['Hlt1Filter'],
+            HLT2=config['Hlt2Filter']
+            )
+
+        self.line_D2KEtaEEG = make_line(
+            self,
+            '{0}Line'.format(d2ketaeeg_name),
+            prescale=config['PrescaleD2KEtaEEG'],
+            postscale=config['PostscaleD2KEtaEEG'],
+            selection=self.selD2KEtaEEG,
+            HLT1=config['Hlt1Filter'],
+            HLT2=config['Hlt2Filter']
+            )
+        
         
 class StrippingD2EtaHConf(LineBuilder):
     """Creates LineBuilder object containing the stripping lines."""

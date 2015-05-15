@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2015-05-15 - Simone Stracka
+ - Added 3 new lines to StrippingD2PiPi0.py 
+
 ! 2015-05-15 - Chitsau Khurewathanakul
  - Added StrippingDitau.py to StrippingQEE
 
