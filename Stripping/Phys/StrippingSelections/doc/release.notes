@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-16 - Laurence Carson
+ - Updated StrippingSigmacForPID in StrippingCalib module
+
 ! 2015-05-16 - Maurizio Martinelli
  - Added StrippingD2HHHKsLines in StrippingCharm 
 
