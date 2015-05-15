@@ -1,15 +1,15 @@
 """
-Stripping options for (pre-)selecting D(s)+ -> h h pi KS
+Stripping options for (pre-)selecting D(s)+ -> h h pi pi0
 
 Authors: Maurizio Martinelli
 """
 
 ########################################################################
 __author__ = ['Maurizio Martinelli']
-__date__ = '15/05/2015'
+__date__ = '16/05/2015'
 __version__ = '$Revision: 0.1 $'
 
-__all__ = ('D2HHHKsLines',
+__all__ = ('D2HHHPi0Lines',
            'default_config')
 
 from Gaudi.Configuration import *
@@ -17,7 +17,7 @@ from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from Configurables                         import DaVinci__N4BodyDecays
 from StandardParticles                     import StdNoPIDsPions, StdNoPIDsKaons
-from StandardParticles                     import StdLooseKsDD, StdLooseKsLL
+from StandardParticles                     import StdLooseResolvedPi0, StdLooseMergedPi0
 
 from PhysSelPython.Wrappers      import Selection
 from StrippingConf.StrippingLine import StrippingLine
@@ -28,28 +28,22 @@ from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 
 
 default_config = {
-    'NAME'        : 'D2HHHKs',
+    'NAME'        : 'D2HHHPi0',
     'WGs'         : ['Charm'],
-    'BUILDERTYPE' : 'D2HHHKsLines',
-    'CONFIG'      : { 'PrescaleD2PiPiPiKsDD'    : 1,
-                      'PrescaleD2KPiPiKsDD'     : 1,
-                      'PrescaleD2KKPiKsDD'      : 1,
-                      'PrescaleD2PiPiPiKsLL'    : 1,
-                      'PrescaleD2KPiPiKsLL'     : 1,
-                      'PrescaleD2KKPiKsLL'      : 1,
-                      # KS (DD)
-                      'MinDz_DD'                : 0 * mm,
-                      'MaxDz_DD'                : 9999 * mm,
-                      'KSCutDIRA_DD'            : 0.999,
-                      'KSCutMass_DD'            : 50 * MeV,
-                      'KSCutFDChi2_DD'          : 5,
-                      # KS (LL)
-                      'MinDz_LL'                : 0 * mm,
-                      'MaxDz_LL'                : 9999 * mm,
-                      'KSCutDIRA_LL'            : 0.999,
-                      'KSCutMass_LL'            : 35 * MeV,
-                      'KSCutFDChi2_LL'          : 5,
-                      # D(s)+ -> HHHKS
+    'BUILDERTYPE' : 'D2HHHPi0Lines',
+    'CONFIG'      : { 'PrescaleD2PiPiPiPi0R'    : 1,
+                      'PrescaleD2KPiPiPi0R'     : 1,
+                      'PrescaleD2KKPiPi0R'      : 1,
+                      'PrescaleD2PiPiPiPi0M'    : 1,
+                      'PrescaleD2KPiPiPi0M'     : 1,
+                      'PrescaleD2KKPiPi0M'      : 1,
+                      # Pi0 (R)
+                      'MinMass_Pi0R'            : 120,
+                      'MaxMass_Pi0R'            : 150,
+                      'MinPT_Pi0R'              : 1000 * MeV,
+                      # Pi0 (M)
+                      'MinPT_Pi0M'              : 1000 * MeV,
+                      # D(s)+ -> HHHPi0
                       'TrChi2'                  : 3,
                       'TrGhostProb'             : 0.5,
                       'MinTrkPT'                : 250 * MeV,
@@ -59,12 +53,12 @@ default_config = {
                       'MaxADOCACHI2'            : 10.0,
                       'CombMassLow'             : 1700 * MeV,
                       'CombMassHigh'            : 2140 * MeV,
-                      'MinCombPT'               : 0.0,
+                      'MinCombPT'               : 1.0 * GeV,
                       'MaxVCHI2NDOF'            : 12.0,
                       'MinBPVDIRA'              : 0.9998,
                       'MinBPVTAU'               : 0.1 * picosecond,
                       'MassLow'                 : 1790 * MeV,
-                      'MassHigh'                : 2050 * MeV,
+                      'MassHigh'                : 2060 * MeV,
                       # HLT filters, only process events firing triggers matching the RegEx
                       'Hlt1Filter': None,
                       'Hlt2Filter': None,
@@ -72,8 +66,8 @@ default_config = {
     'STREAMS'     : ['Charm']
     }
 
-class D2HHHKsLines( LineBuilder ) :
-    """Class defining the D(s)+ -> h h pi KS stripping lines"""
+class D2HHHPi0Lines( LineBuilder ) :
+    """Class defining the D(s)+ -> h h pi pi0 stripping lines"""
     
     __configuration_keys__ = default_config['CONFIG'].keys()
     
@@ -81,41 +75,35 @@ class D2HHHKsLines( LineBuilder ) :
         
         LineBuilder.__init__(self, name, config)
         
-        self.D2HHHKs, self.lineD2HHHKs = {}, {}
+        self.D2HHHPi0, self.lineD2HHHPi0 = {}, {}
         
-        decays = { 'PiPiPiKs'  : ['[D+ -> pi+ pi- pi+ KS0]cc'],
-                   'KPiPiKs'   : ['[D+ -> K- pi+ pi+ KS0]cc', '[D+ -> K+ pi- pi+ KS0]cc'],
-                   'KKPiKs'    : ['[D+ -> K+ K- pi+ KS0]cc', '[D+ -> K+ K+ pi- KS0]cc'],
+        decays = { 'PiPiPiPi0'  : ['[D+ -> pi+ pi- pi+ pi0]cc'],
+                   'KPiPiPi0'   : ['[D+ -> K- pi+ pi+ pi0]cc', '[D+ -> K+ pi- pi+ pi0]cc'],
+                   'KKPiPi0'    : ['[D+ -> K+ K- pi+ pi0]cc', '[D+ -> K+ K+ pi- pi0]cc'],
                      }
 
-        KS = {'DD': self.makeKS('KSDDFor'+name,
-                                config['MinDz_DD'],
-                                config['MaxDz_DD'],
-                                config['KSCutDIRA_DD'],
-                                config['KSCutMass_DD'],
-                                config['KSCutFDChi2_DD'],
-                                [StdLooseKsDD]),
-              'LL': self.makeKS('KSLLFor'+name,
-                                config['MinDz_LL'],
-                                config['MaxDz_LL'],
-                                config['KSCutDIRA_LL'],
-                                config['KSCutMass_LL'],
-                                config['KSCutFDChi2_LL'],
-                                [StdLooseKsLL]) }
+        Piz = {'R': self.makePiz('Pi0RFor'+name,
+                                [StdLooseResolvedPi0],
+                                config['MinPT_Pi0R'],
+                                config['MinMass_Pi0R'],
+                                config['MaxMass_Pi0R']),
+              'M': self.makePiz('Pi0MFor'+name,
+                                [StdLooseMergedPi0],
+                                config['MinPT_Pi0M']) }
 
         for decay, decayDescriptors in decays.iteritems():
             # make the various stripping selections
-            D2HHHKsName   = name + "D2" + decay
+            D2HHHPi0Name   = name + "D2" + decay
         
-            am34 = (139.57 + 493.614) * MeV
-            am4 = 493.614 * MeV
-            inputs = [ StdNoPIDsPions ] if decays == 'PiPiPiKs' else [ StdNoPIDsPions, StdNoPIDsKaons ]
+            am34 = (139.57 + 134.9766) * MeV
+            am4 = 134.9766 * MeV
+            inputs = [ StdNoPIDsPions ] if decays == 'PiPiPiPi0' else [ StdNoPIDsPions, StdNoPIDsKaons ]
         
             # use both LL and DD KS
-            for ksName, ksCands in KS.iteritems():
+            for pizName, pizCands in Piz.iteritems():
             
                 # Create the D+ candidate
-                self.D2HHHKs[decay+ksName] = self.makeD2HHHKs(D2HHHKsName+ksName,
+                self.D2HHHPi0[decay+pizName] = self.makeD2HHHPi0(D2HHHPi0Name+pizName,
                                                               decayDescriptors,
                                                               config['TrChi2'],
                                                               config['TrGhostProb'],
@@ -134,41 +122,37 @@ class D2HHHKsLines( LineBuilder ) :
                                                               config['MaxVCHI2NDOF'],
                                                               config['MinBPVDIRA'],
                                                               config['MinBPVTAU'],
-                                                              inputs+[ksCands]
+                                                              inputs+[pizCands]
                                                               )
         
                 # Create the stripping line
-                self.lineD2HHHKs[decay+ksName] = StrippingLine(D2HHHKsName+ksName+"Line",
-                                                               prescale  = config['PrescaleD2'+decay+ksName],
-                                                               selection = self.D2HHHKs[decay+ksName],
+                self.lineD2HHHPi0[decay+pizName] = StrippingLine(D2HHHPi0Name+pizName+"Line",
+                                                               prescale  = config['PrescaleD2'+decay+pizName],
+                                                               selection = self.D2HHHPi0[decay+pizName],
                                                                HLT1 = config['Hlt1Filter'],
                                                                HLT2 = config['Hlt2Filter'] )
         
                 # Register the line
-                self.registerLine(self.lineD2HHHKs[decay+ksName])
-            # end loop on ks types
+                self.registerLine(self.lineD2HHHPi0[decay+pizName])
+            # end loop on piz types
         # end loop on decay modes
 
-    def makeKS(self, name,
-               minDz, maxDz,
-               KSCutDIRA, KSCutMass, KSCutFDChi2,
-               inputSel) :
+    def makePiz(self, name, inputSel,
+                minPT, mMin=0, mMax=0) :
         """
-            Given a set of input candidates, refine the list to create good KS candidates
-            Used for both long and downstream tracks.
+            Given a set of input candidates, refine the list to create good Pi0 candidates
+            Used for both Merged and Resolved Pi0.
         """
-        _code = " (BPVVDZ > %(minDz)s ) " \
-                "&(BPVVDZ < %(maxDz)s ) " \
-                "&(BPVDIRA > %(KSCutDIRA)s ) " \
-                "&(ADMASS('KS0') < %(KSCutMass)s ) " \
-                "&(BPVVDCHI2> %(KSCutFDChi2)s )" % locals()
-        _KsFilter = FilterDesktop(name = 'KSFilter_'+name,
-                                  Code = _code)
+        _code = " (PT > %(minPT)s ) " % locals()
+        if mMin != 0 or mMax != 0:
+            _code = ( "( in_range( %(mMin)s* MeV, M, %(mMax)s )) & "  % locals() )+ _code
+        _PizFilter = FilterDesktop(name = 'PizFilter_'+name,
+                                   Code = _code)
         return Selection (name,
-                          Algorithm = _KsFilter,
+                          Algorithm = _PizFilter,
                           RequiredSelections = inputSel)
 
-    def makeD2HHHKs( self, name, decayDescriptors,
+    def makeD2HHHPi0( self, name, decayDescriptors,
                    trChi2,trGhostProb,minPT,minIPChi2,
                    highPIDK, lowPIDK,
                    am34, am4, amMin, amMax,
