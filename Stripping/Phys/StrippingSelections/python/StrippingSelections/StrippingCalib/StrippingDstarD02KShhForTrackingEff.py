@@ -156,28 +156,28 @@ class DstarD02KShh_ForTrackingEffBuilder(LineBuilder):
                                                prescale  = config['PiPiprescale'],
                                                postscale = config['postscale'],
                                                RequiredRawEvents = ["Tracker","Velo"],
-                                               HLT = config['HLTFILTER'],
+                                               HLT2 = config['HLTFILTER'],
                                                selection = self.selDstarPiPi_TisTos)
         self.lineKK            = StrippingLine(name + 'KKLine',
                                                FILTER    = _globalEventCuts,
                                                prescale  = config['KKprescale'],
                                                postscale = config['postscale'],
                                                RequiredRawEvents = ["Tracker","Velo"],
-                                               HLT = config['HLTFILTER'],
+                                               HLT2 = config['HLTFILTER'],
                                                selection = self.selDstarKK_TisTos)
         self.lineKPlusPiMinus  = StrippingLine(name+'KPlusPiMinusLine',
                                                FILTER    = _globalEventCuts,
                                                prescale  = config['KPlusPiMinusprescale'],
                                                postscale = config['postscale'],
                                                RequiredRawEvents = ["Tracker","Velo"],
-                                               HLT = config['HLTFILTER'],
+                                               HLT2 = config['HLTFILTER'],
                                                selection = self.selDstarKPlusPiMinus_TisTos)
         self.lineKMinusPiPlus  = StrippingLine(name+'KMinusPiPlusLine',
                                                FILTER    = _globalEventCuts,
                                                prescale  = config['KMinusPiPlusprescale'],
                                                postscale = config['postscale'],
                                                RequiredRawEvents = ["Tracker","Velo"],
-                                               HLT = config['HLTFILTER'],
+                                               HLT2 = config['HLTFILTER'],
                                                selection = self.selDstarKMinusPiPlus_TisTos)
 
         self.registerLine(self.linePiPi)
