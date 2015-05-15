@@ -136,8 +136,7 @@ class DstarD2HHHHLines( LineBuilder ) :
                    am34, am4, amMin, amMax,
                    maxDocaChi2, minCombPT,
                    vmMin, vmMax, maxVChi, minbpvDira, minLT,
-                   inputSel = [ StdNoPIDsPions, StdNoPIDsKaons ],
-                   Hlt1Filter = None, Hlt2Filter = None) :
+                   inputSel = [ StdNoPIDsPions, StdNoPIDsKaons ]) :
         """
           Create and return a D0 -> HHHH (H=K,pi) Selection object.
           Arguments:

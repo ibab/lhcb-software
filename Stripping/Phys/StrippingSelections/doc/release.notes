@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Maurizio Martinelli
+ - Modified b->D0(->HHHH)muX stripping line to use DaVinci__N4BodyCombiner
+ - Added D*+->D0(XGamma)pi+ stripping lines
+ - Fixed a typo in DstarD2HHHH stripping line
+
 ! 2015-05-15 - Francesco Dettori
  - Updated StrippingRareStrange 
  - Updated StrippingDstarD02xx

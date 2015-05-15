@@ -10,7 +10,7 @@ __date__ = '08/03/2012'
 __version__ = '$Revision: 0.9 $'
 
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles
+from Configurables import FilterDesktop, CombineParticles, DaVinci__N4BodyDecays
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -58,6 +58,7 @@ default_config = {
     ,"BVCHI2DOF"     : 6.0    # adimensiional
     ,"DZ"            : 0      #mm
     ,"DDocaChi2Max"  : 20     #adimensiional
+    ,"Dto4hADocaChi2Max"  : 7     #adimensiional
     ,"MINIPCHI2Loose": 4.0   #adimensiional
     ,"KaonPIDKloose" : -5     #adimensiional
     ,'KSCutZFDFromD' :   10.0  #mm
@@ -135,6 +136,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         ,"BVCHI2DOF"     
         ,"DZ"
         ,"DDocaChi2Max"
+        ,"Dto4hADocaChi2Max"
         ,"MINIPCHI2Loose"
         ,"KaonPIDKloose"
         ,'KSCutZFDFromD'
@@ -807,6 +809,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         return _pil
     
     def _D02HHHHFilter( self , _decayDescriptors,_name):
+        '''
         _combinationCut = "(ADAMASS('D0') < %(Dto4h_AMassWin)s *MeV)"\
                           "& (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3)+ACHILD(PT,4) > %(PTSUM)s *MeV)"\
                           "& (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
@@ -817,7 +820,30 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         _d02hhhh = CombineParticles( name = _name,
                                      DecayDescriptors = _decayDescriptors,
                                      CombinationCut = _combinationCut,
-                                     MotherCut = _motherCut)                            
+                                     MotherCut = _motherCut)
+        '''
+        _c12_cuts = (" ( AM < (1865+%(Dto4h_AMassWin)s - 279)* MeV ) " \
+                     "&( ACHI2DOCA(1,2) < %(Dto4hADocaChi2Max)s ) " %self.__confdict__ )
+        _c123_cuts =(" ( AM < (1865+%(Dto4h_AMassWin)s - 139.5)* MeV ) " \
+                     "&( ACHI2DOCA(1,3) < %(Dto4hADocaChi2Max)s ) " \
+                     "&( ACHI2DOCA(2,3) < %(Dto4hADocaChi2Max)s ) " %self.__confdict__ )
+        _combination_cuts =  (" (ADAMASS('D0') < %(Dto4h_AMassWin)s *MeV) " \
+                              "&( (APT1+APT2+APT3+APT4) > %(PTSUM)s )" \
+                              "&( ACHI2DOCA(1,4) < %(Dto4hADocaChi2Max)s ) " \
+                              "&( ACHI2DOCA(2,4) < %(Dto4hADocaChi2Max)s ) " \
+                              "&( ACHI2DOCA(3,4) < %(Dto4hADocaChi2Max)s ) " %self.__confdict__ )
+        _mother_cuts = (" (ADMASS('D0') < %(Dto4h_MassWin)s *MeV) " \
+                        "&(VFASPF(VCHI2PDOF) < %(DsVCHI2DOF)s)" \
+                        "&(MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)" \
+                        "&(SUMTREE( PT,  ISBASIC )> %(PTSUM)s*MeV)" \
+                        "&(BPVVDCHI2 > %(DsFDCHI2)s)" \
+                        "&(BPVDIRA > %(DsDIRA)s )" %self.__confdict__ )
+
+        _d02hhhh = DaVinci__N4BodyDecays(DecayDescriptors = _decayDescriptors,
+                                         Combination12Cut = _c12_cuts, Combination123Cut = _c123_cuts,
+                                         CombinationCut = _combination_cuts,
+                                         MotherCut = _mother_cuts)
+                                     
         return _d02hhhh
     
 
