@@ -4,6 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-05-15 - Sascha Stahl
+ - HltRecoConf: Added extra options for p/pt thresholds for muons in Hlt1.
+ - Hlt1Tracking: Changed configuration of complement forward for muons. 
+   It takes now the charge estimate of VeloTT tracks into account and
+   T-station hits used by the high pt forward are marked to be not used again.
+
 ! 2015-05-14 - Roel Aaij
  - Add HltAfterburner to used_configurables.
  - Remove unneeded whitespace

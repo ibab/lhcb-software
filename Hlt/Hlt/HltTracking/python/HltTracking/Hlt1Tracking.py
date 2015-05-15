@@ -35,24 +35,28 @@ def ConfiguredPatSeeding( minPSeed = 3000):
 from GaudiKernel.SystemOfUnits import MeV
 
 # Use HltRecoConf Here!
-def ConfiguredForward( parent, name , minP , minPt , useMomEst = False ) :
+def ConfiguredForward( parent, name , minP , minPt , useMomEst = False, MarkHitsTrackLocations = None ) :
     if name == None: name = PatForwardTool.__name__
-    from HltTracking.HltRecoConf import CommonForwardTrackingOptions
+    from HltTracking.HltRecoConf import CommonForwardTrackingOptions,ForwardTrackingOptions_MomEstimate
     from HltTracking import HltRecoConf
     opts = CommonForwardTrackingOptions.copy()
+    optsMom = ForwardTrackingOptions_MomEstimate.copy()
     if useMomEst :
-        opts.update( UseMomentumEstimate = True
-                   , UseWrongSignWindow = True
-                   , WrongSignPT = HltRecoConf.getProp("Forward_WrongSignPT")
-                   , Preselection = useMomEst
-                   )
-    return Hlt1Tool( PatForwardTool
-                   , name
-                   , MinPt = minPt
-                   , MinMomentum = minP
-                   , **opts 
-                   ).createConfigurable( parent )
-
+        opts.update( optsMom )
+        opts.update( Preselection = False ) # don't select only high pt (pt>400) velott tracks
+    from Configurables import TrackUsedLHCbID
+    tool =  Hlt1Tool( PatForwardTool
+                      , name
+                      , MinPt = minPt
+                      , MinMomentum = minP
+                      , StatPrint = True
+                      , **opts 
+                      ).createConfigurable( parent )
+    if MarkHitsTrackLocations != None:
+        PatForwardTool(name).addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
+        PatForwardTool(name).UsedLHCbIDToolName="TrackUsedLHCbID"
+        PatForwardTool(name).TrackUsedLHCbID.inputContainers = MarkHitsTrackLocations
+    return tool
 
 def ConfiguredFastKalman( parent = None, name = None ) :
     if name == None: name = HltTrackFit.__name__
@@ -135,8 +139,10 @@ from HltSharedTracking import HltHPTTracking
 # =============================================================================
 from Configurables import HltRecoConf
 ConfiguredForward( ToolSvc(), to_name( "ComplementForward" ), 
-                   minP=HltRecoConf().getProp("Forward_LPT_MinP"),  
-                   minPt=HltRecoConf().getProp("Forward_LPT_MinPt"))
+                   minP=HltRecoConf().getProp("Forward_LPT_Muon_MinP"),  
+                   minPt=HltRecoConf().getProp("Forward_LPT_Muon_MinPt"),
+                   useMomEst = True,
+                   MarkHitsTrackLocations = [ HltHPTTracking.outputSelection() ])
 ConfiguredForward( ToolSvc(), to_name( "LooseForward" ), 
                    minP=HltRecoConf().getProp("Forward_LPT_MinP"),  
                    minPt=HltRecoConf().getProp("Forward_LPT_MinPt"))
