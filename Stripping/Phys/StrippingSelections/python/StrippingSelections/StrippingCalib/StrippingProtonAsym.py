@@ -45,7 +45,7 @@ __all__ = [
 # Dictionary of cut variables and values
 default_config = {
     "NAME": "ProtonAsym",
-    "WGs": ["Semileptonic"],
+    "WGs": ["ALL"],
     "BUILDERTYPE": "ProtonAsymBuilder",
     "CONFIG": {
         # Are the candidates to be stored on microDST, as opposed to full?
@@ -574,7 +574,7 @@ class ProtonAsymBuilder(LineBuilder):
             prescale=prescale,
             postscale=postscale,
             selection=selection,
-            HLT=hlt
+            HLT2=hlt
         )
 
 

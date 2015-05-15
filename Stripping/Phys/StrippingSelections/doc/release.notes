@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Michael Kolpin
+  - Moved StrippingProtonAsym to StrippingCalib module
+  - Updated STREAMS for multiple builders in StrippingCalib
+  - Bugfixes to multiple builder in StrippingCalib
+
 ! 2015-05-15 - Lucio Anderlini
   - updated naming-scheme for DiMuonInherit.py
 

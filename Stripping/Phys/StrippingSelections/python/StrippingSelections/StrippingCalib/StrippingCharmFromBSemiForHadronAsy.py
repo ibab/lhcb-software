@@ -89,7 +89,7 @@ default_config = {
             ,"Lc2Kpi_B_DOCACHI2_MAX" : 50. # adimensional
             ,"Lc2Kpi_B_VCHI2NDF_MAX" : 15. # adimensional
             },
-        'STREAMS'     : ["Semileptonic"]
+        'STREAMS'     : ["Calibration"]
         }
     }
 

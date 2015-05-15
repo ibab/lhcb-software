@@ -44,7 +44,8 @@ default_config = {
             "Pion_MAX_PIDK":20,
             "Dst_M_MAX":2030,
             "Dst_DTFCHI2_MAX":3
-            }
+            },
+        'STREAMS' : ["Calibration"]
         }
     }
 
@@ -187,7 +188,7 @@ class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
         preve = TrackStateInitAlg("For%sInitSeedFit"%self.name,TrackLocation = self.VeloTrackOutputLocation)
         preve.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
         copyVelo = TrackContainerCopy( "For%sCopyVelo"%self.name )
-        copyVelo.inputLocation = self.VeloTrackOutputLocation
+        copyVelo.inputLocations = self.VeloTrackOutputLocation
         copyVelo.outputLocation = self.FittedVeloTrackOutputLocation
         
         ### fitting
