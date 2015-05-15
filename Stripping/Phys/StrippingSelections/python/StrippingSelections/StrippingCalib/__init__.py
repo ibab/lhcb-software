@@ -16,7 +16,8 @@ _selections = [
     "StrippingTrackEffD0ToK3Pi",
     "StrippingTrackEffMuonTT",
     "StrippingTrackEffVeloMuon",
-    "StrippingTrackEffDownMuon"
+    "StrippingTrackEffDownMuon",
+    "StrippingD02KPiPi0"
  ]
 
 for _sel in _selections :

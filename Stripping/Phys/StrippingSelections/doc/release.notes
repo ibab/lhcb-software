@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Regis Lefevre
+ - Added StrippingB2HHPi0.py in StrippingBnoC 
+ - Added StrippingD02KPiPi0.py in StrippingCalib
+
 ! 2015-05-15 - Jibo He
  - Moved Bc2JpsiMuX, Bc2JpsiHBDT, Ccbar2Ppbar, Ccbar2PhiPhi lines to new structure
 
