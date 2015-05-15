@@ -21,7 +21,7 @@ default_config = {
     'CONFIG'            : { 'BPVLTIME'                  :       0.2
                           , 'VCHI2PDOF'                 :       10
                           , 'JpsiMassWindow'            :       80
-                          , 'Bs2JpsiPi0Prescale'        :       0.9     # 2011: 0.185, 2012: 0.9
+                          , 'Bs2JpsiPi0Prescale'        :       1.0     # 2011: 0.185, 2012: 0.9
                           },
     'STREAMS'          : { 'Leptonic' : [ 'StrippingBetaSBd2JpsiPi0PrescaledLine' ,
                                           'StrippingBetaSBd2JpsiPi0DetachedLine'  ] }

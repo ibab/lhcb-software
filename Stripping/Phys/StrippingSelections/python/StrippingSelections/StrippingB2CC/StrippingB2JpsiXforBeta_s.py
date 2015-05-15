@@ -36,11 +36,11 @@ default_config = {
                  ,       'JpsiMassWindow'            :       80
                  ,       'DaughterPT'                :       1000
                  ,       'VCHI2PDOF'                 :       10
-                 ,       'Jpsi2MuMuPrescale'         :       0.075   # 2015: tune to 0.1, 2011: 0.014, 2012: 0.075
-                 ,       'Bd2JpsiKstarPrescale'      :       0.29    # 2011: 0.065, 2012: 0.29
+                 ,       'Jpsi2MuMuPrescale'         :       0.15    # 2015: tune to 0.1, 2011: 0.014, 2012: 0.075
+                 ,       'Bd2JpsiKstarPrescale'      :       1.0     # 2011: 0.065, 2012: 0.29
                  ,       'Bd2JpsiKsPrescale'         :       1.0     # 2011: 1.0, 2012: 1.0
-                 ,       'Bs2JpsiPhiPrescale'        :       0.62    # 2011: 0.13, 2012: 0.62
-                 ,       'Bu2JpsiKPrescale'          :       0.2     # 2011: 0.04, 2012: 0.2
+                 ,       'Bs2JpsiPhiPrescale'        :       1.0     # 2011: 0.13, 2012: 0.62
+                 ,       'Bu2JpsiKPrescale'          :       1.0     # 2011: 0.04, 2012: 0.2
                          },
     'STREAMS' : {
         'Leptonic' : [

@@ -5,6 +5,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-05-15 - Carlos Vazquez Sierra
+ - Prescales tuned up for B2CC lines.
  - Fixed a typo in StrippingD02KSKS.py which caused to include these lines in any WG test.
 
 ! 2015-05-14 - Alex Pearce
