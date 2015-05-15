@@ -15,27 +15,32 @@ __all__ = (
     'makeBc2JpsiMu'
     )
 
-config_default =  {
+default_config = {
+    'NAME'        : 'Bc2JpsiMu',
+    'BUILDERTYPE' : 'Bc2JpsiMuXConf',
+    'CONFIG' : {
     'LinePrescale'        :    1.   ,
     'LinePostscale'       :    1.   ,
-    
-    'MuonTRCHI2DOF'       :    5.   ,  # adimentional 
+   
+    'MuonTRCHI2DOF'       :    5.   ,  # adimentional
     'MuonPT'              : 1400.   ,  # MeV
     'MuonP'               :   -5.   ,  # MeV, not applied now
     'MuMuParticleName'    : "'J/psi(1S)'", # Particle Name, like "'psi(2S)'"
     'MuMuMassWindow'      :  150.   ,  # MeV, 10 sigma, may decreased to 150
     'MuMuVtxCHI2'         :    9.   ,  # adimentional
-    'MuMuPT'              :  -10.   ,  # MeV, not applied 
-    
-    'MuonBcTRCHI2DOF'     :    5.   ,  # adimentional     
+    'MuMuPT'              :  -10.   ,  # MeV, not applied
+   
+    'MuonBcTRCHI2DOF'     :    5.   ,  # adimentional    
     'MuonBcPT'            : 2500.   ,  # MeV
     'MuonBcP'             :   -5.   ,  # MeV, not applied now
-    'BcUpperMass'         : 6400.   ,  # MeV, Upper limit for partial rec. 
+    'BcUpperMass'         : 6400.   ,  # MeV, Upper limit for partial rec.
     'BcLowerMass'         : 3200.   ,  # MeV, Lower limit for partial rec.
     'BcVtxCHI2'           :    9.   ,  # adimentional
-    'BcPT'                : 6000.      # MeV, May incrase up to 5000 MeV if needed       
-    }
-
+    'BcPT'                : 6000.      # MeV, May incrase up to 5000 MeV if needed      
+    },
+    'STREAMS' : [ 'Dimuon' ] ,
+    'WGs'    : [ 'BandQ' ]
+  }
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles

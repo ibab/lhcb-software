@@ -18,7 +18,10 @@ __all__ = (
     'Ccbar2PhiPhiConf'
     )
 
-config_default =  {
+default_config = {
+    'NAME'        : 'Ccbar2Phi', 
+    'BUILDERTYPE' : 'Ccbar2PhiPhiConf',
+    'CONFIG' : {
         'TRCHI2DOF'        :     5.  ,
         'KaonPIDK'         :     5.  ,
         'KaonPT'           :   650.  , # MeV
@@ -32,7 +35,10 @@ config_default =  {
         'PionCuts'         :  "(PT>0.7*GeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>36.) & (PIDK<10)" ,
         'KaonCuts'         :  "(PT>0.5*GeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>25.) & (PIDK>5)",
         'LooseKaonCuts'    :  "(PT>0.5*GeV) & (TRCHI2DOF<5) & (MIPCHI2DV(PRIMARY)>9.)"
-        }
+        },
+    'STREAMS' : [ 'Charm' ] ,
+    'WGs'     : [ 'BandQ' ]
+    }
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles

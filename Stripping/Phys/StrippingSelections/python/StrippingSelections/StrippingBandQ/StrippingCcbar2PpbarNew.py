@@ -16,7 +16,10 @@ __all__ = (
     'makePP'
     )
 
-config_default =  { 'LinePrescale'     :    1.   ,
+default_config = {
+    'NAME'              : 'Ccbar2Ppbar',  
+    'BUILDERTYPE'       : 'Ccbar2PpbarConf',
+    'CONFIG'    : { 'LinePrescale'     :    1.   ,
                     'LinePostscale'    :    1.   ,
                     
                     'SpdMult'          :   300.  , # dimensionless, Spd Multiplicy cut 
@@ -32,9 +35,14 @@ config_default =  { 'LinePrescale'     :    1.   ,
                     'MinMass'          :  2800.  , # MeV, after Vtx fit
                     'VtxCHI2'          :     9.  , # dimensionless
                     'CCCut'            :  " & (PT>6*GeV)"    
-                    }
+                   },
+    'STREAMS' : [ 'Charm' ] ,
+    'WGs'    : [ 'BandQ' ]
+}
 
-config_exclusive =  {
+Ccbar2PpbarExclusive = {
+    'BUILDERTYPE'       : 'Ccbar2PpbarConf',
+    'CONFIG'    : {
         'LinePrescale'     :     1.  ,
         'LinePostscale'    :     1.  ,
         
@@ -51,27 +59,34 @@ config_exclusive =  {
         'MinMass'          :     0.  , # MeV, after Vtx fit
         'VtxCHI2'          :     9.  , # dimensionless
         'CCCut'            :  ""     
-        }
+        },
+    'STREAMS' : [ 'Charm' ] ,
+    'WGs'    : [ 'BandQ' ]
+    }
 
-config_detached =  {
-        'LinePrescale'     :     1.  ,
-        'LinePostscale'    :     1.  ,
-        
-        'SpdMult'          :   600.  , # dimensionless, Spd Multiplicy cut 
-        'ProtonPT'         :   550.  , # MeV
-        'ProtonP'          :    -2.  , # MeV
-        'ProtonTRCHI2DOF'  :     5.  ,
-        'ProtonPIDppi'     :    20.  , # CombDLL(p-pi)
-        'ProtonPIDpK'      :    15.  , # CombDLL(p-K)
-        'ProtonIPCHI2Cut'  : " & (BPVIPCHI2()>9)",
-        'CombMaxMass'      :  1.0e+6 , # MeV, before Vtx fit
-        'CombMinMass'      :  2650.  , # MeV, before Vtx fit
-        'MaxMass'          :  1.0e+6 , # MeV, after Vtx fit
-        'MinMass'          :  2700.  , # MeV, after Vtx fit
-        'VtxCHI2'          :     9.  , # dimensionless
-        'CCCut'            :  " & (BPVDLS>5)"     
-        }
-
+Ccbar2PpbarDetached = {
+    'BUILDERTYPE'       : 'Ccbar2PpbarConf',
+    'CONFIG'    : {
+      'LinePrescale'     :     1.  ,
+      'LinePostscale'    :     1.  ,
+      
+      'SpdMult'          :   600.  , # dimensionless, Spd Multiplicy cut 
+      'ProtonPT'         :  1000.  , # MeV
+      'ProtonP'          :    -2.  , # MeV
+      'ProtonTRCHI2DOF'  :     5.  ,
+      'ProtonPIDppi'     :    15.  , # CombDLL(p-pi)
+      'ProtonPIDpK'      :    10.  , # CombDLL(p-K)
+      'ProtonIPCHI2Cut'  : " & (BPVIPCHI2()>9)",
+      'CombMaxMass'      :  1.0e+6 , # MeV, before Vtx fit
+      'CombMinMass'      :  2650.  , # MeV, before Vtx fit
+      'MaxMass'          :  1.0e+6 , # MeV, after Vtx fit
+      'MinMass'          :  2700.  , # MeV, after Vtx fit
+      'VtxCHI2'          :     9.  , # dimensionless
+      'CCCut'            :  " & (BPVDLS>5)"     
+      },
+    'STREAMS' : [ 'Charm' ] ,
+    'WGs'    : [ 'BandQ' ]
+    }
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles

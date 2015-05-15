@@ -4,9 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Jibo He
+ - Moved Bc2JpsiMuX, Bc2JpsiHBDT, Ccbar2Ppbar, Ccbar2PhiPhi lines to new structure
+
 ! 2015-05-15 - Alessandro Morda'
  - added StrippingB2KstTauTau for B->K*TauTau analysis
-
 
 ! 2015-05-15 - Jibo He
   - Moved Bd2eeKstarBDT line to new structure 
