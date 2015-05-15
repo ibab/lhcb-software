@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Roberta Cardinale
+	- updated __init__.py of BandQ
+
 ! 2015-05-15 - Vanya Belyaev
  - StrippingCharm/StrippingPropmtCharm.py
    update lines for excited baryons 
