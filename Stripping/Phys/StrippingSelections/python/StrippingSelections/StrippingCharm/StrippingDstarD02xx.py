@@ -256,7 +256,7 @@ class StrippingDstarD02xxConf(LineBuilder):
         else:
             hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"  # * matches Signal, Sidebands and Box lines
             line_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"Box",
-                                     HLT = "HLT_PASS_RE('"+hltname+"')",
+                                     HLT2 = "HLT_PASS_RE('"+hltname+"')",
                                      algos = [ _tag_sel ], 
                                      prescale = config[ pres ],
                                       RelatedInfoTools = coneinfo
@@ -311,21 +311,21 @@ class StrippingDstarD02xxConf(LineBuilder):
                                       })
         if(minbias==1):
             line_untagged_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"_untagged_BoxMB",
-                                              HLT = "HLT_PASS_RE('Hlt1(MB|L0).*Decision')",
+                                              HLT1 = "HLT_PASS_RE('Hlt1(MB|L0).*Decision')",
                                               algos = [ xxCombSel ], 
                                               prescale = config[ pres+"MB" ],
                                               RelatedInfoTools = coneinfo
                                               )
         elif(minbias==2):
             line_untagged_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"_untagged_BoxMBTrEff",
-                                              HLT = "HLT_PASS_RE('Hlt2CharmHadMinBiasD02KPiDecision')",
+                                              HLT2 = "HLT_PASS_RE('Hlt2CharmHadMinBiasD02KPiDecision')",
                                               algos = [ xxCombSel ], 
                                               prescale = config[ pres+"MBTrEff" ],
                                               RelatedInfoTools = coneinfo
                                               )
         else :
             line_untagged_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"_untagged_Box",
-                                              HLT = "HLT_PASS_RE('"+hltname+"')",
+                                              HLT2 = "HLT_PASS_RE('"+hltname+"')",
                                               algos = [ xxCombSel ], 
                                               prescale = config[ pres ],
                                               RelatedInfoTools = coneinfo

@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Francesco Dettori
+ - Updated StrippingRareStrange 
+ - Updated StrippingDstarD02xx
+
 ! 2015-05-15 - Roberta Cardinale
  - Updated StrippingDiMuonNew.py
 

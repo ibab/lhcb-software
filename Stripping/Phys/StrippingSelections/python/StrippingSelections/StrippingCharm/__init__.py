@@ -22,6 +22,7 @@ _selections = (
     'StrippingChargedHyperons',
     'StrippingD2KS0H_conf',
     'StrippingDstarD2HHHH',
+    'StrippingDstarD02xx',
     'StrippingD2PiPi0',
     'StrippingLambdac2V0H'
     )

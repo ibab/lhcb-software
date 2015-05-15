@@ -11,6 +11,8 @@ __all__ = ('RareStrangeLinesConf',
            'config_default',
            'makeSigmaPMuMu',
            'makeSigmaPEE',
+           'makeSigmaPPi0',
+           'makeSigmaPPi0Cal',
            'makeSigmaPMuMuLFV',
            'makeSigmaPMuMuDown',
            'makeSigmaPEEDown',
@@ -28,11 +30,16 @@ __all__ = ('RareStrangeLinesConf',
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles
 from CommonParticles import StdNoPIDsDownElectrons
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from GaudiKernel.PhysicalConstants import c_light
-from StandardParticles import StdAllNoPIDsPions, StdNoPIDsDownPions, StdLoosePions, StdLooseDownMuons
+from StandardParticles import ( StdAllNoPIDsPions, StdNoPIDsDownPions,
+                                StdLoosePions, StdLooseDownMuons,
+                                StdLooseMergedPi0, StdLooseResolvedPi0, StdLooseDalitzPi0)
+                                
+#from CommonParticles.StdLooseDalitzPi0 import (StdLoosePi02gee, StdLoosePi024e)
+                                
 
 
 default_config = {
@@ -45,6 +52,8 @@ default_config = {
         'SigmaPMuMuPrescale' : 1,
         'SigmaPMuMuDownPrescale' :1,
         'SigmaPEEPrescale' : 1,
+        'SigmaPPi0Prescale' : 1,
+        'SigmaPPi0CalPrescale' : 1,
         'SigmaPEEDownPrescale' : 0.1,
         'SigmaPMuMuLFVPrescale' :0.1,
         'SigmaPMuMuLFVDownPrescale' :0.1,
@@ -72,10 +81,14 @@ default_config = {
         'SigmaMaxIpChi2Down' : 25.,
         'SigmaVtxChi2Down' : 25.,
         'SigmaDauTrChi2Down': 9.,
+        'SigmaPPi0MassWin' : 150.,
         'muonMinIpChi2' : 9.,
         'protonPIDp': 5.,
+        'protonPIDpTight': 15.,
+        'pMinPt': 500.,
         'electronPIDe':2.,
         'electronMinIpChi2': 9.,
+        'pi0MinPt': 0.,
         'muonMinIpChi2Down' : 9.,
         'electronMinIpChi2Down': 4.,
         'KMaxDOCA' : 3.,
@@ -134,6 +147,8 @@ class RareStrangeLinesConf(LineBuilder) :
         'SigmaPMuMuPrescale',
         'SigmaPMuMuDownPrescale',
         'SigmaPEEPrescale',
+        'SigmaPPi0Prescale',
+        'SigmaPPi0CalPrescale',
         'SigmaPEEDownPrescale',
         'SigmaPMuMuLFVPrescale',
         'SigmaPMuMuLFVDownPrescale',
@@ -161,11 +176,15 @@ class RareStrangeLinesConf(LineBuilder) :
         'SigmaMaxIpChi2Down',
         'SigmaVtxChi2Down',
         'SigmaDauTrChi2Down',
+        'SigmaPPi0MassWin',
         'muonMinIpChi2',
         'protonPIDp',
+        'protonPIDpTight',
+        'pMinPt',
         'electronPIDe',
         'electronMinIpChi2',
         'muonMinIpChi2Down',
+        'pi0MinPt',
         'electronMinIpChi2Down',
         'KMaxDOCA',
         'KMinPT',
@@ -218,6 +237,8 @@ class RareStrangeLinesConf(LineBuilder) :
         spmumu_name=name+'SigmaPMuMu'
         spmumudown_name=name+'SigmaPMuMuDown'
         spee_name=name+'SigmaPEE'
+        sppi0_name=name+'SigmaPPi0'
+        sppi0cal_name=name+'SigmaPPi0Cal'
         speedown_name=name+'SigmaPEEDown'
         spmumulfv_name=name+'SigmaPMuMuLFV'
         spmumulfvdown_name=name+'SigmaPMuMuLFVDown'
@@ -234,6 +255,8 @@ class RareStrangeLinesConf(LineBuilder) :
         self.selSigmaPMuMu = makeSigmaPMuMu(spmumu_name, config)
         self.selSigmaPMuMuDown = makeSigmaPMuMuDown(spmumudown_name, config)
         self.selSigmaPEE   = makeSigmaPEE(spee_name, config)
+        self.selSigmaPPi0   = makeSigmaPPi0(sppi0_name, config)
+        self.selSigmaPPi0Cal   = makeSigmaPPi0Cal(sppi0cal_name, config)
         self.selSigmaPEEDown   = makeSigmaPEEDown(speedown_name, config)
         self.selSigmaPMuMuLFV = makeSigmaPMuMuLFV(spmumulfv_name, config)
         self.selSigmaPMuMuLFVDown = makeSigmaPMuMuLFVDown(spmumulfvdown_name, config)
@@ -354,7 +377,90 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 }
                                               }
                                             ]
+                                          )
+        self.SigmaPPi0Line = StrippingLine(sppi0_name+"Line",
+                                           prescale = config['SigmaPPi0Prescale'],
+                                           postscale = config['Postscale'],
+                                           algos = [ self.selSigmaPPi0 ],
+                                           RequiredRawEvents = ["Velo"],
+                                           MDSTFlag=True,
+                                           RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPPi0 : 'P2CVSigma09',
+                                                "StdLooseDalitzPi0"    : ['P2CVEl09_1','P2CVEl09_2'],
+                                                #"StdLoosePi024e"       : ['P2CVEl09_1','P2CVEl09_2'],
+                                                #"StdLoosePi02gee"      : ['P2CVEl09_1','P2CVEl09_2'],
+                                                "Phys/StdAllLooseProton"   : 'P2CVProton09', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPPi0 : 'P2CVSigma10',
+                                                "StdLooseDalitzPi0"    : ['P2CVEl09_1','P2CVEl09_2'],
+                                                #"StdLoosePi024e"       : ['P2CVEl09_1','P2CVEl09_2'],
+                                                #"StdLoosePi02gee"      : ['P2CVEl09_1','P2CVEl09_2'],
+                                                "Phys/StdAllLooseProton"   : 'P2CVProton10', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPPi0 : 'P2CVSigma11',
+                                                "StdLooseDalitzPi0"    : ['P2CVEl09_1','P2CVEl09_2'],
+                                                #"StdLoosePi024e"       : ['P2CVEl09_1','P2CVEl09_2'],
+                                                #"StdLoosePi02gee"      : ['P2CVEl09_1','P2CVEl09_2'],
+                                                "Phys/StdAllLooseProton"   : 'P2CVProton11', 
+                                                }
+                                              }
+                                            ]
                                      )
+        self.SigmaPPi0CalLine = StrippingLine(sppi0cal_name+"Line",
+                                           prescale = config['SigmaPPi0CalPrescale'],
+                                           postscale = config['Postscale'],
+                                           algos = [ self.selSigmaPPi0Cal ],
+                                           RequiredRawEvents = ["Velo"],
+                                           MDSTFlag=True,
+                                           RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPPi0Cal : 'P2CVSigma09', 
+                                                "Phys/StdLooseMergedPi0"   : ['P2CVEl09_1','P2CVEl09_2'],
+                                                "Phys/StdLooseResolvedPi0"   : ['P2CVEl09_1','P2CVEl09_2'], 
+                                                "Phys/StdAllLooseProton"   : 'P2CVProton09', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPPi0Cal : 'P2CVSigma10', 
+                                                "Phys/StdLooseMergedPi0"   : ['P2CVEl10_1','P2CVEl10_2'],
+                                                "Phys/StdLooseResolvedPi0"   : ['P2CVEl09_1','P2CVEl09_2'], 
+                                                "Phys/StdAllLooseProton"   : 'P2CVProton10', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPPi0Cal : 'P2CVSigma11', 
+                                                "Phys/StdLooseMergedPi0"   : ['P2CVEl11_1','P2CVEl11_2'],
+                                                "Phys/StdLooseResolvedPi0"   : ['P2CVEl09_1','P2CVEl09_2'], 
+                                                "Phys/StdAllLooseProton"   : 'P2CVProton11', 
+                                                }
+                                              }
+                                            ]
+                                     )
+
+
         self.SigmaPEEDownLine = StrippingLine(speedown_name+"Line",
                                             prescale = config['SigmaPEEDownPrescale'],
                                             postscale = config['Postscale'],
@@ -746,6 +852,8 @@ class RareStrangeLinesConf(LineBuilder) :
 
         self.registerLine(self.SigmaPMuMuLine)
         self.registerLine(self.SigmaPEELine)
+        self.registerLine(self.SigmaPPi0Line)
+        self.registerLine(self.SigmaPPi0CalLine)
         self.registerLine(self.SigmaPEEDownLine)
         self.registerLine(self.SigmaPMuMuLFVLine)
         self.registerLine(self.SigmaPMuMuLFVDownLine)
@@ -883,6 +991,90 @@ def makeSigmaPEE(name, config):
     return Selection (name,
                       Algorithm = SigmaPEE,
                       RequiredSelections = [ _stdAllLooseElectrons,
+                                             _stdLooseProtons ])
+
+#============================================================
+#  Sigma+ -> p pi0 
+def makeSigmaPPi0(name, config):
+    """
+    Line for the selection of Sigma+ -> p+ pi0
+    for normalisation purposes
+    Before prescaling this line, please contact the authors listed above
+    
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of tunable cuts 
+    """
+    pi0sel = MergedSelection("Pi0For" + name, RequiredSelections = [  StdLooseDalitzPi0,
+                                                                      #StdLoosePi024e, StdLoosePi02gee
+                                                                      ] ) 
+
+    
+    from Configurables import OfflineVertexFitter
+    SigmaPPi0 = CombineParticles("Combine"+name)
+    SigmaPPi0.DecayDescriptor = "[Sigma+ -> p+ pi0]cc"
+    #SigmaPPi0.addTool( OfflineVertexFitter )
+    #SigmaPPi0.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    #SigmaPPi0.OfflineVertexFitter.useResonanceVertex = False
+
+    
+    SigmaPPi0.DaughtersCuts = { "pi0" : "(PT > %(pi0MinPt)s)"%config,
+                                "p+" : "(PT > %(pMinPt)s) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDpTight)s )"%config
+                               }
+    
+    SigmaPPi0.CombinationCut = "(ADAMASS('Sigma+')<%(SigmaPPi0MassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config
+
+    SigmaPPi0.MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
+                              "& (ADMASS('Sigma+') < %(SigmaPPi0MassWin)s *MeV )"\
+                              "& (BPVDIRA > %(SigmaMinDIRA)s) "\
+                              "& (BPVIPCHI2()< %(SigmaMaxIpChi2)s)"\
+                              "& (BPVLTIME()> %(SigmaMinTauPs)s * ps)" %config  
+    
+
+#    _stdPizeros   =  DataOnDemand(Location = "Phys/StdLooseMergedPi0/Particles")
+    _stdLooseProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
+    
+    return Selection (name,
+                      Algorithm = SigmaPPi0,
+                      RequiredSelections = [ pi0sel,
+                                             _stdLooseProtons ])
+
+def makeSigmaPPi0Cal(name, config):
+    """
+    Line for the selection of Sigma+ -> p+ pi0
+    for normalisation purposes
+    Before prescaling this line, please contact the authors listed above
+    
+    Arguments:
+    name        : name of the Selection.
+    config      : dictionary of tunable cuts 
+    """
+    pi0sel = MergedSelection("Pi0For" + name, RequiredSelections = [ StdLooseMergedPi0, StdLooseResolvedPi0 ] ) 
+
+    
+    from Configurables import OfflineVertexFitter
+    SigmaPPi0 = CombineParticles("Combine"+name)
+    SigmaPPi0.DecayDescriptor = "[Sigma+ -> p+ pi0]cc"
+    
+    SigmaPPi0.DaughtersCuts = { "pi0" : "(PT > %(pi0MinPt)s)"%config,
+                               "p+" : "(PT > %(pMinPt)s) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDp > %(protonPIDpTight)s )"%config
+                               }
+    
+    SigmaPPi0.CombinationCut = "(ADAMASS('Sigma+')<%(SigmaPPi0MassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config
+
+    SigmaPPi0.MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
+                              "& (ADMASS('Sigma+') < %(SigmaPPi0MassWin)s *MeV )"\
+                              "& (BPVDIRA > %(SigmaMinDIRA)s) "\
+                              "& (BPVIPCHI2()< %(SigmaMaxIpChi2)s)"\
+                              "& (BPVLTIME()> %(SigmaMinTauPs)s * ps)" %config  
+    
+
+#    _stdPizeros   =  DataOnDemand(Location = "Phys/StdLooseMergedPi0/Particles")
+    _stdLooseProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
+    
+    return Selection (name,
+                      Algorithm = SigmaPPi0,
+                      RequiredSelections = [ pi0sel,
                                              _stdLooseProtons ])
 
 
