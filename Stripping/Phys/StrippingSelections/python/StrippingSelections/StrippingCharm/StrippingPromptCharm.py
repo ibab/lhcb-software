@@ -160,6 +160,7 @@ _default_configuration_ = {
     'pT(Ds+)'    :  1.0 * GeV ,    ## pt-cut for  prompt   Ds+
     'pT(Lc+)'    :  1.0 * GeV ,    ## pt-cut for  prompt   Lc+
     'pT(Xic0)'   :  1.0 * GeV ,    ## pt-cut for  prompt   Xic0/Omegac0
+    'pT(Omgcc)'  :  1.0 * GeV ,    ## pt-cut for  prompt   Omegacc
     #
     'pT(D0->HH)' :  1.0 * GeV ,    ## pt-cut for  prompt   D0->KK,pipi models 
     #
@@ -271,38 +272,38 @@ _default_configuration_ = {
     ## monitoring ?
     'Monitor'     : False ,
     ## pescales
-    'D0Prescale'             : 1.0 ,
-    'D*Prescale'             : 1.0 ,
-    'DsPrescale'             : 1.0 ,
-    'D+Prescale'             : 1.0 ,
-    'LambdaCPrescale'        : 1.0 ,
-    'XiC0Prescale'           : 1.0 ,
-    'OmegaC0Prescale'        : 1.0 ,
-    'LambdaCpKKPrescale'     : 1.0 ,
-    'LambdaC*Prescale'       : 1.0 ,
-    'OmegaC*Prescale'        : 1.0 ,
-    'XiCprimePrescale'       : 1.0 ,
-    'XiC*Prescale'           : 1.0 ,
-    'OmegaC*2XiCPiKPrescale' : 1.0 ,
-    'OmegaC*2XiCprimeKPrescale' : 1.0 ,
-    'OmegaCCPrescale' : 1.0 ,
-    'SigmaCPrescale'         : 1.0 ,
-    'Xic02LcPiPrescale'      : 1.0 ,
+    'D0Prescale'               : 1.0 ,
+    'D*Prescale'               : 1.0 ,
+    'DsPrescale'               : 1.0 ,
+    'D+Prescale'               : 1.0 ,
+    'LambdaCPrescale'          : 1.0 ,
+    'XiC0Prescale'             : 1.0 ,
+    'OmegaC0Prescale'          : 1.0 ,
+    'LambdaCpKKPrescale'       : 1.0 ,
+    'LambdaC*Prescale'         : 1.0 ,
+    'OmegaC*Prescale'          : 1.0 ,
+    'XiCprimePrescale'         : 1.0 ,
+    'XiC*Prescale'             : 1.0 ,
+    'OmegaC*2XiCPiKPrescale'   : 1.0 ,
+    'OmegaC*2XiCprimeKPrescale': 1.0 ,
+    'OmegaCCPrescale'          : 1.0 ,
+    'SigmaCPrescale'           : 1.0 ,
+    'Xic02LcPiPrescale'        : 1.0 ,
     #
-    'OmegaCCKpiPrescale'     : 1.0 ,
-    'OmegaCCKKPrescale'      : 1.0 ,
+    'OmegaCCKpiPrescale'       : 1.0 ,
+    'OmegaCCKKPrescale'        : 1.0 ,
     ##
-    'D02KKPrescale'          : 1.0 ,
-    'D02pipiPrescale'        : 1.0 ,
-    'D*CPPrescale'           : 1.0 ,
+    'D02KKPrescale'            : 1.0 ,
+    'D02pipiPrescale'          : 1.0 ,
+    'D*CPPrescale'             : 1.0 ,
     ##
-    'DiCharmPrescale'        : 1.0 ,
-    'DiMu&CharmPrescale'     : 1.0 ,
-    'DoubleDiMuPrescale'     : 1.0 ,
-    'Chi&CharmPrescale'      : 1.0 ,
-    'Charm&WPrescale'        : 1.0 ,
-    'DiMuon&WPrescale'       : 1.0 ,
-    'Chi&WPrescale'          : 1.0 ,
+    'DiCharmPrescale'          : 1.0 ,
+    'DiMu&CharmPrescale'       : 1.0 ,
+    'DoubleDiMuPrescale'       : 1.0 ,
+    'Chi&CharmPrescale'        : 1.0 ,
+    'Charm&WPrescale'          : 1.0 ,
+    'DiMuon&WPrescale'         : 1.0 ,
+    'Chi&WPrescale'            : 1.0 ,
     ## ========================================================================
     }
 # =============================================================================
@@ -313,32 +314,32 @@ default_config = {
     'WGs'         : [ 'BandQ' , 'Charm' ] ,
     'CONFIG'      : _default_configuration_  , 
     'BUILDERTYPE' :   'StrippingPromptCharmConf'            ,
-    'STREAMS'     : { 'Charm'    : [ 'StrippingD02KpiForPromptCharm'         , 
-                                     'StrippingDstarForPromptCharm'          , 
-                                     'StrippingDForPromptCharm'              , 
-                                     'StrippingDsForPromptCharm'             ,
-                                     'StrippingLambdaCForPromptCharm'        ,
-                                     'StrippingXiC0ForPromptCharm'           ,
-                                     'StrippingOmegaC0ForPromptCharm'        ,
-                                     'StrippingLambdaC2pKKForPromptCharm'    ,
-                                     'StrippingSigmaCForPromptCharm'         ,
-                                     'StrippingLambdaCstarForPromptCharm'    ,
-                                     'StrippingOmegaCstarForPromptCharm'     ,
-                                     'StrippingXiCprimeForPromptCharm'       ,
-                                     'StrippingXiCstarForPromptCharm'        ,
-                                     'StrippingOmegaCstar2XiCPiKForPromptCharm'     ,
-                                     'StrippingOmegaCstar2XiCprimeKForPromptCharm'  ,
-                                     'StrippingOmegaCCKpiForPromptCharm'     ,
-                                     'StrippingOmegaCCKKForPromptCharm'      ,
-                                     'StrippingXic02LcPiForPromptCharm'      ,
-                                     'StrippingDiCharmForPromptCharm'        , ## ? 
-                                     'StrippingChiAndCharmForPromptCharm'    ,
-                                     'StrippingCharmAndWForPromptCharm'      ,
-                                     'StrippingDiMuonAndCharmForPromptCharm' ,
+    'STREAMS'     : { 'Charm'    : [ 'StrippingD02KpiForPromptCharm'              , 
+                                     'StrippingDstarForPromptCharm'               , 
+                                     'StrippingDForPromptCharm'                   , 
+                                     'StrippingDsForPromptCharm'                  ,
+                                     'StrippingLambdaCForPromptCharm'             ,
+                                     'StrippingXiC0ForPromptCharm'                ,
+                                     'StrippingOmegaC0ForPromptCharm'             ,
+                                     'StrippingLambdaC2pKKForPromptCharm'         ,
+                                     'StrippingSigmaCForPromptCharm'              ,
+                                     'StrippingLambdaCstarForPromptCharm'         ,
+                                     'StrippingOmegaCstarForPromptCharm'          ,
+                                     'StrippingXiCprimeForPromptCharm'            ,
+                                     'StrippingXiCstarForPromptCharm'             ,
+                                     'StrippingOmegaCstar2XiCPiKForPromptCharm'   ,
+                                     'StrippingOmegaCstar2XiCprimeKForPromptCharm',
+                                     'StrippingOmegaCCKpiForPromptCharm'          ,
+                                     'StrippingOmegaCCKKForPromptCharm'           ,
+                                     'StrippingXic02LcPiForPromptCharm'           ,
+                                     'StrippingDiCharmForPromptCharm'             , ## ? 
+                                     'StrippingChiAndCharmForPromptCharm'         ,
+                                     'StrippingCharmAndWForPromptCharm'           ,
+                                     'StrippingDiMuonAndCharmForPromptCharm'      ,
                                      ## for Eva
-                                     'StrippingD02KKForPromptCharm'          ,   ## prescale ?
-                                     'StrippingD02pipiForPromptCharm'        ,   ## prescale ?
-                                     'StrippingDstarCPForPromptCharm'        ] , 
+                                     'StrippingD02KKForPromptCharm'               ,   ## prescale ?
+                                     'StrippingD02pipiForPromptCharm'             ,   ## prescale ?
+                                     'StrippingDstarCPForPromptCharm'           ] , 
                       ## 
                       'Leptonic' : [ 'StrippingDoubleDiMuonForPromptCharm'   , ## Full DST ?
                                      'StrippingDiMuonAndWForPromptCharm'     , ## Full DST ? 
@@ -1652,8 +1653,8 @@ class StrippingPromptCharmConf(LineBuilder) :
             CombinationCut   = " AM <  %s  " %  self['QvalueOmegaCC'],
             ##
             MotherCut      = """
-            ( chi2vx  < 16 )
-            """ ,
+            ( chi2vx  < 16 ) & ( PT > %s )
+            """ % self['pT(Omgcc)'] ,
             )
 
     # =============================================================================
@@ -1685,8 +1686,8 @@ class StrippingPromptCharmConf(LineBuilder) :
             CombinationCut   = " AM <  %s  " %  self['QvalueOmegaCC'],
             ##
             MotherCut      = """
-            ( chi2vx  < 16 )
-            """ ,
+            ( chi2vx  < 16 ) & ( PT > %s )
+            """ % self['pT(Omgcc)'],
             )
 
     # =============================================================================    
