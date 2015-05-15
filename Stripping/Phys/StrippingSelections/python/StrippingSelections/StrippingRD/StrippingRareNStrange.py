@@ -20,10 +20,7 @@ Selections for Rare&strange decays (other than those already existing), eg:
 'lpi3mu': '[Lambda0 ==> pi+ mu- mu+ mu-]CC',
 'lpimuee': '[Lambda0 ==> pi+ mu- e+ e-]CC',
 'lpi3e': '[Lambda0 ==> pi+ e- e+ e-]CC',
-#'sigmapmumu': '[Sigma+ ==> p+ mu- mu+]CC',
-#'sigmapee': '[Sigma+ ==> p+ e- e+]CC',
-#'sigmapmue': '[Sigma+ ==> p+ mu- e+]CC',
-#'sigmappiz' : '[Sigma+ ==> p+ pi0]CC'
+
            
 """
 
