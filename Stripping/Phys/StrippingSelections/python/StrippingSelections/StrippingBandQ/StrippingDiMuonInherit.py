@@ -12,23 +12,23 @@ __all__ = (
     )
 
 default_config = {
-    'NAME'       : 'Onia',
+    'NAME'       : 'DiMuonInherit',
     'WGs'        : ['BandQ'],
     'STREAMS'    : {'Dimuon' :[
-                      "StrippingOniaPsi2MuMuTOSLine",
-                      "StrippingOniaJpsi2MuMuTOSLine",
-                      "StrippingOniaPsi2MuMuDetachedLine",
-                      "StrippingOniaJpsi2MuMuDetachedLine",
-                      "StrippingOniaDiMuonNoPVLine",
-                      'StrippingOniaDiMuonHighMassLine',
-                      'StrippingOniaDiMuonHighMassLine',
-                      'StrippingOniaDiMuonHighMassSameSignLine'
+                      "StrippingPsi2MuMuTOSHighPT",
+                      "StrippingJpsi2MuMuTOSHighPT",
+                      "StrippingPsi2MuMuDetached",
+                      "StrippingJpsi2MuMuDetached",
+                      "StrippingDiMuonNoPV",
+                      'StrippingDiMuonHighMass',
+                      'StrippingDiMuonHighMass',
+                      'StrippingDiMuonHighMassSameSign'
                     ],
                     'Leptonic' :[
-                      "StrippingOniaDiMuonIncSameSignLine",
-                      "StrippingOniaDiMuonIncLine",
-                      "StrippingOniaJpsi2MuMuLine",
-                      "StrippingOniaPsi2MuMuLine",
+                      "StrippingAllDiMuonSameSign",
+                      "StrippingAllDiMuon",
+                      "StrippingJpsi2MuMu",
+                      "StrippingPsi2MuMu",
                     ]
     },
                    
@@ -101,7 +101,7 @@ default_config = {
         }
       },
       
-      "Jpsi2MuMuTOS" : {
+      "Jpsi2MuMuTOSHighPT" : {
         "Prescale"      : 1.0,
         "Inherit"       : "VirtualBase",
         "InputDiMuon"   : "StdLooseJpsi2MuMu",
@@ -117,9 +117,9 @@ default_config = {
         }   
       },
 
-      "Psi2MuMuTOS" : {
+      "Psi2MuMuTOSHighPT" : {
         "Prescale"      : 1.0,
-        "Inherit"       : "Jpsi2MuMuTOS",
+        "Inherit"       : "Jpsi2MuMuTOSHighPT",
         "InputDiMuon"   : "StdLooseDiMuon",
         "TOScut"        : { "L0.*Mu.*Decision%TOS":0,
                             "Hlt1DiMuonHighMassDecision%TOS" : 0,
@@ -134,7 +134,7 @@ default_config = {
 
   ## MicroDST lines
 
-      "DiMuonInc" : {
+      "AllDiMuon" : {
         "Prescale"      : 1.0,
         "Inherit"       : "VirtualBase",
         "InputDiMuon"   : "StdLooseDiMuon",
@@ -143,9 +143,9 @@ default_config = {
         }   
       },
 
-      "DiMuonIncSameSign" : {
+      "AllDiMuonSameSign" : {
         "Prescale"              : 1.0,
-        "Inherit"               : "DiMuonInc",
+        "Inherit"               : "AllDiMuon",
         "InputDiMuon"           : "StdLooseDiMuonSameSign",
         "Cuts"                  : None
       },
@@ -240,7 +240,7 @@ class DiMuonInherit (LineBuilder):
                 print "##################################################################"
 
               ### StrippingLine
-              _tmpDiMuonLine = StrippingLine (  name + lineName + 'Line',
+              _tmpDiMuonLine = StrippingLine (  lineName, # name + lineName + 'Line',
                                                 prescale  = self.getVariable(line, 'Prescale'),    
                                                 FILTER    = _tmpFilter,
                                                 checkPV   = self.getVariable(line, 'checkPV'),
@@ -355,7 +355,7 @@ if '__main__' == __name__ :
     ##
     config = default_config['CONFIG']
     config['Debug'] = True
-    _conf = DiMuonInherit ( 'Onia' ,  config = config)
+    _conf = DiMuonInherit ( 'DiMuonInherit' ,  config = config)
     ##
     _ln   = ' ' + 61*'-' + '+' + 30*'-'
     logger.info ( _ln ) 

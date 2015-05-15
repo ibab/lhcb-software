@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Lucio Anderlini
+  - updated naming-scheme for DiMuonInherit.py
+
 ! 2015-05-15 - Marco Gersabeck
   - removed StrippingDstarD2hhpi0.py
   - updated StrippingD2hh.py
