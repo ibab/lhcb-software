@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Roberta Cardinale
+ - Updated default_config of 
+   - StrippingBandQ/StrippingXic2HHH.py
+	 - StrippingBandQ/StrippingHeavyBaryons.py
+	 - StrippingBandQ/StrippingCC2DD.py
+	 - StrippingBandQ/StrippingChiCJPsiGammaConv.py
+
 ! 2015-05-15 - Federico Redi
  - Added line for Majorana Neutrino in StrippingRD/StrippingB2Lambda0MuLines.py
 

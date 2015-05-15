@@ -5,8 +5,26 @@ Author: Yasmine Amhis
 __author__ = ['Yasmine Amhis']
 __date__ = '19/05/2011'
 __version__ = '$Revision: 1.0 $'
-__all__ = ('HeavyBaryonsConf')
+__all__ = ('HeavyBaryonsConf',
+           'default_config')
 
+default_config = {
+       'NAME' : 'HeavyBaryon',
+       'BUILDERTYPE'  : 'HeavyBaryonsConf',
+       'CONFIG'       : {    'TRCHI2DOF'             :       4.,
+                             'PionPIDK'              :       5.,
+                             'JpsiMassWindow'        :      80.,
+                             'KaonPIDK'              :      -5.,
+                             'DLSForLongLived'       :       5.,
+                             'XiMassWindow'          :      30.,
+                             'OmegaMassWindow'       :      30.,
+                             "XibminusMassWindow"    :     300.,
+                             "XibzeroMassWindow"     :     500.,
+                             "OmegabminusMassWindow" :     500.
+                             },
+       'STREAMS' : [ 'Dimuon' ],
+       'WGs'    : ['BandQ']
+       }
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles

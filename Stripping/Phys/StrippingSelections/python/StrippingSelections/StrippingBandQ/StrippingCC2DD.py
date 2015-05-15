@@ -12,10 +12,15 @@ __version__ = '$Revision: 0.2f $'
 __all__ = ('CC2DDConf',
            'makeD02HH',
            'makeDp2HHH',
-           'makeDs2HHH')
+           'makeDs2HHH',
+           'default_config')
 
 
-config_default =  {
+default_config =  {
+    'NAME' : 'CC2DD',
+    'WGs'  : ['BandQ'],
+    'BUILDERTYPE'       : 'CC2DDConf',
+    'CONFIG'   :  {
 ######## D0 / D~0 -> K pi cuts
                    'D0MassWin'     : "60*MeV",
                    'D0PT'          : "1000*MeV",
@@ -52,7 +57,11 @@ config_default =  {
                    'CCMaxD0ChildPT' : "1500*MeV",
                    'CCMaxD0TreePT'  : "1200*MeV",
                    'CCMaxD0MinTreeIpChi2'   : "0.",    ## unused for the moment
-                   }
+                   },
+    'STREAMS' : [
+    'CharmCompleteEvent' 
+    ],
+    }   
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
