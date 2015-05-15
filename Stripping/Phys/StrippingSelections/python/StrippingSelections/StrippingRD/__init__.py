@@ -7,7 +7,7 @@ _selections = [
     'StrippingB2Lambda0MuLines',
     # 'StrippingB2XMuMu',
     # 'StrippingB2XMuMuInclusive',
-    # 'StrippingB2KstTauTau',
+    'StrippingB2KstTauTau',
     'StrippingBu2LLK',
     # 'StrippingBeauty2XGamma',
     # 'StrippingBeauty2XGammaExclusive',
