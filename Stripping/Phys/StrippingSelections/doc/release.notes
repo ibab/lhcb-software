@@ -5,6 +5,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-05-15 - Maurizio Martinelli
+ - Added converted photons to D*+->D0(XGamma)pi+ stripping lines
  - Modified b->D0(->HHHH)muX stripping line to use DaVinci__N4BodyCombiner
  - Added D*+->D0(XGamma)pi+ stripping lines
  - Fixed a typo in DstarD2HHHH stripping line
