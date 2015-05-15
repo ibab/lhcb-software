@@ -41,4 +41,4 @@ BadEvents = {
     'WGs'         : [ 'ALL' ],
     'STREAMS'     : [ 'MiniBias' ]
 }
-Line
+
