@@ -3,7 +3,7 @@ Module for selecting J/psi and Psi(2S) using an ineheritance approach
 '''
 
 __author__=['Lucio Anderlini']
-__date__ = '2013-12-16'
+__date__ = '2015-05-15'
 __version__= '$Revision: 1.0 $'
 
 
@@ -14,17 +14,32 @@ __all__ = (
 default_config = {
     'NAME'       : 'Onia',
     'WGs'        : ['BandQ'],
-    'STREAMS'    : ['Dimuon'],
+    'STREAMS'    : {'Dimuon' :[
+                      "StrippingOniaPsi2MuMuTOSLine",
+                      "StrippingOniaJpsi2MuMuTOSLine",
+                      "StrippingOniaPsi2MuMuDetachedLine",
+                      "StrippingOniaJpsi2MuMuDetachedLine",
+                      "StrippingOniaDiMuonNoPVLine",
+                      'StrippingOniaDiMuonHighMassLine',
+                      'StrippingOniaDiMuonHighMassLine',
+                      'StrippingOniaDiMuonHighMassSameSignLine'
+                    ],
+                    'Leptonic' :[
+                      "StrippingOniaDiMuonIncSameSignLine",
+                      "StrippingOniaDiMuonIncLine",
+                      "StrippingOniaJpsi2MuMuLine",
+                      "StrippingOniaPsi2MuMuLine",
+                    ]
+    },
+                   
     'BUILDERTYPE': 'DiMuonInherit',
     'CONFIG'     : {
-    "DestinationFullDST" : True, ### Selects line type
-                                 #####################
   #### Definition of all the DiMuon lines ############
   ###############
+    "Debug" : False,
     "Lines" : {
       "VirtualBase" : {
         "Prescale"      : 0.0,
-        "NeedFullDST"   : False,
         "Inherit"       : None,
         "checkPV"       : False,
         "maxPV"         : None,
@@ -39,7 +54,6 @@ default_config = {
 
       "DiMuonHighMass" : {
         "Prescale"      : 1.0,
-        "NeedFullDST"   : True,
         "Inherit"       : "VirtualBase",
         "Cuts"          : {
           "MuonP"         : "MINTREE('mu+'==ABSID,P ) > 8000.0 *MeV",
@@ -50,7 +64,6 @@ default_config = {
 
       "DiMuonHighMassSameSign" : {
   #      "Prescale"      : 1.0,
-  #      "NeedFullDST"   : True,
         "Inherit"       : "DiMuonHighMass",
         "InputDiMuon"   : "StdLooseDiMuonSameSign",
   #      "Cuts"          : None
@@ -58,7 +71,6 @@ default_config = {
 
       "DiMuonNoPV" : {
         "Prescale"      : 1.0,
-        "NeedFullDST"   : True,
         "Inherit"       : "VirtualBase",
         "maxPV"         : 0.5,
         "Cuts"          : {
@@ -70,7 +82,6 @@ default_config = {
       
       "Jpsi2MuMuDetached" : {
         "Prescale"      : 1.0,
-        "NeedFullDST"   : True,
         "Inherit"       : "VirtualBase",
         "checkPV"       : True,
         "InputDiMuon"   : "StdLooseJpsi2MuMu",
@@ -83,7 +94,6 @@ default_config = {
 
       "Psi2MuMuDetached" : {
         "Prescale"      : 1.0,
-        "NeedFullDST"   : True,
         "Inherit"       : "Jpsi2MuMuDetached",
         "InputDiMuon"   : "StdLooseDiMuon",
         "Cuts"          : {
@@ -93,7 +103,6 @@ default_config = {
       
       "Jpsi2MuMuTOS" : {
         "Prescale"      : 1.0,
-        "NeedFullDST"   : True,
         "Inherit"       : "VirtualBase",
         "InputDiMuon"   : "StdLooseJpsi2MuMu",
         "TOScut"        : { "L0.*Mu.*Decision%TOS":0,
@@ -110,7 +119,6 @@ default_config = {
 
       "Psi2MuMuTOS" : {
         "Prescale"      : 1.0,
-        "NeedFullDST"   : True,
         "Inherit"       : "Jpsi2MuMuTOS",
         "InputDiMuon"   : "StdLooseDiMuon",
         "TOScut"        : { "L0.*Mu.*Decision%TOS":0,
@@ -128,7 +136,6 @@ default_config = {
 
       "DiMuonInc" : {
         "Prescale"      : 1.0,
-        "NeedFullDST"   : False,
         "Inherit"       : "VirtualBase",
         "InputDiMuon"   : "StdLooseDiMuon",
         "Cuts"          : {
@@ -146,7 +153,6 @@ default_config = {
   ## Are these lines really needed? Aren't they included in Inclusive line?
       "Jpsi2MuMu" : {
         "Prescale"      : 1.0,
-        "NeedFullDST"   : False,
         "checkPV"       : True,
         "Inherit"       : "VirtualBase",
         "InputDiMuon"   : "StdLooseDiMuon",
@@ -176,8 +182,7 @@ from StrippingUtils.Utils import LineBuilder
 
 class DiMuonInherit (LineBuilder):
     __configuration_keys__ = (
-        'DestinationFullDST',
-        'Lines'
+        "Lines","Debug"
         )
     
     def __init__(self, name, config ): 
@@ -186,6 +191,7 @@ class DiMuonInherit (LineBuilder):
         self.name = name 
         self.config = config
         self.linesCfg  = config['Lines']
+        self.dbug = config['Debug']
 
         ### Loops on the lines defined and get line titles
         for lineName in self.linesCfg:
@@ -193,7 +199,7 @@ class DiMuonInherit (LineBuilder):
           line = self.linesCfg[lineName] 
           ### Test the prescale. Zero prescale means virtual line.
           if self.getVariable(line,'Prescale') != None:
-            if (self.getVariable(line,'Prescale')  != 0) and (config["DestinationFullDST"] == self.getVariable(line, 'NeedFullDST')):
+            if (self.getVariable(line,'Prescale')  != 0) :
 
               ### Defines the filter desktop with the cuts
               _tmpFilter = FilterDesktop(Code = self.compileCut(line))
@@ -213,6 +219,15 @@ class DiMuonInherit (LineBuilder):
                                                 'from LoKiCore.functions import *' ]
                              }
 
+
+              if self.dbug:
+                ## debug cut writer
+                print "###################### DiMuonInh Debugger ########################"
+                print "## " + name + lineName + 'Line'
+                print "## Input:      " +  "Phys/"+self.getVariable(line,"InputDiMuon")+"/Particles" 
+                print "## Parsed Cut: " + self.compileCut(line).replace(" &", " \n\t\t&" )
+
+
               ### If a TOS check is required redefine  _tmpAlgorithm to point to TOS filter
               if self.getVariable(line, 'TOScut') != None:
                 _tmpPlainAlgorithm = _tmpAlgorithm
@@ -221,13 +236,8 @@ class DiMuonInherit (LineBuilder):
                                                    myTisTosSpecs = self.getVariable(line, 'TOScut')
                                                  )
 
-
-              ## debug cut writer
-              print "###################### DiMuonInh Debugger ########################"
-              print "## " + name + lineName + 'Line'
-              print "## Input:      " +  "Phys/"+self.getVariable(line,"InputDiMuon")+"/Particles" 
-              print "## Parsed Cut: " + self.compileCut(line)
-              print "##################################################################"
+              if self.dbug:
+                print "##################################################################"
 
               ### StrippingLine
               _tmpDiMuonLine = StrippingLine (  name + lineName + 'Line',
@@ -277,10 +287,10 @@ class DiMuonInherit (LineBuilder):
           dictCutInh = {}
 
         ### Merges the two dictionaries
-        for cut in dictCutInh:
-          print "Consider inherited cut " + cut
+        for cut in dictCutInh: 
+#          if self.dbug: print "Consider inherited cut " + cut
           if cut not in dictCutCurr :
-            print " not defined in current dictionary"
+#            if self.dbug:      print " not defined in current dictionary"
             dictCutCurr[cut] = dictCutInh[cut]
 
         ### returns the merged dict
@@ -297,7 +307,8 @@ class DiMuonInherit (LineBuilder):
                      myTisTosSpecs ) :
 
         from Configurables import TisTosParticleTagger
-        print "> TOS requirement included!"
+        if self.dbug:
+          print "##  TOS requirement applied"
         
         myTagger = TisTosParticleTagger(name + "_TisTosTagger")
         myTagger.TisTosSpecs = myTisTosSpecs
@@ -314,5 +325,67 @@ class DiMuonInherit (LineBuilder):
 
 
 
+
+# =============================================================================
+## logging
+# =============================================================================
+import logging
+logger = logging.getLogger(__name__)
+if not logger.handlers : logging.basicConfig()
+logger.setLevel(logging.INFO)
+# =============================================================================
+# =============================================================================
+if '__main__' == __name__ :
+    
+    
+    logger.info ( 80*'*'  ) 
+    logger.info (  __doc__ ) 
+    logger.info ( ' Author :  %s' % __author__ ) 
+    logger.info ( ' Date   :  %s' % __date__   )
+    ##
+    clines = set() 
+    logger.info ( ' Lines declared in default_config["STREAMS"] are' )
+    for stream in default_config['STREAMS'] :
+        lines = default_config['STREAMS'][stream] 
+        for l in lines :
+            logger.info ( ' %-15s : %-50s ' % ( stream , l ) )
+            clines.add ( l )
+    ##
+    logger.info ( ' The output locations for the default configuration: ' )
+    ##
+    config = default_config['CONFIG']
+    config['Debug'] = True
+    _conf = DiMuonInherit ( 'Onia' ,  config = config)
+    ##
+    _ln   = ' ' + 61*'-' + '+' + 30*'-'
+    logger.info ( _ln ) 
+    logger.info ( '  %-60s| %-30s  ' % ( 'Output location', 'Stripping line name' ) ) 
+    logger.info ( _ln )
+    for l in _conf.lines() :
+        lout  = l.outputLocation()
+        lname = l.name() 
+        logger.info ( '  %-60s| %-30s  ' % ( lout, lname ) )
+        if not lname in clines :
+            raise AttributeError ('Unknown Line %s' % lname )
+        clines.remove ( lname )
+    logger.info ( _ln ) 
+    logger.info ( 80*'*'  ) 
+    if clines :
+        raise AttributeError('Undeclared lines: %s' % clines )
+
+    ## make dot-graphs 
+    try:    
+        selections = _conf._selections_private() 
+        for s in selections :
+            from SelPy.graph import graph
+            o = graph ( s , format = 'png' )
+            if o : logger.info  ( "Generate DOT-graph: %s"          % o        )
+            else : logger.error ( "Can't produce DOT=-graph for %s" % s.name() )
+            
+    except : pass
+        
+# =============================================================================
+# The END 
+# =============================================================================
 
 

@@ -17,6 +17,7 @@ _selections = (
     'StrippingDiMuonNew'        ,
     'StrippingChiCJPsiGammaConv',
     'StrippingXic2HHH'
+    'StrippingDiMuonInherit'
     )
 
 for _sel in _selections :

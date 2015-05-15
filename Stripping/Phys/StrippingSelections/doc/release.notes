@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Lucio Anderlini
+ - Fixes in StrippingBandQ/StrippingDiMuonInherit.py 
+ - Added internal documentation
+
 ! 2015-05-15 - Stefano Perazzini
  - Fixed a typo in python/StrippingSelections/StrippingSL/__init__.py
 
