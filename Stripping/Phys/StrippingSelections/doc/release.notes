@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-16 - Maurizio Martinelli
+ - Added StrippingD2HHHKsLines in StrippingCharm 
+
 ! 2015-05-15 - Maurizio Martinelli
  - Added converted photons to D*+->D0(XGamma)pi+ stripping lines
  - Modified b->D0(->HHHH)muX stripping line to use DaVinci__N4BodyCombiner

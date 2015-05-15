@@ -25,7 +25,8 @@ _selections = (
     'StrippingDstarD02xx',
     'StrippingD2PiPi0',
     'StrippingLambdac2V0H',
-    'StrippingDstarD2XGamma'
+    'StrippingDstarD2XGamma',
+    'StrippingD2HHHKs',
     )
 
 for _sel in _selections :
