@@ -14,7 +14,6 @@ _selections = (
     "StrippingB2ppipiSigmacmm_Lcpi" ,
     'StrippingPromptCharm',
     'StrippingD2hh',
-    'StrippingDstarD2hhpi0',
     'StrippingDstarD0ToHHPi0',
     'StrippingDstarD2KShh',
     'StrippingD02KSKS',

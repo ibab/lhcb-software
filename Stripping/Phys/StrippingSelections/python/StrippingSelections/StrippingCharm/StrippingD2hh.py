@@ -13,7 +13,12 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllNoPIDsKaons, StdAllNoPIDsPions
 
-default_config = { 'DaugPtMin': 800.,
+default_config = { 
+    'NAME'        : 'D2hh',
+    'WGs'         : ['Charm'],
+    'BUILDERTYPE' : 'D2hhLines',
+    'CONFIG'      : {
+           'DaugPtMin': 800.,
            'DaugPtMax': 1500.,
            'DaugPtLoose': 500.,
            'DaugP': 5000.,
@@ -36,6 +41,7 @@ default_config = { 'DaugPtMin': 800.,
            'D0KKMassWindowWidthHigh': 200.,
            'D0P': 5000.,
            'D0VtxChi2Ndof': 10.,
+           'D0Tau': 0.,
            'D0FDChi2': 40.,
            'D0BPVDira': 0.9999,
            'D0DOCA': 0.07,
@@ -70,6 +76,7 @@ default_config = { 'DaugPtMin': 800.,
            'Hlt2TOSKK': { 'Hlt2CharmHadD02HH_D02KKDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02KKWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02KKDecision%TOS' : 0, 'Hlt2CharmHadD02KKWideMassDecision%TOS' : 0 },
            'Hlt2TOSPiPi': { 'Hlt2CharmHadD02HH_D02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02PiPiWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiWideMassDecision%TOS' : 0 }
          }
+}
 
 class D2hhConf(LineBuilder) :
 
@@ -114,6 +121,7 @@ class D2hhConf(LineBuilder) :
                               'D0KKMassWindowWidthHigh',
                               'D0P',
                               'D0VtxChi2Ndof',
+                              'D0Tau',
                               'D0FDChi2',
                               'D0BPVDira',
                               'D0DOCA',
@@ -565,6 +573,7 @@ def makeD2hhAsymm(name,
 
     _motherCuts = "(VFASPF(VCHI2PDOF) < %(D0VtxChi2Ndof)s)" \
                   "& (BPVVDCHI2 > %(D0FDChi2)s)" \
+                  "& (BPVLTIME() > %(D0Tau)s)" \
                   "& (BPVDIRA > %(D0BPVDira)s)" % locals()['config']
 
     _D0 = CombineParticles( DecayDescriptor = DecayDescriptor,
