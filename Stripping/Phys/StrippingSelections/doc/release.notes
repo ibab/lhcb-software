@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Andrea Contu
+ - Fixed CharmFromBSemi
 
 ! 2015-05-15 - Simone Stracka
  - Added 3 new lines to StrippingD2PiPi0.py 

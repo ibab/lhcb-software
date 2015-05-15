@@ -21,7 +21,7 @@ juggler = RawEventJuggler( DataOnDemand=True, Input=2.0, Output=4.0 )
 
 
 # Specify the name of your configuration
-confname='Bc2hhh' #FOR USERS
+confname='CharmFromBSemi' #FOR USERS
 
 
 # NOTE: this will work only if you inserted correctly the 

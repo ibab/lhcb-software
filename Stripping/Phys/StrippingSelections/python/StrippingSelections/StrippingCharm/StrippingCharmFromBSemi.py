@@ -25,7 +25,12 @@ __all__ = ('CharmFromBSemiAllLinesConf',
            'TOSFilter',
            'confdict')
 
-confdict = {
+default_config = {
+    'NAME' : 'CharmFromBSemi',
+    'BUILDERTYPE' : 'CharmFromBSemiAllLinesConf',
+    'STREAMS' : ['Charm'] ,
+    'WGs'    : ['Charm'],
+    'CONFIG':{
     "GEC_nLongTrk"   : 250    # adimensional
     ,"TTSpecs"      : {'Hlt1.*Track.*Decision%TOS':0,'Hlt2Topo.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0,"Hlt2Global%TIS":0}
     ,"HLT2"   : "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision')"
@@ -97,6 +102,7 @@ confdict = {
     ,"PTSUMLoose"  : 1400. ## MeV
     ,"PTSUM"       : 1800. ## MeV
     ,"PTSUM_HHPi0" : 1800. ## MeV
+    }
     }
 
 class CharmFromBSemiAllLinesConf(LineBuilder) :
