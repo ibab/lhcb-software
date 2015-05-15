@@ -17,6 +17,10 @@
 #    - Lambda_c+/Xi_c -> p K pi              ## for Lesha Dziuba  
 #    - Lambda_c+/Xi_c -> p K K               ## for Lesha Dziuba 
 #    - Xic0           -> Lc+ pi-             ## for Lesha Dziuba 
+#    - Xi_c0 -> p K K pi                     ## for Marco Pappagallo
+#    - Omega_c0 -> p K K pi                  ## for Marco Pappagallo  
+#    - Xi'_c+ -> Xi_c+ gamma                 ## for Marco Pappagallo 
+#    - Xi_c+* -> Xi_c0 pi+                   ## for Marco Pappagallo
 # 
 #  Excited charm baryons 
 #
@@ -24,6 +28,10 @@
 #    - Xi_c0*        -> Xi_c+ pi                            
 #    - Lambda_c+*    -> Lambda_c+ pi+ pi-   ( 2595, 2625 & 2880 )
 #    - Omega_c0*     -> Lambda_c+/Xic+ K-    ## for Marco Pappagallo 
+#    - Omega_c0*     -> Xic0 pi+ K-          ## for Marco Pappagallo
+#    - Omega_c0*     -> Xic'+ K-             ## for Marco Pappagallo
+#    - Omega_cc+     -> Xic+ pi+ K-          ## for Marco Pappagallo
+#    - Omega_cc+     -> Xic+ K+ K-           ## for Marco Pappagallo
 #
 #  Also one has the combinations for 2xCharm studies
 #
@@ -151,11 +159,19 @@ _default_configuration_ = {
     'pT(D+)'     :  1.0 * GeV ,    ## pt-cut for  prompt   D+
     'pT(Ds+)'    :  1.0 * GeV ,    ## pt-cut for  prompt   Ds+
     'pT(Lc+)'    :  1.0 * GeV ,    ## pt-cut for  prompt   Lc+
+    'pT(Xic0)'   :  1.0 * GeV ,    ## pt-cut for  prompt   Xic0/Omegac0
     #
     'pT(D0->HH)' :  1.0 * GeV ,    ## pt-cut for  prompt   D0->KK,pipi models 
     #
     # Selection of basic particles
     #
+    'TrackCut' : """
+    ( CLONEDIST   > 5000      ) &
+    ( TRGHOSTPROB < 0.5       ) &
+    in_range ( 2  , ETA , 4.9 ) &
+    HASRICH
+    """ ,
+    # 
     'PionCut'   : """
     ( PT          > 250 * MeV ) & 
     ( CLONEDIST   > 5000      ) & 
@@ -193,12 +209,21 @@ _default_configuration_ = {
     ( PIDmu - PIDpi >    0       ) &
     ( CLONEDIST     > 5000       )     
     """ ,
+    ## cust for prompt kaon
+    'PromptKaonCut'   : """
+    ( CLONEDIST   > 5000         ) & 
+    ( TRGHOSTPROB < 0.5          ) &
+    in_range ( 2          , ETA , 4.9       ) &
+    in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
+    HASRICH                     
+    """ ,
     #
     ## PID-cuts for hadrons 
     #
     'PionPIDCut'   : " PROBNNpi > 0.1 " ,
     'KaonPIDCut'   : " PROBNNk  > 0.1 " ,
     'ProtonPIDCut' : " PROBNNp  > 0.1 " ,
+    'PhotonCLCut'  : 0.05,
     ##
     #
     ## photons from chi_(c,b)
@@ -236,6 +261,13 @@ _default_configuration_ = {
     "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV"  ,
     "psi_prime     =   ADAMASS (  'psi(2S)') < 150 * MeV"  ,
     ] ,
+    # Q Values:
+    'QvalueXiCK'     :  500 * MeV ,
+    'QvalueXiCprime' :  250 * MeV ,
+    'QvalueXiCstar'  :  150 * MeV ,
+    'QvalueXiCPiK'   :  500 * MeV ,
+    'QvalueXiCprimeK':  500 * MeV ,
+    'QvalueOmegaCC'  : 4500 * MeV ,
     ## monitoring ?
     'Monitor'     : False ,
     ## pescales
@@ -244,11 +276,21 @@ _default_configuration_ = {
     'DsPrescale'             : 1.0 ,
     'D+Prescale'             : 1.0 ,
     'LambdaCPrescale'        : 1.0 ,
+    'XiC0Prescale'           : 1.0 ,
+    'OmegaC0Prescale'        : 1.0 ,
     'LambdaCpKKPrescale'     : 1.0 ,
     'LambdaC*Prescale'       : 1.0 ,
     'OmegaC*Prescale'        : 1.0 ,
+    'XiCprimePrescale'       : 1.0 ,
+    'XiC*Prescale'           : 1.0 ,
+    'OmegaC*2XiCPiKPrescale' : 1.0 ,
+    'OmegaC*2XiCprimeKPrescale' : 1.0 ,
+    'OmegaCCPrescale' : 1.0 ,
     'SigmaCPrescale'         : 1.0 ,
     'Xic02LcPiPrescale'      : 1.0 ,
+    #
+    'OmegaCCKpiPrescale'     : 1.0 ,
+    'OmegaCCKKPrescale'      : 1.0 ,
     ##
     'D02KKPrescale'          : 1.0 ,
     'D02pipiPrescale'        : 1.0 ,
@@ -276,10 +318,18 @@ default_config = {
                                      'StrippingDForPromptCharm'              , 
                                      'StrippingDsForPromptCharm'             ,
                                      'StrippingLambdaCForPromptCharm'        ,
+                                     'StrippingXiC0ForPromptCharm'           ,
+                                     'StrippingOmegaC0ForPromptCharm'        ,
                                      'StrippingLambdaC2pKKForPromptCharm'    ,
                                      'StrippingSigmaCForPromptCharm'         ,
                                      'StrippingLambdaCstarForPromptCharm'    ,
                                      'StrippingOmegaCstarForPromptCharm'     ,
+                                     'StrippingXiCprimeForPromptCharm'       ,
+                                     'StrippingXiCstarForPromptCharm'        ,
+                                     'StrippingOmegaCstar2XiCPiKForPromptCharm'     ,
+                                     'StrippingOmegaCstar2XiCprimeKForPromptCharm'  ,
+                                     'StrippingOmegaCCKpiForPromptCharm'     ,
+                                     'StrippingOmegaCCKKForPromptCharm'      ,
                                      'StrippingXic02LcPiForPromptCharm'      ,
                                      'StrippingDiCharmForPromptCharm'        , ## ? 
                                      'StrippingChiAndCharmForPromptCharm'    ,
@@ -425,10 +475,19 @@ class StrippingPromptCharmConf(LineBuilder) :
                  self.Dplus          () ,
                  self.preLamC        () ,
                  self.LamC           () ,
+                 self.preXiC0        () ,
+                 self.XiC0           () ,
+                 self.OmegaC0        () ,
                  self.LamC2pKK       () ,
                  self.SigC           () ,
                  self.LamCstar       () ,
-                 self.OmgCstar       () ,
+                 self.OmgCstar         () ,
+                 self.XiCprime         () ,
+                 self.XiCstar          () ,
+                 self.OmgCstar2XiCPiK  () ,
+                 self.OmgCstar2XiCprimeK  () ,
+                 self.OmgCCKpi () ,
+                 self.OmgCCKK  () ,
                  self.Xic02LcPi      () ,
                  self.DiMuon         () ,
                  self.DiCharm        () ,
@@ -518,6 +577,21 @@ class StrippingPromptCharmConf(LineBuilder) :
             checkPV  = self['CheckPV'        ] ,
             algos    =     [ self.LamC ()    ]
             ) ,
+            ## Xi_c0
+            StrippingLine (
+            "XiC0For" + self.name() ,
+            prescale = self['XiC0Prescale'] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'        ] ,
+            algos    =     [ self.XiC0 ()    ]
+            ) ,
+            ## Omega_c0
+            StrippingLine (
+            "OmegaC0For" + self.name() ,
+            prescale = self['OmegaC0Prescale'] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'        ] ,
+            algos    =     [ self.OmegaC0 () ]
+            ) ,
+            ##
             StrippingLine (
             "LambdaC2pKKFor" + self.name() ,
             prescale = self['LambdaCpKKPrescale' ] , ## ATTENTION! Prescale here !!
@@ -531,12 +605,54 @@ class StrippingPromptCharmConf(LineBuilder) :
             checkPV  = self['CheckPV'       ] ,
             algos    =     [ self.SigC ()   ]
             ) ,
-            ## Omega_c*
+            ## Omega_c* -> Xic+ K-
             StrippingLine (
             "OmegaCstarFor" + self.name() ,
             prescale = self['OmegaC*Prescale' ] , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'         ] ,
             algos    =     [ self.OmgCstar () ]
+            ) ,
+            ## Xi'_c+
+            StrippingLine (
+            "XiCprimeFor" + self.name() ,
+            prescale = self['XiCprimePrescale' ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'         ] ,
+            algos    =     [ self.XiCprime () ]
+            ) ,
+            ## Xi*_c+
+            StrippingLine (
+            "XiCstarFor" + self.name() ,
+            prescale = self['XiC*Prescale' ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'         ] ,
+            algos    =     [ self.XiCstar () ]
+            ) ,
+            ## Omega_c* -> Xic0 pi+ K-
+            StrippingLine (
+            "OmegaCstar2XiCPiKFor" + self.name() ,
+            prescale = self['OmegaC*2XiCPiKPrescale' ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'         ] ,
+            algos    =     [ self.OmgCstar2XiCPiK () ]
+            ) ,
+            ## Omega_c* -> Xic+' K-
+            StrippingLine (
+            "OmegaCstar2XiCprimeKFor" + self.name() ,
+            prescale = self['OmegaC*2XiCprimeKPrescale' ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'         ] ,
+            algos    =     [ self.OmgCstar2XiCprimeK () ]
+            ) ,
+            ## Omega_cc -> Xic+  K- pi+
+            StrippingLine (
+            "OmegaCCKpiFor" + self.name() ,
+            prescale = self['OmegaCCKpiPrescale' ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'            ] ,
+            algos    =     [ self.OmgCCKpi ()    ]
+            ) ,
+            ## Omega_cc -> Xic+  K- K+
+            StrippingLine (
+            "OmegaCCKKFor" + self.name() ,
+            prescale = self['OmegaCCKKPrescale'  ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'            ] ,
+            algos    =     [ self.OmgCCKK ()     ]
             ) ,
             ## Lambda_c*
             StrippingLine (
@@ -733,11 +849,50 @@ class StrippingPromptCharmConf(LineBuilder) :
             Code = protoncut         ,
             )
     
+    # =========================================================================
+    ## Prompt slow pions for D*+, Sigma_c, Lambda_c**: essentially no cuts at all
+    # =========================================================================
+    def slowPions ( self ) :
+        """
+        Prompt slow pions for D*+, Sigma_c, Lamda_c**, ...
+        - essentially no cuts at all
+        """
+        ##
+        if self['NOPIDHADRONS'] : from StandardParticles import StdAllNoPIDsPions   as slow_pions 
+        else                    : from StandardParticles import StdAllLooseANNPions as slow_pions  
+        ##
+        return slow_pions 
+    
+
+    # =========================================================================
+    ## prompt kaons fro Omega_c*
+    # =========================================================================
+    def promptKaons ( self ) :
+        """
+        Prompt kaons for e.g. Omega_c* 
+        """
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        #
+        if self['NOPIDHADRONS'] :
+            from StandardParticles import   StdNoPIDsKaons as inpts
+            kaoncut = self['PromptKaonCut']
+        else                    :
+            from StandardParticles import StdLooseANNKaons as inpts 
+            kaoncut = "(%s)&(%s)" % ( self['PromptKaonCut'] , self['KaonPIDCut'] ) 
+            #
+        return self.make_selection (
+            'PromptKaon'           ,
+            FilterDesktop          ,
+            [ inpts ]              ,
+            Code = kaoncut         ,
+            )
+    
+        
     ## get the common preambulo:
     def preambulo ( self ) : return self['Preambulo']
     
     
-    # =============================================================================
+    # =========================================================================
     # D0 -> Kpi
     # =============================================================================
     def D02Kpi ( self ) :
@@ -873,12 +1028,10 @@ class StrippingPromptCharmConf(LineBuilder) :
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         ##
-        from StandardParticles                     import StdAllLoosePions as inpts 
-        ##
         return self.make_selection (
             'Dstar'                   ,
             CombineParticles          ,
-            [ self.D02Kpi() , inpts ] ,
+            [ self.D02Kpi() , self.slowPions() ] ,
             #
             ## algorithm properties 
             #
@@ -903,13 +1056,11 @@ class StrippingPromptCharmConf(LineBuilder) :
         D*+ -> (D0 -> K- K+ , pi- p+ ) pi+ selection
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-        ## 
-        from StandardParticles                     import StdAllLoosePions as inpts 
         ##
         return self.make_selection (
             'DstarCP'                ,
             CombineParticles         ,
-            [ self.D02CP() , inpts ] ,
+            [ self.D02CP() , self.slowPions() ] ,
             #
             ## algorithm properties 
             #
@@ -1084,6 +1235,90 @@ class StrippingPromptCharmConf(LineBuilder) :
             Code = " ( PT > %s ) & ( ctau > 0.1 * mm ) " % self['pT(Lc+)']
             )
 
+
+    # =============================================================================
+    # preselection of Xi_c0/Omegac -> ( pKKpi )   NO POINTING HERE! Marco Pappagallo
+    # =============================================================================
+    def preXiC0 ( self ) :
+        """
+        Xi_c0/Omega_c0 -> ( pKKpi )  pre-selection
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N4BodyDecays
+        #
+        return self.make_selection (
+            'preXiC0' ,
+            DaVinci__N4BodyDecays ,
+            ## inputs
+            [ self.protons() , self.kaons() , self.pions()] ,
+            ##
+            DecayDescriptor = " [ Xi_c0 -> p+  K-  K- pi+ ]cc" ,
+            ##
+            Combination12Cut  = """
+            ( ACHI2DOCA(1,2) < 16 )
+            """ ,
+            Combination123Cut  = """
+            ( ACHI2DOCA(1,3) < 16 ) &
+            ( ACHI2DOCA(2,3) < 16 )
+            """ ,
+            ##
+            CombinationCut = """
+            ( ( ADAMASS ( 'Omega_c0' ) < 65 * MeV )
+            | ( ADAMASS ( 'Xi_c0'     ) < 65 * MeV ) ) &
+            ( APT            > %s ) &
+            ( ACHI2DOCA(1,4) < 16 ) &
+            ( ACHI2DOCA(2,4) < 16 ) &
+            ( ACHI2DOCA(3,4) < 16 )
+            """ % ( 0.85 * self[ 'pT(Xic0)' ] ) ,
+            ##
+            MotherCut      = """
+            ( chi2vx  < 25 )                          &
+            ( PT      > %s                          ) &
+            ( ( ADMASS ( 'Omega_c0' ) < 55 * MeV )
+            | ( ADMASS ( 'Xi_c0'    ) < 55 * MeV ) )
+            """ %  self [ 'pT(Xic0)']
+            )
+                                    
+    # =============================================================================
+    # Xi_c0 -> ( pKKpi ) Marco Pappagallo
+    # =============================================================================
+    def XiC0 ( self ) :
+        """
+        Xi_c0 -> ( pKKpi )  selection
+        """
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        #
+        return self.make_selection (
+            'XiC0'     ,
+            FilterDesktop ,
+            ## inputs
+            [ self.preXiC0() ] ,
+            ##
+            Code = """
+            ( ADMASS ( 'Xi_c0' ) < 55 * MeV ) &
+            ( PT > %s ) & ( ctau > 0.1 * mm )
+            """ % self['pT(Xic0)']
+            )    
+    # =============================================================================
+    # Omega_c0 -> ( pKKpi ) Marco Pappagallo
+    # =============================================================================
+    def OmegaC0 ( self ) :
+        """
+        Omega_c0 -> ( pKKpi )  selection
+        """
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        #
+        return self.make_selection (
+            'OmegaC0'     ,
+            FilterDesktop ,
+            ## inputs
+            [ self.preXiC0() ] ,
+            ##
+            Code = """
+            ( ADMASS ( 'Omega_c0' ) < 55 * MeV ) &
+            ( PT > %s ) & ( ctau > 0.1 * mm )
+            """ % self['pT(Xic0)']
+            )
+    
     # =============================================================================
     #  Xi_c0 -> Lc+ pi-
     # ============================================================================= 
@@ -1098,6 +1333,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         There is a hint in LHCb data 
         """ 
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        ## 
         from StandardParticles  import StdAllLoosePions as inpts 
         #
         return self.make_selection (
@@ -1170,11 +1406,10 @@ class StrippingPromptCharmConf(LineBuilder) :
         Sigma_C -> Lambda_C pi selection
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-        from StandardParticles                     import StdAllLoosePions as inpts 
         return self.make_selection (
             'SigmaC'         ,
             CombineParticles ,
-            [ self.LamC() , inpts ] , 
+            [ self.LamC()    , self.slowPions() ] , 
             #
             ## algorithm properties 
             DecayDescriptors = [
@@ -1199,14 +1434,13 @@ class StrippingPromptCharmConf(LineBuilder) :
         Lambda_C* -> Lambda_C pi pi selection
         """
         from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
-        from StandardParticles                     import StdAllLoosePions     as inpts
         ## 
         return self.make_selection (
             ## the unique tag 
-            'LambdaCstar'                 ,
+            'LambdaCstar'                       ,
             ## algorithm type to be used
-            DaVinci__N3BodyDecays         ,
-            [ self.LamC() , inpts ]       ,
+            DaVinci__N3BodyDecays               ,
+            [ self.LamC() , self.slowPions() ]  ,
             #
             ## algorithm properties 
             # 
@@ -1237,35 +1471,224 @@ class StrippingPromptCharmConf(LineBuilder) :
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         ##
-        kaoncut = """
-        ( CLONEDIST   > 5000      ) & 
-        ( TRGHOSTPROB < 0.5       ) &
-        in_range ( 2  , ETA , 4.9 ) &
-        HASRICH                     &
-        ( PROBNNk      > 0.1      ) 
-        """
-        if self['NOPIDHADRONS'] :
-            from StandardParticles import   StdAllNoPIDsKaons as inpts
-        else                    :
-            from StandardParticles import StdAllLooseANNKaons as inpts
-            kaoncut = "(%s)&(%s)" % ( kaoncut , self['KaonPIDCut'] ) 
-            
-        ##
         return self.make_selection (
-            'OmgCstar'         ,
-            CombineParticles   ,
-            [ self.LamC() , inpts ] , 
+            'OmegaCstar'         ,
+            CombineParticles     ,
+            [ self.LamC() , self.promptKaons() ] , 
             #
             ## algorithm properties 
-            DecayDescriptor  = " [ Omega_c*0 -> Lambda_c+ K- ]cc" ,
-            ## refine kaon selection 
-            DaughtersCuts    = { 'K-' : kaoncut } , 
+            DecayDescriptors  = [
+            "[ Omega_c*0 -> Lambda_c+ K- ]cc",
+            "[ Omega_c*0 -> Lambda_c+ K+ ]cc"
+            ] ,
             ##
-            CombinationCut   = " AM - AM1 < ( 500 * MeV + 260 * MeV ) " ,
+            CombinationCut   = " AM - AM1 < ( 500 * MeV + %s ) " %  self['QvalueXiCK'],
             ##
             MotherCut        = " chi2vx  < 16 "
             )
-    
+
+    # =============================================================================
+    # Xi'_c+ -> Xi_c+ gamma selection for Marco Pappagallo
+    # =============================================================================
+    def XiCprime ( self ) :
+        """
+        Xi'_c+ -> Xi_c+ gamma selection for Marco Pappagallo
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from StandardParticles import StdLooseAllPhotons as     inpts
+        ##
+        photoncut = "CL > %s " % self['PhotonCLCut']                
+        ##
+        return self.make_selection (
+            'XiCprime'         ,
+            CombineParticles   ,
+            [ self.LamC() , inpts ] ,
+            #
+            ## algorithm properties
+            DecayDescriptor  = " [ Xi'_c+ -> Lambda_c+ gamma ]cc" ,
+            ## refine kaon selection
+            DaughtersCuts    = {
+            'Lambda_c+' : "M > 2400 * MeV",
+            'gamma'     : photoncut
+            } ,
+            ##
+            CombinationCut   = " AM - AM1 < %s  " %  self['QvalueXiCprime'],
+            ##
+            MotherCut        = " ALL "
+            )
+
+    # =============================================================================
+    # Xi*_c+ -> Xi_C0 pi+ selection for Marco Pappagallo
+    # =============================================================================
+    def XiCstar ( self ) :
+        """
+        Xi*_c+ -> Xi_C0 pi+ selection for Marco Pappagallo
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        ##
+        pioncut = """
+        ( CLONEDIST   > 5000      ) &
+        ( TRGHOSTPROB < 0.5       ) &
+        in_range ( 2  , ETA , 4.9 ) &
+        HASRICH
+        """
+        ##
+        return self.make_selection (
+            'XiCstar'         ,
+            CombineParticles  ,
+            [ self.XiC0()     , self.slowPions()  ] ,
+            #
+            ## algorithm properties
+            DecayDescriptor = " [ Xi_c*+ -> Xi_c0 pi+ ]cc" ,
+            ##
+            DaughtersCuts    = {'pi+' : pioncut} ,
+            ##
+            CombinationCut   = " AM - AM1 < ( 140 * MeV + %s ) " %  self['QvalueXiCstar'],
+            ##
+            MotherCut      = """
+            ( chi2vx  < 16 )
+            """ ,
+            )
+
+    # =============================================================================
+    # Omega_c*0 -> Xi_C0 pi+ K- selection for Marco Pappagallo
+    # =============================================================================
+    def OmgCstar2XiCPiK ( self ) :
+        """
+        Omega_c*0 -> Xi_C0 pi+ K- selection for Marco Pappagallo
+        """
+        
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays        
+        ##
+        pioncut = """
+        ( CLONEDIST   > 5000      ) &
+        ( TRGHOSTPROB < 0.5       ) &
+        in_range ( 2  , ETA , 4.9 ) &
+        HASRICH                     
+        """
+        return self.make_selection (
+            'OmegaCstar2XiCPiK'         ,
+            DaVinci__N3BodyDecays       ,
+            [ self.XiC0() , self.promptKaons() , self.slowPions()  ] ,
+            #
+            ## algorithm properties
+            DecayDescriptors = [
+            "[ Omega_c*0 -> Xi_c0 K- pi+ ]cc",
+            "[ Omega_c*0 -> Xi_c0 K+ pi+ ]cc"
+            ],
+            ##
+            DaughtersCuts    = {
+            'pi+' : self['TrackCut']
+            } ,
+            ##
+            Combination12Cut = """
+            ( ACHI2DOCA(1,2)  < 16 ) & ( AM < 6 * GeV ) 
+            """,
+            ##
+            CombinationCut   = """
+            AM - AM1 < ( 500 * MeV + %s )
+            """ %  self['QvalueXiCPiK'] ,
+            ##
+            MotherCut      = """
+            ( chi2vx  < 16 )
+            """ ,
+            )
+
+    # =============================================================================
+    # Omega_c*0 -> Xi'_C+ K- selection for Marco Pappagallo
+    # =============================================================================
+    def OmgCstar2XiCprimeK ( self ) :
+        """
+        Omega_c*0 -> Xi'_C+ K- selection for Marco Pappagallo
+        """
+        ##
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        ##
+        return self.make_selection (
+            'OmegaCstar2XiCprimeK'         ,
+            CombineParticles  ,
+            [ self.XiCprime() , self.promptKaons() ] ,
+            #
+            ## algorithm properties
+            DecayDescriptors = [
+            "[ Omega_c*0 -> Xi'_c+ K- ]cc",
+            "[ Omega_c*0 -> Xi'_c+ K+ ]cc"
+            ] ,
+            ##
+            CombinationCut   = " AM - AM1 < ( 500 * MeV + %s ) " %  self['QvalueXiCprimeK'],
+            ##
+            MotherCut      = """
+            ( chi2vx  < 16 )
+            """ ,
+            )
+
+    # =============================================================================
+    # Omega_cc+ -> Xi_C+ K- pi+ selection for Marco Pappagallo
+    # =============================================================================
+    def OmgCCKpi( self ) :
+        """
+        Omega_cc+ -> Xi_C+ K- pi+ selection for Marco Pappagallo
+        """
+        
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
+        ##
+        return self.make_selection (
+            'OmegaCC2XiCKpi'      ,
+            DaVinci__N3BodyDecays ,
+            [ self.preLamC() , self.promptKaons () , self.slowPions() ] ,
+            #
+            ## algorithm properties
+            DecayDescriptor = " [ Omega_cc+ -> Lambda_c+ K- pi+ ]cc" ,
+            ##
+            DaughtersCuts    = {
+            'Lambda_c+' : "M > 2400 * MeV",
+            'pi+' : self['TrackCut']
+            } ,
+            ##
+            Combination12Cut = """
+            ( ACHI2DOCA(1,2)  < 16 )  & ( AM < 6 * GeV ) 
+            """,
+            ##
+            CombinationCut   = " AM <  %s  " %  self['QvalueOmegaCC'],
+            ##
+            MotherCut      = """
+            ( chi2vx  < 16 )
+            """ ,
+            )
+
+    # =============================================================================
+    # Omega_cc+ -> Xi_C+ K- K+ selection for Marco Pappagallo
+    # =============================================================================
+    def OmgCCKK ( self ) :
+        """
+        Omega_cc+ -> Xi_C+ K- K+ selection for Marco Pappagallo
+        """
+        
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
+        ##
+        return self.make_selection (
+            'OmegaCC2XiCKK'       ,
+            DaVinci__N3BodyDecays ,
+            [ self.preLamC() , self.promptKaons () ] ,
+            #
+            ## algorithm properties
+            DecayDescriptor = " [ Omega_cc+ -> Lambda_c+ K- K+  ]cc" , 
+            ##
+            DaughtersCuts    = {
+            'Lambda_c+' : "M > 2400 * MeV",
+            } ,
+            ##
+            Combination12Cut = """
+            ( ACHI2DOCA(1,2)  < 16 )  & ( AM < 6 * GeV ) 
+            """,
+            ##
+            CombinationCut   = " AM <  %s  " %  self['QvalueOmegaCC'],
+            ##
+            MotherCut      = """
+            ( chi2vx  < 16 )
+            """ ,
+            )
+
     # =============================================================================    
     ## helper merged selection of all charmed particles
     def PromptCharm ( self ) :

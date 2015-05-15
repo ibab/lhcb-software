@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Vanya Belyaev
+ - StrippingCharm/StrippingPropmtCharm.py
+   update lines for excited baryons 
+
 ! 2015-05-15 - Roberta Cardinale
  - Updated default_config of 
    - StrippingBandQ/StrippingXic2HHH.py
