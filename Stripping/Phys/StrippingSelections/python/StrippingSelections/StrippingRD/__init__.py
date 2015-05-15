@@ -9,6 +9,7 @@ _selections = [
     # 'StrippingB2XMuMuInclusive',
     'StrippingB2KstTauTau',
     'StrippingBu2LLK',
+    'StrippingRareStrange',
     # 'StrippingBeauty2XGamma',
     # 'StrippingBeauty2XGammaExclusive',
     # 'StrippingLb2L0Gamma',
