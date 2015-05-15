@@ -1,4 +1,4 @@
-__author__  = 'Patrick Koppenburg, Alex Shires, Thomas Blake, Luca Pescatore, Simone Bifani, Yasmine Amhis'
+__author__  = 'Patrick Koppenburg, Alex Shires, Thomas Blake, Luca Pescatore, Simone Bifani, Yasmine Amhis, Paula Alvarez Cartelle'
 __date__    = '16/06/2014'
 __version__ = '$Revision: 3 $'
 
@@ -11,6 +11,7 @@ __all__ = ( 'Bu2LLKConf', 'default_config' )
   B --> ee phi versus B --> mumu phi
   Lb --> ee Lambda(*) versus Lb --> mumu Lambda(*)
   B --> gamma K* , B --> gamma phi  and  Lb --> gamma Lambda(*)   with converted photons
+  B --> emu K, B--> emu K* and B--> emu Phi with OS and SS leptons
 """
 
 default_config = {
@@ -36,6 +37,7 @@ default_config = {
         , 'Bu2eeKLinePrescale'  : 1
         , 'Bu2mmKLinePrescale'  : 1
         , 'Bu2meKLinePrescale'  : 1
+        , 'Bu2meKSSLinePrescale': 1
         , 'RelatedInfoTools'    : [
             {'Type'             : 'RelInfoVertexIsolation',
              'Location'         : 'VertexIsoInfo'},
@@ -118,6 +120,7 @@ class Bu2LLKConf(LineBuilder) :
         , 'Bu2eeKLinePrescale'
         , 'Bu2mmKLinePrescale'
         , 'Bu2meKLinePrescale'
+        , 'Bu2meKSSLinePrescale'
         , 'RelatedInfoTools'
       )
     
@@ -129,6 +132,7 @@ class Bu2LLKConf(LineBuilder) :
         mmXLine_name = name+"_mm"
         eeXLine_name = name+"_ee"
         meXLine_name = name+"_me"
+        meXSSLine_name = name+"_meSS"
 
         from StandardParticles import StdLooseKaons as Kaons
         from StandardParticles import StdLooseKstar2Kpi as Kstars
@@ -180,6 +184,7 @@ class Bu2LLKConf(LineBuilder) :
         MuonID = "(HASMUON)&(ISMUON)"
 
         MuE  = self._makeMuE( "MuEFor" + self._name, params = config, electronid = ElecID, muonid = MuonID )
+        MuE_SS  = self._makeMuE( "MuESSFor" + self._name, params = config, electronid = ElecID, muonid = MuonID, samesign=True )
 
         DiElectronID = "(2 == NINTREE((ABSID==11)&(PIDe> %(PIDe)s)))" % config
         DiMuonID     = "(2 == NINTREE((ABSID==13)&(HASMUON)&(ISMUON)))"
@@ -203,6 +208,11 @@ class Bu2LLKConf(LineBuilder) :
                                       dilepton = MuE,
                                       params   = config,
                                       idcut    = None )
+
+        SelMuE_SS = self._filterDiLepton("SelMuESSFor" + self._name, 
+                                         dilepton = MuE_SS,
+                                         params   = config,
+                                         idcut    = None )
 
         from StandardParticles import StdAllLooseGammaLL as PhotonConversion
         SelPhoton         = self._filterPhotons("SelPhotonFor" + self._name, photons = PhotonConversion ) 
@@ -234,6 +244,14 @@ class Bu2LLKConf(LineBuilder) :
                                    hadrons = [ SelKaons, SelKstars, SelPhis , SelKshortsLL, SelKshortsDD, SelLambdasLL, SelLambdasDD, SelLambdastars  ],
                                    params  = config,
                                    masscut = "ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )  
+
+
+        SelB2meX_SS = self._makeB2LLX(meXSSLine_name,
+                                      dilepton = SelMuE_SS,
+                                      hadrons = [ SelKaons, SelKstars, SelPhis , SelKshortsLL, SelKshortsDD, SelLambdasLL, SelLambdasDD, SelLambdastars  ],
+                                      params  = config,
+                                      masscut = "ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )  
+
        
         SelB2gammaX = self._makeB2LLX(eeXLine_name + "3",
                                       dilepton = SelPhoton,
@@ -284,6 +302,17 @@ class Bu2LLKConf(LineBuilder) :
                                         RequiredRawEvents = [],
                                         MDSTFlag = True )
 
+
+        self.B2meX_SSLine = StrippingLine( meXSSLine_name+"Line",
+                                        prescale       = config['Bu2meKSSLinePrescale'],
+                                        postscale      = 1,
+                                        selection      = SelB2meX_SS,
+                                        RelatedInfoTools = config['RelatedInfoTools'],
+                                        FILTER = SPDFilter, 
+                                        RequiredRawEvents = [],
+                                        MDSTFlag = True )
+
+
         self.B2gammaXLine = StrippingLine(eeXLine_name+"Line3",
                                           prescale = config['Bu2eeKLinePrescale'],
                                           postscale = 1,
@@ -299,7 +328,8 @@ class Bu2LLKConf(LineBuilder) :
         self.registerLine( self.B2mmXLine )
         self.registerLine( self.B2meXLine )
         self.registerLine( self.B2gammaXLine )
-        
+        self.registerLine( self.B2meX_SSLine )
+
 #####################################################
     def _filterHadron( self, name, sel, params ):
         """
@@ -409,7 +439,7 @@ class Bu2LLKConf(LineBuilder) :
                          RequiredSelections = [ _Merge, photons ]) 
         
 #####################################################
-    def _makeMuE( self, name, params, electronid = None, muonid = None ):
+    def _makeMuE( self, name, params, electronid = None, muonid = None , samesign = False):
         """
         Makes MuE combinations 
         """
@@ -421,9 +451,14 @@ class Bu2LLKConf(LineBuilder) :
 
         _MassCut = "(AM > 100*MeV)" 
         
-        _Combine = CombineParticles( DecayDescriptor = "[J/psi(1S) -> mu+ e-]cc",
+        _DecayDescriptor = "[J/psi(1S) -> mu+ e-]cc"
+        if samesign: _DecayDescriptor = "[J/psi(1S) -> mu+ e+]cc"
+
+        
+        _Combine = CombineParticles( DecayDescriptor = _DecayDescriptor,
                                      CombinationCut  = _MassCut,
                                      MotherCut       = "(VFASPF(VCHI2/VDOF) < 9)")
+
 
         _ElectronCut = _DaughtersCut
         _MuonCut     = _DaughtersCut
