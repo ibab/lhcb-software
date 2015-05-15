@@ -12,8 +12,8 @@ _selections = ['StrippingB2DMuNuX',
                'StrippingB2XuMuNu',
 	       'StrippingB23MuNu',
 	       'StrippingBd2DstarMuNu',
-	       'StrippingCharmFromBSemiForHadronAsy',
-	       #'StrippingD0ForBXX',
+	       #'StrippingCharmFromBSemiForHadronAsy',
+	       'StrippingD0ForBXX',
 	       'StrippingLb2pMuNuVub',
 	       #'StrippingTrackEffD0ToK3Pi
 	       ,]
