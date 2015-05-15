@@ -4,8 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Federico Redi
+ - Added line for Majorana Neutrino in StrippingRD/StrippingB2Lambda0MuLines.py
+
 ! 2015-05-15 - Lucio Anderlini
- - Fixes in StrippingBandQ/StrippingDiMuonInherit.py 
+ - Fixes in StrippingBandQ/StrippingDiMuonInherit.py
  - Added internal documentation
 
 ! 2015-05-15 - Stefano Perazzini
@@ -29,7 +32,7 @@
  - added StrippingB2XTau for B->TauTau analysis
 
 ! 2015-05-14 - Lucio Anderlini
- - Added StrippingBandQ/StrippingDiMuonInheritance.py 
+ - Added StrippingBandQ/StrippingDiMuonInheritance.py
 
 ! 2015-05-14 - Simone Stracka
  - Added StrippingD2PiPi0.py to StrippingCharm
@@ -38,7 +41,7 @@
  - Added StrippingHeavyBaryons.py to BandQ
 
 ! 2015-05-14 - Mika Vesterinen
- - A bit quick with previous commit. Now added the new dictionary formats, 
+ - A bit quick with previous commit. Now added the new dictionary formats,
   and any useage of HLT rather than HLT1/2.
 
 ! 2015-05-14 - Ricardo Vazquez Gomez
@@ -68,8 +71,8 @@
 ! 2015-05-14 - Konrad Klimaszewski
  - Enlarged mass windows for StrippingBs2JpsieePhi.py
 
-! 2015-05-14 - Erica Polycarpo 
- - Added StrippingCharm/StrippingD2hhh_conf.py with additional lifetime cut wrt Stripping21 
+! 2015-05-14 - Erica Polycarpo
+ - Added StrippingCharm/StrippingD2hhh_conf.py with additional lifetime cut wrt Stripping21
 
 ! 2015-05-14 - Roberta Cardinale
  - Added StrippingXic2HHH.py for Yury
@@ -78,13 +81,13 @@
  - added StrippinDiMuonNew.py and StrippingChicJPsiGammaConv.py to BandQ
 
 ! 2015-05-13 - Maurizio Martinelli
- - added StrippingDstarD2HHHH.py to StrippingCharm 
+ - added StrippingDstarD2HHHH.py to StrippingCharm
 
 ! 2015-05-13 - Carlos Vazquez Sierra
  - moved JpsieeKS lines to Leptonic stream, modified some features.
 
 ! 2015-05-13 - Adlene Hicheur
- - Added Vertex Isolation variables in StrippingBnoC/StrippingBc2hhh_BnoC.py 
+ - Added Vertex Isolation variables in StrippingBnoC/StrippingBc2hhh_BnoC.py
 
 ! 2015-05-13 - Patrick Spradlin
  - Resurrected StrippingXicc.py in StrippingCharm (with full svn history).
@@ -111,7 +114,7 @@
  - Typo fix in StrippingXibc.py
 
 ! 2015-05-13 - Vanya Belyaev
- - add StrippingBandQ/StrippingCharmAssociative from Stripping21 
+ - add StrippingBandQ/StrippingCharmAssociative from Stripping21
 
 ! 2015-05-15 - Mike Sokoloff
   -  added StrippingChargedHyperons.py
@@ -120,13 +123,13 @@
      in the StrippingCharm subdirectory.  These are copies of code which ran in 2012
 
 ! 2015-05-13 - Vanya Belyaev
- - Add StrippingBandQ/StrippingBc3h from Stripping21  
+ - Add StrippingBandQ/StrippingBc3h from Stripping21
 
 ! 2015-05-12 - Stefano Perazzini
  - Correct wrong indentation in StrippingBnoC/StrippingBu2hhh.py
 
 ! 2015-05-12 - Wenbin Qian
- - Add D->4H decays for B->D0HH and B->DstMuNu 
+ - Add D->4H decays for B->D0HH and B->DstMuNu
 
 ! 2015-05-12 - Carlos Vazquez Sierra
  - Moved Psi2S B2CC lines to tests/liaisons (keeping builders).
@@ -169,7 +172,7 @@
  - Cleaned B2CC scripts and replaced HLT with HLT2.
  - Moved all B2CC Radiative lines to Leptonic stream.
 
-! 2015-05-11 - Yasmine Amhis. 
+! 2015-05-11 - Yasmine Amhis.
  - remove commented line in StrippingBu2LLK
 
 ! 2015-05-11 - Flavio Archilli
@@ -181,7 +184,7 @@
 ! 2015-05-11 - Carlos Vazquez Sierra
  - Fixed the code in StrippingB2JpsiPi0.py
 
-! 2015-05-11 - Yasmine Amhis 
+! 2015-05-11 - Yasmine Amhis
  - Add Lambda(*) and Ks for R_X measurements in StrippingBuLLKLines
 
 ! 2015-05-11 - Alex Pearce
@@ -245,10 +248,10 @@ Added the Lines for CEP: StrippingLowMultINC.py
  - Add StrippingRD/StrippingBs2st2KKMuX.py
 
 ! 2015-04-30 - Roberta Cardinale
- - Fix FT warning in StrippingBandQ/StrippingB2JpsiXforEM_s.py 
+ - Fix FT warning in StrippingBandQ/StrippingB2JpsiXforEM_s.py
  - bug fix in StrippingBandQ/StrippingPsiXForBandQ.py
 
-! 2015-04-29 - Lucio Anderlini 
+! 2015-04-29 - Lucio Anderlini
   - Updates to StrippingCalib/StrippingPIDCalib.py
    . minor bug fixes in the DiLepton lines
    . additional split in Lambda0 line to allow different prescales
@@ -282,7 +285,7 @@ Added the Lines for CEP: StrippingLowMultINC.py
 ! 2015-04-18 - Vanya Belyaev
  - StrippingCharm/StrippingPromptCharm.py
    add a line for Xic0 -> Lc+ pi-    (the decay of s-quark in charm baryon)
-   the hint has reported by Belle: Phys.Rev. D89 (2014) 9, 091102 
+   the hint has reported by Belle: Phys.Rev. D89 (2014) 9, 091102
    see http://dx.doi.org/10.1103/PhysRevD.89.091102
    also seen by A.Dziuba
 
@@ -291,7 +294,7 @@ Added the Lines for CEP: StrippingLowMultINC.py
 
 ! 2015-03-27 - Lucio Anderlini
  - Several bug-fixes to StrippingCalib/StrippingPIDCalib.py
- - Added two lines in StrippingCalib/StrippingPIDCalib.py to keep the 
+ - Added two lines in StrippingCalib/StrippingPIDCalib.py to keep the
    intermediate J/psi in the decay descriptor B -> llK  (l = e,mu)
  - Created folder test/liasons/Calibrations
  - Created test file test/liasons/Calibrations/TestCalibLines.py
@@ -322,7 +325,7 @@ Added the Lines for CEP: StrippingLowMultINC.py
  - add two modules in StrippingBandQ, both are for WG-production
 
 ! 2015-03-21 - Vanya Belyaev
- - add StrippingPromptCharm 
+ - add StrippingPromptCharm
 
 ! 2015-03-20 - Stefano Perazzini
  - Introduced tests/test_strippingselections.py
