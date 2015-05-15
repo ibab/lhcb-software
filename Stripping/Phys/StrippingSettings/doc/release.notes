@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-16 - Carlos Vazquez Sierra
+ - Updated LineConfig dictionaries for B2CC in S23.
+
 ! 2015-05-13 - Ricardo Vazquez Gomez
  - Create the folder Stripping23 for the config dictionaries.
    Fill the MiniBias config file. Copied from S21
