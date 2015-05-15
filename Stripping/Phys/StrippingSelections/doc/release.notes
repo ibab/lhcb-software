@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Patrick Owen
+  - re-commmit CharmForVub
+
 ! 2015-05-15 - Michael Kolpin
   - Moved StrippingProtonAsym to StrippingCalib module
   - Updated STREAMS for multiple builders in StrippingCalib
