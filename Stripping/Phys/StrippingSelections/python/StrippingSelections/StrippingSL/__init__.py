@@ -5,7 +5,7 @@ for SL WG.
 
 _selections = ['StrippingB2DMuNuX',
                'StrippingJPsiForSL',
-               'StrippingB2DHForTauMu',
+               #'StrippingB2DHForTauMu',
                'StrippingB2DMuForTauMu',
                'StrippingB2DstMuNuIncl',
                'StrippingB2XTauNu',
@@ -13,11 +13,10 @@ _selections = ['StrippingB2DMuNuX',
 	       'StrippingB23MuNu',
 	       'StrippingBd2DstarMuNu',
 	       'StrippingCharmFromBSemiForHadronAsy',
-	       'StrippingD0ForBXX',
+	       #'StrippingD0ForBXX',
 	       'StrippingLb2pMuNuVub',
-	       'StrippingPhiToKSKS',
-	       'StrippingProtonAsym',
-	       'StrippingTrackEffD0ToK3Pi',]
+	       #'StrippingTrackEffD0ToK3Pi
+	       ,]
 
 for _sel in _selections :
     try :
