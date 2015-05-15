@@ -13,6 +13,7 @@
          StrippingLb2L0Gamma,
          StrippingKshort2PiPiMuMu
 	To StrippingRD
+  Edited StrippingRD/__init__.py
 
 ! 2015-05-15 - Ricardo Vazquez Gomez
  - Added test for the coordinators
