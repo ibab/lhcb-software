@@ -16,7 +16,7 @@ _selections = (
     'StrippingUpsilonExotic'    , ## no need to run in production
     'StrippingDiMuonNew'        ,
     'StrippingChiCJPsiGammaConv',
-    'StrippingXic2HHH'
+    'StrippingXic2HHH',
     'StrippingDiMuonInherit',
     'StrippingHeavyBaryons',
     'StrippingBc2Ds1Gamma',
