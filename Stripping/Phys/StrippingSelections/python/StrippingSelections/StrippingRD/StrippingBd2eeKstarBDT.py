@@ -204,7 +204,7 @@ class Bd2eeKstarBDTConf(LineBuilder):
                                    RelatedInfoTools = config[ 'RelatedInfoTools']
                                    )
         
-        self.registerLine(self.line)
+        #self.registerLine(self.line)
 
         # new line with new Brem cor 
         self.FilterEE = filterEE( 'filterEEFor'+Bd2eeKstarBDTName,

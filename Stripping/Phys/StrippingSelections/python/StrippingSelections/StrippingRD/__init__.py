@@ -13,7 +13,7 @@ _selections = [
     # 'StrippingBeauty2XGammaExclusive',
     # 'StrippingLb2L0Gamma',
     # 'StrippingBs2gammagamma',
-    # 'StrippingBd2eeKstarBDT',
+     'StrippingBd2eeKstarBDT',
      'StrippingDarkBoson',
      'StrippingB2XTau',
      'StrippingZVTOP',

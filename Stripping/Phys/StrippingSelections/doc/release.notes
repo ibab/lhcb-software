@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Jibo He
+  - Moved Bd2eeKstarBDT line to new structure 
+  . Switched off the line not-using DiElectronMaker
+
 ! 2015-05-15 - Paula Alvarez Cartelle
   - Added line for same-sign leptons to StrippingBu2LLK.py
 
