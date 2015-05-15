@@ -10,9 +10,9 @@ Exported symbols (use python help!):
     - D02KSKSConf
 """
 
-__author__ = ['Markward Britsch','Marianna Fontana']
-__date__ = '31/07/2012'
-__version__ = 'Stripping20'
+__author__ = ['Markward Britsch','Marianna Fontana', 'Michael Sokoloff']
+__date__ = '15/05/2014'
+__version__ = 'Stripping23'
 __all__ = 'D02KSKSConf'
 
 from Gaudi.Configuration import *
