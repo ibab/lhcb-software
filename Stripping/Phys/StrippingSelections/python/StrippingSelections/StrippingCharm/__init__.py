@@ -28,6 +28,7 @@ _selections = (
     'StrippingDstarD2XGamma',
     'StrippingD2HHHKs',
     'StrippingD2HHHPi0',
+    'StrippingDstarPromptWithD02HHMuMu'
     )
 
 for _sel in _selections :

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-16 - Andrea Contu
+ - Added StrippingDstarPromptWithD02HHMuMu to StrippingCharm
+
 ! 2015-05-16 - Michael Kolpin
  - Fixes to StrippingTrackEffD2K(3)Pi and StrippingDstarD02KShhForTrackingEff
 
