@@ -3,44 +3,51 @@ __date__ = '22/08/2012'
 __version__ = '$Revision: 1.1 $'
 
 __all__ = ('DstarD02KShh_ForTrackingEffBuilder',
+           'default_config',
            'filterDaughters',
            'makeD0',
            'makeDstar')
 
-config_default = {'LongTrackGEC'          :    150
-                , 'Trk_PT_MIN'            :  600.0
-                , 'Trk_P_MIN'             :10000.0
-                , 'Trk_GHOST_MAX'         :    0.4
-                , 'Pair_AMINDOCA_MAX'     :    0.1
-                , 'Pair_BPVVD_MIN'        :    0.0
-                , 'Pair_SumAPT_MIN'       : 2500.0
-                , 'Pair_BPVCORRM_MAX'     : 3000.0
-                , 'TrkPt_SlowPion'        :    0.0
-                , 'TrkP_SlowPion'         : 3000.0
-                , 'TrkChi2_SlowPion'      :    2.25
-                , 'TrkChi2_MAX_Child_MAX' :    2.25
-                , 'KAON_PIDK_MIN'         :    3.0
-                , 'PION_PIDK_MAX'         :    0.0
-                , 'IPCHI2_MAX_Child_MIN'  :   16.0
-                , 'IPCHI2_PiSlow_MAX'     :    9.0
-                , 'PairMaxDoca_Dstar'     :  100.0
-                , 'PT_Dstar_MIN'          : 2500.0
-                , 'DIRA_D0_MIN'           :    0.999
-                , 'FDCHI2_D0_MIN'         :   80.0
-                , 'VCHI2_D0_MAX'          :    4.0
-                , 'M_MIN'                 :    0.0
-                , 'M_MAX'                 : 1800.0
-                , 'PhiM_MIN'              : 1000.0
-                , 'PhiM_MAX'              : 1040.0
-                , 'DeltaM_MIN'            :    0.0
-                , 'DeltaM_MAX'            :  250.0
-                , 'HLTFILTER'             : "(HLT_PASS_RE('Hlt2CharmHadD02HHXDst.*Decision')|HLT_PASS('Hlt2IncPhiDecision'))"
-                , 'Hlt2TisTosSpec'        : { 'Hlt2CharmHadD02HHXDst.*Decision%TOS' : 0, 'Hlt2IncPhiDecision%TOS' : 0}
-                , 'KKprescale'            :    1.0
-                , 'PiPiprescale'          :    0.1
-                , 'KPlusPiMinusprescale'  :    0.1
-                , 'KMinusPiPlusprescale'  :    0.1
-                , 'postscale'             :    1.0
+default_config = {
+        'NAME' : 'DstarD02KShhForTrackingEff',
+        'BUILDERTYPE' : 'DstarD02KShh_ForTrackingEffBuilder',
+        'CONFIG' : {'LongTrackGEC'          :    150
+                  , 'Trk_PT_MIN'            :  600.0
+                  , 'Trk_P_MIN'             :10000.0
+                  , 'Trk_GHOST_MAX'         :    0.4
+                  , 'Pair_AMINDOCA_MAX'     :    0.1
+                  , 'Pair_BPVVD_MIN'        :    0.0
+                  , 'Pair_SumAPT_MIN'       : 2500.0
+                  , 'Pair_BPVCORRM_MAX'     : 3000.0
+                  , 'TrkPt_SlowPion'        :    0.0
+                  , 'TrkP_SlowPion'         : 3000.0
+                  , 'TrkChi2_SlowPion'      :    2.25
+                  , 'TrkChi2_MAX_Child_MAX' :    2.25
+                  , 'KAON_PIDK_MIN'         :    3.0
+                  , 'PION_PIDK_MAX'         :    0.0
+                  , 'IPCHI2_MAX_Child_MIN'  :   16.0
+                  , 'IPCHI2_PiSlow_MAX'     :    9.0
+                  , 'PairMaxDoca_Dstar'     :  100.0
+                  , 'PT_Dstar_MIN'          : 2500.0
+                  , 'DIRA_D0_MIN'           :    0.999
+                  , 'FDCHI2_D0_MIN'         :   80.0
+                  , 'VCHI2_D0_MAX'          :    4.0
+                  , 'M_MIN'                 :    0.0
+                  , 'M_MAX'                 : 1800.0
+                  , 'PhiM_MIN'              : 1000.0
+                  , 'PhiM_MAX'              : 1040.0
+                  , 'DeltaM_MIN'            :    0.0
+                  , 'DeltaM_MAX'            :  250.0
+                  , 'HLTFILTER'             : "(HLT_PASS_RE('Hlt2CharmHadD02HHXDst.*Decision')|HLT_PASS('Hlt2IncPhiDecision'))"
+                  , 'Hlt2TisTosSpec'        : { 'Hlt2CharmHadD02HHXDst.*Decision%TOS' : 0, 'Hlt2IncPhiDecision%TOS' : 0}
+                  , 'KKprescale'            :    1.0
+                  , 'PiPiprescale'          :    0.1
+                  , 'KPlusPiMinusprescale'  :    0.1
+                  , 'KMinusPiPlusprescale'  :    0.1
+                  , 'postscale'             :    1.0
+                  },
+        'WGs' : ['ALL'],
+        'STREAMS' : ['Calibration']
                 }
 
 from Gaudi.Configuration                   import *

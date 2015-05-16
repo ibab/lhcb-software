@@ -25,7 +25,7 @@ __all__ = ('TrackEffD0ToK3PiAllLinesConf',
            'default_config')
 
 default_config = {
-    'TrackEffD0ToK3Pi' : {
+        'NAME'        : 'TrackEffD0ToK3Pi',
         'WGs'         : ['ALL'],
         'BUILDERTYPE' : 'TrackEffD0ToK3PiAllLinesConf',
         'STREAMS':["Charm"],
@@ -48,7 +48,6 @@ default_config = {
             "Pion_MAX_PIDK":4
             },
         'STREAMS' : ["Calibration"]
-        }
     }
 class TrackEffD0ToK3PiAllLinesConf(LineBuilder) :
     

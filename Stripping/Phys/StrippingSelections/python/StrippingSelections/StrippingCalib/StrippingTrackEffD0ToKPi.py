@@ -24,7 +24,7 @@ __all__ = ('TrackEffD0ToKPiAllLinesConf',
            'default_config')
 
 default_config = {
-    'TrackEffD0ToKPi' : {
+        'NAME'        : 'TrackEffD0ToKPi',
         'WGs'         : ['ALL'],
         'BUILDERTYPE' : 'TrackEffD0ToKPiAllLinesConf',
         'STREAMS':["Charm"],
@@ -46,7 +46,7 @@ default_config = {
             "Dst_DTFCHI2_MAX":3
             },
         'STREAMS' : ["Calibration"]
-        }
+        
     }
 
 
