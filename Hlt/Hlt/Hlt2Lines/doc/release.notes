@@ -7,6 +7,9 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
+! 2015-05-16 - Dan Johnson
+  - Change Hlt2VoidFilter in CEP/Stages.py to comply with change in the HLT2 framework which 
+    fixes a problem experienced in Moore running online
 
 ! 2015-05-14 - S. Stracka
   - CharmHad/D2HHLines.py , CharmHad/Stages.py

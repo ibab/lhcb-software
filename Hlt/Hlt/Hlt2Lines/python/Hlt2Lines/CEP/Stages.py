@@ -3,10 +3,10 @@ from HltLine.HltDecodeRaw import DecodeL0CALO
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2VoidFilter
 class TrackGEC(Hlt2VoidFilter):
     def __init__(self, name):
-        from Configurables import LoKi__Hybrid__CoreFactory as Factory
-        modules =  Factory().Modules
-        for i in [ 'LoKiTrigger.decorators' ] : 
-            if i not in modules : modules.append(i)
+#        from Configurables import LoKi__Hybrid__CoreFactory as Factory
+#        modules =  Factory().Modules
+#        for i in [ 'LoKiTrigger.decorators' ] : 
+#            if i not in modules : modules.append(i)
 
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking 
         velotracks = Hlt2BiKalmanFittedForwardTracking().hlt2VeloTracking()
