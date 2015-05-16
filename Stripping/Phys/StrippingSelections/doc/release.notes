@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-05-16 - Andrea Contu
+ - Added StrippingD2XMuMuSS.py to StrippingCharm
+
+! 2015-05-16 - Andrea Contu
  - Added StrippingDstarPromptWithD02HHMuMu to StrippingCharm
 
 ! 2015-05-16 - Michael Kolpin
