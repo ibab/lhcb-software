@@ -2,6 +2,9 @@
 ! Responsible : E. Polycarpo, H. Lopes
 !----------------------------------------------------------------------------
 
+! 2015-05-17 - Michel De Cian
+ - Fix indentation error in 'ConfigureMuonPIDChecker.py'
+
 ! 2015-05-14 - Roel Aaij
  - Replace environment variable + execfile with importlib.
 

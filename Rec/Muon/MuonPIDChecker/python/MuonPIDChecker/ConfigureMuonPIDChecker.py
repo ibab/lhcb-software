@@ -70,21 +70,21 @@ class ConfigureMuonPIDChecker():
       myalg2.HistoDir = name+"/"+ext+"Down"
       myalg2.HistosOutput = 4
       if (HistosLevel == "OfflineFull"):
-    myalg1.HistosOutput = 3
-    myalg2.HistosOutput = 3
+        myalg1.HistosOutput = 3
+        myalg2.HistosOutput = 3
       if (UseMC):
-    GaudiSequencer("CheckMUONSeq").Members += [ "MuonPIDChecker/"+name+ext+"Down" ]
+        GaudiSequencer("CheckMUONSeq").Members += [ "MuonPIDChecker/"+name+ext+"Down" ]
       else:
-    GaudiSequencer("MoniMUONSeq").Members += [ "MuonPIDChecker/"+name+ext+"Down" ]
+        GaudiSequencer("MoniMUONSeq").Members += [ "MuonPIDChecker/"+name+ext+"Down" ]
 
     else:
 
       if (HistosLevel == "OfflineExpress"):
-    myalg1.HistosOutput = 2
+        myalg1.HistosOutput = 2
       if (HistosLevel == "Online"):
-    myalg1.HistosOutput = 1
+        myalg1.HistosOutput = 1
       if (HistosLevel == "None"):
-    myalg1.HistosOutput = 0
+        myalg1.HistosOutput = 0
 
     if (UseMC):
       GaudiSequencer("CheckMUONSeq").Members += [ "MuonPIDChecker/"+name+ext+"Long" ]
