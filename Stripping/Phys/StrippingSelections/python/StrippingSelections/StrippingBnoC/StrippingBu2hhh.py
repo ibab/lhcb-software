@@ -1,4 +1,4 @@
- # $Id: StrippingBu2hhh.py,v 4.0 2015-05-11 Rio team $
+ # $Id: StrippingBu2hhh.py,v 4.0 2015-05-17 Rio team $
 '''
 Module for construction of Bu->hhh from:   
    Inclusive KKK line for light decay modes (pipipi, Kpipi, KKpi and KKK) 
@@ -13,8 +13,8 @@ Exported symbols (use python help!):
 '''
 
 __author__ = ['Irina Nasteva', 'Jussara Miranda', 'Alvaro Gomes']
-__date__ = '11/05/2015'
-__version__ = '$Revision: 5.0 $'
+__date__ = '17/05/2015'
+__version__ = '$Revision: 5.1 $'
 
 __all__ = ('Bu2hhhBuilder',
            'makeKKK_incl', 
@@ -256,17 +256,140 @@ class Bu2hhhBuilder(LineBuilder) :
         self.lineKKK_incl = StrippingLine( _KKK_inclName + 'Line',
                                            prescale   = config['KKK_inclLinePrescale'],
                                            postscale  = config['KKK_inclLinePostscale'],
-                                           algos      = self.algosKKK)
+                                           algos      = self.algosKKK,
+                                           RelatedInfoTools = [
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKK : 'ConeIso05B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso05K1", "ConeIso05K2", "ConeIso05K3"],
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKK : 'ConeIso10B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso10K1", "ConeIso10K2", "ConeIso10K3"],
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKK : 'ConeIso15B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso15K1", "ConeIso15K2", "ConeIso15K3"],
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONENMULT'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKK : 'NConeIso05B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso05K1", "NConeIso05K2", "NConeIso05K3"],
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONENMULT'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKK : 'NConeIso10B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso10K1", "NConeIso10K2", "NConeIso10K3"],
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONENMULT'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKK : 'NConeIso15B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso15K1", "NConeIso15K2", "NConeIso15K3"],
+                                               }                                                                           },
+                                     ],
+)
         
         self.lineKpKpKp_incl = StrippingLine( _KpKpKp_inclName + 'Line',
                                               prescale   = config['KpKpKp_inclLinePrescale'],
                                               postscale  = config['KpKpKp_inclLinePostscale'],
-                                              algos      = self.algosKpKpKp)
+                                              algos      = self.algosKpKpKp,
+                                              RelatedInfoTools = [
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKK : 'ConeIso05B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso05K1", "ConeIso05K2", "ConeIso05K3"],
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKK : 'ConeIso10B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso10K1", "ConeIso10K2", "ConeIso10K3"],
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKK : 'ConeIso15B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso15K1", "ConeIso15K2", "ConeIso15K3"],
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONENMULT'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKK : 'NConeIso05B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso05K1", "NConeIso05K2", "NConeIso05K3"],
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONENMULT'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKK : 'NConeIso10B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso10K1", "NConeIso10K2", "NConeIso10K3"],
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONENMULT'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selKKK : 'NConeIso15B', 
+                                                   'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso15K1", "NConeIso15K2", "NConeIso15K3"],
+                                               }                                                                           },
+                                     ],
+)
         
         self.linepph_incl = StrippingLine( _pph_inclName + 'Line',
                                            prescale   = config['pph_inclLinePrescale'],
                                            postscale  = config['pph_inclLinePostscale'],
-                                           algos      = self.algospph)
+                                           algos      = self.algospph,
+                                           RelatedInfoTools = [
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selppK : 'ConeIso05B', 
+                                                   'Phys/StdAllLooseProtons'   :                                                     ["ConeIso05p1", "ConeIso05p2"],
+                                                   'Phys/StdAllNoPIDsKaons'   : 'ConeIso05K'
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selppK : 'ConeIso10B', 
+                                                   'Phys/StdAllLooseProtons'   :                                                     ["ConeIso10p1", "ConeIso10p2"],
+                                                   'Phys/StdAllNoPIDsKaons'   : 'ConeIso10K'
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selppK : 'ConeIso15B', 
+                                                   'Phys/StdAllLooseProtons'   :                                                     ["ConeIso15p1", "ConeIso15p2"],
+                                                   'Phys/StdAllNoPIDsKaons'   : 'ConeIso15K'
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONENMULT'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selppK : 'NConeIso05B', 
+                                                   'Phys/StdAllLooseProtons'   :                                                     ["NConeIso05p1", "NConeIso05p2"],
+                                                   'Phys/StdAllNoPIDsKaons'   : 'NConeIso05K'
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONENMULT'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selppK : 'NConeIso10B', 
+                                                   'Phys/StdAllLooseProtons'   :                                                     ["NConeIso10p1", "NConeIso10p2"],
+                                                   'Phys/StdAllNoPIDsKaons'   : 'NConeIso10K'
+                                               }                                                                           },
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONENMULT'],
+                                            'RecursionLevel' : 1,
+                                            'Locations' : {
+                                                   self.selppK : 'NConeIso15B', 
+                                                   'Phys/StdAllLooseProtons'   :                                                     ["NConeIso15p1", "NConeIso15p2"],
+                                                   'Phys/StdAllNoPIDsKaons'   : 'NConeIso15K'
+                                               }                                                                           },
+                                     ],
+)
         
         self.registerLine(self.lineKKK_incl)
         self.registerLine(self.lineKpKpKp_incl)
