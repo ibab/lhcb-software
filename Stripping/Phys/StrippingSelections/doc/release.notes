@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-17 - Chitsanu Khurewathanakul
+ - Fixed StrippingDitau.py in Stripping QEE
+
 ! 2015-05-17 - Irina Nasteva
  - Added vertex isolation variables and neutral cone multiplicity to StrippingBnoC/StrippingBu2hhh.py
  - Fixed a typo.
