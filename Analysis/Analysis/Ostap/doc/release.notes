@@ -8,6 +8,10 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-05-17 - Vanya Belyaev
+ - add TestKisa.py for simple parallel data processing 
+   (well, in this case just projection from TChain)
+
 !=========================== Ostap v1r7 2015-04-22 ============================
 
 ! 2015-04-19 - Vanya Belyaev

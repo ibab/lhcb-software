@@ -104,9 +104,9 @@ class Files(object):
         #
         for pattern in files :            
             for f in glob.iglob ( pattern ) :
-                if len ( files ) < self.maxfiles : self.treatFile  ( f )
+                if len ( self.files ) < self.maxfiles : self.treatFile  ( f )
                 else :
-                    logger.warning ('Maxfiles limit is reached %s ' % self.maxlimit )
+                    logger.warning ('Maxfiles limit is reached %s ' % self.maxfiles )
                     break
                 
                     
