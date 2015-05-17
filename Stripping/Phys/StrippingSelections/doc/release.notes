@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-17 - Oliver Gruenberg
+ - Updated StrippingBLVLines.py in StrippingRD
+
 ! 2015-05-16 - Andrea Contu
  - Added StrippingD2XMuMuSS.py to StrippingCharm
 
