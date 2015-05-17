@@ -6,6 +6,7 @@
 
 ! 2015-05-17 - Irina Nasteva
  - Added vertex isolation variables and neutral cone multiplicity to StrippingBnoC/StrippingBu2hhh.py
+ - Fixed a typo.
 
 ! 2015-05-17 - Oliver Gruenberg
  - Updated StrippingBLVLines.py in StrippingRD

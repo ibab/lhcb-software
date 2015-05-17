@@ -349,42 +349,42 @@ class Bu2hhhBuilder(LineBuilder) :
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
-                                                   self.selppK : 'ConeIso05B', 
+                                                   self.selpph : 'ConeIso05B', 
                                                    'Phys/StdAllLooseProtons'   :                                                     ["ConeIso05p1", "ConeIso05p2"],
                                                    'Phys/StdAllNoPIDsKaons'   : 'ConeIso05K'
                                                }                                                                           },
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
-                                                   self.selppK : 'ConeIso10B', 
+                                                   self.selpph : 'ConeIso10B', 
                                                    'Phys/StdAllLooseProtons'   :                                                     ["ConeIso10p1", "ConeIso10p2"],
                                                    'Phys/StdAllNoPIDsKaons'   : 'ConeIso10K'
                                                }                                                                           },
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
-                                                   self.selppK : 'ConeIso15B', 
+                                                   self.selpph : 'ConeIso15B', 
                                                    'Phys/StdAllLooseProtons'   :                                                     ["ConeIso15p1", "ConeIso15p2"],
                                                    'Phys/StdAllNoPIDsKaons'   : 'ConeIso15K'
                                                }                                                                           },
                                           { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
-                                                   self.selppK : 'NConeIso05B', 
+                                                   self.selpph : 'NConeIso05B', 
                                                    'Phys/StdAllLooseProtons'   :                                                     ["NConeIso05p1", "NConeIso05p2"],
                                                    'Phys/StdAllNoPIDsKaons'   : 'NConeIso05K'
                                                }                                                                           },
                                           { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
-                                                   self.selppK : 'NConeIso10B', 
+                                                   self.selpph : 'NConeIso10B', 
                                                    'Phys/StdAllLooseProtons'   :                                                     ["NConeIso10p1", "NConeIso10p2"],
                                                    'Phys/StdAllNoPIDsKaons'   : 'NConeIso10K'
                                                }                                                                           },
                                           { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
-                                                   self.selppK : 'NConeIso15B', 
+                                                   self.selpph : 'NConeIso15B', 
                                                    'Phys/StdAllLooseProtons'   :                                                     ["NConeIso15p1", "NConeIso15p2"],
                                                    'Phys/StdAllNoPIDsKaons'   : 'NConeIso15K'
                                                }                                                                           },
