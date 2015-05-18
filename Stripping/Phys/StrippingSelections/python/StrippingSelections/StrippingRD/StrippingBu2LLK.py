@@ -253,9 +253,9 @@ class Bu2LLKConf(LineBuilder) :
                                       masscut = "ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )  
 
        
-        SelB2gammaX = self._makeB2LLX(eeXLine_name + "3",
-                                      dilepton = SelPhoton,
-                                      hadrons  = [ SelKstars, SelPhis, SelLambdasLL,  SelLambdasDD, SelLambdastars  ], #it make sense not to have Ks 
+        SelB2gammaX = self._makeB2GammaX(eeXLine_name + "3",
+                                      photons = SelPhoton, 
+                                      hadrons  = [ SelKstars, SelPhis, SelLambdasLL,  SelLambdasDD, SelLambdastars  ], 
                                       params   = config,
                                       masscut  = "ADAMASS('B+') <  %(BMassWindow)s *MeV"% config )
         
@@ -316,7 +316,8 @@ class Bu2LLKConf(LineBuilder) :
         self.B2gammaXLine = StrippingLine(eeXLine_name+"Line3",
                                           prescale = config['Bu2eeKLinePrescale'],
                                           postscale = 1,
-                                          selection = SelB2eeXFromTracks,
+                                          #selection = SelB2eeXFromTracks,
+                                          selection = SelB2gammaX, 
                                           RelatedInfoTools = config['RelatedInfoTools'],
                                           FILTER = SPDFilter, 
                                           RequiredRawEvents = [],
@@ -410,7 +411,7 @@ class Bu2LLKConf(LineBuilder) :
                          RequiredSelections = [ dilepton, _Merge ]) 
 
 #####################################################
-    def _malkeB2GammaX( self, name, photons, hadrons, params, masscut = "(ADAMASS('B+')< 1500 *MeV" ):
+    def _makeB2GammaX( self, name, photons, hadrons, params, masscut = "(ADAMASS('B+')< 1500 *MeV" ):
         """
         CombineParticles / Selection for the B 
         """
@@ -422,8 +423,8 @@ class Bu2LLKConf(LineBuilder) :
         
         _Decays =  [ "[ B0 -> gamma K*(892)0 ]cc",
                      "[ B_s0 -> gamma phi(1020)]cc", 
-                     "[ Lambda_b0 -> gamma  Lambda0 ]cc]",                   
-                     "[ Lambda_b0 -> gamma Lambda(1520)0 ]cc]" ]
+                     "[ Lambda_b0 -> gamma  Lambda0]cc",                   
+                     "[ Lambda_b0 -> gamma Lambda(1520)0]cc" ]
 
         
         _Combine = CombineParticles(DecayDescriptors = _Decays,
@@ -437,7 +438,6 @@ class Bu2LLKConf(LineBuilder) :
         return Selection(name,
                          Algorithm = _Combine,
                          RequiredSelections = [ _Merge, photons ]) 
-        
 #####################################################
     def _makeMuE( self, name, params, electronid = None, muonid = None , samesign = False):
         """
