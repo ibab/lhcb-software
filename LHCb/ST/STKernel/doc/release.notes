@@ -3,6 +3,10 @@
 ! Responsible : M. Tobin
 !----------------------------------------------------------------------------
 
+! 2015-05-17 - Marco Cattaneo
+ - Fix genreflex selection warnings. Note though that some enums and functions
+   that were not being selected before are still not selected...
+
 !========================= STKernel v2r13p1 2014-07-14 ========================
 ! 2014-07-11 - Marco Clemencic
  - Minor fix to a header guard macro.

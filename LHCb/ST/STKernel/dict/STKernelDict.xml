@@ -19,13 +19,13 @@
   <struct name = "ST::ITDetectorPlot::Bins" />
   <class name = "std::pair<STTell1ID, unsigned int>" /> 
 
-  <enum pattern = "STDAQ::version" />
-  <enum pattern="STBitsPolicy::bits" />
-  <enum pattern="STBitsPolicy::masks" />
-  <function pattern="STFun::*" />
-  <function pattern= "STBoardMapping::printTTMap" />
-  <function pattern= "STBoardMapping::printITMap" />
-  <function pattern= "STBoardMapping::printUTMap" />
-  <function pattern = "STBoardMapping::find" />
+  <enum name = "STDAQ::version" />
+  <enum name = "STBitsPolicy::bits" />
+  <enum name = "STBitsPolicy::masks" />
+  <function pattern ="STFun::*" />
+  <function name = "STBoardMapping::printTTMap" />
+  <function name = "STBoardMapping::printITMap" />
+  <function name = "STBoardMapping::printUTMap" />
+  <function name = "STBoardMapping::find" />
   <function pattern = "ST::XMLUtils*" />
 </lcgdict>
