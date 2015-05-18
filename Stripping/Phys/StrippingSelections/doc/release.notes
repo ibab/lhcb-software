@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-18 - Mika Vesterinen
+ - Dictionary fix to StrippingCharm/StrippingDstarD0ToHHPi0
+
 ! 2015-05-18 - Michael Kolpin
  - Fix to StrippingTrackEffD2K(3)Pi
 

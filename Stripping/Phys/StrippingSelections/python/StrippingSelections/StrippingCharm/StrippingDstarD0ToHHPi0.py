@@ -43,7 +43,7 @@ default_config = {
             ,"Slowpion_PIDe" : 5 #adimensional
             ,"D0_APT" : 1400  #MeV
             ,"useTOS" : True  #adimensional
-            ,"useHLT" : True  #adimensional
+            ,"useHLT2" : True  #adimensional
             }
         }
     }
@@ -70,7 +70,7 @@ class DstarD0ToHHPi0AllLinesConf(LineBuilder) :
         ,"Slowpion_TRGHOSTPROB"
         ,"Slowpion_PIDe"
         ,"D0_APT"
-        ,"useHLT" 
+        ,"useHLT2" 
         ,"useTOS"
         )
     
