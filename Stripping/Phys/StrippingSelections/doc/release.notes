@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-18 - Stefano Perazzini
+ - Fixed small bug in StrippingBnoC/StrippingBc2hhh_BnoC.py
+
 ! 2015-05-18  - Adlene hicheur
  - StrippingBnoC/StrippingBc2hhh_BnoC.py: fix warning message for gecFilter, put filter as stripping line property
  

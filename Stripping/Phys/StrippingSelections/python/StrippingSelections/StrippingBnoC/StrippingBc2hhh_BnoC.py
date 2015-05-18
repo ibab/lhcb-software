@@ -500,7 +500,7 @@ class Bc2hhhBuilder(LineBuilder) :
                                                    'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso05K1", "NConeIso05K2"],
                                                    'Phys/StdAllNoPIDsPions'   : 'NConeIso05pi'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EwCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKKpi : 'NConeIso10B', 
