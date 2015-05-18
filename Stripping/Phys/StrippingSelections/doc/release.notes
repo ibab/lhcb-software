@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-18 - Roberta Cardinale
+ - Fixed small bug in RelatedInfo variables in StrippingBandQ/StrippingXic2HHH.py 
+
 ! 2015-05-18 - Stefano Perazzini
  - Fixed small bug in StrippingBnoC/StrippingBc2hhh_BnoC.py
 
