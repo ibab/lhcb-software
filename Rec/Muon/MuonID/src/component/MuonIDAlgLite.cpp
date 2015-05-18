@@ -40,9 +40,9 @@ StatusCode MuonIDAlgLite::initialize() {
   muonTool_ = tool<ICommonMuonTool>("CommonMuonTool");
   DLLTool_ = tool<DLLMuonTool>("DLLMuonTool");
   if(msgLevel(MSG::DEBUG)) debug() << "The tools have been loaded" << endmsg;
-  return StatusCode::SUCCESS;
   StatusCode scNorm = DLLTool_->calcLandauNorm();
   if ( scNorm.isFailure() ) return Error(" Normalizations of Landaus not properly set ",scNorm);
+  return StatusCode::SUCCESS;
 }
 
 /** Iterates over all tracks in the current event and performs muon id on them.
