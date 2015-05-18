@@ -143,6 +143,13 @@ default_config = {
     }
 }
 
+filter = {'Code' :
+          "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)"\
+          " < %s )" \
+          % config_params['MaxTrSIZE'],
+          'Preambulo' : [ "from LoKiTracks.decorators import *",
+                                      'from LoKiCore.functions    import *' ]
+}
 
 default_name = "Bc2hhh"
 
@@ -342,30 +349,23 @@ class Bc2hhhBuilder(LineBuilder) :
                              _probnnk     = config['_probnnk'],
                              _probnnp     = config['_probnnp'])
 
-        self.gECFilter = globalEventCutFilter(name + 'GlobalEventCutFilter', MaxTrSIZE = config['MaxTrSIZE'])
 	
         self.algospipipi = []
-        if self.gECFilter != None  : self.algospipipi.append(self.gECFilter)
         self.algospipipi.append(self.selpipipi)
 
         self.algosKpipi = []
-        if self.gECFilter != None  : self.algosKpipi.append(self.gECFilter)
         self.algosKpipi.append(self.selKpipi)
 
         self.algosKKpi = []
-        if self.gECFilter != None  : self.algosKKpi.append(self.gECFilter)
         self.algosKKpi.append(self.selKKpi)
 
         self.algosKKK = []
-        if self.gECFilter != None  : self.algosKKK.append(self.gECFilter)
         self.algosKKK.append(self.selKKK)
 
         self.algospppi = []
-        if self.gECFilter != None  : self.algospppi.append(self.gECFilter)
         self.algospppi.append(self.selpppi)
 
         self.algosppK = []
-        if self.gECFilter != None : self.algosppK.append(self.gECFilter)
         self.algosppK.append(self.selppK)	
 	
 
@@ -373,6 +373,7 @@ class Bc2hhhBuilder(LineBuilder) :
                                      prescale   = config['pipipi_exclLinePrescale'],
                                      postscale  = config['pipipi_exclLinePostscale'],
                                      algos      = self.algospipipi,
+                                     FILTER = filter,
                                      RelatedInfoTools = [
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
                                             'RecursionLevel' : 1,
@@ -418,6 +419,7 @@ class Bc2hhhBuilder(LineBuilder) :
                                      prescale   = config['Kpipi_exclLinePrescale'],
                                      postscale  = config['Kpipi_exclLinePostscale'],
                                      algos      = self.algosKpipi,
+                                     FILTER = filter,
                                      RelatedInfoTools = [
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
                                             'RecursionLevel' : 1,
@@ -468,6 +470,7 @@ class Bc2hhhBuilder(LineBuilder) :
                                      prescale   = config['KKpi_exclLinePrescale'],
                                      postscale  = config['KKpi_exclLinePostscale'],
                                      algos      = self.algosKKpi,
+                                     FILTER = filter,
                                      RelatedInfoTools = [
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
                                             'RecursionLevel' : 1,
@@ -518,6 +521,7 @@ class Bc2hhhBuilder(LineBuilder) :
                                      prescale   = config['KKK_exclLinePrescale'],
                                      postscale  = config['KKK_exclLinePostscale'],
                                      algos      = self.algosKKK,
+                                     FILTER = filter,
                                      RelatedInfoTools = [
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
                                             'RecursionLevel' : 1,
@@ -562,6 +566,7 @@ class Bc2hhhBuilder(LineBuilder) :
                                      prescale   = config['pppi_exclLinePrescale'],
                                      postscale  = config['pppi_exclLinePostscale'],
                                      algos      = self.algospppi,
+                                     FILTER = filter,
                                      RelatedInfoTools = [
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
                                             'RecursionLevel' : 1,
@@ -613,6 +618,7 @@ class Bc2hhhBuilder(LineBuilder) :
                                      prescale   = config['ppK_exclLinePrescale'],
                                      postscale  = config['ppK_exclLinePostscale'],
                                      algos      = self.algosppK,
+                                     FILTER = filter,
                                      RelatedInfoTools = [
                                           { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
                                             'RecursionLevel' : 1,
@@ -1015,21 +1021,3 @@ def makeppK_excl(name,
                        RequiredSelections = [StdNoPIDsKaons, StdLooseProtons])
 
 
-def globalEventCutFilter(name, 
-	                 MaxTrSIZE = None 
-	                 ) :
-  
-  if MaxTrSIZE == None : return None
-  
-  _code = ""
-  from Configurables import LoKi__VoidFilter as VoidFilter
-  from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
-  modules = CoreFactory('CoreFactory').Modules
-  for i in ['LoKiTracks.decorators']:
-     if i not in modules : modules.append(i)
-  if MaxTrSIZE != None : _code += "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(MaxTrSIZE)s )" %locals()
-
-  globalFilter= VoidFilter(name)
-  globalFilter.Code = _code
-  
-  return globalFilter
