@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-05-18 - Michel De Cian
+ - Add VeloTT tracks to the collection of tracks to be fitted in HLT2 part of reco.
+
 ! 2015-04-28 - Sascha Stahl
  - Fixed configuration of TrackStateInitTool to be inline with the Hlt tracking sequence 
    and added track chi2/ndf<3 cut for Hlt1 Forward tracks (in RecoTrackingRun2.py).

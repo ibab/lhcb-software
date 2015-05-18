@@ -302,6 +302,9 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    # complete the list of track lists
    if "FastVelo" in trackAlgs :
       tracklists += ["Rec/Track/Velo"]
+
+   if "VeloTT" in trackAlgs :
+      tracklists += ["Rec/Track/VeloTT"]
       
    # create the best track creator
    from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter  
