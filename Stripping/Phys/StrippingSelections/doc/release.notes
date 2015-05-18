@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-18 - Michael Kolpin
+ - Fix to StrippingTrackEffD2K(3)Pi
+
 ! 2015-05-18 - Roberta Cardinale
  - Fixed small bug in RelatedInfo variables in StrippingBandQ/StrippingXic2HHH.py 
 

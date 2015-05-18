@@ -27,7 +27,7 @@ default_config = {
         'NAME'        : 'TrackEffD0ToKPi',
         'WGs'         : ['ALL'],
         'BUILDERTYPE' : 'TrackEffD0ToKPiAllLinesConf',
-        'STREAMS':["Charm"],
+        'STREAMS':["Calibration"],
         'CONFIG'      : {
             "VeloLineForTiming":False,
             "VeloFitter":"SimplifiedGeometry",
@@ -44,9 +44,7 @@ default_config = {
             "Pion_MAX_PIDK":20,
             "Dst_M_MAX":2030,
             "Dst_DTFCHI2_MAX":3
-            },
-        'STREAMS' : ["Calibration"]
-        
+            }
     }
 
 
@@ -106,21 +104,21 @@ class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
         
         ##################### MAKE THE LINES #############
         
-        self.MissingPion2BodyLine = self.MakeLine("MissingPion2Body",
+        self.MissingPion2BodyLine = self.MakeLine(name+"MissingPion2Body",
                                                   ['[D0 -> K- pi+]cc','[D~0 -> K+ pi+]cc'], 
                                                   ["[D*(2010)+ -> D0 pi+]cc"],
                                                   [self.SelLongKaons,self.VeloPions])
         
-        self.MissingKaon2BodyLine = self.MakeLine("MissingKaon2Body",
+        self.MissingKaon2BodyLine = self.MakeLine(name+"MissingKaon2Body",
                                                   ['[D0 -> K+ pi+]cc','[D~0 -> K+ pi-]cc'], 
                                                   ["[D*(2010)+ -> D0 pi+]cc"],
                                                   [self.SelLongPions,self.VeloKaons])
                 
         if config["VeloLineForTiming"] == True:
-            self.registerLine(StrippingLine('SelLongKaonsLine', selection = self.SelLongKaons))
-            self.registerLine(StrippingLine('SelLongPionsLine', selection = self.SelLongPions))
-            self.registerLine(StrippingLine('VeloPionLine', selection = self.VeloPions))
-            self.registerLine(StrippingLine('VeloKaonLine', selection = self.VeloKaons))
+            self.registerLine(StrippingLine(name+'SelLongKaonsLine', selection = self.SelLongKaons))
+            self.registerLine(StrippingLine(name+'SelLongPionsLine', selection = self.SelLongPions))
+            self.registerLine(StrippingLine(name+'VeloPionLine', selection = self.VeloPions))
+            self.registerLine(StrippingLine(name+'VeloKaonLine', selection = self.VeloKaons))
         self.registerLine(self.MissingPion2BodyLine)
         self.registerLine(self.MissingKaon2BodyLine)        
         
@@ -188,7 +186,7 @@ class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
         preve = TrackStateInitAlg("For%sInitSeedFit"%self.name,TrackLocation = self.VeloTrackOutputLocation)
         preve.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
         copyVelo = TrackContainerCopy( "For%sCopyVelo"%self.name )
-        copyVelo.inputLocations = self.VeloTrackOutputLocation
+        copyVelo.inputLocations = [self.VeloTrackOutputLocation]
         copyVelo.outputLocation = self.FittedVeloTrackOutputLocation
         
         ### fitting

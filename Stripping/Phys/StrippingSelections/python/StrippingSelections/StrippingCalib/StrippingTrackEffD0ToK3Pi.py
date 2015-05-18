@@ -28,7 +28,7 @@ default_config = {
         'NAME'        : 'TrackEffD0ToK3Pi',
         'WGs'         : ['ALL'],
         'BUILDERTYPE' : 'TrackEffD0ToK3PiAllLinesConf',
-        'STREAMS':["Charm"],
+        'STREAMS':["Calibration"],
         'CONFIG'      : {
             "HLT2" : "HLT_PASS_RE('Hlt2.*CharmHad.*HHX.*Decision')",
             "TTSpecs" : {'Hlt2.*CharmHad.*HHX.*Decision%TOS':0},
@@ -46,8 +46,7 @@ default_config = {
             "VeloMINIP":0.05*mm,
             "Kaon_MIN_PIDK":7,
             "Pion_MAX_PIDK":4
-            },
-        'STREAMS' : ["Calibration"]
+            }
     }
 class TrackEffD0ToK3PiAllLinesConf(LineBuilder) :
     
@@ -317,7 +316,7 @@ class TrackEffD0ToK3PiAllLinesConf(LineBuilder) :
         preve = TrackStateInitAlg("For%sInitSeedFit"%self.name,TrackLocation = self.VeloTrackOutputLocation)
         preve.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
         copyVelo = TrackContainerCopy( "For%sCopyVelo"%self.name )
-        copyVelo.inputLocations = self.VeloTrackOutputLocation
+        copyVelo.inputLocations = [self.VeloTrackOutputLocation]
         copyVelo.outputLocation = self.FittedVeloTrackOutputLocation
         
         ### fitting
