@@ -88,7 +88,7 @@ default_config = {
         'Hlt1Filter': None,
         'Hlt2Filter': None,
         # Fraction of candidates to randomly throw away before stripping
-        'PrescaleXic2PKKPi': 1.0,
+        'PrescaleXic2PKKPi': 0.0,
         # Fraction of candidates to randomly throw after before stripping
         'PostscaleXic2PKKPi': 1.0
     }

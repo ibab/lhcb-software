@@ -113,12 +113,12 @@ default_config = {
         'Hlt1Filter': None,
         'Hlt2Filter': None,
         # Fraction of candidates to randomly throw away before stripping
-        'PrescaleLambdac2PKPi': 1.0,
-        'PrescaleLambdac2PKK': 1.0,
-        'PrescaleLambdac2PPiPi': 1.0,
-        'PrescaleLambdac2PPiKWS': -1.0,
-        'PrescaleSigmacz2LambdacPi': 1.0,
-        'PrescaleSigmacpp2LambdacPi': 1.0,
+        'PrescaleLambdac2PKPi': 0.0,
+        'PrescaleLambdac2PKK': 0.0,
+        'PrescaleLambdac2PPiPi': 0.0,
+        'PrescaleLambdac2PPiKWS': 0.0,
+        'PrescaleSigmacz2LambdacPi': 0.0,
+        'PrescaleSigmacpp2LambdacPi': 0.0,
         # Fraction of candidates to randomly throw after before stripping
         'PostscaleLambdac2PKPi': 1.0,
         'PostscaleLambdac2PKK': 1.0,

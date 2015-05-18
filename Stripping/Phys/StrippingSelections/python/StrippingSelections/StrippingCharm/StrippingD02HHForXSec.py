@@ -82,10 +82,10 @@ default_config = {
         'Hlt1Filter': None,
         'Hlt2Filter': None,
         # Fraction of candidates to randomly throw away before stripping
-        'PrescaleD02HH': 1.0,
-        'PrescaleDstar2D0Pi_D02HH': 1.0,
-        'PrescaleDstar2D0Pi0Merged_D02HH': 1.0,
-        'PrescaleDstar2D0Pi0Resolved_D02HH': 1.0,
+        'PrescaleD02HH': 0.0,
+        'PrescaleDstar2D0Pi_D02HH': 0.0,
+        'PrescaleDstar2D0Pi0Merged_D02HH': 0.0,
+        'PrescaleDstar2D0Pi0Resolved_D02HH': 0.0,
         # Fraction of candidates to randomly throw after before stripping
         'PostscaleD02HH': 1.0,
         'PostscaleDstar2D0Pi_D02HH': 1.0,

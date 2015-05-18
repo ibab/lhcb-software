@@ -3,8 +3,12 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2015-05-18 - Andrea Contu
+ - Prescaling to zero charm cross section lines until more suitable tuning is provided
+
 ! 2015-05-18 - Yasmine Amhis 
-  Fix gamma lines for StrippingRD/StrippingBu2LLK 
+ - Fix gamma lines for StrippingRD/StrippingBu2LLK 
 
 ! 2015-05-18 - Mika Vesterinen
  - Dictionary fix to StrippingCharm/StrippingDstarD0ToHHPi0

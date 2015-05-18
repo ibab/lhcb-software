@@ -109,9 +109,9 @@ default_config = {
         'Hlt1Filter': None,
         'Hlt2Filter': None,
         # Fraction of candidates to randomly throw away before stripping
-        'PrescaleDp2PhiPi': 1.0,
-        'PrescaleDs2PhiPi': 1.0,
-        'PrescaleDsstar2DsGamma': 1.0,
+        'PrescaleDp2PhiPi': 0.0,
+        'PrescaleDs2PhiPi': 0.0,
+        'PrescaleDsstar2DsGamma': 0.0,
         # Fraction of candidates to randomly throw after before stripping
         'PostscaleDp2PhiPi': 1.0,
         'PostscaleDs2PhiPi': 1.0,
