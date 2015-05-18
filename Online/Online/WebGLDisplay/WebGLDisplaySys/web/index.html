@@ -42,7 +42,7 @@
       var renderer;
       //if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
       if ( !software )
-        renderer = new THREE.WebGLRenderer( {preserveDrawingBuffer: true}); //  {antialias: true} { clearColor: 0x000000, clearAlpha: 1 } 
+        renderer = new THREE.WebGLRenderer( {antialias: true, preserveDrawingBuffer: true, clearColor: 0x000000, clearAlpha: 1  }); //  {antialias: true} { clearColor: 0x000000, clearAlpha: 1 } 
       else 
         renderer = new THREE.CanvasRenderer();
 
@@ -105,9 +105,9 @@
       eventtime.style.padding = '5px';
       document.body.appendChild(eventtime);
 
-      var cycletime = 5000;
-      var updatetime = 2000;
-      var autoupdate = false;
+      //var cycletime = 5000;
+      var updatetime = 3000;//try all 3 sec
+      //var autoupdate = true;
       var autorotate = false;
       var displaydetector = true && !software;
       //var displaylogo = false && !software;
@@ -115,7 +115,7 @@
       var wiremode = false;
 
       //global material definitions
-      var otmaterial = new THREE.LineBasicMaterial( { color: 0x0000a0, opacity: 1.0, linewidth: 1, visible: true } );
+      var otmaterial = new THREE.LineBasicMaterial( { color: 0x0000a0, opacity: 1.0, linewidth: 1, visible: false } );
       var itmaterial = new THREE.LineBasicMaterial( { color: 0xa000a0, opacity: 1.0, linewidth: 1 } );
       var ttmaterial = new THREE.LineBasicMaterial( { color: 0xa000a0, opacity: 1.0, linewidth: 1 } );
       var velomaterial = new THREE.LineBasicMaterial( { color: 0xa000a0, opacity: 1.0, linewidth: 1 } );
@@ -142,10 +142,11 @@
 
       var detectoralpha = 0.04;
       //var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: true, transparent: true, opacity: detectoralpha });
-      //var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, blending: THREE.CustomBlending, blendEquation: THREE.MaxEquation, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: true, transparent: true, opacity: detectoralpha });
+      //var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, blending: THREE.CustomBlending, blendEquation: THREE.MaxEquation, shading: THREE.FlatShading, wireframe: wiremode, overdraw: true, doubleSided: false, transparent: true, opacity: detectoralpha });
       //var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, blending: THREE.AdditiveBlending, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: true, transparent: true, opacity: detectoralpha });
-      var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, blending: THREE.AdditiveBlending, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: true, transparent: true, opacity: detectoralpha });
-
+      //var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, blending: THREE.AdditiveBlending, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: true, transparent: true, opacity: detectoralpha });
+      var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, blending: THREE.NormalBlending, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: false, transparent: true, opacity: detectoralpha });
+      //THREE.NormalBlending
       var controls = new THREE.OrbitControls( camera, renderer.domElement );
       controls.target.set( 0.0, 0.0, 8.5);
       //controls.addEventListener( 'change', render );
@@ -214,9 +215,13 @@
       scene.add(directionalLightb);
 
 
-      var currentevent = -1;
-      var allevents = [];
-      var refreshInterval // Used to set/reset the refresh interval
+      var currentevent = 0;
+      //var allevents = [];
+     //this contains names of the currently available events on the server, first event is current
+     var eventlist = [];
+     //this is the current event
+     var theevent = {};
+
 
       stats = new Stats();
       stats.domElement.style.position = 'absolute';
@@ -231,8 +236,8 @@
       window.addEventListener( 'resize', onWindowResize, false );
       //document.addEventListener( 'keydown', onKeyDown, false );
 
-      var prevevent = false;
-      var nextevent = false;
+      //var prevevent = false;
+      //var nextevent = false;
 
       var gui = new dat.GUI();
       var params = {
@@ -241,7 +246,7 @@
         velohits: true, 
         tthits: true, 
         ithits: true, 
-        othits: true, 
+        othits: false, 
         ecalhits: true, 
         hcalhits: true, 
         muonhits: true, 
@@ -250,11 +255,7 @@
         rotate: autorotate,
         center : "Tracker",
         view : "Perspective",
-        screenshot: function() { window.open(renderer.domElement.toDataURL("image/jpeg")); },
-        public: function() { window.open("http://lhcb-public.web.cern.ch/lhcb-public"); },
-        next: function() { nextevent = true; },
-        prev: function() { prevevent = true; },
-        update: autoupdate,
+        update: true, //autoupdate,        
         alpha: detectoralpha,
         picolor: "#ff8000",
         //picolor: "#5a5a5a",
@@ -262,12 +263,37 @@
         pcolor: "#ff00ff",
         mucolor: "#00ff00",
         ecolor: "#0505ff",
+        bkgcolor: "#000000",
+        detcolor: "#ffffff",
         width: 2.0,
         pvs: true,
         vtracks: true,
         fourprongs: true,
         threeprongs: false,
-        twoprongs: false
+        twoprongs: false,
+        //screenshot: function() { window.open(renderer.domElement.toDataURL("image/jpeg")); },
+        screenshot: function() { 
+          window.open(renderer.domElement.toDataURL("image/png")); 
+        },
+        public: function() { 
+          window.open("http://lhcb-public.web.cern.ch/lhcb-public"); 
+        },
+        next: function() { 
+          params.update = false; 
+          if (currentevent < eventlist.length-1)
+	    currentevent += 1;
+	  else
+	    currentevent = 0;
+	  loadevent(eventlist[currentevent]);
+        },
+        prev: function() { 
+          params.update = false; 
+          if (currentevent > 0)
+	    currentevent -= 1;
+	  else
+	    currentevent = eventlist.length-1;
+	  loadevent(eventlist[currentevent]);
+        }
       };
 
       var epublic = gui.add(params, "public").name("LHCb public page");       
@@ -275,17 +301,9 @@
       //epublic.domElement.parentNode.parentNode.style.backgroundImage = "url(logo20.png)";
       //epublic.domElement.parentNode.parentNode.style.backgroundRepeat = "no-repeat";
       var fev = gui.addFolder('Event navigation');
-      var eupdate = fev.add(params, "update").name("Online mode").onChange( function() { autoupdate = params.update;
-          if (autoupdate) {
-              refreshInterval = setInterval(function () {
-                  checkforupdates("events/events.json");
-              }, 100000);
-          } else {
-              clearInterval(refreshInterval)
-          }
-      } );
-      var enext = fev.add(params, "next").name("Next event"); 
-      var eprev = fev.add(params, "prev").name("Previous event"); 
+      var eupdate = fev.add(params, "update").name("Online mode").listen();//.onChange( function() { autoupdate = params.update; } );
+      var enext = fev.add(params, "next").name("Next event");
+      var eprev = fev.add(params, "prev").name("Previous event");
 
       epublic.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
       eupdate.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
@@ -312,7 +330,6 @@
           controls.target.set( 0.0, 0.0, 8.5);
         if (params.center=="Calorimeter")
           controls.target.set( 0.0, 0.0, 13.5);
-
         if (params.view=="Top")
           camera.position.set(0.0, 5.0, controls.target.z);
         if (params.view=="Side")
@@ -337,7 +354,7 @@
             controls.target.set( 0.0, 0.0, 8.5);
           if (params.center=="Calorimeter")
             controls.target.set( 0.0, 0.0, 13.5);
-          controls.noPan = true;
+          controls.noPan = true;//true
           controls.noRotate = false;
           controls.autoRotate = autorotate;
           controls.update();
@@ -376,12 +393,19 @@
           controls.update();
         }
       });
+      var ebkgcolor = fvis.addColor(params, "bkgcolor").name("Bkg. color").onChange( function() { renderer.setClearColor( params.bkgcolor, 1 ); } );
       var escreenshot = fvis.add(params, "screenshot").name("Screenshot"); 
       fvis.open();
 
       var fdet = gui.addFolder('Detector');      
       var edetector = fdet.add(params, "detector").name("Detector model").onChange( function() { displaydetector = params.detector;});
       var ealpha = fdet.add(params, "alpha", 0, 1.0).name("Det. opacity").onChange( function() { detectoralpha = params.alpha; detectormaterial.opacity = params.alpha; } );
+      //
+      var edetcolor = fdet.addColor(params, "detcolor").name("Det. color").onChange( function() { 
+      //detectormaterial.  params.detcolor; 
+      detectormaterial.color.setHex(params.detcolor.replace( '#','0x' ));
+      } );
+
       var ewire = fdet.add(params, "wire").name("Wireframe mode").onChange( function() { 
         wiremode = params.wire; 
         detectormaterial.wireframe = wiremode;
@@ -441,7 +465,7 @@
 
 
       var timebefore = -1.0;
-      var cycledelta = 0.0;
+      //var cycledelta = 0.0;
       var updatedelta = 0.0;
 
       //render function
@@ -460,58 +484,22 @@
 	else
 	  {
 	    var dt = timenow - timebefore;
-	    cycledelta += dt;
+	    //cycledelta += dt;
 	    updatedelta += dt;
 	    timebefore = timenow;
 	  }
-        if (currentevent < 0 && allevents.length > 0)
-        {
-          currentevent = 0;
-          addtoscene(currentevent);
-        }
 
-	if (updatedelta > updatetime && autoupdate)
+	if (updatedelta > updatetime && params.update)//autoupdate)
 	{
-	  //alert("checking");
-	  checkforupdates("events/events.json");
 	  updatedelta = 0.0;
-	  if (currentevent >=0 && currentevent < allevents.length)
-	    removefromscene(currentevent);
-	  //display new event
-	  if (allevents.length>0)
-	  currentevent = allevents.length-1;
-	  addtoscene(currentevent);
-	}
-	//if ((cycledelta > cycletime && autoupdate) || prevevent || nextevent)
-	if (prevevent || nextevent)
-	{//change event every 3 seconds
-	  if (currentevent >=0 && currentevent < allevents.length)
-	    removefromscene(currentevent);
-
-	  if (nextevent)
-	    currentevent++;
-	  else if (prevevent)
-	    currentevent--;
-	  else
-	    currentevent++;
-
-	  if (currentevent >= allevents.length)
-	    currentevent = allevents.length-1;
-	  if (currentevent < 0)
-	    currentevent = 0;
-
-	  //display new event
-	  addtoscene(currentevent);
-
-          cycledelta = 0.0;
-	  prevevent = false;
-	  nextevent = false;
+	  loadeventlist("events/events.json");
 	}
 
         renderer.render(scene, camera);
       };
 
-     function checkforupdates( name ) {
+     //load names of events into eventlist, first event is to be displayed, remaining events can be traversed via next/prev
+     function loadeventlist( name ) {//this is polled every X seconds
         var namefile = new XMLHttpRequest();
 	var fname = name+"?hash="+Math.floor(Math.random()*1.0e+10);
         namefile.open("GET", fname, true);
@@ -520,18 +508,22 @@
             if (namefile.status == 200 || namefile.status == 0) {
               var parsedname = JSON.parse(namefile.responseText);            
               var i = 0;
+	      if (parsedname.length > 0)
+	        eventlist = [];
               for (i in parsedname)
               {
-	        var newevent = true;
-                for (var j=0; j<allevents.length; j++)
-	          if (allevents[j].fileName == parsedname[i])
-                  { 
-		    newevent = false; 
-		    break; 
-		  }
-                if (newevent)
-                  loadEvent(parsedname[i]);
+	        eventlist.push(parsedname[i]);
               }      
+	      //alert(theevent.fileName+":"+eventlist[0]);
+              if (eventlist.length > 0 && theevent.fileName != eventlist[0])
+	      {
+	        //alert(theevent.fileName+":"+eventlist[0]);
+	        currentevent = 0;
+	        loadevent(eventlist[currentevent]);
+	      }
+	      //else
+	      //  alert("SAME");
+
             }
             else
               alert("Error loading file "+name+"\n");
@@ -540,24 +532,24 @@
         namefile.send(null);       
      };
 
-      function addtoscene(number) {
+     //remove current event from scene    
+      function addtoscene( ) {
 	  var i =0;
-	  for (i in allevents[number].lines)
-	    scene.add(allevents[number].lines[i]);
-	  for (i in allevents[number].meshes)
-	    scene.add(allevents[number].meshes[i]);        
-          runnumber.innerHTML = "Run number: "+allevents[number].runNumber; 
-          //runnumber.innerHTML = "Run number: "+allevents[number].fileName; 
-	  eventnumber.innerHTML = "Event number: "+allevents[number].eventNumber;
-          eventtime.innerHTML = "Time: "+allevents[number].time;
+	  for (i in theevent.lines)
+	    scene.add(theevent.lines[i]);
+	  for (i in theevent.meshes)
+	    scene.add(theevent.meshes[i]);        
+          runnumber.innerHTML = "Run number: "+theevent.runNumber; 
+	  eventnumber.innerHTML = "Event number: "+theevent.eventNumber;
+          eventtime.innerHTML = "Time: "+theevent.time;
       };
 
-      function removefromscene(number) {
-        var i =0;
-        for (i in allevents[number].lines)
-          scene.remove(allevents[number].lines[i]);
-        for (i in allevents[number].meshes)
-          scene.remove(allevents[number].meshes[i]);        
+      function removefromscene( ) {
+        var i=0;
+        for (i in theevent.lines)
+          scene.remove(theevent.lines[i]);
+        for (i in theevent.meshes)
+          scene.remove(theevent.meshes[i]);        
       };
 
       function onWindowResize() {    
@@ -567,27 +559,7 @@
         //controls.handleResize();      
       };
 
-      function loadNames( name ) {
-        var namefile = new XMLHttpRequest();
-        namefile.open("GET", name, true);
-        namefile.onreadystatechange = function() {
-          if (namefile.readyState == 4) {
-            if (namefile.status == 200 || namefile.status == 0) {
-              var parsedname = JSON.parse(namefile.responseText);            
-              var i = 0;
-              for (i in parsedname)
-              {
-                loadEvent(parsedname[i]); 
-              }      
-           }
-            else
-              alert("Error loading file "+name+"\n");
-          }
-        }
-        namefile.send(null);
-      };
-
-      function loadEvent( filename ) {
+      function loadevent( filename ) {
         var jsonfile = new XMLHttpRequest();
         jsonfile.open("GET", filename, true);
         jsonfile.onreadystatechange = function() {
@@ -922,20 +894,34 @@
               }
 	      event["lines"] = alllines;
 	      event["meshes"] = allmeshes;
-	      allevents.push(event);
+	      //allevents.push(event);
+	      removefromscene();
+	      theevent = event;
+	      addtoscene(); 
             }
-            else
-              alert("Error loading file "+filename+"\n");
+            //else
+	    //{
+	    //  params.update = true; 
+	    //  autoupdate = true; 
+	    //}
+            //  alert("Error loading file "+filename+"\n");
           }
+          //else
+	  //{
+	  //  params.update = true; 
+	  //  autoupdate = true; 
+	  //}
         }
         jsonfile.send(null);
+	//return 0;
       };
       
-      checkforupdates("events/events.json");
+      //checkforupdates("events/events.json");
       //loadNames("events/events.json")
+      //updateevents("events/events.json");
+      loadeventlist("events/events.json");
       
       render();
-
       </script>
     </body>
 </html>
