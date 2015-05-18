@@ -127,7 +127,7 @@ DaVinci().EvtMax = 10000
 DaVinci().PrintFreq = 2000
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
-#DaVinci().appendToMainSequence( [ ac ] )
+DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
 DaVinci().ProductionType = "Stripping"
 DaVinci().DataType  = "2012"
