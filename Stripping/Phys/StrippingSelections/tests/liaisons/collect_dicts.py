@@ -10,12 +10,19 @@ from __init__ import _selections
 
 save_dicts = True # Set to False if does not want to save dictionaries in an output file!
 
+err_str = ''
 _dict = {}
 for _sel in _selections:
-  _sModule = __import__( '%s' % _sel, globals(), locals(), ['default_config'])
-  _name = _sModule.default_config['NAME']
-  del _sModule.default_config['NAME']
-  _dict[_name] = _sModule.default_config
+  try:
+    _sModule = __import__( '%s' % _sel, globals(), locals(), ['default_config'])
+  except:
+    err_str += 'No default_config found for %s module! Skipping...\n' % _sel
+  try:
+    _name = _sModule.default_config['NAME']
+    del _sModule.default_config['NAME']
+    _dict[_name] = _sModule.default_config
+  except:
+    err_str += 'No NAME key found for default_config in %s module! Skipping...\n' % _sel
 
 if save_dicts:
   _output = open('dictionaries.py','w')
@@ -28,3 +35,5 @@ for key in _dict.keys():
 if save_dicts:
   _output.close()
 
+if len(err_str)>1:
+  print 'WARNINGS:\n'+err_str
