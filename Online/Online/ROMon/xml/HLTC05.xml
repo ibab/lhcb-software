@@ -30,9 +30,6 @@
    <Node name="hltc0526"   type="HLTWorker"/>
    <Node name="hltc0527"   type="HLTWorker"/>
    <Node name="hltc0528"   type="HLTWorker"/>
-   <Node name="hltc0529"   type="HLTWorker"/>
-   <Node name="hltc0530"   type="HLTWorker"/>
-   <Node name="hltc0531"   type="HLTWorker"/>
   </NodeList>
 </TaskInventory>
 

@@ -29,6 +29,7 @@
    <Node name="hltd0125"   type="HLTWorker"/>
    <Node name="hltd0126"   type="HLTWorker"/>
    <Node name="hltd0127"   type="HLTWorker"/>
+   <Node name="hltd0128"   type="HLTWorker"/>
   </NodeList>
 </TaskInventory>
 

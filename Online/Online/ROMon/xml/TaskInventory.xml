@@ -67,6 +67,7 @@
 <TaskList name="FMC">
  <Task name="tmSrv_u"/>
  <Task name="fmcLog"/>
+ <Task name="cmSrv_u"/>
  <Task name="pingSrv_u"/>
 <!--
  <Task name="fsSrv_u"/>
@@ -82,10 +83,14 @@
 </TaskList>
 
 <TaskList name="StandardHLT">
+ <Task name="flukamon"/>
+ <Task name="diracmon"/>
  <Task name="TANServ"/>
  <Task name="ROcollect"/>
  <Task name="LogGaudiSrv"/>
- <Task name="LogRecoSrv"/>
+ <Task name="LogLHCb1Srv"/>
+ <Task name="LogLHCb2Srv"/>
+ <Task name="LogLHCbASrv"/>
 </TaskList>
 
 <TaskList name="ControlsPC">
@@ -286,10 +291,17 @@
   <Task name="LogDef"/>
   <Task name="LogSumDefSrv"/>
   <Task name="LogGaudi"/>
+  <Task name="LogLHCb1"/>
+  <Task name="LogLHCb2"/>
+  <Task name="LogLHCbA"/>
   <Task name="LogGaudiSumSrv"/>
-  <Task name="LogRecoSumSrv"/>
+  <Task name="LogLHCb1SumSrv"/>
+  <Task name="LogLHCb2SumSrv"/>
+  <Task name="LogLHCbASumSrv"/>
   <Task name="LogPVSS"/>
   <Task name="LogPVSSSrv"/>
+  <Task name="TorrentPublish"/>
+  <Task name="TorrentLoader"/>
   <ConnectionList name="ControlsPC"/>
   <Project name="&lt;NODE&gt;"/>
   <!-- 
@@ -303,7 +315,9 @@
   <TaskList name="ControlsPC"/>
   <Task name="LogGaudi"/>
   <Task name="LogGaudiSumSrv"/>
-  <Task name="LogRecoSumSrv"/>
+  <Task name="LogLHCb1SumSrv"/>
+  <Task name="LogLHCb2SumSrv"/>
+  <Task name="LogLHCbASumSrv"/>
   <Task name="LogPVSS"/>
   <Task name="LogPVSSSrv"/>
   <ConnectionList name="ControlsPC"/>
@@ -316,7 +330,9 @@
   <TaskList name="ControlsPC"/>
   <Task name="LogGaudi"/>
   <Task name="LogGaudiSumSrv"/>
-  <Task name="LogRecoSumSrv"/>
+  <Task name="LogLHCb1SumSrv"/>
+  <Task name="LogLHCb2SumSrv"/>
+  <Task name="LogLHCbASumSrv"/>
   <Task name="LogPVSS"/>
   <Task name="LogPVSSSrv"/>
   <ConnectionList name="ControlsPC"/>
@@ -325,9 +341,7 @@
 <NodeType name="HLTWorker">
   <TaskList name="FMC"/>
   <TaskList name="StandardHLT"/>
-<!--
-  <Task name="MBMMON_0"/>
--->
+  <Task name="TorrentLoader"/>
   <ConnectionList name="Standard"/>
   <ConnectionList name="StorageReceiver"/>
 </NodeType>
@@ -338,7 +352,6 @@
   <TaskList name="ControlsPC"/>
   <Task name="LogGaudi"/>
   <Task name="LogGaudiSumSrv"/>
-  <Task name="LogRecoSumSrv"/>
   <Task name="LogPVSS"/>
   <Task name="LogPVSSSrv"/>
   <ConnectionList name="ControlsPC"/>
@@ -459,9 +472,6 @@
   <Task name="LogGaudiSrv"/>
   <Task name="LogGaudiSumSrv"/>
   <Task name="LogSumDefSrv"/>
-  <Task name="LogReco"/>
-  <Task name="LogRecoSrv"/>
-  <Task name="LogRecoSumSrv"/>
   <Project name="LBECSINFO"/>
   <Connection name="ecs01"/>
   <Connection name="ecs03"/>
