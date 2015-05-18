@@ -263,4 +263,23 @@ void SummaryBase::summaryINFO( const LHCb::RichSmartID id,
   }
 }
 
+TH2D* SummaryBase::getHPDImageHist( const LHCb::RichSmartID& smartID ) 
+{
+  TH2D* hist(NULL);
+    
+  PD2Histo::iterator iHist = m_histo.find(smartID);
+
+  if ( UNLIKELY( iHist == m_histo.end() ) )
+  {
+    warning() << "Failed to get image histogram for HPD " << smartID.toString()
+              << endmsg ;
+  }
+  else
+  {
+    hist = (TH2D*) iHist->second ;
+  }
+
+  return hist;
+}
+
 //=============================================================================

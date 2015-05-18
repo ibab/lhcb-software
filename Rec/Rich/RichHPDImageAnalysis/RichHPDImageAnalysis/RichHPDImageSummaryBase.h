@@ -81,6 +81,10 @@ namespace Rich
                                     const double x0,
                                     const double y0 ) const ;
 
+      /// Get 2D image histograms, given a smart ID
+      TH2D* getHPDImageHist( const LHCb::RichSmartID& smartID ) ;
+
+
     private:
 
       /// Minimum number of hits required in HPD

@@ -4,6 +4,9 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2015-05-18 - Jibo He
+ - Added function in the base class, to return image hists for given smart ID.
+
 !========================= RichHPDImageAnalysis v1r15 2015-04-21 =====================
 ! 2015-04-09 - Chris Jones
  - Make a new base class for the HPD Image analysis algorithm, that implements
