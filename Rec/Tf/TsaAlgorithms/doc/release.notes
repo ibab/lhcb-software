@@ -4,7 +4,11 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
-!========================= TsaAlgorithms v3r28 2013-07-18 =========================
+! 2015-05-18 - Marco Cattaneo
+ - Fix typo in name of nClus2 property of STCosmicsFilter (nClus1 was declared
+   twice and associated to both m_nClus1 and m_nClus2 variables)
+
+!========================= TsaAlgorithms v3r28 2013-07-18 ========================
 ! 2013-06-05 - Marco Cattaneo
  - STCosmicsFilter moved here, from ST/STAlgorithms
 

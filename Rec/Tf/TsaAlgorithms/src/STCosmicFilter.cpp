@@ -43,7 +43,7 @@ STCosmicFilter::STCosmicFilter( const std::string& name,
   declareProperty("highThreshold", m_highChargeThreshold = 15.0);
   declareProperty("maxClusters", m_maxClusters = 1000);
   declareProperty("nClus1", m_nClus1 = 50);
-  declareProperty("nClus1", m_nClus2 = 7);
+  declareProperty("nClus2", m_nClus2 = 7);
   declareProperty("xWindow", m_xWindow = 3.0);
 }
 
