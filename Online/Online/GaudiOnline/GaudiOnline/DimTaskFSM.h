@@ -25,31 +25,46 @@ namespace LHCb  {
     *  
     * These FSMs look like this:
     *
+    *
     *                     +----------+                        
     *                     |  UNKNOWN |                      
     *                     +----------+                         
-    *                         |    ^                  
-    *            DimTaskFSM() |    | unload()
-    *                         v    |                  
+    *                         |  ^                  
+    *            DimTaskFSM() |  | unload()
+    *                         |  |        
+    *                         v  |                  
     *                     +----------+       +---------+
     *                     | NOT_READY|<------+  ERROR  |<------+
     *                     +----------+       +---------+       |
     *                         |  ^                             |
     *                         |  |                             |
     *              configure()|  |reset()              error() |
+    *                         |  |                             |
+    *                         |  |                             |
     *                         V  |                             |
-    *                     +----------+                         |
-    *                     | READY    |                         |
-    *                     +----------+                         |
-    *                         |  ^                             |
-    *                         |  |                             |
-    *                 start() |  | stop()                      |
-    *                         |  |                             |
-    *            pause()      V  |                             |
-    * +--------+ <------- +-----------+                        |
-    * | PAUSED |          | RUNNING   |------------------------+
-    * +--------+ -------> +-----------+
-    *            continue()
+    *        activate()   +----------+                         |
+    *      +--------------| READY    |                         |
+    *      |              +----------+                         |
+    *      |                  |  ^                             |
+    *      V                  |  |                             |
+    *  +---------+            |  |                             |
+    *  | ACTIVE  |            |  |                             |
+    *  +---------+            |  |                             |
+    *      |                  |  |                             |
+    *      |          start() |  | stop()                      |
+    *      |                  V  |                             |
+    *      | go()         +-----------+                        |
+    *      +------------->| RUNNING   |------------------------+
+    *                     +-----------+
+    *                         |  ^                             
+    *                         |  |                             
+    *               pause()   |  |  continue()                             
+    *                         |  |                             
+    *                         V  |                             
+    *                     +-----------+
+    *                     | PAUSED    |
+    *                     +-----------+
+    *
     *
     * 
     * @author  M.Frank
@@ -151,6 +166,10 @@ namespace LHCb  {
 
     /// Start the application
     virtual StatusCode start();
+    /// Callback on "activate" command
+    virtual StatusCode activate();
+    /// Callback on "go" command
+    virtual StatusCode go();
     /// Restart the application
     virtual StatusCode restart();
     /// Stop the application

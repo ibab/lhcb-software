@@ -4,5 +4,5 @@ Runable.Directory                    = "/localdisk/hlt1";
 Runable.FilePrefix                   = "Run_";
 Runable.Buffer                       = @OnlineEnv.Hlt2Reader_Output;
 MEPManager.Buffers                   = @OnlineEnv.Hlt2Reader_Buffers;
-Runable.DeleteFiles                  = false;
+Runable.DeleteFiles                  = true;
 Runable.InitialSleep                 = 0;

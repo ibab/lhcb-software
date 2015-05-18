@@ -3,7 +3,7 @@
 // ---------------- General partition parameters:    
 OnlineEnv.PartitionID              = 0;
 OnlineEnv.PartitionIDName          = "0000";
-OnlineEnv.PartitionName            = "HLT2Reco";
+OnlineEnv.PartitionName            = "DQ";
 OnlineEnv.Activity                 = "PHYSICS";
 OnlineEnv.TAE                      = 0;
 OnlineEnv.OutputLevel              = 3;

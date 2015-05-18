@@ -23,29 +23,45 @@ namespace LHCb  {
     *                     +----------+                        
     *                     |  UNKNOWN |                      
     *                     +----------+                         
-    *                         |    ^                  
-    *            DimTaskFSM() |    | unload()
-    *                         v    |                  
+    *                         |  ^                  
+    *            DimTaskFSM() |  | unload()
+    *                         |  |        
+    *                         v  |                  
     *                     +----------+       +---------+
     *                     | NOT_READY|<------+  ERROR  |<------+
     *                     +----------+       +---------+       |
     *                         |  ^                             |
     *                         |  |                             |
     *              configure()|  |reset()              error() |
+    *                         |  |                             |
+    *                         |  |                             |
     *                         V  |                             |
-    *                     +----------+                         |
-    *                     | READY    |                         |
-    *                     +----------+                         |
-    *                         |  ^                             |
-    *                 start() |  | stop()                      |
-    *                         V  |                             |
-    *                     +-----------+                        |
-    *                     | RUNNING   |------------------------+
+    *        start()      +----------+                         |
+    *      +--------------| READY    |                         |
+    *      |              +----------+                         |
+    *      |                  |  ^                             |
+    *      V                  |  |                             |
+    *  +---------+            |  |                             |
+    *  | ACTIVE  |            |  |                             |
+    *  +---------+            |  |                             |
+    *      |                  |  |                             |
+    *      |          start() |  | stop()                      |
+    *      |                  V  |                             |
+    *      | go()         +-----------+                        |
+    *      +------------->| RUNNING   |------------------------+
+    *                     +-----------+
+    *                         |  ^                             
+    *                         |  |                             
+    *               pause()   |  |  continue()                             
+    *                         |  |                             
+    *                         V  |                             
+    *                     +-----------+
+    *                     | PAUSED    |
     *                     +-----------+
     *
     * 
-    * @author  M.Frank
-    * @version 1.0
+    * \author  M.Frank
+    * \version 1.1
     */
   class ITaskFSM : virtual public IRunable, virtual public IAppMgrUI   {
   public:
@@ -53,6 +69,8 @@ namespace LHCb  {
       CONFIGURE=1, 
       INITIALIZE, 
       START,
+      ACTIVATE,
+      GO,
       ENABLE, 
       NEXTEVENT, 
       DISABLE, 
@@ -73,6 +91,7 @@ namespace LHCb  {
       ST_UNKNOWN   = 'U',
       ST_NOT_READY = 'N',
       ST_READY     = 'r',
+      ST_ACTIVE    = 'A',
       ST_RUNNING   = 'R',
       ST_STOPPED   = 'S',
       ST_PAUSED    = 'P',

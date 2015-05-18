@@ -37,6 +37,7 @@ namespace FiniteStateMachine   {
     const char ST_NAME_OFFLINE[]      = {"OFFLINE"};
     const char ST_NAME_NOT_READY[]    = {"NOT_READY"};
     const char ST_NAME_READY[]        = {"READY"};
+    const char ST_NAME_ACTIVE[]       = {"ACTIVE"};
     const char ST_NAME_RUNNING[]      = {"RUNNING"};
     const char ST_NAME_STOPPED[]      = {"READY"};
     const char ST_NAME_ERROR[]        = {"ERROR"};
@@ -47,6 +48,7 @@ namespace FiniteStateMachine   {
       OFFLINE   = 'O',
       NOT_READY = 'N',
       READY     = 'r',
+      ACTIVE    = 'A',
       RUNNING   = 'R',
       STOPPED   = 'S',
       PAUSED    = 'P',

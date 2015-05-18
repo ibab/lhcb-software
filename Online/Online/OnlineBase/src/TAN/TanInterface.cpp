@@ -118,7 +118,7 @@ TanInterface::TanInterface() : m_channel(0) {
 #endif
   m_status            = TAN_SS_SUCCESS;
   return;
-Error:
+ Error:
   m_status = TAN_SS_ERROR;
 }
 // ----------------------------------------------------------------------------
@@ -133,22 +133,22 @@ TanInterface::~TanInterface()  {
 // ----------------------------------------------------------------------------
 int TanInterface::errorCode(int tan_error)  {
   switch ( tan_error )    {
-    case TAN_SS_TASKNOTFOUND:     return  AMS_TASKNOTFOUND;
-    case TAN_SS_HOSTNOTFOUND:     return  AMS_HOSTNOTFOUND;
-    case TAN_SS_DATABASEFULL:     return  AMS_DATABASEFULL;
-    case TAN_SS_ODDRESPONSE:      return  AMS_ODDRESPONSE;
-    case TAN_SS_UNKNOWNMODE:      return  AMS_UNKNOWNMODE;
-    case TAN_SS_NOTOPEN:          return  AMS_TANCLOSED;
-    case TAN_SS_RECV_TMO:         return  AMS_TIMEOUT;
-    case TAN_SS_MADSRV:           return  AMS_TERRIBLE;
-    case TAN_SS_DUPLNAM:          return  AMS_DUPLICATE_NAME;
-    case TAN_SS_ENTNOTALLOC:      return  AMS_TERRIBLE;
-    case TAN_SS_ODDREQUEST:       return  AMS_TERRIBLE;
-    case TAN_SS_OPEN:             return  AMS_TANOPEN;
-    case TAN_SS_ERROR:            return  AMS_ERROR;
-    case TAN_SS_NOMEM:            return  AMS_NOMEMORY;
-    case TAN_SS_SUCCESS:          return  AMS_SUCCESS;
-    default:                      return  AMS_ERROR;
+  case TAN_SS_TASKNOTFOUND:     return  AMS_TASKNOTFOUND;
+  case TAN_SS_HOSTNOTFOUND:     return  AMS_HOSTNOTFOUND;
+  case TAN_SS_DATABASEFULL:     return  AMS_DATABASEFULL;
+  case TAN_SS_ODDRESPONSE:      return  AMS_ODDRESPONSE;
+  case TAN_SS_UNKNOWNMODE:      return  AMS_UNKNOWNMODE;
+  case TAN_SS_NOTOPEN:          return  AMS_TANCLOSED;
+  case TAN_SS_RECV_TMO:         return  AMS_TIMEOUT;
+  case TAN_SS_MADSRV:           return  AMS_TERRIBLE;
+  case TAN_SS_DUPLNAM:          return  AMS_DUPLICATE_NAME;
+  case TAN_SS_ENTNOTALLOC:      return  AMS_TERRIBLE;
+  case TAN_SS_ODDREQUEST:       return  AMS_TERRIBLE;
+  case TAN_SS_OPEN:             return  AMS_TANOPEN;
+  case TAN_SS_ERROR:            return  AMS_ERROR;
+  case TAN_SS_NOMEM:            return  AMS_NOMEMORY;
+  case TAN_SS_SUCCESS:          return  AMS_SUCCESS;
+  default:                      return  AMS_ERROR;
   }
 }
 // ----------------------------------------------------------------------------
@@ -271,10 +271,20 @@ int TanInterface::addressByName(const char* name, NetworkChannel::Address& sad) 
     setLocalAddress(msg.m_sin);
     if ( setInquireAddr(node,msg.m_sin,radd) == TAN_SS_SUCCESS )  {
 #if defined(__USING_TCP_ALLOCATOR) // || defined(_WIN32)
+      int retry = 4, nbyte = 0;
       TcpNetworkChannel c;
       TcpNetworkChannel &rcv = c, &snd = c;
-      if(c.connect(radd,Connect_TMO) == -1)    return errorCode(TAN_SS_NOTOPEN);
-      int nbyte = snd.send(&msg,sizeof(msg));
+      while(--retry > 0 && nbyte == 0)  {
+        if ( c.connect(radd,Connect_TMO) == 0 )  {
+          nbyte = snd.send(&msg,sizeof(msg));
+          break;
+        }
+        ::lib_rtl_output(LIB_RTL_OS,"Failed to connect to TAN(addressByName)");
+        ::lib_rtl_sleep(100);
+      }
+      if ( nbyte <= 0 )  {
+        return errorCode(TAN_SS_NOTOPEN);
+      }
 #else
       UdpNetworkChannel snd, rcv;
       NetworkChannel::Address sadd = msg.sin;
@@ -310,10 +320,17 @@ int TanInterface::addressByName(const char* name, NetworkChannel::Address& sad) 
 int TanInterface::allocatePort(const char* name, NetworkChannel::Port *port)  {
   if ( Status() == TAN_SS_SUCCESS )  {
     if ( m_channel == 0 )  {
+      int retry = 4, rc = -1;
       m_channel = new TcpNetworkChannel;
       TanMessage msg(TanMessage::ALLOCATE);
       setLocalAddress(msg.m_sin);
-      if ( m_channel->connect(msg.m_sin,Connect_TMO) != -1 )  {
+      while(--retry > 0 && rc != 0)  {
+        rc = m_channel->connect(msg.m_sin,Connect_TMO);
+        if ( rc == 0 ) break;
+        ::lib_rtl_output(LIB_RTL_OS,"Failed to connect to TAN(allocatePort)");
+        ::lib_rtl_sleep(1000);
+      }
+      if ( rc != -1 )  {
         nodeWithName(name, 0 , msg._Name());
         //::fprintf(stdout,"%s> TAN:  ALLOCATE: %s [%s] Host:%s Port:%d %d %s\n",
         //	  RTL::nodeName().c_str(),RTL::processName().c_str(), msg._Name(),m_pcHostName, 
@@ -327,7 +344,7 @@ int TanInterface::allocatePort(const char* name, NetworkChannel::Port *port)  {
             if ( msg.error() != TAN_SS_SUCCESS) return fatalError( errorCode(msg.error()) );
             m_portAllocated = ntohs(msg.m_sin.sin_port)+1;
             *port = msg.m_sin.sin_port;         
-                                                return errorCode( TAN_SS_SUCCESS );
+            return errorCode( TAN_SS_SUCCESS );
           }                                     // receive timeout fired
           else if ( m_channel->isCancelled())   return fatalError(errorCode(TAN_SS_RECV_TMO));
           else                                  return fatalError(m_channel->error());
@@ -353,8 +370,8 @@ int TanInterface::deallocatePort(const char* name)  {
       num_byte = m_channel->recv (&msg,sizeof(msg),Receive_TMO);
       if      ( m_channel->isCancelled() )      return errorCode(TAN_SS_RECV_TMO);
       else if ( num_byte == sizeof(msg)  )      {
-	int scc= fatalError(TAN_SS_SUCCESS);
-	//::lib_rtl_output(LIB_RTL_DEBUG,"TAN connection closed. %p\n",(void*)m_channel);
+        int scc= fatalError(TAN_SS_SUCCESS);
+        //::lib_rtl_output(LIB_RTL_DEBUG,"TAN connection closed. %p\n",(void*)m_channel);
         return scc;
       }
       else                                      return fatalError(errorCode(TAN_SS_MADSRV));

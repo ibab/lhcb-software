@@ -45,7 +45,7 @@ Prescaler.OutputLevel                = @OnlineEnv.OutputLevel;
 					// Random: 	3
 					// Periodic: 	4
 					// NZS:		5
-//Prescaler.DownscaleTriggerTypes      = {3,4,5};
+Prescaler.DownscaleTriggerTypes      = {3,4,5};
 
 Merger.Compress                      = 0;
 Merger.DataType                      = 3;

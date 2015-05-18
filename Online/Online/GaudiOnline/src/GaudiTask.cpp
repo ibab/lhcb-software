@@ -106,8 +106,8 @@ int GaudiTask::execRunable(void* arg)  {
 }
 
 GaudiTask::GaudiTask(IInterface*)
-: DimTaskFSM(0), m_handle(0), m_appMgr(0), m_subMgr(0), m_incidentSvc(0), m_msgSvc(0), 
-  m_nerr(0), m_ignoreIncident(false)
+  : DimTaskFSM(0), m_handle(0), m_appMgr(0), m_subMgr(0), m_incidentSvc(0), m_msgSvc(0), 
+    m_nerr(0), m_ignoreIncident(false)
 {
   propertyMgr().declareProperty("Runable",        m_runable     = "LHCb::OnlineRunable/Runable");
   propertyMgr().declareProperty("EventLoop",      m_evtloop     = "LHCb::OnlineRunable/EmptyEventLoop");
@@ -157,19 +157,19 @@ StatusCode GaudiTask::run()  {
       }
       m_appMgr = ui;
       if ( m_autostart == 1 )  {
-	cout << "Commencing checkpoint sequence..." << endl;
-	IOCSENSOR.send(this,CONFIGURE);
+        cout << "Commencing checkpoint sequence..." << endl;
+        IOCSENSOR.send(this,CONFIGURE);
       }
       else if ( m_autostart == 2 )  {
-	cout << "Commencing autostart sequence..." << endl;
-	IOCSENSOR.send(this,CONFIGURE);
-	IOCSENSOR.send(this,INITIALIZE);
+        cout << "Commencing autostart sequence..." << endl;
+        IOCSENSOR.send(this,CONFIGURE);
+        IOCSENSOR.send(this,INITIALIZE);
       }
       else if ( m_autostart == 3 )  {
-	cout << "Commencing autostart sequence..." << endl;
-	IOCSENSOR.send(this,CONFIGURE);
-	IOCSENSOR.send(this,INITIALIZE);
-	IOCSENSOR.send(this,START);
+        cout << "Commencing autostart sequence..." << endl;
+        IOCSENSOR.send(this,CONFIGURE);
+        IOCSENSOR.send(this,INITIALIZE);
+        IOCSENSOR.send(this,START);
       }
       StatusCode sc = m_appMgr->run();
       if ( !sc.isSuccess() ) {
@@ -342,9 +342,9 @@ void GaudiTask::stopRunable() {
     }
     if ( eventThread() )  {
       if ( m_handle && i>2 ) {
-	::snprintf(txt,sizeof(txt),"Kill runable thread to get out of event loop.");
-	output(MSG::WARNING,txt);
-	::lib_rtl_kill_thread(m_handle,SIGINT);
+        ::snprintf(txt,sizeof(txt),"Kill runable thread to get out of event loop.");
+        output(MSG::WARNING,txt);
+        ::lib_rtl_kill_thread(m_handle,SIGINT);
       }
       ::lib_rtl_sleep(500);
     }
@@ -395,28 +395,28 @@ int GaudiTask::initApplication()  {
       StatusCode sc = m_subMgr->initialize();
       if ( sc.isSuccess() )   {
         if ( loc )  {
-	  if ( loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
-	    Incident incident(name(),"APP_INITIALIZED");
-	    m_incidentSvc->addListener(this,"DAQ_CONFIGURE");
-	    m_incidentSvc->addListener(this,"DAQ_INITIALIZE");
-	    m_incidentSvc->addListener(this,"DAQ_START");
-	    m_incidentSvc->addListener(this,"DAQ_STOP");
-	    m_incidentSvc->addListener(this,"DAQ_FINALIZE");
-	    m_incidentSvc->addListener(this,"DAQ_ERROR");
-	    m_incidentSvc->addListener(this,"DAQ_ERROR_CLEAR");
-	    m_incidentSvc->addListener(this,"DAQ_FATAL");
-	    m_incidentSvc->addListener(this,"DAQ_PAUSE");
-	    m_incidentSvc->addListener(this,"DAQ_CONTINUE");
-	    m_incidentSvc->addListener(this,"DAQ_STOP_TRIGGER");
-	    m_incidentSvc->addListener(this,"DAQ_START_TRIGGER");
-	    m_incidentSvc->fireIncident(incident);
-	    return 1;
-	  }
-	  log << MSG::ERROR << "Failed to access incident service." << endmsg;
-	  goto Error;
+          if ( loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
+            Incident incident(name(),"APP_INITIALIZED");
+            m_incidentSvc->addListener(this,"DAQ_CONFIGURE");
+            m_incidentSvc->addListener(this,"DAQ_INITIALIZE");
+            m_incidentSvc->addListener(this,"DAQ_START");
+            m_incidentSvc->addListener(this,"DAQ_STOP");
+            m_incidentSvc->addListener(this,"DAQ_FINALIZE");
+            m_incidentSvc->addListener(this,"DAQ_ERROR");
+            m_incidentSvc->addListener(this,"DAQ_ERROR_CLEAR");
+            m_incidentSvc->addListener(this,"DAQ_FATAL");
+            m_incidentSvc->addListener(this,"DAQ_PAUSE");
+            m_incidentSvc->addListener(this,"DAQ_CONTINUE");
+            m_incidentSvc->addListener(this,"DAQ_STOP_TRIGGER");
+            m_incidentSvc->addListener(this,"DAQ_START_TRIGGER");
+            m_incidentSvc->fireIncident(incident);
+            return 1;
+          }
+          log << MSG::ERROR << "Failed to access incident service." << endmsg;
+          goto Error;
         }
         log << MSG::ERROR << "Failed to access service locator object" << endmsg;
-	goto Error;
+        goto Error;
       }
       log << MSG::ERROR << "Failed to initialize application manager" << endmsg;
       goto Error;
@@ -441,53 +441,30 @@ int GaudiTask::initApplication()  {
 int GaudiTask::startApplication()  {
   MsgStream log(msgSvc(), name());
   if ( 0 != m_subMgr )  {
-    string nam, runable_name;
-    SmartIF<IProperty>   ip(m_subMgr);
     SmartIF<ISvcLocator> loc(m_subMgr);
 
-    if ( ip && loc )  {
+    if ( loc )  {
       if ( 0 == m_incidentSvc ) {  // In case we were removed during stop(): reconnect
-	if ( !loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
-	  log << MSG::ERROR << "Failed to access incident service." << endmsg;
-	  goto Error;
-	}
-	m_incidentSvc->addListener(this,"DAQ_CONFIGURE");
-	m_incidentSvc->addListener(this,"DAQ_INITIALIZE");
-	m_incidentSvc->addListener(this,"DAQ_START");
-	m_incidentSvc->addListener(this,"DAQ_STOP");
-	m_incidentSvc->addListener(this,"DAQ_FINALIZE");
-	m_incidentSvc->addListener(this,"DAQ_ERROR");
-	m_incidentSvc->addListener(this,"DAQ_ERROR_CLEAR");
-	m_incidentSvc->addListener(this,"DAQ_FATAL");
-	m_incidentSvc->addListener(this,"DAQ_PAUSE");
-	m_incidentSvc->addListener(this,"DAQ_CONTINUE");
+        if ( !loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
+          log << MSG::ERROR << "Failed to access incident service." << endmsg;
+          goto Error;
+        }
+        m_incidentSvc->addListener(this,"DAQ_CONFIGURE");
+        m_incidentSvc->addListener(this,"DAQ_INITIALIZE");
+        m_incidentSvc->addListener(this,"DAQ_START");
+        m_incidentSvc->addListener(this,"DAQ_STOP");
+        m_incidentSvc->addListener(this,"DAQ_FINALIZE");
+        m_incidentSvc->addListener(this,"DAQ_ERROR");
+        m_incidentSvc->addListener(this,"DAQ_ERROR_CLEAR");
+        m_incidentSvc->addListener(this,"DAQ_FATAL");
+        m_incidentSvc->addListener(this,"DAQ_PAUSE");
+        m_incidentSvc->addListener(this,"DAQ_CONTINUE");
       }
       StatusCode sc = m_subMgr->start();
       if ( sc.isSuccess() )   {
-	Incident incident(name(),"APP_RUNNING");
-	m_incidentSvc->fireIncident(incident);
-	if ( 0 == m_handle )  {
-	  if ( ip->getProperty("Runable",nam).isSuccess() )  {
-	    size_t id1 = nam.find_first_of("\"");
-	    size_t id2 = nam.find_last_of("\"");
-	    runable_name = nam.substr(id1+1,id2-id1-1);
-	    IRunable* runable = 0;
-	    if ( loc->service(runable_name,runable).isSuccess() )  {
-	      sc = startRunable(runable);
-	      if ( sc.isSuccess() )  {
-		return 1;
-	      }
-	      log << MSG::ERROR << "Failed to start runable." << endmsg;
-	      goto Error;
-	    }
-	    log << MSG::ERROR << "Failed to access Runable:" << nam << endmsg;
-	    goto Error;
-	  }
-	}
-	else  {
-	  log << MSG::INFO << "2nd. layer is already executing." << endmsg;
-	  return 1;
-	}
+        Incident incident(name(),"APP_RUNNING");
+        m_incidentSvc->fireIncident(incident);
+        return StatusCode::SUCCESS;
       }
       log << MSG::ERROR << "Failed to start application manager" << endmsg;
       goto Error;
@@ -506,6 +483,48 @@ int GaudiTask::startApplication()  {
   return 0;
 }
 
+/// Start second layer event processing runable for GAUDI Application
+int GaudiTask::goApplication()  {
+  MsgStream log(msgSvc(), name());
+  if ( 0 != m_subMgr )  {
+    if ( 0 == m_handle )  {
+      string nam, runable_name;
+      SmartIF<IProperty>   ip(m_subMgr);
+      SmartIF<ISvcLocator> loc(m_subMgr);
+      if ( ip && loc )  {
+        if ( ip->getProperty("Runable",nam).isSuccess() )  {
+          size_t id1 = nam.find_first_of("\"");
+          size_t id2 = nam.find_last_of("\"");
+          runable_name = nam.substr(id1+1,id2-id1-1);
+          IRunable* runable = 0;
+          if ( loc->service(runable_name,runable).isSuccess() )  {
+            StatusCode sc = startRunable(runable);
+            if ( sc.isSuccess() )  {
+              return 1;
+            }
+            log << MSG::ERROR << "Failed to start runable." << endmsg;
+            goto Error;
+          }
+          log << MSG::ERROR << "Failed to access Runable:" << nam << endmsg;
+          goto Error;
+        }
+        log << MSG::ERROR << "Failed to access runable:" << nam << endmsg;
+        goto Error;
+      }
+      log << MSG::ERROR << "Failed to access service locator object" << endmsg;
+      goto Error;
+    }
+    log << MSG::INFO << "2nd. layer is already executing." << endmsg;
+    return 1;
+  }
+  log << MSG::ERROR << "2nd. layer is not initialized...did you ever call configure?" << endmsg;
+ Error:
+  if ( m_autostart != 0 ) {
+    log << MSG::FATAL << "goApplication failed. Going to ERROR" << endmsg;
+  }
+  return 0;
+}
+
 /// Finalize second layer application manager for GAUDI Application
 int GaudiTask::stopApplication()  {
   if ( m_subMgr )  {
@@ -519,21 +538,21 @@ int GaudiTask::stopApplication()  {
     try {
 #if 0
       if ( m_incidentSvc ) {
-	m_incidentSvc->removeListener(this);
-	m_incidentSvc->release();
+        m_incidentSvc->removeListener(this);
+        m_incidentSvc->release();
       }
       m_incidentSvc= 0;
 #endif
       StatusCode sc = m_subMgr ? m_subMgr->stop() : StatusCode::SUCCESS;
       if ( !sc.isSuccess() )   {
-	MsgStream log(msgSvc(), name());
-	log << MSG::ERROR << "Failed to stop the application" << endmsg;
-	gauditask_task_unlock();
-	return 0;
+        MsgStream log(msgSvc(), name());
+        log << MSG::ERROR << "Failed to stop the application" << endmsg;
+        gauditask_task_unlock();
+        return 0;
       }
       else if ( m_incidentSvc ) {
-	Incident incident(name(),"APP_STOPPED");
-	m_incidentSvc->fireIncident(incident);
+        Incident incident(name(),"APP_STOPPED");
+        m_incidentSvc->fireIncident(incident);
       }
     }
     catch(const exception& e) {
@@ -564,29 +583,29 @@ int GaudiTask::finalizeApplication()  {
       // If yes. call first 'stop'
       SmartIF<IService> isvc(m_subMgr);
       if ( isvc.get() ) {
-	if ( isvc->FSMState() == Gaudi::StateMachine::RUNNING ) {
-	  output(MSG::ALWAYS,"Attemp to call finalize before stop: will take corrective action....");
-	  sc = isvc->stop();
-	  if ( !sc.isSuccess() )   {
-	    output(MSG::ERROR,"Failed to stop the application");
-	    gauditask_task_unlock();
-	    return 0;
-	  }
-	}
+        if ( isvc->FSMState() == Gaudi::StateMachine::RUNNING ) {
+          output(MSG::ALWAYS,"Attemp to call finalize before stop: will take corrective action....");
+          sc = isvc->stop();
+          if ( !sc.isSuccess() )   {
+            output(MSG::ERROR,"Failed to stop the application");
+            gauditask_task_unlock();
+            return 0;
+          }
+        }
       }
       // If e.g.Class1 processes are reset() before start(), then the incident service
       // is still connected, and a later cancel() would access violate.
       // Hence check again if the incident service is still present.
       if ( m_incidentSvc ) {
-	m_incidentSvc->removeListener(this);
-	m_incidentSvc->release();
+        m_incidentSvc->removeListener(this);
+        m_incidentSvc->release();
       }
       m_incidentSvc= 0;
       sc = m_subMgr ? m_subMgr->finalize() : StatusCode::SUCCESS;
       if ( !sc.isSuccess() )   {
-	output(MSG::ERROR,"Failed to finalize the application.");
-	gauditask_task_unlock();
-	return 0;
+        output(MSG::ERROR,"Failed to finalize the application.");
+        gauditask_task_unlock();
+        return 0;
       }
     }
     catch(const exception& e) {
@@ -605,18 +624,18 @@ int GaudiTask::terminateApplication()  {
   if ( m_subMgr )  {
     try {
       if ( m_incidentSvc ) {
-	m_incidentSvc->removeListener(this);
-	m_incidentSvc->release();
+        m_incidentSvc->removeListener(this);
+        m_incidentSvc->release();
       }
       m_incidentSvc= 0;
       StatusCode sc = m_subMgr->terminate();
       if ( sc.isSuccess() )   {
-	// Release is called by Gaudi::setInstance; danger of releasing twice?
-	// m_subMgr->release();
-	m_subMgr = 0;
-	m_python = auto_ptr<PythonInterpreter>(0);
-	Gaudi::setInstance(m_appMgr);
-	return 1;
+        // Release is called by Gaudi::setInstance; danger of releasing twice?
+        // m_subMgr->release();
+        m_subMgr = 0;
+        m_python = auto_ptr<PythonInterpreter>(0);
+        Gaudi::setInstance(m_appMgr);
+        return 1;
       }
       MsgStream log(msgSvc(), name());
       log << MSG::ERROR << "Failed to terminate the application" << endmsg;
@@ -712,10 +731,10 @@ StatusCode GaudiTask::configPythonSubManager() {
       log << MSG::FATAL << "Failed to invoke python startup script." << endmsg;
       m_python = auto_ptr<PythonInterpreter>(0);
       if ( m_subMgr ) {
-	m_subMgr->release();
-	m_subMgr = 0;
-	Gaudi::setInstance((IAppMgrUI*)0);
-	Gaudi::setInstance((ISvcLocator*)0);
+        m_subMgr->release();
+        m_subMgr = 0;
+        Gaudi::setInstance((IAppMgrUI*)0);
+        Gaudi::setInstance((ISvcLocator*)0);
       }
       return StatusCode::FAILURE;
     }

@@ -2,4 +2,3 @@
 MEPManager.Buffers                   = @OnlineEnv.HLT2RecoSnd1_Buffers;
 EventSelector.Input                  = @OnlineEnv.HLT2RecoSnd1_Input;
 Sender.DataSink                      = "$HLT2Reco_DataSink1";
-

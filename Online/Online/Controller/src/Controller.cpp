@@ -98,7 +98,7 @@ FSM::ErrCond Controller::fail()  {
   const Transition* tr = m_machine->currTrans();
   const Slaves      sl = m_machine->slaves();
   display(ALWAYS,c_name(),"%s> Controller: FAILED to invoke transition %s from %s.",
-	  m_machine->type()->c_name(), tr ? tr->c_name() : "??Unknown??",m_machine->c_state());
+          m_machine->type()->c_name(), tr ? tr->c_name() : "??Unknown??",m_machine->c_state());
   m_machine->setSlaveState(Slave::SLAVE_FAILED,m_errorState);
   SlaveMap sl_map;
   stringstream msg;
@@ -106,7 +106,7 @@ FSM::ErrCond Controller::fail()  {
   for(Slaves::const_iterator i=sl.begin(); i!= sl.end(); ++i)  {
     const Slave* s = *i;
     display(DEBUG,c_name(),"Controller: Slave %s in state %s has meta-state:%s",
-	    s->c_name(), s->c_state(), s->metaStateName());
+            s->c_name(), s->c_state(), s->metaStateName());
     sl_map[s->statusState()].push_back(s);
   }
   for(SlaveMap::const_iterator i=sl_map.begin(); i!=sl_map.end(); ++i)  {
@@ -114,10 +114,10 @@ FSM::ErrCond Controller::fail()  {
     msg << (Slave::metaName(slv)+6) << ":" << (*i).second.size() << " ";
     if ( slv == Slave::SLAVE_FAILED || slv == Slave::SLAVE_TIMEOUT || slv ==  Slave::SLAVE_DEAD )  {
       for(SlaveMap::mapped_type::const_iterator j=(*i).second.begin(); j!=(*i).second.end(); ++j)  {
-	string n = (*j)->name(), m = (*j)->name();
-	if ( n.find('_') != string::npos ) { m = n.substr(n.find('_')+1); n = m; }
-	if ( n.find('_') != string::npos ) { m = n.substr(n.find('_')+1); n = m; }
-	msg << m << " ";
+        string n = (*j)->name(), m = (*j)->name();
+        if ( n.find('_') != string::npos ) { m = n.substr(n.find('_')+1); n = m; }
+        if ( n.find('_') != string::npos ) { m = n.substr(n.find('_')+1); n = m; }
+        msg << m << " ";
       }
     }
   }
@@ -166,13 +166,13 @@ FSM::ErrCond Controller::publish()  {
     for(Slaves::const_iterator i=slaves.begin(); i!= slaves.end(); ++i)  {
       const Slave* s = *i;
       display(INFO,c_name(),"Controller: Slave %s in state %s has meta-state:%s",
-	      s->c_name(), s->c_state(), s->metaStateName());
+              s->c_name(), s->c_state(), s->metaStateName());
     }
   }
   publishSlaves();
   const Transition* tr = m_machine->currTrans();
   display(INFO,c_name(),"Declare new state:          %s %s %s",state.c_str(),
-	  tr ? "after transition" : "", tr ? tr->c_name() : "");
+          tr ? "after transition" : "", tr ? tr->c_name() : "");
   return declareState(state);
 }
 
@@ -201,7 +201,7 @@ void Controller::handle(const Event& ev)    {
       break;
     default:
       display(ALWAYS,c_name(),"Controller: ERROR: Invoke transition from %s action:%d",
-	      m_machine->c_state(),ev.type);
+              m_machine->c_state(),ev.type);
       //m_machine->invokeTransition((const State*)ev.data);
       break;
     }

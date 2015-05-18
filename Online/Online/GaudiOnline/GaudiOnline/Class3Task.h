@@ -1,5 +1,5 @@
-#ifndef ONLINE_GAUDIONLINE_CLASS2TASK_H
-#define ONLINE_GAUDIONLINE_CLASS2TASK_H
+#ifndef ONLINE_GAUDIONLINE_CLASS3TASK_H
+#define ONLINE_GAUDIONLINE_CLASS3TASK_H
 
 // Framework includes
 #include "GaudiOnline/GaudiTask.h"
@@ -15,19 +15,21 @@ namespace LHCb {
     * @author  M.Frank
     * @version 1.0
     */
-  class Class2Task : public GaudiTask {
+  class Class3Task : public GaudiTask {
   public:
     /// Standard constructor
-    Class2Task(IInterface* svc);
+    Class3Task(IInterface* svc);
     /// Default destructor
-    virtual ~Class2Task() {}
+    virtual ~Class3Task() {}
     /// Callback on start transition
     virtual StatusCode initialize();
     /// Callback on activate transition
     virtual StatusCode activate();
+    /// Callback on go transition
+    virtual StatusCode go();
     /// Callback on stop transition
     virtual StatusCode finalize();
   };
 }
 
-#endif // ONLINE_GAUDIONLINE_CLASS2TASK_H
+#endif // ONLINE_GAUDIONLINE_CLASS3TASK_H

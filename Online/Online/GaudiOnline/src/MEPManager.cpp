@@ -23,7 +23,7 @@ using namespace LHCb;
 
 /// Standard service constructor
 MEPManager::MEPManager(const string& nam, ISvcLocator* loc)
-: Service(nam, loc), m_partitionID(0x103)
+  : Service(nam, loc), m_partitionID(0x103)
 {
   m_procName = RTL::processName();
   declareProperty("Buffers",              m_buffers);
@@ -49,7 +49,7 @@ StatusCode MEPManager::error(const string& msg)   const {
 
 /// Query interfaces of Interface
 StatusCode MEPManager::queryInterface(const InterfaceID& riid,
-                                            void** ppvInterface) 
+                                      void** ppvInterface) 
 {
   if ( IMEPManager::interfaceID().versionMatch(riid) )   {
     *ppvInterface = (IMEPManager*)this;
@@ -68,14 +68,14 @@ StatusCode MEPManager::initializeBuffers()  {
     string tmp = m_initFlags;
     for(char* tok=::strtok((char*)tmp.c_str()," "); tok; tok=::strtok(NULL," ")) {
       if ( m_partitionBuffers && ::toupper(tok[1]) == 'I' )  {
-	string bm_name = tok;
-	bm_name += "_";
-	if ( m_partitionName.empty() )
-	  bm_name += _itoa(m_partitionID,txt,16);
-	else
-	  bm_name += m_partitionName;
-	items[ikey++] = strcpy(new char[bm_name.length()+1],bm_name.c_str());
-	continue;
+        string bm_name = tok;
+        bm_name += "_";
+        if ( m_partitionName.empty() )
+          bm_name += _itoa(m_partitionID,txt,16);
+        else
+          bm_name += m_partitionName;
+        items[ikey++] = strcpy(new char[bm_name.length()+1],bm_name.c_str());
+        continue;
       }
       items[ikey++] = strcpy(new char[strlen(tok)+1],tok);
     }
@@ -105,6 +105,7 @@ StatusCode MEPManager::setConsumerRequirement(ServerBMID srvBM, const string& ta
 
 /// Apply consumer requirements to MBM buffers
 StatusCode MEPManager::setConsumerRequirements()   {
+  MsgStream log(msgSvc(), name());
   for(auto i=begin(m_consRequirements); i!=end(m_consRequirements);++i)  {    
     const string& buf = bufferName((*i).first);
     ServedBuffers::const_iterator j=m_srvBMIDs.find(buf);
@@ -114,13 +115,20 @@ StatusCode MEPManager::setConsumerRequirements()   {
     else if ( (*i).second.size() < 2 )  {
       return error("Insufficient information from job-option. Failed to set consumer requirement.");
     }
-    const string& tsk = (*i).second[0];
-    const string& req = (*i).second[1];
-    MBM::Requirement r;
-    r.parse(req);
-    StatusCode sc = setConsumerRequirement((*j).second, tsk, r);
-    if ( !sc.isSuccess() )   {
-      return error("Failed to set consumer requirement: "+req);
+    else if ( (((*i).second.size())%2) != 0 )  {
+      return error("Inconsistent job-option. Failed to set consumer requirement.");
+    }
+    for(size_t k=0; k<(*i).second.size(); k += 2)  {
+      const string& tsk = (*i).second[k];
+      const string& req = (*i).second[k+1];
+      MBM::Requirement r;
+      r.parse(req);
+      log << MSG::INFO << "Setting consumer requirement "
+          << "[" << buf << "] Task:" << tsk << " REQ:" << req << endmsg;
+      StatusCode sc = setConsumerRequirement((*j).second, tsk, r);
+      if ( !sc.isSuccess() )   {
+        return error("Failed to set consumer requirement: "+req);
+      }
     }
   }
   return StatusCode::SUCCESS;

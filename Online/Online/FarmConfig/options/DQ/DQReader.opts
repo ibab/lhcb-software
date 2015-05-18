@@ -1,8 +1,8 @@
 #include "$FARMCONFIGROOT/options/BasicDiskReader.opts"
 #include "$NODE_OPTIONS"
-Runable.Directory                    = "/localdisk/hlt1";
+Runable.Directory                    = "/tmp/OFFLINE_MON";
 Runable.FilePrefix                   = "Run_";
-Runable.Buffer                       = @OnlineEnv.DskReader_Output;
-MEPManager.Buffers                   = @OnlineEnv.DskReader_Buffers;
+Runable.Buffer                       = @OnlineEnv.DQReader_Output;
+MEPManager.Buffers                   = @OnlineEnv.DQReader_Buffers;
 Runable.DeleteFiles                  = true;
 Runable.InitialSleep                 = 0;

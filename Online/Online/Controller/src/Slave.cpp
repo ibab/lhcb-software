@@ -279,31 +279,43 @@ void Slave::handleState(const string& msg)  {
 #endif
     m = "OFFLINE";
   }
-  const State* state = type()->state(m);
-  const Transition* transition = (state && m_state) ? m_state->findTrans(state) : 0;
-  // After fork slaves do not answer with OFFLINE of NOT_READY!
-  starting &= (m == "OFFLINE");
+  try  {
+    const State* state = type()->state(m);
+    const Transition* transition = (state && m_state) ? m_state->findTrans(state) : 0;
+    // After fork slaves do not answer with OFFLINE of NOT_READY!
+    starting &= (m == "OFFLINE");
 
-  display(DEBUG,c_name(),"Received message %s starting:%s state:%s transition:%s",
-	  m.c_str(), starting ? "YES" : "NO", State::c_name(state), Transition::c_name(transition));
-  if ( state && state->isFailure() ) {
-    lib_rtl_sleep(10); // Put in some code to set breakpoint for debugging
-  }
-  m_answered = true;
+    display(DEBUG,c_name(),"Received message %s starting:%s state:%s transition:%s",
+	    m.c_str(), starting ? "YES" : "NO", State::c_name(state), Transition::c_name(transition));
+    if ( state && state->isFailure() ) {
+      lib_rtl_sleep(10); // Put in some code to set breakpoint for debugging
+    }
+    m_answered = true;
 
-  if ( starting )   {
-    iamHere();
+    if ( starting )   {
+      iamHere();
+    }
+    else if ( state && state->isFailure() )   {
+      m_state = state;
+      transitionFailed();
+    }
+    else if ( transition )
+      transitionDone(state);
+    else if ( state )
+      transitionSlave(state);
+    else
+      transitionFailed();
+    return;
   }
-  else if ( state && state->isFailure() )   {
-    m_state = state;
-    transitionFailed();
+  catch(const exception& e)  {
+    display(ERROR,c_name(),"EXCEPTION on message %s starting:%s '%s'",
+	    m.c_str(), starting ? "YES" : "NO", e.what());
   }
-  else if ( transition )
-    transitionDone(state);
-  else if ( state )
-    transitionSlave(state);
-  else
-    transitionFailed();
+  catch(...)  {
+    display(ERROR,c_name(),"UNKNOWN EXCEPTION on message %s starting:%s",
+	    m.c_str(), starting ? "YES" : "NO");
+  }
+  transitionFailed();
 }
 
 

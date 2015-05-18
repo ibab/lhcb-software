@@ -26,6 +26,195 @@ enum DaqType  {
 };
 
 /// Create DAQ machine type
+static Type* defineDAQActiveType(DaqType daqType = DAQ_NORMAL)    {
+  typedef Transition Tr;
+  Type *daq = new Type("DAQ");
+  const State* offline   = daq->addState(ST_NAME_OFFLINE, State::STARTUP);
+  const State* not_ready = daq->addState(ST_NAME_NOT_READY);
+  const State* ready     = daq->addState(ST_NAME_READY);
+  const State* active    = daq->addState(ST_NAME_ACTIVE);
+  const State* running   = daq->addState(ST_NAME_RUNNING);
+  const State* error     = daq->addState(ST_NAME_ERROR, State::FAIL);
+  const State* paused    = daq->addState(ST_NAME_PAUSED);
+
+  daq->setInitialState(offline);
+
+  not_ready->when(anyChildInState(error),          moveTo(error));
+  not_ready->when(anyChildInState(offline),        moveTo(offline));
+  not_ready->when(allChildrenInState(ready,active,running,paused), moveTo(ready));
+
+  ready->when    (  anyChildInState(error),        moveTo(error));
+  ready->when    (  anyChildInState(offline),      moveTo(offline));
+  ready->when    (  anyChildInState(not_ready),    moveTo(not_ready));
+  ready->when    (  allChildrenInState(active),   moveTo(active));
+  ready->when    (  allChildrenInState(running),   moveTo(running));
+  ready->when    (  allChildrenInState(running,paused),   moveTo(paused));
+
+  running->when  (  anyChildInState(error),        moveTo(error));
+  running->when  (  anyChildInState(offline),      moveTo(offline));
+  running->when  (  anyChildInState(not_ready),    moveTo(not_ready));
+  if ( daqType&DAQ_PAUSE_ALL )
+    running->when(  allChildrenInState(paused),       moveTo(paused));
+  else
+    running->when(  anyChildInState(paused),       moveTo(paused));
+  running->when  (  allChildrenInState(ready),     moveTo(ready));
+  running->when  (  allChildrenInState(active),     moveTo(active));
+  //running->when  (  allChildrenInState(running),   moveTo(running));
+
+  paused->when   (  anyChildInState(error),        moveTo(error));
+  paused->when   (  anyChildInState(offline),      moveTo(offline));
+  paused->when   (  anyChildInState(not_ready),    moveTo(not_ready));
+  paused->when   (  allChildrenInState(running),   moveTo(running));
+  paused->when   (  allChildrenInState(ready),     moveTo(ready));
+  paused->when   (  allChildrenInState(active),     moveTo(active));
+
+  offline->when  (  anyChildInState(error),        moveTo(error));
+  offline->when  (  allChildrenInState(running),   moveTo(running));
+  offline->when  (  allChildrenInState(active,running), moveTo(active));
+  offline->when  (  allChildrenInState(ready,active,running), moveTo(ready));
+  offline->when  (  allChildrenInState(ready,active,paused,running), moveTo(paused));
+  offline->when  (  allChildrenInState(not_ready,ready,active,paused,running), moveTo(not_ready));
+
+  error->when    (  anyChildInState(error),        moveTo(error));
+  error->when    (  allChildrenInState(running),   moveTo(running));
+  error->when    (  allChildrenInState(active,running), moveTo(active));
+  error->when    (  allChildrenInState(ready,active,running), moveTo(ready));
+  error->when    (  allChildrenInState(ready,active,paused,running), moveTo(paused));
+  error->when    (  allChildrenInState(not_ready,ready,active,paused,running), moveTo(not_ready));
+  error->when    (  allChildrenInState(offline,not_ready,ready,active,paused,running), moveTo(offline));
+
+  Tr*  reset0    = daq->addTransition("reset",     not_ready,   not_ready, NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  reset1    = daq->addTransition("reset",     ready,       not_ready, NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  reset2    = daq->addTransition("reset",     active,      not_ready, NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  reset3    = daq->addTransition("reset",     offline,     offline,   NO_CHECKS|ON_TIMEOUT_KILL);
+
+  Tr*  daq_err0  = daq->addTransition("daq_err",   not_ready,   error,     NO_CHECKS);
+  Tr*  daq_err1  = daq->addTransition("daq_err",   ready,       error,     NO_CHECKS);
+  Tr*  daq_err2  = daq->addTransition("daq_err",   active,      error,     NO_CHECKS);
+  Tr*  daq_err3  = daq->addTransition("daq_err",   running,     error,     NO_CHECKS);
+  Tr*  daq_err4  = daq->addTransition("daq_err",   paused,      error,     NO_CHECKS);
+  /*Tr*  daq_err4  =*/ daq->addTransition("daq_err",   offline,     error,     NO_CHECKS);
+
+  Tr*  RESET0    = daq->addTransition("RESET",     error,       offline,   NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  RESET1    = daq->addTransition("RESET",     running,     offline,   NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  RESET2    = daq->addTransition("RESET",     ready,       offline,   NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  RESET3    = daq->addTransition("RESET",     active,      offline,   NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  RESET4    = daq->addTransition("RESET",     not_ready,   offline,   NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  RESET5    = daq->addTransition("RESET",     offline,     offline,   NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  RESET6    = daq->addTransition("RESET",     paused,      offline,   NO_CHECKS|ON_TIMEOUT_KILL);
+
+  daq->addTransition("When-Rule",     error,       not_ready, CHECK);
+  daq->addTransition("When-Rule",     error,       ready,     CHECK);
+  daq->addTransition("When-Rule",     error,       active,    CHECK);
+  daq->addTransition("When-Rule",     error,       running,   CHECK);
+  daq->addTransition("When-Rule",     error,       paused,    CHECK);
+
+  daq->addTransition("When-Rule",   offline,       ready,     CHECK);
+  daq->addTransition("When-Rule",   offline,       active,    CHECK);
+  daq->addTransition("When-Rule",   offline,       running,   CHECK);
+  daq->addTransition("When-Rule",   offline,       paused,    CHECK);
+
+  daq_err0->adoptRule(AllChildrenOfType(daq).moveTo(error));
+  daq_err1->adoptRule(AllChildrenOfType(daq).moveTo(error));
+  daq_err2->adoptRule(AllChildrenOfType(daq).moveTo(error));
+  daq_err3->adoptRule(AllChildrenOfType(daq).moveTo(error));
+  daq_err4->adoptRule(AllChildrenOfType(daq).moveTo(error));
+
+  // Otherwise: FULL KILL on recover
+  int flags = KILL;//NO_CHECKS|ON_TIMEOUT_KILL
+  /* Tr*  recover0  = */  daq->addTransition("recover",   error,     offline,   flags);
+  /* Tr*  recover1  = */  daq->addTransition("recover",   running,   offline,   flags);
+  /* Tr*  recover2  = */  daq->addTransition("recover",   ready,     offline,   flags);
+  /* Tr*  recover3  = */  daq->addTransition("recover",   active,    offline,   flags);
+  /* Tr*  recover4  = */  daq->addTransition("recover",   not_ready, offline,   flags);
+  /* Tr*  recover5  = */  daq->addTransition("recover",   paused,    offline,   flags);
+#if 0
+  recover0->adoptRule( AllChildrenOfType(daq).execTransition(daq->transitionsByName("recover")));
+  recover1->adoptRule( AllChildrenOfType(daq).execTransition(daq->transitionsByName("recover")));
+  recover2->adoptRule( AllChildrenOfType(daq).execTransition(daq->transitionsByName("recover")));
+  recover3->adoptRule( AllChildrenOfType(daq).execTransition(daq->transitionsByName("recover")));
+  recover5->adoptRule( AllChildrenOfType(daq).execTransition(daq->transitionsByName("recover")));
+#endif
+  RESET0->adoptRule(  AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));
+  RESET1->adoptRule(  AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));
+  RESET2->adoptRule(  AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));
+  RESET3->adoptRule(  AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));
+  RESET4->adoptRule(  AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));
+  RESET5->adoptRule(  AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));
+  RESET6->adoptRule(  AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));
+
+  reset0->adoptRule(reset0).adoptRule(reset1).adoptRule(reset2).adoptRule(reset3);
+  reset1->adoptRule(reset0).adoptRule(reset1).adoptRule(reset2).adoptRule(reset3);
+  reset2->adoptRule(reset0).adoptRule(reset1).adoptRule(reset2).adoptRule(reset3);
+  reset3->adoptRule(reset0).adoptRule(reset1).adoptRule(reset2).adoptRule(reset3);
+
+  /// Offline -> Not Ready
+  Tr*  load      = daq->addTransition("load",    offline,     not_ready, CHECK|CREATE);
+  load->addPredicate( AllChildrenOfType(daq).inState(offline, not_ready, ready, active, paused, running));
+  load->adoptRule(    AllChildrenOfType(daq).move(offline,    not_ready));
+  load->adoptRule(    AllChildrenOfType(daq).move(paused,     ready));
+  load->adoptRule(    AllChildrenOfType(daq).move(offline,    ready)); // --> Checkpointing
+
+  /// Not Ready -> Ready
+  Tr*  configure = daq->addTransition("configure", not_ready,    ready);
+  configure->addPredicate(AllChildrenOfType(daq).inState(not_ready, ready, active, paused, running));
+  configure->adoptRule(   AllChildrenOfType(daq).move(not_ready, ready));
+  configure->adoptRule(   AllChildrenOfType(daq).move(paused,    ready));
+
+  /// Ready     -> Active
+  Tr*  start0    = daq->addTransition("activate",  ready,       active);
+  start0->addPredicate(AllChildrenOfType(daq).inState(ready,    active,  paused,  running));
+  start0->adoptRule(start0);
+
+  /// Active     -> Running
+  Tr*  go1    = daq->addTransition("go",        active,       running);
+  go1->addPredicate(AllChildrenOfType(daq).inState(ready,    active,  paused,  running));
+  go1->adoptRule(go1);
+
+  /// Running   -> Paused
+  Tr*  pause     = daq->addTransition("pause",     running,     paused);
+  pause->adoptRule(ParentOfType(daq).move(running, paused));
+  pause->adoptRule(pause);
+
+  /// Ready     -> Paused
+  pause          = daq->addTransition("pause",     ready,     paused);
+  pause->adoptRule(ParentOfType(daq).move(ready, paused));
+  pause->adoptRule(pause);
+
+  /// Paused    -> Running for children in state paused
+  Tr*  cont      = daq->addTransition("continue",  paused,      running);
+  cont->addPredicate(AllChildrenOfType(daq).inState(paused, active, running));
+  cont->adoptRule(   AllChildrenOfType(daq).move(active, running));
+  cont->adoptRule(   AllChildrenOfType(daq).move(paused, running));
+
+  /// Running   -> Ready
+  Tr*  stop0     = daq->addTransition("stop",      running,     ready);
+  /// Active    -> Ready
+  Tr*  stop1     = daq->addTransition("stop",      active,      ready);
+  /// Paused    -> Ready
+  Tr*  stop2     = daq->addTransition("stop",      paused,      ready);
+  /// Ready     -> Ready
+  Tr*  stop3     = daq->addTransition("stop",      ready,       ready);
+  /// In case Children died, the controller is OFFLINE; still must accept commands
+  Tr*  stop4     = daq->addTransition("stop",      offline,     offline,   NO_CHECKS);
+
+  stop0->adoptRule(stop0).adoptRule(stop1).adoptRule(stop2);  // RUNNING: on stop move all {PAUSED,RUNNING,ACTIVE} to READY
+  stop1->adoptRule(stop0).adoptRule(stop1).adoptRule(stop2);  // PAUSED:  on stop move all {PAUSED,RUNNING,ACTIVE} to READY
+  stop2->adoptRule(stop0).adoptRule(stop1).adoptRule(stop2);  // ACTIVE:  on stop move all {PAUSED,RUNNING,ACTIVE} to READY
+  stop3->adoptRule(stop0).adoptRule(stop1).adoptRule(stop2);  // READY:   on stop move all {PAUSED,RUNNING,ACTIVE} to READY
+  stop4->adoptRule(stop0).adoptRule(stop1).adoptRule(stop2);  // OFFLINE: on stop move all {PAUSED,RUNNING,ACTIVE} to READY
+
+  // Normal case: all slaves are NOT_READY
+  Tr*  unload2   = daq->addTransition("unload",    not_ready,   offline,   KILL);
+  // If we have dead children, the master is OFFLINE. Still propagate the commands
+  Tr*  unload3   = daq->addTransition("unload",    offline,     offline,   NO_CHECKS);
+  unload2->adoptRule(unload2).adoptRule(unload3);
+  unload3->adoptRule(unload2).adoptRule(unload3);
+
+  return daq;
+}
+
+/// Create DAQ machine type
 static Type* defineDAQType(DaqType daqType = DAQ_NORMAL)    {
   typedef Transition Tr;
   Type *daq = new Type("DAQ");
@@ -332,9 +521,10 @@ Type* FiniteStateMachine::fsm_type(const std::string& typ)  {
   static _M m;
   _M::iterator i = m.find(typ);
   if ( i == m.end() )  {
-    if      ( typ == "DAQ"      ) return m[typ]=defineDAQType(DAQ_NORMAL);
-    else if ( typ == "DAQPause" ) return m[typ]=defineDAQType(DAQ_PAUSE_ALL);
-    else if ( typ == "DAQSteer" ) return m[typ]=defineDAQSteerType();
+    if      ( typ == "DAQ"       ) return m[typ]=defineDAQType(DAQ_NORMAL);
+    else if ( typ == "DAQPause"  ) return m[typ]=defineDAQType(DAQ_PAUSE_ALL);
+    else if ( typ == "DAQActive" ) return m[typ]=defineDAQActiveType(DAQ_NORMAL);
+    else if ( typ == "DAQSteer"  ) return m[typ]=defineDAQSteerType();
     throw runtime_error("Request for undefined FSM type:"+typ);
   }
   return (*i).second;

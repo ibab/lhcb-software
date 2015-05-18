@@ -11,8 +11,8 @@ ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 ApplicationMgr.TopAlg               += {"GaudiSequencer/mySequence"};
 mySequence.Members                  += {"LHCb::RoutingBitsPrescaler/Prescaler"};
 mySequence.Members                  += {"LHCb::SocketDataSender/Sender"};
-mySequencer.ReturnOK = true;
-mySequencer.ShortCircuit = true;
+mySequence.ReturnOK = true;
+mySequence.ShortCircuit = true;
 Sender.DataSink                      = @OnlineEnv.Target;
 Sender.Compress                      = 0;
 Sender.DataType                      = 3; // MDF_NONE=1, MDF_RECORDS=2, MDF_BANKS=3
@@ -32,10 +32,11 @@ EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
 EventSelector.REQ1                   = "$EVENTSELECTOR_REQ1";
 #include "$ONLINETASKS/options/MessageSvc.opts"
 Prescaler.Requirements = {
-"Name=All;EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=0.10",
+"Name=All;EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=10.0",
 "Name=Tracker;EvType=2;TriggerMask=0x0,0x00200000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
 "Name=Rich;EvType=2;TriggerMask=0x0,0x00400000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
 "Name=Velo;EvType=2;TriggerMask=0x0,0x00004008,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
-"Name=Muon;EvType=2;TriggerMask=0x0,0x00000400,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+"Name=Muon;EvType=2;TriggerMask=0x0,0x00000400,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
+"Name=Calo;EvType=2;TriggerMask=0x0,0x18000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
 

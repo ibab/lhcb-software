@@ -102,7 +102,8 @@ int TcpNetworkChannel::connect ( const Address& addr, int tmo )  {
     startTimer(tmo);
     int status = ::connect ( m_socket, (sockaddr*)&addr, sizeof(addr) );
     stopTimer();
-    if ( !m_bCancel ) m_errno = (status < 0) ? ::lib_rtl_socket_error() : 0;
+    //if ( !m_bCancel ) 
+    m_errno = (status < 0) ? ::lib_rtl_socket_error() : 0;
     return status;
   }
   return (-1);

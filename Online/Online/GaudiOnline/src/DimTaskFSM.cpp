@@ -13,6 +13,7 @@
 #define ST_NAME_ERROR       "ERROR"
 #define ST_NAME_NOT_READY   "NOT_READY"
 #define ST_NAME_READY       "READY"
+#define ST_NAME_ACTIVE      "ACTIVE"
 //#define ST_NAME_STOPPED     "STOPPED"
 #define ST_NAME_STOPPED     "READY"
 #define ST_NAME_RUNNING     "RUNNING"
@@ -33,9 +34,9 @@ template <class T,class Q> static inline StatusCode cast_success(T* p, void** q)
 
 namespace  {
   /** @class Command
-    *
-    *  @author M.Frank
-    */
+   *
+   *  @author M.Frank
+   */
   class Command : public DimCommand  {
     typedef DimTaskFSM Target;
     /// Command target
@@ -43,75 +44,83 @@ namespace  {
   public:
     /// Constructor
     Command(const std::string& nam, DimTaskFSM* target) 
-    : DimCommand(nam.c_str(), (char*)"C"), m_target(target) { }
+      : DimCommand(nam.c_str(), (char*)"C"), m_target(target) { }
     /// DimCommand overload: handle DIM commands
     virtual void commandHandler()   {
       // Decouple as quickly as possible from the DIM command loop !
       std::string cmd = getString();
       //m_target->output(MSG::DEBUG,std::string("Received DIM command:"+cmd).c_str());
       if      ( cmd == "load"  ) {  // Ignore!
-	return;
+        return;
       }
       else if ( cmd == "configure"  ) {
-	m_target->setTargetState(Target::ST_READY);
-	IOCSENSOR.send(m_target, Target::CONFIGURE);
+        m_target->setTargetState(Target::ST_READY);
+        IOCSENSOR.send(m_target, Target::CONFIGURE);
+      }
+      else if ( cmd == "activate"   ) {
+        m_target->setTargetState(Target::ST_ACTIVE);
+        IOCSENSOR.send(m_target, Target::ACTIVATE);
+      }
+      else if ( cmd == "go"         ) {
+        m_target->setTargetState(Target::ST_RUNNING);
+        IOCSENSOR.send(m_target, Target::GO);
       }
       else if ( cmd == "start"      ) {
-	m_target->setTargetState(Target::ST_RUNNING);
-	IOCSENSOR.send(m_target, Target::INITIALIZE);
+        m_target->setTargetState(Target::ST_RUNNING);
+        IOCSENSOR.send(m_target, Target::INITIALIZE);
       }
       else if ( cmd == "stop"       ) {
-	m_target->setTargetState(Target::ST_STOPPED);
-	IOCSENSOR.send(m_target, Target::DISABLE);
+        m_target->setTargetState(Target::ST_STOPPED);
+        IOCSENSOR.send(m_target, Target::DISABLE);
       }
       else if ( cmd == "reset"      ) {
-	m_target->setTargetState(Target::ST_UNKNOWN);
-	IOCSENSOR.send(m_target, Target::TERMINATE);
+        m_target->setTargetState(Target::ST_UNKNOWN);
+        IOCSENSOR.send(m_target, Target::TERMINATE);
       }
       else if ( cmd == "pause"      ) {
-	m_target->setTargetState(Target::ST_PAUSED);
+        m_target->setTargetState(Target::ST_PAUSED);
         IOCSENSOR.send(m_target, DimTaskFSM::CANCEL);
         IOCSENSOR.send(m_target, DimTaskFSM::PAUSE);
       }
       else if ( cmd == "continue"   ) {
-	m_target->setTargetState(Target::ST_RUNNING);
+        m_target->setTargetState(Target::ST_RUNNING);
         IOCSENSOR.send(m_target, DimTaskFSM::CANCEL);
         IOCSENSOR.send(m_target, DimTaskFSM::CONTINUE);
       }
       else if ( cmd == "unload"     ) {
-	m_target->setTargetState(Target::ST_UNKNOWN);
+        m_target->setTargetState(Target::ST_UNKNOWN);
         IOCSENSOR.send(m_target, DimTaskFSM::CANCEL);
         IOCSENSOR.send(m_target, DimTaskFSM::UNLOAD);
       }
       else if ( cmd == "recover"    ) {
-	m_target->setTargetState(Target::ST_UNKNOWN);
+        m_target->setTargetState(Target::ST_UNKNOWN);
         IOCSENSOR.send(m_target, DimTaskFSM::CANCEL);
         IOCSENSOR.send(m_target, DimTaskFSM::UNLOAD);
       }
       else if ( cmd == "RESET"      )   {
-	m_target->setTargetState(Target::ST_UNKNOWN);
+        m_target->setTargetState(Target::ST_UNKNOWN);
         IOCSENSOR.send(m_target, DimTaskFSM::CANCEL);
         IOCSENSOR.send(m_target, DimTaskFSM::UNLOAD);
       }
       else if ( cmd == "error" )  {
-	m_target->setTargetState(Target::ST_ERROR);
+        m_target->setTargetState(Target::ST_ERROR);
         m_target->cancel();
         m_target->declareState(Target::ST_ERROR);
         return;
       }
       else if ( cmd == "stop_trigger" )   {
-	std::string* value = new std::string("DAQ_STOP_TRIGGER");
+        std::string* value = new std::string("DAQ_STOP_TRIGGER");
         IOCSENSOR.send(m_target, DimTaskFSM::FIRE_INCIDENT, value);
         return;
       }
       else if ( cmd == "start_trigger" )   {
-	std::string* value = new std::string("DAQ_START_TRIGGER");
+        std::string* value = new std::string("DAQ_START_TRIGGER");
         IOCSENSOR.send(m_target, DimTaskFSM::FIRE_INCIDENT, value);
         return;
       }
       else if ( cmd == "!state" )  {
-	std::string old_state = m_target->stateName();
-	m_target->clearState();
+        std::string old_state = m_target->stateName();
+        m_target->clearState();
         m_target->_declareState(old_state);
         return;
       }
@@ -140,8 +149,8 @@ namespace  {
 }
 
 DimTaskFSM::DimTaskFSM(IInterface*) 
-: m_name(RTL::processName()), m_stateName(ST_NAME_UNKNOWN), m_prevStateName(ST_NAME_UNKNOWN),
-  m_command(0), m_service(0), m_fsmService(0), m_haveEventLoop(false), m_refCount(1)
+  : m_name(RTL::processName()), m_stateName(ST_NAME_UNKNOWN), m_prevStateName(ST_NAME_UNKNOWN),
+    m_command(0), m_service(0), m_fsmService(0), m_haveEventLoop(false), m_refCount(1)
 {
   s_dimtask_instance = this;
   m_propertyMgr  = new PropertyMgr(this);
@@ -254,6 +263,8 @@ std::string DimTaskFSM::stateName(int state) {
     return ST_NAME_NOT_READY;
   case ST_READY:
     return ST_NAME_READY;
+  case ST_ACTIVE:
+    return ST_NAME_ACTIVE;
   case ST_RUNNING:
     return ST_NAME_RUNNING;
   case ST_STOPPED:
@@ -296,23 +307,25 @@ StatusCode DimTaskFSM::_declareState(const std::string& new_state)  {
 StatusCode DimTaskFSM::declareState(State new_state)  {
   m_monitor.state = char(new_state);
   switch(new_state)   {
-    case TR_ERROR:
-    case ST_ERROR:
-      return _declareState(ST_NAME_ERROR);
-    case ST_NOT_READY:
-      return _declareState(ST_NAME_NOT_READY);
-    case ST_READY:
-      return _declareState(ST_NAME_READY);
-    case ST_STOPPED:
-      return _declareState(ST_NAME_STOPPED);
-    case ST_RUNNING:
-      return _declareState(ST_NAME_RUNNING);
-    case ST_PAUSED:
-      return _declareState(ST_NAME_PAUSED);
-    case ST_UNKNOWN:
-    default:
-      m_monitor.state = ST_UNKNOWN;
-      return _declareState(ST_NAME_UNKNOWN);
+  case TR_ERROR:
+  case ST_ERROR:
+    return _declareState(ST_NAME_ERROR);
+  case ST_NOT_READY:
+    return _declareState(ST_NAME_NOT_READY);
+  case ST_READY:
+    return _declareState(ST_NAME_READY);
+  case ST_ACTIVE:
+    return _declareState(ST_NAME_ACTIVE);
+  case ST_STOPPED:
+    return _declareState(ST_NAME_STOPPED);
+  case ST_RUNNING:
+    return _declareState(ST_NAME_RUNNING);
+  case ST_PAUSED:
+    return _declareState(ST_NAME_PAUSED);
+  case ST_UNKNOWN:
+  default:
+    m_monitor.state = ST_UNKNOWN;
+    return _declareState(ST_NAME_UNKNOWN);
   }
 }
 
@@ -320,20 +333,20 @@ StatusCode DimTaskFSM::declareState(State new_state)  {
 StatusCode DimTaskFSM::declareSubState(SubState new_state)  {
   m_monitor.metaState = char(new_state);
   switch(new_state)   {
-    case SUCCESS_ACTION:
-      m_monitor.doneCmd = (unsigned long)::time(0);
-      break;
-    case EXEC_ACTION:
-      m_monitor.lastCmd = (unsigned long)::time(0);
-      break;
-    case FAILED_ACTION:
-      m_monitor.doneCmd = (unsigned long)::time(0);
-      break;
-    case UNKNOWN_ACTION:
-    default:
-      m_monitor.doneCmd = (unsigned long)::time(0);
-      m_monitor.metaState = ST_UNKNOWN;
-      break;
+  case SUCCESS_ACTION:
+    m_monitor.doneCmd = (int)::time(0);
+    break;
+  case EXEC_ACTION:
+    m_monitor.lastCmd = (int)::time(0);
+    break;
+  case FAILED_ACTION:
+    m_monitor.doneCmd = (int)::time(0);
+    break;
+  case UNKNOWN_ACTION:
+  default:
+    m_monitor.doneCmd = (int)::time(0);
+    m_monitor.metaState = ST_UNKNOWN;
+    break;
   }
   // std::cout << "Update substate..." << std::endl;
   m_fsmService->updateService(&m_monitor,sizeof(m_monitor));
@@ -355,10 +368,12 @@ void DimTaskFSM::handle(const Event& ev)  {
         _CASE(UNLOAD)       sc=unload();                              break;
         _CASE(CONFIGURE)    sc=configure();                           break;
         _CASE(INITIALIZE)   sc=initialize();                          break;
+        _CASE(ACTIVATE)     sc=activate();                            break;
+        _CASE(GO)           sc=go();                                  break;
         _CASE(START)        sc=start();                               break;
         _CASE(ENABLE)       sc=enable();                              break;
         _CASE(DISABLE)      sc=disable();                             break;
-	_CASE(CANCEL)       sc=cancel();                              break;
+        _CASE(CANCEL)       sc=cancel();                              break;
         _CASE(NEXTEVENT)    sc=nextEvent(1);                          break;
         _CASE(STOP)         sc=stop();                                break;
         _CASE(FINALIZE)     sc=finalize();                            break;
@@ -368,9 +383,9 @@ void DimTaskFSM::handle(const Event& ev)  {
         _CASE(ERROR)        sc=declareState(ST_ERROR);                break;
         _CASE(STARTUP_DONE) sc = startupDone();                       break;
         _CASE(CONNECT_DIM)  sc = connectDIM();                        break;
-	_CASE(FIRE_INCIDENT)sc = fireIncident(*(std::string*)ev.data);
-	delete (std::string*)ev.data;                                 break;
-        default:  printErr(0,"Got Unkown action request:%d",ev.type); break;
+        _CASE(FIRE_INCIDENT)sc = fireIncident(*(std::string*)ev.data);
+        delete (std::string*)ev.data;                                 break;
+      default:  printErr(0,"Got Unkown action request:%d",ev.type); break;
       }
       sc.isSuccess() ? declareSubState(SUCCESS_ACTION) : declareSubState(FAILED_ACTION);
       return;
@@ -414,6 +429,17 @@ StatusCode DimTaskFSM::initialize()  {
 
 /// Reinitialize the application
 StatusCode DimTaskFSM::reinitialize()   {
+  return StatusCode::SUCCESS;
+}
+
+/// Callback on "activate" command
+StatusCode DimTaskFSM::activate()  {
+  return declareState(ST_ACTIVE);
+}
+
+/// Callback on "go" command
+StatusCode DimTaskFSM::go()  {
+  IOCSENSOR.send(this, ENABLE);
   return StatusCode::SUCCESS;
 }
 

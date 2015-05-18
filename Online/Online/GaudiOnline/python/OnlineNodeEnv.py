@@ -4,7 +4,10 @@ nodeInfo = sys.modules['OnlineEnvBase']
 def load_node_info():
   import os, imp, socket
   dir_name = os.path.dirname(os.path.dirname(imp.find_module('OnlineEnvBase')[1])) + os.sep + 'Nodes'
-  mod_name = socket.gethostname().upper()+'_TriggerInfo.py'
+  nod_name = socket.gethostname().upper()
+  nod_idx  = nod_name.find(".")
+  if nod_idx>0: nod_name = nod_name[:nod_idx]
+  mod_name = nod_name+'_TriggerInfo.py'
   nam,ext = os.path.splitext(mod_name)
   if not sys.modules.has_key(nam):
     if not dir_name in sys.path:

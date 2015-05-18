@@ -1,13 +1,13 @@
-#include "GaudiOnline/Class2Task.h"
+#include "GaudiOnline/Class3Task.h"
 #include "CPP/IocSensor.h"
 
 /// Standard constructor
-LHCb::Class2Task::Class2Task(IInterface* svc) : GaudiTask(svc) {
+LHCb::Class3Task::Class3Task(IInterface* svc) : GaudiTask(svc) {
   IOCSENSOR.send(this, STARTUP_DONE);
 }
 
 /// Callback on start transition
-StatusCode LHCb::Class2Task::initialize()  {
+StatusCode LHCb::Class3Task::initialize()  {
   int result = configApplication();
   if ( result == 1 ) {
     result = initApplication();
@@ -26,17 +26,14 @@ StatusCode LHCb::Class2Task::initialize()  {
 }
 
 /// Callback on activate transition
-StatusCode LHCb::Class2Task::activate()  {
+StatusCode LHCb::Class3Task::activate()  {
   int result = configApplication();
   if ( result == 1 ) {
     result = initApplication();
     if ( result == 1 ) {
       result = startApplication();
       if ( result == 1 ) {
-        result = goApplication();
-        if ( result == 1 ) {
-          return DimTaskFSM::activate();
-        }
+        return DimTaskFSM::activate();
       }
     }
   }
@@ -44,7 +41,17 @@ StatusCode LHCb::Class2Task::activate()  {
   return StatusCode::FAILURE;
 }
 
-StatusCode LHCb::Class2Task::finalize()  {
+/// Callback on go transition
+StatusCode LHCb::Class3Task::go()  {
+  int result = goApplication();
+  if ( result == 1 ) {
+    return DimTaskFSM::go();
+  }
+  declareState(ST_ERROR);
+  return StatusCode::FAILURE;
+}
+
+StatusCode LHCb::Class3Task::finalize()  {
   int result = stopApplication();
   if ( result == 1 ) {
     result = finalizeApplication();

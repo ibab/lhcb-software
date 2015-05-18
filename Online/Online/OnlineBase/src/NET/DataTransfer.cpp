@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include "RTL/que.h"
 #include "RTL/Lock.h"
+#include "RTL/time.h"
 #include "NET/defs.h"
 #include "NET/IOPortManager.h"
 #include "NET/DataTransfer.h"
@@ -295,7 +296,7 @@ netentry_t *NET::connect(const std::string& dest)  {
   std::auto_ptr<netentry_t> e(new netentry_t);
   e->name = dest;
   e->hash = hash32(e->name.c_str());
-  int sc = ::tan_get_address_by_name(e->name.c_str(),&e->addr);
+  int retry, sc = ::tan_get_address_by_name(e->name.c_str(),&e->addr);
   if ( sc != TAN_SS_SUCCESS )  {
     return 0;
   }
@@ -305,7 +306,13 @@ netentry_t *NET::connect(const std::string& dest)  {
     return 0;
   }
   e->setSockopts();
-  sc = ::connect(e->chan,(sockaddr*)&e->addr,sizeof(sockaddr_in));
+  for(sc=1, retry=4; retry > 0 && sc != 0; --retry )  {
+    sc = ::connect(e->chan,(sockaddr*)&e->addr,sizeof(sockaddr_in));
+    if ( sc != 0 )  {
+      ::lib_rtl_output(LIB_RTL_OS,"Failed to connect to DataTransfor(connect)");
+      ::lib_rtl_sleep(1000);
+    }
+  }
   if (sc == -1)  {
     ::socket_close(e->chan);
     return 0;
@@ -628,30 +635,34 @@ void DataTransfer::net_unlock(NET* net, void* lock)
 namespace {
   void help() {
     ::printf("net_send -opt [-opt]\n");
-    ::printf("    -t<urns>=<number>          Number of receive/send turns\n");
-    ::printf("    -l<ength>=<number>         Message length (Client only)\n");
+    ::printf("    -n<ame>=<process-name>     Sender/own process name     \n");
+    ::printf("    -ta<rget>=<process-name>   Receiver's process name     \n");
+    ::printf("    -tu<rns>=<number>          Number of receive/send turns\n");
+    ::printf("    -l<ength>=<number>         Message length in bytes     \n");
     ::printf("    -b<ounce>                  Run in message bounce mode) \n");
   }
   void help_recv() {
     ::printf("net_recv -opt [-opt]\n");
     ::printf("    -b<ounce>                  Run in message bounce mode) \n");
+    ::printf("    -n<ame>=<process-name>     Receiver's process name     \n");
   }
   struct NetSensor  {
-    bool m_bounce;
-    NET* m_net;
+    char* m_buffer;
+    bool  m_bounce;
+    NET*  m_net;
+    char* buffer()   { return m_buffer; }
     static void handle_data(netentry_t* e, const netheader_t& hdr, void* param)   {
       NetSensor* s = (NetSensor*)param;
       static time_t start = time(0);
-      static char buff[1024*128];
       static int cnt = 0;
-      net_receive(s->m_net,e, buff);
+      net_receive(s->m_net,e, s->m_buffer);
       if ( (++cnt)%1000 == 0 )  {
         ::printf("%3ld %s %d messages [%s]. chan:%d port:%d addr:%s\n",
           time(0)-start, s->m_bounce ? "Bounced" : "Received",cnt,
           hdr.name,e->chan,e->addr.sin_port,inet_ntoa(e->addr.sin_addr));
       }
       if ( s->m_bounce )  {
-        int sc = net_send(s->m_net,buff,e->header.size,e,e->header.facility);
+        int sc = net_send(s->m_net,s->m_buffer,e->header.size,e,e->header.facility);
         if ( sc != NET_SUCCESS )  {
           ::printf("Failed to send message. ret=%d\n",sc);
         }
@@ -660,9 +671,16 @@ namespace {
     static void handle_death(netentry_t* e, const netheader_t& hdr, void* /* param */ )
     { ::printf("Task died: %s chan=%d addr=%s\n",hdr.name,e->chan,inet_ntoa(e->addr.sin_addr));  }
     explicit NetSensor(const std::string& proc,bool bounce=false) : m_bounce(bounce) 
-    { net_subscribe(m_net=net_init(proc),this,1,handle_data,handle_death);  }
+    {
+      m_buffer = new char[1024*1024];
+      net_subscribe(m_net=net_init(proc),this,1,handle_data,handle_death);  
+    }
     virtual ~NetSensor() 
-    { net_unsubscribe(m_net,this,1);                         }
+    {
+      net_unsubscribe(m_net,this,1);
+      delete [] m_buffer;
+      m_buffer = 0;
+    }
   };
 }
 
@@ -677,7 +695,7 @@ static std::string host_name()  {
 extern "C" int net_send(int argc, char **argv)  {
   char *wmessage = 0;
   int count=1, length=256, loop=100000;
-  std::string target = "RCV_0", name="SND_0";
+  std::string target, name;
 
   RTL::CLI cli(argc, argv, help);
   bool bounce = cli.getopt("bounce",1) != 0;
@@ -688,28 +706,38 @@ extern "C" int net_send(int argc, char **argv)  {
   cli.getopt("name",1,name);
 
   count = bounce ? 1 : count;
-  std::string proc = host_name()+"::"+name;
-  std::string to   = host_name()+"::"+target;
-  ::printf (" Starting net sender:%d turns:%d\n",length,loop);
+  std::string proc = name.empty() ? host_name()+"::SND_0" : name;
+  std::string to   = target.empty() ? host_name()+"::RCV_0" : target;
+  ::printf (" Starting net sender:%d turns:%d name:%s target:%s\n",
+	    length,loop,name.c_str(),target.c_str());
   while(count-- > 0)  {
-    NetSensor c1(proc,bounce);
+    NetSensor cl(proc,bounce);
     if ( length<=0 ) length=10;
-    wmessage = new char[length];
+    wmessage = cl.buffer();
+    for (int k = 0; k < length; k++) wmessage[k] = char((length + k) & 0xFF);
 
     // receive some messages and bounce them
+    struct timeval start;
+    ::gettimeofday(&start,0);
     for (int i=0, mx=loop; mx > 0; --mx, ++i)  {
-      for (int k = 0; k < length; k++) wmessage[k] = char((length + k) & 0xFF);
-      int sc = net_send(c1.m_net,wmessage, length, to, 1);
+      int sc = net_send(cl.m_net,wmessage, length, to, 1);
       if (sc != NET_SUCCESS)
         printf("Client::send Failed: Error=%d\n",sc);
-      if (i % 1000 == 0) printf ("%ld Sent %d messages\n",time(0),i);
+      if ((i+1) % 1000 == 0) {
+	struct timeval now;
+	::gettimeofday(&now,0);
+	double diff = double(now.tv_sec-start.tv_sec)+double(now.tv_usec-start.tv_usec)/1e6;
+	if ( diff == 0 ) diff = 1;
+	double diff2 = double(i+1)/diff;
+	printf ("%-4ld Sent %6d messages rate:%9.3f kHz %9.3f MB/sec  total:%7.3f [sec]\n",
+		time(0)-start.tv_sec,i+1,diff2/1000.0,diff2*length/1024.0/1024.0,diff);
+      }
     }
     if ( bounce )  {
       while(1)  {
         ::lib_rtl_sleep(100);
       }
     }
-    delete [] wmessage;
   }
   printf("Hit key+Enter to exit ...");
   getchar();
@@ -718,8 +746,11 @@ extern "C" int net_send(int argc, char **argv)  {
 
 extern "C" int net_recv(int argc, char **argv)  {
   RTL::CLI cli(argc, argv, help_recv);
-  std::string proc = host_name()+"::RCV_0";
+  std::string proc;
   bool run = true, bounce = cli.getopt("bounce",1) != 0;
+
+  cli.getopt("name",1,proc);
+  if (proc.empty() ) proc = host_name()+"::RCV_0";
   printf (" Starting receiver:%s. Bounce:%s\n",proc.c_str(),bounce ? "true" : "false");
   NetSensor cl(proc, bounce);
   while(run)  {

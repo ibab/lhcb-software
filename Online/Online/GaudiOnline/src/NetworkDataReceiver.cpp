@@ -26,9 +26,9 @@ static const std::string s_reqMsg("EVENT_REQUEST");
 
 // Standard algorithm constructor
 NetworkDataReceiver::NetworkDataReceiver(const std::string& nam, ISvcLocator* pSvc)
-: OnlineService(nam,pSvc), m_recvReq(0), m_recvError(0), m_recvBytes(0), 
-  m_backlog(0), m_lastbacklog(0), m_mepMgr(0), m_prod(0), m_evtSelector(0),
-  m_lock(0), m_recvEvents(false)
+  : OnlineService(nam,pSvc), m_recvReq(0), m_recvError(0), m_recvBytes(0), 
+    m_backlog(0), m_lastbacklog(0), m_mepMgr(0), m_prod(0), m_evtSelector(0),
+    m_lock(0), m_recvEvents(false)
 {
   ::wtc_init();
   ::lib_rtl_create_lock(0,&m_lock);
@@ -269,18 +269,18 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
       e.len        = entry.size;
       if ( copyEventData(e.data,entry.buffer,entry.size).isSuccess() )  {
         ::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
-	e.mask[3] &= ~m_vetoMask;
-	e.mask[3] |= m_routingMask;
+        e.mask[3] &= ~m_vetoMask;
+        e.mask[3] |= m_routingMask;
         ret = m_prod->sendEvent();
         if ( MBM_NORMAL == ret )   {
           --m_backlog;
-	  ++m_recvReq;
-	  m_recvBytes += entry.size;
+          ++m_recvReq;
+          m_recvBytes += entry.size;
 #if 0
-	  MsgStream log(msgSvc(), name());
-	  log << MSG::ALWAYS << "Declared event of size:" << entry.size 
-	      << " to MBM from:" << entry.name << " Routing:" << std::hex 
-	      << h->subHeader().H1->triggerMask()[3] << endmsg;
+          MsgStream log(msgSvc(), name());
+          log << MSG::ALWAYS << "Declared event of size:" << entry.size 
+              << " to MBM from:" << entry.name << " Routing:" << std::hex 
+              << h->subHeader().H1->triggerMask()[3] << endmsg;
 #endif
           return rearmRequest(entry);
         }

@@ -150,8 +150,10 @@ Rule* ObjectsOfType::moveTo(const State* target_state) const    {
 
 /// Helper function to add predicates
 Predicate::States ObjectsOfType::inState(const State* s1, const State* s2,
-					     const State* s3, const State* s4, 
-					     const State* s5) const
+                                         const State* s3, const State* s4, 
+                                         const State* s5, const State* s6,
+                                         const State* s7, const State* s8
+                                         ) const
 {
   Predicate::States allowed;
   if ( s1 ) allowed.insert(s1);
@@ -159,13 +161,18 @@ Predicate::States ObjectsOfType::inState(const State* s1, const State* s2,
   if ( s3 ) allowed.insert(s3);
   if ( s4 ) allowed.insert(s4);
   if ( s5 ) allowed.insert(s5);
+  if ( s6 ) allowed.insert(s6);
+  if ( s7 ) allowed.insert(s7);
+  if ( s8 ) allowed.insert(s8);
   return allowed;
 }
 
 /// Add a new predicate to a transition
-Predicate::States ObjectsOfType::inState(const string& s1, const string& s2,
-					     const string& s3, const string& s4, 
-					     const string& s5)  const
+Predicate::States 
+ObjectsOfType::inState(const string& s1, const string& s2,
+                       const string& s3, const string& s4, 
+                       const string& s5, const std::string& s6,
+                       const std::string& s7, const std::string& s8)  const
 {
   string sname="";
   const State* st1 = m_type->state(s1);
@@ -173,13 +180,19 @@ Predicate::States ObjectsOfType::inState(const string& s1, const string& s2,
   const State* st3 = s3.empty() ? 0 : m_type->state(s3);
   const State* st4 = s4.empty() ? 0 : m_type->state(s4);
   const State* st5 = s5.empty() ? 0 : m_type->state(s5);
+  const State* st6 = s6.empty() ? 0 : m_type->state(s6);
+  const State* st7 = s7.empty() ? 0 : m_type->state(s7);
+  const State* st8 = s8.empty() ? 0 : m_type->state(s8);
   if ( !st1 ) sname = s1;
   else if ( !s2.empty() && !st2 ) sname = s2;
   else if ( !s3.empty() && !st3 ) sname = s3;
   else if ( !s4.empty() && !st4 ) sname = s4;
   else if ( !s5.empty() && !st5 ) sname = s5;
+  else if ( !s6.empty() && !st6 ) sname = s6;
+  else if ( !s7.empty() && !st7 ) sname = s7;
+  else if ( !s8.empty() && !st8 ) sname = s8;
   else  {
-    return inState(st1,st2,st3,st4,st5);
+    return inState(st1,st2,st3,st4,st5,st6,st7,st8);
   }
   throw runtime_error("Type::addPredicate> invalid allowed state "+sname+" for predicate of type "+m_type->name());
 }

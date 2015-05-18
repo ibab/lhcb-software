@@ -1,0 +1,24 @@
+#include "$INFO_OPTIONS"
+#include "$MBM_SETUP_OPTIONS"
+#include "$STATIC_OPTS/SvcMapping.opts"
+#include "$STATIC_OPTS/Monitoring.opts"
+#pragma print on
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.ExtSvc               += { "MEPManager" };
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+MEPManager.PartitionBuffers          = @OnlineEnv.PartitionBuffers;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
+MEPManager.InitFlags                 = @OnlineEnv.MBM_setup;
+//MEPManager.ConsumerRequirements = {
+//    "Events": [
+//               "*_DQSnd_*","EvType=1,TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff",
+//               "*_DQRcv_*","EvType=1,TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff",
+//               "*_DQBLA_*","EvType=1,TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff"
+//               ]
+//    };
+Runable.Wait                         = 1;  // 1 of running as daemon
+MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+IncidentSvc.OutputLevel              = 4;
+

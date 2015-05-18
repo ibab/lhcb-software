@@ -59,6 +59,27 @@ StatusCode Class1Task::finalize()  {
   return declareState(ST_STOPPED);
 }
 
+/// Callback on activate transition
+StatusCode Class1Task::activate()   {
+  m_myState = TASK_STARTING;
+  int result = startApplication();
+  switch(result) {
+  case 2:
+    declareState(ST_READY);
+    return StatusCode::FAILURE;
+  case 1:
+    if ( result == 1 ) {
+      m_myState = TASK_STARTED;
+      return DimTaskFSM::activate();
+    }
+    // Fall through in case of failure
+  case 0:
+  default:
+    declareState(ST_ERROR);
+    return StatusCode::FAILURE;
+  }
+}
+
 /// Callback on configure transition
 StatusCode Class1Task::start()  {
   m_myState = TASK_STARTING;
@@ -68,8 +89,12 @@ StatusCode Class1Task::start()  {
     declareState(ST_READY);
     return StatusCode::FAILURE;
   case 1:
-    m_myState = TASK_STARTED;
-    return DimTaskFSM::start();
+    result = goApplication();
+    if ( result == 1 ) {
+      m_myState = TASK_STARTED;
+      return DimTaskFSM::start();
+    }
+    // Fall through in case of failure
   case 0:
   default:
     declareState(ST_ERROR);

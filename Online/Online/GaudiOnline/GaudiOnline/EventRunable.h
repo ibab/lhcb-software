@@ -46,7 +46,8 @@ namespace LHCb  {
     int               m_waitForEventFinished;
     /// Property: Number of events to be processed in one nextEvent() call (default: 1)
     int               m_evtMax;
-
+    /// Property: Timeout in seconds to waiiiiiiit for next event request. Never exits event loop if set.
+    int               m_waitForEvent;
     /// Counter to consecutive processing errors
     int               m_nerr;
     /// Monitoring quantity: Number of events processed

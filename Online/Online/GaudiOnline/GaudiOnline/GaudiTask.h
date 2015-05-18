@@ -90,6 +90,8 @@ namespace LHCb  {
     virtual int initApplication();
     /// Internal helper: start application manager
     virtual int startApplication();
+    /// Start second layer event processing runable for GAUDI Application
+    virtual int goApplication();
     /// Internal helper: stop application manager
     virtual int stopApplication();
     /// Internal helper: finalize   application manager

@@ -207,12 +207,15 @@ namespace FiniteStateMachine {
     virtual ~ObjectsOfType() {}
     /// Helper function to add predicates
     Predicate::States inState(const std::string& s1,    const std::string& s2="",
-			      const std::string& s3="", const std::string& s4="", 
-			      const std::string& s5="") const;
+                              const std::string& s3="", const std::string& s4="", 
+                              const std::string& s5="", const std::string& s6="",
+                              const std::string& s7="", const std::string& s8="") const;
     /// Helper function to add predicates
     Predicate::States inState(const State* s1,   const State* s2=0,
-			      const State* s3=0, const State* s4=0, 
-			      const State* s5=0) const;
+                              const State* s3=0, const State* s4=0, 
+                              const State* s5=0, const State* s6=0,
+                              const State* s7=0, const State* s8=0
+                              ) const;
     /// Helper function to add ANY rules
     Rule* moveTo(             const std::string& target_state) const;
     /// Helper function to add ANY rules
