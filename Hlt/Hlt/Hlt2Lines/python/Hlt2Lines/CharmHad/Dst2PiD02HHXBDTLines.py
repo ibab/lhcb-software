@@ -14,12 +14,12 @@ class CharmHadDst2PiD02HHXBDTLines : # {
         self.slotDict = {
                 ## Configuration for two-body seeds shared by inclusive lines
                 'InclHc2HHX'         : {
-                    'Trk_TRCHI2DOF_MAX'         : 3.0
+                    'Trk_TRCHI2DOF_MAX'         : 2.0
                   , 'Trk_PT_MIN'                : 200.0 * MeV
                   , 'Trk_MIPCHI2DV_MIN'         : 7.0
                   , 'D0_VCHI2PDOF_MAX'          : 50
                   , 'D0_BPVVDCHI2_MIN'          : 20
-                  , 'D0_BPVCORRM_MAX'           : 2300.0 * MeV
+                  , 'D0_BPVCORRM_MAX'           : 2400.0 * MeV
                   , 'D0_comb_PT_MIN'             : 1900 * MeV
                   , 'TisTosSpec': { "Hlt1Track.*Decision%TOS":0 }
                 }
@@ -29,17 +29,17 @@ class CharmHadDst2PiD02HHXBDTLines : # {
                   , 'Spi_PT_MIN'                : 150.0 * MeV   
                   , 'Dst_VCHI2PDOF_MAX'         : 50.0
                   , 'Dst_PT_MIN'                : 2.0 * GeV
-                  , 'Dst_M_MAX'                 : 2600.0 * MeV
-                  , 'Dst_D0_DeltaM_MAX'         : 700.0 * MeV
+                  , 'Dst_M_MAX'                 : 2700.0 * MeV
+                  , 'Dst_D0_DeltaM_MAX'         : 500.0 * MeV
                 }
                 ## Configuration for D*+ specific filtering
                 , 'InclDst2PiD02HHX'   : {
                     'D0_BPVVDCHI2_MIN'          : 20
                   , 'D0_BPVCORRM_MAX'           : 2100.0 * MeV
                   , 'Dst_M_MAX'                 : 2300.0 * MeV
-                  , 'Dst_D0_DeltaM_MAX'         : 300.0 * MeV
+                  , 'Dst_D0_DeltaM_MAX'         : 350.0 * MeV
                   , 'BDT_Lookup_Filename'       : "Hlt2Dst2PiD02HHX_BDTParams_v0r0.txt"
-                  , 'BDT_Threshold'             : 1.37
+                  , 'BDT_Threshold'             : 1.40
 
                   , 'BDT_Lookup_VarMap' : {
                                 "D0FD"          : "CHILDFUN(BPVVD, 1)"
@@ -54,11 +54,11 @@ class CharmHadDst2PiD02HHXBDTLines : # {
                 ## Configuration for Sigc specific filtering
                 , 'InclSigc2PiLc2HHX'  : {
                     'D0_BPVVDCHI2_MIN'          : 20
-                  , 'D0_BPVCORRM_MAX'           : 2300.0 * MeV
-                  , 'Dst_M_MAX'                 : 2800.0 * MeV
-                  , 'Dst_D0_DeltaM_MAX'         : 400.0 * MeV
-                  , 'BDT_Lookup_Filename'       : "Hlt2Dst2PiD02HHX_BDTParams_v0r0.txt"
-                  , 'BDT_Threshold'             : 1.37
+                  , 'D0_BPVCORRM_MAX'           : 2400.0 * MeV
+                  , 'Dst_M_MAX'                 : 2700.0 * MeV
+                  , 'Dst_D0_DeltaM_MAX'         : 500.0 * MeV
+                  , 'BDT_Lookup_Filename'       : "Hlt2Sigc2PiLc2HHX_BDTParams_v0r0.txt"
+                  , 'BDT_Threshold'             : 1.425
 
                   , 'BDT_Lookup_VarMap' : {
                                 "D0FD"          : "CHILDFUN(BPVVD, 1)"

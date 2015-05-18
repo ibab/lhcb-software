@@ -7,6 +7,12 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
+
+! 2015-05-18 - Patrick Spradlin
+  . python/Hlt2Lines/CharmHad/Dst2PiD02HHXBDTLines.py
+    Threshold updates to improve rate.
+    !!NOTE!! This change depends on ParamFiles r188395.
+
 ! 2015-05-16 - Dan Johnson
   - Change Hlt2VoidFilter in CEP/Stages.py to comply with change in the HLT2 framework which 
     fixes a problem experienced in Moore running online
