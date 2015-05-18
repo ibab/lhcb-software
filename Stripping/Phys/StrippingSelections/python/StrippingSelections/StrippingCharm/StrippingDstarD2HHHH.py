@@ -180,7 +180,7 @@ class DstarD2HHHHLines( LineBuilder ) :
                               "&( ACHI2DOCA(1,4) < %(maxDocaChi2)s ) " \
                               "&( ACHI2DOCA(2,4) < %(maxDocaChi2)s ) " \
                               "&( ACHI2DOCA(3,4) < %(maxDocaChi2)s ) " %locals() )
-        _mother_cuts = (" (in_range( %(vmMin)s* MeV, M, %(vmMax)s )) " \
+        _mother_cuts = (" (in_range( %(vmMin)s, M, %(vmMax)s )) " \
                         "&(VFASPF(VCHI2PDOF) < %(maxVChi)s)" \
                         "&(BPVDIRA > %(minbpvDira)s )" \
                         "&(BPVLTIME() > %(minLT)s )" %locals() )
