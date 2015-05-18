@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-17 - Andrea Contu
+ - Fix stream for StrippingRD/StrippingB2Lambda0MuLines.py
+
 ! 2015-05-17 - Chitsanu Khurewathanakul
  - Fixed StrippingDitau.py in Stripping QEE
 

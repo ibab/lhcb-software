@@ -49,7 +49,7 @@ default_config = {
                       "XMuMassUpperHigh"      : 6500. ,#MeV
                       'LambdaZ'               : 0.     #mm
                       } ,
-    'STREAMS'     : ['DIMUON']
+    'STREAMS'     : ['Dimuon']
     }
 
 class B2Lambda0MuLines( LineBuilder ) :
