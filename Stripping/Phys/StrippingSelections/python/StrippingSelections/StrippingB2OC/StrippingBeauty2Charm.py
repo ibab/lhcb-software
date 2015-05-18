@@ -1291,7 +1291,7 @@ class Beauty2CharmConf(LineBuilder):
         sel = filterSelection('D02KPIPIDMTIGHT',cuts,d.kpi_pid_tight)
         sel = tosSelection(sel,{'Hlt2Topo2BodyBBDTDecision%TOS':0})
         hlt = "HLT_PASS_RE('Hlt2Topo2BodyBBDTDecision')"
-        sline = StrippingLine('D02HHTopoTOSLine',1.0,selection=sel,HLT=hlt)
+        sline = StrippingLine('D02HHTopoTOSLine',1.0,selection=sel,HLT2=hlt)
         self.registerLine(sline)
 
     def _makeLine(self,protoLine,config):
