@@ -99,8 +99,8 @@ private:
   bool m_printVariables;
   
   std::vector<PatVTTHybridTrack> m_vuttracks;
-  std::vector<PatTTHits> m_hitsLayers;
-  std::vector<PatTTHits> m_allHits;
+  std::array<PatTTHits,8> m_hitsLayers;
+  std::array<PatTTHits,4> m_allHits;
   std::vector<PatTTHits> m_allClusters;
   PatTTHits m_clusterCandidate;
   std::array<PatTTHits::iterator,8> m_iterators;

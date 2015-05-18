@@ -109,22 +109,6 @@ StatusCode PatVeloTTHybridTool::initialize ( ) {
   
   m_allClusters.reserve(50);
   m_clusterCandidate.reserve(4);
-  
-  PatTTHits dummy;
-  dummy.reserve(100);
-  m_hitsLayers.push_back( dummy );
-  m_hitsLayers.push_back( dummy );
-  m_hitsLayers.push_back( dummy );
-  m_hitsLayers.push_back( dummy );
-  m_hitsLayers.push_back( dummy );
-  m_hitsLayers.push_back( dummy );
-  m_hitsLayers.push_back( dummy );
-  m_hitsLayers.push_back( dummy );
-
-  m_allHits.push_back( dummy );
-  m_allHits.push_back( dummy );
-  m_allHits.push_back( dummy );
-  m_allHits.push_back( dummy );
 
   return StatusCode::SUCCESS;
 }
@@ -188,7 +172,7 @@ StatusCode PatVeloTTHybridTool::tracksFromTrack(const LHCb::Track & velotrack, s
   m_PatTTMagnetTool->dxNormFactorsTT( m_tyVelo,  m_normFact);
   m_invNormFact.resize(m_normFact.size());
   std::transform(m_normFact.begin(),m_normFact.end(),m_invNormFact.begin(),
-                 [](float normFact){return 1.0/normFact;});
+                 [](const float normFact){return 1.0/normFact;});
   
   //Save some variables
   float zOrigin =  m_zVelo-m_yVelo/m_tyVelo;
@@ -231,8 +215,8 @@ void PatVeloTTHybridTool::getCandidates(const LHCb::Track& veloTrack,std::vector
       candidate.storeHit( hit );
     }
     // Add this solution
-    m_vuttracks.push_back(candidate);
-
+    m_vuttracks.push_back( std::move(candidate) );
+    
   } // loop over the VeloTT track candidates
   for(PatVTTHybridTrack cand : m_vuttracks){
     simpleFit(cand);
@@ -361,7 +345,6 @@ void PatVeloTTHybridTool::clustering(){
 //=========================================================================
 // Form clusters
 //=========================================================================
-
 void PatVeloTTHybridTool::formClusters(bool forward){
   
   if(!forward){
@@ -402,7 +385,7 @@ void PatVeloTTHybridTool::formClusters(bool forward){
           
           m_clusterCandidate.push_back(hit2);
           if(!m_fourLayerSolution){  
-          m_allClusters.push_back(m_clusterCandidate);
+            m_allClusters.push_back(m_clusterCandidate);
           }
    
           for( auto hit3 : m_allHits[3]){   
@@ -561,12 +544,12 @@ void PatVeloTTHybridTool::simpleFit(PatVTTHybridTrack& vuttr) {
 
   if(chi2Global<m_maxPseudoChi2){
     if(!m_foundCand){
-      m_bestCand.push_back(vuttr);
+      m_bestCand.push_back( std::move(vuttr) );
       m_foundCand = true;
     }
     else if(chi2Global < (*m_bestCand.begin()).chi2PerDoF()){
       m_bestCand.pop_back();
-      m_bestCand.push_back(vuttr);
+      m_bestCand.push_back( std::move(vuttr) );
     }
   }
 

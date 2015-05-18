@@ -21,22 +21,31 @@
 
   public:
     /// Standard constructor
-    PatVTTHybridTrack(const LHCb::Track* tr ) {
-      m_track  = tr;
+    PatVTTHybridTrack(const LHCb::Track* tr ) : m_track(tr), 
+                                                m_chi2PerDoF( 0 ),
+                                                m_qOverP( 0.0 )
+    {
       const LHCb::State& trState = tr->hasStateAt(LHCb::State::LastMeasurement) ?
         *(tr->stateAt(LHCb::State::LastMeasurement)) :
         (tr->closestState(LHCb::State::EndVelo)) ;
-
-      m_origin = trState.position( );
-      m_slope  = trState.slopes();
+      m_origin = trState.position();
+      m_slope = trState.slopes();
       m_clusters.reserve(4); // max of 1 per layer
-      m_qOverP = 0.;
-      m_chi2PerDoF=0.;
-      
     };
-
+    
     virtual ~PatVTTHybridTrack( ) {}; ///< Destructor
-
+    
+    /// Copy constructor
+    PatVTTHybridTrack(const PatVTTHybridTrack& ) = default;
+    /// Move constructor
+    PatVTTHybridTrack(PatVTTHybridTrack&& ) = default;
+    
+    /// Copy assignment operator
+    PatVTTHybridTrack &operator=(const PatVTTHybridTrack& ) = default;
+    /// Move assignment operator
+    PatVTTHybridTrack &operator=(PatVTTHybridTrack&& ) = default;
+    
+    
     const LHCb::Track* track()       const { return m_track; }
 
     float xAtZ( float z ) const {
@@ -56,16 +65,16 @@
     PatTTHits& clusters() { return m_clusters;}
 
     void setChi2PerDoF(float chi2) { m_chi2PerDoF = chi2; }
-    float chi2PerDoF() { return m_chi2PerDoF; }
+    float chi2PerDoF() const { return m_chi2PerDoF; }
 
     void setQOverP(float qp) { m_qOverP = qp; }
-    float qOverP() { return m_qOverP; }
+    float qOverP() const { return m_qOverP; }
 
     void setXTT(float x) { m_xTT = x; }
-    float xTT() { return m_xTT; }
+    float xTT() const { return m_xTT; }
 
     void setXSlopeTT(float tx) { m_txTT = tx; }
-    float xSlopeTT() { return m_txTT; }
+    float xSlopeTT() const { return m_txTT; }
 
   protected:
     
