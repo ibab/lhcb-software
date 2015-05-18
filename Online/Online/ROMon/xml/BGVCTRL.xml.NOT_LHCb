@@ -1,0 +1,41 @@
+<TaskInventory>
+  <NodeList name="BGVCTRL">
+   <Name>BGVCTRL</Name>
+   <Node name="bgvctrl"    type="HLTControl"/>
+   <Node name="hltv0101"   type="HLTWorker"/>
+   <Node name="hltv0102"   type="HLTWorker"/>
+<!--
+   <Node name="hltv0103"   type="HLTWorker"/>
+   <Node name="hltv0104"   type="HLTWorker"/>
+   <Node name="hltv0105"   type="HLTWorker"/>
+   <Node name="hltv0106"   type="HLTWorker"/>
+   <Node name="hltv0107"   type="HLTWorker"/>
+   <Node name="hltv0108"   type="HLTWorker"/>
+   <Node name="hltv0109"   type="HLTWorker"/>
+   <Node name="hltv0110"   type="HLTWorker"/>
+   <Node name="hltv0111"   type="HLTWorker"/>
+   <Node name="hltv0112"   type="HLTWorker"/>
+   <Node name="hltv0113"   type="HLTWorker"/>
+   <Node name="hltv0114"   type="HLTWorker"/>
+   <Node name="hltv0115"   type="HLTWorker"/>
+   <Node name="hltv0116"   type="HLTWorker"/>
+   <Node name="hltv0117"   type="HLTWorker"/>
+   <Node name="hltv0118"   type="HLTWorker"/>
+   <Node name="hltv0119"   type="HLTWorker"/>
+   <Node name="hltv0120"   type="HLTWorker"/>
+   <Node name="hltv0121"   type="HLTWorker"/>
+   <Node name="hltv0122"   type="HLTWorker"/>
+   <Node name="hltv0123"   type="HLTWorker"/>
+   <Node name="hltv0124"   type="HLTWorker"/>
+   <Node name="hltv0125"   type="HLTWorker"/>
+   <Node name="hltv0126"   type="HLTWorker"/>
+   <Node name="hltv0127"   type="HLTWorker"/>
+   <Node name="hltv0128"   type="HLTWorker"/>
+   <Node name="hltv0129"   type="HLTWorker"/>
+   <Node name="hltv0130"   type="HLTWorker"/>
+   <Node name="hltv0131"   type="HLTWorker"/>
+   <Node name="hltv0132"   type="HLTWorker"/>
+-->
+  </NodeList>
+</TaskInventory>
+
