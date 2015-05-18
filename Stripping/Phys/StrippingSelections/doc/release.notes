@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-18 - Roberta Cardinale				
+ - Fixed typo in StrippingUpsilonExotic.py
+
 ! 2015-05-18 - Maurizio Martinelli
  - Fixed a small bug in StrippingCharm/StrippingDstarD2HHHH.py
 

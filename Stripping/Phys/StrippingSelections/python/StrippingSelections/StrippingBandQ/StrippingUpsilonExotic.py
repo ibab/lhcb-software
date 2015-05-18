@@ -202,7 +202,7 @@ class UpsilonExoticConf(LineBuilder) :
         Constructor
         """
         # check the names 
-        if 'UpsilonExotica' != name :
+        if 'UpsilonExotic' != name :
             logger.warning ( 'The non-default name is specified "%s"' % name  ) 
             
         from copy import deepcopy
