@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-18 - Ricardo Vazquez Gomez
+ - Update stripping23 dbase
+
 ! 2015-05-16 - Carlos Vazquez Sierra
  - Updated LineConfig dictionaries for B2CC in S23.
  - Modified a typo ('Line' at the end of the file) which made makeDB.py crash.
