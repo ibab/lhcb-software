@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-05-18 - Andrea Contu
+ - Prescaling on StrippingCharm/StrippingD2PiPi0.py
+
+! 2015-05-18 - Andrea Contu
  - Prescaling to zero charm cross section lines until more suitable tuning is provided
 
 ! 2015-05-18 - Yasmine Amhis 
