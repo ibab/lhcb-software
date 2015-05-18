@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-18  - Wenbin Qian
+  Remove FT request for lines in full DST for B2OC
+
 ! 2015-05-17 - Andrea Contu
  - Fix stream for StrippingRD/StrippingB2Lambda0MuLines.py
 
