@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-18 - Irina Nasteva
+ - Moved GEC from plain Gaudi configurable to FILTER attribute in StrippingBnoC/StrippingBu2hhh.py
+
 ! 2015-05-18 - Andrea Contu
  - Prescaling on StrippingCharm/StrippingD2PiPi0.py
 
