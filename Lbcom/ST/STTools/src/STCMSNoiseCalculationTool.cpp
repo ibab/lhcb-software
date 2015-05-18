@@ -55,8 +55,8 @@ ST::STCMSNoiseCalculationTool::STCMSNoiseCalculationTool( const std::string& typ
   // Number of events used to build the pedestals
   declareProperty("PedestalBuildup",  m_pedestalBuildup = 300 );
   
-  // Read pedestal values from conditions database
-  declareProperty("PedestalsFromDB", m_readPedestals = true);
+  // Read pedestal values from conditions database (change base class default)
+  m_readPedestals = true;
 
   // Use integer algebra in calculations
   declareProperty("UseIntegers", m_useInts=false );

@@ -3,6 +3,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2015-05-18 Marco Cattaneo
+ - STCMSNoiseCalculationTool.cpp: do not re-declare PedestalsFromDB property of
+   base class, just re-initialise default value.
+
 !========================= STTools v4r16 2015-04-20 =========================
 ! 2015-03-31 - Sascha Stahl
  - Added configuration of STOnlinePosition tool to STOfflineConf.py.
