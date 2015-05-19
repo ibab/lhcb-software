@@ -172,12 +172,6 @@ StatusCode RelInfoBs2MuMuZVisoBDT::initialize() {
     return StatusCode::FAILURE;
   }
 
-  m_pvReFitter = tool<IPVReFitter>("AdaptivePVReFitter", this );
-  if(! m_pvReFitter) {
-    fatal() << "Unable to retrieve AdaptivePVReFitter" << endreq;
-    return StatusCode::FAILURE;
-  }
-
   m_vertextool = tool<IVertexFunctionTool>("VertexFunctionTool", this );
   if(! m_vertextool) {
     fatal() << "Unable to retrieve ZVtop" << endreq;

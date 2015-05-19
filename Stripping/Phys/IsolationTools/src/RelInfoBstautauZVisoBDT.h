@@ -222,7 +222,6 @@ private:
   IVertexFunctionTool* m_vertextool;
   const IRelatedPVFinder* pFinder; 
   IDVAlgorithm* m_dva;
-  IPVReFitter* m_pvReFitter;
   const IDistanceCalculator* m_dist;
   IDistanceCalculator*  m_Geom;
   IParticleTransporter* m_transporter;
