@@ -5,7 +5,6 @@ Performance (prescaling included):
 
 Full.dst
 ########
-
 StrippingReport                                                INFO Event 500000, Good event 500000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
  |_StrippingGlobal_                                            |  0.1294|       647|       |  48.457|
@@ -21,6 +20,55 @@ StrippingReport                                                INFO Event 500000
  |!StrippingBLVB2DpiLine                                       |  0.0052|        26|  1.346|   0.056|
  |!StrippingBLVBs2DspiLine                                     |  0.0074|        37|  1.432|   0.051|
  |!StrippingBLVB2LcpLine                                       |  0.0290|       145|  1.697|   0.109|
+
+
+MC: Lambda -> K mu (MC11a/33112001)
+###################################
+StrippingReport                                                INFO Event 19600, Good event 19600
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingBLVLa2KmuLine                                      |  0.4388|        86|  1.000|   2.853|
+
+MC: Lambda_b -> K mu (15112001)
+###############################
+StrippingReport                                                INFO Event 100000, Good event 100000
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingBLVLb2KmuLine                                      | 29.6280|     29628|  1.002|  11.520|
+
+MC: Lambda_b -> D+ mu (15174011)
+################################
+StrippingReport                                                INFO Event 100000, Good event 100000
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingBLVLb2DmuLine                                      |  8.1930|      8193|  1.021|   8.174|
+
+MC: Lambda_b -> Ds+ mu (15174001)
+#################################
+StrippingReport                                                INFO Event 100000, Good event 100000
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingBLVLb2DsmuLine                                     |  8.5070|      8507|  1.117|   5.941|
+
+MC: B0 -> Lambda_c+ mu (11174001)
+#################################
+StrippingReport                                                INFO Event 100000, Good event 100000
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingBLVB2LcmuLine                                      |  7.8240|      7824|  1.080|   6.130|
+
+MC: Bs0 -> Lambda_c+ mu (13174001)
+##################################
+StrippingReport                                                INFO Event 100000, Good event 100000
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingBLVB2LcmuLine                                      |  8.1230|      8123|  1.080|   5.323|
+
+MC: B+ -> K*0 pi+ (12103091)
+############################
+StrippingReport                                                INFO Event 100000, Good event 100000
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingBLVB2KhhLine                                       | 13.4310|     13431|  1.004|   6.188|
+
+MC: B+ -> Phi K+ (12103061)
+###########################
+StrippingReport                                                INFO Event 100000, Good event 100000
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingBLVB2KhhLine                                       | 16.3140|     16314|  1.005|   7.537|
               
 Exported symbols (use python help!):
    - 

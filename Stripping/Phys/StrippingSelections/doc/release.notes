@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-19 - Oliver Gruenberg
+ - StrippingBLVLines.py, StrippingB23MuLines.py, StrippingB24pLines.py,
+   StrippingD23MuLines.py and StrLc23MuLines.py now have all tunable cuts
+   in the dictionary, no changes in selection
+
 ! 2015-05-19 - Alex Pearce
  - Tighten selection in StrippingCharm/StrippingLambdac2V0H.py
 

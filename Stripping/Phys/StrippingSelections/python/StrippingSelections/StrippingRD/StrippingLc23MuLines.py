@@ -8,70 +8,49 @@ Full.dst:
 
 StrippingReport                                                INFO Event 500000, Good event 500000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |_StrippingGlobal_                                            |  0.0516|       258|       |  16.412|
- |_StrippingSequenceStreamLeptonic_                            |  0.0516|       258|       |  16.343|
- |!StrippingLc23MuLc23muLine                                   |  0.0092|        46|  1.065|   5.301|
- |!StrippingLc23MuLc2mueeLine                                  |  0.0038|        19|  1.000|   2.723|
- |!StrippingLc23MuLc2pmumuLine                                 |  0.0236|       118|  1.051|   1.461|
- |!StrippingLc23MuLc2peeLine                                   |  0.0112|        56|  1.054|   1.412|
- |!StrippingLc23MuLc2pKpiLine                                  |  0.0044|        22|  1.091|   0.060|
- |_StrippingSequenceStreamMDST_                                |  0.0516|       258|       |   0.059|
- |!StrippingLc23MuLc23muLine                                   |  0.0092|        46|  1.065|   5.301|
- |!StrippingLc23MuLc2mueeLine                                  |  0.0038|        19|  1.000|   2.723|
- |!StrippingLc23MuLc2pmumuLine                                 |  0.0236|       118|  1.051|   1.461|
- |!StrippingLc23MuLc2peeLine                                   |  0.0112|        56|  1.054|   1.412|
- |!StrippingLc23MuLc2pKpiLine                                  |  0.0044|        22|  1.091|   0.060|
+ |!StrippingLc23MuLc23muLine                                   |  0.0092|        46|  1.065|   0.119|
+ |!StrippingLc23MuLc2mueeLine                                  |  0.0038|        19|  1.000|   0.135|
+ |!StrippingLc23MuLc2pmumuLine                                 |  0.0236|       118|  1.051|   0.266|
+ |!StrippingLc23MuLc2peeLine                                   |  0.0112|        56|  1.054|   1.445|
+ |!StrippingLc23MuLc2pKpiLine                                  |  0.0044|        22|  1.091|   0.034|
               
-Lc -> 3mu (25113002) MC
-#######################
-
+MC: Lc -> 3mu (25113002)
+########################
 StrippingReport                                                INFO Event 100000, Good event 100000
-|                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-|!StrippingLc23MuLinesLc23muLine                              |  2.0760|      2076|  1.025|   0.125|
-                 
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingLc23MuLc23muLine                                   |  2.0770|      2077|  1.025|   5.726|                 
 
-Lc -> p+ mu+ mu- (25113000) MC
-##############################
-
-StrippingReport                                                INFO Event 100000, Good event 100000
-|                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-|!StrippingLc23MuLinesLc2pmumuLine                            |  1.0280|      1028|  1.042|   0.176|
-
-
-Lc -> p~- mu+ mu+ (25113001) MC
+MC: Lc -> p+ mu+ mu- (25113000)
 ###############################
-
 StrippingReport                                                INFO Event 100000, Good event 100000
-|                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-|!StrippingLc23MuLinesLc2pmumuLine                            |  0.9440|       944|  1.040|   0.159|
- 
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingLc23MuLc2pmumuLine                                 |  1.0300|      1030|  1.042|   1.736|
+     
 
-Lc -> p+ K- pi+ (25103000) MC
-#############################
-
+MC: Lc -> p~- mu+ mu+ (25113001)
+################################
 StrippingReport                                                INFO Event 100000, Good event 100000
-|                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-|!StrippingLc23MuLinesLc2pKpiLine                             |  0.6750|       675|  1.107|   0.350|
-              
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingLc23MuLc2pmumuLine                                 |  0.9420|       942|  1.041|   1.720| 
+
+MC: Lc -> p+ K- pi+ (25103000)
+##############################
+StrippingReport                                                INFO Event 100000, Good event 100000
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingLc23MuLc2pKpiLine                                  |  0.0080|         8|  1.000|   0.061|              
 
 Exported symbols (use python help!):
    - 
 """
 
 __author__ = ["Oliver Gruenberg"]
-__date__ = "24.06.2014"
+__date__ = "19.05.2015"
 __version__ = "$Revision: 1.0 $"
 
 ###################################################################################################
 
-__all__ = ("Lc23MuLinesConf",
-           "config_default",
-           "makeLc23mu",
-           "makeLc2muee",
-           "makeLc2pmumu",
-           "makeLc2pee",
-           "makeLc2pKpi",
-           )
+__all__ = ( "Lc23MuLinesConf",
+            "config_default", )
 
 ###################################################################################################
 
@@ -90,21 +69,35 @@ default_config = {
     "STREAMS"     : [ "Leptonic" ],
     "BUILDERTYPE" : "Lc23MuLinesConf",
     "CONFIG"      : {
-    "Postscale"           :1,
-    "Lc23muPrescale"      :1,
-    "Lc2mueePrescale"     :1,
-    "Lc2pmumuPrescale"    :1,
-    "Lc2peePrescale"      :1,        
-    "Lc2pKpiPrescale"     :0.01,
-    "CommonRelInfoTools"   : [ { "Type": "RelInfoVertexIsolation", "Location":"VtxIsoInfo" },
-                               { "Type": "RelInfoVertexIsolationBDT", "Location":"VtxIsoInfoBDT" },
-                               { "Type" : "RelInfoBs2MuMuBIsolations",
-                                 "RecursionLevel" : 0,
-                                 "Variables" : [],
-                                 "Location"  : "BsMuMuBIsolation",
-                                 "tracktype" : 3,
-                                 "makeTrackCuts" : False, },
-                               ] # closes CommonRelInfoTools    
+    # TrackCuts
+    "MinTrPT"             : 300, # (MeV)
+    "MinTrIPChi2"         : 9,
+    "MaxTrChi2Dof"        : 3,
+    "MaxTrGhp"            : 0.3,
+    # CombinationCuts
+    "MaxDoca"             : 0.3, # (mm)
+    "mDiffLcLoose"        : 200, # (MeV) 
+    "mDiffLcTight"        : 150, # (MeV)
+    # MotherCuts
+    "MaxVtxChi2"          : 15,
+    "MinVD"               : 70, # (micrometer)
+    "MaxIPChi2"           : 100,
+    # scalings
+    "Postscale"           : 1,
+    "Lc23muPrescale"      : 1,
+    "Lc2mueePrescale"     : 1,
+    "Lc2pmumuPrescale"    : 1,
+    "Lc2peePrescale"      : 1,        
+    "Lc2pKpiPrescale"     : 0.01,
+    "CommonRelInfoTools"  : [ { "Type": "RelInfoVertexIsolation", "Location":"VtxIsoInfo" },
+                              { "Type": "RelInfoVertexIsolationBDT", "Location":"VtxIsoInfoBDT" },
+                              { "Type" : "RelInfoBs2MuMuBIsolations",
+                                "RecursionLevel" : 0,
+                                "Variables" : [],
+                                "Location"  : "BsMuMuBIsolation",
+                                "tracktype" : 3,
+                                "makeTrackCuts" : False, },
+                              ] # closes CommonRelInfoTools    
     } # closes CONFIG
     } # closes default_config
 
@@ -114,18 +107,65 @@ class Lc23MuLinesConf(LineBuilder) :
     
     """
 
-    __configuration_keys__ = (    "Postscale",
-                                  "Lc23muPrescale",
-                                  "Lc2mueePrescale",
-                                  "Lc2pmumuPrescale",
-                                  "Lc2peePrescale",
-                                  "Lc2pKpiPrescale",
-                                  "CommonRelInfoTools"
-                                  )
+    __configuration_keys__ = ( # TrackCuts
+                               "MinTrPT",
+                               "MinTrIPChi2",
+                               "MaxTrChi2Dof",
+                               "MaxTrGhp",
+                               # CombinationCuts
+                               "MaxDoca",
+                               "mDiffLcLoose",
+                               "mDiffLcTight",
+                               # MotherCuts
+                               "MaxVtxChi2",
+                               "MinVD",
+                               "MaxIPChi2",
+                               # scalings
+                               "Postscale",
+                               "Lc23muPrescale",
+                               "Lc2mueePrescale",
+                               "Lc2pmumuPrescale",
+                               "Lc2peePrescale",
+                               "Lc2pKpiPrescale",
+                               "CommonRelInfoTools"
+                               )
     
-    def __init__(self, name = "Lc23mu", config = None) :
+    def __init__(self, name = "Lc23mu", config = default_config) :
 
         LineBuilder.__init__(self, name, config)
+
+
+#######################################################################################################        
+
+        self.TrackCuts = """
+                         (PT > %(MinTrPT)s*MeV)
+                         & (BPVIPCHI2() > %(MinTrIPChi2)s*MeV)
+                         & (TRCHI2DOF < %(MaxTrChi2Dof)s)
+                         & (TRGHP < %(MaxTrGhp)s)
+                         """ %config
+
+        self.Combination12Cuts = "(ADOCA(1,2) < %(MaxDoca)s*mm)" %config
+
+        self.CombinationCutsLoose = """
+                                 (ADAMASS('Lambda_c+') < %(mDiffLcLoose)s*MeV)
+                                 & (ADOCA(1,3) < %(MaxDoca)s*mm)
+                                 & (ADOCA(2,3) < %(MaxDoca)s*mm)
+                                 """ %config
+        
+
+        self.CombinationCutsTight = """
+                                 (ADAMASS('Lambda_c+') < %(mDiffLcTight)s*MeV)
+                                 & (ADOCA(1,3) < %(MaxDoca)s*mm)
+                                 & (ADOCA(2,3) < %(MaxDoca)s*mm)
+                                 """ %config
+
+        self.MotherCuts = """
+                          ( VFASPF(VCHI2) < %(MaxVtxChi2)s )
+                          & ( (BPVLTIME()*c_light) > %(MinVD)s*micrometer )                         
+                          & ( BPVIPCHI2() < %(MaxIPChi2)s )
+                          """ %config
+                   
+#######################################################################################################
         
         Lc23mu_name   = name+"Lc23mu"
         Lc2muee_name  = name+"Lc2muee"
@@ -133,11 +173,11 @@ class Lc23MuLinesConf(LineBuilder) :
         Lc2pee_name   = name+"Lc2pee"
         Lc2pKpi_name  = name+"Lc2pKpi"
 
-        self.selLc23mu    = makeLc23mu(Lc23mu_name)
-        self.selLc2muee   = makeLc2muee(Lc2muee_name)
-        self.selLc2pmumu  = makeLc2pmumu(Lc2pmumu_name)
-        self.selLc2pee    = makeLc2pee(Lc2pee_name)
-        self.selLc2pKpi   = makeLc2pKpi(Lc2pKpi_name)        
+        self.selLc23mu    = self.makeLc23mu(Lc23mu_name)
+        self.selLc2muee   = self.makeLc2muee(Lc2muee_name)
+        self.selLc2pmumu  = self.makeLc2pmumu(Lc2pmumu_name)
+        self.selLc2pee    = self.makeLc2pee(Lc2pee_name)
+        self.selLc2pKpi   = self.makeLc2pKpi(Lc2pKpi_name)        
 
 #######################################################################################################        
 
@@ -279,21 +319,21 @@ class Lc23MuLinesConf(LineBuilder) :
                                              "ConeAngle" : 0.5,
                                              "Variables" : [],
                                              "RecursionLevel" : 1,
-                                             "Locations"  : { self.selLc2pmumu : "ConeIso05Lc",
+                                             "Locations"  : { self.selLc2pee : "ConeIso05Lc",
                                                               "Phys/StdAllLooseProtons" : "ConeIso05p",
                                                               "Phys/StdAllLooseElectrons" : ["ConeIso05e1", "ConeIso05e2"], }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.0,
                                              "Variables" : [],
                                              "RecursionLevel" : 1,
-                                             "Locations"  : { self.selLc2pmumu : "ConeIso10Lc",
+                                             "Locations"  : { self.selLc2pee : "ConeIso10Lc",
                                                               "Phys/StdAllLooseProtons" : "ConeIso10p",
                                                               "Phys/StdAllLooseElectrons" : ["ConeIso10e1", "ConeIso10e2"], }, },
                                            { "Type" : "RelInfoConeVariables",
                                              "ConeAngle" : 1.5,
                                              "Variables" : [],
                                              "RecursionLevel" : 1,
-                                             "Locations"  : { self.selLc2pmumu : "ConeIso15Lc",
+                                             "Locations"  : { self.selLc2pee : "ConeIso15Lc",
                                                               "Phys/StdAllLooseProtons" : "ConeIso15p",
                                                               "Phys/StdAllLooseElectrons" : ["ConeIso15e1", "ConeIso15e2"], }, },
                                            { "Type": "RelInfoTrackIsolationBDT",
@@ -321,7 +361,7 @@ class Lc23MuLinesConf(LineBuilder) :
                                              "ConeAngle" : 0.5,
                                              "Variables" : [],
                                              "RecursionLevel" : 1,
-                                             "Locations"  : { self.selLc2pmumu : "ConeIso05Lc",
+                                             "Locations"  : { self.selLc2pKpi : "ConeIso05Lc",
                                                               "Phys/StdAllLooseProtons" : "ConeIso05p",
                                                               "Phys/StdAllLooseKaons"   : "ConeIso05K",
                                                               "Phys/StdAllLoosePions"   : "ConeIso05pi", }, },
@@ -329,7 +369,7 @@ class Lc23MuLinesConf(LineBuilder) :
                                              "ConeAngle" : 1.0,
                                              "Variables" : [],
                                              "RecursionLevel" : 1,
-                                             "Locations"  : { self.selLc2pmumu : "ConeIso10Lc",
+                                             "Locations"  : { self.selLc2pKpi : "ConeIso10Lc",
                                                               "Phys/StdAllLooseProtons" : "ConeIso10p",
                                                               "Phys/StdAllLooseKaons"   : "ConeIso10K",
                                                               "Phys/StdAllLoosePions"   : "ConeIso10pi", }, },
@@ -337,7 +377,7 @@ class Lc23MuLinesConf(LineBuilder) :
                                              "ConeAngle" : 1.5,
                                              "Variables" : [],
                                              "RecursionLevel" : 1,
-                                             "Locations"  : { self.selLc2pmumu : "ConeIso15Lc",
+                                             "Locations"  : { self.selLc2pKpi : "ConeIso15Lc",
                                                               "Phys/StdAllLooseProtons" : "ConeIso15p",
                                                               "Phys/StdAllLooseKaons"   : "ConeIso15K",
                                                               "Phys/StdAllLoosePions"   : "ConeIso15pi", }, },
@@ -369,118 +409,105 @@ class Lc23MuLinesConf(LineBuilder) :
         
 #######################################################################################################
 
-TrackCuts = "(PT > 300*MeV) & (BPVIPCHI2()>9.0) & (TRCHI2DOF<3.0) & (TRGHP<0.3)"
-
-########################### 
-
-Combination12Cut = "(ADOCA(1,2)<0.3*mm)"
-
-CombinationCut200 = "(ADAMASS('Lambda_c+')<200*MeV)"\
-                    " & (ADOCA(1,3)<0.3*mm)"\
-                    " & (ADOCA(2,3)<0.3*mm)"\
-
-CombinationCut150 = "(ADAMASS('Lambda_c+')<150*MeV)"\
-                    " & (ADOCA(1,3)<0.3*mm)"\
-                    " & (ADOCA(2,3)<0.3*mm)"\
-
-MotherCut = "( VFASPF(VCHI2) < 15 )"\
-            " & ( (BPVLTIME()*c_light) > 70*micrometer )"\
-            " & ( BPVIPCHI2() < 100 )"\
-                   
-#######################################################################################################
-
-def makeLc23mu(name):
+    def makeLc23mu(self,name):
     
-    Lc23mu = DaVinci__N3BodyDecays("Combine"+name)
-    Lc23mu.DecayDescriptors = [ "[Lambda_c+ -> mu+ mu+ mu-]cc","[Lambda_c+ -> mu+ mu+ mu+]cc" ]
-    Lc23mu.DaughtersCuts = { "mu+" : TrackCuts }
-    Lc23mu.Combination12Cut = Combination12Cut
-    Lc23mu.CombinationCut = CombinationCut200
+        Lc23mu = DaVinci__N3BodyDecays("Combine"+name)
+        Lc23mu.DecayDescriptors = [ "[Lambda_c+ -> mu+ mu+ mu-]cc","[Lambda_c+ -> mu+ mu+ mu+]cc" ]
+
+        Lc23mu.DaughtersCuts = { "mu+" : self.TrackCuts }
+    
+        Lc23mu.Combination12Cut = self.Combination12Cuts
+        Lc23mu.CombinationCut   = self.CombinationCutsLoose
      
-    Lc23mu.MotherCut = MotherCut
+        Lc23mu.MotherCut = self.MotherCuts
 
-    _myMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+        _myMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
     
-    return Selection (name, Algorithm = Lc23mu, RequiredSelections = [ _myMuons ])
+        return Selection (name, Algorithm = Lc23mu, RequiredSelections = [ _myMuons ])
 
 #######################################################################################################
 
-def makeLc2muee(name):
+    def makeLc2muee(self,name):
     
-    Lc2muee = DaVinci__N3BodyDecays("Combine"+name)
-    Lc2muee.DecayDescriptors = [ "[Lambda_c+ -> mu+ e+ e-]cc",
-                                 "[Lambda_c+ -> mu- e+ e+]cc",
-                                 "[Lambda_c+ -> mu+ e+ e+]cc"]
-    Lc2muee.DaughtersCuts = { "mu+" : TrackCuts,
-                              "e+"  : TrackCuts + " & ((PIDe-PIDpi)>2)" }
-    Lc2muee.Combination12Cut = Combination12Cut
-    Lc2muee.CombinationCut = CombinationCut200
-     
-    Lc2muee.MotherCut = MotherCut
+        Lc2muee = DaVinci__N3BodyDecays("Combine"+name)
+        Lc2muee.DecayDescriptors = [ "[Lambda_c+ -> mu+ e+ e-]cc",
+                                     "[Lambda_c+ -> mu- e+ e+]cc",
+                                     "[Lambda_c+ -> mu+ e+ e+]cc"]
+    
+        Lc2muee.DaughtersCuts = { "mu+" : self.TrackCuts,
+                                  "e+"  : self.TrackCuts + " & ((PIDe-PIDpi)>2)" }
+    
+        Lc2muee.Combination12Cut = self.Combination12Cuts
+        Lc2muee.CombinationCut   = self.CombinationCutsLoose     
+        Lc2muee.MotherCut        = self.MotherCuts
 
-    _myMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
-    _myElectrons = DataOnDemand(Location = "Phys/StdLooseElectrons/Particles")    
+        _myMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+        _myElectrons = DataOnDemand(Location = "Phys/StdLooseElectrons/Particles")    
     
-    return Selection (name, Algorithm = Lc2muee, RequiredSelections = [ _myMuons, _myElectrons ])
+        return Selection (name, Algorithm = Lc2muee, RequiredSelections = [ _myMuons, _myElectrons ])
 
 
 #######################################################################################################
 
-def makeLc2pmumu(name):
+    def makeLc2pmumu(self,name):
     
-    Lc2pmumu = DaVinci__N3BodyDecays("Combine"+name)
-    Lc2pmumu.DecayDescriptors = [ "[Lambda_c+ -> p+ mu+ mu-]cc",
-                                "[Lambda_c+ -> p~- mu+ mu+]cc",
-                                "[Lambda_c+ -> p+ mu+ mu+]cc"]
-    Lc2pmumu.DaughtersCuts = { "p+"  : TrackCuts + " & ((PIDp-PIDpi)>5)" + " & ((PIDp-PIDK)>0)",
-                               "mu+" : TrackCuts + " & ((PIDmu-PIDpi)>-5)" + " & ((PIDmu-PIDK)>-5)" }
-    Lc2pmumu.Combination12Cut = Combination12Cut
-    Lc2pmumu.CombinationCut = CombinationCut200
-     
-    Lc2pmumu.MotherCut = MotherCut
+        Lc2pmumu = DaVinci__N3BodyDecays("Combine"+name)
+        Lc2pmumu.DecayDescriptors = [ "[Lambda_c+ -> p+ mu+ mu-]cc",
+                                      "[Lambda_c+ -> p~- mu+ mu+]cc",
+                                      "[Lambda_c+ -> p+ mu+ mu+]cc"]
+    
+        Lc2pmumu.DaughtersCuts = { "p+"  : self.TrackCuts + " & ((PIDp-PIDpi)>5)" + " & ((PIDp-PIDK)>0)",
+                                   "mu+" : self.TrackCuts + " & ((PIDmu-PIDpi)>-5)" + " & ((PIDmu-PIDK)>-5)" }
+    
+        Lc2pmumu.Combination12Cut = self.Combination12Cuts
+        Lc2pmumu.CombinationCut   = self.CombinationCutsLoose     
+        Lc2pmumu.MotherCut        = self.MotherCuts
 
-    _myProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
-    _myMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+        _myProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
+        _myMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
     
-    return Selection (name, Algorithm = Lc2pmumu, RequiredSelections = [ _myProtons, _myMuons ])
+        return Selection (name, Algorithm = Lc2pmumu, RequiredSelections = [ _myProtons, _myMuons ])
 
 #######################################################################################################
 
-def makeLc2pee(name):
+    def makeLc2pee(self,name):
     
-    Lc2pee = DaVinci__N3BodyDecays("Combine"+name)
-    Lc2pee.DecayDescriptors = [ "[Lambda_c+ -> p+ e+ e-]cc",
+        Lc2pee = DaVinci__N3BodyDecays("Combine"+name)
+        Lc2pee.DecayDescriptors = [ "[Lambda_c+ -> p+ e+ e-]cc",
                                 "[Lambda_c+ -> p~- e+ e+]cc",
                                 "[Lambda_c+ -> p+ e+ e+]cc"]
-    Lc2pee.DaughtersCuts = { "p+" : TrackCuts + " & ((PIDp-PIDpi)>5)" + " & ((PIDp-PIDK)>0)",
-                             "e+" : TrackCuts + " & ((PIDe-PIDpi)>2)" }
-    Lc2pee.Combination12Cut = Combination12Cut
-    Lc2pee.CombinationCut = CombinationCut200
-    Lc2pee.MotherCut = MotherCut
-
-    _myProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
-    _myElectrons = DataOnDemand(Location = "Phys/StdLooseElectrons/Particles")    
     
-    return Selection (name, Algorithm = Lc2pee, RequiredSelections = [ _myProtons, _myElectrons ])
+        Lc2pee.DaughtersCuts = { "p+" : self.TrackCuts + " & ((PIDp-PIDpi)>5)" + " & ((PIDp-PIDK)>0)",
+                                 "e+" : self.TrackCuts + " & ((PIDe-PIDpi)>2)" }
+    
+        Lc2pee.Combination12Cut = self.Combination12Cuts
+        Lc2pee.CombinationCut   = self.CombinationCutsLoose
+        Lc2pee.MotherCut        = self.MotherCuts
 
+        _myProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
+        _myElectrons = DataOnDemand(Location = "Phys/StdLooseElectrons/Particles")    
+    
+        return Selection (name, Algorithm = Lc2pee, RequiredSelections = [ _myProtons, _myElectrons ])
 
 #######################################################################################################
 
-def makeLc2pKpi(name):
+    def makeLc2pKpi(self,name):
     
-    Lc2pKpi = DaVinci__N3BodyDecays("Combine"+name)
-    Lc2pKpi.DecayDescriptors = [ "[Lambda_c+ -> p+ K- pi+]cc" ]
-    Lc2pKpi.DaughtersCuts = { "p+"  : TrackCuts + " & ((PIDp-PIDpi)>5)" + " & ((PIDp-PIDK)>0)",
-                              "K-"  : TrackCuts + " & ((PIDK-PIDpi)>5)" + " & ((PIDK-PIDp)>0)",
-                              "pi+" : TrackCuts }
-    Lc2pKpi.Combination12Cut = Combination12Cut
-    Lc2pKpi.CombinationCut = CombinationCut150
-    Lc2pKpi.MotherCut = MotherCut
+        Lc2pKpi = DaVinci__N3BodyDecays("Combine"+name)
+        Lc2pKpi.DecayDescriptors = [ "[Lambda_c+ -> p+ K- pi+]cc" ]
+    
+        Lc2pKpi.DaughtersCuts = { "p+"  : self.TrackCuts + " & ((PIDp-PIDpi)>5)" + " & ((PIDp-PIDK)>0)",
+                                  "K-"  : self.TrackCuts + " & ((PIDK-PIDpi)>5)" + " & ((PIDK-PIDp)>0)",
+                                  "pi+" : self.TrackCuts }
+    
+        Lc2pKpi.Combination12Cut = self.Combination12Cuts
+        Lc2pKpi.CombinationCut   = self.CombinationCutsTight
+        Lc2pKpi.MotherCut        = self.MotherCuts
 
-    _myProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
-    _myKaons = DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
-    _myPions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
+        _myProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
+        _myKaons = DataOnDemand(Location = "Phys/StdLooseKaons/Particles")
+        _myPions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
     
-    return Selection (name, Algorithm = Lc2pKpi, RequiredSelections = [ _myProtons, _myKaons, _myPions ])
+        return Selection (name, Algorithm = Lc2pKpi, RequiredSelections = [ _myProtons, _myKaons, _myPions ])
 
 #######################################################################################################

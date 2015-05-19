@@ -1,50 +1,41 @@
 """
 Module for construction of D+ -> mu l+ l- lines
 
-Performance (with prescaling):
+Performance
 
 Full.dst:
-#########
-
+######### 
 StrippingReport                                                INFO Event 500000, Good event 500000
  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |_StrippingGlobal_                                            |  0.0174|        87|       |  15.167|
- |_StrippingSequenceStreamLeptonic_                            |  0.0174|        87|       |  15.092|
- |!StrippingD23MuD23MuLine                                     |  0.0014|         7|  1.000|   5.758|
- |!StrippingD23MuD2MueeLine                                    |  0.0030|        15|  1.000|   3.434|
- |!StrippingD23MuD23PiLine                                     |  0.0130|        65|  1.354|   0.103|
- |_StrippingSequenceStreamMDST_                                |  0.0174|        87|       |   0.064|
- |!StrippingD23MuD23MuLine                                     |  0.0014|         7|  1.000|   5.758|
- |!StrippingD23MuD2MueeLine                                    |  0.0030|        15|  1.000|   3.434|
- |!StrippingD23MuD23PiLine                                     |  0.0130|        65|  1.354|   0.103|
+ |!StrippingD23MuD23MuLine                                     |  0.0014|         7|  1.000|   0.112|
+ |!StrippingD23MuD2MueeLine                                    |  0.0030|        15|  1.000|   0.131|
+ |!StrippingD23MuD23PiLine                                     |  0.0130|        65|  1.354|   0.033|
 
      
-Performance (without prescaling):
-
-D+ -> 3pi (21163012) MC
-#######################
-
+MC: D+ -> 3pi (21163012)
+########################
 StrippingReport                                                INFO Event 100000, Good event 100000
-|                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-|!StrippingD23MuLinesD23PiLine                                | 64.2100|     64210|  1.017|   0.653|
-            
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+ |!StrippingD23MuD23PiLine                                     |  0.6500|       650|  1.008|   0.569| 
 
+MC: D+ -> K 2pi (21163020)
+##########################
+StrippingReport                                                INFO Event 100000, Good event 100000
+ |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|      
+ |!StrippingD23MuD23PiLine                                     |  0.0130|        13|  1.077|   0.266|
+ 
 Exported symbols (use python help!):
    - 
 """
 
 __author__ = ["Oliver Gruenberg"]
-__date__ = "03.06.2014"
+__date__ = "19.05.2015"
 __version__ = "$Revision: 1.0 $"
 
 #############################################################################
 
 __all__ = ("D23MuLinesConf",
-           "config_default",
-           "makeD23Mu", 
-           "makeD2Muee", 
-           "makeD23Pi", 
-           )
+           "config_default", )
 
 #############################################################################
 
@@ -64,10 +55,25 @@ default_config = {
     "STREAMS"     : [ "Leptonic" ],
     "BUILDERTYPE" : "D23MuLinesConf",
     "CONFIG"      : {
-    "Postscale"            :1, 
-    "D23MuPrescale"        :1,
-    "D2MueePrescale"       :1,
-    "D23PiPrescale"        :0.01,
+    # TrackCuts
+    "MinTrIPChi2"          : 25.0,
+    "MaxTrChi2Dof"         : 3.0,
+    "MaxTrGhp"             : 0.3,
+    # CombiCuts
+    "MaxDoca"              : 0.3, # (mm)
+    "mDiffDLoose"          : 150, # (MeV)
+    "mDiffDTight"          : 150, # (MeV)    
+    # MotherCuts
+    "MaxIPChi2"            : 25,
+    "MinVDChi2"            : 225,
+    "MaxVtxChi2Dof"        : 9,
+    "MinDira"              : 0.0,
+    "MinTau"               : 0.1, # (ps)
+    # scalings
+    "Postscale"            : 1, 
+    "D23MuPrescale"        : 1,
+    "D2MueePrescale"       : 1,
+    "D23PiPrescale"        : 0.01,
     "CommonRelInfoTools"   : [ { "Type": "RelInfoVertexIsolation", "Location":"VtxIsoInfo" },
                                { "Type": "RelInfoVertexIsolationBDT", "Location":"VtxIsoInfoBDT" },
                                { "Type" : "RelInfoBs2MuMuBIsolations",
@@ -86,23 +92,70 @@ class D23MuLinesConf(LineBuilder) :
     
     """
 
-    __configuration_keys__ = ( "Postscale",
+    __configuration_keys__ = ( # TrackCuts
+                               "MinTrIPChi2",
+                               "MaxTrChi2Dof",
+                               "MaxTrGhp",
+                               # CombiCuts
+                               "MaxDoca",
+                               "mDiffDLoose",
+                               "mDiffDTight",
+                               # MotherCuts
+                               "MaxIPChi2",
+                               "MinVDChi2",
+                               "MaxVtxChi2Dof",
+                               "MinDira",
+                               "MinTau",
+                               # scalings
+                               "Postscale",
                                "D23MuPrescale",
                                "D2MueePrescale",
                                "D23PiPrescale",
                                "CommonRelInfoTools", )   
     
-    def __init__(self, name = "D23Mu", config = None) :
+    def __init__(self, name = "D23Mu", config = default_config) :
 
         LineBuilder.__init__(self, name, config)
-        
-        D23Mu_name=name+"D23Mu"
-        D2Muee_name=name+"D2Muee"
-        D23Pi_name=name+"D23Pi"        
 
-        self.selD23Mu = makeD23Mu(D23Mu_name)
-        self.selD2Muee = makeD2Muee(D2Muee_name)
-        self.selD23Pi = makeD23Pi(D23Pi_name)
+#############################################################################
+
+        self.TrackCuts = """
+                         (MIPCHI2DV(PRIMARY) > %(MinTrIPChi2)s)
+                         & (TRCHI2DOF < %(MaxTrChi2Dof)s)
+                         & (TRGHP < %(MaxTrGhp)s)
+                         """ %config
+
+        self.Combination12Cuts = "(ADOCA(1,2) < %(MaxDoca)s*mm)" %config
+
+        self.CombinationCutsLoose = """
+                                    (ADAMASS(1920*MeV) < %(mDiffDLoose)s*MeV)
+                                    & (ADOCA(1,3) < %(MaxDoca)s*mm)
+                                    & (ADOCA(2,3) < %(MaxDoca)s*mm)
+                                    """ %config
+
+        self.CombinationCutsTight = """
+                                    (ADAMASS(1920*MeV) < %(mDiffDTight)s*MeV)
+                                    & (ADOCA(1,3) < %(MaxDoca)s*mm)
+                                    & (ADOCA(2,3) < %(MaxDoca)s*mm)
+                                    """ %config
+
+        self.MotherCuts = """
+                          (BPVIPCHI2() < %(MaxIPChi2)s )
+                          & (BPVVDCHI2 > %(MinVDChi2)s )
+                          & (VFASPF(VCHI2/VDOF) < %(MaxVtxChi2Dof)s )
+                          & (BPVDIRA > %(MinDira)s )
+                          & (BPVLTIME() > %(MinTau)s*ps )
+                          """ %config
+
+#############################################################################
+        
+        D23Mu_name  = name+"D23Mu"
+        D2Muee_name = name+"D2Muee"
+        D23Pi_name  = name+"D23Pi"        
+
+        self.selD23Mu  = self.makeD23Mu(D23Mu_name)
+        self.selD2Muee = self.makeD2Muee(D2Muee_name)
+        self.selD23Pi  = self.makeD23Pi(D23Pi_name)
         
 #############################################################################
 
@@ -238,72 +291,51 @@ class D23MuLinesConf(LineBuilder) :
        
 #############################################################################
 
-#TrackCuts = "(MIPCHI2DV()>1.0) & (TRCHI2DOF<5.0) & (PT>1.0*GeV)"
-
-#CombinationCut = "(ADAMASS(1920*MeV) < 300*MeV)"
-
-#MotherCut = "(ADMASS(1920*MeV) < 100*MeV) & (VFASPF(VCHI2)<16) & (BPVLTIME(16) > 0.1*ps)"
-
-###########
-
-TrackCuts = "(MIPCHI2DV(PRIMARY)>25.0) & (TRCHI2DOF<3.0) & (TRGHP<0.3)"
-
-Combination12Cut = "(ADOCA(1,2)<0.3*mm)"
-
-CombinationCut = "(ADAMASS(1920*MeV) < 150*MeV)"\
-                 " & (ADOCA(1,3)<0.3*mm)"\
-                 " & (ADOCA(2,3)<0.3*mm)"\
-
-MotherCut = "(BPVIPCHI2() < 25)"\
-             " & (BPVVDCHI2 > 225)"\
-             " & (VFASPF(VCHI2/VDOF)<9)"\
-             " & (BPVDIRA > 0.0)"\
-             " & (BPVLTIME() > 0.1*ps)"\
-
-#############################################################################
-
-def makeD23Mu(name):
+    def makeD23Mu(self,name):
     
-    D23Mu = DaVinci__N3BodyDecays("Combine"+name)
-    D23Mu.DecayDescriptors = [ "[D+ -> mu+ mu+ mu-]cc","[D+ -> mu+ mu+ mu+]cc" ]
-    D23Mu.DaughtersCuts = { "mu+" : TrackCuts }
-    D23Mu.Combination12Cut = Combination12Cut
-    D23Mu.CombinationCut = CombinationCut
-    D23Mu.MotherCut = MotherCut
+        D23Mu = DaVinci__N3BodyDecays("Combine"+name)
+        D23Mu.DecayDescriptors = [ "[D+ -> mu+ mu+ mu-]cc","[D+ -> mu+ mu+ mu+]cc" ]
+        D23Mu.DaughtersCuts = { "mu+" : self.TrackCuts }
+        
+        D23Mu.Combination12Cut = self.Combination12Cuts
+        D23Mu.CombinationCut   = self.CombinationCutsLoose
+        D23Mu.MotherCut        = self.MotherCuts
 
-    _myMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+        _myMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
    
-    return Selection (name, Algorithm = D23Mu, RequiredSelections = [ _myMuons ])
+        return Selection (name, Algorithm = D23Mu, RequiredSelections = [ _myMuons ])
 
 #############################################################################
 
-def makeD2Muee(name):
+    def makeD2Muee(self,name):
     
-    D2Muee = DaVinci__N3BodyDecays("Combine"+name)
-    D2Muee.DecayDescriptors = [ "[D+ -> mu+ e+ e-]cc","[D+ -> mu- e+ e+]cc","[D+ -> mu+ e+ e+]cc" ]
-    D2Muee.DaughtersCuts = { "mu+" : TrackCuts, "e+" : TrackCuts }
-    D2Muee.Combination12Cut = Combination12Cut
-    D2Muee.CombinationCut = CombinationCut
-    D2Muee.MotherCut = MotherCut
+        D2Muee = DaVinci__N3BodyDecays("Combine"+name)
+        D2Muee.DecayDescriptors = [ "[D+ -> mu+ e+ e-]cc","[D+ -> mu- e+ e+]cc","[D+ -> mu+ e+ e+]cc" ]
+        D2Muee.DaughtersCuts = { "mu+" : self.TrackCuts, "e+" : self.TrackCuts }
+        
+        D2Muee.Combination12Cut = self.Combination12Cuts
+        D2Muee.CombinationCut   = self.CombinationCutsLoose
+        D2Muee.MotherCut        = self.MotherCuts
 
-    _myMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
-    _myElectrons = DataOnDemand(Location = "Phys/StdLooseElectrons/Particles")
+        _myMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+        _myElectrons = DataOnDemand(Location = "Phys/StdLooseElectrons/Particles")
     
-    return Selection (name, Algorithm = D2Muee, RequiredSelections = [ _myMuons, _myElectrons ])
+        return Selection (name, Algorithm = D2Muee, RequiredSelections = [ _myMuons, _myElectrons ])
 
 #############################################################################
 
-def makeD23Pi(name):
+    def makeD23Pi(self,name):
     
-    D23Pi = DaVinci__N3BodyDecays("Combine"+name)
-    D23Pi.DecayDescriptors = [ "[D+ -> pi+ pi+ pi-]cc" ]
-    D23Pi.DaughtersCuts = { "pi+" : TrackCuts }
-    D23Pi.Combination12Cut = Combination12Cut
-    D23Pi.CombinationCut = CombinationCut
-    D23Pi.MotherCut = MotherCut
+        D23Pi = DaVinci__N3BodyDecays("Combine"+name)
+        D23Pi.DecayDescriptors = [ "[D+ -> pi+ pi+ pi-]cc" ]
+        D23Pi.DaughtersCuts = { "pi+" : self.TrackCuts }
+        
+        D23Pi.Combination12Cut = self.Combination12Cuts
+        D23Pi.CombinationCut   = self.CombinationCutsTight
+        D23Pi.MotherCut        = self.MotherCuts
 
-    _myPions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
+        _myPions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
     
-    return Selection (name, Algorithm = D23Pi, RequiredSelections = [ _myPions ])
+        return Selection (name, Algorithm = D23Pi, RequiredSelections = [ _myPions ])
 
 #############################################################################
