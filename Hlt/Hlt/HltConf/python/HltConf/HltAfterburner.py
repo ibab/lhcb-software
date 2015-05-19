@@ -41,7 +41,9 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             seq = Sequence("RecSummarySequence")
 
             from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+            from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
             tracks = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
+            tracksDown = Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks()
             muonID = Hlt2BiKalmanFittedForwardTracking().hlt2MuonID()
 
             from HltLine.HltDecodeRaw import DecodeVELO, DecodeIT, DecodeTT, DecodeSPD, DecodeMUON
@@ -55,8 +57,11 @@ class HltAfterburnerConf(LHCbConfigurableUser):
 
             from HltTracking.HltPVs import PV3D
             PVs = PV3D("Hlt2")
+            from HltTracking.HltTrackNames import Hlt2TrackLoc
             summary = RecSummaryAlg('Hlt2RecSummary', SummaryLocation = "Hlt2/RecSummary",
-                                    TracksLocation = tracks.outputSelection(),
+                                    HltSplitTracks = True,
+                                    SplitLongTracksLocation = tracks.outputSelection(),
+                                    SplitDownTracksLocation = tracksDown.outputSelection(),
                                     PVsLocation = PVs.output,
                                     VeloClustersLocation = decoders['Velo'][1],
                                     ITClustersLocation = decoders['IT'][1],
@@ -67,5 +72,5 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             from itertools import chain
             from Hlt2Lines.Utilities.Utilities import uniqueEverseen
             seq.Members = list(uniqueEverseen(chain.from_iterable([dec[0] for dec in decoders.itervalues()]
-                                                                  + [PVs, tracks, muonID]))) + [summary]
+                                                                  + [PVs, tracks, tracksDown, muonID]))) + [summary]
             Afterburner.Members += [seq]

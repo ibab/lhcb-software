@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-05-19 - Sean Benson
+ - Adapt RecSummary to split track locations
+
 ! 2015-05-14 - Sean Benson
  - Move afterburner so it is before the post amble.
  - Add RecSummary to known IDs.
