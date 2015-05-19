@@ -32,6 +32,8 @@
 #include "TfKernel/OTHit.h"
 #include "TfKernel/IOTHitCreator.h"
 
+
+#include "LHCbMath/EigenSystem.h"
 //#include "Kernel/OTChannelID.h"           
 #include "Kernel/LHCbID.h"           
 
@@ -135,11 +137,34 @@ StatusCode JsonConverter::execute() {
                 
                 if (nullptr == r)
                   return;
-                
+		//getting the covariance matrix
+		Gaudi::SymMatrix3x3 cov = r->covMatrix();
+		Gaudi::Math::GSL::EigenSystem esystem;
+		Gaudi::Vector3 evalues;
+		Gaudi::Matrix3x3 evectors;
+		esystem.eigenVectors ( cov, evalues, evectors, false );
+
                 Stream vertJson(Container::MAP);
                 vertJson << std::make_pair("pv_x", r->position().x());
                 vertJson << std::make_pair("pv_y", r->position().y());
                 vertJson << std::make_pair("pv_z", r->position().z());
+
+                vertJson << std::make_pair("eval_0", evalues(0));
+                vertJson << std::make_pair("eval_1", evalues(1));
+                vertJson << std::make_pair("eval_2", evalues(2));
+		double mag0 = sqrt(evectors(0,0)*evectors(0,0)+evectors(1,0)*evectors(1,0)+evectors(2,0)*evectors(2,0));
+		double mag1 = sqrt(evectors(0,1)*evectors(0,1)+evectors(1,1)*evectors(1,1)+evectors(2,1)*evectors(2,1));
+		double mag2 = sqrt(evectors(0,2)*evectors(0,2)+evectors(1,2)*evectors(1,2)+evectors(2,2)*evectors(2,2));
+                vertJson << std::make_pair("evec_0x", evectors(0,0)/mag0);
+                vertJson << std::make_pair("evec_0y", evectors(1,0)/mag0);
+                vertJson << std::make_pair("evec_0z", evectors(2,0)/mag0);
+                vertJson << std::make_pair("evec_1x", evectors(0,1)/mag1);
+                vertJson << std::make_pair("evec_1y", evectors(1,1)/mag1);
+                vertJson << std::make_pair("evec_1z", evectors(2,1)/mag1);
+                vertJson << std::make_pair("evec_2x", evectors(0,2)/mag2);
+                vertJson << std::make_pair("evec_2y", evectors(1,2)/mag2);
+                vertJson << std::make_pair("evec_2z", evectors(2,2)/mag2);
+
                 vlistJson << vertJson;
                 vertexCount++;
               });
@@ -273,7 +298,7 @@ StatusCode JsonConverter::execute() {
                if (nullptr == c)
                  return;
 
-               if (c->e() > 150) 
+               if (c->e() > 100.0)//150 
                {
                  const LHCb::CaloCellID cid = c->cellID();
                  double x = hcalDetector->cellX(cid);
@@ -302,7 +327,7 @@ StatusCode JsonConverter::execute() {
              ecalDigits->end(),
              [this, &ecalJson, &ecalDetector] (LHCb::CaloDigit *c) 
              {
-               if (c->e() > 150) 
+               if (c->e() > 50.0) //150.0
                {
                  const LHCb::CaloCellID cid = c->cellID();
                  double x = ecalDetector->cellX(cid);
@@ -361,13 +386,73 @@ StatusCode JsonConverter::execute() {
     jsonStream << std::make_pair("VELOR", veloRJson);
   }
 
+
+  if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting Velo tracks " << endmsg;
+  LHCb::Tracks *vtracks = getIfExists<LHCb::Tracks>("/Event/Rec/Track/Best");
+  Stream veloTracksJson(Container::LIST);
+  int vtracksCount = 0;
+  if( NULL == vtracks ) {
+    if(msgLevel(MSG::INFO)) info()<<" Container /Event/Rec/Track/Best doesn't exist"<<endmsg;    
+  } else 
+  {
+    for_each (vtracks->begin(), 
+              vtracks->end(),
+              [this, &vtracksCount, &veloTracksJson, &vertices] (LHCb::Track *t)
+	      {
+		if (t->checkType(LHCb::Track::Types::Velo))//only look at velo tracks
+		  {
+		    //LHCb::RecVertex* bestpv = NULL;
+		    Gaudi::XYZPoint pos = t->position();
+		    Gaudi::XYZVector mom = t->momentum();
+		    Gaudi::XYZVector momnormalized = mom/sqrt(mom.Mag2());
+		    double zstart = 0.0;
+		    double bestip = 1.0e+6;
+		    Gaudi::XYZPoint closest(0.0, 0.0, 0.0);
+
+		    for_each (vertices->begin(), 
+			      vertices->end(),
+			      [&t, &pos, &bestip, &closest, &zstart, &momnormalized] (LHCb::RecVertex *pv)
+			      {
+				Gaudi::XYZPoint pvpos = pv->position();
+				Gaudi::XYZPoint pvminuspos(pvpos.x()-pos.x(), pvpos.y()-pos.y(), pvpos.z()-pos.z());
+				double currentip = sqrt(  (pvminuspos - pvminuspos.Dot(momnormalized)*momnormalized).Mag2() );
+				if (currentip < bestip)
+				  {
+				    closest = pos + pvminuspos.Dot(momnormalized)*momnormalized;
+				    zstart = closest.z();
+				    bestip = currentip;
+				  }
+			      });
+
+		    double zfinal = (closest+momnormalized*500.0).z();
+		    if (t->checkFlag(LHCb::Track::Flags::Backward)) //backwards track
+		      zfinal = (closest-momnormalized*500.0).z();
+		    Stream trackJson(Container::LIST);
+		    const unsigned int npoints = 5;
+		    LHCb::State s;
+		    for(unsigned int i=0; i < npoints; i++) 
+		      {
+			double z = zstart + i*(zfinal-zstart)/npoints;
+			m_trackExtrapolator->propagate(*t, z, s);
+			Stream p(Container::LIST);
+			p << s.x() << s.y() << s.z();
+			trackJson << p;
+		      }
+		    veloTracksJson << trackJson;
+		  }
+	      });
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Vtracks count " << vtracksCount << endmsg;  
+  }
+  jsonStream << std::make_pair("VTRACKS", veloTracksJson);
+
+
   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting Particles " << endmsg;
-  const std::string PartsTESLocation("/Event/Phys/StdNoPIDsPions/Particles");  
+  const std::string PartsTESLocation("/Event/Phys/StdAllNoPIDsPions/Particles");  
   LHCb::Particles *inputParts = getIfExists<LHCb::Particles>(PartsTESLocation);
   Stream allParticlesJson(Container::LIST);
   int partCount = 0;
   if( NULL == inputParts ) {
-    if(msgLevel(MSG::INFO)) info()<<" Container /Event/Phys/StdNoPIDsPions/Particles doesn't exist"<<endmsg;    
+    if(msgLevel(MSG::INFO)) info()<<" Container /Event/Phys/StdAllNoPIDsPions/Particles doesn't exist"<<endmsg;    
   } else 
   {
     for_each (inputParts->begin(), 
@@ -423,6 +508,25 @@ StatusCode JsonConverter::execute() {
     if ( msgLevel(MSG::DEBUG) ) debug() << "Part count " << partCount << endmsg;  
   }
   jsonStream << std::make_pair("PARTICLES", allParticlesJson);
+
+
+  //SVs
+  /*
+  const std::string PartsTESLocation("/Event/Phys/StdAllNoPIDsPions/Particles");  
+  LHCb::Particles *inputParts = getIfExists<LHCb::Particles>(PartsTESLocation);
+  Stream allParticlesJson(Container::LIST);
+  int partCount = 0;
+  if( NULL == inputParts ) {
+    if(msgLevel(MSG::INFO)) info()<<" Container /Event/Phys/StdAllNoPIDsPions/Particles doesn't exist"<<endmsg;    
+  } else 
+  {
+    for_each (inputParts->begin(), 
+              inputParts->end(),
+              [this, &partCount, &allParticlesJson] (LHCb::Particle *p)
+              {
+*/
+
+
 
   // Now printing the result
   // if ( msgLevel(MSG::DEBUG) ) debug() << "=====================> JSON Result" << endmsg;
@@ -553,7 +657,7 @@ void processTrack(ITrackExtrapolator *extrapolator,
   if (nullptr == track || nullptr == extrapolator) 
     return;
 
-  for(int i=0; i < npoints; i++) 
+  for(int i=0; i < npoints+1; i++) 
   {
     z = zmin + i*(zmax-zmin)/npoints;
     extrapolator->propagate(*track, z, s, pid);
