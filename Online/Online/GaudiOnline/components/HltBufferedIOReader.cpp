@@ -450,6 +450,9 @@ StatusCode HltBufferedIOReader::i_run()  {
     if ( m_goto_paused && files_processed )   {
       /// Before actually declaring PAUSED, we wait until no events are pending anymore.
       waitForPendingEvents(mbmInfo);
+      // Sleep a bit before goung to pause
+      info("Seeping before going to PAUSE....");
+      ::lib_rtl_sleep(10000);
       /// Go to state PAUSED, all the work is done
       incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
     }

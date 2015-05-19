@@ -1,6 +1,7 @@
 // $Id: TimeoutAlg.cpp,v 1.7 2010-03-03 13:16:49 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
+#include "GaudiKernel/MsgStream.h"
 #include "RTL/time.h"
 #include "RTL/rtl.h"
 
@@ -27,7 +28,7 @@ namespace LHCb  {
     {
       ::gettimeofday(&m_last,0);
       // Minimal time per event in milli seconds
-      declareProperty("MinTime", m_minTime=1000);
+      declareProperty("DelayTime", m_minTime=1000);
     }
 
     /// Destructor
@@ -37,13 +38,18 @@ namespace LHCb  {
     /// Main execution
     virtual StatusCode execute()  {
       typedef long long int llint;
+      MsgStream log(msgSvc(), name());
       struct timeval now;
       ::gettimeofday(&now,0);
-      llint diff = llint((now.tv_sec - m_last.tv_sec )*1000000) + llint(now.tv_usec-m_last.tv_usec);
-      if ( diff < m_minTime*1000 )  {
-        ::lib_rtl_usleep(m_minTime*1000-diff);
+      llint diff   = llint((now.tv_sec - m_last.tv_sec )*1000000) + llint(now.tv_usec-m_last.tv_usec);
+      llint min_tm = m_minTime;
+      min_tm *= 1000;
+      log << MSG::INFO << "Diff:" << diff << " min:" << min_tm << endmsg;
+      if ( diff < min_tm )  {
+        ::lib_rtl_usleep(min_tm-diff);
       }
-      m_last = now;
+      ::gettimeofday(&m_last,0);
+      setFilterPassed(true);
       return StatusCode::SUCCESS;
     }
   };
