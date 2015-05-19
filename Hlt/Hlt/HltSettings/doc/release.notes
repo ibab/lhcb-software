@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-05-19 - Sean Benson
+ - Tighten gamma gamma line.
+
 ! 2015-05-13 - Christian Linn
  - Updated Physics_draftEM2015 to work with new line names, adjusted ODIN filter names
  - added HighMult lines and CEP lines
