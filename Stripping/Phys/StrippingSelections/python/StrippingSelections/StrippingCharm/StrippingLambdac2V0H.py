@@ -36,7 +36,7 @@ default_config = {
     'STREAMS': ['Charm'],
     'CONFIG': {
         # Minimum transverse momentum all Lc+ bachelors must satisfy
-        'Bach_All_PT_MIN': 200.0*MeV,
+        'Bach_All_PT_MIN': 750.0*MeV,
         # Minimum best primary vertex IP chi^2 all Lc+ bachelors must satisfy
         'Bach_All_BPVIPCHI2_MIN': 4.0,
         # Minimum Lc+ bachelor momentum
@@ -48,13 +48,29 @@ default_config = {
         # Maximum Lc+ bachelor pseudorapidity
         'Bach_ETA_MAX': 5.0,
         # Minimum Lc+ bachelor proton DLLp
-        'Proton_PIDpPIDpi_MIN': 5.0,
+        'Proton_PIDpPIDpi_MIN': 7.0,
         # Minimum Lc+ bachelor proton DLLp - DLLK
-        'Proton_PIDpPIDK_MIN': 0.0,
+        'Proton_PIDpPIDK_MIN': 2.0,
         # Minimum Lc+ bachelor kaon DLLK
-        'K_PIDK_MIN': 0.0,
+        'K_PIDK_MIN': 5.0,
         # Maximum Lc+ bachelor pion DLLK
-        'Pi_PIDK_MAX': 5.0,
+        'Pi_PIDK_MAX': 3.0,
+        # Minimum KS0 momentum
+        'Lambda0_P_MIN': 2000*MeV,
+        # Minimum L0 transverse momentum
+        'Lambda0_PT_MIN': 500*MeV,
+        # Minimum flight distance chi^2 of L0 from the primary vertex
+        'Lambda0_FDCHI2_MIN': 100,
+        # Maximum L0 vertex chi^2 per vertex fit DoF
+        'Lambda0_VCHI2VDOF_MAX': 10.0,
+        # Minimum KS0 momentum
+        'KS0_P_MIN': 2000*MeV,
+        # Minimum KS0 transverse momentum
+        'KS0_PT_MIN': 500*MeV,
+        # Minimum flight distance chi^2 of KS0 from the primary vertex
+        'KS0_FDCHI2_MIN': 100,
+        # Maximum KS0 vertex chi^2 per vertex fit DoF
+        'KS0_VCHI2VDOF_MAX': 10.0,
         # Lc+ mass window around the nominal Lc+ mass before the vertex fit
         'Comb_ADAMASS_WIN': 90.0*MeV,
         # Maximum distance of closest approach of Lc+ children
@@ -62,15 +78,12 @@ default_config = {
         # Minimum transverse momentum of Lc+ children
         'Comb_PT_MIN': 1.0*GeV,
         # Maximum Lc+ vertex chi^2 per vertex fit DoF
-        'Lambdac_VCHI2VDOF_MAX': 30.0,
+        'Lambdac_VCHI2VDOF_MAX': 10.0,
         # Maximum angle between Lc+ momentum and Lc+ direction of flight
         'Lambdac_acosBPVDIRA_MAX': 140.0*mrad,
         # Primary vertex displacement requirement, either that the Lc+ is some
         # sigma away from the PV, or it has a minimum flight time
-        'Lambdac_PVDispCut': (
-            '((BPVVDCHI2 > 4.0) |'
-            '(BPVLTIME() > 0.075*picosecond))'
-        ),
+        'Lambdac_PVDispCut': '(BPVVDCHI2 > 16.0)',
         # HLT filters, only process events firing triggers matching the RegEx
         'Hlt1Filter': None,
         'Hlt2Filter': None,
@@ -141,6 +154,25 @@ class StrippingLambdac2V0HConf(LineBuilder):
         kaonCuts = '{0} & {1}'.format(childCuts, kaonPIDCuts)
         protonCuts = '{0} & {1}'.format(childCuts, protonPIDCuts)
 
+        # Build Lambda0 and KS0 cut strings
+        lambda0Cuts = (
+            '(P > {0[Lambda0_P_MIN]})'
+            '& (PT > {0[Lambda0_PT_MIN]})'
+            '& (BPVVDCHI2 > {0[Lambda0_FDCHI2_MIN]})'
+            '& (VFASPF(VCHI2/VDOF) < {0[Lambda0_VCHI2VDOF_MAX]})'
+        ).format(self.config)
+        ks0Cuts = (
+            '(P > {0[KS0_P_MIN]})'
+            '& (PT > {0[KS0_PT_MIN]})'
+            '& (BPVVDCHI2 > {0[KS0_FDCHI2_MIN]})'
+            '& (VFASPF(VCHI2/VDOF) < {0[KS0_VCHI2VDOF_MAX]})'
+        ).format(self.config)
+        # Define any additional cuts on LL/DD difference
+        lambda0LLCuts = lambda0Cuts
+        lambda0DDCuts = lambda0Cuts
+        ks0LLCuts = ks0Cuts
+        ks0DDCuts = ks0Cuts
+
         # Filter StdLoose particles
         self.inPions = Selection(
             'PionsFor{0}'.format(name),
@@ -166,12 +198,38 @@ class StrippingLambdac2V0HConf(LineBuilder):
             ),
             RequiredSelections=[StdLooseProtons]
         )
-
-        # Take the StdLoose V0 without filtering
-        self.inLambda0LL = StdLooseLambdaLL
-        self.inLambda0DD = StdLooseLambdaDD
-        self.inKS0LL = StdLooseKsLL
-        self.inKS0DD = StdLooseKsDD
+        self.inLambda0LL = Selection(
+            'Lambda0LLFor{0}'.format(name),
+            Algorithm=FilterDesktop(
+                'FilterLambda0LLFor{0}'.format(name),
+                Code=lambda0LLCuts
+            ),
+            RequiredSelections=[StdLooseLambdaLL]
+        )
+        self.inLambda0DD = Selection(
+            'Lambda0DDFor{0}'.format(name),
+            Algorithm=FilterDesktop(
+                'FilterLambda0DDFor{0}'.format(name),
+                Code=lambda0DDCuts
+            ),
+            RequiredSelections=[StdLooseLambdaDD]
+        )
+        self.inKS0LL = Selection(
+            'KS0LLFor{0}'.format(name),
+            Algorithm=FilterDesktop(
+                'FilterKS0LLFor{0}'.format(name),
+                Code=ks0LLCuts
+            ),
+            RequiredSelections=[StdLooseKsLL]
+        )
+        self.inKS0DD = Selection(
+            'KS0DDFor{0}'.format(name),
+            Algorithm=FilterDesktop(
+                'FilterKS0DDFor{0}'.format(name),
+                Code=ks0DDCuts
+            ),
+            RequiredSelections=[StdLooseKsDD]
+        )
 
         self.selLambdac2Lambda0Pi = self.makeLambdac2V0H(
             name=Lambdac2Lambda0Pi_name,
