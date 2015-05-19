@@ -44,7 +44,8 @@ namespace LHCb  {
       llint diff   = llint((now.tv_sec - m_last.tv_sec )*1000000) + llint(now.tv_usec-m_last.tv_usec);
       llint min_tm = m_minTime;
       min_tm *= 1000;
-      log << MSG::INFO << "Diff:" << diff << " min:" << min_tm << endmsg;
+      log << MSG::INFO << "Diff:" << diff << " min:" << min_tm 
+	  << " --> Need to wait for " << (min_tm-diff) << "musec" << endmsg;
       if ( diff < min_tm )  {
         ::lib_rtl_usleep(min_tm-diff);
       }
