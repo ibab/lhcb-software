@@ -143,7 +143,7 @@ class KSFilter(Hlt2ParticleFilter):
 
 class LambdaFilter(Hlt2ParticleFilter):
     def __init__(self, name, input, ismuon = False):
-        ismuonstr = " & (CHILDCUT( ISMUON , 1) )" if ismuon else ""
+        ismuonstr = " & (CHILDCUT( ISMUONLOOSE , 1) )" if ismuon else ""
         cut = ("( ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > %(LambdaKsVeto)s ) & " +
                "(ADMASS('Lambda0') < %(LambdaMWindow)s ) & " +
                "(CHILDCUT( ( P > %(LambdaProtonP)s ) & (PT > %(LambdaProtonPT)s), 1) )" +
