@@ -271,9 +271,10 @@ BeamGasVertex::BeamGasVertex(const LHCb::HltObjectSummary& recvtx_hos, const DeV
   if (recvtx_hos.summarizedObjectCLID() != 10030)
     throw std::runtime_error("Unexpected CLID of summarized object (expect 10030).");
 
-  int nTr = recvtx_hos.substructure().size();
+  const auto& substr = recvtx_hos.substructureFlattened();
+  int nTr = substr.size();
   int nTrBw = 0;
-  for (const auto& track_hos : recvtx_hos.substructure()) {
+  for (const auto& track_hos : substr) {
     bool bwd = false;
     if (track_hos->summarizedObjectCLID() != 10010)
       throw std::runtime_error("Unexpected CLID of summarized object (expect 10010).");
