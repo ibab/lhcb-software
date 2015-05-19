@@ -34,6 +34,12 @@ RecSummaryAlg::RecSummaryAlg( const std::string& name,
                    m_summaryLoc = LHCb::RecSummaryLocation::Default );
   declareProperty( "TracksLocation",
                    m_trackLoc   = LHCb::TrackLocation::Default );
+  declareProperty( "HltSplitTracks",
+                   m_split   = false );
+  declareProperty( "SplitLongTracksLocation",
+                   m_trackLongLoc   = LHCb::TrackLocation::Default );
+  declareProperty( "SplitDownTracksLocation",
+                   m_trackDownLoc   = LHCb::TrackLocation::Default );
   declareProperty( "PVsLocation",
                    m_pvLoc      = LHCb::RecVertexLocation::Primary );
   declareProperty( "VeloClustersLocation",
@@ -93,7 +99,7 @@ StatusCode RecSummaryAlg::execute()
 
   // can we add tracking info ?
   const LHCb::Tracks * tracks = getIfExists<LHCb::Tracks>(m_trackLoc);
-  if ( tracks )
+  if ( tracks && !m_split )
   {
 
     // Save total number of tracks
@@ -121,6 +127,40 @@ StatusCode RecSummaryAlg::execute()
     summary->addInfo( LHCb::RecSummary::nBackTracks,       nBack );
     summary->addInfo( LHCb::RecSummary::nTTracks,          nT );
 
+    // Save total number of tracks
+    summary->addInfo( LHCb::RecSummary::nTracks, tracks->size() );
+  }
+  else if( m_split )
+  {
+    // Count each track type
+    int nLong(0), nDownstream(0);
+    int combined = 0;
+    // can we add long tracking info ?
+    const LHCb::Tracks * tracks_long = getIfExists<LHCb::Tracks>(m_trackLongLoc);
+    if ( tracks_long )
+    {
+      for ( LHCb::Tracks::const_iterator iTk = tracks_long->begin();
+          iTk != tracks_long->end(); ++iTk )
+      {
+        if      ( (*iTk)->type() == LHCb::Track::Long       ) { ++nLong; }
+      }
+    }
+    // can we add downstream tracking info ?
+    const LHCb::Tracks * tracks_down = getIfExists<LHCb::Tracks>(m_trackDownLoc);
+    if ( tracks_down )
+    {
+      for ( LHCb::Tracks::const_iterator iTk = tracks_down->begin();
+          iTk != tracks_down->end(); ++iTk )
+      {
+        if      ( (*iTk)->type() == LHCb::Track::Downstream       ) { ++nDownstream; }
+      }
+    }
+    combined = nLong + nDownstream;
+    // Save track info by type to summary
+    summary->addInfo( LHCb::RecSummary::nLongTracks,       nLong );
+    summary->addInfo( LHCb::RecSummary::nDownstreamTracks, nDownstream );
+    // Save total number of tracks
+    summary->addInfo( LHCb::RecSummary::nTracks, combined );
   }
   else
   {

@@ -121,6 +121,15 @@ private:
 
   /// Location in the TES to load the recosntructed tracks from
   std::string m_trackLoc;
+  
+  /// Are split track locations used in the HLT
+  bool m_split;
+  
+  /// Location in the TES of split long tracks in the HLT
+  std::string m_trackLongLoc;
+
+  /// Location in the TES of split downstream tracks in the HLT
+  std::string m_trackDownLoc;
 
   /// Location in the TES to load the reconstructed PVs from
   std::string m_pvLoc;
