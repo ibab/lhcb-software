@@ -218,5 +218,5 @@ if __name__ == '__main__' :
   task = AlignmentTask()
   #ppservers = ('lxbrg4601.cern.ch')
   #wmgr = WorkManager(ppservers = ppservers)
-  wmgr = WorkManager()
+  wmgr = WorkManager(ncpus=opts.numprocs)
   wmgr.process( task, range(opts.numprocs) )
