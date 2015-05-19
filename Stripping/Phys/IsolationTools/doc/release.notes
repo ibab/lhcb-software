@@ -3,6 +3,9 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2015-05-19 - Cedric Potterat
+ - adapt RelInfoJetsVariables to the new split HLT config
+
 !========================= IsolationTools v1r2 2015-03-13 =========================
 
 ! 2015-05-11 - Ricardo Vazquez Gomez

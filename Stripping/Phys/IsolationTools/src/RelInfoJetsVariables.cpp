@@ -95,7 +95,7 @@ StatusCode RelInfoJetsVariables::initialize() {
   if ( !m_dist ) { return Error("Unable to retrieve the IDistanceCalculator tool",
                                 StatusCode::FAILURE); }
 
-  m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos","TriggerTisTos",this );
+  m_TriggerTisTosTool = tool<ITriggerTisTos>( "Hlt2TriggerTisTos","Hlt2TriggerTisTos",this );
     if(m_TriggerTisTosTool == 0)
         return Error("Couldn't get requested jet tag tool", StatusCode::SUCCESS);
 
