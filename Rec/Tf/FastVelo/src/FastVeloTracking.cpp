@@ -409,8 +409,7 @@ void FastVeloTracking::findQuadruplets( unsigned int sens0, bool forward ) {
           } else {
             std::sort( newTrack.rHits().begin(), newTrack.rHits().end(), FastVeloHit::DecreasingByZ() );
           }
-
-          m_tracks.push_back( newTrack );
+          
           if ( m_debug ) {
             info() << "      -- stored n=" << m_tracks.size()-1 << endmsg;
             printRTrack( newTrack );
@@ -419,6 +418,9 @@ void FastVeloTracking::findQuadruplets( unsigned int sens0, bool forward ) {
             newTrack.tagUsedRHits();
             rMax = rMaxNormal;
           }
+          
+          m_tracks.push_back( std::move(newTrack) );
+          
         }
       }
     }
@@ -747,34 +749,34 @@ void FastVeloTracking::findUnusedTriplets( unsigned int sens0, bool forward ) {
           //== More demanding for minimal tracks of 3 clusters. Allow change of zone...
           if ( 3 == newTrack.nbRHits() ) {
             int nMissBack = extendTrack( newTrack, sensor0, zone, !forward );
-	    if ( m_maxMissed <  nMissBack ) {
-	      FastVeloSensor *lastSensor = sensor0;
+            if ( m_maxMissed <  nMissBack ) {
+              FastVeloSensor *lastSensor = sensor0;
               if( 0 != zone ){
-		if(3 < newTrack.nbRHits() ){
-		  // Added clusters in the above. Start adding from the end of the track
-		  // Last sensor added is the end of the list
-		  lastSensor = m_hitManager->sensor( newTrack.rHits().back()->sensor() );
-		}
-		nMissBack = extendTrack( newTrack, lastSensor, zone-1, !forward );
-	      }
-	    }
-	    if ( m_maxMissed <  nMissBack ) {
-	      FastVeloSensor *lastSensor = sensor0;
-	      if ( 3 != zone ) {
-		if(3 < newTrack.nbRHits() ){
-		  // Added clusters in the above. Start adding from the end of the track
-		  // Last sensor added is the end of the list
-		  lastSensor = m_hitManager->sensor( newTrack.rHits().back()->sensor() );
-		}
-		nMissBack = extendTrack( newTrack, lastSensor, zone+1, !forward );
-	      }
-	    }
-	    if ( m_maxMissed <  nMissBack ) {
-	      if ( m_debug ) info() << "Short track with missed sensors before." << endmsg;
-	      continue;
-	    }
-	  }
-
+                if(3 < newTrack.nbRHits() ){
+                  // Added clusters in the above. Start adding from the end of the track
+                  // Last sensor added is the end of the list
+                  lastSensor = m_hitManager->sensor( newTrack.rHits().back()->sensor() );
+                }
+                nMissBack = extendTrack( newTrack, lastSensor, zone-1, !forward );
+              }
+            }
+            if ( m_maxMissed <  nMissBack ) {
+              FastVeloSensor *lastSensor = sensor0;
+              if ( 3 != zone ) {
+                if(3 < newTrack.nbRHits() ){
+                  // Added clusters in the above. Start adding from the end of the track
+                  // Last sensor added is the end of the list
+                  lastSensor = m_hitManager->sensor( newTrack.rHits().back()->sensor() );
+                }
+                nMissBack = extendTrack( newTrack, lastSensor, zone+1, !forward );
+              }
+            }
+            if ( m_maxMissed <  nMissBack ) {
+              if ( m_debug ) info() << "Short track with missed sensors before." << endmsg;
+              continue;
+            }
+          }
+          
           int setSector = zone;
           if ( sensor0->isRight() ) setSector += 4;
           newTrack.setZone( setSector );
@@ -803,7 +805,7 @@ void FastVeloTracking::findUnusedTriplets( unsigned int sens0, bool forward ) {
                   if ( m_debug ) info() << " -> rejected" << endmsg;
                 } else {
                   if ( m_debug ) info() << " -> replace it" << endmsg;
-                  (*itT) = newTrack;
+                  (*itT) = std::move(newTrack);
                 }
                 reject = true;
                 break;
@@ -819,7 +821,6 @@ void FastVeloTracking::findUnusedTriplets( unsigned int sens0, bool forward ) {
             std::sort( newTrack.rHits().begin(), newTrack.rHits().end(), FastVeloHit::DecreasingByZ() );
           }
 
-          m_tracks.push_back( newTrack );
           if ( m_debug ) {
             info() << "      -- stored n=" << m_tracks.size()-1
                    << " nbRHits " << newTrack.nbRHits()
@@ -827,6 +828,8 @@ void FastVeloTracking::findUnusedTriplets( unsigned int sens0, bool forward ) {
             printRTrack( newTrack );
           }
           if ( m_minToTag <= newTrack.nbRHits() ) newTrack.tagUsedRHits();
+
+          m_tracks.push_back( std::move(newTrack) );
         }
       }
     }
@@ -1415,8 +1418,8 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
               info() << "**** Accepted qFactor : " << temp.qFactor() << " ***" << endmsg;
               printTrack( temp );
             }
-            newTracks.push_back( temp );
             if ( temp.phiHits().size() >= temp.rHits().size() ) hasFullLength = true;
+            newTracks.push_back( std::move(temp) );
           }
         }
       }
@@ -1439,29 +1442,29 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
         if ( station > 20 ) break;
       }
       if( !(all.begin() == all.end()) ){ // skip cases with zero clusters
-	FastVeloTrack temp;
-	temp.setPhiClusters( input, m_cosPhi, m_sinPhi, all.begin(), all.end() );
-	if ( m_debug ) {
-	  info() << "+++ Try with all hits on stations " << s1 << " to " << station
-		 << ", minNbPhi " << minNbPhi << endmsg;
-	  printTrack( temp );
-	}
-	bool ok = temp.removeWorstMultiple( m_maxChi2PerHit, minNbPhi );
-	if ( ok ) {
-	  //== Overall quality should be good enough...
-	  if ( m_maxQFactor < temp.qFactor() ) {
-	    if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
-	    ok = false;
-	  }
-	  
-	  if ( ok ) {  //== Store it.
-	    if ( m_debug ) {
-	      info() << "**** Accepted qFactor : " << temp.qFactor() << " ***" << endmsg;
-	      printTrack( temp );
-	    }
-	    newTracks.push_back( temp );
-	  }
-	}
+        FastVeloTrack temp;
+        temp.setPhiClusters( input, m_cosPhi, m_sinPhi, all.begin(), all.end() );
+        if ( m_debug ) {
+          info() << "+++ Try with all hits on stations " << s1 << " to " << station
+                 << ", minNbPhi " << minNbPhi << endmsg;
+          printTrack( temp );
+        }
+        bool ok = temp.removeWorstMultiple( m_maxChi2PerHit, minNbPhi );
+        if ( ok ) {
+          //== Overall quality should be good enough...
+          if ( m_maxQFactor < temp.qFactor() ) {
+            if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
+            ok = false;
+          }
+          
+          if ( ok ) {  //== Store it.
+            if ( m_debug ) {
+              info() << "**** Accepted qFactor : " << temp.qFactor() << " ***" << endmsg;
+              printTrack( temp );
+            }
+            newTracks.push_back( std::move(temp) );
+          }
+        }
       }
     }
   }
@@ -1565,7 +1568,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
     }
     (*itTr).tagUsedPhiHits();
     (*itTr).setBackward( input.backward() );
-    m_spaceTracks.push_back( *itTr );
+    m_spaceTracks.push_back( std::move(*itTr) );
     foundSpaceTrack = true;
   }
   if ( !foundSpaceTrack ) {
@@ -1765,7 +1768,7 @@ void FastVeloTracking::findUnusedPhi( ) {
                   }
                   temp.tagUsedRHits();
                   temp.tagUsedPhiHits();
-                  m_spaceTracks.push_back( temp );
+                  m_spaceTracks.push_back( std::move(temp) );
                 }
               }
             }

@@ -18,6 +18,16 @@ public:
   /// Standard constructor
   FastVeloTrack( ); 
 
+  /// Copy constructor
+  FastVeloTrack(const FastVeloTrack& ) = default;
+  /// Move constructor
+  FastVeloTrack(FastVeloTrack&& ) = default;
+  
+  /// Copy assignment operator
+  FastVeloTrack &operator=(const FastVeloTrack& ) = default;
+  /// Move assignment operator
+  FastVeloTrack &operator=(FastVeloTrack&& ) = default;
+
   virtual ~FastVeloTrack( ); ///< Destructor
 
   inline double rPred( double z )   const { return m_r0 + z * m_tr; }
@@ -30,7 +40,7 @@ public:
   inline FastVeloHits& phiHits()          { return m_phiHits; }
   inline double rErr2( double z )   const { double dz = z-m_sz / m_s0; return m_trErr2 + dz * dz * m_trErr2; }
 
-  double rChi2() {
+  double rChi2() const {
     double chi2 = 0.;
     for ( FastVeloHits::const_iterator itH = m_rHits.begin(); m_rHits.end() != itH; ++itH ) {
       double d = m_r0 + (*itH)->z() * m_tr - (*itH)->global();
@@ -99,21 +109,21 @@ public:
 
   void solve();
 
-  double distance( FastVeloHit* hit ) { return hit->distance( m_x0 + hit->z() * m_tx, m_y0 + hit->z() * m_ty ); }
+  double distance( FastVeloHit* hit ) const { return hit->distance( m_x0 + hit->z() * m_tx, m_y0 + hit->z() * m_ty ); }
  
-  double chi2( FastVeloHit* hit ) { return hit->chi2( m_x0 + hit->z() * m_tx, m_y0 + hit->z() * m_ty ); }
+  double chi2( FastVeloHit* hit ) const { return hit->chi2( m_x0 + hit->z() * m_tx, m_y0 + hit->z() * m_ty ); }
 
-  double xAtLastR() { return m_x0 + m_tx * m_rHits.back()->z(); }
+  double xAtLastR() const { return m_x0 + m_tx * m_rHits.back()->z(); }
  
-  double xAtHit( FastVeloHit* hit ) { return m_x0 + m_tx * hit->z(); }
+  double xAtHit( FastVeloHit* hit ) const { return m_x0 + m_tx * hit->z(); }
 
-  double yAtHit( FastVeloHit* hit ) { return m_y0 + m_ty * hit->z(); }
+  double yAtHit( FastVeloHit* hit ) const { return m_y0 + m_ty * hit->z(); }
 
-  double xAtZ( double z ) { return m_x0 + m_tx * z; }
+  double xAtZ( double z ) const { return m_x0 + m_tx * z; }
 
-  double yAtZ( double z ) { return m_y0 + m_ty * z; }
+  double yAtZ( double z ) const { return m_y0 + m_ty * z; }
 
-  double rAtZ( double z ) {
+  double rAtZ( double z ) const {
     double x = m_x0 + m_tx * z;
     double y = m_y0 + m_ty * z;
     return sqrt( x*x+y*y);

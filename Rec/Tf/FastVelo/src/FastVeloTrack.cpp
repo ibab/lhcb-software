@@ -49,8 +49,8 @@ FastVeloTrack::FastVeloTrack(  ) :
   m_sbc( 0. ),
   m_sbcz( 0. )
 {
-  m_rHits.reserve( 20 );
-  m_phiHits.reserve( 20 );
+  m_rHits.reserve( 8 );
+  m_phiHits.reserve( 8 );
 }
 
 //=============================================================================
