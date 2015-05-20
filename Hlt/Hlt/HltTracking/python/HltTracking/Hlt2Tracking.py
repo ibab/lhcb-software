@@ -874,6 +874,11 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from Configurables import HltRecoConf
         ts.setProp("MinChi2Cut", 0.)
         ts.setProp("MaxChi2Cut", HltRecoConf().getProp("MaxTrCHI2PDOF"))
+        if HltRecoConf().getProp("ApplyGHOSTPROBCut") == True:
+            ts.setProp("MinGhostProbCut", 0.)
+            ts.setProp("MaxGhostProbCut", HltRecoConf().getProp("MaxTrGHOSTPROB"))
+            ts.PropertiesPrint = True
+
         if self.__trackType() == "Long":
             ts.TrackTypes = ["Long"]
         elif self.__trackType() == "Downstream":
@@ -1493,6 +1498,11 @@ class Hlt2Tracking(LHCbConfigurableUser):
             from Configurables import HltRecoConf
             ts.setProp("MinChi2Cut", 0.)
             ts.setProp("MaxChi2Cut", HltRecoConf().getProp("MaxTrCHI2PDOF"))
+            if HltRecoConf().getProp("ApplyGHOSTPROBCut") == True:
+                ts.setProp("MinGhostProbCut", 0.)
+                ts.setProp("MaxGhostProbCut", HltRecoConf().getProp("MaxTrGHOSTPROB"))
+                ts.PropertiesPrint = True
+
             if self.__trackType() == "Long":
                 ts.TrackTypes = ["Long"]
             elif self.__trackType() == "Downstream":

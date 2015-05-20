@@ -4,6 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-05-20 - Sascha Stahl
+ - HltRecoConf and Hlt2Tracking: Add possibility to apply cut on GhostProbability
+   upfront in the protoparticle creation. 
+	 Enable it with HltRecoConf().ApplyGHOSTPROBCut = True and tune the cut with
+	 HltRecoConf().MaxTrGHOSTPROB = 0.x.
+
 ! 2015-05-15 - Sascha Stahl
  - HltRecoConf: Added extra options for p/pt thresholds for muons in Hlt1.
  - Hlt1Tracking: Changed configuration of complement forward for muons. 
