@@ -221,7 +221,7 @@ int DalitzMCIntegrator::determineNumEvents(){
 }
 
 int DalitzMCIntegrator::generateEnoughEvents(){
-  addEvents(200000);
+  addEvents(300000);
   //updateEventSet(_minEvents);
   //determineNumEvents();
   //updateEventSet(_numEvents);
