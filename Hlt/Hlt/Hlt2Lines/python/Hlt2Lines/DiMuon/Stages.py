@@ -39,6 +39,7 @@ class SoftDiMuonFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         code = ("(MINTREE('mu-' == ABSID, MIPDV(PRIMARY)) > %(IP)s)" +
                 " & (MM < %(MaxMass)s) & (PT> %(Pt)s)" +
+                " & (ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > %(KsVeto)s ) " +
                 " & (MINTREE('mu-' == ABSID, PT) > %(MuPt)s)" +
                 " & (VFASPF(VCHI2PDOF)<%(VertexChi2)s )" +
                 " & (MAXTREE('mu-' == ABSID, TRCHI2DOF) < %(TrChi2Tight)s)" +

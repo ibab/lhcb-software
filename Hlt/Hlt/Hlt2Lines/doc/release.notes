@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-20 - Francesco Dettori
+ - Adding Ks veto in DiMuonSoft line. 
+
 ! 2015-05-19 - Olli Lupton
  - PID: make Lambda0 isMuon line filter with ISMUONLOOSE rather than ISMUON.
 

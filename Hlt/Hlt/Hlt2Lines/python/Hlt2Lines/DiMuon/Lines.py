@@ -47,7 +47,8 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                                     'MuPt'       :     0 * MeV,
                                     'VertexChi2' :    25,
                                     'doca'       :   0.5,
-                                    'MinVDZ'     :     0 * mm
+                                    'MinVDZ'     :     0 * mm,
+                                    'KsVeto'     :     10 * MeV 
                                     },
 
                  'DetachedHeavy' : {'MinMass'    :  2950 * MeV,
