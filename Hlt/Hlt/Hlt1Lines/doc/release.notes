@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-05-20 - Francesco Dettori
+ - Making the L0 requirement of the Hlt1NoPVPassThrough configurable
+
 ! 2015-05-07 - Sascha Stahl
  - Fix warnings in Hlt1HighMult lines and put cut to something more reasonable.
 

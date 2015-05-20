@@ -56,7 +56,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'MultiMuonNoL0_TrChi2'     :    4.
                  , 'MultiMuonNoL0_GT'         :  2.5
                  , 'MultiMuonNoL0_GEC'        : 'Loose'
-                 , 'MultiMuonNoL0_TrackType'  : 'Long'
+                 , 'NoPVPassThrough_L0ChannelRe' : "L0_CHANNEL_RE('.*lowMult')"
                  , 'ODINFilter'               : {}
                  , 'L0Channels'               : { 'SingleMuonHighPT' : ( 'Muon', ),
                                                   'SingleMuonNoIP'   : ( 'Muon', ),
@@ -291,6 +291,17 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         gec = properties[ 'GEC' ]
         return [ Hlt1GECUnit( gec ), unit ]
 
+    
+    def build_NoPVMuonPassThrough(self): 
+        from HltLine.HltLine import Hlt1Line   as Line
+        # The pass-through NoPV line
+        Hlt1NoPVMuonPassThrough = Line( 'NoPVPassThrough'
+                                        , prescale = self.prescale
+                                        , L0DU = "%(L0ChannelRe)s"%(self.localise_props( 'NoPVPassThrough' ))
+                                        , ODIN = "~jbit( ODIN_EVTTYP,0 )"
+                                        , postscale = self.postscale)
+
+
     def build_line( self, name, streamer ):
         from HltLine.HltLine import Hlt1Line
         algos = [ self.do_timing( unit ) if self.getProp('DoTiming') else unit for unit in streamer( self.localise_props( name ) ) ]
@@ -320,6 +331,8 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         odin = self.getProp( 'ODINFilter' ).get(nickname, None)
         return odin
 
+
+
     def __apply_configuration__( self ) :
          ## Create the lines
         to_build = [ ( 'SingleMuonHighPT', self.singleMuon_streamer ),
@@ -331,10 +344,5 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         for line, streamer in to_build:
             self.build_line( line, streamer )
 
-        from HltLine.HltLine import Hlt1Line   as Line
-        # The pass-through NoPV line
-        Hlt1NoPVMuonPassThrough = Line( 'NoPVPassThrough'
-                                        , prescale = self.prescale
-                                        , L0DU = "L0_CHANNEL_RE('.*lowMult')"
-                                        , ODIN = "~jbit( ODIN_EVTTYP,0 )"
-                                        , postscale = self.postscale)
+        self.build_NoPVMuonPassThrough() 
+
