@@ -67,41 +67,61 @@ GaudiTask::PythonInterpreter::~PythonInterpreter() {
   ::Py_Finalize();
 }
 
-void GaudiTask::PythonInterpreter::reinitializeGIL() {
+static bool old_mode = true;
+GaudiTask::PythonGlobalState::PythonGlobalState() {
   if ( ::Py_IsInitialized() ) {
-    PyThreadState *tstate = 0;
-    PyInterpreterState *interp = 0;
+    if ( old_mode )  {
+      PyThreadState *tstate = 0;
+      PyInterpreterState *interp = 0;
 #ifndef _WIN32
-    ::_PyGILState_Fini();
-    ::PyOS_AfterFork();
-    tstate = PyThreadState_GET();
-    interp = tstate->interp;
-    ::_PyGILState_Init(interp, tstate);
+      ::_PyGILState_Fini();
+      ::PyOS_AfterFork();
+      tstate = PyThreadState_GET();
+      interp = tstate->interp;
+      ::_PyGILState_Init(interp, tstate);
 #endif
+      return;
+    }
+    PyGILState_STATE gstate = ::PyGILState_Ensure(); 
+    m_state = (void*)gstate;
+  }
+}
+
+GaudiTask::PythonGlobalState::afterFork() {
+  if ( old_mode )  return;
+  if ( ::Py_IsInitialized() ) {
+    PythonGlobalState state();
+    ::PyOS_AfterFork();  
+  }
+}
+
+GaudiTask::PythonGlobalState::~PythonGlobalState() {
+  if ( old_mode )  return;
+  if ( ::Py_IsInitialized() ) {
+    PyGILState_STATE gstate = (PyGILState_STATE)m_state;
+    if ( gstate ) ::PyGILState_Release(gstate);
   }
 }
 
 /// Static thread routine to execute a Gaudi runable
 int GaudiTask::execRunable(void* arg)  {
   pair<IRunable*,GaudiTask*>* p = (pair<IRunable*,GaudiTask*>*)arg;
+  GaudiTask* t = p->second;
+  IRunable*  r = p->first;
+  delete p;
   try {
-    IRunable*  r = p->first;
-    GaudiTask* t = p->second;
-    delete p;
-    PythonInterpreter::reinitializeGIL();
+    PythonGlobalState state();
     int ret = r->run();
     t->setEventThread(false);
-    //::Py_Finalize();
     return ret;
   }
   catch(const exception& e) {
-    p->second->output(MSG::FATAL,"Exception while running main thread:"+string(e.what()));
+    t->output(MSG::FATAL,"Exception while running main thread:"+string(e.what()));
   }
   catch(...) {
-    p->second->output(MSG::FATAL,"UNKNWON Exception while running main thread.");
+    t->output(MSG::FATAL,"UNKNWON Exception while running main thread.");
   }
-  p->second->setEventThread(false);
-  delete p;
+  t->setEventThread(false);
   return 0;
 }
 
@@ -460,8 +480,13 @@ int GaudiTask::startApplication()  {
         m_incidentSvc->addListener(this,"DAQ_PAUSE");
         m_incidentSvc->addListener(this,"DAQ_CONTINUE");
       }
+      int pid = ::lib_rtl_pid();
       StatusCode sc = m_subMgr->start();
       if ( sc.isSuccess() )   {
+        int pid_now = ::lib_rtl_pid();
+        if ( pid != pid_now )  {
+          PythonInterpreter::afterFork();
+        }
         Incident incident(name(),"APP_RUNNING");
         m_incidentSvc->fireIncident(incident);
         return StatusCode::SUCCESS;

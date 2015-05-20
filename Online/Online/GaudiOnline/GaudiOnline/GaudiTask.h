@@ -28,11 +28,28 @@ namespace LHCb  {
     */
   class GaudiTask : public DimTaskFSM, virtual public IIncidentListener  {
   protected:
+    /// Python interpreter wrapper
     struct PythonInterpreter {
-      PythonInterpreter();
+      /// Default constructor
+      explicit PythonInterpreter();
+      /// Default destructor
       ~PythonInterpreter();
-      static void reinitializeGIL();
+      /// Special callback after fork
+      static void afterFork();
     };
+
+    /// Wrapper class for global python state
+    struct PythonGlobalState {
+    private:
+      /// State context
+      void* state;
+    public:
+      /// Default constructor
+      explicit PythonGlobalState();
+      /// Default destructor
+      ~PythonGlobalState();
+    };
+
     /// Handle to python interpreter
     std::auto_ptr<PythonInterpreter> m_python;
     /// Handle to second layer execution thread
