@@ -18,9 +18,12 @@ from microdstelements import ( CloneParticleTrees,
                                PackRecObjects,
                                CleanEmptyEventNodes,
                                PrintTESContents,
+                               PackTrackingClusters,
                                FindDuplicates )
 
-def stripDSTElements(pack=True, stripPrefix = 'Strip' ) :
+def stripDSTElements( pack = True,
+                      stripPrefix = 'Strip',
+                      saveTrackClusters = True ) :
     vetoTESList = ["/Event/Rec/Vertex/Primary",
                    "/Event/Rec/ProtoP/Charged",
                    "/Event/Rec/ProtoP/Neutrals",
@@ -48,6 +51,7 @@ def stripDSTElements(pack=True, stripPrefix = 'Strip' ) :
             elements += [ PackStrippingReports( prefix = p ) ] 
         else : 
           elements += [ PackStrippingReports( prefix = stripPrefix ) ]
+        if saveTrackClusters : elements += [ PackTrackingClusters() ]
         elements += [ PackParticlesAndVertices(),
                       PackRecObjects(),
                       CleanEmptyEventNodes() ]
