@@ -7,8 +7,10 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!====================== FlavourTagging v13r13 2015-05-20 =====================
+
 ! 2015-05-13 - Jack Wimberley
- - 
+ - Small charm tagger veto requested by reviewers.
 
 ! 2015-05-10 - Julian Wishahi
  - Enabled the OS Charm tagger in default tunings for Stripping21(_MC).
