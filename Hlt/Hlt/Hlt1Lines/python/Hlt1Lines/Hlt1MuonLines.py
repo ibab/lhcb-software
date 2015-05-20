@@ -252,6 +252,59 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  TrackCandidatesAlgos(properties['name']),
                  unit ]
 
+    def diMuonNoL0_streamer( self, properties ):
+        """
+        DiMuon streamer starts from VeloTTCandidates but uses ComplementForward
+        accessing directly long tracks if the velo segment was already upgraded.
+        IsMuon is used for Long tracks, MatchVeloTTMuon for VeloTT and Velo ones.
+        """
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
+        from HltTracking.Hlt1Tracking import TrackCandidatesAlgos
+        from Configurables import LoKi__HltUnit as HltUnit
+        from HltTracking.HltPVs import PV3D
+        unit = HltUnit(
+            'Hlt1%(name)sStreamer' % properties,
+            ##OutputLevel = 1 ,
+            Preambulo = self.diMuon_preambulo( properties ),
+            Code = """
+            VeloTTCandidates
+            >>  MatchVeloTTMuon
+            >>  tee  ( monitor( TC_SIZE > 0, '# MatchMuon', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
+            >>  ComplementForward
+            >>  tee  ( monitor( TC_SIZE > 0, '# Complement', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nComp' , LoKi.Monitoring.ContextSvc ) )
+            >>  IsMuon
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
+            >>  FitTrack
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )
+            >>  tee  ( monitor( TC_SIZE , 'n after P/PT' , LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
+            >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & ( Tr_HLTMIPCHI2( 'PV3D' ) > %(IPChi2)s ) )
+            >>  tee  ( monitor( TC_SIZE , 'n after Tr/IPChi2' , LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass Tr/IPChi2', LoKi.Monitoring.ContextSvc ) )
+            >>  MakeDiMuons
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass vertex', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nVertices' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( RV_MASS ( 'mu+' , 'mu-' ) > %(M)s * MeV )
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass mass', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nDiMuons' , LoKi.Monitoring.ContextSvc ) )
+            >>  SINK( 'Hlt1%(name)sDecision' )
+            >> ~TC_EMPTY
+            """ % properties
+            )
+        gec = properties[ 'GEC' ]
+
+        return [ Hlt1GECUnit( gec ),
+                 PV3D('Hlt1'),
+                 TrackCandidatesAlgos(properties['name']),
+                 unit ]
+
+
+
     def multiMuon_streamer( self, properties ):
         """
         MultiMuon streamer starts from VeloTTCandidates but uses ComplementForward
@@ -272,6 +325,9 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  ComplementForward
             >>  tee  ( monitor( TC_SIZE > 0, '# Complement', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nComp' , LoKi.Monitoring.ContextSvc ) )
+            >>  IsMuon
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
             >>  FitTrack
             >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
@@ -281,9 +337,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  ( TrCHI2PDOF < %(TrChi2)s )
             >>  tee  ( monitor( TC_SIZE , 'n after TrChi2' , LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass TrChi2', LoKi.Monitoring.ContextSvc ) )
-            >>  IsMuon
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
             >>  SINK( 'Hlt1%(name)sDecision' )
             >>  TC_SIZE > %(GT)s
             """ % properties
@@ -339,7 +392,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                      ( 'SingleMuonNoIP',   self.singleMuon_streamer ),
                      ( 'DiMuonLowMass',    self.diMuonDetached_streamer ),
                      ( 'DiMuonHighMass',   self.diMuon_streamer ),
-                     ( 'DiMuonNoL0',    self.diMuonDetached_streamer ),
+                     ( 'DiMuonNoL0',    self.diMuonNoL0_streamer ),
                      ( 'MultiMuonNoL0',    self.multiMuon_streamer ) ]
         for line, streamer in to_build:
             self.build_line( line, streamer )
