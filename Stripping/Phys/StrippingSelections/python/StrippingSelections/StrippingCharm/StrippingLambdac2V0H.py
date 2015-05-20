@@ -55,7 +55,7 @@ default_config = {
         'K_PIDK_MIN': 5.0,
         # Maximum Lc+ bachelor pion DLLK
         'Pi_PIDK_MAX': 3.0,
-        # Minimum KS0 momentum
+        # Minimum L0 momentum
         'Lambda0_P_MIN': 2000*MeV,
         # Minimum L0 transverse momentum
         'Lambda0_PT_MIN': 500*MeV,
