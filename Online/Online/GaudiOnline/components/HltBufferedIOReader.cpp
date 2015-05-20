@@ -243,7 +243,7 @@ StatusCode HltBufferedIOReader::initialize()   {
       const std::string node = RTL::nodeNameShort();
       int   fd   = ::open(broken_hosts.c_str(),O_RDONLY);
       if ( -1 == fd )  {
-	return error("Failed to access broken node file:"+broken_hosts+" [Error ignored]");
+        return error("Failed to access broken node file:"+broken_hosts+" [Error ignored]");
       }
       char* data = new char[file.st_size+1];
       int rc = file_read(fd,data,file.st_size);
@@ -280,7 +280,7 @@ StatusCode HltBufferedIOReader::initialize()   {
   if ( !m_goService.empty() )  {
     m_goValue = GO_DONT_PROCESS;
     m_goSvcID = ::dic_info_service(m_goService.c_str(),MONITORED,
-				   0,0,0,go_handler,(long)this,0,0);
+                                   0,0,0,go_handler,(long)this,0,0);
   }
   return sc;
 }
@@ -406,7 +406,7 @@ int HltBufferedIOReader::openFile()   {
           //::exit(EBADF);
           m_receiveEvts = false;
           incidentSvc()->fireIncident(Incident(name(),"DAQ_ERROR"));
-	  ::close(fd);
+          ::close(fd);
           return 0;
         }
       }
@@ -510,16 +510,16 @@ StatusCode HltBufferedIOReader::i_run()  {
       info("Locking event loop. Waiting for work....");
       ::lib_rtl_lock(m_lock);
     }
-    if ( !m_receiveEvts || (m_goValue != GO_DONT_PROCESS) )    {
+    if ( !m_receiveEvts || (m_goValue == GO_DONT_PROCESS) )    {
       if ( file_handle )  {
-	safeRestOfFile(file_handle);
-	file_handle = 0;
+        safeRestOfFile(file_handle);
+        file_handle = 0;
       }
       info("Quitting...");
       break;
     }
     m_evtCount = 0;
-    files_processed = scanFiles() == 0;
+    files_processed = (GO_PROCESS != m_goValue) && scanFiles() == 0;
     if ( files_processed )    {
       info("Exit event loop. No more files to process.");
       break;
@@ -529,16 +529,16 @@ StatusCode HltBufferedIOReader::i_run()  {
       if (file_handle == 0 && (m_goValue == GO_PROCESS) )  {
         file_handle = openFile();
         if ( file_handle == 0 )   {
-	  files_processed = (GO_PROCESS==m_goValue) && (scanFiles() == 0);
+          files_processed = (GO_PROCESS!=m_goValue) || (scanFiles() == 0);
           if ( files_processed )    {
             break;
           }
         }
-	event_number = 0;
+        event_number = 0;
       }
       if ( file_handle != 0 )  {
         int size_buf[3];
-	off_t file_position = ::lseek(file_handle, 0, SEEK_CUR);
+        off_t file_position = ::lseek(file_handle, 0, SEEK_CUR);
         int status = ::file_read(file_handle, (char*)size_buf, sizeof(size_buf));
         if (status <= 0)   {
           ::close(file_handle);
@@ -546,105 +546,105 @@ StatusCode HltBufferedIOReader::i_run()  {
           m_current = "";
           continue;
         }
-	bool is_mdf   = size_buf[0] == size_buf[1] && size_buf[0] == size_buf[2];
-	int  evt_size = size_buf[0];
-	int  buf_size = evt_size + (is_mdf ? bank->hdrSize() : sizeof(MEPEVENT) + sizeof(int));
+        bool is_mdf   = size_buf[0] == size_buf[1] && size_buf[0] == size_buf[2];
+        int  evt_size = size_buf[0];
+        int  buf_size = evt_size + (is_mdf ? bank->hdrSize() : sizeof(MEPEVENT) + sizeof(int));
         // Careful here: sizeof(int) MUST match me->sizeOf() !
         // The problem is that we do not (yet) have a valid data pointer!
-	++event_number;
+        ++event_number;
         try   {
           status = m_producer->spaceRearm(buf_size);
         }
         catch (const exception& e)        {
           error("Exception while reading Input files (spaceRearm): %s Event:%d. "
-		"Skipping rest of file: %s", e.what(),event_number,m_current.c_str());
+                "Skipping rest of file: %s", e.what(),event_number,m_current.c_str());
           ::close(file_handle);
           file_handle = 0;
           m_current = "";
           continue;
         }
         if (status == MBM_NORMAL)        {
-	  MBM::EventDesc& dsc = m_producer->event();
-	  char*  read_ptr = 0;
-	  size_t read_len = 0;
-	  if ( is_mdf ) {
-	    RawBank* b = (RawBank*)dsc.data;
-	    b->setMagic();
-	    b->setType(RawBank::DAQ);
-	    b->setSize(MDFHeader::sizeOf(3));
-	    b->setVersion(DAQ_STATUS_BANK);
-	    read_ptr = b->begin<char>();
-	    ::memcpy(read_ptr,size_buf,sizeof(size_buf));
-	    read_ptr += sizeof(size_buf);
-	    read_len = evt_size-sizeof(size_buf);
-	    dsc.len  = evt_size+b->hdrSize();
-	    dsc.type = EVENT_TYPE_EVENT;
-	  }
-	  else {
-	    static int id = -1;
-	    MEPEVENT* e = (MEPEVENT*) dsc.data;
-	    MEPEvent* me = (MEPEvent*) e->data;
-	    me->setSize(evt_size);
-	    e->refCount = m_refCount;
-	    e->evID = ++id;
-	    e->begin = long(e) - long(m_producer->bufferAddress());
-	    e->packing = -1;
-	    e->valid = 1;
-	    e->magic = mep_magic_pattern();
-	    for (size_t j = 0; j < MEP_MAX_PACKING; ++j)   {
-	      e->events[j].begin = 0;
-	      e->events[j].evID = 0;
-	      e->events[j].status = EVENT_TYPE_OK;
-	      e->events[j].signal = 0;
-	    }
-	    read_ptr = (char*)me->start();
-	    ::memcpy(read_ptr,size_buf+1,2*sizeof(size_buf[0]));
-	    read_ptr += 2*sizeof(size_buf[0]);
-	    read_len = me->size() - 2*sizeof(int);
-	    dsc.len  = sizeof(MEPEVENT) + me->sizeOf() + me->size();
-	    dsc.type = EVENT_TYPE_MEP;
-	  }
-	  status = ::file_read(file_handle,read_ptr, read_len);
-	  if (status <= 0)   {
-	    ::close(file_handle);
-	    file_handle = 0;
-	    m_current = "";
-	    continue;
-	  }
-	  if (status == MBM_NORMAL)  {
-	    // Check if there are consumers pending before declaring the event.
-	    // This should be a rare case, since there ARE (were?) consumers.
-	    // Though: In this case the event is really lost!
-	    // But what can I do...
-	    for(cons_wait = m_maxConsWait; !check_consumers(mbmInfo,partid,dsc.type) && --cons_wait>=0; )
-	      ::lib_rtl_sleep(1000);
+          MBM::EventDesc& dsc = m_producer->event();
+          char*  read_ptr = 0;
+          size_t read_len = 0;
+          if ( is_mdf ) {
+            RawBank* b = (RawBank*)dsc.data;
+            b->setMagic();
+            b->setType(RawBank::DAQ);
+            b->setSize(MDFHeader::sizeOf(3));
+            b->setVersion(DAQ_STATUS_BANK);
+            read_ptr = b->begin<char>();
+            ::memcpy(read_ptr,size_buf,sizeof(size_buf));
+            read_ptr += sizeof(size_buf);
+            read_len = evt_size-sizeof(size_buf);
+            dsc.len  = evt_size+b->hdrSize();
+            dsc.type = EVENT_TYPE_EVENT;
+          }
+          else {
+            static int id = -1;
+            MEPEVENT* e = (MEPEVENT*) dsc.data;
+            MEPEvent* me = (MEPEvent*) e->data;
+            me->setSize(evt_size);
+            e->refCount = m_refCount;
+            e->evID = ++id;
+            e->begin = long(e) - long(m_producer->bufferAddress());
+            e->packing = -1;
+            e->valid = 1;
+            e->magic = mep_magic_pattern();
+            for (size_t j = 0; j < MEP_MAX_PACKING; ++j)   {
+              e->events[j].begin = 0;
+              e->events[j].evID = 0;
+              e->events[j].status = EVENT_TYPE_OK;
+              e->events[j].signal = 0;
+            }
+            read_ptr = (char*)me->start();
+            ::memcpy(read_ptr,size_buf+1,2*sizeof(size_buf[0]));
+            read_ptr += 2*sizeof(size_buf[0]);
+            read_len = me->size() - 2*sizeof(int);
+            dsc.len  = sizeof(MEPEVENT) + me->sizeOf() + me->size();
+            dsc.type = EVENT_TYPE_MEP;
+          }
+          status = ::file_read(file_handle,read_ptr, read_len);
+          if (status <= 0)   {
+            ::close(file_handle);
+            file_handle = 0;
+            m_current = "";
+            continue;
+          }
+          if (status == MBM_NORMAL)  {
+            // Check if there are consumers pending before declaring the event.
+            // This should be a rare case, since there ARE (were?) consumers.
+            // Though: In this case the event is really lost!
+            // But what can I do...
+            for(cons_wait = m_maxConsWait; !check_consumers(mbmInfo,partid,dsc.type) && --cons_wait>=0; )
+              ::lib_rtl_sleep(1000);
 
-	    if ( cons_wait <= 0 )  {
-	      error("No consumers (partition:%d event type:%d) present to consume event %d",
-		    partid,dsc.type,event_number);
-	      error("Safe rest of file and finish. Skipping rest of file: %s",m_current.c_str());
-	      m_receiveEvts = false;
-	      ::lseek(file_handle, file_position, SEEK_SET);
-	      safeRestOfFile(file_handle);
-	      file_handle = 0;
-	      /// Before actually declaring PAUSED, we wait until no events are pending anymore.
-	      waitForPendingEvents(mbmInfo);
-	      /// Go to state PAUSED, all the work is done
-	      incidentSvc()->fireIncident(Incident(name(),"DAQ_ERROR"));
-	      return StatusCode::FAILURE;
-	    }
-	    //cout << "Event length:" << dsc.len << endl;
-	    dsc.mask[0] = partid;
-	    dsc.mask[1] = ~0x0;
-	    dsc.mask[2] = ~0x0;
-	    dsc.mask[3] = ~0x0;
-	    m_producer->declareEvent();
-	    status = m_producer->sendSpace();
-	    if (status == MBM_NORMAL)    {
-	      m_evtCount++;
-	    }
-	  }
-	}
+            if ( cons_wait <= 0 )  {
+              error("No consumers (partition:%d event type:%d) present to consume event %d",
+                    partid,dsc.type,event_number);
+              error("Safe rest of file and finish. Skipping rest of file: %s",m_current.c_str());
+              m_receiveEvts = false;
+              ::lseek(file_handle, file_position, SEEK_SET);
+              safeRestOfFile(file_handle);
+              file_handle = 0;
+              /// Before actually declaring PAUSED, we wait until no events are pending anymore.
+              waitForPendingEvents(mbmInfo);
+              /// Go to state PAUSED, all the work is done
+              incidentSvc()->fireIncident(Incident(name(),"DAQ_ERROR"));
+              return StatusCode::FAILURE;
+            }
+            //cout << "Event length:" << dsc.len << endl;
+            dsc.mask[0] = partid;
+            dsc.mask[1] = ~0x0;
+            dsc.mask[2] = ~0x0;
+            dsc.mask[3] = ~0x0;
+            m_producer->declareEvent();
+            status = m_producer->sendSpace();
+            if (status == MBM_NORMAL)    {
+              m_evtCount++;
+            }
+          }
+        }
         else if (file_handle)   {
           // undo reading of the first integer before saving rest of file
           ::lseek(file_handle, -3*sizeof(int), SEEK_CUR);

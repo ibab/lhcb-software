@@ -403,7 +403,12 @@ int NodeTaskMon::start()   {
     }
     for(ConnectionList::iterator c=m_nodeType.connections.begin(); c!=m_nodeType.connections.end();++c) {
       string& n = *c;
-      if ( (idx=n.find("<DIM_DNS_NODE>")) != string::npos ) n.replace(idx,idx+14,::getenv("DIM_DNS_NODE"));
+      if ( (idx=n.find("<DIM_DNS_NODE>")) != string::npos )
+        n.replace(idx,idx+14,::getenv("DIM_DNS_NODE"));
+      else if ( (idx=n.find("<NODE>")) != string::npos )
+        n.replace(idx,idx+6,nodL);
+      else if ( (idx=n.find("<DATAINTERFACE>")) != string::npos )
+        n.replace(idx,idx+15,nodL+"-d1");
       m_connections[n] = 0;
     }
     ::lib_rtl_output(LIB_RTL_INFO,"Subscribing to service:%s.",nam.c_str());

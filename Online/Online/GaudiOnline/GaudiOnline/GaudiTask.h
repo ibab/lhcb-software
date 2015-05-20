@@ -42,7 +42,7 @@ namespace LHCb  {
     struct PythonGlobalState {
     private:
       /// State context
-      void* state;
+      int m_state;
     public:
       /// Default constructor
       explicit PythonGlobalState();

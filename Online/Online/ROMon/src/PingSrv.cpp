@@ -252,7 +252,12 @@ extern "C" int run_node_ping(int argc, char** argv) {
           const Inventory::NodeType& nt = (*j).second;
           for(Inventory::ConnectionList::const_iterator c=nt.connections.begin(); c!=nt.connections.end();++c) {
             string n = *c;
-            if ( (idx=n.find("<DIM_DNS_NODE>")) != string::npos ) n.replace(idx,idx+14,::getenv("DIM_DNS_NODE"));
+            if ( (idx=n.find("<DIM_DNS_NODE>")) != string::npos )
+              n.replace(idx,idx+14,::getenv("DIM_DNS_NODE"));
+            else if ( (idx=n.find("<NODE>")) != string::npos )
+              n.replace(idx,idx+6,::RTL::nodeNameShort());
+            else if ( (idx=n.find("<DATAINTERFACE>")) != string::npos )
+              n.replace(idx,idx+15,RTL::nodeNameShort()+"-d1");
             connections.push_back(n);
           }
           goto Start;

@@ -59,6 +59,8 @@ static string loadScript(const string& fname) {
   return "";
 }
 
+static bool old_mode = true;
+
 GaudiTask::PythonInterpreter::PythonInterpreter() {
   ::Py_Initialize();
 }
@@ -67,7 +69,14 @@ GaudiTask::PythonInterpreter::~PythonInterpreter() {
   ::Py_Finalize();
 }
 
-static bool old_mode = true;
+void GaudiTask::PythonInterpreter::afterFork() {
+  if ( old_mode )  return;
+  if ( ::Py_IsInitialized() ) {
+    PythonGlobalState state();
+    ::PyOS_AfterFork();  
+  }
+}
+
 GaudiTask::PythonGlobalState::PythonGlobalState() {
   if ( ::Py_IsInitialized() ) {
     if ( old_mode )  {
@@ -83,15 +92,7 @@ GaudiTask::PythonGlobalState::PythonGlobalState() {
       return;
     }
     PyGILState_STATE gstate = ::PyGILState_Ensure(); 
-    m_state = (void*)gstate;
-  }
-}
-
-GaudiTask::PythonGlobalState::afterFork() {
-  if ( old_mode )  return;
-  if ( ::Py_IsInitialized() ) {
-    PythonGlobalState state();
-    ::PyOS_AfterFork();  
+    m_state = (int)gstate;
   }
 }
 
@@ -557,7 +558,7 @@ int GaudiTask::stopApplication()  {
     if ( m_handle )   {  //&& m_eventThread == false )  {
       ::lib_rtl_join_thread(m_handle);
       m_handle = 0;
-      PythonInterpreter::reinitializeGIL();
+      //PythonInterpreter::reinitializeGIL();
     }
     gauditask_task_lock();
     try {
@@ -568,6 +569,7 @@ int GaudiTask::stopApplication()  {
       }
       m_incidentSvc= 0;
 #endif
+      PythonGlobalState state();
       StatusCode sc = m_subMgr ? m_subMgr->stop() : StatusCode::SUCCESS;
       if ( !sc.isSuccess() )   {
         MsgStream log(msgSvc(), name());
@@ -601,7 +603,6 @@ int GaudiTask::finalizeApplication()  {
       if ( m_handle )  {
         ::lib_rtl_join_thread(m_handle);
         m_handle = 0;
-        PythonInterpreter::reinitializeGIL();
       }
       gauditask_task_lock();
       // First check if the process is still in state 'RUNNING'
@@ -610,6 +611,7 @@ int GaudiTask::finalizeApplication()  {
       if ( isvc.get() ) {
         if ( isvc->FSMState() == Gaudi::StateMachine::RUNNING ) {
           output(MSG::ALWAYS,"Attemp to call finalize before stop: will take corrective action....");
+          PythonGlobalState state();
           sc = isvc->stop();
           if ( !sc.isSuccess() )   {
             output(MSG::ERROR,"Failed to stop the application");
