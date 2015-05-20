@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-5-20 - Sean Benson
+ - Make resurrection insensitive to missing PVs (needed for smog).
+
 ! 2015-5-14 - Sean Benson
  - Resurrect RecSummary.
 

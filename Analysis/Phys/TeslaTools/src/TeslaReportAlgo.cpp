@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( TeslaReportAlgo )
 //=============================================================================
 TeslaReportAlgo::TeslaReportAlgo( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-: GaudiAlgorithm ( name , pSvcLocator ), m_dist(NULL), m_check(NULL), m_conv(NULL)
+: GaudiAlgorithm ( name , pSvcLocator ), m_PV3D(true), m_dist(NULL), m_check(NULL), m_conv(NULL)
 {
   declareProperty( "TriggerLine" ,          m_inputName    = "Hlt2CharmHadD02HH_D02KK" );
   declareProperty( "OutputPrefix" ,         m_OutputPref   = "Tesla" );
@@ -88,7 +88,7 @@ StatusCode TeslaReportAlgo::execute()
   const LHCb::HltVertexReports::HltVertexReport* vtxRep;
   // Vertex reports
   if ( exist<LHCb::HltVertexReports>( VertRepLoc.c_str() ) ) { // exist --> get content
-    vtxReports = get<LHCb::HltVertexReports>( VertRepLoc.c_str() );
+    vtxReports = getIfExists<LHCb::HltVertexReports>( VertRepLoc.c_str() );
     vtxRep = vtxReports->vertexReport("PV3D");
     if ( msgLevel(MSG::DEBUG) ){
       std::vector<std::string> vnames = vtxReports->selectionNames();
@@ -102,7 +102,8 @@ StatusCode TeslaReportAlgo::execute()
     //
     return StatusCode::SUCCESS;
   }
-
+  if ( !vtxRep ) m_PV3D=false;
+  else m_PV3D=true;
   // Selection reports
   if ( exist<LHCb::HltSelReports>( RepLoc.c_str() ) ) { // exist --> get content
     selReports = get<LHCb::HltSelReports>( RepLoc.c_str() );
@@ -229,7 +230,7 @@ StatusCode TeslaReportAlgo::execute()
     put( cont_PV , m_PVLoc.c_str() );
     reusePV = false;
   }
-  if( !reusePV && !refitted ){
+  if( !reusePV && !refitted && m_PV3D ){
     for( auto iv = vtxRep->begin(); iv!=vtxRep->end(); iv++){
       const LHCb::VertexBase* v = *iv;
       LHCb::RecVertex* vnew = new LHCb::RecVertex();
@@ -357,7 +358,7 @@ StatusCode TeslaReportAlgo::execute()
         }
       }
       else key = refit_PV->key();
-      cont_P2PV->relate( Part , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
+      if( m_PV3D ) cont_P2PV->relate( Part , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
 
       if( motherBasic == false ) ProcessObject( 0, key, Part, Obj, cont_PV, cont_Vert, cont_Part,
                     cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_P2PV);
@@ -421,7 +422,7 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, int key, LHCb::Particle* Part, 
     newObjects_d.push_back(Part_d);
     Part->addToDaughters(Part_d);
     cont_Part->insert( Part_d );
-    cont_P2PV->relate( Part_d , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
+    if( m_PV3D ) cont_P2PV->relate( Part_d , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
 
     //
     if( d_Basic == true ){

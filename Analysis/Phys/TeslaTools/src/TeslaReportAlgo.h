@@ -75,6 +75,7 @@ private:
 	std::string m_OutputPref;
        
         bool turbo;
+        bool m_PV3D;
 
         IDistanceCalculator *   m_dist;
         IReportCheck*   m_check;
