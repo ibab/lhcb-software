@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-05-20 - Matthew Kenzie
+ - Added threshold settings for CalibTracking lines for early measurements:
+    Physics_draftEM2015
+
 ! 2015-05-20 - Christian Linn
  - Added HLT2 settings for early measurements:
    TrackEffDiMuon_EM2015 SingleMuon_EM2015 Topo_EM2015 CharmHad_EM2015 CEP_EM2015 PID_EM2015 DiMuon_EM2015
