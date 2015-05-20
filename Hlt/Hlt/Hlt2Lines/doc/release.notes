@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-20 - V. Gligorov
+ - Move CharmHad lines to Turbo except Inclusive D* and the CF/DCS D*->D0pi
+   lines for the mixing analysis.
+
 ! 2015-05-20 - Francesco Dettori
  - Adding Ks veto in DiMuonSoft line. 
 

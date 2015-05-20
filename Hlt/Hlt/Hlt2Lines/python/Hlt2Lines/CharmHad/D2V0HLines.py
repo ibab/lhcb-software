@@ -34,14 +34,14 @@ class CharmHadD2V0HLines():
         from Stages import D2KS0Pi_LL,D2KS0K_LL,D2KS0Pi_DD,D2KS0K_DD
         from Stages import Lc2LambdaPi_LL,Lc2LambdaK_LL,Lc2LambdaPi_DD,Lc2LambdaK_DD
         stages = {# First the CPV lines
-                  'D2KS0Pi_LL'        : [MassFilter('D2V0H',inputs=[D2KS0Pi_LL('D2V0H')])],
-                  'D2KS0K_LL'         : [MassFilter('D2V0H',inputs=[D2KS0K_LL('D2V0H')])],
-                  'D2KS0Pi_DD'        : [MassFilter('D2V0H',inputs=[D2KS0Pi_DD('D2V0H')])],
-                  'D2KS0K_DD'         : [MassFilter('D2V0H',inputs=[D2KS0K_DD('D2V0H')])],
+                  'D2KS0Pi_LLTurbo'        : [MassFilter('D2V0H',inputs=[D2KS0Pi_LL('D2V0H')])],
+                  'D2KS0K_LLTurbo'         : [MassFilter('D2V0H',inputs=[D2KS0K_LL('D2V0H')])],
+                  'D2KS0Pi_DDTurbo'        : [MassFilter('D2V0H',inputs=[D2KS0Pi_DD('D2V0H')])],
+                  'D2KS0K_DDTurbo'         : [MassFilter('D2V0H',inputs=[D2KS0K_DD('D2V0H')])],
                   #
-                  'Lc2LambdaPi_LL'    : [MassFilter('Lc2V0H',inputs=[Lc2LambdaPi_LL('Lc2V0H')])],
-                  'Lc2LambdaK_LL'     : [MassFilter('Lc2V0H',inputs=[Lc2LambdaK_LL('Lc2V0H')])],
-                  'Lc2LambdaPi_DD'    : [MassFilter('Lc2V0H',inputs=[Lc2LambdaPi_DD('Lc2V0H')])],
-                  'Lc2LambdaK_DD'     : [MassFilter('Lc2V0H',inputs=[Lc2LambdaK_DD('Lc2V0H')])],
+                  'Lc2LambdaPi_LLTurbo'    : [MassFilter('Lc2V0H',inputs=[Lc2LambdaPi_LL('Lc2V0H')])],
+                  'Lc2LambdaK_LLTurbo'     : [MassFilter('Lc2V0H',inputs=[Lc2LambdaK_LL('Lc2V0H')])],
+                  'Lc2LambdaPi_DDTurbo'    : [MassFilter('Lc2V0H',inputs=[Lc2LambdaPi_DD('Lc2V0H')])],
+                  'Lc2LambdaK_DDTurbo'     : [MassFilter('Lc2V0H',inputs=[Lc2LambdaK_DD('Lc2V0H')])],
                  }
         return stages

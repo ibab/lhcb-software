@@ -132,7 +132,7 @@ class CharmHadD2HHPi0Lines() :
         from Stages import D2HHPi0_PiPi , D2HHPi0_KPi , D2HHPi0_KK
 
         stages = {
-            'DstD02PiPiPi0R' : [TagDecay('DstD02PiPiPi0R',
+            'DstD02PiPiPi0RTurbo' : [TagDecay('DstD02PiPiPi0R',
                                        decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
                                        inputs = [ AttachParticle('D2PiPiPi0R',  nickname = 'D2HHPi0R',
                                                                  decay = "D0 -> K*(892)0 pi0",
@@ -140,7 +140,7 @@ class CharmHadD2HHPi0Lines() :
                                                                             SharedNeutralChild_pi0R ]),
                                                   SharedSoftTagChild_pi]
                                        )],
-            'DstD02PiPiPi0M' : [TagDecay('DstD02PiPiPi0M',
+            'DstD02PiPiPi0MTurbo' : [TagDecay('DstD02PiPiPi0M',
                                        decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
                                        inputs = [AttachParticle('D2PiPiPi0M',  nickname = 'D2HHPi0M',
                                                                 decay = "D0 -> K*(892)0 pi0",
@@ -148,7 +148,7 @@ class CharmHadD2HHPi0Lines() :
                                                                            SharedNeutralChild_pi0M ]),
                                                  SharedSoftTagChild_pi]
                                        )],
-            'DstD02KKPi0R' : [TagDecay('DstD02KKPi0R',
+            'DstD02KKPi0RTurbo' : [TagDecay('DstD02KKPi0R',
                                        decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
                                        inputs = [ AttachParticle('D2KKPi0R',  nickname = 'D2HHPi0R',
                                                                  decay = "D0 -> K*(892)0 pi0",
@@ -156,7 +156,7 @@ class CharmHadD2HHPi0Lines() :
                                                                             SharedNeutralChild_pi0R ]),
                                                   SharedSoftTagChild_pi]
                                        )],
-            'DstD02KKPi0M' : [TagDecay('DstD02KKPi0M',
+            'DstD02KKPi0MTurbo' : [TagDecay('DstD02KKPi0M',
                                        decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
                                        inputs = [AttachParticle('D2KKPi0M',  nickname = 'D2HHPi0M',
                                                                 decay = "D0 -> K*(892)0 pi0",
@@ -164,7 +164,7 @@ class CharmHadD2HHPi0Lines() :
                                                                            SharedNeutralChild_pi0M ]),
                                                  SharedSoftTagChild_pi]
                                        )],
-            'DstD02KPiPi0R' : [TagDecay('DstD02KPiPi0R',
+            'DstD02KPiPi0RTurbo' : [TagDecay('DstD02KPiPi0R',
                                        decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
                                        inputs = [ AttachParticle('D2KPiPi0R',  nickname = 'D2HHPi0R',
                                                                  decay = "D0 -> K*(892)0 pi0",
@@ -172,7 +172,7 @@ class CharmHadD2HHPi0Lines() :
                                                                             SharedNeutralChild_pi0R ]),
                                                   SharedSoftTagChild_pi]
                                        )],
-            'DstD02KPiPi0M' : [TagDecay('DstD02KPiPi0M',
+            'DstD02KPiPi0MTurbo' : [TagDecay('DstD02KPiPi0M',
                                        decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
                                        inputs = [AttachParticle('D2KPiPi0M',  nickname = 'D2HHPi0M',
                                                                 decay = "D0 -> K*(892)0 pi0",

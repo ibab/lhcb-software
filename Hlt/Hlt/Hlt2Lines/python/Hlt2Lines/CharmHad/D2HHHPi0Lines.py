@@ -65,16 +65,16 @@ class CharmHadD2HHHPi0Lines() :
         }
         stages ={
           # Then we attach the neutral
-            'D2PiPiPiPi0'   : [AttachParticle('D2PiPiPiPi0', "[D+ -> K*(892)+ pi0]cc",
+            'D2PiPiPiPi0Turbo'   : [AttachParticle('D2PiPiPiPi0', "[D+ -> K*(892)+ pi0]cc",
                                              inputs = [ inputs['DetachedPiPiPi_forD2HHHPi0'][0],
                                                         SharedNeutralChild_pi0 ] )],
-            'D2KPiPiPi0'    : [AttachParticle('D2KPiPiPi0', "[D+ -> K*(892)+ pi0]cc",
+            'D2KPiPiPi0Turbo'    : [AttachParticle('D2KPiPiPi0', "[D+ -> K*(892)+ pi0]cc",
                                              inputs = [ inputs['DetachedKPiPi_forD2HHHPi0'][0],
                                                         SharedNeutralChild_pi0 ] )],
-            'D2KKPiPi0'     : [AttachParticle('D2KKPiPi0', "[D+ -> K*(892)+ pi0]cc",
+            'D2KKPiPi0Turbo'     : [AttachParticle('D2KKPiPi0', "[D+ -> K*(892)+ pi0]cc",
                                              inputs = [ inputs['DetachedKKPi_forD2HHHPi0'][0],
                                                         SharedNeutralChild_pi0 ] )],
-            'D2KKKPi0'      : [AttachParticle('D2KKKPi0', "[D+ -> K*(892)+ pi0]cc",
+            'D2KKKPi0Turbo'      : [AttachParticle('D2KKKPi0', "[D+ -> K*(892)+ pi0]cc",
                                              inputs = [ inputs['DetachedKKK_forD2HHHPi0'][0],
                                                         SharedNeutralChild_pi0 ] )],
         }

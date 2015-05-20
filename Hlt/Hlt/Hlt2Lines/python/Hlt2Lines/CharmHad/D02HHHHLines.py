@@ -76,22 +76,22 @@ class CharmHadD02HHHHLines() :
         stages = {}
         # Create the nominal and wide mass combinations
         stages.update( {
-              'D02PiPiPiPiWide' : [MassFilter('D02PiPiPiPiWide',inputs=[DV4BCombiner('D02PiPiPiPiWide', inputs=[SharedDetachedD0ToHHHHChild_pi], decay=['D0 -> pi+ pi+ pi- pi-'], shared=True)])],
-              'D02KPiPiPiWide'  : [MassFilter('D02KPiPiPiWide',inputs=[DV4BCombiner('D02KPiPiPiWide', inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K], decay=['[D0 -> K- pi+ pi+ pi-]cc'], shared=True)])],
-              'D02KKPiPiWide'   : [MassFilter('D02KKPiPiWide',inputs=[DV4BCombiner('D02KKPiPiWide', inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K], decay=['D0 -> K+ K- pi+ pi-'], shared=True)])],
-              'D02KKKPiWide'    : [MassFilter('D02KKKPiWide',inputs=[DV4BCombiner('D02KKKPiWide', inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K], decay=['[D0 -> K- K- K+ pi+]cc'], shared=True)])],
+              'D02PiPiPiPiWideTurbo' : [MassFilter('D02PiPiPiPiWide',inputs=[DV4BCombiner('D02PiPiPiPiWide', inputs=[SharedDetachedD0ToHHHHChild_pi], decay=['D0 -> pi+ pi+ pi- pi-'], shared=True)])],
+              'D02KPiPiPiWideTurbo'  : [MassFilter('D02KPiPiPiWide',inputs=[DV4BCombiner('D02KPiPiPiWide', inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K], decay=['[D0 -> K- pi+ pi+ pi-]cc'], shared=True)])],
+              'D02KKPiPiWideTurbo'   : [MassFilter('D02KKPiPiWide',inputs=[DV4BCombiner('D02KKPiPiWide', inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K], decay=['D0 -> K+ K- pi+ pi-'], shared=True)])],
+              'D02KKKPiWideTurbo'    : [MassFilter('D02KKKPiWide',inputs=[DV4BCombiner('D02KKKPiWide', inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K], decay=['[D0 -> K- K- K+ pi+]cc'], shared=True)])],
             } )
         # Restrict to the nominal mass
         for fs in ['PiPiPiPi', 'KPiPiPi', 'KKPiPi', 'KKKPi']:
-            stages.update( { 'D02'+fs : [MassFilter('D02'+fs,inputs=[stages['D02'+fs+'Wide'][0]])] } )
+            stages.update( { 'D02'+fs+'Turbo' : [MassFilter('D02'+fs,inputs=[stages['D02'+fs+'Wide'][0]])] } )
         # Then add the soft pion for the D*
         for des in ['','Wide']:
             for fs in ['PiPiPiPi', 'KKPiPi']:
-                stages['D02'+fs+des+'Tag'] = [Dst2D0pi('D02'+fs+des+'Tag', d0=stages['D02'+fs+des][0])]
+                stages['D02'+fs+des+'Tag'+'Turbo'] = [Dst2D0pi('D02'+fs+des+'Tag', d0=stages['D02'+fs+des][0])]
             for fs in ['KPiPiPi', 'KKKPi']:
-                stages['D02CF'+fs+des+'Tag']  = [TagDecay('D02CF'+fs+des+'Tag', decay = ["[D*(2010)+ -> D0 pi+]cc"],
+                stages['D02CF'+fs+des+'Tag'+'Turbo']  = [TagDecay('D02CF'+fs+des+'Tag', decay = ["[D*(2010)+ -> D0 pi+]cc"],
                                                           inputs = [stages['D02'+fs+des][0]])]
-                stages['D02DCS'+fs+des+'Tag'] = [TagDecay('D02DCS'+fs+des+'Tag',decay = ["[D*(2010)- -> D0 pi-]cc"],
+                stages['D02DCS'+fs+des+'Tag'+'Turbo'] = [TagDecay('D02DCS'+fs+des+'Tag',decay = ["[D*(2010)- -> D0 pi-]cc"],
                                                           inputs = [stages['D02'+fs+des][0]])]
         
         return stages

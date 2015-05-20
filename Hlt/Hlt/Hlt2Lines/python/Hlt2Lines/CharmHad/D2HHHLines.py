@@ -124,32 +124,32 @@ class CharmHadD2HHHLines() :
         
         stages = {# First the CPV D+ -> HHH lines, does not include KpKpPim as D+ does not
                   # decay to same-charge kaons
-                  'DpToKmPipPip'        : [MassFilter('DpToKmPipPip', nickname = 'Dpm2HHH',
+                  'DpToKmPipPipTurbo'        : [MassFilter('DpToKmPipPip', nickname = 'Dpm2HHH',
                                                       inputs=[D2HHH_DpToKmPipPip], shared = True)],
-                  'DpToKpPimPip'        : [MassFilter('Dpm2HHH', inputs=[D2HHH_DpToKpPimPip])],
-                  'DpToKmKpPip'         : [MassFilter('Dpm2HHH', inputs=[D2HHH_DpToKmKpPip])],
-                  'DpToPimPipPip'       : [MassFilter('Dpm2HHH', inputs=[D2HHH_DpToPimPipPip])],
-                  'DpToKmKpKp'          : [MassFilter('Dpm2HHH', inputs=[D2HHH_DpToKmKpKp])],
+                  'DpToKpPimPipTurbo'        : [MassFilter('Dpm2HHH', inputs=[D2HHH_DpToKpPimPip])],
+                  'DpToKmKpPipTurbo'         : [MassFilter('Dpm2HHH', inputs=[D2HHH_DpToKmKpPip])],
+                  'DpToPimPipPipTurbo'       : [MassFilter('Dpm2HHH', inputs=[D2HHH_DpToPimPipPip])],
+                  'DpToKmKpKpTurbo'          : [MassFilter('Dpm2HHH', inputs=[D2HHH_DpToKmKpKp])],
                   # Second the CPV D_s+ -> HHH lines, does not include KmPipPip as D_s+ does not
                   # decay to same-charge pions
-                  'DspToKpKpPim'        : [MassFilter('Ds2HHH', inputs=[D2HHH_DspToKpKpPim])],
-                  'DspToKpPimPip'       : [MassFilter('Ds2HHH', inputs=[D2HHH_DspToKpPimPip])],
-                  'DspToKmKpPip'        : [MassFilter('DspToKmKpPip', nickname = 'Ds2HHH', 
+                  'DspToKpKpPimTurbo'        : [MassFilter('Ds2HHH', inputs=[D2HHH_DspToKpKpPim])],
+                  'DspToKpPimPipTurbo'       : [MassFilter('Ds2HHH', inputs=[D2HHH_DspToKpPimPip])],
+                  'DspToKmKpPipTurbo'        : [MassFilter('DspToKmKpPip', nickname = 'Ds2HHH', 
                                                       inputs=[D2HHH_DspToKmKpPip], shared = True)],
-                  'DspToPimPipPip'      : [MassFilter('Ds2HHH', inputs=[D2HHH_DspToPimPipPip])],
-                  'DspToKmKpKp'         : [MassFilter('Ds2HHH', inputs=[D2HHH_DspToKmKpKp])],
+                  'DspToPimPipPipTurbo'      : [MassFilter('Ds2HHH', inputs=[D2HHH_DspToPimPipPip])],
+                  'DspToKmKpKpTurbo'         : [MassFilter('Ds2HHH', inputs=[D2HHH_DspToKmKpKp])],
                   # Now the CPV Lc2HHH lines
-                  'LcpToKmPpPip'        : [MassFilter('LcpToKmPpPip', nickname = 'Lc2HHH',
+                  'LcpToKmPpPipTurbo'        : [MassFilter('LcpToKmPpPip', nickname = 'Lc2HHH',
                                                     inputs=[Lc2HHH_LcpToKmPpPip], shared = True)],
-                  'LcpToKmPpKp'         : [MassFilter('Lc2HHH',inputs=[Lc2HHH_LcpToKmPpKp])],
-                  'LcpToPimPpPip'       : [MassFilter('Lc2HHH',inputs=[Lc2HHH_LcpToPimPpPip])],
-                  'LcpToPimPpKp'        : [MassFilter('Lc2HHH',inputs=[Lc2HHH_LcpToPimPpKp])], 
+                  'LcpToKmPpKpTurbo'         : [MassFilter('Lc2HHH',inputs=[Lc2HHH_LcpToKmPpKp])],
+                  'LcpToPimPpPipTurbo'       : [MassFilter('Lc2HHH',inputs=[Lc2HHH_LcpToPimPpPip])],
+                  'LcpToPimPpKpTurbo'        : [MassFilter('Lc2HHH',inputs=[Lc2HHH_LcpToPimPpKp])], 
                   # Now the three CF lifetime unbiased lines
-                  'D2KPiPi_SS_LTUNB'    : [MassFilter('Dpm2HHH_LTUNB',inputs=[D2KPiPi_SS_LTUNB('Dpm2HHH_LTUNB')])],
-                  'D2KKPi_OS_LTUNB'     : [MassFilter('Ds2HHH_LTUNB',inputs=[D2KKPi_OS_LTUNB('Ds2HHH_LTUNB')])],
-                  'Lc2KPPi_LTUNB_Turbo' : [MassFilter('Lc2HHH_LTUNB_Turbo',inputs=[Lc2KPPi_LTUNB('Lc2HHH_LTUNB_Turbo')])],
+                  'D2KPiPi_SS_LTUNBTurbo'    : [MassFilter('Dpm2HHH_LTUNB',inputs=[D2KPiPi_SS_LTUNB('Dpm2HHH_LTUNB')])],
+                  'D2KKPi_OS_LTUNBTurbo'     : [MassFilter('Ds2HHH_LTUNB',inputs=[D2KKPi_OS_LTUNB('Ds2HHH_LTUNB')])],
+                  'Lc2KPPi_LTUNB_TurboTurbo' : [MassFilter('Lc2HHH_LTUNB_Turbo',inputs=[Lc2KPPi_LTUNB('Lc2HHH_LTUNB_Turbo')])],
                   # Now the KPi asymmetry line
-                  'Dpm2KPiPi_ForKPiAsym' : [MassFilter('Dpm2KPiPi_ForKPiAsym',
+                  'Dpm2KPiPi_ForKPiAsymTurbo' : [MassFilter('Dpm2KPiPi_ForKPiAsym',
                                                        inputs=[DetAsym_DpToKmPipPip])]
             }
         

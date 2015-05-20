@@ -36,8 +36,8 @@ class CharmHadD2V0V0Lines():
         from Stages import D2KS0KS0_2LL,D2KS0KS0_LLDD,D2KS0KS0_2DD
         stages = {# First the CPV lines
                   # If there is no DD KS0, use the LL dictionary, else use the DD dictionary
-                  'D2KS0KS0_2LL'        : [MassFilter('D2KS0KS0_LL',inputs=[D2KS0KS0_2LL('D2KS0KS0_LL')])],
-                  'D2KS0KS0_LLDD'       : [MassFilter('D2KS0KS0_DD',inputs=[D2KS0KS0_LLDD('D2KS0KS0_DD')])],
-                  'D2KS0KS0_2DD'        : [MassFilter('D2KS0KS0_DD',inputs=[D2KS0KS0_2DD('D2KS0KS0_DD')])],
+                  'D2KS0KS0_2LLTurbo'        : [MassFilter('D2KS0KS0_LL',inputs=[D2KS0KS0_2LL('D2KS0KS0_LL')])],
+                  'D2KS0KS0_LLDDTurbo'       : [MassFilter('D2KS0KS0_DD',inputs=[D2KS0KS0_LLDD('D2KS0KS0_DD')])],
+                  'D2KS0KS0_2DDTurbo'        : [MassFilter('D2KS0KS0_DD',inputs=[D2KS0KS0_2DD('D2KS0KS0_DD')])],
                  }
         return stages
