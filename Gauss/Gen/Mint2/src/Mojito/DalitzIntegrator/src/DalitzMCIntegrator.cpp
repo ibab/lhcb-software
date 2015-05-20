@@ -221,9 +221,10 @@ int DalitzMCIntegrator::determineNumEvents(){
 }
 
 int DalitzMCIntegrator::generateEnoughEvents(){
-  updateEventSet(_minEvents);
-  determineNumEvents();
-  updateEventSet(_numEvents);
+  addEvents(200000);
+  //updateEventSet(_minEvents);
+  //determineNumEvents();
+  //updateEventSet(_numEvents);
   return _events.size();
 }
 

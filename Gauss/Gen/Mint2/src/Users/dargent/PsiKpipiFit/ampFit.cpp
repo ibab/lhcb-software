@@ -290,7 +290,7 @@ int ampFit(){
       datH.drawWithFitNorm(fitH, ((string)OutputDir+(string)"datFit_").c_str(),"eps");
       std::vector<DalitzHistoSet> EachAmpsHistos = amps.GetEachAmpsHistograms();
       datH.drawWithFitAndEachAmps(datH, fitH, EachAmpsHistos, ((string)OutputDir+(string)"WithAmps").c_str(), "eps");
-      datH.drawWithFitAndEachAmpsAndInterference(datH, fitH, interferenceH, EachAmpsHistos, ((string)OutputDir+(string)"WithAmpsAndInterference").c_str(), "eps");
+      //datH.drawWithFitAndEachAmpsAndInterference(datH, fitH, interferenceH, EachAmpsHistos, ((string)OutputDir+(string)"WithAmpsAndInterference").c_str(), "eps");
   }
   cout << "==============================================" << endl;
   cout << " Done. " << " Total time since start " << (time(0) - startTime)/60.0 << " min." << endl;

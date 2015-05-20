@@ -19,14 +19,14 @@ IntegratorInputFile     "sgIntegrator"
 OutputRootFile  "GeneratedMC.root"
 
 "FitLineshapeParameters"	1
-"cashingLevel"			1
+"cashingLevel"			0
 
 ** name											Fix?	init	step	min	max
 *
 *"BW_radius"                     							2	0.002	0.0001	0.0	0.0
 *
-"mass_K(1)(1270)+"                     							0	1270	1	0.0	0.0
-"width_K(1)(1270)+"                     						0	90	0.5	0.0	0.0
+"mass_K(1)(1270)+"                     							2	1270	1	0.0	0.0
+"width_K(1)(1270)+"                     						2	90	0.5	0.0	0.0
 *
 *"mass_K(2)(1580)+"                     						2	1580	1	0.0	0.0
 *"width_K(2)(1580)+"  									2	110	1	0.0	0.0

@@ -17,6 +17,7 @@ class FastAmplitude : public Amplitude
   , virtual public MINT::IReturnComplexForEvent<IDalitzEvent>
 {
  protected:
+  MINT::NamedParameter<int>  _cashingLevel;
   std::map<IDalitzEvent*, std::complex<double> > _resultMap;
 
   bool knownEvent(IDalitzEvent& evt, std::complex<double>& value);
@@ -38,6 +39,7 @@ class FastAmplitude : public Amplitude
 
   virtual std::complex<double> getVal(IDalitzEvent& evt);
   virtual std::complex<double> getVal(IDalitzEvent* evt); // for backwards compatibilitiy
+    
 
 };
 
