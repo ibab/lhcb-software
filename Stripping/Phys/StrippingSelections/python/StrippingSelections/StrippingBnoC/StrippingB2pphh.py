@@ -27,7 +27,7 @@ from Configurables import LoKi__VoidFilter as VoidFilter
 
 default_config = {
     'NAME' : 'B2pphh',
-    'WGs'  : ['Charmless'],
+    'WGs'  : ['BnoC'],
     'BUILDERTYPE' : 'B2pphhConf',
     'CONFIG' : { 'MaxTrSIZE'             : 200 ,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
     'CombMass12Max_kk'         : 4700.0,

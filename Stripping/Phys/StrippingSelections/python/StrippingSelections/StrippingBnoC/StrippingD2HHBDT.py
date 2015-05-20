@@ -24,7 +24,7 @@ from StrippingUtils.Utils        import LineBuilder, checkConfig
 
 
 default_config = {
-    'WGs'         : ['Charmless'],
+    'WGs'         : ['BnoC'],
     'NAME'        : 'D2HHBDT',
     'BUILDERTYPE' : 'D2HHBDTLines',
     'CONFIG'      : {'PrescaleD2HHBDT' : 1.,

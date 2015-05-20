@@ -95,7 +95,7 @@ class Hb2Charged2BodyLines( LineBuilder ) :
         self.lineB2Charged2Body = StrippingLine( B2Charged2BodyName+"Line",
                                                  prescale  = config['PrescaleB2Charged2Body'],
                                                  selection = self.B2Charged2Body,
-                                                 EnableFlavourTagging = True,
+                                                 EnableFlavourTagging = False,
                                                  RequiredRawEvents = ["Trigger","Muon","Calo","Rich","Velo","Tracker"])
         
         self.registerLine(self.lineB2Charged2Body)

@@ -20,7 +20,7 @@ __all__=('StrippingBs2Kst_0Kst_0Conf',
 
 default_config = {
      'NAME'        : 'Bs2K0stK0st',
-     'WGs'         : ['Charmless'],
+     'WGs'         : ['BnoC'],
      'BUILDERTYPE' : 'StrippingBs2Kst_0Kst_0Conf',
      'CONFIG'      : {"KaonPT"         : 500.0,
                       "KaonIPCHI2"     : 9.,

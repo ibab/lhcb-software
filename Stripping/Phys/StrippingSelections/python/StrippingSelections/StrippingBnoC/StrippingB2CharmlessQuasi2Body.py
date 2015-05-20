@@ -14,7 +14,7 @@ __all__ = ( 'B2Quasi2Body',
 
 default_config = {
     'NAME'        : 'B2CharmlessQ2B',
-    'WGs'         : ['Charmless'],
+    'WGs'         : ['BnoC'],
     'BUILDERTYPE' : 'B2Quasi2Body',
     'CONFIG'      : { 'Q2BPrescale'     : 1.,
                       'Q2BTrkGhostProb' : 0.5,

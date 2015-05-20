@@ -5,12 +5,14 @@ for BnoC WG.
 
 _selections = [ 'StrippingHb2Charged2Body', 
                 'StrippingB2CharmlessQuasi2Body', 
-                'StrippingB2HHBDT', 
+                'StrippingB2HHBDT',
+                'StrippingD2HHBDT', 
                 'StrippingBc2hhh_BnoC',
                 'StrippingBu2hhh',
                 'StrippingB2pphh',
                 'StrippingBs2Kst_0Kst_0',
-                'StrippingB2HHPi0']
+                'StrippingB2HHPi0',
+                'StrippingB2KShh']
 
 for _sel in _selections :
     try :

@@ -31,7 +31,7 @@ from StandardParticles import StdAllNoPIDsPions as Pions
 
 default_config = {
     'NAME'        : 'B2KShh',
-    'WGs'         : ['Charmless'],
+    'WGs'         : ['BnoC'],
     'BUILDERTYPE' : 'B2KShhConf',
     'CONFIG'      : {'Trk_Chi2'                : 3.0,
                      'Trk_GhostProb'           : 0.3,

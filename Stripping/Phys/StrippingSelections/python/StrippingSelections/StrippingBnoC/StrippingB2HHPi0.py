@@ -26,7 +26,7 @@ from StandardParticles import StdNoPIDsPions,StdLooseMergedPi0,StdLooseResolvedP
 
 default_config = {
     'NAME'        : 'B2HHPi0',
-    'WGs'         : ['Charmless'],
+    'WGs'         : ['BnoC'],
     'BUILDERTYPE' : 'StrippingB2HHPi0Conf',
     'CONFIG'      : { 'PiMinPT'              : 500,
                       'PiMinP'               : 5000,
