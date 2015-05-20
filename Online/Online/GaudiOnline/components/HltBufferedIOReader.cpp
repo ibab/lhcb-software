@@ -40,6 +40,13 @@ namespace LHCb
    */
   class HltBufferedIOReader: public OnlineService, virtual public IRunable
   {
+  public:
+    enum {
+      GO_DONT_PROCESS=0,
+      GO_PROCESS=1,
+      GO_GENTLE_STOP=2
+    };
+
   protected:
     /// Flag indicating that MBM event retrieval is active
     bool                     m_receiveEvts;
@@ -54,6 +61,8 @@ namespace LHCb
     /// List of files to process
     std::set<std::string>    m_files;
 
+    /// Property: Name of the 'GO' command which should be used. If empty feature is disabled.
+    std::string              m_goService;
     /// Property: Buffer name for data output
     std::string              m_buffer;
     /// Property: Data directory name
@@ -72,12 +81,19 @@ namespace LHCb
     int                      m_rescan;
     /// Monitoring quantity: Number of events processed
     int                      m_evtCount;
+    /// DIM service ID for 'GO' command
+    int                      m_goSvcID;
+    /// DIM value of GO service
+    int                      m_goValue;
     /// Flag to indicate if files should be deleted
     bool                     m_deleteFiles;
     /// Flag to indicate if the node is in the broken hosts file and hence disabled
     bool                     m_disabled;
 
     // Helper routines
+
+    /// DIM command service callback
+    static void go_handler(void* tag, void* address, int* size);
 
     /// Scan directory for matching files
     size_t scanFiles();
@@ -129,6 +145,7 @@ namespace LHCb
 #include "RTL/readdir.h"
 #include <fcntl.h>
 #include <cerrno>
+#include "dic.h"
 #ifdef _WIN32
 #include <io.h>
 #else
@@ -167,10 +184,18 @@ static bool file_write(int file, const void* data, int len)   {
   return true;
 }
 
+/// DIM command service callback
+void HltBufferedIOReader::go_handler(void* tag, void* address, int* size) {
+  if ( address && tag && *size > 0 ) {
+    HltBufferedIOReader* rdr = *(HltBufferedIOReader**)tag;
+    rdr->m_goValue = *(int*)address;
+  }
+}
+
 /// Standard Constructor
 HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
   : OnlineService(nam, svcLoc), m_receiveEvts(false), m_lock(0), m_mepMgr(0), 
-    m_producer(0), m_evtCount(0), m_disabled(false)
+    m_producer(0), m_evtCount(0), m_goSvcID(0), m_goValue(0), m_disabled(false)
 {
   declareProperty("Buffer",      m_buffer          = "Mep");
   declareProperty("Directory",   m_directory       = "/localdisk");
@@ -181,6 +206,7 @@ HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
   declareProperty("AllowedRuns", m_allowedRuns);
   declareProperty("InitialSleep",m_initialSleep    = 10);
   declareProperty("Rescan",      m_rescan          = 1);
+  declareProperty("GoService",   m_goService       = "");
   m_allowedRuns.push_back("*");
   ::lib_rtl_create_lock(0, &m_lock);
 }
@@ -250,12 +276,23 @@ StatusCode HltBufferedIOReader::initialize()   {
   ::lib_rtl_lock(m_lock);
   m_files.clear();
   m_current = "";
+  m_goValue = GO_PROCESS;
+  if ( !m_goService.empty() )  {
+    m_goValue = GO_DONT_PROCESS;
+    m_goSvcID = ::dic_info_service(m_goService.c_str(),MONITORED,
+				   0,0,0,go_handler,(long)this,0,0);
+  }
   return sc;
 }
 
 /// IService implementation: finalize the service
 StatusCode HltBufferedIOReader::finalize()  {
-  if (m_producer)  {
+  if ( m_goSvcID )  {
+    ::dic_release_service(m_goSvcID);
+    m_goSvcID = 0;
+  }
+  m_goValue = GO_DONT_PROCESS;
+  if ( m_producer )  {
     if (m_mepMgr->FSMState() != Gaudi::StateMachine::OFFLINE)    {
       m_producer->exclude();
     }
@@ -283,6 +320,7 @@ StatusCode HltBufferedIOReader::sysStart()  {
 
 /// IService implementation: finalize the service
 StatusCode HltBufferedIOReader::sysStop()   {
+  m_goValue = GO_DONT_PROCESS;
   incidentSvc()->removeListener(this);
   if (m_receiveEvts)  {
     if (m_mepMgr)    {
@@ -299,6 +337,7 @@ void HltBufferedIOReader::handle(const Incident& inc)
 {
   info("Got incident:" + inc.source() + " of type " + inc.type());
   if (inc.type() == "DAQ_CANCEL")  {
+    m_goValue = GO_DONT_PROCESS;
     m_receiveEvts = false;
     if (m_mepMgr)    {
       m_mepMgr->cancel();
@@ -431,8 +470,19 @@ StatusCode HltBufferedIOReader::i_run()  {
   MBM::BufferInfo mbmInfo;
   
 
-  if ( m_initialSleep > 0 ) ::lib_rtl_sleep(1000*m_initialSleep);
+  if ( m_initialSleep > 0 )   {
+    ::lib_rtl_sleep(1000*m_initialSleep);
+  }
   m_receiveEvts = true;
+  if ( !m_goService.empty() )   {
+    while( m_receiveEvts && (GO_PROCESS != m_goValue) )  {
+      ::lib_rtl_sleep(100);
+    }
+    if ( !m_receiveEvts || (GO_PROCESS != m_goValue) )  {
+      // If a 'stop' came in the meantime we have to terminate.
+      return StatusCode::SUCCESS;
+    }
+  }
 
   /// Before we start, we need to check if there are consumers present:
   mbmInfo.attach(bm_name.c_str());
@@ -446,8 +496,8 @@ StatusCode HltBufferedIOReader::i_run()  {
   }
   
   while (1)  {
-    files_processed = scanFiles() == 0;
-    if ( m_goto_paused && files_processed )   {
+    files_processed = (GO_PROCESS==m_goValue) && (scanFiles() == 0);
+    if ( (m_goto_paused && files_processed) || (m_goValue != GO_PROCESS) )   {
       /// Before actually declaring PAUSED, we wait until no events are pending anymore.
       waitForPendingEvents(mbmInfo);
       // Sleep a bit before goung to pause
@@ -460,7 +510,7 @@ StatusCode HltBufferedIOReader::i_run()  {
       info("Locking event loop. Waiting for work....");
       ::lib_rtl_lock(m_lock);
     }
-    if ( !m_receiveEvts )    {
+    if ( !m_receiveEvts || (m_goValue != GO_DONT_PROCESS) )    {
       if ( file_handle )  {
 	safeRestOfFile(file_handle);
 	file_handle = 0;
@@ -475,11 +525,11 @@ StatusCode HltBufferedIOReader::i_run()  {
       break;
     }
     // loop over the events
-    while (m_receiveEvts)   {
-      if (file_handle == 0)  {
+    while ( m_receiveEvts && (m_goValue != GO_DONT_PROCESS) )   {
+      if (file_handle == 0 && (m_goValue == GO_PROCESS) )  {
         file_handle = openFile();
         if ( file_handle == 0 )   {
-          files_processed = scanFiles() == 0;
+	  files_processed = (GO_PROCESS==m_goValue) && (scanFiles() == 0);
           if ( files_processed )    {
             break;
           }
