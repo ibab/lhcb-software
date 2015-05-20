@@ -38,15 +38,15 @@ namespace LHCb  {
     /// Main execution
     virtual StatusCode execute()  {
       typedef long long int llint;
-      MsgStream log(msgSvc(), name());
       struct timeval now;
       ::gettimeofday(&now,0);
       llint diff   = llint((now.tv_sec - m_last.tv_sec )*1000000) + llint(now.tv_usec-m_last.tv_usec);
       llint min_tm = m_minTime;
       min_tm *= 1000;
-      log << MSG::INFO << "Diff:" << diff << " min:" << min_tm 
-	  << " --> Need to wait for " << (min_tm-diff) << "musec" << endmsg;
       if ( diff < min_tm )  {
+	MsgStream log(msgSvc(), name());
+	log << MSG::INFO << "Diff:" << diff << " min:" << min_tm 
+	    << " --> Need to wait for " << (min_tm-diff) << " micro seconds." << endmsg;
         ::lib_rtl_usleep(min_tm-diff);
       }
       ::gettimeofday(&m_last,0);
