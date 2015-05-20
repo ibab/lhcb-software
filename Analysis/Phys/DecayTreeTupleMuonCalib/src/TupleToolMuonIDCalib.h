@@ -22,6 +22,7 @@ using namespace Gaudi::Units;
 using namespace Gaudi;
 
 class DVAlgorithm;
+class ITrackExtrapolator;
 
 class TupleToolMuonIDCalib : public TupleToolBase, virtual public IParticleTupleTool
 {
@@ -48,6 +49,9 @@ private:
   StatusCode fillCoordVectors();
   double foiX(const int &station, const int &region, const double &p, const double &dx);
   double foiY(const int &station, const int &region, const double &p, const double &dy);
+  bool linFit();
+  bool calculatePt();
+  bool estrapola();
 
 private:
 
@@ -82,7 +86,6 @@ private:
   std::vector< double >     m_yfoiParam2;
   std::vector< double >     m_yfoiParam3;
 
-
   //--------------------------
   // Muon Detector variables:
   //--------------------------
@@ -93,10 +96,51 @@ private:
   std::vector<std::string> m_stationNames;
   // fill local arrays of pad sizes and region sizes
   DeMuonDetector*  m_mudet;
+  
+  // track state @ M1
+  const LHCb::State *m_stateP;
+  
   // These are indexed [station]
   std::vector<double> m_stationZ; // station position
   double m_trackX[5];   // position of track in x(mm) in each station
   double m_trackY[5];   // position of track in y(mm) in each station
+
+  std::string m_extrapolatorName;
+  ITrackExtrapolator* m_extrapolator; ///< extrapolator
+  double m_TextraX[5];   // x(mm) position of extrapolated track in each station
+  double m_TextraY[5];   // y(mm) position of extrapolated track in each station
+  double m_ms2X[5];      // ms error on x(mm) position in each station
+  double m_ms2Y[5];      // ms error on y(mm) position in each station
+  double m_TextraReg[5]; // region crossed by the extrapolated track
+  
+  // closest hit in FOI[station] ==> input for linFit, the linear fit
+  double m_smalldist_X[5];
+  double m_smalldist_Y[5];
+  double m_smalldist_Z[5];
+  double m_smalldist_dX[5];
+  double m_smalldist_dY[5];
+  double m_smalldist_dZ[5];
+
+  // linear fit results
+  double m_sx, m_sy;
+  double m_bx, m_by;
+  double m_errbx, m_errsx, m_covbsx;
+  double m_errby, m_errsy, m_covbsy;
+  double m_chi2x, m_chi2y;
+
+  // pt calculation
+  std::vector<double> m_ParabolicCorrection;
+  std::vector<double> m_resParams;
+  double m_Constant;
+  IBIntegrator* m_bIntegrator; // magnetic field tool
+
+  double m_qOverP;
+  double m_sigmaQOverP2;
+  double m_pZM1;
+  double m_pXPvtx;
+  double m_pYPvtx;
+  double m_pZPvtx;
+
 
   std::vector<float> m_hitInFOIx;
   std::vector<float> m_hitInFOIdx;
@@ -105,6 +149,8 @@ private:
   std::vector<float> m_hitInFOIz;
   std::vector<float> m_hitInFOIdz;
   std::vector<float> m_hitInFOIuncrossed;
+  std::vector<float> m_hitInFOITDC1;
+  std::vector<float> m_hitInFOITDC2;
   std::vector<float> m_hitInFOIID;
   std::vector<float> m_allMuonHitsX;
   std::vector<float> m_allMuonHitsDX;
@@ -113,6 +159,9 @@ private:
   std::vector<float> m_allMuonHitsZ;
   std::vector<float> m_allMuonHitsDZ;
   std::vector<float> m_allMuonHitsUncrossed;
+  std::vector<float> m_allMuonHitsTDC1;
+  std::vector<float> m_allMuonHitsTDC2;
+  std::vector<float> m_allMuonHitsID;
   bool m_doVerbose;
 
   // local array of region sizes
@@ -124,9 +173,9 @@ private:
   // Store x,dx,y,dy of each coord
   class coordExtent_{
   public:
-    coordExtent_(double x, double dx, double y, double dy,  double z, double dz, bool uncrossed,
+    coordExtent_(double x, double dx, double y, double dy,  double z, double dz, bool uncrossed, int digitTDC1, int digitTDC2,
                  LHCb::MuonCoord *pCoord) :
-      m_x(x), m_dx(dx), m_y(y), m_dy(dy), m_z(z), m_dz(dz), m_uncrossed(uncrossed), m_pCoord(pCoord)  {};
+      m_x(x), m_dx(dx), m_y(y), m_dy(dy), m_z(z), m_dz(dz), m_uncrossed(uncrossed), m_digitTDC1(digitTDC1), m_digitTDC2(digitTDC2), m_pCoord(pCoord)  {};
     double m_x;
     double m_dx;
     double m_y;
@@ -134,6 +183,8 @@ private:
     double m_z;
     double m_dz;
     bool m_uncrossed;
+    int m_digitTDC1;
+    int m_digitTDC2;
     LHCb::MuonCoord *m_pCoord;
   };
   // vector of positions of coords (innner vector coords,
