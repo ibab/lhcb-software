@@ -13,6 +13,7 @@ from D2HHKsLines import CharmHadD2HHKshLines
 from Dst2PiD02HHXBDTLines import CharmHadDst2PiD02HHXBDTLines
 from ChargedHyperonLines import ChargedHyperonLines
 
+from Configurables import HltANNSvc
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
@@ -238,3 +239,5 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             doturbo = True if (nickname.find('Turbo') > -1) else False
             Hlt2Line('CharmHad' + nickname, prescale = self.prescale,
                      algos = algos, postscale = self.postscale, Turbo = doturbo)
+            if "Dst_2D0Pi0_D02KPi_XSec" in nickname:
+                HltANNSvc().Hlt2SelectionID.update( { "Hlt2CharmHadDst_2D0Pi0_D02KPi_XSecTurboDecision":  57222 } )

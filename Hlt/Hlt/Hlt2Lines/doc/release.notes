@@ -10,6 +10,7 @@
 
 ! 2015-05-21 - Sean Benson
  - New RecoTest Turbo line for nightly test of PV refitting in the HLT.
+ - Add ID to charm line used for nightly.
 
 ! 2015-05-21 - Michael Kolpin
  - Change of name of non-turbo tracking eff. lines to be on par with turbo versions
