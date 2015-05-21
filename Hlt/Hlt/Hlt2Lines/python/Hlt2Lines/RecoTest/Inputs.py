@@ -4,5 +4,6 @@ from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPions as
 from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedDownPions as DownPions
 from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPhotons as Photons
 
+from Hlt2SharedParticles.TrackFittedDiMuon import TrackFittedDiMuon
 
 
