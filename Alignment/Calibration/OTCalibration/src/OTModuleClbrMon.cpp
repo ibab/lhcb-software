@@ -702,17 +702,17 @@ StatusCode OTModuleClbrMon::readCondDB(double read_t0s[3][4][4][9])
      Condition *myCond = get<Condition>( detSvc(), alignLoc );
   
  
-      if(simulation){
+     //if(simulation){
 	std::vector<double> TZeroVec = myCond->paramAsDoubleVect( "TZero" );
 	for(size_t i = 0; i<TZeroVec.size();i++){
 	  //std::cout << "t0 per straw = "<<TZeroVec.at(i)<<std::endl; // for check
 	  Module_t0 +=TZeroVec.at(i); 
 	}
 	read_t0s[s][l][q][m] = Module_t0/(TZeroVec.size()*1.0);//in simcond the t0 are on straw bases, I make an average - for now - to make it module basis
-      }
-      else{
-	read_t0s[s][l][q][m] = myCond->paramAsDouble( "TZero" );
-      }
+	//}
+	//else{
+	//	read_t0s[s][l][q][m] = myCond->paramAsDouble( "TZero" );
+	//}
 
      }
    }
