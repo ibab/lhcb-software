@@ -57,6 +57,7 @@ class Physics_draftEM2015( object ):
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
         from Hlt1Lines.Hlt1HighMultLines       import Hlt1HighMultLinesConf
+        from Hlt1Lines.Hlt1CEPLines            import Hlt1CEPLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
         from Hlt1Lines.Hlt1CalibRICHMirrorLines     import Hlt1CalibRICHMirrorLinesConf
@@ -90,22 +91,6 @@ class Physics_draftEM2015( object ):
                                                , 'L0Channels'        : {'AllL0'  : '',
                                                                         'Muon'   : ('Muon',)}
                                                }
-                     , Hlt1CalibRICHMirrorLinesConf :    {'DoTiming' : False
-                                                        , 'PT'       : 500.
-                                                        , 'P'        : 1000.
-                                                        , 'MinETA'   : 2.59
-                                                        , 'MaxETA'   : 2.97
-                                                        , 'Phis'     : [(-2.69, -2.29 ), (-0.85, -0.45), (0.45, 0.85), (2.29, 2.69)]
-                                                        , 'TrChi2'   : 2.
-                                                        , 'MinTr'    : 5.5
-                                                        , 'GEC'      : 'Loose'
-                                                        , 'LM_PT'    : 500.
-                                                        , 'LM_P'     : 1000.
-                                                        , 'LM_TrChi2': 2.
-                                                        , 'LM_MinTr' : 1
-                                                        , 'LM_MaxTr' : 40
-                                                        , 'LM_GEC'   : 'Loose'
-                                               }
                                                        
                      , Hlt1MuonLinesConf :     { 'SingleMuonHighPT_P'        : 3000
                                                , 'SingleMuonHighPT_PT'      : 4800
@@ -136,6 +121,42 @@ class Physics_draftEM2015( object ):
                                                    'DiMuonHighMass'   : ( 'Muon', )}
                                                                   
                                                } 
+                       , Hlt1CEPLinesConf : {    'SpdMult'    :   100.   # dimensionless, Spd Multiplicy cut
+                                               , 'MaxNVelo'   :  1000    # dimensionless, 
+                                               , 'MinNVelo'   :     2    # dimensionless, 
+                                               , 'TrChi2'     :     5.   # dimensionless, 
+                                               , 'PT'         :   200.   # MeV
+                                               , 'P'          :  1000.   # MeV 
+                                               , 'VeloCutLineL0Dependency' : '.*DiHadron,lowMult'
+                                               , 'NoVeloCutLineL0Dependency':'.*DiHadron,lowMult'
+                                               , 'NoBiasTriggerType' : 'LumiTrigger' # dimensionless
+                                               , 'NoBiasBeamCrossingTypeVeto' : 'BeamCrossing' # dimensionless
+                                               }
+                        
+                     , Hlt1HighMultLinesConf: {    'MinVeloHits'        : 2400,
+                                                   'MaxVeloHits'        : 99999,
+                                                   'nPVs'               :  1 ,
+                                                   'MinVeloHits_PV'     : 2400,
+                                                   'ODIN'               : '(ODIN_EVTTYP == LHCb.ODIN.NoBias)'
+                                                   }
+
+                     , Hlt1CalibRICHMirrorLinesConf :    {'DoTiming' : False
+                                                        , 'PT'       : 500.
+                                                        , 'P'        : 1000.
+                                                        , 'MinETA'   : 2.59
+                                                        , 'MaxETA'   : 2.97
+                                                        , 'Phis'     : [(-2.69, -2.29 ), (-0.85, -0.45), (0.45, 0.85), (2.29, 2.69)]
+                                                        , 'TrChi2'   : 2.
+                                                        , 'MinTr'    : 5.5
+                                                        , 'GEC'      : 'Loose'
+                                                        , 'LM_PT'    : 500.
+                                                        , 'LM_P'     : 1000.
+                                                        , 'LM_TrChi2': 2.
+                                                        , 'LM_MinTr' : 1
+                                                        , 'LM_MaxTr' : 40
+                                                        , 'LM_GEC'   : 'Loose'
+                                               }
+
                        , Hlt1CalibTrackingLinesConf :  { 'ParticlePT'            : 600     # MeV
                                                         ,'ParticleP'             : 4000    # MeV
                                                         ,'TrackCHI2DOF'          : 2       # dimensionless
@@ -200,13 +221,6 @@ class Physics_draftEM2015( object ):
                                                                , 'Hlt1MBMicroBiasTStationRateLimited' : 0 }
                                                 , 'NoBiasOdin'    : '(ODIN_EVTTYP == LHCb.ODIN.LeadingCrossing)' 
                                                }
-                        , Hlt1HighMultLinesConf: { 'MinVeloHits'        : 2400,
-                                                   'MaxVeloHits'        : 99999,
-                                                   'nPVs'               :  1 ,
-                                                   'MinVeloHits_PV'     : 2400,
-                                                   'ODIN'               : '(ODIN_EVTTYP == LHCb.ODIN.NoBias)'
-                                                   }
-
                         ,CommissioningLines :  {'Prescale'    : {'Hlt2PassThrough' : 1.0,
                                                                  'Hlt2Forward'     : 0.00001,
                                                                  'Hlt2DebugEvent'  : 0.00001},
