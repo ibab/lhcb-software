@@ -6,7 +6,7 @@
 __version__ = "$Id: BrunelOnline.py,v 1.25 2010/11/09 12:20:55 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
-import os, sys
+import os, sys, time
 import Configurables as Configs
 import Gaudi.Configuration as Gaudi
 import GaudiKernel
@@ -48,6 +48,11 @@ def patchEscher(true_online_version, alignment_module, n = -1):
   from TAlignment.VertexSelections import configuredPVSelection
   Online = importOnline()
 
+  from Configurables import EventClockSvc
+  initialTime = long(time.time() * 1e9)
+  clkSvc = EventClockSvc()
+  clkSvc.InitialTime = initialTime
+
   escher = EscherCommon(true_online_version, alignment_module)
   hostname = HostName()
   escher.DataType = "2012"
@@ -71,7 +76,7 @@ def setupOnline(directory, prefix, filename):
   """
   from Configurables import LHCb__FILEEvtSelector as es
   Online = importOnline()
-  
+
   app=Gaudi.ApplicationMgr()
   app.AppName = ''
   HistogramPersistencySvc().OutputFile = ""
@@ -86,7 +91,7 @@ def setupOnline(directory, prefix, filename):
   sel.FilePrefix = prefix
   sel.Decode = False
   sel.Pause = True
-  sel.AllowedRuns = Online.DeferredRuns
+  sel.AllowedRuns = Online.DeferredRuns if hasattr(Online, "DeferredRuns") else []
   app.EvtSel  = sel
   app.EvtMax = 400
   Online.rawPersistencySvc()

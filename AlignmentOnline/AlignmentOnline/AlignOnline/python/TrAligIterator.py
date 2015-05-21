@@ -6,7 +6,7 @@
 __version__ = "$Id: BrunelOnline.py,v 1.25 2010/11/09 12:20:55 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
-import os, sys
+import os, sys, time
 import Configurables as Configs
 import Gaudi.Configuration as Gaudi
 import GaudiKernel
@@ -61,7 +61,7 @@ def setupOnline():
   """
   from Configurables import LHCb__FILEEvtSelector as es
   from Configurables import LHCb__AlignDrv as Adrv
-  from Configurables import EventClockSvc as evtclk
+  from Configurables import EventClockSvc
   Online = importOnline()
 
   app=Gaudi.ApplicationMgr()
@@ -79,6 +79,7 @@ def setupOnline():
 #   runable = Configs.Runable
 #  runable.MEPManager        = ""
   app.AuditAlgorithms = False
+
   Configs.MonitorSvc().OutputLevel = MSG_ERROR
   Configs.MonitorSvc().UniqueServiceNames = 1
   Configs.RootHistCnv__PersSvc("RootHistSvc").OutputLevel = MSG_ERROR
@@ -89,13 +90,16 @@ def setupOnline():
       setattr(to, att, getattr(fr, att))
     elif d:
       setattr(to, att, d)
-      
+
   from Configurables import AlignOnlineIterator as Aiter
   ad = Adrv("AlignDrv")
   ad.PartitionName     = Online.PartitionName
   ad.FitterClass       = "AlignOnlineIterator"
   ad.FitterName        = "AlIterator"
   __propAtt('RefFileName', Online, ad)
+
+    ## The Alignment driver is the runable
+  app.Runable = ad.getType() + "/" + ad.getName()
 
   ad.addTool( Aiter, ad.FitterName )
   ai = ad.AlIterator
@@ -115,20 +119,20 @@ def setupOnline():
     print 'WARNING: RUN_TYPE is not one of Velo, Tracker or Muon. Will assume all subdetectors'
     sds = ['Velo', 'TT', 'IT', 'OT', 'Muon']
   ai.SubDetectors = sds
-    
+
   for attr, default in [('ASDDir', "/group/online/alignment/EscherOut/"),
                         ('OnlineXmlDir', "/group/online/alignment"),
                         ('AlignXmlDir', "/group/online/AligWork")]:
     __propAtt(attr, Online, ai, default)
-  evtclk().EventTimeDecoder = "FakeEventTime"
-  app.Runable = ad.getType()+"/"+ad.getName()
-  import time
-  from Configurables import FakeEventTime as Fet
-  fet = Fet()
-  fet.StartTime = long(time.time())
-#   print fet
-#   print ad
-  print ai
+
+  initialTime = long(time.time() * 1e9)
+  clkSvc = EventClockSvc()
+  clkSvc.InitialTime = initialTime
+
+  from Configurables import FakeEventTime
+  clkSvc.EventTimeDecoder = "FakeEventTime"
+  clkSvc.addTool(FakeEventTime, "FakeEventTime")
+  clkSvc.FakeEventTime.StartTime = initialTime
 
 def patchMessages():
   """
@@ -184,4 +188,3 @@ def doIt(alignment_module = "VeloHalfAlignment"):
   setupOnline()
   if true_online: patchMessages()
   start()
-

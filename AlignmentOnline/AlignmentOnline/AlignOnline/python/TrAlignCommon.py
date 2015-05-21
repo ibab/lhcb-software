@@ -52,15 +52,18 @@ def importOnline():
     return importOnline.Online
   if 'RUNINFO' in os.environ:
     runinfo = os.environ['RUNINFO']
-    d, f = os.path.split(runinfo)
-    name, ext = os.path.splitext(f)
-    sys.path.insert(1, d)
+    sys.path.insert(1, runinfo)
     Online = importlib.import_module('OnlineEnv')
-    sys.path.remove(d)
+    sys.path.remove(runinfo)
   else:
     import OnlineEnv as Online
-  importOnline.Online = Online  
+  importOnline.Online = Online
   return Online
+
+def oldOnlineTag():
+  from Configurables import CondDBAccessSvc
+  svc = CondDBAccessSvc("ONLINE")
+  svc.ConnectionString = svc.ConnectionString.replace("fake", "fake_010515")
 
 def EscherCommon(true_online_version, alignment_module):
   import GaudiConf.DstConf
@@ -72,10 +75,17 @@ def EscherCommon(true_online_version, alignment_module):
   Online = importOnline()
   import ConditionsMap
 
+  if '2012' in ConditionsMap.CondDBTag:
+    from Gaudi.Configuration import appendPostConfigAction
+    appendPostConfigAction(oldOnlineTag)
+
   escher = Escher.Configuration.Escher()
   escher.DDDBtag   = ConditionsMap.DDDBTag
   escher.CondDBtag = ConditionsMap.CondDBTag
   escher.OnlineMode = True
+  escher.UseDBSnapshot = True
+  escher.DBSnapshotDirectory = "/group/online/hlt/conditions/"
+
   if hasattr(Online, "AlignXmlDir"):
     escher.OnlineAligWorkDir = os.path.join(Online.AlignXmlDir, 'running')
 
@@ -84,19 +94,10 @@ def EscherCommon(true_online_version, alignment_module):
     re_year = re.compile('(201\d)')
     for k, v in handlerConditions.items():
       handlerConditions[re_year.sub('2014', k)] = v
-    
+
   conddb = CondDB()
   conddb.RunChangeHandlerConditions = handlerConditions
   conddb.IgnoreHeartBeat = True
-  conddb.setProp('EnableRunChangeHandler', True)
-  conddb.UseDBSnapshot=True
-  conddb.DBSnapshotDirectory = "/group/online/hlt/conditions/"
-#  conddb.PartitionName = "LHCb"
-  conddb.Tags = { "DDDB" : ConditionsMap.DDDBTag,
-                  "LHCBCOND" : ConditionsMap.CondDBTag,
-                  "ONLINE" : 'fake'}
-  MagneticFieldSvc().UseSetCurrent = True
-  escher.UseDBSnapshot = True
 
   config_module = importlib.import_module('AlignmentConfigurations.' + alignment_module)
   config_module.configureAlignment()

@@ -1,20 +1,23 @@
 #include "GaudiKernel/MsgStream.h"
 
 #include "AlignOnlineXMLCopier.h"
+#include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/regex.hpp>
 #include <fstream>
 
 namespace {
+   namespace fs = boost::filesystem;
   // check that two files are identical. numlinestoskip is the number
   // of lines in the header, which is ignored from the comparison
   bool filesAreIdentical( const char* filename1, const char* filename2, size_t numlinestoskip )
   {
     bool identical = false ;
-    
+
     std::ifstream file1(filename1) ;
     std::ifstream file2(filename2) ;
     if( file1 && file2 ) {
-    
+
       // compare every line, but skip the header
       size_t numlines(0) ;
       identical = true ;
@@ -26,9 +29,9 @@ namespace {
         // flag ready when both files are finished
         ready = file1.eof() && file2.eof() ;
         if(!ready) {
-          identical = 
+          identical =
             // flag false if we have reached the end of one of the two files
-            !file1.eof() && !file2.eof() 
+            !file1.eof() && !file2.eof()
             // flag false if lines differ
             && (++numlines <= numlinestoskip || line1==line2) ;
         }
@@ -49,9 +52,14 @@ AlignOnlineXMLCopier::AlignOnlineXMLCopier( const std::string& onlinedir,
     m_version(0)
 {}
 
+std::string AlignOnlineXMLCopier::onlinedirname() const
+{
+  return m_onlinedir + "/" + m_condname;
+}
+
 std::string AlignOnlineXMLCopier::onlinefilename( FileVersion v ) const
 {
-  return m_onlinedir + "/" + m_condname + "/v" + std::to_string(v) + ".xml" ;
+  return onlinedirname() + "/v" + std::to_string(v) + ".xml" ;
 }
 
 std::string AlignOnlineXMLCopier::alignfilename() const
@@ -66,61 +74,76 @@ std::string AlignOnlineXMLCopier::aligndirname() const
 
 StatusCode AlignOnlineXMLCopier::copyFromOnlineArea()
 {
-  StatusCode sc = StatusCode::SUCCESS ;
-  FileVersion v = 0 ;
-  while(1) {
-    // check that the file exists
-    boost::filesystem::path fn(onlinefilename( v )) ;
-    if( boost::filesystem::exists(fn) ) ++v ;
-    else break ;
-  }
-  if( v==0 ) {
-    m_version = v ;
-    sc = StatusCode::FAILURE ;
-  } else {
-    m_version = v-1 ;
-    m_filename = onlinefilename(m_version) ;
-    boost::filesystem::path origin(m_filename) ;
-    boost::filesystem::path target(alignfilename()) ;
-    boost::filesystem::path aligndir(aligndirname());
-    boost::filesystem::create_directories(aligndir);
-    boost::filesystem::copy_file(origin, target, boost::filesystem::copy_option::overwrite_if_exists) ;
-    if( boost::filesystem::exists(target) ){
-      m_time = boost::filesystem::last_write_time(target) ;
-      msg(MSG::INFO) << "AlignOnlineXMLCopier: copied " << origin.native()
-                     << " to " << target.native() << endmsg;
-    } else {
-      msg(MSG::WARNING) << "AlignOnlineXMLCopier: failed to copy " << origin.native()
+   // Regex and lambda to extract version from filename vN.xml
+   boost::regex re("^v([0-9]+)\\.xml$");
+   auto version = [re, this](const std::string& filename) {
+      boost::smatch matches;
+      auto flags = boost::match_default;
+      if (!fs::is_regular_file(fs::path{onlinedirname()} / fs::path{filename}))
+         return 0u;
+      boost::regex_match(begin(filename), end(filename), matches, re, flags);
+      if (!matches.empty()) {
+         return boost::lexical_cast<unsigned int>(matches[1]);
+      } else {
+         return 0u;
+      }
+   };
+
+   std::vector<unsigned int> versions;
+   // Store versions
+   std::transform(fs::directory_iterator{fs::path{onlinedirname()}},
+                  fs::directory_iterator{}, std::inserter(versions, end(versions)),
+                  [version](const fs::directory_entry& e) {
+                     return version(e.path().filename().string());
+                  });
+
+   // Find highest version
+   auto v = std::max_element(begin(versions), end(versions));
+   if (v == end(versions)) {
+      m_version = 0;
+      return StatusCode::FAILURE;
+   } else {
+      m_version = *v;
+      m_filename = onlinefilename(m_version) ;
+      fs::path origin(m_filename) ;
+      fs::path target(alignfilename()) ;
+      fs::path aligndir(aligndirname());
+      fs::create_directories(aligndir);
+      fs::copy_file(origin, target, fs::copy_option::overwrite_if_exists) ;
+      if( fs::exists(target) ){
+         m_time = fs::last_write_time(target) ;
+         msg(MSG::INFO) << "AlignOnlineXMLCopier: copied " << origin.native()
                         << " to " << target.native() << endmsg;
-      sc = StatusCode::FAILURE ;
-    }
-  }
-  return sc ;
+         return StatusCode::SUCCESS ;
+      } else {
+         msg(MSG::WARNING) << "AlignOnlineXMLCopier: failed to copy " << origin.native()
+                           << " to " << target.native() << endmsg;
+         return StatusCode::FAILURE ;
+      }
+   }
 }
 
 StatusCode AlignOnlineXMLCopier::copyToOnlineArea()
 {
   StatusCode sc= StatusCode::SUCCESS ;
-  boost::filesystem::path origin(alignfilename()) ;
-  if( boost::filesystem::exists(origin) &&
-      boost::filesystem::last_write_time(origin) > m_time ) {
+  fs::path origin(alignfilename()) ;
+  if( fs::exists(origin) &&
+      fs::last_write_time(origin) > m_time ) {
     // first check that the new file is not identical to the old one
     static size_t headersize = 5 ;
     if( !filesAreIdentical( origin.c_str(), onlinefilename(m_version).c_str(), headersize ) ) {
       // update the version number
       m_version += 1 ;
-      boost::filesystem::path target(onlinefilename(m_version)) ;
+      fs::path target(onlinefilename(m_version)) ;
       msg(MSG::INFO) << "AlignOnlineXMLCopier: copying " << origin << " to "
                      << target << "." << endmsg;
-      boost::filesystem::copy( origin, target ) ;
-      if( !boost::filesystem::exists(target) ) {
+      fs::copy( origin, target ) ;
+      if( !fs::exists(target) ) {
         sc = StatusCode::FAILURE ;
         m_version -= 1 ;
-      } 
+      }
     }
     m_newfilename = onlinefilename(m_version) ;
   }
   return sc ;
 }
-
-

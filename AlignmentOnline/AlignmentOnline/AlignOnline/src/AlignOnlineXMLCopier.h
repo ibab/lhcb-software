@@ -20,6 +20,7 @@ public:
   std::string alignfilename() const ;
   std::string aligndirname() const ;
   FileVersion version() const { return m_version ; }
+  std::string onlinedirname() const;
   std::string onlinefilename() const { return onlinefilename(m_version) ; }
   std::string copybackfilename() const {return m_newfilename;}
   std::string condition () const {return m_condname;}
@@ -31,7 +32,7 @@ private:
   MsgStream& msg(const MSG::Level level) const {
     return *m_msg_stream << level ;
   }
-   
+
   std::string m_condname ;  // e.g. "Velo/VeloGlobal"
   std::string m_onlinedir ;
   std::string m_aligndir ;

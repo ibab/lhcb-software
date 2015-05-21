@@ -5,6 +5,11 @@ Purpose: Code for running and testing Alignment in the online environment
 ! 2015-04-22 - Stefania Vecchi
  - added test script to run Muonalignment AlignmentConfigurations/MuonAlignment.py
 
+! 2015-05-21 - Roel Aaij
+ - Make the alignment iterator better at finding the latest xml, don't require
+   all versions up to the latest to be there.
+ - Fix the test with old data, a bit fragile, but it runs.
+
 </PRE><H1><A NAME=v1r2>2015-04-07 AlignOnline v1r2</A></H1><PRE>
 ! 2015-04-07 - Maurizio Martinelli
  - Added a temporary dependency on EventBuilder, should be removed with Online v5r18
@@ -25,7 +30,7 @@ Purpose: Code for running and testing Alignment in the online environment
 
 ! 2015-02-21 - Roel Aaij
  - Fix bug in iterator logic when maximum number of iterations is reached.
- - New XML is only written if the alignment was successful.  
+ - New XML is only written if the alignment was successful.
 
 ! 2015-02-16 - Roel Aaij
  - Put alignment configuration in seperate modules that are imported by name
