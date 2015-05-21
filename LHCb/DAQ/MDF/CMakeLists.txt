@@ -1,13 +1,10 @@
 ################################################################################
 # Package: MDF
 ################################################################################
-gaudi_subdir(MDF v3r38)
+gaudi_subdir(MDF v3r41)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
-                         GaudiAlg
-                         GaudiKernel
-                         GaudiSvc
-                         GaudiUtils)
+                         GaudiKernel)
 
 find_package(ROOT)
 
@@ -20,5 +17,5 @@ gaudi_add_library(MDFLib
 gaudi_add_module(MDF
                  components/*.cpp
                  INCLUDE_DIRS ROOT
-                 LINK_LIBRARIES ROOT GaudiKernel DAQEventLib GaudiAlgLib MDFLib)
+                 LINK_LIBRARIES ROOT GaudiKernel DAQEventLib MDFLib)
 

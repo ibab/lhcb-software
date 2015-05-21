@@ -2,13 +2,11 @@
 # Maintainer : Markus Frank
 #=========================================================================
 package           MDF
-version           v3r40
+version           v3r41
 
 #=========================================================================
 branches          cmt doc src MDF
 use GaudiKernel    v*
-use GaudiAlg       v*            -no_auto_imports
-use GaudiUtils     v*            -no_auto_imports
 use DAQEvent       v* Event      -no_auto_imports
 use ROOT           v* LCG_Interfaces -no_auto_imports
 # ==================== libraries ==================================
@@ -18,10 +16,7 @@ library MDFLib *.cpp -import=DAQEvent -import=ROOT
 #macro_append MDFLib_shlibflags ' ' WIN32 ' $(DAQEvent_linkopts) '
 apply_pattern linker_library library=MDFLib
 
-library MDF ../components/*.cpp -import=DAQEvent -import=ROOT -import=GaudiAlg
+library MDF ../components/*.cpp -import=DAQEvent -import=ROOT
 apply_pattern component_library library=MDF
 macro_append  MDF_dependencies  " MDFLib "
 macro_append  MDF_cppflags "" target-vc9 " -wd4996 "
-
-private
-use GaudiSvc v*
