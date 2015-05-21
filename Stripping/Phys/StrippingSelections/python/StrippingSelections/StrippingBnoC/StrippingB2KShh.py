@@ -9,8 +9,8 @@ Exported symbols (use python help!):
 """
 
 __author__ = ['Thomas Latham','Rafael Coutinho']
-__date__ = '28/07/2014'
-__version__ = 'Stripping21'
+__date__ = '20/05/2015'
+__version__ = 'Stripping23'
 __all__ = {'B2KShhConf',
            'default_config'}
 
@@ -62,42 +62,21 @@ default_config = {
                      'B_LL_Dira'               : 0.999,
                      'B_LD_Dira'               : 0.999,
                      'KS_FD_Z'                 : 15.,
-                     'B_DD_MVA_2011'           : -0.20,
-                     'B_LL_MVA_2011'           : -0.20,   
-                     'B_LD_MVA_2011'           : -0.20,
-                     'B_DD_MVA_2012a'          : -0.20,
-                     'B_LL_MVA_2012a'          : -0.20,   
-                     'B_LD_MVA_2012a'          : -0.20,
-                     'B_DD_MVA_2012b'          : -0.20,
-                     'B_LL_MVA_2012b'          : -0.20,   
-                     'B_LD_MVA_2012b'          : -0.20,
+                     'B_DD_MVA'                : -0.20,
+                     'B_LL_MVA'                : -0.20,   
+                     'B_LD_MVA'                : -0.20,
                      'GEC_MaxTracks'           : 250,
                      'ConeAngle'               : 1.5, 
                      'Prescale'                : 1.0,
                      'Prescale_SameSign'       : 1.0,
-                     'Postscale'               : 1.0,
-                     'TCK_2011'                : ('0x00470032','0x00790038','0x40470032','0x40790038'),
-                     'TCK_2012a'               : ('0x007E003A','0x0097003D','0x407E003A','0x4097003D'),
-                     'TCK_2012b'               : ('0x00990042','0x00AC0046','0x40990042','0x40AC0046')
+                     'Postscale'               : 1.0
                      },
-    'STREAMS'     : { 'Bhadron' : ['StrippingB2KShh_DD_2011_OS_Line',
-                                   'StrippingB2KShh_LL_2011_OS_Line',
-                                   'StrippingB2KShh_LD_2011_OS_Line',
-                                   'StrippingB2KShh_DD_2011_SS_Line',
-                                   'StrippingB2KShh_LL_2011_SS_Line',
-                                   'StrippingB2KShh_LD_2011_SS_Line',
-                                   'StrippingB2KShh_DD_2012a_OS_Line',
-                                   'StrippingB2KShh_LL_2012a_OS_Line',
-                                   'StrippingB2KShh_LD_2012a_OS_Line',
-                                   'StrippingB2KShh_DD_2012a_SS_Line',
-                                   'StrippingB2KShh_LL_2012a_SS_Line',
-                                   'StrippingB2KShh_LD_2012a_SS_Line',
-                                   'StrippingB2KShh_DD_2012b_OS_Line',
-                                   'StrippingB2KShh_LL_2012b_OS_Line',
-                                   'StrippingB2KShh_LD_2012b_OS_Line',
-                                   'StrippingB2KShh_DD_2012b_SS_Line',
-                                   'StrippingB2KShh_LL_2012b_SS_Line',
-                                   'StrippingB2KShh_LD_2012b_SS_Line',
+    'STREAMS'     : { 'Bhadron' : ['StrippingB2KShh_DD_2015_OS_Line',
+                                   'StrippingB2KShh_LL_2015_OS_Line',
+                                   'StrippingB2KShh_LD_2015_OS_Line',
+                                   'StrippingB2KShh_DD_2015_SS_Line',
+                                   'StrippingB2KShh_LL_2015_SS_Line',
+                                   'StrippingB2KShh_LD_2015_SS_Line',
                                    ] 
                       }
     }
@@ -165,23 +144,14 @@ class B2KShhConf(LineBuilder) :
                               'B_LL_Dira',
                               'B_LD_Dira',
                               'KS_FD_Z',
-                              'B_DD_MVA_2011',  
-                              'B_LL_MVA_2011',
-                              'B_LD_MVA_2011', 
-                              'B_DD_MVA_2012a',
-                              'B_LL_MVA_2012a',
-                              'B_LD_MVA_2012a',
-                              'B_DD_MVA_2012b',
-                              'B_LL_MVA_2012b',
-                              'B_LD_MVA_2012b',
+                              'B_DD_MVA',  
+                              'B_LL_MVA',
+                              'B_LD_MVA', 
                               'GEC_MaxTracks',
                               'ConeAngle', 
                               'Prescale',
                               'Prescale_SameSign',
-                              'Postscale',
-                              'TCK_2011', 
-                              'TCK_2012a',
-                              'TCK_2012b'
+                              'Postscale'
                               )
 
     def __init__(self, name, config) :
@@ -189,16 +159,17 @@ class B2KShhConf(LineBuilder) :
         LineBuilder.__init__(self, name, config)
 
         _ks_types = [ 'DD', 'LL', 'LD' ]
-        _years = [ '2011', '2012a', '2012b' ]
+        _years = [ '2015' ]
         _signs = [ 'OS', 'SS' ]
 
         GECCode = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" % config['GEC_MaxTracks'],
                    'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
-        HltFilters = {}
-        for year in _years :
-            HltFilters[year] = {'Code' : "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')) & ((in_range( %s, HLT_TCK, %s )) | (in_range( %s, HLT_TCK, %s )))" % config['TCK_%s'%year],
-                                'Preambulo' : ["from LoKiCore.functions import *"]}
+        Hlt1Filter = {'Code' : "HLT_PASS_RE('Hlt1TrackAllL0Decision')",
+                     'Preambulo' : ["from LoKiCore.functions import *"]}
+                          
+        Hlt2Filter = {'Code' : "HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')",
+                     'Preambulo' : ["from LoKiCore.functions import *"]}
                           
 
         relinfo = [ { "Type" : "RelInfoConeVariables" 
@@ -253,8 +224,8 @@ class B2KShhConf(LineBuilder) :
                 _mylines[ks_type][year] = {}
 
                 # BDT weight file
-                _weightfile1[ks_type][year] = '$TMVAWEIGHTSROOT/data/B2KShh_BDT1_%s_%s_v1r4.xml' % (ks_type, year)
-                _weightfile2[ks_type][year] = '$TMVAWEIGHTSROOT/data/B2KShh_BDT2_%s_%s_v1r4.xml' % (ks_type, year)
+                _weightfile1[ks_type][year] = '$TMVAWEIGHTSROOT/data/B2KShh_BDT1_%s_%s_v1r4.xml' % (ks_type, '2012b')
+                _weightfile2[ks_type][year] = '$TMVAWEIGHTSROOT/data/B2KShh_BDT2_%s_%s_v1r4.xml' % (ks_type, '2012b')
 
                 for sign in _signs :
 
@@ -262,7 +233,7 @@ class B2KShhConf(LineBuilder) :
 
                     _selB[ks_type][year][sign] = self.makeB2KShh( name, ks_type, year, sign, config )
 
-                    _mvaCut[ks_type][year][sign] = "(VALUE('LoKi::Hybrid::DictValue/MVA1Response_%s_%s_%s')>%s) | (VALUE('LoKi::Hybrid::DictValue/MVA2Response_%s_%s_%s')>%s)" % ( ks_type, year, sign, config['B_%s_MVA_%s'%(ks_type,year)], ks_type, year, sign, config['B_%s_MVA_%s'%(ks_type,year)] )
+                    _mvaCut[ks_type][year][sign] = "(VALUE('LoKi::Hybrid::DictValue/MVA1Response_%s_%s_%s')>%s) | (VALUE('LoKi::Hybrid::DictValue/MVA2Response_%s_%s_%s')>%s)" % ( ks_type, '2012b', sign, config['B_%s_MVA'%(ks_type)], ks_type, '2012b', sign, config['B_%s_MVA'%(ks_type)] )
 
                     _mvaFilter[ks_type][year][sign] = FilterDesktopConf( name+'_MVAFilter_%s_%s_%s'%(ks_type,year,sign),  Code = _mvaCut[ks_type][year][sign],  Inputs = [ 'Phys/' + name + '_' + ks_type + '_' + year + '_' + sign + '_Line/Particles' ] )
 
@@ -282,8 +253,8 @@ class B2KShhConf(LineBuilder) :
                         _mvaVars[ks_type][year][sign]['log10(KS_VDCHI2_OWNPV)'] = 'log10(CHILD(BPVVDCHI2,3))'
 
                     # Configuration of the MVA tool
-                    addTMVAclassifierValue(Component = _mvaFilter[ks_type][year][sign], XMLFile = _weightfile1[ks_type][year], Variables = _mvaVars[ks_type][year][sign], ToolName = 'MVA1Response_%s_%s_%s' % (ks_type,year,sign) )
-                    addTMVAclassifierValue(Component = _mvaFilter[ks_type][year][sign], XMLFile = _weightfile2[ks_type][year], Variables = _mvaVars[ks_type][year][sign], ToolName = 'MVA2Response_%s_%s_%s' % (ks_type,year,sign) )
+                    addTMVAclassifierValue(Component = _mvaFilter[ks_type][year][sign], XMLFile = _weightfile1[ks_type][year], Variables = _mvaVars[ks_type][year][sign], ToolName = 'MVA1Response_%s_%s_%s' % (ks_type,'2012b',sign) )
+                    addTMVAclassifierValue(Component = _mvaFilter[ks_type][year][sign], XMLFile = _weightfile2[ks_type][year], Variables = _mvaVars[ks_type][year][sign], ToolName = 'MVA2Response_%s_%s_%s' % (ks_type,'2012b',sign) )
 
                     # Main Algorithm initialisation
                     _flavourFlag = True
@@ -294,7 +265,8 @@ class B2KShhConf(LineBuilder) :
                                            prescale = config['Prescale'],
                                            postscale = config['Postscale'],
                                            selection = _selB[ks_type][year][sign],
-                                           HLT = HltFilters[year],
+                                           HLT1 = Hlt1Filter,
+                                           HLT2 = Hlt2Filter,
                                            FILTER = GECCode,
                                            RelatedInfoTools = relinfo, 
                                            RelatedInfoFilter = _mvaFilter[ks_type][year][sign],

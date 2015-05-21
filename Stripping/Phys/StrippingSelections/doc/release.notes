@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-21 - Thomas Latham
+ - Bring StrippingB2KShh.py into new structure under StrippingBnoC
+   - Lines that will run will be the same configuration as for 2012b in Stripping21 but will have '2015' in their names
+   - Also update lines to split the HLT cuts into HLT1 and HLT2
+
 ! 2015-05-21 - Simone Stracka
  - Tighten selection for Dst2PiD0EEGLine in StrippingCharm/StrippingD2PiPi0.py
  - Prescale 0.1 Dst2PiD0EEGLine to mimic missing selection on Hlt2
