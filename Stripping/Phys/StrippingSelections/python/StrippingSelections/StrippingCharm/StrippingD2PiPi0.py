@@ -180,11 +180,11 @@ default_config = {
           'STREAMS': ['Charm'],
           'CONFIG': {
                 # Minimum best primary vertex IP chi^2 for charged D daughters
-                'Daug_IPCHI2_MIN'      : 25.0,     
+                'Daug_IPCHI2_MIN'      : 6.0,      
                 # Minimum PT for charged D daughters 
-                'Daug_PT_MIN'          : 350  *MeV,   # 600 --> 300
+                'Daug_PT_MIN'          : 1300  *MeV, 
                 # Minimum momentum for charged D daughters 
-                'Daug_P_MIN'           : 1000 *MeV,
+                'Daug_P_MIN'           : 2000 *MeV,  
                 # Maximum momentum for charged D daughters 
                 'Daug_P_MAX'           : 100000 *MeV,
                 # Minimum pseudorapidity for charged D daughters 
@@ -192,31 +192,31 @@ default_config = {
                 # Maximum pseudorapidity for charged D daughters 
                 'Daug_ETA_MAX'         : 5.0,
                 # Track quality requirement for charged D daughters
-                'Daug_TRCHI2DOF_MAX'   : 5,    
+                'Daug_TRCHI2DOF_MAX'   : 3,    
                 # Maximum ghost probability for charged D daughters
                 'Daug_TRGHOSTPROB_MAX' : 0.5,
                 # Minimum PT for intermediate resonance neutral daughters
-                'Neut_PT_MIN'        : 350  *MeV,
+                'Neut_PT_MIN'        : 600  *MeV, # 350
                 # Maximum mass for dielectron                
                 'DiElectron_Mass_MAX'       : 1914  *MeV,
                 # Minimum PT for dielectron                
-                'DiElectron_PT_MIN'       : 0  *MeV, 
+                'DiElectron_PT_MIN'       : 2600  *MeV, 
                 # Minimum mass for intermediate resonance
                 'Res_Mass_MIN'       : 1814   *MeV, 
                 # Maximum mass for intermediate resonance
                 'Res_Mass_MAX'       : 1914  *MeV, 
                 # Track quality requirement for soft pion from Dstar
-                'Soft_TRCHI2DOF_MAX'   : 5,
+                'Soft_TRCHI2DOF_MAX'   : 3,
                 # Maximum Dstar-D0 mass difference
                 'Dstar_AMDiff_MAX': 165. * MeV,
                 'Dstar_MDiff_MAX': 160. * MeV,                
                 # Maximum chi^2 on Dstar vertex
-                'Dstar_VCHI2VDOF_MAX': 100.,
+                'Dstar_VCHI2VDOF_MAX': 9.,
                 # HLT filters, only process events firing triggers matching the RegEx
                 'Hlt1Filter'         : None,
                 'Hlt2Filter'         : None,
                 # prescale and postscale
-                'PrescaleDst2PiD0EEG' : 0,
+                'PrescaleDst2PiD0EEG' : 0.1,
                 'PostscaleDst2PiD0EEG' : 1
                 }
           },

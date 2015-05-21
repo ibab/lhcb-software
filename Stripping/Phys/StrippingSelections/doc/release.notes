@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-21 - Simone Stracka
+ - Tighten selection for Dst2PiD0EEGLine in StrippingCharm/StrippingD2PiPi0.py
+ - Prescale 0.1 Dst2PiD0EEGLine to mimic missing selection on Hlt2
+
 ! 2015-05-21 - Michael Kolpin
  - Updated __init__.py of StrippingCalib module
 
