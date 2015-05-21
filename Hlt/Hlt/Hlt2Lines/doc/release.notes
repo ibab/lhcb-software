@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-20 - Olli Lupton
+ - Suffix PID lines with TurboCalib instead of just Turbo
+ - Rename PID Lambda0 lines to have 'PT' instead of 'P' in their names.
+ - Complete the Turboification of various CharmHad lines.
+
 ! 2015-05-20 - V. Gligorov
  - Move CharmHad lines to Turbo except Inclusive D* and the CF/DCS D*->D0pi
    lines for the mixing analysis.

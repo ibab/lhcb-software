@@ -83,15 +83,15 @@ class CharmHadD02HHHHLines() :
             } )
         # Restrict to the nominal mass
         for fs in ['PiPiPiPi', 'KPiPiPi', 'KKPiPi', 'KKKPi']:
-            stages.update( { 'D02'+fs+'Turbo' : [MassFilter('D02'+fs,inputs=[stages['D02'+fs+'Wide'][0]])] } )
+            stages.update( { 'D02'+fs+'Turbo' : [MassFilter('D02'+fs,inputs=[stages['D02'+fs+'Wide' + 'Turbo'][0]])] } )
         # Then add the soft pion for the D*
         for des in ['','Wide']:
             for fs in ['PiPiPiPi', 'KKPiPi']:
-                stages['D02'+fs+des+'Tag'+'Turbo'] = [Dst2D0pi('D02'+fs+des+'Tag', d0=stages['D02'+fs+des][0])]
+                stages['D02'+fs+des+'Tag'+'Turbo'] = [Dst2D0pi('D02'+fs+des+'Tag', d0=stages['D02'+fs+des+'Turbo'][0])]
             for fs in ['KPiPiPi', 'KKKPi']:
                 stages['D02CF'+fs+des+'Tag'+'Turbo']  = [TagDecay('D02CF'+fs+des+'Tag', decay = ["[D*(2010)+ -> D0 pi+]cc"],
-                                                          inputs = [stages['D02'+fs+des][0]])]
+                                                          inputs = [stages['D02'+fs+des+'Turbo'][0]])]
                 stages['D02DCS'+fs+des+'Tag'+'Turbo'] = [TagDecay('D02DCS'+fs+des+'Tag',decay = ["[D*(2010)- -> D0 pi-]cc"],
-                                                          inputs = [stages['D02'+fs+des][0]])]
+                                                          inputs = [stages['D02'+fs+des+'Turbo'][0]])]
         
         return stages

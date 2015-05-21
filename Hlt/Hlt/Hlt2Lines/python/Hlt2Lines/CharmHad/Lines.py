@@ -32,9 +32,9 @@ Dst2PiD02HHXBDTLines = CharmHadDst2PiD02HHXBDTLines()
 HyperonLines = ChargedHyperonLines()
 
 
-theseslots = {   'Postscale' : {'Hlt2CharmHadD02KK'            : 0.1,
-                                'Hlt2CharmHadD02KPi'           : 0.1,
-                                'Hlt2CharmHadD02PiPi'          : 0.1,
+theseslots = {   'Postscale' : {'Hlt2CharmHadD02KKTurbo'       : 0.1,
+                                'Hlt2CharmHadD02KPiTurbo'      : 0.1,
+                                'Hlt2CharmHadD02PiPiTurbo'     : 0.1,
                                 'Hlt2CharmHadD2KPiPi_SS_LTUNB' : 0.05,
                                 'Hlt2CharmHadD2KKPi_OS_LTUNB'  : 0.05,
                                 'Hlt2CharmHadLc2KPPi_LTUNB'    : 0.05,

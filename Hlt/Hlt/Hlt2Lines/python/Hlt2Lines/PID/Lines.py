@@ -11,43 +11,41 @@ class PIDLines(Hlt2LinesConfigurableUser):
     l0_electrons = ['Photon', 'Electron', 'Hadron', 'Muon', 'DiMuon']
     hlt1_muons = 'Hlt1(TrackAllL0|TrackMuon|SingleMuon|DiMuon|TrackMVA|TwoTrackMVA).*Decision'
     hlt1_electrons = 'Hlt1.*Decision'
-    __slots__ = {'Prescale' :  {# Set all the non-Turbo versions to prescale zero because at least to
-                                # start with in Run2 then Brunel will be run on the Turbo stream and
-                                # we can get the full calibration sample that way.
-                                'Hlt2PIDLambda2PPiLLTurbo'          : 0.003, # First tuning from Lucio (ish)
-                                'Hlt2PIDLambda2PPiLLhighPTurbo'     : 0.1,
-                                'Hlt2PIDLambda2PPiLLveryhighPTurbo' : 1.0,
-                                'Hlt2PIDLambda2PPiLLisMuonTurbo'    : 0.05, 
-                                'Hlt2PIDLambda2PPiDDTurbo'          : 0.0,
-                                'Hlt2PIDLambda2PPiDDhighPTurbo'     : 0.0,
-                                'Hlt2PIDLambda2PPiDDveryhighPTurbo' : 0.0,
-                                'Hlt2PIDLambda2PPiDDisMuonTurbo'    : 0.0,
-                                'Hlt2PIDKs2PiPiLLTurbo'             : 0.0005,
-                                'Hlt2PIDKs2PiPiDDTurbo'             : 0.0,
-                                'Hlt2PIDDetJPsiEEL0PosTaggedTurbo'  : 0.0, # verdict seems to be that we
-                                'Hlt2PIDDetJPsiEEL0NegTaggedTurbo'  : 0.0, # will use the full calo and
-                                'Hlt2PIDB2KJPsiEEL0SSTaggedTurbo'   : 0.0, # have no need for this suite
-                                'Hlt2PIDB2KJPsiEEL0OSTaggedTurbo'   : 0.0, # of lines
-                                'Hlt2PIDDetJPsiMuMuPosTaggedTurbo'  : 1.0,
-                                'Hlt2PIDDetJPsiMuMuNegTaggedTurbo'  : 1.0,
-                                'Hlt2PIDB2KJPsiMuMuSSTaggedTurbo'   : 1.0,
-                                'Hlt2PIDB2KJPsiMuMuOSTaggedTurbo'   : 1.0,
-                                'Hlt2PIDDetPhiMuMuPosTaggedTurbo'   : 1.0,
-                                'Hlt2PIDDetPhiMuMuNegTaggedTurbo'   : 1.0,
-                                'Hlt2PIDDs2PiPhiMuMuSSTaggedTurbo'  : 1.0,
-                                'Hlt2PIDDs2PiPhiMuMuOSTaggedTurbo'  : 1.0,
-                                'Hlt2PIDDetJPsiEEPosTaggedTurbo'    : 1.0,
-                                'Hlt2PIDDetJPsiEENegTaggedTurbo'    : 1.0,
-                                'Hlt2PIDB2KJPsiEESSTaggedTurbo'     : 1.0,
-                                'Hlt2PIDB2KJPsiEEOSTaggedTurbo'     : 1.0,
-                                'Hlt2PIDSc02LcPiTurbo'              : 1.0,
-                                'Hlt2PIDScpp2LcPiTurbo'             : 1.0,
-                                'Hlt2PIDLb2LcPiTurbo'               : 1.0,
-                                'Hlt2PIDLb2LcMuNuTurbo'             : 1.0,
-                                'Hlt2PIDD02KPiPiPiTurbo'            : 0.0,
-                                'Hlt2PIDD02KPiPiPiTagTurbo'         : 0.1,
-                                'Hlt2PIDD02KPiTagTurbo'             : 1.0
-                                },
+    __slots__ = {'Prescale' :  { 'Hlt2PID' + k + 'TurboCalib' : v for k, v in {
+                                'Lambda2PPiLL'          : 0.003, # First tuning from Lucio (ish)
+                                'Lambda2PPiLLhighPT'    : 0.1,
+                                'Lambda2PPiLLveryhighPT': 1.0,
+                                'Lambda2PPiLLisMuon'    : 0.05, 
+                                'Lambda2PPiDD'          : 0.0,
+                                'Lambda2PPiDDhighPT'    : 0.0,
+                                'Lambda2PPiDDveryhighPT': 0.0,
+                                'Lambda2PPiDDisMuon'    : 0.0,
+                                'Ks2PiPiLL'             : 0.0005,
+                                'Ks2PiPiDD'             : 0.0,
+                                'DetJPsiEEL0PosTagged'  : 0.0, # verdict seems to be that we
+                                'DetJPsiEEL0NegTagged'  : 0.0, # will use the full calo and
+                                'B2KJPsiEEL0SSTagged'   : 0.0, # have no need for this suite
+                                'B2KJPsiEEL0OSTagged'   : 0.0, # of lines
+                                'DetJPsiMuMuPosTagged'  : 1.0,
+                                'DetJPsiMuMuNegTagged'  : 1.0,
+                                'B2KJPsiMuMuSSTagged'   : 1.0,
+                                'B2KJPsiMuMuOSTagged'   : 1.0,
+                                'DetPhiMuMuPosTagged'   : 1.0,
+                                'DetPhiMuMuNegTagged'   : 1.0,
+                                'Ds2PiPhiMuMuSSTagged'  : 1.0,
+                                'Ds2PiPhiMuMuOSTagged'  : 1.0,
+                                'DetJPsiEEPosTagged'    : 1.0,
+                                'DetJPsiEENegTagged'    : 1.0,
+                                'B2KJPsiEESSTagged'     : 1.0,
+                                'B2KJPsiEEOSTagged'     : 1.0,
+                                'Sc02LcPi'              : 1.0,
+                                'Scpp2LcPi'             : 1.0,
+                                'Lb2LcPi'               : 1.0,
+                                'Lb2LcMuNu'             : 1.0,
+                                'D02KPiPiPi'            : 0.0,
+                                'D02KPiPiPiTag'         : 0.1,
+                                'D02KPiTag'             : 1.0
+                                }.iteritems()},
                   'Common'   : {'TagTrChi2'     : 3.0,
                                 'TagP'          : 3 * GeV, # 6GeV in old stripping
                                 #'TagPt'         : 500 * MeV, # 1.5GeV in old stripping
@@ -89,16 +87,16 @@ class PIDLines(Hlt2LinesConfigurableUser):
                  'Lambda2PPiDD' : {
                                 'LambdaProtonP' : 2.0 * GeV,
                                 'LambdaProtonPT': 0.0 * GeV},
-                 'Lambda2PPiLLhighP' : {
+                 'Lambda2PPiLLhighPT' : {
                                 'LambdaProtonP' : 2.0 * GeV,
                                 'LambdaProtonPT': 3.5 * GeV},
-                 'Lambda2PPiDDhighP' : {
+                 'Lambda2PPiDDhighPT' : {
                                 'LambdaProtonP' : 2.0 * GeV,
                                 'LambdaProtonPT': 3.5 * GeV},
-                 'Lambda2PPiLLveryhighP' : {
+                 'Lambda2PPiLLveryhighPT' : {
                                 'LambdaProtonP' : 2.0 * GeV,
                                 'LambdaProtonPT': 10.0 * GeV},
-                 'Lambda2PPiDDveryhighP' : {
+                 'Lambda2PPiDDveryhighPT' : {
                                 'LambdaProtonP' : 2.0 * GeV,
                                 'LambdaProtonPT': 10.0 * GeV},
                  'Lambda2PPiLLisMuon' : {
@@ -363,10 +361,10 @@ class PIDLines(Hlt2LinesConfigurableUser):
               'Ks2PiPiDD'             : [ KSFilter('Ks2PiPiDD', KsDD) ],
               'Lambda2PPiLL'          : [ LambdaFilter('Lambda2PPiLL', LambdaLL) ],
               'Lambda2PPiDD'          : [ LambdaFilter('Lambda2PPiDD', LambdaDD) ],
-              'Lambda2PPiLLhighP'     : [ LambdaFilter('Lambda2PPiLLhighP', LambdaLL) ],
-              'Lambda2PPiDDhighP'     : [ LambdaFilter('Lambda2PPiDDhighP', LambdaDD) ],
-              'Lambda2PPiLLveryhighP' : [ LambdaFilter('Lambda2PPiLLveryhighP', LambdaLL) ],
-              'Lambda2PPiDDveryhighP' : [ LambdaFilter('Lambda2PPiDDveryhighP', LambdaDD) ],
+              'Lambda2PPiLLhighPT'    : [ LambdaFilter('Lambda2PPiLLhighPT', LambdaLL) ],
+              'Lambda2PPiDDhighPT'    : [ LambdaFilter('Lambda2PPiDDhighPT', LambdaDD) ],
+              'Lambda2PPiLLveryhighPT': [ LambdaFilter('Lambda2PPiLLveryhighPT', LambdaLL) ],
+              'Lambda2PPiDDveryhighPT': [ LambdaFilter('Lambda2PPiDDveryhighPT', LambdaDD) ],
               'Lambda2PPiLLisMuon'    : [ LambdaFilter('Lambda2PPiLLisMuon', LambdaLL, ismuon = True) ],
               'Lambda2PPiDDisMuon'    : [ LambdaFilter('Lambda2PPiDDisMuon', LambdaDD, ismuon = True) ],
               'Lb2LcPi'               : [ BCombiner('Lb2LcPi', [ Lc2KPPi, BachelorPions ], decay = '[Lambda_b0 -> Lambda_c+ pi-]cc') ],
@@ -388,7 +386,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
             }
         
         from HltLine.HltLine import Hlt2Line
-        for turbo in ['Turbo']:
+        for turbo in ['TurboCalib']:
           for category, stages in stagemap.iteritems():
             for (nickname, algos) in self.algorithms(stages).iteritems():
                 linename = 'PID' + nickname
@@ -426,8 +424,8 @@ class PIDLines(Hlt2LinesConfigurableUser):
             'Ks2PiPiDD'             : 50038,
             'Lambda2PPiLL'          : 50039,
             'Lambda2PPiDD'          : 50040,
-            'Lambda2PPiLLhighP'     : 50041,
-            'Lambda2PPiDDhighP'     : 50042,
+            'Lambda2PPiLLhighPT'    : 50041,
+            'Lambda2PPiDDhighPT'    : 50042,
             'Lambda2PPiLLisMuon'    : 50043,
             'Lambda2PPiDDisMuon'    : 50044,
             'Lb2LcPi'               : 50045,
@@ -436,6 +434,6 @@ class PIDLines(Hlt2LinesConfigurableUser):
             'D02KPiPiPi'            : 50048,
             'D02KPiPiPiTag'         : 50049,
             'D02KPiTag'             : 50050,
-            'Lambda2PPiLLveryhighP' : 50051,
-            'Lambda2PPiDDveryhighP' : 50052
+            'Lambda2PPiLLveryhighPT': 50051,
+            'Lambda2PPiDDveryhighPT': 50052
             }.iteritems()})

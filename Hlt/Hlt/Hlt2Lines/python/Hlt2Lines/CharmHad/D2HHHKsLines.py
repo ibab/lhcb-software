@@ -61,5 +61,5 @@ class CharmHadD2HHHKsLines() :
             for ks in ['LL','DD']:
                 stages['D2'+fs+'Ks_Ks'+ks+'Turbo'] = [DV4BCombiner('D2'+fs+'Ks_Ks'+ks, decays[fs], [sharedKs[ks], SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])]
                 for dps in ['Dp','Ds']:
-                    stages[dps+'2'+fs+'Ks_Ks'+ks+'Turbo'] = [MassFilter(dps+'2'+fs+'Ks_Ks'+ks, inputs = [stages['D2'+fs+'Ks_Ks'+ks][0]])]
+                    stages[dps+'2'+fs+'Ks_Ks'+ks+'Turbo'] = [MassFilter(dps+'2'+fs+'Ks_Ks'+ks, inputs = [stages['D2'+fs+'Ks_Ks'+ks+'Turbo'][0]])]
         return stages

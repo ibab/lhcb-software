@@ -66,10 +66,10 @@ class DPSLines(Hlt2LinesConfigurableUser) :
             from Hlt2Lines.CharmHad.Lines import CharmHadLines as Charm
             charm = Charm  ()
             
-            D0  = charm.stages ( 'D02KPi'         ) [0] ## Wide mass here!!!
-            D   = charm.stages ( 'DpToKmPipPip'   ) [0]
-            Ds  = charm.stages ( 'DspToKmKpPip'   ) [0]
-            Lc  = charm.stages ( 'LcpToKmPpPip'        ) [0]
+            D0  = charm.stages ( 'D02KPiTurbo'         ) [0] ## Wide mass here!!!
+            D   = charm.stages ( 'DpToKmPipPipTurbo'   ) [0]
+            Ds  = charm.stages ( 'DspToKmKpPipTurbo'   ) [0]
+            Lc  = charm.stages ( 'LcpToKmPpPipTurbo'   ) [0]
             
             Hc  = MergeCharm ( 'MergedHc', [ Hlt2ExternalStage ( charm, s ) for s in ( D0 , D , Ds , Lc ) ] )
             
