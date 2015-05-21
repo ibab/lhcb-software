@@ -41,7 +41,7 @@ class Physics_draftEM2015( object ):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
         
     def L0TCK(self) :
-        return '0xFF64' 
+        return '0x004C' 
 
     def HltType(self) :
         self.verifyType( Physics_draftEM2015 ) 
@@ -90,6 +90,22 @@ class Physics_draftEM2015( object ):
                                                , 'L0Channels'        : {'AllL0'  : '',
                                                                         'Muon'   : ('Muon',)}
                                                }
+                     , Hlt1CalibRICHMirrorLinesConf :    {'DoTiming' : False
+                                                        , 'PT'       : 500.
+                                                        , 'P'        : 1000.
+                                                        , 'MinETA'   : 2.59
+                                                        , 'MaxETA'   : 2.97
+                                                        , 'Phis'     : [(-2.69, -2.29 ), (-0.85, -0.45), (0.45, 0.85), (2.29, 2.69)]
+                                                        , 'TrChi2'   : 2.
+                                                        , 'MinTr'    : 5.5
+                                                        , 'GEC'      : 'Loose'
+                                                        , 'LM_PT'    : 500.
+                                                        , 'LM_P'     : 1000.
+                                                        , 'LM_TrChi2': 2.
+                                                        , 'LM_MinTr' : 1
+                                                        , 'LM_MaxTr' : 40
+                                                        , 'LM_GEC'   : 'Loose'
+                                               }
                                                        
                      , Hlt1MuonLinesConf :     { 'SingleMuonHighPT_P'        : 3000
                                                , 'SingleMuonHighPT_PT'      : 4800
@@ -100,11 +116,11 @@ class Physics_draftEM2015( object ):
                                                , 'SingleMuonHighPT_GEC'     : 'Loose'
                                                , 'DiMuonLowMass_VxDOCA'     :  0.2
                                                , 'DiMuonLowMass_VxChi2'     :   25.
-                                               , 'DiMuonLowMass_P'          : 6000.
+                                               , 'DiMuonLowMass_P'          : 3000.
                                                , 'DiMuonLowMass_PT'         :  200.
-                                               , 'DiMuonLowMass_TrChi2'     :    4.
-                                               , 'DiMuonLowMass_M'          : 1000.
-                                               , 'DiMuonLowMass_IPChi2'     :    9.
+                                               , 'DiMuonLowMass_TrChi2'     :    3.
+                                               , 'DiMuonLowMass_M'          :    0.
+                                               , 'DiMuonLowMass_IPChi2'     :    6.
                                                , 'DiMuonLowMass_GEC'        : 'Loose'
                                                , 'DiMuonHighMass_VxDOCA'    :  0.2
                                                , 'DiMuonHighMass_VxChi2'    :   25
@@ -113,7 +129,8 @@ class Physics_draftEM2015( object ):
                                                , 'DiMuonHighMass_TrChi2'    :    3
                                                , 'DiMuonHighMass_M'         : 2700
                                                , 'DiMuonHighMass_GEC'       : 'Loose'
-                                               ,'L0Channels'               : {
+                                               , 'NoPVPassThrough_L0ChannelRe' : "L0_CHANNEL_RE('.*lowMult')"
+                                               , 'L0Channels'               : {
                                                    'SingleMuonHighPT' : ( 'Muon', ),
                                                    'DiMuonLowMass'    : ( 'Muon', ),
                                                    'DiMuonHighMass'   : ( 'Muon', )}
@@ -228,9 +245,8 @@ class Physics_draftEM2015( object ):
         Returns a list of active lines
         """
         hlt2 = [
-            'Hlt2TopoMu2Body'
-           ,'Hlt2PassThrough' # nobias leading crossing + high mult 
-            #'Hlt2Lumi','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent', # technical lines
+            'Hlt2PassThrough' # nobias leading crossing + high mult 
+           ,'Hlt2Lumi','Hlt2DebugEvent','Hlt2ErrorEvent','Hlt2Transparent', # technical lines
         ]
 
         from CharmHad_EM2015 import CharmHad_EM2015
@@ -270,19 +286,18 @@ class Physics_draftEM2015( object ):
                  , 'Hlt1NoPVPassThrough'
                  , 'Hlt1NonBeamBeamNoBias'
                  , 'Hlt1MBNoBias'  # nobias leading crossing
-                 , 'Hlt1CalibRICHMirror'
+                 , 'Hlt1CalibRICHMirror' # calibration lines
+                 , 'Hlt1CalibHighPTLowMultTrks'
                  , 'Hlt1CalibTrackingKPiDetached'
-                 , 'Hlt1Lumi' # lumi lines
+                 , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing' # lumi lines
                  , 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'  
                  , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
                  , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
                  , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingForcedRecoFullZ'
                  , 'Hlt1BeamGasCrossingParasitic', 'Hlt1BeamGasHighRhoVertices'
-               #  , 'Hlt1CharmCalibrationNoBias' # technical lines
-               #  , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
-               #  , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent'  
-               #  , 'Hlt1MBMicroBiasVelo','Hlt1MBMicroBiasTStation'
-               #  , 'Hlt1VeloClosingMicroBias'
+                 , 'Hlt1L0Any','Hlt1L0AnyNoSPD' # technical lines
+                 , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent'  
+                 , 'Hlt1VeloClosingMicroBias'
             ]
 
 

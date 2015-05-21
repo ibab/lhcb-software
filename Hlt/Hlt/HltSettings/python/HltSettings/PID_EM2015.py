@@ -20,17 +20,17 @@ class PID_EM2015 :
         """
 
         lines = [
-            'Hlt2PIDDetJPsiMuMuPosTaggedTurbo',
-            'Hlt2PIDDetJPsiMuMuNegTaggedTurbo',
-            'Hlt2PIDB2KJPsiEESSTaggedTurbo',
-            'Hlt2PIDB2KJPsiEEOSTaggedTurbo',
-            'Hlt2PIDLambda2PPiLLTurbo',
-            'Hlt2PIDLambda2PPiLLhighPTurbo',
-            'Hlt2PIDLambda2PPiLLveryhighPTurbo',
-            'Hlt2PIDLambda2PPiLLisMuonTurbo',
-            'Hlt2PIDD02KPiTagTurbo',
-            'Hlt2PIDLb2LcMuNuTurbo',
-            'Hlt2PIDLb2LcPiTurbo',
+            'Hlt2PIDDetJPsiMuMuPosTaggedTurboCalib',
+            'Hlt2PIDDetJPsiMuMuNegTaggedTurboCalib',
+            'Hlt2PIDB2KJPsiEESSTaggedTurboCalib',
+            'Hlt2PIDB2KJPsiEEOSTaggedTurboCalib',
+            'Hlt2PIDLambda2PPiLLTurboCalib',
+            'Hlt2PIDLambda2PPiLLhighPTTurboCalib',
+            'Hlt2PIDLambda2PPiLLveryhighPTTurboCalib',
+            'Hlt2PIDLambda2PPiLLisMuonTurboCalib',
+            'Hlt2PIDD02KPiTagTurboCalib',
+            'Hlt2PIDLb2LcMuNuTurboCalib',
+            'Hlt2PIDLb2LcPiTurboCalib',
        ]
 
 
@@ -45,43 +45,43 @@ class PID_EM2015 :
         d = {}
         from Hlt2Lines.PID.Lines                import PIDLines
         d.update ({PIDLines : { 
-              'Prescale' :  {# Set all the non-Turbo versions to prescale zero because at least to
+              'Prescale' :  { 'Hlt2PID' + k + 'TurboCalib' : v for k, v in { # Set all the non-Turbo versions to prescale zero because at least to
                                 # start with in Run2 then Brunel will be run on the Turbo stream and
                                 # we can get the full calibration sample that way.
-                                'Hlt2PIDLambda2PPiLLTurbo'          : 0.003, # First tuning from Lucio (ish)
-                                'Hlt2PIDLambda2PPiLLhighPTurbo'     : 0.1,
-                                'Hlt2PIDLambda2PPiLLveryhighPTurbo' : 1.0,
-                                'Hlt2PIDLambda2PPiLLisMuonTurbo'    : 0.05, 
-                                'Hlt2PIDLambda2PPiDDTurbo'          : 0.0,
-                                'Hlt2PIDLambda2PPiDDhighPTurbo'     : 0.0,
-                                'Hlt2PIDLambda2PPiDDveryhighPTurbo' : 0.0,
-                                'Hlt2PIDLambda2PPiDDisMuonTurbo'    : 0.0,
-                                'Hlt2PIDKs2PiPiLLTurbo'             : 0.0005,
-                                'Hlt2PIDKs2PiPiDDTurbo'             : 0.0,
-                                'Hlt2PIDDetJPsiEEL0PosTaggedTurbo'  : 0.0, # verdict seems to be that we
-                                'Hlt2PIDDetJPsiEEL0NegTaggedTurbo'  : 0.0, # will use the full calo and
-                                'Hlt2PIDB2KJPsiEEL0SSTaggedTurbo'   : 0.0, # have no need for this suite
-                                'Hlt2PIDB2KJPsiEEL0OSTaggedTurbo'   : 0.0, # of lines
-                                'Hlt2PIDDetJPsiMuMuPosTaggedTurbo'  : 1.0,
-                                'Hlt2PIDDetJPsiMuMuNegTaggedTurbo'  : 1.0,
-                                'Hlt2PIDB2KJPsiMuMuSSTaggedTurbo'   : 1.0,
-                                'Hlt2PIDB2KJPsiMuMuOSTaggedTurbo'   : 1.0,
-                                'Hlt2PIDDetPhiMuMuPosTaggedTurbo'   : 1.0,
-                                'Hlt2PIDDetPhiMuMuNegTaggedTurbo'   : 1.0,
-                                'Hlt2PIDDs2PiPhiMuMuSSTaggedTurbo'  : 1.0,
-                                'Hlt2PIDDs2PiPhiMuMuOSTaggedTurbo'  : 1.0,
-                                'Hlt2PIDDetJPsiEEPosTaggedTurbo'    : 1.0,
-                                'Hlt2PIDDetJPsiEENegTaggedTurbo'    : 1.0,
-                                'Hlt2PIDB2KJPsiEESSTaggedTurbo'     : 1.0,
-                                'Hlt2PIDB2KJPsiEEOSTaggedTurbo'     : 1.0,
-                                'Hlt2PIDSc02LcPiTurbo'              : 1.0,
-                                'Hlt2PIDScpp2LcPiTurbo'             : 1.0,
-                                'Hlt2PIDLb2LcPiTurbo'               : 1.0,
-                                'Hlt2PIDLb2LcMuNuTurbo'             : 1.0,
-                                'Hlt2PIDD02KPiPiPiTurbo'            : 0.0,
-                                'Hlt2PIDD02KPiPiPiTagTurbo'         : 0.1,
-                                'Hlt2PIDD02KPiTagTurbo'             : 1.0
-                                },
+                                'Lambda2PPiLL'          : 0.003, # First tuning from Lucio (ish)
+                                'Lambda2PPiLLhighPT'     : 0.1,
+                                'Lambda2PPiLLveryhighPT' : 1.0,
+                                'Lambda2PPiLLisMuon'    : 0.05, 
+                                'Lambda2PPiDD'          : 0.0,
+                                'Lambda2PPiDDhighPT'     : 0.0,
+                                'Lambda2PPiDDveryhighPT' : 0.0,
+                                'Lambda2PPiDDisMuon'    : 0.0,
+                                'Ks2PiPiLL'             : 0.0005,
+                                'Ks2PiPiDD'             : 0.0,
+                                'DetJPsiEEL0PosTagged'  : 0.0, # verdict seems to be that we
+                                'DetJPsiEEL0NegTagged'  : 0.0, # will use the full calo and
+                                'B2KJPsiEEL0SSTagged'   : 0.0, # have no need for this suite
+                                'B2KJPsiEEL0OSTagged'   : 0.0, # of lines
+                                'DetJPsiMuMuPosTagged'  : 1.0,
+                                'DetJPsiMuMuNegTagged'  : 1.0,
+                                'B2KJPsiMuMuSSTagged'   : 1.0,
+                                'B2KJPsiMuMuOSTagged'   : 1.0,
+                                'DetPhiMuMuPosTagged'   : 1.0,
+                                'DetPhiMuMuNegTagged'   : 1.0,
+                                'Ds2PiPhiMuMuSSTagged'  : 1.0,
+                                'Ds2PiPhiMuMuOSTagged'  : 1.0,
+                                'DetJPsiEEPosTagged'    : 1.0,
+                                'DetJPsiEENegTagged'    : 1.0,
+                                'B2KJPsiEESSTagged'     : 1.0,
+                                'B2KJPsiEEOSTagged'     : 1.0,
+                                'Sc02LcPi'              : 1.0,
+                                'Scpp2LcPi'             : 1.0,
+                                'Lb2LcPi'               : 1.0,
+                                'Lb2LcMuNu'             : 1.0,
+                                'D02KPiPiPi'            : 0.0,
+                                'D02KPiPiPiTag'         : 0.1,
+                                'D02KPiTag'             : 1.0
+                                }.iteritems()},
                   'Common'   : {'TagTrChi2'     : 3.0,
                                 'TagP'          : 3 * GeV, # 6GeV in old stripping
                                 #'TagPt'         : 500 * MeV, # 1.5GeV in old stripping
@@ -123,16 +123,16 @@ class PID_EM2015 :
                  'Lambda2PPiDD' : {
                                 'LambdaProtonP' : 2.0 * GeV,
                                 'LambdaProtonPT': 0.0 * GeV},
-                 'Lambda2PPiLLhighP' : {
+                 'Lambda2PPiLLhighPT' : {
                                 'LambdaProtonP' : 2.0 * GeV,
                                 'LambdaProtonPT': 3.5 * GeV},
-                 'Lambda2PPiDDhighP' : {
+                 'Lambda2PPiDDhighPT' : {
                                 'LambdaProtonP' : 2.0 * GeV,
                                 'LambdaProtonPT': 3.5 * GeV},
-                 'Lambda2PPiLLveryhighP' : {
+                 'Lambda2PPiLLveryhighPT' : {
                                 'LambdaProtonP' : 2.0 * GeV,
                                 'LambdaProtonPT': 10.0 * GeV},
-                 'Lambda2PPiDDveryhighP' : {
+                 'Lambda2PPiDDveryhighPT' : {
                                 'LambdaProtonP' : 2.0 * GeV,
                                 'LambdaProtonPT': 10.0 * GeV},
                  'Lambda2PPiLLisMuon' : {
@@ -143,10 +143,7 @@ class PID_EM2015 :
                                 'LambdaProtonPT': 0.0 * GeV},
                  'JPsiMuMu' :  {'ProbePt'       : 500 * MeV,
                                 'ProbeMinIPChi2': 16,
-                                'ProbeTisTos'   : [
-                                  "L0(" + "|".join(l0_muons) + ")Decision%TIS",
-                                  hlt1_muons + "%TIS"
-                                  ],
+                                'ProbeTisTos'   : [],
                                 'TagPt'         : 1.2 * GeV,
                                 'TagMinIPChi2'  : 9,
                                 'LLCombAMLow'   : (3096-210) * MeV,
@@ -166,10 +163,7 @@ class PID_EM2015 :
                                 'DetLLVDChi2'   : 50.0},
                  'JPsiEE'   :  {'ProbePt'       : 500 * MeV,
                                 'ProbeMinIPChi2': 25,
-                                'ProbeTisTos'   : [
-                                  "L0(" + "|".join(l0_electrons) + ")Decision%TIS",
-                                  hlt1_electrons + "%TIS"
-                                  ],
+                                'ProbeTisTos'   : [],
                                 'TagMinIPChi2'  : 9,
                                 'TagPIDe'       : 5.0,
                                 'TagP'          : 6.0 * GeV,
@@ -200,10 +194,7 @@ class PID_EM2015 :
                                 'ProbeMinIPChi2': 25.0,
                                 'ProbePt'       : 500 * MeV,
                                 'TagPt'         : 800 * MeV,
-                                'ProbeTisTos'   : [
-                                  "L0(" + "|".join(l0_muons) + ")Decision%TIS",
-                                  hlt1_muons + '%TIS'
-                                  ],
+                                'ProbeTisTos'   : [],
                                 'LLhCombAMLow'  : (1968 - 80) * MeV,
                                 'LLhCombAMHigh' : (1968 + 80) * MeV,
                                 'LLhCombMLow'   : (1968 - 70) * MeV, # Ds+ -> phi pi+
@@ -302,7 +293,7 @@ class PID_EM2015 :
                                 # For Lc+ which are Sc-tagged. Don't want to use the DetachedHHHCombiner
                                 # TisTosSpec CharmHad gives us because we share Lc+ between the Sc
                                 # and Lb tags.
-                                'PromptTisTosSpec'        : "Hlt1(Two)?TrackMVADecision%TOS",
+                                'PromptTisTosSpec'        : [],
                                 'BPVLTIME_MIN'            : 0.15 * ps},
                  # Note the pointing cut is now in the tagger so that we can re-use
                  # the Lc candidates in the PIDCALIB lines for Lb -> Lc pi and Lb -> Lc mu nu
@@ -327,7 +318,7 @@ class PID_EM2015 :
                                 'BPVLTIME_MIN'             :  0.1 * ps,
                                 'Mass_M_MIN'               :  1790 * MeV,
                                 'Mass_M_MAX'               :  1940 * MeV,
-                                'TisTosSpec'               :  "Hlt1.*Track.*Decision%TOS"},
+                                'TisTosSpec'               :  []},
                  'D02KPiPiPiTag' : {
                                 'TagVCHI2PDOF_MAX'         :  15.0,
                                 'DeltaM_AM_MIN'            :  0.0,

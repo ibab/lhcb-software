@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-05-21 - Christian Linn
+ - corrected thresholds of Topo_EM2015, PID_EM2015
+ - added technical lines to Physics_draftEM2015
+
 ! 2015-05-21 - Sean Benson
  - Make sure Turbo only includes 2 new lines for nightly tests
 
