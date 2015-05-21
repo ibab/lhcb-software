@@ -78,10 +78,11 @@ namespace DD4hep { namespace XML {
       cout << "DOM UNKNOWN: ";
       return false;
     }
-    cout << _toString(domError.getType()) << ": " << _toString(domError.getMessage()) << endl;
+    cout << "XML: " << _toString(domError.getType()) << ": " 
+	 << _toString(domError.getMessage()) << endl;
     DOMLocator* loc = domError.getLocation();
     if ( loc )  {
-      cout << "Location: Line:" << loc->getLineNumber()
+      cout << "XML: Location: Line:" << loc->getLineNumber()
 	   << " Column:" << loc->getColumnNumber() << endl;
     }
     return false;
@@ -103,9 +104,9 @@ namespace DD4hep { namespace XML {
   void DocumentErrorHandler::fatalError(const SAXParseException& e)  {
     string m(_toString(e.getMessage()));
     string sys(_toString(e.getSystemId()));
-    cout << "Fatal Error at file \"" << sys
+    cout << "XML: Fatal Error at file \"" << sys
 	 << "\", line " << e.getLineNumber() << ", column " << e.getColumnNumber() << endl
-	 << "Message: " << m << endl;
+	 << "XML: Message: " << m << endl;
     //throw runtime_error( "Standard pool exception : Fatal Error on the DOM Parser" );
   }
 
@@ -138,7 +139,7 @@ Document DocumentHandler::load(Handle_t base, const XMLCh* fname)  const  {
 }
 
 Document DocumentHandler::load(const string& fname)  const  {
-  cout << "Loading document URI:" << fname << endl;
+  cout << "XML: Loading document URI:" << fname << endl;
   XMLURL xerurl = (const XMLCh*)Strng_t(fname);
   string path   = _toString(xerurl.getPath());
   string proto  = _toString(xerurl.getProtocolName());
@@ -149,15 +150,15 @@ Document DocumentHandler::load(const string& fname)  const  {
     parser->parse(path.c_str());
   }
   catch(std::exception& e) {
-    cout << "parse(path):" << e.what() << endl;
+    cout << "XML: parse(path:'" << fname << "'):" << e.what() << endl;
     try {
       parser->parse(fname.c_str());
     }
     catch(std::exception& ex) {
-      cout << "parse(URI):" << ex.what() << endl;      
+      cout << "XML: parse(URI: '" << fname << "'):" << ex.what() << endl;      
     }
   }
-  cout << "Document succesfully parsed....." << endl;
+  cout << "XML: Document '" << fname << "' succesfully parsed....." << endl;
   return (XmlDocument*)parser->adoptDocument();
 }
 
@@ -268,21 +269,22 @@ Document DocumentHandler::load(const string& fname)  const  {
     result = doc->LoadFile();
     if ( !result ) {
       if ( doc->Error() ) {
-	cout << "Unknown error whaile parsing XML document with TiXml:" << endl;
-	cout << "Document:" << doc->Value() << endl;
-	cout << "Location: Line:" << doc->ErrorRow() 
+	cout << "XML: Unknown error whaile parsing XML document " 
+	     << fname << " with TiXml:" << endl;
+	cout << "XML: Document:" << doc->Value() << endl;
+	cout << "XML: Location: Line:" << doc->ErrorRow() 
 	     << " Column:" << doc->ErrorCol() << endl;
 	throw runtime_error(doc->ErrorDesc());
       }
       else
-	throw runtime_error("Unknown error whaile parsing XML document with TiXml.");
+	throw runtime_error("XML: Unknown error whaile parsing XML document '"+fname+"' with TiXml.");
     }
   }
   catch(std::exception& e) {
-    cout << "parse(path):" << e.what() << endl;
+    cout << "XML: parse('" << fname << "') Exception:" << e.what() << endl;
   }
   if ( result ) {
-    cout << "Document " << fname << " succesfully parsed....." << endl;
+    cout << "XML: Document " << fname << " succesfully parsed....." << endl;
     return (XmlDocument*)doc;
   }
   delete doc;
@@ -297,16 +299,16 @@ Document DocumentHandler::parse(const char* doc_string, size_t /* length */) con
       return (XmlDocument*)doc;
     }
     if ( doc->Error() ) {
-      cout << "Unknown error whaile parsing XML document with TiXml:" << endl;
-      cout << "Document:" << doc->Value() << endl;
-      cout << "Location: Line:" << doc->ErrorRow() 
+      cout << "XML: Unknown error whaile parsing XML document with TiXml:" << endl;
+      cout << "XML: Document:" << doc->Value() << endl;
+      cout << "XML: Location: Line:" << doc->ErrorRow() 
 	   << " Column:" << doc->ErrorCol() << endl;
       throw runtime_error(doc->ErrorDesc());
     }
-    throw runtime_error("Unknown error whaile parsing XML document with TiXml.");
+    throw runtime_error("XML: Unknown error whaile parsing XML document with TiXml.");
   }
   catch(std::exception& e) {
-    cout << "parse(xml-string):" << e.what() << endl;
+    cout << "XML: parse(xml-string):" << e.what() << endl;
   }
   delete doc;
   return 0;
@@ -316,7 +318,7 @@ Document DocumentHandler::parse(const char* doc_string, size_t /* length */) con
 int DocumentHandler::output(Document doc, const std::string& fname) const {
   FILE* file = fname.empty() ? stdout : ::fopen(fname.c_str(),"w");
   if ( !file ) {
-    cout << "Failed to open output file:" << fname << endl;
+    cout << "XML: Failed to open output file:  '" << fname << "'" << endl;
     return 0;
   }
   TiXmlDocument* d = (TiXmlDocument*)doc.ptr();
