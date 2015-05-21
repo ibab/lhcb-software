@@ -19,7 +19,7 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
         , 'PT'         :   200.   # MeV
         , 'P'          :  1000.   # MeV 
         , 'VeloCutLineL0Dependency' : '.*DiHadron,lowMult'
-        , 'NoVeloCutLineL0Dependency':',*DiHadron,lowMult'
+        , 'NoVeloCutLineL0Dependency':'.*DiHadron,lowMult'
         , 'NoBiasTriggerType' : 'LumiTrigger' # dimensionless
         , 'NoBiasBeamCrossingTypeVeto' : 'BeamCrossing' # dimensionless
         }
