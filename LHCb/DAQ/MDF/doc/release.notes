@@ -6,6 +6,11 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+
+!========================= MDF v3r41 2015-05-21 =========================
+! 2015-05-21 - Markus Frank
+ - Removed unnecessary dependencies
+
 ! 2015-05-04 - Marco Clemencic
  - Removed unused include (Tokenizer.h).
 

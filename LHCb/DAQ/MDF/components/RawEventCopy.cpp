@@ -1,7 +1,7 @@
 // $Id: RawEventCopy.cpp,v 1.2 2009-05-25 08:56:21 cattanem Exp $
 // Include files from Gaudi
-#include "GaudiKernel/Algorithm.h" 
-#include "GaudiKernel/IDataProviderSvc.h" 
+#include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/SmartDataPtr.h" 
 #include "MDF/RawEventHelpers.h"
 #include "Event/RawEvent.h"
 
@@ -37,11 +37,11 @@ namespace LHCb  {
     virtual ~RawEventCopy()  {} 
     /// Main execution
     virtual StatusCode execute()  {
-      StatusCode sc = StatusCode::FAILURE;
-      if( exist<RawEvent>( m_source ) ) {
-        RawEvent *org = get<RawEvent>( m_source );
+      SmartDataPtr<RawEvent> raw(eventSvc(),m_source);
+      if( raw ) {
+        RawEvent *org = raw;
         RawEvent *res = 0;
-        sc = cloneRawEvent(org, res);
+        StatusCode sc = cloneRawEvent(org, res);
         if ( sc.isSuccess() )  {
           sc = eventSvc()->registerObject(m_destination, res);
           if ( !sc.isSuccess() )  {
@@ -49,7 +49,7 @@ namespace LHCb  {
           }
         }
       }
-      return sc;
+      return StatusCode::FAILURE;
     }
   };
 }
