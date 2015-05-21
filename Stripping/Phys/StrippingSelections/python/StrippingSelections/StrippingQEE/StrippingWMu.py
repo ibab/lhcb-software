@@ -81,7 +81,7 @@ class WMuConf( LineBuilder ) :
                                        postscale = config[ 'WMu_Postscale' ],
                                        checkPV   = False,
                                        RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
-                                       HLT2 = "HLT_PASS('Hlt2SingleMuonHighPTDecision')",
+                                       HLT2 = "HLT_PASS_RE('Hlt2.*SingleMuonHighPTDecision')",
                                        selection = sel
                                        )
 
@@ -96,7 +96,7 @@ class WMuConf( LineBuilder ) :
                                        postscale = config[ 'WMu_Postscale' ],
                                        checkPV   = False,
                                        RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
-                                       HLT2 = "HLT_PASS('Hlt2SingleMuonLowPTDecision')",
+                                       HLT2 = "HLT_PASS_RE('Hlt2.*SingleMuonLowPTDecision')",
                                        selection = sel
                                        )
 

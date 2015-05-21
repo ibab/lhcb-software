@@ -608,7 +608,7 @@ def selection_ditau( config , dtype , decay , inputs ):
     DecayDescriptor   = decay,
     CombinationCut    = parse_cuts_auto(config['ccuts'], 'ATRUE'),
     MotherCut         = parse_cuts_auto(config['mcuts'], 'ALL'),
-    ParticleCombiners = {'':'MomentumCombiner'},
+    # ParticleCombiners = {'':'MomentumCombiner'},
     # CombinationCut  = 'AALLSAMEBPV',  # Too strong even for signal?
   )
 

@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-21 - Chitsanu Khurewathanakul
+ - Fix QEE's trigger-dependent lines due to change of HLT2EW name scheme.
+ - Fill-in more missing QEE lines from S21
+
 ! 2015-05-21 - Thomas Latham
  - Bring StrippingB2KShh.py into new structure under StrippingBnoC
    - Lines that will run will be the same configuration as for 2012b in Stripping21 but will have '2015' in their names

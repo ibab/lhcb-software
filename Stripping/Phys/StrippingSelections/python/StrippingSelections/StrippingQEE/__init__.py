@@ -5,23 +5,38 @@ for QEE WG.
 
 
 _selections = (
-  'StrippingDitau',
-  'StrippingDisplVertices',
-  'StrippingH24MuLines',
+  ## These line has explicit request from users for Run-II measurement.
+  'StrippingDitau', 
+  'StrippingDisplVertices',    
+  'StrippingH24MuLines',       
   'StrippingInclbJets',
-  'StrippingLowMultINC',
-  'StrippingMuMuSS',
+  'StrippingLowMultINC',       
+  'StrippingMuMuSS',           
   'StrippingSingleTrackTIS',
   'StrippingWMu',
   'StrippingWmuAKTJets',
   'StrippingWeAKTJets',
   'StrippingZ02MuMu',
+
+  ## These lines are recovered from S21 `just-in-case`, 
+  ## but there's no explicit request in S23 yet.
+  'StrippingDijets',
+  'StrippingDY2ee',
+  'StrippingDY2MuMu',
+  'StrippingHighPtTopoJets',
+  'StrippingJets',
+  'StrippingLLP2MuX',
+  'StrippingSbarSCorrelations',
+  'StrippingStrangeBaryons',
+  'StrippingStrangeBaryonsNoPID',
+  'StrippingWe',
+  'StrippingZ02ee',
 )
 
 for _sel in _selections :  
   try :
     __import__( '%s.%s'  % ( __name__, _sel ) )
   except Exception, x:
-    print '[WARNING] Submodule %s.%s raises the excetpion "%s" and will be skipped !' % ( __name__,_sel,x )
+    print '[WARNING] Submodule %s.%s raises the exception "%s" and will be skipped !' % ( __name__,_sel,x )
 
 _strippingModules = [ val for key,val in dict(locals()).iteritems() if key.startswith('Stripping') ]
