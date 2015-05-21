@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-05-21 - Ben Couturier 
+ - Fix warnings in the similarity timing test
+
 !========================= LHCbMath v3r56 2015-04-20 =========================
 ! 2015-04-11 - Vanya Belyaev
  - and one more fix in bernstein 

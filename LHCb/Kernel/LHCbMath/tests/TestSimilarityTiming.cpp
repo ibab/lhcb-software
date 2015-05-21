@@ -248,18 +248,14 @@ TestResults compareInstructionSets(Mat &Ftype, SymMat &Otype,
                                    std::map<ISet, similarity_t>&  simFuncs,
                                    TRandom &r,
                                    const int nbentries,
-                                   const int repeatcount,
                                    const double maxConditionNumber)
 {
 
-    //Mat F;
-    //SymMat origin;
-    //fillRandomSMatrix(F, r);
-    //fillSMatrixSymWithCondNumber(origin, r, maxConditionNumber);
-
     bool hasAVX = hasInstructionSet(ISet::AVX);
     bool hasSSE3 = hasInstructionSet(ISet::SSE3);
-
+    // Ugly, need to refactor the functions
+    (void)Ftype; (void)Otype;
+     
     // Declaring our arrays
     auto F = new Mat[nbentries];
     auto O = new SymMat[nbentries];
@@ -397,16 +393,16 @@ int main()
     const int maxConditionNumber = 1e6;
 
     // Check with varying condition numbers
-
     const double cond_min = 1;
     const double cond_max = 1e15;
     int nbres = (int)(log10(cond_max) -log(cond_min) + 1);
-    TestResults results[nbres];
+    auto results = new TestResults[nbres];
+    
     Gaudi::Matrix5x5 F;
     Gaudi::SymMatrix5x5 origin;
 
     for(double cond = cond_min; cond <= cond_max; cond *= 10) {
-         results[(int)(log10(cond))] = compareInstructionSets(F, origin, vtbl_5_5, r, testsize, testcount, cond);
+      results[(int)(log10(cond))] = compareInstructionSets(F, origin, vtbl_5_5, r, testsize, cond);
     }
 
     std::cout << std::endl << "Checking with different condition numbers" << std::endl;
@@ -425,7 +421,7 @@ int main()
     TestResults tresults[testcount];
     for(int i=0; i < testcount; i++) {
         //std::cout << "Test " << i << std::endl;
-        tresults[i] = compareInstructionSets(F, origin, vtbl_5_5, r, testsize, testcount, maxConditionNumber);
+      tresults[i] = compareInstructionSets(F, origin, vtbl_5_5, r, testsize, maxConditionNumber);
     }
 
 
@@ -440,6 +436,9 @@ int main()
                   << "\t" << tresults[i].timing[ISet::AVX]
                   << std::endl;
     }
+
+    // Now cleaning up
+    delete[] results;
 
     return retval;
 }
