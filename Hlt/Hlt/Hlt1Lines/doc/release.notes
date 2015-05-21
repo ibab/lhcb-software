@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-05-21 - Dan Johnson
+ - Adjustment to Hlt1CEPLines.py to ensure VeloTracking is required by the line
+
 ! 2015-05-20 - Francesco Dettori
  - Adding a separate streamer for the DiMuonNoL0 line with inverted order of IsMuon and FitTrack in order to save time. 
 

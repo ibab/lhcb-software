@@ -13,19 +13,24 @@ from HltLine.HltLinesConfigurableUser import *
 class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
     __slots__ = {
           'SpdMult'    :   100.   # dimensionless, Spd Multiplicy cut
-        , 'MaxNVelo'   :  1000.   # dimensionless, 
-        , 'MinNVelo'   :     2.   # dimensionless, 
+        , 'MaxNVelo'   :  1000    # dimensionless, 
+        , 'MinNVelo'   :     2    # dimensionless, 
         , 'TrChi2'     :     5.   # dimensionless, 
         , 'PT'         :   200.   # MeV
         , 'P'          :  1000.   # MeV 
+        , 'VeloCutLineL0Dependency' : '.*DiHadron,lowMult'
+        , 'NoVeloCutLineL0Dependency':',*DiHadron,lowMult'
         , 'NoBiasTriggerType' : 'LumiTrigger' # dimensionless
         , 'NoBiasBeamCrossingTypeVeto' : 'BeamCrossing' # dimensionless
         }
     
     def preambulo( self ):
         ## define some "common" preambulo 
-        from HltTracking.Hlt1Tracking import TrackCandidates
-        return [ TrackCandidates( "CEP" ) ]
+        from HltTracking.Hlt1Tracking import TrackCandidates, FitTrack
+        prefix = "CEP"
+        Preambulo = [ FitTrack,
+                      TrackCandidates( prefix ) ]
+        return Preambulo
    
     def streamer_veloCutsOnly( self, name ):
         props = self.getProps()
@@ -79,18 +84,19 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
             ##
             prescale  = self.prescale,
             postscale = self.postscale,
-            L0DU = "( L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps(),   
+            L0DU = "( ( L0_DATA('Spd(Mult)') < %(SpdMult)s ) & ( L0_CHANNEL_RE('%(NoVeloCutLineL0Dependency)s') ) )" % self.getProps(),   
             ##
             algos     = self.streamer()
             )
+        from HltTracking.HltSharedTracking import MinimalVelo
         Hlt1Line(
             'CEPVeloCut',
             ##
             prescale  = self.prescale,
             postscale = self.postscale,
-            L0DU = "( L0_DATA('Spd(Mult)') < %(SpdMult)s )" % self.getProps(),   
+            L0DU = "( ( L0_DATA('Spd(Mult)') < %(SpdMult)s ) & ( L0_CHANNEL_RE('%(VeloCutLineL0Dependency)s') ) )" % self.getProps(),   
             ##
-            algos     = self.streamer_veloCutsOnly('CEPVeloCut')
+            algos     =  [ MinimalVelo ] + self.streamer_veloCutsOnly('CEPVeloCut')
             )
         Hlt1Line(
             'NonBeamBeamNoBias',
