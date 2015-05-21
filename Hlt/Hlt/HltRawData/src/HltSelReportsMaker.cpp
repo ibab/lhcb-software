@@ -468,7 +468,7 @@ StatusCode HltSelReportsMaker::execute() {
      selSumOut.addToInfo("0#SelectionID",float(s.second.intId));
     
      setPresentInfoLevel( selName );
-  
+ 
      // must also save candidates 
      int nocc(0);
 
@@ -1000,7 +1000,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
 
   const auto& daughters = object.daughtersVector();
   if( !daughters.empty() ){    
-    debug() << "Adding non-basic particle" << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Adding non-basic particle" << endmsg;
     for( const auto&  p : daughters ) hos->addToSubstructure( store_( *p ) );
     // If the particle is not basic, then add the vertex to the substructure after the daughters
     if(m_Turbo && object.endVertex() ) hos->addToSubstructure( store_( *object.endVertex() ) ); 
@@ -1015,26 +1015,25 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
       IRegistry* registry = ( container ? container->registry() : nullptr ) ;
       if( registry ){
         std::string path = registry->identifier() ;
-        boost::replace_last(path,"/Particles","/Particle2VertexRelations");
-        debug() << "Looking for relations table in " << path << endmsg;
-        Particle2Vertex::Table* table = getIfExists< Particle2Vertex::Table >(path);
-        LHCb::RecVertex::Container* pv_hlt = getIfExists< LHCb::RecVertex::Container >("Hlt/Vertex/PV3D");
-        if(table) {
-          LHCb::RecVertex* pv_maybesave = (LHCb::RecVertex*)table->relations(&object)[0].to();
-          debug() << "Refitted PV" << pv_maybesave << endmsg;
-          bool save=true;
-          for ( LHCb::RecVertex::Container::const_iterator pv = pv_hlt->begin() ; pv!=pv_hlt->end() ; ++pv){
-            debug() << "HLT PV" << *pv << endmsg;
-            if(*pv==pv_maybesave) save=false;
+        boost::replace_last(path,"/Particles","/_RefitPVs");
+        if ( msgLevel(MSG::DEBUG) ) debug() << "Looking for PVs in: " << path << endmsg;
+        LHCb::RecVertex::Container* pv_hlt = getIfExists< LHCb::RecVertex::Container >(path);
+        if(pv_hlt) {
+          if(pv_hlt->size()>0){
+            for ( LHCb::RecVertex::Container::const_iterator pv = pv_hlt->begin() ; pv!=pv_hlt->end() ; ++pv){
+              if ( msgLevel(MSG::DEBUG) ) debug() << "Refitted PV" << *pv << endmsg;
+              if ( msgLevel(MSG::DEBUG) ) debug() << "Refitted chi2 = " << (*pv)->chi2() << endmsg;
+              hos->addToSubstructure( store_( *(*pv) ) );
+            }
           }
-          if(save) hos->addToSubstructure( store_( *pv_maybesave ) );
+          else if ( msgLevel(MSG::DEBUG) ) debug() << "No refitted PVs found (inside container)" << endmsg;
         }
-        else debug() << "No refitted PVs found" << endmsg;
+        else if ( msgLevel(MSG::DEBUG) ) debug() << "No refitted PVs found" << endmsg;
       }
     }
   } 
   else {
-    debug() << "Adding basic particle" << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Adding basic particle" << endmsg;
     // particles with no daughters have substructure via ProtoParticle 
     // we don't save Protoparticles, only things they lead to
     const ProtoParticle* pp = object.proto();
@@ -1057,7 +1056,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
       if( track ){
         // charged track particle
         hos->addToSubstructure( store_( *track ) ); 
-        debug() << "requesting track store" << endmsg;
+        if ( msgLevel(MSG::DEBUG) ) debug() << "requesting track store" << endmsg;
         // if muon add muon stub too        
         const LHCb::MuonPID* muid = pp->muonPID();
         if ( muid && object.particleID().abspid()==13  &&  muid->IsMuon() ){
@@ -1107,14 +1106,14 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
         }
       }
       hos->addToSubstructure( store_( *pp ) );  
-      debug() << "requesting proto-particle store" << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "requesting proto-particle store" << endmsg;
       if( m_Turbo && pp->richPID() ) {
         hos->addToSubstructure( store_( *pp->richPID() ) );
-        debug() << "requesting RichPID store" << endmsg;
+        if ( msgLevel(MSG::DEBUG) )debug() << "requesting RichPID store" << endmsg;
       }
       if( pp->muonPID() ) {
         hos->addToSubstructure( store_( *pp->muonPID() ) );
-        debug() << "requesting MuonPID store" << endmsg;
+        if ( msgLevel(MSG::DEBUG) ) debug() << "requesting MuonPID store" << endmsg;
       }
     }
   }

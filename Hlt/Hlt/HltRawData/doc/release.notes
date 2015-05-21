@@ -5,6 +5,9 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-05-21 - Sean Benson
+ - Make sure all refitted PVs are persisted in the Turbo stream.
+
 ! 2015-05-14 - Sean Benson
  - Add RecSummary to the reports.
 
