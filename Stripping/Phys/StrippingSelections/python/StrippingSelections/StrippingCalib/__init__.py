@@ -4,11 +4,11 @@ for Calib WG.
 """
 
 _selections = [
-    "StrippingElectronID",
-    "StrippingMuIDCalib",
+    #"StrippingElectronID", #now part of StrippingPIDCalib
+    #"StrippingMuIDCalib",#now part of StrippingPIDCalib
     "StrippingNoPIDDstarWithD02RSKPi",
     "StrippingPIDCalib",
-    "StrippingV0ForPID",
+    #"StrippingV0ForPID",#now part of StrippingPIDCalib
     "StrippingCharmFromBSemiForHadronAsy",
     "StrippingCharmFromBSemiForProtonPID",
     "StrippingProtonAsym",
