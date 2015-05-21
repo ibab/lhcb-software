@@ -66,19 +66,19 @@ namespace DD4hep { namespace XML {
   bool DocumentErrorHandler::handleError(const DOMError& domError)  {
     switch(domError.getSeverity()) {
     case DOMError::DOM_SEVERITY_WARNING:
-      cout << "DOM WARNING: ";
+      cout << "XML: DOM WARNING: ";
       break;
     case DOMError::DOM_SEVERITY_ERROR:
-      cout << "DOM ERROR:   ";
+      cout << "XML: DOM ERROR:   ";
       break;
     case DOMError::DOM_SEVERITY_FATAL_ERROR:
-      cout << "DOM FATAL:   ";
+      cout << "XML: DOM FATAL:   ";
       break;
     default:
-      cout << "DOM UNKNOWN: ";
+      cout << "XML: DOM UNKNOWN: " << endl;
       return false;
     }
-    cout << "XML: " << _toString(domError.getType()) << ": " 
+    cout << _toString(domError.getType()) << ": " 
 	 << _toString(domError.getMessage()) << endl;
     DOMLocator* loc = domError.getLocation();
     if ( loc )  {
@@ -97,9 +97,9 @@ namespace DD4hep { namespace XML {
 	m.find("for attribute 'ID' is invalid Name or NMTOKEN value")!=string::npos      )
       return;
     string sys(_toString(e.getSystemId()));
-    cout << "Error at file \""  << sys
+    cout << "XML: Error at file \""  << sys
 	 << "\", line " << e.getLineNumber() << ", column " << e.getColumnNumber() << endl
-	 << "Message: " << m << endl;
+	 << "XML: Message: " << m << endl;
   }
   void DocumentErrorHandler::fatalError(const SAXParseException& e)  {
     string m(_toString(e.getMessage()));
