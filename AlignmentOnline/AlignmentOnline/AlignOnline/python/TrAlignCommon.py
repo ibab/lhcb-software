@@ -60,11 +60,6 @@ def importOnline():
   importOnline.Online = Online
   return Online
 
-def oldOnlineTag():
-  from Configurables import CondDBAccessSvc
-  svc = CondDBAccessSvc("ONLINE")
-  svc.ConnectionString = svc.ConnectionString.replace("fake", "fake_010515")
-
 def EscherCommon(true_online_version, alignment_module):
   import GaudiConf.DstConf
   import Escher.Configuration
@@ -74,10 +69,6 @@ def EscherCommon(true_online_version, alignment_module):
   from Configurables import RunChangeHandlerSvc
   Online = importOnline()
   import ConditionsMap
-
-  if '2012' in ConditionsMap.CondDBTag:
-    from Gaudi.Configuration import appendPostConfigAction
-    appendPostConfigAction(oldOnlineTag)
 
   escher = Escher.Configuration.Escher()
   escher.DDDBtag   = ConditionsMap.DDDBTag

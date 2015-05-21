@@ -40,6 +40,21 @@ from TAlignment.TrackSelections import *
 from TAlignment.AlignmentScenarios import *
 from TrAlignCommon import *
 
+class fakeEventTime(object):
+  def __init__(self, initialTime):
+    self.__initialTime = initialTime
+
+  def __call__(self):
+    from Configurables import EventClockSvc, FakeEventTime
+    clkSvc = EventClockSvc()
+    clkSvc.EventTimeDecoder = "FakeEventTime"
+    clkSvc.addTool(FakeEventTime, "FakeEventTime")
+    clkSvc.FakeEventTime.StartTime = self.__initialTime + 1
+
+    from Configurables import GaudiSequencer, createODIN
+    initSeq = GaudiSequencer("InitEscherSeq")
+    initSeq.Members.insert(0, createODIN())
+  
 def patchEscher(true_online_version, alignment_module, n = -1):
   import GaudiConf.DstConf
   import Escher.Configuration
@@ -53,6 +68,9 @@ def patchEscher(true_online_version, alignment_module, n = -1):
   clkSvc = EventClockSvc()
   clkSvc.InitialTime = initialTime
 
+  from Gaudi.Configuration import appendPostConfigAction
+  appendPostConfigAction(fakeEventTime(initialTime))
+  
   escher = EscherCommon(true_online_version, alignment_module)
   hostname = HostName()
   escher.DataType = "2012"

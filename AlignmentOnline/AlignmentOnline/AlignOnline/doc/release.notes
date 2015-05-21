@@ -2,13 +2,15 @@
 Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
-! 2015-04-22 - Stefania Vecchi
- - added test script to run Muonalignment AlignmentConfigurations/MuonAlignment.py
 
 ! 2015-05-21 - Roel Aaij
  - Make the alignment iterator better at finding the latest xml, don't require
    all versions up to the latest to be there.
- - Fix the test with old data, a bit fragile, but it runs.
+ - Fix the test with old data by using the FakeEventTime time source to always
+   get the latest IOV in the data.
+ 
+! 2015-04-22 - Stefania Vecchi
+ - added test script to run Muonalignment AlignmentConfigurations/MuonAlignment.py
 
 </PRE><H1><A NAME=v1r2>2015-04-07 AlignOnline v1r2</A></H1><PRE>
 ! 2015-04-07 - Maurizio Martinelli
