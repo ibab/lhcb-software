@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( TeslaReportAlgo )
 //=============================================================================
 TeslaReportAlgo::TeslaReportAlgo( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-: GaudiAlgorithm ( name , pSvcLocator ), m_PV3D(true), m_dist(NULL), m_check(NULL), m_conv(NULL)
+: GaudiAlgorithm ( name , pSvcLocator ), m_PV3D(true), m_refitted(false), m_dist(NULL), m_check(NULL), m_conv(NULL)
 {
   declareProperty( "TriggerLine" ,          m_inputName    = "Hlt2CharmHadD02HH_D02KK" );
   declareProperty( "OutputPrefix" ,         m_OutputPref   = "Tesla" );
@@ -198,16 +198,17 @@ StatusCode TeslaReportAlgo::execute()
   // - else algorithm uses the already created shared PV container
 
   // Detect refitted PV
-  bool refitted=false;
-  LHCb::RecVertex* refit_PV = new LHCb::RecVertex();
+  m_refitted=false;
+  std::vector<LHCb::RecVertex*> refit_PVs;
   SmartRefVector <LHCb::HltObjectSummary> substructure_PVdet = MotherRep->substructure()[0]->substructure();
   if ( msgLevel(MSG::DEBUG) ) debug() << "Checking for refitted PV" << endmsg;
   for( auto child : substructure_PVdet ){
     const LHCb::HltObjectSummary * Obj = child.target();
     if ( msgLevel(MSG::DEBUG) ) debug() << " - Object has ID: " << Obj->summarizedObjectCLID() << endmsg;
     if(Obj->summarizedObjectCLID()==LHCb::RecVertex::classID()) {
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Refitted PV detected, resurrecting that one" << endmsg;
-      refitted=true;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Refitted PV detected, resurrecting these" << endmsg;
+      m_refitted=true;
+      LHCb::RecVertex* refit_PV = new LHCb::RecVertex();
       const LHCb::HltObjectSummary::Info PV_info = Obj->numericalInfo();
       std::vector<std::string> vec_keys = Obj->numericalInfoKeys();
       if ( msgLevel(MSG::DEBUG) ) {
@@ -215,12 +216,15 @@ StatusCode TeslaReportAlgo::execute()
         for(std::vector<std::string>::iterator it = vec_keys.begin(); it!=vec_keys.end(); it++) debug() << *it << " = " << PV_info[(*it)] << endmsg;
       }
       m_conv->RecVertexObjectFromSummary(&PV_info,refit_PV,true);
-      std::stringstream ss_PVrefit;
-      ss_PVrefit << m_OutputPref << m_inputName << "/_ReFitPVs";
-      m_PVLoc=ss_PVrefit.str().c_str();
+      refit_PVs.push_back(refit_PV);
     }
   }
-  if(refitted==false) delete refit_PV;
+  //
+  if(m_refitted){
+    std::stringstream ss_PVrefit;
+    ss_PVrefit << m_OutputPref << m_inputName << "/_ReFitPVs";
+    m_PVLoc=ss_PVrefit.str().c_str();
+  }
 
   LHCb::RecVertex::Container* cont_PV = getIfExists<LHCb::RecVertex::Container>( m_PVLoc.c_str() );
   bool reusePV = true;
@@ -230,7 +234,7 @@ StatusCode TeslaReportAlgo::execute()
     put( cont_PV , m_PVLoc.c_str() );
     reusePV = false;
   }
-  if( !reusePV && !refitted && m_PV3D ){
+  if( !reusePV && !m_refitted && m_PV3D ){
     for( auto iv = vtxRep->begin(); iv!=vtxRep->end(); iv++){
       const LHCb::VertexBase* v = *iv;
       LHCb::RecVertex* vnew = new LHCb::RecVertex();
@@ -249,9 +253,9 @@ StatusCode TeslaReportAlgo::execute()
       cont_PV->insert( vnew );
     } 
   }
-  else if(refitted) {
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Inserting refitted PV to container" << endmsg;
-    cont_PV->insert(refit_PV);
+  else if(m_refitted) {
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Inserting refitted PVs to container" << endmsg;
+    for( auto pv : refit_PVs ) cont_PV->insert(pv);
   }
 
   //
@@ -335,30 +339,27 @@ StatusCode TeslaReportAlgo::execute()
       // Which PV is best for the mother???
       double min_var = -1.0;
       int key = 0;
-      if(!refitted){
-        for( auto pv : *cont_PV ){
-          double ip, chi2;
-          StatusCode test = m_dist->distance ( Part, pv, ip, chi2 );
-          if(m_PV=="Offline"){
-            if( (chi2<min_var) || (min_var<0.)){
-              min_var = chi2 ;
-              key = (pv)->key();
-            }
-          }
-          else if(m_PV=="Online"){
-            if( (ip<min_var) || (min_var<0.)){
-              min_var = ip;
-              key = (pv)->key();
-            }
-          }
-          else{
-            warning() << "Choose a valid PV requirement or use the default (online)" << endmsg;
-            return StatusCode::FAILURE;
+      for( auto pv : *cont_PV ){
+        double ip, chi2;
+        StatusCode test = m_dist->distance ( Part, pv, ip, chi2 );
+        if(m_PV=="Offline"){
+          if( (chi2<min_var) || (min_var<0.)){
+            min_var = chi2 ;
+            key = (pv)->key();
           }
         }
+        else if(m_PV=="Online"){
+          if( (ip<min_var) || (min_var<0.)){
+            min_var = ip;
+            key = (pv)->key();
+          }
+        }
+        else{
+          warning() << "Choose a valid PV requirement or use the default (offline)" << endmsg;
+          return StatusCode::SUCCESS;
+        }
       }
-      else key = refit_PV->key();
-      if( m_PV3D ) cont_P2PV->relate( Part , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
+      if( m_PV3D || m_refitted ) cont_P2PV->relate( Part , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
 
       if( motherBasic == false ) ProcessObject( 0, key, Part, Obj, cont_PV, cont_Vert, cont_Part,
                     cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_P2PV);
@@ -422,7 +423,7 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, int key, LHCb::Particle* Part, 
     newObjects_d.push_back(Part_d);
     Part->addToDaughters(Part_d);
     cont_Part->insert( Part_d );
-    if( m_PV3D ) cont_P2PV->relate( Part_d , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
+    if( m_PV3D || m_refitted ) cont_P2PV->relate( Part_d , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
 
     //
     if( d_Basic == true ){

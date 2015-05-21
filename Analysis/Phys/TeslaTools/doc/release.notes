@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-5-21 - Sean Benson
+ - Make sure all refitted PVs are resurrected and the right one chosen.
+
 ! 2015-5-20 - Sean Benson
  - Make resurrection insensitive to missing PVs (needed for smog).
 

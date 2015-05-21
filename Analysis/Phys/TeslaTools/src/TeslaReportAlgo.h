@@ -76,6 +76,7 @@ private:
        
         bool turbo;
         bool m_PV3D;
+        bool m_refitted;
 
         IDistanceCalculator *   m_dist;
         IReportCheck*   m_check;
