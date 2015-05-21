@@ -242,3 +242,15 @@ make_release()
     svn cp -m ONLINE_${1} svn+ssh://svn.cern.ch/reps/lhcb/Online/trunk/CMakeLists.txt svn+ssh://svn.cern.ch/reps/lhcb/Online/tags/ONLINE/ONLINE_${1}/;
 }
 echo "+++"
+echo "+++ Define macro \$> checkVersions "
+checkVersions()
+{
+    if test "$ONLINESYSROOT" = "";
+    then
+	eval `cmt run printenv|grep ONLINESYSROOT`;
+    fi;
+    cd ${ONLINESYSROOT}/cmt;
+    `which python` ./checkVersions.py;
+    cd -;
+}
+echo "+++"

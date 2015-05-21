@@ -6,6 +6,21 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v5r19>2015-05-20 OnlineSys v5r19</A></H1>
+<PRE>
+  Use Gaudi v26r2
+  Updated/new packages:	
+     MDF                 v3r41    DAQ
+     Controller          v0r19    Online
+     EventBuilder        v0r10    Online
+     FarmConfig          v0r15    Online
+     GaudiOnline         v2r80    Online
+     OnlineAlign         v0r6     Online
+     OnlineBase          v1r33    Online
+     ROMon               v1r53    Online
+     XML                 v0r6     Online
+</PRE>
+
 <H1><A NAME=v5r18>2015-04-23 OnlineSys v5r18</A></H1>
 <PRE>
   Use Gaudi v26r1
