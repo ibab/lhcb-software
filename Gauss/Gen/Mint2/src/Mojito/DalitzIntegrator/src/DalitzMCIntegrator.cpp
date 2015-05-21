@@ -147,7 +147,7 @@ double DalitzMCIntegrator::evaluateSum(){
   //time_t tstart = time(0);
 
   for(N=0; N < _events.size(); N++){
-    DalitzEvent thisEvt(_events[N]);
+    //DalitzEvent thisEvt(_events[N]);
     /*  
     double ps = thisEvt.phaseSpace();
     if(ps <= 0.0){
@@ -156,8 +156,8 @@ double DalitzMCIntegrator::evaluateSum(){
       continue; // should not happen.
     }
     */
-    double weight =  thisEvt.getWeight() / thisEvt.getGeneratorPdfRelativeToPhaseSpace();
-    double val = _iw.RealVal(thisEvt); // _w->RealVal() * weight;
+    double weight =  _events[N].getWeight() / _events[N].getGeneratorPdfRelativeToPhaseSpace();
+    double val = _iw.RealVal(_events[N]); // _w->RealVal() * weight;
 
     sum   += val;
     sumsq += val*val;
