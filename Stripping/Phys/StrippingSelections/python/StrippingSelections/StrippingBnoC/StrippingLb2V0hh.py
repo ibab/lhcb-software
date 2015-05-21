@@ -10,8 +10,8 @@ Exported symbols (use python help!):
 """
 
 __author__ = ["Thomas Latham", "Rafael Coutinho", "Christian Voss", "Christoph Hombach", "Daniel O'Hanlon"]
-__date__ = '23/08/2014'
-__version__ = 'Stripping21'
+__date__ = '21/05/2015'
+__version__ = 'Stripping23'
 __all__ = 'Lb2V0hhConf'
 
 from Gaudi.Configuration import *
@@ -24,7 +24,7 @@ from StandardParticles import StdNoPIDsPions as Pions
 
 default_config = {
     'NAME' : 'Lb2V0h',
-    'WGs'  : ['Charmless'],
+    'WGs'  : ['BnoC'],
     'BUILDERTYPE' : 'Lb2V0hhConf',
     'CONFIG' : {'Trk_Chi2'                 : 3.0,
                 'Trk_GhostProb'            : 0.5,
@@ -70,6 +70,12 @@ default_config = {
                 'Lb_LL_FDChi2'             : 30.0,
                 'Lb_LD_FDChi2'             : 30.0,
                 'GEC_MaxTracks'            : 250,
+                # 2012 Triggers
+                'HLT1Dec'                  : 'Hlt1TrackAllL0Decision',
+                'HLT2Dec'                  : 'Hlt2Topo[234]Body.*Decision',
+                # 2015 Triggers
+                #'HLT1Dec'                  : 'Hlt1(Two)?TrackMVADecision',
+                #'HLT2Dec'                  : 'Hlt2Topo[234]BodyDecision',
                 'Prescale'                 : 1.0,
                 'Postscale'                : 1.0,
                 'RelatedInfoTools' : [    { "Type" : "RelInfoConeVariables", 
@@ -178,6 +184,8 @@ class Lb2V0hhConf(LineBuilder) :
                               'Lb_LD_FDChi2',
                               'Lb_LL_FDChi2',
                               'GEC_MaxTracks',
+                              'HLT1Dec',
+                              'HLT2Dec',
                               'Prescale',
                               'Postscale',
                               'RelatedInfoTools'
@@ -190,7 +198,10 @@ class Lb2V0hhConf(LineBuilder) :
         GECCode = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" % config['GEC_MaxTracks'],
                    'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
-        self.hltFilter = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))"
+        self.hlt1Filter = {'Code' : "HLT_PASS_RE('%s')" % config['HLT1Dec'],
+                           'Preambulo' : ["from LoKiCore.functions import *"]}
+        self.hlt2Filter = {'Code' : "HLT_PASS_RE('%s')" % config['HLT2Dec'],
+                           'Preambulo' : ["from LoKiCore.functions import *"]}
 
         self.pions   = Pions
 
@@ -218,7 +229,8 @@ class Lb2V0hhConf(LineBuilder) :
             extra = {}
 
             if 'SS' in selName:
-                extra['HLT'] = self.hltFilter
+                extra['HLT1'] = self.hlt1Filter
+                extra['HLT2'] = self.hlt2Filter
 
             line = StrippingLine(selName + 'Line',
                                  selection = sel,

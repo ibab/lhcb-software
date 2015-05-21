@@ -67,6 +67,12 @@ default_config = {
                      'B_LD_MVA'                : -0.20,
                      'GEC_MaxTracks'           : 250,
                      'ConeAngle'               : 1.5, 
+                     # 2012 Triggers
+                     'HLT1Dec'                 : 'Hlt1TrackAllL0Decision',
+                     'HLT2Dec'                 : 'Hlt2Topo[234]Body.*Decision',
+                     # 2015 Triggers
+                     #'HLT1Dec'                 : 'Hlt1(Two)?TrackMVADecision',
+                     #'HLT2Dec'                 : 'Hlt2Topo[234]BodyDecision',
                      'Prescale'                : 1.0,
                      'Prescale_SameSign'       : 1.0,
                      'Postscale'               : 1.0
@@ -149,6 +155,8 @@ class B2KShhConf(LineBuilder) :
                               'B_LD_MVA', 
                               'GEC_MaxTracks',
                               'ConeAngle', 
+                              'HLT1Dec',
+                              'HLT2Dec',
                               'Prescale',
                               'Prescale_SameSign',
                               'Postscale'
@@ -165,10 +173,10 @@ class B2KShhConf(LineBuilder) :
         GECCode = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" % config['GEC_MaxTracks'],
                    'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
-        Hlt1Filter = {'Code' : "HLT_PASS_RE('Hlt1TrackAllL0Decision')",
+        Hlt1Filter = {'Code' : "HLT_PASS_RE('%s')" % config['HLT1Dec'],
                      'Preambulo' : ["from LoKiCore.functions import *"]}
                           
-        Hlt2Filter = {'Code' : "HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')",
+        Hlt2Filter = {'Code' : "HLT_PASS_RE('%s')" % config['HLT2Dec'],
                      'Preambulo' : ["from LoKiCore.functions import *"]}
                           
 

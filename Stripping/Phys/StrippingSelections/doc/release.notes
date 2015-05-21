@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-21 - Thomas Latham
+ - Bring StrippingLb2V0hh.py into new structure under StrippingBnoC
+   - Updated lines to split the HLT cuts into HLT1 and HLT2
+ - Modified B2KShh and Lb2V0hh to take HLT1 and HLT2 cuts from the config dictionary
+   - Should allow simple switch to 2015 line names (included but commented out)
+
 ! 2015-05-21 - Chitsanu Khurewathanakul
  - Fix QEE's trigger-dependent lines due to change of HLT2EW name scheme.
  - Fill-in more missing QEE lines from S21
