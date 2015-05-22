@@ -112,7 +112,7 @@ class TrackEffDiMuonLines(Hlt2LinesConfigurableUser):
         stages = self.stages()
         from HltLine.HltLine import Hlt2Line
         for (nickname, algos) in self.algorithms(stages).iteritems():
-            linename = 'TrackEffDiMuon' + nickname
+            linename = 'TrackEffDiMuon' + nickname + 'TurboCalib'
             Hlt2Line(linename, prescale = self.prescale,
                      algos = algos, postscale = self.postscale,
                      L0DU = self.getProp('Common').get('L0Filter'))

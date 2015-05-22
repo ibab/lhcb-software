@@ -6,19 +6,6 @@ class TurboLines(Hlt2LinesConfigurableUser) :
                  'CloneLines'  : {'DiMuon' : ['JPsi', 
                                               'Psi2S', 
                                               'B'],
-			          'TrackEffDiMuon': ['MuonTTPlusTagged',
-					             'MuonTTMinusTagged',
-					             'VeloMuonPlusTagged',
-					             'VeloMuonMinusTagged',
-					             'DownstreamPlusTagged',
-					             'DownstreamMinusTagged',
-					             'MuonTTPlusMatched',
-					             'MuonTTMinusMatched',
-					             'VeloMuonPlusMatched',
-					             'VeloMuonMinusMatched',
-					             'DownstreamPlusMatched',
-					             'DownstreamMinusMatched'
-					            ],
 			         }
                  }
 
