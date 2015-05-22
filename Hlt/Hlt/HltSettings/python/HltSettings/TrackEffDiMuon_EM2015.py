@@ -19,18 +19,18 @@ class TrackEffDiMuon_EM2015 :
         """
 
         lines = [
-            'Hlt2TrackEffDiMuonMuonTTPlusTaggedTurbo',
-            'Hlt2TrackEffDiMuonMuonTTMinusTaggedTurbo',
-            'Hlt2TrackEffDiMuonVeloMuonPlusTaggedTurbo',
-            'Hlt2TrackEffDiMuonVeloMuonMinusTaggedTurbo',
-            'Hlt2TrackEffDiMuonDownstreamPlusTaggedTurbo',
-            'Hlt2TrackEffDiMuonDownstreamMinusTaggedTurbo',
-            'Hlt2TrackEffDiMuonMuonTTPlusMatchedTurbo',
-            'Hlt2TrackEffDiMuonMuonTTMinusMatchedTurbo',
-            'Hlt2TrackEffDiMuonVeloMuonPlusMatchedTurbo',
-            'Hlt2TrackEffDiMuonVeloMuonMinusMatchedTurbo',
-            'Hlt2TrackEffDiMuonDownstreamPlusMatchedTurbo',
-            'Hlt2TrackEffDiMuonDownstreamMinusMatchedTurbo',
+            'Hlt2TrackEffDiMuonMuonTTPlusTaggedTurboCalib',
+            'Hlt2TrackEffDiMuonMuonTTMinusTaggedTurboCalib',
+            'Hlt2TrackEffDiMuonVeloMuonPlusTaggedTurboCalib',
+            'Hlt2TrackEffDiMuonVeloMuonMinusTaggedTurboCalib',
+            'Hlt2TrackEffDiMuonDownstreamPlusTaggedTurboCalib',
+            'Hlt2TrackEffDiMuonDownstreamMinusTaggedTurboCalib',
+            'Hlt2TrackEffDiMuonMuonTTPlusMatchedTurboCalib',
+            'Hlt2TrackEffDiMuonMuonTTMinusMatchedTurboCalib',
+            'Hlt2TrackEffDiMuonVeloMuonPlusMatchedTurboCalib',
+            'Hlt2TrackEffDiMuonVeloMuonMinusMatchedTurboCalib',
+            'Hlt2TrackEffDiMuonDownstreamPlusMatchedTurboCalib',
+            'Hlt2TrackEffDiMuonDownstreamMinusMatchedTurboCalib',
         ]
 
 
