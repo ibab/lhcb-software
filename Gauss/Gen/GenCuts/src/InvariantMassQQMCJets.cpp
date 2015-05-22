@@ -272,7 +272,7 @@ std::vector<fastjet::PseudoJet> LoKi::InvariantMassQQMCJets::buildMCJets(const H
   LoKi::Types::GCut cut = LoKi::Cuts::GVALID ;
   
   //Cut to define particles with no descendants, as input for the jets
-  LoKi::Types::GCut m_no_daughters = m_no_daughters = ( LoKi::Cuts::GNINTREE( LoKi::Cuts::GVALID , HepMC::descendants) == 0 );
+  LoKi::Types::GCut m_no_daughters = ( LoKi::Cuts::GNINTREE( LoKi::Cuts::GVALID , HepMC::descendants) == 0 );
   // Cut to find out if a particle comes from a b quark. 
   LoKi::Types::GCut m_cut_from_b = ( LoKi::Cuts::GNINTREE( LoKi::Cuts::GBEAUTY , HepMC::ancestors) > 0 );
 
