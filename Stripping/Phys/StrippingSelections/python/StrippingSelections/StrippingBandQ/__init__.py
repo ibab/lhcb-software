@@ -8,7 +8,6 @@ _selections = (
     'StrippingB2JpsiXforEM_s'   ,
     'StrippingXibc'             ,
     'StrippingCC2DD'            ,
-    'StrippingB2JpsiXforEM_s'   ,
     'StrippingBc3h'             , 
     'StrippingCharmAssociative' , 
     'StrippingPsiX0'            , ## no need to run in production 

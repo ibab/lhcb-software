@@ -56,7 +56,7 @@ __all__ = (
 
 
 default_config = {
-    'NAME'              : 'FullDSTDiMuon',
+    'TestFullDSTDiMuon':{
     'BUILDERTYPE'       :       'DiMuonConf',
     'CONFIG'    : {
         'MicroDST'                                 :  False   ,
@@ -83,7 +83,7 @@ default_config = {
                                                        "Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision%TIS" : 0 },
 
         # DiMuon Same Sign line
-        'DiMuonSameSign_Prescale'                  :     0.05  ,
+        'DiMuonSameSign_Prescale'                  :    0.05  ,
         'DiMuonSameSign_Postscale'                 :     1.   ,
         'DiMuonSameSign_checkPV'                   : False    ,
 
@@ -224,11 +224,20 @@ default_config = {
         'Psi2MuMuDetached_PT'                              : -1000.   ,   # MeV, no cut now
         'Psi2MuMuDetached_LTCuts'                          :  " & ((BPVDLS>3)|(BPVDLS<-3))"
         },
-    'STREAMS' : [ 'Dimuon' ],
+    'STREAMS' : { 'Dimuon' : [
+    "StrippingTestFullDSTDiMuonPsi2MuMuTOSLine",
+    "StrippingTestFullDSTDiMuonJpsi2MuMuTOSLine",
+    "StrippingTestFullDSTDiMuonPsi2MuMuDetachedLine",
+    "StrippingTestFullDSTDiMuonJpsi2MuMuDetachedLine",
+    "StrippingTestFullDSTDiMuonDiMuonNoPVLine",
+    'StrippingTestFullDSTDiMuonDiMuonHighMassLine',
+    'StrippingTestFullDSTDiMuonDiMuonHighMassSameSignLine'
+    
+    ]},
     'WGs'    : [ 'BandQ' ]
-    }
+    },
 
-MicroDSTDiMuon = {
+    'TestMicroDSTDiMuon' :{
     'BUILDERTYPE' : 'DiMuonConf',
     'CONFIG' : {
         'MicroDST'                                 :   True   ,
@@ -396,8 +405,12 @@ MicroDSTDiMuon = {
         'Psi2MuMuDetached_PT'                              : -1000.   ,   # MeV, no cut now
         'Psi2MuMuDetached_LTCuts'                          :   " & ((BPVDLS>3) | (BPVDLS<-3))"    
         }, 
-    'STREAMS' : [ 'Leptonic' ] ,
+    'STREAMS' : {'Leptonic' :[
+                      "StrippingTestMicroDSTDiMuonDiMuonSameSignLine",
+                      "StrippingTestMicroDSTDiMuonDiMuonIncLine"
+                      ]} ,
     'WGs'    : [ 'BandQ' ]
+    }
     }
 
 

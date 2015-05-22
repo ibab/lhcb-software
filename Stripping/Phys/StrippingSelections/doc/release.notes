@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-22 - Roberta Cardinale
+ - Fix names in StrippingBandQ/StrippingDiMuonNew.py and StrippingDiMuonInherit.py
+
 ! 2015-05-21 - Thomas Latham
  - Bring StrippingLb2V0hh.py into new structure under StrippingBnoC
    - Updated lines to split the HLT cuts into HLT1 and HLT2
