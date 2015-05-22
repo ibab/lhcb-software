@@ -4,6 +4,13 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-05-22 - Rosen Matev
+ - tweak beam-gas lines in Physics_draftEM2015:
+   - Switch off (prescale to 0) Hlt1BeamGasCrossingForcedRecoFullZ
+     (caused rate spikes at run start in the past)
+   - Switch off (prescale to 0) Hlt1BeamGasCrossingEnhanced1/2
+   - Remove rate limits on Hlt1BeamGasBeam1/2. Input rate controlled by ODIN.
+
 !========================= HltSettings v6r14 2015-05-22 =========================
 
 ! 2015-05-22 - Albert Puig
