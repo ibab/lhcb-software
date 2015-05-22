@@ -138,7 +138,7 @@ class Checkpoint:
     ldir = self.checkpointRelativeDir()
     relocate_path = ldir+sep+self.torrent_file
     self.initProcess().setupCheckpointFile() \
-        .output('echo "[ERROR] Setup restore process for %s";'%(self.task_type,)) \
+        .output('echo "[DEBUG] Setup restore process for %s";'%(self.task_type,)) \
         .output('export APP_STARTUP_OPTS=-restore;') \
         .output('RESTORE_CMD="exec -a ${UTGID} '+self.restore+' -p 4 -e -l '+\
                   self.lib_dir+' -i '+self.target_path+'";') \
