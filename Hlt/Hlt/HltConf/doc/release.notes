@@ -4,6 +4,11 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-05-22 - Sascha Stahl
+ - Configuration.py : Add Hlt1TrackMonitor to the monitoring sequence (needs Hlt/HltGlobalMonitor).
+   Disable with HltConf().EnableHlt1TrackMonitor = False and change rate with
+	 HltConf().Hlt1TrackMonitorPrescale = 0.005 (default). 
+
 - 2015-05-22 - V. Gligorov
  - Configuration.py : define routing bit 90 for the TurboCalib stream
 

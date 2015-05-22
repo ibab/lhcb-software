@@ -70,6 +70,7 @@ class HltConf(LHCbConfigurableUser):
                 , "EnableHltGlobalMonitor"         : True
                 , "EnableHltL0GlobalMonitor"       : True
                 , "EnableBeetleSyncMonitor"        : False
+                , "EnableHlt1TrackMonitor"         : True
                 , "EnableHltDecReports"            : True
                 , "EnableHltSelReports"            : True
                 , "EnableHltVtxReports"            : True
@@ -86,6 +87,7 @@ class HltConf(LHCbConfigurableUser):
                 , 'SkipHltRawBankOnRejectedEvents' : True
                 , 'LumiBankKillerPredicate'        : "(HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision'))"
                 , 'BeetleSyncMonitorRate'          : 5000
+                , 'Hlt1TrackMonitorPrescale'       : 0.005
                 , "LumiBankKillerAcceptFraction"   : 0.9999     # fraction of lumi-only events where raw event is stripped down
                                                                 # (only matters if EnablelumiEventWriting = True)
                 , "AdditionalHlt1Lines"            : []         # must be configured
@@ -699,6 +701,7 @@ class HltConf(LHCbConfigurableUser):
         from Configurables        import GaudiSequencer as Sequence
         from Configurables        import HltGlobalMonitor, HltL0GlobalMonitor
         from Configurables        import HltBeetleSyncMonitor
+        from Configurables        import Hlt1TrackMonitor
         from Configurables        import bankKiller
         from Configurables        import LoKi__HDRFilter   as HltFilter
         from Configurables        import HltSelReportsMaker, HltSelReportsWriter
@@ -715,7 +718,8 @@ class HltConf(LHCbConfigurableUser):
         if sets and hasattr(sets, 'StripEndSequence') and getattr(sets,'StripEndSequence'):
             log.warning('### Setting requests stripped down HltEndSequence ###')
             strip = getattr(sets,'StripEndSequence')
-            for option in ['EnableHltGlobalMonitor','EnableHltL0GlobalMonitor','EnableBeetleSyncMonitor','EnableHltSelReports','EnableHltVtxReports', 'EnableHltTrkReports','EnableLumiEventWriting']:
+            for option in ['EnableHltGlobalMonitor','EnableHltL0GlobalMonitor','EnableBeetleSyncMonitor','EnableHlt1TrackMonitor',
+                           'EnableHltSelReports','EnableHltVtxReports', 'EnableHltTrkReports','EnableLumiEventWriting']:
                 self._safeSet(option, (option in strip))
 
 
@@ -736,6 +740,18 @@ class HltConf(LHCbConfigurableUser):
                                  + DecodeIT.members() + [ HltBeetleSyncMonitor() ]
         BeetleMonitorAccept.Members = [ BeetleMonitor, Filter( 'ForceAccept', Code = 'FALL' ) ]
 
+        # Setup the track monitoring
+        import HltTracking
+        from HltTracking.HltSharedTracking import MinimalVelo, VeloTTTracking, HltHPTTracking
+        from Configurables import DeterministicPrescaler
+        Hlt1TrackMonitorSequence = Sequence( 'Hlt1TrackMonitorSequence' )
+        Hlt1TrackMonitorPrescaler = DeterministicPrescaler("Hlt1TrackMonitorPrescaler", AcceptFraction = self.getProp("Hlt1TrackMonitorPrescale") )
+        Hlt1TrackMonitorSequence.Members = [ Hlt1TrackMonitorPrescaler ] + HltHPTTracking.members() + [ Hlt1TrackMonitor() ]
+        Hlt1TrackMonitor().VeloTrackLocation = MinimalVelo.outputSelection()
+        Hlt1TrackMonitor().VeloTTTrackLocation = VeloTTTracking.outputSelection()
+        Hlt1TrackMonitor().ForwardTrackLocation = HltHPTTracking.outputSelection()
+        Hlt1TrackMonitor().PropertiesPrint = True
+
         # make sure we encode from the locations the decoders will use...
         from DAQSys.Decoders import DecoderDB
         hlt1_decrep_loc = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]
@@ -751,11 +767,12 @@ class HltConf(LHCbConfigurableUser):
         # note: the following is a list and not a dict, as we depend on the
         # order of iterating through it!!!
         _endlist = ( # ( "RequireL0ForEndSequence",  )
-                     ( "EnableHltGlobalMonitor",    HltGlobalMonitor , 'HltGlobalMonitor',  {'Hlt1DecReports': hlt1_decrep_loc,'Hlt2DecReports' : hlt2_decrep_loc,  } ),
-                     ( "EnableHltL0GlobalMonitor",  type(l0decoder), l0decoder.getName(), {} ),
-                     ( "EnableHltL0GlobalMonitor",  HltL0GlobalMonitor , 'HltL0GlobalMonitor', {'Hlt1DecReports': hlt1_decrep_loc,'Hlt2DecReports' : hlt2_decrep_loc,  } ),
-                     ( "EnableBeetleSyncMonitor",   BeetleMonitorAccept , 'BeetleMonitorAccept', { } )
-                   )
+            ( "EnableHltGlobalMonitor",    HltGlobalMonitor , 'HltGlobalMonitor',  {'Hlt1DecReports': hlt1_decrep_loc,'Hlt2DecReports' : hlt2_decrep_loc,  } ),
+            ( "EnableHltL0GlobalMonitor",  type(l0decoder), l0decoder.getName(), {} ),
+            ( "EnableHltL0GlobalMonitor",  HltL0GlobalMonitor , 'HltL0GlobalMonitor', {'Hlt1DecReports': hlt1_decrep_loc,'Hlt2DecReports' : hlt2_decrep_loc,  } ),
+            ( "EnableBeetleSyncMonitor",   Sequence , 'BeetleMonitorAccept', { }),
+            ( "EnableHlt1TrackMonitor",  type(Hlt1TrackMonitorSequence), Hlt1TrackMonitorSequence.getName(),  {})
+            )
 
         ### store the BDT response (and a bit more) through ExtraInfo on particles:
         sel_rep_opts =  dict( InfoLevelDecision = 3, InfoLevelTrack = 3, InfoLevelRecVertex = 3, InfoLevelCaloCluster = 3, InfoLevelParticle = 3 )
