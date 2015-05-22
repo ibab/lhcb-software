@@ -50,10 +50,10 @@ class B2XGammaLines(RadiativeLineBuilder):
                                                         '[B0 -> K*(892)0 gamma]cc',
                                                         kstar)
         # Build stages
-        return {'Bd2KstGamma'           : [TrackGEC(), PV3D('Hlt2'), bd2kstgamma],
-                'Bs2PhiGamma'           : [TrackGEC(), PV3D('Hlt2'), bs2phigamma],
-                'Bs2PhiGammaUnbiased'   : [TrackGEC(), PV3D('Hlt2'), bs2phigamma_unbiased],
-                'Bd2KstGammaULUnbiased' : [TrackGEC(), PV3D('Hlt2'), bd2kstgamma_unbiased]}
+        return {'RadiativeBd2KstGamma'           : [TrackGEC(), PV3D('Hlt2'), bd2kstgamma],
+                'RadiativeBs2PhiGamma'           : [TrackGEC(), PV3D('Hlt2'), bs2phigamma],
+                'RadiativeBs2PhiGammaUnbiased'   : [TrackGEC(), PV3D('Hlt2'), bs2phigamma_unbiased],
+                'RadiativeBd2KstGammaULUnbiased' : [TrackGEC(), PV3D('Hlt2'), bd2kstgamma_unbiased]}
 
     @staticmethod
     def get_cuts():

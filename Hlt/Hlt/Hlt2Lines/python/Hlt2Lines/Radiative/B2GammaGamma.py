@@ -46,10 +46,10 @@ class B2GammaGammaLines(RadiativeLineBuilder):
                                              [HardCALOGamma])
         BDTFilter_None = FilterBDTGammaGamma('None', [bs2gammagamma], cuts['B2GammaGamma']["BDT_MIN"])
 
-        return {'B2GammaGammaLL'     : [TrackGEC(), PV3D('Hlt2'), BDTFilter_LL],
-                'B2GammaGammaDD'     : [TrackGEC(), PV3D('Hlt2'), BDTFilter_DD],
-                'B2GammaGammaDouble' : [TrackGEC(), PV3D('Hlt2'), bs2gammagammaDouble],
-                'B2GammaGamma'       : [TrackGEC(), PV3D('Hlt2'), BDTFilter_None]}
+        return {'RadiativeB2GammaGammaLL'     : [TrackGEC(), PV3D('Hlt2'), BDTFilter_LL],
+                'RadiativeB2GammaGammaDD'     : [TrackGEC(), PV3D('Hlt2'), BDTFilter_DD],
+                'RadiativeB2GammaGammaDouble' : [TrackGEC(), PV3D('Hlt2'), bs2gammagammaDouble],
+                'RadiativeB2GammaGamma'       : [TrackGEC(), PV3D('Hlt2'), BDTFilter_None]}
 
     @staticmethod
     def get_cuts():

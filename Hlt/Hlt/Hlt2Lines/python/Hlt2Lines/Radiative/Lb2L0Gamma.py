@@ -21,17 +21,17 @@ class Lb2L0GammaLines(RadiativeLineBuilder):
         # lambda0_dd = LambdaFilter("Lambda0LL", [LambdaDD])
 
         # Build stages
-        stages = {'Lb2L0GammaLL': [TrackGEC(),
-                                   PV3D('Hlt2'),
-                                   Lb2L0GammaCombiner('Lb2L0GammaLL',
-                                                      '[Lambda_b0 -> Lambda0 gamma]cc',
-                                                      lambda0_ll)],
-                  'Lb2L0GammaEELL': [TrackGEC(),
-                                     PV3D('Hlt2'),
-                                     B2XGammaCombiner('Lb2L0GammaEELL',
-                                                      '[Lambda_b0 -> Lambda0 gamma]cc',
-                                                      lambda0_ll,
-                                                      True)]}
+        stages = {'RadiativeLb2L0GammaLL': [TrackGEC(),
+                                            PV3D('Hlt2'),
+                                            Lb2L0GammaCombiner('Lb2L0GammaLL',
+                                                               '[Lambda_b0 -> Lambda0 gamma]cc',
+                                                               lambda0_ll)],
+                  'RadiativeLb2L0GammaEELL': [TrackGEC(),
+                                              PV3D('Hlt2'),
+                                              B2XGammaCombiner('Lb2L0GammaEELL',
+                                                               '[Lambda_b0 -> Lambda0 gamma]cc',
+                                                               lambda0_ll,
+                                                               True)]}
         return stages
 
     @staticmethod

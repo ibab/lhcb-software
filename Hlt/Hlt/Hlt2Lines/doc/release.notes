@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-22 - Albert Puig
+ - Rename Radiative lines to include the folder name prefix
+
 ! 2015-05-21 - Sean Benson
  - New RecoTest Turbo line for nightly test of PV refitting in the HLT.
  - Add ID to charm line used for nightly.
