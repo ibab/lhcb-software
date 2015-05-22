@@ -1,3 +1,7 @@
+2015-05-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* getpack: LBCORE-821: allow plain checkout (do not create extra files)
+
 2015-05-06  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* buildGeneralDoc: LBCORE-802: made the main script Jenkins-aware

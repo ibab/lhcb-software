@@ -421,6 +421,8 @@ class GetPack(Script):
                                help='use "export" instead of "checkout" to get the packages')
         self.parser.add_option('--ignore-project-info', action='store_true',
                                help='do not use the project.info file')
+        self.parser.add_option('--plain', action='store_true',
+                               help='just plain checkout, do not add special files')
         self.parser.set_defaults(protocol = "default",
                                  switch = False,
                                  version_dirs = False,
@@ -432,6 +434,7 @@ class GetPack(Script):
                                  eclipse = None,
                                  eclipse_config = True,
                                  export = False,
+                                 plain = False,
                                  )
         if "GETPACK_USER" in os.environ:
             self.parser.set_defaults(user = os.environ["GETPACK_USER"])
@@ -606,7 +609,8 @@ class GetPack(Script):
             rep.checkout(package, version, vers_dir=self.options.version_dirs,
                          eclipse=self.options.eclipse,
                          ifExistsAction=self._ifExistsAction,
-                         export=self.options.export)
+                         export=self.options.export,
+                         plain=self.options.plain)
         except TypeError:
             #need to have this option in case it's a CVS user repository, don't want to break those immediately!
             rep.checkout(package, version, vers_dir = self.options.version_dirs, eclipse = self.options.eclipse)
@@ -1024,11 +1028,12 @@ class GetPack(Script):
             self.project_name = self.askProject()
 
         proj = self.checkoutProject(self.project_name, self.project_version)
-        # create a project Makefile for the checked out project (if not present)
-        createProjectMakefile(os.path.join(proj[2], "Makefile"))
-        if os.path.exists(os.path.join(proj[2], "CMakeLists.txt")):
-            # note that an existing toolchain will not be overwritten
-            createToolchainFile(os.path.join(proj[2], 'toolchain.cmake'))
+        if not self.options.plain:
+            # create a project Makefile for the checked out project (if not present)
+            createProjectMakefile(os.path.join(proj[2], "Makefile"))
+            if os.path.exists(os.path.join(proj[2], "CMakeLists.txt")):
+                # note that an existing toolchain will not be overwritten
+                createToolchainFile(os.path.join(proj[2], 'toolchain.cmake'))
         if self.options.recursive:
             packages = None
             # try to get the list of packages from project.info

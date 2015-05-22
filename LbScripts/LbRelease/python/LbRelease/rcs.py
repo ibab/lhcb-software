@@ -245,6 +245,9 @@ class RevisionControlSystem(object):
         is created with the content of the parameter 'version'.
         """
         cmt_dir = os.path.join(base, "cmt")
+        if not os.path.exists(cmt_dir):
+            # we may not have a CMT configuration
+            return
         found_version = None
         try:
             for l in open(os.path.join(cmt_dir, "requirements")):
@@ -377,7 +380,7 @@ class CVS(RevisionControlSystem):
         return tags
 
     def checkout(self, module, version = "head", dest = None, vers_dir = False,
-                 project = False, eclipse = False, export = False):
+                 project = False, eclipse = False, export = False, plain = False):
         """
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used.
@@ -406,7 +409,7 @@ class CVS(RevisionControlSystem):
         options += (module,)
         apply(_cvs, options, {"cwd": dest, "stdout": None, "stderr": None})
 
-        if not vers_dir and not project:
+        if not plain and not vers_dir and not project:
             # create version.cmt file
             self._create_vers_cmt(os.path.join(dest, module), version)
 
@@ -942,7 +945,7 @@ class SubversionCmd(RevisionControlSystem):
 
     def checkout(self, module, version = "head", dest = None, vers_dir = False,
                  project = False, eclipse = False, global_tag = False,
-                 ifExistsAction=None, export=False):
+                 ifExistsAction=None, export=False, plain = False):
         """
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used.
@@ -1038,7 +1041,7 @@ class SubversionCmd(RevisionControlSystem):
                         _svn('export', join(src, subdir), join(dst, subdir),
                              stdout = None, stderr = None)
 
-        if not vers_dir and not project:
+        if not plain and not vers_dir and not project:
             # create version.cmt file
             self._create_vers_cmt(join(dest, module), version)
 
