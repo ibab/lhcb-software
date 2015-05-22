@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-22 - Jon Harrison
+ - Changes to StrippingRD/StrippingPhiToKSKS.py to remove duplicate candidates
+
 ! 2015-05-22 - Alessandro Morda'
  - Changes done in the StrippingB2KstTauTau.py and StrippingZVTOP.py
 

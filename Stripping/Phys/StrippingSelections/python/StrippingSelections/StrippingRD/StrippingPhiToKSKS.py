@@ -216,16 +216,19 @@ def VMaker(_name,_RequiredSelections,_DecayDescriptor,_Filter,conf,_prescale):
         _CombiCut += " (APT > %(Phi_PT_MIN)s *MeV) & (AM < %(Phi_MASS_MAX)s + 30*MeV) & (ACUTDOCACHI2(%(Phi_DOCACHI2_MAX)s,''))" %conf
         _MotherCut = "(M < %(Phi_MASS_MAX)s +20*MeV) & (VFASPF(VCHI2/VDOF) < %(Phi_VCHI2NDOF_MAX)s) & (MIPCHI2DV(PRIMARY) < %(Phi_IPCHI2_MAX)s)" %conf
         _MassFilter = FilterDesktop(name = "MassFilter_"+_name,Code = "(M < %(Phi_MASS_MAX)s *MeV)" %conf)
+        _MassFilterDTF = FilterDesktop(name = "MassFilterDTF_"+_name,Code = "(DTF_FUN(M,True,'phi(1020)') < %(Phi_MASS_MAX)s *MeV)" %conf)
     elif 'J/psi(1S)' in _DecayDescriptor:
         _CombiCut += " (ADAMASS('J/psi(1S)') < %(JPsi_MASS_WIN)s +30*MeV) & (APT > %(JPsi_PT_MIN)s*MeV)"\
             "& (ACUTDOCACHI2(%(JPsi_DOCACHI2_MAX)s,''))" %conf
         _MotherCut = "(DMASS('J/psi(1S)') < %(JPsi_MASS_WIN)s +20*MeV)"\
             "& (VFASPF(VCHI2/VDOF) < %(JPsi_VCHI2NDOF_MAX)s) & (MIPCHI2DV(PRIMARY) < %(JPsi_IPCHI2_MAX)s)" %conf
         _MassFilter = FilterDesktop(name = "MassFilter_"+_name,Code = "(DMASS('J/psi(1S)') < %(JPsi_MASS_WIN)s *MeV)" %conf)
+        _MassFilterDTF = FilterDesktop(name = "MassFilterDTF_"+_name,Code = "(abs(DTF_FUN(M,True,'J/psi(1S)') - 3097) < %(JPsi_MASS_WIN)s *MeV)" %conf)
     elif 'D0' in _DecayDescriptor:
         _CombiCut += " (APT > %(D0_PT_MIN)s *MeV) & (ADAMASS('D0') < %(D0_MASS_WIN)s + 30*MeV) & (ACUTDOCACHI2(%(D0_DOCACHI2_MAX)s,''))" %conf
         _MotherCut = "(DMASS('D0') < %(D0_MASS_WIN)s + 20*MeV) & (VFASPF(VCHI2/VDOF) < %(D0_VCHI2NDOF_MAX)s) & (MIPCHI2DV(PRIMARY) < %(D0_IPCHI2_MAX)s)" %conf
         _MassFilter = FilterDesktop(name = "MassFilter_"+_name,Code = "(DMASS('D0') < %(D0_MASS_WIN)s *MeV)" %conf)
+        _MassFilterDTF = FilterDesktop(name = "MassFilterDTF_"+_name,Code = "(abs(DTF_FUN(M,True,'D0') - 1865) < %(D0_MASS_WIN)s *MeV)" %conf)
     
         
     Comb = CombineParticles( name = "Comb_"+_name,
@@ -238,19 +241,7 @@ def VMaker(_name,_RequiredSelections,_DecayDescriptor,_Filter,conf,_prescale):
                     RequiredSelections = _RequiredSelections)
         
     if conf['DoDTF'] == True:
-        _MassConstraints = []
-        if 'KS0' in _DecayDescriptor:
-            _MassConstraints = ['KS0']
-        FITTER = FitDecayTrees (
-            name = "FITTER_"+_name,
-            Code = "DECTREE('" + _DecayDescriptor +"')",
-            MaxChi2PerDoF = 10,
-            MassConstraints = _MassConstraints,
-            UsePVConstraint = True)
-        FITTER_SEL = Selection("FITTER_SEL_"+_name,
-                               Algorithm = FITTER,
-                               RequiredSelections = [Sel])
-        MASS_FILTER = Selection("MASS_FILTER_"+_name,Algorithm = _MassFilter,RequiredSelections = [FITTER_SEL])
+        MASS_FILTER = Selection("MASS_FILTER_"+_name,Algorithm = _MassFilterDTF,RequiredSelections = [Sel])
     else:
         MASS_FILTER = Selection("MASS_FILTER_"+_name,Algorithm = _MassFilter,RequiredSelections = [Sel])
         
