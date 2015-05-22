@@ -19,22 +19,28 @@ export HOME=/home/$(/usr/bin/whoami)
 #
 . /group/hlt/MOORE/${MOOREONLINE_VERSION}/InstallArea/${CMTCONFIG}/setupMoore.sh;
 #
-
-eval `python ${FARMCONFIGROOT}/job/ConfigureShell.py`;
+# Enable next line for Debug printout
+#python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -s;
+eval `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -s`;
 renice 19 -p $$>>/dev/null
 #
 if test "${MOORESTARTUP_MODE}" = "RESTORE";      ## RunInfo flag=2
     then
-    python ${FARMCONFIGROOT}/job/ConfigureFromCheckpoint.py
-    python ${FARMCONFIGROOT}/job/ConfigureFromCheckpoint.py | ${RESTORE_CMD};
+    # Enable next line for Debug printout
+    #python ${FARMCONFIGROOT}/job/ConfigureFromCheckpoint.py;
+    #echo "RESORE command: ${RESTORE_CMD}";
+    eval "python ${FARMCONFIGROOT}/job/ConfigureFromCheckpoint.py | ${RESTORE_CMD}";
 else
-    exec -a ${UTGID} GaudiCheckpoint.exe libGaudiOnline.so OnlineTask \
-	-msgsvc=LHCb::FmcMessageSvc -tasktype=LHCb::Class1Task \
-	-main=/group/online/dataflow/templates/options/Main.opts \
-	-opt=command="import MooreScripts.runOnline; MooreScripts.runOnline.start(NbOfSlaves = "${NBOFSLAVES}", Split = '%(split)s', WriterRequires = %(WriterRequires)s  )" \\
+    exec -a ${UTGID} GaudiCheckpoint.exe libGaudiOnline.so OnlineTask \\
+	-msgsvc=LHCb::FmcMessageSvc \\
+        -tasktype=LHCb::Class1Task \\
+	-main=/group/online/dataflow/templates/options/Main.opts \\
+	-opt=command="import MooreScripts.runOnline; MooreScripts.runOnline.start(NbOfSlaves = "${NBOFSLAVES}", Split = '%(split)s', %(checkOdin)s WriterRequires = %(WriterRequires)s  )" \\
 	${APP_STARTUP_OPTS};
 fi;
-    """%({'split' : split, 'WriterRequires' : { 'Hlt1' : "[ 'Hlt1' ]" , 'Hlt2' : "[ 'Hlt2' ]" }.get( split, "[ 'HltDecisionSequence' ]" ) } ) )
+    """%({'split': split, \
+          'checkOdin': { 'Hlt1' : '' , 'Hlt2' : 'CheckOdin = False, ' }.get( split, "" ), \
+          'WriterRequires': { 'Hlt1' : "[ 'Hlt1' ]" , 'Hlt2' : "[ 'Hlt2' ]" }.get(split, "['HltDecisionSequence']")}))
 
     from stat import S_IRUSR, S_IRGRP, S_IROTH, S_IWUSR, S_IWGRP, S_IXUSR, S_IXGRP, S_IXOTH
     import os
