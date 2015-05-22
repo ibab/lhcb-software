@@ -4,6 +4,8 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================= HltTracking v13r8 2015-05-22 =========================
+
 ! 2015-05-20 - Sascha Stahl
  - HltRecoConf and Hlt2Tracking: Add possibility to apply cut on GhostProbability
    upfront in the protoparticle creation. 
