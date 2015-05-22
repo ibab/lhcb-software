@@ -160,6 +160,13 @@ macro(reflex_generate_dictionary dictionary _headerfile _selectionfile)
   foreach(d ${_defs})
    set(definitions ${definitions} -D${d})
   endforeach()
+  # by default CMake passes -DNDEBUG in the flags and not in the definitions
+  if(CMAKE_BUILD_TYPE)
+    string(TOUPPER "_${CMAKE_BUILD_TYPE}" _build_type_upper)
+  endif()
+  if(CMAKE_CXX_FLAGS${_build_type_upper} MATCHES "-DNDEBUG")
+    set(definitions ${definitions} -DNDEBUG)
+  endif()
 
   if(gccxmlopts)
     set(gccxmlopts "--gccxmlopt=${gccxmlopts}")

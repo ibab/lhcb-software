@@ -1,3 +1,15 @@
+! 2015-05-18 - Marco Clemencic (a69030d)
+
+ - fixed GAUDI-981: -DNDEBUG not passed to genreflex
+
+   
+
+! 2015-05-12 - Marco Clemencic (544a518)
+
+ - Modified Findtcmalloc.cmake to support new gperftools headers path.
+
+   
+
 ! 2015-05-08 - Marco Clemencic (af09fcc)
 
  - use "c++14" (instead of "c++1y") for gcc >= 5.1
