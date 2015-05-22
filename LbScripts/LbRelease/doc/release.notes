@@ -1,5 +1,10 @@
 2015-05-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* lb-deployment-checklist: fixed the support for Gaudi and added support for
+	plaform '*-do0' (GAUDI-1034, LHCBPS-1394)
+
+2015-05-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* getpack: LBCORE-821: allow plain checkout (do not create extra files)
 
 2015-05-06  Marco Clemencic  <Marco.Clemencic@cern.ch>

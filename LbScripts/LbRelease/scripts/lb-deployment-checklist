@@ -111,7 +111,7 @@ def rpm_copied(project, version):
     out = [l for l in out.splitlines() if re.match(rex + '[-_]', l)]
     global rpm_platforms
     rpm_platforms = [m.group(1)
-                     for m in [re.match(rex + r'_(.*(?:opt|dbg))', l) for l in out]
+                     for m in [re.match(rex + r'_(.*(?:opt|dbg|do0))', l) for l in out]
                      if m]
     #print rpm_platforms
     assert out
@@ -192,9 +192,15 @@ def installation(basedir):
 def afs_installation(project, version):
     '''
     You need to install on AFS.
+
+      lb-deployment-afs-install <project> <version> <platforms>
+
     See https://twiki.cern.ch/twiki/bin/view/LHCb/ProjectRelease#InstallOnAFS
     '''
-    return installation(rel_dir(project, version))
+    installation(rel_dir(project, version))
+    if project == 'Gaudi':
+        assert exists(join(rel_dir(project, version),
+                           'InstallArea', 'doc', 'html')), 'Gaudi doxygen doc missing'
 
 
 @check
@@ -284,11 +290,27 @@ def doxygen(project, version):
         'doxygen doc not yet produced'
 
 
+def fix_platforms(iterable):
+    '''
+    Fix the platform names replacing '_' with '-' where needed.
+
+    >>> fix_platforms(['i686_slc5_gcc43_opt', 'x86_64_slc6_gcc49_dbg'])
+    ['i686-slc5-gcc43-opt', 'x86_64-slc6-gcc49-dbg']
+    '''
+    return [re.sub(r'(?<!x86)_', '-', platform) for platform in iterable]
+
+
 def script_main():
     '''
     Script logic when the script is run on the command line.
     '''
+    global rpm_platforms
+
     project, version = sys.argv[1:]
+
+    if project == 'Gaudi':
+        # FIXME: Gaudi requires very special operations for the web pages
+        all_checks.remove(web_updated)
 
     stdout = sys.stdout
     for f in all_checks:
@@ -307,7 +329,9 @@ def script_main():
             stdout.write('%80s\n' % exc)
             stdout.flush()
             if f.__doc__:
-                print f.__doc__.replace('<project>', project).replace('<version>', version)
+                msg = f.__doc__.replace('<project>', project).replace('<version>', version)
+                msg = msg.replace('<platforms>', ' '.join(fix_platforms(rpm_platforms)))
+                print msg
             sys.exit(1)
 
 
@@ -315,6 +339,8 @@ def cgi_main():
     '''
     Script logic when the script is used as a CGI.
     '''
+    global rpm_platforms
+
     # HTTP header
     print 'Content-Type: text/html\n'
     # HTML header
@@ -350,6 +376,7 @@ def cgi_main():
                 for url in re.findall(r'https?://[^\s<>"]+|www\.[^\s<>"]+', f.__doc__):
                     doc = doc.replace(url, '<a href="{0}">{0}</a>'.format(url))
                 doc = doc.replace('<project>', project).replace('<version>', version)
+                doc = doc.replace('<platforms>', ' '.join(fix_platforms(rpm_platforms)))
                 print '<p class="help-message">{0}</p>'.format(doc)
             break
 
