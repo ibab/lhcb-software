@@ -344,7 +344,7 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   declareProperty("InvokeIncident",         m_invokeIncident= false);
   declareProperty("ConnectToDIM",           m_connectDIM    = true);
   declareProperty("ForkQueueLength",        m_forkQueLen    = 10); // Store last 10 subsequent forks
-  declareProperty("ForkTimeDistance",       m_forkDistance  = 60); // Maximally once per minute
+  declareProperty("ForkTimeDistance",       m_forkDistance  = 30); // Maximally once per minute
 }
 
 /// IInterface implementation : queryInterface
