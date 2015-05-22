@@ -343,8 +343,8 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   declareProperty("CheckpointRestartFlags", m_restartFlags  = 0);
   declareProperty("InvokeIncident",         m_invokeIncident= false);
   declareProperty("ConnectToDIM",           m_connectDIM    = true);
-  declareProperty("ForkQueueLength",        m_forkQueLen    = 10); // Store last 10 subsequent forks
-  declareProperty("ForkTimeDistance",       m_forkDistance  = 30); // Maximally once per minute
+  declareProperty("ForkQueueLength",        m_forkQueLen    = 30); // Store last 10 subsequent forks
+  declareProperty("ForkTimeDistance",       m_forkDistance  = 60); // Maximally once per minute
 }
 
 /// IInterface implementation : queryInterface
@@ -915,18 +915,15 @@ void CheckpointSvc::checkForkFrequency()  {
       if (start>stamp) start = stamp;
       if (end<stamp) end = stamp;
     }
-    if ( (end-start) < m_forkDistance*m_forkQueLen )   {
+    if ( (end-start) < m_forkDistance )   {
       // Need to do something here: Best is to issue an error and sleep forever
       // DIM commands will still be handled though by the command, which will also
       // stop us if the flag m_restartChildren is going to false.
       MsgStream log(msgSvc(),name());
       log << MSG::FATAL << "HLT_FUCKED: Forked the last " << m_forkQueLen 
 	  << " children in only " << (end-start) << " seconds. THIS IS NOT NORMAL." << endmsg;
-      log << MSG::FATAL << "Will stop forking and going asleep until reset command." << endmsg;
-
-      while ( m_restartChildren )  {
-	::lib_rtl_sleep(50); // Sleep 50 milliseconds before next check...
-      }
+      log << MSG::FATAL << "Will stop forking until reset command." << endmsg;
+      m_restartChildren = false;
     }
   }
 }
