@@ -5,6 +5,8 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v7r11 2015-05-22 =========================
+
 ! 2015-05-21 - Dan Johnson
  - Adjustment to Hlt1CEPLines.py to ensure VeloTracking is required by the line
 
