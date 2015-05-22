@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v6r14 2015-05-22 =========================
+
 ! 2015-05-22 - Albert Puig
  - Rename Radiative lines to include the folder name prefix
 
