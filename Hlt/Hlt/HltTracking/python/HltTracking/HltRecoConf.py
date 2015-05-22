@@ -62,6 +62,9 @@ class HltRecoConf(LHCbConfigurableUser):
         log.debug("Hlt configuration")
         import GaudiKernel.ProcessJobOptions
         GaudiKernel.ProcessJobOptions.PrintOff()
+        # Configure the PV refitting correctly
+        from Configurables import LoKi__PVReFitter
+        LoKi__PVReFitter("LoKi::PVReFitter").CheckTracksByLHCbIDs = True
 
 
 MaxOTHits = 15000 #--> move to CommonForwardOptions, this one is used e.g. in Hlt1GECs.py or Hlt1BeamGasLines.py

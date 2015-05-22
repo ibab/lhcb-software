@@ -160,7 +160,6 @@ ComplementForward = ("ComplementForward  = ( execute(decodeIT) * "
 ConfiguredFastKalman( parent = None, name = to_name( "FitTrack" ) )
 ## String for users
 FitTrack      = "FitTrack = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitTrack )"
-
 # =============================================================================
 ## Hlt Velo-only trackfit upgrade configuration
 # =============================================================================
