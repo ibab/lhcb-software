@@ -21,6 +21,7 @@ extern "C" {
 }
 
 #include <map>
+#include <ctime>
 
 // Forward declarations
 class IIncidentSvc;
@@ -43,6 +44,9 @@ namespace LHCb  {
     typedef std::map<int,int> Children;
     typedef void*             Files;
 
+    /// Fork time queue
+    std::list<time_t>         m_forkQueue;
+    /// Restore options
     std::vector<std::string>  m_restoreOptionClients;
     /// Property: Name of the checkpoint file to be created
     std::string               m_checkPoint;
@@ -73,6 +77,10 @@ namespace LHCb  {
     int                       m_childSleep;
     /// Property to force UTGID to environ and argv[0] (default: 0 [false])
     int                       m_forceUTGID;
+    /// Property: Length of queue to store time-stamps to forks
+    int                       m_forkQueLen;
+    /// Property: Minimal time allowed to fork children with the queue length
+    time_t                    m_forkDistance;
     /// Property: Invoke incident APP_INITIALIZED from service on start (default: false)
     bool                      m_invokeIncident;
     /// Property: Instance is running online and re-establishes the DIM connection
@@ -127,6 +135,8 @@ namespace LHCb  {
 
     /// Execute child process
     int execChild();
+    /// Check the frequency of forking children
+    void checkForkFrequency();
 
     /// Helper to build Child UTGID
     std::string buildChildUTGID(int which) const;
@@ -191,6 +201,7 @@ namespace LHCb  {
 
 #include <cerrno>
 #include <cstdlib>
+#include <climits>
 #include <fcntl.h>
 #ifdef _WIN32
 #include <io.h>
@@ -332,6 +343,8 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   declareProperty("CheckpointRestartFlags", m_restartFlags  = 0);
   declareProperty("InvokeIncident",         m_invokeIncident= false);
   declareProperty("ConnectToDIM",           m_connectDIM    = true);
+  declareProperty("ForkQueueLength",        m_forkQueLen    = 10); // Store last 10 subsequent forks
+  declareProperty("ForkTimeDistance",       m_forkDistance  = 60); // Maximally once per minute
 }
 
 /// IInterface implementation : queryInterface
@@ -376,6 +389,7 @@ StatusCode CheckpointSvc::initialize() {
     m_incidentSvc->addListener(this,"APP_INITIALIZED");
     m_incidentSvc->addListener(this,"APP_RUNNING");
     m_incidentSvc->addListener(this,"APP_STOPPED");
+    m_forkQueue.clear();
   }
   return sc;
 }
@@ -392,6 +406,7 @@ StatusCode CheckpointSvc::start() {
     m_incidentSvc->fireIncident(Incident(name(),"APP_INITIALIZED"));
   }
   if ( m_masterProcess )    {  // Only the master does anything on start!
+    m_forkQueue.clear();
     if ( m_useCores || (m_numInstances != 0) )   {
       stopMainInstance();
       checkpointing_dump_threads();
@@ -839,9 +854,14 @@ int CheckpointSvc::watchChildren() {
 	    return execChild();
 	  }
 	  // Parents continue with the loop until all dead childen are restarted!
+	  if ( m_forkQueLen > 0 )  {
+	    m_forkQueue.push_back(time(0));
+	    if ( int(m_forkQueue.size()) > m_forkQueLen ) m_forkQueue.pop_front();
+	 }
 	}
       }
       resumeMainInstance(true);
+      checkForkFrequency();
     }
     else {
       MsgStream log(msgSvc(),name());
@@ -882,6 +902,33 @@ int CheckpointSvc::waitChildren() {
     }
   }
   return count;
+}
+
+/// Check the frequency of forking children
+void CheckpointSvc::checkForkFrequency()  {
+  /// Children were forked so often, that the queue is full.
+  /// Check if the time distance is still OK.
+  if ( m_forkQueLen > 0 && m_forkQueLen == int(m_forkQueue.size()) )   {
+    long start = LONG_MAX, end = LONG_MIN;
+    for(std::list<time_t>::const_iterator i=m_forkQueue.begin(); i != m_forkQueue.end(); ++i) {
+      time_t stamp = *i;
+      if (start>stamp) start = stamp;
+      if (end<stamp) end = stamp;
+    }
+    if ( (end-start) < m_forkDistance )   {
+      // Need to do something here: Best is to issue an error and sleep forever
+      // DIM commands will still be handled though by the command, which will also
+      // stop us if the flag m_restartChildren is going to false.
+      MsgStream log(msgSvc(),name());
+      log << MSG::FATAL << "HLT_FUCKED: Forked the last " << m_forkQueLen 
+	  << " children in only " << (end-start) << ". THIS IS NOT NORMAL." << endmsg;
+      log << MSG::FATAL << "Will stop forking and going asleep until reset command." << endmsg;
+
+      while ( m_restartChildren )  {
+	::lib_rtl_sleep(50); // Sleep 50 milliseconds before next check...
+      }
+    }
+  }
 }
 
 /// Incident handler implemenentation: Inform that a new incident has occured
