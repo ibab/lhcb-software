@@ -64,11 +64,7 @@ class Physics_draftEM2015( object ):
         from Hlt1Lines.Hlt1CalibTrackingLines  import Hlt1CalibTrackingLinesConf
 
         from Hlt2Lines.Commissioning.Lines      import CommissioningLines
-        from Hlt2Lines.DiMuon.Lines             import DiMuonLines
-        from Hlt2Lines.SingleMuon.Lines         import SingleMuonLines
-        from Hlt2Lines.CharmHad.Lines           import CharmHadXSecLines
-        from Hlt2Lines.TrackEffDiMuon.Lines     import TrackEffDiMuonLines
-        from Hlt2Lines.PID.Lines                import PIDLines 
+        
         from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
         thresholds = { Hlt1TrackLinesConf :    {'AllL0_Velo_NHits'   : 9   
@@ -114,7 +110,7 @@ class Physics_draftEM2015( object ):
                                                , 'DiMuonHighMass_TrChi2'    :    3
                                                , 'DiMuonHighMass_M'         : 2700
                                                , 'DiMuonHighMass_GEC'       : 'Loose'
-                                               , 'NoPVPassThrough_L0ChannelRe' : "L0_CHANNEL_RE('.*lowMult')"
+                                               , 'NoPVPassThrough_L0ChannelRe' : "(L0_CHANNEL_RE('.*lowMult')) & ~(L0_CHANNEL_RE('.*DiHadron,lowMult'))"
                                                , 'L0Channels'               : {
                                                    'SingleMuonHighPT' : ( 'Muon', ),
                                                    'DiMuonLowMass'    : ( 'Muon', ),
@@ -133,14 +129,16 @@ class Physics_draftEM2015( object ):
                                                , 'NoBiasBeamCrossingTypeVeto' : 'BeamCrossing' # dimensionless
                                                }
                         
-                     , Hlt1HighMultLinesConf: {    'MinVeloHits'        : 2400,
-                                                   'MaxVeloHits'        : 99999,
-                                                   'nPVs'               :  1 ,
-                                                   'MinVeloHits_PV'     : 2400,
-                                                   'ODIN'               : '(ODIN_EVTTYP == LHCb.ODIN.NoBias)'
+                     , Hlt1HighMultLinesConf: {'Prescale' : { 'Hlt1HighVeloMult'     : 0.001 } ,
+                                                        'MinVeloHits'        : 2400,
+                                                        'MaxVeloHits'        : 99999,
+                                                        'nPVs'               :  1 ,
+                                                        'MinVeloHits_PV'     : 2400,
+                                                        'ODIN'               : '(ODIN_EVTTYP == LHCb.ODIN.NoBias)'
                                                    }
 
-                     , Hlt1CalibRICHMirrorLinesConf :    {'DoTiming' : False
+                     , Hlt1CalibRICHMirrorLinesConf :    { 'Prescale' : { 'Hlt1CalibHighPTLowMultTrks'     : 0.0001 } 
+                                                        , 'DoTiming' : False
                                                         , 'PT'       : 500.
                                                         , 'P'        : 1000.
                                                         , 'MinETA'   : 2.59
@@ -214,8 +212,8 @@ class Physics_draftEM2015( object ):
                          , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)' }
 
                                                        } 
-                        , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBNoBias'                : 1.0
-                                                               , 'Hlt1MBMicroBiasVelo'            : 0 
+                        , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBNoBias'                       : 1.0
+                                                               , 'Hlt1MBMicroBiasVelo'                : 0 
                                                                , 'Hlt1MBMicroBiasTStation'            : 0 
                                                                , 'Hlt1MBMicroBiasVeloRateLimited'     : 0
                                                                , 'Hlt1MBMicroBiasTStationRateLimited' : 0 }

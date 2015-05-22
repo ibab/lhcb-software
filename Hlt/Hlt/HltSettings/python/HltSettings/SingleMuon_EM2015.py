@@ -38,8 +38,8 @@ class SingleMuon_EM2015(object) :
 
         from Hlt2Lines.SingleMuon.Lines import SingleMuonLines
         d.update({SingleMuonLines : 
-                  {'Prescale'   :   {'SingleMuon'    : 0.5, 
-                                     'LowPT'         : 0.1},
+                  {'Prescale'   :   {"Hlt2SingleMuon"              : 0.5, 
+                                     "Hlt2SingleMuonLowPT"         : 0.1},
                    'HltReq'     :   {"SingleMuon"    : "HLT_PASS_RE('Hlt1TrackMuonDecision')"},
                    'Common'     :   {'TrChi2'        :    3,    # Adimensional
                                      'Pt'            : 1300 * MeV },
