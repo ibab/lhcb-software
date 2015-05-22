@@ -246,8 +246,8 @@ class Physics_draftEM2015( object ):
         from TrackEffDiMuon_EM2015 import TrackEffDiMuon_EM2015
         __update_conf__(thresholds,  TrackEffDiMuon_EM2015().Thresholds() )
         
-        from CEP_EM2015 import CEP_EM2015
-        __update_conf__(thresholds,  CEP_EM2015().Thresholds() )
+        from LowMult_EM2015 import LowMult_EM2015
+        __update_conf__(thresholds,  LowMult_EM2015().Thresholds() )
 
         from Topo_EM2015 import Topo_EM2015
         __update_conf__(thresholds,  Topo_EM2015().Thresholds() )
@@ -279,8 +279,8 @@ class Physics_draftEM2015( object ):
         from TrackEffDiMuon_EM2015 import TrackEffDiMuon_EM2015
         hlt2.extend(TrackEffDiMuon_EM2015().ActiveHlt2Lines() )
 
-        from CEP_EM2015 import CEP_EM2015
-        hlt2.extend(CEP_EM2015().ActiveHlt2Lines() )
+        from LowMult_EM2015 import LowMult_EM2015
+        hlt2.extend(LowMult_EM2015().ActiveHlt2Lines() )
 
         from Topo_EM2015 import Topo_EM2015
         hlt2.extend(Topo_EM2015().ActiveHlt2Lines() )

@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-05-22 - Dan Johnson
+ - Fixed change to CEP_EM2015.py to LowMult_EM2015.py to account for changed module name
+
 ! 2015-05-22 - Michael Kolpin
  - Updated TrackEffDiMuon_EM2015.py with new line names
  - Fix to CEP_EM2015.py to account for changed module name
