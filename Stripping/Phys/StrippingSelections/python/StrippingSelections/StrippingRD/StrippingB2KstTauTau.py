@@ -49,16 +49,20 @@ default_config =  {
   #
 
 
-  'MINIPCHI2_K_KMM'	: '10',#'16'	,
-  'MINIPCHI2_PI_KMM'	: '10',#'16'	,
-  'DOCAMAX_KST_KMM'	: '0.2',#'0.15',	
-  'MINIPCHI2_KST_KMM'	: '5',#'9'	,
-  'FDOWNPV_KST_KMM'	: '0',#'3'	,
-  'FDCHI2OWNPV_KST_KMM'	: '0',#'120'	,
-  'FDCHI2ORIVX_KST_KMM'	: '30'	,
-  'MINIPCHI2_MU_KMM'	: '10',#'16'	,
-  'B_COSDIRA_KMM'  	: '0',#'0.999',
-  'B_ENDVERTEX_CHI2' 	: '1000',#'100',
+  'MINIPCHI2_K_KMM'	: '4',#'16'	,
+  'MINIPCHI2_PI_KMM'	: '4',#'16'	,
+  'DOCAMAX_KST_KMM'	: '0.15',#'0.15',	
+  'MINIPCHI2_KST_KMM'	: '3',#'9'	,
+  'FDCHI2OWNPV_KST_KMM'	: '120'	,
+  'MINIPCHI2_MU_KMM'	: '4',#'16'	,
+  'B_COSDIRA_KMM'  	: '0.999',
+  'VCHI2_B_Mu_KMM'                    : '100', # dimensionless
+  'FD_B_Mu_KMM'                       : '3',
+  'FD_Kst_Mu_KMM'                       : '3',
+  'MASS_LOW_B_KMM'                    : '1500', # MeV  
+  'MASS_HIGH_B_KMM'                   : '10000', # MeV  
+  'PT_B_KMM'                        : '2000',
+  'PT_MU_KMM'                         : '800', # MeV
 
 
 
@@ -188,18 +192,20 @@ class B2KstTauXConf(LineBuilder) :
                                 'IPCHI2_HAD_ALL_FINAL_STATE',
                                 'TRACKCHI2_HAD_ALL_FINAL_STATE',
                                 'TRGHOPROB_HAD_ALL_FINAL_STATE',
-                                #
                                 'MINIPCHI2_K_KMM'	,
                                 'MINIPCHI2_PI_KMM'	,
                                 'DOCAMAX_KST_KMM'       ,	
                                 'MINIPCHI2_KST_KMM'	,
-                                'FDOWNPV_KST_KMM'	,
                                 'FDCHI2OWNPV_KST_KMM'	,
-                                'FDCHI2ORIVX_KST_KMM'	,
                                 'MINIPCHI2_MU_KMM'	,
                                 'B_COSDIRA_KMM'         ,
-                                'B_ENDVERTEX_CHI2'      ,
-                                #
+                                'VCHI2_B_Mu_KMM'                  ,
+                                'FD_B_Mu_KMM'                     ,
+                                'FD_Kst_Mu_KMM'                     ,
+                                'MASS_LOW_B_KMM'                  ,  
+                                'MASS_HIGH_B_KMM'                 ,   
+                                'PT_B_KMM'                        ,
+                                'PT_MU_KMM'                       ,                                 
                                 'B2KstTauTau_LinePrescale'            ,
                                 'B2KstTauTau_LinePostscale'            ,
                                 'B2KstTauMu_LinePrescale'              ,
@@ -313,7 +319,7 @@ class B2KstTauXConf(LineBuilder) :
                                                   { "Type" : "RelInfoBKsttautauTrackIsolationBDT","RecursionLevel" : 0, "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
                                                   { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "B2KstTauTau_CDFIso"},
                                                   { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1,
-                                                    "Locations" : {"Phys/B2KstTauTau_TauTau_SameSign_Line" : "BVars_VertexIsoInfo",
+                                                    "Locations" : {"Phys/B2KstTauTau_TauTau_SS_Line" : "BVars_VertexIsoInfo",
                                                                    "Phys/StdTightDetachedTau3pi" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"],
                                                                    "Phys/KstarB2KstTauTau":"KstarVars_VtxIsoInfo"
                                                                    }
@@ -354,7 +360,7 @@ class B2KstTauXConf(LineBuilder) :
                                                   { "Type" : "RelInfoBKsttautauTrackIsolationBDT","RecursionLevel" : 0, "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
                                                   { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "B2KstTauTau_CDFIso"},
                                                   { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1,
-                                                    "Locations" : {"Phys/B2KstTauTau_TauMu_SameSign_Line" : "BVars_VertexIsoInfo",
+                                                    "Locations" : {"Phys/B2KstTauTau_TauMu_SS_Line" : "BVars_VertexIsoInfo",
                                                                    "Phys/StdTightDetachedTau3pi" : "TauVars_VertexIsoInfo_0",
                                                                    "Phys/KstarB2KstTauTau":"KstarVars_VtxIsoInfo"
                                                                    }
@@ -397,7 +403,7 @@ class B2KstTauXConf(LineBuilder) :
                                                   { "Type" : "RelInfoBKsttautauTrackIsolationBDT","RecursionLevel" : 0, "Location"  : "B2KstTauTau_TrackIsolationBDT"},  
                                                   { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "B2KstTauTau_CDFIso"},
                                                   { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1,
-                                                    "Locations" : {"Phys/B2KstTauTau_MuMu_SameSign_Line" : "BVars_VertexIsoInfo",
+                                                    "Locations" : {"Phys/B2KstTauTau_MuMu_SS_Line" : "BVars_VertexIsoInfo",
                                                                    "Phys/Kstar_KMMB2KstTauTau":"KstarVars_VtxIsoInfo"
                                                                    }
                                                     }
@@ -536,11 +542,12 @@ class B2KstTauXConf(LineBuilder) :
 #####################################################
   def _makeB2XMuMu(self, name, muonSel_KMM, KstarSel_KMM, config):
     
-    _combcut = "(AM  > " + config['MASS_LOW_B']    + "*MeV) & "\
-               "(AM  < " + config['MASS_HIGH_B']   + "*MeV)"
+    _combcut = "(AM  > " + config['MASS_LOW_B_KMM']    + "*MeV) & "\
+               "(AM  < " + config['MASS_HIGH_B_KMM']   + "*MeV)"
 
-    _bcut    ="(VFASPF(VCHI2)  <   "   + config['VCHI2_B_Mu']       + ") & "\
-               "(BPVVD          >   "   + config['FD_B_Mu']      + ") & "\
+    _bcut    = " (PT > "             + config['PT_B_KMM']   + "*MeV) &"\
+               "(VFASPF(VCHI2)  <   "   + config['VCHI2_B_Mu_KMM']       + ") & "\
+               "(BPVVD          >   "   + config['FD_B_Mu_KMM']      + ") & "\
                " (BPVDIRA >"         + config['B_COSDIRA_KMM']   + ") "
       
     
@@ -555,11 +562,12 @@ class B2KstTauXConf(LineBuilder) :
 #####################################################
   def _makeB2XMuMuSS(self, name, muonSel_KMM, KstarSel_KMM, config):
     
-    _combcut = "(AM  > " + config['MASS_LOW_B']    + "*MeV) & "\
-               "(AM  < " + config['MASS_HIGH_B']   + "*MeV)"
+    _combcut = "(AM  > " + config['MASS_LOW_B_KMM']    + "*MeV) & "\
+               "(AM  < " + config['MASS_HIGH_B_KMM']   + "*MeV)"
 
-    _bcut    ="(VFASPF(VCHI2)  <   "   + config['VCHI2_B_Mu']       + ") & "\
-               "(BPVVD          >   "   + config['FD_B_Mu']      + ") & "\
+    _bcut    = " (PT > "             + config['PT_B_KMM']   + "*MeV) &"\
+               "(VFASPF(VCHI2)  <   "   + config['VCHI2_B_Mu_KMM']       + ") & "\
+               "(BPVVD          >   "   + config['FD_B_Mu_KMM']      + ") & "\
                " (BPVDIRA >"         + config['B_COSDIRA_KMM']   + ") "
       
     
@@ -580,6 +588,7 @@ class B2KstTauXConf(LineBuilder) :
 
      
      _bcut = " (PT > "             + config['PT_Kst']   + "*MeV) &"\
+               "(BPVVD          >   "   + config['FD_Kst_Mu_KMM']      + ") & "\
              " (VFASPF(VCHI2)  <   "   + config['VCHI2_Kst']       + ")  "
 
 
@@ -612,7 +621,6 @@ class B2KstTauXConf(LineBuilder) :
      _bcut = " (PT > "             + config['PT_Kst']   + "*MeV) &"\
              " (VFASPF(VCHI2)  <   "   + config['VCHI2_Kst']       + ") &  "\
 	     " (MIPCHI2DV(PRIMARY) > "+config['MINIPCHI2_KST_KMM'] +") &"\
-	     " (BPVVDRHO >  "      + config['FDOWNPV_KST_KMM']   + "*mm) &"\
  	     " (BPVVDCHI2 > "      + config['FDCHI2OWNPV_KST_KMM']   + ") "
 
 
@@ -656,7 +664,7 @@ class B2KstTauXConf(LineBuilder) :
     """                     
       Muon selection          
       """                     
-    _code =     "(PT > "                    + config['PT_MU']          + "*MeV) & "\
+    _code =     "(PT > "                    + config['PT_MU_KMM']          + "*MeV) & "\
             "(TRCHI2DOF < "             + config['TRACKCHI2_MU']   + ")      &" \
 	    "(	MIPCHI2DV(PRIMARY) > "+config['MINIPCHI2_MU_KMM']  +")  "
     

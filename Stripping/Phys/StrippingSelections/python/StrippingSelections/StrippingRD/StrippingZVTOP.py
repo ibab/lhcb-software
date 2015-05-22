@@ -207,11 +207,18 @@ class ZVTOP_Conf(LineBuilder) :
     self.selPions        = self._makePions(      name    = "PionsFor"+name, 
                                             config  = config)
     
+    self.selPions_high        = self._makePions_high(      name    = "PionsHighFor"+name, 
+                                            config  = config)
+    
     self.rawPions =     DataOnDemand("Phys/StdLoosePions/Particles")
     
     #
     self.incTauVertices = self._makeTauVertices(name=name+"_IncTopoVtxFor",
                                            pionInput   = self.selPions,
+                                           config = config)
+    
+    self.incTauVertices_high = self._makeTauVertices(name=name+"_IncTopoVtxHighFor",
+                                           pionInput   = self.selPions_high,
                                            config = config)
     
     #
@@ -221,7 +228,7 @@ class ZVTOP_Conf(LineBuilder) :
     
     #
     self.selHigh          = self._filterHigh(name       = name+"_HighFilter",
-                                        tauInput   = self.incTauVertices,
+                                        tauInput   = self.incTauVertices_high,
                                         config     = config)
     
     #
@@ -280,7 +287,7 @@ class ZVTOP_Conf(LineBuilder) :
                                              { "Type" : "RelInfoBstautauTrackIsolation" ,"RecursionLevel" : 0, "Location"  : "TrackIsolation"},
                                              { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "CDFIso"  },
                                              { "Type" : "RelInfoBstautauZVisoBDT" ,"RecursionLevel" : 0 , "Location"  : "ZVisoBDT"},
-                                             { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/ZVTOP_High_Line" : "BVars_VertexIsoInfo","Phys/ZVTOP_IncTopoVtxFor" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"]}}
+                                             { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/ZVTOP_High_Line" : "BVars_VertexIsoInfo","Phys/ZVTOP_HighFilter" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"]}}
                                             ],
                                       selection   = self.selHigh
                                       )
@@ -302,6 +309,19 @@ class ZVTOP_Conf(LineBuilder) :
     return Selection(name,
                      Algorithm          = _Filter,
                      RequiredSelections = [ StdLoosePions ] )
+  
+  #####################################################
+  def _makePions_high(self, name, config) :
+    """
+    Pion selection
+    """
+    _code = "(MIPCHI2DV(PRIMARY) >25) & (TRGHOSTPROB < 0.3) "
+    
+    _Filter = FilterDesktop(Code = _code)
+    
+    return Selection(name,
+                     Algorithm          = _Filter,
+                     RequiredSelections = [ StdNoPIDsPions ] )
   
   #####################################################
   def _filterHigh(self, name, tauInput, config) :
