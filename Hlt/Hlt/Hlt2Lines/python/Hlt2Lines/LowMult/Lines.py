@@ -91,7 +91,7 @@ theseSlots.update(_CEPPhotonLines.localcuts())
 theseSlots.update(_CEPElectronLines.localcuts())
 
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
-class CEPLines(Hlt2LinesConfigurableUser) :
+class LowMultLines(Hlt2LinesConfigurableUser) :
     __slots__ = theseSlots
     def __l0du(self, nickname):
         import collections
