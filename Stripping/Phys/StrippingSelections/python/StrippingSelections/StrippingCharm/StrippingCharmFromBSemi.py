@@ -14,7 +14,7 @@ from Configurables import FilterDesktop, CombineParticles, DaVinci__N4BodyDecays
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLoosePions, StdLooseMuons, StdLooseKaons, StdLooseProtons, StdNoPIDsPions, StdLooseMergedPi0,StdLooseResolvedPi0, StdAllNoPIDsPions, StdNoPIDsUpPions
+from StandardParticles import StdLoosePions, StdLooseMuons, StdLooseKaons, StdLooseProtons, StdNoPIDsPions, StdLooseMergedPi0,StdLooseResolvedPi0, StdAllNoPIDsPions, StdNoPIDsUpPions, StdLooseAllPhotons, StdAllLooseGammaLL, StdAllLooseGammaDD
 from Configurables import ConjugateNeutralPID
 from PhysSelPython.Wrappers import MergedSelection
 
@@ -103,8 +103,28 @@ default_config = {
     ,"PTSUMLoose"  : 1400. ## MeV
     ,"PTSUM"       : 1800. ## MeV
     ,"PTSUM_HHPi0" : 1800. ## MeV
-    }
-    }
+    #Photons
+    ,"PhotonPT"                : 1500 ## MeV
+    ,"MaxConvPhLLMass"         : 100 ## MeV
+    ,"MaxConvPhLLChi"          : 9
+    ,"MinConvPhLLPT"           : 800 ## MeV    
+    ,"MaxConvPhDDMass"         : 100 ## MeV
+    ,"MaxConvPhDDChi"          : 9
+    ,"MinConvPhDDPT"           : 800 ## MeV
+      # X -> HH
+    ,'CombMassLow_HH'          : 0 ## MeV
+    ,'CombMassHigh_HH'         : 1820 ## MeV
+    ,'MassLow_HH'              : 0 ## MeV
+    ,'MassHigh_HH'             : 1810 ## MeV
+    ,'MaxVCHI2NDOF_HH'         : 10.0
+    ,'MinVDCHI2_HH'            : 1000.0
+      # D0 -> X Gamma
+    ,'D02HHGammaAMassWin'      : 220  # MeV (mass window for combination)
+    ,'D02HHGammaMassWin'       : 210  # MeV (mass window after vertex fit)
+    ,'PTSUM_HHGamma'           : 1800. ## MeV
+    ,"DtoXgammaADocaChi2Max"   : 10     #adimensiional     
+        }
+        }
 
 class CharmFromBSemiAllLinesConf(LineBuilder) :
     
@@ -180,8 +200,25 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         ,"Dstar_wideDMCutUpper"
         ,"PTSUMLoose"       
         ,"PTSUM"       
-        ,"PTSUM_HHPi0" 
-        )
+        ,"PTSUM_HHPi0"
+        ,"PhotonPT"
+        ,"MaxConvPhLLMass"
+        ,"MaxConvPhLLChi"
+        ,"MinConvPhLLPT"
+        ,"MaxConvPhDDMass"
+        ,"MaxConvPhDDChi"
+        ,"MinConvPhDDPT"
+        ,"CombMassLow_HH"
+        ,"CombMassHigh_HH"
+        ,"MassLow_HH"
+        ,"MassHigh_HH"
+        ,"MaxVCHI2NDOF_HH"
+        ,"MinVDCHI2_HH"
+        ,"D02HHGammaAMassWin"
+        ,"D02HHGammaMassWin"
+        ,"PTSUM_HHGamma"
+        ,"DtoXgammaADocaChi2Max"
+    )
     
     __confdict__={}
         
@@ -255,8 +292,19 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
 
         self.AllPi0s = MergedSelection("SelAllPi0sFor"+name, 
                                        RequiredSelections = [ self.selPi0Resolved,self.selPi0Merged])
-        
-        
+
+        self.selGamma = Selection("SelGammaFor"+name,
+                                  Algorithm = self._PhotonFilter("GammaFor"+name),
+                                  RequiredSelections = [ StdLooseAllPhotons ] )
+        self.selGammaResLL = Selection("SelGammaResLLFor"+name,
+                                       Algorithm = self._PhotonConvLLFilter("GammaLLFor"+name),
+                                       RequiredSelections = [ StdAllLooseGammaLL ] )
+        self.selGammaResDD = Selection("SelGammaResDDFor"+name,
+                                       Algorithm = self._PhotonConvDDFilter("GammaDDFor"+name),
+                                       RequiredSelections = [ StdAllLooseGammaDD ] )
+        self.AllGammas = MergedSelection("SelAllGammasFor"+name,
+                                         RequiredSelections = [self.selGamma, self.selGammaResLL, self.selGammaResDD] )
+
         self.selSlowPion = DataOnDemand(Location = 'Phys/StdAllLoosePions/Particles')
         self.selSlowPionUp = DataOnDemand(Location = 'Phys/StdLooseANNUpPions/Particles')
         self.selSlowPionAll = MergedSelection("AllSlowPionfor", RequiredSelections = [self.selSlowPion,self.selSlowPionUp])
@@ -630,7 +678,35 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.selb2Lc2pMuMuX = makeb2DMuX('b2Lc2pMuMuX' + name, BDecays,self.selmuon,self.selLc2pMuMu,BCuts)
         self.selb2Lc2pKKMuX = makeb2DMuX('b2Lc2pKKMuX' + name, BDecays,self.selmuon,self.selLc2pKK,BCuts)
         self.selb2LcMuXpKs = makeb2DMuX('b2LcMuXpKs' + name,BDecays,self.selmuon, self.sel_Lc2pKs,BCuts)
-        
+
+        ##########################################################################
+        ## D0 -> X gamma SELECTION ##
+        ## Contact: Maurizio Martinelli
+        ##########################################################################
+
+        # Two-body combinations
+        self.sel_X_to_PiPi = self._makeHHForD2XGamma('X_to_PiPi_for'+ name, ['rho(770)0 -> pi+ pi-'], [self.selPion])
+        self.sel_X_to_KPi  = self._makeHHForD2XGamma('X_to_KPi_for'+ name , ['K*(892)0 -> K- pi+', 'K*(892)0 -> K+ pi-'], [self.selPion, self.selKaon])
+        self.sel_X_to_KK   = self._makeHHForD2XGamma('X_to_KK_for'+ name  , ['phi(1020) -> K+ K-'], [self.selKaon])
+        # D0 candidate
+        self.sel_D0_to_PiPiGamma = self._D02XGammaFilter('D0_to_PiPiGamma_for' + name, ['D0 -> rho(770)0 gamma'], [self.sel_X_to_PiPi, self.AllGammas] )
+        self.sel_D0_to_KPiGamma  = self._D02XGammaFilter('D0_to_KPiGamma_for' + name , ['D0 -> K*(892)0 gamma'] , [self.sel_X_to_KPi , self.AllGammas] )
+        self.sel_D0_to_KKGamma   = self._D02XGammaFilter('D0_to_KKGamma_for' + name  , ['D0 -> phi(1020) gamma'], [self.sel_X_to_KK  , self.AllGammas] )
+        # D* candidate
+        self.sel_Dstar_to_PiPiGamma = makeDstar('Dstar_PiPiGammaFor'+name,self.sel_D0_to_PiPiGamma,self.selSlowPion,Dstar_cuts)
+        self.sel_Dstar_to_KPiGamma  = makeDstar('Dstar_KPiGammaFor'+name ,self.sel_D0_to_KPiGamma ,self.selSlowPion,Dstar_cuts)
+        self.sel_Dstar_to_KKGamma   = makeDstar('Dstar_KKGammaFor'+name  ,self.sel_D0_to_KKGamma  ,self.selSlowPion,Dstar_cuts)
+        # B->D0muX candidate
+        BDecays = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ]
+        self.selb2D0MuXPiPiGamma = makeb2DMuX('b2D0MuXPiPiGamma' + name,BDecays,self.selmuon,self.sel_D0_to_PiPiGamma ,BCuts)
+        self.selb2D0MuXKPiGamma  = makeb2DMuX('b2D0MuXKPiGamma'  + name,BDecays,self.selmuon,self.sel_D0_to_KPiGamma  ,BCuts)
+        self.selb2D0MuXKKGamma   = makeb2DMuX('b2D0MuXKKGamma'   + name,BDecays,self.selmuon,self.sel_D0_to_KKGamma   ,BCuts)
+        # B->D*muX candidate
+        BDecays = [ '[B~0 -> D*(2010)+ mu-]cc', '[B~0 -> D*(2010)+ mu+]cc' ]
+        self.selb2DstarMuXPiPiGamma = makeb2DMuX('b2DstarMuXPiPiGamma' + name,BDecays,self.selmuon,self.sel_Dstar_to_PiPiGamma,BCuts)
+        self.selb2DstarMuXKPiGamma  = makeb2DMuX('b2DstarMuXKPiGamma'  + name,BDecays,self.selmuon,self.sel_Dstar_to_KPiGamma ,BCuts)
+        self.selb2DstarMuXKKGamma   = makeb2DMuX('b2DstarMuXKKGamma'   + name,BDecays,self.selmuon,self.sel_Dstar_to_KKGamma  ,BCuts)
+
         ##########################################################################
         ## Line registration ##
         ##########################################################################
@@ -651,7 +727,11 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                      ['b2D0MuX4Pi',self.selb2D0MuX4Pi],
                      ['b2D0MuX2K2Pi',self.selb2D0MuX2K2Pi],
                      ['b2D0MuX3KPi',self.selb2D0MuX3KPi],
-                     ['b2D0MuXKsKs',self.selb2D0MuXKsKs]]:
+                     ['b2D0MuXKsKs',self.selb2D0MuXKsKs],
+                     ['b2D0MuXPiPiGamma',self.selb2D0MuXPiPiGamma],
+                     ['b2D0MuXKPiGamma',self.selb2D0MuXKPiGamma],
+                     ['b2D0MuXKKGamma',self.selb2D0MuXKKGamma]
+                     ]:
             self.registerLine( StrippingLine('%s%sLine'%(line[0],name),
                                              prescale = 1,
                                              FILTER = GECs,
@@ -673,7 +753,11 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                      ['b2DstarMuX4Pi',self.selb2DstarMuX4Pi],
                      ['b2DstarMuX2K2Pi',self.selb2DstarMuX2K2Pi],
                      ['b2DstarMuX3KPi',self.selb2DstarMuX3KPi],
-                     ['b2DstarMuXKsKs',self.selb2DstarMuXKsKs]]:
+                     ['b2DstarMuXKsKs',self.selb2DstarMuXKsKs],
+                     ['b2DstarMuXPiPiGamma',self.selb2DstarMuXPiPiGamma],
+                     ['b2DstarMuXKPiGamma',self.selb2DstarMuXKPiGamma],
+                     ['b2DstarMuXKKGamma',self.selb2DstarMuXKKGamma]
+                     ]:
             self.registerLine( StrippingLine('%s%sLine'%(line[0],name),
                                              prescale = 1,
                                              FILTER = GECs,
@@ -807,6 +891,28 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                 " & (BPVDIRA > %(LambdaCutDIRA)s )" % self.__confdict__
         _pil = FilterDesktop( name = _name, Code = _code)
         return _pil
+
+    def _PhotonFilter( self, _name):
+        _code = "(PT> %(PhotonPT)s * MeV)" % self.__confdict__
+        _ph = FilterDesktop( name = _name, Code = _code)
+        return _ph
+
+    def _PhotonConvLLFilter( self, _name):
+        _code = " ( MM < %(MaxConvPhLLMass)s * MeV ) " \
+                "&( HASVERTEX ) " \
+                "&( VFASPF(VCHI2/VDOF)<%(MaxConvPhLLChi)s ) " \
+                "&( PT >  %(MinConvPhLLPT)s * MeV)" % self.__confdict__
+        _phConv = FilterDesktop(name = _name, Code = _code)
+        return _phConv
+                    
+
+    def _PhotonConvDDFilter( self, _name):
+        _code = " ( MM < %(MaxConvPhDDMass)s * MeV ) " \
+                "&( HASVERTEX ) " \
+                "&( VFASPF(VCHI2/VDOF)<%(MaxConvPhDDChi)s ) " \
+                "&( PT >  %(MinConvPhDDPT)s * MeV)" % self.__confdict__
+        _phConv = FilterDesktop(name = _name, Code = _code) 
+        return _phConv
     
     def _D02HHHHFilter( self , _decayDescriptors,_name):
         '''
@@ -1014,7 +1120,42 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         return Selection (name = "SelCharm"+_name,
                           Algorithm = CHARM_COMB,
                           RequiredSelections = _requiredSelections)
+
+    def _makeHHForD2XGamma(self, name, decayDescriptors, _requiredSelections) :
+        _daughters_cuts = (" (TRGHOSTPROB < %(TrGhostProbMax)s)" \
+                           "&(TRCHI2DOF < %(TRCHI2)s)" \
+                           "&(PT > %(KPiPT)s)" \
+                           "&(MIPCHI2DV(PRIMARY) > %(MINIPCHI2)s )"  % self.__confdict__ )
+        _pidPi = "&(PIDK < %(PionPIDK)s)"  % self.__confdict__ # May use tight for reducing combinatorial
+        _pidK  = "&(PIDK > %(KaonPIDK)s)"  % self.__confdict__ # May use tight for reducing combinatorial
+        _combination_cuts = (" (in_range( %(CombMassLow_HH)s * MeV, AM, %(CombMassHigh_HH)s * MeV ) ) " \
+                             "&( (APT1+APT2) > %(PTSUM)s )"  \
+                             "&( ACHI2DOCA(1,2) < %(DtoXgammaADocaChi2Max)s )" % self.__confdict__ )
+        _mother_cuts = (" ( in_range( %(MassLow_HH)s * MeV, M, %(MassHigh_HH)s * MeV)) " \
+                        "&( VFASPF(VCHI2PDOF) < %(MaxVCHI2NDOF_HH)s)" \
+                        "&( BPVVDCHI2 > %(MinVDCHI2_HH)s )" % self.__confdict__ )
+        CombineX2HH = CombineParticles(name = 'Comb'+name,
+                                       DecayDescriptors = decayDescriptors,
+                                       DaughtersCuts = { "pi+" : _daughters_cuts+_pidPi, "K+" : _daughters_cuts+_pidK },
+                                       CombinationCut = _combination_cuts,
+                                       MotherCut = _mother_cuts)
+        return Selection(name = 'Sel'+name,
+                         Algorithm = CombineX2HH,
+                         RequiredSelections = _requiredSelections )
     
+    def _D02XGammaFilter( self, name, decayDescriptors, _requiredSelections ) :
+        _combination_cuts =  (" ( ADAMASS('D0') < %(D02HHGammaAMassWin)s *MeV) " \
+                              "&( ACHILD(PT,1)+ACHILD(PT,2) > %(PTSUM_HHGamma)s *MeV)" % self.__confdict__ )
+        _mother_cuts = (" (ADMASS('D0') < %(D02HHGammaMassWin)s *MeV) " \
+                        "&(VFASPF(VCHI2PDOF) < %(DsVCHI2DOF)s)" % self.__confdict__ )
+        CombineD2XGamma = CombineParticles(name = 'Comb'+name,
+                                           DecayDescriptors = decayDescriptors,
+                                           CombinationCut = _combination_cuts,
+                                           MotherCut = _mother_cuts)
+        return Selection(name = 'Sel'+name,
+                         Algorithm = CombineD2XGamma,
+                         RequiredSelections = _requiredSelections )
+                                                                
 def makeDstar(_name, inputD0,_softPi,Dstar_cuts,_isSelfConjFS=False) : 
     _inputD0_conj = Selection("SelConjugateD0For"+_name,
                              Algorithm = ConjugateNeutralPID('ConjugateD0For'+_name),

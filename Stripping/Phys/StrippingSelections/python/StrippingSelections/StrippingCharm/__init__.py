@@ -27,6 +27,7 @@ _selections = (
     'StrippingLambdac2V0H',
     'StrippingDstarD2XGamma',
     'StrippingD2HHHKs',
+    'StrippingDstarD2KSHHPi0',
     'StrippingD2HHHPi0',
     'StrippingDstarPromptWithD02HHMuMu',
     'StrippingD2XMuMuSS'
