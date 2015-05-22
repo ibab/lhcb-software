@@ -59,7 +59,7 @@ static string loadScript(const string& fname) {
   return "";
 }
 
-static bool old_mode = true;
+//static bool old_mode = false;
 
 GaudiTask::PythonInterpreter::PythonInterpreter() {
   ::Py_Initialize();
@@ -70,8 +70,12 @@ GaudiTask::PythonInterpreter::~PythonInterpreter() {
 }
 
 void GaudiTask::PythonInterpreter::afterFork() {
+  /*  OLD mode
   if ( old_mode )  return;
+  */
   if ( ::Py_IsInitialized() ) {
+    //cout << "[error] Executing afterfork procedure......" << endl;
+    //cout << flush;
     PythonGlobalState state();
     ::PyOS_AfterFork();  
   }
@@ -79,6 +83,7 @@ void GaudiTask::PythonInterpreter::afterFork() {
 
 GaudiTask::PythonGlobalState::PythonGlobalState() {
   if ( ::Py_IsInitialized() ) {
+    /*  OLD mode
     if ( old_mode )  {
       PyThreadState *tstate = 0;
       PyInterpreterState *interp = 0;
@@ -91,13 +96,16 @@ GaudiTask::PythonGlobalState::PythonGlobalState() {
 #endif
       return;
     }
+    */
     PyGILState_STATE gstate = ::PyGILState_Ensure(); 
     m_state = (int)gstate;
   }
 }
 
 GaudiTask::PythonGlobalState::~PythonGlobalState() {
+  /*  OLD mode
   if ( old_mode )  return;
+  */
   if ( ::Py_IsInitialized() ) {
     PyGILState_STATE gstate = (PyGILState_STATE)m_state;
     if ( gstate ) ::PyGILState_Release(gstate);
