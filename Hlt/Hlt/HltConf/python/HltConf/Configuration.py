@@ -337,8 +337,10 @@ class HltConf(LHCbConfigurableUser):
                       # routing bit for the full (non-turbo) stream
                       , 87 : "HLT_NONTURBOPASS_RE('Hlt2.*Decision')"
                       # routing bit for Turbo stream, includes lumi events.
-                      , 88 : "HLT_TURBOPASS_RE('Hlt2(?!DebugEvent)(?!Transparent)(?!PassThrough).*Decision') | HLT_PASS_RE('^Hlt1Lumi.*Decision$')"
+                      # this now excludes turbocalib events which have their own stream/routing bit
+                      , 88 : "HLT_TURBOPASS_RE('Hlt2(?!DebugEvent)(?!Transparent)(?!PassThrough)(?!TurboCalib).*Decision') | HLT_PASS_RE('^Hlt1Lumi.*Decision$')"
                       # RB 89 is reserved for the parked stream but is not set for now
+                      , 90 : "HLT_TURBOPASS_RE('Hlt2.*TurboCalib.*Decision') | HLT_PASS_RE('^Hlt1Lumi.*Decision$')"
                       # VVG 01-05-2015
                       }
         HltRoutingBitsWriter('Hlt1RoutingBitsWriter').RoutingBits = routingBits
