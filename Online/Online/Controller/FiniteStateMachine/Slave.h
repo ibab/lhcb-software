@@ -83,6 +83,8 @@ namespace FiniteStateMachine {
     const Rule*       m_rule;
     /// Flag indicating (initial) internal transition actions
     bool              m_internal;
+    /// Flag indicating if the slave may be started (internal slaves may not!)
+    bool              m_mayStart;
     /// Flag to store if slave is alive
     bool              m_alive;
     /// Flag to see if the slave has answered to a request

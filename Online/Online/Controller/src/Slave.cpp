@@ -50,7 +50,8 @@ static const char* _metaStateName(int meta)   {
 Slave::Slave(const Type *typ, const string& nam, Machine* machine, bool internal)
   : TypedObject(typ,nam), m_timerID(0,0), m_tmo(5), 
     m_meta(SLAVE_LIMBO), m_status(SLAVE_LIMBO), m_machine(machine), m_state(0), 
-    m_rule(0), m_internal(internal), m_alive(false), m_answered(false)
+    m_rule(0), m_internal(internal), m_mayStart(!internal), 
+    m_alive(false), m_answered(false)
 {
   m_state = type()->initialState();
 }
@@ -182,13 +183,19 @@ FSM::ErrCond Slave::apply(const Rule* rule)  {
 
 /// Start slave process
 FSM::ErrCond Slave::startSlave(const Transition* tr)  {
+  FSM::ErrCond ret = FSM::FAIL;
   inquireState();
   if ( isInternal() )  {
     send(SLAVE_ALIVE,tr->to());
     return FSM::WAIT_ACTION;
   }
-  FSM::ErrCond ret = start();
-  startTimer(SLAVE_START_TIMEOUT);
+  else if ( m_mayStart )  {  // Formerly internal slaves may NOT be started
+    ret = start();
+    startTimer(SLAVE_START_TIMEOUT);
+  }
+  else  {                    // Here simply set timeout
+    startTimer(1);
+  }
   return ret;
 }
 
