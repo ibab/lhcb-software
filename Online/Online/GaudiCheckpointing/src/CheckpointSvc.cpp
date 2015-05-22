@@ -857,7 +857,7 @@ int CheckpointSvc::watchChildren() {
 	  if ( m_forkQueLen > 0 )  {
 	    m_forkQueue.push_back(time(0));
 	    if ( int(m_forkQueue.size()) > m_forkQueLen ) m_forkQueue.pop_front();
-	 }
+	  }
 	}
       }
       resumeMainInstance(true);
@@ -915,13 +915,13 @@ void CheckpointSvc::checkForkFrequency()  {
       if (start>stamp) start = stamp;
       if (end<stamp) end = stamp;
     }
-    if ( (end-start) < m_forkDistance )   {
+    if ( (end-start) < m_forkDistance*m_forkQueLen )   {
       // Need to do something here: Best is to issue an error and sleep forever
       // DIM commands will still be handled though by the command, which will also
       // stop us if the flag m_restartChildren is going to false.
       MsgStream log(msgSvc(),name());
       log << MSG::FATAL << "HLT_FUCKED: Forked the last " << m_forkQueLen 
-	  << " children in only " << (end-start) << ". THIS IS NOT NORMAL." << endmsg;
+	  << " children in only " << (end-start) << " seconds. THIS IS NOT NORMAL." << endmsg;
       log << MSG::FATAL << "Will stop forking and going asleep until reset command." << endmsg;
 
       while ( m_restartChildren )  {
