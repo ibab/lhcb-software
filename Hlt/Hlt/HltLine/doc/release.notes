@@ -5,6 +5,8 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================= HltLine v7r11 2015-05-22 =========================
+
 ! 2015-05-06 - Roel Aaij
  - Add allHlt{1,2}Lines functions to HltLine.py
 
