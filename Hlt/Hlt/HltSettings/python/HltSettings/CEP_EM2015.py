@@ -66,8 +66,8 @@ class CEP_EM2015 :
     def Thresholds(self) :
 
         d = {}
-        from Hlt2Lines.CEP.Lines import CEPLines
-        d.update ({CEPLines : { 
+        from Hlt2Lines.LowMult.Lines import LowMultLines
+        d.update ({LowMultLines : { 
                     'Prescale' : { 'Hlt2LowMultL2pPi'       : 1.0
                                  , 'Hlt2LowMultL2pPiWS'     : 0.2
                                  , 'Hlt2LowMultD2KPi'       : 1.0
