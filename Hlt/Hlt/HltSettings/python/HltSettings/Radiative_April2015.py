@@ -29,23 +29,23 @@ class Radiative_April2015(object):
         """Returns a list of active lines."""
 
         lines = [# Exclusive B0 - >K* gamma and Bs - >phi gamma
-                 'Hlt2Bs2PhiGamma',
-                 'Hlt2Bd2KstGamma',
-                 'Hlt2Bs2PhiGammaUnbiased',
-                 'Hlt2Bd2KstGammaULUnbiased',
+                 'Hlt2RadiativeBs2PhiGamma',
+                 'Hlt2RadiativeBd2KstGamma',
+                 'Hlt2RadiativeBs2PhiGammaUnbiased',
+                 'Hlt2RadiativeBd2KstGammaULUnbiased',
                  # Inclusive
                  'Hlt2RadiativeIncHHGamma',
                  'Hlt2RadiativeIncHHHGamma',
                  'Hlt2RadiativeIncHHGammaEE',
                  'Hlt2RadiativeIncHHHGammaEE',
                  # Exclusive Bs -> gamma gamma
-                 'Hlt2B2GammaGamma',
-                 'Hlt2B2GammaGammaLL',
-                 'Hlt2B2GammaGammaDD',
-                 'Hlt2B2GammaGammaDouble',
+                 'Hlt2RadiativeB2GammaGamma',
+                 'Hlt2RadiativeB2GammaGammaLL',
+                 'Hlt2RadiativeB2GammaGammaDD',
+                 'Hlt2RadiativeB2GammaGammaDouble',
                  # Exclusive Lb -> L0 gamma
-                 'Hlt2Lb2L0GammaLL',
-                 'Hlt2Lb2L0GammaEELL']
+                 'Hlt2RadiativeLb2L0GammaLL',
+                 'Hlt2RadiativeLb2L0GammaEELL']
 
         return lines
 

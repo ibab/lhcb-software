@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-05-22 - Albert Puig
+ - Rename Radiative lines to include the folder name prefix
+
 ! 2015-05-22 - Christian Linn
  - fixed prescales in SingleMuon_EM2015
  - add prescales to Physics_draftEM2015, correct L0 filter for NoPVPassThrough line 
