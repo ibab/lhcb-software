@@ -82,7 +82,7 @@ class Brunel(LHCbConfigurableUser):
        ,"SkipTracking"    : False
        ,"Detectors"       : ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr']
        ,"SplitRawEventInput" : None #Where the raw event sits on the input
-       ,"SplitRawEventOutput" : 4.0 #how to split the raw event
+       ,"SplitRawEventOutput" : 4.1 #how to split the raw event
         # only use for Online running
        ,"UseDBSnapshot" : False
        ,"PartitionName" : "LHCb"
@@ -615,7 +615,7 @@ class Brunel(LHCbConfigurableUser):
                     juggler.setProp("Input",DecodeRawEvent().getProp("OverrideInputs"))
                     #else if I'm input with a DST, assume it is a Stripping20 type
                 elif self._isReprocessing(self.getProp("InputType")):
-                    juggler.setProp("Input",2.0)
+                    juggler.setProp("Input",2.2)
                 else:
                     #or set the default to whatever comes out of Moore by default
                     juggler.setProp("Input","Moore")
