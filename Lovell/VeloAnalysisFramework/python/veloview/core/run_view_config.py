@@ -90,9 +90,6 @@ run_view_pages = OrderedDict([
             }
         ]
     }),
-    ('common_mode', {
-        'title': 'Common mode'
-    }),
     ('noise', {
         'title': 'Noise',
         'plots': [
@@ -106,7 +103,18 @@ run_view_pages = OrderedDict([
                 'name': 'Vetra/NoiseMon/DecodedADC/TELL1_{0:03d}/RMSNoise_vs_Strip',
                 'sensor_dependent': True
             },
-        ]
+            {
+                'title': 'RMS CMS noise vs. chip channel',
+                'name': 'Vetra/NoiseMon/ADCCMSuppressed/TELL1_{0:03d}/RMSNoise_vs_ChipChannel',
+                'sensor_dependent': True
+            },
+            {
+                'title': 'RMS CMS noise vs. strip',
+                'name': 'Vetra/NoiseMon/ADCCMSuppressed/TELL1_{0:03d}/RMSNoise_vs_Strip',
+                'sensor_dependent': True
+            },
+        ],
+        'layout': (2, 2)
     }),
     ('clusters', {
         'title': 'Clusters',
