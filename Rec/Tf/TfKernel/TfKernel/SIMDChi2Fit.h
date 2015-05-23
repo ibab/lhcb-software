@@ -307,6 +307,129 @@ namespace SIMDChi2FitImplDetail {
     { return transposer<M, N>(lhs); }
 }
 
+/// vectorisation support - implementation
+namespace vect_impl {
+#if defined(__GNUC__)
+    /// dot product @f$\sum_i a_i * b_i@f$
+    template <typename T, unsigned N>
+    struct sdot {
+	T operator()(const T* a, const T *b, T init)
+	{
+	    return (1 == N) ? (*a * *b + init) :
+		sdot<T, N - N / 2>()(a + N / 2, b + N / 2,
+			sdot<T, N / 2>()(a, b, init));
+	}
+    };
+
+    /// vectorised dot product @f$\sum_i a_{Wi+k} * b_{Wi+k}@f$ (k=0, ..., W-1)
+    template <typename T, unsigned N, unsigned W>
+    struct vdot {
+	typedef T __attribute__((vector_size(W * sizeof(T)))) vT;
+	vT operator()(const vT* a, const vT *b)
+	{
+	    return (1 == N) ? (*a * *b) :
+		(vdot<T, N / 2, W>()(a, b) +
+		 vdot<T, N - N / 2, W>()(a + N / 2, b + N / 2));
+	}
+    };
+
+    /// dot product driver
+    template <typename T, unsigned N, unsigned W>
+    struct dot {
+	typedef T __attribute__((vector_size(W * sizeof(T)))) vT;
+	T operator()(const T* a, const T* b, T init)
+	{
+	    if (N / W) {
+		// we can vectorise at current width W, so do it
+		auto tmp = vdot<T, N / W, W>()((const vT *) a, (const vT*) b);
+		for (unsigned i = 0; W != i; ++i) init += tmp[i];
+	    }
+	    /// return, try doing remainder of dot product at half width
+	    return (N - W * (N / W)) ?
+		dot<T, N - W * (N / W), W / 2>()(
+			a + W * (N / W), b + W * (N / W), init) : init;
+	}
+    };
+
+    /// dot product kernel driver (specialised W = 1)
+    template <typename T, unsigned N>
+    struct dot<T, N, 1> {
+	T operator()(const T* a, const T* b, T init)
+	{ return sdot<T, N>()(a, b, init); }
+    };
+#endif
+}
+
+/// contains vectorised implementations of required routines
+namespace vect {
+#if defined(__GNUC__)
+    /** @brief compute the dot product between two vectors
+     *
+     * @tparam T		data type of the underlying vectors
+     * @tparam SIMDWIDTH	maximum SIMD width that the CPU can handle
+     *
+     * @param a		beginning of vector a
+     * @param aend		end of vector a
+     * @param b		beginning of vector b
+     * @param init		initial value
+     *
+     * @returns @f$init + \sum_i a_i b_i @f$
+     *
+     * @author Manuel Schiller <Manuel.Schiller@cern.ch>
+     * @date 2015-05-22
+     *
+     * @note Do not choose SIMDWIDTH larger than the combination of your CPU
+     * and your data type T will support, or things will slow down!
+     */
+    template <typename T, unsigned SIMDWIDTH>
+    T dot_product(const T* a, const T* aend, const T* b, T init)
+    {
+	using namespace vect_impl;
+	// unroll loop up to length 32; use (individually optimised) fixed
+	// length dot product kernels to compute the full product
+	while (aend - a >= 32) { // 32 or more elements left
+	    init = dot<T, 32, SIMDWIDTH>()(a, b, init);
+	    a += 32, b += 32;
+	}
+	switch (aend - a) { // take care of the rest
+	    case 31: return dot<T, 31, SIMDWIDTH>()(a, b, init);
+	    case 30: return dot<T, 30, SIMDWIDTH>()(a, b, init);
+	    case 29: return dot<T, 29, SIMDWIDTH>()(a, b, init);
+	    case 28: return dot<T, 28, SIMDWIDTH>()(a, b, init);
+	    case 27: return dot<T, 27, SIMDWIDTH>()(a, b, init);
+	    case 26: return dot<T, 26, SIMDWIDTH>()(a, b, init);
+	    case 25: return dot<T, 25, SIMDWIDTH>()(a, b, init);
+	    case 24: return dot<T, 24, SIMDWIDTH>()(a, b, init);
+	    case 23: return dot<T, 23, SIMDWIDTH>()(a, b, init);
+	    case 22: return dot<T, 22, SIMDWIDTH>()(a, b, init);
+	    case 21: return dot<T, 21, SIMDWIDTH>()(a, b, init);
+	    case 20: return dot<T, 20, SIMDWIDTH>()(a, b, init);
+	    case 19: return dot<T, 19, SIMDWIDTH>()(a, b, init);
+	    case 18: return dot<T, 18, SIMDWIDTH>()(a, b, init);
+	    case 17: return dot<T, 17, SIMDWIDTH>()(a, b, init);
+	    case 16: return dot<T, 16, SIMDWIDTH>()(a, b, init);
+	    case 15: return dot<T, 15, SIMDWIDTH>()(a, b, init);
+	    case 14: return dot<T, 14, SIMDWIDTH>()(a, b, init);
+	    case 13: return dot<T, 13, SIMDWIDTH>()(a, b, init);
+	    case 12: return dot<T, 12, SIMDWIDTH>()(a, b, init);
+	    case 11: return dot<T, 11, SIMDWIDTH>()(a, b, init);
+	    case 10: return dot<T, 10, SIMDWIDTH>()(a, b, init);
+	    case  9: return dot<T,  9, SIMDWIDTH>()(a, b, init);
+	    case  8: return dot<T,  8, SIMDWIDTH>()(a, b, init);
+	    case  7: return dot<T,  7, SIMDWIDTH>()(a, b, init);
+	    case  6: return dot<T,  6, SIMDWIDTH>()(a, b, init);
+	    case  5: return dot<T,  5, SIMDWIDTH>()(a, b, init);
+	    case  4: return dot<T,  4, SIMDWIDTH>()(a, b, init);
+	    case  3: return dot<T,  3, SIMDWIDTH>()(a, b, init);
+	    case  2: return dot<T,  2, SIMDWIDTH>()(a, b, init);
+	    case  1: return dot<T,  1, SIMDWIDTH>()(a, b, init);
+	    default: break;
+	}
+	return init;
+    }
+#endif
+}
+
 /// @brief perform a simple iterative @f$\chi^2@f$ fit that can be
 /// autovectorised
 ///
@@ -1064,15 +1187,27 @@ void SIMDChi2Fit<MEASUREMENTPROVIDER, MEASUREMENTPROJECTOR,
     for (unsigned i = 0, idx = 0; LIKELY(i != nDim); ++i) {
 	// update m_rhs
 	// vectorises
+#if !defined(__GNUC__) || 1
 	m_rhs[i] += std::inner_product(
 		std::begin(wgrads[i]), std::begin(wgrads[i]) + iHitMax,
 		std::begin(wmeass), value_type(0));
+#else
+	m_rhs[i] += vect::dot_product<value_type, 2>(
+		std::begin(wgrads[i]), std::begin(wgrads[i]) + iHitMax,
+		std::begin(wmeass), value_type(0));
+#endif
 	// update m_icov
 	for (unsigned j = 0; LIKELY(j <= i); ++j, ++idx) {
 	    // vectorises
+#if !defined(__GNUC__) || 1
 	    m_icov[idx] += std::inner_product(
+	    	    std::begin(wgrads[i]), std::begin(wgrads[i]) + iHitMax,
+	    	    std::begin(wgrads[j]), value_type(0));
+#else
+	    m_icov[idx] += vect::dot_product<value_type, 2>(
 		    std::begin(wgrads[i]), std::begin(wgrads[i]) + iHitMax,
 		    std::begin(wgrads[j]), value_type(0));
+#endif
 	}
     }
 }
