@@ -80,11 +80,10 @@ void InfoWindow::ShowCont(const std::string& ins)
       int divx=0;
       int divy=0;
 
-      while (divx*divy<nrHistos){
-
-        if (nrHistos > divx*divy) divy+=1;
-        if (nrHistos > divx*divy) divx+=1;
-
+      while (divx*divy<nrHistos)
+      {
+        if ( nrHistos > divx*divy ) divy+=1;
+        if ( nrHistos > divx*divy ) divx+=1;
       }
 
       //cout << "dividing in "<<divx <<", "<<divy<<" Pads" <<endl;

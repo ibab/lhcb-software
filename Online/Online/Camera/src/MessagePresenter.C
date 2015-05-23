@@ -527,7 +527,7 @@ void MessagePresenter::setup()
 
   gStyle->SetCanvasBorderMode(0);
   gStyle->SetCanvasColor(10);
-  gStyle->SetPadBorderMode(1);
+  gStyle->SetPadBorderMode(0);
   gStyle->SetPadColor(10);
   gStyle->SetPadTopMargin(0.1f);
   gStyle->SetPadBottomMargin(0.1f);
@@ -544,15 +544,15 @@ void MessagePresenter::setup()
   gStyle->SetTitleBorderSize(0);
   gStyle->SetTitleTextColor(kBlack);
   gStyle->SetTitleColor(kBlack);
-  gStyle->SetTitleBorderSize(1);
+  gStyle->SetTitleBorderSize(0);
   gStyle->SetTitleFont(62);
-  gStyle->SetTitleFontSize(0.06f);
+  gStyle->SetTitleFontSize(0.04f);
   gStyle->SetTitleColor(10);
 
   gStyle->SetStatFont(42);
   gStyle->SetStatBorderSize(1);
   gStyle->SetStatColor(10);
-  gStyle->SetStatFontSize(0.08f);
+  gStyle->SetStatFontSize(0.04f);
   gStyle->SetOptStat(10);
   gStyle->SetStatX(0.97);
   gStyle->SetStatY(1.0);
@@ -779,7 +779,7 @@ MessagePresenter::MessagePresenter(): TGMainFrame()
   Pyellow=TColor::RGB2Pixel(242,242,60);
 
   savdir = ".";
-  savname = "msg.png";
+  savname = "msg.pdf";
 
   //int   dummy_argc   = 1;
   // char *dummy_argv[] =  { "MP", NULL  };
@@ -825,7 +825,7 @@ void MessagePresenter::display()
   fTextButtonDump = new TGTextButton(fMainFrame1933,"Print",-1,uGC->GetGC(),ufont->GetFontStruct());
   fTextButtonDump->SetTextJustify(36);
   fTextButtonDump->Resize(90,24);
-  fTextButtonDump->SetToolTipText("Save the message text");
+  fTextButtonDump->SetToolTipText("Save the message as text and image files");
   fMainFrame1933->AddFrame(fTextButtonDump, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fTextButtonDump->MoveResize(600,2,90,20);
 
