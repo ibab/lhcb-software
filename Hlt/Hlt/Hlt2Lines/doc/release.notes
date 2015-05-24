@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-24 - Sean Benson
+ - Add stages function to Radiative Lines.py file.
+ - Add turbo version of Bs->gammagamma line for integration tests.
+
 ! 2015-05-22 - Michael Kolpin
  - Removed Turbo clones of TrackEffDiMuon lines, sending nominal lines to TurboCalib stream
  - Fix to LowMult/Lines.py to account for changed module name

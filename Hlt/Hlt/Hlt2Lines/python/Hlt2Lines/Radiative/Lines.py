@@ -64,4 +64,13 @@ class RadiativeLines(Hlt2LinesConfigurableUser):
                      prescale=self.prescale,
                      postscale=self.postscale)
 
+    def stages(self, nickname = ""):
+        self._stages = {}
+        for line_conf in lines_to_run:
+            self._stages.update(line_conf.get_stages(self.getProps()))
+        
+        if nickname:
+            return self._stages[nickname]
+        else:
+            return self._stages
 # EOF

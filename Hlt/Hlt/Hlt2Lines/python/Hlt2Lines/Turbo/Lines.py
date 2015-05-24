@@ -6,6 +6,8 @@ class TurboLines(Hlt2LinesConfigurableUser) :
                  'CloneLines'  : {'DiMuon' : ['JPsi', 
                                               'Psi2S', 
                                               'B'],
+			          'Radiative': ['RadiativeB2GammaGamma'
+					            ],
 			         }
                  }
 
@@ -23,8 +25,16 @@ class TurboLines(Hlt2LinesConfigurableUser) :
             for line in lines:
                 stages = conf.stages(line)
                 algos = conf.algorithms({'Turbo' : stages})
-                Hlt2Line(module + line + 'Turbo', prescale = self.prescale,
-                         algos = algos['Turbo'], postscale = self.postscale, Turbo = True)
+                if module is not 'Radiative':
+                    Hlt2Line(module + line + 'Turbo', prescale = self.prescale,
+                            algos = algos['Turbo'], postscale = self.postscale, Turbo = True)
+                else:
+                    Hlt2Line(line + 'Turbo', prescale = self.prescale,
+                            algos = algos['Turbo'], postscale = self.postscale, Turbo = True)
+                
                 if module is 'DiMuon':
                     if line is 'JPsi':
                         HltANNSvc().Hlt2SelectionID.update( { 'Hlt2'+module+line+'Turbo'+'Decision':  50212 } )
+                elif module is 'Radiative':
+                    if line is 'RadiativeB2GammaGamma':
+                        HltANNSvc().Hlt2SelectionID.update( { 'Hlt2'+line+'Turbo'+'Decision':  50213 } )
