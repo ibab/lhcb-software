@@ -4,7 +4,12 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
-| 2015-05-18 - Ricardo Vazquez Gomez
+! 2015-05-24 - Ricardo Vazquez Gomez
+ - Bugfix in the foiYDim for MuonIDAlg that was used the dx coordinate.
+ - Bugfix in the NShared computation that was comparing a distance with a 
+   distance squared 
+
+! 2015-05-18 - Ricardo Vazquez Gomez
  - Bugfix in MuonIDAlgLite.cpp
 
 ! 2015-05-13 - Ricardo Vazquez Gomez

@@ -2068,8 +2068,8 @@ StatusCode MuonIDAlg::calcDist( LHCb::MuonPID* muonid ){
       // get best match in X and Y
       if( (x - m_trackX[station])*(x - m_trackX[station]) +
           (y - m_trackY[station])*(y - m_trackY[station])  <
-          pow((mCoordX[station]*dx - m_trackX[station]),2) +
-          pow((mCoordY[station]*dy - m_trackY[station]),2) ){
+          pow((mCoordX[station] - m_trackX[station]),2) +
+          pow((mCoordY[station] - m_trackY[station]),2) ){
         // this Coord is a better match
         mCoordX[station] = x;
         mCoordY[station] = y;
@@ -2275,7 +2275,7 @@ StatusCode MuonIDAlg::get_closest(LHCb::MuonPID *pMuid, double *closest_x,
     int region = (*iCoord)->key().region();
     std::tie(foiXDim,foiYDim) = foiXY( station, region, m_MomentumPre );
     foiXDim *= dx*m_foifactor;
-    foiYDim *= dx*m_foifactor;
+    foiYDim *= dy*m_foifactor;
 
     // only for M2-M3-M4-M5:
     if (station >= m_iM2 ) {  // JHL: station == 0 is OK in the case of no M1  12/Oct./2013
