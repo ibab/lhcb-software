@@ -91,18 +91,7 @@ class TurboOnly( object ):
                 'Hlt2DiMuonPsi2STurbo',
 		'Hlt2DiMuonBTurbo',
 		'Hlt2JPsiReFitPVsTurbo',
-		'Hlt2TrackEffDiMuonMuonTTPlusTaggedTurbo',                
-		'Hlt2TrackEffDiMuonMuonTTMinusTaggedTurbo',
-		'Hlt2TrackEffDiMuonVeloMuonPlusTaggedTurbo',                
-		'Hlt2TrackEffDiMuonVeloMuonMinusTaggedTurbo',                
-		'Hlt2TrackEffDiMuonDownstreamPlusTaggedTurbo',                
-		'Hlt2TrackEffDiMuonDownstreamMinusTaggedTurbo',                
-		'Hlt2TrackEffDiMuonMuonTTPlusMatchedTurbo',                
-		'Hlt2TrackEffDiMuonMuonTTMinusMatchedTurbo',
-		'Hlt2TrackEffDiMuonVeloMuonPlusMatchedTurbo',                
-		'Hlt2TrackEffDiMuonVeloMuonMinusMatchedTurbo',                
-		'Hlt2TrackEffDiMuonDownstreamPlusMatchedTurbo',                
-		'Hlt2TrackEffDiMuonDownstreamMinusMatchedTurbo' 
+		'Hlt2RadiativeB2GammaGammaTurbo'
           ]
 
 
@@ -116,6 +105,7 @@ class TurboOnly( object ):
                  , 'Hlt1CalibRICHMirror'
                  , 'Hlt1SingleMuonHighPT'
                  , 'Hlt1DiMuonHighMass'
+                 , 'Hlt1B2GammaGamma'
                  , 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'   # technical lines
                  , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
                  , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'

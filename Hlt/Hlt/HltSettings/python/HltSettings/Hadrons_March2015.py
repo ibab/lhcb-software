@@ -22,6 +22,7 @@ class Hadrons_March2015 :
             'Hlt2Bd2KstGamma',
             'Hlt2Bs2PhiGammaUnbiased',
             'Hlt2Bd2KstGammaULUnbiased',
+            'Hlt2Bs2PhiPhi',
             # B2HH
             'Hlt2B2HH',
             # DiProtons

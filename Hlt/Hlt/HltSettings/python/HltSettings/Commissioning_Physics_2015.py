@@ -273,6 +273,9 @@ class Commissioning_Physics_2015( object ):
 
         from Hadrons_March2015 import Hadrons_March2015
         hlt2.extend( Hadrons_March2015().ActiveHlt2Lines() )
+        
+        from Radiative_April2015 import Radiative_April2015
+        hlt2.extend( Radiative_April2015().ActiveHlt2Lines() )
        
         return hlt2
     
@@ -284,6 +287,8 @@ class Commissioning_Physics_2015( object ):
                  , 'Hlt1SingleMuonNoIP', 'Hlt1DiMuonNoL0'
                  , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
                  , 'Hlt1MultiMuonNoL0'
+                 , 'Hlt1B2GammaGamma'
+                 , 'Hlt1B2PhiPhi_LTUNB'
                  , 'Hlt1SingleElectronNoIP'
                  , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA'
                  , 'Hlt1CalibTrackingKPi' , 'Hlt1CalibTrackingKK' , 'Hlt1CalibTrackingPiPi'
