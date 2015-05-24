@@ -52,9 +52,11 @@ public:
 
   virtual int Append(const char * T,const char * C)=0;
   virtual int Append(const char * T,void * C, int sz)=0;
-
+    
   virtual int Append(const char * C)=0;
-  virtual int Append(const std::string & C)=0;
+
+  inline int Append(const std::string & C) { return Append(C.c_str()); }
+  inline int Append(const char * T,const std::string& C) { return Append(T,C.c_str()); }
 
   // For unknown reasons if I put the following method declaration just 
   // after MessageLevel they give seg fault

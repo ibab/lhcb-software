@@ -7,6 +7,7 @@
 ! 2015-05-23 - Chris Jones
  - Make PDF the default image file type (as PNG seg. faults.)
  - Minor improvements to the formating.
+ - A bit more support for std::string messages.
 
 ! 2015-03-20 - Chris Jones
  - Fix DIM header location.

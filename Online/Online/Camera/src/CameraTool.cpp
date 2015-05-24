@@ -706,12 +706,6 @@ int CameraTool::Append(const char * C)
   return 1;
 }
 
-int CameraTool::Append(const std::string &C){
-  if (m_dosend)
-    m_out.add("TEXT",C.c_str());
-  return 1;
-}
-
 int CameraTool::Append(TH1D * H, const char * opts)
 {
   if (m_dosend) 
