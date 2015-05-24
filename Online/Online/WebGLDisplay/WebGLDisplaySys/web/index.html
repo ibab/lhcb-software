@@ -4,9 +4,6 @@
     <style>canvas { width: 100%; height: 100%; }</style>
     <style>
       body {background-color: #000000; overflow: hidden; margin: 0px;}
-      #stats #fps { background: transparent !important }
-      #stats #fps #fpsText { color: #FFF !important }
-      #stats #fps #fpsGraph { display: none }      
     </style>
     </head>
   <body>
@@ -14,19 +11,77 @@
     <script src="js/Detector.js"></script>
     <script src="js/OrbitControls.js"></script>
     <script src="js/BinaryLoader.js"></script>
-    <script src="js/stats.min.js"></script>
     <script src="js/dat.gui.min.js"></script>
     <script src="js/Curve.js"></script>
     <script src="js/SplineCurve3.js"></script>
     <script src="js/CombinedCamera.js"></script>
 
+
+<!-- ---------------- Custom Shader Code ------------------------ -->
+<script id="vertexShader" type="x-shader/x-vertex">
+attribute float alpha;
+varying float valpha;
+void main() 
+{
+    valpha = alpha;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+}
+</script>
+
+<!-- fragment shader a.k.a. pixel shader -->
+<script id="fragmentShader" type="x-shader/x-vertex"> 
+uniform vec3 color;
+varying float valpha;
+void main() 
+{
+    gl_FragColor = vec4( color, valpha );
+}
+</script>
+<!-- ----------------------------------------------------------- -->
+
+
     <script>
       var software = ! Detector.webgl;
       //software = true;
       var scene = new THREE.Scene();
-      if (!software)
-        scene.fog = new THREE.FogExp2( 0x000000, 0.01 );
+      //if (!software)
+      //  scene.fog = new THREE.FogExp2( 0x000000, 0.01 );
 
+
+      var logoscene = new THREE.Scene();
+      var logocamera = new THREE.OrthographicCamera( - window.innerWidth / 2.0,  window.innerWidth / 2.0,  window.innerHeight / 2.0, -  window.innerHeight / 2.0, 1.0, 10.0 );
+      logocamera.position.z = 10.0;
+      var logosprite, logomaterial, logowidth=0.2*window.innerWidth, logoheight=0.0;
+      //var infowidth = 0.2*window.innerWidth;
+      var logomap = THREE.ImageUtils.loadTexture( "logo.png", {}, function() {
+        logomaterial = new THREE.SpriteMaterial( { map: logomap, color: 0xffffff } );
+        logosprite = new THREE.Sprite( logomaterial );
+        logoheight = logowidth * logomaterial.map.image.height/logomaterial.map.image.width;
+        logosprite.scale.set( logowidth, logoheight, 1.0 );
+        logosprite.position.set( -window.innerWidth/2.0 + 0.55*logowidth,   window.innerHeight/2.0 - 0.55*logoheight, 1.0 );
+        logoscene.add(logosprite);
+      } );
+      var textcanvas = document.createElement('canvas');
+      var textheight = 50;
+      var textcontext = textcanvas.getContext('2d');
+      textcontext.font = textheight + "px Lucida Grande, sans serif";
+      textmetrics = textcontext.measureText("Thu, 30 Sep 2015 23:45:00 ");
+      var textwidth = textmetrics.width;
+      textcanvas.width = textwidth;
+      textcanvas.height = 4.0*textheight;
+      textcontext.textBaseline = "middle";
+      textcontext.fillStyle = "#ffffff";
+      textcontext.font = textheight + "px Lucida Grande, sans serif";
+      textcontext.fillText("Event number N/A", 0.0, 0.5*textheight);
+      textcontext.fillText("Run number N/A", 0.0, 2.0*textheight);
+      textcontext.fillText("Time stamp N/A", 0.0, 3.5*textheight);
+      var texttexture = new THREE.Texture(textcanvas);
+      texttexture.needsUpdate = true;
+      var textmaterial = new THREE.SpriteMaterial( { map: texttexture, useScreenCoordinates: false });
+      var textsprite = new THREE.Sprite( textmaterial );
+      textsprite.scale.set(logowidth, logowidth*textcanvas.height/textcanvas.width, 1.0);
+      textsprite.position.set( -window.innerWidth/2.0 + 0.55*logowidth, window.innerHeight/2.0 - 1.0*logowidth, 1.0 );
+      logoscene.add(textsprite);
 
       var ortho = false;
       var orthowidth = 20.0;
@@ -38,14 +93,13 @@
       camera.up.set( 0.0, 1.0, 0.0);
       camera.toPerspective();
 
-
       var renderer;
       //if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
       if ( !software )
         renderer = new THREE.WebGLRenderer( {antialias: true, preserveDrawingBuffer: true, clearColor: 0x000000, clearAlpha: 1  }); //  {antialias: true} { clearColor: 0x000000, clearAlpha: 1 } 
       else 
         renderer = new THREE.CanvasRenderer();
-
+      renderer.autoClear = false;
 
       renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(renderer.domElement);
@@ -66,87 +120,91 @@
       if (software)      
         document.body.appendChild(softwarning);
 
-      var runnumber = document.createElement('div');
-      runnumber.style.position = 'absolute';
-      runnumber.style.width = '200px';
-      runnumber.innerHTML = "Run number: 120003212923";
-      runnumber.style.top = '20px';
-      runnumber.style.left = '0px';
-      runnumber.style.fontSize = '9.5px';
-      runnumber.style.color = '#fff';
-      runnumber.style.opacity = '0.97';
-      runnumber.style.fontFamily = 'Lucida Grande, sans-serif';
-      runnumber.style.padding = '5px';
-      document.body.appendChild(runnumber);
-
-      var eventnumber = document.createElement('div');
-      eventnumber.style.position = 'absolute';
-      eventnumber.style.width = '200px';
-      eventnumber.innerHTML = "Event number: 3802760";
-      eventnumber.style.top = '35px';
-      eventnumber.style.left = '0px';
-      eventnumber.style.fontSize = '9.5px';
-      eventnumber.style.color = '#fff';
-      eventnumber.style.opacity = '0.97';
-      eventnumber.style.fontFamily = 'Lucida Grande, sans-serif';
-      eventnumber.style.padding = '5px';
-      document.body.appendChild(eventnumber);
-
-      var eventtime = document.createElement('div');
-      eventtime.style.position = 'absolute';
-      eventtime.style.width = '200px';
-      eventtime.innerHTML = "Time: 14:00:00";
-      eventtime.style.top = '50px';
-      eventtime.style.left = '0px';
-      eventtime.style.fontSize = '9.5px';
-      eventtime.style.color = '#fff';
-      eventtime.style.opacity = '0.97';
-      eventtime.style.fontFamily = 'Lucida Grande, sans-serif';
-      eventtime.style.padding = '5px';
-      document.body.appendChild(eventtime);
-
       //var cycletime = 5000;
       var updatetime = 3000;//try all 3 sec
       //var autoupdate = true;
       var autorotate = false;
       var displaydetector = true && !software;
-      //var displaylogo = false && !software;
+      var displaylogo = true;
       //var displayplane = false && !software;
       var wiremode = false;
 
       //global material definitions
-      var otmaterial = new THREE.LineBasicMaterial( { color: 0x0000a0, opacity: 1.0, linewidth: 1, visible: false } );
-      var itmaterial = new THREE.LineBasicMaterial( { color: 0xa000a0, opacity: 1.0, linewidth: 1 } );
-      var ttmaterial = new THREE.LineBasicMaterial( { color: 0xa000a0, opacity: 1.0, linewidth: 1 } );
-      var velomaterial = new THREE.LineBasicMaterial( { color: 0xa000a0, opacity: 1.0, linewidth: 1 } );
+      var otmaterial = new THREE.LineBasicMaterial( { color: 0x0000a0, opacity: 0.3, linewidth: 1, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true } );
+      var itmaterial = new THREE.LineBasicMaterial( { color: 0xa000a0, opacity: 0.5, linewidth: 1, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true  } );
+      var ttmaterial = new THREE.LineBasicMaterial( { color: 0xa000a0, opacity: 0.5, linewidth: 1, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true  } );
+      var velomaterial = new THREE.LineBasicMaterial( { color: 0xa000a0, opacity: 0.5, linewidth: 1, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true  } );
       var muonmaterial = new THREE.MeshLambertMaterial({color: 0x00ff00, shading: THREE.FlatShading, wireframe: false, overdraw: false, doubleSided: true, transparent: false });
       var ecalmaterial = new THREE.MeshLambertMaterial({color: 0x0000ff, shading: THREE.FlatShading, wireframe: false, overdraw: false, doubleSided: true, transparent: false });
-      var hcalmaterial = new THREE.MeshLambertMaterial({color: 0xff0000, shading: THREE.FlatShading, wireframe: false, overdraw: false, doubleSided: true, transparent: false });
-      //wireframeLinewidth: 2, 
+      var hcalmaterial = new THREE.MeshLambertMaterial({color: 0xff8000, shading: THREE.FlatShading, wireframe: false, overdraw: false, doubleSided: true, transparent: false });
+
+      var muonedges, ecaledges, hcaledges;
+
       var pvmaterial = new THREE.MeshBasicMaterial( { color: 0xff00ff, shading: THREE.FlatShading, blending: THREE.AdditiveBlending, wireframe: false, overdraw: false, doubleSided: false, transparent: true, opacity: 0.8 } );
       var fourprongmaterial = new THREE.MeshBasicMaterial( { color: 0xff00ff, shading: THREE.FlatShading, blending: THREE.AdditiveBlending, wireframe: false, overdraw: false, doubleSided: false, transparent: true, opacity: 0.8, visible: true } );
       var threeprongmaterial = new THREE.MeshBasicMaterial( { color: 0xff00ff, shading: THREE.FlatShading, blending: THREE.AdditiveBlending, wireframe: false, overdraw: false, doubleSided: false, transparent: true, opacity: 0.8, visible: false} );
       var twoprongmaterial = new THREE.MeshBasicMaterial( { color: 0xff00ff, shading: THREE.FlatShading, blending: THREE.AdditiveBlending, wireframe: false, overdraw: false, doubleSided: false, transparent: true, opacity: 0.8 , visible: false} );
-      var pimaterial = new THREE.LineBasicMaterial( { color: 0xff8000, opacity: 1.0, linewidth: 2 } );
-      //var pimaterial = new THREE.LineBasicMaterial( { color: 0xff7000, opacity: 1.0, linewidth: 2 } );
-      var kmaterial = new THREE.LineBasicMaterial( { color: 0xff0000, opacity: 1.0, linewidth: 2 } );
-      var pmaterial = new THREE.LineBasicMaterial( { color: 0xff00ff, opacity: 1.0, linewidth: 2 } );
-      var mumaterial = new THREE.LineBasicMaterial( { color: 0x00ff00, opacity: 1.0, linewidth: 2 } );
-      var ematerial = new THREE.LineBasicMaterial( { color: 0x0505ff, opacity: 1.0, linewidth: 2 } );
+      //var pimaterial = new THREE.LineBasicMaterial( { color: 0xff8000, opacity: 1.0, linewidth: 2 } );
+      //var kmaterial = new THREE.LineBasicMaterial( { color: 0xff0000, opacity: 1.0, linewidth: 2 } );
+      //var pmaterial = new THREE.LineBasicMaterial( { color: 0xff00ff, opacity: 1.0, linewidth: 2 } );
+      //var mumaterial = new THREE.LineBasicMaterial( { color: 0x00ff00, opacity: 1.0, linewidth: 2 } );
+      //var ematerial = new THREE.LineBasicMaterial( { color: 0x0505ff, opacity: 1.0, linewidth: 2 } );
       
-      var vtrackmaterial = new THREE.LineBasicMaterial( { color: 0x303030, opacity: 1.0, linewidth: 2 } );
-      
+      var vtrackmaterial = new THREE.LineBasicMaterial( { color: 0x303030, opacity: 1.0, linewidth: 2 } );      
       var pvsvfourmaterial = new THREE.LineDashedMaterial( { color: 0xff00ff, dashSize: 0.75e-3, gapSize: 0.5e-3, scale: 1.0, linewidth: 2, visible: true } );
       var pvsvthreematerial = new THREE.LineDashedMaterial( { color: 0xff00ff, dashSize: 0.75e-3, gapSize: 0.5e-3, scale: 1.0, linewidth: 2, visible: false } );
       var pvsvtwomaterial = new THREE.LineDashedMaterial( { color: 0xff00ff, dashSize: 0.75e-3, gapSize: 0.5e-3, scale: 1.0, linewidth: 2, visible: false } );
 
-      var detectoralpha = 0.04;
-      //var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: true, transparent: true, opacity: detectoralpha });
-      //var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, blending: THREE.CustomBlending, blendEquation: THREE.MaxEquation, shading: THREE.FlatShading, wireframe: wiremode, overdraw: true, doubleSided: false, transparent: true, opacity: detectoralpha });
-      //var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, blending: THREE.AdditiveBlending, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: true, transparent: true, opacity: detectoralpha });
-      //var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, blending: THREE.AdditiveBlending, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: true, transparent: true, opacity: detectoralpha });
-      var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, blending: THREE.NormalBlending, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: false, transparent: true, opacity: detectoralpha });
-      //THREE.NormalBlending
+      var detectoralpha = 0.06;
+      var detectormaterial = new THREE.MeshLambertMaterial({color: 0x40d0ff, blending: THREE.NormalBlending, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: true, transparent: true, opacity: detectoralpha, depthWrite: false, depthTest: true, side: THREE.DoubleSide });
+
+      var pimaterial = new THREE.ShaderMaterial( 
+      {
+        uniforms: {
+          color: { type: "c", value: new THREE.Color( 0xff8000 ) }
+        },
+        attributes: {
+          alpha: { type: 'f', value: [ ] }
+        },
+        vertexShader:   document.getElementById( 'vertexShader'   ).textContent,
+        fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+        side: THREE.FrontSide,      
+        blending: THREE.NormalBlending, //THREE.AdditiveBlending,
+        linewidth: 2,
+        transparent: true,
+        depthWrite: false,
+        depthTest: true
+      }   );
+      for (i = 0; i < 200; i++)
+        {
+	  pimaterial.attributes.alpha.value[i] = 1.0;
+	  if (i >= 170)//last 15% should fade out
+  	    pimaterial.attributes.alpha.value[i] = 1.0 - (i-169.0)/30.0;	
+        }
+
+      var kmaterial = pimaterial.clone();
+      kmaterial.uniforms = THREE.UniformsUtils.clone( pimaterial.uniforms );
+      kmaterial.attributes = THREE.UniformsUtils.clone( pimaterial.attributes );
+      kmaterial.uniforms.color.value = new THREE.Color( 0xff0000 );
+      var pmaterial = pimaterial.clone();
+      pmaterial.uniforms = THREE.UniformsUtils.clone( pimaterial.uniforms );
+      pmaterial.attributes = THREE.UniformsUtils.clone( pimaterial.attributes );
+      pmaterial.uniforms.color.value = new THREE.Color( 0xff00ff );
+      var mumaterial = pimaterial.clone();
+      mumaterial.uniforms = THREE.UniformsUtils.clone( pimaterial.uniforms );
+      mumaterial.attributes = THREE.UniformsUtils.clone( pimaterial.attributes );
+      mumaterial.uniforms.color.value = new THREE.Color( 0x00ff00 );
+      var ematerial = pimaterial.clone();
+      ematerial.uniforms = THREE.UniformsUtils.clone( pimaterial.uniforms );
+      ematerial.attributes = THREE.UniformsUtils.clone( pimaterial.attributes );
+      ematerial.uniforms.color.value = new THREE.Color( 0x0505ff );
+
+      //var pimaterial = new THREE.LineBasicMaterial( { color: 0xff8000, opacity: 1.0, linewidth: 2 } );
+      //var kmaterial = new THREE.LineBasicMaterial( { color: 0xff0000, opacity: 1.0, linewidth: 2 } );
+      //var pmaterial = new THREE.LineBasicMaterial( { color: 0xff00ff, opacity: 1.0, linewidth: 2 } );
+      //var mumaterial = new THREE.LineBasicMaterial( { color: 0x00ff00, opacity: 1.0, linewidth: 2 } );
+      //var ematerial = new THREE.LineBasicMaterial( { color: 0x0505ff, opacity: 1.0, linewidth: 2 } );
+
       var controls = new THREE.OrbitControls( camera, renderer.domElement );
       controls.target.set( 0.0, 0.0, 8.5);
       //controls.addEventListener( 'change', render );
@@ -157,49 +215,14 @@
 
       //var logo = new THREE.Mesh();
       var detector = new THREE.Mesh()
-      //if (!software)
-      //{      
-        var loader = new THREE.BinaryLoader(true);
-        //add logo
-        //loader.load( "logobin.js", function(geometry, materials) {
-        //  logo = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-        //  logo.geometry.computeFaceNormals();
-        //  logo.scale.set(3.0, 3.0, 3.0);
-        //  logo.position.set(-1.0,-3.0,-1.0);
-        //  //mesh.rotation.set(-1.5*Math.PI, 0.0, -0.5*Math.PI);
-        //  logo.rotation.set(-1.5*Math.PI, 0.0, 0.5*Math.PI);
-        //  scene.add(logo);              
-        //});
-        //add detector
-        //loader.load( "detector.js", function(geometry, materials) {
-        loader.load( "small.js", function(geometry, materials) {
-          //materials.transparent = true;
-          //materials.opacity = detectoralpha;
-          //detector = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( materials ) );
-          //for (i in materials)
-          //{
-          //  materials[i].transparent = true;
-          //  materials[i].opacity = detectoralpha;
-          //}
-          //detector = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-          detector = new THREE.Mesh( geometry, detectormaterial );
-          //depthWrite: false, 
-          //detector = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial({color: 0xffffff, doubleSided:true, depthWrite: false, transparent: true, opacity: 0.3 }) );
-          detector.geometry.computeFaceNormals();
-          detector.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
-          //detector.position.set(0.0,0.04,11.22);
-          detector.rotation.set(0.0, Math.PI, 0.0);
-          //detector.rotation.set(0.5*Math.PI, Math.PI, 0.0);//large model
-          scene.add(detector);              
-        });
-      //}
-
-      
-      //var plane = new THREE.Mesh(new THREE.PlaneGeometry(10000, 10000), new THREE.MeshLambertMaterial({color: 0xcfcfcf, shading: THREE.FlatShading, overdraw: false, doubleSided: true}));
-      //plane.position.set(0.0,-6.5,0.0);//y is now up
-      //plane.rotation.set(-0.5*Math.PI, 0.0, 0.0);
-      ////plane.overdraw = true;
-      //scene.add(plane);
+      var loader = new THREE.BinaryLoader(true);
+      loader.load( "small.js", function(geometry, materials) {
+        detector = new THREE.Mesh( geometry, detectormaterial );
+        detector.geometry.computeFaceNormals();
+        detector.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
+        detector.rotation.set(0.0, Math.PI, 0.0);
+        scene.add(detector);              
+      });
 
       // add subtle ambient lighting
       var ambientLight = new THREE.AmbientLight(0x040404);
@@ -216,56 +239,39 @@
 
 
       var currentevent = 0;
-      //var allevents = [];
      //this contains names of the currently available events on the server, first event is current
      var eventlist = [];
      //this is the current event
      var theevent = {};
 
-
-      stats = new Stats();
-      stats.domElement.style.position = 'absolute';
-      stats.domElement.style.left = '0px';
-      stats.domElement.style.top = '0px';
-      stats.domElement.style.color = '#fff';
-      //stats.domElement.style.padding = '5px';
-      //stats.domElement.style.margin = '0px';
-      //alert(stats.domElement.style.color);
-      document.body.appendChild( stats.domElement );
-
       window.addEventListener( 'resize', onWindowResize, false );
-      //document.addEventListener( 'keydown', onKeyDown, false );
-
-      //var prevevent = false;
-      //var nextevent = false;
 
       var gui = new dat.GUI();
       var params = {
-        //logo: displaylogo,
+        logo: displaylogo,
         detector: displaydetector,
         velohits: true, 
         tthits: true, 
         ithits: true, 
-        othits: false, 
+        othits: true, 
         ecalhits: true, 
         hcalhits: true, 
         muonhits: true, 
-        //plane: displayplane,
         wire: wiremode,
         rotate: autorotate,
         center : "Tracker",
         view : "Perspective",
-        update: true, //autoupdate,        
+        update: true, 
         alpha: detectoralpha,
         picolor: "#ff8000",
-        //picolor: "#5a5a5a",
         kcolor: "#ff0000",
         pcolor: "#ff00ff",
         mucolor: "#00ff00",
         ecolor: "#0505ff",
         bkgcolor: "#000000",
-        detcolor: "#ffffff",
+        detcolor: "#40d0ff",
         width: 2.0,
+        screenshotscale: 1.0,
         pvs: true,
         vtracks: true,
         fourprongs: true,
@@ -273,25 +279,47 @@
         twoprongs: false,
         //screenshot: function() { window.open(renderer.domElement.toDataURL("image/jpeg")); },
         screenshot: function() { 
+
+          renderer.setSize(params.screenshotscale*window.innerWidth, params.screenshotscale*window.innerHeight);
+          //renderer.render( scene, camera );
+
+        renderer.clear();
+	renderer.render(scene, camera);
+	if (displaylogo)
+	  {
+	    renderer.clearDepth();
+	    renderer.render( logoscene, logocamera );
+	  }
+
+
           window.open(renderer.domElement.toDataURL("image/png")); 
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          //renderer.render( scene, camera );
+        renderer.clear();
+	renderer.render(scene, camera);
+	if (displaylogo)
+	  {
+	    renderer.clearDepth();
+	    renderer.render( logoscene, logocamera );
+	  }
         },
         public: function() { 
           window.open("http://lhcb-public.web.cern.ch/lhcb-public"); 
         },
         next: function() { 
           params.update = false; 
-          if (currentevent < eventlist.length-1)
-	    currentevent += 1;
-	  else
-	    currentevent = 0;
-	  loadevent(eventlist[currentevent]);
-        },
-        prev: function() { 
-          params.update = false; 
           if (currentevent > 0)
 	    currentevent -= 1;
 	  else
 	    currentevent = eventlist.length-1;
+	  loadevent(eventlist[currentevent]);
+        },
+        prev: function() { 
+          params.update = false; 
+          if (currentevent < eventlist.length-1)
+	    currentevent += 1;
+	  else
+	    currentevent = 0;
 	  loadevent(eventlist[currentevent]);
         }
       };
@@ -305,10 +333,10 @@
       var enext = fev.add(params, "next").name("Next event");
       var eprev = fev.add(params, "prev").name("Previous event");
 
-      epublic.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      eupdate.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      enext.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      eprev.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
+      epublic.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      eupdate.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      enext.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      eprev.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
       //enext.domElement.parentNode.parentNode.style.backgroundPosition = "100px 50%";
       //enext.domElement.parentNode.parentNode.style.backgroundImage = "url(next16.png)";
       //enext.domElement.parentNode.parentNode.style.backgroundRepeat = "no-repeat";
@@ -318,7 +346,6 @@
       fev.open();
 
       var fvis = gui.addFolder('Visualization');      
-      //var elogo = fvis.add(params, "logo").name("Show logo").onChange( function() { displaylogo = params.logo; } );
       //var eplane = fvis.add(params, "plane").name("Show floor").onChange( function() { displayplane = params.plane; } );
       var erotate = fvis.add(params, "rotate").name("Auto rotate").onChange( function() { autorotate = params.rotate; if (camera.inPerspectiveMode) controls.autoRotate = autorotate;} );
       var ecenter = fvis.add(params, "center", ["VeLo", "Magnet", "Tracker", "Calorimeter"]).name("Center camera").onChange( function() { 
@@ -394,8 +421,10 @@
         }
       });
       var ebkgcolor = fvis.addColor(params, "bkgcolor").name("Bkg. color").onChange( function() { renderer.setClearColor( params.bkgcolor, 1 ); } );
+      var elogo = fvis.add(params, "logo").name("Show logo").onChange( function() { displaylogo = params.logo; } );
       var escreenshot = fvis.add(params, "screenshot").name("Screenshot"); 
-      fvis.open();
+      var escreenshotscale = fvis.add(params, "screenshotscale", 0.0, 5.0).name("Scaling"); 
+      //fvis.open();
 
       var fdet = gui.addFolder('Detector');      
       var edetector = fdet.add(params, "detector").name("Detector model").onChange( function() { displaydetector = params.detector;});
@@ -414,32 +443,44 @@
       var etthits = fdet.add(params, "tthits").name("Trigger tracker hits").onChange( function() { ttmaterial.visible = params.tthits;});
       var eithits = fdet.add(params, "ithits").name("Inner tracker hits").onChange( function() { itmaterial.visible = params.ithits;});
       var eothits = fdet.add(params, "othits").name("Outer tracker hits").onChange( function() { otmaterial.visible = params.othits;});
-      var eecalhits = fdet.add(params, "ecalhits").name("ECal hits").onChange( function() { ecalmaterial.visible = params.ecalhits;});
-      var ehcalhits = fdet.add(params, "hcalhits").name("HCal hits").onChange( function() { hcalmaterial.visible = params.hcalhits;});
-      var emuonhits = fdet.add(params, "muonhits").name("Muon hits").onChange( function() { muonmaterial.visible = params.muonhits;});
-      fdet.open();
+      var eecalhits = fdet.add(params, "ecalhits").name("ECal hits").onChange( function() { 
+			     ecalmaterial.visible = params.ecalhits;
+			     ecaledges.visible = params.ecalhits;
+			     //ecalmaterials[0].visible = params.ecalhits;	
+			     //ecalmaterials[1].visible = params.ecalhits;	
+			     });
+      var ehcalhits = fdet.add(params, "hcalhits").name("HCal hits").onChange( function() { 
+			     hcalmaterial.visible = params.hcalhits;
+			     hcaledges.visible = params.hcalhits;
+			     //hcalmaterials[0].visible = params.hcalhits;
+			     //hcalmaterials[1].visible = params.hcalhits;
+			     });
+      var emuonhits = fdet.add(params, "muonhits").name("Muon hits").onChange( function() { 
+			     muonmaterial.visible = params.muonhits;
+			     muonedges.visible = params.muonhits;
+			     //muon.material.visible = params.muonhits;
+			     //muonmesh.visible = params.muonhits;
+			     //muonmaterials[0].visible = params.muonhits;
+			     //muonmaterials[1].visible = params.muonhits;
+			     });
+      //fdet.open();
 
+      edetector.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      ewire.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      evelohits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      etthits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      eithits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      eothits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      eecalhits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      ehcalhits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      emuonhits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      elogo.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      erotate.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      ecenter.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      escreenshot.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      escreenshotscale.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      eview.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
 
-      edetector.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      ewire.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      evelohits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      etthits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      eithits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      eothits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      eecalhits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      ehcalhits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      emuonhits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      //elogo.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      //eplane.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      erotate.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      ecenter.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      escreenshot.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      eview.domElement.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      //escreenshot.domElement.parentNode.parentNode.style.backgroundPosition = "100px 50%";
-      //escreenshot.domElement.parentNode.parentNode.style.backgroundImage = "url(camera24.png)";
-      //escreenshot.domElement.parentNode.parentNode.style.backgroundRepeat = "no-repeat";
-
-      //var fcolors = gui.addFolder('Colors');
       var fcolors = gui.addFolder('Particles');
       var ewidth = fcolors.add(params, "width", 1.0, 10.0).name("Track width").onChange( function() { 
         pimaterial.linewidth = params.width;
@@ -459,8 +500,8 @@
       var ethreeprongs = fcolors.add(params, "threeprongs").name("Three prong decays").onChange( function() { threeprongmaterial.visible = params.threeprongs; pvsvthreematerial.visible = params.threeprongs; } );
       var etwoprongs = fcolors.add(params, "twoprongs").name("Two prong decays").onChange( function() { twoprongmaterial.visible = params.twoprongs; pvsvtwomaterial.visible = params.twoprongs; } );
 
-      ewidth.domElement.parentNode.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
-      ealpha.domElement.parentNode.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
+      ewidth.domElement.parentNode.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      ealpha.domElement.parentNode.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
       //fcolors.open();
 
 
@@ -470,13 +511,11 @@
 
       //render function
       function render() {
-        //logo.visible = displaylogo;
         detector.visible = displaydetector;
-        //plane.visible = displayplane;
 
         requestAnimationFrame(render);
         controls.update();
-        stats.update();
+        //stats.update();
         
         var timenow = Date.now();// this is in ms
         if (timebefore < 0.0)
@@ -495,7 +534,13 @@
 	  loadeventlist("events/events.json");
 	}
 
-        renderer.render(scene, camera);
+        renderer.clear();
+	renderer.render(scene, camera);
+	if (displaylogo)
+	  {
+	    renderer.clearDepth();
+	    renderer.render( logoscene, logocamera );
+	  }
       };
 
      //load names of events into eventlist, first event is to be displayed, remaining events can be traversed via next/prev
@@ -539,9 +584,21 @@
 	    scene.add(theevent.lines[i]);
 	  for (i in theevent.meshes)
 	    scene.add(theevent.meshes[i]);        
-          runnumber.innerHTML = "Run number: "+theevent.runNumber; 
-	  eventnumber.innerHTML = "Event number: "+theevent.eventNumber;
-          eventtime.innerHTML = "Time: "+theevent.time;
+
+	logoscene.remove(textsprite);
+	textcontext.clearRect ( 0 , 0 , textwidth, 4.0*textheight );
+	textcontext.fillStyle="#FFFFFF";
+	textcontext.fillText("Event "+theevent.runNumber, 0.0, 0.5*textheight);
+	textcontext.fillText("Run "+theevent.eventNumber, 0.0, 2.0*textheight);
+	textcontext.fillText(theevent.time, 0.0, 3.5*textheight);
+	texttexture = new THREE.Texture(textcanvas);
+	texttexture.needsUpdate = true;
+	textmaterial = new THREE.SpriteMaterial( { map: texttexture, useScreenCoordinates: false });
+	textsprite = new THREE.Sprite( textmaterial );
+	textsprite.scale.set(logowidth, logowidth*textcanvas.height/textcanvas.width, 1.0);
+	textsprite.position.set( -window.innerWidth/2.0 + 0.55*logowidth, window.innerHeight/2.0 - 1.0*logowidth, 1.0 );
+	logoscene.add(textsprite);
+
       };
 
       function removefromscene( ) {
@@ -555,6 +612,15 @@
       function onWindowResize() {    
         camera.setSize(window.innerWidth, window.innerHeight);
 	camera.updateProjectionMatrix();      
+
+        logosprite.position.set( -window.innerWidth/2.0 + 0.55*logowidth,   window.innerHeight/2.0 - 0.55*logoheight, 1.0 );
+	textsprite.position.set( -window.innerWidth/2.0 + 0.55*logowidth, window.innerHeight/2.0 - 1.0*logowidth, 1.0 );
+	logocamera.left = - window.innerWidth / 2.0;
+	logocamera.right = window.innerWidth / 2.0;
+	logocamera.top = window.innerHeight / 2.0;
+	logocamera.bottom = - window.innerHeight / 2.0;
+	logocamera.updateProjectionMatrix();      
+
         renderer.setSize( window.innerWidth, window.innerHeight );      
         //controls.handleResize();      
       };
@@ -789,18 +855,24 @@
 	      //PARSE MUON
 	      muonboxes = parsedevent.MUON;			     
               mergedmuongeometry = new THREE.Geometry();
+              mergedmuonlines = new THREE.Geometry();
 	      for (i in muonboxes)
               {
 	        var mb = muonboxes[i];
 		var muongeometry = new THREE.BoxGeometry(2.0*mb[1], 2.0*mb[3], 2.0*mb[5]);
+		//var muongeometry = new THREE.BoxHelper(2.0*mb[1], 2.0*mb[3], 2.0*mb[5]);
 	        var muonmesh = new THREE.Mesh(muongeometry, muonmaterial); 
+	        //var muonmesh = new THREE.Mesh(muongeometry, muonmaterials[0]);  
                 muonmesh.position.set(1.0e-3*mb[0], 1.0e-3*mb[2], 1.0e-3*mb[4]); 
                 muonmesh.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
                 //THREE.GeometryUtils.merge(mergedmuongeometry, muonmesh);
 		muonmesh.updateMatrix();
 		mergedmuongeometry.merge(muonmesh.geometry, muonmesh.matrix);
 	      }
-	      allmeshes.push(new THREE.Mesh(mergedmuongeometry, muonmaterial));
+	      var mergedmuonmesh = new THREE.Mesh(mergedmuongeometry, muonmaterial);
+	      allmeshes.push(mergedmuonmesh);
+	      muonedges = new THREE.EdgesHelper(mergedmuonmesh, 0xa0ffa0 );
+	      allmeshes.push(muonedges);
 
 	      //PARSE ECAL
 	      ecalboxes = parsedevent.ECAL;			     
@@ -811,13 +883,21 @@
 	        var eb = ecalboxes[i];
 		var ecalgeometry = new THREE.BoxGeometry(eb[4], eb[4], eb[0]*escale);
 	        var ecalmesh = new THREE.Mesh(ecalgeometry, ecalmaterial); 
+	        //var ecalmesh = new THREE.Mesh(ecalgeometry, ecalmaterials[0]); 
                 ecalmesh.position.set(1.0e-3*eb[1], 1.0e-3*eb[2], 1.0e-3*(eb[3]-0.5*eb[0]*escale)); 
                 ecalmesh.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
                 //THREE.GeometryUtils.merge(mergedecalgeometry, ecalmesh);
 		ecalmesh.updateMatrix();
 		mergedecalgeometry.merge(ecalmesh.geometry, ecalmesh.matrix);
 	      }
-	      allmeshes.push(new THREE.Mesh(mergedecalgeometry, ecalmaterial));
+	      //allmeshes.push(new THREE.Mesh(mergedecalgeometry, ecalmaterial));
+	      //allmeshes.push(new THREE.SceneUtils.createMultiMaterialObject(mergedecalgeometry, ecalmaterials));
+	      var mergedecalmesh = new THREE.Mesh(mergedecalgeometry, ecalmaterial);
+	      allmeshes.push(mergedecalmesh);
+	      ecaledges = new THREE.EdgesHelper(mergedecalmesh, 0xa0a0ff );
+	      allmeshes.push(ecaledges);
+
+
 
 	      //PARSE HCAL
 	      hcalboxes = parsedevent.HCAL;			     
@@ -828,13 +908,20 @@
 	        var hb = hcalboxes[i];
 		var hcalgeometry = new THREE.BoxGeometry(hb[4], hb[4], hb[0]*escale);
 	        var hcalmesh = new THREE.Mesh(hcalgeometry, hcalmaterial); 
+	        //var hcalmesh = new THREE.Mesh(hcalgeometry, hcalmaterials[0]); 
+
                 hcalmesh.position.set(1.0e-3*hb[1], 1.0e-3*hb[2], 1.0e-3*(hb[3]+0.5*hb[0]*escale)); 
                 hcalmesh.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
                 //THREE.GeometryUtils.merge(mergedhcalgeometry, hcalmesh);
 		hcalmesh.updateMatrix();
 		mergedhcalgeometry.merge(hcalmesh.geometry, hcalmesh.matrix);
 	      }
-	      allmeshes.push(new THREE.Mesh(mergedhcalgeometry, hcalmaterial));
+	      //allmeshes.push(new THREE.Mesh(mergedhcalgeometry, hcalmaterial));
+	      //allmeshes.push(new THREE.SceneUtils.createMultiMaterialObject(mergedhcalgeometry, hcalmaterials));
+	      var mergedhcalmesh = new THREE.Mesh(mergedhcalgeometry, hcalmaterial);
+	      allmeshes.push(mergedhcalmesh);
+	      hcaledges = new THREE.EdgesHelper(mergedhcalmesh, 0xffffa0 );
+	      allmeshes.push(hcaledges);
 
 	      //PARSE VELO TRACKS
 	
@@ -875,6 +962,7 @@
 	          var line;
                   if (name=="pi+" || name=="pi-")
                     line = new THREE.Line( geometry, pimaterial, THREE.LineStrip );
+                    //line = new THREE.Line( geometry, linematerial, THREE.LineStrip );
                   else if (name=="K+" || name=="K-")
                     line = new THREE.Line( geometry, kmaterial, THREE.LineStrip );
                   else if (name=="p+" || name=="p-")
@@ -916,9 +1004,6 @@
 	//return 0;
       };
       
-      //checkforupdates("events/events.json");
-      //loadNames("events/events.json")
-      //updateevents("events/events.json");
       loadeventlist("events/events.json");
       
       render();
