@@ -29,6 +29,9 @@ class HCRawBankDecoder : public Decoder::AlgBase {
   LHCb::HCDigits* m_digits;
   LHCb::HCDigits* m_l0digits;
 
+  std::string m_digitLocation;
+  std::string m_l0digitLocation;
+
   bool m_skipTrigger;
   bool m_skipAdc;
 

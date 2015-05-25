@@ -4,6 +4,9 @@
 ! Purpose     : Decoding of Herschel raw banks
 !-----------------------------------------------------------------------------
 
+! 2015-05-25 - Heinrich Schindler
+ - Make input/output locations configurable.
+
 ! 2015-04-26 - Heinrich Schindler
  - Bug fix in PS/SPD bank decoding (ADC packet is two bytes not one).
 

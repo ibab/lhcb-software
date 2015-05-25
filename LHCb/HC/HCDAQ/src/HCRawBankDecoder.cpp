@@ -22,9 +22,14 @@ HCRawBankDecoder::HCRawBankDecoder(const std::string& name,
     : Decoder::AlgBase(name, pSvcLocator),
       m_digits(NULL), m_l0digits(NULL) {
 
+  declareProperty("DigitLocation", 
+                  m_digitLocation = LHCb::HCDigitLocation::Default);
+  declareProperty("L0DigitLocation",
+                  m_l0digitLocation = LHCb::HCDigitLocation::L0); 
   // Initialize search path, and then call the base method.
-  m_rawEventLocations = {LHCb::RawEventLocation::Other,
-                         LHCb::RawEventLocation::Default};
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::HC);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
   initRawEventSearch();
 }
 
@@ -50,9 +55,9 @@ StatusCode HCRawBankDecoder::execute() {
 
   // Create containers and pass their ownership to the TES.
   m_digits = new LHCb::HCDigits();
-  put(m_digits, LHCb::HCDigitLocation::Default);
+  put(m_digits, m_digitLocation);
   m_l0digits = new LHCb::HCDigits();
-  put(m_l0digits, LHCb::HCDigitLocation::L0);
+  put(m_l0digits, m_l0digitLocation);
     
   // Retrieve the raw event.
   LHCb::RawEvent* rawEvent = findFirstRawEvent();
