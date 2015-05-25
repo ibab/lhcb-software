@@ -525,6 +525,13 @@ void MessagePresenter::setup()
 {
   // define and set root style
 
+  // line thickness
+  int lhcbWidth = 1;
+  // Marker type
+  int lhcbMarkerType = 8;
+  // marker size
+  double lhcbMarkerSize = 0.7;
+
   gStyle->SetCanvasBorderMode(0);
   gStyle->SetCanvasColor(10);
   gStyle->SetPadBorderMode(0);
@@ -557,6 +564,20 @@ void MessagePresenter::setup()
   gStyle->SetStatX(0.97);
   gStyle->SetStatY(1.0);
 
+  // use bold lines and markers
+  gStyle->SetLineWidth(lhcbWidth);
+  gStyle->SetFrameLineWidth(lhcbWidth);
+  gStyle->SetHistLineWidth(lhcbWidth);
+  gStyle->SetFuncWidth(lhcbWidth);
+  gStyle->SetGridWidth(lhcbWidth);
+  gStyle->SetLineStyleString(2,"[12 12]"); // postscript dashes
+  gStyle->SetMarkerStyle(lhcbMarkerType);
+  gStyle->SetMarkerSize(lhcbMarkerSize);
+
+  // histogram divisions: only 5 in x to avoid label overlaps
+  gStyle->SetNdivisions(505,"x");
+  gStyle->SetNdivisions(510,"y");
+  
   // Style for 2D zcol plots
   const Int_t NRGBs = 5;
   const Int_t NCont = 255;

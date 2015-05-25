@@ -4,6 +4,10 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2015-05-25 - Chris Jones
+ - Add support TF1 in camera reports.
+ - Improve a bit the display options for histograms with polymarkers.
+
 ! 2015-05-23 - Chris Jones
  - Make PDF the default image file type (as PNG seg. faults.)
  - Minor improvements to the formating.

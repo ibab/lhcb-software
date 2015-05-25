@@ -1,5 +1,3 @@
-// $Id: CameraTool.cpp,v 1.17 2010-10-01 13:31:34 frankb Exp $
-// Include files
 
 // local
 #include "CameraTool.h"
@@ -8,6 +6,7 @@
 // ROOT
 #include "TH1.h"
 #include "TH2.h"
+#include "TF1.h"
 
 // boost
 #include "boost/lexical_cast.hpp"
@@ -18,6 +17,9 @@
 #include "RTL/rtl.h"
 
 #include <sstream>
+#include <iostream>
+
+using namespace std;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CameraTool
@@ -706,16 +708,23 @@ int CameraTool::Append(const char * C)
   return 1;
 }
 
+int CameraTool::Append(TH1 * H,const char *opts)
+{
+  TH1D * hd = dynamic_cast<TH1D*>(H);
+  if ( hd ) return Append(hd,opts);
+  return 0;
+}
+
 int CameraTool::Append(TH1D * H, const char * opts)
 {
   if (m_dosend) 
   {
-    if ( !H )             { Warning("Null TH1D pointer");  return 0; }
-    if ( !H->GetXaxis() ) { Warning("TH1D has no X axis"); return 0; }
+    if ( !H )             { Warning("Null TH1D pointer").ignore();  return 0; }
+    if ( !H->GetXaxis() ) { Warning("TH1D has no X axis").ignore(); return 0; }
 
     const std::string s = ( opts != NULL ? (std::string)"."+opts : "" );
-    int nXBins = H->GetNbinsX();
-    int size = (5+2*(nXBins+2));
+    const int nXBins = H->GetNbinsX();
+    const int size = (5+2*(nXBins+2));
     float * data = new float[size];
 
     data[0] = 1.f;
@@ -751,15 +760,13 @@ int CameraTool::Append(TH1D * H, const char * opts)
   return 1;
 }
 
-#include <iostream>
-using namespace std;
 int CameraTool::Append( TH2D * H, const char * opts )
 {
   if (m_dosend)
   {
-    if ( !H )             { Warning("Null TH2D pointer");  return 0; }
-    if ( !H->GetXaxis() ) { Warning("TH2D has no X axis"); return 0; }
-    if ( !H->GetYaxis() ) { Warning("TH2D has no Y axis"); return 0; }
+    if ( !H )             { Warning("Null TH2D pointer").ignore();  return 0; }
+    if ( !H->GetXaxis() ) { Warning("TH2D has no X axis").ignore(); return 0; }
+    if ( !H->GetYaxis() ) { Warning("TH2D has no Y axis").ignore(); return 0; }
 
     const std::string s = ( opts != NULL ? (std::string)"."+opts : "" );
     const int nXBins = H->GetNbinsX();
@@ -847,6 +854,17 @@ int CameraTool::Append( TH2D * H, const char * opts )
   return 1;
 }
 
+int CameraTool::Append( TF1 * F, const char * opts )
+{
+  if ( m_dosend ) 
+  {
+    if ( !F ) { Warning("Null TF1 pointer").ignore(); return 0; }
+    std::string s = (std::string)".SAME,C";
+    if ( opts ) { s += (std::string)","+opts; }
+    return Append( F->GetHistogram(), s.c_str() );
+  }
+  return 1;
+}
 
 std::ostream& operator<<(std::ostream &os, ICameraTool::MessageLevel l) 
 {

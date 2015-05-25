@@ -1,8 +1,7 @@
-// $Id: ICameraTool.h,v 1.6 2010-03-24 17:08:10 nmangiaf Exp $
+
 #ifndef RICHKERNEL_ICAMERATOOL_H 
 #define RICHKERNEL_ICAMERATOOL_H 1
 
-// Include files
 // from STL
 #include <string>
 
@@ -12,10 +11,12 @@
 
 // Forward declarations
 #include <iosfwd>
+
 // ROOT
+class TH1;
 class TH1D;
 class TH2D;
-
+class TF1;
 
 static const InterfaceID IID_ICameraTool ( "ICameraTool", 1, 0 );
 
@@ -33,6 +34,8 @@ public:
   
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ICameraTool; }
+
+public:
   
   enum MessageLevel { NONE = 0, 
                       INFO = 1,
@@ -43,20 +46,27 @@ public:
                       CAM_COMMAND = 9 
                      };
 
-
+public:
+  
   virtual int SendAndClear(MessageLevel o_l,const std::string& o_who,const std::string& o_what)=0;
   virtual int SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what)=0; 
 
   virtual int Append(TH2D * H,const char *opts=NULL)=0;
+
   virtual int Append(TH1D * H,const char *opts=NULL)=0;
+  virtual int Append(TH1 * H,const char *opts=NULL)=0;
+ 
+  virtual int Append(TF1  * F,const char *opts=NULL)=0;
 
   virtual int Append(const char * T,const char * C)=0;
-  virtual int Append(const char * T,void * C, int sz)=0;
-    
-  virtual int Append(const char * C)=0;
+  inline  int Append(const char * T,const std::string& C) { return Append(T,C.c_str()); }
+  inline  int Append(const std::string& T,const std::string& C) { return Append(T.c_str(),C.c_str()); }
 
-  inline int Append(const std::string & C) { return Append(C.c_str()); }
-  inline int Append(const char * T,const std::string& C) { return Append(T,C.c_str()); }
+  virtual int Append(const char * C)=0;
+  inline  int Append(const std::string & C) { return Append(C.c_str()); }
+
+  virtual int Append(const char * T,void * C, int sz)=0;
+  inline  int Append(const std::string& T,void * C, int sz) { return Append(T.c_str(),C,sz); }
 
   // For unknown reasons if I put the following method declaration just 
   // after MessageLevel they give seg fault

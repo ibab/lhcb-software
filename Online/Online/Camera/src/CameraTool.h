@@ -1,4 +1,4 @@
-// $Id: CameraTool.h,v 1.10 2010-03-24 17:08:10 nmangiaf Exp $
+
 #ifndef CAMERATOOL_H
 #define CAMERATOOL_H 1
 
@@ -20,9 +20,6 @@
 
 // Forward declarations
 class client;
-// ROOT
-class TH1D;
-class TH2D;
 // DIM
 class DimService;
 class DimCommand;
@@ -43,12 +40,16 @@ class DimCommand;
  */
 
 class CameraTool : public GaudiTool,
-                   virtual public ICameraTool {
+                   virtual public ICameraTool
+{
+
+private:
 
   int numErrBZ;
   int numErrCN;
 
 public:
+
   /// Standard constructor
   CameraTool( const std::string& type,
               const std::string& name,
@@ -59,6 +60,7 @@ public:
   virtual StatusCode initialize();
   virtual StatusCode finalize();
 
+public:
 
   /*!
    * Sets the configurations parameters to handle the message sending to both Camera and PVSS.
@@ -219,13 +221,31 @@ public:
   int Append(TH2D * H, const char * opts = NULL);
 
   /*!
+   * Adds a ROOT 1D histogram to be sent by CAMERA.
+   *
+   * \param  H Histogram to be sent.
+   * \param  opts ROOT options to be applied to the histogram. Defaults to NULL.
+   * \return int Returns 1.
+   */
+  int Append(TH1 * H, const char * opts = NULL);
+
+  /*!
    * Adds a ROOT 1D histogram of doubles to be sent by CAMERA.
    *
    * \param  H Histogram to be sent.
    * \param  opts ROOT options to be applied to the histogram. Defaults to NULL.
    * \return int Returns 1.
    */
-  int Append(TH1D * H, const char * opts =NULL);
+  int Append(TH1D * H, const char * opts = NULL);
+
+  /*!
+   * Adds a ROOT 1D Function to be sent by CAMERA.
+   *
+   * \param  F Function to be sent.
+   * \param  opts ROOT options to be applied to the histogram. Defaults to NULL.
+   * \return int Returns 1.
+   */
+  int Append(TF1 * F, const char * opts =NULL);
 
   /*!
    * Sends a character buffer to CAMERA.
@@ -409,6 +429,7 @@ private:
    *
    */
   int SendToPVSS(int messagePeriod = 0);
+
 };
 
 #endif
