@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-26 - Alex Pearce
+ - Tweak Charm ForXSec line selections to match trigger selections.
+
 ! 2015-05-18 - Ricardo Vazquez Gomez
  - Update stripping23 dbase
 
