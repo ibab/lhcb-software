@@ -65,10 +65,10 @@ default_config = {
         'Xic_VCHI2VDOF_MAX': 25.0,
         # Maximum angle between Xic+ momentum and Xic+ direction of flight
         'Xic_acosBPVDIRA_MAX': 35.0*mrad,
-        # Primary vertex displacement requirement, either that the Xic+ is some
-        # sigma away from the PV, or it has a minimum flight time
+        # Primary vertex displacement requirement, that the Xic+ is some sigma
+        # away from the PV and it has a minimum flight time
         'Xic_PVDispCut': (
-            '((BPVVDCHI2 > 16.0) |'
+            '((BPVVDCHI2 > 16.0) &'
             '(BPVLTIME() > 0.150*picosecond))'
         ),
         # Minimum Xic MVA discriminant value

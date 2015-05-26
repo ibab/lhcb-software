@@ -71,10 +71,10 @@ default_config = {
         'Lambdac_VCHI2VDOF_MAX': 25.0,
         # Maximum angle between Lc+ momentum and Lc+ direction of flight
         'Lambdac_acosBPVDIRA_MAX': 35.0*mrad,
-        # Primary vertex displacement requirement, either that the Lc+ is some
-        # sigma away from the PV, or it has a minimum flight time
+        # Primary vertex displacement requirement, that the Lc+ is some sigma
+        # away from the PV and it has a minimum flight time
         'Lambdac_PVDispCut': (
-            '((BPVVDCHI2 > 4.0) |'
+            '((BPVVDCHI2 > 4.0) &'
             '(BPVLTIME() > 0.075*picosecond))'
         ),
         # Maximum delta mass value m(Sigma_c) - m(Lambda_c+) (PDG dm: 167 MeV)
