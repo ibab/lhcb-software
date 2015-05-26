@@ -753,7 +753,7 @@ D02HHForXSecConf = {
         # Minimum transverse momentum all D0 daughters must satisfy
         'Daug_All_PT_MIN': 250.0*MeV,
         # Minimum best primary vertex IP chi^2 all D0 daughters must satisfy
-        'Daug_All_BPVIPCHI2_MIN': 4.0,
+        'Daug_All_BPVIPCHI2_MIN': 16.0,
         # Minimum D0 daughter momentum
         'Daug_P_MIN': 3.0*GeV,
         # Maximum D0 daughter momentum
@@ -769,12 +769,12 @@ D02HHForXSecConf = {
         # D0 mass window around the nominal D0 mass before the vertex fit
         'D0_ADAMASS_WIN': 80.0*MeV,
         # Maximum D0 vertex chi^2 per vertex fit DoF
-        'D0_VCHI2VDOF_MAX': 25.0,
+        'D0_VCHI2VDOF_MAX': 10.0,
         # Maximum angle between D0 momentum and D0 direction of flight
-        'D0_acosBPVDIRA_MAX': 35.0*mrad,
-        # Primary vertex displacement requirement, either that the D0 is some
-        # sigma away from the PV, or it has a minimum flight time
-        'D0_PVDispCut': '((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150*picosecond))',
+        'D0_acosBPVDIRA_MAX': 17.0*mrad,
+        # Primary vertex displacement requirement, that the D0 is some sigma
+        # away from the PV
+        'D0_PVDispCut': '(BPVVDCHI2 > 49.0)',
         # Maximum delta mass value m(D*{0,+}) - m(D0)
         'Dstar_AMDiff_MAX': 160.0*MeV,
         # Maximum D*+ vertex chi^2 per vertex DoF (_not_ applied to D*0)
@@ -848,14 +848,14 @@ D02K3PiForXSecConf = {
         # D0 mass window around the nominal D0 mass before the vertex fit
         'Comb_ADAMASS_WIN': 80.0*MeV,
         # Maximum distance of closest approach of D0 daughters
-        'Comb_ADOCAMAX_MAX': 0.5*mm,
+        'Comb_ADOCAMAX_MAX': 0.1*mm,
         # Maximum D0 vertex chi^2 per vertex fit DoF
-        'D0_VCHI2VDOF_MAX': 25.0,
+        'D0_VCHI2VDOF_MAX': 10.0,
         # Maximum angle between D0 momentum and D0 direction of flight
-        'D0_acosBPVDIRA_MAX': 35.0*mrad,
+        'D0_acosBPVDIRA_MAX': 17.0*mrad,
         # Primary vertex displacement requirement, either that the D0 is some
         # sigma away from the PV, or it has a minimum flight time
-        'D0_PVDispCut': '((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150*picosecond))',
+        'D0_PVDispCut': '((BPVVDCHI2 > 16.0)&(BPVLTIME() > 0.100*picosecond))',
         # Maximum delta mass value m(D*{0,+}) - m(D0)
         'Dstar_AMDiff_MAX': 160.0*MeV,
         # Maximum D*+ vertex chi^2 per vertex DoF (_not_ applied to D*0)
@@ -909,7 +909,7 @@ D2HHHForXSecConf = {
         # Minimum transverse momentum at least 2 D daughters must satisfy
         'Daug_2of3_PT_MIN': 400.0*MeV,
         # Minimum transverse momentum at least 1 D daughter must satisfy
-        'Daug_1of3_PT_MIN': 400.0*MeV,
+        'Daug_1of3_PT_MIN': 1000.0*MeV,
         # Minimum best primary vertex IP chi^2 all D daughters must satisfy
         'Daug_All_BPVIPCHI2_MIN': 4.0,
         # Minimum best PV IP chi^2 at least 2 D daughters must satisfy
@@ -941,10 +941,10 @@ D2HHHForXSecConf = {
         # Maximum D vertex chi^2 per vertex fit DoF
         'D_VCHI2VDOF_MAX': 25.0,
         # Maximum angle between D momentum and D direction of flight
-        'D_acosBPVDIRA_MAX': 35.0*mrad,
-        # Primary vertex displacement requirement, either that the D is some
-        # sigma away from the PV, or it has a minimum flight time
-        'D_PVDispCut': '((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150*picosecond))',
+        'D_acosBPVDIRA_MAX': 34.0*mrad,
+        # Primary vertex displacement requirement, that the D is some sigma
+        # away from the PV and it has a minimum flight time
+        'D_PVDispCut': '((BPVVDCHI2 > 16.0)&(BPVLTIME() > 0.150*picosecond))',
         # Minimum D+ and D_s+ MVA discriminant value
         'Dp_MVA_MIN': -0.3,
         'Ds_MVA_MIN': -0.3,
