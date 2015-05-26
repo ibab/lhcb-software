@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichHPDImageAnalysis
 ################################################################################
-gaudi_subdir(RichHPDImageAnalysis v1r15)
+gaudi_subdir(RichHPDImageAnalysis v1r16)
 
 gaudi_depends_on_subdirs(GaudiUtils
                          Rich/RichRecBase)
