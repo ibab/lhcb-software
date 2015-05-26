@@ -2,6 +2,8 @@
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! ====================================================================
+
+!========================= CondDBUI v3r34 2015-05-26 =========================
 ! 2015-05-26 - Liang Sun
  - A bug fix to enable the CondDBUI.CondDB member defaultTag so that an alternative tag can be used
 
