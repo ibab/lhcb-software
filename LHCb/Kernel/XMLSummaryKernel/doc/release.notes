@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+!========================= XMLSummaryKernel v1r13 2015-05-26 =======================
 ! 2015-05-06 - Marco Clemencic
  - Wrapped calls to Python with the GIL.
    Fixes a segfault when starting Gaudi without GaudiPython (GAUDI-986).
