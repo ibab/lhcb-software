@@ -2,6 +2,9 @@
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! ====================================================================
+! 2015-05-26 - Liang Sun
+ - A bug fix to enable the CondDBUI.CondDB member defaultTag so that an alternative tag can be used
+
 ! 2015-05-11 - Liang Sun
  - A bug fix for parsing release notes with SAX paser. The method within ReleaseNotesHandler is migrated into endElement() as you might expect an incomplete string within characters()
 

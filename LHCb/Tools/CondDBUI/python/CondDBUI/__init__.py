@@ -243,7 +243,8 @@ class CondDB(object):
         outputs:
             none
         """
-        self.defaultTag = 'HEAD'
+#        self.defaultTag = 'HEAD'
+        self.defaultTag = defaultTag
         self.db         = None
         self.connectionString = os.path.expandvars(connectionString)
         self.readOnly = readOnly
@@ -514,6 +515,9 @@ class CondDB(object):
             third integer is the channel ID, and the last integer is the insertion time.
         '''
         from PyCool import cool
+        import cppyy
+        Helpers = cppyy.gbl.CondDBUI.Helpers
+
         assert self.db != None, "No database connected !"
         if channelID != None:
             channelSelection = cool.ChannelSelection(channelID)
