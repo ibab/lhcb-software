@@ -83,6 +83,6 @@ else()
 endif()
 
 cam_exe(CameraGui src/applications/MessagePresenter.C src/applications/Elog.cpp src/applications/ElogDialog.cpp MessagePresenterDict.cpp)
-target_link_libraries(CameraGui ${CMAKE_DL_LIBS})
+target_link_libraries(CameraGui Boost ${CMAKE_DL_LIBS})
 
 #cam_exe(CameraViewContainer ../src/applications/ViewCont.C MessagePresenterDict.cpp)
