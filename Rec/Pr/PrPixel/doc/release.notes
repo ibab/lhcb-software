@@ -4,6 +4,7 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+!========================= PrPixel v1r11 2015-05-26 =========================
 ! 2015-04-22 - Heinrich Schindler
  - Remove support for obsolete, lite-cluster based raw banks.
  - Sort hits on a track only once.
