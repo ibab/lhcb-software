@@ -4,6 +4,7 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+!========================= MuonID v9r15 2015-05-26 =========================
 ! 2015-05-24 - Ricardo Vazquez Gomez
  - Bugfix in the foiYDim for MuonIDAlg that was used the dx coordinate.
  - Bugfix in the NShared computation that was comparing a distance with a 
