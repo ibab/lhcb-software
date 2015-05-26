@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaudiObjDesc
 ################################################################################
-gaudi_subdir(GaudiObjDesc v11r22)
+gaudi_subdir(GaudiObjDesc v11r23)
 
 gaudi_depends_on_subdirs(GaudiKernel)
 
