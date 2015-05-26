@@ -88,7 +88,7 @@ void ElogDialog::build()
   SetLayoutBroken(true);
 
   // composite frame
-  TGCompositeFrame *elogFrame = new TGCompositeFrame(this, 646, 435,  kVerticalFrame);
+  TGCompositeFrame *elogFrame = new TGCompositeFrame(this, 700, 435,  kVerticalFrame);
   elogFrame->SetLayoutBroken(true);
 
   TGLayoutHints* layout = new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2);
