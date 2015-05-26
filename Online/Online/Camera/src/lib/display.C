@@ -15,6 +15,7 @@
 
 InfoWindow::InfoWindow(int * inalive):TGMainFrame()
 {
+  fHasImage = false;
   //std::cout <<"Made me"<<std::endl;
   alive = inalive;
   lines=0;
@@ -71,6 +72,7 @@ void InfoWindow::ShowCont(const std::string& ins)
     if ((*alive) < 2)
       this->display();
 
+    fHasImage = nrHistos > 0;
 
     int HistoCnt = 1;
 

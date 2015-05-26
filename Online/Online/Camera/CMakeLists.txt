@@ -18,14 +18,13 @@ endif()
 find_package(Boost COMPONENTS regex)
 
 gaudi_add_library(CameraLib
-                    src/camline.C src/container.C src/container_ROOT.C
-                    src/display.C src/proto.C
+                    src/lib/*.C
                   PUBLIC_HEADERS Camera
                   INCLUDE_DIRS ROOT ${CMAKE_CURRENT_SOURCE_DIR}/Camera ${CMAKE_CURRENT_SOURCE_DIR}/src
                   LINK_LIBRARIES ROOT)
 
 gaudi_add_module(Camera
-                   src/*.cpp src/container.C
+                   src/component/*.cpp src/lib/container.C
                  INCLUDE_DIRS ROOT
                  LINK_LIBRARIES ROOT CameraLib GaudiAlgLib dim OnlineKernel)
 
@@ -36,14 +35,14 @@ macro(cam_exe name)
                        LINK_LIBRARIES CameraLib)
 endmacro()
 
-cam_exe(CameraSwitch     camswitch.C)
-cam_exe(CameraCommand    sendcmd.C)
-cam_exe(CameraTest       testwarn.C)
-cam_exe(CameraServer     sserver.C getnsave.C)
-cam_exe(CameraWebServer  webserver.C)
+cam_exe(CameraSwitch     ../src/applications/camswitch.C)
+cam_exe(CameraCommand    ../src/applications/sendcmd.C)
+cam_exe(CameraTest       ../src/applications/testwarn.C)
+cam_exe(CameraServer     ../src/applications/sserver.C ../src/applications/getnsave.C)
+cam_exe(CameraWebServer  ../src/applications/webserver.C)
 
-#cam_exe(CameraSend sendone.C)
-#cam_exe(CameraWebGet get.C)
+#cam_exe(CameraSend ../src/applications/sendone.C)
+#cam_exe(CameraWebGet ../src/applications/get.C)
 
 
 set(dict_srcs ${CMAKE_CURRENT_SOURCE_DIR}/Camera/MessagePresenter.h
@@ -56,14 +55,34 @@ else()
   set(dict_cmd ${ROOT_rootcling_CMD})
 endif()
 
-add_custom_command(OUTPUT MessagePresenterDict.cpp
-                   COMMAND ${env_cmd} --xml ${env_xml}
-                     ${dict_cmd} -f MessagePresenterDict.cpp -c
-                           -inlineInputHeader
-                           ${dict_srcs}
-                   DEPENDS ${dict_srcs})
+set(dict_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/cintBootstrap.h
+              ${CMAKE_CURRENT_SOURCE_DIR}/src/LinkDef.h)
 
-cam_exe(CameraGui src/MessagePresenter.C MessagePresenterDict.cpp)
+if(ROOT_HAS_PCMS)
+  # this section is copied and adapted from gaudi_add_dictionary in GaudiProjectConfig
+  file(MAKE_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+  add_custom_command(OUTPUT cintBootstrapDict.cpp cintBootstrapDict_rdict.pcm ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cintBootstrapDict_rdict.pcm
+                     COMMAND ${env_cmd} --xml ${env_xml}
+                       ${dict_cmd} -f cintBootstrapDict.cpp -c -inlineInputHeader
+                             ${dict_srcs}
+                     COMMAND ${CMAKE_COMMAND} -E copy cintBootstrapDict_rdict.pcm ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cintBootstrapDict_rdict.pcm
+                     DEPENDS ${dict_srcs})
+  add_custom_target(cintBootstrapDictGen ALL
+                    DEPENDS cintBootstrapDict.cpp)
+
+  install(FILES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cintBootstrapDict_rdict.pcm DESTINATION lib OPTIONAL)
+
+else()
+
+  add_custom_command(OUTPUT cintBootstrapDict.h cintBootstrapDict.cpp
+                     COMMAND ${env_cmd} --xml ${env_xml}
+                       ${dict_cmd} -f cintBootstrapDict.cpp -c -inlineInputHeader
+                             ${dict_srcs}
+                     DEPENDS ${dict_srcs})
+
+endif()
+
+cam_exe(CameraGui src/applications/MessagePresenter.C src/applications/Elog.cpp src/applications/src/applications/ElogDialog.cpp MessagePresenterDict.cpp)
 target_link_libraries(CameraGui ${CMAKE_DL_LIBS})
 
-#cam_exe(CameraViewContainer src/ViewCont.C MessagePresenterDict.cpp)
+#cam_exe(CameraViewContainer ../src/applications/ViewCont.C MessagePresenterDict.cpp)

@@ -99,8 +99,13 @@
 
 using namespace std;
 
-#include "MessagePresenter.h"
+#include "Camera/MessagePresenter.h"
 
+#include "Camera/ElogDialog.h"
+#include "Elog.h"
+
+#include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 
 void MessagePresenter::UpdateRight()
 {
@@ -486,7 +491,7 @@ int MessagePresenter::GetXtra(const std::string & str,
   //   }
 
   FILE *F = fopen(to.c_str(),"wb");
-  if (F==NULL)
+  if ( F == NULL )
   {
     std::cerr<< "Could not open cache file: "<<to.c_str()<<endl;
     perror("fopen in GetXtra:");
@@ -616,6 +621,8 @@ void MessagePresenter::setup()
 
   fTextButtonDump->Connect("Clicked()","MessagePresenter",this,"dumpmsg()");
 
+  fTextButtonElog->Connect("Clicked()","MessagePresenter",this,"dumpelog()");
+
   fListBox816->Connect("Selected(Int_t)","MessagePresenter",this,"selectleft()");;
   fListBox863->Connect("Selected(Int_t)","MessagePresenter",this,"selectright()");;
   fMainFrame1933->Connect("CloseWindow()","MessagePresenter",this,"DoClose()");
@@ -684,7 +691,7 @@ void MessagePresenter::dumpmsg()
   //std:;string
   static Bool_t overwr = kFALSE;
   TGFileInfo fi;
-  fi.fFilename = StrDup(savname);
+  fi.fFilename  = StrDup(savname);
   fi.fFileTypes = gFiletypes;
   fi.fIniDir    = StrDup(savdir);
   fi.fOverwrite = overwr;
@@ -701,10 +708,6 @@ void MessagePresenter::dumpmsg()
     std::string stext,smsg;
 
     size_t pos = s.find_last_of(".");
-
-    //std::cout << pos <<" "<<pos2<<" "<<s.length();
-    //std::cout << fi.fFilename << std::endl;
-
 
     if ((pos2!=string::npos) && (pos2>pos)){ // no "." in name
       stext = s+".txt";
@@ -738,6 +741,92 @@ void MessagePresenter::dumpmsg()
     }
 
   }
+}
+
+void MessagePresenter::dumpelog()
+{
+  Int_t i =  fListBox863->GetSelected();
+  if (i<0) return;
+
+  // Construction the subject
+  std::string subject = fListBox863->GetEntry(i)->GetTitle();
+  boost::replace_all(subject," ->","");
+  boost::replace_all(subject,"1: ","INFO: ");
+  boost::replace_all(subject,"2: ","WARNING: ");
+  boost::replace_all(subject,"3: ","ERROR: ");
+
+  // get the current user
+  const char* user = getenv("USER");
+  static std::string username = ( user ? std::string(user) : "?" );
+
+  static std::string logbook   = "RICH" ;
+  static std::string system    = "RICH" ;
+  std::string message   = "";
+  int         isOK      = 0;
+  std::string runNumber = ""; // not needed for RICH elog
+
+  ElogDialog* elogDialog = new ElogDialog( this, 646, 435 );
+  elogDialog->setParameters( logbook, username, system, subject, 
+                             message, runNumber, isOK );
+
+  //  TGFileInfo fi;
+
+  // Make a random filename...
+  TString pageName;
+  gSystem->TempFileName(pageName);
+
+  bool hasImage = false;
+  TString ifile = pageName+".pdf";
+  if ( iw->canvas() != NULL && iw->hasImage() )
+  {
+    hasImage = true;
+    iw->canvas()->Print( ifile.Data() );
+  }
+  bool hasText = false;
+  TString tfile = pageName+".txt";
+  if ( iw->textedit() != NULL ) 
+  {
+    hasText = true;
+    iw->textedit()->SaveFile( tfile.Data() );
+  }
+  //pageName.Append(".png");
+
+  fClient->WaitFor(dynamic_cast<TGWindow*>( elogDialog ));
+
+  std::string answer("");
+  if ( 0 == isOK ) {
+    answer = "Request canceled.";
+  } else if ( "" == subject ) {
+    answer = "Mandatiory subject is absent. Ignored";
+  } else {
+
+    // for testing
+    if ( m_logBookConfig.empty() ) m_logBookConfig = "lblogbook.cern.ch";
+
+    Elog myElog( m_logBookConfig, 8080 );
+
+    myElog.setCredential( "common", "Common!" );
+
+    myElog.setLogbook( logbook );
+
+    if ( hasImage ) myElog.addAttachment(ifile.Data());
+    if ( hasText  ) myElog.addAttachment(tfile.Data());
+
+    myElog.addAttribute( "Author",  username );
+    myElog.addAttribute( "System",  system );
+    myElog.addAttribute( "Subject", subject );
+    if ( !runNumber.empty() ) myElog.addAttribute( "Run", runNumber );
+
+    const int number = myElog.submit( message );
+    std::cout << "=== produced elog entry " << logbook << " : " << number << std::endl;
+
+  }
+
+  if ( boost::filesystem::exists(ifile.Data()) )
+    boost::filesystem::remove(ifile.Data());
+  if ( boost::filesystem::exists(tfile.Data()) )
+    boost::filesystem::remove(tfile.Data());
+ 
 }
 
 void MessagePresenter::selectright()
@@ -780,6 +869,7 @@ void MessagePresenter::Layout(){
 
   fTextButton515->MoveResize(445,2,90,20);
   fTextButtonDump->MoveResize(645,2,90,20);
+  fTextButtonElog->MoveResize(745,2,90,20);
   fLabel746->MoveResize(235,2,70,20);
   fNumberEntry670->MoveResize(315,2,120,20);
 
@@ -846,9 +936,16 @@ void MessagePresenter::display()
   fTextButtonDump = new TGTextButton(fMainFrame1933,"Print",-1,uGC->GetGC(),ufont->GetFontStruct());
   fTextButtonDump->SetTextJustify(36);
   fTextButtonDump->Resize(90,24);
-  fTextButtonDump->SetToolTipText("Save the message as text and image files");
+  fTextButtonDump->SetToolTipText("Save the selected message as text and image files");
   fMainFrame1933->AddFrame(fTextButtonDump, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fTextButtonDump->MoveResize(600,2,90,20);
+
+  fTextButtonElog = new TGTextButton(fMainFrame1933,"Elog",-1,uGC->GetGC(),ufont->GetFontStruct());
+  fTextButtonElog->SetTextJustify(36);
+  fTextButtonElog->Resize(90,24);
+  fTextButtonElog->SetToolTipText("Send the selected message to the RICH elog");
+  fMainFrame1933->AddFrame(fTextButtonElog, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
+  fTextButtonElog->MoveResize(700,2,90,20);
 
   fNumberEntry670=new TGNumberEntry(fMainFrame1933, (Double_t) 0,14,-1,(TGNumberFormat::EStyle) 0,(TGNumberFormat::EAttribute) 1);
   fMainFrame1933->AddFrame(fNumberEntry670, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
@@ -1217,7 +1314,8 @@ void MessagePresenter::readCacheFile()
   }
 }
 
-int main(int /* argc */, char ** argv){
+int main(int /* argc */, char ** argv)
+{
 #ifdef _WIN32
   printf("I will not work properly under windows!\n");
 #endif

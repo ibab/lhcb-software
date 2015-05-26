@@ -5,6 +5,7 @@
 #pragma link off all functions;
 
 #pragma link C++ class MessagePresenter;
+#pragma link C++ class ElogDialog;
 
 #endif
 

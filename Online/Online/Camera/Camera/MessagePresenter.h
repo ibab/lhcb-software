@@ -39,9 +39,15 @@ private:
 
 public:
 
+  /// Set logbook configuration
+  void setLogbookConfig(const std::string & logBookConfig) { m_logBookConfig = logBookConfig ; }
+  std::string logbookConfig() { return m_logBookConfig; }
+
   void display();
 
 private:
+
+  std::string m_logBookConfig;
 
   TString savdir;//(".");
   TString savname;//(".");
@@ -76,6 +82,7 @@ private:
 
   TGTextButton *fTextButton515,*fTextButton516;
   TGTextButton *fTextButtonDump;
+  TGTextButton *fTextButtonElog;
 
   TGNumberEntry *fNumberEntry670;
   TGLabel *fLabel746;
@@ -97,6 +104,7 @@ public:
   void selectRun();
   void clearlist();
   void dumpmsg();
+  void dumpelog();
 
   void selectInfo();
   void selectleft();

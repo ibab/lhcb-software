@@ -510,7 +510,9 @@ int MessagePresenter::GetXtra(std::string str , std::string & cachedfile){
   return 1;
 }
 
-void MessagePresenter::setup(){
+void MessagePresenter::setup()
+{
+
   const int colNum     = 1024;   // Number of colors in the palette
   int       startIndex =  1000;    // starting index of allocated colors
   int       palette[colNum];
@@ -648,7 +650,8 @@ void MessagePresenter::selectleft(){
 }
 
 
-void MessagePresenter::selectright(){
+void MessagePresenter::selectright()
+{
 }
 
 void ShowCont(std::string ins){
@@ -764,7 +767,8 @@ void ShowCont(std::string ins){
 // }
 
 
-void MessagePresenter::Layout(){
+void MessagePresenter::Layout()
+{
   int fWidth =  fMainFrame1933->GetWidth();
   int fHeight =  fMainFrame1933->GetHeight();
   // std::cout<< "Size changed to "<<fWidth<<" "<<fHeight<<endl;
@@ -789,6 +793,7 @@ void MessagePresenter::Layout(){
   // UpdateRight();
 
 }
+
 MessagePresenter::MessagePresenter():TGMainFrame()
 {
 

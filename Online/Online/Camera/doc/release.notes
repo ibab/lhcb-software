@@ -4,6 +4,9 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2015-05-26 - Chris Jones
+ - Add support for sending reports straight to the elog.
+
 ! 2015-05-25 - Chris Jones
  - Add support TF1 in camera reports.
  - Improve a bit the display options for histograms with polymarkers.

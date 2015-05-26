@@ -39,7 +39,12 @@ apply_pattern install_more_includes more=Camera
 # Dictionaries
 #============================================================================
 
-document rootcint MessagePresenter ../Camera/MessagePresenter.h 
+macro cintBootstrapDict_output  "$(CAMERAROOT)/$(tag)/dict/cintBootstrapDict.cpp"
+macro cintBootstrapDict_deps    "../src/cintBootstrap.h"
+macro cintBootstrapDict_command "mkdir -p $(CAMERAROOT)/$(tag)/dict && rootcint -f $(CAMERAROOT)/$(tag)/dict/cintBootstrapDict.cpp -c -I$(CAMERAROOT) -inlineInputHeader $(cintBootstrapDict_deps) ../src/LinkDef.h && (if [ -e $(CAMERAROOT)/$(tag)/dict/cintBootstrapDict_rdict.pcm ] ; then $(install_command) $(CAMERAROOT)/$(tag)/dict/cintBootstrapDict_rdict.pcm ${CMTINSTALLAREA}/$(tag)/lib ; fi)"
+apply_pattern CallCommand target=cintBootstrapDict
+
+#document rootcint MessagePresenter ../Camera/MessagePresenter.h 
 #document rootcint display display.h
 
 #============================================================================
@@ -54,13 +59,15 @@ macro_append Camera_shlibflags " $(Boost_linkopts_regex) "
 
 macro_remove cppflags "-pedantic "
 macro_append cppflags "" WIN32 ' /wd4800 '
+
+macro_append Boost_linkopts " $(Boost_linkopts_filesystem) "
+
 # Linker library.
-library CameraLib -import=ROOT \
-		  camline.C container.C container_ROOT.C display.C proto.C
+library CameraLib -import=ROOT  ../src/lib/*.C
 apply_pattern linker_library library=CameraLib
 
 # Component library.
-library Camera -import=ROOT *.cpp container.C
+library Camera -import=ROOT ../src/component/*.cpp ../src/lib/container.C
 macro_append Camera_dependencies " CameraLib "
 apply_pattern component_library library=Camera
 
@@ -68,35 +75,36 @@ apply_pattern component_library library=Camera
 # Camera Applications
 #============================================================================
 
-application  CameraSwitch camswitch.C
+application  CameraSwitch ../src/applications/camswitch.C
 macro_append CameraSwitch_dependencies " CameraLib "
 macro_append CameraSwitch_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
-application  CameraCommand sendcmd.C
+application  CameraCommand ../src/applications/sendcmd.C
 macro_append CameraCommand_dependencies " CameraLib "
 macro_append CameraCommand_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
-application  CameraTest testwarn.C
+application  CameraTest ../src/applications/testwarn.C
 macro_append CameraTest_dependencies " CameraLib "
 macro_append CameraTest_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
-application  CameraServer sserver.C getnsave.C
+application  CameraServer ../src/applications/sserver.C ../src/applications/getnsave.C
 macro_append CameraServer_dependencies " CameraLib "
 macro_append CameraServer_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
-application  CameraWebServer webserver.C
+application  CameraWebServer ../src/applications/webserver.C
 macro_append CameraWebServer_dependencies " CameraLib "
 macro_append CameraWebServer_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
-application  CameraGui MessagePresenter.C $(CAMERAROOT)/$(tag)/dict/*.cpp
-macro_append CameraGui_dependencies " MessagePresenter CameraLib "
+application  CameraGui ../src/applications/MessagePresenter.C ../src/applications/Elog.cpp \
+                       ../src/applications/ElogDialog.cpp $(CAMERAROOT)/$(tag)/dict/*.cpp
+macro_append CameraGui_dependencies " MessagePresenter CameraLib cintBootstrapDict "
 macro_append CameraGui_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
-#application  CameraSend sendone.C
+#application  CameraSend ../src/applications/sendone.C
 #macro_append CameraSend_dependencies " CameraLib "
 #macro_append CameraSend_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
-#application  CameraWebGet get.C
+#application  CameraWebGet ../src/applications/get.C
 #macro_append CameraWebGet_dependencies " CameraLib "
 #macro_append CameraWebGet_use_linkopts "" target-icc " -Wl,--no-as-needed "
 
