@@ -3,7 +3,7 @@
 # Maintainer : Jaap Panman
 #=====================================================================
 package           LumiAlgs
-version           v9r7
+version           v9r8
 
 #=====================================================================
 # Structure, i.e. directories to process. 
