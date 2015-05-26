@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r41 2015-05-26 =========================
 ! 2015-05-14 - Manuel Tobias Schiller
  - PatSeedingTool: fix a bug where the PatSeeding output depended on the
    "history" of the input hits (i.e. which other pattern reco algorithms ran
