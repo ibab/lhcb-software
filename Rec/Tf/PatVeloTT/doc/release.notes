@@ -4,10 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= PatVeloTT v4r7 2015-05-26 =========================
 ! 2015-05-18 - Michel De Cian
  - Add move-constructor to PatVTTHybridTrack, use it in PatVeloTTHybridTool. 
    Gains about 4.5% in speed (according to callgrind), no change in performance.
-
 
 !========================= PatVeloTT v4r6 2015-04-21 =========================
 ! 2015-04-08 - Sascha Stahl
