@@ -15,7 +15,7 @@ if(ROOT_VERSION_MAJOR EQUAL 6)
 else()
   find_package(ROOT COMPONENTS Core Cint Hist Gpad Graf Gui)
 endif()
-find_package(Boost COMPONENTS regex)
+find_package(Boost COMPONENTS regex filesystem)
 
 gaudi_add_library(CameraLib
                     src/lib/*.C
@@ -82,7 +82,7 @@ else()
 
 endif()
 
-cam_exe(CameraGui src/applications/MessagePresenter.C src/applications/Elog.cpp src/applications/src/applications/ElogDialog.cpp MessagePresenterDict.cpp)
+cam_exe(CameraGui src/applications/MessagePresenter.C src/applications/Elog.cpp src/applications/ElogDialog.cpp MessagePresenterDict.cpp)
 target_link_libraries(CameraGui ${CMAKE_DL_LIBS})
 
 #cam_exe(CameraViewContainer ../src/applications/ViewCont.C MessagePresenterDict.cpp)
