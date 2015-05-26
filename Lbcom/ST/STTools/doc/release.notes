@@ -3,6 +3,7 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!========================= STTools v4r17 2015-05-26 =========================
 ! 2015-05-18 Marco Cattaneo
  - STCMSNoiseCalculationTool.cpp: do not re-declare PedestalsFromDB property of
    base class, just re-initialise default value.
