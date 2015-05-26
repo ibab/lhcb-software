@@ -743,7 +743,7 @@ class HltConf(LHCbConfigurableUser):
 
         # Setup the track monitoring
         import HltTracking
-        from HltTracking.HltSharedTracking import MinimalVelo, VeloTTTracking, HltHPTTracking, Hlt1TrackNames
+        from HltTracking.HltSharedTracking import MinimalVelo, VeloTTTracking, HltHPTTracking
         from Configurables import DeterministicPrescaler
         Hlt1TrackMonitorSequence = Sequence( 'Hlt1TrackMonitorSequence' )
         Hlt1TrackMonitorPrescaler = DeterministicPrescaler("Hlt1TrackMonitorPrescaler", AcceptFraction = self.getProp("Hlt1TrackMonitorPrescale") )
@@ -751,7 +751,7 @@ class HltConf(LHCbConfigurableUser):
         Hlt1TrackMonitor().VeloTrackLocation = MinimalVelo.outputSelection()
         Hlt1TrackMonitor().VeloTTTrackLocation = VeloTTTracking.outputSelection()
         Hlt1TrackMonitor().ForwardTrackLocation = HltHPTTracking.outputSelection()
-        
+
         # make sure we encode from the locations the decoders will use...
         from DAQSys.Decoders import DecoderDB
         hlt1_decrep_loc = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]
