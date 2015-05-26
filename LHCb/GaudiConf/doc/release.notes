@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v19r10 2015-05-26 =========================
 ! 2015-05-06 - Marco Cattaneo
  - LHCbExclusions.py: add temporary exclusion for printout of Algorithm
    ErrorCount property, renamed ErrorCounter in Gaudi v26r2
