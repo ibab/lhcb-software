@@ -109,9 +109,9 @@ StatusCode Hlt1TrackMonitor::execute()
 void Hlt1TrackMonitor::monitor()
 {
 
-  auto veloTracks    = get<LHCb::Track::Range>( m_VeloTrackLocation    );
-  auto veloTTTracks  = get<LHCb::Track::Range>( m_VeloTTTrackLocation  );
-  auto forwardTracks = get<LHCb::Track::Range>( m_ForwardTrackLocation );
+  auto veloTracks    = getIfExists<LHCb::Track::Range>( m_VeloTrackLocation    );
+  auto veloTTTracks  = getIfExists<LHCb::Track::Range>( m_VeloTTTrackLocation  );
+  auto forwardTracks = getIfExists<LHCb::Track::Range>( m_ForwardTrackLocation );
 
   m_VeloTrackMult->fill( veloTracks.size() );
   m_VeloTTTrackMult->fill( veloTTTracks.size() );
@@ -127,8 +127,5 @@ void Hlt1TrackMonitor::monitor()
     m_nTTHits->fill(nTTHits);
     m_nITHits->fill(nITHits);
     m_nOTHits->fill(nOTHits);
-    
-    
   }
-  
 }
