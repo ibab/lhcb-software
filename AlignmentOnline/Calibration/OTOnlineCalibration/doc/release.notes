@@ -32,44 +32,44 @@
    to launch additional log viewer.
 
 ! 2015-02-03 Lucia Grillo
-- added boost v* in the requirements.
-- when a new global t0 has to be written a folder v(n_existing+1) is created
-  and inside a structure as in the db is created:
-  /Conditions/OT/Calibration/CalibrationGlobal.xml
+ - added boost v* in the requirements.
+ - when a new global t0 has to be written a folder v(n_existing+1) is created
+   and inside a structure as in the db is created:
+   /Conditions/OT/Calibration/CalibrationGlobal.xml
 
 ! 2015-02-02 Lucia Grillo
-- getting the drift time residual distribution for each station from the EOR
-files (monitoring from Brunel: OTTrackMonitor)
-- variable double globalt0_threshold default value = 0.1 (ns), otherwise
-to be specified. If |global_t0| > globalt0_threshold => xml file with the new
-condition is writte.
+ - getting the drift time residual distribution for each station from the EOR
+   files (monitoring from Brunel: OTTrackMonitor)
+ - variable double globalt0_threshold default value = 0.1 (ns), otherwise
+   to be specified. If |global_t0| > globalt0_threshold => xml file with the new
+   condition is writte.
 
 ! 2015-01-30 Lucia Grillo
-- Flag to do only global t0 calibration; global t0 wrote in the xml format
-designed by Wouter
-- Default only global t0 calibration
-reads global t0 from Wouter's database and writes xml file in the same format
-- Added histog_2d_109.root and clbr_hists_109.root, examples input files with
-monolayer alignment used. Note that at the moment the input global t0 histo is
-actually the sum of the histos of the 3 stations. I will change this using an
-example of monitoring .root file to give the right format.
+ - Flag to do only global t0 calibration; global t0 wrote in the xml format
+   designed by Wouter
+ - Default only global t0 calibration
+   reads global t0 from Wouter's database and writes xml file in the same format
+ - Added histog_2d_109.root and clbr_hists_109.root, examples input files with
+   monolayer alignment used. Note that at the moment the input global t0 histo is
+   actually the sum of the histos of the 3 stations. I will change this using an
+   example of monitoring .root file to give the right format.
 
 ! 2015-01-29 Lucia Grillo
-- Version used for studies: 2d histo with FitSlicesY();
-Lots of output: txt file for the offsets, all fits saved in rootfile,
-global t0 calculated and module t0 calculated.
-Still to work on the format of the output xmls
+ - Version used for studies: 2d histo with FitSlicesY();
+   Lots of output: txt file for the offsets, all fits saved in rootfile,
+   global t0 calculated and module t0 calculated.
+   Still to work on the format of the output xmls
 
 ! 2015-01-22 Lucia Grillo
-- Different calculations of t0 per Module (4 contribution or single
-contribution, fits or get mean); Added the global t0 computation.
-xml format to be finalized; "Monitoring" histograms: replaced the old ones
- with a simpler version. to be improved.
-- Fix to the Save_Fits option; correction for m==8 (only 2 halfs monolayers)
+ - Different calculations of t0 per Module (4 contribution or single
+   contribution, fits or get mean); Added the global t0 computation.
+   xml format to be finalized; "Monitoring" histograms: replaced the old ones
+   with a simpler version. to be improved.
+ - Fix to the Save_Fits option; correction for m==8 (only 2 halfs monolayers)
 
 ! 2015-01-12 - Lucia Grillo
-- Adding OTt0OnlineClbr for online calibration of t0
-- First version: compiling, stil to be tested
+ - Adding OTt0OnlineClbr for online calibration of t0
+ - First version: compiling, stil to be tested
 
 ! 2015-01-12 - Roel Aaij
  - initial import
