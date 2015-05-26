@@ -8,6 +8,8 @@
 !
 !----------------------------------------------------------------------------
 
+!========================= Hlt2Lines v9r9 2015-05-22 =========================
+
 ! 2015-05-24 - Sean Benson
  - Add stages function to Radiative Lines.py file.
  - Add turbo version of Bs->gammagamma line for integration tests.
@@ -15,8 +17,6 @@
 ! 2015-05-22 - Michael Kolpin
  - Removed Turbo clones of TrackEffDiMuon lines, sending nominal lines to TurboCalib stream
  - Fix to LowMult/Lines.py to account for changed module name
-
-!========================= Hlt2Lines v9r9 2015-05-22 =========================
 
 ! 2015-05-22 - Dan Johnson
  - Rename CEP lines folder to LowMult as requested
@@ -41,7 +41,7 @@
    lines for the mixing analysis.
 
 ! 2015-05-20 - Francesco Dettori
- - Adding Ks veto in DiMuonSoft line. 
+ - Adding Ks veto in DiMuonSoft line.
 
 ! 2015-05-19 - Olli Lupton
  - PID: make Lambda0 isMuon line filter with ISMUONLOOSE rather than ISMUON.
@@ -52,20 +52,20 @@
     !!NOTE!! This change depends on ParamFiles r188395.
 
 ! 2015-05-16 - Dan Johnson
-  - Change Hlt2VoidFilter in CEP/Stages.py to comply with change in the HLT2 framework which 
+  - Change Hlt2VoidFilter in CEP/Stages.py to comply with change in the HLT2 framework which
     fixes a problem experienced in Moore running online
 
 ! 2015-05-14 - S. Stracka
   - CharmHad/D2HHLines.py , CharmHad/Stages.py
-		- Added selections (including HLT1 TisTos) on intermediate resonances to speedup 
-		  combinatorics for D2HHLines 
+		- Added selections (including HLT1 TisTos) on intermediate resonances to speedup
+		  combinatorics for D2HHLines
 
 ! 2015-05-14 - M. Alexander
-  - CharmHad/Hc2HHHHLines.py & D2HHHLines.py : 
+  - CharmHad/Hc2HHHHLines.py & D2HHHLines.py :
     - Tightened DIRA cut for Xic02PKKPi_LTUNB line.
     - Added Lc2KPPi_LTUNB, Xic02PKKPi_LTUNB and Xic02PKKPi (lifetime biasing)
       lines to the Turbo stream.
-      
+
 ! 2015-05-12 - V. Gligorov
  - CharmHad : Add DOCA cut to DV4B combiner
  - CharmHad : update relevant dictionaries in CharmHad and PID
@@ -87,21 +87,21 @@
  - PID: Turn off Lc+ daughter ghostprob experiment.
 
 ! 2015-05-07 - Simone Stracka
- - CharmHad/D2HHLines:  Added merged pi0 and made Turbo version 
+ - CharmHad/D2HHLines:  Added merged pi0 and made Turbo version
 
 ! 2015-05-07 - Jon Harrison
- - Updated cuts for Phi2KsKs and Phi2KsKsD0Ctrl lines in Phi folder 
+ - Updated cuts for Phi2KsKs and Phi2KsKsD0Ctrl lines in Phi folder
 
 ! 2015-05-07 - Jon Harrison
- - Changed name of line Tau23Mu in TriMuon folder to TriMuonTau23Mu  
- - Changed name of line D02KsKs in Phi folder to Phi2KsKsD0Ctrl  
+ - Changed name of line Tau23Mu in TriMuon folder to TriMuonTau23Mu
+ - Changed name of line D02KsKs in Phi folder to Phi2KsKsD0Ctrl
 
 ! 2015-05-06 - Simone Stracka
- - CharmHad: removed empty D2EtaHLines file 
+ - CharmHad: removed empty D2EtaHLines file
 
 ! 2015-05-06 - Vladimir Gligorov
  - CharmHad : adjust cuts in lifetime unbiased D->HHH lines
- - CharmHad : Add PIDK cut for pion in D->HH shared pions, 
+ - CharmHad : Add PIDK cut for pion in D->HH shared pions,
               and tighten IPCHI2 cut for detached D->HH lines
  - CharmHad : Tighten cuts on bachelor in D->V0H lines
  - CharmHad : Add sensible default postscales for some lifetime
@@ -116,7 +116,7 @@
   . Assorted cut tweaks (inc. cutting much harder on Lc+ daughter proton pT).
 
 ! 2015-05-05 - Francesco Dettori
- - Removing Hlt2SingleMuonSharedSingleMuon, present by mistake. 
+ - Removing Hlt2SingleMuonSharedSingleMuon, present by mistake.
 
 ! 2015-05-05 - Dan Johnson
  - CEP: Alter HLT1 dependence of CEP No/min bias lines following yesterday's
