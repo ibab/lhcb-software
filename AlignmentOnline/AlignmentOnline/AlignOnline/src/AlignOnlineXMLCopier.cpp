@@ -81,8 +81,8 @@ StatusCode AlignOnlineXMLCopier::copyFromOnlineArea()
       auto flags = boost::match_default;
       if (!fs::is_regular_file(fs::path{onlinedirname()} / fs::path{filename}))
          return 0u;
-      boost::regex_match(begin(filename), end(filename), matches, re, flags);
-      if (!matches.empty()) {
+      if (boost::regex_match(begin(filename), end(filename), matches, re, flags)) {
+         std::cout << "dir " << onlinedirname() << " filename " << filename << " matches [1] " << matches[1] << std::endl;
          return boost::lexical_cast<unsigned int>(matches[1]);
       } else {
          return 0u;

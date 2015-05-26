@@ -3,12 +3,19 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-05-26 - Roel Aaij
+ - Fix alignment on farm after changes for local test.
+ - Rich calibration constants added to DBXfer.py.
+
+! 2015-04-22 - Stefania Vecchi
+ - added test script to run Muonalignment AlignmentConfigurations/MuonAlignment.py
+
 ! 2015-05-21 - Roel Aaij
  - Make the alignment iterator better at finding the latest xml, don't require
    all versions up to the latest to be there.
  - Fix the test with old data by using the FakeEventTime time source to always
    get the latest IOV in the data.
- 
+
 ! 2015-04-22 - Stefania Vecchi
  - added test script to run Muonalignment AlignmentConfigurations/MuonAlignment.py
 

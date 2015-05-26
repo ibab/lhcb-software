@@ -87,6 +87,11 @@ class WriterConf:#(LHCbConfigurableUser):
       self.addXmlWriter( alg, 'Muon','Global', [0,1,2] )
     if 'ecal' in listOfCondToWrite:
       self.addXmlWriter( alg, 'Ecal','alignment', [] )
+    if 'RichCalib' in listOfCondToWrite:
+      from Configurables import WriteRichCalibrationsTool
+      alg.addTool( WriteRichCalibrationsTool, "WriteRichCalibrations")
+      alg.XmlWriters.append("WriteRichCalibrations")
+      alg.WriteRichCalibrations.Directory = self.getProp('CondFilePrefix')
     if 'otglobaltzero' in listOfCondToWrite:
      from Configurables import WriteOTCalibrationsTool
      alg.addTool( WriteOTCalibrationsTool, "WriteOTCalibrations")

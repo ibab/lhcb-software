@@ -50,8 +50,9 @@ def staticVar(varname, value):
 def importOnline():
   if importOnline.Online:
     return importOnline.Online
+  print "RUNINFO in environment: %s" % os.environ.get("RUNINFO", "False")
   if 'RUNINFO' in os.environ:
-    runinfo = os.environ['RUNINFO']
+    runinfo = os.path.dirname(os.environ['RUNINFO'])
     sys.path.insert(1, runinfo)
     Online = importlib.import_module('OnlineEnv')
     sys.path.remove(runinfo)
@@ -67,20 +68,23 @@ def EscherCommon(true_online_version, alignment_module):
   from Configurables import TAlignment
   from TAlignment.VertexSelections import configuredPVSelection
   from Configurables import RunChangeHandlerSvc
-  Online = importOnline()
+  OnlineEnv = importOnline()
   import ConditionsMap
 
   escher = Escher.Configuration.Escher()
+  escher.DataType = '2015'
   escher.DDDBtag   = ConditionsMap.DDDBTag
   escher.CondDBtag = ConditionsMap.CondDBTag
   escher.OnlineMode = True
   escher.UseDBSnapshot = True
   escher.DBSnapshotDirectory = "/group/online/hlt/conditions/"
 
-  if hasattr(Online, "AlignXmlDir"):
+  if hasattr(OnlineEnv, "AlignXmlDir"):
     escher.OnlineAligWorkDir = os.path.join(Online.AlignXmlDir, 'running')
 
-  handlerConditions = ConditionsMap.RunChangeHandlerConditions
+  sys.path.insert(2, os.path.dirname(OnlineEnv.ConditionsMapping))
+  import Online as OnlineConds
+  handlerConditions = OnlineConds.ConditionMap
   if true_online_version and os.environ['PARTITION_NAME'] == 'TEST':
     re_year = re.compile('(201\d)')
     for k, v in handlerConditions.items():

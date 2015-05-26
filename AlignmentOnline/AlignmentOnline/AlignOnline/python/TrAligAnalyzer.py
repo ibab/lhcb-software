@@ -73,7 +73,6 @@ def patchEscher(true_online_version, alignment_module, n = -1):
   
   escher = EscherCommon(true_online_version, alignment_module)
   hostname = HostName()
-  escher.DataType = "2012"
   escher.InputType  = "MDF"
   escher.PrintFreq = 10000
 #   escher.EvtMax=300
