@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RecAlgs v3r3 2015-05-26 =========================
 ! 2015-05-19 - Sean Benson
  - Allow RecSummaryAlg to use separate downstream and long containers (like those in HLT).
 
