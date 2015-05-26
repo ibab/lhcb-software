@@ -743,11 +743,8 @@ class SoftConfDB(object):
 
         node_tag = self.getNodeTag(tag)
         if node_tag.has_relationship_with(node_pv):
-            print "---> Iterating"
             for r in node_pv.get_relationships():
-                print "--->", r, r.end_node, node_tag
                 if r.is_type("TAG") and r.start_node == node_tag:
-                    print "----> Deleting ", r
                     r.delete()
 
 
