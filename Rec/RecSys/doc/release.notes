@@ -5,6 +5,136 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v17r7>2015-05-26 RecSys v17r7</A></H1><PRE>
+This version uses Gaudi v26r2, LHCb v38r7 and Lbcom v16r6 (and ROOT 6.02.08)
+
+- Packages modified: Calo/CaloMoniDst v5r18, Muon/MuonID v9r15,
+    Muon/MuonPIDChecker v5r5, Muon/MuonTrackRec v3r13, Pr/PrMCTools v2r9,
+    Pr/PrPixel v1r11, Rec/LumiAlgs v9r8, Rec/RecAlgs v3r3, 
+    Rich/RichAlignment v1r10p1, Rich/RichHPDImageAnalysis v1r16,
+    Rich/RichRecQC v2r70, Rich/RichRecSys v5r7, Tf/FastVelo v1r20,
+    Tf/PatAlgorithms v4r41, Tf/PatVelo v3r32, Tf/PatVeloTT v4r7,
+    Tf/TfKernel v2r32, Tf/TrackSys v9r7, Tf/TsaAlgorithms v3r29,
+    Tr/TrackFitter v5r5, Tr/TrackMonitors v2r7, Tr/TrackTools v5r9
+
+- In Calo/CaloMoniDst v5r18
+  . Fix property naming in CaloHypoMonitor
+  . Update CaloPi0Ntp & CaloElectronNtp
+
+- In Muon/MuonID v9r15
+  . Bugfix in the foiYDim for MuonIDAlg that was used the dx coordinate.
+  . Bugfix in the NShared computation that was comparing a distance with a 
+    distance squared 
+  . Bugfix in MuonIDAlgLite.cpp
+  . Remove the algorithms committed to /src/ due to a mismatch in a previous
+    commit.
+  . Remove duplicate declarations of certain properties in MuonIDAlg.cpp
+  . Remove the cleaning of muonPIDs as it prevent them to be written.
+  . Clean the MakeMuonTool from the chi2cut flag
+  . Modify the algorithms to use DLLflag = 5 corresponding to the new calibration.
+    The algorithms are configured to run with either DLLflag = 4 or DLLflag = 5 
+  . Add the files Muon_2015_def.py and tanh_2015.py from the new calibration
+  . Add the makeMuonTrack part to the code. 
+  . Add the possibility to use DLLflag == 3 as the new DLL calibration would use 
+    the cumulative histograms for muons and non-muons.
+  . Clean up a bit unnecessary properties and functions.
+
+- In Muon/MuonPIDChecker v5r5
+  . Fix indentation error in 'ConfigureMuonPIDChecker.py'
+  . Replace environment variable + execfile with importlib.
+
+- In Muon/MuonTrackRec v3r13
+  . Updated MuonClusterRec and MuonNNetRec for Alignment
+
+- In Pr/PrMCTools v2r9
+  . Tidy up PrCheatedVP and adapt it to "new" (spring 2014) VPCluster format.
+
+- In Pr/PrPixel v1r11
+  . Remove support for obsolete, lite-cluster based raw banks.
+  . Sort hits on a track only once.
+  . Remove unused functions and include statements.
+  . Use constants defined in Kernel/VPConstants.h, remove redundant definitions
+    from PrPixelUtils.h
+
+- In Rec/LumiAlgs v9r8
+  . Updated reference files after GAUDI-1030.
+  . Add algorithm LumiEventTuple that writes minimal lumi event ROOT ntuples.
+
+- In Rec/RecAlgs v3r3
+  . Allow RecSummaryAlg to use separate downstream and long containers
+    (like those in HLT).
+  . Use initializer list to initialize vectors.
+  . Allow a check for two types of containers for a configured location,
+    for example regular clusters and lite clusters.
+
+- In Rich/RichAlignment v1r10p1
+  . Decreased Bins in phi (from 25 to 20) in 2D dThetavphiRec histograms for 
+    specific mirror combinations. (Reversed decision of 2011-06-07)
+
+- In Rich/RichHPDImageAnalysis v1r16
+  . Added function in the base class, to return image hists for given smart ID.
+
+- In Rich/RichRecQC v2r70
+  . Fix typo in property names in RawDataSize.
+  . Clean things up a little using C++11 syntax.
+
+- In Rich/RichRecSys v5r7
+  . No longer throw an exception if an instance of the RichRecSysConf is
+    created without its reconstruction sequence defined. Instead print
+    a warning and do nothing. Currently needed due to the changes in RecConf to 
+    support multiple track groupings. Might be improved in the future...
+
+- In Tf/FastVelo v1r20
+  . Rework FastVeloFitLHCbIDs to reset and correct the FastVeloHits in a 
+    repeatable way
+  . Use move-syntax in FastVeloTracking (includes changes to FastVeloTrack)
+
+- In Tf/PatAlgorithms v4r41
+  . PatSeedingTool: fix a bug where the PatSeeding output depended on the
+    "history" of the input hits (i.e. which other pattern reco algorithms ran
+    in which order)
+  . Fix configuration of GEC for PatForward for HLT2 for 2015.
+
+- In Tf/PatVelo v3r32
+  . New AddPileupToTrack algorithm adds pileup sensor hits to existing tracks
+
+- In Tf/PatVeloTT v4r7
+  . Add move-constructor to PatVTTHybridTrack, use it in PatVeloTTHybridTool. 
+    Gains about 4.5% in speed (according to callgrind), no change in performance.
+
+- In Tf/TfKernel v2r32
+  . SIMDChi2Fit: speed up using custom vectorisable dot product implementation
+    (this will gain about 6% speed in the Seeding, no performance changes)
+
+- In Tf/TrackSys v9r7
+  . Add VeloTT tracks to the collection of tracks to be fitted in HLT2 part of
+    reco.
+  . Fixed configuration of TrackStateInitTool to be inline with the Hlt tracking
+    sequence and added track chi2/ndf<3 cut for Hlt1 Forward tracks
+    (in RecoTrackingRun2.py).
+
+- In Tf/TsaAlgorithms v3r29
+  . Fix typo in name of nClus2 property of STCosmicsFilter (nClus1 was declared
+    twice and associated to both m_nClus1 and m_nClus2 variables)
+
+- In Tr/TrackFitter v5r5
+  . Skip loop in 'outlierRemoved' in 'TrackMasterFitter' if it is clear it will
+    not do anything anyway.
+  . Downgrade message about non-successful propagation of track in
+    TrackMasterFitter from 'Warning' to 'Info'
+
+- In Tr/TrackMonitors v2r7
+  . Add BeamGasVertexMonitor algorithm, which writes a ntuple with hlt-stored
+    and/or reconstructed split beam gas vertices. Will also associate and write
+    MC PVs if they exist in the TES.
+
+- In Tr/TrackTools v5r9
+  . Added PVLocation configurable to MuonTTTrack 
+  . Fix to MuonTTTrack to only write out successfully fitted tracks
+  . Added protection for division by 0 in finalise method of StandaloneMuonRec.
+  . TrackSelector: Added the possibility to cut on the phi of a track.
+
+
 </PRE><H1><A NAME=v17r6>2015-04-21 RecSys v17r6</A></H1><PRE>
 This version uses Gaudi v26r1, LHCb v38r6 and Lbcom v16r5 (and ROOT 6.02.05)
 
