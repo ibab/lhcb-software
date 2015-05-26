@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-05-26 - Sascha Stahl
+ - Configuration.py: Remove debug statement for Hlt1TrackMonitor.
+
 ! 2015-05-22 - Sascha Stahl
  - Configuration.py : Add Hlt1TrackMonitor to the monitoring sequence (needs Hlt/HltGlobalMonitor).
    Disable with HltConf().EnableHlt1TrackMonitor = False and change rate with
