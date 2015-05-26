@@ -259,6 +259,9 @@ class Commissioning_Physics_2015( object ):
         from Hadrons_March2015 import Hadrons_March2015
         __update_conf__(thresholds,  Hadrons_March2015().Thresholds() )
 
+        from Radiative_April2015 import Radiative_April2015
+        __update_conf__(thresholds,   Radiative_April2015().Thresholds() )
+
         return thresholds
                        
     def ActiveHlt2Lines(self) :
