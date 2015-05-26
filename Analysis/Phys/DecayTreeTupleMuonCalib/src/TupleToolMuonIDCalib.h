@@ -96,7 +96,7 @@ private:
   std::vector<std::string> m_stationNames;
   // fill local arrays of pad sizes and region sizes
   DeMuonDetector*  m_mudet;
-  
+
   // track state @ M1
   const LHCb::State *m_stateP;
   
@@ -112,7 +112,7 @@ private:
   double m_ms2X[5];      // ms error on x(mm) position in each station
   double m_ms2Y[5];      // ms error on y(mm) position in each station
   double m_TextraReg[5]; // region crossed by the extrapolated track
-  
+
   // closest hit in FOI[station] ==> input for linFit, the linear fit
   double m_smalldist_X[5];
   double m_smalldist_Y[5];
@@ -140,7 +140,7 @@ private:
   double m_pXPvtx;
   double m_pYPvtx;
   double m_pZPvtx;
-
+  
 
   std::vector<float> m_hitInFOIx;
   std::vector<float> m_hitInFOIdx;
@@ -149,9 +149,9 @@ private:
   std::vector<float> m_hitInFOIz;
   std::vector<float> m_hitInFOIdz;
   std::vector<float> m_hitInFOIuncrossed;
+  std::vector<float> m_hitInFOIID;
   std::vector<float> m_hitInFOITDC1;
   std::vector<float> m_hitInFOITDC2;
-  std::vector<float> m_hitInFOIID;
   std::vector<float> m_allMuonHitsX;
   std::vector<float> m_allMuonHitsDX;
   std::vector<float> m_allMuonHitsY;

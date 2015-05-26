@@ -4,7 +4,10 @@
 ! Purpose     : tuple tools for Muon PID calibration
 !-----------------------------------------------------------------------------
 
-| 2015-05-20 - Ricardo Vazquez Gomez
+! 2015-05-26 - Ricardo Vazquez Gomez
+ - Quick fix in the MuonIDCalib tool
+
+! 2015-05-20 - Ricardo Vazquez Gomez
  - Added the muon hit time and the momentum from the muonTrack
 
 !========================= DecayTreeTupleMuonCalib v1r3 2014-10-30 =========================

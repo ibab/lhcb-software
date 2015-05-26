@@ -37,7 +37,7 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleToolMuonIDCalib
 //
-// 2011-09-23 : Ricardo Vazquez Gomez, Fatima Soomro
+// 2011-09-23 : Fatima Soomro
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -63,12 +63,13 @@ DECLARE_TOOL_FACTORY( TupleToolMuonIDCalib )
 
   std::vector<double> tmp1 = boost::assign::list_of(0.015)(0.29);
   declareProperty( "resParams", m_resParams = tmp1);
-
+  
   std::vector<double> tmp2 = boost::assign::list_of(1.04)(0.14);
   declareProperty( "ParabolicCorrection", m_ParabolicCorrection = tmp2);
 
   declareProperty( "ConstantCorrection",  m_Constant = 0.*Gaudi::Units::MeV );
   declareProperty( "Extrapolator"  ,m_extrapolatorName = "TrackMasterExtrapolator" ) ;
+
 }
 
 //=============================================================================
@@ -159,9 +160,9 @@ StatusCode TupleToolMuonIDCalib::fillCoordVectors(){
   m_hitInFOIz.clear();
   m_hitInFOIdz.clear();
   m_hitInFOIuncrossed.clear();
+  m_hitInFOIID.clear();
   m_hitInFOITDC1.clear();
   m_hitInFOITDC2.clear();
-  m_hitInFOIID.clear();
   m_allMuonHitsX.clear();
   m_allMuonHitsDX.clear();
   m_allMuonHitsY.clear();
@@ -169,9 +170,9 @@ StatusCode TupleToolMuonIDCalib::fillCoordVectors(){
   m_allMuonHitsZ.clear();
   m_allMuonHitsDZ.clear();
   m_allMuonHitsUncrossed.clear();
+  m_allMuonHitsID.clear();
   m_allMuonHitsTDC1.clear();
   m_allMuonHitsTDC2.clear();
-  m_allMuonHitsID.clear();
 
   // get the MuonCoords for each station in turn
   LHCb::MuonCoords* coords = NULL;
@@ -351,7 +352,7 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
   /// Project the state at M1 into the rest of the muon stations and store the x, y
   ///-------------------------------------------------------------------------------
 
-  const LHCb::State *m_stateP = &(track->closestState(m_stationZ[0]));
+  m_stateP = &(track->closestState(m_stationZ[0]));
 
   for(int station = 0; station < m_NStation ; station++){
 
@@ -366,7 +367,9 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
 
   // extrapolation through the stations to get expected positions with 
   // errors due to multiple scattering
-  estrapola();
+
+  bool ecode = estrapola();
+  if ( !ecode ) debug() << "estrapola: track extrapolation failed " << endmsg;
 
   bool test = true; 
   for(int station = 0; station < m_NStation ; station++)
@@ -375,7 +378,7 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
     ss << station+1;
     test &= tuple->column(prefix+"_Xs"+ss.str(), m_trackX[station] );
     test &= tuple->column(prefix+"_Ys"+ss.str(), m_trackY[station] );
-  
+    
     test &= tuple->column(prefix+"_extraXs"+ss.str(), m_TextraX[station] );
     test &= tuple->column(prefix+"_extraYs"+ss.str(), m_TextraY[station] );
     test &= tuple->column(prefix+"_ms2Xs"+ss.str(), m_ms2X[station] );
@@ -393,21 +396,16 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
   //int ic_closesthit = 0;
   float dist_ave = 0;
   std::vector<double> small_dist(m_NStation);
-  std::vector<double> smalldist_X(m_NStation);
-  std::vector<double> smalldist_Y(m_NStation);
-  std::vector<double> smalldist_Z(m_NStation);
-  std::vector<double> smalldist_dX(m_NStation);
-  std::vector<double> smalldist_dY(m_NStation);
-  std::vector<double> smalldist_dZ(m_NStation);
+
   for ( int i = 0; i < m_NStation; ++i )
   {
     small_dist[i] = 100000.;
-    smalldist_X[i] = 10000000.;
-    smalldist_Y[i] = 10000000.;
-    smalldist_Z[i] = 10000000.;
-    smalldist_dX[i] = 10000000.;
-    smalldist_dY[i] = 10000000.;
-    smalldist_dZ[i] = 10000000.;
+    m_smalldist_X[i] = 10000000.;
+    m_smalldist_Y[i] = 10000000.;
+    m_smalldist_Z[i] = 10000000.;
+    m_smalldist_dX[i] = 10000000.;
+    m_smalldist_dY[i] = 10000000.;
+    m_smalldist_dZ[i] = 10000000.;
   }
 
   // store hit info if its in the FOI of the track
@@ -431,8 +429,8 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
             m_allMuonHitsDY.push_back(itPos->m_dy);
             m_allMuonHitsZ.push_back(itPos->m_z);
             m_allMuonHitsDZ.push_back(itPos->m_dz);
-            m_allMuonHitsID.push_back(station*m_NRegion + region);
             m_allMuonHitsUncrossed.push_back(itPos->m_uncrossed);
+	          m_allMuonHitsID.push_back(station*m_NRegion + region);      
             m_allMuonHitsTDC1.push_back(itPos->m_digitTDC1);
             m_allMuonHitsTDC2.push_back(itPos->m_digitTDC2);
           }
@@ -457,12 +455,12 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
           if (dist < small_dist[station])
           {
             small_dist[station] = dist;
-            smalldist_X[station] = itPos->m_x;
-            smalldist_Y[station] = itPos->m_y;
-            smalldist_Z[station] = itPos->m_z;
-            smalldist_dX[station] = itPos->m_dx;
-            smalldist_dY[station] = itPos->m_dy;
-            smalldist_dZ[station] = itPos->m_dz; 
+            m_smalldist_X[station] = itPos->m_x;
+            m_smalldist_Y[station] = itPos->m_y;
+            m_smalldist_Z[station] = itPos->m_z;
+            m_smalldist_dX[station] = itPos->m_dx;
+            m_smalldist_dY[station] = itPos->m_dy;
+            m_smalldist_dZ[station] = itPos->m_dz;
             //ic_closesthit = ic_hit;
           }
 
@@ -489,6 +487,7 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
               m_hitInFOIz.push_back(itPos->m_z);
               m_hitInFOIdz.push_back(itPos->m_dz);
               m_hitInFOIuncrossed.push_back(itPos->m_uncrossed);
+              m_hitInFOIID.push_back(station*m_NRegion + region);
               m_hitInFOITDC1.push_back(itPos->m_digitTDC1);
               m_hitInFOITDC2.push_back(itPos->m_digitTDC2);
               m_hitInFOIID.push_back(station*m_NRegion + region);
@@ -532,21 +531,28 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
     for(int station = 0; station < m_NStation ; ++station )
     {
       std::stringstream ss; ss<< station+1 ; const std::string& mychar2 = ss.str();
-      test &= tuple->column(prefix+"Stn"+mychar2+"X", smalldist_X[station]);
-      test &= tuple->column(prefix+"Stn"+mychar2+"Y", smalldist_Y[station]);
-      test &= tuple->column(prefix+"Stn"+mychar2+"Z", smalldist_Z[station]);
+      test &= tuple->column(prefix+"Stn"+mychar2+"X", m_smalldist_X[station]);
+      test &= tuple->column(prefix+"Stn"+mychar2+"Y", m_smalldist_Y[station]);
+      test &= tuple->column(prefix+"Stn"+mychar2+"Z", m_smalldist_Z[station]);
     }
+
   }
 
   // estimate the momentum of the muon-track assuming it cames from the primary vertex
   // first --> do a linear fit with the closest hits in FOI, starting from M2 to M5,
   //           if successful call the tool to estimate the momentum
   //
-  if (linFit()) calculatePt();
-  test &= tuple->column(prefix+"pZM1", m_pZM1);
-  test &= tuple->column(prefix+"qOverP", m_qOverP);
-  test &= tuple->column(prefix+"sigmaQOverP2", m_sigmaQOverP2);
-  test &= tuple->column(prefix+"pXPvtx", m_pXPvtx);
+  bool fcode = linFit();
+  if ( !fcode ) {
+    debug() << "linFit: linear fit closest hits in FOI failed " << endmsg;
+  } else {
+    bool pcode = calculatePt();
+    if ( !pcode ) debug() << "calculatePt: calculation momentum of muon track failed " << endmsg;
+  }
+  test &= tuple->column(prefix+"pZM1", m_pZM1);  
+  test &= tuple->column(prefix+"qOverP", m_qOverP); 
+  test &= tuple->column(prefix+"sigmaQOverP2", m_sigmaQOverP2); 
+  test &= tuple->column(prefix+"pXPvtx", m_pXPvtx); 
   test &= tuple->column(prefix+"pYPvtx", m_pYPvtx);
   test &= tuple->column(prefix+"pZPvtx", m_pZPvtx);
 
@@ -563,6 +569,7 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
   return test;
 
 } // fillVars
+
 
 /// track fitting with linear Chi^2 from M2 to M5
 bool TupleToolMuonIDCalib::linFit()
@@ -583,12 +590,12 @@ bool TupleToolMuonIDCalib::linFit()
   yc11 = yc12 = yc22 = yv1 = yv2 = yyy = 0;
   double xdet,ydet;
   double xerr,yerr;
-
+  
   for ( int i = 1; i < m_NStation; ++i ) {
 
     if (m_smalldist_X[i]==10000000.) continue;
     double x,dx,y,dy,z; //dz;
-
+           
     x = m_smalldist_X[i];
     y = m_smalldist_Y[i];
     z = m_smalldist_Z[i];
@@ -607,7 +614,7 @@ bool TupleToolMuonIDCalib::linFit()
     xv1  += z*x/xerr/xerr;
     xv2  +=   x/xerr/xerr;
     xxx  += x*x/xerr/xerr;
-
+    
     //2) YZ projection:
     yc11 += z*z/yerr/yerr;
     yc12 +=   z/yerr/yerr;
@@ -624,7 +631,7 @@ bool TupleToolMuonIDCalib::linFit()
   m_sy = (yv1*yc22-yv2*yc12)/ydet;
   m_bx = (xv2*xc11-xv1*xc12)/xdet;
   m_by = (yv2*yc11-yv1*yc12)/ydet;
-
+  
   m_errbx = sqrt(xc11/xdet);
   m_errsx = sqrt(xc22/xdet);
   m_covbsx = -xc12/xdet;
@@ -632,7 +639,7 @@ bool TupleToolMuonIDCalib::linFit()
   m_errby = sqrt(yc11/ydet);
   m_errsy = sqrt(yc22/ydet);
   m_covbsy = -yc12/ydet;
-
+  
   m_chi2x = (xxx + m_sx*m_sx*xc11 + m_bx*m_bx*xc22 - 2.*m_sx*xv1 -2.*m_bx*xv2 + 2*m_sx*m_bx*xc12)/dof;
   m_chi2y = (yyy + m_sy*m_sy*yc11 + m_by*m_by*yc22 - 2.*m_sy*yv1 -2.*m_by*yv2 + 2*m_sy*m_by*yc12)/dof;
 
@@ -643,10 +650,10 @@ bool TupleToolMuonIDCalib::linFit()
 bool TupleToolMuonIDCalib::calculatePt()
 {
   double Zfirst = m_stationZ[0];
-
+        
   Gaudi::XYZPoint trackPos(m_bx + m_sx*Zfirst,
                            m_by + m_sy*Zfirst, Zfirst);
-  LHCb::State state(LHCb::StateVector(trackPos,
+  LHCb::State state(LHCb::StateVector(trackPos, 
                                       Gaudi::XYZVector(m_sx, m_sy, 1.0 ), 1./10000.));
 
   // compute integrated B field before M1 at x=y=0
@@ -657,16 +664,16 @@ bool TupleToolMuonIDCalib::calculatePt()
   Gaudi::XYZPoint  begin( 0., 0., 0. );
   Gaudi::XYZPoint  end( 0., 0., Zfirst );
   Gaudi::XYZVector bdl;
-
-  m_bIntegrator -> calculateBdlAndCenter(begin, end, 0.0001,
+  
+  m_bIntegrator -> calculateBdlAndCenter(begin, end, 0.0001, 
                                          0., zCenter, bdl );
   if ( bdl.x() > 0.0 ) {
     FieldPolarity =  1;
-  }
+  } 
   else {
-    FieldPolarity = -1;
+    FieldPolarity = -1; 
   }
-
+  
   bdlX = bdl.x();
   debug() << "Integrated B field is "<< bdlX << " Tm" <<
     "  centered at Z="<< zCenter/Gaudi::Units::m << " m"<<endmsg;
@@ -674,50 +681,50 @@ bool TupleToolMuonIDCalib::calculatePt()
  // copied from the TrackPtKick tool by M. Needham
   double q = 0.;
   double p = 1e6 * Gaudi::Units::MeV;
-
-  double tX;
+  
+  double tX;       
   double xCenter;
-  double zeta_trk;
-  double tx_vtx;
-  double zeta_vtx;
+  double zeta_trk; 
+  double tx_vtx;   
+  double zeta_vtx;   
 
   if ( fabs( bdlX ) > TrackParameters::hiTolerance ) {
     //can estimate momentum and charge
-
+    
     //Rotate to the  0-0-z axis and do the ptkick 
     tX       = state.tx();
     xCenter  = state.x() + tX * ( zCenter - state.z() );
-
+    
     zeta_trk = -tX / sqrt( 1.0 + tX*tX );
     tx_vtx   = xCenter / zCenter;
     zeta_vtx = -tx_vtx/ sqrt( 1.0 + tx_vtx*tx_vtx );
-
+    
     // curvature
     const double curv = ( zeta_trk - zeta_vtx );
-
+    
     // charge
     int sign = 1;
     if( curv < TrackParameters::hiTolerance ) {
       sign *= -1;
     }
     if ( bdlX < TrackParameters::hiTolerance ) {
-      sign *= -1;
+      sign *= -1;      
     }
     q = -1. * FieldPolarity*sign;
-
+    
     // momentum
-    p = Gaudi::Units::eplus * Gaudi::Units::c_light *fabs(bdlX)
+    p = Gaudi::Units::eplus * Gaudi::Units::c_light *fabs(bdlX) 
       * sqrt((1.0 +tX*tX+gsl_pow_2(state.ty()))
              /(1.0 +gsl_pow_2(tX)))/fabs(curv);
-
+    
     //   Addition Correction factor for the angle of the track!
     if ( m_ParabolicCorrection.size() == 2u ) {
       //p*= (a + b*tx*tx ) 
       p+= m_Constant;
       p*= ( m_ParabolicCorrection[0] + (m_ParabolicCorrection[1] * tX * tX ));
     }
-
-  }
+    
+  }  
   else {
     // can't estimate momentum or charge
     error() << "B integral is 0!" << endmsg;
@@ -725,10 +732,10 @@ bool TupleToolMuonIDCalib::calculatePt()
   }
 
   m_pZM1 = p;
-  m_qOverP = q / p;
+  m_qOverP = q / p;  
   const double err2 = gsl_pow_2(m_resParams[0]) + gsl_pow_2(m_resParams[1]/p) ;
   m_sigmaQOverP2 = err2*gsl_pow_2(1.0/p);
-
+  
    // set MuonTrack momentum variables (momentum at primary vertex)
   double pz_vtx =  state.p() * sqrt(1- tx_vtx*tx_vtx - state.ty()*state.ty() );
   Gaudi::XYZVector momentum_vtx( tx_vtx * pz_vtx,
@@ -737,9 +744,9 @@ bool TupleToolMuonIDCalib::calculatePt()
   m_pXPvtx = momentum_vtx.X();
   m_pYPvtx = momentum_vtx.Y();
   m_pZPvtx = momentum_vtx.Z();
-
+  
   return true;
-
+  
 }
 
 // extrapolation through the stations to get expected positions with 
@@ -747,7 +754,7 @@ bool TupleToolMuonIDCalib::calculatePt()
 //=======================================================
 bool  TupleToolMuonIDCalib::estrapola(){
 //=======================================================
-
+ 
   LHCb::State ExtraState =*(m_stateP);
 
   LHCb::ParticleID pid(13);
@@ -759,7 +766,7 @@ bool  TupleToolMuonIDCalib::estrapola(){
       debug() << " ==> Extrapolating to z = " << m_stationZ[station] << " failed "<<endmsg;
       return false;
     }
-
+    
     m_TextraX[station] = ExtraState.x();
     m_TextraY[station] = ExtraState.y();
     m_ms2X[station] = ExtraState.errX2();
@@ -773,6 +780,5 @@ bool  TupleToolMuonIDCalib::estrapola(){
     }
     m_TextraReg[station] = region;
   }
-  return true;
+  return true;  
 }
-
