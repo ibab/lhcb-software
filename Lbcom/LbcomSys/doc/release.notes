@@ -6,6 +6,24 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v16r6>2015-05-26 LbcomSys v16r6</A></H1><PRE>
+This version uses Gaudi v26r2 and LHCb v38r7 (and ROOT 6.02.08)
+
+- Packages added:    VP/VPCheckers v1r0 - To move VPClusterMonitor from Boole
+- Packages modified: Rich/RichTools v2r48, ST/STTools v4r17
+
+- In Rich/RichTools v2r48
+  . Force the use of the HLT refractive index in TabulatedRefractiveIndex
+    and RichSnellsLawRefraction to avoid tiny differences between the values
+    used Online and Offline.
+
+- In ST/STTools v4r17
+  . STCMSNoiseCalculationTool.cpp: do not re-declare PedestalsFromDB property of
+    base class, just re-initialise default value.
+
+- In VP/VPCheckers v1r0
+  . Tidy up VPClusterMonitor (remove lite-cluster and ToT related plots).
+
 </PRE><H1><A NAME=v16r5>2015-04-21 LbcomSys v16r5</A></H1><PRE>
 This version uses Gaudi v26r1 and LHCb v38r6 (and ROOT 6.02.05)
 
