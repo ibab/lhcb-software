@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v6r14 2015-05-22 =========================
+
 ! 2015-05-24 - Sean Benson
  - Modifications to TurboOnly to facilitate new Integration tests.
 
@@ -21,14 +23,12 @@
    - Switch off (prescale to 0) Hlt1BeamGasCrossingEnhanced1/2
    - Remove rate limits on Hlt1BeamGasBeam1/2. Input rate controlled by ODIN.
 
-!========================= HltSettings v6r14 2015-05-22 =========================
-
 ! 2015-05-22 - Albert Puig
  - Rename Radiative lines to include the folder name prefix
 
 ! 2015-05-22 - Christian Linn
  - fixed prescales in SingleMuon_EM2015
- - add prescales to Physics_draftEM2015, correct L0 filter for NoPVPassThrough line 
+ - add prescales to Physics_draftEM2015, correct L0 filter for NoPVPassThrough line
 
 ! 2015-05-21 - Christian Linn
  - added HLT1CEPLine tresholds to Physics_draftEM2015
