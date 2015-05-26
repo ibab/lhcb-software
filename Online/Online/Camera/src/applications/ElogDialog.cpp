@@ -88,15 +88,22 @@ void ElogDialog::build()
   SetLayoutBroken(true);
 
   // composite frame
-  TGCompositeFrame *elogFrame = new TGCompositeFrame(this, 700, 435,  kVerticalFrame);
+  TGCompositeFrame *elogFrame = new TGCompositeFrame(this, 800, 435,  kVerticalFrame);
   elogFrame->SetLayoutBroken(true);
 
   TGLayoutHints* layout = new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2);
 
+  // original good numbers
+  //int xBeg = 20;
+  //int yBeg = 25;
+  //int xSize = 100;
+  //int xInputSize = 500;
+  //int yStep = 30;
+
   int xBeg = 20;
   int yBeg = 25;
-  int xSize = 80;
-  int xInputSize = 510;
+  int xSize = 100;
+  int xInputSize = 600;
   int yStep = 30;
 
   int xButtonSize = 100;
@@ -208,11 +215,11 @@ void ElogDialog::build()
   yBeg += yButtonSize + 40;
 
   AddFrame(elogFrame, new TGLayoutHints(kLHintsExpandX | kLHintsExpandY));
-  elogFrame->MoveResize(0, 0, 646, yBeg);
+  elogFrame->MoveResize(0, 0, 750, yBeg);
   MapSubwindows();
   Resize(GetDefaultSize());
   MapWindow();
-  Resize(658, yBeg+38 );
+  Resize( 800, yBeg+20 );
 }
 
 void ElogDialog::CloseWindow() { DeleteWindow(); }
