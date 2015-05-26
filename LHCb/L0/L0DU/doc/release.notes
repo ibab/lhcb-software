@@ -3,6 +3,7 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================= L0DU v10r32 2015-05-26 =========================
 ! 2015-04-22 - Marco Clemencic
  - Modified DecodeVeloRawBuffer to avoir re-definition of property
    xLabelOptions from base class (see GAUDI-1023).
