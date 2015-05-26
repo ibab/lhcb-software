@@ -8,7 +8,8 @@
 
 ! 2015-05-26 - Roel Aaij
  - Fix Turbo and TurboCalib routing bits to be mutually exclusive.
- 
+ - Disable HLT TrackReports by default.
+
 ! 2015-05-26 - Sascha Stahl
  - Configuration.py: Remove debug statement for Hlt1TrackMonitor.
 

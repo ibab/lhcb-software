@@ -74,7 +74,7 @@ class HltConf(LHCbConfigurableUser):
                 , "EnableHltDecReports"            : True
                 , "EnableHltSelReports"            : True
                 , "EnableHltVtxReports"            : True
-                , "EnableHltTrkReports"            : True
+                , "EnableHltTrkReports"            : False
                 , "EnableHltRoutingBits"           : True
                 , "EnableHltAfterburner"           : True
                 , "EnableLumiEventWriting"         : True
