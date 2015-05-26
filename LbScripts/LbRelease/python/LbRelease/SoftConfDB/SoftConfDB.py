@@ -101,7 +101,10 @@ class SoftConfDB(object):
         
         query = 'start n=node:Lbadmin(Type="%s") match n-[:TAG]-m  return distinct m.project, m.version' % tag
         projects = []
-        self.runCypher(query, lambda x: projects.append((x[0], x[1])))
+        self.runCypher(query, lambda x: projects.append((x[0], x[1], None)))
+
+        query = 'start n=node:Lbadmin(Type="%s") match n-[:PTAG]-m  return distinct m.project, m.version, m.platform' % tag
+        self.runCypher(query, lambda x: projects.append((x[0], x[1], x[2])))
         return projects
 
 
@@ -424,6 +427,7 @@ class SoftConfDB(object):
         ''' Create or lookup the main entry point nodes and indices '''
         if not self.setupDone:
             self.projectVersionIndex = self.mNeoDB.get_or_create_index(neo4j.Node, "ProjectVersion")
+            self.projectVersionPlatformIndex = self.mNeoDB.get_or_create_index(neo4j.Node, "ProjectVersionPlatform")
             self.datapkgVersionIndex = self.mNeoDB.get_or_create_index(neo4j.Node, "DatapkgVersion")
             self.projectIndex = self.mNeoDB.get_or_create_index(neo4j.Node, "Project")
             self.projectIndex = self.mNeoDB.get_or_create_index(neo4j.Node, "datapkg")
@@ -432,6 +436,10 @@ class SoftConfDB(object):
                                                                "Type",
                                                                "PROJECT_PARENT",
                                                                {"type": "PROJECT_PARENT"})
+            self.node_pvpparent =  self.mNeoDB.get_or_create_indexed_node("Lbadmin",
+                                                               "Type",
+                                                               "PVP_PARENT",
+                                                               {"type": "PVP_PARENT"})
             self.node_datapkgparent =  self.mNeoDB.get_or_create_indexed_node("Lbadmin",
                                                                "Type",
                                                                "DATAPKG_PARENT",
@@ -489,6 +497,10 @@ class SoftConfDB(object):
     def getProjectParent(self):
         self.setupDB()
         return self.node_projectparent
+
+    def getPVPParent(self):
+        self.setupDB()
+        return self.node_pvpparent
 
     def getDatapkgParent(self):
         self.setupDB()
@@ -605,6 +617,42 @@ class SoftConfDB(object):
                 self.log.warning("Pattern %s %s matching %s" % ( node_project.get_properties()["project"], p,  vmatch))
                 node_version = versionNodes[vmatch]
                 self.addRequires(node_pattern, node_version)
+
+    def getOrCreatePVP(self, project, version, platform):
+        ''' Create a project version platform node, with appropriate links '''
+
+        node_pv =  self.getOrCreatePV(project, version)
+        pvp_parent = self.getPVPParent()
+        node_pvp =  self.mNeoDB.get_or_create_indexed_node("ProjectVersionPlatform",
+                                                           "ProjectVersionPlatform",
+                                                           project + "_" + version + "_" + platform,
+                                                           {"project": project, "version":version, "platform":platform})
+        node_platform = self.mNeoDB.get_or_create_indexed_node("Platform",
+                                                               "Platform",
+                                                               platform,
+                                                               {"platform": platform})
+        self.mNeoDB.get_or_create_relationships((node_pvp, "PVPPLATFORM", node_platform))
+        self.mNeoDB.get_or_create_relationships((node_pvp, "PVP", node_pv))
+        self.mNeoDB.get_or_create_relationships((pvp_parent, "TYPE", node_pvp))
+        return node_pvp
+    
+    def deletePVP(self, project, version, platform):
+        ''' Create a project version platform node, with appropriate links '''
+
+        self.log.warning("Deleting: %s %s %s" % (project, version, platform))
+        node_pvp =  self.mNeoDB.get_indexed_node("ProjectVersionPlatform",
+                                                "ProjectVersionPlatform",
+                                                project + "_" + version + "_" + platform)
+        if node_pvp is None:
+            self.log.warning("Node not found, exiting")
+            return
+
+        rels = node_pvp.get_relationships()
+        for r in rels:
+            self.log.warning("Deleting rel: " + str(r))
+            r.delete()
+        self.log.warning("Deleting node: " + str(node_pvp))
+        node_pvp.delete()
 
     def deleteActiveLinks(self, batch = None):
         """ delete the active nodes in the graph """
@@ -744,9 +792,33 @@ class SoftConfDB(object):
         node_tag = self.getNodeTag(tag)
         if node_tag.has_relationship_with(node_pv):
             for r in node_pv.get_relationships():
-                if r.is_type("TAG") and r.start_node == node_tag:
+                if r.is_type("TAG") and (r.start_node == node_tag or r.end_node == node_tag):
                     r.delete()
 
+    def setPlatformTag(self, project, version, platform, tag):
+        ''' Set the link to a node named tag from the given project/version'''
+        self.setupDB()
+        node_pvp =  self.getOrCreatePVP(project, version, platform)
+        node_tag = self.getNodeTag(tag)
+        if not node_tag.has_relationship_with(node_pvp):
+            rels = self.mNeoDB.get_or_create_relationships((node_tag, "PTAG", node_pvp))
+            for r in rels:
+                props = r.get_properties()
+                import datetime
+                props["DATE"] = str(datetime.datetime.now())
+                r.set_properties(props)
+                
+    def unsetPlatformTag(self, project, version, platform, tag):
+        ''' Unset the link to indicate that a project was built with CMake '''
+        self.setupDB()
+        node_pvp =  self.getOrCreatePVP(project, version, platform)
+        node_tag = self.getNodeTag(tag)
+        print "---> nodes:", node_tag, node_pvp
+        if node_tag.has_relationship_with(node_pvp):
+            print "---> Found relationship"
+            for r in node_pvp.get_relationships():
+                if r.is_type("PTAG") and (r.start_node == node_tag or r.end_node == node_tag):
+                    r.delete()
 
     def setReleaseFlag(self, project, version):
         ''' Set the link to indicate that a release was requested '''

@@ -28,6 +28,12 @@ class LbSdbTag(Script):
                           default = False,
                           help = "Remove the link to the CMake node")
 
+        parser.add_option("-p", "--platform",
+                          dest = "platform",
+                          action = "store",
+                          default = None,
+                          help = "Set the tag to the project/version/platform")
+
     def main(self):
         """ Main method for bootstrap and parsing the options.
         It invokes the appropriate method and  """
@@ -51,9 +57,15 @@ class LbSdbTag(Script):
         self.mConfDB = SoftConfDB()
        
         if self.options.remove:
-            self.mConfDB.unsetTag(project, version, tag)
+            if self.options.platform != None:
+                self.mConfDB.unsetPlatformTag(project, version, self.options.platform, tag)
+            else:
+                self.mConfDB.unsetTag(project, version, tag)
         else:
-            self.mConfDB.setTag(project, version, tag)
+            if self.options.platform != None:
+                self.mConfDB.setPlatformTag(project, version, self.options.platform, tag)
+            else:
+                self.mConfDB.setTag(project, version, tag)
 
 
 if __name__=='__main__':

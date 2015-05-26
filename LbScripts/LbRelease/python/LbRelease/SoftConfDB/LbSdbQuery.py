@@ -117,8 +117,7 @@ class LbSdbQuery(Script):
             print json.dumps(sorted(self.mConfDB.listTag(args[0].upper())), indent=2)
         else:
             for p in sorted(self.mConfDB.listTag(args[0].upper())):
-                print "%s\t%s" % tuple(p)
-
+                print "%s\t%s\t%s" % tuple(p)
 
     def cmdlistCMT(self, args):
         ''' List the projects built with CMT '''
