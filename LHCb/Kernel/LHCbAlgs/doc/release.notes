@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v3r6 2015-05-26 =========================
 ! 2015-04-27 - Marco Cattaneo
  - Remove obsolete GaudiKernel/DeclareFactoryEntries.h include
 
