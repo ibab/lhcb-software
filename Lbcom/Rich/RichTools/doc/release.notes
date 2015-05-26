@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!========================= RichTools v2r48 2015-05-26 =========================
 ! 2015-05-05 - Chris Jones
  - Force the use of the HLT refractive index in TabulatedRefractiveIndex
    and RichSnellsLawRefraction to avoid tiny differences between the values
