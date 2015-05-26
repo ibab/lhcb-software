@@ -11,7 +11,8 @@ HOSTUP=`echo $HOSTNAME | tr a-z A-Z`
 export UTGID=${PARTITION}_${HOSTUP}_OTCALIB;
 export TNS_ADMIN=/sw/oracle/10.2.0.4/linux64/network/admin;
 export DIM_DNS_NODE=mona09;
-export PYTHONPATH=/group/online/dataflow/options/${PARTITION}/RECONSTRUCTION:$PYTHONPATH
+#export PYTHONPATH=/group/online/dataflow/options/${PARTITION}/RECONSTRUCTION:$PYTHONPATH
+export PYTHONPATH=/group/online/hlt/conditions/RunChangeHandler:$PYTHONPATH
 
 # Log server and viewer for debugging.
 sh -c "exec -a ${UTGID}_LogSrv /opt/FMC/sbin64/logSrv -N ${DIM_DNS_NODE} -v -s fest -l 1 -S 1 -p ${LOGFIFO}" &
