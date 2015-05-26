@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v15r10 2015-05-26 =========================
 ! 2015-05-05 - Chris Jones
  - Add a new test 'gaudipythonallocator' that tests the use of classes with
    custom allocators via GaudiPython. Intended to catch situations such as the
