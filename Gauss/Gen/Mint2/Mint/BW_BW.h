@@ -30,12 +30,12 @@ class BW_BW : virtual public ILineshape, public MINT::FitParDependent{
   mutable IDalitzEvent* _eventPtr;
   //  mutable std::stack<IDalitzEvent*> _oldPointers;
 
-  mutable double _prSq, _prSqForGofM, _pABSq, _mumsPDGMass, _mumsPDGWidth, 
+  mutable double _prSq, _prSqForGofM, _pABSq, //_mumsPDGMass, _mumsPDGWidth, 
     _mumsRecoMass2, _mumsRecoMass, _Fr_BELLE, _Fr_PDG_BL, _GofM;
   mutable int _mumsPID;
   mutable bool _mumsPID_set;
 
-  mutable double _mumsPDGRadius;
+  // mutable double _mumsPDGRadius;
 
   mutable int _mumsParity, _dgtrsInternalParity;
 
@@ -80,16 +80,25 @@ class BW_BW : virtual public ILineshape, public MINT::FitParDependent{
   virtual double prSqMax() const;
  protected:
   
-  ResonancePropertiesList* _RPL;
+  bool setAllFitParameters();
+
+  mutable ResonancePropertiesList* _RPL;
+  ResonancePropertiesFitRef* _fittableResonancePropertiesPtr;
+  MINT::FitParRef* _fittableGlobalRadiusPtr;
+
+  ResonancePropertiesList* resonancePropertiesList() const;
+  const ResonanceProperties* resonanceProperties() const;
+
   virtual const ParticleProperties* mumsProperties() const;
+  virtual ResonancePropertiesFitRef& mumsFittableProperties() const;
 
   virtual int mumsPID() const;
   virtual double mumsMass() const;
-  virtual double mumsPDGMass() const;
+  //virtual double mumsPDGMass() const;
   virtual double mumsWidth() const;
-  virtual double mumsPDGWidth() const;
+  //virtual double mumsPDGWidth() const;
   virtual double mumsRadius() const; // individual resonance radius
-  virtual double mumsPDGRadius() const; // fixed default value
+  //virtual double mumsPDGRadius() const; // fixed default value
   virtual double Radius() const; // global resonance radius (equal for all resonances)
     
   virtual int twoLPlusOne() const;

@@ -40,7 +40,8 @@ class ResonancePropertiesList{ // a singleton - ensures everyone
     
   //const ResonanceProperties* get(const std::string& name) const;
   const ResonanceProperties* get(int i) const;
-  double radius() const {return _radius;}
+  const MINT::FitParameter& radius() const {return _radius;}
+
   //void print(std::ostream& out=std::cout) const;
 
     /*

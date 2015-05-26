@@ -27,8 +27,8 @@ BW_BW::BW_BW( const AssociatedDecayTree& decay)
   , _prSq(-9999.0)
   , _prSqForGofM(-9999.0)
   , _pABSq(-9999.0)
-  , _mumsPDGMass(-9999.0)
-  , _mumsPDGWidth(-9999.0) 
+    //  , _mumsPDGMass(-9999.0)
+    //  , _mumsPDGWidth(-9999.0) 
   , _mumsRecoMass2(-9999.0)
   , _mumsRecoMass(-9999.0)
   , _Fr_BELLE(-9999.0)
@@ -36,7 +36,7 @@ BW_BW::BW_BW( const AssociatedDecayTree& decay)
   , _GofM(-9999.0)
   , _mumsPID(0)
   , _mumsPID_set(false)
-  , _mumsPDGRadius(-9999.0)
+    //  , _mumsPDGRadius(-9999.0)
   , _mumsParity(0)
   , _dgtrsInternalParity(0)
   , _twoLPlusOne(-9999)
@@ -48,6 +48,9 @@ BW_BW::BW_BW( const AssociatedDecayTree& decay)
   , _theDecay(decay)
   , _gen_s_mi(0)
   , _gen_s_ma(0)
+  , _RPL(0)
+  , _fittableResonancePropertiesPtr(0)
+  , _fittableGlobalRadiusPtr(0)
 {
   //  const fitSetup* fs = fitSetup::getMe();
   resetPDG();
@@ -63,21 +66,22 @@ BW_BW::BW_BW( const AssociatedDecayTree& decay)
 	      << "  PID " << mumsPID()
 	      << std::endl;
   }
-    
+  /*    
     _RPL = ResonancePropertiesList::getMe();
     if(_RPL->get(mumsPID())==0){
         ResonanceProperties* rp= new ResonanceProperties(mumsProperties()->name());
         _RPL->AddToList(rp);
     }  
-    
+  */
+  setAllFitParameters();
 }
 BW_BW::BW_BW(const BW_BW& other)
   : ILineshape()
   , _prSq(other._prSq)
   , _prSqForGofM(other._prSqForGofM)
   , _pABSq(other._pABSq)
-  , _mumsPDGMass(other._mumsPDGMass)
-  , _mumsPDGWidth(other._mumsPDGWidth) 
+    //  , _mumsPDGMass(other._mumsPDGMass)
+    //  , _mumsPDGWidth(other._mumsPDGWidth) 
   , _mumsRecoMass2(other._mumsRecoMass2)
   , _mumsRecoMass(other._mumsRecoMass)
   , _Fr_BELLE(other._Fr_BELLE)
@@ -85,7 +89,7 @@ BW_BW::BW_BW(const BW_BW& other)
   , _GofM(other._GofM)
   , _mumsPID(other._mumsPID)
   , _mumsPID_set(other._mumsPID_set)
-  , _mumsPDGRadius(other._mumsPDGRadius)
+    //  , _mumsPDGRadius(other._mumsPDGRadius)
   , _mumsParity(other._mumsParity)
   , _dgtrsInternalParity(other._dgtrsInternalParity)
   , _twoLPlusOne(other._twoLPlusOne)
@@ -98,14 +102,21 @@ BW_BW::BW_BW(const BW_BW& other)
   , _gen_s_mi(other._gen_s_mi)
   , _gen_s_ma(other._gen_s_ma)
   , _RPL(other._RPL)
+  , _fittableResonancePropertiesPtr(0)
+  , _fittableGlobalRadiusPtr(0)
 {
-    if(_RPL->get(mumsPID())==0){
+  
+  /*  if(_RPL->get(mumsPID())==0){
         ResonanceProperties* rp= new ResonanceProperties(mumsProperties()->name());
         _RPL->AddToList(rp);
     }  
+  */
+  setAllFitParameters();
 }
 
 BW_BW::~BW_BW(){
+  delete _fittableResonancePropertiesPtr;
+  delete  _fittableGlobalRadiusPtr;
 }
 
 bool BW_BW::setEventPtr(IDalitzEvent& evt) const{
@@ -353,10 +364,70 @@ const ParticleProperties* BW_BW::mumsProperties() const{
     cout << "ERROR in BW_BW::mumsProperties()"
 	 << " can't find properties for first element"
 	 << " in this decay tree\n" << _theDecay << endl;
-    throw "invalid decay tree in BW_BW::mumsPropertiesMass()";
+    throw "invalid decay tree in BW_BW::mumsProperties()";
   }
   return pp;
 }
+
+ResonancePropertiesList*  BW_BW::resonancePropertiesList() const{
+  if(0 == _RPL) _RPL = ResonancePropertiesList::getMe();
+  if(0 == _RPL){
+    cout << "ERROR in BW_BW::resonanceProperties()"
+	 << " can't find properties for first element"
+	 << " in this decay tree\n" << _theDecay << endl;
+    throw "invalid decay tree in BW_BW::resonanceProperties()";
+  }
+  return _RPL;
+}
+
+const ResonanceProperties* BW_BW::resonanceProperties() const{
+  const ResonanceProperties* rp = resonancePropertiesList()->get(mumsPID());
+  if(0 == rp){
+    ResonanceProperties* rpnew= new ResonanceProperties(mumsProperties()->pdg_id());
+    resonancePropertiesList()->AddToList(rpnew);
+    rp=rpnew;
+  }
+  if(0 == rp){
+    cout << "ERROR in BW_BW::ResonanceProperties()"
+	 << " can't find properties for first element"
+	 << " in this decay tree\n" << _theDecay << endl;
+    throw "invalid decay tree in BW_BW::mumsFittableProperties()";
+  }
+  return rp;
+}
+
+ResonancePropertiesFitRef& BW_BW::mumsFittableProperties() const{
+  if(0 == _fittableResonancePropertiesPtr){
+    cout << "something went wrong in BW_BW::mumsFittableProperties() "
+	 << " _fittableResonancePropertiesPtr is 0 although it should be"
+	 << " set at construction."
+	 << " Looking at  this decay tree\n" << _theDecay << endl;
+
+    throw "error in BW_BW::mumsFittableProperties()";
+  }
+  return *_fittableResonancePropertiesPtr;
+}
+
+bool BW_BW::setAllFitParameters(){
+  bool s=true;
+  if(0 == resonancePropertiesList()){
+    cout << "big problem in BW_BW::setAllFitParameters"
+	 << ", resonancePropertiesList is zero" << endl;
+    throw "BW_BW::setAllFitParameters can't find resonancePropertiesList()";
+  }
+  cout << "getting _fittableGlobalRadiusPtr" << endl;
+  const FitParameter& rad(resonancePropertiesList()->radius());
+  cout << "called radius, no crash, now pringint it:" << endl;
+  cout << "rad is" << rad << endl;
+  cout << " radius is: " << resonancePropertiesList()->radius() << endl;
+  _fittableGlobalRadiusPtr = new FitParRef(resonancePropertiesList()->radius(), this);
+  cout << "hurray, got _fittableGlobalRadiusPtr" << endl;
+  s &= (0 != _fittableGlobalRadiusPtr);
+  _fittableResonancePropertiesPtr = new ResonancePropertiesFitRef(*resonanceProperties(), this);
+  s &= (0 != _fittableResonancePropertiesPtr);
+  return s;
+}
+
 
 double BW_BW::mumsMass() const{
   bool dbThis=false;
@@ -367,21 +438,32 @@ double BW_BW::mumsMass() const{
     cout << "_RPL->get(mumsPID()) " << _RPL->get(mumsPID()) << endl;
     cout << "... and finally " << _RPL->get(mumsPID())->mass() << endl;
   }
-  return _RPL->get(mumsPID())->mass();
+  return mumsFittableProperties().mass();
+  // return _RPL->get(mumsPID())->mass();
 }
 
 double BW_BW::mumsWidth() const{
-    return _RPL->get(mumsPID())->width();
+  return mumsFittableProperties().width();
+  //    return _RPL->get(mumsPID())->width();
 }
 
 double BW_BW::mumsRadius() const{
-    return _RPL->get(mumsPID())->radius();
+  return mumsFittableProperties().radius();
+  //    return _RPL->get(mumsPID())->radius();
 }
 
 double BW_BW::Radius() const{
-    return _RPL->radius();
+  if(0 == _fittableGlobalRadiusPtr){
+    cout << "ERROR in BW_BW::Radius()"
+	 << " _fittableGlobalRadiusPtr is 0"
+	 << ", although it should have been set during construction."
+	 << " Looking at  this decay tree\n" << _theDecay << endl;
+    throw "invalid decay tree in BW_BW::Radius()";
+  }
+  return *_fittableGlobalRadiusPtr;
 }
 
+/*
 double BW_BW::mumsPDGMass() const{
   if(_mumsPDGMass < 0){
     _mumsPDGMass = mumsProperties()->mass();
@@ -401,21 +483,8 @@ double BW_BW::mumsPDGRadius() const{
         _mumsPDGRadius = mumsProperties()->radius();
     }
     return _mumsPDGRadius;
-    /*
-     double r=-9999;
-     
-     const fitSetup* fs = fitSetup::getMe();
-     if(thisIsD()) r =  fs->radiusOfD();
-     else r =  fs->radiusOfNonD();
-     if(true || thisIsD()){
-     cout << "compare: new radius " << mumsProperties()->radius()
-	 << ", new 2 " << _mumsRadius
-	 <<  ", old: " << r << endl;
-     }
-     return r;//mumsProperties()->radius();
-     */
 }
-
+*/
 
 std::string BW_BW::mumsSpin() const{
   return mumsProperties()->J();
@@ -1021,9 +1090,9 @@ void BW_BW::resetInternals(){
 }
 
 void BW_BW::resetPDG(){
-  _mumsPDGMass = _mumsPDGWidth = -1;
+  //  _mumsPDGMass = _mumsPDGWidth = -1;
   _mumsPID_set = false;
-  _mumsPDGRadius  = -9999.0;
+  //  _mumsPDGRadius  = -9999.0;
 
   _daughterPDGMass.resize(_theDecay.nDgtr());
   for(int i=0; i< _theDecay.nDgtr(); i++){

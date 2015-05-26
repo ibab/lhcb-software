@@ -14,7 +14,7 @@
 #include "Mint/FitComplex.h"
 #include "Mint/FitComplexPolar.h"
 #include "Mint/AmpInitialiser.h"
-#include "Mint/FastAmplitude.h"
+#include "Mint/Amplitude.h"
 
 #include "Mint/IDalitzEvent.h"
 
@@ -23,7 +23,7 @@
 
 #include <complex>
 
-class FitAmplitude : public FastAmplitude
+class FitAmplitude : public Amplitude
 , virtual public MINT::IReturnRealForEvent<IDalitzEvent>
   , virtual public MINT::IReturnComplexForEvent<IDalitzEvent>
 {
@@ -132,7 +132,7 @@ class FitAmplitude : public FastAmplitude
   std::complex<double> getVal(IDalitzEvent* evt); //for backwards compatibility
 
   std::complex<double> getValWithoutFitParameters(IDalitzEvent& evt){
-    return FastAmplitude::getVal(evt);
+    return Amplitude::getVal(evt);
   }
 
   double Prob(IDalitzEvent& evt){

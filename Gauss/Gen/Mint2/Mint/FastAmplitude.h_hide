@@ -11,18 +11,20 @@
 #include "Mint/NamedParameter.h"
 #include "Mint/IDalitzEvent.h"
 #include "Mint/Amplitude.h"
+#include "Mint/CachedByEvent.h"
 
 class FastAmplitude : public Amplitude
+, public CachedByEvent<std::complex<double> >
 , virtual public MINT::IReturnRealForEvent<IDalitzEvent>
   , virtual public MINT::IReturnComplexForEvent<IDalitzEvent>
 {
  protected:
-  MINT::NamedParameter<int>  _cashingLevel;
-  std::map<IDalitzEvent*, std::complex<double> > _resultMap;
+  //  MINT::NamedParameter<int>  _cashingLevel;
+  //std::map<IDalitzEvent*, std::complex<double> > _resultMap;
 
-  bool knownEvent(IDalitzEvent& evt, std::complex<double>& value);
-  mutable long int _rememberNumber; // for cashing
-  long int rememberNumber() const;
+  //bool knownEvent(IDalitzEvent& evt, std::complex<double>& value);
+  //  mutable long int _rememberNumber; // for cashing
+  //  long int rememberNumber() const;
 
  public:
   FastAmplitude( const DecayTree& decay
@@ -40,7 +42,7 @@ class FastAmplitude : public Amplitude
   virtual std::complex<double> getVal(IDalitzEvent& evt);
   virtual std::complex<double> getVal(IDalitzEvent* evt); // for backwards compatibilitiy
     
-
+  virtual std::complex<double> getNewVal(IDalitzEvent& evt);
 };
 
 #endif

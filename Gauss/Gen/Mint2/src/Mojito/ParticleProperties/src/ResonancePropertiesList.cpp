@@ -17,7 +17,9 @@ ResonancePropertiesList* ResonancePropertiesList::ptr=0;
 
 
 ResonancePropertiesList* ResonancePropertiesList::getMe(){
-  if(! ptr){
+  //cout << "Hello from  ResonancePropertiesList::getMe()" << endl;
+  if(0 == ptr){
+    //cout << "ResonancePropertiesList: making myself" << endl;
     ptr = new ResonancePropertiesList();
   }
   if(0 == ptr){
@@ -52,10 +54,20 @@ double ParticlePropertiesList::width(int pid) {
 */
 
 
-ResonancePropertiesList::ResonancePropertiesList(): _radius("BW_radius") //, _rp(10323)
+ResonancePropertiesList::ResonancePropertiesList()
+  : _radius("BW_radius", 1, 1.5/GeV, 0, 0, 0, 0,  NamedParameterBase::QUIET) //, _rp(10323)
 {   
+
+  /*
+  cout << "Hello from ResonancePropertiesList::ResonancePropertiesList" << endl;
+  cout << "I think I initialised _radius" << endl;
+  cout << "here we go" << endl;
+  cout << _radius << endl;
+  */
+
     //fix BW radius to default value if not explicitly initiallised 
-    if(_radius.iFixInit() && _radius== 0) _radius = 1.5/GeV;
+    //if(_radius.iFixInit() && _radius== 0) _radius = 1.5/GeV;
+
     /*
     const ParticlePropertiesList* PPL = ParticlePropertiesList::getMe();
     const std::list<ParticleProperties> theParticleList = PPL->getList();

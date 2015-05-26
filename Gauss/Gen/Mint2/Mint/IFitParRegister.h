@@ -6,7 +6,7 @@ namespace MINT{
   class IFitParRegister : virtual public IFitParDependent{
   public:
     virtual bool changedSinceLastCall() const=0;
-    virtual bool registerFitParDependence(const IFitParDependent* fpd)=0;
+    virtual bool registerFitParDependence(const IFitParDependent& fpd)=0;
   };
 
 }

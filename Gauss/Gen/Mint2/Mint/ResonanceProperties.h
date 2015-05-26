@@ -14,6 +14,13 @@ class ResonancePropertiesFitRef;
 class ResonanceProperties{
   friend class ResonancePropertiesFitRef;
  protected:
+  static std::string nameFromPid(int pdg_id);
+  static int pidFromName(const std::string& name);
+  static std::string nameFromName(const std::string& name);
+  static double massInit(int pdg_id);
+  static double widthInit(int pdg_id);
+  static double radiusInit(int pdg_id);
+
   int _pid;
   MINT::FitParameter _fitMass;
   MINT::FitParameter _fitWidth;
@@ -21,7 +28,7 @@ class ResonanceProperties{
   MINT::FitParameter _fitAlpha;
  public:
   ResonanceProperties(int pid);
-  ResonanceProperties(std::string name);
+  ResonanceProperties(const std::string& name);
   double mass() const{return _fitMass;}
   double width() const{return _fitWidth;}
   double radius() const{return _fitRadius;}

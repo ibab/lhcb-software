@@ -50,7 +50,8 @@ complex<double> Lass::BG(){
 
   const complex<double> den( q()*cotDeltaBg(), -q() );
 
-  const double M_0    = BW_BW::mumsPDGMass();
+  //  const double M_0    = BW_BW::mumsPDGMass();
+  const double M_0    = BW_BW::mumsMass();
   const double Gamma0 = BW_BW::mumsWidth();
 
   const double num = M_Kpi;

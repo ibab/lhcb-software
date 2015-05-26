@@ -58,6 +58,7 @@ Amplitude::~Amplitude(){
 
 bool Amplitude::deleteDependants(){
   _init=false;
+  this->removeAllFitParDependencies(); // risky
   deleteLineshapes();
   if(0 != _spinFactor) delete _spinFactor;
   _spinFactor=0;
@@ -96,6 +97,13 @@ bool Amplitude::CPConjugate(){
   return resetTree(dt);
 }
 
+bool Amplitude::addLineshape(ILineshape* lsPtr){
+  if(0 == lsPtr) return false;
+  this->registerFitParDependence(*lsPtr);
+  _LineshapeList.push_back(lsPtr);
+  return true;
+}
+
 bool Amplitude::createLineshapes(const const_counted_ptr<AssociatedDecayTree>& 
 				 counted_tree_ptr){
   return createLineshapes(counted_tree_ptr.get());
@@ -120,10 +128,11 @@ bool Amplitude::createLineshapes(const AssociatedDecayTree* treePtr){
 
   bool success=true;
   if(treePtr->nDgtr() >= 2){
-    LineshapeList.push_back(LineshapeMaker(treePtr, _lopt));
+    addLineshape(LineshapeMaker(treePtr, _lopt));
+    //    LineshapeList.push_back(LineshapeMaker(treePtr, _lopt));
     if(dbThis){
       cout << "Amplitude::createLineshapes: just added lineshape: ";
-      LineshapeList.back()->print(cout);
+      _LineshapeList.back()->print(cout);
       cout << endl;
     }
   }
@@ -133,11 +142,11 @@ bool Amplitude::createLineshapes(const AssociatedDecayTree* treePtr){
   return success;
 }
 bool Amplitude::deleteLineshapes(){
-  for(std::vector<ILineshape*>::iterator it = LineshapeList.begin();
-      it != LineshapeList.end(); it++){
+  for(std::vector<ILineshape*>::iterator it = _LineshapeList.begin();
+      it != _LineshapeList.end(); it++){
     if(0 != *it) delete (*it);
   }
-  LineshapeList.clear();
+  _LineshapeList.clear();
   return true;
 }
 
@@ -165,8 +174,8 @@ std::complex<double> Amplitude::LineshapeProduct(IDalitzEvent& evt){
     cout << " ...calling lineshapes: " << endl;
   }
    */
-  for(std::vector<ILineshape*>::iterator it = LineshapeList.begin();
-      it != LineshapeList.end(); it++){
+  for(std::vector<ILineshape*>::iterator it = _LineshapeList.begin();
+      it != _LineshapeList.end(); it++){
     //if(dbThis && 0 != *it) cout << (*it)->name() << ", " << (*it)->getVal(evt);
     if(0 != *it) prod *= (*it)->getVal(evt);
   }
@@ -195,12 +204,12 @@ DalitzBoxSet Amplitude::MakeBox(const DalitzEventPattern& pat
   DalitzBoxSet v;
   double maxHeight = 1;// norm(this->getValAtResonance());
   double maxHeight_2 = maxHeight;
-  if(LineshapeList.size() >= 2){
+  if(_LineshapeList.size() >= 2){
     maxHeight_2 *=  exp(-0.5*(nSigma*nSigma*0.75));
   }
   std::vector<DalitzCoordinate> limits;
-  for(std::vector<ILineshape*>::iterator it = LineshapeList.begin();
-      it != LineshapeList.end(); it++){
+  for(std::vector<ILineshape*>::iterator it = _LineshapeList.begin();
+      it != _LineshapeList.end(); it++){
     DalitzCoordinate coord ((*it)->getDalitzCoordinate(nSigma).mapMe(perm) );
     if(coord.size() <= 3){ // otherwise it's the D itself
       DalitzBox box(pat, coord);
@@ -261,8 +270,8 @@ DalitzBWBox Amplitude::MakeBWBox(const DalitzEventPattern& pat
   if(dbThis) cout << "making bw-box for " << (*this) << endl;
 
   std::vector<counted_ptr<IGenFct> > limits;
-  for(std::vector<ILineshape*>::iterator it = LineshapeList.begin();
-      it != LineshapeList.end(); it++){
+  for(std::vector<ILineshape*>::iterator it = _LineshapeList.begin();
+      it != _LineshapeList.end(); it++){
     if(dbThis){
       cout << "adding co-ordinate " 
 	   << (*it)->getDalitzCoordinate()
@@ -330,7 +339,7 @@ std::complex<double> Amplitude::getVal(IDalitzEvent* evt){
   return this->getVal(*evt);
 }
 
-std::complex<double> Amplitude::getVal(IDalitzEvent& evt){
+std::complex<double> Amplitude::getNewVal(IDalitzEvent& evt){
   //bool dbThis=false;
 
   initialiseIfNeeded(evt.eventPattern());

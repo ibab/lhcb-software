@@ -92,7 +92,7 @@ FitAmplitude::FitAmplitude(const std::string& yourOwnName
 			   , MinuitParameterSet* pset
 			   , STRING_USAGE useStringAs
 			   )
-  : FastAmplitude(treeWithOpts)
+  : Amplitude(treeWithOpts)
   , _FitAmpPhase(FitComplexMaker(yourOwnName, fname, pset
 			      , FitParameter::HIDE
 			      , NamedParameterBase::QUIET
@@ -112,7 +112,7 @@ FitAmplitude::FitAmplitude(const std::string& yourOwnName
 			   , MinuitParameterSet* pset
 			   , STRING_USAGE useStringAs
 			   )
-  : FastAmplitude(treeWithOpts)
+  : Amplitude(treeWithOpts)
   , _FitAmpPhase(FitComplexMaker(yourOwnName, (char*) 0, pset
 			      , FitParameter::HIDE
 			      , NamedParameterBase::QUIET
@@ -131,7 +131,7 @@ FitAmplitude::FitAmplitude(const AmpInitialiser& treeWithOpts
 			   , const char* fname
 			   , MinuitParameterSet* pset
 			   )
-  : FastAmplitude(treeWithOpts)
+  : Amplitude(treeWithOpts)
   , _FitAmpPhase(FitComplexMaker(treeWithOpts.uniqueName(), fname, pset
 				 , FitParameter::HIDE
 				 , NamedParameterBase::QUIET
@@ -146,7 +146,7 @@ FitAmplitude::FitAmplitude(const AmpInitialiser& treeWithOpts
 FitAmplitude::FitAmplitude(const AmpInitialiser& treeWithOpts
 			   , MinuitParameterSet* pset
 			   )
-  : FastAmplitude(treeWithOpts)
+  : Amplitude(treeWithOpts)
   ,_FitAmpPhase(FitComplexMaker(treeWithOpts.uniqueName(), (char*) 0, pset
 			     , FitParameter::HIDE
 			     , NamedParameterBase::QUIET
@@ -162,7 +162,7 @@ FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
 			   , const char* fname
 			   , MinuitParameterSet* pset
 			   )
-  : FastAmplitude(AmpInitialiser(StandardisedDecayTreeName))
+  : Amplitude(AmpInitialiser(StandardisedDecayTreeName))
   , _FitAmpPhase(FitComplexMaker(StandardisedDecayTreeName, fname, pset
 			      , FitParameter::HIDE
 			      , NamedParameterBase::QUIET
@@ -178,7 +178,7 @@ FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
 FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
 			   , MinuitParameterSet* pset
 			   )
-  : FastAmplitude(AmpInitialiser(StandardisedDecayTreeName))
+  : Amplitude(AmpInitialiser(StandardisedDecayTreeName))
   , _FitAmpPhase(FitComplexMaker(StandardisedDecayTreeName, (char*) 0, pset
 			      , FitParameter::HIDE
 			      , NamedParameterBase::QUIET
@@ -193,7 +193,7 @@ FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
 FitAmplitude::FitAmplitude(const FitAmplitude& other)
   : IReturnRealForEvent<IDalitzEvent>()
   , IReturnComplexForEvent<IDalitzEvent>()
-  , FastAmplitude(other)
+  , Amplitude(other)
   , _FitAmpPhase(other._FitAmpPhase)
   , _fitFraction(other._fitFraction)
   , _preFactors(other._preFactors)
@@ -231,7 +231,7 @@ bool FitAmplitude::canBeIgnored() const{
 }
 bool FitAmplitude::CPConjugateSameFitParameters(){
   _name += "_CPcon";
-  return FastAmplitude::CPConjugate();
+  return Amplitude::CPConjugate();
 }
 
 FitAmplitude FitAmplitude::GetCPConjugateSameFitParameters() const{

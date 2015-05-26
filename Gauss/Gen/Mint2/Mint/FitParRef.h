@@ -29,6 +29,8 @@ namespace MINT{
     operator double() const{
       return returnFPVal();
     }
+
+    virtual ~FitParRef(){}
   }; 
 }
 #endif

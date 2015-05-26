@@ -95,10 +95,11 @@ double FocusFlatte::GofM(){
 }
 
 std::complex<double> FocusFlatte::BreitWigner() {
-   double mpdg = mumsPDGMass();
-  std::complex<double> i(0.0, 1.0);
-  std::complex<double> invBW = (((std::complex<double>) mpdg*mpdg -
-  mumsRecoMass2()) -  i * mpdg * complexGofM());
-  return 1.*GeV*GeV/invBW;  
+  //  double mpdg = mumsPDGMass();
+   double mpdg = mumsMass();
+   std::complex<double> i(0.0, 1.0);
+   std::complex<double> invBW = (((std::complex<double>) mpdg*mpdg -
+				  mumsRecoMass2()) -  i * mpdg * complexGofM());
+   return 1.*GeV*GeV/invBW;  
 
 }

@@ -31,9 +31,15 @@
 
 #include "Mint/counted_ptr.h"
 
+#include "Mint/FitParDependent.h"
+#include "Mint/CachedByEvent.h"
+
+
 class Amplitude 
 : virtual public MINT::IReturnRealForEvent<IDalitzEvent>
 , virtual public MINT::IReturnComplexForEvent<IDalitzEvent>
+, public CachedByEvent<std::complex<double> >
+, public MINT::FitParDependent
 {
  protected:
   AssociatingDecayTree _associatingDecayTree;
@@ -44,7 +50,9 @@ class Amplitude
   DalitzEventPattern _pat;
   bool _init;
 
-  std::vector<ILineshape*> LineshapeList;
+  std::vector<ILineshape*> _LineshapeList;
+
+  bool addLineshape(ILineshape* ls);
 
   virtual double boxFactor(){ return 1;}
 
@@ -90,8 +98,14 @@ class Amplitude
   bool resetTree(const DecayTree& dt);
   bool CPConjugate();
  
-  virtual std::complex<double> getVal(IDalitzEvent& evt);
+  virtual std::complex<double> getVal(IDalitzEvent& evt){
+    return getValWithCaching(evt);
+  }
+
   virtual std::complex<double> getVal(IDalitzEvent* evt); // for backward compatibility only, will be removed
+
+  virtual std::complex<double> getNewVal(IDalitzEvent& evt);
+
 
 
   double Prob(IDalitzEvent& evt){

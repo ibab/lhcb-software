@@ -46,9 +46,10 @@ FitParameter::FitParameter(const std::string& name
 			   , double ma
 			   , MinuitParameterSet* setPtr
 			   , NamedParameterBase::VERBOSITY vb
+			   , const char* fname
 			   )
   : INamedParameter()
-  , NamedParameterBase(name, 0, vb)
+  , NamedParameterBase(name, fname, vb)
   , IMinuitParameter()
   //  , _minPtr(0)
   , _pset(0)
@@ -62,6 +63,7 @@ FitParameter::FitParameter(const std::string& name
   , _scanParameters(name + "_Scan", 0, NamedParameterBase::QUIET)
 {
   _gotInitialised = true;
+  setFromParsedFile();// so the above values are for initialisation but over-ruled by what's in the file
   MinuitParameterSet* ps = setPtr;
   if(0 == ps) ps = MinuitParameterSet::getDefaultSet();
   

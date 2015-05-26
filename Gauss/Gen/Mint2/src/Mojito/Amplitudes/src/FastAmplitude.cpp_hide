@@ -10,33 +10,34 @@ FastAmplitude::FastAmplitude( const DecayTree& decay
 			      , const std::string& opt
 			      )
   : Amplitude(decay, SPD_Wave, opt)
-  ,_rememberNumber(-9999)
-  ,_cashingLevel("cashingLevel",2)
+    //  ,_rememberNumber(-9999)
+    //  ,_cashingLevel("cashingLevel",2)
 {}
 
 FastAmplitude::FastAmplitude( const AmpInitialiser& ampInit)
   : Amplitude(ampInit)
-  ,_rememberNumber(-9999)
-  ,_cashingLevel("cashingLevel",2)
+    //  ,_rememberNumber(-9999)
+    //  ,_cashingLevel("cashingLevel",2)
 {}
 
 FastAmplitude::FastAmplitude( const FastAmplitude& other)
   : IReturnRealForEvent<IDalitzEvent>()
   , IReturnComplexForEvent<IDalitzEvent>()
   , Amplitude(other)
-  , _resultMap(other._resultMap)
-  ,_rememberNumber(-9999)
-  ,_cashingLevel("cashingLevel",2)
+    //  , _resultMap(other._resultMap)
+    //,_rememberNumber(-9999)
+    //  ,_cashingLevel("cashingLevel",2)
 {}
 
 FastAmplitude::FastAmplitude( const Amplitude& other)
   : Amplitude(other)
-  ,_rememberNumber(-9999)
-  ,_cashingLevel("cashingLevel",2)
+    //  ,_rememberNumber(-9999)
+    //  ,_cashingLevel("cashingLevel",2)
 {
-  _resultMap.clear();
+  //  _resultMap.clear();
 }
 
+/*
 long int FastAmplitude::rememberNumber() const{
   if(_rememberNumber < 0){
     _rememberNumber = DalitzEvent::assignUniqueRememberNumber();
@@ -45,7 +46,12 @@ long int FastAmplitude::rememberNumber() const{
 }
 
 bool FastAmplitude::knownEvent(IDalitzEvent& evt, complex<double>& value){
-  return evt.retrieveComplex(rememberNumber(), value);
+  return evt.retrieveValue(rememberNumber(), value);
+}
+*/
+
+std::complex<double> FastAmplitude::getNewVal(IDalitzEvent& evt){
+  return Amplitude::getVal(evt);
 }
 
 std::complex<double> FastAmplitude::getVal(IDalitzEvent* evt){
@@ -53,7 +59,11 @@ std::complex<double> FastAmplitude::getVal(IDalitzEvent* evt){
 }
 
 complex<double> FastAmplitude::getVal(IDalitzEvent& evt){
-  
+  return getValWithCaching(evt);
+}
+/*
+complex<double> FastAmplitude::getVal(IDalitzEvent& evt){
+
   if(_cashingLevel==0) return Amplitude::getVal(evt);  
     
   if(_cashingLevel==1) {
@@ -61,7 +71,7 @@ complex<double> FastAmplitude::getVal(IDalitzEvent& evt){
             complex<double> spinFactor(-9999.0, 0);
             if(knownEvent(evt, spinFactor)) return Amplitude::LineshapeProduct(evt)*spinFactor;
             spinFactor = Amplitude::SpinFactorValue(evt);
-            evt.setComplex(rememberNumber(),spinFactor);
+            evt.setValue(rememberNumber(),spinFactor);
             return Amplitude::LineshapeProduct(evt)*spinFactor;
         }
         else return Amplitude::getVal(evt);
@@ -89,11 +99,12 @@ complex<double> FastAmplitude::getVal(IDalitzEvent& evt){
   }
   if(dbThis) cout << " result is not known - getting Amplitude " << endl;
   result = Amplitude::getVal(evt);
-  evt.setComplex(rememberNumber(),result);
+  evt.setValue(rememberNumber(),result);
   if(dbThis)cout << "FastAmplitude returning " << result << endl;
   return result;
   
 }
 
+*/
 
 //

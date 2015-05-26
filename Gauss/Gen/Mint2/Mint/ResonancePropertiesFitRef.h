@@ -15,12 +15,15 @@ class ResonancePropertiesFitRef : public MINT::FitParDependent{
     MINT::FitParRef _fitRadius;
     MINT::FitParRef _fitAlpha;
  public:
-    ResonancePropertiesFitRef(const ResonanceProperties& repo, IFitParRegister* daddy=0);
+    ResonancePropertiesFitRef(const ResonanceProperties& repo
+			      , IFitParRegister* daddy=0);
     double mass() const{return _fitMass;}
     double width() const{return _fitWidth;}
     double radius() const{return _fitRadius;}
     double alpha() const{return _fitAlpha;}
     int pid() const{return _pid;}
+
+    virtual ~ResonancePropertiesFitRef(){}
 };
 
 #endif

@@ -6,6 +6,8 @@
 #include "Mint/AssociatingDecayTree.h"
 #include "Mint/ISpinFactor.h"
 #include "Mint/counted_ptr.h"
+#include "Mint/CachedByEvent.h"
+
 #include <string>
 #include <iostream>
 

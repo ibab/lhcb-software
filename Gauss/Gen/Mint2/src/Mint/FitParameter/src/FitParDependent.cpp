@@ -12,7 +12,7 @@ bool FitParDependent::changedSinceLastCall() const{
 }
 
 FitParDependent::FitParDependent(IFitParRegister* daddy){
-  if(0 != daddy) daddy->registerFitParDependence(this);
+  if(0 != daddy) daddy->registerFitParDependence(*this);
 }
 
 FitParDependent::FitParDependent(const FitParDependent& other)

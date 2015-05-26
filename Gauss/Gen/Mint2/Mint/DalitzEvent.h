@@ -43,7 +43,8 @@ class DalitzEvent : virtual public IDalitzEvent{
 
   mutable double _rememberPhaseSpace;
 
-  RememberAnythingFast<std::complex<double> >  _rememberAmpsFast;
+  RememberAnythingFast<std::complex<double> >  _rememberComplexFast;
+  RememberAnythingFast<double >  _rememberDoubleFast;
 
   double _aValue;
   double _weight;
@@ -163,12 +164,18 @@ public:
   virtual void setMothers3Momentum(const TVector3& mp3);
 
   virtual double phaseSpace() const;
-
-  virtual bool retrieveComplex(int i, std::complex<double>& value){
-    return _rememberAmpsFast.get(i, value);
+ 
+  virtual bool retrieveValue(int i, std::complex<double>& value){
+    return _rememberComplexFast.get(i, value);
   }
-  virtual void setComplex(int i, const std::complex<double>& value){
-    _rememberAmpsFast.set(i,value);
+  virtual void setValue(int i, const std::complex<double>& value){
+    _rememberComplexFast.set(i,value);
+  }
+  virtual bool retrieveValue(int i, double value){
+    return _rememberDoubleFast.get(i, value);
+  }
+  virtual void setValue(int i, double value){
+    _rememberDoubleFast.set(i,value);
   }
  
   // helpful

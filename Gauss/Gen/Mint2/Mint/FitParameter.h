@@ -87,7 +87,10 @@ class FitParameter : public NamedParameterBase, public IMinuitParameter{
 	       , double ma=0
 	       , MinuitParameterSet* pset=0
 	       , NamedParameterBase::VERBOSITY fb=VERBOSE
+	       , const char* fname = 0
 	       );
+ // Above: so you can fully initialise the FitParameter in your code, 
+  // but have that initialisation been overriden by a parameter file (default: stdin))
   
   FitParameter(const std::string& name
 	       , MinuitParameterSet* pset
