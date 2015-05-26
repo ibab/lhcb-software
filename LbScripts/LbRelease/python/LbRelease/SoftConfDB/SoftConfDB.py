@@ -96,6 +96,15 @@ class SoftConfDB(object):
         self.runCypher(query, lambda x: projects.append((x[0], x[1])))
         return projects
 
+    def listTag(self, tag):
+        ''' List the applications to be released '''
+        
+        query = 'start n=node:Lbadmin(Type="%s") match n-[:TAG]-m  return distinct m.project, m.version' % tag
+        projects = []
+        self.runCypher(query, lambda x: projects.append((x[0], x[1])))
+        return projects
+
+
     def listCMTBuiltProjects(self):
         ''' List the applications to be released '''
         
@@ -464,6 +473,15 @@ class SoftConfDB(object):
             self.setupDone = True
 
 
+    def getNodeTag(self, tag):
+        ''' Creates or gets the node named TAG (upper case) and index it for retrieval '''
+        cleanTag = tag.upper()
+        node =  self.mNeoDB.get_or_create_indexed_node("Lbadmin",
+                                                       "Type",
+                                                       cleanTag,
+                                                       {"type": cleanTag})
+        return node
+
     def getPlatformParent(self):
         self.setupDB()
         return self.node_platformparent
@@ -697,6 +715,39 @@ class SoftConfDB(object):
         if self.node_cmt.has_relationship_with(node_pv):
             for r in node_pv.get_relationships():
                 if r.is_type("BUILDTOOL"):
+                    r.delete()
+
+
+    def setTag(self, project, version, tag):
+        ''' Set the link to a node named tag from the given project/version'''
+        self.setupDB()
+        node_pv =  self.mNeoDB.get_indexed_node("ProjectVersion",
+                                                "ProjectVersion",
+                                                project + "_" + version)
+
+        node_tag = self.getNodeTag(tag)
+        if not node_tag.has_relationship_with(node_pv):
+            rels = self.mNeoDB.get_or_create_relationships((node_tag, "TAG", node_pv))
+            for r in rels:
+                props = r.get_properties()
+                import datetime
+                props["DATE"] = str(datetime.datetime.now())
+                r.set_properties(props)
+                
+    def unsetTag(self, project, version, tag):
+        ''' Unset the link to indicate that a project was built with CMake '''
+        self.setupDB()
+        node_pv =  self.mNeoDB.get_indexed_node("ProjectVersion",
+                                                "ProjectVersion",
+                                                project + "_" + version)
+
+        node_tag = self.getNodeTag(tag)
+        if node_tag.has_relationship_with(node_pv):
+            print "---> Iterating"
+            for r in node_pv.get_relationships():
+                print "--->", r, r.end_node, node_tag
+                if r.is_type("TAG") and r.start_node == node_tag:
+                    print "----> Deleting ", r
                     r.delete()
 
 

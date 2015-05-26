@@ -110,6 +110,16 @@ class LbSdbQuery(Script):
         for p in sorted(self.mConfDB.listCMakeBuiltProjects()):
             print "%s\t%s" % tuple(p)
 
+    def cmdlistTag(self, args):
+        ''' List the projects built with CMake '''
+        if self.options.json:
+            import json
+            print json.dumps(sorted(self.mConfDB.listTag(args[0].upper())), indent=2)
+        else:
+            for p in sorted(self.mConfDB.listTag(args[0].upper())):
+                print "%s\t%s" % tuple(p)
+
+
     def cmdlistCMT(self, args):
         ''' List the projects built with CMT '''
         for p in sorted(self.mConfDB.listCMTBuiltProjects()):
@@ -390,6 +400,7 @@ if __name__=='__main__':
   %prog getBuildTool                                       : Get the build tool to use for this project
   %prog listDatapkgs                                       : List known Data packages
   %prog listDatapkgVersions <datapkg>                      : List known versions for the specified Data package
+  %prog listTag <tag>                                      : List projects/version tagged with that specific value
       """
     s = LbSdbQuery(usage=sUsage)
     sys.exit(s.run())
