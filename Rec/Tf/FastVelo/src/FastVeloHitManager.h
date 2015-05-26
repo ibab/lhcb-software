@@ -60,6 +60,9 @@ public:
 
   FastVeloHit* hitByLHCbID( LHCb::LHCbID id );
 
+  /// get a hit by LHCbID and reset all internal state to the default
+  FastVeloHit* defaultStateHitByLHCbID( LHCb::LHCbID id );
+
   void resetUsedFlags ( );
   
 protected:

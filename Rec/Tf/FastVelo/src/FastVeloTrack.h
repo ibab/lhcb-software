@@ -268,6 +268,10 @@ public:
     bool operator() (const FastVeloTrack& lhs, const FastVeloTrack& rhs) const { return lhs.nbRHits() > rhs.nbRHits(); }
   };
 
+  /// test to see if solve() failed: i.e.  x=tx=0 or y=ty=0
+  bool testStateFit() const {
+    return ( (m_x0 != 0. || m_tx != 0.) && (m_y0 != 0. || m_ty != 0.) ) ?  true : false;
+  }
 
 protected:
 

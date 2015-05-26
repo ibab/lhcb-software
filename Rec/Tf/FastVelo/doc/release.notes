@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2015-05-22 - David Hutchcroft
+ - Rework FastVeloFitLHCbIDs to reset and correct the FastVeloHits in a repeatable way
+
 ! 2015-05-20 - Michel De Cian
  - Use move-syntax in FastVeloTracking (includes changes to FastVeloTrack)
 

@@ -157,6 +157,21 @@ public:
     m_weight = m_phiWeight/float(dx*dx+dy*dy); 
   }
 
+  /// reset internal cluster state to default when cluster loaded to hit manager
+  void clearState(){
+    m_a         = 0.;
+    m_b         = 0.;
+    m_c         = 1.;
+    m_xStripCentre = 0.;
+    m_yStripCentre = 0.;
+    m_xGlobal    = 0.;
+    m_yGlobal    = 0.;
+    m_xCentre    = 0.;
+    m_yCentre    = 0.;
+    m_weight     = m_phiWeight; // phiWieght is never changed from initalised value
+    m_z          = 0.;
+  }
+
   struct DecreasingByZ  {
     bool operator() (const FastVeloHit* lhs, const FastVeloHit* rhs) const { return lhs->z() > rhs->z(); }
   };

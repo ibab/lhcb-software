@@ -288,6 +288,33 @@ FastVeloHit* FastVeloHitManager::hitByLHCbID ( LHCb::LHCbID id) {
   return 0;
 }
 
+// get a hit by LHCbID and reset all internal state to the default
+FastVeloHit* FastVeloHitManager::defaultStateHitByLHCbID ( LHCb::LHCbID id) {
+  FastVeloHit* hit = this->hitByLHCbID(id);
+  if(!hit) return nullptr; // no hit
+  hit->clearState();
+  FastVeloSensor* mySensor = m_sensors[hit->sensor()];
+  unsigned int strip = hit->cluster().channelID().strip();
+  double       frac  = hit->cluster().interStripFraction();
+  if( id.isVeloR() ){
+    DeVeloRType* deSensor =  mySensor->rSensor();
+    double pitch = deSensor->rPitch( strip );
+    double coord = deSensor->rOfStrip( strip ) + frac * pitch;
+    hit->setGlobal( coord + mySensor->rOffset( hit->zone() ) );
+    unsigned int spaceZone = hit->zone();
+    if ( deSensor->isRight() ) spaceZone += 4;
+    double x = coord * m_cosPhi[spaceZone];
+    double y = coord * m_sinPhi[spaceZone];
+    hit->setZ( mySensor->z( x, y ) );
+  }else{
+    hit->setLineParameters( mySensor->lineParams( strip, frac ) );
+    hit->setZ( mySensor->z() );
+  }
+  hit->setSensorCentre( mySensor->xCentre(), mySensor->yCentre() );
+  return hit;
+}
+
+
 //=========================================================================
 //  Clear the used flags so that a second instance of Fast Velo will start properly
 //=========================================================================
