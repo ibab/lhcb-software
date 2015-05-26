@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-26 - Alex Pearce
+ - Tweak Charm ForXSec line selections to match trigger selections.
+
 ! 2015-05-22 - Maurizio Martinelli
  - Added a stripping line for prompt D0->KsHHpi0 decays and for D0->HHgamma
   from semileptonic B decays (both in StrippingCharm)
