@@ -3,6 +3,7 @@
 ! Responsible : M. Tobin
 !----------------------------------------------------------------------------
 
+!========================= STKernel v2r14 2015-05-26 =========================
 ! 2015-05-17 - Marco Cattaneo
  - Fix genreflex selection warnings. Note though that some enums and functions
    that were not being selected before are still not selected...
