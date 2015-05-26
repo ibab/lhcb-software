@@ -5,6 +5,92 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v38r7>2015-05-26 LHCbSys v38r7</A></H1><PRE>
+This version uses Gaudi v26r2 and LCG_76root6 with ROOT 6.02.08.
+
+- Packages modified: DAQ/MDF v3r41, Det/DDDB v1r76, Det/RichDet v17r3,
+    Event/DAQEvent v9r19, Event/EventPacker v5r2, GaudiConf v19r10,
+    GaudiObjDesc v11r23, HC/HCDAQ v1r3, Hlt/HltDAQ v4r14, Kernel/FSRAlgs v1r8,
+    Kernel/LHCbAlgs v3r6, Kernel/LHCbKernel v15r10, Kernel/LHCbMath v3r57,
+    Kernel/XMLSummaryKernel v1r13, L0/L0DU v10r32, ST/STKernel v2r14,
+    Tools/CondDBUI v3r34
+
+- In DAQ/MDF v3r41
+  . Removed unnecessary dependencies
+  . Removed unused include (Tokenizer.h).
+
+- In Det/DDDB v1r76
+  . Update default database tags to the latest ones:
+    o DDDB,     2015                  : dddb-20150520
+    o DDDB,           2012            : dddb-20150522-2
+    o DDDB,                 2011      : dddb-20150522-1
+    o DDDB,                       2010: dddb-20150522
+    o LHCBCOND, 2015                  : cond-20150511
+    o LHCBCOND,                   2010: cond-20150527
+
+- In Det/RichDet v17r3
+  . Make the HLT refractive indices the default ones.
+
+- In Event/DAQEvent v9r19
+  . Fixed LHCBPS-1410: implement event type bits as enum in ODIN
+
+- In Event/EventPacker v5r2
+  . Add a check to PackCluster to see if the packed data already exists or not.
+
+- In GaudiConf v19r9, v19r10
+  . LHCbExclusions.py: add temporary exclusion for printout of Algorithm
+    ErrorCount property, renamed ErrorCounter in Gaudi v26r2
+  . Turbo option in DstConf. Needed for propagation of Turbo objects.
+
+- In GaudiObjDesc v11r23
+  . Add back the previously removed placement operators, as it turns out these
+    are still required for GaudiPython...
+
+- In HC/HCDAQ v1r3
+  . Make input/output locations configurable.
+  . Bug fix in PS/SPD bank decoding (ADC packet is two bytes not one).
+
+- In Hlt/HltDAQ v4r14
+  . Include helper functions for RecSummary.
+
+- In Kernel/FSRAlgs v1r8
+  . Updated reference file after GAUDI-1030.
+  . Synchronized LHCbOutputStream with OutputStream in Gaudi v26r2.
+
+- In Kernel/LHCbAlgs v3r6
+  . Remove obsolete GaudiKernel/DeclareFactoryEntries.h include
+  . Modified EventCountAlg to avoid re-definition of property StatEntityList
+    from base class (see GAUDI-1023).
+
+- In Kernel/LHCbKernel v15r10
+  . Add a new test 'gaudipythonallocator' that tests the use of classes with
+    custom allocators via GaudiPython. Intended to catch situations such as the
+    recent removal of the placement operators in GaudiObjDesc that caused
+    problems with GaudiPython, that where only found after being released ...
+
+- In Kernel/LHCbMath v3r57
+  . Fix compilation warnings in the similarity timing test
+
+- In Kernel/XMLSummaryKernel v1r13
+  . Wrapped calls to Python with the GIL.
+    Fixes a segfault when starting Gaudi without GaudiPython (GAUDI-986).
+
+- In L0/L0DU v10r32
+  . Modified DecodeVeloRawBuffer to avoid re-definition of property
+    xLabelOptions from base class (see GAUDI-1023).
+
+- In ST/STKernel v2r14
+  . Fix genreflex selection warnings. Note though that some enums and functions
+    that were not being selected before are still not selected...
+
+- In Tools/CondDBUI v3r34
+  . Fix to enable the CondDBUI.CondDB member defaultTag so that an alternative
+    tag can be used
+  . Fix for parsing release notes with SAX parser. The method within
+    ReleaseNotesHandler is migrated into endElement() as you might expect an
+    incomplete string within characters()
+
+
 </PRE><H1><A NAME=v38r6>2015-04-20 LHCbSys v38r6</A></H1><PRE>
 This version uses Gaudi v26r1 and LCG_74root6 with ROOT 6.02.05.
 
