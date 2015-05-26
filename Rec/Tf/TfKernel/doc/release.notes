@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!========================= TfKernel v2r32 2015-05-26 =========================
 ! 2015-05-23 - Manuel Tobias Schiller
  - SIMDChi2Fit: speed up using custom vectorisable dot product implementation
    (this will gain about 6% speed in the Seeding, no performance changes)
