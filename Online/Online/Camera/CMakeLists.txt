@@ -32,7 +32,7 @@ gaudi_install_python_modules()
 
 macro(cam_exe name)
   gaudi_add_executable(${name} ${ARGN}
-                       LINK_LIBRARIES CameraLib)
+                       LINK_LIBRARIES Boost CameraLib)
 endmacro()
 
 cam_exe(CameraSwitch     ../src/applications/camswitch.C)
@@ -82,7 +82,7 @@ else()
 
 endif()
 
-cam_exe(CameraGui src/applications/MessagePresenter.C src/applications/Elog.cpp src/applications/ElogDialog.cpp MessagePresenterDict.cpp)
-target_link_libraries(CameraGui Boost ${CMAKE_DL_LIBS})
+cam_exe(CameraGui src/applications/MessagePresenter.C src/applications/Elog.cpp src/applications/ElogDialog.cpp )
+target_link_libraries(CameraGui ${CMAKE_DL_LIBS})
 
 #cam_exe(CameraViewContainer ../src/applications/ViewCont.C MessagePresenterDict.cpp)
