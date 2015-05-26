@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-05-26 - Roel Aaij
+ - Fix Turbo and TurboCalib routing bits to be mutually exclusive.
+ 
 ! 2015-05-26 - Sascha Stahl
  - Configuration.py: Remove debug statement for Hlt1TrackMonitor.
 
