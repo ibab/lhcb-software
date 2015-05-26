@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v5r2 2015-05-26 =========================
 ! 2015-05-14 - Chris Jones
  - Add a check to PackCluster to see if the packed data already exists or not.
 
