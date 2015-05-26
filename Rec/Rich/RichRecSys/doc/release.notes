@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v5r7 2015-05-26 =========================
 ! 2015-05-12 - Chris Jones
  - No longer throw an exception if an instance of the RichRecSysConf is
    created without its reconstruction sequence defined. Instead print
