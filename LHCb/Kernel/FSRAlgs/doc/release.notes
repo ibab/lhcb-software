@@ -4,6 +4,7 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+!========================= FSRAlgs v1r8 2015-05-26 =========================
 ! 2015-05-12 - Marco Clemencic
  - Updated reference file after GAUDI-1030.
 
