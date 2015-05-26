@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r57 2015-05-26 =========================
 ! 2015-05-21 - Ben Couturier 
  - Fix warnings in the similarity timing test
 
