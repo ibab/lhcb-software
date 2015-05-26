@@ -52,7 +52,6 @@ void main()
       var logocamera = new THREE.OrthographicCamera( - window.innerWidth / 2.0,  window.innerWidth / 2.0,  window.innerHeight / 2.0, -  window.innerHeight / 2.0, 1.0, 10.0 );
       logocamera.position.z = 10.0;
       var logosprite, logomaterial, logowidth=0.2*window.innerWidth, logoheight=0.0;
-      //var infowidth = 0.2*window.innerWidth;
       var logomap = THREE.ImageUtils.loadTexture( "logo.png", {}, function() {
         logomaterial = new THREE.SpriteMaterial( { map: logomap, color: 0xffffff } );
         logosprite = new THREE.Sprite( logomaterial );
@@ -71,6 +70,7 @@ void main()
       textcanvas.height = 4.0*textheight;
       textcontext.textBaseline = "middle";
       textcontext.fillStyle = "#ffffff";
+      //textcontext.fillStyle = logomaterial.color;
       textcontext.font = textheight + "px Lucida Grande, sans serif";
       textcontext.fillText("Event number N/A", 0.0, 0.5*textheight);
       textcontext.fillText("Run number N/A", 0.0, 2.0*textheight);
@@ -269,6 +269,7 @@ void main()
         mucolor: "#00ff00",
         ecolor: "#0505ff",
         bkgcolor: "#000000",
+        logocolor: "#ffffff",
         detcolor: "#40d0ff",
         width: 2.0,
         screenshotscale: 1.0,
@@ -422,6 +423,25 @@ void main()
       });
       var ebkgcolor = fvis.addColor(params, "bkgcolor").name("Bkg. color").onChange( function() { renderer.setClearColor( params.bkgcolor, 1 ); } );
       var elogo = fvis.add(params, "logo").name("Show logo").onChange( function() { displaylogo = params.logo; } );
+      var elogocolor = fvis.addColor(params, "logocolor").name("Logo color").onChange( function() { 
+	logomaterial.color.setHex(params.logocolor.replace( '#','0x' ));  
+	//textcontext.fillStyle = params.logocolor;//logomaterial.color;
+
+	logoscene.remove(textsprite);
+	textcontext.clearRect ( 0 , 0 , textwidth, 4.0*textheight );
+	textcontext.fillStyle = params.logocolor;//logomaterial.color;
+	textcontext.fillText("Event "+theevent.eventNumber, 0.0, 0.5*textheight);
+	textcontext.fillText("Run "+theevent.runNumber, 0.0, 2.0*textheight);
+	textcontext.fillText(theevent.time, 0.0, 3.5*textheight);
+	texttexture = new THREE.Texture(textcanvas);
+	texttexture.needsUpdate = true;
+	textmaterial = new THREE.SpriteMaterial( { map: texttexture, useScreenCoordinates: false });
+	textsprite = new THREE.Sprite( textmaterial );
+	textsprite.scale.set(logowidth, logowidth*textcanvas.height/textcanvas.width, 1.0);
+	textsprite.position.set( -window.innerWidth/2.0 + 0.55*logowidth, window.innerHeight/2.0 - 1.0*logowidth, 1.0 );
+	logoscene.add(textsprite);
+
+	} );
       var escreenshot = fvis.add(params, "screenshot").name("Screenshot"); 
       var escreenshotscale = fvis.add(params, "screenshotscale", 0.0, 5.0).name("Scaling"); 
       //fvis.open();
@@ -587,7 +607,7 @@ void main()
 
 	logoscene.remove(textsprite);
 	textcontext.clearRect ( 0 , 0 , textwidth, 4.0*textheight );
-	textcontext.fillStyle="#FFFFFF";
+	textcontext.fillStyle = params.logocolor;//logomaterial.color;
 	textcontext.fillText("Event "+theevent.eventNumber, 0.0, 0.5*textheight);
 	textcontext.fillText("Run "+theevent.runNumber, 0.0, 2.0*textheight);
 	textcontext.fillText(theevent.time, 0.0, 3.5*textheight);
