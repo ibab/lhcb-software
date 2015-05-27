@@ -1,3 +1,7 @@
+2015-05-27  Ben Couturier  <ben.couturier@cern.ch>
+
+	* cmt/requirements: LBCORE-825: Release of v4r4 
+
 2015-05-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmake: updated CMake support modules
