@@ -54,6 +54,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "OutputLevel"                  : INFO                        # Output level
         , "LogFile"                      : "alignlog.txt"              # log file for kalman type alignment
         , "Incident"                     : ""                          # name of handle to be executed on incident by incident server
+        , "DataCondType"                 : "Run2"                      # Set the format of xml file for run1 or run2 
         , "UpdateInFinalize"             : True
         , "OutputDataFile"               : ""
         , "DatasetName"                  : "Unknown"
@@ -188,6 +189,31 @@ class TAlignment( LHCbConfigurableUser ):
         listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
         if 'Velo' in listOfCondToWrite:
             self.addXmlWriter( alg, 'Velo', 'Global', [0,1] )
+            self.addXmlWriter( alg, 'Velo','Modules', [2,4] )
+        if 'TT' in listOfCondToWrite:
+            self.addXmlWriter( alg, 'TT','Global', [0,1,2] )
+            self.addXmlWriter( alg, 'TT','Modules', [3,4] )
+            #self.addXmlWriter( alg, 'TT','Elements', [5] )
+        if 'IT' in listOfCondToWrite:
+            self.addXmlWriter( alg, 'IT','Global', [0,1,2] )
+            self.addXmlWriter( alg, 'IT','Modules', [3,4] )
+            #self.addXmlWriter( alg, 'IT','Elements', [5,6] )
+        if 'OT' in listOfCondToWrite:
+            self.addXmlWriter( alg, 'OT','Global', [0,1,2,3] )
+            self.addXmlWriter( alg, 'OT','Modules', [4] )
+        if 'Muon' in listOfCondToWrite:
+            #self.addXmlWriter( alg, 'Muon','Detectors', [] )
+            self.addXmlWriter( alg, 'Muon','Global', [0,1,2] )
+
+        if 'Ecal' in listOfCondToWrite:
+            self.addXmlWriter( alg, 'Ecal','alignment', [] )
+
+    def addXmlRun1Writers( self, alg ) :
+        print '================ Configuring XML writer for Run1 offline alignment ====================='
+        alg.XmlWriters = []
+        listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
+        if 'Velo' in listOfCondToWrite:
+            self.addXmlWriter( alg, 'Velo', 'Global', [0,1] )
             self.addXmlWriter( alg, 'Velo','Modules', [2] )
             self.addXmlWriter( alg, 'Velo','Detectors', [4] )
         if 'TT' in listOfCondToWrite:
@@ -293,8 +319,10 @@ class TAlignment( LHCbConfigurableUser ):
             if self.getProp( "OnlineMode" ) :
                 self.addOnlineXmlWriters(xmlwriter)
                 updatetool.LogFile = self.getProp('OnlineAligWorkDir') + '/' + self.getProp( 'LogFile' )
-            else :
+            elif self.getProp( "DataCondType")=="Run2":
                 self.addXmlWriters(xmlwriter)
+            else :
+                self.addXmlRun1Writers(xmlwriter)
             print '=================== OnlineMode = ', self.getProp( "OnlineMode" ) 
                 
             # and these too
