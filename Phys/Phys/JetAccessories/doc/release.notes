@@ -4,11 +4,11 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!====================== JetAccessories v3r12 2015-05-27 =======================
 
 ! 2015-05-01 - Cedric Potterat
  - new jec (v3) implemented in PFJetMAker and its config
  - add new container "CandidatesToKeep", Particles that are keep in PF without cuts. 
-
 
 !====================== JetAccessories v3r11 2015-02-24 =======================
 
