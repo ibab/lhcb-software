@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-27 - Eva Gersabeck
+- Updated LineConfigDictionaries_Charm.py 
+
 ! 2015-05-26 - Alex Pearce
  - Tweak Charm ForXSec line selections to match trigger selections.
 
