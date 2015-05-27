@@ -513,76 +513,76 @@ int MessagePresenter::GetXtra(std::string str , std::string & cachedfile){
 void MessagePresenter::setup()
 {
 
-  const int colNum     = 1024;   // Number of colors in the palette
-  int       startIndex =  1000;    // starting index of allocated colors
-  int       palette[colNum];
-  float     val;
-  int       iCount     =    0;
-  const int iStep      =    1;
-  std::vector<TColor*>          m_RootColourVector;
-  m_RootColourVector.reserve(colNum);
+  // const int colNum     = 1024;   // Number of colors in the palette
+  // int       startIndex =  1000;    // starting index of allocated colors
+  // int       palette[colNum];
+  // float     val;
+  // int       iCount     =    0;
+  // const int iStep      =    1;
+  // std::vector<TColor*>          m_RootColourVector;
+  // m_RootColourVector.reserve(colNum);
 
-  // blue(0,0,255) -> cyan(0,255,255)
-  for (int i=0; i < 256; i += iStep) {
-    val = i/(float)256;
-    TColor *color = new TColor(startIndex+iCount, 0, val, 1);
-    m_RootColourVector.push_back(color);
-    palette[iCount ] = startIndex + iCount;
-    iCount++;
-  }
+  // // blue(0,0,255) -> cyan(0,255,255)
+  // for (int i=0; i < 256; i += iStep) {
+  //   val = i/(float)256;
+  //   TColor *color = new TColor(startIndex+iCount, 0, val, 1);
+  //   m_RootColourVector.push_back(color);
+  //   palette[iCount ] = startIndex + iCount;
+  //   ++iCount;
+  // }
 
-  // cyan (0,255,255) -> green (0,255,0)
-  for (int i=0; i < 256; i += iStep){
-    val = i/(float)256;
-    TColor *color = new TColor(startIndex+iCount, 0, 1, 1-val);
-    m_RootColourVector.push_back(color);
-    palette[iCount] = startIndex + iCount;
-    iCount ++;
-  }
+  // // cyan (0,255,255) -> green (0,255,0)
+  // for (int i=0; i < 256; i += iStep){
+  //   val = i/(float)256;
+  //   TColor *color = new TColor(startIndex+iCount, 0, 1, 1-val);
+  //   m_RootColourVector.push_back(color);
+  //   palette[iCount] = startIndex + iCount;
+  //   ++iCount;
+  // }
 
-  //green (0,255,0) -> yellow (255,255,0)
-  for (int i=0; i < 256; i += iStep){
-    val = i/(float)256;
-    TColor *color = new TColor(startIndex+iCount, val, 1, 0);
-    m_RootColourVector.push_back(color);
-    palette[iCount] = startIndex + iCount;
-    iCount ++;
-  }
+  // //green (0,255,0) -> yellow (255,255,0)
+  // for (int i=0; i < 256; i += iStep){
+  //   val = i/(float)256;
+  //   TColor *color = new TColor(startIndex+iCount, val, 1, 0);
+  //   m_RootColourVector.push_back(color);
+  //   palette[iCount] = startIndex + iCount;
+  //   ++iCount;
+  // }
 
-  // yellow (255,255,0) -> red (255,0,0)
-  for (int i=0; i < 256; i += iStep){
-    val = i/(float)256;
-    TColor *color = new TColor(startIndex+iCount, 1, 1-val, 0);
-    m_RootColourVector.push_back(color);
-    palette[iCount] = startIndex + iCount;
-    iCount ++;
-  }
+  // // yellow (255,255,0) -> red (255,0,0)
+  // for (int i=0; i < 256; i += iStep){
+  //   val = i/(float)256;
+  //   TColor *color = new TColor(startIndex+iCount, 1, 1-val, 0);
+  //   m_RootColourVector.push_back(color);
+  //   palette[iCount] = startIndex + iCount;
+  //   ++iCount;
+  // }
   // define and set style
 
-  gStyle->SetCanvasBorderMode(0);
-  gStyle->SetCanvasColor(10);
-  gStyle->SetPadBorderMode(1);
-  gStyle->SetPadColor(10);
-  gStyle->SetPadTopMargin(0.1);
-  gStyle->SetPadBottomMargin(0.1);
-  gStyle->SetPadLeftMargin(0.1);
-  gStyle->SetPaperSize(18,24);
-  gStyle->SetLabelSize(0.04,"XY");
-  gStyle->SetLabelOffset(0.01,"Y");
-  gStyle->SetTitleOffset(1.1,"XY");
-  gStyle->SetTitleSize(0.06,"XY");
-  gStyle->SetStatFont(42);
-  gStyle->SetStatBorderSize(1);
-  gStyle->SetStatColor(10);
-  gStyle->SetStatFontSize(0.08);
-  gStyle->SetTitleBorderSize(1);
-  gStyle->SetTitleFont(62);
-  gStyle->SetTitleFontSize(0.06);
+  // gStyle->SetCanvasBorderMode(0);
+  // gStyle->SetCanvasColor(10);
+  // gStyle->SetPadBorderMode(1);
+  // gStyle->SetPadColor(10);
+  // gStyle->SetPadTopMargin(0.1);
+  // gStyle->SetPadBottomMargin(0.1);
+  // gStyle->SetPadLeftMargin(0.1);
+  // gStyle->SetPaperSize(18,24);
+  // gStyle->SetLabelSize(0.04,"XY");
+  // gStyle->SetLabelOffset(0.01,"Y");
+  // gStyle->SetTitleOffset(1.1,"XY");
+  // gStyle->SetTitleSize(0.06,"XY");
+  // gStyle->SetStatFont(42);
+  // gStyle->SetStatBorderSize(1);
+  // gStyle->SetStatColor(10);
+  // gStyle->SetStatFontSize(0.08);
+  // gStyle->SetTitleBorderSize(1);
+  // gStyle->SetTitleFont(62);
+  // gStyle->SetTitleFontSize(0.06);
 
-  gStyle->SetTitleColor(10);
-  gStyle->SetOptStat(10);
+  // gStyle->SetTitleColor(10);
+  // gStyle->SetOptStat(10);
 
-  gStyle->SetPalette(colNum, palette);
+  // gStyle->SetPalette(colNum, palette);
 
   Pred=TColor::RGB2Pixel(230,20,20);
   Pgreen=TColor::RGB2Pixel(32,220,32);

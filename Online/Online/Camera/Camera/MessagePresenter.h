@@ -51,9 +51,11 @@ private:
 
   TString savdir;//(".");
   TString savname;//(".");
+
   void Layout();
   int GetXtra(const std::string & str, std::string &);
 
+  void rootStyle();
 
   std::vector<std::string> allpairs;
 
@@ -95,6 +97,7 @@ private:
   bool writeCacheON;
 
 public:
+
   void DoClose();
   void messageloop(const char * host = "127.0.0.1", const char * file = NULL);
   MessagePresenter();

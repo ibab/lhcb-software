@@ -52,6 +52,7 @@
 #include "TGButton.h"
 #include "TGSplitter.h"
 #include "TGFSComboBox.h"
+#include "TGaxis.h"
 
 #ifndef ROOT_TGLabel
 #include "TGLabel.h"
@@ -526,16 +527,14 @@ int MessagePresenter::GetXtra(const std::string & str,
   return 1;
 }
 
-void MessagePresenter::setup()
+void MessagePresenter::rootStyle()
 {
-  // define and set root style
-
   // line thickness
-  int lhcbWidth = 1;
+  const int lhcbWidth = 1;
   // Marker type
-  int lhcbMarkerType = 8;
+  const int lhcbMarkerType = 8;
   // marker size
-  double lhcbMarkerSize = 0.7;
+  const float lhcbMarkerSize = 0.7;
 
   gStyle->SetCanvasBorderMode(0);
   gStyle->SetCanvasColor(10);
@@ -544,6 +543,7 @@ void MessagePresenter::setup()
   gStyle->SetPadTopMargin(0.1f);
   gStyle->SetPadBottomMargin(0.1f);
   gStyle->SetPadLeftMargin(0.1f);
+  gStyle->SetPadRightMargin(0.125f);
   gStyle->SetPaperSize(18,24);
   gStyle->SetLabelSize(0.04f,"XY");
   gStyle->SetLabelOffset(0.01f,"Y");
@@ -596,10 +596,15 @@ void MessagePresenter::setup()
   // put tick marks on top and RHS of plots
   gStyle->SetPadTickX(1);
   gStyle->SetPadTickY(1);
-  
-  // histogram divisions: only 5 in x to avoid label overlaps
-  //gStyle->SetNdivisions(505,"x");
-  //gStyle->SetNdivisions(510,"y");
+
+  TGaxis::SetMaxDigits(2);
+
+}
+
+void MessagePresenter::setup()
+{
+  // define and set root style
+  rootStyle();
 
   fTextButton659->SetState(kButtonDown);
   fTextButton699->SetState(kButtonDown);
