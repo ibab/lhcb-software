@@ -16,7 +16,6 @@
     <script src="js/SplineCurve3.js"></script>
     <script src="js/CombinedCamera.js"></script>
 
-
 <!-- ---------------- Custom Shader Code ------------------------ -->
 <script id="vertexShader" type="x-shader/x-vertex">
 attribute float alpha;
@@ -39,8 +38,8 @@ void main()
 </script>
 <!-- ----------------------------------------------------------- -->
 
-
     <script>
+
       var software = ! Detector.webgl;
       //software = true;
       var scene = new THREE.Scene();
@@ -322,6 +321,10 @@ void main()
 	  else
 	    currentevent = 0;
 	  loadevent(eventlist[currentevent]);
+        },			     
+        download: function() { 
+	  //download current events json
+          window.open(eventlist[currentevent]); 
         }
       };
 
@@ -444,6 +447,8 @@ void main()
 	} );
       var escreenshot = fvis.add(params, "screenshot").name("Screenshot"); 
       var escreenshotscale = fvis.add(params, "screenshotscale", 0.0, 5.0).name("Scaling"); 
+      var edownload = fvis.add(params, "download").name("Download .json");
+
       //fvis.open();
 
       var fdet = gui.addFolder('Detector');      
@@ -499,6 +504,7 @@ void main()
       ecenter.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
       escreenshot.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
       escreenshotscale.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      edownload.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
       eview.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
 
       var fcolors = gui.addFolder('Particles');
