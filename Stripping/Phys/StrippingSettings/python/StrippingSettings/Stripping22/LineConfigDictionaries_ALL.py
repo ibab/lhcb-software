@@ -34,7 +34,7 @@ LowMultINC = {
     'WGs'         : [ 'QEE' ],
     'STREAMS'     : [ 'ALL' ],
     'CONFIG'      : {
-        'LowMultRequiredRawEvents' : None, #["Velo","Heschel"], Please we need to add this!
+        'LowMultRequiredRawEvents' : ["Velo","Herschel"],
         #
         'PrescaleL0DiHadron'  : 0,
         'DecisionL0DiHadron'  : None,#"L0_CHANNEL('DiHadron,lowMult')",
@@ -190,7 +190,7 @@ TrackEffDownMuon = {
     'NAME'        : 'TrackEffDownMuon',
     'WGs'         : ['ALL'],
     'BUILDERTYPE' : 'StrippingTrackEffDownMuonConf',
-    'STREAMS'           : [ 'ALL' ],
+    'STREAMS'           : [ 'ALL','ALLTURBO' ],
     'CONFIG'      : { 
 				'MuMom':		2000.	# MeV
 			,	'MuTMom':		200.	# MeV
@@ -235,7 +235,7 @@ TrackEffDownMuon = {
 TrackEffMuonTT = {
     'NAME'        : 'TrackEffMuonTT',
     'WGs'         : ['ALL'],
-    'STREAMS'           : [ 'ALL' ],
+    'STREAMS'           : [ 'ALL','ALLTURBO' ],
     'BUILDERTYPE' : 'StrippingTrackEffMuonTTConf',
     'CONFIG'      : { 
 			'JpsiMassWin'                 : 500,
@@ -285,7 +285,7 @@ TrackEffMuonTT = {
 TrackEffVeloMuon = {
     'NAME'        : 'TrackEffVeloMuon',
     'WGs'         : ['ALL'],
-    'STREAMS'           : [ 'ALL' ],
+    'STREAMS'           : [ 'ALL','ALLTURBO' ],
     'BUILDERTYPE' : 'StrippingTrackEffVeloMuonConf',
     'CONFIG'      : {
 			"TrChi2VeMu":		5.	# adimensional
@@ -334,7 +334,7 @@ TrackEffVeloMuon = {
 NoPIDDstarWithD02RSKPi =  {
     'NAME'       : 'noPIDDstar',
     'WGs'        : ['ALL'],
-    'STREAMS'           : [ 'ALL' ],
+    'STREAMS'           : [ 'ALL','ALLTURBO' ],
     'BUILDERTYPE': 'NoPIDDstarWithD02RSKPiConf',
     'CONFIG'     :{
     
@@ -368,10 +368,9 @@ NoPIDDstarWithD02RSKPi =  {
 
 PIDCalib = {
     'NAME'              : 'PIDCalib',
-    'BUILDERTYPE'       : 'DiMuonConf',
     'WGs'               : [ 'ALL' ],
     'BUILDERTYPE'       : 'PIDCalibLineBuilder',
-    'STREAMS'           : [ 'ALL' ],
+    'STREAMS'           : [ 'ALL','ALLTURBO' ],
     'CONFIG'            : {
       'Jpsi2MuMu'       : { # Replaces old StrippingMuIDCalib_JpsiKFromBNoPIDNoMip
         'Prescale'      : 1.0
@@ -695,7 +694,7 @@ DiMuonForXsection = {
     'Prescale'   :  1.,
     'CheckPV'    :  False
     },
-    'STREAMS' : [ 'ALL' ] ,
+    'STREAMS' : [ 'ALLTURBO' ] ,
     'WGs'    : [ 'BandQ' ]
     }
 
@@ -744,11 +743,11 @@ B2JpsiXforEM = {
 # Charm #
 #-------#
 
-D02HHForXSecConf = {
+D02HHForXSec = {
     'NAME': 'D02HHForXSec',
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingD02HHForXSecConf',
-    'STREAMS': ['ALL'],
+    'STREAMS': ['ALLTURBO'],
     'CONFIG': {
         # Minimum transverse momentum all D0 daughters must satisfy
         'Daug_All_PT_MIN': 250.0*MeV,
@@ -811,11 +810,11 @@ D02HHForXSecConf = {
     }
 }
 
-D02K3PiForXSecConf = {
+D02K3PiForXSec = {
     'NAME': 'D02K3PiForXSec',
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingD02K3PiForXSecConf',
-    'STREAMS': ['ALL'],
+    'STREAMS': ['ALLTURBO'],
     'CONFIG': {
         # Minimum transverse momentum all D0 daughters must satisfy
         'Daug_All_PT_MIN': 200.0*MeV,
@@ -898,11 +897,11 @@ D02K3PiForXSecConf = {
     }
 }
 
-D2HHHForXSecConf = {
+D2HHHForXSec = {
     'NAME': 'D2HHHForXSec',
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingD2HHHForXSecConf',
-    'STREAMS': ['ALL'],
+    'STREAMS': ['ALLTURBO'],
     'CONFIG': {
         # Minimum transverse momentum all D daughters must satisfy
         'Daug_All_PT_MIN': 200.0*MeV,
@@ -1003,11 +1002,11 @@ D2HHHForXSecConf = {
     }
 }
 
-D2PhiPiForXSecConf = {
+D2PhiPiForXSec = {
     'NAME': 'D2PhiPiForXSec',
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingD2PhiPiForXSecConf',
-    'STREAMS': ['ALL'],
+    'STREAMS': ['ALLTURBO'],
     'CONFIG': {
         # Minimum transverse momentum all D_s+ and phi daughters must satisfy
         'Daug_All_PT_MIN': 200.0*MeV,
@@ -1092,11 +1091,11 @@ D2PhiPiForXSecConf = {
     }
 }
 
-Lambdac2PHHForXSecConf = {
+Lambdac2PHHForXSec = {
     'NAME': 'Lambdac2PHHForXSec',
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingLambdac2PHHForXSecConf',
-    'STREAMS': ['ALL'],
+    'STREAMS': ['ALLTURBO'],
     'CONFIG': {
         # Minimum transverse momentum all Lc+ daughters must satisfy
         'Daug_All_PT_MIN': 200.0*MeV,
@@ -1192,11 +1191,11 @@ Lambdac2PHHForXSecConf = {
     }
 }
 
-Xic2PKPiForXSecConf = {
+Xic2PKPiForXSec = {
     'NAME': 'Xic2PKPiForXSec',
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingXic2PKPiForXSecConf',
-    'STREAMS': ['ALL'],
+    'STREAMS': ['ALLTURBO'],
     'CONFIG': {
         # Minimum transverse momentum all Xic+ daughters must satisfy
         'Daug_All_PT_MIN': 200.0*MeV,
@@ -1259,11 +1258,11 @@ Xic2PKPiForXSecConf = {
     }
 }
 
-Xic2PKKPiForXSecConf = {
+Xic2PKKPiForXSec = {
     'NAME': 'Xic2PKKPiForXSec',
     'WGs': ['Charm'],
     'BUILDERTYPE': 'StrippingXic2PKKPiForXSecConf',
-    'STREAMS': ['ALL'],
+    'STREAMS': ['ALLTURBO'],
     'CONFIG': {
         # Minimum transverse momentum all Xic0 daughters must satisfy
         'Daug_All_PT_MIN': 250.0*MeV,

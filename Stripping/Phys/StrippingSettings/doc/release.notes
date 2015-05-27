@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-27 - Andrea Contu
+ - Splitting Stripping22 into ALL and ALLTURBO streams
+
 ! 2015-05-27 - Eva Gersabeck
 - Updated LineConfigDictionaries_Charm.py 
 
