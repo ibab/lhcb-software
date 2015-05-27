@@ -55,8 +55,6 @@ private:
   int m_nberOfLostHitFromMap;
   int m_nberOfKeptHitFromMap;
 
-  DeFTDetector* m_deFT; ///< pointer to FT detector description
-
 };
 #endif // FTCLUSTERCREATOR_H
 

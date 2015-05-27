@@ -4,6 +4,14 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+
+! 2015-05-27 - Eric Cogneras
+ - Migrate resolution computation on cluster position from FTClusterCreator to FTClusterMonitor.
+ - Add if statement in Cluster/MCHit association to fix a seg. fault breakdown
+ - strict inequalities moved into not strict ones in force2bitsADC patch (MCFTDigitCreator)
+ - control plots added MCFTDepositMonitor
+ - New class FTNtupleMaker to create a ntuple filled with hit/Digit/cluster wanted informations
+
 !========================= FTDigitisation v2r4 2015-04-20 =========================
 ! 2015-04-09 - Jacco de Vries
  - turned on 2-bits ADC forcing of digits, noise implementation, and new SiPMResponse shape

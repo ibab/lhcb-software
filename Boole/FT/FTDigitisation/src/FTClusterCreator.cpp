@@ -8,10 +8,6 @@
 // from Linker
 #include "Linker/LinkerWithKey.h"
 
-// FTDet
-#include "FTDet/DeFTDetector.h"
-#include "FTDet/DeFTLayer.h"
-
 // from FTEvent
 #include "Event/MCFTDeposit.h"
 #include "Event/MCFTDigit.h"
@@ -71,9 +67,6 @@ FTClusterCreator::~FTClusterCreator() {}
 StatusCode FTClusterCreator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  /// Retrieve and initialize DeFT (no test: exception in case of failure)
-  m_deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
 
   return StatusCode::SUCCESS;
 }
@@ -185,7 +178,7 @@ StatusCode FTClusterCreator::execute(){
           // next digit should be in the same SiPM, the channel next door, and above adcThreshold
           if((stopDigit->channelID().sipmId() == seedDigit->channelID().sipmId())
              &&(stopDigit->channelID().sipmCell()==((*stopDigitIter)->channelID().sipmCell()+1))
-             && (stopDigit->adcCount() >=m_adcThreshold)) {
+             && (stopDigit->adcCount() >= m_adcThreshold)) {
             
             // if ADC of next digit > the current seed digit, redefine the seed
             if(stopDigit->adcCount() > seedDigit->adcCount()) {
@@ -231,7 +224,7 @@ StatusCode FTClusterCreator::execute(){
           //  and also after the ending channel of the previous cluster
           if((startDigit->channelID().sipmId() == seedDigit->channelID().sipmId()) 
              &&(startDigit->channelID().sipmCell()==((*startDigitIter)->channelID().sipmCell()-1))
-             && (startDigit->adcCount() >=m_adcThreshold)
+             && (startDigit->adcCount() >= m_adcThreshold)
              &&((startDigitIter-1) > lastStopDigitIter)) {
 
             // extend cluster to the 'left'
@@ -379,7 +372,6 @@ StatusCode FTClusterCreator::execute(){
         ++m_nCluster;
         m_sumCharge += totalCharge;
 
- 
 
         // Get largest MCHit object contributing to cluster
         if( mcHitContributionMap.size() > 0 ) {
@@ -433,6 +425,12 @@ StatusCode FTClusterCreator::execute(){
           if ( acceptCluster ) {
             clusterCont -> insert(newCluster); // add cluster to container
         
+            //implement counters
+            if(newCluster->size() == 1) counter("NberOfClusterSize1")++;
+            else if (newCluster->size() == 2) counter("NberOfClusterSize2")++;
+            else if (newCluster->size() == 3) counter("NberOfClusterSize3")++;
+            else if (newCluster->size() == 4) counter("NberOfClusterSize4")++;
+
             // draw cluster channelID
             plot(newCluster->channelID(), "ClusChannelID", "Cluster ChannelID; Cluster ChannelID" , 0. , 589824. ,4608);
             plot(newCluster->channelID().sipmCell(), "ClusSiPMCell", "Cluster SiPM Cell; Cluster SiPM Cell", 0. , 130. ,130);
@@ -445,10 +443,12 @@ StatusCode FTClusterCreator::execute(){
             // draw cluster details
             plot(newCluster->size(),"ClusSize","Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 10., 10);
             plot(newCluster->charge(),"ClusCharge","Cluster Charge Distribution;Cluster Charge;Nber of events" , 0., 50., 50);
-            plot(newCluster->fraction(), "ClusFraction", "Cluster Fraction Pos;Cluster Fraction; Nber of events" , -.5, .5 , 100);
+            plot(newCluster->fraction(), "ClusFractionOld", "Cluster Fraction Pos in old [-.5,.5] range;Cluster Fraction; Nber of events" , -.5, .5 , 100);
+            plot(newCluster->fraction(), "ClusFraction", "Cluster Fraction Pos;Cluster Fraction; Nber of events" , 0., 1. , 100);
             plot2D(newCluster->size(), newCluster->charge(), "ClusChargevsSize",
                    "Cluster charge vs. size;Cluster size [Nb of Channels];Cluster Charge [ADC counts]",
                    0. , 16. , 0. , 100.,16, 100);
+            plot2D(newCluster->size(),newCluster->fraction(), "ClusterSizeVSFraction",  "Cluster Size VS Cluster Fraction ; Cluster Size; Cluster Fraction" , 0. , 5., 0., 1.);
 
             // draw largest contributing MCHit properties
             plot( largestHit -> midPoint().x(), "Cluster_MCHit_xPosition", "Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3500,3500,200 ); 
@@ -502,122 +502,7 @@ StatusCode FTClusterCreator::execute(){
                   plot(newCluster->channelID().sipmId(), "SpillPrevClusSiPMID", "SpillPrev Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
                 }
               }
-            } // end of IS spillover 
-
-
-            // draw BIG ERIC test
-            const DeFTFibreMat* pL = m_deFT->findFibreMat(largestHit->midPoint());
-            if( pL ) {
-              std::pair<LHCb::FTChannelID, double> hitMeanChannel;
-              std::vector < std::pair<LHCb::FTChannelID, double> > meanChannels;
-              if( pL->calculateMeanChannel(largestHit, hitMeanChannel)){
-                double dXCluster = (((double)hitMeanChannel.first-(double)newCluster->channelID()) + 
-                                    (hitMeanChannel.second - newCluster->fraction()))*250.; // in micrometer
-                plot2D(hitMeanChannel.first.layer(),hitMeanChannel.first.sipmId(), "Cluster_MCHit_layer_VS_SiPMID", 
-                       "Cluster  MCHit Layer; Cluster MCHit Layer ; Cluster MCHit SiPMID",0.,20.,0.,128.,20,128); 
-                plot2D(hitMeanChannel.first.layer(),hitMeanChannel.first.sipmCell(), "Cluster_MCHit_layer_VS_SiPMCell", 
-                       "Cluster  MCHit Layer; Cluster MCHit Layer ; Cluster MCHit SiPMCell",0.,20.,0.,128.,20,128); 
-                plot(hitMeanChannel.first.layer(), "Cluster_MCHit_layer", "Cluster  MCHit Layer; Cluster MCHit Layer ; Number of clusters",0.,20.,20); 
-                plot(dXCluster, "Cluster_x_position_resolution", "Cluster x position (from MCHit) ; Cluster position resolution [#mum] ; Number of clusters",-1000,1000,100); 
-                plot(dXCluster, "Cluster_x_position_resolutionZOOM", "Cluster x position (from MCHit) ; Cluster position resolution [#mum] ; Number of clusters",-200,200,400); 
-                plot2D(dXCluster, newCluster->fraction(),"Cluster_resolutionVSFraction", 
-                       "Cluster x position (from MCHit) VS Fraction; Cluster position resolution [#mum] ; Fraction", -60000., 60000., -.5, .5 ,400, 100); 
-                plot2D(dXCluster, newCluster->channelID().layer(),"Cluster_resolutionVSLayer", 
-                       "Cluster x position (from MCHit) VS Layer ; Cluster position resolution [#mum] ; Lyer", -60000., 60000., 0., 12. ,400, 12); 
-                plot2D(dXCluster, hitMeanChannel.first.layer(),"Cluster_resolutionVSHitLayer", 
-                       "Cluster x position (from MCHit) VS Layer ; Cluster position resolution [#mum] ; Hit Layer", -60000., 60000., 0., 16. ,400, 16); 
-                plot2D(dXCluster, newCluster->channelID().sipmCell(),"Cluster_resolutionVSCell", 
-                       "Cluster x position (from MCHit) VS Cell ; Cluster position resolution [#mum] ; SiPM Cell", -60000., 60000., 0., 128., 400, 128); 
-                plot2D(dXCluster, newCluster->channelID(),"Cluster_resolutionVSChannelID", 
-                       "Cluster x position (from MCHit) VS ChannelID ; Cluster position resolution [#mum] ; SiPM ChannelID", -60000., 60000., 0., 589824., 100, 4068); 
-                plot2D(dXCluster, newCluster->fraction(),"Cluster_resolutionVSFractionZOOM", 
-                       "Cluster x position (from MCHit) VS Fraction; Cluster position resolution [#mum] ; Fraction", -1000., 1000., -.5, .5 , 100, 100); 
-                plot2D(dXCluster, newCluster->channelID().layer(),"Cluster_resolutionVSLayerZOOM", 
-                       "Cluster x position (from MCHit) VS Layer ; Cluster position resolution [#mum] ; Lyer", -1000., 1000., 0., 12., 100, 12); 
-                plot2D(dXCluster, newCluster->channelID().sipmCell(),"Cluster_resolutionVSCellZOOM", 
-                       "Cluster x position (from MCHit) VS Cell ; Cluster position resolution [#mum] ; SiPM Cell", -1000., 1000., 0., 128. ,100, 128); 
-                plot2D(dXCluster, newCluster->channelID(),"Cluster_resolutionVSChannelIDZOOM", 
-                       "Cluster x position (from MCHit) VS ChannelID ; Cluster position resolution [#mum] ; SiPM ChannelID", -1000., 1000., 0., 589824. ,100, 4068); 
-                if (newCluster->size() == 1 ) {
-                  plot(dXCluster, "Cluster_x_position_resolutionZOOM_1Ch", 
-                      "Cluster x position (from MCHit, 1 channel); Cluster (1 channel) position resolution [#mum];Number of clusters",-200., 200., 400);
-                  plot(dXCluster, "Cluster_x_position_resolution_1Ch",
-                      "Cluster x position (from MCHit, 1 channel); Cluster (1 channel) position resolution [#mum];Number of clusters",-1000., 1000., 100);
-                  plot2D(dXCluster,  newCluster->channelID().sipmCell(), "Resol_vs_Cell_1CH", 
-                      "resol vs Cell ;Cluster (1 channel) position resolution [#mum]; sipmCell", -1000., 1000., 0., 134., 100, 134);
-                  if(std::abs(dXCluster) > 200) {
-                    plot2D(newCluster->channelID().sipmCell(), newCluster->channelID().layer(), "SiPM_vs_Layer_1CH_up200", 
-                        "SiPM vs Layer (1CH cluster with resol > 200 #mum) ;sipmCell ; layer", 0., 134.,0., 16., 134,16);
-                    if(newCluster->channelID().sipmCell() <10)
-                      plot2D(newCluster->channelID().sipmCell(), newCluster->channelID().layer(),"SiPMbegin_vs_Layer_1CH_up200", 
-                          "SiPM begin vs Layer (1CH cluster with resol > 200 #mum) ;sipmCell ; layer", 0., 10.,0., 16., 10,16);
-                    if(newCluster->channelID().sipmCell() >100)
-                      plot2D(newCluster->channelID().sipmCell(), newCluster->channelID().layer(), "SiPMend_vs_Layer_1CH_up200", 
-                          "SiPM end vs Layer (1CH cluster with resol > 200 #mum) ;sipmCell ; layer", 120., 130.,0., 16., 10,16);
-                    if((newCluster->channelID().sipmCell() <70)&&(newCluster->channelID().sipmCell() >60))
-                      plot2D(newCluster->channelID().sipmCell(), newCluster->channelID().layer(),"SiPMmiddle_vs_Layer_1CH_up200", 
-                          "SiPM middle vs Layer (1CH cluster with resol > 200 #mum) ;sipmCell ; layer", 60., 70.,0., 16., 10,16);
-                  }
-                } else if (newCluster->size() == 2 ) {
-                  plot(dXCluster, "Cluster_x_position_resolutionZOOM_2Ch",
-                      "Cluster x position (from MCHit, 2 channels); Cluster (2 channels) position resolution [#mum] ; Number of clusters", -200., 200., 400);
-                  plot(dXCluster, "Cluster_x_position_resolution_2Ch",
-                      "Cluster x position (from MCHit, 2 channels); Cluster (2 channels) position resolution [#mum] ; Number of clusters", -1000., 1000., 100);
-                  if(std::abs(dXCluster) > 200) {
-                    plot2D(newCluster->channelID().sipmCell(), newCluster->channelID().layer(), "SiPM_vs_Layer_2CH_up200", 
-                        "SiPM vs Layer (2CH cluster with resol > 200 #mum) ;sipmCell ; layer", 0., 134., 0., 16., 134, 16);
-                    if(newCluster->channelID().sipmCell() <10)
-                      plot2D(newCluster->channelID().sipmCell(), newCluster->channelID().layer(),"SiPMbegin_vs_Layer_2CH_up200", 
-                          "SiPM begin vs Layer (2CH cluster with resol > 200 #mum) ;sipmCell ; layer", 0., 10., 0., 16., 10, 16);
-                    if(newCluster->channelID().sipmCell() >100)
-                      plot2D(newCluster->channelID().sipmCell(), newCluster->channelID().layer(),"SiPMend_vs_Layer_2CH_up200",
-                          "SiPM end vs Layer (2CH cluster with resol > 200 #mum) ;sipmCell ; layer", 120., 130., 0., 16., 10, 16);
-                    if((newCluster->channelID().sipmCell() <70)&&(newCluster->channelID().sipmCell() >60))
-                      plot2D(newCluster->channelID().sipmCell(), newCluster->channelID().layer(),"SiPMmiddle_vs_Layer_2CH_up200", 
-                          "SiPM middle vs Layer (2CH cluster with resol > 200 #mum) ;sipmCell ; layer", 60., 70., 0., 16., 10, 16);
-                  }
-                } else if (newCluster->size() == 3 ) {
-                  plot(dXCluster, "Cluster_x_position_resolutionZOOM_3Ch",
-                      "Cluster x position (from MCHit, 3 channels); Cluster (3 channels) position resolution [#mum] ; Number of clusters", -200., 200., 400);
-                  plot(dXCluster, "Cluster_x_position_resolution_3Ch",
-                      "Cluster x position (from MCHit, 3 channels); Cluster (3 channels) position resolution [#mum] ; Number of clusters",-1000., 1000., 100);
-                  if(std::abs(dXCluster) > 200) {
-                    plot2D(newCluster->channelID().sipmCell(), newCluster->channelID().layer(), "SiPM_vs_Layer_3CH_up200", 
-                        "SiPM vs Layer (3CH cluster with resol > 200 #mum) ;sipmCell ; layer", 0., 134., 0., 16., 134, 16);
-                    if(newCluster->channelID().sipmCell() <10)
-                      plot2D(newCluster->channelID().sipmCell(), newCluster->channelID().layer(), "SiPMbegin_vs_Layer_3CH_up200", 
-                          "SiPM begin vs Layer (3CH cluster with resol > 200 #mum) ;sipmCell ; layer", 0., 10., 0., 16., 10, 16);
-                    if(newCluster->channelID().sipmCell() >100)
-                      plot2D(newCluster->channelID().sipmCell(), newCluster->channelID().layer(),"SiPMend_vs_Layer_3CH_up200", 
-                          "SiPM end vs Layer (3CH cluster with resol > 200 #mum) ;sipmCell ; layer", 120., 130., 0., 16., 10, 16);
-                    if((newCluster->channelID().sipmCell() <70)&&(newCluster->channelID().sipmCell() >60))
-                      plot2D(newCluster->channelID().sipmCell(), newCluster->channelID().layer(),"SiPMmiddle_vs_Layer_3CH_up200", 
-                          "SiPM middle vs Layer (3CH cluster with resol > 200 #mum) ;sipmCell ; layer", 60., 70., 0., 16., 10, 16);
-                  }
-                } else if (newCluster->size() == 4 ) {
-                  plot(dXCluster, "Cluster_x_position_resolutionZOOM_4Ch",
-                      "Cluster x position (from MCHit, 4 channels); Cluster (4 channels) position resolution [#mum] ; Number of clusters", -200., 200., 400);
-                  plot(dXCluster, "Cluster_x_position_resolution_4Ch",
-                      "Cluster x position (from MCHit, 4 channels); Cluster (4 channels) position resolution [#mum] ; Number of clusters", -1000., 1000., 100);
-                  if(std::abs(dXCluster) > 200) {
-                    plot2D(  newCluster->channelID().sipmCell(), newCluster->channelID().layer(), "SiPM_vs_Layer_4CH_up200", 
-                        "SiPM vs Layer (4CH cluster with resol > 200 #mum) ;sipmCell ; layer", 0., 134., 0., 16., 134, 16);
-                    if(newCluster->channelID().sipmCell() <10)
-                      plot2D(newCluster->channelID().sipmCell(), newCluster->channelID().layer(),"SiPMbegin_vs_Layer_4CH_up200", 
-                          "SiPM begin vs Layer (4CH cluster with resol > 200 #mum) ;sipmCell ; layer", 0., 10., 0., 16., 10, 16);
-                    if(newCluster->channelID().sipmCell() >100)
-                      plot2D(  newCluster->channelID().sipmCell(), newCluster->channelID().layer(), "SiPMend_vs_Layer_4CH_up200", 
-                          "SiPM end vs Layer (4CH cluster with resol > 200 #mum) ;sipmCell ; layer", 120., 130., 0., 16., 10, 16);
-                    if((newCluster->channelID().sipmCell() <70)&&(newCluster->channelID().sipmCell() >60))
-                      plot2D(  newCluster->channelID().sipmCell(), newCluster->channelID().layer(), "SiPMmiddle_vs_Layer_4CH_up200", 
-                          "SiPM middle vs Layer (4CH cluster with resol > 200 #mum) ;sipmCell ; layer", 60., 70., 0., 16., 10,16);
-                  }
-                }
-              }
-            } // end of BIG ERIC test
-
-
-
+            } // end of IS spillover
 
           } else {
             // do not accept cluster
@@ -627,15 +512,17 @@ StatusCode FTClusterCreator::execute(){
           }
         
           // Setup MCParticle to cluster link (also for spillover / not accepted clusters, as long as it's not noise)
-          for(std::map<const LHCb::MCParticle*,double>::iterator i = mcContributionMap.begin(); i != mcContributionMap.end(); ++i) {
-            mcToClusterLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
+          if ( acceptCluster ) {
+            for(std::map<const LHCb::MCParticle*,double>::iterator i = mcContributionMap.begin(); i != mcContributionMap.end(); ++i) {
+              mcToClusterLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
+            }
+            
+            // Setup MCHit to cluster link
+            for(std::map<const LHCb::MCHit*,double>::iterator i = mcHitContributionMap.begin(); i != mcHitContributionMap.end(); ++i) {
+              hitToClusterLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
+            }
           }
-
-          // Setup MCHit to cluster link
-          for(std::map<const LHCb::MCHit*,double>::iterator i = mcHitContributionMap.begin(); i != mcHitContributionMap.end(); ++i) {
-            hitToClusterLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
-          }
-
+          
         } else { 
           // Cluster has no contributing MCHits --> is a noise cluster
           clusterCont -> insert(newCluster);

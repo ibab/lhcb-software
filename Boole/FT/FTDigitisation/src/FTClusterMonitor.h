@@ -5,7 +5,10 @@
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 
+// LHCbKernel
+#include "Kernel/FTChannelID.h"
 
+#include "Event/MCFTDigit.h"
 /** @class FTClusterMonitor FTClusterMonitor.h
  *  
  *
@@ -24,6 +27,10 @@ public:
 
 private:
   std::string m_clusterLocation;      ///< FTCluster Container
+  std::string m_rawBankFractionGranularity; 
   unsigned int QuarterModule(const unsigned int module);
+
+  DeFTDetector* m_deFT; ///< pointer to FT detector description
+
 };
 #endif // FTCLUSTERMONITOR_H

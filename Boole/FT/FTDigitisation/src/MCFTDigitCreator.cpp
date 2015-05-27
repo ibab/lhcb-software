@@ -583,9 +583,9 @@ StatusCode MCFTDigitCreator::execute() {
       adc = mcDigit -> adcCount();
 
       newAdc = 0;
-      if(adc > 3) { newAdc = 3; }
-      if(adc > 5) { newAdc = 5; }
-      if(adc > 8) { newAdc = 8; }
+      if(adc >= 3) { newAdc = 3; }
+      if(adc >= 5) { newAdc = 5; }
+      if(adc >= 8) { newAdc = 8; }
       mcDigit -> setAdcCount( newAdc );
     
       plot( adc   , "force2bitADC_oldAdc", "force2bitADC oldADC" , 0. , 20. , 20);

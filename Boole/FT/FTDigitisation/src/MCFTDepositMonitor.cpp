@@ -164,6 +164,8 @@ StatusCode MCFTDepositMonitor::execute() {
   MCFTDeposits::const_iterator iterDeposit = mcDepositsCont->begin();
   for (; iterDeposit!=mcDepositsCont->end();++iterDeposit){
     plot((double)(*iterDeposit)->channelID(), "DepFiredChannel","Fired Channel; ChannelID" , 0. , 1000000., 10000);
+    plot((double)(*iterDeposit)->channelID().sipmId(), "DepFiredSiPMID","SiPMID of Fired Channel; SiPMID", 0.,20.,20);
+    plot((double)(*iterDeposit)->channelID().sipmCell(), "DepFiredSiPMChannel","SiPMCell Fired Channel; SiPMID", 0.,140.,140);
     plot((double)(*iterDeposit)->mcHitVec().size(), "DepHitPerChannel",
          "Number of Hits per Channel;Number of Hits per Channel;" , 0. , 50.);
 
