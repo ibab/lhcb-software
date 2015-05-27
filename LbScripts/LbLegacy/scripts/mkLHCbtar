@@ -147,6 +147,9 @@ def make_tar(pname, pversion, binary='', use_dbg_externals=False):
         if not use_dbg_externals:
             if isBinaryDbg(binary) :
                 tar_opt = "_" + getBinaryOpt(binary)
+        # Special case of -do0 platform
+        if tar_opt.endswith("-do0"):
+            tar_opt = tar_opt.replace("-do0", "-dbg")
         platform = binary.split('_')[0]
         if platform.find('slc') != -1:
             platform = 'slc'
@@ -536,7 +539,7 @@ if __name__ == "__main__":
         sys.exit()
 
     binary = ''
-    use_dbg_externals = False
+    use_dbg_externals = True
     for key, value in keys:
         if key in ('-d', '--debug'):
             debug_flag = 1
@@ -551,6 +554,10 @@ if __name__ == "__main__":
         if key in ('-x', '--dbgext'):
             # Special option added to allow refering to DBG version of LCGCMT
             use_dbg_externals = True
+        if key in ('--nodbgext'):
+            # Special option added to allow refering to DBG version of LCGCMT
+            use_dbg_externals = False
+
         if key in ('-w', '--web'):
             rc = create_web()
             sys.exit()

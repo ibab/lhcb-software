@@ -1,11 +1,15 @@
 2015-05-27 Ben Couturier  <Ben.Couturier@cern.ch>
 
+	* scripts/mkLHCbtar: LBCORE-826 Add -do0 platform to lbscripts (debug compiled with -O0) 
+
+2015-05-27 Ben Couturier  <Ben.Couturier@cern.ch>
+
         * cmt/requirements: release of version v6r4
         * python/LbLegacy/install_project.py:  release of LbScripts version v8r4
 
 2015-02-18 Ben Couturier  <Ben.Couturier@cern.ch>
 
-	* scripts/mkLHCbtar: LBCORE-747 Add option -x to have html files that refer to dbg version of LCGCMT.
+	* scripts/mkLHCbtar: LBCORE-746 Add option -x to have html files that refer to dbg version of LCGCMT.
 
 2015-02-06 Ben Couturier  <Ben.Couturier@cern.ch>
 
