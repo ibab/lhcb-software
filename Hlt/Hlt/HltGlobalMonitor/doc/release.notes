@@ -5,10 +5,10 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+!========================= HltGlobalMonitor v4r7 2015-05-26 =========================
+
 ! 2015-05-26 - Sascha Stahl
  - Hlt1TrackMonitor: Prevent it from crashing in case locations do not exist.
-
-!========================= HltGlobalMonitor v4r7 2015-05-26 =========================
 
 ! 2015-05-22 - Sascha Stahl
  - Add new Hlt1TrackMonitor.
