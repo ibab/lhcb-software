@@ -4,10 +4,11 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+!========================= GenCuts v3r11p1 2015-05-27 ========================
 ! 2015-05-22 - Xabier Cid Vidal
- - Fixed tiny bug in InvariantMassQQMCJets.cpp
+ - Fixed tiny bug in InvariantMassQQMCJets.cpp that was causing core dump
 
-!========================== GenCuts v3r11 2014-05-07 =========================
+!========================== GenCuts v3r11 2015-05-07 =========================
 ! 2015-05-01 - Guy Wormser 
  - Added DaughtersInLHCbAndCutsForDstar3pi.cpp and .h to select D*3pi 
    inclusive events from B decays
