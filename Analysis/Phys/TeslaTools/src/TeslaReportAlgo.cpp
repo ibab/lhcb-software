@@ -98,7 +98,7 @@ StatusCode TeslaReportAlgo::execute()
       }
     }
   } else{
-    warning() << "Vertex reports do not exist!!!" << endmsg;
+    info() << "Vertex reports do not exist!!!" << endmsg;
     //
     return StatusCode::SUCCESS;
   }
@@ -115,7 +115,7 @@ StatusCode TeslaReportAlgo::execute()
       }
     }
   } else{
-    warning() << "Sel. reports do not exist!!!" << endmsg;
+    info() << "Sel. reports do not exist!!!" << endmsg;
     //
     return StatusCode::SUCCESS;
   }
