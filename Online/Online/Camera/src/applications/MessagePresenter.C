@@ -756,8 +756,10 @@ void MessagePresenter::dumpelog()
   boost::replace_all(subject,"3: ","ERROR: ");
 
   // get the current user
-  const char* user = getenv("USER");
-  static std::string username = ( user ? std::string(user) : "?" );
+  const char* eloguser = getenv("CAMERA_ELOGAUTHOR");
+  const char* user     = getenv("USER");
+  static std::string username = ( eloguser ? std::string(eloguser) :
+                                  user     ? std::string(user)     : "?" );
 
   static std::string logbook   = "RICH" ;
   static std::string system    = "RICH" ;
@@ -804,15 +806,15 @@ void MessagePresenter::dumpelog()
     if ( m_logBookConfig.empty() ) m_logBookConfig = "lblogbook.cern.ch";
 
     Elog myElog( m_logBookConfig, 8080 );
-
     myElog.setCredential( "common", "Common!" );
+
+    myElog.addAttribute( "Author", username );
 
     myElog.setLogbook( logbook );
 
     if ( hasImage ) myElog.addAttachment(ifile.Data());
     if ( hasText  ) myElog.addAttachment(tfile.Data());
 
-    myElog.addAttribute( "Author",  username );
     myElog.addAttribute( "System",  system );
     myElog.addAttribute( "Subject", subject );
     if ( !runNumber.empty() ) myElog.addAttribute( "Run", runNumber );
