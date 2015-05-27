@@ -5,19 +5,27 @@
 #include "IFitParRegister.h"
 
 #include <vector>
+#include <iostream>
 
 namespace MINT{
   class FitParDependent 
     : virtual public IFitParRegister
-    , std::vector<const IFitParDependent*> // a bit unsave, but easy
+    , std::vector<FitParRef>
     {
+      IFitParRegister* _daddy;
     public:
       virtual bool changedSinceLastCall() const;
+      virtual void rememberFitParValues() const;
       
+      virtual unsigned int size() const{return std::vector<FitParRef>::size();}
+      virtual const FitParRef& operator[](unsigned int i) const;
+    
       bool registerFitParDependence(const IFitParDependent& fpd){
-	//if(0 != fpd) this->push_back(fpd);
-	this->push_back(&fpd);
-	return true;
+	 for(unsigned int i=0; i < fpd.size(); i++){
+	   this->push_back(fpd[i]);
+	 }
+	 if(0 != _daddy) _daddy->registerFitParDependence(fpd);
+	 return true;
       }
       void removeAllFitParDependencies(){this->clear();}
       // I would one day like to make this saver, but for
@@ -25,7 +33,9 @@ namespace MINT{
       // fact the dependencies still persist.
 
       FitParDependent(IFitParRegister* daddy=0);
-      FitParDependent(const FitParDependent& other);
+      FitParDependent(const FitParDependent& other, IFitParRegister* newDaddy=0);
+
+      void listFitParDependencies(std::ostream& os=std::cout) const;
     }; // class
 
 } // namespace MINT

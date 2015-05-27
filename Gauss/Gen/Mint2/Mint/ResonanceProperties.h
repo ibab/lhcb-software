@@ -34,6 +34,11 @@ class ResonanceProperties{
   double radius() const{return _fitRadius;}
   double alpha() const{return _fitAlpha;}
   int pid() const{return _pid;}
+
+
+  void changeMassForDebug(double newVal){
+    _fitMass = newVal;
+  }
   
 };
 

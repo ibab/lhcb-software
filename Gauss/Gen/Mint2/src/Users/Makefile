@@ -29,6 +29,7 @@ HDRS += $(wildcard $(MintDir)/*/src/*.$(HdrSuf))
 HDRS += $(wildcard $(MintDir)/../../Mint/*.$(HdrSuf))
 HDRS += $(wildcard $(MojitoDir)/*/src/*.$(HdrSuf))
 HDRS += $(wildcard *.$(HdrSuf))
+HDRS += $(wildcard ../../../../Mint/*.$(HdrSuf))
 OBJS := $(patsubst %.$(SrcSuf),%.$(ObjSuf),$(SRCS))
 ##OBJS := $(shell echo $(OBJS) | sed 's/\/src\//\/bin\//g')
 SRCSLOCAL += $(wildcard *.$(SrcSuf))
@@ -47,7 +48,7 @@ depend: .depend
 
 .depend: $(SRCS) $(HDRS)
 	@echo ""; echo " ===== Figuring out dependencies ============"; echo ""
-	@makedepend -f- -- $(CXXFLAGS) -- $(SRCS) > .depend 2> .makedepend.err
+	@makedepend -f- -- $(CXXFLAGS) -- $(SRCS) -- $(HDRS) > .depend 2> .makedepend.err
 	@echo ""; echo " result in .depend, errors in .makedepend.err"; echo ""
 	@echo ""; echo " ======== Dependencies done. ================"; echo ""
 

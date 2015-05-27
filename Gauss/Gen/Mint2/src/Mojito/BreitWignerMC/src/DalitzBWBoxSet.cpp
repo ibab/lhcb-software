@@ -694,7 +694,7 @@ counted_ptr<DalitzEvent> DalitzBWBoxSet::makeEventForOwner(int& NTries){
 	   << "\n\t This event's weight > max Weight: "
 	   << evtPtr->getWeight() << " > " << _maxWeightEstimate
 	   << endl;
-      _maxWeightEstimate = evtPtr->getWeight()*2;
+      _maxWeightEstimate = evtPtr->getWeight()*1.3;
       cout << "\n\t...increased _maxWeightEstimate to: " 
 	   << _maxWeightEstimate
 	   << endl;

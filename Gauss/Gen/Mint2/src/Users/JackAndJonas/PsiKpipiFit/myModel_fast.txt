@@ -18,15 +18,19 @@ IntegratorInputFile     "sgIntegrator"
 *InputFileName    "GeneratedMC.root"
 OutputRootFile  "GeneratedMC.root"
 
-"FitLineshapeParameters"	0
-"cashingLevel"			2
+"FitLineshapeParameters"	1
 
 ** name											Fix?	init	step	min	max
 *
 *"BW_radius"                     							2	0.002	0.0001	0.0	0.0
 *
-"mass_K(1)(1270)+"                     							0	1270	1	0.0	0.0
-"width_K(1)(1270)+"                     						1	90	0.5	0.0	0.0
+"mass_K*(892)0"                     							0	896	1	0.0	0.0
+* "mass_K*(892)0_Scan"      0	3000
+*"width_K*(892)0"                     							0	54.4	1	5	500
+*
+* "mass_K(1)(1270)+"                     							1	1270	1	0.0	0.0
+* "mass_K(1)(1270)+_Scan"     1000 1500
+* "width_K(1)(1270)+"                     						1	90	0.5	40	180
 *
 *"mass_K(2)(1580)+"                     						2	1580	1	0.0	0.0
 *"width_K(2)(1580)+"  									2	110	1	0.0	0.0

@@ -228,7 +228,7 @@ int ampFit(){
   NamedParameter<int>  Nevents("Nevents", 1000);
   NamedParameter<double> integPrecision("IntegPrecision", 1.e-2);
   NamedParameter<std::string> integMethod("IntegMethod", (std::string)"efficient");
-  NamedParameter<int> fitLineshapeParameters("FitLineshapeParameters", 0);
+  NamedParameter<int> fitLineshapeParameters("FitLineshapeParameters", 1);
 
   NamedParameter<string> OutputDir("OutputDir", (std::string) "", (char*) 0);
   NamedParameter<int>  useIntegrator("UseIntegrator", 0);
@@ -263,6 +263,7 @@ int ampFit(){
   //datH.draw("data_","eps");
 
   if(fitLineshapeParameters){
+    cout << "FITTING LINESHAPE PARAMETERS" << endl;
         AmpsPdf amps(pat, &fas, integPrecision,integMethod, (std::string) IntegratorEventFile);
         Neg2LL fcn(amps, eventList);
         Minimiser mini(&fcn);

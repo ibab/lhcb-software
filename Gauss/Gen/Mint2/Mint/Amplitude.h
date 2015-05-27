@@ -99,6 +99,7 @@ class Amplitude
   bool CPConjugate();
  
   virtual std::complex<double> getVal(IDalitzEvent& evt){
+    //return getNewVal(evt); (for debugging)
     return getValWithCaching(evt);
   }
 

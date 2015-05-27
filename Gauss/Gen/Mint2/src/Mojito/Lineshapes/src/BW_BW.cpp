@@ -17,7 +17,8 @@ using namespace MINT;
 
 bool bigDbg=false;
 
-bool PDGWithReco=false;
+//bool PDGWithReco=false;
+bool PDGWithReco=true;
 
 bool DoAsLaurenDid = false;
 bool compareToOldRooFit = DoAsLaurenDid;
@@ -431,13 +432,6 @@ bool BW_BW::setAllFitParameters(){
 
 double BW_BW::mumsMass() const{
   bool dbThis=false;
-  if(dbThis){
-    cout << "BW_BW::mumsMass() called with "
-	 << "_RPL = " << _RPL
-	 << " mumsPID() " << mumsPID() << endl;
-    cout << "_RPL->get(mumsPID()) " << _RPL->get(mumsPID()) << endl;
-    cout << "... and finally " << _RPL->get(mumsPID())->mass() << endl;
-  }
   return mumsFittableProperties().mass();
   // return _RPL->get(mumsPID())->mass();
 }
@@ -647,7 +641,7 @@ double BW_BW::daughterPDGMass( const int& i ) const{
 
 double BW_BW::daughterWidth(int i) const{
   if( i >= _theDecay.nDgtr() || i < 0){
-    cout << " ERROR in BW_BW::daughterPDGMass:"
+    cout << " ERROR in BW_BW::daughterWidth:"
 	 << " You requested the mass of dgtr number " << i
 	 << ". There are " << _theDecay.nDgtr() 
 	 << " daughters." << endl;
@@ -722,7 +716,7 @@ double BW_BW::Fr_BELLE(double prSquared){
     double R_pr_sq  = R*R * prSquared;
     double R_pAB_sq = R*R * pABSq();
     if(twoLPlusOne() == 3){                        // spin = 1
-      if(bigDbg) cout << "in Fr() " << sqrt(prSquared)
+      if(dbThis) cout << "in Fr() " << sqrt(prSquared)
 		      << ", " << sqrt(pABSq()) << endl;
       
       if(dbThis)cout << "BW Fr R = " << R << "prSquared = " << prSquared 
@@ -776,7 +770,7 @@ double BW_BW::Fr_BELLE_Max(){
   double R_pr_sq  = R*R * prSq();
   double R_pAB_sq = 0;//R*R * pABSq();
   if(twoLPlusOne() == 3){                        // spin = 1
-    if(bigDbg) cout << "in FrMax() " << sqrt(prSq())
+    if(dbThis) cout << "in FrMax() " << sqrt(prSq())
 		    << ", " << sqrt(pABSq()) << endl;
     
     if(dbThis)cout << "BW FrMax R = " << R << "prSq() = " << prSq() 
@@ -835,7 +829,7 @@ double BW_BW::Fr_PDG_BL(){
     double FrSq = -9999;
 
     if(twoLPlusOne() == 3){                        // spin = 1
-      if(bigDbg) cout << "in Fr() " << sqrt(prSq())
+      if(dbThis) cout << "in Fr() " << sqrt(prSq())
 		      << ", " << sqrt(pABSq()) << endl;
       
       if(dbThis)cout << "BW Fr R = " << R << "prSq() = " << prSq() 
@@ -1033,7 +1027,7 @@ double BW_BW::GofM(){
       cout << "pratio = sqrt( " << numsq << " / " << densq << " )" << endl;
     }
     double pratio_to_2Jplus1 = 1;
-    if(bigDbg || dbThis) cout  << " pratio " 
+    if(dbThis) cout  << " pratio " 
 			       << pratio 
 			   //  << "^  2*mumsSpinValue() + 1 = "; //dbg
 			       << "^ " << twoLPlusOne() << " = "; //dbg
@@ -1041,7 +1035,7 @@ double BW_BW::GofM(){
     for(int i=0; i < twoLPlusOne(); i++){
       pratio_to_2Jplus1 *= pratio;
     }
-    if(bigDbg || dbThis) cout << pratio_to_2Jplus1 << endl;//dbg
+    if(dbThis) cout << pratio_to_2Jplus1 << endl;//dbg
     
     densq = mumsRecoMass2();
     if(densq <= 0){
@@ -1056,7 +1050,7 @@ double BW_BW::GofM(){
     // this factor varies for different final states - check!!
     
     double thisFr = FrForGofM();
-    if(bigDbg || dbThis) cout << "GofM() = " << mumsWidth()  << " * "  // dbg
+    if(dbThis) cout << "GofM() = " << mumsWidth()  << " * "  // dbg
 			      << pratio_to_2Jplus1 << " * "
 			      << mRatio << " * " 
 			      << thisFr << " * " << thisFr
@@ -1105,7 +1099,7 @@ void BW_BW::resetPDG(){
 }
 
 std::complex<double> BW_BW::getVal(IDalitzEvent& evt){
-  bool dbThis=false;
+  bool dbThis=bigDbg;
 
   setEventPtr(evt);
   resetInternals();

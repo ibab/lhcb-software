@@ -75,6 +75,11 @@ bool Amplitude::createDependants(){
   if(dbThis) cout << "got this spin factor: " << _spinFactor->name() << endl;
   if(0 == _spinFactor) return false;
   bool cl = createLineshapes();
+
+  cout << "Amplitude::createDependants() after creating lineshape, I depend on these fitParameters:"
+       << endl;
+  this->listFitParDependencies(cout);
+
   if(0 == cl) return false;
   return true;
 }

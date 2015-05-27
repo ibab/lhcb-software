@@ -165,17 +165,30 @@ public:
 
   virtual double phaseSpace() const;
  
-  virtual bool retrieveValue(int i, std::complex<double>& value){
-    return _rememberComplexFast.get(i, value);
+  virtual bool retrieveValue(int i, std::complex<double>& value
+			     , long int configNumber=1){
+    /*std::cout << "I remember these numbers: " << std::endl;
+    for(unsigned int j=0; j < _rememberComplexFast.size(); j++){
+      std::complex<double> tempVal;
+      _rememberComplexFast.get(j, tempVal, configNumber);
+      std::cout << j << ") " << tempVal << std::endl;
+    }
+    std::cout << "and I am returning this: " << 
+      _rememberComplexFast.get(i, value, configNumber);
+    std::cout << " " << i << ") " << value << std::endl;
+    */
+    return _rememberComplexFast.get(i, value, configNumber);
   }
-  virtual void setValue(int i, const std::complex<double>& value){
-    _rememberComplexFast.set(i,value);
+  virtual void setValue(int i, const std::complex<double>& value
+			, long int configNumber=1){
+    //std::cout << "setting: " << i << ") " << value << std::endl;
+    _rememberComplexFast.set(i,value, configNumber);
   }
-  virtual bool retrieveValue(int i, double value){
-    return _rememberDoubleFast.get(i, value);
+  virtual bool retrieveValue(int i, double value, long int configNumber=1){
+    return _rememberDoubleFast.get(i, value, configNumber);
   }
-  virtual void setValue(int i, double value){
-    _rememberDoubleFast.set(i,value);
+  virtual void setValue(int i, double value, long int configNumber=1){
+    _rememberDoubleFast.set(i,value, configNumber);
   }
  
   // helpful

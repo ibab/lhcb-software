@@ -5,6 +5,8 @@
 #include "Mint/IDalitzEvent.h"
 #include "Mint/DalitzEvent.h"
 
+#include <iostream>
+
 template <typename T>
 class CachedByEvent : virtual public MINT::IFitParDependent{
   
@@ -12,28 +14,53 @@ class CachedByEvent : virtual public MINT::IFitParDependent{
   virtual T getNewVal(IDalitzEvent& evt)=0; // <<< user needs to implement this
 
  protected:
-  mutable long int _rememberNumber; // for caching
-  long int rememberNumber() const{
+  long int _rememberNumber; // for caching
+  long int _configNumber;
+
+  long int rememberNumber() {
     if(_rememberNumber < 0){
       _rememberNumber = DalitzEvent::assignUniqueRememberNumber();
+      std::cout << "just assigned _rememberNumber " 
+		<< _rememberNumber << std::endl;
     }
     return _rememberNumber;
+  }
+  long int configNumber(){ 
+    if(_configNumber <= 0) _configNumber=1;
+    return _configNumber;
   }
 
   virtual T recalculate(IDalitzEvent& evt){
     T result(getNewVal(evt));
-    evt.setValue(rememberNumber(), result);
+    rememberFitParValues();
+    evt.setValue(rememberNumber(), result, configNumber());
     return result;
   }
-  
  public:
-  CachedByEvent() : _rememberNumber(-9999){}
-  CachedByEvent(const CachedByEvent& other) : _rememberNumber(-9999) {}
-
+ CachedByEvent() : _rememberNumber(-9999), _configNumber(0){}
+ CachedByEvent(const CachedByEvent& ) : _rememberNumber(-9999), _configNumber(0) {}
+  
   T getValWithCaching(IDalitzEvent& evt){
-    if(changedSinceLastCall()) return recalculate(evt);
+    if(changedSinceLastCall()){
+      _configNumber++;
+      return recalculate(evt);
+    }
     T result;
-    if(! evt.retrieveValue(rememberNumber(), result)) return recalculate(evt);
+    if(! evt.retrieveValue(rememberNumber(), result, configNumber())){
+      return recalculate(evt);
+    }
+    //std::cout << "using cached result" << std::endl;
+
+    /*
+    // debugging stuff:
+    if(result != getNewVal(evt)){
+      std::cout << "=============================================================" << std::endl;
+      std::cout << "Nothing has changed? Hah! Check: " << result << " == " << getNewVal(evt) 
+		<< " ?? (" << rememberNumber() << ")" << std::endl;
+      listFitParDependencies(std::cout);
+      std::cout << "=============================================================" << std::endl;
+    }
+    */
     return result;
   }
 

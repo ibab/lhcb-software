@@ -42,11 +42,11 @@ class IDalitzEvent : public virtual MINT::IWeightedEvent{
 
   virtual void print(std::ostream& os = std::cout) const=0;
 
-  virtual bool retrieveValue(int i, std::complex<double>& value)=0;
-  virtual void setValue(int i, const std::complex<double>& value)=0;
+  virtual bool retrieveValue(int i, std::complex<double>& value, long int configNumber)=0;
+  virtual void setValue(int i, const std::complex<double>& value, long int configNumber)=0;
 
-  virtual bool retrieveValue(int i, double value)=0;
-  virtual void setValue(int i, double value)=0;
+  virtual bool retrieveValue(int i, double value, long int configNumber)=0;
+  virtual void setValue(int i, double value, long int configNumber)=0;
 
   virtual int numPermutations() const=0;
   virtual void setPermutationIndex(int i)=0;
