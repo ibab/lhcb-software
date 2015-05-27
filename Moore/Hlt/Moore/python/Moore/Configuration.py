@@ -725,7 +725,7 @@ class Moore(LHCbConfigurableUser):
             # Hlt1 transform: remove items starting with Hlt2
             #                 enable track reports writers
             #                 remove lumi stripper...
-            trans['Hlt1'] = { 'GaudiSequencer/HltDecisionSequence' : { 'Members' : { ",[^']*'[^/]*/Hlt2[^']*'" : "" } } 
+            trans['Hlt1'] = { 'GaudiSequencer/HltDecisionSequence' : { 'Members' : { ",[^']*'[^/]*/Hlt(2|Afterburner)[^']*'" : "" } } 
                             , 'HltTrackReportsWriter/.*'           : { 'Enable'  : { "^.*$" : 'True' } }
                             , 'GaudiSequencer/HltEndSequence'      : { 'Members' : { ", 'GaudiSequencer/LumiStripper'": "" } }
                             , 'HltGlobalMonitor/.*'                : { 'Hlt2DecReports' : { '^.*$' : ''    } }

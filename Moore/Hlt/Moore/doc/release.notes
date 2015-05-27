@@ -4,6 +4,12 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+
+!========================= Moore v23r7 2015-05-27 =========================
+
+! 2015-05-27 - Roel Aaij
+ - Remove HltAfterburner when split is Hlt1 and running from TCK.
+
 !========================= Moore v23r6 2015-04-28 =========================
 
 ! 2015-04-18 - Sascha Stahl
@@ -32,7 +38,7 @@
  - Add __init__.py
 
 ! 2015-01-12 Gerhard Raven
- - explicitly disable EventDataSvc faulthandler if no data-on-demand 
+ - explicitly disable EventDataSvc faulthandler if no data-on-demand
    service is configured
 
 !========================= Moore v23r3 2014-12-15 =========================
@@ -51,7 +57,7 @@
  - fix & simplify split config more
 
 ! 2014-11-19 Gerhard Raven
- - simplify split config 
+ - simplify split config
 
 !========================= Moore v23r2 2014-11-05 =========================
 
@@ -63,7 +69,7 @@
  - Decoder test picks up the right config.tar location
 
 ! 2014-11-04 Gerhard Raven
- - tell HltConfigSvc to generate the intial HltDecReports in the right TES 
+ - tell HltConfigSvc to generate the intial HltDecReports in the right TES
    location
 
 ! 2014-11-03 Sean Benson
@@ -76,7 +82,7 @@
  - Made TISTOS test split aware
 
 ! 2014-09-23 Sebastian Neubert
- - updated test references after small changes to forward tracking algos 
+ - updated test references after small changes to forward tracking algos
 
 ! 2014-09-22 - Sebastian Neubert
  - added tracking test to check the rerunning of the foward reco in hlt2
@@ -140,7 +146,7 @@
 
 ! 2014-06-14 - Gerhard Raven
  - fix typo
- - explicitly set L0TCK to lower 16 bits of target TCK in tckgen tests 
+ - explicitly set L0TCK to lower 16 bits of target TCK in tckgen tests
 
 ! 2014-06-13 - Gerhard Raven
  - fix shunting of decreports which got broken in previous commit...
@@ -151,7 +157,7 @@
  - in tckgen tests, set ForceSingleL0Configuration to true
 
 ! 2014-06-12 - Gerhard Raven
- - revert change as to which file defines the default threshold 
+ - revert change as to which file defines the default threshold
    used in hlt1only.qmt and hlt2after1.qmt as the relevant python
    files do not exist
  - streamline insertion of Hlt1 decoders when running Hlt2 only
@@ -223,7 +229,7 @@
 
 ! 2014-03-04 - Rob Lambert
  - Fix surface problems with Moore's split running
- - Adapt to HltIndependent option of MooreExpert(). 
+ - Adapt to HltIndependent option of MooreExpert().
  - Edit the tests, I don't want hlt2after1 to be compared to notos any longer
 
 ! 2014-02-26 - Rob Lambert
@@ -274,8 +280,8 @@
 
 !========================= Moore v21r0 2014-01-14 =========================
 ! 2014-01-14 - Rob Lambert
- - Fix up a lot of the test results, 
- - reduced again the number of running tests by one, 
+ - Fix up a lot of the test results,
+ - reduced again the number of running tests by one,
  - use only default-threshold.py file in the tests.
  - does not make sense any longer to make a test vs v14r8.
 
@@ -302,7 +308,7 @@
  - Reorganize options into options groups and add documentation for options (finally).
 
 ! 2014-01-09 - Sebastian Neubert
- - New reference for moore.physics.2012 test 
+ - New reference for moore.physics.2012 test
 
 ! 2014-01-08 - Rob Lambert
  - Expand silent behaviour to suppress Calo printout (total now <85 lines)
@@ -379,18 +385,18 @@
  - Split HLT in tests using Gerhard's new Moore feature.
 
 ! 2013-08-23 - Gerhard Raven
- - move splitting logic out of dedicated scripts, and hide it in the 
+ - move splitting logic out of dedicated scripts, and hide it in the
    Moore configurable. One can now specify:
     Moore().Split = 'Hlt1' # or 'Hlt2' or ''
 
 ! 2013-08-22 - Rob Lambert
- - Update some references with additional locations where 
-   L0DU decoders appear. 
- - Run some of the tests independently rather than in sequence 
+ - Update some references with additional locations where
+   L0DU decoders appear.
+ - Run some of the tests independently rather than in sequence
    due to the RICH and HltGlobal warnings.
 
 ! 2013-08-21 - Rob Lambert
- - Add tests from Gerhard on Hlt1/2 splitting functionality. 
+ - Add tests from Gerhard on Hlt1/2 splitting functionality.
  - Currently they don't 100% work...
 
 ! 2013-08-21 - Gerhard Raven
@@ -418,7 +424,7 @@
 
 ! 2013-06-05 - Rob Lambert
  - Update all tests to work directly from PRConfig
- - add tests running pass-through with latest database tags, 
+ - add tests running pass-through with latest database tags,
    2010, 2011 and 2012 data.
  - recover the compatibility tests to a better state
 
@@ -497,7 +503,7 @@
 !========================= Moore v14r5p3 2012-06-27 =========================
 ! 2012-06-27 - Eric van Herwijnen
  - With tuned settings for better timing
- 
+
 !========================= Moore v14r5p2 2012-06-23 =========================
 !========================= Moore v14r5p1 2012-06-21 =========================
 ! 2012-06-21 - Eric van Herwijnen
@@ -506,8 +512,8 @@
 !========================= Moore v14r5 2012-06-19 =========================
 ! 2012-06-19 - Eric van Herwijnen
  - Change CreateRunMooreOnline_EFF.py and ConfigureFromCheckpoint.py to fix
- a bug with checkpointing 
- 
+ a bug with checkpointing
+
 !========================= Moore v14r4 2012-05-16 =========================
 ! 2012-05-09 - Patrick Koppenburg
  - Use DB snapshot configuration from DetCond v12r24 released in LHCb v34r3.
@@ -534,7 +540,7 @@
 !========================= Moore v13r2p4 2012-04-02 =========================
 ! 2012-04-02 - Eric van Herwijnen
  - Change to ConfigureShell.py for checkpointing.
- 
+
 ! 2012-03-28 - Eric van Herwijnen
  - Change to Configuration.py to read TAE events.
 
@@ -553,7 +559,7 @@
 ! 2012-03-09 - Eric van Herwijnen
  - All changes from v13r1 were lost. I put them back in.
  - Set DataType to 2012
- - Changes for forking & checkpointing  
+ - Changes for forking & checkpointing
 
 !========================= Moore v13r1p2 2012-03-07 =========================
 ! 2012-03-07 - Eric van Herwijnen
@@ -582,12 +588,12 @@
 
 !========================= Moore v12r10 2012-01-25 =========================
 ! 2012-01-20 - Eric van Herwijnen
- - Modified Moore/python/Configuration.py, Moore/python/runOnline.py 
+ - Modified Moore/python/Configuration.py, Moore/python/runOnline.py
    and Moore/scripts/CreateRunMooreOnline_EFF.py to take the number
    of forking slaves as an argument
 
 ! 2011-12-09 - Eric van Herwijnen
- - Modified Moore/python/Configuration.py 
+ - Modified Moore/python/Configuration.py
    - added the TES RawEventLocation for L0 decoding
 
 ! 2011-09-02 - Roel Aaij
@@ -613,14 +619,14 @@
  - Migrated to IOHelper for input/output and persistency service management
 
 ! 2011-06-10 - Eric van Herwijnen
- - changes to Configuration.py and ConfigureFromCheckpoint.py to  
+ - changes to Configuration.py and ConfigureFromCheckpoint.py to
    support the F subfarms
 
 !========================== Moore v12r6p1 2011-05-12 =================
 ! 2011-05-12 - Gerhard Raven
  - add a postconfig action to update any configurable which has an
    L0DUConfigProviderType when ForceSingleL0Config is requested
-    
+
 
 !========================== Moore v12r6 2011-05-06 =================
 ! 2011-05-05 - Gerhard Raven
@@ -712,7 +718,7 @@
 !========================== Moore v10r2 2010-09-30 ===================
 ! 2010-09-27 - Gerhard Raven
  - change creation of setup scripts such that 'use OnlineSys' in the
-   requirements file and the project.cmt dependency on Online  is no 
+   requirements file and the project.cmt dependency on Online  is no
    longer needed
 
 ! 2010-09-23 - Eric van Herwijnen
@@ -747,7 +753,7 @@
  - move routing bits filter to HltConf
 
 ! 2010-05-28 - Gerhard Raven
- - remove options specific to Online v4r39 
+ - remove options specific to Online v4r39
 
 
 !========================== Moore v9r1p2 2010-05-20 ===================
@@ -790,7 +796,7 @@
 
 !========================== Moore v8r8p1 2010-03-19 ===================
 ! 2010-03-19 - Gerhard Raven
- - include some patches 
+ - include some patches
 
 !========================== Moore v8r8 2010-03-02 ===================
 ! 2010-03-02 - Gerhard Raven
@@ -798,7 +804,7 @@
 
 ! 2010-02-24 - Gerhard Raven
  - replace cosmic qmtest with test on 2009 collision data
- - replace DC06 qmtest with MC09 
+ - replace DC06 qmtest with MC09
 
 
 !========================== Moore v8r7 2010-02-22 ===================
@@ -846,7 +852,7 @@
 ! 2009-11-23 - Gerhard Raven
  - for now, disable timeout catcher for LHCb partition
  - update database tag used
- 
+
 
 !========================== Moore v8r2 2009-11-18 ===================
 ! 2009-11-18 - Gerhard Raven
@@ -855,12 +861,12 @@
    specified
  - add options/CreateConfig which overrules some snapshot settings to
    directly create a config which can have its Technical trigger acceptfraction
-   set from PVSS, and which allows switching on/off of monitoring through 
+   set from PVSS, and which allows switching on/off of monitoring through
    OnlineEnv.
 
 !========================== Moore v8r1 2009-11-05 ===================
 ! 2009-11-03 - Gerhard Raven
- - add 'EnableAcceptIfSlow' option 
+ - add 'EnableAcceptIfSlow' option
 
 !========================== Moore v8r0p1 2009-11-02 ===================
 ! 2009-11-02 - Gerhard Raven
@@ -875,7 +881,7 @@
 
 !========================== Moore v8r0 2009-10-22 ===================
 ! 2009-10-22 - Gerhard Raven
- - Oops, it is 'EnableRunChangeHandler' 
+ - Oops, it is 'EnableRunChangeHandler'
 
 ! 2009-10-21 - Gerhard Raven
  - add 'UseRunChangeHandler' property
@@ -1084,12 +1090,12 @@
  - propagate verbose to HltConf configurable
 
 ! 2008-09-25 - Gerhard Raven
- - use LHCbConfigurableUser to inherit from 
+ - use LHCbConfigurableUser to inherit from
 
 ! 2008-09-23 - Gerhard Raven
  - move part of configurable into HltConf so that part can also be
    used by DaVinci
- 
+
 !========================== Moore v5r3 2008-09-21 ===================
 
 ! 2008-09-21 - Gerhard Raven
@@ -1127,28 +1133,28 @@
  - lumiChecker.py : calculate R and put in trend histo
 
 ! 2008-08-25 - Jaap Panman
- - lumiMoore (new in options) : job to test/run lumiAlley 
+ - lumiMoore (new in options) : job to test/run lumiAlley
  - Configuration.py : mods to run lumiAlley
  - lumiChecker.py (in python/Moore) : algorithm to analyse lumiAlley histos
 
 ! 2008-08-14 - Gerhard Raven
- - move TCK utilities to TCKData package 
+ - move TCK utilities to TCKData package
 
 ! 2008-08-13 - Jaap Panman
  - add MyMoore.py to do the lumiAlly only, should be merged later with Moore.py
  - add features to Configuration.py for lumi and for user algorithm
 
-! 2008-08-03 - Gerhard Raven 
+! 2008-08-03 - Gerhard Raven
  - add TCK management utilities
 
-! 2008-08-01 - Gerhard Raven 
+! 2008-08-01 - Gerhard Raven
  - add release version & runtype to generated toplevel aliases
 
-! 2008-07-31 - Gerhard Raven 
+! 2008-07-31 - Gerhard Raven
  - adapt configurable for Gaudi v20r2, LHCb v25r0, Rec v5r10
 
-! 2008-07-28 - Gerhard Raven 
- - improved configurable: introduced runType slot, 
+! 2008-07-28 - Gerhard Raven
+ - improved configurable: introduced runType slot,
    sets up the L0 from raw decoding using data-on-demand service
  - add dependency on TCKData package
 
