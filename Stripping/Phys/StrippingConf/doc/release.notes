@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-05-15 - Andrea Contu
+ - Fix raw banks name for Herschel to HC
+
+! 2015-05-15 - Andrea Contu
  - Added Herschel to list of raw banks
 
 !========================= StrippingConf v4r15 2015-04-30 =========================

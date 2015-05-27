@@ -293,7 +293,7 @@ class StrippingLine(object):
 
         self._initialSelection = selection
 
-        validRawBanks = ["Trigger","Muon","Calo","Rich","Velo","Tracker","Herschel"] # hard coded list, should really come from elsewhere....
+        validRawBanks = ["Trigger","Muon","Calo","Rich","Velo","Tracker","HC"] # hard coded list, should really come from elsewhere....
         if RequiredRawEvents != None :
             for bank in RequiredRawEvents :
                 if bank not in validRawBanks :
