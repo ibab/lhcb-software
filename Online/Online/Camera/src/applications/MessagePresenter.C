@@ -771,8 +771,6 @@ void MessagePresenter::dumpelog()
   elogDialog->setParameters( logbook, username, system, subject, 
                              message, runNumber, isOK );
 
-  //  TGFileInfo fi;
-
   // Make a random filename...
   TString pageName;
   gSystem->TempFileName(pageName);
@@ -791,7 +789,6 @@ void MessagePresenter::dumpelog()
     hasText = true;
     iw->textedit()->SaveFile( tfile.Data() );
   }
-  //pageName.Append(".png");
 
   fClient->WaitFor(dynamic_cast<TGWindow*>( elogDialog ));
 
@@ -835,6 +832,8 @@ void MessagePresenter::dumpelog()
     boost::filesystem::remove(ifile.Data());
   if ( boost::filesystem::exists(tfile.Data()) )
     boost::filesystem::remove(tfile.Data());
+  if ( boost::filesystem::exists(pageName.Data()) )
+    boost::filesystem::remove(pageName.Data());
 
   static int msgBoxReturnCode(0);
   new TGMsgBox( fClient->GetRoot(), this, "Elog result",
