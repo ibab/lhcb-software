@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-27 - Ricardo Vazquez Gomez
+ - Add tests for coordinators
+
 ! 2015-05-26 - Alex Pearce
  - Tweak Charm ForXSec line selections to match trigger selections.
 
