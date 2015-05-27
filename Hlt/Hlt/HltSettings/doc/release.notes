@@ -4,11 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v6r14 2015-05-22 =========================
+
 ! 2015-05-26 - Sascha Stahl
  - Removed radiative lines with wrong name from Hadrons_march_2015.py. 
    Added configuration of radiative lines thresholds to Commissioning_physics_2015.py.
-
-!========================= HltSettings v6r14 2015-05-22 =========================
 
 ! 2015-05-24 - Sean Benson
  - Modifications to TurboOnly to facilitate new Integration tests.
