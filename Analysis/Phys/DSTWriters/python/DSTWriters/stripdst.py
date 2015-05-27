@@ -87,7 +87,8 @@ def stripDSTStreamConf( pack = True,
                                        "/Event/Calo/RawEvent",
                                        "/Event/Muon/RawEvent",
                                        "/Event/Other/RawEvent",
-                                       "/Event/Tracker/RawEvent" ]
+                                       "/Event/Tracker/RawEvent",
+                                       "/Event/HC/RawEvent" ]
         
     return OutputStreamConf( streamType = InputCopyStream,
                              extraItems = eItems,

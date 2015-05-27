@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2015-05-27 - Andrea Contu
+ - Add HC raw banks to selectiveRawEvent
+
 ! 2015-05-20 - Chris Jones
  - Saved packed track clusters to stream locations on DSTs as well as uDSTs.
 
