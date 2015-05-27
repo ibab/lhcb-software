@@ -799,7 +799,7 @@ void MessagePresenter::dumpelog()
   if ( 0 == isOK ) {
     answer = "Request canceled.";
   } else if ( "" == subject ) {
-    answer = "Mandatiory subject is absent. Ignored";
+    answer = "Mandatory subject is absent. Ignored.";
   } else {
 
     // for testing
@@ -820,7 +820,14 @@ void MessagePresenter::dumpelog()
     if ( !runNumber.empty() ) myElog.addAttribute( "Run", runNumber );
 
     const int number = myElog.submit( message );
-    std::cout << "=== produced elog entry " << logbook << " : " << number << std::endl;
+    if ( 0 != number ) 
+    {
+      answer = "Created ELOG entry : " + logbook + " " + std::to_string(number);
+    }
+    else
+    {
+      answer = "ERROR : Failed to create elog entry";
+    }
 
   }
 
@@ -828,6 +835,11 @@ void MessagePresenter::dumpelog()
     boost::filesystem::remove(ifile.Data());
   if ( boost::filesystem::exists(tfile.Data()) )
     boost::filesystem::remove(tfile.Data());
+
+  static int msgBoxReturnCode(0);
+  new TGMsgBox( fClient->GetRoot(), this, "Elog result",
+                answer.c_str(), kMBIconExclamation, kMBOk,
+                &msgBoxReturnCode );
  
 }
 
