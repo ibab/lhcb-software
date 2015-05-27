@@ -1,3 +1,56 @@
+2015-05-27 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r4
+
+	LbConfiguration
+	* python/LbConfiguration/Package.py - LBCORE-797 Added package TurboStreamProd
+	                                    - Added package B2CCConfig	
+	* lb-run - fixed LBCORE-785 (define the LCG relocation env. variables)
+	         - fixed handling of version alias 'prod'
+	         - fixed after changes to fix LBCORE-771
+	* lb-dev - allow local projects that support both CMT and CMake
+	         - removed reference to QMTest in lb-dev message
+	* LBCORE-771: - improved fix to CMT part of LBCORE-771 (no need changes to LbNightlyTools)
+                - fixed CMT part of LBCORE-771 (require small change in LbNightlyTools)
+	* data/Makefile-cmt.mk: added other (fake) targets for consistecy with CMake
+	* scripts/doxygen: fixed handling of doxygen version for the new LCG layout
+	* updated lb-run/lb-dev tests and fixed LBCORE-758
+	* LBCORE-751: add support for data packages checked out in a CMake-based project
+	* SetupProject: restored compatibility with SLC5 (python 2.4)
+
+	LbRelease
+	LBCORE-819 - Add possibility to tag project/version/platform with a tag.
+	           - Add possibility to tag project/version with a tag.
+	           (To be used to specify what should be installed on ONLINE)
+	* lb-deployment-checklist - fixed the support for Gaudi and added support for
+	plaform '*-do0' (GAUDI-1034, LHCBPS-1394)
+	                          - added support for Gaudi (special case)
+	                          - fixed problem with the check of old tarballs
+	                          - minor fix to the check of "release pending" flag
+	* getpack: LBCORE-821: allow plain checkout (do not create extra files)
+	* buildGeneralDoc: LBCORE-802: made the main script Jenkins-aware
+	* LbRelease.LHCbDoc - fixed LBCORE-772 (QCustomPlot mainpage showed instead
+	                      of the correct one).
+	                    - fixed LBCORE-763
+	LBCORE-751: add support for data packages checked out in a CMake-based project
+	* lb-deployment-*: improvements to support Gaudi builds and added a command
+	to install on AFS
+	* mkLCGCMTtarFromRPM: fixed name mapping for Frontier_Client
+	* getpack: use project.info (if present) for --project --recursive (LBCORE-147)
+
+	LbUtils
+	* cmake: updated CMake support modules
+	* cmt/update_gaudi_cmake.sh: modified to update release.notes
+	* scripts/lcg-*-*: fixed LBCORE-795: added wrappers for gcc 4.8.4, 4.9.2 and
+	5.1.0 (wild guess, because it is not yet available)
+	* scripts/cern-lxdistcc-wrappers.sh: fixed LBCORE-783, now the wrapper looks
+	for the compilers in lcg/releases (first entry in $LCG_release_area) and in
+	lcg/external ($LCG_external_area) for backward compatibility.
+
+	LbLegacy
+	* scripts/mkLHCbtar: LBCORE-747 Add option -x to have html files that refer to dbg version of LCGCMT.
+
+
 2015-02-06 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v8r3p1
