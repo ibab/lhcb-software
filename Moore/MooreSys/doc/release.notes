@@ -3,6 +3,14 @@ Package             : MooreSys
 Package Coordinator : R. Aaij
 Purpose             : LHCb HLT application
 
+</PRE><H1><A NAME=v23r7>2015-04-28 MooreSys v23r7</A></H1><PRE>
+
+Patch Release as part of stack based on LHCb v38r7 and Gaudi v26r2.
+Depends on Hlt v23r7.
+
+Release for calibration runs in early June 2015 and tests of
+early measurements configuration.
+
 </PRE><H1><A NAME=v23r6>2015-04-28 MooreSys v23r6</A></H1><PRE>
 
 Patch Release as part of stack based on LHCb v38r6 and Gaudi v26r1.
@@ -99,8 +107,8 @@ https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=M
 
 </PRE><H1><A NAME=v23r0>2014-8-17 MooreSys v23r0</A></H1><PRE>
 
-For HLT commissioning week of the end of August. This is the first version to use ROOT 6 and should be considered as a development version. 
-	
+For HLT commissioning week of the end of August. This is the first version to use ROOT 6 and should be considered as a development version.
+
 Major changes include:
     - Fix inputs of OfflineVertexFitter such that parallel particles are never used in the vertex fit.
     - Substantial updates and fixes to the flagging of used tracks and the resurrection of Hlt1 tracks, including the addition of the "Hlt1TrackOption" to Hlt2Conf.
@@ -138,11 +146,11 @@ Moore/HLT LS1 development version and Upgrade TDR version, LHCb stack. Depends o
 
 Major Developments:
   . C++11 :
-    This is the first Moore release which allows C++11 features. 
+    This is the first Moore release which allows C++11 features.
     Therefore is only available on slc6-gcc48.
-    C++11 features have been introduced throughout this stack, 
-    and this constitutes the majority of changes in this release. 
-    Several packages require the new C++11 features of lower projects, 
+    C++11 features have been introduced throughout this stack,
+    and this constitutes the majority of changes in this release.
+    Several packages require the new C++11 features of lower projects,
     and so several packages have had their major versions incremented.
 
   . Moore().OutputLevel is now WARNING by default
@@ -152,12 +160,12 @@ Major Developments:
     reduced even further in the next release.
 
   . Moore's Online-specific parts are moved to the MooreOnline project
-    This means fewer options to Moore, less complicated Moore, and 
+    This means fewer options to Moore, less complicated Moore, and
     deprecation warnings in case you try and configure these parts.
     See MooreOnline v22r0, and the module MooreScripts/MooreOnlineConf
     which contains the new configurable, MooreOnline()
     task #48780
-  
+
   . Moore's options.
     Moore has lost over half it's options since v14r8, from 52 to 24 different slots.
     This campaign makes Moore much simpler to use. Remember:
@@ -168,12 +176,12 @@ Major Developments:
 Other developments:
   . Tracking in the HLT1/2 Split:
     task #48808, task #48807.
-    Tracking in the split configuration is beginning to take shape, 
+    Tracking in the split configuration is beginning to take shape,
     with the possibility to transfer tracks in a raw bank from Hlt1->2.
 
   . CMAKE dependencies:
-    Almost every package has been touched to add cmake replacements 
-    for the requirements files, 
+    Almost every package has been touched to add cmake replacements
+    for the requirements files,
 
   . Retirement of "castor:" protocol
     Required many of the tests to be adjusted to "root:"
@@ -184,7 +192,7 @@ Other developments:
     task #49581
 
 Removed packages:
-  . The temporarily included packages, GaudiConf, 
+  . The temporarily included packages, GaudiConf,
     Phys/TisTobTobbing and Phys/ParticleMaker, were removed,
     since they changes are part of the stack.
 
@@ -206,7 +214,7 @@ Moore/HLT LS1 development version. LHCb v36r4 stack. Depends on Rec v15r4 via Ph
 
 This is a Dev version For January 2014 trigger workshop and commissioning week.
 
-This is expected to be the last HLT/Moore release compatible with slc5. 
+This is expected to be the last HLT/Moore release compatible with slc5.
 From v22r0 we will only release for slc6 to permit incoming C++11 modifications.
 This is the first Moore version to be macroscopically different from 2012 Moore.
 Deferred HLT2 is now much more similar to concurrent HLT2, but there are still significant differences.
