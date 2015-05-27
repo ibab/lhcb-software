@@ -724,12 +724,7 @@ class HltConf(LHCbConfigurableUser):
                 self._safeSet(option, (option in strip))
 
 
-        activehlt1lines,activehlt2lines=self._runHltLines()
-
-        # switch on TrackReports in a split scenario in Hlt1
-        if activehlt1lines and not activehlt2lines :
-            self._safeSet( "EnableHltTrkReports", True)
-
+        activehlt1lines, activehlt2lines = self._runHltLines()
 
         # Setup the beetle sync sequence
         BeetleMonitorAccept = Sequence( 'BeetleSyncMonitorAcceptSequence' )

@@ -6,6 +6,10 @@
 
 !========================= HltConf v12r9 2015-05-22 =========================
 
+! 2015-05-27 - Roel Aaij
+ - Only the EnableHltTrkReports property determines whether that are switched
+   on or off.
+
 ! 2015-05-26 - Roel Aaij
  - Fix Turbo and TurboCalib routing bits to be mutually exclusive.
  - Disable HLT TrackReports by default.
