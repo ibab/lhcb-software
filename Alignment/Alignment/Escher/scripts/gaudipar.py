@@ -5,13 +5,14 @@ from optparse import OptionParser
 parser = OptionParser(usage = "%prog [options] <opts_file> ...")
 parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=-1)
 parser.add_option("-p","--numprocesses",type="int", dest="numprocs",help="number of processes", default=1)
-parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with LHCBCOND database layer")
+parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with CALIBOFF/LHCBCOND/SIMCOND database layer")
 parser.add_option("--dddb", action = 'append', dest="dddb",help="path to file with DDDB database layer")
 parser.add_option("-i", "--iter",type="int", dest="iter",help="number of iteration (used for loggin)", default=0)
 parser.add_option("-r", "--roothistofile",dest="histofile",help="name of histogram file",default = "histograms.root")
 parser.add_option("-c", "--derivativefile",dest="derivativefile",help="name of derivative file",default = "")
 parser.add_option("--stagefiles",action = 'store', help="stage files locally")
 parser.add_option("-s", "--simulation",action="store_true",dest="simtag",help="activate if running with MC",default=False)
+parser.add_option("-l", "--lhcbcond",action="store_true",dest="lhcbcondtag",help="activate if constants in lhcbcondDB",default=False)
 (opts, args) = parser.parse_args()
 
 # Prepare the "configuration script" to parse (like this it is easier than
@@ -41,7 +42,14 @@ prescalername = "EscherPrescaler"
 GaudiSequencer("EscherSequencer").Members.insert(0,CountingPrescaler(prescalername) )
 
 #set COND-tag
-condtag = "/SIMCOND" if opts.simtag else "/LHCBCOND"
+condtag = "/SIMCOND"
+#if opts.simtag else "/CALIBOFF"
+if opts.simtag:
+   condtag = "/SIMCOND"
+elif opts.lhcbcondtag:
+   condtag ="/CALIBOFF"
+else:
+   condtag ="/LHCBCOND"
 
 # set the database layer
 if opts.aligndb:

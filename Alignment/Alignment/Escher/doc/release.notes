@@ -3,6 +3,11 @@ Package : Escher
 Package Coordinator : Maurizio Martinelli
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
+
+! 2015-05-27 - Silvia Borghi
+ - change gaudipar, gaudipariter and gaudiiter to set name of the
+   alignment db type (CONDDB or CALIBOFF) 
+
 ! 2015-04-21 - Stefania Vecchi
  - added script for Muon Alignment offline options/Escher-AlignMUON.py
 

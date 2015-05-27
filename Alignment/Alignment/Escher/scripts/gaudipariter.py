@@ -8,12 +8,13 @@ parser.add_option("-f","--firstiter",type="int", dest="firstiter",help="first it
 parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=-1)
 parser.add_option("-p","--numprocesses",type="int", dest="numprocs",help="number of processes", default=8)
 parser.add_option("-b","--baseDir", type='string', dest="basedir",help="directory to store output", default='AlignmentResults')
-parser.add_option("-d","--aligndb", action = 'append', dest="aligndb",help="path to file with LHCBCOND database layer that will only be used in first iter")
-parser.add_option("--conddb", action = 'append', dest="conddb",help="path to file with LHCBCOND database layer that will be used in all iterations")
+parser.add_option("-d","--aligndb", action = 'append', dest="aligndb",help="path to file with CALIBOFF/LHCBCOND/SIMCOND database layer that will only be used in first iter")
+parser.add_option("--conddb", action = 'append', dest="conddb",help="path to file with CALIBOFF/LHCBCOND/SIMCOND database layer that will be used in all iterations")
 parser.add_option("--dddb", action = 'append', dest="dddb",help="path to file with DDDB database layer")
 parser.add_option("-r", "--roothistofile",dest="histofile",help="name of histogram file",default = "histograms.root")
 parser.add_option("--dryrun", action="store_true",help="dont do anything")
 parser.add_option("-s", "--simulation",action="store_true",dest="simtag",help="activate if running with MC",default=False)
+parser.add_option("-l", "--lhcbcond",action="store_true",dest="lhcbcondtag",help="activate if constants in lhcbcondDB",default=False)
 (opts, args) = parser.parse_args()
 
 import os
@@ -52,7 +53,9 @@ for i in range(opts.firstiter,opts.numiter) :
 
     if opts.simtag:
         theseoptions += ' -s '
- 
+        
+    if opts.lhcbcondtag:
+        theseoptions += ' -l '
     # add the remaining options
     for a in args:
         theseoptions += ' ' + a

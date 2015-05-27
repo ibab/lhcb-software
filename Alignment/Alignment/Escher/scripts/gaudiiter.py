@@ -5,10 +5,11 @@ from optparse import OptionParser
 parser = OptionParser(usage = "%prog [options] <opts_file> ...")
 parser.add_option("-n","--numiter",type="int", dest="numiter",help="number of iterations", default=1)
 parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=-1)
-parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with LHCBCOND database layer")
+parser.add_option("-d", "--aligndb", action = 'append', dest="aligndb",help="path to file with CALIBOFF/LHCBCOND/SIMCOND database layer")
 parser.add_option("--dddb", action = 'append', dest="dddb",help="path to file with DDDB database layer")
 parser.add_option("--skipprintsequence", action="store_true",help="skip printing the sequence")
 parser.add_option("--do_not_rewind",action="store_true",help="do not rewind after each iteration")
+parser.add_option("-l", "--lhcbcond",action="store_true",dest="lhcbcondtag",help="activate if constants in lhcbcondDB",default=False)
 (opts, args) = parser.parse_args()
 
 # Prepare the "configuration script" to parse (like this it is easier than
@@ -52,7 +53,10 @@ if opts.aligndb:
    for db in opts.aligndb:
       from Configurables import ( CondDB, CondDBAccessSvc )
       alignCond = CondDBAccessSvc( 'AlignCond' + str(counter) )
-      alignCond.ConnectionString = 'sqlite_file:' + db + '/LHCBCOND'
+      if opts.lhcbcondtag:
+         alignCond.ConnectionString = 'sqlite_file:' + db + '/LHCBCOND'
+      else:
+         alignCond.ConnectionString = 'sqlite_file:' + db + '/CALIBOFF'
       CondDB().addLayer( alignCond )
       counter += 1
       
