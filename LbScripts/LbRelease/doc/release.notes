@@ -1,3 +1,7 @@
+2015-05-27  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v5r4
+
 2015-05-26  Ben Couturier <Ben.Couturier@cern.ch>
 
 	LBCORE-819: Add possibility to tag project/version/platform with a tag.
