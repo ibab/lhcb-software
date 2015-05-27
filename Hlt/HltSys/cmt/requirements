@@ -1,27 +1,27 @@
 package HltSys
-version           v23r6
+version           v23r7
 
 branches cmt doc
 
-use Hlt1Lines           v7r10    Hlt   # Roel Aaij, Vava Gligorov, Gerhard Raven
+use Hlt1Lines           v7r11    Hlt   # Roel Aaij, Vava Gligorov, Gerhard Raven
 use Hlt1Muons           v1r14    Hlt   # Vasilis Syropoulos
-use Hlt2Lines           v9r8     Hlt   # Vava Gligorov, Roel Aaij, Gerhard Raven
-use Hlt2SharedParticles v7r6     Hlt   # Vava Gligorov
+use Hlt2Lines           v9r9     Hlt   # Vava Gligorov, Roel Aaij, Gerhard Raven
+use Hlt2SharedParticles v7r6p1   Hlt   # Vava Gligorov
 use HltBase             v15r6    Hlt   # Gerhard Raven
 use HltBeamGasAlley     v4r1     Hlt   # Rosen Matev
 use HltCommon           v10r5    Hlt   # Gerhard Raven
-use HltConf             v12r8    Hlt   # Roel Aaij, Gerhard Raven
-use HltCosmics          v1r3     Hlt   # 
+use HltConf             v12r9    Hlt   # Roel Aaij, Gerhard Raven
+use HltCosmics          v1r3     Hlt   #
 use HltDisplVertices    v4r3     Hlt   # Pieter David, Victor Coco
-use HltGlobalMonitor    v4r6     Hlt   # Eric van Herwijnen
+use HltGlobalMonitor    v4r7     Hlt   # Eric van Herwijnen
 use HltL0Conf           v4r2     Hlt   # Johannes Albrecht
-use HltLine             v7r10    Hlt   # Roel Aaij, Gerhard Raven
+use HltLine             v7r11    Hlt   # Roel Aaij, Gerhard Raven
 use HltLuminosity       v4r3     Hlt   # Rosen Matev
-use HltRawData          v5r4     Hlt   # Tomasz Skwarnicki
+use HltRawData          v5r5     Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v3r2     Hlt   # Jose Angel Hernando-Morata
-use HltSettings         v6r13    Hlt   # Vava Gligorov, Roel Aaij
-use HltTracking         v13r7    Hlt   # Sascha Stahl, Vava Gligorov
-use TCKUtils            v1r15    Hlt   # Gerhard Raven
+use HltSettings         v6r14    Hlt   # Vava Gligorov, Roel Aaij
+use HltTracking         v13r8    Hlt   # Sascha Stahl, Vava Gligorov
+use TCKUtils            v1r15p1  Hlt   # Gerhard Raven
 use LoKiTrigger         v15r7    Phys  # Vanya Belyaev
 
 # Declare this as a container package
@@ -32,4 +32,3 @@ apply_pattern QMTest
 
 # Allow the generation of QMTest summary
 apply_pattern QMTestSummarize
-

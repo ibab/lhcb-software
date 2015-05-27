@@ -7,6 +7,13 @@ Purpose: LHCb High Level Trigger packages.
 
 </PRE><H1><A NAME=v23r6>2015-04-28 HltSys v23r6</A></H1><PRE>
 
+Release on stack v38r7. Depends on Phys v19r7.
+
+Release for calibration run in early June 2015 and tests of
+early measurements configuration.
+
+</PRE><H1><A NAME=v23r6>2015-04-28 HltSys v23r6</A></H1><PRE>
+
 Release on stack v38r6. Depends on Phys v19r6.
 
 Main changes:
