@@ -1,7 +1,7 @@
+B################################################################################
+#0;136;0c Package: LoKiFitters
 ################################################################################
-# Package: LoKiFitters
-################################################################################
-gaudi_subdir(LoKiFitters v4r13)
+gaudi_subdir(LoKiFitters v4r14)
 
 gaudi_depends_on_subdirs(Kernel/LHCbMath
                          Phys/DaVinciKernel
