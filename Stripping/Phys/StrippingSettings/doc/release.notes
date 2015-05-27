@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-05-27 - Andrea Contu
+ - Set correct HC banks for LowMult lines
+
+! 2015-05-27 - Andrea Contu
  - Splitting Stripping22 into ALL and ALLTURBO streams
 
 ! 2015-05-27 - Eva Gersabeck

@@ -34,7 +34,7 @@ LowMultINC = {
     'WGs'         : [ 'QEE' ],
     'STREAMS'     : [ 'ALL' ],
     'CONFIG'      : {
-        'LowMultRequiredRawEvents' : ["Velo","Herschel"],
+        'LowMultRequiredRawEvents' : ["Velo","Calo","Rich","HC"],
         #
         'PrescaleL0DiHadron'  : 0,
         'DecisionL0DiHadron'  : None,#"L0_CHANNEL('DiHadron,lowMult')",
