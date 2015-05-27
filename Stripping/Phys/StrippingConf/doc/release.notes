@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2015-05-15 - Andrea Contu
+ - Added Herschel to list of raw banks
+
 !========================= StrippingConf v4r15 2015-04-30 =========================
 
 ! 2015-03-30 - Stefano Perazzini
