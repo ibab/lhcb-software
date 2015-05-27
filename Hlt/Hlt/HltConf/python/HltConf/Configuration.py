@@ -307,7 +307,7 @@ class HltConf(LHCbConfigurableUser):
                       , 49 : "HLT_PASS_RE('Hlt1.*MVA.*Decision')"
                       , 50 : "HLT_PASS('Hlt1LumiLowBeamCrossingDecision')"
                       , 51 : "HLT_PASS('Hlt1LumiMidBeamCrossingDecision')"
-                      , 53 : "HLT_PASS_RE('Hlt1CalibTrackingKPiDetachedDecision')"
+                      , 53 : "HLT_PASS_RE('Hlt1Calib(TrackingKPiDetached|HighPTLowMultTrks)Decision')"
                       , 54 : "HLT_PASS_RE('Hlt1CalibRICH.*Decision')"
                       , 59 : "HLT_PASS_RE('Hlt1.*DisplVertex.*Decision')"
                       , 60 : "HLT_PASS('Hlt1TrackAllL0Decision')"

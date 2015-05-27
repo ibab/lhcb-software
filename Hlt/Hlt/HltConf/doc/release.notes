@@ -9,6 +9,7 @@
 ! 2015-05-27 - Roel Aaij
  - Only the EnableHltTrkReports property determines whether that are switched
    on or off.
+ - Add Hlt1CalibHighPTLowMultTrks to routing bit 53.
 
 ! 2015-05-26 - Roel Aaij
  - Fix Turbo and TurboCalib routing bits to be mutually exclusive.
