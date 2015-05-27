@@ -61,28 +61,28 @@ set(dict_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/cintBootstrap.h
 if(ROOT_HAS_PCMS)
   # this section is copied and adapted from gaudi_add_dictionary in GaudiProjectConfig
   file(MAKE_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
-  add_custom_command(OUTPUT cintBootstrapDict.cpp cintBootstrapDict_rdict.pcm ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cintBootstrapDict_rdict.pcm
+  add_custom_command(OUTPUT cintBootstrapDictCamera.cpp cintBootstrapDictCamera_rdict.pcm ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cintBootstrapDictCamera_rdict.pcm
                      COMMAND ${env_cmd} --xml ${env_xml}
-                       ${dict_cmd} -f cintBootstrapDict.cpp -c -inlineInputHeader
+                       ${dict_cmd} -f cintBootstrapDictCamera.cpp -c -inlineInputHeader
                              ${dict_srcs}
-                     COMMAND ${CMAKE_COMMAND} -E copy cintBootstrapDict_rdict.pcm ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cintBootstrapDict_rdict.pcm
+                     COMMAND ${CMAKE_COMMAND} -E copy cintBootstrapDictCamera_rdict.pcm ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cintBootstrapDictCamera_rdict.pcm
                      DEPENDS ${dict_srcs})
-  add_custom_target(cintBootstrapDictGen ALL
-                    DEPENDS cintBootstrapDict.cpp)
+  add_custom_target(cintBootstrapDictCameraGen ALL
+                    DEPENDS cintBootstrapDictCamera.cpp)
 
-  install(FILES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cintBootstrapDict_rdict.pcm DESTINATION lib OPTIONAL)
+  install(FILES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cintBootstrapDictCamera_rdict.pcm DESTINATION lib OPTIONAL)
 
 else()
 
-  add_custom_command(OUTPUT cintBootstrapDict.h cintBootstrapDict.cpp
+  add_custom_command(OUTPUT cintBootstrapDictCamera.h cintBootstrapDictCamera.cpp
                      COMMAND ${env_cmd} --xml ${env_xml}
-                       ${dict_cmd} -f cintBootstrapDict.cpp -c -inlineInputHeader
+                       ${dict_cmd} -f cintBootstrapDictCamera.cpp -c -inlineInputHeader
                              ${dict_srcs}
                      DEPENDS ${dict_srcs})
 
 endif()
 
-cam_exe(CameraGui src/applications/MessagePresenter.C src/applications/Elog.cpp src/applications/ElogDialog.cpp cintBootstrapDict.cpp)
+cam_exe(CameraGui src/applications/MessagePresenter.C src/applications/Elog.cpp src/applications/ElogDialog.cpp cintBootstrapDictCamera.cpp)
 target_link_libraries(CameraGui ${CMAKE_DL_LIBS})
 
 #cam_exe(CameraViewContainer ../src/applications/ViewCont.C MessagePresenterDict.cpp)
