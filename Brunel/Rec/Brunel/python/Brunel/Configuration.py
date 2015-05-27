@@ -51,7 +51,7 @@ class Brunel(LHCbConfigurableUser):
         "EvtMax"          : -1
        ,"SkipEvents"      : 0
        ,"PrintFreq"       : 1
-       ,"DataType"        : "2012"
+       ,"DataType"        : "2015"
        ,"WithMC"          : False
        ,"Simulation"      : False
        ,"RecL0Only"       : False
@@ -134,6 +134,7 @@ class Brunel(LHCbConfigurableUser):
 
     KnownInputTypes  = [ "MDF",  "DST", "XDST", "DIGI" ]
     KnownHistograms  = [ "None", "Online", "OfflineExpress", "OfflineFull", "Expert" ]
+    Run1DataTypes = [ "2008", "2009", "2010", "2011", "2012", "2013", "MC09" ]
 
     def defineGeometry(self):
         # DIGI is always simulation, as is usage of MC truth!
@@ -189,6 +190,11 @@ class Brunel(LHCbConfigurableUser):
                 LHCbApp().setProp( "TimeStamp", True )
             if not self.isPropertySet( "PrintFreq" ) :
                 self.setProp("PrintFreq", 1000)
+
+        # HC does not exist in Run 1, so use appropriate split output
+        if self.getProp( "DataType" ) in self.Run1DataTypes :
+            if not self.isPropertySet( "SplitRawEventOutput" ) :
+                self.setProp( "SplitRawEventOutput", 4.0 )
 
         # Online mode
         if self.getProp( "OnlineMode" ) :
@@ -615,7 +621,7 @@ class Brunel(LHCbConfigurableUser):
                     juggler.setProp("Input",DecodeRawEvent().getProp("OverrideInputs"))
                     #else if I'm input with a DST, assume it is a Stripping20 type
                 elif self._isReprocessing(self.getProp("InputType")):
-                    juggler.setProp("Input",2.2)
+                    juggler.setProp("Input",2.0)
                 else:
                     #or set the default to whatever comes out of Moore by default
                     juggler.setProp("Input","Moore")

@@ -3,12 +3,20 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v47r7>2015-05-28 Brunel v47r7</A></H1><PRE>
+This version uses projects LHCb v38r7, Lbcom v16r6, Rec v17r7, Gaudi v26r2
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
 - Changes to configuration
   . Do not run MCRichDigitSummaryUnpacker explicitly in MCLinksUnpackSeq, as this
     breaks with LDST. Just run it on demand when/if needed by the Check sequence.
+  . Change default DataType to 2015
+  . Change default SplitRawEventOutput to 4.1 if DataType is not a Run 1 DataType
+    (in which case default remains 4.0)
 
-- Changes to references to reflect changes since v47r5
+- Changes to references to reflect changes since v47r6
   . Follow MCRichDigitSummaryUnpacker configuration change
+  . Follow changes to tracking in Rec v17r7
 
 </PRE><H1><A NAME=v47r6p1>2015-05-04 Brunel v47r6p1</A></H1><PRE>
 This version uses projects LHCb v38r6, Lbcom v16r5, Rec v17r6, Gaudi v26r1

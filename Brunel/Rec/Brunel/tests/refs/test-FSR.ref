@@ -31,53 +31,57 @@
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x1401abb0>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x7fdba4960bf0>  (default: None)
 # |-IgnoreDQFlags     = False
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # skipping configuration of XMLSummary
 # applying configuration of DDDBConf
-# WARNING: Using default tag dddb-20130312-1 for partition DDDB
-# WARNING: Using default tag cond-20130404 for partition LHCBCOND
-# WARNING: Using default tag dq-20130418 for partition DQFLAGS
+# WARNING: Using default tag dddb-20150522-2 for partition DDDB
+# WARNING: Using default tag cond-20150409-1 for partition LHCBCOND
+# WARNING: Using default tag dq-20140822 for partition DQFLAGS
 # /***** User DDDBConf/DDDBConf **********************************************************************
-# |-DataType   = '2012'
-# |-DbRoot     = 'conddb:/lhcb.xml'
-# |-AutoTags   = False
-# |-Simulation = False
+# |-DataType    = '2012'
+# |-DbRoot      = 'conddb:/lhcb.xml'
+# |-InitialTime = 'Safe'
+# |-AutoTags    = False
+# |-Simulation  = False
 # \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
 # applying configuration of CondDB
 # --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
-# |-Upgrade                   = False
-# |-DBSnapshotDirectory       = '/group/online/hlt/conditions'
-# |-SQLiteLocalCopiesDir      = ''
-# |-Online                    = False
-# |-LogFile                   = ''
-# |-EnableRunChangeHandler    = False
-# |-Tags                      = {}  (default: {})
-# |-LatestLocalTagsByDataType = []  (default: [])
-# |-AllLocalTagsByDataType    = []  (default: [])
-# |-PartitionName             = 'LHCb'
-# |-PartitionConnectionString = {}  (default: {})
-# |-LocalTags                 = {}  (default: {})
-# |-IgnoreHeartBeat           = False
-# |-Overrides                 = []  (default: [])
-# |-Simulation                = False
-# |-QueryGranularity          = 0
-# |-UseOracle                 = False
-# |-LatestGlobalTagByDataType = ''
-# |-UseDBSnapshot             = False
-# |-DisableLFC                = False
-# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
-# |-UseLatestTags             = []  (default: [])
-# |-OverwriteSQLiteLocalCopy  = False
+# |-Upgrade                    = False
+# |-DBSnapshotDirectory        = '/group/online/hlt/conditions'
+# |-LatestLocalTagsByDataType  = []  (default: [])
+# |-Online                     = False
+# |-LogFile                    = ''
+# |-SQLiteLocalCopiesDir       = ''
+# |-EnableRunChangeHandler     = False
+# |-RunChangeHandlerConditions = {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']}
+# |                            (default: {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']})
+# |-Tags                       = {}  (default: {})
+# |-LoadCALIBDB                = 'OFFLINE'
+# |-AllLocalTagsByDataType     = []  (default: [])
+# |-UseOracle                  = False
+# |-PartitionConnectionString  = {}  (default: {})
+# |-LocalTags                  = {}  (default: {})
+# |-IgnoreHeartBeat            = False
+# |-Overrides                  = []  (default: [])
+# |-Simulation                 = False
+# |-QueryGranularity           = 0
+# |-LatestGlobalTagByDataType  = ''
+# |-UseDBSnapshot              = False
+# |-DisableLFC                 = False
+# |-HeartBeatCondition         = '/Conditions/Online/LHCb/Tick'
+# |-LatestGlobalTagByDataTypes = []  (default: [])
+# |-UseLatestTags              = []  (default: [])
+# |-OverwriteSQLiteLocalCopy   = False
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v44r5
-                                          running on lxbuild163.cern.ch on Tue Jul 16 13:50:12 2013
+                                                   Welcome to Brunel version v47r5
+                                          running on mcat.cern.ch on Wed May 27 17:38:16 2015
 ====================================================================================================================================
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service EvtDataSvc/EventDataSvc
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service DetDataSvc/DetectorDataSvc
@@ -171,7 +175,7 @@ LumiSequence        DEBUG Property ['Name': Value] =  'AuditRestart':False
 LumiSequence        DEBUG Property ['Name': Value] =  'AuditReinitialize':False
 LumiSequence        DEBUG Property ['Name': Value] =  'AuditInitialize':False
 LumiSequence        DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
-LumiSequence        DEBUG Property ['Name': Value] =  'ErrorCount':0
+LumiSequence        DEBUG Property ['Name': Value] =  'ErrorCounter':0
 LumiSequence        DEBUG Property ['Name': Value] =  'ErrorMax':1
 LumiSequence        DEBUG Property ['Name': Value] =  'Enable':True
 LumiSequence        DEBUG Property ['Name': Value] =  'OutputLevel':1
@@ -235,7 +239,7 @@ RndmGenSvc.Engine   DEBUG Service base class initialized successfully
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.34 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.68 times the speed of a 2.8 GHz Xeon.
 LumiSequence        DEBUG The tool of type 'SequencerTimerTool' has been added with the name 'ToolSvc.SequencerTimerTool'
 LumiSequence        DEBUG Releasing tool 'ToolSvc.SequencerTimerTool'
 LumiSequence        DEBUG The tool 'ToolSvc.SequencerTimerTool' of type 'SequencerTimerTool' is released
@@ -276,7 +280,7 @@ EventAccount        DEBUG Property ['Name': Value] =  'AuditRestart':False
 EventAccount        DEBUG Property ['Name': Value] =  'AuditReinitialize':False
 EventAccount        DEBUG Property ['Name': Value] =  'AuditInitialize':False
 EventAccount        DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
-EventAccount        DEBUG Property ['Name': Value] =  'ErrorCount':0
+EventAccount        DEBUG Property ['Name': Value] =  'ErrorCounter':0
 EventAccount        DEBUG Property ['Name': Value] =  'ErrorMax':1
 EventAccount        DEBUG Property ['Name': Value] =  'Enable':True
 EventAccount        DEBUG Property ['Name': Value] =  'OutputLevel':1
@@ -340,50 +344,50 @@ LumiSequence        DEBUG Property update for OutputLevel : new value = 1
 LumiSequence        DEBUG ==> beginRun
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [FILE_OPEN_READ]
-FileRecordDataSvc   DEBUG Request to load record for file B0EDE3FE-9DD9-E211-8A75-003048C9CD62
-FileRecordDataSvc VERBOSE Requested object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62
+FileRecordDataSvc   DEBUG Request to load record for file 5A3F9B41-F4E0-E411-A0E5-003048F1C546
+FileRecordDataSvc VERBOSE Requested object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546
 FileRecordPersi...VERBOSE ServiceLocatorHelper::service: found service Gaudi::RootCnvSvc/FileRecordCnvSvc
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
-FileRecordDataSvc VERBOSE Object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62#/LumiFSRNoBeam[0]
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62#/LumiFSRBeamCrossing[0]
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62#/LumiFSRBeam1[0]
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62#/LumiFSRBeam2[0]
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62#/TimeSpanFSR[0]
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62#/EventCountFSR[0]
-FileRecordDataSvc VERBOSE Object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62
-FileRecordDataSvc VERBOSE Requested object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRNoBeam
-FileRecordDataSvc VERBOSE Object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRNoBeam created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRNoBeam
-FileRecordDataSvc VERBOSE Object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRNoBeam successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRNoBeam
-FileRecordDataSvc VERBOSE Requested object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRBeamCrossing created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRBeamCrossing successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Requested object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRBeam1 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRBeam1 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Requested object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRBeam2 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRBeam2 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Requested object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/TimeSpanFSR
-FileRecordDataSvc VERBOSE Object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/TimeSpanFSR created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/TimeSpanFSR
-FileRecordDataSvc VERBOSE Object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/TimeSpanFSR successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/TimeSpanFSR
-FileRecordDataSvc VERBOSE Requested object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/EventCountFSR
-FileRecordDataSvc VERBOSE Object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/EventCountFSR created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/EventCountFSR
-FileRecordDataSvc VERBOSE Object /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/EventCountFSR successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/B0EDE3FE-9DD9-E211-8A75-003048C9CD62/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546#/LumiFSRNoBeam[0]
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546#/LumiFSRBeamCrossing[0]
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546#/LumiFSRBeam1[0]
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546#/LumiFSRBeam2[0]
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546#/TimeSpanFSR[0]
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546#/EventCountFSR[0]
+FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546
+FileRecordDataSvc VERBOSE Requested object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRNoBeam
+FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRNoBeam created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRNoBeam
+FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRNoBeam successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRNoBeam
+FileRecordDataSvc VERBOSE Requested object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeamCrossing
+FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeamCrossing created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeamCrossing
+FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeamCrossing successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeamCrossing
+FileRecordDataSvc VERBOSE Requested object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam1
+FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam1 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam1
+FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam1 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam1
+FileRecordDataSvc VERBOSE Requested object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam2 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam2 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Requested object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/TimeSpanFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/TimeSpanFSR created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/TimeSpanFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/TimeSpanFSR successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/TimeSpanFSR
+FileRecordDataSvc VERBOSE Requested object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/EventCountFSR created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/EventCountFSR successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/EventCountFSR
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
@@ -486,7 +490,7 @@ ToolSvc             DEBUG Will finalize tools with refCount <= 1
 ToolSvc             DEBUG   Performing finalization of EventSelector.DataStreamTool (refCount 1)
 ToolSvc             DEBUG   Performing finalization of ToolSvc.SequencerTimerTool (refCount 1)
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.34 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.68 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
@@ -501,20 +505,20 @@ ToolSvc             DEBUG   Performing deletion of ToolSvc.SequencerTimerTool
 ToolSvc             DEBUG   Performing deletion of ToolSvc.CondDBEntityResolver
 ServiceManager      DEBUG Finalizing service DetectorPersistencySvc
 ServiceManager      DEBUG Finalizing service IncidentSvc
-IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0.8999(+-3.92257)/0/17.998[ms] Total:0.017998[s]
+IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0(+-0)/0/0[ms] Total:0[s]
 ServiceManager      DEBUG Finalizing service AppMgrRunable
 ServiceManager      DEBUG Finalizing service FileRecordCnvSvc
 ServiceManager      DEBUG Finalizing service RootCnvSvc
-RootCnvSvc           INFO Disconnected data IO:B0EDE3FE-9DD9-E211-8A75-003048C9CD62 [bigEvents-2010.dst]
+RootCnvSvc           INFO Disconnected data IO:5A3F9B41-F4E0-E411-A0E5-003048F1C546 [bigEvents-2010.dst]
 ServiceManager      DEBUG Finalizing service IODataManager
 ServiceManager      DEBUG Finalizing service FileCatalog
 ServiceManager      DEBUG Finalizing service DetectorDataSvc
 DetectorDataSvc     DEBUG Finalizing
 ServiceManager      DEBUG Finalizing service HistogramDataSvc
 ServiceManager      DEBUG Finalizing service HistogramPersistencySvc
-ServiceManager      DEBUG Service reference count check:
-ServiceManager      DEBUG ---- MessageSvc (refCount = 29)
-ServiceManager      DEBUG ---- JobOptionsSvc (refCount = 5)
+ServiceManager      DEBUG Looping over all active services...
+ServiceManager      DEBUG ---- MessageSvc (refCount = 25)
+ServiceManager      DEBUG ---- JobOptionsSvc (refCount = 2)
 ServiceManager      DEBUG ---- RndmGenSvc.Engine (refCount = 2)
 ServiceManager      DEBUG ---- HistogramPersistencySvc (refCount = 2)
 ServiceManager      DEBUG ---- HistogramDataSvc (refCount = 3)
