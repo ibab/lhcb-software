@@ -1,7 +1,40 @@
-<PRE>
+0;136;0c<PRE>
 Package             : PhysSys
-Package Coordinator : Chris Jones
+Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics packages
+
+</PRE><H1><A NAME=v19r7>2015-05-27 Phys v19r7</A></H1><PRE>
+Development release, based on Gaudi v26r2, LHCb v38r7 and Rec v17r7.
+Uses LCG_76root6 with ROOT 6.02.08.
+
+- Packages updated :
+  Phys/DaVinciTypes v2r12, Phys/DecayTreeFitter v1r20, Phys/FlavourTagging v13r13,
+  Phys/JetAccessories v3r12, Phys/KalmanFilter v1r12, Phys/LoKiFitters v4r14, Phys/TisTosTobbing v9r0.
+
+- In Phys/DaVinciTypes v2r12 :
+  . Revert the changes in RelatedInfoNamed.h to make it work for the EM with DV36r1p1.
+
+- In Phys/DecayTreeFitter v1r20 :
+  . Fixed compilation with CLHEP 2.
+
+- In Phys/FlavourTagging v13r13 :
+  . Enabled the OS Charm tagger in default tunings for Stripping21(_MC).
+  . Small charm tagger veto requested by reviewers.
+
+- In Phys/JetAccessories v3r12 :
+  . New jet energy correction (v3) implemented in PFJetMAker and its config.
+  . Added new container "CandidatesToKeep", Particles that are keep in PF without cuts.
+
+- In Phys/KalmanFilter v1r12 :
+  . Added IParticleClassifier interface needed for bypassing full vertex fit.
+
+- In Phys/LoKiFitters v4r14 :
+  . Converted base class into separate component.
+
+- In Phys/TisTosTobbing v9r0 :
+  . "Valid" flag introduced to TisTos and selected ParticleTisTos methods to protect tos,tis,tus methods
+    against HltObjectSummeries with no lhcbids at any level.
+    Previously only generic tistos method was protected (new hlt raw data have such HOS).
 
 </PRE><H1><A NAME=v19r6>2015-04-27 Phys v19r6</A></H1><PRE>
 Development release, based on Gaudi v26r1, LHCb v38r6 and Rec v17r6.
