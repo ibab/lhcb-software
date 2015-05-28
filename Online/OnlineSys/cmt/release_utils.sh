@@ -234,6 +234,8 @@ make_release()
 #
 #
     echo "+++ Copy project area .... ";
+    cd ${ONLINESYSROOT}/..;
+    svn commit -m ONLINE_${1};
     cd ${ONLINESYSROOT}/../cmt;
     svn commit -m ONLINE_${1};
     cd ${ONLINESYSROOT}/cmt;
