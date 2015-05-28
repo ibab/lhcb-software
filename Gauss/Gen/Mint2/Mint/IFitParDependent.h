@@ -10,7 +10,7 @@ namespace MINT{
   class IFitParDependent{
   public:
     virtual bool changedSinceLastCall() const=0;
-    virtual void rememberFitParValues() const=0;
+    virtual void rememberFitParValues()=0;
     virtual const FitParRef& operator[](unsigned int i) const=0;
     virtual unsigned int size() const=0;
 

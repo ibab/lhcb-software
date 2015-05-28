@@ -1,8 +1,9 @@
 #ifndef FIT_PAR_DEPENDENT_HH
 #define FIT_PAR_DEPENDENT_HH
 
-#include "IFitParDependent.h"
-#include "IFitParRegister.h"
+#include "Mint/IFitParDependent.h"
+#include "Mint/IFitParRegister.h"
+#include "Mint/FitParRef.h"
 
 #include <vector>
 #include <iostream>
@@ -13,20 +14,39 @@ namespace MINT{
     , std::vector<FitParRef>
     {
       IFitParRegister* _daddy;
+
+      bool ignoreFitParRef(const FitParRef& fpr)const;
+
     public:
-      virtual bool changedSinceLastCall() const;
-      virtual void rememberFitParValues() const;
+      //bool changedSinceLastCall() const;
+      //void rememberFitParValues() const;
       
       virtual unsigned int size() const{return std::vector<FitParRef>::size();}
-      virtual const FitParRef& operator[](unsigned int i) const;
-    
-      bool registerFitParDependence(const IFitParDependent& fpd){
-	 for(unsigned int i=0; i < fpd.size(); i++){
-	   this->push_back(fpd[i]);
-	 }
-	 if(0 != _daddy) _daddy->registerFitParDependence(fpd);
-	 return true;
+      //const FitParRef& operator[](unsigned int i) const;
+
+      virtual const FitParRef& operator[](unsigned int i) const{
+	return ((static_cast<const vector<FitParRef>& >(*this))[i]);
+      } 
+
+      virtual FitParRef& operator[](unsigned int i) {
+	return ((static_cast<vector<FitParRef>& >(*this))[i]);
+      } 
+   
+      virtual bool changedSinceLastCall() const{
+	for(unsigned int i=0; i < this->size(); i++){
+	  if( ((*this)[i]).changedSinceLastCall() ) return true;
+	}
+	return false;
       }
+
+      virtual void rememberFitParValues(){
+	for(unsigned int i=0; i < this->size(); i++){
+	  ((*this)[i]).rememberFitParValues();
+	}
+      }
+
+      virtual bool registerFitParDependence(const IFitParDependent& fpd);
+      bool registerFitParDependence(const FitParRef& fpr);
       void removeAllFitParDependencies(){this->clear();}
       // I would one day like to make this saver, but for
       // now it is possible to call this, although in 

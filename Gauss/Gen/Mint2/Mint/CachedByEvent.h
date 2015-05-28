@@ -1,8 +1,9 @@
 #ifndef CACHED_BY_EVENT_HH
 #define CACHED_BY_EVENT_HH
 
-#include "Mint/FitParDependent.h"
-#include "Mint/IDalitzEvent.h"
+#include "Mint/FitParRef.h"
+#include "Mint/IFitParDependent.h"
+//#include "Mint/IDalitzEvent.h"
 #include "Mint/DalitzEvent.h"
 
 #include <iostream>
@@ -30,7 +31,7 @@ class CachedByEvent : virtual public MINT::IFitParDependent{
     return _configNumber;
   }
 
-  virtual T recalculate(IDalitzEvent& evt){
+  T recalculate(IDalitzEvent& evt){
     T result(getNewVal(evt));
     rememberFitParValues();
     evt.setValue(rememberNumber(), result, configNumber());

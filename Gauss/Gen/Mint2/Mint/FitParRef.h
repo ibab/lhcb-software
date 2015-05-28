@@ -2,18 +2,21 @@
 #define FIT_PAR_REF_HH
 
 #include "Mint/IFitParDependent.h"
+#include "Mint/IFitParRegister.h"
 #include "Mint/FitParameter.h"
+#include "FitParameter.h"
 
 namespace MINT{
-  class IFitParRegister;
-
+  class IFitParDependent;
+  
   class FitParRef : virtual public IFitParDependent{
     
-    mutable double _lastValue;
+    double _lastValue;
     
-    const FitParameter& _fp;
+    const FitParameter* _fp;
+    const FitParameter& fp() const{return *_fp;}
     double returnFPVal() const{
-      return (double) _fp; // (_lastValue = (double) _fp);}
+      return (double) fp(); // (_lastValue = (double) fp());}
     }
 
     // not entirely sure a copy constructor even makes sense.
@@ -23,27 +26,30 @@ namespace MINT{
     FitParRef(const FitParRef& other, IFitParRegister* newDaddyPtr=0);
 	
 
-    virtual bool changedSinceLastCall() const;
-    
-    virtual void rememberFitParValues() const{
-      _lastValue = (double) _fp;
+    virtual bool changedSinceLastCall() const{
+      return ( ((double) fp()) != _lastValue);
+    }
+
+    virtual void rememberFitParValues(){
+      _lastValue = (double) fp();
     }
     
     virtual unsigned int size() const{return 1;}
     virtual const FitParRef& operator[](unsigned int ) const{
       return *this;}
 
-
     operator double() const{
       return returnFPVal();
     }
 
-    const FitParameter& theFitParameter() const{ return _fp;}
+    const FitParameter& theFitParameter() const{ return fp();}
     double lastValue() const{ return _lastValue;}
 
-    void listFitParDependencies(std::ostream& os=std::cout)const;
+    virtual void listFitParDependencies(std::ostream& os=std::cout)const;
 
-    virtual ~FitParRef(){}
+    FitParRef& operator=(const FitParRef& rhs);
+
+    ~FitParRef(){}
   }; 
 }
 #endif
