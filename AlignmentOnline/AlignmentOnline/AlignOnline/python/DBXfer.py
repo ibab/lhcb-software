@@ -72,16 +72,16 @@ class WriterConf:#(LHCbConfigurableUser):
     listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
     if 'velo' in listOfCondToWrite:
       self.addXmlWriter( alg, 'Velo', 'Global', [0,1] )
-      self.addXmlWriter( alg, 'Velo','Modules', [2] )
-      self.addXmlWriter( alg, 'Velo','Detectors', [4] )
+      self.addXmlWriter( alg, 'Velo','Modules', [2,4] )
     if 'tt' in listOfCondToWrite:
-      self.addXmlWriter( alg, 'TT','Detectors', [0,1,2] )
-      self.addXmlWriter( alg, 'TT','Modules', [3] )
-      self.addXmlWriter( alg, 'TT','Sensors', [4,5] )
+      self.addXmlWriter( alg, 'TT','Global', [0,1,2] )
+      self.addXmlWriter( alg, 'TT','Modules', [3,4] )
     if 'it' in listOfCondToWrite:
-      self.addXmlWriter( alg, 'IT','Detectors', [] )
+      self.addXmlWriter( alg, 'IT','Global', [0,1,2] )
+      self.addXmlWriter( alg, 'IT','Modules', [3,4] )
     if 'ot' in listOfCondToWrite:
-      self.addXmlWriter( alg, 'OT','Elements', [] )
+      self.addXmlWriter( alg, 'OT','Global', [0,1,2,3] )
+      self.addXmlWriter( alg, 'OT','Modules', [4] )
     if 'muon' in listOfCondToWrite:
       #self.addXmlWriter( alg, 'Muon','Detectors', [] )
       self.addXmlWriter( alg, 'Muon','Global', [0,1,2] )
@@ -98,6 +98,7 @@ class WriterConf:#(LHCbConfigurableUser):
      alg.XmlWriters.append("WriteOTCalibrations")
      alg.WriteOTCalibrations.Directory = self.getProp('CondFilePrefix')
      alg.WriteOTCalibrations.WriteGlobalCalibration = True
+
 
 
 from Gaudi.Configuration import *
