@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-05-28 - Karlis Dreimanis
+ - Minor changes to EW lines (only names and dictionary entries)
+
 ! 2015-05-26 - Albert Puig
  - Change default dict of radiative inclusive lines to avoid LoKi error.
 
