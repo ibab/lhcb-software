@@ -5,6 +5,7 @@ Purpose: Code for running and testing Alignment in the online environment
 
 ! 2015-05-28 - Silvia Borghi
  - Change the xml writer for the IT, TT, OT and velo alignment
+ - Change PV selection in VeloAlignment
 
 ! 2015-05-26 - Roel Aaij
  - Fix alignment on farm after changes for local test.
