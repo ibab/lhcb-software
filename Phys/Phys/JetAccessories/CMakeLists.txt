@@ -1,6 +1,6 @@
-B################################################################################
+################################################################################
 # Package: JetAccessories
-#0;136;0c###############################################################################
+################################################################################
 gaudi_subdir(JetAccessories v3r12)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
@@ -24,4 +24,3 @@ gaudi_add_dictionary(JetAccessories
                      dict/JetAccessories.xml
                      LINK_LIBRARIES FastJet CaloUtils LHCbMathLib LoKiAlgo
                      OPTIONS "-U__MINGW32__")
-
