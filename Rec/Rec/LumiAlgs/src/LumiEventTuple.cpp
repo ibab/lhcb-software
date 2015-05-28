@@ -75,7 +75,9 @@ bool LumiEventTuple::fillCounters(Tuples::Tuple& tuple, const LHCb::HltLumiSumma
     tuple->farray("lc_value", m_values, "lc_n", m_values.size());
   } else {
     for (const auto& kvp : summary->extraInfo()) {
-      test &= tuple->column("lc_" + std::to_string(kvp.first), boost::numeric_cast<unsigned short>(kvp.second));
+      int value = kvp.second;
+      if (value < 0) value = value & 0xFFFF; // replicate behaviour of HltLumiWriter and HltLumiSummaryDecoder
+      test &= tuple->column("lc_" + std::to_string(kvp.first), boost::numeric_cast<unsigned short>(value));
     }
   }
   return test;

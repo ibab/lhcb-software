@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2015-05-28 - Rosen Matev
+ - Fix LumiEventTuple when running with Moore (directly reading the
+   HltLumiSummary object).
+
 !========================= LumiAlgs v9r8 2015-05-26 =========================
 ! 2015-05-12 - Marco Clemencic
  - Updated reference files after GAUDI-1030.
