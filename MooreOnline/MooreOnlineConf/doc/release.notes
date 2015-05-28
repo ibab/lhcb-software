@@ -4,6 +4,8 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+!========================= MooreOnlineConf v1r8 2015-05-28 =========================
+
 ! 2015-05-05 - Roel Aaij
  - Don't warn if CheckOdin if off when running only HLT2.
 
