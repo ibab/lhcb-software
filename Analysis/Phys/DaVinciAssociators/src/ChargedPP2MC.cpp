@@ -50,6 +50,7 @@ private:
     }
     return m_track2MCLink;
   }
+  bool m_vetoempty;
 
 private:
 
@@ -93,6 +94,7 @@ DECLARE_ALGORITHM_FACTORY( ChargedPP2MC )
   m_trackLocations.push_back(TrackLocation::Default);
   declareProperty("TrackLocations", m_trackLocations );
   declareProperty("InputData", m_inputData );
+  declareProperty("VetoEmpty", m_vetoempty=false );
 }
 
 //=============================================================================
@@ -121,6 +123,8 @@ StatusCode ChargedPP2MC::execute() {
     SmartDataPtr<ProtoParticles> protos ( evtSvc(), *inp );
     // Check here to avoid the rest running on uDSTs where Protos are missing
     //if ( 0 == protos ) continue;
+    // Though we do not want to create empty containers in Turbo processing
+    if ( (0 == protos) && m_vetoempty ) continue;
 
     // postpone the check for pointer till linker and relations table
     // are cretsaed/locate/registered

@@ -4,6 +4,9 @@
 ! Responsible : Vladimir Gligorov
 !==============================================================================
 
+! 2015-05-28 - Sean Benson
+ - Option to veto creation of empty proto2mc relations containers.
+
 !==================== DaVinciAssociators v9r6 2015-02-25 ======================
 
 ! 2015-02-18 - Eduardo Rodrigues
