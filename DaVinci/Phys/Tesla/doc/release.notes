@@ -4,6 +4,9 @@ Package Coordinator : Sean Benson
 Purpose             : Turbo Stream Analysis
 !-----------------------------------------------------------------------------
 
+! 2015-5-28 - Sean Benson
+ - Configure PP2MCP more efficiently.
+
 ! 2015-5-14 - Sean Benson
  - Add RecSummary location.
 

@@ -67,25 +67,19 @@ class Tesla(LHCbConfigurableUser):
         if dod not in ApplicationMgr().ExtSvc :
             ApplicationMgr().ExtSvc.append( dod ) 
     
-    def _configureTruth(self,line) :
+    def _configureTruth(self,line,assocpp) :
         tesROOT="/Event/"+self.base
         protocont = self.base + line + "/Protos"
         trackcont = self.base + line + "/Tracks"
-        relloc = line + "/PP2MC"
         assoctr = TrackAssociator(line+"TurboAssocTr")
         assoctr.OutputLevel = self.getProp('OutputLevel')
         assoctr.TracksInContainer = trackcont
-        assocpp=ChargedPP2MC(line+"TurboProtoAssocPP")
-        assocpp.OutputLevel = self.getProp('OutputLevel')
-        assocpp.TrackLocations = [ trackcont ]
-        assocpp.InputData = [ protocont ]
-        assocpp.OutputTable = relloc
-        assocpp.RootInTES=tesROOT
-        outputPPLoc = tesROOT+'Relations/Turbo/'+relloc
+        assocpp.TrackLocations += [ trackcont ]
+        assocpp.InputData += [ protocont ]
         # Add it to a selection sequence
-        seq = GaudiSequencer(line+'TurboSeqP2MC')
-        seq.Members += [assoctr,assocpp]
-        return seq,outputPPLoc
+        seq = GaudiSequencer(line+'TurboSeqT2MC')
+        seq.Members += [assoctr]
+        return seq
 
     def _unpackMC(self):
         DataOnDemandSvc().NodeMap['/Event/MC']   = 'DataObject'
@@ -188,13 +182,22 @@ class Tesla(LHCbConfigurableUser):
         
         inputType = self.getProp('InputType')
         if (inputType=='XDST') or (inputType=='LDST'):
+            assocpp=ChargedPP2MC("TurboProtoAssocPP")
+            assocpp.OutputLevel = self.getProp('OutputLevel')
+            assocpp.TrackLocations = []
+            assocpp.InputData = []
+            assocpp.VetoEmpty=True
+            tesROOT="/Event/"+self.base
+            outputPPLoc = tesROOT+'Relations/Turbo/'
+            assocpp.RootInTES=tesROOT
             for l in lines:
-                truthSeq,locTruth = self._configureTruth(l)
+                truthSeq = self._configureTruth(l,assocpp)
                 seq.Members += [ truthSeq ]
                 if not self.getProp('Pack'):
                     writer.OptItemList+=[
-                            locTruth + '#99'
+                            outputPPLoc + l + '/Protos' '#99'
                             ]
+            seq.Members+=[assocpp]
         
         # Add shared places to writer
         if not self.getProp('Pack'):
