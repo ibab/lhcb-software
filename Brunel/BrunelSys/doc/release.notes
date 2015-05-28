@@ -3,6 +3,76 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v47r7>2015-05-28 Brunel v47r7</A></H1><PRE>
+This version uses projects:
+ LCG_76root6 (ROOT 6.02.08), Gaudi v26r2, LHCb v38r7, Lbcom v16r6,
+ Rec v17r7 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Changes to configuration
+  . Change default DataType to 2015
+  . Do not run MCRichDigitSummaryUnpacker explicitly in MCLinksUnpackSeq, as this
+    breaks with LDST. Just run it on demand when/if needed by the Check sequence.
+  . Use online calibration by default (RichDet v17r3, RichTools v2r48)
+  . Add Turbo option in DstConf. Used for propagation of Turbo objects in MC
+    workflow (GaudiConf v19r9)
+  . Add support for the new MuonID calibration. Default is still the old one
+    (MuonID v9r15)
+  . Further support for HLT and offline convergence
+    (RecAlgs v3r3, RichRecSys v5r7, TrackSys v9r7) 
+
+- Changes to persistency
+  . Change default SplitRawEventOutput to 4.1 (adds HC/RawEvent) if DataType is
+    not a Run 1 DataType (in which case default remains 4.0)
+
+- New physics tuning
+  . Update default database tags to the latest ones (DDDB v1r76):
+    o DDDB,     2015                  : dddb-20150520
+    o DDDB,           2012            : dddb-20150522-2
+    o DDDB,                 2011      : dddb-20150522-1
+    o DDDB,                       2010: dddb-20150522
+    o LHCBCOND, 2015                  : cond-20150511
+    o LHCBCOND,                   2010: cond-20150527
+  . Fix configuration of GEC for PatForward for HLT2 for 2015
+    (PatAlgorithms v4r41)
+  . Add VeloTT tracks to the collection of tracks to be fitted in HLT2 part of
+    reco (TrackSys v9r7)
+  . Added track chi2/ndf<3 cut for Hlt1 Forward tracks (TrackSys v9r7)
+
+- Performance improvements
+  . Sort hits on a track only once (PrPixel v1r11)
+  . C++11 improvements (RecAlgs v3r3, RichRecQC v2r70, FastVelo v1r20)
+  . Add move-constructor to PatVTTHybridTrack, use it in PatVeloTTHybridTool. 
+    Gains about 4.5% in speed (according to callgrind), no change in performance.
+    (PatVeloTT v4r7)
+  . SIMDChi2Fit: speed up using custom vectorisable dot product implementation
+    (this will gain about 6% speed in the Seeding, no performance changes)
+    (TfKernel v2r32)
+  . Skip loop in 'outlierRemoved' in 'TrackMasterFitter' if it is clear it will
+    not do anything anyway (TrackFitter v5r5)
+
+- Bug fixes
+  . GAUDI-1023: issue a warning when re-declaring a property (GaudiKernel v31r5)
+    Related fixes:
+    o Renamed the Algorithm property "ErrorCount" to "ErrorCounter", avoids 
+      clash with error counting in DecodeVeloRawBuffer (GaudiKernel v31r5)
+    o Modifications to avoid re-definition of properties from base class
+      (LHCbAlgs v3r6, L0DU v10r32, STTools v4r17)
+  . Add a check to PackCluster to see if the packed data already exists or not.
+    (EventPacker v5r2)
+  . Several fixes in MuonIDAlg (MuonID v9r15)
+  . Rework FastVeloFitLHCbIDs to reset and correct the FastVeloHits in a 
+    repeatable way (FastVelo v1r20)
+  . PatSeedingTool: fix a bug where the PatSeeding output depended on the
+    "history" of the input hits (i.e. which other pattern reco algorithms ran
+    in which order) (PatAlgorithms v4r41)
+  . Fix to MuonTTTrack to only write out successfully fitted tracks
+    (TrackTools v5r9)
+
+- Monitoring changes
+  . Downgrade message about non-successful propagation of track in
+    TrackMasterFitter from 'Warning' to 'Info' (TrackFitter v5r5)
+
+
 </PRE><H1><A NAME=v47r6p1>2015-05-04 Brunel v47r6p1</A></H1><PRE>
 This version uses projects:
  LCG_74root6 (ROOT 6.02.05), Gaudi v26r1, LHCb v38r6, Lbcom v16r5,
