@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-28 Eva Gersabeck
+
+- Update __init__.py for StrippingCharm, 2 line bulders were missing
 ! 2015-05-27 - Ricardo Vazquez Gomez
  - Add tests for coordinators
 
