@@ -104,11 +104,13 @@ StatusCode BeamGasVertexMonitor::execute() {
       if (mpair.second != mcandidates.end())
         matched = &(*mpair.second);
 
-      test &= tuple->column(mname + "_match_dist", mpair.first);
+      // For **rec** PVs (other than the main), don't write the PV and
+      // the matching distance (which is always zero).
       if (mname.compare(0, 3, "rec") != 0) {
-        // don't write rec PVs other than the first one. TODO make this configurable
         test &= fillVertex(tuple, mname + "_", matched->pv, true);
+        test &= tuple->column(mname + "_match_dist", mpair.first);
       }
+
       if (mname != "mc") {
         test &= fillVertex(tuple, mname + "_1_", matched->sv1, false);
         test &= fillVertex(tuple, mname + "_2_", matched->sv2, false);
@@ -181,7 +183,7 @@ std::pair<double, BeamGasCandidates::const_iterator> BeamGasVertexMonitor::match
 
   double dist = 1e10; //std::numeric_limits<double>::infinity();
   if (it != candidates.end()) {
-    if (abs((*it).pv.z - vertex.z) > m_maxMatchDeltaZ)
+    if (abs((*it).pv.z - vertex.z) < m_maxMatchDeltaZ)
       dist = abs((*it).pv.z - vertex.z);
     else
       it = candidates.end();
