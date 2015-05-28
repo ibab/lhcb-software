@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-05-28 - Christopher Rob Jones
+ - Fix typo in PackedWeightedRelations::clID() that was causing the wrong
+   class ID to be returned...
+
 !========================= EventPacker v5r2 2015-05-26 =========================
 ! 2015-05-14 - Chris Jones
  - Add a check to PackCluster to see if the packed data already exists or not.

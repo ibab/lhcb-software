@@ -118,7 +118,7 @@ namespace LHCb
     static const CLID& classID() { return CLID_PackedWeightedRelations; }
 
     /// Class ID
-    virtual const CLID& clID() const { return PackedRelations::classID(); }
+    virtual const CLID& clID() const { return PackedWeightedRelations::classID(); }
 
   public:
     
