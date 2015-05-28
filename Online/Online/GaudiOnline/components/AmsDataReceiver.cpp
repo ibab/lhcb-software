@@ -102,6 +102,10 @@ namespace LHCb  {
       ::amsc_release_message_long(from);
       return StatusCode::SUCCESS;
     }
+    /// Networking layer overload [Net producer+consumer]: Cancel current I/O
+    virtual StatusCode cancelNetwork()   {
+      return StatusCode::SUCCESS;
+    }
   };
 }
 

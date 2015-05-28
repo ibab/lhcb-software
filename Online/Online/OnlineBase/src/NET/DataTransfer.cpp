@@ -74,9 +74,11 @@ namespace DataTransfer  {
     std::map<unsigned int,netentry_t*> m_db;
     lib_rtl_lock_t           m_lockid;
     Clients                  m_clients;
+    int                      m_cancelled;
     NetConnectionType type() const { return m_type; }
     netentry_t* connect(const std::string& dest);
     NetErrorCode remove(netentry_t *e);
+    void cancel();
     void sendShutdown(netentry_t *e);
     NetErrorCode disconnect(netentry_t *e);
     NetErrorCode accept();
@@ -242,7 +244,7 @@ NetErrorCode netentry_t::recv(void *buffer, size_t siz, unsigned int flag)  {
 }
 //----------------------------------------------------------------------------------
 NET::NET(const std::string& proc) 
-: m_refCount(0), m_mgr(0), m_type(NET_SERVER), m_lockid(0)  
+  : m_refCount(0), m_mgr(0), m_type(NET_SERVER), m_lockid(0), m_cancelled(0)
 {
   m_lockid = 0;
   m_me.sys = this;
@@ -276,6 +278,10 @@ NET::~NET() {
     lib_rtl_delete_lock(m_lockid);
   }
   m_lockid = 0;
+}
+//----------------------------------------------------------------------------------
+void NET::cancel()   {
+  m_cancelled = true;
 }
 //----------------------------------------------------------------------------------
 int NET::acceptAction (void* param)    {
@@ -613,21 +619,23 @@ NetErrorCode NET::unsubscribe(void* param, unsigned int fac) {
 NET* DataTransfer::net_init(const std::string& proc, NetConnectionType type)
 { return NET::instance(proc, type);                 }
 void DataTransfer::net_close(NET* net)
-{ net->release();                                   }
+{ if ( net ) net->release();                        }
 int DataTransfer::net_receive(NET* net, netentry_t* e, void* buff) 
-{ return net->getData(e,buff);                      }
+{ return net ? net->getData(e,buff) : NET_ERROR;    }
 int DataTransfer::net_send(NET* net, const void* buff, size_t size, const std::string& dest, unsigned int fac)
-{ return net->send(buff,size,dest,fac);             }
+{ return net ? net->send(buff,size,dest,fac) : NET_ERROR;      }
 int DataTransfer::net_send(NET* net, const void* buff, size_t size, netentry_t* dest, unsigned int fac)
-{ return net->send(buff,size,dest,fac);             }
+{ return net ? net->send(buff,size,dest,fac) : NET_ERROR;      }
 int DataTransfer::net_subscribe(NET* net, void* param, unsigned int fac, net_handler_t data, net_handler_t death)
-{ return net->subscribe(param,fac,data,death);      }
+{ return net ? net->subscribe(param,fac,data,death) : NET_ERROR;  }
 int DataTransfer::net_unsubscribe(NET* net, void* param, unsigned int fac)
-{ return net->unsubscribe(param,fac);               }
+{ return net ? net->unsubscribe(param,fac) : NET_SUCCESS;  }
 void* DataTransfer::net_lock(NET* net)
 { return net ? net->m_mgr.lock() : 0;               }
 void DataTransfer::net_unlock(NET* net, void* lock)
 { if ( net && lock ) net->m_mgr.unlock(lock);       }
+void DataTransfer::net_cancel(NET* net)
+{ if ( net ) net->cancel();   }
 
 #ifndef ONLINEKERNEL_NO_TESTS
 

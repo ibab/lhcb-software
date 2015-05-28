@@ -100,6 +100,10 @@ namespace LHCb  {
       log << MSG::ERROR << "Failed to send request for events to:" << src.name << endmsg;
       return StatusCode::FAILURE;
     }
+    /// Networking layer overload [Net producer+consumer]: Cancel current I/O
+    virtual StatusCode cancelNetwork()   {
+      return StatusCode::SUCCESS;
+    }
   };
 }
 

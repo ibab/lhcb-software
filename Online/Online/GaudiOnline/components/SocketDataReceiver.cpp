@@ -126,6 +126,12 @@ namespace LHCb  {
       }
       return StatusCode::SUCCESS;
     }
+    /// Networking layer overload [Net producer+consumer]: Cancel current I/O
+    virtual StatusCode cancelNetwork()   {
+      //unsubscribeNetwork();
+      net_cancel(m_netPlug);
+      return StatusCode::SUCCESS;
+    }
   };
 }
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,SocketDataReceiver)

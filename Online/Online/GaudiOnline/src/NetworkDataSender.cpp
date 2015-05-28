@@ -112,6 +112,7 @@ void LHCb::NetworkDataSender::handle(const Incident& inc)    {
   if ( inc.type() == "DAQ_CANCEL" )  {
     MsgStream info(msgSvc(), name());
     m_sendEvents = false;
+    cancelNetwork();
     info << MSG::INFO << "Executing DAQ_CANCEL" << endmsg;
   }
 }
@@ -218,9 +219,12 @@ StatusCode NetworkDataSender::writeBuffer(void* const /* ioDesc */, const void* 
   if ( !sendData(recipient, data, len).isSuccess() )   {
     MsgStream output(msgSvc(),name());
     output << MSG::ERROR << "Failed to send MDF to " << recipient.name << "." << endmsg;
-    ::lib_rtl_sleep(m_sendErrorDelay);
-    ++m_sendError;
-    return StatusCode::FAILURE;
+    if ( m_sendEvents )   {
+      ::lib_rtl_sleep(m_sendErrorDelay);
+      ++m_sendError;
+      return StatusCode::FAILURE;
+    }
+    return StatusCode::SUCCESS;
   }
   else {
 #if 0

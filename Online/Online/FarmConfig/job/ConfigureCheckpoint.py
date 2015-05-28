@@ -8,6 +8,9 @@ sep = '/'
 checkpoint_dir = '/group/online/dataflow/cmtuser/checkpoints'
 checkpoint_local_area = '/dev/shm'
 checkpoint_local_area = '/localdisk/checkpoints'
+if os.environ.has_key('LOCAL_CHECKPOINT_DIR'):
+  checkpoint_local_area = os.environ['LOCAL_CHECKPOINT_DIR']
+
 line = "====================================================================================="
 
 
@@ -21,6 +24,11 @@ class RunInfo:
     for i in Online.__dict__:
       if i[:2] != '__':
         setattr(self,i,getattr(Online,i))
+    # This is sort of a hack for producing checkpoints for Brunel:
+    # If the brunel version cannot be obtained from the run-info, 
+    # we simply assume the 'default' version called 'OnlineBrunel'
+    if not hasattr(self,'OnlineBrunelVersion'):
+      self.OnlineBrunelVersion = 'OnlineBrunel'
 
 class Checkpoint:
   def __init__(self, runinfo, config_brunel):
@@ -58,8 +66,8 @@ class Checkpoint:
     if self.config_brunel:
       Mapping = os.path.basename(ri.ConditionsMapping)
       checkpoint_reloc = sep+'Brunel'+sep+ri.OnlineBrunelVersion+sep+\
-          ri.HLTType+sep+ri.CondDBTag+sep+ri.DDDBTag+sep+\
-          Mapping+sep+self.task_type
+          ri.HLTType+sep+ri.CondDBTag+sep+ri.DDDBTag+sep+Mapping+\
+          '' #sep+self.task_type
     elif ri.MooreOnlineVersion == "" or ri.MooreOnlineVersion == "DEFAULT":
       checkpoint_reloc = sep+ri.HltArchitecture+sep+ri.OnlineVersion+sep+ri.HLTType
     else:
@@ -154,10 +162,13 @@ class Checkpoint:
   def copyTorrent(self):
     ldir = self.checkpointRelativeDir()
     relocate_path = self.checkpointRelativeDir()+sep+self.torrent_file
-    return self.setupCheckpointFile() \
-        .output('echo "[INFO] Copy checkpoint:'+self.target_path+'";') \
-        .output('bash '+checkpoint_dir+'/cmds/copy_torrent '+relocate_path+';') \
-        .output('if test ! -f "'+self.target_path+'"; then') \
+    self.setupCheckpointFile() \
+        .output('echo "[INFO] Copy checkpoint:'+self.target_path+'";')
+    if self.config_brunel:
+      self.output('bash '+checkpoint_dir+'/cmds/copy_data '+relocate_path+';')
+    else:
+      self.output('bash '+checkpoint_dir+'/cmds/copy_torrent '+relocate_path+';')
+    return self.output('if test ! -f "'+self.target_path+'"; then') \
         .output('  echo "[FATAL] '+line+'";') \
         .output('  echo "[FATAL] == CHECKPOINT FILE '+self.target_path+' DOES NOT EXIST!";') \
         .output('  echo "[FATAL] '+line+'";') \

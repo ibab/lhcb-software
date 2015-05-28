@@ -61,6 +61,12 @@ namespace LHCb  {
       int sc = net_send(m_netPlug,data,len,tar.name,WT_FACILITY_CBMEVENT);
       return sc==NET_SUCCESS ? StatusCode::SUCCESS : StatusCode::FAILURE;
     }
+    /// Networking layer overload [Net producer+consumer]: Cancel current I/O
+    virtual StatusCode cancelNetwork()   {
+      //unsubscribeNetwork();
+      net_cancel(m_netPlug);
+      return StatusCode::SUCCESS;
+    }
   };
 }
 

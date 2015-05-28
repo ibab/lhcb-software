@@ -42,6 +42,7 @@ namespace DataTransfer  {
   void net_close(NET* net);
   void* net_lock(NET* net);
   void net_unlock(NET* net, void* lock);
+  void net_cancel(NET* net);
   int net_subscribe(NET* net, void* param, unsigned int fac, net_handler_t data, net_handler_t death);
   int net_unsubscribe(NET* net, void* param, unsigned int fac);
   int net_receive(NET* net, netentry_t* e, void* buff);

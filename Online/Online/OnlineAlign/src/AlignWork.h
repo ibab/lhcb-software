@@ -29,6 +29,7 @@ namespace LHCb
       std::string getPartitionName(){return m_PartitionName;};
       IAlignFcn * m_fitterFcn;
       void readReference();
+      unsigned long getReference(){return m_Reference;}
       virtual void handle(const Incident& inc);
 //  unsigned long long m_prevupdate;
 

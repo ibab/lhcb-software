@@ -1,5 +1,8 @@
 import os, sys
-pname = os.environ['PARTITION_NAME']
+if os.environ.has_key('PARTITION_NAME'):
+  pname = os.environ['PARTITION_NAME']
+else:
+  pname = os.environ['PARTITION']
 print 'UTGID='+os.environ['UTGID']+';'
 print "DIM_DNS_NODE="+os.environ['DIM_DNS_NODE']+';'
 print "NUMBER_OF_CHILDREN="+os.environ['NBOFSLAVES']+';'

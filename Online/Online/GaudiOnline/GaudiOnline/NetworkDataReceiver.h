@@ -160,6 +160,9 @@ namespace LHCb  {
     virtual StatusCode handleSourceRequest(int clientID,const std::string& source,const std::string& svc);
     /// Networking layer overload [Net consumer]: Handle event declaration into the buffer manager
     StatusCode declareEventData(RecvEntry& entry);
+    /// Networking layer overload [Net producer+consumer]: Cancel current I/O
+    virtual StatusCode cancelNetwork() = 0;
+
   };
 }       // End namespace LHCb
 #endif  // ONLINE_GAUDIONLINE_NETWORKDATARECEIVER_H

@@ -160,6 +160,8 @@ namespace LHCb  {
     virtual StatusCode sendData(const Recipient& tar, const void* data, size_t len) = 0;
     /// Networking layer overload [Net producer]: Handle client request to receive event over the network
     virtual StatusCode handleEventRequest(long clientID,const std::string& source, const char* data);
+    /// Networking layer overload [Net producer+consumer]: Cancel current I/O
+    virtual StatusCode cancelNetwork() = 0;
 
     /// Write MDF record from serialization buffer
     virtual StatusCode writeBuffer(void* const /* ioDesc */, const void* data, size_t len);

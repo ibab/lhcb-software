@@ -129,6 +129,7 @@ void LHCb::NetworkDataReceiver::handle(const Incident& inc)    {
     info << MSG::INFO << "Executing DAQ_CANCEL" << endmsg;
     ::wtc_flush(WT_FACILITY_DAQ_EVENT);
     m_mepMgr->cancel();
+    cancelNetwork();
   }
 }
 

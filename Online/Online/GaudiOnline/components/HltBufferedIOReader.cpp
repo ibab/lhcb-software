@@ -79,8 +79,12 @@ namespace LHCb
     int                      m_initialSleep;
     /// Property: Inhibit rescan of the source directory
     int                      m_rescan;
+    /// Property: Maximum number of events to be read from 1 single input file
+    int                      m_max_events_per_file;
     /// Monitoring quantity: Number of events processed
     int                      m_evtCount;
+    /// Monitoring quantity: Number of events per current input file
+    int                      m_evtCountFile;
     /// DIM service ID for 'GO' command
     int                      m_goSvcID;
     /// DIM value of GO service
@@ -145,6 +149,7 @@ namespace LHCb
 #include "RTL/readdir.h"
 #include <fcntl.h>
 #include <cerrno>
+#include <sstream>
 #include "dic.h"
 #ifdef _WIN32
 #include <io.h>
@@ -195,18 +200,20 @@ void HltBufferedIOReader::go_handler(void* tag, void* address, int* size) {
 /// Standard Constructor
 HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
   : OnlineService(nam, svcLoc), m_receiveEvts(false), m_lock(0), m_mepMgr(0), 
-    m_producer(0), m_evtCount(0), m_goSvcID(0), m_goValue(0), m_disabled(false)
+    m_producer(0), m_evtCount(0), m_evtCountFile(0), m_goSvcID(0), 
+    m_goValue(0), m_disabled(false)
 {
-  declareProperty("Buffer",      m_buffer          = "Mep");
-  declareProperty("Directory",   m_directory       = "/localdisk");
-  declareProperty("FilePrefix",  m_filePrefix      = "Run_");
-  declareProperty("BrokenHosts", m_brokenHostsFile = "");
-  declareProperty("DeleteFiles", m_deleteFiles     = true);
-  declareProperty("ConsumerWait",m_maxConsWait     = 20);
-  declareProperty("AllowedRuns", m_allowedRuns);
-  declareProperty("InitialSleep",m_initialSleep    = 10);
-  declareProperty("Rescan",      m_rescan          = 1);
-  declareProperty("GoService",   m_goService       = "");
+  declareProperty("Buffer",        m_buffer          = "Mep");
+  declareProperty("Directory",     m_directory       = "/localdisk");
+  declareProperty("FilePrefix",    m_filePrefix      = "Run_");
+  declareProperty("BrokenHosts",   m_brokenHostsFile = "");
+  declareProperty("DeleteFiles",   m_deleteFiles     = true);
+  declareProperty("ConsumerWait",  m_maxConsWait     = 20);
+  declareProperty("AllowedRuns",   m_allowedRuns);
+  declareProperty("InitialSleep",  m_initialSleep    = 10);
+  declareProperty("Rescan",        m_rescan          = 1);
+  declareProperty("GoService",     m_goService       = "");
+  declareProperty("EventsPerFile", m_max_events_per_file = -1);
   m_allowedRuns.push_back("*");
   ::lib_rtl_create_lock(0, &m_lock);
 }
@@ -273,6 +280,7 @@ StatusCode HltBufferedIOReader::initialize()   {
   incidentSvc()->addListener(this, "DAQ_CANCEL");
   incidentSvc()->addListener(this, "DAQ_STOP_TRIGGER");
   declareInfo("EvtCount", m_evtCount = 0, "Number of events processed");
+  declareInfo("EvtCountFile", m_evtCountFile = 0, "Number of events processed from current input");
   ::lib_rtl_lock(m_lock);
   m_files.clear();
   m_current = "";
@@ -411,7 +419,15 @@ int HltBufferedIOReader::openFile()   {
         }
       }
       m_current = fname;
-      info("Opened file: " + fname + " for deferred HLT processing");
+      if ( m_max_events_per_file < 0 )  {
+	info("Opened file: " + fname + " for HLT processing");
+      }
+      else  {
+	stringstream s;
+	s << "Opened file: " << fname << " for HLT processing [" 
+	  << m_max_events_per_file << " events]";
+	info(s.str());
+      }
       return fd;
     }
     error("FAILD to open file: " + fname + " for deferred HLT processing: "
@@ -501,7 +517,7 @@ StatusCode HltBufferedIOReader::i_run()  {
       /// Before actually declaring PAUSED, we wait until no events are pending anymore.
       waitForPendingEvents(mbmInfo);
       // Sleep a bit before goung to pause
-      info("Seeping before going to PAUSE....");
+      info("Sleeping before going to PAUSE....");
       ::lib_rtl_sleep(10000);
       /// Go to state PAUSED, all the work is done
       incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
@@ -519,6 +535,7 @@ StatusCode HltBufferedIOReader::i_run()  {
       break;
     }
     m_evtCount = 0;
+    m_evtCountFile = 0;
     files_processed = (GO_PROCESS != m_goValue) && scanFiles() == 0;
     if ( files_processed )    {
       info("Exit event loop. No more files to process.");
@@ -528,6 +545,7 @@ StatusCode HltBufferedIOReader::i_run()  {
     while ( m_receiveEvts && (m_goValue != GO_DONT_PROCESS) )   {
       if (file_handle == 0 && (m_goValue == GO_PROCESS) )  {
         file_handle = openFile();
+	m_evtCountFile = 0;
         if ( file_handle == 0 )   {
           files_processed = (GO_PROCESS!=m_goValue) || (scanFiles() == 0);
           if ( files_processed )    {
@@ -642,6 +660,13 @@ StatusCode HltBufferedIOReader::i_run()  {
             status = m_producer->sendSpace();
             if (status == MBM_NORMAL)    {
               m_evtCount++;
+	      m_evtCountFile++;
+	      // If we have exceeded the total number of events per file, close it!
+	      if ( m_max_events_per_file>0 && m_evtCountFile>m_max_events_per_file )  {
+		::close(file_handle);
+		file_handle = 0;
+		m_current = "";
+	      }
             }
           }
         }
@@ -655,6 +680,7 @@ StatusCode HltBufferedIOReader::i_run()  {
     file_handle = 0;
     // Bad file: Cannot read input (m_evtCount==0)
     m_evtCount = 0;
+    m_evtCountFile = 0;
   }
   /// Before actually declaring PAUSED, we wait until no events are pending anymore.
   waitForPendingEvents(mbmInfo);

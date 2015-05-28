@@ -66,6 +66,10 @@ namespace LHCb  {
         return StatusCode::FAILURE;
       return StatusCode::SUCCESS;
     }
+    /// Networking layer overload [Net producer+consumer]: Cancel current I/O
+    virtual StatusCode cancelNetwork()   {
+      return StatusCode::SUCCESS;
+    }
   };
 }
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,DimDataSender)

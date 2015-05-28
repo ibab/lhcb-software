@@ -59,6 +59,10 @@ namespace LHCb  {
       int sc = ::amsc_send_message(data,len,tar.name.c_str(),WT_FACILITY_CBMEVENT,0);
       return sc==AMS_SUCCESS ? StatusCode::SUCCESS : StatusCode::FAILURE;
     }
+    /// Networking layer overload [Net producer+consumer]: Cancel current I/O
+    virtual StatusCode cancelNetwork()   {
+      return StatusCode::SUCCESS;
+    }
   };
 }
 

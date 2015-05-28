@@ -1,8 +1,9 @@
 #include "$FARMCONFIGROOT/options/BasicDiskReader.opts"
 #include "$NODE_OPTIONS"
-Runable.Directory                    = "/tmp/OFFLINE_MON";
+Runable.Directory                    = "/tmp/DATAQUALITY_MON";
 Runable.FilePrefix                   = "Run_";
 Runable.Buffer                       = @OnlineEnv.DQReader_Output;
 MEPManager.Buffers                   = @OnlineEnv.DQReader_Buffers;
 Runable.DeleteFiles                  = true;
 Runable.InitialSleep                 = 0;
+Runable.EventsPerFile                = @OnlineEnv.EventsPerFile;
