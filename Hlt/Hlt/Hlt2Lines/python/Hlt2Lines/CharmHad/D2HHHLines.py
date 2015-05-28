@@ -149,7 +149,7 @@ class CharmHadD2HHHLines() :
                   'D2KKPi_OS_LTUNBTurbo'     : [MassFilter('Ds2HHH_LTUNB',inputs=[D2KKPi_OS_LTUNB('Ds2HHH_LTUNB')])],
                   'Lc2KPPi_LTUNBTurbo'       : [MassFilter('Lc2HHH_LTUNB',inputs=[Lc2KPPi_LTUNB('Lc2HHH_LTUNB')])],
                   # Now the KPi asymmetry line
-                  'Dpm2KPiPi_ForKPiAsymTurbo' : [MassFilter('Dpm2KPiPi_ForKPiAsym',
+                  'Dpm2KPiPi_ForKPiAsym'     : [MassFilter('Dpm2KPiPi_ForKPiAsym',
                                                        inputs=[DetAsym_DpToKmPipPip])]
             }
         
