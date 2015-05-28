@@ -27,7 +27,9 @@ class TGComboBox ;
 class ElogDialog : public TGTransientFrame
 {
 public:
+
   ElogDialog(MessagePresenter* gui, int width, int height);
+
   virtual ~ElogDialog();
 
   void setParameters( std::string& logbook, std::string& username, std::string& system,
@@ -40,6 +42,7 @@ public:
   void CloseWindow();
 
 private:
+
   TGTextButton       *m_okButton;
   TGTextButton       *m_elogButton;
   TGTextButton       *m_cancelButton;
@@ -61,6 +64,7 @@ private:
 
   TGComboBox *m_logbookListBox ;
 
-  //ClassDef(ElogDialog, 0);
+  ClassDef(ElogDialog, 0);
 };
+
 #endif /*ELOGDIALOG_H_*/
