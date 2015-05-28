@@ -782,7 +782,7 @@ D02HHForXSec = {
         'D0_MVA_MIN': -0.3,
         # Path to the D0 MVA weights file
         # BDT is not applied if this is the empty string or None
-        'D0_MVA_Weights': '$TMVAWEIGHTSROOT/data/D02HHForXSec_BDT_v1r0.xml',
+        'D0_MVA_Weights': None,
         # Dictionary of LoKi functors defining the D0 MVA input variables
         # The keys must match those used when training the MVA
         'D0_MVA_Variables': {
@@ -863,7 +863,7 @@ D02K3PiForXSec = {
         'D0_MVA_MIN': -0.3,
         # Path to the D0 MVA weights file
         # BDT is not applied if this is the empty string or None
-        'D0_MVA_Weights': '$TMVAWEIGHTSROOT/data/D02K3PiForXSec_BDT_v1r0.xml',
+        'D0_MVA_Weights': None,
         # Dictionary of LoKi functors defining the D0 MVA input variables
         # The keys must match those used when training the MVA
         'D0_MVA_Variables': {
@@ -949,8 +949,8 @@ D2HHHForXSec = {
         'Ds_MVA_MIN': -0.3,
         # Path to the D+ and D_s+ MVA weights files
         # BDT is not applied if this is the empty string or None
-        'Dp_MVA_Weights': '$TMVAWEIGHTSROOT/data/D2HHHForXSec_BDT_v1r0.xml',
-        'Ds_MVA_Weights': '$TMVAWEIGHTSROOT/data/D2HHHForXSec_BDT_v1r0.xml',
+        'Dp_MVA_Weights': None,
+        'Ds_MVA_Weights': None,
         # Dictionary of LoKi functors defining the D MVA input variables
         # The keys must match those used when training the MVA
         # Same input variables are used for both D+ and D_s+
@@ -1051,8 +1051,8 @@ D2PhiPiForXSec = {
         'Ds_MVA_MIN': -0.3,
         # Path to the D+ and D_s+ MVA weights files
         # BDT is not applied if this is the empty string or None
-        'Dp_MVA_Weights': '$TMVAWEIGHTSROOT/data/D2PhiPiForXSec_BDT_v1r0.xml',
-        'Ds_MVA_Weights': '$TMVAWEIGHTSROOT/data/D2PhiPiForXSec_BDT_v1r0.xml',
+        'Dp_MVA_Weights': None,
+        'Ds_MVA_Weights': None,
         # Dictionary of LoKi functors defining the D+ MVA input variables
         # The keys must match those used when training the MVA
         # Same input variables are used for both D+ and D_s+
@@ -1147,7 +1147,7 @@ Lambdac2PHHForXSec = {
         'Lambdac_MVA_MIN': -0.3,
         # Path to the Lc+ MVA weights file
         # BDT is not applied if this is the empty string or None
-        'Lambdac_MVA_Weights': '$TMVAWEIGHTSROOT/data/Lambdac2PHHForXSec_BDT_v1r0.xml',
+        'Lambdac_MVA_Weights': None,
         # Dictionary of LoKi functors defining the Lc+ MVA input variables
         # The keys must match those used when training the MVA
         'Lambdac_MVA_Variables': {

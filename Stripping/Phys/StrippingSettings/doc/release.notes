@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-28 - Alex Pearce
+ - Disable BDTs in Charm ForXSec lines.
+
 ! 2015-05-27 - Andrea Contu
  - Set correct HC banks for LowMult lines
 
