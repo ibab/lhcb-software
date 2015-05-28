@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2015-05-28 - Gloria Corti
+ - Fixed a bug that showed up with particle gun productions introduced when
+   removing the tool declaration for Special from the configuration since 
+   it is used also by powheg and not only bcvegpy. For physics events it
+   because picked up via the options in LbPythia6 and LbPythia8 in the tests. 
+
 ! 2015-05-12 - Philip Ilten
  - Removed no longer needed configuration of BcVegPy
 

@@ -1778,11 +1778,13 @@ class Gauss(LHCbConfigurableUser):
         # forced selecting the appropriate pileup tool in the eventtype
         gen_t0.addTool(FixedNInteractions,name="FixedNInteractions")
         gen_t0.FixedNInteractions.NInteractions = 1
-        pInGeV = beamMom*SystemOfUnits.GeV/SystemOfUnits.TeV
 
-        # or with LbPowheg
+        #  Special signal with LbPowheg
         from Configurables import PowhegProductionbb, PowhegProductiontt, PowhegProductionWbb
         from Configurables import PowhegProductionWZ, PowhegProductionZZ
+
+        pInGeV   = beamMom*SystemOfUnits.GeV/SystemOfUnits.TeV
+        gen_t0.addTool( Special, name="Special" )
         gen_t0.Special.addTool( PowhegProductionbb , name = "PowhegProductionbb" )
         gen_t0.Special.addTool( PowhegProductiontt , name = "PowhegProductiontt" )
         gen_t0.Special.addTool( PowhegProductionWbb , name = "PowhegProductionWbb" )
