@@ -63,7 +63,8 @@ void main()
       var textheight = 50;
       var textcontext = textcanvas.getContext('2d');
       textcontext.font = textheight + "px Lucida Grande, sans serif";
-      textmetrics = textcontext.measureText("Thu, 30 Sep 2015 23:45:00 ");
+      //textmetrics = textcontext.measureText("Thu, 30 Sep 2015 23:45:00 ");
+      textmetrics = textcontext.measureText("XXX, XX XXX 2015 XX:XX:XX");
       var textwidth = textmetrics.width;
       textcanvas.width = textwidth;
       textcanvas.height = 4.0*textheight;
