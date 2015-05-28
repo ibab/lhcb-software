@@ -7,7 +7,7 @@ program ranging from testing the SM parameters to searches for exotic particles 
 
 __version__ = "$Revision: $"
 __author__  = "Karlis Dreimanis k.dreimanis@liverpool.ac.uk"
-__date__    = "2015-04-22"
+__date__    = "2015-05-28"
 #======================================================================================
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm 
@@ -15,21 +15,21 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 class EWLines(Hlt2LinesConfigurableUser) :
 
     __slots__ = {'Prescale' : {'HLT2EWDiMuonZ'                : 1.000,
-                               'Hlt2EWDiMuonDY1'              : 0.005, #or 0.1
-                               'Hlt2EWDiMuonDY2'              :  0.03, #or none
+                               'Hlt2EWDiMuonDY1'              :  0.02,
+                               'Hlt2EWDiMuonDY2'              :   0.3,
                                'Hlt2EWDiMuonDY3'              : 1.000,
                                'Hlt2EWDiMuonDY4'              : 1.000,
-                               'Hlt2EWSingleMuonLowPt'        : 0.002, #or 0.1
-                               'Hlt2EWSingleMuonHighPt'       : 1.000,
+                               'Hlt2EWSingleMuonLowPt'        : 0.002,
+                               'Hlt2EWSingleMuonHighPt'       :	  0.1,
                                'Hlt2EWSingleMuonVHighPt'      : 1.000,
                                'Hlt2EWDiElectronDY'           : 1.000,
                                'Hlt2EWDiElectronHighMass'     : 1.000,
-                               'Hlt2EWSingleTFElectron'       : 1.000,
-                               'Hlt2EWSingleTFElectronLowPt'  : 0.001, #or 0.1
-                               'Hlt2EWSingleTFElectronHighPt' :  0.01, #or none
-                               'Hlt2EWSingleTFElectronVHighPt': 1.000,
-                               'Hlt2EWSingleTauHighPt2Prong'  : 1.000,
-                               'Hlt2EWSingleTauHighPt3Prong'  : 1.000},
+                               'Hlt2EWSingleElectron'         : 1.000,
+                               'Hlt2EWSingleElectronLowPt'    : 0.001,
+                               'Hlt2EWSingleElectronHighPt'   :  0.01,
+                               'Hlt2EWSingleElectronVHighPt'  : 1.000,
+                               'Hlt2EWSingleTauHighPt2Prong'  :   0.2,
+                               'Hlt2EWSingleTauHighPt3Prong'  :   0.5},
 
                  'Common' :                  {},
                  #=====DiMuon=====
@@ -61,7 +61,7 @@ class EWLines(Hlt2LinesConfigurableUser) :
 
                  'SingleMuonHighPt' :        {'Pt'             : 10000 * MeV},
                  
-                 'SingleMuonVHighPt' :       {'Pt'             : 15000 * MeV},
+                 'SingleMuonVHighPt' :       {'Pt'             : 12500 * MeV},
                  #=====DiElectron=====
                  'DiElectronDY' :            {'L0Req'          : "L0_CHANNEL('Electron')",
                                               'Hlt1Req'        : "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')",
@@ -87,7 +87,7 @@ class EWLines(Hlt2LinesConfigurableUser) :
                                               'EcalMin'        :   0.1,
                                               'HcalMax'        :  0.05},
                  #=====SingleElectron=====
-                 'SingleTFElectron' :        {'L0Req'          : "L0_CHANNEL('Electron')",
+                 'SingleElectron' :          {'L0Req'          : "L0_CHANNEL('Electron')",
                                               'Hlt1Req'        : "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')",
                                               'Pt'             : 10000 * MeV,
                                               'IP'             :  0.05 * mm,
@@ -98,7 +98,7 @@ class EWLines(Hlt2LinesConfigurableUser) :
                                               'EcalMin'        :   0.1,
                                               'HcalMax'        :  0.05},
                  
-                 'SingleTFElectronLowPt' :   {'L0Req'          : "L0_CHANNEL('Electron')",
+                 'SingleElectronLowPt' :     {'L0Req'          : "L0_CHANNEL('Electron')",
                                               'Hlt1Req'        : "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')",
                                               'Pt'             :  4800 * MeV,
                                               'PIDe'           :     4,  #unused?
@@ -107,7 +107,7 @@ class EWLines(Hlt2LinesConfigurableUser) :
                                               'EcalMin'        :   0.1,
                                               'HcalMax'        :  0.05},
 
-                 'SingleTFElectronHighPt' :  {'L0Req'          : "L0_CHANNEL('Electron')",
+                 'SingleElectronHighPt'   :  {'L0Req'          : "L0_CHANNEL('Electron')",
                                               'Hlt1Req'        : "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')",
                                               'Pt'             : 10000 * MeV,
                                               'PrsMin'         :    50,
@@ -115,7 +115,7 @@ class EWLines(Hlt2LinesConfigurableUser) :
                                               'HcalMax'        :  0.05,
                                               'TkChi2'         :    20},
                  
-                 'SingleTFElectronVHighPt' : {'L0Req'          : "L0_CHANNEL('Electron')",
+                 'SingleElectronVHighPt'   : {'L0Req'          : "L0_CHANNEL('Electron')",
                                               'Hlt1Req'        : "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')",
                                               'Pt'             : 15000 * MeV,
                                               'PrsMin'         :    50,
@@ -158,7 +158,7 @@ class EWLines(Hlt2LinesConfigurableUser) :
         from Stages import (DiMuonZFilter,DiMuonDY1Filter,DiMuonDY2Filter,DiMuonDY3Filter,DiMuonDY4Filter,
                             SingleMuonLowPtFilter,SingleMuonHighPtFilter,SingleMuonVHighPtFilter,
                             DiElectronDYFilter,DiElectronHighMassFilter,
-                            SingleTFElectronFilter,SingleTFElectronLowPtFilter,SingleTFElectronHighPtFilter,SingleTFElectronVHighPtFilter, TauTrkFilter, TauRhoCombiner, HighPTTauCombiner, SingleTauFilter)
+                            SingleElectronFilter,SingleElectronLowPtFilter,SingleElectronHighPtFilter,SingleElectronVHighPtFilter, TauTrkFilter, TauRhoCombiner, HighPTTauCombiner, SingleTauFilter)
         from Inputs import (MergedPi0s, ResolvedPi0s, BiKalmanFittedMuons, BiKalmanFittedElectrons, BiKalmanFittedPions)
         #create the taus first
         tau_trkfilter     = TauTrkFilter("TauTrkFilter", [BiKalmanFittedPions])
@@ -178,10 +178,10 @@ class EWLines(Hlt2LinesConfigurableUser) :
                   'SingleMuonVHighPt'       : [SingleMuonVHighPtFilter('SingleMuonVHighPt')],
                   'DiElectronDY'            : [DiElectronDYFilter('DiElectronDY')],
                   'DiElectronHighMass'      : [DiElectronHighMassFilter('DiElectronHighMass')],
-                  'SingleTFElectron'        : [SingleTFElectronFilter('SingleTFElectron')],
-                  'SingleTFElectronLowPt'   : [SingleTFElectronLowPtFilter('SingleTFElectronLowPt')],
-                  'SingleTFElectronHighPt'  : [SingleTFElectronHighPtFilter('SingleTFElectronHighPt')],
-                  'SingleTFElectronVHighPt' : [SingleTFElectronVHighPtFilter('SingleTFElectronVHighPt')],
+                  'SingleElectron'          : [SingleElectronFilter('SingleElectron')],
+                  'SingleElectronLowPt'     : [SingleElectronLowPtFilter('SingleElectronLowPt')],
+                  'SingleElectronHighPt'    : [SingleElectronHighPtFilter('SingleElectronHighPt')],
+                  'SingleElectronVHighPt'   : [SingleElectronVHighPtFilter('SingleElectronVHighPt')],
                   'SingleTauHighPt3Prong'   : [singletaus_3prong],
                   'SingleTauHighPt2Prong'   : [singletaus_2prong]}
         

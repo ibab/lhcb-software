@@ -93,7 +93,7 @@ class DiElectronHighMassFilter(Hlt2ParticleFilter):
         inputs = [TrackFittedDiElectron]
         Hlt2ParticleFilter.__init__(self, name, code, inputs, dependencies = [DecodeL0CALO])
 
-class SingleTFElectronFilter(Hlt2ParticleFilter):
+class SingleElectronFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         code = ("(PT > %(Pt)s) " +
                 "& (PPINFO(LHCb.ProtoParticle.CaloPrsE, 0) > %(PrsMin)s) " +
@@ -105,7 +105,7 @@ class SingleTFElectronFilter(Hlt2ParticleFilter):
         inputs = [BiKalmanFittedElectrons]
         Hlt2ParticleFilter.__init__(self, name, code, inputs, dependencies = [DecodeL0CALO, PV3D('HLT2')])
 
-class SingleTFElectronLowPtFilter(Hlt2ParticleFilter):
+class SingleElectronLowPtFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         code = ("(PT > %(Pt)s) " +
                 "& (PPINFO(LHCb.ProtoParticle.CaloPrsE, 0) > %(PrsMin)s) " +
@@ -115,7 +115,7 @@ class SingleTFElectronLowPtFilter(Hlt2ParticleFilter):
         inputs = [BiKalmanFittedElectrons]
         Hlt2ParticleFilter.__init__(self, name, code, inputs, dependencies = [DecodeL0CALO])
 
-class SingleTFElectronHighPtFilter(Hlt2ParticleFilter):
+class SingleElectronHighPtFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         code = ("(PT > %(Pt)s) " +
                 "& (PPINFO(LHCb.ProtoParticle.CaloPrsE, 0) > %(PrsMin)s) " +
@@ -125,7 +125,7 @@ class SingleTFElectronHighPtFilter(Hlt2ParticleFilter):
         inputs = [BiKalmanFittedElectrons]
         Hlt2ParticleFilter.__init__(self,name, code, inputs, dependencies = [DecodeL0CALO])
 
-class SingleTFElectronVHighPtFilter(Hlt2ParticleFilter):
+class SingleElectronVHighPtFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         code = ("(PT > %(Pt)s) " +
                 "& (PPINFO(LHCb.ProtoParticle.CaloPrsE, 0) > %(PrsMin)s) " +
