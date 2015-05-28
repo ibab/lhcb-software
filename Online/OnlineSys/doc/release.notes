@@ -11,9 +11,13 @@
   Use Gaudi v26r2
   Updated/new packages:	
      MDF                 v3r41    DAQ
+     DAQEvent            v9r19    Event
+     GaudiObjDesc        v11r23
+     Camera              v1r31    Online
      Controller          v0r19    Online
      EventBuilder        v0r10    Online
      FarmConfig          v0r15    Online
+     GaudiCheckpointing  v0r22    Online
      GaudiOnline         v2r80    Online
      OnlineAlign         v0r6     Online
      OnlineBase          v1r33    Online

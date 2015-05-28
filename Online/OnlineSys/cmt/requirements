@@ -12,12 +12,12 @@ branches cmt doc
 #=======================================================
 use MDF                 v3r41    DAQ
 use MDF_ROOT            v1r9     DAQ
-use DAQEvent            v9r18    Event
-use GaudiObjDesc        v11r22
+use DAQEvent            v9r19    Event
+use GaudiObjDesc        v11r23
 #=======================================================
 # LHCb Online packages
 #=======================================================
-use Camera              v1r30    Online
+use Camera              v1r31    Online
 use Checkpointing       v0r21    Online
 macro CondDBServer_use "CondDBServer v1r6 Online" target-i686 ""
 use $(CondDBServer_use)
@@ -32,7 +32,7 @@ use FarmConfig          v0r15    Online
 use FarmMonitor         v2r13    Online
 use Gaucho              v7r38    Online
 use GauchoAppl          v1r23    Online
-use GaudiCheckpointing  v0r21    Online
+use GaudiCheckpointing  v0r22    Online
 use GaudiOnline         v2r80    Online
 use GaudiOnlineTests    v1r5     Online
 use GaudiRootCnvTests   v1r13    Online
