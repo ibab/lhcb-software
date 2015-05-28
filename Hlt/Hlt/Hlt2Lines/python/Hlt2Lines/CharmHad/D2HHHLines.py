@@ -76,7 +76,7 @@ class CharmHadD2HHHLines() :
                                  'Mass_M_MAX'               :  2049.0 * MeV,
                                 },
                  # Wide mass window accomodates the Xi_c+ 
-                 'Lc2HHH_LTUNB_Turbo'    : {
+                 'Lc2HHH_LTUNB'    : {
                                  'TisTosSpec'               : "Hlt1Track.*Decision%TIS",
                                  'BPVLTIME_MIN'             :  0.15 * picosecond,
                                  'BPVDIRA_MIN'              :  0.95,
@@ -147,7 +147,7 @@ class CharmHadD2HHHLines() :
                   # Now the three CF lifetime unbiased lines
                   'D2KPiPi_SS_LTUNBTurbo'    : [MassFilter('Dpm2HHH_LTUNB',inputs=[D2KPiPi_SS_LTUNB('Dpm2HHH_LTUNB')])],
                   'D2KKPi_OS_LTUNBTurbo'     : [MassFilter('Ds2HHH_LTUNB',inputs=[D2KKPi_OS_LTUNB('Ds2HHH_LTUNB')])],
-                  'Lc2KPPi_LTUNB_TurboTurbo' : [MassFilter('Lc2HHH_LTUNB_Turbo',inputs=[Lc2KPPi_LTUNB('Lc2HHH_LTUNB_Turbo')])],
+                  'Lc2KPPi_LTUNBTurbo'       : [MassFilter('Lc2HHH_LTUNB',inputs=[Lc2KPPi_LTUNB('Lc2HHH_LTUNB')])],
                   # Now the KPi asymmetry line
                   'Dpm2KPiPi_ForKPiAsymTurbo' : [MassFilter('Dpm2KPiPi_ForKPiAsym',
                                                        inputs=[DetAsym_DpToKmPipPip])]
