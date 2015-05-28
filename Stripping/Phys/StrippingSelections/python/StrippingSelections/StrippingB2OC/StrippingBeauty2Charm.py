@@ -1289,8 +1289,8 @@ class Beauty2CharmConf(LineBuilder):
         cuts = "(PT > %d*MeV) & (ADMASS('D0') < 25*MeV) & (MIPCHI2DV(PRIMARY)>%d)" \
                % (config['D0INC']['PT_MIN'],config['D0INC']['IPCHI2_MIN'])
         sel = filterSelection('D02KPIPIDMTIGHT',cuts,d.kpi_pid_tight)
-        sel = tosSelection(sel,{'Hlt2Topo2BodyBBDTDecision%TOS':0})
-        hlt = "HLT_PASS_RE('Hlt2Topo2BodyBBDTDecision')"
+        sel = tosSelection(sel,{'Hlt2Topo2.*Decision%TOS':0})
+        hlt = "HLT_PASS_RE('Hlt2Topo2.*Decision')"
         sline = StrippingLine('D02HHTopoTOSLine',1.0,selection=sel,HLT2=hlt)
         self.registerLine(sline)
 

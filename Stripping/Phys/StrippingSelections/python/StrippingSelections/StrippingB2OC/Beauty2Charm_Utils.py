@@ -249,7 +249,7 @@ def makeDoubleTopo(inputs,config):
     cp.ParticleCombiners.update({'':'MomentumCombiner'})
     sel = Selection('PseudoDoubleTopoSel',
                     Algorithm=cp,RequiredSelections=topos)
-    sel = tosSelection(sel,{'Hlt2Topo.*BBDTDecision%TOS':0})
+    sel = tosSelection(sel,{'Hlt2Topo.*Decision%TOS':0})
     return sel
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
