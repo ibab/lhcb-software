@@ -8,6 +8,7 @@ gaudi_depends_on_subdirs(Alignment/AlignmentInterfaces
                          Det/OTDet
                          Det/STDet
                          Det/VeloDet
+			 Det/RichDet
                          Event/HltEvent
                          Event/LinkerEvent
                          Event/MCEvent
@@ -29,7 +30,7 @@ find_package(AIDA)
 gaudi_add_module(AlignTrTools
                  src/*.cpp
                  INCLUDE_DIRS GSL AIDA Alignment/AlignmentInterfaces Tr/TrackInterfaces
-                 LINK_LIBRARIES GSL MuonDetLib OTDetLib STDetLib VeloDetLib HltEvent LinkerEvent MCEvent RecEvent TrackEvent GaudiAlgLib LHCbKernel LHCbMathLib RelationsLib MuonInterfacesLib STKernelLib TrackFitEvent TrackKernel)
+                 LINK_LIBRARIES GSL MuonDetLib RichDetLib OTDetLib STDetLib VeloDetLib HltEvent LinkerEvent MCEvent RecEvent TrackEvent GaudiAlgLib LHCbKernel LHCbMathLib RelationsLib MuonInterfacesLib STKernelLib TrackFitEvent TrackKernel)
 
 gaudi_install_python_modules()
 
