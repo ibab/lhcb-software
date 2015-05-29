@@ -3,6 +3,15 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+
+! 2015-05-29 Lucia Grillo
+ - fixing in clbr_make.sh to compile the stand alone calibration clbr.cpp. This algo runs on Brunel histo files and it is still
+the old version of the calibration (by Alex, per module)
+ - Option OTIS_calibration to calculate the t0 offsets on OTIS basis (at the moment either per OTIS calibration or per module)
+ - Fixed a bug in the function to read the Conditions DB (the TZero is paramAsDoubleVect)
+ - Cleaning of the code started, old parts commented, still to be deleted
+ - added two scripts to run on the grid the calibrations job usign monolayer alignment
+
 !========================= OTCalibration v1r9 2015-04-01 =========================
 
 ! 2015-03-16 - Wouter Hulsbergen
@@ -21,7 +30,9 @@ Todo: - implement the condition to update the database t0> 0.3ns?
       - check the timing, optimizing, can the full implementation go in Brunel online or we have to change completely?
 
 ! 2014-12-18 - Lucia Grillo
-- First draft of on-line t0 calibration - algorithm in the finalize. functions to read and write xml files, function to read t0 from the LHCBCOND or SIMCOND. to be added: function to write the new values in the database, at the moment only the new xml files in the scripts directory are written
+- First draft of on-line t0 calibration - algorithm in the finalize. functions to read and write xml files, function to read t0 from 
+the LHCBCOND or SIMCOND. to be added: function to write the new values in the database, at the moment only the new xml files in the
+ scripts directory are written 
 to try the calibration from scripts: gaudirun.py MC_BuJpsiK_JunSept2012.py 12143001_Bu_JpsiK_pfn.py
 
 !========================= OTCalibration v1r7 2014-08-23 =========================
