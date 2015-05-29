@@ -9,6 +9,9 @@
 !----------------------------------------------------------------------------
 
 ! 2015-05-29 - Michael Alexander
+ - Also enabling PV refitting for lines in CharmHad/D02HHLines.py.
+
+! 2015-05-29 - Michael Alexander
  - Enabling PV refitting on lines in CharmHad/D2HHHLines.py and CharmHad/Hc2HHHHLines.py.
 
 ! 2015-05-28 - Karlis Dreimanis

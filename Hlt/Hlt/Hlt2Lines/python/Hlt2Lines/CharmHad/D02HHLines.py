@@ -98,29 +98,29 @@ class CharmHadD02HHLines : # {
             # Now add the tagged lines
             self.__stages['Dst_2D0Pi_D02KKTurbo']      = [TagDecay('D0_TAG_CPV', ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"],
                                                              inputs = [ self.__stages['D02KKTurbo'][0],
-                                                                        SharedSoftTagChild_pi ])]
+                                                                        SharedSoftTagChild_pi ], ReFitPVs = True)]
             self.__stages['Dst_2D0Pi_D02PiPiTurbo']    = [TagDecay('D0_TAG_CPV', ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"],
                                                              inputs = [ self.__stages['D02PiPiTurbo'][0],
-                                                                         SharedSoftTagChild_pi ])] 
+                                                                         SharedSoftTagChild_pi ], ReFitPVs = True)] 
             self.__stages['Dst_2D0Pi_D02KPiCF']   = [TagDecay('D0_TAG_CPV', ["[D*(2010)+ -> D0 pi+]cc"],
                                                              inputs = [ self.__stages['D02KPiTurbo'][0],
-                                                                        SharedSoftTagChild_pi ])]
+                                                                        SharedSoftTagChild_pi ], ReFitPVs = True)]
             self.__stages['Dst_2D0Pi_D02KPiDCS']  = [TagDecay('D0_TAG_CPV', ["[D*(2010)- -> D0 pi-]cc"],
                                                             inputs = [ self.__stages['D02KPiTurbo'][0],
-                                                                       SharedSoftTagChild_pi ])]
+                                                                       SharedSoftTagChild_pi ], ReFitPVs = True)]
             # The tagged LTUNB lines
             self.__stages['Dst_2D0Pi_D02KK_LTUNBTurbo']      = [TagDecay('D0_TAG_CPV', ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"],
                                                                    inputs = [ D02HH_D0ToKmKp_LTUNB,
-                                                                              SharedSoftTagChild_pi ])]
+                                                                              SharedSoftTagChild_pi ], ReFitPVs = True)]
             self.__stages['Dst_2D0Pi_D02PiPi_LTUNBTurbo']    = [TagDecay('D0_TAG_CPV', ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"],
                                                                    inputs = [ D02HH_D0ToPimPip_LTUNB,
-                                                                              SharedSoftTagChild_pi ]) ] 
+                                                                              SharedSoftTagChild_pi ], ReFitPVs = True)] 
             self.__stages['Dst_2D0Pi_D02KPiCF_LTUNBTurbo']   = [TagDecay('D0_TAG_CPV', ["[D*(2010)+ -> D0 pi+]cc"],
                                                                    inputs = [ D02HH_D0ToKmPip_LTUNB,
-                                                                              SharedSoftTagChild_pi ])]
+                                                                              SharedSoftTagChild_pi ], ReFitPVs = True)]
             self.__stages['Dst_2D0Pi_D02KPiDCS_LTUNBTurbo']  = [TagDecay('D0_TAG_CPV', ["[D*(2010)- -> D0 pi-]cc"],
                                                                    inputs = [ D02HH_D0ToKmPip_LTUNB,
-                                                                              SharedSoftTagChild_pi ])]
+                                                                              SharedSoftTagChild_pi ], ReFitPVs = True)]
         # }
 
         return self.__stages

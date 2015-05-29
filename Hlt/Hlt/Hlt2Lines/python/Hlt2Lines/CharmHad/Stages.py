@@ -262,7 +262,10 @@ class TagDecay(Hlt2Combiner) : # {
         'DeltaM_MAX'       : lower and upper limits of the delta mass window
                              at the MotherCut level, M - M1.
     """
-    def __init__(self, name, decay, inputs, DaughtersCuts = { }, shared = False, nickname = None):
+    def __init__(self, name, decay, inputs, DaughtersCuts = { }, shared = False, nickname = None, **kwargs):
+        '''**kwargs can be anything accepted by the Hlt2Combiner constructor, eg, to enable PV refitting use
+        ReFitPVs = True.'''
+
         cc =    ('in_range( %(DeltaM_AM_MIN)s, (AM - AM1), %(DeltaM_AM_MAX)s )')
         mc =    ("(VFASPF(VCHI2PDOF) < %(TagVCHI2PDOF_MAX)s)" +
                  "& in_range( %(DeltaM_MIN)s, (M - M1), %(DeltaM_MAX)s )")
@@ -276,7 +279,8 @@ class TagDecay(Hlt2Combiner) : # {
                               CombinationCut = cc, 
                               shared = shared,
                               nickname = nickname,
-                              MotherCut = mc, Preambulo = []) 
+                              MotherCut = mc, Preambulo = [], 
+                              **kwargs) 
 # }
 
 class TagDecayWithNeutral(Hlt2Combiner) : # {
@@ -344,7 +348,9 @@ class DetachedD02HHCombiner(Hlt2Combiner) : # {
         'D0_BPVDIRA_MIN'    : lower limit on BPVDIRA in MotherCut
         'TisTosSpec'        : configuration string of the Hlt1 TISTOS filter.
     """
-    def __init__(self, name, decay, inputs, nickname = None, shared = False) : # {
+    def __init__(self, name, decay, inputs, nickname = None, shared = False, **kwargs) : # {
+        '''**kwargs can be anything accepted by the Hlt2Combiner constructor, eg, to enable PV refitting use
+        ReFitPVs = True.'''
         dc = { }
         for child in ['pi+','K+','p+'] :
             dc[child] = "(PT > %(Trk_ALL_PT_MIN)s)" \
@@ -375,7 +381,8 @@ class DetachedD02HHCombiner(Hlt2Combiner) : # {
                                DaughtersCuts = dc,
                                CombinationCut = combcuts,
                                MotherCut = parentcuts,
-                               Preambulo = [] )
+                               Preambulo = [],
+                               **kwargs)
     # }
 # }
 
@@ -387,17 +394,20 @@ D02HH_D0ToKmPip  = DetachedD02HHCombiner( 'D02HH_D0ToKmPip'
         , decay = "[D0 -> K- pi+]cc"
         , inputs = [ CharmHadSharedDetachedD0ToHHChildPi, CharmHadSharedDetachedD0ToHHChildK ]
         , nickname = 'D02HH'            ## def in D02HHLines.py
-        , shared = True )
+        , shared = True 
+        , ReFitPVs = True)
 D02HH_D0ToKmKp   = DetachedD02HHCombiner( 'D02HH_D0ToKmKp'
         , decay = "D0 -> K- K+"         ## Only D0s to prevent duplication
         , inputs = [ CharmHadSharedDetachedD0ToHHChildK ]
         , nickname = 'D02HH'            ## def in D02HHLines.py
-        , shared = True )
+        , shared = True 
+        , ReFitPVs = True)
 D02HH_D0ToPimPip = DetachedD02HHCombiner( 'D02HH_D0ToPimPip'
         , decay = "D0 -> pi- pi+"       ## Only D0s to prevent duplication
         , inputs = [ CharmHadSharedDetachedD0ToHHChildPi ]
         , nickname = 'D02HH'            ## def in D02HHLines.py
-        , shared = True )
+        , shared = True 
+        , ReFitPVs = True)
 
 
 ## ========================================================================= ##
@@ -841,7 +851,9 @@ class DetachedV0V0Combiner(Hlt2Combiner):
 
 ## Lifetime unbiased combiner class for D0 -> h h' decays
 class D02HHCombiner(Hlt2Combiner) : # { 
-    def __init__(self, name, decay, inputs, nickname = None, shared = False) : # { 
+    def __init__(self, name, decay, inputs, nickname = None, shared = False, **kwargs) : # { 
+        '''**kwargs can be anything accepted by the Hlt2Combiner constructor, eg, to enable PV refitting use
+        ReFitPVs = True.'''
 
         incuts = "(TRCHI2DOF< %(Trk_ALL_TRCHI2DOF_MAX)s )" \
                   "& (PT> %(Trk_ALL_PT_MIN)s)" \
@@ -875,7 +887,8 @@ class D02HHCombiner(Hlt2Combiner) : # {
                                DaughtersCuts = dc, 
                                CombinationCut = combcuts,
                                MotherCut = parentcuts,
-                               Preambulo = [] )
+                               Preambulo = [],
+                               **kwargs)
 
 ## Shared instances of D02HHCombiner for LTUnb lines
 ## ------------------------------------------------------------------------- ##
@@ -885,17 +898,20 @@ D02HH_D0ToKmPip_LTUNB  = D02HHCombiner( 'D02HH_D0ToKmPip_LTUNB'
         , decay = "[D0 -> K- pi+]cc"
         , inputs = [ SharedPromptChild_K,SharedPromptChild_pi]
         , nickname = 'D02HH_LTUNB'            ## def in D02HHLines.py
-        , shared = True )
+        , shared = True
+        , ReFitPVs = True )
 D02HH_D0ToKmKp_LTUNB   = D02HHCombiner( 'D02HH_D0ToKmKp_LTUNB'
         , decay = "D0 -> K- K+"         ## Only D0s to prevent duplication
         , inputs = [ SharedPromptChild_K]
         , nickname = 'D02HH_LTUNB'            ## def in D02HHLines.py
-        , shared = True )
+        , shared = True 
+        , ReFitPVs = True )
 D02HH_D0ToPimPip_LTUNB = D02HHCombiner( 'D02HH_D0ToPimPip_LTUNB'
         , decay = "D0 -> pi- pi+"       ## Only D0s to prevent duplication
         , inputs = [ SharedPromptChild_pi] 
         , nickname = 'D02HH_LTUNB'            ## def in D02HHLines.py
-        , shared = True )
+        , shared = True 
+        , ReFitPVs = True )
 
 class DetachedHHChildCombiner(Hlt2Combiner):
     # combiner for 2-body displaced tracks to be used in multi-body D decays
