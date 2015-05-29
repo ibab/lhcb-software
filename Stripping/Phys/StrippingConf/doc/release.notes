@@ -4,13 +4,15 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingConf v4r17 2015-05-29 =========================
+
 ! 2015-05-15 - Andrea Contu
  - Fix raw banks name for Herschel to HC
 
 ! 2015-05-15 - Andrea Contu
  - Added Herschel to list of raw banks
 
-!========================= StrippingConf v4r15 2015-04-30 =========================
+!========================= StrippingConf v4r16 2015-04-30 =========================
 
 ! 2015-03-30 - Stefano Perazzini
  - New bug fix to MDST stream
