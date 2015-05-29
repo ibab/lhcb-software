@@ -1577,13 +1577,20 @@ InclHcst2PiHc2HHX = Dstp2D0PiInclCombiner( 'CharmHadInclHcst2PiHc2HHX'
 
 # Mass filter
 ## ------------------------------------------------------------------------- ##
+def refit_pvs_kwargs(reFitPVs) :
+    if not reFitPVs :
+        return {}
+    return {'ReFitPVs' : True,
+            'CloneFilteredParticles' : True}
+
 class MassFilter(Hlt2ParticleFilter):
-    def __init__(self, name, inputs, nickname = None, shared = False ):
+    def __init__(self, name, inputs, nickname = None, shared = False, reFitPVs=False ):
         cut = "in_range( %(Mass_M_MIN)s , M , %(Mass_M_MAX)s )"
         nickname = name if nickname == None else nickname
         name     = name if not shared       else 'CharmHad%sMass' % name
         Hlt2ParticleFilter.__init__(self, name, cut, inputs,
-                                    nickname = nickname , shared = shared )
+                                    nickname = nickname , shared = shared,
+                                    **refit_pvs_kwargs(reFitPVs))
 
 
 ## ------------------------------------------------------------------------- ##

@@ -17,13 +17,13 @@ class CharmHadHc2HHHHLines() :
         Xic0OmegacMasses = (2471., 2695.)
         Xic0OmegacMassCuts = mass_cuts(Xic0OmegacMasses)
         cuts = {
-            'Xic02PKKPi_LTUNB' : 
+            'Xic0ToPpKmKmPip_LTUNBTurbo' : 
             dict(TisTosSpec = "Hlt1Track.*Decision%TIS",
                  BPVLTIME_MIN = 0.1*picosecond, 
                  BPVDIRA_MIN = 0.95,
                  ASUMPT_MIN = 3000.*MeV,
                  **Xic0OmegacMassCuts),
-            'Xic02PKKPi' : 
+            'Xic0ToPpKmKmPipTurbo' : 
             dict(#Trk_ALL_TRCHI2DOF_MAX = , # defined in Common.
                 Trk_ALL_PT_MIN = 500.*MeV,
                 #Trk_ALL_P_MIN = , # defined in Common.
@@ -45,9 +45,11 @@ class CharmHadHc2HHHHLines() :
         from Stages import MassFilter, Xic02PKKPi_LTUNB, Xic02PKKPi
         
         stages = {
-            'Xic02PKKPi_LTUNBTurbo' : [MassFilter('Xic02PKKPi_LTUNB',
-                                                   inputs = [Xic02PKKPi_LTUNB('Xic02PKKPi_LTUNB')])],
-            'Xic02PKKPiTurbo' : [MassFilter('Xic02PKKPi',
-                                             inputs = [Xic02PKKPi('Xic02PKKPi')])],
+            'Xic0ToPpKmKmPip_LTUNBTurbo' : [MassFilter('Xic0ToPpKmKmPip_LTUNBTurbo',
+                                                       inputs = [Xic02PKKPi_LTUNB('Xic0ToPpKmKmPip_LTUNBTurbo')],
+                                                       reFitPVs = True)],
+            'Xic0ToPpKmKmPipTurbo' : [MassFilter('Xic0ToPpKmKmPipTurbo',
+                                                 inputs = [Xic02PKKPi('Xic0ToPpKmKmPipTurbo')],
+                                                 reFitPVs = True)],
             }
         return stages
