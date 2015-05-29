@@ -153,7 +153,7 @@ default_config = {
       },
 
       "MicroDSTDiMuonDiMuonSameSignLine" : {
-        "Prescale"              : 0.05,
+        "Prescale"              : 0.5,
         "Inherit"               : "MicroDSTDiMuonDiMuonIncLine",
         "InputDiMuon"           : "StdLooseDiMuonSameSign",
         "Cuts"                  : None

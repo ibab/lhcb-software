@@ -83,7 +83,7 @@ default_config = {
                                                        "Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision%TIS" : 0 },
 
         # DiMuon Same Sign line
-        'DiMuonSameSign_Prescale'                  :    0.05  ,
+        'DiMuonSameSign_Prescale'                  :    1.  ,
         'DiMuonSameSign_Postscale'                 :     1.   ,
         'DiMuonSameSign_checkPV'                   : False    ,
 
@@ -148,6 +148,7 @@ default_config = {
         'DiMuonLowMass_MinMass'                    :   500.   ,  # MeV
         'DiMuonLowMass_VCHI2PDOF'                  :    20.   ,       
         'DiMuonLowMass_PT'                         : -1000.   ,  # MeV, no cut now
+        'DiMuonLowMass_HLTFILTER'                : "(HLT_PASS('Hlt2DiMuonLowMassDecision'))",
 
         # Jpsi2MuMu line
         'Jpsi2MuMu_Prescale'                       :     1.   ,
@@ -264,7 +265,7 @@ default_config = {
                                                        "Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision%TIS" : 0 },
 
         # DiMuon Same Sign line
-        'DiMuonSameSign_Prescale'                  :     0.05 ,
+        'DiMuonSameSign_Prescale'                  :     0.5 ,
         'DiMuonSameSign_Postscale'                 :     1.   ,
         'DiMuonSameSign_checkPV'                   :  False   ,
 
@@ -329,6 +330,7 @@ default_config = {
         'DiMuonLowMass_MinMass'                    :   500.   ,  # MeV
         'DiMuonLowMass_VCHI2PDOF'                  :    20.   ,       
         'DiMuonLowMass_PT'                         : -1000.   ,  # MeV, no cut now
+        'DiMuonLowMass_HLTFILTER'                : "(HLT_PASS('Hlt2DiMuonLowMassDecision'))",
 
         # Jpsi2MuMu line
         'Jpsi2MuMu_Prescale'                       :     1.   ,
@@ -512,7 +514,7 @@ class DiMuonConf(LineBuilder):
         'DiMuonLowMass_MinMass',
         'DiMuonLowMass_VCHI2PDOF',       
         'DiMuonLowMass_PT',
-
+        'DiMuonLowMass_HLTFILTER',
         # Tight Jpsi line
         'Jpsi2MuMu_Prescale',
         'Jpsi2MuMu_Postscale',
@@ -795,7 +797,7 @@ class DiMuonConf(LineBuilder):
                                               MuMuPT        = config['DiMuonLowMass_PT']
                                               )
         self.DiMuonLowMassLine = StrippingLine( name + 'DiMuonLowMass' + 'Line',
-                                                HLT = "HLT_PASS('Hlt2DiMuonLowMassDecision')",
+                                                HLT = config['DiMuonLowMass_HLTFILTER'],
                                                 prescale  = config['DiMuonLowMass_Prescale'],
                                                 postscale = config['DiMuonLowMass_Postscale'],
                                                 checkPV   = config['DiMuonLowMass_checkPV'],

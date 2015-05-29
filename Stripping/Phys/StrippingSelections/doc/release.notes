@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-29 Roberta Cardinale
+ - Small modifications to StrippinBandQ/StrippingDiMuonNew.py and StrippingDiMuonInherit.py
+
 ! 2015-05-28 Eva Gersabeck
 
 - Update __init__.py for StrippingCharm, 2 line bulders were missing
