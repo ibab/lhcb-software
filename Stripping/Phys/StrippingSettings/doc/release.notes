@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r36 2015-05-29 =========================
+
 ! 2015-05-29 - Andrea Contu
  - Adjust prescalings for PID lines and updated db for S22
 
@@ -67,7 +69,7 @@
 ! 2015-05-07 - Chitsanu Khurewathanakul
  - Add QEE's configs into S22 LineConfigDictionaries_ALL.py
 
-!========================= StrippingSettings v2r34 2015-04-30 =========================
+!========================= StrippingSettings v2r35 2015-04-30 =========================
 
 ! 2015-03-15 - Andrea Contu
  - Added Stripping22 folder and LineConfig file for EM stripping
