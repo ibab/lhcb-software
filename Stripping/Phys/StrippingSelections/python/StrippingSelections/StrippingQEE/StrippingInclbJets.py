@@ -35,7 +35,10 @@ default_config = {
         'DZSVPVCut'     : 1.0,
         'SumMomSVCut'   : 1.0,
         'VtxChi2Cut'    : 20.0,
-        'scale'         : 0.05
+        'scale'         : 0.05,
+        #
+        'HLT2'          : "HLT_PASS_RE('Hlt2*.Topo.*Decision')",
+        'VertexFitter'  : 'LoKi::VertexFitter',
     },
 }
 
@@ -61,12 +64,15 @@ class InclbJetsConf(LineBuilder) :
         selectionAlg.DZSVPV   = self.__confdict__['DZSVPVCut']
         selectionAlg.SumMomSV = self.__confdict__['SumMomSVCut']
         selectionAlg.VtxChi2  = self.__confdict__['VtxChi2Cut']
+
+        selectionAlg.VertexFitter = self.__confdict__['VertexFitter']
+
         return Selection("Sel" + name, Algorithm = selectionAlg,
                          RequiredSelections = [StdAllNoPIDsPions, StdLooseAllPhotons])
 
     def _makeInclbJetLine(self, name):
         return StrippingLine(name ,
-                             HLT2 = "HLT_PASS_RE('Hlt2*.Topo.*Decision')",
+                             HLT2 = self.__confdict__['HLT2'],
                              prescale = self.__confdict__['scale'],
                              RequiredRawEvents = ["Calo"],
                              selection = self._makeInclbJetSel(name))

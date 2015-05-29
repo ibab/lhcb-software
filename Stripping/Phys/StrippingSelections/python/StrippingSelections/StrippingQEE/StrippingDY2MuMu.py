@@ -39,6 +39,10 @@ default_config = {
         'DY2MuMu3LinePrescale'    : 1.0,  
         'DY2MuMu4LinePrescale'    : 1.0,
         'DY2MuMuLinePostscale'    : 1.0,
+        #
+        'DY2MuMu1HLT2': "HLT_PASS_RE( 'Hlt2.*DiMuonDY.*Decision' )",
+        'DY2MuMu2HLT2': "HLT_PASS_RE( 'Hlt2.*DiMuonDY.*Decision' )",
+        #
         'DY1MinMass'  :  3.2 * GeV,
         'DY1MaxMass'  :  5. * GeV,
         'DY2MinMass'  :  5. * GeV,
@@ -114,7 +118,8 @@ class DY2MuMuConf( LineBuilder ) :
                                                prescale  = config[ 'DY2MuMu1LineHltPrescale' ],
                                                postscale = config[ 'DY2MuMuLinePostscale' ],
                                                RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
-                                               HLT2      = "HLT_PASS_RE( 'Hlt2.*DiMuonDY.*Decision' )",
+                                               HLT2      = config[ 'DY2MuMu1HLT2' ],
+                                               # HLT2      = "HLT_PASS_RE( 'Hlt2.*DiMuonDY.*Decision' )",
                                                selection = sel_DY2MuMu1Hlt,
                                                )
 
@@ -152,7 +157,8 @@ class DY2MuMuConf( LineBuilder ) :
                                                prescale  = config[ 'DY2MuMu2LineHltPrescale' ],
                                                postscale = config[ 'DY2MuMuLinePostscale' ],
                                                RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
-                                               HLT2      = "HLT_PASS_RE( 'Hlt2.*DiMuonDY.*Decision' )",
+                                               HLT2      = config[ 'DY2MuMu1HLT2' ],
+                                               # HLT2      = "HLT_PASS_RE( 'Hlt2.*DiMuonDY.*Decision' )",
                                                selection = sel_DY2MuMu2Hlt,
                                                )
 

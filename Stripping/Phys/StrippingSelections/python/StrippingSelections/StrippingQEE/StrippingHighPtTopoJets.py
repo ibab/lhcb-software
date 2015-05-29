@@ -15,8 +15,10 @@ from Gaudi.Configuration import *
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from Configurables import LoKi__VoidFilter
 from PhysSelPython.Wrappers import EventSelection
+from Configurables import LoKi__VoidFilter
+from Configurables import HighPtTopoTool as HighpTDT
+
 
 default_config = {
   'NAME'        : 'HighPtTopoJets',
@@ -36,6 +38,8 @@ default_config = {
     'pT1'       : 1000,
     'conesize'  : 0.3,
     'pTcone'    : 55000,
+    #
+    'HLT2'      : "HLT_PASS_RE('Hlt2Topo.*Decision')",
   },
 }
 
@@ -49,69 +53,61 @@ class HighPtTopoJetsConf( LineBuilder ) :
 
 
         # High pT Topo line
-        from Configurables import HighPtTopoTool as HighpTDT
         code = "ACCEPT('HighPtTopoTool/HighPtTopoLine_DT_40000')"
         alg = LoKi__VoidFilter('HighPtTopoLineFilter_40000',Code=code)
         sel = EventSelection('HighPtTopoEventSel_40000',Algorithm=alg)
         dt = HighpTDT('HighPtTopoLine_DT_40000')
         dt.minpT = config['pT']
-        hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine(name+'%(pT)s'%config,
                               prescale  = config[ 'HighPtTopo40000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,
-                              HLT2=hlt)
+                              HLT2=config['HLT2'])
         self.registerLine(sline)
 
 
         # High pT Topo line
-        from Configurables import HighPtTopoTool as HighpTDT
         code = "ACCEPT('HighPtTopoTool/HighPtTopoLine_DT_20000')"
         alg = LoKi__VoidFilter('HighPtTopoLineFilter_20000',Code=code)
         sel = EventSelection('HighPtTopoEventSel_20000',Algorithm=alg)
         dt = HighpTDT('HighPtTopoLine_DT_20000')
         dt.minpT = config['pT20']
-        hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine(name+'%(pT20)s'%config,
                               prescale  = config[ 'HighPtTopo20000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,
-                              HLT2=hlt)
+                              HLT2=config['HLT2'])
         self.registerLine(sline)
 
 
         # High pT Topo line
-        from Configurables import HighPtTopoTool as HighpTDT
         code = "ACCEPT('HighPtTopoTool/HighPtTopoLine_DT_10000')"
         alg = LoKi__VoidFilter('HighPtTopoLineFilter_10000',Code=code)
         sel = EventSelection('HighPtTopoEventSel_10000',Algorithm=alg)
         dt = HighpTDT('HighPtTopoLine_DT_10000')
         dt.minpT = config['pT10']
-        hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine(name+'%(pT10)s'%config,
                               prescale  = config[ 'HighPtTopo10000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,
-                              HLT2=hlt)
+                              HLT2=config['HLT2'])
         self.registerLine(sline)
 
 
         # High pT Topo line
-        from Configurables import HighPtTopoTool as HighpTDT
         code = "ACCEPT('HighPtTopoTool/HighPtTopoLine_DT_1000')"
         alg = LoKi__VoidFilter('HighPtTopoLineFilter_1000',Code=code)
         sel = EventSelection('HighPtTopoEventSel_1000',Algorithm=alg)
         dt = HighpTDT('HighPtTopoLine_DT_1000')
         dt.minpT = config['pT1']
-        hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine(name+'%(pT1)s'%config,
                               prescale  = config[ 'HighPtTopo1000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,
-                              HLT2=hlt)
+                              HLT2=config['HLT2'])
         self.registerLine(sline)
 
-        from Configurables import HighPtTopoTool as HighpTDT
+
         code = "ACCEPT('HighPtTopoTool/HighPtTopoLine_DT_20000_Cone55')"
         alg = LoKi__VoidFilter('HighPtTopoLineFilter_20000_Cone55',Code=code)
         sel = EventSelection('HighPtTopoEventSel_20000_Cone55',Algorithm=alg)
@@ -119,12 +115,11 @@ class HighPtTopoJetsConf( LineBuilder ) :
         dt.minconepT = config['pTcone']
         dt.conesize = config['conesize']
         dt.minpT = config['pT20']
-        hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine(name+'%(pT20)s_Cone55'%config,
                               prescale  = config[ 'HighPtTopo20000_Cone55_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,
-                              HLT2=hlt)
+                              HLT2=config['HLT2'])
         self.registerLine(sline)
 
 

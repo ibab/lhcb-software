@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-29 Chitsanu Khurewathanakul
+ - De-hardcoded all HLT-dependent line into default_config
+ - Fix StrippingInclbJets vertexfitter dependency to LoKi's.
+
 ! 2015-05-29 Erica Polycarpo  
  - Remove HLT filter from StrippingD2hhh_conf.py 
 

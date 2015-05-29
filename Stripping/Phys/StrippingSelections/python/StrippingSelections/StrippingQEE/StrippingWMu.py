@@ -39,23 +39,16 @@ default_config = {
     'pTvlow'              :  5. * GeV,
     'SingMuon10_pT'       : 10. * GeV,
     'SingMuon48_pT'       : 4.8 * GeV,
+    #
+    'HLT2_Control10'        : "HLT_PASS_RE('Hlt2.*SingleMuonHighPTDecision')",
+    'HLT2_Control4800'      : "HLT_PASS_RE('Hlt2.*SingleMuonLowPTDecision')",
+    'HLT1_SingleTrackNoBias': "HLT_PASS( 'Hlt1MBNoBiasDecision' )",
   },
 }
 
 class WMuConf( LineBuilder ) :
 
-    __configuration_keys__ = ( 'WMu_Prescale',
-                               'WMuLow_Prescale',
-                               'STNB_Prescale',
-                               'WMu_Postscale',
-                               'SingMuon10_Prescale',
-                               'SingMuon48_Prescale', 
-                               'pT',
-                               'pTlow',
-                               'pTvlow',
-                               'SingMuon10_pT',
-                               'SingMuon48_pT'
-                               )
+    __configuration_keys__ = default_config['CONFIG'].keys()
 
     def __init__( self, name, config ) :
 
@@ -81,7 +74,7 @@ class WMuConf( LineBuilder ) :
                                        postscale = config[ 'WMu_Postscale' ],
                                        checkPV   = False,
                                        RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
-                                       HLT2 = "HLT_PASS_RE('Hlt2.*SingleMuonHighPTDecision')",
+                                       HLT2 = config['HLT2_Control10'],
                                        selection = sel
                                        )
 
@@ -96,7 +89,7 @@ class WMuConf( LineBuilder ) :
                                        postscale = config[ 'WMu_Postscale' ],
                                        checkPV   = False,
                                        RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
-                                       HLT2 = "HLT_PASS_RE('Hlt2.*SingleMuonLowPTDecision')",
+                                       HLT2 = config['HLT2_Control4800'],
                                        selection = sel
                                        )
 
@@ -145,7 +138,7 @@ class WMuConf( LineBuilder ) :
                                                      postscale = config[ 'WMu_Postscale' ],
                                                      checkPV   = False,
                                                      RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
-                                                     HLT1      = "HLT_PASS( 'Hlt1MBNoBiasDecision' )",
+                                                     HLT1      = config['HLT1_SingleTrackNoBias'],
                                                      selection = sel,
                                                      )
 
@@ -160,7 +153,7 @@ class WMuConf( LineBuilder ) :
                                                      postscale = config[ 'WMu_Postscale' ],
                                                      checkPV   = False,
                                                      RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
-                                                     HLT1      = "HLT_PASS( 'Hlt1MBNoBiasDecision' )",
+                                                     HLT1      = config['HLT1_SingleTrackNoBias'],
                                                      selection = sel,
                                                      )
 
