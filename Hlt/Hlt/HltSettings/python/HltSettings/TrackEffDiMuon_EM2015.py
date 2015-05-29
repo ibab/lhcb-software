@@ -44,7 +44,7 @@ class TrackEffDiMuon_EM2015 :
         d.update ({TrackEffDiMuonLines : { 
                  'Prescale' :  {},
                  'Common'   :  {'TisTosSpec'    : "Hlt1TrackMuonDecision%TOS",
-                                'L0Filter'      : "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')",
+                                'L0Filter'      : "L0_CHANNEL('Muon')",
                                 'OverlapTT'     : 0.4,
                                 'OverlapIT'     : 0.4,
                                 'OverlapOT'     : 0.4,
