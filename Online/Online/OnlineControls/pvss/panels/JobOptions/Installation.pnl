@@ -1,13 +1,20 @@
-V 10
+V 12
 1
 LANG:1 20 Job Options Executor
 PANEL,-1 -1 325 401 N "_3DFace" 0
-E E E E E 1 0 0 0  160 180
+"main() {
+  string default_sys = \"LBECS\";
+  addGlobal(\"JobOptionsSystem\",STRING_VAR);
+  JobOptionsEditor_init();  
+  JobOptionsEditor_setSystem(default_sys);
+}
+" 0
+ E E E E 1 0 0 0  160 180
 ""0  1
 E "#uses \"JobOptions.cpp\"" 0
  2
-"CBRef""1"
-"EClose"E
+"CBRef" "1"
+"EClose" E
 ""
 DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
 LAYER, 0 
@@ -26,9 +33,8 @@ LANG:1 0
 
 0
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
-0 ""
- 18 348 142 375
+LANG:1 33 MS Shell Dlg,-1,13,5,50,0,0,0,0,0
+0  18 348 142 375
 
 T 
 1
@@ -42,7 +48,7 @@ main()   {
 13 3
 "m_installJobOptions"
 ""
-1 20 20 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 10 20 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 5 0 0 0 0 0
 E E E
@@ -52,9 +58,8 @@ LANG:1 0
 
 0
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
-0 ""
- 18 18 152 42
+LANG:1 33 MS Shell Dlg,-1,11,5,50,0,0,0,0,0
+0  8 18 161 42
 
 T 
 1
@@ -64,7 +69,7 @@ LANG:1 23 Install Datapoint types
 13 4
 "m_uninstallJobOptions"
 ""
-1 180 20 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 170 20 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 7 0 0 0 0 0
 E E E
@@ -74,9 +79,8 @@ LANG:1 0
 
 0
 1
-LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
-0 ""
- 178 18 312 42
+LANG:1 33 MS Shell Dlg,-1,11,5,50,0,0,0,0,0
+0  158 18 321 42
 
 T 
 1

@@ -1,4 +1,4 @@
-V 10
+V 12
 1
 LANG:1 11 Job Options
 PANEL,-1 -1 636 357 N "_3DFace" 0
@@ -97,9 +97,8 @@ E "main()
  0 1 1 2 1 E U  1 E 12 239 130 259
 0 2 2 "0s" 0 0 0 64 0 0  12 239 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,14,5,50,0,0,0,0,0
+0 1
 LANG:1 11 System Name
 0
 LAYER, 1 
@@ -118,9 +117,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 352 317 485 341
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  352 317 485 341
 1
 T 
 1
@@ -146,9 +144,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 483 317 627 341
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  483 317 627 341
 1
 T 
 1
@@ -174,9 +171,8 @@ LANG:1 0
 
 0
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
- 333 296 622 317
+LANG:1 26 Arial,-1,13,5,50,0,0,0,0,0
+0  333 296 622 317
 3 "0s" 0 0 0 0 0 -1  E E E
 2 56
 "m_scriptPathText"
@@ -194,9 +190,8 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 297 298 425 316
 0 2 2 "0s" 0 0 0 64 0 0  297 298 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 7 Script:
 14 58
 "m_runAs"
@@ -211,9 +206,8 @@ LANG:1 0
 
 0
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
- 216 318 295 339
+LANG:1 26 Arial,-1,13,5,50,0,0,0,0,0
+0  216 318 295 339
 3 "0s" 0 0 0 0 0 -1  E E E
 2 57
 "m_runAsText"
@@ -231,9 +225,8 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 160 323 288 341
 0 2 2 "0s" 0 0 0 64 0 0  160 323 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 6 RunAs:
 29 23
 "m_textEditor"
@@ -247,19 +240,11 @@ E E E
 LANG:1 0 
 
 0
- 160 120 621 294
+1
+LANG:1 30 Sans Serif,9,-1,5,50,0,0,0,0,0
+0  160 120 620 293
 15 PVSS.TextEdit.1
-5
-0 "TextChanged" "()"
-""
-0 "ReturnPressed" "()"
-""
-0 "ModificationChanged" "(bool mod)"
-""
-0 "Clicked" "(int para, int pos)"
-""
-0 "CursorPositionChanged" "(int para, int pos)"
-""
+0
 E2 60
 "m_detectorText"
 ""
@@ -276,9 +261,8 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 161 300 289 318
 0 2 2 "0s" 0 0 0 64 0 0  161 300 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 9 Detector:
 22 61
 "m_detector"
@@ -293,9 +277,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-*-70-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 217 296 295 316
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  217 296 295 316
 0
 
 E
@@ -319,9 +302,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 288 318 622 342
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  288 318 622 342
 3 "0s" 0 0 0 0 0 -1  E E E
 13 19
 "m_create"
@@ -336,9 +318,8 @@ LANG:1 0
 
 0
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
- 158 318 282 345
+LANG:1 26 Arial,-1,13,5,50,0,0,0,0,0
+0  158 318 282 345
 
 T 
 1
@@ -360,9 +341,8 @@ LANG:1 0
 "dashclr"N "_Transparent"
 E E 0 1 1 0 1 E U  0 E 150 300 630 350
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
-1
+LANG:1 26 Arial,-1,13,5,50,0,0,0,0,0
+0 1
 LANG:1 6 Frame1
 0
 LAYER, 3 
@@ -383,9 +363,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 158 28 622 342
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  158 28 622 342
 0
 
 E
@@ -409,9 +388,8 @@ LANG:1 0
 E E 0 3 1 0 1 E U  0 E 22 172 138 188
 0 2 0 "0s" 0 0 0 64 0 0  22 172 1
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
-1
+LANG:1 26 Arial,-1,13,5,50,0,0,0,0,0
+0 1
 LANG:1 9 Activity:
 2 1
 "m_partitionID"
@@ -429,9 +407,8 @@ LANG:1 0
 E E 0 3 1 0 1 E U  0 E 22 152 138 168
 0 2 0 "0s" 0 0 0 64 0 0  22 152 1
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
-1
+LANG:1 26 Arial,-1,13,5,50,0,0,0,0,0
+0 1
 LANG:1 13 Partition ID:
 2 2
 "m_state"
@@ -449,9 +426,8 @@ LANG:1 0
 E E 0 3 1 0 1 E U  0 E 22 192 138 208
 0 2 0 "0s" 0 0 0 64 0 0  22 192 1
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
-1
+LANG:1 26 Arial,-1,13,5,50,0,0,0,0,0
+0 1
 LANG:1 5 State
 2 3
 "m_partitionName"
@@ -469,9 +445,8 @@ LANG:1 0
 E E 0 3 1 0 1 E U  0 E 22 132 138 148
 0 2 0 "0s" 0 0 0 64 0 0  22 132 1
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
-1
+LANG:1 26 Arial,-1,13,5,50,0,0,0,0,0
+0 1
 LANG:1 10 Partition:
 30 4
 "m_partitionInfo"
@@ -488,9 +463,8 @@ LANG:1 0
 "dashclr"N "_Transparent"
 E E 0 1 1 0 1 E U  0 E 10 110 152 220
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
-1
+LANG:1 26 Arial,-1,13,5,50,0,0,0,0,0
+0 1
 LANG:1 6 Frame1
 30 6
 "m_resultFrame"
@@ -507,9 +481,8 @@ LANG:1 0
 "dashclr"N "_Transparent"
 E E 0 1 1 0 1 E U  0 E 150 10 630 350
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
-1
+LANG:1 26 Arial,-1,13,5,50,0,0,0,0,0
+0 1
 LANG:1 12 Result Frame
 2 7
 "m_logo"
@@ -524,12 +497,11 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 3 1 0 1 E 1.247191011235955 0 1 -2.471910112359551 0 0 E 12 167 97 216
+E E 0 3 1 0 1 E 1.247191011235955 0 1 -2.471910112359551 0 0 E 12 167 93 216
 0 2 0 "0s" 0 0 0 192 0 0  12 167 1
 1
-LANG:1 111 -*-Bitstream Charter-bold-i-normal-*-40-*-100-100-*-*-iso8859-1|-40,0,0,0,758,1,0,0,0,0,0,0,0,Bitstream Charter
-0 ""
-1
+LANG:1 38 Bitstream Charter,-1,40,5,50,1,0,0,0,0
+0 1
 LANG:1 4 Logo
 30 9
 "m_logoFrame"
@@ -546,9 +518,8 @@ LANG:1 0
 "dashclr"N "_Transparent"
 E E 0 1 1 0 1 E 1.134453781512605 0 1 -1.344537815126051 0 0 E 10 160 130 236
 1
-LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
-0 ""
-1
+LANG:1 26 Arial,-1,13,5,50,0,0,0,0,0
+0 1
 LANG:1 6 Frame1
 13 13
 "m_showTasksTypes"
@@ -563,9 +534,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 8 8 132 35
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  8 8 132 35
 
 T 
 1
@@ -585,9 +555,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 8 38 132 65
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  8 38 132 65
 
 T 
 1
@@ -607,9 +576,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 8 68 132 95
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  8 68 132 95
 
 T 
 1
@@ -629,9 +597,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 9 292 133 319
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  9 292 133 319
 
 T 
 1
@@ -651,9 +618,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 9 262 133 289
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  9 262 133 289
 
 T 
 1
@@ -673,9 +639,8 @@ LANG:1 20 what\r\n\0ever\r\n\0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 9 322 133 349
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  9 322 133 349
 
 T 
 1
@@ -685,7 +650,7 @@ LANG:1 4 Quit
 2 24
 "m_logo2"
 ""
-1 9.935483870967742 210 E E E 1 E 1 E N "white" E N "red" E E
+1 9.866805411030176 210 E E E 1 E 1 E N "white" E N "red" E E
  E E
 22 0 0 0 0 0
 E E E
@@ -707,9 +672,8 @@ E "main()
  0 1 1 2 1 E 1.064516129032258 0 1 -0.7096774193548381 0 1 E 13 210 133 230
 0 2 2 "0s" 0 0 0 64 0 0  13 210 1
 1
-LANG:1 125 -*-Bitstream Vera Sans Mono-bold-i-normal-*-20-*-100-100-*-*-iso8859-1|-20,0,0,0,758,1,0,0,0,0,0,0,0,Bitstream Vera Sans Mono
-0 ""
-1
+LANG:1 45 Bitstream Vera Sans Mono,-1,20,5,50,1,0,0,0,0
+0 1
 LANG:1 5 Logo2
 17 12
 "m_listEditor"
@@ -725,9 +689,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 158 118 622 342
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  158 118 622 342
 0
 
 E
@@ -752,9 +715,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 382.1658536585367 147 621.1769456538327 174
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  382 147 621 174
 
 T 
 1
@@ -782,9 +744,8 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 387.0717979389032 96 439.0717979389032 116
 0 2 2 "0s" 0 0 0 64 0 0  387.0717979389032 96 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 7 Script:
 14 38
 "m_hltOptsScript"
@@ -799,9 +760,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 422.1622740940061 90 620.1622740940061 114
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  422 90 620 114
 3 "0s" 0 0 0 0 0 -1  E E E
 2 39
 "PRIMITIVE_TEXT4"
@@ -819,9 +779,8 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 387.0717979389032 119 439.0717979389032 139
 0 2 2 "0s" 0 0 0 64 0 0  387.0717979389032 119 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 5 Name:
 14 40
 "m_hltOptsName"
@@ -836,9 +795,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 422.1672928804186 113 559.0839595470852 137
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  422 113 559 137
 3 "0s" 0 0 0 0 0 -1  E E E
 21 41
 "m_hltOptsNumber"
@@ -853,9 +811,8 @@ LANG:1 0
 
 0
 1
-LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
-0 ""
- 569 114 619.952380952381 135
+LANG:1 25 Sans,-1,14,5,50,0,0,0,0,0
+0  569 114 620 135
 0
 
 E
@@ -866,7 +823,7 @@ N 0 500 1 0 1 1
 2 42
 "PRIMITIVE_TEXT5"
 ""
-1 377.013986013986 86 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 404.9789965279476 70 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 48 0 0 0 0 0
 E E E
@@ -879,9 +836,8 @@ LANG:1 0
 E E 0 1 1 2 1 E 0.9982517482517482 0 1 28.62412587412589 -16 1 E 359 200 411 220
 0 2 2 "0s" 0 0 0 64 0 0  359 200 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 7 Script:
 14 43
 "m_storageOptsScript"
@@ -896,14 +852,13 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 423 177 620.2712775029848 201
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  423 177 620 201
 3 "0s" 0 0 0 0 0 -1  E E E
 2 44
 "PRIMITIVE_TEXT6"
 ""
-1 377.013986013986 86 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 404.9789965279476 70 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 52 0 0 0 0 0
 E E E
@@ -916,9 +871,8 @@ LANG:1 0
 E E 0 1 1 2 1 E 0.9982517482517482 0 1 28.62412587412589 -16 1 E 359 223 411 243
 0 2 2 "0s" 0 0 0 64 0 0  359 223 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 5 Name:
 14 45
 "m_storageOptsName"
@@ -933,9 +887,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 422.0189174568274 201 562.6937174375485 225
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  422 201 563 225
 3 "0s" 0 0 0 0 0 -1  E E E
 21 46
 "m_storageOptsNumber"
@@ -950,9 +903,8 @@ LANG:1 0
 
 0
 1
-LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
-0 ""
- 569.1708988380042 202 620.0411952083005 223
+LANG:1 25 Sans,-1,14,5,50,0,0,0,0,0
+0  569 202 620 223
 0
 
 E
@@ -973,9 +925,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 384.4975609756098 233 623.5086529709059 260
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  384 233 624 260
 
 T 
 1
@@ -990,7 +941,7 @@ LANG:1 33 Install MONITORING Stream Manager
 2 48
 "PRIMITIVE_TEXT7"
 ""
-1 377.013986013986 172 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 404.9789965279476 242 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 60 0 0 0 0 0
 E E E
@@ -1003,9 +954,8 @@ LANG:1 0
 E E 0 1 1 2 1 E 0.9982517482517482 0 1 28.62412587412589 70 1 E 359 200 411 220
 0 2 2 "0s" 0 0 0 64 0 0  359 200 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 7 Script:
 14 49
 "m_monitoringOptsScript"
@@ -1020,14 +970,13 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 422.390243902439 264 619.6615214054239 288
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  422 264 620 288
 3 "0s" 0 0 0 0 0 -1  E E E
 2 50
 "PRIMITIVE_TEXT8"
 ""
-1 377.013986013986 172 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 404.9789965279476 242 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 64 0 0 0 0 0
 E E E
@@ -1040,9 +989,8 @@ LANG:1 0
 E E 0 1 1 2 1 E 0.9982517482517482 0 1 28.62412587412589 70 1 E 359 223 411 243
 0 2 2 "0s" 0 0 0 64 0 0  359 223 1
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 5 Name:
 14 51
 "m_monitoringOptsName"
@@ -1057,9 +1005,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 422.0403773565768 287 562.7151773372979 311
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  422 287 563 311
 3 "0s" 0 0 0 0 0 -1  E E E
 21 52
 "m_monitoringOptsNumber"
@@ -1074,9 +1021,8 @@ LANG:1 0
 
 0
 1
-LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
-0 ""
- 568.7899464570518 288 619.6602428273482 309
+LANG:1 25 Sans,-1,14,5,50,0,0,0,0,0
+0  569 288 620 309
 0
 
 E
@@ -1097,9 +1043,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 182 192.9999999999999 375 219.9999999999999
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  182 193 375 220
 
 T 
 1
@@ -1125,39 +1070,32 @@ LANG:1 0
 E E 0 1 1 2 1 E U  1 E 15.99999999999997 77.99999999999994 337 119.9999999999999
 0 2 2 "0s" 0 0 0 64 0 0  15.99999999999997 77.99999999999994 7
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 48 You are not connected to the job options editor.
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 52 This is not necessary for execution on the HLT farm.
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 40 You can however install a local editor. 
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 0 
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 37 Note that there is more to installing
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 45 a options writer system than only the editor.
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0 1
 LANG:1 0 
 13 28
 "m_uninstallLocal"
@@ -1172,9 +1110,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 182 222.9999999999999 375 249.9999999999999
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  182 223 375 250
 
 T 
 1
@@ -1199,9 +1136,8 @@ LANG:1 0
 "dashclr"N "_Transparent"
 E E 0 0 1 0 1 E 2.217857142857143 0 3.04 -62.75357142857142 -507.2800000000001 0 E 31 182 312 283
 1
-LANG:1 115 -*-Bitstream Vera Sans-bold-r-normal-*-17-*-100-100-*-*-iso8859-1|-17,0,0,0,758,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
-1
+LANG:1 40 Bitstream Vera Sans,-1,17,5,50,0,0,0,0,0
+0 1
 LANG:1 24 Be careful: EXPERTS ONLY
 13 34
 "PUSH_BUTTON6"
@@ -1216,9 +1152,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 181 282.9999999999999 374 309.9999999999999
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  181 283 374 310
 
 T 
 1
@@ -1238,9 +1173,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 182 252 375 279
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  182 252 375 279
 
 T 
 1
@@ -1260,9 +1194,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 381 63 620.4226700898588 90
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  381 63 620 90
 
 T 
 1
@@ -1287,9 +1220,8 @@ LANG:1 0
 
 0
 1
-LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
-0 ""
- 8 13 132 45
+LANG:1 25 Sans,-1,14,5,50,0,0,0,0,0
+0  8 13 132 45
 
 T 
 1
@@ -1309,9 +1241,8 @@ LANG:1 0
 
 0
 1
-LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
-0 ""
- 11 259 172 281
+LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
+0  11 259 172 281
 0
 
 E

@@ -1,7 +1,7 @@
-V 11
+V 12
 1
 LANG:1 25 Brunel Checkpoint Utility
-PANEL,-1 -1 849 750 N "_3DFace" 0
+PANEL,-1 -1 853 793 N "_3DFace" 0
 "main()    {  BrunelCheckpoint_init();  }" 0
  E E E E 1 -1 -1 0  30 23
 ""0  1
@@ -49,7 +49,7 @@ LANG:1 26 Fixed,10,-1,5,50,0,0,0,0,0
 E13 1
 "m_close"
 ""
-1 974 452 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 970 490 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 22 0 0 0 0 0
 E E E
@@ -60,7 +60,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  547 703 650 729
+0  543 741 646 767
 
 T 
 1
@@ -235,7 +235,7 @@ LANG:1 28 Detector database tag (DDDB)
 13 16
 "m_create"
 ""
-1 760 452 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 756 490 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 18 0 0 0 0 0
 E E E
@@ -246,7 +246,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  18 703 151 729
+0  14 741 147 767
 
 T 
 1
@@ -267,7 +267,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 0 1 0 1 E 1.092493297587132 0 0.7447698744769873 -1.572386058981237 134.3849372384938 0 E 17 456 764 696
+E E 0 0 1 0 1 E 1.092493297587132 0 0.9581589958158999 -1.572386058981237 37.07949790794963 0 E 17 456 764 696
 1
 LANG:1 30 Sans Serif,7,-1,5,75,0,0,0,0,0
 0 1
@@ -275,7 +275,7 @@ LANG:1 36 Parameter setup to create checkpoint
 13 18
 "m_reload"
 ""
-1 1016 452 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 1012 490 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 23 0 0 0 0 0
 E E E
@@ -286,7 +286,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  440 703 543 729
+0  436 741 539 767
 
 T 
 1
@@ -297,7 +297,7 @@ LANG:1 6 Reload
 14 19
 "m_outdir"
 ""
-1 364 402.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 364 431.7500000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 16 0 0 0 0 0
 E E E
@@ -309,12 +309,12 @@ LANG:1 0
 "textChangedCB" "main(string newText)   {  Checkpoint_update();  }"
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  302 610 825 633
+0  302 640 825 663
 3 "0s" 0 0 0 0 0 -1  E E E
 2 20
 "m_outdirLabel"
 ""
-1 33 612.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 33 641.7500000000001 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 20 0 0 0 0 0
 E E E
@@ -324,8 +324,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 35 614.0000000000002 129 627
-0 2 0 "0s" 0 0 0 192 0 0  35 614.0000000000002 1
+E E 0 1 1 0 1 E U  0 E 35 643.7500000000001 134 654.7499999999999
+0 2 0 "0s" 0 0 0 192 0 0  35 643.7500000000001 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0 1
@@ -333,7 +333,7 @@ LANG:1 20 Checkpoint directory
 14 21
 "m_output"
 ""
-1 94.32618025751073 356 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 90.32618025751073 394 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 26 0 0 0 0 0
 E E E
@@ -344,7 +344,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  16 674 819 697
+0  12 712 815 735
 3 "0s" 0 0 0 0 0 -1  E E E
 30 24
 "m_messageFrame"
@@ -367,7 +367,7 @@ LANG:1 39 Logger Messages of checkpoint processes
 13 25
 "m_test"
 ""
-1 902 452 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 898 490 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 19 0 0 0 0 0
 E E E
@@ -378,7 +378,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  160 703 293 729
+0  156 741 289 767
 
 T 
 1
@@ -389,7 +389,7 @@ LANG:1 15 Test Checkpoint
 13 26
 "m_enable"
 ""
-1 1081 452 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 1077 490 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 33 0 0 0 0 0
 E E E
@@ -400,7 +400,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  654 703 757 729
+0  650 741 753 767
 
 T 
 1
@@ -433,7 +433,7 @@ LANG:1 5 Clear
 2 35
 "m_suggestions"
 ""
-1 551 733 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 551 773 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 35 0 0 0 0 0
 E E E
@@ -443,8 +443,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  0 E 551 733 846 748
-0 2 2 "0s" 0 0 0 64 0 0  551 733 1
+E E 0 1 1 2 1 E U  0 E 551 773 846 788
+0 2 2 "0s" 0 0 0 64 0 0  551 773 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0 1
@@ -452,7 +452,7 @@ LANG:1 45 Comments and suggestions to M.Frank CERN/LHCb
 13 36
 "m_options"
 ""
-1 1042 452 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 1038 490 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 21 0 0 0 0 0
 E E E
@@ -463,7 +463,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  300 703 433 729
+0  296 741 429 767
 
 T 
 1
@@ -544,7 +544,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 35 525.0000000000002 98 538
+E E 0 1 1 0 1 E U  0 E 35 525.0000000000002 102 536
 0 2 0 "0s" 0 0 0 192 0 0  35 525.0000000000002 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
@@ -579,7 +579,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 35 547.0000000000002 99 560
+E E 0 1 1 0 1 E U  0 E 35 547.0000000000002 104 558
 0 2 0 "0s" 0 0 0 192 0 0  35 547.0000000000002 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
@@ -636,6 +636,98 @@ E
 E
 E
  1 0
+14 48
+"m_hltType"
+""
+1 40 670 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+48 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 31 Sans Serif,13,-1,5,50,0,0,0,0,0
+0  38 668 82 692
+3 "0s" 0 0 0 0 0 -1  E E E
+14 49
+"m_condMap"
+""
+1 364 400 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+49 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"textChangedCB" "main(string newText)   {  Checkpoint_update();  }"
+1
+LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
+0  302 608 825 631
+3 "0s" 0 0 0 0 0 -1  E E E
+2 50
+"m_condMapLabel"
+""
+1 33 610 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+50 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 0 1 E U  0 E 35 612 108 623
+0 2 0 "0s" 0 0 0 192 0 0  35 612 1
+1
+LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
+0 1
+LANG:1 14 Conditions map
+14 51
+"m_hltProgram"
+""
+1 100 670 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+51 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 31 Sans Serif,13,-1,5,50,0,0,0,0,0
+0  98 668 142 692
+3 "0s" 0 0 0 0 0 -1  E E E
+13 52
+"m_installCheckpointing"
+""
+1 160 670 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+52 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 30 Sans Serif,8,-1,5,50,0,0,0,0,0
+0  158 668 222 692
+
+T 
+1
+LANG:1 7 Install
+"main()
+{
+  Checkpoint_install();
+}" 0
+ E E E
 0
 LAYER, 1 
 1

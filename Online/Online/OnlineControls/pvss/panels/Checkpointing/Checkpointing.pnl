@@ -1,21 +1,29 @@
 V 12
 1
 LANG:1 24 Moore Checkpoint Utility
-PANEL,-1 -1 850 930 N "_3DFace" 2
+PANEL,-1 -1 850 930 N "_3DFace" 4
+"$app_type"
+"$flavour"
 "$part"
 "$trgConf"
 "main()    {
-  string partition=\"ANY\", triggerConf=\"\";
+  string partition=\"ANY\", triggerConf=\"\", flavour=\"Moore\", app_typ=\"\";
   if(isDollarDefined(\"$part\")) {
     partition = $part;
   }
   if(isDollarDefined(\"$trgConf\")) {
     triggerConf = $trgConf;
   }
-  DebugN(\"Starting checkpoint panel for part=\"+partition+\" Configuration:\"+triggerConf);
-  MooreCheckpoint_init(partition,triggerConf);   
+  if(isDollarDefined(\"$flavour\")) {
+    flavour = $flavour;
+  }
+  if(isDollarDefined(\"$app_type\")) {
+    app_typ = $app_type;
+  }
+  DebugN(\"Starting checkpoint panel for part=\"+partition+\" Configuration:\"+triggerConf+\" Flavour:\"+flavour);
+  Checkpoint_initPanel(partition,triggerConf,flavour,app_typ);
 }" 0
- E E E E 1 -1 -1 0  30 23
+ E E E E 1 -1 -1 0  0 0
 ""0  1
 E "#uses \"lbECS_TCK.ctl\"
 #uses \"ctrlUtils.cpp\"
@@ -42,7 +50,7 @@ string    Checkpoint_RunInfoDp            = \"ECS:LHCb_RunInfo\";
 string    Checkpoint_DDDB                 = \"\";
 string    Checkpoint_CondDB               = \"\";
 string    Checkpoint_CondMap              = \"\";
-" 0
+int       Checkpoint_msgConnected         = 0;" 0
  2
 "CBRef" "1"
 "EClose" E
@@ -128,48 +136,6 @@ E E 0 1 1 2 1 E U  0 E 32 440 551 469
 LANG:1 31 Sans Serif,12,-1,5,75,0,0,0,0,0
 0 1
 LANG:1 20 Checkpointing result
-22 4
-"m_mooreVsn"
-""
-1 304 570.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E E
-6 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  302 568 655 591
-0
-
-E
-"main()  {  MooreCheckpoint_reload();  }
-" 0
-
-E
- 1 0
-2 5
-"m_mooreLabel"
-""
-1 35 571.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E E
-5 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-1
-"dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  0 E 35 571.0000000000002 280 586.0000000000002
-0 2 2 "0s" 0 0 0 64 0 0  35 571.0000000000002 1
-1
-LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0 1
-LANG:1 13 Moore version
 22 6
 "m_hltType"
 ""
@@ -225,7 +191,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 35 702.0000000000001 159 714
+E E 0 1 1 0 1 E U  0 E 35 702.0000000000001 176 713
 0 2 0 "0s" 0 0 0 192 0 0  35 702.0000000000001 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
@@ -288,7 +254,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 35 781.0000000000001 130 793
+E E 0 1 1 0 1 E U  0 E 35 781.0000000000001 141 792
 0 2 0 "0s" 0 0 0 192 0 0  35 781.0000000000001 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
@@ -397,7 +363,7 @@ LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 T 
 1
 LANG:1 17 Create Checkpoint
-"main()  {	MooreCheckpoint_createCheckpoint(); }
+"main()  {	Checkpoint_createCheckpoint(); }
 " 0
  E E E
 30 17
@@ -437,7 +403,7 @@ LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 T 
 1
 LANG:1 6 Reload
-"main()  {	MooreCheckpoint_reload(); }
+"main()  {	Checkpoint_reload(); }
 " 0
  E E E
 14 19
@@ -473,7 +439,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 35 804.0000000000001 132 816
+E E 0 1 1 0 1 E U  0 E 35 804.0000000000001 148 815
 0 2 0 "0s" 0 0 0 192 0 0  35 804.0000000000001 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
@@ -495,45 +461,6 @@ LANG:1 0
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0  16 851 819 874
 3 "0s" 0 0 0 0 0 -1  E E E
-14 22
-"m_online"
-""
-1 364 381.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E E
-27 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-1
-"textChangedCB" "main(string newText)
-{
-  Checkpoint_update();
-}"
-1
-LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  302 589 655 612
-3 "0s" 0 0 0 0 0 -1  E E E
-2 23
-"m_onlineLabel"
-""
-1 33 591.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
- E E
-23 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-1
-"dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 35 593.0000000000001 100 605
-0 2 0 "0s" 0 0 0 192 0 0  35 593.0000000000001 1
-1
-LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0 1
-LANG:1 14 Online version
 30 24
 "m_messageFrame"
 ""
@@ -571,7 +498,7 @@ LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 T 
 1
 LANG:1 15 Test Checkpoint
-"main()  {	MooreCheckpoint_testCheckpoint(); }
+"main()  {	Checkpoint_testCheckpoint(); }
 " 0
  E E E
 13 26
@@ -599,7 +526,7 @@ LANG:1 6 Enable
 13 27
 "m_clear"
 ""
-1 1177 182 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 1180 180 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 36 0 0 0 0 0
 E E E
@@ -610,7 +537,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  777 433 830 459
+0  780 431 833 457
 
 T 
 1
@@ -618,67 +545,6 @@ LANG:1 5 Clear
 "main()  {	m_messages.text=\"\";    }
 " 0
  E E E
-22 30
-"m_triggerConf"
-""
-1 304 528.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E E
-4 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-0
-1
-LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  302 526 655 549
-0
-
-E
-"main()  {  MooreCheckpoint_changeTriggerConf();  }
-" 0
-
-E
- 1 0
-2 31
-"m_triggerConfLabel"
-""
-1 35 531.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E E
-31 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-1
-"dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  0 E 35 531.0000000000002 280 546.0000000000002
-0 2 2 "0s" 0 0 0 64 0 0  35 531.0000000000002 1
-1
-LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0 1
-LANG:1 21 Trigger configuration
-2 32
-"m_scan"
-""
-1 790 645.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
- E E
-32 0 0 0 0 0
-E E E
-0
-1
-LANG:1 0 
-
-1
-"dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  0 E 790 645.0000000000001 824 672.0000000000001
-0 2 2 "0s" 0 0 0 64 0 0  790 645.0000000000001 1
-1
-LANG:1 31 Sans Serif,13,-1,5,50,0,0,0,0,0
-0 1
-LANG:1 1 0
 22 33
 "m_partSelector"
 ""
@@ -697,7 +563,7 @@ LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0
 
 E
-"main() {  MooreCheckpoint_partitionChanged();   }" 0
+"main() {  Checkpoint_partitionChanged();   }" 0
 
 E
  1 0
@@ -742,7 +608,7 @@ LANG:1 45 Comments and suggestions to M.Frank CERN/LHCb
 13 36
 "m_options"
 ""
-1 1034 629 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 1042 629 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 21 0 0 0 0 0
 E E E
@@ -753,12 +619,12 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  292 880 420 906
+0  300 880 428 906
 
 T 
 1
 LANG:1 14 Create Options
-"main()  {	MooreCheckpoint_createOptions(); }
+"main()  {	Checkpoint_createOptions(); }
 " 0
  E E E
 2 38
@@ -845,7 +711,46 @@ LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0
 
 E
-"main()  {  Checkpoint_HLTProgram = m_hltProgram.text; Checkpoint_update();  }
+"main()  {
+  string text = m_flavour.text, app_typ = m_hltProgram.text;
+  if ( m_hltProgram.text == \"OnlineBrunel\" )  {
+    m_flavour.text = \"Brunel\";
+    Checkpoint_HLTProgram = m_hltProgram.text; 
+  }
+  else if ( m_hltProgram.text == \"OnlineReco\" )  {
+    m_flavour.text = \"Brunel\";
+    Checkpoint_HLTProgram = m_hltProgram.text; 
+  }
+  else if ( m_hltProgram.text == \"DataQuality\" )  {
+    m_flavour.text = \"Brunel\";
+    Checkpoint_HLTProgram = m_hltProgram.text; 
+  }
+  else if ( m_hltProgram.text == \"Moore\" )  {
+    m_flavour.text = \"Moore\";
+    Checkpoint_HLTProgram = m_hltProgram.text; 
+  }
+  else if ( m_hltProgram.text == \"Moore1\" )  {
+    m_flavour.text = \"Moore\";
+    Checkpoint_HLTProgram = m_hltProgram.text; 
+  }
+  else if ( m_hltProgram.text == \"Moore2\" )  {
+    m_flavour.text = \"Moore\";
+    Checkpoint_HLTProgram = m_hltProgram.text; 
+  }
+  else if ( m_hltProgram.text == \"Moore\" )  {
+    m_flavour.text = \"Moore\";
+    Checkpoint_HLTProgram = m_hltProgram.text; 
+  }
+  else   {
+    Checkpoint_HLTProgram = m_hltProgram.text; 
+    Checkpoint_update();
+    return;
+  }
+  //if ( text != m_flavour.text )  
+  {
+    Checkpoint_initPanel(m_partSelector.text,m_triggerConf.text,m_flavour.text, app_typ);
+  }
+}
 " 0
 
 E
@@ -868,7 +773,7 @@ E E 0 1 1 2 1 E U  0 E 35 511 280 526
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0 1
-LANG:1 17 Moore Application
+LANG:1 27 Checkpoint application name
 22 43
 "m_app"
 ""
@@ -887,7 +792,7 @@ LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0
 
 E
-"main()  {  MooreCheckpoint_reload();  }
+"main()  {  Checkpoint_reloadApp(m_app.text);  }
 " 0
 
 E
@@ -945,7 +850,7 @@ LANG:1 0
 "textChangedCB" "main(string newText)
 {
   Checkpoint_update();
-  Checkpoint_condMap = newText;
+  Checkpoint_CondMap = newText;
 }"
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
@@ -955,10 +860,212 @@ LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 LAYER, 1 
 1
 LANG:1 0 
+22 4
+"m_mooreVsn"
+""
+1 304 570.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+6 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
+0  302 568 655 591
+0
+
+E
+"main()  {  Checkpoint_reload();  }
+" 0
+
+E
+ 1 0
+2 5
+"m_mooreLabel"
+""
+1 35 571.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+5 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  0 E 35 571.0000000000002 280 586.0000000000002
+0 2 2 "0s" 0 0 0 64 0 0  35 571.0000000000002 1
+1
+LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
+0 1
+LANG:1 13 Moore version
+14 22
+"m_online"
+""
+1 364 381.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+27 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"textChangedCB" "main(string newText)
+{
+  Checkpoint_update();
+}"
+1
+LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
+0  302 589 655 612
+3 "0s" 0 0 0 0 0 -1  E E E
+2 23
+"m_onlineLabel"
+""
+1 33 591.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+23 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 0 1 E U  0 E 35 593.0000000000001 112 604
+0 2 0 "0s" 0 0 0 192 0 0  35 593.0000000000001 1
+1
+LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
+0 1
+LANG:1 14 Online version
+22 30
+"m_triggerConf"
+""
+1 304 528.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+4 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
+0  302 526 655 549
+0
+
+E
+"main()  {  Checkpoint_changeTriggerConf();  }
+" 0
+
+E
+ 1 0
+2 31
+"m_triggerConfLabel"
+""
+1 35 531.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+31 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  0 E 35 531.0000000000002 280 546.0000000000002
+0 2 2 "0s" 0 0 0 64 0 0  35 531.0000000000002 1
+1
+LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
+0 1
+LANG:1 21 Trigger configuration
 0
 LAYER, 2 
 1
 LANG:1 0 
+13 49
+"m_install"
+""
+1 890 180 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+49 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
+0  490 431 543 457
+
+T 
+1
+LANG:1 7 Install
+"main()  {	Checkpoint_install();    }
+" 0
+ E E E
+13 50
+"m_uninstall"
+""
+1 967.75 180 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+50 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
+0  568 431 621 457
+
+T 
+1
+LANG:1 9 Uninstall
+"main()  {	Checkpoint_uninstall();    }
+" 0
+ E E E
+14 48
+"m_flavour"
+""
+1 710 600 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+48 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 31 Sans Serif,13,-1,5,50,0,0,0,0,0
+0  708 598 822 622
+3 "0s" 0 0 0 0 0 -1  E E E
+2 32
+"m_scan"
+""
+1 790 645.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+32 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  0 E 790 645.0000000000001 824 672.0000000000001
+0 2 2 "0s" 0 0 0 64 0 0  790 645.0000000000001 1
+1
+LANG:1 31 Sans Serif,13,-1,5,50,0,0,0,0,0
+0 1
+LANG:1 1 0
 0
 LAYER, 3 
 1

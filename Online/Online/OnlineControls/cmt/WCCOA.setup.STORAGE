@@ -1,3 +1,3 @@
-#/bin/bash
+#!/bin/bash
 . ./setup.generic.vars;
 export PVSS_II="/localdisk/wincc/STORAGE/config/config";

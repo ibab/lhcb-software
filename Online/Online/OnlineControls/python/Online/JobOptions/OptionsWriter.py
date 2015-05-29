@@ -123,7 +123,7 @@ class OptionsWriter(Control.AllocatorClient):
 
   # ===========================================================================
   def activityName(self):
-    log('Activity name:'+self.run.name+' '+self.hostType+'_'+self.run.runType(),timestamp=1)
+    ##log('Activity name:'+self.run.name+' '+self.hostType+'_'+self.run.runType(),timestamp=1)
     return self.hostType+'_'+self.run.runType()
 
   # ===========================================================================
@@ -354,6 +354,9 @@ class OptionsWriter(Control.AllocatorClient):
 
     if hasattr(self.run,'recStartup') and self.run.recStartup is not None:
       opts.add('RecoStartupMode',self.run.recStartup.data)
+    elif self.run.partitionName() == "FEST":
+      opts.add('RecoStartupMode',   2)
+      opts.add('OnlineBrunelVersion', 'OnlineBrunel')
     else: 
       opts.add('RecoStartupMode',   1)
 
@@ -615,7 +618,7 @@ class HLTOptionsWriter(OptionsWriter):
   # ===========================================================================
   def _configure(self, partition):
     if self.run:
-      log('Starting to write HLT TEXT job options',timestamp=1)
+      log('(*****) Starting to write HLT TEXT job options',timestamp=1)
       res = self._writeHLTOpts(partition)
       log('Finished to write HLT TEXT job options',timestamp=1)
       if res:
@@ -623,8 +626,8 @@ class HLTOptionsWriter(OptionsWriter):
         self._writePyOnlineEnv(partition=partition,fname='OnlineEnv',subdir='HLT')
         log('Finished to write HLT PYTHON job environment options',timestamp=1)
         return self._writePyHLTOpts(partition)
-        log('Finished to write HLT PYTHON job options',timestamp=1)
-        return res
+        #log('Finished to write HLT PYTHON job options',timestamp=1)
+        #return res
     return None
 
   # ===========================================================================
@@ -674,6 +677,7 @@ class HLTOptionsWriter(OptionsWriter):
     opts.comment('---------------- HLT patrameters:   ')
     opts.add('SubFarms',       farm_names)
 
+    error(' HLT OPTS: Adding deferred runs.......',timestamp=1,type=PVSS.ILLEGAL_VALUE)
     # For the HLT info add the list of deferred runs
     if self.run.deferredRuns is not None and len(self.run.deferredRuns.data)>0:
       opts.add('DeferredRuns', ["%s"%i for i in self.run.deferredRuns.data])
@@ -734,7 +738,7 @@ class HLTOptionsWriter(OptionsWriter):
         fname = partition+'_'+farm+'_HLT'
         if self.writePythonFile(partition, fname, subdir='HLT', opts=opts) is None:
           return None
-        log('      --> Farm:'+farm+' sends to slot:'+slots[i]+', Task:'+name+', pyOpts:HLT/'+fname,timestamp=1)
+        #log('      --> Farm:'+farm+' sends to slot:'+slots[i]+', Task:'+name+', pyOpts:HLT/'+fname,timestamp=1)
         
     opts = PyOptions('#'+opt_header)
     opts = self.addGeneralInfo(partition,opts)

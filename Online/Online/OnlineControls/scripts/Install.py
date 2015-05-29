@@ -16,10 +16,11 @@ def pvssTool():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/WCCOAtoolSync
 
 def usage():
   print "usage: Install.py <action> -project <project-name> [-opt [-opt]]"
-  print "  <action>:              Choose one of INSTALL INSTALLFILES COPYBACK"
-  print "  -project       <name>: Choose one of: STORAGE MONITORING LBECS RECO RECOTEST"
-  print "  -install       <name>: Choose one of: JOBOPTIONS"
-  print "  -componentsdir <name>: Installation directory of components"
+  print "  <action>:                Choose one of INSTALL INSTALLFILES COPYBACK"
+  print "  -project       <name>:   Choose one of: STORAGE MONITORING LBECS RECO RECOTEST"
+  print "  -install       <name>:   Choose one of: JOBOPTIONS"
+  print "  -n             <number>  WCCOA system number     "
+  print "  -componentsdir <name>:   Installation directory of components"
   sys.exit(1)
 
 def parseOpts():
@@ -183,10 +184,10 @@ def install():
     execCmd(pvssCTRL()+'InstallStorage.cpp')
     importStreamDpLists()
     print '......... --> Executing python setup....'
-    execCmd("""/bin/bash""")
+    #####execCmd("""/bin/bash""")
     #  import Online.Streaming.StorageInstaller as IM
     #  IM.install('Storage','STORAGE')
-    #execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+pro+"""')";""")
+    execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+pro+"""')";""")
     print '......... --> Executing final PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallStorage2.cpp')
   elif pro=="RECSTORAGE":
@@ -265,25 +266,24 @@ def copyProject():
       content = 'proj_path = "/localdisk/wincc/'+nam+'"'
     print >>fout,content
     if content=='distributed = 1':
-      """
-      print >>fout, 'pmonPort= '+str(sysN+100)+'00'
-      print >>fout, 'dataPort= '+str(sysN+100)+'01'
-      print >>fout, 'eventPort= '+str(sysN+100)+'02'
-      print >>fout, '[dist]'
-      print >>fout, 'distPort= '+str(sysN+100)+'10'
-      """
+      #print >>fout, 'pmonPort= '+str(sysN+100)+'00'
+      #print >>fout, 'dataPort= '+str(sysN+100)+'01'
+      #print >>fout, 'eventPort= '+str(sysN+100)+'02'
+      #print >>fout, '[dist]'
+      #print >>fout, 'distPort= '+str(sysN+100)+'10'
+
       if nam == "STORAGE":
-        print >>fout, 'pmonPort= 44000'
-        print >>fout, 'dataPort= 44001'
-        print >>fout, 'eventPort= 44002'
+        print >>fout, 'pmonPort= 40000'
+        print >>fout, 'dataPort= 40001'
+        print >>fout, 'eventPort= 40002'
         print >>fout, '[dist]'
-        print >>fout, 'distPort= 44010'
+        print >>fout, 'distPort= 40010'
 
         print >>fout, 'distPeer= "storectl01:49910" 399 # LBECS'
-        ##print >>fout, 'distPeer = "mona08" 301 # MONITORING'
-        ##print >>fout, 'distPeer = "mona09:40210" 302   # Online real time RECONSTRUCTION'
-        ##print >>fout, 'distPeer = "tfc002" 11  # LHC/LHCCOM'
-        ##print >>fout, 'distPeer = "trg001" 250 # TRGL0DU'
+        print >>fout, 'distPeer = "mona08" 301 # MONITORING'
+        print >>fout, 'distPeer = "mona09:40210" 302   # Online real time RECONSTRUCTION'
+        print >>fout, 'distPeer = "tfc002" 11  # LHC/LHCCOM'
+        print >>fout, 'distPeer = "trg001" 250 # TRGL0DU'
       
         #print >>fout, 'distPeer= "storectl01:40710" 307 # RECSTORAGE'
         #print >>fout, 'distPeer= "mona07:40610"     306 # RECCTRL'
@@ -291,8 +291,8 @@ def copyProject():
       else:
         print >>fout, 'pmonPort= 4999'
         print >>fout, '[dist]'
-        #print >>fout, 'distPeer = "storectl01:44000" 400 # STORAGE'
-        print >>fout, 'distPeer = "devpvssslc6:44010" 400 # STORAGE'
+        print >>fout, 'distPeer = "storectl01:40010" 300 # STORAGE'
+        #print >>fout, 'distPeer = "devpvssslc6:44010" 400 # STORAGE'
     elif content.find('[dist]')==0:
       pass
     elif content.find('pmonPort = ')==0:

@@ -5,8 +5,19 @@
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
+int Checkpoint_connectTaskManager(string cfg, string name)  {
+  dyn_string recvNodes, strmNodes;
+  fwDim_createConfig(cfg);
+  return 1;
+}
+
+//=============================================================================
+// 
+// @author  M.Frank
+// @version 1.0
+//=============================================================================
 void Checkpoint_install()  {
-  string cfg = ctrlUtils_dimMapName();
+  string cfg = "DimPublishCHECKPOINT";//ctrlUtils_dimMapName();
   dyn_dyn_string names;
   dyn_dyn_int types;
   string dp = "CheckpointService";
@@ -25,10 +36,18 @@ void Checkpoint_install()  {
     dpCreate(dp,"GaudiCheckpointing");
   }
   fwDim_createConfig(cfg);
+  if ( !dpExists("CHECKPOINT01_StreamTaskCreator") ) dpCreate("CHECKPOINT01_StreamTaskCreator","StreamTaskCreator");
+  fwDim_unSubscribeCommandsByDp(cfg,"CHECKPOINT01_StreamTaskCreator*");
+  fwDim_unSubscribeServicesByDp(cfg,"CHECKPOINT01_StreamTaskCreator*");
+  dpSet("CHECKPOINT01_StreamTaskCreator.Name","CHECKPOINT01");
+  fwDim_subscribeCommand(cfg,"/FMC/CHECKPOINT01/task_manager/start","CHECKPOINT01_StreamTaskCreator.Start", 1);
+  fwDim_subscribeCommand(cfg,"/FMC/CHECKPOINT01/task_manager/stop","CHECKPOINT01_StreamTaskCreator.Stop", 1);
+  fwDim_subscribeCommand(cfg,"/FMC/CHECKPOINT01/task_manager/kill","CHECKPOINT01_StreamTaskCreator.Kill", 1);
+  DebugN("Connect /FMC/CHECKPOINT01/task_manager to CHECKPOINT01_StreamTaskCreator");
+
   fwDim_unSubscribeCommandsByDp(cfg,dp+"*");
   fwDim_unSubscribeServicesByDp(cfg,dp+"*");
-  fwDim_subscribeCommand(cfg,"/FMC/STORESTRM02/task_manager/start",dp+".Start");
-  fwDim_subscribeService(cfg,"/FMC/STORESTRM02/logger/gaudi/log",
+  fwDim_subscribeService(cfg,"/FMC/CHECKPOINT01/logger/gaudi/log",
                          dp+".Messages",
                          "Connected to output logger",
                          0,1,0);
@@ -41,7 +60,8 @@ void Checkpoint_install()  {
 // @version 1.0
 //=============================================================================
 void Checkpoint_uninstall()  {
-  string dp = "CheckpointService";
+  string cfg = "DimPublishCHECKPOINT";//ctrlUtils_dimMapName();
+  string dp  = "CheckpointService";
   ctrlUtils_uninstallDataType("GaudiCheckpointing");
   fwDim_unSubscribeCommandsByDp(cfg,dp+"*");
   fwDim_unSubscribeServicesByDp(cfg,dp+"*");
@@ -57,12 +77,14 @@ void Checkpoint_uninstall()  {
 void CheckpointMessage_callback(string dpe, string text)  {
   int pos = strpos(text,"finished. Process now exiting.");
   int start = strpos(text,"GaudiCheckpoint.exe("); 
+  int end = strpos(text,"\n");
+  if ( end <= 0 ) end = strlen(text);
   if ( start > 0 )  {
     start = strpos(text,"):");
-    m_messages.append(substr(text,start+3));
+    m_messages.append(substr(text,start+3,end-start-3));
   }
   else  {
-    m_messages.append(text);
+    m_messages.append(substr(text,0,end));
   } 
   if ( pos > 0 )   {
     //m_result.foreCol = "black";
@@ -158,22 +180,30 @@ void Checkpoint_readL0Types()  {
 //=============================================================================
 string Checkpoint_directory()  {
   string f=m_outdir.text;
-  if ( m_hltType.text == "PassThrough" )  {
+  if ( m_flavour.text == "Moore" && m_hltType.text == "PassThrough" )  {
     f = f + "/" + m_hltType.text;
     f = f + "/" + m_online.text;
     f = f + "/" + m_hltProgram.text;
     return f;
   }
-  f = f + "/" + Checkpoint_AppType +
-          "/" + m_app.text;
-  if ( strlen(m_hltType.text)> 0 ) f = f + "/" + m_hltType.text;
+  if ( strlen(Checkpoint_AppType) > 0 )  {
+    f = f + "/" + Checkpoint_AppType;
+  }
+  if ( strlen(m_app.text) > 0 )  {
+    f = f + "/" + m_app.text;
+  }
+  if ( strlen(m_hltType.text) > 0 )  {
+    f = f + "/" + m_hltType.text;
+  }
   if ( Checkpoint_useDBtags )  {
     f = f +   "/" + m_condDB.text + "/" + m_ddDB.text;
   }
-  if ( strlen(m_condMap.text)> 0 )   {
+  if ( strlen(m_condMap.text) > 0 )   {
     f = f + "/" + baseName(m_condMap.text);
   }
-  if ( strlen(m_hltProgram.text)> 0 ) f = f + "/" + m_hltProgram.text;
+  if ( m_flavour.text == "Moore" && strlen(m_hltProgram.text) > 0 )  {
+    f = f + "/" + m_hltProgram.text;
+  }
   return f;
 }
 
@@ -276,8 +306,30 @@ void Checkpoint_About(string app_type)   {
 // @version 1.0
 //=============================================================================
 void Checkpoint_enableCommands(bool val)   {
-  if      ( Checkpoint_AppType == "Moore" ) MooreCheckpoint_enableCommands(val);
-  else if ( Checkpoint_AppType == "OnlineBrunel" ) BrunelCheckpoint_enableCommands(val);
+  bool edit = val;
+  // Input fields
+  if ( !Checkpoint_Editable ) edit = false;
+  m_app.editable       = edit;
+  m_outdir.editable    = edit;
+  m_hltType.editable   = edit;
+  m_output.editable    = edit;
+  m_condMap.editable   = edit;
+  m_online.editable    = edit;
+  m_mooreVsn.editable  = edit;
+  m_tck.editable       = edit;
+  m_tckList.enabled    = edit;
+  // DB tags
+  m_condDB.enabled     = val;
+  m_ddDB.enabled       = val;
+  // Buttons:
+  m_close.enabled      = val;
+  m_create.enabled     = val;
+  m_test.enabled       = val;
+  m_reload.enabled     = val;
+  m_gzip.enabled       = val;
+  m_options.enabled    = val;
+
+  m_enable.visible     = !val;
 }
 
 //=============================================================================
@@ -296,7 +348,7 @@ void Checkpoint_waitTest(string utgid)  {
     ChildPanelOnReturn("visionUtils/ErrorBox","Kill child",
                        makeDynString("$1:"+msg,"$2:Ok"),
                        150,550,ds,df);
-    dpSet("STORAGE:STORESTRM02_StreamTaskCreator.Kill","-s 9 "+utgid);
+    dpSet("STORAGE:CHECKPOINT01_StreamTaskCreator.Kill","-s 9 "+utgid);
     m_messages.append(">>>> Process "+utgid+" killed.....");
     m_result.text = "  >>> Checkpoint action completed.";
     Checkpoint_enableCommands(true);
@@ -319,8 +371,69 @@ void Checkpoint_createZip()  {
   args = args + " /group/online/dataflow/cmtuser/checkpoints/cmds/zip_checkpoint.sh";
   DebugN(args);
   m_messages.text = "";
-  dpSet("STORAGE:STORESTRM02_StreamTaskCreator.Start",args);
+  dpSet("STORAGE:CHECKPOINT01_StreamTaskCreator.Start",args);
   Checkpoint_waitTest(utgid);
+}
+
+//=============================================================================
+// 
+// @author  M.Frank
+// @version 1.0
+//=============================================================================
+void Checkpoint_initMenu(string partition, string triggerConf)  {
+  string dir = "/group/online/dataflow/cmtuser/checkpoints";
+  Checkpoint_Partition = partition;
+  if ( _WIN32 ) {
+    strreplace(Checkpoint_SwPath,"/group/","G:/");
+  }
+
+  m_flavour.visible               = true;
+  m_partSelector.items            = makeDynString(partition);
+  m_partSelector.text             = partition;
+  m_partSelector.editable         = false;
+
+  m_outdir.text                   = dir;
+  m_close.text                    = "Close";
+  m_close.toolTipText             = "Close panel.";
+  m_messages.wordWrap             = "NoWrap";
+  m_result.text                   = "";
+  m_result.backCol                = "_Transparent";
+  m_result.foreCol                = "_WindowText";
+
+  m_partSelector.toolTipText      = "Select partition name.";
+  m_partSelectorLabel.toolTipText = m_partSelector.toolTipText;
+  m_hltProgram.toolTipText        = "Select the application type";
+  m_hltProgramLabel.toolTipText   = m_hltProgram.toolTipText;
+  m_triggerConf.toolTipText       = "Select trigger configuration by nick name.";
+  m_triggerConfLabel.toolTipText  = m_triggerConf.toolTipText;
+  m_mooreLabel.toolTipText        = "Select Moore software version";
+  m_mooreVsn.toolTipText          = m_mooreLabel.toolTipText;
+  m_appLabel.toolTipText          = "Select here the app.software version used to create the checkpoint";
+  m_app.toolTipText               = m_appLabel.toolTipText;
+  m_hltTypeLabel.toolTipText      = "Select the TCK family to create the checkpoint.";
+  m_hltType.toolTipText           = m_hltTypeLabel.toolTipText;
+  m_condDBLabel.toolTipText       = "Select the conditions database tag to create the checkpoint.";
+  m_condDB.toolTipText            = m_condDBLabel.toolTipText;  
+  m_condMapLabel.toolTipText      = "File with run-dependent conditions items";
+  m_condMap.toolTipText           = "File with run-dependent conditions items";
+  m_ddDBLabel.toolTipText         = "Select the detector database tag to create the checkpoint.";
+  m_ddDB.toolTipText              = m_ddDBLabel.toolTipText;  
+  m_outdirLabel.toolTipText       = "Output directory for checkpoint files.";
+  m_outdir.toolTipText            =  m_outdirLabel.toolTipText;
+  m_output.toolTipText            = "Final output file name for the checkpoint.";  
+  m_output.editable               = false;
+  m_onlineLabel.toolTipText       = "Online version corresponding to this Moore version";
+  m_online.toolTipText            = m_onlineLabel.toolTipText;
+  m_suggestions.toolTipText       = "If you really want changes, contact me....";
+  m_clear.toolTipText             = "Press to clear the message display.";
+  m_create.toolTipText            = "Press to create checkpoint file according to selected parameters.";
+  m_test.toolTipText              = "Press to start up process using checkpoint file.";
+  m_options.toolTipText           = "Press to generate checkpoint job options.";
+  m_close.toolTipText             = "Press to close the panel.";
+
+  m_scan.text                     = strlen(triggerConf)>0 ? "" : "1";
+  m_enable.toolTipText            = "Press to re-enable commands.";
+  m_enable.visible                = false;
 }
 
 //=============================================================================
@@ -329,96 +442,28 @@ void Checkpoint_createZip()  {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-void MooreCheckpoint_init(string partition, string triggerConf)   {
-  string dir = "/group/online/dataflow/cmtuser/checkpoints";
-  Checkpoint_Partition = partition;
-  m_close.text         = "Close";
-  m_close.toolTipText  = "Close panel.";
-  m_messages.wordWrap  = "NoWrap";
-  m_result.text        = "";
-  m_result.backCol     = "_Transparent";
-  m_result.foreCol     = "_WindowText";
-  m_scan.visible       = false;
-  
-  if ( _WIN32 ) {
-    strreplace(Checkpoint_SwPath,"/group/","G:/");
-  }
-  m_outdir.text              = dir;
-  m_partSelector.toolTipText = "Select partition name.";
-  m_partSelectorLabel.toolTipText = m_partSelector.toolTipText;
-  m_hltProgram.toolTipText      = "Select the Moore application type";
-  m_hltProgramLabel.toolTipText = m_hltProgram.toolTipText;
-  m_triggerConf.toolTipText  = "Select trigger configuration by nick name.";
-  m_triggerConfLabel.toolTipText = m_triggerConf.toolTipText;
-  m_mooreLabel.toolTipText   = "Select Moore software version";
-  m_mooreVsn.toolTipText     = m_mooreLabel.toolTipText;
-  m_appLabel.toolTipText     = "Select here the MooreOnline version used to create the checkpoint";
-  m_app.toolTipText          = m_appLabel.toolTipText;
-  m_hltTypeLabel.toolTipText = "Select the TCK family to create the checkpoint.";
-  m_hltType.toolTipText      = m_hltTypeLabel.toolTipText;
-  m_condDBLabel.toolTipText  = "Select the conditions database tag to create the checkpoint.";
-  m_condDB.toolTipText       = m_condDBLabel.toolTipText;  
-  m_condMapLabel.toolTipText = "File with run-dependent conditions items";
-  m_condMap.toolTipText      = "File with run-dependent conditions items";
-  m_ddDBLabel.toolTipText    = "Select the detector database tag to create the checkpoint.";
-  m_ddDB.toolTipText         = m_ddDBLabel.toolTipText;  
-  m_outdirLabel.toolTipText  = "Output directory for checkpoint files.";
-  m_outdir.toolTipText       =  m_outdirLabel.toolTipText;
-  m_output.toolTipText       = "Final output file name for the checkpoint.";  
-  m_output.editable          = false;
-  m_onlineLabel.toolTipText  = "Online version corresponding to this Moore version";
-  m_online.toolTipText       = m_onlineLabel.toolTipText;
-  m_suggestions.toolTipText  = "If you really want changes, contact me....";
-  m_clear.toolTipText        = "Press to clear the message display.";
-  m_create.toolTipText       = "Press to create checkpoint file according to selected parameters.";
-  m_test.toolTipText         = "Press to start up process using checkpoint file.";
-  m_options.toolTipText      = "Press to generate checkpoint job options.";
-  m_close.toolTipText        = "Press to close the panel.";
-  m_scan.text                = strlen(triggerConf)>0 ? "" : "1";
-  m_enable.toolTipText       = "Press to re-enable commands.";
-  m_enable.visible           = false;
-  m_partSelector.items       = makeDynString(partition);
-  m_partSelector.text        = partition;
-  m_partSelector.editable    = false;
-  m_hltProgram.items         = makeDynString("Moore1","Moore2","PassThrough");
-  m_hltProgram.text          = "Moore1";
-  Checkpoint_HLTProgram      = m_hltProgram.text;
-  if ( partition == "ANY" )  {
-    m_partSelector.editable = true;
-    Checkpoint_initPartitionSelector();
-    MooreCheckpoint_initValuesFromRecipeCache(Checkpoint_Partition,triggerConf);
-  }
-  else if ( strlen(partition)>0 )  {
-    //MooreCheckpoint_initValuesFromRecipeCache(partition,triggerConf);
-    MooreCheckpoint_initValuesFromMapping(partition,triggerConf);
-  }
-  else  {
-    MooreCheckpoint_initValuesFromRunInfo();
-    MooreCheckpoint_reloadApp(Checkpoint_AppVsn);
-  }
-  if(!dynlen(Checkpoint_LumiPars))  {
-    Checkpoint_LumiPars[1] = 0;
-    Checkpoint_LumiPars[2] = 0;
-    Checkpoint_LumiPars[3] = 0;
-    Checkpoint_LumiPars[4] = 0;
-  }
-
-  int rc = dpConnect("CheckpointMessage_callback","STORAGE:CheckpointService.Messages");
-  if ( 0 != rc )  {
-    DebugN("Failed to connect to datapoint STORAGE:CheckpointService.Messages. rc="+rc);
-  }
+void Checkpoint_initPanel(string partition, string triggerConf, string flavour, string app_type)  {
+  m_flavour.text = flavour;
+  LayerOff(3);
+  Checkpoint_initMenu(partition, triggerConf);
+  if ( flavour == "Moore" )
+    MooreCheckpoint_init(partition, triggerConf, app_type);
+  else
+    BrunelCheckpoint_init(partition, triggerConf, app_type);
 }
- 
+
 //=============================================================================
 // Callback when the state of the partition selector changed.
 //
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-void MooreCheckpoint_partitionChanged()  {
+void Checkpoint_partitionChanged()  {
   dyn_string empty;
-  Checkpoint_Partition = m_partSelector.text;
-  MooreCheckpoint_initValuesFromRecipeCache(Checkpoint_Partition,"");
+  if ( m_partSelector.editable )  {
+    Checkpoint_Partition = m_partSelector.text;
+    Checkpoint_initValuesFromRecipeCache(Checkpoint_Partition,"");
+  }
 }
 
 //=============================================================================
@@ -427,8 +472,10 @@ void MooreCheckpoint_partitionChanged()  {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-void MooreCheckpoint_changeTriggerConf()  {
-  MooreCheckpoint_initValuesFromRecipeCache(Checkpoint_Partition,m_triggerConf.text);
+void Checkpoint_changeTriggerConf()  {
+  if ( m_partSelector.editable )  {
+    Checkpoint_initValuesFromRecipeCache(Checkpoint_Partition,m_triggerConf.text);
+  }
 }
 
 //=============================================================================
@@ -436,12 +483,14 @@ void MooreCheckpoint_changeTriggerConf()  {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-void MooreCheckpoint_reloadApp(string app)  {
+void Checkpoint_reloadApp(string app)  {
   dyn_string tcks;
   if ( app != m_app.text ) m_app.text = app;
-  MooreCheckpoint_readCmtFile();
-  MooreCheckpoint_readTckFile(tcks);
-  MooreCheckpoint_showTCKs(tcks);
+  if ( m_partSelector.editable )  {
+    Checkpoint_readCmtFile();
+    Checkpoint_readTckFile(tcks);
+    Checkpoint_showTCKs(tcks);
+  }
   Checkpoint_update();
 }
 
@@ -451,7 +500,7 @@ void MooreCheckpoint_reloadApp(string app)  {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-void MooreCheckpoint_initValuesFromRunInfo()   {
+void Checkpoint_initValuesFromRunInfo()   {
   int tckHex;
   dpGet(Checkpoint_RunInfoDp+".Trigger.mooreVersion", Checkpoint_MooreVsn,
         Checkpoint_RunInfoDp+".Trigger.mooreOnlineVersion", Checkpoint_AppVsn,
@@ -482,7 +531,7 @@ void MooreCheckpoint_initValuesFromRunInfo()   {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-void MooreCheckpoint_initValuesFromRecipeCache(string partition, string triggerConf)  {
+void Checkpoint_initValuesFromRecipeCache(string partition, string triggerConf)  {
   string name, sys=getSystemName(), cfg=triggerConf, tmp, s=m_scan.text;
   dyn_string pars, vals, infos, recipes;
   int i, len, pos, tckHex, scan = strlen(s)>0 ? 1 : 0;
@@ -580,16 +629,16 @@ void MooreCheckpoint_initValuesFromRecipeCache(string partition, string triggerC
 
   Checkpoint_showdbTags();
   bool val = false;
-  m_mooreVsn.editable   = val;
-  m_app.editable   = val;
-  m_outdir.editable  = val;
-  m_hltType.editable = val;
-  m_output.editable  = val;
-  m_online.editable  = val;
-  m_tck.editable     = val;
-  m_tckList.enabled  = val;
-  m_enable.visible   = val;
-  m_reload.visible   = val;
+  m_mooreVsn.editable = val;
+  m_app.editable      = val;
+  m_outdir.editable   = val;
+  m_hltType.editable  = val;
+  m_output.editable   = val;
+  m_online.editable   = val;
+  m_tck.editable      = val;
+  m_tckList.enabled   = val;
+  m_enable.visible    = val;
+  m_reload.visible    = val;
   //m_create.enabled  = val;
   //m_options.enabled = val;
 }
@@ -600,7 +649,7 @@ void MooreCheckpoint_initValuesFromRecipeCache(string partition, string triggerC
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-void MooreCheckpoint_initValuesFromMapping(string partition, string triggerConf)  {
+void Checkpoint_initValuesFromMapping(string partition, string triggerConf)  {
   string name, sys=getSystemName();
   mapping parameters;
   int tckHex;
@@ -651,53 +700,22 @@ void MooreCheckpoint_initValuesFromMapping(string partition, string triggerConf)
 
   Checkpoint_showdbTags();
   bool val = false;
-  m_mooreVsn.editable = val;
-  m_app.editable   = val;
-  m_outdir.editable  = val;
-  m_hltType.editable = val;
-  m_output.editable  = val;
-  m_online.editable  = val;
   m_mooreVsn.editable  = val;
-  m_tck.editable     = val;
-  m_tckList.enabled  = val;
-  m_enable.visible   = val;
-  m_reload.visible   = val;
-  //m_create.enabled  = val;
-  //m_options.enabled = val;
+  m_app.editable       = val;
+  m_outdir.editable    = val;
+  m_hltType.editable   = val;
+  m_output.editable    = val;
+  m_online.editable    = val;
+  m_mooreVsn.editable  = val;
+  m_tck.editable       = val;
+  m_tckList.enabled    = val;
+  m_enable.visible     = val;
+  m_reload.visible     = val;
+  //m_create.enabled   = val;
+  //m_options.enabled  = val;
   Checkpoint_update();
 }
 
-//=============================================================================
-// Enable commands
-// 
-// @author  M.Frank
-// @version 1.0
-//=============================================================================
-void MooreCheckpoint_enableCommands(bool val)   {
-  bool edit = val;
-  // Input fields
-  if ( !Checkpoint_Editable ) edit = false;
-  m_app.editable       = edit;
-  m_outdir.editable    = edit;
-  m_hltType.editable   = edit;
-  m_output.editable    = edit;
-  m_condMap.editable   = edit;
-  m_online.editable    = edit;
-  m_mooreVsn.editable  = edit;
-  m_tck.editable       = edit;
-  m_tckList.enabled    = edit;
-  // DB tags
-  m_condDB.enabled     = val;
-  m_ddDB.enabled       = val;
-  // Buttons:
-  m_close.enabled      = val;
-  m_create.enabled     = val;
-  m_test.enabled       = val;
-  m_reload.enabled     = val;
-  m_gzip.enabled       = val;
-  m_options.enabled    = val;
-  m_enable.visible     = !val;
-}
 
 //=============================================================================
 // Reload panel items from file
@@ -705,9 +723,9 @@ void MooreCheckpoint_enableCommands(bool val)   {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-void MooreCheckpoint_reload()  {
-  MooreCheckpoint_findVersions();
-  MooreCheckpoint_reloadApp(m_app.text);
+void Checkpoint_reload()  {
+  Checkpoint_findVersions();
+  Checkpoint_reloadApp(m_app.text);
 }
 
 //=============================================================================
@@ -716,7 +734,7 @@ void MooreCheckpoint_reload()  {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-int MooreCheckpoint_readTckFile(dyn_string& TCKs)   {
+int Checkpoint_readTckFile(dyn_string& TCKs)   {
   file f;
   dyn_string items, types;
   string path, moorev, fname, s, tckDatav;
@@ -756,7 +774,7 @@ int MooreCheckpoint_readTckFile(dyn_string& TCKs)   {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-void MooreCheckpoint_findVersions()    {
+void Checkpoint_findVersions()    {
   string path;
   dyn_string files, filesRev;
   path = Checkpoint_SwPath;
@@ -765,20 +783,28 @@ void MooreCheckpoint_findVersions()    {
     strreplace(path,"/group/","G:/");
     Checkpoint_SwPath = path;
   }
-  files = getFileNames(path+"/MOORE","*",FILTER_DIRS);
-  for(int i = 1; i <= dynlen(files); i++)  {
-    if((strpos(files[i],"MOORE_") != 0) && (strpos(files[i],"Moore_") != 0))    {
-      dynRemove(files, i);
-      i--;
+  /// Scan MOORE versions
+  if ( m_flavour.text == "Moore" )  {
+    files = getFileNames(path+"/MOORE","*",FILTER_DIRS);
+    for(int i = 1; i <= dynlen(files); i++)  {
+      if((strpos(files[i],"MOORE_") != 0) && (strpos(files[i],"Moore_") != 0))    {
+	dynRemove(files, i);
+	i--;
+      }
+    }
+    if(!dynlen(files))
+      files = getFileNames(path+"/MOORE/*","*");
+    for(int i = 1; i <= dynlen(files); i++)  {
+      if((strpos(files[i],"MOORE_") != 0) && (strpos(files[i],"Moore_") != 0))    {
+	dynRemove(files, i);
+	i--;
+      }
     }
   }
-  if(!dynlen(files))
-    files = getFileNames(path+"/MOORE/*","*");
-  for(int i = 1; i <= dynlen(files); i++)  {
-    if((strpos(files[i],"MOORE_") != 0) && (strpos(files[i],"Moore_") != 0))    {
-      dynRemove(files, i);
-      i--;
-    }
+  // Now scan Other stuff versions
+  else {
+    DebugN("Find program versions for application type:"+Checkpoint_AppVsn);
+    files = getFileNames("/group/online/dataflow/cmtuser",Checkpoint_AppVsn+"*",FILTER_DIRS);
   }
   dynSortAsc(files);
   for(int i = 1, n=dynlen(files); i <= dynlen(files); i++)  {
@@ -794,7 +820,7 @@ void MooreCheckpoint_findVersions()    {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-void MooreCheckpoint_showTCKs(dyn_string& TCKs)   {
+void Checkpoint_showTCKs(dyn_string& TCKs)   {
   dyn_string labels;
   string hltType = m_hltType.text;
   string ltck    = m_tck.text;
@@ -821,7 +847,7 @@ void MooreCheckpoint_showTCKs(dyn_string& TCKs)   {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-int MooreCheckpoint_readCmtFile()    {
+int Checkpoint_readCmtFile()    {
   file f;
   string path, dirname, fname, s, onlinev;
   int i, pos, pos1;
@@ -866,7 +892,7 @@ int MooreCheckpoint_readCmtFile()    {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-string MooreCheckpoint_createOptions(int mode=0)  {
+string Checkpoint_createOptions(int mode=0)  {
   int    pos;
   string fname = Checkpoint_directory() + "/";
   string text, lumi_param, tckhex, pyopts;
@@ -907,6 +933,9 @@ string MooreCheckpoint_createOptions(int mode=0)  {
       "OnlineEnv.MooreOnlineVersion = \""+m_app.text+"\";\n"  +
       "OnlineEnv.OnlineVersion      = \""+m_online.text+"\";\n"  +
       "OnlineEnv.MooreVersion       = \""+m_mooreVsn.text+"\";\n"  +
+      "// ---------------- Reconstruction parameters:    \n"  +
+      "OnlineEnv.RecoStartupMode    = 1;\n" +
+      "OnlineEnv.OnlineBrunelVersion= \""+m_app.text+"\";\n" +
       "// \n";
   file f = fopen(fname + "OnlineEnv.opts","w");
   fprintf(f,text);
@@ -932,7 +961,7 @@ string MooreCheckpoint_createOptions(int mode=0)  {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-string MooreCheckpoint_submitCreateCheckpoint(string tck)  {
+string Checkpoint_submitCreateCheckpoint(string tck)  {
   string tag   = m_condDB.text + "_" + m_ddDB.text;
   string utgid = m_app.text+"_"+tag+"_"+tck+"_create";
   string part  = m_partSelector.text;
@@ -944,10 +973,10 @@ string MooreCheckpoint_submitCreateCheckpoint(string tck)  {
   args = args + " -D CREATE_CHECKPOINT=1";
   args = args + " -D CHECKPOINT_FILE="+Checkpoint_directory()+"/Checkpoint.data";
   args = args + " -D CHECKPOINT_DIR="+Checkpoint_directory();
-  args = args + " /group/online/dataflow/cmtuser/checkpoints/cmds/Moore_checkpoint.sh ";
+  args = args + " /group/online/dataflow/cmtuser/checkpoints/cmds/Application_checkpoint.sh ";
   args = args + m_app.text + " storectl01 " + part + "  " + m_hltProgram.text;
   DebugN(args);
-  dpSet("STORAGE:STORESTRM02_StreamTaskCreator.Start",args);
+  dpSet("STORAGE:CHECKPOINT01_StreamTaskCreator.Start",args);
   return utgid;
 }
 
@@ -956,12 +985,12 @@ string MooreCheckpoint_submitCreateCheckpoint(string tck)  {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-string MooreCheckpoint_submitTestCheckpoint()  {
+string Checkpoint_submitTestCheckpoint()  {
   string tag = m_condDB.text + "_" + m_ddDB.text;
   string tckhex = m_tck.text, utgid;
-  string part = m_partSelector.text;
-  string hlt = m_hltType.text;
-  int    pos = strpos(tckhex,"(")+1;
+  string part   = m_partSelector.text;
+  string hlt    = m_hltType.text;
+  int    pos    = strpos(tckhex,"(")+1;
   tckhex = substr(tckhex,pos,strpos(tckhex,")")-pos);
   utgid = m_app.text+"_"+tag+"_"+tckhex+"_test";
   string args = "-E /tmp/logGaudi.fifo -O /tmp/logGaudi.fifo";
@@ -971,10 +1000,10 @@ string MooreCheckpoint_submitTestCheckpoint()  {
   args = args + " -D TEST_CHECKPOINT=1";
   args = args + " -D CHECKPOINT_FILE="+Checkpoint_directory()+"/Checkpoint.data";
   args = args + " -D CHECKPOINT_DIR="+Checkpoint_directory();
-  args = args + " /group/online/dataflow/cmtuser/checkpoints/cmds/Moore_checkpoint.sh ";
+  args = args + " /group/online/dataflow/cmtuser/checkpoints/cmds/Application_checkpoint.sh ";
   args = args + m_app.text + " storectl01 " + part + "  " + m_hltProgram.text + " 1 ";
   DebugN(args);
-  dpSet("STORAGE:STORESTRM02_StreamTaskCreator.Start",args);
+  dpSet("STORAGE:CHECKPOINT01_StreamTaskCreator.Start",args);
   return utgid;
 }
 
@@ -983,10 +1012,10 @@ string MooreCheckpoint_submitTestCheckpoint()  {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-void MooreCheckpoint_createCheckpoint()  {
-  string utgid, tck = MooreCheckpoint_createOptions(100);
+void Checkpoint_createCheckpoint()  {
+  string utgid, tck = Checkpoint_createOptions(100);
   m_messages.text = "";
-  utgid = MooreCheckpoint_submitCreateCheckpoint(tck);
+  utgid = Checkpoint_submitCreateCheckpoint(tck);
   Checkpoint_enableCommands(false);
   Checkpoint_waitTest(utgid);
 }
@@ -996,10 +1025,10 @@ void MooreCheckpoint_createCheckpoint()  {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-void MooreCheckpoint_testCheckpoint()  {
+void Checkpoint_testCheckpoint()  {
   m_messages.text = "";
-  string tck = MooreCheckpoint_createOptions(2);
-  string utgid = MooreCheckpoint_submitTestCheckpoint();
+  string tck = Checkpoint_createOptions(2);
+  string utgid = Checkpoint_submitTestCheckpoint();
   Checkpoint_waitTest(utgid);
 }
 
@@ -1009,245 +1038,95 @@ void MooreCheckpoint_testCheckpoint()  {
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-void BrunelCheckpoint_init()   {
-  string dir = "/group/online/dataflow/cmtuser/checkpoints";  
-  m_close.text         = "Close";
-  m_close.toolTipText  = "Close panel.";
-  m_messages.wordWrap  = "NoWrap";
-  m_result.text        = "";
-  m_result.backCol     = "_Transparent";
-  m_result.foreCol     = "_WindowText";
-  
-  if ( _WIN32 ) {
-    strreplace(Checkpoint_SwPath,"/group/","G:/");
+void MooreCheckpoint_init(string partition, string triggerConf, string app_typ)   {
+  LayerOn(2);
+
+  m_hltProgram.items              = makeDynString("Moore1","Moore2","PassThrough","OnlineBrunel","DataQuality");
+  if ( strlen(app_typ) == 0 )
+    m_hltProgram.text             = "Moore1";
+  else
+    m_hltProgram.text             = app_typ;
+  Checkpoint_AppType              = m_flavour.text;
+  Checkpoint_HLTProgram           = m_hltProgram.text;
+  if ( partition == "ANY" )  {
+    m_partSelector.editable = true;
+    Checkpoint_initPartitionSelector();
+    Checkpoint_initValuesFromRecipeCache(Checkpoint_Partition,triggerConf);
   }
-  m_outdir.text              = dir;
-  m_online.editable          = false;
-  m_brunel.editable          = false;
-  m_condDBLabel.toolTipText  = "Select the conditions database tag to create the BrunelCheckpoint.";
-  m_condDB.toolTipText       = m_condDBLabel.toolTipText;  
-  m_ddDBLabel.toolTipText    = "Select the detector database tag to create the BrunelCheckpoint.";
-  m_ddDB.toolTipText         = m_ddDBLabel.toolTipText;  
-  m_outdirLabel.toolTipText  = "Output directory for BrunelCheckpoint files.";
-  m_outdir.toolTipText       =  m_outdirLabel.toolTipText;
-  m_output.toolTipText       = "Final output file name for the BrunelCheckpoint.";  
-  m_output.editable          = false;
-  m_suggestions.toolTipText  = "If you really want changes, contact me....";
-  m_clear.toolTipText        = "Press to clear the message display.";
-  m_create.toolTipText       = "Press to create BrunelCheckpoint file according to selected parameters.";
-  m_test.toolTipText         = "Press to start up process using BrunelCheckpoint file.";
-  m_options.toolTipText      = "Press to generate BrunelCheckpoint job options.";
-  m_close.toolTipText        = "Press to close the panel.";
-  m_enable.toolTipText       = "Press to re-enable commands.";
-  m_enable.visible           = false;
-  m_useDBTags.state(0,Checkpoint_useDBtags);
-
-  Checkpoint_dbTagsFromRunInfo();
-  BrunelCheckpoint_reload();
-
-  int rc = dpConnect("CheckpointMessage_callback","STORAGE:CheckpointService.Messages");
-  if ( 0 != rc )  {
-    DebugN("Failed to connect to datapoint STORAGE:CheckpointService.Messages. rc="+rc);
+  else if ( strlen(partition)>0 )  {
+    //Checkpoint_initValuesFromRecipeCache(partition,triggerConf);
+    Checkpoint_initValuesFromMapping(partition,triggerConf);
+  }
+  else  {
+    Checkpoint_initValuesFromRunInfo();
+    Checkpoint_reloadApp(Checkpoint_AppVsn);
+  }
+  if(!dynlen(Checkpoint_LumiPars))  {
+    Checkpoint_LumiPars[1] = 0;
+    Checkpoint_LumiPars[2] = 0;
+    Checkpoint_LumiPars[3] = 0;
+    Checkpoint_LumiPars[4] = 0;
+  }
+  m_appLabel.text = "Moore Online version";
+  if ( 0 == Checkpoint_msgConnected )  {
+    int rc = dpConnect("CheckpointMessage_callback","STORAGE:CheckpointService.Messages");
+    if ( 0 != rc )  {
+      DebugN("Failed to connect to datapoint STORAGE:CheckpointService.Messages. rc="+rc);
+    }
+    Checkpoint_msgConnected = 1;
   }
 }
 
 //=============================================================================
-// Enable commands
+// Panel initialization routine
 // 
 // @author  M.Frank
 // @version 1.0
 //=============================================================================
-void BrunelCheckpoint_enableCommands(bool val)   {
-  bool edit = val;
-  // Input fields
-  if ( !Checkpoint_Editable ) edit = false;
-  m_outdir.editable      = edit;
-  m_output.editable      = edit;
-  // DB tags
-  m_condDB.enabled       = val;
-  m_ddDB.enabled         = val;
-  m_condDB.visible       = Checkpoint_useDBtags;
-  m_ddDB.visible         = Checkpoint_useDBtags;
-  m_condDBLabel.visible  = Checkpoint_useDBtags;
-  m_ddDBLabel.visible    = Checkpoint_useDBtags;
-  // Buttons:
-  m_close.enabled        = val;
-  m_create.enabled       = val;
-  m_test.enabled         = val;
-  m_reload.enabled       = val;
-  m_options.enabled      = val;
-  m_enable.visible       = !val;
-}
+void BrunelCheckpoint_init(string partition, string triggerConf, string app_typ)   {
+  Checkpoint_initMenu(partition, triggerConf);
+  LayerOff(2);
 
-//=============================================================================
-// Reload panel items from file
-// 
-// @author  M.Frank
-// @version 1.0
-//=============================================================================
-void BrunelCheckpoint_setApp(string app_name)  {
-  if ( app_name != m_app.text ) m_app.text = app_name;
-  Checkpoint_AppVsn = app_name;
-  BrunelCheckpoint_readCmtFile();
+  Checkpoint_AppType              = app_typ;// aka "OnlineBrunel";
+  Checkpoint_HLTProgram           = m_hltProgram.text;
+  if ( partition == "ANY" )  {
+    m_partSelector.editable = true;
+    Checkpoint_initPartitionSelector();
+    Checkpoint_initValuesFromRecipeCache(Checkpoint_Partition,triggerConf);
+  }
+  else if ( strlen(partition)>0 )  {
+    //Checkpoint_initValuesFromRecipeCache(partition,triggerConf);
+    Checkpoint_initValuesFromMapping(partition,triggerConf);
+  }
+  else  {
+    Checkpoint_initValuesFromRunInfo();
+    Checkpoint_reloadApp(Checkpoint_AppVsn);
+  }
+  if(!dynlen(Checkpoint_LumiPars))  {
+    Checkpoint_LumiPars[1] = 0;
+    Checkpoint_LumiPars[2] = 0;
+    Checkpoint_LumiPars[3] = 0;
+    Checkpoint_LumiPars[4] = 0;
+  }
+  Checkpoint_Editable      = true;
+  Checkpoint_AppVsn        = app_typ;//"OnlineBrunel";
+  Checkpoint_findVersions();
+
+  m_appLabel.text            = "Brunel Online version";
+  m_app.editable             = true;
+  m_hltProgram.items         = makeDynString("Moore1","Moore2","PassThrough","OnlineBrunel","DataQuality");
+  m_hltProgram.text          = Checkpoint_HLTProgram;
+  //m_hltType.visible          = false;
+  //m_hltTypeLabel.visible     = false;
   Checkpoint_update();
-}
 
-//=============================================================================
-// Reload panel items from file
-// 
-// @author  M.Frank
-// @version 1.0
-//=============================================================================
-void BrunelCheckpoint_reload()  {
-  Checkpoint_CondDB = "";
-  Checkpoint_DDDB = "";
-  Checkpoint_AppVsn = "";
-  BrunelCheckpoint_findVersions();
-  BrunelCheckpoint_setApp(Checkpoint_AppVsn);
-  Checkpoint_showdbTags();
-  Checkpoint_update();
-}
-
-//=============================================================================
-// 
-// @author  M.Frank
-// @version 1.0
-//=============================================================================
-void BrunelCheckpoint_reloadApp()  {
-  BrunelCheckpoint_readCmtFile();
-  Checkpoint_update();
-}
-
-//=============================================================================
-// Find all availible OnlineBrunel versions from the hlt group area
-// 
-// @author  M.Frank
-// @version 1.0
-//=============================================================================
-BrunelCheckpoint_findVersions()    {
-  string path;
-  dyn_string files, filesRev;
-  path = Checkpoint_SwPath;
-  if(_WIN32)   {
-    strreplace(path,"/sw/","P:/");
-    strreplace(path,"/group/","G:/");
-  }
-  files = getFileNames(path,"*",FILTER_DIRS);
-  for(int i = 1; i <= dynlen(files); i++)  {
-    if( strpos(files[i],"OnlineBrunel_") != 0 )    {
-      dynRemove(files, i);
-      i--;
+  if ( 0 == Checkpoint_msgConnected )  {
+    int rc = dpConnect("CheckpointMessage_callback","STORAGE:CheckpointService.Messages");
+    if ( 0 != rc )  {
+      DebugN("Failed to connect to datapoint STORAGE:CheckpointService.Messages. rc="+rc);
     }
+    Checkpoint_msgConnected = 1;
   }
-  if(!dynlen(files))
-    files = getFileNames(path+"/*","*");
-  for(int i = 1; i <= dynlen(files); i++)  {
-    if( strpos(files[i],"OnlineBrunel_") != 0 )    {
-      dynRemove(files, i);
-      i--;
-    }
-  }
-  dynSortAsc(files);
-  for(int i = 1, n=dynlen(files); i <= dynlen(files); i++)  {
-    filesRev[i] = files[n];
-    n--;
-  }
-  if ( strlen(Checkpoint_AppVsn) == 0 && dynlen(filesRev)>0 )   {
-    Checkpoint_AppVsn = filesRev[1];
-  }
-  m_app.items = filesRev;
-  m_app.text  = Checkpoint_AppVsn;
-}
-
-//=============================================================================
-// 
-// @author  M.Frank
-// @version 1.0
-//=============================================================================
-int BrunelCheckpoint_readCmtFile()    {
-  file f;
-  string path, dirname, fname, s, onlinev, brunelv;
-  int i, pos, pos1;
-  dyn_string items;
-  
-  dirname = m_app.text;
-  fname = "cmt/project.cmt";
-  path = Checkpoint_SwPath+"/"+dirname+"/"+fname;
-  if(_WIN32)   {
-    strreplace(path,"/sw/","P:/");
-    strreplace(path,"/group/","G:/");
-  }
-  f = fopen(path,"r");
-  if(f == 0)  {
-    DebugN("CMT Project File not found: "+path);
-    return 0;
-  }
-  while(!feof(f))  {
-    fgets(s,2000,f);
-    if(strpos(s,"#") == 0)
-      continue;
-    pos  = strpos(s,"ONLINE_v");
-    pos1 = strpos(s,"Online_v");
-    if(pos >= 0)    {
-      onlinev = substr(s,pos);
-      onlinev = strrtrim(onlinev);
-    }
-    if(pos1 >= 0)    {
-      onlinev = substr(s,pos1);
-      onlinev = strrtrim(onlinev);
-    }
-    pos  = strpos(s,"BRUNEL_v");
-    pos1 = strpos(s,"Brunel_v");
-    if(pos >= 0)    {
-      brunelv = substr(s,pos);
-      brunelv = strrtrim(brunelv);
-    }
-    if(pos1 >= 0)    {
-      brunelv = substr(s,pos1);
-      brunelv = strrtrim(brunelv);
-    }
-  }
-  fclose(f);
-  m_online.text = onlinev;
-  m_brunel.text = brunelv;
-  return 1;
-}
-
-//=============================================================================
-// Write task initialization options to initiate the BrunelCheckpoint
-// 
-// @author  M.Frank
-// @version 1.0
-//=============================================================================
-void BrunelCheckpoint_createOptions()  {
-  string text, fname = Checkpoint_directory() + "/";
-  bool res = mkdir(Checkpoint_directory(),"777");
-  if ( _WIN32 ) strreplace(fname,"/group/","G:/");
-  text = 
-      "// ---------------- General partition information:  \n" +
-      "OnlineEnv.PartitionID      = 1;\n" +
-      "OnlineEnv.PartitionIDName  = \"0001\";\n"  +
-      "OnlineEnv.PartitionName    = \"LHCb\";\n"  +
-      "OnlineEnv.Activity         = \"Physics\";\n"  +
-      "OnlineEnv.TAE              = 0;\n"  +
-      "OnlineEnv.OutputLevel      = 3;\n"  +
-      "// ---------------- Trigger parameters:    \n"  +
-      "OnlineEnv.DDDBTag          = \""+m_ddDB.text+"\";\n"  +
-      "OnlineEnv.CondDBTag        = \""+m_condDB.text+"\";\n"  +
-      "// \n";
-  file f = fopen(fname + "OnlineEnv.opts","w");
-  fprintf(f,text);
-  fclose(f);
-  m_messages.append(">>>Option file prepared:"+fname+ "OnlineEnv.opts");
-  strreplace(text,";\n","\n");
-  strreplace(text,"{","[");
-  strreplace(text,"}","]");
-  strreplace(text,"// ","# ");
-  strreplace(text,"OnlineEnv.","");
-  f = fopen(fname + "OnlineEnv.py","w");
-  fprintf(f,text+"from OnlineConfig import *\n\n");
-  fclose(f);
-  m_messages.append(">>>Python option file prepared:"+fname+ "OnlineEnv.py");
 }
 
 //=============================================================================
@@ -1268,7 +1147,7 @@ void BrunelCheckpoint_submitCreateCheckpoint()  {
   args = args + " /group/online/dataflow/cmtuser/"+m_app.text+"/OnlineBrunelSys/scripts/runBrunel.sh ";
   args = args + m_app.text + " Class1 RecBrunel storectl01";
   DebugN(args);
-  dpSet("STORAGE:STORESTRM02_StreamTaskCreator.Start",args);
+  dpSet("STORAGE:CHECKPOINT01_StreamTaskCreator.Start",args);
 }
 
 //=============================================================================
@@ -1291,28 +1170,6 @@ string BrunelCheckpoint_submitTestCheckpoint()  {
   args = args + m_app.text + " Class1 RecBrunel storectl01";
   DebugN(args);
   m_messages.text = "";
-  dpSet("STORAGE:STORESTRM02_StreamTaskCreator.Start",args);
+  dpSet("STORAGE:CHECKPOINT01_StreamTaskCreator.Start",args);
   return utgid;
-}
-
-//=============================================================================
-// 
-// @author  M.Frank
-// @version 1.0
-//=============================================================================
-void BrunelCheckpoint_createCheckpoint()  {
-  m_messages.text = "";
-  BrunelCheckpoint_createOptions();
-  BrunelCheckpoint_submitCreateCheckpoint();
-  Checkpoint_enableCommands(false);
-}
-
-//=============================================================================
-// 
-// @author  M.Frank
-// @version 1.0
-//=============================================================================
-void BrunelCheckpoint_testCheckpoint()  {
-  string utgid = BrunelCheckpoint_submitTestCheckpoint();
-  Checkpoint_waitTest(utgid);
 }

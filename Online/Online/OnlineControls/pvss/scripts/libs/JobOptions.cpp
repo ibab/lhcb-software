@@ -5,6 +5,7 @@ string JobOptionsVersion     = "1.0";
 string JobOptionsPartition_t = "JobOptionsPartition";
 string JobOptionsActivity_t  = "JobOptionsActivity";
 string JobOptionsTaskType_t  = "JobOptionsTaskType";
+string JobOptionsInstall_t   = "JobOptionsInstalled";
 
 int    jo_debug = 1;
 int    jo_doExit = 0;
@@ -325,6 +326,7 @@ void JobOptions_installControl() {
 void JobOptions_installOptions() {
   dyn_dyn_string names;
   dyn_dyn_int types;
+  string nam;
   // Create Partition type
   names[1] = makeDynString (JobOptionsPartition_t,"","","");
   names[2] = makeDynString ("","State","","");
@@ -362,6 +364,16 @@ void JobOptions_installOptions() {
   types[6] = makeDynInt (0,DPEL_STRING);
   types[7] = makeDynInt (0,DPEL_STRING);
   JobOptions_typeCreate(names,types);
+
+  // Create Activity type
+  names[1] = makeDynString (JobOptionsInstall_t,"","","");	
+  types[1] = makeDynInt (DPEL_INT);
+  JobOptions_typeCreate(names,types);
+  nam = JobOptions_sysName()+JobOptionsInstall_t;
+  if ( !dpExist(nam) )  {
+    dpCreate(nam, JobOptionsInstall_t, JobOptions_sysID());
+    dpSet(nam,JobOptions_sysID());
+  }
 }
 /// Uninstall types
 void JobOptions_uninstallOptions() {
@@ -378,10 +390,13 @@ void JobOptions_uninstall() {
   JobOptions_uninstallOptions();
 }
 int JobOptionsEditor_isInstalled()  {
-  if ( dynlen(dpTypes(JobOptionsTaskType_t,JobOptions_sysID())) == 0 )  {
-    return 0;
+  string nam = JobOptions_sysName()+JobOptionsInstall_t;
+  //if ( dynlen(dpTypes(JobOptionsTaskType_t,JobOptions_sysID())) == 0 )  {
+  if ( dpExists(nam) )  {
+    return 1;
   }
-  return 1;
+  DebugN("Data point "+nam+" does not exist. No job options editor availible!");
+  return 0;
 }
 /// Flip between systems
 int JobOptionsEditor_setSystem(string name)  {
