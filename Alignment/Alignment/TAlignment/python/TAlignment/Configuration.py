@@ -60,6 +60,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "DatasetName"                  : "Unknown"
         , "OnlineMode"                   : False
         , "OnlineAligWorkDir"            : "/group/online/AligWork/running"
+        , "Upgrade"                      : False
         }
 
     def __apply_configuration__(self):
