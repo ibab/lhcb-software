@@ -229,14 +229,22 @@ void main()
       scene.add(ambientLight);
       
       // directional lighting
-      var directionalLighta = new THREE.DirectionalLight(0xafafaf);
-      directionalLighta.position.set(20, 20, 20);//.normalize();
+      var directionalLighta = new THREE.DirectionalLight(0xffffff);
+      directionalLighta.position.set(1.0, 1.0, 1.0); //z is along beam axis, y is up, x is perpendicular, horizontal
       scene.add(directionalLighta);
 
-      var directionalLightb = new THREE.DirectionalLight(0xafafaf);
-      directionalLightb.position.set(-20, 20, -20);
+      var directionalLightb = new THREE.DirectionalLight(0xffffff);
+      directionalLightb.position.set(-1.0, 1.0, -1.0);
       scene.add(directionalLightb);
+/*
+      var directionalLightc = new THREE.DirectionalLight(0xffffff);
+      directionalLightc.position.set(1.0, 1.0, 1.0); //z is along beam axis, y is up, x is perpendicular, horizontal
+      scene.add(directionalLightc);
 
+      var directionalLightd = new THREE.DirectionalLight(0xffffff);
+      directionalLightd.position.set(-1.0, 1.0, -1.0);
+      scene.add(directionalLightd);
+*/	
 
       var currentevent = 0;
      //this contains names of the currently available events on the server, first event is current
@@ -906,12 +914,15 @@ void main()
               mergedecalgeometry = new THREE.Geometry();
               for (i in ecalboxes)
               {
-	        var escale = 0.05; //20gev is 1m?
 	        var eb = ecalboxes[i];
-		var ecalgeometry = new THREE.BoxGeometry(eb[4], eb[4], eb[0]*escale);
-	        var ecalmesh = new THREE.Mesh(ecalgeometry, ecalmaterial); 
+		var ez = 1.0e+3*(1.0-Math.exp(-1.0e-4*eb[0]));
+	        //var escale = 0.05; //20gev is 1m?
+		//var ecalgeometry = new THREE.BoxGeometry(eb[4], eb[4], eb[0]*escale);
 	        //var ecalmesh = new THREE.Mesh(ecalgeometry, ecalmaterials[0]); 
-                ecalmesh.position.set(1.0e-3*eb[1], 1.0e-3*eb[2], 1.0e-3*(eb[3]-0.5*eb[0]*escale)); 
+                //ecalmesh.position.set(1.0e-3*eb[1], 1.0e-3*eb[2], 1.0e-3*(eb[3]-0.5*eb[0]*escale)); 
+		var ecalgeometry = new THREE.BoxGeometry(eb[4], eb[4], ez);
+	        var ecalmesh = new THREE.Mesh(ecalgeometry, ecalmaterial); 
+                ecalmesh.position.set(1.0e-3*eb[1], 1.0e-3*eb[2], 1.0e-3*(eb[3]+400.0-0.5*ez)); 
                 ecalmesh.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
                 //THREE.GeometryUtils.merge(mergedecalgeometry, ecalmesh);
 		ecalmesh.updateMatrix();
@@ -931,13 +942,15 @@ void main()
               mergedhcalgeometry = new THREE.Geometry();
               for (i in hcalboxes)
               {
-	        var escale = 0.05; //20gev is 1m?
 	        var hb = hcalboxes[i];
-		var hcalgeometry = new THREE.BoxGeometry(hb[4], hb[4], hb[0]*escale);
-	        var hcalmesh = new THREE.Mesh(hcalgeometry, hcalmaterial); 
+	        var ez = 1.5e+3*(1.0-Math.exp(-0.5e-4*hb[0]));
+		//var escale = 0.05; //20gev is 1m?
+		//var hcalgeometry = new THREE.BoxGeometry(hb[4], hb[4], hb[0]*escale);
 	        //var hcalmesh = new THREE.Mesh(hcalgeometry, hcalmaterials[0]); 
-
-                hcalmesh.position.set(1.0e-3*hb[1], 1.0e-3*hb[2], 1.0e-3*(hb[3]+0.5*hb[0]*escale)); 
+                //hcalmesh.position.set(1.0e-3*hb[1], 1.0e-3*hb[2], 1.0e-3*(hb[3]+0.5*hb[0]*escale)); 
+		var hcalgeometry = new THREE.BoxGeometry(hb[4], hb[4], ez);
+	        var hcalmesh = new THREE.Mesh(hcalgeometry, hcalmaterial); 
+                hcalmesh.position.set(1.0e-3*hb[1], 1.0e-3*hb[2], 1.0e-3*(hb[3]+0.5*ez)); 
                 hcalmesh.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
                 //THREE.GeometryUtils.merge(mergedhcalgeometry, hcalmesh);
 		hcalmesh.updateMatrix();
