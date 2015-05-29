@@ -371,6 +371,16 @@ StatusCode FTClusterCreator::execute(){
         FTCluster *newCluster = new FTCluster(meanChanPosition,fractionChanPosition,newClusSize,totalCharge);
         ++m_nCluster;
         m_sumCharge += totalCharge;
+ 
+
+        // TEMPORARY FIX! The calculation of the meanChanPos creates module=12 when on an edge channel!!
+        //  Should be taken into account in the calculation of meanChanPos.
+        debug() << "creating New Cluster at meanChanPos: " << meanChanPosition << endmsg;
+        debug() << "SiPM " 
+          << ", sipmCell:" << newCluster->channelID().sipmCell() << ", sipmId:" << newCluster->channelID().sipmId()
+          << " mat:" << newCluster->channelID().mat() << ", module:" << newCluster->channelID().module() 
+          << ", quarter:" << newCluster->channelID().quarter() << ", layer:" << newCluster->channelID().layer() << endmsg;
+        if( newCluster->channelID().module() >= 12 ) { continue; }
 
 
         // Get largest MCHit object contributing to cluster
