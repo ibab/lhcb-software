@@ -387,7 +387,7 @@ StatusCode FTNtupleMaker::ClusterWithLargestMCHitInfo(Tuple &tpl)
   std::vector<double> ClusterCharge;
   std::vector<int> ClusterSize;
   std::vector<int> ClusterHitNb;
-  //std::vector<int> ClusterHitCounter;
+
 
  // Look at larger mcHit from clusters
   std::vector<double> HitclusX;
@@ -437,7 +437,7 @@ StatusCode FTNtupleMaker::ClusterWithLargestMCHitInfo(Tuple &tpl)
     }
 
 
-    int HitCounter = 0;
+
     const  LHCb::MCHit* pHit = myClusterToHitLink.first( cluster );
 
   // Look at largest mcHit from clusters
@@ -537,7 +537,7 @@ StatusCode FTNtupleMaker::ClusterWithAllMCHitInfo(Tuple &tpl){
   std::vector<double> ClusterCharge;
   std::vector<int> ClusterSize;
   std::vector<int> ClusterHitNb;
-  //ROOT::Math::SVector<int> ClusterHitCounter;
+
 
  // Loop over all mcHit from clusters
   std::vector<double> HitclusX;
@@ -635,60 +635,6 @@ StatusCode FTNtupleMaker::ClusterWithAllMCHitInfo(Tuple &tpl){
     pHit = myClusterToHitLink.next();
     }
     }
-    
-  
-                     
-   // Loop over mcHits from clusters
-    // while(pHit != NULL)
-    // {
-    //   ClusterHitclusX.push_back(pHit->midPoint().x());
-    //   info()<< "- HitCounter=" << HitCounter <<" ClusterCounter=" << (iterCluster - clustersCont->begin())
-    //         << " HitPosition = " << pHit->midPoint()
-    //     // << "{ X = " << pHit->midPoint().x()<< " Y = "<< pHit->midPoint().y()
-    //     //   << " Z = " << pHit->midPoint().z() 
-    //         << " Energy = " << pHit->energy() 
-    //         << "\n from MCPartPID= " << pHit->mcParticle()->particleID().pid()
-    //         << " Momentum = " << pHit->mcParticle()->momentum()
-    //     //<< "{ PX = " << pHit->mcParticle()->momentum().x()<< " PY = "<< pHit->mcParticle()->momentum().y()
-    //     // << " PZ = " << pHit->mcParticle()->momentum().z()<< " E = "<< pHit->mcParticle()->momentum().e()
-    //   //<< " }"
-    //         << endmsg;
-    //   HitclusX[HitCounter][iterCluster - clustersCont->begin()] = pHit->midPoint().x();
-    //   HitclusY[HitCounter][iterCluster - clustersCont->begin()] = pHit->midPoint().y();
-    //   HitclusZ[HitCounter][iterCluster - clustersCont->begin()] = pHit->midPoint().z();
-    //   HitclusEnergy[HitCounter][iterCluster - clustersCont->begin()] = pHit->energy();
-    //   HitclusPID[HitCounter][iterCluster - clustersCont->begin()] = pHit->mcParticle()->particleID().pid();
-    //   HitclusPartPx[HitCounter][iterCluster - clustersCont->begin()] = pHit->mcParticle()->momentum().x();
-    //   HitclusPartPy[HitCounter][iterCluster - clustersCont->begin()] = pHit->mcParticle()->momentum().y();
-    //   HitclusPartPz[HitCounter][iterCluster - clustersCont->begin()] = pHit->mcParticle()->momentum().z();
-    //   HitclusPartE[HitCounter][iterCluster - clustersCont->begin()] = pHit->mcParticle()->momentum().e();
-      
-      
-    //   info()<< "HitclusX["<<HitCounter << "][" << iterCluster - clustersCont->begin() << "]=" 
-    //         << HitclusX[HitCounter][iterCluster - clustersCont->begin()] 
-    //     //<< " HitclusY["<< iterCluster - clustersCont->begin()<<"]["<< HitCounter<< "]=" 
-    //     // << HitclusY[iterCluster - clustersCont->begin()][HitCounter]
-    //     //<< " HitclusZ["<< iterCluster - clustersCont->begin()<<"]["<< HitCounter<< "]=" 
-    //     // << HitclusZ[iterCluster - clustersCont->begin()][HitCounter]
-    //         << endmsg;
-      
-    //   const DeFTFibreMat* pL = m_deFT->findFibreMat(pHit->midPoint());
-    //   if( pL ) {
-    //     std::vector < std::pair<LHCb::FTChannelID, double> > channels;
-    //     if( pL->calculateListOfFiredChannels( pHit, channels) == StatusCode::FAILURE){
-    //       if ( msgLevel( MSG::DEBUG) ) debug() << "Could not calculate list of fired channels" << endmsg;
-    //       return StatusCode::SUCCESS;
-    //     }
-    //   }
-      
-    //   ++HitCounter;
-      
-    //   pHit = myClusterToHitLink.next();
-    // }
-    
-    //StatusCode status = tpl_Hit->write();
-
-    // ClusterHitCounter.push_back( HitCounter );
   }
 
   tpl->farray("Cluster_ChannelID" ,ClusterChannelID,"Nclusters",50000 );
