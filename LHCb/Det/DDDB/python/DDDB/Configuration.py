@@ -177,8 +177,8 @@ class DDDBConf(ConfigurableUser):
         Default configuration for 2015 data
         """
         # Set the tags
-        self.__set_tag__(["DDDB"],     "dddb-20150520" )
-        self.__set_tag__(["LHCBCOND"], "cond-20150511" )
+        self.__set_tag__(["DDDB"],     "dddb-20150526" )
+        self.__set_tag__(["LHCBCOND"], "cond-20150526" )
         self.__set_tag__(["DQFLAGS"],  "dq-20140822"   )
         if not self.getProp("Simulation"):
            # set initialization time to a safe default
