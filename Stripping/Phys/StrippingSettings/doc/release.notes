@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-29 - Lucio Anderlini
+ - Changed prescales to PID/Calib lines
+
 ! 2015-06-29 - Andrea Contu
  - Updated dbase for S22
 

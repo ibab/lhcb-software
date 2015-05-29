@@ -359,7 +359,7 @@ NoPIDDstarWithD02RSKPi =  {
     , 'KK_WrongMass'     : 25 * MeV       ## MeV (3 sigma veto)
     , 'PiPi_WrongMass'   : 25 * MeV       ## MeV (3 sigma veto)
     ##
-    , 'Prescale'         : 0.800          ## unitless
+    , 'Prescale'         : 1.000          ## unitless
     , 'Postscale'        : 1.00           ## unitless
     ##
     , 'Monitor'          : False          ## Activate the monitoring?
@@ -396,7 +396,7 @@ PIDCalib = {
 
 
       'Bu2KMuMu'       : {
-        'Prescale'      : 1.0
+        'Prescale'      : 0.0
         , 'CheckPV'     : True
         , 'RawEvent'    : ['Muon']
         , 'MDST.DST'    : True
@@ -423,7 +423,7 @@ PIDCalib = {
 
 
       'L02ppi' : {
-        'Prescale'      : .14
+        'Prescale'      : 1.0
         , 'CheckPV'     : True
         , 'RawEvent'    : ['Muon']
         , 'MDST.DST'    : False
@@ -478,21 +478,21 @@ PIDCalib = {
 
       'L02ppiDD' : {
         'CloneLine' : "L02ppi"
-        , 'Prescale'  : .14
+        , 'Prescale'  : 1.0
         , 'InputTES'    : [ 'Phys/StdNoPIDsDownPions/Particles', 
                                    'Phys/StdNoPIDsDownProtons/Particles' ]
       },
 
       'L02ppiDDHighPT' : {
         'CloneLine' : "L02ppiHighPT"
-        , 'Prescale'  : 1.0
+        , 'Prescale'  : 0.0
         , 'InputTES'    : [ 'Phys/StdNoPIDsDownPions/Particles', 
                                    'Phys/StdNoPIDsDownProtons/Particles' ]
       },
 
       'L02ppiDDVeryHighPT' : {
         'CloneLine' : "L02ppiVeryHighPT"
-        , 'Prescale'  : 1.0
+        , 'Prescale'  : 0.0
         , 'InputTES'    : [ 'Phys/StdNoPIDsDownPions/Particles', 
                                    'Phys/StdNoPIDsDownProtons/Particles' ]
       },
@@ -520,7 +520,7 @@ PIDCalib = {
       },
 
       'Bu2Kee'       : {
-        'Prescale'      : 1.0
+        'Prescale'      : 0.0
         , 'CheckPV'     : True
         , 'RawEvent'    : ['Calo']
         , 'MDST.DST'    : True
@@ -604,7 +604,7 @@ PIDCalib = {
 
 
       'Ks02pipi'      :{
-        'Prescale'      : 0.024
+        'Prescale'      : 0.05
         , 'CheckPV'     : True
         , 'RawEvent'    : ['Muon']
         , 'MDST.DST'    : False
@@ -629,7 +629,7 @@ PIDCalib = {
     
       'Ks02pipiDD' : {
         'CloneLine'    : 'Ks02pipi'
-        , 'Prescale'   : 0.024
+        , 'Prescale'   : 0.05
         , 'CheckPV'     : True
         , 'RawEvent'    : ['Muon']
         , 'MDST.DST'    : False
