@@ -13,7 +13,6 @@ from Configurables import LHCbApp
 
 from PRConfig import TestFileDB
 TestFileDB.test_file_db["mc11a-xdst"].run(configurable=LHCbApp())
-Boole().SiG4EnergyDeposit=True
 </text></argument>
   <argument name="reference"><text>../refs/boole-mc11a-xdst.ref</text></argument>
   <argument name="validator"><text>

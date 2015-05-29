@@ -3,6 +3,19 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- Changes to references to follow changes in underlying packages
+  . Strict inequalities moved into not strict ones in force2bitsADC patch
+    (MCFTDigitCreator)
+
+- Changes to configuration
+  . Default DataType is now 2015 (no effect, value not explicitly used anywhere)
+  . Boole().SiG4EnergyDeposit now True by default (use Geant4 modelling of energy
+    loss for silicon trackers from Geant4 instead of in-house)
+
+- Changes to tests
+  . All tests now use Boole().SiG4EnergyDeposit = True, except MC10 tests. 
+    Reference files updated accordingly
+
 </PRE><H1><A NAME=v29r5>2015-04-21 Boole v29r5</A></H1><PRE>
 This version uses projects:
  LCG_74root6 (ROOT 6.02.05), Gaudi v26r1, LHCb v38r6, Lbcom v16r5

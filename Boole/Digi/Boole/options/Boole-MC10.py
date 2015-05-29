@@ -6,7 +6,8 @@
 ##############################################################################
 
 from Gaudi.Configuration import importOptions
+from Boole.Configuration import *
+Boole().SiG4EnergyDeposit=False
 
-importOptions("$APPCONFIGOPTS/Boole/Default.py")
 importOptions("$APPCONFIGOPTS/Boole/DataType-2010.py")
  

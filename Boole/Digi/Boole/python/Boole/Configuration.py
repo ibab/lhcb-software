@@ -38,7 +38,7 @@ class Boole(LHCbConfigurableUser):
         ,"ProductionMode"      : False 
         ,"OutputLevel"         : INFO 
         ,"DatasetName"         : "Boole"
-        ,"DataType"            : "2012"
+        ,"DataType"            : "2015"
         ,"DDDBtag"             : ""
         ,"CondDBtag"           : ""
         ,"VeloTell1Processing" : True
@@ -51,7 +51,7 @@ class Boole(LHCbConfigurableUser):
         ,"MoniSequence"        : []
         ,"FilterSequence"      : []
         ,"EnablePack"          : True
-        ,"SiG4EnergyDeposit"   : False
+        ,"SiG4EnergyDeposit"   : True
         ,"SplitRawEventFormat" : None #Where the raw event sits, DAQ/RawEvent!
         }
 
@@ -75,7 +75,7 @@ class Boole(LHCbConfigurableUser):
        ,'ProductionMode' : """ Enables special settings for running in production """
        ,'OutputLevel'  : """ The printout level to use (default INFO) """
        ,'DatasetName'  : """ String used to build output file names """
-       ,'DataType'     : """ Data type. Default '2011' (use 'Upgrade' for LHCb Upgrade simulations)"""
+       ,'DataType'     : """ Data type. Default '2015' (use 'Upgrade' for LHCb Upgrade simulations)"""
        ,'DDDBtag'      : """ Tag for DDDB """
        ,'CondDBtag'    : """ Tag for CondDB """
        ,'VeloTell1Processing' : """ Use the Tell1 emulation bit perfect code to perform digitization and zero suppression of the simulated Velo data (default True) """
