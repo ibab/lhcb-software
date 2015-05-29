@@ -1,4 +1,3 @@
-   
 #include "OTModuleClbrMon.h"
 
 #include <GaudiKernel/AlgFactory.h>
@@ -79,8 +78,12 @@ OTModuleClbrMon::OTModuleClbrMon(const std::string& name, ISvcLocator* pSvcLocat
 
   declareProperty("HistResidual", histResidualOpts, "Options for residual histograms (default r = [-2.5, 2.5]/50)");
   declareProperty("Simulation", simulation = false, " Is simulation or data (default false, so data)");
-  declareProperty("Apply_Calibration", Apply_Calibration = false, " Apply_Calibration - in xml (by now) or in DB (default false,)");
-  declareProperty("Verbose", verbose = false, " Verbose, for debugging (default false,)");
+  declareProperty("Apply_Calibration", Apply_Calibration = true, " Apply_Calibration - in xml (by now) or in DB (default false,)");
+  declareProperty("Save_Fits", save_fits = true, " Save fitted gaussian (default false,)");
+
+  declareProperty("OTIS_calibration", OTIS_calibration = true, "OTIS calibration (instead of half module left and right)");
+
+  declareProperty("Verbose", verbose = true, " Verbose, for debugging (default false,)");
   //  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/group/online/alignment/" );
   // declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online" );
   declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online/OT/results.xml" );
@@ -395,15 +398,29 @@ StatusCode OTModuleClbrMon::execute()
         fill(histStationDriftTime[s], tdrift, 1.0);
 
         int otis = (channel.straw() - 1) / 32;
-        if(otis <= 1 && dist < 0) fill(histModuleDriftTimeResidual01L[s][l][q][m], timeResidual, 1.0);
-        if(otis <= 1 && dist > 0) fill(histModuleDriftTimeResidual01R[s][l][q][m], timeResidual, 1.0);
-        if(otis >= 2 && dist < 0) fill(histModuleDriftTimeResidual23L[s][l][q][m], timeResidual, 1.0);
-        if(otis >= 2 && dist > 0) fill(histModuleDriftTimeResidual23R[s][l][q][m], timeResidual, 1.0);
+	if(OTIS_calibration){
+	  if(otis == 0) fill(histModuleDriftTimeResidual01L[s][l][q][m], timeResidual, 1.0);
+	  if(otis == 1) fill(histModuleDriftTimeResidual01R[s][l][q][m], timeResidual, 1.0);
+	  if(otis == 2) fill(histModuleDriftTimeResidual23L[s][l][q][m], timeResidual, 1.0);
+	  if(otis == 3) fill(histModuleDriftTimeResidual23R[s][l][q][m], timeResidual, 1.0);
 
-        if(otis <= 1 && dist < 0) m_histModuleDriftTimeResidual01L[s][l][q][m]->Fill(timeResidual);
-        if(otis <= 1 && dist > 0) m_histModuleDriftTimeResidual01R[s][l][q][m]->Fill(timeResidual);
-        if(otis >= 2 && dist < 0) m_histModuleDriftTimeResidual23L[s][l][q][m]->Fill(timeResidual);
-        if(otis >= 2 && dist > 0) m_histModuleDriftTimeResidual23R[s][l][q][m]->Fill(timeResidual);
+	  if(otis == 0) m_histModuleDriftTimeResidual01L[s][l][q][m]->Fill(timeResidual);
+	  if(otis == 1) m_histModuleDriftTimeResidual01R[s][l][q][m]->Fill(timeResidual);
+	  if(otis == 2) m_histModuleDriftTimeResidual23L[s][l][q][m]->Fill(timeResidual);
+	  if(otis == 3) m_histModuleDriftTimeResidual23R[s][l][q][m]->Fill(timeResidual);
+
+	}
+	else{
+	  if(otis <= 1 && dist < 0) fill(histModuleDriftTimeResidual01L[s][l][q][m], timeResidual, 1.0);
+	  if(otis <= 1 && dist > 0) fill(histModuleDriftTimeResidual01R[s][l][q][m], timeResidual, 1.0);
+	  if(otis >= 2 && dist < 0) fill(histModuleDriftTimeResidual23L[s][l][q][m], timeResidual, 1.0);
+	  if(otis >= 2 && dist > 0) fill(histModuleDriftTimeResidual23R[s][l][q][m], timeResidual, 1.0);
+
+	  if(otis <= 1 && dist < 0) m_histModuleDriftTimeResidual01L[s][l][q][m]->Fill(timeResidual);
+	  if(otis <= 1 && dist > 0) m_histModuleDriftTimeResidual01R[s][l][q][m]->Fill(timeResidual);
+	  if(otis >= 2 && dist < 0) m_histModuleDriftTimeResidual23L[s][l][q][m]->Fill(timeResidual);
+	  if(otis >= 2 && dist > 0) m_histModuleDriftTimeResidual23R[s][l][q][m]->Fill(timeResidual);
+	}
 
         fill(histModuleDriftTimeResidual[s][l][q][m], timeResidual, 1.0);
         fill(histQuarterDriftTimeResidual[s][l][q], timeResidual, 1.0);
@@ -465,6 +482,9 @@ StatusCode OTModuleClbrMon::finalize()
   projector.release().ignore();
   decoder.release().ignore();
 
+  TFile * outFile = new TFile("calibration_monitoring.root", "RECREATE");
+
+  /*
   double mtoff[] = {
     27.8546, 27.4911, 27.1707, 26.8945, 26.6638, 26.4802, 26.3445, 26.2568, 26.2233, 27.8478, 27.485, 27.1654, 26.89, 26.66,
     26.4774, 26.3425, 26.2557, 26.2183, 27.8823, 27.5192, 27.1991, 26.9231, 26.6927, 26.5092, 26.3737, 26.2874, 26.2548,
@@ -499,12 +519,16 @@ StatusCode OTModuleClbrMon::finalize()
     32.4177, 32.1464, 31.9141, 31.7206, 31.567, 31.4538, 31.3813, 31.3496, 32.7558, 32.4473, 32.1763, 31.9435, 31.7497,
     31.5959, 31.4825, 31.4105, 31.3837, 32.7534, 32.446, 32.175, 31.9429, 31.7497, 31.5962, 31.4832, 31.4118, 31.3815
   };
+  */
 
   double test[3][4][4][9]; memset(test, 0.0, sizeof(test));
-  double newT0s[3][4][4][9]; memset(newT0s, 0.0, sizeof(newT0s));
+  //double newT0s[3][4][4][9]; memset(newT0s, 0.0, sizeof(newT0s));
 
   double t0s[3][4][4][9]; memset(t0s, 0, sizeof(t0s));
-  double fake_t0s[3][4][4][9]; memset(t0s, 0, sizeof(t0s));
+
+  double test_OTIS[3][4][4][9][4]; memset(test_OTIS, 0.0, sizeof(test_OTIS));
+
+  //double fake_t0s[3][4][4][9]; memset(t0s, 0, sizeof(t0s));
   //readCondXMLs(t0s);
   if(readXMLs) readCondXMLs(t0s);
   else readCondDB(t0s);
@@ -521,20 +545,130 @@ StatusCode OTModuleClbrMon::finalize()
       }
     }
   }
-    for(int s = 0; s < 3; s++){
-      for(int l = 0; l < 4; l++){
-	for(int q = 0; q < 4; q++){
+    
+  //Loop over the station layer quarter module                                                                                                    
 
-	  double t0_ = 0.0;
-	  double dt0_ = 0.0;
-	  double dt0err_ = 0.1;
-	  
+  std::cout << "Loop ..." << std::endl;
+  for(int s = 0; s < 3; s++){
+    for(int l = 0; l < 4; l++){
+      for(int q = 0; q < 4; q++){
+
+	// used only for Alex's monitorning                                                                                                                                
+	double t0_ = 0.0;
+	double dt0_ = 0.0;
+	double dt0err_ = 0.1;
+
+        for(int m = 8; m >= 0; m--){
+
+	  std::string histName = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual";
+	  std::string histName01L = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual01L";
+	  std::string histName01R = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual01R";
+	  std::string histName23L = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual23L";
+	  std::string histName23R = "OTModuleClbrMon/" + stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m] + "/driftTimeResidual23R";
+
+          TH1D* hist = (TH1D*)m_histModuleDriftTimeResidual[s][l][q][m]->Clone("hist");
+          TH1D* hist01L = (TH1D*)m_histModuleDriftTimeResidual01L[s][l][q][m]->Clone("hist01L");
+          TH1D* hist01R = (TH1D*)m_histModuleDriftTimeResidual01R[s][l][q][m]->Clone("hist01R");
+          TH1D* hist23L = (TH1D*)m_histModuleDriftTimeResidual23L[s][l][q][m]->Clone("hist23L");
+          TH1D* hist23R = (TH1D*)m_histModuleDriftTimeResidual23R[s][l][q][m]->Clone("hist23R");
+
+	  int modulen = m + 9 * (q + 4 * (l + 4 * s));
+
+          if(hist == 0 || hist->GetEntries() < 1000 || (s == 0 && m == 0))//this is the normal condition  
+	    //if(s == 0 && m == 0) //this is for debug                                                                                                                            
+            {
+              if(hist != 0 && !(s == 0 && m == 0)) std::cout << histName << " :: N = " << hist->GetEntries() << std::endl;
+              hdt0->SetBinContent(hdt0->FindBin(modulen), 0.0);
+              hdt0->SetBinError(hdt0->FindBin(modulen), 0.0);
+              ht0->SetBinContent(ht0->FindBin(modulen), t0s[s][l][q][m]);
+              ht0->SetBinError(ht0->FindBin(modulen), 0.0);
+              continue;
+            }
+          double dt0err = 0.0;
+
+	  std::cout<<"Now fitting the 4 sub contributions"<<std::endl;
+
+          double residual_01L=0.0;
+          double residual_01R=0.0;
+          double residual_23L=0.0;
+          double residual_23R=0.0;
+
+          double residual_01L_err=0.0;
+          double residual_01R_err=0.0;
+          double residual_23L_err=0.0;
+          double residual_23R_err=0.0;
+
+          StatusCode sc_01L = fit_single_hist(hist01L,s,l,q, m, "01L", residual_01L, residual_01L_err, outFile);
+          StatusCode sc_01R = fit_single_hist(hist01R,s,l,q, m, "01R", residual_01R, residual_01R_err, outFile);
+          StatusCode sc_23L = fit_single_hist(hist23L,s,l,q, m, "23L", residual_23L, residual_23L_err, outFile);
+          StatusCode sc_23R = fit_single_hist(hist23R,s,l,q, m, "23R", residual_23R, residual_23R_err, outFile);
+
+          if(OTIS_calibration){
+	    test_OTIS[s][l][q][m][0] = residual_01L;
+	    test_OTIS[s][l][q][m][1] = residual_01R;
+	    test_OTIS[s][l][q][m][2] = residual_23L;
+	    test_OTIS[s][l][q][m][3] = residual_23R;
+
+		if(Apply_Calibration){
+		  for (int a = 0; a<4;a++){
+		    test_OTIS[s][l][q][m][a] = test_OTIS[s][l][q][m][a]+t0s[s][l][q][m];
+		  }
+		}
+
+          }
+	  else{
+	    if( m==8 && (q == 0 || q == 2) && hist23L->GetEntries()==0 && hist23R->GetEntries()==0){ //only 2 half monlayer contributions 
+	      test[s][l][q][m] = 0.5*(residual_01L + residual_01R);
+	      
+	      dt0err = 0.5*(sqrt((residual_01L_err*residual_01L_err)+(residual_01R_err*residual_01R_err)));
+	      
+	    }
+	    else{
+	      test[s][l][q][m] = 0.25*(residual_01L + residual_01R + residual_23L+ residual_23R);
+	      
+	      
+	      dt0err = 0.25*(sqrt((residual_01L_err*residual_01L_err)+(residual_01R_err*residual_01R_err)
+				  +(residual_23L_err*residual_23L_err)+(residual_23R_err*residual_23R_err)));
+	    }
+
+	    double dt0 =  test[s][l][q][m];
+	    double t0 = t0s[s][l][q][m] + test[s][l][q][m];
+	    hdt0->SetBinContent(hdt0->FindBin(modulen),  dt0);
+	    hdt0->SetBinError(hdt0->FindBin(modulen), dt0err);
+	    ht0->SetBinContent(ht0->FindBin(modulen), t0);
+	    ht0->SetBinError(ht0->FindBin(modulen), dt0err);
+
+
+	    //if(fabs(dt0) > 1) std::cout << histName << " :: dt0 = " << dt0 << std::endl; 
+	    std::cout << histName << " :: dt0 = " << dt0 << std::endl;
+
+	    if(Apply_Calibration){
+	      t0s[s][l][q][m]= t0s[s][l][q][m] + test[s][l][q][m];
+	    }
+	    else
+	      t0s[s][l][q][m]= t0s[s][l][q][m] + 0.0;
+	  }
+        }
+      }
+    }
+  }
+
+  /*
+  for(int s = 0; s < 3; s++){
+      for(int l = 0; l < 4; l++){
+	for(int q = 0; q < 4; q++){	  
 	  for(int m = 8; m >= 0; m--){
+
+	    double t0_ = 0.0;
+	    double dt0_ = 0.0;
+	    double dt0err_ = 0.1;
 
 	    int modulen = m + 9 * (q + 4 * (l + 4 * s));
 
+	    //std::cout<< "inner looop"<<std::endl;//debug
 	    
-	    if(m_histModuleDriftTimeResidual[s][l][q][m] == 0 || m_histModuleDriftTimeResidual[s][l][q][m]->GetEntries() < 1000  || (s == 0 && m == 0))
+	    //    if(m_histModuleDriftTimeResidual[s][l][q][m] == 0 || m_histModuleDriftTimeResidual[s][l][q][m]->GetEntries() < 1000  || (s == 0 && m == 0))
+	    if(m_histModuleDriftTimeResidual[s][l][q][m] == 0 || m_histModuleDriftTimeResidual[s][l][q][m]->GetEntries() < 0  || (s == 0 && m == 0))//for debug only
 	      {
 		if (verbose)
 		  std::cout<< "no data enough"<<std::endl;
@@ -596,10 +730,20 @@ StatusCode OTModuleClbrMon::finalize()
             double residual_23L=0.0;
             double residual_23R=0.0;
 
-            StatusCode sc_01L = fit_single_hist(m_histModuleDriftTimeResidual01L[s][l][q][m],s,l,q, m, residual_01L);
-            StatusCode sc_01R = fit_single_hist(m_histModuleDriftTimeResidual01R[s][l][q][m],s,l,q, m, residual_01R);
-            StatusCode sc_23L = fit_single_hist(m_histModuleDriftTimeResidual23L[s][l][q][m],s,l,q, m, residual_23L);
-            StatusCode sc_23R = fit_single_hist(m_histModuleDriftTimeResidual23R[s][l][q][m],s,l,q, m, residual_23R);
+	    double residual_01L_err=0.0;
+            double residual_01R_err=0.0;
+            double residual_23L_err=0.0;
+            double residual_23R_err=0.0;
+
+            //StatusCode sc_01L = fit_single_hist(m_histModuleDriftTimeResidual01L[s][l][q][m],s,l,q, m, residual_01L);
+            //StatusCode sc_01R = fit_single_hist(m_histModuleDriftTimeResidual01R[s][l][q][m],s,l,q, m, residual_01R);
+            //StatusCode sc_23L = fit_single_hist(m_histModuleDriftTimeResidual23L[s][l][q][m],s,l,q, m, residual_23L);
+            //StatusCode sc_23R = fit_single_hist(m_histModuleDriftTimeResidual23R[s][l][q][m],s,l,q, m, residual_23R);
+
+	    StatusCode sc_01L = fit_single_hist(m_histModuleDriftTimeResidual01L[s][l][q][m],s,l,q, m, "01L", residual_01L, residual_01L_err, outFile);
+	    StatusCode sc_01R = fit_single_hist(m_histModuleDriftTimeResidual01R[s][l][q][m],s,l,q, m, "01R", residual_01R, residual_01R_err, outFile);
+	    StatusCode sc_23L = fit_single_hist(m_histModuleDriftTimeResidual23L[s][l][q][m],s,l,q, m, "23L", residual_23L, residual_23L_err, outFile);
+	    StatusCode sc_23R = fit_single_hist(m_histModuleDriftTimeResidual01L[s][l][q][m],s,l,q, m, "23R", residual_23R, residual_23R_err, outFile);
 
             test[s][l][q][m]= 0.25*(residual_01L+
                                     residual_01R+
@@ -657,6 +801,7 @@ StatusCode OTModuleClbrMon::finalize()
 
 	    if(verbose)
 	      std::cout<< "newT0s[s][l][q][m] = "<<t0s[s][l][q][m]<<std::endl;
+	      std::cout<< "test[s][l][q][m] = "<<test[s][l][q][m]<<std::endl;
 
 	    // std::cout<< "FAKE t0s = " << fake_t0s[s][l][q][m]<<std::endl; 
 	    //std::cout<< "FAKE t0s = " << fake_t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl; 
@@ -666,21 +811,35 @@ StatusCode OTModuleClbrMon::finalize()
 	}
       }
     }
+  */
 
   for(int i = 0; i < 432; i++) if(hdt0->GetBinContent(i+1) != 0) hdt0proj->Fill(hdt0->GetBinContent(i+1));
 
   if(verbose)
     for(int i = 0; i < 432; i++) std::cout<< i <<" "<< hdt0->GetBinContent(i+1)<< " "<< ht0->GetBinContent(i+1)<<std::endl;
 
-  if(Apply_Calibration){
+
+  if(OTIS_calibration){
+    if(Apply_Calibration){
+      writeCondXMLs(test_OTIS);
+    }
+    else
+      writeCondXMLs(t0s);
+  }
+  else{
     writeCondXMLs(t0s);
     writeCondDBXMLs(t0s);
   }
-  //just to change the t0s 2ns to everyone, to see how much the track eff. and so change
-  else{
-    writeCondXMLs(fake_t0s);
-    writeCondDBXMLs(fake_t0s);
-  }
+
+  // if(Apply_Calibration){
+  //   writeCondXMLs(t0s);
+  //   writeCondDBXMLs(t0s);
+  // }
+  // //just to change the t0s 2ns to everyone, to see how much the track eff. and so change
+  // else{
+  //   writeCondXMLs(fake_t0s);
+  //   writeCondDBXMLs(fake_t0s);
+  // }
 
   return GaudiTupleAlg::initialize();
 }
@@ -704,6 +863,7 @@ StatusCode OTModuleClbrMon::readCondDB(double read_t0s[3][4][4][9])
  
      //if(simulation){
 	std::vector<double> TZeroVec = myCond->paramAsDoubleVect( "TZero" );
+	Module_t0=0;
 	for(size_t i = 0; i<TZeroVec.size();i++){
 	  //std::cout << "t0 per straw = "<<TZeroVec.at(i)<<std::endl; // for check
 	  Module_t0 +=TZeroVec.at(i); 
@@ -941,6 +1101,7 @@ StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9])
 		
 		file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
 		//file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << "\n";
+		/*
 		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
 		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
 		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
@@ -957,6 +1118,11 @@ StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9])
 		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
 		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
 		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		*/
+                for(int a = 0; a<16;a++){
+                  file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+                }
+
 		file << "    </paramVector>\n";
 		//              file << "    <paramVector name=\"WalkParameters\" type=\"double\" comment=\"Walk parameters\">\n";
 		//              file << "      " << 0 << " " << 1.10 << " " << 400 << " " << 0.15 << "\n";
@@ -1002,6 +1168,104 @@ StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9])
   return StatusCode::SUCCESS;
 }
 
+StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9][4])
+{
+  std::string prefix = "CalibrationModules";
+
+  std::cout<< "WRITING XMLs" <<std::endl;
+
+  for(int s = 0; s < 3; s++)
+    for(int l = 0; l < 4; l++)
+      for(int q = 0; q < 4; q++)
+	{
+	  std::string quarterId = stationNames[s] + layerNames[l] + quarterNames[q];
+
+	  std::string fileName = quarterId + "@" + prefix + ".xml";
+
+	  std::ofstream file(fileName.c_str());
+          if(file.fail())
+            {
+              printf("Can't open file: '%s'\n", fileName.c_str());
+
+              continue;
+            }
+          file << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+          file << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">\n";
+          file << "\n";
+          file << "<DDDB>\n";
+          file << "<catalog name=\"" << prefix << quarterId << "\">\n";
+
+
+          //for SIMCOND only
+          if(simulation){
+            for(int m = 0; m < 9; m++)
+              {
+                if(verbose){
+		  for(int b = 0; b<4;b++){
+		  std::cout<< "WRITING m = "<< m<< "t0 = "<< t0s[s][l][q][m][b]<< "written num"<< 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5)<<std::endl;
+		  }
+		}
+
+		std::string moduleId = quarterId + moduleNames[m];
+
+                file << "  <condition classID=\"5\" name=\"" << moduleId << "\">\n";
+
+                file << "    <paramVector name=\"STParameters\" type=\"double\" comment=\"SigmaT parameters in ns\">\n";
+                if(m < 7) file << "     " << 2.7 << " " << (3.7 - 2.7) << "\n";
+                else      file << "     " << 2.6 << " " << 0 << " " << 4.0 * 0.15 << "\n";
+                //else      file << "     " << 2.6 << " " << (3.2 - 2.6 - 4.0 * 0.15) << " " << 4.0 * 0.15 << "\n";
+                file << "    </paramVector>\n";
+
+                file << "    <paramVector name=\"TRParameters\" type=\"double\" comment=\"RT parameters in ns\">\n";
+                file << "     " << 0 << " " << (35.5 - 4.0 * 3.6) << " " << (4.0 * 3.6) << "\n";
+                file << "    </paramVector>\n";
+
+                file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
+                for(int a = 0; a<4;a++){
+		  for(int b = 0; b<4;b++){
+                  file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5)<< " " << 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5)<< "\n";
+		  }
+                }
+                file << "    </paramVector>\n";
+                file << "  </condition>\n";
+              }
+          }
+	  else{
+	    for(int m = 0; m < 9; m++)
+	      {
+		std::string moduleId = quarterId + moduleNames[m];
+		
+		file << "  <condition classID=\"5\" name=\"" << moduleId << "\">\n";
+		
+		file << "    <paramVector name=\"STParameters\" type=\"double\" comment=\"SigmaT parameters in ns\">\n";
+		if(m < 7) file << "     " << 2.7 << " " << (3.7 - 2.7) << "\n";
+		else      file << "     " << 2.6 << " " << 0  << " " << 4.0 * 0.15 << "\n";
+		file << "    </paramVector>\n";
+		
+		file << "    <paramVector name=\"TRParameters\" type=\"double\" comment=\"RT parameters in ns\">\n";
+		file << "     " << 0 << " " << (35.5 - 4.0 * 3.6) << " " << (4.0 * 3.6) << "\n";
+		file << "    </paramVector>\n";
+		
+		file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m][0] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m][1] + 0.5) << " "
+		     << 0.001 * (int)(1000.0 * t0s[s][l][q][m][2] + 0.5) << " " << 0.001 * (int)(1000.0 * t0s[s][l][q][m][3] + 0.5) << "\n";
+		file << "    </paramVector>\n";
+		file << "    <paramVector name=\"WalkParameters\" type=\"double\" comment=\"Walk parameters\">\n";
+		file << "      " << 0 << " " << 1.10 << " " << 400 << " " << 0.15 << "\n";
+		file << "    </paramVector>\n";
+		file << "  </condition>\n";
+	      }
+	  }
+	  
+	  file << "</catalog>\n";
+	  file << "</DDDB>\n";
+	  
+	  file.flush();
+	  file.close();
+	}
+
+  return StatusCode::SUCCESS;
+}
 
 StatusCode OTModuleClbrMon::writeCondDBXMLs(double t0s[3][4][4][9])
 {
@@ -1090,7 +1354,8 @@ StatusCode OTModuleClbrMon::fit_single_hist(TH1D* hist, int s, int l, int q, int
   //sprintf(histName, "OTModuleClbrMon/%s/%s/%s/%s/%s", stationNames[s].c_str(), layerNames[l].c_str(), quarterNames[q].c_str(), moduleNames[m].c_str(), name);
   //TH1D* hist = (TH1D*)file->Get(histName);                                                                 
  
-  if(hist == 0 || hist->GetEntries() < 100)
+  //  if(hist == 0 || hist->GetEntries() < 100)
+    if(hist == 0 || hist->GetEntries() < 1)//to debug
     {
       if(!(q % 2 == 0 && m == 8))
         {
@@ -1109,6 +1374,63 @@ StatusCode OTModuleClbrMon::fit_single_hist(TH1D* hist, int s, int l, int q, int
   std::cout << "FITTING: " << s<< " "<<l <<" "<<q<< " "<<m <<" "<<hist->GetFunction("gaus")->GetParameter(1)<< " "<< hist->GetFunction("gaus")->GetParameter(2)<<std::endl;
 
   result =  hist->GetFunction("gaus")->GetParameter(1);
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode OTModuleClbrMon::fit_single_hist(TH1D* hist, int s, int l, int q, int m, std::string contr, double& result, double& result_error,  TFile* outFile)
+{
+  debug() << hist << " " << s << " " << l << " " << q << " "<< m << endmsg;
+
+  stationNames = {"T1","T2","T3"};
+  layerNames = {"X1", "U", "V", "X2"};
+  quarterNames = {"Q0", "Q1", "Q2", "Q3"};
+  moduleNames = {"M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9"};
+
+
+  if(!hist){
+    Error("Histogram not found " );
+    return StatusCode::FAILURE;
+
+  }else if(hist->GetEntries() < 100) 
+    //}else if(hist->GetEntries() < 1)//to debug  
+    {
+      if(!(q % 2 == 0 && m == 8))
+        {
+	  std::cout << "FAIL: " << s<< " "<<l <<" "<<q<< " "<<m << std::endl;
+        }
+      return StatusCode::FAILURE;
+    }
+
+  double left = hist->GetXaxis()->GetXmin();
+  double right = hist->GetXaxis()->GetXmax();
+
+
+  for(int i = 0; i < 5; i++)
+    {
+      hist->Fit("gaus", "QRLL", "", left, right);
+      left = hist->GetFunction("gaus")->GetParameter(1) - 1.0 * hist->GetFunction("gaus")->GetParameter(2);
+      right = hist->GetFunction("gaus")->GetParameter(1) + 1.0 * hist->GetFunction("gaus")->GetParameter(2);
+    }
+  debug() << "FITTING: " << s<< " "<<l <<" "<<q<< " "<<m <<" "<<hist->GetFunction("gaus")->GetParameter(1)<< " "<< hist->GetFunction("gaus")->GetParameter(2)<< endmsg ;
+  result =  hist->GetFunction("gaus")->GetParameter(1);
+  result_error =  hist->GetFunction("gaus")->GetParError(1);
+  //only to save stuff
+
+  if(save_fits){
+    outFile->cd();
+
+    std::string hist_name;
+
+    if(s==-1 && l==-1 && q==-1 && m==-1)
+      hist_name = "Global_hist";
+    else
+      hist_name = stationNames[s] + "_" + layerNames[l] + "_" + quarterNames[q] + "_"+ moduleNames[m] + contr;
+
+    hist->SetName(hist_name.c_str());
+    hist->Write(); 
+
+  }
 
   return StatusCode::SUCCESS;
 }

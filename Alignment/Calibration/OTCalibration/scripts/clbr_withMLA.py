@@ -10,14 +10,13 @@ Brunel().DataType = "2012"
 Brunel().Simulation = False
 Brunel().InputType = "MDF"
 
-Brunel().DDDBtag = 'dddb-20130503-1'                                                                                                                             
-Brunel().CondDBtag = 'cond-20130710'
+Brunel().EvtMax = 100
 
 from Configurables import LHCbApp
-#LHCbApp().DDDBtag   = "default"
-#LHCbApp().CondDBtag = "default"
-LHCbApp().DDDBtag = 'dddb-20130503-1'                                                                                                                             
-LHCbApp().CondDBtag = 'cond-20130710'
+LHCbApp().DDDBtag   = "default"
+LHCbApp().CondDBtag = "default"
+#LHCbApp().DDDBtag = 'dddb-20130503-1'                                                                                                                             
+#LHCbApp().CondDBtag = 'cond-20130710'
 
 from Configurables import TrajOTProjector
 Projector = TrajOTProjector("OTProjector", UseDrift = True)

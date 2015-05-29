@@ -145,6 +145,15 @@ private:
    * Apply_Calibration (default false, if set to true it writes the new XML files - will write DB - with the new, calibrated t0s).
    */
   bool Apply_Calibration;
+  /**                                                                                                                                                            
+   * save_fits (default false, I hope to mange to save the fits, ONLY FOR STUDIES).                                                                              
+   */
+  bool save_fits;
+  /**                                                                                                                                                            
+   * OTIS calibration (instead of 4 sub contributions per module)               
+   */
+  bool OTIS_calibration;
+
 
 public:
   OTModuleClbrMon(const std::string& name, ISvcLocator* pSvcLocator);
@@ -180,8 +189,10 @@ public:
 
   //TF1* m_myFunc;                                                                  
   StatusCode writeCondXMLs(double t0s[3][4][4][9]);
+  StatusCode writeCondXMLs(double t0s[3][4][4][9][4]);
   StatusCode writeCondDBXMLs(double t0s[3][4][4][9]);
   StatusCode fit_single_hist(TH1D* hist,int s, int l, int q, int m, double& result);
+  StatusCode fit_single_hist(TH1D* hist,int s, int l, int q, int m, std::string contr, double& result, double& result_err, TFile* outFile);
 
 };
 
