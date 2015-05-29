@@ -987,7 +987,7 @@ D2HHHForXSec = {
         'PrescaleDs2KKP': 1.0,
         'PrescaleDs2KKK': -1.0,
         'PrescaleDs2PPP': 1.0,
-        'PrescaleDs2KPPDCS': -1.0,
+        'PrescaleDs2KPPDCS': 1.0,
         # Fraction of candidates to randomly throw after before stripping
         'PostscaleDp2KPP': 1.0,
         'PostscaleDp2KKP': 1.0,
@@ -998,7 +998,7 @@ D2HHHForXSec = {
         'PostscaleDs2KKP': 1.0,
         'PostscaleDs2KKK': -1.0,
         'PostscaleDs2PPP': 1.0,
-        'PostscaleDs2KPPDCS': -1.0
+        'PostscaleDs2KPPDCS': 1.0
     }
 }
 

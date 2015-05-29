@@ -6,6 +6,7 @@
 
 ! 2015-05-29 - Alex Pearce
  - Fix typo in D2PhiPi charm ForXSec selection.
+ - Enable Ds2KPPDCS line for charm D2HHHForXSec module.
 
 ! 2015-06-29 - Lucio Anderlini
  - Changed prescales to PID/Calib lines
