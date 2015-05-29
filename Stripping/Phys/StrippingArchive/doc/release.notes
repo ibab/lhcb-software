@@ -4,6 +4,8 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r29 2015-05-29 =========================
+
 ! 2015-05-18 - Ricardo Vazquez Gomez
  - Add the stripping23 to the archive init
 
