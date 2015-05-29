@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-29 - Andrea Contu
+ - Adjust prescalings for PID lines and updated db for S22
+
 ! 2015-05-29 - Alex Pearce
  - Fix typo in D2PhiPi charm ForXSec selection.
  - Enable Ds2KPPDCS line for charm D2HHHForXSec module.

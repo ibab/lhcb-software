@@ -478,7 +478,7 @@ PIDCalib = {
 
       'L02ppiDD' : {
         'CloneLine' : "L02ppi"
-        , 'Prescale'  : 1.0
+        , 'Prescale'  : 0.14
         , 'InputTES'    : [ 'Phys/StdNoPIDsDownPions/Particles', 
                                    'Phys/StdNoPIDsDownProtons/Particles' ]
       },
@@ -629,7 +629,7 @@ PIDCalib = {
     
       'Ks02pipiDD' : {
         'CloneLine'    : 'Ks02pipi'
-        , 'Prescale'   : 0.05
+        , 'Prescale'   : 0.005
         , 'CheckPV'     : True
         , 'RawEvent'    : ['Muon']
         , 'MDST.DST'    : False
