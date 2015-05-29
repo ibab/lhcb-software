@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2015-05-29 - Michel De Cian
+ - Make sure PrTrackAssociator writes out linker location, even if there are no tracks in the event.
+
 !========================= PrMCTools v2r9 2015-05-26 =========================
 ! 2015-04-24 - Heinrich Schindler
  - Tidy up PrCheatedVP and adapt it to "new" (spring 2014) VPCluster format.

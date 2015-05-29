@@ -107,17 +107,19 @@ StatusCode PrTrackAssociator::execute() {
     if( msgLevel(MSG::DEBUG) ) 
       debug() << "processing container: " << *itS << endreq ;
 
+    // Create the Linker table from Track to MCParticle
+    // Sorted by decreasing weight, so first retrieved has highest weight
+    // This has to be done, even if there are no tracks in the event, to satisfy the DST writer
+    LinkerWithKey<LHCb::MCParticle,LHCb::Track> myLinker( evtSvc(), msgSvc(), *itS );
+    myLinker.reset() ;
+    
+
     // Retrieve the Tracks
     LHCb::Track::Range tracks = getIfExists<LHCb::Track::Range> ( *itS );
     if ( tracks.empty() ) {
       if( msgLevel(MSG::DEBUG) ) debug() << "No tracks in container " <<  *itS << "' . Skipping." <<endmsg;
       continue;
     }
-
-    // Create the Linker table from Track to MCParticle
-    // Sorted by decreasing weight, so first retrieved has highest weight
-    LinkerWithKey<LHCb::MCParticle,LHCb::Track> myLinker( evtSvc(), msgSvc(), *itS );
-    myLinker.reset() ;
 
     // Loop over the Tracks
     for( auto tr  : tracks ) {
