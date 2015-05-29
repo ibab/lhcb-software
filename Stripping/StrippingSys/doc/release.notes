@@ -3,6 +3,264 @@ Package     : StrippingSys
 Package Coordinator : Andrea.Contu@cern.ch, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v9r7 2015-05-29 =========================
+
+*Phys/CommonParticles
+ - Added StandardMuPi.py
+ - Added StandardLambdastar.py and stick it in Intermediate particles 
+
+*Phys/IncTopoVert
+ - Modified values of the default parameters to optimize time consumption and performances
+
+*Phys/IsolationTools
+ - adapt RelInfoJetsVariables to the new split HLT config
+
+*Phys/StrippingArchive
+ - Add the stripping23 to the archive init
+ - Change the instantiate-all-strip.ref that adds all the lines for EM
+ - Clean up docstrings in ForXSec charm modules
+ - Relax BDT requirements in all ForXSec charm modules
+ - Change D2HHH and D2PhiPi ForXSec charm modules to produce separate D+ and
+   D_s+ lines, rather than combined D+ or D_s+ lines with wide mass windows.
+ - Change the instantiate-all-strip.ref to fix the nightlies
+ - Added StrippingPIDCalib and StrippingNoPIDDstarWithD02RSKPi to Stripping22  
+
+*Phys/StrippingConf
+ - Fix raw banks name for Herschel to HC
+ - Added Herschel to list of raw banks
+
+*Phys/StrippingSelections
+ - De-hardcoded all HLT-dependent line into default_config
+ - Fix StrippingInclbJets vertexfitter dependency to LoKi's.
+ - Remove HLT filter from StrippingD2hhh_conf.py 
+ - Small modifications to StrippinBandQ/StrippingDiMuonNew.py and StrippingDiMuonInherit.py
+ - Update __init__.py for StrippingCharm, 2 line bulders were missing
+ - Add tests for coordinators
+ - Tweak Charm ForXSec line selections to match trigger selections.
+ - Added a stripping line for prompt D0->KsHHpi0 decays and for D0->HHgamma
+   from semileptonic B decays (both in StrippingCharm)
+ - Changes to StrippingRD/StrippingPhiToKSKS.py to remove duplicate candidates
+ - Changes done in the StrippingB2KstTauTau.py and StrippingZVTOP.py
+ - Fix names in StrippingBandQ/StrippingDiMuonNew.py and StrippingDiMuonInherit.py
+ - Bring StrippingLb2V0hh.py into new structure under StrippingBnoC
+ - Updated lines to split the HLT cuts into HLT1 and HLT2
+ - Modified B2KShh and Lb2V0hh to take HLT1 and HLT2 cuts from the config dictionary
+ - Should allow simple switch to 2015 line names (included but commented out)
+ - Fix QEE's trigger-dependent lines due to change of HLT2EW name scheme.
+ - Fill-in more missing QEE lines from S21
+ - Bring StrippingB2KShh.py into new structure under StrippingBnoC
+ - Lines that will run will be the same configuration as for 2012b in Stripping21 but will have '2015' in their names
+ - Also update lines to split the HLT cuts into HLT1 and HLT2
+ - Tighten selection for Dst2PiD0EEGLine in StrippingCharm/StrippingD2PiPi0.py
+ - Prescale 0.1 Dst2PiD0EEGLine to mimic missing selection on Hlt2
+ - Updated __init__.py of StrippingCalib module
+ - Added dir in tests/liaisons/BnoC
+ - Added few more linbuilders to BnoC
+ - Fix typo in StrippingCharm/StrippingLambdac2V0H.py
+ - StrippingBLVLines.py, StrippingB23MuLines.py, StrippingB24pLines.py,
+   StrippingD23MuLines.py and StrLc23MuLines.py now have all tunable cuts
+   in the dictionary, no changes in selection
+ - Tighten selection in StrippingCharm/StrippingLambdac2V0H.py
+ - Fixed typo in StrippingUpsilonExotic.py
+ - Fixed a small bug in StrippingCharm/StrippingDstarD2HHHH.py
+ - Added a script for a quick collection of configuration dictionaries.
+ - Moved GEC from plain Gaudi configurable to FILTER attribute in StrippingBnoC/StrippingBu2hhh.py
+ - Prescaling on StrippingCharm/StrippingD2PiPi0.py
+ - Prescaling to zero charm cross section lines until more suitable tuning is provided
+ - Fix gamma lines for StrippingRD/StrippingBu2LLK 
+ - Dictionary fix to StrippingCharm/StrippingDstarD0ToHHPi0
+ - Fix to StrippingTrackEffD2K(3)Pi
+ - Fixed small bug in RelatedInfo variables in StrippingBandQ/StrippingXic2HHH.py 
+ - Fixed small bug in StrippingBnoC/StrippingBc2hhh_BnoC.py
+ - StrippingBnoC/StrippingBc2hhh_BnoC.py: fix warning message for gecFilter, put filter as stripping line property
+ -  Remove FT request for lines in full DST for B2OC
+ - Fix stream for StrippingRD/StrippingB2Lambda0MuLines.py
+ - Fixed StrippingDitau.py in Stripping QEE
+ - Added vertex isolation variables and neutral cone multiplicity to StrippingBnoC/StrippingBu2hhh.py
+ - Fixed a typo.
+ - Updated StrippingBLVLines.py in StrippingRD
+ - Added StrippingD2XMuMuSS.py to StrippingCharm
+ - Fixes to StrippingTrackEffD2K(3)Pi and StrippingDstarD02KShhForTrackingEff
+ - Added StrippingD2HHHPi0Lines in StrippingCharm
+ - Updated StrippingSigmacForPID in StrippingCalib module
+ - Added StrippingD2HHHKsLines in StrippingCharm 
+ - Added converted photons to D*+->D0(XGamma)pi+ stripping lines
+ - Modified b->D0(->HHHH)muX stripping line to use DaVinci__N4BodyCombiner
+ - Added D*+->D0(XGamma)pi+ stripping lines
+ - Fixed a typo in DstarD2HHHH stripping line
+ - Updated StrippingRareStrange 
+ - Updated StrippingDstarD02xx
+ - Updated StrippingDiMuonNew.py
+ - Modified StrippingB2JpsiPi0, last s23 commit from B2CC
+ - StrippingCharm/StrippingPropmtCharm.py
+   update lines for excited baryons 
+ - Added StrippingTau2LambdaMuLines,
+         StrippingBs2gammagamma,
+         StrippingBeauty2XGammaExclusive,
+         StrippingKshort2MuMuMuMu,
+         StrippingBeauty2XGamma,
+         StrippingLb2L0Gamma,
+         StrippingKshort2PiPiMuMu
+    To StrippingRD
+ - Edited StrippingRD/__init__.py
+ - Added test for the coordinators
+ - Fixed typo in __init__.py in StrippingBandQ
+ - Fixed CharmFromBSemi
+ - Added 3 new lines to StrippingD2PiPi0.py 
+ - Added StrippingDitau.py to StrippingQEE
+ - Added B2XMuMu
+ - Added StrippingDstarD02KShhForTrackingEff and StrippingSigmacForPID to StrippingCalib module
+ - Added StrippingB2HHPi0.py in StrippingBnoC 
+ - Added StrippingD02KPiPi0.py in StrippingCalib
+ - Moved Bc2JpsiMuX, Bc2JpsiHBDT, Ccbar2Ppbar, Ccbar2PhiPhi lines to new structure
+ - added StrippingB2KstTauTau for B->K*TauTau analysis
+ - Moved Bd2eeKstarBDT line to new structure 
+   . Switched off the line not-using DiElectronMaker
+ - Added line for same-sign leptons to StrippingBu2LLK.py
+ - re-commmit CharmForVub
+ - Moved StrippingProtonAsym to StrippingCalib module
+ - Updated STREAMS for multiple builders in StrippingCalib
+ - Bugfixes to multiple builder in StrippingCalib
+ - updated naming-scheme for DiMuonInherit.py
+ - removed StrippingDstarD2hhpi0.py
+ - updated StrippingD2hh.py
+ - updated __init__.py of BandQ
+ - StrippingCharm/StrippingPropmtCharm.py
+   update lines for excited baryons 
+ - Updated default_config of 
+   - StrippingBandQ/StrippingXic2HHH.py
+     - StrippingBandQ/StrippingHeavyBaryons.py
+     - StrippingBandQ/StrippingCC2DD.py
+     - StrippingBandQ/StrippingChiCJPsiGammaConv.py
+ - Added line for Majorana Neutrino in StrippingRD/StrippingB2Lambda0MuLines.py
+ - Fixes in StrippingBandQ/StrippingDiMuonInherit.py
+ - Added internal documentation
+ - Fixed a typo in python/StrippingSelections/StrippingSL/__init__.py
+ - Add Mike Sokoloff as author in StrippingD02KSKS.py
+ - Prescales tuned up for B2CC lines.
+ - Fixed a typo in StrippingD02KSKS.py which caused to include these lines in any WG test.
+ - Add Lambdac2V0H stripping module in StrippingCharm.
+ - Remove superflous print in StrippingDarkBoson.py
+ - added StrippingZVTOP for B->TauTau analysis
+ - added StrippingB2XTau for B->TauTau analysis
+ - Added StrippingBandQ/StrippingDiMuonInheritance.py
+ - Added StrippingD2PiPi0.py to StrippingCharm
+ - Added StrippingHeavyBaryons.py to BandQ
+ - A bit quick with previous commit. Now added the new dictionary formats,
+  and any useage of HLT rather than HLT1/2.
+ - Added the StrippingDarkBoson.py to the RD for S23 round.
+ * Added the following modules
+ - StrippingCalib/StrippingCharmFromBSemiForHadronAsy.py
+ - StrippingCalib/StrippingTrackEffD0ToKPi.py
+ - StrippingCalib/StrippingTrackEffD0ToK3Pi.py
+ - StrippingCalib/StrippingCharmFromBSemiForProtonPID.py
+ - StrippingCharm/StrippingDstarD0ToHHPi0.py
+ * Modified
+ - StrippingSL/StrippingB2DMuNuX.py
+ - StrippingSL/StrippingB2DMuNuXUtils.py
+ - In particular, the electron-D0 line is moved to full DST but prescaled, as per Greg's request
+ - Added neutral cone multiplicity to StrippingBnoC/StrippingBc2hhh_BnoC.py
+ - Added S21 lines from StrippingPhiToKSKSLines to StrippingRD with addition of D0ToKsKs line
+ - Added StrippingB2XTauMu.py
+ - Enlarged mass windows for StrippingBs2JpsieePhi.py
+ - Added StrippingCharm/StrippingD2hhh_conf.py with additional lifetime cut wrt Stripping21
+ - Added StrippingXic2HHH.py for Yury
+ - added StrippinDiMuonNew.py and StrippingChicJPsiGammaConv.py to BandQ
+ - added StrippingDstarD2HHHH.py to StrippingCharm
+ - moved JpsieeKS lines to Leptonic stream, modified some features.
+ - Added Vertex Isolation variables in StrippingBnoC/StrippingBc2hhh_BnoC.py
+ - Resurrected StrippingXicc.py in StrippingCharm (with full svn history).
+ - added StrippingD2HHBDT.py to StrippingBnoC
+ - added StrippingBs2Kst_0Kst_0.py to StrippingBnoC
+ - added StrippingBs2MuMuLines.py, changes from S21 now more cuts are defined in   default_config and LoKi::VertexFitter is used not OffLineVertexFitter
+ - added StrippingCharmFromBSemi.py to StrippingCharm (copy of old lines)
+ - Add (old) StrippingD02KSKS.py in Charm
+ - Add StrippingB2pphh.py in BnoC
+ - Typo fix in StrippingXibc.py
+ - add StrippingBandQ/StrippingCharmAssociative from Stripping21
+  -  added StrippingChargedHyperons.py
+           StrippingKshort2MuMuMuMu.py
+           StrippingKshort2PiPiMuMu.py
+     in the StrippingCharm subdirectory.  These are copies of code which ran in 2012
+ - Add StrippingBandQ/StrippingBc3h from Stripping21
+ - Correct wrong indentation in StrippingBnoC/StrippingBu2hhh.py
+ - Add D->4H decays for B->D0HH and B->DstMuNu
+ - Moved Psi2S B2CC lines to tests/liaisons (keeping builders).
+ - Removed those lines from StrippingB2CC.
+ - modified StrippingB2CC/StrippingBd2JpsieeKS.py
+   - added 3 new lines:
+     - Bd2JpsieeKSBd2JpsieeKstarFromTracksPrescaledLine
+     - Bd2JpsieeKSBd2JpsieeKstarFromTracksDetachedLine
+     - Bd2JpsieeKSBu2JpsieeKFromTracksDetachedLine
+   - modified existing lines to use newer BremCorrection (FromTracks), kept 1 with old algorithm:
+     - Bd2JpsieeKSBd2JpsieeKSFromTracksPrescaledLine (new)
+     - Bd2JpsieeKSBd2JpsieeKSFromTracksDetachedLine (new)
+     - Bd2JpsieeKSBd2JpsieeKSDetachedLine (new)
+   - all lines to FullDST
+  - added StrippingWmuAKTJets.py, StrippingWeAKTJets.py and StrippingH24MuLines.py to StrippingQEE
+  - added StrippingBu2MuNu.py to StrippingRD
+ - added StrippingDstarD2KShh.py to StrippingCharm
+ - added Velo raw banks to B->emu line.
+ - Added file StrippingBnoC/StrippingB2CharmlessQuasi2Body.py
+ - Added Stripping21 BnoC/Bu2hhh lines
+ - Add Stripping21 QEE/DisplVertices lines
+ - Renamed HLT->HLT2 (including HltSelReports location for Hlt2 displaced vertex seeds)
+ - Added a subfolder tests/liaisons/B2CC and a script TestB2CC.py for B2CC testing.
+ - Cleaned B2CC scripts and replaced HLT with HLT2.
+ - Moved all B2CC Radiative lines to Leptonic stream.
+ - remove commented line in StrippingBu2LLK
+ - added StrippingLFVLines.py to StrippingRD; MDSTFlag added to B->eMu Line.
+ - Added StrippingBc2hhh_BnoC.py to StrippingBnoC
+ - Fixed the code in StrippingB2JpsiPi0.py
+ - Add Lambda(*) and Ks for R_X measurements in StrippingBuLLKLines
+ - Clean up docstrings in ForXSec charm modules
+ - Relax BDT requirements in all ForXSec charm modules
+ - Change D2HHH and D2PhiPi ForXSec charm modules to produce separate D+ and
+   D_s+ lines, rather than combined D+ or D_s+ lines with wide mass windows.
+ - added StrippingKshort2eepipi.py to StrippingRD
+ - added StrippingTau23MuLines.py to StrippingRD
+ - updated db tags in test scripts
+ - added StrippingXibc and StrippingCC2DD to StrippingB&Q, now for real
+ - Splitted BdJpsiPi0 lines in a new builder: StrippingB2JpsiPi0.py
+ - added StrippingXibc and StrippingCC2DD to StrippingB&Q
+ - added StrippingDstarD2hhpi0.py to StrippingCharm
+ - Added Hlt1/2 filter slots to TrackEffVeloMuon, TrackEffDownMuon, and TrackEffMuonTT
+ - added StrippingD2hh.py to StrippingCharm
+ - updated the following S21 lines with RelatedInfoTools for the coming MDST.DST rerun
+    - StrippingB23MuLines.py
+    - StrippingB24pLines.py
+    - StrippingBLVLines.py
+    - StrippingD23MuLines.py
+    - StrippingLc23MuLines.py
+ - in StrippingB23MuLines.py the line B2DMu is taken out due to problems (segmentations fault)
+   during running on Full.dst test sample
+ - Minor fix default_config structure in StrippingLowMultINC
+
+*Phys/StrippingSettings
+  - Adjust prescalings for PID lines and updated db for S22
+  - Fix typo in D2PhiPi charm ForXSec selection.
+  - Enable Ds2KPPDCS line for charm D2HHHForXSec module.
+  - Changed prescales to PID/Calib lines
+  - Updated dbase for S22
+  - Disable BDTs in Charm ForXSec lines.
+  - Set correct HC banks for LowMult lines
+  - Splitting Stripping22 into ALL and ALLTURBO streams
+  - Updated LineConfigDictionaries_Charm.py
+  - Tweak Charm ForXSec line selections to match trigger selections.
+  - Update stripping23 dbase
+  - Updated LineConfig dictionaries for B2CC in S23.
+  - Modified a typo ('Line' at the end of the file) which made makeDB.py crash.
+  - Create the folder Stripping23 for the config dictionaries.
+    Fill the MiniBias config file. Copied from S21
+  - Update the LineConfig dictionaries for EM in S22.
+  - Update Stripping22 line configurations with ForXSec charm dictionaries.
+  - Update to stripping22 dbase following previous commit
+  - Fix to s22 dictionaries, several dictionaries without "STREAMS" key
+  - Created dbase for Stripping22
+  - Added BandQ configs into S22 LineCOnfigDictionaries_ALL.py
+  - Added Calibration configs (TrackEff and PID) to Stripping22 ConfigDictionary
+  - Add QEE's configs into S22 LineConfigDictionaries_ALL.py
+
 !========================= StrippingSys v9r6 2015-04-30 =========================
 
 *Phys/CommonParticlesArchive
