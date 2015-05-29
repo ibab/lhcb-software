@@ -3,13 +3,14 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2015-05-29 - Giulio Dujany
+ - Changed contraints in VELO alignment scenarios in AlignmentScenarios.py
+
 ! 2015-05-26 - Silvia Borghi
  - Change the Configuration to change the format of xml file for Run2.
    Option "DataCondType" has been added to have back-compatible for Run1 data
    (default is Run2). 
 
-! 2015-05-04 - Giulio Dujany
- - Modified VELO alignment scenarios in AlignmentScenarios.py
 
 ! 2015-04-30 - Maurizio Martinelli
  - Modified ParticleSelectionFromDST for being able to run 

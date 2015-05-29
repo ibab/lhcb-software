@@ -70,7 +70,7 @@ def configureVeloHalfAlignment():
     surveyconstraints.All()
 
 
-def configureVeloAlignment(fixMeanInHalf=False):
+def configureVeloAlignment(fixMeanInHalf=True):
     '''
     This should be the default alignment for the Automatic alignment procedure
     Align 2-halves for all degree of freedom and
@@ -117,7 +117,8 @@ def configureVeloAlignment(fixMeanInHalf=False):
         constraints.append("VeloFixSensors11 : Velo/VeloRight/Module11/RPhiPair11/.*: Tx Ty Rz")
         constraints.append("VeloFixSensors32 : Velo/VeloLeft/Module32/RPhiPair32/.*: Tx Ty Rz")
         constraints.append("VeloFixSensors33 : Velo/VeloRight/Module33/RPhiPair33/.*: Tx Ty Rz")
-        
+
+    TAlignment().Constraints      = constraints    
    
 
 
@@ -156,6 +157,8 @@ def configureVeloModuleAlignment():
     # Constrain average
     # constraints.append("VeloAInternal : Velo/VeloRight/Module..: Tx Ty Rz Szx Szy")
     # constraints.append("VeloCInternal : Velo/VeloLeft/Module..: Tx Ty Rz  Szx Szy")
+
+    TAlignment().Constraints      = constraints
 
 
 def configureVeloSensorAlignment():
