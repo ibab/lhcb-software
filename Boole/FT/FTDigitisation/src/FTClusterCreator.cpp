@@ -372,15 +372,14 @@ StatusCode FTClusterCreator::execute(){
         ++m_nCluster;
         m_sumCharge += totalCharge;
  
+        bool acceptCluster = 1;
 
         // TEMPORARY FIX! The calculation of the meanChanPos creates module=12 when on an edge channel!!
         //  Should be taken into account in the calculation of meanChanPos.
-        debug() << "creating New Cluster at meanChanPos: " << meanChanPosition << endmsg;
-        debug() << "SiPM " 
-          << ", sipmCell:" << newCluster->channelID().sipmCell() << ", sipmId:" << newCluster->channelID().sipmId()
-          << " mat:" << newCluster->channelID().mat() << ", module:" << newCluster->channelID().module() 
-          << ", quarter:" << newCluster->channelID().quarter() << ", layer:" << newCluster->channelID().layer() << endmsg;
-        if( newCluster->channelID().module() >= 12 ) { continue; }
+        if( newCluster->channelID().module() >= 12 ) { 
+          info() << "Warning: cluster module is out of allowed bounds. Ignoring Cluster. [ " << newCluster->channelID() << " ] " << endmsg;
+          acceptCluster = 0; 
+        }
 
 
         // Get largest MCHit object contributing to cluster
@@ -399,7 +398,6 @@ StatusCode FTClusterCreator::execute(){
           }
 
           
-          bool acceptCluster = 1;
 
 
           // TESTS: Check if we should remove cluster
@@ -535,30 +533,33 @@ StatusCode FTClusterCreator::execute(){
           
         } else { 
           // Cluster has no contributing MCHits --> is a noise cluster
-          clusterCont -> insert(newCluster);
 
-          plot(newCluster->size(),"NoiseClusSize","Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 10., 10);
-          plot(newCluster->charge(),"NoiseClusCharge","Cluster Charge Distribution;Cluster Charge;Nber of events" , 0., 50., 50);
-          plot(newCluster->channelID().sipmCell(), "NoiseClusSiPMCell", "Cluster SiPM Cell; Cluster SiPM Cell", 0. , 130. ,130);
-          plot(newCluster->channelID().quarter(), "NoiseClusQuarter", "Cluster Quarter; Cluster Quarter" , 0. , 4. ,4);
-          plot(newCluster->channelID().layer(), "NoiseClusLayer", "Cluster Layer; Cluster layer" , 0. , 13. ,13);
-          plot(newCluster->channelID().sipmId(), "NoiseClusSiPMID", "Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
-          plot(newCluster->channelID().module(), "NoiseClusModule", "Cluster Module; Cluster Module" , 0. , 16. ,16);
-            
-          plot(newCluster->channelID(), "ClusChannelID", "Cluster ChannelID; Cluster ChannelID" , 0. , 589824. ,4608);
-          plot(newCluster->channelID().sipmCell(), "ClusSiPMCell", "Cluster SiPM Cell; Cluster SiPM Cell", 0. , 130. ,130);
-          plot(newCluster->channelID().sipmId(), "ClusSiPMID", "Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
-          plot(newCluster->channelID().module(), "ClusModule", "Cluster Module; Cluster Module" , 0. , 16. ,16);
-          plot(newCluster->channelID().mat(), "ClusMat", "Cluster Mat; Cluster Mat" , 0. , 2. ,2);
-          plot(newCluster->channelID().quarter(), "ClusQuarter", "Cluster Quarter; Cluster Quarter" , 0. , 4. ,4);
-          plot(newCluster->channelID().layer(), "ClusLayer", "Cluster Layer; Cluster layer" , 0. , 13. ,13);
+          if( acceptCluster ) {
+            clusterCont -> insert(newCluster);
 
-          plot(newCluster->size(),"ClusSize","Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 10., 10);
-          plot(newCluster->charge(),"ClusCharge","Cluster Charge Distribution;Cluster Charge;Nber of events" , 0., 50., 50);
-          plot(newCluster->fraction(), "ClusFraction", "Cluster Fraction Pos;Cluster Fraction; Nber of events" , -.5, .5 , 100);
-          plot2D(newCluster->size(), newCluster->charge(), "ClusChargevsSize",
-                 "Cluster charge vs. size;Cluster size [Nb of Channels];Cluster Charge [ADC counts]",
-                 0. , 16. , 0. , 100.,16, 100);
+            plot(newCluster->size(),"NoiseClusSize","Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 10., 10);
+            plot(newCluster->charge(),"NoiseClusCharge","Cluster Charge Distribution;Cluster Charge;Nber of events" , 0., 50., 50);
+            plot(newCluster->channelID().sipmCell(), "NoiseClusSiPMCell", "Cluster SiPM Cell; Cluster SiPM Cell", 0. , 130. ,130);
+            plot(newCluster->channelID().quarter(), "NoiseClusQuarter", "Cluster Quarter; Cluster Quarter" , 0. , 4. ,4);
+            plot(newCluster->channelID().layer(), "NoiseClusLayer", "Cluster Layer; Cluster layer" , 0. , 13. ,13);
+            plot(newCluster->channelID().sipmId(), "NoiseClusSiPMID", "Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
+            plot(newCluster->channelID().module(), "NoiseClusModule", "Cluster Module; Cluster Module" , 0. , 16. ,16);
+              
+            plot(newCluster->channelID(), "ClusChannelID", "Cluster ChannelID; Cluster ChannelID" , 0. , 589824. ,4608);
+            plot(newCluster->channelID().sipmCell(), "ClusSiPMCell", "Cluster SiPM Cell; Cluster SiPM Cell", 0. , 130. ,130);
+            plot(newCluster->channelID().sipmId(), "ClusSiPMID", "Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
+            plot(newCluster->channelID().module(), "ClusModule", "Cluster Module; Cluster Module" , 0. , 16. ,16);
+            plot(newCluster->channelID().mat(), "ClusMat", "Cluster Mat; Cluster Mat" , 0. , 2. ,2);
+            plot(newCluster->channelID().quarter(), "ClusQuarter", "Cluster Quarter; Cluster Quarter" , 0. , 4. ,4);
+            plot(newCluster->channelID().layer(), "ClusLayer", "Cluster Layer; Cluster layer" , 0. , 13. ,13);
+
+            plot(newCluster->size(),"ClusSize","Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 10., 10);
+            plot(newCluster->charge(),"ClusCharge","Cluster Charge Distribution;Cluster Charge;Nber of events" , 0., 50., 50);
+            plot(newCluster->fraction(), "ClusFraction", "Cluster Fraction Pos;Cluster Fraction; Nber of events" , -.5, .5 , 100);
+            plot2D(newCluster->size(), newCluster->charge(), "ClusChargevsSize",
+                   "Cluster charge vs. size;Cluster size [Nb of Channels];Cluster Charge [ADC counts]",
+                   0. , 16. , 0. , 100.,16, 100);
+          }
         }
 
 
