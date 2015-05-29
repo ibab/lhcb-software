@@ -1041,7 +1041,7 @@ D2PhiPiForXSec = {
         'D_acosBPVDIRA_MAX': 35.0*mrad,
         # Primary vertex displacement requirement, either that the D+ is some
         # sigma away from the PV, or it has a minimum flight time
-        'D_PVDispCut': '((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150*picosecond))',
+        'D_PVDispCut': '((BPVVDCHI2 > 16.0)&(BPVLTIME() > 0.150*picosecond))',
         # Minimum photon confidence level
         'Photon_CL_MIN': 0.25,
         # Maximum delta mass value m(D*_s+) - m(D_s+) (PDG dm: 143 MeV)
