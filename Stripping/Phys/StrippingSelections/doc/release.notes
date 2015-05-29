@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v4r2 2015-05-29 ===============
+
 ! 2015-05-29 Chitsanu Khurewathanakul
  - De-hardcoded all HLT-dependent line into default_config
  - Fix StrippingInclbJets vertexfitter dependency to LoKi's.
