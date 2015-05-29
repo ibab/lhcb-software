@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-05-29 - Roel Aaij
+ - Add routing bit 52 for Hlt1VeloClosingMicroBias to allow events to be
+   picked up 100% by the monitoring task.
+
 !========================= HltConf v12r9 2015-05-22 =========================
 
 ! 2015-05-27 - Roel Aaij
