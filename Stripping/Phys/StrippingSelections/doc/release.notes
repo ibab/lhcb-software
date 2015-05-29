@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-05-29 Erica Polycarpo  
+ - Remove HLT filter from StrippingD2hhh_conf.py 
+
 ! 2015-05-29 Roberta Cardinale
  - Small modifications to StrippinBandQ/StrippingDiMuonNew.py and StrippingDiMuonInherit.py
 

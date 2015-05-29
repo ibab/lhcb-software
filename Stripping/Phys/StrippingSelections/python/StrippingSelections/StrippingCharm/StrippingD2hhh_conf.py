@@ -80,7 +80,6 @@ default_config = {
     'D2KPPosLinePostscale'  : 1.0,
     'D2HHHIncLinePrescale'  : 0.04,
     'D2HHHIncLinePostscale' : 1.0,
-    'HLT'                   : None
       }
     }
 
@@ -161,7 +160,6 @@ class D2hhhConf(LineBuilder) :
                               'D2KPPosLinePostscale',
                               'D2HHHIncLinePrescale',
                               'D2HHHIncLinePostscale',
-                              'HLT'
                               )
 
     def __init__(self, name, config) :
@@ -319,50 +317,43 @@ class D2hhhConf(LineBuilder) :
                                         prescale = config['D2KKPLinePrescale'],
                                         postscale = config['D2KKPLinePostscale'],
                                         selection = self.selD2KKP,
-                                        FILTER = self.filterGE,
-                                        HLT = config['HLT']
+                                        FILTER = self.filterGE
                                         )
         self.D2KPP_line = StrippingLine(D2KPP_name+"Line",
                                         prescale = config['D2KPPLinePrescale'],
                                         postscale = config['D2KPPLinePostscale'],
                                         selection = self.selD2KPP,
-                                        FILTER = self.filterGE,
-                                        HLT = config['HLT']
+                                        FILTER = self.filterGE
                                         )
         self.D2PPP_line = StrippingLine(D2PPP_name+"Line",
                                         prescale = config['D2PPPLinePrescale'],
                                         postscale = config['D2PPPLinePostscale'],
                                         selection = self.selD2PPP,
-                                        FILTER = self.filterGE,
-                                        HLT = config['HLT']
+                                        FILTER = self.filterGE
                                         )
         self.D2KPPos_line = StrippingLine(D2KPPos_name+"Line",
                                         prescale = config['D2KPPosLinePrescale'],
                                         postscale = config['D2KPPosLinePostscale'],
                                         selection = self.selD2KPPos,
-                                        FILTER = self.filterGE,
-                                        HLT = config['HLT']
+                                        FILTER = self.filterGE
                                         )
         self.D2KKK_line = StrippingLine(D2KKK_name+"Line",
                                         prescale = config['D2KKKLinePrescale'],
                                         postscale = config['D2KKKLinePostscale'],
                                         selection = self.selD2KKK,
-                                        FILTER = self.filterGE,
-                                        HLT = config['HLT']
+                                        FILTER = self.filterGE
                                         )
         self.Ds2KKPos_line = StrippingLine(Ds2KKPos_name+"Line",
                                         prescale = config['Ds2KKPosLinePrescale'],
                                         postscale = config['Ds2KKPosLinePostscale'],
                                         selection = self.selDs2KKPos,
-                                        FILTER = self.filterGE,
-                                        HLT = config['HLT']
+                                        FILTER = self.filterGE
                                         )
         self.D2HHHInc_line = StrippingLine(D2HHHInc_name+"Line",
                                         prescale = config['D2HHHIncLinePrescale'],
                                         postscale = config['D2HHHIncLinePostscale'],
                                         selection = self.selD2HHHInc,
-                                        FILTER = self.filterGE,
-                                        HLT = config['HLT']
+                                        FILTER = self.filterGE
                                         )
 
         self.registerLine(self.D2KKP_line)
