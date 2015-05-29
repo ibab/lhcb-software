@@ -75,6 +75,7 @@ class Escher(LHCbConfigurableUser):
        , "PartitionName"        : "LHCb"
        , "DBSnapshotDirectory"  : "/group/online/hlt/conditions"
        , "OnlineAligWorkDir"    : "/group/online/AligWork/running"
+       , "Upgrade"              : False
         }
 
     def defineGeometry(self):
@@ -182,6 +183,7 @@ class Escher(LHCbConfigurableUser):
         TrackSys().ExpertTracking = self.getProp("ExpertTracking")
 
         ta = TAlignment()
+        ta.Upgrade = self.getProp("Upgrade")
         self.setOtherProps(ta, ["DatasetName","OnlineMode","OnlineAligWorkDir"])
         ta.Sequencer = alignSeq
         if  self.getProp("Millepede") :
