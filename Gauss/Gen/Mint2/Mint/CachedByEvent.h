@@ -66,7 +66,7 @@ class CachedByEvent : virtual public MINT::IFitParDependent{
     if(! evt.retrieveValue(rememberNumber(), result, configNumber())){
       return recalculate(evt);
     }
-    std::cout << "using cached result" << std::endl;
+    //std::cout << "using cached result" << std::endl;
 
     /*
     // debugging stuff:
@@ -91,7 +91,7 @@ class CachedByEvent : virtual public MINT::IFitParDependent{
         if(! evt.retrieveValue(rememberNumberPermutation(evt), result, configNumber())){
             return recalculatePermutation(evt);
         }
-        std::cout << "using cached result" << std::endl;
+        //std::cout << "using cached result" << std::endl;
         
         /*
         // debugging stuff:
