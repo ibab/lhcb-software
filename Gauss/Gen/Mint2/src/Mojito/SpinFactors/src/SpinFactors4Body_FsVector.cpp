@@ -170,7 +170,7 @@ const DecayTree& SF_BtoAV0_AtoVP1_VtoP2P3_D::exampleDecay(){
 }
 
 //SF 1
-complex<double> SF_BtoAV0_AtoVP1_VtoP2P3::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoAV0_AtoVP1_VtoP2P3::getNewVal(IDalitzEvent& evt){
   //bool debugThis = false;
     
   if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -213,7 +213,7 @@ void SF_BtoAV0_AtoVP1_VtoP2P3::printYourself(ostream& os) const{
 }
 
 //SF 2
-complex<double> SF_BtoAV0_AtoVP1Dwave_VtoP2P3::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoAV0_AtoVP1Dwave_VtoP2P3::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -266,7 +266,7 @@ void SF_BtoAV0_AtoVP1Dwave_VtoP2P3::printYourself(ostream& os) const{
 
 
 //SF 3
-complex<double> SF_BtoAV0_AtoVP1_VtoP2P3_P::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoAV0_AtoVP1_VtoP2P3_P::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -313,7 +313,7 @@ void SF_BtoAV0_AtoVP1_VtoP2P3_P::printYourself(ostream& os) const{
 }
 
 //SF 4
-complex<double> SF_BtoAV0_AtoVP1_VtoP2P3_D::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoAV0_AtoVP1_VtoP2P3_D::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -431,7 +431,7 @@ bool SF_BtoAV0_AtoSP1_StoP2P3_BASE::parseTree(const DalitzEventPattern& pat){
     return true;
 }
 
-complex<double> SF_BtoAV0_AtoSP1_StoP2P3::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoAV0_AtoSP1_StoP2P3::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -536,7 +536,7 @@ const DecayTree& SF_BtoV1V0_V1toV2P1_V2toP2P3::exampleDecay(){
     return getExampleDecay();
 }
 
-complex<double> SF_BtoV1V0_V1toV2P1_V2toP2P3::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoV1V0_V1toV2P1_V2toP2P3::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -671,7 +671,7 @@ const DecayTree& SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_D::exampleDecay(){
 
 
 //SF 7
-complex<double> SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_P::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_P::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -722,7 +722,7 @@ void SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_P::printYourself(ostream& os) const{
 }
 
 //SF 8
-complex<double> SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_D::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_D::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -837,7 +837,7 @@ const DecayTree& SF_BtoPseudoTV0_PseudoTtoSP1_StoP2P3_P::exampleDecay(){
     return getExampleDecay();
 }
 
-complex<double> SF_BtoPseudoTV0_PseudoTtoSP1_StoP2P3_P::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoPseudoTV0_PseudoTtoSP1_StoP2P3_P::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -947,7 +947,7 @@ const DecayTree& SF_BtoPseudoTV0_PseudoTtoTP1_TtoP2P3_P::exampleDecay(){
     return getExampleDecay();
 }
 
-complex<double> SF_BtoPseudoTV0_PseudoTtoTP1_TtoP2P3_P::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoPseudoTV0_PseudoTtoTP1_TtoP2P3_P::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -1067,7 +1067,7 @@ const DecayTree& SF_BtoTV0_TtoVP1_VtoP2P3_P::exampleDecay(){
     return getExampleDecay();
 }
 
-complex<double> SF_BtoTV0_TtoVP1_VtoP2P3_P::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoTV0_TtoVP1_VtoP2P3_P::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -1204,7 +1204,7 @@ bool SF_BtoVP1_VtoV0S_StoP2P3_BASE::parseTree(const DalitzEventPattern& pat){
     return true;
 }
 
-complex<double> SF_BtoVP1_VtoV0S_StoP2P3::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoVP1_VtoV0S_StoP2P3::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -1322,7 +1322,7 @@ bool SF_BtoV1P1_V1toV2V0_V2toP2P3_BASE::parseTree(const DalitzEventPattern& pat)
     return true;
 }
 
-complex<double> SF_BtoV1P1_V1toV2V0_V2toP2P3::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoV1P1_V1toV2V0_V2toP2P3::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -1447,7 +1447,7 @@ bool SF_BtoAP1_AtoVV0_VtoP2P3_BASE::parseTree(const DalitzEventPattern& pat){
     return true;
 }
 
-complex<double> SF_BtoAP1_AtoVV0_VtoP2P3::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoAP1_AtoVV0_VtoP2P3::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -1584,7 +1584,7 @@ const DecayTree& SF_BtoV1V2_V1toP1V0_V2toP2P3::exampleDecay(){
     return getExampleDecay();
 }
 
-complex<double> SF_BtoV1V2_V1toP1V0_V2toP2P3::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoV1V2_V1toP1V0_V2toP2P3::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -1711,7 +1711,7 @@ const DecayTree& SF_BtoAV_AtoP1V0_VtoP2P3::exampleDecay(){
     return getExampleDecay();
 }
 
-complex<double> SF_BtoAV_AtoP1V0_VtoP2P3::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoAV_AtoP1V0_VtoP2P3::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -1828,7 +1828,7 @@ const DecayTree& SF_BtoAS_AtoP1V0_StoP2P3::exampleDecay(){
     return getExampleDecay();
 }
 
-complex<double> SF_BtoAS_AtoP1V0_StoP2P3::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoAS_AtoP1V0_StoP2P3::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -1940,7 +1940,7 @@ const DecayTree& SF_BtoPS_PtoP1V0_StoP2P3::exampleDecay(){
     return getExampleDecay();
 }
 
-complex<double> SF_BtoPS_PtoP1V0_StoP2P3::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoPS_PtoP1V0_StoP2P3::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -2052,7 +2052,7 @@ const DecayTree& SF_BtoPV_PtoP1V0_VtoP2P3::exampleDecay(){
     return getExampleDecay();
 }
 
-complex<double> SF_BtoPV_PtoP1V0_VtoP2P3::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoPV_PtoP1V0_VtoP2P3::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -2168,7 +2168,7 @@ const DecayTree& SF_BtoPV0_PtoS_StoP2P3::exampleDecay(){
     return getExampleDecay();
 }
 
-complex<double> SF_BtoPV0_PtoS_StoP2P3::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoPV0_PtoS_StoP2P3::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -2273,7 +2273,7 @@ const DecayTree& SF_BtoVP1_VtoAP2_AtoV0P3::exampleDecay(){
     return getExampleDecay();
 }
 
-complex<double> SF_BtoVP1_VtoAP2_AtoV0P3::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoVP1_VtoAP2_AtoV0P3::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
@@ -2381,7 +2381,7 @@ const DecayTree& SF_BtoVP1_VtoSV0_StoP2P3::exampleDecay(){
     return getExampleDecay();
 }
 
-complex<double> SF_BtoVP1_VtoSV0_StoP2P3::ComplexVal(IDalitzEvent& evt){
+complex<double> SF_BtoVP1_VtoSV0_StoP2P3::getNewVal(IDalitzEvent& evt){
     //bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());

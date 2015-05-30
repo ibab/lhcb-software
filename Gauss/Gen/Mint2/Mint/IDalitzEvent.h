@@ -50,6 +50,7 @@ class IDalitzEvent : public virtual MINT::IWeightedEvent{
 
   virtual int numPermutations() const=0;
   virtual void setPermutationIndex(int i)=0;
+  virtual int permutationIndex() const=0;  
 
   virtual IDalitzEvent* clone() const=0;
   virtual ~IDalitzEvent(){}

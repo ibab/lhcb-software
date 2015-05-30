@@ -25,11 +25,11 @@ namespace MINT{
       //const FitParRef& operator[](unsigned int i) const;
 
       virtual const FitParRef& operator[](unsigned int i) const{
-	return ((static_cast<const vector<FitParRef>& >(*this))[i]);
+	return ((static_cast<const std::vector<FitParRef>& >(*this))[i]);
       } 
 
       virtual FitParRef& operator[](unsigned int i) {
-	return ((static_cast<vector<FitParRef>& >(*this))[i]);
+	return ((static_cast<std::vector<FitParRef>& >(*this))[i]);
       } 
    
       virtual bool changedSinceLastCall() const{

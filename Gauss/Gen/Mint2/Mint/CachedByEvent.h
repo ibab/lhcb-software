@@ -21,11 +21,20 @@ class CachedByEvent : virtual public MINT::IFitParDependent{
   long int rememberNumber() {
     if(_rememberNumber < 0){
       _rememberNumber = DalitzEvent::assignUniqueRememberNumber();
-      std::cout << "just assigned _rememberNumber " 
-		<< _rememberNumber << std::endl;
+      std::cout << "just assigned _rememberNumber "<< _rememberNumber << std::endl;
     }
     return _rememberNumber;
   }
+  
+  long int rememberNumberPermutation(IDalitzEvent& evt) {
+        if(_rememberNumber < 0){
+            _rememberNumber = DalitzEvent::assignUniqueRememberNumber();
+            std::cout << "just assigned _rememberNumber "<< _rememberNumber << std::endl;
+            for(int i=1; i < evt.numPermutations(); i++) DalitzEvent::assignUniqueRememberNumber();
+        }
+        return _rememberNumber+evt.permutationIndex();
+  }
+    
   long int configNumber(){ 
     if(_configNumber <= 0) _configNumber=1;
     return _configNumber;
@@ -37,6 +46,13 @@ class CachedByEvent : virtual public MINT::IFitParDependent{
     evt.setValue(rememberNumber(), result, configNumber());
     return result;
   }
+    
+  T recalculatePermutation(IDalitzEvent& evt){
+        T result(getNewVal(evt));
+        rememberFitParValues();
+        evt.setValue(rememberNumberPermutation(evt), result, configNumber());
+        return result;
+  }  
  public:
  CachedByEvent() : _rememberNumber(-9999), _configNumber(0){}
  CachedByEvent(const CachedByEvent& ) : _rememberNumber(-9999), _configNumber(0) {}
@@ -50,7 +66,7 @@ class CachedByEvent : virtual public MINT::IFitParDependent{
     if(! evt.retrieveValue(rememberNumber(), result, configNumber())){
       return recalculate(evt);
     }
-    //std::cout << "using cached result" << std::endl;
+    std::cout << "using cached result" << std::endl;
 
     /*
     // debugging stuff:
@@ -61,9 +77,35 @@ class CachedByEvent : virtual public MINT::IFitParDependent{
       listFitParDependencies(std::cout);
       std::cout << "=============================================================" << std::endl;
     }
-    */
+    */  
+    
     return result;
   }
+    
+  T getValWithCachingPermutation(IDalitzEvent& evt){
+        if(changedSinceLastCall()){
+           if(evt.permutationIndex()==0) _configNumber++;
+           return recalculatePermutation(evt);
+        }
+        T result;
+        if(! evt.retrieveValue(rememberNumberPermutation(evt), result, configNumber())){
+            return recalculatePermutation(evt);
+        }
+        std::cout << "using cached result" << std::endl;
+        
+        /*
+        // debugging stuff:
+        if(result != getNewVal(evt)){
+        std::cout << "=============================================================" << std::endl;
+        std::cout << "Nothing has changed? Hah! Check: " << result << " == " << getNewVal(evt) 
+		<< " ?? (" << rememberNumberPermutation(evt) << ")" << std::endl;
+        listFitParDependencies(std::cout);
+        std::cout << "=============================================================" << std::endl;
+        }
+        */
+      
+        return result;
+  }  
 
 };
 

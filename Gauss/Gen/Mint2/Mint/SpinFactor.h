@@ -7,6 +7,8 @@
 #include "Mint/ISpinFactor.h"
 #include "Mint/counted_ptr.h"
 #include "Mint/CachedByEvent.h"
+#include "Mint/FitParDependent.h"
+#include "Mint/CachedByEvent.h"
 
 #include <string>
 #include <iostream>
@@ -14,6 +16,8 @@
 class SpinFactor 
 : virtual public MINT::IReturnRealForEvent<IDalitzEvent>
 , virtual public MINT::IReturnComplexForEvent<IDalitzEvent>
+, public CachedByEvent<std::complex<double> >
+, public MINT::FitParDependent
 , virtual public ISpinFactor{
  protected:
   AssociatingDecayTree _associatingDecayTree;
@@ -24,7 +28,11 @@ class SpinFactor
  public:
   virtual double getVal(IDalitzEvent& evt)=0;
   virtual double RealVal(IDalitzEvent& evt){return getVal(evt);}// some dublication here...
-  virtual std::complex<double> ComplexVal(IDalitzEvent& evt){return std::complex<double>(getVal(evt),0);}
+  virtual std::complex<double> ComplexVal(IDalitzEvent& evt){     
+            return getValWithCachingPermutation(evt);
+            //return std::complex<double>(getVal(evt),0);
+  }
+  virtual std::complex<double> getNewVal(IDalitzEvent& evt){return std::complex<double>(getVal(evt),0);}
 
     
   double mRes(const AssociatedDecayTreeItem& adt, IDalitzEvent& evt);
@@ -62,7 +70,8 @@ class SpinFactor
     {}
   virtual void printYourself(std::ostream& os=std::cout) const=0;
   virtual void printParsing(std::ostream& os=std::cout) const;
-  virtual ~SpinFactor(){}
+  virtual ~SpinFactor(){this->removeAllFitParDependencies();}
+
   virtual const DecayTree& exampleDecay()=0;
   virtual std::string name() const=0;
 };

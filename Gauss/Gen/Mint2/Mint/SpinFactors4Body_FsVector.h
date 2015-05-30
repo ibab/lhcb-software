@@ -35,7 +35,7 @@ public:
     
     virtual ~SF_BtoAV0_AtoVP1_VtoP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -66,8 +66,8 @@ protected:
     }
 
   virtual ~SF_BtoAV0_AtoVP1_VtoP2P3(){}
-  virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-  virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+  virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+  virtual std::complex<double> getNewVal(IDalitzEvent& evt);
 
   static const DecayTree& getExampleDecay();
   virtual const DecayTree& exampleDecay();
@@ -93,8 +93,8 @@ public:
     : SF_BtoAV0_AtoVP1_VtoP2P3_BASE(theDecay), _pol(pol) {}
     
     virtual ~SF_BtoAV0_AtoVP1Dwave_VtoP2P3(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -117,8 +117,8 @@ public:
     : SF_BtoAV0_AtoVP1_VtoP2P3_BASE(theDecay), _pol(pol){}
     
     virtual ~SF_BtoAV0_AtoVP1_VtoP2P3_P(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -142,8 +142,8 @@ public:
     : SF_BtoAV0_AtoVP1_VtoP2P3_BASE(theDecay), _pol(pol){}
     
     virtual ~SF_BtoAV0_AtoVP1_VtoP2P3_D(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -172,7 +172,7 @@ public:
     
     virtual ~SF_BtoAV0_AtoSP1_StoP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -192,8 +192,8 @@ public:
     : SF_BtoAV0_AtoSP1_StoP2P3_BASE(theDecay), _pol(pol){}
     
     virtual ~SF_BtoAV0_AtoSP1_StoP2P3(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -223,7 +223,7 @@ public:
     
     virtual ~SF_BtoV1V0_V1toV2P1_V2toP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -243,8 +243,8 @@ public:
     : SF_BtoV1V0_V1toV2P1_V2toP2P3_BASE(theDecay), _pol(pol){}
     
     virtual ~SF_BtoV1V0_V1toV2P1_V2toP2P3(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -273,7 +273,7 @@ public:
     
     virtual ~SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -294,8 +294,8 @@ public:
     : SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_BASE(theDecay), _pol(pol){}
     
     virtual ~SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_P(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -318,8 +318,8 @@ public:
     : SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_BASE(theDecay), _pol(pol){}
     
     virtual ~SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_D(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -348,7 +348,7 @@ public:
     
     virtual ~SF_BtoPseudoTV0_PseudoTtoSP1_StoP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -368,8 +368,8 @@ public:
     : SF_BtoPseudoTV0_PseudoTtoSP1_StoP2P3_BASE(theDecay), _pol(pol){}
     
     virtual ~SF_BtoPseudoTV0_PseudoTtoSP1_StoP2P3_P(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -398,7 +398,7 @@ public:
     
     virtual ~SF_BtoPseudoTV0_PseudoTtoTP1_TtoP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -418,8 +418,8 @@ public:
     : SF_BtoPseudoTV0_PseudoTtoTP1_TtoP2P3_BASE(theDecay), _pol(pol){}
     
     virtual ~SF_BtoPseudoTV0_PseudoTtoTP1_TtoP2P3_P(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -447,7 +447,7 @@ public:
     
     virtual ~SF_BtoTV0_TtoVP1_VtoP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -467,8 +467,8 @@ public:
     : SF_BtoTV0_TtoVP1_VtoP2P3_BASE(theDecay), _pol(pol){}
     
     virtual ~SF_BtoTV0_TtoVP1_VtoP2P3_P(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -497,7 +497,7 @@ public:
     
     virtual ~SF_BtoVP1_VtoV0S_StoP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -519,8 +519,8 @@ public:
     : SF_BtoVP1_VtoV0S_StoP2P3_BASE(theDecay), _pol(pol), _is3bodyDecay(is3body){}
     
     virtual ~SF_BtoVP1_VtoV0S_StoP2P3(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -549,7 +549,7 @@ public:
     
     virtual ~SF_BtoV1P1_V1toV2V0_V2toP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -571,8 +571,8 @@ public:
     : SF_BtoV1P1_V1toV2V0_V2toP2P3_BASE(theDecay), _pol(pol), _LS_s(LS_s){}
     
     virtual ~SF_BtoV1P1_V1toV2V0_V2toP2P3(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -603,7 +603,7 @@ public:
     
     virtual ~SF_BtoAP1_AtoVV0_VtoP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -625,8 +625,8 @@ public:
     : SF_BtoAP1_AtoVV0_VtoP2P3_BASE(theDecay), _pol(pol), _is3bodyDecay(is3body){}
     
     virtual ~SF_BtoAP1_AtoVV0_VtoP2P3(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -656,7 +656,7 @@ public:
     
     virtual ~SF_BtoV1V2_V1toP1V0_V2toP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -676,8 +676,8 @@ public:
     : SF_BtoV1V2_V1toP1V0_V2toP2P3_BASE(theDecay), _pol(pol){}
     
     virtual ~SF_BtoV1V2_V1toP1V0_V2toP2P3(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -704,7 +704,7 @@ public:
     
     virtual ~SF_BtoAV_AtoP1V0_VtoP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -725,8 +725,8 @@ public:
     : SF_BtoAV_AtoP1V0_VtoP2P3_BASE(theDecay), _pol(pol){}
     
     virtual ~SF_BtoAV_AtoP1V0_VtoP2P3(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -753,7 +753,7 @@ public:
     
     virtual ~SF_BtoAS_AtoP1V0_StoP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -774,8 +774,8 @@ public:
     : SF_BtoAS_AtoP1V0_StoP2P3_BASE(theDecay), _pol(pol){}
     
     virtual ~SF_BtoAS_AtoP1V0_StoP2P3(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -802,7 +802,7 @@ public:
     
     virtual ~SF_BtoPS_PtoP1V0_StoP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -823,8 +823,8 @@ public:
     : SF_BtoPS_PtoP1V0_StoP2P3_BASE(theDecay), _pol(pol){}
     
     virtual ~SF_BtoPS_PtoP1V0_StoP2P3(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -852,7 +852,7 @@ public:
     
     virtual ~SF_BtoPV_PtoP1V0_VtoP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -872,8 +872,8 @@ public:
     : SF_BtoPV_PtoP1V0_VtoP2P3_BASE(theDecay), _pol(pol){}
     
     virtual ~SF_BtoPV_PtoP1V0_VtoP2P3(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -900,7 +900,7 @@ public:
     
     virtual ~SF_BtoPV0_PtoS_StoP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -920,8 +920,8 @@ public:
     : SF_BtoPV0_PtoS_StoP2P3_BASE(theDecay), _pol(pol){}
     
     virtual ~SF_BtoPV0_PtoS_StoP2P3(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -956,7 +956,7 @@ public:
     
     virtual ~SF_BtoVP1_VtoAP2_AtoV0P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -986,8 +986,8 @@ public:
     }
     
     virtual ~SF_BtoVP1_VtoAP2_AtoV0P3(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
@@ -1024,7 +1024,7 @@ public:
     
     virtual ~SF_BtoVP1_VtoSV0_StoP2P3_BASE(){}
     virtual double getVal(IDalitzEvent& evt)=0;
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
     
     virtual const DecayTree& exampleDecay()=0;
     virtual std::string name() const{
@@ -1054,8 +1054,8 @@ public:
     }
     
     virtual ~SF_BtoVP1_VtoSV0_StoP2P3(){}
-    virtual double getVal(IDalitzEvent& evt){return ComplexVal(evt).real();}
-    virtual std::complex<double> ComplexVal(IDalitzEvent& evt);
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
     
     static const DecayTree& getExampleDecay();
     virtual const DecayTree& exampleDecay();
