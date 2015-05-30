@@ -1,8 +1,10 @@
-----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 ! Package     : Phys/DecayTreeTuple
-! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
+! Responsible : Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+
+!======================= DecayTreeTuple v4r15 2015-05-30 =====================
 
 ! 2015-05-11 - Eduardo Rodrigues
  - Removed warning in compilation of TupleToolTwoParticleMatching.
