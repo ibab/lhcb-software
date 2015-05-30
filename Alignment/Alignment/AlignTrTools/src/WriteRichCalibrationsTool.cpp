@@ -213,7 +213,7 @@ StatusCode WriteRichCalibrationsTool::writeRefIndex(const std::string& version) 
     std::string alignLoc = "/dd/Conditions/Environment/"+riches[richID]+"/RefractivityScaleFactor";   
     Condition *myCond = get<Condition>( detSvc(), alignLoc );
 
-    std::string fileName = m_directory + "/Conditions/" + files[richID];
+    std::string fileName = m_directory + "/" + files[richID];
     sc = createXmlFile(fileName,version,formattedcondition( *myCond, m_precision ) ) ;
   }
 
@@ -246,7 +246,7 @@ StatusCode WriteRichCalibrationsTool::writeHPDOcc(const std::string& version) co
     std::string alignLoc = "/dd/Conditions/Environment/"+riches[richID]+"/AverageHPDOccupancies";   
     Condition *myCond = get<Condition>( detSvc(), alignLoc );
 
-    std::string fileName = m_directory + "/Conditions/" + files[richID];
+    std::string fileName = m_directory + "/" + files[richID];
     sc = createXmlFile(fileName,version,formattedcondition( *myCond, m_precision ) ) ;
   }
 
@@ -336,7 +336,7 @@ StatusCode WriteRichCalibrationsTool::writeHPDAlign(const std::string& version) 
 
   for( int pID=0 ; pID<totalPannels ; pID++ )
   {
-    fileName = m_directory + "/Conditions/" + files[pID];
+    fileName = m_directory + "/" + files[pID];
     sc = createXmlFile( fileName, version, RichHpdAlign[pID].str() ) ;
   }
 
