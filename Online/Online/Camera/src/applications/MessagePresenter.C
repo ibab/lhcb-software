@@ -475,7 +475,7 @@ int MessagePresenter::GetXtra(const std::string & str,
   }
 
   std::string::size_type position2 = add.find(":");
-  std::string host(add),port("8888");
+  std::string host(add), port("8888");
 
   if (position2 != std::string::npos)
   {
@@ -548,9 +548,9 @@ void MessagePresenter::rootStyle()
   gStyle->SetLabelSize(0.04f,"XY");
   gStyle->SetLabelOffset(0.01f,"Y");
 
-  //gStyle->SetTitleOffset(1.1f,"XY");
-  //gStyle->SetTitleOffset(0,"XY");
-  gStyle->SetTitleSize(0.06f,"XY");
+  gStyle->SetTitleOffset(0.5,"x");
+  gStyle->SetTitleOffset(0.5,"y");
+  gStyle->SetTitleSize(0.04f,"XY");
   gStyle->SetTitleX(0.16);
   gStyle->SetTitleY(0.995);
   gStyle->SetTitleBorderSize(0);
@@ -597,6 +597,7 @@ void MessagePresenter::rootStyle()
   gStyle->SetPadTickX(1);
   gStyle->SetPadTickY(1);
 
+  // Set number of digits on axes
   TGaxis::SetMaxDigits(3);
 
 }
@@ -1118,7 +1119,7 @@ void MessagePresenter::messageloop( const char * host, const char * file )
 
       for (unsigned int i = 0;i<serverlist.size();++i)
       {
-        if (connlist[i] ==1)
+        if ( connlist[i] == 1 )
         {
           stat = (TGString)(stat + (TGString)serverlist[i].c_str() + (TGString)", ");
         }
@@ -1126,7 +1127,7 @@ void MessagePresenter::messageloop( const char * host, const char * file )
       stat = (TGString)(stat + " / NOT Connected to: ");
       for (unsigned int i = 0;i<serverlist.size();++i)
       {
-        if (connlist[i] ==0)
+        if ( connlist[i] == 0 )
         {
           stat = (TGString)( stat + (TGString)serverlist[i].c_str() + (TGString)", " );
         }
@@ -1145,11 +1146,12 @@ void MessagePresenter::messageloop( const char * host, const char * file )
       for (unsigned int i = 0;i<serverlist.size();++i)
       {
 
-        if (connlist[i] ==1){
+        if ( connlist[i] == 1 ) 
+        {
 
           char buf[512];
           int r;
-          while ((r = protolist[i]->getline(buf,511)) >0 )
+          while ( (r = protolist[i]->getline(buf,511)) > 0 )
           {
             if (r > 0)
             {
@@ -1169,8 +1171,8 @@ void MessagePresenter::messageloop( const char * host, const char * file )
 
             // every now and then, check the cache file length
             // otherwise just write
-            static time_t lastLengthCheck = time(NULL);
             const time_t timeNow = time(NULL);
+            static time_t lastLengthCheck = timeNow;
             if ( (timeNow-lastLengthCheck) >= 15*60 )
             {
               checkCacheFileLength();
@@ -1182,11 +1184,11 @@ void MessagePresenter::messageloop( const char * host, const char * file )
             }
 
           }
-          if (r==-1){
+          if ( r == -1 ) 
+          {
             clientlist[i]->new_sock();
-            connlist[i] =0;
-            string str = "Connection to "+serverlist[i]+" terminated!";
-
+            connlist[i] = 0;
+            //string str = "Connection to "+serverlist[i]+" terminated!";
           }
 
         }// connlist ==1
