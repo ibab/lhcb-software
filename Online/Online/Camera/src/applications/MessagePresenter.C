@@ -597,7 +597,7 @@ void MessagePresenter::rootStyle()
   gStyle->SetPadTickX(1);
   gStyle->SetPadTickY(1);
 
-  TGaxis::SetMaxDigits(2);
+  TGaxis::SetMaxDigits(3);
 
 }
 
