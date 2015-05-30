@@ -4,6 +4,8 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!======================== DSTWriters v4r20 2015-05-30 ========================
+
 ! 2015-05-27 - Andrea Contu
  - Add HC raw banks to selectiveRawEvent
 
