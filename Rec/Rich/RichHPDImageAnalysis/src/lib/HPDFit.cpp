@@ -38,6 +38,27 @@ HPDFit::HPDFit()
 
 HPDFit::~HPDFit() { }
 
+const TH2D * HPDFit::getFitHistogram( const TH2D& hist,
+                                      const Params& params,
+                                      const unsigned int nEvents ) const
+{
+  const TH2D * hToUse = &hist;
+  if ( params.cleanHistogram )
+  {
+    const Clean cleaner(&hist,nEvents);
+    hToUse = cleaner.filter();
+  }
+  const TH2D * hToReturn = hToUse;
+  if ( "Sobel" == params.type )
+  {
+    const SobelFilter sobel(hToUse);
+    hToReturn = sobel.filter();
+  }
+  if ( hToUse != &hist && 
+       hToUse != hToReturn ) { delete hToUse; }
+  return hToReturn;
+}
+
 HPDFit::Result HPDFit::fit ( const TH2D& hist,
                              const Params& params,
                              const unsigned int nEvents ) const
@@ -245,6 +266,7 @@ HPDFit::Result HPDFit::fit ( const TH2D& hist,
   // cleanup
   if ( params.cleanHistogram ) { delete hToUse; }
 
+  // return the final status
   return result;
 }
 

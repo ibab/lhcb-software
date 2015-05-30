@@ -4,6 +4,9 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2015-05-30 - Chris Jones
+ - Add a method to extract a copy of the cleaned histogram from the fitter.
+
 !========================= RichHPDImageAnalysis v1r16 2015-05-26 =====================
 ! 2015-05-18 - Jibo He
  - Added function in the base class, to return image hists for given smart ID.

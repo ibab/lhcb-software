@@ -145,6 +145,12 @@ namespace Rich
       /// Get the boundary pixels (read only access)
       const Pixel::List & boundaryPixels() const { return m_boundaryPixels; }
 
+      /** Get a copy of the fit histogram (cleaned and filtered as required).
+       *  @attention Caller takes ownership of the returned histogram object */
+      const TH2D * getFitHistogram( const TH2D& hist,
+                                    const Params& params,
+                                    const unsigned int nEvents = 0 ) const;
+
     private:
 
       /// List of boundary pixels
