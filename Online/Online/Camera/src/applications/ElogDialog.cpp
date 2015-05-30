@@ -1,4 +1,4 @@
-// $Id: ElogDialog.cpp,v 1.9 2010-10-01 12:52:26 frankb Exp $
+
 // STL
 #include <iostream>
 
