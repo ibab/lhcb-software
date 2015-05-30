@@ -19,6 +19,9 @@
 #include "OTDet/DeOTDetector.h"
 #include "STDet/DeSTDetector.h"
 #include "VeloDet/DeVelo.h"
+#include "VPDet/DeVP.h"
+#include "STDet/DeUTDetector.h"
+#include "FTDet/DeFTDetector.h"
 #include "MuonDet/DeMuonDetector.h"
 
 // from Boost
@@ -46,6 +49,7 @@ GetElementsToBeAligned::GetElementsToBeAligned( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
   : GaudiTool ( type, name , parent ),
+    m_upgrade(false),
     m_useLocalFrame(true),
     m_elemsToBeAligned(),
     m_elementMap(),
@@ -54,6 +58,7 @@ GetElementsToBeAligned::GetElementsToBeAligned( const std::string& type,
   declareInterface<IGetElementsToBeAligned>(this);
   declareProperty("Elements"     , m_elemsToBeAligned);
   declareProperty("UseLocalFrame", m_useLocalFrame   );
+  declareProperty("Upgrade"      , m_upgrade );
 }
 
 GetElementsToBeAligned::~GetElementsToBeAligned() {}
@@ -347,13 +352,42 @@ const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::LHCbID& 
   // longer needed if we have a new version of brunel.
   const DetectorElement* element(0) ; // = meas.detectorElement() ;
   {
-    static DeVelo*       velo = getDet<DeVelo>(DeVeloLocation::Default); 
-    static DeSTDetector* tt   = getDet<DeSTDetector>(DeSTDetLocation::TT);
-    static DeSTDetector* it   = getDet<DeSTDetector>(DeSTDetLocation::IT);
-    static DeOTDetector* ot   = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
+    static DeVP*         vp;
+    static DeSTDetector* ut;
+    static DeFTDetector* ft;
+    static DeVelo*       velo;
+    static DeSTDetector* tt;
+    static DeSTDetector* it;
+    static DeOTDetector* ot;
+    
+    if (m_upgrade) 
+    {
+      vp   = getDet<DeVP>(  DeVPLocation::Default ) ;
+      ut   = getDet<DeUTDetector>(DeSTDetLocation::UT);
+      ft   = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
+    }
+    else
+    {
+      velo = getDet<DeVelo>(DeVeloLocation::Default); 
+      tt   = getDet<DeSTDetector>(DeSTDetLocation::TT);
+      it   = getDet<DeSTDetector>(DeSTDetLocation::IT);
+      ot   = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
+    }
     static DeMuonDetector* muon = getDet<DeMuonDetector>(DeMuonLocation::Default);
 
     switch( id.detectorType() ) {
+    case LHCb::LHCbID::VP:
+      {
+        LHCb::VPChannelID chID = id.vpID();
+        element = vp->sensorOfChannel(chID); 
+      }
+      break ;
+    case LHCb::LHCbID::UT:
+      element = ut->findSector( id.stID() ) ;
+      break;
+    case LHCb::LHCbID::FT:
+      element = ft->findFibreMat( id.ftID() );
+      break;  
     case LHCb::LHCbID::Velo:
       element = id.isVeloR() ? 
         static_cast<const DetectorElement*>(velo->rSensor( id.veloID() )) :

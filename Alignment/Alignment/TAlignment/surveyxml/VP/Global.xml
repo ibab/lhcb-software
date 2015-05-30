@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><!DOCTYPE DDDB SYSTEM "../../../DTD/structure.dtd"><DDDB>
+
+<!-- VP alignment constants evaluated using October TED data-->
+
+  <condition classID="6" name="VPSystem">
+    <paramVector name="dPosXYZ" type="double"> 0.0  0  0 </paramVector>
+    <paramVector name="dRotXYZ" type="double"> 0.0  0  0.000 </paramVector>
+    <paramVector name="pivotXYZ" type="double"> 0  0  0 </paramVector>
+  </condition>
+
+  <condition classID="1008106" name="VPLeft">
+    <paramVector name="dPosXYZ" type="double"> 0.  0.0  0 </paramVector>
+    <paramVector name="dRotXYZ" type="double"> 0.0  0.0  0 </paramVector>
+    <paramVector name="pivotXYZ" type="double"> 0  0  0 </paramVector>
+  </condition>
+
+  <condition classID="1008106" name="VPRight">
+    <paramVector name="dPosXYZ" type="double"> 0.0  0.0  0 </paramVector>
+    <paramVector name="dRotXYZ" type="double"> 0.0  0.0  0 </paramVector>
+    <paramVector name="pivotXYZ" type="double"> 0  0  0 </paramVector>
+  </condition>
+
+</DDDB>

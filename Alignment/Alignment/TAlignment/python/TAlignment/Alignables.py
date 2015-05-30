@@ -7,7 +7,11 @@ class Alignables( list ):
         self.m_velo       = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo"
         self.m_veloLeft   = "/VeloLeft"
         self.m_veloRight  = "/VeloRight"
-        
+
+        self.m_vp         = "/dd/Structure/LHCb/BeforeMagnetRegion/VP"
+        self.m_vpLeft   = "/VPLeft"
+        self.m_vpRight  = "/VPRight"
+
         self.m_tt         = "/dd/Structure/LHCb/BeforeMagnetRegion/TT"
         self.m_ttStations = [ "TTa","TTb" ]
         self.m_ttLayers   = [ "TTa/TTaXLayer","TTa/TTaULayer","TTb/TTbVLayer","TTb/TTbXLayer", ]
@@ -161,6 +165,17 @@ class Alignables( list ):
     def VeloLeft( self, dofs = "" ) :
         self.__append( self.m_velo + self.m_veloLeft, dofs)
 
+    ## VP #################################################################################
+    def VPModules( self, dofs = "" ) :
+        elements = []
+        elements.append( self.m_vp + "/VP(Right|Left)/Module.{1,2}WithSupport" )
+        self.__append( elements, dofs )
+        
+    def VPRight( self, dofs = "" ) :
+        self.__append( self.m_vp + self.m_vpRight, dofs)
+        
+    def VPLeft( self, dofs = "" ) :
+        self.__append( self.m_vp + self.m_vpLeft, dofs)
     ## TT #################################################################################
     def TT( self, dofs = "" ) :
         self.__append( self.m_tt, dofs )

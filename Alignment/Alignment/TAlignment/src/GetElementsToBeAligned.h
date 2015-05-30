@@ -129,6 +129,7 @@ private:
   
 private:
   bool                                                              m_useLocalFrame;    ///< Use local frame as alignmentframe
+  bool                                                              m_upgrade;          ///< Use for upgrade alignment
   std::vector<std::string>                                          m_elemsToBeAligned; ///< Elemenst : Path to elements
   mutable IGetElementsToBeAligned::Elements                         m_elements;    ///< Flat vector of alignment elements
   typedef std::map<const DetectorElement*, const AlignmentElement*> ElementMap;

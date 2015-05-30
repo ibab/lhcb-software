@@ -3,7 +3,8 @@ from Configurables import LHCbConfigurableUser
 #from Configurables import Al__AlignChisqConstraintTool as AlignChisqConstraintTool
 
 # Dictionary with all the available XMLfiles
-XmlFilesDict = { 'Velo': {'latest': ['Modules', 'Detectors']},
+XmlFilesDict = { 'VP': {'latest': ['Modules']},
+                 'Velo': {'latest': ['Modules', 'Detectors']},
                  'OT': {'latest': ['Elements_OTSurvey2011StationYCorrected'],
                         '2010': [],
                         'old': ['Elements', 'ElementsBowingCorrected']},
@@ -44,7 +45,13 @@ class SurveyConstraints( LHCbConfigurableUser ):
  				  "Detector(PU|)..-.. : 0.005 0.005 0.005 0.0001 0.0001 0.0001" ]
         self.Constraints += [ "Velo      : 0 0 0 -0.0001 0 -0.0001 : 0.2 0.2 0.2 0.0001 0.0001 0.001",
                               "Velo/Velo(Right|Left) : 0 0 0 0 0 0 : 10 1 0.2 0.0001 0.0001 0.0001" ]
-        
+    def VP( self, ver='latest' ) :
+        if not ver in XmlFilesDict['VP'].keys():
+            print 'WARNING(SurveyConstraints): Survey constraint version '+ver+' not found for Velo. Using \'latest\''
+            ver = 'latest'
+        for f in XmlFilesDict['VP'][ver]: self.XmlFiles += [ self.defaultSurveyDir() + "VP/"+f+".xml" ]
+        self.XmlUncertainties += ["Module(00|).. : 0.02 0.02 0.02 0.0002 0.0002 0.0002" ]
+        self.Constraints += ["VP/VP(Right|Left) : 0. 0. 0. 0. 0. 0. : 0.200 0.200 0.2 0.0001 0.0001 0.0001" ]
     def OT( self, ver='latest' ) :
         # we don't load OT xml yet. there is no usefull info, since it doesn't have the right structures in geometry. (solved in 2011 - do not use old file)
         if not ver in XmlFilesDict['OT'].keys():
@@ -127,6 +134,7 @@ class SurveyConstraints( LHCbConfigurableUser ):
 
     def All( self, ver='latest' ) :
         self.Velo(ver)
+        self.VP(ver)
         self.TT(ver)
         self.IT(ver)
         self.OT(ver)

@@ -44,6 +44,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "EigenValueThreshold"          : -1                          # Eigenvalue threshold for cutting out weak modes
         , "WriteCondSubDetList"          : []                          # List of sub-detectors for which to write out the conditions
         , "CondFilePrefix"               : "xml/"                      # Prefix for xml file names
+        , "VPTopLevelElement"            : "/dd/Structure/LHCb/BeforeMagnetRegion/VP"
         , "VeloTopLevelElement"          : "/dd/Structure/LHCb/BeforeMagnetRegion/Velo"
         , "TTTopLevelElement"            : "/dd/Structure/LHCb/BeforeMagnetRegion/TT"
         , "ITTopLevelElement"            : "/dd/Structure/LHCb/AfterMagnetRegion/T/IT"
@@ -132,12 +133,17 @@ class TAlignment( LHCbConfigurableUser ):
     # set up the monitoring sequence
     def createTrackMonitors(self, name, location ):
         from Configurables import (TrackMonitor,TrackVeloOverlapMonitor,TrackITOverlapMonitor)
-        seq = [TrackMonitor(name + "TrackMonitor",
-                            TracksInContainer = location),
-               TrackVeloOverlapMonitor(name + "VeloOverlapMonitor",
-                                       TrackLocation =location),
-               TrackITOverlapMonitor(name + "ITOverlapMonitor",
-                                     TrackLocation =location)]
+        if not self.getProp( "Upgrade" ):
+            seq = [TrackMonitor(name + "TrackMonitor",
+                                TracksInContainer = location),
+                   
+                   TrackVeloOverlapMonitor(name + "VeloOverlapMonitor",
+                                           TrackLocation =location),
+                   TrackITOverlapMonitor(name + "ITOverlapMonitor",
+                                         TrackLocation =location)]
+        else:
+            seq = [TrackMonitor(name + "TrackMonitor",
+                                TracksInContainer = location)]
         return seq
 
     def monitorSeq( self ) :
@@ -188,6 +194,9 @@ class TAlignment( LHCbConfigurableUser ):
         print '================ Configuring XML writer for offline alignment ====================='
         alg.XmlWriters = []
         listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
+        if 'VP'   in listOfCondToWrite:
+            self.addXmlWriter( alg, 'VP', 'Global', [0,1] )
+            self.addXmlWriter( alg, 'VP','Modules', [2] )
         if 'Velo' in listOfCondToWrite:
             self.addXmlWriter( alg, 'Velo', 'Global', [0,1] )
             self.addXmlWriter( alg, 'Velo','Modules', [2,4] )
@@ -251,6 +260,9 @@ class TAlignment( LHCbConfigurableUser ):
         if 'Velo' in listOfCondToWrite:
             self.addOnlineXmlWriter( alg, 'Velo','Global', [0,1] )
             self.addOnlineXmlWriter( alg, 'Velo','Modules', [2,4] )
+        if 'VP'   in listOfCondToWrite:
+            self.addXmlWriter( alg, 'VP', 'Global', [0,1] )
+            self.addXmlWriter( alg, 'VP','Modules', [2] )
         if 'TT' in listOfCondToWrite:
             self.addOnlineXmlWriter( alg, 'TT','Global', [0,1,2] )
             self.addOnlineXmlWriter( alg, 'TT','Modules', [3] )
@@ -313,6 +325,7 @@ class TAlignment( LHCbConfigurableUser ):
             #print "(1)I will try to aling ", self.getProp( "ElementsToAlign" ), " elements!"
             elementtool.Elements                  = self.getProp( "ElementsToAlign" )
             elementtool.UseLocalFrame             = self.getProp( "UseLocalFrame"   )
+            elementtool.Upgrade                   = self.getProp( "Upgrade"         )
             #alignAlg.addTool( elementtool )
 
             # Setup XML writer, also a public tool

@@ -3,11 +3,22 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+
+
+
+
 ! 2015-05-29 - Maurizio Martinelli
  - Added 'Upgrade' slot in TAlignment
 
 ! 2015-05-29 - Giulio Dujany
  - Changed contraints in VELO alignment scenarios in AlignmentScenarios.py
+
+! 2015-05-28 - Christoph Hombach
+ - Integrated Velo Upgrade alignment:
+    - Added upgrade option in Configuration.py
+		- Added VP in Alignables.py
+		- Added VP survey constants
+		- Added VP and upgrade option in src/GetElementsToBeAligned.cpp/h
 
 ! 2015-05-26 - Silvia Borghi
  - Change the Configuration to change the format of xml file for Run2.
