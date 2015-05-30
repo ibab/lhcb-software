@@ -130,7 +130,7 @@ void main()
       var wiremode = false;
 
       //global material definitions
-      var otmaterial = new THREE.LineBasicMaterial( { color: 0x0000a0, opacity: 0.3, linewidth: 1, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true } );
+      var otmaterial = new THREE.LineBasicMaterial( { color: 0x0000a0, opacity: 0.5, linewidth: 1, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true } );
       var itmaterial = new THREE.LineBasicMaterial( { color: 0xa000a0, opacity: 0.5, linewidth: 1, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true  } );
       var ttmaterial = new THREE.LineBasicMaterial( { color: 0xa000a0, opacity: 0.5, linewidth: 1, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true  } );
       var velomaterial = new THREE.LineBasicMaterial( { color: 0xa000a0, opacity: 0.5, linewidth: 1, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true  } );
@@ -155,7 +155,7 @@ void main()
       var pvsvthreematerial = new THREE.LineDashedMaterial( { color: 0xff00ff, dashSize: 0.75e-3, gapSize: 0.5e-3, scale: 1.0, linewidth: 2, visible: false } );
       var pvsvtwomaterial = new THREE.LineDashedMaterial( { color: 0xff00ff, dashSize: 0.75e-3, gapSize: 0.5e-3, scale: 1.0, linewidth: 2, visible: false } );
 
-      var detectoralpha = 0.06;
+      var detectoralpha = 0.05;
       var detectormaterial = new THREE.MeshLambertMaterial({color: 0x40d0ff, blending: THREE.NormalBlending, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: true, transparent: true, opacity: detectoralpha, depthWrite: false, depthTest: true, side: THREE.DoubleSide });
 
       var pimaterial = new THREE.ShaderMaterial( 
