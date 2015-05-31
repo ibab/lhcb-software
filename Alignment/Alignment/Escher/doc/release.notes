@@ -4,6 +4,9 @@ Package Coordinator : Maurizio Martinelli
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+! 2015-05-31 - Maurizio Martinelli
+ - Updated qmtests
+
 ! 2015-05-28 - Christoph Hombach				 
  - Added Velo Upgrade Alignment:
  - Added Upgrade option in Configuration.py

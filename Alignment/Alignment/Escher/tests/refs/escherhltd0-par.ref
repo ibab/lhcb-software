@@ -14,8 +14,8 @@ INFO: initializeRemote
 =================== OnlineMode =  False
 ApplicationMgr    SUCCESS 
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r3)
-                                          running on lxplus0227.cern.ch on Tue Mar 24 18:19:37 2015
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r4)
+                                          running on lxplus0064.cern.ch on Sun May 31 11:14:08 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 
@@ -42,12 +42,12 @@ ApplicationMgr       INFO Application Manager Configured successfully
 [32m                HltSelReportsDecoder/HltSelReportsDecoder[0m
 [32m                HltSelReportsDecoder/Hlt2SelReportsDecoder[0m
 [32m                HltTrackConverter/HltTrackConv[0m
-[94m                GaudiSequencer/Hlt2BestSeq[0m
-[32m                     TrackStateInitAlg/Hlt2BestFitInit[0m
-[32m                     TrackEventFitter/Hlt2BestFitBeforeHitAdder[0m
-[32m                     TrackHitAdder/Hlt2BestHitAdder[0m
-[32m                     TrackEventFitter/Hlt2BestFitAfterHitAdder[0m
-[32m                     TrackContainerCopy/Hlt2BestCopyAndSelect[0m
+[94m                GaudiSequencer/HltBestSeq[0m
+[32m                     TrackStateInitAlg/HltBestFitInit[0m
+[32m                     TrackEventFitter/HltBestFitBeforeHitAdder[0m
+[32m                     TrackHitAdder/HltBestHitAdder[0m
+[32m                     TrackEventFitter/HltBestFitAfterHitAdder[0m
+[32m                     TrackContainerCopy/HltBestCopyAndSelect[0m
 [32m                LoKi::VoidFilter/BestTrackFilter[0m
 [94m           RecoVertexSeq[0m
 [32m                PatPVOffline/PatPVOffline[0m
@@ -184,7 +184,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   3.25 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.82 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 EscherSequencer      INFO Member list: CountingPrescaler/EscherPrescaler, ProcessPhase/Init, GaudiSequencer/HltFilterSeq, ProcessPhase/Reco, ProcessPhase/Moni, GaudiSequencer/AlignSequence
@@ -203,24 +203,24 @@ RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/createBothVeloCluster
 createBothVeloC...   INFO Cancel processing of events with more than 6000 Velo clusters
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/DDDB.db/DDDB"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "dddb-20130503-1"
-LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
 LHCBCOND             INFO Using TAG "cond-20130710"
-ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2012.db/ONLINE"
+ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/ONLINE-2012.db/ONLINE"
 ONLINE_2012          INFO Using TAG ""
-RecoAlignTrSeq       INFO Member list: HltSelReportsDecoder/Hlt1SelReportsDecoder, HltSelReportsDecoder, HltSelReportsDecoder/Hlt2SelReportsDecoder, HltTrackConverter/HltTrackConv, GaudiSequencer/Hlt2BestSeq, LoKi::VoidFilter/BestTrackFilter
+RecoAlignTrSeq       INFO Member list: HltSelReportsDecoder/Hlt1SelReportsDecoder, HltSelReportsDecoder, HltSelReportsDecoder/Hlt2SelReportsDecoder, HltTrackConverter/HltTrackConv, GaudiSequencer/HltBestSeq, LoKi::VoidFilter/BestTrackFilter
 HltSelReportsDe...WARNING HltSelReportsDecoder:: Hlt raw bank decoder HltSelReportsDecoder is configured to decode both Hlt1 and Hlt2 into a single TES location;
 This configuration is deprecated as it can NOT work for data taken with a 'split' Hlt configuration, i.e. 2015 data and beyond
 Please reconfigure, and request seperate decoding of Hlt1 and Hlt2 instead.
 And yes, this 'split' decoding will also work for data taken with an 'unsplit' Hlt configuration, eg. old data taken before 2015
 NB: you may have to adapt your Hlt decision filtering accordingly!
-Hlt2BestSeq          INFO Member list: TrackStateInitAlg/Hlt2BestFitInit, TrackEventFitter/Hlt2BestFitBeforeHitAdder, TrackHitAdder/Hlt2BestHitAdder, TrackEventFitter/Hlt2BestFitAfterHitAdder, TrackContainerCopy/Hlt2BestCopyAndSelect
+HltBestSeq           INFO Member list: TrackStateInitAlg/HltBestFitInit, TrackEventFitter/HltBestFitBeforeHitAdder, TrackHitAdder/HltBestHitAdder, TrackEventFitter/HltBestFitAfterHitAdder, TrackContainerCopy/HltBestCopyAndSelect
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64 numberOfBX  = 3 timePerBX = 25 ForceBankVersion = 255 require window [-8,56], vetoing out of time hit pairs
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/field101.c1.down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/field101.c2.down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/field101.c3.down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/field101.c4.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/field101.c1.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/field101.c2.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/field101.c3.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/field101.c4.down.cdf
 MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: -1 signed relative current: -1
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT Bdl LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT Bdl LUTs finished
@@ -231,8 +231,9 @@ ToolSvc.STOffli...   INFO APE set to 0.197
 ToolSvc.STOffli...   INFO Error Vec 0.257 0.245 0.277 0.208 
 ToolSvc.ITClust...   INFO APE set to 0.0758
 ToolSvc.ITClust...   INFO Error Vec 0.253 0.236 0.273 0.185 
-Hlt2BestFitBefo...   INFO Rec/Track/AllBest -> Rec/Track/AllBest using Hlt2BestFitBeforeHitAdder.Fitter
-Hlt2BestFitAfte...   INFO Rec/Track/AllBest -> Rec/Track/AllBest using Hlt2BestFitAfterHitAdder.Fitter
+HltBestFitBefor...   INFO Rec/Track/AllBest -> Rec/Track/AllBest using HltBestFitBeforeHitAdder.Fitter
+HltBestFitAfter...   INFO Rec/Track/AllBest -> Rec/Track/AllBest using HltBestFitAfterHitAdder.Fitter
+HltBestCopyAndS...WARNING TrackContainerCopy:: 'inputLocation' Property is obsolete. Please change to use 'inputLocations' instead StatusCode=FAILURE
 LoKiSvc           SUCCESS 
 
 
@@ -311,9 +312,11 @@ AlignInputSeq        INFO Member list: GaudiSequencer/AlignTrackSelSeq, GaudiSeq
 AlignTrackSelSeq     INFO Member list: GaudiSequencer/NoPIDTracksFromHltSeq, TrackListMerger/AlignTracks
 NoPIDTracksFrom...   INFO Member list: HltTrackConverter/HltTrackConvAll, GaudiSequencer/NoPIDForAlignmentSelectionSeq, TrackContainerCopy/NoPIDForAlignmentCopy, GaudiSequencer/NoPIDFitSeq
 NoPIDForAlignme...   INFO Member list: TrackListRefiner/NoPIDForAlignmentVeloOverlapSelectorAlg, TrackListRefiner/NoPIDForAlignmentVeloBackwardSelectorAlg, TrackListRefiner/NoPIDForAlignmentITBoxOverlapSelectorAlg, TrackListRefiner/NoPIDForAlignmentGoodLongSelectorAlg, TrackListMerger/NoPIDForAlignmentMerger
+NoPIDForAlignme...WARNING TrackContainerCopy:: 'inputLocation' Property is obsolete. Please change to use 'inputLocations' instead StatusCode=FAILURE
 NoPIDFitSeq          INFO Member list: TrackStateInitAlg/NoPIDFitFitInit, TrackEventFitter/NoPIDFitFitBeforeHitAdder, TrackHitAdder/NoPIDFitHitAdder, TrackEventFitter/NoPIDFitFitAfterHitAdder, TrackContainerCopy/NoPIDFitCopyAndSelect
 NoPIDFitFitBefo...   INFO Rec/Track/NoPIDForAlignmentOwned -> Rec/Track/NoPIDForAlignmentOwned using NoPIDFitFitBeforeHitAdder.Fitter
 NoPIDFitFitAfte...   INFO Rec/Track/NoPIDForAlignmentOwned -> Rec/Track/NoPIDForAlignmentOwned using NoPIDFitFitAfterHitAdder.Fitter
+NoPIDFitCopyAnd...WARNING TrackContainerCopy:: 'inputLocation' Property is obsolete. Please change to use 'inputLocations' instead StatusCode=FAILURE
 AlignParticleSe...   INFO Member list: GaudiSequencer/RecoD0Seq, FilterDesktop/AlignParticles
 RecoD0Seq            INFO Member list: ChargedProtoParticleMaker/ChargedProtoPMaker, ChargedProtoParticleAddRichInfo/ChargedProtoPAddRich, ChargedProtoCombineDLLsAlg/ChargedProtoPCombDLLs, TrackParticleMonitor/StdLooseD02KPiMonitor, FilterDesktop/AlignD02KPiWide, TrackParticleMonitor/AlignD02KPiWideMonitor, FilterDesktop/AlignD02KPi, TrackParticleMonitor/AlignD02KPiMonitor
 ChargedProtoPCo...   INFO Using retuned RICH el and mu DLL values in combined DLLs
@@ -329,8 +332,8 @@ ToolSvc.Al::Ver...   INFO parent mass 3096.92
 ToolSvc.Al::Ali...   INFO Constraint definition:  dofs = num elements = 373
 ToolSvc.Al::Ali...   INFO Constraint definition: VeloHalfAverage  dofs = Tx , num elements = 2
 ToolSvc.Al::Ali...   INFO Number of constraint definitions= 2,  number of active constraints = 1
-ToolSvc.Al::Ali...   INFO Number of entries in xml data: 3055
-ToolSvc.Al::Ali...   INFO Number of entries specified by job-option: 18
+ToolSvc.Al::Ali...   INFO Number of entries in xml data: 3065
+ToolSvc.Al::Ali...   INFO Number of entries specified by job-option: 19
 ToolSvc.DiagSol...   INFO EigenValueThreshold = -1
 ToolSvc.DiagSol...   INFO MinEigenModeChisquare = -1
 Alignment            INFO Use correlations = 1
@@ -351,7 +354,7 @@ ToolSvc.PatTTMa...   INFO Generation of VeloTT deflection LUTs finished
 EscherPrescaler      INFO Interval=1 Offset=0 Accepting event : 0
 EscherInit           INFO Evt 1039271196,  Run 123928,  Nr. in job = 1
 PropertyConfigSvc    INFO  resolving alias TCK/0x00990042
-ConfigCDBAccessSvc   INFO  opening /afs/cern.ch/lhcb/software/releases/DBASE/TCK/HltTCK/v3r2/config.cdb in mode ReadOnly
+ConfigCDBAccessSvc   INFO  opening /afs/cern.ch/lhcb/software/releases/DBASE/TCK/HltTCK/v3r6p1/config.cdb in mode ReadOnly
 PropertyConfigSvc    INFO  resolved TCK/0x00990042 to dacca6485b032a9252b798ff9e0d224b
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 StdAllLooseKaons     INFO Particle/AntiParticle to be created : 'K+'/'K-'
@@ -5267,11 +5270,11 @@ EscherInit           INFO Evt 1042525250,  Run 123928,  Nr. in job = 81
 EscherPrescaler      INFO Interval=1 Offset=0 Accepting event : 90
 EscherInit           INFO Evt 1040162526,  Run 123928,  Nr. in job = 91
 Alignment            INFO Rejected 1 out of 4 tracks because of overlaps.
-EscherInit           INFO Memory has changed from 1963256 to 2045352 KB (82096KB, 4.18162%) in last 100 events
+EscherInit           INFO Memory has changed from 1968080 to 2053136 KB (85056KB, 4.32178%) in last 100 events
 Job execution statistics:
 job count | % of all jobs | job time sum | time per job | job server
-       1 |        100.00 |      119.558 |     119.558 | lxplus0227.cern.ch
-Time elapsed since server creation 120.606191
+       1 |        100.00 |       71.812 |      71.812 | lxplus0064.cern.ch
+Time elapsed since server creation 72.579839
 INFO: finalize
 INFO: number of events in derivatives:  15
 # WARNING: Using default tag dq-20140822 for partition DQFLAGS
@@ -5286,8 +5289,8 @@ INFO: number of events in derivatives:  15
 =================== OnlineMode =  False
 ApplicationMgr    SUCCESS 
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r3)
-                                          running on lxplus0227.cern.ch on Tue Mar 24 18:21:38 2015
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r4)
+                                          running on lxplus0064.cern.ch on Sun May 31 11:15:21 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 ApplicationMgr       INFO Already Configured
@@ -5296,7 +5299,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   3.28 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   3.38 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 AlignSequence        INFO Member list: GaudiSequencer/AlignInputSeq, GaudiSequencer/AlignmentAlgSeq, GaudiSequencer/AlignMonitorSeq
@@ -5304,20 +5307,21 @@ AlignInputSeq        INFO Member list: GaudiSequencer/AlignTrackSelSeq, GaudiSeq
 AlignTrackSelSeq     INFO Member list: GaudiSequencer/NoPIDTracksFromHltSeq, TrackListMerger/AlignTracks
 NoPIDTracksFrom...   INFO Member list: HltTrackConverter/HltTrackConvAll, GaudiSequencer/NoPIDForAlignmentSelectionSeq, TrackContainerCopy/NoPIDForAlignmentCopy, GaudiSequencer/NoPIDFitSeq
 NoPIDForAlignme...   INFO Member list: TrackListRefiner/NoPIDForAlignmentVeloOverlapSelectorAlg, TrackListRefiner/NoPIDForAlignmentVeloBackwardSelectorAlg, TrackListRefiner/NoPIDForAlignmentITBoxOverlapSelectorAlg, TrackListRefiner/NoPIDForAlignmentGoodLongSelectorAlg, TrackListMerger/NoPIDForAlignmentMerger
+NoPIDForAlignme...WARNING TrackContainerCopy:: 'inputLocation' Property is obsolete. Please change to use 'inputLocations' instead StatusCode=FAILURE
 NoPIDFitSeq          INFO Member list: TrackStateInitAlg/NoPIDFitFitInit, TrackEventFitter/NoPIDFitFitBeforeHitAdder, TrackHitAdder/NoPIDFitHitAdder, TrackEventFitter/NoPIDFitFitAfterHitAdder, TrackContainerCopy/NoPIDFitCopyAndSelect
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/DDDB.db/DDDB"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "dddb-20130503-1"
-LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
 LHCBCOND             INFO Using TAG "cond-20130710"
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64 numberOfBX  = 3 timePerBX = 25 ForceBankVersion = 255 require window [-8,56], vetoing out of time hit pairs
-ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2012.db/ONLINE"
+ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/ONLINE-2012.db/ONLINE"
 ONLINE_2012          INFO Using TAG ""
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/field101.c1.down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/field101.c2.down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/field101.c3.down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r6/cdf/field101.c4.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/field101.c1.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/field101.c2.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/field101.c3.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r7/cdf/field101.c4.down.cdf
 MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: -1 signed relative current: -1
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT Bdl LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT Bdl LUTs finished
@@ -5332,6 +5336,7 @@ NoPIDFitFitBefo...   INFO Rec/Track/NoPIDForAlignmentOwned -> Rec/Track/NoPIDFor
 RootHistSvc          INFO Writing ROOT histograms to: AlignHltD0-100ev-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
 NoPIDFitFitAfte...   INFO Rec/Track/NoPIDForAlignmentOwned -> Rec/Track/NoPIDForAlignmentOwned using NoPIDFitFitAfterHitAdder.Fitter
+NoPIDFitCopyAnd...WARNING TrackContainerCopy:: 'inputLocation' Property is obsolete. Please change to use 'inputLocations' instead StatusCode=FAILURE
 AlignParticleSe...   INFO Member list: GaudiSequencer/RecoD0Seq, FilterDesktop/AlignParticles
 RecoD0Seq            INFO Member list: ChargedProtoParticleMaker/ChargedProtoPMaker, ChargedProtoParticleAddRichInfo/ChargedProtoPAddRich, ChargedProtoCombineDLLsAlg/ChargedProtoPCombDLLs, TrackParticleMonitor/StdLooseD02KPiMonitor, FilterDesktop/AlignD02KPiWide, TrackParticleMonitor/AlignD02KPiWideMonitor, FilterDesktop/AlignD02KPi, TrackParticleMonitor/AlignD02KPiMonitor
 ChargedProtoPCo...   INFO Using retuned RICH el and mu DLL values in combined DLLs
@@ -5370,8 +5375,8 @@ ToolSvc.Al::Ver...   INFO parent mass 3096.92
 ToolSvc.Al::Ali...   INFO Constraint definition:  dofs = num elements = 373
 ToolSvc.Al::Ali...   INFO Constraint definition: VeloHalfAverage  dofs = Tx , num elements = 2
 ToolSvc.Al::Ali...   INFO Number of constraint definitions= 2,  number of active constraints = 1
-ToolSvc.Al::Ali...   INFO Number of entries in xml data: 3055
-ToolSvc.Al::Ali...   INFO Number of entries specified by job-option: 18
+ToolSvc.Al::Ali...   INFO Number of entries in xml data: 3065
+ToolSvc.Al::Ali...   INFO Number of entries specified by job-option: 19
 ToolSvc.DiagSol...   INFO EigenValueThreshold = -1
 ToolSvc.DiagSol...   INFO MinEigenModeChisquare = -1
 Alignment            INFO Use correlations = 1
@@ -13819,7 +13824,7 @@ align pars: -0.163, 0.0464, 0.0166, -5.21e-05, 4.2e-05, 0.000456
 survey pars:   0, 0, 0, 0, 0, 0
 survey errors: 10, 1, 0.2, 0.0001, 0.0001, 0.0001
 ********************* END OF ALIGNMENT LOG ************************
-ToolSvc.WriteMu...   INFO 0x7fff979bd828
+ToolSvc.WriteMu...   INFO 0x7fffef736c88
 ToolSvc.WriteMu...   INFO topElement = /dd/Structure/LHCb/BeforeMagnetRegion/Velo
 footer     = </DDDB>
 startTag   = <condition
@@ -13830,44 +13835,46 @@ footer     = </DDDB>
 startTag   = <condition
 outputFile = xml/Conditions/Velo/Alignment/Modules.xml
 precision  = 10
-ToolSvc.WriteMu...   INFO topElement = /dd/Structure/LHCb/BeforeMagnetRegion/Velo
-footer     = </DDDB>
-startTag   = <condition
-outputFile = xml/Conditions/Velo/Alignment/Detectors.xml
-precision  = 10
 ToolSvc.WriteMu...   INFO topElement = /dd/Structure/LHCb/BeforeMagnetRegion/TT
 footer     = </DDDB>
 startTag   = <condition
-outputFile = xml/Conditions/TT/Alignment/Detectors.xml
+outputFile = xml/Conditions/TT/Alignment/Global.xml
 precision  = 10
 ToolSvc.WriteMu...   INFO topElement = /dd/Structure/LHCb/BeforeMagnetRegion/TT
 footer     = </DDDB>
 startTag   = <condition
 outputFile = xml/Conditions/TT/Alignment/Modules.xml
 precision  = 10
-ToolSvc.WriteMu...   INFO topElement = /dd/Structure/LHCb/BeforeMagnetRegion/TT
+ToolSvc.WriteMu...   INFO topElement = /dd/Structure/LHCb/AfterMagnetRegion/T/IT
 footer     = </DDDB>
 startTag   = <condition
-outputFile = xml/Conditions/TT/Alignment/Sensors.xml
+outputFile = xml/Conditions/IT/Alignment/Global.xml
 precision  = 10
 ToolSvc.WriteMu...   INFO topElement = /dd/Structure/LHCb/AfterMagnetRegion/T/IT
 footer     = </DDDB>
 startTag   = <condition
-outputFile = xml/Conditions/IT/Alignment/Detectors.xml
+outputFile = xml/Conditions/IT/Alignment/Modules.xml
 precision  = 10
 ToolSvc.WriteMu...   INFO topElement = /dd/Structure/LHCb/AfterMagnetRegion/T/OT
 footer     = </DDDB>
 startTag   = <condition
-outputFile = xml/Conditions/OT/Alignment/Elements.xml
+outputFile = xml/Conditions/OT/Alignment/Global.xml
+precision  = 10
+ToolSvc.WriteMu...   INFO topElement = /dd/Structure/LHCb/AfterMagnetRegion/T/OT
+footer     = </DDDB>
+startTag   = <condition
+outputFile = xml/Conditions/OT/Alignment/Modules.xml
 precision  = 10
 ToolSvc.WriteMu...   INFO Writing alignment conditions to file: xml/Conditions/Velo/Alignment/Global.xml
 ToolSvc.WriteMu...   INFO Writing alignment conditions to file: xml/Conditions/Velo/Alignment/Modules.xml
-ToolSvc.WriteMu...   INFO Writing alignment conditions to file: xml/Conditions/Velo/Alignment/Detectors.xml
-ToolSvc.WriteMu...   INFO Writing alignment conditions to file: xml/Conditions/TT/Alignment/Detectors.xml
+ToolSvc.WriteMu...   INFO Writing alignment conditions to file: xml/Conditions/TT/Alignment/Global.xml
 ToolSvc.WriteMu...   INFO Writing alignment conditions to file: xml/Conditions/TT/Alignment/Modules.xml
-ToolSvc.WriteMu...   INFO Writing alignment conditions to file: xml/Conditions/TT/Alignment/Sensors.xml
-ToolSvc.WriteMu...   INFO Writing alignment conditions to file: xml/Conditions/IT/Alignment/Detectors.xml
-ToolSvc.WriteMu...   INFO Writing alignment conditions to file: xml/Conditions/OT/Alignment/Elements.xml
+ToolSvc.WriteMu...   INFO Writing alignment conditions to file: xml/Conditions/IT/Alignment/Global.xml
+ToolSvc.WriteMu...   INFO Writing alignment conditions to file: xml/Conditions/IT/Alignment/Modules.xml
+ToolSvc.WriteMu...   INFO Writing alignment conditions to file: xml/Conditions/OT/Alignment/Global.xml
+ToolSvc.WriteMu...   INFO Writing alignment conditions to file: xml/Conditions/OT/Alignment/Modules.xml
+NoPIDForAlignme...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
+NoPIDForAlignme...SUCCESS  #WARNINGS   = 1        Message = ''inputLocation' Property is obsolete. Please change to use 'inputLocations' instead'
 NoPIDFitFitBefo...   INFO   Fitting performance   :     0.00 %
 NoPIDFitFitBefo...SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
@@ -13876,6 +13883,8 @@ NoPIDFitFitAfte...   INFO   Fitting performance   :     0.00 %
 NoPIDFitFitAfte...SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
+NoPIDFitCopyAnd...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
+NoPIDFitCopyAnd...SUCCESS  #WARNINGS   = 1        Message = ''inputLocation' Property is obsolete. Please change to use 'inputLocations' instead'
 StdLooseD02KPiM...SUCCESS Booked 46 Histogram(s) : 1D=26 2D=10 1DProf=10 
 AlignD02KPiWide...SUCCESS Booked 46 Histogram(s) : 1D=26 2D=10 1DProf=10 
 AlignD02KPiMonitorSUCCESS Booked 46 Histogram(s) : 1D=26 2D=10 1DProf=10 
@@ -13921,7 +13930,7 @@ ToolSvc.TrackSt...SUCCESS Number of counters : 1
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   3.28 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   3.38 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -13970,12 +13979,12 @@ ToolSvc.Al::Ali...SUCCESS
 Booked 271 Histogram(s) : 1D=270 2D=1 
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 ApplicationMgr       INFO Application Manager Finalized successfully
-1 7  /Conditions/IT/Alignment/Detectors.xml (1 files)
-2 6  /Conditions/OT/Alignment/Elements.xml (1 files)
-3 5  /Conditions/TT/Alignment/Detectors.xml (1 files)
-4 4  /Conditions/TT/Alignment/Modules.xml (1 files)
-5 3  /Conditions/TT/Alignment/Sensors.xml (1 files)
-6 2  /Conditions/Velo/Alignment/Detectors.xml (1 files)
+1 7  /Conditions/IT/Alignment/Global.xml (1 files)
+2 6  /Conditions/IT/Alignment/Modules.xml (1 files)
+3 5  /Conditions/OT/Alignment/Global.xml (1 files)
+4 4  /Conditions/OT/Alignment/Modules.xml (1 files)
+5 3  /Conditions/TT/Alignment/Global.xml (1 files)
+6 2  /Conditions/TT/Alignment/Modules.xml (1 files)
 7 1  /Conditions/Velo/Alignment/Global.xml (1 files)
 8 0  /Conditions/Velo/Alignment/Modules.xml (1 files)
 Total folders inserted = 8
