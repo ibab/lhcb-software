@@ -3,9 +3,7 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
-
-
-
+!========================= TAlignment v6r4 2015-05-31 =========================
 
 ! 2015-05-29 - Maurizio Martinelli
  - Added 'Upgrade' slot in TAlignment
