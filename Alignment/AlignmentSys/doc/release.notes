@@ -6,6 +6,15 @@ Purpose: LHCb Alignment packages.
          used by the Gaudi application Escher to align the LHCb detector 
          components.
 
+</PRE><H1><A NAME=v10r4>2015-05-31 AlignmentSys v10r4</A></H1><PRE>
+Depends on: Phys v19r7. For 2015 data.
+
+! 2015-05-31 - Maurizio Martinelli
+ - Removed temporary dependences on 
+     Tr/TrackUtils
+     Det/OTDet
+     Kernel/LHCbMath
+
 </PRE><H1><A NAME=v10r3>2015-04-01 AlignmentSys v10r3</A></H1><PRE>
 Depends on: Phys v19r5. For 2015 data.
 
