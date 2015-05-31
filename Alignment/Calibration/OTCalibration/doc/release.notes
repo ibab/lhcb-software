@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+!========================= OTCalibration v1r10 2015-05-31 =========================
 
 ! 2015-05-29 Lucia Grillo
  - fixing in clbr_make.sh to compile the stand alone calibration clbr.cpp. This algo runs on Brunel histo files and it is still
