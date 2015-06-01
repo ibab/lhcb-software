@@ -3,6 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v29r6>2015-06-01 Boole v29r6</A></H1><PRE>
+This version uses projects:
+ LCG_76root6 (ROOT 6.02.08), Gaudi v26r2, LHCb v38r7, Lbcom v16r6
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
 - Changes to references to follow changes in underlying packages
   . Strict inequalities moved into not strict ones in force2bitsADC patch
     (MCFTDigitCreator)
