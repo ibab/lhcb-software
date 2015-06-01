@@ -3,6 +3,10 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+!========================= VPDigitisation v1r5 2015-06-01 =========================
+! 2015-04-24 - Heinrich Schindler
+ - Move VPClusterMonitor to VP/VPCheckers (in Lbcom)
+
 !========================= VPDigitisation v1r4 2014-05-15 =======================
 ! 2014-05-03 - Heinrich Schindler
  - Improve doxygen documentation and comments
