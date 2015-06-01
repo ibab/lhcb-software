@@ -157,11 +157,11 @@ class Physics_draftEM2015( object ):
 
                        , Hlt1CalibTrackingLinesConf :  { 'ParticlePT'            : 600     # MeV
                                                         ,'ParticleP'             : 4000    # MeV
-                                                        ,'TrackCHI2DOF'          : 2       # dimensionless
+                                                        ,'TrackCHI2DOF'          : 4       # dimensionless
                                                         ,'CombMaxDaughtPT'       : 900     # MeV 900
                                                         ,'CombAPT'               : 1800    # MeV 1200
-                                                        ,'CombDOCA'              : 0.1     # mm
-                                                        ,'CombVCHI2DOF'          : 10      # dimensionless
+                                                        ,'CombDOCA'              : 0.2     # mm
+                                                        ,'CombVCHI2DOF'          : 20      # dimensionless
                                                         ,'CombVCHI2DOFLoose'     : 15      # dimensionless
                                                         ,'CombDIRA'              : 0.99    # dimensionless
                                                         ,'CombTAU'               : 0.25    # ps
@@ -170,7 +170,7 @@ class Physics_draftEM2015( object ):
                                                         ,'B0MassWinLoose'        : 200     # MeV
                                                         ,'B0MassWin'             : 150     # MeV
                                                         ,'D0DetachedDaughtsIPCHI2': 9      # dimensionless 
-                                                        ,'D0DetachedIPCHI2'       : 9      # dimensionless
+                                                        ,'D0DetachedIPCHI2'       : 16      # dimensionless
                                                         ,'BsPhiGammaMassMinLoose': 3350    # MeV
                                                         ,'BsPhiGammaMassMaxLoose': 6900    # MeV
                                                         ,'BsPhiGammaMassMin'     : 3850    # MeV

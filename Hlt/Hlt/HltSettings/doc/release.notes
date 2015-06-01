@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-06-01 - Matthew Kenzie
+ - Updated CalibTrackingKPi detached thresholds in Physics_draftEM2015
+
 ! 2015-06-01 - Christian Linn
  - Added JPsiReFitPV line to DiMuon_EM2015 settings
 
