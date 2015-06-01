@@ -4,12 +4,11 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
-
+!========================= FTDigitisation v2r5 2015-06-01 =========================
 ! 2015-05-29 - Jacco de Vries
  - Added a temporary fix for too large fiber module index (can happen due to mean position calculation).
    See also https://its.cern.ch/jira/browse/LHCBGAUSS-447
  - Second commit: first fix created memory leak, implemented improved temp. fix
-
 
 ! 2015-05-27 - Eric Cogneras
  - Migrate resolution computation on cluster position from FTClusterCreator to FTClusterMonitor.
