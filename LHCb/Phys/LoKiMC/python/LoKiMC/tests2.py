@@ -3,6 +3,8 @@
 # $Id: tests.py 124207 2011-06-02 16:05:29Z ibelyaev $
 # =============================================================================
 ## @file   LoKiMC/tests2.py
+#   Test the problem reported in JIRA:
+#   @see https://its.cern.ch/jira/browse/LHCBPS-1417
 #   
 #        This file is a part of LoKi project - 
 #    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -15,8 +17,8 @@
 #  @author Pieter David pieter.david@nikhef.nl
 #  @date 2015-06-01
 # =============================================================================
-"""
-The basic tests for LoKiMC package
+""" Test the problem reported in JIRA:
+    https://its.cern.ch/jira/browse/LHCBPS-1417
 
       This file is a part of LoKi project - 
 'C++ ToolKit  for Smart and Friendly Physics Analysis'
