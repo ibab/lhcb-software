@@ -1,7 +1,7 @@
 project ALIGNMENTONLINE
 
-use ALIGNMENT ALIGNMENT_v10r3
-use ONLINE ONLINE_v5r17
+use ALIGNMENT ALIGNMENT_v10r4
+use ONLINE ONLINE_v5r19
 
 build_strategy with_installarea
 setup_strategy root
