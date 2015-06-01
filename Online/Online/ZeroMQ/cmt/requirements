@@ -1,0 +1,29 @@
+#============================================================================
+# Created    : 2015-06-01
+# Maintainer : Roel Aaij
+#============================================================================
+package           ZeroMQ
+version           v4r0p5
+
+#============================================================================
+# Structure, i.e. directories to process.
+#============================================================================
+branches          cmt doc src zmq
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+use GaudiKernel v*
+
+apply_pattern install_more_includes more=zmq
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          zmq    ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=zmq
