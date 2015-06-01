@@ -1,6 +1,9 @@
 // Include files
 #include <thread>
 
+// boost
+#include <boost/regex.hpp>
+
 // zeromq
 #include "zmq/zmq.hpp"
 
@@ -15,18 +18,27 @@
 
 namespace {
    using std::string;
-
+   using std::to_string;
 }
+
 // Factory for instantiation of service objects
 DECLARE_SERVICE_FACTORY(Hlt2MonRelaySvc)
 
 //===============================================================================
 Hlt2MonRelaySvc::Hlt2MonRelaySvc(const string& name, ISvcLocator* loc)
    : base_class(name, loc),
-     m_thread{nullptr},
-     m_control{nullptr},
-     m_context{nullptr}
+   m_top{false},
+   m_relay{true},
+   m_thread{nullptr},
+   m_control{nullptr},
+   m_context{nullptr}
 {
+   declareProperty("HostnameRegex", m_hostRegex = "hlt(01|(?<subfarm>[a-f]{1}[0-9]{2})(?<node>[0-9]{2})?)");
+   declareProperty("InPort", m_inPort = 31337);
+   declareProperty("OutPort", m_inPort = 31338);
+   declareProperty("FrontConnection", m_inPort = 31337);
+   declareProperty("BackConnection", m_inPort = 31338);
+   declareProperty("ForceTopRelay", m_forceTop = false);
 }
 
 //===============================================================================
@@ -48,7 +60,56 @@ StatusCode Hlt2MonRelaySvc::initialize()
    }
    m_incidentSvc->addListener(this, "APP_RUNNING");
    m_incidentSvc->addListener(this, "APP_STOPPED");
-   return sc;
+
+   std::string taskName{System::argv()[0]};
+   m_lhcb2 = (taskName.substr(0, 4) == "LHCb2");
+
+   char hname[_POSIX_HOST_NAME_MAX];
+   if (!gethostname(hname, sizeof(hname))) {
+      const string hostname{hname};
+
+      boost::smatch matches;
+      boost::match_flag_type flags = boost::match_default;
+      boost::regex re_host{m_hostRegex};
+      auto result = boost::regex_match(begin(hostname), end(hostname), matches, re_host, flags);
+
+      MsgStream msg(msgSvc(), name());
+
+      // This one first as we want to check for forced top/forced on.
+      if (matches[1] == "01" || m_forceTop) {
+         // top relay
+         m_top = true;
+      }
+
+      if (!result) {
+         msg << MSG::WARNING << "Not a suitable host, relay disabled" << endmsg;
+         m_relay = false;
+         return sc;
+      }
+
+      // If connections were specified, do nothing more
+      if (!m_frontCon.empty() && !m_backCon.empty()) {
+         return sc;
+      }
+
+      // Deduce connections from hostname.
+      if (m_top) {
+         m_frontCon = string("tcp://*:") + to_string(m_inPort);
+         m_backCon  = string("tcp://*:") + to_string(m_outPort);
+      } else if (matches.str("node").empty()) {
+         // subfarm relay
+         m_frontCon = string("tcp://*:") + to_string(m_inPort);
+         m_backCon  = string("tcp://hlt01:") + to_string(m_inPort);
+      } else {
+         // node relay
+         m_frontCon = string("ipc:///tmp/hlt2mon/0");
+         m_backCon  = string("tcp://") + matches.str("subfarm") + ":" + to_string(m_inPort);
+      }
+      return sc;
+   } else {
+      msg << MSG::FATAL << "Could not determine hostname." << endmsg;
+      return StatusCode::FAILURE;
+   }
 }
 
 //===============================================================================
@@ -63,30 +124,40 @@ StatusCode Hlt2MonRelaySvc::start()
    auto sc = Service::start();
    if (!sc.isSuccess()) return sc;
 
-   if (!m_control) {
-      m_control = new zmq::socket_t{*m_context, ZMQ_PAIR};
-      m_control->bind("inproc://control");
+   if (!m_lhcb2) return sc;
+
+   if (m_thread) {
+      string resume{"RESUME"};
+      zmq::message_t msg(resume.size());
+      memcpy(static_cast<void*>(msg.data()), resume.c_str(), resume.size());
+      m_control->send(msg);
+      return sc;
    }
 
-   if (m_thread) return sc;
+   m_thread = new std::thread([this](void) -> void {
+         // Create frontend, backend and control sockets
+         zmq::socket_t front{*m_context, ZMQ_XSUB};
+         zmq::socket_t back{*m_context, ZMQ_XPUB};
+         zmq::socket_t control{*m_context, ZMQ_PAIR};
 
-   m_thread = new std::thread([this] {
-      // Create frontend, backend and control sockets
-      zmq::socket_t front{*m_context, ZMQ_XSUB};
-      zmq::socket_t back{*m_context, ZMQ_XPUB};
-      zmq::socket_t control{*m_context, ZMQ_PAIR};
+         //  Bind sockets to TCP ports
+         front.bind(m_frontCon.c_str());
+         if (!m_top) {
+            back.connect(m_backCon.c_str());
+         } else {
+            back.bind(m_backCon.c_str());
+         }
 
-      //  Bind sockets to TCP ports
-      front.bind(m_frontConnection.c_str());
-      back.bind(m_backConnection.c_str());
+         // use inproc for the control.
+         control.connect("inproc://control");
 
-      // use inproc for the control.
-      control.connect("inproc://control");
+         //  Start the queue proxy, which runs until ETERM or "TERMINATE"
+         //  received on the control socket
+         zmq_proxy_steerable (front, back, nullptr, control);
+      });
 
-      //  Start the queue proxy, which runs until ETERM or "TERMINATE"
-      //  received on the control socket
-      zmq_proxy_steerable (front, back, nullptr, control);
-   });
+   m_control = new zmq::socket_t{*m_context, ZMQ_PAIR};
+   m_control->bind("inproc://control");
 
    return sc;
 }
@@ -95,15 +166,12 @@ StatusCode Hlt2MonRelaySvc::start()
 //===============================================================================
 StatusCode Hlt2MonRelaySvc::stop()
 {
-   // terminate the proxy
-   zmq_send(*m_control, "TERMINATE", 9, 0);
-   m_thread->join();
-   delete m_thread;
-   m_thread = 0;
-   delete m_control;
-   m_control = nullptr;
-   delete m_context;
-   m_context = nullptr;
+   if (m_control) {
+      string pause{"PAUSE"};
+      zmq::message_t msg(pause.size());
+      memcpy(static_cast<void*>(msg.data()), pause.c_str(), pause.size());
+      m_control->send(msg);
+   }
    return StatusCode::SUCCESS;
 }
 
@@ -111,6 +179,18 @@ StatusCode Hlt2MonRelaySvc::stop()
 StatusCode Hlt2MonRelaySvc::finalize()
 {
    MsgStream msg(msgSvc(), "Hlt2MonRelaySvc");
+
+   // terminate the proxy
+   if (m_thread) {
+      zmq_send(*m_control, "TERMINATE", 9, 0);
+      m_thread->join();
+      delete m_thread;
+      m_thread = nullptr;
+      delete m_control;
+      m_control = nullptr;
+   }
+   delete m_context;
+   m_context = nullptr;
 
    if (m_incidentSvc) {
       m_incidentSvc->removeListener(this);

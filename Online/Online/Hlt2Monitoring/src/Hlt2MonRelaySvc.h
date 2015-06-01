@@ -35,9 +35,16 @@ public:
 private:
 
    // properties
-   std::string m_frontConnection;
-   std::string m_backConnection;
+   std::string m_hostRegex;
+   bool m_top;
+   bool m_forceTop;
+   bool m_relay;
+   bool m_lhcb2;
+   std::string m_frontCon;
+   std::string m_backCon;
 
+   unsigned int m_inPort;
+   unsigned int m_outPort;
    IIncidentSvc* m_incidentSvc;
    std::thread* m_thread;
    zmq::socket_t* m_control;
