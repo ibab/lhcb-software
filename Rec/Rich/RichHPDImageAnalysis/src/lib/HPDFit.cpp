@@ -54,8 +54,13 @@ const TH2D * HPDFit::getFitHistogram( const TH2D& hist,
     const SobelFilter sobel(hToUse);
     hToReturn = sobel.filter();
   }
+  // if needed delete temporary histogram
   if ( hToUse != &hist && 
-       hToUse != hToReturn ) { delete hToUse; }
+       hToUse != hToReturn ) { delete hToUse; hToUse = NULL; }
+  // if no new histo has been made so far, create one to return
+  // as caller expects to take ownership
+  if ( hToReturn == &hist ) { hToReturn = new TH2D(hist); }
+  // finally return
   return hToReturn;
 }
 
