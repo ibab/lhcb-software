@@ -1,6 +1,6 @@
 # Import the necessary modules.
 from Configurables import Generation, Special, Pythia8Production
-from Configruables import BcVegPyProduction
+from Configurables import BcVegPyProduction
 
 # Add Pythia as minimum bias production tool.
 Generation().addTool(MinimumBias)

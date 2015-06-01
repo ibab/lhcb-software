@@ -2,6 +2,9 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+! 2015-06-01 - Gloria Corti
+ - Fixed mistyping in BcVegPyPythia8.py
+
 ! 2015-05-13 - Philip Ilten
  - Added the MesonState and ViolateGaugeInvariance configruables
 
