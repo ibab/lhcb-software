@@ -12,7 +12,7 @@
 #  contributions and advices from G.Raven, J.van Tilburg, 
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
-#  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2007-05-29
 # =============================================================================
 """
@@ -27,12 +27,12 @@ contributions and advices from G.Raven, J.van Tilburg,
 A.Golutvin, P.Koppenburg have been used in the design.
 """
 # =============================================================================
-__author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__author__  = "Vanya BELYAEV Ivan/Belyaev@itep.ru" 
 __date__    = "2007-05-29"
-__version__ = "CVS Tag: $Name: not supported by cvs2svn $, version $Revision$ "
+__version__ = "$Revision$ "
 # =============================================================================
 
-import GaudiPython.Pythonizations
+## import GaudiPython.Pythonizations
 
 import LoKiMC.MC
 import LoKiNumbers.decorators 

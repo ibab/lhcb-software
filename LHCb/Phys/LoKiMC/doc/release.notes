@@ -15,6 +15,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-06-01 - Vanya Belyaev
+ - add new test for segmentation fault in loafing the dictionaries 
+   many thanks to Pieter David
+
+! 2015-06-01 - Vanya Belyaev
  - try to reshuffle the files... 
 
 !========================= LoKiMC v10r17 2015-04-20 =========================
