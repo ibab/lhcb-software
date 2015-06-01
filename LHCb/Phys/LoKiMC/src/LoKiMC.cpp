@@ -21,6 +21,8 @@
 #include "LoKi/MCHybridEngine.h"
 #include "LoKi/MCHybridEngineActor.h"
 // ============================================================================
+#include "LoKi/LoKiMC_dct.h"
+// ============================================================================
 /** @file
  *
  * Implementation file for the package Phys/LoKiMC
