@@ -4,6 +4,10 @@
 ! Purpose     : Distribution of parametrization data files
 !-----------------------------------------------------------------------------
 
+! 2015-06-01 - Julien Cogan
+- Add a new LUT (V5) for L0Muon pt. Similar to V3 (2012-2013 geometry) but 50 MeV
+bins instead of 40 MeV.
+
 ! 2015-05-18 - Patrick Spradlin
  + data/Hlt2Sigc2PiLc2HHX_BDTParams_v0r0.txt
    Added initial version of lookup table for an inclusive Sigc trigger in Hlt2.
