@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-01 - Michael Kolpin
+ - Copied all needed S23 configurations to LineConfigDictionaries_Calib.py
+
 !========================= StrippingSettings v2r36 2015-05-29 =========================
 
 ! 2015-05-29 - Andrea Contu
