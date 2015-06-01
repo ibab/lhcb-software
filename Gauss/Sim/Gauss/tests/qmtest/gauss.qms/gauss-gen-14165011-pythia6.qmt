@@ -12,7 +12,7 @@
 	<text>$GAUSSOPTS/Gauss-2012.py</text>
 	<text>$DECFILESROOT/options/14165011.py</text>
 	<text>$LBPYTHIAROOT/options/Pythia.py</text>
-	<text>$LBBCVEGPYROOT/options/BcVegPy.py</text>
+	<text>$LBBCVEGPYROOT/options/BcVegPyPythia.py</text>
 	<text>$GAUSSOPTS/GenStandAlone.py</text>
 	<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
   	<text>$GAUSSROOT/tests/options/testGauss-gen-100evts-defaults.py</text>
