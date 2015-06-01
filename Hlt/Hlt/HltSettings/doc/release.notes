@@ -4,7 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
-
+! 2015-06-01 - Christian Linn
+ - Added JPsiReFitPV line to DiMuon_EM2015 settings
 
 ! 2015-05-29 - Christian Linn
  - Changed L0 filter of TrackEffDiMuon_EM2015 to run on Muon only

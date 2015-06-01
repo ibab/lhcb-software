@@ -20,6 +20,7 @@ class DiMuon_EM2015(object) :
 
         lines = [
             'Hlt2DiMuonJPsiTurbo',
+            'Hlt2JPsiReFitPVsTurbo',
             'Hlt2DiMuonPsi2STurbo',
             'Hlt2DiMuonBTurbo',
                                    ]
@@ -36,7 +37,8 @@ class DiMuon_EM2015(object) :
         d = { }
 
         from Hlt2Lines.DiMuon.Lines     import DiMuonLines            
-        d.update({DiMuonLines :
+        from Hlt2Lines.RecoTest.Lines   import RecoTestLines
+        d.update({ DiMuonLines :
                   {'Common' :              {'TrChi2'      :   10,
                                             'TrChi2Tight' :    4},
                    'JPsi' :                {'MassWindow'  :   150 * MeV,
@@ -53,7 +55,13 @@ class DiMuon_EM2015(object) :
                                    'Hlt2DiMuonB'       :  1.0,
                                    'Hlt2DiMuonPsi2S'   :  1.0}
                   }
-                 })
+                 , RecoTestLines : 
+                  { 'Common'      : {'Pt'            : 0.0,
+                                   'TrChi2Tight'    : 4,
+                                   'MuPt'           : 0 * MeV,
+                                   'VertexChi2'     : 25,
+                                   'MassWindow'     : 150 * MeV}
+                  } } )
         
         return d
     
