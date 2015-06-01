@@ -3,6 +3,46 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v29r6>2015-06-01 Boole v29r6</A></H1><PRE>
+This version uses projects:
+ LCG_76root6 (ROOT 6.02.08), Gaudi v26r2, LHCb v38r7, Lbcom v16r6
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Changes to configuration
+  . Default DataType is now 2015 (no effect, value not explicitly used anywhere)
+  . Boole().SiG4EnergyDeposit now True by default (use Geant4 modelling of energy
+    loss for silicon trackers from Geant4 instead of in-house)
+
+- New functionality
+  . Update raw bank encoding to PS/SPD format (HCDigitisation v1r1)
+
+- New tuning
+  . MCFTDigitCreator: strict inequalities moved into not strict ones in
+    force2bitsADC patch (FTDigitisation v2r5)
+
+- Bug fixes
+  . Added a temporary fix for too large fiber module index (can happen due to
+    mean position calculation). See https://its.cern.ch/jira/browse/LHCBGAUSS-447
+    (FTDigitisation v2r5)
+  . Add if statement in Cluster/MCHit association to fix a seg. fault
+    (FTDigitisation v2r5)
+  . GAUDI-1023: issue a warning when re-declaring a property (GaudiKernel v31r5)
+    Related fixes:
+    o Renamed the Algorithm property "ErrorCount" to "ErrorCounter", avoids 
+      clash with error counting in DecodeVeloRawBuffer (GaudiKernel v31r5)
+    o STCMSNoiseCalculationTool.cpp: do not re-declare PedestalsFromDB property
+      of base class, just re-initialise default value (STTools v4r17)
+
+- Monitoring changes
+  . Migrate resolution computation on cluster position from FTClusterCreator to
+    FTClusterMonitor (FTDigitisation v2r5)
+  . Tidy up VPClusterMonitor (remove lite-cluster and ToT related plots)
+    (VPCheckers v1r0)
+
+- Changes to tests
+  . All tests now use Boole().SiG4EnergyDeposit = True, except MC10 tests. 
+    Reference files updated accordingly
+
 </PRE><H1><A NAME=v29r5>2015-04-21 Boole v29r5</A></H1><PRE>
 This version uses projects:
  LCG_72root6 (ROOT 6.02.05), Gaudi v26r1, LHCb v38r6, Lbcom v16r5

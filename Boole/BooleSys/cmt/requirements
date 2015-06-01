@@ -1,5 +1,5 @@
 package BooleSys
-version           v29r5
+version           v29r6
 
 branches cmt doc
  
@@ -20,10 +20,10 @@ use CaloDigit           v3r4p1  Calo     # Olivier Deschamps
 use CaloMoniDigi        v2r6p1  Calo     # Olivier Deschamps
 
 # Fibre Tracker
-use FTDigitisation      v2r4    FT       # Eric Cogneras
+use FTDigitisation      v2r5    FT       # Eric Cogneras
 
 # Herschel 
-use HCDigitisation      v1r0    HC       # Heinrich Schindler
+use HCDigitisation      v1r1    HC       # Heinrich Schindler
 
 # Muon
 use MuonAlgs            v6r13   Muon     # Alessia Satta
@@ -43,7 +43,7 @@ use RichReadout         v2r16   Rich     # Chris Jones
 use STDigiAlgorithms    v2r6    ST       # Jeroen van Tilburg
 
 # VP
-use VPDigitisation      v1r4    VP       # Marcin Kucharczyk / Paul Szczypka
+use VPDigitisation      v1r5    VP       # Heinrich Schindler
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
