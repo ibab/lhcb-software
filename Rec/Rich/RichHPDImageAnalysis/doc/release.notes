@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-06-01 - Chris Jones
- - Prevent possible doible delete in previous commit if no cleaning or 
+ - Prevent possible double delete in previous commit if no cleaning or 
    filtering is activated in the HPD Fitter.
 
 ! 2015-05-30 - Chris Jones
