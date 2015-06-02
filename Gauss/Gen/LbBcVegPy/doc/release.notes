@@ -3,7 +3,7 @@
 !=============================================================================
 
 ! 2015-06-02 - Gloria Corti
- - Fixed mistyping in BcVegPyPythia{,8}.py 
+ - Fixed mistyping in BcVegPyPythia{,8}.py
 
 ! 2015-05-13 - Philip Ilten
  - Added the MesonState and ViolateGaugeInvariance configruables
