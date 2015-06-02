@@ -11,47 +11,47 @@ branches cmt doc
 use GaudiConf           v19r9
 
 # Gauss application: the application is not built on Win32
-use Gauss               v48r1p1 Sim
+use Gauss               v48r2   Sim
 
 # LCG interfaces to generators, until available in LCGCMT
 use LCG_Settings        v74r0p1 
 use lhapdf              v74r0p1 LCG_GeneratorsInterfaces
-use photospp            v74r0p1 LCG_GeneratorsInterfaces
+use photospp            v74r0p2 LCG_GeneratorsInterfaces
 use tauolapp            v74r0p1 LCG_GeneratorsInterfaces
 use pythia6             v74r0p1 LCG_GeneratorsInterfaces
 use pythia8             v74r0p1 LCG_GeneratorsInterfaces
 use thepeg              v74r0p1 LCG_GeneratorsInterfaces
-use herwigpp            v74r0p1 LCG_GeneratorsInterfaces
+use herwigpp            v74r0p2 LCG_GeneratorsInterfaces
 use rivet               v74r0p1 LCG_GeneratorsInterfaces
 use alpgen              v74r0p1 LCG_GeneratorsInterfaces
 use hijing              v74r0p1 LCG_GeneratorsInterfaces
 use powhegbox           v74r0p1 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
-use GenCuts             v3r11   Gen
-use GENSER              v16r0p1 Gen
+use GenCuts             v3r11p1 Gen
+use GENSER              v16r0p2 Gen
 use EvtGen              v14r1   Gen
 use Mint                v3r3    Gen
 use EvtGenExtras        v3r11   Gen
 use Generators          v14r8   Gen
-use LbPythia            v14r2p1 Gen
+use LbPythia8           v11r0   Gen
 
-# Generators packages: extensions to Pythia6
+# Generators packages: alternative to Pythia8 for pp collisions
+use LbPythia            v15r0   Gen
+use LbHerwigpp          v3r0p1  Gen
+
+# Generators packages: extensions to Pythia6 .or. Pythia8
 use LbHard              v1r0    Gen
-use LbAlpGen            v5r0    Gen 
+use LbAlpGen            v6r0    Gen 
 use BcVegPy             v4r0    Gen
 use GenXicc             v2r1p1  Gen
-use LbBcVegPy           v5r1p1  Gen
-use LbGenXicc           v4r0p1  Gen
+use LbBcVegPy           v6r0    Gen
+use LbGenXicc           v5r0    Gen
 use LbHidValley         v4r0p1  Gen
 use LbOniaPairs         v2r1p1  Gen
 use LbPowheg            v3r0    Gen
 
-# Generators packages: alternative to Pythia6 for pp collisions
-use LbPythia8           v10r0   Gen
-use LbHerwigpp          v3r0p1  Gen
-
-# Generators packages: alternative to Pythia6 for p-A collisions
+# Generators packages: alternative for p-A collisions
 use LbHijing            v10r0p1 Gen
 
 # Generators packages: LHCb sampling results for Machine Induced Background
