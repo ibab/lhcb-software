@@ -4,8 +4,8 @@
 import sys
 import os
 
-sys.path.append(os.environ["PWD"].replace("/options",""))
-from Target_CreateEvents import RunTargetJobs
+#sys.path.append(os.environ["SIMCHECKSROOT"]+"/python")
+from TargetCreateEvents import RunTargetJobs
 from optparse import OptionParser
 
 parser = OptionParser()
@@ -13,7 +13,7 @@ parser.add_option("--parallel", default=False, dest="parallel", action='store_tr
 parser.add_option("--physList", default=None, dest="physList", help="Specific single Physics List to use by default does both FTFP_BERT and QGSP_BERT" )
 (opts, args) = parser.parse_args()
 
-path=os.environ['PWD']+'/TargetOutput' # where you want your output (absolute or relative path)
+path=os.environ['WORK']+'/TargetOutput' # where you want your output (absolute or relative path)
 
 models=['FTFP_BERT','QGSP_BERT']#any present in the version of Gauss you are using e.g. 'FTFP_BERT'
 if opts.physList :

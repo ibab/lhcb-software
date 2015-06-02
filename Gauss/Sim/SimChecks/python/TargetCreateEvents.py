@@ -70,7 +70,7 @@ def createTemplateOptionFile(path,models,particlesTodo,energies,materialsTodo,th
 
 def submit():
 
-	sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
+	sub = subprocess.call(['gaudirun.py', '$SIMCHECKSROOT/scripts/Target/Gauss-Job-Targets-Tmp.py' ])
     
 
 
@@ -82,6 +82,8 @@ Zorig = {'Al': {1: '100*mm', 5: '300*mm', 10: '500*mm'}, 'Be': {1: '700*mm', 5: 
 def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks,parallel = False) :
 
 	#Creating option file for analysis with all the options available
+
+	base = os.environ["SIMCHECKSROOT"]+"/scripts/Target/"
 
 	if not os.path.exists(path):
 		os.makedirs(path)
@@ -125,7 +127,7 @@ def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks,p
 				
 						time.sleep(2)
 						
-						inputfile = "TargetMaterialGunMultiTargetLocalTemporary.py"
+						inputfile = base+"MaterialGun-Targets-Tmp.py"
 						command = 's/PdgCode.*/PdgCode = ' + particles[particle] + '/'
 						sub = subprocess.call(['sed', '-i', command, inputfile])
 						command = 's|MaterialEval.ModP = .*|MaterialEval.ModP = ' + str(energy) + ' * GeV|'
@@ -135,7 +137,7 @@ def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks,p
 						command = 's|ParticleGun.MaterialEval.Zorig =.*|ParticleGun.MaterialEval.Zorig = ' + Zorig[material][thick] + '|'
 						sub = subprocess.call(['sed', '-i', command, inputfile])
 					
-						inputfile = "Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py"
+						inputfile = base+"Gauss-Job-Targets-Tmp.py"
 						command = 's/Multi.*.root/Multi_' + particle + '_in' + material + '.root/'
 						sub = subprocess.call(['sed', '-i', command, inputfile])
 						command = 's|physList = .*|physList = \''+model+'\'|'
@@ -154,7 +156,7 @@ def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks,p
 							process.start()
 							jobs.append(process)
 						else :
-							subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
+							subprocess.call(['gaudirun.py', base+'Gauss-Job-Targets-Tmp.py' ])
 					
 					for j in jobs :
 						j.join()

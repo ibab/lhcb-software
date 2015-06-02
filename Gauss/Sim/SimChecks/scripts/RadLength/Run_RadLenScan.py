@@ -13,6 +13,9 @@ import os
 import shutil
 import fileinput
 import string
+
+base = os.environ["SIMCHECKSROOT"] + "/scripts/RadLength/"
+sys.path.append(os.environ["SIMCHECKSROOT"]+"/python")
 from RadLengthMakePlots import makePlots
 
 useganga = False
@@ -26,9 +29,9 @@ else :
     out = 'Rad_merged.root'
 
 os.system("mkdir -p plots")
-run_command = "gaudirun.py MaterialEvalGun.py Gauss-Job.py RadLengthAna.py"
+run_command = "gaudirun.py "+base+"MaterialEvalGun.py "+base+"Gauss-Job.py "+base+"RadLengthAna.py"
 os.system(run_command)
-run_command = "gaudirun.py MaterialEvalGun.py Gauss-Job.py RadLengthAna_VELO.py"    
+run_command = "gaudirun.py "+base+"MaterialEvalGun.py "+base+"Gauss-Job.py "+base+"RadLengthAna_VELO.py"    
 os.system(run_command)
     
 output=outputpath+'/'+out

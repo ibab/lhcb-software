@@ -4,7 +4,7 @@
 import sys
 import os
 
-sys.path.append(os.environ["PWD"].replace("/options",""))
+#sys.path.append(os.environ["SIMCHECKSROOT"]+"/python")
 from Target_CreateEvents import RunTargetJobs
 from optparse import OptionParser
 

@@ -11,19 +11,17 @@ from Gaudi.Configuration import *
 from Gauss.Configuration import *
 
 
-importOptions("$APPCONFIGOPTS/Gauss/Sim08-Beam4000GeV-md100-2012-nu2.5.py")
-
 ##############################################################################
 # Database tags must be set and are defined in a separate file
 ##############################################################################
 from Configurables import LHCbApp
 from Configurables import DDDBConf
 
-physList = 'FTFP_BERT'
-targetThick = 10
+physList = 'QGSP_BERT'
+targetThick = 1
 targetMat = 'Al'
 projEng = 100
-projID = -321
+projID = -211
 target = 'Target_'+str(targetThick)+'mm'+targetMat
 
 from Configurables import CondDB
@@ -98,7 +96,7 @@ GaussGen.FirstEventNumber = 1
 GaussGen.RunNumber        = 1082
 
 #--Number of events
-nEvts = 50000
+nEvts = 1000
 LHCbApp().EvtMax = nEvts
 
 Gauss().Production='PGUN'
@@ -115,8 +113,8 @@ Gauss().Histograms = 'NONE'
 #OutputStream("GaussTape").Output = "DATAFILE='PFN:%s.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'"%idFile
 # --- Save ntuple with hadronic cross section information
 ApplicationMgr().ExtSvc += [ "NTupleSvc" ]
-NTupleSvc().Output = ["FILE1 DATAFILE='Multi_Kminus_inAl.root' TYP='ROOT' OPT='NEW'"]
+NTupleSvc().Output = ["FILE1 DATAFILE='Multi_Piminus_inAl.root' TYP='ROOT' OPT='NEW'"]
 
-importOptions ("TargetMaterialGunMultiTargetLocalTemporary.py")
+importOptions (os.environ["SIMCHECKSROOT"]+"/scripts/Target/MaterialGun-Targets-Tmp.py")
 
 

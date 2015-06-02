@@ -11,9 +11,10 @@ version           v1r5
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc scripts
+branches          cmt doc scripts Tools
 
 use GaudiAlg v*
+#use Targets  v* /Tools/Targets 
 #use   ROOT                v*    LCG_Interfaces -no_auto_imports
 
 #path_remove  PATH "$(ROOTSYS)/bin"
@@ -24,7 +25,15 @@ use GaudiAlg v*
 macro ROOT_includedirs "-I$(ROOTSYS)/include"
 macro ROOT_linkopts "-L$(ROOTSYS)/lib $(shell root-config --glibs)"
 
-#application RadLengthPlots ../scripts/RadLength/*.cpp
+apply_pattern install_scripts
+apply_pattern install_python_modules
+apply_pattern install_scripts_Targets
+apply_pattern install_scripts_RadLenght
 
-#application TargetPlots ../scripts/Target/MultiTarget/TargetAnalysis/Multi.cpp
+#==========================================================================
+# New variables
+#===========================================================================
+
+set	TARGETOPTS $(SIMCHECKSROOT)/scripts/Target/options
+
 
