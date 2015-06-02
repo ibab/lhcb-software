@@ -11,7 +11,6 @@
 <argument name="args"><set>
 	<text>$GAUSSOPTS/Gauss-2012.py</text>
 	<text>$DECFILESROOT/options/14165011.py</text>
-	<text>$LBPYTHIA8ROOT/options/Pythia8.py</text>
 	<text>$LBBCVEGPYROOT/options/BcVegPyPythia8.py</text>
 	<text>$GAUSSOPTS/GenStandAlone.py</text>
 	<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
