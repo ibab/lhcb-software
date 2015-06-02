@@ -37,19 +37,19 @@ MCTupleToolInteractions::MCTupleToolInteractions( const std::string& type,
 
   // normalise the scaling factor such that it is equal to 1 at this value of I
   declareProperty( "NormaliseAt", m_normaliseAt=0 );
-
-  // prefix to give to the variables, in case you want to use two copies of this tool
-  declareProperty( "ExtraName", m_extraName="EVT_Int" );
-
+  
   // use the #of reconstructed PVs, rather than the MC Collisions.
   declareProperty( "UseRecPV", m_useRecPV=false );
-
+  
   //deprecated, use Verbose
   // fill extra information on MCPV, MC Collisions and Reconstructed PVs
   //declareProperty( "FillDetails", m_fillDetails=false );
-
+  
   // change the default PV location
   declareProperty( "RecPVLocation", m_RecPVLocation=LHCb::RecVertexLocation::Primary );
+  
+  // prefix to give to the variables, in case you want to use two copies of this tool
+  setProperty( "ExtraName", "EVT_Int" );
 }
 
 //=============================================================================

@@ -68,8 +68,7 @@ DECLARE_TOOL_FACTORY( MCTupleToolEventType )
   declareProperty( "hasMCDecay", m_hasMCDecay="" );
 
   //extra name. EVT in this case.
-  declareProperty("ExtraName",m_extraName="EVT",
-                  "prepend the name of any variable with this string");
+  setProperty("ExtraName", "EVT");
 }
 
 //=============================================================================

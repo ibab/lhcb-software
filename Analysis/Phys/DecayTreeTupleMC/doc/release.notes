@@ -4,6 +4,11 @@
 ! Purpose     : MC tuple tools
 !-----------------------------------------------------------------------------
 
+! 2015-06-02 - Eduardo Rodrigues
+- Various declareProperty changed to setProperty to remove compilation warnings
+  of the kind "WARNING duplicated property name 'ExtraName',
+  see https://its.cern.ch/jira/browse/GAUDI-1023".
+
 !========================= DecayTreeTupleMC v1r5 2014-12-15 =========================
 
 ! 2014-12-15 - Eduardo Rodrigues

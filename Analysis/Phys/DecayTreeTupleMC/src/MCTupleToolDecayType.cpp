@@ -65,8 +65,7 @@ MCTupleToolDecayType::MCTupleToolDecayType( const std::string& type,
   declareProperty( "hasMCDecay", m_hasMCDecay="" );
 
   //extra name. MCP in this case.
-  declareProperty("ExtraName",m_extraName="MCP",
-                  "prepend the name of any variable with this string");
+  setProperty("ExtraName", "MCP");
 }
 
 //=============================================================================
