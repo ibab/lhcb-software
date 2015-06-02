@@ -10,8 +10,11 @@ Development release, based on Gaudi v26r2, LHCb v38r7, Rec v17r7 and Phys v19r7.
 Uses LCG_76root6 with ROOT 6.02.08.
 
 - Packages updated :
-  Phys/DaVinciAssociators v9r7, Phys/DecayTreeTupleMC v1r6, Phys/DecayTreeTupleMuonCalib v1r4,
-  Phys/DecayTreeTuple v4r15, Phys/DSTWriters v4r20, Phys/TeslaTools v1r5.
+  Analysis/Ostap v1r8, Phys/DaVinciAssociators v9r7, Phys/DecayTreeTupleMC v1r6,
+  Phys/DecayTreeTupleMuonCalib v1r4, Phys/DecayTreeTuple v4r15, Phys/DSTWriters v4r20, Phys/TeslaTools v1r5.
+
+- In Analysis/Ostap v1r8 :
+  . Added TestKisa.py for simple parallel data processing (well, in this case just projection from TChain).
 
 - In Phys/DaVinciAssociators v9r7 :
   . Option to veto creation of empty proto2mc relations containers.
