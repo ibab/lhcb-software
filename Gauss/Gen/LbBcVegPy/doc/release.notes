@@ -2,6 +2,7 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+!========================= LbBcVegPy v6r0 2015-06-02 =========================
 ! 2015-06-02 - Gloria Corti
  - Fixed mistyping in BcVegPyPythia{,8}.py
 
