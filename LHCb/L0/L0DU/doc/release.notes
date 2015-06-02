@@ -3,6 +3,11 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2015-06-02 - Olivier Deschamps
+  - L0CondDBProvider : patch for muonPtScale() to account for hardware change in scale on 2015/06/02
+  -> the new code is backward compatible (but previous sw version is not correct for data taken after 2015/06)
+  -> muonPtScale to be moved to condDB for more generic usage
+
 !========================= L0DU v10r32 2015-05-26 =========================
 ! 2015-04-22 - Marco Clemencic
  - Modified DecodeVeloRawBuffer to avoir re-definition of property
