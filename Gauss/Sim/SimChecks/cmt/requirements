@@ -34,6 +34,6 @@ apply_pattern install_scripts_RadLenght
 # New variables
 #===========================================================================
 
-set	TARGETOPTS $(SIMCHECKSROOT)/scripts/Target/options
+set	TARGETOPTS $(SIMCHECKSROOT)/options/Target
 
 
