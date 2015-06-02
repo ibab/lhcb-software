@@ -25,5 +25,5 @@
   <enum  name="Rich::RichPhDetConfigType" />
   <variable pattern="DeRichLocations::*"  />
   <function pattern="DeRichLocations::location*" />
-  <function pattern="Rich::text(Rich::RichPhDetConfigType)" />
+  <function name="Rich::text(Rich::RichPhDetConfigType)" />
 </lcgdict>

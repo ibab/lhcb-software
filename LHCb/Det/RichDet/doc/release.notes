@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2015-06-02 - Marco Cattaneo
+ - Fix xml selection rule for dict, to please genreflex
+
 !========================= RichDet v17r3 2015-05-26 =========================
 ! 2015-05-05 - Chris Jones
  - Make the HLT refractive indices the default ones.
