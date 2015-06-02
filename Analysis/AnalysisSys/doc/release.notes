@@ -4,6 +4,40 @@ Package Coordinator : DaVinci coordinator
 Purpose             : LHCb analysis packages
 
 
+</PRE><H1><A NAME=v13r6>2015-06-02 Analysis v13r6</A></H1><PRE>
+
+Development release, based on Gaudi v26r2, LHCb v38r7, Rec v17r7 and Phys v19r7.
+Uses LCG_76root6 with ROOT 6.02.08.
+
+- Packages updated :
+  Phys/DaVinciAssociators v9r7, Phys/DecayTreeTupleMC v1r6, Phys/DecayTreeTupleMuonCalib v1r4,
+  Phys/DecayTreeTuple v4r15, Phys/DSTWriters v4r20, Phys/TeslaTools v1r5.
+
+- In Phys/DaVinciAssociators v9r7 :
+  . Option to veto creation of empty proto2mc relations containers.
+
+- In Phys/DecayTreeTupleMC v1r6 :
+  . Various declareProperty changed to setProperty to remove compilation warnings of the kind
+    "WARNING duplicated property name 'ExtraName', see https://its.cern.ch/jira/browse/GAUDI-1023".
+
+- In Phys/DecayTreeTupleMuonCalib v1r4 :
+  . Added the muon hit time and the momentum from the muonTrack.
+  . Quick fix in the MuonIDCalib tool.
+
+- In Phys/DecayTreeTuple v4r15 :
+  . Removed warning in compilation of TupleToolTwoParticleMatching.
+
+- In Phys/DSTWriters v4r20 :
+  . Saved packed track clusters to stream locations on DSTs as well as uDSTs.
+  . Added HC raw banks to selectiveRawEvent.
+
+- In Phys/TeslaTools v1r5 :
+  . Updates to truth helper functions.
+  . Resurrected RecSummary.
+  . Made resurrection insensitive to missing PVs (needed for smog).
+  . Made sure all refitted PVs are resurrected and the right one chosen.
+  . Stopped expected events causing warnings polluting MC generation.
+
 </PRE><H1><A NAME=v13r5>2015-04-22 Analysis v13r5</A></H1><PRE>
 
 Development release, based on Gaudi v26r1, LHCb v38r6, Rec v17r6 and Phys v19r6.
