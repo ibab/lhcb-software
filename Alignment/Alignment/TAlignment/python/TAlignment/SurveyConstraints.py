@@ -4,7 +4,8 @@ from Configurables import LHCbConfigurableUser
 
 # Dictionary with all the available XMLfiles
 XmlFilesDict = { 'VP': {'latest': ['Modules']},
-                 'Velo': {'latest': ['Modules', 'Detectors']},
+                 'Velo': {'latest': ['Modules'],
+                          'Run1': ['Modules_run1', 'Detectors_run1']},
                  'OT': {'latest': ['Elements_OTSurvey2011StationYCorrected'],
                         '2010': [],
                         'old': ['Elements', 'ElementsBowingCorrected']},

@@ -1,27 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><!DOCTYPE DDDB SYSTEM "../../../DTD/structure.dtd"><DDDB>
+<!-- 2015-May-27 - 13:05:1 -->
+<!-- Author: gdujany -->
+<!-- Version:: Unknown -->
+<!-- Description:: survey  "normalised" to fix average position inside the same half-->
 
-<!-- VELO alignment constants evaluated using October TED data-->
 
-  <condition classID="6" name="VeloSystem">
-    <paramVector name="dPosXYZ" type="double"> 0.0  0  0 </paramVector>
-    <paramVector name="dRotXYZ" type="double">-0.0001  0 -0.0001 </paramVector>
-    <paramVector name="pivotXYZ" type="double"> 0  0  0 </paramVector>
-  </condition>
+<condition classID="6" name="VeloSystem"><paramVector name="dPosXYZ" type="double">-0.011384447881 0.00385086 0.20334352381</paramVector><paramVector name="dRotXYZ" type="double">-0.0001 0.0 -2.9403134119e-05</paramVector></condition>
+<condition classID="1008106" name="VeloLeft"><param name="XOffset" type="other">Conditions/Online/Velo/MotionSystem[ResolPosLA]</param><param name="YOffset" type="other">Conditions/Online/Velo/MotionSystem[ResolPosY]</param><paramVector name="dPosXYZ" type="double">0.126473876452 -0.0757135171429 0.00614785238095</paramVector><paramVector name="dRotXYZ" type="double">5.95e-05 -3.75e-05 -0.0001321818365</paramVector></condition>
+<condition classID="1008106" name="VeloRight"><param name="XOffset" type="other">Conditions/Online/Velo/MotionSystem[ResolPosRC]</param><param name="YOffset" type="other">Conditions/Online/Velo/MotionSystem[ResolPosY]</param><paramVector name="dPosXYZ" type="double">-0.126473876452 0.0757135171429 -0.00614785238095</paramVector><paramVector name="dRotXYZ" type="double">-5.95e-05 3.75e-05 0.0001321818365</paramVector></condition>
 
-  <condition classID="1008106" name="VeloLeft">
-    <paramVector name="dPosXYZ" type="double"> 0.1415  -0.0425  0 </paramVector>
-    <paramVector name="dRotXYZ" type="double"> 5.95e-05  -3.75e-05  0 </paramVector>
-    <paramVector name="pivotXYZ" type="double"> 0  0  0 </paramVector>
-    <param name="XOffset" type="string">Conditions/Online/Velo/MotionSystem[ResolPosLA]</param>
-    <param name="YOffset" type="string">Conditions/Online/Velo/MotionSystem[ResolPosY]</param>
-  </condition>
-
-  <condition classID="1008106" name="VeloRight">
-    <paramVector name="dPosXYZ" type="double">-0.1415  0.0425  0 </paramVector>
-    <paramVector name="dRotXYZ" type="double"> -5.95e-05  3.75e-05  0 </paramVector>
-    <paramVector name="pivotXYZ" type="double"> 0  0  0 </paramVector>
-    <param name="XOffset" type="string">Conditions/Online/Velo/MotionSystem[ResolPosRC]</param>
-    <param name="YOffset" type="string">Conditions/Online/Velo/MotionSystem[ResolPosY]</param>
-  </condition>
 
 </DDDB>

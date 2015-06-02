@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2015-06-02 - Silvia Borghi
+ - Change Velo survey for run2
+
 ! 2015-06-02 - Maurizio Martinelli
  - Set 2015 IT box survey as default
 
