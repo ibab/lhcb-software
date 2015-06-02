@@ -1,8 +1,6 @@
 <!-- 
      * $Id: CaloUtils.xml,v 1.5 2010-03-18 13:58:42 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
-     * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for 
      * Calo/CaloUtils package 
@@ -40,7 +38,7 @@
   
   <exclusion>
 
-    <class pattern="LHCb::CaloMomentum::CaloPositions"/>
+    <class pattern="LHCb::CaloMomentum::CaloPositions*"/>
     
     <class pattern="LHCb::Calo*">
       <field  name="m_caloPositions" />

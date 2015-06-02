@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+! 2015-06-02 - Marco Cattaneo
+ - Fix a pattern selection rule to please genreflex
+
 !========================= CaloUtils v10r4 2014-07-14 =========================
 ! 2014-07-03 - Olivier Deschamps
   - CaloMomentum.cpp    : protect against negative calo energy
