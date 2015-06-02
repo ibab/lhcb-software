@@ -188,7 +188,6 @@ StatusCode Pythia8Production::initializeGenerator() {
   // Read user settings.
   for (unsigned int setting = 0; setting < m_userSettings.size(); ++setting) {
     debug() << m_userSettings[setting] << endmsg;
-    std::cout << m_userSettings[setting] << "\n";
     if (!m_pythia->readString(m_userSettings[setting]))
       Warning ("Failed to read the command " + m_userSettings[setting] + ".");
   }
@@ -244,9 +243,10 @@ StatusCode Pythia8Production::finalize() {
 StatusCode Pythia8Production::generateEvent(HepMC::GenEvent* theEvent,
 					    LHCb::GenCollision* theCollision) {
 
-  // Generate the event.
-  if (!m_pythia->next())
-    return Error("Pythia 8 event generation failed.");
+  // Generate the event (make 10 attempts).
+  int tries(0);
+  while (!m_pythia->next() && tries < 10) ++tries;
+  if (tries == 10) return Error("Pythia 8 event generation failed 10 times.");
   if (!m_pythia->flag("HadronLevel:all")) m_event = m_pythia->event;  
   ++m_nEvents;
 
