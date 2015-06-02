@@ -4,7 +4,7 @@
 
 #include "Kernel/DaVinciAlgorithm.h"
 
-class ITrackManipulator;
+class IGhostProbability;
 class ITrackFitter;
 
 /** @class RefitParticleTracks RefitParticleTracks.h
@@ -48,7 +48,7 @@ protected:
 private:
 
   ITrackFitter*        m_trackFitter;
-  ITrackManipulator*   m_trackManipulator;
+  IGhostProbability*   m_ghostprobability;
   bool                 m_overwrite;
   bool                 m_fit;
   bool                 m_manipulate;

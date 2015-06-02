@@ -4,7 +4,7 @@
 #include "RefitParticleTracks.h"
 
 #include "TrackInterfaces/ITrackFitter.h"
-#include "TrackInterfaces/ITrackManipulator.h"
+#include "TrackInterfaces/IGhostProbability.h"
 #include "Event/Track.h"
 #include "LoKi/PhysExtract.h"
 #include <boost/foreach.hpp>
@@ -63,10 +63,18 @@ StatusCode RefitParticleTracks::initialize()
     m_update = false; // sorry for this hack. I here attempt to keep the code more readable.[3]
   }
 
-  if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "==> Initialize" << endmsg;
+  if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) {
+    debug() << "==> Initialize" << endmsg;
+    debug() <<  "DoFit = "              << m_fit << endmsg;
+    debug() <<  "DoProbability = "      << m_manipulate << endmsg;
+    debug() <<  "WriteToTES = "         << m_writeOutput << endmsg;
+    debug() <<  "UpdateProbability = "  << m_update << endmsg;
+    debug() <<  "ReplaceTracks = "      << m_overwrite << endmsg;
+ 
+  }
 
   m_trackFitter = tool<ITrackFitter>(m_fittername,this);
-  m_trackManipulator = tool<ITrackManipulator>(m_manipulatorname,this);
+  m_ghostprobability = tool<IGhostProbability>(m_manipulatorname,this);
 
 
   return StatusCode::SUCCESS;
@@ -121,9 +129,7 @@ StatusCode RefitParticleTracks::execute()
       copies.push_back( (*iterTs)->cloneWithKey() );
       if (incasts.back()->key() != copies.back()->key()) {
         fatal() << "SEVERE PROBLEM. DATA WILL BE CORRUPTED!" << endmsg;
-  }
-
-
+      }
     }
   }
 
@@ -138,8 +144,11 @@ StatusCode RefitParticleTracks::execute()
 
   if (m_fit) fit(toworkwith);
   if (m_manipulate) manipulate(toworkwith);
+  if ( UNLIKELY (msgLevel(MSG::DEBUG)) ) debug() << " manipulations done " << endmsg;
 
   if (m_update) { /// if we anyhow overwrite, the property has been switched off in initialize() [3]
+                  /// for better text editor support I add the following line as a comment:
+                  /// if (m_overwrite = false)
     std::vector<LHCb::Track*>::const_iterator iterFrom = copies.begin();
     std::vector<LHCb::Track*>::const_iterator iterTo   = incasts.begin();
     for ( ; copies.end() != iterFrom ; ++iterFrom) {
@@ -148,6 +157,7 @@ StatusCode RefitParticleTracks::execute()
       ++iterTo; // do this only at the very end of the loop
     }
   }
+  if ( UNLIKELY (msgLevel(MSG::DEBUG)) ) debug() << " updates done " << endmsg;
 
   if (m_writeOutput) {
     LHCb::Tracks* outtracks = new LHCb::Tracks();
@@ -156,6 +166,7 @@ StatusCode RefitParticleTracks::execute()
       outtracks->add(*iterT);
     }
     put(outtracks,outputLocation());
+    if (UNLIKELY(msgLevel(MSG::DEBUG))) debug() << "put to TES" << endmsg;
   } else {
     while (copies.size()) {
       delete copies.back();
@@ -181,7 +192,7 @@ StatusCode RefitParticleTracks::manipulate(std::vector<LHCb::Track*> *vec) {
   if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "==> MANIPULATING" << endmsg;
   std::vector<LHCb::Track*>::iterator iterT = vec->begin();
   for ( ; vec->end() != iterT ; ++iterT ) {
-    m_trackManipulator->execute(*(*iterT)).ignore();
+    m_ghostprobability->execute(*(*iterT)).ignore();
   }
   return StatusCode::SUCCESS;
 }

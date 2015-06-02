@@ -4,6 +4,9 @@
 ! Purpose     : Provide tools for refitting on DST
 !-----------------------------------------------------------------------------
 
+! 2015-06-02 - Paul Seyfert
+ - Adapt RefitParticleTracks to change of GhostProbability interface
+
 !=================== DaVinciTrackRefitting v1r5 2015-01-16 ===================
 
 ! 2015-01-16 - Eduardo Rodrigues
