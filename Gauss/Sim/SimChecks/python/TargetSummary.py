@@ -186,7 +186,7 @@ class Plotter :
 	
 				for j in self._thicks:
 
-					dir2 = dir1.mkdir(Form("Thick_"+str(j)+"mm"));
+					dir2 = dir1.mkdir("Thick_"+str(j)+"mm");
 					dir2.cd();
 
 					for i in materials :
@@ -352,7 +352,6 @@ def doMultiHistos(nt, curdir, mod, mat, Dx, pgun, eng) :
 
 	select = "CreatorProcessType == -2 && PhysicsList == " + str(mod) + " && TargetMaterial == " + str(mat) + " && ProjectilePdgID == " + str(pgun)
 	select += " && TargetThickness == " + str(Dx) + " && ProjectileEnergy == " + str(eng) 
-	#print select
 	varexp = "elist"
 	nt.SetEntryList(0)
 	nt.Draw(">>"+varexp,select,"entrylist")
@@ -500,11 +499,14 @@ def doMultiHistos(nt, curdir, mod, mat, Dx, pgun, eng) :
 	print "Pint el = ", '{0:4.5f}'.format(Xsecel),"+/-",'{0:4.5f}'.format(XsecelErr)
 	print "< Multi > = ", '{0:3.1f}'.format(multi),"+/-",'{0:3.1f}'.format(multi_err)
 
-		
-	result = [totP, Xsecinel, XsecinelErr, Xsecel, XsecelErr, multi, multi_err,
-			avg_nChPerc/countinel, avg_ChPlusPerc/countinel, avg_ChMinusPerc/countinel,
-			in_nchdau_mult.GetMean(), in_nchdau_nogamma.GetMean(), in_dau_gamma.GetMean()
-			]
+	if countinel != 0 :
+		result = [totP, Xsecinel, XsecinelErr, Xsecel, XsecelErr, multi, multi_err,
+				avg_nChPerc/countinel, avg_ChPlusPerc/countinel, avg_ChMinusPerc/countinel,
+				in_nchdau_mult.GetMean(), in_nchdau_nogamma.GetMean(), in_dau_gamma.GetMean()
+				]
+	else :
+		result = [totP, Xsecinel, XsecinelErr, Xsecel, XsecelErr, multi, multi_err, 0,0,0,
+				  in_nchdau_mult.GetMean(), in_nchdau_nogamma.GetMean(), in_dau_gamma.GetMean()]
 
 	curdir.Write()
 	p_endsubproc.Write()

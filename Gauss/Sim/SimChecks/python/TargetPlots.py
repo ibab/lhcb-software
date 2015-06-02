@@ -10,7 +10,7 @@
 
 from string import find
 from ROOT import *
-from TargetSummary import *
+from TargetSummary import Plotter, doMultiHistos
 from array import array
 from copy import *
 import os
@@ -199,10 +199,7 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 							leg.AddEntry(grPDG,dict._all_pguns[pguns[pg+1]].GetLatex("LEG") + " / " + dict._all_pguns[pguns[pg]].GetLatex("LEG") +" PDG","P")
 			
 				nm+=1
-				grs.append(gr)
-
-			#ratiotxt << "\\hline" << endl
-		
+				grs.append(gr)	
 		
 		c = TCanvas()
 		leg_pad = TPad("leg_pad","",0.73,0,1.,1.)
@@ -510,9 +507,6 @@ if __name__ == "__main__" :
 	##      or as asymmetries adding RATIO or ASYM to the plot type. e.g. RATIO_TOTAL or RATIO_MULTI_NCH or ASYM_INEL, etc
 
 	plots = [ "RATIO_TOTAL", "INEL", "TOTAL", "EL", "MULTI", "MULTI_NCH", "MULTI_NCH_NOGAMMA", "PERC_PLUS", "PERC_MINUS" ]
-
-	### N.B.: Options need to have been generated with Targets_RunAll.py!
-	### In your output directory a file options.txt has been created where the options you generated are listed.
 
 	models = ["FTFP_BERT"]  # any you generated, by default "QGSP_BERT","FTFP_BERT"
 	thicks = [1] #1,5,10

@@ -13,7 +13,7 @@ parser.add_option("--parallel", default=False, dest="parallel", action='store_tr
 parser.add_option("--physList", default=None, dest="physList", help="Specific single Physics List to use by default does both FTFP_BERT and QGSP_BERT" )
 (opts, args) = parser.parse_args()
 
-path=os.environ['WORK']+'/TargetOutput' # where you want your output (absolute or relative path)
+path=os.environ['PWD']+'/TargetOutput' # where you want your output (absolute or relative path)
 
 models=['FTFP_BERT','QGSP_BERT']#any present in the version of Gauss you are using e.g. 'FTFP_BERT'
 if opts.physList :
@@ -24,7 +24,7 @@ materials=['Al'] # 'Al' 'Be' 'Si'
 thicks=[1]  #in mm 1, 5, 10 (only)
 pguns=["p","pbar","Kplus","Kminus","Piplus","Piminus"] # Available: 'Piminus' 'Piplus' 'Kminus' 'Kplus' 'p' 'pbar'
 
-RunTargetJobs(path, models, pguns, energies, materials, thicks, parallel=opts.parallel)
+#RunTargetJobs(path, models, pguns, energies, materials, thicks, parallel=opts.parallel)
 
 from ROOT import *
 from TargetPlots import Plot
@@ -39,10 +39,12 @@ os.system("mkdir -p "+path+"/Protons")
 os.system("mkdir -p "+path+"/Pions")
 
 for p in plots :
-	Plot( dataTree, "energy", p, path, models , pguns , materials , 2 , 1, True )
-	Plot( dataTree, "energy", p, path+"/Protons", models , ["p","pbar"] , materials , 2 , 1, True )
-	Plot( dataTree, "energy", p, path+"/Kaons", models , ["Kplus","Kminus"] , materials , 2 , 1, True )
-	Plot( dataTree, "energy", p, path+"/Pions", models , ["Piplus","Piminus"] , materials , 2 , 1, True )
-
+	Plot( dataTree, "energy", p, path, models , pguns , materials , 2 , thicks[0], True )
+	if "p" in pguns and "pbar" in pguns :
+		Plot( dataTree, "energy", p, path+"/Protons", models , ["p","pbar"] , materials , 2 , thicks[0], True )
+	if "Kplus" in pguns and "Kminus" in pguns :
+		Plot( dataTree, "energy", p, path+"/Kaons", models , ["Kplus","Kminus"] , materials , 2 , thicks[0], True )
+	if "Piplus" in pguns and "Piminus" in pguns :
+		Plot( dataTree, "energy", p, path+"/Pions", models , ["Piplus","Piminus"] , materials , 2 , thicks[0], True )
 
 

@@ -39,13 +39,15 @@ os.system("mkdir -p "+path+"/Protons")
 os.system("mkdir -p "+path+"/Pions")
 
 for t in thicks :
-
 	for p in plots :
 	
 		Plot( dataTree, "energy", p, path, models , pguns , materials , 2 , t, True )
-		Plot( dataTree, "energy", p, path+"/Protons", models , ["p","pbar"] , materials , 2 , t, True )
-		Plot( dataTree, "energy", p, path+"/Kaons", models , ["Kplus","Kminus"] , materials , 2 , t, True )
-		Plot( dataTree, "energy", p, path+"/Pions", models , ["Piplus","Piminus"] , materials , 2 , t, True )
+		if "p" in pguns and "pbar" in pguns :
+			Plot( dataTree, "energy", p, path+"/Protons", models , ["p","pbar"] , materials , 2 , t, True )
+		if "Kminus" in pguns and "Kplus" in pguns :
+			Plot( dataTree, "energy", p, path+"/Kaons", models , ["Kplus","Kminus"] , materials , 2 , t, True )
+		if "Piminus" in pguns and "Piplus" in pguns :
+			Plot( dataTree, "energy", p, path+"/Pions", models , ["Piplus","Piminus"] , materials , 2 , t, True )
 
 
 

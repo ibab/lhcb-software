@@ -18,10 +18,10 @@ from Configurables import LHCbApp
 from Configurables import DDDBConf
 
 physList = 'FTFP_BERT'
-targetThick = 1
+targetThick = 5
 targetMat = 'Al'
-projEng = 1
-projID = 2212
+projEng = 100
+projID = -2212
 target = 'Target_'+str(targetThick)+'mm'+targetMat
 
 from Configurables import CondDB
@@ -96,7 +96,7 @@ GaussGen.FirstEventNumber = 1
 GaussGen.RunNumber        = 1082
 
 #--Number of events
-nEvts = 1000
+nEvts = 10000
 LHCbApp().EvtMax = nEvts
 
 Gauss().Production='PGUN'
@@ -113,7 +113,7 @@ Gauss().Histograms = 'NONE'
 #OutputStream("GaussTape").Output = "DATAFILE='PFN:%s.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'"%idFile
 # --- Save ntuple with hadronic cross section information
 ApplicationMgr().ExtSvc += [ "NTupleSvc" ]
-NTupleSvc().Output = ["FILE1 DATAFILE='Multi_p_inAl.root' TYP='ROOT' OPT='NEW'"]
+NTupleSvc().Output = ["FILE1 DATAFILE='Multi_pbar_inAl.root' TYP='ROOT' OPT='NEW'"]
 
 importOptions (os.environ["SIMCHECKSROOT"]+"/scripts/Target/MaterialGun-Targets-Tmp.py")
 
