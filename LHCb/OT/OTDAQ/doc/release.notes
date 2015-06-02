@@ -3,6 +3,10 @@
 ! Package manager : A.Kozlinskiy
 !------------------------------------------------------------------------------
 
+! 2015-06-02 - Rose Koopman and Manuel Tobias Schiller
+ - add dictionaries for OTLiteTime and OTLiteTimeContainer classes; they are
+   needed for OT the python code used in calibration jobs
+
 !========================= OTDAQ v7r19 2015-02-23 =========================
 ! 2015-01-27 - Manuel Tobias Schiller
  - OTRawBankDecoder: following decision in today's Tracking meeting, change to

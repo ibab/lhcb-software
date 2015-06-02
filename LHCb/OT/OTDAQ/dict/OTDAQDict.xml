@@ -1,4 +1,6 @@
 <lcgdict>
+  <class name = "LHCb::OTLiteTime" />
+  <class name = "LHCb::OTLiteTimeContainer" />
   <class name = "IOTChannelMapTool" />
   <class name = "IOTRawBankDecoder" />
   <class name = "IOTRawBankEncoder" />
