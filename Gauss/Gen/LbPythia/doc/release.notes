@@ -4,6 +4,7 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v15r0 2015-06-02 =========================
 ! 2015-05-01 - Philip Ilten
  - Exposed members for HardProduction tool
 
