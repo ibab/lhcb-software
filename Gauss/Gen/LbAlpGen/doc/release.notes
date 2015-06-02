@@ -5,6 +5,11 @@
 ! Purpose     : read ALPGEN-generated partonic level events
 ! -----------------------------------------------------------------------------
 
+!========================== LbAlpGen v6r0 2015-06-02 ==========================
+! 2015-06-02 - Gloria Corti
+ - Ported from v3b branch options AlpGen.py by Xabier Cid Vidal.
+ - Removed all other obsolete options
+
 !========================== LbAlpGen v5r0 2015-03-13 ==========================
 ! 2015-01-28 - Marco Clemencic
  - Hacked CMT configuration to avoid the failures due to parallel builds.
