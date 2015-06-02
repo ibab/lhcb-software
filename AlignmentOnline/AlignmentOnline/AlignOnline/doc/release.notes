@@ -4,6 +4,9 @@ Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
 ! 2015-06-02 - Silvia Borghi
+ - Remove few lines of stuff under development
+
+! 2015-06-02 - Silvia Borghi
  - Change AlignOnlineIterator to set properly version string in PubSvc
 
 ! 2015-05-28 - Silvia Borghi
