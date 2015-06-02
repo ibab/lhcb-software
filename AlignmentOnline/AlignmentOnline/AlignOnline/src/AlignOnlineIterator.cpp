@@ -18,6 +18,7 @@
 #include "GaudiKernel/ToolHandle.h"
 #include "AlignmentInterfaces/IAlignUpdateTool.h"
 #include "AlignmentInterfaces/IWriteAlignmentConditionsTool.h"
+#include "TAlignment/IGetElementsToBeAligned.h"
 
 #include "AlignOnlineXMLCopier.h"
 #include <boost/filesystem.hpp>
@@ -43,6 +44,8 @@ namespace {
 class AlignOnlineIterator: public GaudiTool, virtual public LHCb::IAlignIterator
 {
   public:
+    typedef IGetElementsToBeAligned::Elements Elements ;
+    typedef std::vector<double> AlignConstants;
     AlignOnlineIterator(const string & type, const string & name,
         const IInterface * parent);
     //      StatusCode init(string, string);
@@ -60,6 +63,11 @@ class AlignOnlineIterator: public GaudiTool, virtual public LHCb::IAlignIterator
     string m_PartitionName;
     ToolHandle<Al::IAlignUpdateTool> m_alignupdatetool;
     ToolHandle<IWriteAlignmentConditionsTool> m_xmlwriter;
+    ToolHandle<IGetElementsToBeAligned>  m_elementProvider;
+
+    Elements  m_elements;
+    AlignConstants m_alignConstantsFirst;
+    AlignConstants m_alignConstantsLast;
     unsigned int m_maxIteration;
     ASDCollector m_asdCollector;
     unsigned int m_iteration;
@@ -90,8 +98,8 @@ extern "C"
 
 AlignOnlineIterator::AlignOnlineIterator(const string & type,
     const string & name, const IInterface * parent) :
-    GaudiTool(type, name, parent), m_alignupdatetool("Al::AlignUpdateTool"), m_xmlwriter(
-        "WriteMultiAlignmentConditionsTool")
+    GaudiTool(type, name, parent), m_alignupdatetool("Al::AlignUpdateTool"), 
+    m_xmlwriter("WriteMultiAlignmentConditionsTool"),m_elementProvider("GetElementsToBeAligned")
 {
   declareInterface<LHCb::IAlignIterator>(this);
   declareProperty("PartitionName", m_PartitionName = "LHCbA");
@@ -140,7 +148,11 @@ StatusCode AlignOnlineIterator::initialize()
     if (sc.isSuccess()) {
        prop->setProperty("OnlineMode", "True");
     }
+    sc = m_elementProvider.retrieve();
   }
+  if (!sc.isSuccess())
+    error() <<"==> Failed to retrieve detector selector tool!"<< endreq;
+  m_elements = m_elementProvider->elements() ;
 
   // instantiate the objects that will take care of copying and versioning files
   const string runningdir = m_alignxmldir + "/running";
@@ -218,7 +230,15 @@ StatusCode AlignOnlineIterator::i_run()
     // Don't know if we need all of this ... Need to think.
     detDataSvc->setEventTime(equations.lastTime());
     incSvc->fireIncident(RunChangeIncident(name(), runnr));
-
+   // Silvia:If m_iterationx==1 here save the constants for the first iteration.
+    // we need the elements, we can retrieve from the equation
+    sc = m_alignupdatetool->getAlignmentConstants(m_elements,m_alignConstantsFirst);
+    if (!sc.isSuccess())
+    {
+      error() << "Error calling alignupdate tool to get Input Alignment Constants" << endreq;
+      break;
+    }
+    
     // Now call the update tool
     debug() << "Calling AlignUpdateTool" << endreq;
     sc = m_alignupdatetool->process(equations, convergencestatus);
@@ -254,6 +274,15 @@ StatusCode AlignOnlineIterator::i_run()
   string *s;
   if (sc.isSuccess() && m_iteration > 1 && convergencestatus == Al::IAlignUpdateTool::Converged)
   {
+
+    // Silvia: here save the constants to be compared to the ones of the first iteration.
+    sc = m_alignupdatetool->getAlignmentConstants(m_elements,m_alignConstantsLast);
+    if (!sc.isSuccess())
+    {
+      error() << "Error calling alignupdate tool to get Output Alignment Constants" << endreq;
+      break;
+    }
+ 
     // after last update, if more than one iteration and successfully converged
     for (auto& i : m_xmlcopiers)
     {
@@ -262,7 +291,9 @@ StatusCode AlignOnlineIterator::i_run()
           << i->copybackfilename() << endmsg;
       auto j = m_condmap.find(i->condition());
       s = (j->second);
-      *s = to_string(runnr) + " " + i->copybackfilename();
+      //*s = to_string(runnr) + " " + i->copybackfilename();
+      *s = to_string(runnr) + " v" + to_string(i->version());
+      
       if (!thissc.isSuccess())
       {
         error() << "Error copying file to online area" << endmsg;
@@ -285,7 +316,8 @@ StatusCode AlignOnlineIterator::i_run()
           << i->onlinefilename() << endmsg;
       auto j = m_condmap.find(i->condition());
       s = (j->second);
-      *s = to_string(runnr) + " " + i->onlinefilename();
+      //*s = to_string(runnr) + " " + i->onlinefilename();
+      *s = to_string(runnr) + " v" + to_string(i->version());
     }
   }
   m_PubSvc->updateAll();
