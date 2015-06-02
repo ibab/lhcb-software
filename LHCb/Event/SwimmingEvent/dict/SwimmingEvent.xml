@@ -35,16 +35,8 @@
   </class>
   
   <class pattern = "std::map<*,*LHCb::TurningPoint*>" />
-  <class pattern = "std::pair<std::string,*LHCb::TurningPoint*>" />
-
   <class pattern = "std::pair<*,bool>" />
-
-  <class pattern = "std::map<*,bool>" />
-  <class pattern = "std::map<*,bool>*iterator" />
-  <class pattern = "std::map<*,double>*iterator" />
   <class pattern = "std::map<*,std::map*>" />
-  <class pattern = "std::map<*,std::map*>*iterator" />
-  <class pattern = "std::pair<std::string,std::map*>" />
 
   <!-- FIXME: work-around for https://sft.its.cern.ch/jira/browse/ROOT-6704 -->
   <class name="std::map<std::string,bool>" />

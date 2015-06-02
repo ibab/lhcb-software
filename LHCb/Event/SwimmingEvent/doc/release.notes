@@ -4,6 +4,9 @@
 ! Purpose     : Event Model classes for persistency of the swimming result
 !-----------------------------------------------------------------------------
 
+! 2015-06-02 - Marco Cattaneo
+ - Remove unused classes from SwimmingEvent.xml to suppress genreflex warnings
+
 !========================= SwimmingEvent v1r6 2014-10-14 =======================
 ! 2014-10-07 - Olli Lupton
  - Move the various helper functions to be static members of a Swimming::Helpers
