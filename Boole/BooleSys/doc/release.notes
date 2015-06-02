@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- Changes to tests
+  . Remove sam.qms test suite, no longer used and not supported by CMake
+
 </PRE><H1><A NAME=v29r6>2015-06-01 Boole v29r6</A></H1><PRE>
 This version uses projects:
  LCG_76root6 (ROOT 6.02.08), Gaudi v26r2, LHCb v38r7, Lbcom v16r6
