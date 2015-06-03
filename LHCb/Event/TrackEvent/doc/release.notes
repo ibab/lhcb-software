@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
 
+! 2015-06-03 - Wouter Hulsbergen
+ - Fixed bug in 'State::linearTransportTo'
+
 !========================= TrackEvent v6r2 2014-09-08 =========================
 ! 2014-08-20 - Wouter Hulsbergen
  - Improve speed of Track::probChi2 (Gerhard)

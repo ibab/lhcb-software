@@ -205,13 +205,18 @@ void State::setState( double x, double y, double z,
 //=============================================================================
 void State::linearTransportTo( double z )
 {
-  double dz = z - m_z ;
+  const double dz = z - m_z ;
+  const double dz2 = dz*dz ;
   m_stateVector(0) += dz * m_stateVector(2) ;
   m_stateVector(1) += dz * m_stateVector(3) ;
-  m_covariance(0,0) += 2*dz*m_covariance(0,2) + dz*dz*m_covariance(2,2) ;
-  m_covariance(0,2) += dz*m_covariance(2,2) ;
-  m_covariance(1,1) += 2*dz*m_covariance(1,3) + dz*dz*m_covariance(3,3) ;
-  m_covariance(1,3) += dz*m_covariance(3,3) ;
+  auto& cov = m_covariance ;
+  cov(0,0) += dz2*cov(2,2) + 2*dz*cov(2,0) ;
+  cov(1,0) += dz2*cov(3,2) + dz*(cov(3,0)+cov(2,1)) ;
+  cov(2,0) += dz*cov(2,2) ;
+  cov(3,0) += dz*cov(3,2) ;
+  cov(1,1) += dz2*cov(3,3) + 2*dz*cov(3,1) ;
+  cov(2,1) += dz*cov(3,2) ;
+  cov(3,1) += dz*cov(3,3) ;
   m_z = z ;
 }
 
