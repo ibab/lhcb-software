@@ -15,8 +15,9 @@
 findReferenceBlock("""
 DaVinciInitAlg                                              SUCCESS 500 events processed
 DaVinciInitAlg                                              SUCCESS ==================================================================
-CountParticles                                              SUCCESS Number of counters : 78
+CountParticles                                              SUCCESS Number of counters : 82
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# Phys/StdAllLooseMuPion"                      |       500 |      11557 |     23.114 |     50.641 |      0.0000 |      541.00 |
  | "# Phys/StdDiElectronFromTracks"                |       500 |      11976 |     23.952 |     41.569 |      0.0000 |      378.00 |
  | "# Phys/StdDiElectronGamma"                     |       500 |      11988 |     23.976 |     41.603 |      0.0000 |      378.00 |
  | "# Phys/StdKs2PiPiDD"                           |       500 |        177 |    0.35400 |    0.66984 |      0.0000 |      4.0000 |
@@ -58,12 +59,11 @@ CountParticles                                              SUCCESS Number of co
  | "# Phys/StdLooseLambdaLDpLong"                  |       500 |       1656 |     3.3120 |     6.6989 |      0.0000 |      72.000 |
  | "# Phys/StdLooseLambdaLL"                       |       500 |        209 |    0.41800 |     1.4280 |      0.0000 |      17.000 |
  | "# Phys/StdLooseLambdac2PKPi"                   |       500 |        725 |     1.4500 |     9.1564 |      0.0000 |      175.00 |
+ | "# Phys/StdLooseLambdastar2pK"                  |       500 |     188703 |     377.41 |     535.56 |      0.0000 |      4629.0 |
  | "# Phys/StdLoosePhi2KK"                         |       500 |      14789 |     29.578 |     38.317 |      0.0000 |      361.00 |
  | "# Phys/StdLooseRho0"                           |       500 |        664 |     1.3280 |     2.2019 |      0.0000 |      19.000 |
  | "# Phys/StdLooseRhoPlus"                        |       500 |      19119 |     38.238 |     62.229 |      0.0000 |      552.00 |
  | "# Phys/StdMassConstrainedJpsi2MuMu"            |       500 |         18 |   0.036000 |    0.18629 |      0.0000 |      1.0000 |
- | "# Phys/StdTightDetachedTau3pi"                 |       500 |         49 |   0.098000 |    0.45650 |      0.0000 |      4.0000 |
- | "# Phys/StdTightDplus2PiPiPi"                   |       500 |        175 |    0.35000 |     1.3489 |      0.0000 |      16.000 |
 """, stdout, result, causes, 
 signature_offset = 0, id='Particles')
 countErrorLines({"FATAL":0})
