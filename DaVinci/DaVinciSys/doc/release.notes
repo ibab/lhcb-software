@@ -3,6 +3,32 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v36r7>2015-06-03 DaVinci v36r7</A></H1><PRE>
+
+Development release for 2015 data taking, based on Gaudi v26r2,
+LHCb v38r7, Lbcom v16r6, Rec v17r7, Phys v19r7, Analysis v13r6
+and Stripping v9r7. Uses LCG_76root6 with ROOT 6.02.08.
+
+- Refer to the release notes of Phys, Analysis and Stripping for details
+  on updates to these dependency projects.
+
+- Packages updated :
+  DaVinciTests v2r32, Phys/DaVinci v36r7, Phys/Tesla v1r5.
+
+- Packages added :
+  Event/EventPacker v5r3 added only for this release, to include a last-minute fix
+  relevant to Turbo MC productions.
+
+- In DaVinciTests v2r32 :
+  . Test commonparticles.qms/test_standardintermediate_reco14_run.qmt updated.
+
+- In Phys/DaVinci v36r7 :
+  . New stack release.
+
+- In Phys/Tesla v1r5 :
+  . Added RecSummary location.
+  . Configured PP2MCP more efficiently.
+
 </PRE><H1><A NAME=v36r6>2015-04-30 DaVinci v36r6</A></H1><PRE>
 
 Development release for 2015 data taking, based on Gaudi v26r1,
