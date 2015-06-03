@@ -5,7 +5,15 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-06-03 - Lucio Anderlini
- - Updated TupleToolTwoParticleMatching. 
+ - Updated TupleToolTwoParticleMatching:
+   . added property "ToolList" which will replace "TupleTools", for conformity
+     with other tools as a requirement for a future implementation of 
+     the addTupleTool syntax
+   . added property "MatchLocations" which replaces "MatchWith" (still present
+     for backward compatibility). MatchLocations takes a dictionary (in C++ 
+     converted to map<string,string>) where the first string is a particle
+     name (present in LHCb Particle Database), and the second is the match
+     location. An example is reported in the updated doxygen documentation.
 
 !======================= DecayTreeTuple v4r15 2015-05-30 =====================
 
