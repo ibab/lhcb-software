@@ -44,6 +44,7 @@ public:
   FastVeloHits& hits( unsigned int sensor, int zone ) { return m_sensors[sensor]->hits(zone); }
 
   FastVeloSensor* sensor( unsigned int n ) { return m_sensors[n]; }
+  const FastVeloSensor* sensor( unsigned int n ) const { return m_sensors[n]; }
 
   unsigned int firstRSensor()   const { return m_firstR;   }
   unsigned int lastRSensor()    const { return m_lastR;    }
