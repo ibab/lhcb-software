@@ -6,6 +6,7 @@
 #include "FastVeloHit.h"
 #include "FastVeloSensor.h"
 #include "Event/StateVector.h"
+#include "Event/State.h"
 
 /** @class FastVeloTrack FastVeloTrack.h
  *  Working tracks, used inside the FastVeloTracking
@@ -122,6 +123,9 @@ public:
   double xAtZ( double z ) const { return m_x0 + m_tx * z; }
 
   double yAtZ( double z ) const { return m_y0 + m_ty * z; }
+
+  double tx() const { return m_tx ; }
+  double ty() const { return m_ty ; }
 
   double rAtZ( double z ) const {
     double x = m_x0 + m_tx * z;
@@ -267,7 +271,11 @@ public:
   struct DecreasingByRLength  {
     bool operator() (const FastVeloTrack& lhs, const FastVeloTrack& rhs) const { return lhs.nbRHits() > rhs.nbRHits(); }
   };
-
+  
+  void fitKalman(LHCb::State& state,
+		 double& chi2,int& ndof,
+		 const int direction,const float noise2PerLayer) const ;
+  
   /// test to see if solve() failed: i.e.  x=tx=0 or y=ty=0
   bool testStateFit() const {
     return ( (m_x0 != 0. || m_tx != 0.) && (m_y0 != 0. || m_ty != 0.) ) ?  true : false;
