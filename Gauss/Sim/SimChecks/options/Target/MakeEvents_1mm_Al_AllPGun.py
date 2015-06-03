@@ -24,7 +24,7 @@ materials=['Al'] # 'Al' 'Be' 'Si'
 thicks=[1]  #in mm 1, 5, 10 (only)
 pguns=["p","pbar","Kplus","Kminus","Piplus","Piminus"] # Available: 'Piminus' 'Piplus' 'Kminus' 'Kplus' 'p' 'pbar'
 
-#RunTargetJobs(path, models, pguns, energies, materials, thicks, parallel=opts.parallel)
+RunTargetJobs(path, models, pguns, energies, materials, thicks, parallel=opts.parallel)
 
 from ROOT import *
 from TargetPlots import Plot
