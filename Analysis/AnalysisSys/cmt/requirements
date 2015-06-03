@@ -39,7 +39,7 @@ use  DecayTreeTupleTrigger      v1r6     Phys
 use  DecayTreeTupleMuonCalib    v1r4     Phys
 use  DecayTreeTupleTracking     v1r2     Phys
 use  DecayTreeTupleANNPID       v1r2     Phys 
-use  DecayTreeTuple             v4r15    Phys 
+use  DecayTreeTuple             v5r0     Phys 
 
 ####################################################################
 
@@ -68,7 +68,7 @@ use  MicroDSTExample            v2r15   Ex         # Chris Jones
 ####################################################################
 
 use  TrackSmearing              v1r6p1  Phys   # Alex Shires
-use  DaVinciTrackRefitting      v1r5    Phys   # Matt Needham
+use  DaVinciTrackRefitting      v2r0    Phys   # Matt Needham
 use  DaVinciTrackScaling        v1r4    Phys   # Vanya Belyaev
 
 ####################################################################
