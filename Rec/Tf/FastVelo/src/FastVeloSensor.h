@@ -40,6 +40,7 @@ public:
 
   DeVeloRType* rSensor() { return m_rSensor; }
   DeVeloPhiType* phiSensor() { return m_phiSensor; }
+  const DeVeloSensor* sensor() const { return m_sensor ; }
 
   FastVeloLineParams lineParams(  unsigned int strip, double frac ) const {
     if ( 0. == frac ) return  m_lineParams[strip];
@@ -57,6 +58,9 @@ public:
   double rPitch( double r ) const { return m_rSensor->rPitch( r ); }
 
   double rOffset( unsigned int zone ) const { return m_rOffset[zone]; }
+
+  double dzDx() const { return m_dzDx ; }
+  double dzDy() const { return m_dzDy ; }
 
 protected:
 
