@@ -8,7 +8,6 @@
 from GaudiKernel.SystemOfUnits import *
 
 TrackEffDownMuon = {
-    'NAME'        : 'TrackEffDownMuon',
     'WGs'         : ['ALL'],
     'BUILDERTYPE' : 'StrippingTrackEffDownMuonConf',
     'STREAMS'           : [ 'ALL','ALLTURBO' ],
@@ -54,7 +53,6 @@ TrackEffDownMuon = {
     }
 
 TrackEffMuonTT = {
-    'NAME'        : 'TrackEffMuonTT',
     'WGs'         : ['ALL'],
     'STREAMS'           : [ 'ALL','ALLTURBO' ],
     'BUILDERTYPE' : 'StrippingTrackEffMuonTTConf',
@@ -104,7 +102,6 @@ TrackEffMuonTT = {
     }
 
 TrackEffVeloMuon = {
-    'NAME'        : 'TrackEffVeloMuon',
     'WGs'         : ['ALL'],
     'STREAMS'           : [ 'ALL','ALLTURBO' ],
     'BUILDERTYPE' : 'StrippingTrackEffVeloMuonConf',
@@ -153,7 +150,6 @@ TrackEffVeloMuon = {
     }
 
 CharmFromBSemiForHadronAsy = {
-    'CharmFromBSemiForHadronAsy' : {
         'WGs'         : ['ALL'],
         'BUILDERTYPE' : 'CharmFromBSemiForHadronAsyAllLinesConf',
         'CONFIG'      : {
@@ -220,11 +216,9 @@ CharmFromBSemiForHadronAsy = {
             ,"Lc2Kpi_B_VCHI2NDF_MAX" : 15. # adimensional
             },
         'STREAMS'     : ["Calibration"]
-        }
     }
 
 CharmFromBSemiForProtonPID = {
-    'CharmFromBSemiForProtonPID' : {
         'WGs'         : ['ALL'],
         'BUILDERTYPE' : 'CharmFromBSemiForProtonPIDAllLinesConf',
         'CONFIG'      : {
@@ -249,11 +243,9 @@ CharmFromBSemiForProtonPID = {
             ,"LambdaB_VCHI2NDF"     : 3 # adimentional
             },
         "STREAMS":["PID"]
-        }
     }
         
 D02KPiPi0 = {
-    'NAME'        : 'D02KPiPi0',
     'WGs'         : ['ALL'],
     'BUILDERTYPE' : 'StrippingD02KPiPi0Conf',
     'CONFIG'      : {   'TrackMinPT_M'         : 300       # MeV
@@ -279,7 +271,6 @@ D02KPiPi0 = {
     }
 
 DstarD02KShhForTrackingEff = {
-        'NAME' : 'DstarD02KShhForTrackingEff',
         'BUILDERTYPE' : 'DstarD02KShh_ForTrackingEffBuilder',
         'CONFIG' : {'LongTrackGEC'          :    150
                   , 'Trk_PT_MIN'            :  600.0
@@ -321,7 +312,6 @@ DstarD02KShhForTrackingEff = {
                 }
 
 noPIDDstar =  {
-    'NAME'       : 'noPIDDstar',
     'WGs'        : ['ALL'],
     'BUILDERTYPE': 'NoPIDDstarWithD02RSKPiConf',
     'CONFIG'     :{
@@ -357,7 +347,6 @@ noPIDDstar =  {
 }
 
 PIDCalib = {
-    'NAME'              : 'PIDCalib',
     'BUILDERTYPE'       : 'DiMuonConf',
     'WGs'               : [ 'ALL' ],
     'BUILDERTYPE'       : 'PIDCalibLineBuilder',
@@ -672,7 +661,6 @@ PIDCalib = {
 }
 
 ProtonAsym = {
-    "NAME": "ProtonAsym",
     "WGs": ["ALL"],
     "BUILDERTYPE": "ProtonAsymBuilder",
     "CONFIG": {
@@ -815,7 +803,6 @@ ProtonAsym = {
 }
 
 SigmacForPID = {
-  'NAME' : 'SigmacForPID',
   'BUILDERTYPE' : 'SigmacForPIDConf',
   'CONFIG'      : {
     #
@@ -886,7 +873,6 @@ TrackEffD0ToK3Pi = {
     }
 
 TrackEffD0ToKPi = {
-        'NAME'        : 'TrackEffD0ToKPi',
         'WGs'         : ['ALL'],
         'BUILDERTYPE' : 'TrackEffD0ToKPiAllLinesConf',
         'STREAMS':["Calibration"],
