@@ -93,7 +93,7 @@ DECLARE_ALGORITHM_FACTORY( ChargedPP2MC )
 
   m_trackLocations.push_back(TrackLocation::Default);
   declareProperty("TrackLocations", m_trackLocations );
-  declareProperty("InputData", m_inputData );
+  setProperty("InputData", m_inputData );
   declareProperty("VetoEmpty", m_vetoempty=false );
 }
 

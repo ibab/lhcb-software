@@ -4,6 +4,11 @@
 ! Responsible : Vladimir Gligorov
 !==============================================================================
 
+! 2015-06-03 - Eduardo Rodrigues
+ - ChargedPP2MC algo.: a declareProperty changed to setProperty to remove
+   compilation warnings of the kind "WARNING duplicated property name 'InputData',
+   see https://its.cern.ch/jira/browse/GAUDI-1023".
+
 !==================== DaVinciAssociators v9r7 2015-05-30 ======================
 
 ! 2015-05-28 - Sean Benson
