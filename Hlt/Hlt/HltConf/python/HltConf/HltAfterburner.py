@@ -27,7 +27,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
         """
         HLT Afterburner configuration
         """
-        Afterburner = Sequence("HltAfterburner")
+        Afterburner = Sequence("HltAfterburner", IgnoreFilterPassed = True)
         if self.getProp("Hlt2Filter"):
             from DAQSys.Decoders import DecoderDB
             decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
