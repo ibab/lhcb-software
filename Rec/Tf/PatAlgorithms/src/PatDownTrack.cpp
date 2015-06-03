@@ -15,17 +15,19 @@
 //=============================================================================
 PatDownTrack::PatDownTrack( LHCb::Track* tr, 
                             double zTT,
-                            const std::vector<double>& magnetParams,
-                            const std::vector<double>& momentumParams,
+                            const std::array<double,7>& magnetParams,
+                            const std::array<double,3>& momentumParams,
                             const std::vector<double>& yParams,
                             const double magnetScale) :
   m_magPar(&magnetParams), 
   m_momPar(&momentumParams), 
   m_track(tr),
   m_magnetScale(magnetScale), 
-  m_zTT(zTT)
+  m_zTT(zTT),
+  m_ignore(false),
+  m_firedLayers(0)
 {
-  m_hits.reserve(8);
+  m_hits.reserve(6);
     
   // -- Number of IT hits
   const unsigned int nbIT = std::count_if( tr->lhcbIDs().begin(), tr->lhcbIDs().end(), 
@@ -42,8 +44,10 @@ PatDownTrack::PatDownTrack( LHCb::Track* tr,
     magnetParams[5] * std::abs( m_state->y() ) +
     magnetParams[6] * std::abs( m_state->ty() );
   
+  
+
   const double dz      = zMagnet - m_state->z();
-  const double xMagnet = m_state->x() + dz * m_state->tx();
+  double xMagnet = m_state->x() + dz * m_state->tx();
   m_slopeX       = xMagnet / zMagnet;
   
   const double dSlope = std::abs( m_slopeX - m_state->tx() );
@@ -56,7 +60,6 @@ PatDownTrack::PatDownTrack( LHCb::Track* tr,
   m_slopeY = by * ( 1. + yParams[0] * fabs(by) * dSlope2 );
  
   const double yMagnet = m_state->y() + dz * by - yParams[1] * by * dSlope2;
-  m_magnet = Gaudi::XYZPoint( xMagnet, yMagnet, zMagnet );
   
   // -- These resolutions are semi-empirical and are obtained by fitting residuals
   // -- with MCHits and reconstructed tracks
@@ -69,6 +72,8 @@ PatDownTrack::PatDownTrack( LHCb::Track* tr,
     m_errYMag = dSlope2 * 80.0 + dSlope * 10.0 + 4.0;
   }
 
+  m_magnet = Gaudi::XYZPoint( xMagnet, yMagnet, zMagnet );
+
   //=== Save for reference
   m_magnetSave = m_magnet;
   m_slopeXSave = m_slopeX;
@@ -76,7 +81,6 @@ PatDownTrack::PatDownTrack( LHCb::Track* tr,
   m_displY     = 0.;
 
   //=== Initialize all other data members
-  m_moment     = 0.;
   m_chi2       = 0.;
   m_slopeXCand = m_slopeX;
 

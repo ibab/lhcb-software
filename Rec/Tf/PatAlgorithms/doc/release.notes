@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-06-02 - Michel De Cian
+ - Modify PatDownTrack, and as a consequence PatDownstream, in preparation for a modified downstream algorithm
+
 !========================= PatAlgorithms v4r41 2015-05-26 =========================
 ! 2015-05-14 - Manuel Tobias Schiller
  - PatSeedingTool: fix a bug where the PatSeeding output depended on the

@@ -220,12 +220,18 @@ StatusCode PatDownstream::execute() {
   // Main loop on tracks
   //==========================================================================
   Tf::TTStationHitManager<PatTTHit>::HitRange ttCoords = m_ttHitManager->hits();
+
+  std::array<double,7> magPars = { m_zMagnetParams[0], m_zMagnetParams[1], m_zMagnetParams[2], m_zMagnetParams[3], 
+                                   m_zMagnetParams[4], m_zMagnetParams[5], m_zMagnetParams[6] };
+  std::array<double,3> momPars = { m_momentumParams[0], m_momentumParams[1], m_momentumParams[2] };
+
+
   
   for ( LHCb::Track* tr : myInTracks ) {
     
     if ( 0 <= m_seedKey && m_seedKey == tr->key() ) m_printing = true;
     
-    PatDownTrack track( tr, m_zTT, m_zMagnetParams, m_momentumParams, m_yParams, magScaleFactor*(-1) );
+    PatDownTrack track( tr, m_zTT, magPars, momPars, m_yParams, magScaleFactor*(-1) );
     
     // -- Veto particles coming from the beam pipe.
     if( insideBeampipe( track ) ) continue;
