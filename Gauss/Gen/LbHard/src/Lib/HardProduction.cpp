@@ -157,7 +157,7 @@ void HardProduction::printRunningConditions() {
 //=============================================================================
 // Returns whether a particle has special status.
 //=============================================================================
-bool HardProduction::isSpecialParticle(const LHCb::ParticleProperty *thePP)
+bool HardProduction::isSpecialParticle(const LHCb::ParticleProperty */*thePP*/)
   const {return false;}
 
 //=============================================================================
@@ -190,8 +190,8 @@ void HardProduction::hardUpdateParticleProperties(const LHCb::ParticleProperty
 void HardProduction::hardPrintRunningConditions()
 {if (m_hard && m_hard != m_shower) m_hard->printRunningConditions();}
 
-bool HardProduction::hardIsSpecialParticle(const LHCb::ParticleProperty* thePP)
-  const {return false;}
+bool HardProduction::hardIsSpecialParticle(const LHCb::ParticleProperty 
+					   */*thePP*/) const {return false;}
 
 //=============================================================================
 // The END.
