@@ -4,6 +4,8 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!======================= DecayTreeTuple v5r0 2015-06-03 =====================
+
 ! 2015-06-03 - Lucio Anderlini
  - Updated TupleToolTwoParticleMatching:
    . added property "ToolList" which will replace "TupleTools", for conformity
@@ -14,8 +16,6 @@
      converted to map<string,string>) where the first string is a particle
      name (present in LHCb Particle Database), and the second is the match
      location. An example is reported in the updated doxygen documentation.
-
-!======================= DecayTreeTuple v4r15 2015-05-30 =====================
 
 ! 2015-05-11 - Eduardo Rodrigues
  - Removed warning in compilation of TupleToolTwoParticleMatching.
