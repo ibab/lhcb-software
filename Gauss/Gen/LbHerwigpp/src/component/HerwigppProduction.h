@@ -1,11 +1,12 @@
 #ifndef LBHERWIGPP_HERWIGPPPRODUCTION_H 
 #define LBHERWIGPP_HERWIGPPPRODUCTION_H 1
 
+using namespace std;
+
 // Beamtool declaration.
 class IBeamTool;
 
 /** 
- * 
  * Wrapper for ThePEG::EventGenerator class to provide RandomGenerator access.
  *
  * Random generators in ThePEG should be accessed using ThePEG::UseRandom
@@ -40,7 +41,6 @@ public:
 };
 
 /**
- * 
  * Production tool to generate events with Herwig++.
  * 
  * Production of events using the Herwig++ Monte Carlo event generator is
@@ -49,6 +49,12 @@ public:
  * including full helicity correlations, cluster hadronization, and NLO ME
  * implementations using the the POWHEG matching method.
  * 
+ * If NLO production is requested the user should enable it by setting
+ * "Nlo" to True. This will then parse the "NloCommands" instead of
+ * "Commands" and will automatically attempt to switch the hard
+ * process PDF set to an NLO PDF set. However, if any NLO user setting
+ * contains "p+:PDF" then the hard process PDF is not changed.
+ *
  * @class  HerwigppProduction
  * @file   HerwigppProduction.h 
  * @author Philip Ilten
@@ -56,10 +62,10 @@ public:
  */
 class HerwigppProduction : public GaudiTool, virtual public IProductionTool {
  public:
-  typedef std::vector<std::string> CommandVector;
+  typedef vector<string> CommandVector;
   
   /// Default constructor.
-  HerwigppProduction(const std::string &type, const std::string &name,
+  HerwigppProduction(const string &type, const string &name,
 		     const IInterface *parent);
   
   /// Default destructor.
@@ -145,10 +151,10 @@ class HerwigppProduction : public GaudiTool, virtual public IProductionTool {
   /// This method is not implemented.
   virtual void printRunningConditions();
 
-  /// This methid is not implemented.
+  /// This method is not implemented.
   virtual bool isSpecialParticle(const LHCb::ParticleProperty *thePP) const;
 
-  /// This methid is not implemented.
+  /// This method is not implemented.
   virtual StatusCode setupForcedFragmentation(const int thePdgId);
 
   /**
@@ -175,7 +181,7 @@ class HerwigppProduction : public GaudiTool, virtual public IProductionTool {
 protected:
 
   /// Convert a number to a string.
-  std::string numToString(double num);
+  string numToString(double num);
 
   /**
    * Replace special characters in the command string.
@@ -188,23 +194,25 @@ protected:
    * this with an actual ";" in the following code. Additionally, tab
    * characters are correctly converted to spaces.
    */
-  std::string replaceSpecialCharacters(std::string str);
+  string replaceSpecialCharacters(string str);
   
 private:
-
-  bool m_printEvent;               ///< Flag to print the event to screen.
 
   CommandVector m_defaultSettings; ///< Herwig++ default settings.
   CommandVector m_minbiasSettings; ///< Herwig++ minbias settings.
   CommandVector m_userSettings;    ///< Herwig++ user settings.
-  
-  std::string m_beamToolName;      ///< Name of beam tool.
-  std::string m_writeEventOutput;  ///< File name to write output.
+  CommandVector m_nloUserSettings; ///< NLO Herwig++ user settings.
+
+  bool m_nlo;                      ///< Flag to use NLO user settings.
+  bool m_printEvent;               ///< Flag to print the event to screen.
+  string m_beamToolName;           ///< Name of beam tool.
+  string m_writeEventOutput;       ///< File name to write output.
   HepMC::IO_GenEvent *m_hepmcOut;  ///< HepMC output object.
-  std::string m_readEventInput;    ///< File name of HepMC event to read.
+  string m_readEventInput;         ///< File name of HepMC event to read.
   
   int m_id1 , m_id2;               ///< PDG ID's for the beams. 
   double m_cme;                    ///< Center of mass energy.
+  map<string, string> m_pdfs;      ///< Map of LO to NLO PDFs.
   
   IBeamTool *m_beamTool;           ///< Beam tool.
   
