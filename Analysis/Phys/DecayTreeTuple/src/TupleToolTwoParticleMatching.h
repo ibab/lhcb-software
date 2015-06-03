@@ -43,8 +43,17 @@
  * @code
  * matching_tools = [ "TupleToolKinematic", "TupleToolMCTruth", "TupleToolMCBackgroundInfo"]
  * tm = tesla_tuple.addTupleTool(TupleToolTwoParticleMatching, name = "TupleToolTwoParticleMatching")
- * tm.MatchWith = "Phys/SelMyJPsi/Particles" #Locaion of particles to match with
- * tm.TupleTools = matching_tools
+ * tm.MatchLocations = {
+ *  "J/psi(1S)" : "Phys/SelMyJPsi/Particles",   #Location of particles to match J/psi with
+ *  }
+ * tm.ToolList = matching_tools
+ *
+ * from Configurables import LoKi__Hybrid__TupleTool as LoKiTool
+ * lokitool = LoKiTool ( "MatchedLoki" )
+ * lokitool.Variables = { "P" : "P" }
+ * tm.addTool ( tm )
+ * tm.ToolList += ["LoKi::Hybrid::TupleTool/MatchedLoki"]
+ *
  * @endcode
  *
  * \sa DecayTreeTuple
@@ -75,9 +84,13 @@ public:
                           Tuples::Tuple& );
 
 private:
-  std::string m_matching_location;
   std::vector<std::string> m_toolNames;
   std::vector<IParticleTupleTool*> m_tuple;
+  std::string m_headPrefix, m_headSuffix;
+  std::string m_matching_location;
+
+  std::map <std::string, std::string> m_matching_locations;
+  std::map <int, std::string>         m_parsed_locations;
   
 };
 
