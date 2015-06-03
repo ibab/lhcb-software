@@ -96,6 +96,8 @@ default_config =  {
   'B2TauMu_SameSign_TOSLinePostscale'      : 1,
   'B2DPi_SameSign_LinePrescale'            : 0.5,
   'B2DPi_SameSign_LinePostscale'           : 1,
+  'HLT_DECISIONS_HAD'    : {'Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision%TOS' : 0},
+  'HLT_DECISIONS_MUON'  : {"Hlt2(TopoMu|SingleMuon).*Decision%TOS": 0},
   'RelatedInfoTools'      : [
   #1
   { "Type" : "RelInfoBstautauMuonIsolationBDT"
@@ -262,6 +264,8 @@ class B2XTauConf(LineBuilder) :
                             'B2TauMu_SameSign_TOSLinePostscale',
                             'B2DPi_SameSign_LinePrescale',
                             'B2DPi_SameSign_LinePostscale',
+                            'HLT_DECISIONS_HAD',
+                            'HLT_DECISIONS_MUON',
                             'RelatedInfoTools'
                             )
   
@@ -325,12 +329,12 @@ class B2XTauConf(LineBuilder) :
                                    pionSel = self.selPions,
                                    config  = config)
 
-    self.selB2TauTauTOS     = self._makeTOS(name+"_TOSForTauTau",self.selB2TauTau)
-    self.selB2TauTauSSTOS   = self._makeTOS(name+"_TOSForTauTauSS",self.selB2TauTauSS)
-    self.selB2TauTaupiSSTOS = self._makeTOS(name+"_TOSForTauTaupiSS",self.selB2TauTaupiSS)
-    self.selB2TauMuTOS      = self._makeTOS(name+"_TOSForTauMu",self.selB2TauMu)
-    self.selB2TauMupiSSTOS  = self._makeTOS(name+"_TOSForTauMupiSS",self.selB2TauMupiSS)
-    self.selB2TauMuSSTOS    = self._makeTOS(name+"_TOSForTauMuSS",self.selB2TauMuSS)
+    self.selB2TauTauTOS     = self._makeTOS(name+"_TOSForTauTau",self.selB2TauTau,config)
+    self.selB2TauTauSSTOS   = self._makeTOS(name+"_TOSForTauTauSS",self.selB2TauTauSS,config)
+    self.selB2TauTaupiSSTOS = self._makeTOS(name+"_TOSForTauTaupiSS",self.selB2TauTaupiSS,config)
+    self.selB2TauMuTOS      = self._makeTOS(name+"_TOSForTauMu",self.selB2TauMu,config)
+    self.selB2TauMupiSSTOS  = self._makeTOS(name+"_TOSForTauMupiSS",self.selB2TauMupiSS,config)
+    self.selB2TauMuSSTOS    = self._makeTOS(name+"_TOSForTauMuSS",self.selB2TauMuSS,config)
 
     #
     # Define StrippingLines
@@ -946,12 +950,12 @@ class B2XTauConf(LineBuilder) :
     tisTosFilter.TOSFrac = {4:0.0, 5:0.0}
     return tisTosFilter
   
-  def _makeTOS(self, name, sel):
+  def _makeTOS(self, name, sel, config):
     ''' TOS filters selections'''
     if ((name.find('TauMu') > -1) or (name.find('DMu') > -1)):
-      tisTosFilter = self._makeTISTOSFilter(name,{HLT_DECISIONS_MUON+'%TOS':0})
+      tisTosFilter = self._makeTISTOSFilter(name,config['HLT_DECISIONS_MUON'])
     else :
-      tisTosFilter = self._makeTISTOSFilter(name,{HLT_DECISIONS_HAD+'%TOS':0})
+      tisTosFilter = self._makeTISTOSFilter(name,config['HLT_DECISIONS_HAD'])
     return Selection(name, Algorithm=tisTosFilter, RequiredSelections=[sel])
   
 

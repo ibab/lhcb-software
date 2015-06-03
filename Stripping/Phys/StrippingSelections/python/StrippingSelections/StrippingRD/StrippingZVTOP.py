@@ -57,8 +57,6 @@ config_params =  {
   'PT_B_PIONS_TOTAL'              :  '7000',# MeV
   'B_TAUPI_2NDMINIPS'             :  '20',  # dimensionless
   #
-  'HltFilter'               : "HLT_PASS_RE('Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision')",
-  #
   'RelatedInfoTools'      : [
   #1
   { "Type" : "RelInfoBstautauMuonIsolationBDT"
@@ -108,9 +106,9 @@ config_params =  {
   { "Type" : "RelInfoBstautauZVisoBDT" 
     ,"RecursionLevel" : 0
     , "Variables" : ['ZVISOTAUP','ZVISOTAUM']
-     , "Location"  : "ZVisoBDT"
+    , "Location"  : "ZVisoBDT"
     }
-  ],
+  ]
 }
 
 __all__ = ('ZVTOP_Conf',
@@ -127,9 +125,6 @@ from StandardParticles import StdLooseKaons
 from Configurables import TopoTauAlg,TopoVertexTool
 
 default_name = "ZVTOP"
-HLT_DECISIONS_HAD   = "Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision"
-HLT1_DECISIONS_TIS  = "Hlt1TrackAllL0Decision"
-HLT2_DECISIONS_TIS  = "Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision"
 
 default_config = {'NAME'       : 'ZVTOP',
                   'BUILDERTYPE': 'ZVTOP_Conf',
@@ -195,7 +190,6 @@ class ZVTOP_Conf(LineBuilder) :
                             'IPCHI2_B_TAU_CHILD_WORSE',
                             'PT_B_PIONS_TOTAL',
                             'B_TAUPI_2NDMINIPS',
-                            'HltFilter',
                             #
                             'RelatedInfoTools'
                             )
@@ -237,7 +231,6 @@ class ZVTOP_Conf(LineBuilder) :
                                                           config  = config)
     #
     self.TauTau_Line    = StrippingLine(name+"_TauTau_Line",
-                                        #    HLT = config['HltFilter'],
                                         #    self.TauTau_Line    = StrippingLine(name+"_TauTau_Line",
                                         prescale    = config['B2TauTau_LinePrescale'],
                                         postscale   = config['B2TauTau_LinePostscale'],
@@ -256,7 +249,6 @@ class ZVTOP_Conf(LineBuilder) :
                                         )
 
     self.TauTauSS_Line  = StrippingLine(name+"_TauTauSS_Line",
-                                        #    HLT = config['HltFilter'],
                                         #    self.TauTau_Line    = StrippingLine(name+"_TauTau_Line",
                                         prescale    = config['B2TauTauSS_LinePrescale'],
                                         postscale   = config['B2TauTauSS_LinePostscale'],
@@ -275,7 +267,6 @@ class ZVTOP_Conf(LineBuilder) :
                                         ) 
     
     self.High_Line    = StrippingLine(name+"_High_Line",
-                                      #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                       prescale    = config['High_LinePrescale'],
                                       postscale   = config['High_LinePostscale'],
                                       #                                           selection   = self._makeTOS(name+"_TOSForTauTau",selB2TauTau)
@@ -287,7 +278,7 @@ class ZVTOP_Conf(LineBuilder) :
                                              { "Type" : "RelInfoBstautauTrackIsolation" ,"RecursionLevel" : 0, "Location"  : "TrackIsolation"},
                                              { "Type" : "RelInfoBstautauCDFIso" ,"RecursionLevel" : 0, "Location"  : "CDFIso"  },
                                              { "Type" : "RelInfoBstautauZVisoBDT" ,"RecursionLevel" : 0 , "Location"  : "ZVisoBDT"},
-                                             { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/ZVTOP_High_Line" : "BVars_VertexIsoInfo","Phys/ZVTOP_HighFilter" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"]}}
+                                             { "Type" : "RelInfoVertexIsolation","RecursionLevel" : 1, "Locations" : {"Phys/ZVTOP_High_Line" : "BVars_VertexIsoInfo","Phys/ZVTOP_IncTopoVtxFor" : ["TauVars_VertexIsoInfo_0","TauVars_VertexIsoInfo_1"]}}
                                             ],
                                       selection   = self.selHigh
                                       )
@@ -462,29 +453,4 @@ class ZVTOP_Conf(LineBuilder) :
                             RequiredSelections = [ tauSel ] )
 
     return selTauTauOS,selTauTauSS
-  
-  #####################################################
-  # TISTOSING
-  #####################################################
-  def _makeTISTOSFilter(self,name,specs):
-    from Configurables import TisTosParticleTagger
-    tisTosFilter = TisTosParticleTagger(name+'TISTOSFilter')
-    tisTosFilter.TisTosSpecs = specs
-    tisTosFilter.ProjectTracksToCalo = False
-    tisTosFilter.CaloClustForCharged = False
-    tisTosFilter.CaloClustForNeutral = False
-    tisTosFilter.TOSFrac = {4:0.0, 5:0.0}
-    return tisTosFilter
-  
-  def _makeTOS(self, name, sel):
-    ''' TOS filters selections'''
-    tisTosFilter = self._makeTISTOSFilter(name,{HLT_DECISIONS_HAD+'%TOS':0})
-    return Selection(name, Algorithm=tisTosFilter, RequiredSelections=[sel])
-  
-  def _makeTIS(self, name, sel):
-    ''' TIS filters selections'''
-    tisTosFilter = self._makeTISTOSFilter(name,
-                                          {HLT1_DECISIONS_TIS+'%TIS':0,HLT2_DECISIONS_TIS+'%TIS':0})
-    return Selection(name, Algorithm=tisTosFilter, RequiredSelections=[sel])
-  
   
