@@ -526,28 +526,28 @@ D2HHH_DspToKmKpKp = DetachedHHHCombiner( 'D2HHH_DspToKmKpKp'
         , inputs = [ SharedDetachedDpmChild_K ]
         , nickname = 'Ds2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
 
-## Main line Lambda_c+ -> 3h combiners
-Lc2HHH_LcpToKmPpPip = DetachedHHHCombiner( 'Lc2HHH_LcpToKmPpPip'
+## Main line Lambda_c+/Xi_c+ -> 3h combiners
+LcXic2HHH_LcpToKmPpPip = DetachedHHHCombiner( 'LcXic2HHH_LcpToKmPpPip'
         , decay = "[Lambda_c+ -> K- p+ pi+]cc"
         , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_K,
                      SharedDetachedLcChild_pi ]
-        , nickname = 'Lc2HHH' ) ## 'Lc2HHH' defined in D2HHHLines.py
+        , nickname = 'LcXic2HHH' ) ## 'LcXic2HHH' defined in D2HHHLines.py
 
-Lc2HHH_LcpToKmPpKp = DetachedHHHCombiner( 'Lc2HHH_LcpToKmPpKp'
+LcXic2HHH_LcpToKmPpKp = DetachedHHHCombiner( 'LcXic2HHH_LcpToKmPpKp'
         , decay = "[Lambda_c+ -> K- p+ K+]cc"
         , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_K ]
-        , nickname = 'Lc2HHH' ) ## 'Lc2HHH' defined in D2HHHLines.py
+        , nickname = 'LcXic2HHH' ) ## 'LcXic2HHH' defined in D2HHHLines.py
 
-Lc2HHH_LcpToPimPpPip = DetachedHHHCombiner( 'Lc2HHH_LcpToPimPpPip'
+LcXic2HHH_LcpToPimPpPip = DetachedHHHCombiner( 'LcXic2HHH_LcpToPimPpPip'
         , decay = "[Lambda_c+ -> pi- p+ pi+]cc"
         , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_pi ]
-        , nickname = 'Lc2HHH' ) ## 'Lc2HHH' defined in D2HHHLines.py
+        , nickname = 'LcXic2HHH' ) ## 'LcXic2HHH' defined in D2HHHLines.py
 
-Lc2HHH_LcpToPimPpKp = DetachedHHHCombiner( 'Lc2HHH_LcpToPimPpKp'
+LcXic2HHH_LcpToPimPpKp = DetachedHHHCombiner( 'LcXic2HHH_LcpToPimPpKp'
         , decay = "[Lambda_c+ -> pi- p+ K+]cc"
         , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_K,
                      SharedDetachedLcChild_pi ]
-        , nickname = 'Lc2HHH' ) ## 'Lc2HHH' defined in D2HHHLines.py
+        , nickname = 'LcXic2HHH' ) ## 'LcXic2HHH' defined in D2HHHLines.py
 
 
 ## Combiners for cross-section measurements

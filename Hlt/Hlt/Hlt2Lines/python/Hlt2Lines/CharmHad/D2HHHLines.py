@@ -36,9 +36,10 @@ class CharmHadD2HHHLines() :
                                  'Mass_M_MIN'               :  1889.0 * MeV,
                                  'Mass_M_MAX'               :  2049.0 * MeV,
                                 }, 
-                 # For the Lc lines, despite the name, the mass window is
-                 # wide enough to catch the Xi_c as well.
-                 'Lc2HHH'    : {
+                 ## The masses of Lambda_c+ and Xi_c+ are separated by 181 MeV,
+                 ##   so the mass windows are adjacent unless they are very
+                 ##   narrow.  It makes sense to do joint combinatorics.
+                 'LcXic2HHH' : {
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  6.0,
                                  'Trk_2OF3_MIPCHI2DV_MIN'   :  9.0,
                                  'Trk_1OF3_MIPCHI2DV_MIN'   :  16.0,
@@ -54,6 +55,15 @@ class CharmHadD2HHHLines() :
                                  'Mass_M_MIN'               :  2211.0 * MeV,
                                  'Mass_M_MAX'               :  2543.0 * MeV,
                                 },
+                 'Lc2HHH'    : {
+                                 'Mass_M_MIN'               :  2211.0 * MeV,
+                                 'Mass_M_MAX'               :  2362.0 * MeV,
+                                },
+                 'Xic2HHH'   : {
+                                 'Mass_M_MIN'               :  2392.0 * MeV,
+                                 'Mass_M_MAX'               :  2543.0 * MeV,
+                                },
+
                  # The combiner for the lifetime unbiased lines 
                  'Dpm2HHH_LTUNB' : {
                                  'TisTosSpec'               : "Hlt1Track.*Decision%TIS",
@@ -119,8 +129,8 @@ class CharmHadD2HHHLines() :
         from Stages import D2HHH_DspToKpKpPim,   D2HHH_DspToKmKpPip
         from Stages import D2HHH_DspToPimPipPip, D2HHH_DspToKmKpKp
         #
-        from Stages import Lc2HHH_LcpToKmPpPip, Lc2HHH_LcpToKmPpKp
-        from Stages import Lc2HHH_LcpToPimPpPip, Lc2HHH_LcpToPimPpKp
+        from Stages import LcXic2HHH_LcpToKmPpPip, LcXic2HHH_LcpToKmPpKp
+        from Stages import LcXic2HHH_LcpToPimPpPip, LcXic2HHH_LcpToPimPpKp
         
         stages = {# First the CPV D+ -> HHH lines, does not include KpKpPim as D+ does not
                   # decay to same-charge kaons
@@ -140,11 +150,14 @@ class CharmHadD2HHHLines() :
                   'DspToKmKpKpTurbo'         : [MassFilter('Ds2HHH', inputs=[D2HHH_DspToKmKpKp], reFitPVs = True)],
                   # Now the CPV Lc2HHH lines
                   'LcpToKmPpPipTurbo'        : [MassFilter('LcpToKmPpPip', nickname = 'Lc2HHH',
-                                                    inputs=[Lc2HHH_LcpToKmPpPip], shared = True,
+                                                    inputs=[LcXic2HHH_LcpToKmPpPip], shared = True,
                                                            reFitPVs = True)],
-                  'LcpToKmPpKpTurbo'         : [MassFilter('Lc2HHH',inputs=[Lc2HHH_LcpToKmPpKp], reFitPVs = True)],
-                  'LcpToPimPpPipTurbo'       : [MassFilter('Lc2HHH',inputs=[Lc2HHH_LcpToPimPpPip], reFitPVs = True)],
-                  'LcpToPimPpKpTurbo'        : [MassFilter('Lc2HHH',inputs=[Lc2HHH_LcpToPimPpKp], reFitPVs = True)], 
+                  'LcpToKmPpKpTurbo'         : [MassFilter('Lc2HHH',inputs=[LcXic2HHH_LcpToKmPpKp], reFitPVs = True)],
+                  'LcpToPimPpPipTurbo'       : [MassFilter('Lc2HHH',inputs=[LcXic2HHH_LcpToPimPpPip], reFitPVs = True)],
+                  'LcpToPimPpKpTurbo'        : [MassFilter('Lc2HHH',inputs=[LcXic2HHH_LcpToPimPpKp], reFitPVs = True)], 
+                  ## Xi_c+ -> p K- pi+, DO NOT SEND TO TURBO.
+                  'XicpToKmPpPip'        : [MassFilter('XicpToKmPpPip', nickname = 'Xic2HHH',
+                                                    inputs=[LcXic2HHH_LcpToKmPpPip], reFitPVs = True)],
                   # Now the three CF lifetime unbiased lines
                   'D2KPiPi_SS_LTUNBTurbo'    : [MassFilter('Dpm2HHH_LTUNB',inputs=[D2KPiPi_SS_LTUNB('Dpm2HHH_LTUNB')], 
                                                            reFitPVs = True)],
