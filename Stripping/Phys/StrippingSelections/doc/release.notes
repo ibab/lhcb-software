@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-03 - Andrea Contu
+ - Added new test scripts for liaisons and cordinators and modified collect_dicts.py script
+
 !========================== StrippingSelections v4r2 2015-05-29 ===============
 
 ! 2015-05-29 Chitsanu Khurewathanakul

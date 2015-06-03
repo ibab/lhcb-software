@@ -1,5 +1,5 @@
 # $Id: $
-# Test your line(s) of the stripping
+# Test your line(s) of the stripping by taking the dictionaries from StrippingSettings
 #  
 # NOTE: Please make a copy of this file for your testing, and do NOT change this one!
 #
@@ -22,15 +22,17 @@ juggler = RawEventJuggler( DataOnDemand=True, Input=2.0, Output=4.0 )
 
 # Specify the name of your configuration
 my_wg='Charm' #FOR LIAISONS
+stripping='stripping23'
 
 
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 
 # is defined.
+from StrippingSettings.Utils import strippingConfiguration
 from StrippingSelections import buildersConf
-confs = buildersConf()
+conf=strippingConfiguration(stripping)
 from StrippingSelections.Utils import lineBuilder, buildStreams
-streams = buildStreams( confs, WGs=my_wg )
+streams = buildStreams( conf, WGs=my_wg )
 
 leptonicMicroDSTname   = 'Leptonic'
 charmMicroDSTname      = 'Charm'
