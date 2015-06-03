@@ -4,6 +4,7 @@
 ! Purpose     : Adaptor package for Herwig++
 !-----------------------------------------------------------------------------
 
+!========================= LbHerwigpp v3r1 2015-06-03 ========================
 ! 2015-06-02 - Philip Ilten
  - Updated particle code translation.
  - Included method for handling NLO hard process generation.
