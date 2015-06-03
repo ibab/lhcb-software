@@ -447,7 +447,8 @@ StatusCode JsonConverter::execute() {
 
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "=====> Extracting Particles " << endmsg;
-  const std::string PartsTESLocation("/Event/Phys/StdAllNoPIDsPions/Particles");  
+  //const std::string PartsTESLocation("/Event/Phys/StdAllNoPIDsPions/Particles");  
+  const std::string PartsTESLocation("/Event/Phys/StdNoPIDsPions/Particles");  
   LHCb::Particles *inputParts = getIfExists<LHCb::Particles>(PartsTESLocation);
   Stream allParticlesJson(Container::LIST);
   int partCount = 0;
