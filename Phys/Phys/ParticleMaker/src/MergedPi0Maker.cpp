@@ -40,13 +40,13 @@ MergedPi0Maker::MergedPi0Maker( const std::string& name,ISvcLocator* pSvcLocator
   , m_clBase           ()
   , m_clSwitch         ()
 {
-  declareProperty ( "Input" , m_input = LHCb::ProtoParticleLocation::Neutrals ) ;
+  setProperty ( "Input" , LHCb::ProtoParticleLocation::Neutrals ) ;
   //
   declareProperty ( "ConfidenceLevelBase"        , m_clBase   ) ;
   declareProperty ( "ConfidenceLevelSwitch"      , m_clSwitch ) ;
   // Filter
   declareProperty( "ConfLevelCut"      , m_clCut = -99.     ) ; 
-  declareProperty( "PtCut"             , m_PtCut = 2000. * Gaudi::Units::MeV );
+  setProperty    ( "PtCut"             , 2000. * Gaudi::Units::MeV );
   declareProperty( "GammaPtCut"        , m_gPtCut = 0. * Gaudi::Units::MeV );
   declareProperty( "GammaGammaDistCut" , m_ggDistCut = 2.8 ); // Unit = cellSize
   declareProperty( "Chi2Cut"           , m_chi2Cut   = 1.  );

@@ -3,6 +3,12 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
+
+! 2015-06-03 - Eduardo Rodrigues
+ - Various declareProperty changed to setProperty to remove compilation warnings
+   of the kind "WARNING duplicated property name 'Particle',
+   see https://its.cern.ch/jira/browse/GAUDI-1023".
+
 !======================= ParticleMaker v6r14 2015-04-22 =======================
 
 ! 2015-01-16 : Olivier Deschamps

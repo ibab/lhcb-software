@@ -35,7 +35,7 @@ Pi0MakerBase::Pi0MakerBase
   // Filter
   declareProperty( "MassWindow"     , m_MassWin = 30. * Gaudi::Units::MeV);
   declareProperty( "PtCut"          , m_PtCut = 0. * Gaudi::Units::MeV);
-  declareProperty( "Particle"       , m_pid = "pi0");
+  setProperty    ( "Particle"       , "pi0");
   declareProperty( "FirstPVasOrigin", m_setPV = false);
   // 
   //
