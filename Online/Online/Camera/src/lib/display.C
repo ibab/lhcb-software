@@ -31,7 +31,7 @@ InfoWindow::~InfoWindow()
 
 void InfoWindow::ShowCont(const std::string& ins)
 {
-  //std::cout << "in ShowCont " << ins << std::endl;
+  std::cout << "in ShowCont " << ins << std::endl;
 
   SetBit(kDontCallClose);
   const std::string& cfile = ins;
@@ -350,7 +350,7 @@ void InfoWindow::Layout(){
   //  fMainFrame892->CallClose();
 }
 
-void InfoWindow::display(int x,int y)
+void InfoWindow::display(const int x, const int y)
 {
 
   int textsize = 100;

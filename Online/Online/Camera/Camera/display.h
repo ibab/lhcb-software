@@ -114,7 +114,7 @@
 using namespace std;
 #include "container_ROOT.h"
 
-class InfoWindow:public TGMainFrame
+class InfoWindow : public TGMainFrame
 {
 
 private:
@@ -148,7 +148,7 @@ public:
   void DoResize();
   void raise();
   void Layout();
-  void display(int x=600,int y=700);
+  void display( const int x=600, const int y=700 );
   
   TCanvas * canvas();
 

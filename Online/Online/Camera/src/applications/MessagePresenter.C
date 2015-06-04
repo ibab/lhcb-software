@@ -1,5 +1,3 @@
-// By ROOT version 5.12/00 on 2007-05-17 12:02:29
-// Mainframe macro generated from application: /usr/local/root/bin/root.exe
 
 #include <cmath>
 
@@ -142,7 +140,8 @@ void MessagePresenter::UpdateRight()
       string::size_type position1 = allpairs[j].find("/");
       string::size_type position2 = allpairs[j].find("\\");
       int isextra=0;
-      if (position2 != string::npos ){
+      if ( position2 != string::npos )
+      {
         isextra=1;
         xinfostring = allpairs[j].substr(position2+1);
       }
@@ -454,10 +453,13 @@ void MessagePresenter::addwarning(const std::string & msg,const int ref)
 int MessagePresenter::GetXtra(const std::string & str, 
                               std::string & cachedfile)
 {
+  cout << "In MessagePresenter::GetXtra " << str << " " 
+       << cachedfile << endl;
 
   std::string::size_type position1 = str.find("/");
 
-  if (position1 == std::string::npos){ // cpb format check
+  if ( position1 == std::string::npos )
+  { // cpb format check
     std::cerr << "No / in message"<<std::endl;
     return 0;
   }
@@ -474,10 +476,10 @@ int MessagePresenter::GetXtra(const std::string & str,
     // cerr << "Using proxy "<< getenv("CAMPROXY") <<endl;
   }
 
-  std::string::size_type position2 = add.find(":");
+  const std::string::size_type position2 = add.find(":");
   std::string host(add), port("8888");
 
-  if (position2 != std::string::npos)
+  if ( position2 != std::string::npos )
   {
     host = add.substr(0,position2);
     port = add.substr(position2+1);
@@ -491,17 +493,18 @@ int MessagePresenter::GetXtra(const std::string & str,
   //     }
   //   }
 
-  FILE *F = fopen(to.c_str(),"wb");
+  FILE * F = fopen(to.c_str(),"wb");
   if ( F == NULL )
   {
-    std::cerr<< "Could not open cache file: "<<to.c_str()<<endl;
+    std::cerr << "Could not open cache file: " << to << endl;
     perror("fopen in GetXtra:");
     return 0;
   }
 
-  client c(host.c_str(),atoi(port.c_str()));
+  client c( host.c_str(), atoi(port.c_str()) );
 
-  if (c.Connect()>0){
+  if ( c.Connect() > 0 ) 
+  {
     //cout <<"GET " <<file.c_str()<<endl;
     c.wr("GET ",4);
     c.wr(file.c_str(),strlen(file.c_str()));
@@ -519,8 +522,9 @@ int MessagePresenter::GetXtra(const std::string & str,
     fclose(F);
     cachedfile = to;
   }
-  else{
-    // std::cerr << "Error Connecting"<<std::endl;
+  else
+  {
+    std::cerr << "Error Connecting to client" << std::endl;
     return -1;
   }
 
@@ -851,22 +855,23 @@ void MessagePresenter::dumpelog()
 void MessagePresenter::selectright()
 {
 
-  Int_t i =  fListBox863->GetSelected();
+  Int_t i = fListBox863->GetSelected();
+  cout << "In MessagePresenter::selectright " << i << endl;
 
-  if ( extradata[i]==""){
-
+  if ( extradata[i] == "" ) { 
+    cerr << " -> extradata is empty" << endl;
     return ;
-
   }
+
   std::string cfile;
-  if ( GetXtra(extradata[i],cfile)> 0)
+  if ( GetXtra(extradata[i],cfile) > 0)
   {
     if (iwAlive < 1) iw = new InfoWindow(&iwAlive);
     if (iwAlive < 2) iw->display();
     if (iwAlive>1) iw ->ShowCont(cfile);
   }
-
-  else{
+  else
+  {
     fStatusBar528->SetText("Error retrieving extra data.");
   }
 
@@ -1094,7 +1099,9 @@ void MessagePresenter::messageloop( const char * host, const char * file )
     TGString savestat = (TGString)"";
 
     cachefileName  = getCacheFilename();
+    cout << "cache file " << cachefileName << endl;
     xcachefileName = getXCacheFilename();
+    cout << "xcache file " << xcachefileName << endl;
     checkCacheFileLength();
     readCacheFile();
 
