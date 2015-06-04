@@ -4,7 +4,11 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-06-04 - Roel Aaij
+ - Fully suppress the warnings in absence of data and write a size of 0.
+
 !========================= RecAlgs v3r3 2015-05-26 =========================
+
 ! 2015-05-19 - Sean Benson
  - Allow RecSummaryAlg to use separate downstream and long containers (like those in HLT).
 

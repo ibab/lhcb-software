@@ -72,7 +72,8 @@ private:
      if (size) {
         summary->addInfo( id, *size );
      } else {
-        Warning( "No data at '" + location + "'" ).ignore();
+        summary->addInfo( id, 0 );
+        Warning( "No data at '" + location + "'", StatusCode::FAILURE, 0 ).ignore();
      }
   }
 
@@ -121,10 +122,10 @@ private:
 
   /// Location in the TES to load the recosntructed tracks from
   std::string m_trackLoc;
-  
+
   /// Are split track locations used in the HLT
   bool m_split;
-  
+
   /// Location in the TES of split long tracks in the HLT
   std::string m_trackLongLoc;
 
