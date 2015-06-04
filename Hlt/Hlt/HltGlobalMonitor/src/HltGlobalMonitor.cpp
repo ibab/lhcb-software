@@ -495,7 +495,7 @@ void HltGlobalMonitor::handle( const Incident& incident )
          incident.type() == "RunChange" )
         m_startClock = m_startEvent;
     using seconds = std::chrono::duration<double>;
-    m_currentTime = std::chrono::duration_cast<seconds>( std::chrono::high_resolution_clock::now() - m_startEvent ).count();
+    m_currentTime = std::chrono::duration_cast<seconds>( std::chrono::high_resolution_clock::now() - m_startClock ).count();
 }
 
 //==============================================================================
