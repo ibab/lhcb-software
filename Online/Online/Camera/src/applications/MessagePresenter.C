@@ -510,7 +510,8 @@ int MessagePresenter::GetXtra(const std::string & str,
     c.wr(file.c_str(),strlen(file.c_str()));
     c.wr("\n",1);
     //c.shutwr();
-    char buf[512];int r;
+    char buf[512]; 
+    int r;
     while ((r = c.rd(buf,511))!=-1){
       if (r!=-2){
         buf[r] = '\0';
