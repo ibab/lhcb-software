@@ -32,6 +32,7 @@ class CharmHad_EM2015 :
             'Hlt2CharmHadDst_2DsGamma_Ds2KKPi_XSecTurbo',
             'Hlt2CharmHadDst_2D0Pi_D02K3Pi_XSecTurbo',
             'Hlt2CharmHadSigmac_2LcPi_XSecTurbo',
+            'Hlt2CharmHadXic0ToPpKmKmPipTurbo'
        ]
 
 
@@ -40,8 +41,73 @@ class CharmHad_EM2015 :
     def Thresholds(self) :
 
         d = {}
-        from Hlt2Lines.CharmHad.Lines import CharmHadXSecLines
-        d.update ({CharmHadXSecLines : { 
+        ## I cannot see this possibly working as expected.
+        from Hlt2Lines.CharmHad.Lines import CharmHadLines
+        d.update ({CharmHadLines : { 
+                 ## Common here for full explication.  Otherwise it would
+                 ##   default to the common defined in CharmHad/Lines.py
+                 'Common'       : {
+                                 'Trk_ALL_TRCHI2DOF_MAX'    :  3.0,
+                                 'Trk_ALL_P_MIN'          :  1000 * MeV,
+                                 'VCHI2PDOF_MAX'          :  10.0
+                                  },
+                 ## Input particle definitions here for full explication.
+                 ## SharedDetachedDpmChild used by the following lines:
+                 ##     Dpm2KPiPi_XSecTurbo
+                 ##     Ds2KKPi_XSecTurbo
+                 ##     Ds2PiPiPi_XSecTurbo
+                 ##     D02KPi_XSecTurbo
+                 ##     Dst_2D0Pi_D02K3Pi_XSecTurbo
+                 ##     Dst_2DsGamma_Ds2KKPi_XSecTurbo
+                 ##     Dst_2D0Pi_D02KPi_XSecTurbo
+                 'CharmHadSharedDetachedDpmChild_K' : {
+                                 'PID_LIM'                  :  5.0,
+                                 'Trk_ALL_PT_MIN'           :  200 * MeV,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                              },
+                 'CharmHadSharedDetachedDpmChild_pi' : {
+                                 'PID_LIM'                  :  5.0,
+                                 'Trk_ALL_PT_MIN'           :  200 * MeV,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                              },
+                 ## SharedDetachedLcChild used by
+                 ##     Lc2KPPi_XSecTurbo
+                 ##     Lc2PiPPi_XSecTurbo
+                 ##     Lc2KPK_XSecTurbo
+                 ##     Sigmac_2LcPi_XSecTurbo
+                 'CharmHadSharedDetachedLcChild_K' : {
+                                 'PID_LIM'                  :  5.0,
+                                 'Trk_ALL_PT_MIN'           :  200 * MeV,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                              },
+                 'CharmHadSharedDetachedLcChild_pi' : {
+                                 'PID_LIM'                  :  5.0,
+                                 'Trk_ALL_PT_MIN'           :  200 * MeV,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                              },
+                 'CharmHadSharedDetachedLcChild_p' : {
+                                 'PID_LIM'                  :  5.0,
+                                 'Trk_ALL_PT_MIN'           :  200 * MeV,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                              },
+                 ## SharedPromptChild used by line Xic0ToPpKmKmPipTurbo
+                 'CharmHadSharedPromptChild_K' : {
+                                 'PID_LIM'                  :  5.0,
+                                 'Trk_ALL_PT_MIN'           :  250.0 * MeV,
+                                              },
+                 'CharmHadSharedPromptChild_pi' : {
+                                 'PID_LIM'                  :  3.0,
+                                 'Trk_ALL_PT_MIN'           :  250.0 * MeV,
+                                              },
+                 'CharmHadSharedPromptChild_p' : {
+                                 'PID_LIM'                  :  10.0,
+                                 'Trk_ALL_PT_MIN'           :  250.0 * MeV,
+                                              },
+                 # Soft particles for tagging decays
+                 'CharmHadSharedSoftTagChild_pi' : {
+                                 'Trk_ALL_PT_MIN'           :  100.0 * MeV,
+                                           },
+
                  'D02HH_XSec'   : {
                                   'TisTosSpec'               : "Hlt1TrackAllL0Decision%TOS",
                                   'Pair_AMINDOCA_MAX'        : 0.10 * mm,
@@ -150,6 +216,24 @@ class CharmHad_EM2015 :
                                  'DeltaM_AM_MAX'            :  205.0 * MeV,
                                  'DeltaM_MAX'               :  200.0 * MeV,
                                  'TagVCHI2PDOF_MAX'         :  25.0
+                                },
+                 'Xic0ToPpKmKmPipTurbo' : {
+                                 'TisTosSpec'               : "Hlt1TrackAllL0Decision%TOS",
+                                 'Trk_ALL_PT_MIN'           : 250.*MeV,
+                                 'Trk_2OF4_PT_MIN'          : 400.*MeV,
+                                 'Trk_1OF4_PT_MIN'          : 800.*MeV,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    : 4.0,
+                                 'Trk_2OF4_MIPCHI2DV_MIN'   : 4.0,
+                                 'Trk_1OF4_MIPCHI2DV_MIN'   : 4.0,
+                                 'ASUMPT_MIN'               : 0.0 * MeV,
+                                 'AM_MIN'                   :  2386.0 * MeV,
+                                 'AM_MAX'                   :  2556.0 * MeV,
+                                 'Mass_M_MIN'               :  2396.0 * MeV,
+                                 'Mass_M_MAX'               :  2546.0 * MeV,
+                                 'VCHI2PDOF_MAX'            :  10.0,
+                                 'BPVDIRA_MIN'              :  0.99939,
+                                 'BPVVDCHI2_MIN'            : 4.0,
+                                 'BPVLTIME_MIN'             : 0.075 * picosecond
                                 },
                 }
         })

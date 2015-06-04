@@ -4,6 +4,13 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-06-04 - Patrick Spradlin
+ - Updated CharmHad_EM2015:
+   . Added accidentally omitted line Hlt2CharmHadXic0ToPpKmKmPipTurbo
+   . Added configurations of input particle filters for full explication
+   . Fixed an error that prevents from CharmHad_EM2015 from actually
+     configuring anything.
+
 ! 2015-06-04 - Christian Linn
  - corrected ODIN filter expression, added new NoBias lines
 
