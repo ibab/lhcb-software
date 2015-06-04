@@ -163,6 +163,11 @@ namespace LHCb
       virtual double arclength(double mu1, double mu2) const {
 	return (mu2 - mu1)*m_dndy;
       }
+
+      /// arclength
+      virtual double arclength() const { 
+	return arclength(beginRange(),endRange()) ;
+      }
       
 #ifndef GOD_NOALLOC
       /// operator new
