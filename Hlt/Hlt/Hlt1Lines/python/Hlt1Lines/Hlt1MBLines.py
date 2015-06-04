@@ -11,11 +11,13 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 , 'MicroBiasOdin'          : '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
                 , 'NoBiasOdin'             : 'jbit( ODIN_EVTTYP,2 )'
+                , 'NoBiasLeadingCrossingOdin'             : 'jbit( ODIN_EVTTYP,14 )'
                 , 'MaxNoBiasRate'          : 1000000.
 		, 'MaxVeloTracks'          : 10
 		, 'Prescale'               : { 'Hlt1MBNoBias' : 0.1,
 		                               'Hlt1MBMicroBiasLowMultVelo'   : 1.0 }
-                , 'Postscale'              : { 'Hlt1MBMicroBias.*RateLimited' : 'RATE(500)', 
+                , 'Postscale'              : { 'Hlt1MBNoBiasRateLimited'      : 'RATE(200)', 
+                                               'Hlt1MBMicroBias.*RateLimited' : 'RATE(500)', 
                                                'Hlt1CharmCalibrationNoBias'   : 'RATE(500)',
 					       'Hlt1MBMicroBiasLowMultVelo'   : 1.0 }
                 }
@@ -30,6 +32,18 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
                     , ODIN = self.getProp('NoBiasOdin')
                     , postscale = self.postscale
                     )
+
+    def __create_nobias_leadingcrossing_line__(self ):
+        '''
+        returns an Hlt1 "Line" including input and output filter
+        '''
+        from HltLine.HltLine import Hlt1Line as Line
+        return Line ( 'MBNoBiasLeadingCrossing'
+                    , prescale = self.prescale
+                    , ODIN = self.getProp('NoBiasLeadingCrossingOdin')
+                    , postscale = self.postscale
+                    )
+
     def __create_charm_nobias_line__(self ) :
         ''' 
         returns an Hlt1 "Line" including input and output filter
@@ -76,9 +90,12 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         creates parallel HLT1 Lines for each beam crossing type
         '''
         self.__create_minibias_line__()
-        self.__create_nobias_line__()
+        nb = self.__create_nobias_line__()
+        nb.clone( nb.name().lstrip('Hlt1') + 'RateLimited',  postscale = self.postscale, prescale = self.prescale )
+        self.__create_nobias_leadingcrossing_line__()
         self.__create_charm_nobias_line__()
-    
+   
+        
         from HltTracking.HltSharedTracking import MinimalVelo , Hlt1Seeding
         ve = self.__create_microbias_line__('Velo',MinimalVelo )
         ve.clone( ve.name().lstrip('Hlt1') + 'RateLimited',  postscale = self.postscale, prescale = self.prescale )
