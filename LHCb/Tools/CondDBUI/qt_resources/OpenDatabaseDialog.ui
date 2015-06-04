@@ -107,6 +107,11 @@
            <string>ONLINE</string>
           </property>
          </item>
+         <item>
+          <property name="text" >
+           <string>CALIBOFF</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>

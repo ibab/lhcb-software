@@ -2,6 +2,8 @@
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! ====================================================================
+! 2015-06-04 - Liang Su
+ - Add menu support for CALIBOFF
 
 !========================= CondDBUI v3r34 2015-05-26 =========================
 ! 2015-05-26 - Liang Sun
