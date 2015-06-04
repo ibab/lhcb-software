@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 use AlignOnline v1r3 AlignmentOnline
-use PRConfig    v1r15
+#use PRConfig    v1r15
 use OMAlib      v4r5   Online
 # temporary requirement - MM, 7/4/2015  
 use EventBuilder v0r11  Online
