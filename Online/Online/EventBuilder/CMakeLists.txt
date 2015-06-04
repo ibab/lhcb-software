@@ -1,7 +1,7 @@
 ################################################################################
 # Package: EventBuilder
 ################################################################################
-gaudi_subdir(EventBuilder v0r10)
+gaudi_subdir(EventBuilder v0r11)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          DAQ/MDF
