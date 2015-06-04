@@ -1230,6 +1230,7 @@ std::string MessagePresenter::_getCacheFilename(const std::string & _cache_name_
   const char * camcache = getenv("CAMCACHE");
   if ( camcache )
   {
+    cout << "Using CAMCACHE environment variable " << camcache << endl;
     to = (std::string)camcache + "/" + _cache_name_;
   }
   else
