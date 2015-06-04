@@ -41,7 +41,7 @@ class Physics_draftEM2015( object ):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
         
     def L0TCK(self) :
-        return '0x004C' 
+        return '0x014D' 
 
     def HltType(self) :
         self.verifyType( Physics_draftEM2015 ) 
@@ -83,7 +83,7 @@ class Physics_draftEM2015( object ):
                                                , 'Muon_IPChi2'       : 4.0
                                                , 'Muon_TrChi2'       : 3.0
                                                , 'Muon_GEC'          : 'Loose'
-                                               , 'ODINFilter'        : {'AllL0'  : '(ODIN_EVTTYP == LHCb.ODIN.NoBias)'}
+                                               , 'ODINFilter'        : {'AllL0'  : 'jbit( ODIN_EVTTYP, 2)'}
                                                , 'L0Channels'        : {'AllL0'  : '',
                                                                         'Muon'   : ('Muon',)}
                                                }
@@ -134,7 +134,7 @@ class Physics_draftEM2015( object ):
                                                         'MaxVeloHits'        : 99999,
                                                         'nPVs'               :  1 ,
                                                         'MinVeloHits_PV'     : 2400,
-                                                        'ODIN'               : '(ODIN_EVTTYP == LHCb.ODIN.NoBias)'
+                                                        'ODIN'               : 'jbit( ODIN_EVTTYP, 2)'
                                                    }
 
                      , Hlt1CalibRICHMirrorLinesConf :    { 'Prescale' : { 'Hlt1CalibHighPTLowMultTrks'     : 0.0001 } 
@@ -215,17 +215,19 @@ class Physics_draftEM2015( object ):
                          , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)' }
 
                                                        } 
-                        , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBNoBias'                       : 1.0
+                        , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBNoBias'                       : 0.00025
                                                                , 'Hlt1MBMicroBiasVelo'                : 0 
                                                                , 'Hlt1MBMicroBiasTStation'            : 0 
                                                                , 'Hlt1MBMicroBiasVeloRateLimited'     : 0
                                                                , 'Hlt1MBMicroBiasTStationRateLimited' : 0 }
-                                                , 'NoBiasOdin'    : '(ODIN_EVTTYP == LHCb.ODIN.LeadingCrossing)' 
+                                                , 'Postscale'   : {'Hlt1MBNoBiasRateLimited'          : 'RATE(200.0)'}
+                                                , 'NoBiasOdin'                   : 'jbit( ODIN_EVTTYP, 2)'  
+                                                , 'NoBiasLeadingCrossingOdin'    : 'jbit( ODIN_EVTTYP, 14)'  
                                                }
                         ,CommissioningLines :  {'Prescale'    : {'Hlt2PassThrough' : 1.0,
                                                                  'Hlt2Forward'     : 0.00001,
                                                                  'Hlt2DebugEvent'  : 0.00001},
-                                                'PassThrough' : {'HLT1' : "HLT_PASS_RE('^Hlt1(MBNoBias|HighVeloMult|HighVeloMultSinglePV)Decision$')"},
+                                                'PassThrough' : {'HLT1' : "HLT_PASS_RE('^Hlt1(MBNoBiasLeadingCrossing|HighVeloMult|HighVeloMultSinglePV)Decision$')"},
                                                 'Postscale'   : {'Hlt2ErrorEvent'  : 'RATE(0.01)'}
                                                 }
 
@@ -300,17 +302,19 @@ class Physics_draftEM2015( object ):
                  , 'Hlt1CEPVeloCut'
                  , 'Hlt1NoPVPassThrough'
                  , 'Hlt1NonBeamBeamNoBias'
-                 , 'Hlt1MBNoBias'  # nobias leading crossing
+                 , 'Hlt1MBNoBiasLeadingCrossing'  # nobias leading crossing
                  , 'Hlt1CalibRICHMirror' # calibration lines
                  , 'Hlt1CalibHighPTLowMultTrks'
                  , 'Hlt1CalibTrackingKPiDetached'
-                 , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing' # lumi lines
+                 , 'Hlt1Lumi' # lumi lines 'Hlt1LumiMidBeamCrossing' excluded
                  , 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'  
                  , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
                  , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
                  , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingForcedRecoFullZ'
                  , 'Hlt1BeamGasCrossingParasitic', 'Hlt1BeamGasHighRhoVertices'
-                 , 'Hlt1L0Any','Hlt1L0AnyNoSPD' # technical lines
+                 , 'Hlt1MBNoBias'  # technical lines 
+                 , 'Hlt1MBNoBiasRateLimited'  
+                 , 'Hlt1L0Any','Hlt1L0AnyNoSPD' 
                  , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent'  
                  , 'Hlt1VeloClosingMicroBias'
             ]

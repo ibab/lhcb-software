@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-06-04 - Christian Linn
+ - corrected ODIN filter expression, added new NoBias lines
+
 ! 2015-06-01 - Matthew Kenzie
  - Updated CalibTrackingKPi detached thresholds in Physics_draftEM2015
 
