@@ -16,7 +16,7 @@
 
 DECLARE_SERVICE_FACTORY(MEPSvc)
 static std::string DetNames[] = {"TDet","VeloA","VeloC","TT","IT","OTA","OTC","RICH1","RICH2","ECal","HCal",
-    "MuonA","MuonC","L0DU","TMuA","TMuC","TPU","PRS","TCalo","LHCb"};
+    "MuonA","MuonC","L0DU","TMuA","TMuC","TPU","PRS","TCalo","LHCb","HRC"};
 static std::vector<std::string> s_counterTypes;
 
 static std::map<std::string,std::string> s_nammap;
@@ -333,6 +333,7 @@ MEPSvc::MEPSvc(const std::string& name, ISvcLocator* sl) : PubSvc(name,sl)
     s_nammap["tmutellq04"] = "TMUC";
     s_nammap["tmutellq34"] = "TMUC";
     s_nammap["tfcodin"] = "TFC";
+    s_nammap["hrctell"] = "HRC";
   }
   if (s_counterTypes.empty())
   {

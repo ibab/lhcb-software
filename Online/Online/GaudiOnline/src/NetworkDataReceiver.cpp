@@ -24,6 +24,14 @@
 using namespace LHCb;
 static const std::string s_reqMsg("EVENT_REQUEST");
 
+
+static void _doSleep(int errorDelay,bool* recvEvents)  {
+  while(errorDelay>0 )  {
+    if ( !(*recvEvents) ) break;
+    errorDelay-= 10;
+  }
+}
+
 // Standard algorithm constructor
 NetworkDataReceiver::NetworkDataReceiver(const std::string& nam, ISvcLocator* pSvc)
   : OnlineService(nam,pSvc), m_recvReq(0), m_recvError(0), m_recvBytes(0), 
@@ -32,11 +40,12 @@ NetworkDataReceiver::NetworkDataReceiver(const std::string& nam, ISvcLocator* pS
 {
   ::wtc_init();
   ::lib_rtl_create_lock(0,&m_lock);
-  declareProperty("Buffer",           m_buffer);
-  declareProperty("UseEventRequests", m_useEventRequests=false);
+  declareProperty("Buffer",              m_buffer);
+  declareProperty("UseEventRequests",    m_useEventRequests=false);
   declareProperty("DeclareAsynchonously",m_declareAsynch=false);
-  declareProperty("RoutingMask",m_routingMask=0);
-  declareProperty("VetoMask",   m_vetoMask=0);
+  declareProperty("RoutingMask",         m_routingMask=0);
+  declareProperty("VetoMask",            m_vetoMask=0);
+  declareProperty("ErrorDelay",          m_errorDelay=100);
 }
 
 // Standard Destructor
@@ -290,6 +299,7 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
       log0 << MSG::ERROR << "Failed to retrieve network event data from:" << entry.name << endmsg;
       if ( m_recvEvents && ret != MBM_REQ_CANCEL ) rearmRequest(entry);
       ++m_recvError;
+      _doSleep(m_errorDelay,&m_recvEvents);
       return StatusCode::SUCCESS;
     }
     MsgStream log1(msgSvc(), name());
@@ -297,6 +307,7 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
     log1 << MSG::ERROR << "Failed to get space from buffer manager." << endmsg;
     if ( m_recvEvents && ret != MBM_REQ_CANCEL ) rearmRequest(entry);
     ++m_recvError;
+    _doSleep(m_errorDelay,&m_recvEvents);
     return StatusCode::SUCCESS;
   }
   catch(std::exception& e)  {
@@ -309,6 +320,8 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
     err << MSG::ERROR << "Got unknown exception when declaring event from:" << entry.name << endmsg;
   }
   ++m_recvError;
+  if ( m_errorDelay>0 ) ::lib_rtl_sleep(m_errorDelay);
+  _doSleep(m_errorDelay,&m_recvEvents);
   return m_recvEvents ? rearmRequest(entry) : StatusCode::SUCCESS;
 }
 

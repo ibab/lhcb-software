@@ -151,10 +151,11 @@ OnlineBaseEvtSelector::OnlineBaseEvtSelector(const string& nam, ISvcLocator* svc
   declareProperty("REQ6", m_Rqs[5] = "");
   declareProperty("REQ7", m_Rqs[6] = "");
   declareProperty("REQ8", m_Rqs[7] = "");
+  declareProperty("Pause",m_gotoPause = false);
+  declareProperty("PauseSleep",m_pauseSleep = 0);
   // Note: This is purely dummy! 
   // Only present for backwards compatibility with offline
   declareProperty("PrintFreq",m_printFreq = 100000);
-  declareProperty("Pause",m_gotoPause = false);
   m_isCancelled = false;
 }
 
@@ -299,6 +300,7 @@ StatusCode OnlineBaseEvtSelector::next(Context& ctxt) const {
       sc = pCtxt->rearmEvent();
       if ( !sc.isSuccess() ) {
 	if ( m_gotoPause )   {
+	  if ( m_pauseSleep > 0 ) ::lib_rtl_sleep(m_pauseSleep);
 	  incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
 	}
 	return sc;
@@ -312,6 +314,7 @@ StatusCode OnlineBaseEvtSelector::next(Context& ctxt) const {
       }
       sc = pCtxt->receiveEvent();
       if ( !sc.isSuccess() && m_gotoPause )   {
+	  if ( m_pauseSleep > 0 ) ::lib_rtl_sleep(m_pauseSleep);
 	incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
       }
       else if ( sc.isSuccess() )  {

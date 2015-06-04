@@ -81,7 +81,7 @@ void EvtsPub::analyze(void *, int ,MonMap* mmap)
 //  MonMap::iterator  it;
 //  printf("dumping Map\n");
 //  for (it=mmap->begin();it!=mmap->end();it++)
-//  {
+//  {d
 //    printf("%s ",(*it).first.c_str());
 //  }
 //  printf("\n");
@@ -108,9 +108,9 @@ void EvtsPub::analyze(void *, int ,MonMap* mmap)
       dyn_string &ds=*Strsplit(svc.c_str(),"/");
       svc = ds[0];
       delete &ds;
-      ds = *Strsplit(svc.c_str(),"_");
-      svc = ds[ds.size()-2]+"_"+ds[ds.size()-1];
-      delete &ds;
+      dyn_string &ds1 = *Strsplit(svc.c_str(),"_");
+      svc = ds1[ds1.size()-2]+"_"+ds1[ds1.size()-1];
+      delete &ds1;
       nam = m_PartitionName+"_X_"+svc+"/Runable/EvtCount";
       m_noEvtsSvc = new DimService(m_adder->m_ServiceDns,(char*)nam.c_str(),m_NoEvts);
     }
@@ -130,9 +130,9 @@ void EvtsPub::analyze(void *, int ,MonMap* mmap)
       dyn_string &ds=*Strsplit(svc.c_str(),"/");
       svc = ds[0];
       delete &ds;
-      ds = *Strsplit(svc.c_str(),"_");
-      svc = ds[ds.size()-2]+"_"+ds[ds.size()-1];
-      delete &ds;
+      dyn_string &ds1 = *Strsplit(svc.c_str(),"_");
+      svc = ds1[ds1.size()-2]+"_"+ds1[ds1.size()-1];
+      delete &ds1;
       std::string nam = m_PartitionName+"_X_"+svc+"/R_Runable/EvtCount";
       m_EvtRateSvc = new DimService(m_adder->m_ServiceDns,(char*)nam.c_str(),m_EvtRate);
     }

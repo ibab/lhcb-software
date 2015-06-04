@@ -85,6 +85,8 @@ namespace LHCb  {
     int             m_routingMask;
     /// Property: Additional OR mask to declare event (default: 0)
     int             m_vetoMask;
+    /// Property: Sleep interval on error
+    int             m_errorDelay;
     /// Monitoring item: Total number of items received
     int             m_recvReq; 
     /// Monitoring item: Total number of receive errors

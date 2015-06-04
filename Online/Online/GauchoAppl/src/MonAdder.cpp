@@ -50,6 +50,7 @@ MonAdder::MonAdder()
   m_Dimcmd = 0;
   m_parentAdderSvc = 0;
   m_doPause = false;
+  m_SaveonUpdate = false;
 }
 
 MonAdder::~MonAdder()
@@ -452,7 +453,7 @@ void MonAdder::TimeoutHandler()
 //  printf("Timeout Handler after add... received %d expected %d\n",(int)m_received,(int)m_expected);
   m_timeout = true;
   Update();
-  if (m_SaveonUpdate)
+  if (m_isSaver && m_SaveonUpdate)
   {
     this->m_parentAdderSvc->m_SaveTimer->timerHandler();
   }
@@ -468,7 +469,7 @@ void MonAdder::i_update()
     }
     //    //printf("Finished one cycle. Updating our service... %d %d\n", m_received,expected);
     Update();
-    if (m_SaveonUpdate)
+    if (m_isSaver && m_SaveonUpdate)
     {
       this->m_parentAdderSvc->m_SaveTimer->timerHandler();
     }

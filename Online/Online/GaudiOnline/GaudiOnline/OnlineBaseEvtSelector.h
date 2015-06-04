@@ -248,6 +248,8 @@ namespace LHCb  {
     bool                          m_handleTMO;
     /// Property to indicate to pause on error
     bool                          m_gotoPause;
+    /// Property to sleep for some time before pause [unit: milli-seconds]
+    int                           m_pauseSleep;
     /// Dummy property for backwards compatibility
     int                           m_printFreq;
     /// Local GUID to be added: needed to chain GUID information for reprocessing

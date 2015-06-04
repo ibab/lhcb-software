@@ -32,4 +32,4 @@ python ./MonAdderOpts.py ${AdderOptsFile}
 export INFO_OPTIONS=/group/online/dataflow/options/${PARTITION}/${PARTITION}_Info.opts
 #
 exec -a ${UTGID} $gaudi_exe ${TASKCLASS} -opt=../options/genAdder.opts -main=${ONLINETASKS}/options/Main.opts
-#exec -a ${UTGID} ${Class1_task} -opts=../options/genAdder.opts
+

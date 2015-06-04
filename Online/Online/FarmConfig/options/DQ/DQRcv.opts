@@ -14,4 +14,5 @@ MEPManager.Buffers                   = @OnlineEnv.DQRcv_Buffers;
 ReceiverSvc.Buffer                   = @OnlineEnv.DQRcv_Output;
 ReceiverSvc.RoutingMask              = 1;
 ReceiverSvc.VetoMask                 = 65535; // 0xffff
+ReceiverSvc.ErrorDelay               = 25000; // 25 seconds delay of workers crash...
 #include "$STATIC_OPTS/MessageSvc.opts"

@@ -376,6 +376,9 @@ StatusCode FILEEvtSelector::scan(const std::string& input)  {
       }
     }
   }
+  // Must return SUCCESS.
+  // Otherwise we will not get the PAUSE incident
+  // when no events are present.
   return StatusCode::SUCCESS;
 }
 

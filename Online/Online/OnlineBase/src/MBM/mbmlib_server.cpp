@@ -826,6 +826,7 @@ int mbmsrv_map_memory(const char* bm_name, BufferMemory* bm)  {
 /// Evaluate consumer rules
 int _mbmsrv_evaluate_rules(ServerBMID bm)   {
   CONTROL* c = bm->ctrl;
+  bool match = false;
   // Check all rules
   for(size_t j=0; j<BM_MAX_REQS; ++j)  {
     const ServerBMID_t::ConsumerREQ& cr = bm->cons_req[j];
@@ -833,8 +834,8 @@ int _mbmsrv_evaluate_rules(ServerBMID bm)   {
       USER* u = bm->user;
       const REQ& req = cr.requirement;
       for (int i = 0; i < c->p_umax; ++i, ++u)  {
-        if(u->magic == MBM_USER_MAGIC && u->busy == 1 && u->partid == req.user_type)  {
-          bool match = req.masktype || ::str_match_wild(u->name,cr.name);
+        if(u->magic == MBM_USER_MAGIC && u->busy == 1 )  {
+          match = ::str_match_wild(u->name,cr.name);
           if ( match )  {
             for(int k=0; match && k<u->n_req; ++k)  {
               if ( req.ev_type == u->req[k].ev_type )  {
@@ -1148,7 +1149,7 @@ int mbmsrv_add_req(ServerBMID bm, MSG& msg)   {
   rq->user_type = args.usertype&BM_MASK_REQ;
   _mbmsrv_alloc_reqone_id(bm,rq->user_type,args.usertype&~BM_MASK_REQ,&rq->user_type_one);
   ++u->n_req;
-  return MBM_NORMAL;
+  return _mbmsrv_evaluate_rules(bm);
 }
 
 /// Consumer interface: Delete consumer request
@@ -1170,9 +1171,11 @@ int mbmsrv_del_req(ServerBMID bm, MSG& msg)   {
     }
     _mbmsrv_free_reqone_id(bm,user_type,user_type_one);
     --u->n_req;
-    return MBM_NORMAL;
+    //return MBM_NORMAL;
+    return _mbmsrv_evaluate_rules(bm);
   }
-  return MBM_NORMAL;
+  //return MBM_NORMAL;
+  return _mbmsrv_evaluate_rules(bm);
 }
 
 /*
