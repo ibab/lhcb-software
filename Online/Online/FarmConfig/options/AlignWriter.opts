@@ -139,7 +139,7 @@ AlignDataWriter_BWDivision.PartitionName             = @OnlineEnv.PartitionName;
 // Requirements for Physics
 //
 AlignDataWriter_BWDivision.Requirements         = {
-"EvType=2;TriggerMask=0x20,0x0,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+"EvType=2;TriggerMask=0x0,0x800000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
 //
 // Requirements for TED and other stuff
