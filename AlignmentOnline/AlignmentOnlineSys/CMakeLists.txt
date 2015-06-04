@@ -3,7 +3,8 @@
 ################################################################################
 gaudi_subdir(AlignmentOnlineSys v10r4)
 
-gaudi_depends_on_subdirs(AlignmentOnline/AlignOnline)
+gaudi_depends_on_subdirs(AlignmentOnline/AlignOnline
+			 Online/EventBuilder)
 
 
 gaudi_install_python_modules()
