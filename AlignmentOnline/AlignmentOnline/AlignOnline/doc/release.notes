@@ -3,6 +3,9 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-06-04 - Maurizio Martinelli
+ - Removed requirement that is not needed anymore after Online v5r19
+
 ! 2015-06-02 - Silvia Borghi
  - Remove few lines of stuff under development
 
