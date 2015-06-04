@@ -1,5 +1,5 @@
 package AlignmentOnlineSys
-version v10r3
+version v10r4
 
 branches cmt doc tests
  
@@ -7,11 +7,11 @@ branches cmt doc tests
 # LHCb Alignment Online packages
 #=======================================================
 
-use AlignOnline v1r2 AlignmentOnline
+use AlignOnline v1r3 AlignmentOnline
 use PRConfig    v1r15
 use OMAlib      v4r5   Online
 # temporary requirement - MM, 7/4/2015  
-use EventBuilder v0r8  Online
+use EventBuilder v0r10  Online
 
 # Declare this as a container package
 apply_pattern container_package
