@@ -27,7 +27,7 @@ use ControllerTests     v0r3     Online
 use DailyReport         v1r3     Online
 use DefHLTUtils         v1r11    Online
 use DIM                 v20r7p4  Online
-use EventBuilder        v0r10    Online
+use EventBuilder        v0r11    Online
 use FarmConfig          v0r16    Online
 use FarmMonitor         v2r13    Online
 use Gaucho              v7r39    Online
