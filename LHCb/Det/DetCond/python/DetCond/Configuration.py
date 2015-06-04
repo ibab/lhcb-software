@@ -447,7 +447,8 @@ class CondDB(ConfigurableUser):
                       ("ONLINE",   CondDBTimeSwitchSvc),
                       ("SIMCOND",  CondDBAccessSvc),
                       ("DQFLAGS",  CondDBAccessSvc)]
-        if LoadCALIBDB is "OFFLINE":
+        if LoadCALIBDB is "OFFLINE" and not self.getProp('Upgrade'):
+        # CALIBOFF not needed for the upgrade
             parttypes += [("CALIBOFF", CondDBAccessSvc)]
 
         for (p ,t) in parttypes:
@@ -500,7 +501,8 @@ class CondDB(ConfigurableUser):
                     # Pass along the configuration for the layered DBs    
                     elif isinstance(config, CondDBLayeringSvc):
                         for ly in config.Layers:
-                            if isinstance(ly, CondDBAccessSvc):
+                            #Only apply HeartBeatCondition for ONLINE
+                            if isinstance(ly, CondDBAccessSvc) and ly.getName().startswith("ONLINE_"):
                                 self.propagateProperty("HeartBeatCondition", ly)
 
         if not self.getProp("Simulation"):
@@ -523,12 +525,8 @@ class CondDB(ConfigurableUser):
         CondDBCnvSvc( CondDBReader = disp )
 
         # Load the CALIBOFF layer above everything if it exists
-        if len([x for x in parttypes if x[0] == 'CALIBOFF']):
-            self._addLayer(getAnyDBReader('CALIBOFF'))
-#            lhcbcondsvc = partition['LHCBCOND']
-#            layers = [getAnyDBReader('CALIBOFF'),  lhcbcondsvc]
-#            partition['LHCBCOND'] = CondDBLayeringSvc("LHCBCONDLAYER", Layers = layers)
-
+#        if len([x for x in parttypes if x[0] == 'CALIBOFF']):
+#            self._addLayer(getAnyDBReader('CALIBOFF'))
 
         localTags = self.getProp("LocalTags")
         not_applied = []
@@ -537,7 +535,18 @@ class CondDB(ConfigurableUser):
                 taglist = list(localTags[p])
                 taglist.reverse() # we need to stack the in reverse order to use the first as on top of the others
                 i = 0 # counter
-                if type(partition[p]) is not CondDBTimeSwitchSvc: 
+                if p is "CALIBOFF":
+                    if LoadCALIBDB is not "OFFLINE":
+                        raise ValueError("invalid argument LoadCALIBDB set at '%s' instead of 'OFFLINE' for accessing local tags for CALIBOFF.db" % LoadCALIBDB)
+                    pcolayers = []
+                    for t in taglist:
+                        pcolayers.append(partition[p].clone("CALIBOFF_%d" %i, DefaultTAG = t))
+                        i += 1
+                        for r in partition["ONLINE"].Readers:
+                            config = allConfigurables[eval(r.split(':')[0]).split("/")[1]]
+                            if isinstance(config, CondDBLayeringSvc):
+                                config.Layers = pcolayers + config.Layers
+                elif type(partition[p]) is not CondDBTimeSwitchSvc: 
                     for t in taglist:
                         self._addLayer(partition[p].clone("%s_%d" % (p, i),
                             DefaultTAG = t))
@@ -685,8 +694,22 @@ def getOnlineDBReader(ym_tuple, granularity = 'YEARLY', connStrFunc = None):
     ptnm = "ONLINE_" + ymstr
     accSvc = CondDBAccessSvc(ptnm, ConnectionString = cnstr)
     dblayers = [ accSvc ]
+    LoadCALIBDB = os.environ.get('LoadCALIBDB')
+    if ym_tuple[0] < 2015 or LoadCALIBDB is not "OFFLINE": # For datatype before 2015, no CALIBOFF layer is needed
+        return accSvc
     dbpath = os.environ["SQLITEDBPATH"]
-    return accSvc
+    layer = 'CALIBOFF'
+    if exists(join(dbpath, layer + '.db')):
+        # Put the discovered layer on top
+        cfg = getConfigurable(layer, CondDBAccessSvc) 
+        try: cfg.ConnectionString
+        except AttributeError: # Set up connection for the 1st time 
+            cfg = CondDBAccessSvc("CALIBOFF", ConnectionString =
+                    cnstr.replace('ONLINE-%s.db/ONLINE' %ymstr, "%s.db/%s" % (layer, layer)), CacheHighLevel = 200)
+        dblayers.insert(0, cfg)
+
+    if (len(dblayers) == 1): return accSvc # In case no CALIBOFF.db is found
+    return CondDBLayeringSvc("ONLINELAYER_"+ymstr, Layers = dblayers )
 
 def configureOnlineSnapshots(start = None, end = None, connStrFunc = None):
     if connStrFunc is None:

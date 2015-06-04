@@ -4,9 +4,13 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2015-06-04 - Liang Sun
+ - Finalized support for CALIBOFF by loading the partition as an additional layer only above every ONLINE snapshot no earlier than 2015 
+ - Bug fix for mistakenly loading CALIBOFF for upgrade CondDB
+
 !========================= DetCond v12r41 2015-04-20 =========================
 ! 2015-04-16 - Liang Sun
-- Further support for loading CALIBOFF.db file as an additional layer above all partitions, for testing purpose only
+ - Further support for loading CALIBOFF.db file as an additional layer above all partitions, for testing purpose only
 
 ! 2015-03-18 - Liang Sun
  - Fix the nightlies after the last commit. The XML extensions of the condition files within TESTDB?.db are now removed.
