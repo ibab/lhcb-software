@@ -1,0 +1,5 @@
+MEPManager.ConsumerRequirements = {
+    "Events": [
+               "DQ_MONA1001_DQSnd*","EvType=2,TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff"
+              ]
+        };
