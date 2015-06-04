@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-06-04 - Patrick Spradlin
+  . CharmHad:  Renamed the inclusive D*+ and Sigma_c lines to match the
+    routing bit pattern designated for them.
+    M python/Hlt2Lines/CharmHad/Dst2PiD02HHXBDTLines.py
+
 ! 2015-06-03 - Patrick Spradlin
   . CharmHad:  Split the LcpToKmPpPip line into two lines:  one with a Lambda_c+
     mass window and one with a Xi_c+ mass window.  As a side effect, the

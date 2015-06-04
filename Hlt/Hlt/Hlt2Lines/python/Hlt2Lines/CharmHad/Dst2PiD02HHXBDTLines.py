@@ -109,8 +109,8 @@ class CharmHadDst2PiD02HHXBDTLines : # {
             Sigc2LcPiInclFilt = BDTFilter( 'FiltBDT', [ InclSigc2PiLc2HHX ], self.slots()['InclSigc2PiLc2HHX'] )
 
 
-            self.__stages = { 'Dst2PiD02HHXBDT'  :  [ Dstp2D0PiInclFilt ]
-                              , 'Sigc2PiLc2HHXBDT'  :  [ Sigc2LcPiInclFilt ]  }
+            self.__stages = { 'InclDst2PiD02HHXBDT'  :  [ Dstp2D0PiInclFilt ]
+                              , 'InclSigc2PiLc2HHXBDT'  :  [ Sigc2LcPiInclFilt ]  }
         # }
 
         return self.__stages
