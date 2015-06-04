@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-06-04 - Christian Linn
+ - add IDs for MBNoBiasRateLimited and MBNoBiasLeadingCrossing lines
+
 ! 2015-06-03 - Roel Aaij
  - Set IgnoreFilterPassed on the HltAfterburner.
 

@@ -164,6 +164,8 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1MBMicroBiasTStationRateLimitedDecision" : 514,
     "Hlt1MBMicroBiasVeloDecision" : 515,
     "Hlt1MBMicroBiasVeloRateLimitedDecision" : 516,
+    'Hlt1MBNoBiasRateLimitedDecision'        :  517,
+    'Hlt1MBNoBiasLeadingCrossingDecision'    :  518,
     "Hlt1VeloClosingMicroBiasDecision" : 1015,
 
 
