@@ -4,7 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!========================== Gauss v48r2 2015-06-02 ===========================
+!========================== Gauss v48r2 2015-06-04 ===========================
+! 2015-06-04 - Gloria Corti
+ - Updated some qmtest reference files
+
 ! 2015-06-02 - Gloria Corti
  - Update options in reference for BcVegPy with Pythia8
 
