@@ -5,7 +5,8 @@ gaudi_subdir(AlignOnline v1r3)
 
 gaudi_depends_on_subdirs(Alignment/AlignKernel
                          Det/DetDesc
-                         Online/OnlineKernel)
+                         Online/OnlineKernel
+			 Online/EventBuilder)
 
 # This is a special trick to handle the non standard headers'
 # locations in Online.

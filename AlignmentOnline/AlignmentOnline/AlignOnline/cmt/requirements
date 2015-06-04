@@ -26,6 +26,7 @@ use     OnlineAlign         v*  Online
 use     AlignmentSys        v*
 use     Boost               v*	LCG_Interfaces -no_auto_imports
 use 	DetDesc		    v*	Det
+use     EventBuilder        v*  Online
 
 #============================================================================
 # Component library building rule
