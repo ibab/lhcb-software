@@ -41,7 +41,6 @@ class CharmHad_EM2015 :
     def Thresholds(self) :
 
         d = {}
-        ## I cannot see this possibly working as expected.
         from Hlt2Lines.CharmHad.Lines import CharmHadLines
         d.update ({CharmHadLines : { 
                  ## Common here for full explication.  Otherwise it would
