@@ -65,6 +65,9 @@ __version__ = "$Revision:$"
 # =============================================================================
 if '__main__' == __name__ :
     
+    import ROOT
+    ROOT.PyConfig.IgnoreCommandLineOptions = True
+    
     print 120*'*'
     print                   __doc__ 
     print ' Author(s)  : ', __author__ 

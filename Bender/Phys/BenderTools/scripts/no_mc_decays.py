@@ -73,6 +73,9 @@ __usage__   = """
 # =============================================================================
 
 if '__main__' == __name__ :
+
+    import ROOT
+    ROOT.PyConfig.IgnoreCommandLineOptions = True
     
     print 120*'*'
     print                __doc__ 

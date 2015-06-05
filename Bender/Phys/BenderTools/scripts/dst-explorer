@@ -100,6 +100,8 @@ from AnalysisPython.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'Bender/dst-explorer' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+# =============================================================================
 logger.info ( 100*'*')
 logger.info ( ' Author  : %s ' % __author__   ) 
 logger.info ( ' Version : %s ' % __version__  ) 

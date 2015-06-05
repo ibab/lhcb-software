@@ -87,53 +87,60 @@ def noDecays ( usage = __usage__ , vers = __version__ ) :
     Look for ``no-decays'' events 
     """
     
-    from BenderTools.Parser import makeParser
+    from BenderTools.Parser import makeArgParser as makeParser 
     parser = makeParser  ( usage , vers  )
     
-    parser.add_option (
+    parser.add_argument (
         '-d'                      ,
         '--decay'                 ,
-        type    = 'str'           ,
+        type    = str             ,
         dest    = 'GenericDecay'  ,
         help    = 'The decay descriptor for generic decay: script will look for decays that have this generic pattern ' ,
         )
     
-    parser.add_option (
+    parser.add_argument (
         '-z'                        ,
         '--miss'                    ,
-        type    = 'str'             ,
+        type    =  str              ,
         dest    = 'DecayInQuestion' ,
         help    = 'The decay descriptor for "decay-in-question": script will look for decays that have NOT this missing pattern' ,
         )
     
-    parser.add_option (
+    parser.add_argument (
         '-n'                          ,
         '--events'                    ,
         dest    = 'nEvents'           ,
-        type    = 'int'               , 
+        type    = int                 , 
         help    = "Number of events to process " ,
         default = 1000     
         )
+    
+
+    parser.add_argument (
+        'files'                       ,
+        nargs   = '+'                 , 
+        help    = "Input files"       
+        )
 
     ##
-    options , arguments = parser.parse_args()
-    
-    ## Files must be specfied are mandatory!
-    if not arguments : parser.error ( 'No input files are specified' ) 
+    ## options , arguments = parser.parse_args()
+    arguments = parser.parse_args()
 
-    if not options.Simulation  : logger.warning ( 'Redefine "Simulation" to be true')
+    ## Files must be specfied are mandatory!
+    if not arguments.files : parser.error ( 'No input files are specified' ) 
+
+    if not arguments.Simulation  : logger.warning ( 'Redefine "Simulation" to be true')
     
-    if options.nEvents < 0 :
+    if arguments.nEvents < 0 :
         logger.info ( 'Redefine "nEvents" to be 10000' ) 
-        options.nEvents = 10000 
-    if options.OutputLevel < 4 : options.OutputLevel = 4
+        arguments.nEvents = 10000 
+    if arguments.OutputLevel < 4 : arguments.OutputLevel = 4
 
     #
     ## configure it!
     #
     from BenderTools.DstExplorer import configure 
-    configure ( options , arguments )
-    
+    configure ( arguments , arguments.files )    
     from Bender.MainMC  import cpp,appMgr,get,run,MCDECTREE,SUCCESS 
     
     ## instantiate the application manager 
@@ -151,13 +158,13 @@ def noDecays ( usage = __usage__ , vers = __version__ ) :
     
     ievent = 0 
 
-    decay1 = MCDECTREE ( options.GenericDecay )
+    decay1 = MCDECTREE ( arguments.GenericDecay )
     if not decay1.valid() :
-        raise TypeError ( 'Invalid decay descriptor "%s"' % options.GenericDecay )
+        raise TypeError ( 'Invalid decay descriptor "%s"' % arguments.GenericDecay )
     
-    decay2 = MCDECTREE ( options.DecayInQuestion )
+    decay2 = MCDECTREE ( arguments.DecayInQuestion )
     if not decay2.valid() :
-        raise TypeError ( 'Invalid decay descriptor "%s"' % options.DecayInQuestion ) 
+        raise TypeError ( 'Invalid decay descriptor "%s"' % arguments.DecayInQuestion ) 
 
     cnts = [ cpp.StatEntity() , cpp.StatEntity() , cpp.StatEntity() ] 
 
@@ -198,7 +205,7 @@ def noDecays ( usage = __usage__ , vers = __version__ ) :
                 for d in decs1 :
                     decays.add( d.decay() ) 
                     
-                if options.Quiet :
+                if arguments.Quiet :
                     for d in decs1 : print d.decay()
                 else : print decs1
         
@@ -217,7 +224,7 @@ def noDecays ( usage = __usage__ , vers = __version__ ) :
         return SUCCESS
 
     ## run it! 
-    return process ( options.nEvents )
+    return process ( arguments.nEvents )
 
 
 # =============================================================================

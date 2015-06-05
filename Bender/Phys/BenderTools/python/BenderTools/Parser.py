@@ -188,6 +188,122 @@ def makeParser ( usage = None ,
     ##
     return parser
 
+## create the parser
+def makeArgParser ( usage = None ,
+                 vers  = None ) :
+    """
+    Create the parser 
+    """
+    #
+    if not usage : usage = __usage__
+    if not vers  : vers  = __version__
+    #
+    from argparse import ArgumentParser as ArgParser
+    parser = ArgParser( usage   = usage )
+
+    ## version: 
+    parser.add_argument ( '--version' , action='version', version = vers  ) 
+    ##
+    parser.add_argument (
+        '-t'                  ,
+        '--datatype'          ,
+        dest    = 'DataType'  ,
+        type    =  str        , 
+        help    = "``DataType''    attribute to be specified for DaVinci [default : %(default)s]" ,
+        default = '2012'  
+        )
+    ## 
+    parser.add_argument (
+        '-s'                          ,
+        '--simulation'                ,
+        action  = "store_true"        ,
+        dest    = 'Simulation'        ,
+        help    = "``Simulation''  flag to be propagated to DaVinci" ,
+        default = False   
+        )
+    ## 
+    parser.add_argument (
+        '-g'                       ,
+        '--grid'                   ,
+        type    = str              , 
+        dest    = 'Grid'           ,
+        help    = "Grid-site to access LFN-files (has precedence over -c, but grid proxy is needed)" ,
+        default = 'CERN'
+        )
+    ## 
+    parser.add_argument (
+        '-c'                          ,
+        '--castor'                    ,
+        action  = "store_true"        ,
+        dest    = 'Castor'            ,
+        help    = "Enable direct access to Castor/EOS Grid Storage to access LFN-files" ,
+        default = True   
+        )
+    ##
+    parser.add_argument (
+        '-p'                          ,
+        '--print'                     ,
+        type    = int                 , 
+        dest    = 'OutputLevel'       ,
+        help    = "``OutputLevel'' attribute for ApplicationMgr/MessageSvc [default : %(default)s]" ,
+        default = 3                  
+        )
+    ## 
+    parser.add_argument (
+        '-m'                          ,
+        '--micro'                     ,
+        action  = "store_true"        ,
+        dest    = 'MicroDST'          ,
+        help    = "MicroDST format?"  ,
+        default = False   
+        )
+    ##
+    parser.add_argument (
+        '-x'                           ,
+        '--xml'                        ,
+        dest    = 'XmlCatalogue'       ,
+        help    = "``XmlCatalog'' to be transferred to setData-function [default : %(default)s]" ,
+        default = ''                  
+        )
+    ## 
+    parser.add_argument (
+        '-q'                          ,
+        '--quiet'                     ,
+        action  = "store_true"        ,
+        dest    = 'Quiet'             ,
+        help    = "``Quiet'' processing"  ,
+        default = False   
+        )
+    ## 
+    parser.add_argument (
+        '-r'                     ,
+        '--root'                 ,
+        type    = str            ,
+        dest    = 'RootInTES'    ,
+        help    = 'Root-In-TES'  ,
+        default = ''           
+        )
+    ##
+    parser.add_argument (
+        '-u'                       ,
+        '--useoracle'              ,
+        action  = "store_true"     ,
+        dest    = 'UseOracle'      ,
+        help    = "Use Oracle-DB"  ,
+        default = False   
+        )
+    ##
+    parser.add_argument (
+        '-l'                       ,
+        '--lumi'                   ,
+        action  = "store_true"     ,
+        dest    = 'Lumi'           ,
+        help    = "Use Lumi?"      ,
+        default = False   
+        )
+    ##
+    return parser
+
 # =============================================================================
 ## try to extract the data type, simulation flag and file extension (type)
 #

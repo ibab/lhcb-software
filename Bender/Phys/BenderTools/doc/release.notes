@@ -6,6 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-06-05 - Vanya Belyaev
+ - fix issue with ROOT/python command-line options
+   Thanks to Albert Puig
+
+! 2015-06-05 - Vanya Belyaev
  - small improvement in NoMCDecays
 
 ! ==================== Phys/BenderTools v25r7 2015-06-04 ======================

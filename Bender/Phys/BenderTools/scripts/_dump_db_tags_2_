@@ -26,6 +26,7 @@ __version__ = "Revision"
 import ROOT
 if not hasattr( ROOT , 'ostream') :
     ROOT.gROOT.ProcessLine("#include <ostream>") 
+ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
 ## helper function to get DB-tags
 #  @author Thomas RUF

@@ -28,7 +28,7 @@ if len(sys.argv) > 1 :
 else:
     print 'missing file name, stop'
     sys.exit()
-    
+
 try :
     from GaudiPython.Bindings import AppMgr
     gaudi = AppMgr( outputlevel = 6 )

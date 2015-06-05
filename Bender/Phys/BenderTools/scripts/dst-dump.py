@@ -68,6 +68,8 @@ __version__ = '$Revision$'
 __all__     = ()  ## nothing to import 
 __usage__   = 'dst_dump [options] file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================
+import ROOT
+ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 print 120*'*'
 print                __doc__ 
