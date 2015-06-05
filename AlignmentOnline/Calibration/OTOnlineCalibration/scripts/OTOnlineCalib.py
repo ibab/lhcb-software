@@ -34,7 +34,8 @@ def setup():
     OTt0OnlineClbrAlg.UseClockPhase = (partition != "FEST")
     OTt0OnlineClbrAlg.InitialTime = initialTime
     OTt0OnlineClbrAlg.Threshold = 0.04
-    # Keep analysis task going.
+    OTt0OnlineClbrAlg.MaxDifference = 2
+     # Keep analysis task going.
     OTt0OnlineClbrAlg.StopAlgSequence = False
 
     OTGaudiSeq.Members += [OTt0OnlineClbrAlg]
@@ -68,8 +69,12 @@ def setup():
     conddb.RunChangeHandlerConditions = {'LHCb/2015/%d/ot.xml' : ["Conditions/Calibration/OT/CalibrationGlobal"]}
     
     from Configurables import LHCbApp
-    LHCbApp().CondDBtag = 'cond-20150409-2'
-    LHCbApp().DDDBtag   = 'dddb-20150119-3'
+    import ConditionsMap
+    LHCbApp().CondDBtag = ConditionsMap.CondDBTag
+    LHCbApp().DDDBtag   = ConditionsMap.DDDBTag
+    
+    # LHCbApp().CondDBtag = 'cond-20150409-2'
+    # LHCbApp().DDDBtag   = 'dddb-20150119-3'
     LHCbApp().DataType = '2015'
 
 #============================================================================================================
