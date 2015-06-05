@@ -35,6 +35,8 @@ class Escher(LHCbConfigurableUser):
                         , GaudiSequencer("AlignSequence")
 			]
 
+    KnownSpecialData = []
+
 
     # Steering options
     __slots__ = {
@@ -46,6 +48,7 @@ class Escher(LHCbConfigurableUser):
        , "Simulation"		: False    # set to True to use SimCond
        , "InputType"		: "DST"    # or "DIGI" or "ETC" or "RDST" or "DST"
        , "OutputType"		: "NONE"   # or "RDST" or "NONE". Also forwarded to RecSys
+       , "GlobalCuts"		: {}       # global event cuts for tracking
        , "Persistency"          : None     # POOL or ROOT foraward to LHCbApp
        , "PackType"		: "TES"    # Flag whether or not to use packed containers
        , "NoWarnings"		: False    # suppress all messages with MSG::WARNING or below
@@ -62,7 +65,8 @@ class Escher(LHCbConfigurableUser):
        , "Incident"     	:  ""      # for Millepede style alignment, there are two incident handles: GlobalMPedeFit and Converged
                                            # for Kalman style alignment, there is a handle: UpdateConstants.
         # Following are options forwarded to RecSys
-       , "RecoSequence"   	: ["Decoding","VELO","Tr","Vertex"] # The Sub-detector reconstruction sequencing. See RecSys for default
+#       , "RecoSequence"   	: ["Decoding","VELO","Tr","Vertex"] # The Sub-detector reconstruction sequencing. See RecSys for default
+       , "RecoSequence"   	: ["Decoding","VELO","Tr","Vertex"] # The Sub-detector reconstruction sequencing. See RecSys for default  
        , "MoniSequence"         : ["VELO","Tr", "OT","ST"]
        , "SpecialData"    	: [] # Various special data processing options. See KnownSpecialData for all options
        , "Context"		: "Offline" # The context within which to run
@@ -126,6 +130,12 @@ class Escher(LHCbConfigurableUser):
             HistogramPersistencySvc().OutputFile = histosName
 
     def configureSequences(self):
+        
+        # Check for special data options
+        for option in self.getProp('SpecialData'):
+            if option not in self.KnownSpecialData:
+                raise RunTimeError("Unknown SpecialData option '%s'" %option)
+
         escherSeq = GaudiSequencer("EscherSequencer")
         #escherSeq.Context = self.getProp("Context")
         ApplicationMgr().TopAlg = [ escherSeq ]
@@ -180,7 +190,10 @@ class Escher(LHCbConfigurableUser):
         if not GaudiSequencer("RecoTrSeq").getProp("Enable"):
             DstConf( EnableUnpack = True )
 
-        TrackSys().ExpertTracking = self.getProp("ExpertTracking")
+        # Setup tracking sequence
+        trackConf = TrackSys()
+        self.setOtherProps(trackConf,["SpecialData","OutputType","DataType","Simulation","GlobalCuts"])
+        trackConf.ExpertTracking = self.getProp("ExpertTracking")
 
         ta = TAlignment()
         ta.Upgrade = self.getProp("Upgrade")
@@ -428,7 +441,10 @@ class Escher(LHCbConfigurableUser):
 
         #if self.isPropertySet("RecoSequence") :
         #self.setOtherProp(RecSysConf(),["RecoSequence"])
-        RecSysConf().RecoSequence = self.getProp("RecoSequence")
+        RecoSeq = self.getProp("RecoSequence")
+        if self.getProp("DataType") is "2015": RecoSeq = RecSysConf().DefaultSubDetsFieldOnRun2+\
+                                                         RecSysConf().DefaultTrackingSubdetsRun2
+        RecSysConf().RecoSequence = RecoSeq
 
         # there is a bug in setOtherProps, so we cannot use it to set the MoniSequence.
         if not self.getProp("OnlineMode"):

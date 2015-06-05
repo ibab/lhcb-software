@@ -4,6 +4,9 @@ Package Coordinator : Maurizio Martinelli
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+! 2015-06-05 - Maurizio Martinelli
+ - Updated configuration to use Run2 tracking on 2015 data
+
 </PRE><H1><A NAME=v5r5>2015-05-31 Escher v5r5</A></H1><PRE>
 
 ! 2015-05-31 - Maurizio Martinelli
