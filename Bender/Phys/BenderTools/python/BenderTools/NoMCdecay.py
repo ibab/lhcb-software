@@ -65,6 +65,9 @@ __version__ = " $Revision$ "
 __usage__   = """
    no-mc-decays [options] -d GENERICDECAY
                           -z DECAYINQUESTION file1 [ file2 [ ....
+
+   It searches the decays matched by ``GENERICDECAY'' but ``DECAYINQUESTION''
+   
    """
 __all__     = ( 'noDecays' , ) 
 # =============================================================================
@@ -158,6 +161,8 @@ def noDecays ( usage = __usage__ , vers = __version__ ) :
 
     cnts = [ cpp.StatEntity() , cpp.StatEntity() , cpp.StatEntity() ] 
 
+    decays = set() 
+    
     ## helper function to process the events 
     def process ( evnts = 100 ) :
         """
@@ -189,7 +194,10 @@ def noDecays ( usage = __usage__ , vers = __version__ ) :
             if l1 : cnts[2] +=   ( 0 < l2 )
             
             if l1 and not l2 :
-                
+
+                for d in decs1 :
+                    decays.add( d.decay() ) 
+                    
                 if options.Quiet :
                     for d in decs1 : print d.decay()
                 else : print decs1
@@ -200,6 +208,10 @@ def noDecays ( usage = __usage__ , vers = __version__ ) :
         logger.info ( "Generic decays     found     %s " % cnts[0] )
         logger.info ( "Decays-in-question found(1)  %s " % cnts[1] )
         logger.info ( "Decays-in-question found(2)  %s " % cnts[2] )
+        print 120*'*'
+        if decays : 
+            logger.info ( "Problematic decays are: " )
+            for d in decays : print '   %s' % d
         print 120*'*'
 
         return SUCCESS
