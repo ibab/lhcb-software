@@ -45,7 +45,7 @@ RelInfoBstautauTrackIsolation::RelInfoBstautauTrackIsolation( const std::string&
   declareProperty( "tracktype", m_tracktype = 3,
                    "Set the type of tracks which are considered inside the cone (default = 3)");
 
-  declareProperty("PVInputLocation",m_PVInputLocation = LHCb::RecVertexLocation::Primary);
+  setProperty("PVInputLocation",m_PVInputLocation = LHCb::RecVertexLocation::Primary);
   declareProperty ( "TrackContainer",   m_TracksPath = LHCb::TrackLocation::Default); // default is "Rec/Track/Best "
   declareProperty("angle"     , m_angle  = 0.27     ); //
   declareProperty("fc"        , m_fc  = 0.60     ); //

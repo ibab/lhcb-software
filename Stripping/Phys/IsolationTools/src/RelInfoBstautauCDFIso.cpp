@@ -42,7 +42,7 @@ RelInfoBstautauCDFIso::RelInfoBstautauCDFIso( const std::string& type,
 {
   declareInterface<IRelatedInfoTool>(this);
 
-  declareProperty("PVInputLocation",m_PVInputLocation = LHCb::RecVertexLocation::Primary);
+  setProperty("PVInputLocation",m_PVInputLocation = LHCb::RecVertexLocation::Primary);
   declareProperty ( "TrackContainer",   m_TracksPath = LHCb::TrackLocation::Default); // default is "Rec/Track/Best "
   declareProperty(    "PVInputLocation"
                       , m_PVInputLocation = LHCb::RecVertexLocation::Primary
