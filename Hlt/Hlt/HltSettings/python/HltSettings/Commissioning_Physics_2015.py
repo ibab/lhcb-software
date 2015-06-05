@@ -300,7 +300,13 @@ class Commissioning_Physics_2015( object ):
                  , 'Hlt1IncPhi'
                  , 'Hlt1B2PhiPhi_LTUNB', 'Hlt1B2PhiGamma_LTUNB'
                  , 'Hlt1L0HighSumETJet', 'Hlt1HighPtJetsSinglePV'
-                 , 'Hlt1CalibRICHMirror' ]
+                   , 'Hlt1CalibRICHMirror' 
+                   , 'Hlt1DiProton'
+                   , 'Hlt1DiProtonLowMult'
+                   , 'Hlt1CEP'
+                   , 'Hlt1CEPVeloCut'
+                   , 'Hlt1NonBeamBeamNoBias']
+                   
         
         ## from Hlt1TechnicalLines import Hlt1TechnicalLines 
         ## lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )

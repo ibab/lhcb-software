@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-06-04 - Mika Vesterinen
+ - Updated Commissioning_AllLines_2015
+ - Added Hlt1DiProton, DiProtonLowMult, and 3 CEP lines to Physics_2015
+
 ! 2015-06-04 - Patrick Spradlin
  - Updated CharmHad_EM2015:
    . Added accidentally omitted line Hlt2CharmHadXic0ToPpKmKmPipTurbo
