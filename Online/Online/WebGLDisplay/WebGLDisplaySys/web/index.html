@@ -524,11 +524,11 @@ void main()
         pmaterial.linewidth = params.width;
         mumaterial.linewidth = params.width;
       } );
-      var epicolor = fcolors.addColor(params, "picolor").name("Pions").onChange( function() { pimaterial.color.setHex(params.picolor.replace( '#','0x' )); } );
-      var ekcolor = fcolors.addColor(params, "kcolor").name("Kaons").onChange( function() { kmaterial.color.setHex(params.kcolor.replace( '#','0x' )); } );
-      var epcolor = fcolors.addColor(params, "pcolor").name("Protons").onChange( function() { pmaterial.color.setHex(params.pcolor.replace( '#','0x' )); } );
-      var emucolor = fcolors.addColor(params, "mucolor").name("Muons").onChange( function() { mumaterial.color.setHex(params.mucolor.replace( '#','0x' )); } );
-      var eecolor = fcolors.addColor(params, "ecolor").name("Electrons").onChange( function() { ematerial.color.setHex(params.ecolor.replace( '#','0x' )); } );
+      var epicolor = fcolors.addColor(params, "picolor").name("Pions").onChange( function() { pimaterial.uniforms.color.value = new THREE.Color(params.picolor); } );
+      var ekcolor = fcolors.addColor(params, "kcolor").name("Kaons").onChange( function() { kmaterial.uniforms.color.value = new THREE.Color(params.kcolor); } );
+      var epcolor = fcolors.addColor(params, "pcolor").name("Protons").onChange( function() { pmaterial.uniforms.color.value = new THREE.Color(params.pcolor); } );
+      var emucolor = fcolors.addColor(params, "mucolor").name("Muons").onChange( function() { mumaterial.uniforms.color.value = new THREE.Color(params.mucolor); } );
+      var eecolor = fcolors.addColor(params, "ecolor").name("Electrons").onChange( function() { ematerial.uniforms.color.value = new THREE.Color(params.ecolor); } );
       var epvs = fcolors.add(params, "pvs").name("Primary vertices").onChange( function() { pvmaterial.visible = params.pvs; } );
       var evtracks = fcolors.add(params, "vtracks").name("Velo Tracks").onChange( function() { vtrackmaterial.visible = params.vtracks; } );
       var efourprongs = fcolors.add(params, "fourprongs").name("Four prong decays").onChange( function() { fourprongmaterial.visible = params.fourprongs; pvsvfourmaterial.visible = params.fourprongs; } );
