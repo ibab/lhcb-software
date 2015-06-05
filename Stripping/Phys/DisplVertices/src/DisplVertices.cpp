@@ -61,7 +61,7 @@ DECLARE_ALGORITHM_FACTORY( DisplVertices )
     //Unlimited
     declareProperty("PreyMaxMass", m_PreyMaxMass = 14.*TeV );
     declareProperty("PreyMinSumpt", m_SumPt = 0.*GeV );
-    declareProperty("PreyMinSumpt", m_PreyMaxSumPt = 14.*TeV );
+    declareProperty("PreyMaxSumpt", m_PreyMaxSumPt = 14.*TeV );
     declareProperty("RMin", m_RMin = 0.3*mm );//0.06 in K
     declareProperty("RMax", m_RMax = 10.*m );
     declareProperty("DistMax", m_DistMax = 10.* m );//Check value.
