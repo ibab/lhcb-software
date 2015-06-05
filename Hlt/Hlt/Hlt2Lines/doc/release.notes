@@ -9,7 +9,7 @@
 !----------------------------------------------------------------------------
 
 ! 2015-06-05 - Maurizio Martinelli
-  . CharmHad:  Fixed a bug in D02HHHHLine.py
+  . CharmHad:  Fixed a bug in D02HHHHLine.py and removed TISTOS on Hlt1 tracks
     M python/Hlt2Lines/CharmHad/D02HHHHLines.py
 
 ! 2015-06-05 - Patrick Spradlin

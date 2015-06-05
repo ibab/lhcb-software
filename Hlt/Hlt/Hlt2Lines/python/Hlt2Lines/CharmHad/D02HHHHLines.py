@@ -20,6 +20,7 @@ class CharmHadD02HHHHLines() :
     def localcuts(self) :
         # The kinematic cuts are in common between the lines
         cutsForD2HHHH = {
+                'TisTosSpec'               :  "" # Empty line for not applying TisTos
                 'Trk_ALL_PT_MIN'           :  250 * MeV,
                 'Trk_ALL_MIPCHI2DV_MIN'    :  3,
                 'AM_34'                    : (139.5 + 139.5) * MeV,
