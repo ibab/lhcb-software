@@ -231,7 +231,7 @@ class H24MuLineConf(LineBuilder) :
         self.registerLine(self.promptLine)
         self.registerLine(self.simpleLine)
         self.registerLine(self.detachedLine)
-        self.registerLine(self.looseLine)
+        #self.registerLine(self.looseLine)
 
 
 

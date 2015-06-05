@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-05 - Ricardo Vazquez Gomez
+ - Remove the line StrippingH24MuLooseLine from the registerLine in StrippingH24MuLines.py as
+   suggested by authors.
+ - Comment out the modules from BandQ not going into production  in the __init__.py file
+
 ! 2015-06-03 - Andrea Contu
  - Added new test scripts for liaisons and cordinators and modified collect_dicts.py script
 
