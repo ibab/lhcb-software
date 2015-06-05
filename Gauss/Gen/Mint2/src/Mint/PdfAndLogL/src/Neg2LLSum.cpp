@@ -2,7 +2,11 @@
 // status:  Mon 9 Feb 2009 19:17:56 GMT
 #include "Mint/Neg2LLSum.h"
 #include "Mint/IMinimisable.h"
+#include "Mint/Neg2LLConstraint.h"
+#include "Mint/NamedParameter.h"
 
+
+using namespace std;
 using namespace MINT;
 
 Neg2LLSum::Neg2LLSum(MinuitParameterSet* mps)
@@ -99,6 +103,31 @@ double Neg2LLSum::getVal(){
     sum += _likList[i]->getVal();
   }
   return sum;
+}
+
+bool Neg2LLSum::addConstraints(){
+
+    cout << "addConstraints for " << getParSet()->size() << " paramaters" <<  endl;
+
+    
+    for(int i=0;i< getParSet()->size();i++){
+        string name_i= getParSet()->getParPtr(i)->name();
+        cout << "paramater " << i << " : " <<  name_i << endl;
+        NamedParameter<double> constrain(("Constrain_"+name_i).c_str(),-1,-1,NamedParameterBase::QUIET);
+        //cout << constrain << endl;
+        if(constrain.getVal(0)>0 && constrain.getVal(1)>0){
+            IMinimisable* gaussConstraint = new Neg2LLConstraint(getParSet()->getParPtr(i),constrain.getVal(0),constrain.getVal(1),getParSet());
+            add(gaussConstraint);
+            cout << "Added gaussian constraint to parameter: " << name_i 
+            << " with initial value = " << (double) *(getParSet()->getParPtr(i))  
+            << " and mean = " << constrain.getVal(0)
+            << " and sigma = " << constrain.getVal(1) << endl  ;
+            cout << "neg2LL value = " << gaussConstraint->getVal() << endl; 
+
+        }
+    }
+        
+    return true;
 }
 
 //

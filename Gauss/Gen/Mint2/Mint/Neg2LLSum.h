@@ -56,6 +56,8 @@ class Neg2LLSum : public Minimisable{
   virtual void endFit();
 
   double getVal();
+    
+  bool addConstraints();
 
 };
 }// namespace MINT

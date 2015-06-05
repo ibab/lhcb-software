@@ -265,7 +265,9 @@ int ampFit(){
   if(fitLineshapeParameters){
         AmpsPdf amps(pat, &fas, integPrecision,integMethod, (std::string) IntegratorEventFile);
         Neg2LL fcn(amps, eventList);
-        Minimiser mini(&fcn);
+        Neg2LLSum neg2LLSum(&fcn);
+        neg2LLSum.addConstraints(); 
+        Minimiser mini(&neg2LLSum);
         mini.doFit();
         mini.printResultVsInput();
         DalitzHistoSet fitH = amps.histoSet();

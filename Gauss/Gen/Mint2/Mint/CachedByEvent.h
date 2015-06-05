@@ -16,6 +16,7 @@ class CachedByEvent : virtual public MINT::IFitParDependent{
 
  protected:
   long int _rememberNumber; // for caching
+  std::vector<long int> _rememberNumberPermutation;
   long int _configNumber;
 
   long int rememberNumber() {
@@ -25,16 +26,17 @@ class CachedByEvent : virtual public MINT::IFitParDependent{
     }
     return _rememberNumber;
   }
-  
-  long int rememberNumberPermutation(IDalitzEvent& evt) {
-        if(_rememberNumber < 0){
-            _rememberNumber = DalitzEvent::assignUniqueRememberNumber();
-            std::cout << "just assigned _rememberNumber "<< _rememberNumber << std::endl;
-            for(int i=1; i < evt.numPermutations(); i++) DalitzEvent::assignUniqueRememberNumber();
-        }
-        return _rememberNumber+evt.permutationIndex();
-  }
     
+  long int rememberNumberPermutation(IDalitzEvent& evt) {
+        if(_rememberNumberPermutation.size() < evt.numPermutations()){
+            _rememberNumberPermutation.resize(evt.numPermutations());
+            for(unsigned int i=0; i < evt.numPermutations(); i++)
+                _rememberNumberPermutation[i] = DalitzEvent::assignUniqueRememberNumber();
+             
+        }
+        return _rememberNumberPermutation[evt.permutationIndex()];
+  }
+  
   long int configNumber(){ 
     if(_configNumber <= 0) _configNumber=1;
     return _configNumber;
