@@ -4,6 +4,10 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2015-06-05 - Liang Sun
+ - Set LoadCALIBDB default value to HLT1 for Online and Upgrade options
+ - Change in detcond.configuration_module to avoid checking layered ONLINE partition
+
 ! 2015-06-04 - Liang Sun
  - Finalized support for CALIBOFF by loading the partition as an additional layer only above every ONLINE snapshot no earlier than 2015 
  - Bug fix for mistakenly loading CALIBOFF for upgrade CondDB

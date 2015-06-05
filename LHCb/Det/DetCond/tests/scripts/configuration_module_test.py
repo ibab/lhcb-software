@@ -38,6 +38,13 @@ class DetCondConfigurationTest(unittest.TestCase):
         GaudiKernel.Configurable._appliedConfigurableUsers_ = False
         unittest.TestCase.tearDown(self)
 
+    def checkHeartBeat(self, conf, chkstr = ""):
+        conf = allConfigurables[eval(conf.split(':')[0]).split("/")[1]]
+        if isinstance(conf, CondDBLayeringSvc):
+            conf = conf.Layers[-1]# Only check the bottom layer
+        self.assertEquals(conf.getProp("HeartBeatCondition"), chkstr)
+
+
     def test_000_originalConfiguration(self):
         """Check the default configuration"""
         applyConfigurableUsers()
@@ -161,11 +168,9 @@ class DetCondConfigurationTest(unittest.TestCase):
         
         online = allConfigurables["ONLINE"]
         for conf in online.Readers[:-1]:
-            conf = allConfigurables[eval(conf.split(':')[0]).split("/")[1]]
-            self.assertEquals(conf.getProp("HeartBeatCondition"), "")
+            self.checkHeartBeat(conf, "")
         conf = online.Readers[-1]
-        conf = allConfigurables[eval(conf.split(':')[0]).split("/")[1]]
-        self.assertEquals(conf.getProp("HeartBeatCondition"), "/Conditions/Online/LHCb/Tick")
+        self.checkHeartBeat(conf, "/Conditions/Online/LHCb/Tick")
         
     def test_033_heartbeat(self):
         """HeartBeat condition (off-line, SQLite, ignore)"""
@@ -176,8 +181,7 @@ class DetCondConfigurationTest(unittest.TestCase):
         
         online = allConfigurables["ONLINE"]
         for conf in online.Readers:
-            conf = allConfigurables[eval(conf.split(':')[0]).split("/")[1]]
-            self.assertEquals(conf.getProp("HeartBeatCondition"), "")
+            self.checkHeartBeat(conf, "")
         
     def test_040_heartbeat(self):
         """HeartBeat condition (on-line, Oracle, not ignore)"""
@@ -209,11 +213,9 @@ class DetCondConfigurationTest(unittest.TestCase):
         
         online = allConfigurables["ONLINE"]
         for conf in online.Readers[:-1]:
-            conf = allConfigurables[eval(conf.split(':')[0]).split("/")[1]]
-            self.assertEquals(conf.getProp("HeartBeatCondition"), "")
+            self.checkHeartBeat(conf, "")
         conf = online.Readers[-1]
-        conf = allConfigurables[eval(conf.split(':')[0]).split("/")[1]]
-        self.assertEquals(conf.getProp("HeartBeatCondition"), "/Conditions/Online/LHCb/Tick")
+        self.checkHeartBeat(conf, "/Conditions/Online/LHCb/Tick")
         
     def test_043_heartbeat(self):
         """HeartBeat condition (on-line, SQLite, default)"""
@@ -223,8 +225,7 @@ class DetCondConfigurationTest(unittest.TestCase):
         
         online = allConfigurables["ONLINE"]
         for conf in online.Readers:
-            conf = allConfigurables[eval(conf.split(':')[0]).split("/")[1]]
-            self.assertEquals(conf.getProp("HeartBeatCondition"), "")
+            self.checkHeartBeat(conf, "")
 
 if __name__ == '__main__':
     unittest.main(testRunner = unittest.TextTestRunner(stream=sys.stdout,verbosity=2))

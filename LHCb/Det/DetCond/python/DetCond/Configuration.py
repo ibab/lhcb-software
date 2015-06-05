@@ -75,7 +75,7 @@ class CondDB(ConfigurableUser):
                        'AllLocalTagsByDataType' : """ Use all CondDB local tags marked with the data type """,
                        'UseLatestTags' : """ List of the form [DataType, OnlyGlobalTags = False] to turn on the usage of the latest tags """,
                        'QueryGranularity': """Granularity of the query in the database (in time units)""",
-                       'LoadCALIBDB': """ Load CALIB*.db file as additional layers on top of ONLINE-*.db file, could be either "HLT1" (w/o layering, ONLINE only), or "OFFLINE" (Layer CALIBOFF above CALIB & ONLINE ) """,
+                       'LoadCALIBDB': """ Load CALIB*.db file as additional layers on top of ONLINE-*.db file, could be either "HLT1" (w/o layering, ONLINE only), or "OFFLINE" (Layer CALIBOFF above CALIB & ONLINE ), Do not set it for the Online environment""",
                        }
     LAYER = 0
     ALTERNATIVE = 1
@@ -371,6 +371,9 @@ class CondDB(ConfigurableUser):
         # special case for online
         if self.getProp('UseDBSnapshot') : self._configureDBSnapshot()
 
+        # In the Online/Upgrade environment, LoadCALIBDB should be defaulted to HLT1
+        if self.getProp("Online") or self.getProp('Upgrade'):
+            self._properties["LoadCALIBDB"].setDefault("HLT1")
         # Set up environment variables for loading CALIBOFF layers, must be before loading any tags
         LoadCALIBDB = self.getProp('LoadCALIBDB')
         loadcaliboptions = ["HLT1", "OFFLINE"]
@@ -447,7 +450,7 @@ class CondDB(ConfigurableUser):
                       ("ONLINE",   CondDBTimeSwitchSvc),
                       ("SIMCOND",  CondDBAccessSvc),
                       ("DQFLAGS",  CondDBAccessSvc)]
-        if LoadCALIBDB is "OFFLINE" and not self.getProp('Upgrade'):
+        if LoadCALIBDB is "OFFLINE":
         # CALIBOFF not needed for the upgrade
             parttypes += [("CALIBOFF", CondDBAccessSvc)]
 
