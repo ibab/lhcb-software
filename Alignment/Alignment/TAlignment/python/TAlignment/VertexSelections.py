@@ -20,8 +20,8 @@ def configuredPVSelection():
                                    InputLocation = "Rec/Vertex/Primary",
                                    OutputLocation = "Rec/Vertex/AlignPrimaryVertices",
                                    MaxChi2PerDoF = 5,
-                                   MinNumTracks = 10,
-                                   MinNumLongTracks = 2 )
+                                   MinNumTracks = 8,
+                                   MinNumLongTracks = 0 )
     seq = GaudiSequencer("AlignPVSelSeq")
     seq.Members += [ pvrefitter, pvselector ]
     sel = VertexSelection(Name = "DefaultPVSelection",

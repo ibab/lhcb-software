@@ -6,7 +6,8 @@ Purpose	: collection of alignment algorithms
 ! 2015-06-05 - Silvia Borghi
  - Add in Track selection for the velo overlap and add selection of the velo 
    refitted segnments of the long tracks
-   Few fixes in messages
+ - Change Vertex selection
+ -  Few fixes in messages
 
 ! 2015-06-02 - Silvia Borghi
  - Change Velo survey for run2
