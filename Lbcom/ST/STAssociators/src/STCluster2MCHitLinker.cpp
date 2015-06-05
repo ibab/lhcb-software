@@ -18,10 +18,10 @@ DECLARE_ALGORITHM_FACTORY( STCluster2MCHitLinker )
 STCluster2MCHitLinker::STCluster2MCHitLinker( const std::string& name,
                                               ISvcLocator* pSvcLocator) : 
   ST::AlgBase (name,pSvcLocator),
-  m_hitLocation(MCHitLocation::TT),
-  m_asctLocation(STDigitLocation::TTDigits + "2MCHits")
+  m_hitLocation(MCHitLocation::TT)
 {
 
+  declareSTConfigProperty("DigitASCTlocation", m_asctLocation , STDigitLocation::TTDigits + "2MCHits" );
   declareSTConfigProperty("InputData", m_inputData , STClusterLocation::TTClusters );
   declareSTConfigProperty("OutputData", m_outputData , STClusterLocation::TTClusters 
                   + "2MCHits" );

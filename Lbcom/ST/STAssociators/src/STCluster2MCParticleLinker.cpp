@@ -19,9 +19,9 @@ DECLARE_ALGORITHM_FACTORY( STCluster2MCParticleLinker )
 
 STCluster2MCParticleLinker::STCluster2MCParticleLinker(const std::string& name,
                                                        ISvcLocator* pSvcLocator)
-  : ST::AlgBase (name,pSvcLocator),
-    m_asctLocation( STClusterLocation::TTClusters + "2MCHits")
+  : ST::AlgBase (name,pSvcLocator)
 {
+  declareSTConfigProperty("ClusterASCTlocation" , m_asctLocation  , STClusterLocation::TTClusters + "2MCHits");
   declareSTConfigProperty("InputData" , m_inputData  , STClusterLocation::TTClusters);
   declareSTConfigProperty("OutputData", m_outputData , STClusterLocation::TTClusters);
   declareProperty("AddSpillOverHits", m_addSpillOverHits = false); 
