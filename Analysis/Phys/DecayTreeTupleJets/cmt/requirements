@@ -16,6 +16,7 @@ branches          cmt doc src
 use   DecayTreeTupleBase  v*    Phys
 use   LoKiArrayFunctors   v*    Phys
 use   JetTagging          v*    Phys
+use   HltEvent            v*    Event
 
 #============================================================================
 # Component library building rule
