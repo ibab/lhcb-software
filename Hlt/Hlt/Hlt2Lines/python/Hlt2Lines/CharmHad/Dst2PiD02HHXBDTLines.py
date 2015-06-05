@@ -39,7 +39,7 @@ class CharmHadDst2PiD02HHXBDTLines : # {
                   , 'Dst_M_MAX'                 : 2300.0 * MeV
                   , 'Dst_D0_DeltaM_MAX'         : 350.0 * MeV
                   , 'BDT_Lookup_Filename'       : "Hlt2Dst2PiD02HHX_BDTParams_v0r0.txt"
-                  , 'BDT_Threshold'             : 1.40
+                  , 'BDT_Threshold'             : 1.33
 
                   , 'BDT_Lookup_VarMap' : {
                                 "D0FD"          : "CHILDFUN(BPVVD, 1)"
@@ -58,7 +58,7 @@ class CharmHadDst2PiD02HHXBDTLines : # {
                   , 'Dst_M_MAX'                 : 2700.0 * MeV
                   , 'Dst_D0_DeltaM_MAX'         : 500.0 * MeV
                   , 'BDT_Lookup_Filename'       : "Hlt2Sigc2PiLc2HHX_BDTParams_v0r0.txt"
-                  , 'BDT_Threshold'             : 1.425
+                  , 'BDT_Threshold'             : 1.345
 
                   , 'BDT_Lookup_VarMap' : {
                                 "D0FD"          : "CHILDFUN(BPVVD, 1)"

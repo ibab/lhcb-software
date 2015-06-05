@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-06-05 - Patrick Spradlin
+  . CharmHad:  Updated the thresholds for the inclusive D*+ and Sigma_c lines
+    M python/Hlt2Lines/CharmHad/Dst2PiD02HHXBDTLines.py
+
 ! 2015-06-05 - Stefano Perazzini
  - Update to python/Hlt2Lines/B2HH/{Lines.py,Stages.py}
 
