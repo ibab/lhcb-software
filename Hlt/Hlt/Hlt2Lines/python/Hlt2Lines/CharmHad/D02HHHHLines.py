@@ -69,8 +69,8 @@ class CharmHadD02HHHHLines() :
   
     def locallines(self):
         from Stages import MassFilter
-        from Stages import SharedNoPIDDetachedChild_pi, SharedNoPIDDetachedChild_K
-        from Stages import SharedDetachedD0ToHHHHChild_pi, SharedDetachedD0ToHHHHChild_K
+#        from Stages import SharedNoPIDDetachedChild_pi, SharedNoPIDDetachedChild_K
+        from Stages import SharedDetachedD0ToHHHHChild_pi, SharedDetachedD0ToHHHHChild_K, SharedSoftTagChild_pi
         from Stages import DV4BCombiner, Dst2D0pi, TagDecay
         
         stages = {}
@@ -90,8 +90,8 @@ class CharmHadD02HHHHLines() :
                 stages['D02'+fs+des+'Tag'+'Turbo'] = [Dst2D0pi('D02'+fs+des+'Tag', d0=stages['D02'+fs+des+'Turbo'][0])]
             for fs in ['KPiPiPi', 'KKKPi']:
                 stages['D02CF'+fs+des+'Tag'+'Turbo']  = [TagDecay('D02CF'+fs+des+'Tag', decay = ["[D*(2010)+ -> D0 pi+]cc"],
-                                                          inputs = [stages['D02'+fs+des+'Turbo'][0]])]
+                                                          inputs = [stages['D02'+fs+des+'Turbo'][0],SharedSoftTagChild_pi])]
                 stages['D02DCS'+fs+des+'Tag'+'Turbo'] = [TagDecay('D02DCS'+fs+des+'Tag',decay = ["[D*(2010)- -> D0 pi-]cc"],
-                                                          inputs = [stages['D02'+fs+des+'Turbo'][0]])]
+                                                          inputs = [stages['D02'+fs+des+'Turbo'][0],SharedSoftTagChild_pi])]
         
         return stages
