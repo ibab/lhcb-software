@@ -86,7 +86,8 @@ class B2HHLTUnbiasedCombiner(Hlt2Combiner):
                   " & ( AM > %(BMassWinLow)s )" +
                   " & ( AM < %(BMassWinHigh)s )" +
                   " & ( ACUTDOCACHI2( %(DOCACHI2)s, '' ) )")
-        mc =    ( "( BPVDIRA > %(BDIRA)s )" +
+        mc =    ( "( PT > %(BPT)s )" +
+                  " & ( BPVDIRA > %(BDIRA)s )" +
                   " & ( BPVIPCHI2() < %(BIPCHI2)s )" +
                   " & ( BPVLTIME() > %(BLT)s )" )
 

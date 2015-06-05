@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-06-05 - Stefano Perazzini
+ - Update to python/Hlt2Lines/B2HH/{Lines.py,Stages.py}
+
 ! 2015-06-04 - Patrick Spradlin
   . CharmHad:  Renamed the inclusive D*+ and Sigma_c lines to match the
     routing bit pattern designated for them.
