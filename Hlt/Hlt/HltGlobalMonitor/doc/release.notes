@@ -5,6 +5,11 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+! 2015-06-05 - Sascha Stahl
+ - HltGlobalMonitor: Added monitoring of the track chi2 and the hit residuals
+   in each subdetector.
+
+
 ! 2015-06-04 - Sascha Stahl
  - HltGlobalMonitor: Fixed calculation of time passed since start of run.
 

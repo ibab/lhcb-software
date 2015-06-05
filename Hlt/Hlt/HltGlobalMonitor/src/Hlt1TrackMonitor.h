@@ -5,6 +5,8 @@
 #include "GaudiKernel/ObjectContainerBase.h"
 #include "HltBase/HltBaseAlg.h"
 
+#include <unordered_map>
+
 namespace AIDA {
   class IHistorgram2D;
 }
@@ -30,7 +32,10 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
 
 private:
-
+  
+  void monitorTracks(LHCb::Track::Range tracks);
+  void monitorFittedTracks(LHCb::Track::Range tracks);
+    
   template < typename T > T* fetch(const std::string& location)
   {
     T* t = this->exist<T>( location ) ?  this->get<T>( location ) : 0;
@@ -54,7 +59,22 @@ private:
   AIDA::IHistogram1D* m_nITHits;
   AIDA::IHistogram1D* m_nOTHits;
   AIDA::IHistogram1D* m_nVeloHits;
-  AIDA::IHistogram1D* m_trackChi2;  
+  AIDA::IHistogram1D* m_trackChi2DoF;
+  AIDA::IHistogram1D* m_hitResidual;
+  AIDA::IHistogram1D* m_hitResidualPull;
+
+  struct EnumClassHash
+  {
+    template <typename T>
+    std::size_t operator()(T t) const
+    {
+      return static_cast<std::size_t>(t);
+    }
+  };
+
+  std::unordered_map<LHCb::Measurement::Type,AIDA::IHistogram1D*,EnumClassHash> m_hitResidualPerDet;
+  std::unordered_map<LHCb::Measurement::Type,AIDA::IHistogram1D*,EnumClassHash> m_hitResidualPullPerDet;
+
 };
 #endif // HLT1TRACKMONITOR_H
 

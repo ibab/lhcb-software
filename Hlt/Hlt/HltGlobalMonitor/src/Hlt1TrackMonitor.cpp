@@ -29,6 +29,8 @@
 #include <Event/L0DUReport.h>
 #include <Event/ODIN.h>
 #include <Event/Track.h>
+#include <Event/Node.h>
+
 // ============================================================================
 // local
 // ============================================================================
@@ -77,7 +79,7 @@ StatusCode Hlt1TrackMonitor::initialize()
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc; // error printed already by GaudiAlgorithm
 
-  m_VeloTrackMult = book1D( "VeloTrackMult", "Velo track multiplicity", 0., 250., 251 );
+  m_VeloTrackMult = book1D( "VeloTrackMult", "Velo track multiplicity", 0., 300., 301 );
   declareInfo( "VeloTrackMult", m_VeloTrackMult, "Velo track multiplicity" );
   m_VeloTTTrackMult = book1D( "VeloTTTrackMult", "VeloTT track multiplicity", 0., 200., 201 );
   declareInfo( "VeloTTTrackMult", m_VeloTTTrackMult, "VeloTT track multiplicity" );
@@ -87,10 +89,33 @@ StatusCode Hlt1TrackMonitor::initialize()
   declareInfo("VeloHitsPerLongTrack",  m_nVeloHits , "# Velo hits per long track");
   m_nTTHits = book1D("TTHitsPerLongTrack",  "# TT hits per long track",  0., 10.5 ,11);
   declareInfo("TTHitsPerLongTrack",  m_nTTHits , "# TT hits per long track");
-  m_nITHits = book1D("ITHitsPerLongTrack" , "# IT hits per long track",  0., 40.5 ,41);
+  m_nITHits = book1D("ITHitsPerLongTrack" , "# IT hits per long track",  0., 30.5 ,31);
   declareInfo("ITHitsPerLongTrack",  m_nITHits , "# IT hits per long track");
   m_nOTHits = book1D("OTHitsPerLongTrack" , "# OT hits per long track",  0., 40.5 ,41);
   declareInfo("OTHitsPerLongTrack",  m_nOTHits , "# OT hits per long track");
+  m_trackChi2DoF = book1D("TrackChi2DoF" , "Track #chi^{2}/DoF",  0., 10. ,100);
+  declareInfo("TrackChi2DoF", m_trackChi2DoF, "Track #chi^{2}/DoF");
+  m_hitResidual = book1D("HitResidual" , "hit residual",  -6., 6. ,100);
+  declareInfo("HitResidual", m_hitResidual, "hit residual");
+  m_hitResidualPull = book1D("HitResidualPull" , "hit residual pull",  -5., 5. ,100);
+  declareInfo("HitResidualPull", m_hitResidualPull, "hit residual pull");
+  for (auto type : { LHCb::Measurement::VeloLiteR, 
+                     LHCb::Measurement::VeloLitePhi, 
+                     LHCb::Measurement::TTLite, 
+                     LHCb::Measurement::ITLite, 
+                     LHCb::Measurement::OT  }){
+    auto typeName = LHCb::Measurement::TypeToString(type);
+    if (type==LHCb::Measurement::OT)
+      m_hitResidualPerDet[type] = book1D("HitResidual"+typeName , typeName + " hit residual",  -6., 6. ,200);
+    else if (type==LHCb::Measurement::ITLite || type==LHCb::Measurement::TTLite)
+      m_hitResidualPerDet[type] = book1D("HitResidual"+typeName , typeName + " hit residual",  -1.5, 1.5 ,200);
+    else
+      m_hitResidualPerDet[type] = book1D("HitResidual"+typeName , typeName + " hit residual",  -0.2, 0.2 ,200);
+    declareInfo("HitResidual"+typeName,  m_hitResidualPerDet[type], typeName + " hit residual");
+    m_hitResidualPullPerDet[type] = book1D("HitResidualPull"+typeName , typeName + " hit residual pull",  -5., 5. ,100);
+    declareInfo("HitResidualPull"+typeName,  m_hitResidualPullPerDet[type], typeName + " hit residual pull");
+  }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -106,18 +131,8 @@ StatusCode Hlt1TrackMonitor::execute()
 }
 
 //=============================================================================
-void Hlt1TrackMonitor::monitor()
-{
-
-  auto veloTracks    = getIfExists<LHCb::Track::Range>( m_VeloTrackLocation    );
-  auto veloTTTracks  = getIfExists<LHCb::Track::Range>( m_VeloTTTrackLocation  );
-  auto forwardTracks = getIfExists<LHCb::Track::Range>( m_ForwardTrackLocation );
-
-  m_VeloTrackMult->fill( veloTracks.size() );
-  m_VeloTTTrackMult->fill( veloTTTracks.size() );
-  m_ForwardTrackMult->fill( forwardTracks.size() );
-  
-  for (auto track : forwardTracks ){
+void Hlt1TrackMonitor::monitorTracks(LHCb::Track::Range tracks){
+  for ( auto track : tracks ) {
     const auto ids = track->lhcbIDs();
     const auto nVeloHits = std::count_if(ids.begin(), ids.end(),[](LHCb::LHCbID id){return id.isVelo();});
     const auto nTTHits = std::count_if(ids.begin(), ids.end(),[](LHCb::LHCbID id){return id.isTT();});
@@ -128,4 +143,42 @@ void Hlt1TrackMonitor::monitor()
     m_nITHits->fill(nITHits);
     m_nOTHits->fill(nOTHits);
   }
+}
+
+//=============================================================================
+void Hlt1TrackMonitor::monitorFittedTracks(LHCb::Track::Range tracks){
+  for ( auto track : tracks ){
+    m_trackChi2DoF->fill(track->chi2PerDoF());
+    if (track->nodes().empty()) continue;
+    LHCb::Track::ConstNodeRange nodes = track->nodes() ;
+    for ( auto node : nodes ){
+      const double f = std::sqrt( node->errMeasure2()/node->errResidual2()) ;
+      m_hitResidual->fill(f*node->residual());
+      m_hitResidualPull->fill(node->residual()/node->errResidual());
+      if (node->hasMeasurement()){
+        auto type = node->measurement().type();
+        if (m_hitResidualPerDet.find(type)!=m_hitResidualPerDet.end()){
+          m_hitResidualPerDet[type]->fill(f*node->residual());
+          m_hitResidualPullPerDet[type]->fill(node->residual()/node->errResidual());
+        }
+      }
+    }
+  }
+}
+
+//=============================================================================
+void Hlt1TrackMonitor::monitor()
+{
+  auto veloTracks    = getIfExists<LHCb::Track::Range>( m_VeloTrackLocation    );
+  auto veloTTTracks  = getIfExists<LHCb::Track::Range>( m_VeloTTTrackLocation  );
+  auto forwardTracks = getIfExists<LHCb::Track::Range>( m_ForwardTrackLocation );
+  auto fittedTracks  = getIfExists<LHCb::Track::Range>( m_FittedTrackLocation  );
+  
+  m_VeloTrackMult->fill( veloTracks.size() );
+  m_VeloTTTrackMult->fill( veloTTTracks.size() );
+  m_ForwardTrackMult->fill( forwardTracks.size() );
+  
+  monitorTracks(forwardTracks);
+  monitorFittedTracks(fittedTracks);
+
 }
