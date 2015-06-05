@@ -94,8 +94,6 @@
   <class name = "Decays::IMCDecay::Tree"   />
   <class name = "LoKi::Dicts::FinderDicts_<const LHCb::MCParticle*> "/>
 
-  <enum name  = "Rich::DetectorType" />
-  
   <exclusion>
     <class name = "std::vector<const ContainedObject*>"           /> 
     <class name = "std::vector<const LHCb::MCParticle*>"          /> 
