@@ -1,6 +1,10 @@
+2015-06-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/cern-lxdistcc-wrappers.sh: do not use lcg-*-x.y.z links in the gcc installations
+
 2015-05-27  Ben Couturier  <ben.couturier@cern.ch>
 
-	* cmt/requirements: LBCORE-825: Release of v4r4 
+	* cmt/requirements: LBCORE-825: Release of v4r4
 
 2015-05-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

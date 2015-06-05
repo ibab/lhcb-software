@@ -82,6 +82,8 @@ case ${_self} in
 
                 _version=${_self##*-}
                 setup_gcc $_version
+                _self=${_self%-*}
+                _self=${_self#*-}
                 ;;
 
         lcg-clang-*|lcg-clang++-*)
