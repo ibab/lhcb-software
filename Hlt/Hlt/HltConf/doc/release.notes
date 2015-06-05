@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-06-05 - Roel Aaij
+ - Remove routing bit 59, bit 52 was unnecessarily added for the Velo closing,
+   40 already does that job.
+
 ! 2015-06-04 - Christian Linn
  - add IDs for MBNoBiasRateLimited and MBNoBiasLeadingCrossing lines
 

@@ -58,6 +58,11 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             from HltTracking.HltPVs import PV3D
             PVs = PV3D("Hlt2")
             from HltTracking.HltTrackNames import Hlt2TrackLoc
+            recSeq = Sequence("RecSummaryRecoSequence", IgnoreFilterPassed = True)
+            from itertools import chain
+            from Hlt2Lines.Utilities.Utilities import uniqueEverseen
+            recSeq.Members = (list(chain.from_iterable([dec[0] for dec in decoders.itervalues()]))
+                              + list(uniqueEverseen(chain.from_iterable([tracks, tracksDown, muonID, PVs]))))
             summary = RecSummaryAlg('Hlt2RecSummary', SummaryLocation = "Hlt2/RecSummary",
                                     HltSplitTracks = True,
                                     SplitLongTracksLocation = tracks.outputSelection(),
@@ -69,8 +74,5 @@ class HltAfterburnerConf(LHCbConfigurableUser):
                                     SpdDigitsLocation  = decoders['SPD'][1],
                                     MuonCoordsLocation = decoders['Muon'][1],
                                     MuonTracksLocation = decoders['MuonTr'][1])
-            from itertools import chain
-            from Hlt2Lines.Utilities.Utilities import uniqueEverseen
-            seq.Members = list(uniqueEverseen(chain.from_iterable([dec[0] for dec in decoders.itervalues()]
-                                                                  + [PVs, tracks, tracksDown, muonID]))) + [summary]
+            seq.Members = [recSeq, summary]
             Afterburner.Members += [seq]
