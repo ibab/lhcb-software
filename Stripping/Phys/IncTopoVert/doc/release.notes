@@ -4,6 +4,10 @@
 ! Purpose     : Inclusive Vertex Reconstruction
 !-----------------------------------------------------------------------------
 
+! 2015-06-05 - Ricardo Vazquez Gomez
+ - Change declareProperty to setProperty to avoid compilation warnings from properties 
+   already declared.
+
 !========================= IncTopoVert v1r5 2015-05-29 =========================
 
 ! 2015-05-11 - Alessandro Morda'

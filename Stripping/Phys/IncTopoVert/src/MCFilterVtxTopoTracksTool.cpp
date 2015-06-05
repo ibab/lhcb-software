@@ -29,7 +29,7 @@ MCFilterVtxTopoTracksTool::MCFilterVtxTopoTracksTool( const std::string& type,
 {
   declareInterface<IFilterVtxTopoTracksTool>(this);
   std::string Default_decay = "[B_s0 -> (tau+ -> ^pi+ ^pi- ^pi+ nu_tau~ {,gamma}{,gamma}{,gamma}) (tau- -> ^pi+ ^pi- ^pi- nu_tau {,gamma}{,gamma}{,gamma}) {,gamma}{,gamma}{,gamma}]cc";
-  declareProperty("DecayDescriptor",m_DecayDescriptor= Default_decay);
+  setProperty("DecayDescriptor",m_DecayDescriptor= Default_decay);
 
   declareProperty("Plot"  ,m_DoPlot = false);
 
