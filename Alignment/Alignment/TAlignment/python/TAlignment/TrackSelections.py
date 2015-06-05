@@ -103,6 +103,45 @@ class HighMomentumTTracks( TrackRefiner ):
         if self._fitted:
             a.Selector.MaxChi2Cut = 5
 
+# selection of Long tracks refitted with only Velo segment
+class GoodLongRefittedVeloTracks(TrackSelection):
+   # __slots__ = {
+   #     "_inputLocation" : "" # Location of input track list"
+   #     }
+    
+    def __init__( self, Name, InputLocation = "Rec/Track/Best" ) :  
+        TrackSelection.__init__(self, "GoodLongRefittedVeloTracks")
+        self._inputLocation = InputLocation
+    def algorithm( self ):
+        Name = self._name
+        inputTrackLocation = self._inputLocation
+        from Configurables import GaudiSequencer, HltTrackConverter, TrackContainerCopy, Escher
+        from Configurables import TrackContainerCopy, TrackSelector
+        trackRefitSeq = GaudiSequencer(self.name() + "Seq")# GaudiSequencer("TrackRefitSeq")
+
+        # create a track list for tracks with velo hits
+        velotrackselector = TrackContainerCopy("GoodLongRefittedVeloTracks",
+                                               inputLocation = "Rec/Track/Best",
+                                               outputLocation = "Rec/Track/GoodLongRefittedVeloTracks",
+                                               Selector = TrackSelector())
+        velotrackselector.Selector.MinNVeloRHits = 7
+        velotrackselector.Selector.MinNVeloPhiHits = 6
+        # refit the tracks in that list
+        from TrackFitter.ConfiguredFitters import *
+        velotrackrefitter = ConfiguredEventFitter(Name = "TracksWithVeloHitsFitter",
+                                                  TracksInContainer = "Rec/Track/GoodLongRefittedVeloTracks",
+                                                  FieldOff=True)
+        velotrackrefitter.Fitter.MeasProvider.IgnoreIT = True
+        velotrackrefitter.Fitter.MeasProvider.IgnoreOT = True
+        velotrackrefitter.Fitter.MeasProvider.IgnoreTT = True
+        velotrackrefitter.Fitter.MeasProvider.IgnoreMuon = True
+        velotrackrefitter.Fitter.MakeNodes = True
+        velotrackrefitter.Fitter.MakeMeasurements = True
+
+        trackRefitSeq.Members += [velotrackselector, velotrackrefitter]
+        return trackRefitSeq
+
+
 # selection of Velo backward tracks
 class VeloBackwardTracks( TrackRefiner ):
     def __init__( self, Name = "VeloBackwardTracks", InputLocation = "Rec/Track/Best", Fitted = True ) :
@@ -111,8 +150,8 @@ class VeloBackwardTracks( TrackRefiner ):
         from Configurables import TrackSelector
         a.Selector = TrackSelector()
         a.Selector.TrackTypes = ["Backward"]
-        a.Selector.MinNVeloRHits = 4
-        a.Selector.MinNVeloPhiHits = 4
+        a.Selector.MinNVeloRHits = 6
+        a.Selector.MinNVeloPhiHits = 6
         a.Selector.MaxNVeloHoles = 0
         if self._fitted:
             a.Selector.MaxChi2Cut = 5
@@ -138,12 +177,12 @@ class VeloOverlapTracks( TrackRefiner ):
     def configureSelector( self, a ):
         from Configurables import VeloTrackSelector
         a.Selector = VeloTrackSelector()
-        a.Selector.MinHitsASide = 1
-        a.Selector.MinHitsCSide = 1
-        a.Selector.MinNVeloRHits = 4
-        a.Selector.MinNVeloPhiHits = 4
+        a.Selector.MinHitsASide = 3
+        a.Selector.MinHitsCSide = 3
+        a.Selector.MinNVeloRHits = 7
+        a.Selector.MinNVeloPhiHits = 7
         a.Selector.MaxNVeloHoles = 1
-        a.Selector.TrackTypes = ["Long","Velo","Backward"]
+        a.Selector.TrackTypes = ["Velo","Backward"]
         if self._fitted:
             a.Selector.MaxChi2PerDoFVelo = 5
             a.Selector.MaxChi2Cut = 5

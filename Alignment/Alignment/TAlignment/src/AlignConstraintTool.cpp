@@ -552,7 +552,7 @@ namespace Al
 	logmessage << std::setw(15) 
 		   << std::setiosflags(std::ios_base::left)
 		   << m_derivatives[parindex/Al::ConstraintDerivatives::NumConstraints]->name(parindex%Al::ConstraintDerivatives::NumConstraints)
-		   << std::setw(12) << x(iactive)
+		   << std::setw(12) << x(iactive) << " "
 		   << " +/- " 
 		   << std::setw(12) << AlParameters::signedSqrt(V.fast(iactive,iactive)) 
 		   << " gcc^2: " 
