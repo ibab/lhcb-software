@@ -3,6 +3,8 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+! 2015-06-05 - Liang Sun
+ - Set LoadCALIBDB default value to HLT1 for Simulation option
 
 ! 2015-06-05 - Liang Sun
  - Set LoadCALIBDB default value to HLT1 for Online and Upgrade options
