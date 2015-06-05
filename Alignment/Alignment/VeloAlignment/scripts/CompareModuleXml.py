@@ -331,7 +331,7 @@ for fnamein in listFiles:
                     vd2rotzl[nmod] = sign * rotz
                 else:
                     sign=1
-                    if ((nmod-1)%4==0):
+                    if ((nmod+1)%4==0):
                         sign=-1
                     n=gr2rtx.GetN()
                     gr2rtx.SetPoint(n,vmodz[nmod],-transx)
