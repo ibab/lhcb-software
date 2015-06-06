@@ -1,7 +1,7 @@
 def configureAlignment():
     from Configurables import TAlignment
     from TAlignment.TrackSelections import GoodLongTracks, VeloOverlapTracks, VeloBackwardTracks, GoodLongRefittedVeloTracks
-    from TAlignment.VertexSelections import configuredLoosePVSelection
+    from TAlignment.VertexSelections import configuredLoosePVSelection, configuredPVSelection
     # specify what we actually align for
     TAlignment().TrackSelections = [GoodLongRefittedVeloTracks('TrackRefitSeq'),
                                     VeloOverlapTracks(),
