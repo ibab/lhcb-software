@@ -121,7 +121,7 @@ class GoodLongRefittedVeloTracks(TrackSelection):
 
         # create a track list for tracks with velo hits
         velotrackselector = TrackContainerCopy("GoodLongRefittedVeloTracks",
-                                               inputLocation = "Rec/Track/Best",
+                                               inputLocations = ["Rec/Track/Best"],
                                                outputLocation = "Rec/Track/GoodLongRefittedVeloTracks",
                                                Selector = TrackSelector())
         velotrackselector.Selector.MinNVeloRHits = 7
@@ -247,7 +247,7 @@ class NoPIDTracksFromHlt(TrackSelection):
             from Configurables import FastVeloTracking
             seq.Members += [FastVeloTracking(),
                             TrackContainerCopy('CopyVeloTracks',
-                                               inputLocation = 'Rec/Track/Velo',
+                                               inputLocations = ['Rec/Track/Velo'],
                                                outputLocation = 'Rec/Track/NoPIDBest')]
             
         tracksel = FavouriteTrackCocktail(Name ='NoPIDForAlignment',
@@ -255,7 +255,7 @@ class NoPIDTracksFromHlt(TrackSelection):
                                           Fitted = False)
         seq.Members += [ tracksel.algorithm(),
                          TrackContainerCopy('NoPIDForAlignmentCopy',
-                                            inputLocation = tracksel.location(),
+                                            inputLocations = [tracksel.location()],
                                             outputLocation = tracksel.location() + 'Owned'),
                          configuredFitAndHitAdderSequence('NoPIDFit',
                                                           InputLocation = tracksel.location() + 'Owned',
@@ -389,7 +389,7 @@ class BestMuonTracks(TrackSelection):
         # ------------------------------------------------------------------
         from Configurables import TrackSelector,TrackContainerCopy
         tmuonselectoralg  = TrackContainerCopy(name = "TmuonSelection",
-                                               inputLocation  =   'Rec/Track/Best/TMuon',
+                                               inputLocations  =   ['Rec/Track/Best/TMuon'],
                                                outputLocation =   self.location())  
         tmuonselectoralg.addTool( TrackSelector, name = "Selector")
         tmuonselectoralg.Selector.MaxChi2Cut = 10

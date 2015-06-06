@@ -100,7 +100,7 @@ def configureVeloAlignment(fixMeanInHalf=True):
     # make sure that the velo stays where it was. Important note: the
     # dofs here must match the ones that we actually align for. If you
     # specify too many, things will go rather wrong.
-    constraints.append( "VeloHalfAverage  : Velo/Velo(Left|Right) :  Tx Ty Tz Rx Ry Rz: total" )
+    constraints.append( "VeloHalfAverage  : Velo/Velo(Left|Right) :  Tx Ty Tz Rx Ry Rz" )
 
     if fixMeanInHalf:
         # Constrain average

@@ -24,6 +24,7 @@ gaudi_depends_on_subdirs(Alignment/AlignEvent
                          Tr/TrackInterfaces
                          Tr/TrackKernel)
 
+#set(CMAKE_PREFIX_PATH ${LCG_releases_base}/LCG_${heptools_version}/clhep/1.9.4.7/${BINARY_TAG} ${CMAKE_PREFIX_PATH}) # Fix by MClemencic, to be removed on 6/6/2015
 find_package(CLHEP)
 find_package(GSL)
 find_package(AIDA)

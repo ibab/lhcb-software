@@ -24,7 +24,7 @@ def configuredFitAndHitAdderSequence( Name, InputLocation, OutputLocation):
         TrackHitAdder( Name + 'HitAdder', TrackLocation = InputLocation ),
         ConfiguredEventFitter(Name + 'FitAfterHitAdder',TracksInContainer = InputLocation)]
     tracksel =  TrackContainerCopy(Name + 'CopyAndSelect',
-                                   inputLocation = InputLocation,
+                                   inputLocations = [InputLocation],
                                    outputLocation = OutputLocation,
                                    Selector = TrackSelector())
     # also apply a selection

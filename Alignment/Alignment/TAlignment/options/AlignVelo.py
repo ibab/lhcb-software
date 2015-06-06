@@ -262,7 +262,7 @@ trackselectortool = TrackSelector( "AlignTrackSelectorTool",
                                    TrackTypes = [ "Velo" ] ) 
 
 trackselectoralg = TrackContainerCopy("AlignTrackSelector",
-                                      inputLocation = "Rec/Track/Best",
+                                      inputLocations = ["Rec/Track/Best"],
                                       outputLocation = "Alignment/AlignmentTracks" )
 trackselectoralg.addTool( trackselectortool, "Selector" )
 AlConfigurable().filterSeq().Members.append( trackselectoralg  )

@@ -65,7 +65,7 @@ from Configurables import ( TrajOTProjector, TrackEventFitter, TrackMasterFitter
 from Configurables import ( TrackContainerCopy, TrackSelector )
 trackContCopy = TrackContainerCopy( "FilterTracks2",
                                     OutputLevel    = INFO,
-                                    inputLocation  = "Alignment/FilterTracks1", #"Alignment/FittedTracks",
+                                    inputLocations  = ["Alignment/FilterTracks1"], #"Alignment/FittedTracks",
                                     outputLocation = "Alignment/AlignmentTracks",
                                     copyFailures   = False )
 
