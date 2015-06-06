@@ -162,7 +162,7 @@ namespace Rich
                                     const Params& params,
                                     const unsigned int nEvents = 0 ) const;
 
-    private:
+    public:
 
       /// Check the fit errors for strange deviations
       inline bool errorsOK( const HPDFit::Result& result,
