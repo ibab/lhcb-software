@@ -9,6 +9,7 @@
 
 // local
 #include "FastVeloTracking.h"
+#include "FastVeloKalmanTrack.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FastVeloTracking
@@ -73,6 +74,11 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
   declareProperty( "MaxMergeManyTracks",m_maxMergeManyTracks=0.1);
   declareProperty( "MaxPhiReuseLimit",m_PhiReuseLimit=4.0);
 
+  // Steering the simple kalman fit that we could do at the end
+  declareProperty( "UseKalmanFit", m_useKalmanFit = false ) ;
+  declareProperty( "KalmanStateLastMeasurement", m_kalmanStateLastMeasurement = false ) ;
+  declareProperty( "KalmanStateEndVelo", m_kalmanStateEndVelo = false ) ;
+  declareProperty( "KalmanTransverseMomentumForScattering", m_kalmanPtForScattering = 400 * Gaudi::Units::MeV ) ;
 
   // Parameters for debugging
   declareProperty( "DebugToolName"     , m_debugToolName  = ""        );
@@ -946,6 +952,14 @@ void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
       state->setCovariance( track.covariance( zMax ) );
     }
     newTrack->addToStates( states );
+
+    if( m_useKalmanFit ) {
+      // as tracks share hits, we need to update everything
+      track.updateRPhi() ;
+      FastVeloKalmanTrack kalmantrack( track ) ;
+      kalmantrack.addStates( *newTrack,newTrack->firstState(),m_kalmanPtForScattering,
+			     m_stateAtBeam,m_kalmanStateLastMeasurement,m_kalmanStateEndVelo ) ;
+    }
 
     outputTracks->insert( newTrack );
   }

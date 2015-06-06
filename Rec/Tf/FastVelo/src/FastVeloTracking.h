@@ -125,6 +125,11 @@ private:
 
   double m_PhiReuseLimit; ///< if on average phi clusters used more than this kill the track
 
+  bool   m_useKalmanFit ;
+  double m_kalmanPtForScattering ;
+  bool   m_kalmanStateLastMeasurement ;
+  bool   m_kalmanStateEndVelo ;
+
   //== Debugging controls
   std::string      m_debugToolName;
   int              m_wantedKey;

@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2015-06-06 - Wouter Hulsbergen
+ - Added code to refit FastTrack with kalman fit with scattering.
+
 !========================= FastVelo v1r20 2015-05-26 =========================
 ! 2015-05-22 - David Hutchcroft
  - Rework FastVeloFitLHCbIDs to reset and correct the FastVeloHits in a repeatable way

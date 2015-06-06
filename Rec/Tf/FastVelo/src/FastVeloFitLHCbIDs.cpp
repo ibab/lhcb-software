@@ -3,9 +3,11 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 #include "Event/Track.h"
+
 // local
 #include "FastVeloFitLHCbIDs.h"
 #include "FastVeloTrack.h"
+#include "FastVeloKalmanTrack.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FastVeloFitLHCbIDs
@@ -27,6 +29,11 @@ FastVeloFitLHCbIDs::FastVeloFitLHCbIDs( const std::string& type,
 {
   declareInterface<ITrackFitter>(this);
   declareProperty( "StateAtBeam"  , m_stateAtBeam = true );
+  declareProperty( "UseKalmanFit", m_useKalmanFit = false ) ;
+  declareProperty( "KalmanStateLastMeasurement", m_kalmanStateLastMeasurement = false ) ;
+  declareProperty( "KalmanStateEndVelo", m_kalmanStateEndVelo = false ) ;
+  declareProperty( "KalmanTransverseMomentumForScattering", m_kalmanPtForScattering = 400 * Gaudi::Units::MeV ) ;
+  declareProperty( "KalmanUseTrackMomentum", m_kalmanUseTrackMomentum = false ) ;
 }
 //=============================================================================
 // Destructor
@@ -43,8 +50,24 @@ StatusCode FastVeloFitLHCbIDs::initialize() {
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
   m_hitManager  = tool<FastVeloHitManager>( "FastVeloHitManager", "FastVeloHitManager" );
 
+  debug() << "UseKalmanFit = " << m_useKalmanFit << endreq ;
+
   return StatusCode::SUCCESS;
 }
+
+namespace {
+  void addOrReplace( LHCb::Track& track, const LHCb::State& state )
+  {
+    LHCb::State* stateOnTrack = track.stateAt( state.location() ) ;
+    if( stateOnTrack ) {
+      *stateOnTrack = state ;
+    } else {
+      track.addToStates( state ) ;
+    }
+  }
+}
+
+
 
 //=========================================================================
 //  Fit a single track. The second argument is ignored.
@@ -133,27 +156,43 @@ StatusCode FastVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID) {
     }
   }
   fastTrack.updateRParameters();
-  double zBeam = fastTrack.zBeam();
 
   LHCb::State state;
-  if ( m_stateAtBeam ) {
-    state.setLocation( LHCb::State::ClosestToBeam );
-    state.setState( fastTrack.state( zBeam ) );
-    state.setCovariance( fastTrack.covariance( zBeam ) );
-  } else {
-    state.setLocation( LHCb::State::FirstMeasurement );
-    state.setState( fastTrack.state( zMin ) );
-    state.setCovariance( fastTrack.covariance( zMin ) );
-  }
-  track.addToStates( state );
 
-  if ( !track.checkFlag( LHCb::Track::Backward) ) {
+  if( !m_useKalmanFit ) {
+    double zBeam = fastTrack.zBeam();
+    if ( m_stateAtBeam ) {
+      state.setLocation( LHCb::State::ClosestToBeam );
+      state.setState( fastTrack.state( zBeam ) );
+      state.setCovariance( fastTrack.covariance( zBeam ) );
+    } else {
+      state.setLocation( LHCb::State::FirstMeasurement );
+      state.setState( fastTrack.state( zMin ) );
+      state.setCovariance( fastTrack.covariance( zMin ) );
+    }
+    addOrReplace( track, state ) ;
+  } else {  
+    // if it is there, we get the momentum from one of the input
+    // states, and also make sure to leave it there.
+    if( track.nStates()>0 ) state = track.firstState() ;
+    
+    // call the fit etc.
+    FastVeloKalmanTrack kalmantrack( fastTrack ) ;
+    double ptscat = m_kalmanUseTrackMomentum && std::abs( state.qOverP() ) > 0 ? -1 : m_kalmanPtForScattering ;
+    kalmantrack.addStates( track,state,ptscat,
+			   m_stateAtBeam,
+			   m_kalmanStateLastMeasurement,
+			   m_kalmanStateEndVelo ) ;
+  }
+
+  if ( !track.checkFlag( LHCb::Track::Backward) && !(m_useKalmanFit && m_kalmanStateEndVelo ) ) {
     state.setLocation( LHCb::State::EndVelo );
     state.setState( fastTrack.state( zMax ) );
     state.setCovariance( fastTrack.covariance( zMax ) );
-    track.addToStates( state );
+    addOrReplace(track,state );
   }
   
   return StatusCode::SUCCESS;
 }
 //=============================================================================
+

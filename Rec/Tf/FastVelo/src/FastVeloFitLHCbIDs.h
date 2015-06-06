@@ -38,5 +38,10 @@ private:
   FastVeloHitManager* m_hitManager;
   double m_msFactor;
   bool   m_stateAtBeam;
+  bool   m_useKalmanFit ;
+  double m_kalmanPtForScattering ;
+  bool   m_kalmanUseTrackMomentum ;
+  bool   m_kalmanStateLastMeasurement ;
+  bool   m_kalmanStateEndVelo ;
 };
 #endif // FASTVELOFITLHCBIDS_H
