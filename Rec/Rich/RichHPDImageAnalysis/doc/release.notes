@@ -4,6 +4,11 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2015-06-06 - Chris Jones
+ - Add support for fitting log-z images when the first fit gave unusual fit
+   errors. Designed to try and deal with image fits for HPDs with strongly 
+   varying occupancies.
+
 ! 2015-06-01 - Chris Jones
  - Prevent possible double delete in previous commit if no cleaning or 
    filtering is activated in the HPD Fitter.

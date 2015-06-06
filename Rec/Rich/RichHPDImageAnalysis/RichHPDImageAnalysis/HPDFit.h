@@ -34,14 +34,18 @@ namespace Rich
       {
       public:
         /// Default Constructor
-        Params() : type           ( "Sobel" ),
-                   cleanHistogram (  true   ),
-                   maxImageShift  (  3.0    ) // in mm
+        Params() : type             ( "Sobel" ),
+                   cleanHistogram   (  true   ),
+                   maxImageShift    (  3.0    ), // in mm
+                   maxXYErrDevation ( 99999   ),
+                   retryWithLogzImage ( false )
         { }
       public:
-        std::string type;     ///< Fit type
-        bool cleanHistogram;  ///< Flag to turn on image cleaning prior to the fit
-        double maxImageShift; ///< Max allowed image shift for a good fit
+        std::string type;        ///< Fit type
+        bool cleanHistogram;     ///< Flag to turn on image cleaning prior to the fit
+        double maxImageShift;    ///< Max allowed image shift for a good fit
+        double maxXYErrDevation; ///< HPD image fit max errors max deviation
+        bool retryWithLogzImage; ///< Retry the fit as needed with a log-z image
       public:
         /// Overload output to ostream
         friend inline std::ostream& operator << ( std::ostream& os,
@@ -66,12 +70,18 @@ namespace Rich
         Result() : m_OK ( false ),
                    m_row ( 0 ), m_rowErr ( 0 ),
                    m_col ( 0 ), m_colErr ( 0 ),
-                   m_rad ( 0 ), m_radErr ( 0 )  { }
+                   m_rad ( 0 ), m_radErr ( 0 ),
+                   m_usedLogZ( false ) { }
       public:
         /// Set the fit status
         void setOK( const bool OK ) { m_OK = OK; }
         /// Access the fit status
         bool OK() const { return m_OK; }
+      public:
+        /// Set the 'Used log-z' flag
+        void setUsedLogZ( const bool flag ) { m_usedLogZ = flag; }
+        /// Access the 'Used log-z' flag
+        bool usedLogZ() const { return m_usedLogZ; }
       public:
         /// Set the row number for the centre point and error
         void setRowAndErr( const double val, const double err ) { m_row = val; m_rowErr = err; }
@@ -125,6 +135,7 @@ namespace Rich
         double m_colErr;  ///< Error on the column number of centre point
         double m_rad;     ///< Image radius in pixel units
         double m_radErr;  ///< Error on the image radius in pixel units
+        bool m_usedLogZ;  ///< Used Log-z image
       };
 
     public:
@@ -150,6 +161,22 @@ namespace Rich
       const TH2D * getFitHistogram( const TH2D& hist,
                                     const Params& params,
                                     const unsigned int nEvents = 0 ) const;
+
+    private:
+
+      /// Check the fit errors for strange deviations
+      inline bool errorsOK( const HPDFit::Result& result,
+                            const Params& params ) const
+      {
+        const double avErr = ( result.xErr() + result.yErr() ) / 2.0;
+        return ( fabs( result.xErr() - avErr ) < avErr*params.maxXYErrDevation &&
+                 fabs( result.yErr() - avErr ) < avErr*params.maxXYErrDevation );
+      }
+
+    public:
+
+      /// Create a 'log-z' version of the image histogram
+      TH2D * createLogzImage( const TH2D& image ) const;
 
     private:
 

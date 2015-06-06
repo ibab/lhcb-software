@@ -64,6 +64,38 @@ const TH2D * HPDFit::getFitHistogram( const TH2D& hist,
   return hToReturn;
 }
 
+TH2D * HPDFit::createLogzImage( const TH2D& image ) const
+{
+  // construct unique ID each time ...
+  // nonsense to keep ROOT happy
+  static unsigned int iH(0);
+  std::ostringstream id;
+  id << image.GetName() << "_LogZ_" << ++iH;
+
+  // make a new histogram
+  TH2D * lzH = new TH2D ( id.str().c_str(),
+                          (std::string(image.GetTitle())+"_LogZ").c_str(),
+                          image.GetNbinsX(),
+                          image.GetXaxis()->GetXmin(),
+                          image.GetXaxis()->GetXmax(),
+                          image.GetNbinsY(),
+                          image.GetYaxis()->GetXmin(),
+                          image.GetYaxis()->GetXmax() );
+
+  // loop over bins and fill
+  for ( int i = 0; i < image.GetNbinsX(); ++i )
+  {
+    for ( int  j = 0; j < image.GetNbinsY(); ++j )
+    {
+      const auto cont = image.GetBinContent(i+1,j+1);
+      lzH->Fill( i, j, cont > 0 ? std::log10(cont) : 0.0 );
+    }
+  }
+
+  // return
+  return lzH;
+}
+
 HPDFit::Result HPDFit::fit ( const TH2D& hist,
                              const Params& params,
                              const unsigned int nEvents ) const
@@ -270,6 +302,25 @@ HPDFit::Result HPDFit::fit ( const TH2D& hist,
 
   // cleanup
   if ( params.cleanHistogram ) { delete hToUse; }
+
+  // Check the final result to see if we should retry with a log-z image
+  if ( params.retryWithLogzImage )
+  {
+    if ( ! errorsOK( result, params ) )
+    {
+      // create the log-z image
+      TH2D * logZhist = createLogzImage(hist);
+      // clone the params to turn off log-z fit, to avoid infinite recursion ...
+      auto new_params = params;
+      new_params.retryWithLogzImage = false;
+      // fit it
+      result = fit( *logZhist, new_params, nEvents );
+      // set the flag to say Log-Z was used
+      result.setUsedLogZ( true );
+      // remove the temporary hist
+      delete logZhist;
+    }
+  }
 
   // return the final status
   return result;
