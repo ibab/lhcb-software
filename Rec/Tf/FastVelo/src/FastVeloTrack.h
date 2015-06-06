@@ -39,6 +39,8 @@ public:
   inline int nbMissedSensors()      const { return m_missedSensors; }
   inline FastVeloHits& rHits()            { return m_rHits; }
   inline FastVeloHits& phiHits()          { return m_phiHits; }
+  inline const FastVeloHits& rHits()   const { return m_rHits; }
+  inline const FastVeloHits& phiHits() const { return m_phiHits; }
   inline double rErr2( double z )   const { double dz = z-m_sz / m_s0; return m_trErr2 + dz * dz * m_trErr2; }
 
   double rChi2() const {
@@ -124,6 +126,8 @@ public:
 
   double yAtZ( double z ) const { return m_y0 + m_ty * z; }
 
+  double x0() const { return m_x0 ; }
+  double y0() const { return m_y0 ; }
   double tx() const { return m_tx ; }
   double ty() const { return m_ty ; }
 
@@ -148,6 +152,15 @@ public:
     for ( itH = m_phiHits.begin(); m_phiHits.end() != itH; ++itH ) {
       (*itH)->setPhiWeight( m_x0 + (*itH)->z() * m_tx, m_y0 + (*itH)->z() * m_ty );
     }
+    fitTrack();
+  }
+
+  void updateRPhi() {
+    FastVeloHits::iterator itH;
+    for ( itH = m_rHits.begin(); m_rHits.end() != itH; ++itH ) 
+      (*itH)->setStartingPoint( m_x0 + (*itH)->z() * m_tx, m_y0 + (*itH)->z() * m_ty );
+    for ( itH = m_phiHits.begin(); m_phiHits.end() != itH; ++itH ) 
+      (*itH)->setPhiWeight( m_x0 + (*itH)->z() * m_tx, m_y0 + (*itH)->z() * m_ty );
     fitTrack();
   }
 
@@ -264,18 +277,14 @@ public:
     return temp;
   }
 
-  double zBeam() { return -( m_x0 * m_tx + m_y0 * m_ty ) / ( m_tx * m_tx + m_ty * m_ty ); }
+  double zBeam() const { return -( m_x0 * m_tx + m_y0 * m_ty ) / ( m_tx * m_tx + m_ty * m_ty ); }
 
   Gaudi::TrackSymMatrix covariance( double z );
 
   struct DecreasingByRLength  {
     bool operator() (const FastVeloTrack& lhs, const FastVeloTrack& rhs) const { return lhs.nbRHits() > rhs.nbRHits(); }
   };
-  
-  void fitKalman(LHCb::State& state,
-		 double& chi2,int& ndof,
-		 const int direction,const float noise2PerLayer) const ;
-  
+
   /// test to see if solve() failed: i.e.  x=tx=0 or y=ty=0
   bool testStateFit() const {
     return ( (m_x0 != 0. || m_tx != 0.) && (m_y0 != 0. || m_ty != 0.) ) ?  true : false;
