@@ -2,12 +2,12 @@
 ! Package manager : J. van Tilburg
 !------------------------------------------------------------------------------
 
-!========================= STAssociators v1r7 2012-11-28 =========================
 ! 2015-06-05 - Vincenzo Battista
  - The following (previously hardcoded) properties have been added:
    In STCluster2MCHitLinker.cpp: "DigitASCTlocation"
    In STCluster2MCParticleLinker.cpp: "ClusterASCTlocation"
 
+!========================= STAssociators v1r7 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.
 
