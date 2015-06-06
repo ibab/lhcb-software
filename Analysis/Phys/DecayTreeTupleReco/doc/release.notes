@@ -4,6 +4,9 @@
 ! Purpose     : Reconstruction related tuple tools
 !-----------------------------------------------------------------------------
 
+! 2015-06-06
+ - Make TupleToolRecoStats look in one more place.
+
 !========================= DecayTreeTupleReco v1r4p1 2014-10-30 =========================
 
 ! 2014-10-30 - Chris Jones

@@ -41,6 +41,10 @@ StatusCode TupleToolRecoStats::fill( Tuples::Tuple& tup )
   {
     rS = getIfExists<LHCb::RecSummary>(evtSvc(),LHCb::RecSummaryLocation::Default,false); 
   }
+  if ( !rS ) 
+  {
+    rS = getIfExists<LHCb::RecSummary>(evtSvc(),"/Event/Turbo/Rec/Summary",false); 
+  }
 
   // Fill the tuple
   bool test = true;
