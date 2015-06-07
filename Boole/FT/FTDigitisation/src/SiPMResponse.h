@@ -25,12 +25,14 @@ public:
   SiPMResponse( const std::string& type, 
                 const std::string& name,
                 const IInterface* parent);
+  
 
   virtual ~SiPMResponse( ); ///< Destructor
   
   virtual StatusCode initialize();
   
   virtual double response(const double time) const;
+  
 
 protected:
 
@@ -48,7 +50,9 @@ private:
   std::vector<double> m_times;  
   std::vector<double> m_values; 
   std::string m_splineType;
+  
+  int m_useNewResponse;
+  
 
-  bool m_useNewResponse;
 };
 #endif // BOOLE_V26R9_SIPMRESPONSE_H

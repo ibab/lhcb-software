@@ -33,7 +33,7 @@ DECLARE_TOOL_FACTORY( SiPMResponse )
 //=============================================================================
 SiPMResponse::SiPMResponse( const std::string& type,
                             const std::string& name,
-                            const IInterface* parent )
+                            const IInterface* parent)
   : GaudiTool ( type, name , parent ), m_responseSpline(0)
 {
   declareInterface<SiPMResponse>(this);
@@ -66,9 +66,7 @@ SiPMResponse::initialize()
     // prev spill
 
 
-
-
-    if( m_useNewResponse ) {
+    if( m_useNewResponse == 1 ) {
 
     // output of tools/getSiPMResponseShape.py here:
 
@@ -102,11 +100,48 @@ SiPMResponse::initialize()
     
         m_times  = times;
         m_values = values;
-    }
 
-    else {
+
+    } else if ( m_useNewResponse == 2 ) {
+
+      // Use f(t) = 1
+      info() << "WARNING: Using flat SiPMResponse!" << endmsg;
+
+      std::vector<double> values =
+        boost::assign::list_of
+        (1.) (1.) (1.) (1.) (1.) 
+        (1.) (1.) (1.) (1.) (1.) 
+        (1.) (1.) (1.) (1.) (1.) 
+        (1.) (1.) (1.) (1.) (1.) 
+        (1.) (1.) (1.) (1.) (1.) 
+        (1.) (1.) (1.) (1.) (1.) 
+        (1.) (1.) (1.) (1.) (1.) 
+        (1.) (1.) (1.) (1.) (1.) 
+        (1.) (1.) (1.) (1.) (1.) 
+        (1.) (1.) (1.) (1.) (1.) 
+        (1.) (1.) (1.) (1.) ;
+      
+      std::vector<double> times = 
+        boost::assign::list_of
+        (-45.2) (-43.06) (-40.92) (-38.78) (-36.64) 
+        (-34.5) (-32.36) (-30.22) (-28.08) (-25.94) 
+        (-23.8) (-21.66) (-19.52) (-17.38) (-15.24) 
+        (-13.1) (-10.96) (-8.82) (-6.68) (-4.54) 
+        (-2.4) (-0.26) (1.88) (4.02) (6.16) 
+        (8.3) (10.44) (12.58) (14.72) (16.86) 
+        (19.0) (21.14) (23.28) (25.42) (27.56) 
+        (29.7) (31.84) (33.98) (36.12) (38.26) 
+        (40.4) (42.54) (44.68) (46.82) (48.96) 
+        (51.1) (53.24) (55.38) (57.52) (59.66) 
+        (61.8) (63.94) (66.08) (68.22) ; 
+    
+        m_times  = times;
+        m_values = values;
+
+    } else {
     
       // use old SiPMResponse
+      info() << "WARNING: Using old SiPMResponse!" << endmsg;
 
       std::vector<double> Tprev =  
         boost::assign::list_of

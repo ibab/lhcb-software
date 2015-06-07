@@ -252,6 +252,9 @@ c3.Update()
 
 
 # print vector for SiPMResponse.cpp
+print ""
+print "This is the shape to use normally!"
+print "=================================="
 print "SiPM Integrator pulse height for SiPMResponse.cpp:"
 for i,entry in enumerate(pulseShapeSmooth):
   if(i%5==0) : print ""
@@ -264,7 +267,14 @@ for i,entry in enumerate(xlistSmooth):
 print ""
 
 
-
+# Print f(t) = 1, for SciFi Testbeam comparison
+#print ""
+#print "Here is the shape for f(t) = 1:"
+#print "=================================="
+#print "SiPM Integrator pulse height for SiPMResponse.cpp:"
+#for i,entry in enumerate(pulseShapeSmooth):
+#  if(i%5==0) : print ""
+#  print "(" + "1." + ")",
 
 
 # Write

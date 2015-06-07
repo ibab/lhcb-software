@@ -47,6 +47,8 @@ public:
   std::pair<double,double> integrateResponse(const LHCb::MCFTDeposit* ftdeposit);
   int averagePhotoElectrons(double energy);
   
+  SiPMResponse* m_SiPMResponse; ///< pointer to SiPM integrated response function
+  
 protected:
 
 private:
@@ -75,7 +77,6 @@ private:
   Rndm::Numbers m_rndmLandau;
 
   // tools
-  SiPMResponse* m_SiPMResponse; ///< pointer to SiPM integrated response function
   
   // detectors
   DeFTDetector* m_deFT; ///< pointer to FT detector description

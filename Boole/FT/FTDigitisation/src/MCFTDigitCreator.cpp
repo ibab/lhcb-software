@@ -100,7 +100,9 @@ StatusCode MCFTDigitCreator::initialize() {
 
   // tools
   if ( msgLevel( MSG::DEBUG) ) debug() << ": initializing SiPMResponse" << endmsg;
-  m_SiPMResponse = tool<SiPMResponse>("SiPMResponse","SiPMResponse", this);
+  //m_SiPMResponse = tool<SiPMResponse>("SiPMResponse","SiPMResponse", this);
+  m_SiPMResponse = tool<SiPMResponse>("SiPMResponse","SiPMResponse");
+  
   // plot response
   for (int i = -25; i < 75; ++i) plot(i, "SiPMResponse", "SiPMResponse; Pulse Height; Time (ns)" ,
 				       -25. , 75., 100,m_SiPMResponse->response(i));

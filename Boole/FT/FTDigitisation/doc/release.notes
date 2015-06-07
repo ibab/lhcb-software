@@ -4,6 +4,10 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2015-06-07 - Jacco de Vries
+ - Added option in SiPMResponse to have continuous flat shape, for testbeam comparisons.
+ - Set SiPMResponse as ToolSvc property instead of private, to allow for setting properties.
+
 !========================= FTDigitisation v2r5 2015-06-01 =========================
 ! 2015-05-29 - Jacco de Vries
  - Added a temporary fix for too large fiber module index (can happen due to mean position calculation).
