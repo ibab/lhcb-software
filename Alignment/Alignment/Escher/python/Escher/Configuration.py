@@ -37,8 +37,8 @@ class Escher(LHCbConfigurableUser):
 
     KnownSpecialData = []
 
-    DefaultRecoSequences = {'Run1':RecSysConf().DefaultSubDetsFieldOn,
-                            'Run2':RecSysConf().DefaultSubDetsFieldOnRun2}
+    DefaultRecoSequences = {'Run1':["Decoding"]+RecSysConf().DefaultTrackingSubdets,
+                            'Run2':["Decoding"]+RecSysConf().DefaultTrackingSubdetsRun2}
 
 
     # Steering options
@@ -69,7 +69,7 @@ class Escher(LHCbConfigurableUser):
                                            # for Kalman style alignment, there is a handle: UpdateConstants.
         # Following are options forwarded to RecSys
 #       , "RecoSequence"   	: ["Decoding","VELO","Tr","Vertex"] # The Sub-detector reconstruction sequencing. See RecSys for default
-       , "RecoSequence"   	: ["Decoding","VELO","Tr","Vertex"] # The Sub-detector reconstruction sequencing. See RecSys for default  
+       , "RecoSequence"   	: [] # The Sub-detector reconstruction sequencing. See RecSys for default  
        , "MoniSequence"         : ["VELO","Tr", "OT","ST"]
        , "SpecialData"    	: [] # Various special data processing options. See KnownSpecialData for all options
        , "Context"		: "Offline" # The context within which to run
@@ -437,10 +437,14 @@ class Escher(LHCbConfigurableUser):
     def CheckRecoSequence(self):
         RecoSeq = self.getProp("RecoSequence")
         RunType = 'Run2' if self.getProp("DataType") in ['2015'] else 'Run1'
+        # Set default sequence if not specified 
+        if RecoSeq == []: 
+            RecoSeq = self.DefaultRecoSequences[RunType]
+            return RecoSeq
+        # Inform that the specified sequence contains algorithm which are not in the default one
         if not set(RecoSeq).issubset(set(self.DefaultRecoSequences[RunType])):
             print 'Escher.RecoSequence contains algorithms which are not in '+RunType+' sequence:', \
                 self.DefaultRecoSequences[RunType]
-#            RecoSeq = self.DefaultRecoSequences[RunType] # You may want to redefine pieces of the sequence (for example in TrackerAlign)
         return RecoSeq
 
     ## Apply the configuration
