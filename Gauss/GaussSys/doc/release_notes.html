@@ -4,6 +4,161 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v48r2">2015-06-08 - GaussSys v48r2</A></H1><PRE>
+<H2><A NAME="Note"For development and Upgrade studies. Based on LCG_74root6.
+   Patches for EM and Kaon cross sections to Geant4 9.6.p04
+</A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v38r6 (and Gaudi v26r1)</b>
+   AppConfig v3r*,
+   <b>DecFiles v27r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   PGunsData v1r*
+   pythia8 186, lhapdf 6.1.4, 
+   photos++ 3.56 and tauola++ 1.1.4, 
+   pythia 6.428.2 (via LCG_GeneratorsInterfaces),
+   HepMC 2.06.08 (via LCG_Interfaces),
+   LHAPDFSets v2r* (private LHCb version)
+   <b>Geant4 v96r4p1</b> (based on geant4.9.6.p04 + patches for LHCb) and 
+   Geant4Files v96r0, 
+   XmlVis v1r19,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 and powhegbox r2092 (via LCG_GeneratorsInterfaces),
+   herwig++ 2.7.1 and <b>thepeg 1.9.2p1</b> (via LCG_GeneratorsInterfaces),
+   rivet 1.9.0 (via LCG_GeneratorsInterfaces),
+   EvtGen v16r0, EvtGenExtras v3r11 and Mint v3r3
+   (private LHCb version),
+   BcVegPy v4r0 + BcVegPyData v2r*, GenXicc v2r1p1 + GenXiccData v3r* and 
+   HidValley v4r0p1 (private LHCb versions)
+</A></H3>
+
+! 2015-06-02 - Gloria Corti
+ - Use patch version of LCG_GeneratorsInterfaces/herwigpp and photospp to 
+   match distribution on cvfms with 'pp'
+
+! 2015-05-12 - Gloria Corti
+ - Use new tags of LCG_Settings and LCG_GeneratorsInterfaces although the 
+   content is the same to indicate their compatibility with LCG 74root6
+ - Use new version of GaudiConf v19r9 althought not strictly necessary
+
+!========================= GenCuts v3r11p1 2015-05-27 ========================
+! 2015-05-22 - Xabier Cid Vidal
+ - Fixed tiny bug in InvariantMassQQMCJets.cpp that was causing core dump
+
+!========================== GenCuts v3r11 2015-05-07 =========================
+! 2015-05-01 - Guy Wormser 
+ - Added DaughtersInLHCbAndCutsForDstar3pi.cpp and .h to select D*3pi 
+   inclusive events from B decays
+
+!========================= GENSER v16r0p2 2015-06-02 =========================
+! 2015-03-13 - Gloria Corti
+ - Dummy release for building distribution with LCG_74root6
+
+!======================= Generators v14r8 2015-05-12 =========================
+! 2015-05-07 - Patrick Robbe 
+ - Special.cpp: fix to allow not reinitializing the generator, mandatory
+   when reading events from file (in that case the same events would be 
+   processed several times)
+
+!======================== LbPythia8 v11r0 2015-06-02 =========================
+! 2015-05-15 - Philip Ilten
+ - Removed LHAup code that was no longer need because of LbHard
+
+! 2015-05-01 - Philip Ilten
+ - Exposed members for HardProduction too
+
+!========================= LbPythia v15r0 2015-06-02 =========================
+! 2015-05-01 - Philip Ilten
+ - Exposed members for HardProduction tool
+
+!========================= LbHerwigpp v3r1 2015-06-03 ========================
+! 2015-06-02 - Philip Ilten
+ - Updated particle code translation.
+ - Included method for handling NLO hard process generation.
+
+!========================== LbHard v1r0 2015-06-02 ===========================
+! 2015-05-12 - Philip Ilten
+ - Changed default isSpecialParticle to false
+
+! 2015-05-07 - Gloria Corti
+ - Modify requirements to use more recent pattern to expose header.
+ - Attempt to write CMakeList.txt
+
+! 2015-05-01 - Philip Ilten
+ - Initial creation for use with LbBcVegPy and LbGenXicc
+
+!========================== LbAlpGen v6r0 2015-06-02 ==========================
+! 2015-06-02 - Gloria Corti
+ - Ported from v3b branch options AlpGen.py by Xabier Cid Vidal.
+ - Removed all other obsolete options
+
+!========================= LbBcVegPy v6r0 2015-06-02 =========================
+! 2015-06-02 - Gloria Corti
+ - Fixed mistyping in BcVegPyPythia{,8}.py
+
+! 2015-05-13 - Philip Ilten
+ - Added the MesonState and ViolateGaugeInvariance configruables
+
+! 2015-05-12 - Philip Ilten
+ - Changed masses to be configured via the ParticlePropertySvc
+ - Moved beam energy configuration from Gauss/Configuration.py to tool
+
+! 2015-05-07 - Gloria Corti
+ - Added linking to LbHardLib in cmake
+
+! 2015-05-01 - Philip Ilten
+ - Migrated to HardProduction tool
+
+!========================= LbGenXicc v5r0 2015-06-02 =========================
+! 2015-05-12 - Philip Ilten
+ - Removed deprecated configurable options
+
+! 2015-05-07 - Gloria Corti
+ - Added linking to LbHardLib for cmake
+
+! 2015-05-01 - Philip Ilten
+ - Migrated to HardProduction tool
+
+!========================= HCMoniSim v1r0 2015-05-07 =========================
+! 2015-02-12 - Heinrich Schindler
+ - Initial import.
+
+!=========================== GenTune v2r3 2015-05-07 =========================
+! 2015-04-30 - Alex Grecu
+ - Improve component logging and put generator cross-section change messages
+   under the supression system as value continues to vary slightly around 
+   asymptotic value.
+ - Minor patch to correct behaviour in automatically selecting interaction 
+   cross-section from various sources (MC generator, BeamParameters or 
+   externally force value). Previously ERROR was triggered when using 
+   generator provided cross-section in analysis module explicitly requiring
+   cross-section, even if cross-section value was correctly read from HepMC
+   stream.
+
+! 2015-04-07 - Alex Grecu
+ - Include lbInjectMathJax to inject MathJax enabling JS code in HTML pages.
+   This tool may become obsolete when rivet-mkhtml will support this feature. 
+ - Changed use line for fastjet in requirements to let package properly set 
+   up its corresponding link/build flags.
+
+! 2015-04-01 - Alex Grecu
+ - Adapted rivet-buildplugin from original RIVET distribution to work with 
+   LHCb specific configuration retrieved via CMT. Added bin directory containing
+   the build script named lbrivet-buildAM. Adjusted requirements to apply 
+   set_bin_path pattern for the package.
+ - Remove exec_prefix env variable definition in requirements
+
+!========================== XmlVis v1r20 2015-05-07 ==========================
+! 2014-10-14 - Sajan Easo
+ - Updated RICH upgrade visibility options
+
+!========================== SimChecks v1r5 2015-05-07 ========================
+! 2015-04-29 - Luca Pescatore
+ - Improved output readability
+
+!=============================================================================
 </PRE><H1><A NAME="v48r1p1">2015-03-19 - GaussSys v48r1p1</A></H1><PRE>
 <H2><A NAME="Note"For development and Upgrade studies. Identical to v48r1 but
 based on LCG_71root6.
