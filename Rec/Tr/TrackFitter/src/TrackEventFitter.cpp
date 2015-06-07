@@ -136,16 +136,12 @@ StatusCode TrackEventFitter::execute() {
       StatusCode sc = m_tracksFitter -> fit( track );
       
       if ( sc.isSuccess() ) {
-        // Add the track to the new Tracks container if it passes the chi2-cut
-        // -----------------------------------------
-        if ( m_makeNewContainer && m_maxChi2DoF > track.chi2PerDoF() ) tracksNewCont -> add( &track );
-        
+        std::string prefix = Gaudi::Utils::toString(track.type()) ;        
         if( msgLevel( MSG::INFO ) ) {
           if ( msgLevel( MSG::DEBUG ) ) {
             debug() << "Fitted successfully track # " << track.key() << endmsg;
           }
           // Update counters
-          std::string prefix = Gaudi::Utils::toString(track.type()) ;
           if( track.checkFlag( LHCb::Track::Backward ) ) prefix += "Backward" ;
           prefix += '.' ;
           if( track.nDoF()>0) {
@@ -155,6 +151,15 @@ StatusCode TrackEventFitter::execute() {
           }
           counter(prefix + "flipCharge") += bool( qopBefore * track.firstState().qOverP() <0) ;
           counter(prefix + "numOutliers") += track.nMeasurementsRemoved() ;
+        }
+        // Add the track to the new Tracks container if it passes the chi2-cut
+        // -----------------------------------------
+        if ( m_makeNewContainer) {
+          if ( m_maxChi2DoF > track.chi2PerDoF() ) tracksNewCont -> add( &track );
+          else{
+            delete &track;
+            counter(prefix + "RejectedChisqCut") += 1 ;
+          }
         }
       }
       else {
