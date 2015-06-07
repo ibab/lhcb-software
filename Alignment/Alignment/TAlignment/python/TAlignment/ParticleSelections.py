@@ -169,7 +169,7 @@ def defaultHLTD0Selection():
 
     # this still needs to be worked out
     from Configurables import Escher
-    Escher().RecoSequence = ["Hlt","Decoding","AlignTr","Vertex","RICH" ]
+    Escher().RecoSequence = ["Hlt","Decoding","AlignTr",'VELO', 'TrHLT1',"Vertex","RICH" ]
     Escher().MoniSequence = ["Tr","OT"]
 
     # if the Escher hlt filter is not set, set it here

@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2015-06-07 - Maurizio Martinelli
+ - Modified reconstruction sequence for Tracked alignment to adapt for Run2
+
 ! 2015-06-06 - Silvia Borghi
  - Fix some configurables
  - Change the 2 half constraint (cancel "total") for VeloAlignment scenario
