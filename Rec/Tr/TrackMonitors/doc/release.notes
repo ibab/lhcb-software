@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-06-07 - Sascha Stahl
+ - OTTrackMonitor: Increase the range of the OT hit multiplicity to 15000.
+
 ! 2015-05-28 Rosen Matev
  - Fix bug in BeamGasVertexMonitor (matching of vertices).
 

@@ -290,8 +290,8 @@ StatusCode OTTrackMonitor::initialize()
                                               -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
   profileResidualVsModule = bookProfile1D("resvsmodule", "unbiased residual versus module",
                                           -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
-  m_hitMultiplicity = book("hitmultiplicity","hit multiplicity", 0, 5000, 200) ;
-  m_hotMultiplicity = book("hotmultiplicity","hot multiplicity", 0, 5000, 200) ; 
+  m_hitMultiplicity = book("hitmultiplicity","hit multiplicity", 0, 15000, 400) ;
+  m_hotMultiplicity = book("hotmultiplicity","hot multiplicity", 0, 15000, 400) ; 
   histModuleHitOccupancy = book("moduleHitOccupancy", "number of hits per module",
                                 -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
   histModuleHotOccupancy = book("moduleHotOccupancy", "number of HOTs per module",
