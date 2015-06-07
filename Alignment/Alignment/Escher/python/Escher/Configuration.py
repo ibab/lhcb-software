@@ -37,6 +37,9 @@ class Escher(LHCbConfigurableUser):
 
     KnownSpecialData = []
 
+    DefaultRecoSequences = {'Run1':RecSysConf().DefaultSubDetsFieldOn,
+                            'Run2':RecSysConf().DefaultSubDetsFieldOnRun2}
+
 
     # Steering options
     __slots__ = {
@@ -430,6 +433,16 @@ class Escher(LHCbConfigurableUser):
         from Configurables import MagneticFieldSvc
         MagneticFieldSvc().UseSetCurrent = True
 
+    ## Check the reconstruction sequence
+    def CheckRecoSequence(self):
+        RecoSeq = self.getProp("RecoSequence")
+        RunType = 'Run2' if self.getProp("DataType") in ['2015'] else 'Run1'
+        if not set(RecoSeq).issubset(set(self.DefaultRecoSequences[RunType])):
+            print 'Escher.RecoSequence contains algorithms which are not in '+RunType+' sequence:', \
+                self.DefaultRecoSequences[RunType]
+#            RecoSeq = self.DefaultRecoSequences[RunType] # You may want to redefine pieces of the sequence (for example in TrackerAlign)
+        return RecoSeq
+
     ## Apply the configuration
     def __apply_configuration__(self):
 
@@ -441,10 +454,7 @@ class Escher(LHCbConfigurableUser):
 
         #if self.isPropertySet("RecoSequence") :
         #self.setOtherProp(RecSysConf(),["RecoSequence"])
-        RecoSeq = self.getProp("RecoSequence")
-        if self.getProp("DataType") is "2015": RecoSeq = RecSysConf().DefaultSubDetsFieldOnRun2+\
-                                                         RecSysConf().DefaultTrackingSubdetsRun2
-        RecSysConf().RecoSequence = RecoSeq
+        RecSysConf().RecoSequence = self.CheckRecoSequence()
 
         # there is a bug in setOtherProps, so we cannot use it to set the MoniSequence.
         if not self.getProp("OnlineMode"):
