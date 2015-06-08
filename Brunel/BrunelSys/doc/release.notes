@@ -3,8 +3,28 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v47r8>2015-06-08 Brunel v47r8</A></H1><PRE>
+This version uses projects:
+ LCG_76root6 (ROOT 6.02.08), Gaudi v26r2, LHCb v38r7, Lbcom v16r6,
+ Rec v17r7 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+ Patch release to address issues found after initial tests with 2015 data
+
+- Bug fixes
+  . LHCBPS-1416: Make sure PrTrackAssociator writes out linker location, even if
+    there are no tracks in the event (PrMCTools v2r10)
+  . TrackEventFitter: Added missing delete in case track chisq cut is not passed.
+    (TrackFitter v5r6)
+
+- Changes to monitoring
+  . OTTrackMonitor: Increase the range of the OT hit multiplicity to 15000.
+    (TrackMonitors v2r8)
+  . Fix bug in BeamGasVertexMonitor (matching of vertices) (TrackMonitors v2r8)
+
 - Changes to tests
   . Remove sam.qms test suite, no longer used and not supported by CMake
+  . Remove 2015-magdown and 2015-magdown-rdst tests that were using a 2012 test
+    file, and replace them with 2015-em, 2015-em-rdst using the first 2015 data
 
 </PRE><H1><A NAME=v47r7>2015-05-28 Brunel v47r7</A></H1><PRE>
 This version uses projects:
