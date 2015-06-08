@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-08 - Andrea Contu
+ - Fix test scripts to use algorithm correlation
+
 ! 2015-06-05 - Ricardo Vazquez Gomez
  - Remove the line StrippingH24MuLooseLine from the registerLine in StrippingH24MuLines.py as
    suggested by authors.

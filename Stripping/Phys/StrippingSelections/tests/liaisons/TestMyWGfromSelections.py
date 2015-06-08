@@ -123,7 +123,7 @@ from Configurables import StrippingReport
 sr = StrippingReport(Selections = sc.selections())
 
 from Configurables import AlgorithmCorrelationsAlg
-ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
+ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().EvtMax = 10000
