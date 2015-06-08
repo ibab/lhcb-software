@@ -5,6 +5,9 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2015-06-08 - Vanya Belyaev
+ - minor improvements in scripts 
+
 ! 2015-06-05 - Vanya Belyaev
  - fix issue with ROOT/python command-line options
    Thanks to Albert Puig

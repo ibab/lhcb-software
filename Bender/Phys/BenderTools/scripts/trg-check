@@ -2,7 +2,7 @@
 # =============================================================================
 # $Id: trg-check 129602 2011-09-29 17:04:25Z ibelyaev $ 
 # =============================================================================
-## @file dst-explorer
+## @file trg-check
 #
 #  Trivial Bender-based script to check trigger decisions 
 #                                                 for certain (stripping) line
@@ -32,7 +32,7 @@
 from BenderTools.CheckTrg import runChkTrg 
 import sys 
 args = sys.argv[1:]
-print 'MY ARGS! #%s#' % args  
+## print 'MY ARGS! #%s#' % args  
 runChkTrg() 
 
 # =============================================================================

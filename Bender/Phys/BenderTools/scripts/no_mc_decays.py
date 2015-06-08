@@ -4,6 +4,9 @@
 #
 #  Simple script to address ``MCDecayTuple does not contain all events'' problem
 #
+#  It looks MC-decays, that passes ``GENERICDECAY'' but not ``DECAYINQUESTION''
+#  - it helps to tune the decay descriptor, used in ``DECAYINQUESTION''
+#
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
 #  <b>``Python-based Interactive Environment for Smart and Friendly Physics Analysis''</b>
@@ -38,6 +41,9 @@
 
 Simple script to address ``MCDecayTuple does not contain all events'' problem
 
+It looks MC-decays, that passes ``GENERICDECAY'' but not ``DECAYINQUESTION'' 
+- it helps to tune the decay descriptor, used in ``DECAYINQUESTION'' 
+
 This file is a part of BENDER project:
 
   ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
@@ -69,6 +75,10 @@ __version__ = " $Revision: 162137 $ "
 __usage__   = """
    no-mc-decays [options] -d GENERICDECAY
                           -z DECAYINQUESTION file1 [ file2 [ ....
+                          
+   It looks MC-decays, that passes ``GENERICDECAY'' but not ``DECAYINQUESTION''
+   - it helps to tune the decay descriptor, used in ``DECAYINQUESTION''
+
    """
 # =============================================================================
 
