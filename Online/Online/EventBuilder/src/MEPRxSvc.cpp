@@ -53,7 +53,7 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, MEPRxSvc)
 /* maximum number of sources (TELL1, RS, UKL1) */
 //#ifndef MAX_SRC
 // This must provoke an error!  No protection (M.Frank)
-#define MAX_SRC 400
+#define MAX_SRC 500
 //#endif
 
 #define RAWBHDRSIZ (sizeof(RawBank) - sizeof(int)) /* f*** C99 */
