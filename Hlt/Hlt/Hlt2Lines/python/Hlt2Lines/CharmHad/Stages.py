@@ -3,6 +3,7 @@ from Hlt2Lines.Utilities.Hlt2Filter import Hlt2VoidFilter
 from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
 from Configurables import DaVinci__N4BodyDecays
+from Configurables import DaVinci__N5BodyDecays
 
 ## ========================================================================= ##
 ## Global event cuts
@@ -78,6 +79,30 @@ SharedPromptChild_p = InParticleFilter( 'CharmHadSharedPromptChild_p',
 SharedSoftTagChild_pi = InParticleFilter( 'CharmHadSharedSoftTagChild_pi',
                                           [Hlt2NoPIDsPions] )
 
+## ------------------------------------------------------------------------- ##
+class TighterProtonFilter(Hlt2ParticleFilter):
+    def __init__(self, name, inputs, nickname = None , shared = True  ):
+        pidp_cut = "(PIDp > %(PIDp_MIN)s  )"
+        deltaPID_cut = "( (PIDp-PIDK) > %(DeltaPID_MIN)s )"
+        momentum_cut = "( P > %(P_MIN)s )"
+        cut = pidp_cut + " & " + deltaPID_cut + " & " + momentum_cut
+        print ' cut = '
+        print(cut)
+        nickname = name if nickname == None else nickname
+        print '  nickname =  '
+        print(nickname)
+##        name     = name if not shared       else 'CharmHad%sTighterProton' % name
+        print '    name =  '
+        print(name)
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs,
+                                    nickname = nickname , shared = shared )
+
+##  --------------
+
+SharedTighterPromptChild_p = TighterProtonFilter('CharmHadTighterSharedPromptChild_p',
+                               inputs = [SharedPromptChild_p], 
+                               nickname = 'TighterProtons',
+                               shared = True)
 
 ## ------------------------------------------------------------------------- ##
 class DetachedInParticleFilter(Hlt2ParticleFilter) : # {
@@ -135,6 +160,10 @@ SharedDetachedLcChild_K = DetachedInParticleFilter( 'CharmHadSharedDetachedLcChi
                                                     [Hlt2LooseKaons], 'PIDK' )
 SharedDetachedLcChild_p = DetachedInParticleFilter('CharmHadSharedDetachedLcChild_p',
                                                    [Hlt2LooseProtons], 'PIDp' )
+SharedTighterDetachedLcChild_p = TighterProtonFilter('CharmHadTighterSharedDetachedLcChild_p',
+                               inputs = [SharedDetachedLcChild_p], 
+                               nickname = 'TighterProtons',
+                               shared = True)
 SharedDetachedD0ToHHHHChild_pi = DetachedInParticleFilter( 'CharmHadSharedDetachedD0ToHHHHChild_pi', [Hlt2LoosePions], 'PIDK', True )
 SharedDetachedD0ToHHHHChild_K = DetachedInParticleFilter( 'CharmHadSharedDetachedD0ToHHHHChild_K', [Hlt2LooseKaons], 'PIDK' )
 
@@ -526,26 +555,26 @@ D2HHH_DspToKmKpKp = DetachedHHHCombiner( 'D2HHH_DspToKmKpKp'
         , inputs = [ SharedDetachedDpmChild_K ]
         , nickname = 'Ds2HHH' )  ## 'D2HHH' defined in D2HHHLines.py
 
-## Main line Lambda_c+/Xi_c+ -> 3h combiners
+## Main line Lambda_c+ -> 3h combiners
 LcXic2HHH_LcpToKmPpPip = DetachedHHHCombiner( 'LcXic2HHH_LcpToKmPpPip'
         , decay = "[Lambda_c+ -> K- p+ pi+]cc"
-        , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_K,
+        , inputs = [ SharedTighterDetachedLcChild_p, SharedDetachedLcChild_K,
                      SharedDetachedLcChild_pi ]
         , nickname = 'LcXic2HHH' ) ## 'LcXic2HHH' defined in D2HHHLines.py
 
 LcXic2HHH_LcpToKmPpKp = DetachedHHHCombiner( 'LcXic2HHH_LcpToKmPpKp'
         , decay = "[Lambda_c+ -> K- p+ K+]cc"
-        , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_K ]
+        , inputs = [ SharedTighterDetachedLcChild_p, SharedDetachedLcChild_K ]
         , nickname = 'LcXic2HHH' ) ## 'LcXic2HHH' defined in D2HHHLines.py
 
 LcXic2HHH_LcpToPimPpPip = DetachedHHHCombiner( 'LcXic2HHH_LcpToPimPpPip'
         , decay = "[Lambda_c+ -> pi- p+ pi+]cc"
-        , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_pi ]
+        , inputs = [ SharedTighterDetachedLcChild_p, SharedDetachedLcChild_pi ]
         , nickname = 'LcXic2HHH' ) ## 'LcXic2HHH' defined in D2HHHLines.py
 
 LcXic2HHH_LcpToPimPpKp = DetachedHHHCombiner( 'LcXic2HHH_LcpToPimPpKp'
         , decay = "[Lambda_c+ -> pi- p+ K+]cc"
-        , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_K,
+        , inputs = [ SharedTighterDetachedLcChild_p, SharedDetachedLcChild_K,
                      SharedDetachedLcChild_pi ]
         , nickname = 'LcXic2HHH' ) ## 'LcXic2HHH' defined in D2HHHLines.py
 
@@ -573,18 +602,18 @@ XSec_DspToPimPipPip = DetachedHHHCombiner( 'XSec_DspToPimPipPip'
 
 XSec_LcpToKmPpPip = DetachedHHHCombiner( 'XSec_LcpToKmPpPip'
         , decay = "[Lambda_c+ -> K- p+ pi+]cc"
-        , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_K,
+        , inputs = [ SharedTighterDetachedLcChild_p, SharedDetachedLcChild_K,
                      SharedDetachedLcChild_pi ]
         , nickname = 'Lc2HHH_XSec' ) ## 'Lc2HHH_XSec' defined in XSecLines.py
 
 XSec_LcpToPimPpPip = DetachedHHHCombiner( 'XSec_LcpToPimPpPip'
         , decay = "[Lambda_c+ -> pi- p+ pi+]cc"
-        , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_pi ]
+        , inputs = [ SharedTighterDetachedLcChild_p, SharedDetachedLcChild_pi ]
         , nickname = 'Lc2HHH_XSec' ) ## 'Lc2HHH_XSec' defined in XSecLines.py
 
 XSec_LcpToKmPpKp = DetachedHHHCombiner( 'XSec_LcpToKmPpKp'
         , decay = "[Lambda_c+ -> K- p+ K+]cc"
-        , inputs = [ SharedDetachedLcChild_p, SharedDetachedLcChild_K]
+        , inputs = [ SharedTighterDetachedLcChild_p, SharedDetachedLcChild_K]
         , nickname = 'Lc2HHH_XSec' ) ## 'Lc2HHH_XSec' defined in XSecLines.py
 
 XSec_D02KPi = DetachedD02HHCombiner('XSec_D02KPi'
@@ -743,6 +772,135 @@ class DetachedHHHHCombiner(Hlt2Combiner) :
                               shared = True, tistos = 'TisTosSpec', DaughtersCuts = dc,
                               CombinationCut = cc, MotherCut = mc, Preambulo = [])
 
+##  a combiner intended for P_c --> phi,p,pi  (a charmed pentaquark, as suggested by Lipkin;
+##  see http://link.springer.com/article/10.1007%2Fs002180050168)
+class PentaCombiner(Hlt2Combiner):
+    """
+    Combiner for exclusive D0->hhhh lines, designed for the case where the first two
+    tracks have a low invariant mass
+
+    Configuration dictionaries must contain the following keys:
+        'AM_MAX'        : Maximum mass of the n-body combination
+        'AM12_MAX'      : Maximum mass of the first two tracks (good for phi --> KK cands)
+        'AM_4'          : Mass of the last particle
+        'ACHI2DOCA_MAX' : Maximum Doca-chi2 of each two-body combination (should be >= VCHI2NDOF)
+        'ASUMPT_MIN'    : Lower limit on the sum of the PTs of the daughters
+        'VCHI2PDOF_MAX' : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
+        'BPVDIRA_MIN'   : Lower limit on DIRA wrt bestPV in MotherCut
+        'BPVLTIME_MIN'  : Lower limit on Lifetime wrt bestPV in MotherCut'   
+        'PT_MIN'        : lower limit on Mother PT
+        'IPCHI2_MAX'    : max Mother IPCHI2; can restrict to only "prompt" candidates
+        'TisTosSpec'    : Configuration string of the Hlt1 TISTOS filter.
+    """
+    def __init__(self, name, decay,inputs, shared = False):
+        dc =  {}
+        for child in ['pi+','K+','p+'] :
+            dc[child] = "(PT > %(Trk_ALL_PT_MIN)s) & (MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)"
+        c12 = (" ( AM < (%(AM12_MAX)s) ) " +
+               "&( ACHI2DOCA(1,2) < %(ACHI2DOCA_MAX)s ) " )
+        c123 =(" ( AM < (%(AM_MAX)s - %(AM_4)s) ) " +
+               "&( ACHI2DOCA(1,3) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ACHI2DOCA(2,3) < %(ACHI2DOCA_MAX)s ) " )
+        cc =  (" (in_range( %(AM_MIN)s, AM, %(AM_MAX)s )) " +
+               "&( (APT1+APT2+APT3+APT4) > %(ASUMPT_MIN)s )" +
+               "&( ACHI2DOCA(1,4) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ACHI2DOCA(2,4) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ACHI2DOCA(3,4) < %(ACHI2DOCA_MAX)s ) " )
+##  the mother cuts do not explicitly include a specific mass range
+##  this will be specified in D2HHHHLines.py where a MassFilter is applied
+        mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
+                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVLTIME() > %(BPVLTIME_MIN)s )" +
+                 " & (PT> %(PT_MIN)s)" +
+                 " & (BPVIPCHI2() < %(IPCHI2_MAX)s )" )
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, name, decay, inputs, shared = shared,
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              tistos = 'TisTosSpec', combiner = DaVinci__N4BodyDecays, DaughtersCuts = dc,
+                              Combination12Cut = c12, Combination123Cut = c123, CombinationCut = cc,
+                              MotherCut = mc, Preambulo = [] )
+PentaPhiPimPp = PentaCombiner('PentaPhiPimPp', decay = "[Xi_c0 -> K- K+  p+ pi-]cc",
+                inputs=[SharedDetachedLcChild_K,SharedTighterDetachedLcChild_p,SharedDetachedLcChild_pi],
+                shared=True)
+
+
+##  a combiner intended for D --> 5 hadrons  
+class D2HHHHHCombiner(Hlt2Combiner):
+    """
+    Combiner for exclusive prompt D0->hhhhh lines, 
+
+    Configuration dictionaries must contain the following keys:
+        'AM_MIN'        : Minimum mass of the n-body combination
+        'AM_MAX'        : Maximum mass of the n-body combination
+        'AM_3'          : Mass of the 3rd daughter
+        'AM_4'          : Mass of the 4th daughter
+        'AM_5'          : Mass of the 5th daughter
+        'ACHI2DOCA_MAX' : Maximum Doca-chi2 of each two-body combination (should be >= VCHI2NDOF)
+        'ASUMPT_MIN'    : Lower limit on the sum of the PTs of the daughters
+        'VCHI2PDOF_MAX' : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
+        'BPVDIRA_MIN'   : Lower limit on DIRA wrt bestPV in MotherCut
+        'BPVLTIME_MIN'  : Lower limit on Lifetime wrt bestPV in MotherCut'   
+        'PT_MIN'        : lower limit on Mother PT
+        'IPCHI2_MAX'    : max Mother IPCHI2; can restrict to only "prompt" candidates
+        'TisTosSpec'    : Configuration string of the Hlt1 TISTOS filter.
+    """
+    def __init__(self, name, decay,inputs, shared = False):
+        dc =  {}
+        for child in ['pi+','K+','p+'] :
+            dc[child] = "(PT > %(Trk_ALL_PT_MIN)s) & (MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)"
+        c12 = (" ( AM < (%(AM_MAX)s - %(AM_3)s - %(AM_4)s - %(AM_5)s) ) " +
+               "&( ACHI2DOCA(1,2) < %(ACHI2DOCA_MAX)s ) " )
+        c123 =(" ( AM < (%(AM_MAX)s - %(AM_4)s - %(AM_5)s) ) " +
+               "&( ACHI2DOCA(1,3) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ACHI2DOCA(2,3) < %(ACHI2DOCA_MAX)s ) " )
+        c1234 = (" ( AM < (%(AM_MAX)s - %(AM_5)s) ) " +
+               "&( ACHI2DOCA(1,4) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ACHI2DOCA(2,4) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ACHI2DOCA(3,4) < %(ACHI2DOCA_MAX)s ) " )
+        cc =  (" (in_range( %(AM_MIN)s, AM, %(AM_MAX)s )) " +
+               "&( APT  > %(ASUMPT_MIN)s )" +
+               "&( ACHI2DOCA(1,5) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ACHI2DOCA(2,5) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ACHI2DOCA(3,5) < %(ACHI2DOCA_MAX)s ) " +
+               "&( ACHI2DOCA(4,5) < %(ACHI2DOCA_MAX)s ) " )
+##  the mother cuts do not explicitly include a specific mass range
+##  this will be specified in D2HHHHLines.py where a MassFilter is applied
+        mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
+                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVLTIME() > %(BPVLTIME_MIN)s )" +
+                 " & (PT> %(PT_MIN)s)" +
+                 " & (BPVIPCHI2() < %(IPCHI2_MAX)s )" )
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, name, decay, inputs, shared = shared,
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              tistos = 'TisTosSpec', combiner = DaVinci__N5BodyDecays, DaughtersCuts = dc,
+                              Combination12Cut = c12, Combination123Cut = c123, 
+                              Combination1234Cut = c1234, CombinationCut = cc,
+                              MotherCut = mc, Preambulo = [] )
+##  The DchXXXX lines are intended to cover both the D+ and D_s mass ranges.
+##  Separate mass, decay time, PT cuts can be applied elsewhere (D2HHHHHLines.py)
+##  to create disjoint or overlapping subsamples. The comments for each line
+##  refer to the D+ decay as the original use case is find D+ --> K,K,K,pi,pi
+##  for a high-precision mass measurement and the other two are there for 
+##  comparison and completeness.
+
+## The CF line with 4 pions can probably be pre-scaled, perhaps a factor of 10
+Dch2KmPimPipPipPip = D2HHHHHCombiner('Dch2KmPimPipPipPip', decay = "[D+ -> K- pi- pi+ pi+ pi+]cc",
+                inputs=[SharedDetachedDpmChild_K,SharedDetachedDpmChild_pi],
+                shared = True)
+##  We might want to keep all the SCS candidates for a BF measurement, and possibly
+##  an amplitude analysis
+Dch2KmKpPimPipPip = D2HHHHHCombiner('Dch2KmKpPimPipPip', decay = "[D+ -> K- K+ pi- pi+ pi+]cc",
+                inputs=[SharedDetachedDpmChild_K,SharedDetachedDpmChild_pi],
+                shared = True)
+## The CF decay with 3 kaons has a very small Q-value, so is interesting for 
+## for a mass measurement relatively robust against momentum scale systematics
+## We looked for this channel in BaBar data, and did not see it
+## With three kaons in the final state, and limited phase-space, the trigger rate
+## should be small.
+Dch2KmKmKpPipPip = D2HHHHHCombiner('Dch2KmKmKpPipPip', decay = "[D+ -> K- K- K+ pi+ pi+]cc",
+                inputs=[SharedDetachedDpmChild_K,SharedDetachedDpmChild_pi],
+                shared = True)
 
 class DetachedV0HCombiner(Hlt2Combiner):
     def __init__(self, name, decay,inputs):
@@ -1291,7 +1449,7 @@ class D2KKPi_OS_LTUNB(HHHCombiner) :
 class Lc2KPPi_LTUNB(HHHCombiner) :
     def __init__(self,name) :
         decay = "[Lambda_c+ -> K- p+ pi+]cc"
-        protonsForPromptHHHCombiner = SharedPromptChild_p
+        protonsForPromptHHHCombiner = SharedTighterPromptChild_p
         inputs = [SharedPromptChild_K,
                   SharedPromptChild_pi,
                   protonsForPromptHHHCombiner]
@@ -1304,7 +1462,7 @@ class Xic02PKKPi_LTUNB(HHHHCombiner) :
         decay = "[Xi_c0 -> p+ K- K- pi+]cc"
         inputs = [SharedPromptChild_K,
                   SharedPromptChild_pi,
-                  SharedPromptChild_p]
+                  SharedTighterPromptChild_p]
         HHHHCombiner.__init__(self,name,decay,inputs)
 
 class Xic02PKKPi(DetachedHHHHCombiner) :
@@ -1315,7 +1473,7 @@ class Xic02PKKPi(DetachedHHHHCombiner) :
         # combiner.
         inputs = [SharedPromptChild_K,
                   SharedPromptChild_pi,
-                  SharedPromptChild_p]
+                  SharedTighterPromptChild_p]
         DetachedHHHHCombiner.__init__(self,name,decay,inputs)
 
 # The V0H lines now
@@ -1608,6 +1766,45 @@ class MassFilter(Hlt2ParticleFilter):
                                     nickname = nickname , shared = shared,
                                     **refit_pvs_kwargs(reFitPVs))
 
+
+
+
+# prompt charm filter (really, prompt exclusive filter)
+# designed for charmed hadrons being combined with bachelor
+# tracks, also from the PV. See "PromptTrackFilter" below for bachelors.
+## ------------------------------------------------------------------------- ##
+class PromptSpectroscopyFilter(Hlt2ParticleFilter):
+    def __init__(self, name, inputs, nickname = None, shared = False ):
+        ipchi2_cut = "(BPVIPCHI2() < %(IPCHI2_MAX)s )"
+        decaytime_cut = "(BPVLTIME() > %(D_BPVLTIME_MIN)s )" 
+        mass_cut = "(%(DMASS_MIN)s < M) & (M < %(DMASS_MAX)s)"
+        cut = ipchi2_cut + " & " + decaytime_cut + " & " + mass_cut
+        nickname = name if nickname == None else nickname
+        name     = name if not shared       else 'CharmHad%sPromptSpectroscopy' % name
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs,
+                                    nickname = nickname , shared = shared )
+##
+class DplusFilter(Hlt2ParticleFilter):
+    def __init__(self, name, inputs, nickname = None, shared = False ):
+        decaytime_cut = "(BPVLTIME() > %(D_BPVLTIME_MIN)s )" 
+        mass_cut = "(%(DMASS_MIN)s < M) & (M < %(DMASS_MAX)s)"
+        pt_cut = "(PT > %(PT_MIN)s)"
+        cut =  decaytime_cut + " & " + mass_cut + " & " + pt_cut
+        nickname = name if nickname == None else nickname
+        name     = name if not shared       else 'CharmHad%sDplusFiltered' % name
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs,
+                                    nickname = nickname , shared = shared )
+##
+
+## ------------------------------------------------------------------------- ##
+class PromptBachelorFilter(Hlt2ParticleFilter):
+    def __init__(self, name, inputs, nickname = None, shared = False ):
+        ipchi2_cut = "(BPVIPCHI2() < %(IPCHI2_MAX)s )"
+        cut = ipchi2_cut
+        nickname = name if nickname == None else nickname
+        name     = name if not shared       else 'CharmHad%sPromptSpectroscopy' % name
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs,
+                                    nickname = nickname , shared = shared )
 
 ## ------------------------------------------------------------------------- ##
 class InclHcst2PiHc2HHXFilter( Hlt2ParticleFilter ) : # {
