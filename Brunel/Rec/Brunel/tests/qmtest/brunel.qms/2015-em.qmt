@@ -1,0 +1,39 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: M.Cattaneo
+# Purpose: Check that Brunel().DataType = "2015" is working correctly on 50ns ("EM") data.
+#          Currently using input file directly from tape, to be moved to SWTEST when we have a physics quality file.
+#          Currently explicitly setting database tags, remove once defaults are sfficiently recent
+# Prerequisites: brunel.2015-em-rdst, so that in case of failure the new 
+#                reference file of this test is the one that survives 
+# Common failure modes, severities and cures: 
+#          . MAJOR: Every failure should be understood. If brunel2012magdown test
+#                   also fails, check first reasons for those failures
+#######################################################
+-->
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout"><integer>3600</integer></argument>
+  <argument name="args"><set>
+    <text>$APPCONFIGOPTS/Brunel/saveFittedVeloTracks.py</text>
+    <text>--option</text>
+    <text>from Configurables import Brunel; Brunel().DataType = "2015"; Brunel().EvtMax = 1000; Brunel().DatasetName="2015-em"; Brunel().Monitors=["SC","FPE"]; from Gaudi.Configuration import EventSelector; EventSelector().Input = [ "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15EM/153759/153759_0000000066.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'" ];from Configurables import LHCbApp;LHCbApp().CondDBtag="cond-20150602";LHCbApp().DDDBtag="dddb-20150526"
+</text>
+  </set></argument>
+  <argument name="reference"><text>../refs/2015-em.ref</text></argument>
+  <argument name="validator"><text>
+#check if the output exists, and check the split locations are on it
+from RawEventCompat.QMTest.FormatTests import checkIsSplit, checkIsGone
+checkIsSplit("2015-em-1000ev.dst",4.1,causes,result,"brunel.2015-em")
+checkIsGone("2015-em-1000ev.dst",["Event/DAQ"],causes,result,"brunel.2015-em")
+
+from Brunel.QMTest.BrunelExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>brunel.2015-em-rdst</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>
+</extension>

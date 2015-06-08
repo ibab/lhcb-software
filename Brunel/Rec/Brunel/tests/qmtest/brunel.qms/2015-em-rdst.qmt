@@ -4,8 +4,7 @@
 # SUMMARY OF THIS TEST
 # ...................
 # Author: M.Cattaneo
-# Purpose: Identical to 2015magdown, but with RDST output
-# Prerequisites: None
+# Purpose: Identical to 2015-em, but with rdst output
 # Common failure modes, severities and cures: 
 #          . MAJOR: Every failure should be understood. If brunel2012magdown test
 #                   also fails, check first reasons for those failures
@@ -15,19 +14,20 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="timeout"><integer>3600</integer></argument>
   <argument name="args"><set>
-    <text>$PRCONFIGOPTS/Brunel/PR-COLLISION12-Beam4000GeV-VeloClosed-MagDown.py</text>
-    <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
+    <text>$APPCONFIGOPTS/Brunel/saveFittedVeloTracks.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().EvtMax=10; Brunel().Monitors=["SC","FPE"]; Brunel().DatasetName="2015magdown"; Brunel().DataType="2015"; Brunel().OutputType="RDST"; from Configurables import LHCbApp; LHCbApp().CondDBtag="cond-20150119-1"; LHCbApp().DDDBtag="dddb-20150119-3"</text>
+    <text>from Configurables import Brunel; Brunel().DataType = "2015"; Brunel().EvtMax = 1000; Brunel().DatasetName="2015-em"; Brunel().Monitors=["SC","FPE"]; Brunel().OutputType="RDST"; from Gaudi.Configuration import EventSelector; EventSelector().Input = [ "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15EM/153759/153759_0000000066.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'" ];from Configurables import LHCbApp;LHCbApp().CondDBtag="cond-20150602";LHCbApp().DDDBtag="dddb-20150526"
+</text>
   </set></argument>
-  <argument name="reference"><text>../refs/2015magdown.ref</text></argument>
+  <argument name="reference"><text>../refs/2015-em.ref</text></argument>
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
 preprocessor = BrunelPreprocessor + \
   RegexpReplacer(when = "DstWriter", orig = r'ev.rdst', repl = r'ev.dst') + \
   RegexpReplacer(when = "FSROutputStream", orig = r'ev.rdst', repl = r'ev.dst') + \
   RegexpReplacer(when = "OutputDSTSeq         INFO Member list:", orig = r'GaudiSequencer/RawEventSplitSeq, ', repl = r'') + \
-  LineSkipper( ["RawEventSplitSeq     INFO"] )
+  LineSkipper( ["RawEventSplitSeq     INFO"] ) + \
+  LineSkipper( ["BrunelInit           INFO RecInit:: The INFO message is suppressed : 'Memory exceeds limit of 2000000 KB -> Purging pools'"] )
 validateWithReference(preproc = preprocessor)
 </text></argument>
 </extension>
