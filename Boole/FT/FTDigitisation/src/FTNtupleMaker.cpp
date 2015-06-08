@@ -46,6 +46,9 @@ FTNtupleMaker::FTNtupleMaker( const std::string& name,
   declareProperty("FTHitLocation"  , m_hitLocation     = LHCb::MCHitLocation::FT, "Path to MCFTHits");
   declareProperty("DigitLocation"  , m_digitLocation   = LHCb::MCFTDigitLocation::Default, "Path to MCFTDeposits");
   declareProperty("ClusterLocation", m_clusterLocation = LHCb::FTClusterLocation::Default, "Path to Clusters");
+  declareProperty("NtupHitMaxSize", m_ntupHitMaxSize = 150000, "Max Size of Hit Leafs in Ntuple");
+  declareProperty("NtupDigitMaxSize", m_ntupDigitMaxSize = 150000, "Max Size of Digit Leafs in Ntuple");
+  declareProperty("NtupClusterMaxSize", m_ntupClusterMaxSize = 50000, "Max Size of Cluster Leafs in Ntuple");
 }
 //=============================================================================
 // Destructor
@@ -77,8 +80,6 @@ StatusCode FTNtupleMaker::execute() {
 
 
   Tuple tuple = nTuple(m_tupleName);
-  //Tuple tuple_Hit = nTuple(m_tupleName);
-
 
   // Get the run and event number from the MC Header
   LHCb::MCHeader* evt = get<LHCb::MCHeader>( LHCb::MCHeaderLocation::Default,
@@ -240,51 +241,51 @@ StatusCode FTNtupleMaker::execute() {
     
 
   }
-  tuple->farray("Hit_X",HitX,"Nhits",150000 );
-  tuple->farray("Hit_Y",HitY,"Nhits",150000 );
-  tuple->farray("Hit_Z",HitZ,"Nhits",150000 );
-  tuple->farray("Hit_Energy",HitEnergy,"Nhits",150000 );
-  tuple->farray("Hit_PID",HitPID,"Nhits",150000 );
-  tuple->farray("Hit_PartPx",HitPartPx,"Nhits",150000 );
-  tuple->farray("Hit_PartPy",HitPartPy,"Nhits",150000 );
-  tuple->farray("Hit_PartPz",HitPartPz,"Nhits",150000 );
-  tuple->farray("Hit_PartE",HitPartE,"Nhits",150000 );
-  tuple->farray("Hit_ChannelID" ,HitChannelID,"Nhits",150000 );
-  tuple->farray("Hit_Layer" ,HitLayer,"Nhits",150000 );
-  tuple->farray("Hit_Quarter" ,HitQuarter,"Nhits",150000 );
-  tuple->farray("Hit_Module" ,HitModule,"Nhits",100000 );
-  tuple->farray("Hit_Mat" ,HitMat,"Nhits",150000 );
-  tuple->farray("Hit_SiPMId" ,HitSiPMId,"Nhits",150000 );
-  tuple->farray("Hit_SiPMCell" ,HitSiPMCell,"Nhits",150000 );
-  tuple->farray("Hit_Fraction" ,HitFraction,"Nhits",150000 );
-  tuple->farray("Hit_Size" ,HitSize,"Nhits",150000 );
+  tuple->farray("Hit_X",HitX,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Y",HitY,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Z",HitZ,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Energy",HitEnergy,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_PID",HitPID,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_PartPx",HitPartPx,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_PartPy",HitPartPy,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_PartPz",HitPartPz,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_PartE",HitPartE,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_ChannelID" ,HitChannelID,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Layer" ,HitLayer,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Quarter" ,HitQuarter,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Module" ,HitModule,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Mat" ,HitMat,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_SiPMId" ,HitSiPMId,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_SiPMCell" ,HitSiPMCell,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Fraction" ,HitFraction,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Size" ,HitSize,"Nhits",m_ntupHitMaxSize );
 
-  tuple->farray("Hit_ChannelID_Start" ,HitChannelID_Start,"Nhits",150000 );
-  tuple->farray("Hit_Layer_Start" ,HitLayer_Start,"Nhits",150000 );
-  tuple->farray("Hit_Quarter_Start" ,HitQuarter_Start,"Nhits",150000 );
-  tuple->farray("Hit_Module_Start" ,HitModule_Start,"Nhits",100000 );
-  tuple->farray("Hit_Mat_Start" ,HitMat_Start,"Nhits",150000 );
-  tuple->farray("Hit_SiPMId_Start" ,HitSiPMId_Start,"Nhits",150000 );
-  tuple->farray("Hit_SiPMCell_Start" ,HitSiPMCell_Start,"Nhits",150000 );
-  tuple->farray("Hit_Fraction_Start" ,HitFraction_Start,"Nhits",150000 );
+  tuple->farray("Hit_ChannelID_Start" ,HitChannelID_Start,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Layer_Start" ,HitLayer_Start,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Quarter_Start" ,HitQuarter_Start,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Module_Start" ,HitModule_Start,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Mat_Start" ,HitMat_Start,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_SiPMId_Start" ,HitSiPMId_Start,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_SiPMCell_Start" ,HitSiPMCell_Start,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Fraction_Start" ,HitFraction_Start,"Nhits",m_ntupHitMaxSize );
 
-  tuple->farray("Hit_ChannelID_End" ,HitChannelID_End,"Nhits",150000 );
-  tuple->farray("Hit_Layer_End" ,HitLayer_End,"Nhits",150000 );
-  tuple->farray("Hit_Quarter_End" ,HitQuarter_End,"Nhits",150000 );
+  tuple->farray("Hit_ChannelID_End" ,HitChannelID_End,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Layer_End" ,HitLayer_End,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Quarter_End" ,HitQuarter_End,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Module_End" ,HitModule_End,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Mat_End" ,HitMat_End,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_SiPMId_End" ,HitSiPMId_End,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_SiPMCell_End" ,HitSiPMCell_End,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Fraction_End" ,HitFraction_End,"Nhits",m_ntupHitMaxSize );
+
+  tuple->farray("Hit_ChannelID_End" ,HitChannelID_End,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Layer_End" ,HitLayer_End,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Quarter_End" ,HitQuarter_End,"Nhits",m_ntupHitMaxSize );
   tuple->farray("Hit_Module_End" ,HitModule_End,"Nhits",100000 );
-  tuple->farray("Hit_Mat_End" ,HitMat_End,"Nhits",150000 );
-  tuple->farray("Hit_SiPMId_End" ,HitSiPMId_End,"Nhits",150000 );
-  tuple->farray("Hit_SiPMCell_End" ,HitSiPMCell_End,"Nhits",150000 );
-  tuple->farray("Hit_Fraction_End" ,HitFraction_End,"Nhits",150000 );
-
-  tuple->farray("Hit_ChannelID_End" ,HitChannelID_End,"Nhits",50000 );
-  tuple->farray("Hit_Layer_End" ,HitLayer_End,"Nhits",150000 );
-  tuple->farray("Hit_Quarter_End" ,HitQuarter_End,"Nhits",150000 );
-  tuple->farray("Hit_Module_End" ,HitModule_End,"Nhits",100000 );
-  tuple->farray("Hit_Mat_End" ,HitMat_End,"Nhits",150000 );
-  tuple->farray("Hit_SiPMId_End" ,HitSiPMId_End,"Nhits",150000 );
-  tuple->farray("Hit_SiPMCell_End" ,HitSiPMCell_End,"Nhits",150000 );
-  tuple->farray("Hit_Fraction_End" ,HitFraction_End,"Nhits",150000 );
+  tuple->farray("Hit_Mat_End" ,HitMat_End,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_SiPMId_End" ,HitSiPMId_End,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_SiPMCell_End" ,HitSiPMCell_End,"Nhits",m_ntupHitMaxSize );
+  tuple->farray("Hit_Fraction_End" ,HitFraction_End,"Nhits",m_ntupHitMaxSize );
 
 
   // retrieve FTDigits
@@ -328,14 +329,14 @@ StatusCode FTNtupleMaker::execute() {
     DigiCharge.push_back( mcDigit->adcCount() );
   }
 
-  tuple->farray("Digit_ChannelID" ,DigiChannelID,"Ndigits",150000 );
-  tuple->farray("Digit_Layer" ,DigiLayer,"Ndigits",150000 );
-  tuple->farray("Digit_Quarter" ,DigiQuarter,"Ndigits",150000 );
-  tuple->farray("Digit_Module" ,DigiModule,"Ndigits",100000 );
-  tuple->farray("Digit_Mat" ,DigiMat,"Ndigits",150000 );
-  tuple->farray("Digit_SiPMId" ,DigiSiPMId,"Ndigits",150000 );
-  tuple->farray("Digit_SiPMCell" ,DigiSiPMCell,"Ndigits",150000 );
-  tuple->farray("Digit_Charge" ,DigiCharge,"Ndigits",150000 );
+  tuple->farray("Digit_ChannelID" ,DigiChannelID,"Ndigits",m_ntupDigitMaxSize );
+  tuple->farray("Digit_Layer" ,DigiLayer,"Ndigits",m_ntupDigitMaxSize );
+  tuple->farray("Digit_Quarter" ,DigiQuarter,"Ndigits",m_ntupDigitMaxSize );
+  tuple->farray("Digit_Module" ,DigiModule,"Ndigits",m_ntupDigitMaxSize );
+  tuple->farray("Digit_Mat" ,DigiMat,"Ndigits",m_ntupDigitMaxSize );
+  tuple->farray("Digit_SiPMId" ,DigiSiPMId,"Ndigits",m_ntupDigitMaxSize );
+  tuple->farray("Digit_SiPMCell" ,DigiSiPMCell,"Ndigits",m_ntupDigitMaxSize );
+  tuple->farray("Digit_Charge" ,DigiCharge,"Ndigits",m_ntupDigitMaxSize );
   
 
   // Store Cluster information with only largest hit info
@@ -478,34 +479,34 @@ StatusCode FTNtupleMaker::ClusterWithLargestMCHitInfo(Tuple &tpl)
     }
   }
 
-  tpl->farray("Cluster_ChannelID" ,ClusterChannelID,"Nclusters",50000 );
-  tpl->farray("Cluster_Layer" ,ClusterLayer,"Nclusters",50000 );
-  tpl->farray("Cluster_Quarter" ,ClusterQuarter,"Nclusters",50000 );
-  tpl->farray("Cluster_Module" ,ClusterModule,"Nclusters",50000 );
-  tpl->farray("Cluster_Mat" ,ClusterMat,"Nclusters",50000 );
-  tpl->farray("Cluster_SiPMId" ,ClusterSiPMId,"Nclusters",50000 );
-  tpl->farray("Cluster_SiPMCell" ,ClusterSiPMCell,"Nclusters",50000 );
-  tpl->farray("Cluster_Fraction" ,ClusterFraction,"Nclusters",50000 );
-  tpl->farray("Cluster_Charge" ,ClusterCharge,"Nclusters",50000 );
-  tpl->farray("Cluster_Size" ,ClusterSize,"Nclusters",50000 );
-  tpl->farray("Cluster_HitNb" ,ClusterHitNb,"Nclusters",50000 );
-  tpl->farray("Hitclus_X",HitclusX,"Nclusters",50000 );
-  tpl->farray("Hitclus_Y",HitclusY,"Nclusters",50000 );
-  tpl->farray("Hitclus_Z",HitclusZ,"Nclusters",50000 );
-  tpl->farray("Hitclus_Energy",HitclusEnergy,"Nclusters",50000 );
-  tpl->farray("Hitclus_PID",HitclusPID,"Nclusters",50000 );
-  tpl->farray("Hitclus_PartPx",HitclusPartPx,"Nclusters",50000 );
-  tpl->farray("Hitclus_PartPy",HitclusPartPy,"Nclusters",50000 );
-  tpl->farray("Hitclus_PartPz",HitclusPartPz,"Nclusters",50000 );
-  tpl->farray("Hitclus_PartE",HitclusPartE,"Nclusters",50000 );
-  tpl->farray("Hitclus_ChannelID",HitclusChannelID,"Nclusters",50000 );
-  tpl->farray("Hitclus_Layer",HitclusLayer,"Nclusters",50000 );
-  tpl->farray("Hitclus_Quarter",HitclusQuarter,"Nclusters",50000 );
-  tpl->farray("Hitclus_Module",HitclusModule,"Nclusters",50000 );
-  tpl->farray("Hitclus_Mat",HitclusMat,"Nclusters",50000 );
-  tpl->farray("Hitclus_SiPMId",HitclusSiPMId,"Nclusters",50000 );
-  tpl->farray("Hitclus_SiPMCell",HitclusSiPMCell,"Nclusters",50000 );
-  tpl->farray("Hitclus_Fraction",HitclusFraction,"Nclusters",50000 );
+  tpl->farray("Cluster_ChannelID" ,ClusterChannelID,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_Layer" ,ClusterLayer,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_Quarter" ,ClusterQuarter,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_Module" ,ClusterModule,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_Mat" ,ClusterMat,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_SiPMId" ,ClusterSiPMId,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_SiPMCell" ,ClusterSiPMCell,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_Fraction" ,ClusterFraction,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_Charge" ,ClusterCharge,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_Size" ,ClusterSize,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_HitNb" ,ClusterHitNb,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_X",HitclusX,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Y",HitclusY,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Z",HitclusZ,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Energy",HitclusEnergy,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_PID",HitclusPID,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_PartPx",HitclusPartPx,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_PartPy",HitclusPartPy,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_PartPz",HitclusPartPz,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_PartE",HitclusPartE,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_ChannelID",HitclusChannelID,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Layer",HitclusLayer,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Quarter",HitclusQuarter,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Module",HitclusModule,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Mat",HitclusMat,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_SiPMId",HitclusSiPMId,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_SiPMCell",HitclusSiPMCell,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Fraction",HitclusFraction,"Nclusters",m_ntupClusterMaxSize );
 
             
   return StatusCode::SUCCESS;
@@ -637,34 +638,34 @@ StatusCode FTNtupleMaker::ClusterWithAllMCHitInfo(Tuple &tpl){
     }
   }
 
-  tpl->farray("Cluster_ChannelID" ,ClusterChannelID,"Nclusters",50000 );
-  tpl->farray("Cluster_Layer" ,ClusterLayer,"Nclusters",50000 );
-  tpl->farray("Cluster_Quarter" ,ClusterQuarter,"Nclusters",50000 );
-  tpl->farray("Cluster_Module" ,ClusterModule,"Nclusters",50000 );
-  tpl->farray("Cluster_Mat" ,ClusterMat,"Nclusters",50000 );
-  tpl->farray("Cluster_SiPMId" ,ClusterSiPMId,"Nclusters",50000 );
-  tpl->farray("Cluster_SiPMCell" ,ClusterSiPMCell,"Nclusters",50000 );
-  tpl->farray("Cluster_Fraction" ,ClusterFraction,"Nclusters",50000 );
-  tpl->farray("Cluster_Charge" ,ClusterCharge,"Nclusters",50000 );
-  tpl->farray("Cluster_Size" ,ClusterSize,"Nclusters",50000 );
-  tpl->farray("Cluster_HitNb" ,ClusterHitNb,"Nclusters",50000 );
-  tpl->farray("Hitclus_X" ,HitclusX,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_Y" ,HitclusY,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_Z" ,HitclusZ,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_Energy" ,HitclusEnergy,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_PID" ,HitclusPID,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_PartPx" ,HitclusPartPx,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_PartPy" ,HitclusPartPy,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_PartPz" ,HitclusPartPz,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_PartE" ,HitclusPartE,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_ChannelID" ,HitclusChannelID,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_Layer" ,HitclusLayer,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_Quarter" ,HitclusQuarter,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_Module" ,HitclusModule,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_Mat" ,HitclusMat,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_SiPMId" ,HitclusSiPMId,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_SiPMCell" ,HitclusSiPMCell,"Nhitclus",5000000 );
-  tpl->farray("Hitclus_Fraction" ,HitclusFraction,"Nhitclus",5000000 );
+  tpl->farray("Cluster_ChannelID" ,ClusterChannelID,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_Layer" ,ClusterLayer,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_Quarter" ,ClusterQuarter,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_Module" ,ClusterModule,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_Mat" ,ClusterMat,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_SiPMId" ,ClusterSiPMId,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_SiPMCell" ,ClusterSiPMCell,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_Fraction" ,ClusterFraction,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_Charge" ,ClusterCharge,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_Size" ,ClusterSize,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Cluster_HitNb" ,ClusterHitNb,"Nclusters",m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_X" ,HitclusX,"Nhitclus", 100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Y" ,HitclusY,"Nhitclus",100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Z" ,HitclusZ,"Nhitclus",100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Energy" ,HitclusEnergy,"Nhitclus",100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_PID" ,HitclusPID,"Nhitclus",100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_PartPx" ,HitclusPartPx,"Nhitclus",100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_PartPy" ,HitclusPartPy,"Nhitclus",100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_PartPz" ,HitclusPartPz,"Nhitclus",100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_PartE" ,HitclusPartE,"Nhitclus",100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_ChannelID" ,HitclusChannelID,"Nhitclus",100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Layer" ,HitclusLayer,"Nhitclus",100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Quarter" ,HitclusQuarter,"Nhitclus",100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Module" ,HitclusModule,"Nhitclus",100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Mat" ,HitclusMat,"Nhitclus",100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_SiPMId" ,HitclusSiPMId,"Nhitclus",100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_SiPMCell" ,HitclusSiPMCell,"Nhitclus",100*m_ntupClusterMaxSize );
+  tpl->farray("Hitclus_Fraction" ,HitclusFraction,"Nhitclus",100*m_ntupClusterMaxSize );
 
   return StatusCode::SUCCESS;
 }

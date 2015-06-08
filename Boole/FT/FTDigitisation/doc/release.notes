@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2015-06-08 - Eric Cogneras
+ - ntuple max sizes in FTNtupleMaker now changeable from joboption files.
+
 ! 2015-06-07 - Jacco de Vries
  - Added option in SiPMResponse to have continuous flat shape, for testbeam comparisons.
  - Set SiPMResponse as ToolSvc property instead of private, to allow for setting properties.

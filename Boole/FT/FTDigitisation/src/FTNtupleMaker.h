@@ -34,6 +34,10 @@ private:
   std::string m_digitLocation;        ///< FTDigit Container
   std::string m_clusterLocation;      ///< FTCluster Container
 
+  uint m_ntupHitMaxSize;
+  uint m_ntupDigitMaxSize;
+  uint m_ntupClusterMaxSize; 
+
   DeFTDetector* m_deFT; ///< pointer to FT detector description
 };
 #endif // FTNTUPLEMAKER_H
