@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2015-06-08 - Ricardo Vazquez Gomez
+ - Bug fix in MuIDMonitor.cpp that checks the size of selParts. 
+
 !=================== DaVinciMonitors v1r21 2015-04-22 ========================
 
 ! 2015-03-17 - Giacomo

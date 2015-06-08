@@ -233,6 +233,7 @@ StatusCode MuIDMonitor::execute() {
 
   //Loop on matched tracks
   const Particle::Range selParts = this->particles();
+  if(selParts.size() != 1)  return StatusCode::SUCCESS;
 
   double cosTr(0),plTr(0);
   int id_jp(0);
