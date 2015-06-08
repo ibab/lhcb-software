@@ -108,6 +108,7 @@ def setupOnline(directory, prefix, filename):
   sel.FilePrefix = prefix
   sel.Decode = False
   sel.Pause = True
+  sel.PauseSleep = 5000
   sel.AllowedRuns = Online.DeferredRuns if hasattr(Online, "DeferredRuns") else []
   app.EvtSel  = sel
   app.EvtMax = 400
