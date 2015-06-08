@@ -35,7 +35,14 @@ public:
   
   virtual void debugTTCluster( MsgStream& msg, const PatTTHit* hit ) = 0;
 
+  virtual bool isTrueHit( const LHCb::Track* track, const PatTTHit* hit) = 0;
+  
+  virtual double fracGoodHits( const LHCb::Track* track, const PatTTHits& hits) = 0;
+  
+  virtual bool isTrueTrack( const LHCb::Track* track, const PatTTHits& hits) = 0;
 
+  virtual void chi2Tuple( const double p, const double chi2, const unsigned int nHits) = 0;
+  
 protected:
 
 private:

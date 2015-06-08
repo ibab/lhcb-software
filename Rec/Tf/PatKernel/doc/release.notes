@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-06-08 - Michel De Cian
+ - Put in some virtual methods in IPatDebugTTTool.h.
+
 !========================= PatKernel v2r9 2015-04-21 =========================
 ! 2015-03-03 - Manuel Tobias Schiller
  - PatFwdHit: optimise planeCodee(), layer(), isStereo(), isX(), and
