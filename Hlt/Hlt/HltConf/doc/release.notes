@@ -4,6 +4,11 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-06-08 - Roel Aaij
+ - Fix exclusive lumi events in Turbo and Turbo Calibration stream.
+ - Add routing bit 91 for NoBias Leading Crossing events.
+ - Veto exclusive NoBias Leading Crossing events from the Full stream.
+
 ! 2015-06-05 - Roel Aaij
  - Remove routing bit 59, bit 52 was unnecessarily added for the Velo closing,
    40 already does that job.

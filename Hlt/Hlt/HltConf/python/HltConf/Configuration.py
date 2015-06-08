@@ -267,6 +267,7 @@ class HltConf(LHCbConfigurableUser):
         ###       bit 32 -> full stream (actually, not used for that, but it could be ;-)
         from Hlt1Lines.HltL0Candidates import L0Channels
 
+        exclLeadCrosPred = "(HLT_PASS('Hlt2{0}Decision') & ~HLT_PASS_RE('Hlt1(?!{0}).*Decision'))".format("MBNoBiasLeadingCrossing")
         from Configurables import HltRoutingBitsWriter
         routingBits = {  0 : '( ODIN_BXTYP == LHCb.ODIN.Beam1 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
                       ,  1 : '( ODIN_BXTYP == LHCb.ODIN.Beam2 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
@@ -276,10 +277,10 @@ class HltConf(LHCbConfigurableUser):
                       ,  6 : 'jbit( ODIN_EVTTYP, 14)' # ODIN LEADING BUNCH
                       ,  8 : 'L0_DECISION_PHYSICS'
                       ,  9 : "L0_CHANNEL_RE('B?gas')"
-                      , 10 : "|".join( [ "L0_CHANNEL_RE('%s')" % chan for chan in [ 'CALO','MUON,minbias' ] if chan in L0Channels() ] )
-                      , 11 : "|".join( [ "L0_CHANNEL_RE('%s')" % chan for chan in [ 'Electron','Photon','Hadron','Muon','DiMuon',
-                                                                                    'Muon,lowMult','DiMuon,lowMult','Electron,lowMult',
-                                                                                    'Photon,lowMult','DiEM,lowMult','DiHadron,lowMult'] if chan in L0Channels() ] )
+                      , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'CALO','MUON,minbias' ] if chan in L0Channels() ] )
+                      , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Electron','Photon','Hadron','Muon','DiMuon',
+                                                                                 'Muon,lowMult','DiMuon,lowMult','Electron,lowMult',
+                                                                                 'Photon,lowMult','DiEM,lowMult','DiHadron,lowMult'] if chan in L0Channels() ] )
                       , 12 : "L0_CHANNEL('CALO')" if 'CALO' in L0Channels() else "" # note: need to take into account prescale in L0...
                       , 13 : "L0_CHANNEL( 'Hadron' )" if 'Hadron' in L0Channels() else ""
                       , 14 : "L0_CHANNEL_RE('Electron|Photon')"
@@ -337,13 +338,15 @@ class HltConf(LHCbConfigurableUser):
                       , 85 : "HLT_PASS_RE('Hlt2TopoE[234]Body.*Decision')"
                       , 86 : "HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')"
                       # routing bit for the full (non-turbo) stream
-                      , 87 : "HLT_NONTURBOPASS_RE('Hlt2.*Decision')"
+                      , 87 : "(HLT_NONTURBOPASS_RE('Hlt2.*Decision') & (~({0}))) | HLT_PASS('Hlt2LumiDecision')".format(exclLeadCrosPred)
                       # routing bit for Turbo stream, includes lumi events.
                       # this now excludes turbocalib events which have their own stream/routing bit
-                      , 88 : "HLT_TURBOPASS_RE('^Hlt2.*(?!TurboCalib)Decision$') | HLT_PASS_RE('^Hlt1Lumi.*Decision$')"
+                      , 88 : "HLT_TURBOPASS_RE('^Hlt2.*(?!TurboCalib)Decision$') | HLT_PASS('Hlt2LumiDecision')"
                       # RB 89 is reserved for the parked stream but is not set for now
                       # routing bit 90 for TurboCalib stream, includes lumi events.
-                      , 90 : "HLT_TURBOPASS_RE('^Hlt2.*TurboCalibDecision$') | HLT_PASS_RE('^Hlt1Lumi.*Decision$')"
+                      , 90 : "HLT_TURBOPASS_RE('^Hlt2.*TurboCalibDecision$') | HLT_PASS('Hlt2LumiDecision')"
+                      # Leading crossing events during early measurements
+                      , 91 : "HLT_PASS('Hlt2MBNoBiasLeadingCrossingDecision') | HLT_PASS('Hlt2LumiDecision')"
                       # VVG 01-05-2015
                       }
         HltRoutingBitsWriter('Hlt1RoutingBitsWriter').RoutingBits = routingBits
@@ -805,6 +808,12 @@ class HltConf(LHCbConfigurableUser):
                          , ( "EnableHltSelReports"  ,  HltSelReportsWriter,  'Hlt2SelReportsWriter',  { 'SourceID' : 2,
                                                                                                         'InputHltSelReportsLocation': hlt2_selrep_loc } )
                          )
+
+        # Don't try to decode L0 for the routing bits writer if no L0TCK has
+        # been set. This allows forward compatibility.
+        if not self.getProp('L0TCK'):
+            _hlt1postamble = _hlt1postamble[1 :]
+            _hlt2postamble = _hlt2postamble[1 :]
 
         # make sure we only instantiate members which are used...
         instantiate = lambda name, cfg : Sequence( name,
