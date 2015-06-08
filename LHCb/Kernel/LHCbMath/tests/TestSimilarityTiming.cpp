@@ -1,8 +1,8 @@
 // $Id$
 // ============================================================================
-// Include files 
+// Include files
 // ============================================================================
-// STD & STL 
+// STD & STL
 // ============================================================================
 #include <iostream>
 #include <map>
@@ -51,7 +51,7 @@ namespace generic {
 extern void similarity_5_1(const double* Ci, const double* Fi, double* Ti);
 extern void similarity_5_5(const double* Ci, const double* Fi, double* Ti);
 extern void similarity_5_7(const double* Ci, const double* Fi, double* Ti);
-}  
+}
 }
 }
 
@@ -87,7 +87,7 @@ struct TestResults {
 /**
  * Check whether the AVX instruction set is available
  */
-bool hasInstructionSet(ISet lvl) 
+bool hasInstructionSet(ISet lvl)
 {
     int level = instrset_detect();
     return (level >= static_cast<int>(lvl));
@@ -97,7 +97,7 @@ bool hasInstructionSet(ISet lvl)
  * Generate a random Matrix and a SymMatrix
  */
 template <typename Mat>
-void fillRandomSMatrix(Mat &F, TRandom& r, bool symmetric=false) 
+void fillRandomSMatrix(Mat &F, TRandom& r, bool symmetric=false)
 {
 
     for (int i=0; i<F.kRows; i++)
@@ -112,7 +112,7 @@ void fillRandomSMatrix(Mat &F, TRandom& r, bool symmetric=false)
  * Orthogonalze a SMatrix
  */
 template <typename Mat>
-Mat orthogonalizeMatrix(Mat &M, bool &processOk) 
+Mat orthogonalizeMatrix(Mat &M, bool &processOk)
 {
     processOk = false;
     int n = M.kRows;
@@ -165,7 +165,7 @@ Mat orthogonalizeMatrix(Mat &M, bool &processOk)
 /**
  * Generate a random SymMatrix with a given max Condition number
  */
-void fillSMatrixSymWithCondNumber(Gaudi::SymMatrix5x5 &F, TRandom& r, double condNumber) 
+void fillSMatrixSymWithCondNumber(Gaudi::SymMatrix5x5 &F, TRandom& r, double condNumber)
 {
 
     Gaudi::Matrix5x5 T;
@@ -204,7 +204,7 @@ void fillSMatrixSymWithCondNumber(Gaudi::SymMatrix5x5 &F, TRandom& r, double con
  * Compare SymMatrices
  */
 template <typename M>
-std::pair<M, bool> compareSMatrix(M& A, M& B, bool symetric=true, 
+std::pair<M, bool> compareSMatrix(M& A, M& B, bool symetric=true,
                                   double diffThreshold=1e-5)
 {
     M cmpres;
@@ -255,7 +255,7 @@ TestResults compareInstructionSets(Mat &Ftype, SymMat &Otype,
     bool hasSSE3 = hasInstructionSet(ISet::SSE3);
     // Ugly, need to refactor the functions
     (void)Ftype; (void)Otype;
-     
+
     // Declaring our arrays
     auto F = new Mat[nbentries];
     auto O = new SymMat[nbentries];
@@ -378,9 +378,9 @@ TestResults compareInstructionSets(Mat &Ftype, SymMat &Otype,
     delete(resAVX);
 
     return results;
-} 
+}
 // ============================================================================
-// Main method                                                                      
+// Main method
 // ============================================================================
 
 int main()
@@ -395,9 +395,9 @@ int main()
     // Check with varying condition numbers
     const double cond_min = 1;
     const double cond_max = 1e15;
-    int nbres = (int)(log10(cond_max) -log(cond_min) + 1);
-    auto results = new TestResults[nbres];
-    
+    constexpr int nbres = (int)(log10(cond_max) -log(cond_min) + 1);
+    TestResults results[nbres];
+
     Gaudi::Matrix5x5 F;
     Gaudi::SymMatrix5x5 origin;
 
@@ -437,11 +437,8 @@ int main()
                   << std::endl;
     }
 
-    // Now cleaning up
-    delete[] results;
-
     return retval;
 }
 // ============================================================================
-//                                                                      The END 
+//                                                                      The END
 // ============================================================================

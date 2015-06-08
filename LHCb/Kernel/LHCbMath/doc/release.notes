@@ -6,72 +6,75 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-06-02 - Marco Clemencic
+ - Minor change to the fix to similarity timing test.
+
 !========================= LHCbMath v3r57 2015-05-26 =========================
-! 2015-05-21 - Ben Couturier 
+! 2015-05-21 - Ben Couturier
  - Fix warnings in the similarity timing test
 
 !========================= LHCbMath v3r56 2015-04-20 =========================
 ! 2015-04-11 - Vanya Belyaev
- - and one more fix in bernstein 
+ - and one more fix in bernstein
 
 ! 2015-04-10 - Vanya Belyaev
- - minor fix in bernstein 
+ - minor fix in bernstein
 
 ! 2015-04-10 - Vanya Belyaev
- - minor fix in bernstein 
+ - minor fix in bernstein
 
 ! 2015-04-03 - Gerhard Raven
  - use VectorLib to improve Similarity_AVX
 
 ! 2015-04-03 - Vanya Belyaev
- - add running counter 
+ - add running counter
 
-! 2015-04-02 - Ben Couturier 
- - Added timing test for The Similarity functions 
+! 2015-04-02 - Ben Couturier
+ - Added timing test for The Similarity functions
 
 !========================= LHCbMath v3r55 2015-04-01 =========================
 ! 2015-03-28 - Vanya Belyaev
- - improve numerical stability 
+ - improve numerical stability
 
 ! 2015-03-26 - Vanya Belyaev
- - minor reshuffling 
+ - minor reshuffling
 
 ! 2015-03-25 - Vanya Belyaev
- - minor reshuffling 
+ - minor reshuffling
 
 ! 2015-03-24 - Vanya Belyaev
- - minor update 
+ - minor update
 
 ! 2015-03-19 - Vanya Belyaev
- - minor fix 
+ - minor fix
 
-! 2015-03-17 - Ben Couturier 
+! 2015-03-17 - Ben Couturier
  - Updated check threshold for TestSimilarity
 
 ! 2015-03-16 - Vanya Belyaev
  - remove compilation warning
 
 ! 2015-03-15 - Vanya Belyaev
- - update test 
+ - update test
 
 ! 2015-03-14 - Vanya Belyaev
  - improve numerial stability
 
 ! 2015-03-13 - Vanya Belyaev
- - fix stupid recently introduced bug, update tests  
+ - fix stupid recently introduced bug, update tests
 
 ! 2015-03-12 - Vanya Belyaev
  - add one more test
 
-! 2015-03-10 - 
+! 2015-03-10 -
  - fix a bug in the interration of the product
-   of Bernstein polynomial and an exponential function  
+   of Bernstein polynomial and an exponential function
 
 ! 2015-03-09 - Vanya Belyaev
- - add conversions of polynomial bases  
+ - add conversions of polynomial bases
 
 ! 2015-03-05 - Vanya Belyaev
- - nSphere: use vtd::fast_sincos...  
+ - nSphere: use vtd::fast_sincos...
    For real case situation the gain is questionable...
 
 ! 2015-03-01 - Manuel Tobias Schiller
@@ -94,16 +97,16 @@
    question:
     should it be used with -no_auto_imports directive(for CMT?)
      if so, what is the corresponding CMake function?
-                   
+
 !========================= LHCbMath v3r54 2015-02-24 =========================
 ! 2015-02-23 - Vanya Belyaev
- - reshuffle polinomials 
+ - reshuffle polinomials
 
 ! 2015-02-22 - Vanya Belyaev
- - extend a bit VE-math 
+ - extend a bit VE-math
 
 ! 2015-02-21 - Vanya Belyaev
- - impove printout for WStatEntity 
+ - impove printout for WStatEntity
 
 ! 2015-02-20 - Marco Clemencic
  - fixed the name of the LCG_Interfaces/eigen package
@@ -113,7 +116,7 @@
    Use the LCG version instead.
 
 ! 2015-02-18 - Vanya Belyaev
- - make flatte amplitude simpler 
+ - make flatte amplitude simpler
 
 ! 2015-02-17 - Manuel Tobias Schiller
  - add LHCbMath/PolyEval.h, as a substitute for various hand-written or
@@ -128,28 +131,28 @@
 
 ! 2015-02-11 - Vanya Belyaev
  - MatrixUtils.h:
-     add Gaudi::Math:inverse   
+     add Gaudi::Math:inverse
 
 ! 2015-02-11 - Chris Jones
  - Improve EigenTypes.h
  - Add VectorClassTypes.h
  - Add a new test TestXYZTypes
 
-! 2015-02-10 - Vanya BELYAEV 
- - add convex spline 
+! 2015-02-10 - Vanya BELYAEV
+ - add convex spline
 
 ! 2015-02-10 - Vanya Belyaev
- - improve splines 
+ - improve splines
 
-! 2015-02-09 - 
+! 2015-02-09 -
  - improve splines ...
 
-! 2015-02-09 - 
- - reduce some code duplication 
+! 2015-02-09 -
+ - reduce some code duplication
 
 ! 2015-02-08 - Vanya Belyaev
  - move bernstein polynomials into separate file.
-   add monithonic and convex polynomials  
+   add monithonic and convex polynomials
 
 ! 2015-02-07 - Chris Jones
  - Use a workaround to install the Eigen headers with CMake.
@@ -166,7 +169,7 @@
 
 ! 2015-02-03 - Gerhard Raven
  - Insure that _mm256_zeroupper() is invoked at the boundaries of AVX
-   and non-AVX code -- see the discussion in section 12.1 of 
+   and non-AVX code -- see the discussion in section 12.1 of
    http://www.agner.org/optimize/optimizing_cpp.pdf
 
 ! 2015-01-28 - Chris Jones
