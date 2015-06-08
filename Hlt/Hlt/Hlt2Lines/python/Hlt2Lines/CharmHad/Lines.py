@@ -10,8 +10,11 @@ from XSecLines import CharmHadXSecLines
 from D2HHHPi0Lines import CharmHadD2HHHPi0Lines
 from D2HHLines import CharmHadD2HHLines
 from D2HHKsLines import CharmHadD2HHKshLines
+from CharmSpectroscopyLines import CharmSpectroscopyLines
 from Dst2PiD02HHXBDTLines import CharmHadDst2PiD02HHXBDTLines
 from ChargedHyperonLines import ChargedHyperonLines
+from D2HHHHHLines import CharmHadD2HHHHHLines
+
 
 from Configurables import HltANNSvc
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
@@ -29,17 +32,20 @@ XSecLines = CharmHadXSecLines()
 D2HHHPi0Lines = CharmHadD2HHHPi0Lines()
 D2HHLines = CharmHadD2HHLines()
 D2HHKsLines = CharmHadD2HHKshLines()
+CharmSpectroscopyLines = CharmSpectroscopyLines()
 Dst2PiD02HHXBDTLines = CharmHadDst2PiD02HHXBDTLines()
 HyperonLines = ChargedHyperonLines()
+D2HHHHHLines = CharmHadD2HHHHHLines()
+
 
 
 theseslots = {   'Postscale' : {'Hlt2CharmHadD02KKTurbo'       : 0.1,
                                 'Hlt2CharmHadD02KPiTurbo'      : 0.1,
                                 'Hlt2CharmHadD02PiPiTurbo'     : 0.1,
-                                'Hlt2CharmHadD2KPiPi_SS_LTUNBTurbo' : 0.05,
-                                'Hlt2CharmHadD2KKPi_OS_LTUNBTurbo'  : 0.05,
-                                'Hlt2CharmHadLcpToKmPpPip_LTUNBTurbo'    : 0.05,
-                                'Hlt2CharmHadXic0ToPpKmKmPip_LTUNBTurbo' : 0.05,
+                                'Hlt2CharmHadD2KPiPi_SS_LTUNB' : 0.05,
+                                'Hlt2CharmHadD2KKPi_OS_LTUNB'  : 0.05,
+                                'Hlt2CharmHadLc2KPPi_LTUNB'    : 0.05,
+                                'Hlt2CharmHadXic02PKKPi_LTUNB' : 0.05,
                                 'Hlt2CharmHadDpm2KPiPi_ForKPiAsym' : 0.25  }, 
                  'TrackGEC' : { 'NTRACK_MAX'           : 10000},
                  'Common' : {'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS",
@@ -95,6 +101,23 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KKTurbo'       : 0.1,
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  3.0,
                                               },
+                 # Use tighter PID and (and momentum) cuts for protons which
+                 # are charmed baryon daughters
+                 'TighterProtons' :  {
+                                  'PIDp_MIN'              :  5.0,
+                                  'DeltaPID_MIN'         :  5.0,
+                                  'P_MIN'                 :  10000 * MeV
+                                  },
+                 'CharmHadTighterSharedPromptChild_p' :  {
+                                  'PIDp_MIN'              :  5.0,
+                                  'Delta_PID_MIN'         :  5.0,
+                                  'P_MIN'                 :  10000 * MeV
+                                  },
+                 'CharmHadTighterSharedLcChild_p' :  {
+                                  'PIDp_MIN'              :  5.0,
+                                  'Delta_PID_MIN'         :  5.0,
+                                  'P_MIN'                 :  10000 * MeV
+                                  },
                  # Secondary Lambda's, used at least for building Xi- and Omega- candidates
                  'CharmHadSharedSecondaryLambdaLL' : {
                                  'DecayTime_MIN'           : 4.5 * picosecond,
@@ -190,6 +213,22 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KKTurbo'       : 0.1,
                                  'Neut_ALL_PT_MIN'           : 200.0 * MeV,
                                  'Neut_ALL_ADMASS_MAX'       :  105.0,
                                           },
+## some cuts for Pentaquark --> phi,pi,p  mimics D0 --> HHHH to start
+                 'PentaPhiPimPp' : {
+                          'Trk_ALL_PT_MIN'           :  250 * MeV,
+                          'Trk_ALL_MIPCHI2DV_MIN'    :  3,
+                          'AM12_MAX'                 : 1050.0 * MeV,
+                          'AM_4'                     : (139.5) * MeV,
+                          'AM_MIN'                   :  2700 * MeV,
+                          'AM_MAX'                   :  2930 * MeV,
+                          'ASUMPT_MIN'               :  1980.0 * MeV,
+                          'ACHI2DOCA_MAX'            :  10.0,
+                          'VCHI2PDOF_MAX'            :  12.0,
+                          'BPVDIRA_MIN'              :  0.9998,
+                          'BPVLTIME_MIN'             :  0.3*picosecond,
+                          'PT_MIN'                   :  2000 * MeV,
+                          'IPCHI2_MAX'               :  15.0,
+                                          },
                 }
 
 theseslots.update(D2HHHLines.localcuts())
@@ -204,8 +243,10 @@ theseslots.update(XSecLines.localcuts())
 theseslots.update(D2HHHPi0Lines.localcuts())
 theseslots.update(D2HHLines.localcuts())
 theseslots.update(D2HHKsLines.localcuts())
+theseslots.update(CharmSpectroscopyLines.localcuts())
 theseslots.update(Dst2PiD02HHXBDTLines.slots())
 theseslots.update(HyperonLines.localcuts())
+theseslots.update(D2HHHHHLines.localcuts())
 
 class CharmHadLines(Hlt2LinesConfigurableUser):
     __slots__ = theseslots
@@ -226,8 +267,10 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self.__lines__.update(D2HHHPi0Lines.locallines())
             self.__lines__.update(D2HHLines.locallines())
             self.__lines__.update(D2HHKsLines.locallines())
+            self.__lines__.update(CharmSpectroscopyLines.locallines())
             self.__lines__.update(Dst2PiD02HHXBDTLines.stages())
             self.__lines__.update(HyperonLines.locallines())
+            self.__lines__.update(D2HHHHHLines.locallines())
             
         return self.__lines__[nickname] if nickname else self.__lines__
             
@@ -236,6 +279,8 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
         _stages = self.stages()
         from HltLine.HltLine import Hlt2Line
         for nickname, algos in self.algorithms( _stages ).iteritems():
+            print(nickname)
+
             doturbo = True if (nickname.find('Turbo') > -1) else False
             Hlt2Line('CharmHad' + nickname, prescale = self.prescale,
                      algos = algos, postscale = self.postscale, Turbo = doturbo)
