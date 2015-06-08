@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackFitter
 ################################################################################
-gaudi_subdir(TrackFitter v5r5)
+gaudi_subdir(TrackFitter v5r6)
 
 gaudi_depends_on_subdirs(Event/TrackEvent
                          GaudiAlg
