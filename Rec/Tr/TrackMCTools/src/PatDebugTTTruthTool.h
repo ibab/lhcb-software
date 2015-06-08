@@ -4,7 +4,7 @@
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "GaudiAlg/GaudiTupleTool.h"
 #include "PatKernel/IPatDebugTTTool.h"            // Interface
 
 class DeSTDetector;
@@ -15,7 +15,7 @@ class DeSTDetector;
  *  @author Olivier Callot
  *  @date   2007-10-22
  */
-class PatDebugTTTruthTool : public GaudiTool, virtual public IPatDebugTTTool {
+class PatDebugTTTruthTool : public GaudiTupleTool, virtual public IPatDebugTTTool {
 public: 
   /// Standard constructor
   PatDebugTTTruthTool( const std::string& type, 
@@ -31,6 +31,16 @@ public:
                                       const PatTTHits::const_iterator endCoord   );
   
   virtual void debugTTCluster( MsgStream& msg, const PatTTHit* hit );
+
+  virtual bool isTrueHit( const LHCb::Track* track, const PatTTHit* hit);
+
+  virtual double fracGoodHits( const LHCb::Track* track, const PatTTHits& hits);
+  
+  virtual bool isTrueTrack( const LHCb::Track* track, const PatTTHits& hits);
+  
+  virtual void chi2Tuple( const double p, const double chi2, const unsigned int nHits);
+  
+
 
 protected:
 
