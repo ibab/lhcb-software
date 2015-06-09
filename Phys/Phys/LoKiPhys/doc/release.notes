@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2015-06-09 - Eduardo Rodrigues
+ - Fixed a few pattern selection rules to please genreflex.
+
 !========================== LoKiPhys v11r2 2015-04-27 =========================
 
 ! 2015-04-26 - Vanya Belyaev
