@@ -5,6 +5,10 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2015-06-09 - Eduardo Rodrigues
+ - PVReFitter: duplicate property "MinChi2Iterations" corrected to a new name
+   since it's in fact not a duplicate but a different property.
+
 !====================== Phys/LoKiFitters v4r14 2015-05-27 =====================
 
 ! 2015-04-30 - Vanya Belyaev

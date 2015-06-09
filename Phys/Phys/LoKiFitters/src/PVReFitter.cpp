@@ -415,7 +415,7 @@ LoKi::PVReFitter::PVReFitter
       "Minimal number of iterations before delta(chi2)     check" ) ;
   //
   declareProperty 
-    ( "MinChi2Iterations"      , 
+    ( "MinDistanceIterations"      , 
       m_iterDist               , 
       "Minimal number of iterations before delta(distance) check" ) ;
   //
