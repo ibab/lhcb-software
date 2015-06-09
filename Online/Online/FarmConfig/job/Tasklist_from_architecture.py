@@ -11,7 +11,7 @@ def TaskListfromArch(arch, tasklist):
         tasklist.append(s.attributes['name'].value)
 def OptionsfromTasks(tasklist,level,ofile,pname,dohostdns):
     f = open(ofile,'w')
-    f.write("//  Adder Level "+level+"\n")
+    f.write("//  Adder Level "+level+"=====================\n")
     f.write("""#include "$INFO_OPTIONS"
 
 ApplicationMgr.ExtSvc               += {"MonitorSvc","BusySvc"};
@@ -40,7 +40,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
       OutDns = os.getenv("OutDns","hlt01")
       InDns = "\""+InDns+"\""
       OutDns = "\""+OutDns+"\""
-    elif level == "3":      
+    elif level == "3":
       InDns = os.getenv("InDns","hlt01")
       OutDns = os.getenv("OutDns","mona08")
       InDns = "\""+InDns+"\""
@@ -149,6 +149,7 @@ BusyAdder.ReceiveTimeout          = 3;
         cntsvc = []
         histsvc.append("Adder")
         cntsvc.append("Busy")
+        tasklist.remove("MEPrx")
         for s in tasklist:
             hsvc = s#+"HistAdder"
             f.write("ApplicationMgr.ExtSvc               += {\"AdderSvc/"+hsvc+"HistAdder\"};\n")
