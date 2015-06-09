@@ -11,7 +11,7 @@ def myActionHlt2() :
                                 MCParticleSelector, PrLHCbID2MCParticle,
                                 UnpackMCParticle, UnpackMCVertex, DebugTrackingLosses )
 
-    from HltTracking.HltTrackNames import  HltSharedTrackLoc, HltSharedTrackRoot,Hlt2TrackRoot,Hlt2TrackLoc
+    from HltTracking.HltTrackNames import  HltSharedTrackLoc, HltSharedTrackRoot,Hlt2TrackRoot,Hlt2TrackLoc,HltDefaultFitSuffix
     
 
     PatCheck = GaudiSequencer("CheckPatSeq")
@@ -30,12 +30,25 @@ def myActionHlt2() :
     PrChecker2("PrCheckerHlt2").MatchTracks = Hlt2TrackLoc["Match"]
     PrChecker2("PrCheckerHlt2").DownTracks = Hlt2TrackLoc["Downstream"]
     PrChecker2("PrCheckerHlt2").ForwardTracks = Hlt2TrackLoc["Forward"]
-    PrChecker2("PrCheckerHlt2").BestTracks = Hlt2TrackLoc["Best"]
-    #PrChecker2("PrCheckerHlt2").HistoPrint = True
+
+    from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+    from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
+    tracks = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
+    tracksDown = Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks()
+    PrChecker2("PrCheckerHlt2").BestTracks = tracks.outputSelection()
+    #PrChecker2("PrCheckerHlt2").DownTracks = tracksDown.outputSelection()
 
     PrTrackAssociator("AssocAllHlt2").RootOfContainers = Hlt2TrackRoot
-    
-    PatCheck.Members += [ PrTrackAssociator("AssocAllHlt2") ]
+    PrTrackAssociator("AssocFittedHlt2").RootOfContainers = Hlt2TrackRoot+HltDefaultFitSuffix
+    print tracks.outputSelection()
+    print Hlt2TrackRoot+HltDefaultFitSuffix
+    print tracks.outputSelection()
+    print Hlt2TrackRoot+HltDefaultFitSuffix
+    print tracks.outputSelection()
+    print Hlt2TrackRoot+HltDefaultFitSuffix
+
+
+    PatCheck.Members += [ PrTrackAssociator("AssocAllHlt2"), PrTrackAssociator("AssocFittedHlt2") ]
     PatCheck.Members += [ PrChecker2("PrCheckerHlt2") ]
     PatCheck.Members += [ PrChecker2("PrCheckerHlt2Forward") ]
 

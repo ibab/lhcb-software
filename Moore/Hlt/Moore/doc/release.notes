@@ -4,9 +4,13 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2015-06-09 - Sascha Stahl
+ - Fixed AddPrCheckerHlt2.py to pick up the current locations of tracks.
+
 ! 2015-06-09 - Roel Aaij
  - Remove Hlt1TrackMonitorSequence from HltEndSequence in Hlt2.
  - Remove dependency on Sys packages.
+
 
 !========================= Moore v23r7 2015-05-27 =========================
 
