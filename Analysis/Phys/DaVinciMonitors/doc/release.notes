@@ -4,6 +4,11 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+!=================== DaVinciMonitors v1r22 2015-06-09 ========================
+
+! 2015-06-08 - Patrizia de Simone
+ - MuEffMonitor algorithm: update for Run 2.
+
 ! 2015-06-08 - Ricardo Vazquez Gomez
  - Bug fix in MuIDMonitor.cpp that checks the size of selParts. 
 
