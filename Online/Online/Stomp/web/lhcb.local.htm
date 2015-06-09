@@ -9,11 +9,11 @@
 
   <script language="JavaScript">
   if ( document.domain=='comet' )  {
-    var loc = 'http://comet.lbdaq.cern.ch'+document.location.href.substring(12);
+    var loc = 'https://comet.lbdaq.cern.ch'+document.location.href.substring(12);
     document.location = loc;
   }
   else if ( document.domain=='lbcomet' )  {
-    var loc = 'http://lbcomet.cern.ch'+document.location.href.substring(14);
+    var loc = 'https://lbcomet.cern.ch'+document.location.href.substring(14);
     document.location = loc;
   }
   var _transport_in_use = "stomp";

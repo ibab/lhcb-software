@@ -1,2 +1,298 @@
-eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('o 9=d.9;o m=d.m;o 2E=e(){3.5Q=15;3.5P=15;3.5O=15;3.14=\'5N\';o 2F=1w.5M.5L();o 1b=2F.1u(\'?\');1c(1b.1q>1){o 5K=\'\';o p=1b[1].1u(\'&\');3.O=p;2r(o i=0;i<p.1q;++i){o v=p[i].1u(\'=\');3[v[0]]=v[1]}3.5J=1b[0]}};a=h g.1r.5I({O:h 2E(),k:e(){g.5H.k()},5G:e(){J{5F:\'5E\',5D:\'5C\',5B:5A,5z:{2A:2,2z:\'5y 5x\',2y:\'1t/1s/5w/2D-2C/2B/2D-2C.2B\'},5v:{2A:4,2z:\'5u\',5t:\'1t/1s/2x/5s/2w-2v.1m\',2y:\'1t/1s/2x/2w-2v.1m\'},5r:\'5q\'}},5p:e(){J[h a.1l(),h a.2d(),h a.2g(),h a.2f(),h a.2e(),h a.2b(),h a.2c(),h a.29(),h a.28(),h a.2a(),h a.26(),h a.I(),h a.27(),h a.25(),h a.24(),h a.1Y(),h a.1S(),h a.1R(),h a.1G(),h a.1C(),h a.1A(),h a.1P(),h g.1r.2p(),h g.1r.2o()]},2s:e(2u){1c(2u==\'5o\')5n.5m.5l()},2j:e(5k){g.5j.5i(\'5h\',\'5g 2t 5f <5e>2t 5d 5c 5b 2l?\',3.2s)},5a:e(){o 1p=3.59;2r(o i=0,2q=1p.1q;i<2q;i++){o l=1p[i].T;o t=l.2m;(!(t==\'2p\'||t==\'2o\'))?3.T.58(l):3.T.2n(l)}3.T.57();3.T.2n({2m:\'56\',2h:\'2l\',2i:3,55:{54:\'2k 53 2k 52\'},51:3.2j,2i:3})},4Z:e(){J{4Y:4X,4W:4V,4U:\'17 4T\',2h:\'4S\',4R:[]}},4Q:e(){J 3.4P(3.O.14)},4O:e(O){J 3.4N(O,3.O.14)}});a.1l=g.s(m.A,{k:e(){3.r(9.f.d.4M)}});a.2g=g.s(m.A,{k:e(){3.r(9.f.d.4L)}});a.2f=g.s(m.A,{k:e(){3.r(9.f.d.4K)}});a.2e=g.s(m.A,{k:e(){3.r(9.f.d.4J)}});a.2d=g.s(m.A,{k:e(){3.r(9.f.d.4I)}});a.2c=g.s(m.A,{k:e(){3.r(9.f.d.4H)}});a.2b=g.s(m.A,{k:e(){3.r(9.f.d.4G)}});a.2a=g.s(m.A,{k:e(){3.r(9.f.d.4F)}});a.29=g.s(m.A,{k:e(){3.r(9.f.d.4E)}});a.28=g.s(m.A,{k:e(){3.r(9.f.d.4D)}});a.27=g.s(m.A,{k:e(){3.r(9.f.d.4C)}});a.26=g.s(m.A,{k:e(){3.r(9.f.d.4B)}});a.I=g.s(m.A,{k:e(){3.r(9.f.23.4A)}});a.1H=g.s(m.A,{k:e(){3.r(9.f.j)}});a.25=g.s(m.A,{k:e(){3.r(9.f.d.1T)}});a.24=g.s(m.G,{k:e(){o z=[3.b(\'I 22\',\'y://N.j.n/N/N.1g\',C,c),3.b(\'M 1o 1\',9.E(\'4z\'),w,c),3.b(\'I 1n\',9.E(\'4y\'),S,R).D(9.u.23),3.b(\'I 1o 1\',9.E(\'4x\'),S,R),3.b(\'I 1o 2\',9.E(\'4w\'),S,R),3.b(\'I 4v\',9.E(\'4u\'),S,R),3.b(\'I 4t\',9.E(\'4s\'),w,c),3.b(\'4r\',9.E(\'4q\'),w,c),3.b(\'4p\',9.E(\'4o\'),w,c),3.b(\'4n\',9.E(\'4m\'),S,R),3.b(\'M 1n\',\'y://1a-Q-19-18.H.j.n/1a-Q-19-18\',w,c),3.b(\'M 1n\',\'y://1a-Q-19-18.H.j.n/1a-Q-19-18\',w,c),3.b(\'M 22\',\'y://N.j.n/N/N.1g?4l=50\',w,c),3.b(\'M 4k\',\'y://4j/1v/4i/M+4h+4g\',w,c),3.b(\'4f 4e\',\'K://4d.j.n/4c-Q\',w,c),3.b(\'4b 20\',\'y://j.n/21\',w,c).D({4a:\'y://j.n/21/u/49-48.1m\'}),3.b(\'1Z 20\',\'y://j.n/1Z-47\',w,c)];3.r(\'46&45;44\',9.u.43,z)}});a.1Y=g.s(m.G,{k:e(){o z=[3.B(9.f.d.1Q).D(9.u.d),3.b(\'1X 1l (42 1U)\',\'K://41.j.n/40/d-3Z-3Y/3X.3W\',w,c),3.b(\'1X 1V\',\'K://3V.j.n/1W?3U=1W\',w,c),3.b(\'3T 1V\',\'y://3S.j.n\',C,c),3.b(\'3R 3Q\',\'y://d.H.j.n/d/H-3P.3O\',C,c),3.b(\'3N\',\'y://3M.j.n/1N.3L/1U\',C,c),3.B(9.f.d.Y).D(9.u.Y),3.B(9.f.d.3K),3.B(9.f.d.3J),3.B(9.f.d.1T),3.B(9.f.d.3I).D(9.u.1j),3.B(9.f.d.3H).D(9.u.1j)];3.r(\'17 U\',9.u.d,z)}});a.1S=g.s(m.G,{k:e(){o z=[3.B(9.f.d.P.3G),3.B(9.f.d.P.3F),3.B(9.f.d.P.3E),3.B(9.f.d.P.3D),3.B(9.f.d.P.3C)];3.r(\'17 3B\',9.u.d,z)}});a.1R=g.s(m.G,{k:e(){o z=[3.B(9.f.d.16.1Q).D(9.u.16),3.B(9.f.d.16.3A)];3.r(\'17 3z\',9.u.16,z)}});a.1P=g.s(m.G,{k:e(){o z=[3.b(\'3y\',9.1O(15),C,c),3.b(\'3x\',9.1O(\'/3w\'),C,c).D(9.u.3v),3.b(\'3u 3t 3s\',\'K://H-13.H.j.n/H-13/3r-1B/3q.3p?3o=3n&3m=1z&3l=3k&14=3j&3i=1N\',C,c).D(9.u.3h),3.b(\'1k 3g 3f\',\'y://1M-13.H.j.n/1M-13/3e/1k-1L/?p=3d&q=1k 1L 3c\',L,c),3.b(\'3b\',9.12(\'11-3a-10\'),L,c).D(9.u.1j),3.b(\'1K 1i\',9.12(\'11-1K-10\'),L,c),3.b(\'1J 1i\',9.12(\'11-1J-10\'),L,c),3.b(\'1I 1i\',9.12(\'11-1I-10\'),L,c)];3.r(\'1H\',9.u.j,z)}});a.1G=g.s(m.G,{k:e(){o z=[3.b(\'Z 1e\',\'y://39.j.n\',w,c).D(9.u.1D),3.b(\'Z 1F\',\'y://j.n/1E\',w,c),3.b(\'Z 1F 38\',\'y://j.n/1E/37\',L,c)];3.r(\'Z U\',9.u.1D,z)}});a.1C=g.s(m.G,{k:e(){o z=[3.b(\'X 1e\',\'y://1h.n\',w,c).D(9.u.1h),3.b(\'X 36\',\'K://Y.j.n/Y/1B/35/34/33\',w,c),3.b(\'X 32 31\',\'y://30.j.n/2Z\',w,c)];3.r(\'X U\',9.u.1h,z)}});a.1A=g.s(m.G,{F:e(1f){J\'y://2Y.j.n/2X/F/F.1g?1f=\'+1f},k:e(){o z=[3.b(\'1x 1e\',\'y://1d.j.n\',w,c).D(9.u.1d),3.b(\'2W 1y\',3.F(4),C,c),3.b(\'W V (2V)\',3.F(5),C,c),3.b(\'W V (2U)\',3.F(6),C,c),3.b(\'W V (1z)\',3.F(7),C,c),3.b(\'W V (2T)\',3.F(8),C,c),3.b(\'2S 0 1y\',\'K://2R.j.n/2Q\',C,c)];3.r(\'1x U\',9.u.1d,z)}});o 2P=e(){o p=1w.2O(\'x-2N\');J p};1c(2M)2L(\'2K d.1v.2J.2I 2H 2G\');',62,363,'|||this||||||constants|LbDesktop|menuItem|700|lhcb|function|urls|Ext|new||cern|init||desktop|ch|var|||_launch|extend||images||900||http|items|URLModule|menuURL|1000|makeIcon|operations_url|cmstv|URLMenuModule|web|LHC|return|https|1100|SPS|eLogbook|params|subdetectors|dep|870|1150|launcher|Experiment|Display|Event|ATLAS|twiki|ALICE|Group|IT|sls_service_url|statistics|config|null|dirac|LHCb|sps|op|ab|pars|if|cms|Home|channel|jsp|atlas|services|database|LHCOPN|News|jpg|Operation|Page|ms|length|app|resources|ExtJs|split|display|document|CMS|Status|2010|CMSMenuModule|bin|ATLASMenuModule|alice|alicedcs|DCS|ALICEMenuModule|CERN|IS|DES|FIO|Total|network|index|mmm_url|CERNMenuModule|home_page|DiracMenuModule|LHCbSDetModule|weekly_meetings|login|DB|rundb|Run|LHCbMenuModule|CLIC|Project|linac4|logbook|lhc|BeamMenuModule|LHCbMeetings|LHCStatus|ELog|BCM|Collimators|Magnet|Operator|DetStatus|Page1|SDETStatus|FESTStatus|LHCbStatus|iconCls|scope|createLogoutWindow|3px|logout|text|addTool|About|Preferences|len|for|handleLogout|you|btn|swirl|blue|wallpapers|pathtofile|name|id|css|vistablack|xtheme|Params|url|successfully|loaded|cpp|lbdesk|Script|alert|_debugLoading|shortcuts|getElementById|defineShortcuts|T0Mon|cmsweb|Tier|Sim|2009|2008|Online|cmscc|cmsdoc|live|atlantis|events|Live|AtlasComputing|Atlas|view|Computing|monitoring|Monitoring|aliceinfo|DM|Databases|Traffic|sc|ext|Tier2s|and|webstats|framename|frankm|main|output|year|all|month|pl|awstats|cgi|stats|site|Web|mail|exchange|Mail|MMM|Dirac|launch_pad|Subdetectors|muon|ot|velo|daq_trigger|daq_lumi|online_databases_status|offline_databases_status|computing_home_page|online_home_page|py|lbshiftdb|Shifts|htm|cam|Webcam|Pit|lbproblems|Problem|destination|lbrundb|aspx|default|news|run|group|groups|requires|beams_department|Operations|amp|Beam|Study|Linacresized|Logo|icon|Linac4|be|espace|department|Beams|page|Start|SPSOP|wikis|wiki|lgbk|LHCF|LHCf|LIN|Linac|LEIR|Leir|LHCEXPMAG|Magnets|LHC_CONFIG|Configuration|LHC2|LHC1|LHC3|SPS1|project|lhc_status|elog|bcm|collimators|magnet|operstatus|detstatus|page1|sdet_run_status|fest_run_status|lhcb_run_status|display_news|savePreferencesWithCookie|savePreferences|loadPreferencesWithCookie|initPreferences|toolItems|user|Desktop|title|600|height|350|width|getStartConfig||handler|28px|1px|padding|style|Logout|addToolSeparator|add|modules|getStartItemsConfig|do|to|want|br|sure|Are|Confirm|confirm|MessageBox|src|back|history|window|yes|getModules|tile|wallpaperposition|thumbnails|pathtothumbnail|Swirl|wallpaper|themes|Black|Vista|theme|100|transparency|FFFFFF|fontcolor|575757|backgroundcolor|getStyles|QuickTips|App|url_base|disp_func|toString|location|session|body|header|type'.split('|'),0,{}))
-;
+var constants = lhcb.constants;
+var desktop   = lhcb.desktop;
+
+var Params = function()   {
+  this.type = null;
+  this.header = null;
+  this.body = null;
+  this.config = 'session';
+  var url = document.location.toString();
+  var pars = url.split('?');
+  if ( pars.length > 1 )  {
+    var disp_func = '';
+    var p = pars[1].split('&');
+    this.params = p;
+    for (var i=0; i<p.length; ++i) {
+      var v = p[i].split('=');
+      this[v[0]] = v[1];
+    }
+    this.url_base = pars[0];
+  }
+};
+
+
+// Sample desktop configuration
+LbDesktop = new Ext.app.App({
+  params: new Params(),
+
+  init:   function(){
+    Ext.QuickTips.init();
+  },
+
+  getStyles: function() {
+    return   {
+        backgroundcolor: '575757',
+        fontcolor: 'FFFFFF',
+        transparency: 100,
+        theme: {
+            id: 2,
+            name: 'Vista Black',
+            pathtofile: 'ExtJs/resources/themes/xtheme-vistablack/css/xtheme-vistablack.css'
+        },
+        wallpaper: {
+            id: 4,
+            name: 'Swirl',
+            pathtothumbnail:	'ExtJs/resources/wallpapers/thumbnails/blue-swirl.jpg', 
+	    pathtofile:		'ExtJs/resources/wallpapers/blue-swirl.jpg'
+        },
+        wallpaperposition: 'tile'
+     };
+  },
+  getModules : function()     {
+    return [ 
+         new LbDesktop.News()
+	 ,new LbDesktop.Page1()
+         ,new LbDesktop.LHCbStatus()
+         ,new LbDesktop.FESTStatus()
+         ,new LbDesktop.SDETStatus()
+         ,new LbDesktop.Operator()
+         ,new LbDesktop.DetStatus()
+         ,new LbDesktop.Collimators()
+         ,new LbDesktop.BCM()
+         ,new LbDesktop.Magnet()
+         ,new LbDesktop.LHCStatus()
+         ,new LbDesktop.LHC()
+         ,new LbDesktop.ELog()
+         ,new LbDesktop.LHCbMeetings()
+         //,new LbDesktop.CERN()
+         ,new LbDesktop.BeamMenuModule()
+         ,new LbDesktop.LHCbMenuModule()
+	 ,new LbDesktop.LHCbSDetModule()
+         //,new LbDesktop.DiracMenuModule()
+         ,new LbDesktop.ALICEMenuModule()
+         ,new LbDesktop.ATLASMenuModule()
+         //,new LbDesktop.CMSMenuModule()
+         ,new LbDesktop.CERNMenuModule()
+	 ,new Ext.app.Preferences()
+	 ,new Ext.app.About()
+    ];
+  },
+
+  handleLogout: function(btn){
+     if ( btn == 'yes' ) window.history.back();
+  },
+  createLogoutWindow: function(src) {
+    Ext.MessageBox.confirm('Confirm', 'Are you sure <br>you want to do logout?', this.handleLogout);
+  },
+
+  getStartItemsConfig: function() {
+    var ms = this.modules;
+    for(var i = 0, len = ms.length; i < len; i++) {
+      var l = ms[i].launcher;
+      var t = l.text;
+      ( !(t == 'Preferences' || t=='About') ) ? this.launcher.add(l) : this.launcher.addTool(l);
+    }
+    this.launcher.addToolSeparator();
+    this.launcher.addTool({
+          text:     'Logout'
+          ,iconCls: 'logout'
+          ,scope:    this
+          ,style:   {padding: '3px 1px 3px 28px'}
+          ,handler:  this.createLogoutWindow
+          ,scope:    this
+		       });
+  },
+
+  // config for the start menu
+  getStartConfig : function() {
+    return {
+      width:  350,
+      height: 600,
+      title: 'LHCb Desktop',
+      iconCls: 'user',
+      toolItems: []
+    };
+  },
+
+  initPreferences: function() {
+    return this.loadPreferencesWithCookie(this.params.config);
+  },
+
+  savePreferences : function(params) {
+    return this.savePreferencesWithCookie(params,this.params.config);
+  }
+});
+
+LbDesktop.News        = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.display_news);}});
+LbDesktop.LHCbStatus  = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.lhcb_run_status);}});
+LbDesktop.FESTStatus  = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.fest_run_status);}});
+LbDesktop.SDETStatus  = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.sdet_run_status);}});
+LbDesktop.Page1       = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.page1);}});
+LbDesktop.DetStatus   = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.detstatus);}});
+LbDesktop.Operator    = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.operstatus);}});
+LbDesktop.Magnet      = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.magnet);}});
+LbDesktop.Collimators = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.collimators);}});
+LbDesktop.BCM         = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.bcm); }});
+LbDesktop.ELog        = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.elog); }});
+LbDesktop.LHCStatus   = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.lhc_status); }});
+LbDesktop.LHC         = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhc.project); }});
+LbDesktop.CERN        = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.cern);}});
+LbDesktop.LHCbMeetings= Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.weekly_meetings); }});
+
+LbDesktop.BeamMenuModule = Ext.extend(desktop.URLMenuModule, {
+  init : function()  { 
+      var sps_icon = 'http://images.iop.org/objects/ccr/cern/41/6/17/cernsps3_6-01.jpg';
+      var clic_icon = 'http://clic-study.web.cern.ch/sites/clic-study.web.cern.ch/themes/cliccern/img/logos/CLIClogo.png';
+      var items = 
+	[ this.menuItem('LHC logbook',       'https://op-webtools.web.cern.ch/op-webtools/eLogbook/?lgbkID=60',1000,700).makeIcon(constants.images.lhc)
+	  ,this.menuItem('LHC Operation',     constants.operations_url('LHC3'),          1100,870).makeIcon(constants.images.lhc)
+	  ,this.menuItem('LHC Page 1',        constants.operations_url('LHC1'),          1100,870).makeIcon(constants.images.lhc)
+	  ,this.menuItem('LHC Page 2',        constants.operations_url('LHC2'),          1100,870).makeIcon(constants.images.lhc)
+	  ,this.menuItem('LHC Configuration', constants.operations_url('LHCCONFIG'),     1100,870).makeIcon(constants.images.lhc)
+	  ,this.menuItem('LHC Magnets',       constants.operations_url('LHCEXPMAG'),     1100,920).makeIcon(constants.images.lhc)
+	  ,this.menuItem('LHC Beam Dump',     constants.operations_url('LHCBDS'),        1100,700).makeIcon(constants.images.lhc)
+	  ,this.menuItem('LHC Dashboard',     constants.operations_url('LHCDASHBOARD'),  1150,1000).makeIcon(constants.images.lhc) 
+	  ,this.menuItem('Leir',              constants.operations_url('LEIR'),          900,700)
+	  ,this.menuItem('Linac',             constants.operations_url('LIN'),           900,700)
+	  ,this.menuItem('PSB',               constants.operations_url('PSB'),           1150,870)
+	  ,this.menuItem('HRS',               constants.operations_url('HRS'),           1150,870)
+	  ,this.menuItem('GPS',               constants.operations_url('GPS'),           1150,870)
+	  ,this.menuItem('LHCf',              constants.operations_url('LHCfExperiment'),1150,870)
+
+	  ,this.menuItem('SPS Page 1',        constants.operations_url('SPS1'),          900,700).makeIcon({icon:sps_icon})
+	  ,this.menuItem('SPS Home page',     'https://home.web.cern.ch/about/accelerators/super-proton-synchrotron', 1150,700).makeIcon({icon:sps_icon})
+	  ,this.menuItem('SPS Operation',     'https://ab-dep-op-sps.web.cern.ch/ab-dep-op-sps', 900,700).makeIcon({icon:sps_icon})
+	  ,this.menuItem('SPS logbook',       'https://op-webtools.web.cern.ch/op-webtools/eLogbook/?lgbkID=50',1000,700).makeIcon({icon:sps_icon})
+	  ,this.menuItem('Beams department',  'https://espace.cern.ch/be-dep',900,700)
+	  ,this.menuItem('Linac4 Project',    'https://linac4-project.web.cern.ch/linac4-project',1100,870).makeIcon({icon:'https://cern.ch/linac4/images/Logo-Linacresized.jpg'})
+	  ,this.menuItem('CLIC Project',      'https://clic-study.web.cern.ch',1100,870).makeIcon({icon:clic_icon})
+	  ,this.menuItem('CLICdp',            'https://clicdp.web.cern.ch',1200,870).makeIcon({icon:clic_icon})
+	  ];
+    this._launch('Beam&amp;Operations',constants.images.beams_department,items);
+  }
+});
+
+LbDesktop.LHCbMenuModule = Ext.extend(desktop.URLMenuModule, {
+  init: function(){
+    var items = 
+      [ this.menuURL(constants.urls.lhcb.home_page).makeIcon(constants.images.lhcb,1300,700)
+      ,this.menuItem('Run News (requires login)', 'https://groups.cern.ch/group/lhcb-run-news/default.aspx',1000,700)
+      ,this.menuItem('Run DB',                    'https://lbrundb.cern.ch/rundb?destination=rundb',1000,700)
+      ,this.menuItem('Problem DB',                'https://lbproblems.cern.ch',1000,700)
+      ,this.menuItem('Shifts',                    'https://lbshiftdb.cern.ch',1000,700)
+      ,this.menuItem('Pit Webcam',                'https://lhcb.web.cern.ch/lhcb/web-cam.htm',1000,700)
+      ,this.menuURL(constants.urls.lhcb.twiki).makeIcon(constants.images.twiki).makeIcon(constants.images.lhcb,1300,700)
+      ,this.menuURL(constants.urls.lhcb.online_home_page).makeIcon(constants.images.lhcb,1300,700)
+      ,this.menuURL(constants.urls.lhcb.computing_home_page).makeIcon(constants.images.lhcb,1300,700)
+      ,this.menuURL(constants.urls.lhcb.weekly_meetings).makeIcon(constants.images.lhcb,1300,700)
+      ,this.menuURL(constants.urls.lhcb.offline_databases_status).makeIcon(constants.images.database)
+      ,this.menuURL(constants.urls.lhcb.online_databases_status).makeIcon(constants.images.database)
+     ];
+    this._launch('LHCb Experiment',constants.images.lhcb,items);
+  }
+});
+
+LbDesktop.LHCbSDetModule = Ext.extend(desktop.URLMenuModule, {
+  init: function(){
+    var items = 
+    [ 
+     this.menuURL(constants.urls.lhcb.subdetectors.daq_evdisp).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.daq_lumi).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.daq_trigger).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.alarmScreen).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.trg_l0status).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.velo).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.velo.motion).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.st).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.ot).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.rich).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.calo).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.muon).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.cooling).makeIcon(constants.images.lhcb,1300,700)
+     ];
+    this._launch('LHCb Subdetectors',constants.images.lhcb,items);
+  }
+});
+
+LbDesktop.DiracMenuModule = Ext.extend(desktop.URLMenuModule, {
+  init: function(){
+    var items = 
+    [
+     this.menuURL(constants.urls.lhcb.dirac.home_page).makeIcon(constants.images.dirac)
+     //,this.menuURL(constants.urls.lhcb.dirac.launch_pad)
+     ];
+    this._launch('LHCb Dirac',constants.images.dirac,items);
+  }
+});
+
+LbDesktop.CERNMenuModule = Ext.extend(desktop.URLMenuModule, {
+  init: function(){
+    var items=[//this.menuItem('Home Page',        constants.mmm_url(null),1000,700).makeIcon(constants.images.cern)
+                this.menuItem('MMM',               constants.mmm_url(null),1000,700)
+               ,this.menuItem('Mail',              constants.mmm_url('/exchange'),1000,700).makeIcon(constants.images.mail)
+               ,this.menuItem('Web site stats',    'https://web-statistics.web.cern.ch/web-statistics/cgi-bin/awstats.pl?month=all&year=2010&output=main&config=frankm&framename=index',1000,700).makeIcon(constants.images.webstats)
+               ,this.menuItem('Service Portal',    constants.service_now_url('sls.do'), 1100,700).makeIcon(constants.images.database)
+               ,this.menuItem('Phonebook',         'https://phonebook.cern.ch/phonebook#',1100,700)
+               ,this.menuItem('Maps',              'https://maps.cern.ch',1100,700)
+               ,this.menuItem('Library',           'https://library.web.cern.ch', 1100,700)
+               ,this.menuItem('Shuttle service',   'https://gs-dep.web.cern.ch/en/ShuttleService', 1100,700)
+    ];
+    this._launch('CERN',constants.images.cern,items);
+  }
+});
+
+LbDesktop.ALICEMenuModule = Ext.extend(desktop.URLMenuModule, {
+  init: function() {
+      var items=[//this.menuItem('ALICE Home','http://alice.cern.ch',900,700).makeIcon(constants.images.alice)
+		 this.menuItem('ALICE DCS','https://cern.ch/alicedcs',900,700).makeIcon(constants.images.alice)
+		 ,this.menuItem('ALICE DCS Status',    'https://alicedcs.web.cern.ch/AliceDCS/Status',1100,700).makeIcon(constants.images.alice)
+		 ,this.menuItem('ALICE DCS Operation', 'https://alicedcs.web.cern.ch/AliceDCS/DCSoperation',1100,700).makeIcon(constants.images.alice)
+		 ,this.menuItem('ALICE DCS Monitoring','https://alicedcs.web.cern.ch/AliceDCS/monitoring',1100,700).makeIcon(constants.images.alice)
+    ];
+    this._launch('ALICE Experiment',constants.images.alice,items);
+  }
+});
+
+
+LbDesktop.ATLASMenuModule = Ext.extend(desktop.URLMenuModule, {
+  init: function(){
+    var items=[this.menuItem('ATLAS Home','https://atlas.web.cern.ch/Atlas/Collaboration',900,700).makeIcon(constants.images.atlas),
+               this.menuItem('ATLAS Computing','https://twiki.cern.ch/twiki/bin/view/Atlas/AtlasComputing',900,700),
+               this.menuItem('ATLAS Event display','https://atlantis.web.cern.ch/atlantis',900,700)
+    ];
+    this._launch('ATLAS Experiment',constants.images.atlas,items);
+  }
+});
+
+LbDesktop.CMSMenuModule = Ext.extend(desktop.URLMenuModule, {
+  cmstv: function(channel) { return 'http://cmsdoc.cern.ch/cmscc/cmstv/cmstv.jsp?channel='+channel; },
+  init: function()  {
+    var items=[this.menuItem('CMS Home','http://cms.web.cern.ch',900,700).makeIcon(constants.images.cms)
+              ,this.menuItem('Public Data',  'http://cms.web.cern.ch/content/cms-public-data',1000,700)
+	       //,this.menuItem('Event Display (2008)', this.cmstv(5),1000,700)
+	       //,this.menuItem('Event Display (2009)', this.cmstv(6),1000,700)
+	       //,this.menuItem('Event Display (2010)', this.cmstv(7),1000,700)
+	       //,this.menuItem('Event Display (Sim)',  this.cmstv(8),1000,700)
+              ,this.menuItem('Tier 0 Status',    'https://cmsweb.cern.ch/T0Mon',1000,700)
+    ];
+    this._launch('CMS Experiment',constants.images.cms,items);
+  }
+});
+
+var defineShortcuts = function() {
+  var p = document.getElementById('x-shortcuts');
+  /*
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.lhcb_run_status));
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.fest_run_status));
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.page1));
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.detstatus));
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.magnet));
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.lhc_status));
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.elog));
+  p.appendChild(desktop.shortcut(constants.urls.lhc.project));
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.weekly_meetings));
+  */
+  return p;
+};
+
+if ( _debugLoading ) alert('Script lhcb.display.lbdesk.cpp loaded successfully');

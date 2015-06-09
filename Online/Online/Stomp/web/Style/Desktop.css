@@ -133,7 +133,17 @@ a.x-menu-item {
 	background-position: left top;
 }
 .wallpaper-center {
+        background-repeat:   no-repeat;
 	background-position: center;
+	-webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+}
+.wallpaper-center-resize {
+        background-repeat:   no-repeat;
+	background-position: center;
+	background-size:     100%;
 }
 
 .x-icon-alert {

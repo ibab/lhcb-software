@@ -1,2 +1,3078 @@
-eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('L(!X.13){X.13=2a 4j();X.13.fY=Q(){};X.13.fX=Q(1c){J 1m=Q(){y.2T=w.5i};1m.5i=X.2y.47(1c);S 1m};X.13.9x=Q(){y.2T=X.2y.47("2L&1H=1E")};X.13.fW=Q(){y.2T=X.2y.fV("fU")};X.13.8E=Q(){S\'<3c 3d="\'+X.2y.6i(\'4V/fT.6h\').3d+\'" 1C="25"></3c>\'};X.13.fS=Q(){S\'<3c 3d="\'+X.2y.6i(\'4V/fR.6h\').3d+\'" 1C="25"></3c>\'};X.13.8D=Q(){S\'<3c 3d="\'+X.2y.6i(\'4V/9t-fQ-4V-87.6h\').3d+\'" 1C="25"></3c>\'};X.13.fP=Q(){S\'<3c 3d="\'+X.2y.6i(\'4V/fO.6h\').3d+\'" 1C="15"></3c>\'};X.13.8v=Q(4U,1A){J 3B,U=y.E(\'R\');L(fN()){U.u(3B=y.E(\'8v\'))}1u{U.u(3B=y.E(\'fM\'));3B.2t=\'8v\'}3B.4U=4U;3B.1A=1A;S[U,3B]};X.13.O=Q(F,1m){L(1m){F.1a(1m.1c,1m)}};X.13.4K=Q(1m,6g){J a=y.E(\'a\');L(6g)a.u(z(6g,1,\'fL\'));1u a.u(1m.6g);a.u(1m);a.u(1m.1S);1m.1S.V=D;S a};X.13.9l=Q(){J x,R,a,p=y.E(\'14\');x=y.E(\'1d\');p.V=x.V=\'8j\';p.2k=x;x.u(a=y.E(\'a\'));a.u(R=y.E(\'R\'));R.1z=\'18&29;89\';p.2Y=I(\'G.1B/18.18.3b.88\',D,D);a.u(p.2Y);a.u(R=y.E(\'R\'));R.1z=\'1P:\';p.4e=I(\'G.1B/18.18.3b.aZ\',D,D);a.u(p.4e);a.u(R=y.E(\'R\'));R.1z=\'\';p.u(x);p.1a=Q(F){w.4e.1a(F);w.2Y.1a(F);S w};S p};X.13.fK=Q(){J x,R,a,p=y.E(\'14\');x=y.E(\'1d\');p.V=x.V=\'8j\';p.2k=x;x.u(a=y.E(\'a\'));a.u(R=y.E(\'R\'));R.1z=\'18&29;89\';R.V=\'W-Z\';p.2Y=I(\'G.1B/18.18.3b.88\',\'W-aY\',D);a.u(p.2Y);p.4e=I(\'G.1B/18.18.3b.aZ\',\'W-Z\',\'1P:%s&29;/&29;\');a.u(p.4e);p.8u=I(\'G.1B/18.18.3b.aF\',\'W-aY\',D);a.u(p.8u);a.u(R=y.E(\'R\'));R.1z=\'\';p.u(x);p.1a=Q(F){w.4e.1a(F);w.8u.1a(F);w.2Y.1a(F);S w};S p};X.13.fJ=Q(){J c,a,p=y.E(\'14\');J x=y.E(\'1d\');p.V=x.V=\'1i\';p.6e=I(\'G.1B/18.18.22.64\',D,"%7.1n aE");p.8r=I(\'G.1B/18.18.22.6f.aW.aX\',D,\'%9.2e\');p.8q=I(\'G.1B/18.18.22.6f.aV.aX\',D,\'%9.2e\');p.8p=I(\'G.1B/18.18.22.6f.aW.aU\',D,\'%7.2f h\');p.8o=I(\'G.1B/18.18.22.6f.aV.aU\',D,\'%7.2f h\');p.8n=I(\'G.1B/18.1E.22.5Z.fI\',D,"%9.2e");p.6d=I(\'G.1B/18.18.8t.fH\',D,D);p.6c=I(\'G.1B/18.18.8t.fG\',D,D);p.6b=I(\'G.1B/18.18.8t.fF\',D,D);p.6e.1r=Q(4U){S 4U*87.0/7w.0};a=y.E(\'a\');x.u(a);a.u(z(\'18 2L 37\',4,\'N\'));a=y.E(\'a\');x.u(a);a.u(c=z(\'64:\',D,\'N\'));c.P.16=\'30%\';a.u(p.6e);a.u(z(\'4m.5Z:\',D,\'N\'));a.u(p.8n);a=y.E(\'a\');x.u(a);a=y.E(\'a\');x.u(a);a.u(z(\'fE [e]:\',D,\'N\'));a.u(p.8r);a.u(z(\'&aT;1 22 2&aS;\',D,\'W-2u\'));a.u(p.8q);a=y.E(\'a\');x.u(a);a.u(z(\'fD [h]:\',D,\'N\'));a.u(p.8p);a.u(z(\'&aT;1 22 2&aS;\',D,\'W-2u\'));a.u(p.8o);a=y.E(\'a\');x.u(a);c=z(\'fC:\',D,\'N\');c.3i=2;a.u(c);a.u(z(\'fB\',D,\'N\'));a.u(z(\'fA\',D,\'N\'));a.u(z(\'98\',D,\'N\'));a=y.E(\'a\');x.u(a);a.u(p.6d);a.u(p.6c);a.u(p.6b);p.6d.16=\'8s\';p.6c.16=\'8s\';p.6b.16=\'8s\';p.u(x);p.1a=Q(F){w.6e.1a(F);w.8r.1a(F);w.8q.1a(F);w.8p.1a(F);w.8o.1a(F);w.8n.1a(F);w.6d.1a(F);w.6c.1a(F);w.6b.1a(F);S w};S p};X.13.fz=Q(){J x,a,p=y.E(\'14\');x=y.E(\'1d\');p.V=x.V=\'1i\';p.1O=I(\'G.1B/18.18.3b.fy\',D,D);p.1O.P.8l=\'8k\';a=y.E(\'a\');x.u(a);a.u(z(\'18 fx 1O:\',D,\'N\'));a=y.E(\'a\');x.u(a);a.u(p.1O);p.1O.1r=Q(11){S 11.8m(/\\n/g,\'<3m>\')};p.1O.1C=\'75\';p.u(x);p.1a=Q(F){w.1O.1a(F);S w};S p};X.13.fw=Q(){J x,a,p=y.E(\'14\');x=y.E(\'1d\');p.V=x.V=\'1i\';p.1O=I(\'G.fv\',D,D);p.1O.1r=Q(11){S 11.8m(/\\n/g,\'<3m>\')};p.1O.P.8l=\'8k\';a=y.E(\'a\');x.u(a);a.u(z(\'fu 1O:\',D,\'N\'));a=y.E(\'a\');x.u(a);a.u(p.1O);p.1O.1C=\'aQ\';p.u(x);p.1a=Q(F){w.1O.1a(F);S w};S p};X.13.ft=Q(H){J x,a,p=y.E(\'14\');x=y.E(\'1d\');p.V=x.V=\'1i\';p.1O=I(\'G.1B/18.1E.4N.aR\',D,D);p.1O.1r=Q(11){J s=11.8m(/\\n/g,\'<3m>\');S s};p.1O.P.8l=\'8k\';L(H.P){a=y.E(\'a\');x.u(a);a.u(z(\'aR 36 3u fs:\',D,H.P))}x.u(a=y.E(\'a\'));a.u(p.1O);p.1O.1C=\'aQ\';p.u(x);p.1a=Q(F){w.1O.1a(F);S w};S p};X.13.9k=Q(1h,1k){J R,a,p=y.E(\'14\');J x=y.E(\'1d\');p.P.1C=x.P.1C=\'2m%\';p.V=x.V=\'8j\';p.4T=I(\'G.\'+1h+\'1N.60.4T\',D,D);p.2A=1L(\'G.\'+1h,1k,1p);x.u(a=y.E(\'a\'));a.u(R=y.E(\'R\'));R.1z=\'2B\';a.u(p.4T);a.u(R=y.E(\'R\'));R.1z=\' aN \';a.u(p.2A);a.u(p.2A.1S);a.u(R=y.E(\'R\'));R.1z=\'\';p.u(x);p.1a=Q(F){F.1a(w.4T.1c,w.4T);F.1a(w.2A.1c,w.2A);S w};S p};X.13.fr=Q(8i){J 1h=8i.1H;J 1k=8i.1k;J x,R,a,2s,p=y.E(\'14\');x=y.E(\'1d\');p.V=x.V=\'1i\';x.5u=0;x.5t=0;p.2z=I(\'G.\'+1h+\'1N.60.2z\',D,D);p.4S=I(\'G.\'+1h+\'1N.60.fq\',D,\'2B fp at: %s\');p.1Y=I(\'G.\'+1h+\'1N.2h.1Y\',\'W-Z\',D);p.39=I(\'G.\'+1h+\'1N.2h.39\',D,\'%8.2f %%\');p.4a=I(\'G.\'+1h+\'1N.2h.av\',D,\'2B:%8.2f %%\');p.67=I(\'G.\'+1h+\'1N.2W.9B\',D,D);p.8g=I(\'G.aP.B\',\'W-Z\',\'%7.4f\');p.6a=I(\'G.aP.5W\',D,D);p.2n=I(\'G.7K.aM.1K\',\'N\',D);p.2n.1r=Q(11){S\'1V & 1j:\'+(11.1J(\'/\')[1])};p.8h=I(\'G.1B/18.1E.99.2C.4n\',\'N\',\'2C %s\');p.43=I(\'G.5T.5S\',\'W-Z\',\'ad:%7.3f\');p.42=I(\'G.5T.5Q\',\'W-Z\',\'%7.3f\');p.41=I(\'G.5R.5S\',\'W-Z\',\'ac:%7.3f\');p.3Z=I(\'G.5R.5Q\',\'W-Z\',\'%7.3f\');p.3x=I(\'G.46.ag.44\',\'W-Z\',D);p.3w=I(\'G.46.af.44\',\'W-Z\',D);p.3v=I(\'G.46.ae.44\',\'W-Z\',D);p.3y=I(\'G.1B/18.1E.4N.au.as\',\'W-Z\',\'%7.1n 1l\');p.4d=I(\'G.\'+1h+\'1N.2h.ay\',\'W-Z\',\'%6.1n\');p.4c=I(\'G.\'+1h+\'1N.2h.ax\',\'W-Z\',\'%6.1n\');p.3a=I(\'G.\'+1h+\'1N.4O.3a\',\'W-Z\',\'%4.1n\');p.4b=I(\'G.\'+1h+\'1N.4O.aw\',\'W-Z\',\'%4.1n\');p.8e=I(\'G.1q.2G\',\'W-Z\',\'%4.1n\');p.8f=I(\'G.1q.2F\',\'W-Z\',\'%4.1n\');p.68=I(\'G.1q.2g\',\'W-Z\',\'%4.1n\');p.69=I(\'G.1q.2d\',\'W-Z\',\'%4.1n\');p.68=I(\'G.1q.2g\',\'W-Z\',\'%4.1n\');p.69=I(\'G.1q.2d\',\'W-Z\',\'%4.1n\');p.49=I(\'G.1q.2I\',\'W-Z\',\'%4.1n\');p.48=I(\'G.1q.2H\',\'W-Z\',\'%4.1n\');p.26=I(\'G.1q.26\',\'W-Z\',\'%4.1n\');p.24=I(\'G.1q.24\',\'W-Z\',\'%4.1n\');p.1X=I(\'G.1q.1X\',\'W-Z\',\'%4.1n\');p.1W=I(\'G.1q.1W\',\'W-Z\',\'%4.1n\');p.3z=I(\'G.1B/18.1E.4N.5Z.ar\',D,\'%7.2f &aq;b<1g>-1</1g>/s\');x.u(a=y.E(\'a\'));p.2z.1U=2;a.u(p.2z);p.4S.1U=6;a.u(p.4S);p.4S.P.1I=\'2l\';x.u(a=y.E(\'a\'));a.u(R=z(\'82 [&29;T&29;]:\',2,\'N\'));R.16=\'15%\';a.u(p.8g);a.u(z(\'5W:\',2,\'N\'));a.u(p.6a);p.6a.1r=Q(11){L(11>0)S\'+&29;(am)\';S\'-&29;(al)\'};a.u(p.2n);x.u(a=y.E(\'a\'));a.u(z(\'ai fo [&fn;]:\',2,\'N\'));a.u(p.43);a.u(R=p.42);R.1U=2;a.u(p.41);a.u(p.3Z);x.u(a=y.E(\'a\'));a.u(z(\'22 7P:\',2,\'N\'));a.u(p.3x);a.u(R=p.3w);R.1U=2;a.u(p.3v);a.u(p.8h);x.u(a=y.E(\'a\'));a.u(z(\'aJ.3e:\',2,\'N\'));a.u(p.3y);a.u(z(\'5C.3P:\',2,\'N\'));a.u(p.3z);p.3z.1U=2;x.u(a=y.E(\'a\'));a.u(z(\'3s ap:\',2,\'N\'));a.u(p.1Y);a.u(z(\'7D&29;7C:\',2,\'N\'));a.u(p.39);a.u(p.4a);x.u(a=y.E(\'a\'));a.u(2s=y.E(\'R\'));2s.P.16=\'2m%\';2s.1U=7;x.u(a=y.E(\'a\'));a.u(R=z(\'4v:\',1,\'N\'));R.16=\'5%\';p.67.1U=8;a.u(p.67);p.u(x);J t=y.E(\'14\');x=y.E(\'1d\');t.V=x.V=\'1i\';x.5u=0;x.5t=0;x.u(a=y.E(\'a\'));a.u(R=z(\'5p\',1,\'N\'));R.16=\'12%\';a.u(R=z(\'3s&29;[1l]\',1,\'23\'));R.16=\'12%\';a.u(R=z(\'3r&29;[1l]\',1,\'23\'));R.16=\'12%\';a.u(R=z(\'fm\',2,\'23\'));R.16=\'20%\';a.u(R=z(\'fl\',1,\'23\'));R.16=\'12%\';a.u(R=z(\'3P\',1,\'23\'));R.16=\'12%\';a.u(R=z(\'fk\',1,\'23\'));R.16=\'12%\';a.u(R=z(\'fj\',1,\'23\'));R.16=\'12%\';x.u(a=y.E(\'a\'));a.u(R=z(\'5Y:<3m>2B:\',1,\'N\'));R.3i=2;a.u(p.4d);a.u(p.3a);a.u(R=z(\'fi&29;[1l]:<3m>fh&29;[1l]:\',1,\'fg\'));R.3i=2;R.P.16=\'10%\';a.u(p.8f);a.u(p.48);a.u(p.69);a.u(p.24);a.u(p.1W);x.u(a=y.E(\'a\'));a.u(p.4c);a.u(p.4b);a.u(p.8e);a.u(p.49);a.u(p.68);a.u(p.26);a.u(p.1X);t.u(x);2s.u(t);p.1a=Q(F){F.O(w.2z);F.O(w.4S);F.O(w.1Y);F.O(w.4d);F.O(w.4c);F.O(w.3a);F.O(w.4b);F.O(w.39);F.O(w.4a);F.O(w.8h);F.O(w.3x);F.O(w.3w);F.O(w.3v);F.O(w.8g);F.O(w.6a);F.O(w.2n);F.O(w.43);F.O(w.42);F.O(w.41);F.O(w.3Z);F.O(w.3z);F.O(w.3y);F.O(w.8f);F.O(w.8e);F.O(w.69);F.O(w.68);F.O(w.48);F.O(w.49);F.O(w.26);F.O(w.24);F.O(w.1X);F.O(w.1W);F.O(w.67);S w};S p};X.13.ff=Q(){J c,x,R,a,p=y.E(\'14\');x=y.E(\'1d\');p.16=\'2m%\';p.V=\'aO\';x.V=\'aO\';a=y.E(\'a\');a.u(z(\'fe 1j 2Z\',2,\'N\'));x.u(a);a=y.E(\'a\');a.u(c=z(\'1E 1V & 1j aN:\',1,D));c.P.16=\'2D\';w.2n=I(\'G.7K.aM.1K\',D,D);w.2n.1r=Q(2X){L(2X){J v=2X.1J(\'/\',4);L(v.1o>1)S v[1]}S 2X};a.u(w.2n);x.u(a);p.u(x);S p};X.13.aC=Q(){J 1m=I(\'G.66/65.8d.fd.fc.fb\',\'W-Z\',D);1m.1r=Q(v){S(v==\'aL\')?\'fa\':\'aH\'};S 1m};X.13.az=Q(){J 1m=I(\'G.66/65.8d.aK.f9.f8\',D,D);1m.1r=Q(v){S(v==\'aL\')?\'4Q f7\':\'f6 4Q\'};S 1m};X.13.aB=Q(){J 1m=I(\'G.66/65.1P.f5\',D,D);1m.11=3;1m.1r=Q(1K){w.11=1K;L(1K==3||1K==5)S\'7E\';1u L(1K==1||1K==2)S\'aI 7E\';S\'f4\'};S 1m};X.13.aA=Q(2K){J 1m=I(\'G.66/65.8d.aK.f3.f2\',\'W-Z\',D);1m.1P=2K;1m.1P.11=3;1m.1r=Q(4R){J 1K=1K=w.1P.11;L(1K==3||1K==5){L(4R==0)S\'aJ. 1E 3A\';1u L(4R==1)S\'8c. 18 3A: 8b 8a f1 f0\';1u L(4R==2)S\'8c. 18 3A: 8b 8a 22 1\';1u L(4R==3)S\'8c. 18 3A: 8b 8a 22 2\'}1u L(1K==1||1K==2)S\'aI eZ\';1u L(1K==0)S\'eY eX 3u 3A\';1u L(1K==-1)S\'aH 4Q eW\';S\'4X aG eV eU eT eS aG eR\'};S 1m};X.13.eQ=Q(H){J x,a,U,p=y.E(\'14\');p.V=\'1i\';x=y.E(\'1d\');1G.1F(x,\'18 1K 37<br>4w 2v ao 2v 18 37 5U.\');x.1A=Q(){y.2T=X.2y.47("aD")};x.V=\'1i\';x.1C=\'2D\';L(H.P){a=y.E(\'a\');a.u(z(\'18 1P\',3,H.P));x.u(a)}L(H.1v){a=y.E(\'a\');a.u(z(\'eP\',1,\'N\'));a.u(z(\'89 9L\',1,\'N\'));a.u(z(\'64\',1,\'N\'));x.u(a)}p.86=I(\'G.1B/18.18.3b.aF\',D,D);p.2Y=I(\'G.1B/18.18.3b.88\',D,D);p.63=I(\'G.1B/18.18.22.64\',D,\'%7.1f aE\');p.63.1r=Q(11){S(11*87.0)/7w.0};a=y.E(\'a\');a.u(p.86);a.u(p.2Y);a.u(p.63);x.u(a);p.u(x);p.1a=Q(F){F.O(w.86);F.O(w.2Y);F.O(w.63)};S p};X.13.eO=Q(H){J p=y.E(\'14\');J x=y.E(\'1d\');J a=y.E(\'a\');J U=z(\'18 3A:\',D,\'N\');1G.1F(p,\'eN 3A 5U<br>4w 2v eM 18 2L\');p.1A=Q(){y.2T=X.2y.47("aD")};p.61=X.13.aC();p.4P=X.13.aB();p.62=X.13.aA(p.4P);p.85=X.13.az();p.V=x.V=\'1i\';L(H.P){a.u(z(\'18 4Q 2Z\',4,H.P));x.u(a);a=y.E(\'a\')}a.u(U);U.P.16=\'25%\';a.u(p.62);p.62.1U=5;p.P.1I=\'2l\';x.u(a);a=y.E(\'a\');a.u(U=z(\'4Q 1K:\',D,\'N\'));a.u(p.4P);p.4P.P.1I=\'2l\';a.u(U=z(\'/\',D,D));a.u(p.85);a.u(U=z(\'eL:\',D,\'N\'));U.P.16=\'15%\';a.u(p.61);p.61.P.16=\'15%\';x.u(a);p.u(x);p.1a=Q(F){F.O(w.62);F.O(w.85);F.O(w.4P);F.O(w.61)};S p};X.13.eK=Q(H){J x,R,a,p=y.E(\'14\');J 1h=H.1H;x=y.E(\'1d\');p.V=x.V=\'1i\';p.16=\'2m%\';x.5u=0;x.5t=0;p.2z=I(\'G.\'+1h+\'1N.60.2z\',D,D);p.1Y=I(\'G.\'+1h+\'1N.2h.1Y\',\'W-Z\',D);p.5X=I(\'G.\'+1h+\'1N.4O.5X\',\'W-Z\',D);p.4d=I(\'G.\'+1h+\'1N.2h.ay\',\'W-Z\',\'%8.2f 1l\');p.4c=I(\'G.\'+1h+\'1N.2h.ax\',\'W-Z\',\'%8.2f 1l\');p.3a=I(\'G.\'+1h+\'1N.4O.3a\',\'W-Z\',\'%8.2f 1l\');p.4b=I(\'G.\'+1h+\'1N.4O.aw\',\'W-Z\',\'%8.2f 1l\');p.39=I(\'G.\'+1h+\'1N.2h.39\',\'W-Z\',\'%8.2f %%\');p.4a=I(\'G.\'+1h+\'1N.2h.av\',\'W-Z\',\'%8.2f %%\');p.3y=I(\'G.1B/18.1E.4N.au.as\',\'W-Z\',\'%7.1f 1l\');p.3z=I(\'G.1B/18.1E.4N.5Z.ar\',\'W-Z\',\'%7.2f 1l/&aq;b\');p.84=I(\'G.1q.2G\',\'W-Z\',\'%7.1n 1l\');p.83=I(\'G.1q.2F\',\'W-Z\',\'%7.1n 1l\');p.49=I(\'G.1q.2I\',\'W-Z\',\'%7.1n 1l\');p.48=I(\'G.1q.2H\',\'W-Z\',\'%7.1n 1l\');p.2g=I(\'G.1q.2g\',\'W-Z\',\'%7.1n 1l\');p.2d=I(\'G.1q.2d\',\'W-Z\',\'%7.1n 1l\');p.26=I(\'G.1q.26\',\'W-Z\',\'%7.1n 1l\');p.24=I(\'G.1q.24\',\'W-Z\',\'%7.1n 1l\');p.1X=I(\'G.1q.1X\',\'W-Z\',\'%7.1n 1l\');p.1W=I(\'G.1q.1W\',\'W-Z\',\'%7.1n 1l\');L(H.P){x.u(a=y.E(\'a\'));a.u(z(\'eJ eI 2s 5e eH eG\',5,H.P))}x.u(a=y.E(\'a\'));a.u(z(\'eF:\',D,\'N\'));a.u(p.2z);p.2z.1U=4;p.2z.P.1I=\'2l\';x.u(a=y.E(\'a\'));a.u(z(\'eE 3e:\',D,\'N\'));p.3y.1U=2;a.u(p.3y);a.u(z(\'5C.3P:\',1,\'N\'));a.u(p.3z);x.u(a=y.E(\'a\'));a.u(z(\'3s ap:\',D,\'N\'));p.1Y.1U=2;a.u(p.1Y);a.u(z(\'9H:\',1,\'N\'));a.u(p.5X);x.u(a=y.E(\'a\'));a.u(z(\'3s 3e:\',1,\'N\'));a.u(z(\'5Y:\',1,\'W-Z\'));a.u(p.4d);a.u(z(\'2B:\',1,\'W-Z\'));a.u(p.4c);x.u(a=y.E(\'a\'));a.u(z(\'3r 3e:\',1,\'N\'));a.u(z(\'5Y:\',1,\'W-Z\'));a.u(p.3a);a.u(z(\'2B:\',1,\'W-Z\'));a.u(p.4b);x.u(a=y.E(\'a\'));a.u(z(\'7D-7C:\',D,\'N\'));a.u(z(\'5Y:\',1,\'W-Z\'));a.u(p.39);a.u(z(\'2B:\',1,\'W-Z\'));a.u(p.4a);x.u(a=y.E(\'a\'));a.u(z(\'9F:\',1,\'N\'));a.u(z(\'4M:\',1,\'W-Z\'));a.u(p.84);a.u(z(\'4L:\',1,\'W-Z\'));a.u(p.83);x.u(a=y.E(\'a\'));a.u(z(\'eD 9E:\',1,\'N\'));a.u(z(\'4M:\',1,\'W-Z\'));a.u(p.49);a.u(z(\'4L:\',1,\'W-Z\'));a.u(p.48);x.u(a=y.E(\'a\'));a.u(z(\'22 eC:\',1,\'N\'));a.u(z(\'4M:\',1,\'W-Z\'));a.u(p.26);a.u(z(\'4L:\',1,\'W-Z\'));a.u(p.24);x.u(a=y.E(\'a\'));a.u(z(\'3P 5z:\',1,\'N\'));a.u(z(\'4M:\',1,\'W-Z\'));a.u(p.2g);a.u(z(\'4L:\',1,\'W-Z\'));a.u(p.2d);x.u(a=y.E(\'a\'));a.u(z(\'9D 5z:\',1,\'N\'));a.u(z(\'4M:\',1,\'W-Z\'));a.u(p.1X);a.u(z(\'4L:\',1,\'W-Z\'));a.u(p.1W);p.u(x);p.1a=Q(F){F.O(w.2z);F.O(w.1Y);F.O(w.5X);F.O(w.4d);F.O(w.4c);F.O(w.3a);F.O(w.4b);F.O(w.39);F.O(w.4a);F.O(w.3z);F.O(w.3y);F.O(w.84);F.O(w.83);F.O(w.49);F.O(w.48);F.O(w.2g);F.O(w.2d);F.O(w.26);F.O(w.24);F.O(w.1X);F.O(w.1W);S w};S p};X.13.eB=Q(H){J x,a,p=y.E(\'14\');p.V=\'1i\';x=y.E(\'1d\');1G.1F(x,\'82 37<br>4w 2v ao 2v an 9y.\');x.1A=Q(){y.2T=X.2y.47("an")};x.V=\'1i\';x.1C=\'2D\';L(H.P){x.u(a=y.E(\'a\'));a.u(z(\'82 2Z\',3,H.P))}L(H.1v){x.u(a=y.E(\'a\'));a.u(z(\'eA 81\',1,\'N\'));a.u(z(\'ez 81\',1,\'N\'));a.u(z(\'5W\',1,\'N\'))}x.u(a=y.E(\'a\'));p.7Z=I(\'G.80.ey\',D,\'%7.1n A\');p.7Y=I(\'G.80.81\',D,\'%7.1n A\');p.5V=I(\'G.80.5W\',D,D);p.5V.1r=Q(11){S 11>0?\'am\':\'al\'};a.u(p.7Z);a.u(p.7Y);a.u(p.5V);p.u(x);p.1a=Q(F){F.O(w.7Z);F.O(w.7Y);F.O(w.5V)};S p};X.13.ex=Q(H){J c,x,R,a,p=y.E(\'14\');x=y.E(\'1d\');p.V=x.V=\'1i\';1G.1F(p,\'3G 5U 37<br>1y ew 5I\');p.7X=I(\'G.1t/4i.1s.2N\',D,D);p.7V=I(\'G.1t/ak.1s.2N\',D,D);p.7W=I(\'G.1t/3j.1s.2N\',D,D);p.7U=I(\'G.1t/aj.1s.2N\',D,D);p.7T=I(\'G.1t/4i.1s.2M\',D,D);p.7R=I(\'G.1t/ak.1s.2M\',D,D);p.7S=I(\'G.1t/3j.1s.2M\',D,D);p.7Q=I(\'G.1t/aj.1s.2M\',D,D);L(H.P){x.u(a=y.E(\'a\'));a.u(z(\'3G 28 2Z\',5,H.P))}a=y.E(\'a\');x.u(a);L(H.1v){a.u(c=z(\'3G\',1,\'N\'));c.P.16=\'25%\'}a.u(z(\'3V\',1,\'N\'));a.u(z(\'3W\',1,\'N\'));a.u(z(\'7H\',1,\'N\'));a.u(z(\'a7\',1,\'N\'));x.u(a=y.E(\'a\'));L(H.1v)a.u(z(\'8A\',1,\'N\'));a.u(p.7X);a.u(p.7W);a.u(p.7V);a.u(p.7U);x.u(a=y.E(\'a\'));L(H.1v)a.u(z(\'8z\',1,\'N\'));a.u(p.7T);a.u(p.7S);a.u(p.7R);a.u(p.7Q);p.u(x);p.1a=Q(F){F.O(w.7X);F.O(w.7W);F.O(w.7V);F.O(w.7U);F.O(w.7T);F.O(w.7S);F.O(w.7R);F.O(w.7Q)};S p};X.13.ev=Q(H){J c,a;J p=y.E(\'14\');J x=y.E(\'1d\');1G.1F(p,\'ah 37<br>4w 2v eu ai 5U\');p.1A=Q(){y.2T=X.2y.47("et&es=1")};p.V=x.V=\'1i\';L(H.P){x.u(a=y.E(\'a\'));a.u(c=z(\'ah 2Z 5e 22 7P:\',7,H.P));c.P.16=\'2m%\'}p.3x=I(\'G.46.ag.44\',D,D);p.3w=I(\'G.46.af.44\',D,D);p.3v=I(\'G.46.ae.44\',D,D);x.u(a=y.E(\'a\'));L(H.1v){a.u(c=z(\'7P\',1,\'N\'));c.P.16=\'25%\'}a.u(p.3x);p.3x.1U=2;a.u(p.3w);p.3w.1U=2;a.u(p.3v);p.3v.1U=2;p.43=I(\'G.5T.5S\',D,\'%7.3f\');p.42=I(\'G.5T.5Q\',D,\'%7.3f\');p.41=I(\'G.5R.5S\',D,\'%7.3f\');p.3Z=I(\'G.5R.5Q\',D,\'%7.3f\');x.u(a=y.E(\'a\'));L(H.1v){a.u(z(\'er\',D,\'N\'))}a.u(z(\'ad.ab/32:\',1,\'N\'));a.u(p.43);a.u(p.42);a.u(z(\'ac.ab/32:\',1,\'N\'));a.u(p.41);a.u(p.3Z);p.u(x);p.1a=Q(F){F.O(w.3x);F.O(w.3w);F.O(w.3v);F.O(w.43);F.O(w.42);F.O(w.41);F.O(w.3Z)};S p};X.13.eq=Q(H){J a,U,p=y.E(\'14\');J x=y.E(\'1d\');p.V=x.V=\'1i\';1G.1F(x,\'4W 2L 36 3u 5I\');L(H.P){x.u(a=y.E(\'a\'));a.u(z(\'4W\',3,H.P))}L(H.1v){x.u(a=y.E(\'a\'));a.u(z(\'7J\',1,\'N\'));a.u(z(\'1P\',1,\'N\'));a.u(z(\'\',1,D))}J 4J=(!H.1v&&!H.P)?\' 4W 2Z\':\'\';L(H.38||H.5J)p.5N=1L(\'G.ep\',H.1k,1p);L(H.38||H.a8)p.5M=1L(\'G.eo\',H.1k,1p);L(H.38||H.aa)p.5P=1L(\'G.en\',H.1k,1p);L(H.38||H.a9)p.5O=1L(\'G.em\',H.1k,1p);L(H.38||H.aa)x.u(X.13.4K(p.5P,\'3W\'+4J));L(H.38||H.a9)x.u(X.13.4K(p.5O,\'3V\'+4J));L(H.38||H.5J)x.u(X.13.4K(p.5N,\'el\'+4J));L(H.38||H.a8)x.u(X.13.4K(p.5M,\'7G\'+4J));p.u(x);p.1a=Q(F){L(w.5P)F.O(w.5P);L(w.5O)F.O(w.5O);L(w.5N)F.O(w.5N);L(w.5M)F.O(w.5M)};S p};X.13.a3=Q(H){J x,a,U,p=y.E(\'14\');x=y.E(\'1d\');1G.1F(x,\'a7 ek\');p.V=x.V=\'1i\';L(H.P){x.u(a=y.E(\'a\'));a.u(z(\'ej 7n\',2,H.P));a.u(z(\'ei 7n\',2,H.P))}L(H.1v){x.u(a=y.E(\'a\'));a.u(z(\'3K\',1,\'N\'));a.u(z(\'5K\',1,\'N\'));a.u(z(\'3K\',1,\'N\'));a.u(z(\'5K\',1,\'N\'))}L(H.2j)1G.1F(x,H.2j);L(H.1A)x.1A=H.1A;x.u(a);p.7O=I(\'G.5L.3U.a6.3K\',D,\'%7.1f a5\');p.7N=I(\'G.5L.3U.a6.5K\',D,\'%7.1f K\');p.7M=I(\'G.5L.3T.a4.3K\',D,\'%7.2f a5\');p.7L=I(\'G.5L.3T.a4.5K\',D,\'%7.1f K\');x.u(a=y.E(\'a\'));a.u(p.7O);a.u(p.7N);a.u(p.7M);a.u(p.7L);p.u(x);p.1a=Q(F){F.O(w.7O);F.O(w.7N);F.O(w.7M);F.O(w.7L)};S p};X.13.5J=2a 4j();X.13.5J.95=X.13.a3;X.13.9r=Q(1k){J x,a,U,p=y.E(\'14\');p.V=\'1i\';p.1k=1k;p.1M=Q(1x,1J,m,q){J U,a=y.E(\'a\');a.u(U=z(1x,1,D));U.P.16=\'2D\';w[m+\'18\'+1x]=1L(\'G.\'+1x+\'a2\'+m,w.1k,1p);w[m+\'7I\'+1x]=I(\'G.\'+1x+\'a2\'+m+\'eh.eg\',D,D);a.u(w[m+\'18\'+1x]);a.u(w[m+\'7I\'+1x]);L(1J){w[m+\'A\'+1x]=1L(\'G.\'+1x+\'3I\'+q,w.1k,1p);w[m+\'C\'+1x]=1L(\'G.\'+1x+\'3H\'+q,w.1k,1p);a.u(w[m+\'A\'+1x]);a.u(w[m+\'C\'+1x])}1u{w[m+1x]=1L(\'G.\'+1x+\'9Q\'+q,w.1k,1p);a.u(w[m+1x])}a.u(w[m+\'18\'+1x].1S);w[m+\'18\'+1x].1S.V=D;1G.1F(a,\'a1 1K 36 3u \'+1x+\' ef\');S a};p.5n=Q(x){x.u(w.1M(\'2C\',1p,\'1j\',\'1j\'));x.u(w.1M(\'3W\',2c,\'1j\',\'1j\'));x.u(w.1M(\'3V\',2c,\'1j\',\'1j\'));x.u(w.1M(\'7H\',1p,\'1j\',\'1j\'));x.u(w.1M(\'3U\',2c,\'1j\',\'1j\'));x.u(w.1M(\'3T\',2c,\'1j\',\'1j\'));x.u(w.1M(\'9T\',2c,\'1j\',\'1j\'));x.u(w.1M(\'9S\',2c,\'1j\',\'1j\'));x.u(w.1M(\'9R\',2c,\'1j\',\'1j\'));x.u(w.1M(\'7G\',1p,\'1j\',\'1j\'))};p.5m=Q(x){x.u(w.1M(\'2C\',1p,\'1V\',\'3p\'));x.u(w.1M(\'3W\',2c,\'1V\',\'3p\'));x.u(w.1M(\'3V\',2c,\'1V\',\'3p\'));x.u(w.1M(\'3U\',2c,\'1V\',\'3p\'));x.u(w.1M(\'3T\',2c,\'1V\',\'3p\'))};p.79=Q(H){J x,a,U;x=y.E(\'1d\');x.V=\'1i\';x.1C=\'2D\';L(H.1J)w.1J=1p;1G.1F(x,\'a1 37 36 1E\');L(H.P){x.u(a=y.E(\'a\'));a.u(z(\'ee\',6,H.P))}L(H.31){x.u(a=y.E(\'a\'));a.u(z(\'4X\',1,\'N\'));a.u(z(\'1P\',1,\'N\'));a.u(z(\'ed\',1,\'N\'));w.2n=1L(\'G.7K\',w.1k,1p);w.5H=I(\'G.ec.eb\',D,D);x.u(a=y.E(\'a\'));a.u(z(\'1E 1j &ea; 1V\',1,\'N\'));a.u(w.2n);a.u(w.5H);a.u(w.2n.1S);w.2n.1S.V=D;w.u(x)}x=y.E(\'1d\');1G.1F(p,\'a0 9Z 1K 36 3u 5I\');x.V=\'1i\';x.1C=\'2D\';L(H.2U){x.u(a=y.E(\'a\'));a.u(z(\'a0 9X\',6,\'4r\'))}L(H.78){x.u(a=y.E(\'a\'));a.u(U=z(\'7J\',1,\'N\'));a.u(U=z(\'1P\',1,\'N\'));a.u(U=z(\'9W\',1,\'N\'));U.P.16=\'20%\';a.u(z(w.1J?\'1j 1P 3l A / C\':\'1j 1P\',2,\'N\'))}w.5n(x);w.u(x);x=y.E(\'1d\');1G.1F(x,\'9Y 9Z 1K 36 3u 5I\');x.V=\'1i\';x.1C=\'2D\';L(H.4q){x.u(a=y.E(\'a\'));a.u(z(\'9Y 9X\',6,\'4r\'))}L(H.9U){x.u(a=y.E(\'a\'));a.u(z(\'7J\',1,\'N\'));a.u(z(\'1P\',1,\'N\'));a.u(U=z(\'9W\',1,\'N\'));a.u(z(\'1V 1P 3l A / 3l C\',2,\'N\'))}w.5m(x);w.u(x);S w};p.6Z=Q(9V){S w.79({P:9V,31:1p,2U:1p,78:1p,4q:1p,9U:1p})};p.3Y=X.13.O;p.27=Q(F,3X,1x){w.3Y(F,w[3X+\'18\'+1x]);w.3Y(F,w[3X+\'7I\'+1x]);w.3Y(F,w[3X+1x]);w.3Y(F,w[3X+\'A\'+1x]);w.3Y(F,w[3X+\'C\'+1x])};p.1a=Q(F){w.27(F,\'1j\',\'2C\');w.27(F,\'1j\',\'3W\');w.27(F,\'1j\',\'3V\');w.27(F,\'1j\',\'7H\');w.27(F,\'1j\',\'3U\');w.27(F,\'1j\',\'3T\');w.27(F,\'1j\',\'9T\');w.27(F,\'1j\',\'9S\');w.27(F,\'1j\',\'9R\');w.27(F,\'1j\',\'7G\');w.27(F,\'1V\',\'2C\');w.27(F,\'1V\',\'3W\');w.27(F,\'1V\',\'3V\');w.27(F,\'1V\',\'3U\');w.27(F,\'1V\',\'3T\');L(w[\'2n\'])F.O(w.2n);L(w[\'5H\'])F.O(w.5H)};S p};X.13.e9=Q(H){J p=y.E(\'14\');J x=y.E(\'1d\');J a=y.E(\'a\');J 1J=H.1J;J 1h=H.1H;J U;p.V=x.V=\'1i\';p.P.1C=x.P.1C=\'2m%\';L(H.P){J 4I=H.3n;L(!4I)4I=\'2C e8 1P\';L(H.7F)a.u(U=z(4I,5,H.P));1u a.u(z(4I,4,H.P));x.u(a);a=y.E(\'a\')}L(H.1v){L(H.7F)a.u(U=z(\'\',1,D));L(1J){a.u(U=z(\'3l A\',2,\'N\'));a.u(U=z(\'3l C\',2,\'N\'));x.u(a)}}p.19=[];p.9P=Q(1H,1c){a=y.E(\'a\');L(H.7F)a.u(U=z(1c,1,\'N\'));L(1J){w[1c+\'A\']=1L(\'G.\'+1H+\'3I\'+1c,H.1k,1p);w[1c+\'C\']=1L(\'G.\'+1H+\'3H\'+1c,H.1k,1p);a.u(w[1c+\'A\']);a.u(w[1c+\'A\'].1S);w[1c+\'A\'].P.16=\'30%\';a.u(w[1c+\'C\']);a.u(w[1c+\'C\'].1S);w[1c+\'C\'].P.16=\'30%\';w.19.1b(w[1c+\'A\']);w.19.1b(w[1c+\'C\'])}1u{w[1c]=1L(\'G.\'+1H+\'9Q\'+1c,H.1k,1p);a.u(w[1c]);a.u(w[1c].1S);w[1c].P.16=\'30%\';w.19.1b(w[1c])}S a};1y(J i=0;i<H.2b.1o;++i)x.u(p.9P(1h,H.2b[i]));p.u(x);p.1a=Q(F){1y(J i=0;i<w.19.1o;++i)F.O(w.19[i])};S p};X.13.e7=Q(H){J a,p=y.E(\'14\');J x=y.E(\'1d\');J 2t=H.e6;L(!2t)2t=\'3P\';p.V=x.V=\'1i\';1G.1F(x,\'2B e5 37 9O 2v<br> \'+2t+\' 36 e4 e3 w 9w.\');x.1C=\'2D\';L(H.P){x.u(a=y.E(\'a\'));a.u(z(\'e2 9O 2v \'+2t,3,H.P))}L(H.1v){x.u(a=y.E(\'a\'));a.u(z(\'1j 7E\',1,\'N\'));a.u(z(\'2C e1\',1,\'N\'));a.u(z(\'7j e0\',1,\'N\'));a.u(z(\'7D 7C\',1,\'N\'))}p.2U=I(\'G.4H.5G\'+2t+\'.1j\',D,\'%7.2f %%\');p.2S=I(\'G.4H.5G\'+2t+\'.2C\',D,\'%7.2f %%\');p.7B=I(\'G.4H.5G\'+2t+\'.7j\',D,\'%7.2f %%\');p.7A=I(\'G.4H.5G\'+2t+\'.dZ\',D,\'%7.2f %%\');p.5r=I(\'G.4H.\'+2t+\'7m\',D,\'%7.2f %%\');x.u(a=y.E(\'a\'));a.u(p.2U);a.u(p.2S);a.u(p.7B);a.u(p.7A);a.u(p.5r);p.u(x);p.1a=Q(F){F.O(w.2U);F.O(w.2S);F.O(w.7B);F.O(w.7A);F.O(w.5r)};S p};X.13.dY=Q(H){J x,a,U,p=y.E(\'14\');p.V=\'1i\';x=y.E(\'1d\');1G.1F(x,\'dX 3Q 9K 3u 3s 9N 9M (dW)\');x.V=\'1i\';L(H.P){a=y.E(\'a\');a.u(z(\'3s 9N 9M 7o 3Q\',4,H.P));x.u(a)}L(H.1v){a=y.E(\'a\');a.u(z(\'2W dV\',1,\'N\'));a.u(z(\'9L 36 5w\',1,\'N\'));a.u(z(\'5C.dU [1l]\',1,\'N\'));x.u(a)}p.5D=I(\'G.7z.5p.dT\',D,D);p.7u=I(\'G.7z.5p.7u\',D,D);p.7t=I(\'G.7z.7t\',D,D);p.5l=Q(1c){J 7y;J a=y.E(\'a\');a.u(7y=z(1c,1,\'N\'));7y.P.16=\'40%\';a.1Y=y.E(\'R\');a.35=y.E(\'R\');a.1Y.P.1I=\'1w\';a.35.P.1I=\'1w\';a.35.1z=\'--\';a.1Y.P.16=\'30%\';a.35.P.16=\'30%\';a.u(a.1Y);a.u(a.35);S a};p.1T=2a 3o();1y(J i=0;i<32;++i){p.1T.1b(p.5l(\'dS \'+(i+1)));x.u(p.1T[i])}p.u(x);x=y.E(\'1d\');x.V=\'1i\';x.u(p.3S=p.5l(\'7m\'));p.3S.1Y.V=\'N\';p.3S.35.V=\'N\';p.u(x);p.5D.p=p;p.4F=D;p.4G=D;p.7x=0;p.5F=D;p.5D.1D=Q(11){J v=11[1].1J(\' | \',20);J 2X,5E,4E;J 4D=0,7v;J p=w.p;J 4p=v.1o>p.1T.1o?p.1T.1o:v.1o;L(p.4G){p.4F=p.4G;p.7x=p.5F}p.5F=(2a 76()).dR();p.4G=2a 3o();5E=(p.5F-p.7x)/7w;1y(J i=0;i<4p;++i){2X=6l(v[i]);p.1T[i].1Y.1z=v[i];p.4G[i]=2X;L(p.4F){4E=(2X-p.4F[i])/5E;p.1T[i].35.1z=2E(\'%10.2f 1l\',4E)}4D=4D+2X}L(p.4F){7v=6l(p.3S.1Y.1z);4E=(4D-7v)/5E;p.3S.35.1z=2E(\'%10.2f 1l\',4E)}p.3S.1Y.1z=4D};p.1a=Q(F){F.O(w.5D);F.O(w.7u);F.O(w.7t)};S p};X.13.dQ=Q(H){J x,a,U,p=y.E(\'14\');p.V=\'1i\';x=y.E(\'1d\');1G.1F(x,\'2W 3Q 9K 7p\');x.V=\'1i\';L(H.P){a=y.E(\'a\');a.u(z(\'7p 7o 3Q\',4,H.P));x.u(a)}L(H.1v){a=y.E(\'a\');a.u(z(\'9G 2t\',1,\'N\'));a.u(z(\'5w\',1,\'N\'));a.u(z(\'5C. 3e [1l]\',1,\'N\'));a.u(z(\'2B 3e [1l]\',1,\'N\'));x.u(a)}p.4x=I(\'G.3t.2h.5B.4x\',D,\'%10.1n\');p.34=I(\'G.3t.2h.5B.34\',D,D);p.2s=I(\'G.3t.2h.5B.2s\',D,\'%10.2f\');p.3R=I(\'G.3t.2h.5B.3R\',D,\'%10.2f\');p.u(x);p.2J=2a 4j();p.34.p=p;p.34.1D=Q(11){J R,a,v=11[1].1J(\' | \',20);J 7s=2c;J p=w.p;p.1T=v;1y(J i=0;i<v.1o;++i){L(!p.2J[v[i]]){J 2K=\'\';L(v[i].2V(\'dP\')>=0)2K=\'N\';1u L(v[i].2V(\'dO\')>=0)2K=\'N\';1u L(v[i].2V(\'dN\')>=0)2K=\'N\';1u L(v[i].2V(\'dM\')>=0)2K=\'N\';p.2J[v[i]]=y.E(\'a\');a=p.2J[v[i]];a.9J=z(v[i],1,\'N\');a.4A=y.E(\'R\');a.4y=y.E(\'R\');a.4z=y.E(\'R\');a.4A.V=2K;a.4z.V=2K;a.4y.V=2K;a.4A.P.1I=\'1w\';a.4z.P.1I=\'1w\';a.4y.P.1I=\'1w\';a.u(a.9J);a.u(a.4A);a.u(a.4z);a.u(a.4y);7s=1p}}L(7s){J n;J 5y=y.E(\'1d\');J 4C=y.E(\'1d\');J 4B=y.E(\'1d\');L(p.5A)p.7r(\'5A\');L(p.7q)p.7r(\'7q\');L(p.9I)p.7r(\'9I\');p.5A=5y;p.7q=4C;p.5A=4B;1y(J i=0;i<p.1T.1o;++i){n=p.1T[i];L(n.2V(\'dL\')>0){a=p.2J[n];5y.u(a)}}4C.u(z(\'7p 9H 5z\',4,\'4r\'));4B.u(z(\'dK 5z\',4,\'4r\'));1y(J i=0;i<p.1T.1o;++i){n=p.1T[i];J 5h=n.2V(\'dJ\');L(n.2V(\'dI\')>0&&5h<0){a=p.2J[n];4C.u(a)}1u L(5h>=0){a=p.2J[n];4B.u(a)}}p.u(5y);p.u(4C);p.u(4B)}S w};p.4x.p=p;p.4x.1D=Q(11){J v=11[1].1J(\' | \',20);J t=w.p;L(t.1T.1o==v.1o){J r=t.2J;J k=t.1T;1y(J i=0;i<v.1o;++i){r[k[i]][\'4A\'].1z=v[i]}}};p.2s.p=p;p.2s.1D=Q(11){J v=11[1].1J(\' | \',20);J t=w.p;L(t.1T.1o==v.1o){J r=t.2J;J k=t.1T;J 5x=t.2s.5v;1y(J i=0;i<v.1o;++i){J f=3q(v[i]);r[k[i]].4z.1z=2E(5x,f)}}};p.3R.p=p;p.3R.1D=Q(11){J v=11[1].1J(\' | \',20);J t=w.p;J 5x=t.3R.5v;L(t.1T.1o==v.1o){J r=t.2J;J k=t.1T;1y(J i=0;i<v.1o;++i){J f=3q(v[i]);r[k[i]].4y.1z=2E(5x,f)}}};p.1a=Q(F){F.O(w.34);F.O(w.4x);F.O(w.2s);F.O(w.3R)};S p};X.13.dH=Q(H){J x,a,U,p=y.E(\'14\');p.V=\'1i\';x=y.E(\'1d\');1G.1F(x,\'3r 7o 3Q\');x.V=\'1i\';L(H.P){a=y.E(\'a\');a.u(z(\'3r 2W 3Q\',3,H.P));x.u(a)}L(H.1v){a=y.E(\'a\');a.u(U=z(\'9G dG\',1,\'N\'));U.P.16=\'40%\';a.u(U=z(\'5w dF.\',1,\'N\'));U.P.16=\'30%\';a.u(U=z(\'5w dE.\',1,\'N\'));U.P.16=\'30%\';x.u(a)}p.2x=Q(11){w.11=3q(11);p.9C();S 11};p.26=I(\'G.1q.26\',D,\'%10.2f 1l\');p.24=I(\'G.1q.24\',D,\'%10.2f 1l\');p.2g=I(\'G.1q.2g\',D,\'%10.2f 1l\');p.2d=I(\'G.1q.2d\',D,\'%10.2f 1l\');p.2I=I(\'G.1q.2I\',D,\'%10.2f 1l\');p.2H=I(\'G.1q.2H\',D,\'%10.2f 1l\');p.2G=I(\'G.1q.2G\',D,\'%10.2f 1l\');p.2F=I(\'G.1q.2F\',D,\'%10.2f 1l\');p.1X=I(\'G.1q.1X\',D,\'%10.2f 1l\');p.1W=I(\'G.1q.1W\',D,\'%10.2f 1l\');p.26.1r=p.2x;p.24.1r=p.2x;p.2g.1r=p.2x;p.2d.1r=p.2x;p.2I.1r=p.2x;p.2H.1r=p.2x;p.2G.1r=p.2x;p.2F.1r=p.2x;p.1X.1r=p.2x;p.1W.1r=p.2x;p.26.P.1I=\'1w\';p.24.P.1I=\'1w\';p.2g.P.1I=\'1w\';p.2d.P.1I=\'1w\';p.2I.P.1I=\'1w\';p.2H.P.1I=\'1w\';p.2G.P.1I=\'1w\';p.2F.P.1I=\'1w\';p.1X.P.1I=\'1w\';p.1W.P.1I=\'1w\';a=y.E(\'a\');a.u(z(\'9F\',1,\'N\'));a.u(p.2F);a.u(p.2G);x.u(a);a=y.E(\'a\');a.u(z(\'dD.9E\',1,\'N\'));a.u(p.2H);a.u(p.2I);x.u(a);a=y.E(\'a\');a.u(z(\'3P\',1,\'N\'));a.u(p.2d);a.u(p.2g);x.u(a);a=y.E(\'a\');a.u(z(\'22 7n\',1,\'N\'));a.u(p.24);a.u(p.26);x.u(a);a=y.E(\'a\');a.u(z(\'9D\',1,\'N\'));a.u(p.1W);a.u(p.1X);x.u(a);a=y.E(\'a\');a.u(z(\'7m\',1,\'N\'));a.u(p.7l=z(\'0\',1,\'N\'));a.u(p.7k=z(\'0\',1,\'N\'));p.7l.P.1I=\'1w\';p.7k.P.1I=\'1w\';x.u(a);p.9C=Q(){J 2q=0.0,2r=0.0;L(p.26.11)2q=2q+p.26.11;L(p.2g.11)2q=2q+p.2g.11;L(p.2I.11)2q=2q+p.2I.11;L(p.2G.11)2q=2q+p.2G.11;L(p.1X.11)2q=2q+p.1X.11;L(p.24.11)2r=2r+p.24.11;L(p.2d.11)2r=2r+p.2d.11;L(p.2H.11)2r=2r+p.2H.11;L(p.2F.11)2r=2r+p.2F.11;L(p.1W.11)2r=2r+p.1W.11;p.7l.1z=2E(p.1W.5v,2r);p.7k.1z=2E(p.1X.5v,2q)};p.u(x);p.1a=Q(F){F.O(w.26);F.O(w.24);F.O(w.2g);F.O(w.2d);F.O(w.2I);F.O(w.2H);F.O(w.2G);F.O(w.2F);F.O(w.1X);F.O(w.1W)};S p};X.13.dC=Q(H){J R,a,p=y.E(\'14\');J x=y.E(\'1d\');p.V=x.V=\'1i\';x.5u=x.5t=0;p.7i=I(\'G.3t.2W.dB\',D,D);p.5s=I(\'G.3t.2W.5s\',D,D);p.4v=I(\'G.3t.2W.9B\',D,D);L(H.P){a=y.E(\'a\');a.u(z(\'2W 9z\',H.1v?2:1,H.P));x.u(a)}a=y.E(\'a\');L(H.1v)a.u(z(\'3s 9A:\',D,\'N\'));a.u(p.7i);x.u(a);a=y.E(\'a\');L(H.1v)a.u(z(\'3r 9A:\',D,\'N\'));a.u(p.5s);x.u(a);a=y.E(\'a\');L(H.1v)a.u(z(\'4v:\',1,\'N\'));a.u(p.4v);x.u(a);p.u(x);1G.1F(p,\'2W 9z 5e 2L<br>4w 2v dA 2v 7j 9y\');p.1A=X.13.9x;p.1a=Q(F){F.O(p.4v);F.O(p.7i);F.O(p.5s)};S p};X.13.dz=Q(H){J c,a,p=y.E(\'14\');J x=y.E(\'1d\');p.V=x.V=\'1i\';1G.1F(x,\'dy 3r 9v 1y w 9w.\');x.1C=\'2D\';L(1||H.P){x.u(a=y.E(\'a\'));a.u(z(\'3r dx 9v dw:\',3,H.P))}L(H.1v){x.u(a=y.E(\'a\'));a.u(z(\'dv:\',1,\'N\'));a.u(z(\'9u 5r\',1,\'23\'));a.u(z(\'9u 9t\',1,\'23\'));a.u(z(\'du\',1,\'23\'));a.u(z(\'dt\',1,\'23\'))}p.4t=I(\'G.4u.ds\',\'W-Z\',\'%d 1l\');p.9s=1.0;p.4t.1Q=p;p.4t.1r=Q(11){J 3O=w.1Q;J v=3O.7h;J r=3q(11);3O.9s=v;3O.7b.1z=2E(\'%7.1n 1l \',r*v/2m.0);3O.7d.1z=2E(\'%7.1n 1l\',r*(2m.0-v)/2m.);3O.7c.1z=2E(\'%7.2f %%\',2m.0-v);S 11};p.7d=I(\'5q\',\'W-Z\',D);p.7c=I(\'5q\',\'W-Z\',D);p.7b=I(\'5q\',\'W-Z\',D);p.4s=I(\'G.4u.dr\',\'W-Z\',\'%7.2f %%\');p.4s.1Q=p;p.7h=0.0;p.4s.1r=Q(11){w.1Q.7h=3q(11);S 11};p.3N=I(\'G.4u.3N\',\'W-Z\',D);p.3M=I(\'G.4u.3M\',\'W-Z\',D);p.5o=I(\'G.4u.5o\',\'W-Z\',D);p.7e=I(\'5q\',\'W-Z\',D);p.7g=1.0;p.7f=1.0;p.3M.1Q=p;p.3M.1r=Q(11){w.1Q.7g=3q(11);w.1Q.7e.1z=2E(\'%7.4f %%\',2m.0*(1.0-w.1Q.7g/w.1Q.7f));S 11};p.3N.1Q=p;p.3N.1r=Q(11){w.1Q.7f=3q(11);S 11};x.u(a=y.E(\'a\'));a.u(z(\'\',1,\'W-Z\'));a.u(p.3N);a.u(p.3M);a.u(p.7e);a.u(p.5o);L(H.1v){x.u(a=y.E(\'a\'));a.u(c=z(\'5p:\',1,\'N\'));a.u(c=z(\'dq\',1,\'23\'));c.P.16=\'17%\';a.u(c=z(\'dp\',1,\'23\'));c.P.16=\'17%\';a.u(c=z(\' [%] \',1,\'23\'));c.P.16=\'17%\';a.u(c=z(\'do\',1,\'23\'));c.P.16=\'17%\';a.u(c=z(\' [%] \',1,\'23\'));c.P.16=\'17%\'}x.u(a=y.E(\'a\'));a.u(z(\'\',1,\'W-Z\'));a.u(p.4t);a.u(p.7d);a.u(p.7c);a.u(p.7b);a.u(p.4s);p.u(x);p.1a=Q(F){F.O(w.4t);F.O(w.4s);F.O(w.3N);F.O(w.3M);F.O(w.5o)};S p};X.13.dn=Q(H){J p=y.E(\'14\');p.19=[];p.1k=H.1k;p.V=\'1i\';p.dm=Q(34){J a=y.E(\'a\');1y(J i=0;i<34.1o;++i){J 1c=34[i];L(1c){J U=z(1c,1,\'N\');J 1m=1L(\'G.\'+1c,w.1k,1p);w[1c]=1m;a.u(U);a.u(1m);a.u(1m.1S);w.19.1b(1m)}1u{a.u(z(\'\',3,D))}}S a};p.2k=Q(3n){J x=y.E(\'1d\');x.V=\'1i\';L(H.P){J a=y.E(\'a\');a.u(z(3n,6,H.P));x.u(a)}w.u(x);S x};p.1a=Q(F){1y(J i=0;i<w.19.1o;++i)F.O(w.19[i])};S p};X.13.6Y=Q(1c,4o){J 14=y.E(\'14\');14.2k=y.E(\'1d\');14.1H=1c;14.3n=1c;14.9f=4o;14.F=D;14.1k=D;L(14.1H.2V(\' \')>0)14.1H=1c.dl(0,1c.2V(\' \'));14.7a=Q(){J R=y.E(\'R\'),a=y.E(\'a\');R.dk(\'1U\',2);a.u(R);w.2k.u(a);S R};14.V=14.2k.V=\'dj\';14.1D=14.7a();14.70=14.7a();14.u(14.2k);14.19=2a 3o();14.di=Q(H){J p=X.13.9r(w.1k);p.1J=1p;L(H.dh)p.1J=2c;p.1H=w.1H;L(H.1H)p.1H=H.1H;p.5n=Q(x){};p.5m=Q(x){};L(H.2U){p.5n=Q(x){L(w.1H 5k 3o){1y(J i=0;i<w.1H.1o;++i)x.u(w.1M(w.1H[i],w.1J,\'1j\',\'1j\'))}1u{x.u(w.1M(w.1H,w.1J,\'1j\',\'1j\'))}}}L(H.4q){p.5m=Q(x){L(w.1H 5k 3o){1y(J i=0;i<w.1H.1o;++i)x.u(w.1M(w.1H[i],w.1J,\'1V\',\'3p\'))}1u{x.u(w.1M(w.1H,w.1J,\'1V\',\'3p\'))}}}S p.79({P:\'4r\',31:2c,2U:H.2U,78:H.2U,4q:H.4q})};14.5l=Q(2b){J 5j=1,x=w.1d,a,R,1m;x.u(a=y.E(\'a\'));1y(J j=0;j<2b.1o;++j){L(2b[j]5k 3o){L(2b[j].1o>5j)5j=2b[j].1o}}1y(J i=0;i<2b.1o;++i){a.u(R=y.E(\'R\'));R.P.3L=\'31\';L(2b[i]5k 3o){1y(J k=0,4p=2b[i].1o;k<4p;++k){R.u(2b[i][k]);w.19.1b(2b[i][k]);L(k==4p-1){R.P.3L=\'dg\';df}x.u(a=y.E(\'a\'));a.u(R=y.E(\'R\'));R.P.3L=\'31\'}}1u{R.3i=5j;R.u(2b[i]);w.19.1b(2b[i])}}};14.9i=Q(){};14.9h=Q(){};14.6Z=Q(H){J p=y.E(\'14\');J x=y.E(\'1d\');J 1Z,3g,2w,2p,U,d=2a 76();p.V=x.V=\'8F\';w.5g=y.E(\'a\');w.5g.u(R=y.E(\'R\'));R.P.16=\'2m%\';R.1U=3;R.u(1Z=y.E(\'14\'));1Z.u(3g=y.E(\'1d\'));1Z.16=\'2m%\';3g.u(2w=y.E(\'a\'));2w.u(2p=y.E(\'R\'));L(H.9q){2p.u(U=z(H.9q,D,D));L(H.9p){U.5i=H.9p;U.1A=Q(){y.2T=w.5i}}}2w.u(w.77=z(d.9n(),1,\'9g\'));w.77.5h=\'9o\';w.77.1I=\'1w\';U=z(w.3n+\'&29;\'+de(),1,\'dd\');U.P.1I=\'1w\';U.1A=Q(){y.2T="dc://X.db.ch"};2w.u(U);L(H.2j){1G.1F(w.5g,H.2j)}x.u(w.5g);w.9m=Q(){y.da(\'9o\').1z=(2a 76()).9n()};d9(w.9m,d8);x.u(a=y.E(\'a\'));a.u(R=y.E(\'R\'));R.P.16=\'55%\';R.u(w.74=X.13.9l());a.u(R=y.E(\'R\'));R.u(w.73=X.13.9k(\'1E\',w.1k));R.16=\'45%\';w.74.P.1C=\'75\';w.73.P.1C=\'75\';w.19.1b(w.74);w.19.1b(w.73);x.u(a=y.E(\'a\'));a.u(R=y.E(\'R\'));R.u(1Z=y.E(\'14\'));1Z.u(w.2l=y.E(\'1d\'));1Z.V=w.2l.V=\'1i\';1Z.P.5f=w.2l.P.5f=\'9j\';w.2l.P.3L=\'31\';a.u(R=y.E(\'R\'));R.u(1Z=y.E(\'14\'));1Z.u(w.1w=y.E(\'1d\'));1Z.V=w.1w.V=\'1i\';1Z.P.5f=w.1w.P.5f=\'9j\';w.1w.P.3L=\'31\';w.2l.72=Q(1m){J 2w,2p;w.u(2w=y.E(\'a\'));2w.u(2p=y.E(\'R\'));2p.P.3L=\'31\';2p.u(1m);w.1Q.19.1b(1m);S 2p};w.2l.71=Q(1C){J 2w,2p;w.u(2w=y.E(\'a\'));2w.u(2p=y.E(\'R\'));L(1C)2p.P.1C=1C;S 2p};w.1w.72=w.2l.72;w.1w.71=w.2l.71;w.2l.1Q=w.1w.1Q=w;w.1d=x;w.9i();w.9h();x.u(a=y.E(\'a\'));a.u(z(\'\',D,D));a.u(z(\'d7 5e d6 2v M.d5 d4/1E\',2,\'9g\'));x.u(a);p.u(x);w.1D.u(p);S w};14.1a=Q(){1y(J i=0;i<w.19.1o;++i)w.19[i].1a(w.F)};S 14};X.13.6Y.9a=Q(6X){J 4o=d3[\'9f\'];J 2k=y.d2(\'2k\')[0];J 2j=d1(2k);J 1D=6X(4o);2k.u(1D);2k.V=\'d0\';L(1D.H.3n)cZ(1D.H.3n);L(4o>0)1D.1k=2a 9e(1D.70,cY,9d,\'9c\');1u 1D.1k=2a 9e(1D.70,-1,9d,\'9c\');1D.F=2a cX(1D.1k);1D.F.9b=\'/9b/2L\';1D.6Z(1D.H);1D.1a();1D.F.9a();2k.P.cW=\'cV\';S 1D};X.13.6Y.cU=Q(6X){cT()};X.13.2S=2a 4j();X.13.2S.cS=Q(H){J x,a,U,p=y.E(\'14\');p.V=\'1i\';x=y.E(\'1d\');1G.1F(x,\'3k 4n\');x.V=\'1i\';x.1C=\'2D\';L(H.P){a=y.E(\'a\');a.u(z(\'3k 4n\',4,H.P));x.u(a)}L(H.1v){a=y.E(\'a\');a.u(z(\'4n\',1,\'N\'));a.u(z(\'cR\',1,\'N\'));a.u(z(\'cQ\',1,\'N\'));a.u(z(\'Y\',1,\'N\'));x.u(a)}L(H.2j){1G.1F(x,H.2j)}L(H.1A){x.1A=H.1A}p.6T=I(\'G.1B/18.1E.99.2C.4n\',D,D);p.6S=I(\'G.cP.6W.6V\',D,\'%7.2f 6U\');p.6R=I(\'G.cO.6W.6V\',D,\'%7.2f 6U\');p.6Q=I(\'G.cN.6W.6V\',D,\'%7.2f 6U\');a=y.E(\'a\');a.u(p.6T);a.u(p.6S);a.u(p.6R);a.u(p.6Q);x.u(a);p.u(x);p.1a=Q(F){F.O(w.6T);F.O(w.6S);F.O(w.6R);F.O(w.6Q)};S p};X.13.2S.cM=Q(H){J p=y.E(\'14\');J x=y.E(\'1d\');J a=y.E(\'a\');J U;p.V=x.V=\'1i\';p.5d=I(\'G.6P.cL\',D,D);p.5c=I(\'G.6P.cK\',D,D);p.5b=I(\'G.6P.cJ\',D,D);L(H.P){a.u(z(\'3k cI 2Z\',4,H.P));x.u(a);a=y.E(\'a\')}L(H.1v){a.u(U=z(\'98 97\',1,\'N\'));a.u(U=z(\'cH cG 97\',1,\'N\'));a.u(U=z(\'cF cE 22\',1,\'N\'));x.u(a)}L(H.2j){1G.1F(x,H.2j)}L(H.1A){x.1A=H.1A}a=y.E(\'a\');a.u(p.5d);p.5d.P.16=\'33%\';a.u(p.5c);p.5c.P.16=\'33%\';a.u(p.5b);p.5b.P.16=\'33%\';x.u(a);p.u(x);p.1a=Q(F){F.O(w.5d);F.O(w.5c);F.O(w.5b)};S p};X.13.2S.cD=Q(H){J p=y.E(\'14\');J x=y.E(\'1d\');J a=y.E(\'a\');p.V=x.V=\'1i\';p.59=I(\'G.96.94.3K\',D,"%7.1f");p.58=I(\'G.96.93.3K\',D,"%7.1e");p.57=I(\'G.5a.92.3J\',D,"%7.1e");p.56=I(\'G.5a.91.3J\',D,"%7.1e");p.54=I(\'G.5a.90.3J\',D,"%7.1e");p.53=I(\'G.5a.8Z.3J\',D,"%7.1e");L(H.P){a.u(z(\'3k 3J 2Z: 95 cC [cB]\',4,H.P));x.u(a);a=y.E(\'a\')}L(H.1v){a.u(z(\'94\',1,\'N\'));a.u(z(\'93\',1,\'N\'));a.u(z(\'92\',1,\'N\'));a.u(z(\'91\',1,\'N\'));a.u(z(\'90\',1,\'N\'));a.u(z(\'8Z\',1,\'N\'));x.u(a)}L(H.2j){1G.1F(x,H.2j)}L(H.1A){x.1A=H.1A}a=y.E(\'a\');a.u(p.59);p.59.P.16=\'17%\';a.u(p.58);p.58.P.16=\'17%\';a.u(p.57);p.57.P.16=\'17%\';a.u(p.56);p.56.P.16=\'17%\';a.u(p.54);p.54.P.16=\'17%\';a.u(p.53);p.53.P.16=\'17%\';x.u(a);p.u(x);p.1a=Q(F){F.O(w.59);F.O(w.58);F.O(w.57);F.O(w.56);F.O(w.54);F.O(w.53)};S p};X.13.2S.cA=Q(H){J p=y.E(\'14\');J x=y.E(\'1d\');J a=y.E(\'a\');J U;p.V=x.V=\'1i\';p.51=1L(\'G.cz\',H.1k,1p);p.4l=1L(\'G.cy\',H.1k,1p);p.4k=1L(\'G.cx\',H.1k,1p);p.50=1L(\'G.cw\',H.1k,1p);p.6O=I(\'G.cv.8Y\',D,\'%7.1f <1g>o</1g>C\');p.6L=I(\'G.cu.8Y\',D,\'%7.1f <1g>o</1g>C\');p.6N=I(\'G.ct.52\',D,\'%7.1f <1g>o</1g>C\');p.6M=I(\'G.cs.52\',D,\'%7.1f <1g>o</1g>C\');p.6K=I(\'G.cr.52\',D,\'%7.1f <1g>o</1g>C\');p.6J=I(\'G.cq.52\',D,\'%7.1f <1g>o</1g>C\');L(H.P){a.u(z(\'3k cp 1P\',8,H.P));x.u(a);a=y.E(\'a\')}L(H.1v){a.u(U=z(\'3J\',2,\'N\'));U.P.16=\'15%\';a.u(U=z(\'A<3m>3l\',1,\'N\'));U.P.16=\'10%\';U.3i=2;a.u(U=z(\'3G\',2,\'N\'));U.P.16=\'15%\';a.u(z(\'8X\',1,\'N\'));a.u(z(\'4m.8W\',1,\'N\'));a.u(z(\'4m.8V\',1,\'N\'));x.u(a);a=y.E(\'a\')}L(H.2j){1G.1F(x,H.2j)}L(H.1A){x.1A=H.1A}a.u(p.4l);a.u(p.4l.1S);p.4l.1S.P.16=\'2%\';a.u(p.4k);a.u(p.4k.1S);p.4k.1S.P.16=\'2%\';a.u(p.6O);a.u(p.6N);a.u(p.6M);x.u(a);a=y.E(\'a\');L(H.1v){a.u(z(\'co\',2,\'N\'));a.u(U=z(\'C<3m>3l\',1,\'N\'));U.3i=2;a.u(z(\'3G\',2,\'N\'));a.u(z(\'8X\',1,\'N\'));a.u(z(\'4m.8W\',1,\'N\'));a.u(z(\'4m.8V\',1,\'N\'));x.u(a);a=y.E(\'a\')}a.u(p.51);a.u(p.51.1S);a.u(p.50);a.u(p.50.1S);a.u(p.6L);a.u(p.6K);a.u(p.6J);a.u(U=z(\'&29;\',2,D));x.u(a);p.u(x);p.1a=Q(F){F.O(w.51);F.O(w.4l);F.O(w.4k);F.O(w.6O);F.O(w.6N);F.O(w.6M);F.O(w.50);F.O(w.6L);F.O(w.6K);F.O(w.6J)};S p};X.13.2S.cn=Q(H){J p=y.E(\'14\');J x=y.E(\'1d\');J a,U;p.1k=H.1k;p.V=x.V=\'1i\';L(H.P){a=y.E(\'a\');a.u(z(\'3k 1V 4Z 1P\',3,H.P));x.u(a)}L(H.1v){a=y.E(\'a\');a.u(U=z(\'4Z\',1,\'N\'));a.u(U=z(\'8U\',2,\'N\'));a.u(U=z(\'8T\',2,\'N\'));x.u(a)}p.19=[];p.1R=Q(1c){J U,a=y.E(\'a\');a.u(U=z(1c,1,\'N\'));U.P.16=\'30%\';w[\'3I\'+1c]=1L(\'G.cm\'+1c,w.1k,1p);w[\'3H\'+1c]=1L(\'G.cl\'+1c,w.1k,1p);a.u(w[\'3I\'+1c]);a.u(w[\'3I\'+1c].1S);a.u(w[\'3H\'+1c]);a.u(w[\'3H\'+1c].1S);w.19.1b(w[\'3I\'+1c]);w.19.1b(w[\'3H\'+1c]);S a};x.u(p.1R(\'ck\'));x.u(p.1R(\'cj\'));x.u(p.1R(\'ci\'));x.u(p.1R(\'cg\'));x.u(p.1R(\'cf\'));x.u(p.1R(\'ce\'));x.u(p.1R(\'cd\'));x.u(p.1R(\'cc\'));x.u(p.1R(\'cb\'));x.u(p.1R(\'ca\'));x.u(p.1R(\'c9\'));x.u(p.1R(\'c8\'));L(H.P){a=y.E(\'a\');a.u(z(\'3k 1j 4Z 1P\',3,H.P));x.u(a)}L(H.1v){a=y.E(\'a\');a.u(U=z(\'4Z\',1,\'N\'));a.u(U=z(\'8U\',2,\'N\'));a.u(U=z(\'8T\',2,\'N\'));x.u(a)}x.u(p.1R(\'c7\'));x.u(p.1R(\'c6\'));x.u(p.1R(\'c5\'));x.u(p.1R(\'c4\'));x.u(p.1R(\'c3\'));x.u(p.1R(\'c2\'));p.u(x);p.1a=Q(F){1y(J i=0;i<w.19.1o;++i){F.O(w.19[i])}};S p};X.13.2i=2a 4j();X.13.2i.c1=Q(H){J p=y.E(\'14\');J x=y.E(\'1d\');J a,U;p.1k=H.1k;p.19=[];p.V=\'1i\';x.V=\'1i\';L(H.P){a=y.E(\'a\');a.u(z(\'2i 3E 4Y c0\',6,H.P));x.u(a)}p.6H=I(\'G.2R/1E/2i/bZ.2Q\',D,\'%7.2f <1g>o</1g>C\');p.6G=I(\'G.2R/1E/2i/bY.2Q\',D,\'%7.2f <1g>o</1g>C\');p.6F=I(\'G.2R/1E/2i/bX.2Q\',D,\'%7.2f <1g>o</1g>C\');p.6E=I(\'G.2R/1E/2i/bW.2Q\',D,\'%7.2f <1g>o</1g>C\');p.6D=I(\'G.2R/1E/2i/bV.2Q\',D,\'%7.2f <1g>o</1g>C\');p.6C=I(\'G.2R/1E/2i/bU.2Q\',D,\'%7.2f <1g>o</1g>C\');p.6B=I(\'G.2R/1E/2i/6I~bT.2Q\',D,\'%7.2f <1g>o</1g>C\');p.6A=I(\'G.2R/1E/2i/6I~bS.2Q\',D,\'%7.2f <1g>o</1g>C\');p.6y=I(\'G.2R/1E/2i/6I~bR.2Q\',D,\'%7.2f <1g>o</1g>C\');p.19.1b(p.6H);p.19.1b(p.6G);p.19.1b(p.6F);p.19.1b(p.6E);p.19.1b(p.6D);p.19.1b(p.6C);p.19.1b(p.6B);p.19.1b(p.6A);p.19.1b(p.6y);a=y.E(\'a\');a.u(z(\'bQ/bP:\',1,D));a.u(p.6H);a.u(z(\'8S-A:\',1,D));a.u(p.6G);a.u(z(\'8S-B:\',1,D));a.u(p.6F);x.u(a);a=y.E(\'a\');a.u(z(\'bO:\',1,D));a.u(p.6E);a.u(z(\'8R-A:\',1,D));a.u(p.6D);a.u(z(\'8R-C:\',1,D));a.u(p.6C);x.u(a);a=y.E(\'a\');a.u(z(\'6z-A:\',1,D));a.u(p.6B);a.u(z(\'6z-bN:\',1,D));a.u(p.6A);a.u(z(\'6z-C:\',1,D));a.u(p.6y);x.u(a);p.u(x);p.1a=Q(F){1y(J i=0;i<w.19.1o;++i){F.O(w.19[i])}};S p};X.13.2i.bM=Q(1h,H){J p=y.E(\'14\');J x=y.E(\'1d\');J a,U;p.19=[];p.1k=H.1k;p.V=x.V=\'1i\';L(H.P){a=y.E(\'a\');a.u(z(1h+\' 3G bL 2L\',4,H.P));x.u(a)}p.8I=Q(x){w.6x=I(\'G.1t/\'+1h+\'28.1s.8Q.8M\',D,\'%7.2f bK\');w.6w=I(\'G.1t/\'+1h+\'28.1s.8Q.8N\',D,\'%7.2f <1g>o</1g>C\');w.2P=I(\'G.1t/\'+1h+\'28.1s.21.8P\',D,\'%7.2f <1g>o</1g>C\');w.2O=I(\'G.1t/\'+1h+\'28.1s.21.8O\',D,\'%7.2f <1g>o</1g>C\');w.19.1b(w.6x);w.19.1b(w.6w);w.19.1b(w.2P);w.19.1b(w.2O);x.u(a=y.E(\'a\'));a.u(U=z(\'bJ\',2,\'N\'));a.u(z(\'bI:\',1,D));a.u(w.6x);a.u(z(\'3h:\',1,D));a.u(w.6w);x.u(a=y.E(\'a\'));a.u(z(\'3E 4Y\',2,\'N\'));a.u(z(\'6o:\',1,D));a.u(w.2P);a.u(z(\'6n:\',1,D));a.u(w.2O)};p.8G=Q(x){w.6v=I(\'G.1t/3j.1s.21.bH\',D,\'%7.2f &#3F;C\');w.6u=I(\'G.1t/3j.1s.21.bG\',D,\'%7.2f &#3F;C\');w.6t=I(\'G.1t/3j.1s.21.8P\',D,\'%7.2f &#3F;C\');w.6s=I(\'G.1t/3j.1s.21.8O\',D,\'%7.2f &#3F;C\');w.6r=I(\'G.1t/3j.1s.21.bF\',D,\'%7.2f l/h\');w.2P=I(\'G.1t/\'+1h+\'28.1s.21.bE\',D,\'%7.2f <1g>o</1g>C\');w.2O=I(\'G.1t/\'+1h+\'28.1s.21.bD\',D,\'%7.2f <1g>o</1g>C\');w.3D=I(\'G.1t/\'+1h+\'28.1s.21.bC\',D,\'%7.1f l/h\');w.19.1b(w.6v);w.19.1b(w.6u);w.19.1b(w.6t);w.19.1b(w.6s);w.19.1b(w.6r);w.19.1b(w.2P);w.19.1b(w.2O);w.19.1b(w.3D);x.u(a=y.E(\'a\'));a.u(U=z(\'8L<br>bB\',1,\'N\'));U.3i="2";a.u(z(\'3h.1:\',1,D));a.u(w.6v);a.u(z(\'3h.2:\',1,D));a.u(w.6u);x.u(a=y.E(\'a\'));a.u(z(\'3h.3:\',1,D));a.u(w.6t);a.u(z(\'3h.4:\',1,D));a.u(w.6s);x.u(a=y.E(\'a\'));a.u(z(\'3E 4Y\',1,\'N\'));a.u(z(\'6o:\',1,D));a.u(w.2P);a.u(z(\'6n:\',1,D));a.u(w.2O);x.u(a=y.E(\'a\'));a.u(z(\'8K\',1,\'N\'));a.u(z(\'8J:\',1,D));a.u(w.6r);a.u(z(\'3E:\',1,D));a.u(w.3D)};p.8H=Q(x){w.6q=I(\'G.1t/4i.1s.21.bA\',D,\'%7.2f &#3F;C\');w.6p=I(\'G.1t/4i.1s.21.bz\',D,\'%7.2f &#3F;C\');w.6m=I(\'G.1t/4i.1s.21.bx\',D,\'%7.2f l/h\');w.2P=I(\'G.1t/\'+1h+\'28.1s.21.8N\',D,\'%7.2f <1g>o</1g>C\');w.2O=I(\'G.1t/\'+1h+\'28.1s.21.bw\',D,\'%7.2f <1g>o</1g>C\');w.3D=I(\'G.1t/\'+1h+\'28.1s.21.8M\',D,\'%7.1f l/h\');w.19.1b(w.6q);w.19.1b(w.6p);w.19.1b(w.6m);w.19.1b(w.2P);w.19.1b(w.2O);w.19.1b(w.3D);x.u(a=y.E(\'a\'));a.u(U=z(\'8L\',1,\'N\'));a.u(z(\'3h.1:\',1,D));a.u(w.6q);a.u(z(\'3h.2:\',1,D));a.u(w.6p);x.u(a=y.E(\'a\'));a.u(z(\'3E 4Y\',1,\'N\'));a.u(z(\'6o:\',1,D));a.u(w.2P);a.u(z(\'6n:\',1,D));a.u(w.2O);x.u(a=y.E(\'a\'));a.u(z(\'8K\',1,\'N\'));a.u(z(\'8J:\',1,D));a.u(w.6m);a.u(z(\'3E:\',1,D));a.u(w.3D)};L(1h==\'bv\')p.4h=p.8I;1u L(1h==\'bu\')p.4h=p.8H;1u L(1h==\'bt\')p.4h=p.8G;L(p.4h){x.u(a=y.E(\'a\'));a.u(U=y.E(\'R\'));U.1U=6;J 1Z,3g;U.u(1Z=y.E(\'14\'));1Z.u(3g=y.E(\'1d\'));1Z.V=3g.V=\'8F\';p.4h(3g)}p.2M=I(\'G.1t/\'+1h+\'28.1s.2M\',D,D);p.2N=I(\'G.1t/\'+1h+\'28.1s.2N\',D,D);p.2M.1r=p.2N.1r=Q(11){S 11=="bs"?X.13.8E():X.13.8D()};p.4g=Q(11){L(w.2o){1y(J i=4;i<12;++i){J m=11&(1<<i);J l=w.2o[i-4];l.P.bq=11&(1<<i)?\'bp\':\'bo\';l.bn=11&(1<<i)?\'#bm\':\'#bl\';l.1z=11&(1<<i)?\'bk\':\'6k\'}}};p.2A=I(\'G.1t/\'+1h+\'28.1s.2L\',D,D);p.2A.1Q=p;p.2A.1r=Q(11){J t=\'\';J 3C=6l(11);J v=3C&bj;1y(J i=0;i<4;++i){J m=v&(1<<i);L(0!=m){L((v^m)!=0){w.V=\'6j\';w.1Q.4g(3C);S\'8B (\'+11+\')\'}1u L(i==2){w.V=\'bi\';w.1Q.4g(3C);S\'2B 8C\'}1u L(i==0){w.V=\'bh\';w.1Q.4g(3C);S\'4X 6k\'}1u{w.V=\'6j\';w.1Q.4g(3C);L(i==0)S\'4X 6k\';1u L(i==1)S\'bg-by 8C\';1u L(i==3)S\'bf\'}}}w.V=\'6j\';S\'8B:\'+11};p.19.1b(p.2A);p.19.1b(p.2M);p.19.1b(p.2N);x.u(a=y.E(\'a\'));a.u(z(\'1P:\',1,D));a.u(p.2A);a.u(z(\'8A:\',1,D));a.u(p.2N);a.u(z(\'8z:\',1,D));a.u(p.2M);L(H.be){L(H.P){a=y.E(\'a\');a.u(z(\'28 2L bd:\',4,H.P));x.u(a)}p.2o=[];x.u(a=y.E(\'a\'));a.u(U=z(\'8y bc 3e:\',2,D));a.u(U=z(\'\',1,\'W-2u\'));p.2o.1b(U);a.u(U=z(\'8y bb\',2,D));a.u(U=z(\'\',1,\'W-2u\'));p.2o.1b(U);x.u(a=y.E(\'a\'));a.u(U=z(\'4W ba:\',2,D));a.u(U=z(\'\',1,\'W-2u\'));p.2o.1b(U);a.u(U=z(\'b9:\',2,D));a.u(U=z(\'\',1,\'W-2u\'));p.2o.1b(U);J 8x,8w;x.u(a=y.E(\'a\'));a.u(8x=U=z(\'b8:\',2,D));a.u(U=z(\'\',1,\'W-2u\'));p.2o.1b(U);a.u(8w=U=z(\'b7 b6:\',2,D));a.u(U=z(\'\',1,\'W-2u\'));p.2o.1b(U);p.2o.1b(U=z(\'\',1,\'W-2u\'));p.2o.1b(U=z(\'\',1,\'W-2u\'));p.2o.1b(U=z(\'\',1,\'W-2u\'))}p.u(x);p.1a=Q(F){1y(J i=0;i<w.19.1o;++i){F.O(w.19[i])}};S p};L(b5)b4(\'b3 X.1D.13.b2 b1 b0\')}',62,991,'||||||||||tr|||||||||||||||tab|||||appendChild||this|tb|document|Cell||||null|createElement|provider|lbWeb|options|StyledItem|var||if||MonitorDataHeader|subscribeItem|style|function|td|return||cell|className|Text|lhcb||Right||data||widgets|table||width||LHC|subscriptions|subscribe|push|name|tbody|||sup|sys|MonitorPage|HV|logger|Hz|item|0f|length|true|LHCB_STATS|conversion|Actual|CaV|else|legend|right|nam|for|innerHTML|onclick|LHCCOM|height|display|LHCb|set|tooltips|system|textAlign|split|state|FSMItem|addState|_RunInfo|comments|State|parent|addBoard|lock|trg_rows|colSpan|LV|RandIn|RandEx|nTriggers|t1||Measurements|Beam|MonitorDataHeaderRight|BeamGasIn||BeamGasEx|subscribe_i|Plant|nbsp|new|items|false|LumiIn|||LumiEx|TFC|DSS|tips|body|left|100|hvState|leds|td1|fEx|fIn|rates|type|Center|to|tr1|update_totals|constants|runType|runState|Run|VELO|120px|sprintf|PhysIn|PhysEx|MBiasIn|MBiasEx|trg_row|st|status|fault|alarm|mixedWaterOut|mixedWaterIn|__DIP_DEFAULT__|dip|velo|location|hv|indexOf|Trigger|val|lhcFillNumber|Status||top|||names|instRate|of|summary|all|deadTime|hltRate|RunControl|IMG|src|rate||tb1|Temp|rowSpan|TtPlant|Velo|Side|BR|title|Array|DCS_Local|parseFloat|HLT|L0|LHCb_RunInfo|the|bcmBeamPermit3|bcmBeamPermit2|bcmBeamPermit1|interActionRate|instantLumi|clock|but|v0|mixedWaterFlow|Mixed|186|Cooling|C_|A_|Vacuum|Pressure|verticalAlign|DiskFree|DiskSize|par|Lumi|counters|runRates|trg_total|RICH2|RICH1|IT|TT|typ|subscribe_j|figureOfMerit4||figureOfMerit3|figureOfMerit2|figureOfMerit1|getStatus||BCM_Interface|lhcb_display_url|minbRateIn|minbRateEx|deadTimeRun|hltRateRun|l0RateRun|l0Rate|lhcBeamMode||setLEDs|specific|ItPlant|Object|coolA|vacuum|Avg|Position|msg|len|lv|Arial12pt|OverflowPercent|MEPRate|LHCb_RunInfoDeferredHLT|TCK|Click|nTriggersL|col_runRate|col_rate|col_trL|tb_cal|tb_acc|tot|freq|last_readings|curr_readings|LHCbEfficiency|tit|opt|mkFSMitem1|Inclusive|Exclusive|Internal|HLTFarm|lhcClockState|Clock|source|runStart|runNumber|value|smileys|Safety|System|water|Board|coolC|motion|Average|pe422|pe421||pe412|pe411|dp411|ap411|veloVac_Meters|safeBeam|movableAllowed|injectionAllowed|and|border|heading|id|url|mx|instanceof|addRow|addLV|addHV|NFilesLeft|Rates|None|total|HLTType|cellPadding|cellSpacing|format|Triggers|fmt|tb_tot|triggers|odin_body_total|triggerRates|Inst|nTrigChan|diff|curr_time|Results|hvRequest|subdetectors|rich|Temperature|LHCb_RunInfoCond|muonSafety|richSafety|itSafety|ttSafety|RS32_REL|BCM_DP_S1|RS2_REL|BCM_DP_S0|information|magPolarity|Polarity|hltNTriggers|Now|Luminosity|general|lhcPrepulses|lhcClock|lhcEnergy|Energy|rf2ttc|RF2TTC|trgConfig|LumiRateEx|LumiRateIn|magnetPolarity|LHCbInject|LHCbAdjust|LHCbDump|energy|IntensityPerBunch|label|gif|mkStaticImage|FwDEAD|OFF|parseInt|it_c6f14flow|Out|In|it_manifold_temp02|it_manifold_temp01|tt_c6f14flow|tt_manifold_temp04|tt_manifold_temp03|tt_manifold_temp02|tt_manifold_temp01|outletTemperature|outletPressure|uxaC|UXA|uxaB1|uxaA|caloC|caloA|bunker|d3B|d3A|d1d2|PT_TE_UXA|T1C|T0C|setPC|T1A|T0A|setPA|veloMove_RdBool|veloY|veloCenter|veloOpening|veloState|mm|Av|Potm|creator|SubdetectorPage|build|logDisplay|addSpacer|addItem|run_header|lhc_header|60px|Date|head_date|hv_legend|buildTable|add|OverflowRate|MoorePercent|MooreRate|DiskUsage|DiskSizeData|DiskFreeData|OverflowPercentData|l0Type|DAQ|totalEx|totalIn|Total|Gas|trigger|ODIN|odin_body_accept|deleteElementById|upda|nBC|nTrigTot|last_tot|1000|last_time|name_col|Monitor_L0DU_1|dead|daq|time|Dead|Ready|rowing|MUON|OT|LHCRQ|Subdetector|LHCb_LHC_HV|rich2Temp|rich2Pressure|rich1Temp|rich1Pressure|Permits|richCoolingFaults|otCoolingFaults|ttCoolingFaults|itCoolingFaults|richCoolingAlarms|otCoolingAlarms|ttCoolingAlarms|itCoolingAlarms|magRead|magSet|LbMagnet|Current|Magnet|physRateIn|physRateEx|lhcStatus|lhcMode|120|FillNumber|Fill|on|locked|Ext|Parameter|physicsRateEx|physicsRateIn|magnetField|veloPosition|opts|MonitorSubHeader|normal|fontWeight|replace|avgLumi|lifetime2|lifetime1|intensity2|intensity1|70px|Handshake|lhcMachineMode|button|r2|r1|Leak|Faults|Alarms|Invalid|mode|red_smiley|green_smiley|MonitorInnerFrame|TTspecific|ITspecific|OTspecific|C6F14|Flow|Manifold|param03|param04|param14|param13|Parameters|Calo|D3|SideC|SideA|NTC1|NTC0|SetPoint|SETPOINT|PE422|PE421|PE412|PE411|DP411|AP411|Pressures|veloVac_Barotrons|Allowed|Injection|Specific|start|topic|StatusLogger|LOG_INFO|OutputLogger|messages|MonitorTinyHeader|beforeComment|attachWidgets|none|Det_Run_header|LHC_header|timerHandler|toString|current_time|logo_url|logo|HVSummary|MEPRateData|free|Blocks|activity|fill|goto_lhcb_daq_page|page|setup|Configuration|TCKLabel|totalHandler|Random|Bias|Physics|Event|accepted|odin_body_calib|col_name|from|Number|Unit|Decision|normalized|addSystem|_|HCAL|ECAL|PRS|lv_legend|header_style|Request|Voltage|Low|voltage|High|HT|_LHC_|RICHPressures|R2HltGasParameters|hPa|R1HltGasParameters|Rich|muon|it|tt|RS2|S1|S0|InjPermit2|InjPermit1|BeamPermit|Background|BCM|RichPlant|OtPlant|Up|Down|magnet|move|Events|mu|LumiInst_GP|TrgRate_calo_bb||TriggerRates|runDeadTime|runHltRate|runTriggerRate|triggerRate|rf2ttcStatus|rf2ttcSource|rf2ttcState|rf2ttcPrepulses|lhc|GeV|MachineMode|not|No|Not|Int|Settings|TRUE|FSM|is|MonitorData|lbHyst|100px|Plan|rarr|larr|bestLifetime|Beam2|Beam1|averageBeamIntensity|Left|BeamMode|successfully|loaded|cpp|Script|alert|_debugLoading|Control|TCR|Maintenance|Reserved|heater|search|flow|bits|showStatus|Recovering|Stand|FwStateAttention3|FwStateOKPhysics|0xF|ON|333333|00CC99|bgColor|white|black|color||FALSE|Tt|It|Ot|param05|param06||param02|param01|Temperatures|param15|param17|param16|param18|param12|param11|Press|Outlet|bar|plant|CaVPlantStatus|B1|Bunker|D2|D1|C_Mixed_Water_Cooling|B1_Mixed_Water_Cooling|A_Mixed_Water_Cooling|PT_TE_CALO_Mixed_Water_Cside|PT_TE_CALO_Mixed_Water_Aside|PT_TE_BUNKER_Mixed_Water_Cooling|PT_TE_BARRACK_Mixed_Water_D3B_In|PT_TE_BARRACK_Mixed_Water_D3A_In|PT_TE_BARRACK_Mixed_Water_D1D2_In|temperature|MixedWaterStatus|HV_BOARD05|HV_BOARD04|HV_BOARD03|HV_BOARD02|HV_BOARD01|HV_BOARD00|DCS_LV_EB09|DCS_LV_EB08|DCS_LV_EB07|DCS_LV_EB06|DCS_LV_EB05|DCS_LV_EB04|DCS_LV_EB03|DCS_LV_EB02|DCS_LV_EB01||DCS_LV_EB00|DCS_LV_EB|DCS_LV_PS|VELOC_|VELOA_|LVBoards|Motion|Infrastructure|VeloDpFct_Cside_P_NTC3|VeloDpFct_Cside_P_NTC2|VeloDpFct_Aside_P_NTC3|VeloDpFct_Aside_P_NTC2|VTCS_TR_AC101|VTCS_TL_AC101|VEC_COOL|VEA_COOL|VELO_VACUUM|VELO_MOTION|infrastructureSummary|mbar|in|vacuumSummary|Stable|Safe|Devices|Movable|Move|SafeStableBeam|MovableDevicesAllowed|InjectionAllowed|moveSummary|veloMove_Yy|veloMove_Xri|veloMove_Xle|XC|XA|positionSummary|dataProviderReset|stop|default|cursor|DataProvider|200|setWindowTitle|MainBody|init_tooltips|getElementsByTagName|the_displayObject|CERN|Frank|suggestions|Comments|2000|setInterval|getElementById|cern|http|MonitorBigHeader|lhcb_online_picture|continue|bottom|nosplit|hvSummary|MonitorOuterFrame|setAttribute|substr|addFSMRow|SubdetectorSystem|Overflow|Moore|MEPRx|MEPRxOverflowPerc|MEPRxMEPRate|Files|Usage|Disk|monitor|defer|Deferred|DeferredHLT|go|L0Type|TriggerSetup|Min|Excl|Incl|Type|HLTRateMonitor|_Accepted|Calib|Calibration|_Total|AllHLT_Accepted|Physics_Accepted|Physics_Total|AllCalib|ODINRateMonitor|getTime|Channel|nTrigChannels|Rate|channel|L0DU|Trigegr|L0DURateMonitor|DAQLiveTime|stopped|IN|Efficiency|during|datataking|efficiency|efficiency_type|DAQEfficiency|Subsystem|SystemSummary|amp|requestedState|LHCb_LHC_HV_Info|Requested|Voltages|subdetector|PrevLhcState|_Comm|Rich2|Rich1|parameters|RICH|IT_Safety|TT_Safety|MUON_Safety|RICH_Safety|SafetySummary|FoM|sensors|bcm|access|BackgroundSummary|various|CoolingSummary|SetCurrent|Measured|Set|MagnetSummary|gas|Minimum|Interaction|Activity|luminosity|instantaneous|taking|Data|RateSummary|Prepulses|see|TTC|ClockSummary|Mode|LHCStateSummary|connected|project|PVSS|or|used|Monitoring|with|Problem|configured|Ref|RF|SELECT_SOURCE|Selection|Off|RunState|Bad|OK|FREQ_STATUS|Errors|Yes|INJECTION_PREPULSE|DIP|Readings|Detector|LHCb_HT_header|MonitorDataHeaderLeft|Exc|Inc|Rndm|BGas|MinB|Phys|permil|BKG|started|runStartTime|Det_Run_Summary|day|LHCb_PlanOfDay|Shift|shiftComments|LHCb_shift_comments|operator|Page1Comment|LHC_operator_comments|Adjust|Dump|Handshakes|Lifetime|Intensity|LHC_INJECTION|LHC_ADJUST|LHC_BEAMDUMP|LuminosityAverage|LHC_summary|LHC_header2|FSMLabel|input|_isInternetExplorer|smiley153|blue_smiley|mad|smiley1807|yellow_smiley|smiley4162|LHC3|operations_url|goto_lhc_operations_page|goto_lhcb_page|check'.split('|'),0,{}))
-;
+if ( !lhcb.widgets ) {
+
+  lhcb.widgets = new Object();
+
+  /// Check initialization
+  lhcb.widgets.check = function() {};
+  
+  /// Set document location to LHCb DAQ status page
+  lhcb.widgets.goto_lhcb_page = function(name) {
+    var item = function() {    document.location = this.url; };
+    item.url =  lhcb.constants.lhcb_display_url(name);
+    return item;
+  };
+  /// Set document location to LHCb DAQ status page
+  lhcb.widgets.goto_lhcb_daq_page = function() {
+    document.location =  lhcb.constants.lhcb_display_url("status&system=LHCb");
+  };
+  /// Set document location to LHC operations page
+  lhcb.widgets.goto_lhc_operations_page = function() {
+    document.location =  lhcb.constants.operations_url("LHC3");
+  };
+
+  lhcb.widgets.green_smiley  = function() { 
+    return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/smiley4162.gif').src+'" height="25"></IMG>';   
+  };
+  lhcb.widgets.yellow_smiley = function() {
+    return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/smiley1807.gif').src+'" height="25"></IMG>';   
+  };
+  lhcb.widgets.red_smiley    = function() {
+    return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/free-mad-smileys-120.gif').src+'" height="25"></IMG>';
+  };
+  lhcb.widgets.blue_smiley   = function() { 
+    return '<IMG src="'+lhcb.constants.mkStaticImage('smileys/smiley153.gif').src+'" height="15"></IMG>';   
+  };
+
+  lhcb.widgets.button = function(value,onclick) {
+    var but, cell = document.createElement('td');
+    if ( _isInternetExplorer() ) {
+      cell.appendChild(but=document.createElement('button'));
+    }
+    else {
+      cell.appendChild(but=document.createElement('input'));
+      but.type = 'button';
+    }
+    but.value = value;
+    but.onclick = onclick;
+    return [cell,but];
+  };
+
+  lhcb.widgets.subscribeItem = function(provider,item) {
+    if ( item ) {
+      provider.subscribe(item.name,item);
+    }
+  };
+
+  lhcb.widgets.mkFSMitem1 = function(item,label) {
+    var tr = document.createElement('tr');
+    if ( label )
+      tr.appendChild(Cell(label,1,'FSMLabel'));
+    else
+      tr.appendChild(item.label);
+    tr.appendChild(item);
+    tr.appendChild(item.lock);
+    item.lock.className = null;
+    return tr;
+  };
+
+
+  /** Build table with summary of the LHC
+   *   
+   * @return Reference to HTML table containing all data items of this widget
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  lhcb.widgets.LHC_header = function() {
+    var tb, td, tr, tab = document.createElement('table');
+    tb = document.createElement('tbody');
+  
+    tab.className = tb.className = 'MonitorSubHeader';
+  
+    tab.body = tb;
+    tb.appendChild(tr=document.createElement('tr'));
+  
+    tr.appendChild(td=document.createElement('td'));
+    td.innerHTML = 'LHC&nbsp;Fill';
+  
+    tab.lhcFillNumber = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.FillNumber',null,null);
+    tr.appendChild(tab.lhcFillNumber);
+  
+    tr.appendChild(td=document.createElement('td'));
+    td.innerHTML = 'State:';
+  
+    tab.lhcBeamMode = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.BeamMode',null,null);
+    tr.appendChild(tab.lhcBeamMode);
+  
+    tr.appendChild(td=document.createElement('td'));
+    td.innerHTML = '';
+  
+    tab.appendChild(tb);
+
+    /** Subscribe all required data item to receive data from data provider object
+     *
+     *  @param      provider  Data provider object
+     *
+     *  @return On success reference to self, null otherwise
+     */
+    tab.subscribe = function(provider) {
+      this.lhcBeamMode.subscribe(provider);
+      this.lhcFillNumber.subscribe(provider);
+      return this;
+    };
+    return tab;
+  };
+ 
+  /** Build table with summary of the LHC
+   *   
+   * @return Reference to HTML table containing all data items of this widget
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  lhcb.widgets.LHC_header2 = function() {
+    var tb, td, tr, tab = document.createElement('table');
+    tb = document.createElement('tbody');
+  
+    tab.className = tb.className = 'MonitorSubHeader';
+  
+    tab.body = tb;
+    tb.appendChild(tr=document.createElement('tr'));
+  
+    tr.appendChild(td=document.createElement('td'));
+    td.innerHTML = 'LHC&nbsp;Fill';
+    td.className = 'Text-Right';
+  
+    tab.lhcFillNumber = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.FillNumber','Text-Left',null);
+    tr.appendChild(tab.lhcFillNumber);
+  
+    tab.lhcBeamMode = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.BeamMode','Text-Right','State:%s&nbsp;/&nbsp;');
+    tr.appendChild(tab.lhcBeamMode);
+
+    tab.lhcMachineMode = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.MachineMode','Text-Left',null);
+    tr.appendChild(tab.lhcMachineMode);
+  
+    tr.appendChild(td=document.createElement('td'));
+    td.innerHTML = '';
+  
+    tab.appendChild(tb);
+
+    /** Subscribe all required data item to receive data from data provider object
+     *
+     *  @param      provider  Data provider object
+     *
+     *  @return On success reference to self, null otherwise
+     */
+    tab.subscribe = function(provider) {
+      this.lhcBeamMode.subscribe(provider);
+      this.lhcMachineMode.subscribe(provider);
+      this.lhcFillNumber.subscribe(provider);
+      return this;
+    };
+    return tab;
+  };
+ 
+  /** Build table with LHC summary information
+   *   
+   * @return Reference to HTML table containing all data items of this widget
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  lhcb.widgets.LHC_summary = function() {
+    var c, tr, tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+
+    tab.className = tb.className  = 'MonitorPage';
+    //tab.height    = '120px';
+
+    tab.energy       = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Energy',null,"%7.0f GeV");
+    //tab.intensity1   = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Intensity.Beam1.totalIntensity',null,"%9.2e");
+    //tab.intensity2   = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Intensity.Beam2.totalIntensity',null,"%9.2e");
+    //tab.lifetime1    = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Intensity.Beam1.primitiveLifetime',null,"%7.2f");
+    //tab.lifetime2    = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Intensity.Beam2.primitiveLifetime',null,"%7.2f");
+    tab.intensity1    = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.IntensityPerBunch.Beam1.averageBeamIntensity',null,'%9.2e');
+    tab.intensity2    = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.IntensityPerBunch.Beam2.averageBeamIntensity',null,'%9.2e');
+    tab.lifetime1     = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.IntensityPerBunch.Beam1.bestLifetime',null,'%7.2f h');
+    tab.lifetime2     = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.IntensityPerBunch.Beam2.bestLifetime',null,'%7.2f h');
+
+    tab.avgLumi      = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Beam.Luminosity.LuminosityAverage',null,"%9.2e");
+    tab.LHCbDump     = StyledItem('lbWeb.LHCCOM/LHC.LHC.Handshake.LHC_BEAMDUMP',null,null);
+    tab.LHCbAdjust   = StyledItem('lbWeb.LHCCOM/LHC.LHC.Handshake.LHC_ADJUST',null,null);
+    tab.LHCbInject   = StyledItem('lbWeb.LHCCOM/LHC.LHC.Handshake.LHC_INJECTION',null,null);
+
+    tab.energy.conversion = function(value) {  return value*120.0/1000.0; };
+
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    tr.appendChild(Cell('LHC status summary',4,'MonitorDataHeader'));
+
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    tr.appendChild(c=Cell('Energy:',null,'MonitorDataHeader'));
+    c.style.width = '30%';
+    tr.appendChild(tab.energy);
+    tr.appendChild(Cell('Avg.Luminosity:',null,'MonitorDataHeader'));
+    tr.appendChild(tab.avgLumi);
+
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    tr.appendChild(Cell('Intensity [e]:',null,'MonitorDataHeader'));
+    tr.appendChild(tab.intensity1);
+    tr.appendChild(Cell('&larr;1 Beam 2&rarr;',null,'Text-Center'));
+    tr.appendChild(tab.intensity2);
+
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    tr.appendChild(Cell('Lifetime [h]:',null,'MonitorDataHeader'));
+    tr.appendChild(tab.lifetime1);
+    tr.appendChild(Cell('&larr;1 Beam 2&rarr;',null,'Text-Center'));
+    tr.appendChild(tab.lifetime2);
+
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    c = Cell('Handshakes:',null,'MonitorDataHeader');
+    c.rowSpan = 2;
+    tr.appendChild(c);
+    tr.appendChild(Cell('Dump',null,'MonitorDataHeader'));
+    tr.appendChild(Cell('Adjust',null,'MonitorDataHeader'));
+    tr.appendChild(Cell('Injection',null,'MonitorDataHeader'));
+
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    tr.appendChild(tab.LHCbDump);
+    tr.appendChild(tab.LHCbAdjust);
+    tr.appendChild(tab.LHCbInject);
+    tab.LHCbDump.width   = '70px';
+    tab.LHCbAdjust.width = '70px';
+    tab.LHCbInject.width = '70px';
+
+    /*
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    tr.appendChild(tab.LumiFill);
+    */
+
+
+    tab.appendChild(tb);
+
+    /** Subscribe all required data item to receive data from data provider object
+     *
+     *  @param      provider  Data provider object
+     *
+     *  @return On success reference to self, null otherwise
+     */
+    tab.subscribe = function(provider) {
+      this.energy.subscribe(provider);
+      this.intensity1.subscribe(provider);
+      this.intensity2.subscribe(provider);
+      this.lifetime1.subscribe(provider);
+      this.lifetime2.subscribe(provider);
+      this.avgLumi.subscribe(provider);
+      this.LHCbDump.subscribe(provider);
+      this.LHCbAdjust.subscribe(provider);
+      this.LHCbInject.subscribe(provider);
+      return this;
+    };
+    return tab;
+  };
+
+  /**
+     Build table like this:
+
+     +-------- LHC operator comments ----------
+     |LHC in limbo, awaiting decision ...      
+     |
+     +-----------------------------------------
+  */
+  lhcb.widgets.LHC_operator_comments = function() {
+    var tb, tr, tab = document.createElement('table');
+    tb = document.createElement('tbody');
+    tab.className = tb.className = 'MonitorPage';
+    
+    tab.comments   = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.Page1Comment',null,null);
+    tab.comments.style.fontWeight = 'normal';
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    tr.appendChild(Cell('LHC operator comments:',null,'MonitorDataHeader'));
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    tr.appendChild(tab.comments);
+    tab.comments.conversion = function(data) { return data.replace(/\n/g,'<BR>');  };
+    tab.comments.height = '60px';
+
+    tab.appendChild(tb);
+
+    /** Subscribe all required data item to receive data from data provider object
+     *
+     *  @param      provider  Data provider object
+     *
+     *  @return On success reference to self, null otherwise
+     */
+    tab.subscribe = function(provider) {
+      this.comments.subscribe(provider);
+      return this;
+    };
+    return tab;
+  };
+
+  /**
+     Build table like this:
+
+     +---- Shift crew : None --------------------------------------------------------
+     |
+     |
+     +---- Comment updated on 18-SEP-2000 16:28 -------------------------------------
+  */
+  lhcb.widgets.LHCb_shift_comments = function() {
+    var tb, tr, tab = document.createElement('table');
+    tb = document.createElement('tbody');
+    tab.className = tb.className = 'MonitorPage';
+
+    tab.comments   = StyledItem('lbWeb.shiftComments',null,null);
+    tab.comments.conversion = function(data) { return data.replace(/\n/g,'<BR>');    };
+    tab.comments.style.fontWeight = 'normal';
+
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    tr.appendChild(Cell('Shift comments:',null,'MonitorDataHeader'));
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    tr.appendChild(tab.comments);
+    tab.comments.height = '100px';
+    tab.appendChild(tb);
+
+    /** Subscribe all required data item to receive data from data provider object
+     *
+     *  @param      provider  Data provider object
+     *
+     *  @return On success reference to self, null otherwise
+     */
+    tab.subscribe = function(provider) {
+      this.comments.subscribe(provider);
+      return this;
+    };
+    return tab;
+  };
+
+  lhcb.widgets.LHCb_PlanOfDay = function(options) {
+    var tb, tr, tab = document.createElement('table');
+    tb = document.createElement('tbody');
+    tab.className = tb.className = 'MonitorPage';
+
+    tab.comments   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Plan',null,null);
+    tab.comments.conversion = function(data) { 
+      //alert(data);
+      var s = data.replace(/\n/g,'<BR>');
+      return s;
+    };
+    tab.comments.style.fontWeight = 'normal';
+
+    if ( options.style) {
+      tr = document.createElement('tr');
+      tb.appendChild(tr);
+      tr.appendChild(Cell('Plan of the day:',null,options.style));
+    }
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(tab.comments);
+    tab.comments.height = '100px';
+    tab.appendChild(tb);
+
+    /** Subscribe all required data item to receive data from data provider object
+     *
+     *  @param      provider  Data provider object
+     *
+     *  @return On success reference to self, null otherwise
+     */
+    tab.subscribe = function(provider) {
+      this.comments.subscribe(provider);
+      return this;
+    };
+    return tab;
+  };
+
+  /** 
+   *   
+   * @return Reference to HTML table containing all data items of this widget
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
+  lhcb.widgets.Det_Run_header = function(sys,logger) {
+    var td, tr, tab = document.createElement('table');
+    var tb  = document.createElement('tbody');
+
+    tab.style.height = tb.style.height = '100%';
+    tab.className = tb.className = 'MonitorSubHeader';
+
+    tab.runNumber = StyledItem('lbWeb.'+sys+'_RunInfo.general.runNumber',null,null);
+    tab.runState = FSMItem('lbWeb.'+sys,logger,true);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(td=document.createElement('td'));
+    td.innerHTML = 'Run';    
+    tr.appendChild(tab.runNumber);
+    tr.appendChild(td=document.createElement('td'));
+    td.innerHTML = ' is ';
+    tr.appendChild(tab.runState);
+    tr.appendChild(tab.runState.lock);
+    tr.appendChild(td=document.createElement('td'));
+    td.innerHTML = '';
+
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribe(this.runNumber.name,this.runNumber);
+      provider.subscribe(this.runState.name,this.runState);
+      return this;
+    };
+    return tab;
+  };
+
+  /**
+     Build table like this:
+     +-----------------------------------------
+     | RUN_196 , Started  2-NOV-2000 08:02
+     |           Last 4 mn     Run    Fill
+     | Events            0       0       0
+     | LCAL              0       0       0
+     | QQbar             0       0       0
+     | L1 rate Hz    0.000   0.000 Ineff.(%)
+     | L2 rate Hz    0.000   0.000 Op   0.00
+     | L3 rate Hz    0.000   0.000 DAQ  0.00
+     | Deadtime %     0.00    0.00 Dt   0.00
+     | Downtime %     0.00    0.00 Tot  0.00
+     | Magnet          3.1    12.1     9.9
+     | BKG    TPC    -0.80  SAMBA     0.00
+     +-----------------------------------------
+  */
+  lhcb.widgets.Det_Run_Summary = function(opts) {
+    var sys = opts.system;
+    var logger = opts.logger;
+    var tb, td, tr, rates, tab = document.createElement('table');
+    tb = document.createElement('tbody');
+
+    tab.className  = tb.className = 'MonitorPage';
+    tb.cellSpacing = 0;
+    tb.cellPadding = 0;
+
+    tab.runType        = StyledItem('lbWeb.'+sys+'_RunInfo.general.runType',     null,null);
+    tab.runStart       = StyledItem('lbWeb.'+sys+'_RunInfo.general.runStartTime',null,'Run started at: %s');
+    tab.nTriggers      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.nTriggers',      'Text-Right',null);
+    //tab.hltNTriggers   = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.hltNTriggers',null,null);
+    tab.deadTime       = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.deadTime',        null,'%8.2f %%');
+    tab.deadTimeRun    = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runDeadTime',     null,'Run:%8.2f %%');
+    tab.trgConfig      = StyledItem('lbWeb.'+sys+'_RunInfo.Trigger.TCKLabel',    null,null);
+    tab.magnetField    = StyledItem('lbWeb.lbHyst.B',                            'Text-Right','%7.4f');
+    tab.magnetPolarity = StyledItem('lbWeb.lbHyst.Polarity',                     null, null);
+    tab.hvState        = StyledItem('lbWeb.LHCb_LHC_HV.FSM.state','MonitorDataHeader',null);
+    tab.hvState.conversion = function(data) {  return 'LV & HV:'+(data.split('/')[1]); };
+    tab.veloPosition   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Specific.VELO.Position','MonitorDataHeader','VELO %s');
+    tab.figureOfMerit1 = StyledItem('lbWeb.BCM_DP_S0.RS2_REL',                  'Text-Right', 'S0:%7.3f');
+    tab.figureOfMerit2 = StyledItem('lbWeb.BCM_DP_S0.RS32_REL',                 'Text-Right', '%7.3f');
+    tab.figureOfMerit3 = StyledItem('lbWeb.BCM_DP_S1.RS2_REL',                  'Text-Right', 'S1:%7.3f');
+    tab.figureOfMerit4 = StyledItem('lbWeb.BCM_DP_S1.RS32_REL',                 'Text-Right', '%7.3f');
+    tab.bcmBeamPermit1 = StyledItem('lbWeb.BCM_Interface.BeamPermit.getStatus', 'Text-Right', null);
+    tab.bcmBeamPermit2 = StyledItem('lbWeb.BCM_Interface.InjPermit1.getStatus', 'Text-Right', null);
+    tab.bcmBeamPermit3 = StyledItem('lbWeb.BCM_Interface.InjPermit2.getStatus', 'Text-Right', null);
+    tab.interActionRate= StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRate_calo_bb','Text-Right','%7.0f Hz');
+
+    tab.l0Rate         = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.triggerRate',    'Text-Right','%6.0f');
+    tab.l0RateRun      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runTriggerRate', 'Text-Right','%6.0f');
+    tab.hltRate        = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.hltRate',    'Text-Right','%4.0f');
+    tab.hltRateRun     = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.runHltRate', 'Text-Right','%4.0f');
+    tab.physicsRateEx  = StyledItem('lbWeb.LHCB_STATS.PhysEx',   'Text-Right',   '%4.0f');
+    tab.physicsRateIn  = StyledItem('lbWeb.LHCB_STATS.PhysIn',   'Text-Right',   '%4.0f');
+    tab.LumiRateEx     = StyledItem('lbWeb.LHCB_STATS.LumiEx',   'Text-Right',   '%4.0f');
+    tab.LumiRateIn     = StyledItem('lbWeb.LHCB_STATS.LumiIn',   'Text-Right',   '%4.0f');
+    tab.LumiRateEx     = StyledItem('lbWeb.LHCB_STATS.LumiEx',   'Text-Right',   '%4.0f');
+    tab.LumiRateIn     = StyledItem('lbWeb.LHCB_STATS.LumiIn',   'Text-Right',   '%4.0f');
+    tab.minbRateEx     = StyledItem('lbWeb.LHCB_STATS.MBiasEx',  'Text-Right',   '%4.0f');
+    tab.minbRateIn     = StyledItem('lbWeb.LHCB_STATS.MBiasIn',  'Text-Right',   '%4.0f');
+    tab.BeamGasEx      = StyledItem('lbWeb.LHCB_STATS.BeamGasEx','Text-Right',   '%4.0f');
+    tab.BeamGasIn      = StyledItem('lbWeb.LHCB_STATS.BeamGasIn','Text-Right',   '%4.0f');
+    tab.RandEx         = StyledItem('lbWeb.LHCB_STATS.RandEx',   'Text-Right',   '%4.0f');
+    tab.RandIn         = StyledItem('lbWeb.LHCB_STATS.RandIn',   'Text-Right',   '%4.0f');
+    tab.instantLumi    = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP', null, '%7.2f &mu;b<sup>-1</sup>/s');
+
+    // Run status
+    tb.appendChild(tr=document.createElement('tr'));
+    tab.runType.colSpan = 2;
+    tr.appendChild(tab.runType);
+    tab.runStart.colSpan = 6;
+    tr.appendChild(tab.runStart);
+    tab.runStart.style.textAlign = 'left';
+
+    // Magnet status
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(td=Cell('Magnet [&nbsp;T&nbsp;]:',2,'MonitorDataHeader'));
+    td.width = '15%';
+    tr.appendChild(tab.magnetField);
+    tr.appendChild(Cell('Polarity:',2,'MonitorDataHeader'));
+    tr.appendChild(tab.magnetPolarity);
+    tab.magnetPolarity.conversion = function(data) {
+      if ( data>0 ) return '+&nbsp;(Down)';
+      return '-&nbsp;(Up)';
+    };
+    tr.appendChild(tab.hvState);
+
+    // Background status
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('BCM BKG [&permil;]:',2,'MonitorDataHeader'));
+    tr.appendChild(tab.figureOfMerit1);
+    tr.appendChild(td=tab.figureOfMerit2);
+    td.colSpan = 2;
+    tr.appendChild(tab.figureOfMerit3);
+    tr.appendChild(tab.figureOfMerit4);
+
+    // Beam permits
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('Beam Permits:',2,'MonitorDataHeader'));
+    tr.appendChild(tab.bcmBeamPermit1);
+    tr.appendChild(td=tab.bcmBeamPermit2);
+    td.colSpan = 2;
+    tr.appendChild(tab.bcmBeamPermit3);
+    tr.appendChild(tab.veloPosition);    // Velo position
+
+    // Luminosity and interaction information
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('Int.rate:',2,'MonitorDataHeader'));
+    tr.appendChild(tab.interActionRate);
+    tr.appendChild(Cell('Inst.Lumi:',2,'MonitorDataHeader'));
+    tr.appendChild(tab.instantLumi);
+    tab.instantLumi.colSpan = 2;
+
+    // Event processing information
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('L0 Events:',2,'MonitorDataHeader'));
+    tr.appendChild(tab.nTriggers);
+    tr.appendChild(Cell('Dead&nbsp;time:',2,'MonitorDataHeader'));
+    tr.appendChild(tab.deadTime);
+    tr.appendChild(tab.deadTimeRun);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(rates=document.createElement('td'));
+    rates.style.width='100%';
+    rates.colSpan = 7;
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(td=Cell('TCK:',1,'MonitorDataHeader'));
+    td.width = '5%';
+    tab.trgConfig.colSpan=8;
+    tr.appendChild(tab.trgConfig);
+    tab.appendChild(tb);
+
+
+    var t=document.createElement('table');
+    tb = document.createElement('tbody');
+
+    t.className  = tb.className = 'MonitorPage';
+    tb.cellSpacing = 0;
+    tb.cellPadding = 0;
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(td=Cell('Rates',   1,'MonitorDataHeader'));
+    td.width = '12%';
+    tr.appendChild(td=Cell('L0&nbsp;[Hz]',  1,'MonitorDataHeaderRight'));
+    td.width = '12%';
+    tr.appendChild(td=Cell('HLT&nbsp;[Hz]', 1,'MonitorDataHeaderRight'));
+    td.width = '12%';
+    tr.appendChild(td=Cell('Phys',2,'MonitorDataHeaderRight'));
+    td.width = '20%';
+    tr.appendChild(td=Cell('MinB',1,'MonitorDataHeaderRight'));
+    td.width = '12%';
+    tr.appendChild(td=Cell('Lumi',1,'MonitorDataHeaderRight'));
+    td.width = '12%';
+    tr.appendChild(td=Cell('BGas',1,'MonitorDataHeaderRight'));
+    td.width = '12%';
+    tr.appendChild(td=Cell('Rndm',1,'MonitorDataHeaderRight'));
+    td.width = '12%';
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(td=Cell('Now:<BR>Run:',   1,'MonitorDataHeader'));
+    td.rowSpan = 2;
+    tr.appendChild(tab.l0Rate);
+    tr.appendChild(tab.hltRate);
+    tr.appendChild(td=Cell('Inc&nbsp;[Hz]:<BR>Exc&nbsp;[Hz]:', 1,'MonitorDataHeaderLeft'));
+    td.rowSpan = 2;
+    td.style.width = '10%';
+    tr.appendChild(tab.physicsRateIn);
+    tr.appendChild(tab.minbRateIn);
+    tr.appendChild(tab.LumiRateIn);
+    tr.appendChild(tab.BeamGasIn);
+    tr.appendChild(tab.RandIn);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(tab.l0RateRun);
+    tr.appendChild(tab.hltRateRun);
+    tr.appendChild(tab.physicsRateEx);
+    tr.appendChild(tab.minbRateEx);
+    tr.appendChild(tab.LumiRateEx);
+    tr.appendChild(tab.BeamGasEx);
+    tr.appendChild(tab.RandEx);
+    t.appendChild(tb);
+    rates.appendChild(t);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.runType);
+      provider.subscribeItem(this.runStart);
+      provider.subscribeItem(this.nTriggers);
+      //provider.subscribeItem(this.hltNTriggers);
+      provider.subscribeItem(this.l0Rate);
+      provider.subscribeItem(this.l0RateRun);
+      provider.subscribeItem(this.hltRate);
+      provider.subscribeItem(this.hltRateRun);
+      provider.subscribeItem(this.deadTime);
+      provider.subscribeItem(this.deadTimeRun);
+      provider.subscribeItem(this.veloPosition);
+      
+      provider.subscribeItem(this.bcmBeamPermit1);
+      provider.subscribeItem(this.bcmBeamPermit2);
+      provider.subscribeItem(this.bcmBeamPermit3);
+      
+      provider.subscribeItem(this.magnetField);
+      provider.subscribeItem(this.magnetPolarity);
+      provider.subscribeItem(this.hvState);
+      
+      provider.subscribeItem(this.figureOfMerit1);
+      provider.subscribeItem(this.figureOfMerit2);
+      provider.subscribeItem(this.figureOfMerit3);
+      provider.subscribeItem(this.figureOfMerit4);
+
+      provider.subscribeItem(this.instantLumi);
+      provider.subscribeItem(this.interActionRate);
+
+      provider.subscribeItem(this.physicsRateIn);
+      provider.subscribeItem(this.physicsRateEx);
+      provider.subscribeItem(this.LumiRateIn);
+      provider.subscribeItem(this.LumiRateEx);
+      provider.subscribeItem(this.minbRateIn);
+      provider.subscribeItem(this.minbRateEx);
+      provider.subscribeItem(this.BeamGasEx);    
+      provider.subscribeItem(this.BeamGasIn);    
+      provider.subscribeItem(this.RandEx);
+      provider.subscribeItem(this.RandIn);
+
+      provider.subscribeItem(this.trgConfig);
+      return this;
+    };
+    return tab;
+  };
+
+  /** Build table with HT summary state of the LHCb detector
+   *   
+   * @author  M.Frank
+   * @version 1.0
+   */
+  lhcb.widgets.LHCb_HT_header = function() {
+    var c, tb, td, tr, tab = document.createElement('table');
+    tb = document.createElement('tbody');
+  
+    tab.width     = '100%';
+    tab.className = 'MonitorData';
+    tb.className  = 'MonitorData';
+  
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('Detector HV Status',2,'MonitorDataHeader'));
+    tb.appendChild(tr);
+  
+    tr = document.createElement('tr');
+    tr.appendChild(c=Cell('LHCb LV & HV is:',1,null));    
+    c.style.width  = '120px';
+    this.hvState   = StyledItem('lbWeb.LHCb_LHC_HV.FSM.state',null,null);
+    //this.hvState = StyledItem('lbWeb.LHCb_HV.FSM.state',null,null);
+    this.hvState.conversion = function(val) {
+      if ( val ) {
+	var v=val.split('/',4);
+	if ( v.length > 1 ) return v[1];
+      }
+      return val;
+    };
+    tr.appendChild(this.hvState);
+    tb.appendChild(tr);
+    /*
+    tr = document.createElement('tr');
+    tr.appendChild(c=Cell('Updated:',1,null));    
+    c.style.width = '120px';
+    this.hvStateUpdate = StyledItem('lbWeb.LHCb.HVStateUpdate',null,null);
+    tr.appendChild(this.hvStateUpdate);
+    tb.appendChild(tr);
+    */
+    tab.appendChild(tb);
+    return tab;
+  };
+
+  /// Create Cell item containing the TTC prepulse information
+  lhcb.widgets.rf2ttcPrepulses = function() {
+    var item = StyledItem('lbWeb.RF2TTC/rf2ttc.Parameter.Readings.DIP.INJECTION_PREPULSE','Text-Right',null);
+    item.conversion = function(v) { return (v=='TRUE') ? 'Yes' : 'No'; };
+    return item;
+  };
+
+  /// Create Cell item containing the TTC clock status
+  lhcb.widgets.rf2ttcStatus = function() {
+    var item = StyledItem('lbWeb.RF2TTC/rf2ttc.Parameter.Settings.Errors.FREQ_STATUS',null,null);
+    item.conversion = function(v) {  return (v=='TRUE') ? 'Clock OK' : 'Bad Clock'; };
+    return item
+  };
+
+  /// Create Cell item containing the TTC clock state
+  lhcb.widgets.rf2ttcState = function() {
+    var item = StyledItem('lbWeb.RF2TTC/rf2ttc.State.RunState',null,null);
+    item.data = 3;
+    item.conversion = function(state) {
+      this.data = state;
+      if(state == 3 || state == 5)    //state Ready or Running
+	return 'Ready';
+      else if(state == 1 || state == 2) // Not Ready or Configuring
+        return 'Not Ready';
+      return 'Off';
+    };
+    return item
+  };
+
+  /// Create Cell item containing the TTC clock type. Requires the state for interpretation!
+  lhcb.widgets.rf2ttcSource = function(st) {
+    var item = StyledItem('lbWeb.RF2TTC/rf2ttc.Parameter.Settings.Selection.SELECT_SOURCE','Text-Right',null);
+    item.State  = st;
+    item.State.data = 3;
+    item.conversion = function(source)  {
+      var state = state = this.State.data;
+      if(state == 3 || state == 5) {  //state Ready or Running
+	if(source == 0)
+	  return 'Int. LHCb clock'; 
+	else if (source == 1)
+          return 'Ext. LHC clock: locked on RF Ref'; 
+	else if (source == 2)
+          return 'Ext. LHC clock: locked on Beam 1'; 
+	else if (source == 3)
+          return 'Ext. LHC clock: locked on Beam 2';
+      }
+      else if(state == 1 || state == 2) // Not Ready or Configuring
+        return 'Not configured';
+      else if(state == 0)
+        return 'Problem with the clock';
+      else if(state == -1)
+        return 'No Clock Monitoring';
+      return 'System not used or PVSS project not connected';
+    };
+    return item;
+  };
+
+  lhcb.widgets.LHCStateSummary = function(options) {
+    var tb, tr, cell, tab = document.createElement('table');
+    tab.className  = 'MonitorPage';
+
+    tb = document.createElement('tbody');
+    tooltips.set(tb,'LHC state summary<br>Click to move to LHC summary information.');
+    tb.onclick = function() { document.location = lhcb.constants.lhcb_display_url("lhc");};
+    tb.className  = 'MonitorPage';
+    tb.height    = '120px';
+    if ( options.style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('LHC State',3,options.style));
+      tb.appendChild(tr);
+    }
+    if ( options.legend ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('Mode',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Fill Number',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Energy',1,'MonitorDataHeader'));
+      tb.appendChild(tr);
+    }
+    tab.lhcMode = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.MachineMode',null,null);
+    tab.lhcFillNumber    = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.FillNumber',null,null);
+    tab.lhcEnergy        = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Energy',null,'%7.1f GeV');
+    tab.lhcEnergy.conversion = function(data) {      return (data*120.0)/1000.0;    };
+    tr = document.createElement('tr');
+    tr.appendChild(tab.lhcMode);
+    tr.appendChild(tab.lhcFillNumber);
+    tr.appendChild(tab.lhcEnergy);
+    tb.appendChild(tr);
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.lhcMode);
+      provider.subscribeItem(this.lhcFillNumber);
+      provider.subscribeItem(this.lhcEnergy);
+    };
+    return tab;
+  };
+
+
+  lhcb.widgets.ClockSummary = function(options) {
+    var tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var tr = document.createElement('tr');
+    var cell = Cell('LHC clock:',null,'MonitorDataHeader');
+
+    tooltips.set(tab,'TTC clock information<br>Click to see LHC status');
+    tab.onclick = function() { document.location = lhcb.constants.lhcb_display_url("lhc");};
+    tab.lhcPrepulses   = lhcb.widgets.rf2ttcPrepulses();
+    tab.lhcClockState  = lhcb.widgets.rf2ttcState();
+    tab.lhcClock       = lhcb.widgets.rf2ttcSource(tab.lhcClockState);
+    tab.lhcStatus      = lhcb.widgets.rf2ttcStatus();
+
+    tab.className = tb.className   = 'MonitorPage';
+    if ( options.style ) {
+      tr.appendChild(Cell('LHC Clock Status',4,options.style));
+      tb.appendChild(tr);
+      tr = document.createElement('tr');
+    }
+
+    tr.appendChild(cell);
+    cell.style.width = '25%';
+    tr.appendChild(tab.lhcClock);
+    tab.lhcClock.colSpan = 5;
+    tab.style.textAlign = 'left';
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    tr.appendChild(cell=Cell('Clock state:',null,'MonitorDataHeader'));
+    tr.appendChild(tab.lhcClockState);
+    tab.lhcClockState.style.textAlign = 'left';
+    tr.appendChild(cell=Cell('/',null,null));
+    tr.appendChild(tab.lhcStatus);
+    tr.appendChild(cell=Cell('Prepulses:',null,'MonitorDataHeader'));
+    cell.style.width = '15%';
+    tr.appendChild(tab.lhcPrepulses);
+    tab.lhcPrepulses.style.width = '15%';
+    tb.appendChild(tr);
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.lhcClock);
+      provider.subscribeItem(this.lhcStatus);
+      provider.subscribeItem(this.lhcClockState);
+      provider.subscribeItem(this.lhcPrepulses);
+    };
+    return tab;
+  };
+
+  lhcb.widgets.RateSummary = function(options) {
+
+    var tb, td, tr, tab = document.createElement('table');
+    var sys = options.system;
+    tb = document.createElement('tbody');
+
+    tab.className  = tb.className = 'MonitorPage';
+    tab.width      = '100%';
+    tb.cellSpacing = 0;
+    tb.cellPadding = 0;
+
+    tab.runType        = StyledItem('lbWeb.'+sys+'_RunInfo.general.runType',     null, null);
+    tab.nTriggers      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.nTriggers',       'Text-Right', null);
+    tab.hltNTriggers   = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.hltNTriggers','Text-Right', null);
+    tab.l0Rate         = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.triggerRate',     'Text-Right','%8.2f Hz');
+    tab.l0RateRun      = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runTriggerRate',  'Text-Right','%8.2f Hz');
+    tab.hltRate        = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.hltRate',     'Text-Right','%8.2f Hz');
+    tab.hltRateRun     = StyledItem('lbWeb.'+sys+'_RunInfo.HLTFarm.runHltRate',  'Text-Right','%8.2f Hz');
+    tab.deadTime       = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.deadTime',        'Text-Right','%8.2f %%');
+    tab.deadTimeRun    = StyledItem('lbWeb.'+sys+'_RunInfo.TFC.runDeadTime',     'Text-Right','%8.2f %%');
+    tab.interActionRate= StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.TriggerRates.TrgRate_calo_bb', 'Text-Right', '%7.1f Hz');
+    tab.instantLumi    = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Internal.Luminosity.LumiInst_GP', 'Text-Right', '%7.2f Hz/&mu;b');
+    tab.physRateEx = StyledItem('lbWeb.LHCB_STATS.PhysEx',   'Text-Right','%7.0f Hz');
+    tab.physRateIn = StyledItem('lbWeb.LHCB_STATS.PhysIn',   'Text-Right','%7.0f Hz');
+    tab.minbRateEx = StyledItem('lbWeb.LHCB_STATS.MBiasEx',  'Text-Right','%7.0f Hz');
+    tab.minbRateIn = StyledItem('lbWeb.LHCB_STATS.MBiasIn',  'Text-Right','%7.0f Hz');
+    tab.LumiEx     = StyledItem('lbWeb.LHCB_STATS.LumiEx',   'Text-Right','%7.0f Hz');
+    tab.LumiIn     = StyledItem('lbWeb.LHCB_STATS.LumiIn',   'Text-Right','%7.0f Hz');
+    tab.BeamGasEx  = StyledItem('lbWeb.LHCB_STATS.BeamGasEx','Text-Right','%7.0f Hz');
+    tab.BeamGasIn  = StyledItem('lbWeb.LHCB_STATS.BeamGasIn','Text-Right','%7.0f Hz');
+    tab.RandEx     = StyledItem('lbWeb.LHCB_STATS.RandEx',   'Text-Right','%7.0f Hz');
+    tab.RandIn     = StyledItem('lbWeb.LHCB_STATS.RandIn',   'Text-Right','%7.0f Hz');
+
+    if ( options.style ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Data taking rates and instantaneous luminosity',5,options.style));
+    }
+
+    // Run status
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('Activity:',null,'MonitorDataHeader'));
+    tr.appendChild(tab.runType);
+    tab.runType.colSpan = 4;
+    tab.runType.style.textAlign = 'left';
+
+    // Luminosity and interaction information
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('Interaction rate:',null,'MonitorDataHeader'));
+    tab.interActionRate.colSpan = 2;
+    tr.appendChild(tab.interActionRate);
+    tr.appendChild(Cell('Inst.Lumi:',1,'MonitorDataHeader'));
+    tr.appendChild(tab.instantLumi);
+
+    // Event processing information
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('L0 Events:',null,'MonitorDataHeader'));
+    tab.nTriggers.colSpan = 2;
+    tr.appendChild(tab.nTriggers);
+    tr.appendChild(Cell('accepted:',1,'MonitorDataHeader'));
+    tr.appendChild(tab.hltNTriggers);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('L0 rate:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Now:',1,'Text-Right'));
+    tr.appendChild(tab.l0Rate);
+    tr.appendChild(Cell('Run:',1,'Text-Right'));
+    tr.appendChild(tab.l0RateRun);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('HLT rate:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Now:',1,'Text-Right'));
+    tr.appendChild(tab.hltRate);
+    tr.appendChild(Cell('Run:',1,'Text-Right'));
+    tr.appendChild(tab.hltRateRun);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('Dead-time:',null,'MonitorDataHeader'));
+    tr.appendChild(Cell('Now:',1,'Text-Right'));
+    tr.appendChild(tab.deadTime);
+    tr.appendChild(Cell('Run:',1,'Text-Right'));
+    tr.appendChild(tab.deadTimeRun);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('Physics:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Exclusive:',1,'Text-Right'));
+    tr.appendChild(tab.physRateEx);
+    tr.appendChild(Cell('Inclusive:',1,'Text-Right'));
+    tr.appendChild(tab.physRateIn);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('Minimum Bias:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Exclusive:',1,'Text-Right'));
+    tr.appendChild(tab.minbRateEx);
+    tr.appendChild(Cell('Inclusive:',1,'Text-Right'));
+    tr.appendChild(tab.minbRateIn);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('Beam gas:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Exclusive:',1,'Text-Right'));
+    tr.appendChild(tab.BeamGasEx);
+    tr.appendChild(Cell('Inclusive:',1,'Text-Right'));
+    tr.appendChild(tab.BeamGasIn);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('Lumi triggers:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Exclusive:',1,'Text-Right'));
+    tr.appendChild(tab.LumiEx);
+    tr.appendChild(Cell('Inclusive:',1,'Text-Right'));
+    tr.appendChild(tab.LumiIn);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('Random triggers:',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Exclusive:',1,'Text-Right'));
+    tr.appendChild(tab.RandEx);
+    tr.appendChild(Cell('Inclusive:',1,'Text-Right'));
+    tr.appendChild(tab.RandIn);
+
+   tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.runType);
+      provider.subscribeItem(this.nTriggers);
+      provider.subscribeItem(this.hltNTriggers);
+      provider.subscribeItem(this.l0Rate);
+      provider.subscribeItem(this.l0RateRun);
+      provider.subscribeItem(this.hltRate);
+      provider.subscribeItem(this.hltRateRun);
+      provider.subscribeItem(this.deadTime);
+      provider.subscribeItem(this.deadTimeRun);
+      provider.subscribeItem(this.instantLumi);
+      provider.subscribeItem(this.interActionRate);
+
+      provider.subscribeItem(this.physRateEx);    
+      provider.subscribeItem(this.physRateIn);    
+      provider.subscribeItem(this.minbRateEx);    
+      provider.subscribeItem(this.minbRateIn);    
+      provider.subscribeItem(this.LumiEx);    
+      provider.subscribeItem(this.LumiIn);    
+      provider.subscribeItem(this.BeamGasEx);    
+      provider.subscribeItem(this.BeamGasIn);    
+      provider.subscribeItem(this.RandEx);
+      provider.subscribeItem(this.RandIn);
+      return this;
+    };
+    return tab;
+  };
+
+  lhcb.widgets.MagnetSummary = function(options) {
+    var tb, tr, tab = document.createElement('table');
+    tab.className  = 'MonitorPage';
+    
+    tb = document.createElement('tbody');
+    tooltips.set(tb,'Magnet summary<br>Click to move to magnet page.');
+    tb.onclick = function() { document.location = lhcb.constants.lhcb_display_url("magnet");};
+    tb.className  = 'MonitorPage';
+    tb.height    = '120px';
+    if ( options.style ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Magnet Status',3,options.style));
+    }
+    if ( options.legend ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Set Current',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Measured Current',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Polarity',1,'MonitorDataHeader'));
+    }
+    tb.appendChild(tr=document.createElement('tr'));
+    tab.magSet      = StyledItem('lbWeb.LbMagnet.SetCurrent',null,'%7.0f A');
+    tab.magRead     = StyledItem('lbWeb.LbMagnet.Current',null,'%7.0f A');
+    tab.magPolarity = StyledItem('lbWeb.LbMagnet.Polarity',null,null);
+    tab.magPolarity.conversion = function(data) {      return data>0 ? 'Down' : 'Up';    };
+    tr.appendChild(tab.magSet);
+    tr.appendChild(tab.magRead);
+    tr.appendChild(tab.magPolarity);
+
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.magSet);
+      provider.subscribeItem(this.magRead);
+      provider.subscribeItem(this.magPolarity);
+    };
+    return tab;
+  };
+
+  lhcb.widgets.CoolingSummary = function(options) {
+    var c, tb, td, tr, tab = document.createElement('table');
+    tb = document.createElement('tbody');
+    tab.className = tb.className   = 'MonitorPage';
+
+    tooltips.set(tab,'Cooling information summary<br>for various subdetectors');    
+    // Velo position
+    tab.itCoolingAlarms    = StyledItem('lbWeb.CaV/ItPlant.Actual.alarm', null, null);
+    tab.otCoolingAlarms    = StyledItem('lbWeb.CaV/OtPlant.Actual.alarm', null, null);
+    tab.ttCoolingAlarms    = StyledItem('lbWeb.CaV/TtPlant.Actual.alarm', null, null);
+    tab.richCoolingAlarms  = StyledItem('lbWeb.CaV/RichPlant.Actual.alarm', null, null);
+
+    tab.itCoolingFaults    = StyledItem('lbWeb.CaV/ItPlant.Actual.fault', null, null);
+    tab.otCoolingFaults    = StyledItem('lbWeb.CaV/OtPlant.Actual.fault', null, null);
+    tab.ttCoolingFaults    = StyledItem('lbWeb.CaV/TtPlant.Actual.fault', null, null);
+    tab.richCoolingFaults  = StyledItem('lbWeb.CaV/RichPlant.Actual.fault', null, null);
+    /*
+    tab.itCoolingStatus    = StyledItem('lbWeb.CaV/ItPlant.Actual.status', null, null);
+    tab.otCoolingStatus    = StyledItem('lbWeb.CaV/OtPlant.Actual.status', null, null);
+    tab.ttCoolingStatus    = StyledItem('lbWeb.CaV/TtPlant.Actual.status', null, null);
+    tab.richCoolingStatus  = StyledItem('lbWeb.CaV/RichPlant.Actual.status', null, null);
+    */
+    if ( options.style ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Cooling Plant Status',5,options.style));
+    }
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    if ( options.legend ) {
+      tr.appendChild(c=Cell('Cooling',1,'MonitorDataHeader'));
+      c.style.width = '25%';
+    }
+    tr.appendChild(Cell('IT',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('TT',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('OT',1,'MonitorDataHeader'));
+    tr.appendChild(Cell('Rich',1,'MonitorDataHeader'));
+
+    tb.appendChild(tr=document.createElement('tr'));
+    if ( options.legend ) tr.appendChild(Cell('Alarms',1,'MonitorDataHeader'));
+
+    tr.appendChild(tab.itCoolingAlarms);
+    tr.appendChild(tab.ttCoolingAlarms);
+    tr.appendChild(tab.otCoolingAlarms);
+    tr.appendChild(tab.richCoolingAlarms);
+
+    tb.appendChild(tr=document.createElement('tr'));
+    if ( options.legend ) tr.appendChild(Cell('Faults',1,'MonitorDataHeader'));
+
+    tr.appendChild(tab.itCoolingFaults);
+    tr.appendChild(tab.ttCoolingFaults);
+    tr.appendChild(tab.otCoolingFaults);
+    tr.appendChild(tab.richCoolingFaults);
+
+    /*
+    tb.appendChild(tr=document.createElement('tr'));
+    if ( options.legend ) tr.appendChild(Cell('Status',1,'MonitorDataHeader'));
+
+    tr.appendChild(tab.itCoolingStatus);
+    tr.appendChild(tab.ttCoolingStatus);
+    tr.appendChild(tab.otCoolingStatus);
+    tr.appendChild(tab.richCoolingStatus);
+    */
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.itCoolingAlarms);
+      provider.subscribeItem(this.ttCoolingAlarms);
+      provider.subscribeItem(this.otCoolingAlarms);
+      provider.subscribeItem(this.richCoolingAlarms);
+      provider.subscribeItem(this.itCoolingFaults);
+      provider.subscribeItem(this.ttCoolingFaults);
+      provider.subscribeItem(this.otCoolingFaults);
+      provider.subscribeItem(this.richCoolingFaults);
+      //provider.subscribeItem(this.itCoolingStatus);
+      //provider.subscribeItem(this.ttCoolingStatus);
+      //provider.subscribeItem(this.otCoolingStatus);
+      //provider.subscribeItem(this.richCoolingStatus);
+    };
+    return tab;
+  };
+
+  lhcb.widgets.BackgroundSummary = function(options) {
+    var c, tr;
+    var tab = document.createElement('table');
+    var tb  = document.createElement('tbody');
+
+    tooltips.set(tab,'Background summary<br>Click to access BCM information');
+    tab.onclick = function() { document.location = lhcb.constants.lhcb_display_url("bcm&sensors=1");};
+    tab.className = tb.className = 'MonitorPage';
+
+    if ( options.style ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(c=Cell('Background Status and Beam Permits:',7,options.style));
+      c.style.width='100%';
+    }
+
+    tab.bcmBeamPermit1 = StyledItem('lbWeb.BCM_Interface.BeamPermit.getStatus',null,null);
+    tab.bcmBeamPermit2 = StyledItem('lbWeb.BCM_Interface.InjPermit1.getStatus',null,null);
+    tab.bcmBeamPermit3 = StyledItem('lbWeb.BCM_Interface.InjPermit2.getStatus',null,null);
+    tb.appendChild(tr=document.createElement('tr'));
+    if ( options.legend ) {
+      tr.appendChild(c=Cell('Permits',1,'MonitorDataHeader'));
+      c.style.width = '25%';
+    }
+    tr.appendChild(tab.bcmBeamPermit1);
+    tab.bcmBeamPermit1.colSpan = 2;
+    tr.appendChild(tab.bcmBeamPermit2);
+    tab.bcmBeamPermit2.colSpan = 2;
+    tr.appendChild(tab.bcmBeamPermit3);
+    tab.bcmBeamPermit3.colSpan = 2;
+
+    tab.figureOfMerit1 = StyledItem('lbWeb.BCM_DP_S0.RS2_REL',             null, '%7.3f');
+    tab.figureOfMerit2 = StyledItem('lbWeb.BCM_DP_S0.RS32_REL',            null, '%7.3f');
+    tab.figureOfMerit3 = StyledItem('lbWeb.BCM_DP_S1.RS2_REL',             null, '%7.3f');
+    tab.figureOfMerit4 = StyledItem('lbWeb.BCM_DP_S1.RS32_REL',            null, '%7.3f');
+    tb.appendChild(tr=document.createElement('tr'));
+    if ( options.legend ) {
+      tr.appendChild(Cell('FoM',null,'MonitorDataHeader'));
+    }
+    tr.appendChild(Cell('S0.RS2/32:',1,'MonitorDataHeader'));
+    tr.appendChild(tab.figureOfMerit1);
+    tr.appendChild(tab.figureOfMerit2);
+    tr.appendChild(Cell('S1.RS2/32:',1,'MonitorDataHeader'));
+    tr.appendChild(tab.figureOfMerit3);
+    tr.appendChild(tab.figureOfMerit4);
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.bcmBeamPermit1);
+      provider.subscribeItem(this.bcmBeamPermit2);
+      provider.subscribeItem(this.bcmBeamPermit3);
+      
+      provider.subscribeItem(this.figureOfMerit1);
+      provider.subscribeItem(this.figureOfMerit2);
+      provider.subscribeItem(this.figureOfMerit3);
+      provider.subscribeItem(this.figureOfMerit4);
+    };
+    return tab;
+  };
+
+  lhcb.widgets.SafetySummary = function(options) {
+    var tr, cell, tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+
+    tab.className =  tb.className = 'MonitorPage';
+    tooltips.set(tb,'Safety status of the subdetectors');
+    if ( options.style ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Safety',3,options.style));
+    }
+    if ( options.legend ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Subdetector',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('State',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('',1,null));
+    }
+    var opt = (!options.legend && !options.style) ? ' Safety Status' : '';
+    if ( options.all || options.rich ) tab.richSafety = FSMItem('lbWeb.RICH_Safety',options.logger,true);
+    if ( options.all || options.muon ) tab.muonSafety = FSMItem('lbWeb.MUON_Safety',options.logger,true);
+    if ( options.all || options.tt   ) tab.ttSafety   = FSMItem('lbWeb.TT_Safety',options.logger,true);
+    if ( options.all || options.it   ) tab.itSafety   = FSMItem('lbWeb.IT_Safety',options.logger,true);
+    if ( options.all || options.tt   ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.ttSafety,'TT'+opt));
+    if ( options.all || options.it   ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.itSafety,'IT'+opt));
+    if ( options.all || options.rich ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.richSafety,'RICH'+opt));
+    if ( options.all || options.muon ) tb.appendChild(lhcb.widgets.mkFSMitem1(tab.muonSafety,'MUON'+opt));
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      if (this.ttSafety)   provider.subscribeItem(this.ttSafety);
+      if (this.itSafety)   provider.subscribeItem(this.itSafety);
+      if (this.richSafety) provider.subscribeItem(this.richSafety);
+      if (this.muonSafety) provider.subscribeItem(this.muonSafety);
+    };
+
+    return tab;
+  };
+
+  /** Online widgets. RICH gas pressures
+   *
+   *  @author M.Frank
+   */
+  lhcb.widgets.RICHPressures = function(options) {
+    var tb, tr, cell, tab = document.createElement('table');
+
+    tb = document.createElement('tbody');
+    tooltips.set(tb,'Rich parameters');
+    tab.className =  tb.className = 'MonitorPage';
+
+    if ( options.style ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Rich1 Gas',2,options.style));
+      tr.appendChild(Cell('Rich2 Gas',2,options.style));
+    }
+    if ( options.legend ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Pressure',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Temperature',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Pressure',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Temperature',1,'MonitorDataHeader'));
+    }
+    if ( options.tips    ) tooltips.set(tb,options.tips);
+    if ( options.onclick ) tb.onclick = options.onclick; 
+
+    tb.appendChild(tr);
+    tab.rich1Pressure = StyledItem('lbWeb.LHCb_RunInfoCond.RICH1.R1HltGasParameters.Pressure',null,'%7.1f hPa');
+    tab.rich1Temp     = StyledItem('lbWeb.LHCb_RunInfoCond.RICH1.R1HltGasParameters.Temperature',null,'%7.1f K');
+    tab.rich2Pressure = StyledItem('lbWeb.LHCb_RunInfoCond.RICH2.R2HltGasParameters.Pressure',null,'%7.2f hPa');
+    tab.rich2Temp     = StyledItem('lbWeb.LHCb_RunInfoCond.RICH2.R2HltGasParameters.Temperature',null,'%7.1f K');
+
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(tab.rich1Pressure);
+    tr.appendChild(tab.rich1Temp);
+    tr.appendChild(tab.rich2Pressure);
+    tr.appendChild(tab.rich2Temp);
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.rich1Pressure);
+      provider.subscribeItem(this.rich1Temp);
+      provider.subscribeItem(this.rich2Pressure);
+      provider.subscribeItem(this.rich2Temp);
+    };
+    return tab;
+  };
+  lhcb.widgets.rich = new Object();
+  lhcb.widgets.rich.Pressures = lhcb.widgets.RICHPressures;
+
+  /** Online widgets. HV Summary for subdetector(s) from ECS project
+   *
+   *  @author M.Frank
+   */
+  lhcb.widgets.HVSummary = function(logger) {
+    var tb, tr, cell, tab = document.createElement('table');
+    tab.className  = 'MonitorPage';
+    tab.logger = logger;
+
+    tab.addState = function(nam,split,m,q) {
+      var cell,tr = document.createElement('tr');
+      tr.appendChild(cell=Cell(nam,1,null));
+      cell.style.width='120px';
+      this[m+'LHC'+nam]   = FSMItem('lbWeb.'+nam+'_LHC_'+m,this.logger,true);
+      this[m+'LHCRQ'+nam] = StyledItem('lbWeb.'+nam+'_LHC_'+m+'_Comm.PrevLhcState',null,null);
+      tr.appendChild(this[m+'LHC'+nam]);      
+      tr.appendChild(this[m+'LHCRQ'+nam]);
+      
+      if ( split ) {
+	this[m+'A'+nam] = FSMItem('lbWeb.'+nam+'A_'+q,this.logger,true);
+	this[m+'C'+nam] = FSMItem('lbWeb.'+nam+'C_'+q,this.logger,true);
+	tr.appendChild(this[m+'A'+nam]);
+	tr.appendChild(this[m+'C'+nam]);
+      }
+      else {
+	this[m+nam] = FSMItem('lbWeb.'+nam+'_'+q,this.logger,true);
+	tr.appendChild(this[m+nam]);
+      }
+      tr.appendChild(this[m+'LHC'+nam].lock);
+      this[m+'LHC'+nam].lock.className = null;
+      tooltips.set(tr,'HT state of the '+nam+' subdetector');
+      return tr;
+    };
+
+    tab.addHV = function(tb) {
+      tb.appendChild(this.addState('VELO',  true, 'HV', 'HV'));
+      tb.appendChild(this.addState('TT',   false, 'HV', 'HV'));
+      tb.appendChild(this.addState('IT',   false, 'HV', 'HV'));
+      tb.appendChild(this.addState('OT',    true, 'HV', 'HV'));
+      tb.appendChild(this.addState('RICH1',false, 'HV', 'HV'));
+      tb.appendChild(this.addState('RICH2',false, 'HV', 'HV'));
+      tb.appendChild(this.addState('PRS',  false, 'HV', 'HV'));
+      tb.appendChild(this.addState('ECAL', false, 'HV', 'HV'));
+      tb.appendChild(this.addState('HCAL', false, 'HV', 'HV'));
+      tb.appendChild(this.addState('MUON',  true, 'HV', 'HV'));
+      tb.appendChild(this.addState('HRC',  false, 'HV', 'HV'));
+    };
+
+    tab.addLV = function(tb) {
+      tb.appendChild(this.addState('VELO',   true, 'LV', 'DCS_Local'));
+      tb.appendChild(this.addState('TT',    false, 'LV', 'DCS_Local'));
+      tb.appendChild(this.addState('IT',    false, 'LV', 'DCS_Local'));
+      tb.appendChild(this.addState('RICH1', false, 'LV', 'DCS_Local'));
+      tb.appendChild(this.addState('RICH2', false, 'LV', 'DCS_Local'));
+    };
+
+    tab.buildTable = function(options) {
+      var tb, tr, cell;
+      tb = document.createElement('tbody');
+      tb.className = 'MonitorPage';
+      tb.height    = '120px';
+      if ( options.split ) this.split = true;
+      tooltips.set(tb,'HT summary of LHCb');
+      if ( options.style ) {
+	tb.appendChild(tr=document.createElement('tr'));
+	tr.appendChild(Cell('Voltages',6,options.style));
+      }
+      if ( options.top ) {
+	tb.appendChild(tr=document.createElement('tr'));
+	tr.appendChild(Cell('System',1,'MonitorDataHeader'));
+	tr.appendChild(Cell('State',1,'MonitorDataHeader'));
+	tr.appendChild(Cell('Requested',1,'MonitorDataHeader'));
+
+	this.hvState   = FSMItem('lbWeb.LHCb_LHC_HV',this.logger,true);
+	this.hvRequest = StyledItem('lbWeb.LHCb_LHC_HV_Info.requestedState',null,null);
+	
+	tb.appendChild(tr=document.createElement('tr'));
+	tr.appendChild(Cell('LHCb HV &amp; LV',1,'MonitorDataHeader'));
+	tr.appendChild(this.hvState);
+	tr.appendChild(this.hvRequest);
+	tr.appendChild(this.hvState.lock);
+	this.hvState.lock.className = null;
+	this.appendChild(tb);
+      }
+
+      tb = document.createElement('tbody');
+      tooltips.set(tab,'High voltage state of the subdetectors');
+      tb.className  = 'MonitorPage';
+      tb.height    = '120px';
+      if ( options.hv ) {
+	tb.appendChild(tr=document.createElement('tr'));
+	tr.appendChild(Cell('High Voltage',6,'Arial12pt'));
+      }
+      if ( options.hv_legend ) {
+	tb.appendChild(tr=document.createElement('tr'));
+	tr.appendChild(cell=Cell('Subdetector',1,'MonitorDataHeader'));
+	tr.appendChild(cell=Cell('State',1,'MonitorDataHeader'));
+	tr.appendChild(cell=Cell('Request',1,'MonitorDataHeader'));
+	cell.style.width = '20%';
+	tr.appendChild(Cell(this.split ? 'HV State Side A / C' : 'HV State',2,'MonitorDataHeader'));
+      }
+      this.addHV(tb);
+      this.appendChild(tb);
+      
+      tb = document.createElement('tbody');
+      tooltips.set(tb,'Low voltage state of the subdetectors');
+      tb.className  = 'MonitorPage';
+      tb.height    = '120px';
+      if ( options.lv ) {
+	tb.appendChild(tr=document.createElement('tr'));
+	tr.appendChild(Cell('Low Voltage',6,'Arial12pt'));
+      }
+      if ( options.lv_legend ) {
+	tb.appendChild(tr=document.createElement('tr'));
+	tr.appendChild(Cell('Subdetector',1,'MonitorDataHeader'));
+	tr.appendChild(Cell('State',1,'MonitorDataHeader'));
+	tr.appendChild(cell=Cell('Request',1,'MonitorDataHeader'));
+	tr.appendChild(Cell('LV State Side A / Side C',2,'MonitorDataHeader'));
+      }
+      this.addLV(tb);
+      this.appendChild(tb);
+      return this;
+    };
+
+    tab.build = function(header_style) {
+      return this.buildTable({style:header_style,top:true,hv:true,hv_legend:true,lv:true,lv_legend:true});
+    };
+
+    tab.subscribe_j = lhcb.widgets.subscribeItem;
+
+    tab.subscribe_i = function(provider,typ,nam) {
+      this.subscribe_j(provider, this[typ+'LHC'+nam]);
+      this.subscribe_j(provider, this[typ+'LHCRQ'+nam]);
+      this.subscribe_j(provider, this[typ+nam]);
+      this.subscribe_j(provider, this[typ+'A'+nam]);
+      this.subscribe_j(provider, this[typ+'C'+nam]);
+    };
+    tab.subscribe = function(provider) {
+      this.subscribe_i(provider, 'HV', 'VELO');
+      this.subscribe_i(provider, 'HV', 'TT');
+      this.subscribe_i(provider, 'HV', 'IT');
+      this.subscribe_i(provider, 'HV', 'OT');
+      this.subscribe_i(provider, 'HV', 'RICH1');
+      this.subscribe_i(provider, 'HV', 'RICH2');
+      this.subscribe_i(provider, 'HV', 'PRS');
+      this.subscribe_i(provider, 'HV', 'ECAL');
+      this.subscribe_i(provider, 'HV', 'HCAL');
+      this.subscribe_i(provider, 'HV', 'MUON');
+      this.subscribe_i(provider, 'HV', 'HRC');
+
+      this.subscribe_i(provider, 'LV', 'VELO');
+      this.subscribe_i(provider, 'LV', 'TT');
+      this.subscribe_i(provider, 'LV', 'IT');
+      this.subscribe_i(provider, 'LV', 'RICH1');
+      this.subscribe_i(provider, 'LV', 'RICH2');
+      if ( this['hvState']  )  provider.subscribeItem(this.hvState);
+      if ( this['hvRequest'] ) provider.subscribeItem(this.hvRequest);
+    };
+
+    return tab;
+  };
+
+
+  /** SystemSummary class
+   *
+   *  @author M.Frank
+   */
+  lhcb.widgets.SystemSummary = function(options) {
+    var tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var tr = document.createElement('tr');
+    var split = options.split;
+    var sys = options.system;
+    var cell;
+    tab.className = tb.className   = 'MonitorPage';
+    tab.style.height = tb.style.height = '100%';
+    if ( options.style ) {
+      var tit = options.title;
+      if ( !tit ) tit = 'VELO Subsystem State';
+      if ( options.rowing ) 
+	tr.appendChild(cell=Cell(tit,5,options.style));
+      else 
+	tr.appendChild(Cell(tit,4,options.style));
+      tb.appendChild(tr);
+      tr = document.createElement('tr');
+    }
+    if ( options.legend ) {
+      if ( options.rowing ) tr.appendChild(cell=Cell('',1,null));
+      if ( split ) {
+	tr.appendChild(cell=Cell('Side A',2,'MonitorDataHeader'));
+	tr.appendChild(cell=Cell('Side C',2,'MonitorDataHeader'));
+	tb.appendChild(tr);
+      }
+    }
+    tab.subscriptions=[];
+    tab.addSystem = function(system,name) {
+      tr = document.createElement('tr');
+      if ( options.rowing ) tr.appendChild(cell=Cell(name,1,'MonitorDataHeader'));
+      if ( split ) {
+	this[name+'A'] = FSMItem('lbWeb.'+system+'A_'+name,options.logger,true);
+	this[name+'C'] = FSMItem('lbWeb.'+system+'C_'+name,options.logger,true);
+	tr.appendChild(this[name+'A']);
+	tr.appendChild(this[name+'A'].lock);
+	this[name+'A'].style.width = '30%';
+	tr.appendChild(this[name+'C']);
+	tr.appendChild(this[name+'C'].lock);
+	this[name+'C'].style.width = '30%';
+	this.subscriptions.push(this[name+'A']);
+	this.subscriptions.push(this[name+'C']);
+      }
+      else {
+	this[name]  = FSMItem('lbWeb.'+system+'_'+name,options.logger,true);
+	tr.appendChild(this[name]);
+	tr.appendChild(this[name].lock);
+	this[name].style.width = '30%';
+	this.subscriptions.push(this[name]);
+      }
+      return tr;
+    };
+    for(var i=0; i<options.items.length;++i)
+      tb.appendChild(tab.addSystem(sys,options.items[i]));
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      for(var i=0; i<this.subscriptions.length;++i)
+	provider.subscribeItem(this.subscriptions[i]);
+    };
+    return tab;
+  };
+
+  /** Online widgets. DAQ efficiency
+   *
+   *  @author M.Frank
+   */
+  lhcb.widgets.DAQEfficiency = function(options) {
+    var tr, tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var type = options.efficiency_type;
+    if ( !type ) type = 'Lumi';
+    tab.className  = tb.className = 'MonitorPage';
+    
+    tooltips.set(tb,'Run efficiency summary normalized to<br> '+type+' of datataking during this fill.');
+    tb.height    = '120px';
+    if ( options.style ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Efficiency normalized to '+type,3,options.style));
+    }
+    if ( options.legend ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('HV Ready',   1,'MonitorDataHeader'));
+      tr.appendChild(Cell('VELO IN',    1,'MonitorDataHeader'));
+      tr.appendChild(Cell('DAQ stopped',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Dead time',  1,'MonitorDataHeader'));
+    }
+    tab.hv      = StyledItem('lbWeb.LHCbEfficiency.Results'+type+'.HV',null,'%7.2f %%');
+    tab.velo    = StyledItem('lbWeb.LHCbEfficiency.Results'+type+'.VELO',null,'%7.2f %%');
+    tab.daq     = StyledItem('lbWeb.LHCbEfficiency.Results'+type+'.DAQ',null,'%7.2f %%');
+    tab.dead    = StyledItem('lbWeb.LHCbEfficiency.Results'+type+'.DAQLiveTime',null,'%7.2f %%');
+    tab.total   = StyledItem('lbWeb.LHCbEfficiency.'+type+'Total',null,'%7.2f %%');
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(tab.hv);
+    tr.appendChild(tab.velo);
+    tr.appendChild(tab.daq);
+    tr.appendChild(tab.dead);
+    tr.appendChild(tab.total);
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.hv);
+      provider.subscribeItem(this.velo);
+      provider.subscribeItem(this.daq);
+      provider.subscribeItem(this.dead);
+      provider.subscribeItem(this.total);
+    };
+    return tab;
+  };
+
+  /** Online widgets. L0DU monitor
+   *
+   *  @author M.Frank
+   */
+  lhcb.widgets.L0DURateMonitor = function(options) {
+    var tb, tr, cell, tab = document.createElement('table');
+    
+    tab.className  = 'MonitorPage';
+    tb = document.createElement('tbody');
+    tooltips.set(tb,'Trigegr counters from the L0 Decision Unit (L0DU)');
+    tb.className  = 'MonitorPage';
+    if ( options.style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('L0 Decision Unit trigger counters',4,options.style));
+      tb.appendChild(tr);
+    }
+    if ( options.legend ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('Trigger channel',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Number of Triggers',1,'MonitorDataHeader'));
+      //tr.appendChild(Cell('Avg.rate [Hz]',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Inst.Rate [Hz]',1,'MonitorDataHeader'));
+      tb.appendChild(tr);
+    }
+    tab.nTrigChan = StyledItem('lbWeb.Monitor_L0DU_1.Rates.nTrigChannels',null,null);
+    tab.nTrigTot  = StyledItem('lbWeb.Monitor_L0DU_1.Rates.nTrigTot',null,null);
+    tab.nBC       = StyledItem('lbWeb.Monitor_L0DU_1.nBC',null,null);
+    
+    tab.addRow = function(name) {
+      var name_col;
+      var tr = document.createElement('tr');
+      tr.appendChild(name_col=Cell(name,1,'MonitorDataHeader'));
+      name_col.style.width = '40%';
+
+      tr.nTriggers = document.createElement('td');
+      tr.instRate  = document.createElement('td');
+      tr.nTriggers.style.textAlign = 'right';
+      tr.instRate.style.textAlign = 'right';
+      tr.instRate.innerHTML = '--';
+
+      tr.nTriggers.style.width = '30%';
+      tr.instRate.style.width = '30%';
+
+      tr.appendChild(tr.nTriggers);
+      tr.appendChild(tr.instRate);
+      return tr;
+    };
+    tab.trg_rows = new Array();
+    for(var i=0; i<32; ++i) {
+      tab.trg_rows.push(tab.addRow('Channel '+(i+1)));
+      tb.appendChild(tab.trg_rows[i]);
+    }
+    tab.appendChild(tb);
+
+    tb = document.createElement('tbody');
+    tb.className  = 'MonitorPage';
+    tb.appendChild(tab.trg_total=tab.addRow('Total'));
+    tab.trg_total.nTriggers.className = 'MonitorDataHeader';
+    tab.trg_total.instRate.className = 'MonitorDataHeader';
+    //tab.trg_total.avgRate.className = 'MonitorDataHeader';
+    tab.appendChild(tb);
+
+    tab.nTrigChan.tab = tab;
+    tab.last_readings = null;
+    tab.curr_readings = null;
+    tab.last_time = 0;
+    tab.curr_time = null;
+
+    tab.nTrigChan.display = function(data) {
+      var v = data[1].split(' | ',20);
+      var val, diff, freq;
+      var tot = 0, last_tot;
+      var tab = this.tab;
+      var len = v.length>tab.trg_rows.length ? tab.trg_rows.length : v.length;
+      if ( tab.curr_readings ) {
+	tab.last_readings = tab.curr_readings;
+	tab.last_time = tab.curr_time;
+      }
+      tab.curr_time = (new Date()).getTime();
+      tab.curr_readings = new Array();
+      diff = (tab.curr_time-tab.last_time)/1000;
+      for(var i=0; i<len;++i) {
+	val = parseInt(v[i]);
+	tab.trg_rows[i].nTriggers.innerHTML = v[i];
+	tab.curr_readings[i] = val;
+	if ( tab.last_readings ) {
+	  freq = (val-tab.last_readings[i])/diff;
+	  tab.trg_rows[i].instRate.innerHTML = sprintf('%10.2f Hz',freq);
+	}
+	tot = tot + val;
+      }
+      if ( tab.last_readings ) {
+	last_tot = parseInt(tab.trg_total.nTriggers.innerHTML);
+	freq = (tot-last_tot)/diff;
+	tab.trg_total.instRate.innerHTML = sprintf('%10.2f Hz',freq);
+      }
+      tab.trg_total.nTriggers.innerHTML = tot;
+    };
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.nTrigChan);
+      provider.subscribeItem(this.nTrigTot);
+      provider.subscribeItem(this.nBC);
+    };
+
+    return tab;
+  };
+
+  /** Online widgets. ODIN Rate monitor
+   *
+   *  @author M.Frank
+   */
+  lhcb.widgets.ODINRateMonitor = function(options) {
+    var tb, tr, cell, tab = document.createElement('table');
+    
+    tab.className  = 'MonitorPage';
+    tb = document.createElement('tbody');
+    tooltips.set(tb,'Trigger counters from ODIN');
+    tb.className  = 'MonitorPage';
+    if ( options.style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('ODIN trigger counters',4,options.style));
+      tb.appendChild(tr);
+    }
+    if ( options.legend ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('Event type',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Triggers',1,'MonitorDataHeader'));
+      //tr.appendChild(Cell('Triggers',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Inst. rate [Hz]',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Run rate [Hz]',1,'MonitorDataHeader'));
+
+      tb.appendChild(tr);
+    }
+    tab.nTriggersL = StyledItem('lbWeb.LHCb_RunInfo.TFC.triggerRates.nTriggersL',null,'%10.0f');
+    //tab.nTriggersU = StyledItem('lbWeb.LHCb_RunInfo.TFC.triggerRates.nTriggersU',null,'%10.0f');
+    tab.names = StyledItem('lbWeb.LHCb_RunInfo.TFC.triggerRates.names',null,null);
+    tab.rates = StyledItem('lbWeb.LHCb_RunInfo.TFC.triggerRates.rates',null,'%10.2f');
+    tab.runRates = StyledItem('lbWeb.LHCb_RunInfo.TFC.triggerRates.runRates',null,'%10.2f');
+
+    tab.appendChild(tb);
+
+    tab.trg_row = new Object();
+
+    tab.names.tab = tab;
+    tab.names.display = function(data) {
+      var td, tr, v = data[1].split(' | ',20);
+      var upda = false;
+      var tab = this.tab;
+      tab.trg_rows = v;
+      for(var i=0; i<v.length; ++i) {
+	if ( !tab.trg_row[v[i]] )  {
+	  var st = '';
+	  if ( v[i].indexOf('AllCalib')>=0 ) st = 'MonitorDataHeader';
+	  else if ( v[i].indexOf('Physics_Total')>=0 ) st = 'MonitorDataHeader';
+	  else if ( v[i].indexOf('Physics_Accepted')>=0 ) st = 'MonitorDataHeader';
+	  else if ( v[i].indexOf('AllHLT_Accepted')>=0 ) st = 'MonitorDataHeader';
+
+	  tab.trg_row[v[i]] = document.createElement('tr');
+	  tr = tab.trg_row[v[i]];
+	  tr.col_name    = Cell(v[i],1,'MonitorDataHeader');
+	  tr.col_trL     = document.createElement('td');
+	  //tr.col_trU     = document.createElement('td');
+	  tr.col_runRate = document.createElement('td');
+	  tr.col_rate    = document.createElement('td');
+	  tr.col_trL.className = st;
+	  tr.col_rate.className = st;
+	  tr.col_runRate.className = st;
+	  tr.col_trL.style.textAlign = 'right';
+	  tr.col_rate.style.textAlign = 'right';
+	  tr.col_runRate.style.textAlign = 'right';
+	  
+	  tr.appendChild(tr.col_name);
+	  tr.appendChild(tr.col_trL);
+	  //tr.appendChild(tr.col_trU);
+	  tr.appendChild(tr.col_rate);
+	  tr.appendChild(tr.col_runRate);
+	  upda = true;
+	}
+      }
+      if ( upda ) {
+	var n;
+	var tb_tot = document.createElement('tbody');
+	var tb_acc = document.createElement('tbody');
+	var tb_cal = document.createElement('tbody');
+	if ( tab.odin_body_total  ) tab.deleteElementById('odin_body_total');
+	if ( tab.odin_body_accept ) tab.deleteElementById('odin_body_accept');
+	if ( tab.odin_body_calib  ) tab.deleteElementById('odin_body_calib');
+	tab.odin_body_total = tb_tot;
+	tab.odin_body_accept = tb_acc;
+	tab.odin_body_total = tb_cal;
+	for(var i=0; i<tab.trg_rows.length; ++i) {
+	  n = tab.trg_rows[i];
+	  if ( n.indexOf('_Total')>0 ) {
+	    tr = tab.trg_row[n];
+	    tb_tot.appendChild(tr);
+	  }
+	}
+	tb_acc.appendChild(Cell('ODIN accepted triggers',4,'Arial12pt'));
+	tb_cal.appendChild(Cell('Calibration triggers',4,'Arial12pt'));
+	for(var i=0; i<tab.trg_rows.length; ++i) {
+	  n = tab.trg_rows[i];
+	  var id = n.indexOf('Calib');
+	  if ( n.indexOf('_Accepted')>0 && id<0 ) {
+	    tr = tab.trg_row[n];
+	    tb_acc.appendChild(tr);
+	  }
+	  else if ( id>= 0 ) {
+	    tr = tab.trg_row[n];
+	    tb_cal.appendChild(tr);
+	  }
+	}
+	tab.appendChild(tb_tot);
+	tab.appendChild(tb_acc);
+	tab.appendChild(tb_cal);
+      }
+      return this;
+    };
+
+    tab.nTriggersL.tab = tab;
+    tab.nTriggersL.display = function(data) {
+      var v = data[1].split(' | ',20);
+      var t = this.tab;
+      if ( t.trg_rows.length == v.length )  {
+	var r = t.trg_row;
+	var k = t.trg_rows;
+	for(var i=0; i<v.length; ++i) {
+	  r[k[i]]['col_trL'].innerHTML = v[i];
+	}
+      }
+    };
+    /*
+    tab.nTriggersU.tab = tab;
+    tab.nTriggersU.display = function(data) {
+      var v = data[1].split(' | ',20);
+      var t = this.tab;
+      if ( t.trg_rows.length == v.length )  {
+	var r = t.trg_row;
+	var k = t.trg_rows;
+	for(var i=0; i<v.length; ++i) {
+	  r[k[i]]['col_trU'].innerHTML = v[i];
+	}
+      }
+    };
+    */
+    tab.rates.tab = tab;
+    tab.rates.display = function(data) {
+      var v = data[1].split(' | ',20);
+      var t = this.tab;
+      if ( t.trg_rows.length == v.length )  {
+	var r = t.trg_row;
+	var k = t.trg_rows;
+	var fmt = t.rates.format;
+	for(var i=0; i<v.length; ++i) {
+	  var f = parseFloat(v[i]);
+	  r[k[i]].col_rate.innerHTML = sprintf(fmt,f);
+	}
+      }
+    };
+
+    tab.runRates.tab = tab;
+    tab.runRates.display = function(data) {
+      var v = data[1].split(' | ',20);
+      var t = this.tab;
+      var fmt = t.runRates.format;
+      if ( t.trg_rows.length == v.length )  {
+	var r = t.trg_row;
+	var k = t.trg_rows;
+	for(var i=0; i<v.length; ++i) {
+	  var f = parseFloat(v[i]);
+	  r[k[i]].col_runRate.innerHTML = sprintf(fmt,f);
+	}
+      }
+    };
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.names);
+      provider.subscribeItem(this.nTriggersL);
+      //provider.subscribeItem(this.nTriggersU);
+      provider.subscribeItem(this.rates);
+      provider.subscribeItem(this.runRates);
+    };
+
+    return tab;
+  };
+
+  /** Online widgets. HLT Rate monitor
+   *
+   *  @author M.Frank
+   */
+  lhcb.widgets.HLTRateMonitor = function(options) {
+    var tb, tr, cell, tab = document.createElement('table');
+    
+    tab.className  = 'MonitorPage';
+    tb = document.createElement('tbody');
+    tooltips.set(tb,'HLT trigger counters');
+    tb.className  = 'MonitorPage';
+    if ( options.style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('HLT Trigger counters',3,options.style));
+      tb.appendChild(tr);
+    }
+    if ( options.legend ) {
+      tr = document.createElement('tr');
+      tr.appendChild(cell=Cell('Event Type',    1,'MonitorDataHeader'));
+      cell.style.width = '40%';
+      tr.appendChild(cell=Cell('Triggers Incl.',1,'MonitorDataHeader'));
+      cell.style.width = '30%';
+      tr.appendChild(cell=Cell('Triggers Excl.',1,'MonitorDataHeader'));
+      cell.style.width = '30%';
+      tb.appendChild(tr);
+    }
+    tab.update_totals = function(data) {
+      this.data = parseFloat(data);
+      tab.totalHandler();
+      return data;
+    };
+    tab.BeamGasEx = StyledItem('lbWeb.LHCB_STATS.BeamGasEx',null,'%10.2f Hz');
+    tab.BeamGasIn = StyledItem('lbWeb.LHCB_STATS.BeamGasIn',null,'%10.2f Hz');
+    tab.LumiEx    = StyledItem('lbWeb.LHCB_STATS.LumiEx',null,'%10.2f Hz');
+    tab.LumiIn    = StyledItem('lbWeb.LHCB_STATS.LumiIn',null,'%10.2f Hz');
+    tab.MBiasEx   = StyledItem('lbWeb.LHCB_STATS.MBiasEx',null,'%10.2f Hz');
+    tab.MBiasIn   = StyledItem('lbWeb.LHCB_STATS.MBiasIn',null,'%10.2f Hz');
+    tab.PhysEx    = StyledItem('lbWeb.LHCB_STATS.PhysEx',null,'%10.2f Hz');
+    tab.PhysIn    = StyledItem('lbWeb.LHCB_STATS.PhysIn',null,'%10.2f Hz');
+    tab.RandEx    = StyledItem('lbWeb.LHCB_STATS.RandEx',null,'%10.2f Hz');
+    tab.RandIn    = StyledItem('lbWeb.LHCB_STATS.RandIn',null,'%10.2f Hz');
+
+    tab.BeamGasEx.conversion = tab.update_totals;
+    tab.BeamGasIn.conversion = tab.update_totals;
+    tab.LumiEx.conversion    = tab.update_totals;
+    tab.LumiIn.conversion    = tab.update_totals;
+    tab.MBiasEx.conversion   = tab.update_totals;
+    tab.MBiasIn.conversion   = tab.update_totals;
+    tab.PhysEx.conversion    = tab.update_totals;
+    tab.PhysIn.conversion    = tab.update_totals;
+    tab.RandEx.conversion    = tab.update_totals;
+    tab.RandIn.conversion    = tab.update_totals;
+
+    tab.BeamGasEx.style.textAlign = 'right';
+    tab.BeamGasIn.style.textAlign = 'right';
+    tab.LumiEx.style.textAlign    = 'right';
+    tab.LumiIn.style.textAlign    = 'right';
+    tab.MBiasEx.style.textAlign   = 'right';
+    tab.MBiasIn.style.textAlign   = 'right';
+    tab.PhysEx.style.textAlign    = 'right';
+    tab.PhysIn.style.textAlign    = 'right';
+    tab.RandEx.style.textAlign    = 'right';
+    tab.RandIn.style.textAlign    = 'right';
+
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('Physics',1,'MonitorDataHeader'));
+    tr.appendChild(tab.PhysIn);
+    tr.appendChild(tab.PhysEx);
+    tb.appendChild(tr);
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('Min.Bias',1,'MonitorDataHeader'));
+    tr.appendChild(tab.MBiasIn);
+    tr.appendChild(tab.MBiasEx);
+    tb.appendChild(tr);
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('Lumi',1,'MonitorDataHeader'));
+    tr.appendChild(tab.LumiIn);
+    tr.appendChild(tab.LumiEx);
+    tb.appendChild(tr);
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('Beam Gas',1,'MonitorDataHeader'));
+    tr.appendChild(tab.BeamGasIn);
+    tr.appendChild(tab.BeamGasEx);
+    tb.appendChild(tr);
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('Random',1,'MonitorDataHeader'));
+    tr.appendChild(tab.RandIn);
+    tr.appendChild(tab.RandEx);
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('Total',1,'MonitorDataHeader'));
+    tr.appendChild(tab.totalIn=Cell('0',1,'MonitorDataHeader'));
+    tr.appendChild(tab.totalEx=Cell('0',1,'MonitorDataHeader'));
+    tab.totalIn.style.textAlign = 'right';
+    tab.totalEx.style.textAlign = 'right';
+    tb.appendChild(tr);
+
+    tab.totalHandler = function() {
+      var fEx = 0.0, fIn = 0.0;
+      if ( tab.BeamGasEx.data ) fEx = fEx + tab.BeamGasEx.data;
+      if ( tab.LumiEx.data    ) fEx = fEx + tab.LumiEx.data;
+      if ( tab.MBiasEx.data   ) fEx = fEx + tab.MBiasEx.data;
+      if ( tab.PhysEx.data    ) fEx = fEx + tab.PhysEx.data;
+      if ( tab.RandEx.data    ) fEx = fEx + tab.RandEx.data;
+      if ( tab.BeamGasIn.data ) fIn = fIn + tab.BeamGasIn.data;
+      if ( tab.LumiIn.data    ) fIn = fIn + tab.LumiIn.data;
+      if ( tab.MBiasIn.data   ) fIn = fIn + tab.MBiasIn.data;
+      if ( tab.PhysIn.data    ) fIn = fIn + tab.PhysIn.data;
+      if ( tab.RandIn.data    ) fIn = fIn + tab.RandIn.data;
+      tab.totalIn.innerHTML = sprintf(tab.RandIn.format,fIn);
+      tab.totalEx.innerHTML = sprintf(tab.RandEx.format,fEx);
+    };
+
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.BeamGasEx);
+      provider.subscribeItem(this.BeamGasIn);
+      provider.subscribeItem(this.LumiEx);
+      provider.subscribeItem(this.LumiIn);
+      provider.subscribeItem(this.MBiasEx);
+      provider.subscribeItem(this.MBiasIn);
+      provider.subscribeItem(this.PhysEx);
+      provider.subscribeItem(this.PhysIn);
+      provider.subscribeItem(this.RandEx);
+      provider.subscribeItem(this.RandIn);
+    };
+
+    return tab;
+  };
+    
+  /** Online widgets. Trigger setup and TCKs
+   *
+   *  @author M.Frank
+   */
+  lhcb.widgets.TriggerSetup = function(options) {
+    var td, tr, tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    tab.className  = tb.className = 'MonitorPage';
+    tb.cellSpacing = tb.cellPadding = 0;
+
+    tab.l0Type        = StyledItem('lbWeb.LHCb_RunInfo.Trigger.L0Type',null, null);
+    tab.HLTType       = StyledItem('lbWeb.LHCb_RunInfo.Trigger.HLTType',null, null);
+    tab.TCK           = StyledItem('lbWeb.LHCb_RunInfo.Trigger.TCKLabel',null, null);
+
+    if ( options.style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('Trigger setup',options.legend ? 2 : 1,options.style));
+      tb.appendChild(tr);
+    }
+
+    tr = document.createElement('tr');
+    if ( options.legend ) tr.appendChild(Cell('L0 Configuration:',null,'MonitorDataHeader'));
+    tr.appendChild(tab.l0Type);
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    if ( options.legend ) tr.appendChild(Cell('HLT Configuration:',null,'MonitorDataHeader'));
+    tr.appendChild(tab.HLTType);
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    if ( options.legend ) tr.appendChild(Cell('TCK:',1,'MonitorDataHeader'));
+    tr.appendChild(tab.TCK);
+    tb.appendChild(tr);
+
+    tab.appendChild(tb);
+    tooltips.set(tab,'Trigger setup and status<br>Click to go to DAQ page');
+    tab.onclick = lhcb.widgets.goto_lhcb_daq_page;
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(tab.TCK);
+      provider.subscribeItem(tab.l0Type);
+      provider.subscribeItem(tab.HLTType);
+    };
+    return tab;
+  };
+
+
+  /** Online widgets. DAQ efficiency
+   *
+   *  @author M.Frank
+   */
+  lhcb.widgets.DeferredHLT = function(options) {
+    var c, tr, tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    tab.className  = tb.className = 'MonitorPage';
+    
+    tooltips.set(tb,'Deferred HLT activity for this fill.');
+    tb.height    = '120px';
+    if ( 1||options.style ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('HLT defer activity monitor:',3,options.style));
+    }
+    if ( options.legend ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Disk:',          1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Blocks total',   1,'MonitorDataHeaderRight'));
+      tr.appendChild(Cell('Blocks free',    1,'MonitorDataHeaderRight'));
+      tr.appendChild(Cell('Usage',          1,'MonitorDataHeaderRight'));
+      tr.appendChild(Cell('Files',          1,'MonitorDataHeaderRight'));
+    }
+    tab.MEPRate      = StyledItem('lbWeb.LHCb_RunInfoDeferredHLT.MEPRxMEPRate','Text-Right','%d Hz');
+    tab.MEPRateData  = 1.0;
+    tab.MEPRate.parent = tab;    
+    tab.MEPRate.conversion = function(data) { 
+      var par = this.parent;
+      var v   = par.OverflowPercentData;
+      var r   = parseFloat(data);
+      par.MEPRateData = v; 
+      par.OverflowRate.innerHTML = sprintf('%7.0f Hz ',r*v/100.0);
+      par.MooreRate.innerHTML    = sprintf('%7.0f Hz', r*(100.0-v)/100.);
+      par.MoorePercent.innerHTML = sprintf('%7.2f %%',100.0-v);
+      return data;
+    };
+    tab.MooreRate    = StyledItem('None','Text-Right',null);
+    tab.MoorePercent = StyledItem('None','Text-Right',null);
+    tab.OverflowRate = StyledItem('None','Text-Right',null);
+    tab.OverflowPercent = StyledItem('lbWeb.LHCb_RunInfoDeferredHLT.MEPRxOverflowPerc','Text-Right','%7.2f %%');
+    tab.OverflowPercent.parent = tab;
+    tab.OverflowPercentData = 0.0;
+    tab.OverflowPercent.conversion = function(data) {
+      this.parent.OverflowPercentData = parseFloat(data); 
+      return data;
+    };
+
+    tab.DiskSize     = StyledItem('lbWeb.LHCb_RunInfoDeferredHLT.DiskSize','Text-Right',null);
+    tab.DiskFree     = StyledItem('lbWeb.LHCb_RunInfoDeferredHLT.DiskFree','Text-Right',null);
+    tab.NFilesLeft   = StyledItem('lbWeb.LHCb_RunInfoDeferredHLT.NFilesLeft','Text-Right',null);
+    tab.DiskUsage    = StyledItem('None','Text-Right',null);
+    tab.DiskFreeData = 1.0;
+    tab.DiskSizeData = 1.0;
+    tab.DiskFree.parent = tab;
+    tab.DiskFree.conversion = function(data) {
+      this.parent.DiskFreeData = parseFloat(data);
+      this.parent.DiskUsage.innerHTML = 
+        sprintf('%7.4f %%',100.0*(1.0-this.parent.DiskFreeData/this.parent.DiskSizeData));
+      return data;
+    };
+    tab.DiskSize.parent = tab;
+    tab.DiskSize.conversion = function(data) { 
+      this.parent.DiskSizeData = parseFloat(data); 
+      return data;
+    };
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('',1,'Text-Right'));
+    tr.appendChild(tab.DiskSize);
+    tr.appendChild(tab.DiskFree);
+    tr.appendChild(tab.DiskUsage);
+    tr.appendChild(tab.NFilesLeft);
+    if ( options.legend ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(c=Cell('Rates:',1,   'MonitorDataHeader'));
+      tr.appendChild(c=Cell('MEPRx', 1,   'MonitorDataHeaderRight'));
+      c.style.width = '17%';
+      tr.appendChild(c=Cell('Moore', 1,   'MonitorDataHeaderRight'));
+      c.style.width = '17%';
+      tr.appendChild(c=Cell(' [%] ', 1,   'MonitorDataHeaderRight'));
+      c.style.width = '17%';
+      tr.appendChild(c=Cell('Overflow',1, 'MonitorDataHeaderRight'));
+      c.style.width = '17%';
+      tr.appendChild(c=Cell(' [%] ',   1, 'MonitorDataHeaderRight'));
+      c.style.width = '17%';
+    }
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('',1,'Text-Right'));
+    tr.appendChild(tab.MEPRate);
+    tr.appendChild(tab.MooreRate);
+    tr.appendChild(tab.MoorePercent);
+    tr.appendChild(tab.OverflowRate);
+    tr.appendChild(tab.OverflowPercent);
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.MEPRate);
+      provider.subscribeItem(this.OverflowPercent);
+      provider.subscribeItem(this.DiskSize);
+      provider.subscribeItem(this.DiskFree);
+      provider.subscribeItem(this.NFilesLeft);
+    };
+    return tab;
+  };
+
+  /** Online widgets. Base class to show subdetector FSM groups
+   *
+   *  @author M.Frank
+   */
+  lhcb.widgets.SubdetectorSystem = function(options) {
+    var tab = document.createElement('table');
+    tab.subscriptions=[];
+    tab.logger = options.logger;
+    tab.className = 'MonitorPage';
+
+    tab.addFSMRow = function(names) {
+      var tr = document.createElement('tr');
+      for(var i=0; i<names.length; ++i) {
+	var name = names[i];
+	if ( name ) {
+	  var cell = Cell(name,1,'MonitorDataHeader');
+	  var item = FSMItem('lbWeb.'+name,this.logger,true);
+	  this[name] = item;
+	  tr.appendChild(cell);
+	  tr.appendChild(item);
+	  tr.appendChild(item.lock);
+	  this.subscriptions.push(item);
+	}
+	else {
+	  tr.appendChild(Cell('',3,null));
+	}
+      }
+      return tr;
+    };
+
+    tab.body = function(title) {
+      var tb = document.createElement('tbody');
+      tb.className   = 'MonitorPage';
+      if ( options.style ) {
+	var tr = document.createElement('tr');
+	tr.appendChild(Cell(title,6,options.style));
+	tb.appendChild(tr);
+      }
+      this.appendChild(tb);
+      return tb;
+    };
+
+    tab.subscribe = function(provider) {
+      for(var i=0; i<this.subscriptions.length;++i)
+	provider.subscribeItem(this.subscriptions[i]);
+    };
+    
+    return tab;
+  };
+
+
+  lhcb.widgets.SubdetectorPage = function(name, msg) {
+    var table       = document.createElement('table');
+    table.body      = document.createElement('tbody');
+    table.system    = name;
+    table.title     = name;
+    table.messages  = msg;
+    table.provider  = null;
+    table.logger    = null;
+    if ( table.system.indexOf(' ')>0 ) table.system = name.substr(0,name.indexOf(' '));
+    table.add = function() {
+      var td = document.createElement('td'), tr = document.createElement('tr');
+      td.setAttribute('colSpan',2);
+      tr.appendChild(td);
+      this.body.appendChild(tr);
+      return td;
+    };
+    table.className = table.body.className = 'MonitorOuterFrame';
+    table.display = table.add();
+    table.logDisplay = table.add();
+    table.appendChild(table.body);
+    table.subscriptions = new Array();
+
+    table.hvSummary = function(options) {
+      var tab = lhcb.widgets.HVSummary(this.logger);
+      tab.split = true;
+      if ( options.nosplit ) tab.split = false;
+      tab.system = this.system;
+      if ( options.system ) tab.system = options.system;
+      tab.addHV = function(tb) {};
+      tab.addLV = function(tb) {};
+      if ( options.hv )  {
+	tab.addHV = function(tb) { 
+	  if ( this.system instanceof Array ) {
+	    for(var i=0; i<this.system.length; ++i)
+	      tb.appendChild(this.addState(this.system[i], this.split, 'HV', 'HV'));
+	  }
+	  else {
+	    tb.appendChild(this.addState(this.system, this.split, 'HV', 'HV'));
+	  }
+	};
+      }
+      if ( options.lv )  {
+	tab.addLV = function(tb) { 
+	  if ( this.system instanceof Array ) {
+	    for(var i=0; i<this.system.length; ++i)
+	      tb.appendChild(this.addState(this.system[i], this.split, 'LV', 'DCS_Local'));
+	  }
+	  else {
+	    tb.appendChild(this.addState(this.system, this.split, 'LV', 'DCS_Local'));
+	  }
+	};
+      }
+      return tab.buildTable({style:'Arial12pt',top:false,hv:options.hv,hv_legend:options.hv,lv:options.lv});
+    };
+
+    table.addRow = function(items) {
+      var mx=1, tb = this.tbody, tr, td, item;
+      tb.appendChild(tr=document.createElement('tr'));
+      for(var j=0; j<items.length; ++j) {
+	if ( items[j] instanceof Array ) {
+	  if ( items[j].length>mx ) mx = items[j].length;
+	} 
+      }
+      for(var i=0; i<items.length; ++i) {
+	tr.appendChild(td=document.createElement('td'));
+	td.style.verticalAlign = 'top';
+	if ( items[i] instanceof Array ) {
+	  for(var k=0, len=items[i].length; k<len; ++k) {
+	    td.appendChild(items[i][k]);
+	    this.subscriptions.push(items[i][k]);
+	    if ( k == len-1 ) {
+	      td.style.verticalAlign = 'bottom';
+	      continue;
+	    }
+	    tb.appendChild(tr=document.createElement('tr'));
+	    tr.appendChild(td=document.createElement('td'));
+	    td.style.verticalAlign = 'top';
+	  }
+	} 
+	else {
+	  td.rowSpan = mx;
+	  td.appendChild(items[i]);
+	  this.subscriptions.push(items[i]);
+	}
+      }
+    };
+
+    /// Empty placeholder
+    table.attachWidgets = function() {  };
+    table.beforeComment = function() {  };
+
+    table.build = function(options) {
+      var tab = document.createElement('table');
+      var tb = document.createElement('tbody');
+      var t1, tb1, tr1, td1, cell, d = new Date();
+
+      tab.className = tb.className = 'MonitorInnerFrame';
+
+      this.heading = document.createElement('tr');
+      this.heading.appendChild(td=document.createElement('td'));
+      td.style.width = '100%';
+      td.colSpan = 3;
+      td.appendChild(t1=document.createElement('table'));
+      t1.appendChild(tb1=document.createElement('tbody'));
+      t1.width  = '100%';
+
+      tb1.appendChild(tr1=document.createElement('tr'));
+      tr1.appendChild(td1=document.createElement('td'));
+      if ( options.logo ) {
+	td1.appendChild(cell=Cell(options.logo,null,null));
+	if ( options.logo_url ) {
+	  cell.url = options.logo_url;
+	  cell.onclick = function() { document.location = this.url; };
+	}
+      }
+      tr1.appendChild(this.head_date=Cell(d.toString(),1,'MonitorTinyHeader'));
+      this.head_date.id = 'current_time';
+      this.head_date.textAlign = 'right';
+      cell = Cell(this.title+'&nbsp;'+lhcb_online_picture(),1,'MonitorBigHeader');
+      cell.style.textAlign = 'right';
+      cell.onclick = function() { document.location = "http://lhcb.cern.ch";};
+      tr1.appendChild(cell);
+      if ( options.tips ) {
+	tooltips.set(this.heading,options.tips);
+      }
+      tb.appendChild(this.heading);
+
+      this.timerHandler = function() {document.getElementById('current_time').innerHTML = (new Date()).toString(); };
+      setInterval(this.timerHandler,2000);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(td=document.createElement('td'));
+      td.style.width = '55%';
+      td.appendChild(this.lhc_header=lhcb.widgets.LHC_header());
+      tr.appendChild(td=document.createElement('td'));
+      td.appendChild(this.run_header=lhcb.widgets.Det_Run_header('LHCb',this.logger));
+      td.width = '45%';
+
+      this.lhc_header.style.height = '60px';
+      this.run_header.style.height = '60px';
+      this.subscriptions.push(this.lhc_header);
+      this.subscriptions.push(this.run_header);
+
+
+      tb.appendChild(tr=document.createElement('tr'));
+      // Left half of the display
+      tr.appendChild(td=document.createElement('td'));
+      td.appendChild(t1=document.createElement('table'));
+      t1.appendChild(this.left=document.createElement('tbody'));
+      t1.className = this.left.className = 'MonitorPage';
+      t1.style.border = this.left.style.border = 'none';
+      this.left.style.verticalAlign = 'top';
+
+      // Right hand of the display
+      tr.appendChild(td=document.createElement('td'));
+      td.appendChild(t1=document.createElement('table'));
+      t1.appendChild(this.right=document.createElement('tbody'));
+      t1.className = this.right.className = 'MonitorPage';
+      t1.style.border = this.right.style.border = 'none';
+      this.right.style.verticalAlign = 'top';
+
+      this.left.addItem = function(item) {
+	var tr1, td1;
+	this.appendChild(tr1=document.createElement('tr'));
+	tr1.appendChild(td1=document.createElement('td'));
+	td1.style.verticalAlign = 'top';
+	td1.appendChild(item);
+	this.parent.subscriptions.push(item);
+	return td1;
+      };
+      this.left.addSpacer = function(height) {
+	var tr1, td1;
+	this.appendChild(tr1=document.createElement('tr'));
+	tr1.appendChild(td1=document.createElement('td'));
+	if ( height ) td1.style.height=height;
+	return td1;
+      };
+      this.right.addItem = this.left.addItem;
+      this.right.addSpacer = this.left.addSpacer;
+      this.left.parent = this.right.parent = this;
+
+      this.tbody = tb;
+      this.attachWidgets();
+      this.beforeComment();
+
+      // Finally add suggestions text
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('',null,null));
+      tr.appendChild(Cell('Comments and suggestions to M.Frank CERN/LHCb',2,'MonitorTinyHeader'));
+
+      tb.appendChild(tr);
+      tab.appendChild(tb);
+      this.display.appendChild(tab);
+      return this;
+    };
+
+    table.subscribe = function() {
+      for(var i=0; i<this.subscriptions.length; ++i)
+	this.subscriptions[i].subscribe(this.provider);
+    };
+    return table;
+  };
+
+  lhcb.widgets.SubdetectorPage.start = function(creator) {
+    var msg  = the_displayObject['messages'];
+    var body = document.getElementsByTagName('body')[0];
+    var tips = init_tooltips(body);
+    var display = creator(msg);
+
+    body.appendChild(display);
+    body.className = 'MainBody';
+    if ( display.options.title ) setWindowTitle(display.options.title);
+    if ( msg > 0 ) display.logger = new OutputLogger(display.logDisplay, 200, LOG_INFO, 'StatusLogger');
+    else           display.logger = new OutputLogger(display.logDisplay,  -1, LOG_INFO, 'StatusLogger');
+    display.provider = new DataProvider(display.logger);
+    display.provider.topic = '/topic/status';
+    display.build(display.options);
+    display.subscribe();
+    display.provider.start();
+    body.style.cursor = 'default';
+    return display;
+  };
+
+  lhcb.widgets.SubdetectorPage.stop = function(creator) {
+    dataProviderReset();
+  };
+
+  ///=====================================================================================
+  ///
+  ///  VELO Widgets
+  ///
+  ///=====================================================================================
+  lhcb.widgets.velo = new Object();
+
+  /** VELO web widgets
+   *
+   *  @author  M.Frank
+   */
+  lhcb.widgets.velo.positionSummary = function(options) {
+    var tb, tr, cell, tab = document.createElement('table');
+    tab.className  = 'MonitorPage';
+    tb = document.createElement('tbody');
+    tooltips.set(tb,'Velo Position');
+    tb.className  = 'MonitorPage';
+    tb.height    = '120px';
+    if ( options.style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('Velo Position',4,options.style));
+      tb.appendChild(tr);
+    }
+    if ( options.legend ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('Position',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('XA',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('XC',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Y',1,'MonitorDataHeader'));
+      tb.appendChild(tr);
+    }
+    if ( options.tips ) {
+      tooltips.set(tb,options.tips);
+    }
+    if ( options.onclick ) {
+      tb.onclick = options.onclick; 
+    }
+    tab.veloState   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Specific.VELO.Position', null, null);
+    //tab.veloOpening = StyledItem('lbWeb.veloMove_Xle.Comm.ResolPos',null,'%7.2f mm');
+    tab.veloOpening = StyledItem('lbWeb.veloMove_Xle.Potm.Av',null,'%7.2f mm');
+    //tab.veloCenter  = StyledItem('lbWeb.veloMove_Xri.Comm.ResolPos',null,'%7.2f mm');
+    tab.veloCenter  = StyledItem('lbWeb.veloMove_Xri.Potm.Av',null,'%7.2f mm');
+    //tab.veloY       = StyledItem('lbWeb.veloMove_Yy.Comm.ResolPos',null,'%7.2f mm');
+    tab.veloY       = StyledItem('lbWeb.veloMove_Yy.Potm.Av',null,'%7.2f mm');
+    tr = document.createElement('tr');
+    tr.appendChild(tab.veloState);
+    tr.appendChild(tab.veloOpening);
+    tr.appendChild(tab.veloCenter);
+    tr.appendChild(tab.veloY);
+    tb.appendChild(tr);
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.veloState);
+      provider.subscribeItem(this.veloOpening);
+      provider.subscribeItem(this.veloCenter);
+      provider.subscribeItem(this.veloY);
+    };
+    return tab;
+  };
+
+  /** VELO web widgets
+   *
+   *  @author  M.Frank
+   */
+  lhcb.widgets.velo.moveSummary = function(options) {
+    var tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var tr = document.createElement('tr');
+    var cell;
+    tab.className = tb.className   = 'MonitorPage';
+  
+    tab.injectionAllowed = StyledItem('lbWeb.veloMove_RdBool.InjectionAllowed', null, null);
+    tab.movableAllowed   = StyledItem('lbWeb.veloMove_RdBool.MovableDevicesAllowed', null, null);
+    tab.safeBeam         = StyledItem('lbWeb.veloMove_RdBool.SafeStableBeam', null, null);
+    if ( options.style ) {
+      tr.appendChild(Cell('Velo Move Status',4,options.style));
+      tb.appendChild(tr);
+      tr = document.createElement('tr');
+    }
+    if ( options.legend ) {
+      tr.appendChild(cell=Cell('Injection Allowed',1,'MonitorDataHeader'));
+      tr.appendChild(cell=Cell('Movable Devices Allowed',1,'MonitorDataHeader'));
+      tr.appendChild(cell=Cell('Safe Stable Beam',1,'MonitorDataHeader'));
+      tb.appendChild(tr);
+    }
+    if ( options.tips ) {
+      tooltips.set(tb,options.tips);
+    }
+    if ( options.onclick ) {
+      tb.onclick = options.onclick; 
+    }
+    tr = document.createElement('tr');
+    tr.appendChild(tab.injectionAllowed );
+    tab.injectionAllowed.style.width = '33%';
+    tr.appendChild(tab.movableAllowed);
+    tab.movableAllowed.style.width = '33%';
+    tr.appendChild(tab.safeBeam);
+    tab.safeBeam.style.width = '33%';
+    tb.appendChild(tr);
+    tab.appendChild(tb);
+  
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.injectionAllowed);
+      provider.subscribeItem(this.movableAllowed);
+      provider.subscribeItem(this.safeBeam);      
+    };
+    return tab;
+  };
+
+  /** VELO web widgets
+   *
+   *  @author  M.Frank
+   */
+  lhcb.widgets.velo.vacuumSummary = function(options) {
+    var tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var tr = document.createElement('tr');
+
+    tab.className = tb.className   = 'MonitorPage';
+    tab.ap411 = StyledItem('lbWeb.veloVac_Barotrons.AP411.Pressure', null, "%7.1f");
+    tab.dp411 = StyledItem('lbWeb.veloVac_Barotrons.DP411.Pressure', null, "%7.1e");
+    tab.pe411 = StyledItem('lbWeb.veloVac_Meters.PE411.Vacuum', null, "%7.1e");
+    tab.pe412 = StyledItem('lbWeb.veloVac_Meters.PE412.Vacuum', null, "%7.1e");
+    tab.pe421 = StyledItem('lbWeb.veloVac_Meters.PE421.Vacuum', null, "%7.1e");
+    tab.pe422 = StyledItem('lbWeb.veloVac_Meters.PE422.Vacuum', null, "%7.1e");
+    if ( options.style ) {
+      tr.appendChild(Cell('Velo Vacuum Status: Pressures in [mbar]',4,options.style));
+      tb.appendChild(tr);
+      tr = document.createElement('tr');
+    }
+    if ( options.legend ) {
+      tr.appendChild(Cell('AP411',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('DP411',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('PE411',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('PE412',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('PE421',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('PE422',1,'MonitorDataHeader'));
+      tb.appendChild(tr);
+    }
+    if ( options.tips ) {
+      tooltips.set(tb,options.tips);
+    }
+    if ( options.onclick ) {
+      tb.onclick = options.onclick; 
+    }
+    tr = document.createElement('tr');
+    tr.appendChild(tab.ap411);
+    tab.ap411.style.width = '17%';
+    tr.appendChild(tab.dp411);
+    tab.dp411.style.width = '17%';
+    tr.appendChild(tab.pe411);
+    tab.pe411.style.width = '17%';
+    tr.appendChild(tab.pe412);
+    tab.pe412.style.width = '17%';
+    tr.appendChild(tab.pe421);
+    tab.pe421.style.width = '17%';
+    tr.appendChild(tab.pe422);
+    tab.pe422.style.width = '17%';
+    tb.appendChild(tr);
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.ap411);
+      provider.subscribeItem(this.dp411);
+      provider.subscribeItem(this.pe411);
+      provider.subscribeItem(this.pe412);
+      provider.subscribeItem(this.pe421);
+      provider.subscribeItem(this.pe422);
+    };
+    return tab;
+  };
+
+  /** VELO web widgets
+   *
+   *  @author  M.Frank
+   */
+  lhcb.widgets.velo.infrastructureSummary = function(options) {
+    var tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var tr = document.createElement('tr');
+    var cell;
+
+    tab.className = tb.className   = 'MonitorPage';
+    tab.motion = FSMItem('lbWeb.VELO_MOTION',options.logger,true);
+    tab.vacuum = FSMItem('lbWeb.VELO_VACUUM',options.logger,true);
+    //tab.cool   = FSMItem('lbWeb.VELO_COOLING',options.logger,true);
+    tab.coolA  = FSMItem('lbWeb.VEA_COOL',options.logger,true);
+    tab.coolC  = FSMItem('lbWeb.VEC_COOL',options.logger,true);
+    tab.setPA  = StyledItem('lbWeb.VTCS_TL_AC101.SETPOINT',null,'%7.1f <sup>o</sup>C');
+    tab.setPC  = StyledItem('lbWeb.VTCS_TR_AC101.SETPOINT',null,'%7.1f <sup>o</sup>C');
+    tab.T0A    = StyledItem('lbWeb.VeloDpFct_Aside_P_NTC2.Average',null,'%7.1f <sup>o</sup>C');
+    tab.T1A    = StyledItem('lbWeb.VeloDpFct_Aside_P_NTC3.Average',null,'%7.1f <sup>o</sup>C');
+    tab.T0C    = StyledItem('lbWeb.VeloDpFct_Cside_P_NTC2.Average',null,'%7.1f <sup>o</sup>C');
+    tab.T1C    = StyledItem('lbWeb.VeloDpFct_Cside_P_NTC3.Average',null,'%7.1f <sup>o</sup>C');
+    if ( options.style ) {
+      tr.appendChild(Cell('Velo Infrastructure State',8,options.style));
+      tb.appendChild(tr);
+      tr = document.createElement('tr');
+    }
+    if ( options.legend ) {
+      tr.appendChild(cell=Cell('Vacuum',2,'MonitorDataHeader'));
+      cell.style.width='15%';
+      tr.appendChild(cell=Cell('A<BR>Side',1,'MonitorDataHeader'));
+      cell.style.width='10%';
+      cell.rowSpan = 2;
+      tr.appendChild(cell=Cell('Cooling',2,'MonitorDataHeader'));
+      cell.style.width='15%';
+      tr.appendChild(Cell('SetPoint',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Avg.NTC0',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Avg.NTC1',1,'MonitorDataHeader'));
+      //tr.appendChild(Cell('Cooling',2,'MonitorDataHeader'));
+      tb.appendChild(tr);
+      tr = document.createElement('tr');
+    }
+    if ( options.tips ) {
+      tooltips.set(tb,options.tips);
+    }
+    if ( options.onclick ) {
+      tb.onclick = options.onclick; 
+    }
+    //tr.appendChild(tab.cool);
+    //tr.appendChild(tab.cool.lock);
+
+    tr.appendChild(tab.vacuum);
+    tr.appendChild(tab.vacuum.lock);
+    tab.vacuum.lock.style.width = '2%';
+    tr.appendChild(tab.coolA);
+    tr.appendChild(tab.coolA.lock);
+    tab.coolA.lock.style.width = '2%';
+    tr.appendChild(tab.setPA);
+    tr.appendChild(tab.T0A);
+    tr.appendChild(tab.T1A);
+
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    if ( options.legend ) {
+      tr.appendChild(Cell('Motion',2,'MonitorDataHeader'));
+      tr.appendChild(cell=Cell('C<BR>Side',1,'MonitorDataHeader'));
+      cell.rowSpan = 2;
+      tr.appendChild(Cell('Cooling',2,'MonitorDataHeader'));
+      tr.appendChild(Cell('SetPoint',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Avg.NTC0',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Avg.NTC1',1,'MonitorDataHeader'));
+      tb.appendChild(tr);
+      tr = document.createElement('tr');
+    }
+    tr.appendChild(tab.motion);
+    tr.appendChild(tab.motion.lock);
+    tr.appendChild(tab.coolC);
+    tr.appendChild(tab.coolC.lock);
+    tr.appendChild(tab.setPC);
+    tr.appendChild(tab.T0C);
+    tr.appendChild(tab.T1C);
+    tr.appendChild(cell=Cell('&nbsp;',2,null));
+    tb.appendChild(tr);
+
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      provider.subscribeItem(this.motion);
+      provider.subscribeItem(this.vacuum);
+      //provider.subscribeItem(this.cool);
+      provider.subscribeItem(this.coolA);
+      provider.subscribeItem(this.setPA);
+      provider.subscribeItem(this.T0A);
+      provider.subscribeItem(this.T1A);
+      provider.subscribeItem(this.coolC);
+      provider.subscribeItem(this.setPC);
+      provider.subscribeItem(this.T0C);
+      provider.subscribeItem(this.T1C);
+    };
+    return tab;
+  };
+
+  /** VELO web widgets
+   *
+   *  @author  M.Frank
+   */
+  lhcb.widgets.velo.LVBoards = function(options) {
+    var tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var tr, cell;
+
+    tab.logger = options.logger;
+    tab.className = tb.className   = 'MonitorPage';
+    if ( options.style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('Velo LV Board State',3,options.style));
+      tb.appendChild(tr);
+    }
+    if ( options.legend ) {
+      tr = document.createElement('tr');
+      tr.appendChild(cell=Cell('Board',1,'MonitorDataHeader'));
+      tr.appendChild(cell=Cell('SideA',2,'MonitorDataHeader'));
+      tr.appendChild(cell=Cell('SideC',2,'MonitorDataHeader'));
+      tb.appendChild(tr);
+    }
+    tab.subscriptions=[];
+    tab.addBoard = function(name) {
+      var cell, tr = document.createElement('tr');
+      tr.appendChild(cell=Cell(name,1,'MonitorDataHeader'));
+      cell.style.width='30%';
+      this['A_'+name] = FSMItem('lbWeb.VELOA_'+name,this.logger,true);
+      this['C_'+name] = FSMItem('lbWeb.VELOC_'+name,this.logger,true);
+
+      tr.appendChild(this['A_'+name]);
+      tr.appendChild(this['A_'+name].lock);
+
+      tr.appendChild(this['C_'+name]);
+      tr.appendChild(this['C_'+name].lock);
+      this.subscriptions.push(this['A_'+name]);
+      this.subscriptions.push(this['C_'+name]);
+      return tr;
+    };
+
+    tb.appendChild(tab.addBoard('DCS_LV_PS'));
+    tb.appendChild(tab.addBoard('DCS_LV_EB'));
+    tb.appendChild(tab.addBoard('DCS_LV_EB00'));
+    tb.appendChild(tab.addBoard('DCS_LV_EB01'));
+    tb.appendChild(tab.addBoard('DCS_LV_EB02'));
+    tb.appendChild(tab.addBoard('DCS_LV_EB03'));
+    tb.appendChild(tab.addBoard('DCS_LV_EB04'));
+    tb.appendChild(tab.addBoard('DCS_LV_EB05'));
+    tb.appendChild(tab.addBoard('DCS_LV_EB06'));
+    tb.appendChild(tab.addBoard('DCS_LV_EB07'));
+    tb.appendChild(tab.addBoard('DCS_LV_EB08'));
+    tb.appendChild(tab.addBoard('DCS_LV_EB09'));
+
+    if ( options.style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('Velo HV Board State',3,options.style));
+      tb.appendChild(tr);
+    }
+    if ( options.legend ) {
+      tr = document.createElement('tr');
+      tr.appendChild(cell=Cell('Board',1,'MonitorDataHeader'));
+      tr.appendChild(cell=Cell('SideA',2,'MonitorDataHeader'));
+      tr.appendChild(cell=Cell('SideC',2,'MonitorDataHeader'));
+      tb.appendChild(tr);
+    }
+    tb.appendChild(tab.addBoard('HV_BOARD00'));
+    tb.appendChild(tab.addBoard('HV_BOARD01'));
+    tb.appendChild(tab.addBoard('HV_BOARD02'));
+    tb.appendChild(tab.addBoard('HV_BOARD03'));
+    tb.appendChild(tab.addBoard('HV_BOARD04'));
+    tb.appendChild(tab.addBoard('HV_BOARD05'));
+
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      for(var i=0; i<this.subscriptions.length;++i) {
+	provider.subscribeItem(this.subscriptions[i]);
+      }
+    };
+    return tab;
+  };
+
+  ///=====================================================================================
+  ///
+  ///  DSS Widgets
+  ///
+  ///=====================================================================================
+  lhcb.widgets.DSS = new Object();
+
+  /** DSS web widgets
+   *
+   *  @author  M.Frank
+   */
+  lhcb.widgets.DSS.MixedWaterStatus = function(options) {
+    var tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var tr, cell;
+
+    tab.logger = options.logger;
+    tab.subscriptions=[];
+    tab.className = 'MonitorPage';
+    tb.className   = 'MonitorPage';
+    if ( options.style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell('DSS Mixed water temperature',6,options.style));
+      tb.appendChild(tr);
+    }
+    tab.d1d2 = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_BARRACK_Mixed_Water_D1D2_In.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+    tab.d3A = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_BARRACK_Mixed_Water_D3A_In.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+    tab.d3B = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_BARRACK_Mixed_Water_D3B_In.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+
+    tab.bunker = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_BUNKER_Mixed_Water_Cooling.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+    tab.caloA = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_CALO_Mixed_Water_Aside.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+    tab.caloC = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_CALO_Mixed_Water_Cside.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+
+    tab.uxaA = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_UXA~A_Mixed_Water_Cooling.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+    tab.uxaB1 = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_UXA~B1_Mixed_Water_Cooling.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+    tab.uxaC = StyledItem('lbWeb.dip/LHCb/DSS/PT_TE_UXA~C_Mixed_Water_Cooling.__DIP_DEFAULT__',null,'%7.2f <sup>o</sup>C');
+
+    tab.subscriptions.push(tab.d1d2);
+    tab.subscriptions.push(tab.d3A);
+    tab.subscriptions.push(tab.d3B);
+    tab.subscriptions.push(tab.bunker);
+    tab.subscriptions.push(tab.caloA);
+    tab.subscriptions.push(tab.caloC);
+    tab.subscriptions.push(tab.uxaA);
+    tab.subscriptions.push(tab.uxaB1);
+    tab.subscriptions.push(tab.uxaC);
+    
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('D1/D2:',1,null));
+    tr.appendChild(tab.d1d2);
+    tr.appendChild(Cell('D3-A:',1,null));
+    tr.appendChild(tab.d3A);
+    tr.appendChild(Cell('D3-B:',1,null));
+    tr.appendChild(tab.d3B);
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('Bunker:',1,null));
+    tr.appendChild(tab.bunker);
+    tr.appendChild(Cell('Calo-A:',1,null));
+    tr.appendChild(tab.caloA);
+    tr.appendChild(Cell('Calo-C:',1,null));
+    tr.appendChild(tab.caloC);
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('UXA-A:',1,null));
+    tr.appendChild(tab.uxaA);
+    tr.appendChild(Cell('UXA-B1:',1,null));
+    tr.appendChild(tab.uxaB1);
+    tr.appendChild(Cell('UXA-C:',1,null));
+    tr.appendChild(tab.uxaC);
+    tb.appendChild(tr);
+
+    tab.appendChild(tb);
+
+    tab.subscribe = function(provider) {
+      for(var i=0; i<this.subscriptions.length;++i) {
+	provider.subscribeItem(this.subscriptions[i]);
+      }
+    };
+    return tab;
+  };
+
+  /** DSS web widgets
+   *
+   *  @author  M.Frank
+   */
+  lhcb.widgets.DSS.CaVPlantStatus = function(sys, options) {
+    var tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var tr, cell;
+
+    tab.subscriptions=[];
+    tab.logger = options.logger;
+    tab.className = tb.className = 'MonitorPage';
+    if ( options.style ) {
+      tr = document.createElement('tr');
+      tr.appendChild(Cell(sys+' Cooling plant status',4,options.style));
+      tb.appendChild(tr);
+    }
+
+    tab.OTspecific = function(tb) {
+      this.outletPressure = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Parameters.param03',null,'%7.2f bar');
+      this.outletTemperature = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Parameters.param04',null,'%7.2f <sup>o</sup>C');
+      this.mixedWaterIn  = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param13',null,'%7.2f <sup>o</sup>C');
+      this.mixedWaterOut = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param14',null,'%7.2f <sup>o</sup>C');
+      this.subscriptions.push(this.outletPressure);
+      this.subscriptions.push(this.outletTemperature);
+      this.subscriptions.push(this.mixedWaterIn);
+      this.subscriptions.push(this.mixedWaterOut);
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(cell=Cell('Outlet',2,'MonitorDataHeader'));
+      tr.appendChild(Cell('Press:',1,null));
+      tr.appendChild(this.outletPressure);
+      tr.appendChild(Cell('Temp:',1,null));
+      tr.appendChild(this.outletTemperature);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Mixed water',2,'MonitorDataHeader'));
+      tr.appendChild(Cell('In:',1,null));
+      tr.appendChild(this.mixedWaterIn);
+      tr.appendChild(Cell('Out:',1,null));
+      tr.appendChild(this.mixedWaterOut);
+    };
+
+    tab.TTspecific = function(tb) {
+      this.tt_manifold_temp01 = StyledItem('lbWeb.CaV/TtPlant.Actual.Measurements.param11',null,'%7.2f &#186;C');
+      this.tt_manifold_temp02 = StyledItem('lbWeb.CaV/TtPlant.Actual.Measurements.param12',null,'%7.2f &#186;C');
+      this.tt_manifold_temp03 = StyledItem('lbWeb.CaV/TtPlant.Actual.Measurements.param13',null,'%7.2f &#186;C');
+      this.tt_manifold_temp04 = StyledItem('lbWeb.CaV/TtPlant.Actual.Measurements.param14',null,'%7.2f &#186;C');
+      this.tt_c6f14flow       = StyledItem('lbWeb.CaV/TtPlant.Actual.Measurements.param18',null,'%7.2f l/h');
+      this.mixedWaterIn  = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param16',null,'%7.2f <sup>o</sup>C');
+      this.mixedWaterOut = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param17',null,'%7.2f <sup>o</sup>C');
+      this.mixedWaterFlow = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param15',null,'%7.1f l/h');
+
+      this.subscriptions.push(this.tt_manifold_temp01);
+      this.subscriptions.push(this.tt_manifold_temp02);
+      this.subscriptions.push(this.tt_manifold_temp03);
+      this.subscriptions.push(this.tt_manifold_temp04);
+      this.subscriptions.push(this.tt_c6f14flow);
+      this.subscriptions.push(this.mixedWaterIn);
+      this.subscriptions.push(this.mixedWaterOut);
+      this.subscriptions.push(this.mixedWaterFlow);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(cell=Cell('Manifold<br>Temperatures',1,'MonitorDataHeader'));
+      cell.rowSpan = "2";
+      tr.appendChild(Cell('Temp.1:',1,null));
+      tr.appendChild(this.tt_manifold_temp01);
+      tr.appendChild(Cell('Temp.2:',1,null));
+      tr.appendChild(this.tt_manifold_temp02);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Temp.3:',1,null));
+      tr.appendChild(this.tt_manifold_temp03);
+      tr.appendChild(Cell('Temp.4:',1,null));
+      tr.appendChild(this.tt_manifold_temp04);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Mixed water',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('In:',1,null));
+      tr.appendChild(this.mixedWaterIn);
+      tr.appendChild(Cell('Out:',1,null));
+      tr.appendChild(this.mixedWaterOut);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Flow',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('C6F14:',1,null));
+      tr.appendChild(this.tt_c6f14flow);
+      tr.appendChild(Cell('Mixed:',1,null));
+      tr.appendChild(this.mixedWaterFlow);
+    };
+
+    tab.ITspecific = function(tb) {
+      this.it_manifold_temp01 = StyledItem('lbWeb.CaV/ItPlant.Actual.Measurements.param01',null,'%7.2f &#186;C');
+      this.it_manifold_temp02 = StyledItem('lbWeb.CaV/ItPlant.Actual.Measurements.param02',null,'%7.2f &#186;C');
+      this.it_c6f14flow = StyledItem('lbWeb.CaV/ItPlant.Actual.Measurements.param06',null,'%7.2f l/h');
+      this.mixedWaterIn  = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param04',null,'%7.2f <sup>o</sup>C');
+      this.mixedWaterOut = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param05',null,'%7.2f <sup>o</sup>C');
+      this.mixedWaterFlow = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.Measurements.param03',null,'%7.1f l/h');
+      this.subscriptions.push(this.it_manifold_temp01);
+      this.subscriptions.push(this.it_manifold_temp02);
+      this.subscriptions.push(this.it_c6f14flow);
+      this.subscriptions.push(this.mixedWaterIn);
+      this.subscriptions.push(this.mixedWaterOut);
+      this.subscriptions.push(this.mixedWaterFlow);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(cell=Cell('Manifold',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('Temp.1:',1,null));
+      tr.appendChild(this.it_manifold_temp01);
+      tr.appendChild(Cell('Temp.2:',1,null));
+      tr.appendChild(this.it_manifold_temp02);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Mixed water',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('In:',1,null));
+      tr.appendChild(this.mixedWaterIn);
+      tr.appendChild(Cell('Out:',1,null));
+      tr.appendChild(this.mixedWaterOut);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(Cell('Flow',1,'MonitorDataHeader'));
+      tr.appendChild(Cell('C6F14:',1,null));
+      tr.appendChild(this.it_c6f14flow);
+      tr.appendChild(Cell('Mixed:',1,null));
+      tr.appendChild(this.mixedWaterFlow);
+    };
+
+    if      ( sys=='Ot'   ) tab.specific = tab.OTspecific;
+    else if ( sys == 'It' ) tab.specific = tab.ITspecific;
+    else if ( sys == 'Tt' ) tab.specific = tab.TTspecific;
+    if ( tab.specific ) {
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(cell=document.createElement('td'));
+      cell.colSpan = 6;
+      var t1, tb1;
+      cell.appendChild(t1=document.createElement('table'));
+      t1.appendChild(tb1=document.createElement('tbody'));
+      t1.className = tb1.className = 'MonitorInnerFrame';
+      tab.specific(tb1);
+    }
+
+    tab.fault    = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.fault',null,null);
+    tab.alarm    = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.alarm',null,null);
+    tab.fault.conversion = tab.alarm.conversion = function(data) 
+    { return data=="FALSE" ? lhcb.widgets.green_smiley() : lhcb.widgets.red_smiley();  };
+    tab.setLEDs = function(data) {
+      if ( this.leds ) {
+	for(var i=4; i<12; ++i) {
+	  var m = data&(1<<i);
+	  var l = this.leds[i-4];
+	  l.style.color = data&(1<<i) ? 'black' : 'white';
+	  l.bgColor     = data&(1<<i) ? '#00CC99' : '#333333';
+	  l.innerHTML   = data&(1<<i) ? 'ON' : 'OFF';
+	}
+      }
+    };
+    tab.runState = StyledItem('lbWeb.CaV/'+sys+'Plant.Actual.status',null,null);
+    tab.runState.parent = tab;
+    tab.runState.conversion = function(data) {
+      var t='';
+      var v0 = parseInt(data);
+      var v = v0&0xF;
+      for(var i=0; i<4; ++i) {
+	var m = v&(1<<i);
+	if ( 0 != m ) {
+	  if ( (v^m) != 0 ) {
+	    this.className = 'FwDEAD';
+	    this.parent.setLEDs(v0);
+	    return 'Invalid ('+data+')';
+	  }
+	  else if ( i == 2 )  {
+	    this.className = 'FwStateOKPhysics';
+	    this.parent.setLEDs(v0);
+	    return 'Run mode';
+	  }
+	  else if ( i == 0 )  {
+	    this.className = 'FwStateAttention3';
+	    this.parent.setLEDs(v0);
+	    return 'System OFF';
+	  }
+	  else {
+	    this.className = 'FwDEAD';
+	    this.parent.setLEDs(v0);
+	    if ( i == 0      ) return 'System OFF';
+	    else if ( i == 1 ) return 'Stand-by mode';
+	    else if ( i == 3 ) return 'Recovering';
+	  }
+	}
+      }
+      this.className = 'FwDEAD';
+      return 'Invalid:'+data;
+    };
+
+    tab.subscriptions.push(tab.runState);
+
+    tab.subscriptions.push(tab.fault);
+    tab.subscriptions.push(tab.alarm);
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(Cell('State:',1,null));
+    tr.appendChild(tab.runState);
+    tr.appendChild(Cell('Alarms:',1,null));
+    tr.appendChild(tab.alarm);
+    tr.appendChild(Cell('Faults:',1,null));
+    tr.appendChild(tab.fault);
+
+
+    if ( options.showStatus ) {
+
+      if ( options.style ) {
+	tr = document.createElement('tr');
+	tr.appendChild(Cell('Plant status bits:',4,options.style));
+	tb.appendChild(tr);
+      }
+      tab.leds = [];
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(cell=Cell('Leak flow rate:',2,null));
+      tr.appendChild(cell=Cell('',1,'Text-Center'));
+      tab.leds.push(cell);
+      tr.appendChild(cell=Cell('Leak search',2,null));
+      tr.appendChild(cell=Cell('',1,'Text-Center'));
+      tab.leds.push(cell);
+
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(cell=Cell('Safety heater:',2,null));
+      tr.appendChild(cell=Cell('',1,'Text-Center'));
+      tab.leds.push(cell);
+      tr.appendChild(cell=Cell('Reserved:',2,null));
+      tr.appendChild(cell=Cell('',1,'Text-Center'));
+      tab.leds.push(cell);
+
+      var r1, r2;
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(r1=cell=Cell('Maintenance:',2,null));
+      tr.appendChild(cell=Cell('',1,'Text-Center'));
+      tab.leds.push(cell);
+      tr.appendChild(r2=cell=Cell('TCR Control:',2,null));
+      tr.appendChild(cell=Cell('',1,'Text-Center'));
+      tab.leds.push(cell);
+
+      // Reserved ones...
+      tab.leds.push(cell=Cell('',1,'Text-Center'));
+      tab.leds.push(cell=Cell('',1,'Text-Center'));
+      tab.leds.push(cell=Cell('',1,'Text-Center'));
+    }
+
+    tab.appendChild(tb);
+    tab.subscribe = function(provider) {
+      for(var i=0; i<this.subscriptions.length;++i) {
+	provider.subscribeItem(this.subscriptions[i]);
+      }
+    };
+    return tab;
+
+  };
+
+  if ( _debugLoading ) alert('Script lhcb.display.widgets.cpp loaded successfully');
+}

@@ -420,12 +420,12 @@ Ext.app.Preferences.Appearance = Ext.extend(Ext.app.Panel, {
         id: 	this.owner.id
       },
       fields:    ['id', 'name', 'pathtothumbnail', 'pathtofile'],
-      root: 	'Images',
-      url: 	'http://lbcomet.cern.ch/Online/Desktop/config/themes.json'
+      root: 	'images',
+      url: 	'/Online/Desktop/config/themes.json'
     });
 
-    this.store.on('load', function(store, records){
-      if(records)   {
+    this.store.on('load', function(store, records)   {
+      if ( records )   {
         this.defaults.setTitle('Themes Available (' + records.length + ')');
         var id = this.app.styles.theme.id;
         if(id){
@@ -462,6 +462,7 @@ Ext.app.Preferences.Appearance = Ext.extend(Ext.app.Panel, {
     
     this.defaults = new Ext.Panel({
       title: 		'Default Themes',
+      header:           true,
       bodyStyle: 	'padding:10px',
       id: 		'pref-theme-view',
       titleCollapse: 	true,
@@ -627,8 +628,8 @@ Ext.app.Preferences.Background = Ext.extend(Ext.app.Panel,  {
       },
       fields: ['id', 'name', 'pathtothumbnail', 'pathtofile'],
       id: 	'id',
-      root: 	'Images',
-      url: 	'http://lbcomet.cern.ch/Online/Desktop/config/wallpapers.1280x1024.json'
+      root: 	'images',
+      url: 	'/Online/Desktop/config/wallpapers.1280x1024.json'
     });
   
     this.store.on('load', function(store, records){

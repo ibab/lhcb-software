@@ -38,7 +38,7 @@ if ( !_lhcb().desktop ) {
 				 height:          this.url.size.height,
 				 initHidden:      true,
 				 html:            lhcb.desktop.make_iframe(this.url.src),
-				 iconCls:         this.url.cls,
+				 iconCls:         this.url.iconCls,
 				 shim:            false,
 				 animCollapse:    false,
 				 autoScroll:      true,
@@ -54,9 +54,8 @@ if ( !_lhcb().desktop ) {
 	this.id             = url.nick;
         this.tooltip        = url.nick+'\n'+url.title,
 	this.createWindow   = function(src) {this._createWin();};
-	//this.launcher       = {text:           '<img src="'+this.url.img.icon+'" width="16" height="16"/>&nbsp;&nbsp;'+this.url.title,
 	this.launcher       = {text:           this.url.title,
-			       iconCls:        this.url.cls,
+			       iconCls:        this.url.iconCls,
 			       shortcutIconCls:this.url.iconCls,
                                tooltip:        'Click to move to the requested page:\n'+this.url.title+'\n'+this.url.src,
 			       handler:        this.createWindow,
@@ -76,8 +75,8 @@ if ( !_lhcb().desktop ) {
 	  text:     'Window '+(++lhcb.desktop.menuWindowIndex),
 	  iconCls:  'bogus',
 	  handler:   this.createWindow,
-	  scope:     this,
-	  windowId:  lhcb.desktop.menuWindowIndex
+	  windowId:  lhcb.desktop.menuWindowIndex,
+	  scope:     this
 	}
       },
       _launchSize: function(title,img,items,size) {
@@ -93,59 +92,61 @@ if ( !_lhcb().desktop ) {
 	this.handler = function() { return false;  };
 	this.launcher = {
 	  text:    this.text,
+	  title:   this.text,
 	  iconCls: this.iconCls,
-	  handler: function() { return false;  },
+	  handler: this.createWindow,
+	  scope:   this,
 	  menu: {  items:  items  }
-	}
-      },
-      _launch: function(title,img,items) {
-	return this._launchSize(title,img,items,null);
-      },
-      createWindow: function(src){
+	};
+	},
+	  _launch: function(title,img,items) {
+	  this._launchSize(title,img,items,null);
+	},
+      createWindow: function(url){
 	var desktop = this.app.getDesktop();
-	var win = desktop.getWindow(src.id);
+	var win = desktop.getWindow(url.id);
 	if(!win){
 	  win = desktop.createWindow({
-          id:              src.id,
-          title:           src.title,
-	  width:           src.width,
-          height:          src.height,
-          html:            lhcb.desktop.make_iframe(src.url),
-          iconCls:         'bogus',
-          shim:            false,
-          animCollapse:    false,
-          constrainHeader: true
-			     });
+	    id:              url.id,
+		title:           url.title,
+		width:           url.size.width,
+		height:          url.size.height,
+		initHidden:      true,
+		html:            lhcb.desktop.make_iframe(url.src),
+		iconCls:         url.iconCls,
+		shim:            false,
+		animCollapse:    false,
+		autoScroll:      true,
+		//layout:          'fit',
+		constrainHeader: true
+		});
 	}
 	win.show();
       },
-      menuItemId: function(title,id,url,width,height)   {
-	var item = {
-	  id:      id,
-	  title:   title,
-	  text:    title,//lhcb.desktop._makeIcon(constants.images.bogus)+'&nbsp;&nbsp;&nbsp;'+title,
-	  url:     url,
-	  width:   width,
-	  height:  height,
-	  iconCls: 'bogus',
-	  handler: this.createWindow,
-	  scope:   this,
+      menuItemId: function(title,id,source,width,height)   {
+	var url = {
+	  id:       id,
+          src:      source,
+	  text:     title,
+	  nick:     title,
+	  title:    title,
+	  size:   { width: width, height: height },
+	  iconCls:  'bogus',
+	  handler:  this.createWindow,
+	  scope:    this,
 	  windowId: ++lhcb.desktop.menuWindowIndex,
-	  
 	  makeIcon: function(img) {
 	    this.text = _makeIcon(img)+'&nbsp;'+this.title;
 	    return this;
 	  }
 	};
-	return item;
+	return url;
       },
       menuItem: function(title,url,width,height)   {
 	return this.menuItemId(title,title,url,width,height);
       },
       menuURL: function(url)   { 
-	var item = this.menuItemId(url.title,url.nick,url.src,url.size.width,url.size.height);
-	item.cls = '';
-	return item;
+	return this.menuItemId(url.title,url.nick,url.src,url.size.width,url.size.height);
       }
     });
 

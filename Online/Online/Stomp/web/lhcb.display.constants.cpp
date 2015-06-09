@@ -1,2 +1,438 @@
-eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('V(!5b().18){3.18=t(){2.1y=(\'\'+1A.1z).5a(0,(\'\'+1A.1z).2g(\'/W/\')+7);2.2h=\'\'+1A.1z;2.59=t(){s\'v://58.i.m/57/56\'};2.1x=t(){s 2.1y};2.2e=t(){s 2.1y};V(2.2h.2g(\'/55/\')>0){2.g=t(k){s 2.1x()+\'/3.19.1j?2f=\'+k}}54{2.g=t(k){s 2.1x()+\'/3.53.1j?2f=\'+k}}2.B=t(k){s 2.2e()+\'/\'+k};2.52=t(k){s\'v://2d-2c.C.i.m/2d-2c/51/50.2a?4Z=\'+k};2.1b=t(k){s\'v://2b.i.m/2b/4Y.2a?4X=\'+k};2.4W=t(k){1w n=\'K://4V.i.m\';V(k)n=n+k;s n};2.z=t(k){s{8:k,1t:k}};2.N=t(k){s 2.z(2.B(\'15/\'+k))};2.h=t(k,1v){1w 17=4U 4T();1w n=\'15/\'+k;17.8=2.B(n+\'4S.\'+1v);17.1t=2.B(n+\'4R.\'+1v);s 17};2.6={l:2.z(2.B(\'1u/6/l.x\')),D:2.z(2.B(\'1u/6/l.x\')),1f:2.z(2.B(\'1u/6/1f.x\')),1h:2.h(\'29\',\'p\'),1S:2.h(\'4Q\',\'p\'),1U:2.h(\'4P\',\'p\'),1Q:2.h(\'4O\',\'p\'),o:2.h(\'4N\',\'p\'),1O:2.h(\'4M\',\'p\'),1h:2.h(\'29\',\'p\'),L:2.h(\'T\',\'p\'),1P:2.h(\'4L\',\'p\'),1c:2.N(\'1c.U\'),4K:2.z(\'K://28.C.i.m/28/15/4J/4I.p\'),25:2.z(\'K://C-27.C.i.m/C-27/1t/4H/4G.x\'),J:2.N(\'J.p\'),3:2.z(\'v://3.C.i.m/3/4F.p\'),4E:2.z(\'15/3-Z-26.x\'),M:2.N(\'4D.x\'),Q:2.h(\'u/4C\',\'x\'),4B:2.N(\'u/1L.U\'),P:2.h(\'1K\',\'x\'),F:2.h(\'1d\',\'p\'),Y:2.h(\'4A\',\'x\'),X:2.h(\'X\',\'p\'),4z:2.h(\'4y\',\'p\'),4x:2.h(\'4w\',\'x\'),4v:2.h(\'4u\',\'p\'),4t:2.N(\'u/4s.x\'),1I:2.h(\'4r\',\'U\'),23:2.h(\'4q-4p\',\'U\'),i:2.h(\'i-26\',\'U\'),1a:2.h(\'4o\',\'x\')};2.6.M.14={13:{5:16,4:16},12:{5:32,4:32}};2.6.25.14={13:{5:32,4:16},12:{5:4n,4:32}};2.6.3.14={13:{5:24,4:16},12:{5:48,4:32}};2.6.23.14={13:{5:4m,4:16},12:{5:4l,4:32}};2.4k={4j:{8:\'\',b:\'4i\',c:2.6.l,a:\'\',9:{5:22,4:22}},i:{8:\'v://i.m\',c:2.6.i,b:\'4h\',a:\'i-e\',d:\'l\',9:{5:O,4:I}},F:{4g:{8:\'v://i.m/F\',c:2.6.F,b:\'1d 4f\',a:\'F-e\',d:\'4e\',f:\'4d\',9:{5:O,4:I}}},3:{4c:{4b:{8:2.g(\'21\'),c:2.6.o,b:\'11/4a\',a:\'3-21-e\',d:\'r\',f:\'q\',9:{5:j,4:w}},49:{8:2.g(\'1s\'),c:2.6.o,b:\'11/47\',a:\'3-1s-e\',d:\'r\',f:\'q\',9:{5:j,4:w}},46:{8:2.g(\'20\'),c:2.6.o,b:\'11/45 44\',a:\'3-20-e\',d:\'r\',f:\'q\',9:{5:j,4:w}},43:{8:2.g(\'1Z\'),c:2.6.o,b:\'11/42 41\',a:\'3-1Z-e\',d:\'r\',f:\'q\',9:{5:j,4:w}},40:{8:2.g(\'3Z\'),c:2.6.o,b:\'3Y/3X G\',a:\'3-1s-3W-e\',d:\'r\',f:\'q\',9:{5:j,4:w}},10:{8:2.g(\'10\'),c:2.6.o,b:\'1Y/3V/1N\',a:\'3-10-e\',d:\'r\',f:\'q\',9:{5:j,4:w},1X:{8:2.g(\'3U\'),c:2.6.o,b:\'1Y/3T\',a:\'3-10-1X-e\',d:\'r\',f:\'q\',9:{5:j,4:w}}},1r:{8:2.g(\'1r\'),c:2.6.o,b:\'3S\',a:\'3-1r-e\',d:\'r\',f:\'q\',9:{5:j,4:y}},1q:{8:2.g(\'1q\'),c:2.6.o,b:\'3R\',a:\'3-1q-e\',d:\'r\',f:\'q\',9:{5:j,4:y}},1p:{8:2.g(\'1p\'),c:2.6.o,b:\'3Q\',a:\'3-1p-e\',d:\'r\',f:\'q\',9:{5:j,4:w}},1o:{8:2.g(\'1o\'),c:2.6.o,b:\'3P\',a:\'3-1o-e\',d:\'r\',f:\'q\',9:{5:j,4:w}},1n:{8:2.g(\'1n\'),c:2.6.o,b:\'3O\',a:\'3-1n-e\',d:\'r\',f:\'q\',9:{5:j,4:w}},1m:{8:2.g(\'1m\'),c:2.6.o,b:\'3N\',a:\'3-1m-e\',d:\'r\',f:\'q\',9:{5:j,4:w}}},M:{1W:{8:\'v://3M.3L.3K\',c:2.6.M,b:\'3J T R\',a:\'3-M-L-S-e\',d:\'l\',9:{5:A,4:y}},3I:{8:\'K://3H.3G/M\',c:2.6.D,b:\'3F 3E\',a:\'3-3D-e\',d:\'l\',9:{5:A,4:y}}},1W:{8:\'v://3.i.m\',c:2.6.D,b:\'T R\',a:\'3-L-S-e\',d:\'l\',9:{5:A,4:y}},3C:{8:\'v://3-Z.C.i.m/3-Z\',c:2.6.L,b:\'W T R\',a:\'3-Z-L-S-e\',d:\'3B\',f:\'3A\',9:{5:A,4:y}},3z:{8:\'K://3-1V.C.i.m/3-1V\',c:2.6.D,b:\'3y T R\',a:\'3-3x-L-S-e\',d:\'l\',9:{5:A,4:y}},J:{8:\'K://J.i.m/J/3w/3v/u\',c:2.6.D,b:\'3u\',a:\'3-J-S-e\',d:\'l\',f:\'l\',9:{5:A,4:y}},3t:{8:2.g(\'E&1T=u\'),c:2.6.1U,b:\'u 1l G\',a:\'3-1k-E-e\',d:\'3s\',f:\'3r\',9:{5:j,4:H}},3q:{8:2.g(\'E&1T=1R\'),c:2.6.1S,b:\'1R 1l G\',a:\'3p-1k-E-e\',d:\'3o\',f:\'3n\',9:{5:j,4:3m}},3l:{8:2.g(\'E\'),c:2.6.1Q,b:\'3k 1l G\',a:\'3-3j-1k-E-e\',d:\'3i\',f:\'3h\',9:{5:j,4:H}},3g:{8:2.B(\'3f/3e.1j\'),c:2.6.1P,b:\'u W 3d\',a:\'3-19-3c-e\',d:\'3b\',f:\'3a\',9:{5:39,4:w}},1i:{8:2.g(\'1i\'),c:2.6.1O,b:\'u R 1\',a:\'3-1i-e\',d:\'38\',f:\'37\',9:{5:1B,4:H}},1g:{8:2.g(\'1g\'),c:2.6.1h,b:\'1N G\',a:\'3-1g-e\',d:\'36\',f:\'35\',9:{5:j,4:34}},33:{8:2.g(\'1M\'),c:2.6.1f,b:\'31 G\',a:\'3-1M-e\',d:\'30\',f:\'2Z\',9:{5:j,4:I}},Q:{8:2.g(\'Q\'),c:2.6.Q,b:\'u 1L 2Y\',a:\'3-Q-e\',d:\'2X\',f:\'2W\',9:{5:j,4:H}},1e:{8:2.g(\'1e\'),c:2.6.o,b:\'2V\',a:\'3-1e-e\',d:\'r\',f:\'q\',9:{5:j,4:1J}},P:{8:2.g(\'P\'),c:2.6.P,b:\'1K\',a:\'3-P-e\',d:\'2U\',f:\'2T\',9:{5:A,4:1J}},2S:{8:2.g(\'F\'),c:2.6.1I,b:\'1d G\',a:\'3-F-E-e\',d:\'2R\',f:\'2Q\',9:{5:A,4:H}},Y:{8:\'v://2P.i.m/2O/\',c:2.6.Y,b:\'2N u\',a:\'3-Y-e\',d:\'2M\',f:\'2L\',9:{5:O,4:I}},1H:{8:\'v://2K.i.m/\',c:2.6.o,b:\'u 2J 1c\',a:\'3-1H-e\',d:\'l\',f:\'l\',9:{5:O,4:I}},2I:{8:\'v://X.i.m/2H.2G?2F=2E&2D=2C&2B=2A\',c:2.6.X,b:\'2z\',a:\'3-2y-e\',d:\'2x\',f:\'2w\',9:{5:O,4:I}},1G:{8:2.1b(\'2v\'),c:2.6.D,b:\'2u 1F\',a:\'3-1G-e\',d:\'l\',f:\'l\',9:{5:1D,4:y}},1E:{8:2.1b(\'2t\'),c:2.6.D,b:\'W 1F\',a:\'3-1E-e\',d:\'l\',f:\'l\',9:{5:1D,4:y}},1a:{8:2.g(\'1C\'),c:2.6.1a,b:\'u 2s 2r\',a:\'3-2q-1C\',d:\'2p\',f:\'2o\',9:{5:1B,4:H}}}};s 2}();V(2n)2m(\'2l 3.19.18.2k 2j 2i\')}',62,322,'||this|lhcb|height|width|images||src|size|nick|title|img|cls|win|iconCls|lhcb_display_url|mkImage|cern|950|name|bogus|ch||lookprod|gif|Collimators32|Collimators16|return|function|LHCb|http|700|png|800|mkAbsImage|900|lhcb_static|web|window|status|lhc|Status|820|850|twiki|https|home|dirac|mkStaticImage|1000|bcm|magnet|Page|page|Home|jpg|if|Online|indico|elog|online|velo|DAQ|large|small|iconSize|Images||obj|constants|display|alarmScreen|sls_service_url|database|LHC|collimators|gears|detstatus|wizard|page1|htm|daq|Run|cooling|muon|calo|rich|ot|st|trigger|icon|Desktop|ext|var|lhcb_comet_url|_url|location|document|770|alarms|1100|online_databases_status|databases|offline_databases_status|rundb|beams|400|BCM|Magnet|oper|HV|search|help|lookjob|FEST|options|system|lookfile|comp|home_page|motion|VELO|evdisp|bigbrother|lumi|100|beams_department||webstats|logo|statistics|mmmservices|Wizard|php|sls|webtools|op|lhcb_base_url|type|indexOf|_loc|successfully|loaded|cpp|Script|alert|_debugLoading|PvssAlarms32|PvssAlarms16|pvss|Alarms|PVSS|phydb_LHCBONR|Offline|phydb_LHCBR|INDICO32|INDICO16|meetings|Meetings|conference|detail|week|period|1l22|selCateg|py|categOverview|weekly_meetings|run|lbrundb|ELOG32|ELOG16|ELog|Shift|lblogbook|Beams32|Beams16|lhc_status|BCM32|BCM16|Collimators|Magnet32|Magnet16|Summary|OperStatus32|OperStatus16|Operations||operstatus|500|DetStatus32|DetStatus16|Page132|Page116|590|Help32|Help16|news|Displays|News|html|display_news|SdetDAQ32|SdetDAQ16|sdet|Subdetector|sdet_run_status|600|FESTDAQ32|FESTDAQ16|fest|fest_run_status|LHCbDAQ32|LHCbDAQ16|lhcb_run_status|TWiki|view|bin|computing|Computing|computing_home_page|Home32|Home16|online_home_page|dirac_launch_pad|pad|Launch|net|launchpad|launch_pad|Dirac|es|pic|lhcbweb|Cooling|MUON|CALO|RICH|OT|ST|Motion|velo_move|LV|l0status|L0|TRG|trgstatus|trg_l0status|Display|Event|daq_evdisp|Brother|Big|daq_bigbrother|Trigger||daq_trigger|Lumi|daq_lumi|subdetectors|LHC32|LHC16|Project|project|CERN|Unknown|empty|urls|160|80|64|AlarmScreen|BeamsDep|BE|Beams|Ramses_icon|ramses|CMS|cms|ATLAS|atlas|ALICE|alice|ELOG|magnet_big|Magnet_Icon|DIRAC|lhcb_online|lhcblogo|awstats_logo6|other|outlook|Icons|mail|Help|Search|LookProd|LookJob|LookFile|Options|_16x16|_32x32|Object|new|mmm|mmm_url|id|service|usr|vistars|vistar|operations_url|comet|else|frankm|RunStatus|static|lbcomet|lhcb_comet_url2|substr|_lhcb'.split('|'),0,{}))
-;
+//------------------------------------------------------------------------------------------------------------------------------------------------
+if ( !_lhcb().constants ) {
+  lhcb.constants = function() {
+    this._url = (''+document.location).substr(0,(''+document.location).indexOf('/Online/')+7);//'http://www.cern.ch/lhcbproject/online/comet/Online';
+    this._loc = ''+document.location;
+    this.lhcb_comet_url2  = function()     {    return 'https://lbcomet.cern.ch/static/RunStatus';  };
+    this.lhcb_comet_url   = function()     {    return this._url;                                  };
+    this.lhcb_base_url    = function()     {    return this._url;                                  };
+    //alert('\nDomain:'+document.domain+'\nURL:'+this._url+'\nLoc:'+this._loc+'\nComet:'+this.lhcb_comet_url()+'\nBase:'+this.lhcb_base_url()+'\n');
+
+    if ( this._loc.indexOf('/frankm/')>0 ) {
+      this.lhcb_display_url = function(name) {    return this.lhcb_comet_url()+'/lhcb.display.htm?type='+name;     };
+    }
+    else {
+      this.lhcb_display_url = function(name) {    return this.lhcb_comet_url()+'/lhcb.comet.htm?type='+name;       };
+    }
+    this.lhcb_static      = function(name) {    return this.lhcb_base_url()+'/'+name;                              };
+    this.operations_url   = function(name) {    return 'https://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr='+name; };
+    this.sls_service_url  = function(name) {    return 'https://sls.cern.ch/sls/service.php?id='+name;              };
+    this.service_now_url  = function(name) {    return 'https://cern.service-now.com/service-portal/'+name;        };
+    this.mmm_url          = function(name) {    var n = 'https://mmm.cern.ch'; if ( name ) n = n + name; return n; };
+
+    this.mkAbsImage       = function(name) {    return {src: name, icon: name};                                    };
+    this.mkStaticImage    = function(name) {    return this.mkAbsImage(this.lhcb_static('Images/'+name));          };
+    this.mkImage=function(name,ext) {
+      var obj  = new Object();
+      var n    = 'Images/'+name;
+      obj.src  = this.lhcb_static(n+'_32x32.'+ext);
+      obj.icon = this.lhcb_static(n+'_16x16.'+ext);
+      return obj;
+    };
+
+    this.images = {
+      bogus:            this.mkAbsImage(this.lhcb_static('Desktop/images/bogus.png')),
+      window:           this.mkAbsImage(this.lhcb_static('Desktop/images/bogus.png')),
+      gears:            this.mkAbsImage(this.lhcb_static('Desktop/images/gears.png')),
+      wizard:           this.mkImage('Wizard','gif'),
+      options:          this.mkImage('Options','gif'),
+      lookfile:         this.mkImage('LookFile','gif'),
+      lookjob:          this.mkImage('LookJob','gif'),
+      lookprod:         this.mkImage('LookProd','gif'),
+      search:           this.mkImage('Search','gif'),
+      wizard:           this.mkImage('Wizard','gif'),
+      home:             this.mkImage('Home','gif'),
+      help:             this.mkImage('Help','gif'),
+      database:         this.mkStaticImage('database.jpg'),
+      mail:             this.mkAbsImage('https://mmmservices.web.cern.ch/mmmservices/Images/Icons/outlook.gif'),
+      webstats:         this.mkAbsImage('https://web-statistics.web.cern.ch/web-statistics/icon/other/awstats_logo6.png'),
+
+      twiki:            this.mkStaticImage('twiki.gif'),
+      lhcb:             this.mkAbsImage('https://lhcb.web.cern.ch/lhcb/lhcblogo.gif'),
+      lhcb_online:      this.mkAbsImage('Images/lhcb-online-logo.png'),
+      dirac:            this.mkStaticImage('DIRAC.png'),
+      magnet:           this.mkImage('LHCb/Magnet_Icon','png'),
+      magnet_big:       this.mkStaticImage('LHCb/Magnet.jpg'),
+      bcm:              this.mkImage('BCM','png'),
+      lhc:              this.mkImage('LHC','gif'),
+      elog:             this.mkImage('ELOG','png'),
+      indico:           this.mkImage('indico','gif'),
+
+      alice:            this.mkImage('ALICE','gif'),
+      atlas:            this.mkImage('ATLAS','png'),
+      cms:              this.mkImage('CMS','gif'),
+
+      ramses:           this.mkStaticImage('LHCb/Ramses_icon.png'),
+      beams:            this.mkImage('Beams','jpg'),
+      beams_department: this.mkImage('BE-BeamsDep','jpg'),
+      cern:             this.mkImage('cern-logo','jpg'),
+      alarmScreen:	this.mkImage('AlarmScreen', 'png')
+    };
+    this.images.dirac.iconSize = { 
+      small: { width: 16, height: 16},
+      large: { width: 32, height: 32}
+    };
+    this.images.webstats.iconSize = { 
+      small: { width: 32, height: 16},
+      large: { width: 64, height: 32}
+    };
+    this.images.lhcb.iconSize = { 
+      small: { width: 24, height: 16},
+      large: { width: 48, height: 32}
+    };
+    this.images.beams_department.iconSize = { 
+      small: { width: 80,  height: 16},
+      large: { width: 160, height: 32}
+    };
+
+    this.urls = {
+      empty: {
+	src:       '',
+	title:     'Unknown',
+	img:       this.images.bogus,
+	nick:      '',
+	size:      {width:100,height:100}
+      },
+      cern: {
+	src:    'http://cern.ch',
+	img:    this.images.cern,
+	title:  'CERN',
+	nick:   'cern-win',
+	cls:    'bogus',
+	size:   {width:  1100,	height: 850}
+      },
+      lhc: {
+	project: {
+	  src:    'http://cern.ch/lhc',
+	  img:    this.images.lhc,
+	  title:  'LHC Project',
+	  nick:   'lhc-win',
+	  cls:    'LHC16',
+	  iconCls:'LHC32',
+	  size:   {width:  1100,	height: 850}
+	}
+      },
+      lhcb: {
+	subdetectors: {
+	  daq_lumi: {
+	    src:    this.lhcb_display_url('lumi'),
+	    img:    this.images.lookprod,
+	    title:  'DAQ/Lumi',
+	    nick:   'lhcb-lumi-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  1150,	height: 850}
+	  },
+	  daq_trigger: {
+	    src:    this.lhcb_display_url('trigger'),
+	    img:    this.images.lookprod,
+	    title:  'DAQ/Trigger',
+	    nick:   'lhcb-trigger-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  1150,	height: 950}
+	  },
+	  daq_bigbrother: {
+	    src:    this.lhcb_display_url('bigbrother'),
+	    img:    this.images.lookprod,
+	    title:  'DAQ/Big Brother',
+	    nick:   'lhcb-bigbrother-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  1150,	height: 850}
+	  },
+	  daq_evdisp: {
+	    src:    this.lhcb_display_url('evdisp'),
+	    img:    this.images.lookprod,
+	    title:  'DAQ/Event Display',
+	    nick:   'lhcb-evdisp-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  1150,	height: 850}
+	  },
+	  trg_l0status: {
+	    src:    this.lhcb_display_url('trgstatus'),
+	    img:    this.images.lookprod,
+	    title:  'TRG/L0 Status',
+	    nick:   'lhcb-trigger-l0status-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  1150,	height: 850}
+	  },
+	  velo: {
+	    src:    this.lhcb_display_url('velo'),
+	    img:    this.images.lookprod,
+	    title:  'VELO/LV/HV',
+	    nick:   'lhcb-velo-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  1150,	height: 900},
+	    motion: {
+	      src:    this.lhcb_display_url('velo_move'),
+	      img:    this.images.lookprod,
+	      title:  'VELO/Motion',
+	      nick:   'lhcb-velo-motion-win',
+	      cls:    'Collimators16',
+	      iconCls:'Collimators32',
+	      size:   {width:  1250,	height: 900}
+	    }
+	  },
+	  st: {
+	    src:    this.lhcb_display_url('st'),
+	    img:    this.images.lookprod,
+	    title:  'ST',
+	    nick:   'lhcb-st-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  1150,	height: 950}
+	  },
+	  ot: {
+	    src:    this.lhcb_display_url('ot'),
+	    img:    this.images.lookprod,
+	    title:  'OT',
+	    nick:   'lhcb-ot-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  1150,	height: 900}
+	  },
+	  rich: {
+	    src:    this.lhcb_display_url('rich'),
+	    img:    this.images.lookprod,
+	    title:  'RICH',
+	    nick:   'lhcb-rich-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  1150,	height: 900}
+	  },
+	  calo: {
+	    src:    this.lhcb_display_url('calo'),
+	    img:    this.images.lookprod,
+	    title:  'CALO',
+	    nick:   'lhcb-calo-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  1150,	height: 950}
+	  },
+	  muon: {
+	    src:    this.lhcb_display_url('muon'),
+	    img:    this.images.lookprod,
+	    title:  'MUON',
+	    nick:   'lhcb-muon-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  1150,	height: 850}
+	  },
+	  cooling: {
+	    src:    this.lhcb_display_url('cooling'),
+	    img:    this.images.lookprod,
+	    title:  'Cooling',
+	    nick:   'lhcb-cooling-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  1150,	height: 700}
+	  }
+	},
+	dirac: {
+	  home_page: {
+	    src:    'http://diracgrid.org',
+	    img:    this.images.dirac,
+	    title:  'Dirac Home Page',
+	    nick:   'lhcb-dirac-home-page-win',
+	    cls:    'bogus',
+	    size:   {width:  900,	height: 800}
+	  }
+	},
+	home_page: {
+	  src:    'https://lhcb.web.cern.ch/lhcb',
+	  img:    this.images.window,
+	  title:  'Home Page',
+	  nick:   'lhcb-home-page-win',
+	  cls:    'bogus',
+	  size:   {width:  1150,	height: 800}
+	},
+	online_home_page: {
+	  src:    'https://lhcb-online.web.cern.ch/lhcb-online',
+	  img:    this.images.home,
+	  title:  'Online Home Page',
+	  nick:   'lhcb-online-home-page-win',
+	  cls:    'Home16',
+	  iconCls:'Home32',
+	  size:   {width:  1150,	height: 800}
+	},
+	computing_home_page: {
+	  src:    'https://lhcb-comp.web.cern.ch/lhcb-comp',
+	  img:    this.images.window,
+	  title:  'Computing Home Page',
+	  nick:   'lhcb-computing-home-page-win',
+	  cls:    'bogus',
+	  size:   {width:  1150,	height: 800}
+	},
+	twiki: {
+	  src:    'https://twiki.cern.ch/twiki/bin/view/LHCb',
+	  img:    this.images.window,
+	  title:  'TWiki',
+	  nick:   'lhcb-twiki-page-win',
+	  cls:    'bogus',
+	  iconCls:'bogus',
+	  size:   {width:  1150,	height: 800}
+	},
+	lhcb_run_status: {
+	  src:    this.lhcb_display_url('status&system=LHCb'),
+	  img:    this.images.lookfile,
+	  title:  'LHCb Run Status',
+	  nick:   'lhcb-daq-status-win',
+	  cls:    'LHCbDAQ16',
+	  iconCls:'LHCbDAQ32',
+	  size:   {width:  1150,	height: 820}
+	},
+	fest_run_status: {
+	  src:    this.lhcb_display_url('status&system=FEST'),
+	  img:    this.images.options,
+	  title:  'FEST Run Status',
+	  nick:   'fest-daq-status-win',
+	  cls:    'FESTDAQ16',
+	  iconCls:'FESTDAQ32',
+	  size:   {width:  1150,	height: 500}
+	},
+	sdet_run_status: {
+	  src:    this.lhcb_display_url('status'),
+	  img:    this.images.lookjob,
+	  title:  'Subdetector Run Status',
+	  nick:   'lhcb-sdet-daq-status-win',
+	  cls:    'SdetDAQ16',
+	  iconCls:'SdetDAQ32',
+	  size:   {width:  1150,	height: 820}
+	},
+	display_news: {
+	  src:    this.lhcb_static('html/News.htm'),
+	  img:    this.images.help,
+	  title:  'LHCb Online Displays',
+	  nick:   'lhcb-display-news-win',
+	  cls:    'Help16',
+	  iconCls:'Help32',
+	  size:   {width:  590,	height: 700}
+	},
+	page1: {
+	  src:    this.lhcb_display_url('page1'),
+	  img:    this.images.search,
+	  title:  'LHCb Page 1',
+	  nick:   'lhcb-page1-win',
+	  cls:    'Page116',
+	  iconCls:'Page132',
+	  size:   {width:  770,	height: 820}
+	},
+	detstatus: {
+	  src:    this.lhcb_display_url('detstatus'),
+	  img:    this.images.wizard,
+	  title:  'HV Status',
+	  nick:   'lhcb-detstatus-win',
+	  cls:    'DetStatus16',
+	  iconCls:'DetStatus32',
+	  size:   {width:  1150,	height: 850}
+	},
+	operstatus: {
+	  src:    this.lhcb_display_url('oper'),
+	  img:    this.images.gears,
+	  title:  'Operations Status',
+	  nick:   'lhcb-oper-win',
+	  cls:    'OperStatus16',
+	  iconCls:'OperStatus32',
+	  size:   {width:  1150,	height: 950}
+	},
+	magnet: {
+	  src:    this.lhcb_display_url('magnet'),
+	  img:    this.images.magnet,
+	  title:  'LHCb Magnet Summary',
+	  nick:   'lhcb-magnet-win',
+	  cls:    'Magnet16',
+	  iconCls:'Magnet32',
+	  size:   {width:  1150,	height: 820}
+	},
+	collimators: {
+	  src:    this.lhcb_display_url('collimators'),
+	  img:    this.images.lookprod,
+	  title:  'Collimators',
+	  nick:   'lhcb-collimators-win',
+	  cls:    'Collimators16',
+	  iconCls:'Collimators32',
+	  size:   {width:  1150,	height: 550}
+	},
+	bcm: {
+	  src:    this.lhcb_display_url('bcm'),
+	  img:    this.images.bcm,
+	  title:  'BCM',
+	  nick:   'lhcb-bcm-win',
+	  cls:    'BCM16',
+	  iconCls:'BCM32',
+	  size:   {width:  900,	height: 270}
+	},
+	lhc_status: {
+	  src:    this.lhcb_display_url('lhc'),
+	  img:    this.images.beams,
+	  title:  'LHC Status',
+	  nick:   'lhcb-lhc-status-win',
+	  cls:    'Beams16',
+	  iconCls:'Beams32',
+	  size:   {width:  1150,	height: 820}
+	},
+	elog: {
+	  src:    'https://lblogbook.cern.ch/Shift/',
+	  img:    this.images.elog,
+	  title:  'ELog LHCb',
+	  nick:   'lhcb-elog-win',
+	  cls:    'ELOG16',
+	  iconCls:'ELOG32',
+	  size:   {width:  1150,	height: 850}
+	},
+	rundb: {
+	  src:    'https://lbrundb.cern.ch/',
+	  img:    this.images.lookprod,
+	  title:  'LHCb run database',
+	  nick:   'lhcb-rundb-win',
+	  cls:    'bogus',
+	  iconCls:'bogus',
+	  size:   {width:  1100,	height: 850}
+	},
+	weekly_meetings: {
+	  src:    'https://indico.cern.ch/categOverview.py?selCateg=1l22&period=week&detail=conference',
+	  img:    this.images.indico,
+	  title:  'Meetings',
+	  nick:   'lhcb-meetings-win',
+	  cls:    'INDICO16',
+	  iconCls:'INDICO32',
+	  size:   {width:  1200,	height: 850}
+	},
+	offline_databases_status: {
+	  src:    this.sls_service_url('phydb_LHCBR'),
+	  img:    this.images.window,
+	  title:  'Offline databases',
+	  nick:   'lhcb-offline_databases_status-win',
+	  cls:    'bogus',
+	  iconCls:'bogus',
+	  size:   {width:  1100,	height: 800}
+	},
+	online_databases_status: {
+	  src:    this.sls_service_url('phydb_LHCBONR'),
+	  img:    this.images.window,
+	  title:  'Online databases',
+	  nick:   'lhcb-online_databases_status-win',
+	  cls:    'bogus',
+	  iconCls:'bogus',
+	  size:   {width:  1100,	height: 800}
+        },
+	alarmScreen: {
+	  src:    this.lhcb_display_url('alarms'),
+	  img:    this.images.alarmScreen,
+	  title:  'LHCb PVSS Alarms',
+	  nick:   'lhcb-pvss-alarms',
+	  cls:    'PvssAlarms16',
+	  iconCls:'PvssAlarms32',
+	  size:   {width: 1000,	height: 820}
+	}
+      }
+    };
+    return this;
+  }();
+
+  if ( _debugLoading ) alert('Script lhcb.display.constants.cpp loaded successfully');
+}

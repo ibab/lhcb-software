@@ -3,7 +3,7 @@ if ( !_lhcb().constants ) {
   lhcb.constants = function() {
     this._url = (''+document.location).substr(0,(''+document.location).indexOf('/Online/')+7);//'http://www.cern.ch/lhcbproject/online/comet/Online';
     this._loc = ''+document.location;
-    this.lhcb_comet_url2  = function()     {    return 'http://lbcomet.cern.ch/static/RunStatus';  };
+    this.lhcb_comet_url2  = function()     {    return 'https://lbcomet.cern.ch/static/RunStatus';  };
     this.lhcb_comet_url   = function()     {    return this._url;                                  };
     this.lhcb_base_url    = function()     {    return this._url;                                  };
     //alert('\nDomain:'+document.domain+'\nURL:'+this._url+'\nLoc:'+this._loc+'\nComet:'+this.lhcb_comet_url()+'\nBase:'+this.lhcb_base_url()+'\n');
@@ -15,8 +15,9 @@ if ( !_lhcb().constants ) {
       this.lhcb_display_url = function(name) {    return this.lhcb_comet_url()+'/lhcb.comet.htm?type='+name;       };
     }
     this.lhcb_static      = function(name) {    return this.lhcb_base_url()+'/'+name;                              };
-    this.operations_url   = function(name) {    return 'http://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr='+name; };
-    this.sls_service_url  = function(name) {    return 'http://sls.cern.ch/sls/service.php?id='+name;              };
+    this.operations_url   = function(name) {    return 'https://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr='+name; };
+    this.sls_service_url  = function(name) {    return 'https://sls.cern.ch/sls/service.php?id='+name;              };
+    this.service_now_url  = function(name) {    return 'https://cern.service-now.com/service-portal/'+name;        };
     this.mmm_url          = function(name) {    var n = 'https://mmm.cern.ch'; if ( name ) n = n + name; return n; };
 
     this.mkAbsImage       = function(name) {    return {src: name, icon: name};                                    };
@@ -47,7 +48,7 @@ if ( !_lhcb().constants ) {
       webstats:         this.mkAbsImage('https://web-statistics.web.cern.ch/web-statistics/icon/other/awstats_logo6.png'),
 
       twiki:            this.mkStaticImage('twiki.gif'),
-      lhcb:             this.mkAbsImage('http://lhcb.web.cern.ch/lhcb/lhcblogo.gif'),
+      lhcb:             this.mkAbsImage('https://lhcb.web.cern.ch/lhcb/lhcblogo.gif'),
       lhcb_online:      this.mkAbsImage('Images/lhcb-online-logo.png'),
       dirac:            this.mkStaticImage('DIRAC.png'),
       magnet:           this.mkImage('LHCb/Magnet_Icon','png'),
@@ -98,7 +99,7 @@ if ( !_lhcb().constants ) {
 	title:  'CERN',
 	nick:   'cern-win',
 	cls:    'bogus',
-	size:   {width:  1000,	height: 850}
+	size:   {width:  1100,	height: 850}
       },
       lhc: {
 	project: {
@@ -108,7 +109,7 @@ if ( !_lhcb().constants ) {
 	  nick:   'lhc-win',
 	  cls:    'LHC16',
 	  iconCls:'LHC32',
-	  size:   {width:  1000,	height: 850}
+	  size:   {width:  1100,	height: 850}
 	}
       },
       lhcb: {
@@ -120,7 +121,7 @@ if ( !_lhcb().constants ) {
 	    nick:   'lhcb-lumi-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
+	    size:   {width:  1150,	height: 850}
 	  },
 	  daq_trigger: {
 	    src:    this.lhcb_display_url('trigger'),
@@ -129,7 +130,7 @@ if ( !_lhcb().constants ) {
 	    nick:   'lhcb-trigger-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
+	    size:   {width:  1150,	height: 950}
 	  },
 	  daq_bigbrother: {
 	    src:    this.lhcb_display_url('bigbrother'),
@@ -138,7 +139,7 @@ if ( !_lhcb().constants ) {
 	    nick:   'lhcb-bigbrother-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
+	    size:   {width:  1150,	height: 850}
 	  },
 	  daq_evdisp: {
 	    src:    this.lhcb_display_url('evdisp'),
@@ -147,7 +148,7 @@ if ( !_lhcb().constants ) {
 	    nick:   'lhcb-evdisp-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
+	    size:   {width:  1150,	height: 850}
 	  },
 	  trg_l0status: {
 	    src:    this.lhcb_display_url('trgstatus'),
@@ -156,7 +157,7 @@ if ( !_lhcb().constants ) {
 	    nick:   'lhcb-trigger-l0status-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
+	    size:   {width:  1150,	height: 850}
 	  },
 	  velo: {
 	    src:    this.lhcb_display_url('velo'),
@@ -165,7 +166,7 @@ if ( !_lhcb().constants ) {
 	    nick:   'lhcb-velo-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700},
+	    size:   {width:  1150,	height: 900},
 	    motion: {
 	      src:    this.lhcb_display_url('velo_move'),
 	      img:    this.images.lookprod,
@@ -173,7 +174,7 @@ if ( !_lhcb().constants ) {
 	      nick:   'lhcb-velo-motion-win',
 	      cls:    'Collimators16',
 	      iconCls:'Collimators32',
-	      size:   {width:  950,	height: 700}
+	      size:   {width:  1250,	height: 900}
 	    }
 	  },
 	  st: {
@@ -183,7 +184,7 @@ if ( !_lhcb().constants ) {
 	    nick:   'lhcb-st-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 800}
+	    size:   {width:  1150,	height: 950}
 	  },
 	  ot: {
 	    src:    this.lhcb_display_url('ot'),
@@ -192,7 +193,7 @@ if ( !_lhcb().constants ) {
 	    nick:   'lhcb-ot-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 800}
+	    size:   {width:  1150,	height: 900}
 	  },
 	  rich: {
 	    src:    this.lhcb_display_url('rich'),
@@ -201,7 +202,7 @@ if ( !_lhcb().constants ) {
 	    nick:   'lhcb-rich-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
+	    size:   {width:  1150,	height: 900}
 	  },
 	  calo: {
 	    src:    this.lhcb_display_url('calo'),
@@ -210,7 +211,7 @@ if ( !_lhcb().constants ) {
 	    nick:   'lhcb-calo-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
+	    size:   {width:  1150,	height: 950}
 	  },
 	  muon: {
 	    src:    this.lhcb_display_url('muon'),
@@ -219,7 +220,7 @@ if ( !_lhcb().constants ) {
 	    nick:   'lhcb-muon-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
+	    size:   {width:  1150,	height: 850}
 	  },
 	  cooling: {
 	    src:    this.lhcb_display_url('cooling'),
@@ -228,43 +229,35 @@ if ( !_lhcb().constants ) {
 	    nick:   'lhcb-cooling-win',
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
-	    size:   {width:  950,	height: 700}
+	    size:   {width:  1150,	height: 700}
 	  }
 	},
 	dirac: {
 	  home_page: {
-	    src:    'http://lhcbweb.pic.es',
+	    src:    'http://diracgrid.org',
 	    img:    this.images.dirac,
 	    title:  'Dirac Home Page',
 	    nick:   'lhcb-dirac-home-page-win',
 	    cls:    'bogus',
 	    size:   {width:  900,	height: 800}
-	  },
-	  launch_pad: {
-	    src:    'https://launchpad.net/dirac',
-	    img:    this.images.window,
-	    title:  'Launch pad',
-	    nick:   'lhcb-dirac_launch_pad-win',
-	    cls:    'bogus',
-	    size:   {width:  900,	height: 800}
 	  }
 	},
 	home_page: {
-	  src:    'http://lhcb.cern.ch',
+	  src:    'https://lhcb.web.cern.ch/lhcb',
 	  img:    this.images.window,
 	  title:  'Home Page',
 	  nick:   'lhcb-home-page-win',
 	  cls:    'bogus',
-	  size:   {width:  900,	height: 800}
+	  size:   {width:  1150,	height: 800}
 	},
 	online_home_page: {
-	  src:    'http://lhcb-online.web.cern.ch/lhcb-online',
+	  src:    'https://lhcb-online.web.cern.ch/lhcb-online',
 	  img:    this.images.home,
 	  title:  'Online Home Page',
 	  nick:   'lhcb-online-home-page-win',
 	  cls:    'Home16',
 	  iconCls:'Home32',
-	  size:   {width:  900,	height: 800}
+	  size:   {width:  1150,	height: 800}
 	},
 	computing_home_page: {
 	  src:    'https://lhcb-comp.web.cern.ch/lhcb-comp',
@@ -272,7 +265,7 @@ if ( !_lhcb().constants ) {
 	  title:  'Computing Home Page',
 	  nick:   'lhcb-computing-home-page-win',
 	  cls:    'bogus',
-	  size:   {width:  900,	height: 800}
+	  size:   {width:  1150,	height: 800}
 	},
 	twiki: {
 	  src:    'https://twiki.cern.ch/twiki/bin/view/LHCb',
@@ -281,7 +274,7 @@ if ( !_lhcb().constants ) {
 	  nick:   'lhcb-twiki-page-win',
 	  cls:    'bogus',
 	  iconCls:'bogus',
-	  size:   {width:  900,	height: 800}
+	  size:   {width:  1150,	height: 800}
 	},
 	lhcb_run_status: {
 	  src:    this.lhcb_display_url('status&system=LHCb'),
@@ -290,7 +283,7 @@ if ( !_lhcb().constants ) {
 	  nick:   'lhcb-daq-status-win',
 	  cls:    'LHCbDAQ16',
 	  iconCls:'LHCbDAQ32',
-	  size:   {width:  950,	height: 820}
+	  size:   {width:  1150,	height: 820}
 	},
 	fest_run_status: {
 	  src:    this.lhcb_display_url('status&system=FEST'),
@@ -299,7 +292,7 @@ if ( !_lhcb().constants ) {
 	  nick:   'fest-daq-status-win',
 	  cls:    'FESTDAQ16',
 	  iconCls:'FESTDAQ32',
-	  size:   {width:  950,	height: 600}
+	  size:   {width:  1150,	height: 500}
 	},
 	sdet_run_status: {
 	  src:    this.lhcb_display_url('status'),
@@ -308,7 +301,7 @@ if ( !_lhcb().constants ) {
 	  nick:   'lhcb-sdet-daq-status-win',
 	  cls:    'SdetDAQ16',
 	  iconCls:'SdetDAQ32',
-	  size:   {width:  950,	height: 820}
+	  size:   {width:  1150,	height: 820}
 	},
 	display_news: {
 	  src:    this.lhcb_static('html/News.htm'),
@@ -335,7 +328,7 @@ if ( !_lhcb().constants ) {
 	  nick:   'lhcb-detstatus-win',
 	  cls:    'DetStatus16',
 	  iconCls:'DetStatus32',
-	  size:   {width:  950,	height: 500}
+	  size:   {width:  1150,	height: 850}
 	},
 	operstatus: {
 	  src:    this.lhcb_display_url('oper'),
@@ -344,7 +337,7 @@ if ( !_lhcb().constants ) {
 	  nick:   'lhcb-oper-win',
 	  cls:    'OperStatus16',
 	  iconCls:'OperStatus32',
-	  size:   {width:  950,	height: 850}
+	  size:   {width:  1150,	height: 950}
 	},
 	magnet: {
 	  src:    this.lhcb_display_url('magnet'),
@@ -353,7 +346,7 @@ if ( !_lhcb().constants ) {
 	  nick:   'lhcb-magnet-win',
 	  cls:    'Magnet16',
 	  iconCls:'Magnet32',
-	  size:   {width:  950,	height: 820}
+	  size:   {width:  1150,	height: 820}
 	},
 	collimators: {
 	  src:    this.lhcb_display_url('collimators'),
@@ -362,7 +355,7 @@ if ( !_lhcb().constants ) {
 	  nick:   'lhcb-collimators-win',
 	  cls:    'Collimators16',
 	  iconCls:'Collimators32',
-	  size:   {width:  950,	height: 400}
+	  size:   {width:  1150,	height: 550}
 	},
 	bcm: {
 	  src:    this.lhcb_display_url('bcm'),
@@ -371,7 +364,7 @@ if ( !_lhcb().constants ) {
 	  nick:   'lhcb-bcm-win',
 	  cls:    'BCM16',
 	  iconCls:'BCM32',
-	  size:   {width:  900,	height: 400}
+	  size:   {width:  900,	height: 270}
 	},
 	lhc_status: {
 	  src:    this.lhcb_display_url('lhc'),
@@ -380,34 +373,34 @@ if ( !_lhcb().constants ) {
 	  nick:   'lhcb-lhc-status-win',
 	  cls:    'Beams16',
 	  iconCls:'Beams32',
-	  size:   {width:  900,	height: 820}
+	  size:   {width:  1150,	height: 820}
 	},
 	elog: {
-	  src:    'http://lblogbook.cern.ch/Shift/',
+	  src:    'https://lblogbook.cern.ch/Shift/',
 	  img:    this.images.elog,
 	  title:  'ELog LHCb',
 	  nick:   'lhcb-elog-win',
 	  cls:    'ELOG16',
 	  iconCls:'ELOG32',
-	  size:   {width:  1000,	height: 850}
+	  size:   {width:  1150,	height: 850}
 	},
 	rundb: {
-	  src:    'http://lbrundb.cern.ch/',
+	  src:    'https://lbrundb.cern.ch/',
 	  img:    this.images.lookprod,
 	  title:  'LHCb run database',
 	  nick:   'lhcb-rundb-win',
 	  cls:    'bogus',
 	  iconCls:'bogus',
-	  size:   {width:  1000,	height: 850}
+	  size:   {width:  1100,	height: 850}
 	},
 	weekly_meetings: {
-	  src:    'http://indico.cern.ch/categOverview.py?selCateg=1l22&period=week&detail=conference',
+	  src:    'https://indico.cern.ch/categOverview.py?selCateg=1l22&period=week&detail=conference',
 	  img:    this.images.indico,
 	  title:  'Meetings',
 	  nick:   'lhcb-meetings-win',
 	  cls:    'INDICO16',
 	  iconCls:'INDICO32',
-	  size:   {width:  1000,	height: 850}
+	  size:   {width:  1200,	height: 850}
 	},
 	offline_databases_status: {
 	  src:    this.sls_service_url('phydb_LHCBR'),
@@ -434,7 +427,7 @@ if ( !_lhcb().constants ) {
 	  nick:   'lhcb-pvss-alarms',
 	  cls:    'PvssAlarms16',
 	  iconCls:'PvssAlarms32',
-	  size:   {width:  770,	height: 820}
+	  size:   {width: 1000,	height: 820}
 	}
       }
     };

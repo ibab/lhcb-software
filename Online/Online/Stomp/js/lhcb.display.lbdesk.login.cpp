@@ -40,7 +40,7 @@ supply the proper key when reconnecting.';
 	 window:       win,
          onLogon:     function()  {
 	   var session = '';
-	   var url = 'desk.htm';
+	   var url = '/Online/Desktop/desk.htm';
 	   var config = this.items.items[0].getValue();
 	   /*
 	     var session = this.items.items[0].getValue();
@@ -102,7 +102,7 @@ supply the proper key when reconnecting.';
 	 }
      });
     win.add(this.panel);
-    win.setSize(350,150);
+    win.setSize(450,200);
     win.show(this);
   }
   return this;

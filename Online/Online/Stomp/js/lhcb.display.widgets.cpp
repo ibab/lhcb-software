@@ -1297,6 +1297,7 @@ if ( !lhcb.widgets ) {
       tb.appendChild(this.addState('ECAL', false, 'HV', 'HV'));
       tb.appendChild(this.addState('HCAL', false, 'HV', 'HV'));
       tb.appendChild(this.addState('MUON',  true, 'HV', 'HV'));
+      tb.appendChild(this.addState('HRC',  false, 'HV', 'HV'));
     };
 
     tab.addLV = function(tb) {
@@ -1399,6 +1400,7 @@ if ( !lhcb.widgets ) {
       this.subscribe_i(provider, 'HV', 'ECAL');
       this.subscribe_i(provider, 'HV', 'HCAL');
       this.subscribe_i(provider, 'HV', 'MUON');
+      this.subscribe_i(provider, 'HV', 'HRC');
 
       this.subscribe_i(provider, 'LV', 'VELO');
       this.subscribe_i(provider, 'LV', 'TT');
