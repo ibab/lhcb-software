@@ -1,6 +1,0 @@
-package OnlAlignmentSys
-version v0r1
-#
-#
-use AlignmentSys v*
-use OnlineSys    v*
