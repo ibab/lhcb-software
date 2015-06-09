@@ -82,22 +82,22 @@ class WriterConf:#(LHCbConfigurableUser):
     if 'ot' in listOfCondToWrite:
       self.addXmlWriter( alg, 'OT','Global', [0,1,2,3] )
       self.addXmlWriter( alg, 'OT','Modules', [4] )
+      from Configurables import WriteOTCalibrationsTool
+      alg.addTool( WriteOTCalibrationsTool, "WriteOTCalibrationsTool")
+      alg.XmlWriters.append("WriteOTCalibrationsTool")
+      alg.WriteOTCalibrationsTool.Directory = self.getProp('CondFilePrefix')
+      alg.WriteOTCalibrationsTool.WriteGlobalCalibration = True
     if 'muon' in listOfCondToWrite:
       #self.addXmlWriter( alg, 'Muon','Detectors', [] )
       self.addXmlWriter( alg, 'Muon','Global', [0,1,2] )
     if 'ecal' in listOfCondToWrite:
       self.addXmlWriter( alg, 'Ecal','alignment', [] )
-    if 'RichCalib' in listOfCondToWrite:
-      from Configurables import WriteRichCalibrationsTool
-      alg.addTool( WriteRichCalibrationsTool, "WriteRichCalibrations")
-      alg.XmlWriters.append("WriteRichCalibrations")
-      alg.WriteRichCalibrations.Directory = self.getProp('CondFilePrefix')
-    if 'otglobaltzero' in listOfCondToWrite:
-     from Configurables import WriteOTCalibrationsTool
-     alg.addTool( WriteOTCalibrationsTool, "WriteOTCalibrations")
-     alg.XmlWriters.append("WriteOTCalibrations")
-     alg.WriteOTCalibrations.Directory = self.getProp('CondFilePrefix')
-     alg.WriteOTCalibrations.WriteGlobalCalibration = True
+    if ('rich1' in listOfCondToWrite) or ('rich2' in listOfCondToWrite):
+      if "WriteRichCalibrationsTool" not in alg.XmlWriters:
+        from Configurables import WriteRichCalibrationsTool
+        alg.addTool( WriteRichCalibrationsTool, "WriteRichCalibrationsTool")
+        alg.XmlWriters.append("WriteRichCalibrationsTool")
+        alg.WriteRichCalibrationsTool.Directory = self.getProp('CondFilePrefix')
 
 
 
@@ -105,6 +105,7 @@ from Gaudi.Configuration import *
 from Configurables import LHCbAlgsTests__TestTimeDecoderOdin as TimeDecoder
 from Configurables import (RunChangeHandlerSvc, DBXferAlg ,XmlCnvSvc, DDDBConf, CondDB, EventClockSvc, FakeEventTime)
 import RunOption
+import HLT2Params
 import sys
 excludeFiles =[]
 excludeFiles.append('online.xml')
@@ -168,11 +169,13 @@ app.EvtSel = "NONE"
 app.EvtMax = 1
 app.OutputLevel = INFO
 # from Configurables import XmlParserSvc
-# RunChangeHandlerSvc(OutputLevel=VERBOSE)
-# MessageSvc(OutputLevel=1)
+#RunChangeHandlerSvc(OutputLevel=VERBOSE)
+#MessageSvc(OutputLevel=1)
 EventDataSvc(ForceLeaves = True)
 from GaudiPython.Bindings import AppMgr
 Gaudi=AppMgr()
+print "===================== Initializing the XML conversion ========================"
+stat = Gaudi.initialize()
 print "===================== Running the XML conversion ========================"
 stat = Gaudi.run(1)
 print "============= Status :",stat
@@ -196,16 +199,16 @@ if stat.isFailure():
 print "===================== Updating the Database ========================"
 import CondDBUI
 import CondDBUI.Admin
-DBString = "CondDBOnline(owner)/ONLINE" # use the central Oracle Database...
-
+#####DBString = "CondDBOnline(owner)/ONLINE" # use the central Oracle Database...
+DBString = "sqlite_file:./CONDDB.db/ONLINE"
 db = CondDBUI.CondDB(DBString, create_new_db = False, readOnly=False)
 status = CondDBUI.Admin.MakeDBFromFiles(RunOption.OutputDirectory+"/offl", db,
                                    includes = [], excludes = [],
                                    verbose = True,
-                                   since = RunOption.RunStartTime*1000000000
-                                   , until = None
-                                   ,writeDuplicate = False
-                                   )
+                                   since = RunOption.RunStartTime*1000000000,
+                                   until = (HLT2Params.RunStartTime+HLT2Params.RunDuration)*1000000000,
+                                   writeDuplicate = False
+                                    )
 print "===================== Updated the Database ======================== Status = ",status
 
 
