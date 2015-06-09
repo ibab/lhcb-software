@@ -45,7 +45,10 @@ def help() :
       -p or --project= <project>         - project name \n
       -v or --version= <version>         - project version\n
       -b or --binary=  <binary>          - binary \n
-      -x or --dbgext                     - Refer to LCGCMT in dbg config\n
+      -x or --dbgext                     - Refer to LCGCMT in dbg config (now DEFAULT)\n
+      --nodbgext                         - Do not Refer to LCGCMT in dbg config, but force opt\n
+                                           (needed to build tar files for projects with LCGCMT
+                                           that does not have debug builds).
     Examples:
       cd $LHCBRELEASES
       if the project uses InstallArea then
