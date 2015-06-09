@@ -139,16 +139,16 @@ class Physics_draftEM2015( object ):
 
                      , Hlt1CalibRICHMirrorLinesConf :    { 'Prescale' : { 'Hlt1CalibHighPTLowMultTrks'     : 0.0001 }
                                                         , 'DoTiming' : False
-                                                        , 'PT'       : 500.
-                                                        , 'P'        : 20000.
+                                                        , 'PT'       : 500. * MeV
+                                                        , 'P'        : 20000. * MeV
                                                         , 'MinETA'   : 2.59
                                                         , 'MaxETA'   : 2.97
                                                         , 'Phis'     : [(-2.69, -2.29 ), (-0.85, -0.45), (0.45, 0.85), (2.29, 2.69)]
                                                         , 'TrChi2'   : 2.
                                                         , 'MinTr'    : 0.5
                                                         , 'GEC'      : 'Loose'
-                                                        , 'LM_PT'    : 500.
-                                                        , 'LM_P'     : 1000.
+                                                        , 'LM_PT'    : 500. * MeV
+                                                        , 'LM_P'     : 1000. * MeV
                                                         , 'LM_TrChi2': 2.
                                                         , 'LM_MinTr' : 1
                                                         , 'LM_MaxTr' : 40
