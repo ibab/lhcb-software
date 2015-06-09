@@ -146,6 +146,7 @@ class Boole(LHCbConfigurableUser):
         if 'Ecal'    in self.getProp('DetectorDigi') : detListSim += ['Ecal']
         if 'Hcal'    in self.getProp('DetectorDigi') : detListSim += ['Hcal']
         if 'Muon'    in self.getProp('DetectorDigi') : detListSim += ['Muon']
+        if 'HC'      in self.getProp('DetectorDigi') : detListSim += ['HC']
         SimConf().setProp("Detectors",detListSim)
 
     def configurePhases(self):
@@ -172,7 +173,7 @@ class Boole(LHCbConfigurableUser):
 
         if 'Data' in self.getProp('DetectorInit')['DATA'] : detListInit += ['Data']
 
-        for det in ['Velo', 'VP', 'TT', 'UT', 'IT', 'OT', 'FT']:
+        for det in ['Velo', 'VP', 'TT', 'UT', 'IT', 'OT', 'FT', 'HC']:
             if det in self.getProp('DetectorDigi') :
                 detListDigi += [det]
                 if det in self.getProp('DetectorLink'): detListLink += [det]
@@ -344,6 +345,7 @@ class Boole(LHCbConfigurableUser):
         if "Calo"    in digiDets : self.configureDigiCalo(    GaudiSequencer("DigiCaloSeq"), "" )        
         if "Muon"    in digiDets : self.configureDigiMuon(    GaudiSequencer("DigiMuonSeq"), "" )
         if "L0"      in digiDets : self.configureDigiL0(      GaudiSequencer("DigiL0Seq"), "" )
+        if "HC"      in digiDets : self.configureDigiHC(      GaudiSequencer("DigiHCSeq"), "" )
 
     def configureDigiVelo(self, seq, tae ):
         # Velo digitisation and clustering (also for PuVeto and trigger)            
@@ -553,6 +555,13 @@ class Boole(LHCbConfigurableUser):
         else:
             raise RuntimeError("TAE not implemented for L0")
         
+    def configureDigiHC(self, seq, tae):
+        # HC digitisation
+        if tae == "":
+            from Configurables import HCDigitCreator
+            seq.Members += [HCDigitCreator()]
+        else:
+            raise RuntimeError("TAE not implemented for HC")
 
     def configureFilter(self):
         """
@@ -761,6 +770,8 @@ class Boole(LHCbConfigurableUser):
                 self.configureDigiMuon( GaudiSequencer("Digi%sMuonSeq"%taeSlot), taeSlot )
             if "L0" in taeDets:
                 self.configureDigiL0( GaudiSequencer("Digi%sL0Seq"%taeSlot), taeSlot )
+            if "HC" in taeDets:
+                self.configureDigiHC( GaudiSequencer("Digi%sHCSeq"%taeSlot), taeSlot )
             
 
     def defineMonitors(self):
