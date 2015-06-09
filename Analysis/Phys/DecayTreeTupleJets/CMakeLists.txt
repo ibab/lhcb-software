@@ -5,7 +5,8 @@ gaudi_subdir(DecayTreeTupleJets v1r2)
 
 gaudi_depends_on_subdirs(Phys/DecayTreeTupleBase
                          Phys/LoKiArrayFunctors
-			 Phys/JetTagging)
+			 Phys/JetTagging
+			 Event/HltEvent)
 
 gaudi_add_module(DecayTreeTupleJets
                  src/*.cpp

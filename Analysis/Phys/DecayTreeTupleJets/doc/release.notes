@@ -4,6 +4,9 @@
 ! Purpose     : Jet related Tuple Tools
 !-----------------------------------------------------------------------------
 
+! 2015-06-09 - Xabier Cid Vidal
+ - add Event/HltEvent CMakeLists.txt to fix CMake compilation
+
 ! 2015-06-05 - Xabier Cid Vidal
  - add new TupleTool to add variables related to the use of jets in B physics
 
