@@ -3,7 +3,7 @@
 # Maintainer : Patrick Koppenburg
 #============================================================================
 package           DaVinciMonitors
-version           v1r21
+version           v1r22
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -14,15 +14,15 @@ branches          cmt doc src options
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use PartProp v* Kernel
-use DaVinciKernel  v*    Phys
-use LoKiPhys              v* Phys
-use LoKiArrayFunctors     v* Phys
+use DaVinciKernel       v* Phys
+use LoKiPhys            v* Phys
+use LoKiArrayFunctors   v* Phys
 use MuonDet		v* Det
 use HltEvent            v* Event
-use LinkerEvent        v*    Event
-use RecEvent           v* Event
-use TrackEvent         v* Event
-use MuonTools	       v* Muon
+use LinkerEvent         v* Event
+use RecEvent            v* Event
+use TrackEvent          v* Event
+use MuonTools	        v* Muon
 
 
 include_path      none
