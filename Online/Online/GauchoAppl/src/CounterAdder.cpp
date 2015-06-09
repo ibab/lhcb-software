@@ -30,13 +30,18 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
   while (pp<bend)
   {
     if (pp->reclen == 0) break;
-    if (pp->nameoff != sizeof(DimBuffBase))
+    if ( (pp->nameoff != sizeof(DimBuffBase)) || pp->nameoff <0)
     {
       printf("+++ Counter Adder: Bad value of name offset (%d). Corrupted record?\n",pp->nameoff);
       break;
     }
     char *nam = (char*)AddPtr(pp,pp->nameoff);
     char pnam[2048];
+    if (pp->dataoff > pp->reclen)
+    {
+      printf("+++ Counter Adder: Bad value of data offset (%d [%0x] > %d). Corrupted record for %s?\n",pp->dataoff,pp->dataoff,pp->reclen,nam);
+      break;
+    }
     int limit = 2048;
     int nlen = strnlen(nam,limit);
     if (nlen == limit)
@@ -49,15 +54,27 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
     hmap.insert(std::make_pair(nam,pp));
     pp=(DimHistbuff1*)AddPtr(pp,pp->reclen);
   }
+  int count =0;
   for (MonIter i=hmap.begin();i!=hmap.end();i++)
   {
+    std::string IFirst = i->first;
+    MonObj *ISecond = (MonObj*)i->second;
     MonIter j = m_hmap.find(i->first);
     if (j!=m_hmap.end())
     {
       //printf("Counter Adder: Locking MAP\n");
+      ++count;
       LockMap();
+      std::string JFirst = j->first;
+      DimHistbuff1 *JSecond = (DimHistbuff1*)j->second;
       DimHistbuff1 *sumh = (DimHistbuff1*)(j->second);
       DimHistbuff1 *srch = (DimHistbuff1*)(i->second);
+      if ((sumh->dataoff > sumh->reclen) || (sumh->dataoff<0))
+      {
+        printf ("Data offset greater than Record Length for %s Loop Count %d\n",j->first.c_str(),count);
+        UnLockMap();
+        break;
+      }
       double *ps = (double*)AddPtr(sumh,sumh->dataoff);
       double *ph = (double*)AddPtr(srch,srch->dataoff);
       switch(srch->type)
@@ -127,10 +144,13 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
           int indx;
           long *sum = (long*)ps;
           long *src = (long*)ph;
+          char txt[10000];
+          sprintf(txt,"%p %p, %p %p",(void*)IFirst.c_str(),(void*)ISecond,(void*)JFirst.c_str(),(void*)JSecond);
           for (indx = 0;indx<n;indx++)
           {
             sum[indx]+=src[indx];
           }
+          sprintf(txt,"%p %p, %p %p",(void*)IFirst.c_str(),(void*)ISecond,(void*)JFirst.c_str(),(void*)JSecond);
           break;
         }
         default:

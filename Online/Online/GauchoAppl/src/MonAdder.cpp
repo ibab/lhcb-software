@@ -584,6 +584,10 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
     {
       if (pp->reclen == 0) break;
       char *nam = (char*)AddPtr(pp,pp->nameoff);
+      if (pp->dataoff > pp->reclen)
+      {
+        printf("Data Offset bigger than Recor Length for %s %s\n",nam, h->m_TargetService.c_str());
+      }
 //      //printf("Histogram Name: %s\n",nam);
       std::string nams =nam;
       //printf("HistAdder Locking MAP\n");
@@ -604,7 +608,7 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
   }
   else
   {
-//    printf("late update from %s\n m_expected %lli received %lli. Using stored buffer...\n",h->m_TargetService.c_str(),m_reference,current);
+    printf("late update from %s\n m_expected %lli received %lli. Using stored buffer...\n",h->m_TargetService.c_str(),m_reference,current);
     add(buff,siz,h);
 //    m_received++;
   }

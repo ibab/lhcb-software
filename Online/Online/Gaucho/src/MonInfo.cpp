@@ -35,7 +35,10 @@ void MonInfo::infoHandler()
   }
   if (AdderFn != 0)
   {
-    (*AdderFn)(adderobj, valin, siz, this);
+    unsigned char* buff = new unsigned char[siz];
+    ::memcpy(buff,valin,siz);
+    (*AdderFn)(adderobj, buff, siz, this);
+    delete [] buff;
   }
   return;
 }
