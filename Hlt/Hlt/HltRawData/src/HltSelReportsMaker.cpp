@@ -396,17 +396,13 @@ StatusCode HltSelReportsMaker::execute() {
      const Hlt::Selection* sel = s.second.selection;
      if( !sel->decision() )continue;
 
-     //FIXME: need to invert the next if -- i.e. the m_Suppress... test should be done in 
-     //       'AND' with the decision check in order to continue... as we always need the
-     //       turbo signature (I think)
-
      bool turbo_signature { false };
-     if( ( !m_debugMode && m_SuppressPostscale ) ||  ( m_debugMode && m_SuppressPostscaleDebug ) ){
      // must also check its decision in HltDecReports since it might have been killed by postscale
-       if( decReports ){
-         const HltDecReport* decReport = decReports->decReport(selName);
-         if( decReport ){
-           turbo_signature = ( decReport->executionStage() & 0x80 ); 
+     if( decReports ){
+       const HltDecReport* decReport = decReports->decReport(selName);
+       if( decReport ){
+         turbo_signature = ( decReport->executionStage() & 0x80 ); 
+         if( ( !m_debugMode && m_SuppressPostscale ) ||  ( m_debugMode && m_SuppressPostscaleDebug ) ){
            if( !(decReport->decision()) )continue;
          }
        }
