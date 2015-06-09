@@ -355,10 +355,10 @@ StatusCode RelInfoBKsttautauTauIsolationBDT::calculateRelatedInfo( const LHCb::P
   }
   
   
-  //    if (msgLevel(MSG::DEBUG)) debug() << "=========================" << endmsg;
-  //    if (msgLevel(MSG::DEBUG)) debug() << "  var_ipchisqany_TauP: " << var_ipchisqany_TauP << "  var_pt_TauP: " << var_pt_TauP << "  var_angle_TauP: " << var_angle_TauP << "  var_fc_TauP: " <<  var_fc_TauP << "  var_doca_TauP: " << var_doca_TauP << "  var_SVdist_TauP: " << var_SVdist_TauP << "  var_PVdist_TauP: " << var_PVdist_TauP << endmsg ;
-  //    if (msgLevel(MSG::DEBUG)) debug() << "  var_ipchisqany_TauM: " << var_ipchisqany_TauM << "  var_pt_TauM: " << var_pt_TauM << "  var_angle_TauM: " << var_angle_TauM << "  var_fc_TauM: " <<  var_fc_TauM << "  var_doca_TauM: " << var_doca_TauM << "  var_SVdist_TauM: " << var_SVdist_TauM << "  var_PVdist_TauM: " << var_PVdist_TauM << endmsg ;
-  //    if (msgLevel(MSG::DEBUG)) debug() << "  var_ipchisqany_Kst: " << var_ipchisqany_Kst << "  var_pt_Kst: " << var_pt_Kst << "  var_angle_Kst: " << var_angle_Kst << "  var_fc_Kst: " <<  var_fc_Kst << "  var_doca_Kst: " << var_doca_Kst << "  var_SVdist_Kst: " << var_SVdist_Kst << "  var_PVdist_Kst: " << var_PVdist_Kst << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "=========================" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "  var_ipchisqany_TauP: " << var_ipchisqany_TauP << "  var_pt_TauP: " << var_pt_TauP << "  var_angle_TauP: " << var_angle_TauP << "  var_fc_TauP: " <<  var_fc_TauP << "  var_doca_TauP: " << var_doca_TauP << "  var_SVdist_TauP: " << var_SVdist_TauP << "  var_PVdist_TauP: " << var_PVdist_TauP << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "  var_ipchisqany_TauM: " << var_ipchisqany_TauM << "  var_pt_TauM: " << var_pt_TauM << "  var_angle_TauM: " << var_angle_TauM << "  var_fc_TauM: " <<  var_fc_TauM << "  var_doca_TauM: " << var_doca_TauM << "  var_SVdist_TauM: " << var_SVdist_TauM << "  var_PVdist_TauM: " << var_PVdist_TauM << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "  var_ipchisqany_Kst: " << var_ipchisqany_Kst << "  var_pt_Kst: " << var_pt_Kst << "  var_angle_Kst: " << var_angle_Kst << "  var_fc_Kst: " <<  var_fc_Kst << "  var_doca_Kst: " << var_doca_Kst << "  var_SVdist_Kst: " << var_SVdist_Kst << "  var_PVdist_Kst: " << var_PVdist_Kst << endmsg ;
   
   
   if ( msgLevel(MSG::DEBUG) ) debug()<<" m_bdt1_TauP : "<<m_bdt1_TauP<<"  ,  m_bdt2_TauP : "<<m_bdt2_TauP<<"  ,  m_bdt3_TauP : "<<m_bdt3_TauP<<endmsg;

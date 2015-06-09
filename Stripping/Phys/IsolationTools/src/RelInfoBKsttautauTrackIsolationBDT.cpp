@@ -241,8 +241,8 @@ StatusCode RelInfoBKsttautauTrackIsolationBDT::calculateRelatedInfo( const LHCb:
 	  const LHCb::Particle* part_2;
 	  LHCb::Particle::ConstVector::const_iterator i_daug_2;
 	  bool flag_p=true;
-	  bool flag_p_max=true;
-	  bool flag_p_min=true;
+	  //bool flag_p_max=true;
+	  //bool flag_p_min=true;
 	  if(Part->charge()==1||Part->charge()==-1){
 	    for(i_daug_2=Daughters_2.begin(); i_daug_2!=Daughters_2.end();++i_daug_2 ){//
 	      part_2 = *(i_daug_2);

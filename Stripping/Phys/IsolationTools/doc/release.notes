@@ -3,6 +3,9 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2015-06-09 - Ricardo Vazquez Gomez
+ - Add fixes to avoid compiler warnings
+
 ! 2015-06-05 - Ricardo Vazquez Gomez
  - Change form declareProperty to setProperty to avoid compilation warnings
 
