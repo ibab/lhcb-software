@@ -4,7 +4,7 @@
 #
 #  !!!DO NOT USE THESE TRACKS FOR NORMAL HLT2 LINES!!!
 #
-#  @author M. Kolpin   michael.kolpin@cern.ch 
+#  @author M. Kolpin   michael.kolpin@cern.ch
 #
 #  @date 2015-01-29
 #
@@ -21,7 +21,7 @@ from HltTrackNames import TrackName, TrackEffNames, Hlt2TrackRoot, Hlt2TrackLoc,
 
 from HltTrackNames import _baseTrackLocation, _baseProtoPLocation
 from HltTrackNames import HltMuonTracksName, HltAllMuonTracksName
-from HltTrackNames import HltMuonIDSuffix, HltRICHIDSuffix, HltCALOIDSuffix, HltSharedPIDPrefix 
+from HltTrackNames import HltMuonIDSuffix, HltRICHIDSuffix, HltCALOIDSuffix, HltSharedPIDPrefix
 
 from Configurables import CaloProcessor, RichRecSysConf, TrackSelector
 
@@ -31,7 +31,7 @@ from Configurables import CaloProcessor, RichRecSysConf, TrackSelector
 #
 class Hlt2ProbeTracking(LHCbConfigurableUser):
     #############################################################################################
-    # 
+    #
     # First of all the dependencies and the slots
     #
     #############################################################################################
@@ -51,7 +51,7 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
     #
     def hlt2ProbeMuonProtos(self):
         """
-        Charged probe protoparticles 
+        Charged probe protoparticles
         """
         return self.__hlt2ProbeMuonProtos()
     #############################################################################################
@@ -59,25 +59,25 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
     # VeloMuon tracking
     #
     def hlt2VeloMuonTracking(self):
-        """ 
+        """
         VeloMuon tracks
         """
         return self.__hlt2VeloMuonTracking()
     #############################################################################################
     #
     # MuonTT tracking
-    #   
+    #
     def hlt2MuonTTTracking(self):
-        """  
+        """
         MuonTT tracks
         """
         return self.__hlt2MuonTTTracking()
     #############################################################################################
     #
     # Full Downstream tracking (seeding with all hits)
-    #   
+    #
     def hlt2FullDownstreamTracking(self):
-        """  
+        """
         Full Downstream tracks
         """
         return self.__hlt2FullDownstreamTracking()
@@ -85,7 +85,7 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
     #############################################################################################
     #
     # The apply configuration method, makes the bindMembers objects which can then
-    # be exported, and also checks that the configuration is not inconsistent  
+    # be exported, and also checks that the configuration is not inconsistent
     #
     #############################################################################################
     #############################################################################################
@@ -109,13 +109,13 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
     # Actual implementation of the functions
     #
     #############################################################################################
-    # 
+    #
     # Start with the naming conventions
     #
     # The track type for the derived tracks
     # This function checks that the track asked for by the Hlt2Tracking instance
     # is in the recognised track types, and returns "Unknown" or the correct
-    # suffix based on the configuration of the Hlt2Tracking. 
+    # suffix based on the configuration of the Hlt2Tracking.
     #
     def trackType(self) :
         if ( self.getProp("ProbeTrack") == "MuonTT" ) :
@@ -154,17 +154,17 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         Requires chargedProtos and muon ID
         """
         from Configurables import ( ChargedProtoParticleAddMuonInfo
-                                   , ChargedProtoCombineDLLsAlg 
+                                   , ChargedProtoCombineDLLsAlg
                                    , MuonIDAlg
 				   , ChargedProtoParticleMaker
 				   , DelegatingTrackSelector
 				   )
         from MuonID	      import ConfiguredMuonIDs
-       
+
         ProbeMuonProtosOutputLocation = _baseProtoPLocation("Hlt2", HltDefaultFitSuffix+"/"+TrackEffNames[self.trackType()])
 
         Hlt2ProbeMuonProtoMaker = ChargedProtoParticleMaker(self.__pidAlgosAndToolsPrefix()+'ProbeProtoPAlg')
-       
+
 
         if (self.trackType() == "MuonTT" ) :
                 # create the protos
@@ -190,7 +190,7 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
                 idalg = MuonIDAlg("IDalg")
                 cm=ConfiguredMuonIDs.ConfiguredMuonIDs( self.getProp("DataType") )
                 cm.configureMuonIDAlg(idalg)
-                idalg.TrackLocation = self.__hlt2FullDownstreamTracking().outputSelection() 
+                idalg.TrackLocation = self.__hlt2FullDownstreamTracking().outputSelection()
                 idalg.MuonIDLocation = Hlt2TrackRoot+HltDefaultFitSuffix+"/"+HltSharedPIDPrefix+"/"+HltMuonIDSuffix
                 idalg.MuonTrackLocation = Hlt2TrackRoot+HltDefaultFitSuffix+"/"+HltSharedPIDPrefix+"/"+HltMuonTracksName
                 # make protos
@@ -208,11 +208,11 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
 
         from HltLine.HltLine import bindMembers
         # Build the bindMembers
-        
-        bm_name         = self.__pidAlgosAndToolsPrefix()+"ProbeMuonProtosSeq" 
+
+        bm_name         = self.__pidAlgosAndToolsPrefix()+"ProbeMuonProtosSeq"
         bm_output       = ProbeMuonProtosOutputLocation
 
-        return bindMembers(bm_name, bm_members).setOutputSelection(bm_output) 
+        return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
     #########################################################################################
     #
     # Probe Track reconstruction
@@ -221,12 +221,12 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         """
         Track reconstruction
         """
-        from HltLine.HltLine import bindMembers    
+        from HltLine.HltLine import bindMembers
         #
         # Set output location
         #
         hlt2TrackingOutput      = Hlt2TrackLoc[self.trackType()]
-        
+
         # Finally make the sequence
         trackRecoSequence = []
         if (self.trackType() == "MuonTT") :
@@ -235,8 +235,8 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
             trackRecoSequence        =     [self.__hlt2VeloMuonTracking()]
         elif (self.trackType() == "FullDownstream" ) :
             trackRecoSequence         =    [self.__hlt2FullDownstreamTracking()]
-  
-        # Build the bindMembers        
+
+        # Build the bindMembers
         bm_name         = self.__trackingAlgosAndToolsPrefix()+"TrackingSeq"
         bm_members      = trackRecoSequence
         bm_output       = hlt2TrackingOutput
@@ -250,18 +250,18 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         """
         VeloMuon track reconstruction for Hlt2
         """
-        #HltSharedTracking decides which Velo sequence is used 
+        #HltSharedTracking decides which Velo sequence is used
         from Configurables  import Hlt2Conf, VeloMuonBuilder, StandaloneMuonRec, TrackMasterFitter
         from Configurables  import MeasurementProviderT_MeasurementProviderTypes__VeloLiteR_, MeasurementProviderT_MeasurementProviderTypes__VeloLitePhi_
-        from HltLine.HltLine    import bindMembers 
-       
+        from HltLine.HltLine    import bindMembers
+
         # Define output location
         VeloMuonTracksOutputLocation = Hlt2TrackEffLoc["VeloMuon"]
-                
+
         # Get Muon standalone track
         Hlt2StandaloneMuon = StandaloneMuonRec("Hlt2StandaloneMuon")
         Hlt2StandaloneMuon.OutputMuonTracksName = Hlt2TrackEffLoc["StandaloneMuon"]
-        
+
         #build VeloMuon track
         Hlt2VeloMuonBuild = VeloMuonBuilder('Hlt2VeloMuonBuild')
         Hlt2VeloMuonBuild.MuonLocation = Hlt2StandaloneMuon.OutputMuonTracksName
@@ -271,13 +271,14 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         Hlt2VeloMuonBuild.addTool( TrackMasterFitter )
         from TrackFitter.ConfiguredFitters import ConfiguredHltFitter, ConfiguredMasterFitter
         ConfiguredMasterFitter( Hlt2VeloMuonBuild.TrackMasterFitter , SimplifiedGeometry = True, LiteClusters = True) #on par with Hlt track fits
-        
-        # Build the bindMembers        
+        Hlt2VeloMuonBuild.TrackMasterFitter.OutputLevel = 5
+
+        # Build the bindMembers
         bm_name         = self.getProp("Prefix")+"VeloMuonTracking"
         bm_members      = [ Hlt2StandaloneMuon, Hlt2VeloMuonBuild ]
         bm_output       = VeloMuonTracksOutputLocation
-        
-        
+
+
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
     #########################################################################################
     #
@@ -295,20 +296,20 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         from HltRecoConf import CommonForwardTrackingOptions, MuonTTOptions
         from HltTracking.HltPVs import PV3D
         #        from Hlt1Lines.HltConfigurePR import ConfiguredPR
-    
+
         pvreco = PV3D('Hlt2')
         Hlt2MuonTTTrack = MuonTTTrack("Hlt2MuonTTTrack")
         Hlt2MuonTTTrack.AddTTHits = True
         Hlt2MuonTTTrack.FillMuonStubInfo = False
         Hlt2MuonTTTrack.ToolName = "MuonCombRec"
-        Hlt2MuonTTTrack.OutputLevel = 6 
+        Hlt2MuonTTTrack.OutputLevel = 6
         Hlt2MuonTTTrack.MC = False
         Hlt2MuonTTTrack.PVLocation = pvreco.output
         Hlt2MuonTTTrack.addTool( MuonCombRec )
         Hlt2MuonTTTrack.MuonCombRec.ClusterTool       = "MuonFakeClustering"
         Hlt2MuonTTTrack.MuonCombRec.CloneKiller       = False
         Hlt2MuonTTTrack.MuonCombRec.StrongCloneKiller = False
-        Hlt2MuonTTTrack.MuonCombRec.SeedStation       = MuonTTOptions["SeedStation"] 
+        Hlt2MuonTTTrack.MuonCombRec.SeedStation       = MuonTTOptions["SeedStation"]
         Hlt2MuonTTTrack.MuonCombRec.DecodingTool      = "MuonHitDecode"
         Hlt2MuonTTTrack.MuonCombRec.PadRecTool        = "MuonPadRec"
         Hlt2MuonTTTrack.MuonCombRec.AssumePhysics     = True
@@ -325,12 +326,13 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         Hlt2MuonTTTrack.addTool( TrackMasterFitter )
         from TrackFitter.ConfiguredFitters import ConfiguredHltFitter, ConfiguredMasterFitter
         ConfiguredMasterFitter( Hlt2MuonTTTrack.TrackMasterFitter , SimplifiedGeometry = True, LiteClusters = True) #on par with Hlt track fits
+        Hlt2MuonTTTrack.TrackMasterFitter.OutputLevel = 5
         Hlt2MuonTTTrack.addTool( TrackMasterExtrapolator )
         Hlt2MuonTTTrack.TrackMasterExtrapolator.MaterialLocator = "SimplifiedMaterialLocator"
         Hlt2MuonTTTrack.Output = Hlt2TrackEffLoc["MuonTT"]
 
-        
-        # Build the bindMembers        
+
+        # Build the bindMembers
         bm_name         = self.getProp("Prefix")+"MuonTTTracking"
         bm_members      = [pvreco, Hlt2MuonTTTrack]
         bm_output       = Hlt2MuonTTTrack.Output
@@ -354,10 +356,12 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         DownstreamFit.TracksOutContainer = Hlt2TrackEffLoc["FullDownstream"] #our outputlocation
         DownstreamFit.addTool(TrackMasterFitter, name = 'Fitter')
         from TrackFitter.ConfiguredFitters import ConfiguredHltFitter, ConfiguredMasterFitter
-        ConfiguredMasterFitter( getattr(DownstreamFit,'Fitter') , SimplifiedGeometry = True, LiteClusters = True) #on par with Hlt track fits
+        DownstreamFitter = getattr(DownstreamFit,'Fitter')
+        ConfiguredMasterFitter(DownstreamFitter, SimplifiedGeometry = True, LiteClusters = True) #on par with Hlt track fits
+        DownstreamFitter.OutputLevel = 5
 
-        # Build the bindMembers        
-        bm_name         = self.getProp("Prefix")+"FullDownstreamTracking" 
+        # Build the bindMembers
+        bm_name         = self.getProp("Prefix")+"FullDownstreamTracking"
         bm_members      = [ DownstreamFit ]
         bm_output       = Hlt2TrackEffLoc["FullDownstream"]
 

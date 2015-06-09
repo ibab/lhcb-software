@@ -4,21 +4,24 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-06-08 - Roel Aaij
+ - Squash some warnings in HLT2 track fitters.
+
 !========================= HltTracking v13r8 2015-05-22 =========================
 
 ! 2015-05-22 - Sascha Stahl
- - HltRecoConf: Configure the LoKi__PVReFitter to compare tracks by LHCbIDs 
+ - HltRecoConf: Configure the LoKi__PVReFitter to compare tracks by LHCbIDs
    to trigger a refit.
 
 ! 2015-05-20 - Sascha Stahl
  - HltRecoConf and Hlt2Tracking: Add possibility to apply cut on GhostProbability
-   upfront in the protoparticle creation. 
+   upfront in the protoparticle creation.
 	 Enable it with HltRecoConf().ApplyGHOSTPROBCut = True and tune the cut with
 	 HltRecoConf().MaxTrGHOSTPROB = 0.x.
 
 ! 2015-05-15 - Sascha Stahl
  - HltRecoConf: Added extra options for p/pt thresholds for muons in Hlt1.
- - Hlt1Tracking: Changed configuration of complement forward for muons. 
+ - Hlt1Tracking: Changed configuration of complement forward for muons.
    It takes now the charge estimate of VeloTT tracks into account and
    T-station hits used by the high pt forward are marked to be not used again.
 
