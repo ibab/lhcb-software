@@ -1,12 +1,12 @@
 ################################################################################
 # Package: AlignOnline
 ################################################################################
-gaudi_subdir(AlignOnline v1r3)
+gaudi_subdir(AlignOnline v1r2)
 
 gaudi_depends_on_subdirs(Alignment/AlignKernel
                          Det/DetDesc
                          Online/OnlineKernel
-			 Online/EventBuilder)
+      Online/EventBuilder) # Temporary - MM, 2015/04/07
 
 # This is a special trick to handle the non standard headers'
 # locations in Online.
@@ -16,6 +16,6 @@ find_path(RTL_include_dir RTL/rtl.h
 gaudi_add_module(AlignOnline
                  src/*.cpp
                  INCLUDE_DIRS ${RTL_include_dir}
-                 LINK_LIBRARIES AlignKernel DetDescLib OnlineKernel)
+                 LINK_LIBRARIES AlignKernel DetDescLib OnlineKernel GaudiAlgLib)
 
 gaudi_install_python_modules()
