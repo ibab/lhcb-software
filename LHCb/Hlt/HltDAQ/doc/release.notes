@@ -8,6 +8,7 @@
  - Add first state covariance matrix.
  - Choose states properly.
  - Do not require every map present for each bank version.
+ - Update unit test.
 
 !========================= HltDAQ v4r14 2015-05-26 =========================
 ! 2015-05-13 - Sean Benson
