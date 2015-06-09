@@ -11,8 +11,8 @@
 __author__  = "Vladimir Gligorov vladimir.gligorov@@cern.ch"
 __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.0 $"
 # =============================================================================
-
-import Gaudi.Configuration 
+from GaudiKernel.SystemOfUnits import GeV, MeV, mm
+import Gaudi.Configuration
 
 def histosfilter(name,xlower=0.,xup=100.,nbins=100):
     """ return the dictonary with the booking of the histograms associated to a filter
@@ -29,16 +29,16 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
     #
     # V. Gligorov
     __slots__ = { 'DoTiming' : False
-                , 'PT'       : 500.
-                , 'P'        : 1000.
+                , 'PT'       : 500. * MeV
+                , 'P'        : 20000. * MeV
                 , 'MinETA'   : 2.59
                 , 'MaxETA'   : 2.97
                 , 'Phis'     : [(-2.69, -2.29 ), (-0.85, -0.45), (0.45, 0.85), (2.29, 2.69)]
                 , 'TrChi2'   : 2.
                 , 'MinTr'    : 5.5
                 , 'GEC'      : 'Loose'
-                , 'LM_PT'    : 500.
-                , 'LM_P'     : 1000.
+                , 'LM_PT'    : 500. * MeV
+                , 'LM_P'     : 1000. * MeV
                 , 'LM_TrChi2': 2.
                 , 'LM_MinTr' : 1
                 , 'LM_MaxTr' : 40
@@ -48,7 +48,7 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
     def localise_props( self, prefix ):
         ps = self.getProps()
         # get the list of options belonging to this prefix
-        return { key.replace(prefix + "_", "") : ps[key] for key in ps if key.find(prefix) >= 0 } 
+        return { key.replace(prefix + "_", "") : ps[key] for key in ps if key.find(prefix) >= 0 }
 
     def hltRICHMirror_Preambulo( self ) :
         from HltTracking.Hlt1Tracking import ( VeloCandidates, TrackCandidates, FitTrack )
@@ -56,19 +56,19 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
                       TrackCandidates( 'CalibRICHMirror' )]
         return Preambulo
 
-    # line using velo+veloTT+forwardUpgrade en'block 
+    # line using velo+veloTT+forwardUpgrade en'block
     def hltRICHMirrorBlock_Streamer( self, name, props ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
         props['PhiCuts'] = ' | '.join(('in_range(%3.2f, TrPHI, %3.2f)' % box for box in props['Phis']))
-        lineCode = """ 
+        lineCode = """
         TrackCandidates
         >>  FitTrack
         >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
-        >>  ( ( TrPT  > %(PT)s * MeV ) &
-              ( TrP   > %(P)s  * MeV ) &
+        >>  ( ( TrPT  > %(PT)s ) &
+              ( TrP   > %(P)s ) &
               ( TrCHI2PDOF < %(TrChi2)s ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT/TrackChi2', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nP/PT/Chi2' , LoKi.Monitoring.ContextSvc ) )
@@ -77,17 +77,17 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
         >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT/ETA/PHI', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , '      nP/PT/ETA/PHI', LoKi.Monitoring.ContextSvc ) )
         >>  SINK( 'Hlt1%(name)sDecision' )
-        >>  (TC_SIZE > %(MinTr)s)
+        >>  (TC_SIZE > %(MinTr)s ))
         """ % props
         hltRICHMirrorBlock_Unit = HltUnit(
             'Hlt1'+name+'Unit',
             Preambulo = self.hltRICHMirror_Preambulo( ),
             Code = lineCode
-            )       
+        )
         from HltTracking.HltPVs import PV3D
         return [ Hlt1GECUnit( props[ 'GEC' ] ), PV3D('Hlt1'), hltRICHMirrorBlock_Unit ]
 
-    
+
     #--------------------------------
     #
     # M. Martinelli
@@ -97,7 +97,7 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
         Preambulo = [ FitTrack,
                       TrackCandidates( name)]
         return Preambulo
-    
+
     # line to select tracks with high pt in a low multiplicity event
     def hltHighPTLowMultiplicity_Streamer( self, name, props):
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
@@ -105,14 +105,14 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
         from Configurables import LoKi__HltUnit as HltUnit
         from HltLine.HltLine import bindMembers
         props['name'] = name
-        
+
         algos = []
 
         gec = props["GEC"]
         algos.append( Hlt1GECUnit( props["GEC"] ) )
 
         algos.append( PV3D('Hlt1') )
-        
+
         LowMultUnit = HltUnit(
             "Hlt1%(name)sLowMultStreamer" % props,
             Preambulo = self.hltLowMultiplicity_Preambulo( 'CalibHighPTLowMultTrksU1' ),
@@ -125,7 +125,7 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
               """ % props
             )
         algos.append( LowMultUnit )
-        
+
         TrackSelUnit = HltUnit(
             "Hlt1%(name)sTrackSelStreamer" % props,
             Preambulo = self.hltLowMultiplicity_Preambulo( 'CalibHighPTLowMultTrksU2' ),
@@ -134,8 +134,8 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
               >>  FitTrack
               >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
               >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
-              >>  ( ( TrPT  > %(PT)s * MeV ) &
-                    ( TrP   > %(P)s  * MeV ) &
+              >>  ( ( TrPT  > %(PT)s ) &
+                    ( TrP   > %(P)s ) &
                     ( TrCHI2PDOF < %(TrChi2)s ) )
               >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT/TrackChi2', LoKi.Monitoring.ContextSvc ) )
               >>  tee  ( monitor( TC_SIZE    , 'nP/PT/Chi2' , LoKi.Monitoring.ContextSvc ) )
@@ -167,8 +167,8 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
             code = re.sub( '\\s+%s\\s+' % step, sub, code )
         unit.Code = code
         return unit
-    
-    def __apply_configuration__(self) : 
+
+    def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt1Line
         doTiming = self.getProp( 'DoTiming' )
         # Rich Mirror Calibration
@@ -187,4 +187,3 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
             algos = [ self.do_timing( unit ) if doTiming else unit for unit in \
                       self.hltHighPTLowMultiplicity_Streamer( 'CalibHighPTLowMultTrks', self.localise_props( 'LM' ) ) ]
             )
-

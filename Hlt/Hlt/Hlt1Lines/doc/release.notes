@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-06-09 - Roel Aaij
+ - Add seperate property for minimum number of tracks in FullZ BeamGas line.
+ - Set default cut to 20 GeV in CalibRICHMirror line.
+
 ! 2015-06-04 - Christian Linn
  - added new MBNoBiasRateLimited and MBNoBiasLeadingCrossing lines
 
@@ -14,7 +18,7 @@
  - Adjustment to Hlt1CEPLines.py to ensure VeloTracking is required by the line
 
 ! 2015-05-20 - Francesco Dettori
- - Adding a separate streamer for the DiMuonNoL0 line with inverted order of IsMuon and FitTrack in order to save time. 
+ - Adding a separate streamer for the DiMuonNoL0 line with inverted order of IsMuon and FitTrack in order to save time.
 
 ! 2015-05-20 - Francesco Dettori
  - Making the L0 requirement of the Hlt1NoPVPassThrough configurable
@@ -23,7 +27,7 @@
  - Fix warnings in Hlt1HighMult lines and put cut to something more reasonable.
 
 ! 2015-05-05 - Dan Johnson
-  - Following yesterday's PPTS discussion on triggering non b-b events, add an HLT1 line to pass these through 
+  - Following yesterday's PPTS discussion on triggering non b-b events, add an HLT1 line to pass these through
     to HLT2. Need this to avoid nonification of the events triggered at L0 by lumi triggers
   - Change NoBias line name to remove "CEP"
 
@@ -34,7 +38,7 @@
  - Commit new HighPT low multiplicity line for Maurizio
 
 ! 2015-05-01 - Dan Johnson
- - Change to Hlt1CEPLines.py, proposed by Gerhard/Vava. Removes TISTOS warning and makes for faster evaluation of upper/lower nVeloTracks bound using 
+ - Change to Hlt1CEPLines.py, proposed by Gerhard/Vava. Removes TISTOS warning and makes for faster evaluation of upper/lower nVeloTracks bound using
    is_range instead of two CONTAINS.
 
 !========================= Hlt1Lines v7r10 2015-04-23 =========================
@@ -50,7 +54,7 @@
  - Added soft tracks to MultiMuonNoL0 (as the other lines).
 
 ! 2015-04-28 - Roel Aaij
- - Update 1TrackMVA parameters. 
+ - Update 1TrackMVA parameters.
  - Remove modification of factories from Hlt1Lines.
 
 ! 2015-04-28 - Christian Linn

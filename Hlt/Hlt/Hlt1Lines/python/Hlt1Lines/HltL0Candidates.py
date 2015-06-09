@@ -5,7 +5,7 @@
 #
 # Module to define the conversion of L0 candidates across several HltLines
 # Using this module will insure that multiple inclusions will still only
-# execute once, and it guarantees a uniform naming convention which is 
+# execute once, and it guarantees a uniform naming convention which is
 # defined in one single place
 #
 #
@@ -23,7 +23,7 @@
 #
 # this convention is implemented by the _name function below.
 #
-# In addition, if an L0 TCK is explicity specified, this module checks 
+# In addition, if an L0 TCK is explicity specified, this module checks
 # that the requested L0 Channels actually exist in the corresponding
 # L0 configuration
 #
@@ -42,7 +42,7 @@ from HltLine.HltLine import bindMembers
 
 
 # utilities to pack and unpack L0 conditions into Condition property...
-# given the 'Conditions' property of an L0DUCOnfig tool instance, 
+# given the 'Conditions' property of an L0DUCOnfig tool instance,
 # return a pythonized table of settings
 # i.e. the inverse of 'genItems'
 def _parseL0settings( settings ) :
@@ -55,7 +55,7 @@ def _parseL0setting( setting ) :
     val = {}
     for s in setting :
         m = p.match(s)
-        key = m.group(1) 
+        key = m.group(1)
         value = m.group(2)
         # adapt to ideosyncracies
         if key == 'rate=' : key = 'rate'
@@ -69,7 +69,7 @@ def _parseL0setting( setting ) :
         val.update( { key : value } )
     return val
 
-def _name(i) : 
+def _name(i) :
     return 'Hlt1L0'+i+'Candidates' if i.startswith('All') else 'Hlt1L0'+i+'Decision'
 
 def _muon( channel ) :
@@ -99,9 +99,9 @@ def _converter( channel ) :
     conditionTypes = set()
     # TODO: go recursive, and substitute channels which act as conditions with their own conditions
     for i in _l0Channels[channel]['conditions'] :
-        if i in _l0Conditions : 
+        if i in _l0Conditions :
             conditionData =  _l0Conditions[i]['data']
-            if conditionData in conditionMapper : 
+            if conditionData in conditionMapper :
                 conditionTypes.update( [ conditionMapper[conditionData]  ])
     if not conditionTypes :         return { channel : None }
     elif len(conditionTypes) == 1 : return typeMapper[conditionTypes.pop()](channel)
@@ -155,7 +155,7 @@ def decodeL0Channels( L0TCK , skipDisabled = True, forceSingleL0Configuration = 
     from Configurables import L0DUMultiConfigProvider,L0DUConfigProvider
     # canonicalize L0 TCK...
     L0TCK = int(L0TCK,16) if type(L0TCK)==str else L0TCK
-    L0TCK = '0x%04X' %  L0TCK  
+    L0TCK = '0x%04X' %  L0TCK
     if L0TCK not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
         raise KeyError('requested L0 TCK %s is not known'%L0TCK)
     if 'ToolSvc.L0DUConfig.TCK_%s'%L0TCK not in allConfigurables :
@@ -170,7 +170,7 @@ def decodeL0Channels( L0TCK , skipDisabled = True, forceSingleL0Configuration = 
     print '# decoded L0 channels for L0TCK=%s: %s'%(L0TCK, [ i for i in _l0Channels.iterkeys()])
     def _hasBeenDisabled( d ) :
         if 'DISABLE' in d and d['DISABLE'].upper().find('TRUE') != -1 : return True # old style
-        if 'MASK'    in d and _parseMask(d['MASK']) == 'Disable' : return True    
+        if 'MASK'    in d and _parseMask(d['MASK']) == 'Disable' : return True
         return False
     return [ i for i in _l0Channels.iterkeys() if ( not skipDisabled or not _hasBeenDisabled(_l0Channels[i])) ]
 
@@ -178,7 +178,7 @@ def decodeL0Channels( L0TCK , skipDisabled = True, forceSingleL0Configuration = 
 def L0Mask( channel ) :
     global _dict,_l0Channels
     if channel not in _dict.keys() : raise KeyError('Unknown L0 channel requested: %s -- check that this channel is included in requested L0 configuration...'%channel)
-    x = _l0Channels[ channel ] 
+    x = _l0Channels[ channel ]
     return _parseMask(x['MASK']) if 'MASK' in x else None
 
 
@@ -203,7 +203,7 @@ def setupL0Channels( ) :
     # the types are basically hardwired and are thus not likely to change...
     _l0Types = [ 'Muon','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
     _dict = dict()
-    if not _l0Channels : 
+    if not _l0Channels :
          log.warning('HLT does not know about any L0 Channels.')
          log.warning('This is most likely because you have not specified (to the HLT) what L0 configuration you want to use.')
          log.warning('Either specify a ThresholdSettings, or an explicit L0TCK')

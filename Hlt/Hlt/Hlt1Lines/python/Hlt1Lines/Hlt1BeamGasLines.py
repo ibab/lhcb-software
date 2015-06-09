@@ -97,6 +97,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
 
         ### PV3D vertex cuts
         , 'VertexMinNTracks'          : 9  # strictly greater than
+        , 'FullZVertexMinNTracks'     : 27  # strictly greater than
         , 'HighRhoVerticesMinNTracks' : 9  # strictly greater than
         , 'VertexMaxChi2PerDoF'       : False  # None doesn't work with the framework...
         , 'VertexCutSmallRho'       : '(VX_BEAMSPOTRHO( 6*mm ) < 4*mm)'
@@ -330,7 +331,8 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         ### One object cuts ###
         vtxCut_zPos           = "in_range(%s*mm, VZ, %s*mm)" %(zMin, zMax)
         vtxCut_maxChi2PerDoF  = "(VCHI2PDOF < %s)"% self.getProp("VertexMaxChi2PerDoF") if self.getProp("VertexMaxChi2PerDoF") else ""
-        vtxCut_minNTracks     = "(NTRACKS > %s)"  % self.getProp("VertexMinNTracks") if self.getProp("VertexMinNTracks") else ""
+        prop = 'FullZVertexMinNTracks' if 'FullZ' in lineName else 'VertexMinNTracks'
+        vtxCut_minNTracks     = "(NTRACKS > %s)"  % self.getProp(prop) if self.getProp(prop) else ""
         vtxCut_smallRho = self.getProp('VertexCutSmallRho')
         listVertexCuts = [ vtxCut_zPos, vtxCut_maxChi2PerDoF, vtxCut_minNTracks, vtxCut_smallRho ]
 
