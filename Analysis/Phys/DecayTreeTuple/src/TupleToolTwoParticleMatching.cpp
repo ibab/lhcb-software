@@ -115,7 +115,7 @@ StatusCode TupleToolTwoParticleMatching::fill( const LHCb::Particle*
       LHCb::Particle::Range candidates_for_matching = get<LHCb::Particle::Range>(matching_location);
       for(LHCb::Particle::Range::const_iterator iCand=candidates_for_matching.begin(); iCand!= candidates_for_matching.end(); ++iCand){
 //        if ((P->isBasicParticle()==(*iCand)->isBasicParticle())&&(P->charge()==(*iCand)->charge())){
-        if ((*iCand)->particleID().pid() == pid ){
+//        if ((*iCand)->particleID().pid() == pid ){
           m_counter +=1;
           std::pair< double, double > c_overlap = LHCb::HashIDs::overlap((*iCand), P);
           double loaded_overlap = std::get<0>(c_overlap);
@@ -126,7 +126,7 @@ StatusCode TupleToolTwoParticleMatching::fill( const LHCb::Particle*
             best_overlap_loaded = loaded_overlap;
             best_overlap_original = original_overlap;
           }
-        }
+//        }
       }
     }
     /*

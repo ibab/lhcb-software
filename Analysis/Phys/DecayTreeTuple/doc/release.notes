@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2015-06-09 - Lucio Anderlini
+  - Fixed a bug in TupleToolTwoParticleMatching: matching was achieved with
+    positive particles only. If statement is now removed.
+
 !======================= DecayTreeTuple v5r0 2015-06-03 =====================
 
 ! 2015-06-03 - Lucio Anderlini
