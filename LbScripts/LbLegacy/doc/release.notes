@@ -1,3 +1,8 @@
+2015-06-08 Ben Couturier  <Ben.Couturier@cern.ch>
+
+	* python/LbLegacy/install_project.py: LBCORE-826: Added support for -do0 platform,
+	 --no-self-checki, --no-compat and not-boot-scripts options. 
+
 2015-05-27 Ben Couturier  <Ben.Couturier@cern.ch>
 
 	* scripts/mkLHCbtar: LBCORE-826 Add -do0 platform to lbscripts (debug compiled with -O0) 

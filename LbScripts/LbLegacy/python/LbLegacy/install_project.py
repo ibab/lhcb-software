@@ -90,6 +90,11 @@ latest_data_link = False
 dev_install = False
 extra_binary = None
 
+# Extra flag to enable/diable the LbScript version check
+check_self = True
+get_boot_scripts_flag = True
+get_compat_flag = True
+
 #----------------------------------------------------------------------------------
 
 def usage() :
@@ -127,7 +132,10 @@ def usage() :
       -B or --boot-scripts : prepend boot scripts location (LbScripts base dir). For debug purposes.
       -t or --tmp-dir      : give the base tmp directory instead of the std $MYSITEROOT/tmp/$USER. mkdtemp
                              is used to make the directory unique.
-
+      --no-self-check      : Disable check for download of latest version
+      --no-boot-scripts    : Disable LbScripts installation
+      --no-compat          : Disable COmpat installation
+      
     Perequisite:
       requires python version >= 2.3.4 on Win32 and python >=2.3 on Linux
       the following environment variables should have been set before invoking the script:
@@ -1260,9 +1268,18 @@ def getProjectList(name, version, binary=None, recursive=True):
         if project_list[fname] == "source":
             pack_ver = getPackVer(fname)
             if pack_ver[2] != cmtconfig:
+
+                #
+                # XXX Hack for the do0 config
+                # The issue needs to be sorted carefully.
+                # Not sure why we are not trsuting what mkLHCbtar produced so need to investigate the use case
+                if cmtconfig.endswith("-do0"):
+                    # Just do not apply this rules for this platform...
+                    continue
+
+                # Normal processing, to be reviewed urgently
                 del project_list[fname]
                 html_list.remove(fname)
-
                 ## There was a condition for this update which was NOT necessary.
                 #if cmtconfig in LbConfiguration.Platform.binary_list:
                 ## At this point the platform has been checked and we have to consider it as valid,
@@ -1601,6 +1618,7 @@ def getProjectTar(tar_list, already_present_list=None):
                 removeAll(pack_ver[3])
                 log.info('Cleaning up %s' % pack_ver[3])
                 sys.exit("getProjectTar: Exiting ...")
+            import LbConfiguration.External
             if pack_ver[0] in LbConfiguration.External.external_projects:
                 try:
                     # if it is a ext_lhcb project
@@ -1665,6 +1683,10 @@ def getProjectTar(tar_list, already_present_list=None):
 # Autoupdate myself
 def getMySelf():
     log = logging.getLogger()
+    global check_self
+    if not check_self:
+        log.warning("Install_project automatic update disabled")
+        return
     here = os.getcwd()
     mysiteroot = os.environ["MYSITEROOT"].split(os.pathsep)[0]
     os.chdir(mysiteroot)
@@ -1920,9 +1942,17 @@ def getProjectVersions(pname, cmt_config=None):
 
     return version_list
 
-def getLatestVersion(pname, cmt_config=None):
-    vlist = getProjectVersions(pname, cmt_config)
-    return vlist[-1]
+def getLatestVersion(pname, cmt_config=None, noerror=False):
+    try:
+        vlist = getProjectVersions(pname, cmt_config)
+        return vlist[-1]
+    except IndexError, e:
+        # No version was found...
+        if noerror:
+            return None
+        else:
+            raise e
+        
 
 #
 #  read a string from a file ==============================================
@@ -2198,7 +2228,22 @@ def runInstall(pname, pversion, binary=None):
 
 
 # start the project installation
-    getBootScripts()
+    global get_boot_scripts_flag
+    if get_boot_scripts_flag:
+        getBootScripts()
+    else:
+        log.warning("Boot scripts installation disabled")
+        # Need to add LbScripts to the PYTHONPATH...
+        scripttar = "LBSCRIPTS_LBSCRIPTS_%s.tar.gz" % lbscripts_version
+        location = getInstallLocation(scripttar)
+        log.debug("LbScripts %s is already installed in %s" % (lbscripts_version, location))
+        for l in subdir_dict["lhcb"].split(os.pathsep) :
+            if l.startswith(location) :
+                that_lhcb_dir = l
+                break
+            sys.path.insert(0, os.path.join(that_lhcb_dir,
+                                            "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version,
+                                            "InstallArea", "python"))
 
 # update main lhcb project configuration
 # This has to be removed as many grid jobs do not have write permissions
@@ -2228,7 +2273,10 @@ def runInstall(pname, pversion, binary=None):
     if install_binary :
         binary = cmtconfig
 
-    getCMT(cmtversion)
+    if get_boot_scripts_flag:
+        getCMT(cmtversion)
+    else:
+        log.warning("CMT install disabled as boot scripts installation disabled")
 
     if not pversion:
         if binary:
@@ -2240,9 +2288,12 @@ def runInstall(pname, pversion, binary=None):
 
 
     if not check_only :
-        if pname != 'LbScripts' :
-            script_project_list = getProjectList('LbScripts', lbscripts_version)[0]
-            getProjectTar(script_project_list)
+        if not get_boot_scripts_flag:
+            log.warning("LbScripts install disabled as boot scripts installation disabled")        
+        else:
+            if pname != 'LbScripts' :
+                script_project_list = getProjectList('LbScripts', lbscripts_version)[0]
+                getProjectTar(script_project_list)
 
     project_list, html_list = getProjectList(pname, pversion)
 
@@ -2259,9 +2310,12 @@ def runInstall(pname, pversion, binary=None):
             grid_project_list, grid_html_list = getProjectList('LHCbGrid', grid_version, cmtconfig_opt)
             project_list.update(grid_project_list)
             html_list += grid_html_list
-        if pname != 'Compat' :
+        global get_compat_flag
+        if not get_compat_flag:
+            log.warning("Compat installation disabled")
+        if pname != 'Compat' and get_compat_flag:
             if not compat_version:
-                new_compat_version = getLatestVersion("Compat", cmtconfig_opt)
+                new_compat_version = getLatestVersion("Compat", cmtconfig_opt, True)
             else :
                 new_compat_version = compat_version
             compat_project_list, compat_html_list = getProjectList('Compat', new_compat_version)
@@ -2631,12 +2685,13 @@ def checkBinaryName(binary):
     if sys.platform != 'win32' and binary.find('win32') != -1 :
         make_flag = None
 
+    # Disabling this check as it is more harmful than useful...
     if binary not in binary_list:
-        print 'BE CAREFUL - your CMTCONFIG %s is not part of the lhcb_binary %s' % (os.getenv('CMTCONFIG'), LbConfiguration.Platform.binary_list)
-        print 'do you want to continue? [yes|no]'
-        nextin = sys.stdin.readline()
-        if nextin.lower()[0] != 'y':
-            sys.exit()
+    #    print 'BE CAREFUL - your CMTCONFIG %s is not part of the lhcb_binary %s' % (os.getenv('CMTCONFIG'), LbConfiguration.Platform.binary_list)
+    #    print 'do you want to continue? [yes|no]'
+    #    nextin = sys.stdin.readline()
+    #    if nextin.lower()[0] != 'y':
+    #        sys.exit()
         extra_binary = binary
 
     return binary
@@ -2654,8 +2709,9 @@ def parseArgs():
     global url_dist
     global boot_script_loc
     global cur_tmp_dir
-
-
+    global check_self
+    global get_boot_scripts_flag
+    global get_compat_flag
 
     pname = None
     pversion = None
@@ -2674,7 +2730,8 @@ def parseArgs():
              'retry=', 'grid=', 'setup-script=', 'check', 'overwrite',
              'compatversion=', "retrytime=", "nofixperm", "version",
              "compatible-configs", "latest-data-link", "url",
-             "boot-scripts=","tmp-dir=", "dev-install"])
+             "boot-scripts=","tmp-dir=", "dev-install", "no-self-check",
+             "no-boot-scripts", "no-compat"])
 
     except getopt.GetoptError, err:
         print str(err)
@@ -2738,6 +2795,12 @@ def parseArgs():
             url_dist = value
         if key in ('-B', '--boot-scripts'):
             boot_script_loc = value
+        if key in ('--no-self-check'):
+            check_self = False
+        if key in ('--no-boot-scripts'):
+            get_boot_scripts_flag = False
+        if key in ('--no-compat'):
+            get_compat_flag = False
         if key in ('-t', '--tmp-dir'):
             try :
                 cur_tmp_dir = mkdtemp(dir=value)
