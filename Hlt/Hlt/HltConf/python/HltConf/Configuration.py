@@ -170,6 +170,9 @@ class HltConf(LHCbConfigurableUser):
                 log.warning( '## WARNING Please make sure you know what you are doing!!                         ##' )
                 log.warning( '####################################################################################' )
             L0TCK = self.getProp('L0TCK')
+        if not self.getProp('L0TCK') :
+            self.setProp('L0TCK', L0TCK)
+
         self.defineL0Channels( L0TCK )
 
         # obtain list of lines,
@@ -811,7 +814,7 @@ class HltConf(LHCbConfigurableUser):
 
         # Don't try to decode L0 for the routing bits writer if no L0TCK has
         # been set. This allows forward compatibility.
-        if not self.getProp('L0TCK'):
+        if self.getProp('L0TCK') == '':
             _hlt1postamble = _hlt1postamble[1 :]
             _hlt2postamble = _hlt2postamble[1 :]
 
