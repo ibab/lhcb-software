@@ -89,43 +89,31 @@ StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple )
   // fill the HLT global
   if ( m_doHlt1 || m_doHlt2 )
   {
+    // Use of the split locations should be backwards compatible, i.e. we an use the Hlt1/Hlt2
+    // specific locations even for Run 1 data.
     const LHCb::HltDecReports* decReports2(0);
-    //    look for split report first
     const LHCb::HltDecReports* decReports1 =
-      getIfExists<LHCb::HltDecReports>(evtSvc(),"Hlt1/DecReports");
+      getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Hlt1Default);
     if ( !decReports1 )
     {
       decReports1 =
-        getIfExists<LHCb::HltDecReports>(evtSvc(),"Hlt1/DecReports",false);
-    }
-    //        if not found look for old style Hlt1+Hlt2
-    if ( !decReports1 )
-    {
-      decReports1 =
-        getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default);
-      if ( !decReports1 )
-      {
-        decReports1 =
-          getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default,false);
-      }
-      if( decReports1 )
-      {
-        decReports2 = decReports1;
-      }
+        getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Hlt1Default,false);
     }
 
-    //       allow data with only Hlt2 report
-    if( !decReports2 )
+    if(! decReports1 )
+      debug() << "No reports at LHCb::HltDecReportsLocation::Hlt1Default (" << LHCb::HltDecReportsLocation::Hlt1Default << ")" << endreq;
+
+    // allow data with only Hlt2 report
+    decReports2 =
+      getIfExists<LHCb::HltDecReports>(evtSvc(), LHCb::HltDecReportsLocation::Hlt2Default);
+    if ( !decReports2 )
     {
       decReports2 =
-        getIfExists<LHCb::HltDecReports>(evtSvc(),"Hlt2/DecReports");
-      if ( !decReports2 )
-      {
-        decReports2 =
-          getIfExists<LHCb::HltDecReports>(evtSvc(),"Hlt2/DecReports",false);
-      }
+        getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Hlt2Default,false);
     }
 
+    if(! decReports2 )
+      debug() << "No reports at LHCb::HltDecReportsLocation::Hlt2Default (" << LHCb::HltDecReportsLocation::Hlt2Default << ")" << endreq;
 
     //fill the HLT1 global
     if ( !tuple->column( prefix+"Hlt1Global",
@@ -203,23 +191,14 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
       decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca,false);
     }
   } else {
-    //  look for split reports first
+    // Split reports should be all we need.
     std::string loca = level + "/DecReports";
     decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca);
     if ( !decReports )
     {
       decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca,false);
     }
-    //  if not found look for old style Hlt report
-    loca = LHCb::HltDecReportsLocation::Default;
-    decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca);
-    if ( !decReports )
-    {
-      decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca,false);
-    }
   }
-
-
 
   if ( decReports )
   {

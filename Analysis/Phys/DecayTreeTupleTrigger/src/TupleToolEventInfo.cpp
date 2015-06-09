@@ -84,17 +84,31 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
              LHCb::L0DUReportLocation::Default + ")" ).ignore();
   }
 
-  LHCb::HltDecReports* decreport =
-    getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default);
-  if ( !decreport )
+  LHCb::HltDecReports* decreport_hlt1 =
+    getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Hlt1Default);
+  if ( !decreport_hlt1 )
   {
-    decreport =
-      getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default,false);
+    decreport_hlt1 =
+      getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Hlt1Default,false);
   }
-  if ( !decreport )
+  if ( !decreport_hlt1 )
   {
-    Warning( "Can't get LHCb::HltDecReportsLocation::Default (" +
-             LHCb::HltDecReportsLocation::Default + ")" ).ignore();
+    Warning( "Can't get LHCb::HltDecReportsLocation::DefaultHlt1 (" +
+             LHCb::HltDecReportsLocation::Hlt1Default + ")" ).ignore();
+  }
+
+  LHCb::HltDecReports* decreport_hlt2 =
+    getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Hlt2Default);
+  if ( !decreport_hlt2 )
+  {
+    decreport_hlt2 =
+      getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Hlt2Default,false);
+  }
+  
+  if ( !decreport_hlt2 )
+  {
+    Warning( "Can't get LHCb::HltDecReportsLocation::DefaultHlt2 (" +
+             LHCb::HltDecReportsLocation::Hlt2Default + ")" ).ignore();
   }
 
   bool test = true;
@@ -109,7 +123,8 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple )
   test &= tuple->column( prefix+"BCType",       odin->bunchCrossingType() );
   test &= tuple->column( prefix+"OdinTCK",      odin->triggerConfigurationKey() );
   test &= tuple->column( prefix+"L0DUTCK",      report    ? report->tck() : 0 );
-  test &= tuple->column( prefix+"HLTTCK",       decreport ? decreport->configuredTCK() : 0 );
+  test &= tuple->column( prefix+"HLT1TCK",      decreport_hlt1 ? decreport_hlt1->configuredTCK() : 0 );
+  test &= tuple->column( prefix+"HLT2TCK",      decreport_hlt2 ? decreport_hlt2->configuredTCK() : 0 );
   test &= tuple->column( prefix+"GpsTime",      odin->gpsTime() );
 
   if ( isVerbose() )
