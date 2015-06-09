@@ -8,7 +8,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/Time.h"
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 #include "RTL/rtl.h"
 
@@ -28,7 +28,7 @@
 //#include <stdio.h>
 //#include <stdlib.h>
 
-class DBXferAlg : public Algorithm
+class DBXferAlg : public GaudiAlgorithm
 {
   public:
     DBXferAlg(const std::string& name, ISvcLocator *svcloc);
@@ -50,7 +50,7 @@ class DBXferAlg : public Algorithm
 
 DECLARE_ALGORITHM_FACTORY(DBXferAlg)
 
-DBXferAlg::DBXferAlg( const std::string& name, ISvcLocator *svcloc) : Algorithm(name,svcloc)
+DBXferAlg::DBXferAlg( const std::string& name, ISvcLocator *svcloc) : GaudiAlgorithm(name,svcloc)
 {
   declareProperty("OnlineXmlDir", m_onlinexmldir = "/group/online/alignment");
   declareProperty("RunStartTime",m_RunStartTime);
@@ -61,7 +61,7 @@ StatusCode DBXferAlg::initialize()
 {
 //	sleep(20);
   printf("Initializing DBXferAlg...\n");
-  StatusCode sc = Algorithm::initialize();
+  StatusCode sc = GaudiAlgorithm::initialize();
 //  sc = GaudiTool::initialize();
 
   // loading the xml writers
@@ -77,7 +77,7 @@ StatusCode DBXferAlg::finalize()
 //  GaudiTool::finalize();
   m_XMLWriter->finalize();
   m_toolsvc->releaseTool(m_XMLWriter);
-  return Algorithm::finalize();
+  return GaudiAlgorithm::finalize();
 }
 
 StatusCode DBXferAlg::execute()
@@ -102,6 +102,7 @@ StatusCode DBXferAlg::execute()
 
     detDataSvc->setEventTime(m_RunStartTime);
     incSvc->fireIncident(RunChangeIncident(name(), m_RunNumber));
+    updMgrSvc()->newEvent();
 
   return sc;
 }
