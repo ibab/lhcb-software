@@ -752,7 +752,18 @@ class HltConf(LHCbConfigurableUser):
         Hlt1TrackMonitor().VeloTrackLocation = MinimalVelo.outputSelection()
         Hlt1TrackMonitor().VeloTTTrackLocation = VeloTTTracking.outputSelection()
         Hlt1TrackMonitor().ForwardTrackLocation = HltHPTTracking.outputSelection()
+        # This is not so nice but currently unavoidable
+        from HltTracking.Hlt1TrackNames import Hlt1TrackLoc
+        from HltTracking.HltTrackNames import HltDefaultFitSuffix
+        if activehlt1lines:
+            Hlt1TrackMonitor().FittedTrackLocation = Hlt1TrackLoc["FitTrack"]
+        if activehlt2lines and not activehlt1lines:
+            Hlt1TrackMonitor().FittedTrackLocation =  HltHPTTracking.outputSelection()+HltDefaultFitSuffix
 
+        print Hlt1TrackMonitor().FittedTrackLocation
+        print Hlt1TrackMonitor().FittedTrackLocation
+        print Hlt1TrackMonitor().FittedTrackLocation
+        print Hlt1TrackMonitor().FittedTrackLocation
         # make sure we encode from the locations the decoders will use...
         from DAQSys.Decoders import DecoderDB
         hlt1_decrep_loc = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]

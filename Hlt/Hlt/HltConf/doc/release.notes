@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-06-09 - Sascha Stahl
+ - Added configuration of fitted track location of Hlt1TrackMonitor. 
+
 ! 2015-06-08 - Roel Aaij
  - Fix exclusive lumi events in Turbo and Turbo Calibration stream.
  - Add routing bit 91 for NoBias Leading Crossing events.
