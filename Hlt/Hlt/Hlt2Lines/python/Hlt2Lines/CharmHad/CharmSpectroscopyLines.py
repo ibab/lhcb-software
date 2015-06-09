@@ -111,7 +111,7 @@ class CharmSpectroscopyLines(Hlt2LinesConfigurableUser):
         Dst2D0PiD02KPiPiPi = charm.stages('D02CFKPiPiPiTagTurbo')[0]
         D02KPiPiPiForSpectroscopy = charm.stages('D02KPiPiPiForSpectroscopy')[0]
 
-        Dst2D0PiD02KPi = charm.stages('Dst_2D0Pi_D02KPiCF')[0]
+        Dst2D0PiD02KPi = charm.stages('Dst_2D0Pi_D02KPiCFTurbo')[0]
 
         LcTurbo = charm.stages('LcpToKmPpPipTurbo')[0]
 

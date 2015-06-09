@@ -8,6 +8,13 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-06-09 - Mika Vesterinen
+  D2HHPi0Lines.py - moved from turbo to full
+  D02HHLines.py - moved Kpi DCS and CF to turbo
+  D2HHHPi0Lines.py - moved from turbo to full
+  CharmSpectroscopyLines.py - updated CF Kpi line name due to above change
+  D2HHKsLines.py - Move to full
+
 ! 2015-06-06 - Simone Stracka
   . CharmHad:  Tightened selection in D2HHLines.py
     M python/Hlt2Lines/CharmHad/D2HHLines.py

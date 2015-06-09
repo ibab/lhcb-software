@@ -87,22 +87,22 @@ class CharmHadD2HHKshLines(Hlt2LinesConfigurableUser):
 ##  All of the following lines use a common dictionary "name":  Dst2D0pi_D02HHKsh
 ##  as the channels should be sufficiently similar to use common cuts.
 ##
-                  'DstD02KshPiPi_LLTurbo' : [TagDecay('Dst2D0pi_D02HHKsh',
-                     decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
-                     inputs = [D02KsPiPi_LL,SharedSoftTagChild_pi])],
-                  'DstD02KshPiPi_DDTurbo' : [TagDecay('Dst2D0pi_D02HHKsh',
-                     decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
-                     inputs = [D02KsPiPi_DD,SharedSoftTagChild_pi])],
+                  'DstD02KshPiPi_LL' : [TagDecay('Dst2D0pi_D02HHKsh',
+                                                 decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
+                                                 inputs = [D02KsPiPi_LL,SharedSoftTagChild_pi])],
+                  'DstD02KshPiPi_DD' : [TagDecay('Dst2D0pi_D02HHKsh',
+                                                 decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
+                                                 inputs = [D02KsPiPi_DD,SharedSoftTagChild_pi])],
 
 ## These lines will produce D*+ --> D0,pi+; D0 --> D0 --> K-,pi+,Kshort candidates 
 ## and also D*- --> D0bar,pi-;  D0bar --> K+,pi-,Kshort candidates; Ignoring CPV 
 ##  in K0 and K0bar decays to Kshort, these are CP conjugate decays.
-                  'DstD02KshKPi_LLTurbo'  : [TagDecay('Dst2D0pi_D02HHKsh',
-                     decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D~0 pi-"],
+                  'DstD02KshKPi_LL'  : [TagDecay('Dst2D0pi_D02HHKsh',
+                                                 decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D~0 pi-"],
                      inputs = [D02KsKPi_LL,SharedSoftTagChild_pi])],
-                  'DstD02KshKPi_DDTurbo'  : [TagDecay('Dst2D0pi_D02HHKsh',
-                     decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D~0 pi-"],
-                     inputs = [D02KsKPi_DD,SharedSoftTagChild_pi])],
+                  'DstD02KshKPi_DD'  : [TagDecay('Dst2D0pi_D02HHKsh',
+                                                 decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D~0 pi-"],
+                                                 inputs = [D02KsKPi_DD,SharedSoftTagChild_pi])],
 
 ## These lines will produce D*+ --> D0,pi+; D0 --> D0 --> K+,pi-,Kshort candidates
 ## and also D*- --> D0bar,pi-;  D0bar --> K-,pi+,Kshort candidates; Ignoring CPV
@@ -113,19 +113,19 @@ class CharmHadD2HHKshLines(Hlt2LinesConfigurableUser):
 ##  wanted here, the descriptors say that the D*+ decays to D0bar,pi+
 ##  and the D*- decays to D0,pi-. This is OK because the descriptor is
 ##  not encoded in the candidate beyond Hlt.
-                  'DstD02KshPiK_LLTurbo'  : [TagDecay('Dst2D0pi_D02HHKsh',
-                     decay = ["D*(2010)+ -> D~0 pi+", "D*(2010)- -> D0 pi-"],
-                     inputs = [D02KsKPi_LL,SharedSoftTagChild_pi])],
-                  'DstD02KshPiK_DDTurbo'  : [TagDecay('Dst2D0pi_D02HHKsh',
-                     decay = ["D*(2010)+ -> D~0 pi+", "D*(2010)- -> D0 pi-"],
-                     inputs = [D02KsKPi_DD,SharedSoftTagChild_pi])],
+                  'DstD02KshPiK_LL'  : [TagDecay('Dst2D0pi_D02HHKsh',
+                                                 decay = ["D*(2010)+ -> D~0 pi+", "D*(2010)- -> D0 pi-"],
+                                                 inputs = [D02KsKPi_LL,SharedSoftTagChild_pi])],
+                  'DstD02KshPiK_DD'  : [TagDecay('Dst2D0pi_D02HHKsh',
+                                                 decay = ["D*(2010)+ -> D~0 pi+", "D*(2010)- -> D0 pi-"],
+                                                 inputs = [D02KsKPi_DD,SharedSoftTagChild_pi])],
 
-                  'DstD02KshKK_LLTurbo'  : [TagDecay('Dst2D0pi_D02HHKsh',
-                     decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
-                     inputs = [D02KsKK_LL,SharedSoftTagChild_pi])],
-                  'DstD02KshKK_DDTurbo'  : [TagDecay('Dst2D0pi_D02HHKsh',
-                     decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
-                     inputs = [D02KsKK_DD,SharedSoftTagChild_pi])]
+                  'DstD02KshKK_LL'  : [TagDecay('Dst2D0pi_D02HHKsh',
+                                                decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
+                                                inputs = [D02KsKK_LL,SharedSoftTagChild_pi])],
+                  'DstD02KshKK_DD'  : [TagDecay('Dst2D0pi_D02HHKsh',
+                                                decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
+                                                inputs = [D02KsKK_DD,SharedSoftTagChild_pi])]
                  }
         
 
