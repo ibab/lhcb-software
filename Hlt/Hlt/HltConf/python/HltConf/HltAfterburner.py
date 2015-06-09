@@ -16,6 +16,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
     __used_configurables__ = []
 
     __slots__ = {"EnableHltRecSummary" : True,
+                 "RecSummaryLocation"  : "Hlt2/RecSummary",
                  "Hlt2Filter"          : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
                 }
 
@@ -63,7 +64,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             from Hlt2Lines.Utilities.Utilities import uniqueEverseen
             recSeq.Members = (list(chain.from_iterable([dec[0] for dec in decoders.itervalues()]))
                               + list(uniqueEverseen(chain.from_iterable([tracks, tracksDown, muonID, PVs]))))
-            summary = RecSummaryAlg('Hlt2RecSummary', SummaryLocation = "Hlt2/RecSummary",
+            summary = RecSummaryAlg('Hlt2RecSummary', SummaryLocation = self.getProp("RecSummaryLocation"),
                                     HltSplitTracks = True,
                                     SplitLongTracksLocation = tracks.outputSelection(),
                                     SplitDownTracksLocation = tracksDown.outputSelection(),

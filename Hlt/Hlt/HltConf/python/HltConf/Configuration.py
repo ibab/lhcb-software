@@ -760,10 +760,6 @@ class HltConf(LHCbConfigurableUser):
         if activehlt2lines and not activehlt1lines:
             Hlt1TrackMonitor().FittedTrackLocation =  HltHPTTracking.outputSelection()+HltDefaultFitSuffix
 
-        print Hlt1TrackMonitor().FittedTrackLocation
-        print Hlt1TrackMonitor().FittedTrackLocation
-        print Hlt1TrackMonitor().FittedTrackLocation
-        print Hlt1TrackMonitor().FittedTrackLocation
         # make sure we encode from the locations the decoders will use...
         from DAQSys.Decoders import DecoderDB
         hlt1_decrep_loc = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]
@@ -787,8 +783,15 @@ class HltConf(LHCbConfigurableUser):
             )
 
         ### store the BDT response (and a bit more) through ExtraInfo on particles:
-        sel_rep_opts =  dict( InfoLevelDecision = 3, InfoLevelTrack = 3, InfoLevelRecVertex = 3, InfoLevelCaloCluster = 3, InfoLevelParticle = 3 )
+        sel_rep_opts =  dict( InfoLevelDecision = 3, InfoLevelTrack = 3, InfoLevelRecVertex = 3,
+                              InfoLevelCaloCluster = 3, InfoLevelParticle = 3,
+                              )
 
+        ### HLT2 rec summary location, empty if HltAfterburner is disabled
+        if self.getProp("EnableHltAfterburner"):
+            recSumLoc = HltAfterburnerConf().getProp("RecSummaryLocation")
+        else:
+            recSumLoc = ""
 
         ### FIXME/TODO: having the routing bits writer(s) in the postamble implies they do NOT run for rejected events.
         ###             Is that really appropriate? Maybe we don't care, as those events (in the pit!) are never seen
@@ -818,7 +821,8 @@ class HltConf(LHCbConfigurableUser):
                                                                                                         'InputHltDecReportsLocation' : hlt2_decrep_loc } )
                          , ( "EnableHltSelReports"  ,  HltSelReportsMaker,   'Hlt2SelReportsMaker',  dict( InputHltDecReportsLocation = hlt2_decrep_loc,
                                                                                                            OutputHltSelReportsLocation = hlt2_selrep_loc,
-                                                                                                           **sel_rep_opts  ) )
+                                                                                                           RecSummaryLocation = recSumLoc,
+                                                                                                           **sel_rep_opts ) )
                          , ( "EnableHltSelReports"  ,  HltSelReportsWriter,  'Hlt2SelReportsWriter',  { 'SourceID' : 2,
                                                                                                         'InputHltSelReportsLocation': hlt2_selrep_loc } )
                          )
