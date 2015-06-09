@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-06-04 - Mika Vesterinen
+ - Added the NoPVPassThrough Hlt1 line in Commissioning_Physics_2015 and update Commissioning_AllLines_2015
+
+! 2015-06-04 - Mika Vesterinen
  - Updated Commissioning_AllLines_2015 following Simone's updates
 
 ! 2015-06-04 - Mika Vesterinen
