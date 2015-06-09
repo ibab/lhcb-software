@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+!2015-06-09 - Lucia Grillo
+- added scripts to run on 2015 data locally on plus and on the grid with the db snapshot
+- bug fixing in the calibration done in the finalize of OTModuleClbrMon
+
 !========================= OTCalibration v1r10 2015-05-31 =========================
 
 ! 2015-05-29 Lucia Grillo

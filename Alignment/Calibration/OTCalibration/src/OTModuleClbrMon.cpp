@@ -422,6 +422,8 @@ StatusCode OTModuleClbrMon::execute()
 	  if(otis >= 2 && dist > 0) m_histModuleDriftTimeResidual23R[s][l][q][m]->Fill(timeResidual);
 	}
 
+	m_histModuleDriftTimeResidual[s][l][q][m]->Fill(timeResidual);
+
         fill(histModuleDriftTimeResidual[s][l][q][m], timeResidual, 1.0);
         fill(histQuarterDriftTimeResidual[s][l][q], timeResidual, 1.0);
         fill(histLayerDriftTimeResidual[s][l], timeResidual, 1.0);
@@ -574,8 +576,9 @@ StatusCode OTModuleClbrMon::finalize()
 
 	  int modulen = m + 9 * (q + 4 * (l + 4 * s));
 
-          if(hist == 0 || hist->GetEntries() < 1000 || (s == 0 && m == 0))//this is the normal condition  
-	    //if(s == 0 && m == 0) //this is for debug                                                                                                                            
+          //if(hist == 0 || hist->GetEntries() < 1000 || (s == 0 && m == 0))//this is the normal condition  
+          //if(hist == 0 || hist->GetEntries() < 1 || (s == 0 && m == 0))//this is the normal condition  
+	  if(s == 0 && m == 0) //this is for debug                                                                                                                            
             {
               if(hist != 0 && !(s == 0 && m == 0)) std::cout << histName << " :: N = " << hist->GetEntries() << std::endl;
               hdt0->SetBinContent(hdt0->FindBin(modulen), 0.0);
