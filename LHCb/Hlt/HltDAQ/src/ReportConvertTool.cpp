@@ -56,7 +56,7 @@ int ReportConvertTool::getLatestVersion(){
 
 int ReportConvertTool::getSizeSelRepParticleLatest(){
   int sum=0;
-  sum+=m_particle_unordered_map2.at(m_LatestVersion).size();
+  sum+=m_particle_unordered_map2.at(findBestPrevious(m_particle_unordered_map2,m_LatestVersion)).size();
   return sum;
 }
 
