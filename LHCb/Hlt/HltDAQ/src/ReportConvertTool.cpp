@@ -60,6 +60,16 @@ int ReportConvertTool::getSizeSelRepParticleLatest(){
   return sum;
 }
 
+int ReportConvertTool::findBestPrevious(unordered_map<int, unordered_map<string,pair<int,int> > > map,int in){
+  int out=in;
+  for(int m=in;m>0;m--){
+    auto it = map.find(m);
+    out = m;
+    if (it != map.end()) break;
+  }
+  return out;
+}
+
 void ReportConvertTool::SummaryFromRaw(HltObjectSummary::Info* info, HltSelRepRBStdInfo::StdInfo* subbank, int classID) {
   
   // Version number that we use to ensure backwards compatibility with Run 1
@@ -104,7 +114,7 @@ void ReportConvertTool::SummaryFromRaw(HltObjectSummary::Info* info, HltSelRepRB
           used_map = m_track_unordered_map2;
           m_version=run1version;
         }
-        else if( subbank->size()<(m_track_unordered_map2_Turbo.at(m_version)).size() ) used_map = m_track_unordered_map2;
+        else if( subbank->size()<m_track_unordered_map2_Turbo.at( findBestPrevious( m_track_unordered_map2_Turbo, m_version ) ).size() ) used_map = m_track_unordered_map2;
         else used_map = m_track_unordered_map2_Turbo;
       }
       break;
@@ -117,13 +127,13 @@ void ReportConvertTool::SummaryFromRaw(HltObjectSummary::Info* info, HltSelRepRB
           used_map = m_particle_unordered_map2;
           m_version=run1version;
         }
-        else if( subbank->size()<(m_recvertex_unordered_map2_Turbo.at(m_version)).size() ) used_map = m_recvertex_unordered_map2;
+        else if( subbank->size()<m_recvertex_unordered_map2_Turbo.at( findBestPrevious( m_recvertex_unordered_map2_Turbo, m_version ) ).size() ) used_map = m_recvertex_unordered_map2;
         else used_map = m_recvertex_unordered_map2_Turbo;
       }
       break;
     case LHCb::CLID_Vertex:
       {      
-        if( subbank->size()<(m_vertex_unordered_map2_Turbo.at(m_version)).size() ) used_map = m_vertex_unordered_map2;
+        if( subbank->size()<m_vertex_unordered_map2_Turbo.at( findBestPrevious( m_vertex_unordered_map2_Turbo, m_version ) ).size() ) used_map = m_vertex_unordered_map2;
         else used_map = m_vertex_unordered_map2_Turbo;
       }
       break;
@@ -136,25 +146,25 @@ void ReportConvertTool::SummaryFromRaw(HltObjectSummary::Info* info, HltSelRepRB
           used_map = m_particle_unordered_map2;
           m_version=run1version;
         }
-        else if( subbank->size()<(m_particle_unordered_map2_Turbo.at(m_version)).size() ) used_map = m_particle_unordered_map2;
+        else if( subbank->size()<m_particle_unordered_map2_Turbo.at( findBestPrevious( m_particle_unordered_map2_Turbo, m_version ) ).size() ) used_map = m_particle_unordered_map2;
         else used_map = m_particle_unordered_map2_Turbo;
       }
       break;
     case LHCb::CLID_ProtoParticle:
       {      
-        if( subbank->size()<(m_proto_unordered_map2_Turbo.at(m_version)).size() ) used_map = m_proto_unordered_map2;
+        if( subbank->size()<m_proto_unordered_map2_Turbo.at( findBestPrevious( m_proto_unordered_map2_Turbo, m_version ) ).size() ) used_map = m_proto_unordered_map2;
         else used_map = m_proto_unordered_map2_Turbo;
       }
       break;
     case LHCb::CLID_RichPID:
       {      
-        if( subbank->size()<(m_rpid_unordered_map2_Turbo.at(m_version)).size() ) used_map = m_rpid_unordered_map2;
+        if( subbank->size()<m_rpid_unordered_map2_Turbo.at( findBestPrevious( m_rpid_unordered_map2_Turbo, m_version ) ).size() ) used_map = m_rpid_unordered_map2;
         else used_map = m_rpid_unordered_map2_Turbo;
       }
       break;
     case LHCb::CLID_MuonPID:
       {      
-        if( subbank->size()<(m_mpid_unordered_map2_Turbo.at(m_version)).size() ) used_map = m_mpid_unordered_map2;
+        if( subbank->size()<m_mpid_unordered_map2_Turbo.at( findBestPrevious( m_mpid_unordered_map2_Turbo, m_version ) ).size() ) used_map = m_mpid_unordered_map2;
         else used_map = m_mpid_unordered_map2_Turbo;
       }
       break;
@@ -172,7 +182,7 @@ void ReportConvertTool::SummaryFromRaw(HltObjectSummary::Info* info, HltSelRepRB
           used_map = m_calo_unordered_map2;
           m_version=run1version;
         }
-        else if( subbank->size()<(m_calo_unordered_map2_Turbo.at(m_version)).size() ) used_map = m_calo_unordered_map2;
+        else if( subbank->size()<m_calo_unordered_map2_Turbo.at( findBestPrevious( m_calo_unordered_map2_Turbo, m_version ) ).size() ) used_map = m_calo_unordered_map2;
         else used_map = m_calo_unordered_map2_Turbo;
       }
       break;
@@ -194,7 +204,7 @@ void ReportConvertTool::SummaryFromRaw(HltObjectSummary::Info* info, HltSelRepRB
   // If version<3 => for Track, Particle, RecVertex, and CaloCluster, need to assign version based on size
 
   debug() << "Inserting from bank" << endmsg;
-  for(it_unordered_map object_it = (used_map.at(m_version)).begin(); object_it!=(used_map.at(m_version)).end(); object_it++){
+  for(it_unordered_map object_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); object_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); object_it++){
     info->insert( object_it->first, floatFromInt( (*subbank)[ object_it->second.first ]) );
   }
 }
@@ -210,7 +220,7 @@ void ReportConvertTool::ParticleObject2Summary( HltObjectSummary::Info* info, co
   if(turbo==true) used_map = m_particle_unordered_map2_Turbo;
   else used_map = m_particle_unordered_map2;
   
-  for(it_unordered_map particle_it = (used_map.at(m_version)).begin(); particle_it!=(used_map.at(m_version)).end(); particle_it++){
+  for(it_unordered_map particle_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); particle_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); particle_it++){
     switch( particle_it->second.second )
     {
       case 0: info->insert( particle_it->first, float( object->particleID().pid() ) ); break;
@@ -266,7 +276,7 @@ void ReportConvertTool::ProtoParticleObject2Summary( HltObjectSummary::Info* inf
   if(turbo==true) used_map = m_proto_unordered_map2_Turbo;
   else used_map = m_proto_unordered_map2;
   
-  for(it_unordered_map proto_it = (used_map.at(m_version)).begin(); proto_it!=(used_map.at(m_version)).end(); proto_it++){
+  for(it_unordered_map proto_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); proto_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); proto_it++){
     switch( proto_it->second.second )
     {
       case 0:  info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::IsPhoton, -1000 ) ) ); break;
@@ -339,33 +349,70 @@ void ReportConvertTool::TrackObject2Summary( HltObjectSummary::Info* info, const
   unordered_map<int,unordered_map<string, pair<int,int> > > used_map;
   if(turbo==true) used_map = m_track_unordered_map2_Turbo;
   else used_map = m_track_unordered_map2;
-  
-  for(it_unordered_map track_it = (used_map.at(m_version)).begin(); track_it!=(used_map.at(m_version)).end(); track_it++){
+
+  LHCb::State first, last;
+  if( object->type() == LHCb::Track::Types::Long ){
+    if( object->hasStateAt(LHCb::State::ClosestToBeam) ) first = *(object->stateAt(LHCb::State::ClosestToBeam));
+    else first = *(object->states().front());
+    //
+    if( object->hasStateAt(LHCb::State::BegRich2) ) last = *(object->stateAt(LHCb::State::BegRich2));
+    else last = *(object->states().back());
+  }
+  else if( object->type() == LHCb::Track::Types::Downstream ){
+    if( object->hasStateAt(LHCb::State::FirstMeasurement) ) first = *(object->stateAt(LHCb::State::FirstMeasurement));
+    else first = *(object->states().front());
+    //
+    if( object->hasStateAt(LHCb::State::BegRich2) ) last = *(object->stateAt(LHCb::State::BegRich2));
+    else last = *(object->states().back());
+  } 
+  else{
+    first = *(object->states().front());
+    last = *(object->states().back());
+  }
+
+  for(it_unordered_map track_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); track_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); track_it++){
     switch( track_it->second.second )
     {
-      case 0: info->insert( track_it->first, float( object->states().front()->z() ) ); break;
-      case 1: info->insert( track_it->first, float( object->states().front()->x() ) ); break;
-      case 2: info->insert( track_it->first, float( object->states().front()->y() ) ); break;
-      case 3: info->insert( track_it->first, float( object->states().front()->tx() ) ); break;
-      case 4: info->insert( track_it->first, float( object->states().front()->ty() ) ); break;
-      case 5: info->insert( track_it->first, float( object->states().front()->qOverP() ) ); break;
+      case 0: info->insert( track_it->first, float( first.z() ) ); break;
+      case 1: info->insert( track_it->first, float( first.x() ) ); break;
+      case 2: info->insert( track_it->first, float( first.y() ) ); break;
+      case 3: info->insert( track_it->first, float( first.tx() ) ); break;
+      case 4: info->insert( track_it->first, float( first.ty() ) ); break;
+      case 5: info->insert( track_it->first, float( first.qOverP() ) ); break;
       case 6: info->insert( track_it->first, float( object->chi2PerDoF() ) ); break;
       case 7: info->insert( track_it->first, float( object->nDoF() ) ); break;
       case 8: info->insert( track_it->first, float( object->likelihood() ) ); break;
       case 9: info->insert( track_it->first, float( object->ghostProbability() ) ); break;
       case 10: info->insert( track_it->first, float( object->flags() ) ); break;
-      case 11: info->insert( track_it->first, float( object->states().back()->z() ) ); break;
-      case 12: info->insert( track_it->first, float( object->states().back()->x() ) ); break;
-      case 13: info->insert( track_it->first, float( object->states().back()->y() ) ); break;
-      case 14: info->insert( track_it->first, float( object->states().back()->tx() ) ); break;
-      case 15: info->insert( track_it->first, float( object->states().back()->ty() ) ); break;
-      case 16: info->insert( track_it->first, float( object->states().back()->qOverP() ) ); break;
+      case 11: info->insert( track_it->first, float( last.z() ) ); break;
+      case 12: info->insert( track_it->first, float( last.x() ) ); break;
+      case 13: info->insert( track_it->first, float( last.y() ) ); break;
+      case 14: info->insert( track_it->first, float( last.tx() ) ); break;
+      case 15: info->insert( track_it->first, float( last.ty() ) ); break;
+      case 16: info->insert( track_it->first, float( last.qOverP() ) ); break;
       case 17: info->insert( track_it->first, float( object->info( LHCb::Track::CloneDist, -1000) ) ); break;
       case 18: info->insert( track_it->first, float( object->info( LHCb::Track::FitMatchChi2, -1000) ) ); break;
       case 19: info->insert( track_it->first, float( object->info( LHCb::Track::FitVeloChi2, -1000) ) ); break;
       case 20: info->insert( track_it->first, float( object->info( LHCb::Track::FitTChi2, -1000) ) ); break;
       case 21: info->insert( track_it->first, float( object->info( LHCb::Track::FitVeloNDoF, -1000) ) ); break;
       case 22: info->insert( track_it->first, float( object->info( LHCb::Track::FitTNDoF, -1000) ) ); break;
+      case 23: info->insert( track_it->first, float( first.flags() ) ); break;
+      case 24: info->insert( track_it->first, float( last.flags() ) ); break;
+      case 25: info->insert( track_it->first, float( first.covariance()(0,0) ) ); break;
+      case 26: info->insert( track_it->first, float( first.covariance()(1,1) ) ); break;
+      case 27: info->insert( track_it->first, float( first.covariance()(2,2) ) ); break;
+      case 28: info->insert( track_it->first, float( first.covariance()(3,3) ) ); break;
+      case 29: info->insert( track_it->first, float( first.covariance()(4,4) ) ); break;
+      case 30: info->insert( track_it->first, float( first.covariance()(0,1) ) ); break;
+      case 31: info->insert( track_it->first, float( first.covariance()(0,2) ) ); break;
+      case 32: info->insert( track_it->first, float( first.covariance()(0,3) ) ); break;
+      case 33: info->insert( track_it->first, float( first.covariance()(0,4) ) ); break;
+      case 34: info->insert( track_it->first, float( first.covariance()(1,2) ) ); break;
+      case 35: info->insert( track_it->first, float( first.covariance()(1,3) ) ); break;
+      case 36: info->insert( track_it->first, float( first.covariance()(1,4) ) ); break;
+      case 37: info->insert( track_it->first, float( first.covariance()(2,3) ) ); break;
+      case 38: info->insert( track_it->first, float( first.covariance()(2,4) ) ); break;
+      case 39: info->insert( track_it->first, float( first.covariance()(3,4) ) ); break;
     }
   }
 }
@@ -380,7 +427,7 @@ void ReportConvertTool::RichPIDObject2Summary( HltObjectSummary::Info* info, con
   if(turbo==true) used_map = m_rpid_unordered_map2_Turbo;
   else used_map = m_rpid_unordered_map2;
   
-  for(it_unordered_map rpid_it = (used_map.at(m_version)).begin(); rpid_it!=(used_map.at(m_version)).end(); rpid_it++){
+  for(it_unordered_map rpid_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); rpid_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); rpid_it++){
     switch( rpid_it->second.second )
     {
       case 0: info->insert( rpid_it->first, float( object->pidResultCode() ) ); break;
@@ -405,7 +452,7 @@ void ReportConvertTool::MuonPIDObject2Summary( HltObjectSummary::Info* info , co
   if(turbo==true) used_map = m_mpid_unordered_map2_Turbo;
   else used_map = m_mpid_unordered_map2;
   
-  for(it_unordered_map mpid_it = (used_map.at(m_version)).begin(); mpid_it!=(used_map.at(m_version)).end(); mpid_it++){
+  for(it_unordered_map mpid_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); mpid_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); mpid_it++){
     switch( mpid_it->second.second )
     {
       case 0: info->insert( mpid_it->first, float( object->MuonLLMu() ) ); break;
@@ -430,7 +477,7 @@ void ReportConvertTool::CaloClusterObject2Summary( HltObjectSummary::Info* info,
   if(turbo==true) used_map = m_calo_unordered_map2_Turbo;
   else used_map = m_calo_unordered_map2;
   
-  for(it_unordered_map calo_it = (used_map.at(m_version)).begin(); calo_it!=(used_map.at(m_version)).end(); calo_it++){
+  for(it_unordered_map calo_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); calo_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); calo_it++){
     switch( calo_it->second.second )
     {
       case 0: info->insert( calo_it->first, float( object->e() ) ); break;
@@ -451,7 +498,7 @@ void ReportConvertTool::RecVertexObject2Summary( HltObjectSummary::Info* info, c
   if(turbo==true) used_map = m_recvertex_unordered_map2_Turbo;
   else used_map = m_recvertex_unordered_map2;
   
-  for(it_unordered_map recvertex_it = (used_map.at(m_version)).begin(); recvertex_it!=(used_map.at(m_version)).end(); recvertex_it++){
+  for(it_unordered_map recvertex_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); recvertex_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); recvertex_it++){
     switch( recvertex_it->second.second )
     {
       case 0: info->insert( recvertex_it->first, float( object->position().x() ) ); break;
@@ -481,7 +528,7 @@ void ReportConvertTool::VertexObject2Summary( HltObjectSummary::Info* info, cons
   if(turbo==true) used_map = m_vertex_unordered_map2_Turbo;
   else used_map = m_vertex_unordered_map2;
   
-  for(it_unordered_map vertex_it = (used_map.at(m_version)).begin(); vertex_it!=(used_map.at(m_version)).end(); vertex_it++){
+  for(it_unordered_map vertex_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); vertex_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); vertex_it++){
     switch( vertex_it->second.second )
     {
       case 0: info->insert( vertex_it->first, float( object->chi2() ) ); break;
@@ -510,7 +557,7 @@ void ReportConvertTool::RecSummaryObject2Summary( HltObjectSummary::Info* info, 
   
   used_map = m_recsummary_unordered_map2;
   
-  for(it_unordered_map recsummary_it = (used_map.at(m_version)).begin(); recsummary_it!=(used_map.at(m_version)).end(); recsummary_it++){
+  for(it_unordered_map recsummary_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); recsummary_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); recsummary_it++){
     switch( recsummary_it->second.second )
     {
       case 0: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nLongTracks,0 ) ) ); break;
@@ -576,7 +623,7 @@ void ReportConvertTool::ParticleObjectFromSummary( const HltObjectSummary::Info*
   Gaudi::Matrix4x3 & posMomCov = *(const_cast<Gaudi::Matrix4x3*>(&object->posMomCovMatrix()));
   Gaudi::SymMatrix3x3 & posCov = *(const_cast<Gaudi::SymMatrix3x3*>(&object->posCovMatrix()));
 
-  for(it_unordered_map particle_it = (used_map.at(m_version)).begin(); particle_it!=(used_map.at(m_version)).end(); particle_it++){
+  for(it_unordered_map particle_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); particle_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); particle_it++){
     switch( std::get<1>( particle_it->second ) )
     {
       case 0: object->setParticleID( LHCb::ParticleID( (*info)[ particle_it->first ] ) ); break;
@@ -640,7 +687,7 @@ void ReportConvertTool::ProtoParticleObjectFromSummary( const HltObjectSummary::
   if(turbo==true) used_map = m_proto_unordered_map2_Turbo;
   else used_map = m_proto_unordered_map2;
   
-  for(it_unordered_map proto_it = (used_map.at(m_version)).begin(); proto_it!=(used_map.at(m_version)).end(); proto_it++){
+  for(it_unordered_map proto_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); proto_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); proto_it++){
     switch( proto_it->second.second )
     {
       case 0: object->addInfo( LHCb::ProtoParticle::IsPhoton, ( (*info)[ proto_it->first ] ) ); break;//381
@@ -730,8 +777,9 @@ void ReportConvertTool::TrackObjectFromSummary( const HltObjectSummary::Info* in
   
   LHCb::State* first = new LHCb::State();
   LHCb::State* last = new LHCb::State();
-  
-  for(it_unordered_map track_it = (used_map.at(m_version)).begin(); track_it!=(used_map.at(m_version)).end(); track_it++){
+ 
+  Gaudi::TrackSymMatrix cov;
+  for(it_unordered_map track_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); track_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); track_it++){
     switch( track_it->second.second )
     {
       case 0: first->setZ( (*info)[ track_it->first ] ); break;
@@ -757,8 +805,40 @@ void ReportConvertTool::TrackObjectFromSummary( const HltObjectSummary::Info* in
       case 20: object->addInfo( LHCb::Track::FitTChi2, (*info)[ track_it->first ] ); break;
       case 21: object->addInfo( LHCb::Track::FitVeloNDoF, (*info)[ track_it->first ] ); break;
       case 22: object->addInfo( LHCb::Track::FitTNDoF, (*info)[ track_it->first ] ); break;
+      case 23: first->setFlags( (*info)[ track_it->first ] ); break;
+      case 24: last->setFlags( (*info)[ track_it->first ] ); break;
+      case 25: cov(0,0) = (*info)[ track_it->first ] ; break;
+      case 26: cov(1,1) = (*info)[ track_it->first ] ; break;
+      case 27: cov(2,2) = (*info)[ track_it->first ] ; break;
+      case 28: cov(3,3) = (*info)[ track_it->first ] ; break;
+      case 29: cov(4,4) = (*info)[ track_it->first ] ; break;
+      case 30: cov(0,1) = (*info)[ track_it->first ] ; break;
+      case 31: cov(0,2) = (*info)[ track_it->first ] ; break;
+      case 32: cov(0,3) = (*info)[ track_it->first ] ; break;
+      case 33: cov(0,4) = (*info)[ track_it->first ] ; break;
+      case 34: cov(1,2) = (*info)[ track_it->first ] ; break;
+      case 35: cov(1,3) = (*info)[ track_it->first ] ; break;
+      case 36: cov(1,4) = (*info)[ track_it->first ] ; break;
+      case 37: cov(2,3) = (*info)[ track_it->first ] ; break;
+      case 38: cov(2,4) = (*info)[ track_it->first ] ; break;
+      case 39: cov(3,4) = (*info)[ track_it->first ] ; break;
     }
   }
+
+  // I am sure there is a smarter way of doing this
+  if(cov(0,0)>0.0){
+    cov(1,0)=cov(0,1);
+    cov(2,0)=cov(0,2);
+    cov(3,0)=cov(0,3);
+    cov(4,0)=cov(0,4);
+    cov(2,1)=cov(1,2);
+    cov(3,1)=cov(1,3);
+    cov(4,1)=cov(1,4);
+    cov(3,2)=cov(2,3);
+    cov(4,2)=cov(2,4);
+    cov(4,3)=cov(3,4);
+  }
+  first->setCovariance(cov);
 
   object->addToStates(*first);
   // stop memory leak
@@ -776,7 +856,7 @@ void ReportConvertTool::RichPIDObjectFromSummary( const HltObjectSummary::Info*i
   if(turbo==true) used_map = m_rpid_unordered_map2_Turbo;
   else used_map = m_rpid_unordered_map2;
   
-  for(it_unordered_map rpid_it = (used_map.at(m_version)).begin(); rpid_it!=(used_map.at(m_version)).end(); rpid_it++){
+  for(it_unordered_map rpid_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); rpid_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); rpid_it++){
     switch( rpid_it->second.second )
     {
       case 0: object->setPidResultCode( (unsigned int)(*info)[ rpid_it->first ] ); break;
@@ -801,7 +881,7 @@ void ReportConvertTool::MuonPIDObjectFromSummary( const HltObjectSummary::Info* 
   if(turbo==true) used_map = m_mpid_unordered_map2_Turbo;
   else used_map = m_mpid_unordered_map2;
   
-  for(it_unordered_map mpid_it = (used_map.at(m_version)).begin(); mpid_it!=(used_map.at(m_version)).end(); mpid_it++){
+  for(it_unordered_map mpid_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); mpid_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); mpid_it++){
     switch( mpid_it->second.second )
     {
       case 0: object->setMuonLLMu( (*info)[ mpid_it->first ] ); break;
@@ -833,7 +913,7 @@ void ReportConvertTool::CaloClusterObjectFromSummary( const HltObjectSummary::In
   double x=0;
   double y=0;
 
-  for(it_unordered_map calo_it = (used_map.at(m_version)).begin(); calo_it!=(used_map.at(m_version)).end(); calo_it++){
+  for(it_unordered_map calo_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); calo_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); calo_it++){
     switch( calo_it->second.second )
     {
       case 0: e = (*info)[ calo_it->first ]; break;
@@ -874,7 +954,7 @@ void ReportConvertTool::RecVertexObjectFromSummary( const HltObjectSummary::Info
 
   Gaudi::XYZPoint xyz;
   Gaudi::SymMatrix3x3 & cov = *(const_cast<Gaudi::SymMatrix3x3*>(&object->covMatrix()));
-  for(it_unordered_map recvertex_it = (used_map.at(m_version)).begin(); recvertex_it!=(used_map.at(m_version)).end(); recvertex_it++){
+  for(it_unordered_map recvertex_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); recvertex_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); recvertex_it++){
     switch( recvertex_it->second.second )
     {
       case 0: xyz.SetX( (*info)[ recvertex_it->first ] ); break;
@@ -908,7 +988,7 @@ void ReportConvertTool::VertexObjectFromSummary( const HltObjectSummary::Info* i
   Gaudi::XYZPoint xyz;
   Gaudi::SymMatrix3x3 & cov = *(const_cast<Gaudi::SymMatrix3x3*>(&object->covMatrix()));
 
-  for(it_unordered_map vertex_it = (used_map.at(m_version)).begin(); vertex_it!=(used_map.at(m_version)).end(); vertex_it++){
+  for(it_unordered_map vertex_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); vertex_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); vertex_it++){
     switch( vertex_it->second.second )
     {
       case 0: object->setChi2( (*info)[ vertex_it->first ] ); break;
@@ -937,7 +1017,7 @@ void ReportConvertTool::RecSummaryObjectFromSummary( const HltObjectSummary::Inf
   unordered_map<int,unordered_map<string, pair<int,int> > > used_map;
   used_map = m_recsummary_unordered_map2;
   
-  for(it_unordered_map recsummary_it = (used_map.at(m_version)).begin(); recsummary_it!=(used_map.at(m_version)).end(); recsummary_it++){
+  for(it_unordered_map recsummary_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); recsummary_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); recsummary_it++){
     switch( recsummary_it->second.second )
     {
       case 0: ( object->addInfo( LHCb::RecSummary::nLongTracks, (*info)[ recsummary_it->first ] ) ); break;

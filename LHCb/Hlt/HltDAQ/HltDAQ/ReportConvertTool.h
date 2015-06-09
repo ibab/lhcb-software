@@ -90,6 +90,8 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
     void VertexObjectFromSummary( const HltObjectSummary::Info*, LHCb::Vertex*,bool) ;
     void RecSummaryObjectFromSummary( const HltObjectSummary::Info*, LHCb::RecSummary*) ;
 
+    int findBestPrevious(unordered_map<int, unordered_map<string,pair<int,int> > >,int) ;
+
   protected:
   
   private:
@@ -348,6 +350,48 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
           , {"20#Track.FitTChi2",              {13,20}}
           , {"21#Track.FitVeloNDoF",           {14,21}}
           , {"22#Track.FitTNDoF",              {15,22}}}
+      }
+      , { 5
+        , {{"0#Track.firstState.z",            {0,0}}
+          , {"1#Track.firstState.x",           {1,1}}
+          , {"2#Track.firstState.y",           {12,2}}
+          , {"3#Track.firstState.tx",          {23,3}}
+          , {"4#Track.firstState.ty",          {34,4}}
+          , {"5#Track.firstState.qOverP",      {35,5}}
+          , {"6#Track.chi2PerDoF",             {36,6}}
+          , {"7#Track.nDoF",                   {37,7}}
+          , {"8#Track.Likelihood",             {38,8}}
+          , {"9#Track.GhostProb",              {39,9}}
+          , {"10#Track.flags",                 {2,10}}
+          , {"11#Track.lastState.z",           {3,11}}
+          , {"12#Track.lastState.x",           {4,12}}
+          , {"13#Track.lastState.y",           {5,13}}
+          , {"14#Track.lastState.tx",          {6,14}}
+          , {"15#Track.lastState.ty",          {7,15}}
+          , {"16#Track.lastState.qOverP",      {8,16}}
+          , {"17#Track.CloneDist",             {9,17}}
+          , {"18#Track.FitMatchChi2",          {10,18}}
+          , {"19#Track.FitVeloChi2",           {11,19}}
+          , {"20#Track.FitTChi2",              {13,20}}
+          , {"21#Track.FitVeloNDoF",           {14,21}}
+          , {"22#Track.FitTNDoF",              {15,22}}
+          , {"23#Track.firstStateFlags",       {16,23}}
+          , {"24#Track.lastStateFlags",        {17,24}}
+          , {"25#Track.firstStateCov00",       {18,25}}
+          , {"26#Track.firstStateCov11",       {19,26}}
+          , {"27#Track.firstStateCov22",       {20,27}}
+          , {"28#Track.firstStateCov33",       {21,28}}
+          , {"29#Track.firstStateCov44",       {22,29}}
+          , {"30#Track.firstStateCov01",       {24,30}}
+          , {"31#Track.firstStateCov02",       {25,31}}
+          , {"32#Track.firstStateCov03",       {26,32}}
+          , {"33#Track.firstStateCov04",       {27,33}}
+          , {"34#Track.firstStateCov12",       {28,34}}
+          , {"35#Track.firstStateCov13",       {29,35}}
+          , {"36#Track.firstStateCov14",       {30,36}}
+          , {"37#Track.firstStateCov23",       {31,37}}
+          , {"38#Track.firstStateCov24",       {32,38}}
+          , {"39#Track.firstStateCov34",       {33,39}}}
       }
     };
     //===========================================================================

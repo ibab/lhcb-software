@@ -4,9 +4,14 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-05-13 - Sean Benson
+ - Add first state covariance matrix.
+ - Choose states properly.
+ - Do not require every map present for each bank version.
+
 !========================= HltDAQ v4r14 2015-05-26 =========================
 ! 2015-05-13 - Sean Benson
- - Include helper functions for RecSummary..
+ - Include helper functions for RecSummary.
 
 !========================= HltDAQ v4r13 2015-04-20 =========================
 ! 2015-04-19 - Sean Benson

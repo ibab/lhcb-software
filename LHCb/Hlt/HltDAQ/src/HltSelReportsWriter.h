@@ -29,7 +29,7 @@ public:
   StatusCode initialize() override;    ///< Algorithm initialization
   StatusCode execute   () override;    ///< Algorithm execution
 
-  enum HeaderIDs { kVersionNumber=4 };
+  enum HeaderIDs { kVersionNumber=5 };
 
 
   enum SourceIDs { kSourceID_Dummy=0,
