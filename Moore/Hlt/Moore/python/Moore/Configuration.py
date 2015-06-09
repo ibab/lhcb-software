@@ -57,7 +57,7 @@ class Moore(LHCbConfigurableUser):
                              , DecodeRawEvent
                              , DDDBConf
                              , MooreExpert ]
-    
+
     __slots__ = {
         #########################################
         # Basic options, used to set LHCbApp
@@ -138,7 +138,7 @@ class Moore(LHCbConfigurableUser):
         #, "configAlgorithms" : None # use MooreExpert
         #, "configServices" :  None #use MooreExpert
         }
-    
+
     _propertyDocDct={
         #########################################
         # Basic options, used to set LHCbApp
@@ -222,23 +222,23 @@ class Moore(LHCbConfigurableUser):
         #, "configAlgorithms" : "None #  DEPRECATED. use MooreExpert()"
         #, "configServices" :  "None # DEPRECATED. use MooreExpert()"
         }
-    
-    
+
+
     def _configureDataOnDemand(self) :
         if not self.getProp("EnableDataOnDemand") :
-            if 'DataOnDemandSvc' in ApplicationMgr().ExtSvc : 
+            if 'DataOnDemandSvc' in ApplicationMgr().ExtSvc :
                 ApplicationMgr().ExtSvc.pop('DataOnDemandSvc')
             from Gaudi.Configuration import appendPostConfigAction
             def disableFaultHandler() :
                 from Configurables import EventDataSvc
                 EventDataSvc().EnableFaultHandler = False
             appendPostConfigAction(  disableFaultHandler )
-        else: 
+        else:
             from Configurables import DataOnDemandSvc
             dod = DataOnDemandSvc()
             if dod not in ApplicationMgr().ExtSvc :
-                ApplicationMgr().ExtSvc.append( dod ) 
-    
+                ApplicationMgr().ExtSvc.append( dod )
+
     def _configureDQTags(self):
         from Configurables import CondDB
         tag=None
@@ -255,12 +255,12 @@ class Moore(LHCbConfigurableUser):
             pass
         elif tag:
             CondDB().Tags=Funcs._zipdict(CondDB().Tags,{"DQFLAGS":tag})
-    
+
     def _configureInput(self):
         files = self.getProp('inputFiles')
         #    #  veto lumi events..
         #    #ApplicationMgr().EvtSel.REQ1 = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0"
-        
+
         if files:
             from GaudiConf import IOExtension
             IOExtension().inputFiles(files,clear=True)
@@ -274,7 +274,7 @@ class Moore(LHCbConfigurableUser):
             app.TopAlg.insert(0, bk)
 
 
-        
+
     def _setRawEventLocations(self):
         """
         Check that I can set DecodeRawEvent.py options correctly.
@@ -283,7 +283,7 @@ class Moore(LHCbConfigurableUser):
         if (not DecodeRawEvent().isPropertySet("OverrideInputs")) or DecodeRawEvent().getProp("OverrideInputs") is None:
             #default version which comes out of the Pit,
             #currently just DAQ/RawEvent
-            DecodeRawEvent().OverrideInputs="Pit" 
+            DecodeRawEvent().OverrideInputs="Pit"
             return
         from RawEventCompat.Configuration import _checkv
         from Configurables import RawEventFormatConf
@@ -302,23 +302,23 @@ class Moore(LHCbConfigurableUser):
         # these locations are always "DAQ/RawEvent"
         files = self.getProp('inputFiles')
         files=files+EventSelector().Input
-        
+
         ext=files[0].split('.')[-1].strip().split('?')[0].strip().upper()
         if ext in ["MDF","RAW","DIGI","XDIGI"]:
             raise ValueError("When running from a DIGI, XDIGI or RAW file, the only raw event location is DAQ/RawEvent, but you're resetting it into"+DecodeRawEvent().getProp("OverrideInputs"))
-    
+
     def _configureOutput(self):
         fname = self.getProp('outputFile')
         if not fname : return
         writer = None
-        
+
         #retrieve the persistency
         persistency=None
         from GaudiConf import IOExtension, IOHelper
         iox=IOExtension()
-        
+
         #check the file type and use MDF writer or InputCopyStream
-        if iox.detectFileType(fname) == 'MDF'  : 
+        if iox.detectFileType(fname) == 'MDF'  :
             from Configurables import LHCb__MDFWriter as MDFWriter
             writer = IOHelper("MDF","MDF").outputAlgs(fname
                                                        ,writer = MDFWriter( 'Writer' , Compress = 0 )
@@ -330,24 +330,24 @@ class Moore(LHCbConfigurableUser):
                 #                         , Members = self.getProp('WriterRequires') + writer
                 #                         )
                 writer = GaudiSequencer( 'WriteSequence'
-                                         , Members = [ VoidFilter( "WriterFilter" 
+                                         , Members = [ VoidFilter( "WriterFilter"
                                                                    , Preambulo = [ 'from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED' ]
-                                                                   , Code = ' & '.join( [ "ALG_EXECUTED('%s') & ALG_PASSED('%s')" % (i,i) for i in self.getProp('WriterRequires') ] ) 
+                                                                   , Code = ' & '.join( [ "ALG_EXECUTED('%s') & ALG_PASSED('%s')" % (i,i) for i in self.getProp('WriterRequires') ] )
                                                                    )
                                                        ] + writer
                                          )
                 #convert to a smegging list consistently
                 writer=[writer]
-            
+
             ApplicationMgr().OutStream+=writer
-            
-        else : 
+
+        else :
             from Configurables import InputCopyStream
             writer = InputCopyStream("Writer"
                                     , RequireAlgs = self.getProp('WriterRequires')
                                     )
             IOHelper(persistency,persistency).outStream(fname,writer,writeFSR=MooreExpert().getProp('WriteFSR'))
-        
+
 
     def getRelease(self):
         import re,fileinput
@@ -382,8 +382,8 @@ class Moore(LHCbConfigurableUser):
         raise TypeError("invalid TCK persistency '%s'"%method)
 
     def addAuditor(self,x) :
-        if  'AuditorSvc' not in ApplicationMgr().ExtSvc : 
-            ApplicationMgr().ExtSvc.append( 'AuditorSvc' ) 
+        if  'AuditorSvc' not in ApplicationMgr().ExtSvc :
+            ApplicationMgr().ExtSvc.append( 'AuditorSvc' )
         AuditorSvc().Auditors.append( x )
         x.Enable = True
 
@@ -398,23 +398,23 @@ class Moore(LHCbConfigurableUser):
            - TCKs via transforms
 
         defaults are now WARNING printouts only, so I need to handle the case the user wishes to switch back if a TCK has been generated with a warning
-        
+
         """
         #firstly explicitly configure things not seen by TCK
         #firstly configure things which are level-independent
-        
+
         # Usual output levels for services
-        from Configurables import XmlParserSvc 
+        from Configurables import XmlParserSvc
         XmlParserSvc().OutputLevel                = WARNING
         ApplicationMgr().OutputLevel              = INFO #I still want the Application Manager Finalized Sucessfully printout
-        
+
         # Print algorithm name with 40 characters
         if not MessageSvc().isPropertySet("Format"):
             MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
-        
+
         #this should be OK to do here...
         from Funcs import _minSetFileTypes
-        
+
         #postconfig away common warnings
         def suppresswarningifneeded():
             #histogram warning isn't needed if I didn't want histograms
@@ -428,22 +428,22 @@ class Moore(LHCbConfigurableUser):
             if Moore().getProp("RunOnline") or _minSetFileTypes() in ["MDF","RAW"]:
                 from Configurables import IODataManager
                 IODataManager().DisablePFNWarning=True
-        
+
         appendPostConfigAction(suppresswarningifneeded)
-        
+
         #then configure things that depend on the level
         level=self.getProp("OutputLevel")
         from Configurables import LHCbSequencerTimerTool, SequencerTimerTool
         if level>=INFO: LHCbSequencerTimerTool().OutputLevel = WARNING
         if level>=INFO: SequencerTimerTool().OutputLevel = WARNING
-        
+
         if level>DEBUG:
             from Configurables import LoKi__DistanceCalculator
             LoKi__DistanceCalculator().MaxPrints=0
         if level>VERBOSE:
             from Configurables import LoKiSvc
             LoKiSvc().Welcome = False
-        
+
         from Configurables import Hlt__Service
         if not Hlt__Service().isPropertySet('Pedantic') : Hlt__Service().Pedantic = (level<DEBUG)
         ###############################################################
@@ -452,20 +452,20 @@ class Moore(LHCbConfigurableUser):
         ###############################################################
         if level<INFO:
             return
-        
+
         if level>INFO:
             MessageSvc().OutputLevel = level
             ToolSvc().OutputLevel = level
-        
+
         if level>INFO and hasattr(self, "EnableTimer") and self.getProp("EnableTimer") and type(self.getProp("EnableTimer")) is not str:
             print "# WARNING: Timing table is too verbose for printing, consider outputting to a file instead please, Moore().EnableTimer='timing.csv', for example."
-            
+
         #################################################
         # If the OutputLevel is set I need
         # Either a postConfigAction or a transform
         # to suppress the outputs properly
         #################################################
-        
+
         #################################################
         # Running from thresholds, use post config action
         #################################################
@@ -478,20 +478,20 @@ class Moore(LHCbConfigurableUser):
             props["StatPrint"]=(level<WARNING)
             props["ErrorsPrint"]=(level<WARNING)
             props["PropertiesPrint"]=(level<WARNING)
-            
+
             from DAQSys.Decoders import DecoderDB
             for k,v in DecoderDB.iteritems():
                 for pk,pv in props.iteritems():
                     v.Properties[pk]=pv
-            
+
             postConfForAll(head=[k for k in DecoderDB], prop_value_dict=props,force=True,recurseToTools=True)
-            
+
             #only for GaudiHistoAlgs...
             props["HistoCountersPrint"]=(level<WARNING)
             postConfForAll(head=None, prop_value_dict=props,force=True,recurseToTools=True)
             #so, the above works for almost everything, apart from on-demand created tools, of which there are a lot, and these need to be added separately
             #mostly these tools are in the calo
-            
+
             #now turn off the calo tool finalize printout, there are *a lot* of tools here
             tools={"CaloECorrection/ECorrection":props,
                    "CaloSCorrection/SCorrection":props,
@@ -507,12 +507,12 @@ class Moore(LHCbConfigurableUser):
                    "CaloSelectClusterWithPrs/ClusterWithPrs":props,
                    "CaloSelectNeutralClusterWithTracks/NeutralCluster":props,
                    "CaloSelectNeutralClusterWithTracks/NotNeutralCluster":props,
-                   
+
                    "CaloSelectorNOT/ChargedCluster" : props,
                    "CaloSelectNeutralClusterWithTracks/ChargedCluster.NeutralCluster":props
                    }
             #allcalotools=[]
-            
+
             postConfForAll(head=None, prop_value_dict={},types=["CaloSinglePhotonAlg","CaloElectronAlg","CaloMergedPi0Alg","NeutralProtoPAlg"],force=True,tool_value_dict=tools)
             #three extras for merged pi0
             tools={"CaloCorrectionBase/ShowerProfile":props,
@@ -527,28 +527,28 @@ class Moore(LHCbConfigurableUser):
             from Configurables import LoKi__LifetimeFitter, CaloDigitFilterTool, CaloGetterTool, OTChannelMapTool, CaloClusterizationTool
             #public tools
             postConfForAll(head=[LoKi__LifetimeFitter("ToolSvc.lifetime"),CaloDigitFilterTool("ToolSvc.FilterTool"),CaloGetterTool("ToolSvc.CaloGetter"),OTChannelMapTool("ToolSvc.OTChannelMapTool"),CaloClusterizationTool("ToolSvc.CaloClusterizationTool")], prop_value_dict=props,force=True)
-            
-            
+
+
             #I still want to print "Application Manager Finalized Successfully"
             #and "End of event input reached" no matter what
-            
+
             def AppMrgOP():
                 if ApplicationMgr().getProp("OutputLevel")>INFO:
                     ApplicationMgr().OutputLevel=INFO
                 if EventSelector().getProp("OutputLevel")>INFO:
                     EventSelector().OutputLevel=INFO
-            
+
             appendPostConfigAction(AppMrgOP)
-            
-            
+
+
             def RestoreGenConfig():
                 Moore().getConfigAccessSvc().OutputLevel =INFO
                 from Configurables import HltGenConfig
                 HltGenConfig().OutputLevel =INFO
-            
+
             if self.getProp("generateConfig"):
                 appendPostConfigAction(RestoreGenConfig)
-            
+
             #################################################
             # Running from TCK define a similar transform
             #################################################
@@ -559,9 +559,9 @@ class Moore(LHCbConfigurableUser):
             trans[".*"]["ErrorsPrint"]=       {"^.*$":str(level<WARNING)}
             trans[".*"]["PropertiesPrint"]=   {"^.*$":str(level<WARNING)}
             trans[".*"]["HistoCountersPrint"]={"^.*$":str(level<WARNING)}
-            
+
             Funcs._mergeTransform(trans)
-            
+
             #kill LoKi warnings
             set=0
             if level<WARNING:
@@ -576,17 +576,17 @@ class Moore(LHCbConfigurableUser):
             props["ErrorsPrint"]=(level<WARNING)
             props["PropertiesPrint"]=(level<WARNING)
             postConfForAll(head=["LoKi::LifetimeFitter/ToolSvc.lifetime"],force=True,prop_value_dict=props)
-            
+
             from Configurables import HltConfigSvc
             cfg = HltConfigSvc()
             #self-defeating warnings!
             cfg.OutputLevel=ERROR
-                
-    
+
+
     def _profile(self) :
         ApplicationMgr().AuditAlgorithms = 1
         auditors = self.getProp('EnableAuditor')
-        if hasattr(self, "EnableTimer") and self.getProp('EnableTimer') is not None: 
+        if hasattr(self, "EnableTimer") and self.getProp('EnableTimer') is not None:
             #print self.getProp('EnableTimer')
             from Configurables import LHCbTimingAuditor, LHCbSequencerTimerTool
             LHCbTimingAuditor('TIMER').addTool(LHCbSequencerTimerTool, name="TIMER")
@@ -595,7 +595,7 @@ class Moore(LHCbConfigurableUser):
             if type(self.getProp('EnableTimer')) is not bool and len(self.getProp('EnableTimer')):
                 LHCbTimingAuditor('TIMER').TIMER.SummaryFile=self.getProp('EnableTimer')
                 #LHCbSequencerTimerTool().SummaryFile=self.getProp('EnableTimer')
-        
+
         for i in auditors : self.addAuditor( i )
 
     def _generateConfig(self) :
@@ -606,7 +606,7 @@ class Moore(LHCbConfigurableUser):
         if MooreExpert().getProp('TCKpersistency').lower() in [ 'tarfile', 'zipfile', 'cdb' ] :
             self.getConfigAccessSvc().Mode = 'ReadWrite'
             #self.getConfigAccessSvc().OutputLevel = 1
-        
+
         from Configurables import HltGenConfig
         print 'requesting following  svcs: %s ' % svcs
         gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in algs ]
@@ -622,11 +622,11 @@ class Moore(LHCbConfigurableUser):
             def gather( c, overrule ) :
                     def check(config,prop,value) :
                         if prop not in config.getDefaultProperties() : return False
-                        if hasattr(config,prop) : return getattr(config,prop) == value 
+                        if hasattr(config,prop) : return getattr(config,prop) == value
                         return config.getDefaultProperties()[prop] == value
                     def addOverrule(config,rule):
                         if c.name() not in overrule.keys() :
-                           overrule[c.name()] = []     
+                           overrule[c.name()] = []
                         if rule not in overrule[c.name()] :
                            overrule[c.name()] += [ rule ]
 
@@ -640,7 +640,7 @@ class Moore(LHCbConfigurableUser):
                         if not hasattr(c,p) : continue
                         x = getattr(c,p)
                         if list is not type(x) : x = [ x ]
-                        for i in x : gather(i,overrule) 
+                        for i in x : gather(i,overrule)
             from Configurables import HltGenConfig,GaudiSequencer
             HltGenConfig().Overrule = { 'Hlt1ODINTechnicalPreScaler' : [ 'AcceptFraction:@OnlineEnv.AcceptRate@0' ] }
             gather( GaudiSequencer('Hlt'), HltGenConfig().Overrule )
@@ -660,10 +660,10 @@ class Moore(LHCbConfigurableUser):
         """
         Propagate settings to HltConf
         """
-        
+
         hltConf = HltConf()
-        
-        self.setOtherProps( hltConf,  
+
+        self.setOtherProps( hltConf,
                             [ 'ThresholdSettings'
                             , 'DataType'
                             , 'Split'
@@ -672,13 +672,13 @@ class Moore(LHCbConfigurableUser):
                           )
         if self.getProp("OutputLevel")<INFO:
             hltConf.setProp("Verbose",True)
-        
+
         from Configurables import Hlt2Conf
         #cannot do this for the TCK right now. Ideally I want a transform which does the same as this.
         if MooreExpert().getProp("Hlt2Independent") and ("Hlt1TrackOption" in Hlt2Conf().__slots__ or hasattr(Hlt2Conf(),"Hlt1TrackOption")) and not Hlt2Conf().isPropertySet("Hlt1TrackOption"):
             Hlt2Conf().setProp("Hlt1TrackOption","Rerun")
-        
-    
+
+
     def _suppressMonitoring(self):
         if self.getProp("UseTCK"):
             trans={}
@@ -690,33 +690,33 @@ class Moore(LHCbConfigurableUser):
             hltConf = HltConf()
             hltConf.setProp("EnableHltGlobalMonitor",False)
             hltConf.setProp("EnableBeetleSyncMonitor",False)
-            hltConf.setProp("EnableHltL0GlobalMonitor",False)                     
-            
+            hltConf.setProp("EnableHltL0GlobalMonitor",False)
+
     def _config_with_tck(self):
         from Configurables import HltConfigSvc
         from Funcs import _tck
         cfg = HltConfigSvc( prefetchDir = MooreExpert().getProp('prefetchConfigDir')
                           , initialTCK =  _tck(self.getProp('InitialTCK'))
                           , checkOdin = self.getProp('CheckOdin')
-                          , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
-       
+                          , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() )
+
         ApplicationMgr().ExtSvc.insert(0,cfg.getFullName())
         # configure services...
         from Configurables import VFSSvc
         VFSSvc().FileAccessTools = ['FileReadTool', 'CondDBEntityResolver/CondDBEntityResolver'];
         from Configurables import LHCb__ParticlePropertySvc
         LHCb__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt';
-        
-    
+
+
     def _definePersistency(self):
-        
+
         #online, do the minimum possible, of only setting up MDF
         if self.getProp("RunOnline") :
             LHCbApp().setProp("Persistency","MDF")
-    
-    def _split(self, useTCK ): 
+
+    def _split(self, useTCK ):
         split=self.getProp("Split")
-        # rather nasty way of doing this.. but it is 'hidden' 
+        # rather nasty way of doing this.. but it is 'hidden'
         # if you're reading this: don't expect this to remain like this!!!
         if split not in [ "", "Hlt1", "Hlt2" ]:
             raise ValueError("Invalid option for Moore().Split: '%s'"% split )
@@ -725,7 +725,7 @@ class Moore(LHCbConfigurableUser):
             # Hlt1 transform: remove items starting with Hlt2
             #                 enable track reports writers
             #                 remove lumi stripper...
-            trans['Hlt1'] = { 'GaudiSequencer/HltDecisionSequence' : { 'Members' : { ",[^']*'[^/]*/Hlt(2|Afterburner)[^']*'" : "" } } 
+            trans['Hlt1'] = { 'GaudiSequencer/HltDecisionSequence' : { 'Members' : { ",[^']*'[^/]*/Hlt(2|Afterburner)[^']*'" : "" } }
                             , 'HltTrackReportsWriter/.*'           : { 'Enable'  : { "^.*$" : 'True' } }
                             , 'GaudiSequencer/HltEndSequence'      : { 'Members' : { ", 'GaudiSequencer/LumiStripper'": "" } }
                             , 'HltGlobalMonitor/.*'                : { 'Hlt2DecReports' : { '^.*$' : ''    } }
@@ -735,19 +735,19 @@ class Moore(LHCbConfigurableUser):
             ###                 enable various reports decoders
             ###                 TODO: remove/disable the 'producers'
             ###                 TODO: if running 'independent' somehow replace track decoder with velo reco ...
-            trans['Hlt2'] = { 'GaudiSequencer/HltDecisionSequence$' : { 'Members' : { "'[^/]*/Hlt1[^']*'[^,]*," : ""  } }
-                            , 'HltTrackReportsDecoder/.*' : { 'Enable' : { '^.*$' : '%s' % ( not MooreExpert().getProp("Hlt2Independent") ) } } 
+            trans['Hlt2'] = { 'GaudiSequencer/Hlt(Decision|End)Sequence$' : { 'Members' : { "'[^'/]*/Hlt1[^']*'[^,]*," : ""  } }
+                            , 'HltTrackReportsDecoder/.*' : { 'Enable' : { '^.*$' : '%s' % ( not MooreExpert().getProp("Hlt2Independent") ) } }
                             , 'HltSelReportsDecoder/.*'   : { 'Enable' : { '^.*$' : 'True' } }
                             , 'HltDecReportsDecoder/.*'   : { 'Enable' : { '^.*$' : 'True' } }
             }
             Funcs._mergeTransform(trans[split])
-            # Tell the HltConfigSvc that we will only be running 
+            # Tell the HltConfigSvc that we will only be running
             # one level of the HLT
             from Configurables import HltConfigSvc
             from DAQSys.Decoders import DecoderDB
             # make sure the HltConfigSvc (if used) puts the TCK it used in the relevant HltDecReports
             HltConfigSvc().HltDecReportsLocations = [ DecoderDB["HltDecReportsDecoder/%sDecReportsDecoder" % split].listOutputs()[0] ]
-        
+
         #check/set WriterRequires, not really needed since now the content of Hlt1/2 is modified in the HltDecisionSequence
         if self.isPropertySet('WriterRequires') and len(self.getProp('WriterRequires')) and len(split):
             for check,fail in [("Hlt1","Hlt2"),("Hlt2","Hlt1")]:
@@ -759,11 +759,11 @@ class Moore(LHCbConfigurableUser):
     def _setIfNotSet(self,prop,value) :
         if not self.isPropertySet(prop) : self.setProp(prop,value)
         return self.getProp(prop) == value
-    
+
     def _throwIfNotSet(self,conf,prop,set,reason):
         if not conf.getProp(prop)==set:
             raise AttributeError("You've set mutually exclusive settings! "+prop+":"+str(conf.getProp(prop))+" should be "+str(set)+" "+reason)
-        
+
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
         # verify mutually exclusive settings:
@@ -772,8 +772,8 @@ class Moore(LHCbConfigurableUser):
         #       Online vs. DB tags...
         #       Online vs. EvtMax, SkipEvents, DataType, ...
         #       Online requires UseTCK
-        # L0 decoding to look in a single place  
-        # L0Conf().RawEventLocations = ['DAQ/RawEvent']        
+        # L0 decoding to look in a single place
+        # L0Conf().RawEventLocations = ['DAQ/RawEvent']
         #L0DUFromRawAlg("L0DUFromRaw").Hlt1 = True
         deprecationwarning=""
         for prop in self.getProperties():
@@ -786,25 +786,25 @@ class Moore(LHCbConfigurableUser):
                     deprecationwarning=deprecationwarning+"\n"
         if len(deprecationwarning.strip()):
             raise DeprecationWarning(deprecationwarning.strip())
-        
+
         #check nothing strange is set for running online
         if self.getProp("RunOnline"):
-            #things 
+            #things
             for prop,set in [("generateConfig",False),("EvtMax",-1)]:
                 self._throwIfNotSet(self,prop,set," because you're running in Online mode!")
             for prop,set in [("DisableMonitors",False)]:
                 self._throwIfNotSet(MooreExpert(),prop,set," because you're running in Online mode!")
-        
+
         #check nothing strange is running to generate a TCK
         if self.getProp("generateConfig"):
             for prop,set in [("Hlt2Independent",False)]:
                 self._throwIfNotSet(MooreExpert(),prop,set," because you're trying to generate a TCK!")
             for prop,set in [("OutputLevel",WARNING),("UseTCK",False)]:
                 self._throwIfNotSet(self,prop,set," because you're trying to generate a TCK!")
-        
-        
+
+
         if not self.getProp("RunOnline") : self._l0()
-        
+
         from Configurables import MooreInitSvc
         ApplicationMgr().ExtSvc.append( MooreInitSvc() )
         #from Configurables import LbAppInit
@@ -814,11 +814,11 @@ class Moore(LHCbConfigurableUser):
         if hlt not in ApplicationMgr().TopAlg : ApplicationMgr().TopAlg.append( hlt )
 
 
-        # forward some settings... 
+        # forward some settings...
         # WARNING: this triggers setup of /dd -- could be avoided in PA only mode...
         app = LHCbApp()
         self.setOtherProps( app, ['EvtMax','SkipEvents','Simulation', 'DataType' ] )
-        
+
         # this was a hack. Someone thought setOtherProps did not work?
         #app.CondDBtag = self.getProp('CondDBtag')
         #app.DDDBtag   = self.getProp('DDDBtag')
@@ -832,29 +832,29 @@ class Moore(LHCbConfigurableUser):
         from Configurables import DDDBConf
         if not DDDBConf().isPropertySet("InitialTime"):
             DDDBConf().InitialTime="Now"
-        
+
         # make sure we don't pick up small variations of the read current
         # Need a defined HistogramPersistency to read some calibration inputs!!!
         ApplicationMgr().HistogramPersistency = 'ROOT'
-        
+
         #set the decoders to read from the default location
         self._setRawEventLocations()
-        
+
         self._configureDQTags()
-        
+
         if self.getProp('UseTCK') :
             self._config_with_tck()
             self._split( useTCK = True )
         else:
             self._config_with_hltconf()
             self._split( useTCK = False  )
-            
+
         self._definePersistency()
         self._configureDataOnDemand()
 
         if self.getProp("Simulation") or MooreExpert().getProp("DisableMonitors"):
             self._suppressMonitoring()
-            
+
         if not self.getProp("RunOnline") :
             self._profile()
             if self.getProp("generateConfig") : self._generateConfig()

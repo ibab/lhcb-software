@@ -8,11 +8,7 @@ gaudi_depends_on_subdirs(Det/DDDB
                          GaudiKernel
                          GaudiPython
                          GaudiSvc
-                         HltSys
-                         L0/L0Interfaces
-                         LbcomSys
-                         PhysSys
-                         RecSys)
+                         L0/L0Interfaces)
 
 find_package(HepMC)
 

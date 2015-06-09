@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2015-06-09 - Roel Aaij
+ - Remove Hlt1TrackMonitorSequence from HltEndSequence in Hlt2.
+ - Remove dependency on Sys packages.
 
 !========================= Moore v23r7 2015-05-27 =========================
 
