@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-06-09 - Michel De Cian
+ - First commit of PatLongLivedTracking, an improved version of PatDownstream for Run II.
+
 ! 2015-06-02 - Michel De Cian
  - Modify PatDownTrack, and as a consequence PatDownstream, in preparation for a modified downstream algorithm
 
