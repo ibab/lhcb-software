@@ -4,6 +4,10 @@
 ! Purpose     : Offline GUI for analysis of VELO data
 !----------------------------------------------------------------------------
 
+! 2015-06-10 - Alex Pearce
+ - Quick fix to support retrieve_run_view_plot.py now returning two plots by
+   default
+
 ! 2015-04-16 - Alex Pearce
  - Fix image resources not appearing
  - Move QtAssets/ to qt_resources to be consistent with other LHCb Qt

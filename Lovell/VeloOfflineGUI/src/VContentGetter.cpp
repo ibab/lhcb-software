@@ -23,6 +23,7 @@ public:
         m_retrivalCommand + "' '" + m_plot->m_plotOps->currentModuleStr() + "'";
     std::string * dataDir = m_plot->m_plotOps->m_dataDir;
     command += " --run-data-dir=" + (*dataDir);
+    command += " --no-reference";
     std::cout<<"Sending command: "<<std::endl;
     std::cout<<command<<std::endl;
     in = popen(command.c_str(), "r");
@@ -33,20 +34,34 @@ public:
 
     rapidjson::Document d;
     d.Parse(rawData.c_str());
-    if (!d.HasMember("data")) {
+    // Successful plot retrieval means an array of two plotables
+    // Unsuccessful retrieval results in an object with the error message
+    if (!d.IsArray() && d.IsObject()) {
+    	std::cout<<"Error retrieving the plot"<<std::endl;
+      if (d.HasMember("success") && d["success"].GetBool() == false
+                                 && d.HasMember("message")) {
+        std::cout<<"Error message:"<<d["message"].GetString()<<std::endl;
+      }
+    	return;
+    }
+
+    // Until we can deal with references, just get the first (nominal) plot
+    // that was returned
+    const rapidjson::Value& v = d[0];
+    if (!v.HasMember("data")) {
     	std::cout<<"No plot data returned to GUI"<<std::endl;
     	return;
     }
 
-    std::string className = d["data"]["object_class"].GetString();
+    std::string className = v["data"]["object_class"].GetString();
     if (className.size() == 4) {
-    	if (className.substr(0, 3) == "TH1") th1Decoder(&d);
-    	else if (className.substr(0, 3) == "TH2") th2Decoder(&d);
+    	if (className.substr(0, 3) == "TH1") th1Decoder(&v);
+    	else if (className.substr(0, 3) == "TH2") th2Decoder(&v);
     	else std::cout<<"Unknown root object: "<<className<<std::endl;
     }
 
     else if (className.size() == 8) {
-    	if (className == "TProfile") th1Decoder(&d);
+    	if (className == "TProfile") th1Decoder(&v);
     	else std::cout<<"Unknown root object: "<<className<<std::endl;
     }
     else std::cout<<"Unknown root object: "<<className<<std::endl;
@@ -54,7 +69,7 @@ public:
 
 
   //___________
-  void th1Decoder(rapidjson::Document * d) {
+  void th1Decoder(const rapidjson::Value * d) {
   	m_plottableDimension = 1;
 
   	if (!(*d)["success"].GetBool()) {
@@ -103,7 +118,7 @@ public:
   }
 
   //___________
-  void th2Decoder(rapidjson::Document * d) {
+  void th2Decoder(const rapidjson::Value * d) {
     m_name = (*d)["data"]["title"].GetString();
     m_plottableStyle = 0;
     m_plottableDimension = 2;
