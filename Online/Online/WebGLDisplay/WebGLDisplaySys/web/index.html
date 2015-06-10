@@ -150,7 +150,7 @@ void main()
       //var mumaterial = new THREE.LineBasicMaterial( { color: 0x00ff00, opacity: 1.0, linewidth: 2 } );
       //var ematerial = new THREE.LineBasicMaterial( { color: 0x0505ff, opacity: 1.0, linewidth: 2 } );
       
-      var vtrackmaterial = new THREE.LineBasicMaterial( { color: 0x303030, opacity: 1.0, linewidth: 2 } );      
+      //var vtrackmaterial = new THREE.LineBasicMaterial( { color: 0x303030, opacity: 1.0, linewidth: 2 } );      
       var pvsvfourmaterial = new THREE.LineDashedMaterial( { color: 0xff00ff, dashSize: 0.75e-3, gapSize: 0.5e-3, scale: 1.0, linewidth: 2, visible: true } );
       var pvsvthreematerial = new THREE.LineDashedMaterial( { color: 0xff00ff, dashSize: 0.75e-3, gapSize: 0.5e-3, scale: 1.0, linewidth: 2, visible: false } );
       var pvsvtwomaterial = new THREE.LineDashedMaterial( { color: 0xff00ff, dashSize: 0.75e-3, gapSize: 0.5e-3, scale: 1.0, linewidth: 2, visible: false } );
@@ -199,6 +199,21 @@ void main()
       ematerial.attributes = THREE.UniformsUtils.clone( pimaterial.attributes );
       ematerial.uniforms.color.value = new THREE.Color( 0x0505ff );
 
+      //var vtrackmaterial = new THREE.LineBasicMaterial( { color: 0x303030, opacity: 1.0, linewidth: 2 } );      
+      var vtrackmaterial = pimaterial.clone();
+      vtrackmaterial.uniforms = THREE.UniformsUtils.clone( pimaterial.uniforms );
+      vtrackmaterial.attributes = THREE.UniformsUtils.clone( pimaterial.attributes );
+      vtrackmaterial.uniforms.color.value = new THREE.Color( 0x303030 );
+      for (i = 0; i < 200; i++)
+        {
+	  vtrackmaterial.attributes.alpha.value[i] = 1.0;
+	  if (i >= 5)
+  	    vtrackmaterial.attributes.alpha.value[i] = 0.0;		  
+        }
+      vtrackmaterial.attributes.alpha.value[3] = 0.66;		  
+      vtrackmaterial.attributes.alpha.value[4] = 0.33;		  
+      //vtrackmaterial.attributes.alpha.value[5] = 0.0;		  
+
       //var pimaterial = new THREE.LineBasicMaterial( { color: 0xff8000, opacity: 1.0, linewidth: 2 } );
       //var kmaterial = new THREE.LineBasicMaterial( { color: 0xff0000, opacity: 1.0, linewidth: 2 } );
       //var pmaterial = new THREE.LineBasicMaterial( { color: 0xff00ff, opacity: 1.0, linewidth: 2 } );
@@ -236,15 +251,6 @@ void main()
       var directionalLightb = new THREE.DirectionalLight(0xffffff);
       directionalLightb.position.set(-1.0, 1.0, -1.0);
       scene.add(directionalLightb);
-/*
-      var directionalLightc = new THREE.DirectionalLight(0xffffff);
-      directionalLightc.position.set(1.0, 1.0, 1.0); //z is along beam axis, y is up, x is perpendicular, horizontal
-      scene.add(directionalLightc);
-
-      var directionalLightd = new THREE.DirectionalLight(0xffffff);
-      directionalLightd.position.set(-1.0, 1.0, -1.0);
-      scene.add(directionalLightd);
-*/	
 
       var currentevent = 0;
      //this contains names of the currently available events on the server, first event is current
@@ -280,6 +286,7 @@ void main()
         logocolor: "#ffffff",
         detcolor: "#40d0ff",
         width: 2.0,
+	fov: 75.0, 
         screenshotscale: 1.0,
         pvs: true,
         vtracks: true,
@@ -433,6 +440,7 @@ void main()
           controls.update();
         }
       });
+      var efov = fvis.add(params, "fov", 40.0, 100.0).name("Field of view").onChange( function() { camera.fov = params.fov; if (camera.inPerspectiveMode) camera.toPerspective(); controls.update(); } );
       var ebkgcolor = fvis.addColor(params, "bkgcolor").name("Bkg. color").onChange( function() { renderer.setClearColor( params.bkgcolor, 1 ); } );
       var elogo = fvis.add(params, "logo").name("Show logo").onChange( function() { displaylogo = params.logo; } );
       var elogocolor = fvis.addColor(params, "logocolor").name("Logo color").onChange( function() { 
@@ -508,6 +516,7 @@ void main()
       eecalhits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
       ehcalhits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
       emuonhits.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
+      efov.domElement.parentNode.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
       elogo.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
       erotate.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
       ecenter.domElement.parentNode.parentNode.style.borderLeft = "3px solid #fffffe";
