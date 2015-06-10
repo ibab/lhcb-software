@@ -7,13 +7,12 @@ from veloview.runview import utils
 from veloview.runview.response_formatters import dictionary_formatter
 
 
-# TODO factor out returning nominal+reference to a different method
 def get_run_plot(name, run, reference=False, formatter=dictionary_formatter):
     """Return the formatted object at the plot path in the run file.
 
-    If reference is True, a list of two plots will be returned, the first being
-    the plot for `run`, and the second being the plot for the reference run for
-    `run`.
+    If reference is True, the corresponding plot from the reference file will 
+    be returned, else the plot from the `run` run will be returned.
+    If no reference run can be found for `run`, None is returned.
     Keyword arguments:
     name -- Path within the run file to the plot object.
             A KeyError is raised if name is not found in the run file
@@ -21,6 +20,12 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter):
     reference -- If True, include the reference plot for the given plot and run
     formatter -- Response formatter used to format the TObject
     """
+    if reference:
+        try:
+            run = utils.reference_run(name, run)
+        except ValueError:
+            return None
+
     # Get the latest run file in the run's directory
     base = utils.run_file_path(run)
     files = sorted(glob.glob("{0}/*.root".format(base)))
@@ -44,18 +49,26 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter):
     clone = obj.Clone(obj.GetName())
     f.Close()
 
-    nomplot = formatter(clone)
-    refrun = None
-    if reference:
-        try:
-            refrun = utils.reference_run(name, run)
-        except ValueError:
-            # TODO what to do on invalid reference resolution?
-            pass
-    if refrun:
-        refplot = get_run_plot(name, refrun, reference=False)
-        # nomplot['data']['title'] += ' (nominal run {0})'.format(run)
-        # refplot['data']['title'] += ' (reference run {0})'.format(refrun)
-        return [nomplot, refplot]
-    else:
-        return nomplot
+    return formatter(clone)
+
+
+def get_run_plot_with_reference(name, run, formatter=dictionary_formatter):
+    """Return the formatted nominal and reference plots.
+
+    A 2-tuple of two plots is returned:
+        1. The nominal plot, as returned by
+            get_run_plot(name, run, reference=False, formatter)
+        2. The reference plot, as returned by
+            get_run_plot(name, run, reference=True, formatter)
+    in that order.
+
+    If the reference get_run_plot call returns None, None is returned in place
+    of the reference object.
+    """
+    nominal = get_run_plot(name, run, reference=False, formatter=formatter)
+    try:
+        reference = get_run_plot(name, run, reference=False,
+                                 formatter=formatter)
+    except KeyError:
+        reference = None
+    return nominal, reference

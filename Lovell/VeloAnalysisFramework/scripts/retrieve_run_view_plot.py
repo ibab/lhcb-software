@@ -1,9 +1,14 @@
 #!/usr/bin/env python
-"""Return a plot for a given run in the format expected by the offline GUI.
+"""Return plots for a given run in the format expected by the offline GUI.
 
 A run number is in invalid if it is not present in the run list.
 A plot name is invalid if it is not present in the run file.
 A sensor number is invalid if is not in {0, ..., 42, 64, ..., 106}.
+The reference plot is returned along with the nominal plot, if it can be found, 
+as an array of length 2.
+If the refernce plot cannot be found, null is used as a placeholder.
+It is up to the caller to decide if the two returned plots are consistent with 
+one another.
 If any invalid arguments are supplied, 1 is returned and the program exits.
 """
 # This is due to what appears to be a ROOT bug, where doing `import ROOT`
@@ -27,8 +32,8 @@ def create_parser():
                         help="Sensor number")
     parser.add_argument("--run-data-dir", default=Config().run_data_dir,
                         help="Directory to search for run list and data")
-    parser.add_argument("--reference", action="store_true",
-                        help="Include reference plot for the given arguments")
+    parser.add_argument("--no-reference", action="store_true",
+                        help="Omit the reference plot")
     return parser
 
 
@@ -39,7 +44,8 @@ def exit_with_error(msg):
     sys.exit(1)
 
 
-def retrieve_run_view_plot(run, plot, sensor, reference, run_data_dir):
+def retrieve_run_view_plot(run, plot, sensor, noreference, run_data_dir):
+    import json
     from veloview.runview import plots, response_formatters, utils
 
     # Change the run data directory to the user-specified one
@@ -62,8 +68,17 @@ def retrieve_run_view_plot(run, plot, sensor, reference, run_data_dir):
 
     # Try to the get the plot object, formatting it to JSON
     try:
-        response = plots.get_run_plot(plot, run, reference=reference,
-                                      formatter=response_formatters.json_formatter)
+        if noreference:
+            # Return a 2-tuple to be consistent with the nominal+reference case
+            response = (plots.get_run_plot(
+                plot, run,
+                reference=False,
+                formatter=response_formatters.json_formatter
+            ), json.dumps(None))
+        else:
+            response = plots.get_run_plot_with_reference(
+                plot, run, formatter=response_formatters.json_formatter
+            )
     except KeyError, e:
         err = True
         msg = (
@@ -89,14 +104,15 @@ def retrieve_run_view_plot(run, plot, sensor, reference, run_data_dir):
     if err:
         exit_with_error(msg)
 
-    sys.stdout.write(response)
+    # Return a JSON list containing the two plot objects
+    sys.stdout.write('[{0}]'.format(','.join(response)))
 
 
 def main():
     parser = create_parser()
     args = parser.parse_args()
-    retrieve_run_view_plot(args.run, args.plot, args.sensor, args.reference,
-        args.run_data_dir)
+    retrieve_run_view_plot(args.run, args.plot, args.sensor, args.no_reference,
+                           args.run_data_dir)
 
 
 if __name__ == "__main__":

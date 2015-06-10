@@ -10,6 +10,7 @@
    Configuration is now handled by the veloview.config.Config object.
    Any getting or setting of any configuration option should be done with
    this object, e.g. `Config().run_data_dir`.
+ - Return (nominal plot, reference plot) to the GUIs by default
 
 ! 2015-05-29 - Michael Alexander
  - First commit of config for plots from IP resolution monitoring.
