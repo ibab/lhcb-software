@@ -1,7 +1,6 @@
 #!/bin/bash
 echo $1
 echo $2
-echo $3
 export HOME=/home/online
 export USER=online # these dumb offline scripts....
 source /cvmfs/lhcb.cern.ch/lib/LbLogin.sh
@@ -12,5 +11,5 @@ unset GAUDIAPPNAME
 source /sw/oracle/set_oraenv.sh
 export CORAL_DBLOOKUP_PATH=/group/online/conddbserver/
 export CORAL_AUTH_PATH=/group/online/conddbserver
-python $ALIGNONLINEROOT/python/DBXfer.py
-exit
+python $ALIGNONLINEROOT/python/DBXfer.py $2
+exit $?
