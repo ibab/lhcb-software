@@ -80,7 +80,7 @@ def EscherCommon(true_online_version, alignment_module):
   escher.DBSnapshotDirectory = "/group/online/hlt/conditions/"
 
   if hasattr(OnlineEnv, "AlignXmlDir"):
-    escher.OnlineAligWorkDir = os.path.join(Online.AlignXmlDir, 'running')
+    escher.OnlineAligWorkDir = os.path.join(OnlineEnv.AlignXmlDir, 'running')
 
   sys.path.insert(2, os.path.dirname(OnlineEnv.ConditionsMapping))
   import Online as OnlineConds
