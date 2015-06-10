@@ -36,8 +36,8 @@ Hlt2MonRelaySvc::Hlt2MonRelaySvc(const string& name, ISvcLocator* loc)
    declareProperty("HostnameRegex", m_hostRegex = "hlt(01|(?<subfarm>[a-f]{1}[0-9]{2})(?<node>[0-9]{2})?)");
    declareProperty("InPort", m_inPort = 31337);
    declareProperty("OutPort", m_inPort = 31338);
-   declareProperty("FrontConnection", m_inPort = 31337);
-   declareProperty("BackConnection", m_inPort = 31338);
+   declareProperty("FrontConnection", m_frontCon);
+   declareProperty("BackConnection", m_backCon);
    declareProperty("ForceTopRelay", m_forceTop = false);
 }
 
@@ -53,6 +53,7 @@ StatusCode Hlt2MonRelaySvc::initialize()
    StatusCode sc = Service::initialize();
 
    MsgStream msg(msgSvc(), name());
+   msg << MSG::INFO << "Initialized ZeroMQ based Hlt2MonRelaySvc" << endmsg;
    sc = serviceLocator()->service("IncidentSvc", m_incidentSvc, true);
    if( !sc.isSuccess() ) {
       msg << MSG::FATAL << "IncidentSvc not found" << endmsg;
@@ -73,22 +74,19 @@ StatusCode Hlt2MonRelaySvc::initialize()
       boost::regex re_host{m_hostRegex};
       auto result = boost::regex_match(begin(hostname), end(hostname), matches, re_host, flags);
 
-      MsgStream msg(msgSvc(), name());
-
       // This one first as we want to check for forced top/forced on.
       if (matches[1] == "01" || m_forceTop) {
          // top relay
          m_top = true;
       }
 
-      if (!result) {
-         msg << MSG::WARNING << "Not a suitable host, relay disabled" << endmsg;
+      if (!result && (m_frontCon.empty() || m_backCon.empty())) {
+         msg << MSG::WARNING << "Not a known host type, and connections not correctly configured, "
+             << "relay disabled" << endmsg;
          m_relay = false;
          return sc;
-      }
-
-      // If connections were specified, do nothing more
-      if (!m_frontCon.empty() && !m_backCon.empty()) {
+      } else if (!m_frontCon.empty() && !m_backCon.empty()) {
+         // If connections were explicitly configured, we're done
          return sc;
       }
 
@@ -134,17 +132,26 @@ StatusCode Hlt2MonRelaySvc::start()
       return sc;
    }
 
+   if (!m_context) {
+      m_context = new zmq::context_t{1};
+   }
+
    m_thread = new std::thread([this](void) -> void {
          // Create frontend, backend and control sockets
          zmq::socket_t front{*m_context, ZMQ_XSUB};
          zmq::socket_t back{*m_context, ZMQ_XPUB};
          zmq::socket_t control{*m_context, ZMQ_PAIR};
 
+         MsgStream log(msgSvc(), name());
          //  Bind sockets to TCP ports
          front.bind(m_frontCon.c_str());
+         log << MSG::INFO << "Bound frontend to: " << m_frontCon << endmsg;
          if (!m_top) {
             back.connect(m_backCon.c_str());
+            log << MSG::INFO << "Connected backend to " << m_backCon << endmsg;
          } else {
+            back.connect(m_backCon.c_str());
+            log << MSG::INFO << "Bound backend to " << m_backCon << endmsg;
             back.bind(m_backCon.c_str());
          }
 
@@ -158,6 +165,9 @@ StatusCode Hlt2MonRelaySvc::start()
 
    m_control = new zmq::socket_t{*m_context, ZMQ_PAIR};
    m_control->bind("inproc://control");
+
+   MsgStream msg(msgSvc(), name());
+   msg << MSG::INFO << "Relay started." << endmsg;
 
    return sc;
 }
