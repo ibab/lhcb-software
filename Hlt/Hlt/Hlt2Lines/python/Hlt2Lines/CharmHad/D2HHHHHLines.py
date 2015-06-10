@@ -58,6 +58,24 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
                              'PT_MIN'                   :  2500 * MeV,
                              'IPCHI2_MAX'               : 15.0
                                           }
+##  designed for both Lambda_c and Xi_c^+
+                ,'LcpToPpKmKpPimPip' : {
+                             'TisTosSpec'               : "Hlt1.*MVA.*Decision%TOS",
+                             'Trk_ALL_PT_MIN'           :  250 * MeV,
+                             'Trk_ALL_MIPCHI2DV_MIN'    :  3,
+                             'AM_MIN'                   :  2186. * MeV,
+                             'AM_MAX'                   :  2586. * MeV,
+                             'AM_3'                     :  493.677 * MeV,
+                             'AM_4'                     :  139.570 * MeV,
+                             'AM_5'                     :  139.570 * MeV,
+                             'ACHI2DOCA_MAX'            :  15.0,
+                             'ASUMPT_MIN'               :  2000 * MeV,
+                             'VCHI2PDOF_MAX'            :  20.0,
+                             'BPVDIRA_MIN'              : 0.9994,
+                             'BPVLTIME_MIN'             : 0.1 * picosecond,
+                             'PT_MIN'                   :  2500 * MeV,
+                             'IPCHI2_MAX'               : 25.0
+                                          }
 
                ##  cuts dictionary entries for DplusFilter selections
                 ,'Dplus':  {
@@ -72,6 +90,13 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
                              'PT_MIN'                 :  2500 * MeV,
                              'D_BPVLTIME_MIN'         :  0.3 * picosecond,
                            }
+## "Lcp" should accept the full mass range for both Lambda_c and Xi_c^+
+                ,'Lcp':     {
+                             'DMASS_MIN'              :  2206 * MeV,
+                             'DMASS_MAX'              :  2548 * MeV,
+                             'PT_MIN'                 :  2500 * MeV,
+                             'D_BPVLTIME_MIN'         :  0.1 * picosecond,
+                           }
 
 
 
@@ -82,6 +107,7 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
         from Stages import DplusFilter
         ## Dch2XXXX include both the D+ an Ds mass range
         from Stages import Dch2KmPimPipPipPip, Dch2KmKpPimPipPip, Dch2KmKmKpPipPip
+        from Stages import LcpToPpKmKpPimPip
         
 
         stages = { 'Dp2KmPimPipPipPipTurbo'   :  [DplusFilter('Dp2KmPimPipPipPip',
@@ -101,7 +127,10 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
                                                   nickname='Ds')],
                    'Dsp2KmKmKpPipPipTurbo'   :  [DplusFilter('Dsp2KmKmKpPipPip',
                                                   inputs=[Dch2KmKmKpPipPip],
-                                                  nickname='Ds')]
+                                                  nickname='Ds')],
+                   'LcpToPpKmKpPimPipTurbo'  :  [DplusFilter('LcpToPpKmKpPimPip',
+                                                  inputs=[LcpToPpKmKpPimPip],
+                                                  nickname='Lcp')]
                  }
         
 

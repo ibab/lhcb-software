@@ -266,6 +266,43 @@ SharedNeutralLowPtChild_eta = NeutralInParticleFilter("CharmHadSharedNeutralLowP
 
 
 
+##  -----------------  define a shared Lambda class, and its instantiations,
+##  -----------------  here so the instantiations are available anywhere below
+##  -----------------  in this files
+
+class SecondaryLambdaFilter(Hlt2ParticleFilter) : # {
+    '''
+    Filter Lambda candidates for building hyperons on
+
+           decay time wrt PV                    BPVLTIME
+           vertex position                      VFASPF
+
+    Always creates a shared instance of the filter.
+
+    Configuration dictionaries must contain the following keys:
+        'DecayTime_MIN' :  lower limit on decay time wrt PV
+        'VZ_MIN'        :  lower limit vertex z position
+        'VZ_MAX'        :  upper limit vertex z position
+
+    '''
+    def __init__(self, name, inputs): # {
+        cut = ("  (BPVLTIME() > %(DecayTime_MIN)s) " +
+               "& (VFASPF(VZ) > %(VZ_MIN)s)" +
+               "& (VFASPF(VZ) > %(VZ_MAX)s)")
+        # }
+
+        from HltTracking.HltPVs import PV3D
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True,
+                                    dependencies = [PV3D('Hlt2')],
+                                    UseP2PVRelations = False)
+
+    # }
+# }
+
+## and instantiate  combiners for LL and DD
+CharmHadSharedSecondaryLambdaLL = SecondaryLambdaFilter("CharmHadSharedSecondaryLambdaLL",[Lambda_LL])
+CharmHadSharedSecondaryLambdaDD = SecondaryLambdaFilter("CharmHadSharedSecondaryLambdaDD",[Lambda_DD])
+
 ## ========================================================================= ##
 ## 2-body Combiners
 ## ========================================================================= ##
@@ -736,6 +773,18 @@ XSec_D02K3Pi = DV4BCombiner('XSec_D02K3Pi'
         , inputs = [ SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi ]
         , nickname = 'D02HHHH_XSec',shared=True ) ## 'D02HHHH_XSec' defined in XSecLines.py 
 
+LcpToLambda0KmKpPip = DV4BCombiner('LcpToLambda0KmKpPip'
+        , decay = "[Lambda_c+ -> Lambda0 K- K+ pi+]cc"
+        , inputs =[CharmHadSharedSecondaryLambdaLL,CharmHadSharedSecondaryLambdaDD,
+                   SharedDetachedLcChild_K, SharedDetachedLcChild_pi]
+        , shared = True )  ## LcpToLambda0KmKpPip dictionary in D02HHHHLines.py
+
+LcpToLambda0KmPipPip = DV4BCombiner('LcpToLambda0KmPipPip'
+        , decay = "[Lambda_c+ -> Lambda0 K- pi+ pi+]cc"
+        , inputs =[CharmHadSharedSecondaryLambdaLL,CharmHadSharedSecondaryLambdaDD,
+                   SharedDetachedLcChild_K, SharedDetachedLcChild_pi]
+        , shared = True )  ## LcpToLambda0KmPipPip dictionary in D02HHHHLines.py
+
 class HHHHCombiner(Hlt2Combiner):
     def __init__(self, name, decay,inputs):
         dc =    {}  
@@ -902,6 +951,10 @@ Dch2KmKmKpPipPip = D2HHHHHCombiner('Dch2KmKmKpPipPip', decay = "[D+ -> K- K- K+ 
                 inputs=[SharedDetachedDpmChild_K,SharedDetachedDpmChild_pi],
                 shared = True)
 
+LcpToPpKmKpPimPip = D2HHHHHCombiner('LcpToPpKmKpPimPip', decay = "[Lambda_c+ -> p+ K- K+ pi- pi+]cc",
+                inputs=[SharedTighterDetachedLcChild_p,SharedDetachedLcChild_K,SharedDetachedLcChild_pi],
+                shared = True)
+
 class DetachedV0HCombiner(Hlt2Combiner):
     def __init__(self, name, decay,inputs):
         dc =    {'KS0'    : "ALL",
@@ -911,7 +964,7 @@ class DetachedV0HCombiner(Hlt2Combiner):
         cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
                  " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )" )
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
-                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 "mbda0KmKpPimPp & (BPVDIRA > %(BPVDIRA_MIN)s )" +
                  " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
         from HltTracking.HltPVs import PV3D
@@ -919,41 +972,6 @@ class DetachedV0HCombiner(Hlt2Combiner):
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
                               MotherCut = mc, Preambulo = [])
-
-##  -----------------  beginning Charged Hyperon code
-
-class SecondaryLambdaFilter(Hlt2ParticleFilter) : # {
-    '''
-    Filter Lambda candidates for building hyperons on
-
-           decay time wrt PV                    BPVLTIME
-           vertex position                      VFASPF
-
-    Always creates a shared instance of the filter.
-
-    Configuration dictionaries must contain the following keys:
-        'DecayTime_MIN' :  lower limit on decay time wrt PV
-        'VZ_MIN'        :  lower limit vertex z position
-        'VZ_MAX'        :  upper limit vertex z position
-
-    '''
-    def __init__(self, name, inputs): # {
-        cut = ("  (BPVLTIME() > %(DecayTime_MIN)s) " +
-               "& (VFASPF(VZ) > %(VZ_MIN)s)" +
-               "& (VFASPF(VZ) > %(VZ_MAX)s)")
-        # }
-
-        from HltTracking.HltPVs import PV3D
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True,
-                                    dependencies = [PV3D('Hlt2')],
-                                    UseP2PVRelations = False)
-
-    # }
-# }
-
-## and instantiate  combiners for LL and DD
-CharmHadSharedSecondaryLambdaLL = SecondaryLambdaFilter("CharmHadSharedSecondaryLambdaLL",[Lambda_LL])
-CharmHadSharedSecondaryLambdaDD = SecondaryLambdaFilter("CharmHadSharedSecondaryLambdaDD",[Lambda_DD])
 
 class ChargedHyperonLambdaHCombiner(Hlt2Combiner):
     def __init__(self, name, decay,inputs):

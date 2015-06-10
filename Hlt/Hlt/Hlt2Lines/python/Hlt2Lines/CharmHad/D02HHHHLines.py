@@ -38,6 +38,56 @@ class CharmHadD02HHHHLines() :
                 'Mass_M_MIN'               :  1790 * MeV,
                 'Mass_M_MAX'               :  1940 * MeV,
                 }
+##  despite the names, these cuts are designed to accept both Lambda_c and Xi_c^+ decays
+##  mass(Lcp) = 2286 MeV and mass(Xicp) = 2468 MeV
+        cutsForLcpToLambda0KmKpPip = {
+                'Trk_ALL_PT_MIN'           :  250 * MeV,
+                'Trk_ALL_MIPCHI2DV_MIN'    :  3,
+                'AM_34'                    : (493.677 + 139.5) * MeV,
+                'AM_4'                     : (139.5) * MeV,
+                'AM_MIN'                   :  2186 * MeV,
+                'AM_MAX'                   :  2586 * MeV,
+                'ASUMPT_MIN'               :  2000.0 * MeV,
+                'ADOCA_MAX'                :  100.0 * mm,
+                'ACHI2DOCA_MAX'            :  10.0,
+                'VCHI2PDOF_MAX'            :  12.0,
+                'BPVDIRA_MIN'              :  0.9998,
+                'BPVLTIME_MIN'             :  0.1*picosecond,
+                'Mass_M_MIN'               :  2206 * MeV,
+                'Mass_M_MAX'               :  2348 * MeV,
+                }
+        cutsForLcpToLambda0KmPipPip = {
+                'Trk_ALL_PT_MIN'           :  250 * MeV,
+                'Trk_ALL_MIPCHI2DV_MIN'    :  3,
+                'AM_34'                    : (139.5 + 139.5) * MeV,
+                'AM_4'                     : (139.5) * MeV,
+                'AM_MIN'                   :  2186 * MeV,
+                'AM_MAX'                   :  2586 * MeV,
+                'ASUMPT_MIN'               :  2000.0 * MeV,
+                'ADOCA_MAX'                :  100.0 * mm,
+                'ACHI2DOCA_MAX'            :  10.0,
+                'VCHI2PDOF_MAX'            :  12.0,
+                'BPVDIRA_MIN'              :  0.9998,
+                'BPVLTIME_MIN'             :  0.1*picosecond,
+                'Mass_M_MIN'               :  2206 * MeV,
+                'Mass_M_MAX'               :  2348 * MeV,
+                }
+## some cuts for Pentaquark --> phi,pi,p  mimics D0 --> HHHH to start
+        cutsForPentaPhiPimPp = {
+                 'Trk_ALL_PT_MIN'           :  250 * MeV,
+                 'Trk_ALL_MIPCHI2DV_MIN'    :  3,
+                 'AM12_MAX'                 : 1050.0 * MeV,
+                 'AM_4'                     : (139.5) * MeV,
+                 'AM_MIN'                   :  2700 * MeV,
+                 'AM_MAX'                   :  2930 * MeV,
+                 'ASUMPT_MIN'               :  1980.0 * MeV,
+                 'ACHI2DOCA_MAX'            :  10.0,
+                 'VCHI2PDOF_MAX'            :  12.0,
+                 'BPVDIRA_MIN'              :  0.9998,
+                 'BPVLTIME_MIN'             :  0.3*picosecond,
+                 'PT_MIN'                   :  2000 * MeV,
+                 'IPCHI2_MAX'               :  15.0,
+                                 }
         cutsForSpectroscopy = {
                     'IPCHI2_MAX'       :  15,
                     'D_BPVLTIME_MIN'   :  0.3 * picosecond,
@@ -47,6 +97,11 @@ class CharmHadD02HHHHLines() :
         cutsForPentaQuarkMassFilter = {
                 'Mass_M_MIN'               :  2720 * MeV,
                 'Mass_M_MAX'               :  2915 * MeV,
+                     }
+## as above, the mass filter should accept both Lambda_c and Xi_c^+ decays
+        cutsForLcMassFilter = {
+                'Mass_M_MIN'               :  2206 * MeV,
+                'Mass_M_MAX'               :  2348 * MeV,
                      }
         # modify the mass cuts to enlarge the mass window for prescaled control lines (are these really needed?)
         cutsForD2HHHHWide = copy.copy(cutsForD2HHHH)
@@ -66,12 +121,15 @@ class CharmHadD02HHHHLines() :
         for fs in ['PiPiPiPi', 'KPiPiPi', 'KKPiPi', 'KKKPi']:
             # Now the combiner for the CPV lines  
             cuts.update( {
-              'cutsForD2HHHH' : cutsForD2HHHH,
-              'D02'+fs        : cutsForD2HHHH,
-              'D02'+fs+'Turbo': cutsForD2HHHH,
-              'D02'+fs+'Starting': cutsForD2HHHH,
-              'D02'+fs+'Wide' : cutsForD2HHHHWide,
-              'cutsForD2HHHHWide' : cutsForD2HHHHWide
+              'cutsForD2HHHH'        : cutsForD2HHHH,
+              'LcpToLambda0KmKpPip'  : cutsForLcpToLambda0KmKpPip,
+              'LcpToLambda0KmPipPip'  : cutsForLcpToLambda0KmPipPip,
+              'D02'+fs               : cutsForD2HHHH,
+              'D02'+fs+'Turbo'       : cutsForD2HHHH,
+              'D02'+fs+'Starting'    : cutsForD2HHHH,
+              'D02'+fs+'Wide'        : cutsForD2HHHHWide,
+              'cutsForD2HHHHWide'    : cutsForD2HHHHWide,
+              'PentaPhiPimPp'        : cutsForPentaPhiPimPp
               } )
         for des in ['', 'Wide']:
             for fs in ['PiPiPiPi', 'KKPiPi' ]:
@@ -85,7 +143,10 @@ class CharmHadD02HHHHLines() :
             'D02KPiPiPiForSpectroscopy' : cutsForSpectroscopy,
             } )
         cuts.update( {
-                    'PentaMass'             : cutsForPentaQuarkMassFilter,
+                    'PentaMass'         : cutsForPentaQuarkMassFilter,
+            } )
+        cuts.update( {
+                    'LcMass'            : cutsForLcMassFilter,
             } )
 
         print '  cuts =  \n'
@@ -102,6 +163,7 @@ class CharmHadD02HHHHLines() :
         from Stages import PromptSpectroscopyFilter
 
         from Stages import PentaPhiPimPp
+        from Stages import LcpToLambda0KmKpPip, LcpToLambda0KmPipPip
  
         stages = {}
         # Create the nominal and wide mass combinations
@@ -163,5 +225,7 @@ class CharmHadD02HHHHLines() :
                   inputs = [stages['D02'+fs+des+'Turbo'][0]], shared=True)]
         
         stages['PentaPhiPimPpTurbo'] = [MassFilter('PentaMass',inputs=[PentaPhiPimPp])]
+        stages['LcpToLambda0KmKpPipTurbo'] = [MassFilter('LcMass',inputs=[LcpToLambda0KmKpPip])]
+        stages['LcpToLambda0KmPipPipTurbo'] = [MassFilter('LcMass',inputs=[LcpToLambda0KmPipPip])]
 
         return stages
