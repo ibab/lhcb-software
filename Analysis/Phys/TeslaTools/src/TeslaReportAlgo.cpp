@@ -333,7 +333,7 @@ StatusCode TeslaReportAlgo::execute()
         //  
       } 
       
-      fillParticleInfo( newObjects_mother , Obj , motherBasic );
+      fillParticleInfo( newObjects_mother , Obj , motherBasic, cont_Track );
       cont_Part->insert( Part );
      
       // Which PV is best for the mother???
@@ -445,11 +445,11 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, int key, LHCb::Particle* Part, 
       cont_MPID->insert( muon_d );
       //  
       vert_mother->addToOutgoingParticles( Part_d );
-      fillParticleInfo( newObjects_d , Obj_d , d_Basic );
+      fillParticleInfo( newObjects_d , Obj_d , d_Basic, cont_Track );
     }
     else {
       vert_mother->addToOutgoingParticles( Part_d );
-      fillParticleInfo( newObjects_d , Obj_d , d_Basic );
+      fillParticleInfo( newObjects_d , Obj_d , d_Basic , cont_Track );
       ProcessObject( n, key, Part_d, Obj_d, cont_PV, cont_Vert, cont_Part,
           cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_P2PV);
     }
@@ -457,7 +457,7 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, int key, LHCb::Particle* Part, 
   return StatusCode::SUCCESS;
 }
 
-void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, const LHCb::HltObjectSummary* obj, bool isBasic){
+void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, const LHCb::HltObjectSummary* obj, bool isBasic, LHCb::Track::Container* cont_Track){
 /*
  * vector Key:
  * For basic particle:
@@ -513,17 +513,19 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
           {
             const LHCb::HltObjectSummary::Info Track_info = ObjBasic->numericalInfo();
 
-            // TODO: Stop the stub from being created in the first place.
-            // this is here to stop the track being overridden.
-            LHCb::Track* testTrack = new LHCb::Track();
-            testTrack->setFlags( (unsigned int)Track_info["10#Track.flags"] );
-            if ( msgLevel(MSG::DEBUG) ) debug() << "***** TRACK TYPE TEST = " << testTrack->type() << endmsg;
-            if( testTrack->type() == LHCb::Track::Types::Muon ) {
-              delete testTrack;
+            LHCb::Track* muonTrack = new LHCb::Track();
+            muonTrack->setFlags( (unsigned int)Track_info["10#Track.flags"] );
+            if ( msgLevel(MSG::DEBUG) ) debug() << "***** TRACK TYPE TEST = " << muonTrack->type() << endmsg;
+            // If we have the muon stub, attach it to the muonPID object
+            if( muonTrack->type() == LHCb::Track::Types::Muon ) {
+              muonTrack->setLhcbIDs( ObjBasic->lhcbIDs() );
+              m_conv->TrackObjectFromSummary(&Track_info,muonTrack,turbo);
+              muon->setMuonTrack( muonTrack );
+              cont_Track->insert( muonTrack );
               break;
             }
             else{
-              delete testTrack;
+              delete muonTrack;
             }
             //
 

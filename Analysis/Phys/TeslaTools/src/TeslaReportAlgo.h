@@ -57,7 +57,7 @@ public:
             ,LHCb::MuonPID::Container*
             ,LHCb::Track::Container*
             ,Particle2Vertex::Table*);
-        void fillParticleInfo(std::vector<ContainedObject*>,const LHCb::HltObjectSummary*,bool);
+        void fillParticleInfo(std::vector<ContainedObject*>,const LHCb::HltObjectSummary*,bool, LHCb::Track::Container*);
         void fillVertexInfo(LHCb::Vertex*,const LHCb::HltObjectSummary*);
 
         template <typename Iter, typename Cont>
