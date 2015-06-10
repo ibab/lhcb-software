@@ -5,11 +5,11 @@ import velo_monitor
 
 
 def setUpModule():
-    test_utils.set_up_run_list()
+    test_utils.set_up_temp_run_data_dir()
 
 
 def tearDownModule():
-    test_utils.tear_down_run_list()
+    test_utils.tear_down_temp_run_data_dir()
 
 
 class TestPages(unittest.TestCase):

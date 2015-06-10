@@ -5,14 +5,14 @@ from lxml.html import fromstring as parse_html
 
 from tests import utils as test_utils
 import velo_monitor
-from veloview.core import run_view_config
+from veloview.config import Config as VeloConfig
 
 
-test_utils.set_up_run_list()
+test_utils.set_up_temp_run_data_dir()
 
 
 def tearDownModule():
-    test_utils.tear_down_run_list()
+    test_utils.tear_down_temp_run_data_dir()
 
 
 from velo_monitor import run_view
@@ -73,11 +73,11 @@ class TestRunView(unittest.TestCase):
         self.app.config['DEFAULT_CHILDREN'] = DEFAULT_CHILDREN
         self.client = self.app.test_client()
 
-        self.old_rvd = run_view_config.run_view_pages
-        run_view_config.run_view_pages = RUN_VIEW_PAGES
+        self.old_rvp = VeloConfig().run_view_pages
+        VeloConfig().run_view_pages = RUN_VIEW_PAGES
 
     def tearDown(self):
-        run_view_config.run_view_pages = self.old_rvd
+        VeloConfig().run_view_pages = self.old_rvp
 
     def get(self, path):
         """Return an pq instance of the lxml parsed document at path."""

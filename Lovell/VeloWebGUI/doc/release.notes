@@ -4,6 +4,9 @@
 ! Purpose     : Web GUI for analysis of VELO data
 !------------------------------------------------------------------------------
 
+! 2015-06-10 - Alex Pearce
+  - Use new veloview.config.Config object from VeloAnalysisFramework
+
 !========================= VeloWebGUI v1r1 2015-03-02 =========================
 ! 2015-03-02 - J Harrison / A Pearce
   - For Lovell v1r1

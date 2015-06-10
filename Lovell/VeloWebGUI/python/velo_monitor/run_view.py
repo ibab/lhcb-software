@@ -10,7 +10,7 @@ from flask import (
     g
 )
 
-from veloview.core import run_view_config
+from veloview.config import Config as VeloConfig
 from veloview.runview import utils as runview_utils
 
 run_view = Blueprint('run_view', __name__,
@@ -98,11 +98,11 @@ def run_view_builder(run, page, sensor):
         if page is not None:
             page = page[len('run_view/'):]
     # Else load the page data associated with the route's page
-    page_data = run_view_config.run_view_pages.get(page, None)
+    page_data = VeloConfig().run_view_pages.get(page, None)
 
     # Set up the required template variables and render the page
     g.page = page
-    g.pages = run_view_config.run_view_pages
+    g.pages = VeloConfig().run_view_pages
     g.page_data = page_data
     g.run = run
     g.runs = runview_utils.run_list()
@@ -120,7 +120,7 @@ def run_view_builder(run, page, sensor):
 # Delegate the page not found hits to the catchall blueprint
 @run_view.errorhandler(404)
 def page_not_found(e):
-    g.pages = run_view_config.run_view_pages
+    g.pages = VeloConfig().run_view_pages
     g.active_page = 'run_view/404'
     return render_template('run_view/404.html'), 404
 
