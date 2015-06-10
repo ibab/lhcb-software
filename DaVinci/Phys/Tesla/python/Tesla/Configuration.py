@@ -23,7 +23,8 @@ class Tesla(LHCbConfigurableUser):
           , 'OutputLevel' 	: 4 		# Er, output level
           , "outputFile" 	: 'Tesla.dst' 	# output filename
           , 'WriteFSR'    	: False 	# copy FSRs as required
-          , 'PV'	        : "Offline"      # Associate to the PV chosen by the HLT or the offline one
+          , 'PV'	        : "Offline"     # Associate to the PV chosen by the HLT or the offline one
+          , 'VertRepLoc'	: "Hlt1"        # Do we use the maker from Hlt1 or Hlt2
           , 'TriggerLines'	: ["Hlt2IncPhi"]# Which trigger line
           , 'Mode'	        : "Offline"     # "Online" (strip unnecessary banks and run lumi algorithms) or "Offline"?
           , 'Pack'	        : True          # Do we want to pack the objects?
@@ -42,6 +43,7 @@ class Tesla(LHCbConfigurableUser):
             , "outputFile" 	: 'output filename, automatically selects MDF or InputCopyStream'
             , 'WriteFSR'    	: 'copy FSRs as required'
             , 'PV'     	        : 'Associate to the PV chosen by the HLT or the offline one'
+            , 'VertRepLoc'	: 'Do we use the maker from Hlt1 or Hlt2'
             , 'TriggerLines'    : 'Which trigger line to process'
             , 'Mode'     	: '"Online" (strip unnecessary banks and run lumi algorithms) or "Offline"?'
             , 'Pack'     	: 'Do we want to pack the object?'
@@ -161,8 +163,9 @@ class Tesla(LHCbConfigurableUser):
         if self.getProp('Mode') is "Online":
             from DAQSys.Decoders import DecoderDB
             Hlt1VertexReportsDecoder=DecoderDB["HltVertexReportsDecoder/Hlt1VertexReportsDecoder"].setup()
+            Hlt2VertexReportsDecoder=DecoderDB["HltVertexReportsDecoder/Hlt2VertexReportsDecoder"].setup()
             Hlt2SelReportsDecoder=DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].setup()
-            seq.Members += [ Hlt1VertexReportsDecoder, Hlt2SelReportsDecoder ]
+            seq.Members += [ Hlt2VertexReportsDecoder, Hlt2VertexReportsDecoder, Hlt2SelReportsDecoder ]
         #
         lines = self.getProp('TriggerLines')
         for l in lines:
@@ -237,6 +240,10 @@ class Tesla(LHCbConfigurableUser):
         trig1 = TeslaReportAlgo("TeslaReportAlgo"+line)
         trig1.OutputPrefix=self.base
         trig1.PV=self.getProp('PV')
+        if self.getProp('VertRepLoc')=="Hlt1":
+            trig1.VertRepLoc="Hlt1/VertexReports"
+        else:
+            trig1.VertRepLoc="Hlt2/VertexReports"
         trig1.PVLoc=self.base+"Primary"
         trig1.TriggerLine=line
         trig1.OutputLevel=self.getProp('OutputLevel')
