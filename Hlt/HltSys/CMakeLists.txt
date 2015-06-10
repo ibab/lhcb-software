@@ -22,6 +22,9 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/HltSettings
                          Hlt/HltTracking
                          Hlt/TCKUtils
-                         Phys/LoKiTrigger)
+                         Phys/LoKiTrigger
+						 Hlt/HltDAQ
+						 DAQ/DAQSys
+						 Rec/RecAlgs)
 
 gaudi_add_test(QMTest QMTEST)

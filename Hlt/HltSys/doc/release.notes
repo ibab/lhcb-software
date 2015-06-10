@@ -5,6 +5,12 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
+</PRE><H1><A NAME=v23r7p1>2015-04-28 HltSys v23r7p1</A></H1><PRE>
+
+Release on stack v38r7. Depends on Phys v19r7.
+
+Release for further commissioning of EM configuration.
+
 </PRE><H1><A NAME=v23r6>2015-04-28 HltSys v23r6</A></H1><PRE>
 
 Release on stack v38r7. Depends on Phys v19r7.
@@ -58,7 +64,7 @@ Main changes:
    Built with CMake.
    Speed improvements included.
    Updates for turbo stream.
-   
+
 </PRE><H1><A NAME=v23r3>2014-12-15 HltSys v23r3</A></H1><PRE>
 
 Release on stack v38r3. Depends on Phys v19r3p1.
@@ -115,7 +121,7 @@ Major changes include:
 
 A complete list can be seen here:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v23r0
-  
+
 
 </PRE><H1><A NAME=v22r2>2014-06-21 HltSys v22r2</A></H1><PRE>
 
@@ -130,7 +136,7 @@ For more details see:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v22r2
 
 </PRE><H1><A NAME=v22r1>2014-04-22 HltSys v22r1</A></H1><PRE>
-Moore/HLT LS1 development version, to catch up with LHCb stack v37r1. Depends on Rec v17r1 via Phys v18r1. Based on Gaudi v25r1. 
+Moore/HLT LS1 development version, to catch up with LHCb stack v37r1. Depends on Rec v17r1 via Phys v18r1. Based on Gaudi v25r1.
 
 Mostly picks up a lot of underlying changes in LHCb and Rec, after the recent Velo reconstruction sprint. Very few major changes, and few changes in Hlt altogether. Changes in this project are mostly C++11 migrations, small speed-ups and changes in the tests. Other changes are summarized below.
 
@@ -314,12 +320,12 @@ Fix bug in Rich tracking.
 
 </PRE><H1><A NAME=v15r2>2012-06-19 HltSys v15r2</A></H1><PRE>
 Version for july 2012 datataking.
-	 
+
 </PRE><H1><A NAME=v15r1>2012-04-26 HltSys v15r1</A></H1><PRE>
 Version for may 2012 datataking with tuned p/pt/chi2 cuts.
 
 </PRE><H1><A NAME=v15r0>2012-04-24 HltSys v15r0</A></H1><PRE>
-Tune chi2 cuts. Subscribe CharmCalibrationNoBias to ODIN Nobias. 
+Tune chi2 cuts. Subscribe CharmCalibrationNoBias to ODIN Nobias.
 Prescale Hlt1MBNoBias by 10.
 
 </PRE><H1><A NAME=v14r4>2012-04-17 HltSys v14r4</A></H1><PRE>
@@ -340,7 +346,7 @@ Include Hlt/HltCommon v8r4
 New major version using Gaudi v23r0
 
 </PRE><H1><A NAME=v13r11>2012-01-12 HltSys v13r11</A></H1><PRE>
-Intermediate version based on Gaudi v22r5 for testing deferred 
+Intermediate version based on Gaudi v22r5 for testing deferred
 triggering in the pit
 
 </PRE><H1><A NAME=v13r10p1>2011-08-30 HltSys v13r10p1</A></H1><PRE>
