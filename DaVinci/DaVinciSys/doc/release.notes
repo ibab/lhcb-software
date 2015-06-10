@@ -17,10 +17,7 @@ and Stripping v9r7. Uses LCG_76root6 with ROOT 6.02.08.
   Phys/DaVinci v36r7p1.
 
 - Packages added from outside the DaVinci project, i.e. patched :
-  . Hlt/HltDAQ v4r15.
-  . Phys/DaVinciMonitors v1r22 added only for this release intended for DQ.
-  . Phys/TeslaTools v1r6.
-  . Phys/DecayTreeTupleTrigger v1r7.
+  Hlt/HltDAQ v4r15, Phys/DaVinciMonitors v1r22, Phys/TeslaTools v1r6, Phys/DecayTreeTupleTrigger v1r7.
 
 - In Phys/DaVinci v36r7p1 :
   . New stack release.
