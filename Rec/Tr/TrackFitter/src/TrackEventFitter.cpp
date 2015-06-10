@@ -83,6 +83,10 @@ StatusCode TrackEventFitter::execute() {
 
   // Retrieve the Tracks container
   // -----------------------------
+  if( !exist<Tracks>( m_tracksInContainer )){
+    error() << "Track container " << m_tracksInContainer << " does not exist" << endmsg;
+    return StatusCode::SUCCESS;
+  }
   Tracks* tracksCont = get<Tracks>( m_tracksInContainer );
 
   // Make container for tracks

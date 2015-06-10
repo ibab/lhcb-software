@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2015-06-10 - Michel De Cian
+ - Check if input location in TrackEventFitter exists, otherwise skip and print an error.
+
 !========================= TrackFitter v5r6 2015-06-08 =========================
 ! 2015-06-07 - Sascha Stahl
  - TrackEventFitter: Added missing delete in case track chisq cut is not passed.
