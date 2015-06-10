@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v6r15 2015-06-10 =========================
+
 ! 2015-06-10 - Roel Aaij
  - Add Commossioning_MB_PassThrough settings that have both Hlt passthrough
    and Velo MicroBias (HltType is still Hlt_PassThrough).
