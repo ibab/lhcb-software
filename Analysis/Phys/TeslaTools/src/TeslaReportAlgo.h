@@ -72,6 +72,7 @@ private:
 	std::string m_inputName;
 	std::string m_PV;
 	std::string m_PVLoc;
+	std::string m_VertRepLoc;
 	std::string m_OutputPref;
        
         bool turbo;

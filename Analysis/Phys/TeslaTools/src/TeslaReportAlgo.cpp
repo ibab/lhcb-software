@@ -28,6 +28,7 @@ TeslaReportAlgo::TeslaReportAlgo( const std::string& name,
   declareProperty( "TriggerLine" ,          m_inputName    = "Hlt2CharmHadD02HH_D02KK" );
   declareProperty( "OutputPrefix" ,         m_OutputPref   = "Tesla" );
   declareProperty( "PV" ,                   m_PV = "Offline" );
+  declareProperty( "VertRepLoc" ,           m_VertRepLoc = "Hlt1/VertexReports" );
   declareProperty( "PVLoc" ,                m_PVLoc = "Turbo/Primary" );
 }
 
@@ -76,7 +77,6 @@ StatusCode TeslaReportAlgo::execute()
   HltLoc << m_inputName << "Decision";
   //
   std::string RepLoc = "Hlt2/SelReports";
-  std::string VertRepLoc = "Hlt1/VertexReports";
   
   // For jobs with multiple versions, need to check bank header
   int versionNum = m_check->checkBankVersion();
@@ -87,8 +87,8 @@ StatusCode TeslaReportAlgo::execute()
   const LHCb::HltVertexReports* vtxReports;
   const LHCb::HltVertexReports::HltVertexReport* vtxRep;
   // Vertex reports
-  if ( exist<LHCb::HltVertexReports>( VertRepLoc.c_str() ) ) { // exist --> get content
-    vtxReports = getIfExists<LHCb::HltVertexReports>( VertRepLoc.c_str() );
+  if ( exist<LHCb::HltVertexReports>( m_VertRepLoc.c_str() ) ) { // exist --> get content
+    vtxReports = getIfExists<LHCb::HltVertexReports>( m_VertRepLoc.c_str() );
     vtxRep = vtxReports->vertexReport("PV3D");
     if ( msgLevel(MSG::DEBUG) ){
       std::vector<std::string> vnames = vtxReports->selectionNames();
