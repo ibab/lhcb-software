@@ -97,7 +97,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
 
         ### PV3D vertex cuts
         , 'VertexMinNTracks'          : 9  # strictly greater than
-        , 'FullZVertexMinNTracks'     : 27  # strictly greater than
+        , 'FullZVertexMinNTracks'     : 9  # strictly greater than
         , 'HighRhoVerticesMinNTracks' : 9  # strictly greater than
         , 'VertexMaxChi2PerDoF'       : False  # None doesn't work with the framework...
         , 'VertexCutSmallRho'       : '(VX_BEAMSPOTRHO( 6*mm ) < 4*mm)'

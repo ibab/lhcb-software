@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-06-10 - Christian Linn
+ - Changed default cut of Hlt1BeamGasCrossingForcedRecoFullZ to Ntr > 9 
+
+! 2015-06-10 - Christian Linn
  - Add new Hlt1NoBiasPrescaled line which uses ODIN LumiTriggers
 
 ! 2015-06-09 - Roel Aaij
