@@ -3,6 +3,10 @@ Package             : MooreOnlineSys
 Package Coordinator : R. Aaij
 Purpose             : Running and testing Moore in the online environment
 
+</PRE><H1><A NAME=v23r7p1>2015-05-27 MooreOnlineSys v23r7p1</A></H1><PRE>
+
+Depends on Moore v23r7p1 and Online v5r20.
+
 </PRE><H1><A NAME=v23r7>2015-05-27 MooreOnlineSys v23r7</A></H1><PRE>
 
 Depends on Moore v23r7 and Online v5r19.
