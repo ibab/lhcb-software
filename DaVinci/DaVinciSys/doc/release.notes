@@ -4,6 +4,25 @@ Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
 
+</PRE><H1><A NAME=v36r7p2>2015-06-10 DaVinci v36r7p2</A></H1><PRE>
+
+Patch release identical to v36r7p1 except for the
+- Update of the DaVinci package Phys/Tesla v1r6.
+- Update of the patched Analysis package Phys/TeslaTools v1r7.
+
+The patch is required to deal with corner cases in which Hlt2 lines can be fired
+without Hlt1 vertex reports being made (it is these vertex reports that provide the PVs
+for the Turbo stream).
+
+- In Phys/DaVinci v36r7p2 :
+  . New patch release.
+
+- In Phys/Tesla v1r6 :
+  . PV reports location made an option.
+
+- In Phys/TeslaTools v1r7 :
+  . PV reports location made an option.
+
 </PRE><H1><A NAME=v36r7p1>2015-06-10 DaVinci v36r7p1</A></H1><PRE>
 
 Patch release prepared for the DQ monitoring of 2015 data taking,

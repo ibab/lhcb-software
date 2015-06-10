@@ -1,20 +1,20 @@
 package DaVinciSys
-version v36r7p1
+version v36r7p2
 
 branches doc cmt
 
 # Packages
-use  DaVinci         v36r7p1  Phys   # DaVinci coordinator
+use  DaVinci         v36r7p2  Phys   # DaVinci coordinator
 use  DaVinciTests    v2r32
 use  KaliCalo        v4r17    Phys   # Olivier Deschamps
-use  Tesla           v1r5     Phys   # Sean Benson
+use  Tesla           v1r6     Phys   # Sean Benson
 
 
 #########################################
 # Extra package just for this release !!!
 use  HltDAQ                  v4r15  Hlt
 use  DaVinciMonitors         v1r22  Phys
-use  TeslaTools              v1r6   Phys
+use  TeslaTools              v1r7   Phys
 use  DecayTreeTupleTrigger   v1r7   Phys
 #########################################
 
