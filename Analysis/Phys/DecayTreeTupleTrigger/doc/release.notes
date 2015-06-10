@@ -4,6 +4,8 @@
 ! Purpose     : Trigger and stripping related tuple tools
 !-----------------------------------------------------------------------------
 
+!=================== DecayTreeTupleTrigger v1r7 2015-06-10 ===================
+
 ! 2015-06-09 - Olli Lupton
  - TupleToolEventInfo: remove the HLTTCK branch and replace with HLT1TCK and HLT2TCK.
  - TupleToolTrigger: Fix bug where it always used the combined Hlt1+Hlt2 location even
