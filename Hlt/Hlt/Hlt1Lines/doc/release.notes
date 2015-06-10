@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-06-10 - Christian Linn
+ - Add new Hlt1NoBiasPrescaled line which uses ODIN LumiTriggers
+
 ! 2015-06-09 - Roel Aaij
  - Add seperate property for minimum number of tracks in FullZ BeamGas line.
  - Set default cut to 20 GeV in CalibRICHMirror line.
