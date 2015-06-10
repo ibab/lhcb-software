@@ -150,56 +150,57 @@ def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    ######
    ### Fitter for Velo tracks
    ######
-   veloFitter = TrackEventFitter('VeloOnlyFitterAlg')
-   veloFitter.TracksInContainer = "Rec/Track/Velo"
-   veloFitter.TracksOutContainer = "Rec/Track/FittedHLT1VeloTracks"
-   veloFitter.Fitter = "TrackInitFit/Fit"
-   veloFitter.addTool(TrackInitFit, "Fit")
-   veloFitter.Fit.Init = "TrackStateInitTool/VeloOnlyStateInit"
-   veloFitter.Fit.addTool(TrackStateInitTool, "VeloOnlyStateInit")
-   veloFitter.Fit.VeloOnlyStateInit.VeloFitterName = "FastVeloFitLHCbIDs"
-   veloFitter.Fit.VeloOnlyStateInit.addTool(TrackMasterExtrapolator, "Extrapolator")
-   if( simplifiedGeometryFit ) :
-      veloFitter.Fit.VeloOnlyStateInit.Extrapolator.addTool(SimplifiedMaterialLocator, name = "MaterialLocator")
-   else:
-      veloFitter.Fit.VeloOnlyStateInit.Extrapolator.addTool(DetailedMaterialLocator, name = "MaterialLocator")
+   if "FastVelo" in trackAlgs:
+      veloFitter = TrackEventFitter('VeloOnlyFitterAlg')
+      veloFitter.TracksInContainer = "Rec/Track/Velo"
+      veloFitter.TracksOutContainer = "Rec/Track/FittedHLT1VeloTracks"
+      veloFitter.Fitter = "TrackInitFit/Fit"
+      veloFitter.addTool(TrackInitFit, "Fit")
+      veloFitter.Fit.Init = "TrackStateInitTool/VeloOnlyStateInit"
+      veloFitter.Fit.addTool(TrackStateInitTool, "VeloOnlyStateInit")
+      veloFitter.Fit.VeloOnlyStateInit.VeloFitterName = "FastVeloFitLHCbIDs"
+      veloFitter.Fit.VeloOnlyStateInit.addTool(TrackMasterExtrapolator, "Extrapolator")
+      if( simplifiedGeometryFit ) :
+         veloFitter.Fit.VeloOnlyStateInit.Extrapolator.addTool(SimplifiedMaterialLocator, name = "MaterialLocator")
+      else:
+         veloFitter.Fit.VeloOnlyStateInit.Extrapolator.addTool(DetailedMaterialLocator, name = "MaterialLocator")
       
-   veloFitter.Fit.Fit = "TrackMasterFitter/Fit"
-   veloFitter.Fit.addTool(TrackMasterFitter, name = "Fit")
+      veloFitter.Fit.Fit = "TrackMasterFitter/Fit"
+      veloFitter.Fit.addTool(TrackMasterFitter, name = "Fit")
    
-   from TrackFitter.ConfiguredFitters import ConfiguredForwardFitter
-   ConfiguredForwardFitter(veloFitter.Fit.Fit, LiteClusters = liteClustersFit)
-
-   GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ veloFitter ]
+      from TrackFitter.ConfiguredFitters import ConfiguredForwardFitter
+      ConfiguredForwardFitter(veloFitter.Fit.Fit, LiteClusters = liteClustersFit)
+         
+      GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ veloFitter ]
 
    ######
    ### Fitter for Forward tracks
    ######
-   fwdFitter = TrackEventFitter('ForwardHLT1FitterAlg')
-   fwdFitter.TracksInContainer = "Rec/Track/ForwardHLT1"
-   fwdFitter.TracksOutContainer = "Rec/Track/FittedHLT1ForwardTracks"
-   # Keep only good tracks, this cut should be aligned with the one in the TrackBestTrackCreator
-   fwdFitter.MaxChi2DoF = 3.
-   fwdFitter.Fitter = "TrackInitFit/Fit"
-   fwdFitter.addTool(TrackInitFit, "Fit")
-   fwdFitter.Fit.Init = "TrackStateInitTool/FwdStateInit"
-   fwdFitter.Fit.addTool(TrackStateInitTool, "FwdStateInit")
-   fwdFitter.Fit.FwdStateInit.addTool(TrackMasterExtrapolator, "Extrapolator")
-   fwdFitter.Fit.FwdStateInit.UseFastMomentumEstimate = True 
-   fwdFitter.Fit.FwdStateInit.VeloFitterName = "FastVeloFitLHCbIDs"
-   if( simplifiedGeometryFit ) :
-      fwdFitter.Fit.FwdStateInit.Extrapolator.addTool(SimplifiedMaterialLocator, name = "MaterialLocator")
-   else:
-      fwdFitter.Fit.FwdStateInit.Extrapolator.addTool(DetailedMaterialLocator, name = "MaterialLocator")
+   if "ForwardHLT1" in trackAlgs:
+      fwdFitter = TrackEventFitter('ForwardHLT1FitterAlg')
+      fwdFitter.TracksInContainer = "Rec/Track/ForwardHLT1"
+      fwdFitter.TracksOutContainer = "Rec/Track/FittedHLT1ForwardTracks"
+      # Keep only good tracks, this cut should be aligned with the one in the TrackBestTrackCreator
+      fwdFitter.MaxChi2DoF = 3.
+      fwdFitter.Fitter = "TrackInitFit/Fit"
+      fwdFitter.addTool(TrackInitFit, "Fit")
+      fwdFitter.Fit.Init = "TrackStateInitTool/FwdStateInit"
+      fwdFitter.Fit.addTool(TrackStateInitTool, "FwdStateInit")
+      fwdFitter.Fit.FwdStateInit.addTool(TrackMasterExtrapolator, "Extrapolator")
+      fwdFitter.Fit.FwdStateInit.UseFastMomentumEstimate = True 
+      fwdFitter.Fit.FwdStateInit.VeloFitterName = "FastVeloFitLHCbIDs"
+      if( simplifiedGeometryFit ) :
+         fwdFitter.Fit.FwdStateInit.Extrapolator.addTool(SimplifiedMaterialLocator, name = "MaterialLocator")
+      else:
+         fwdFitter.Fit.FwdStateInit.Extrapolator.addTool(DetailedMaterialLocator, name = "MaterialLocator")
       
-   fwdFitter.Fit.Fit = "TrackMasterFitter/Fit"
-   fwdFitter.Fit.addTool(TrackMasterFitter, name = "Fit")
+      fwdFitter.Fit.Fit = "TrackMasterFitter/Fit"
+      fwdFitter.Fit.addTool(TrackMasterFitter, name = "Fit")
    
-   from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter
-   ConfiguredMasterFitter(fwdFitter.Fit.Fit, SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit)
-   
-
-   GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ fwdFitter ]
+      from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter
+      ConfiguredMasterFitter(fwdFitter.Fit.Fit, SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit)
+      
+      GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ fwdFitter ]
   
   
 

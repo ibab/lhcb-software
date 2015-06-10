@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-06-10 Michel De Cian
+ - Check that fitters in HLT1 sequence only run when the corresponding PatReco algorithms have run.
+
 !========================= TrackSys v9r7 2015-05-26 =========================
 ! 2015-05-18 - Michel De Cian
  - Add VeloTT tracks to the collection of tracks to be fitted in HLT2 part of reco.
