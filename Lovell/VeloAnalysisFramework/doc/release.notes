@@ -11,6 +11,9 @@
    Any getting or setting of any configuration option should be done with
    this object, e.g. `Config().run_data_dir`.
  - Return (nominal plot, reference plot) to the GUIs by default
+ - Add new plot display configuration parameters to the run view config:
+   - User-specified y-axis ranges; and
+   - Display histograms as points.
 
 ! 2015-05-29 - Michael Alexander
  - First commit of config for plots from IP resolution monitoring.

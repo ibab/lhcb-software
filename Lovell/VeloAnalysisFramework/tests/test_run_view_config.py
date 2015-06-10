@@ -14,6 +14,8 @@ PAGE_VALUE_TYPES = {
 
 # Key name that holds the plot dictionary within a page dictionary
 PLOTS_KEY = 'plots'
+# Key name that holds the plot options dictionary within a plot dictionary
+OPTIONS_KEY = 'options'
 
 # Required keys for the plot dictionary
 REQ_PLOT_KEYS = ['title', 'name']
@@ -24,7 +26,16 @@ PLOT_VALUE_TYPES = {
     'name': str,
     'short': str,
     'sensor_dependent': bool,
-    'options': dict
+    OPTIONS_KEY: dict
+}
+
+# Value types for a given option with plot options dictionary
+PLOT_OPTIONS_TYPES = {
+    'showUncertainties': bool,
+    'yAxisMinimum': float,
+    'yAxisMaximum': float,
+    'yAxisZeroSuppressed': bool,
+    'asPoints': bool
 }
 
 
@@ -76,6 +87,30 @@ class TestRunViewConfig(unittest.TestCase):
                     if key not in plot:
                         continue
                     self.assertIsInstance(plot[key], key_type)
+
+    def test_every_plot_options_dictionary_key_is_valud(self):
+        """Each plot option must be a key in PLOT_OPTIONS_TYPES."""
+        for page in run_view_pages.itervalues():
+            if PLOTS_KEY not in page:
+                continue
+            for plot in page['plots']:
+                if OPTIONS_KEY not in plot:
+                    continue
+                for key in plot[OPTIONS_KEY]:
+                    self.assertIn(key, PLOT_OPTIONS_TYPES)
+
+    def test_every_plot_options_dictionary_defines_correct_value_types(self):
+        """Each plot option must be of type PLOT_OPTIONS_TYPES."""
+        for page in run_view_pages.itervalues():
+            if PLOTS_KEY not in page:
+                continue
+            for plot in page['plots']:
+                if OPTIONS_KEY not in plot:
+                    continue
+                for key, key_type in PLOT_OPTIONS_TYPES.iteritems():
+                    if key not in plot[OPTIONS_KEY]:
+                        continue
+                    self.assertIsInstance(plot[OPTIONS_KEY][key], key_type)
 
 
 if __name__ == "__main__":

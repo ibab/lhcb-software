@@ -58,6 +58,12 @@ No key in the `options` dictionary is required, and valid keys are:
 
     showUncertainties: Should the GUI display the uncertainties defined in the
                        plots (boolean)
+    yAxisMinimum: Fixed y-axis minimum to display (float)
+    yAxisMaximum: Fixed y-axis maximum to display (float)
+    yAxisZeroSuppressed: Set the y-axis range to be centered around the minimum
+                         and maximum histogram values (boolean)
+    asPoints: Display the histogram as a set of points centered within each
+              bin, rather than as a continuous line (boolean)
 
 If there is a cosmetic change you would like to be adjustable for each plot
 that is not already available, please contact the authors of the GUIs.
