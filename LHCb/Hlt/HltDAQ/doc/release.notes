@@ -4,7 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
-! 2015-05-13 - Sean Benson
+! 2015-06-09 - Sean Benson
  - Add first state covariance matrix.
  - Choose states properly.
  - Do not require every map present for each bank version.
