@@ -4,6 +4,9 @@
 ! Purpose     : Jet related Tuple Tools
 !-----------------------------------------------------------------------------
 
+! 2015-06-10 - Eduardo Rodrigues
+ - Fixed CMakeLists.txt ... hopefully, so that the package builds again.
+
 ! 2015-06-09 - Xabier Cid Vidal
  - add Event/HltEvent CMakeLists.txt to fix CMake compilation
 
