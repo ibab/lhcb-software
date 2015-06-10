@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-06-10 - Christian Linn
+ - add new Hlt2NoBiasPassThrough line to Commissioning module,
+   passthrough of Hlt1NoBiasPrescaled line
+
 ! 2015-06-10 - Simone Stracka
 	. CharmHad: fixed wrong syntax for lifetime cut in D2HHPi0Lines 
     M python/Hlt2Lines/CharmHad/D2HHPi0Lines.py - fixed bug 
