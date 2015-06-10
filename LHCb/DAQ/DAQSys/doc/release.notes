@@ -4,6 +4,10 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2015-06-10 - Roel Aaij
+ - Set outputs of Calorimeter decoders anyway to allow usage of the correct
+   values from python.
+
 !========================= DAQSys v8r8p1 2015-04-20 =========================
 ! 2015-04-01 - Marco Cattaneo
  - Fix decoder-compare test following change of L0Muon decoding default
@@ -15,7 +19,7 @@
 !========================= DAQSys v8r7 2015-03-02 =========================
 ! 2015-03-03 - Marco Cattaneo
  - Decoders.py: set up separate configurations for the decoder of OT "normal"
-   RawBanks and OTRaw and OTError "expert" banks, made necessary by the move 
+   RawBanks and OTRaw and OTError "expert" banks, made necessary by the move
    OT to RawEventLocation::Tracker in RawEventFormat 4.0. Only the "normal"
    configuration has been tested
 
@@ -34,13 +38,13 @@
  - Define new instances of decoders (disabled by default) for "expert" banks
    "TTPedestal","TTFull","TTProcFull","TTError", "ITPedestal","ITFull",
    "ITProcFull","ITError", "UTPedestal","UTFull","UTError", "OTError",
-   "EcalPackedError", "HcalPackedError", so that these banks can reside in a 
+   "EcalPackedError", "HcalPackedError", so that these banks can reside in a
    different RawEvent from the normal bank of these sub-detectors
  - Bug fix in DecodeRawEvent, check on algs writing to same location was using
    a non-existent function of the Decoder class
 
 ! 2014-07-21 - Marco Cattaneo
- - Commented out Calo trigger banks from DecodersDB configuration of 
+ - Commented out Calo trigger banks from DecodersDB configuration of
    L0DUFromRawTool, as this was preventing Moore from decoding L0DU on S20
    input. See https://savannah.cern.ch/task/?19106
 
@@ -145,7 +149,7 @@
  - Fix issue with renamed HltXXXReportsDecoders introduced in last modification.
 
 ! 2014-01-07 - Rob Lambert
- - Reconfigure trigger decoding in preparation for Hlt1/2 split. 
+ - Reconfigure trigger decoding in preparation for Hlt1/2 split.
    Currently both split and non-split reports are created.
 
 ! 2013-12-20 - Marco Clemencic

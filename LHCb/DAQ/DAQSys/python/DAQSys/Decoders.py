@@ -191,9 +191,10 @@ toolname="CaloTriggerBitsFromRaw/"+name+"Tool" #as in C++
 Decoder("CaloDigitsFromRaw/"+name,
         active=True,banks=["PrsE","PrsPacked"],
         privateTools=[toolname],
-        outputs=["Raw/Spd/Digits","Raw/Spd/Adcs"],
+        #set logically in code, so for the C++ it doesn't matter what is set here, but python matters too
+        outputs={"DigitsContainer" : "Raw/Spd/Digits", "AdcsContainer" : "Raw/Spd/Adcs"},
         conf=DecoderDB)
-#outputs={"DigitsContainer" : "Raw/Spd/Digits", "AdcsContainer" : "Raw/Spd/Adcs"} #set logically in code, so overwriting here won't actually work
+
 
 Decoder(toolname,active=False,
         inputs={"RawEventLocations" : None},
@@ -206,9 +207,9 @@ toolname="CaloEnergyFromRaw/"+name+"Tool" #as in C++
 Decoder("CaloDigitsFromRaw/"+name,
         active=True,banks=["PrsE","PrsPacked"],
         privateTools=[toolname],
-        outputs=["Raw/Prs/Digits","Raw/Prs/Adcs"],
+        #set logically in code, so for the C++ it doesn't matter what is set here, but python matters too
+        outputs={"DigitsContainer" : "Raw/Prs/Digits", "AdcsContainer" : "Raw/Prs/Adcs"},
         conf=DecoderDB)
-#outputs={"DigitsContainer" : "Raw/Prs/Digits", "AdcsContainer" : "Raw/Prs/Adcs"} #set logically in code, so overwriting here won't actually work
 
 Decoder(toolname,active=False,
         inputs={"RawEventLocations" : None},
@@ -239,16 +240,18 @@ for cal in ["Ecal","Hcal"]:
         # Zero suppressed is "active", NZS is "not active", only activated in Boole
         Decoder(algname, active=zs,
                 privateTools=[toolname],banks=[cal+'E',cal+'Packed'],
-                outputs=["Raw/"+cal+"/Adcs","Raw/"+cal+"/Digits"],
+                #set logically in code, so for the C++ it doesn't matter what is set here, but python matters too
+                outputs={"OutputADCData": "Raw/%s/Adcs" % cal,
+                         "OutputDigitData": "Raw/%s/Digits" % cal},
                 conf=DecoderDB)
-        #outputs={"OutputADCData": "Raw/Ecal/Adcs","OutputDigitData": "Raw/Ecal/Digits"}#set logically in code, so overwriting here won't actually work
-        
+
         Decoder(algname+"Expert", active=False,
                 privateTools=[toolname],banks=[cal+'PackedError'],
-                outputs=["Raw/"+cal+"/Adcs","Raw/"+cal+"/Digits"],
+                #set logically in code, so for the C++ it doesn't matter what is set here, but python matters too
+                outputs={"OutputADCData": "Raw/%s/Adcs" % cal,
+                         "OutputDigitData": "Raw/%s/Digits" % cal},
                 conf=DecoderDB)
-        #outputs={"OutputADCData": "Raw/Ecal/Adcs","OutputDigitData": "Raw/Ecal/Digits"}#set logically in code, so overwriting here won't actually work
-        
+
         Decoder(toolname,active=False,
                 inputs={"RawEventLocations" : None},
                 conf=DecoderDB)
@@ -288,7 +291,7 @@ Decoder("L0MuonCandidatesFromRaw/L0MuonFromRaw",
         conf=DecoderDB)
 
 Decoder("L0MuonOutputs/OutputTool",
-        active=False, 
+        active=False,
         outputs=["Trig/L0/MuonCtrl","Trig/L0/MuonBCSU","Trig/L0/MuonData"],
         conf=DecoderDB)
 
@@ -349,7 +352,7 @@ Decoder("CaloTriggerAdcsFromRaw/HcalTriggerAdcToolExpert",
         inputs={"RawEventLocations":None},
         conf=DecoderDB)
 
-        
+
 
 #TRIGGER ==========HLT===========
 
