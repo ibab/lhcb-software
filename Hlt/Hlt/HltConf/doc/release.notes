@@ -4,6 +4,8 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v12r10 2015-06-10 =========================
+
 ! 2015-06-10 - Roel Aaij
  - Add Hlt2VertexReportsMaker for Turbo and Tesla.
  - Add Hlt2NoBiasPassThrough to NoBias stream (routing bit 91)
