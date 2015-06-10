@@ -3,11 +3,15 @@ B0;136;0c!======================================================================
 ! Responsible : Sean Benson
 !=============================================================================
 
+!========================= TeslaTools v1r7 2015-06-10 =========================
+
+! 2015-6-10 - Sean Benson
+ - Make PV reports location an option.
+
 !========================= TeslaTools v1r6 2015-06-10 =========================
 
 ! 2015-6-10 - Sean Benson
  - Propagate muon IDs properly in muonPID.
- - Make PV reports location an option.
 
 !========================= TeslaTools v1r5 2015-06-02 ========================
 
