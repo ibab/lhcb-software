@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-06-10 - Christian Linn
+ - add IDs for new Hlt1NoBiasPrescaled line 
+
 ! 2015-06-09 - Roel Aaij
  - Ensure that Hlt2SelReportsMaker doesn't look for RecSummary if the afterburner
    is disabled.
