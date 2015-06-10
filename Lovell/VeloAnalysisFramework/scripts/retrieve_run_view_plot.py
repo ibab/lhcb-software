@@ -14,9 +14,10 @@ os.environ["TERM"] = "dumb"
 import sys
 import argparse
 
+from veloview.config import Config
+
 
 def create_parser():
-    from veloview.core import config as veloview_config
     parser = argparse.ArgumentParser(
         description=__doc__.split("\n")[0],
         epilog="\n".join(__doc__.split("\n")[1:]))
@@ -24,7 +25,7 @@ def create_parser():
     parser.add_argument("plot", type=str, help="Plot name in run file")
     parser.add_argument("sensor", type=int, nargs="?", default=0,
                         help="Sensor number")
-    parser.add_argument("--run-data-dir", default=veloview_config.run_data_dir,
+    parser.add_argument("--run-data-dir", default=Config().run_data_dir,
                         help="Directory to search for run list and data")
     parser.add_argument("--reference", action="store_true",
                         help="Include reference plot for the given arguments")
@@ -39,11 +40,10 @@ def exit_with_error(msg):
 
 
 def retrieve_run_view_plot(run, plot, sensor, reference, run_data_dir):
-    from veloview.core import config as veloview_config
     from veloview.runview import plots, response_formatters, utils
 
     # Change the run data directory to the user-specified one
-    veloview_config.update_run_data_dir(run_data_dir)
+    Config().run_data_dir = run_data_dir
 
     # Check all arguments have valid values
     err = False

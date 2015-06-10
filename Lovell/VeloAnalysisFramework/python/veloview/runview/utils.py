@@ -1,12 +1,12 @@
 """Utilities for GUI run view pages."""
-from veloview.core import config
+from veloview.config import Config
 from veloview.runview.reference_database import ReferenceDatabase
 from veloview.utils import paths, rundb
 
 
 def run_list():
     """Return a list of run numbers as integers sorted high-to-low."""
-    run_file_lines = tuple(open(config.processed_run_list_file, "r"))
+    run_file_lines = tuple(open(Config().processed_run_list_path, "r"))
     return sorted([int(l.strip()) for l in run_file_lines], reverse=True)
 
 
@@ -31,11 +31,11 @@ def valid_sensor(sensor):
 
 def reference_run(plot, run):
     """Return the reference run number for the plot and nominal run number."""
-    refdb = ReferenceDatabase(config.reference_db)
+    refdb = ReferenceDatabase(Config().reference_db_path)
     polarity = rundb.RunDB().polarity(run)
     return refdb.reference_run_for_plot(run, plot, polarity)
 
 
 def run_file_path(run):
     """Return TFile object directory path for the given run."""
-    return paths.make_dir_tree(run, config.run_data_dir)
+    return paths.make_dir_tree(run, Config().run_data_dir)

@@ -1,6 +1,7 @@
 import unittest
 
-from veloview.core.run_view_config import run_view_pages
+from veloview.config import Config
+run_view_pages = Config().run_view_pages
 
 # Required keys for the page dictionary
 REQ_PAGE_KEYS = ['title']

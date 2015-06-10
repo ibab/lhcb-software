@@ -75,7 +75,7 @@ off run as a reference run.
 """
 import sqlite3
 
-from veloview.core import config
+from veloview.config import Config
 from veloview.utils.rundb import UP, DOWN, OFF, POLARITIES
 
 # Resolve magnet off runs to magnet up reference runs
@@ -98,7 +98,7 @@ class ReferenceDatabase(object):
     environment is a pain, and as we only deal with two resources here, we
     just use SQL statements.
     """
-    def __init__(self, path=config.reference_db):
+    def __init__(self, path):
         """Initialise a ReferenceDatabase at path.
 
         The database is loaded if present, else a new one is created using

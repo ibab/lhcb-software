@@ -5,7 +5,7 @@ import shutil
 import unittest
 import mock
 
-from veloview.core import config
+from veloview.config import Config
 from veloview.runview import utils
 from veloview.utils.rundb import UP, DOWN
 
@@ -43,20 +43,17 @@ class MockedReferenceDatabase(object):
 
 class TestRunViewUtils(unittest.TestCase):
     def setUp(self):
-        self.old_prlf = config.processed_run_list_file
-        self.old_rdd = config.run_data_dir
-        config.run_data_dir = tempfile.mkdtemp()
-        config.processed_run_list_file = os.path.join(
-            config.run_data_dir, "runList.txt"
-        )
-        with open(config.processed_run_list_file, "w") as f:
+        """Use a temporary run directory for the tests."""
+        self.old_rdd = Config().run_data_dir
+        Config().run_data_dir = tempfile.mkdtemp()
+        with open(Config().processed_run_list_path, "w") as f:
             for r in RUNS:
                 f.write("{0}\n".format(r))
 
     def tearDown(self):
-        shutil.rmtree(config.run_data_dir)
-        config.processed_run_list_file = self.old_prlf
-        config.run_data_dir = self.old_rdd
+        """Remove the test run directory and restore the old paths."""
+        shutil.rmtree(Config().run_data_dir)
+        Config().run_data_dir = self.old_rdd
 
     def test_run_list(self):
         """Should return a list of high-low sorted run numbers as integers."""
@@ -99,7 +96,7 @@ class TestRunViewUtils(unittest.TestCase):
         """Should return path to ROOT file for the given run."""
         self.assertEqual(
             utils.run_file_path(123987),
-            os.path.join(config.run_data_dir,
+            os.path.join(Config().run_data_dir,
                          "100000s", "120000s", "123000s", "123900s", "123987")
         )
 
