@@ -349,7 +349,7 @@ class HltConf(LHCbConfigurableUser):
                       # routing bit 90 for TurboCalib stream, includes lumi events.
                       , 90 : "HLT_TURBOPASS_RE('^Hlt2.*TurboCalibDecision$') | HLT_PASS('Hlt2LumiDecision')"
                       # Leading crossing events during early measurements
-                      , 91 : "HLT_PASS('Hlt2MBNoBiasLeadingCrossingDecision') | HLT_PASS('Hlt2LumiDecision')"
+                      , 91 : "HLT_PASS_RE('Hlt2(MBNoBiasLeadingCrossing|NoBiasPassThrough)Decision') | HLT_PASS('Hlt2LumiDecision')"
                       # VVG 01-05-2015
                       }
         HltRoutingBitsWriter('Hlt1RoutingBitsWriter').RoutingBits = routingBits
@@ -680,7 +680,8 @@ class HltConf(LHCbConfigurableUser):
                 i.configurable().FlagAsSlowThreshold = self.getProp('SlowHlt2Threshold')
 
         self.configureHltMonitoring(lines1, lines2)
-        self.configureVertexPersistence( [ i.name() for i in lines1 ], "Hlt1VtxReportsMaker" ) # TODO: add lines2...
+        for stage, lines in zip(('Hlt1', 'Hlt2'), (lines1, lines2)):
+            self.configureVertexPersistence( [ i.name() for i in lines ], stage + "VtxReportsMaker" )
         self.configureANNSelections()
 
         if self.getProp("Verbose") : print Sequence('Hlt')
@@ -766,7 +767,8 @@ class HltConf(LHCbConfigurableUser):
         hlt2_decrep_loc = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
         hlt1_selrep_loc = DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].listOutputs()[0]
         hlt2_selrep_loc = DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
-        hlt_vtxrep_loc = DecoderDB["HltVertexReportsDecoder/Hlt1VertexReportsDecoder"].listOutputs()[0]
+        hlt1_vtxrep_loc = DecoderDB["HltVertexReportsDecoder/Hlt1VertexReportsDecoder"].listOutputs()[0]
+        hlt2_vtxrep_loc = DecoderDB["HltVertexReportsDecoder/Hlt2VertexReportsDecoder"].listOutputs()[0]
 
         from DAQSys.DecoderClass import decodersForBank
         l0decoder = decodersForBank( DecoderDB, 'L0DU' )
@@ -809,9 +811,9 @@ class HltConf(LHCbConfigurableUser):
                          , ( "EnableHltSelReports"  ,  HltSelReportsWriter,    'Hlt1SelReportsWriter',  {'SourceID' : 1,
                                                                                                          'InputHltSelReportsLocation': hlt1_selrep_loc } )
                          , ( "EnableHltTrkReports"  ,  HltTrackReportsWriter,  'Hlt1TrkReportsWriter',  {})
-                         , ( "EnableHltVtxReports"  ,  HltVertexReportsMaker,  'Hlt1VtxReportsMaker',   {'OutputHltVertexReportsLocation' : hlt_vtxrep_loc } )
+                         , ( "EnableHltVtxReports"  ,  HltVertexReportsMaker,  'Hlt1VtxReportsMaker',   {'OutputHltVertexReportsLocation' : hlt1_vtxrep_loc } )
                          , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt1VtxReporteWriter',  { 'SourceID' : 1,
-                                                                                                          'InputHltVertexReportsLocation': hlt_vtxrep_loc } )
+                                                                                                          'InputHltVertexReportsLocation': hlt1_vtxrep_loc } )
                          )
         _hlt2postamble = ( ( "EnableHltRoutingBits" ,  type(l0decoder), l0decoder.getName(), {})
                          , ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter, 'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc,
@@ -825,7 +827,9 @@ class HltConf(LHCbConfigurableUser):
                                                                                                            **sel_rep_opts ) )
                          , ( "EnableHltSelReports"  ,  HltSelReportsWriter,  'Hlt2SelReportsWriter',  { 'SourceID' : 2,
                                                                                                         'InputHltSelReportsLocation': hlt2_selrep_loc } )
-                         )
+                         , ( "EnableHltVtxReports"  ,  HltVertexReportsMaker,  'Hlt2VtxReportsMaker',   {'OutputHltVertexReportsLocation' : hlt2_vtxrep_loc } )
+                         , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt2VtxReportWriter',  { 'SourceID' : 2,
+                                                                                                          'InputHltVertexReportsLocation': hlt2_vtxrep_loc } ) )
 
         # Don't try to decode L0 for the routing bits writer if no L0TCK has
         # been set. This allows forward compatibility.

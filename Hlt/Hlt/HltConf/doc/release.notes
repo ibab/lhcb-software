@@ -4,8 +4,12 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-06-10 - Roel Aaij
+ - Add Hlt2VertexReportsMaker for Turbo and Tesla.
+ - Add Hlt2NoBiasPassThrough to NoBias stream (routing bit 91)
+
 ! 2015-06-10 - Christian Linn
- - add IDs for new Hlt1NoBiasPrescaled line 
+ - add IDs for new Hlt1NoBiasPrescaled line
 
 ! 2015-06-09 - Roel Aaij
  - Ensure that Hlt2SelReportsMaker doesn't look for RecSummary if the afterburner
