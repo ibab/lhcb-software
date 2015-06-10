@@ -4,6 +4,7 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+!========================= DAQSys v8r8p2 2015-06-10 =========================
 ! 2015-06-10 - Roel Aaij
  - Set outputs of Calorimeter decoders anyway to allow usage of the correct
    values from python.
