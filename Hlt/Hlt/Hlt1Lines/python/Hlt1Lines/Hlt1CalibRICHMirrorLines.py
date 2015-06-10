@@ -77,7 +77,7 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
         >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT/ETA/PHI', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , '      nP/PT/ETA/PHI', LoKi.Monitoring.ContextSvc ) )
         >>  SINK( 'Hlt1%(name)sDecision' )
-        >>  (TC_SIZE > %(MinTr)s ))
+        >>  (TC_SIZE > %(MinTr)s)
         """ % props
         hltRICHMirrorBlock_Unit = HltUnit(
             'Hlt1'+name+'Unit',
