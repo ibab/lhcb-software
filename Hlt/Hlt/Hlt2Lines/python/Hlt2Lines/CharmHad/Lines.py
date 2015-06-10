@@ -213,22 +213,6 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KKTurbo'       : 0.1,
                                  'Neut_ALL_PT_MIN'           : 200.0 * MeV,
                                  'Neut_ALL_ADMASS_MAX'       :  105.0,
                                           },
-## some cuts for Pentaquark --> phi,pi,p  mimics D0 --> HHHH to start
-                 'PentaPhiPimPp' : {
-                          'Trk_ALL_PT_MIN'           :  250 * MeV,
-                          'Trk_ALL_MIPCHI2DV_MIN'    :  3,
-                          'AM12_MAX'                 : 1050.0 * MeV,
-                          'AM_4'                     : (139.5) * MeV,
-                          'AM_MIN'                   :  2700 * MeV,
-                          'AM_MAX'                   :  2930 * MeV,
-                          'ASUMPT_MIN'               :  1980.0 * MeV,
-                          'ACHI2DOCA_MAX'            :  10.0,
-                          'VCHI2PDOF_MAX'            :  12.0,
-                          'BPVDIRA_MIN'              :  0.9998,
-                          'BPVLTIME_MIN'             :  0.3*picosecond,
-                          'PT_MIN'                   :  2000 * MeV,
-                          'IPCHI2_MAX'               :  15.0,
-                                          },
                 }
 
 theseslots.update(D2HHHLines.localcuts())
