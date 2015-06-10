@@ -1217,7 +1217,7 @@ bool MuEffMonitor::DoHitsInPad(){
        
         double Err2x = (dx*dx*4)/12. +  m_Muon.err2X[station];
         double Err2y = (dy*dy*4)/12. +  m_Muon.err2Y[station]; 
-        double Dx, Dy;
+        double Dx=0., Dy=0.;
         
         if (station==0) {
           Dx = m_nSigma1X[region]*sqrt(Err2x);
