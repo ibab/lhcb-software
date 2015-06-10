@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-06-10 - Simone Stracka
+	. CharmHad: fixed wrong syntax for lifetime cut in D2HHPi0Lines 
+    M python/Hlt2Lines/CharmHad/D2HHPi0Lines.py - fixed bug 
+    M python/Hlt2Lines/CharmHad/D2HHLines.py - minor adjustment 		
+
 ! 2015-06-09 - Mika Vesterinen
   D2HHPi0Lines.py - moved from turbo to full
   D02HHLines.py - moved Kpi DCS and CF to turbo

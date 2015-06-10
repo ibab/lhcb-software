@@ -166,7 +166,7 @@ class CharmHadD2HHLines() :
                  ######                 
                  'D2EtaPi_3hR' : {
                     'TisTosSpec'        : "Hlt1.*Track.*Decision%TOS",            
-                    'Trk_PT_MIN'        :  1200 *MeV,
+                    'Trk_PT_MIN'        :  1300 *MeV,
                     'Trk_MIPCHI2DV_MIN' :  25,
                     'AM_MIN'            : 1550 * MeV,
                     'AM_MAX'            : 2250 * MeV,
@@ -182,12 +182,12 @@ class CharmHadD2HHLines() :
                     'AMRhoH_MAX'        : 2250 * MeV,
                     'AMEta_MIN'         : 450 * MeV,  # don't tighten beyond 680 
                     'AMEta_MAX'         : 880 * MeV,  # don't tighten 
-                    'Neut_ALL_PT_MIN'   : 800 * MeV,
+                    'Neut_ALL_PT_MIN'   : 900 * MeV,
                     'Neut_ALL_P_MIN'   : 1000 * MeV,
                     },
                  'D2EtaK_3hR' : {
                     'TisTosSpec'        : "Hlt1.*Track.*Decision%TOS",            
-                    'Trk_PT_MIN'        :  1200 *MeV,  
+                    'Trk_PT_MIN'        :  1300 *MeV,  
                     'Trk_MIPCHI2DV_MIN' :  25,
                     'AM_MIN'            : 1450 * MeV,
                     'AM_MAX'            : 2350 * MeV,
@@ -203,7 +203,7 @@ class CharmHadD2HHLines() :
                     'AMRhoH_MAX'        : 2350 * MeV,
                     'AMEta_MIN'         : 450 * MeV,  # don't tighten beyond 680 
                     'AMEta_MAX'         : 880 * MeV,  # don't tighten 
-                    'Neut_ALL_PT_MIN'  :  800 * MeV,
+                    'Neut_ALL_PT_MIN'  :  900 * MeV,
                     'Neut_ALL_P_MIN'   : 1000 * MeV,
                     },
                  'D2EtaPi_3hM' : {
@@ -294,7 +294,7 @@ class CharmHadD2HHLines() :
                     'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS",
                     'Trk_PIDK_MAX'             :   0,   
                     'Trk_PT_MIN'               : 500 *  MeV ,   
-                    'Trk_MIPCHI2DV_MIN'        :  25 ,          
+                    'Trk_MIPCHI2DV_MIN'        :  16 ,  # 25 if high        
                     'AM_MAX'                   : 1150 * MeV ,     
                     'ASUMPT_MIN'               :   0 * MeV ,
                     'ADOCA_MAX'                :  0.1 * mm , 

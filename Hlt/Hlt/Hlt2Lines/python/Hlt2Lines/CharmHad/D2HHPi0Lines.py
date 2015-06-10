@@ -20,7 +20,7 @@ class CharmHadD2HHPi0Lines() :
     def localcuts(self) : 
         return { 
             'DetachedHH_forD2PiPiPi0' : { 
-              'AM_MAX'         : 1865 * MeV,
+              'AM_MAX'         : 1900 * MeV,
               'ASUMPT_MIN'     : 1.0 * GeV,
               'ADOCA_MAX'      : 0.08 * mm,
               'VCHI2_MAX'      : 20.0,
@@ -29,7 +29,7 @@ class CharmHadD2HHPi0Lines() :
               'BPVVDCHI2_MIN'  : 25.0,                                 
             },
             'DetachedHH_forD2KKPi0' : { 
-              'AM_MAX'         : 1865 * MeV,
+              'AM_MAX'         : 1900 * MeV,
               'ASUMPT_MIN'     : 1.0 * GeV,
               'ADOCA_MAX'      : 0.08 * mm,
               'VCHI2_MAX'      : 20.0,
@@ -38,7 +38,7 @@ class CharmHadD2HHPi0Lines() :
               'BPVVDCHI2_MIN'  : 25.0,                                 
             },
             'DetachedHH_forD2KPiPi0' : { 
-              'AM_MAX'         : 1865 * MeV,
+              'AM_MAX'         : 1900 * MeV,
               'ASUMPT_MIN'     : 1.0 * GeV,
               'ADOCA_MAX'      : 0.08 * mm,
               'VCHI2_MAX'      : 20.0,
@@ -47,8 +47,8 @@ class CharmHadD2HHPi0Lines() :
               'BPVVDCHI2_MIN'  : 25.0,                                 
             },            
             'D2HHPi0R' : {
-              'AM_MIN'            : 1735 * MeV,
-              'AM_MAX'            : 1995 * MeV,
+              'AM_MIN'            : 1700 * MeV, # was 1735 
+              'AM_MAX'            : 2020 * MeV, # was 1995
               'APT_MIN'           : 1400.0 * MeV,
               'ADAU1PT_MIN'       : 1700,
               'ADAU1BPVIPCHI2_MIN': 36,
@@ -58,12 +58,12 @@ class CharmHadD2HHPi0Lines() :
               'DMASS_MAX'         : 1985 * MeV,
               'BPVIPCHI2_MAX'     : 50.0,
               'BPVDIRA_MIN'       : 0.9995,
-              'BPVLTIME_MIN'      : 0.2, 
+              'BPVLTIME_MIN'      : 0.2 * picosecond, 
               'VCHI2PDOF_MAX'     : 20,
             },
             'D2HHPi0M' : {
-              'AM_MIN'            : 1735 * MeV,
-              'AM_MAX'            : 1995 * MeV,
+              'AM_MIN'            : 1700 * MeV, # was 1735
+              'AM_MAX'            : 2020 * MeV, # was 1995
               'APT_MIN'           : 1400.0 * MeV,
               'ADAU1PT_MIN'       : 1700,
               'ADAU1BPVIPCHI2_MIN': 36,
@@ -73,7 +73,7 @@ class CharmHadD2HHPi0Lines() :
               'DMASS_MAX'         : 1985 * MeV,
               'BPVIPCHI2_MAX'     : 50.0,
               'BPVDIRA_MIN'       : 0.9995,
-              'BPVLTIME_MIN'      : 0.2, 
+              'BPVLTIME_MIN'      : 0.2 * picosecond, 
               'VCHI2PDOF_MAX'     : 20,
               },
             'DstD02PiPiPi0R' : {
@@ -82,7 +82,7 @@ class CharmHadD2HHPi0Lines() :
               'DeltaM_MIN'       : -999 * MeV,
               'DeltaM_MAX'       : 185 * MeV,
               'TagVCHI2PDOF_MAX' : 10.0,
-              'TisTosSpec'       : "Hlt1.*MVA.*Decision%TOS",
+              'TisTosSpec'       : "Hlt1.*Track.*Decision%TOS",  # was MVA
               },                
             'DstD02PiPiPi0M' : {
               'DeltaM_AM_MIN'    : -999 * MeV,
@@ -90,7 +90,7 @@ class CharmHadD2HHPi0Lines() :
               'DeltaM_MIN'       : -999 * MeV,
               'DeltaM_MAX'       : 185 * MeV,
               'TagVCHI2PDOF_MAX' : 10.0,
-              'TisTosSpec'       : "Hlt1.*MVA.*Decision%TOS",
+              'TisTosSpec'       : "Hlt1.*Track.*Decision%TOS",  # was MVA
               },             
             'DstD02KKPi0R' : {
               'DeltaM_AM_MIN'    : -999 * MeV,
@@ -98,7 +98,7 @@ class CharmHadD2HHPi0Lines() :
               'DeltaM_MIN'       : -999 * MeV,
               'DeltaM_MAX'       : 185 * MeV,
               'TagVCHI2PDOF_MAX' : 10.0,
-              'TisTosSpec'       : "Hlt1.*MVA.*Decision%TOS",
+              'TisTosSpec'       : "Hlt1.*Track.*Decision%TOS",  # was MVA
               },                
             'DstD02KKPi0M' : {
               'DeltaM_AM_MIN'    : -999 * MeV,
@@ -106,7 +106,7 @@ class CharmHadD2HHPi0Lines() :
               'DeltaM_MIN'       : -999 * MeV,
               'DeltaM_MAX'       : 185 * MeV,
               'TagVCHI2PDOF_MAX' : 10.0,
-              'TisTosSpec'       : "Hlt1.*MVA.*Decision%TOS",
+              'TisTosSpec'       : "Hlt1.*Track.*Decision%TOS",  # was MVA
               },            
             'DstD02KPiPi0R' : {
               'DeltaM_AM_MIN'    : -999 * MeV,
@@ -114,7 +114,7 @@ class CharmHadD2HHPi0Lines() :
               'DeltaM_MIN'       : -999 * MeV,
               'DeltaM_MAX'       : 185 * MeV,
               'TagVCHI2PDOF_MAX' : 10.0,
-              'TisTosSpec'       : "Hlt1.*MVA.*Decision%TOS",
+              'TisTosSpec'       : "Hlt1.*Track.*Decision%TOS",  # was MVA
               },                
             'DstD02KPiPi0M' : {
               'DeltaM_AM_MIN'    : -999 * MeV,
@@ -122,7 +122,7 @@ class CharmHadD2HHPi0Lines() :
               'DeltaM_MIN'       : -999 * MeV,
               'DeltaM_MAX'       : 185 * MeV,
               'TagVCHI2PDOF_MAX' : 10.0,
-              'TisTosSpec'       : "Hlt1.*MVA.*Decision%TOS",
+              'TisTosSpec'       : "Hlt1.*Track.*Decision%TOS",  # was MVA
               },
             }
 
