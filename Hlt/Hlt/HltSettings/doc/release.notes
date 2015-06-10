@@ -4,7 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
-! 2015-6-10 - Christian Linn
+
+! 2016-06-10 - Christian Linn
+ - Changed pT thresholds in Lambda2PPi* lines in PID_EM2015
+
+! 2015-06-10 - Christian Linn
  - Added Hlt1NoBiasRateLimited and Hlt2NoBiasPassThrough line to Physics_draftEM2015
  - Changed name of Xic02PKKPi_Turbo line in CharmHad_EM2015
 
