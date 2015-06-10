@@ -32,7 +32,7 @@ class CharmHad_EM2015 :
             'Hlt2CharmHadDst_2DsGamma_Ds2KKPi_XSecTurbo',
             'Hlt2CharmHadDst_2D0Pi_D02K3Pi_XSecTurbo',
             'Hlt2CharmHadSigmac_2LcPi_XSecTurbo',
-            'Hlt2CharmHadXic0ToPpKmKmPipTurbo'
+            'Hlt2CharmHadXic02PKKPi_Turbo'
        ]
 
 
@@ -89,7 +89,7 @@ class CharmHad_EM2015 :
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },
-                 ## SharedPromptChild used by line Xic0ToPpKmKmPipTurbo
+                 ## SharedPromptChild used by line Xic02PKKPi_Turbo
                  'CharmHadSharedPromptChild_K' : {
                                  'PID_LIM'                  :  5.0,
                                  'Trk_ALL_PT_MIN'           :  250.0 * MeV,
@@ -216,7 +216,7 @@ class CharmHad_EM2015 :
                                  'DeltaM_MAX'               :  200.0 * MeV,
                                  'TagVCHI2PDOF_MAX'         :  25.0
                                 },
-                 'Xic0ToPpKmKmPipTurbo' : {
+                 'Xic02PKKPi_Turbo' : {
                                  'TisTosSpec'               : "Hlt1TrackAllL0Decision%TOS",
                                  'Trk_ALL_PT_MIN'           : 250.*MeV,
                                  'Trk_2OF4_PT_MIN'          : 400.*MeV,

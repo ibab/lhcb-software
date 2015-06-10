@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-6-10 - Christian Linn
+ - Added Hlt1NoBiasRateLimited and Hlt2NoBiasPassThrough line to Physics_draftEM2015
+ - Changed name of Xic02PKKPi_Turbo line in CharmHad_EM2015
+
 ! 2015-06-04 - Mika Vesterinen
  - Added the NoPVPassThrough Hlt1 line in Commissioning_Physics_2015 and update Commissioning_AllLines_2015
 

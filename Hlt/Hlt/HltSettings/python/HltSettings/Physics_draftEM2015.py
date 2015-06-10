@@ -56,6 +56,7 @@ class Physics_draftEM2015( object ):
         from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
+        from Hlt1Lines.Hlt1NBLines             import Hlt1NBLinesConf
         from Hlt1Lines.Hlt1HighMultLines       import Hlt1HighMultLinesConf
         from Hlt1Lines.Hlt1CEPLines            import Hlt1CEPLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
@@ -215,6 +216,10 @@ class Physics_draftEM2015( object ):
                          , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)' }
 
                                                        }
+                         , Hlt1NBLinesConf : {   'Prescale' : { 'Hlt1NoBiasPrescaled'   : 0.5 },
+                                                 'NoBiasPrescaledOdin'    : '(ODIN_TRGTYP == LHCb.ODIN.LumiTrigger)'
+                                             }
+
                         , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBNoBias'                       : 0.00025
                                                                , 'Hlt1MBMicroBiasVelo'                : 0
                                                                , 'Hlt1MBMicroBiasTStation'            : 0
@@ -228,6 +233,7 @@ class Physics_draftEM2015( object ):
                                                                  'Hlt2Forward'     : 0.00001,
                                                                  'Hlt2DebugEvent'  : 0.00001},
                                                 'PassThrough' : {'HLT1' : "HLT_PASS_RE('^Hlt1(MBNoBiasLeadingCrossing|HighVeloMult|HighVeloMultSinglePV)Decision$')"},
+                                                'NoBiasPassThrough' : {'HLT1' : "HLT_PASS('Hlt1NoBiasPrescaledDecision')"},
                                                 'Postscale'   : {'Hlt2ErrorEvent'  : 'RATE(0.01)'}
                                                 }
 
@@ -261,7 +267,7 @@ class Physics_draftEM2015( object ):
         """
         Returns a list of active lines
         """
-        hlt2 = ['Hlt2PassThrough', # nobias leading crossing + high mult
+        hlt2 = ['Hlt2PassThrough', 'Hlt2NoBiasPassThrough', # passthrough of leading crossing + high mult, passthrough of Hlt1NoBiasPrescaled
                 'Hlt2Lumi','Hlt2DebugEvent','Hlt2ErrorEvent','Hlt2Transparent', # technical lines
                 'Hlt2MBNoBiasLeadingCrossing'] # Special line for leading crossing
 
@@ -311,9 +317,10 @@ class Physics_draftEM2015( object ):
                  , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
                  , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingForcedRecoFullZ'
                  , 'Hlt1BeamGasCrossingParasitic', 'Hlt1BeamGasHighRhoVertices'
-                 , 'Hlt1MBNoBias'  # technical lines
+                 , 'Hlt1MBNoBias'  # nobias lines
                  , 'Hlt1MBNoBiasRateLimited'
-                 , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
+                 , 'Hlt1NoBiasPrescaled'
+                 , 'Hlt1L0Any','Hlt1L0AnyNoSPD' # technical lines
                  , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent'
                  , 'Hlt1VeloClosingMicroBias'
             ]
