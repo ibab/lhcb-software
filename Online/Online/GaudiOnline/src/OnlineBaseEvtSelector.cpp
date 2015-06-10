@@ -249,8 +249,8 @@ void OnlineBaseEvtSelector::handle(const Incident& inc)    {
     if ( m_handleTMO && m_context ) {
       OnlineContext* ctxt = const_cast<OnlineContext*>(m_context);
       if ( ctxt ) {
-	ctxt->flagEvent(14).ignore(); // 14 = SIGALRM; see "kill -l"
-	ctxt->releaseEvent().ignore();
+        ctxt->flagEvent(14).ignore(); // 14 = SIGALRM; see "kill -l"
+        ctxt->releaseEvent().ignore();
       }
       m_context = 0;
     }
@@ -299,11 +299,11 @@ StatusCode OnlineBaseEvtSelector::next(Context& ctxt) const {
       // Need to aquire the mutex if suspended
       sc = pCtxt->rearmEvent();
       if ( !sc.isSuccess() ) {
-	if ( m_gotoPause )   {
-	  if ( m_pauseSleep > 0 ) ::lib_rtl_sleep(m_pauseSleep);
-	  incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
-	}
-	return sc;
+        if ( m_gotoPause )   {
+          if ( m_pauseSleep > 0 ) ::lib_rtl_sleep(m_pauseSleep);
+          incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
+        }
+        return sc;
       }
       if ( m_allowSuspend )   {
         m_isWaiting = true;
@@ -314,11 +314,11 @@ StatusCode OnlineBaseEvtSelector::next(Context& ctxt) const {
       }
       sc = pCtxt->receiveEvent();
       if ( !sc.isSuccess() && m_gotoPause )   {
-	  if ( m_pauseSleep > 0 ) ::lib_rtl_sleep(m_pauseSleep);
-	incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
+        if ( m_pauseSleep > 0 ) ::lib_rtl_sleep(m_pauseSleep);
+        incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
       }
       else if ( sc.isSuccess() )  {
-	incidentSvc()->fireIncident(Incident(name(),"DAQ_PROCESS_EVENT"));
+        incidentSvc()->fireIncident(Incident(name(),"DAQ_PROCESS_EVENT"));
       }
       return sc;
     }

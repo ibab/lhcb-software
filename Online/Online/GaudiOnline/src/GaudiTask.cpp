@@ -76,7 +76,17 @@ void GaudiTask::PythonInterpreter::afterFork() {
   if ( ::Py_IsInitialized() ) {
     //cout << "[error] Executing afterfork procedure......" << endl;
     //cout << flush;
-    PythonGlobalState state();
+
+    //PythonGlobalState state();
+
+    PyThreadState *tstate = 0;
+    PyInterpreterState *interp = 0;
+    ::_PyGILState_Fini();
+    //::PyOS_AfterFork();
+    tstate = PyThreadState_GET();
+    interp = tstate->interp;
+    ::_PyGILState_Init(interp, tstate);
+
     ::PyOS_AfterFork();  
   }
 }
@@ -117,9 +127,24 @@ int GaudiTask::execRunable(void* arg)  {
   pair<IRunable*,GaudiTask*>* p = (pair<IRunable*,GaudiTask*>*)arg;
   GaudiTask* t = p->second;
   IRunable*  r = p->first;
+  static int first = 1;
   delete p;
   try {
     PythonGlobalState state();
+#if 0
+    if ( first )  {
+      first = false;
+      if ( ::Py_IsInitialized() ) {
+        PyThreadState *tstate = 0;
+        PyInterpreterState *interp = 0;
+        ::_PyGILState_Fini();
+        //::PyOS_AfterFork();
+        tstate = PyThreadState_GET();
+        interp = tstate->interp;
+        ::_PyGILState_Init(interp, tstate);
+      }
+    }
+#endif
     int ret = r->run();
     t->setEventThread(false);
     return ret;
