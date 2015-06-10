@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-06-10 - Roel Aaij
+ - Add Commossioning_MB_PassThrough settings that have both Hlt passthrough
+   and Velo MicroBias (HltType is still Hlt_PassThrough).
 
 ! 2016-06-10 - Christian Linn
  - Changed pT thresholds in Lambda2PPi* lines in PID_EM2015
@@ -44,7 +47,7 @@
 !========================= HltSettings v6r14 2015-05-22 =========================
 
 ! 2015-05-26 - Sascha Stahl
- - Removed radiative lines with wrong name from Hadrons_march_2015.py. 
+ - Removed radiative lines with wrong name from Hadrons_march_2015.py.
    Added configuration of radiative lines thresholds to Commissioning_physics_2015.py.
 
 ! 2015-05-24 - Sean Benson
