@@ -74,6 +74,7 @@ class AlignOnlineIterator: public GaudiTool, virtual public LHCb::IAlignIterator
     map<string, string*> m_condmap;
     string m_ServInfix;
     vector<string> m_subDets;
+    IUpdateManagerSvc* m_updateMgrSvc ; ///< Pointer to update manager svc
 };
 
 DECLARE_TOOL_FACTORY(AlignOnlineIterator)
@@ -134,6 +135,10 @@ StatusCode AlignOnlineIterator::initialize()
   {
     error() << "cannot retrieve the Publishing Service" << endmsg;
   }
+
+  sc = service("UpdateManagerSvc",m_updateMgrSvc, false);
+  if (!sc.isSuccess())  return Error("==> Failed to retrieve UpdateManagerSvc",  StatusCode::FAILURE);
+
   if (sc.isSuccess())
   {
     sc = m_xmlwriter.retrieve();
@@ -224,8 +229,10 @@ StatusCode AlignOnlineIterator::i_run()
     // FIXME: fire incident in the run changehandler to read the xml:
     // otherwise it will just use the geometry from the snapshot
     // Don't know if we need all of this ... Need to think.
+    // Update 2015/06/11: we definitely need the 'newEvent'.
     detDataSvc->setEventTime(equations.lastTime());
     incSvc->fireIncident(RunChangeIncident(name(), runnr));
+    m_updateMgrSvc->newEvent() ;
 
     // Now call the update tool
     debug() << "Calling AlignUpdateTool" << endreq;
