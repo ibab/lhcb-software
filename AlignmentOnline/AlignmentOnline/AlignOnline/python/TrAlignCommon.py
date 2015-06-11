@@ -85,10 +85,10 @@ def EscherCommon(true_online_version, alignment_module):
   sys.path.insert(2, os.path.dirname(OnlineEnv.ConditionsMapping))
   import Online as OnlineConds
   handlerConditions = OnlineConds.ConditionMap
-  if true_online_version and os.environ['PARTITION_NAME'] == 'TEST':
-    re_year = re.compile('(201\d)')
-    for k, v in handlerConditions.items():
-      handlerConditions[re_year.sub('2014', k)] = v
+  # if true_online_version and os.environ['PARTITION_NAME'] == 'TEST':
+  #   re_year = re.compile('(201\d)')
+  #   for k, v in handlerConditions.items():
+  #     handlerConditions[re_year.sub('2014', k)] = v
 
   conddb = CondDB()
   conddb.RunChangeHandlerConditions = handlerConditions
