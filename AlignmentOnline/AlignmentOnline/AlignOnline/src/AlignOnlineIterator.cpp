@@ -54,7 +54,8 @@ class AlignOnlineIterator: public GaudiTool, virtual public LHCb::IAlignIterator
     //      StatusCode de_init();
     StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
   private:
-    StatusCode writeWrapper(const string& sd);
+    StatusCode writeWrappers() const ;
+    StatusCode writeWrapper(const std::string& det) const ;
     LHCb::IAlignDrv *m_parent;
     lib_rtl_thread_t m_thread;
     string m_PartitionName;
@@ -64,7 +65,10 @@ class AlignOnlineIterator: public GaudiTool, virtual public LHCb::IAlignIterator
     ASDCollector m_asdCollector;
     unsigned int m_iteration;
     string m_onlinexmldir;
-    string m_alignxmldir;
+    string m_alignworkdir; // directory where all jobs run
+    string m_runningdir ;  // sub directory where this job runs
+    string m_runningxmldir ;  // directory where the iterator stores the xml
+    bool m_keepIterXml ;
     vector<AlignOnlineXMLCopier*> m_xmlcopiers;
     IPublishSvc *m_PubSvc;
     map<string, string*> m_condmap;
@@ -99,9 +103,10 @@ AlignOnlineIterator::AlignOnlineIterator(const string & type,
   declareProperty("ASDDir", m_asdCollector.m_dir);
   declareProperty("ASDFilePattern", m_asdCollector.m_filePatt);
   declareProperty("OnlineXmlDir", m_onlinexmldir = "/group/online/alignment");
-  declareProperty("AlignXmlDir", m_alignxmldir = "/group/online/AligWork");
+  declareProperty("AlignXmlDir", m_alignworkdir = "/group/online/AligWork");
   declareProperty("ServiceInfix", m_ServInfix = "TrackerAlignment/");
   declareProperty("SubDetectors", m_subDets);
+  declareProperty("KeepIterXml", m_keepIterXml = true ) ;
 
   m_iteration = 0;
   IInterface *p = (IInterface*) parent;
@@ -143,9 +148,12 @@ StatusCode AlignOnlineIterator::initialize()
   }
 
   // instantiate the objects that will take care of copying and versioning files
-  const string runningdir = m_alignxmldir + "/running";
-  if (!boost::filesystem::exists(runningdir))
-    boost::filesystem::create_directory(runningdir);
+  m_runningdir = m_alignworkdir + "/running" ;
+  if (!boost::filesystem::exists(m_runningdir))
+    boost::filesystem::create_directory(m_runningdir);
+  m_runningxmldir = m_runningdir + "/xml" ;
+  if (!boost::filesystem::exists(m_runningxmldir))
+    boost::filesystem::create_directory(m_runningxmldir);
 
   vector<string> condnames;
   for (const auto& sd: m_subDets) {
@@ -155,7 +163,7 @@ StatusCode AlignOnlineIterator::initialize()
   for (const auto& i : condnames) {
     string *s = new string("");
     m_condmap.insert(make_pair(i, s));
-    AlignOnlineXMLCopier* acpy = new AlignOnlineXMLCopier(m_onlinexmldir, runningdir, i, &info());
+    AlignOnlineXMLCopier* acpy = new AlignOnlineXMLCopier(m_onlinexmldir, m_runningxmldir, i, &info());
     m_PubSvc->declarePubItem(m_ServInfix + i, *s);
     m_xmlcopiers.push_back(acpy);
   }
@@ -228,6 +236,12 @@ StatusCode AlignOnlineIterator::i_run()
       break;
     }
 
+    // copy the xml directory to a directory with the iteration name
+    if( m_keepIterXml ) {
+      const std::string xmliterdir = m_runningdir + "/Iter" + to_string(m_iteration);
+      boost::filesystem::rename(m_runningxmldir, xmliterdir);
+    }
+    
     // write the xml
     debug() << "writing xml files" << endreq;
     sc = m_xmlwriter->write("run" + to_string(runnr) ) ;
@@ -236,6 +250,9 @@ StatusCode AlignOnlineIterator::i_run()
       error() << "Error writing xml files" << endreq;
       break;
     }
+
+    // Write the wrappers for the generated conditions
+    if (sc.isSuccess()) sc = writeWrappers() ;
 
     // writes a little file with number of iteration step
     debug() << "calling parent->writeReference()" << endreq;
@@ -296,10 +313,10 @@ StatusCode AlignOnlineIterator::i_run()
   fflush(stdout);
 
   // move the 'running' dir to a dirname with current run
-  string rundir = m_alignxmldir + "/run" + to_string(runnr);
+  string rundir = m_alignworkdir + "/run" + to_string(runnr);
   if (boost::filesystem::exists(rundir))
     boost::filesystem::remove_all(rundir);
-  boost::filesystem::rename(m_alignxmldir + "/running", rundir);
+  boost::filesystem::rename(m_runningdir,rundir);
 
   //fflush(stdout);
   m_parent->doStop();
@@ -339,17 +356,9 @@ StatusCode AlignOnlineIterator::i_start()
     if (!sc.isSuccess())
       error() << "Error writing xml files" << endreq;
   }
+
   // Write the wrappers for the generated conditions, this only needs to happen once.
-  if (sc.isSuccess()) {
-     // Write the wrappers for the generated conditions, this only needs to happen once.
-     for (const auto& sd: m_subDets) {
-        sc = writeWrapper(sd);
-        if (!sc.isSuccess()) {
-           error() << "Error writing wrapper file for " << sd << endreq;
-           break;
-        }
-     }
-  }
+  if (sc.isSuccess()) sc = writeWrappers() ;
   
   // 3. start the analyzers and wait
   debug() << "wait for analyzers" << endreq;
@@ -377,9 +386,22 @@ StatusCode AlignOnlineIterator::queryInterface(const InterfaceID& riid,
   return GaudiTool::queryInterface(riid, ppvIF);
 }
 
-StatusCode AlignOnlineIterator::writeWrapper(const string& sd)
+StatusCode AlignOnlineIterator::writeWrappers() const
 {
-   string filename = m_alignxmldir + "/running/" + sd + ".xml";
+  StatusCode sc = StatusCode::SUCCESS ;
+  for (const auto& sd: m_subDets) {
+    sc = writeWrapper(sd);
+    if (!sc.isSuccess()) {
+      error() << "Error writing wrapper file for " << sd << endreq;
+      break;
+    }
+  }
+  return sc ;
+}
+
+StatusCode AlignOnlineIterator::writeWrapper(const string& sd) const
+{
+   string filename = m_runningxmldir + "/" + sd + ".xml";
    ofstream xml(filename);
    if (xml.fail() ){
       return Warning(string("Failed to open wrapper file ") + filename, StatusCode::FAILURE);
