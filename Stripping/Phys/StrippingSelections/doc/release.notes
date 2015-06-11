@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-11 - Roberta Cardinale
+ - Added RefitPVs in the default_config in StrippingBandQ/StrippingB2JpsiXforEM_s.py
+
 ! 2015-06-11 - Carla Marin Benito
  - Updated StrippingKshort2eePiPi.py to reduce multiple candidates
 
