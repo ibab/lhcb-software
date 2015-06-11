@@ -20,6 +20,7 @@ use                DaVinciInterfaces v* Phys
 
 # ================ own includes ===============================================
 apply_pattern      install_more_includes more=KalmanFilter
+apply_pattern      install_more_includes more=Kernel
 
 # ================ constituents ===============================================
 library            KalmanFilter  ../src/*.cpp

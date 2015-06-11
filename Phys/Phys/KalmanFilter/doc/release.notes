@@ -6,6 +6,10 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+! 2015-06-11 - Vanya Belyaev
+ - cmt/requirmenets  fix CMT compilation problem 
+
+
 !========================= KalmanFilter v1r12 2015-05-27 ======================
 
 ! 2015-04-30 - Vanya Belyaev
