@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-11 - Carla Marin Benito
+ - Updated StrippingKshort2eePiPi.py to reduce multiple candidates
+
 ! 2015-06-08 - Andrea Contu
  - Fix test scripts to use algorithm correlation
 

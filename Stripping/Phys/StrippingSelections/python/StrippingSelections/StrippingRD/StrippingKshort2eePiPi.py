@@ -29,6 +29,7 @@ default_config =  {
                         'KsLifetime'    : 0.01*89.53    , #0.01*10^-12s
                         'KsIP'          : 1             , #mm
                         'MaxKsMass'     : 800.          , #MeV, comb mass high limit
+                        'KsVtxChi2'     : 50            , 
                     },
     'STREAMS'     : ['Dimuon']
     }
@@ -74,6 +75,7 @@ class Kshort2eePiPiConf(LineBuilder) :
                               
                               'Kshort2eePiPiLinePrescale',
                               'Kshort2eePiPiLinePostscale',
+                              'KsVtxChi2',
                               )
                               
     def __init__(self, name, config):
@@ -167,8 +169,9 @@ def makeKshort2eePiPi(name, pionSel, elecSel, params):
     
     _mothercut =    "(M < %(MaxKsMass)s *MeV) &"\
                     "(MIPDV(PRIMARY) < %(KsIP)s *mm) & "\
-                    "((BPVVDSIGN*M/P) > %(KsLifetime)s*2.9979e-01)" % params
-
+                    "((BPVVDSIGN*M/P) > %(KsLifetime)s*2.9979e-01) & "\
+                    "(VFASPF(VCHI2/VDOF) < %(KsVtxChi2)s) " % params
+    
     _Combine = CombineParticles(DecayDescriptor = "KS0 -> pi+ pi- e+ e-",
                                 CombinationCut = _combcut,
                                 MotherCut = _mothercut
@@ -192,7 +195,8 @@ def makeKshort2eePiPiFromTracks(name, pionSel, elecSel, params):
     
     _mothercut =    "(M < %(MaxKsMass)s *MeV) &"\
                     "(MIPDV(PRIMARY) < %(KsIP)s *mm) & "\
-                    "((BPVVDSIGN*M/P) > %(KsLifetime)s*2.9979e-01)" % params
+                    "((BPVVDSIGN*M/P) > %(KsLifetime)s*2.9979e-01) & "\
+                    "(VFASPF(VCHI2/VDOF) < %(KsVtxChi2)s) " % params
 
     _Combine = CombineParticles(DecayDescriptor = "KS0 -> pi+ pi- J/psi(1S)",
                                 CombinationCut = _combcut,
