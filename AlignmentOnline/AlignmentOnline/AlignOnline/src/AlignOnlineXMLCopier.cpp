@@ -69,7 +69,7 @@ std::string AlignOnlineXMLCopier::alignfilename() const
 
 std::string AlignOnlineXMLCopier::aligndirname() const
 {
-  return m_aligndir + "/" + m_condname;
+  return fs::path(alignfilename()).parent_path().string() ;
 }
 
 StatusCode AlignOnlineXMLCopier::copyFromOnlineArea()
