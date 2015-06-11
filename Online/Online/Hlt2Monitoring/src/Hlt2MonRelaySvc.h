@@ -39,7 +39,8 @@ private:
    bool m_top;
    bool m_forceTop;
    bool m_relay;
-   bool m_lhcb2;
+   std::string m_partition;
+   std::vector<std::string> m_partitions;
    std::string m_frontCon;
    std::string m_backCon;
 

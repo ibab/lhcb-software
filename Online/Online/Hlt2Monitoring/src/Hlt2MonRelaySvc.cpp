@@ -39,6 +39,8 @@ Hlt2MonRelaySvc::Hlt2MonRelaySvc(const string& name, ISvcLocator* loc)
    declareProperty("FrontConnection", m_frontCon);
    declareProperty("BackConnection", m_backCon);
    declareProperty("ForceTopRelay", m_forceTop = false);
+   declareProperty("PartitionName", m_partition);
+   declareProperty("RunInPartitions", m_partitions = {"LHCb2"});
 }
 
 //===============================================================================
@@ -61,9 +63,6 @@ StatusCode Hlt2MonRelaySvc::initialize()
    }
    m_incidentSvc->addListener(this, "APP_RUNNING");
    m_incidentSvc->addListener(this, "APP_STOPPED");
-
-   std::string taskName{System::argv()[0]};
-   m_lhcb2 = (taskName.substr(0, 4) == "LHCb2");
 
    char hname[_POSIX_HOST_NAME_MAX];
    if (!gethostname(hname, sizeof(hname))) {
@@ -122,7 +121,12 @@ StatusCode Hlt2MonRelaySvc::start()
    auto sc = Service::start();
    if (!sc.isSuccess()) return sc;
 
-   if (!m_lhcb2) return sc;
+   if (std::find(begin(m_partitions), end(m_partitions), m_partition) == end(m_partitions)) {
+      MsgStream log(msgSvc(), name());
+      log << MSG::INFO << "Running in partition: " << m_partition
+          << ", not starting relay." << endmsg;
+      return sc;
+   }
 
    if (m_thread) {
       string resume{"RESUME"};
@@ -188,7 +192,7 @@ StatusCode Hlt2MonRelaySvc::stop()
 //===============================================================================
 StatusCode Hlt2MonRelaySvc::finalize()
 {
-   MsgStream msg(msgSvc(), "Hlt2MonRelaySvc");
+   MsgStream msg(msgSvc(), name());
 
    // terminate the proxy
    if (m_thread) {

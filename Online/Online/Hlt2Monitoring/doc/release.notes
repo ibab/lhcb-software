@@ -4,5 +4,8 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-06-11 - Roel Aaij
+ - Updates to Hlt2MonRelaySvc, works in a small test now.
+
 ! 2015-06-10 - Roel Aaij
  - Initial import
