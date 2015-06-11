@@ -49,8 +49,8 @@ GetElementsToBeAligned::GetElementsToBeAligned( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    m_upgrade(false),
     m_useLocalFrame(true),
+    m_upgrade(false),
     m_elemsToBeAligned(),
     m_elementMap(),
     m_initTime(0)
@@ -194,7 +194,7 @@ StatusCode GetElementsToBeAligned::initialize() {
 	(*ielem)->addDofs( dofs ) ;
       }
       else alignelements.push_back(new AlignmentElement(groupname,
-                                                        detelements, index++, dofs,m_useLocalFrame));
+                                                        detelements, index++, dofs,info(),m_useLocalFrame));
     } else {
       for(std::vector<const DetectorElement*>::iterator ielem = detelements.begin() ;
           ielem != detelements.end(); ++ielem) {
@@ -207,7 +207,7 @@ StatusCode GetElementsToBeAligned::initialize() {
 		    << name << ". Using '" << dofs << "'." << endreq ;
 	  (*jelem)->setDofs( dofs ) ;
 	} else {
-	  alignelements.push_back(new AlignmentElement(**ielem, index++, dofs,m_useLocalFrame));
+	  alignelements.push_back(new AlignmentElement(**ielem, index++, dofs,info(),m_useLocalFrame));
 	}
       }
     }
@@ -337,7 +337,8 @@ StatusCode GetElementsToBeAligned::findElements(const std::string& path,
 }
 
 const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::Measurement& meas) const {
-  // We'll do this differently with new brunel version
+  if( meas.detectorElement() ) 
+    return findElement( *meas.detectorElement() ) ;
   return findElement(meas.lhcbID()) ;
 }
 

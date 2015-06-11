@@ -68,6 +68,7 @@ namespace {
 AlignmentElement::AlignmentElement(const DetectorElement& element, 
                                    const unsigned int index, 
 				   const std::string& dofs,
+				   MsgStream& msgstream,
 				   bool useLocalFrame)
   : m_name(stripElementName(element.name())),
     m_basename(element.name()),
@@ -75,7 +76,8 @@ AlignmentElement::AlignmentElement(const DetectorElement& element,
     m_index(index),
     m_activeParOffset(-1),
     m_dofMask(AlParameters::NumPars,false),
-    m_useLocalFrame(useLocalFrame)
+    m_useLocalFrame(useLocalFrame),
+    m_msgstream(&msgstream)
 {
   //m_name = description() ;
   std::vector<const DetectorElement*> elements(1u,&element) ;
@@ -87,13 +89,15 @@ AlignmentElement::AlignmentElement(const std::string& aname,
 				   const std::vector<const DetectorElement*>& elements, 
                                    const unsigned int index,
 				   const std::string& dofs,
+				   MsgStream& msgstream,
 				   bool useLocalFrame)
   : m_name(aname),
     m_mother(0),
     m_index(index),
     m_activeParOffset(-1),
     m_dofMask(AlParameters::NumPars,false),
-    m_useLocalFrame(useLocalFrame)
+    m_useLocalFrame(useLocalFrame),
+    m_msgstream(&msgstream)
 {
   size_t pos = aname.find_first_of("(.*") ;
   m_basename = pos == std::string::npos ? aname : aname.substr(0,pos) ;
@@ -233,8 +237,8 @@ void AlignmentElement::initAlignmentFrame() {
   // This is a simple check for velo R, just to make sure Jan separated them correctly:
   if( m_elements.size()==1 && dynamic_cast<const DeVeloRType*>(m_elements.front()) &&
       m_dofMask.isActive(AlParameters::Rz) ) {
-    std::cout << "PROBLEM: You are aligning Rz for velo R module with name "
-	      << m_elements.front()->name() << std::endl ;
+    msg( MSG::ERROR ) << "PROBLEM: You are aligning Rz for velo R module with name "
+		      << m_elements.front()->name() << endmsg ;
   }
 }
 
@@ -388,7 +392,7 @@ StatusCode AlignmentElement::updateGeometry( const AlParameters& parameters)
     /// Update position of detector element with new local delta matrix
     sc = const_cast<IGeometryInfo*>((*i)->geometry())->ownToOffNominalMatrix(localDeltaMatrix);
     if (sc.isFailure()) {
-      std::cout << "Failed to update local delta matrix of detector element " + (*i)->name() <<  std::endl;
+      msg(MSG::FATAL) << "Failed to update local delta matrix of detector element " + (*i)->name() << endmsg;
       break; ///< Break loop if sc is failure
     }
   }

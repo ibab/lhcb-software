@@ -11,6 +11,7 @@
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/GenericMatrixTypes.h"
 #include "GaudiKernel/Transform3DTypes.h"
+#include "GaudiKernel/MsgStream.h"
 
 // from DetDesc
 #include "DetDesc/DetectorElement.h"
@@ -59,7 +60,8 @@ public:
   AlignmentElement(const DetectorElement& element,
 		   const unsigned int index, 
 		   const std::string& dofs,
-		   bool useLocalFrame=false);
+		   MsgStream& msgstream,
+		   bool useLocalFrame=false ) ;
   
   /** Construct an alignment element from a group, i.e. vector, of
    *  detector elements and an index. The index is needed for bookkeeping
@@ -71,6 +73,7 @@ public:
 		   const std::vector<const DetectorElement*>& elements, 
 		   const unsigned int index, 
 		   const std::string& dofs,
+		   MsgStream& msgstream,
 		   bool useLocalFrame=false);
   
 public:
@@ -252,6 +255,8 @@ private:
 
   static void addToElementsInTree( const IDetectorElement* const element, ElementContainer& elements ) ;
 
+  MsgStream& msg(const MSG::Level level) const { return *m_msgstream << level ; }
+
 private:
   std::string         m_name;
   std::string         m_basename;
@@ -267,6 +272,7 @@ private:
   bool                m_useLocalFrame;    ///< Use local frame as alignmentframe
   ElementContainer    m_elementsInTree;   ///< Return all elements that are served by this alignment element
   AlParameters        m_lastDeltaDelta ;  ///< Last applied correction. We only keep it for its cov matrix.
+  MsgStream*          m_msgstream ;       ///< pointer to msgstream
 };
 
 
