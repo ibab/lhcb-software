@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2015-06-11 - Wouter Hulsbergen
+ - change writers configuration of RunChangeHandler for new location of xml in online
+
 ! 2015-06-07 - Maurizio Martinelli
  - Modified reconstruction sequence for Tracked alignment to adapt for Run2
 

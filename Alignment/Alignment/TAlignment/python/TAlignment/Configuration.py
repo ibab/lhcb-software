@@ -249,7 +249,7 @@ class TAlignment( LHCbConfigurableUser ):
         handle.topElement = self.getProp( subdet + 'TopLevelElement' )
         handle.precision = self.getProp( "Precision" )
         handle.depths = depths
-        handle.outputFile = self.getProp('OnlineAligWorkDir') + '/' + subdet + '/' +subdet+condname + '.xml'
+        handle.outputFile = self.getProp('OnlineAligWorkDir') + '/xml/' + subdet + '/' +subdet+condname + '.xml'
         handle.author = getpass.getuser()
         handle.desc = self.getProp('DatasetName')
         alg.XmlWriters.append("WriteAlignmentConditionsTool/" + name)
