@@ -396,10 +396,17 @@ void DVCommonBase<PBASE>::initializeInputLocations()
     this->debug() << ">>> Initialising input locations : " << m_inputLocations
                   << endmsg;
   }
-
+  
   // Clean up the paths
   for ( auto& loc : m_inputLocations )
   {
+    
+    // remove RootInTES prefix, if any 
+    if ( !this->rootInTES().empty()    
+         && "/Event/" !=            this->rootInTES() 
+         &&        0  == loc.find ( this->rootInTES() ) ) 
+    {  loc = std::string( loc , this->rootInTES().size() ) ; }
+    
     // Strip any ending "/Particles"
     DaVinci::StringUtils::removeEnding(loc,"/Particles");
     // Strip any starting "/Event/"

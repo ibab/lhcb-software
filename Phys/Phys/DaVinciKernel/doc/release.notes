@@ -4,6 +4,10 @@
 ! Responsible : DV Maintainer
 !============================================================================
 
+! 2015-06-11 - Vanya Belyaev
+ - DVCommonBase: 
+     remove "root-in-tes" prefix from input locations
+
 !===================== DaVinciKernel v12r1 2015-04-21 =======================
 
 ! 2015-04-02 - Vanya Belyaev
