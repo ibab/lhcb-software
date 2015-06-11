@@ -142,16 +142,16 @@ class AutomaticData(NamedObject, SelectionBase) :
     >>> pions.outputLocation()
     'Phys/StdLoosePions/Particles'
     """
-
-    def __init__(self,
-                 Location) :
-
-        NamedObject.__init__(self,
-                             Location.replace('/', '_'))
-
+    
+    def __init__( self                ,
+                  Location            ,
+                  UseRootInTES = True ) :
+        
+        NamedObject.__init__(self, Location.replace('/', '_'))
+        
         _alg = VoidFilter('SelFilter'+self.name(),
-                          Code = "CONTAINS('"+Location+"')>0")
-
+                          Code = "CONTAINS('"+Location+"',%s)>0" % UseRootInTES )
+        
         SelectionBase.__init__(self,
                                algorithm = _alg,
                                outputLocation=Location,
@@ -510,15 +510,27 @@ def SimpleSelection (
     #       )
     
     """
+
+    ## get selection's properties: 
+    output_branch = kwargs.pop ( 'OutputBranch'     , 'Phys'      )
+    input_setter  = kwargs.pop ( 'InputDataSetter'  , 'Inputs'    ) 
+    output_setter = kwargs.pop ( 'OutputDataSetter' , 'Output'    ) 
+    extension     = kwargs.pop ( 'Extension'        , 'Particles' ) 
+    
     #
-    ## create new algorithm or algorothm generator 
+    ## create new algorithm or algorithm generator 
     #
     alg = algotype ( *args , **kwargs )
-    # 
+    #
+    ## create selection 
     return Selection (
-        name                        , 
-        Algorithm          = alg    ,
-        RequiredSelections = inputs
+        name                               , 
+        Algorithm          = alg           ,
+        RequiredSelections = inputs        ,
+        OutputBranch       = output_branch ,
+        InputDataSetter    = input_setter  ,
+        OutputDataSetter   = output_setter ,
+        Extension          = extension             
         )
 
 # =========================================================================
