@@ -424,7 +424,7 @@ class Escher(LHCbConfigurableUser):
         ## know that this is set from top level, so let's give it a try anyway
         ta = TAlignment()
         sdToWrite = set(ta.getProp("WriteCondSubDetList"))
-        pat = self.getProp("OnlineAligWorkDir") + "/%s.xml" 
+        pat = self.getProp("OnlineAligWorkDir") + "/xml/%s.xml" 
         conditionmap = dict((pat % sd, f) for (sd, f) in allconds.iteritems() if sd in sdToWrite)
             
         # add to the existing map

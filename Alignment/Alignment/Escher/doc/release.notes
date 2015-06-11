@@ -4,6 +4,10 @@ Package Coordinator : Maurizio Martinelli
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+
+! 2015-06-11 - Wouter Hulsbergen
+ - change configuration of RunChangeHandler for new location of xml
+
 ! 2015-06-07 - Maurizio Martinelli
  - Added a function to pickup the correct reconstruction sequence and inform
    whether an alternative one is used
