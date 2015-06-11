@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-11 - Roberta Cardinale
+ - Add RefitPVs in the default_config in StrippingBandQ/StrippingB2JpsiXforEM_s.py
+
 !========================= StrippingArchive v1r29 2015-05-29 =========================
 
 ! 2015-05-18 - Ricardo Vazquez Gomez

@@ -28,40 +28,40 @@ default_config = {
     'NAME'              : 'B2JpsiXforEM',
     'WGs'               : ['BandQ'],
     'BUILDERTYPE'       : 'B2JpsiXforEM_sConf',
-    'CONFIG'    : {
-                         'TRCHI2DOF'                 :       5
-                 ,       'BPVLTIME'                  :       0.2
-                 ,       'JpsiMassWindow'            :       80
-                 ,       'DaughterPT'                :       1000
-                 ,       'VCHI2PDOF'                 :       10
-                 ,       'BuVCHI2PDOF'               :       10.0 #ok
-                 ,       'BdVCHI2PDOF'               :       10.0 #ok
-                 ,       'BsVCHI2PDOF'               :       10.0 #ok
-                 ,       'MinBsMass'                 :       5150.0
-                 ,       'MaxBsMass'                 :       5550.0
-                 ,       'MinBuMass'                 :       5150.0 #ok
-                 ,       'MaxBuMass'                 :       5550.0 #ok
-                 ,       'MinBdMass'                 :       5150.0
-                 ,       'MaxBdMass'                 :       5550.0
-                 ,       'CombMinBuMass'                 :       5050.0 #ok
-                 ,       'CombMaxBuMass'                 :       5650.0 #ok
-                 ,       'CombMinBdMass'                 :       5050.0
-                 ,       'CombMaxBdMass'                 :       5650.0
-                 ,       'CombMinBsMass'                 :       5050.0
-                 ,       'CombMaxBsMass'                 :       5650.0
-                         ,       'PIDKaon'                       : -2
-                         , 'MinPhiMass'                  : 980.0
-                         , 'MaxPhiMass'                  : 1050.0
-                         , 'phiPT'                       : 500.0
-                         , 'phiVCHI2'                    : 16.0
-                         , 'MinKstarMass'                : 826.0
-                         , 'MaxKstarMass'                : 966.0
-                         , 'KstarPT'                     : 500.0
-                         , 'KstarVCHI2'                  : 16.0
-                         , 'PTKaon'                      : 500.
-                         
-                         
-                         },
+    'CONFIG'    : {'ReFitPVsFlag'            :  True
+                   ,'TRCHI2DOF'         :       5
+                   ,'BPVLTIME'          :       0.2
+                   ,'JpsiMassWindow'    :       80
+                   ,'DaughterPT'        :       1000
+                   ,'VCHI2PDOF'         :       10
+                   ,'BuVCHI2PDOF'       :       10.0 #ok
+                   ,'BdVCHI2PDOF'       :       10.0 #ok
+                   ,'BsVCHI2PDOF'       :       10.0 #ok
+                   ,'MinBsMass'         :       5150.0
+                   ,'MaxBsMass'         :       5550.0
+                   ,'MinBuMass'         :       5150.0 #ok
+                   ,'MaxBuMass'         :       5550.0 #ok
+                   ,'MinBdMass'         :       5150.0
+                   ,'MaxBdMass'         :       5550.0
+                   ,'CombMinBuMass'     :       5050.0 #ok
+                   ,'CombMaxBuMass'     :       5650.0 #ok
+                   ,'CombMinBdMass'     :       5050.0
+                   ,'CombMaxBdMass'     :       5650.0
+                   ,'CombMinBsMass'     :       5050.0
+                   ,'CombMaxBsMass'     :       5650.0
+                   ,'PIDKaon'           :        -2
+                   ,'MinPhiMass'        :       980.0
+                   ,'MaxPhiMass'        :       1050.0
+                   ,'phiPT'             :       500.0
+                   ,'phiVCHI2'          :       16.0
+                   ,'MinKstarMass'      :       826.0
+                   ,'MaxKstarMass'      :       966.0
+                   ,'KstarPT'           :       500.0
+                   ,'KstarVCHI2'        :       16.0
+                   ,'PTKaon'            :       500.
+                   
+                   
+                   },
     'STREAMS' : {'Dimuon' : ['StrippingB2JpsiXforEMBu2JpsiKDetachedLine',
                              'StrippingB2JpsiXforEMBd2JpsiKstarDetachedLine',
                              'StrippingB2JpsiXforEMBs2JpsiPhiDetachedLine'
@@ -76,7 +76,8 @@ default_config = {
 
 
 class B2JpsiXforEM_sConf(LineBuilder) :
-    __configuration_keys__ = ('TRCHI2DOF',
+    __configuration_keys__ = ('ReFitPVsFlag',
+                              'TRCHI2DOF',
                               'BPVLTIME',
                               'JpsiMassWindow',
                               'DaughterPT',
@@ -159,7 +160,7 @@ class B2JpsiXforEM_sConf(LineBuilder) :
                           DaughterCuts = {} ,
                           PreVertexCuts = "ALL",
                           PostVertexCuts = "ALL",
-                          ReFitPVs = True ) :
+                          ReFitPVs = False ) :
         '''create a selection using a ParticleCombiner with a single decay descriptor'''
         combiner = CombineParticles( DecayDescriptor = DecayDescriptor,
                                      DaughtersCuts = DaughterCuts,
@@ -176,7 +177,7 @@ class B2JpsiXforEM_sConf(LineBuilder) :
                           DaughterCuts = {} ,
                           PreVertexCuts = "ALL",
                           PostVertexCuts = "ALL",
-                          ReFitPVs = True ) :
+                          ReFitPVs = False ) :
         '''For taking in multiple decay descriptors'''
         combiner = CombineParticles( DecayDescriptors = DecayDescriptors,
                                  DaughtersCuts = DaughterCuts,
@@ -190,13 +191,15 @@ class B2JpsiXforEM_sConf(LineBuilder) :
     
     def makeBu2JpsiK( self ):
         Bu2JpsiK = self.createCombinationSel( OutputList = "Bu2JpsiK" + self.name,
-                                 DecayDescriptor = "[B+ -> J/psi(1S) K+]cc",
-                                 DaughterLists = [ self.WideJpsiList, self.NoIPKaonList ],
+                                              DecayDescriptor = "[B+ -> J/psi(1S) K+]cc",
+                                              DaughterLists = [ self.WideJpsiList, self.NoIPKaonList ],
                                               #DaughterCuts  = {"K+": "(PT > 500.*MeV)" },
                                               #DaughterCuts  = {"K+": "(PT > %(PTKaon)s *MeV)" %self.config },
                                               DaughterCuts  = {"K+": "ALL" %self.config },
-                                 PreVertexCuts = "in_range( %(CombMinBuMass)s *MeV, AM, %(CombMaxBuMass)s *MeV)" %self.config,
-                                 PostVertexCuts = "in_range( %(MinBuMass)s *MeV,M, %(MaxBuMass)s *MeV) & (VFASPF(VCHI2PDOF) < %(BuVCHI2PDOF)s)" % self.config ) # for the other particles is 10.
+                                              PreVertexCuts = "in_range( %(CombMinBuMass)s *MeV, AM, %(CombMaxBuMass)s *MeV)" %self.config,
+                                              PostVertexCuts = "in_range( %(MinBuMass)s *MeV,M, %(MaxBuMass)s *MeV) & (VFASPF(VCHI2PDOF) < %(BuVCHI2PDOF)s)" % self.config,
+                                              ReFitPVs = self.config["ReFitPVsFlag"]
+                                              ) # for the other particles is 10.
 
         #Bu2JpsiKPrescaledLine = StrippingLine( self.name + "Bu2JpsiKPrescaledLine", algos = [ Bu2JpsiK ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config["Bu2JpsiKPrescale"], EnableFlavourTagging = True, MDSTFlag = True )
 
@@ -210,10 +213,12 @@ class B2JpsiXforEM_sConf(LineBuilder) :
 
     def makeBs2JpsiPhi( self ):
         Bs2JpsiPhi = self.createCombinationSel( OutputList = "Bs2JpsiPhi" + self.name,
-                                   DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
-                                   DaughterLists  = [ self.WideJpsiList, self.PhiList ],
-                                   PreVertexCuts = "in_range( %(CombMinBsMass)s *MeV, AM, %(CombMaxBsMass)s *MeV)" %self.config,
-                                   PostVertexCuts = "in_range( %(MinBsMass)s *MeV,M, %(MaxBsMass)s *MeV) & (VFASPF(VCHI2PDOF) < %(BsVCHI2PDOF)s)" % self.config ) # for the other particles is 10.
+                                                DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
+                                                DaughterLists  = [ self.WideJpsiList, self.PhiList ],
+                                                PreVertexCuts = "in_range( %(CombMinBsMass)s *MeV, AM, %(CombMaxBsMass)s *MeV)" %self.config,
+                                                PostVertexCuts = "in_range( %(MinBsMass)s *MeV,M, %(MaxBsMass)s *MeV) & (VFASPF(VCHI2PDOF) < %(BsVCHI2PDOF)s)" % self.config,
+                                                ReFitPVs = self.config["ReFitPVsFlag"]
+                                                )
 				   
         #Bs2JpsiPhiPrescaledLine = StrippingLine( self.name + "Bs2JpsiPhiPrescaledLine", algos = [ Bs2JpsiPhi ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config['Bs2JpsiPhiPrescale'], MDSTFlag = True, EnableFlavourTagging = True )
 
@@ -228,11 +233,13 @@ class B2JpsiXforEM_sConf(LineBuilder) :
 
     def makeBd2JpsiKstar( self ):
         Bd2JpsiKstar = self.createCombinationSel( OutputList = "Bd2JpsiKstar" + self.name,
-                                     DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0]cc",
-                                     DaughterLists  = [ self.WideJpsiList, self.KstarList ],
-                                     PreVertexCuts = "in_range( %(CombMinBdMass)s *MeV, AM, %(CombMaxBdMass)s *MeV)" %self.config,
-                                     #PostVertexCuts = "in_range(5150,M,5450) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config)
-                                     PostVertexCuts = "in_range( %(MinBdMass)s *MeV, M, %(MaxBdMass)s *MeV) & (VFASPF(VCHI2PDOF) < %(BdVCHI2PDOF)s)" % self.config) # for the other particles is 10.
+                                                  DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0]cc",
+                                                  DaughterLists  = [ self.WideJpsiList, self.KstarList ],
+                                                  PreVertexCuts = "in_range( %(CombMinBdMass)s *MeV, AM, %(CombMaxBdMass)s *MeV)" %self.config,
+                                                  #PostVertexCuts = "in_range(5150,M,5450) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config)
+                                                  PostVertexCuts = "in_range( %(MinBdMass)s *MeV, M, %(MaxBdMass)s *MeV) & (VFASPF(VCHI2PDOF) < %(BdVCHI2PDOF)s)" % self.config,
+                                                  ReFitPVs = self.config["ReFitPVsFlag"]
+                                                  )
 
         #Bd2JpsiKstarPrescaledLine = StrippingLine( self.name + "Bd2JpsiKstarPrescaledLine", algos = [ Bd2JpsiKstar ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config['Bd2JpsiKstarPrescale'], MDSTFlag = True, EnableFlavourTagging = True )
 
