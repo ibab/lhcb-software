@@ -49,8 +49,9 @@ StatusCode FastVeloFitLHCbIDs::initialize() {
 
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
   m_hitManager  = tool<FastVeloHitManager>( "FastVeloHitManager", "FastVeloHitManager" );
-
-  debug() << "UseKalmanFit = " << m_useKalmanFit << endreq ;
+  
+  if( msgLevel(MSG::DEBUG) )
+    debug() << "UseKalmanFit = " << m_useKalmanFit << endmsg ;
 
   return StatusCode::SUCCESS;
 }
