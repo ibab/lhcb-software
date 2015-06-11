@@ -3,6 +3,9 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2015-06-11 - Maurizio Martinelli
+ - added example to make plots of conditions from Tracker alignment
+
 !========================= AlignmentDBVisualisationTool v1r4 2015-05-31 =========================
 
 ! 2015-05-12 - Maurizio Martinelli

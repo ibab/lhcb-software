@@ -12,6 +12,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.ticker import Formatter, FixedLocator
+from matplotlib.backends.backend_pdf import PdfPages
 import datetime
 import numpy as np
 import re
@@ -35,12 +36,24 @@ class AlPlotter:
         self.AlignJobs = alignJobs if alignJobs != None else []
         self.Plots = []
         self.xAxis = {'title': 'iterations', 'min': 0, 'max': len(self.AlignJobs), 'labels': xrange(len(self.AlignJobs))}
+        return
+    
     # Show plots
     def Show(self):
         """
             Plot all the created figures
         """
         plt.show()
+        return
+    
+    # Save to PDF
+    def SavePdf(self, fname):
+        """
+            Save to a single PDF all the created figures
+        """
+        Pdf = PdfPages(fname)
+        for pl in self.Plots: Pdf.savefig(pl)
+        self.SetPdfInfo(Pdf)
         return
     
     # Set the label and format the X axis
@@ -96,7 +109,7 @@ class AlPlotter:
         return
     
     # Create a figure out of an array
-    def Plot(self, y, yerr=None, yrange=None, zero=False, legend=False, title = None):
+    def Plot(self, y, yerr=None, yrange=None, zero=False, legend=False, title = None, addToPDF=False):
         """
             Plot the content of an array
         """
@@ -111,6 +124,7 @@ class AlPlotter:
                 if type(y[name]) not in [list, np.ndarray]:
                     print 'ERROR: a list of values is requested as input!'
                     return
+                if len(y[name]) == 0: continue
                 if pltErr: plt.errorbar(self.xAxis['labels'], y[name], yerr=yerr[name], marker='o', color = colors[i], label=name)
                 else: plt.plot(self.xAxis['labels'], y[name], marker='o', color = colors[i], label=name)
                 i = i + 1
@@ -118,6 +132,7 @@ class AlPlotter:
             if type(y) not in [list, np.ndarray]:
                 print 'ERROR: a list of values is requested as input!'
                 return
+            if len(y) == 0: return
             if yerr != None: plt.errorbar(self.xAxis['labels'], y, yerr=yerr, marker='o')
             else: plt.plot(self.xAxis['labels'], y,marker='o')
         # add a dashed line for zero
@@ -164,7 +179,7 @@ class AlPlotter:
         return
     
     # plot parameter for specific dof
-    def PlotAlignableDof(self, name, dof, corr=None, par=None, plotErr=True, yrange=None):
+    def PlotAlignableDof(self, name, dof, corr=None, par=None, plotErr=True, yrange=None, addToPDF=False):
         """
             Plot the parameter for a specific degree of freedom
                 name: alignable name (IT/Station2/TopBox)
@@ -191,7 +206,7 @@ class AlPlotter:
         return
     
     # plot parameter for specific dofs from different (or same) alignables
-    def PlotAlignablesDofs(self, names, corr=None, par=None, plotErr=True, xaxis=None, title=None, yrange=None):
+    def PlotAlignablesDofs(self, names, corr=None, par=None, plotErr=True, xaxis=None, title=None, yrange=None, addToPDF=False):
         """
             Plot a parameter for two or more dofs from same or different alignables
                 names: list of alignable names + dofs (['IT/Station2/TopBox.Tx', 'IT/Station2/TopBox.Tz'])
@@ -221,51 +236,13 @@ class AlPlotter:
             self.Plots += [ self.Frame( title if title!=None else '', par + (' ('+units[par]+')' if units[par] != None else '')) ]
         else:
             self.Plots += [ self.Frame( name+'.'+dof, corr + ' (mm)') ]
+              #        print yvals, yerrs, parErr
         self.Plot(yvals, yerr= yerrs if parErr != None else None, zero=True, legend=True, title=title)
         self.ResizeAxes(yrange=yrange)
         return
 
-    # Get list of values for specific alignment correction
-    def GetAlignableDofCorrection(self, name, dof, type='correction to initial'):
-        y ={'vals': [], 'err':[]}
-        if type == 'correction to initial':
-            y['vals'] = [self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) for alJob in self.AlignJobs]
-            y['err'] = [self.GetAttr(parErr, self.GetAlignableDof(alJob, name, dof)) for alJob in self.AlignJobs]
-        if type == 'correction to nominal':
-            y['vals'] = [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars) for alJob in self.AlignJobs]
-            y['err'] = [0 for alJob in self.AlignJobs]
-        if type == 'correction to initial including mother':
-            y['vals'] = [(self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof))+
-                 self.GetAttr('CurTot', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof))!=None else None) for alJob in self.AlignJobs]
-            y['err'] = [self.GetAttr(parErr, self.GetAlignableDof(alJob, name, dof)) for alJob in self.AlignJobs]
-        if type == 'correction to nominal including mother':
-            y['vals'] = [self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) for alJob in self.AlignJobs]
-            y['err'] = [self.GetAttr(parErr, self.GetAlignableDof(alJob, name, dof)) for alJob in self.AlignJobs]
-        if type == 'initial':
-            y['vals'] = [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars)-
-                 self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) != None else 0 for alJob in self.AlignJobs]
-            y['err'] = [0 for alJob in self.AlignJobs]
-        if type == 'correction to survey':
-            y['vals'] = [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars)-self.GetAttr(dof,alJob.Alignables[name].SurveyPars) for alJob in self.AlignJobs]
-            y['err'] = [self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars) for alJob in self.AlignJobs]
-        if type == 'survey':
-            y['vals'] = [self.GetAttr(dof,alJob.Alignables[name].SurveyPars) for alJob in self.AlignJobs]
-            y['err'] = [self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars) for alJob in self.AlignJobs]
-        if type == 'correction of initial to survey':
-            y['vals'] = [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars)-
-                 self.GetAttr(dof,alJob.Alignables[name].SurveyPars)+
-                 self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) != None else 0  for alJob in self.AlignJobs]
-            y['err'] = [ np.sqrt(np.power(self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars),2)+
-                             np.power(self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) != None else 0,2) ) for alJob in self.AlignJobs]
-        if type == 'correction of nominal including mother to survey':
-            y['vals'] = [-self.GetAttr(dof,alJob.Alignables[name].SurveyPars)+
-                 (self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof))+self.GetAttr('CurTot', self.GetAlignableDof(alJob, name, dof))) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) != None else 0  for alJob in self.AlignJobs]
-            y['err'] = [ np.sqrt(np.power(self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars),2)+
-                             np.power(self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) != None else 0,2) ) for alJob in self.AlignJobs]
-        return y
-
     # plot alignment correction, initial or survey parameter
-    def PlotAlignableDofCorrection(self, name, dof, type='correction to initial', plotErr=True):
+    def PlotAlignableDofCorrection(self, name, dof, type='correction to initial', plotErr=True, addToPDF=False):
         """
             Depending of the choice, plot the alignment correction, or the stored alignment dof
             Plot options:
@@ -290,39 +267,75 @@ class AlPlotter:
         # store values for specific key of alignable
         y, yErr = [], []
         if type == 'correction to initial':
-            y = [self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) for alJob in self.AlignJobs]
-            yErr = [self.GetAttr(parErr, self.GetAlignableDof(alJob, name, dof)) for alJob in self.AlignJobs]
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y += [self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) ]
+            yErr += [self.GetAttr(parErr, self.GetAlignableDof(alJob, name, dof)) ]
         if type == 'correction to nominal':
-            y = [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars) for alJob in self.AlignJobs]
-            yErr = [0 for alJob in self.AlignJobs]
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y += [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars) ]
+            yErr += [0]
         if type == 'correction to initial including mother':
-            y = [(self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof))+
-                 self.GetAttr('CurTot', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof))!=None else None) for alJob in self.AlignJobs]
-            yErr = [self.GetAttr(parErr, self.GetAlignableDof(alJob, name, dof)) for alJob in self.AlignJobs]
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y += [(self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof))+
+                 self.GetAttr('CurTot', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof))!=None else None) ]
+            yErr += [self.GetAttr(parErr, self.GetAlignableDof(alJob, name, dof))]
         if type == 'correction to nominal including mother':
-            y = [self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) for alJob in self.AlignJobs]
-            yErr = [self.GetAttr(parErr, self.GetAlignableDof(alJob, name, dof)) for alJob in self.AlignJobs]
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y += [self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) ]
+            yErr += [self.GetAttr(parErr, self.GetAlignableDof(alJob, name, dof)) ]
         if type == 'initial':
-            y = [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars)-
-                 self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) != None else 0 for alJob in self.AlignJobs]
-            yErr = [0 for alJob in self.AlignJobs]
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y += [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars)-
+                 self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) != None else 0]
+            yErr += [0]
         if type == 'correction to survey':
-            y = [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars)-self.GetAttr(dof,alJob.Alignables[name].SurveyPars) for alJob in self.AlignJobs]
-            yErr = [self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars) for alJob in self.AlignJobs]
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y += [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars)-self.GetAttr(dof,alJob.Alignables[name].SurveyPars)]
+            yErr += [self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars)]
         if type == 'survey':
-            y = [self.GetAttr(dof,alJob.Alignables[name].SurveyPars) for alJob in self.AlignJobs]
-            yErr = [self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars) for alJob in self.AlignJobs]
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y += [self.GetAttr(dof,alJob.Alignables[name].SurveyPars)]
+            yErr += [self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars)]
         if type == 'correction of initial to survey':
-            y = [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars)-
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y += [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars)-
                  self.GetAttr(dof,alJob.Alignables[name].SurveyPars)+
-                 self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) != None else 0  for alJob in self.AlignJobs]
-            yErr = [ np.sqrt(np.power(self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars),2)+
-                             np.power(self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) != None else 0,2) ) for alJob in self.AlignJobs]
+                 self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) != None else 0]
+            yErr += [ np.sqrt(np.power(self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars),2)+
+                             np.power(self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) != None else 0,2) )]
         if type == 'correction of nominal including mother to survey':
-            y = [-self.GetAttr(dof,alJob.Alignables[name].SurveyPars)+
-                 (self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof))+self.GetAttr('CurTot', self.GetAlignableDof(alJob, name, dof))) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) != None else 0  for alJob in self.AlignJobs]
-            yErr = [ np.sqrt(np.power(self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars),2)+
-                             np.power(self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) != None else 0,2) ) for alJob in self.AlignJobs]
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y += [-self.GetAttr(dof,alJob.Alignables[name].SurveyPars)+
+                 (self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof))+self.GetAttr('CurTot', self.GetAlignableDof(alJob, name, dof))) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) != None else 0]
+            yErr += [ np.sqrt(np.power(self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars),2)+
+                             np.power(self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) != None else 0,2) )]
         # add figure
         self.Plots += [ plt.figure() ]
         plt.title(type)
@@ -423,5 +436,98 @@ class AlPlotter:
         if kind == 'variable':
             self.xAxis = {'title': 'variable', 'min': 0, 'max': len(self.AlignJobs), 'labels': xrange(0,len(self.AlignJobs)) ,'ticknames':labels}
         return
+
+    # Get list of values for specific alignment correction
+    def GetAlignableDofCorrection(self, name, dof, type='correction to initial', plotErr=True):
+        # plot error?
+        parErr = 'DeltaErr' if plotErr else None
+        y ={'vals': [], 'err':[]}
+        if type == 'correction to initial':
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y['vals'] += [self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof))]
+            y['err'] += [self.GetAttr(parErr, self.GetAlignableDof(alJob, name, dof))]
+        if type == 'correction to nominal':
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y['vals'] += [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars)]
+            y['err'] += [0]
+        if type == 'correction to initial including mother':
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y['vals'] += [(self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof))+
+                 self.GetAttr('CurTot', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof))!=None else None) ]
+            y['err'] += [self.GetAttr(parErr, self.GetAlignableDof(alJob, name, dof))]
+        if type == 'correction to nominal including mother':
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y['vals'] += [self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof))]
+            y['err'] += [self.GetAttr(parErr, self.GetAlignableDof(alJob, name, dof))]
+        if type == 'initial':
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y['vals'] += [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars)-
+                 self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) != None else 0]
+            y['err'] += [0]
+        if type == 'correction to survey':
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y['vals'] += [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars)-self.GetAttr(dof,alJob.Alignables[name].SurveyPars) ]
+            y['err'] += [self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars) ]
+        if type == 'survey':
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y['vals'] += [self.GetAttr(dof,alJob.Alignables[name].SurveyPars) ]
+            y['err'] += [self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars) ]
+        if type == 'correction of initial to survey':
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y['vals'] += [self.GetAttr(dof,alJob.Alignables[name].AlignmentPars)-
+                 self.GetAttr(dof,alJob.Alignables[name].SurveyPars)+
+                 self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) != None else 0 ]
+            y['err'] += [ np.sqrt(np.power(self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars),2)+
+                             np.power(self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) != None else 0,2) )]
+        if type == 'correction of nominal including mother to survey':
+          for alJob in self.AlignJobs:
+            if alJob.Alignables[name].EnoughHits == False:
+              print 'Alignable',name,'has insufficient statistic'
+              continue
+            y['vals'] += [-self.GetAttr(dof,alJob.Alignables[name].SurveyPars)+
+                 (self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof))+self.GetAttr('CurTot', self.GetAlignableDof(alJob, name, dof))) if self.GetAttr('Delta', self.GetAlignableDof(alJob, name, dof)) != None else 0 ]
+            y['err'] += [ np.sqrt(np.power(self.GetAttr(dof+'Err',alJob.Alignables[name].SurveyPars),2)+
+                             np.power(self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) if self.GetAttr('DeltaErr', self.GetAlignableDof(alJob, name, dof)) != None else 0,2) ) ]
+        return y
+    
+    # Set PDF info
+    def SetPdfInfo(self, pdf, title='AlignLogOutput', author='Aligner',
+                   subject='Output of AlignLog', keywords='alignlog alignment'):
+        """
+            Plot all the created figures
+        """
+        d = pdf.infodict()
+        d['Title'] = title
+        d['Author'] = author
+        d['Subject'] = subject
+        d['Keywords'] = keywords
+        d['CreationDate'] = datetime.datetime.today()
+        d['ModDate'] = datetime.datetime.today()
+        return
+
 
 # END ALPLOTTER

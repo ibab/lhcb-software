@@ -239,12 +239,14 @@ class AlignIter:
     def __getattribute__(self, name):
         return self.__dict__[name] if name in self.__dict__.keys() else None
     # Info
-    def AlignablesWithInsufficientStatistic(self, details=False):
+    def AlignablesWithInsufficientStatistic(self, details=True, moredetails=False):
+        notAligned = []
         for name, alignable in self.Alignables.iteritems():
             if not alignable.EnoughHits:
-                if details: alignable.Print()
-                else: print name
-        return
+                notAligned += [alignable.Name]
+                if moredetails: alignable.Print()
+                if details: print alignable.Name
+        return notAligned
     def PrintAlignable(self, name):
         if name in self.Alignables.keys():
             self.Alignables[name].Print()
