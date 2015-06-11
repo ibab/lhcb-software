@@ -233,13 +233,22 @@ StatusCode MuIDMonitor::execute() {
 
   //Loop on matched tracks
   const Particle::Range selParts = this->particles();
-  if(selParts.size() != 1)  return StatusCode::SUCCESS;
+  if (selParts.size() == 0) return StatusCode::SUCCESS;
 
   double cosTr(0),plTr(0);
   int id_jp(0);
-  int my_pid[2] = {0,0}; double pt_pid[2] = {0.,0.};
-  int my_chg[2] = {0,0}; double pl_pid[2] = {0.,0.};
-  int idTag[2]  = {0,0}; double PMass(0);
+  int size = 2*selParts.size();
+  std::vector<int> my_pid;
+  std::vector<int> my_chg;
+  std::vector<double> pt_pid;
+  std::vector<double> pl_pid;
+  std::vector<int> idTag;
+  my_pid.reserve(size);
+  my_chg.reserve(size);
+  pt_pid.reserve(size);
+  pl_pid.reserve(size);
+  idTag.reserve(size);
+  double PMass(0);
   std::string name, nameD, tit; bool profFl(kFALSE);
 
   double eEcal(0), eHcal(0);
@@ -250,7 +259,6 @@ StatusCode MuIDMonitor::execute() {
     //Mass of the 2body pair
     PMass = (*iP)->measuredMass();
     plot1D (PMass, "IM","Mass: tag muon only",m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );
-
     pl1 = pl2 = 0; pl = -999;
     cosTr = 0; plTr = 0;
     plotFlag = kFALSE;
@@ -286,7 +294,6 @@ StatusCode MuIDMonitor::execute() {
         }
       }
     }
-
     if(m_JPAna) {
       //In Jpsi analysis decide what is tag and what is probe
       if(my_pid[0] == 1 && my_pid[1] == 1) {
@@ -297,7 +304,6 @@ StatusCode MuIDMonitor::execute() {
         idTag[0] = my_pid[0];  idTag[1] = my_pid[1];
       }
     }
-
     if(m_LMAna) {
       //Lambda analysis: disentangle pion and proton
       //IdTag == 0 --> Proton; IdTag == 1 --> Pion
@@ -316,7 +322,6 @@ StatusCode MuIDMonitor::execute() {
         }
       }
     }
-
     /*
       From now on you know who is tag and who is probe OR who is pion and who is proton
     */
@@ -457,7 +462,6 @@ StatusCode MuIDMonitor::execute() {
             }//Only for Probe muons
           }//JP analysis plots for efficiency
 
-
           /*
             Lambda plots: Efficiency
           */
@@ -468,7 +472,6 @@ StatusCode MuIDMonitor::execute() {
                                        m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 ); }
             else  { plot1D (PMass, "IM_"+name,tit+" Mass Lambda Candidates",
                             m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 ); }
-
             if(fabs(PMass-m_MassMean)<m_EffWin) {
 
               if(idTag[id_jp]) { plot1D ( (track)->p(), nameD+"P_effDeno",tit+" P distribution",m_edgesLMX);}
@@ -493,14 +496,15 @@ StatusCode MuIDMonitor::execute() {
                                            m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );}
                 else { plot1D (PMass, "IM_ism_"+name,"Mass Lambda Candidates (after ismuon)",
                                m_MassMean-m_MassWin, m_MassMean+m_MassWin, 100 );}
-
                 if(fabs(PMass-m_MassMean)<m_EffWin) {
                   if(idTag[id_jp]) { plot1D ( (track)->p(), nameD+"P_effNume",tit+" P distribution (after ismuon)",m_edgesLMX);}
                   else { plot1D ( (track)->p(), nameD+"P_effNume",tit+" P distribution (after ismuon)",m_edgesLMX);}
                 }
               }//Requires IsMuonloose
             }//Requires pMuid for ismuon loose check
+
           }//LM analysis plots for efficiency
+
 
         }//Select tag and probe (pion and proton)
         id_jp++;
@@ -508,12 +512,10 @@ StatusCode MuIDMonitor::execute() {
     }//Loop on daughters
   }//Loop on particles
 
-
   //MAss plot
   //S/B
   //Efficiency
   //DLL hits from mutracks (closest) .. distance on 4 regionsxs
-
   setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
 }
