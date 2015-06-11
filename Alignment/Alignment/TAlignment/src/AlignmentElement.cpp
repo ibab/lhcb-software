@@ -385,15 +385,20 @@ StatusCode AlignmentElement::updateGeometry( const AlParameters& parameters)
   /// Construct global delta matrix from deltas
   // transform the delta to the global frame
   const Gaudi::Transform3D globalDeltaMatrix = m_alignmentFrame * parameters.transform() * m_alignmentFrame.Inverse() ;
-  StatusCode sc;
-  for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
-    /// Transform global delta matrix to new local delta matrix (takes current local delta matrix into account!!)
-    const Gaudi::Transform3D localDeltaMatrix  = DetDesc::localDeltaMatrix((*i), globalDeltaMatrix);
-    /// Update position of detector element with new local delta matrix
-    sc = const_cast<IGeometryInfo*>((*i)->geometry())->ownToOffNominalMatrix(localDeltaMatrix);
-    if (sc.isFailure()) {
-      msg(MSG::FATAL) << "Failed to update local delta matrix of detector element " + (*i)->name() << endmsg;
-      break; ///< Break loop if sc is failure
+  StatusCode sc = StatusCode::SUCCESS ;
+  for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd && sc.isSuccess() ; ++i) {
+    /// make sure this element has an alignment condition
+    if( !(*i)->geometry()->alignmentCondition() ) {
+      msg(MSG::FATAL) << "Updating element without alignment condition: " << (*i)->name() << endmsg ;
+      sc = StatusCode::FAILURE ;
+    } else {
+      /// Transform global delta matrix to new local delta matrix (takes current local delta matrix into account!!)
+      const Gaudi::Transform3D localDeltaMatrix  = DetDesc::localDeltaMatrix((*i), globalDeltaMatrix);
+      /// Update position of detector element with new local delta matrix
+      sc = const_cast<IGeometryInfo*>((*i)->geometry())->ownToOffNominalMatrix(localDeltaMatrix);
+      if (sc.isFailure()) {
+	msg(MSG::FATAL) << "Failed to update local delta matrix of detector element " + (*i)->name() << endmsg;
+      }
     }
   }
   // Update the transform of the alignment frame
