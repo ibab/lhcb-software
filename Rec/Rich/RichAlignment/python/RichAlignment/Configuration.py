@@ -109,6 +109,21 @@ class RichAlignmentConf(RichConfigurableUser):
             if r1MinPCut < 0: r1MinPCut = 5
             RichAlignMoniR1.TrackSelector.MinPCut   = r1MinPCut
 
+            bigvalue = 1e+30
+            RichAlignMoniR1.TrackSelector.MinPCut    = 10
+            RichAlignMoniR1.TrackSelector.MaxPCut    = bigvalue
+            RichAlignMoniR1.TrackSelector.MinPtCut   = 0.5
+            RichAlignMoniR1.TrackSelector.MaxPtCut   = bigvalue
+            RichAlignMoniR1.TrackSelector.MinChi2Cut = 0
+            RichAlignMoniR1.TrackSelector.MaxChi2Cut = 2
+            RichAlignMoniR1.TrackSelector.MinLikelihood   = -40
+            RichAlignMoniR1.TrackSelector.MaxLikelihood   =  bigvalue
+            RichAlignMoniR1.TrackSelector.MinCloneDistCut = 5000
+            RichAlignMoniR1.TrackSelector.MaxCloneDistCut =  bigvalue
+            RichAlignMoniR1.TrackSelector.MinGhostProbCut = -bigvalue
+            RichAlignMoniR1.TrackSelector.MaxGhostProbCut =  0.8
+            RichAlignMoniR1.TrackSelector.AcceptClones    = False
+
             RichAlignMoniR1.NTupleProduce = self.getProp("NTupleProduce") and self.getProp("R1NTupleProduce")
             RichAlignMoniR1.HistoProduce  = self.getProp("Histograms") != "None"
 
@@ -140,6 +155,21 @@ class RichAlignmentConf(RichConfigurableUser):
             r2MinPCut = self.getProp("MinTrackMomentum")[2]
             if r2MinPCut < 0: r2MinPCut = 10
             RichAlignMoniR2.TrackSelector.MinPCut   = r2MinPCut
+
+            bigvalue = 1e+30
+            RichAlignMoniR2.TrackSelector.MinPCut    = 10
+            RichAlignMoniR2.TrackSelector.MaxPCut    = bigvalue
+            RichAlignMoniR2.TrackSelector.MinPtCut   = 0.5
+            RichAlignMoniR2.TrackSelector.MaxPtCut   = bigvalue
+            RichAlignMoniR2.TrackSelector.MinChi2Cut = 0
+            RichAlignMoniR2.TrackSelector.MaxChi2Cut = 2
+            RichAlignMoniR2.TrackSelector.MinLikelihood   = -40
+            RichAlignMoniR2.TrackSelector.MaxLikelihood   =  bigvalue
+            RichAlignMoniR2.TrackSelector.MinCloneDistCut = 5000
+            RichAlignMoniR2.TrackSelector.MaxCloneDistCut =  bigvalue
+            RichAlignMoniR2.TrackSelector.MinGhostProbCut = -bigvalue
+            RichAlignMoniR2.TrackSelector.MaxGhostProbCut =  0.8
+            RichAlignMoniR2.TrackSelector.AcceptClones    = False
 
             RichAlignMoniR2.NTupleProduce = self.getProp("NTupleProduce") and self.getProp("R2NTupleProduce")
             RichAlignMoniR2.HistoProduce  = self.getProp("Histograms") != "None"

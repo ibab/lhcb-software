@@ -1,10 +1,10 @@
 #=====================================================================
 # Created    : 2010-08-18
-# Maintainer : Chris Jones, Antonis Papanestis
+# Maintainer : Chris Jones, Antonis Papanestis, Paras Naik
 #=====================================================================
 
 package           RichAlignment
-version           v1r10p1
+version           v1r11
 
 #=====================================================================
 # Structure, i.e. directories to process. 
