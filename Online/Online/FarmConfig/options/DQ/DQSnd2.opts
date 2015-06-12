@@ -1,4 +1,0 @@
-#include "$STATIC_OPTS/DQ/DQSnd.opts"
-MEPManager.Buffers                   = @OnlineEnv.DQSnd2_Buffers;
-EventSelector.Input                  = @OnlineEnv.DQSnd2_Input;
-Sender.DataSink                      = "$DQ_DataSink2";
