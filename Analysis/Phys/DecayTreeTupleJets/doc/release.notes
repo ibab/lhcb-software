@@ -4,6 +4,9 @@
 ! Purpose     : Jet related Tuple Tools
 !-----------------------------------------------------------------------------
 
+! 2015-06-12 - Eduardo Rodrigues
+ - Removed recent "fix" from CMakeLists.txt as it did not help.
+
 ! 2015-06-10 - Eduardo Rodrigues
  - Fixed CMakeLists.txt ... hopefully, so that the package builds again.
 
