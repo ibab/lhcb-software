@@ -46,13 +46,13 @@ HltMonitorSvc::HltMonitorSvc(const string& name, ISvcLocator* loc)
    : base_class(name, loc),
    m_context{nullptr},
    m_output{nullptr},
-   m_send{false},
    m_run{0},
    m_tck{0},
    m_startOfRun{0}
 {
    declareProperty("OutputConnection", m_outCon = "ipc:///tmp/hlt2mon_0");
    declareProperty("HltDecReportsLocation", m_decRepLoc = "Hlt2/DecReports");
+   declareProperty("ChunkOverlap", m_chunkOverlap = 1.);
 }
 
 //===============================================================================
@@ -143,7 +143,7 @@ void HltMonitorSvc::count(const Gaudi::StringKey& key, double t)
    // event clock, which would result in negative numbers here. Since that should (flw)
    // only happen at the start of run, we ignore those events.
    auto diff = t - m_startOfRun;
-   if (diff < 0) {
+   if (diff < -m_chunkOverlap) {
       return;
    }
 
@@ -163,16 +163,22 @@ void HltMonitorSvc::count(const Gaudi::StringKey& key, double t)
    MsgStream msg(msgSvc(), name());
    auto it = m_chunks.find(key);
    if (it == end(m_chunks)) {
-      size_t start{boost::numeric_cast<size_t>(diff)};
+      size_t start{boost::numeric_cast<size_t>(diff - m_chunkOverlap)};
       it = m_chunks.emplace(key, Chunk{m_run, m_tck, key.__hash__(),
                                        start, m_updateInterval}).first;
    }
 
-   // Protection againt overflow
+   // Protection againt underflow
+   if (diff < it->second.start) {
+      return;
+   }
+
+   // Get bin number and protect against overflow
    size_t bin{boost::numeric_cast<size_t>(diff - it->second.start)};
    if (bin > it->second.data.size()) {
       msg << MSG::ERROR << "Requested to fill bin " << bin << " at time " << t
           << " with start of run " << m_startOfRun << endmsg;
+      return;
    }
 
    // If we're beyond the update interval, send the chunk. This creates a new one.

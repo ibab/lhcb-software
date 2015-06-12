@@ -70,10 +70,10 @@ private:
    zmq::context_t* m_context;
    zmq::socket_t* m_output;
 
-   bool m_send;
    unsigned int m_run;
    unsigned int m_tck;
    double m_startOfRun;
+   double m_chunkOverlap;
 
    mutable std::unordered_map<Gaudi::StringKey, RateCounter*> m_counters;
    mutable std::unordered_map<Gaudi::StringKey, Monitoring::Chunk> m_chunks;
