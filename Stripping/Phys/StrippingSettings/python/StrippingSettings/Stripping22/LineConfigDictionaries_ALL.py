@@ -700,7 +700,8 @@ DiMuonForXsection = {
 
 B2JpsiXforEM = {
     'BUILDERTYPE'       : 'B2JpsiXforEM_sConf',
-    'CONFIG'    : {'TRCHI2DOF'                 :       5
+    'CONFIG'    : {'ReFitPVsFlag'            :  True 
+                   ,       'TRCHI2DOF'                 :       5
                    ,       'BPVLTIME'                  :       0.2
                    ,       'JpsiMassWindow'            :       80
                    ,       'DaughterPT'                :       1000
