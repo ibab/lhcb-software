@@ -5,7 +5,7 @@
 #
 #============================================================================
 package LovellSys
-version v1r2
+version v1r3
 #============================================================================
 
 branches cmt doc
@@ -14,9 +14,9 @@ branches cmt doc
 # VeloAnalysisFramework 	# S Ali, L Bell
 # VeloOfflineGUI 		# D Saunders
 # VeloWebGUI		 	# A Pearce
-use VeloAnalysisFramework 	v1r2
-use VeloOfflineGUI 		v1r2
-use VeloWebGUI		 	v1r1
+use VeloAnalysisFramework 	v1r3
+use VeloOfflineGUI 		v1r3
+use VeloWebGUI		 	v1r2
 
 # Declare this as a container package
 apply_pattern container_package
