@@ -6,5 +6,5 @@ find_package(GaudiProject)
 #---------------------------------------------------------------
 
 # Declare project name and version
-gaudi_project(Lovell v1r2
+gaudi_project(Lovell v1r3
               USE Gaudi v26r1)
