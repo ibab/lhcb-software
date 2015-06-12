@@ -4,6 +4,7 @@
 ! Purpose     : Analysis framework and configuration for offline and web GUIs
 !----------------------------------------------------------------------------
 
+!=================== VeloAnalysisFramework v1r3 2015-06-12 ==================
 ! 2015-06-12 - Alex Pearce
  - Add bad channels run view configuration, on behalf of Sophie Richards.
 

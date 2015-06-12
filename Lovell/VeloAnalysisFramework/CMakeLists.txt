@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VeloAnalysisFramework
 ################################################################################
-gaudi_subdir(VeloAnalysisFramework v1r2)
+gaudi_subdir(VeloAnalysisFramework v1r3)
 
 find_package(ROOT COMPONENTS Hist Matrix Graf)
 
