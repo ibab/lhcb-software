@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VeloOfflineGUI
 ################################################################################
-gaudi_subdir(VeloOfflineGUI v1r2)
+gaudi_subdir(VeloOfflineGUI v1r3)
 
 gaudi_depends_on_subdirs(VeloAnalysisFramework)
 
