@@ -4,6 +4,21 @@ Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
 
+</PRE><H1><A NAME=v36r7p3>2015-06-12 DaVinci v36r7p3</A></H1><PRE>
+
+Patch release identical to v36r7p2 except for the
+- Update of the DaVinci package Phys/Tesla v1r7.
+- Update of the patched Analysis package Phys/TeslaTools v1r8.
+
+- In Phys/DaVinci v36r7p3 :
+  . New patch release.
+
+- In Phys/Tesla v1r7 :
+  . Vertex reports decoding fixed.
+
+- In Phys/TeslaTools v1r8 :
+  . Catch case when many multiple candidates corrupt data.
+
 </PRE><H1><A NAME=v36r7p2>2015-06-10 DaVinci v36r7p2</A></H1><PRE>
 
 Patch release identical to v36r7p1 except for the
