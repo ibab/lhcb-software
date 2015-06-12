@@ -10,12 +10,7 @@
 # =========================================================================
 #
 act=${RUN_TYPE}
-if [ "$act" = "Alignment|Muon" ]; then
-  . /group/online/dataflow/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-dbg.vars
-  export PYTHONPATH=${ALIGNONLINEROOT}/python:$PYTHONPATH
-  cd ${FARMCONFIGROOT}/job
-  exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; from TrAligAnalyzer import doIt; doIt('/localdisk/Alignment/Muon', 'MuonAlignment');"
-elif [ "$act" = "Alignment|Tracker" ]; then
+if [ "$act" = "Alignment|Tracker" ]; then
   . /group/online/dataflow/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-dbg.vars
   export PYTHONPATH=${ALIGNONLINEROOT}/python:$PYTHONPATH
   cd ${FARMCONFIGROOT}/job
