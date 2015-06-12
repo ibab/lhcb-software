@@ -149,7 +149,13 @@ StatusCode TeslaReportAlgo::execute()
 
   if(MotherRep!=0) {if ( msgLevel(MSG::DEBUG) ) debug() << "Required line has been fired" << endmsg;}
   else return StatusCode::SUCCESS;
-  
+ 
+  // Check validity
+  LHCb::HltObjectSummary firstCand = *(MotherRep->substructure()[0]->substructure()[0].target());
+  if( (firstCand.numericalInfo().size()==0) && (firstCand.summarizedObjectCLID()==LHCb::Particle::classID()) ){
+          warning() << "Candidate has invalid particle information" << endmsg;
+          return StatusCode::SUCCESS;
+  };
   // Set our output locations
   std::stringstream ss_PartLoc;
   ss_PartLoc << m_OutputPref << m_inputName << "/Particles";
