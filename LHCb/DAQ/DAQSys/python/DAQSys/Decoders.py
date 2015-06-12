@@ -238,18 +238,20 @@ for cal in ["Ecal","Hcal"]:
             dec_calo_nzs.append(algname)
         toolname="CaloEnergyFromRaw/"+name+"Tool" #as in C++
         # Zero suppressed is "active", NZS is "not active", only activated in Boole
+        if "CaloZSupAlg" in algname:
+            algOutputs = {"OutputADCData": "Raw/%s/Adcs" % cal, "OutputDigitData": "Raw/%s/Digits" % cal}
+        else:
+            algOutputs = ["Raw/"+cal+"/Adcs","Raw/"+cal+"/Digits"]
         Decoder(algname, active=zs,
                 privateTools=[toolname],banks=[cal+'E',cal+'Packed'],
                 #set logically in code, so for the C++ it doesn't matter what is set here, but python matters too
-                outputs={"OutputADCData": "Raw/%s/Adcs" % cal,
-                         "OutputDigitData": "Raw/%s/Digits" % cal},
+                outputs=algOutputs,
                 conf=DecoderDB)
 
         Decoder(algname+"Expert", active=False,
                 privateTools=[toolname],banks=[cal+'PackedError'],
                 #set logically in code, so for the C++ it doesn't matter what is set here, but python matters too
-                outputs={"OutputADCData": "Raw/%s/Adcs" % cal,
-                         "OutputDigitData": "Raw/%s/Digits" % cal},
+                outputs=algOutputs,
                 conf=DecoderDB)
 
         Decoder(toolname,active=False,

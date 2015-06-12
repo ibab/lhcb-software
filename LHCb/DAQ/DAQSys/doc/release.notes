@@ -4,6 +4,10 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2015-06-12 - Marco Cattaneo
+ - Fix previous change to work also for Boole Calorimeter decoders
+ - Fix decoder-compare test to follow this change
+
 !========================= DAQSys v8r8p2 2015-06-10 =========================
 ! 2015-06-10 - Roel Aaij
  - Set outputs of Calorimeter decoders anyway to allow usage of the correct
