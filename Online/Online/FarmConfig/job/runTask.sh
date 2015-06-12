@@ -18,7 +18,7 @@ if [ -z $DIM_DNS_NODE ]; then
    # exit 1
 fi;
 #
-export STATIC_OPTS=../options
+export STATIC_OPTS=${FARMCONFIGROOT}/options
 export DYNAMIC_OPTS=/group/online/dataflow/options/${PARTITION_NAME}
 export DATAINTERFACE=`python /group/online/dataflow/scripts/getDataInterface.py`
 export ONLINETASKS=/group/online/dataflow/templates;
@@ -28,4 +28,15 @@ export SUBFARM_OPTIONS=${DYNAMIC_OPTS}/${PARTITION_NAME}_${DIM_DNS_NODE}_HLT.opt
 #
 #
 . ./preamble.sh;
-. ./${TASK_TYPE}.sh;
+if test -f ./${TASK_TYPE}.sh;
+then
+  . ./${TASK_TYPE}.sh;
+elif test -f ./${PARTITION_NAME}${TASK_TYPE}.sh;
+then
+  . ./${PARTITION_NAME}${TASK_TYPE}.sh;
+elif test -f ./${PARTITION_NAME}DefaultTask.sh;
+then
+  . ./${PARTITION_NAME}DefaultTask.sh;
+else
+  . ./DefaultTask.sh;
+fi;
