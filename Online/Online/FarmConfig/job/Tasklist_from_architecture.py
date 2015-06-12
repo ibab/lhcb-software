@@ -78,6 +78,11 @@ MonitorSvc.CounterUpdateInterval     = 5;
             if dohostdns:
                 f.write(svc+".InDNS = "+InDns+";\n")
                 f.write(svc+".OutDNS = "+OutDns+";\n")
+            if pname == "LHCbA": # overwrite certain options for the Alignment...
+              f.write(svc+".SaveInterval = -1;\n");
+              f.write(svc+".SaveonUpdate = false;\n");
+              f.write(svc+".SaveSetTaskName= \""+svc+"\";\n");
+              f.write(svc+".ReceiveTimeout = 0;\n")
         for s in cntsvc:
             svc = s+"CountAdder"
             f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
@@ -127,6 +132,11 @@ BusyAdder.ReceiveTimeout          = 3;
             f.write(svc+".ReceiveTimeout = 6;\n")
             f.write(svc+".InDNS = "+InDns+";\n")
             f.write(svc+".OutDNS = "+OutDns+";\n")
+            if pname == "LHCbA": # overwrite certain options for the Alignment...
+              f.write(svc+".SaveInterval = -1;\n");
+              f.write(svc+".SaveonUpdate = false;\n");
+              f.write(svc+".SaveSetTaskName= \""+svc+"\";\n");
+              f.write(svc+".ReceiveTimeout = 0;\n")
             f.write("\n")
 
 
@@ -174,6 +184,11 @@ BusyAdder.ReceiveTimeout          = 3;
             f.write(svc+".SaveInterval = 900;\n");
             f.write(svc+".SaveonUpdate = false;\n");
             f.write(svc+".SaveSetTaskName= \""+svc+"\";\n");
+            if pname == "LHCbA": # overwrite certain options for the Alignment...
+              f.write(svc+".SaveInterval = -1;\n");
+              f.write(svc+".SaveonUpdate = true;\n");
+              f.write(svc+".SaveSetTaskName= \""+svc+"\";\n");
+              f.write(svc+".ReceiveTimeout = 0;\n")
             f.write("\n")
 
         for s in cntsvc:

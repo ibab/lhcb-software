@@ -20,7 +20,7 @@ void CounterAdder::add(void *buff, int siz, MonInfo *h)
 {
   addBuffer(buff,siz,h);
 }
-void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
+void CounterAdder::addBuffer(void *buff, int siz, MonInfo *minfo)
 {
   //printf("Counter Adder: UNLocking MonitorSvc\n");
   MonMap hmap;
@@ -30,14 +30,14 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
   while (pp<bend)
   {
     if (pp->reclen == 0) break;
-    if ( (pp->nameoff != sizeof(DimBuffBase)) || pp->nameoff <0)
+    if (!offsetinBounds(pp,pp->reclen,pp->nameoff))
     {
-      printf("+++ Counter Adder: Bad value of name offset (%d). Corrupted record?\n",pp->nameoff);
+      printf("+++ Counter Adder: Bad value of name offset (%d). Corrupted record? Source %s\n",pp->nameoff,minfo->getName());
       break;
     }
     char *nam = (char*)AddPtr(pp,pp->nameoff);
     char pnam[2048];
-    if (pp->dataoff > pp->reclen)
+    if (!offsetinBounds(pp,pp->reclen,pp->dataoff))
     {
       printf("+++ Counter Adder: Bad value of data offset (%d [%0x] > %d). Corrupted record for %s?\n",pp->dataoff,pp->dataoff,pp->reclen,nam);
       break;
@@ -69,9 +69,9 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
       DimHistbuff1 *JSecond = (DimHistbuff1*)j->second;
       DimHistbuff1 *sumh = (DimHistbuff1*)(j->second);
       DimHistbuff1 *srch = (DimHistbuff1*)(i->second);
-      if ((sumh->dataoff > sumh->reclen) || (sumh->dataoff<0))
+      if (!offsetinBounds(sumh,sumh->reclen,sumh->dataoff))
       {
-        printf ("Data offset greater than Record Length for %s Loop Count %d\n",j->first.c_str(),count);
+        printf ("Bad Data offset in sum record %s Loop Record number %d\n",j->first.c_str(),count);
         UnLockMap();
         break;
       }
@@ -175,8 +175,11 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
         p = AddPtr(p,csiz);
         Memcpy(p,srch,hsiz);
         m_usedSize += hsiz;
-        char *nam = (char*)AddPtr(srch,srch->nameoff);
-        m_hmap.insert(std::make_pair(nam,p));
+        if (offsetinBounds(srch,srch->reclen,srch->nameoff))
+        {
+          char *nam = (char*)AddPtr(srch,srch->nameoff);
+          m_hmap.insert(std::make_pair(nam,p));
+        }
       }
       //printf("Counter Adder: UNLocking MAP\n");
       UnLockMap();

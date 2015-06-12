@@ -19,6 +19,7 @@
 //#include "CCPCSerializer.h"
 //char hist_prefix[]="_HIST_";
 
+#define offsetinBounds(base,recl,offs) !((AddPtr(base,offs)>AddPtr(base,recl))||(AddPtr(base,offs)<base)||(offs<0))
 
 typedef std::map<std::string, void*> MonMap;
 typedef MonMap::iterator MonIter;

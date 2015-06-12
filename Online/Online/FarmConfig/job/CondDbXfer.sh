@@ -11,5 +11,6 @@ unset GAUDIAPPNAME
 source /sw/oracle/set_oraenv.sh
 export CORAL_DBLOOKUP_PATH=/group/online/conddbserver/
 export CORAL_AUTH_PATH=/group/online/conddbserver
+echo $2
 python $ALIGNONLINEROOT/python/DBXfer.py $2
 exit $?

@@ -169,8 +169,15 @@ void *MonAdder::ReAllocate(int incsiz)
         DimBuffBase *pp = (DimBuffBase*)hstart;
         while (pp<bend)
         {
-          char *nam = (char*)AddPtr(pp,pp->nameoff);
-          m_hmap.insert(MonPair(std::string(nam),(MonObj*)pp));
+          if (offsetinBounds(pp,pp->reclen,pp->nameoff))
+          {
+            char *nam = (char*)AddPtr(pp,pp->nameoff);
+            m_hmap.insert(MonPair(std::string(nam),(MonObj*)pp));
+          }
+          else
+          {
+            printf("Problem in reallocating buffer: Name offset in record bad. %d (%0x)\n",pp->nameoff,pp->nameoff);
+          }
           pp=(DimBuffBase*)AddPtr(pp,pp->reclen);
         }
         m_buffer = newbuffer;
@@ -583,21 +590,31 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
     while (pp<bend)
     {
       if (pp->reclen == 0) break;
-      char *nam = (char*)AddPtr(pp,pp->nameoff);
-      if (pp->dataoff > pp->reclen)
+      if (offsetinBounds(pp,pp->reclen,pp->nameoff))
       {
-        printf("Data Offset bigger than Recor Length for %s %s\n",nam, h->m_TargetService.c_str());
+        char *nam = (char*)AddPtr(pp,pp->nameoff);
+        if (offsetinBounds(pp,pp->reclen,pp->dataoff))
+        {
+    //      //printf("Histogram Name: %s\n",nam);
+          std::string nams =nam;
+          //printf("HistAdder Locking MAP\n");
+          LockMap();
+          m_hmap.insert(std::make_pair(nams,pp));
+          //printf("HistAdder UNLocking MAP\n");
+          UnLockMap();
+          if ((MONTYPE)pp->type == H_RATE)
+          {
+            m_RateBuff = pp;
+          }
+        }
+        else
+        {
+          printf("Data Offset negative or bigger than Record Length for %s %s\n",nam, h->m_TargetService.c_str());
+        }
       }
-//      //printf("Histogram Name: %s\n",nam);
-      std::string nams =nam;
-      //printf("HistAdder Locking MAP\n");
-      LockMap();
-      m_hmap.insert(std::make_pair(nams,pp));
-      //printf("HistAdder UNLocking MAP\n");
-      UnLockMap();
-      if ((MONTYPE)pp->type == H_RATE)
+      else
       {
-        m_RateBuff = pp;
+        printf("Bad Name offset %d (%0x) from %s\n",pp->nameoff,pp->nameoff, h->m_TargetService.c_str());
       }
       pp=(DimBuffBase*)AddPtr(pp,pp->reclen);
     }
