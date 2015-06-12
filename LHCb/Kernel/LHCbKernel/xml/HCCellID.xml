@@ -8,10 +8,10 @@
            desc = 'This class identifies a single PMT in the HC'
            virtual = 'FALSE'>
 
-      <constructor argList = 'unsigned int side, unsigned int station , unsigned int quadrant'
-                   desc = 'Constructor with side, station, quadrant'>
+      <constructor argList = 'unsigned int crate, unsigned int channel'
+                   desc = 'Constructor with crate and channel'>
         <code>
-  m_cellID = (side &lt;&lt; sideBits) | (station &lt;&lt; stationBits) | quadrant ;
+  m_cellID = (crate &lt;&lt; crateBits) | channel;
         </code>
       </constructor>
 
@@ -32,9 +32,8 @@
       </method> 
 
       <attribute type = 'bitfield' name = 'cellID' desc = 'HC Cell ID'>
-        <bitfield name = 'quadrant'    length =  '2' desc = 'quadrant number'/>
-        <bitfield name = 'station'    length =  '2' desc = 'station number'/>
-        <bitfield name = 'side'   length =  '1' desc = 'side'/>
+        <bitfield name = 'channel' length = '6' desc = 'channel number'/>
+        <bitfield name = 'crate'   length = '5' desc = 'crate number'/>
       </attribute>
 
     </class>

@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2015-06-12 - Heinrich Schindler
+ - Redefine bitfields of HCCellID.
+
 !========================= LHCbKernel v15r10 2015-05-26 =========================
 ! 2015-05-05 - Chris Jones
  - Add a new test 'gaudipythonallocator' that tests the use of classes with
