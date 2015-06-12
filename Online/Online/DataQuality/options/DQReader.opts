@@ -1,5 +1,5 @@
 #include "$FARMCONFIGROOT/options/BasicDiskReader.opts"
-#include "$NODE_OPTIONS"
+#include "$DQREADER_NODE_OPTIONS"
 Runable.Directory                    = @OnlineEnv.DataDirectory;
 Runable.FilePrefix                   = "Run_";
 Runable.Buffer                       = @OnlineEnv.DQReader_Output;

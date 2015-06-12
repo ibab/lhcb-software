@@ -8,7 +8,7 @@ export PYTHONHOME=`dirname $PY_EXE`;
 export PYTHONHOME=`dirname $PYTHONHOME`;
 export UTGID;
 export DIM_DNS_NODE=mona10;
-export PYTHONPATH=${DATAQUALITYSYSROOT}/python:$PYTHONPATH;
+export PYTHONPATH=${DATAQUALITYROOT}/python:$PYTHONPATH;
 #
 echo "DIM-DNS: $DIM_DNS_NODE  Working directory: `pwd`"
 #

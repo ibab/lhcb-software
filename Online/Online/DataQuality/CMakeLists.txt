@@ -1,7 +1,7 @@
 ################################################################################
-# Package: DataQualitySys
+# Package: DataQuality
 ################################################################################
-gaudi_subdir(DataQualitySys v0r1)
+gaudi_subdir(DataQuality v0r1)
 
 find_package(pytools)
 find_package(Oracle)

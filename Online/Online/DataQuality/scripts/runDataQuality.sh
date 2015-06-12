@@ -16,7 +16,7 @@ export CMTCONFIG=x86_64-slc6-gcc48-opt;
 #
 . setup.${CMTCONFIG}.vars
 #
-export PYTHONPATH=${DATAQUALITYSYSROOT}/python:/group/online/dataflow/options/${PARTITION_NAME}:${PYTHONPATH}
+export PYTHONPATH=${DATAQUALITYROOT}/python:/group/online/dataflow/options/${PARTITION_NAME}:${PYTHONPATH}
 #
 ulimit -d 2097152
 ulimit -m 2097152

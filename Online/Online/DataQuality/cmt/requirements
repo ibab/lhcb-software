@@ -1,4 +1,4 @@
-package OnlineBrunelSys
+package DataQuality
 version v5r9
 #
 #  Glue package to use Brunel in the online environment
