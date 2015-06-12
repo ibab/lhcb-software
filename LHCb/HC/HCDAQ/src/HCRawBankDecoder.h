@@ -34,10 +34,9 @@ class HCRawBankDecoder : public Decoder::AlgBase {
 
   bool m_skipTrigger;
   bool m_skipAdc;
+  bool m_skipErrorBanks;
 
-  bool decodeV1(LHCb::RawBank* bank);
-  bool decodeV2(LHCb::RawBank* bank);
-  bool decodeV3(LHCb::RawBank* bank);
+  bool decode(LHCb::RawBank* bank);
   bool decodeErrorBank(LHCb::RawBank* bank);
 
 };

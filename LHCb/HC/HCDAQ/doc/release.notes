@@ -4,6 +4,11 @@
 ! Purpose     : Decoding of Herschel raw banks
 !-----------------------------------------------------------------------------
 
+! 2015-06-12 - Heinrich Schindler
+ - Remove decoding of obsolete raw bank formats.
+ - Follow modified cell ID scheme (channel and crate).
+ - Add option to skip error bank decoding.
+
 !========================= HCDAQ v1r3 2015-05-26 =========================
 ! 2015-05-25 - Heinrich Schindler
  - Make input/output locations configurable.
