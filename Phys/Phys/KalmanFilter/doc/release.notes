@@ -1,48 +1,52 @@
 
-! $Id$ 
+! $Id$
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KalmanFilter
 ! Responsible : Vanya Belyaev  Ivan.Belyaev@itep.ru
-! Purpose     : Kalman filter Utilities for Vertex fit 
+! Purpose     : Kalman filter Utilities for Vertex fit
 ! -----------------------------------------------------------------------------
 
+! 2015-06-12 - Marco Clemencic
+ - Modified CMakeLists.txt to install headers from 'Kernel' (needed for
+   Kernel/IParticleClassifier.h).
+
 ! 2015-06-12 - Vanya Belyaev
-  - cmt/requirements  fix CMT compilation problem 
+  - cmt/requirements  fix CMT compilation problem
 
 ! 2015-06-11 - Vanya Belyaev
-  - cmt/requirements  fix CMT compilation problem 
+  - cmt/requirements  fix CMT compilation problem
 
 
 !========================= KalmanFilter v1r12 2015-05-27 ======================
 
 ! 2015-04-30 - Vanya Belyaev
- - add IParticleClassifier interface 
-    needed for bypassing full vertex fit   (for Mike Sokoloff) 
+ - add IParticleClassifier interface
+    needed for bypassing full vertex fit   (for Mike Sokoloff)
 
 !========================= KalmanFilter v1r11 2015-03-31 ======================
 
 ! 2015-03-07 - Vanya Belyaev
- - add new function, that allows significinat optimization of vertex fit 
+ - add new function, that allows significinat optimization of vertex fit
 
 !====================== KalmanFilter v1r10 2015-02-24 =========================
 
 ! 2015-02-11 -  Vanya BELYAEV
-  use cholesky decompositon for inversion of 
-  positively definite covariance matrices   
+  use cholesky decompositon for inversion of
+  positively definite covariance matrices
 
 ! 2015-01-19 - Vanya Belyaev
- - remove boost 
+ - remove boost
 
 ========================= KalmanFilter v1r9 2015-01-16 =========================
 
 ! 2015-01-12 - Vanya Belyaev
- - fix compilations warnings 
+ - fix compilations warnings
 
 ========================= KalmanFilter v1r8 2014-12-15 =========================
 
 ! 2014-12-01 - Vanya Belyaev
  - VertexFit, VertexFitWithTracks, FastVertex
-   replace all matrix inversions by faster method, 
+   replace all matrix inversions by faster method,
    based on Cholesky's decomposition.
    Many thanks to Manuel
 
@@ -50,8 +54,8 @@
 !========================= KalmanFilter v1r7 2014-04-02 =========================
 
 ! 2014-03-16 - Vanya Belyaev
- - VertexFitWithTracks:  
-    Add the concept of "weight" for Kalman Filter 
+ - VertexFitWithTracks:
+    Add the concept of "weight" for Kalman Filter
     and few explicit "multi-steps"
     in paritcular is allows the efficient implementation
     of the track removal from the fitted vertex.
@@ -59,7 +63,7 @@
 !========================= KalmanFilter v1r6 2014-02-20 =========================
 
 ! 2014-02-10 - Vanya Belyaev
- - Add the proper treatment of merged pi0 case 
+ - Add the proper treatment of merged pi0 case
    (many thanks to Olivier Deschamps).
 
 !========================= KalmanFilter v1r5 2013-06-13 =========================
@@ -75,24 +79,24 @@
 !========================= KalmanFilter v1r4 2012-04-17 =========================
 ! 2012-04-09 - Vanya Belyaev
 
- - FastVertex 
-  
-    add a function for Pieter David for DOCA between line and track 
+ - FastVertex
+
+    add a function for Pieter David for DOCA between line and track
 
 !========================= KalmanFilter v1r3 2011-09-07 =========================
 ! 2011-07-29 - Vanya Belyaev
 
- - add possibility to evaluate vertex for ``rho+''-like particles 
+ - add possibility to evaluate vertex for ``rho+''-like particles
 
 
 !========================= KalmanFilter v1r2p1 2011-07-28 =========================
 ! 2011-07-19 - Vanya Belyaev
 
 
- - fix in KalmanFilter::nDoF calculation 
-   add    KalmanFilter::chi2 function 
+ - fix in KalmanFilter::nDoF calculation
+   add    KalmanFilter::chi2 function
 
- - cmt/requirement 
+ - cmt/requirement
     version increment to v1r3
 
 
@@ -107,44 +111,44 @@
 
 ! 2011-01-14 - Vanya Belyaev
 
- - improve a little bit CPU effiicency of FastVertex 
- - improve Doxygen comments 
+ - improve a little bit CPU effiicency of FastVertex
+ - improve Doxygen comments
 
 ! 2011-01-13 - Vanya Belyaev
 
- - add Reflex dictionary 
+ - add Reflex dictionary
 
- - few minor fixes 
+ - few minor fixes
 
- - cmt/requirement 
+ - cmt/requirement
 
-    version increment to v1r1 
+    version increment to v1r1
 
 
 !========================== KalmanFilter v1r0 2010-12-17 ===================
 
 ! 2010-12-07 - Vanya Belyaev
 
- - add more functions 
+ - add more functions
 
 ! 2010-12-06 - Vanya Belyaev
 
- - add more functions 
+ - add more functions
 
 ! 2010-12-04 - Vanya Belyaev
 
- - FastVertex: 
+ - FastVertex:
 
-    add more functions 
+    add more functions
 
 ! 2010-12-03 - Vanya Belyaev
 
- - the first import : 
+ - the first import :
 
-     the functions have been moved from Phys/LoKiFitters package 
+     the functions have been moved from Phys/LoKiFitters package
 
 
 ! -----------------------------------------------------------------------------
-! The END 
+! The END
 ! -----------------------------------------------------------------------------
 

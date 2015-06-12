@@ -13,7 +13,7 @@ gaudi_depends_on_subdirs(Calo/CaloUtils
 
 gaudi_add_library(KalmanFilter
                   src/*.cpp
-                  PUBLIC_HEADERS KalmanFilter
+                  PUBLIC_HEADERS KalmanFilter Kernel
                   LINK_LIBRARIES CaloUtils PhysEvent RecEvent GaudiKernel LHCbMathLib DaVinciInterfacesLib DaVinciTypesLib)
 
 gaudi_add_dictionary(KalmanFilter
