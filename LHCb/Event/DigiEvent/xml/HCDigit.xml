@@ -19,7 +19,9 @@
     </constructor>
     <constructor desc = "Copy constructor"
                  initList = "KeyedObject&lt;LHCb::HCCellID&gt;(),
-                             m_adc(digit.m_adc)">
+                             m_adc(digit.m_adc),
+                             m_ctrlWord(digit.m_ctrlWord),
+                             m_card(digit.m_card)">
       <arg const = 'TRUE' name = "digit" type = "LHCb::HCDigit"/>
     </constructor>
 
@@ -31,13 +33,16 @@
     </method>
 
     <attribute name = "adc" type = "int" desc = "PMT adc"/>
+    <attribute name = "ctrlWord" type = "int" desc = "control word"/>
+    <attribute name = "card" type = "int" desc = "card number"/>
 
     <method type = "LHCb::HCCellID" name = "cellID" const = 'TRUE' 
             desc = "Return the digit cellID = key">
       <code>return key();</code>
     </method>
 
-    <method type = "std::ostream&amp;" name = "fillStream" const = 'TRUE' virtual = "FALSE"
+    <method type = "std::ostream&amp;" name = "fillStream" const = 'TRUE' 
+            virtual = "FALSE"
             desc = "Print the digit key = cellID">
       <arg type = "std::ostream" name = "s"/>
       <code>
