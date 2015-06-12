@@ -88,6 +88,7 @@ std::string LHCb::RawBank::typeName(LHCb::RawBank::BankType e){
   case LHCb::RawBank::UTPedestal      : return  "UTPedestal";
   case LHCb::RawBank::HC              : return  "HC";
   case LHCb::RawBank::HltTrackReports : return  "HltTrackReports";    
+  case LHCb::RawBank::HCError         : return  "HCError";
   default                             : return  "Undefined_name";
   };
 }  

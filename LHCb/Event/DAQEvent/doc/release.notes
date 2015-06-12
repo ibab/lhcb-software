@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2015-06-12 - Heinrich Schindler
+ - Add HCError raw bank type.
+
 !========================= DAQEvent v9r19 2015-05-26 =========================
 ! 2015-05-05 - Marco Clemencic
  - Fixed LHCBPS-1410: implement event type bits as enum in ODIN
