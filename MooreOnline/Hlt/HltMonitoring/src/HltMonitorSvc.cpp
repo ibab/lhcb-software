@@ -169,7 +169,7 @@ void HltMonitorSvc::count(const Gaudi::StringKey& key, double t)
    }
 
    // Protection againt overflow
-   size_t bin{boost::numeric_cast<size_t>(t - it->second.start)};
+   size_t bin{boost::numeric_cast<size_t>(diff - it->second.start)};
    if (bin > it->second.data.size()) {
       msg << MSG::ERROR << "Requested to fill bin " << bin << " at time " << t
           << " with start of run " << m_startOfRun << endmsg;
