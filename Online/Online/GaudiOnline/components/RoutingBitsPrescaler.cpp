@@ -24,6 +24,7 @@
 #include <cstdlib>
 #include <vector>
 #include <ctime>
+#include <string>
 
 /*
  *  LHCb namespace declaration
@@ -48,7 +49,8 @@ namespace LHCb
     public:
       string m_Name;
       long m_evCounter;
-      myRequirement() : MBM::Requirement()
+      myRequirement() :
+          MBM::Requirement()
       {
         m_evCounter = 0;
       }
@@ -174,6 +176,27 @@ namespace LHCb
   };
   typedef vector<string> Requirements;
   typedef vector<myRequirement> BinRequirements;
+  class DatStream
+  {
+    public:
+      int m_bit;
+      string m_Name;
+      long m_cnt;
+      int m_mask;
+      int m_wd;
+      DatStream(int bit, string Name) :
+          m_bit(bit), m_Name(Name), m_cnt(0)
+      {
+        m_mask = 1 << (bit % 32);
+        m_wd = bit / 32;
+      }
+      ;
+      void Clear()
+      {
+        m_cnt = 0;
+      }
+      ;
+  };
   class GAUDI_API RoutingBitsPrescaler: public Algorithm
   {
 
@@ -181,6 +204,8 @@ namespace LHCb
       /// Standard Algorithm Constructor(s)
       Requirements m_req;
       BinRequirements m_breq;
+      vector<DatStream> m_streams;
+
       RoutingBitsPrescaler(const std::string& nam, ISvcLocator* svc) :
           Algorithm(nam, svc)
       {
@@ -188,6 +213,12 @@ namespace LHCb
             (RTL::processName() + "@" + RTL::nodeName()).c_str());
         ::srand(seed);
         declareProperty("Requirements", m_req, "Requirements List");
+        m_streams.push_back(DatStream(33, "Lumi"));
+        m_streams.push_back(DatStream(35, "BeamGas"));
+        m_streams.push_back(DatStream(87, "Full"));
+        m_streams.push_back(DatStream(88, "Turbo"));
+        m_streams.push_back(DatStream(89, "Park"));
+        m_streams.push_back(DatStream(90, "TurCal"));
       }
 
       /// Default Destructor
@@ -207,7 +238,22 @@ namespace LHCb
         }
         for (auto i = m_breq.begin(); i != m_breq.end(); i++)
         {
-          declareInfo((*i).m_Name,(*i).m_evCounter,"Accepted Events");
+          declareInfo((*i).m_Name, (*i).m_evCounter, "Accepted Events");
+        }
+        for (size_t j = 0; j < m_streams.size(); j++)
+        {
+          this->monitorSvc()->declareInfo("Stream/"+m_streams[j].m_Name,
+              m_streams[j].m_cnt, m_streams[j].m_Name + " Stream Counter", this);
+        }
+        return StatusCode::SUCCESS;
+      }
+
+      virtual StatusCode start()
+      {
+        Algorithm::start();
+        for (size_t j = 0; j < m_streams.size(); j++)
+        {
+          m_streams[j].Clear();
         }
         return StatusCode::SUCCESS;
       }
@@ -234,7 +280,8 @@ namespace LHCb
           {
             return false;
           }
-        }else
+        }
+        else
         {
           for (int i = 0; i < 4; i++)
           {
@@ -289,12 +336,18 @@ namespace LHCb
           {
             setFilterPassed(false);
           }
-        }
+          for (size_t i = 0; i < this->m_streams.size(); i++)
+          {
+            if ((trm[m_streams[i].m_wd] & (m_streams[i].m_mask)) != 0)
+            {
+              this->m_streams[i].m_cnt++;
+            }
+          }
+        };
         return StatusCode::SUCCESS;
       }
   };
 }
-
 #include "GaudiKernel/AlgFactory.h"
 
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb, RoutingBitsPrescaler)
