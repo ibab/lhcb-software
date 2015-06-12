@@ -1,0 +1,111 @@
+#=====================================================================
+# Created    : 2009-06-23
+# Maintainer : Tomasz Skwarnicki
+#=====================================================================
+package           HltDAQ
+version           v4r14
+
+#=====================================================================
+# Structure, i.e. directories to process.
+#=====================================================================
+branches          cmt doc src tests xml HltDAQ
+#=====================================================================
+# Used packages
+#=====================================================================
+
+use GaudiKernel         v*
+private
+use GaudiObjDesc v* -no_auto_imports
+end_private
+
+use Boost               v*    LCG_Interfaces 
+use AIDA                v*    LCG_Interfaces -no_auto_imports
+
+use GaudiAlg            v*
+use HltInterfaces       v*    Kernel
+use HltEvent            v*    Event
+use DAQEvent            v*    Event
+use EventPacker         v*    Event
+use DAQKernel           v*    DAQ
+use LoKiHlt             v*    Phys
+use HltServices         v*    Hlt
+use LumiEvent           v*    Event
+
+#### for CORAL access
+use DetCond             v*      Det
+#### for getting the StartOfRun condition
+use DetDesc             v*    Det
+
+### for access to the config.tar file with configurations
+use HltTCK              v*    TCK         -no_auto_imports
+
+# include_path      none
+#=====================================================================
+# Produce Header-Files from XML description
+#=====================================================================
+apply_pattern god_headers files=../xml/*.xml
+
+macro HltDAQObj2Doth_GODflags " -s ../HltDAQ/ " \
+      WIN32                   " -s ..\HltDAQ\ "
+
+#=====================================================================
+# define component library link options
+#=====================================================================
+apply_pattern    component_library library=HltDAQ
+
+#=====================================================================
+# Component library building rule
+#=====================================================================
+library          HltDAQ    ../src/*.cpp 
+
+#=====================================================================
+# define component library link options for use in HltDAQ and outside
+#=====================================================================
+apply_pattern install_more_includes more=HltDAQ
+
+#=====================================================================
+# unit test application building rule
+#=====================================================================
+application      utestTrackingCoder -import=Boost   utest/utestTrackingCoder.cpp utest/HltTrackingCoder_utest.cpp
+macro_append Boost_linkopts " $(Boost_linkopts_iostreams)  $(Boost_linkopts_filesystem)"
+macro_append Boost_linkopts " -lboost_unit_test_framework-${Boost_compiler_version}-mt-${Boost_debug}${Boost_file_version}"
+
+private
+# Work around to be able to compile with Gaudi v22r5
+macro_append pp_cppflags " -DBOOST_FILESYSTEM_VERSION=3 "
+end_private
+
+#private
+#macro_remove cppoptimized_s "-O2"
+#macro_append cppoptimized_s "-g"
+#end_private
+
+#=====================================================================
+private
+# Note: libgslcblas is needed by libgsl, but the link is missing.
+macro_prepend GSL_linkopts " -Wl,--no-as-needed " \
+                    Darwin "" \
+                     WIN32 ""
+macro_append  GSL_linkopts " -Wl,--as-needed " \
+                    Darwin "" \
+                     WIN32 "" \
+                target-icc ""
+
+
+end_private
+
+#at least GaudiConf for IOHelper and LHCbApp
+private
+  macro PRConfig_use "" QMTest "PRConfig v* -no_auto_imports"
+  use $(PRConfig_use)
+  macro Utils_use "" QMTest "DAQUtils v* DAQ -no_auto_imports"
+  use $(Utils_use)
+  macro LHCbK_use "" QMTest "LHCbAlgs v* Kernel -no_auto_imports"
+  use $(LHCbK_use)
+  macro GaudiC_use "" QMTest "GaudiConf v* -no_auto_imports"
+  use $(GaudiC_use)
+end_private
+
+
+apply_pattern QMTest
+

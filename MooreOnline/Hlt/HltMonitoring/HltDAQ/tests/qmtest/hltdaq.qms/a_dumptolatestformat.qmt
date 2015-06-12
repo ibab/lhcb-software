@@ -1,0 +1,24 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="args"><set>
+    <text>../options/dump_decode_wipe_encode.py</text>
+  </set></argument>
+  <argument name="validator"><text>
+
+# Author: rlambert
+# Purpose: to check if bank encoder changes are binary compatible
+# Pre-requisites: the file in ../options/OnlyHltBanks.mdf needs to exist
+# Common failure modes, severities and cures: see dumpafterreformat.qmt
+
+countErrorLines({"FATAL":0, "ERROR":0, "WARNING" :0})
+
+stdout=[s.strip() for s in stdout.split("\n") if "RawEventDump" in s]
+
+f=open("hltdaq.dump.previous.stdout","w")
+f.write('\n'.join(stdout)+"\n")
+f.close()
+
+</text></argument>
+</extension>
+

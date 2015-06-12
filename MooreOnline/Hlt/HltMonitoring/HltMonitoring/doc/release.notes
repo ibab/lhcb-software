@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltMonitoring
+! Responsible : Roel Aaij
+! Purpose     : Monitoring of the HLT
+!-----------------------------------------------------------------------------
+
+! 2015-06-02 - Roel Aaij
+ - Initial package version.
+ - Moved Hlt/HltMonitor contents into this package to keep the number of
+   packages that do the same things small.

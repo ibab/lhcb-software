@@ -1,0 +1,432 @@
+RawEventDump         INFO banks of type 17(HltDecReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 17: [size, source, version, magic]
+RawEventDump         INFO   [1024, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [a30046] [ffff0000] [10701] [20701] [1b0200] [1c0200] [1f0000] [200300] [280100] [320100] 
+RawEventDump         INFO    ... [330100] [340100] [350100] [360100] [370100] [380200] [390200] [3a0000] [3b0100] [460100] 
+RawEventDump         INFO    ... [490000] [4b0000] [5e0200] [660200] [cb0500] [cc0500] [cd0200] [ce0500] [1970200] [1fd0000] 
+RawEventDump         INFO    ... [1ff0701] [2000600] [2580500] [3ea0500] [3eb0500] [3ec0200] [3ed0200] [3ef0000] [3f30500] [3f40000] 
+RawEventDump         INFO    ... [3f50000] [3f60000] [3f70100] [c3500500] [c3530500] [c35b0000] [c35c0701] [c35d0000] [c35e0000] [c35f0300] 
+RawEventDump         INFO    ... [c37c0500] [c37d0500] [c37e0500] [c3a00500] [c3a10000] [c3a20500] [c3aa0500] [c3ab0000] [c3ac0000] [c3ad0000] 
+RawEventDump         INFO    ... [c3ae0500] [c3af0000] [c3b00000] [c3b20500] [c3e00500] [c40f0000] [c4100500] [c4120000] [c4140500] [c4190000] 
+RawEventDump         INFO    ... [c41a0500] [c41b0500] [c41d0500] [c41e0000] [c41f0000] [c4200500] [c4210500] [c4250500] [c4260500] [c4270500] 
+RawEventDump         INFO    ... [c4280500] [c4290500] [c42a0000] [c42b0500] [c42c0500] [c42d0500] [c42e0500] [c42f0500] [c4690000] [c46a0500] 
+RawEventDump         INFO    ... [c46b0500] [c46c0500] [c46d0500] [c46e0500] [c46f0000] [c4700500] [c4710000] [c4770300] [c47d0200] [c47e0000] 
+RawEventDump         INFO    ... [c47f0200] [c4800000] [c4810200] [c4820000] [c4830000] [c4e10200] [c4e20200] [c4e30200] [c4e40200] [c4e50200] 
+RawEventDump         INFO    ... [c4e60000] [c4e70000] [c4e80000] [c4e90000] [c4ea0200] [c4eb0200] [c4ec0200] [c4ed0200] [c4ee0000] [c4f40000] 
+RawEventDump         INFO    ... [c4f80000] [c4fc0500] [c5010000] [c5440200] [c5460000] [c54e0200] [c5500000] [c5510000] [c5530300] [c5540200] 
+RawEventDump         INFO    ... [c6300000] [c6310500] [c6320500] [c6330200] [c6580000] [c6590500] [c65a0500] [c65b0200] [c65d0000] [c65e0000] 
+RawEventDump         INFO    ... [c6800000] [c6810500] [c6820500] [c6830200] [c6ac0000] [c6ad0000] [c6ae0000] [c6af0000] [c6b00500] [c6c00500] 
+RawEventDump         INFO    ... [c6c10500] [c6c20500] [c6ca0500] [c6cb0500] [c6cc0500] [c6df0500] [c6e00000] [c6e10500] [c6e20500] [c6e30500] 
+RawEventDump         INFO    ... [c6e40500] [c6e80500] [c6e90500] [c6ed0500] [c6ee0000] [c6f70500] [c6f80500] [c7070500] [c7380200] [c73c0200] 
+RawEventDump         INFO    ... [c8350200] [c8360200] [c8960200] [c8970000] [c8980200] [c8990000] [cac90500] [caca0500] [cacb0500] [cacc0500] 
+RawEventDump         INFO    ... [cad30500] [cad40500] [cad50500] [cad60500] [cad70500] [cad80500] [cb200500] [d35e0500] [d35f0500] [d8250300] 
+RawEventDump         INFO    ... [d8260300] [d8270300] [d8280300] [d8290300] [d96e0500] [d96f0500] [d9700500] [d9710500] [d9720500] [d9730500] 
+RawEventDump         INFO    ... [d9740500] [d9750500] [ea570200] [eaa20500] [eaa30500] [ee660500] [ee670500] [ee680500] [ee6a0500] [ee6e0500] 
+RawEventDump         INFO    ... [ee6f0500] [ee700500] [ee730500] [f2380500] [f2390000] [f23a0500] [f23b0000] [f23c0500] [f23d0500] [f23e0500] 
+RawEventDump         INFO    ... [f23f0000] [f2400500] [f2410000] [f2610000] [f2620000] [f2630000] [f2640000] [f2650000] [f2660000] [f2670000] 
+RawEventDump         INFO    ... [f2680000] [f2690500] [f26a0000] [f36e0500] [f36f0000] [f3700500] [f3710000] [f3720500] [f3730000] [f3740500] 
+RawEventDump         INFO    ... [f3750000] [f3760500] [f3770000] [f3780500] [f3790000] [f37a0500] [f37b0000] [f37c0500] [f37d0000] [f37e0500] 
+RawEventDump         INFO    ... [f37f0000] [f3800500] [f3810000] [f3820500] [f3830000] [fffd0300] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 54(HltSelReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 54: [size, source, version, magic]
+RawEventDump         INFO   [64, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [10] [1c445] [b] [c] [d] [e] [10] [0] [12] [0] 
+RawEventDump         INFO    ... [10000] [10000] [10000] [10000] [20000] [0] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 55(HltVertexReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 55: [size, source, version, magic]
+RawEventDump         INFO   [188, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [2] [27770002] [3f2fcc44] [3d8e050c] [4264580f] [4299503d] [6b] [3908f4b1] [38ef2e96] [3b93f014] 
+RawEventDump         INFO    ... [37189c93] [b99c6856] [b9101464] [3f219619] [3dfc7ab0] [42d9e63d] [428ab11e] [4f] [395504bd] [3961fb5f] 
+RawEventDump         INFO    ... [3c085abf] [37197e87] [b94429e5] [b9c883c3] [27850002] [3f2fcc44] [3d8e050c] [4264580f] [4299503d] [6b] 
+RawEventDump         INFO    ... [3908f4b1] [38ef2e96] [3b93f014] [37189c93] [b99c6856] [b9101464] [3f219619] [3dfc7ab0] [42d9e63d] [428ab11e] 
+RawEventDump         INFO    ... [4f] [395504bd] [3961fb5f] [3c085abf] [37197e87] [b94429e5] [b9c883c3] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 17(HltDecReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 17: [size, source, version, magic]
+RawEventDump         INFO   [1024, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [a30046] [ffff0000] [10701] [20701] [1b0200] [1c0200] [1f0000] [200300] [280100] [320100] 
+RawEventDump         INFO    ... [330100] [340100] [350100] [360100] [370100] [380200] [390200] [3a0000] [3b0100] [460100] 
+RawEventDump         INFO    ... [490000] [4b0000] [5e0200] [660200] [cb0500] [cc0500] [cd0200] [ce0500] [1970200] [1fd0000] 
+RawEventDump         INFO    ... [1ff0701] [2000600] [2580500] [3ea0500] [3eb0500] [3ec0200] [3ed0200] [3ef0000] [3f30500] [3f40000] 
+RawEventDump         INFO    ... [3f50000] [3f60000] [3f70100] [c3500500] [c3530500] [c35b0000] [c35c0701] [c35d0000] [c35e0000] [c35f0300] 
+RawEventDump         INFO    ... [c37c0500] [c37d0500] [c37e0500] [c3a00500] [c3a10000] [c3a20500] [c3aa0500] [c3ab0000] [c3ac0000] [c3ad0000] 
+RawEventDump         INFO    ... [c3ae0500] [c3af0000] [c3b00000] [c3b20000] [c3e00500] [c40f0300] [c4100500] [c4120000] [c4140500] [c4190000] 
+RawEventDump         INFO    ... [c41a0000] [c41b0500] [c41d0500] [c41e0000] [c41f0000] [c4200500] [c4210500] [c4250500] [c4260500] [c4270500] 
+RawEventDump         INFO    ... [c4280500] [c4290500] [c42a0000] [c42b0500] [c42c0500] [c42d0500] [c42e0500] [c42f0500] [c4690000] [c46a0500] 
+RawEventDump         INFO    ... [c46b0500] [c46c0500] [c46d0500] [c46e0500] [c46f0000] [c4700500] [c4710000] [c4770300] [c47d0200] [c47e0000] 
+RawEventDump         INFO    ... [c47f0200] [c4800000] [c4810200] [c4820000] [c4830000] [c4e10200] [c4e20200] [c4e30200] [c4e40200] [c4e50200] 
+RawEventDump         INFO    ... [c4e60000] [c4e70000] [c4e80000] [c4e90000] [c4ea0000] [c4eb0200] [c4ec0200] [c4ed0200] [c4ee0000] [c4f40000] 
+RawEventDump         INFO    ... [c4f80000] [c4fc0500] [c5010000] [c5440200] [c5460000] [c54e0200] [c5500000] [c5510000] [c5530200] [c5540200] 
+RawEventDump         INFO    ... [c6300000] [c6310500] [c6320500] [c6330200] [c6580000] [c6590500] [c65a0500] [c65b0200] [c65d0000] [c65e0000] 
+RawEventDump         INFO    ... [c6800000] [c6810500] [c6820500] [c6830200] [c6ac0000] [c6ad0000] [c6ae0000] [c6af0000] [c6b00500] [c6c00500] 
+RawEventDump         INFO    ... [c6c10500] [c6c20500] [c6ca0500] [c6cb0500] [c6cc0500] [c6df0500] [c6e00000] [c6e10500] [c6e20500] [c6e30500] 
+RawEventDump         INFO    ... [c6e40500] [c6e80500] [c6e90500] [c6ed0500] [c6ee0000] [c6f70500] [c6f80500] [c7070500] [c7380300] [c73c0200] 
+RawEventDump         INFO    ... [c8350200] [c8360200] [c8960200] [c8970000] [c8980200] [c8990000] [cac90500] [caca0500] [cacb0500] [cacc0500] 
+RawEventDump         INFO    ... [cad30500] [cad40500] [cad50500] [cad60500] [cad70500] [cad80500] [cb200500] [d35e0500] [d35f0500] [d8250300] 
+RawEventDump         INFO    ... [d8260300] [d8270300] [d8280300] [d8290300] [d96e0500] [d96f0500] [d9700500] [d9710500] [d9720500] [d9730500] 
+RawEventDump         INFO    ... [d9740500] [d9750500] [ea570200] [eaa20500] [eaa30500] [ee660500] [ee670500] [ee680500] [ee6a0500] [ee6e0500] 
+RawEventDump         INFO    ... [ee6f0500] [ee700500] [ee730500] [f2380500] [f2390000] [f23a0500] [f23b0000] [f23c0500] [f23d0000] [f23e0500] 
+RawEventDump         INFO    ... [f23f0000] [f2400500] [f2410500] [f2610000] [f2620000] [f2630000] [f2640000] [f2650000] [f2660000] [f2670000] 
+RawEventDump         INFO    ... [f2680000] [f2690000] [f26a0000] [f36e0500] [f36f0000] [f3700500] [f3710000] [f3720500] [f3730000] [f3740500] 
+RawEventDump         INFO    ... [f3750000] [f3760500] [f3770000] [f3780500] [f3790000] [f37a0500] [f37b0000] [f37c0500] [f37d0000] [f37e0500] 
+RawEventDump         INFO    ... [f37f0000] [f3800500] [f3810000] [f3820500] [f3830000] [fffd0300] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 54(HltSelReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 54: [size, source, version, magic]
+RawEventDump         INFO   [64, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [10] [1c445] [b] [c] [d] [e] [10] [0] [1] [0] 
+RawEventDump         INFO    ... [10000] [10000] [10000] [10000] [20000] [0] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 55(HltVertexReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 55: [size, source, version, magic]
+RawEventDump         INFO   [100, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [2] [27770001] [3f2f673e] [3df7ecd1] [4180f308] [42d7657b] [7f] [38d6d9b7] [38cb2d47] [3b258960] 
+RawEventDump         INFO    ... [34724fb6] [38f55726] [b5b94767] [27850001] [3f2f673e] [3df7ecd1] [4180f308] [42d7657b] [7f] [38d6d9b7] 
+RawEventDump         INFO    ... [38cb2d47] [3b258960] [34724fb6] [38f55726] [b5b94767] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 17(HltDecReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 17: [size, source, version, magic]
+RawEventDump         INFO   [1024, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [a30046] [ffff0000] [10701] [20701] [1b0200] [1c0200] [1f0000] [200300] [280100] [320100] 
+RawEventDump         INFO    ... [330100] [340100] [350100] [360100] [370100] [380200] [390200] [3a0000] [3b0100] [460100] 
+RawEventDump         INFO    ... [490000] [4b0000] [5e0200] [660200] [cb0500] [cc0200] [cd0200] [ce0500] [1970200] [1fd0000] 
+RawEventDump         INFO    ... [1ff0701] [2000600] [2580500] [3ea0200] [3eb0200] [3ec0500] [3ed0200] [3ef0000] [3f30200] [3f40000] 
+RawEventDump         INFO    ... [3f50000] [3f60000] [3f70100] [c3500500] [c3530500] [c35b0000] [c35c0701] [c35d0000] [c35e0000] [c35f0300] 
+RawEventDump         INFO    ... [c37c0500] [c37d0500] [c37e0500] [c3a00500] [c3a10000] [c3a20500] [c3aa0500] [c3ab0000] [c3ac0000] [c3ad0000] 
+RawEventDump         INFO    ... [c3ae0500] [c3af0000] [c3b00000] [c3b20000] [c3e00500] [c40f0000] [c4100500] [c4120000] [c4140500] [c4190000] 
+RawEventDump         INFO    ... [c41a0000] [c41b0500] [c41d0500] [c41e0000] [c41f0000] [c4200500] [c4210500] [c4250500] [c4260500] [c4270500] 
+RawEventDump         INFO    ... [c4280500] [c4290500] [c42a0000] [c42b0500] [c42c0500] [c42d0500] [c42e0500] [c42f0500] [c4690000] [c46a0500] 
+RawEventDump         INFO    ... [c46b0500] [c46c0500] [c46d0500] [c46e0500] [c46f0000] [c4700500] [c4710000] [c4770300] [c47d0200] [c47e0200] 
+RawEventDump         INFO    ... [c47f0200] [c4800000] [c4810200] [c4820000] [c4830000] [c4e10200] [c4e20200] [c4e30200] [c4e40200] [c4e50200] 
+RawEventDump         INFO    ... [c4e60200] [c4e70000] [c4e80000] [c4e90000] [c4ea0000] [c4eb0200] [c4ec0200] [c4ed0200] [c4ee0000] [c4f40000] 
+RawEventDump         INFO    ... [c4f80000] [c4fc0500] [c5010500] [c5440200] [c5460000] [c54e0200] [c5500200] [c5510000] [c5530300] [c5540200] 
+RawEventDump         INFO    ... [c6300000] [c6310500] [c6320500] [c6330200] [c6580000] [c6590500] [c65a0500] [c65b0200] [c65d0000] [c65e0000] 
+RawEventDump         INFO    ... [c6800000] [c6810500] [c6820500] [c6830200] [c6ac0500] [c6ad0000] [c6ae0000] [c6af0000] [c6b00500] [c6c00500] 
+RawEventDump         INFO    ... [c6c10500] [c6c20500] [c6ca0500] [c6cb0500] [c6cc0500] [c6df0500] [c6e00000] [c6e10500] [c6e20500] [c6e30500] 
+RawEventDump         INFO    ... [c6e40500] [c6e80500] [c6e90500] [c6ed0500] [c6ee0000] [c6f70500] [c6f80500] [c7070500] [c7380300] [c73c0200] 
+RawEventDump         INFO    ... [c8350200] [c8360200] [c8960200] [c8970000] [c8980200] [c8990000] [cac90500] [caca0500] [cacb0500] [cacc0500] 
+RawEventDump         INFO    ... [cad30500] [cad40500] [cad50500] [cad60500] [cad70500] [cad80500] [cb200500] [d35e0500] [d35f0500] [d8250300] 
+RawEventDump         INFO    ... [d8260300] [d8270300] [d8280300] [d8290300] [d96e0500] [d96f0500] [d9700500] [d9710500] [d9720500] [d9730500] 
+RawEventDump         INFO    ... [d9740500] [d9750500] [ea570200] [eaa20500] [eaa30500] [ee660500] [ee670500] [ee680500] [ee6a0500] [ee6e0500] 
+RawEventDump         INFO    ... [ee6f0500] [ee700500] [ee730500] [f2380500] [f2390000] [f23a0500] [f23b0000] [f23c0500] [f23d0000] [f23e0500] 
+RawEventDump         INFO    ... [f23f0000] [f2400500] [f2410500] [f2610500] [f2620000] [f2630000] [f2640000] [f2650000] [f2660000] [f2670500] 
+RawEventDump         INFO    ... [f2680000] [f2690000] [f26a0000] [f36e0500] [f36f0000] [f3700500] [f3710500] [f3720500] [f3730000] [f3740500] 
+RawEventDump         INFO    ... [f3750500] [f3760500] [f3770000] [f3780500] [f3790500] [f37a0500] [f37b0000] [f37c0500] [f37d0000] [f37e0500] 
+RawEventDump         INFO    ... [f37f0000] [f3800500] [f3810000] [f3820500] [f3830500] [fffd0300] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 54(HltSelReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 54: [size, source, version, magic]
+RawEventDump         INFO   [64, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [10] [1c445] [b] [c] [d] [e] [10] [4154425e] [b21e62e3] [419a3ea2] 
+RawEventDump         INFO    ... [10000] [10000] [10000] [10000] [20000] [0] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 55(HltVertexReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 55: [size, source, version, magic]
+RawEventDump         INFO   [100, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [2] [27770001] [3f33a55c] [3e15dbaf] [420e60b9] [428ccc58] [49] [39185d7d] [39191eb5] [3b6fa599] 
+RawEventDump         INFO    ... [b5d044de] [38adbd96] [b8b9f0a1] [27850001] [3f33a55c] [3e15dbaf] [420e60b9] [428ccc58] [49] [39185d7d] 
+RawEventDump         INFO    ... [39191eb5] [3b6fa599] [b5d044de] [38adbd96] [b8b9f0a1] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 17(HltDecReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 17: [size, source, version, magic]
+RawEventDump         INFO   [1024, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [a30046] [ffff0000] [10701] [20701] [1b0200] [1c0200] [1f0000] [200300] [280100] [320100] 
+RawEventDump         INFO    ... [330100] [340100] [350100] [360100] [370100] [380200] [390200] [3a0000] [3b0100] [460100] 
+RawEventDump         INFO    ... [490000] [4b0000] [5e0200] [660200] [cb0500] [cc0200] [cd0200] [ce0500] [1970200] [1fd0000] 
+RawEventDump         INFO    ... [1ff0701] [2000600] [2580500] [3ea0200] [3eb0200] [3ec0500] [3ed0200] [3ef0000] [3f30200] [3f40000] 
+RawEventDump         INFO    ... [3f50000] [3f60000] [3f70100] [c3500500] [c3530500] [c35b0000] [c35c0701] [c35d0000] [c35e0000] [c35f0300] 
+RawEventDump         INFO    ... [c37c0500] [c37d0500] [c37e0500] [c3a00500] [c3a10000] [c3a20500] [c3aa0500] [c3ab0000] [c3ac0000] [c3ad0000] 
+RawEventDump         INFO    ... [c3ae0500] [c3af0000] [c3b00000] [c3b20500] [c3e00500] [c40f0300] [c4100500] [c4120000] [c4140500] [c4190000] 
+RawEventDump         INFO    ... [c41a0000] [c41b0500] [c41d0500] [c41e0000] [c41f0000] [c4200500] [c4210500] [c4250500] [c4260500] [c4270500] 
+RawEventDump         INFO    ... [c4280500] [c4290500] [c42a0000] [c42b0500] [c42c0500] [c42d0500] [c42e0500] [c42f0500] [c4690000] [c46a0500] 
+RawEventDump         INFO    ... [c46b0500] [c46c0500] [c46d0500] [c46e0500] [c46f0000] [c4700500] [c4710000] [c4770300] [c47d0200] [c47e0000] 
+RawEventDump         INFO    ... [c47f0200] [c4800000] [c4810200] [c4820000] [c4830000] [c4e10200] [c4e20200] [c4e30200] [c4e40200] [c4e50200] 
+RawEventDump         INFO    ... [c4e60000] [c4e70000] [c4e80000] [c4e90000] [c4ea0000] [c4eb0200] [c4ec0200] [c4ed0200] [c4ee0000] [c4f40000] 
+RawEventDump         INFO    ... [c4f80000] [c4fc0500] [c5010000] [c5440200] [c5460000] [c54e0200] [c5500000] [c5510000] [c5530300] [c5540200] 
+RawEventDump         INFO    ... [c6300000] [c6310500] [c6320500] [c6330200] [c6580000] [c6590500] [c65a0500] [c65b0200] [c65d0000] [c65e0000] 
+RawEventDump         INFO    ... [c6800000] [c6810500] [c6820500] [c6830200] [c6ac0000] [c6ad0000] [c6ae0000] [c6af0000] [c6b00500] [c6c00500] 
+RawEventDump         INFO    ... [c6c10500] [c6c20500] [c6ca0500] [c6cb0500] [c6cc0500] [c6df0500] [c6e00000] [c6e10500] [c6e20500] [c6e30500] 
+RawEventDump         INFO    ... [c6e40500] [c6e80500] [c6e90500] [c6ed0500] [c6ee0000] [c6f70500] [c6f80500] [c7070500] [c7380300] [c73c0200] 
+RawEventDump         INFO    ... [c8350200] [c8360200] [c8960200] [c8970000] [c8980200] [c8990000] [cac90500] [caca0500] [cacb0500] [cacc0500] 
+RawEventDump         INFO    ... [cad30500] [cad40500] [cad50500] [cad60500] [cad70500] [cad80500] [cb200500] [d35e0500] [d35f0500] [d8250300] 
+RawEventDump         INFO    ... [d8260300] [d8270300] [d8280300] [d8290300] [d96e0500] [d96f0500] [d9700500] [d9710500] [d9720500] [d9730500] 
+RawEventDump         INFO    ... [d9740500] [d9750500] [ea570200] [eaa20500] [eaa30500] [ee660500] [ee670500] [ee680500] [ee6a0500] [ee6e0500] 
+RawEventDump         INFO    ... [ee6f0500] [ee700500] [ee730500] [f2380500] [f2390000] [f23a0500] [f23b0000] [f23c0500] [f23d0000] [f23e0500] 
+RawEventDump         INFO    ... [f23f0000] [f2400500] [f2410000] [f2610000] [f2620000] [f2630000] [f2640000] [f2650000] [f2660000] [f2670000] 
+RawEventDump         INFO    ... [f2680000] [f2690000] [f26a0000] [f36e0500] [f36f0000] [f3700500] [f3710000] [f3720500] [f3730000] [f3740500] 
+RawEventDump         INFO    ... [f3750000] [f3760500] [f3770000] [f3780500] [f3790000] [f37a0500] [f37b0000] [f37c0500] [f37d0000] [f37e0500] 
+RawEventDump         INFO    ... [f37f0500] [f3800500] [f3810000] [f3820500] [f3830000] [fffd0300] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 54(HltSelReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 54: [size, source, version, magic]
+RawEventDump         INFO   [64, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [10] [1c445] [b] [c] [d] [e] [10] [41607de7] [41d66e16] [41a4705e] 
+RawEventDump         INFO    ... [10000] [10000] [10000] [10000] [20000] [0] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 55(HltVertexReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 55: [size, source, version, magic]
+RawEventDump         INFO   [100, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [2] [27770001] [3f2628d1] [3e1af958] [4231a8e2] [4288c7f4] [63] [38d62df8] [38d45ebf] [3b72fc8b] 
+RawEventDump         INFO    ... [345e041b] [38864b0f] [35379841] [27850001] [3f2628d1] [3e1af958] [4231a8e2] [4288c7f4] [63] [38d62df8] 
+RawEventDump         INFO    ... [38d45ebf] [3b72fc8b] [345e041b] [38864b0f] [35379841] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 17(HltDecReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 17: [size, source, version, magic]
+RawEventDump         INFO   [1024, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [a30046] [ffff0000] [10701] [20701] [1b0200] [1c0200] [1f0000] [200300] [280100] [320100] 
+RawEventDump         INFO    ... [330100] [340100] [350100] [360100] [370100] [380200] [390200] [3a0000] [3b0100] [460100] 
+RawEventDump         INFO    ... [490000] [4b0000] [5e0200] [660200] [cb0500] [cc0500] [cd0200] [ce0500] [1970200] [1fd0000] 
+RawEventDump         INFO    ... [1ff0701] [2000600] [2580500] [3ea0500] [3eb0500] [3ec0200] [3ed0200] [3ef0000] [3f30500] [3f40000] 
+RawEventDump         INFO    ... [3f50000] [3f60000] [3f70100] [c3500500] [c3530500] [c35b0000] [c35c0701] [c35d0000] [c35e0000] [c35f0300] 
+RawEventDump         INFO    ... [c37c0500] [c37d0500] [c37e0500] [c3a00500] [c3a10000] [c3a20500] [c3aa0500] [c3ab0000] [c3ac0000] [c3ad0000] 
+RawEventDump         INFO    ... [c3ae0500] [c3af0000] [c3b00500] [c3b20000] [c3e00500] [c40f0300] [c4100500] [c4120000] [c4140500] [c4190000] 
+RawEventDump         INFO    ... [c41a0000] [c41b0500] [c41d0500] [c41e0000] [c41f0000] [c4200500] [c4210500] [c4250500] [c4260500] [c4270500] 
+RawEventDump         INFO    ... [c4280500] [c4290500] [c42a0000] [c42b0500] [c42c0500] [c42d0500] [c42e0500] [c42f0500] [c4690000] [c46a0500] 
+RawEventDump         INFO    ... [c46b0500] [c46c0500] [c46d0500] [c46e0500] [c46f0000] [c4700500] [c4710000] [c4770300] [c47d0200] [c47e0000] 
+RawEventDump         INFO    ... [c47f0200] [c4800000] [c4810200] [c4820000] [c4830000] [c4e10200] [c4e20200] [c4e30200] [c4e40200] [c4e50200] 
+RawEventDump         INFO    ... [c4e60000] [c4e70000] [c4e80000] [c4e90000] [c4ea0000] [c4eb0200] [c4ec0200] [c4ed0200] [c4ee0000] [c4f40000] 
+RawEventDump         INFO    ... [c4f80000] [c4fc0500] [c5010000] [c5440200] [c5460200] [c54e0200] [c5500000] [c5510000] [c5530200] [c5540200] 
+RawEventDump         INFO    ... [c6300000] [c6310500] [c6320500] [c6330200] [c6580000] [c6590500] [c65a0500] [c65b0200] [c65d0000] [c65e0000] 
+RawEventDump         INFO    ... [c6800000] [c6810500] [c6820500] [c6830200] [c6ac0000] [c6ad0000] [c6ae0000] [c6af0000] [c6b00500] [c6c00500] 
+RawEventDump         INFO    ... [c6c10500] [c6c20500] [c6ca0500] [c6cb0500] [c6cc0500] [c6df0500] [c6e00000] [c6e10500] [c6e20500] [c6e30500] 
+RawEventDump         INFO    ... [c6e40500] [c6e80500] [c6e90500] [c6ed0500] [c6ee0000] [c6f70500] [c6f80500] [c7070500] [c7380300] [c73c0200] 
+RawEventDump         INFO    ... [c8350200] [c8360200] [c8960200] [c8970000] [c8980200] [c8990000] [cac90500] [caca0500] [cacb0500] [cacc0500] 
+RawEventDump         INFO    ... [cad30500] [cad40500] [cad50500] [cad60500] [cad70500] [cad80500] [cb200500] [d35e0500] [d35f0500] [d8250300] 
+RawEventDump         INFO    ... [d8260300] [d8270300] [d8280300] [d8290300] [d96e0500] [d96f0500] [d9700500] [d9710500] [d9720500] [d9730500] 
+RawEventDump         INFO    ... [d9740500] [d9750500] [ea570200] [eaa20500] [eaa30500] [ee660500] [ee670500] [ee680500] [ee6a0500] [ee6e0500] 
+RawEventDump         INFO    ... [ee6f0500] [ee700500] [ee730500] [f2380500] [f2390000] [f23a0500] [f23b0000] [f23c0500] [f23d0000] [f23e0500] 
+RawEventDump         INFO    ... [f23f0000] [f2400500] [f2410000] [f2610000] [f2620000] [f2630000] [f2640000] [f2650000] [f2660000] [f2670000] 
+RawEventDump         INFO    ... [f2680000] [f2690000] [f26a0000] [f36e0500] [f36f0000] [f3700500] [f3710000] [f3720500] [f3730000] [f3740500] 
+RawEventDump         INFO    ... [f3750000] [f3760500] [f3770000] [f3780500] [f3790000] [f37a0500] [f37b0000] [f37c0500] [f37d0000] [f37e0500] 
+RawEventDump         INFO    ... [f37f0000] [f3800500] [f3810000] [f3820500] [f3830000] [fffd0300] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 54(HltSelReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 54: [size, source, version, magic]
+RawEventDump         INFO   [64, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [10] [1c445] [b] [c] [d] [e] [10] [0] [1] [0] 
+RawEventDump         INFO    ... [10000] [10000] [10000] [10000] [20000] [0] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 55(HltVertexReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 55: [size, source, version, magic]
+RawEventDump         INFO   [100, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [2] [27770001] [3f271c85] [3e271845] [43055d73] [422fc985] [51] [393a229c] [393c72c9] [3bc4c668] 
+RawEventDump         INFO    ... [35ab41ab] [b870d09c] [b8bda431] [27850001] [3f271c85] [3e271845] [43055d73] [422fc985] [51] [393a229c] 
+RawEventDump         INFO    ... [393c72c9] [3bc4c668] [35ab41ab] [b870d09c] [b8bda431] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 17(HltDecReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 17: [size, source, version, magic]
+RawEventDump         INFO   [1024, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [a30046] [ffff0000] [10701] [20701] [1b0200] [1c0200] [1f0000] [200300] [280100] [320100] 
+RawEventDump         INFO    ... [330100] [340100] [350100] [360100] [370100] [380200] [390200] [3a0000] [3b0100] [460100] 
+RawEventDump         INFO    ... [490000] [4b0000] [5e0200] [660200] [cb0500] [cc0200] [cd0200] [ce0500] [1970200] [1fd0000] 
+RawEventDump         INFO    ... [1ff0701] [2000600] [2580500] [3ea0200] [3eb0200] [3ec0500] [3ed0200] [3ef0000] [3f30200] [3f40000] 
+RawEventDump         INFO    ... [3f50000] [3f60000] [3f70100] [c3500500] [c3530500] [c35b0000] [c35c0701] [c35d0000] [c35e0000] [c35f0300] 
+RawEventDump         INFO    ... [c37c0500] [c37d0500] [c37e0500] [c3a00500] [c3a10000] [c3a20500] [c3aa0500] [c3ab0000] [c3ac0000] [c3ad0000] 
+RawEventDump         INFO    ... [c3ae0500] [c3af0000] [c3b00000] [c3b20000] [c3e00500] [c40f0300] [c4100500] [c4120000] [c4140500] [c4190000] 
+RawEventDump         INFO    ... [c41a0500] [c41b0500] [c41d0500] [c41e0000] [c41f0000] [c4200500] [c4210500] [c4250500] [c4260500] [c4270500] 
+RawEventDump         INFO    ... [c4280500] [c4290500] [c42a0000] [c42b0500] [c42c0500] [c42d0500] [c42e0500] [c42f0500] [c4690000] [c46a0500] 
+RawEventDump         INFO    ... [c46b0500] [c46c0500] [c46d0500] [c46e0500] [c46f0000] [c4700500] [c4710000] [c4770300] [c47d0200] [c47e0000] 
+RawEventDump         INFO    ... [c47f0200] [c4800000] [c4810200] [c4820000] [c4830000] [c4e10200] [c4e20200] [c4e30200] [c4e40200] [c4e50200] 
+RawEventDump         INFO    ... [c4e60000] [c4e70000] [c4e80000] [c4e90000] [c4ea0000] [c4eb0200] [c4ec0200] [c4ed0200] [c4ee0200] [c4f40000] 
+RawEventDump         INFO    ... [c4f80000] [c4fc0500] [c5010000] [c5440200] [c5460000] [c54e0200] [c5500000] [c5510000] [c5530300] [c5540200] 
+RawEventDump         INFO    ... [c6300000] [c6310500] [c6320500] [c6330200] [c6580000] [c6590500] [c65a0500] [c65b0200] [c65d0000] [c65e0000] 
+RawEventDump         INFO    ... [c6800000] [c6810500] [c6820500] [c6830200] [c6ac0000] [c6ad0000] [c6ae0000] [c6af0000] [c6b00500] [c6c00500] 
+RawEventDump         INFO    ... [c6c10500] [c6c20500] [c6ca0500] [c6cb0500] [c6cc0500] [c6df0500] [c6e00000] [c6e10500] [c6e20500] [c6e30500] 
+RawEventDump         INFO    ... [c6e40500] [c6e80500] [c6e90500] [c6ed0500] [c6ee0000] [c6f70500] [c6f80500] [c7070500] [c7380300] [c73c0200] 
+RawEventDump         INFO    ... [c8350200] [c8360200] [c8960200] [c8970000] [c8980200] [c8990000] [cac90500] [caca0500] [cacb0500] [cacc0500] 
+RawEventDump         INFO    ... [cad30500] [cad40500] [cad50500] [cad60500] [cad70500] [cad80500] [cb200500] [d35e0500] [d35f0500] [d8250300] 
+RawEventDump         INFO    ... [d8260300] [d8270300] [d8280300] [d8290300] [d96e0500] [d96f0500] [d9700500] [d9710500] [d9720500] [d9730500] 
+RawEventDump         INFO    ... [d9740500] [d9750500] [ea570200] [eaa20500] [eaa30500] [ee660500] [ee670500] [ee680500] [ee6a0500] [ee6e0500] 
+RawEventDump         INFO    ... [ee6f0500] [ee700500] [ee730500] [f2380500] [f2390000] [f23a0500] [f23b0000] [f23c0500] [f23d0000] [f23e0500] 
+RawEventDump         INFO    ... [f23f0500] [f2400500] [f2410000] [f2610000] [f2620000] [f2630000] [f2640000] [f2650000] [f2660000] [f2670000] 
+RawEventDump         INFO    ... [f2680000] [f2690000] [f26a0000] [f36e0500] [f36f0500] [f3700500] [f3710000] [f3720500] [f3730000] [f3740500] 
+RawEventDump         INFO    ... [f3750000] [f3760500] [f3770000] [f3780500] [f3790000] [f37a0500] [f37b0000] [f37c0500] [f37d0000] [f37e0500] 
+RawEventDump         INFO    ... [f37f0000] [f3800500] [f3810000] [f3820500] [f3830000] [fffd0300] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 54(HltSelReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 54: [size, source, version, magic]
+RawEventDump         INFO   [64, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [10] [1c445] [b] [c] [d] [e] [10] [4159ceb0] [3356ba72] [41a26669] 
+RawEventDump         INFO    ... [10000] [10000] [10000] [10000] [20000] [0] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 55(HltVertexReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 55: [size, source, version, magic]
+RawEventDump         INFO   [100, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [2] [27770001] [3f346ca7] [3e13bda4] [4246800e] [420b5e6f] [3f] [39853d0f] [398a3515] [3c3a515d] 
+RawEventDump         INFO    ... [3639e89d] [38c829e5] [39c14a67] [27850001] [3f346ca7] [3e13bda4] [4246800e] [420b5e6f] [3f] [39853d0f] 
+RawEventDump         INFO    ... [398a3515] [3c3a515d] [3639e89d] [38c829e5] [39c14a67] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 17(HltDecReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 17: [size, source, version, magic]
+RawEventDump         INFO   [1024, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [a30046] [ffff0000] [10701] [20701] [1b0200] [1c0200] [1f0000] [200300] [280100] [320100] 
+RawEventDump         INFO    ... [330100] [340100] [350100] [360100] [370100] [380200] [390200] [3a0000] [3b0100] [460100] 
+RawEventDump         INFO    ... [490000] [4b0000] [5e0200] [660200] [cb0500] [cc0500] [cd0200] [ce0500] [1970200] [1fd0000] 
+RawEventDump         INFO    ... [1ff0701] [2000600] [2580500] [3ea0500] [3eb0500] [3ec0200] [3ed0200] [3ef0000] [3f30500] [3f40000] 
+RawEventDump         INFO    ... [3f50000] [3f60000] [3f70100] [c3500500] [c3530500] [c35b0000] [c35c0701] [c35d0000] [c35e0000] [c35f0300] 
+RawEventDump         INFO    ... [c37c0500] [c37d0500] [c37e0500] [c3a00500] [c3a10000] [c3a20500] [c3aa0500] [c3ab0000] [c3ac0000] [c3ad0000] 
+RawEventDump         INFO    ... [c3ae0500] [c3af0000] [c3b00000] [c3b20000] [c3e00500] [c40f0000] [c4100500] [c4120000] [c4140500] [c4190000] 
+RawEventDump         INFO    ... [c41a0500] [c41b0500] [c41d0500] [c41e0000] [c41f0000] [c4200500] [c4210500] [c4250500] [c4260500] [c4270500] 
+RawEventDump         INFO    ... [c4280500] [c4290500] [c42a0000] [c42b0500] [c42c0500] [c42d0500] [c42e0500] [c42f0500] [c4690000] [c46a0500] 
+RawEventDump         INFO    ... [c46b0500] [c46c0500] [c46d0500] [c46e0500] [c46f0000] [c4700500] [c4710000] [c4770300] [c47d0200] [c47e0000] 
+RawEventDump         INFO    ... [c47f0200] [c4800000] [c4810200] [c4820000] [c4830200] [c4e10200] [c4e20200] [c4e30200] [c4e40200] [c4e50200] 
+RawEventDump         INFO    ... [c4e60000] [c4e70000] [c4e80000] [c4e90000] [c4ea0000] [c4eb0200] [c4ec0200] [c4ed0200] [c4ee0000] [c4f40000] 
+RawEventDump         INFO    ... [c4f80000] [c4fc0500] [c5010000] [c5440200] [c5460000] [c54e0200] [c5500000] [c5510000] [c5530200] [c5540200] 
+RawEventDump         INFO    ... [c6300000] [c6310500] [c6320500] [c6330200] [c6580000] [c6590500] [c65a0500] [c65b0200] [c65d0000] [c65e0000] 
+RawEventDump         INFO    ... [c6800000] [c6810500] [c6820500] [c6830200] [c6ac0000] [c6ad0000] [c6ae0000] [c6af0000] [c6b00500] [c6c00500] 
+RawEventDump         INFO    ... [c6c10500] [c6c20500] [c6ca0500] [c6cb0500] [c6cc0500] [c6df0500] [c6e00000] [c6e10500] [c6e20500] [c6e30500] 
+RawEventDump         INFO    ... [c6e40500] [c6e80500] [c6e90500] [c6ed0500] [c6ee0000] [c6f70500] [c6f80500] [c7070500] [c7380300] [c73c0200] 
+RawEventDump         INFO    ... [c8350200] [c8360200] [c8960200] [c8970000] [c8980200] [c8990000] [cac90500] [caca0500] [cacb0500] [cacc0500] 
+RawEventDump         INFO    ... [cad30500] [cad40500] [cad50500] [cad60500] [cad70500] [cad80500] [cb200500] [d35e0500] [d35f0500] [d8250300] 
+RawEventDump         INFO    ... [d8260300] [d8270300] [d8280300] [d8290300] [d96e0500] [d96f0500] [d9700500] [d9710500] [d9720500] [d9730500] 
+RawEventDump         INFO    ... [d9740500] [d9750500] [ea570200] [eaa20500] [eaa30500] [ee660500] [ee670500] [ee680500] [ee6a0500] [ee6e0500] 
+RawEventDump         INFO    ... [ee6f0500] [ee700500] [ee730500] [f2380500] [f2390000] [f23a0500] [f23b0000] [f23c0500] [f23d0000] [f23e0500] 
+RawEventDump         INFO    ... [f23f0000] [f2400500] [f2410000] [f2610000] [f2620000] [f2630000] [f2640000] [f2650000] [f2660000] [f2670000] 
+RawEventDump         INFO    ... [f2680000] [f2690000] [f26a0000] [f36e0500] [f36f0000] [f3700500] [f3710000] [f3720500] [f3730000] [f3740500] 
+RawEventDump         INFO    ... [f3750000] [f3760500] [f3770000] [f3780500] [f3790000] [f37a0500] [f37b0500] [f37c0500] [f37d0000] [f37e0500] 
+RawEventDump         INFO    ... [f37f0000] [f3800500] [f3810000] [f3820500] [f3830000] [fffd0300] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 54(HltSelReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 54: [size, source, version, magic]
+RawEventDump         INFO   [64, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [10] [1c445] [b] [c] [d] [e] [10] [0] [0] [0] 
+RawEventDump         INFO    ... [10000] [10000] [10000] [10000] [20000] [0] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 55(HltVertexReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 55: [size, source, version, magic]
+RawEventDump         INFO   [100, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [2] [27770001] [3f29f0fe] [3da1c471] [42d9e4ea] [41d7230f] [2b] [3994faeb] [39972ab7] [3beea9b9] 
+RawEventDump         INFO    ... [377fe747] [b98c4a4b] [b9b42a0d] [27850001] [3f29f0fe] [3da1c471] [42d9e4ea] [41d7230f] [2b] [3994faeb] 
+RawEventDump         INFO    ... [39972ab7] [3beea9b9] [377fe747] [b98c4a4b] [b9b42a0d] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 17(HltDecReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 17: [size, source, version, magic]
+RawEventDump         INFO   [1024, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [a30046] [ffff0000] [10701] [20701] [1b0200] [1c0200] [1f0000] [200300] [280100] [320100] 
+RawEventDump         INFO    ... [330100] [340100] [350100] [360100] [370100] [380200] [390200] [3a0000] [3b0100] [460100] 
+RawEventDump         INFO    ... [490000] [4b0000] [5e0200] [660200] [cb0500] [cc0200] [cd0200] [ce0500] [1970200] [1fd0000] 
+RawEventDump         INFO    ... [1ff0701] [2000701] [2580500] [3ea0200] [3eb0200] [3ec0500] [3ed0200] [3ef0000] [3f30200] [3f40000] 
+RawEventDump         INFO    ... [3f50000] [3f60000] [3f70100] [c3500500] [c3530500] [c35b0000] [c35c0701] [c35d0000] [c35e0000] [c35f0300] 
+RawEventDump         INFO    ... [c37c0500] [c37d0500] [c37e0500] [c3a00500] [c3a10000] [c3a20500] [c3aa0500] [c3ab0000] [c3ac0000] [c3ad0000] 
+RawEventDump         INFO    ... [c3ae0500] [c3af0000] [c3b00000] [c3b20500] [c3e00500] [c40f0300] [c4100500] [c4120000] [c4140500] [c4190000] 
+RawEventDump         INFO    ... [c41a0000] [c41b0500] [c41d0500] [c41e0000] [c41f0000] [c4200500] [c4210500] [c4250500] [c4260500] [c4270500] 
+RawEventDump         INFO    ... [c4280500] [c4290500] [c42a0000] [c42b0500] [c42c0500] [c42d0500] [c42e0500] [c42f0500] [c4690000] [c46a0500] 
+RawEventDump         INFO    ... [c46b0500] [c46c0500] [c46d0500] [c46e0500] [c46f0000] [c4700500] [c4710000] [c4770300] [c47d0200] [c47e0000] 
+RawEventDump         INFO    ... [c47f0200] [c4800000] [c4810200] [c4820000] [c4830200] [c4e10200] [c4e20200] [c4e30200] [c4e40200] [c4e50200] 
+RawEventDump         INFO    ... [c4e60200] [c4e70000] [c4e80000] [c4e90200] [c4ea0000] [c4eb0200] [c4ec0200] [c4ed0200] [c4ee0000] [c4f40000] 
+RawEventDump         INFO    ... [c4f80000] [c4fc0500] [c5010000] [c5440200] [c5460000] [c54e0200] [c5500000] [c5510000] [c5530500] [c5540200] 
+RawEventDump         INFO    ... [c6300000] [c6310500] [c6320500] [c6330200] [c6580000] [c6590500] [c65a0500] [c65b0200] [c65d0000] [c65e0000] 
+RawEventDump         INFO    ... [c6800000] [c6810500] [c6820500] [c6830200] [c6ac0000] [c6ad0000] [c6ae0000] [c6af0000] [c6b00500] [c6c00500] 
+RawEventDump         INFO    ... [c6c10500] [c6c20500] [c6ca0500] [c6cb0500] [c6cc0500] [c6df0500] [c6e00000] [c6e10500] [c6e20500] [c6e30500] 
+RawEventDump         INFO    ... [c6e40500] [c6e80500] [c6e90500] [c6ed0500] [c6ee0000] [c6f70500] [c6f80500] [c7070500] [c7380300] [c73c0200] 
+RawEventDump         INFO    ... [c8350200] [c8360200] [c8960200] [c8970000] [c8980200] [c8990000] [cac90500] [caca0500] [cacb0500] [cacc0500] 
+RawEventDump         INFO    ... [cad30500] [cad40500] [cad50500] [cad60500] [cad70500] [cad80500] [cb200500] [d35e0500] [d35f0500] [d8250500] 
+RawEventDump         INFO    ... [d8260500] [d8270500] [d8280500] [d8290500] [d96e0500] [d96f0500] [d9700500] [d9710500] [d9720500] [d9730500] 
+RawEventDump         INFO    ... [d9740500] [d9750500] [ea570200] [eaa20500] [eaa30500] [ee660500] [ee670500] [ee680500] [ee6a0500] [ee6e0500] 
+RawEventDump         INFO    ... [ee6f0500] [ee700500] [ee730500] [f2380500] [f2390000] [f23a0500] [f23b0000] [f23c0500] [f23d0000] [f23e0500] 
+RawEventDump         INFO    ... [f23f0000] [f2400500] [f2410000] [f2610000] [f2620000] [f2630000] [f2640000] [f2650500] [f2660000] [f2670000] 
+RawEventDump         INFO    ... [f2680000] [f2690000] [f26a0000] [f36e0500] [f36f0000] [f3700500] [f3710000] [f3720500] [f3730000] [f3740500] 
+RawEventDump         INFO    ... [f3750000] [f3760500] [f3770500] [f3780500] [f3790000] [f37a0500] [f37b0000] [f37c0500] [f37d0000] [f37e0500] 
+RawEventDump         INFO    ... [f37f0500] [f3800500] [f3810000] [f3820500] [f3830000] [fffd0300] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 54(HltSelReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 54: [size, source, version, magic]
+RawEventDump         INFO   [64, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [10] [1c445] [b] [c] [d] [e] [10] [0] [1] [0] 
+RawEventDump         INFO    ... [10000] [10000] [10000] [10000] [20000] [0] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 55(HltVertexReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 55: [size, source, version, magic]
+RawEventDump         INFO   [100, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [2] [27770001] [3f351b52] [3dbfccf9] [42675943] [42b3970d] [7d] [38e4ef5b] [38da6445] [3b817de4] 
+RawEventDump         INFO    ... [b69f634b] [3936a770] [b8d489bb] [27850001] [3f351b52] [3dbfccf9] [42675943] [42b3970d] [7d] [38e4ef5b] 
+RawEventDump         INFO    ... [38da6445] [3b817de4] [b69f634b] [3936a770] [b8d489bb] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 17(HltDecReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 17: [size, source, version, magic]
+RawEventDump         INFO   [1024, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [a30046] [ffff0000] [10701] [20701] [1b0200] [1c0200] [1f0000] [200300] [280100] [320100] 
+RawEventDump         INFO    ... [330100] [340100] [350100] [360100] [370100] [380200] [390200] [3a0000] [3b0100] [460100] 
+RawEventDump         INFO    ... [490000] [4b0000] [5e0200] [660200] [cb0500] [cc0200] [cd0500] [ce0500] [1970500] [1fd0000] 
+RawEventDump         INFO    ... [1ff0701] [2000600] [2580500] [3ea0200] [3eb0200] [3ec0500] [3ed0200] [3ef0000] [3f30200] [3f40000] 
+RawEventDump         INFO    ... [3f50000] [3f60000] [3f70100] [c3500500] [c3530500] [c35b0000] [c35c0701] [c35d0000] [c35e0000] [c35f0300] 
+RawEventDump         INFO    ... [c37c0500] [c37d0500] [c37e0500] [c3a00500] [c3a10000] [c3a20500] [c3aa0500] [c3ab0000] [c3ac0000] [c3ad0000] 
+RawEventDump         INFO    ... [c3ae0500] [c3af0000] [c3b00000] [c3b20000] [c3e00500] [c40f0000] [c4100500] [c4120000] [c4140500] [c4190000] 
+RawEventDump         INFO    ... [c41a0000] [c41b0500] [c41d0500] [c41e0000] [c41f0000] [c4200500] [c4210500] [c4250500] [c4260500] [c4270500] 
+RawEventDump         INFO    ... [c4280500] [c4290500] [c42a0000] [c42b0500] [c42c0500] [c42d0500] [c42e0500] [c42f0500] [c4690000] [c46a0500] 
+RawEventDump         INFO    ... [c46b0500] [c46c0500] [c46d0500] [c46e0500] [c46f0000] [c4700500] [c4710000] [c4770300] [c47d0200] [c47e0000] 
+RawEventDump         INFO    ... [c47f0200] [c4800000] [c4810200] [c4820000] [c4830000] [c4e10200] [c4e20200] [c4e30200] [c4e40200] [c4e50200] 
+RawEventDump         INFO    ... [c4e60000] [c4e70000] [c4e80000] [c4e90000] [c4ea0000] [c4eb0200] [c4ec0200] [c4ed0200] [c4ee0000] [c4f40000] 
+RawEventDump         INFO    ... [c4f80000] [c4fc0500] [c5010000] [c5440300] [c5460000] [c54e0300] [c5500000] [c5510000] [c5530300] [c5540300] 
+RawEventDump         INFO    ... [c6300000] [c6310500] [c6320500] [c6330300] [c6580000] [c6590500] [c65a0500] [c65b0300] [c65d0000] [c65e0000] 
+RawEventDump         INFO    ... [c6800000] [c6810500] [c6820500] [c6830300] [c6ac0000] [c6ad0000] [c6ae0000] [c6af0000] [c6b00500] [c6c00500] 
+RawEventDump         INFO    ... [c6c10500] [c6c20500] [c6ca0500] [c6cb0500] [c6cc0500] [c6df0500] [c6e00000] [c6e10500] [c6e20500] [c6e30500] 
+RawEventDump         INFO    ... [c6e40500] [c6e80500] [c6e90500] [c6ed0500] [c6ee0000] [c6f70500] [c6f80500] [c7070500] [c7380300] [c73c0200] 
+RawEventDump         INFO    ... [c8350300] [c8360300] [c8960300] [c8970000] [c8980300] [c8990000] [cac90500] [caca0500] [cacb0500] [cacc0500] 
+RawEventDump         INFO    ... [cad30500] [cad40500] [cad50500] [cad60500] [cad70500] [cad80500] [cb200500] [d35e0500] [d35f0500] [d8250300] 
+RawEventDump         INFO    ... [d8260300] [d8270300] [d8280300] [d8290300] [d96e0500] [d96f0500] [d9700500] [d9710500] [d9720500] [d9730500] 
+RawEventDump         INFO    ... [d9740500] [d9750500] [ea570500] [eaa20500] [eaa30500] [ee660500] [ee670500] [ee680500] [ee6a0500] [ee6e0500] 
+RawEventDump         INFO    ... [ee6f0500] [ee700500] [ee730500] [f2380500] [f2390000] [f23a0500] [f23b0000] [f23c0500] [f23d0000] [f23e0500] 
+RawEventDump         INFO    ... [f23f0000] [f2400500] [f2410000] [f2610000] [f2620000] [f2630000] [f2640000] [f2650000] [f2660000] [f2670500] 
+RawEventDump         INFO    ... [f2680500] [f2690000] [f26a0000] [f36e0500] [f36f0000] [f3700500] [f3710000] [f3720500] [f3730000] [f3740500] 
+RawEventDump         INFO    ... [f3750000] [f3760500] [f3770000] [f3780500] [f3790000] [f37a0500] [f37b0000] [f37c0500] [f37d0000] [f37e0500] 
+RawEventDump         INFO    ... [f37f0000] [f3800500] [f3810000] [f3820500] [f3830000] [fffd0300] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 54(HltSelReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 54: [size, source, version, magic]
+RawEventDump         INFO   [64, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [10] [1c445] [b] [c] [d] [e] [10] [0] [1] [0] 
+RawEventDump         INFO    ... [10000] [10000] [10000] [10000] [20000] [0] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 55(HltVertexReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 55: [size, source, version, magic]
+RawEventDump         INFO   [100, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [2] [27770001] [3f2f1157] [3e1e005b] [42f2533e] [417b6580] [1f] [3a18bbbc] [3a2b0f86] [3d358845] 
+RawEventDump         INFO    ... [b889e46a] [baa9b3c6] [3b123232] [27850001] [3f2f1157] [3e1e005b] [42f2533e] [417b6580] [1f] [3a18bbbc] 
+RawEventDump         INFO    ... [3a2b0f86] [3d358845] [b889e46a] [baa9b3c6] [3b123232] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 17(HltDecReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 17: [size, source, version, magic]
+RawEventDump         INFO   [1024, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [a30046] [ffff0000] [10701] [20701] [1b0200] [1c0200] [1f0000] [200300] [280100] [320100] 
+RawEventDump         INFO    ... [330100] [340100] [350100] [360100] [370100] [380200] [390200] [3a0000] [3b0100] [460100] 
+RawEventDump         INFO    ... [490000] [4b0000] [5e0200] [660200] [cb0500] [cc0200] [cd0200] [ce0500] [1970200] [1fd0000] 
+RawEventDump         INFO    ... [1ff0701] [2000600] [2580500] [3ea0200] [3eb0200] [3ec0500] [3ed0200] [3ef0000] [3f30200] [3f40000] 
+RawEventDump         INFO    ... [3f50000] [3f60000] [3f70100] [c3500500] [c3530500] [c35b0000] [c35c0701] [c35d0000] [c35e0000] [c35f0300] 
+RawEventDump         INFO    ... [c37c0500] [c37d0500] [c37e0500] [c3a00500] [c3a10000] [c3a20500] [c3aa0500] [c3ab0000] [c3ac0000] [c3ad0000] 
+RawEventDump         INFO    ... [c3ae0500] [c3af0000] [c3b00000] [c3b20000] [c3e00500] [c40f0300] [c4100500] [c4120000] [c4140500] [c4190000] 
+RawEventDump         INFO    ... [c41a0000] [c41b0500] [c41d0500] [c41e0000] [c41f0000] [c4200500] [c4210500] [c4250500] [c4260500] [c4270500] 
+RawEventDump         INFO    ... [c4280500] [c4290500] [c42a0000] [c42b0500] [c42c0500] [c42d0500] [c42e0500] [c42f0500] [c4690000] [c46a0500] 
+RawEventDump         INFO    ... [c46b0500] [c46c0500] [c46d0500] [c46e0500] [c46f0000] [c4700500] [c4710000] [c4770300] [c47d0200] [c47e0200] 
+RawEventDump         INFO    ... [c47f0200] [c4800000] [c4810200] [c4820000] [c4830000] [c4e10200] [c4e20200] [c4e30200] [c4e40200] [c4e50200] 
+RawEventDump         INFO    ... [c4e60000] [c4e70000] [c4e80000] [c4e90000] [c4ea0200] [c4eb0200] [c4ec0200] [c4ed0200] [c4ee0000] [c4f40000] 
+RawEventDump         INFO    ... [c4f80000] [c4fc0500] [c5010000] [c5440200] [c5460000] [c54e0200] [c5500000] [c5510000] [c5530300] [c5540200] 
+RawEventDump         INFO    ... [c6300000] [c6310500] [c6320500] [c6330200] [c6580000] [c6590500] [c65a0500] [c65b0200] [c65d0000] [c65e0000] 
+RawEventDump         INFO    ... [c6800000] [c6810500] [c6820500] [c6830200] [c6ac0000] [c6ad0000] [c6ae0000] [c6af0000] [c6b00500] [c6c00500] 
+RawEventDump         INFO    ... [c6c10500] [c6c20500] [c6ca0500] [c6cb0500] [c6cc0500] [c6df0500] [c6e00000] [c6e10500] [c6e20500] [c6e30500] 
+RawEventDump         INFO    ... [c6e40500] [c6e80500] [c6e90500] [c6ed0500] [c6ee0000] [c6f70500] [c6f80500] [c7070500] [c7380300] [c73c0200] 
+RawEventDump         INFO    ... [c8350200] [c8360200] [c8960200] [c8970000] [c8980200] [c8990000] [cac90500] [caca0500] [cacb0500] [cacc0500] 
+RawEventDump         INFO    ... [cad30500] [cad40500] [cad50500] [cad60500] [cad70500] [cad80500] [cb200500] [d35e0500] [d35f0500] [d8250300] 
+RawEventDump         INFO    ... [d8260300] [d8270300] [d8280300] [d8290300] [d96e0500] [d96f0500] [d9700500] [d9710500] [d9720500] [d9730500] 
+RawEventDump         INFO    ... [d9740500] [d9750500] [ea570200] [eaa20500] [eaa30500] [ee660500] [ee670500] [ee680500] [ee6a0500] [ee6e0500] 
+RawEventDump         INFO    ... [ee6f0500] [ee700500] [ee730500] [f2380500] [f2390000] [f23a0500] [f23b0000] [f23c0500] [f23d0000] [f23e0500] 
+RawEventDump         INFO    ... [f23f0000] [f2400500] [f2410000] [f2610000] [f2620000] [f2630000] [f2640000] [f2650500] [f2660000] [f2670000] 
+RawEventDump         INFO    ... [f2680000] [f2690000] [f26a0000] [f36e0500] [f36f0000] [f3700500] [f3710000] [f3720500] [f3730000] [f3740500] 
+RawEventDump         INFO    ... [f3750000] [f3760500] [f3770000] [f3780500] [f3790000] [f37a0500] [f37b0000] [f37c0500] [f37d0000] [f37e0500] 
+RawEventDump         INFO    ... [f37f0000] [f3800500] [f3810000] [f3820500] [f3830000] [fffd0300] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 54(HltSelReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 54: [size, source, version, magic]
+RawEventDump         INFO   [64, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [10] [1c445] [b] [c] [d] [e] [10] [0] [1] [0] 
+RawEventDump         INFO    ... [10000] [10000] [10000] [10000] [20000] [0] 
+RawEventDump         INFO   
+RawEventDump         INFO banks of type 55(HltVertexReports) discovered in DAQ/RawEvent
+RawEventDump         INFO 1 banks of type 55: [size, source, version, magic]
+RawEventDump         INFO   [100, 0, 1, cbcb] Data follows...
+RawEventDump         INFO    ... [2] [27770001] [3f37469f] [3e28e6f6] [4293bc97] [427d88d3] [4b] [390e3818] [390ca912] [3b5d4072] 
+RawEventDump         INFO    ... [b4f5cb33] [b8366e2b] [37811645] [27850001] [3f37469f] [3e28e6f6] [4293bc97] [427d88d3] [4b] [390e3818] 
+RawEventDump         INFO    ... [390ca912] [3b5d4072] [b4f5cb33] [b8366e2b] [37811645] 
+RawEventDump         INFO   
