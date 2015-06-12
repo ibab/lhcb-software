@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-06-12 - Tom Hadavizadeh
+ - CharmHad: Fixed D* lines in D2HHLines 
+    M python/Hlt2Lines/CharmHad/D2HHLines.py
+    M python/Hlt2Lines/CharmHad/Stages.py
+
 ! 2015-06-10 - Christian Linn
  - add new Hlt2NoBiasPassThrough line to Commissioning module,
    passthrough of Hlt1NoBiasPrescaled line

@@ -1319,39 +1319,55 @@ class D2HH0_3Body_Combiner(Hlt2Combiner):
                               CombinationCut =  D_combination_cut, MotherCut = D_mother_cut,
                               Combination12Cut = neutral_combination_cut, Preambulo = [])
                               
-class D2HD0_3Body_Combiner(Hlt2Combiner):
-    def __init__(self, name, decay, inputs):
-        pi_daughters_cut = ("( PT > %(Daug_PT)s ) &" +
-                            "( P  > %(Daug_P)s  ) &" +
-                            "(TRCHI2DOF< %(Track_Chi2)s ) &" +
-                            "(MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s) ")
-                               
-        e_daughters_cut  = ("( PT > %(Elec_PT)s ) &" +
-                            "( P  >  %(Elec_P)s ) &" + 
-                            "(TRCHI2DOF< %(Track_Chi2)s ) &"+
-                            "(MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s) ")
+
+
+class D02_ee_Combiner(Hlt2Combiner):
+    def __init__(self, name):
+        e_daughter_cuts  = ("( PT > %(Elec_PT)s ) &" +
+                 "(TRCHI2DOF< %(Track_Chi2)s ) &"+
+                 "(MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN)s) ")
                  
-        daug_cuts =    {'pi+'   : pi_daughters_cut,
-                        'e+'    : e_daughters_cut}
-                        
-        D_combination_cut   = ("(AM>%(D_MassWinLow)s) &" +
-                               "(AM<%(D_MassWinHigh)s)")
-                               
-        neutral_combination_cut = ("(AM>%(Neutral_MassWinLow)s) &" + 
-                                   "(AM<%(Neutral_MassWinHigh)s) &" + 
-                                   "(APT > %(Neutral_PT)s)")
-
-        D_mother_cut   = ("( (PT > %(D_PT)s ) &" + 
-                          "(VFASPF(VCHI2/VDOF)< %(Vertex_Chi2)s ) )")
-
+        daug_cuts = { 'e+' : e_daughter_cuts,
+                      'e-' : e_daughter_cuts }
+        
+        D0_combination_cut   = ("(AM>%(D0_AM_MassWinLow)s) &" +
+                               "(AM<%(D0_AM_MassWinHigh)s)") 
+        
+        D0_mother_cut   = ("( (PT > %(D0_PT)s ) &" + 
+                          "(VFASPF(VCHI2/VDOF)< %(Vertex_Chi2)s ) ) &"+
+                          "(M>%(D0_MassWinLow)s) &" +
+                          "(M<%(D0_MassWinHigh)s)")
+                          
         from HltTracking.HltPVs import PV3D
-        from Configurables import DaVinci__N3BodyDecays
-                
-        Hlt2Combiner.__init__(self, name, decay, inputs,
-                              dependencies = [ PV3D('Hlt2')], tistos = 'TisTosSpec',
-                              combiner = DaVinci__N3BodyDecays, DaughtersCuts = daug_cuts, 
-                              CombinationCut =  D_combination_cut, MotherCut = D_mother_cut,
-                              Combination12Cut = neutral_combination_cut, Preambulo = [])
+        from Inputs import Hlt2NoPIDsElectrons
+        inputs = [ Hlt2NoPIDsElectrons ]
+        Hlt2Combiner.__init__(self, name, "D0 -> e+ e-", inputs,
+                              dependencies = [ PV3D('Hlt2')],tistos = 'TisTosSpec', 
+                              DaughtersCuts = daug_cuts, CombinationCut =  D0_combination_cut,
+                              MotherCut = D0_mother_cut, Preambulo = []) 
+
+class D0_gg_NeutralCombiner(Hlt2Combiner):
+    """ Combines converted photon ('KS0') with another photon  """
+    def __init__(self, name):
+        gamma_daughters_cut = ("( PT > %(Gamma_PT)s  ) &" +
+                               "( P  > %(Gamma_P)s   )")          
+        
+        daug_cuts = { 'gamma' : gamma_daughters_cut,
+                      'KS0'    : "ALL"  }
+                      
+        combination_cut = ("(AM>%(D0_AM_MassWinLow)s) &" +
+                           "(AM<%(D0_AM_MassWinHigh)s)")
+                           
+        mother_cut = ("(PT > %(D0_PT)s) & " + 
+                     "(M>%(D0_MassWinLow)s) &" +
+                     "(M<%(D0_MassWinHigh)s)")
+        
+        from Inputs import Hlt2NoPIDsPhotons
+        inputs = [ Hlt2NoPIDsPhotons, D2HH0_ee_Combiner( 'Conv_Photon')]
+        Hlt2Combiner.__init__(self, name,"D0 -> KS0 gamma ",
+                              inputs,nickname=name, DaughtersCuts=daug_cuts,
+                              CombinationCut=combination_cut, MotherCut=mother_cut,
+                              ParticleCombiners={'':'ParticleAdder'})
 
 
 # D2EtaH Combiners
@@ -1608,20 +1624,9 @@ class D2KH0_eeg(D2HH0_3Body_Combiner) :
         decay = "[D+ -> KS0 gamma K+]cc"
         inputs = [D2HH0_ee_Combiner( 'Conv_Photon'), Hlt2NoPIDsPhotons, Hlt2NoPIDsKaons]
         D2HH0_3Body_Combiner.__init__(self, name, decay, inputs)
+             
         
-
-class DStar2PiD0_eeg(D2HH0_3Body_Combiner) :
-    def __init__(self,name) :
-        decay = "[D*(2010)+ -> KS0 gamma pi+]cc"
-        inputs = [D2HH0_ee_Combiner( 'Conv_Photon'), Hlt2NoPIDsPhotons, Hlt2NoPIDsPions]
-        D2HH0_3Body_Combiner.__init__(self, name, decay, inputs)
-        
-        
-class DStar2PiD0_ee(D2HD0_3Body_Combiner) :
-    def __init__(self,name) :
-        decay = "[D*(2010)+ -> e+ e- pi+]cc"
-        inputs = [Hlt2NoPIDsElectrons, Hlt2NoPIDsPions]
-        D2HD0_3Body_Combiner.__init__(self, name, decay, inputs)        
+      
 
 ##  The first argument must be a unique name as HHKshCombiner is "shared = True".
 ##  All these instances use the same nickname, 'D02HHKsh', to point to a single, common,

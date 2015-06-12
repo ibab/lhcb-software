@@ -45,36 +45,31 @@ class CharmHadD2HHLines() :
                               'Trk_MIPCHI2DV_MIN'         : 6.0,      
                               'Gamma_PT'                  : 300  * MeV,  # 600 if high
                               'Gamma_P'                   : 1500 * MeV},                              
-                                             
-                 'Dstar2PiD0_eegamma' :{'D_MassWinLow'    : 1600 * MeV, # don't tighten 
-                              'D_MassWinHigh'             : 2200 * MeV, # don't tighten 
-                              'D_PT'                      : 3000 * MeV, 
-                              'Vertex_Chi2'               : 9,                              
-                              'Neutral_MassWinLow'        : 1814 * MeV, #Neutral = D0 mass =1864
-                              'Neutral_MassWinHigh'       : 1914 * MeV,
-                              'Neutral_PT'                : 1000  * MeV,         
-                              'Daug_PT'                   : 1000 * MeV,                              
-                              'Daug_P'                    : 1500 * MeV,                                                            
-                              'Track_Chi2'                : 3,
-                              'AMAXDOCA'                  : 0.05  * mm,
-                              'Trk_MIPCHI2DV_MIN'         : 6.0,                              
-                              'Gamma_PT'                  : 600  * MeV,
-                              'Gamma_P'                   : 1500 * MeV},
-                                                            
-                 'Dstar2PiD0_ee':{'D_MassWinLow'         : 1600 * MeV,  # don't tighten 
-                              'D_MassWinHigh'             : 2200 * MeV, # don't tighten 
-                              'D_PT'                      : 3000 * MeV,
-                              'Vertex_Chi2'               : 9,                              
-                              'Neutral_MassWinLow'        : 1814 * MeV, #Neutral = D0 mass =1864
-                              'Neutral_MassWinHigh'       : 1914 * MeV,
-                              'Neutral_PT'                : 700  * MeV, 
-                              'Daug_PT'                   : 1000 * MeV,  
-                              'Daug_P'                    : 1500 * MeV,
-                              'Elec_PT'                   : 350  * MeV,                              
-                              'Elec_P'                    : 500  * MeV,                                                            
-                              'Track_Chi2'                : 3,
-                              'Trk_MIPCHI2DV_MIN'         : 6.0},                                
-                                                          
+                                                                                                        
+                 'Dstar2PiD0' :{'DeltaM_AM_MIN'           : 0    * MeV,  
+                              'DeltaM_AM_MAX'             : 220  * MeV,
+                              'TagVCHI2PDOF_MAX'          : 25.0,
+                              'DeltaM_MIN'                : 0    * MeV,
+                              'DeltaM_MAX'                : 200  * MeV, },
+                                                             
+                 'D0_ee' :  { 'Elec_PT'                   : 350  * MeV,
+                              'Trk_MIPCHI2DV_MIN'         : 9.0,   
+                              'Track_Chi2'                : 5,
+                              'D0_AM_MassWinLow'          : 1804 * MeV,
+                              'D0_AM_MassWinHigh'         : 1924 * MeV,
+                              'D0_MassWinLow'             : 1814 * MeV,
+                              'D0_MassWinHigh'            : 1914 * MeV,
+                              'D0_PT'                     : 2500 * MeV,
+                              'Vertex_Chi2'               : 25},                                          
+                                                                          
+                 'D0_gg'   : {'Gamma_PT'                  : 1500  * MeV,
+                              'Gamma_P'                   : 3000 * MeV,
+                              'D0_AM_MassWinLow'          : 1804 * MeV,
+                              'D0_AM_MassWinHigh'         : 1924 * MeV,
+                              'D0_MassWinLow'             : 1814 * MeV,
+                              'D0_MassWinHigh'            : 1914 * MeV,
+                              'D0_PT'                     : 3000 * MeV},                              
+                              
                  'Conv_Photon' : {'Elec_PT'               : 350  * MeV,
                                   'Trk_MIPCHI2DV_MIN'     : 9.0,   
                                   'Track_Chi2'            : 5         }, 
@@ -307,7 +302,9 @@ class CharmHadD2HHLines() :
     
     def locallines(self):
         from Stages import MassFilter
-        from Stages import D2PiH0_eeg, D2KH0_eeg, DStar2PiD0_eeg, DStar2PiD0_ee 
+        from Stages import D2PiH0_eeg, D2KH0_eeg
+        from Stages import TagDecay, TagDecayWithNeutral 
+        from Stages import D0_gg_NeutralCombiner, D02_ee_Combiner
         from Stages import D2RhoHG_3Body_Combiner
         from Stages import D2HH_RhoToPipPim
         from Stages import SharedNoPIDDetachedChild_pi
@@ -316,14 +313,23 @@ class CharmHadD2HHLines() :
         from Stages import SharedNeutralLowPtChild_pi0R
         from Stages import SharedNeutralLowPtChild_pi0M
         from Stages import SharedNeutralLowPtChild_eta
+        from Stages import SharedSoftTagChild_pi
             
         stages = {'D2PiPi0_eegamma'           : [ D2PiH0_eeg('D2HPi0')    ],
                   'D2KPi0_eegamma'            : [ D2KH0_eeg('D2HPi0')     ],
                   'D2PiEta_eegamma'           : [ D2PiH0_eeg('D2HEta')    ],
                   'D2KEta_eegamma'            : [ D2KH0_eeg('D2HEta')     ],
                   
-                  'Dstar2PiD0_eegamma'        : [ DStar2PiD0_eeg('Dstar2PiD0_eegamma')],
-                  'Dstar2PiD0_ee'             : [ DStar2PiD0_ee('Dstar2PiD0_ee') ],
+                  'Dstar2PiD0_ee'        : [ TagDecay('Dstar2PiD0',
+                                                            decay  = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
+                                                            inputs = [D02_ee_Combiner( 'D0_ee'),
+                                                                      SharedSoftTagChild_pi ] ) ],
+                                                            
+                  'Dstar2PiD0_eegamma'   : [ TagDecayWithNeutral('Dstar2PiD0',
+                                                            decay  = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
+                                                            inputs = [D0_gg_NeutralCombiner( 'D0_gg'), 
+                                                                      SharedSoftTagChild_pi ] ) ],
+                  
                   
                   'D2EtaPi_hhgamma'           : [D2RhoHG_3Body_Combiner('D2EtaPi_hhgamma',
                                                                         decay = ["D+ -> rho(770)0 pi+ gamma","D- -> rho(770)0 pi- gamma"],
