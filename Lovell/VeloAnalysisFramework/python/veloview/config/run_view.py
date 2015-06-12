@@ -179,6 +179,36 @@ run_view_pages = OrderedDict([
             }
         ]
     }),
+    ('bad_channels', {
+        'title': 'Bad Channels',
+        'plots': [
+            {
+                'title': 'Dead Channels Per Sensor',
+                'name': 'Velo/VeloOccupancyMonitor/DeadPerSensor',
+            },
+            {
+                'title': 'Noisy Channels Per Sensor',
+                'name': 'Velo/VeloOccupancyMonitor/NoisyPerSensor',
+            },
+            {
+                'title': 'Dead/Noisy Channels Per Sensor',
+                'name': 'Velo/VeloOccupancyMonitor/DeadOrNoisyPerSensor',
+             },
+            {
+                'title': 'Dead Channels Per Sensor And Link',
+                'name': 'Velo/VeloOccupancyMonitor/DeadPerSensorAndLink',
+            },
+            {
+                'title': 'Noisy Channels Per Sensor And Link',
+                'name': 'Velo/VeloOccupancyMonitor/NoisyPerSensorAndLink',
+            },
+            {
+                'title': 'Dead/Noisy Channels Per Sensor And Link',
+                'name': 'Velo/VeloOccupancyMonitor/DeadOrNoisyPerSensorAndLink',
+             }
+        ],
+        'layout': (3,3)
+    }),
     ('tracks', {
         'title': 'Tracks'
     }),

@@ -4,6 +4,9 @@
 ! Purpose     : Analysis framework and configuration for offline and web GUIs
 !----------------------------------------------------------------------------
 
+! 2015-06-12 - Alex Pearce
+ - Add bad channels run view configuration, on behalf of Sophie Richards.
+
 ! 2015-06-10 - Alex Pearce
  - Improve configuration logic.
 
