@@ -1,0 +1,18 @@
+package OnlineBrunelSys
+version v5r9
+#
+#  Glue package to use Brunel in the online environment
+#
+branches cmt
+#
+use Brunel              v* Rec
+use DaVinci             v* Phys
+use GaudiOnline         v* Online
+use GaudiSerialize      v* Online
+use Checkpointing       v* Online
+use GaudiCheckpointing  v* Online
+use SQLDDDB v7r* Det
+##use SQLDDDB v999r0 Det
+#
+apply_pattern install_python_modules
+macro strip_script '/group/online/dataflow/cmtuser/dummy_strip_script'

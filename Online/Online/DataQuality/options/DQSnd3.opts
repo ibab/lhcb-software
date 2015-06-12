@@ -1,0 +1,4 @@
+#include "$DATAQUALITYSYSROOT/options/DQSnd.opts"
+MEPManager.Buffers                   = @OnlineEnv.DQSnd3_Buffers;
+EventSelector.Input                  = @OnlineEnv.DQSnd3_Input;
+Sender.DataSink                      = "$DQ_DataSink3";

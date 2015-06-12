@@ -1,0 +1,5 @@
+MEPManager.ConsumerRequirements = {
+    "Events": [
+               "*_DQWorker_*","EvType=2,TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff"
+              ]
+        };

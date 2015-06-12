@@ -1,0 +1,20 @@
+#include "/group/online/dataflow/options/LHCb/LHCb_Info.opts"
+MEPManager.PartitionID            = @OnlineEnv.PartitionID;
+MEPManager.PartitionName          = @OnlineEnv.PartitionName;
+MessageSvc.OutputLevel            = @OnlineEnv.OutputLevel;
+MessageSvc.doPrintAlways          = True;
+MessageSvc.OutputLevel            = 3;
+CheckpointSvc.PrintLevel          = 2;
+CheckpointSvc.OutputLevel         = 3;
+CheckpointSvc.UtgidPattern        = "%P_%NN_%TT_%02d";
+CheckpointSvc.Partition           = @OnlineEnv.PartitionName;
+CheckpointSvc.TaskType            = "Moore";
+CheckpointSvc.ExitAfterCheckpoint = false;
+
+CheckpointSvc.NumberOfInstances   = 0;
+CheckpointSvc.UseCores            = false;
+CheckpointSvc.UseCores            = true;
+
+
+EnvironDumper.PrintLevel          = 2;
+EnvironDumper.OutputLevel         = 4;

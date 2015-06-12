@@ -1,0 +1,37 @@
+
+. /group/online/dataflow/scripts/shell_macros.sh
+
+export CMTPROJECTPATH=/group/online/dataflow/cmtuser:${CMTPROJECTPATH};
+export LOGFIFO=/tmp/logGaudi.fifo
+export UTGID=DataQuality_0
+export PARTITION=LHCb
+export NBOFSLAVES=1
+export PYTHONPATH=/group/online/dataflow/options/${PARTITION}/RECONSTRUCTION:/group/online/hlt/conditions/RunChangeHandler:${PYTHONPATH}
+####. ${GAUDIONLINEROOT}/tests/cmt/preamble.sh
+. /cvmfs/lhcb.cern.ch/lib/lhcb/ONLINE/ONLINE_v5r13/Online/GaudiOnlineTests/cmt/preamble.sh 
+
+
+export NODENAME=`python -c "print '$HOST'.split('.')[0]"`
+xterm -e /opt/FMC/sbin/logSrv -p /tmp/logGaudi.fifo -s gaudi &
+
+start_task()
+{
+    $MINITERM ${1}@${HOST} -sl 30000  -e "export UTGID=${NODENAME}/${1};   exec -a \${UTGID} $Class1_task -opt=command=\"${2}\""&
+}
+start_task MbmEvents "import GaudiOnlineTests;GaudiOnlineTests.runRecBuffer()"
+#
+#  Monitors:
+#
+$BIGTERM MBMMon@${HOST}     -e "export UTGID=${NODENAME}/MBMMon;    exec -a \${UTGID} $gaudi_run libOnlineKernel.so mbm_mon"&
+
+
+ ./runDataQuality.sh LHCb Class1 DataQuality $DIM_DNS_NODE
+
+
+python <</EOF
+import GaudiOnlineTests
+app=GaudiOnlineTests.runMDF2MBM(buffers=['Events'],input=["DATA='PFN:/daqarea/lhcb/data/2015/RAW/FULL/LHCb/CALIBRATION15/151669/151669_0000000004.raw' SVC='LHCb::MDFSelector'"])
+app[1].initialize()
+app[1].start()
+app[1].run(10000)
+/EOF
