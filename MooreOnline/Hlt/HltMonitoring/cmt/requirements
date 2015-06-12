@@ -1,0 +1,30 @@
+#============================================================================
+# Created    : 2015-06-01
+# Maintainer : Roel Aaij
+#============================================================================
+package           Hlt2Monitoring
+version           v0r1
+
+#============================================================================
+# Structure, i.e. directories to process.
+#============================================================================
+branches          cmt doc src
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+use     ZeroMQ       v4r*    Online
+use     GaudiKernel  v*
+use     DIM          v*      Online
+use     OnlineKernel v*      Online
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          Hlt2Monitoring    ../src/*.cpp
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=Hlt2Monitoring
