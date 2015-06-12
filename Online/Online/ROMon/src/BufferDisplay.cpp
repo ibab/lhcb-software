@@ -16,6 +16,7 @@
 // Framework include files
 #include "ROMon/FarmDisplay.h"
 #include "ROMon/CPUMon.h"
+#include "ROMonDefs.h"
 #include "RTL/strdef.h"
 #include "CPP/Event.h"
 #include "SCR/scr.h"
@@ -72,25 +73,24 @@ void BufferDisplay::update(const void* data) {
       if ( node == m_node ) {
         time_t tim = (*n).time;
         const Buffers& buffs = *(*n).buffers();
-	//bool hlt = ::strncmp((*n).name,"hlt",3)==0;
+        //bool hlt = ::strncmp((*n).name,"hlt",3)==0;
         ::strftime(name,sizeof(name),"%H:%M:%S",::localtime(&tim));
         ::snprintf(txt,sizeof(txt),"MBM Monitor display for node:%s  [%s]  %s %s",
-		  (*n).name,name,partitioned ? "Partition:""" : "",
-		  partitioned ? m_partition.c_str() : "");
+                   (*n).name,name,partitioned ? "Partition:""" : "",
+                   partitioned ? m_partition.c_str() : "");
         ::scrc_set_border(m_display,txt,BLUE|INVERSE);
         for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
           const Buffers::value_type::Control& c = (*ib).ctrl;
           const char* bnam = (char*)(*ib).name;
-	  if ( partitioned )  {
-	    if ( 0 == ::strstr(bnam,m_partition.c_str()) ) continue;
-	  }
+          if ( !(!partitioned || ro_match_end(m_partition,bnam)) ) continue;
+
           ::snprintf(name,sizeof(name)," Buffer \"%s\"",bnam);
           ::snprintf(txt,sizeof(txt),"%-26s  Events: Produced:%lld Actual:%lld Seen:%lld Pending:%ld Max:%d",
-                    name, c.tot_produced, c.tot_actual, c.tot_seen, c.i_events, c.p_emax);
+                     name, c.tot_produced, c.tot_actual, c.tot_seen, c.i_events, c.p_emax);
           ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
           ::snprintf(txt,sizeof(txt),"%-26s  Space(kB):[Tot:%ld Free:%ld] Users:[Tot:%ld Max:%d]",
-                    "",long((c.bm_size*c.bytes_p_Bit)/1024), long((c.i_space*c.bytes_p_Bit)/1024), 
-                    c.i_users, c.p_umax);
+                     "",long((c.bm_size*c.bytes_p_Bit)/1024), long((c.i_space*c.bytes_p_Bit)/1024), 
+                     c.i_users, c.p_umax);
           ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
           ::scrc_put_chars(m_display,"  Occupancy [Events]:",NORMAL,++line,1,1);
           draw_bar(29,line,float(c.i_events)/float(c.p_emax),95);
@@ -116,17 +116,19 @@ void BufferDisplay::update(const void* data) {
     for (n=ns->nodes.begin(), node=0; n!=ns->nodes.end(); n=ns->nodes.next(n), ++node)  {
       if ( node == m_node ) {
         const Buffers& buffs = *(*n).buffers();
-	bool hlt = ::strncmp((*n).name,"hlt",3)==0;
+        bool hlt = ::strncmp((*n).name,"hlt",3)==0;
         for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
           const Clients& clients = (*ib).clients;
           const char* bnam = (const char*)(*ib).name;
-	  if ( hlt && partitioned )  {
-	    if ( 0 == ::strstr(bnam,m_partition.c_str()) ) continue;
-	    bnam_str = bnam;
-	    size_t idx = bnam_str.find(m_partition);
-	    bnam_str = bnam_str.substr(0,idx-1);
-	    bnam = bnam_str.c_str();
-	  }
+          if ( !(!partitioned || ro_match_end(m_partition,bnam)) ) 
+            continue;
+          else if ( hlt && partitioned )  {
+            if ( 0 == ::strstr(bnam,m_partition.c_str()) ) continue;
+            bnam_str = bnam;
+            size_t idx = bnam_str.find(m_partition);
+            bnam_str = bnam_str.substr(0,idx-1);
+            bnam = bnam_str.c_str();
+          }
           else if ( ::strncmp(bnam,"Events_",7)==0 && hlt ) bnam = "Events";
           else if ( ::strncmp(bnam,"Events_",7)==0 ) bnam += 7;
           else if ( ::strncmp(bnam,"Output_",7)==0 ) bnam = "Output";
@@ -134,19 +136,19 @@ void BufferDisplay::update(const void* data) {
           for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
             Clients::const_reference c = (*ic);
             const char* cnam = (partitioned) ? _procNam(m_partition,c.name) : c.name;
-	    if ( cnam ) {
-	      if ( c.type == 'C' )
-		::snprintf(txt,sizeof(txt),"%-26s%5X%6d C%4s%12ld %c%c%c%c %s",cnam,c.partitionID,c.processID,
-			  sstat[(size_t)c.state],c.events,c.reqs[0],c.reqs[1],c.reqs[2],c.reqs[3],bnam);
-	      else if ( c.type == 'P' )
-		::snprintf(txt,sizeof(txt),"%-26s%5X%6d P%4s%12ld %4s %s",cnam,c.partitionID,c.processID,
-			  sstat[(size_t)c.state],c.events,"",bnam);
-	      else
-		::snprintf(txt,sizeof(txt),"%-26s%5X%6d ?%4s%12s %4s %s",cnam,c.partitionID,c.processID,"","","",bnam);
-	      key = bnam;
-	      key += c.name;
-	      entries[key] = txt;
-	    }
+            if ( cnam ) {
+              if ( c.type == 'C' )
+                ::snprintf(txt,sizeof(txt),"%-26s%5X%6d C%4s%12ld %c%c%c%c %s",cnam,c.partitionID,c.processID,
+                           sstat[(size_t)c.state],c.events,c.reqs[0],c.reqs[1],c.reqs[2],c.reqs[3],bnam);
+              else if ( c.type == 'P' )
+                ::snprintf(txt,sizeof(txt),"%-26s%5X%6d P%4s%12ld %4s %s",cnam,c.partitionID,c.processID,
+                           sstat[(size_t)c.state],c.events,"",bnam);
+              else
+                ::snprintf(txt,sizeof(txt),"%-26s%5X%6d ?%4s%12s %4s %s",cnam,c.partitionID,c.processID,"","","",bnam);
+              key = bnam;
+              key += c.name;
+              entries[key] = txt;
+            }
           }
         }
         break;

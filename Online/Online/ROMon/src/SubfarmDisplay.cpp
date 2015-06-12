@@ -21,6 +21,7 @@
 // Framework include files
 #include "RTL/Lock.h"
 #include "RTL/strdef.h"
+#include "ROMonDefs.h"
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
 #include "ROMon/Constants.h"
@@ -95,7 +96,7 @@ void SubfarmDisplay::init(int argc, char** argv)   {
   cli.getopt("partition",     1, m_partition   = "*");
   cli.getopt("servicename",   1, m_svcName     = "/hlte07/ROpublish");
   if ( m_partition == "*" ) m_partition = "";
-  if ( m_partition == "ALL" ) m_partition = "";
+  else if ( m_partition == "ALL" ) m_partition = "";
   if ( cli.getopt("debug", 5) ) {
     printf("To start debugger type:  gdb --pid %d\n",::lib_rtl_pid());
     ::lib_rtl_sleep(30*1000);
@@ -103,9 +104,13 @@ void SubfarmDisplay::init(int argc, char** argv)   {
   setup_window();
   int posx     = m_position.x-2;
   int posy     = m_position.y-2;
+  string nodes_title = "Node Information";
+  if ( !m_partition.empty() )  {
+    nodes_title += " Partition:"+m_partition;
+  }
   m_nodes      = createSubDisplay(Position(posx,posy+hdr_height),
-				  Area(m_area.width,m_area.height - hdr_height),
-				  "Node Information");
+                                  Area(m_area.width,m_area.height - hdr_height),
+                                  nodes_title);
   end_update();
   m_measure = 0;
 }
@@ -125,7 +130,7 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
   map<string,Info>   totals;
   map<size_t,string> buffers;
   long ntsk_tot = 0;
-  bool partitioned=m_partition.empty();
+  bool partitioned = !m_partition.empty();
 
   ::snprintf(text1,sizeof(text1),"           - MBM -  ");
   ::snprintf(text2,sizeof(text2)," Node      Clients ");
@@ -136,14 +141,17 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
     bool doBreak = false;
     buff_text[0] = 0;
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-      if ( !partitioned || strstr((*ib).name,m_partition.c_str()) ) {
-	size_t len = ::strlen(text1);
-	::snprintf(text1+len,sizeof(text1),"%s",pattern);
-	::snprintf(text1+len+12,sizeof(text1),"%s",(*ib).name);
-	text1[len+11] = ' ';
-	text1[len+12+strlen((*ib).name)] = ' ';
-	::snprintf(text2+len,sizeof(text2),"%11s%11s%6s%8s%2s","Produced","Consumed","Slots","Space","");
-	doBreak = true;
+      const char* bn = (*ib).name;
+      size_t bnlen = ::strlen(bn);
+      if ( !partitioned || ro_match_end(m_partition,bn) ) {
+        size_t len = ::strlen(text1);
+        ::snprintf(text1+len,sizeof(text1),"%s",pattern);
+        ::snprintf(text1+len+12,sizeof(text1),"%s",(*ib).name);
+        text1[len+11] = ' ';
+        text1[len+12+bnlen] = ' ';
+        len = ::strlen(text2);
+        ::snprintf(text2+len,sizeof(text2),"%11s%11s%6s%8s%2s","Produced","Consumed","Slots","Space","");
+        doBreak = true;
       }
     }
     if ( doBreak ) break;
@@ -159,31 +167,31 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
     if ( in == m_minimal.end() ) in = m_minimal.insert(make_pair((*n).name,map<string,pair<long,long> >())).first;
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       Info info;
-      if ( !partitioned || strstr((*ib).name,m_partition.c_str()) ) {
-	map<string,pair<long,long> >::iterator ibuf = (*in).second.find((*ib).name);
-	const Clients&             clients = (*ib).clients;
-	const MBMBuffer::Control&  ctrl = (*ib).ctrl;
-
-	if ( ibuf == (*in).second.end() ) ibuf = (*in).second.insert(make_pair((*ib).name,make_pair(0,0))).first;
-	info.data[0] = ctrl.tot_produced;
-	info.data[1] = ctrl.p_emax-ctrl.i_events;
-	info.data[2] = (ctrl.i_space*ctrl.bytes_p_Bit)/1024;
-	long min_task  = numeric_limits<long>::max();
-	for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	  ++ntsk;
-	  if ( (*ic).type == 'C' ) info.data[3] += (*ic).events;
-	  if ( (*ic).type == 'P' ) info.data[4] += (*ic).events;
-	  if ( (*ic).events < min_task && ::strncmp((*ic).name,"MEPRx",5) != 0 )min_task = (*ic).events;
-	}
-	size_t len = ::strlen(buff_text);
-	if ( (m_measure%5)==0 ) {
-	  (*ibuf).second.second = min_task <= (*ibuf).second.first ? 1 : 0;
-	  (*ibuf).second.first  = min_task;
-	}
-	buffers[totals.size()] = (*ib).name;
-	for(size_t k=0; k<5; ++k) totals[(*ib).name].data[k] += info.data[k];
-	::snprintf(buff_text+len,sizeof(buff_text)-len,"%11ld%11ld%6ld%8ld%s",
-		   info.data[4],info.data[4],info.data[1],info.data[2],(*ibuf).second.second ? "/S" : "  ");
+      if ( !partitioned || ro_match_end(m_partition,(*ib).name) ) {
+        map<string,pair<long,long> >::iterator ibuf = (*in).second.find((*ib).name);
+        const Clients&             clients = (*ib).clients;
+        const MBMBuffer::Control&  ctrl = (*ib).ctrl;
+        const char* bn = (*ib).name;
+        if ( ibuf == (*in).second.end() ) ibuf = (*in).second.insert(make_pair(bn,make_pair(0,0))).first;
+        info.data[0] = ctrl.tot_produced;
+        info.data[1] = ctrl.p_emax-ctrl.i_events;
+        info.data[2] = (ctrl.i_space*ctrl.bytes_p_Bit)/1024;
+        long min_task  = numeric_limits<long>::max();
+        for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
+          ++ntsk;
+          if ( (*ic).type == 'C' ) info.data[3] += (*ic).events;
+          if ( (*ic).type == 'P' ) info.data[4] += (*ic).events;
+          if ( (*ic).events < min_task && ::strncmp((*ic).name,"MEPRx",5) != 0 )min_task = (*ic).events;
+        }
+        if ( (m_measure%5)==0 ) {
+          (*ibuf).second.second = min_task <= (*ibuf).second.first ? 1 : 0;
+          (*ibuf).second.first  = min_task;
+        }
+        if ( totals.find(bn) == totals.end() ) buffers[totals.size()] = bn;
+        for(size_t k=0; k<5; ++k) totals[bn].data[k] += info.data[k];
+        size_t len = ::strlen(buff_text);
+        ::snprintf(buff_text+len,sizeof(buff_text)-len,"%11ld%11ld%6ld%8ld%s",
+                   info.data[4],info.data[4],info.data[1],info.data[2],(*ibuf).second.second ? "/S" : "  ");
       }
     }
     ntsk_tot += ntsk;
@@ -195,7 +203,7 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
     size_t len = ::strlen(buff_text);
     Info& info = totals[buffers[i]];
     ::snprintf(buff_text+len,sizeof(buff_text)-len,"%11ld%11ld%6ld%8ld  ",
-	       info.data[4],info.data[4],info.data[1],info.data[2]);
+               info.data[4],info.data[4],info.data[1],info.data[2]);
   }
   disp->draw_line_bold(fmt, "Total:", ntsk_tot, buff_text);
 }
@@ -210,8 +218,8 @@ void SubfarmDisplay::showHeader(const Nodeset& ns)   {
   draw_line_normal ("");
   
   draw_line_reverse("         HLT monitoring on %s   [%s]   %s %s", ns.name, ::lib_rtl_timestr(),
-		    m_partition.empty() ? "" : "Partition:",
-		    m_partition.empty() ? "" : m_partition.c_str());
+                    m_partition.empty() ? "" : "Partition:",
+                    m_partition.empty() ? "" : m_partition.c_str());
   draw_line_bold   ("         Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
 }
 

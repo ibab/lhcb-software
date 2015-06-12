@@ -11,6 +11,8 @@ namespace ROMon {
   std::ostream& log();
   void print_startup(const char* msg);
   void ro_gettime(int* seconds, unsigned int* milli_seconds);
+  bool ro_match_end(const std::string& pattern, const char* data);
+  bool ro_match_start(const std::string& pattern, const char* data);
   std::string strupper(const std::string& n);
   std::string strlower(const std::string& n);
   size_t ro_rtl_print(void*,int,const char* fmt,va_list args);

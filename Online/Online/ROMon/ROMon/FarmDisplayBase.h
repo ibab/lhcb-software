@@ -81,7 +81,7 @@ namespace ROMon {
     std::string  m_node;
   public:
     /// Initializing constructor
-    CPUDisplay(InternalDisplay* parent, const std::string& title, const std::string& node, int height=60,int width=132);
+    CPUDisplay(InternalDisplay* parent, const std::string& title, const std::string& node, int height=75,int width=132);
     /// Standard destructor
     virtual ~CPUDisplay();
     /// Update display content

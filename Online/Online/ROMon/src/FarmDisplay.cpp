@@ -60,7 +60,10 @@ static void help() {
 }
 
 namespace ROMon {
-  InternalDisplay* createFarmSubDisplay(InternalDisplay* parent, const string& title, int height);
+  InternalDisplay* createFarmSubDisplay(InternalDisplay* parent,
+                                        const string& title, 
+                                        const string& partition,
+                                        int height);
   InternalDisplay* createRecFarmSubDisplay(InternalDisplay* parent, const string& title, int height);
   InternalDisplay* createCtrlFarmSubDisplay(InternalDisplay* parent, const string& title, int height);
   InternalDisplay* createMonitoringSubDisplay(InternalDisplay* parent, const string& title, int height);
@@ -574,7 +577,7 @@ void FarmDisplay::connect(const std::string& /* section */, const vector<string>
       else if ( ::strncasecmp((*i).c_str(),"storectl",8)==0 )
         copy.insert(make_pair(*i,createStorageSubDisplay(this,*i, m_subDisplayHeight)));
       else
-        copy.insert(make_pair(*i,createFarmSubDisplay(this,*i, m_subDisplayHeight)));
+        copy.insert(make_pair(*i,createFarmSubDisplay(this,*i,m_partition,m_subDisplayHeight)));
     }
     else {
       copy.insert(*k);

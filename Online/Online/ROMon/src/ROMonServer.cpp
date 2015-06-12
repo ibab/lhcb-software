@@ -94,10 +94,14 @@ void ROMonServer::dumpBufferInfo(const char* bm_name, BufferMemory* dsc, MBMBuff
     if ( us->busy     == 0             ) continue;
     t->reqs[0] = t->reqs[1] = t->reqs[2] = t->reqs[3] = ' ';
     for (int k=0; k<us->n_req; ++k )  {
-      if      ( us->req[k].user_type == BM_REQ_ONE  ) t->reqs[1] = '1';
-      else if ( us->req[k].user_type == BM_REQ_USER ) t->reqs[2] = 'U';
-      else if ( us->req[k].user_type == BM_REQ_ALL  ) t->reqs[3] = 'A';
-      else if ( us->req[k].freq < 100.0             ) t->reqs[0] = 'S';
+      if      ( us->req[k].user_type == BM_REQ_USER ) 
+	t->reqs[2] = 'U';
+      else if ( us->req[k].user_type == BM_REQ_ALL  )
+	t->reqs[3] = 'A';
+      else if ( us->req[k].user_type == BM_REQ_ONE  ) 
+	t->reqs[1] = 'a' + us->req[k].user_type_one;
+      else if ( us->req[k].freq < 100.0             )
+	t->reqs[0] = 'S';
     }
     strncpy(t->name,us->name,sizeof(t->name));
     t->name[sizeof(t->name)-1] = 0;

@@ -30,6 +30,10 @@ namespace LHCb  {
   protected:
     /// Python interpreter wrapper
     struct PythonInterpreter {
+    private:
+      /// State context
+      void* m_state;
+    public:
       /// Default constructor
       explicit PythonInterpreter();
       /// Default destructor

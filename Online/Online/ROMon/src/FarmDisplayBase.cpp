@@ -196,7 +196,7 @@ int FarmDisplayBase::showSubfarm()    {
       m_subfarmDisplay = BitTorrent::createTorrentDisplay(SUBFARM_WIDTH+20,SUBFARM_HEIGHT,m_anchorX,m_anchorY,4,(char**)argv);
     }
     else if ( m_mode == HLTDEFER_MODE ) {
-      svc = "-servicename="+svcPrefix()+dnam+"/ROpublish/HLTDefer";
+      svc = "-servicename="+svcPrefix()+dnam+"/ROpublish/HLT1";
       if ( !svcPostfix().empty() ) svc = "-servicename="+svcPrefix()+dnam+svcPostfix();
       const char* argv[] = {"", svc.c_str(), "-delay=300" };
       m_subfarmDisplay = createHltSubfarmDisplay(SUBFARM_WIDTH+20,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
@@ -220,8 +220,8 @@ int FarmDisplayBase::showSubfarm()    {
       m_subfarmDisplay = createRecSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
     else if ( m_mode == HLT_MODE ) {
-      const char* argv[] = {"", svc.c_str(), "-delay=300", "-mooresheight=-1", "-nodesheight=35"};
-      m_subfarmDisplay = createSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,5,(char**)argv);
+      const char* argv[] = {"", svc.c_str(), "-delay=300", "-mooresheight=-1", "-nodesheight=35", part.c_str()};
+      m_subfarmDisplay = createSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,6,(char**)argv);
     }
     else {
       m_nodeSelector = 0;
@@ -276,7 +276,7 @@ int FarmDisplayBase::showDeferHltWindow() {
   string dnam = strlower(selectedCluster());
   if ( !dnam.empty() ) {
     string node = "-node="+dnam;
-    string svc = "-servicename="+svcPrefix()+dnam+"/ROpublish/HLTDefer";
+    string svc = "-servicename="+svcPrefix()+dnam+"/ROpublish/HLT1";
     const char* argv[] = {"", svc.c_str(), "-delay=300" };
     ClusterDisplay* disp = createHltSubfarmDisplay(SUBFARM_WIDTH+20,SUBFARM_HEIGHT,m_anchorX+3,m_anchorY,3,(char**)argv);
     m_deferHltDisplay = auto_ptr<ClusterDisplay>(disp);
@@ -352,7 +352,7 @@ int FarmDisplayBase::showCpuWindow() {
   pair<string,string> node = selectedNode();
   if ( !node.second.empty() ) {
     m_cpuDisplay = auto_ptr<CPUDisplay>(new CPUDisplay(this,node.first,node.second));
-    m_cpuDisplay->show(m_anchorY+5,m_anchorX+12);
+    m_cpuDisplay->show(m_anchorY-3,m_anchorX+4);
     MouseSensor::instance().add(this,m_cpuDisplay->display());
   }
   return WT_SUCCESS;
@@ -462,7 +462,7 @@ int FarmDisplayBase::showReadoutWindow() {
     string svc = "-servicename="+svcPrefix()+strlower(dnam)+"/ROpublish";
     string part = "-partition="+m_partition;
     const char* argv[] = {"", svc.c_str(), part.c_str(), "-delay=300"};
-    ClusterDisplay* disp = createSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,5,(char**)argv);
+    ClusterDisplay* disp = createSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,4,(char**)argv);
     m_roDisplay = auto_ptr<ClusterDisplay>(disp);
     m_roDisplay->initialize();
     m_nodeSelector = swapMouseSelector(this,m_subfarmDisplay,m_roDisplay.get());
@@ -623,8 +623,8 @@ int FarmDisplayBase::handleKeyboard(int key)    {
     case 'E':
     case CTRL_E:
       delete this;
-      ::exit(0);
-      break;
+    ::exit(0);
+    break;
     case 'h':
     case 'H':
     case CTRL_H:
@@ -638,21 +638,21 @@ int FarmDisplayBase::handleKeyboard(int key)    {
     case 'd':
     case 'D':
       IocSensor::instance().send(this,CMD_SHOWDEFERRED,this);
-      break;
+    break;
     case 'k':
     case 'K':
       IocSensor::instance().send(this,CMD_SHOWCTRL,this);
-      break;
+    break;
     case 'l':
     case 'L':
       IocSensor::instance().send(this,CMD_SHOWSYS,this);
-      break;
+    break;
     case 'm':
     case 'M':
     case '.':
     case KPD_PERIOD:
       IocSensor::instance().send(this,m_sysDisplay.get()?CMD_SHOWCTRL:CMD_SHOWMBM,this);
-      break;
+    break;
     case CTRL_L:
       IocSensor::instance().send(this,CMD_SHOWBENCHMARK,this);
       break;
@@ -672,14 +672,14 @@ int FarmDisplayBase::handleKeyboard(int key)    {
     case 'r':
     case 'R':
       IocSensor::instance().send(this,CMD_SHOWREADOUT,this);
-      break;
+    break;
     case 's':
     case 'S':
       return showStatsWindow();
     case 't':
       if ( m_torrentDisplay.get() || m_mode == TORRENT_MODE )  {
-	IocSensor::instance().send(this,CMD_SHOWTORRENTNODE,this);
-	break;
+        IocSensor::instance().send(this,CMD_SHOWTORRENTNODE,this);
+        break;
       }
     case 'T':
       IocSensor::instance().send(this,CMD_SHOWTORRENT,this);

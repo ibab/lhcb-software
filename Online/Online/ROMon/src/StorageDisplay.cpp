@@ -21,6 +21,7 @@
 
 // Framework include files
 #include "RTL/Lock.h"
+#include "ROMonDefs.h"
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
 #include "ROMon/StorageDisplay.h"
@@ -86,20 +87,6 @@ static void help() {
 
 }
 
-/// DimInfoHandler overload
-static void dataWrHandler(void* tag, void* address, int* size) {
-  if ( address && tag && size && *size>0) {
-    DataWriterInfo::_Item*    v = *(DataWriterInfo::_Item**)tag;
-    DataWriterInfo::_RawItem* r = (DataWriterInfo::_RawItem*)address;
-    v->value   = r->v[0];
-    v->val2    = r->v[1];
-    v->val3    = r->s[0];
-    v->val4    = r->s[1];
-    v->stamp   = ::time(0);
-    v->hasData = 1;
-  }
-}
-
 /// Static abstract object creator.
 ClusterDisplay* ROMon::createStorageDisplay(int width, int height, int posx, int posy, int argc, char** argv) {
   return new StorageDisplay(width,height,posx,posy,argc,argv);
@@ -107,14 +94,14 @@ ClusterDisplay* ROMon::createStorageDisplay(int width, int height, int posx, int
 
 /// Initializing constructor for using display as sub-display
 StorageDisplay::StorageDisplay(int width, int height, int posx, int posy, int argc, char** argv)
-  : ClusterDisplay(width, height), m_wrInfo(0)
+  : ClusterDisplay(width, height)
 {
   m_position = Position(posx,posy);
   init(1, argc, argv);
 }
 
 /// Standard constructor
-StorageDisplay::StorageDisplay(int argc, char** argv) : m_wrInfo(0) {
+StorageDisplay::StorageDisplay(int argc, char** argv)  {
   init(0, argc,argv);
 }
 
@@ -122,12 +109,12 @@ StorageDisplay::StorageDisplay(int argc, char** argv) : m_wrInfo(0) {
 void StorageDisplay::init(int flag, int argc, char** argv)   {
   RTL::CLI cli(argc,argv,help);
   int hdr_height, hlt_width, hlt_height, hlt_posy, buff_height, strm_height, logg_height;
-  int right, width, height, posx, posy;
+  int right, width, posx, posy;
   cli.getopt("headerheight",  1, hdr_height    =    5);
-  cli.getopt("streamheight",  1, strm_height   =   12);
+  cli.getopt("streamheight",  1, strm_height   =   16);
   cli.getopt("loggerheight",  1, logg_height   =    9);
   cli.getopt("widthhltrec",   1, hlt_width     =   27);
-  cli.getopt("bufferheight",  1, buff_height   =   10);
+  cli.getopt("bufferheight",  1, buff_height   =   13);
   cli.getopt("delay",         1, m_delay       = 1000);
   cli.getopt("servicename",   1, m_svcName     = "/storectl01/ROpublish");
   cli.getopt("partitionname", 1, m_partName    = "LHCb");
@@ -140,69 +127,32 @@ void StorageDisplay::init(int flag, int argc, char** argv)   {
   hlt_height = m_area.height-hdr_height;
   m_select = 0;
   if ( flag ) {
-    m_select  = createSubDisplay(Position(posx,posy+hdr_height-hdr_height),Area(hlt_width, 6+hdr_height),"  Node Selector");
-    hlt_posy += 7;
+    m_select  = createSubDisplay(Position(posx,posy+hdr_height-hdr_height),Area(hlt_width,10+hdr_height),"  Node Selector");
+    hlt_posy   += 11;
     hlt_height -= 7;
   }
   m_hltRec  = createSubDisplay(Position(posx,hlt_posy), Area(hlt_width,hlt_height),"Farm receivers");
   right = m_hltRec->right();
   width = m_area.width-hlt_width-2;
-  height= m_area.height-hdr_height-buff_height-strm_height-logg_height-4;
+  //height= m_area.height-hdr_height-buff_height-strm_height-logg_height-4;
   m_buffers = createSubDisplay(Position(right,posy+hdr_height), Area(width,buff_height),      "Buffer Monitor");
   m_streams = createSubDisplay(Position(right,m_buffers->bottom()-1),Area(width,strm_height), "Stream Information");
-  m_logging = createSubDisplay(Position(right,m_streams->bottom()-1),Area(width,logg_height), "Logger Summary");
-  m_files   = createSubDisplay(Position(right,m_logging->bottom()-1),Area(width,height+1),    "File Information");
   end_update();
-  m_wrInfo = new DataWriterInfo[NUM_STORE_NODES];
-  ::memset(m_wrInfo,0,sizeof(DataWriterInfo)*NUM_STORE_NODES);
-  for(size_t i=0; i<NUM_STORE_NODES; ++i) {
-    char text[256];
-    std::string svc;
-    DataWriterInfo& w = m_wrInfo[i];
-    ::sprintf(w.name,"store%02d",int(i+1));
-    ::sprintf(text,"PUBLISHERD_%s/Counters/MBWritten",w.name);
-    w.mbWritten.id  = ::dic_info_service(text,MONITORED,0,0,0,dataWrHandler,(long)&w.mbWritten,0,0);
-    ::sprintf(text,"PUBLISHERD_%s/Counters/OpenFiles",w.name);
-    w.openFiles.id  = ::dic_info_service(text,MONITORED,0,0,0,dataWrHandler,(long)&w.openFiles,0,0);
-    ::sprintf(text,"PUBLISHERD_%s/Counters/TotalFiles",w.name);
-    w.totalFiles.id = ::dic_info_service(text,MONITORED,0,0,0,dataWrHandler,(long)&w.totalFiles,0,0);
-    ::sprintf(text,"PUBLISHERD_%s/Counters/NumSockets",w.name);
-    w.numSockets.id = ::dic_info_service(text,MONITORED,0,0,0,dataWrHandler,(long)&w.numSockets,0,0);
-    ::sprintf(text,"PUBLISHERD_%s/Counters/NumThreads",w.name);
-    w.numThreads.id = ::dic_info_service(text,MONITORED,0,0,0,dataWrHandler,(long)&w.numThreads,0,0);
-    ::sprintf(text,"PUBLISHERD_%s/Counters/Abnormals",w.name);
-    w.abnormals.id  = ::dic_info_service(text,MONITORED,0,0,0,dataWrHandler,(long)&w.abnormals,0,0);
-  }
 }
 
 /// Standard destructor
 StorageDisplay::~StorageDisplay()   {
-  if ( m_wrInfo ) {
-    for(size_t j=0; j<NUM_STORE_NODES; ++j) {
-      DataWriterInfo& i = m_wrInfo[j];
-      if ( i.mbWritten.id  ) ::dic_release_service(i.mbWritten.id);
-      if ( i.openFiles.id  ) ::dic_release_service(i.openFiles.id);
-      if ( i.totalFiles.id ) ::dic_release_service(i.totalFiles.id);
-      if ( i.numSockets.id ) ::dic_release_service(i.numSockets.id);
-      if ( i.numThreads.id ) ::dic_release_service(i.numThreads.id);
-      if ( i.abnormals.id  ) ::dic_release_service(i.abnormals.id);
-    }
-  }
-  delete [] m_wrInfo;
-  m_wrInfo = 0;
   begin_update();
   delete m_hltRec;
   delete m_buffers;
   delete m_streams;
-  delete m_logging;
-  delete m_files;
   if ( m_select ) delete m_select;
   end_update();
 }
 
 /// Number of nodes in the dataset
 size_t StorageDisplay::numNodes() {
-  return 4;
+  return 8;
 }
 
 /// Retrieve cluster name from cluster display
@@ -215,8 +165,12 @@ std::string StorageDisplay::nodeName(size_t offset) {
   switch(offset) {
   case 0:    return "storerecv01";
   case 1:    return "storerecv02";
-  case 2:    return "storestrm01";
-  case 3:    return "storestrm02";
+  case 2:    return "storerecv03";
+  case 3:    return "storerecv04";
+  case 4:    return "storestrm01";
+  case 5:    return "storestrm02";
+  case 6:    return "storestrm03";
+  case 7:    return "storestrm04";
   default:   return "";
   }
 }
@@ -226,63 +180,18 @@ MonitorDisplay* StorageDisplay::nodeDisplay() const {
   return m_select;
 }
 
-#define PRT(x,y)  {  ::sprintf(text,"%-15s ",#y);\
-  for(size_t j=0; j<NUM_STORE_NODES; ++j) {\
-    DataWriterInfo& i = m_wrInfo[j]; \
-    (i.x.hasData)  ? ::sprintf(&text[strlen(text)-1],"%12d ",i.x.value)  : ::sprintf(&text[strlen(text)-1],"%12s ","----");}}\
-
-
-/// Show the data logging status
-void StorageDisplay::showLogging() {
-  char text[256];
-  MonitorDisplay* disp = m_logging;
-  //DataWriterInfo  wi;
-  //wi.space = wi.free_space = wi.open_files = wi.closed_files = wi.transferred_files = wi.deleted_files = 0;
-  //strcpy(wi.data_dir,"/daqarea/2008/RAW/LHCb/Physics/0123456789");
-  //disp->draw_line_reverse("File Information for Run %-10                                         ",0);
-  //disp->draw_line_normal("Space:%9d MB [%4d TB] Free Space: %9d MB [%4d TB]", 
-  //                       wi.space,wi.space/1024/1024,wi.free_space,wi.free_space/1024/1024);
-  //disp->draw_line_normal("Open:%5d  Closed:%5d Transferring:%5d Deleted:%5d Total:%5d     ",
-  //                       wi.open_files,wi.closed_files,wi.transferred_files,wi.deleted_files,
-  //                       wi.open_files+wi.closed_files+wi.transferred_files+wi.deleted_files);
-  //disp->draw_line_normal("Directory:%s", wi.data_dir);
-
-  disp->draw_line_reverse("Writerd summary information from publishers:");
-  ::sprintf(text,"%-15s ","Node");
-  for(size_t j=0; j<NUM_STORE_NODES; ++j)
-    ::sprintf(&text[strlen(text)-1],"%12s ",m_wrInfo[j].name);
-  disp->draw_line_normal(text);
-  PRT(mbWritten, MB written...);
-  disp->draw_line_normal(text);
-  PRT(totalFiles,Total Files..);
-  disp->draw_line_normal(text);
-  PRT(openFiles, Open files...);
-  disp->draw_line_normal(text);
-  PRT(numSockets,Num.Sockets..);
-  disp->draw_line_normal(text);
-  PRT(numThreads,Num.Threads..);
-  disp->draw_line_normal(text);
-  PRT(abnormals, Anomalies....);
-  disp->draw_line_normal(text);
-}
-
-/// Show the file information
-void StorageDisplay::showFiles() {
-  MonitorDisplay* disp = m_files;
-  disp->draw_line_reverse("File                    Destination Size[Bytes]  Events     State           ");
-}
-
 /// Display the Stream information
 void StorageDisplay::showStreams(const Nodeset& ns) {
   map<string,StorageDisplay::Stream> streams;
   MonitorDisplay* disp = m_streams;
   string part = m_partName + "_";
-  disp->draw_line_reverse("Stream         Source       Target              Sent    Received     Written   ");
+  disp->draw_line_reverse("Stream                Target              Sent    Received     Written   ");
 
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
     for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       const Clients& clients = (*ib).clients;
+      if ( !ro_match_end(m_partName,(*ib).name) ) continue;
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
         const MBMClient& c = *ic;
         if (strncmp(c.name,part.c_str(),part.length())==0) {
@@ -292,34 +201,41 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
           if ( (typ=nullstr(nam,"_SND")) ){
             *(typ+3) = 0;
             ptr = nullchr(str=typ+4,'_');
-            if ( !ptr ) {
-              const char* s = "MONA0801";
-              streams[s].node = s;
-              streams[s].sent += c.events;
-              streams[s].source = "Recv Layer";
+            if ( !ptr )    {
+              StorageDisplay::Stream& stream = streams["Monitor"];
+              stream.node = "MONA08";
+              stream.sent += c.events;
+              stream.source = "Recv Layer";
               continue;
             }
             else if ( (ptr=::strstr(ptr+1,"MONA09")) ) {
-              const char* s = nullchr(ptr,'_') ? ptr : "MONA0901";
-              streams[s].node = s;
-              streams[s].sent += c.events;
-              streams[s].source = "Recv Layer";
+              StorageDisplay::Stream& stream = streams["Reco"];
+              stream.node = "MONA09";
+              stream.sent += c.events;
+              stream.source = "Recv Layer";
               continue;
             }
-	    streams[str].sent += c.events;
-	    streams[str].source = node;
+            else if ( str && ::strlen(str) )  {
+              StorageDisplay::Stream& stream = streams[str];
+              stream.sent += c.events;
+              stream.source = node;
+            }
           }
           else if ( (typ=nullstr(nam,"_RCV")) ) {
             *(typ+3) = 0;
             nullchr(str=typ+4,'_');
-            streams[str].received+=c.events;
-            streams[str].node = node;
+            if ( str && ::strlen(str) )  {
+              streams[str].received+=c.events;
+              streams[str].node = node;
+            }
           }
           else if ( (typ=nullstr(nam,"_WRT")) ) {
             *(typ+3) = 0;
             nullchr(str=typ+4,'_');
-            streams[str].written+=c.events;
-            streams[str].node = node;
+            if ( str && ::strlen(str) )  {
+              streams[str].written+=c.events;
+              streams[str].node = node;
+            }
           }
         }
       }
@@ -329,8 +245,8 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
   for(map<string,Stream>::const_iterator i=streams.begin();i!=streams.end();++i) {
     const Stream& s = (*i).second;
     if ( ::strncmp(s.node.c_str(),"MONA0",5) != 0 )  {
-      disp->draw_line_normal("%-14s%12s->%-12s %11d %11d %11d",
-                             (*i).first.c_str(),s.source.c_str(),s.node.c_str(),
+      disp->draw_line_normal("%-10s%-24s%12d%12d%12d",
+                             (*i).first.c_str(),"Recv Layer -> Streamers",
                              s.sent,s.received,s.written);
       total.sent += s.sent;
       total.written += s.written;
@@ -338,13 +254,13 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
     }
   }
   //disp->draw_line_normal("");
-  disp->draw_line_bold("%-14s%12s->%-12s %11d %11d %11d","Total","Recv Layer","Stream Layer",
+  disp->draw_line_bold("%-10s%9s -> %-10s %11d %11d %11d","Total","Recv Layer","Streamers",
                        total.sent,total.received,total.written);
   disp->draw_line_normal("");
   for(map<string,Stream>::const_iterator i=streams.begin();i!=streams.end();++i) {
     const Stream& s = (*i).second;
     if ( ::strncmp(s.node.c_str(),"MONA0",5) == 0 )  {
-      disp->draw_line_normal("%-14s%12s->%-15s%9d",(*i).first.c_str(),s.source.c_str(),s.node.c_str(),s.sent);
+      disp->draw_line_normal("%-8s%12s -> %-12s%10d",(*i).first.c_str(),s.source.c_str(),s.node.c_str(),s.sent);
     }
   }
 }
@@ -364,6 +280,7 @@ void StorageDisplay::showHLT(const Nodeset& ns) {
       size_t len = strlen(t.name);
       if ( strcmp(t.name+len-4,"_HLT")==0 && strncmp(t.name,part.c_str(),part.length())==0) {
         for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
+          if ( !ro_match_end(m_partName,(*ib).name) ) continue;
           const Clients& clients = (*ib).clients;
           for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
             if ( (*ic).processID == t.processID ) {
@@ -393,6 +310,7 @@ void StorageDisplay::showBuffers(const Nodeset& ns) {
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
     for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
+      if ( !ro_match_end(m_partName,(*ib).name) ) continue;
       const Clients& clients = (*ib).clients;
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
         if (strncmp((*ic).name,part.c_str(),part.length())==0) {
@@ -421,7 +339,7 @@ void StorageDisplay::showHeader(const Nodeset& ns)   {
   draw_line_reverse("  %s                   Storage Monitor for partition %s on %s   [%s]",
                     fill,m_partName.c_str(), RTL::nodeNameShort().c_str(), ::lib_rtl_timestr());    
   draw_line_bold   ("  %s                   Information updates date between: %s.%03d and %s.%03d",
-		    fill,b1,frst.second,b2,last.second);
+                    fill,b1,frst.second,b2,last.second);
   draw_line_normal ("");
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     char* c = ::strchr((char*)(*n).name,'.');
@@ -437,8 +355,12 @@ void StorageDisplay::showSelector(const Nodeset& /* ns */)   {
     m_select->draw_line_bold  ("             ");
     m_select->draw_line_bold  ("  storerecv01");
     m_select->draw_line_bold  ("  storerecv02");    
+    m_select->draw_line_bold  ("  storerecv03");    
+    m_select->draw_line_bold  ("  storerecv04");    
     m_select->draw_line_bold  ("  storestrm01");
     m_select->draw_line_bold  ("  storestrm02");
+    m_select->draw_line_bold  ("  storestrm03");
+    m_select->draw_line_bold  ("  storestrm04");
     m_select->draw_line_normal("");
     m_select->draw_line_normal("");
     m_select->draw_line_bold  ("  Click node to show MBM");
@@ -455,19 +377,13 @@ void StorageDisplay::updateDisplay(const Nodeset& ns)   {
   m_hltRec->begin_update();
   m_buffers->begin_update();
   m_streams->begin_update();
-  m_logging->begin_update();
-  m_files->begin_update();
 
   showHeader(ns);
   showHLT(ns);
   showBuffers(ns);
   showStreams(ns);
-  showLogging();
-  showFiles();
   showSelector(ns);
 
-  m_files->end_update();
-  m_logging->end_update();
   m_streams->end_update();
   m_buffers->end_update();
   m_hltRec->end_update();

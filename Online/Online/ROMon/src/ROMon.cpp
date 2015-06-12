@@ -33,6 +33,26 @@ void ROMon::getServiceNode(char* s, string& svc, string& node) {
   node = at+1;
 }
 
+bool ROMon::ro_match_end(const string& pattern, const char* data)  {
+  if ( !data ) return false;
+  if ( pattern.empty() ) return true;
+  size_t len = ::strlen(data);
+  if ( len+1 < pattern.length() ) return false;
+  const char* ptr = data + len - pattern.length() - 1;
+  if ( *ptr != '_' ) return false;
+  return ::strcmp(ptr+1,pattern.c_str()) == 0;
+}
+
+bool ROMon::ro_match_start(const string& pattern, const char* data)  {
+  if ( !data ) return false;
+  if ( pattern.empty() ) return true;
+  size_t len = ::strlen(data);
+  if ( len+1 < pattern.length() ) return false;
+  const char* ptr = data + pattern.length() + 1;
+  if ( *ptr != '_' ) return false;
+  return ::strncmp(data,pattern.c_str(),pattern.length()) == 0;
+}
+
 MBMBuffer* MBMBuffer::reset() {
   ::memset(this,0,sizeof(MBMBuffer));  
   return this;

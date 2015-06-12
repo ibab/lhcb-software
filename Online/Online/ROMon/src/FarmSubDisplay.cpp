@@ -10,6 +10,7 @@ namespace ROMon {
    *   @author M.Frank
    */
   class FarmSubDisplay : public InternalDisplay  {
+    std::string       m_partition;
     long long int     m_evtBuilt;
     long long int     m_evtMoore;
     long long int     m_evtSent;
@@ -25,7 +26,10 @@ namespace ROMon {
 
   public:
     /// Initializing constructor
-    FarmSubDisplay(InternalDisplay* parent, const std::string& title, int height, bool bad=false);
+    FarmSubDisplay(InternalDisplay* parent, 
+                   const std::string& title, 
+                   const std::string& partition, 
+                   int height, bool bad=false);
     /// Standard destructor
     virtual ~FarmSubDisplay();
     /// Initialize default display text
@@ -51,8 +55,11 @@ namespace ROMon {
     virtual void updateContent(const Nodeset& ns);
   };
 
-  InternalDisplay* createFarmSubDisplay(InternalDisplay* parent, const std::string& title,int height) {
-    return new FarmSubDisplay(parent,title,height);
+  InternalDisplay* createFarmSubDisplay(InternalDisplay* parent, 
+                                        const std::string& title,
+                                        const std::string& partition,
+                                        int height) {
+    return new FarmSubDisplay(parent,title,partition,height);
   }
 }
 #include <set>
@@ -83,8 +90,11 @@ namespace {
 }
 
 /// Initializing constructor
-FarmSubDisplay::FarmSubDisplay(InternalDisplay* parent, const string& title, int height, bool bad) 
-: InternalDisplay(parent, title)
+FarmSubDisplay::FarmSubDisplay(InternalDisplay* parent, 
+                               const string& title, 
+                               const string& part,
+                               int height, bool bad) 
+  : InternalDisplay(parent, title), m_partition(part)
 {
   m_numUpdate = 0;
   m_evtOvl    = m_totOvl = 0;
@@ -201,6 +211,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   int numBuffs       = 0;
   int numClients     = 0;
   set<string> bad_nodes;
+  string part = "_"+m_partition;
 
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
@@ -211,7 +222,9 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
     long int node_evt_moore = LNG_max;
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       int idx = 0;
-      char b = (*ib).name[0];
+      const char* bn = (*ib).name;
+      char b = bn[0];
+      if ( !ro_match_end(m_partition,bn) ) continue;
       const MBMBuffer::Control& ctrl = (*ib).ctrl;
       ++numBuffs;
       switch(b) {
@@ -249,14 +262,14 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
           }
           break;
         case SENDER_TASK:
-	  //  Orig.MEP schema    MEP or DeferHLT schema
+          //  Orig.MEP schema    MEP or DeferHLT schema
           if( b == RES_BUFFER || b == SND_BUFFER )  {
             node_evt_sent = ro_min(node_evt_sent,(*ic).events);
           }
           break;
         case MOORE_TASK:
           //  Normal  and        TAE event processing
-	  //  MEP or DeferHLT    Orig.MEP schmema
+          //  MEP or DeferHLT    Orig.MEP schmema
           if( b == EVT_BUFFER || b == MEP_BUFFER )  {
             node_evt_moore = ro_min(node_evt_moore,long((*ic).events));
           }

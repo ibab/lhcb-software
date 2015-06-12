@@ -46,79 +46,65 @@ int gauditask_task_trylock() {
 int gauditask_task_unlock() {
   return ::lib_rtl_unlock(s_lock);
 }
-
-static string loadScript(const string& fname) {
-  ifstream file(fname.c_str());
-  stringstream str;
-  if( file ) {
-    char ch;
-    while( file.get(ch) ) str.put(ch);
-    file.close();
-    return str.str();
+namespace {
+  string loadScript(const string& fname) {
+    ifstream file(fname.c_str());
+    stringstream str;
+    if( file ) {
+      char ch;
+      while( file.get(ch) ) str.put(ch);
+      file.close();
+      return str.str();
+    }
+    return "";
   }
-  return "";
+  struct PythonInterpreterState {
+    PyThreadState      *mainThreadState;
+    PyInterpreterState *mainInterpreterState;
+  };
 }
 
-//static bool old_mode = false;
-
-GaudiTask::PythonInterpreter::PythonInterpreter() {
-  ::Py_Initialize();
+GaudiTask::PythonInterpreter::PythonInterpreter() : m_state(0) {
+  if ( !::Py_IsInitialized() ) {
+    ::Py_Initialize();
+    ::PyEval_InitThreads();
+    PythonInterpreterState* s = new PythonInterpreterState;
+    // Save a pointer to the main PyThreadState object
+    s->mainThreadState = PyThreadState_Get();
+    // Get a reference to the PyInterpreterState
+    s->mainInterpreterState = s->mainThreadState->interp;
+    m_state = s;
+  }
 }
 
 GaudiTask::PythonInterpreter::~PythonInterpreter() {
+  PythonInterpreterState* s = (PythonInterpreterState*)m_state;
+  if ( s ) delete s;
   ::Py_Finalize();
 }
 
 void GaudiTask::PythonInterpreter::afterFork() {
-  /*  OLD mode
-  if ( old_mode )  return;
-  */
   if ( ::Py_IsInitialized() ) {
-    //cout << "[error] Executing afterfork procedure......" << endl;
-    //cout << flush;
-
-    //PythonGlobalState state();
-
-    PyThreadState *tstate = 0;
-    PyInterpreterState *interp = 0;
-    ::_PyGILState_Fini();
-    //::PyOS_AfterFork();
-    tstate = PyThreadState_GET();
-    interp = tstate->interp;
-    ::_PyGILState_Init(interp, tstate);
-
+#if 0
+    cout << "[INFO] Re-init python after forking....." << flush << endmsg;
+#endif
     ::PyOS_AfterFork();  
+    ::PyEval_InitThreads();
+    ::PyEval_ReleaseLock();
   }
 }
 
 GaudiTask::PythonGlobalState::PythonGlobalState() {
-  if ( ::Py_IsInitialized() ) {
-    /*  OLD mode
-    if ( old_mode )  {
-      PyThreadState *tstate = 0;
-      PyInterpreterState *interp = 0;
-#ifndef _WIN32
-      ::_PyGILState_Fini();
-      ::PyOS_AfterFork();
-      tstate = PyThreadState_GET();
-      interp = tstate->interp;
-      ::_PyGILState_Init(interp, tstate);
-#endif
-      return;
-    }
-    */
+  if ( ::Py_IsInitialized() )  {
     PyGILState_STATE gstate = ::PyGILState_Ensure(); 
     m_state = (int)gstate;
   }
 }
 
 GaudiTask::PythonGlobalState::~PythonGlobalState() {
-  /*  OLD mode
-  if ( old_mode )  return;
-  */
   if ( ::Py_IsInitialized() ) {
     PyGILState_STATE gstate = (PyGILState_STATE)m_state;
-    if ( gstate ) ::PyGILState_Release(gstate);
+    ::PyGILState_Release(gstate);
   }
 }
 
@@ -127,24 +113,14 @@ int GaudiTask::execRunable(void* arg)  {
   pair<IRunable*,GaudiTask*>* p = (pair<IRunable*,GaudiTask*>*)arg;
   GaudiTask* t = p->second;
   IRunable*  r = p->first;
-  static int first = 1;
   delete p;
+
   try {
-    PythonGlobalState state();
-#if 0
-    if ( first )  {
-      first = false;
-      if ( ::Py_IsInitialized() ) {
-        PyThreadState *tstate = 0;
-        PyInterpreterState *interp = 0;
-        ::_PyGILState_Fini();
-        //::PyOS_AfterFork();
-        tstate = PyThreadState_GET();
-        interp = tstate->interp;
-        ::_PyGILState_Init(interp, tstate);
-      }
-    }
-#endif
+    PythonGlobalState state;
+    //char text[64];
+    //PyThreadState* st = PyGILState_GetThisThreadState();
+    //::sprintf(text," %p ",(void*)st);
+    //t->output(MSG::ERROR,"PyGILState_GetThisThreadState():  "+string(text));
     int ret = r->run();
     t->setEventThread(false);
     return ret;
@@ -171,7 +147,6 @@ GaudiTask::GaudiTask(IInterface*)
   propertyMgr().declareProperty("AutoStart",      m_autostart   = 0);
   ::lib_rtl_create_lock(0,&s_lock);
   m_eventThread = false;
-  ::PyEval_InitThreads();
 }
 
 GaudiTask::~GaudiTask()  {
@@ -602,7 +577,7 @@ int GaudiTask::stopApplication()  {
       }
       m_incidentSvc= 0;
 #endif
-      PythonGlobalState state();
+      PythonGlobalState state;
       StatusCode sc = m_subMgr ? m_subMgr->stop() : StatusCode::SUCCESS;
       if ( !sc.isSuccess() )   {
         MsgStream log(msgSvc(), name());
@@ -644,7 +619,7 @@ int GaudiTask::finalizeApplication()  {
       if ( isvc.get() ) {
         if ( isvc->FSMState() == Gaudi::StateMachine::RUNNING ) {
           output(MSG::ALWAYS,"Attemp to call finalize before stop: will take corrective action....");
-          PythonGlobalState state();
+          PythonGlobalState state;
           sc = isvc->stop();
           if ( !sc.isSuccess() )   {
             output(MSG::ERROR,"Failed to stop the application");
@@ -786,6 +761,8 @@ StatusCode GaudiTask::configPythonSubManager() {
     if ( ::PyErr_Occurred() )   {
       ::PyErr_Print();
       ::PyErr_Clear();
+      ::PyEval_ReleaseLock();
+
       ::fflush(stdout);
       ::fflush(stderr);
       log << MSG::FATAL << "Failed to invoke python startup script." << endmsg;
@@ -798,6 +775,7 @@ StatusCode GaudiTask::configPythonSubManager() {
       }
       return StatusCode::FAILURE;
     }
+    ::PyEval_ReleaseLock();
     log << MSG::INFO << "Python initialization done. ";
     return StatusCode::SUCCESS;
   }

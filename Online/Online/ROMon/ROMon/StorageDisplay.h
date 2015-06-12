@@ -42,12 +42,6 @@ namespace ROMon {
     /// reference to the Streams display
     MonitorDisplay* m_streams;
 
-    /// Reference to the logger window
-    MonitorDisplay* m_logging;
-
-    /// Reference to the display showing current files
-    MonitorDisplay* m_files;
-
     /// Reference to the HLT receiver display
     MonitorDisplay* m_hltRec;
 
@@ -56,9 +50,6 @@ namespace ROMon {
 
     /// Partition name for projection(s)
     std::string     m_partName;
-
-    /// Store node services
-    DataWriterInfo* m_wrInfo;
 
     struct Stream {
       std::string node, source;
@@ -106,12 +97,6 @@ namespace ROMon {
 
     /// Show the display header information (title, time, ...)
     void showHeader(const Nodeset& ns);
-
-    /// Show the data logging status
-    void showLogging();
-
-    /// Show the file information
-    void showFiles();
 
     /// Display the Stream information
     void showStreams(const Nodeset& ns);

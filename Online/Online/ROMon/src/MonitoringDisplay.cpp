@@ -21,6 +21,7 @@
 // Framework include files
 #include "RTL/Lock.h"
 #include "RTL/strdef.h"
+#include "ROMonDefs.h"
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
 #include "ROMon/MonitoringDisplay.h"
@@ -165,7 +166,6 @@ void MonitoringDisplay::showTasks(const Nodeset& ns) {
   int nTsk;
   char txt[2][256];
   string part = m_partName + "_";
-  string part2 = "_" + m_partName;
   MonitorDisplay* disp = m_tasks;
   const char* fmt = " %-24s%4s %c%c%c%c%11d %3.0f ";
   sprintf(txt[0],   " %-23s%5s %c%c%c%c%11s %3s ","Monitoring Task","State",'R','e','q','s',"Seen","[%]");
@@ -176,9 +176,9 @@ void MonitoringDisplay::showTasks(const Nodeset& ns) {
     if ( ::str_ncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) != 0 ) {
       const Buffers& buffs = *(*n).buffers();
       for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
+        if ( !ro_match_end(m_partName,(*ib).name) ) continue;
         string buff_nam = (*ib).name;
         const Clients& clients = (*ib).clients;
-        if ( buff_nam.find(part2) == string::npos ) continue;
         for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
           const MBMClient& c = *ic;
           if (strncmp(c.name,part.c_str(),part.length())==0) {
@@ -223,10 +223,10 @@ void MonitoringDisplay::showNodes(const Nodeset& ns) {
     if ( ::str_ncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) != 0 ) {
       const Buffers& buffs = *(*n).buffers();
       for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
+        if ( !ro_match_end(m_partName,(*ib).name) ) continue;
         const MBMBuffer::Control& ctrl = (*ib).ctrl;
         const Clients& clients = (*ib).clients;
         string buff_nam = (*ib).name;
-        if ( buff_nam.find(part2) == string::npos ) continue;
         for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
           const MBMClient& c = *ic;
           if (strncmp(c.name,part.c_str(),part.length())==0) {
@@ -274,6 +274,7 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
       is_reco = ::str_ncasecmp((*n).name,"mona09",6) == 0;
       const Buffers& buffs = *(*n).buffers();
       for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
+        if ( !ro_match_end(m_partName,(*ib).name) ) continue;
         string buff_nam = (*ib).name;
         if ( buff_nam.find(part2) != string::npos )  {
           const MBMBuffer::Control& c = (*ib).ctrl;

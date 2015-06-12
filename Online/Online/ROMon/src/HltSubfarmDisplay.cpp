@@ -65,7 +65,7 @@ void HltSubfarmDisplay::init(int argc, char** argv)   {
   RTL::CLI cli(argc,argv,help);
   cli.getopt("headerheight",  1, hdr_height    =   5);
   cli.getopt("delay",         1, m_delay       = 1000);
-  cli.getopt("servicename",   1, m_svcName     = "/hlta01/ROpublish/HLTDefer");
+  cli.getopt("servicename",   1, m_svcName     = "/hlta01/ROpublish/HLT1");
   m_readAlways = true;
   setup_window();
   m_nodes      = createSubDisplay(Position(m_position.x-2,m_position.y-2+hdr_height), 

@@ -39,31 +39,31 @@ namespace ROMon {
       long free_slots, buf_clients, task_evt_tot, task_evt_min;
       float min_free_slots, min_free_space;
       Info()   {
-	free_slots=buf_clients=task_evt_tot=0;
-	task_evt_min   = std::numeric_limits<long>::max();
-	min_free_slots = std::numeric_limits<float>::max();
-	min_free_space = std::numeric_limits<float>::max();
+        free_slots=buf_clients=task_evt_tot=0;
+        task_evt_min   = std::numeric_limits<long>::max();
+        min_free_slots = std::numeric_limits<float>::max();
+        min_free_space = std::numeric_limits<float>::max();
       }
       Info(const Info& c) {
-	free_slots     = c.free_slots;
-	min_free_slots = c.min_free_slots;
-	buf_clients    = c.buf_clients;
-	task_evt_tot   = c.task_evt_tot;
-	task_evt_min   = c.task_evt_min;
-	min_free_space = c.min_free_space;
-	min_free_slots = c.min_free_slots;
+        free_slots     = c.free_slots;
+        min_free_slots = c.min_free_slots;
+        buf_clients    = c.buf_clients;
+        task_evt_tot   = c.task_evt_tot;
+        task_evt_min   = c.task_evt_min;
+        min_free_space = c.min_free_space;
+        min_free_slots = c.min_free_slots;
       }
       Info& operator=(const Info& c) {
-	if ( &c != this )  {
-	  free_slots     = c.free_slots;
-	  min_free_slots = c.min_free_slots;
-	  buf_clients    = c.buf_clients;
-	  task_evt_tot   = c.task_evt_tot;
-	  task_evt_min   = c.task_evt_min;
-	  min_free_space = c.min_free_space;
-	  min_free_slots = c.min_free_slots;
-	}
-	return *this;
+        if ( &c != this )  {
+          free_slots     = c.free_slots;
+          min_free_slots = c.min_free_slots;
+          buf_clients    = c.buf_clients;
+          task_evt_tot   = c.task_evt_tot;
+          task_evt_min   = c.task_evt_min;
+          min_free_space = c.min_free_space;
+          min_free_slots = c.min_free_slots;
+        }
+        return *this;
       }
     };
     std::vector<Info> m_history;
@@ -432,8 +432,8 @@ void CtrlFarmClusterLine::excludedHandler(void* tag, void* address, int* size) {
     if ( address && *size > 0 ) {
       char *p = (char*)address, *end = p+*size;
       while(p<end) {
-	nodes.insert(strlower(p));
-	p += (::strlen(p)+1);
+        nodes.insert(strlower(p));
+        p += (::strlen(p)+1);
       }
     }
     IocSensor::instance().send(l,CMD_EXCLUDE,new set<string>(nodes));
@@ -442,7 +442,7 @@ void CtrlFarmClusterLine::excludedHandler(void* tag, void* address, int* size) {
 
 /// Standard constructor
 StorageClusterLine::StorageClusterLine(FarmLineDisplay* p, const string& partition, const std::string& n)
-: ClusterLine(p,partition,n)
+  : ClusterLine(p,partition,n)
 {
   m_lastUpdate = time(0);
   m_hasProblems = false;
@@ -483,8 +483,8 @@ void StorageClusterLine::display() {
           num_cl[idx]   += (*ib).clients.size();
           num_sl[idx]   += ctrl.p_emax - ctrl.i_events;
           min_prod[idx]  = ro_min(min_prod[idx],ctrl.tot_produced);
-	  fsp = float(ctrl.i_space)/float(ctrl.bm_size);
-	  fsl = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
+          fsp = float(ctrl.i_space)/float(ctrl.bm_size);
+          fsl = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
           fspace[idx]    = ro_min(fspace[idx],fsp);
           fslots[idx]    = ro_min(fslots[idx],fsl);
           if ( fsl < SLOTS_MIN || fsp < SPACE_MIN ) bad_nodes.insert((*n).name);
@@ -564,7 +564,7 @@ void StorageClusterLine::display() {
 
 /// Standard constructor
 MonitoringClusterLine::MonitoringClusterLine(FarmLineDisplay* p, const string& partition, const std::string& n)
-: ClusterLine(p,partition,n)
+  : ClusterLine(p,partition,n)
 {
   m_numUpdate = 0;
   m_evtRelay  = m_totRelay = 0;
@@ -612,12 +612,12 @@ void MonitoringClusterLine::display() {
           int ncl = (*ib).clients.size();
           numClients += ncl;
           ++numBuffs;
-	  tot_prod[idx] += ctrl.tot_produced;
-	  num_cl[idx]   += ncl;
-	  num_sl[idx]   += ctrl.p_emax - ctrl.i_events;
+          tot_prod[idx] += ctrl.tot_produced;
+          num_cl[idx]   += ncl;
+          num_sl[idx]   += ctrl.p_emax - ctrl.i_events;
           min_prod[idx]  = ro_min(min_prod[idx],ctrl.tot_produced);
-	  fsl            = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
-	  fsp            = float(ctrl.i_space)/float(ctrl.bm_size);
+          fsl            = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
+          fsp            = float(ctrl.i_space)/float(ctrl.bm_size);
           fspace[idx]    = ro_min(fspace[idx],fsp);
           fslots[idx]    = ro_min(fslots[idx],fsl);
           if ( fsl < SLOTS_MIN || fsp < SPACE_MIN ) {
@@ -649,11 +649,11 @@ void MonitoringClusterLine::display() {
 
   if ( tot_prod[1] != 0 && tot_prod[2] != 0 )
     ::snprintf(txt,sizeof(txt),"%13lld%6d  %8s%4d %30s %10lld%6d %8s%4d %64s",
-	      tot_prod[1],num_sl[1],"Clients:",num_cl[1],"",
-	      tot_prod[2],num_sl[2],"Clients:",num_cl[2],"");
+               tot_prod[1],num_sl[1],"Clients:",num_cl[1],"",
+               tot_prod[2],num_sl[2],"Clients:",num_cl[2],"");
   else if ( tot_prod[1] != 0 )
     ::snprintf(txt,sizeof(txt),"%13lld%6d  %8s%4d  %10s %-62s",tot_prod[1],num_sl[1],
-	      "Clients:",num_cl[1],"","No Output streams");
+               "Clients:",num_cl[1],"","No Output streams");
   else
     ::snprintf(txt,sizeof(txt),"%13s%6s  %8s%4s%64s","--","--","","","");
   ::scrc_put_chars(dis,"  Worker:  ",BOLD,pos,77+57+CLUSTERLINE_START,0);
@@ -716,7 +716,7 @@ namespace {
 }
 
 FarmClusterLine::FarmClusterLine(FarmLineDisplay* p, const string& partition, const std::string& n)
-: ClusterLine(p,partition,n)
+  : ClusterLine(p,partition,n)
 {
   m_numUpdate  = 0;
   m_lastUpdate = time(0);
@@ -745,6 +745,7 @@ void FarmClusterLine::display() {
     txt[1] = nn[0];
     txt[2] = nn[1];
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
+      if ( !(!partitioned || ro_match_end(m_partition,(*ib).name)) ) continue;
       string b = (*ib).name, bnam = b.substr(0,partitioned ? b.find('_') : string::npos);
       const MBMBuffer::Control& ctrl = (*ib).ctrl;
       float fsp = float(ctrl.i_space)/float(ctrl.bm_size);
@@ -770,18 +771,18 @@ void FarmClusterLine::display() {
       if ( fsp < SPACE_MIN ) space_min |= (fsp<SPACE_MIN);
       const Clients& clients = (*ib).clients;
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	if ( 0 == ::strncasecmp((*ic).name,"MEPRx",5) ) continue;
-	info->task_evt_tot   += (*ic).events;
-	info->task_evt_min    = ro_min(info->task_evt_min,(*ic).events);
-	totals.task_evt_tot  += (*ic).events;
-	totals.task_evt_min   = ro_min(totals.task_evt_min,(*ic).events);
-	if ( (*ic).events < min_task ) min_task = (*ic).events;
+        if ( 0 == ::strncasecmp((*ic).name,"MEPRx",5) ) continue;
+        info->task_evt_tot   += (*ic).events;
+        info->task_evt_min    = ro_min(info->task_evt_min,(*ic).events);
+        totals.task_evt_tot  += (*ic).events;
+        totals.task_evt_min   = ro_min(totals.task_evt_min,(*ic).events);
+        if ( (*ic).events < min_task ) min_task = (*ic).events;
         ++numClients;
       }
 #if 0
       if ( (m_measure%5)==0 ) {
-	info->stuck = min_task <= info->task_evt_min ? 1 : 0;
-	(*ibuf).second.first  = min_task;
+        info->stuck = min_task <= info->task_evt_min ? 1 : 0;
+        (*ibuf).second.first  = min_task;
       }
 #endif
       ++numBuffs;
@@ -866,9 +867,9 @@ void FarmClusterLine::display() {
     if ( min_prod[3]  == INT_max ) min_prod[3] = 0;  // if not existing....
     if ( min_slots[3] == INT_max ) min_slots[3] = 0; // if not existing....
     ::snprintf(txt,sizeof(txt),"%10lld%5ld%11lld%6ld%10lld%5ld",
-              min_prod[3],min_slots[3],
-              min_prod[1],min_slots[1],
-              min_prod[2],min_slots[2]);
+               min_prod[3],min_slots[3],
+               min_prod[1],min_slots[1],
+               min_prod[2],min_slots[2]);
   }
   else {
     ::snprintf(txt,sizeof(txt),"%10s%5s%10s%7s%10s%5s","--","--","--","--","--","--");
@@ -886,7 +887,7 @@ void FarmClusterLine::display() {
 #include "ROMon/CPUMon.h"
 
 HltDeferLine::HltDeferLine(FarmLineDisplay* p, const string& partition, const std::string& n)
-: ClusterLine(p,partition,n)
+  : ClusterLine(p,partition,n)
 {
   m_numUpdate   = 0;
   m_numFiles    = 0;
@@ -894,7 +895,8 @@ HltDeferLine::HltDeferLine(FarmLineDisplay* p, const string& partition, const st
   m_numNodes    = 0;
   m_lastUpdate  = time(0);
   m_hasProblems = false;
-  connect(strlower(m_name)+"/ROpublish/HLTDefer");
+  connect(strlower(m_name)+"/ROpublish/HLT1");
+  //connect(strlower(m_name)+"/ROpublish/HLTDefer");
   string svc = "HLT/ExcludedNodes/"+strupper(m_name);
   m_exclID   = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,excludedHandler,(long)this,0,0);
 }
@@ -912,9 +914,9 @@ void HltDeferLine::handle(const Event& ev) {
     case CMD_EXCLUDE:
       m_excluded = *auto_ptr<StrSet>(ev.iocPtr<StrSet>()).get();
       if ( 0 == m_numUpdate ) {
-	RTL::Lock lock(InternalDisplay::screenLock());
-	begin_update("          -- No Subfarm information retrieved yet --");
-	end_update();
+        RTL::Lock lock(InternalDisplay::screenLock());
+        begin_update("          -- No Subfarm information retrieved yet --");
+        end_update();
       }
       return;
     default:
@@ -934,8 +936,8 @@ void HltDeferLine::excludedHandler(void* tag, void* address, int* size) {
     if ( address && *size > 0 ) {
       char *p = (char*)address, *end = p+*size;
       while(p<end) {
-	nodes.insert(strlower(p));
-	p += (::strlen(p)+1);
+        nodes.insert(strlower(p));
+        p += (::strlen(p)+1);
       }
     }
     IocSensor::instance().send(l,CMD_EXCLUDE,new set<string>(nodes));
@@ -1005,20 +1007,20 @@ void HltDeferLine::display() {
       const DeferredHLTStats& n = *ni;
       string nn = n.name;
       if ( nn.length() > 0 && nn != s->name ) {
-	const Runs& nr = n.runs;
-	bool excl = m_excluded.find(nn) != m_excluded.end();
-	col = nr.size()==0 ? COL_OK : COL_ATTENTION;
-	if ( excl )
-	  col = INVERSE|(col != COL_OK ? MAGENTA : BLUE);
-	else if ( n.overflowState == 'Y' && nr.size()>0 )
-	  col = COL_WARNING;
-	else if ( n.overflowState == 'Y' )
-	  col = COL_OK|BOLD;
-	nn = nn.substr(nn.length()-2);
-	int n_pos = ::atoi(nn.c_str())-1;
-	val = " "+nn;
-	::scrc_put_chars(dis,val.c_str(),col,line,pos+n_pos*3,0);
-	if ( last_pos < pos+(1+n_pos)*3 ) last_pos = pos+(1+n_pos)*3;
+        const Runs& nr = n.runs;
+        bool excl = m_excluded.find(nn) != m_excluded.end();
+        col = nr.size()==0 ? COL_OK : COL_ATTENTION;
+        if ( excl )
+          col = INVERSE|(col != COL_OK ? MAGENTA : BLUE);
+        else if ( n.overflowState == 'Y' && nr.size()>0 )
+          col = COL_WARNING;
+        else if ( n.overflowState == 'Y' )
+          col = COL_OK|BOLD;
+        nn = nn.substr(nn.length()-2);
+        int n_pos = ::atoi(nn.c_str())-1;
+        val = " "+nn;
+        ::scrc_put_chars(dis,val.c_str(),col,line,pos+n_pos*3,0);
+        if ( last_pos < pos+(1+n_pos)*3 ) last_pos = pos+(1+n_pos)*3;
       }
     }
   }
