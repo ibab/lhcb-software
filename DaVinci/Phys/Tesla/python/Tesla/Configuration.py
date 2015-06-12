@@ -165,7 +165,7 @@ class Tesla(LHCbConfigurableUser):
             Hlt1VertexReportsDecoder=DecoderDB["HltVertexReportsDecoder/Hlt1VertexReportsDecoder"].setup()
             Hlt2VertexReportsDecoder=DecoderDB["HltVertexReportsDecoder/Hlt2VertexReportsDecoder"].setup()
             Hlt2SelReportsDecoder=DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].setup()
-            seq.Members += [ Hlt2VertexReportsDecoder, Hlt2VertexReportsDecoder, Hlt2SelReportsDecoder ]
+            seq.Members += [ Hlt1VertexReportsDecoder, Hlt2VertexReportsDecoder, Hlt2SelReportsDecoder ]
         #
         lines = self.getProp('TriggerLines')
         for l in lines:
