@@ -57,12 +57,8 @@ class TestRunViewPlots(unittest.TestCase):
 
     @mock.patch('veloview.runview.utils.reference_run', mocked_reference_run)
     def test_get_run_plot_reference(self):
-        """Should also return the reference plot if reference is True."""
-        ret = plots.get_run_plot('h', NOMINAL_RUN, reference=True)
-        self.assertIsInstance(ret, list)
-        self.assertEqual(len(ret), 2)
-        nominal, reference = ret
-        self.assertEqual(nominal['data']['title'], 'h_nom')
+        """Should return the reference plot if reference is True."""
+        reference = plots.get_run_plot('h', NOMINAL_RUN, reference=True)
         self.assertEqual(reference['data']['title'], 'h_ref')
 
     def test_get_run_plot_no_key(self):
