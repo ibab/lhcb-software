@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-06-13 Michel De Cian
+ - Add TrackLikelihood to ExtraInfos, as it is needed by the ANNPID variables (in RecoTrackingRun2.py)
+
 ! 2015-06-10 Michel De Cian
  - Check that fitters in HLT1 sequence only run when the corresponding PatReco algorithms have run.
 

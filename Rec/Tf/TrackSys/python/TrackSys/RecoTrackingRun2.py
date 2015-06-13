@@ -370,6 +370,17 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
          cloneCleaner.CloneCut = 5e3
          #trackClones.Members += [ cloneTable, cloneCleaner ]
          GaudiSequencer("AddExtraInfoClonesSeq").Members += [ cloneTable, cloneCleaner ]
+
+      ## Add the likelihood information
+      if "TrackLikelihood" in extraInfos and ('TrackLikelihood' not in exclude):
+
+         addExtraInfo.DetectorList += ["TrackLikelihood"]
+         
+         from Configurables import TrackAddLikelihood, TrackLikelihood 
+         trackAddLikelihood = TrackAddLikelihood()
+         trackAddLikelihood.addTool( TrackLikelihood, name = "TrackMatching_likTool" )
+         trackAddLikelihood.TrackMatching_likTool.otEff = 0.9
+         GaudiSequencer("AddExtraInfoTrackLikelihoodSeq").Members += [ trackAddLikelihood ]
          
       ## ghost probability using a Neural Net
       if "GhostProbability" in extraInfos :
