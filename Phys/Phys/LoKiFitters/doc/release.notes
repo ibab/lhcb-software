@@ -5,6 +5,9 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2015-06-13 - Michel De Cian
+ - Make minimum numbers of tracks in PV configurable, set default to 4, compare tracks by ID by default (all in PVRefitter.cpp).
+
 ! 2015-06-09 - Eduardo Rodrigues
  - PVReFitter: duplicate property "MinChi2Iterations" corrected to a new name
    since it's in fact not a duplicate but a different property.

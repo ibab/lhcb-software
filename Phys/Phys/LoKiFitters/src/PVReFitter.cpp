@@ -316,6 +316,9 @@ namespace LoKi
     double         m_delta_chi2 ;    
     /// delta-distance stopping criteria
     double         m_delta_dist ;
+    /// minimum number of tracks in PV
+    unsigned int   m_minTracksInPV ;
+    std::string    m_minTS;
     /// tukey's parameters 
     // double         m_tukey[3]   ;
     boost::array<double,3> m_tukey ;
@@ -352,7 +355,7 @@ LoKi::PVReFitter::PVReFitter
   , m_extrapolatorName      ( "TrackMasterExtrapolator:PUBLIC" ) 
   , m_veloExtrapolatorName  ( "TrackLinearExtrapolator:PUBLIC" )
   , m_tolerance             ( 2 * Gaudi::Units::um )
-  , m_checkIDs              ( false ) 
+  , m_checkIDs              ( true  ) 
   , m_reFit                 ( false ) 
     //
   , m_maxIter               ( 16    ) 
@@ -360,6 +363,8 @@ LoKi::PVReFitter::PVReFitter
   , m_iterDist              ( 3     )
   , m_delta_chi2            ( 0.001 )
   , m_delta_dist            ( 1 * Gaudi::Units::um ) 
+  , m_minTracksInPV         ( 4     )
+  , m_minTS                 ( "4"   )
     //
   , m_tukey (  { { 3.0 , 15.0 , 3.0 } }  )      // used in LSAdaptPVFitter
     // , m_tukey (  { { 4.0 , 24.0 , 4.0 } }  ) 
@@ -428,6 +433,12 @@ LoKi::PVReFitter::PVReFitter
     ( "DeltaChi2"             ,  
       m_delta_chi2            , 
       "Delta-chi2     as convergency criterion"    ) ;
+   //
+  declareProperty 
+    ( "MinTracksInPV",  
+      m_minTracksInPV, 
+      "Minimum number of tracks in a PV") ;
+
   //
 // ==========================================================================
 }
@@ -447,6 +458,7 @@ StatusCode LoKi::PVReFitter::initialize ()               // initialize the tool
   m_stateProvider        = 0 ;
   m_extrapolator         = 0 ; 
   m_veloExtrapolator     = 0 ;
+  m_minTS                = std::to_string(m_minTracksInPV);
   //
   if ( !m_stateProviderName    . empty () ) 
   { m_stateProvider    = tool<ITrackStateProvider> ( m_stateProviderName    , this ) ; }
@@ -560,8 +572,8 @@ StatusCode LoKi::PVReFitter::_remove_
   if ( removed.empty() ) { return StatusCode::SUCCESS ; }   // RETURN
   //
   // - too many tracks to remove 
-  if ( removed.size () +  5  > pv.tracks().size() ) 
-  { return _Warning( "Less then five tracks in vertex remains",
+  if ( removed.size () +  m_minTracksInPV  > pv.tracks().size() ) 
+  {return _Warning( "Less than "+m_minTS+" tracks in vertex remain",
                      StatusCode::FAILURE, 3 ) ; }
   // 
   // - too many tracks to remove
@@ -714,8 +726,8 @@ StatusCode LoKi::PVReFitter::_reFit_ ( LHCb::RecVertex& pv ) const
   //
   if      ( 2 > tracks.size () ) 
   { return _Warning ( "Not enough     tracks in vertex!" ) ; }
-  else if ( 5 > tracks.size () ) 
-  { _Warning      ( "Less than five tracks in vertex!" ).ignore() ; }
+  else if ( m_minTracksInPV > tracks.size () ) 
+  {_Warning      ( "Less than "+m_minTS+" tracks in vertex!" ).ignore() ; }
   //
   // 
   Gaudi::XYZPoint     x  = pv.position  () ;
@@ -730,8 +742,8 @@ StatusCode LoKi::PVReFitter::_reFit_ ( LHCb::RecVertex& pv ) const
     const unsigned int nTracks = _load_ ( pv , x , iIter , &ci ) ;
     if      ( 2 > nTracks ) 
     { return _Warning ( "Not enough good tracks in the vertex!" ) ; }  // RETURN
-    else if ( 5 > nTracks ) 
-    { _Warning        ( "Less than five good tracks in vertex!", 
+    else if ( m_minTracksInPV > nTracks ) 
+    { _Warning        ( "Less than "+m_minTS+" good tracks in vertex!", 
                         StatusCode::SUCCESS, 0 ).ignore() ; }
     //
     // make Kalman-Filter step 
