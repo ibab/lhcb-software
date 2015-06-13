@@ -40,8 +40,6 @@ class RecSysConf(LHCbConfigurableUser):
     DefaultSubDetsFieldOn  = ["Decoding"] + DefaultTrackingSubdets+["RICH","CALO","MUON","PROTO","SUMMARY"]
     ## Default reconstruction sequence for field-on data (Run II)
     DefaultSubDetsFieldOnRun2  = ["Decoding"] + DefaultTrackingSubdetsRun2 + ["RICH","CALO","MUON","PROTO","SUMMARY"]
-    ## Default reconstruction sequence for field-off data
-    DefaultSubDetsFieldOff = ["Decoding"] + DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO","SUMMARY"]
     ## List of known special data processing options
     KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas", "microBiasTrigger", "pA", "pGun"]
 
@@ -81,8 +79,6 @@ class RecSysConf(LHCbConfigurableUser):
         # Phases
         if not self.isPropertySet("RecoSequence"):
             self.setProp("RecoSequence",self.DefaultSubDetsFieldOn)
-            if "fieldOff" in self.getProp("SpecialData"):
-                self.setProp("RecoSequence",self.DefaultSubDetsFieldOff)
             if self.getProp("DataType") is "2015":
                 self.setProp("RecoSequence",self.DefaultSubDetsFieldOnRun2)
         

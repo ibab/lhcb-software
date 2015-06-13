@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2015-06-13 - Michel De Cian
+ - Remove list of detectors for fieldOff, as it was never used and is identical to list for fieldOn (in Configuration.py)
+
 !========================= RecConf v2r21 2015-04-21 =========================
 ! 2015-04-20 - Michel De Cian
  - Remove '2015Dev' from 'KnownSpecialData', activate RunII tracking sequence by DataType '2015'
