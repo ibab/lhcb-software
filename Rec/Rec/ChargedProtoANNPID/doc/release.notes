@@ -4,6 +4,9 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2015-06-13 - Chris Jones
+ - Improved debug messages, including the inputs for each MVA.
+
 !========================= ChargedProtoANNPID v2r10 2015-04-21 ======================
 ! 2015-03-30 - Chris Jones
  - Add some more consistency checks to the NetConfig helper class.

@@ -108,8 +108,18 @@ StatusCode ChargedProtoANNPIDAlg::execute()
 
     // get the ANN output for this proto
     const double nnOut = m_netConfig->netHelper()->getOutput( proto );
+
     if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "ProtoParticle " << *proto << endmsg;
+      verbose() << " -> Inputs :";
+      for ( const auto& in : m_netConfig->netHelper()->inputs() )
+      {
+        verbose() << " " << in->name() << "=" << in->value(proto);
+      }
+      verbose() << endmsg;
       verbose() << " -> ANN value = " << nnOut << endmsg;
+    }
 
     // add to protoparticle
     proto->addInfo( m_protoInfo, nnOut );

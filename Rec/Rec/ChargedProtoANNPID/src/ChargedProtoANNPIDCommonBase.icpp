@@ -198,6 +198,10 @@ ChargedProtoANNPIDCommonBase<PBASE>::getInput( const std::string& name ) const
   {
     this->Exception( "Failed to create input object for '" + name + "'" );
   }
+  else
+  {
+    input->setName(name);
+  }
 
   return input;
 }

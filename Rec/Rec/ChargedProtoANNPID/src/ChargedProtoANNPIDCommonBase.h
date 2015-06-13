@@ -108,7 +108,6 @@ namespace ANNGlobalPID
     /// Type for list of inputs
     typedef std::vector<std::string> StringInputs;
 
-
   protected:
 
     /** @class Input ChargedProtoANNPIDCommonBase.h
@@ -130,6 +129,14 @@ namespace ANNGlobalPID
     public:
       /// Type for a vector of inputs
       typedef std::vector<const Input *> ConstVector;
+    public:
+      /// Access the input name
+      const std::string& name() const { return m_name; }
+      /// Set the name
+      void setName( const std::string & name ) { m_name = name; }
+    private:
+      /// Name
+      std::string m_name;
     };
 
   private:
@@ -551,7 +558,8 @@ namespace ANNGlobalPID
       ANNHelper( const ChargedProtoANNPIDCommonBase<PBASE>::StringInputs& inputs,
                  const ChargedProtoANNPIDCommonBase<PBASE> * parent )
         : m_inputs ( parent->getInputs(inputs) ),
-          m_ok     ( false  ) { }
+          m_ok     ( false  ) 
+      { }
       /// Destructor
       virtual ~ANNHelper()
       {
