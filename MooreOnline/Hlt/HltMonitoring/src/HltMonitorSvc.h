@@ -59,7 +59,8 @@ private:
    // properties
    std::string m_outCon;
    std::string m_decRepLoc;
-   unsigned int m_updateInterval;
+   double m_chunkOverlap;
+   double m_updateInterval;
 
    // data members
    IIncidentSvc* m_incidentSvc;
@@ -73,7 +74,6 @@ private:
    unsigned int m_run;
    unsigned int m_tck;
    double m_startOfRun;
-   double m_chunkOverlap;
 
    mutable std::unordered_map<Gaudi::StringKey, RateCounter*> m_counters;
    mutable std::unordered_map<Gaudi::StringKey, Monitoring::Chunk> m_chunks;

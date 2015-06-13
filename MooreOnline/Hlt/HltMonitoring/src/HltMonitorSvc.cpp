@@ -53,6 +53,7 @@ HltMonitorSvc::HltMonitorSvc(const string& name, ISvcLocator* loc)
    declareProperty("OutputConnection", m_outCon = "ipc:///tmp/hlt2mon_0");
    declareProperty("HltDecReportsLocation", m_decRepLoc = "Hlt2/DecReports");
    declareProperty("ChunkOverlap", m_chunkOverlap = 1.);
+   declareProperty("UpdateInterval", m_updateInterval = 10.);
 }
 
 //===============================================================================
