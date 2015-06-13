@@ -35,7 +35,7 @@ Hlt2MonRelaySvc::Hlt2MonRelaySvc(const string& name, ISvcLocator* loc)
 {
    declareProperty("HostnameRegex", m_hostRegex = "hlt(01|(?<subfarm>[a-f]{1}[0-9]{2})(?<node>[0-9]{2})?)");
    declareProperty("InPort", m_inPort = 31337);
-   declareProperty("OutPort", m_inPort = 31338);
+   declareProperty("OutPort", m_outPort = 31338);
    declareProperty("FrontConnection", m_frontCon);
    declareProperty("BackConnection", m_backCon);
    declareProperty("ForceTopRelay", m_forceTop = false);
@@ -63,6 +63,13 @@ StatusCode Hlt2MonRelaySvc::initialize()
    }
    m_incidentSvc->addListener(this, "APP_RUNNING");
    m_incidentSvc->addListener(this, "APP_STOPPED");
+
+   if (std::find(begin(m_partitions), end(m_partitions), m_partition) == end(m_partitions)) {
+      MsgStream log(msgSvc(), name());
+      log << MSG::INFO << "Running in partition: " << m_partition
+          << ", not starting relay." << endmsg;
+      return sc;
+   }
 
    char hname[_POSIX_HOST_NAME_MAX];
    if (!gethostname(hname, sizeof(hname))) {
@@ -120,13 +127,6 @@ StatusCode Hlt2MonRelaySvc::start()
 {
    auto sc = Service::start();
    if (!sc.isSuccess()) return sc;
-
-   if (std::find(begin(m_partitions), end(m_partitions), m_partition) == end(m_partitions)) {
-      MsgStream log(msgSvc(), name());
-      log << MSG::INFO << "Running in partition: " << m_partition
-          << ", not starting relay." << endmsg;
-      return sc;
-   }
 
    if (m_thread) {
       string resume{"RESUME"};
