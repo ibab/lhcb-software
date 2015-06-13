@@ -15,18 +15,14 @@
 // local
 #include "ChargedProtoParticleAddVeloInfo.h"
 
-//-----------------------------------------------------------------------------
-
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleAddVeloInfo )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 ChargedProtoParticleAddVeloInfo::
 ChargedProtoParticleAddVeloInfo( const std::string& name,
-                                 ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ), m_velodEdx(0)
+                                 ISvcLocator* pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ), 
+    m_velodEdx     ( NULL )
 {
   // default locations from context()
   if ( context() == "HLT" || context() == "Hlt" )
@@ -63,24 +59,19 @@ StatusCode ChargedProtoParticleAddVeloInfo::initialize()
 //=============================================================================
 StatusCode ChargedProtoParticleAddVeloInfo::execute()
 {
-
   // ProtoParticle container
   LHCb::ProtoParticles * protos = getIfExists<LHCb::ProtoParticles>(m_protoPath);
-  if ( NULL == protos )
+  if ( !protos )
   {
-    return Warning( "No existing ProtoParticle container at " +  m_protoPath + " thus do nothing.",
+    return Warning( "No existing ProtoParticle container at " +  
+                    m_protoPath + " thus do nothing.",
                     StatusCode::SUCCESS );
   }
 
-  // Loop over proto particles
-  for ( LHCb::ProtoParticles::iterator iProto = protos->begin();
-        iProto != protos->end(); ++iProto )
-  {
-    // replace the muon information
-    addVelodEdx(*iProto);
-  }
+  // Loop over proto particles and fill dE/dx
+  for ( auto * P : *protos ) { addVelodEdx(P); }
 
-  counter("VeloDEDX ==> " + m_protoPath )+= protos->size();
+  counter( "VeloDEDX ==> " + m_protoPath ) += protos->size();
 
   return StatusCode::SUCCESS;
 }
@@ -90,20 +81,23 @@ StatusCode ChargedProtoParticleAddVeloInfo::execute()
 //=============================================================================
 // Add VELO dE/dx info to the protoparticle
 //=============================================================================
-bool ChargedProtoParticleAddVeloInfo::addVelodEdx( LHCb::ProtoParticle * proto ) const
+bool 
+ChargedProtoParticleAddVeloInfo::addVelodEdx( LHCb::ProtoParticle * proto ) const
 {
   // clear current Velo info
   proto->removeVeloInfo();
 
   // get velo charge
   double veloNtks(0);
-  bool OK(false);
   const StatusCode sc = m_velodEdx->nTracks( proto->track(), veloNtks );
   if ( sc.isSuccess() )
-  {
-    proto->addInfo ( LHCb::ProtoParticle::VeloCharge, veloNtks );
-    OK = true;
-  }
+  { proto->addInfo( LHCb::ProtoParticle::VeloCharge, veloNtks ); }
+
   // return status
-  return OK;
+  return sc.isSuccess();
 }
+
+//-----------------------------------------------------------------------------
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleAddVeloInfo )
