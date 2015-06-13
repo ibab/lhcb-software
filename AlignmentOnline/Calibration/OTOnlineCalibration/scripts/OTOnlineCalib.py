@@ -61,6 +61,26 @@ def setup():
     ecs.EventTimeDecoder.TimeStep = 10
     EventDataSvc().ForceLeaves = True
 
+    ## Configure saving of histograms
+    ur = UpdateAndReset()
+    ur.saveHistograms = 1
+    ApplicationMgr().TopAlg.insert(0, ur)
+
+    from Configurables import MonitorSvc
+    MonitorSvc().disableDimPropServer      = 1
+    MonitorSvc().disableDimCmdServer       = 1
+    
+    MonitorSvc().ExpandCounterServices = 0;
+    MonitorSvc().ExpandNameInfix       = "<part>_x_<program>/";
+    MonitorSvc().PartitionName         = OnlineEnv.PartitionName;
+    MonitorSvc().ProgramName           = "OTOnlineCalib_00";
+    
+   # setup the histograms and the monitoring service
+    ApplicationMgr().ExtSvc.append( 'MonitorSvc' )
+    from Configurables import RootHistCnv__PersSvc
+    RootHistCnv__PersSvc().OutputEnabled = False
+
+
     # Configure DB tags and per-run conditions to be used to be the same as what
     # the HLT1 reconstruction farm uses. This is done by directly importing the
     # python file to ensure the script can also start when LHCb is running

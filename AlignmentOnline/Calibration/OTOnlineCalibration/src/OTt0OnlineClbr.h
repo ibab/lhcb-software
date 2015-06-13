@@ -90,6 +90,7 @@ public:
    virtual StatusCode initialize();    ///< Algorithm initialization
    virtual StatusCode start     ();    ///< Algorithm start
    virtual StatusCode finalize  ();    ///< Algorithm finalization
+   virtual StatusCode execute   ();    ///< to run offline
    virtual StatusCode analyze   (std::string& saveSet,
                                  std::string task); ///< Algorithm analyze
 

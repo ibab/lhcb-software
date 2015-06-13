@@ -12,6 +12,7 @@
 #include <tuple>
 #include <map>
 #include <set>
+#include <regex>
 
 // Boost Regex, cast and FileSystem
 #include <boost/regex.hpp>
@@ -116,6 +117,7 @@ OTt0OnlineClbr::OTt0OnlineClbr( const string& name, ISvcLocator* pSvcLocator)
           "OT/OTTrackMonitor/station3/drifttimeresidualgood"});
 
    //inputs for testing
+
    declareProperty("InputFileName", m_InputFileName  = "clbr_hists_109.root");
    declareProperty("InputFilePath", m_InputFilePath  = "/afs/cern.ch/work/l/lgrillo/OT_CALIBRATION_files/");
    declareProperty("DataT0"       , m_dataT0  = 0.);
@@ -141,11 +143,12 @@ StatusCode OTt0OnlineClbr::initialize()
 
    if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-   sc = serviceLocator()->service("LHCb::PublishSvc", m_publishSvc, true);
-   if ( sc.isFailure() ) return sc;
-   m_publishSvc->declarePubItem("OT/Calib", m_pubString);
-   m_publishSvc->declarePubItem("OT/CalibStatus", m_pubStatus);
-
+   if(m_RunOnline){
+     sc = serviceLocator()->service("LHCb::PublishSvc", m_publishSvc, true);
+     if ( sc.isFailure() ) return sc;
+     m_publishSvc->declarePubItem("OT/Calib", m_pubString);
+     m_publishSvc->declarePubItem("OT/CalibStatus", m_pubStatus);
+   }
    // ApplicationMgr
    m_evtProc = service("ApplicationMgr");
    if (!m_evtProc) {
@@ -234,8 +237,8 @@ StatusCode OTt0OnlineClbr::analyze (string& saveSet, string task)
 {
    // We do the work on a thread so the DIM thread is not blocked if we want to
    // to wait for start to have completed.
-   m_queue.put(make_pair(saveSet, task));
-   return StatusCode::SUCCESS;
+  m_queue.put(make_pair(saveSet, task));
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -265,23 +268,31 @@ StatusCode OTt0OnlineClbr::calibrate(string saveSet, string task)
    double prevT0 = 0.;
    boost::optional<double> prevPhase;
    if (!latest || m_readFromDB) {
-      // booststrap from DB
-      double t0 = m_condition->param<double>("TZero");
-      boost::optional<double> phase;
-      latest = 0;
-      writeXML(*latest, 0, phase, t0);
-      publish({}, *latest, "good");
+     // booststrap from DB
+     double t0 = m_condition->param<double>("TZero");
+     boost::optional<double> phase;
+     latest = 0;
+     writeXML(*latest, 0, phase, t0);
+     publish({}, *latest, "good");
    } else {
-      // Parse the file to get the info from the previous calibration.
-      std::tie(prevRun, prevPhase, prevT0) = readXML(xmlFileName(*latest));
-      if (prevRun) {
-         m_calibratedRuns.emplace(prevRun);
-         publish({}, *latest, "good");
-      }
+     // Parse the file to get the info from the previous calibration.
+     std::tie(prevRun, prevPhase, prevT0) = readXML(xmlFileName(*latest));
+     if (prevRun) {
+       m_calibratedRuns.emplace(prevRun);
+       publish({}, *latest, "good");
+     }
    }
 
    // Output file for testing
    unique_ptr<TFile> outFile;
+   //Path for monitoring file
+   string monitoring_path;
+   string file_name{fs::path{saveSet}.string()};
+   int found = file_name.find_last_of("/");
+   monitoring_path = file_name.substr(0,found+1);
+   string monitoring_file = file_name.substr(found+1);
+   //info() << "Monitoring histogram path: " << monitoring_path << endmsg;
+   //info() << "Monitoring histogram file: " << monitoring_file << endmsg;
 
    // Run number
    unsigned int run = 0;
@@ -359,10 +370,15 @@ StatusCode OTt0OnlineClbr::calibrate(string saveSet, string task)
          // Add to files for check of sufficient stats.
          m_calibrating[run].emplace_back(saveSet);
       }
+
+      // Save your own TFile
+      outFile = unique_ptr<TFile>{new TFile((monitoring_path+"/OTOnlineClbr-"+fileName).c_str(), "RECREATE")};
+
    } else {
       // Test mode.
       m_calibrating[0].push_back(m_InputFilePath + m_InputFileName);
-      outFile = unique_ptr<TFile>{new TFile("calibration_monitoring.root", "RECREATE")};
+      //outFile = unique_ptr<TFile>{new TFile("calibration_monitoring.root", "RECREATE")};
+      outFile = unique_ptr<TFile>{new TFile((monitoring_path+"/OTOnlineClbr-"+m_InputFileName).c_str(), "RECREATE")};
       run = 0;
    }
 
@@ -396,6 +412,7 @@ StatusCode OTt0OnlineClbr::calibrate(string saveSet, string task)
    info() << "Global t0: "      << t0 << endmsg;
    info() << "Global dt0: "     << residual  << endmsg;
    info() << "Global dt0_err: " << residual_err << endmsg;
+
 
    // The runs we are calibrating.
    auto runs = calibrating();
@@ -498,14 +515,33 @@ void OTt0OnlineClbr::fitHistogram(TH1D* hist, double& result,
    result_error = hist->GetFunction("gaus")->GetParError(1);
    info() << "Fit result: " << result << " +- " << result_error << endmsg ;
 
+   //for publish monitoring histograms
+   if(m_saveFits && m_RunOnline){
+     //to save your own TH1 in your own file
+     outFile->cd();
+     declareInfo( "hist", hist, "Global_hist" );
+     info()<< "Saving histogram" <<endmsg;
+     hist->SetName("Global_hist");
+     hist->Write();
+   }
+
    //only to save stuff
    if(m_saveFits && outFile){
       outFile->cd();
+      info()<< "Saving histogram" <<endmsg;
       hist->SetName("Global_hist");
       hist->Write();
    }
 }
 
+//=============================================================================
+StatusCode OTt0OnlineClbr::execute() {
+  if (!m_RunOnline){
+    string saveSet = m_InputFilePath + m_InputFileName;
+    return analyze(saveSet, " ");
+  }
+  return StatusCode::SUCCESS; 
+}
 //=============================================================================
 StatusCode OTt0OnlineClbr::finalize() {
 
@@ -616,7 +652,7 @@ void OTt0OnlineClbr::publish(const vector<unsigned int> runs,
    auto pub = [this] (const unsigned int run,
                       const string& end, string& member,
                       const string& item) {
-      if (run != 0) {
+      if (run != 0 && m_RunOnline) {
          member = to_string(run) + " " + end;
          debug() << "Publishing : " << item << " " << member << endmsg;
          m_publishSvc->updateItem(item);
