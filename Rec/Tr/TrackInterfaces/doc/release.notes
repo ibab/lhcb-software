@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2015-06-14 - David Hutchcroft
+ - Made ITrackVelodEdxCharg::nTracks non-const to allow summary of average charge per track
+
 !========================= TrackInterfaces v4r28 2015-02-23 =========================
 ! 2015-02-19 - Paul Seyfert
  - Extended IGhostProbability to ease up development

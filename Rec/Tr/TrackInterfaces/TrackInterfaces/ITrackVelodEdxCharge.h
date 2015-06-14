@@ -64,7 +64,7 @@ public:
    *          performed or not
    */
   virtual StatusCode nTracks( const LHCb::Track * track,
-                              double & nTks ) const = 0;
+                              double & nTks ) = 0;
 
 };
 
