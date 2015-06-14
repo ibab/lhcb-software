@@ -24,8 +24,6 @@
 // Event
 #include "Event/Track.h"
 #include "Event/Measurement.h"
-#include "Event/VeloPhiMeasurement.h"
-#include "Event/VeloRMeasurement.h"
 #include "DetDesc/Condition.h"
 
 //-----------------------------------------------------------------------------
@@ -67,20 +65,20 @@ public:
   /// Tool initialisation
   StatusCode initialize();
 
+  /// Finalize and print average track charge
+  StatusCode finalize();
+
 public:
 
   /// Returns the scaled truncated mean of the ADCs for Velo measurements to check for double tracks
   /// nTrk the number of estimated particles that contributed dEdx to this track in the VELO
   StatusCode nTracks( const LHCb::Track * track,
-                      double & nTks ) const;
+                      double & nTks );
 
 private: // definitions etc.
 
   /// call back to update dEdx conditions from DB
   StatusCode i_cachedEdx();
-
-  /// List of measurements
-  typedef std::vector< LHCb::Measurement * > TkMeas;
 
 private: // data
 
@@ -88,6 +86,11 @@ private: // data
   double m_Ratio;         ///< Fraction of cluster considered (1-Ratio highest clusters are discarded)
   bool m_useConditions; ///< use SIMCOND or LHCBCOND values instead of properties
   Condition *m_dEdx; ///< Condition with dEdx content in SIMCOND/LHCBCOND 
+
+  int m_totalTracks;     ///< total tracks evaluated
+  int m_veloTracks;      ///< total tracks with VELO part
+  double m_sumEffective; ///< effective number of VELO tracks
+
 };
 
 #endif // TRACKTOOLS_TrackVelodEdxCharge_H
