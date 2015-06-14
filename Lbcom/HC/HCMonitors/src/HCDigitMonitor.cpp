@@ -3,6 +3,8 @@
 #include "GaudiUtils/HistoLabels.h"
 
 // LHCb
+// Event/DAQEvent
+#include "Event/ODIN.h"
 // Event/DigiEvent
 #include "Event/HCDigit.h"
 
@@ -45,58 +47,90 @@ StatusCode HCDigitMonitor::initialize() {
   StatusCode sc = GaudiHistoAlg::initialize();
   if (sc.isFailure()) return sc;
 
+  // Get ODIN.
+  m_odin = tool<IEventTimeDecoder>("OdinTimeDecoder", "OdinDecoder", this);
+
   // Setup the histograms.
-  auto bins = m_parAdc.bins();
-  double low = m_parAdc.lowEdge();
-  double high = m_parAdc.highEdge();
-  m_hAdcSumB0 = book1D("ADC/Sum/B0", "B0", low, 4 * high, 4 * bins);
-  m_hAdcSumB1 = book1D("ADC/Sum/B1", "B1", low, 4 * high, 4 * bins);
-  m_hAdcSumB2 = book1D("ADC/Sum/B2", "B2", low, 4 * high, 4 * bins);
-  m_hAdcSumF1 = book1D("ADC/Sum/F1", "F1", low, 4 * high, 4 * bins);
-  m_hAdcSumF2 = book1D("ADC/Sum/F2", "F2", low, 4 * high, 4 * bins);
-  setAxisLabels(m_hAdcSumB0, "Sum ADC", "Entries");
-  setAxisLabels(m_hAdcSumB1, "Sum ADC", "Entries");
-  setAxisLabels(m_hAdcSumB2, "Sum ADC", "Entries");
-  setAxisLabels(m_hAdcSumF1, "Sum ADC", "Entries");
-  setAxisLabels(m_hAdcSumF2, "Sum ADC", "Entries");
+  std::vector<std::string> stations = {"B0", "B1", "B2", "F1", "F2"};
+  const unsigned int nStations = 5;
+  for (unsigned int i = 0; i < nStations; ++i) {
+    // Book histograms for ADC sum distributions for each station.
+    auto bins = 4 * m_parAdc.bins();
+    const double low = m_parAdc.lowEdge();
+    const double high = 4 * m_parAdc.highEdge();
+    const std::string st = stations[i];
+    std::string name = "ADC/Sum/" + st;
+    m_hAdcSum.push_back(book1D(name, st, low, high, bins));
+    m_hAdcSumEven.push_back(book1D("ADC/Sum/Even/" + st, st, low, high, bins));
+    m_hAdcSumOdd.push_back(book1D("ADC/Sum/Odd/" + st, st, low, high, bins));
+    setAxisLabels(m_hAdcSum[i], "Sum ADC", "Entries");
+    setAxisLabels(m_hAdcSumEven[i], "Sum ADC", "Entries");
+    setAxisLabels(m_hAdcSumOdd[i], "Sum ADC", "Entries");
+    // Book profile histograms of average ADC vs. quadrant for each station.
+    name = "ADC/" + st + "/Average";
+    m_hAdcVsQuadrant.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
+    name = "ADC/" + st + "/Even/Average";
+    m_hAdcVsQuadrantEven.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
+    name = "ADC/" + st + "/Odd/Average";
+    m_hAdcVsQuadrantOdd.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
+    setAxisLabels(m_hAdcVsQuadrant[i], "Quadrant", "ADC");
+    setAxisLabels(m_hAdcVsQuadrantEven[i], "Quadrant", "ADC");
+    setAxisLabels(m_hAdcVsQuadrantOdd[i], "Quadrant", "ADC");
+  }
 
   const unsigned int nChannels = 64;
   for (unsigned int i = 0; i < nChannels; ++i) {
-    const std::string title = "Channel" + std::to_string(i);
-    m_hAdcB.push_back(book1D("ADC/B/" + title, title, low, high, bins));
-    m_hAdcF.push_back(book1D("ADC/F/" + title, title, low, high, bins));
+    // Book histograms for ADC distributions for each channel.
+    auto bins = m_parAdc.bins();
+    const double low = m_parAdc.lowEdge();
+    const double high = m_parAdc.highEdge();
+    const std::string ch = "Channel" + std::to_string(i);
+    m_hAdcB.push_back(book1D("ADC/B/" + ch, ch, low, high, bins));
+    m_hAdcF.push_back(book1D("ADC/F/" + ch, ch, low, high, bins));
+    m_hAdcEvenB.push_back(book1D("ADC/B/Even/" + ch, ch, low, high, bins));
+    m_hAdcEvenF.push_back(book1D("ADC/F/Even/" + ch, ch, low, high, bins));
+    m_hAdcOddB.push_back(book1D("ADC/B/Odd/" + ch, ch, low, high, bins));
+    m_hAdcOddF.push_back(book1D("ADC/F/Odd/" + ch, ch, low, high, bins));
     setAxisLabels(m_hAdcB[i], "ADC", "Entries");
     setAxisLabels(m_hAdcF[i], "ADC", "Entries");
+    setAxisLabels(m_hAdcEvenB[i], "ADC", "Entries");
+    setAxisLabels(m_hAdcEvenF[i], "ADC", "Entries");
+    setAxisLabels(m_hAdcOddB[i], "ADC", "Entries");
+    setAxisLabels(m_hAdcOddF[i], "ADC", "Entries");
   }
   for (unsigned int i = 0; i < 4; ++i) {
-    const std::string title = "Quadrant" + std::to_string(i);
-    m_hAdcB0.push_back(book1D("ADC/B0/" + title, title, low, high, bins));
-    m_hAdcB1.push_back(book1D("ADC/B1/" + title, title, low, high, bins));
-    m_hAdcB2.push_back(book1D("ADC/B2/" + title, title, low, high, bins));
-    m_hAdcF1.push_back(book1D("ADC/F1/" + title, title, low, high, bins));
-    m_hAdcF2.push_back(book1D("ADC/F2/" + title, title, low, high, bins));
-    setAxisLabels(m_hAdcB0[i], "ADC", "Entries");
-    setAxisLabels(m_hAdcB1[i], "ADC", "Entries");
-    setAxisLabels(m_hAdcB2[i], "ADC", "Entries");
-    setAxisLabels(m_hAdcF1[i], "ADC", "Entries");
-    setAxisLabels(m_hAdcF2[i], "ADC", "Entries");
+    // Book histograms for ADC distributions for each quadrant.
+    auto bins = m_parAdc.bins();
+    const double low = m_parAdc.lowEdge();
+    const double high = m_parAdc.highEdge();
+    const std::string qu = "Quadrant" + std::to_string(i);
+    for (unsigned int j = 0; j < nStations; ++j) {
+      std::string name = "ADC/" + stations[j] + "/" + qu;
+      m_hAdcQuadrant.push_back(book1D(name, qu, low, high, bins));
+      name = "ADC/" + stations[j] + "/Even/" + qu;
+      m_hAdcQuadrantEven.push_back(book1D(name, qu, low, high, bins));
+      name = "ADC/" + stations[j] + "/Odd/" + qu;
+      m_hAdcQuadrantOdd.push_back(book1D(name, qu, low, high, bins));
+      const unsigned int index = i * nStations + j;
+      setAxisLabels(m_hAdcQuadrant[index], "ADC", "Entries");
+      setAxisLabels(m_hAdcQuadrantEven[index], "ADC", "Entries");
+      setAxisLabels(m_hAdcQuadrantOdd[index], "ADC", "Entries");
+    }
   }
  
+  // Book profile histograms of average ADC vs. channel number.
   m_hAdcVsChannelB = bookProfile1D("ADC/B/Average", "B", -0.5, 63.5, 64);
   m_hAdcVsChannelF = bookProfile1D("ADC/F/Average", "F", -0.5, 63.5, 64);
+  m_hAdcVsChannelEvenB = bookProfile1D("ADC/B/Even/Average", "B", -0.5, 63.5, 64);
+  m_hAdcVsChannelEvenF = bookProfile1D("ADC/F/Even/Average", "F", -0.5, 63.5, 64);
+  m_hAdcVsChannelOddB = bookProfile1D("ADC/B/Odd/Average", "B", -0.5, 63.5, 64);
+  m_hAdcVsChannelOddF = bookProfile1D("ADC/F/Odd/Average", "F", -0.5, 63.5, 64);
   setAxisLabels(m_hAdcVsChannelB, "Channel", "ADC");
   setAxisLabels(m_hAdcVsChannelF, "Channel", "ADC");
-
-  m_hAdcVsQuadrantB0 = bookProfile1D("ADC/B0/Average", "B0", -0.5, 3.5, 4);
-  m_hAdcVsQuadrantB1 = bookProfile1D("ADC/B1/Average", "B1", -0.5, 3.5, 4);
-  m_hAdcVsQuadrantB2 = bookProfile1D("ADC/B2/Average", "B2", -0.5, 3.5, 4);
-  m_hAdcVsQuadrantF1 = bookProfile1D("ADC/F1/Average", "F1", -0.5, 3.5, 4);
-  m_hAdcVsQuadrantF2 = bookProfile1D("ADC/F2/Average", "F2", -0.5, 3.5, 4);
-  setAxisLabels(m_hAdcVsQuadrantB0, "Quadrant", "ADC");
-  setAxisLabels(m_hAdcVsQuadrantB1, "Quadrant", "ADC");
-  setAxisLabels(m_hAdcVsQuadrantB2, "Quadrant", "ADC");
-  setAxisLabels(m_hAdcVsQuadrantF1, "Quadrant", "ADC");
-  setAxisLabels(m_hAdcVsQuadrantF2, "Quadrant", "ADC");
+  setAxisLabels(m_hAdcVsChannelEvenB, "Channel", "ADC");
+  setAxisLabels(m_hAdcVsChannelEvenF, "Channel", "ADC");
+  setAxisLabels(m_hAdcVsChannelOddB, "Channel", "ADC");
+  setAxisLabels(m_hAdcVsChannelOddF, "Channel", "ADC");
 
   // Setup the mapping.
   m_mappedB.resize(nChannels, false);
@@ -190,64 +224,79 @@ StatusCode HCDigitMonitor::initialize() {
 //=============================================================================
 StatusCode HCDigitMonitor::execute() {
 
+  // Get event information from ODIN.
+  m_odin->getTime();
+  const LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default);
+  if (!odin) {
+    return Error("Cannot retrieve ODIN", StatusCode::SUCCESS);
+  }
+  const unsigned int bxid = odin->bunchId();
+  const bool even = (bxid % 2 == 0);
+
   // Grab the digits.
   const LHCb::HCDigits* digits = getIfExists<LHCb::HCDigits>(m_digitLocation);
   if (!digits) {
     return Error("No digits in " + m_digitLocation, StatusCode::FAILURE);
   }
-  unsigned int sumB0 = 0;
-  unsigned int sumB1 = 0;
-  unsigned int sumB2 = 0;
-  unsigned int sumF1 = 0;
-  unsigned int sumF2 = 0;
+  std::vector<unsigned int> sum = {0, 0, 0, 0, 0};
+  const unsigned int nStations = 5;
   // Loop over the digits.
   for (LHCb::HCDigit* digit : *digits) {
     const unsigned int crate = digit->cellID().crate();
     const unsigned int channel = digit->cellID().channel();
     const int adc = digit->adc();
+    unsigned int station = 0;
+    unsigned int quadrant = 0;
+    unsigned int offset = 0;
     if (crate == m_crateB) {
       m_hAdcB[channel]->fill(adc);
       m_hAdcVsChannelB->fill(channel, adc); 
+      if (even) {
+        m_hAdcEvenB[channel]->fill(adc);
+        m_hAdcVsChannelEvenB->fill(channel, adc);
+      } else {
+        m_hAdcOddB[channel]->fill(adc);
+        m_hAdcVsChannelOddB->fill(channel, adc);
+      } 
       if (!m_mappedB[channel]) continue;
-      const unsigned int station = m_stationB[channel];
-      const unsigned int quadrant = m_quadrantB[channel];
-      if (station == 0) {
-        m_hAdcB0[quadrant]->fill(adc);
-        m_hAdcVsQuadrantB0->fill(quadrant, adc);
-        sumB0 += adc;
-      } else if (station == 1) {
-        m_hAdcB1[quadrant]->fill(adc);
-        m_hAdcVsQuadrantB1->fill(quadrant, adc);
-        sumB1 += adc;
-      } else if (station == 2) {
-        m_hAdcB2[quadrant]->fill(adc);
-        m_hAdcVsQuadrantB2->fill(quadrant, adc);
-        sumB2 += adc;
-      }
+      station = m_stationB[channel];
+      quadrant = m_quadrantB[channel];
     } else if (crate == m_crateF) {
       m_hAdcF[channel]->fill(adc);
       m_hAdcVsChannelF->fill(channel, adc); 
+      if (even) {
+        m_hAdcEvenF[channel]->fill(adc);
+        m_hAdcVsChannelEvenF->fill(channel, adc);
+      } else {
+        m_hAdcOddF[channel]->fill(adc);
+        m_hAdcVsChannelOddF->fill(channel, adc);
+      } 
       if (!m_mappedF[channel]) continue;
-      const unsigned int station = m_stationF[channel];
-      const unsigned int quadrant = m_quadrantF[channel];
-      if (station == 1) {
-        m_hAdcF1[quadrant]->fill(adc);
-        m_hAdcVsQuadrantF1->fill(quadrant, adc);
-        sumF1 += adc;
-      } else if (station == 2) {
-        m_hAdcF2[quadrant]->fill(adc);
-        m_hAdcVsQuadrantF2->fill(quadrant, adc);
-        sumF2 += adc;
-      }
+      station = m_stationF[channel];
+      quadrant = m_quadrantF[channel];
+      offset = 2;
     } else {
       warning() << "Unexpected crate number (" << crate << ")" << endmsg;
     }
+    const unsigned int index = quadrant * nStations + station + offset;
+    m_hAdcVsQuadrant[station + offset]->fill(quadrant, adc);
+    m_hAdcQuadrant[index]->fill(adc);
+    if (even) {
+      m_hAdcVsQuadrantEven[station + offset]->fill(quadrant, adc);
+      m_hAdcQuadrantEven[index]->fill(adc);
+    } else { 
+      m_hAdcVsQuadrantOdd[station + offset]->fill(quadrant, adc);
+      m_hAdcQuadrantOdd[index]->fill(adc);
+    }
+    sum[station + offset] += adc;
   }
-  m_hAdcSumB0->fill(sumB0);
-  m_hAdcSumB1->fill(sumB1);
-  m_hAdcSumB2->fill(sumB2);
-  m_hAdcSumF1->fill(sumF1);
-  m_hAdcSumF2->fill(sumF2);
-
+  for (unsigned int i = 0; i < nStations; ++i) {
+    m_hAdcSum[i]->fill(sum[i]);
+    if (even) {
+      m_hAdcSumEven[i]->fill(sum[i]);
+    } else {
+      m_hAdcSumOdd[i]->fill(sum[i]);
+    }
+  }
   return StatusCode::SUCCESS;
 }

@@ -8,6 +8,7 @@
 
 // Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiKernel/IEventTimeDecoder.h"
 
 /** @class HCDigitMonitor HCDigitMonitor.h
  *
@@ -28,6 +29,9 @@ class HCDigitMonitor : public GaudiHistoAlg {
  private:
   /// TES location of digits.
   std::string m_digitLocation;
+
+  /// ODIN
+  IEventTimeDecoder* m_odin;
 
   /// Number of B-side crate
   unsigned int m_crateB;
@@ -58,32 +62,33 @@ class HCDigitMonitor : public GaudiHistoAlg {
   /// ADC distributions of all channels
   std::vector<AIDA::IHistogram1D*> m_hAdcB;
   std::vector<AIDA::IHistogram1D*> m_hAdcF;
+  std::vector<AIDA::IHistogram1D*> m_hAdcEvenB;
+  std::vector<AIDA::IHistogram1D*> m_hAdcEvenF;
+  std::vector<AIDA::IHistogram1D*> m_hAdcOddB;
+  std::vector<AIDA::IHistogram1D*> m_hAdcOddF;
 
   /// ADC distributions of all quadrants
-  std::vector<AIDA::IHistogram1D*> m_hAdcB0;
-  std::vector<AIDA::IHistogram1D*> m_hAdcB1;
-  std::vector<AIDA::IHistogram1D*> m_hAdcB2;
-  std::vector<AIDA::IHistogram1D*> m_hAdcF1;
-  std::vector<AIDA::IHistogram1D*> m_hAdcF2;
+  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrant;
+  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantEven;
+  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantOdd;
 
   /// ADC sum distributions
-  AIDA::IHistogram1D* m_hAdcSumB0;
-  AIDA::IHistogram1D* m_hAdcSumB1;
-  AIDA::IHistogram1D* m_hAdcSumB2;
-  AIDA::IHistogram1D* m_hAdcSumF1;
-  AIDA::IHistogram1D* m_hAdcSumF2;
+  std::vector<AIDA::IHistogram1D*> m_hAdcSum;
+  std::vector<AIDA::IHistogram1D*> m_hAdcSumEven;
+  std::vector<AIDA::IHistogram1D*> m_hAdcSumOdd;
 
   /// Mean ADC vs. channel number
   AIDA::IProfile1D* m_hAdcVsChannelB;
   AIDA::IProfile1D* m_hAdcVsChannelF;
+  AIDA::IProfile1D* m_hAdcVsChannelEvenB;
+  AIDA::IProfile1D* m_hAdcVsChannelEvenF;
+  AIDA::IProfile1D* m_hAdcVsChannelOddB;
+  AIDA::IProfile1D* m_hAdcVsChannelOddF;
 
   /// Mean ADC vs. quadrant
-  AIDA::IProfile1D* m_hAdcVsQuadrantB0;
-  AIDA::IProfile1D* m_hAdcVsQuadrantB1;
-  AIDA::IProfile1D* m_hAdcVsQuadrantB2;
-  AIDA::IProfile1D* m_hAdcVsQuadrantF1;
-  AIDA::IProfile1D* m_hAdcVsQuadrantF2;
- 
+  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrant;
+  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantEven;
+  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantOdd;
 };
 
 #endif
