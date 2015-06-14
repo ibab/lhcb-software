@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : HC/HCMonitors
+! Responsible : 
+! Purpose     : Monitoring of Herschel data
+!-----------------------------------------------------------------------------
+
+! 2015-06-14 - Heinrich Schindler
+ - Initial import.
+
