@@ -4,6 +4,9 @@
 ! Purpose     : Decoding of Herschel raw banks
 !-----------------------------------------------------------------------------
 
+! 2015-06-14 - Heinrich Schindler
+ - Add monitoring histograms.
+
 ! 2015-06-12 - Heinrich Schindler
  - Remove decoding of obsolete raw bank formats.
  - Follow modified cell ID scheme (channel and crate).

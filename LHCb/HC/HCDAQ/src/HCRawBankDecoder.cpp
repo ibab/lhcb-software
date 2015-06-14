@@ -1,8 +1,15 @@
+// ROOT
+#include "TH2D.h"
+#include "TAxis.h"
+
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiUtils/Aida2ROOT.h"
+#include "GaudiUtils/HistoLabels.h"
 
 // LHCb
 // Event/DAQEvent
+#include "Event/ODIN.h"
 #include "Event/RawEvent.h"
 // Event/DigiEvent
 #include "Event/HCDigit.h"
@@ -12,6 +19,8 @@
 // Local
 #include "HCRawBankDecoder.h"
 
+using namespace Gaudi::Utils::Histos;
+
 DECLARE_ALGORITHM_FACTORY(HCRawBankDecoder)
 
 //=============================================================================
@@ -19,8 +28,8 @@ DECLARE_ALGORITHM_FACTORY(HCRawBankDecoder)
 //=============================================================================
 HCRawBankDecoder::HCRawBankDecoder(const std::string& name,
                                    ISvcLocator* pSvcLocator)
-    : Decoder::AlgBase(name, pSvcLocator),
-      m_digits(NULL), m_l0digits(NULL) {
+    : Decoder::HistoAlgBase(name, pSvcLocator),
+      m_digits(NULL), m_l0digits(NULL), m_odin(NULL) {
 
   declareProperty("DigitLocation", 
                   m_digitLocation = LHCb::HCDigitLocation::Default);
@@ -29,6 +38,7 @@ HCRawBankDecoder::HCRawBankDecoder(const std::string& name,
   declareProperty("SkipErrorBanks", m_skipErrorBanks = false);
   declareProperty("SkipTriggerWords", m_skipTrigger = false);
   declareProperty("SkipAdcWords", m_skipAdc = false);
+  declareProperty("Monitoring", m_monitoring = false);
  
   // Initialize search path, and then call the base method.
   m_rawEventLocations.push_back(LHCb::RawEventLocation::HC);
@@ -47,8 +57,56 @@ HCRawBankDecoder::~HCRawBankDecoder() {}
 //=============================================================================
 StatusCode HCRawBankDecoder::initialize() {
 
-  StatusCode sc = Decoder::AlgBase::initialize();
+  StatusCode sc = Decoder::HistoAlgBase::initialize();
   if (sc.isFailure()) return sc;
+
+  // Get ODIN.
+  m_odin = tool<IEventTimeDecoder>("OdinTimeDecoder", "OdinDecoder", this);
+
+  // Book histograms.
+  for (unsigned int i = 0; i < 2; ++i) {
+    const std::string name = "ErrorBanks/DiffBX/Crate" + std::to_string(i);
+    const std::string title = "Crate " + std::to_string(i);
+    m_hBxDiff.push_back(book1D(name, title, -20.5, 20.5, 41));
+    setAxisLabels(m_hBxDiff[i], "BX_{FE} - BX_{ODIN}", "Entries");
+  }
+  m_hLinkErrors = book2D("ErrorBanks/Links", "Errors", 
+                         -0.5, 1.5, 2, -0.5, 15.5, 16);
+  m_hTell1Errors = book2D("RawBanks/ErrorBitsTELL1", "Errors", 
+                         -0.5, 2.5, 3, -0.5, 1.5, 2);
+  TH2D* h = Gaudi::Utils::Aida2ROOT::aida2root(m_hLinkErrors);
+  if (h) {
+    TAxis* axis = h->GetYaxis();
+    if (axis) {
+      for (unsigned int i = 0; i < 4; ++i) {
+        for (unsigned int j = 0; j < 4; ++j) {
+          const unsigned int bin = 16 - (4 * i + j);
+          const std::string label = "PP" + std::to_string(i) + 
+                                    " L" + std::to_string(j);
+          axis->SetBinLabel(bin, label.c_str());
+        }
+      }
+    }
+    axis = h->GetXaxis();
+    if (axis) {
+      axis->SetBinLabel(1, "Link Error");
+      axis->SetBinLabel(2, "Synchronisation Error");
+    }
+  } 
+  h = Gaudi::Utils::Aida2ROOT::aida2root(m_hTell1Errors);
+  if (h) {
+    TAxis* axis = h->GetYaxis();
+    if (axis) {
+      axis->SetBinLabel(1, "Crate 0");
+      axis->SetBinLabel(2, "Crate 1");
+    }
+    axis = h->GetXaxis();
+    if (axis) {
+      axis->SetBinLabel(1, "General");
+      axis->SetBinLabel(2, "Synchronisation");
+      axis->SetBinLabel(3, "Link");
+    }
+  } 
   return StatusCode::SUCCESS;
 }
 
@@ -97,7 +155,15 @@ StatusCode HCRawBankDecoder::execute() {
 
   if (m_skipErrorBanks) return StatusCode::SUCCESS;
 
-  auto errorBanks = rawEvent->banks(LHCb::RawBank::EcalPackedError);
+  // Get event information from ODIN.
+  m_odin->getTime();
+  const LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default);
+  if (!odin) {
+    return Error("Cannot retrieve ODIN", StatusCode::SUCCESS);
+  }
+  const unsigned int bxid = odin->bunchId();
+
+  auto errorBanks = rawEvent->banks(LHCb::RawBank::HCError);
   if (errorBanks.empty()) {
     if (UNLIKELY(msgLevel(MSG::DEBUG))) {
       debug() << "No error banks in raw event." << endmsg;
@@ -110,7 +176,7 @@ StatusCode HCRawBankDecoder::execute() {
       error() << "Bad magic pattern in error bank" << endmsg;
       continue;
     }
-    decodeErrorBank(*it);
+    decodeErrorBank(*it, bxid);
   }
   return StatusCode::SUCCESS;
 }
@@ -152,6 +218,11 @@ bool HCRawBankDecoder::decode(LHCb::RawBank* bank) {
         if (0 != generalError) debug() << "General error" << endmsg; 
         if (0 != syncError) debug() << "Synchronisation error" << endmsg; 
         if (0 != linkError) debug() << "Link error" << endmsg; 
+      }
+      if (m_monitoring) {
+        if (0 != generalError) m_hTell1Errors->fill(0, crate);
+        if (0 != syncError) m_hTell1Errors->fill(1, crate);
+        if (0 != linkError) m_hTell1Errors->fill(2, crate);
       }
     }
     unsigned int offset = 32;
@@ -227,7 +298,8 @@ bool HCRawBankDecoder::decode(LHCb::RawBank* bank) {
 //=============================================================================
 // Decoding of error raw banks
 //=============================================================================
-bool HCRawBankDecoder::decodeErrorBank(LHCb::RawBank* bank) {
+bool HCRawBankDecoder::decodeErrorBank(LHCb::RawBank* bank, 
+                                       const int bxid) {
 
   uint32_t* data = bank->data();
   const unsigned int nPP = 4;
@@ -280,6 +352,12 @@ bool HCRawBankDecoder::decodeErrorBank(LHCb::RawBank* bank) {
                   << "         " << errLink << "      " 
                   << format("%2u    %2u   %4u  %4u", crate, card, fel0, febx) 
                   << endmsg; 
+      }
+      if (m_monitoring) {
+        const unsigned int bin = 15 - (4 * i + j); 
+        if (errLink > 0) m_hLinkErrors->fill(0, bin);
+        if (errSync > 0) m_hLinkErrors->fill(1, bin);
+        m_hBxDiff[crate]->fill(int(febx) - bxid); 
       }
     }
     data += 2;

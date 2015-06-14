@@ -1,7 +1,15 @@
 #ifndef HCRAWBANKDECODER_H
 #define HCRAWBANKDECODER_H 1
 
-#include "DAQKernel/DecoderAlgBase.h"
+// AIDA
+#include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
+
+// Gaudi
+#include "GaudiKernel/IEventTimeDecoder.h"
+
+// LHCb
+#include "DAQKernel/DecoderHistoAlgBase.h"
 
 #include "Event/HCDigit.h"
 
@@ -15,7 +23,7 @@ class RawEvent;
  *
  */
 
-class HCRawBankDecoder : public Decoder::AlgBase {
+class HCRawBankDecoder : public Decoder::HistoAlgBase {
  public:
   /// Standard constructor
   HCRawBankDecoder(const std::string& name, ISvcLocator* pSvcLocator);
@@ -36,8 +44,17 @@ class HCRawBankDecoder : public Decoder::AlgBase {
   bool m_skipAdc;
   bool m_skipErrorBanks;
 
+  bool m_monitoring;
+
+  IHistogram2D* m_hLinkErrors;
+  IHistogram2D* m_hTell1Errors;
+  std::vector<IHistogram1D*> m_hBxDiff;
+
+  /// ODIN
+  IEventTimeDecoder* m_odin;
+
   bool decode(LHCb::RawBank* bank);
-  bool decodeErrorBank(LHCb::RawBank* bank);
+  bool decodeErrorBank(LHCb::RawBank* bank, const int bxid);
 
 };
 
