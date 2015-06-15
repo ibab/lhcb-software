@@ -122,7 +122,7 @@ void NamedDecayTreeList::add(const AmpInitialiser& ai, const std::string& opt){
   // if it already is a decay with the BgSpinZero option, then there's not point in adding it again.
 
     
-  //if(! isCLEO2012)addSimple(ai, opt + "CLEO2012");
+  if(! isCLEO2012)addSimple(ai, opt + "CLEO2012");
   // if it already is a decay with the CLEO2012 option, then there's not point in adding it again.
   if(dbThis) cout << "NamedDecayTreeList::add: just added D->f\t" 
 		  << ai.tree().oneLiner() << endl;
@@ -133,7 +133,7 @@ void NamedDecayTreeList::add(const AmpInitialiser& ai, const std::string& opt){
   CPai.setTree(dt);
   addSimple(CPai, opt);
   if(! isBg) addSimple(CPai, opt + "BgSpinZero");
-  //if(! isCLEO2012)addSimple(CPai, opt + "CLEO2012");
+  if(! isCLEO2012)addSimple(CPai, opt + "CLEO2012");
   if(dbThis) cout << "NamedDecayTreeList::add: just added Dbar->fbar\t" 
 		  << dt.oneLiner() << endl;
 
@@ -142,7 +142,7 @@ void NamedDecayTreeList::add(const AmpInitialiser& ai, const std::string& opt){
   DtoCPai.setTree(dt);
   addSimple(DtoCPai, opt);
   if(! isBg) addSimple(DtoCPai, opt + "BgSpinZero");
-  //if(! isCLEO2012)addSimple(DtoCPai, opt + "CLEO2012");
+  if(! isCLEO2012)addSimple(DtoCPai, opt + "CLEO2012");
   if(dbThis) cout << "NamedDecayTreeList::add: just added D->fbar\t" 
 		  << dt.oneLiner() << endl;
 
@@ -151,7 +151,7 @@ void NamedDecayTreeList::add(const AmpInitialiser& ai, const std::string& opt){
   DbarToOriginal.setTree(dt);
   addSimple(DbarToOriginal, opt);
   if(! isBg) addSimple(DbarToOriginal, opt + "BgSpinZero");
-  //if(! isCLEO2012)addSimple(DbarToOriginal, opt + "CLEO2012");
+  if(! isCLEO2012)addSimple(DbarToOriginal, opt + "CLEO2012");
   if(dbThis) cout << "NamedDecayTreeList::add: just added Dbar->f\t" 
 		  << dt.oneLiner() << endl;
   
@@ -909,6 +909,31 @@ int NamedDecayTreeList::makePsiKpipiList(){
     this->add(AmpInitialiser(*dk, "SBW_9000325_GS"));
     delete dk;
 
+    // B->psi K2(1580); K2->K f0(980); f2->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(100443, 9000325)->addDgtr(321, 9010221)->addDgtr(211,-211);
+    this->add(AmpInitialiser(*dk, "Flatte"));
+    this->add(*dk); 
+    this->add(AmpInitialiser(*dk, "SBW_9000325_"));    
+    this->add(AmpInitialiser(*dk, "SBW_9000325_Flatte"));    
+    delete dk;
+    
+    // B->psi K2(1580); K2->K f2(1270); f2->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(100443, 9000325)->addDgtr(321, 225)->addDgtr(211,-211);
+    this->add(*dk);    
+    this->add(AmpInitialiser(*dk, "SBW_"));   
+    this->add(AmpInitialiser(*dk, "SBW_9000325_"));    
+    delete dk;
+    
+    // B->psi K2(1580); K2->K2*(1430) pi; K2*->K pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(100443, 9000325)->addDgtr(211, 315)->addDgtr(321,-211);
+    this->add(*dk); 
+    this->add(AmpInitialiser(*dk, "SBW_"));   
+    this->add(AmpInitialiser(*dk, "SBW_9000325_"));    
+    delete dk;
+
     // B->psi K1*(1680); K2->K*(892) pi; K*->K pi  
     dk = new DecayTree(521);
     dk->addDgtr(100443, 30323)->addDgtr(211, 313)->addDgtr(321,-211);
@@ -972,6 +997,15 @@ int NamedDecayTreeList::makePsiKpipiList(){
     //Charmonia amplitudes:
     //------------------------
     
+    // B->X(3872) K; X-> psi rho
+    dk = new DecayTree(521);
+    dk->addDgtr(321, 9999991)->addDgtr(100443, 113)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_9999991_"));   
+    this->add(AmpInitialiser(*dk, "SBW_9999991_GS"));  
+    this->add(AmpInitialiser(*dk, "GS"));  
+    delete dk;
+
     // B->psi(4160) K; psi-> psi pi pi 
     dk = new DecayTree(521);
     dk->addDgtr(321, 9010443)->addDgtr(100443, 9981)->addDgtr(211,-211);
@@ -994,6 +1028,36 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk = new DecayTree(521);
     dk->addDgtr(321, 9999992)->addDgtr(100443, 9993)->addDgtr(211,-211);
     this->add(*dk); 
+    delete dk;
+
+    // B->X(4260) K; X-> psi rho
+    dk = new DecayTree(521);
+    dk->addDgtr(321, 9999992)->addDgtr(100443, 113)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_9999992_"));   
+    this->add(AmpInitialiser(*dk, "SBW_9999992_GS"));  
+    this->add(AmpInitialiser(*dk, "GS"));   
+    this->add(AmpInitialiser(*dk, "LS_10_SBW_9999992_"));   
+    this->add(AmpInitialiser(*dk, "LS_10_SBW_9999992_GS"));  
+    this->add(AmpInitialiser(*dk, "LS_10_GS")); 
+    this->add(AmpInitialiser(*dk, "LS_10_"));  
+    this->add(AmpInitialiser(*dk, "LS_11_SBW_9999992_"));   
+    this->add(AmpInitialiser(*dk, "LS_11_SBW_9999992_GS"));  
+    this->add(AmpInitialiser(*dk, "LS_11_GS")); 
+    this->add(AmpInitialiser(*dk, "LS_11_")); 
+    this->add(AmpInitialiser(*dk, "LS_12_SBW_9999992_"));   
+    this->add(AmpInitialiser(*dk, "LS_12_SBW_9999992_GS"));  
+    this->add(AmpInitialiser(*dk, "LS_12_GS")); 
+    this->add(AmpInitialiser(*dk, "LS_12_"));  
+    delete dk;
+
+    // B->K X(4260); X->f0 psi; f0->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(321, 9999992)->addDgtr(100443, 9010221)->addDgtr(211,-211);
+    this->add(*dk); 
+    this->add(AmpInitialiser(*dk, "SBW_9999992_")); 
+    this->add(AmpInitialiser(*dk, "Flatte")); 
+    this->add(AmpInitialiser(*dk, "SBW_9999992_Flatte")); 
     delete dk;
     
     // B->X(4660) K; X-> psi pi pi 
@@ -1210,6 +1274,141 @@ int NamedDecayTreeList::makePsiKpipiList(){
     this->add(AmpInitialiser(*dk, "VBW_9999993_")); 
     delete dk;
 
+    //B->rho Z(3900)V
+    dk = new DecayTree(521);
+    DecayTree rho(113);
+    rho.addDgtr(211,-211);
+    Z= DecayTree(9999994);
+    Z.addDgtr(100443,321);
+    dk->addDgtr(&rho);
+    dk->addDgtr(&Z);
+    this->add(*dk);
+    delete dk;
+
+    //B->rho Z(3900)A
+    dk = new DecayTree(521);
+    rho=DecayTree(113);
+    rho.addDgtr(211,-211);
+    Z=DecayTree(9999993);
+    Z.addDgtr(100443,321);
+    dk->addDgtr(&rho);
+    dk->addDgtr(&Z);
+    this->add(*dk);
+    delete dk;
+    
+    //B->rho Z(3900)P
+    dk = new DecayTree(521);
+    rho=DecayTree(113);
+    rho.addDgtr(211,-211);
+    Z=DecayTree(9999995);
+    Z.addDgtr(100443,321);
+    dk->addDgtr(&rho);
+    dk->addDgtr(&Z);
+    this->add(*dk);
+    delete dk;
+    
+    //B->rho Z(4051)V
+    dk = new DecayTree(521);
+    rho=DecayTree(113);
+    rho.addDgtr(211,-211);
+    Z=DecayTree(9999912);
+    Z.addDgtr(100443,321);
+    dk->addDgtr(&rho);
+    dk->addDgtr(&Z);
+    this->add(*dk);
+    delete dk;
+    
+    //B->rho Z(4051)A
+    dk = new DecayTree(521);
+    rho=DecayTree(113);
+    rho.addDgtr(211,-211);
+    Z=DecayTree(9999911);
+    Z.addDgtr(100443,211);
+    dk->addDgtr(&rho);
+    dk->addDgtr(&Z);
+    this->add(*dk);
+    delete dk;
+    
+    //B->rho Z(4051)P
+    dk = new DecayTree(521);
+    rho=DecayTree(113);
+    rho.addDgtr(211,-211);
+    Z=DecayTree(9999913);
+    Z.addDgtr(100443,211);
+    dk->addDgtr(&rho);
+    dk->addDgtr(&Z);
+    this->add(*dk);
+    delete dk;
+    
+    // B->pi+ X(4260); X->Z+ pi-; Z+->psi K+  
+    dk = new DecayTree(521);
+    dk->addDgtr(211, 9999992)->addDgtr(-211, 9999993)->addDgtr(100443,321);
+    this->add(*dk); 
+    this->add(AmpInitialiser(*dk, "SBW_9999992_")); 
+    delete dk;
+
+    // B->pi- X(4260); X->Z- K+; Z-->psi pi-  
+    dk = new DecayTree(521);
+    dk->addDgtr(-211, 9999992)->addDgtr(321, 9999993)->addDgtr(100443,-211);
+    this->add(*dk); 
+    this->add(AmpInitialiser(*dk, "SBW_9999992_")); 
+    delete dk;
+
+    // B->pi+ X(4660); X->Z+ pi-; Z+->psi K+  
+    dk = new DecayTree(521);
+    dk->addDgtr(211, 9999914)->addDgtr(-211, 9999993)->addDgtr(100443,321);
+    this->add(*dk); 
+    this->add(AmpInitialiser(*dk, "SBW_9999914_")); 
+    delete dk;
+
+    // B->pi- X(4660); X->Z- K+; Z-->psi pi-  
+    dk = new DecayTree(521);
+    dk->addDgtr(-211, 9999914)->addDgtr(321, 9999993)->addDgtr(100443,-211);
+    this->add(*dk); 
+    this->add(AmpInitialiser(*dk, "SBW_9999914_")); 
+    delete dk;
+
+    // B->K X(4260); X->f0 psi; f0->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(321, 9999992)->addDgtr(100443, 9010221)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_9999992_")); 
+    this->add(AmpInitialiser(*dk, "Flatte")); 
+    this->add(AmpInitialiser(*dk, "SBW_9999992_Flatte")); 
+    delete dk;
+
+    // B->pi X(4260); X->K0* psi; K0*->K pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(211, 9999992)->addDgtr(100443, 10311)->addDgtr(321,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_9999992_")); 
+    delete dk;
+
+    // B->K X(4660); X->f0 psi; f0->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(321, 9999914)->addDgtr(100443, 9010221)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_9999992_")); 
+    this->add(AmpInitialiser(*dk, "Flatte")); 
+    this->add(AmpInitialiser(*dk, "SBW_9999992_Flatte")); 
+    delete dk;
+
+    // B->pi X(4660); X->K0* psi; K0*->K pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(211, 9999914)->addDgtr(100443, 10311)->addDgtr(321,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_9999992_")); 
+    delete dk;
+
+    // B->X(3872) K; X-> psi rho
+    dk = new DecayTree(521);
+    dk->addDgtr(321, 9999991)->addDgtr(100443, 113)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_9999991_"));   
+    this->add(AmpInitialiser(*dk, "SBW_9999991_GS"));  
+    this->add(AmpInitialiser(*dk, "GS"));  
+    delete dk;
+    
     //Single resonance amplitudes:
     //----------------------------
     
@@ -5446,6 +5645,13 @@ int NamedDecayTreeList::make4PiList() {
     
   DecayTree* dk=0;
   DecayTree* a1=0;
+    
+  //D0 -> NV NT
+  dk = new DecayTree(421);
+  dk->addDgtr(9993)->addDgtr(211, -211);
+  dk->addDgtr(9985)->addDgtr(211, -211);
+  add(*dk);
+  delete dk;  
 
   //D0 -> a1(1260)pi-, a1(1260)->rho(770)pi+, rho->pi+pi-   [S-WAVE]
   dk = new DecayTree(421);
@@ -5561,6 +5767,7 @@ int NamedDecayTreeList::make4PiList() {
   dk->addDgtr(9010221)->addDgtr(211, -211);
   // dk->getVal().setL(0);
   add(*dk);
+  add(AmpInitialiser(*dk, "Flatte"));
   if(dbThis) cout << "fourth decay: " << *dk << endl;
   delete dk;
 
@@ -5652,9 +5859,21 @@ int NamedDecayTreeList::make4PiList() {
   
   // added on 9 Oct 2013, using new/refurbished spin factors (mainly tensor/pseudo tensor)
 
-  // D0 -> pi(1300)- pi+, pi(1300)- ->rho(770) pi-, rhp(770) -> pi+pi-
+  // D0 -> pi(1300)+ pi-, pi(1300)+ ->rho(770) pi+, rhp(770) -> pi+pi-
   dk = new DecayTree(421);
   dk->addDgtr(-211,100211)->addDgtr(211, 113)->addDgtr(211, -211);
+  add(*dk);
+  delete dk;
+
+  // D0 -> pi(1300)+ pi-, pi(1300)+ ->NS pi+
+  dk = new DecayTree(421);
+  dk->addDgtr(-211,100211)->addDgtr(211, 9981)->addDgtr(211, -211);
+  add(*dk);
+  delete dk;
+    
+  // D0 -> pi(1300)+ pi-, pi(1300)+ ->NV pi+
+  dk = new DecayTree(421);
+  dk->addDgtr(-211,100211)->addDgtr(211, 9993)->addDgtr(211, -211);
   add(*dk);
   delete dk;
 
