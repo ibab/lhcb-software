@@ -4,9 +4,6 @@
  *
  * Header file for tool TrackVelodEdxCharge
  *
- * CVS Log :-
- * $Id: TrackVelodEdxCharge.h,v 1.5 2010-03-19 18:15:00 dhcroft Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 18/07/2006
  */
@@ -73,7 +70,7 @@ public:
   /// Returns the scaled truncated mean of the ADCs for Velo measurements to check for double tracks
   /// nTrk the number of estimated particles that contributed dEdx to this track in the VELO
   StatusCode nTracks( const LHCb::Track * track,
-                      double & nTks );
+                      double & nTks ) const;
 
 private: // definitions etc.
 
@@ -87,9 +84,9 @@ private: // data
   bool m_useConditions; ///< use SIMCOND or LHCBCOND values instead of properties
   Condition *m_dEdx; ///< Condition with dEdx content in SIMCOND/LHCBCOND 
 
-  int m_totalTracks;     ///< total tracks evaluated
-  int m_veloTracks;      ///< total tracks with VELO part
-  double m_sumEffective; ///< effective number of VELO tracks
+  mutable unsigned long long m_totalTracks;     ///< total tracks evaluated
+  mutable unsigned long long m_veloTracks;      ///< total tracks with VELO part
+  mutable double m_sumEffective; ///< effective number of VELO tracks
 
 };
 
