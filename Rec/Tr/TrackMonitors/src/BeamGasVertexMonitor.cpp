@@ -4,8 +4,7 @@
 #include <Event/HltDecReports.h>
 #include <Event/HltSelReports.h>
 #include <Event/MCHeader.h>
-// #include <Event/GenHeader.h>
-// #include <Event/GenCollision.h>
+#include <Event/GenHeader.h>
 #include "BeamGasVertexMonitor.h"
 
 //-----------------------------------------------------------------------------
@@ -19,8 +18,7 @@ DECLARE_ALGORITHM_FACTORY( BeamGasVertexMonitor )
 BeamGasVertexMonitor::BeamGasVertexMonitor(const std::string& name, ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
 {
-  declareProperty("ReportLocation", m_reportLocation
-                    = LHCb::HltSelReportsLocation::Default);
+  declareProperty("ReportLocation", m_reportLocation = "Hlt1/SelReports");
   declareProperty("Selections", m_selNames);
   declareProperty("SplitLocations", m_svLocations);
   declareProperty("SplitPrefixes", m_svPrefixes);
@@ -58,18 +56,18 @@ StatusCode BeamGasVertexMonitor::execute() {
     set.emplace_back("rec" + m_svPrefixes[i], getRecoCandidates(*splitVertices));
   }
 
-  const auto* selReports = getIfExists<LHCb::HltSelReports>(m_reportLocation);
-  if (selReports) {
-    set.emplace_back("hlt", getHltCandidates(*selReports));
-    withHlt = true;
+  if (!m_selNames.empty()) {
+    const auto* selReports = getIfExists<LHCb::HltSelReports>(m_reportLocation);
+    if (selReports) {
+      set.emplace_back("hlt", getHltCandidates(*selReports));
+      withHlt = true;
+    }
   }
 
   const auto* mcHeader = getIfExists<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default);
-  // const LHCb::GenHeader* genHeader = nullptr;
-  // const LHCb::GenHeader* genCollisions = nullptr;
+  const LHCb::GenHeader* genHeader = nullptr;
   if (mcHeader) {
-    // genHeader = get<LHCb::GenHeader>(LHCb::GenHeaderLocation::Default);
-    // genCollisions = get<LHCb::GenCollisions>(LHCb::GenCollisionLocation::Default);
+    genHeader = get<LHCb::GenHeader>(LHCb::GenHeaderLocation::Default);
     set.emplace_back("mc", getMCCandidates(mcHeader->primaryVertices()));
     withMC = true;
   }
@@ -90,9 +88,13 @@ StatusCode BeamGasVertexMonitor::execute() {
     test &= tuple->column("nCandidate", nCandidate);
 
     // The main primary/split vertices
-    test &= fillVertex(tuple, name + "_", cand.pv, true);
-    test &= fillVertex(tuple, name + "_1_", cand.sv1, false);
-    test &= fillVertex(tuple, name + "_2_", cand.sv2, false);
+    if (name != "mc") {
+      test &= fillVertex(tuple, name + "_", cand.pv, true);
+      test &= fillVertex(tuple, name + "_1_", cand.sv1, false);
+      test &= fillVertex(tuple, name + "_2_", cand.sv2, false);
+    } else {
+      test &= fillVertex(tuple, name + "_", cand.pv, false);
+    }
 
     // Matched primary/split vertices
     for (auto it = ++set.begin(); it != set.end(); ++it) {
@@ -107,7 +109,7 @@ StatusCode BeamGasVertexMonitor::execute() {
       // For **rec** PVs (other than the main), don't write the PV and
       // the matching distance (which is always zero).
       if (mname.compare(0, 3, "rec") != 0) {
-        test &= fillVertex(tuple, mname + "_", matched->pv, true);
+        test &= fillVertex(tuple, mname + "_", matched->pv, mname != "mc");
         test &= tuple->column(mname + "_match_dist", mpair.first);
       }
 
@@ -127,9 +129,14 @@ StatusCode BeamGasVertexMonitor::execute() {
     }
 
     if (withMC) {
-      // TODO The following does not work? Fix it!:
-      // tuple.column("mc_evtype", genHeader->evType());
-      // tuple.column('mc_ncollisions', int(genCollisions->size()));
+      tuple->column("mc_evtype", genHeader->evType());
+      //tuple->column("mc_ncollisions", genHeader->numOfCollisions());
+
+      std::vector<double> processTypes;
+      for (const auto& collision : genHeader->collisions()) {
+        processTypes.push_back(collision->processType());
+      }
+      tuple->farray("mc_processtypes", processTypes, "mc_ncollisions", 10);
     }
 
     test &= tuple->write();
@@ -177,14 +184,14 @@ std::pair<double, BeamGasCandidates::const_iterator> BeamGasVertexMonitor::match
   auto it = std::min_element(
     candidates.begin(), candidates.end(),
     [&vertex](const BeamGasCandidate& a, const BeamGasCandidate& b) {
-      return abs(a.pv.z - vertex.z) < abs(b.pv.z - vertex.z);
+      return std::abs(a.pv.z - vertex.z) < std::abs(b.pv.z - vertex.z);
     }
   );
 
   double dist = 1e10; //std::numeric_limits<double>::infinity();
   if (it != candidates.end()) {
-    if (abs((*it).pv.z - vertex.z) < m_maxMatchDeltaZ)
-      dist = abs((*it).pv.z - vertex.z);
+    if (std::abs((*it).pv.z - vertex.z) < m_maxMatchDeltaZ)
+      dist = std::abs((*it).pv.z - vertex.z);
     else
       it = candidates.end();
   }

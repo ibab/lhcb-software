@@ -5,6 +5,7 @@ gaudi_subdir(TrackMonitors v2r8)
 
 gaudi_depends_on_subdirs(Det/CaloDet
                          Event/MCEvent
+                         Event/GenEvent
                          Event/PhysEvent
                          Event/RecEvent
                          Event/TrackEvent
@@ -23,7 +24,6 @@ find_package(GSL)
 gaudi_add_module(TrackMonitors
                  src/*.cpp
                  INCLUDE_DIRS GSL AIDA Tr/TrackInterfaces Tf/PatKernel
-                 LINK_LIBRARIES GSL CaloDetLib MCEvent PhysEvent RecEvent TrackEvent HltEvent GaudiAlgLib GaudiUtilsLib PartPropLib STKernelLib TrackFitEvent TrackKernel)
+                 LINK_LIBRARIES GSL CaloDetLib MCEvent GenEvent PhysEvent RecEvent TrackEvent HltEvent GaudiAlgLib GaudiUtilsLib PartPropLib STKernelLib TrackFitEvent TrackKernel)
 
 gaudi_install_python_modules()
-

@@ -28,6 +28,7 @@ use   CaloDet           v*      Det
 use   PhysEvent         v*      Event
 use   MCEvent           v*      Event
 use   HltEvent          v*      Event
+use   GenEvent          v*      Event
 
 # Component library building rule
 #=====================================================================
