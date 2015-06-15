@@ -1,0 +1,25 @@
+#============================================================================
+# Created    : 2015-06-12
+# Maintainer : Philip Ilten
+#============================================================================
+package       SuperChic
+version       v1r0
+
+# Structure, i.e. directories to process.
+#============================================================================
+branches      SuperChic doc cmt src
+
+# Used packages.
+#============================================================================
+use           Generators       v*    Gen
+
+# Export include files
+#============================================================================
+apply_pattern install_more_includes more=SuperChic
+
+# Linker library building rules.
+#============================================================================
+library       SuperChic        *.f
+
+apply_pattern linker_library library=SuperChic
+apply_pattern library_stamps library=SuperChic
