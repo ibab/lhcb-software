@@ -5,7 +5,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-06-15 - Carlos Vazquez Sierra
- - Added two temporary builders to StrippingB2CC for some tests.
+ - Added two temporary builders to StrippingB2CC for some tests (already deleted, tests finished).
 
 ! 2015-06-15 - Chitsanu Khurewathanakul.
  - Modified collect_dicts.py output engine to use json builtin-lib. 
