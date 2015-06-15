@@ -286,7 +286,7 @@ class AlignOutput:
                 self.ParseCanonicalConstraints(line)
                 continue
             if self.logstatus == 'survey_constraints':
-                self.ParseSurveyConstraints(line)
+                #self.ParseSurveyConstraints(line)
                 continue
             if self.logstatus == 'alignables':
                 self.ParseAlignable(line)
@@ -317,7 +317,7 @@ class AlignOutput:
         if 'Survey constraints with largest chisquare contribution:' in line:
             self.logstatus = 'survey_constraints'
             return (self.logstatus != prev_log)
-        if 'Alignable: Tracker' in line:
+        if 'Alignable: Tracker' in line or 'Alignable: Velo' in line or 'Alignable: Muon' in line:
             self.logstatus = 'alignables'
             self.ParseAlignable(line)
             return (self.logstatus != prev_log)

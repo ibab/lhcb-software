@@ -5,8 +5,10 @@ from matplotlib.backends.backend_pdf import PdfPages
 ###########################
 # Load log-files
 alIters = []
-for fdir in ['startfromITsurvey','startfromITsurvey2']:
+#for fdir in ['startfromITsurvey','startfromITsurvey2']:
+for fdir in ['startfromITsurvey']:
     fileName = '/afs/cern.ch/work/m/mamartin/Alignment2015/outputs/run154182_%s/alignlog.txt' %fdir
+    fileName = '/afs/cern.ch/user/s/siborghi/run154182_Ok/alignlog.txt'
     aout = AlignOutput(fileName)
     aout.Parse()
     alIters += aout.AlignIterations
