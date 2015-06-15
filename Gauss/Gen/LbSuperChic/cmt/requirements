@@ -1,0 +1,26 @@
+#============================================================================
+# Created    : 2015-06-12
+# Maintainer : Philip Ilten
+#============================================================================
+package       LbSuperChic
+version       v1r0
+
+# Structure, i.e. directories to process.
+#============================================================================
+branches      LbSuperChic doc cmt src
+
+# Local include directory (not exported to project).
+#============================================================================
+include_dirs  $(LBSUPERCHICROOT)
+
+# Used packages.
+#============================================================================
+use           SuperChic        v*    Gen
+
+# Component library building rules.
+#============================================================================
+library       LbSuperChic           component/*.cpp
+
+# Define component and linker library link options.
+#============================================================================
+apply_pattern component_library library=LbSuperChic
