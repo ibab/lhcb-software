@@ -17,6 +17,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
 
     __slots__ = {"EnableHltRecSummary" : True,
                  "RecSummaryLocation"  : "Hlt2/RecSummary",
+                 "AddAdditionalTrackInfos"   : True,
                  "Hlt2Filter"          : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
                 }
 
@@ -77,3 +78,51 @@ class HltAfterburnerConf(LHCbConfigurableUser):
                                     MuonTracksLocation = decoders['MuonTr'][1])
             seq.Members = [recSeq, summary]
             Afterburner.Members += [seq]
+
+        if self.getProp("AddAdditionalTrackInfos"):
+            from GaudiKernel.SystemOfUnits import mm
+            from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+            from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
+            trackLocations = {"Long" : Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks().outputSelection(),
+                              "Downstream" : Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks().outputSelection()}
+            infoSeq = Sequence("TrackInfoSequence", IgnoreFilterPassed = True)
+            infoSeq.Members +=  Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks().members() + Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks().members()
+            for name, location in trackLocations.iteritems():
+                from Configurables import TrackBuildCloneTable, TrackCloneCleaner
+                prefix = "Hlt2" + name 
+                #trackClones = GaudiSequencer("TrackClonesSeq")
+                
+                cloneTable = TrackBuildCloneTable(prefix + "FindTrackClones")
+                cloneTable.maxDz   = 500*mm
+                cloneTable.zStates = [ 0*mm, 990*mm, 9450*mm ]
+                cloneTable.klCut   = 5e3
+                cloneTable.inputLocation = location
+                cloneTable.outputLocation = location + "Clones"
+                cloneCleaner = TrackCloneCleaner(prefix + "FlagTrackClones")
+                cloneCleaner.CloneCut = 5e3
+                cloneCleaner.inputLocation = location
+                cloneCleaner.linkerLocation = cloneTable.outputLocation
+                infoSeq.Members += [ cloneTable, cloneCleaner ]
+                
+                ## Add the likelihood information
+                
+                from Configurables import TrackAddLikelihood, TrackLikelihood
+                trackAddLikelihood = TrackAddLikelihood(prefix + "TrackAddLikelihood" )
+                trackAddLikelihood.addTool( TrackLikelihood, name = "TrackMatching_likTool" )
+                trackAddLikelihood.TrackMatching_likTool.otEff = 0.9
+                trackAddLikelihood.inputLocation = location
+                infoSeq.Members += [ trackAddLikelihood ]
+
+            Afterburner.Members += [infoSeq]
+
+            # Add VeloCharge to protoparticles for dedx
+            veloChargeSeq = Sequence("VeloChargeSequence", IgnoreFilterPassed = True)
+            from Configurables import ChargedProtoParticleAddVeloInfo
+            addVeloCharge = ChargedProtoParticleAddVeloInfo("Hlt2AddVeloCharge")
+            addVeloCharge.ProtoParticleLocation = Hlt2BiKalmanFittedForwardTracking().hlt2ChargedAllPIDsProtos().outputSelection()
+            #DecoderDB["DecodeVeloRawBuffer/createVeloClusters"].members()
+            decodeVeloFullClusters = DecoderDB["DecodeVeloRawBuffer/createVeloClusters"].setup()
+            veloChargeSeq.Members += [ decodeVeloFullClusters, addVeloCharge]
+            Afterburner.Members += [veloChargeSeq]
+            
+

@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-06-16 - Sascha Stahl
+ - HltAfterburner: Add calculation of TrackLikelihood, TrackClonedist and VeloCharge
+   to the sequence.
+
 !========================= HltConf v12r10 2015-06-10 =========================
 
 ! 2015-06-10 - Roel Aaij
