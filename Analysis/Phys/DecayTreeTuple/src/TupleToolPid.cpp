@@ -126,6 +126,7 @@ StatusCode TupleToolPid::fill( const Particle*
         test &= tuple->column( prefix+"_InAccMuon", 
                                proto->info(LHCb::ProtoParticle::InAccMuon,false)>0.5 );
         test &= tuple->column( prefix+"_isMuonLoose", muonPID ? muonPID->IsMuonLoose() : false );
+        test &= tuple->column( prefix+"_isMuonTight", muonPID ? muonPID->IsMuonTight() : false );
         test &= tuple->column( prefix+"_MuonMuLL",    muonPID ? muonPID->MuonLLMu()    : -1000 );
         test &= tuple->column( prefix+"_MuonBkgLL",   muonPID ? muonPID->MuonLLBg()    : -1000 );
         test &= tuple->column( prefix+"_MuonNShared", muonPID ? muonPID->nShared()     : -1    );

@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2015-06-15 - Ricardo Vazquez Gomez
+ - Add the IsMuonTight variable to the TupleToolPid.cpp  
+
 ! 2015-06-09 - Lucio Anderlini
   - Fixed a bug in TupleToolTwoParticleMatching: matching was achieved with
     positive particles only. If statement is now removed.
