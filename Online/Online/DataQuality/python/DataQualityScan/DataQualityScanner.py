@@ -310,7 +310,7 @@ class DataQualityScanner:
     for run in running_runs:
       log(INFO,'+++ Reschedule run %d after restart.'%(run,))
       self.mondb.setRunTodo(run)
-    return self
+    return len(running_runs)>0
 
   # -----------------------------------------------------------------------------
   def _prepareRun(self, run, with_options=False):
@@ -485,57 +485,38 @@ class Steer(FSM):
     self.controller.register(FSM.ST_READY,   self.onCtrlReady)
     self.controller.register(FSM.ST_ERROR,   self.onCtrlError)
     self.work = IntegerService('LHCb2_MONA10_R/Work',0)
-
+  # -----------------------------------------------------------------------------
+  def printCtrl(self):
+    log(INFO,'Controller in state: %s [Active:%s Working:%s]'%\
+        (self.controller.state(),str(self.__active),str(self.__working),))
+    return self
+  # -----------------------------------------------------------------------------
+  def setW(self,value):
+    self.__working = value
+    return self
+  # -----------------------------------------------------------------------------
+  def setA(self,value):
+    self.__active = value
+    return self
   # -----------------------------------------------------------------------------
   def isActive(self):
     return self.__active
-
   # -----------------------------------------------------------------------------
-  def onRUNNING(self):
-    log(INFO,'Current state is now '+self.state())
-    self.__active = True
-    self.__working = True
-    return self
-
+  def onRUNNING(self):          return self.setW(True).setA(True).printCtrl()
   # -----------------------------------------------------------------------------
-  def onREADY(self):
-    log(INFO,'Current state is now '+self.state())
-    self.__active = False
-    return self
-
+  def onREADY(self):            return self.setA(False).printCtrl()
   # -----------------------------------------------------------------------------
-  def onUNKNOWN(self):
-    self.__active = False
-    return self
-
+  def onUNKNOWN(self):          return self.setA(False).printCtrl()
   # -----------------------------------------------------------------------------
-  def onCtrlOffline(self):
-    log(INFO,'Controller in state: '+self.controller.state())
-    return self
-
+  def onCtrlOffline(self):      return self.printCtrl()
   # -----------------------------------------------------------------------------
-  def onCtrlReady(self):
-    log(INFO,'Controller in state: '+self.controller.state())
-    return self
-
+  def onCtrlReady(self):        return self.printCtrl()
   # -----------------------------------------------------------------------------
-  def onCtrlRunning(self):
-    log(INFO,'Controller in state: '+self.controller.state())
-    return self
-
+  def onCtrlRunning(self):      return self.printCtrl()
   # -----------------------------------------------------------------------------
-  def onCtrlPaused(self):
-    log(INFO,'Controller in state: '+self.controller.state())
-    self.__active   = True
-    self.__working  = False
-    return self
-
+  def onCtrlPaused(self):       return self.setW(False).setA(True).printCtrl()
   # -----------------------------------------------------------------------------
-  def onCtrlError(self):
-    log(INFO,'Controller in state: '+self.controller.state())
-    self.__active   = False
-    return self
-
+  def onCtrlError(self):        return self.setA(False).printCtrl()
   # -----------------------------------------------------------------------------
   def signalWork(self, runs):
     log(INFO,'Signal new work..... work:%s'%(str(runs),))
@@ -559,10 +540,9 @@ class Steer(FSM):
     current_runs = None
     ##if debug: scan.scanDatabase()
 
-    ##if debug: self.__working = False  # DEBUG! standalone mode
-
     # Check if there is old work left. If yes, restart this run
-    scan.restart()
+    if not scan.restart():
+      self.__working = False
     
     while(1):
       #log(INFO,'*** Prepare  %s %s %s'%(str(self.__working), str(self.isActive()), str(current_runs),))
@@ -596,7 +576,6 @@ class Steer(FSM):
 # -------------------------------------------------------------------------------
 def run(run_auto=False):
   import Config, errno
-  mondb_table = 'offl_mon'
 
   auto = (len(sys.argv)>1 and sys.argv[1] == '-a') or run_auto
   log(INFO,'%s PID: %-6d  auto: %-5s %s'%(43*'*',os.getpid(), str(auto),43*'*',))

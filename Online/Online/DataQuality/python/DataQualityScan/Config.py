@@ -42,7 +42,7 @@ class Config:
     self.rundb       = 'oracle:'+rundb_params.login+'@'+rundb_params.tns+'/'+rundb_params.pwd
     ## Monitoring database login credentials
     self.mondb       = 'oracle:'+mondb_params.login+'@'+mondb_params.tns+'/'+mondb_params.pwd
-    self.mondb               = 'sqlite:DATAQUALITY_MON.db'
+    self.mondb               = 'sqlite:/localdisk/DQ/DATAQUALITY_MON.db'
     ## Monitoring database table name
     self.mondb_table         = 'DQ_mon'
     #
