@@ -4,6 +4,9 @@
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
 !2015-06-09 - Lucia Grillo
+- OTIS calibration implemented in clbr_new.cpp
+
+!2015-06-09 - Lucia Grillo
 - added scripts to run on 2015 data locally on plus and on the grid with the db snapshot
 - bug fixing in the calibration done in the finalize of OTModuleClbrMon
 

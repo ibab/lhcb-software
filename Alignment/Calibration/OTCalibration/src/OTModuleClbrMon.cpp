@@ -1224,8 +1224,8 @@ StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9][4])
                 file << "    </paramVector>\n";
 
                 file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
-                for(int a = 0; a<4;a++){
-		  for(int b = 0; b<4;b++){
+                for(int b = 0; b<4;b++){
+		  for(int a = 0; a<4;a++){
                   file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5)<< " " << 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m][b] + 0.5)<< "\n";
 		  }
                 }

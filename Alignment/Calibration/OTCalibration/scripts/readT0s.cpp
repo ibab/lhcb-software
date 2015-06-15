@@ -12,18 +12,23 @@
 
 void readT0s(const std::string& path, double t0s[3][4][4][9])
 {
-  std::vector<std::string> stationNames;
-  std::vector<std::string> layerNames;
-  std::vector<std::string> quarterNames;
-  std::vector<std::string> moduleNames;
+  // std::vector<std::string> stationNames;
+  // std::vector<std::string> layerNames;
+  // std::vector<std::string> quarterNames;
+  // std::vector<std::string> moduleNames;
 
-  {
-    using namespace boost::assign;
-    stationNames = list_of("T1")("T2")("T3");
-    layerNames = list_of("X1")("U")("V")("X2");
-    quarterNames = list_of("Q0")("Q1")("Q2")("Q3");
-    moduleNames = list_of("M1")("M2")("M3")("M4")("M5")("M6")("M7")("M8")("M9");
-  }
+  std::vector<std::string> stationNames =  {"T1","T2","T3"};
+  std::vector<std::string> layerNames = {"X1","U","V","X2"};
+  std::vector<std::string> quarterNames = {"Q0","Q1","Q2","Q3"};
+  std::vector<std::string> moduleNames = {"M1","M2","M3","M4","M5","M6","M7", "M8"};
+
+  // {
+  //   using namespace boost::assign;
+  //   stationNames = list_of("T1")("T2")("T3");
+  //   layerNames = list_of("X1")("U")("V")("X2");
+  //   quarterNames = list_of("Q0")("Q1")("Q2")("Q3");
+  //   moduleNames = list_of("M1")("M2")("M3")("M4")("M5")("M6")("M7")("M8")("M9");
+  // }
 
   std::string prefix = "CalibrationModules";
 

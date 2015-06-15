@@ -172,8 +172,21 @@ int main()
   std::cout << "Read T0s ..." << std::endl;
   readT0s("db/", t0s);
 
+  std::cout<< "READ t0s"<< std::endl;
+  for(int s = 0; s < 3; s++){
+    for(int l = 0; l < 4; l++){
+      for(int q = 0; q < 4; q++){
+	for(int m = 8; m >= 0; m--){
+	  std::cout<< "s = "<<s<< " l = "<< l<< " q = "<< q << " m = "<< m << "t0 = " << t0s[s][l][q][m]<<std::endl;
+	}
+      }
+    }
+  }
+
+
+
   std::cout << "Load file ..." << std::endl;
-  TFile* file = new TFile("clbr_hists.root");
+  TFile* file = new TFile("clbr_hists_data2012.root");
 
   std::cout << "Book hists ..." << std::endl;
   TH1D* hdt0 = new TH1D("hdt0", "", 432, 0, 432);
