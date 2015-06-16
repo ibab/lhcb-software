@@ -52,8 +52,8 @@ HltMonitorSvc::HltMonitorSvc(const string& name, ISvcLocator* loc)
 {
    declareProperty("OutputConnection", m_outCon = "ipc:///tmp/hlt2mon_0");
    declareProperty("HltDecReportsLocation", m_decRepLoc = "Hlt2/DecReports");
-   declareProperty("ChunkOverlap", m_chunkOverlap = 1.);
-   declareProperty("UpdateInterval", m_updateInterval = 10.);
+   declareProperty("ChunkOverlap", m_chunkOverlap = 1);
+   declareProperty("UpdateInterval", m_updateInterval = 10);
 }
 
 //===============================================================================
@@ -144,7 +144,7 @@ void HltMonitorSvc::count(const Gaudi::StringKey& key, double t)
    // event clock, which would result in negative numbers here. Since that should (flw)
    // only happen at the start of run, we ignore those events.
    auto diff = t - m_startOfRun;
-   if (diff < -m_chunkOverlap) {
+   if (diff < 0) {
       return;
    }
 
@@ -160,32 +160,32 @@ void HltMonitorSvc::count(const Gaudi::StringKey& key, double t)
    //    m_tck = decReps->configuredTCK();
    // }
 
-   // Create a new chunk if we don't have one for this identifier
    MsgStream msg(msgSvc(), name());
+
+   size_t bin = 0;
+   size_t chunkSize{boost::numeric_cast<size_t>(m_updateInterval)};
+
+   // Create a new chunk if we don't have one for this identifier
    auto it = m_chunks.find(key);
    if (it == end(m_chunks)) {
-      size_t start{boost::numeric_cast<size_t>(diff - m_chunkOverlap)};
       it = m_chunks.emplace(key, Chunk{m_run, m_tck, key.__hash__(),
-                                       start, m_updateInterval}).first;
+                                       0, chunkSize}).first;
+      bin = boost::numeric_cast<size_t>(diff);
    }
 
-   // Protection againt underflow
-   if (diff < it->second.start) {
-      return;
+   // If we get an early event, OR in case of an event outside of the chunk, send the old
+   // chunk and create a new one.
+   if ((diff < it->second.start)
+       || (boost::numeric_cast<size_t>(t - it->second.start) > it->second.data.size())) {
+      sendChunk(it->second);
+      auto start = boost::numeric_cast<size_t>(diff);
+      if (start > m_chunkOverlap) {
+         start -= m_chunkOverlap;
+      }
+      it->second = Chunk{m_run, m_tck, it->second.histId, start, chunkSize};
+      bin = boost::numeric_cast<size_t>(diff - start);
    }
 
-   // Get bin number and protect against overflow
-   size_t bin{boost::numeric_cast<size_t>(diff - it->second.start)};
-   if (bin > it->second.data.size()) {
-      msg << MSG::ERROR << "Requested to fill bin " << bin << " at time " << t
-          << " with start of run " << m_startOfRun << endmsg;
-      return;
-   }
-
-   // If we're beyond the update interval, send the chunk. This creates a new one.
-   if (bin >= m_updateInterval) {
-      it->second = sendChunk(it->second);
-   }
    // Count
    it->second.data[bin] += 1;
 }
@@ -230,13 +230,15 @@ void HltMonitorSvc::handle(const Incident& incident)
 
       // On a run change, always send the chunks
       for (auto& entry : m_chunks) {
-         entry.second = sendChunk(entry.second);
+         sendChunk(entry.second);
+         size_t size{boost::numeric_cast<size_t>(m_updateInterval + m_chunkOverlap)};
+         entry.second = Chunk{m_run, m_tck, entry.second.histId, 0, size};
       }
    }
 }
 
 //===============================================================================
-Monitoring::Chunk HltMonitorSvc::sendChunk(const Chunk& chunk)
+void HltMonitorSvc::sendChunk(const Chunk& chunk)
 {
    std::stringstream ss;
    boost::archive::text_oarchive oa{ss};
@@ -247,9 +249,6 @@ Monitoring::Chunk HltMonitorSvc::sendChunk(const Chunk& chunk)
    zmq::message_t msg(s.size());
    memcpy(static_cast<void*>(msg.data()), s.c_str(), s.size());
    m_output->send(msg);
-
-   size_t start{boost::numeric_cast<size_t>(chunk.start + m_updateInterval)};
-   return Chunk{m_run, m_tck, chunk.histId, start, m_updateInterval};
 }
 
 //===============================================================================

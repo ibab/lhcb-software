@@ -54,13 +54,13 @@ private:
 
    StatusCode updateConditions();
 
-   Monitoring::Chunk sendChunk(const Monitoring::Chunk& chunk);
+   void sendChunk(const Monitoring::Chunk& chunk);
 
    // properties
    std::string m_outCon;
    std::string m_decRepLoc;
-   double m_chunkOverlap;
-   double m_updateInterval;
+   size_t m_chunkOverlap;
+   size_t m_updateInterval;
 
    // data members
    IIncidentSvc* m_incidentSvc;

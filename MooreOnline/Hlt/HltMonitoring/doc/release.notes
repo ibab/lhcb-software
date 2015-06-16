@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of the HLT
 !-----------------------------------------------------------------------------
 
+! 2015-06-17 - Roel Aaij
+ - Fix logic in HltMonitorSvc::count.
+
 ! 2015-06-12 - Roel Aaij
  - Make chunks overlap a bit to account for slightly not time-ordered arrival
    of events in HLT2. Addition of the chunks in the top level aggregator will
