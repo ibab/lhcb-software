@@ -149,9 +149,9 @@ default_config = {
                 # Minimum PT for dielectron                
                 'DiElectron_PT_MIN'       : 0  *MeV, 
                 # Minimum mass for intermediate resonance
-                'Res_Mass_MIN'       : 450  *MeV, 
+                'Res_Mass_MIN'       : 400  *MeV, 
                 # Maximum mass for intermediate resonance
-                'Res_Mass_MAX'       : 650  *MeV, 
+                'Res_Mass_MAX'       : 700  *MeV, 
                 # Minimum D PT
                 'D_PT_Min'           : 2000 *MeV, 
                 # Minimum D mass
@@ -226,17 +226,17 @@ default_config = {
           'STREAMS': ['Charm'],
           'CONFIG': {
                 # Minimum best primary vertex IP chi^2 for charged D daughters
-                'Bachelor_IPCHI2_MIN'      : 4.0,        # 25 --> 4
+                'Bachelor_IPCHI2_MIN'      : 16.0,        # 25 --> 16
                 # Minimum PT for charged D daughters
-                'Bachelor_PT_MIN'          : 350  *MeV,   # 600 --> 300
+                'Bachelor_PT_MIN'          : 600  *MeV,   # 600
                 # Minimum momentum for charged D daughters
                 'Bachelor_P_MIN'           : 1000 *MeV,
                 # Bachelor particle PID requirement 
                 'Bachelor_PIDK_MIN'        : -999.0, # not used
                 # Minimum best primary vertex IP chi^2 for charged D daughters
-                'Daug_IPCHI2_MIN'      : 4.0,        # 25 --> 4
+                'Daug_IPCHI2_MIN'      : 16.0,        # 25 --> 4
                 # Minimum PT for charged D daughters
-                'Daug_PT_MIN'          : 350  *MeV,   # 600 --> 300
+                'Daug_PT_MIN'          : 500  *MeV,   # 600 --> 300
                 # Minimum momentum for charged D daughters
                 'Daug_P_MIN'           : 1000 *MeV,
                 # Maximum momentum for charged D daughters
@@ -250,33 +250,33 @@ default_config = {
                 # Maximum ghost probability for charged D daughters
                 'Daug_TRGHOSTPROB_MAX' : 0.5,
                 # Maximum DLLK of intermediate resonance daughter (pion)
-                'Pi_PIDK_MAX'        : 5.0,
+                'Pi_PIDK_MAX'        : 0.0,
                 # Minimum PT for intermediate resonance neutral daughters
-                'Neut_PT_MIN'        : 350  *MeV,
+                'Neut_PT_MIN'        : 600  *MeV,
                 # Mass window for intermediate resonance neutral daughters (pi0, eta)
                 'Neut_Mass_Win'      :  50  *MeV,
                 # Minimum dipion mass
                 'Dipion_Mass_MIN'    : 200 *MeV,
                 # Maximum dipion mass
-                'Dipion_Mass_MAX'    : 650 *MeV,
+                'Dipion_Mass_MAX'    : 700 *MeV,
                 # Maximum DOCA chi2 for dipion combination
                 'Dipion_DOCACHI2_MAX': 15,
                 # Minimum mass for intermediate resonance
-                'Res_Mass_MIN'       : 450   *MeV,  # 500 --> 450
+                'Res_Mass_MIN'       : 400   *MeV,  # 500 --> 400
                 # Maximum mass for intermediate resonance
-                'Res_Mass_MAX'       : 650  *MeV,   # 600 --> 650
+                'Res_Mass_MAX'       : 700  *MeV,   # 600 --> 700
                 # Minimum D PT
-                'D_PT_Min'           : 1500 *MeV,   # 2000 --> 1500
+                'D_PT_Min'           : 2000 *MeV,   # 
                 # Minimum D mass
                 'D_Mass_MIN'          : 1600 *MeV,
                 # Maximum D mass
-                'D_Mass_MAX'          : 2500 *MeV,
+                'D_Mass_MAX'          : 2200 *MeV,
                 # Maximum chi^2 on D end vertex
-                'D_VCHI2PDOF_MAX'         : 5,
+                'D_VCHI2PDOF_MAX'         : 4,
                 # minimum flight time
                 'D_BPVLTIME_MIN'       : 0.25*picosecond,
                 # max chi^2 per DOF of DTF fit
-                'DTF_CHI2NDOF_MAX'   : 5,
+                'DTF_CHI2NDOF_MAX'   : 5,    # non usato
                 # HLT filters, only process events firing triggers matching the RegEx
                 'Hlt1Filter'         : None,
                 'Hlt2Filter'         : None,
@@ -301,17 +301,17 @@ default_config = {
           'STREAMS': ['Charm'],
           'CONFIG': {
                 # Minimum best primary vertex IP chi^2 for charged D daughters
-                'Bachelor_IPCHI2_MIN'      : 4.0,        # 25 --> 4
+                'Bachelor_IPCHI2_MIN'      : 16.0,        # 25 
                 # Minimum PT for charged D daughters
-                'Bachelor_PT_MIN'          : 350  *MeV,   # 600 --> 300
+                'Bachelor_PT_MIN'          : 600  *MeV,   # 600
                 # Minimum momentum for charged D daughters
                 'Bachelor_P_MIN'           : 1000 *MeV,
                 # Bachelor particle PID requirement 
                 'Bachelor_PIDK_MIN'        : -999.0, # not used 
                 # Minimum best primary vertex IP chi^2 for charged D daughters
-                'Daug_IPCHI2_MIN'      : 4.0,        # 25 --> 4
+                'Daug_IPCHI2_MIN'      : 16.0,        # 25 --> 16
                 # Minimum PT for charged D daughters
-                'Daug_PT_MIN'          : 350  *MeV,   # 600 --> 300
+                'Daug_PT_MIN'          : 500  *MeV,   # 600 --> 500
                 # Minimum momentum for charged D daughters
                 'Daug_P_MIN'           : 1000 *MeV,
                 # Maximum momentum for charged D daughters
@@ -325,29 +325,29 @@ default_config = {
                 # Maximum ghost probability for charged D daughters
                 'Daug_TRGHOSTPROB_MAX' : 0.5,
                 # Maximum DLLK of intermediate resonance daughter (pion)
-                'Pi_PIDK_MAX'        : 5,
+                'Pi_PIDK_MAX'        : 0,
                 # Minimum PT for intermediate resonance neutral daughters
-                'Neut_PT_MIN'        : 350  *MeV,
+                'Neut_PT_MIN'        : 1000  *MeV,
                 # Mass window for intermediate resonance neutral daughters (pi0, eta)
                 'Neut_Mass_Win'      :  50  *MeV,
                 # Minimum dipion mass
                 'Dipion_Mass_MIN'    : 200 *MeV,
                 # Maximum dipion mass
-                'Dipion_Mass_MAX'    : 1050 *MeV,
+                'Dipion_Mass_MAX'    : 1200 *MeV,
                 # Maximum DOCA chi2 for dipion combination
                 'Dipion_DOCACHI2_MAX': 15,
                 # Minimum mass for intermediate resonance
-                'Res_Mass_MIN'       : 800   *MeV,  # 900 --> 800
+                'Res_Mass_MIN'       : 650   *MeV,  # 900 --> 800
                 # Maximum mass for intermediate resonance
-                'Res_Mass_MAX'       : 1050  *MeV,   # 990 --> 1050
+                'Res_Mass_MAX'       : 1200  *MeV,   # 990 --> 1050
                 # Minimum D PT
-                'D_PT_Min'           : 1500 *MeV,   # 2000 --> 1500
+                'D_PT_Min'           : 2000 *MeV,   # 2000
                 # Minimum D mass
                 'D_Mass_MIN'          : 1600 *MeV,
                 # Maximum D mass
-                'D_Mass_MAX'          : 2500 *MeV,
+                'D_Mass_MAX'          : 2200 *MeV,
                 # Maximum chi^2 on D end vertex
-                'D_VCHI2PDOF_MAX'         : 5,
+                'D_VCHI2PDOF_MAX'         : 4,
                 # minimum flight time
                 'D_BPVLTIME_MIN'       : 0.25*picosecond,
                 # max chi^2 per DOF of DTF fit
@@ -372,17 +372,17 @@ default_config = {
           'STREAMS': ['Charm'],
           'CONFIG': {
                 # Minimum best primary vertex IP chi^2 for charged D daughters
-                'Bachelor_IPCHI2_MIN'      : 4.0,        # 25 --> 4
+                'Bachelor_IPCHI2_MIN'      : 16.0,        # 25 --> 16
                 # Minimum PT for charged D daughters
-                'Bachelor_PT_MIN'          : 350  *MeV,   # 600 --> 300
+                'Bachelor_PT_MIN'          : 600  *MeV,   # 600 
                 # Minimum momentum for charged D daughters
                 'Bachelor_P_MIN'           : 1000 *MeV,
                 # Bachelor particle PID requirement 
                 'Bachelor_PIDK_MIN'        : -999.0, # not used 
                 # Minimum best primary vertex IP chi^2 for charged D daughters
-                'Daug_IPCHI2_MIN'      : 4.0,        # 25 --> 4
+                'Daug_IPCHI2_MIN'      : 16.0,        # 25 --> 4
                 # Minimum PT for charged D daughters
-                'Daug_PT_MIN'          : 350  *MeV,   # 600 --> 300
+                'Daug_PT_MIN'          : 500  *MeV,   # 600 --> 300
                 # Minimum momentum for charged D daughters
                 'Daug_P_MIN'           : 1000 *MeV,
                 # Maximum momentum for charged D daughters
@@ -396,29 +396,29 @@ default_config = {
                 # Maximum ghost probability for charged D daughters
                 'Daug_TRGHOSTPROB_MAX' : 0.5,
                 # Maximum DLLK of intermediate resonance daughter (pion)
-                'Pi_PIDK_MAX'        : 5,
+                'Pi_PIDK_MAX'        : 0,
                 # Minimum PT for intermediate resonance neutral daughters
-                'Neut_PT_MIN'        : 350  *MeV,
+                'Neut_PT_MIN'        : 600  *MeV,
                 # Mass window for intermediate resonance neutral daughters (pi0, eta)
                 'Neut_Mass_Win'      :  50  *MeV,
                 # Minimum dipion mass
                 'Dipion_Mass_MIN'    : 200 *MeV,
                 # Maximum dipion mass
-                'Dipion_Mass_MAX'    : 1050 *MeV,
+                'Dipion_Mass_MAX'    : 1200 *MeV,
                 # Maximum DOCA chi2 for dipion combination
                 'Dipion_DOCACHI2_MAX': 15,
                 # Minimum mass for intermediate resonance
-                'Res_Mass_MIN'       : 700   *MeV,  #  includes omega
+                'Res_Mass_MIN'       : 650   *MeV,  #  includes omega
                 # Maximum mass for intermediate resonance
-                'Res_Mass_MAX'       : 1150  *MeV,   #
+                'Res_Mass_MAX'       : 1200  *MeV,   #
                 # Minimum D PT
-                'D_PT_Min'           : 1500 *MeV,   #
+                'D_PT_Min'           : 2000 *MeV,   #
                 # Minimum D mass
                 'D_Mass_MIN'          : 1600 *MeV,
                 # Maximum D mass
-                'D_Mass_MAX'          : 2500 *MeV,
+                'D_Mass_MAX'          : 2200 *MeV,
                 # Maximum chi^2 on D end vertex
-                'D_VCHI2PDOF_MAX'         : 5,
+                'D_VCHI2PDOF_MAX'         : 4,
                 # minimum flight time
                 'D_BPVLTIME_MIN'       : 0.25*picosecond,
                 # max chi^2 per DOF of DTF fit
@@ -1210,7 +1210,7 @@ def makeD(name, config, inputSel, decDescriptors, useBachelorPID):
     dCuts = (
         '(VFASPF(VCHI2PDOF) < {0[D_VCHI2PDOF_MAX]})'
         '& (BPVLTIME() > {0[D_BPVLTIME_MIN]})'
-        '& (DTF_CHI2NDOF(True) < {0[DTF_CHI2NDOF_MAX]})' 
+        #'& (DTF_CHI2NDOF(True) < {0[DTF_CHI2NDOF_MAX]})' 
         ).format(config)
     
     _D = CombineParticles(
