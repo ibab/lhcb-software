@@ -16,10 +16,14 @@ namespace Monitoring {
 struct Histogram {
   Histogram() = default;
   Histogram(RunNumber runNumber, TCK tck, HistId histId)
-      : runNumber{runNumber}, tck{tck}, histId{histId}, data{} {}
+     : runNumber{runNumber}, tck{tck}, histId{histId}, data{} {}
 
   auto addChunk(const Chunk& c) noexcept -> void {
     assert(runNumber == c.runNumber && tck == c.tck && histId == c.histId);
+    if ((c.start + c.data.size()) > data.size()) {
+       data.resize(c.start + c.data.size());
+    }
+
     std::transform(std::begin(c.data), std::end(c.data),
                    std::begin(data) + c.start, std::begin(data) + c.start,
                    std::plus<BinContent>());

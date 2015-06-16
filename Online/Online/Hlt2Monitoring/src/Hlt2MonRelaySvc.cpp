@@ -29,6 +29,7 @@ Hlt2MonRelaySvc::Hlt2MonRelaySvc(const string& name, ISvcLocator* loc)
    : base_class(name, loc),
    m_top{false},
    m_relay{true},
+   m_incidentSvc{nullptr},
    m_thread{nullptr},
    m_control{nullptr},
    m_context{nullptr}
@@ -154,9 +155,8 @@ StatusCode Hlt2MonRelaySvc::start()
             back.connect(m_backCon.c_str());
             log << MSG::INFO << "Connected backend to " << m_backCon << endmsg;
          } else {
-            back.connect(m_backCon.c_str());
-            log << MSG::INFO << "Bound backend to " << m_backCon << endmsg;
             back.bind(m_backCon.c_str());
+            log << MSG::INFO << "Bound backend to " << m_backCon << endmsg;
          }
 
          // use inproc for the control.

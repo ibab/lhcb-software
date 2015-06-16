@@ -4,6 +4,10 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-06-17 - Roel Aaij
+ - Fix binding of backend connection of Hlt2MonRelaySvc.
+ - Add first implementation of Adder, it just prints histograms to cout.
+
 ! 2015-06-11 - Roel Aaij
  - Updates to Hlt2MonRelaySvc, works in a small test now.
 
