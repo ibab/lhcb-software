@@ -209,11 +209,11 @@ class Plotter :
 									thick = j,
 									material = matname )
 
-							xsec_txtout.write( '{0} & $ {1:.2} \pm {2:.2}$ & $ {3:.2} \pm {4:.2}$ & $ {5:.2} \pm {6:.2}$ & $ {7:.2} \pm {8:.2}$ \\\\ \n'
+							xsec_txtout.write( '{0} & $ {1:.2f} \pm {2:.2f}$ & $ {3:.2f} \pm {4:.2f}$ & $ {5:.2f} \pm {6:.2f}$ & $ {7:.2f} \pm {8:.2f}$ \\\\ \n'
 									.format(head, res[1] * 1e3, res[2] * 1e3, res[1] * SigmaOverPint * 1e3, res[2] * SigmaOverPint * 1e3,
 										res[3] * 1e3, res[4] * 1e3, res[3] * SigmaOverPint * 1e3, res[4] * SigmaOverPint * 1e3) )
 
-							multi_txtout.write( '{0} & {1:.1} & {2:.1}  \\\\ \n'.format(head,res[5],res[6]) )
+							multi_txtout.write( '{0} & {1:.1f} & {2:.1f}  \\\\ \n'.format(head,res[5],res[6]) )
 	
 							tvars.pGun = self._all_pguns[k].GetPDG()
 							tvars.energy = g
