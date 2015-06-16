@@ -222,6 +222,8 @@ StatusCode TeslaReportAlgo::execute()
         for(std::vector<std::string>::iterator it = vec_keys.begin(); it!=vec_keys.end(); it++) debug() << *it << " = " << PV_info[(*it)] << endmsg;
       }
       m_conv->RecVertexObjectFromSummary(&PV_info,refit_PV,true);
+      // Make sure technique is known as Primary
+      refit_PV->setTechnique(LHCb::RecVertex::Primary);
       refit_PVs.push_back(refit_PV);
     }
   }
@@ -254,6 +256,7 @@ StatusCode TeslaReportAlgo::execute()
       vnew->setPosition( v->position() );
       vnew->setCovMatrix( v->covMatrix() );
       vnew->setExtraInfo( v->extraInfo() );
+      vnew->setTechnique(LHCb::RecVertex::Primary);
 
       // Fill PV container
       cont_PV->insert( vnew );
