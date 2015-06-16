@@ -120,7 +120,7 @@ StatusCode TupleToolTwoParticleMatching::fill( const LHCb::Particle*
           std::pair< double, double > c_overlap = LHCb::HashIDs::overlap((*iCand), P);
           double loaded_overlap = std::get<0>(c_overlap);
           double original_overlap = std::get<1>(c_overlap);
-          if (std::min(loaded_overlap,original_overlap)>std::min(best_overlap_loaded,best_overlap_original))
+          if (std::max(loaded_overlap,original_overlap)>std::max(best_overlap_loaded,best_overlap_original))
           {
             best_particle = *iCand;
             best_overlap_loaded = loaded_overlap;
