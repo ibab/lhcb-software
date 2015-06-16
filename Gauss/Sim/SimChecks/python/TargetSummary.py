@@ -250,16 +250,7 @@ class Plotter :
 		dataTree.Write("summaryTree")
 		rootout.Close();
 
-
-
-
-def doMultiHistos(nt, curdir, mod, mat, Dx, pgun, eng) :
-
-	avg_nChPerc = 0
-	avg_ChPlusPerc = 0 
-	avg_ChMinusPerc = 0 
-
-	gROOT.ProcessLine(
+gROOT.ProcessLine(
 		'''struct vars_t {
 		Double_t  endx,endy,endz,prox,proy,proz;
 		int  cptype,cpstype;
@@ -269,6 +260,15 @@ def doMultiHistos(nt, curdir, mod, mat, Dx, pgun, eng) :
 		Double_t daukine[100];
 		Double_t daucharge[100];
 	}''')
+
+
+
+
+def doMultiHistos(nt, curdir, mod, mat, Dx, pgun, eng) :
+
+	avg_nChPerc = 0
+	avg_ChPlusPerc = 0 
+	avg_ChMinusPerc = 0 
 
 	vars = vars_t()
 
