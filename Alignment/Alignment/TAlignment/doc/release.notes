@@ -3,6 +3,11 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+
+! 2015-06-16 - Stefania Vecchi
+ - change configuration and track selection for muon alignment
+ - tightened the convergence criteria
+
 ! 2015-06-11 - Wouter Hulsbergen
  - change writers configuration of RunChangeHandler for new location of xml in online
 

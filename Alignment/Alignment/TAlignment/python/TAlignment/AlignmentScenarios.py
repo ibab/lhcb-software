@@ -16,7 +16,7 @@ from Configurables import TAlignment
 # scenario used for prompt alignment
 
 def configurePromptAlignment( fixQOverPBias = True ) :
-    TAlignment().WriteCondSubDetList += ['Velo','TT','IT','OT','MUON']
+    TAlignment().WriteCondSubDetList += ['Velo','TT','IT','OT','Muon']
   
     # define the alignment elements
     elements = Alignables()
@@ -224,7 +224,7 @@ def configureVeloModule24Alignment():
 
 # Early 2012 data alignment
 def configureEarlyDataAlignment( fixQOverPBias = True ) :
-    TAlignment().WriteCondSubDetList += ['Velo','TT','IT','OT','MUON']
+    TAlignment().WriteCondSubDetList += ['Velo','TT','IT','OT','Muon']
   
     # define the alignment elements
     elements = Alignables()
@@ -298,7 +298,7 @@ def configureTrackerAlignment( fixQOverPBias = False, surveyVer = 'latest' ) :
     
 # Alignment scenario used for 2012 data
 def configure2012DataAlignment( fixQOverPBias = False, surveyVer = 'latest' ) :
-    TAlignment().WriteCondSubDetList += ['Velo','TT','IT','OT','MUON']
+    TAlignment().WriteCondSubDetList += ['Velo','TT','IT','OT','Muon']
   
     # define the alignment elements
     elements = Alignables()
@@ -336,7 +336,7 @@ def configure2012DataAlignment( fixQOverPBias = False, surveyVer = 'latest' ) :
 
 # Alignment scenario used for 2012 data
 def configureMuonAlignment( surveyVer = 'latest' ) :
-    TAlignment().WriteCondSubDetList += ['MUON']
+    TAlignment().WriteCondSubDetList += ['Muon']
   
     # define the alignment elements
     elements = Alignables()

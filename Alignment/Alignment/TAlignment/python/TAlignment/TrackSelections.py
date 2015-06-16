@@ -275,6 +275,8 @@ class BestMuonTracks(TrackSelection):
         self._inputLocation = InputLocation
 
     def algorithm( self ):
+        from Configurables import TrackSys
+        TrackSys().GlobalCuts = {'Velo':4000, 'OT':8000} #### to remove busy events
         Name = self._name
         inputTrackLocation = self._inputLocation
         from Configurables import GaudiSequencer, HltTrackConverter, TrackContainerCopy, Escher

@@ -274,7 +274,8 @@ class TAlignment( LHCbConfigurableUser ):
             self.addOnlineXmlWriter( alg, 'OT','Modules', [4] )
         if 'Muon' in listOfCondToWrite:
             #self.addXmlWriter( alg, 'Muon','Detectors', [] )
-            self.addOnlineXmlWriter( alg, 'Muon','Global', [0,1,2] )
+            self.addOnlineXmlWriter( alg, 'Muon','Global', [0,1] )
+            self.addOnlineXmlWriter( alg, 'Muon','Modules', [2] )
         if 'Ecal' in listOfCondToWrite:
             self.addOnlineXmlWriter( alg, 'Ecal','alignment', [] )
             
