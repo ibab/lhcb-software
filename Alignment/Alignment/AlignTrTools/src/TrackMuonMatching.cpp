@@ -148,6 +148,7 @@ StatusCode TrackMuonMatching::execute() {
       for ( Tracks::const_iterator t = tTracks->begin(), tEnd = tTracks->end(); t != tEnd; ++t ) {
         if(!(*t)->hasT()) continue;
         if( (*t)->chi2PerDoF() > 5.) continue;
+        if( (*t)->ghostProbability() > 0.7) continue;
         
         double chi2 = -9999.0;
         /// Get the T state closest to this z
