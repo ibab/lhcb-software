@@ -51,7 +51,7 @@
  * from Configurables import LoKi__Hybrid__TupleTool as LoKiTool
  * lokitool = LoKiTool ( "MatchedLoki" )
  * lokitool.Variables = { "P" : "P" }
- * tm.addTool ( tm )
+ * tm.addTool ( lokitool )
  * tm.ToolList += ["LoKi::Hybrid::TupleTool/MatchedLoki"]
  *
  * @endcode
