@@ -5,6 +5,9 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-06-15 - Sean Benson
+ - Save muon LHCbIDs even for particles all particles where they are present.
+
 !========================= HltRawData v5r5p1 2015-06-10 =======================
 
 ! 2015-06-09 - Roel Aaij

@@ -1057,7 +1057,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
         if ( msgLevel(MSG::DEBUG) ) debug() << "requesting track store" << endmsg;
         // if muon add muon stub too
         const LHCb::MuonPID* muid = pp->muonPID();
-        if ( muid && object.particleID().abspid()==13  &&  muid->IsMuon() ){
+        if ( muid ){
           const LHCb::Track*  muStub=muid->muonTrack();
           if (!muStub ){
             if( !m_HLTmuonTracks ) {
