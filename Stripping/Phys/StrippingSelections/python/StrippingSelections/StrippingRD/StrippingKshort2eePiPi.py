@@ -31,7 +31,7 @@ default_config =  {
                         'MaxKsMass'     : 800.          , #MeV, comb mass high limit
                         'KsVtxChi2'     : 50            , 
                     },
-    'STREAMS'     : ['Dimuon']
+    'STREAMS'     : ['Leptonic']
     }
 
 

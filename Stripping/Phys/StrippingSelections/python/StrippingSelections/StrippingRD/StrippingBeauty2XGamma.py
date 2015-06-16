@@ -94,14 +94,14 @@ default_config = {
           # TRACK COMBINATION CUTS
           'B2XGResMinPT'     : 150., #was 0
           'B2XGResMinMass'   : 0., #was 520
-          'B2XGResMaxMass'   : 7900., # was 4940 (3500+4*(mK-mpi)). Now is maxMLambda+(mp-mpi)+(mK-mpi) to allow for Kp decays is StdLooseNoPIDPions also covers proton tracks
+          'B2XGResMaxMass'   : 7900., # was 4940 (3500+4*(mK-mpi)). Now is maxMLambda+(mp-mpi)+(mK-mpi) to allow for Kp decays if StdLooseNoPIDPions also covers proton tracks
           'B2XGResVtxChi2DOF': 10., # was 25
           'B2XGResSumPtMin'  : 1500.,
           'B2XGResDocaMax'   : 100.5, # NOT USED
           'B2XGResBPVVDCHI2Min'  : 0., # FD avoid if possible. was 64
           'B2XGResIPCHI2Min' : 0.0,
-          'B2XGPhiOmegaMinMass'   : 500., #
-          'B2XGPhiOmegaMaxMass'   : 2020., #
+          'B2XGPhiOmegaMinMass'   : 700., #
+          'B2XGPhiOmegaMaxMass'   : 1300., # 2020
           
           
           # B HADRON CUTS

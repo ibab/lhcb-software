@@ -52,7 +52,10 @@ default_config = {
           ,'Bd2KstGammaPreScale'               : 1.0
           ,'Bd2KstGammaPostScale'              : 1.0
           },
-    'STREAMS' : ['Leptonic'],
+    'STREAMS' :  {
+          'Radiative' : ['StrippingBeauty2XGammaExclusiveBs2PhiGammaLine'],
+          'Calibration' : ['StrippingBeauty2XGammaExclusiveBd2KstGammaLine'],
+          },
     }
 
 class Beauty2XGammaExclusiveConf(LineBuilder):

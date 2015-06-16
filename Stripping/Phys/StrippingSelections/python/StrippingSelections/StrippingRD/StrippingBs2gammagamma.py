@@ -50,7 +50,7 @@ default_config = {
                      ,'BsHighMassNone'      : 6000    # MeV/cc
                      ,'BsHighMassDouble'    : 5800    # MeV/cc
                     },
-    'STREAMS'     : ['Radiative']
+    'STREAMS'     : ['Leptonic']
     }
 
 

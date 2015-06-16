@@ -43,7 +43,7 @@ default_config = {
                'pTminMuControl': 2.5,
                'IPchi2MuControl': 100.
                },
-    'STREAMS': [ 'Semileptonic' ]
+    'STREAMS': [ 'Leptonic' ]
     }
 
 
