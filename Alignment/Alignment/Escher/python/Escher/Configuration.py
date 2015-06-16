@@ -417,7 +417,12 @@ class Escher(LHCbConfigurableUser):
                  + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU','bV','bX'] for r in range(1,4) for m in range(1,4)]
                  + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['bV','bX']           for r in range(1,4) for m in range(4,6)]
                  + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU','bV','bX'] for r in [1,3]      for m in range(6,7)]
-                 + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU']           for r in [1,3]      for m in range(4,6)]
+                 + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU']           for r in [1,3]      for m in range(4,6)],
+            'Muon' : []
+                    + ['Conditions/Alignment/Muon/MuonSystem']
+                    + [ 'Conditions/Alignment/Muon/M%sStation' % i for i in range(1,6) ]
+                    + [ 'Conditions/Alignment/Muon/M%sASide' % i for i in range(1,6) ]
+                    + [ 'Conditions/Alignment/Muon/M%sCSide' % i for i in range(1,6) ]
         }
 
         ## This is a bit dirty, since we're supposed to control TAlignment. We
