@@ -15,14 +15,6 @@ from array import array
 from copy import *
 import os
 
-def ScalarProd(ncomp, v, c) :
-
-	res = []
-	for i in v :
-		res.append(i*c)
-
-	return res
-
 vardef = { "TOTAL": "xsec", "INEL" : "inel_xsec", "EL" : "el_xsec",
 		"MULTI_NCH" : "multiNCh", "MULTI_NCH_NOGAMMA" : "multiNCh_nogamma",
 		"PERC_NCH" : "percNCh", "PERC_MINUS" : "percMinus", "PERC_PLUS" : "percPlus",
@@ -62,10 +54,11 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 		pdgRatios_K  = [ 1.61, 1.32, 1.23, 1.10, 1.07 ]
 
 		if(xvar=="energy") : 
-			ratiotxt = open(finalPlot+"_in"+str(Dx)+".txt","w")
+			ratiotxt = open("%s_in%imm.txt" % (finalPlot,Dx),"w")
 		else :
-			ratiotxt = open(finalPlot+"_for"+str(E0)+"GeV.txt","w")
-	
+			ratiotxt = open("%s_for%iGeV.txt" % (fialPlot,E0),"w")
+		ratiotxt.write("\\begin{tabular}\n")
+		
 		
 		grs = []
 		
@@ -78,7 +71,9 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 				ratiotxt.write( "\\multicolumn{2}{c}{ " + m + "} \\\\ \\hline \n" )
 
 				varexp = "h_"+str(pg)+m
-				select = "model == " + str(ord(m[0])) + " && material == " + str(ord(materials[0][0])) + " && pGun == " + str(dict._all_pguns[pguns[pg]].GetPDG())
+				select_template = "model == {mod} && material == {mat} && pGun == {part}"
+				select = select_template.format(mod = ord(m[0]), mat = ord(materials[0][0]), part = dict._all_pguns[pguns[pg]]._pdgID )
+				
 				if(xvar=="energy") : 
 						select += " && thickness == " + str(Dx)
 				elif(xvar=="thickness") :
@@ -115,7 +110,8 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 						erry1.append(terry1[i])
 									
 				varexp = "h_"+str(pg+1)+m
-				select = "model == " + str(ord(m[0])) + " && material == " + str(ord(materials[0][0])) + " && pGun == " + str(dict._all_pguns[pguns[pg+1]].GetPDG())
+				select = select_template.format(mod = ord(m[0]), mat = ord(materials[0][0]), part = dict._all_pguns[pguns[pg+1]]._pdgID )
+				
 				if(xvar=="energy") : 
 						select += " && thickness == " + str(Dx)
 				elif(xvar=="thickness") :
@@ -201,6 +197,8 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 				nm+=1
 				grs.append(gr)	
 		
+		ratiotxt.write("\\hline\n\\end{tabular}")
+
 		c = TCanvas()
 		leg_pad = TPad("leg_pad","",0.73,0,1.,1.)
 		gr_pad = TPad("gr_pad","",0.03,0,0.8,1.)
@@ -237,7 +235,7 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 		c.cd()
 		gr_pad.Draw()
 		leg_pad.Draw()
-		c.Print(outputPath + "/" + finalPlot + mystr.replace(" ","_") +".pdf")	
+		c.Print(os.path.join(outputPath,finalPlot + mystr.replace(" ","_") + ".pdf"))	
 		c.Clear()
 	
 	else :
@@ -283,39 +281,39 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 		COMPAS_p_x           = [ 1.52, 5., 9., 20., 30., 60. ]
 		COMPAS_p_sigmaErr    = [ 10., 4., 4., 5., 5., 7. ]
 		COMPAS_p_sigma       = [ 445., 445., 465., 446., 445., 455. ]
-		COMPAS_p_y           = ScalarProd(6,COMPAS_p_sigma,PintOverSigmaFactor)
-		COMPAS_p_yErr        = ScalarProd(6,COMPAS_p_sigmaErr,PintOverSigmaFactor)
+		COMPAS_p_y           = [ x*PintOverSigmaFactor for x in COMPAS_p_sigma ]
+		COMPAS_p_yErr        = [ x*PintOverSigmaFactor for x in COMPAS_p_sigmaErr ]
 		COMPAS_pbar_x        = [ 1.45,6.65,13.3,25.,30.,60. ]
 		COMPAS_pbar_sigma    = [ 617., 558., 536., 480., 457., 439. ]
 		COMPAS_pbar_sigmaErr = [ 17., 10., 10., 9., 11., 13. ]
-		COMPAS_pbar_y        = ScalarProd(6,COMPAS_pbar_sigma,PintOverSigmaFactor)
-		COMPAS_pbar_yErr     = ScalarProd(6,COMPAS_pbar_sigmaErr,PintOverSigmaFactor)
+		COMPAS_pbar_y        = [ x*PintOverSigmaFactor for x in COMPAS_pbar_sigma ]
+		COMPAS_pbar_yErr     = [ x*PintOverSigmaFactor for x in COMPAS_pbar_sigmaErr ]
 
 		#COMPAS Inelastic Xsec data in Be
 
 		COMPAS_inBe_p_x           = [ 3., 5., 9., 30.,50.,60. ]
 		COMPAS_inBe_p_sigmaErr    = [ 4., 3., 3., 3., 3., 2. ]
 		COMPAS_inBe_p_sigma       = [ 236., 207., 210., 210., 210., 216. ]
-		COMPAS_inBe_p_y           = ScalarProd(6,COMPAS_inBe_p_sigma,PintOverSigmaFactor)
-		COMPAS_inBe_p_yErr        = ScalarProd(6,COMPAS_inBe_p_sigmaErr,PintOverSigmaFactor)
+		COMPAS_inBe_p_y           = [ x*PintOverSigmaFactor for x in COMPAS_inBe_p_sigma ]
+		COMPAS_inBe_p_yErr        = [ x*PintOverSigmaFactor for x in COMPAS_inBe_p_sigmaErr ]
 		COMPAS_inBe_pbar_x        = [ 6.65,13.3,20.,30.,40. ]
 		COMPAS_inBe_pbar_sigma    = [ 296., 275., 240., 235., 226., 190. ]
 		COMPAS_inBe_pbar_sigmaErr = [ 6., 4., 10., 6., 7. ]
-		COMPAS_inBe_pbar_y        = ScalarProd(5,COMPAS_inBe_pbar_sigma,PintOverSigmaFactor)
-		COMPAS_inBe_pbar_yErr     = ScalarProd(5,COMPAS_inBe_pbar_sigmaErr,PintOverSigmaFactor)
+		COMPAS_inBe_pbar_y        = [ x*PintOverSigmaFactor for x in COMPAS_inBe_pbar_sigma ]
+		COMPAS_inBe_pbar_yErr     = [ x*PintOverSigmaFactor for x in COMPAS_inBe_pbar_sigmaErr ]
 
 		#COMPAS Total Xsec data in Al
 
 		COMPASTot_p_x               = [ 1.52, 1.8, 19.3, 20. ]  
 		COMPASTot_p_sigmaErr        = [ 22., 27., 10., 10. ] 
 		COMPASTot_p_sigma           = [ 687., 694., 687., 687. ] 
-		COMPASTot_p_y               = ScalarProd(4,COMPASTot_p_sigma,PintOverSigmaFactor) 
-		COMPASTot_p_yErr            = ScalarProd(4,COMPASTot_p_sigmaErr,PintOverSigmaFactor) 
+		COMPASTot_p_y               = [ x*PintOverSigmaFactor for x in COMPASTot_p_sigma ] 
+		COMPASTot_p_yErr            = [ x*PintOverSigmaFactor for x in COMPASTot_p_sigmaErr ] 
 		COMPASTot_pbar_x            = [ 1.45,1.8 ] 
 		COMPASTot_pbar_sigma        = [ 1034., 1066. ] 
 		COMPASTot_pbar_sigmaErr     = [ 40., 40. ] 
-		COMPASTot_pbar_y            = ScalarProd(2,COMPASTot_pbar_sigma,PintOverSigmaFactor) 
-		COMPASTot_pbar_yErr         = ScalarProd(2,COMPASTot_pbar_sigmaErr,PintOverSigmaFactor) 
+		COMPASTot_pbar_y            = [ x*PintOverSigmaFactor for x in COMPASTot_pbar_sigma ] 
+		COMPASTot_pbar_yErr         = [ x*PintOverSigmaFactor for x in COMPASTot_pbar_sigmaErr ]
 
 		COMPAS_p_gr = TGraphErrors(6,array('d', COMPAS_p_x ), array('d', COMPAS_p_y ), array('d', [0.]*6 ), array('d', COMPAS_p_yErr))
 		COMPAS_pbar_gr = TGraphErrors(6, array('d', COMPAS_pbar_x), array('d', COMPAS_pbar_y), array ('d', [0.]*6 ), array('d', COMPAS_pbar_yErr) )

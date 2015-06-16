@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-06-16 - Luca Pescatore
+ - Modified RadLenght and Target tools to make better
+   use of python and cmt structure. In particular template options
+   for Target are converted to python nmodules.
+
 ! 2015-06-02 - Luca Pescatore
  - Modified structure of RadLenght and Target tools to allow
    installation of python modules via cmt and introduce

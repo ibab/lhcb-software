@@ -119,16 +119,16 @@ class Plotter :
 		self._energies = energies
 	
 		gROOT.ProcessLine(
-			"struct tvars_t {\
-			int pGun, mat, model;\
-			double energy, thickness;\
-			double multi, multi_err;\
-			double xsec, xsec_err;\
-			double inel_xsec, inel_xsec_err;\
-			double el_xsec, el_xsec_err;\
-			double percPlus, percMinus, percNCh;\
-			double multiNCh_nogamma, multi_gamma, multiNCh;\
-			} ")
+			'''struct tvars_t {
+			int pGun, mat, model;
+			double energy, thickness;
+			double multi, multi_err;
+			double xsec, xsec_err;
+			double inel_xsec, inel_xsec_err;
+			double el_xsec, el_xsec_err;
+			double percPlus, percMinus, percNCh;
+			double multiNCh_nogamma, multi_gamma, multiNCh;
+			} ''')
 
 		tvars = tvars_t()
 
@@ -181,8 +181,8 @@ class Plotter :
 				dir1 = dir0.mkdir("E_"+str(g)+"GeV");
 				dir1.cd();
 
-				xsec_txtout.write( "\\multicolumn{5}{c}{Energy = " + str(g) + "GeV } \\\\ \n" )
-				multi_txtout.write( "\\multicolumn{3}{c}{Energy = " + str(g) + "GeV } \\\\ \n" ) 
+				xsec_txtout.write( "\\multicolumn{5}{c}{Energy = %i GeV }} \\\\ \n" % g )
+				multi_txtout.write( "\\multicolumn{3}{c}{Energy = %i GeV }} \\\\ \n" % g ) 
 	
 				for j in self._thicks:
 
@@ -204,14 +204,16 @@ class Plotter :
 							Dx = j
 							SigmaOverPint = 1000*self._all_materials[i].GetSigmaDxOverPintFactor() / Dx
 		
-							xsec_txtout.write( self._all_pguns[k].GetLatex("$") + " in "
-								+ str(j) + "mm " + matname + " & $" + str(res[1] * 1e3) + " \\pm "
-								+ str(res[2] * 1e3) + "$ & $" + str(res[1] * SigmaOverPint * 1e3) + " \\pm "
-								+ str(res[2] * SigmaOverPint * 1e3) + "$ & $" + str(res[3] * 1e3) + " \\pm "
-								+ str(res[4] * 1e3) + "$ & $" + str(res[3] * SigmaOverPint * 1e3)+ " \\pm "
-								+ str(res[4] * SigmaOverPint * 1e3) + "$ \\\\ \n" )
+							head = '{pgun} in {thick:.0f} mm {material}'.format(
+									pgun = self._all_pguns[k].GetLatex("$"),
+									thick = j,
+									material = matname )
 
-							multi_txtout.write( self._all_pguns[k].GetLatex("$") + " in " + str(j) + "mm " + matname + " & " + str(res[5]) + " & " + str(res[6]) + " \\\\ \n" )
+							xsec_txtout.write( '{0} & $ {1:.2} \pm {2:.2}$ & $ {3:.2} \pm {4:.2}$ & $ {5:.2} \pm {6:.2}$ & $ {7:.2} \pm {8:.2}$ \\\\ \n'
+									.format(head, res[1] * 1e3, res[2] * 1e3, res[1] * SigmaOverPint * 1e3, res[2] * SigmaOverPint * 1e3,
+										res[3] * 1e3, res[4] * 1e3, res[3] * SigmaOverPint * 1e3, res[4] * SigmaOverPint * 1e3) )
+
+							multi_txtout.write( '{0} & {1:.1} & {2:.1}  \\\\ \n'.format(head,res[5],res[6]) )
 	
 							tvars.pGun = self._all_pguns[k].GetPDG()
 							tvars.energy = g
@@ -258,15 +260,15 @@ def doMultiHistos(nt, curdir, mod, mat, Dx, pgun, eng) :
 	avg_ChMinusPerc = 0 
 
 	gROOT.ProcessLine(
-		"struct vars_t {\
-		Double_t  endx,endy,endz,prox,proy,proz;\
-		int  cptype,cpstype;\
-		int  trid,trpdg,ndau;\
-		int  dirparent[100],isinside[100],parent[100];\
-		int eptype[100],epstype[100],daupdg[100];\
-		Double_t daukine[100];\
-		Double_t daucharge[100];\
-	}")
+		'''struct vars_t {
+		Double_t  endx,endy,endz,prox,proy,proz;
+		int  cptype,cpstype;
+		int  trid,trpdg,ndau;
+		int  dirparent[100],isinside[100],parent[100];
+		int eptype[100],epstype[100],daupdg[100];
+		Double_t daukine[100];
+		Double_t daucharge[100];
+	}''')
 
 	vars = vars_t()
 
@@ -349,9 +351,10 @@ def doMultiHistos(nt, curdir, mod, mat, Dx, pgun, eng) :
 	in_chplus_perc = TH1D("in_chplus_perc","Percent of positively charged inelastic daughters", 50, 0, 1)
 	in_chminus_perc = TH1D("in_chminus_perc","Multi of negatively charged inelastic daughters", 50, 0, 1)
 
+	select_template = "CreatorProcessType == -2 && PhysicsList == {mod} && TargetMaterial == {mat} && ProjectilePdgID == {pgun} && TargetThickness == {Dx} && ProjectileEnergy == {eng}"
+	select = select_template.format(pgun=pgun,mod=mod,mat=mat,Dx=Dx,eng=eng)
+	print select
 
-	select = "CreatorProcessType == -2 && PhysicsList == " + str(mod) + " && TargetMaterial == " + str(mat) + " && ProjectilePdgID == " + str(pgun)
-	select += " && TargetThickness == " + str(Dx) + " && ProjectileEnergy == " + str(eng) 
 	varexp = "elist"
 	nt.SetEntryList(0)
 	nt.Draw(">>"+varexp,select,"entrylist")
@@ -495,9 +498,9 @@ def doMultiHistos(nt, curdir, mod, mat, Dx, pgun, eng) :
 	multi = in_dau_mult.GetMean()
 	multi_err = in_dau_mult.GetMeanError()
 	print "Tot projectiles = ", totP
-	print "Pint inel = ", '{0:4.5f}'.format(Xsecinel),"+/-", '{0:4.5f}'.format(XsecinelErr)
-	print "Pint el = ", '{0:4.5f}'.format(Xsecel),"+/-",'{0:4.5f}'.format(XsecelErr)
-	print "< Multi > = ", '{0:3.1f}'.format(multi),"+/-",'{0:3.1f}'.format(multi_err)
+	print "Pint inel = ", '{:4.5f} +/- {:4.5f}'.format(Xsecinel,XsecinelErr)
+	print "Pint el = ", '{:4.5f} +/- {:4.5f}'.format(Xsecel,XsecelErr)
+	print "< Multi > = ", '{:3.1f} +/- {:3.1f}'.format(multi,multi_err)
 
 	if countinel != 0 :
 		result = [totP, Xsecinel, XsecinelErr, Xsecel, XsecelErr, multi, multi_err,

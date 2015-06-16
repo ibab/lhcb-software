@@ -30,13 +30,12 @@ macro ROOT_linkopts "-L$(ROOTSYS)/lib $(shell root-config --glibs)"
 
 apply_pattern install_scripts
 apply_pattern install_python_modules
-#apply_pattern install_scripts_Targets
-#apply_pattern install_scripts_RadLenght
 
 #==========================================================================
-# New variables
+# New variables and aliases
 #===========================================================================
 
 set	TARGETOPTS $(SIMCHECKSROOT)/options/Target
 
+alias 'rad_length_scan' 'rad_length_scan.py'
 

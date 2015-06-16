@@ -4,12 +4,10 @@
 import sys
 import os
 
-#sys.path.append(os.environ["SIMCHECKSROOT"]+"/python")
 from TargetCreateEvents import RunTargetJobs
 from optparse import OptionParser
 
 parser = OptionParser()
-parser.add_option("--parallel", default=False, dest="parallel", action='store_true',help="If you want to parallelise the particle guns jobs")
 parser.add_option("--physList", default=None, dest="physList", help="Specific single Physics List to use by default does both FTFP_BERT and QGSP_BERT" )
 (opts, args) = parser.parse_args()
 
@@ -24,7 +22,7 @@ materials=['Al'] # 'Al' 'Be' 'Si'
 thicks=[1]  #in mm 1, 5, 10 (only)
 pguns=["p","pbar","Kplus","Kminus","Piplus","Piminus"] # Available: 'Piminus' 'Piplus' 'Kminus' 'Kplus' 'p' 'pbar'
 
-RunTargetJobs(path, models, pguns, energies, materials, thicks, parallel=opts.parallel)
+RunTargetJobs(path, models, pguns, energies, materials, thicks)
 
 from ROOT import *
 from TargetPlots import Plot

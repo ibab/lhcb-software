@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #################################################################################
 ## This option file helps you save time by running in sequence                 ##
 ## RanLengthAna.py and RadLengthAna_VELO.py and merging the outputs.           ##
@@ -10,32 +11,25 @@
 
 import sys
 import os
-import shutil
-import fileinput
-import string
 
-base = os.environ["SIMCHECKSROOT"] + "/scripts/RadLength/"
-sys.path.append(os.environ["SIMCHECKSROOT"]+"/python")
+base = os.environ["SIMCHECKSROOT"] + "/options/RadLength/"
 from RadLengthMakePlots import makePlots
 
 useganga = False
 
-
 pwd = os.environ['PWD']
 outputpath = pwd
+out = 'Rad_merged.root'
 if(len(sys.argv) == 2):
     out = sys.argv[1]
-else :
-    out = 'Rad_merged.root'
 
 os.system("mkdir -p plots")
-run_command = "gaudirun.py "+base+"MaterialEvalGun.py "+base+"Gauss-Job.py "+base+"RadLengthAna.py"
-os.system(run_command)
-run_command = "gaudirun.py "+base+"MaterialEvalGun.py "+base+"Gauss-Job.py "+base+"RadLengthAna_VELO.py"    
-os.system(run_command)
+cmd = "gaudirun.py {base}/MaterialEvalGun.py {base}/Gauss-Job.py {base}".format(base=base)
+os.system(cmd+"RadLengthAna.py")
+os.system(cmd+"RadLengthAna_VELO.py")
     
 output=outputpath+'/'+out
-merge_command = ' hadd -f ' + output + ' ' + pwd + '/Rad.root ' + pwd + '/Rad_VELO.root '
+merge_command = 'hadd -f {output} {pwd}/Rad.root {pwd}/Rad_VELO.root'.format(output=output, pwd=pwd)
 os.system(merge_command)
 
 makePlots(out,"plots/","rad")

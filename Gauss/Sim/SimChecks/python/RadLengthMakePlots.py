@@ -1,6 +1,8 @@
 from ROOT import *
 import os 
 
+#detectros = ["Velo", "Rich1", "Magnet", "OT1", "OT2", "OT3", "Rich2", "Detached muon", "Ecal", "Hcal", "Muon"]
+#name = dicts( zip(range(1,len(detectors)),detectors) )
 name = { 1 : "Velo", 2: "Rich1", 3 : "Magnet", 4 : "OT1", 5 : "OT2", 6 : "OT3", 7 : "Rich2", 8 : "Detached muon", 9 : "Ecal", 10 : "Hcal", 11 : "Muon"}
 
 def makePlots(fileName = "Rad_merged.root", path = "plots/", type = "rad") :
@@ -48,7 +50,7 @@ def makePlots(fileName = "Rad_merged.root", path = "plots/", type = "rad") :
 		h1.GetYaxis().SetTitle("N_{evt}")
 		h1.SetTitle("Cumulative " + ntype + " length (" + name[i] +")")
 		namefile = path + namehisto + ".pdf"
-		#c.Print(namefile)
+		
 		cumul.SetPoint(p,i,h1.GetMean())
 		cumul.SetPointError(p,0,h1.GetMeanError())
 		txtfile.write( '{0:13}'.format(name[i]) +  "\t& " + '{:5.4f} \\pm {:5.4f}'.format(h1.GetMean(),h1.GetMeanError()) + " \t \\\\ \n" )
@@ -84,9 +86,6 @@ def makePlots(fileName = "Rad_merged.root", path = "plots/", type = "rad") :
 		hh.GetXaxis().SetTitle("#phi")
 		hh.GetYaxis().SetTitle("#eta")
 		hh.SetTitle("Cumulative " + ntype + " length (" + name[i] +")")
-		#if(type=="inter") :
-			#c.SetLogz()
-			#hh.SetMinimum(20)
 		hh.Draw("colz")
 		namefile = path + namehisto + ".pdf"
 		c.Print(namefile)
