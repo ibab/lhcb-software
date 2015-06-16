@@ -3,6 +3,24 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2014-06-16 - Marco Clemencic
+ - LHCBPS-1421: Modified RunStampCheck to instantiate EventClockSvc.
+   To ensure that it does get a "current event time", RunStampCheck triggers
+   the instantiation of EventClockSvc, so that it is not needed to explicitly
+   do it in the configuration.
+
+! 2014-06-16 - Marco Clemencic
+ - LHCBPS-1421: Updated CondDB configurable to enable/disable RunStampCheck
+   The RunStampCheck is enabled by default for "Offline" (i.e. not Online
+   nor Simulation).
+
+! 2014-06-11 - Marco Clemencic
+ - LHCBPS-1421: added a first implementation of RunStampCheck
+   The optional service RunStampCheck can be instantiated (via
+   ApplicationManager::ExtSvc) to check if a special "run stamp"
+   condition exist for the current run.
+
 ! 2015-06-05 - Liang Sun
  - Set LoadCALIBDB default value to HLT1 for Simulation option
 
@@ -11,7 +29,7 @@
  - Change in detcond.configuration_module to avoid checking layered ONLINE partition
 
 ! 2015-06-04 - Liang Sun
- - Finalized support for CALIBOFF by loading the partition as an additional layer only above every ONLINE snapshot no earlier than 2015 
+ - Finalized support for CALIBOFF by loading the partition as an additional layer only above every ONLINE snapshot no earlier than 2015
  - Bug fix for mistakenly loading CALIBOFF for upgrade CondDB
 
 !========================= DetCond v12r41 2015-04-20 =========================

@@ -36,6 +36,8 @@ class CondDB(ConfigurableUser):
                   "Online"      : False,
                   "IgnoreHeartBeat": False,
                   "HeartBeatCondition" : "/Conditions/Online/LHCb/Tick",
+                  "EnableRunStampCheck": False,
+                  "RunStampCondition": "",
                   "LatestGlobalTagByDataType" : "",
                   "LatestGlobalTagByDataTypes" : [],
                   "LatestLocalTagsByDataType": [],
@@ -48,7 +50,7 @@ class CondDB(ConfigurableUser):
                   'RunChangeHandlerConditions' : { 'online_%d.xml' :  [ "Conditions/Online/LHCb/Magnet/Set"
                                                                       , "Conditions/Online/Velo/MotionSystem"
                                                                       , "Conditions/Online/LHCb/Lumi/LumiSettings"
-                                                                      , "Conditions/Online/LHCb/LHCFillingScheme"    
+                                                                      , "Conditions/Online/LHCb/LHCFillingScheme"
                                                                       , "Conditions/Online/LHCb/RunParameters"
                                                                       , "Conditions/Online/Rich1/R1HltGasParameters"
                                                                       , "Conditions/Online/Rich2/R2HltGasParameters" ] },
@@ -69,6 +71,8 @@ class CondDB(ConfigurableUser):
                        'Online' : """ Flag to activate configuration options specific for the Online environment """,
                        'IgnoreHeartBeat' : """ Do not set the HeartBeatCondition for the Online partition """,
                        'HeartBeatCondition' : """ Location of the heart-beat condition in the database """,
+                       'EnableRunStampCheck': """ Enable the check for the special RunStamp condition """,
+                       'RunStampCondition': """ Path (in the CondDB) to the special RunsTamp condition. """,
                        'LatestGlobalTagByDataType' : """ Use latest CondDB global tag marked with the data type""",
                        'LatestGlobalTagByDataTypes' : """ Use latest CondDB global tag marked with the data type, will override LatestGlobalTagByDataType if set""",
                        'LatestLocalTagsByDataType' : """ Use all latest CondDB local tags marked with the data type """,
@@ -476,7 +480,7 @@ class CondDB(ConfigurableUser):
                     config = allConfigurables[eval(r.split(':')[0]).split("/")[1]]
                     if isinstance(config, CondDBAccessSvc):
                         self.propagateProperty("QueryGranularity", config)
-                    # Pass along the configuration for the layered DBs    
+                    # Pass along the configuration for the layered DBs
                     elif isinstance(config, CondDBLayeringSvc):
                         for ly in config.Layers:
                             if isinstance(ly, CondDBAccessSvc):
@@ -501,7 +505,7 @@ class CondDB(ConfigurableUser):
                     config = allConfigurables[eval(latest.split(':')[0]).split("/")[1]]
                     if isinstance(config, CondDBAccessSvc):
                         self.propagateProperty("HeartBeatCondition", config)
-                    # Pass along the configuration for the layered DBs    
+                    # Pass along the configuration for the layered DBs
                     elif isinstance(config, CondDBLayeringSvc):
                         for ly in config.Layers:
                             #Only apply HeartBeatCondition for ONLINE
@@ -527,6 +531,14 @@ class CondDB(ConfigurableUser):
                                        })
         CondDBCnvSvc( CondDBReader = disp )
 
+        if not (self.getProp("Online") or self.getProp("Simulation")):
+            self._properties["EnableRunStampCheck"].setDefault(True)
+        if self.getProp("EnableRunStampCheck"):
+            from Configurables import RunStampCheck
+            rsc = RunStampCheck()
+            self.propagateProperty("RunStampCondition", rsc)
+            ApplicationMgr().ExtSvc.append(rsc)
+
         # Load the CALIBOFF layer above everything if it exists
 #        if len([x for x in parttypes if x[0] == 'CALIBOFF']):
 #            self._addLayer(getAnyDBReader('CALIBOFF'))
@@ -549,7 +561,7 @@ class CondDB(ConfigurableUser):
                             config = allConfigurables[eval(r.split(':')[0]).split("/")[1]]
                             if isinstance(config, CondDBLayeringSvc):
                                 config.Layers = pcolayers + config.Layers
-                elif type(partition[p]) is not CondDBTimeSwitchSvc: 
+                elif type(partition[p]) is not CondDBTimeSwitchSvc:
                     for t in taglist:
                         self._addLayer(partition[p].clone("%s_%d" % (p, i),
                             DefaultTAG = t))
@@ -680,7 +692,7 @@ def getAnyDBReader(layer = 'CALIBOFF', svc = CondDBAccessSvc, CacheHighLevel = 2
     if svc is not CondDBAccessSvc: return cfg
     try: cfg.ConnectionString
     except AttributeError: # Set up connection for the 1st time
-        cfg = CondDBAccessSvc(layer, ConnectionString = 
+        cfg = CondDBAccessSvc(layer, ConnectionString =
                 "sqlite_file:$SQLITEDBPATH/%s.db/%s" % (layer, layer), CacheHighLevel = CacheHighLevel)
     return cfg
 
@@ -704,9 +716,9 @@ def getOnlineDBReader(ym_tuple, granularity = 'YEARLY', connStrFunc = None):
     layer = 'CALIBOFF'
     if exists(join(dbpath, layer + '.db')):
         # Put the discovered layer on top
-        cfg = getConfigurable(layer, CondDBAccessSvc) 
+        cfg = getConfigurable(layer, CondDBAccessSvc)
         try: cfg.ConnectionString
-        except AttributeError: # Set up connection for the 1st time 
+        except AttributeError: # Set up connection for the 1st time
             cfg = CondDBAccessSvc("CALIBOFF", ConnectionString =
                     cnstr.replace('ONLINE-%s.db/ONLINE' %ymstr, "%s.db/%s" % (layer, layer)), CacheHighLevel = 200)
         dblayers.insert(0, cfg)
