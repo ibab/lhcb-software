@@ -301,9 +301,11 @@ namespace LoKi
     /// the name of linear track extrapolator   tool 
     std::string    m_veloExtrapolatorName  ; // linear extrapolator name 
     /// the proparagation tolerance 
-    double         m_tolerance  ;
+    double         m_tolerance      ;
     /// check tracks by LHcbIDs ? 
-    bool           m_checkIDs   ;
+    bool           m_checkIDs       ;
+    /// check the ancestors for the given track 
+    bool           m_checkAncestors ;
     /// perform the full refit of the vertiex after track removal? 
     bool           m_reFit      ;
     /// maximal number of iterations
@@ -356,6 +358,7 @@ LoKi::PVReFitter::PVReFitter
   , m_veloExtrapolatorName  ( "TrackLinearExtrapolator:PUBLIC" )
   , m_tolerance             ( 2 * Gaudi::Units::um )
   , m_checkIDs              ( true  ) 
+  , m_checkAncestors        ( true  ) 
   , m_reFit                 ( false ) 
     //
   , m_maxIter               ( 16    ) 
@@ -403,6 +406,11 @@ LoKi::PVReFitter::PVReFitter
     ( "CheckTracksByLHCbIDs"   , 
       m_checkIDs               ,
       "Check the tracks by LHCbIDs " ) ;
+  //
+  declareProperty 
+    ( "CheckAncestors"                , 
+      m_checkAncestors                ,
+      "Check ancestors for the track" ) ;
   //
   declareProperty 
     ( "FullReFit"              , 
@@ -500,9 +508,10 @@ namespace  // local anonymous namespace to keep local functions
   // ==========================================================================  
   std::pair<const LHCb::Track*,double> 
   trackInPV 
-  ( const LHCb::Track*     track  , 
-    const LHCb::RecVertex& pv     , 
-    const bool             useIDs ) 
+  ( const LHCb::Track*     track        , 
+    const LHCb::RecVertex& pv           , 
+    const bool             useIDs       , 
+    const bool             useAncestors ) 
   {
     //
     if ( 0 == track ) { return std::make_pair ( track, 0 ) ; }
@@ -514,57 +523,79 @@ namespace  // local anonymous namespace to keep local functions
         std::make_pair ( track    , c.second ) ;
     }
     //
-    if ( !useIDs )  { return std::make_pair ( s_track , 0 ) ; }
-    //
-    typedef SmartRefVector<LHCb::Track> TRACKS  ;
-    typedef std::vector<float>          WEIGHTS ;
-    //
-    const TRACKS&  tracks  = pv.tracks  () ;
-    const WEIGHTS  weights = pv.weights () ;
-    //
-    const unsigned int n1 = track->nLHCbIDs() ;
-    //
-    for ( unsigned int i = 0 ; i < tracks.size() ; ++i ) 
+    if ( useIDs )  
     {
-      // check only valid tracks 
-      const LHCb::Track* tr = tracks  [i] ;
-      if ( 0 == tr )           { continue ; } // CONTINUE 
-      // check only non-zero weights 
-      const double       w  = weights [i] ;
-      if ( s_equal ( w , 0 ) ) { continue ; } // CONTINUE 
       //
-      const unsigned int n2     = tr->nLHCbIDs() ;
+      typedef SmartRefVector<LHCb::Track> TRACKS  ;
+      typedef std::vector<float>          WEIGHTS ;
       //
-      const unsigned int common = tr->nCommonLhcbIDs ( *track  ) ;
+      const TRACKS&  tracks  = pv.tracks  () ;
+      const WEIGHTS  weights = pv.weights () ;
       //
-      if ( 1.33 * common >= n1 ) { return std::make_pair( tr , w ) ; }
-      if ( 1.33 * common >= n2 ) { return std::make_pair( tr , w ) ; }
+      const unsigned int n1 = track->nLHCbIDs() ;
       //
+      for ( unsigned int i = 0 ; i < tracks.size() ; ++i ) 
+      {
+        // check only valid tracks 
+        const LHCb::Track* tr = tracks  [i] ;
+        if ( 0 == tr )           { continue ; } // CONTINUE 
+        // check only non-zero weights 
+        const double       w  = weights [i] ;
+        if ( s_equal ( w , 0 ) ) { continue ; } // CONTINUE 
+        //
+        const unsigned int n2     = tr->nLHCbIDs() ;
+        //
+        const unsigned int common = tr->nCommonLhcbIDs ( *track  ) ;
+        //
+        if ( 1.33 * common >= n1 ) { return std::make_pair( tr , w ) ; }
+        if ( 1.33 * common >= n2 ) { return std::make_pair( tr , w ) ; }
+        //
+      }
     }
+    //
+    if ( useAncestors ) 
+    { 
+      typedef SmartRefVector<LHCb::Track>  ANCESTORS ;
+      const ANCESTORS& ancestors = track->ancestors() ;
+      //
+      for ( ANCESTORS::const_iterator ia = ancestors.begin() ; 
+            ancestors.end() != ia ; ++ia ) 
+      {
+        // check the track (recursion here!) 
+        const std::pair<const LHCb::Track*,double> p =             // RECUSION 
+          trackInPV ( *ia , pv , useIDs , useAncestors ) ;
+        //
+        if ( p.first && !s_equal ( p.second , 0.0 ) ) { return p ; } // RETURN
+      }
+    }
+    //
     return std::make_pair ( s_track , 0 ) ;
   }
   // ==========================================================================
 } 
 // ============================================================================
-// remove the tracks fomr primary vertex 
+// remove the tracks from primary vertex 
 // ============================================================================
 StatusCode LoKi::PVReFitter::_remove_ 
 ( const LHCb::Track::ConstVector& tracks , 
   LHCb::RecVertex&                pv     ) const 
 {
   //
-  // collect the actual tracks in vertex to ve removed 
+  // collect the actual tracks in vertex to be removed 
   LHCb::Track::ConstVector removed ; removed.reserve( tracks.size() ) ;
   for ( LHCb::Track::ConstVector::const_iterator it = tracks.begin() ; 
         tracks.end() != it ; ++it ) 
   {
     //
-    std::pair<const LHCb::Track*, double> p = trackInPV ( *it , pv , m_checkIDs) ;
+    const std::pair<const LHCb::Track*, double> p = 
+      trackInPV ( *it , pv , m_checkIDs , m_checkAncestors ) ;
+    //
     const LHCb::Track* track  = p.first  ;
     const double       weight = p.second ;
     if ( 0 == track || s_equal ( weight  , 0 )  ) { continue ; }
     //
-    removed.push_back ( track ) ;
+    /// @attention: here "track" or "track_0" ???
+    removed.push_back ( track ) ;  // or track_0 ???   
     //
   }
   //
@@ -618,9 +649,12 @@ StatusCode LoKi::PVReFitter::_remove_
   // the data entries are loaded properly, make a step of kalman filter:
   //
   // 1) prepare the gain-matrix for PV 
-  int ifail = 0 ;
-  const Gaudi::SymMatrix3x3 ci = pv.covMatrix().Inverse( ifail );
-  if ( 0 != ifail ) { return _Warning( "Non-invertible covarinace matrix!",
+  Gaudi::SymMatrix3x3 ci ;
+  /// use fast cholesky inversion 
+  const int ifail = Gaudi::Math::inverse ( pv.covMatrix() , ci ) ;
+  //// int ifail = 0 
+  //// const Gaudi::SymMatrix3x3 ci = pv.covMatrix().Inverse( ifail );
+  if ( 0 != ifail ) { return _Warning( "Non-invertible covariance matrix!",
                                        StatusCode::FAILURE, 0 ) ; }
   //
   // 2) make (multi-step) of Kalman filter 
