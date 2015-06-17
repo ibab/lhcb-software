@@ -1,3 +1,5 @@
+import sys
+args=sys.argv[:]
 from Configurables import ( LHCbConfigurableUser)
 class WriterConf:#(LHCbConfigurableUser):
   __slots__ = {
@@ -107,6 +109,26 @@ from Configurables import (RunChangeHandlerSvc, DBXferAlg ,XmlCnvSvc, DDDBConf, 
 import RunOption
 import HLT2Params
 import sys
+import os
+def MakeTick(root,runnr):
+  pth = root+"/onl/Conditions/Online/LHCb"
+  if not os.access(pth, os.F_OK):
+    try:
+      os.makedirs(pth,0777)
+    except:
+      print "Cannot create directory "+pth
+  else:
+    print "Path "+pth+" already exists"
+  xmlf = open(pth+"/RunStamp.xml","w")
+  xmlf.write('<?xml version="1.0" encoding="ISO-8859-1"?>\n')
+  xmlf.write('<!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">\n')
+  xmlf.write('<DDDB>\n')
+  xmlf.write('<condition name="RunStamp"> <param name="RunNumber" type="int">'
+             +str(runnr)
+             +'</param> </condition>\n')
+  xmlf.write('</DDDB>\n')
+  xmlf.close()
+
 excludeFiles =[]
 excludeFiles.append('online.xml')
 try:
@@ -168,6 +190,13 @@ app.addTool(xmlwriter)
 app.EvtSel = "NONE"
 app.EvtMax = 1
 app.OutputLevel = INFO
+RunStart = HLT2Params.RunStartTime*1000000000
+RunEnd =  (HLT2Params.RunStartTime+HLT2Params.RunDuration)*1000000000
+print args
+if len(args)>1:
+  lstrun = args[1]
+  if lstrun == 'LastRun':
+    RunEnd = None
 # from Configurables import XmlParserSvc
 #RunChangeHandlerSvc(OutputLevel=VERBOSE)
 #MessageSvc(OutputLevel=1)
@@ -199,16 +228,33 @@ if stat.isFailure():
 print "===================== Updating the Database ========================"
 import CondDBUI
 import CondDBUI.Admin
-#####DBString = "CondDBOnline(owner)/ONLINE" # use the central Oracle Database...
-DBString = "sqlite_file:./CONDDB.db/ONLINE"
+DBString = "CondDBOnline(owner)/ONLINE" # use the central Oracle Database...
+####DBString = "sqlite_file:./CONDDB.db/ONLINE"
 db = CondDBUI.CondDB(DBString, create_new_db = False, readOnly=False)
+import time
+if RunEnd == None:
+  etime =  HLT2Params.RunStartTime+86400*365*100
+else:
+  etime = RunEnd/1000000000
+print "IoV is ["+str(RunStart)+","+str(RunEnd)+"], ["+time.ctime(HLT2Params.RunStartTime)+","+time.ctime(etime)+"]"
+status = 0
 status = CondDBUI.Admin.MakeDBFromFiles(RunOption.OutputDirectory+"/offl", db,
                                    includes = [], excludes = [],
                                    verbose = True,
-                                   since = RunOption.RunStartTime*1000000000,
-                                   until = (HLT2Params.RunStartTime+HLT2Params.RunDuration)*1000000000,
+                                   since = RunStart,
+                                   until = RunEnd,
                                    writeDuplicate = False
                                     )
+MakeTick(RunOption.OutputDirectory,RunOption.RunNumber)
+RunEnd =  (HLT2Params.RunStartTime+HLT2Params.RunDuration)*1000000000
+status = CondDBUI.Admin.MakeDBFromFiles(RunOption.OutputDirectory+"/onl", db,
+                                   includes = [], excludes = [],
+                                   verbose = True,
+                                   since = RunStart,
+                                   until = RunEnd,
+                                   writeDuplicate = False
+                                    )
+
 print "===================== Updated the Database ======================== Status = ",status
 
 
