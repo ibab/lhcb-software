@@ -28,7 +28,7 @@ use  DaVinciKernel v*    Phys
 use  DaVinciInterfaces v*    Phys
 use  HltDAQ      v* Hlt
 use   LoKiPhys                  v*    Phys
-use   LoKi                      v*    Phys
+use   LoKiArrayFunctors                      v*    Phys
 
 
 # standard patterns (order is essential!)

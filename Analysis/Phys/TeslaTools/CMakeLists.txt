@@ -7,6 +7,8 @@ gaudi_depends_on_subdirs(Event/MicroDst
                          Kernel/LHCbAlgs
                          Event/RecEvent
                          Phys/DaVinciKernel
+                         Phys/LoKiArrayFunctors
+                         Phys/LoKiPhys
                          Phys/DaVinciInterfaces
                          Event/HltEvent
                          Event/DAQEvent
@@ -16,6 +18,7 @@ gaudi_depends_on_subdirs(Event/MicroDst
 gaudi_add_module(TeslaTools
                  src/*.cpp
                  LINK_LIBRARIES DAQEventLib HltEvent RecEvent DaVinciKernelLib
+                 LoKiArrayFunctorsLib LoKiPhysLib
                  DaVinciInterfacesLib)
 
 gaudi_install_python_modules()
