@@ -8,6 +8,13 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-06-12 - Olli Lupton
+ - CharmHad: Duplicate the line Hlt2CharmHadDspToKmKpPipTurbo as
+    Hlt2CharmHadDspToKmKpPip (no Turbo), so we get the desired result:
+     . Copy in the Turbo stream for use as a control mode in
+       Charm analyses
+     . Copy on Full DST for use in flavour tagging calibration
+
 ! 2015-06-12 - Tom Hadavizadeh
  - CharmHad: Fixed D* lines in D2HHLines 
     M python/Hlt2Lines/CharmHad/D2HHLines.py

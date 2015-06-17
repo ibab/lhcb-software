@@ -169,6 +169,7 @@ class CharmHadD2HHHLines() :
                   'Dpm2KPiPi_ForKPiAsym'     : [MassFilter('Dpm2KPiPi_ForKPiAsym',
                                                             inputs=[DetAsym_DpToKmPipPip], reFitPVs = True)]
             }
-        
+
+        stages['DspToKmKpPip'] = stages['DspToKmKpPipTurbo']
         
         return stages
