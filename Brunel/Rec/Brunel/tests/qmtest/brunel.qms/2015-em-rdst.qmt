@@ -16,7 +16,7 @@
   <argument name="args"><set>
     <text>$APPCONFIGOPTS/Brunel/saveFittedVeloTracks.py</text>
     <text>--option</text>
-    <text>from Configurables import Brunel; Brunel().DataType = "2015"; Brunel().EvtMax = 1000; Brunel().DatasetName="2015-em"; Brunel().Monitors=["SC","FPE"]; Brunel().OutputType="RDST"; from Gaudi.Configuration import EventSelector; EventSelector().Input = [ "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15EM/153759/153759_0000000066.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'" ];from Configurables import LHCbApp;LHCbApp().CondDBtag="cond-20150602";LHCbApp().DDDBtag="dddb-20150526"
+    <text>from Configurables import Brunel; Brunel().DataType = "2015"; Brunel().EvtMax = 1000; Brunel().DatasetName="2015-em"; Brunel().Monitors=["SC","FPE"]; Brunel().OutputType="RDST"; from Gaudi.Configuration import EventSelector; EventSelector().Input = [ "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15EM/153759/153759_0000000066.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'" ];from Configurables import LHCbApp;LHCbApp().CondDBtag="cond-20150602";LHCbApp().DDDBtag="dddb-20150526";from Configurables import EventClockSvc; EventClockSvc( InitialTime = 1433509200000000000 )
 </text>
   </set></argument>
   <argument name="reference"><text>../refs/2015-em.ref</text></argument>

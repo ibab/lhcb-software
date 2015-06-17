@@ -4,10 +4,15 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 - Changes to references to reflect changes since v47r8
-  . Follow introduction of CALIBOFF partition
+  . Follow introduction of CALIBOFF partition (DetCond v12r42)
+  . Follow introduction of Run Stamp check (DetCond v12r42)
   . Print average number of real tracks per VELO track (TrackTools v5r10)
   . Fix TrackVelodEdxCharge in 2015 configuration (TrackTools v5r10)
   . Put back TrackLikelyhood ExtraInfo in 2015 configuration (TrackSys v9r8)
+
+- Changes to tests
+  . Add an EventClockSvc().InitialTime to 2015 tests, to avoid changes in
+    initialisation output every time current magnet polarity changes
 
 </PRE><H1><A NAME=v47r8>2015-06-08 Brunel v47r8</A></H1><PRE>
 This version uses projects LHCb v38r7, Lbcom v16r6, Rec v17r7, Gaudi v26r2

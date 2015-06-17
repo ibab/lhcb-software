@@ -1,5 +1,5 @@
-# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Brunel_HEAD/Rec/Brunel/tests/options/test-FSR.py'
-# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Brunel_HEAD/Rec/Brunel/tests/options/test-FSR.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@3/build/BRUNEL/BRUNEL_HEAD/Rec/Brunel/tests/options/test-FSR.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@3/build/BRUNEL/BRUNEL_HEAD/Rec/Brunel/tests/options/test-FSR.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
 # |-Persistency    = None
@@ -31,7 +31,7 @@
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x7fdba4960bf0>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x7f228dc28bf0>  (default: None)
 # |-IgnoreDQFlags     = False
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # skipping configuration of XMLSummary
@@ -51,6 +51,7 @@
 # <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-Upgrade                    = False
+# |-EnableRunStampCheck        = True
 # |-DBSnapshotDirectory        = '/group/online/hlt/conditions'
 # |-LatestLocalTagsByDataType  = []  (default: [])
 # |-Online                     = False
@@ -63,6 +64,7 @@
 # |-LoadCALIBDB                = 'OFFLINE'
 # |-AllLocalTagsByDataType     = []  (default: [])
 # |-UseOracle                  = False
+# |-RunStampCondition          = ''
 # |-PartitionConnectionString  = {}  (default: {})
 # |-LocalTags                  = {}  (default: {})
 # |-IgnoreHeartBeat            = False
@@ -80,8 +82,8 @@
 ApplicationMgr      DEBUG Getting my own properties
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v47r5
-                                          running on mcat.cern.ch on Wed May 27 17:38:16 2015
+                                                   Welcome to Brunel version HEAD
+                                          running on lbbuild03.cern.ch on Wed Jun 17 08:07:23 2015
 ====================================================================================================================================
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service EvtDataSvc/EventDataSvc
 ApplicationMgr    VERBOSE declareMultiSvcType: declared service DetDataSvc/DetectorDataSvc
@@ -124,6 +126,8 @@ ServiceManager      DEBUG Initializing service FileRecordCnvSvc
 FileRecordCnvSvc    DEBUG Service base class initialized successfully
 FileRecordCnvSvc  VERBOSE ServiceLocatorHelper::service: found service IODataManager
 FileRecordCnvSvc  VERBOSE ServiceLocatorHelper::service: found service IncidentSvc
+ServiceManager      DEBUG Initializing service RunStampCheck
+RunStampCheck       DEBUG Service base class initialized successfully
 ServiceManager      DEBUG Initializing service AppMgrRunable
 AppMgrRunable       DEBUG Service base class initialized successfully
 ServiceManager      DEBUG Initializing service EventLoopMgr
@@ -239,7 +243,7 @@ RndmGenSvc.Engine   DEBUG Service base class initialized successfully
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.68 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.31 times the speed of a 2.8 GHz Xeon.
 LumiSequence        DEBUG The tool of type 'SequencerTimerTool' has been added with the name 'ToolSvc.SequencerTimerTool'
 LumiSequence        DEBUG Releasing tool 'ToolSvc.SequencerTimerTool'
 LumiSequence        DEBUG The tool 'ToolSvc.SequencerTimerTool' of type 'SequencerTimerTool' is released
@@ -319,6 +323,59 @@ ServiceManager      DEBUG Starting service FileCatalog
 ServiceManager      DEBUG Starting service IODataManager
 ServiceManager      DEBUG Starting service RootCnvSvc
 ServiceManager      DEBUG Starting service FileRecordCnvSvc
+ServiceManager      DEBUG Starting service RunStampCheck
+EventClockSvc       DEBUG Service base class initialized successfully
+EventClockSvc       DEBUG --- initialize ---
+EventClockSvc     VERBOSE ServiceLocatorHelper::service: found service DetectorDataSvc
+EventClockSvc       DEBUG Got pointer to IDetDataSvc "DetectorDataSvc"
+EventClockSvc     VERBOSE ServiceLocatorHelper::service: found service ToolSvc
+EventClockSvc       DEBUG Got pointer to ToolSvc
+ToolSvc           VERBOSE Created tool FakeEventTime/EventClockSvc.FakeEventTime
+EventClockSvc.F...  DEBUG --- initialize ---
+EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
+EventClockSvc       DEBUG Got pointer to FakeEventTime
+EventClockSvc       DEBUG Initialize event time to 1355694590.0
+DetectorDataSvc     DEBUG Event Time set to 1355694590.0
+IncidentSvc         DEBUG Adding [BeginEvent] listener 'EventClockSvc' with priority 0
+EventClockSvc       DEBUG Got pointer to IncidentSvc
+IncidentSvc         DEBUG Adding [BeginEvent] listener 'RunStampCheck' with priority 0
+CondDBCnvSvc        DEBUG Service base class initialized successfully
+CondDBCnvSvc        DEBUG Specific initialization starting
+MainCondDBReader    DEBUG Service base class initialized successfully
+MainCondDBReader    DEBUG Initialize
+DDDB                DEBUG Service base class initialized successfully
+DDDB                DEBUG Initialize
+DDDB                DEBUG Initialize CondDB cache.
+DDDB.Cache          DEBUG Cache initialized with high/low levels = 1700/10
+MainCondDBReader  VERBOSE ServiceLocatorHelper::service: found service CondDBAccessSvc/DDDB
+LHCBCOND            DEBUG Service base class initialized successfully
+LHCBCOND            DEBUG Initialize
+LHCBCOND            DEBUG Initialize CondDB cache.
+LHCBCOND.Cache      DEBUG Cache initialized with high/low levels = 200/10
+MainCondDBReader  VERBOSE ServiceLocatorHelper::service: found service CondDBAccessSvc/LHCBCOND
+MainCondDBReader    DEBUG Retrieved 'CondDBAccessSvc/LHCBCOND' (for path '/Conditions')
+DQFLAGS             DEBUG Service base class initialized successfully
+DQFLAGS             DEBUG Initialize
+DQFLAGS             DEBUG Initialize CondDB cache.
+DQFLAGS.Cache       DEBUG Cache initialized with high/low levels = 10/5
+MainCondDBReader  VERBOSE ServiceLocatorHelper::service: found service CondDBAccessSvc/DQFLAGS
+MainCondDBReader    DEBUG Retrieved 'CondDBAccessSvc/DQFLAGS' (for path '/Conditions/DQ')
+ONLINE              DEBUG Service base class initialized successfully
+ONLINE              DEBUG Initialize
+ONLINE              DEBUG Configured CondDBReaders:
+ONLINE              DEBUG  0.0 - 1230768000.0: CondDBAccessSvc/ONLINE_2008
+ONLINE              DEBUG  1230768000.0 - 1262304000.0: CondDBAccessSvc/ONLINE_2009
+ONLINE              DEBUG  1262304000.0 - 1293840000.0: CondDBAccessSvc/ONLINE_2010
+ONLINE              DEBUG  1293840000.0 - 1325376000.0: CondDBAccessSvc/ONLINE_2011
+ONLINE              DEBUG  1325376000.0 - 1356998400.0: CondDBAccessSvc/ONLINE_2012
+ONLINE              DEBUG  1356998400.0 - 1388534400.0: CondDBAccessSvc/ONLINE_2013
+ONLINE              DEBUG  1388534400.0 - 1420070400.0: CondDBAccessSvc/ONLINE_2014
+ONLINE              DEBUG  1420070400.0 - 9223372036.854775807: CondDBLayeringSvc/ONLINELAYER_2015
+MainCondDBReader  VERBOSE ServiceLocatorHelper::service: found service CondDBTimeSwitchSvc/ONLINE
+MainCondDBReader    DEBUG Retrieved 'CondDBTimeSwitchSvc/ONLINE' (for path '/Conditions/Online')
+CondDBCnvSvc      VERBOSE ServiceLocatorHelper::service: found service CondDBDispatcherSvc/MainCondDBReader
+CondDBCnvSvc        DEBUG Retrieved CondDBDispatcherSvc/MainCondDBReader
+CondDBCnvSvc        DEBUG Specific initialization completed
 ServiceManager      DEBUG Starting service AppMgrRunable
 ServiceManager      DEBUG Starting service IncidentSvc
 ServiceManager      DEBUG Starting service DetectorPersistencySvc
@@ -327,6 +384,7 @@ ToolSvc             DEBUG START transition for AlgTools
 ToolSvc           VERBOSE ToolSvc.CondDBEntityResolver::start()
 ToolSvc           VERBOSE ToolSvc.SequencerTimerTool::start()
 ToolSvc           VERBOSE EventSelector.DataStreamTool::start()
+ToolSvc           VERBOSE EventClockSvc.FakeEventTime::start()
 ServiceManager      DEBUG Starting service XmlParserSvc
 ServiceManager      DEBUG Starting service XmlCnvSvc
 ServiceManager      DEBUG Starting service AlgContextSvc
@@ -344,56 +402,108 @@ LumiSequence        DEBUG Property update for OutputLevel : new value = 1
 LumiSequence        DEBUG ==> beginRun
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 IncidentSvc       VERBOSE Calling 'FileRecordDataSvc' for incident [FILE_OPEN_READ]
-FileRecordDataSvc   DEBUG Request to load record for file 5A3F9B41-F4E0-E411-A0E5-003048F1C546
-FileRecordDataSvc VERBOSE Requested object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546
+FileRecordDataSvc   DEBUG Request to load record for file 86098136-9A14-E511-BFAB-02163E00CCE5
+FileRecordDataSvc VERBOSE Requested object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5
 FileRecordPersi...VERBOSE ServiceLocatorHelper::service: found service Gaudi::RootCnvSvc/FileRecordCnvSvc
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
-FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546#/LumiFSRNoBeam[0]
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546#/LumiFSRBeamCrossing[0]
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546#/LumiFSRBeam1[0]
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546#/LumiFSRBeam2[0]
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546#/TimeSpanFSR[0]
-FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546#/EventCountFSR[0]
-FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546
-FileRecordDataSvc VERBOSE Requested object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRNoBeam
-FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRNoBeam created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRNoBeam
-FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRNoBeam successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRNoBeam
-FileRecordDataSvc VERBOSE Requested object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeamCrossing created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeamCrossing successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeamCrossing
-FileRecordDataSvc VERBOSE Requested object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam1 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam1 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam1
-FileRecordDataSvc VERBOSE Requested object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam2 created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam2 successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/LumiFSRBeam2
-FileRecordDataSvc VERBOSE Requested object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/TimeSpanFSR
-FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/TimeSpanFSR created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/TimeSpanFSR
-FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/TimeSpanFSR successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/TimeSpanFSR
-FileRecordDataSvc VERBOSE Requested object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/EventCountFSR
-FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/EventCountFSR created
-FileRecordDataSvc VERBOSE Filling object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/EventCountFSR
-FileRecordDataSvc VERBOSE Object /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/EventCountFSR successfully loaded
-FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/5A3F9B41-F4E0-E411-A0E5-003048F1C546/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5#/LumiFSRNoBeam[0]
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5#/LumiFSRBeamCrossing[0]
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5#/LumiFSRBeam1[0]
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5#/LumiFSRBeam2[0]
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5#/TimeSpanFSR[0]
+FileRecordCnvSvc  VERBOSE FileRecordDataSvc -> Register:/FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5#/EventCountFSR[0]
+FileRecordDataSvc VERBOSE Object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5
+FileRecordDataSvc VERBOSE Requested object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRNoBeam
+FileRecordDataSvc VERBOSE Object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRNoBeam created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRNoBeam
+FileRecordDataSvc VERBOSE Object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRNoBeam successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRNoBeam
+FileRecordDataSvc VERBOSE Requested object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRBeamCrossing
+FileRecordDataSvc VERBOSE Object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRBeamCrossing created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRBeamCrossing
+FileRecordDataSvc VERBOSE Object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRBeamCrossing successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRBeamCrossing
+FileRecordDataSvc VERBOSE Requested object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRBeam1
+FileRecordDataSvc VERBOSE Object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRBeam1 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRBeam1
+FileRecordDataSvc VERBOSE Object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRBeam1 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRBeam1
+FileRecordDataSvc VERBOSE Requested object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRBeam2 created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRBeam2 successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/LumiFSRBeam2
+FileRecordDataSvc VERBOSE Requested object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/TimeSpanFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/TimeSpanFSR created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/TimeSpanFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/TimeSpanFSR successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/TimeSpanFSR
+FileRecordDataSvc VERBOSE Requested object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/EventCountFSR created
+FileRecordDataSvc VERBOSE Filling object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/EventCountFSR
+FileRecordDataSvc VERBOSE Object /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/EventCountFSR successfully loaded
+FileRecordDataSvc   DEBUG Loaded records object: /FileRecords/86098136-9A14-E511-BFAB-02163E00CCE5/EventCountFSR
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventDataSvc      VERBOSE Requested object /Event
 EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'EventClockSvc' for incident [BeginEvent]
+DetectorDataSvc     DEBUG Event Time set to 0.0
+EventClockSvc       DEBUG New BeginEvent incident received
+EventClockSvc       DEBUG DetDataSvc::eventTime() -> 0.0
+IncidentSvc       VERBOSE Calling 'RunStampCheck' for incident [BeginEvent]
+RunStampCheck       DEBUG Checking '/Conditions/Online/LHCb/RunStamp.xml' for event time 0.0
+MainCondDBReader  VERBOSE Get alternative DB for '/Conditions/Online/LHCb/RunStamp.xml'
+MainCondDBReader  VERBOSE Comparing with /Conditions/Online
+MainCondDBReader  VERBOSE Using 'ONLINE'
+ONLINE            VERBOSE Get CondDBReader for event time 0.0
+ONLINE_2008         DEBUG Service base class initialized successfully
+ONLINE_2008         DEBUG Initialize
+ONLINE_2008         DEBUG Initialize CondDB cache.
+ONLINE_2008.Cache   DEBUG Cache initialized with high/low levels = 100/10
+ONLINE_2008         DEBUG Connection string = "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2008.db/ONLINE"
+COOLConfSvc         DEBUG Service base class initialized successfully
+COOLConfSvc         DEBUG Initialize
+COOLConfSvc         DEBUG Initializing COOL Application
+COOLConfSvc         DEBUG Getting CORAL Connection Service configurator
+COOLConfSvc         DEBUG Disabling CORAL connection automatic clean up
+COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
+COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
+ONLINE_2008       VERBOSE ServiceLocatorHelper::service: found service COOLConfSvc
+ONLINE_2008         DEBUG Get cool::DatabaseSvc
+ONLINE_2008         DEBUG cool::DatabaseSvc got
+ONLINE_2008         DEBUG Opening connection
+ONLINE_2008         DEBUG Retrieve the root folderset.
+ONLINE_2008          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2008.db/ONLINE"
+ONLINE_2008       VERBOSE Check availability of tag ""
+ONLINE_2008       VERBOSE "" is a HEAD tag: OK
+ONLINE_2008          INFO Using TAG ""
+MainCondDBReader  VERBOSE Get alternative DB for '/Conditions/Online/LHCb/RunStamp.xml'
+MainCondDBReader  VERBOSE Comparing with /Conditions/Online
+MainCondDBReader  VERBOSE Using 'ONLINE'
+ONLINE            VERBOSE Get CondDBReader for event time 0.0
+ONLINE_2008.Cache   DEBUG Insert  Folder '/Conditions/Online/LHCb/RunStamp.xml', IOV : 0 - 1420070400443000000, channel : 0
+ONLINE_2008.Cache   DEBUG Request Folder '/Conditions/Online/LHCb/RunStamp.xml'  @ 0 channel 0 FOUND
+RunStampCheck       DEBUG Found '/Conditions/Online/LHCb/RunStamp.xml' valid in [0.0, 1230768000.0)
+LumiSequence        DEBUG ==> Execute
+LumiSequence      VERBOSE SeqPass is false
+IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
+EventDataSvc      VERBOSE Requested object /Event
+EventDataSvc      VERBOSE Object /Event created
+EventDataSvc      VERBOSE Filling object /Event
+ONLINE_2008.Tim...VERBOSE Starting
+EventDataSvc      VERBOSE Object /Event successfully loaded
+IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'EventClockSvc' for incident [BeginEvent]
+DetectorDataSvc     DEBUG Event Time set to 0.0
+EventClockSvc       DEBUG New BeginEvent incident received
+EventClockSvc       DEBUG DetDataSvc::eventTime() -> 0.0
+IncidentSvc       VERBOSE Calling 'RunStampCheck' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
@@ -402,6 +512,11 @@ EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'EventClockSvc' for incident [BeginEvent]
+DetectorDataSvc     DEBUG Event Time set to 0.0
+EventClockSvc       DEBUG New BeginEvent incident received
+EventClockSvc       DEBUG DetDataSvc::eventTime() -> 0.0
+IncidentSvc       VERBOSE Calling 'RunStampCheck' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
@@ -410,14 +525,11 @@ EventDataSvc      VERBOSE Object /Event created
 EventDataSvc      VERBOSE Filling object /Event
 EventDataSvc      VERBOSE Object /Event successfully loaded
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
-LumiSequence        DEBUG ==> Execute
-LumiSequence      VERBOSE SeqPass is false
-IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
-EventDataSvc      VERBOSE Requested object /Event
-EventDataSvc      VERBOSE Object /Event created
-EventDataSvc      VERBOSE Filling object /Event
-EventDataSvc      VERBOSE Object /Event successfully loaded
-IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [BeginEvent]
+IncidentSvc       VERBOSE Calling 'EventClockSvc' for incident [BeginEvent]
+DetectorDataSvc     DEBUG Event Time set to 0.0
+EventClockSvc       DEBUG New BeginEvent incident received
+EventClockSvc       DEBUG DetDataSvc::eventTime() -> 0.0
+IncidentSvc       VERBOSE Calling 'RunStampCheck' for incident [BeginEvent]
 LumiSequence        DEBUG ==> Execute
 LumiSequence      VERBOSE SeqPass is false
 IncidentSvc       VERBOSE Calling 'AlgContextSvc' for incident [EndEvent]
@@ -426,6 +538,15 @@ LumiSequence        DEBUG Property update for OutputLevel : new value = 1
 LumiSequence        DEBUG ==> endRun
 EventAccount        DEBUG Property update for OutputLevel : new value = 1
 ServiceManager      DEBUG Stopping service EventLoopMgr
+ServiceManager      DEBUG Stopping service COOLConfSvc
+ServiceManager      DEBUG Stopping service ONLINE_2008
+ServiceManager      DEBUG Stopping service CondDBCnvSvc
+ServiceManager      DEBUG Stopping service MainCondDBReader
+ServiceManager      DEBUG Stopping service ONLINE
+ServiceManager      DEBUG Stopping service DQFLAGS
+ServiceManager      DEBUG Stopping service LHCBCOND
+ServiceManager      DEBUG Stopping service DDDB
+ServiceManager      DEBUG Stopping service EventClockSvc
 ServiceManager      DEBUG Stopping service HistogramDataSvc
 ServiceManager      DEBUG Stopping service HistogramPersistencySvc
 ServiceManager      DEBUG Stopping service EventSelector
@@ -442,9 +563,12 @@ ToolSvc             DEBUG STOP transition for AlgTools
 ToolSvc           VERBOSE ToolSvc.CondDBEntityResolver::stop()
 ToolSvc           VERBOSE ToolSvc.SequencerTimerTool::stop()
 ToolSvc           VERBOSE EventSelector.DataStreamTool::stop()
+ToolSvc           VERBOSE EventClockSvc.FakeEventTime::stop()
 ServiceManager      DEBUG Stopping service DetectorPersistencySvc
 ServiceManager      DEBUG Stopping service IncidentSvc
 ServiceManager      DEBUG Stopping service AppMgrRunable
+ServiceManager      DEBUG Stopping service RunStampCheck
+IncidentSvc         DEBUG Removing [BeginEvent] listener 'RunStampCheck'
 ServiceManager      DEBUG Stopping service FileRecordCnvSvc
 ServiceManager      DEBUG Stopping service RootCnvSvc
 ServiceManager      DEBUG Stopping service IODataManager
@@ -468,6 +592,58 @@ LumiSequence        DEBUG Tools to release :
 LumiSequence        DEBUG Services to release :
 IncidentSvc         DEBUG Removing [AbortEvent] listener '<unknown>'
 EventLoopMgr         INFO Histograms converted successfully according to request.
+ServiceManager      DEBUG Finalizing service COOLConfSvc
+COOLConfSvc         DEBUG Finalize
+ServiceManager      DEBUG Finalizing service ONLINE_2008
+ONLINE_2008         DEBUG Finalize
+ONLINE_2008.Tim...VERBOSE Stopping
+ONLINE_2008.Cache   DEBUG Cache content dump --------------------- BEGIN
+ONLINE_2008.Cache   DEBUG  Thresholds (high/low) -> 100/10
+ONLINE_2008.Cache   DEBUG  Level = 1
+ONLINE_2008.Cache   DEBUG Folder '/Conditions/Online/LHCb/RunStamp.xml'
+ONLINE_2008.Cache   DEBUG   Channel 0
+ONLINE_2008.Cache   DEBUG   Object 0
+ONLINE_2008.Cache   DEBUG     Score: 1
+ONLINE_2008.Cache   DEBUG     Validity: 0 - 1420070400443000000
+ONLINE_2008.Cache   DEBUG     Data: [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
+<DDDB>
+<condition name="RunStamp">
+<param name="RunNumber" type="int">-1</param>
+</condition>
+</DDDB>]
+ONLINE_2008.Cache   DEBUG Cache content dump --------------------- END
+ONLINE_2008.Cache   DEBUG Cache deleted. Level was = 1
+ServiceManager      DEBUG Finalizing service CondDBCnvSvc
+CondDBCnvSvc        DEBUG Finalizing
+ServiceManager      DEBUG Finalizing service MainCondDBReader
+MainCondDBReader    DEBUG Finalize
+ServiceManager      DEBUG Finalizing service ONLINE
+ONLINE              DEBUG Finalize
+ServiceManager      DEBUG Finalizing service DQFLAGS
+DQFLAGS             DEBUG Finalize
+DQFLAGS.Cache       DEBUG Cache content dump --------------------- BEGIN
+DQFLAGS.Cache       DEBUG  Thresholds (high/low) -> 10/5
+DQFLAGS.Cache       DEBUG  Level = 0
+DQFLAGS.Cache       DEBUG Cache content dump --------------------- END
+DQFLAGS.Cache       DEBUG Cache deleted. Level was = 0
+ServiceManager      DEBUG Finalizing service LHCBCOND
+LHCBCOND            DEBUG Finalize
+LHCBCOND.Cache      DEBUG Cache content dump --------------------- BEGIN
+LHCBCOND.Cache      DEBUG  Thresholds (high/low) -> 200/10
+LHCBCOND.Cache      DEBUG  Level = 0
+LHCBCOND.Cache      DEBUG Cache content dump --------------------- END
+LHCBCOND.Cache      DEBUG Cache deleted. Level was = 0
+ServiceManager      DEBUG Finalizing service DDDB
+DDDB                DEBUG Finalize
+DDDB.Cache          DEBUG Cache content dump --------------------- BEGIN
+DDDB.Cache          DEBUG  Thresholds (high/low) -> 1700/10
+DDDB.Cache          DEBUG  Level = 0
+DDDB.Cache          DEBUG Cache content dump --------------------- END
+DDDB.Cache          DEBUG Cache deleted. Level was = 0
+ServiceManager      DEBUG Finalizing service EventClockSvc
+EventClockSvc       DEBUG --- finalize ---
+IncidentSvc         DEBUG Removing [BeginEvent] listener 'EventClockSvc'
 ServiceManager      DEBUG Finalizing service EventSelector
 EventSelector       DEBUG finalize()
 ServiceManager      DEBUG Finalizing service EventDataSvc
@@ -484,13 +660,15 @@ ServiceManager      DEBUG Finalizing service XmlCnvSvc
 ServiceManager      DEBUG Finalizing service XmlParserSvc
 ServiceManager      DEBUG Finalizing service ToolSvc
 ToolSvc              INFO Removing all tools created by ToolSvc
-ToolSvc             DEBUG   Tool List : ToolSvc.CondDBEntityResolver:1 ToolSvc.SequencerTimerTool:1 EventSelector.DataStreamTool:1
-ToolSvc             DEBUG 3 tools left to finalize. Summed refCounts: 3
+ToolSvc             DEBUG   Tool List : ToolSvc.CondDBEntityResolver:1 ToolSvc.SequencerTimerTool:1 EventSelector.DataStreamTool:1 EventClockSvc.FakeEventTime:1
+ToolSvc             DEBUG 4 tools left to finalize. Summed refCounts: 4
 ToolSvc             DEBUG Will finalize tools with refCount <= 1
+ToolSvc             DEBUG   Performing finalization of EventClockSvc.FakeEventTime (refCount 1)
+EventClockSvc.F...  DEBUG --- finalize ---
 ToolSvc             DEBUG   Performing finalization of EventSelector.DataStreamTool (refCount 1)
 ToolSvc             DEBUG   Performing finalization of ToolSvc.SequencerTimerTool (refCount 1)
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.68 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.31 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
@@ -499,17 +677,19 @@ ToolSvc.Sequenc...  DEBUG Tools to release :
 ToolSvc.Sequenc...  DEBUG Services to release : RndmGenSvc
 ToolSvc.Sequenc...  DEBUG Releasing service 'RndmGenSvc'
 ToolSvc             DEBUG   Performing finalization of ToolSvc.CondDBEntityResolver (refCount 1)
-ToolSvc             DEBUG Deleting 3 finalized tools
+ToolSvc             DEBUG Deleting 4 finalized tools
+ToolSvc             DEBUG   Performing deletion of EventClockSvc.FakeEventTime
 ToolSvc             DEBUG   Performing deletion of EventSelector.DataStreamTool
 ToolSvc             DEBUG   Performing deletion of ToolSvc.SequencerTimerTool
 ToolSvc             DEBUG   Performing deletion of ToolSvc.CondDBEntityResolver
 ServiceManager      DEBUG Finalizing service DetectorPersistencySvc
 ServiceManager      DEBUG Finalizing service IncidentSvc
-IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:0(+-0)/0/0[ms] Total:0[s]
+IncidentSvc         DEBUG Incident  timing: Mean(+-rms)/Min/Max:7.24895(+-30.6921)/0/140.979[ms] Total:0.144979[s]
 ServiceManager      DEBUG Finalizing service AppMgrRunable
+ServiceManager      DEBUG Finalizing service RunStampCheck
 ServiceManager      DEBUG Finalizing service FileRecordCnvSvc
 ServiceManager      DEBUG Finalizing service RootCnvSvc
-RootCnvSvc           INFO Disconnected data IO:5A3F9B41-F4E0-E411-A0E5-003048F1C546 [bigEvents-2010.dst]
+RootCnvSvc           INFO Disconnected data IO:86098136-9A14-E511-BFAB-02163E00CCE5 [bigEvents-2010.dst]
 ServiceManager      DEBUG Finalizing service IODataManager
 ServiceManager      DEBUG Finalizing service FileCatalog
 ServiceManager      DEBUG Finalizing service DetectorDataSvc
@@ -517,7 +697,7 @@ DetectorDataSvc     DEBUG Finalizing
 ServiceManager      DEBUG Finalizing service HistogramDataSvc
 ServiceManager      DEBUG Finalizing service HistogramPersistencySvc
 ServiceManager      DEBUG Looping over all active services...
-ServiceManager      DEBUG ---- MessageSvc (refCount = 25)
+ServiceManager      DEBUG ---- MessageSvc (refCount = 35)
 ServiceManager      DEBUG ---- JobOptionsSvc (refCount = 2)
 ServiceManager      DEBUG ---- RndmGenSvc.Engine (refCount = 2)
 ServiceManager      DEBUG ---- HistogramPersistencySvc (refCount = 2)
@@ -527,6 +707,7 @@ ServiceManager      DEBUG ---- FileCatalog (refCount = 2)
 ServiceManager      DEBUG ---- IODataManager (refCount = 2)
 ServiceManager      DEBUG ---- RootCnvSvc (refCount = 5)
 ServiceManager      DEBUG ---- FileRecordCnvSvc (refCount = 5)
+ServiceManager      DEBUG ---- RunStampCheck (refCount = 2)
 ServiceManager      DEBUG ---- AppMgrRunable (refCount = 3)
 ServiceManager      DEBUG ---- IncidentSvc (refCount = 3)
 ServiceManager      DEBUG ---- DetectorPersistencySvc (refCount = 2)
@@ -540,6 +721,15 @@ ServiceManager      DEBUG ---- FileRecordDataSvc (refCount = 4)
 ServiceManager      DEBUG ---- EventPersistencySvc (refCount = 2)
 ServiceManager      DEBUG ---- EventDataSvc (refCount = 4)
 ServiceManager      DEBUG ---- EventSelector (refCount = 2)
+ServiceManager      DEBUG ---- EventClockSvc (refCount = 2)
+ServiceManager      DEBUG ---- DDDB (refCount = 2)
+ServiceManager      DEBUG ---- LHCBCOND (refCount = 2)
+ServiceManager      DEBUG ---- DQFLAGS (refCount = 2)
+ServiceManager      DEBUG ---- ONLINE (refCount = 2)
+ServiceManager      DEBUG ---- MainCondDBReader (refCount = 2)
+ServiceManager      DEBUG ---- CondDBCnvSvc (refCount = 2)
+ServiceManager      DEBUG ---- ONLINE_2008 (refCount = 3)
+ServiceManager      DEBUG ---- COOLConfSvc (refCount = 3)
 ServiceManager      DEBUG ---- EventLoopMgr (refCount = 3)
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
