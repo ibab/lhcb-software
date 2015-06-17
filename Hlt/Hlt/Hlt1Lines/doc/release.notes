@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-06-17 - V. Gligorov
+ - Separate RICH mirror alignment line into RICH1 and RICH2 lines, with separate
+   slots and cuts. This change is NOT backwards compatible.
+
 !========================= Hlt1Lines v7r12 2015-06-10 =========================
 
 ! 2015-06-10 - Christian Linn
