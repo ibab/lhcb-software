@@ -1,7 +1,15 @@
-B0;136;0c!=============================================================================
+=============================================================================
 ! Package     : TeslaTools
 ! Responsible : Sean Benson
 !=============================================================================
+
+! 2015-06-17 - Lucio Anderlini
+ - First commit of TeslaMonitoring. It includes:
+   . src/TeslaMonitor.cpp
+   . src/TeslaMonitor.h
+   . python/TeslaTools/TeslaMonitor.py
+ - cmt/requirments updated to include LoKi and LoKiPhys dependencies
+
 
 ! 2015-6-15 - Sean Benson
  - Make sure PVs are set with technique as Primary.
