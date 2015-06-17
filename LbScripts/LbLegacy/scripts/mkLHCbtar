@@ -74,7 +74,13 @@ def _get_base_project(native_version):
 
 def _get_project_dir(native_version):
     NAME, version, Name, NameSys, release_area = _get_base_project(native_version)
-    dir = os.path.join(os.environ[release_area], NAME, native_version)
+    # os.environ[release_area]i can contain several entries
+    # In that case we take the first one as default !
+    env_rel_area = os.environ[release_area]
+    tmppath = ""
+    if env_rel_area != None:
+        tmppath = env_rel_area.split(":")[0]
+    dir = os.path.join(tmppath, NAME, native_version)
     return dir
 
 
