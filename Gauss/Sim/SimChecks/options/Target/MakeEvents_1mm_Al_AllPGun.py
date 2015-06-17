@@ -4,7 +4,7 @@
 import sys
 import os
 
-from TargetCreateEvents import RunTargetJobs
+from Target.TargetCreateEvents import RunTargetJobs
 from optparse import OptionParser
 
 parser = OptionParser()
@@ -25,7 +25,7 @@ pguns=["p","pbar","Kplus","Kminus","Piplus","Piminus"] # Available: 'Piminus' 'P
 RunTargetJobs(path, models, pguns, energies, materials, thicks)
 
 from ROOT import *
-from TargetPlots import Plot
+from Target.TargetPlots import Plot
 
 plots = [ "RATIO_TOTAL", "RATIO_INEL", "TOTAL", "INEL", "EL", "MULTI", "MULTI_NCH", "MULTI_GAMMA", "ASYM_INEL" ]
 

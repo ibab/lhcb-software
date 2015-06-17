@@ -10,7 +10,7 @@
 
 from string import find
 from ROOT import *
-from TargetSummary import Plotter, doMultiHistos
+from Target.TargetSummary import Plotter, doMultiHistos
 from array import array
 from copy import *
 import os

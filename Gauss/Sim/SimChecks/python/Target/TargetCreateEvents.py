@@ -13,11 +13,11 @@ import shutil
 import subprocess
 import time
 import glob
-from TargetSummary import *
-from TargetSetup import *
+from Target.TargetSummary import *
+from Target.TargetSetup import *
 
 
-template = '''from TargetSetup import *
+template = '''from Target.TargetSetup import *
 
 setup_Targets_pguns("{particle}", {energy}, "{material}", {thick})
 setup_Target_GaussJob("{model}",{thick},"{material}",{energy},"{particle}",{nevts:.0f})
