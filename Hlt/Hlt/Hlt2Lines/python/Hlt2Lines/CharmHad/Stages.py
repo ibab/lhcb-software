@@ -86,14 +86,8 @@ class TighterProtonFilter(Hlt2ParticleFilter):
         deltaPID_cut = "( (PIDp-PIDK) > %(DeltaPID_MIN)s )"
         momentum_cut = "( P > %(P_MIN)s )"
         cut = pidp_cut + " & " + deltaPID_cut + " & " + momentum_cut
-        print ' cut = '
-        print(cut)
         nickname = name if nickname == None else nickname
-        print '  nickname =  '
-        print(nickname)
-##        name     = name if not shared       else 'CharmHad%sTighterProton' % name
-        print '    name =  '
-        print(name)
+        name     = name if not shared       else 'CharmHad%sTighterProton' % name
         Hlt2ParticleFilter.__init__(self, name, cut, inputs,
                                     nickname = nickname , shared = shared )
 
@@ -767,6 +761,23 @@ class DV4BCombiner(Hlt2Combiner):
                               tistos = 'TisTosSpec', combiner = DaVinci__N4BodyDecays, DaughtersCuts = dc,
                               Combination12Cut = c12, Combination123Cut = c123, CombinationCut = cc,
                               MotherCut = mc, Preambulo = [], nickname = nickname)
+
+D0ToPiPiPiPi_Proto = DV4BCombiner('D0ToPiPiPiPi_Proto',
+  inputs=[SharedDetachedD0ToHHHHChild_pi],
+  nickname = 'cutsForD2HHHH',
+  decay=['D0 -> pi+ pi+ pi- pi-'], shared=True),
+D0ToKPiPiPi_Proto  = DV4BCombiner('D0ToKPiPiPi_Proto',
+  inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K],
+  nickname = 'cutsForD2HHHH',
+  decay=['[D0 -> K- pi+ pi+ pi-]cc'], shared=True),
+D0ToKKPiPi_Proto = DV4BCombiner('D0ToKKPiPi_Proto',
+  inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K],
+  nickname = 'cutsForD2HHHH',
+  decay=['D0 -> K+ K- pi+ pi-'], shared=True),
+D0ToKKKPi_Proto  = DV4BCombiner('D0ToKKKPi_Proto',
+  inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K],
+  nickname = 'cutsForD2HHHH',
+  decay=['[D0 -> K- K- K+ pi+]cc'], shared=True),
 
 XSec_D02K3Pi = DV4BCombiner('XSec_D02K3Pi'
         , decay = "[D0 -> K- pi+ pi+ pi-]cc"
