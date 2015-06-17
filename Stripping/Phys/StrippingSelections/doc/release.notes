@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-16 - Andrea Contu
+ - Added test script for EM tuning
+
 ! 2015-06-16 - Simone Stracka
  - StrippingCharm/StrippingD2PiPi0.py : removed cut on chi2 of DTF beam-constrained fit and tightened 
    other selections.
