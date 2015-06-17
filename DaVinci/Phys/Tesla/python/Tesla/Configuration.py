@@ -29,6 +29,8 @@ class Tesla(LHCbConfigurableUser):
           , 'Mode'	        : "Offline"     # "Online" (strip unnecessary banks and run lumi algorithms) or "Offline"?
           , 'Pack'	        : True          # Do we want to pack the objects?
           , 'RawFormatVersion'	: 0.2           # Which banks form the Turbo stream
+          , 'Monitors'	        : []            # Histogram monitors to run in the job
+          , 'Histogram'  	: ""            # Name of histogram file
           }
     _propertyDocDct ={
             "EvtMax"		: "Maximum number of events to process, default all"
@@ -48,6 +50,8 @@ class Tesla(LHCbConfigurableUser):
             , 'Mode'     	: '"Online" (strip unnecessary banks and run lumi algorithms) or "Offline"?'
             , 'Pack'     	: 'Do we want to pack the object?'
             , 'RawFormatVersion': 'Which banks form the Turbo stream'
+            , 'Monitors'        : 'Histogram monitors to run in the job'
+            , 'Histogram'       : 'File name for histogram file'
             }
 
     writerName = "DstWriter"
@@ -68,6 +72,17 @@ class Tesla(LHCbConfigurableUser):
             dod = DataOnDemandSvc()
         if dod not in ApplicationMgr().ExtSvc :
             ApplicationMgr().ExtSvc.append( dod ) 
+    
+    def _configureHistos(self):
+        monitorSeq = GaudiSequencer('TelaMonitors')
+        monitorSeq.IgnoreFilterPassed = True 
+        monitorSeq.Members += self.getProp('Monitors')
+        self.teslaSeq.Members += [ monitorSeq ]
+        #
+        ApplicationMgr().HistogramPersistency = "ROOT"
+        
+        if ( self.getProp("Histogram") != "" ):
+            HistogramPersistencySvc().OutputFile = self.getProp("Histogram")
     
     def _configureTruth(self,line,assocpp) :
         tesROOT="/Event/"+self.base
@@ -272,5 +287,9 @@ class Tesla(LHCbConfigurableUser):
         #
         from Configurables import EventSelector
         EventSelector().PrintFreq = 1000
+
+        # Add monitors if they are there
+        if len(self.getProp('Monitors'))>0:
+            self._configureHistos()
 
         ApplicationMgr().TopAlg+=[self.teslaSeq]
