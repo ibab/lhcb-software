@@ -20,6 +20,9 @@ class CharmHadD2HHHLines() :
                                  'Mass_M_MIN'               :  1789.0 * MeV,
                                  'Mass_M_MAX'               :  1949.0 * MeV,
                                 },
+                 # Be aware the following cuts are used for a flavour tagging calibration line
+                 # as well as for the Charm physics lines. If you change them please be
+                 # aware and consult as appropriate.
                  'Ds2HHH' : {
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                  'Trk_2OF3_MIPCHI2DV_MIN'   :  10.0,
@@ -170,6 +173,8 @@ class CharmHadD2HHHLines() :
                                                             inputs=[DetAsym_DpToKmPipPip], reFitPVs = True)]
             }
 
+        # Create Full stream version of this line for use in 
+        # flavour tagging calibration.
         stages['DspToKmKpPip'] = stages['DspToKmKpPipTurbo']
         
         return stages
