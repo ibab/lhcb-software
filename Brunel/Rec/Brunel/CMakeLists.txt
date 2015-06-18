@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Brunel
 ################################################################################
-gaudi_subdir(Brunel v47r8)
+gaudi_subdir(Brunel v47r9)
 
 gaudi_depends_on_subdirs(DAQ/MDF
                          Det/CaloDetXmlCnv
