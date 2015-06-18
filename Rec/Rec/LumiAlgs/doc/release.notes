@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2015-06-18 - Marco Cattaneo
+ - Update references to follow introduction or Run heartbeat
+
 ! 2015-05-28 - Rosen Matev
  - Fix LumiEventTuple when running with Moore (directly reading the
    HltLumiSummary object).
