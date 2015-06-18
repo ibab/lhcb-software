@@ -298,7 +298,7 @@ class Commissioning_Physics_2015( object ):
                    , 'Hlt1CalibTrackingKPiDetached'
                    , 'Hlt1B2HH_LTUNB_KPi' , 'Hlt1B2HH_LTUNB_KK' , 'Hlt1B2HH_LTUNB_PiPi'
                    , 'Hlt1IncPhi'
-                   , 'Hlt1B2PhiPhi_LTUNB', 'Hlt1B2PhiGamma_LTUNB'
+                   , 'Hlt1B2PhiGamma_LTUNB'
                    , 'Hlt1CalibRICHMirror' 
                    , 'Hlt1DiProton'
                    , 'Hlt1DiProtonLowMult'

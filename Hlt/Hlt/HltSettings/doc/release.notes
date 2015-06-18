@@ -6,6 +6,9 @@
 
 !========================= HltSettings v6r15 2015-06-10 =========================
 
+! 2015-06-18 - Mika Vesterinen
+ - remove duplicated  Hlt1B2PhiPhi_LTUNB in Commissioning_Physics_2015.
+
 ! 2015-06-10 - Roel Aaij
  - Add Commossioning_MB_PassThrough settings that have both Hlt passthrough
    and Velo MicroBias (HltType is still Hlt_PassThrough).
