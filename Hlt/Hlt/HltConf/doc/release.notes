@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-06-18 - Sascha Stahl
+ - HltAfterburner: Protected adding of extra infos by checking if track locations exist.
+
 ! 2015-06-16 - Sascha Stahl
  - HltAfterburner: Add calculation of TrackLikelihood, TrackClonedist and VeloCharge
    to the sequence.

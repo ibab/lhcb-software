@@ -83,15 +83,18 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             from GaudiKernel.SystemOfUnits import mm
             from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
             from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
+            from Configurables import LoKi__VoidFilter as Filter
             trackLocations = {"Long" : Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks().outputSelection(),
                               "Downstream" : Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks().outputSelection()}
             infoSeq = Sequence("TrackInfoSequence", IgnoreFilterPassed = True)
-            infoSeq.Members +=  Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks().members() + Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks().members()
+            # I don't want to pull in reconstruction if not run before, then there should be also no candidates needing this information
+            #infoSeq.Members +=  Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks().members() + Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks().members()
             for name, location in trackLocations.iteritems():
                 from Configurables import TrackBuildCloneTable, TrackCloneCleaner
-                prefix = "Hlt2" + name 
-                #trackClones = GaudiSequencer("TrackClonesSeq")
-                
+                prefix =  name 
+                trackClones = GaudiSequencer(prefix + "TrackClonesSeq")
+                checkTracks =  Filter(prefix+"CheckTrackLoc",Code = "EXISTS('%(trackLoc)s')"% {"trackLoc" : location})
+                trackClones.Members += [checkTracks]
                 cloneTable = TrackBuildCloneTable(prefix + "FindTrackClones")
                 cloneTable.maxDz   = 500*mm
                 cloneTable.zStates = [ 0*mm, 990*mm, 9450*mm ]
@@ -102,27 +105,28 @@ class HltAfterburnerConf(LHCbConfigurableUser):
                 cloneCleaner.CloneCut = 5e3
                 cloneCleaner.inputLocation = location
                 cloneCleaner.linkerLocation = cloneTable.outputLocation
-                infoSeq.Members += [ cloneTable, cloneCleaner ]
-                
+                trackClones.Members += [ cloneTable, cloneCleaner ]
+
                 ## Add the likelihood information
-                
                 from Configurables import TrackAddLikelihood, TrackLikelihood
                 trackAddLikelihood = TrackAddLikelihood(prefix + "TrackAddLikelihood" )
                 trackAddLikelihood.addTool( TrackLikelihood, name = "TrackMatching_likTool" )
                 trackAddLikelihood.TrackMatching_likTool.otEff = 0.9
                 trackAddLikelihood.inputLocation = location
-                infoSeq.Members += [ trackAddLikelihood ]
+                trackClones.Members += [ trackAddLikelihood ]
+                infoSeq.Members += [trackClones]
 
             Afterburner.Members += [infoSeq]
 
             # Add VeloCharge to protoparticles for dedx
-            veloChargeSeq = Sequence("VeloChargeSequence", IgnoreFilterPassed = True)
+            veloChargeSeq = Sequence("VeloChargeSequence")
             from Configurables import ChargedProtoParticleAddVeloInfo
+            protoLocation = Hlt2BiKalmanFittedForwardTracking().hlt2ChargedAllPIDsProtos().outputSelection()
+            checkProto =  Filter("CheckProtoParticles",Code = "EXISTS('%(protoLoc)s')"% {"protoLoc" : protoLocation})
             addVeloCharge = ChargedProtoParticleAddVeloInfo("Hlt2AddVeloCharge")
-            addVeloCharge.ProtoParticleLocation = Hlt2BiKalmanFittedForwardTracking().hlt2ChargedAllPIDsProtos().outputSelection()
-            #DecoderDB["DecodeVeloRawBuffer/createVeloClusters"].members()
+            addVeloCharge.ProtoParticleLocation = protoLocation
             decodeVeloFullClusters = DecoderDB["DecodeVeloRawBuffer/createVeloClusters"].setup()
-            veloChargeSeq.Members += [ decodeVeloFullClusters, addVeloCharge]
+            veloChargeSeq.Members +=  [checkProto, decodeVeloFullClusters, addVeloCharge]
             Afterburner.Members += [veloChargeSeq]
             
 
