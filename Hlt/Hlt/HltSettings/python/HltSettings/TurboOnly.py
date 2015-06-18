@@ -102,7 +102,6 @@ class TurboOnly( object ):
         Returns a list of active lines
         """
         lines =  [ 'Hlt1TrackAllL0', 'Hlt1TrackMuon'
-                 , 'Hlt1CalibRICHMirror'
                  , 'Hlt1SingleMuonHighPT'
                  , 'Hlt1DiMuonHighMass'
                  , 'Hlt1B2GammaGamma'
@@ -115,10 +114,6 @@ class TurboOnly( object ):
                  , 'Hlt1CharmCalibrationNoBias'
                  , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
                  , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
-                 , 'Hlt1MBNoBias'
-                 , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent'  
-                 , 'Hlt1MBMicroBiasVelo','Hlt1MBMicroBiasTStation'
-                 , 'Hlt1VeloClosingMicroBias'
             ]
 
 
