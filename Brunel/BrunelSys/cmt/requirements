@@ -1,5 +1,5 @@
 package           BrunelSys
-version           v47r8
+version           v47r9
 
 branches cmt doc tests
  
@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v47r8 Rec
+use Brunel v47r9 Rec
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
@@ -20,6 +20,11 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use PrMCTools     v2r10 Pr
-use TrackFitter   v5r6  Tr
-use TrackMonitors v2r8  Tr
+use PrMCTools     v2r10  Pr
+use TrackFitter   v5r6   Tr
+use TrackMonitors v2r8   Tr
+use DDDB          v1r77  Det
+use DetCond       v12r42 Det
+use EventPacker   v5r3   Event
+use TrackSys      v9r8   Tf
+use TrackTools    v5r10  Tr
