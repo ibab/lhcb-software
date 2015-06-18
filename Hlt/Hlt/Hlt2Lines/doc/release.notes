@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-06-18 - Mika Vesterinen
+ - Fix spurious mbda0KmKpPimPp in cut string in V0H combiner in CharmHad/Stages.py
+
 ! 2015-06-12 - Olli Lupton
  - CharmHad: Duplicate the line Hlt2CharmHadDspToKmKpPipTurbo as
     Hlt2CharmHadDspToKmKpPip (no Turbo), so we get the desired result:

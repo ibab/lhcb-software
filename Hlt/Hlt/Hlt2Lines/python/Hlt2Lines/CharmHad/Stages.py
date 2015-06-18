@@ -975,7 +975,7 @@ class DetachedV0HCombiner(Hlt2Combiner):
         cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
                  " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )" )
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
-                 "mbda0KmKpPimPp & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
                  " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
         from HltTracking.HltPVs import PV3D
