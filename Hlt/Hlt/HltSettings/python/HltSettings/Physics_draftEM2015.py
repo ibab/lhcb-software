@@ -139,23 +139,30 @@ class Physics_draftEM2015( object ):
                                                    }
 
                      , Hlt1CalibRICHMirrorLinesConf :    { 'Prescale' : { 'Hlt1CalibHighPTLowMultTrks'     : 0.0001 }
-                                                        , 'DoTiming' : False
-                                                        , 'PT'       : 500. * MeV
-                                                        , 'P'        : 20000. * MeV
-                                                        , 'MinETA'   : 2.59
-                                                        , 'MaxETA'   : 2.97
-                                                        , 'Phis'     : [(-2.69, -2.29 ), (-0.85, -0.45), (0.45, 0.85), (2.29, 2.69)]
-                                                        , 'TrChi2'   : 2.
-                                                        , 'MinTr'    : 0.5
-                                                        , 'GEC'      : 'Loose'
-                                                        , 'LM_PT'    : 500. * MeV
-                                                        , 'LM_P'     : 1000. * MeV
-                                                        , 'LM_TrChi2': 2.
-                                                        , 'LM_MinTr' : 1
-                                                        , 'LM_MaxTr' : 40
-                                                        , 'LM_GEC'   : 'Loose'
-                                               }
-
+                                                         , 'DoTiming' : False
+                                                         , 'R2L_PT'       : 500. * MeV
+                                                         , 'R2L_P'        : 20000. * MeV
+                                                         , 'R2L_MinETA'   : 2.59
+                                                         , 'R2L_MaxETA'   : 2.97
+                                                         , 'R2L_Phis'     : [(-2.69, -2.29 ), (-0.85, -0.45), (0.45, 0.85), (2.29, 2.69)]
+                                                         , 'R2L_TrChi2'   : 2.
+                                                         , 'R2L_MinTr'    : 0.5
+                                                         , 'R2L_GEC'      : 'Loose'
+                                                         , 'R1L_PT'       : 500. * MeV
+                                                         , 'R1L_P'        : 20000. * MeV
+                                                         , 'R1L_MinETA'   : 1.6
+                                                         , 'R1L_MaxETA'   : 2.04
+                                                         , 'R1L_Phis'     : [(-2.65, -2.30 ), (-0.80, -0.50), (0.50, 0.80), (2.30, 2.65)]
+                                                         , 'R1L_TrChi2'   : 2.
+                                                         , 'R1L_MinTr'    : 0.5
+                                                         , 'R1L_GEC'      : 'Loose'
+                                                         , 'LM_PT'    : 500. * MeV
+                                                         , 'LM_P'     : 1000. * MeV
+                                                         , 'LM_TrChi2': 2.
+                                                         , 'LM_MinTr' : 1
+                                                         , 'LM_MaxTr' : 40
+                                                         , 'LM_GEC'   : 'Loose'
+                                                         }
                        , Hlt1CalibTrackingLinesConf :  { 'ParticlePT'            : 600     # MeV
                                                         ,'ParticleP'             : 4000    # MeV
                                                         ,'TrackCHI2DOF'          : 4       # dimensionless
@@ -308,7 +315,7 @@ class Physics_draftEM2015( object ):
                  , 'Hlt1NoPVPassThrough'
                  , 'Hlt1NonBeamBeamNoBias'
                  , 'Hlt1MBNoBiasLeadingCrossing'  # nobias leading crossing
-                 , 'Hlt1CalibRICHMirror' # calibration lines
+                 , 'Hlt1CalibRICHMirrorRICH1', 'Hlt1CalibRICHMirrorRICH2' # calibration lines
                  , 'Hlt1CalibHighPTLowMultTrks'
                  , 'Hlt1CalibTrackingKPiDetached'
                  , 'Hlt1Lumi' # lumi lines 'Hlt1LumiMidBeamCrossing' excluded
