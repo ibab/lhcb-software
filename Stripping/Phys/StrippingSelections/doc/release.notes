@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-18 - Andrea Contu
+ - New trigger filtered sample for EM tuning
+
 ! 2015-06-16 - Andrea Contu
  - Added test script for EM tuning
 

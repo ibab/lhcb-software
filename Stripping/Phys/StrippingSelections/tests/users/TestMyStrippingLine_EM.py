@@ -14,9 +14,10 @@ DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
                                 "CloneDistCut" : [5000, 9e+99 ] }
 
 #
-#Raw event juggler to split Other/RawEvent into Velo/RawEvent and Tracker/RawEvent
+#Fix for TrackEff lines
 #
-
+from Configurables import DecodeRawEvent
+DecodeRawEvent().setProp("OverrideInputs",4.1)
 
 # Specify the name of your configuration
 confname='PIDCalib' #FOR USERS
@@ -163,4 +164,4 @@ DaVinci().DDDBtag  = "dddb-20150526"
 DaVinci().CondDBtag = "cond-20150601"
 
 # input file
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/validationReco2015a.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/fulldst154030_trigfilt.py")
