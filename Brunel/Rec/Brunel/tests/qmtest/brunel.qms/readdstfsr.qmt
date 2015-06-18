@@ -21,7 +21,9 @@
   </set></argument>
   <argument name="reference"><text>../refs/test-FSR.ref</text></argument>
   <argument name="validator"><text>
-from Brunel.QMTest.BrunelExclusions import preprocessor
+from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
+preprocessor = BrunelPreprocessor + \
+  RegexpReplacer(when = "ONLINE_2008         DEBUG Connection string", orig = r'DBASE/Det/SQLDDDB/v7r999', repl = r'SQLite/SQLDDDB')
 validateWithReference(preproc = preprocessor)
 </text></argument>
   <argument name="prerequisites"><set>
