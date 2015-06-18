@@ -35,15 +35,15 @@ class Hlt1CalibRICHMirrorLinesConf( HltLinesConfigurableUser ) :
                 , 'R2L_MaxETA'   : 2.97
                 , 'R2L_Phis'     : [(-2.69, -2.29 ), (-0.85, -0.45), (0.45, 0.85), (2.29, 2.69)]
                 , 'R2L_TrChi2'   : 2.
-                , 'R2L_MinTr'    : 5.5
+                , 'R2L_MinTr'    : 0.5
                 , 'R2L_GEC'      : 'Loose'
-                , 'R1L_PT'       : 500. * MeV 
-                , 'R1L_P'        : 20000. * MeV 
+                , 'R1L_PT'       : 500. * MeV
+                , 'R1L_P'        : 20000. * MeV
                 , 'R1L_MinETA'   : 1.6
-                , 'R1L_MaxETA'   : 2.2
-                , 'R1L_Phis'     : [(-2.8, -2.2 ), (-0.95, -0.4), (0.4, 0.95), (2.2, 2.8)]
+                , 'R1L_MaxETA'   : 2.04
+                , 'R1L_Phis'     : [(-2.65, -2.30 ), (-0.80, -0.50), (0.50, 0.80), (2.30, 2.65)]
                 , 'R1L_TrChi2'   : 2.
-                , 'R1L_MinTr'    : 5.5 
+                , 'R1L_MinTr'    : 0.5
                 , 'R1L_GEC'      : 'Loose'
                 , 'LM_PT'    : 500. * MeV
                 , 'LM_P'     : 1000. * MeV
