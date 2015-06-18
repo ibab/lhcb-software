@@ -4,6 +4,29 @@ Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
 
+</PRE><H1><A NAME=v36r7p4>2015-06-18 DaVinci v36r7p4</A></H1><PRE>
+
+Patch release identical to v36r7p3 except for the
+- Update of the DaVinci package Phys/Tesla v1r8.
+- Update of the patched Analysis package Phys/TeslaTools v1r9.
+- Update of the patched LHCb packages Det/DetCond v12r42 and Det/DDDB v1r77
+
+- In Phys/DaVinci v36r7p4 :
+  . New patch release.
+
+- In Phys/Tesla v1r8 :
+  . Add option to make monitoring histograms in the event loop.
+
+- In Phys/TeslaTools v1r9 :
+  . First commit of TeslaMonitoring.
+  . Make sure PVs are set with technique as Primary.
+
+- In Det/DetCond v12r42, Det/DDDB v1r77
+  . Finalise support for CALIBOFF partition
+  . Add support for Run Stamp check
+  . Use new default tags for 2015 LHCBCOND: cond-20150617, DDDB: dddb-20150526
+
+
 </PRE><H1><A NAME=v36r7p3>2015-06-12 DaVinci v36r7p3</A></H1><PRE>
 
 Patch release identical to v36r7p2 except for the

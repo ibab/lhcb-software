@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciSys
 ################################################################################
-gaudi_subdir(DaVinciSys v36r7p3)
+gaudi_subdir(DaVinciSys v36r7p4)
 
 gaudi_depends_on_subdirs(DaVinciTests
 ########################################################
@@ -11,6 +11,8 @@ gaudi_depends_on_subdirs(DaVinciTests
                          Phys/DaVinciMonitors
                          Phys/TeslaTools
                          Phys/DecayTreeTupleTrigger
+                         Det/DetCond
+                         Det/DDDB
 ########################################################
                          Phys/DaVinci
 			 Phys/KaliCalo
