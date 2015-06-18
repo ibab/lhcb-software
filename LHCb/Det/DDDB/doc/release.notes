@@ -3,6 +3,11 @@
 ! Responsible : Marco Cattaneo
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
+
+! 2015-06-03 - Marco Cattaneo
+ - Update default database tags to the latest ones:
+   . LHCBCOND, 2015: cond-20150617
+
 ! 2015-06-04 - Liang Sun
  - Default database tag for CALIBOFF should be head-2015604, fix the typo here
 
