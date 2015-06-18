@@ -7,6 +7,9 @@
 !========================= HltSettings v6r15 2015-06-10 =========================
 
 ! 2015-06-18 - Mika Vesterinen
+ - Split the rich mirror calib Hlt1 lines in Commissioning_Physics_2015
+
+! 2015-06-18 - Mika Vesterinen
  - remove duplicated  Hlt1B2PhiPhi_LTUNB in Commissioning_Physics_2015.
 
 ! 2015-06-10 - Roel Aaij
