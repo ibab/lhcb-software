@@ -285,7 +285,8 @@ StatusCode OTModuleClbrMon::initialize()
 
   double t0s[3][4][4][9]; memset(t0s, 0, sizeof(t0s));
   if(readXMLs) statusCode = readCondXMLs(t0s);
-  else statusCode = readCondDB(t0s);
+  //else statusCode = readCondDB(t0s);
+  else statusCode = read_Globalt0(t0s);
 
   return statusCode;
 }
@@ -533,7 +534,8 @@ StatusCode OTModuleClbrMon::finalize()
   //double fake_t0s[3][4][4][9]; memset(t0s, 0, sizeof(t0s));
   //readCondXMLs(t0s);
   if(readXMLs) readCondXMLs(t0s);
-  else readCondDB(t0s);
+  //else readCondDB(t0s);
+  else read_Globalt0(t0s);
 
   std::cout<< "READ t0s"<< std::endl;
   if(verbose){
@@ -883,6 +885,31 @@ StatusCode OTModuleClbrMon::readCondDB(double read_t0s[3][4][4][9])
   
   return StatusCode::SUCCESS;
 }
+
+StatusCode OTModuleClbrMon::read_Globalt0(double read_t0s[3][4][4][9])
+{
+   std::string subDet = "OT";
+
+   double Module_t0=0;
+
+   for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++)
+   {
+     for(int m = 8; m >= 0; m--){
+       
+       std::string alignLoc ="/dd/Conditions/Calibration/OT/CalibrationGlobal";
+       
+       Condition *myCond = get<Condition>( detSvc(), alignLoc );
+       
+       //double global_t0 = myCond->paramAsDouble( "TZero" );
+       read_t0s[s][l][q][m] = myCond->paramAsDouble( "TZero" );
+       
+     }
+   }
+
+  
+  return StatusCode::SUCCESS;
+}
+
 
 StatusCode OTModuleClbrMon::readCondXMLs(double t0s[3][4][4][9])
 {

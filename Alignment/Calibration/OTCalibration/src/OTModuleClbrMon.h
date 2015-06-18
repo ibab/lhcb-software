@@ -168,9 +168,13 @@ public:
   StatusCode readCondXMLs(double t0s[3][4][4][9]);
 
   /**
-   * Read condition XMLs.
+   * Read condition XMLs form DB.
    */
   StatusCode readCondDB(double t0s[3][4][4][9]);
+  /**
+   * Read global t0 from online partition of offline DB.
+   */
+  StatusCode read_Globalt0(double t0s[3][4][4][9]);
 
  private:
 
