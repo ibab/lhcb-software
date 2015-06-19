@@ -94,7 +94,6 @@ static void load(int org_argc, char** org_argv,
     mtcp_output(MTCP_FATAL,"Failed to open checkpoint file:%s\n",file_name);
   }
   checkMarker(fd,PROCESS_BEGIN_MARKER);
-
   checkMarker(fd,LIBS_BEGIN_MARKER);
   mtcp_sys_read(fd,&libs_size,sizeof(long));
   mtcp_sys_read(fd,&num_libs,sizeof(int));
@@ -310,21 +309,22 @@ extern "C" void __libc_csu_fini (void)
 #endif
 
 static int usage() {
-  mtcp_output(MTCP_ERROR,"Usage: restore -p(rint) <print-level> -i(nput) <file-name> \n"
-              "       print-level = 1...5  : DEBUG,INFO,WARNING,ERROR,FATAL.         \n"
-              "                              Default:%d                              \n"
-              "       file-name = string   : Name of the checkpoint file.            \n"
-              "       -n                   : Do not write PID in mtcp output.        \n"
-              "       -e                   : Read new environment vars from stdin.   \n"
-              "       -d                   : Sleep 10 sec to attacj debugger         \n"
-              "       -a                   : Personalize process                     \n"
-              "       -A                   : DO NOT personalize process              \n"
-              "       -r (DEFAULT)         : Execve process after with restored env. \n"
-              "       -R                   : DO NOT restart.                         \n"
-              "       -x (DEFAULT)         : Restore libraries to dedicated directory\n"
-              "       -X                   : DO NOT restore libraries.               \n"
-              "       -c (DEFAULT)         : Continue execution after lib restore.   \n"
-              "       -X                   : DO NOT continue execution               \n"
+  mtcp_output(MTCP_ERROR,
+	      "Usage: restore -p(rint) <print-level> -i(nput) <file-name> [options]   \n"
+              "       <print-level> = 1...5 : DEBUG,INFO,WARNING,ERROR,FATAL.         \n"
+              "                               Default:%d                              \n"
+              "       <file-name> = string  : Name of the checkpoint file.            \n"
+              "       -n                    : Do not write PID in mtcp output.        \n"
+              "       -e                    : Read new environment vars from stdin.   \n"
+              "       -d                    : Sleep 10 sec to attach debugger         \n"
+              "       -a                    : Personalize process                     \n"
+              "       -A (DEFAULT)          : DO NOT personalize process              \n"
+              "       -r (DEFAULT)          : Execve process after with restored env. \n"
+              "       -R                    : DO NOT restart.                         \n"
+              "       -x (DEFAULT)          : Restore libraries to dedicated directory\n"
+              "       -X                    : DO NOT restore libraries.               \n"
+              "       -c (DEFAULT)          : Continue execution after lib restore.   \n"
+              "       -C                    : DO NOT continue execution after restore.\n"
               , mtcp_get_debug_level());
   return 1;
 }
