@@ -4,6 +4,10 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+! 2015-06-18 - Marco Cattaneo
+ . Fix dumpmultievents test to follow changes in output due to introduction
+   of Run Stamp in CondDB
+
 !========================= DAQUtils v1r13 2014-03-17 =========================
 ! 2014-03-12 - Rob Lambert
  - fix hex printing bug #104052

@@ -17,56 +17,67 @@
 # |-Monitors       = []  (default: [])
 # \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
 # applying configuration of DDDBConf
-# WARNING: Using default tag dq-20130806-1 for partition DQFLAGS
+# WARNING: Using default tag dq-20140822 for partition DQFLAGS
 # /***** User DDDBConf/DDDBConf **********************************************************************
-# |-DataType   = '2012'  (default: '2012')
-# |-DbRoot     = 'conddb:/lhcb.xml'
-# |-AutoTags   = False
-# |-Simulation = False  (default: False)
+# |-DataType    = '2012'  (default: '2012')
+# |-DbRoot      = 'conddb:/lhcb.xml'
+# |-InitialTime = 'Safe'
+# |-AutoTags    = False
+# |-Simulation  = False  (default: False)
 # \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
 # skipping configuration of XMLSummary
 # applying configuration of CondDB
 # --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
-# |-Upgrade                   = False
-# |-DBSnapshotDirectory       = '/group/online/hlt/conditions'
-# |-SQLiteLocalCopiesDir      = ''
-# |-Online                    = False
-# |-LogFile                   = ''
-# |-EnableRunChangeHandler    = False
-# |-Tags                      = {}  (default: {})
-# |-LatestLocalTagsByDataType = []  (default: [])
-# |-AllLocalTagsByDataType    = []  (default: [])
-# |-PartitionName             = 'LHCb'
-# |-PartitionConnectionString = {}  (default: {})
-# |-LocalTags                 = {}  (default: {})
-# |-IgnoreHeartBeat           = False
-# |-Overrides                 = []  (default: [])
-# |-Simulation                = False  (default: False)
-# |-QueryGranularity          = 0
-# |-UseOracle                 = False
-# |-LatestGlobalTagByDataType = ''
-# |-UseDBSnapshot             = False
-# |-DisableLFC                = False
-# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
-# |-UseLatestTags             = []  (default: [])
-# |-OverwriteSQLiteLocalCopy  = False
+# |-Upgrade                    = False
+# |-EnableRunStampCheck        = True
+# |-DBSnapshotDirectory        = '/group/online/hlt/conditions'
+# |-LatestLocalTagsByDataType  = []  (default: [])
+# |-Online                     = False
+# |-LogFile                    = ''
+# |-SQLiteLocalCopiesDir       = ''
+# |-EnableRunChangeHandler     = False
+# |-RunChangeHandlerConditions = {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']}
+# |                            (default: {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']})
+# |-Tags                       = {}  (default: {})
+# |-LoadCALIBDB                = 'OFFLINE'
+# |-AllLocalTagsByDataType     = []  (default: [])
+# |-UseOracle                  = False
+# |-RunStampCondition          = ''
+# |-PartitionConnectionString  = {}  (default: {})
+# |-LocalTags                  = {}  (default: {})
+# |-IgnoreHeartBeat            = False
+# |-Overrides                  = []  (default: [])
+# |-Simulation                 = False  (default: False)
+# |-QueryGranularity           = 0
+# |-LatestGlobalTagByDataType  = ''
+# |-UseDBSnapshot              = False
+# |-DisableLFC                 = False
+# |-HeartBeatCondition         = '/Conditions/Online/LHCb/Tick'
+# |-LatestGlobalTagByDataTypes = []  (default: [])
+# |-UseLatestTags              = []  (default: [])
+# |-OverwriteSQLiteLocalCopy   = False
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v2r1)
-                                          running on lxplus0024 on Thu Feb  6 17:17:44 2014
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r4)
+                                          running on mcat.cern.ch on Fri Jun 19 18:16:31 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
 DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
-EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='root://eoslhcb.cern.ch//eos/lhcb/swtest/lhcb/swtest/B2CC.S20r0p2.Dimuon.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/swtest/B2CC.S20r0p2.Dimuon.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
+EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 ApplicationMgr       INFO Application Manager Started successfully
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
+COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
+COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
+ONLINE_2008          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2008.db/ONLINE"
+ONLINE_2008          INFO Using TAG ""
 RawEventDump         INFO banks of type 0(L0Calo) discovered in Trigger/RawEvent
 RawEventDump         INFO 2 banks of type 0: [size, source, version, magic]
 RawEventDump         INFO   [312, 0, 1, cbcb] Data follows...
@@ -2563,6 +2574,6 @@ RawEventDump         INFO
 ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
-RootCnvSvc           INFO Disconnected data IO:501277DD-0121-E311-9691-003048F0E854 [root://eoslhcb.cern.ch//eos/lhcb/swtest/lhcb/swtest/B2CC.S20r0p2.Dimuon.dst]
+RootCnvSvc           INFO Disconnected data IO:501277DD-0121-E311-9691-003048F0E854 [root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/swtest/B2CC.S20r0p2.Dimuon.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
