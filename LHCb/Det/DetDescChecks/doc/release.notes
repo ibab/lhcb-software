@@ -5,6 +5,10 @@
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
 
+! 2015-06-19 - Marco Cattaneo
+ - Disable RunStamp check in loaddddb-2015, to avoid frequent failure as we
+   initialise with time = now
+
 !========================= DetDescChecks v5r11 2014-09-08 ======================
 ! 2014-07-30 - Liang Sun
  - New tests added for DataType 2015: loaddddb-2015 & loaddddb-sim-2015

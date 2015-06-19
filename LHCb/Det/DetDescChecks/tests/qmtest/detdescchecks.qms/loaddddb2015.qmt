@@ -14,6 +14,7 @@ from Configurables import DDDBConf, CondDB
 
 DDDBConf(DataType = "2015")
 CondDB().UseLatestTags = ["2015"]
+CondDB().EnableRunStampCheck = False
 
 </text></argument>
 <argument name="validator"><text>
