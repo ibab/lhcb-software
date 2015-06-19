@@ -156,6 +156,9 @@ int TanInterface::errorCode(int tan_error)  {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 int TanInterface::fatalError(int code)  {
+  if ( code != TAN_SS_SUCCESS )  {
+    ::lib_rtl_output(LIB_RTL_OS,"Closing Channel in error:%d errno=%d\n",code,errno);
+  }
   delete m_channel;
   m_channel = 0;
   return code;
@@ -274,15 +277,16 @@ int TanInterface::addressByName(const char* name, NetworkChannel::Address& sad) 
       int retry = 4, nbyte = 0;
       TcpNetworkChannel c;
       TcpNetworkChannel &rcv = c, &snd = c;
+      c.reuseAddress();
       while(--retry > 0 && nbyte == 0)  {
         if ( c.connect(radd,Connect_TMO) == 0 )  {
           nbyte = snd.send(&msg,sizeof(msg));
           break;
         }
-        ::lib_rtl_output(LIB_RTL_OS,"Failed to connect to TAN(addressByName)");
-        ::lib_rtl_sleep(100);
+        ::lib_rtl_sleep(1000);
       }
       if ( nbyte <= 0 )  {
+        ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to connect to TAN(addressByName)");
         return errorCode(TAN_SS_NOTOPEN);
       }
 #else
@@ -323,14 +327,17 @@ int TanInterface::allocatePort(const char* name, NetworkChannel::Port *port)  {
       int retry = 4, rc = -1;
       m_channel = new TcpNetworkChannel;
       TanMessage msg(TanMessage::ALLOCATE);
+      m_channel->reuseAddress();
       setLocalAddress(msg.m_sin);
       while(--retry > 0 && rc != 0)  {
         rc = m_channel->connect(msg.m_sin,Connect_TMO);
         if ( rc == 0 ) break;
-        ::lib_rtl_output(LIB_RTL_OS,"Failed to connect to TAN(allocatePort)");
         ::lib_rtl_sleep(1000);
       }
-      if ( rc != -1 )  {
+      if ( rc == -1 )  {
+        ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to connect to TAN(allocatePort)");
+      }
+      else if ( rc != -1 )  {
         nodeWithName(name, 0 , msg._Name());
         //::fprintf(stdout,"%s> TAN:  ALLOCATE: %s [%s] Host:%s Port:%d %d %s\n",
         //	  RTL::nodeName().c_str(),RTL::processName().c_str(), msg._Name(),m_pcHostName, 

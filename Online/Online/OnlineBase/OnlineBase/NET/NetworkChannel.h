@@ -69,6 +69,7 @@ public:
   }
   /// Return Error string
   const char* errMsg();
+
   /// Abstract method to cancel eventually pending I/O requests
   virtual int cancel() = 0;
   /// Abstract method to Bind Address (Acceptor)
@@ -79,7 +80,9 @@ public:
   virtual int send   (const void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0) = 0;
   /// Abstract method: receive data from network.
   virtual int recv   (void* buff, int len, int tmo = 0, int flags = 0, Address* addr = 0) = 0;
-  ///  Set Select TMO on receive.
+  /// Set socket option to reuse address in case of re-creation (default implementation is empty)
+  virtual int reuseAddress()  const;
+  /// Set Select TMO on receive.
   virtual int selectTmo(int flags, int tmo);
 };
 #endif  /* __cplusplus           */

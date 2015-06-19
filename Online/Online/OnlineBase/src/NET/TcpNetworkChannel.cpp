@@ -17,7 +17,7 @@ TcpNetworkChannel::TcpNetworkChannel() {
     return;
   }
   struct linger Linger;
-  Linger.l_onoff  = 0;
+  Linger.l_onoff  = 1;
   Linger.l_linger = 0;
   ::setsockopt(m_socket, SOL_SOCKET, SO_LINGER, (const char*)&Linger, sizeof(Linger));
   m_bValid = true;
@@ -37,10 +37,33 @@ TcpNetworkChannel::TcpNetworkChannel(Channel channel) {
 TcpNetworkChannel::~TcpNetworkChannel()  {
   //stopTimer();
   if ( m_socket > 0 ) {
+    struct linger Linger;
+    Linger.l_onoff  = 0;
+    Linger.l_linger = 0;
+    ::setsockopt(m_socket, SOL_SOCKET, SO_LINGER, (const char*)&Linger,sizeof(Linger));
     ::shutdown(m_socket,2);
     ::socket_close (m_socket);
   }
 }
+// ----------------------------------------------------------------------------
+// o Set socket option to reuse address in case of re-creation
+//                                      M.Frank
+// ----------------------------------------------------------------------------
+int TcpNetworkChannel::reuseAddress()  const  {
+  if ( m_socket > 0 )  {
+    int status, on = 1;
+    struct linger Linger;
+    Linger.l_onoff  = 0; // Enable SO_LINGER
+    Linger.l_linger = 0; // Timeout (seconds?)
+    status = ::setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, (const char*)&on, sizeof(on));
+    status = ::setsockopt(m_socket, SOL_SOCKET, SO_BROADCAST, (const char*)&on, sizeof(on));
+    status = ::setsockopt(m_socket, SOL_SOCKET, SO_OOBINLINE, (const char*)&on, sizeof(on));
+    status = ::setsockopt(m_socket, SOL_SOCKET, SO_LINGER,   (const char*)&Linger,sizeof(Linger));
+    return status;
+  }
+  return (-1);
+}
+
 // ----------------------------------------------------------------------------
 //  o Bind Address (Acceptor)
 //  o listen to specified connection (Acceptor)
@@ -49,10 +72,14 @@ TcpNetworkChannel::~TcpNetworkChannel()  {
 int TcpNetworkChannel::bind ( const Address& addr, int con_pend )  {
   if ( m_socket > 0 )  {
     m_errno = 0;
-    int status, on = 1;
+    struct linger Linger;
+    int status, on  = 1;
+    Linger.l_onoff  = 0; // Enable/Disable SO_LINGER
+    Linger.l_linger = 0; // Timeout (seconds?)
     status = ::setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, (const char*)&on, sizeof(on));
     status = ::setsockopt(m_socket, SOL_SOCKET, SO_BROADCAST, (const char*)&on, sizeof(on));
     status = ::setsockopt(m_socket, SOL_SOCKET, SO_OOBINLINE, (const char*)&on, sizeof(on));
+    status = ::setsockopt(m_socket, SOL_SOCKET, SO_LINGER,   (const char*)&Linger,sizeof(Linger));
     status = ::bind ( m_socket, (sockaddr*)&addr, sizeof(addr) );
     if ( status < 0 )  {
       m_errno = ::lib_rtl_socket_error();
@@ -81,8 +108,8 @@ NetworkChannel::Channel TcpNetworkChannel::accept ( Address& addr, int tmo )  {
     if ( accepted > 0 )   {
       struct linger Linger;
       int status, on  = 1;
-      Linger.l_onoff  = 0;
-      Linger.l_linger = 0;
+      Linger.l_onoff  = 1; // Enable SO_LINGER
+      Linger.l_linger = 0; // Timeout (seconds?)
       status = ::setsockopt( accepted, SOL_SOCKET, SO_REUSEADDR,(const char*)&on, sizeof(on));
       status = ::setsockopt( accepted, SOL_SOCKET, SO_BROADCAST,(const char*)&on, sizeof(on));
       status = ::setsockopt( accepted, SOL_SOCKET, SO_OOBINLINE,(const char*)&on, sizeof(on));

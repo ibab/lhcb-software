@@ -1,4 +1,5 @@
 #include <ctime>
+#include <cerrno>
 #include <cstdio>
 #include <cstdlib>
 #include "TAN/TanDB.h"
@@ -11,30 +12,34 @@
 #define lib_signal(x) {printf("%s\n",strerror(x)); }
 #endif
 
+static void help()  {
+  printf("Usage : inquire -opt <opts>\n");
+  printf("        -t           supply task name; default:MYTASK\n");
+  printf("        -n           supply host name; default:<localhost>\n");
+  printf("        -c           contious mode \n");
+  printf("        -q           quiet mode    \n");
+  printf("        -?, -h       get this help \n");
+  exit(0);
+}
+
 extern "C" int rtl_tan_alloc_test ( int argc, char* argv[] )  {
   // ----------------------------------------------------------------------------
   //
   //                                      M.Frank
   // ----------------------------------------------------------------------------
+  RTL::CLI cli(argc,argv,help);
   TanInterface& interf = TanInterface::instance();
   int status = 1;
   bool continuous = false, quiet = false;
-  char *c, buff[64], host[32];
-  tan_host_name(host,sizeof(host));
-  while( --argc > 0 )      {
-    if ( *(c = *++argv) == '-' )   {
-      switch( *++c | 0x20 )  {
-      case 'c': continuous = true; break;
-      case 'q': quiet      = true; break;
-      default:
-        printf("Usage : inquire -opt <opts>\n");
-        printf("        -c           contious mode \n");
-        printf("        -q           quiet mode    \n");
-        printf("        -?, -h       get this help \n");
-        exit(0);
-      }
-    }
-  }
+  char buff[64], host[64];
+  std::string task_name = "MYTASK", host_name;
+  ::lib_rtl_get_node_name(host,sizeof(host));
+  //tan_host_name(host,sizeof(host));
+
+  cli.getopt("node",1,host_name=host);
+  cli.getopt("task",1,task_name);
+  continuous = cli.getopt("continuous",1) != 0;
+  quiet = cli.getopt("quiet",1) != 0;
 
 #if defined(_OSK)
 #define MAXTASKS 6
@@ -49,7 +54,7 @@ extern "C" int rtl_tan_alloc_test ( int argc, char* argv[] )  {
       NetworkChannel::Port ports[MAXTASKS];
       for ( int i = 0; i < MAXTASKS; i++ )         {
         ports[i] = 0;
-        ::snprintf(buff,sizeof(buff),"%s::MYTASK_%02d",host,i);
+        ::snprintf(buff,sizeof(buff),"%s::%s_%02d",host_name.c_str(),task_name.c_str(),i);
         status = ::tan_allocate_port_number (buff, &ports[i]);
         alloc++;
         if ( status == TAN_SS_SUCCESS )  {
@@ -60,11 +65,12 @@ extern "C" int rtl_tan_alloc_test ( int argc, char* argv[] )  {
           lib_signal(status);
         }
         for ( int j = 0; j < i; j++ )           {
-          ::snprintf(buff,sizeof(buff),"%s::MYTASK_%02d_%02d",host,i,j);
+          ::snprintf(buff,sizeof(buff),"%s::%s_%02d_%02d",host_name.c_str(),task_name.c_str(),i,j);
           status = ::tan_declare_alias(buff);
           alias++;
           if ( !quiet || status != TAN_SS_SUCCESS ) {
-            ::printf("     DeclareAlias: %s   status:%d\n", buff, status);
+            ::printf("     DeclareAlias: %s   status:%d %08X errno:%d\n", 
+		     buff, status, status, errno);
             if ( status != TAN_SS_SUCCESS ) lib_signal(status);
           }
         }
@@ -72,7 +78,7 @@ extern "C" int rtl_tan_alloc_test ( int argc, char* argv[] )  {
           ::printf("Hit any key to continue\n");
           ::getchar();
         }
-        ::snprintf(buff,sizeof(buff),"%s::MYTASK_%02d",host,i);
+        ::snprintf(buff,sizeof(buff),"%s::%s_%02d",host_name.c_str(),task_name.c_str(),i);
         status = ::tan_deallocate_port_number ( buff );
 #ifdef _OSK
         //       tsleep(5);

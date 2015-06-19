@@ -53,6 +53,13 @@ int NetworkChannel::selectTmo(int flags, int tmo) {
 }
 
 // ----------------------------------------------------------------------------
+// o Set socket option to reuse address in case of re-creation
+//                                      M.Frank
+// ----------------------------------------------------------------------------
+int NetworkChannel::reuseAddress()  const  {
+  return 0;
+}
+// ----------------------------------------------------------------------------
 //  AST called on timeout for receiving data on socket
 //                                      M.Frank
 // ----------------------------------------------------------------------------

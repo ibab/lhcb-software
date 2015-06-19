@@ -38,17 +38,17 @@ class TcpNetworkChannel : public NetworkChannel {
   /// Destructor: closes channel
   ~TcpNetworkChannel();
   /// Connect to network partner (Connector)
-  int connect ( const Address&  addr, int tmo = 0);
+  virtual int connect ( const Address&  addr, int tmo = 0);
   /// Bind Address + listen to specified connection (Acceptor)
-  int bind( const Address& addr, int con_pend = 5 );
+  virtual int bind( const Address& addr, int con_pend = 5 );
   /// Accept connection on socket (Acceptor)
-  Channel accept( Address& addr, int tmo = 0 );
+  virtual Channel accept( Address& addr, int tmo = 0 );
   /// Set send buffer size
   int setSendBufferSize(int len);
   /// send data to network partner.
-  int send  (const void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0);
+  virtual int send  (const void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0);
   /// receive data from network partner.
-  int recv  (void* buff, int len, int tmo = 0, int flags = 0, Address* addr = 0);
+  virtual int recv  (void* buff, int len, int tmo = 0, int flags = 0, Address* addr = 0);
   /// Queue Accept call 
   int queueAccept  ( Port port, CPP::EventHandler *handler );
   /// Queue receive call 
@@ -56,6 +56,8 @@ class TcpNetworkChannel : public NetworkChannel {
   /// Queue receive call
   int _unqueueIO ( Port port );
   /// Cancel eventually pending I/O requests
-  int cancel();
+  virtual int cancel();
+  /// Set socket option to reuse address in case of re-creation
+  virtual int reuseAddress()  const;
 };
 #endif  /* ONLINEBASE_NET_TcpNetworkChannel_H__  */

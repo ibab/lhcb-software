@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
+#include "RTL/rtl.h"
 #include "AMS/amsdef.h"
 #include "TAN/TanInterface.h"
 
@@ -14,8 +15,18 @@
 #else
 #define lib_signal(x) {printf("%s\n",strerror(x)); }
 #endif
+static void help()  {
+  printf("Usage : inquire -opt <opts>\n");
+  printf("        -c           contious mode\n");
+  printf("        -t           supply task name; default:MYTASK\n");
+  printf("        -n           supply host name; default:<localhost>\n");
+  printf("        -q           quiet mode(statistics only\n");
+  printf("        -?, -h       get this help\n");
+  exit(0);
+}
 
 extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
+  RTL::CLI cli(argc,argv,help);
   TanInterface& interf = TanInterface::instance();
   int status, num_inq = 0, tot_inq = 0, succ = 0, fail = 0, notfnd = 0;
 #ifdef _WIN32
@@ -23,37 +34,29 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
 #else
   int inc = 500;
 #endif
+  std::string task_name = "MYTASK", host_name;
   bool continuous = false, quiet = false;
-  char *c, buff[64], host[32];
+  char buff[64], host[32];
   sockaddr_in addr;
+  ::lib_rtl_get_node_name(host,sizeof(host));
   tan_host_name(host,sizeof(host));
-  while( --argc > 0 )      {
-    if ( *(c = *++argv) == '-' )   {
-      switch( *++c | 0x20 )  {
-        case 'q': quiet = true;         break;
-        case 'c': continuous = true;      break;
-        case 'n': strncpy(host,c+2,sizeof(host));   break;
-        default:
-          printf("Usage : inquire -opt <opts>\n");
-          printf("        -c           contious mode\n");
-          printf("        -n           supply host name; default:%s\n",host);
-          printf("        -q           quiet mode(statistics only\n");
-          printf("        -?, -h       get this help\n");
-          exit(0);
-      }
-    }
-  }
+  cli.getopt("node",1,host_name=host);
+  cli.getopt("task",1,task_name);
+  continuous = cli.getopt("continuous",1) != 0;
+  quiet = cli.getopt("quiet",1) != 0;
+
 #define _PRINT  succ++; if ( !quiet ) printf
 #define _PRINTERROR(buff,status)  {             \
   if ( status == AMS_TASKNOTFOUND ) notfnd++;          \
-  if ( !quiet || status != AMS_TASKNOTFOUND )  {       \
+  if ( !quiet || status != AMS_TASKNOTFOUND )  {	     \
     ::printf("GetAddressByName(%-24s) %4d ", buff, status);  \
-    lib_signal(status);					\
-  } fail++;							\
-}
+    lib_signal(status);					     \
+  } fail++;						\
+  }
+
   if ( interf.Status() == TAN_SS_SUCCESS ) {
     /// Check non-exisiting task
-    ::snprintf(buff,sizeof(buff),"%s::IDIOTIC",host);
+    ::snprintf(buff,sizeof(buff),"%s::IDIOTIC",host_name.c_str());
     status = ::tan_get_address_by_name(buff,&addr);
     _PRINTERROR(buff,status);
     time_t start = ::time(0);
@@ -66,10 +69,10 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
 		 time(0) - start, tot_inq, nalias, succ, notfnd, fail);
       }
       for ( int i = 0; i < MAXTASKS; i++ )         {
-        if ( (i % 10)==0 && !quiet ) status = tan_dump_dbase ( host );
+        if ( (i % 10)==0 && !quiet ) status = tan_dump_dbase ( host_name.c_str() );
         for ( int j = 0; j < i; j++ )           {
           // Now check the aliases
-          ::snprintf(buff,sizeof(buff),"%s::MYTASK_%02d_%02d",host,i,j);
+          ::snprintf(buff,sizeof(buff),"%s::%s_%02d_%02d",host_name.c_str(),task_name.c_str(),i,j);
           status = ::tan_get_address_by_name (buff,&addr);
           num_inq++;
           if ( status == AMS_SUCCESS ) {
@@ -82,7 +85,7 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
             _PRINTERROR(buff,status);
           }
         }
-        ::snprintf(buff,sizeof(buff),"%s::MYTASK_%02d",host,i);
+        ::snprintf(buff,sizeof(buff),"%s::%s_%02d",host_name.c_str(),task_name.c_str(),i);
         status = ::tan_get_address_by_name (buff,&addr);
         num_inq++;
         if ( status == AMS_SUCCESS ) {

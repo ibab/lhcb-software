@@ -50,6 +50,7 @@ protected:
     int      setLocalAddress  (NetworkChannel::Address& sin);
     /// Get hostentry by name from inetdb
     hostent* hostByName    (const char* name);
+
     /// Fatal nameserver connection error: close channel and return given error code
     int fatalError(int code);
     /// Convert TAN error codes to operating system specific ones

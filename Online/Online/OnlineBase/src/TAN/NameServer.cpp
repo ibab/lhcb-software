@@ -380,6 +380,7 @@ TcpNameService::TcpNameService(int port, bool verbose) : NameService(m_tcp=new T
   }
   m_pAccepthandler = new EventHandler(this);
   m_pNetwork = &((TcpNetworkChannel&)m_tcp->recvChannel());
+  m_pNetwork->reuseAddress();
   m_pNetwork->queueAccept ( m_port, m_pAccepthandler );              // Rearm
 }
 
@@ -408,11 +409,19 @@ void TcpNameService::handle()   {
 // ----------------------------------------------------------------------------
 int TcpNameService::handle ( EventHandler* handler )  {
   int status = NAME_SERVER_SUCCESS;
-  if ( handler == m_pAccepthandler )
-    status=handleAcceptRequest ( handler );
-  else if ( handler != 0 )
-    status=handleReceiveRequest ( handler );
-  if ( m_shutdown ) ::exit(0);
+  try {
+    if ( handler == m_pAccepthandler )
+      status=handleAcceptRequest ( handler );
+    else if ( handler != 0 )
+      status=handleReceiveRequest ( handler );
+    if ( m_shutdown ) ::exit(0);
+  }
+  catch(const std::exception& e)  {
+    ::lib_rtl_output(LIB_RTL_ERROR,"TcpNameService::handle> Exception: %s",e.what());
+  }
+  catch(...)  {
+    ::lib_rtl_output(LIB_RTL_ERROR,"TcpNameService::handle> UNKNOWN Exception");
+  }
   return status;
 }
 
@@ -437,6 +446,7 @@ int TcpNameService::handleAcceptRequest ( EventHandler* handler )  {
     if ( entry != 0 )  {                                           // SUCCESS:
       Receivehandler*    hand = new Receivehandler(this);          // Add handler      
       TcpNetworkChannel* chan = new TcpNetworkChannel(channel);    // Create new connection
+      chan->reuseAddress();
       hand->_Set ( chan, entry );                                  //   Update handler's parameters
       return handleReceiveRequest( hand );                         //
     }                                                              // and return
@@ -469,8 +479,12 @@ int TcpNameService::handleReceiveRequest ( EventHandler* handler )  {
       chan->_unqueueIO (m_port);
     }
     else  {
-      switch( ntohl(reply.function()) ) {
-      case TanMessage::DEALLOCATE:
+      int func = ntohl(reply.function());
+      switch( func ) {
+	//case TanMessage::DUMP:
+	//case TanMessage::INQUIRE:       // Inquire service...
+      case TanMessage::DEALLOCATE:    // Deallocate port
+	// Here the channel must be closed.
         // No task dead message! chan->recv(&reply, 1);
         chan->_unqueueIO (m_port);
         break;
@@ -480,7 +494,8 @@ int TcpNameService::handleReceiveRequest ( EventHandler* handler )  {
           if ( !lib_rtl_is_success(status) ) {
             ::lib_rtl_output(LIB_RTL_ERROR,"Error rearming receive: %s",chan->errMsg());
           }
-          return status;
+	  if ( func != TanMessage::INQUIRE )
+	    return status;
         }
         m_tandb.Close ( ent );
         chan->_unqueueIO (m_port);
