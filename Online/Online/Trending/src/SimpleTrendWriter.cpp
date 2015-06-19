@@ -2,10 +2,6 @@
 // Include files
 
 // from Gaudi
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include "stdio.h"
 #include "GaudiKernel/ToolFactory.h"
 
 // local
@@ -52,13 +48,6 @@ StatusCode SimpleTrendWriter::initialize( ) {
 //=========================================================================
 //  Set partition and name. Open file and load latest tags
 //=========================================================================
-int SimpleTrendWriter::Fileexists(std::string &fnam)
-{
-  struct stat stbuf;
-  int i = stat(fnam.c_str(),&stbuf);
-  return i;
-}
-
 void SimpleTrendWriter::setPartitionAndName( std::string& partition, std::string& name ) {
   m_fileName = partition + "_" + name;
   if (0 == m_trend)
@@ -71,17 +60,7 @@ void SimpleTrendWriter::setPartitionAndName( std::string& partition, std::string
   if ( 0 == m_trend ) return ;
 
   if ( m_fileIsOpen ) close();
-  int fstat = Fileexists(m_fileName);
-  bool status;
-  if (fstat ==-1)
-  {
-    status = m_trend->openWrite(m_fileName,m_tags);
-    m_trend->closeFile();
-  }
-  else
-  {
-    status = m_trend->openRead( m_fileName );
-  }
+  bool status = m_trend->openRead( m_fileName );
   if ( status ) {
     m_trend->tags( m_tags );  // get the tags;
     m_values.resize( m_tags.size(), 0. );
