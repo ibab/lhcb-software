@@ -21,7 +21,7 @@
 #include "RTL/Lock.h"
 #include "ROMon/TorrentSubfarmDisplay.h"
 extern "C" {
-  #include "dic.h"
+#include "dic.h"
 }
 
 using namespace std;
@@ -48,7 +48,7 @@ ClusterDisplay* BitTorrent::createTorrentDisplay(int width, int height, int posx
 
 /// Standard constructor
 TorrentSubfarmDisplay::TorrentSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv)
-: ClusterDisplay(width,height)
+  : ClusterDisplay(width,height)
 {
   m_position = Position(posx,posy);
   init(argc, argv);
@@ -87,7 +87,7 @@ void TorrentSubfarmDisplay::init(int argc, char** argv)   {
   int posx     = m_position.x-2;
   int posy     = m_position.y-2;
   m_nodes      = createSubDisplay(Position(posx,posy+hdr_height),Area(width,height-hdr_height),
-				  "Torrent Subfarm Information for "+m_svcName+"   ");
+                                  "Torrent Subfarm Information for "+m_svcName+"   ");
   m_clusterData.pointer = (char*)0;
   showHeader();
   end_update();
@@ -140,20 +140,24 @@ void TorrentSubfarmDisplay::showNodes(const SubfarmTorrentStatus& sf)   {
   map<string,int> tmap;
 
   disp->begin_update();
-  disp->draw_line_reverse("%-14s %23s %17s %13s %-21s %11s %17s",
-			  "SESSION info:","--------Blocks--------", "----Load [kB]----", "--Rates [kB/s]--",
-			  "TORRENT information:","---Pieces--","--------------Load [kB]--------------");
+  /// Draw header
+  disp->draw_line_reverse("%-14s %23s %17s %13s %-21s %18s %17s",
+                          "SESSION info:","--------Blocks--------", "----Load [kB]----", "--Rates [kB/s]--",
+                          "TORRENT information:","------Pieces------",
+                          "--------------Load [kB]---------------");
   disp->draw_line_reverse("%-9s%5s %7s %7s %7s %7s %9s %7s%9s %6s%6s%6s%9s%12s %9s %9s %9s %9s",
-			  "Node","Peers","written","read","hits","upload","download","upload","download",
-			  "Seeds","Peers","#Torr","Progress","total done","upload","download","wanted","done");
+                          "Node","Peers","written","read","hits","upload","download","upload","download",
+                          "Seeds","Peers","#Torr","Progress","total done","upload","download","wanted","done");
+
+  /// Loop over all sessions in all nodes:
   for(Sessions::const_iterator i=sf.sessions.begin(); i!=sf.sessions.end(); i=sf.sessions.next(i)) {
     const SessionStatus& s = *i;
     string nam = s.name;
     if ( strncmp(s.name,"store",5) == 0 ) nam = s.name+5;
     ::snprintf(text1,sizeof(text1),"%-10s%4d%8d%8d%8d%8.0f%10.0f%8.0f%9.0f ",
-	       nam.c_str(),s.num_peers,s.blocks_written,s.blocks_read,s.blocks_read_hit,
-	       float(s.total_upload)/1024.f, float(s.total_download)/1024.0f,
-	       float(s.upload_rate)/1024.f,float(s.download_rate)/1024.f);
+               nam.c_str(),s.num_peers,s.blocks_written,s.blocks_read,s.blocks_read_hit,
+               float(s.total_upload)/1024.f, float(s.total_download)/1024.0f,
+               float(s.upload_rate)/1024.f,float(s.download_rate)/1024.f);
     ::sprintf(text2,"---- No explicit torrents found. ----");
 
     Torrents::const_iterator ti = s.torrents.end();
@@ -161,8 +165,8 @@ void TorrentSubfarmDisplay::showNodes(const SubfarmTorrentStatus& sf)   {
       tmap[(*j).name] +=  1;
 
     float progress = 0.f;
-    int   num_torrent=0, num_peers=0, num_seeds=0, num_pieces_done=0;
-    int   num_pieces_total=0, total_upload=0, total_download=0, total_wanted=0, total_done=0;
+    long  num_torrent=0, num_peers=0, num_seeds=0, num_pieces_done=0;
+    long  num_pieces_total=0, total_upload=0, total_download=0, total_wanted=0, total_done=0;
     for(Torrents::const_iterator j=s.torrents.begin(); j!=s.torrents.end();j=s.torrents.next(j))   {
       const TorrentStatus& t = *j;
       num_seeds += t.num_seeds;
@@ -173,16 +177,16 @@ void TorrentSubfarmDisplay::showNodes(const SubfarmTorrentStatus& sf)   {
       total_download   += t.total_download;
       total_wanted     += t.total_wanted;
       total_done       += t.total_done;
-      progress +=  t.progress;
+      progress         += t.progress;
       ++num_torrent;
     }
     if ( num_torrent>0 )  {
       progress /= num_torrent;  
-      ::snprintf(text2,sizeof(text2),"%6d%6d%6d%9.2f%6d%6d%10d%10d%10d%10d",
-		 num_seeds, num_peers, num_torrent, 100.f*progress,
-		 num_pieces_total, num_pieces_done, 
-		 int(total_upload/1024), int(total_download/1024),
-		 int(total_wanted/1024), int(total_done/1024));
+      ::snprintf(text2,sizeof(text2),"%6ld%6ld%6ld%9.2f%6ld%6ld%10ld%10ld%10ld%10ld",
+                 num_seeds, num_peers, num_torrent, 100.f*progress,
+                 num_pieces_total, num_pieces_done, 
+                 long(total_upload/1024), long(total_download/1024),
+                 long(total_wanted/1024), long(total_done/1024));
     }
     disp->draw_line_normal("%s%s",text1,text2);
   }

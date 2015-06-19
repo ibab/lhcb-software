@@ -80,43 +80,43 @@ void TorrentNodeDisplay::updateContent(const SubfarmTorrentStatus& sf) {
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
   if ( num_session > 0 )  {
     ::snprintf(txt,sizeof(txt),"%-14s %23s %17s %13s %-31s %11s %s",
-	       "SESSION info:","--------Blocks--------", "----Load [kB]----", "--Rates [kB/s]--",
-	       "TORRENT information:","---Pieces--","-------------Load [kB]-------------");
+               "SESSION info:","--------Blocks--------", "----Load [kB]----", "--Rates [kB/s]--",
+               "TORRENT information:","---Pieces--","-------------Load [kB]-------------");
     ::scrc_put_chars(m_display,txt,BOLD,++line,3,1);
     ::snprintf(txt,sizeof(txt),"%-9s%5s %7s %7s %7s %7s %9s %7s%9s %16s%6s%9s%12s %8s %8s %8s %8s",
-	       "Node","Peers","written","read","hits","upload","download","upload","download",
-	       "State","Peers","Progress","total done","upload","download","wanted","done");
+               "Node","Peers","written","read","hits","upload","download","upload","download",
+               "State","Peers","Progress","total done","upload","download","wanted","done");
     ::scrc_put_chars(m_display,txt,BOLD,++line,3,1);
     for(Sessions::const_iterator i=sf.sessions.begin(); i!=sf.sessions.end(); i=sf.sessions.next(i)) {
       const SessionStatus& s = *i;
       string nam = s.name;
       if ( m_node != nam ) continue;
       if ( num_session < 1 )  {
-	::scrc_put_chars(m_display,"No torrent information availible for this node.",NORMAL,++line,3,1);
+        ::scrc_put_chars(m_display,"No torrent information availible for this node.",NORMAL,++line,3,1);
       }
 
       for(Torrents::const_iterator j=s.torrents.begin(); j!=s.torrents.end();j=s.torrents.next(j))   {
-	const TorrentStatus& t = *j;
-	int col = t.state == 5 ? GREEN : RED;
-	::snprintf(txt,sizeof(txt),"-->%s",t.name);
-	::scrc_put_chars(m_display,txt,INVERSE|BOLD|MAGENTA,++line,3,1);
-	::snprintf(txt,sizeof(txt),"%-10s%4d%8d%8d%8d%8.0f%10.0f%8.0f%9.0f ",
-		   nam.c_str(),s.num_peers,s.blocks_written,s.blocks_read,s.blocks_read_hit,
-		   float(s.total_upload)/1024.f, float(s.total_download)/1024.0f,
-		   float(s.upload_rate)/1024.f,float(s.download_rate)/1024.f);
-	::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
-	::snprintf(txt,sizeof(txt),"%16s%6d%9.2f%6d%6d%9d%9d%9d%9d",
-		   states[t.state], t.num_peers, 100.f*t.progress,
-		   t.num_pieces_total, t.num_pieces_done, 
-		   int(t.total_upload/1024), int(t.total_download/1024),
-		   int(t.total_wanted/1024), int(t.total_done/1024));
-	::scrc_put_chars(m_display,txt,INVERSE|col,line,77,1);
-	if ( t.msgLen>0 ) {
-	  ::snprintf(txt,sizeof(txt),"Message: \t%s", t.message());
-	  ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
-	}
-	::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
-	++cnt;
+        const TorrentStatus& t = *j;
+        int col = t.state == 5 ? GREEN : RED;
+        ::snprintf(txt,sizeof(txt),"-->%s",t.name);
+        ::scrc_put_chars(m_display,txt,INVERSE|BOLD|MAGENTA,++line,3,1);
+        ::snprintf(txt,sizeof(txt),"%-10s%4d%8d%8d%8d%8.0f%10.0f%8.0f%9.0f ",
+                   nam.c_str(),s.num_peers,s.blocks_written,s.blocks_read,s.blocks_read_hit,
+                   float(s.total_upload)/1024.f, float(s.total_download)/1024.0f,
+                   float(s.upload_rate)/1024.f,float(s.download_rate)/1024.f);
+        ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
+        ::snprintf(txt,sizeof(txt),"%16s%6d%9.2f%6ld%6ld%9ld%9ld%9ld%9ld",
+                   states[t.state], t.num_peers, 100.f*t.progress,
+                   long(t.num_pieces_total), long(t.num_pieces_done), 
+                   long(t.total_upload/1024), long(t.total_download/1024),
+                   long(t.total_wanted/1024), long(t.total_done/1024));
+        ::scrc_put_chars(m_display,txt,INVERSE|col,line,77,1);
+        if ( t.msgLen>0 ) {
+          ::snprintf(txt,sizeof(txt),"Message: \t%s", t.message());
+          ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
+        }
+        ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
+        ++cnt;
       }
     }
   }
