@@ -136,7 +136,7 @@ void SaveTimer::SavetoFile(void *buff)
           tstruct->tm_hour,tstruct->tm_min,tstruct->tm_sec);
     }
 
-//    printf("File Saver: Filename %s\n",fn);
+  printf("File Saver: Filename %s\n",fn);
   loclock->lockMutex();
   m_Adder->Lock();
   TFile *f = TFile::Open(fn,"RECREATE");

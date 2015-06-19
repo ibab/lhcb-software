@@ -342,12 +342,10 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
     if ( excl )  {
       col = INVERSE|(col==COL_ALARM ? MAGENTA : BLUE);
     }
-    else {
-      taskCount     += n.taskCount;
-      missTaskCount += n.missTaskCount;
-      connCount     += n.connCount;
-      missConnCount += n.missConnCount;
-    }
+    taskCount     += n.taskCount;
+    missTaskCount += n.missTaskCount;
+    connCount     += n.connCount;
+    missConnCount += n.missConnCount;
     val = (n.name == m_name ? " "+n.name : " "+n.name.substr(n.name.length()-2));
     if ( ::strncasecmp(n.name.c_str(),"store",4)==0 ) val = " " + n.name;
     ::scrc_put_chars(dis,val.c_str(),col,line,pos,0);

@@ -4,6 +4,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GauchoAppl/MonAdder.h"
+#include "Trending/ISimpleTrendWriter.h"
 
 // Forward declarations
 class MonAdder;

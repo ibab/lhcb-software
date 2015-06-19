@@ -36,10 +36,10 @@ elif [ "$act" = "Alignment|Rich" ]; then
   export PYTHONPATH=${ONLPANOPTESSYSROOT}/python:$PYTHONPATH
   exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; importOptions('${ONLPANOPTESSYSROOT}/python/MirrorIterator.py');"
 elif [ "$act" = "Calibration|Calo" ]; then
-  . /group/online/dataflow/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-dbg.vars
+  . /group/calo/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-dbg.vars
   export PYTHONPATH=/group/online/dataflow/options/LHCbA/HLT:$PYTHONPATH
   cd ${FARMCONFIGROOT}/job
-  exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; importOptions('');"
+  python -c "from PyKaliOnline import Iterator; Iterator.run('/group/calo/cmtuser/data')"
 elif [ "$act" = "BWDivision" ]; then
   . /group/online/bw_division/cmtuser/BWDivisionDev/setup.x86_64-slc6-gcc48-opt.vars
   . /group/online/bw_division/root/bin/thisroot.sh

@@ -47,7 +47,7 @@ def patchExitHandler():
   handlers = []
   for i in atexit._exithandlers:
     ##print '[ERROR] Exit:',str(i[0])
-    if str(i[0]).find(' AppMgr.exit ') == -1:
+    if str(i[0]).find('AppMgr.exit') == -1:
       handlers.append(i)
   atexit._exithandlers = handlers
   #print atexit._exithandlers
@@ -254,11 +254,21 @@ def netSelector(input=None,type=None,event_type=2):
   return svc
 
 #------------------------------------------------------------------------------------------------
+def dummy_exit_handler(*args,**kwd):
+  import GaudiPython.Bindings
+  print '[INFO] *** GaudiPython.Bindings.AppMgr: Executing dummy exithandler.....'
+  return GaudiPython.Bindings.SUCCESS
+
+#------------------------------------------------------------------------------------------------
 def end_config_normal(print_config=True):
   import sys, traceback
-  import GaudiPython
-  import sys
   try:
+    import GaudiPython.Bindings
+    setattr(GaudiPython.Bindings.AppMgr,'exit',dummy_exit_handler)
+  except:
+    pass
+  try:
+    import GaudiPython
     gaudi = GaudiPython.AppMgr()
     patchExitHandler()
     if print_config: printConfiguration()
@@ -274,6 +284,11 @@ def end_config_normal(print_config=True):
 
 #------------------------------------------------------------------------------------------------
 def end_config_checkpoint(print_config, checkpoint):
+  try:
+    import GaudiPython.Bindings
+    setattr(GaudiPython.Bindings.AppMgr,'exit',dummy_exit_handler)
+  except:
+    pass
   import os, sys, GaudiPython
   forker = Configs.LHCb__CheckpointSvc("CheckpointSvc")
   forker.NumberOfInstances   = 0

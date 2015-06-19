@@ -245,14 +245,15 @@ void TorrentClusterLine::display() {
     ::scrc_put_chars(dis,val.c_str(),col,line,pos + 3*n_pos,0);
     if ( last_pos < pos+(1+n_pos)*3 ) last_pos = pos+(1+n_pos)*3;
   }
-  sum.progress /= num_torrent;
+  if ( num_torrent > 0 ) sum.progress /= num_torrent;
+  else sum.progress = 0.0;
   ::scrc_put_chars(dis," ",GREEN|INVERSE,line,last_pos,1);
 
   ::sprintf(txt,"%6d",int(num_session));
   ::scrc_put_chars(dis,txt,NORMAL,line,33,0);
 
   ::sprintf(txt,"%5.1f",sum.progress*100.);
-  ::scrc_put_chars(dis,txt,sum.progress>0.99999 ? GREEN|INVERSE : RED,line,31,0);
+  ::scrc_put_chars(dis,txt,sum.progress>0.99999 || num_torrent==0 ? GREEN|INVERSE : RED,line,31,0);
 
   ::sprintf(txt,"%6d",num_torrent);
   ::scrc_put_chars(dis,txt,NORMAL,line,37,0);

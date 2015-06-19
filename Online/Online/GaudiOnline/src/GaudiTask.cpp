@@ -668,6 +668,7 @@ int GaudiTask::terminateApplication()  {
         // Release is called by Gaudi::setInstance; danger of releasing twice?
         // m_subMgr->release();
         m_subMgr = 0;
+        PythonGlobalState state;
         m_python = auto_ptr<PythonInterpreter>(0);
         Gaudi::setInstance(m_appMgr);
         return 1;

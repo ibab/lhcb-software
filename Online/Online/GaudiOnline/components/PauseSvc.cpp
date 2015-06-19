@@ -37,15 +37,15 @@ namespace LHCb  {
       MsgStream log(msgSvc(), name());
       log << MSG::ALWAYS << "Interactor callback here! " << endmsg;
       if ( ev.eventtype == TimeEvent )  {
-	IIncidentSvc* svc = 0;
-	StatusCode sc = service("IncidentSvc", svc, true);
-	if ( sc.isSuccess() )  {
-	  svc->fireIncident(Incident(name(),m_inc));
-	  svc->release();
-	  return;
-	}
-	MsgStream log(msgSvc(), name());
-	log << MSG::ERROR << "Failed to retrieve IIncidentSvc interface." << endmsg;
+        IIncidentSvc* svc = 0;
+        StatusCode sc = service("IncidentSvc", svc, true);
+        if ( sc.isSuccess() )  {
+          svc->fireIncident(Incident(name(),m_inc));
+          svc->release();
+          return;
+        }
+        MsgStream log(msgSvc(), name());
+        log << MSG::ERROR << "Failed to retrieve IIncidentSvc interface." << endmsg;
       }
     }
     /// Initialize the algorithm

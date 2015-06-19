@@ -37,5 +37,6 @@ public:
   int m_NoEvts;
   double m_EvtRate;
   std::string m_SvcInfix;
+  bool m_enableTrending;
 };
 #endif // ONLINE_GAUCHO_CNTRPUB_H

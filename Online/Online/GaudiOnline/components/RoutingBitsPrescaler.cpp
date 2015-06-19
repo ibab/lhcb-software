@@ -205,6 +205,7 @@ namespace LHCb
       Requirements m_req;
       BinRequirements m_breq;
       vector<DatStream> m_streams;
+      long m_totout;
 
       RoutingBitsPrescaler(const std::string& nam, ISvcLocator* svc) :
           Algorithm(nam, svc)
@@ -214,6 +215,8 @@ namespace LHCb
         ::srand(seed);
         declareProperty("Requirements", m_req, "Requirements List");
         m_streams.push_back(DatStream(33, "Lumi"));
+        m_streams.push_back(DatStream(46, "HLT1Physics"));
+        m_streams.push_back(DatStream(52, "VeloClosing"));
         m_streams.push_back(DatStream(35, "BeamGas"));
         m_streams.push_back(DatStream(87, "Full"));
         m_streams.push_back(DatStream(88, "Turbo"));
@@ -245,6 +248,7 @@ namespace LHCb
           this->monitorSvc()->declareInfo("Stream/"+m_streams[j].m_Name,
               m_streams[j].m_cnt, m_streams[j].m_Name + " Stream Counter", this);
         }
+        declareInfo("TotalOut",m_totout,"Total Events Sent");
         return StatusCode::SUCCESS;
       }
 
@@ -255,6 +259,7 @@ namespace LHCb
         {
           m_streams[j].Clear();
         }
+        m_totout = 0;
         return StatusCode::SUCCESS;
       }
 
@@ -335,6 +340,10 @@ namespace LHCb
           if (!trmok)
           {
             setFilterPassed(false);
+          }
+          else
+          {
+            m_totout++;
           }
           for (size_t i = 0; i < this->m_streams.size(); i++)
           {

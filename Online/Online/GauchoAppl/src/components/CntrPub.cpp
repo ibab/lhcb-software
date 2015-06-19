@@ -36,6 +36,19 @@ StatusCode CntrPub::start()
 StatusCode CntrPub::initialize()
 {
   StatusCode sc = PubSvc::initialize();
+  m_trender = 0;
+  if (m_enableTrending)
+  {
+    SmartIF<IToolSvc> tools;
+    sc = service("ToolSvc", tools.pRef());
+    sc = tools->retrieveTool("SimpleTrendWriter",this->name(),m_trender,this);
+    if (sc.isSuccess() && m_trender != 0)
+    {
+      std::string nnam(this->name());
+      m_trender->setPartitionAndName(this->m_PartitionName,nnam);
+      m_trender->setMaxTimeNoWrite(600);
+    }
+  }
   m_counterPatternRegex = boost::regex(m_counterPattern.c_str(),
       boost::regex_constants::icase);
   return sc;
@@ -43,18 +56,34 @@ StatusCode CntrPub::initialize()
 
 StatusCode CntrPub::finalize()
 {
-  StatusCode sc;
-  for (      auto mit = m_cntrSvcMap.begin();mit!=m_cntrSvcMap.end();mit++)
+  for (auto mit = m_cntrSvcMap.begin();mit!=m_cntrSvcMap.end();mit++)
   {
     delete (*mit).second;
   }
   m_cntrSvcMap.clear();
-  Service::finalize();
+  StatusCode sc;
+  if (m_enableTrending)
+  {
+    SmartIF<IToolSvc> tools;
+    sc = serviceLocator()->service("ToolSvc", tools.pRef());
+    if ( !sc.isSuccess() ) {
+      ::lib_rtl_output(LIB_RTL_FATAL,"DIM(RateSvc): Failed to access ToolsSvc.\n");
+      return sc;
+    }
+    sc = tools->releaseTool(m_trender);
+    m_trender = 0;
+  }
+  PubSvc::finalize();
   return StatusCode::SUCCESS;
 }
 
 void CntrPub::analyze(void *, int, MonMap* mmap)
 {
+  if (m_enableTrending)
+  {
+    m_trender->startEvent();
+  }
+
   for (auto it = mmap->begin(); it != mmap->end(); it++)
   {
     bool status = boost::regex_search((*it).first, m_counterPatternRegex);
@@ -94,68 +123,19 @@ void CntrPub::analyze(void *, int, MonMap* mmap)
       {
         sdes->idata = d->l_data;
       }
+      if (m_enableTrending)
+      {
+        double fdata = sdes->rdata;
+        m_trender->addEntry(sdes->name, fdata);
+      }
       sdes->svc->updateService();
     }
   }
+  if (m_enableTrending)
+  {
+    m_trender->saveEvent();
+  }
 }
-//  printf("\n");
-//  INServiceMap::iterator it;
-//  printf("dumping Input Service Map\n");
-//  for (it = m_adder->m_inputServicemap.begin();
-//      it != m_adder->m_inputServicemap.end(); it++)
-//  {
-//    printf("%s ", (*it).first.c_str());
-//  }
-//  printf("\n");
-//  CntrDescr *d;
-//  evtCnt = mmap->find("Runable/EvtCount");
-//  if (evtCnt != mmap->end())
-//  {
-//    long long Evts;
-//    d = (CntrDescr*) MonCounter::de_serialize((*evtCnt).second);
-//    Evts = d->i_data;
-//    m_NoEvts = Evts;
-//    if (m_noEvtsSvc == 0)
-//    {
-//      std::string nam;
-//      std::string svc;
-//      svc = m_adder->m_inputServicemap.begin()->first;
-//      dyn_string &ds = *Strsplit(svc.c_str(), "/");
-//      svc = ds[0];
-//      delete &ds;
-//      ds = *Strsplit(svc.c_str(), "_");
-//      svc = ds[ds.size() - 2] + "_" + ds[ds.size() - 1];
-//      delete &ds;
-//      nam = m_PartitionName + "_X_" + svc + "/Runable/EvtCount";
-//      m_noEvtsSvc = new DimService(m_adder->m_ServiceDns, (char*) nam.c_str(),
-//          m_NoEvts);
-//    }
-//    m_noEvtsSvc->updateService(m_NoEvts);
-//  }
-//  evtRate = mmap->find("R_Runable/EvtCount");
-//  if (evtRate != mmap->end())
-//  {
-//    double REvts;
-//    d = (CntrDescr*) MonCounter::de_serialize((*evtRate).second);
-//    REvts = d->d_data;
-//    m_EvtRate = REvts;
-//    if (m_EvtRateSvc == 0)
-//    {
-//      std::string svc;
-//      svc = m_adder->m_inputServicemap.begin()->first;
-//      dyn_string &ds = *Strsplit(svc.c_str(), "/");
-//      svc = ds[0];
-//      delete &ds;
-//      ds = *Strsplit(svc.c_str(), "_");
-//      svc = ds[ds.size() - 2] + "_" + ds[ds.size() - 1];
-//      delete &ds;
-//      std::string nam = m_PartitionName + "_X_" + svc + "/R_Runable/EvtCount";
-//      m_EvtRateSvc = new DimService(m_adder->m_ServiceDns, (char*) nam.c_str(),
-//          m_EvtRate);
-//    }
-//    m_EvtRateSvc->updateService(m_EvtRate);
-//  }
-//}
 
 CntrPub::CntrPub(const std::string& name, ISvcLocator* sl) :
     PubSvc(name, sl), m_noEvtsSvc(0), m_EvtRateSvc(0)
@@ -164,6 +144,7 @@ CntrPub::CntrPub(const std::string& name, ISvcLocator* sl) :
   m_EvtRate = 0.0;
   declareProperty("ServiceInfix", m_SvcInfix);
   declareProperty("CounterPattern", m_counterPattern);
+  declareProperty("TrendingOn",  m_enableTrending=false);
 }
 
 CntrPub::~CntrPub()

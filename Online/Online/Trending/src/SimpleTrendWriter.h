@@ -1,5 +1,5 @@
 // $Id: $
-#ifndef SIMPLETRENDWRITER_H 
+#ifndef SIMPLETRENDWRITER_H
 #define SIMPLETRENDWRITER_H 1
 
 // Include files
@@ -9,15 +9,15 @@
 #include "Trending/ITrendingTool.h"
 
 /** @class SimpleTrendWriter SimpleTrendWriter.h
- *  
+ *
  *
  *  @author Olivier Callot
  *  @date   2011-03-24
  */
 class SimpleTrendWriter : public GaudiTool, virtual public ISimpleTrendWriter {
-public: 
+public:
   /// Standard constructor
-  SimpleTrendWriter( const std::string& type, 
+  SimpleTrendWriter( const std::string& type,
                      const std::string& name,
                      const IInterface* parent);
 
@@ -26,18 +26,20 @@ public:
   virtual StatusCode initialize();
 
   virtual void setPartitionAndName( std::string& partition, std::string& name );
-  
+
   virtual void startEvent();
-  
+
   virtual void addEntry( std::string tag, double value );
-  
+
   virtual void setAverageTime( unsigned int seconds );
 
   virtual void setMaxTimeNoWrite( unsigned int seconds );
 
   virtual void saveEvent();
-  
+
   virtual void close();
+
+  virtual int Fileexists(std::string &fnam);
 
 protected:
 

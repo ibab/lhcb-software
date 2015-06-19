@@ -24,6 +24,9 @@ ApplicationMgr.ExtSvc               += {
 ApplicationMgr.ExtSvc               += {
           "CntrPub/HLT1Writer"
                                        };
+ApplicationMgr.ExtSvc               += {
+          "CntrPub/HLT1Sender"
+                                       };
 
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
@@ -84,7 +87,7 @@ BusyPub.OutDNS              = "mona08";
 DiskWrPub.MyName              = "<part>_X_DiskWrPub";
 DiskWrPub.PartitionName       = @OnlineEnv.PartitionName;
 DiskWrPub.TaskPattern         = "MON_<part>_HLT01_PartAdder_(.*)";
-DiskWrPub.ServicePattern      = "MON_<part>_Sender_00/Counter/";
+DiskWrPub.ServicePattern      = "MON_<part>_(.*)Sender_00/Counter/";
 DiskWrPub.AdderClass          = "Counter";
 DiskWrPub.InDNS               = "mona08";
 DiskWrPub.TrendingOn          = true;
@@ -107,6 +110,16 @@ HLT1Writer.AdderClass          = "Counter";
 HLT1Writer.CounterPattern      = "(.*)DskWriter(.*)EvtsOut";
 HLT1Writer.InDNS               = "mona08";
 HLT1Writer.OutDNS              = "mona08";
+
+HLT1Sender.MyName              = "<part>_X_HLT1Sender";
+HLT1Sender.PartitionName       = @OnlineEnv.PartitionName;
+HLT1Sender.TaskPattern         = "MON_<part>_HLT01_PartAdder_(.*)";
+HLT1Sender.ServicePattern      = "MON_<part>_HLT1Sender_00/Counter/";
+HLT1Sender.AdderClass          = "Counter";
+HLT1Sender.CounterPattern      = "Prescaler/(.*)";
+HLT1Sender.InDNS               = "mona08";
+HLT1Sender.OutDNS              = "mona08";
+HLT1Sender.TrendingOn          = true;
 
 //OvrPub.MyName              = "<part>_X_OvrPub";
 //OvrPub.PartitionName       = @OnlineEnv.PartitionName;

@@ -99,16 +99,17 @@ MonitorSvc.CounterUpdateInterval     = 5;
                 f.write(svc+".OutDNS = "+OutDns+";\n")
             f.write("\n")
     elif level == "2":
+        f.write("ApplicationMgr.ExtSvc               += {\"AdderSvc/"+"BusyAdder"+"CountAdder\"};\n")
         f.write("""
-BusyAdder.MyName                = "<part>_<node>_Busy";
-BusyAdder.PartitionName         = @OnlineEnv.PartitionName;
-BusyAdder.TaskPattern           = "<part>_<node>[0-9][0-9]_NodeAdder_0";
-BusyAdder.ServicePattern        = "MON_<part>_<node>[0-9][0-9]_NodeAdder_0/Counter/";
-BusyAdder.AdderClass            = "Counter";
-BusyAdder.ReceiveTimeout          = 3;
+BusyAdderCountAdder.MyName                = "<part>_<node>_BusySvc";
+BusyAdderCountAdder.PartitionName         = @OnlineEnv.PartitionName;
+BusyAdderCountAdder.TaskPattern           = "<part>_<node>[0-9][0-9]_NodeAdder_0";
+BusyAdderCountAdder.ServicePattern        = "MON_<part>_<node>[0-9][0-9]_NodeAdder_0/Counter/";
+BusyAdderCountAdder.AdderClass            = "Counter";
+BusyAdderCountAdder.ReceiveTimeout          = 3;
 """)
-        f.write("BusyAdder.InDns     = "+InDns+";\n")
-        f.write("BusyAdder.OutDns     = "+OutDns+";\n")
+        f.write("BusyAdderCountAdder.InDns     = "+InDns+";\n")
+        f.write("BusyAdderCountAdder.OutDns     = "+OutDns+";\n")
         histsvc = []
         cntsvc = []
         for s in tasklist:
@@ -155,10 +156,21 @@ BusyAdder.ReceiveTimeout          = 3;
               f.write(svc+".ReceiveTimeout = 0;\n")
             f.write("\n")
     elif level == "3":
+        f.write("ApplicationMgr.ExtSvc               += {\"AdderSvc/"+"BusyAdder"+"CountAdder\"};\n")
+        f.write("""
+BusyAdderCountAdder.MyName                = "<part>_<node>_BusySvc_00";
+BusyAdderCountAdder.PartitionName         = @OnlineEnv.PartitionName;
+BusyAdderCountAdder.TaskPattern           = "<part>_hlt[a-z][0-9][0-9]_SubFarmAdder_0";
+BusyAdderCountAdder.ServicePattern        = "MON_<part>_hlt[a-z][0-9][0-9]_BusySvc/Counter/";
+BusyAdderCountAdder.AdderClass            = "Counter";
+BusyAdderCountAdder.ReceiveTimeout          = 6;
+""")
+        f.write("BusyAdderCountAdder.InDns     = "+InDns+";\n")
+        f.write("BusyAdderCountAdder.OutDns     = "+OutDns+";\n")
         histsvc = []
         cntsvc = []
         histsvc.append("Adder")
-        cntsvc.append("Busy")
+        cntsvc.append("BusySvc")
         tasklist.remove("MEPrx")
         for s in tasklist:
             hsvc = s#+"HistAdder"

@@ -36,11 +36,14 @@ class Checkpoint:
     self.runinfo = runinfo
     self.config_brunel = config_brunel
     
-    if self.config_brunel:
-      self.task_type      = 'OnlineBrunel' # FixME: runinfo.HLTType
+    ##print 'echo "[INFO] '+str(isinstance(self.config_brunel,str))+'";'
+    if isinstance(self.config_brunel,str):
+      self.task_type = self.config_brunel
+    elif self.config_brunel:
+      self.task_type = 'OnlineBrunel' # FixME: runinfo.HLTType
       ##checkpoint_local_area = checkpoint_dir
     else:
-      self.task_type      = 'Moore1' # FixME: runinfo.HLTType
+      self.task_type = 'Moore1' # FixME: runinfo.HLTType
 
     self.torrent_file   = self._getTorrentFile()
     self.checkpoint_bin = os.environ['CHECKPOINTING_BIN']
@@ -65,7 +68,7 @@ class Checkpoint:
     ri = self.runinfo
     if self.config_brunel:
       Mapping = os.path.basename(ri.ConditionsMapping)
-      checkpoint_reloc = sep+'Brunel'+sep+ri.OnlineBrunelVersion+sep+\
+      checkpoint_reloc = sep+self.task_type+sep+ri.OnlineBrunelVersion+sep+\
           ri.HLTType+sep+ri.CondDBTag+sep+ri.DDDBTag+sep+Mapping+\
           '' #sep+self.task_type
     elif ri.MooreOnlineVersion == "" or ri.MooreOnlineVersion == "DEFAULT":
@@ -142,13 +145,15 @@ class Checkpoint:
         .output('export CHECKPOINTING_BIN='+self.checkpoint_bin+';')
 
   #=======================================================================================
-  def setupRestore(self):
+  def setupRestore(self, extract=True):
     ldir = self.checkpointRelativeDir()
     relocate_path = ldir+sep+self.torrent_file
+    if extract: e_opt = '-x'
+    else:       e_opt = '-X'
     self.initProcess().setupCheckpointFile() \
         .output('echo "[DEBUG] Setup restore process for %s";'%(self.task_type,)) \
         .output('export APP_STARTUP_OPTS=-restore;') \
-        .output('RESTORE_CMD="exec -a ${UTGID} '+self.restore+' -p 4 -e -l '+\
+        .output('RESTORE_CMD="exec -a ${UTGID} '+self.restore+' -p 4 -e '+e_opt+' -l '+\
                   self.lib_dir+' -i '+self.target_path+'";') \
         .output('if test ! -f "'+self.target_path+'"; then') \
         .output('  echo "[FATAL] '+line+'";') \
@@ -176,10 +181,10 @@ class Checkpoint:
         .output('fi;')
 
 #=========================================================================================
-def torrent_restore(cp):
+def torrent_restore(cp, extract=True):
   torrent_file = cp.torrentFile()
   if torrent_file:
-    return cp.setupRestore()
+    return cp.setupRestore(extract)
   print 'echo "[ERROR] Checkpointing '+cp.checkpointRelativeDir()+' requested, but no checkpoint present.";'
   print 'exit 1;'
   return None
@@ -220,7 +225,7 @@ def setupEnviron(runinfo, config_brunel):
   return None
 
 #=========================================================================================
-def configureForRunning(runinfo, config_brunel):
+def configureForRunning(runinfo, config_brunel, extract=True):
   ri = RunInfo(runinfo)
   ##print 'echo "[ERROR] Configure CHECKPOINT for running. Reco:%s/%d Moore:%d";'%(str(config_brunel),ri.RecoStartupMode,ri.MooreStartupMode,)
   cp = Checkpoint(ri,config_brunel)
@@ -230,13 +235,13 @@ def configureForRunning(runinfo, config_brunel):
   elif config_brunel and ri.RecoStartupMode == 1:
     return cp.setupForking()
   elif config_brunel and ri.RecoStartupMode == 2:
-    return torrent_restore(cp)
+    return torrent_restore(cp, extract)
   elif ri.MooreStartupMode == 0:
     return cp.setupNormal()
   elif ri.MooreStartupMode == 1:
     return cp.setupForking()
   elif ri.MooreStartupMode == 2:
-    return torrent_restore(cp)
+    return torrent_restore(cp, extract)
   else:
     print 'echo "[ERROR] Undefined CHECKPOINT startup mode in runinfo. Exiting";'
   print 'exit 1;'
@@ -320,6 +325,8 @@ def doIt():
                     help="Start process according to runinfo",metavar="<boolean>")
   parser.add_option("-b","--brunel",dest='brunel',default=False,action='store_true',
                     help="Configure checkpointing for brunel",metavar="<boolean>")
+  parser.add_option("-t","--task_type",dest='task_type',default=None,
+                    help="Set special task type for brunel configuration",metavar="<string>")
 
   try:
     (opts, args) = parser.parse_args()
@@ -335,16 +342,20 @@ def doIt():
       parser.format_help()
       return
 
+    config_brunel = opts.brunel
+    if opts.brunel and opts.task_type:
+      config_brunel = opts.task_type
+      
     if opts.environ:
-      setupEnviron(opts.runinfo,config_brunel=opts.brunel)
+      setupEnviron(opts.runinfo,config_brunel=config_brunel)
     if opts.copy and opts.libs:
-      extractLibraries(opts.runinfo,copy=True,extract=True,config_brunel=opts.brunel)
+      extractLibraries(opts.runinfo,copy=True,extract=True,config_brunel=config_brunel)
     elif opts.copy:
-      extractLibraries(opts.runinfo,copy=True,extract=False,config_brunel=opts.brunel)
+      extractLibraries(opts.runinfo,copy=True,extract=False,config_brunel=config_brunel)
     elif opts.libs:
-      extractLibraries(opts.runinfo,copy=False,extract=True,config_brunel=opts.brunel)
+      extractLibraries(opts.runinfo,copy=False,extract=True,config_brunel=config_brunel)
     if opts.start:
-      configureForRunning(opts.runinfo,config_brunel=opts.brunel)
+      configureForRunning(opts.runinfo,config_brunel=config_brunel,extract=opts.libs)
 
   except Exception,X:
     traceback.print_stack()
