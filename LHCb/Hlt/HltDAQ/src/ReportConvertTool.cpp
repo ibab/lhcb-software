@@ -690,62 +690,62 @@ void ReportConvertTool::ProtoParticleObjectFromSummary( const HltObjectSummary::
   for(it_unordered_map proto_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); proto_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); proto_it++){
     switch( proto_it->second.second )
     {
-      case 0: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::IsPhoton, ( (*info)[ proto_it->first ] ) ); break;//381
-      case 1: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::IsNotE, ( (*info)[ proto_it->first ] ) ); break;//382
-      case 2: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::IsNotH, ( (*info)[ proto_it->first ] ) ); break;//383
-      case 3: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::EcalPIDe, ( (*info)[ proto_it->first ] ) ); break;//360
-      case 4: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::PrsPIDe, ( (*info)[ proto_it->first ] ) ); break;//361
-      case 5: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::BremPIDe, ( (*info)[ proto_it->first ] ) ); break;//362
-      case 6: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::HcalPIDe, ( (*info)[ proto_it->first ] ) ); break;//363
-      case 7: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::HcalPIDmu, ( (*info)[ proto_it->first ] ) ); break;//364
-      case 8: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::EcalPIDmu, ( (*info)[ proto_it->first ] ) ); break;//365
-      case 9: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloTrMatch, ( (*info)[ proto_it->first ] ) ); break;//310
-      case 10: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloElectronMatch, ( (*info)[ proto_it->first ] ) ); break;//311
-      case 11: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloBremMatch, ( (*info)[ proto_it->first ] ) ); break;//312
-      case 12: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloNeutralSpd, ( (*info)[ proto_it->first ] ) ); break;//323
-      case 13: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloNeutralPrs, ( (*info)[ proto_it->first ] ) ); break;//324
-      case 14: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloNeutralEcal, ( (*info)[ proto_it->first ] ) ); break;//325
-      case 15: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloNeutralHcal2Ecal, ( (*info)[ proto_it->first ] ) ); break;//326
-      case 16: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloNeutralE49, ( (*info)[ proto_it->first ] ) ); break;//327
-      case 17: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloNeutralID, ( (*info)[ proto_it->first ] ) ); break;//328
-      case 18: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloDepositID, ( (*info)[ proto_it->first ] ) ); break;//320
-      case 19: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::ShowerShape, ( (*info)[ proto_it->first ] ) ); break;//321
-      case 20: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::ClusterMass, ( (*info)[ proto_it->first ] ) ); break;//322
-      case 21: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloSpdE, ( (*info)[ proto_it->first ] ) ); break;//330
-      case 22: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsE, ( (*info)[ proto_it->first ] ) ); break;//331
-      case 23: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloEcalE, ( (*info)[ proto_it->first ] ) ); break;//332
-      case 24: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloHcalE, ( (*info)[ proto_it->first ] ) ); break;//333
-      case 25: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloEcalChi2, ( (*info)[ proto_it->first ] ) ); break;//334
-      case 26: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloBremChi2, ( (*info)[ proto_it->first ] ) ); break;//335
-      case 27: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloClusChi2, ( (*info)[ proto_it->first ] ) ); break;//336
-      case 28: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloNeutralPrsM, ( (*info)[ proto_it->first ] ) ); break;//343
-      case 29: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloShapeFr2r4, ( (*info)[ proto_it->first ] ) ); break;//344
-      case 30: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloShapeKappa, ( (*info)[ proto_it->first ] ) ); break;//345
-      case 31: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloShapeAsym, ( (*info)[ proto_it->first ] ) ); break;//346
-      case 32: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloShapeE1, ( (*info)[ proto_it->first ] ) ); break;//347
-      case 33: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloShapeE2, ( (*info)[ proto_it->first ] ) ); break;//348
-      case 34: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsShapeE2, ( (*info)[ proto_it->first ] ) ); break;//349
-      case 35: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsShapeEmax, ( (*info)[ proto_it->first ] ) ); break;//350
-      case 36: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsShapeFr2, ( (*info)[ proto_it->first ] ) ); break;//351
-      case 37: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsShapeAsym, ( (*info)[ proto_it->first ] ) ); break;//352
-      case 38: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsM, ( (*info)[ proto_it->first ] ) ); break;//353
-      case 39: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsM15, ( (*info)[ proto_it->first ] ) ); break;//354
-      case 40: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsM30, ( (*info)[ proto_it->first ] ) ); break;//355
-      case 41: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsM45, ( (*info)[ proto_it->first ] ) ); break;//356
-      case 42: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloClusterCode, ( (*info)[ proto_it->first ] ) ); break;//357
-      case 43: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloClusterFrac, ( (*info)[ proto_it->first ] ) ); break;//358
-      case 44: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CombDLLe, ( (*info)[ proto_it->first ] ) ); break;//600
-      case 45: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CombDLLmu, ( (*info)[ proto_it->first ] ) ); break;//601
-      case 46: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CombDLLpi, ( (*info)[ proto_it->first ] ) ); break;//602
-      case 47: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CombDLLk, ( (*info)[ proto_it->first ] ) ); break;//603
-      case 48: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CombDLLp, ( (*info)[ proto_it->first ] ) ); break;//604
-      case 49: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::InAccBrem, ( (*info)[ proto_it->first ] ) ); break;// Extra for PID group
-      case 50: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::InAccSpd, ( (*info)[ proto_it->first ] ) ); break;// ''
-      case 51: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::InAccPrs, ( (*info)[ proto_it->first ] ) ); break;// ''
-      case 52: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::InAccEcal, ( (*info)[ proto_it->first ] ) ); break;// ''
-      case 53: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::InAccHcal, ( (*info)[ proto_it->first ] ) ); break;// ''
-      case 54: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::VeloCharge, ( (*info)[ proto_it->first ] ) ); break;// ''
-      case 55: if( (int)(*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::RichPIDStatus, ( (*info)[ proto_it->first ] ) ); break;// ''
+      case 0: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::IsPhoton, ( (*info)[ proto_it->first ] ) ); break;//381
+      case 1: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::IsNotE, ( (*info)[ proto_it->first ] ) ); break;//382
+      case 2: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::IsNotH, ( (*info)[ proto_it->first ] ) ); break;//383
+      case 3: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::EcalPIDe, ( (*info)[ proto_it->first ] ) ); break;//360
+      case 4: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::PrsPIDe, ( (*info)[ proto_it->first ] ) ); break;//361
+      case 5: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::BremPIDe, ( (*info)[ proto_it->first ] ) ); break;//362
+      case 6: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::HcalPIDe, ( (*info)[ proto_it->first ] ) ); break;//363
+      case 7: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::HcalPIDmu, ( (*info)[ proto_it->first ] ) ); break;//364
+      case 8: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::EcalPIDmu, ( (*info)[ proto_it->first ] ) ); break;//365
+      case 9: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloTrMatch, ( (*info)[ proto_it->first ] ) ); break;//310
+      case 10: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloElectronMatch, ( (*info)[ proto_it->first ] ) ); break;//311
+      case 11: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloBremMatch, ( (*info)[ proto_it->first ] ) ); break;//312
+      case 12: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloNeutralSpd, ( (*info)[ proto_it->first ] ) ); break;//323
+      case 13: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloNeutralPrs, ( (*info)[ proto_it->first ] ) ); break;//324
+      case 14: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloNeutralEcal, ( (*info)[ proto_it->first ] ) ); break;//325
+      case 15: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloNeutralHcal2Ecal, ( (*info)[ proto_it->first ] ) ); break;//326
+      case 16: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloNeutralE49, ( (*info)[ proto_it->first ] ) ); break;//327
+      case 17: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloNeutralID, ( (*info)[ proto_it->first ] ) ); break;//328
+      case 18: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloDepositID, ( (*info)[ proto_it->first ] ) ); break;//320
+      case 19: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::ShowerShape, ( (*info)[ proto_it->first ] ) ); break;//321
+      case 20: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::ClusterMass, ( (*info)[ proto_it->first ] ) ); break;//322
+      case 21: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloSpdE, ( (*info)[ proto_it->first ] ) ); break;//330
+      case 22: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsE, ( (*info)[ proto_it->first ] ) ); break;//331
+      case 23: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloEcalE, ( (*info)[ proto_it->first ] ) ); break;//332
+      case 24: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloHcalE, ( (*info)[ proto_it->first ] ) ); break;//333
+      case 25: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloEcalChi2, ( (*info)[ proto_it->first ] ) ); break;//334
+      case 26: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloBremChi2, ( (*info)[ proto_it->first ] ) ); break;//335
+      case 27: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloClusChi2, ( (*info)[ proto_it->first ] ) ); break;//336
+      case 28: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloNeutralPrsM, ( (*info)[ proto_it->first ] ) ); break;//343
+      case 29: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloShapeFr2r4, ( (*info)[ proto_it->first ] ) ); break;//344
+      case 30: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloShapeKappa, ( (*info)[ proto_it->first ] ) ); break;//345
+      case 31: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloShapeAsym, ( (*info)[ proto_it->first ] ) ); break;//346
+      case 32: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloShapeE1, ( (*info)[ proto_it->first ] ) ); break;//347
+      case 33: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloShapeE2, ( (*info)[ proto_it->first ] ) ); break;//348
+      case 34: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsShapeE2, ( (*info)[ proto_it->first ] ) ); break;//349
+      case 35: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsShapeEmax, ( (*info)[ proto_it->first ] ) ); break;//350
+      case 36: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsShapeFr2, ( (*info)[ proto_it->first ] ) ); break;//351
+      case 37: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsShapeAsym, ( (*info)[ proto_it->first ] ) ); break;//352
+      case 38: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsM, ( (*info)[ proto_it->first ] ) ); break;//353
+      case 39: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsM15, ( (*info)[ proto_it->first ] ) ); break;//354
+      case 40: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsM30, ( (*info)[ proto_it->first ] ) ); break;//355
+      case 41: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloPrsM45, ( (*info)[ proto_it->first ] ) ); break;//356
+      case 42: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloClusterCode, ( (*info)[ proto_it->first ] ) ); break;//357
+      case 43: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloClusterFrac, ( (*info)[ proto_it->first ] ) ); break;//358
+      case 44: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CombDLLe, ( (*info)[ proto_it->first ] ) ); break;//600
+      case 45: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CombDLLmu, ( (*info)[ proto_it->first ] ) ); break;//601
+      case 46: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CombDLLpi, ( (*info)[ proto_it->first ] ) ); break;//602
+      case 47: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CombDLLk, ( (*info)[ proto_it->first ] ) ); break;//603
+      case 48: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CombDLLp, ( (*info)[ proto_it->first ] ) ); break;//604
+      case 49: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::InAccBrem, ( (*info)[ proto_it->first ] ) ); break;// Extra for PID group
+      case 50: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::InAccSpd, ( (*info)[ proto_it->first ] ) ); break;// ''
+      case 51: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::InAccPrs, ( (*info)[ proto_it->first ] ) ); break;// ''
+      case 52: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::InAccEcal, ( (*info)[ proto_it->first ] ) ); break;// ''
+      case 53: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::InAccHcal, ( (*info)[ proto_it->first ] ) ); break;// ''
+      case 54: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::VeloCharge, ( (*info)[ proto_it->first ] ) ); break;// ''
+      case 55: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::RichPIDStatus, ( (*info)[ proto_it->first ] ) ); break;// ''
     }
   }
 
@@ -799,12 +799,12 @@ void ReportConvertTool::TrackObjectFromSummary( const HltObjectSummary::Info* in
       case 14: last->setTx( (*info)[ track_it->first ] ); break;
       case 15: last->setTy( (*info)[ track_it->first ] ); break;
       case 16: last->setQOverP( (*info)[ track_it->first ] ); break;
-      case 17: if( (int)(*info)[ track_it->first ] != -1000 ) object->addInfo( LHCb::Track::CloneDist, (*info)[ track_it->first ] ); break;
-      case 18: if( (int)(*info)[ track_it->first ] != -1000 ) object->addInfo( LHCb::Track::FitMatchChi2, (*info)[ track_it->first ] ); break;
-      case 19: if( (int)(*info)[ track_it->first ] != -1000 ) object->addInfo( LHCb::Track::FitVeloChi2, (*info)[ track_it->first ] ); break;
-      case 20: if( (int)(*info)[ track_it->first ] != -1000 ) object->addInfo( LHCb::Track::FitTChi2, (*info)[ track_it->first ] ); break;
-      case 21: if( (int)(*info)[ track_it->first ] != -1000 ) object->addInfo( LHCb::Track::FitVeloNDoF, (*info)[ track_it->first ] ); break;
-      case 22: if( (int)(*info)[ track_it->first ] != -1000 ) object->addInfo( LHCb::Track::FitTNDoF, (*info)[ track_it->first ] ); break;
+      case 17: if( (*info)[ track_it->first ] != -1000 ) object->addInfo( LHCb::Track::CloneDist, (*info)[ track_it->first ] ); break;
+      case 18: if( (*info)[ track_it->first ] != -1000 ) object->addInfo( LHCb::Track::FitMatchChi2, (*info)[ track_it->first ] ); break;
+      case 19: if( (*info)[ track_it->first ] != -1000 ) object->addInfo( LHCb::Track::FitVeloChi2, (*info)[ track_it->first ] ); break;
+      case 20: if( (*info)[ track_it->first ] != -1000 ) object->addInfo( LHCb::Track::FitTChi2, (*info)[ track_it->first ] ); break;
+      case 21: if( (*info)[ track_it->first ] != -1000 ) object->addInfo( LHCb::Track::FitVeloNDoF, (*info)[ track_it->first ] ); break;
+      case 22: if( (*info)[ track_it->first ] != -1000 ) object->addInfo( LHCb::Track::FitTNDoF, (*info)[ track_it->first ] ); break;
       case 23: first->setFlags( (*info)[ track_it->first ] ); break;
       case 24: last->setFlags( (*info)[ track_it->first ] ); break;
       case 25: cov(0,0) = (*info)[ track_it->first ] ; break;
