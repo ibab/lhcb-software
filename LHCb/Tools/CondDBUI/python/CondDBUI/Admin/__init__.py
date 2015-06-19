@@ -7,7 +7,7 @@ __version__ = "$Id: __init__.py,v 1.3 2009-06-30 14:55:08 marcocle Exp $"
 from Management import *
 # fixme: to be moved into Management
 from _internals import (MergeAndTag,
-                        MakeDBFromFiles,
+                        MakeDBFromFiles, CompareDBToFiles,
                         DumpToFiles,
                         timegm, timeToValKey)
 

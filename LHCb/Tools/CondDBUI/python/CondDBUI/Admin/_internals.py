@@ -216,6 +216,88 @@ def MakeDBFromFiles(source, db, includes, excludes, basepath = "",
         print "Total folders inserted = %d"%folder_count
         print "Total files inserted = %d"%file_count
 
+def CompareDBToFiles(source, db, includes, excludes, basepath = "",
+                     remove_extension = False, verbose = False,
+                     since = None,
+                     until = None):
+    """
+    Check if the content of a directory matches the content of a CondDB instance.
+    """
+    # this is mostly a copy+paste from MakeDBFromFiles, so you can look there
+    # for the details.
+    import re
+    from PyCool import cool
+    if since is None:
+        since = cool.ValidityKeyMin
+    if until is None:
+        until = cool.ValidityKeyMax
+
+    nodes = CondDBUI._collect_tree_info(source, includes = includes, excludes = [])
+
+    errors = {}
+    foldersets = sorted(nodes)
+    for folderset in foldersets:
+
+        folders = sorted(nodes[folderset])
+        for folder in folders:
+
+            folder_path = re.sub('/+','/','/'.join([basepath,folderset,folder]))
+            if remove_extension:
+                folder_path = os.path.splitext(folder_path)[0]
+
+            if not db.db.existsFolder(folder_path):
+                errors[folder_path] = 'missing folder'
+                continue
+
+            collection = {}
+            keys = sorted(nodes[folderset][folder])
+            for key in keys:
+                for channel in nodes[folderset][folder][key]:
+
+                    if channel not in collection:
+                        collection[channel] = {}
+                        for k in keys:
+                            collection[channel][k] = ""
+
+                    collection[channel][key] = CondDBUI._fix_xml(open(nodes[folderset][folder][key][channel],"rb").read(),
+                                                                 "conddb:"+'/'.join([basepath,folderset]))
+
+            for channel in collection:
+                expected = [collection[channel], # FIXME: we should allow other keys
+                            since,
+                            until,
+                            channel]
+
+                # The use of "until-1" is to take into account a difference
+                # between insertion and retrieval.
+                # Insertion is meant to be [since, until), while retrieval is
+                # [since, until].
+                found = db.getPayloadList(folder_path,
+                                          since, until-1,
+                                          channel, 'HEAD')
+                if channel:
+                    err_id = '%s[%d]' % (folder_path, channel)
+                else:
+                    err_id = folder_path
+                if len(found) != 1:
+                    errors[err_id] = 'bad IOVs count'
+                    continue
+                found = found[0][:-1]
+                if expected != found:
+                    errors[err_id] = 'bad content'
+                    #if verbose:
+                    #    from pprint import pprint
+                    #    print 'error: bad content in', err_id
+                    #    print 'expected:'
+                    #    pprint(expected)
+                    #    print 'found:'
+                    #    pprint(found)
+                    continue
+    if verbose and errors:
+        for err in sorted(errors.items()):
+            print 'Error in %s: %s' % err
+    return errors
+
 def timegm(t):
     """Inverse of time.gmtime. Implementation from Gaudi::Time."""
     import time

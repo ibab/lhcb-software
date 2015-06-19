@@ -2,6 +2,11 @@
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! ====================================================================
+
+! 2015-06-19 - Marco Clemencic
+ - Added the CondDB.Admin.CompareDBToFiles function to check that
+   CondDB.Admin.MakeDBFromFiles worked.
+
 ! 2015-06-04 - Liang Su
  - Add menu support for CALIBOFF
 
@@ -14,17 +19,17 @@
 
 !========================= CondDBUI v3r33 2015-04-20 =========================
 ! 2015-03-04 - Liang Sun
- - Added writeDuplicate argument for method CondDB.storeXMLStringList() which is set to True be default. When writeDuplicate 
+ - Added writeDuplicate argument for method CondDB.storeXMLStringList() which is set to True be default. When writeDuplicate
    is set to False, there will be a check on whether the new & old payload contents are identical and only in the case of no
    the new payload contents are saved.
 
 !========================= CondDBUI v3r32 2014-12-11 =========================
 ! 2014-12-05 - Liang Sun
- - The workaround for PyCoolCopy issue is now marked with FIXME. This is due to a current ROOT6 bug 
-    about handling exceptions in Python: https://sft.its.cern.ch/jira/browse/ROOT-5603 
+ - The workaround for PyCoolCopy issue is now marked with FIXME. This is due to a current ROOT6 bug
+    about handling exceptions in Python: https://sft.its.cern.ch/jira/browse/ROOT-5603
 
 ! 2014-12-05 - Liang Sun
- - PyCoolCopy().copy would not support a connection string as its target db when the target db does not exist, 
+ - PyCoolCopy().copy would not support a connection string as its target db when the target db does not exist,
     now use an empty cool.IDatabase object
 
 !========================= CondDBUI v3r31 2014-10-14 =========================
@@ -54,7 +59,7 @@
 ! 2014-07-24 - Liang Sun
  - Fixed COOL API compatibility issues with ROOT 6
  - Exception handlings for COOL added in Helpers by hand.
- - Admin/ReleaseNotes.py: lines altered to quell warning messages on coding convention during running 
+ - Admin/ReleaseNotes.py: lines altered to quell warning messages on coding convention during running
 
 !========================= CondDBUI v3r29 2014-07-14 =========================
 ! 2014-07-11 - Marco Clemencic
