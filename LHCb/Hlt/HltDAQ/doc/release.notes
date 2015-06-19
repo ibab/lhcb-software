@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-06-19 - Sean Benson
+ - Only fill info fields in Tesla if not default value.
+
 !========================= HltDAQ v4r15 2015-06-10 =========================
 
 ! 2015-06-09 - Sean Benson
