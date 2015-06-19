@@ -55,8 +55,8 @@ class CharmHadD2HHLines() :
                  'D0_ee' :  { 'Elec_PT'                   : 350  * MeV,
                               'Trk_MIPCHI2DV_MIN'         : 9.0,   
                               'Track_Chi2'                : 5,
-                              'D0_AM_MassWinLow'          : 1804 * MeV,
-                              'D0_AM_MassWinHigh'         : 1924 * MeV,
+                              'D0_AM_MassWinLow'          : 1780 * MeV,
+                              'D0_AM_MassWinHigh'         : 1950 * MeV,
                               'D0_MassWinLow'             : 1814 * MeV,
                               'D0_MassWinHigh'            : 1914 * MeV,
                               'D0_PT'                     : 2500 * MeV,
@@ -64,8 +64,8 @@ class CharmHadD2HHLines() :
                                                                           
                  'D0_gg'   : {'Gamma_PT'                  : 1500  * MeV,
                               'Gamma_P'                   : 3000 * MeV,
-                              'D0_AM_MassWinLow'          : 1804 * MeV,
-                              'D0_AM_MassWinHigh'         : 1924 * MeV,
+                              'D0_AM_MassWinLow'          : 1780 * MeV,
+                              'D0_AM_MassWinHigh'         : 1950 * MeV,
                               'D0_MassWinLow'             : 1814 * MeV,
                               'D0_MassWinHigh'            : 1914 * MeV,
                               'D0_PT'                     : 3000 * MeV},                              
@@ -87,11 +87,13 @@ class CharmHadD2HHLines() :
                     'DOCACHI2_MAX'      : 15, 
                     'VCHI2PDOF_MAX'     : 4,
                     'MRho_MIN'          : 200 * MeV,
-                    'MRho_MAX'          : 700 * MeV, 
+                    'MRho_MAX'          : 750 * MeV, 
                     'AMRhoH_MIN'        : 0 * MeV,
                     'AMRhoH_MAX'        : 2350 * MeV, 
-                    'AMEta_MIN'         : 450 * MeV, # don't tighten 
-                    'AMEta_MAX'         : 650 * MeV, # don't tighten 
+                    'AMEta_MIN'         : 350 * MeV, # don't tighten 
+                    'AMEta_MAX'         : 750 * MeV, # don't tighten
+                    'MEta_MIN'          : 450 * MeV, # don't tighten 
+                    'MEta_MAX'          : 650 * MeV, # don't tighten 
                     'Neut_ALL_PT_MIN'   : 600 * MeV, 
                     'Neut_ALL_P_MIN'   : 1000 * MeV,
                                                     },
@@ -108,11 +110,13 @@ class CharmHadD2HHLines() :
                     'DOCACHI2_MAX'      : 15,  
                     'VCHI2PDOF_MAX'     : 4,
                     'MRho_MIN'          : 200 * MeV,
-                    'MRho_MAX'          : 700 * MeV, 
+                    'MRho_MAX'          : 750 * MeV, 
                     'AMRhoH_MIN'        : 0 * MeV,
                     'AMRhoH_MAX'        : 2250 * MeV, #
-                    'AMEta_MIN'         : 450 * MeV,  # don't tighten 
-                    'AMEta_MAX'         : 650 * MeV,  # don't tighten 
+                    'AMEta_MIN'         : 350 * MeV,  # don't tighten 
+                    'AMEta_MAX'         : 750 * MeV,  # don't tighten 
+                    'MEta_MIN'         : 450 * MeV,  # don't tighten 
+                    'MEta_MAX'         : 650 * MeV,  # don't tighten 
                     'Neut_ALL_PT_MIN'   : 600 * MeV,
                     'Neut_ALL_P_MIN'   : 1000 * MeV,
                                                     },
@@ -129,11 +133,13 @@ class CharmHadD2HHLines() :
                     'DOCACHI2_MAX'      : 15,  
                     'VCHI2PDOF_MAX'     : 4,
                     'MRho_MIN'          : 200 * MeV,
-                    'MRho_MAX'          : 1150 * MeV, 
+                    'MRho_MAX'          : 1160 * MeV, 
                     'AMRhoH_MIN'        : 0 * MeV,
                     'AMRhoH_MAX'        : 2250 * MeV, 
-                    'AMEta_MIN'         : 850 * MeV,   # don't tighten 
-                    'AMEta_MAX'         : 1060 * MeV,  # don't tighten 
+                    'AMEta_MIN'         : 750 * MeV,   # don't tighten 
+                    'AMEta_MAX'         : 1160 * MeV,  # don't tighten 
+                    'MEta_MIN'         : 850 * MeV,   # don't tighten 
+                    'MEta_MAX'         : 1060 * MeV,  # don't tighten 
                     'Neut_ALL_PT_MIN'   : 1000 * MeV, 
                     'Neut_ALL_P_MIN'   : 1000 * MeV,
                                                     },
@@ -150,21 +156,23 @@ class CharmHadD2HHLines() :
                     'DOCACHI2_MAX'      : 15,  
                     'VCHI2PDOF_MAX'     : 4,
                     'MRho_MIN'          : 200 * MeV,
-                    'MRho_MAX'          : 1150 * MeV,
+                    'MRho_MAX'          : 1160 * MeV,
                     'AMRhoH_MIN'        : 0 * MeV,
                     'AMRhoH_MAX'        : 2250 * MeV, 
-                    'AMEta_MIN'         : 850 * MeV,  # don't tighten 
-                    'AMEta_MAX'         : 1060 * MeV, # don't tighten 
+                    'AMEta_MIN'         : 750 * MeV,  # don't tighten 
+                    'AMEta_MAX'         : 1160 * MeV, # don't tighten 
+                    'MEta_MIN'          : 850 * MeV,  # don't tighten 
+                    'MEta_MAX'          : 1060 * MeV, # don't tighten 
                     'Neut_ALL_PT_MIN'   : 1000 * MeV, 
-                    'Neut_ALL_P_MIN'   : 1000 * MeV,
+                    'Neut_ALL_P_MIN'    : 1000 * MeV,
                                                     },
                  ######                 
                  'D2EtaPi_3hR' : {
                     'TisTosSpec'        : "Hlt1.*Track.*Decision%TOS",            
                     'Trk_PT_MIN'        :  1300 *MeV,
                     'Trk_MIPCHI2DV_MIN' :  25,
-                    'AM_MIN'            : 1550 * MeV,
-                    'AM_MAX'            : 2250 * MeV,
+                    'AM_MIN'            : 1450 * MeV,
+                    'AM_MAX'            : 2350 * MeV,
                     'DMASS_MIN'         : 1600 * MeV,    # don't tighten 
                     'DMASS_MAX'         : 2200 * MeV,    # don't tighten 
                     'APT_MIN'           : 5000.0 * MeV,
@@ -175,8 +183,10 @@ class CharmHadD2HHLines() :
                     'MRho_MAX'          : 1100 * MeV, 
                     'AMRhoH_MIN'        : 0 * MeV,
                     'AMRhoH_MAX'        : 2250 * MeV,
-                    'AMEta_MIN'         : 450 * MeV,  # don't tighten beyond 680 
-                    'AMEta_MAX'         : 880 * MeV,  # don't tighten 
+                    'AMEta_MIN'         : 350 * MeV,  # don't tighten beyond 680 
+                    'AMEta_MAX'         : 980 * MeV,  # don't tighten 
+                    'MEta_MIN'          : 450 * MeV,  # don't tighten beyond 680 
+                    'MEta_MAX'          : 880 * MeV,  # don't tighten 
                     'Neut_ALL_PT_MIN'   : 900 * MeV,
                     'Neut_ALL_P_MIN'   : 1000 * MeV,
                     },
@@ -196,8 +206,10 @@ class CharmHadD2HHLines() :
                     'MRho_MAX'          : 1100 * MeV, 
                     'AMRhoH_MIN'        : 0 * MeV,
                     'AMRhoH_MAX'        : 2350 * MeV,
-                    'AMEta_MIN'         : 450 * MeV,  # don't tighten beyond 680 
-                    'AMEta_MAX'         : 880 * MeV,  # don't tighten 
+                    'AMEta_MIN'         : 350 * MeV,  # don't tighten beyond 680 
+                    'AMEta_MAX'         : 980 * MeV,  # don't tighten 
+                    'MEta_MIN'         : 450 * MeV,  # don't tighten beyond 680 
+                    'MEta_MAX'         : 880 * MeV,  # don't tighten 
                     'Neut_ALL_PT_MIN'  :  900 * MeV,
                     'Neut_ALL_P_MIN'   : 1000 * MeV,
                     },
@@ -214,11 +226,13 @@ class CharmHadD2HHLines() :
                     'DOCACHI2_MAX'      : 15,  
                     'VCHI2PDOF_MAX'     : 4,
                     'MRho_MIN'          : 200 * MeV,
-                    'MRho_MAX'          : 1100 * MeV, 
+                    'MRho_MAX'          : 1300 * MeV, 
                     'AMRhoH_MIN'        : 0 * MeV,
                     'AMRhoH_MAX'        : 2350 * MeV,
-                    'AMEta_MIN'         : 400 * MeV,   # don't tighten beyond 450
-                    'AMEta_MAX'         : 1200 * MeV,  # don't tighten beyond 880
+                    'AMEta_MIN'         : 300 * MeV,   # don't tighten beyond 450
+                    'AMEta_MAX'         : 1300 * MeV,  # don't tighten beyond 880
+                    'MEta_MIN'         : 400 * MeV,   # don't tighten beyond 450
+                    'MEta_MAX'         : 1200 * MeV,  # don't tighten beyond 880
                     'Neut_ALL_PT_MIN'   : 600 * MeV,   # 800 if high
                     'Neut_ALL_P_MIN'   : 1000 * MeV,
                     },
@@ -235,11 +249,13 @@ class CharmHadD2HHLines() :
                     'DOCACHI2_MAX'      : 15,  
                     'VCHI2PDOF_MAX'     : 4,
                     'MRho_MIN'          : 200 * MeV,
-                    'MRho_MAX'          : 1100 * MeV, 
+                    'MRho_MAX'          : 1300 * MeV, 
                     'AMRhoH_MIN'        : 0 * MeV,
                     'AMRhoH_MAX'        : 2350 * MeV,
-                    'AMEta_MIN'         : 400 * MeV,      # don't tighten beyond 450
-                    'AMEta_MAX'         : 1200 * MeV,     # don't tighten beyond 880
+                    'AMEta_MIN'         : 300 * MeV,      # don't tighten beyond 450
+                    'AMEta_MAX'         : 1300 * MeV,     # don't tighten beyond 880
+                    'MEta_MIN'         : 400 * MeV,      # don't tighten beyond 450
+                    'MEta_MAX'         : 1200 * MeV,     # don't tighten beyond 880
                     'Neut_ALL_PT_MIN'   : 600 * MeV,      # 800 if high
                     'Neut_ALL_P_MIN'   : 1000 * MeV,
                     },
@@ -247,8 +263,8 @@ class CharmHadD2HHLines() :
                     'TisTosSpec'        : "Hlt1.*Track.*Decision%TOS",            
                     'Trk_PT_MIN'        :  1000 *MeV,
                     'Trk_MIPCHI2DV_MIN' :  25,
-                    'AM_MIN'            : 1550 * MeV,
-                    'AM_MAX'            : 2250 * MeV,
+                    'AM_MIN'            : 1450 * MeV,
+                    'AM_MAX'            : 2350 * MeV,
                     'DMASS_MIN'         : 1600 * MeV,
                     'DMASS_MAX'         : 2200 * MeV,
                     'APT_MIN'           : 3000.0 * MeV,
@@ -256,11 +272,13 @@ class CharmHadD2HHLines() :
                     'DOCACHI2_MAX'      : 15,
                     'VCHI2PDOF_MAX'     : 4,
                     'MRho_MIN'          : 200 * MeV,
-                    'MRho_MAX'          : 650 * MeV, 
+                    'MRho_MAX'          : 750 * MeV, 
                     'AMRhoH_MIN'        : 0 * MeV,
                     'AMRhoH_MAX'        : 1950 * MeV,
-                    'AMEta_MIN'         : 800 * MeV,
-                    'AMEta_MAX'         : 1150 * MeV,
+                    'AMEta_MIN'         : 700 * MeV,
+                    'AMEta_MAX'         : 1250 * MeV,
+                    'MEta_MIN'         : 800 * MeV,
+                    'MEta_MAX'         : 1150 * MeV,
                     'Neut_ALL_PT_MIN'   : 350 * MeV,
                     'Neut_ALL_P_MIN'   : 1000 * MeV,
                     },
@@ -268,8 +286,8 @@ class CharmHadD2HHLines() :
                     'TisTosSpec'        : "Hlt1.*Track.*Decision%TOS",            
                     'Trk_PT_MIN'        :  1000 *MeV,
                     'Trk_MIPCHI2DV_MIN' :  25,
-                    'AM_MIN'            : 1550 * MeV,
-                    'AM_MAX'            : 2250 * MeV,
+                    'AM_MIN'            : 1450 * MeV,
+                    'AM_MAX'            : 2350 * MeV,
                     'DMASS_MIN'         : 1600 * MeV,
                     'DMASS_MAX'         : 2200 * MeV,
                     'APT_MIN'           : 3000.0 * MeV,
@@ -277,11 +295,13 @@ class CharmHadD2HHLines() :
                     'DOCACHI2_MAX'      : 15,
                     'VCHI2PDOF_MAX'     : 4,
                     'MRho_MIN'          : 200 * MeV,
-                    'MRho_MAX'          : 650 * MeV, 
+                    'MRho_MAX'          : 750 * MeV, 
                     'AMRhoH_MIN'        : 0 * MeV,
                     'AMRhoH_MAX'        : 1950 * MeV,
-                    'AMEta_MIN'         : 800 * MeV,
-                    'AMEta_MAX'         : 1150 * MeV,
+                    'AMEta_MIN'         : 700 * MeV,
+                    'AMEta_MAX'         : 1250 * MeV,
+                    'MEta_MIN'         : 800 * MeV,
+                    'MEta_MAX'         : 1150 * MeV,
                     'Neut_ALL_PT_MIN'   : 350 * MeV,
                     'Neut_ALL_P_MIN'   : 1000 * MeV,
                     },
@@ -290,7 +310,7 @@ class CharmHadD2HHLines() :
                     'Trk_PIDK_MAX'             :   0,   
                     'Trk_PT_MIN'               : 500 *  MeV ,   
                     'Trk_MIPCHI2DV_MIN'        :  16 ,  # 25 if high        
-                    'AM_MAX'                   : 1150 * MeV ,     
+                    'AM_MAX'                   : 1300 * MeV ,     
                     'ASUMPT_MIN'               :   0 * MeV ,
                     'ADOCA_MAX'                :  0.1 * mm , 
                     'VCHI2_MAX'                :  20.0 , 

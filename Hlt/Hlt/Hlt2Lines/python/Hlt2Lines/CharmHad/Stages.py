@@ -1415,7 +1415,10 @@ class D2RhoHG_3Body_Combiner(Hlt2Combiner):
         
         D_mother_cut   = ("( in_range( %(DMASS_MIN)s, M, %(DMASS_MAX)s )" +
                           " & ( VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
-                          " & ( BPVLTIME() > %(BPVLTIME_MIN)s ) )" )
+                          " & ( BPVLTIME() > %(BPVLTIME_MIN)s ) " +
+                          " & ( M13>%(MEta_MIN)s) " +
+                          " & ( M13<%(MEta_MAX)s) ) " 
+                          )
         
         from HltTracking.HltPVs import PV3D
         from Configurables import DaVinci__N3BodyDecays

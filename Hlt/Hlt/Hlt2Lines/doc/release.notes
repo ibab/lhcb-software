@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-06-19 - Simone Stracka
+ - Fix in CharmHad/Stages.py and CharmHad/D2HHLines.py to apply a looser mass cut before
+   combination and refine it afterwards. 
+
 ! 2015-06-18 - Mika Vesterinen
  - Fix spurious mbda0KmKpPimPp in cut string in V0H combiner in CharmHad/Stages.py
 
