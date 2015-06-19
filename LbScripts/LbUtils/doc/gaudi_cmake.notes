@@ -1,3 +1,39 @@
+! 2015-06-19 - Marco Clemencic (af4b882)
+
+ - Fixed LBCORE-784: "eval `xenv ...`" not working for tcsh
+
+   
+
+! 2015-06-11 - Marco Clemencic (63adcc8)
+
+ - GAUDI-1038: re added a line removed by mistake
+
+   
+
+! 2015-06-05 - Marco Clemencic (c06aeb0)
+
+ - add PACKAGE_NAME and PACKAGE_VERSION macros to compiler command line
+
+   
+
+! 2015-06-05 - Marco Clemencic (163119a)
+
+ - handle correctly quotes (") in macros to genreflex
+
+   
+
+! 2015-06-05 - Marco Clemencic (2083f8c)
+
+ - allow to specify the subdir version in package_version.txt
+
+   
+
+! 2015-06-02 - Stan Thompson (a6ddd80)
+
+ - GAUDI-1038: CMAKE/CPACK additions to assist in rpm creation
+
+   
+
 ! 2015-05-18 - Marco Clemencic (a69030d)
 
  - fixed GAUDI-981: -DNDEBUG not passed to genreflex

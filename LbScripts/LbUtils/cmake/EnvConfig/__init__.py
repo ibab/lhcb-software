@@ -209,7 +209,7 @@ class Script(object):
             pprint(self.env)
         else:
             template = {'sh':  "export %s='%s'",
-                        'csh': "setenv %s '%s'"}.get(self.opts.shell, "%s=%s")
+                        'csh': "setenv %s '%s';"}.get(self.opts.shell, "%s=%s")
             for nv in sorted(self.env.items()):
                 print template % nv
 

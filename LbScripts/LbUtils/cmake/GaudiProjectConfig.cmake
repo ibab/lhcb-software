@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: 6d000098f7da11c89cbbbfa26aaa43c277f6d903
+# Commit Id: af4b882f6d63cf5cbc235a69355e2f15fd3e793c
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -716,12 +716,23 @@ __path__ = [d for d in [os.path.join(d, '${pypack}') for d in sys.path if d]
   endforeach()
   set(CPACK_SYSTEM_NAME ${BINARY_TAG})
 
-  set(CPACK_GENERATOR "RPM")
+  set(CPACK_SOURCE_IGNORE_FILES "/InstallArea/;/build\\\\..*/;/\\\\.svn/;/\\\\.git/;/\\\\.settings/;\\\\..*project;\\\\.gitignore")
+
+  # for the binary
+  set(CPACK_INSTALL_PREFIX "usr/${project}/${version}/InstallArea/${BINARY_TAG}")
+  set(CPACK_INSTALL_SCRIPT "${GaudiProject_DIR}/cpack_install.cmake")
+
+  # for the source
+  set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${CMAKE_SOURCE_DIR};/usr/${project}/${version}")
+
+  # for the RPMs
   set(CPACK_PACKAGE_DEFAULT_LOCATION "/usr")
+  set(CPACK_GENERATOR "RPM")
+  set(CPACK_RPM_PACKAGE_VERSION "${version}")
   set(CPACK_SOURCE_GENERATOR "RPM")
   set(CPACK_SOURCE_RPM "ON")
-
-  set(CPACK_SOURCE_IGNORE_FILES "/InstallArea/;/build\\\\..*/;/\\\\.svn/;/\\\\.git/;/\\\\.settings/;\\\\..*project;\\\\.gitignore")
+  set(CPACK_SOURCE_RPM_PACKAGE_ARCHITECTURE "noarch")
+  set(CPACK_SOURCE_RPM_PACKAGE_NAME "${project}-source")
 
   include(CPack)
 
@@ -1279,11 +1290,11 @@ endfunction()
 
 
 #-------------------------------------------------------------------------------
-# gaudi_subdir(name version)
+# gaudi_subdir(name [version])
 #
 # Declare name and version of the subdirectory.
 #-------------------------------------------------------------------------------
-macro(gaudi_subdir name version)
+macro(gaudi_subdir name)
   gaudi_get_package_name(_guessed_name)
   if (NOT _guessed_name STREQUAL "${name}")
     message(WARNING "Declared subdir name (${name}) does not match the name of the directory (${_guessed_name})")
@@ -1291,14 +1302,23 @@ macro(gaudi_subdir name version)
 
   # Set useful variables and properties
   set(subdir_name ${name})
-  set(subdir_version ${version})
-  set_directory_properties(PROPERTIES name ${name})
-  set_directory_properties(PROPERTIES version ${version})
+  if(NOT "${ARGV1}" STREQUAL "")
+    set(subdir_version ${ARGV1})
+  elseif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/package_version.txt)
+    file(READ ${CMAKE_CURRENT_SOURCE_DIR}/package_version.txt subdir_version)
+    string(STRIP "${subdir_version}" subdir_version)
+  else()
+    set(subdir_version unknown)
+  endif()
+  set_directory_properties(PROPERTIES name ${subdir_name})
+  set_directory_properties(PROPERTIES version ${subdir_version})
 
   # Generate the version header for the package.
   execute_process(COMMAND
                   ${versheader_cmd} --quiet
-                     ${name} ${version} ${CMAKE_CURRENT_BINARY_DIR}/${name}Version.h)
+                     ${name} ${subdir_version} ${CMAKE_CURRENT_BINARY_DIR}/${name}Version.h)
+  # Add a macro for the version of the package
+  add_definitions("-DPACKAGE_NAME=\"${subdir_name}\"" "-DPACKAGE_VERSION=\"${subdir_version}\"")
 endmacro()
 
 #-------------------------------------------------------------------------------

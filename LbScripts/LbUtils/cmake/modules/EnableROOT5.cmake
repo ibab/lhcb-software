@@ -158,6 +158,9 @@ macro(reflex_generate_dictionary dictionary _headerfile _selectionfile)
 
   get_directory_property(_defs COMPILE_DEFINITIONS)
   foreach(d ${_defs})
+   if(d MATCHES "\"")
+     string(REPLACE "\"" "\\\"" d "${d}")
+   endif()
    set(definitions ${definitions} -D${d})
   endforeach()
   # by default CMake passes -DNDEBUG in the flags and not in the definitions
