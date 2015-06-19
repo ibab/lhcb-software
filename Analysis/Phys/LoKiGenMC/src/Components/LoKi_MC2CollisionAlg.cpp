@@ -144,10 +144,6 @@ namespace LoKi
           m_threshold     ,
           "The threshold for LHCb::MCVertex ---> LHCb::GenCollision links") ;
       declareProperty 
-        ( "OutputTable"   , 
-          m_output        , 
-          "The TES location of MCVertex->GenCollision relation table") ;
-      declareProperty 
         ( "MC2Collision"  , 
           m_mc2colName    , 
           "The type/name of IMCCollision tool ") ;

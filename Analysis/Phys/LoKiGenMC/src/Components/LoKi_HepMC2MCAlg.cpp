@@ -169,7 +169,7 @@ namespace LoKi
           m_cut1  ,
           "The maximum allowed value for delta2eucludian (absolute)" ) ;
       declareProperty 
-        ( "Cut1"  , 
+        ( "Cut2"  , 
           m_cut2  ,
           "The maximum allowed value for delta2eucludian (relative)" ) ;
       declareProperty 
