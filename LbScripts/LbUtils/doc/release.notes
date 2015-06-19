@@ -1,3 +1,7 @@
+2015-06-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmt/update_gaudi_cmake.sh: changed Gaudi repository to gitlab.cern.ch
+
 2015-06-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/cern-lxdistcc-wrappers.sh: do not use lcg-*-x.y.z links in the gcc installations

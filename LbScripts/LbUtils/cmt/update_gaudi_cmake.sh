@@ -3,7 +3,7 @@
 # Simple script to update the LbUtils copy of the script env.py in Gaudi.
 #
 
-git_url=http://git.cern.ch/pub/gaudi
+git_url=https://gitlab.cern.ch/gaudi/Gaudi.git
 
 # Check if we have all the commands we need.
 for c in git patch ; do
