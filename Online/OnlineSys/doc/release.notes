@@ -6,7 +6,22 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
-<H1><A NAME=v5r19>2015-06-04 OnlineSys v5r20</A></H1>
+<H1><A NAME=v5r21>2015-06-19 OnlineSys v5r21</A></H1>
+<PRE>
+  Use Gaudi v26r2
+  Updated/new packages:	
+     Checkpointing       v0r22    Online
+     EventBuilder        v0r12    Online
+     FarmConfig          v0r17    Online
+     Gaucho              v7r40    Online
+     GauchoAppl          v1r25    Online
+     GaudiOnline         v2r82    Online
+     OnlineBase          v1r35    Online
+     PyDIM               v2r15    Online
+     ROMon               v1r54    Online
+</PRE>
+
+<H1><A NAME=v5r20>2015-06-04 OnlineSys v5r20</A></H1>
 <PRE>
   Use Gaudi v26r2
   Updated/new packages:	
