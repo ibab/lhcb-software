@@ -7,6 +7,7 @@
 
 ! 2015-06-15 - Sean Benson
  - Save muon LHCbIDs even for particles all particles where they are present.
+ - Add front CaloCluster for charged particles in Turbo.
 
 !========================= HltRawData v5r5p1 2015-06-10 =======================
 

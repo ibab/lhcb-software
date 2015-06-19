@@ -1035,6 +1035,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
     // particles with no daughters have substructure via ProtoParticle
     // we don't save Protoparticles, only things they lead to
     const ProtoParticle* pp = object.proto();
+    const auto& caloVec = pp->calo();
     if( !pp ){
       std::string w { " Particle with no daughters and no protoparticle " };
       const ObjectContainerBase *p = object.parent();
@@ -1082,11 +1083,17 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
                 ,StatusCode::SUCCESS,10 );
           }
         }
+        if(m_Turbo){
+          if( !caloVec.empty() ) {
+            const LHCb::CaloHypo* hypo  = caloVec.front();
+            const LHCb::CaloCluster* cluster = hypo->clusters().front();
+            if( cluster ) hos->addToSubstructure( store_( *cluster ) );
+          }
+        }
       }
       else {
         // neutral particle ?
         // Ecal via CaloHypo
-        const auto& caloVec = pp->calo();
         if( !caloVec.empty() ) {
           const LHCb::CaloHypo*   hypo  = caloVec.front();
           if( LHCb::CaloHypo::Photon == hypo->hypothesis() ){
