@@ -14,3 +14,5 @@ gaudi_add_module(HCMonitors
                  INCLUDE_DIRS AIDA
                  LINK_LIBRARIES DigiEvent GaudiAlgLib)
 
+gaudi_install_python_modules()
+

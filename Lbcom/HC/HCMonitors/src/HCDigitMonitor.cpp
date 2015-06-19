@@ -20,6 +20,7 @@ DECLARE_ALGORITHM_FACTORY(HCDigitMonitor)
 //=============================================================================
 HCDigitMonitor::HCDigitMonitor(const std::string& name, ISvcLocator* pSvcLocator)
     : GaudiHistoAlg(name, pSvcLocator),
+      m_odin(NULL),
       m_parAdc("", -0.5, 1023.5, 1023) {
 
   declareProperty("DigitLocation", m_digitLocation = LHCb::HCDigitLocation::Default);

@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-06-19 - Heinrich Schindler
+ - Add python module.
+
 ! 2015-06-14 - Heinrich Schindler
  - Initial import.
  - Add HCDigitTuple.

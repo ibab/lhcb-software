@@ -21,3 +21,5 @@ use GaudiConf     v*  -no_auto_imports
 library HCMonitors ../src/*.cpp -import=AIDA
 
 apply_pattern component_library library=HCMonitors
+
+apply_pattern install_python_modules
