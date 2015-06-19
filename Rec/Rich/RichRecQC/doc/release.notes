@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2015-06-19 - Chris Jones
+ - Small cleanup of the RichDataDecodingErrorMoni monitor.
+
 !========================= RichRecQC v2r70 2015-05-26 =========================
 ! 2015-05-12 - Chris Jones
  - Fix typo in property names in RawDataSize.

@@ -30,9 +30,6 @@
 // RichDet
 #include "RichDet/DeRichSystem.h"
 
-// boost
-#include "boost/assign/list_of.hpp"
-
 namespace Rich
 {
   namespace DAQ
@@ -69,7 +66,7 @@ namespace Rich
     private:
 
       /// Fill the plots for the given L1ID and error code
-      void fillPlots( const Rich::DAQ::Level1CopyNumber logID,
+      void fillPlots( const Rich::DAQ::Level1CopyNumber& copyN,
                       const int errorCode,
                       const bool error,
                       AIDA::IProfile1D * h1D,
