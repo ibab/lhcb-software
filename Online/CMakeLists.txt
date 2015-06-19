@@ -12,5 +12,5 @@ endif()
 add_definitions(-DDD4HEP_USE_TINYXML)
 
 # Declare project name and version
-gaudi_project(Online v5r20
+gaudi_project(Online v5r21
               USE Gaudi v26r2)
