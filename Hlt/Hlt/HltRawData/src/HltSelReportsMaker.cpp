@@ -1086,8 +1086,12 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
         if(m_Turbo){
           if( !caloVec.empty() ) {
             const LHCb::CaloHypo* hypo  = caloVec.front();
-            const LHCb::CaloCluster* cluster = hypo->clusters().front();
-            if( cluster ) hos->addToSubstructure( store_( *cluster ) );
+            int numCluster=0;
+            for( auto cluster : hypo->clusters() ){
+              numCluster++;
+              hos->addToSubstructure( store_( *cluster ) );
+              if(numCluster==3) break;
+            }
           }
         }
       }
