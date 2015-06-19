@@ -1,11 +1,11 @@
 #ifndef HLT2MONITORING_CHUNK_H
 #define HLT2MONITORING_CHUNK_H 1
 
-#include <algorithm>
-#include <vector>
 #include <ostream>
 
-#include <boost/serialization/vector.hpp>
+#include <algorithm>
+#include <vector>
+#include <unordered_map>
 
 #include "Common.h"
 
@@ -16,31 +16,27 @@ namespace Monitoring {
 struct Chunk {
    Chunk() = default;
 
-   Chunk(RunNumber rn, TCK t, HistId id, Seconds s, size_t n = 10)
-      : runNumber{rn}, tck{t}, histId{id}, start{s}, data(n) {}
+   Chunk(RunNumber rn, TCK t, HistId id)
+      : runNumber{rn}, tck{t}, histId{id} {}
 
    // Copy constructor
    Chunk(const Chunk& other)
       : runNumber{other.runNumber},
         tck{other.tck},
         histId{other.histId},
-        start{other.start}
+        data{other.data}
    {
-      data.reserve(other.data.size());
-      std::copy(begin(other.data), end(other.data), std::back_inserter(data));
    }
 
    // Move constructor
    Chunk(Chunk&& other)
       : runNumber{0},
         tck{0},
-        histId{0},
-        start{0}
+        histId{0}
    {
       std::swap(runNumber, other.runNumber);
       std::swap(tck, other.tck);
       std::swap(histId, other.histId);
-      std::swap(start, other.start);
       std::swap(data, other.data);
    }
 
@@ -52,7 +48,6 @@ struct Chunk {
       runNumber = other.runNumber;
       tck = other.tck;
       histId = other.histId;
-      start = other.start;
       data = other.data;
       return *this;
    }
@@ -65,29 +60,24 @@ struct Chunk {
       std::swap(runNumber, other.runNumber);
       std::swap(tck, other.tck);
       std::swap(histId, other.histId);
-      std::swap(start, other.start);
       std::swap(data, other.data);
       return *this;
    }
 
-   // operator+=
-   Chunk& operator+=(const Chunk& c) {
-      auto size = data.size();
-      auto new_size = c.start + c.data.size();
-      if (new_size > data.size()) {
-         data.resize(new_size);
-         for (unsigned int i = size; i < new_size; ++i) data[i] = 0;
-      }
-      for (unsigned int i = 0; i < c.data.size(); ++i)
-         data[c.start + i] += c.data[i];
-      return *this;
+   // Find highest bin
+   unsigned int highestBin() const {
+      auto it = std::max_element(begin(data), end(data),
+                                 [] (const decltype(data)::value_type& first,
+                                     const decltype(data)::value_type& second) {
+                                    return first.first < second.first;
+                                 });
+      return it == end(data) ? 0 : it->first;
    }
 
    RunNumber runNumber;
    TCK tck;
    HistId histId;
-   Seconds start;
-   std::vector<BinContent> data;
+   std::unordered_map<unsigned int, BinContent> data;
 };
 }
 

@@ -38,10 +38,10 @@ namespace Monitoring {
     */
    auto operator<<(std::ostream& os, const Chunk& chunk) -> std::ostream & {
       os << "Monitoring::Chunk [Run: " << chunk.runNumber << ", TCK: " << chunk.tck
-         << ", HistId: " << chunk.histId << ", Start: " << chunk.start
-         << "]\n                  [";
-      std::copy(std::begin(chunk.data), std::end(chunk.data),
-                std::ostream_iterator<BinContent>(os, " "));
+         << ", HistId: " << chunk.histId << "]\n                  [";
+      for (const auto& entry : chunk.data) {
+         os << entry.first << " " << entry.second << " ";
+      }
       os << ']';
       return os;
    }

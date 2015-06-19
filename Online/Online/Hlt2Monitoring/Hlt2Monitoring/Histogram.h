@@ -20,13 +20,20 @@ struct Histogram {
 
   auto addChunk(const Chunk& c) noexcept -> void {
     assert(runNumber == c.runNumber && tck == c.tck && histId == c.histId);
-    if ((c.start + c.data.size()) > data.size()) {
-       data.resize(c.start + c.data.size());
+    // Skip empty chunks
+    if (c.data.empty()) return;
+
+    // Find the highest bin in this chunk.
+    auto high = c.highestBin();
+
+    // Resize if needed.
+    if (high > data.size()) {
+       data.resize(high);
     }
 
-    std::transform(std::begin(c.data), std::end(c.data),
-                   std::begin(data) + c.start, std::begin(data) + c.start,
-                   std::plus<BinContent>());
+    for (const auto& entry : c.data) {
+       data[entry.first] += entry.second;
+    }
   }
 
   RunNumber runNumber;
