@@ -710,7 +710,7 @@ serviceProxy(void *tagp, void **buf, int *size, int * /*first_time*/) {
      *    - return some default data => unpredictable results client side
      */
     print("ERROR: You should not see this message! The service update has failed");
-    debug("Could not get data to update service %s, pointer %ld. Output buffer is %ld with size %d, updated %d",
+    print("Could not get data to update service %s, pointer %ld. Output buffer is %ld with size %d, updated %d",
           svc->name, (long)svc, (long)svc->buffer, svc->bufferSize, svc->isUpdated);
     svc->bufferSize = 0;
     if (svc->buffer) {
