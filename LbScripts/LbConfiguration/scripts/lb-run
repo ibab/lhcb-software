@@ -14,6 +14,7 @@ Script to run a command in an environment modified for an LHCb application.
 '''
 __author__ = 'Marco Clemencic <marco.clemencic@cern.ch>'
 
+import os
 import sys
 from LbConfiguration.SP2.script import SP2
 # special handling of the option --profile
@@ -21,4 +22,17 @@ if '--profile' in sys.argv:
     from LbConfiguration.SP2.profiling import run
     run('SP2().main()')
 else:
+    # special handling of the '#!' case (LBCORE-782)
+    # - we must have at least one argument and the first one must be a file
+    if len(sys.argv) >= 2 and os.path.isfile(sys.argv[1]):
+        # - the second line of the file must start with '# args: '
+        argline = ''
+        with open(sys.argv[1]) as scriptfile:
+            scriptfile.next() # skip first line
+            argline = scriptfile.next().strip()
+        import re
+        args = re.match(r'#\s*args\s*:\s*(\S+.*)', argline)
+        if args:
+            # FIXME: we should improve the argument splitting
+            sys.argv = sys.argv[:1] + args.group(1).split() + sys.argv[1:]
     SP2().main()

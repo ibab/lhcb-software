@@ -1,3 +1,7 @@
+2015-06-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-run: fixed LBCORE-782 (Allow use of lb-run in the "#!" line of a script)
+
 2015-05-27  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: LBCORE-825 release of version v8r4
