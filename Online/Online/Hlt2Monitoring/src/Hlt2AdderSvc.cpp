@@ -184,11 +184,8 @@ StatusCode Hlt2AdderSvc::start()
                if (command == "TERMINATE") {
                   break;
                } else if (command == "PAUSE") {
-                  front.close();
                   paused = true;
                } else if (paused && command == "RESUME") {
-                  front.connect(m_frontCon.c_str());
-                  front.setsockopt(ZMQ_SUBSCRIBE, "", 0);
                   paused = false;
                }
             }
