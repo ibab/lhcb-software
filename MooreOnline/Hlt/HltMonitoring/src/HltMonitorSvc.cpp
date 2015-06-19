@@ -52,8 +52,7 @@ HltMonitorSvc::HltMonitorSvc(const string& name, ISvcLocator* loc)
 {
    declareProperty("OutputConnection", m_outCon = "ipc:///tmp/hlt2mon_0");
    declareProperty("HltDecReportsLocation", m_decRepLoc = "Hlt2/DecReports");
-   declareProperty("ChunkOverlap", m_chunkOverlap = 1);
-   declareProperty("UpdateInterval", m_updateInterval = 10);
+   declareProperty("UpdateInterval", m_updateInterval = 10.);
 }
 
 //===============================================================================
@@ -77,6 +76,7 @@ StatusCode HltMonitorSvc::initialize()
       return sc;
    }
    m_incidentSvc->addListener(this, IncidentType::RunChange);
+   m_incidentSvc->addListener(this, IncidentType::BeginRun);
 
    sc = serviceLocator()->service("UpdateManagerSvc", m_updMgrSvc, true);
    if (!sc.isSuccess()) {
@@ -138,70 +138,9 @@ StatusCode HltMonitorSvc::finalize()
 }
 
 //===============================================================================
-void HltMonitorSvc::count(const Gaudi::StringKey& key, double t)
-{
-   // The clock that provides the start of run time might be a bit ahead of the
-   // event clock, which would result in negative numbers here. Since that should (flw)
-   // only happen at the start of run, we ignore those events.
-   auto diff = t - m_startOfRun;
-   if (diff < 0) {
-      return;
-   }
-
-   // if (UNLIKELY(!m_tck)) {
-   //    // Get the newly created HltDecReports to obtain the TCK
-   //    DataObject* obj{nullptr};
-   //    StatusCode sc = m_evtSvc->retrieveObject(m_decRepLoc, obj);
-   //    if (!sc.isSuccess()) {
-   //       throw GaudiException(name() + " Could not retrieve LHCb::HltDecReports from " + m_decRepLoc, "",
-   //                            StatusCode::FAILURE);
-   //    }
-   //    const LHCb::HltDecReports* decReps = static_cast<const LHCb::HltDecReports*>(obj);
-   //    m_tck = decReps->configuredTCK();
-   // }
-
-   MsgStream msg(msgSvc(), name());
-
-   size_t bin = 0;
-   size_t chunkSize{boost::numeric_cast<size_t>(m_updateInterval)};
-
-   // Create a new chunk if we don't have one for this identifier
-   auto it = m_chunks.find(key);
-   if (it == end(m_chunks)) {
-      it = m_chunks.emplace(key, Chunk{m_run, m_tck, key.__hash__(),
-                                       0, chunkSize}).first;
-      bin = boost::numeric_cast<size_t>(diff);
-   }
-
-   // If we get an early event, OR in case of an event outside of the chunk, send the old
-   // chunk and create a new one.
-   if ((diff < it->second.start)
-       || (boost::numeric_cast<size_t>(t - it->second.start) > it->second.data.size())) {
-      sendChunk(it->second);
-      auto start = boost::numeric_cast<size_t>(diff);
-      if (start > m_chunkOverlap) {
-         start -= m_chunkOverlap;
-      }
-      it->second = Chunk{m_run, m_tck, it->second.histId, start, chunkSize};
-      bin = boost::numeric_cast<size_t>(diff - start);
-   }
-
-   // Count
-   it->second.data[bin] += 1;
-}
-
-//===============================================================================
 RateCounter& HltMonitorSvc::rateCounter(const std::string& identifier) const
 {
-   Gaudi::StringKey key{identifier};
-   auto it = m_counters.find(key);
-   if (it == m_counters.end()) {
-      auto rc = new RateCounter(const_cast<HltMonitorSvc* const>(this), key);
-      auto r = m_counters.emplace(key, rc);
-      return *(r.first->second);
-   } else {
-      return *(it->second);
-   }
+   return item<RateCounter, decltype(m_counters)>(identifier, m_counters);
 }
 
 //===============================================================================
@@ -215,40 +154,134 @@ vector<string> HltMonitorSvc::counters() const
 }
 
 //===============================================================================
-void HltMonitorSvc::handle(const Incident& incident)
+void HltMonitorSvc::count(const Gaudi::StringKey& key, double t)
+{
+   // The clock that provides the start of run time might be a bit ahead of the
+   // event clock, which would result in negative numbers here. Since that should (flw)
+   // only happen at the start of run, we ignore those events.
+   auto diff = t - m_startOfRun;
+   if (diff < 0) {
+      return;
+   }
+   auto bin = boost::numeric_cast<size_t>(diff);
+
+   // Create a new chunk if we don't have one for this identifier
+   auto it = m_chunks.find(key);
+   if (it == end(m_chunks)) {
+      it = m_chunks.emplace(key, Chunk{m_run, tck(), key.__hash__()}).first;
+   }
+
+   // Count
+   if (!it->second.data.count(bin)) {
+      it->second.data[bin] = 1;
+   } else {
+      it->second.data[bin] += 1;
+   }
+}
+
+//===============================================================================
+HltHistogram& HltMonitorSvc::histogram(const std::string& identifier,
+                                       double left, double right,
+                                       size_t bins) const
+{
+   return item<HltHistogram, decltype(m_histograms)>(identifier, m_histograms,
+                                                     left, right, bins);
+}
+
+//===============================================================================
+vector<string> HltMonitorSvc::histograms() const
+{
+   vector<string> names;
+   for (const auto& entry : m_histograms) {
+      names.push_back(entry.first.str());
+   }
+   return names;
+}
+
+//===============================================================================
+void HltMonitorSvc::fill(const Gaudi::StringKey& key, size_t bin)
 {
    MsgStream msg(msgSvc(), name());
 
+   // Create a new chunk if we don't have one for this identifier
+   auto it = m_chunks.find(key);
+   if (it == end(m_chunks)) {
+      it = m_chunks.emplace(key, Chunk{m_run, tck(), key.__hash__()}).first;
+   }
+
+   // Count
+   if (!it->second.data.count(bin)) {
+      it->second.data[bin] = 1;
+   } else {
+      it->second.data[bin] += 1;
+   }
+}
+
+//===============================================================================
+void HltMonitorSvc::handle(const Incident& incident)
+{
+
+   auto now = std::chrono::high_resolution_clock::now(); // System::currentTime( System::microSec );
+   if ( m_latestUpdate.time_since_epoch().count() == 0 ||
+        incident.type() == IncidentType::BeginRun ||
+        incident.type() == "RunChange" )
+      m_latestUpdate = now;
+   using seconds = std::chrono::duration<double>;
+   if (std::chrono::duration_cast<seconds>(std::chrono::high_resolution_clock::now() - m_latestUpdate).count()
+       > m_updateInterval) {
+      sendChunks();
+      m_latestUpdate = now;
+   }
 
    const RunChangeIncident* rci = dynamic_cast<const RunChangeIncident*>(&incident);
    if (rci) {
       if (m_run != rci->runNumber()) {
+         MsgStream msg(msgSvc(), name());
          msg << MSG::DEBUG << "Change of run number detected " << m_run
              << " -> " << rci->runNumber() << endmsg;
       }
       m_run = rci->runNumber();
 
       // On a run change, always send the chunks
-      for (auto& entry : m_chunks) {
-         sendChunk(entry.second);
-         size_t size{boost::numeric_cast<size_t>(m_updateInterval + m_chunkOverlap)};
-         entry.second = Chunk{m_run, m_tck, entry.second.histId, 0, size};
-      }
+      sendChunks();
    }
 }
 
 //===============================================================================
-void HltMonitorSvc::sendChunk(const Chunk& chunk)
+void HltMonitorSvc::sendChunks()
 {
-   std::stringstream ss;
-   boost::archive::text_oarchive oa{ss};
-   oa << chunk;
-   auto s = ss.str();
+   for (auto& entry : m_chunks) {
+      // Don't send empty chunks.
+      if (entry.second.data.empty()) continue;
 
-   // Prepare message and send
-   zmq::message_t msg(s.size());
-   memcpy(static_cast<void*>(msg.data()), s.c_str(), s.size());
-   m_output->send(msg);
+      std::stringstream ss;
+      boost::archive::text_oarchive oa{ss};
+      oa << entry.second;
+      auto s = ss.str();
+
+      // Prepare message and send
+      zmq::message_t msg(s.size());
+      memcpy(static_cast<void*>(msg.data()), s.c_str(), s.size());
+      m_output->send(msg);
+      entry.second = Chunk{m_run, tck(), entry.second.histId};
+   }
+}
+
+//===============================================================================
+unsigned int HltMonitorSvc::tck() const
+{
+   if (UNLIKELY(!m_tck)) {
+      // Get the newly created HltDecReports to obtain the TCK
+      DataObject* obj{nullptr};
+      StatusCode sc = m_evtSvc->retrieveObject(m_decRepLoc, obj);
+      if (!sc.isSuccess()) {
+         throw GaudiException(name() + " Could not retrieve LHCb::HltDecReports from " + m_decRepLoc, "",
+                              StatusCode::FAILURE);
+      }
+      const LHCb::HltDecReports* decReps = static_cast<const LHCb::HltDecReports*>(obj);
+      m_tck = decReps->configuredTCK();
+   }
+   return m_tck;
 }
 
 //===============================================================================

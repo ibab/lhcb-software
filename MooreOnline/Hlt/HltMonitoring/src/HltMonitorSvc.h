@@ -18,6 +18,7 @@
 // HLT
 #include <Kernel/IHltMonitorSvc.h>
 #include <Kernel/RateCounter.h>
+#include <Kernel/HltHistogram.h>
 
 class ISvcLocator;
 class IIncidentSvc;
@@ -39,28 +40,53 @@ public:
    virtual StatusCode stop();
    virtual StatusCode finalize();
 
-   // Count counter at time t
-   virtual void count(const Gaudi::StringKey& id, double t);
+   // List of all counters
+   virtual std::vector<std::string> counters() const;
 
    // Simple wrapper to facilitate counting
    virtual RateCounter& rateCounter(const std::string& identifier) const;
 
-   // List of all counters
-   virtual std::vector<std::string> counters() const;
+   // Count counter at time t
+   virtual void count(const Gaudi::StringKey& id, double t);
+
+   // Simple wrapper to facilitate histogram filling
+   virtual HltHistogram& histogram(const std::string& identifier,
+                                   double left, double right,
+                                   size_t bins) const;
+
+   // List of all histograms
+   virtual std::vector<std::string> histograms() const;
+
+   // Fill histograms with value
+   virtual void fill(const Gaudi::StringKey& id, size_t bin);
 
    virtual void handle(const Incident& incident);
 
 private:
 
+   template <class T, class C, class... Args>
+   T& item(const std::string& identifier, C& container, Args&&... args) const {
+      Gaudi::StringKey key{identifier};
+      auto it = container.find(key);
+      if (it == container.end()) {
+         auto rc = new T(const_cast<HltMonitorSvc* const>(this), key, std::forward<Args>(args)...);
+         auto r = container.emplace(key, rc);
+         return *(r.first->second);
+      } else {
+         return *(it->second);
+      }
+   }
+
    StatusCode updateConditions();
 
-   void sendChunk(const Monitoring::Chunk& chunk);
+   void sendChunks();
+
+   unsigned int tck() const;
 
    // properties
    std::string m_outCon;
    std::string m_decRepLoc;
-   size_t m_chunkOverlap;
-   size_t m_updateInterval;
+   double m_updateInterval;
 
    // data members
    IIncidentSvc* m_incidentSvc;
@@ -72,10 +98,13 @@ private:
    zmq::socket_t* m_output;
 
    unsigned int m_run;
-   unsigned int m_tck;
+   mutable unsigned int m_tck;
+
+   std::chrono::high_resolution_clock::time_point m_latestUpdate;
    double m_startOfRun;
 
    mutable std::unordered_map<Gaudi::StringKey, RateCounter*> m_counters;
+   mutable std::unordered_map<Gaudi::StringKey, HltHistogram*> m_histograms;
    mutable std::unordered_map<Gaudi::StringKey, Monitoring::Chunk> m_chunks;
 
 };
