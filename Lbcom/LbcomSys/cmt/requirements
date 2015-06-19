@@ -16,6 +16,9 @@ use CaloAssociators   v6r14p1  Calo      # Olivier Deschamps
 # DAQ
 use DAQMonitors       v1r9     DAQ       # Olivier Deschamps
 
+# Herschel
+use HCMonitors        v1r0     HC        # Heinrich Schindler
+
 # L0 trigger simulation
 use L0MuonMonitor     v2r4     L0        # Julien Cogan
 use PuVeto            v7r10    L0        # 
