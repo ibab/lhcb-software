@@ -40,6 +40,8 @@ elif 2012 == year :
   ConfigV = ['Collision12','Protonion12','Collision12hl','Collision12_25']
 elif 2013 == year :
   ConfigV = ['Collision13','Protonion13','Ionproton13','Ionsmog']
+elif 2015 == year :
+  ConfigV = ['Collision15','Collision15em']
 else:
   print 'Unknown year', year
   DIRAC.exit(2)
@@ -98,6 +100,7 @@ else:
           type = 90000000 # FULL Stream
         if config == 'Protonion13' or config == 'Ionproton13' :
           type = 90000000 # FULL Stream
+        #if  run > 77595  and run < 77624 : # Express disappeared for unknown reasons
 
         typeS = "EXPRESS"
         if type == 90000000 : typeS = "FULL"

@@ -67,9 +67,24 @@ def fileMD5(file):
 #dbFileName = "Tracking2011Align-v5.3"
 
 # Mirror alignment
-upAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors/MagUp"
-dnAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors/MagDown"
-dbFileName = "2013MirrorAlign"
+#upAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors/MagUp"
+#dnAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors/MagDown"
+#dbFileName = "2013MirrorAlign"
+
+# Mirror alignment
+#upAlign    = "/usera/jonesc/NFS/DetDB/2012-MagTest/MagUp"
+#dnAlign    = "/usera/jonesc/NFS/DetDB/2012-MagTest/MagDown"
+#dbFileName = "2012-MagTest"
+
+# Reset HPD alignments to 0
+#upAlign    = "/usera/jonesc/NFS/DetDB/ResetHPDAlign/MagUp"
+#dnAlign    = "/usera/jonesc/NFS/DetDB/ResetHPDAlign/MagDown"
+#dbFileName = "ResetHPDAlign"
+
+# 2015 Mirror alignment
+upAlign    = "/usera/jonesc/NFS/DetDB/2015-MirrorAlign-V2-It3/MagUp"
+dnAlign    = "/usera/jonesc/NFS/DetDB/2015-MirrorAlign-V2-It3/MagDown"
+dbFileName = "2015-MirrorAlign-V2-It3"
 
 # Mirror alignment RICH1 only
 #upAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors-RICH1/MagUp"
@@ -165,9 +180,12 @@ field = { }
 ## field[ datetime.datetime(  2012,  12,   14,   22,    0,   0  ) ] = dnAlign
 
 # 2013                     Year  Month  Day   Hour  Min  Sec
-field[ datetime.datetime(  2013,   1,    1,    0,    0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2013,   1,   29,   18,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2013,   2,    6,    0,    1,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2013,   1,    1,    0,    0,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2013,   1,   29,   18,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2013,   2,    6,    0,    1,   0  ) ] = dnAlign
+
+# 2015
+field[ datetime.datetime(  2015,   1,    1,    1,    0,   0  ) ] = upAlign
 
 # Long way away ...
 stop = datetime.datetime(  2100,  12,   31,   23,   59,  59  )

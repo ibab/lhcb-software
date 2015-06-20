@@ -38,7 +38,7 @@ namespace Rich
                    cleanHistogram   (  true   ),
                    maxImageShift    (  3.0    ), // in mm
                    maxXYErrDevation ( 99999   ),
-                   retryWithLogzImage ( false )
+                   retryWithLogzImage ( true  )
         { }
       public:
         std::string type;        ///< Fit type

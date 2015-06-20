@@ -45,9 +45,13 @@ def initialise():
         #LHCbApp().DDDBtag   = "dddb-20120831"
         #LHCbApp().CondDBtag = "cond-20121208"
 
-        DDDBConf(DataType = "2012")
-        LHCbApp().DDDBtag   = "dddb-20120831"
-        LHCbApp().CondDBtag = "cond-20121211"
+        #DDDBConf(DataType = "2012")
+        #LHCbApp().DDDBtag   = "dddb-20120831"
+        #LHCbApp().CondDBtag = "cond-20121211"
+
+        DDDBConf(DataType = "2015")
+        LHCbApp().DDDBtag    = "dddb-20150526"
+        LHCbApp().CondDBtag  = "cond-20150601"
 
         # Move HPD Occs
         #cDB.addLayer(CondDBAccessSvc("NewMDMSCondDB-28022011",
@@ -291,8 +295,8 @@ def getAllRuns():
     print "Trying to get a list of all runs"
     nTries = 0
     res = { 'OK' : False }
-    dict = { 'StartDate'        : "2011-03-01",
-             'EndDate'          : "2012-12-31",
+    dict = { 'StartDate'        : "2015-03-01",
+             'EndDate'          : "2015-12-31",
              'AllowOutsideRuns' : True, # Allows runs to start inside but finish outside the dates
              'CheckRunStatus'   : False # Don't care if it is processed or not
              }

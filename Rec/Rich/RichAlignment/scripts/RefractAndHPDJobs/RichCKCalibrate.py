@@ -52,7 +52,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v47r0' ) )
+                j = Job( application = Brunel( version = 'v47r6p1' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -112,17 +112,17 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v47r0",pickledRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v47r6p1",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v47r0",pickledRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v47r6p1",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInVerify")
 
 ## Real underlying method
 def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
-    from Ganga.GPI import ( Job, LHCbDataset, Brunel, File,
+    from Ganga.GPI import ( Job, LHCbDataset, Brunel, File, queues,
                             SplitByFiles, RootMerger, Dirac )
     import time
 
@@ -189,10 +189,29 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     # New 2012 MDMS with global shift - V3
     #dbFiles += [ "MDCS-RICH1-GLOBAL_SHIFT-25092014" ]
     # New 2012 MDMS with global shift - V4
-    dbFiles += [ "MDCS-RICH1-GLOBAL_SHIFT-FOR2012-11102014" ]
+    #dbFiles += [ "MDCS-RICH1-GLOBAL_SHIFT-FOR2012-11102014" ]
 
     # 2012 HPD image calibrations with radius values
     #dbFiles += ["2012-NewMDMSCalib-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-17062014"]
+
+    # Antonis's test 2012 DB with fixed Magnification
+    #dbFiles += ["MDCS-RICH1_FixedMag_210515"]
+    # No MDCS (Zero field)
+    #dbFiles += ["MDCS-RICH1_ZeroField_240515"]
+    # Run II test - First Scan
+    #dbFiles += ["MDCS-RICH1-FirstScans-RunI-IOV-26052015"]
+    # Run II test - Second Scan
+    #dbFiles += ["MDCS-RICH1-SecondScans-RunI-IOV-26052015"]
+
+    # 2012 test with one alignment for up and down
+    #dbFiles += ["2012-MagTest-10062015"]
+
+    # 2015 DBs
+    dbFiles += ["Alignment2015"] # Tracking
+    dbFiles += ["MDCS-RICH1-SecondScans-26052015"] # MDCS
+    dbFiles += ["ResetHPDAlign-13062015"]
+    #dbFiles += ["2015-MirrorAlign-V1-It2-15062015"]
+    dbFiles += ["2015-MirrorAlign-V2-It3-15062015"]
 
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
@@ -331,29 +350,38 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                           "file(s) per subjob,", nEventsPerJob, "events per job"
                     for f in j.inputdata.files : print "  ->", f.name
 
-                    submitOK = False
-                    submitCount = 0
-                    while ( not submitOK and submitCount <= 100 ) :
-                        submitCount = submitCount + 1
-                        try:
-                            j.submit()
-                            # See if any of the sub-jobs are still 'new'
-                            sj = j.subjobs.select(status='new')
-                            if len(sj) == 0 : submitOK = True
-                        except Exception,e:
-                            submitOK = False
-                        if not submitOK :
-                            nSleep = 120
-                            print "WARNING : Job not submitted -> Delete and try again after", nSleep, "secs..."
-                            new_j = j.copy()
-                            j.remove()
-                            j = new_j
-                            time.sleep(nSleep)
-                            
-                    if not submitOK :
-                        print "WARNING : Job failed to be submitted after", submitCount, "tries."
-                        j.remove()
-                        return
+                    # Submitt now
+                    #submitJob(j)
+                    # queue the submission
+                    queues.add( submitJob, args=(j,) )
+
+def submitJob(j):
+
+    import time
+    
+    submitOK = False
+    submitCount = 0
+    while ( not submitOK and submitCount <= 100 ) :
+        submitCount = submitCount + 1
+        try:
+            j.submit()
+            # See if any of the sub-jobs are still 'new'
+            sj = j.subjobs.select(status='new')
+            if len(sj) == 0 : submitOK = True
+        except Exception,e:
+            submitOK = False
+        if not submitOK :
+            nSleep = 120
+            print "WARNING : Job ", j.name, " not submitted -> Delete and try again after", nSleep, "secs..."
+            new_j = j.copy()
+            j.remove()
+            j = new_j
+            time.sleep(nSleep)
+            
+    if not submitOK :
+        print "WARNING : Job ", j.name, " failed to be submitted after", submitCount, "tries."
+        j.remove()
+
 
 def makeAllColumnFits(jobs,rad='Rich1Gas',polarity=''):
     
@@ -395,10 +423,12 @@ def refractiveIndexCalib(jobs,rads=['Rich1Gas','Rich2Gas'],polarity='',pdCol='')
         # Keep tabs on min and max values (for plots)
         minMaxScale = [999.0,-999.0]
         if 'Rich1Gas' == rad :
-            minMaxCKRes = (1.4,1.8)
+            #minMaxCKRes = (1.4,1.8)
+            minMaxCKRes = (1.4,2.2)
             maxDeltaTheta = 0.03
         else:
-            minMaxCKRes = (0.62,0.72)
+            #minMaxCKRes = (0.62,0.72)
+            minMaxCKRes = (0.62,0.8)
             maxDeltaTheta = 0.01
 
         # Raw mean and sigma
@@ -438,6 +468,9 @@ def refractiveIndexCalib(jobs,rads=['Rich1Gas','Rich2Gas'],polarity='',pdCol='')
                 rootfile = getRootFile(j)
 
                 if rootfile :
+
+                    # Turn on fit stats box
+                    gStyle.SetOptFit(1011)
 
                     # Fits
                     fitResultRes = fitCKThetaHistogram(rootfile,run,rad,resPlot)
@@ -621,6 +654,9 @@ def refractiveIndexCalib(jobs,rads=['Rich1Gas','Rich2Gas'],polarity='',pdCol='')
             scaleTrend.Fit(linearFit,"QRS")
             scaleTrend.Draw("ALP")
             printCanvas()
+
+            # Turn on fit stats box
+            gStyle.SetOptFit(1011)
 
         # Close PDF file
         printCanvas(']')
@@ -989,15 +1025,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v47r0",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v47r6p1",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v47r0",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v47r6p1",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v47r0",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v47r6p1",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
@@ -1495,20 +1531,22 @@ def filesPerJob(nFiles):
     if nFiles < 100 : return 6
     return 10
 
-def removeCalibrationDataSet(name,BrunelVer="v47r0"):
-    from Ganga.GPI import jobtree
+def removeCalibrationDataSet(name,BrunelVer="v47r6p1"):
+    from Ganga.GPI import jobtree, queues
     js = getCalibrationJobList(name,BrunelVer,
-                               statuscodes=['completed','running','submitted','failed'])
-    for j in js : j.remove()
+                               statuscodes=['completed','running','submitted',
+                                            'failed','new','submitting'])
+    for j in js : queues.add(j.remove)
     path = '/RichCalibration/RefInCalib-'+name+'_BR-'+BrunelVer
     if jobtree.exists(path) : jobtree.rm(path)
     jobtree.cd('/RichCalibration')
 
-def removeVerificationDataSet(name,BrunelVer="v47r0"):
-    from Ganga.GPI import jobtree
+def removeVerificationDataSet(name,BrunelVer="v47r6p1"):
+    from Ganga.GPI import jobtree, queues
     js = getVerificationJobList(name,BrunelVer,
-                                statuscodes=['completed','running','submitted','failed'])
-    for j in js : j.remove()
+                                statuscodes=['completed','running','submitted'
+                                             ,'failed','new','submitting'])
+    for j in js : queues.add(j.remove)
     path = '/RichCalibration/RefInVerify-'+name+'_BR-'+BrunelVer
     if jobtree.exists(path) : jobtree.rm(path)
     jobtree.cd('/RichCalibration')

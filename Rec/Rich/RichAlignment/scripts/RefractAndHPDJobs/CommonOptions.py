@@ -15,9 +15,18 @@ importOptions("$L0TCK/L0DUConfig.opts")
 #LHCbApp().CondDBtag = "cond-20140425"
 
 # For 2012 data
-importOptions("$APPCONFIGOPTS/Brunel/DataType-2012.py")
-LHCbApp().DDDBtag   = "dddb-20130503-1"
-LHCbApp().CondDBtag = "cond-20140425"
+#importOptions("$APPCONFIGOPTS/Brunel/DataType-2012.py")
+#LHCbApp().DDDBtag   = "dddb-20130503-1"
+#LHCbApp().CondDBtag = "cond-20150511"
+
+# For Run II testing
+#LHCbApp().DDDBtag   = "dddb-20130520"
+#LHCbApp().CondDBtag = "cond-20150511"
+
+# For 2015 data
+importOptions("$APPCONFIGOPTS/Brunel/DataType-2015.py")
+LHCbApp().DDDBtag    = "dddb-20150526"
+LHCbApp().CondDBtag  = "cond-20150601"
 
 # Aerogel Sub Tiles
 #CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
@@ -25,13 +34,14 @@ LHCbApp().CondDBtag = "cond-20140425"
 
 # Initial IOV time
 # http://www.onlineconversion.com/unix_time.htm
+# values in ns (so multiply values from above link by 1e9)
 from Configurables import EventClockSvc
 #EventClockSvc( InitialTime = 1274313600000000000 ) # 20th April 2010
 #EventClockSvc( InitialTime = 1287968400000000000 ) # 25th Octo 2010 (1am)
 #EventClockSvc( InitialTime = 1306879200000000000 ) # 1st June 2011
 #EventClockSvc( InitialTime = 1317460149000000000 ) # 1st Octo 2011
 #EventClockSvc( InitialTime = 1319155200000000000 ) # 21st Octo 2011
-EventClockSvc( InitialTime = 1341100800000000000 ) # 1st July 2012
+#EventClockSvc( InitialTime = 1341100800000000000 ) # 1st July 2012
 #EventClockSvc( InitialTime = 1350259200000000000 ) # 15th Octo 2012
 #EventClockSvc( InitialTime = 1351123200000000000 ) # 25th Octo 2012
 #EventClockSvc( InitialTime = 1351645200000000000 ) # 31st Octo 2012
@@ -39,6 +49,7 @@ EventClockSvc( InitialTime = 1341100800000000000 ) # 1st July 2012
 #EventClockSvc( InitialTime = 1354233600000000000 ) # 30th Nov 2012
 #EventClockSvc( InitialTime = 1355533200000000000 ) # 15th Dec 2012
 #EventClockSvc( InitialTime = 1359072000000000000 ) # 25th Jan 2013
+EventClockSvc( InitialTime = 1433635200000000000 ) # 7th June 2015
 
 # Timestamps in messages
 LHCbApp().TimeStamp = True
@@ -47,13 +58,16 @@ LHCbApp().TimeStamp = True
 Brunel().OutputType = "None"
 
 # Only tracking and RICH reco
-Brunel().RecoSequence = ["Decoding","VELO","TT","IT","OT","Tr","Vertex","RICH"]
+# Run1
+#Brunel().RecoSequence = ["Decoding","VELO","TT","IT","OT","Tr","Vertex","RICH"]
+# Run2
+Brunel().RecoSequence = ["Decoding","VELO","TT","IT","OT","TrHLT1","Vertex","TrHLT2","RICH"]
 
 from Configurables import RichRecSysConf
 rConf = RichRecSysConf("RichOfflineRec")
 
 # Which radiators
-#rConf.Radiators = [ "Rich1Gas","Rich2Gas" ]
+rConf.Radiators = [ "Rich1Gas","Rich2Gas" ]
 
 # Photon selection options
 rConf.photonConfig().SelectionMode = "Wide"
@@ -102,4 +116,4 @@ longT.EnablePerPDColPlots = True
 #rConf.richTools().PixelCreatorType = "RawBufferWithPanelFlip"
 
 # Don't reject HLT error events
-#Brunel().VetoHltErrorEvents = False 
+Brunel().VetoHltErrorEvents = False 
