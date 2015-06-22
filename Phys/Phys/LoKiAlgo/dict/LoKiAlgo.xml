@@ -51,9 +51,6 @@
     <class pattern="LoKi::I*">
       <method name="=" />
     </class>
-    <class pattern="LoKi::Hybrid::*">
-      <method name="=" />
-    </class>
     
     <class pattern="LoKi::Functor&lt;*&gt;">
       <method name="=" />
@@ -61,29 +58,11 @@
     <class pattern="LoKi::Constant&lt;*&gt;">
       <method name="=" />
     </class>
-    <class pattern="LoKi::Valid&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::TheSame&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::Identity&lt;*&gt;">
-      <method name="=" />
-    </class>
     
     <class pattern="Gaudi::Range_&lt;*&gt;">
       <method name="=" />
     </class>
     <class pattern="Gaudi::NamedRange_&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::RangeList_&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::Keeper&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::UniqueKeeper&lt;*&gt;">
       <method name="=" />
     </class>
     <class pattern="std::unary_function&lt;*&gt;">
