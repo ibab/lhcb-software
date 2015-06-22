@@ -19,15 +19,12 @@
 
 <lcgdict>
   
-  <class pattern   = "std::vector<*Range_*LHCb::Particle*>"             />
- 
   <class pattern   = "LoKi::Functor<*Range_*LHCb::Particle*>"           />
   <class pattern   = "LoKi::FunctorFromFunctor<*Range*LHCb::Particle*>" />
   
   <class pattern   = "LoKi::Constant<*Range_*LHCb::Particle*>"         />
   
   <class pattern   = "LoKi::Valid<*Range*>"            />
-  <class pattern   = "LoKi::TheSame<*Range*LHCb::Particle*>"  />
   
   <class    pattern   = "LoKi::AParticles::*"             />
   <function pattern   = "LoKi::AKinematics::*"             />
@@ -38,14 +35,8 @@
   <class pattern   = "LoKi::Dicts::CutsOps<*Range_*LHCb::Particle*>"    />
 
   <class pattern   = "LoKi::Dicts::FuncOps__<*Range_*LHCb::Particle*>"  />
-  <class pattern   = "LoKi::Dicts::CutsOps__<*Range_*LHCb::Particle*>"  />
   <class pattern   = "LoKi::Dicts::FuncOps_<*Range_*LHCb::Particle*>"   />
   <class pattern   = "LoKi::Dicts::CutsOps_<*Range_*LHCb::Particle*>"   />
-  <class pattern   = "LoKi::Dicts::MapsOps<*Range_*LHCb::Particle*>"    />
-  <class pattern   = "LoKi::Dicts::PipeOps<*Range_*LHCb::Particle*>"    />
-  <class pattern   = "LoKi::Dicts::FunValOps<*Range_*LHCb::Particle*>"  />
-  <class pattern   = "LoKi::Dicts::CutValOps<*Range_*LHCb::Particle*>"  />
-  <class pattern   = "LoKi::Dicts::ElementOps<*Range_*LHCb::Particle*>" />
   <class pattern   = "LoKi::Dicts::FunCalls<*Range_*LHCb::Particle*>"   />
   <class pattern   = "LoKi::Dicts::CutCalls<*Range_*LHCb::Particle*>"   />
   
@@ -117,23 +108,11 @@
     <class pattern="LoKi::Valid&lt;*&gt;">
       <method name="=" />
     </class>
-    <class pattern="LoKi::TheSame&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::Identity&lt;*&gt;">
-      <method name="=" />
-    </class>
     
     <class pattern="Gaudi::Range_&lt;*&gt;">
       <method name="=" />
     </class>
     <class pattern="Gaudi::NamedRange_&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::RangeList_&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::Keeper&lt;*&gt;">
       <method name="=" />
     </class>
     <class pattern="LoKi::UniqueKeeper&lt;*&gt;">

@@ -5,6 +5,9 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2015-06-22 - Eduardo Rodrigues
+ - Removed unused class rules producing warnings in genflex.
+
 !=================== LoKiArrayFunctors v11r2 2015-04-22 =======================
 
 ! 2015-03-31 - Chris Jones
