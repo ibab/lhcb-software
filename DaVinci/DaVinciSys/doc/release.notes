@@ -4,7 +4,7 @@ Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
 
-</PRE><H1><A NAME=v36r7p4>2015-06-18 DaVinci v36r7p4</A></H1><PRE>
+</PRE><H1><A NAME=v36r7p4>2015-06-22 DaVinci v36r7p4</A></H1><PRE>
 
 Patch release identical to v36r7p3 except for the
 - Update of the DaVinci package Phys/Tesla v1r8.
@@ -20,6 +20,9 @@ Patch release identical to v36r7p3 except for the
 - In Phys/TeslaTools v1r9 :
   . First commit of TeslaMonitoring.
   . Make sure PVs are set with technique as Primary.
+
+- In Hlt/HltDAQ v4r16
+  . Only fill ExtraInfo fields in Tesla if not default value.
 
 - In Det/DetCond v12r42, Det/DDDB v1r77
   . Finalise support for CALIBOFF partition

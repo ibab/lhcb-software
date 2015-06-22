@@ -15,7 +15,7 @@ use  Tesla           v1r8     Phys   # Sean Benson
 use  DetCond                 v12r42 Det
 use  DDDB                    v1r77  Det
 use  EventPacker             v5r3   Event
-use  HltDAQ                  v4r15  Hlt
+use  HltDAQ                  v4r16  Hlt
 use  DaVinciMonitors         v1r22  Phys
 use  TeslaTools              v1r9   Phys
 use  DecayTreeTupleTrigger   v1r7   Phys
