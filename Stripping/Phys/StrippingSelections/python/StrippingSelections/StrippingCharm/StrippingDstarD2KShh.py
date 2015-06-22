@@ -33,9 +33,9 @@ from StrippingUtils.Utils import LineBuilder
 name = "DstarD2KShh"
 
 default_config = { 
-    'NAME'        : name,
+    'NAME'        : "DstarD2KShh",
     'WGs'         : ['Charm'],
-    'STREAMS'     : [ 'CharmToBeSwum' ],
+    'STREAMS'     : [ 'Charm' ],
     'BUILDERTYPE' : 'DstarD2KShhBuilder',
     'CONFIG'      : {
         'LongTrackGEC'          :  150        ## Global event cut on number of long tracks
