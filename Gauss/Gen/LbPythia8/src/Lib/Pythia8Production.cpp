@@ -31,8 +31,8 @@ Pythia8Production::Pythia8Production(const std::string& type,
                                      const std::string& name,
                                      const IInterface* parent)
   : GaudiTool(type, name, parent), m_pythia(0), m_hooks(0), m_lhaup(0),
-    m_beamTool(0), m_randomEngine(0), m_nEvents(0), m_showBanner(false), 
-    m_xmlLogTool(0) {
+    m_beamTool(0), m_pythiaBeamTool(0), m_randomEngine(0), m_nEvents(0),
+    m_showBanner(false), m_xmlLogTool(0) {
  
   // Declare the tool properties.
   declareInterface<IProductionTool>(this);
@@ -124,8 +124,13 @@ StatusCode Pythia8Production::initialize() {
   std::string xmlpath("UNKNOWN" != System::getEnv("PYTHIA8XML") ?
 		      System::getEnv("PYTHIA8XML") : ""); 
   m_pythia = new Pythia8::Pythia(xmlpath, m_showBanner); 
-  if (m_pythia) return StatusCode::SUCCESS;
-  else return StatusCode::FAILURE;
+  if (!m_pythia) return StatusCode::FAILURE;
+
+  // Initialize the Pythia beam tool.
+  m_pythiaBeamTool = new BeamToolForPythia8(m_beamTool, m_pythia->settings, sc);
+  if (!sc.isSuccess()) 
+    return Error("Failed to initialize the BeamToolForPythia8."); 
+  return sc;
 }
 
 //=============================================================================
@@ -136,12 +141,6 @@ StatusCode Pythia8Production::initializeGenerator() {
   // Initialize the external pointers.
   m_pythia->setRndmEnginePtr(m_randomEngine);
   m_pythia->setUserHooksPtr(m_hooks);
-
-  // Set the beam shape pointer.
-  StatusCode sc;
-  m_pythiaBeamTool = new BeamToolForPythia8(m_beamTool, m_pythia->settings, sc);
-  if (!sc.isSuccess()) 
-    return Error("Failed to initialize the BeamToolForPythia8."); 
   m_pythia->setBeamShapePtr(m_pythiaBeamTool);
 
   // Set the beam configuration.

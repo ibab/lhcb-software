@@ -4,6 +4,9 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2015-06-22 - Philip Ilten
+ - Fixed initialization and memory handling of the beam shape tool
+
 !======================== LbPythia8 v11r0 2015-06-02 =========================
 ! 2015-05-15 - Philip Ilten
  - Removed LHAup code that was no longer need because of LbHard
