@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-22 - Marco Gersabeck
+ - Updated default_configs in StrippingCharm/StrippingDstarD0ToHHPi0.py, StrippingDstarD2KShh.py, StrippingD2hh.py
+
 ! 2015-06-18 - Andrea Contu
  - New trigger filtered sample for EM tuning
 

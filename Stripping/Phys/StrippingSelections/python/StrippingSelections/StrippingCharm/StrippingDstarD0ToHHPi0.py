@@ -44,6 +44,8 @@ default_config = {
             ,"D0_APT" : 1400  #MeV
             ,"useTOS" : True  #adimensional
             ,"useHLT2" : True  #adimensional
+            ,"TOSFilter" : "{ 'Hlt2CharmHad.*HHX.*Decision%TOS' : 0}"  #adimensional
+            ,"Hlt2Filter" : "HLT_PASS_RE('Hlt2CharmHad.*HHX.*Decision%TOS')"  #adimensional
             }
         }
     }
@@ -72,6 +74,8 @@ class DstarD0ToHHPi0AllLinesConf(LineBuilder) :
         ,"D0_APT"
         ,"useHLT2" 
         ,"useTOS"
+        ,"TOSFilter"
+        ,"Hlt2Filter"
         )
     
     __confdict__={}
@@ -248,13 +252,15 @@ def DstarMaker(_name,_KstDecays,_D0Decays,_DstDecays,_ChargedTracks,_Pi0s,_Slowp
                        Algorithm = DstComb,
                        RequiredSelections = [D0Sel,_Slowpions])
     
+    _tosFilter = "%(TOSFilter)s" %config
     DstSelTOS = TOSFilter( "SelDstKPiPi0_Hlt2TOS"+_name
                            ,DstSel
-                           ,{ 'Hlt2CharmHad.*HHX.*Decision%TOS' : 0})
+                           ,_tosFilter)
     
     hlt2 = ""
     if config["useHLT2"] == True:
-        hlt2 = "HLT_PASS_RE('Hlt2CharmHad.*HHX.*Decision%TOS')"
+        _hlt2 = "%(Hlt2Filter)s" %config
+        hlt2 = _hlt2
         
     if config["useTOS"] == True:
         Line = StrippingLine(_name+'Line',

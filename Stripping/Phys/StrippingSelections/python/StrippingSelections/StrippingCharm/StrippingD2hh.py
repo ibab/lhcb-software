@@ -16,6 +16,7 @@ from StandardParticles import StdAllNoPIDsKaons, StdAllNoPIDsPions
 default_config = { 
     'NAME'        : 'D2hh',
     'WGs'         : ['Charm'],
+    'STREAMS'     : [ 'Charm' ],
     'BUILDERTYPE' : 'D2hhLines',
     'CONFIG'      : {
            'DaugPtMin': 800.,

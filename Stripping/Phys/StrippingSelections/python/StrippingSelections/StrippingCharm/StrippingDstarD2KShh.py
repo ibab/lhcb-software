@@ -32,6 +32,66 @@ from StrippingUtils.Utils import LineBuilder
 
 name = "DstarD2KShh"
 
+default_config = { 
+    'NAME'        : name,
+    'WGs'         : ['Charm'],
+    'STREAMS'     : [ 'CharmToBeSwum' ],
+    'BUILDERTYPE' : 'DstarD2KShhBuilder',
+    'CONFIG'      : {
+        'LongTrackGEC'          :  150        ## Global event cut on number of long tracks
+        ,'KSLLCutDIRA'          :    0.9997   ## unitless
+        ,'KSDDCutDIRA'          :    0.99995  ## unitless
+        ,'KSLLCutMass'          :   20.0      ## in MeV -- Mat changed from 11.4 to 20.0 in S20
+        ,'KSDDCutMass'          :   40.0      ## in MeV -- Mat changed from 24.9 to 40.0 in S20
+        ,'KSLLCutFDChi2'        :  100        ## unitless
+        ,'KSDDCutFDChi2'        :  100        ## unitless
+        ,'KSCutZFDFromD'        :   10.0      ## in mm -- Mat added in S20
+        ,'trackFromDCutP'       : 1500.0      ## in MeV
+        ,'trackFromDCutPIDe'    :   10.0      ## unitless -- note that this means (DLLe - DLLx) < 10 for x=K,pi
+        ,'trackFromDCutPIDp'    :   15.0      ## unitless -- note that this means (DLLp - DLLx) < 15 for x=K,pi
+        ,'pionFromDCutPIDK'     :   -1.0
+        ,'kaonFromDCutPIDpi'    :   -3.0
+        ,'pionFromDCutTRCHI2DOF':    4.0      ## unitless
+        ,'kaonFromDCutTRCHI2DOF':    5.0      ## unitless
+        ,'DCutDIRA'             :    0.0      ## unitless -- remove "backwards-going" D0
+        ,'DCutTau'              :    0.2      ## ps -- Mat changed from 0.3 to 0.2 in S20
+        ,'DCutVtxChi2_KK'       :   21.0      ## unitless
+        ,'DCutVtxChi2_KP'       :   15.0      ## unitless
+        ,'DCutVtxChi2_PP'       :   13.0      ## unitless
+        ,'preFitDCutPT'         : 1500.0      ## in MeV
+        ,'preFitDMassCut_LL'    :  130        ## in MeV
+        ,'preFitDMassCut_DD'    :  270        ## in MeV
+        ,'wideDMassCut_KKLL'    :   70.0      ## in MeV -- Mat changed from  57.2 to  70.0 in S20
+        ,'wideDMassCut_KPLL'    :  105.0      ## in MeV -- Mat changed from  92.0 to 105.0 in S20
+        ,'wideDMassCut_PPLL'    :  120.0      ## in MeV -- Mat changed from 110.0 to 120.0 in S20
+        ,'wideDMassCut_KKDD'    :   85.0      ## in MeV -- Mat changed from  72.0 to  85.0 in S20
+        ,'wideDMassCut_KPDD'    :  130.0      ## in MeV -- Mat changed from 120.0 to 130.0 in S20
+        ,'wideDMassCut_PPDD'    :  150.0      ## in MeV -- Mat changed from 140.0 to 150.0 in S20
+        ,'preFitDstarMassCut'   :  200.0      ## in MeV; make sure it's well above the largest D mass window
+        ,'wideDMCutLower'       :  -10.0      ## in MeV: allow negative tail made by CombineParticles -- Mat changed from -2.0 to -10.0 in S20
+        ,'wideDMCutUpper'       :   15.0      ## in MeV -- Mat changed from 15.0 to 25.0 in S20
+        ,'DstarCutPT_KK'        : 2200.0      ## in MeV
+        ,'DstarCutPT_KP'        : 2200.0      ## in MeV
+        ,'DstarCutPT_PP'        : 2200.0      ## in MeV
+        ,'DstarCutChi2NDOF_KK'  :   60.0      ## unitless
+        ,'DstarCutChi2NDOF_KP'  :   20.0      ## unitless
+        ,'DstarCutChi2NDOF_PP'  :   20.0      ## unitless
+        ,'SoftPionCutPIDe'      :    2.0      ## unitless -- Mat changed from 5.0 to 2.0 in S20
+        ,'KKLLPrescale'         :    1.0
+        ,'KKLLPostscale'        :    1.0
+        ,'KPLLPrescale'         :    1.0
+        ,'KPLLPostscale'        :    1.0
+        ,'PPLLPrescale'         :    1.0
+        ,'PPLLPostscale'        :    1.0
+        ,'KKDDPrescale'         :    1.0
+        ,'KKDDPostscale'        :    1.0
+        ,'KPDDPrescale'         :    1.0
+        ,'KPDDPostscale'        :    1.0
+        ,'PPDDPrescale'         :    1.0
+        ,'PPDDPostscale'        :    1.0
+    }
+}
+
 class DstarD2KShhBuilder(LineBuilder) :
     """
     Reconstruct D*+ -> D0 pi+, D0 -> KS0 h+ h- for h = K, pi
