@@ -48,10 +48,6 @@
   
   <exclusion>
     
-    <class pattern="LoKi::ProtoParticlesParticles::*">
-      <method name="=" />
-    </class>
-    
     <class pattern="LoKi::Functor&lt;*&gt;">
       <method name="=" />
     </class>
@@ -59,12 +55,6 @@
       <method name="=" />
     </class>
     <class pattern="LoKi::Valid&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::TheSame&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::Identity&lt;*&gt;">
       <method name="=" />
     </class>
    

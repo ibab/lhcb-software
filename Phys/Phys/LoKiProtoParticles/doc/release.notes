@@ -6,6 +6,9 @@
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
 
+! 2015-06-22 - Eduardo Rodrigues
+ - Removed unused class rules producing warnings in genflex.
+
 !====================== LoKiProtoParticles v3r0 2015-02-24 ====================
 
 ! 2015-02-03 - Vanya Belyaev
