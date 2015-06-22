@@ -1,3 +1,8 @@
+2015-06-22 Ben Couturier  <Ben.Couturier@cern.ch>
+
+        * cmt/requirements: release of version v6r4p1
+        * python/LbLegacy/install_project.py:  release of LbScripts version v8r4p1
+
 2015-06-17 Ben Couturier  <Ben.Couturier@cern.ch>
 
 	* scripts/mkLHCbtar: LBCORE-832: fix to allow generating properly HTML files for LHCbGrid
