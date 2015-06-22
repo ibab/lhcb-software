@@ -96,11 +96,12 @@ __usage__   = 'dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
 # logging 
 # =============================================================================
 import ROOT,sys 
+# =============================================================================
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+# =============================================================================
 from AnalysisPython.Logger import getLogger 
 if '__main__' == __name__ : logger = getLogger ( 'Bender/dst-explorer' )
 else                      : logger = getLogger ( __name__ )
-# =============================================================================
-ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
 logger.info ( 100*'*')
 logger.info ( ' Author  : %s ' % __author__   ) 
@@ -134,7 +135,8 @@ else :
     logger.info ( __doc__ ) 
    
 ## Files must be specfied are mandatory!
-if not arguments : parser.error ( 'No input files are specified' ) 
+if not arguments and not options.FileList and not options.ImportOptions : 
+    parser.error ( 'No input files are specified' ) 
 
 #	
 ## Perform the basic configuration

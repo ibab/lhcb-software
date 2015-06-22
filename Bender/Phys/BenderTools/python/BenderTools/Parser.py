@@ -65,7 +65,8 @@ __date__    = "2010-09-10"
 __version__ = '$Revision$'
 __all__     = ( 'makeParser' ,
                 'dataType'   ,
-                'theYear'    )
+                'theYear'    ,
+                'fileList'   )
 # =============================================================================
 ## logging
 # =============================================================================
@@ -186,6 +187,24 @@ def makeParser ( usage = None ,
         default = False   
         )
     ##
+    parser.add_option (
+        '-k'                       ,
+        '--klist'                  ,
+        dest    = 'FileList'       ,
+        type    = 'str'            ,
+        default = ''               ,
+        help    = "A file with list of input file names"
+        )
+    ##
+    parser.add_option (
+        '-i'                       ,
+        '--import'                 ,
+        dest    = 'ImportOptions'  ,
+        type    = 'str'            ,
+        default = ''               ,
+        help    = "A file to be used for 'importOptions'"
+        )
+    ##
     return parser
 
 ## create the parser
@@ -302,6 +321,24 @@ def makeArgParser ( usage = None ,
         default = False   
         )
     ##
+    parser.add_argument (
+        '-k'                       ,
+        '--klist'                  ,
+        dest    = 'FileList'       ,
+        type    = str              ,
+        default = ''               ,
+        help    = "A file with list of input file names"
+        )
+    ##
+    parser.add_argument (
+        '-i'                       ,
+        '--import'                 ,
+        dest    = 'ImportOptions'  ,
+        type    = str              ,
+        default = ''               ,
+        help    = "A file to be used for 'importOptions'"
+        )
+    ##
     return parser
 
 # =============================================================================
@@ -377,6 +414,35 @@ def dataType ( files ) :
             
     return  dtype,simu,ext.upper() 
 
+# =============================================================================
+##  get file name from filelist 
+def fileList  ( file_list ) :
+    """
+    Get list of files from filelist
+    
+    """
+    if not file_list : return []
+    #
+    ## try to read filelist 
+    import os
+    #
+    file_list = os.path.expandvars ( file_list ) 
+    file_list = os.path.expanduser ( file_list ) 
+    file_list = os.path.expandvars ( file_list ) 
+    file_list = os.path.expanduser ( file_list ) 
+    file_list = os.path.expandvars ( file_list )
+    #
+    if not os.path.exists ( file_list ) : return []
+    result = []
+    #
+    with open ( file_list , 'r' ) as mfile :
+        for line in mfile :
+            if line : result.append ( line )
+            
+    return result 
+    
+
+    
 # =============================================================================
 ## try to extract more information from file names 
 def hasInFile ( files , pattern ) :

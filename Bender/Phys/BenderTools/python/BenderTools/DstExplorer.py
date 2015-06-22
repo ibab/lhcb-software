@@ -164,20 +164,26 @@ def configure ( options , arguments ) :
     from BenderTools.Parser import dataType
     pyfiles = [ i for i in arguments if  len(i) == 3 + i.find('.py') ]
     files   = [ i for i in arguments if  i not in pyfiles ]
-    if not files :
-        raise AttribiteError('No data files are specified!')
+    from BenderTools.Parser import fileList 
+    files  += fileList ( options.FileList ) 
+    #
+    if not files and not options.ImportOptions : 
+        raise AttributeError('No data files are specified!')
     
-    dtype, simu, ext = dataType ( files ) 
-
+    ## get some info from file names/extensision
+    dtype, simu, ext = None,None,None  
+    if  files :
+        dtype, simu, ext = dataType ( files )
+    
     if '2013' == dtype :
         logger.info ('Data type 2013 is redefined to be 2012')
         dtype = '2012'
         
-    # 
+        # 
     if ext in ( 'gen'  , 'xgen' ,
                 'GEN'  , 'XGEN' ,
                 'ldst' , 'LDST' ) and not simu : simu = True 
-        
+    
     if dtype and dtype != options.DataType :
         logger.info ( 'Redefine DataType from  %s to %s '   % ( options.DataType, dtype ) )
         options.DataType  = dtype
@@ -189,7 +195,7 @@ def configure ( options , arguments ) :
     if options.Simulation and '2009' == options.DataType :
         options.DataType = 'MC09'
         logger.info('set DataType to be MC09')    
-    
+        
     daVinci = DaVinci (
         DataType    = options.DataType    ,
         Simulation  = options.Simulation  ,
@@ -199,7 +205,7 @@ def configure ( options , arguments ) :
     if options.MicroDST or 'mdst' == ext or 'MDST' == ext or 'uDST' == ext :
         logger.info ( 'Define input type as micro-DST' )
         daVinci.InputType = 'MDST'
-
+        
     #
     ## try to guess RootInTES
     #
@@ -326,11 +332,17 @@ def configure ( options , arguments ) :
         else :
             copyGoodEvents ( "%s.%s" % ( options.OutputFile , ext ) ) 
 
-    from Gaudi.Configuration import appendPostConfigAction
-    appendPostConfigAction ( _action )
+    ## comment it out... Hm...
+    ## from Gaudi.Configuration import appendPostConfigAction
+    ## appendPostConfigAction ( _action )
     
     ## get xml-catalogs (if specified) 
     catalogs = [ options.XmlCatalogue ] if options.XmlCatalogue else []
+
+    ## import options (if specified) 
+    if options.ImportOptions :
+        from Gaudi.Configuration import importOptions
+        importOptions ( options.ImportOptions )  
     
     ## set input data
     from Bender.Main import setData 
@@ -354,7 +366,7 @@ if '__main__' == __name__ :
     from BenderTools.Parser import makeParser
     parser = makeParser  ( usage = __usage__   ,
                            vers  = __version__ )
-
+    
     parser.add_option (
         '-o'                     ,
         '--output'               ,
@@ -374,7 +386,8 @@ if '__main__' == __name__ :
         logger.info ( __doc__ ) 
 
     ## Files must be specfied are mandatory!
-    if not arguments : parser.error ( 'No input files are specified' ) 
+    if not arguments and not options.FileList and not options.ImportOptions :
+        parser.error ( 'No input files/data are specified' ) 
     
     pyfiles = configure ( options , arguments ) 
     
@@ -390,6 +403,7 @@ if '__main__' == __name__ :
     evtSel = gaudi.evtSel()
     
     evtSvc = gaudi.evtSvc()
+    
     detSvc = gaudi.detSvc()
 
     evt    = evtSvc

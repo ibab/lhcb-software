@@ -5,6 +5,15 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/BenderTools v25r7p2 2015-06-22 ====================
+
+! 2015-06-22 - Vanya Belyaev
+
+ - add two standard options:
+
+    -i  / --import to specify the filename with import options 
+    -k  / --klist  to specify the fiel with names of input files 
+
 ! 2015-06-20 - Vanya Belyaev
 
  - Fill.py: fix typo
