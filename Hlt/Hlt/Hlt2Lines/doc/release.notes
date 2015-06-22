@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-06-22 - Philip Ilten
+ - Minor changes in Topo for more efficient KS handling.
+
 ! 2015-06-22 - Patrick Spradlin
  - Merged in changes from branch spradlin_20150615.
    For detailed descriptions of the changes, please see the doc/release.notes

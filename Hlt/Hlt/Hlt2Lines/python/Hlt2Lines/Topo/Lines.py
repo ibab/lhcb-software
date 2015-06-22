@@ -23,14 +23,13 @@ slots['Common'].update({
             "n"      : "NINTREE((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0'))",
             "mcor"   : "BPVCORRM",
             "chi2"   : "VFASPF(VCHI2)",
-            "sumpt"  : ("SUMTREE(PT,"
-                        "((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0')), 0.0)/MeV"),
+            "sumpt"  : ("SUMTREE(PT,((ABSID=='K+')|(ID=='KS0')|"
+                        "(ABSID=='Lambda0')), 0.0)/MeV"),
             "eta"    : "BPVETA",
             "fdchi2" : "BPVVDCHI2",
-            "minpt"  : ("MINTREE(((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0')),"
-                        "PT)/MeV"),
-            "nlt16"  : ("NINTREE(((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0'))"
-                        "& (BPVIPCHI2() < 16))"),
+            "minpt"  : ("MINTREE(((ABSID=='K+')|(ID=='KS0')|"
+                        "(ABSID=='Lambda0')),PT)/MeV"),
+            "nlt16"  : ("NINTREE((ABSID == 'K+') & (BPVIPCHI2() < 16))"),
             "ipchi2" : "BPVIPCHI2()",
             "n1trk"  : ("NINTREE(((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0'))"
                         "& (PT > 1*GeV) & (BPVIPCHI2() > 16))")
@@ -40,7 +39,7 @@ slots['Common'].update({
         'TRK_P_MIN'         : 3000 * MeV,
         'TRK_CHI2_MAX'      : 3,
         'TRK_IPCHI2_MIN'    : 4,
-        'TRK_LT_MIN'        : 20 * picosecond,
+        'TRK_LT_MIN'        : 0 * picosecond,
         'CMB_TRK_NLT16_MAX' : 2,
         'CMB_PRT_PT_MIN'    : 2000 * MeV,
         'CMB_VRT_DIRA_MIN'  : 0,

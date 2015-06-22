@@ -120,24 +120,16 @@ class CombineTos(Hlt2Combiner):
         from Hlt1Lines.Hlt1MVALines import Hlt1MVALinesConf
         props  = Hlt1MVALinesConf().getProps()
         pids   = ['K+', 'K-', 'KS0', 'Lambda0', 'Lambda~0']
-        basic = "((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0'))"
+        basic  = "(ABSID=='K+')"
         combos = list(combinations_with_replacement(pids, 2))
         decays = ['K*(892)0 -> ' + ' '.join(combo) for combo in combos]
-        ismuon = "(ANUM(HASPROTO & HASMUON & ISMUON) > 0)"
-        onetrk = ("(ANUM((TRCHI2DOF < %(TrChi2)s) "
-                  "& (((PT > %(MaxPT)s) & (BPVIPCHI2() > %(MinIPChi2)s)) "
-                  "| (in_range(%(MinPT)s, PT, %(MaxPT)s)))) > 0)"
-                  % props['TrackMVA'])
-        twotrk = ("(ANUM((PT > %(PT)s) & (P > %(P)s) "
-                  "& (TRCHI2DOF < %(TrChi2)s) "
-                  "& (BPVIPCHI2() > %(IPChi2)s)) > 1)" % props['TwoTrackMVA'])
-        #cc = ("(" + " | ".join([ismuon, onetrk, twotrk])  + ") "
         cc = ("(APT > %(CMB_PRT_PT_MIN)s) "
               "& (ANUM((ID=='KS0')|(ABSID=='Lambda0')) < 2) "
               "& (ACUTDOCACHI2(%(CMB_VRT_CHI2_MAX)s, '')) "
-              "& (AALLSAMEBPV | (AMINCHILD(MIPCHI2DV(PRIMARY)) > 16))"
+              "& ((AALLSAMEBPV | (AMINCHILD(MIPCHI2DV(PRIMARY)) > 16)) "
+              "| (ANUM((ID == 'KS0') | (ABSID == 'Lambda0')) > 0)) "
               "& (AM < %(CMB_VRT_MCOR_MAX)s) "
-              "& (ANUM("+basic+" & (MIPCHI2DV(PRIMARY) < 16)) <"
+              "& (ANUM(" + basic + " & (MIPCHI2DV(PRIMARY) < 16)) <"
               " %(CMB_TRK_NLT16_MAX)s) ")
         mc = ("(HASVERTEX)"
               "& (VFASPF(VCHI2) < %(CMB_VRT_CHI2_MAX)s) "
@@ -158,13 +150,16 @@ class Combine3(Hlt2Combiner):
         pids = ['K+', 'K-', 'KS0', 'Lambda0', 'Lambda~0']
         basic = "((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0'))"
         combos = list(combinations_with_replacement(pids, 1))
-        decays = ['D*(2010)+  -> K*(892)0 ' + ' '.join(combo) for combo in combos]
+        decays = ['D*(2010)+  -> K*(892)0 ' + ' '.join(combo)
+                  for combo in combos]
         cc = ("(APT > %(CMB_PRT_PT_MIN)s) "
               "& (ANUM((ID=='KS0')|(ABSID=='Lambda0')) < 2) "
               "& (ACUTDOCACHI2(%(CMB_VRT_CHI2_MAX)s, '')) "
               "& (AALLSAMEBPV | (AMINCHILD(MIPCHI2DV(PRIMARY)) > 16)) "
               "& (AM < %(CMB_VRT_MCOR_MAX)s) "
-              "& ((ACHILD(NINTREE("+basic+" & (MIPCHI2DV(PRIMARY) < 16)),1)+ANUM("+basic+" & (MIPCHI2DV(PRIMARY) < 16))) < 2)")
+              "& ((ACHILD(NINTREE(" + basic + 
+              " & (MIPCHI2DV(PRIMARY) < 16)),1)+ANUM(" + basic + 
+              " & (MIPCHI2DV(PRIMARY) < 16))) < 2)")
         mc = ("(HASVERTEX) "
               "& (VFASPF(VCHI2) < %(CMB_VRT_CHI2_MAX)s) "
               "& (BPVVDCHI2 > %(CMB_VRT_VDCHI2_MIN)s) "
