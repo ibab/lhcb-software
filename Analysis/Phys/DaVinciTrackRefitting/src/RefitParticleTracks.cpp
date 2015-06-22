@@ -92,7 +92,7 @@ StatusCode RefitParticleTracks::execute()
 
   if (0==inputParticles.size()) return StatusCode::SUCCESS;
   if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) verbose() << inputParticles.size() << "input particles" << endmsg;
-  if (m_ghostTool->beginEvent().isFailure()) {
+  if (m_ghostprobability->beginEvent().isFailure()) {
     return Error("GhostIdTool could not begin event.",StatusCode::SUCCESS,10);
   }
 
