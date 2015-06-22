@@ -92,6 +92,9 @@ StatusCode RefitParticleTracks::execute()
 
   if (0==inputParticles.size()) return StatusCode::SUCCESS;
   if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) verbose() << inputParticles.size() << "input particles" << endmsg;
+  if (m_ghostTool->beginEvent().isFailure()) {
+    return Error("GhostIdTool could not begin event.",StatusCode::SUCCESS,10);
+  }
 
   std::vector<const LHCb::Track*> alltracks;
   std::vector<LHCb::Track*>::const_iterator iterT;

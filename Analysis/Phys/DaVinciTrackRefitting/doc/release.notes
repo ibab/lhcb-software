@@ -4,6 +4,10 @@
 ! Purpose     : Provide tools for refitting on DST
 !-----------------------------------------------------------------------------
 
+! 2015-06-22 - Paul Seyfert
+ - bugfix for event initialisation of RefitParticleTracks with latest
+   GhostProbability interface
+
 !=================== DaVinciTrackRefitting v2r0 2015-06-03 ===================
 
 ! 2015-06-02 - Paul Seyfert
