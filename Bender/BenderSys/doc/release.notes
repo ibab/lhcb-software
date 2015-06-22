@@ -28,6 +28,13 @@
 <li>Based on the DaVinci v36r7p3</li>
 </ul>
 
+<A NAME=v25r7p2> 2015-06-22 Bender v25r7p2 based on the DaVinci v36r7p4</A>
+<ul>						 						
+<li>Based on the DaVinci v36r7p4</li>
+<li> new option  </code>-i/--import</code> is added to <code>dst-explorer</code> (to be propagated to other scripts soon) </li>
+<li> new option  </code>-k/--klist</code> is added to <code>dst-explorer</code> (to be propagated to other scripts soon)</li>
+</ul>
+
 <A NAME=v25r7> 2015-06-05 Bender v25r7 based on the DaVinci v36r7</A>
 <ul>						 
 <li>Based on the DaVinci v36r7</li>
