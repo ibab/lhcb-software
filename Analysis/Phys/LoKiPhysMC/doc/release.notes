@@ -5,6 +5,9 @@
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2015-06-22 - Eduardo Rodrigues
+ - Removed unused class rule producing warning in genflex.
+
 !========================= LoKiPhysMC v9r8 2015-02-26 =========================
 
 ! 2015-01-24 - Vanya Belyaev

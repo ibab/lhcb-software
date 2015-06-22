@@ -46,9 +46,6 @@
     <class name="LoKi::MCMatchObj">
       <method name="=" />
     </class>
-    <class name="LoKi::DecayChain">
-      <method name="=" />
-    </class>
 
   </exclusion>
   
