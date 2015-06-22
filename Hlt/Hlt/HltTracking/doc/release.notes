@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-06-22 - Sascha Stahl
+ - HltRecoConf: Fixed order of RICH hypotheses.
+
 !========================= HltTracking v13r8p1 2015-06-10 =======================
 
 ! 2015-06-08 - Roel Aaij
