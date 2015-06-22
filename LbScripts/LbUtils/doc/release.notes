@@ -1,3 +1,7 @@
+2015-06-22  Ben Couturier  <ben.couturier@cern.ch>
+
+	* cmt/requirements: LBCORE-840: Release of v4r4p1
+
 2015-06-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmake: updated CMake support modules
