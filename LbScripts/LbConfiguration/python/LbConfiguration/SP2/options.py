@@ -14,6 +14,7 @@ Common functions to add common options to a OptionParser instance.
 __author__ = 'Marco Clemencic <marco.clemencic@cern.ch>'
 
 import os
+import re
 
 from LbConfiguration.SP2 import SearchPathEntry, EnvSearchPathEntry, SearchPath
 
@@ -189,8 +190,11 @@ def addSearchPath(parser):
                                    'nightlies and optionally by the day'
                                    % opt_str)
 
-        if rargs and rargs[0].capitalize() in days:
-            day = rargs.pop(0).capitalize()
+        if rargs:
+            if rargs[0].capitalize() in days:
+                day = rargs.pop(0).capitalize()
+            elif re.match(r'^\d*$', rargs[0]):
+                day = rargs.pop(0)
 
         # Locate the requested slot in the know nightlies directories
         from os import environ
