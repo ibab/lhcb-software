@@ -1,3 +1,27 @@
+2015-06-22 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r4p1
+
+	LbConfiguration
+	* lb-project-init: fixed LBCORE-839 (added script to initialize a checked out project)
+	* lb-run/lb-dev: allow numeric ids for the build id in --nightly
+	* lb-run/lb-dev: fixed LBCORE-838 (Allow use of /cvmfs/lhcbdev.cern.ch in lb-run/dev)
+	* lb-run: fixed LBCORE-782 (Allow use of lb-run in the "#!" line of a script)
+	
+	LbRelease
+	* getpack: use the same function as lb-project-init (LBCORE-839) to prepare projects
+
+	LbUtils
+	* cmake: updated CMake support modules
+	* cmt/update_gaudi_cmake.sh: changed Gaudi repository to gitlab.cern.ch
+	* scripts/cern-lxdistcc-wrappers.sh: do not use lcg-*-x.y.z links in the gcc installations
+
+	LbLegacy
+	* scripts/mkLHCbtar: LBCORE-832: fix to allow generating proper HTML files for LHCbGrid
+	* python/LbLegacy/install_project.py: LBCORE-826: Added support for -do0 platform,
+	 --no-self-check, --no-compat and not-boot-scripts options. 
+	* scripts/mkLHCbtar: LBCORE-826 Add -do0 platform to lbscripts (debug compiled with -O0) 
+
 2015-05-27 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v8r4
