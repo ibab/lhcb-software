@@ -6,7 +6,7 @@ from subprocess import Popen, PIPE
 
 from LbUtils.Script import Script
 from LbUtils.VCS import SVNReposInfo, CVSReposInfo
-from LbConfiguration import (createProjectMakefile, createToolchainFile,
+from LbConfiguration import (initProject,
                              createDataPackageCMakeLists,
                              eclipseConfigurationAddPackage,
                              createEclipseConfiguration)
@@ -1029,11 +1029,9 @@ class GetPack(Script):
 
         proj = self.checkoutProject(self.project_name, self.project_version)
         if not self.options.plain:
-            # create a project Makefile for the checked out project (if not present)
-            createProjectMakefile(os.path.join(proj[2], "Makefile"))
-            if os.path.exists(os.path.join(proj[2], "CMakeLists.txt")):
-                # note that an existing toolchain will not be overwritten
-                createToolchainFile(os.path.join(proj[2], 'toolchain.cmake'))
+            # initialize the checkout out project for building
+            # (does not overwrite)
+            initProject(proj[2])
         if self.options.recursive:
             packages = None
             # try to get the list of packages from project.info

@@ -2,14 +2,14 @@ import External
 import Platform
 import Project
 import shutil
-
+import os
 
 def createProjectMakefile(dest, overwrite=False):
     '''Write the generic Makefile for CMT projects.
     @param dest: the name of the destination file
     @param overwrite: flag to decide if an already present file has to be kept or not (default is False)
     '''
-    import os, logging
+    import logging
     if overwrite or not os.path.exists(dest):
         logging.debug("Creating '%s'", dest)
         f = open(dest, "w")
@@ -21,7 +21,7 @@ def createToolchainFile(dest, overwrite=False):
     @param dest: destination filename
     @param overwrite: flag to decide if an already present file has to be kept or not (default is False)
     '''
-    import os, logging
+    import logging
     if overwrite or not os.path.exists(dest):
         logging.debug("Creating '%s'", dest)
         f = open(dest, "w")
@@ -34,7 +34,7 @@ def createDataPackageCMakeLists(pkg, dest, overwrite=False):
     @param dest: destination filename
     @param overwrite: flag to decide if an already present file has to be kept or not (default is False)
     '''
-    import os, logging
+    import logging
     from string import Template
     if overwrite or not os.path.exists(dest):
         logging.debug("Creating '%s'", dest)
@@ -48,7 +48,7 @@ def createEclipseConfiguration(dest, projectpath):
     """Create the configuration files for an Eclipse project in the directory
     'dest', setting CMTPROJECTPATH to projectpath.
     """
-    import os, time, sys, logging
+    import time, sys, logging
     from os import environ
     from os.path import join, exists, basename
     # data to inject in the templates
@@ -123,3 +123,32 @@ def eclipseConfigurationAddPackage(dest, package):
     except:
         # Ignore failures
         pass
+
+def initProject(path, overwrite=False):
+    '''
+    Initialize the sources for an LHCb project for building.
+
+    Create the (generic) special files required for building LHCb/Gaudi
+    projects.
+
+    @param path: path to the root directory of the project
+    @param overwrite: whether existing files should be overwritten, set it to
+                      True to overwrite all of them or to a list of filenames
+
+    '''
+    factories = [('Makefile', createProjectMakefile),
+                 ('toolchain.cmake', createToolchainFile)]
+
+    # handle the possible values of overwrite to always have a set of names
+    if overwrite in (False, None):
+        overwrite = set()
+    elif overwrite is True:
+        overwrite = set(f[0] for f in factories)
+    elif isinstance(overwrite, basestring):
+        overwrite = set([overwrite])
+    else:
+        overwrite = set(overwrite)
+
+    for filename, factory in factories:
+        factory(os.path.join(path, filename), overwrite=filename in overwrite)
+

@@ -1,5 +1,9 @@
 2015-06-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* lb-project-init: fixed LBCORE-839 (added script to initialize a checked out project)
+
+2015-06-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* lb-run/lb-dev: allow numeric ids for the build id in --nightly
 
 2015-06-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
