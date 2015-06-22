@@ -102,12 +102,16 @@ class Files(object):
         # 
         if isinstance ( files , str ) : files = [ files ]
         #
+        _files = set() 
         for pattern in files :            
             for f in glob.iglob ( pattern ) :
-                if len ( self.files ) < self.maxfiles : self.treatFile  ( f )
-                else :
-                    logger.warning ('Maxfiles limit is reached %s ' % self.maxfiles )
-                    break
+                _files.add ( f )
+
+        for f in _files : 
+            if len ( self.files ) < self.maxfiles : self.treatFile  ( f )
+            else :
+                logger.warning ('Maxfiles limit is reached %s ' % self.maxfiles )
+                break
                 
                     
     ## the specific action for each file 
@@ -145,17 +149,26 @@ class Data(Files):
                   maxfiles    = 1000000 ) :  
 
         
-        self.chain = ROOT.TChain ( chain )
+        self.e_list1 = set()  
+        self.chain   = ROOT.TChain ( chain )
         Files.__init__( self , files , description  , maxfiles )
-            
+        
     ## the specific action for each file 
     def treatFile ( self, the_file ) :
         """
         Add the file to TChain
         """
-        Files.treatFile ( self , the_file ) 
-        self.chain.Add         ( the_file ) 
+        Files.treatFile ( self , the_file )
         
+        tmp = ROOT.TChain ( self.chain.GetName() )
+        tmp.Add ( the_file )
+        
+        if tmp.GetEntries() and 0 < tmp.GetEntry(0) : self.chain.Add ( the_file ) 
+        else                  :
+            logger.warning("No/empty chain '%s' in file '%s'" % ( self.chain.GetName() , the_file ) ) 
+            self.e_list1.add ( the_file ) 
+            
+            
     ## printout 
     def __str__(self):
         return  "<#files: {}; Entries: {}>".format ( len ( self.files ) ,
@@ -183,24 +196,33 @@ class Data2(Data):
                   description = ''      ,
                   maxfiles    = 1000000 ) :  
         
-        self.chain2 = ROOT.TChain ( chain2 )
+        self.e_list2 = set()
+        self.chain2  = ROOT.TChain ( chain2 )
         Data.__init__( self , chain1 , files , description , maxfiles )
-        self.chain1 = self.chain 
-            
+        self.chain1  = self.chain 
+        
     ## the specific action for each file 
     def treatFile ( self, the_file ) :
         """
         Add the file to TChain
         """
-        Data.treatFile ( self , the_file ) 
-        self.chain2.Add       ( the_file ) 
+        Data.treatFile ( self , the_file )
+
+        tmp = ROOT.TChain ( self.chain2.GetName() )
+        tmp.Add ( the_file )
+        
+        if tmp.GetEntries() and 0 < tmp.GetEntry(0) : self.chain2.Add ( the_file ) 
+        else                  :
+            logger.warning("No/empty chain '%s' in file '%s'" % ( self.chain2.GetName() , the_file ) ) 
+            self.e_list2.add ( the_file ) 
         
     ## printout 
-    def __str__(self):
+    def __str__(self):    
         return  "<#files: {}; Entries1: {}; Entries2: {}>".format ( len ( self.files  ) ,
                                                                     len ( self.chain1 ) ,
                                                                     len ( self.chain2 ) )
     
+            
 # =============================================================================
 ## @class DataAndLumi
 #  Simple utility to access to certain chain in the set of ROOT-files
@@ -231,7 +253,7 @@ class DataAndLumi(Data2):
     ## get the luminosity 
     def getLumi ( self ):
         """
-        Get the luminosity from the 
+        Get the luminosity
         """
         from   Ostap.GetLumi import getLumi
         return getLumi( self.lumi)
