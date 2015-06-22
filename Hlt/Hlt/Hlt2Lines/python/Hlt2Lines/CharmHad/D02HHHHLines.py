@@ -5,9 +5,6 @@
 #
 #  @author Maurizio MARTINELLI maurizio.martinelli@cern.ch
 #  @author Simone STRACKA simone.stracka@cern.ch
-#  @author Mike Sokoloff msokolof@cern.ch   --  re-wrote the code a bit and added
-#    PromptSpectroscopyFilter code to produce a cleaner "un-tagged" sample
-#    to be used as input for spectroscopy trigger lines
 #=============================================================================
 """ Set of Hlt2-lines suitable for the study of charm decay channels with
     four particles in the final state.
@@ -21,8 +18,21 @@ import copy
 
 class CharmHadD02HHHHLines() :
     def localcuts(self) :
+        ## The configuration dictionaries for the lines used to be generated
+        ## in a loop in which keys/line names were assembled from components.
+        ## This led to very compact code, but it also made it difficult to
+        ## find things with simple search tools.
+        ## Further, there seem to be only one variant of the dictionary.
+        ## Having one configuration dictionary per combiner does make it
+        ## possible to apply different configurations for each of the lines
+        ## in HltSettings.  However, it is not clear that it would be desirable
+        ## to do so.  Until it is clear that we need different configurations
+        ## for the combiners of the lines, use just two configuration
+        ## dictionaries to configure all of the lines.  (P.S.)
+
         # The kinematic cuts are in common between the lines
-        cutsForD2HHHH = {
+        cutsForD2HHHHComb = {
+                'TisTosSpec'               :  [], # Empty line for not applying TisTos
                 'Trk_ALL_PT_MIN'           :  250 * MeV,
                 'Trk_ALL_MIPCHI2DV_MIN'    :  3,
                 'AM_34'                    : (139.5 + 139.5) * MeV,
@@ -35,197 +45,119 @@ class CharmHadD02HHHHLines() :
                 'VCHI2PDOF_MAX'            :  12.0,
                 'BPVDIRA_MIN'              :  0.9998,
                 'BPVLTIME_MIN'             :  0.1*picosecond,
-                'Mass_M_MIN'               :  1790 * MeV,
-                'Mass_M_MAX'               :  1940 * MeV,
-                }
-##  despite the names, these cuts are designed to accept both Lambda_c and Xi_c^+ decays
-##  mass(Lcp) = 2286 MeV and mass(Xicp) = 2468 MeV
-        cutsForLcpToLambda0KmKpPip = {
-                'Trk_ALL_PT_MIN'           :  250 * MeV,
-                'Trk_ALL_MIPCHI2DV_MIN'    :  3,
-                'AM_34'                    : (493.677 + 139.5) * MeV,
-                'AM_4'                     : (139.5) * MeV,
-                'AM_MIN'                   :  2186 * MeV,
-                'AM_MAX'                   :  2586 * MeV,
-                'ASUMPT_MIN'               :  2000.0 * MeV,
-                'ADOCA_MAX'                :  100.0 * mm,
-                'ACHI2DOCA_MAX'            :  10.0,
-                'VCHI2PDOF_MAX'            :  12.0,
-                'BPVDIRA_MIN'              :  0.9998,
-                'BPVLTIME_MIN'             :  0.1*picosecond,
-                'Mass_M_MIN'               :  2206 * MeV,
-                'Mass_M_MAX'               :  2348 * MeV,
-                }
-        cutsForLcpToLambda0KmPipPip = {
-                'Trk_ALL_PT_MIN'           :  250 * MeV,
-                'Trk_ALL_MIPCHI2DV_MIN'    :  3,
-                'AM_34'                    : (139.5 + 139.5) * MeV,
-                'AM_4'                     : (139.5) * MeV,
-                'AM_MIN'                   :  2186 * MeV,
-                'AM_MAX'                   :  2586 * MeV,
-                'ASUMPT_MIN'               :  2000.0 * MeV,
-                'ADOCA_MAX'                :  100.0 * mm,
-                'ACHI2DOCA_MAX'            :  10.0,
-                'VCHI2PDOF_MAX'            :  12.0,
-                'BPVDIRA_MIN'              :  0.9998,
-                'BPVLTIME_MIN'             :  0.1*picosecond,
-                'Mass_M_MIN'               :  2206 * MeV,
-                'Mass_M_MAX'               :  2348 * MeV,
-                }
-## some cuts for Pentaquark --> phi,pi,p  mimics D0 --> HHHH to start
-        cutsForPentaPhiPimPp = {
-                 'Trk_ALL_PT_MIN'           :  250 * MeV,
-                 'Trk_ALL_MIPCHI2DV_MIN'    :  3,
-                 'AM12_MAX'                 : 1050.0 * MeV,
-                 'AM_4'                     : (139.5) * MeV,
-                 'AM_MIN'                   :  2700 * MeV,
-                 'AM_MAX'                   :  2930 * MeV,
-                 'ASUMPT_MIN'               :  1980.0 * MeV,
-                 'ACHI2DOCA_MAX'            :  10.0,
-                 'VCHI2PDOF_MAX'            :  12.0,
-                 'BPVDIRA_MIN'              :  0.9998,
-                 'BPVLTIME_MIN'             :  0.3*picosecond,
-                 'PT_MIN'                   :  2000 * MeV,
-                 'IPCHI2_MAX'               :  15.0,
-                                 }
-        cutsForSpectroscopy = {
-                    'IPCHI2_MAX'       :  15,
-                    'D_BPVLTIME_MIN'   :  0.3 * picosecond,
-                    'DMASS_MIN'        :  1790 * MeV,
-                    'DMASS_MAX'        :  1940 * MeV,
-                     }
-        cutsForPentaQuarkMassFilter = {
-                'Mass_M_MIN'               :  2720 * MeV,
-                'Mass_M_MAX'               :  2915 * MeV,
-                     }
-## as above, the mass filter should accept both Lambda_c and Xi_c^+ decays
-        cutsForLcMassFilter = {
-                'Mass_M_MIN'               :  2206 * MeV,
-                'Mass_M_MAX'               :  2348 * MeV,
-                     }
-        # modify the mass cuts to enlarge the mass window for prescaled control lines (are these really needed?)
-        cutsForD2HHHHWide = copy.copy(cutsForD2HHHH)
-        cutsForD2HHHHWide.update({
                 'Mass_M_MIN'               :  1700 * MeV,
-                'Mass_M_MAX'               :  2100 * MeV,
-                })
-        # Specific cuts for tagging
+                'Mass_M_MAX'               :  2100 * MeV
+        }
+
+        massForD2HHHH = {
+                'Mass_M_MIN'               :  1790 * MeV,
+                'Mass_M_MAX'               :  1940 * MeV
+        }
+
         cutsForD2HHHHTag = {
                 'TagVCHI2PDOF_MAX'         :  15.0,
                 'DeltaM_AM_MIN'            :  0.0,
                 'DeltaM_AM_MAX'            :  190.0 * MeV,
                 'DeltaM_MIN'               :  0.0,
                 'DeltaM_MAX'               :  170.0 * MeV
-                }
-        cuts = {}
-        for fs in ['PiPiPiPi', 'KPiPiPi', 'KKPiPi', 'KKKPi']:
-            # Now the combiner for the CPV lines  
-            cuts.update( {
-              'cutsForD2HHHH'        : cutsForD2HHHH,
-              'LcpToLambda0KmKpPip'  : cutsForLcpToLambda0KmKpPip,
-              'LcpToLambda0KmPipPip'  : cutsForLcpToLambda0KmPipPip,
-              'D02'+fs               : cutsForD2HHHH,
-              'D02'+fs+'Turbo'       : cutsForD2HHHH,
-              'D02'+fs+'Starting'    : cutsForD2HHHH,
-              'D02'+fs+'Wide'        : cutsForD2HHHHWide,
-              'cutsForD2HHHHWide'    : cutsForD2HHHHWide,
-              'PentaPhiPimPp'        : cutsForPentaPhiPimPp
-              } )
-        for des in ['', 'Wide']:
-            for fs in ['PiPiPiPi', 'KKPiPi' ]:
-                cuts['D02'+fs+des+'Tag'] = cutsForD2HHHHTag
-            for fs in ['KPiPiPi', 'KKKPi']:
-                cuts.update( {
-                    'D02CF'+fs+des+'Tag' : cutsForD2HHHHTag,
-                    'D02DCS'+fs+des+'Tag': cutsForD2HHHHTag
-                    } )
-        cuts.update( {
-            'D02KPiPiPiForSpectroscopy' : cutsForSpectroscopy,
-            } )
-        cuts.update( {
-                    'PentaMass'         : cutsForPentaQuarkMassFilter,
-            } )
-        cuts.update( {
-                    'LcMass'            : cutsForLcMassFilter,
-            } )
+        }
 
-        print '  cuts =  \n'
-        print cuts
+        cuts = {   'D02HHHH'      : cutsForD2HHHHComb
+                 , 'D02HHHHMass'  : massForD2HHHH
+                 , 'DstToD02HHHH' : cutsForD2HHHHTag
+        }
+
         return cuts
 
-  
+
     def locallines(self):
         from Stages import MassFilter
-        from Stages import SharedNoPIDDetachedChild_pi, SharedNoPIDDetachedChild_K
-        from Stages import SharedDetachedD0ToHHHHChild_pi, SharedDetachedD0ToHHHHChild_K
+        from Stages import SharedDetachedD0ToHHHHChild_pi, SharedDetachedD0ToHHHHChild_K, SharedSoftTagChild_pi
+        from Stages import D02HHHH_D02PiPiPiPi, D02HHHH_D02KPiPiPi
+        from Stages import D02HHHH_D02KKPiPi, D02HHHH_D02KKKPi
+        from Stages import D02HHHHMass_D02PiPiPiPi, D02HHHHMass_D02KPiPiPi
+        from Stages import D02HHHHMass_D02KKPiPi, D02HHHHMass_D02KKKPi
+        from Stages import DstToD02HHHH_D02CFKPiPiPi
         from Stages import DV4BCombiner, Dst2D0pi, TagDecay
-       
-        from Stages import PromptSpectroscopyFilter
 
-        from Stages import PentaPhiPimPp
-        from Stages import LcpToLambda0KmKpPip, LcpToLambda0KmPipPip
- 
+        ## D*+ -> D0 pi+ reconstruction on D0 with wide mass windows
+        DstToD02HHHH_D02PiPiPiPiWideTag = TagDecay('DstpComb'
+                , decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
+                , inputs = [ D02HHHH_D02PiPiPiPi, SharedSoftTagChild_pi ]
+                , nickname = 'DstToD02HHHH')
+
+        DstToD02HHHH_D02KKPiPiWideTag = DstToD02HHHH_D02PiPiPiPiWideTag.clone('DstpComb'
+                , inputs = [ D02HHHH_D02KKPiPi, SharedSoftTagChild_pi ] )
+
+        DstToD02HHHH_D02CFKPiPiPiWideTag = TagDecay('DstpComb'
+                , decay = ["[D*(2010)+ -> D0 pi+]cc"]
+                , inputs = [D02HHHH_D02KPiPiPi, SharedSoftTagChild_pi]
+                , nickname = 'DstToD02HHHH')
+        DstToD02HHHH_D02DCSKPiPiPiWideTag = DstToD02HHHH_D02CFKPiPiPiWideTag.clone('DstpComb'
+                , decay = ["[D*(2010)- -> D0 pi-]cc"])
+
+        DstToD02HHHH_D02CFKKKPiWideTag = DstToD02HHHH_D02CFKPiPiPiWideTag.clone('DstpComb'
+                , inputs = [D02HHHH_D02KKKPi, SharedSoftTagChild_pi])
+        DstToD02HHHH_D02DCSKKKPiWideTag = DstToD02HHHH_D02CFKKKPiWideTag.clone('DstpComb'
+                , decay = ["[D*(2010)- -> D0 pi-]cc"])
+
+
+        ## D*+ -> D0 pi+ reconstruction
+        ## The combiner for the Cabibbo-favored D*+ -> D0(K- pi- pi+ pi+) pi+
+        ##   is shared with a spectroscopy line in CharmSpectroscopyLines.py.
+        ##   Its definition is moved to Stages.py for sharing.
+        DstToD02HHHH_D02PiPiPiPiTag = TagDecay('DstpComb'
+                , decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
+                , inputs = [ D02HHHHMass_D02PiPiPiPi, SharedSoftTagChild_pi ]
+                , nickname = 'DstToD02HHHH')
+
+        DstToD02HHHH_D02KKPiPiTag = DstToD02HHHH_D02PiPiPiPiTag.clone('DstpComb'
+                , inputs = [ D02HHHHMass_D02KKPiPi, SharedSoftTagChild_pi ] )
+
+        DstToD02HHHH_D02DCSKPiPiPiTag = TagDecay('DstpComb'
+                , decay = ["[D*(2010)- -> D0 pi-]cc"]
+                , inputs = [D02HHHHMass_D02KPiPiPi, SharedSoftTagChild_pi]
+                , nickname = 'DstToD02HHHH')
+
+        DstToD02HHHH_D02CFKKKPiTag = TagDecay('DstpComb'
+                , decay = ["[D*(2010)+ -> D0 pi+]cc"]
+                , inputs = [D02HHHHMass_D02KKKPi, SharedSoftTagChild_pi]
+                , nickname = 'DstToD02HHHH')
+
+        DstToD02HHHH_D02DCSKKKPiTag = DstToD02HHHH_D02CFKKKPiTag.clone('DstpComb'
+                , decay = ["[D*(2010)- -> D0 pi-]cc"])
+
+
+
+        ## The stages dictionary should be a clear two-column list from
+        ##   which the lines defined in this module can be directly read.
+
         stages = {}
         # Create the nominal and wide mass combinations
+        stages = {
+                ## Main lines (nominal mass window)
+                  'D02PimPimPipPipTurbo' : [D02HHHHMass_D02PiPiPiPi]
+                , 'D02KmPimPipPipTurbo'  : [D02HHHHMass_D02KPiPiPi]
+                , 'D02KmKpPimPipTurbo'   : [D02HHHHMass_D02KKPiPi]
+                , 'D02KmKmKpPipTurbo'    : [D02HHHHMass_D02KKKPi]
+                , 'Dstp2D0Pip_D02PimPimPipPipTurbo' : [DstToD02HHHH_D02PiPiPiPiTag]
+                , 'Dstp2D0Pip_D02KmKpPimPipTurbo'   : [DstToD02HHHH_D02KKPiPiTag]
+                , 'Dstp2D0Pip_D02KmPimPipPipTurbo'  : [DstToD02HHHH_D02CFKPiPiPi]
+                , 'Dstp2D0Pip_D02KpPimPimPipTurbo'  : [DstToD02HHHH_D02DCSKPiPiPiTag]
+                , 'Dstp2D0Pip_D02KmKmKpPipTurbo'    : [DstToD02HHHH_D02CFKKKPiTag]
+                , 'Dstp2D0Pip_D02KmKpKpPimTurbo'    : [DstToD02HHHH_D02DCSKKKPiTag]
 
-## "Starting" denotes use of cuts defined in the DV4BCombiner class
-##  which has a combination mass cut but not a mother mass cut
-        stages.update( {
-              'D02PiPiPiPiStarting' : [DV4BCombiner('D02PiPiPiPiStarting', 
-                inputs=[SharedDetachedD0ToHHHHChild_pi], 
-                nickname = 'cutsForD2HHHH',
-                decay=['D0 -> pi+ pi+ pi- pi-'], shared=True)],
-              'D02KPiPiPiStarting'  : [DV4BCombiner('D02KPiPiPiStarting', 
-                inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K], 
-                nickname = 'cutsForD2HHHH',
-                decay=['[D0 -> K- pi+ pi+ pi-]cc'], shared=True)],
-              'D02KKPiPiStarting'   : [DV4BCombiner('D02KKPiPiStarting', 
-                inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K], 
-                nickname = 'cutsForD2HHHH',
-                decay=['D0 -> K+ K- pi+ pi-'], shared=True)],
-              'D02KKKPiStarting'    : [DV4BCombiner('D02KKKPiStarting', 
-                inputs=[SharedDetachedD0ToHHHHChild_pi,SharedDetachedD0ToHHHHChild_K], 
-                nickname = 'cutsForD2HHHH',
-                decay=['[D0 -> K- K- K+ pi+]cc'], shared=True)],
-            } )
-
-        # Restrict to the Wide mass
-        for fs in ['PiPiPiPi', 'KPiPiPi', 'KKPiPi', 'KKKPi']:
-            stages.update( { 'D02'+fs+'Wide'+'Turbo' : [MassFilter('D02'+fs+'Wide',
-            inputs=[stages['D02'+fs+'Starting'][0]], shared=True)] } )
-
-        # Restrict to the nominal mass
-        for fs in ['PiPiPiPi', 'KPiPiPi', 'KKPiPi', 'KKKPi']:
-            stages.update( { 'D02'+fs+'Turbo' : [MassFilter('D02'+fs,
-            inputs=[stages['D02'+fs+'Wide'+'Turbo'][0]], shared=True)] } )
-
-       # Make a tighter set of selections on  decay time, IPChi2, and (potentially) D
-       # mass to create candidates for spectroscopy studies
-        for fs in [ 'KPiPiPi']:
-            stages.update( { 'D02'+fs+'ForSpectroscopy' : [PromptSpectroscopyFilter('D02'+fs+'Spectroscopy',
-                             inputs=[stages['D02'+fs+'Turbo'][0]], 
-                             nickname = 'D02KPiPiPiForSpectroscopy',
-                             shared=True)] } )
-
-        # Add the soft pion  to the wide and nominal selections for the D* candidates
-        for des in ['','Wide']:
-            for fs in ['PiPiPiPi', 'KKPiPi']:
-                stages['D02'+fs+des+'Tag'+'Turbo'] = [TagDecay('D02'+fs+des+'Tag', 
-                  decay = ["[D*(2010)+ -> D0 pi+]cc"],
-                  nickname = 'D02'+fs+des+'Tag',
-                  inputs = [stages['D02'+fs+des+'Turbo'][0]], shared=True)]
-            for fs in ['KPiPiPi', 'KKKPi']:
-                stages['D02CF'+fs+des+'Tag'+'Turbo']  = [TagDecay('D02CF'+fs+des+'Tag', 
-                  decay = ["[D*(2010)+ -> D0 pi+]cc"],
-                  nickname = 'D02CF'+fs+des+'Tag',
-                  inputs = [stages['D02'+fs+des+'Turbo'][0]], shared=True)]
-                stages['D02DCS'+fs+des+'Tag'+'Turbo'] = [TagDecay('D02DCS'+fs+des+'Tag',
-                  decay = ["[D*(2010)- -> D0 pi-]cc"],
-                  nickname = 'D02DCS'+fs+des+'Tag',
-                  inputs = [stages['D02'+fs+des+'Turbo'][0]], shared=True)]
-        
-        stages['PentaPhiPimPpTurbo'] = [MassFilter('PentaMass',inputs=[PentaPhiPimPp])]
-        stages['LcpToLambda0KmKpPipTurbo'] = [MassFilter('LcMass',inputs=[LcpToLambda0KmKpPip])]
-        stages['LcpToLambda0KmPipPipTurbo'] = [MassFilter('LcMass',inputs=[LcpToLambda0KmPipPip])]
+                ## Wide mass lines (plan for obsolescence)
+                , 'D02PimPimPipPip_WideTurbo' : [D02HHHH_D02PiPiPiPi]
+                , 'D02KmPimPipPip_WideTurbo'  : [D02HHHH_D02KPiPiPi]
+                , 'D02KmKpPimPip_WideTurbo'   : [D02HHHH_D02KKPiPi]
+                , 'D02KmKmKpPip_WideTurbo'    : [D02HHHH_D02KKKPi]
+                , 'Dstp2D0Pip_D02PimPimPipPip_WideTurbo' : [DstToD02HHHH_D02PiPiPiPiWideTag]
+                , 'Dstp2D0Pip_D02KmKpPimPip_WideTurbo'   : [DstToD02HHHH_D02KKPiPiWideTag]
+                , 'Dstp2D0Pip_D02KmPimPipPip_WideTurbo'  : [DstToD02HHHH_D02CFKPiPiPiWideTag]
+                , 'Dstp2D0Pip_D02KpPimPimPip_WideTurbo'  : [DstToD02HHHH_D02DCSKPiPiPiWideTag]
+                , 'Dstp2D0Pip_D02KmKmKpPip_WideTurbo'    : [DstToD02HHHH_D02CFKKKPiWideTag]
+                , 'Dstp2D0Pip_D02KmKpKpPim_WideTurbo'    : [DstToD02HHHH_D02DCSKKKPiWideTag]
+        }
 
         return stages

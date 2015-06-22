@@ -38,12 +38,33 @@ class CharmHadHc2HHHHLines() :
                 BPVVDCHI2_MIN = 10.0,
                 BPVLTIME_MIN = 0.1 * picosecond,
                 **Xic0OmegacMassCuts),
+        'PentaPhiPimPp' : {
+                 'Trk_ALL_PT_MIN'           :  250 * MeV,
+                 'Trk_ALL_MIPCHI2DV_MIN'    :  3,
+                 'AM12_MAX'                 : 1050.0 * MeV,
+                 'AM_4'                     : (139.5) * MeV,
+                 'AM_MIN'                   :  2700 * MeV,
+                 'AM_MAX'                   :  2930 * MeV,
+                 'ASUMPT_MIN'               :  1980.0 * MeV,
+                 'ACHI2DOCA_MAX'            :  10.0,
+                 'VCHI2PDOF_MAX'            :  12.0,
+                 'BPVDIRA_MIN'              :  0.9998,
+                 'BPVLTIME_MIN'             :  0.3*picosecond,
+                 'PT_MIN'                   :  2000 * MeV,
+                 'IPCHI2_MAX'               :  15.0,
+                 'Mass_M_MIN'               :  2720 * MeV,
+                 'Mass_M_MAX'               :  2915 * MeV,
+                }
             }
         return cuts
 
     def locallines(self) :
         from Stages import MassFilter, Xic02PKKPi_LTUNB, Xic02PKKPi
-        
+        from Stages import PentaPhiPimPp
+       
+        PentaPhiPimPpFilt = MassFilter('Filt' , inputs = [ PentaPhiPimPp ]
+                                              , nickname = 'PentaPhiPimPp')
+ 
         stages = {
             'Xic0ToPpKmKmPip_LTUNBTurbo' : [MassFilter('Xic0ToPpKmKmPip_LTUNBTurbo',
                                                        inputs = [Xic02PKKPi_LTUNB('Xic0ToPpKmKmPip_LTUNBTurbo')],
@@ -51,5 +72,6 @@ class CharmHadHc2HHHHLines() :
             'Xic0ToPpKmKmPipTurbo' : [MassFilter('Xic0ToPpKmKmPipTurbo',
                                                  inputs = [Xic02PKKPi('Xic0ToPpKmKmPipTurbo')],
                                                  reFitPVs = True)],
+            'PentaToPhiPpPimTurbo' : [PentaPhiPimPpFilt],
             }
         return stages

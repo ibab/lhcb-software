@@ -62,9 +62,9 @@ class ChargedHyperonLines():
         from Stages import Xi2LambdaPi_LLL, Xi2LambdaPi_DDL
         from Stages import Omega2LambdaK_LLL, Omega2LambdaK_DDL
         stages = {# 
-                  'Xi2LambdaPi_LLL'       : [MassFilter('Ximinus2LambdaPi_LLL', inputs=[Xi2LambdaPi_LLL])],
-                  'Xi2LambdaPi_DDL'       : [MassFilter('Ximinus2LambdaPi_DDL',inputs=[Xi2LambdaPi_DDL])],
-                  'Omega2LambdaK_LLL'     : [MassFilter('Omegaminus2LambdaK_LLL',inputs=[Omega2LambdaK_LLL])],
-                  'Omega2LambdaK_DDL'     : [MassFilter('Omegaminus2LambdaK_DDL',inputs=[Omega2LambdaK_DDL])],
+                  'Xim2LamPim_LamLL'       : [MassFilter('Ximinus2LambdaPi_LLL', inputs=[Xi2LambdaPi_LLL])],
+                  'Xim2LamPim_LamDD'       : [MassFilter('Ximinus2LambdaPi_DDL',inputs=[Xi2LambdaPi_DDL])],
+                  'Omm2LamKm_LamLL'        : [MassFilter('Omegaminus2LambdaK_LLL',inputs=[Omega2LambdaK_LLL])],
+                  'Omm2LamKm_LamDD'        : [MassFilter('Omegaminus2LambdaK_DDL',inputs=[Omega2LambdaK_DDL])],
                  }
         return stages

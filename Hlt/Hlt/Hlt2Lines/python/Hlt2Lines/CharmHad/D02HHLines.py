@@ -1,13 +1,18 @@
 ## Exclusive reconstruction of D0 -> h- h'+ modes, adapted directly from
 ## the former Hlt2CharmHadD02HHLines.py configurable.
 ##
-## Defines sets of stages for 6 lines:
-##      'D02KK'
-##      'D02KPi'
-##      'D02PiPi'
-##      'D02KKWideMass'
-##      'D02KPiWideMass'
-##      'D02PiPiWideMass'
+## Defines sets of stages for lots of lines:
+##      'D02KmKpTurbo'
+##      'D02KmPipTurbo'
+##      'D02PimPipTurbo'
+##      'Dstp2D0Pip_D02KmKpTurbo'
+##      'Dstp2D0Pip_D02PimPipTurbo'
+##      'Dstp2D0Pip_D02KmPipTurbo'
+##      'Dstp2D0Pip_D02KpPimTurbo'
+##      'Dstp2D0Pip_D02KmKp_LTUNBTurbo'
+##      'Dstp2D0Pip_D02PimPip_LTUNBTurbo'
+##      'Dstp2D0Pip_D02KmPip_LTUNBTurbo'
+##      'Dstp2D0Pip_D02KpPim_LTUNBTurbo'
 ##
 ## @author Patrick Spradlin
 __author__  = [ 'Patrick Spradlin' ]
@@ -86,41 +91,81 @@ class CharmHadD02HHLines : # {
         if len(self.__stages) == 0 : # {
             from Stages import D02HH_D0ToKmPip, D02HH_D0ToKmKp, D02HH_D0ToPimPip
             from Stages import D02HH_D0ToKmPip_LTUNB, D02HH_D0ToKmKp_LTUNB, D02HH_D0ToPimPip_LTUNB
-            from Stages import TagDecay,SharedSoftTagChild_pi
+            from Stages import D0_TAG_CPV_Dstp2D0Pip_D02KmPip
+            from Stages import TagDecay, SharedSoftTagChild_pi
+
+            ## Create D*+ -> D0 pi+
+
+            ## I (P.S.) want to make this very easy to trace, but some
+            ##   automation would help to ensure consistency.  Need to
+            ##   consider better patterns.  For now, i have gone with making
+            ##   it as clear as possible.
 
             ## Hmm, having several MassFilter with the same name seems strange,
-            ## but supposedly it does something sensible.
+            ##   but the automatic name mangling does something sensible since
+            ##   these are not shared instances.
             ## <grumble, grumble, inscrutable obfuscated wrapper nonsense>
-            self.__stages = {   'D02KKTurbo'   : [D02HH_D0ToKmKp]
-                              , 'D02KPiTurbo'  : [D02HH_D0ToKmPip]
-                              , 'D02PiPiTurbo' : [D02HH_D0ToPimPip]
+
+            ## D0 -> K pi reconstructed as "[D0 -> K- pi+]cc
+            ## D0_TAG_CPV_Dstp2D0Pip_D02KmPip is a shared instance defined in
+            ##   Stages.py because it is also used in CharmSpectroscopyLines.py
+            Dstp2D0Pip_D02KpPim = TagDecay('D0_TAG_CPV'
+                        , ["[D*(2010)- -> D0 pi-]cc"]
+                        , inputs = [ D02HH_D0ToKmPip, SharedSoftTagChild_pi ]
+                        , ReFitPVs = True)
+
+            ## Self-conjugate final state reconstructed only as D0
+            Dstp2D0Pip_D02KmKp  = TagDecay('D0_TAG_CPV'
+                        , decay = ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"]
+                        , inputs = [ D02HH_D0ToKmKp, SharedSoftTagChild_pi ]
+                        , ReFitPVs = True)
+
+            Dstp2D0Pip_D02PimPip = TagDecay('D0_TAG_CPV'
+                        , decay = ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"]
+                        , inputs = [ D02HH_D0ToPimPip, SharedSoftTagChild_pi ]
+                        , ReFitPVs = True)
+
+            ## For lifetime maximally biased D0s.
+            Dstp2D0Pip_D02KmPip_LTUNB = TagDecay('D0_TAG_CPV'
+                        , ["[D*(2010)+ -> D0 pi+]cc"]
+                        , inputs = [ D02HH_D0ToKmPip_LTUNB, SharedSoftTagChild_pi ]
+                        , ReFitPVs = True)
+
+            Dstp2D0Pip_D02KpPim_LTUNB = TagDecay('D0_TAG_CPV'
+                        , ["[D*(2010)- -> D0 pi-]cc"]
+                        , inputs = [ D02HH_D0ToKmPip_LTUNB, SharedSoftTagChild_pi ]
+                        , ReFitPVs = True)
+
+            Dstp2D0Pip_D02KmKp_LTUNB = TagDecay('D0_TAG_CPV'
+                        , ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"]
+                        , inputs = [ D02HH_D0ToKmKp_LTUNB, SharedSoftTagChild_pi ]
+                        , ReFitPVs = True)
+
+            Dstp2D0Pip_D02PimPip_LTUNB = TagDecay('D0_TAG_CPV'
+                        , ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"]
+                        , inputs = [ D02HH_D0ToPimPip_LTUNB, SharedSoftTagChild_pi ]
+                        , ReFitPVs = True)
+
+
+            ## The stages dictionary should be a clear two-column list from
+            ##   which the lines defined in this module can be directly read.
+            self.__stages = {
+                  'D02KmKpTurbo'                    : [D02HH_D0ToKmKp]
+                , 'D02KmPipTurbo'                   : [D02HH_D0ToKmPip]
+                , 'D02PimPipTurbo'                  : [D02HH_D0ToPimPip]
+
+                ## Now add the tagged lines
+                , 'Dstp2D0Pip_D02KmKpTurbo'         : [ Dstp2D0Pip_D02KmKp ]
+                , 'Dstp2D0Pip_D02PimPipTurbo'       : [ Dstp2D0Pip_D02PimPip ]
+                , 'Dstp2D0Pip_D02KmPipTurbo'        : [ D0_TAG_CPV_Dstp2D0Pip_D02KmPip ]
+                , 'Dstp2D0Pip_D02KpPimTurbo'        : [ Dstp2D0Pip_D02KpPim ]
+
+                ## The tagged LTUNB lines
+                , 'Dstp2D0Pip_D02KmKp_LTUNBTurbo'   : [ Dstp2D0Pip_D02KmKp_LTUNB ]
+                , 'Dstp2D0Pip_D02PimPip_LTUNBTurbo' : [ Dstp2D0Pip_D02PimPip_LTUNB ]
+                , 'Dstp2D0Pip_D02KmPip_LTUNBTurbo'  : [ Dstp2D0Pip_D02KmPip_LTUNB ]
+                , 'Dstp2D0Pip_D02KpPim_LTUNBTurbo'  : [ Dstp2D0Pip_D02KpPim_LTUNB ]
             }
-            # Now add the tagged lines
-            self.__stages['Dst_2D0Pi_D02KKTurbo']      = [TagDecay('D0_TAG_CPV', ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"],
-                                                             inputs = [ self.__stages['D02KKTurbo'][0],
-                                                                        SharedSoftTagChild_pi ], ReFitPVs = True)]
-            self.__stages['Dst_2D0Pi_D02PiPiTurbo']    = [TagDecay('D0_TAG_CPV', ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"],
-                                                             inputs = [ self.__stages['D02PiPiTurbo'][0],
-                                                                         SharedSoftTagChild_pi ], ReFitPVs = True)] 
-            self.__stages['Dst_2D0Pi_D02KPiCFTurbo']   = [TagDecay('D0_TAG_CPV', ["[D*(2010)+ -> D0 pi+]cc"],
-                                                                   inputs = [ self.__stages['D02KPiTurbo'][0],
-                                                                              SharedSoftTagChild_pi ], ReFitPVs = True)]
-            self.__stages['Dst_2D0Pi_D02KPiDCSTurbo']  = [TagDecay('D0_TAG_CPV', ["[D*(2010)- -> D0 pi-]cc"],
-                                                                   inputs = [ self.__stages['D02KPiTurbo'][0],
-                                                                              SharedSoftTagChild_pi ], ReFitPVs = True)]
-            # The tagged LTUNB lines
-            self.__stages['Dst_2D0Pi_D02KK_LTUNBTurbo']      = [TagDecay('D0_TAG_CPV', ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"],
-                                                                   inputs = [ D02HH_D0ToKmKp_LTUNB,
-                                                                              SharedSoftTagChild_pi ], ReFitPVs = True)]
-            self.__stages['Dst_2D0Pi_D02PiPi_LTUNBTurbo']    = [TagDecay('D0_TAG_CPV', ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"],
-                                                                   inputs = [ D02HH_D0ToPimPip_LTUNB,
-                                                                              SharedSoftTagChild_pi ], ReFitPVs = True)] 
-            self.__stages['Dst_2D0Pi_D02KPiCF_LTUNBTurbo']   = [TagDecay('D0_TAG_CPV', ["[D*(2010)+ -> D0 pi+]cc"],
-                                                                   inputs = [ D02HH_D0ToKmPip_LTUNB,
-                                                                              SharedSoftTagChild_pi ], ReFitPVs = True)]
-            self.__stages['Dst_2D0Pi_D02KPiDCS_LTUNBTurbo']  = [TagDecay('D0_TAG_CPV', ["[D*(2010)- -> D0 pi-]cc"],
-                                                                   inputs = [ D02HH_D0ToKmPip_LTUNB,
-                                                                              SharedSoftTagChild_pi ], ReFitPVs = True)]
         # }
 
         return self.__stages

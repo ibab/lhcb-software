@@ -8,6 +8,67 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-06-22 - Patrick Spradlin
+ - Merged in changes from branch spradlin_20150615.
+   For detailed descriptions of the changes, please see the doc/release.notes
+   of the spradlin_20150615 branch.  Briefly:
+   . Several bug fixes
+   . Much rearrangement of code.
+   . Major campaign to bring line names for the exclusive lines into a common
+     convention.  The convention that i applied follows:
+    Descriptive and unambiguous:  for each Hlt2 line in CharmHad that
+      reconstructs an exclusive final state, the line name must fully and
+      unambiguously describe the _physics_ decay mode.  Since the
+      reconstructed decay mode sometimes differs from the physics mode for
+      technical reasons, the line should describe the intended physics rather
+      than the technical implementation.  If there are more than one line for
+      a physics mode, additional description strings for the line should be
+      appended to the name after an underscore, e.g., _LTUNB and _XSec.
+    Sub-decays:  reconstructed subdecays must be full described.  Underscores
+      will be used to separate subdecays from the top level decay and from
+      each other.
+    Particle ordering:  order the names of decay products by decreasing
+      mass from left to right.  For particles with the same mass, e.g.
+      conjugates, put the negatively charged one first.  The same ordering
+      should be applied to subdecays when there are multiple subdecays at the
+      same level:  list the heaviest subdecay first.
+    'To' or '2':  i prefer 'To' to represent the decay operator in a decay
+      formula, but either is acceptable as long as it does not introduce
+      ambiguity.
+    Charge conjugate decays:  the name should describe just one of the
+      conjugate decays; 'DpToKS0Pip', not 'DpmToKS0Pipm'.  If a line does
+      not select both conjugate decays of a final state that is not
+      self-conjugate, the name must contain an additional description to this
+      affect.
+    Electric charge:  when the electric charge is part of the usual symbol for
+      a particle, include it in the name, 'p' for positively charged, 'm' for
+      negatively charged, '0' for neutral:  'Km', 'Kp', 'KS0', but 'Eta'.
+      An exception is the proton, which should be 'Pp' or 'Pm' despite the
+      usual symbols for proton and antiproton having no electrical charge.
+    Camel case:  capitalize the first letter of each particle name.
+    KS0 abbreviation:  when the reconstructed decay uses only 'long-long' or
+      only 'down-down' KS0, this should be noted in the name.  The
+      abbreviations KS0LL and KS0DD can be used in these cases as a combined
+      subdecay and additional description.
+    Pi0 abbreviation:  when the reconstructed decay uses only 'merged' or
+      'resolved' calorimeter Pi0, this should be noted in the name.  The
+      abbreviations Pi0M and Pi0R can be used in these cases as a combined
+      subdecay and additional description.
+    Eta abbreviations:  for calorimeter etas, use the same convention as for
+      Pi0:  EtaR and EtaM can be used as combined subdecay and additional
+      description to indicate respectively resolved or merged
+      eta -> gamma gamma.  Use 'Etap' for eta^{prime}.  This does clash with
+      the charge convention, but it should not cause ambiguity.
+    Joint mass windows:  Often mass windows are specified wide enough to
+      cover multiple particles exclusively reconstructed to the same final
+      state.  This is common for D+ and D_s+ decays.  When this is the case,
+      all of the intended particles should be listed before the 'To' or '2' in
+      order of increasing mass, e.g., DpDspTo....
+    Common particle names to be used:  Pim, Pip, Pi0, Km, Kp, KS0, Eta, Phi.
+      Pp = proton, Lam = Lambda.  G = photon.  D0, Dp, Dsp.  Dstp = D^{*+},
+      Dst0 = D^{*0}, Dsstp = D_s^{*+}.  Lcp = Lambda_c^+, Sc0 = Sigma_c^0, Scp,
+      Scpp = Sigma_c^{++}.  Xic0, Xicp, Omc0 = Omega_c^0.
+
 ! 2015-06-19 - Simone Stracka
  - Fix in CharmHad/Stages.py and CharmHad/D2HHLines.py to apply a looser mass cut before
    combination and refine it afterwards. 

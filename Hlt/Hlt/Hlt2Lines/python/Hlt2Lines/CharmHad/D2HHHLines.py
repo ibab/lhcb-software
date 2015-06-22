@@ -19,6 +19,7 @@ class CharmHadD2HHHLines() :
                                  'AM_MAX'                   :  1959 * MeV,
                                  'Mass_M_MIN'               :  1789.0 * MeV,
                                  'Mass_M_MAX'               :  1949.0 * MeV,
+                                 'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS"
                                 },
                  # Be aware the following cuts are used for a flavour tagging calibration line
                  # as well as for the Charm physics lines. If you change them please be
@@ -38,6 +39,7 @@ class CharmHadD2HHHLines() :
                                  'AM_MAX'                   :  2059 * MeV,
                                  'Mass_M_MIN'               :  1889.0 * MeV,
                                  'Mass_M_MAX'               :  2049.0 * MeV,
+                                 'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS"
                                 }, 
                  ## The masses of Lambda_c+ and Xi_c+ are separated by 181 MeV,
                  ##   so the mass windows are adjacent unless they are very
@@ -57,6 +59,7 @@ class CharmHadD2HHHLines() :
                                  'AM_MAX'                   :  2553. * MeV,
                                  'Mass_M_MIN'               :  2211.0 * MeV,
                                  'Mass_M_MAX'               :  2543.0 * MeV,
+                                 'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS"
                                 },
                  'Lc2HHH'    : {
                                  'Mass_M_MIN'               :  2211.0 * MeV,
@@ -119,10 +122,11 @@ class CharmHadD2HHHLines() :
                 }
     
     def locallines(self):
-        from Stages import MassFilter,TagDecay
-        from Stages import D2KPiPi_SS_LTUNB,D2KKPi_OS_LTUNB,Lc2KPPi_LTUNB
+        from Stages import MassFilter, TagDecay, HHHCombiner
         from Stages import DetAsym_DpToKmPipPip
         from Stages import SharedSoftTagChild_pi
+        from Stages import SharedPromptChild_K, SharedPromptChild_pi
+        from Stages import SharedTighterPromptChild_p
         #
         from Stages import D2HHH_DpToKmPipPip, D2HHH_DpToKpPimPip
         from Stages import D2HHH_DpToKmKpPip
@@ -134,43 +138,133 @@ class CharmHadD2HHHLines() :
         #
         from Stages import LcXic2HHH_LcpToKmPpPip, LcXic2HHH_LcpToKmPpKp
         from Stages import LcXic2HHH_LcpToPimPpPip, LcXic2HHH_LcpToPimPpKp
-        
-        stages = {# First the CPV D+ -> HHH lines, does not include KpKpPim as D+ does not
-                  # decay to same-charge kaons
-                  'DpToKmPipPipTurbo'        : [MassFilter('DpToKmPipPip', nickname = 'Dpm2HHH',
-                                                           inputs=[D2HHH_DpToKmPipPip], shared = True, reFitPVs = True)],
-                  'DpToKpPimPipTurbo'        : [MassFilter('Dpm2HHH', inputs=[D2HHH_DpToKpPimPip], reFitPVs = True)],
-                  'DpToKmKpPipTurbo'         : [MassFilter('Dpm2HHH', inputs=[D2HHH_DpToKmKpPip], reFitPVs = True)],
-                  'DpToPimPipPipTurbo'       : [MassFilter('Dpm2HHH', inputs=[D2HHH_DpToPimPipPip], reFitPVs = True)],
-                  'DpToKmKpKpTurbo'          : [MassFilter('Dpm2HHH', inputs=[D2HHH_DpToKmKpKp], reFitPVs = True)],
-                  # Second the CPV D_s+ -> HHH lines, does not include KmPipPip as D_s+ does not
-                  # decay to same-charge pions
-                  'DspToKpKpPimTurbo'        : [MassFilter('Ds2HHH', inputs=[D2HHH_DspToKpKpPim], reFitPVs = True)],
-                  'DspToKpPimPipTurbo'       : [MassFilter('Ds2HHH', inputs=[D2HHH_DspToKpPimPip], reFitPVs = True)],
-                  'DspToKmKpPipTurbo'        : [MassFilter('DspToKmKpPip', nickname = 'Ds2HHH', 
-                                                      inputs=[D2HHH_DspToKmKpPip], shared = True, reFitPVs = True)],
-                  'DspToPimPipPipTurbo'      : [MassFilter('Ds2HHH', inputs=[D2HHH_DspToPimPipPip], reFitPVs = True)],
-                  'DspToKmKpKpTurbo'         : [MassFilter('Ds2HHH', inputs=[D2HHH_DspToKmKpKp], reFitPVs = True)],
-                  # Now the CPV Lc2HHH lines
-                  'LcpToKmPpPipTurbo'        : [MassFilter('LcpToKmPpPip', nickname = 'Lc2HHH',
-                                                    inputs=[LcXic2HHH_LcpToKmPpPip], shared = True,
-                                                           reFitPVs = True)],
-                  'LcpToKmPpKpTurbo'         : [MassFilter('Lc2HHH',inputs=[LcXic2HHH_LcpToKmPpKp], reFitPVs = True)],
-                  'LcpToPimPpPipTurbo'       : [MassFilter('Lc2HHH',inputs=[LcXic2HHH_LcpToPimPpPip], reFitPVs = True)],
-                  'LcpToPimPpKpTurbo'        : [MassFilter('Lc2HHH',inputs=[LcXic2HHH_LcpToPimPpKp], reFitPVs = True)], 
+        from Stages import Lc2HHH_LcpToKmPpPip
+       
+
+        ## MassFilters for imported combiner instances.
+        ## Since the D+ and D_s+ combinatorics were separated, do we still need
+        ##   to apply MassFilter?
+
+        ## The end-point of the DpToKmPipPip line is used as input to the DPS
+        ##   module and must be shared.  Because it is not used anywhere else
+        ##   in CharmHad, it can be defined here rather than in Stages.py
+        DpToKmPipPip  = MassFilter('DpToKmPipPip'
+                                , inputs=[D2HHH_DpToKmPipPip]
+                                , nickname = 'Dpm2HHH'
+                                , shared = True, reFitPVs = True)
+
+        ## The other D+ -> 3h lines can have non-shared mass filters.
+        DpToKpPimPip  = MassFilter('Dpm2HHH'
+                                , inputs=[D2HHH_DpToKpPimPip], reFitPVs = True)
+        DpToKmKpPip   = MassFilter('Dpm2HHH'
+                                , inputs=[D2HHH_DpToKmKpPip], reFitPVs = True)
+        DpToPimPipPip = MassFilter('Dpm2HHH'
+                                , inputs=[D2HHH_DpToPimPipPip], reFitPVs = True)
+        DpToKmKpKp    = MassFilter('Dpm2HHH'
+                                , inputs=[D2HHH_DpToKmKpKp], reFitPVs = True)
+
+
+        ## The end-point of the DspToKmKpPip line is used as input to the DPS
+        ##   module and must be shared.  Because it is not used anywhere else
+        ##   in CharmHad, it can be defined here rather than in Stages.py
+        DspToKmKpPip   = MassFilter('DspToKmKpPip'
+                                , inputs=[D2HHH_DspToKmKpPip]
+                                , nickname = 'Ds2HHH'
+                                , shared = True, reFitPVs = True)
+
+        ## The other D_s+ -> 3h lines can have non-shared mass filters.
+        DspToKpKpPim   = MassFilter('Ds2HHH'
+                               , inputs=[D2HHH_DspToKpKpPim], reFitPVs = True)
+        DspToKpPimPip  = MassFilter('Ds2HHH'
+                               , inputs=[D2HHH_DspToKpPimPip], reFitPVs = True)
+        DspToPimPipPip = MassFilter('Ds2HHH'
+                               , inputs=[D2HHH_DspToPimPipPip], reFitPVs = True)
+        DspToKmKpKp    = MassFilter('Ds2HHH'
+                               , inputs=[D2HHH_DspToKmKpKp], reFitPVs = True)
+
+        ## The end-point of the LcpToPpKmPip line is used as input to the DPS
+        ## module and as input the CharmSpectroscopyLines.py lines.
+        ## Because it is shared within CharmHad, its definition is in Stages.py.
+        LcpToKmPpKp   = MassFilter('Lc2HHH'
+                            , inputs=[LcXic2HHH_LcpToKmPpKp], reFitPVs = True)
+        LcpToPimPpPip = MassFilter('Lc2HHH'
+                            , inputs=[LcXic2HHH_LcpToPimPpPip], reFitPVs = True)
+        LcpToPimPpKp  = MassFilter('Lc2HHH'
+                            , inputs=[LcXic2HHH_LcpToPimPpKp], reFitPVs = True)
+
+        XicpToKmPpPip = MassFilter('Xic2HHH'
+                            , inputs=[LcXic2HHH_LcpToKmPpPip], reFitPVs = True)
+
+
+        ## Maximally-biased-lifetime combiners.
+        Dpm2HHH_DpToKmPipPip_LTUNB = HHHCombiner( 'Comb'
+                        , decay = "[D+ -> K- pi+ pi+]cc"
+                        , inputs = [ SharedPromptChild_pi, SharedPromptChild_K ]
+                        , nickname = 'Dpm2HHH_LTUNB' )
+
+        DpToKmPipPip_LTUNB = MassFilter('Dpm2HHH_LTUNB'
+                        , inputs=[Dpm2HHH_DpToKmPipPip_LTUNB], reFitPVs = True)
+
+
+        Ds2HHH_DspToKmKpPip_LTUNB = HHHCombiner( 'Comb'
+                        , decay = "[D_s+ -> K- K+ pi+]cc"
+                        , inputs = [ SharedPromptChild_pi, SharedPromptChild_K ]
+                        , nickname = 'Ds2HHH_LTUNB' )
+
+        DspToKmKpPip_LTUNB = MassFilter('Ds2HHH_LTUNB'
+                        , inputs = [Ds2HHH_DspToKmKpPip_LTUNB], reFitPVs = True)
+
+
+        Lc2HHH_LcpToPpKmPip_LTUNB = HHHCombiner( 'Comb'
+                        , decay = "[Lambda_c+ -> K- p+ pi+]cc"
+                        , inputs = [ SharedPromptChild_pi, SharedPromptChild_K
+                                     , SharedTighterPromptChild_p ]
+                        , nickname = 'Lc2HHH_LTUNB' )
+
+        LcpToPpKmPip_LTUNB = MassFilter('Lc2HHH_LTUNB'
+                        , inputs = [Lc2HHH_LcpToPpKmPip_LTUNB], reFitPVs = True)
+
+
+        ## Selection specifically for detector asymmetry measurements
+        Dpm2KPiPi_ForKPiAsym = MassFilter('Dpm2KPiPi_ForKPiAsym'
+                        , inputs=[DetAsym_DpToKmPipPip], reFitPVs = True)
+
+
+        ## The stages dictionary should be a clear two-column list from
+        ##   which the lines defined in this module can be directly read.
+        stages = {
+                  ## CPV D+ -> HHH lines.
+                  ## Does not include forbidden mode KpKpPim.
+                  'DpToKmPipPipTurbo'        : [DpToKmPipPip],
+                  'DpToKpPimPipTurbo'        : [DpToKpPimPip],
+                  'DpToKmKpPipTurbo'         : [DpToKmKpPip],
+                  'DpToPimPipPipTurbo'       : [DpToPimPipPip],
+                  'DpToKmKpKpTurbo'          : [DpToKmKpKp],
+
+                  ## CPV D_s+ -> HHH lines.
+                  ## Does not include forbidden KmPipPip.
+                  'DspToKmKpPipTurbo'        : [DspToKmKpPip],
+                  'DspToKpKpPimTurbo'        : [DspToKpKpPim],
+                  'DspToKpPimPipTurbo'       : [DspToKpPimPip],
+                  'DspToPimPipPipTurbo'      : [DspToPimPipPip],
+                  'DspToKmKpKpTurbo'         : [DspToKmKpKp],
+
+                  # CPV L_c+ -> HHH lines
+                  'LcpToPpKmPipTurbo'        : [Lc2HHH_LcpToKmPpPip],
+                  'LcpToPpKmKpTurbo'         : [LcpToKmPpKp],
+                  'LcpToPpPimPipTurbo'       : [LcpToPimPpPip],
+                  'LcpToPpKpPimTurbo'        : [LcpToPimPpKp], 
+
                   ## Xi_c+ -> p K- pi+, DO NOT SEND TO TURBO.
-                  'XicpToKmPpPip'        : [MassFilter('XicpToKmPpPip', nickname = 'Xic2HHH',
-                                                    inputs=[LcXic2HHH_LcpToKmPpPip], reFitPVs = True)],
+                  'XicpToPpKmPip'            : [XicpToKmPpPip],
+
                   # Now the three CF lifetime unbiased lines
-                  'D2KPiPi_SS_LTUNBTurbo'    : [MassFilter('Dpm2HHH_LTUNB',inputs=[D2KPiPi_SS_LTUNB('Dpm2HHH_LTUNB')], 
-                                                           reFitPVs = True)],
-                  'D2KKPi_OS_LTUNBTurbo'     : [MassFilter('Ds2HHH_LTUNB',inputs=[D2KKPi_OS_LTUNB('Ds2HHH_LTUNB')], 
-                                                           reFitPVs = True)],
-                  'LcpToKmPpPip_LTUNBTurbo' : [MassFilter('Lc2HHH_LTUNB',inputs=[Lc2KPPi_LTUNB('Lc2HHH_LTUNB')],
-                                                          reFitPVs = True)],
+                  'DpToKmPipPip_LTUNBTurbo'  : [DpToKmPipPip_LTUNB],
+                  'DspToKmKpPip_LTUNBTurbo'  : [DspToKmKpPip_LTUNB],
+                  'LcpToPpKmPip_LTUNBTurbo'  : [LcpToPpKmPip_LTUNB],
+
                   # Now the KPi asymmetry line
-                  'Dpm2KPiPi_ForKPiAsym'     : [MassFilter('Dpm2KPiPi_ForKPiAsym',
-                                                            inputs=[DetAsym_DpToKmPipPip], reFitPVs = True)]
+                  'DpToKmPipPip_ForKPiAsym'  : [Dpm2KPiPi_ForKPiAsym]
             }
 
         # Create Full stream version of this line for use in 

@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 ## @file
 #  Set of Hlt2-lines suitable for the study of charm decay channels with
@@ -19,7 +18,7 @@ from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 class CharmHadD2HHPi0Lines() :
     def localcuts(self) : 
         return { 
-            'DetachedHH_forD2PiPiPi0' : { 
+            'D02HHPi0_HH' : {
               'AM_MAX'         : 1900 * MeV,
               'ASUMPT_MIN'     : 1.0 * GeV,
               'ADOCA_MAX'      : 0.08 * mm,
@@ -28,24 +27,6 @@ class CharmHadD2HHPi0Lines() :
               'BPVCORRM_MAX'   : 3.5 * GeV,
               'BPVVDCHI2_MIN'  : 25.0,                                 
             },
-            'DetachedHH_forD2KKPi0' : { 
-              'AM_MAX'         : 1900 * MeV,
-              'ASUMPT_MIN'     : 1.0 * GeV,
-              'ADOCA_MAX'      : 0.08 * mm,
-              'VCHI2_MAX'      : 20.0,
-              'BPVVD_MIN'      : -999.,
-              'BPVCORRM_MAX'   : 3.5 * GeV,
-              'BPVVDCHI2_MIN'  : 25.0,                                 
-            },
-            'DetachedHH_forD2KPiPi0' : { 
-              'AM_MAX'         : 1900 * MeV,
-              'ASUMPT_MIN'     : 1.0 * GeV,
-              'ADOCA_MAX'      : 0.08 * mm,
-              'VCHI2_MAX'      : 20.0,
-              'BPVVD_MIN'      : -999.,
-              'BPVCORRM_MAX'   : 3.5 * GeV,
-              'BPVVDCHI2_MIN'  : 25.0,                                 
-            },            
             'D2HHPi0R' : {
               'AM_MIN'            : 1700 * MeV, # was 1735 
               'AM_MAX'            : 2020 * MeV, # was 1995
@@ -76,7 +57,7 @@ class CharmHadD2HHPi0Lines() :
               'BPVLTIME_MIN'      : 0.2 * picosecond, 
               'VCHI2PDOF_MAX'     : 20,
               },
-            'DstD02PiPiPi0R' : {
+            'DstD02HHPi0R' : {
               'DeltaM_AM_MIN'    : -999 * MeV,
               'DeltaM_AM_MAX'    : 195 * MeV,
               'DeltaM_MIN'       : -999 * MeV,
@@ -84,102 +65,108 @@ class CharmHadD2HHPi0Lines() :
               'TagVCHI2PDOF_MAX' : 10.0,
               'TisTosSpec'       : "Hlt1.*Track.*Decision%TOS",  # was MVA
               },                
-            'DstD02PiPiPi0M' : {
+            'DstD02HHPi0M' : {
               'DeltaM_AM_MIN'    : -999 * MeV,
               'DeltaM_AM_MAX'    : 195 * MeV,
               'DeltaM_MIN'       : -999 * MeV,
               'DeltaM_MAX'       : 185 * MeV,
               'TagVCHI2PDOF_MAX' : 10.0,
               'TisTosSpec'       : "Hlt1.*Track.*Decision%TOS",  # was MVA
-              },             
-            'DstD02KKPi0R' : {
-              'DeltaM_AM_MIN'    : -999 * MeV,
-              'DeltaM_AM_MAX'    : 195 * MeV,
-              'DeltaM_MIN'       : -999 * MeV,
-              'DeltaM_MAX'       : 185 * MeV,
-              'TagVCHI2PDOF_MAX' : 10.0,
-              'TisTosSpec'       : "Hlt1.*Track.*Decision%TOS",  # was MVA
-              },                
-            'DstD02KKPi0M' : {
-              'DeltaM_AM_MIN'    : -999 * MeV,
-              'DeltaM_AM_MAX'    : 195 * MeV,
-              'DeltaM_MIN'       : -999 * MeV,
-              'DeltaM_MAX'       : 185 * MeV,
-              'TagVCHI2PDOF_MAX' : 10.0,
-              'TisTosSpec'       : "Hlt1.*Track.*Decision%TOS",  # was MVA
-              },            
-            'DstD02KPiPi0R' : {
-              'DeltaM_AM_MIN'    : -999 * MeV,
-              'DeltaM_AM_MAX'    : 195 * MeV,
-              'DeltaM_MIN'       : -999 * MeV,
-              'DeltaM_MAX'       : 185 * MeV,
-              'TagVCHI2PDOF_MAX' : 10.0,
-              'TisTosSpec'       : "Hlt1.*Track.*Decision%TOS",  # was MVA
-              },                
-            'DstD02KPiPi0M' : {
-              'DeltaM_AM_MIN'    : -999 * MeV,
-              'DeltaM_AM_MAX'    : 195 * MeV,
-              'DeltaM_MIN'       : -999 * MeV,
-              'DeltaM_MAX'       : 185 * MeV,
-              'TagVCHI2PDOF_MAX' : 10.0,
-              'TisTosSpec'       : "Hlt1.*Track.*Decision%TOS",  # was MVA
-              },
+              }
             }
 
     def locallines(self):
-        from Stages import AttachParticle, SharedNeutralChild_pi0R, SharedNeutralChild_pi0M, TagDecay
+        from Stages import AttachParticle, TagDecay
+        from Stages import SharedNeutralChild_pi0R, SharedNeutralChild_pi0M
         from Stages import SharedSoftTagChild_pi
-        from Stages import D2HHPi0_PiPi , D2HHPi0_KPi , D2HHPi0_KK
+        from Stages import D2HHPi0_PiPi, D2HHPi0_KPi, D2HHPi0_KK
 
+
+        D2PiPiPi0R = AttachParticle('D2PiPiPi0R'
+                        , decay = "D0 -> K*(892)0 pi0"
+                        , inputs = [ D2HHPi0_PiPi , SharedNeutralChild_pi0R ]
+                        , nickname = 'D2HHPi0R')
+
+        DstD02PiPiPi0R = TagDecay('DstD02PiPiPi0R'
+                , decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
+                , inputs = [ D2PiPiPi0R, SharedSoftTagChild_pi]
+                , nickname = 'DstD02HHPi0R' )
+
+
+        D2PiPiPi0M = AttachParticle('D2PiPiPi0M'
+                        , decay = "D0 -> K*(892)0 pi0"
+                        , inputs = [ D2HHPi0_PiPi , SharedNeutralChild_pi0M ]
+                        , nickname = 'D2HHPi0M')
+
+        DstD02PiPiPi0M = TagDecay('DstD02PiPiPi0M'
+                , decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
+                , inputs = [D2PiPiPi0M, SharedSoftTagChild_pi]
+                , nickname = 'DstD02HHPi0M')
+
+
+        D2KKPi0R = AttachParticle('D2KKPi0R'
+                        , decay = "D0 -> K*(892)0 pi0"
+                        , inputs = [ D2HHPi0_KK , SharedNeutralChild_pi0R ]
+                        , nickname = 'D2HHPi0R')
+
+        DstD02KKPi0R = TagDecay('DstD02KKPi0R'
+                , decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
+                , inputs = [ D2KKPi0R, SharedSoftTagChild_pi]
+                , nickname = 'DstD02HHPi0R' )
+
+
+        D2KKPi0M = AttachParticle('D2KKPi0M'
+                        , decay = "D0 -> K*(892)0 pi0"
+                        , inputs = [ D2HHPi0_KK, SharedNeutralChild_pi0M ]
+                        , nickname = 'D2HHPi0M')
+
+        DstD02KKPi0M = TagDecay('DstD02KKPi0M'
+                , decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
+                , inputs = [D2KKPi0M, SharedSoftTagChild_pi]
+                , nickname = 'DstD02HHPi0M')
+
+
+        D2KPiPi0R = AttachParticle('D2KPiPi0R'
+                        , decay = "[D0 -> K*(892)0 pi0]cc"
+                        , inputs = [ D2HHPi0_KPi , SharedNeutralChild_pi0R ]
+                        , nickname = 'D2HHPi0R')
+
+        DstD02KmPipPi0R = TagDecay('DstD02KPiPi0R'
+                , decay = ["[D*(2010)+ -> D0 pi+]cc"]
+                , inputs = [ D2KPiPi0R, SharedSoftTagChild_pi]
+                , nickname = 'DstD02HHPi0R' )
+        DstD02KpPimPi0R = TagDecay('DstD02KPiPi0R'
+                , decay = ["[D*(2010)- -> D0 pi-]cc"]
+                , inputs = [ D2KPiPi0R, SharedSoftTagChild_pi]
+                , nickname = 'DstD02HHPi0R' )
+
+
+        D2KPiPi0M = AttachParticle('D2KPiPi0M'
+                        , decay = "[D0 -> K*(892)0 pi0]cc"
+                        , inputs = [ D2HHPi0_KPi , SharedNeutralChild_pi0M ]
+                        , nickname = 'D2HHPi0M')
+
+        DstD02KmPipPi0M = TagDecay('DstD02KPiPi0M'
+                , decay = ["[D*(2010)+ -> D0 pi+]cc"]
+                , inputs = [D2KPiPi0M, SharedSoftTagChild_pi]
+                , nickname = 'DstD02HHPi0M')
+        DstD02KpPimPi0M = TagDecay('DstD02KPiPi0M'
+                , decay = ["[D*(2010)- -> D0 pi-]cc"]
+                , inputs = [D2KPiPi0M, SharedSoftTagChild_pi]
+                , nickname = 'DstD02HHPi0M')
+
+
+        ## The stages dictionary should be a clear two-column list from
+        ##   which the lines defined in this module can be directly read.
         stages = {
-            'DstD02PiPiPi0R' : [TagDecay('DstD02PiPiPi0R',
-                                       decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
-                                       inputs = [ AttachParticle('D2PiPiPi0R',  nickname = 'D2HHPi0R',
-                                                                 decay = "D0 -> K*(892)0 pi0",
-                                                                 inputs = [ D2HHPi0_PiPi ,
-                                                                            SharedNeutralChild_pi0R ]),
-                                                  SharedSoftTagChild_pi]
-                                       )],
-            'DstD02PiPiPi0M' : [TagDecay('DstD02PiPiPi0M',
-                                       decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
-                                       inputs = [AttachParticle('D2PiPiPi0M',  nickname = 'D2HHPi0M',
-                                                                decay = "D0 -> K*(892)0 pi0",
-                                                                inputs = [ D2HHPi0_PiPi ,
-                                                                           SharedNeutralChild_pi0M ]),
-                                                 SharedSoftTagChild_pi]
-                                       )],
-            'DstD02KKPi0R' : [TagDecay('DstD02KKPi0R',
-                                       decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
-                                       inputs = [ AttachParticle('D2KKPi0R',  nickname = 'D2HHPi0R',
-                                                                 decay = "D0 -> K*(892)0 pi0",
-                                                                 inputs = [ D2HHPi0_KK , 
-                                                                            SharedNeutralChild_pi0R ]),
-                                                  SharedSoftTagChild_pi]
-                                       )],
-            'DstD02KKPi0M' : [TagDecay('DstD02KKPi0M',
-                                       decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
-                                       inputs = [AttachParticle('D2KKPi0M',  nickname = 'D2HHPi0M',
-                                                                decay = "D0 -> K*(892)0 pi0",
-                                                                inputs = [ D2HHPi0_KK ,
-                                                                           SharedNeutralChild_pi0M ]),
-                                                 SharedSoftTagChild_pi]
-                                       )],
-            'DstD02KPiPi0R' : [TagDecay('DstD02KPiPi0R',
-                                       decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
-                                       inputs = [ AttachParticle('D2KPiPi0R',  nickname = 'D2HHPi0R',
-                                                                 decay = "D0 -> K*(892)0 pi0",
-                                                                 inputs = [ D2HHPi0_KPi ,
-                                                                            SharedNeutralChild_pi0R ]),
-                                                  SharedSoftTagChild_pi]
-                                       )],
-            'DstD02KPiPi0M' : [TagDecay('DstD02KPiPi0M',
-                                       decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
-                                       inputs = [AttachParticle('D2KPiPi0M',  nickname = 'D2HHPi0M',
-                                                                decay = "D0 -> K*(892)0 pi0",
-                                                                inputs = [ D2HHPi0_KPi , 
-                                                                           SharedNeutralChild_pi0M ]),
-                                                 SharedSoftTagChild_pi]
-                                       )],
+            'Dstp2D0Pip_D02PimPipPi0_Pi0R' : [DstD02PiPiPi0R],
+            'Dstp2D0Pip_D02PimPipPi0_Pi0M' : [DstD02PiPiPi0M],
+            'Dstp2D0Pip_D02KmKpPi0_Pi0R'   : [DstD02KKPi0R],
+            'Dstp2D0Pip_D02KmKpPi0_Pi0M'   : [DstD02KKPi0M],
+            'Dstp2D0Pip_D02KmPipPi0_Pi0R'  : [DstD02KmPipPi0R],
+            'Dstp2D0Pip_D02KpPimPi0_Pi0R'  : [DstD02KpPimPi0R],
+            'Dstp2D0Pip_D02KmPipPi0_Pi0M'  : [DstD02KmPipPi0M],
+            'Dstp2D0Pip_D02KpPimPi0_Pi0M'  : [DstD02KpPimPi0M],
             }
         return stages
     

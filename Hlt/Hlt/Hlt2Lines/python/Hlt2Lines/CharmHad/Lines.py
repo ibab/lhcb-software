@@ -39,14 +39,14 @@ D2HHHHHLines = CharmHadD2HHHHHLines()
 
 
 
-theseslots = {   'Postscale' : {'Hlt2CharmHadD02KKTurbo'       : 0.1,
-                                'Hlt2CharmHadD02KPiTurbo'      : 0.1,
-                                'Hlt2CharmHadD02PiPiTurbo'     : 0.1,
-                                'Hlt2CharmHadD2KPiPi_SS_LTUNB' : 0.05,
-                                'Hlt2CharmHadD2KKPi_OS_LTUNB'  : 0.05,
-                                'Hlt2CharmHadLc2KPPi_LTUNB'    : 0.05,
-                                'Hlt2CharmHadXic02PKKPi_LTUNB' : 0.05,
-                                'Hlt2CharmHadDpm2KPiPi_ForKPiAsym' : 0.25  }, 
+theseslots = {   'Postscale' : {'Hlt2CharmHadD02KmKpTurbo'               : 0.1,
+                                'Hlt2CharmHadD02KmPipTurbo'              : 0.1,
+                                'Hlt2CharmHadD02PimPipTurbo'             : 0.1,
+                                'Hlt2CharmHadDpToKmPipPip_LTUNBTurbo'    : 0.05,
+                                'Hlt2CharmHadDspToKmKpPip_LTUNBTurbo'    : 0.05,
+                                'Hlt2CharmHadLcpToPpKmPip_LTUNBTurbo'    : 0.05,
+                                'Hlt2CharmHadXic0ToPpKmKmPip_LTUNBTurbo' : 0.05,
+                                'Hlt2CharmHadDpToKmPipPip_ForKPiAsym'    : 0.25  }, 
                  'TrackGEC' : { 'NTRACK_MAX'           : 10000},
                  'Common' : {'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS",
                              'Trk_ALL_TRCHI2DOF_MAX'    :  3.0,    
@@ -263,8 +263,6 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
         _stages = self.stages()
         from HltLine.HltLine import Hlt2Line
         for nickname, algos in self.algorithms( _stages ).iteritems():
-            print(nickname)
-
             doturbo = True if (nickname.find('Turbo') > -1) else False
             Hlt2Line('CharmHad' + nickname, prescale = self.prescale,
                      algos = algos, postscale = self.postscale, Turbo = doturbo)

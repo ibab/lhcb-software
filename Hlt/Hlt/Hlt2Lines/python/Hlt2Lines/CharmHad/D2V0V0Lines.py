@@ -16,6 +16,7 @@ class CharmHadD2V0V0Lines():
                                  'AM_MAX'                   :  1959 * MeV,
                                  'Mass_M_MIN'               :  1789.0 * MeV,
                                  'Mass_M_MAX'               :  1949.0 * MeV,
+                                 'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS"
                                 },
                   'D2KS0KS0_DD' : {
                                  'KS0_ALL_PT_MIN'           :  750.0 * MeV,
@@ -28,16 +29,44 @@ class CharmHadD2V0V0Lines():
                                  'AM_MAX'                   :  1959 * MeV,
                                  'Mass_M_MIN'               :  1789.0 * MeV,
                                  'Mass_M_MAX'               :  1949.0 * MeV,
+                                 'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS"
                                 }, 
                 }
     
     def locallines(self):
-        from Stages import MassFilter
-        from Stages import D2KS0KS0_2LL,D2KS0KS0_LLDD,D2KS0KS0_2DD
-        stages = {# First the CPV lines
-                  # If there is no DD KS0, use the LL dictionary, else use the DD dictionary
-                  'D2KS0KS0_2LLTurbo'        : [MassFilter('D2KS0KS0_LL',inputs=[D2KS0KS0_2LL('D2KS0KS0_LL')])],
-                  'D2KS0KS0_LLDDTurbo'       : [MassFilter('D2KS0KS0_DD',inputs=[D2KS0KS0_LLDD('D2KS0KS0_DD')])],
-                  'D2KS0KS0_2DDTurbo'        : [MassFilter('D2KS0KS0_DD',inputs=[D2KS0KS0_2DD('D2KS0KS0_DD')])],
+        from Stages import MassFilter, DetachedV0V0Combiner
+        from Stages import CharmHadSharedKsLL, CharmHadSharedKsDD
+
+
+        ## If either KS0 is DD,  use the DD dictionary, otherwise use LL.
+        D2KS0KS0_2LLComb = DetachedV0V0Combiner( 'Comb'
+                , decay = "D0 -> KS0 KS0"
+                , inputs = [ CharmHadSharedKsLL ]
+                , nickname = 'D2KS0KS0_LL' )
+
+        D2KS0KS0_2LL = MassFilter('D2KS0KS0_LL', inputs=[ D2KS0KS0_2LLComb ])
+
+
+        D2KS0KS0_LLDDComb = DetachedV0V0Combiner( 'Comb'
+                , decay = "D0 -> KS0 KS0"
+                , inputs = [ CharmHadSharedKsLL, CharmHadSharedKsDD ]
+                , lldd = True, nickname = 'D2KS0KS0_DD')
+
+        D2KS0KS0_LLDD = MassFilter('D2KS0KS0_DD', inputs = [ D2KS0KS0_LLDDComb ])
+
+
+        D2KS0KS0_2DDComb = DetachedV0V0Combiner( 'Comb'
+                , decay = "D0 -> KS0 KS0"
+                , inputs = [ CharmHadSharedKsDD ]
+                , nickname = 'D2KS0KS0_DD' )
+
+        D2KS0KS0_2DD = MassFilter('D2KS0KS0_DD', inputs = [D2KS0KS0_2DDComb])
+
+
+
+        stages = {
+                  'D02KS0KS0_KS0LLTurbo'        : [D2KS0KS0_2LL],
+                  'D02KS0KS0_KS0LL_KS0DDTurbo'  : [D2KS0KS0_LLDD],
+                  'D02KS0KS0_KS0DDTurbo'        : [D2KS0KS0_2DD],
                  }
         return stages

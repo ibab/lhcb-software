@@ -63,69 +63,93 @@ class CharmHadD2HHKshLines(Hlt2LinesConfigurableUser):
 
     def locallines(self):
         from Stages import MassFilter
-        from Stages import D02KsPiPi_LL
-        from Stages import D02KsPiPi_DD
-        from Stages import D02KsKPi_LL
-        from Stages import D02KsKPi_DD
+        from Stages import D02KsPiPi_LL, D02KsPiPi_DD
+        from Stages import D02KsKPi_LL, D02KsKPi_DD
         from Stages import D02KsKK_LL, D02KsKK_DD
         from Stages import TagDecay
         from Stages import SharedSoftTagChild_pi
 
-        stages = {'D02KS0PiPi_LLTurbo'     : [MassFilter('D02KshPiPi_LL',inputs=[D02KsPiPi_LL])],
-                  'D02KS0PiPi_DDTurbo'     : [MassFilter('D02KshPiPi_DD',inputs=[D02KsPiPi_DD])],
-                  'D02KS0KPi_LLTurbo'      : [MassFilter('D02KshKPi_LL',inputs=[D02KsKPi_LL])],
-                  'D02KS0KPi_DDTurbo'      : [MassFilter('D02KshKPi_DD',inputs=[D02KsKPi_DD])],
-                  'D02KS0KK_LLTurbo'       : [MassFilter('D02KshKK_LL',inputs=[D02KsKK_LL])],
-                  'D02KS0KK_DDTurbo'       : [MassFilter('D02KshKK_DD',inputs=[D02KsKK_DD])],
-##  
-##  We can probably use only D*-tagged HHKs candidates, so let's make the
-##  corresponding D*-tagged lines
-##  
-##  recall that the first argument of Dst2D0pi is the "name" used in the dictionary of cuts
-##  and the second argument is the "d0" list to be used.
-##  
-##  All of the following lines use a common dictionary "name":  Dst2D0pi_D02HHKsh
-##  as the channels should be sufficiently similar to use common cuts.
-##
-                  'DstD02KshPiPi_LL' : [TagDecay('Dst2D0pi_D02HHKsh',
-                                                 decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
-                                                 inputs = [D02KsPiPi_LL,SharedSoftTagChild_pi])],
-                  'DstD02KshPiPi_DD' : [TagDecay('Dst2D0pi_D02HHKsh',
-                                                 decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
-                                                 inputs = [D02KsPiPi_DD,SharedSoftTagChild_pi])],
 
-## These lines will produce D*+ --> D0,pi+; D0 --> D0 --> K-,pi+,Kshort candidates 
-## and also D*- --> D0bar,pi-;  D0bar --> K+,pi-,Kshort candidates; Ignoring CPV 
-##  in K0 and K0bar decays to Kshort, these are CP conjugate decays.
-                  'DstD02KshKPi_LL'  : [TagDecay('Dst2D0pi_D02HHKsh',
-                                                 decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D~0 pi-"],
-                     inputs = [D02KsKPi_LL,SharedSoftTagChild_pi])],
-                  'DstD02KshKPi_DD'  : [TagDecay('Dst2D0pi_D02HHKsh',
-                                                 decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D~0 pi-"],
-                                                 inputs = [D02KsKPi_DD,SharedSoftTagChild_pi])],
+        ## We can probably use only D*-tagged HHKs candidates, so let's make
+        ## the corresponding D*-tagged lines.
+        ##  
+        ## Recall that the first argument of Dst2D0pi is the "name" used in
+        ## the dictionary of cuts and the second argument is the "d0" list to
+        ## be used.
+        ##  
+        ## All of the following lines use a common dictionary
+        ## "name":  Dst2D0pi_D02HHKsh
+        ## as the channels should be sufficiently similar to use common cuts.
+        Dstp2D0Pip_D02KS0PimPip_KS0LL = TagDecay('Dst2D0pi_D02HHKsh'
+                , decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
+                , inputs = [D02KsPiPi_LL, SharedSoftTagChild_pi])
 
-## These lines will produce D*+ --> D0,pi+; D0 --> D0 --> K+,pi-,Kshort candidates
-## and also D*- --> D0bar,pi-;  D0bar --> K-,pi+,Kshort candidates; Ignoring CPV
-##  in K0 and K0bar decays to Kshort, these are CP conjugate decays.
-##
-##  Note that the code reuses the D02KsKPi_XX inputs where D0 --> Ks,K-,pi+
-##  and D0bar --> Ks,K+,pi-.  To allow this reuse, with the charge assignments
-##  wanted here, the descriptors say that the D*+ decays to D0bar,pi+
-##  and the D*- decays to D0,pi-. This is OK because the descriptor is
-##  not encoded in the candidate beyond Hlt.
-                  'DstD02KshPiK_LL'  : [TagDecay('Dst2D0pi_D02HHKsh',
-                                                 decay = ["D*(2010)+ -> D~0 pi+", "D*(2010)- -> D0 pi-"],
-                                                 inputs = [D02KsKPi_LL,SharedSoftTagChild_pi])],
-                  'DstD02KshPiK_DD'  : [TagDecay('Dst2D0pi_D02HHKsh',
-                                                 decay = ["D*(2010)+ -> D~0 pi+", "D*(2010)- -> D0 pi-"],
-                                                 inputs = [D02KsKPi_DD,SharedSoftTagChild_pi])],
+        Dstp2D0Pip_D02KS0PimPip_KS0DD = TagDecay('Dst2D0pi_D02HHKsh'
+                , decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
+                , inputs = [D02KsPiPi_DD, SharedSoftTagChild_pi])
 
-                  'DstD02KshKK_LL'  : [TagDecay('Dst2D0pi_D02HHKsh',
-                                                decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
-                                                inputs = [D02KsKK_LL,SharedSoftTagChild_pi])],
-                  'DstD02KshKK_DD'  : [TagDecay('Dst2D0pi_D02HHKsh',
-                                                decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"],
-                                                inputs = [D02KsKK_DD,SharedSoftTagChild_pi])]
+        ## These lines will produce
+        ## D*+ --> D0,pi+; D0 --> D0 --> K-,pi+,Kshort candidates 
+        ## and also D*- --> D0bar,pi-;  D0bar --> K+,pi-,Kshort candidates;
+        ## Ignoring CPV in K0 and K0bar decays to Kshort, these are CP
+        ## conjugate decays.
+        Dstp2D0Pip_D02KS0KmPip_KS0LL  = TagDecay('Dst2D0pi_D02HHKsh'
+                , decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D~0 pi-"]
+                , inputs = [D02KsKPi_LL, SharedSoftTagChild_pi])
+
+        Dstp2D0Pip_D02KS0KmPip_KS0DD  = TagDecay('Dst2D0pi_D02HHKsh'
+                , decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D~0 pi-"]
+                , inputs = [D02KsKPi_DD, SharedSoftTagChild_pi])
+
+        ## These lines will produce
+        ## D*+ --> D0,pi+; D0 --> D0 --> K+,pi-,Kshort candidates
+        ## and also D*- --> D0bar,pi-;  D0bar --> K-,pi+,Kshort candidates;
+        ## Ignoring CPV in K0 and K0bar decays to Kshort, these are CP
+        ## conjugate decays.
+        ##
+        ## Note that the code reuses the D02KsKPi_XX inputs where
+        ## D0 --> Ks,K-,pi+ and D0bar --> Ks,K+,pi-.  To allow this reuse,
+        ## with the charge assignments wanted here, the descriptors say that
+        ## the D*+ decays to D0bar,pi+ and the D*- decays to D0,pi-.
+        ## This is OK because the descriptor is not encoded in the candidate
+        ## beyond Hlt.
+        Dstp2D0Pip_D02KS0KpPim_KS0LL  = TagDecay('Dst2D0pi_D02HHKsh'
+                , decay = ["D*(2010)+ -> D~0 pi+", "D*(2010)- -> D0 pi-"]
+                , inputs = [D02KsKPi_LL, SharedSoftTagChild_pi])
+
+        Dstp2D0Pip_D02KS0KpPim_KS0DD  = TagDecay('Dst2D0pi_D02HHKsh'
+                , decay = ["D*(2010)+ -> D~0 pi+", "D*(2010)- -> D0 pi-"]
+                , inputs = [D02KsKPi_DD, SharedSoftTagChild_pi])
+
+        Dstp2D0Pip_D02KS0KmKp_KS0LL  = TagDecay('Dst2D0pi_D02HHKsh'
+                , decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
+                , inputs = [D02KsKK_LL, SharedSoftTagChild_pi])
+
+        Dstp2D0Pip_D02KS0KmKp_KS0DD  = TagDecay('Dst2D0pi_D02HHKsh'
+                , decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
+                , inputs = [D02KsKK_DD, SharedSoftTagChild_pi])
+
+
+        ## The stages dictionary should be a clear two-column list from
+        ##   which the lines defined in this module can be directly read.
+        stages = {'D02KS0PimPip_KS0LLTurbo'       : [MassFilter('D02KshPiPi_LL',inputs=[D02KsPiPi_LL])],
+                  'D02KS0PimPip_KS0DDTurbo'       : [MassFilter('D02KshPiPi_DD',inputs=[D02KsPiPi_DD])],
+                  'D02KS0KmPip_KS0LLTurbo'        : [MassFilter('D02KshKPi_LL',inputs=[D02KsKPi_LL])],
+                  'D02KS0KmPip_KS0DDTurbo'        : [MassFilter('D02KshKPi_DD',inputs=[D02KsKPi_DD])],
+                  'D02KS0KmKp_KS0LLTurbo'         : [MassFilter('D02KshKK_LL',inputs=[D02KsKK_LL])],
+                  'D02KS0KmKp_KS0DDTurbo'         : [MassFilter('D02KshKK_DD',inputs=[D02KsKK_DD])],
+
+                  'Dstp2D0Pip_D02KS0PimPip_KS0LL' : [Dstp2D0Pip_D02KS0PimPip_KS0LL],
+                  'Dstp2D0Pip_D02KS0PimPip_KS0DD' : [Dstp2D0Pip_D02KS0PimPip_KS0DD],
+
+                  'Dstp2D0Pip_D02KS0KmPip_KS0LL'  : [Dstp2D0Pip_D02KS0KmPip_KS0LL],
+                  'Dstp2D0Pip_D02KS0KmPip_KS0DD'  : [Dstp2D0Pip_D02KS0KmPip_KS0DD],
+
+                  'Dstp2D0Pip_D02KS0KpPim_KS0LL'  : [Dstp2D0Pip_D02KS0KpPim_KS0LL],
+                  'Dstp2D0Pip_D02KS0KpPim_KS0DD'  : [Dstp2D0Pip_D02KS0KpPim_KS0DD],
+
+                  'Dstp2D0Pip_D02KS0KmKp_KS0LL'   : [Dstp2D0Pip_D02KS0KmKp_KS0LL],
+                  'Dstp2D0Pip_D02KS0KmKp_KS0DD'   : [Dstp2D0Pip_D02KS0KmKp_KS0DD]
                  }
         
 
