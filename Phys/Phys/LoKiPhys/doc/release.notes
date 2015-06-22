@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2015-06-22 - Eduardo Rodrigues
+ - Removed unused class rules producing warnings in genflex.
+
 ! 2015-06-09 - Eduardo Rodrigues
  - Fixed a few pattern selection rules to please genreflex.
 

@@ -114,7 +114,6 @@
   <class pattern   = "LoKi::Dicts::PipeOps<*LHCb::*>"     />
   <class pattern   = "LoKi::Dicts::FunValOps<*LHCb::*>"   />
   <class pattern   = "LoKi::Dicts::CutValOps<*LHCb::*>"   />
-  <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::*>"  />
   <class pattern   = "LoKi::Dicts::SourceOps<*LHCb::*>"   />
   <class pattern   = "LoKi::Dicts::InfoOps<*LHCb::*>"     />
   <class pattern   = "LoKi::Dicts::PIDOps<*LoKi::Pa*>"    />  
@@ -153,9 +152,6 @@
     <class pattern="LoKi::TheSame&lt;*&gt;">
       <method name="=" />
     </class>
-    <class pattern="LoKi::Identity&lt;*&gt;">
-      <method name="=" />
-    </class>
     
     <class name="LoKi::Interface<IDataProviderSvc>" /> 
     <class name="LoKi::Interface<LoKi::ILoKiSvc>"   /> 
@@ -166,9 +162,6 @@
       <method name="=" />
     </class>
     <class pattern="LoKi::I*">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::Hybrid::*">
       <method name="=" />
     </class>
     
@@ -203,9 +196,6 @@
     <class pattern="LoKi::Vertices::*">
       <method name="=" />
     </class>
-    <class pattern="LoKi::Tracks::FastDOCAToBeamLine*">
-      <method name="=" />
-    </class>
     <class pattern="LoKi::Legacy::*">
       <method name="=" />
     </class>
@@ -223,11 +213,6 @@
     <class pattern="LoKi::Vertices::RecVertex2TrackNum*">
       <method name="="     />
       <field name="m_cut" />
-    </class>
-
-    <class name ="LoKi::Vertices::MinMaxDistance">
-      <method name="=" />
-      <field  name="m_distance" />
     </class>
 
     <class name ="LoKi::Particles::RelatedInfo">
