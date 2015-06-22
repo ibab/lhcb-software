@@ -48,6 +48,4 @@
   <class name = "LoKi::ITrackFunctorAntiFactory" />
   <class name = "LoKi::Hybrid::TrackEngine"      />
   
-  <class pattern   = "LoKi::Hlt1::*" />
-  
 </lcgdict>

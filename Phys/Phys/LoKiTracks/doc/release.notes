@@ -5,6 +5,9 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2015-06-22 - Eduardo Rodrigues
+ - Removed unused class rule producing warning in genflex.
+
 !========================= LoKiTracks v3r1 2015-04-22 =========================
 
 ! 2015-03-12 - Vanya Belyaev
