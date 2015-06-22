@@ -111,7 +111,7 @@ class LbSdbQuery(Script):
             print "%s\t%s" % tuple(p)
 
     def cmdlistTag(self, args):
-        ''' List the projects built with CMake '''
+        ''' List the projects with a given tag '''
         if self.options.json:
             import json
             print json.dumps(sorted(self.mConfDB.listTag(args[0].upper())), indent=2)
