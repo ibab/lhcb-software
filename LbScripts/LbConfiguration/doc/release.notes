@@ -1,3 +1,7 @@
+2015-06-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-run/lb-dev: fixed LBCORE-838 (Allow use of /cvmfs/lhcbdev.cern.ch in lb-run/dev)
+
 2015-06-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-run: fixed LBCORE-782 (Allow use of lb-run in the "#!" line of a script)

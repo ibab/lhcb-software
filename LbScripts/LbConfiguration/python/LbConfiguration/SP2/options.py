@@ -148,6 +148,32 @@ def addSearchPath(parser):
                            'Note: the directories are searched in the '
                            'order specified on the command line.')
 
+    def nightly_base(option, opt_str, value, parser):
+        '''
+        Callback for the --nightly-base and --nightly-cvmfs options.
+        '''
+        if parser.values.nightly:
+            raise OptionValueError('%s specified after --nightly' % option)
+
+        if option.get_opt_string() == '--nightly-cvmfs':
+            path = '/cvmfs/lhcbdev.cern.ch/nightlies'
+        else:
+            path = value
+        if not os.path.isdir(path):
+            raise OptionValueError('"%s" is not a directory' % path)
+
+        parser.values.nightly_bases.append(path)
+
+    parser.add_option('--nightly-base', action='callback',
+                      type='string', callback=nightly_base,
+                      help='add the specified directory to the nightly builds '
+                           'search path (must be specified before --nightly)')
+
+    parser.add_option('--nightly-cvmfs', action='callback',
+                      callback=nightly_base,
+                      help='looks for nightly builds on CVMFS '
+                           '(must be specified before --nightly)')
+
     def nightly_option(_option, opt_str, _value, _parser):
         # List of abbreviations for weekdays
         days = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Today')
@@ -167,10 +193,12 @@ def addSearchPath(parser):
             day = rargs.pop(0).capitalize()
 
         # Locate the requested slot in the know nightlies directories
-        nightly_bases = [os.environ.get('LHCBNIGHTLIES',
-                                        '/afs/cern.ch/lhcb/software/nightlies'),
-                         os.environ.get('LCG_nightlies_area',
-                                        '/afs/cern.ch/sw/lcg/app/nightlies')]
+        from os import environ
+        nightly_bases = parser.values.nightly_bases
+        nightly_bases += [environ.get('LHCBNIGHTLIES',
+                                      '/afs/cern.ch/lhcb/software/nightlies'),
+                          environ.get('LCG_nightlies_area',
+                                      '/afs/cern.ch/sw/lcg/app/nightlies')]
 
         slot_dir = None
         for nightly_base, slot_id in [(nightly_base, slot_id)
@@ -216,7 +244,8 @@ def addSearchPath(parser):
     parser.set_defaults(dev_dirs=SearchPath([]),
                         user_area=os.environ.get('User_release_area'),
                         no_user_area=False,
-                        nightly=None)
+                        nightly=None,
+                        nightly_bases=[])
 
     return parser
 
