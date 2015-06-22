@@ -192,14 +192,21 @@ def setData ( files            ,
             files = [ extendfile2 ( f , castor , grid ) for f in files ]
 
             from Gaudi.Configuration import EventSelector
-            EventSelector ( Input = files )
+            inpts  = EventSelector().Input
+            inpts += files  
+            EventSelector ( Input = inpts )
             
         if catalogs :
             
             from Gaudi.Configuration import Gaudi__MultiFileCatalog as FileCatalog
-            FileCatalog   ( Catalogs = catalogs )
+            ctlgs  = FileCatalog().Catalogs
+            ctlgs += catalogs  
+            FileCatalog   ( Catalogs = ctlgs )
+            
             from Gaudi.Configuration import FileCatalog
-            FileCatalog   ( Catalogs = catalogs )
+            ctlgs  = FileCatalog().Catalogs
+            ctlgs += catalogs  
+            FileCatalog   ( Catalogs = ctlgs )
             
     else :                        ## here we deal with the actual components
 
