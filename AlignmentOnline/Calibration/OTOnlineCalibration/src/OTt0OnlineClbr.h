@@ -181,6 +181,9 @@ private:
    std::string m_pubStatus;
    IPublishSvc* m_publishSvc; ///< Online Gaucho Monitoring Service
 
+   //monitoring histogram
+   AIDA::IHistogram1D* m_hist_aida;
+
    // T0 condition
    std::string m_conditionPath;
    Condition*  m_condition;
@@ -234,7 +237,11 @@ private:
    std::tuple<unsigned int, boost::optional<double>, double>
    readXML(const boost::filesystem::path& xmlFile);
 
-   boost::filesystem::path writeXML(const FileVersion previous, const unsigned int run,
+   /* boost::filesystem::path writeXML(const FileVersion previous, const unsigned int run, */
+   /*                                  const boost::optional<double> phase, */
+   /*                                  const double t0); */
+   boost::filesystem::path writeXML(const FileVersion previous, const boost::filesystem::path path,
+				    const unsigned int run,
                                     const boost::optional<double> phase,
                                     const double t0);
    void fitHistogram(TH1D* hist, double& result, double& result_err, TFile* outFile);

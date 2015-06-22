@@ -27,12 +27,14 @@ OTt0OnlineClbrAlg.InitialTime = initialTime
 OTt0OnlineClbrAlg.Threshold = 0.04
 OTt0OnlineClbrAlg.MaxDifference = 2
 
-myFiles1 = [ "clbr_hists_109.root" ]
+myFiles1 = [ "Brunel-109.root" ]
 #OTt0OnlineClbrAlg.InputFiles  = myFiles1
 #OTt0OnlineClbrAlg.InputFilePath = "/afs/cern.ch/work/l/lgrillo/OT_CALIBRATION_files/"
-OTt0OnlineClbrAlg.InputFileName  = "clbr_hists_109.root"
+#OTt0OnlineClbrAlg.InputFileName  = "clbr_hists_109.root"
+OTt0OnlineClbrAlg.InputFileName  = "Brunel-109.root"
 #OTt0OnlineClbrAlg.InputFilePath  = "/home/lgrillo/cmtuser/AlignmentOnlineDev_v10r4/Calibration/OTOnlineCalibration/test/"
-OTt0OnlineClbrAlg.InputFilePath  = "/afs/cern.ch/user/l/lgrillo/cmtuser/AlignmentOnlineDev_v10r4/Calibration/OTOnlineCalibration/test/"
+#OTt0OnlineClbrAlg.InputFilePath  = "/afs/cern.ch/user/l/lgrillo/cmtuser/AlignmentOnlineDev_v10r4/Calibration/OTOnlineCalibration/test/"
+OTt0OnlineClbrAlg.InputFilePath  = "/afs/cern.ch/user/l/lgrillo/cmtuser/AlignmentOnlineDev_v10r4/Calibration/OTOnlineCalibration/test/LHCb/Brunel/06/22/"
 #OTt0OnlineClbrAlg.InputFileName_2d  = "histog_2d_109.root"
 
 
@@ -47,7 +49,7 @@ OTt0OnlineClbrAlg.OutputLevel = 2
 #OTt0OnlineClbrAlg.Simulation = False 
 #OTt0OnlineClbrAlg.Fit_module_contributions = False
 OTt0OnlineClbrAlg.UseMean = False
-OTt0OnlineClbrAlg.SaveFits = True
+OTt0OnlineClbrAlg.SaveFits = False
 
 #simulation = OTt0OnlineClbrAlg.Simulation
 

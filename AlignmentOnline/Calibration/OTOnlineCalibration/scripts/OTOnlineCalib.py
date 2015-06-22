@@ -26,6 +26,7 @@ def setup():
     OTt0OnlineClbrAlg.InputTasks  = [ "Brunel" ]
     OTt0OnlineClbrAlg.Partition = partition
     OTt0OnlineClbrAlg.ReadInitialT0FromDB = False
+    OTt0OnlineClbrAlg.SaveFits = False
     OTt0OnlineClbrAlg.RunOnline = True
     OTt0OnlineClbrAlg.CheckDataT0 = True
     OTt0OnlineClbrAlg.PublishedName = "OT/Calib"
@@ -62,6 +63,7 @@ def setup():
     EventDataSvc().ForceLeaves = True
 
     ## Configure saving of histograms
+    from Configurables import UpdateAndReset
     ur = UpdateAndReset()
     ur.saveHistograms = 1
     ApplicationMgr().TopAlg.insert(0, ur)
@@ -70,13 +72,15 @@ def setup():
     MonitorSvc().disableDimPropServer      = 1
     MonitorSvc().disableDimCmdServer       = 1
     
+    import OnlineEnv
     MonitorSvc().ExpandCounterServices = 0;
     MonitorSvc().ExpandNameInfix       = "<part>_x_<program>/";
-    MonitorSvc().PartitionName         = OnlineEnv.PartitionName;
-    MonitorSvc().ProgramName           = "OTOnlineCalib_00";
+    #MonitorSvc().PartitionName         = OnlineEnv.PartitionName;
+    MonitorSvc().PartitionName         = partition;
+    MonitorSvc().ProgramName           = "OTOnlineCalib_0";
     
-   # setup the histograms and the monitoring service
-    ApplicationMgr().ExtSvc.append( 'MonitorSvc' )
+    #setup the histograms and the monitoring service
+    #ApplicationMgr().ExtSvc.append( 'MonitorSvc' )
     from Configurables import RootHistCnv__PersSvc
     RootHistCnv__PersSvc().OutputEnabled = False
 

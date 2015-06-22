@@ -42,6 +42,9 @@
 #include <GaudiKernel/ServiceLocatorHelper.h>
 #include <GaudiKernel/IPublishSvc.h>
 
+//for monitoring histogram
+#include <AIDA/IHistogram1D.h> 
+
 // local
 #include "OTt0OnlineClbr.h"
 
@@ -272,7 +275,9 @@ StatusCode OTt0OnlineClbr::calibrate(string saveSet, string task)
      double t0 = m_condition->param<double>("TZero");
      boost::optional<double> phase;
      latest = 0;
-     writeXML(*latest, 0, phase, t0);
+     //writeXML(*latest, 0, phase, t0);
+     fs::path filename_xml = xmlFileName(*latest);
+     writeXML(*latest,filename_xml, 0, phase, t0);
      publish({}, *latest, "good");
    } else {
      // Parse the file to get the info from the previous calibration.
@@ -293,6 +298,15 @@ StatusCode OTt0OnlineClbr::calibrate(string saveSet, string task)
    string monitoring_file = file_name.substr(found+1);
    //info() << "Monitoring histogram path: " << monitoring_path << endmsg;
    //info() << "Monitoring histogram file: " << monitoring_file << endmsg;
+   int found_b = monitoring_path.find_last_of("b");
+   string first_path = monitoring_path.substr(0,found_b+2);
+   //info() << "first_path: " << first_path << endmsg;
+   int found_l = monitoring_path.find_last_of("l");
+   string date_path = monitoring_path.substr(found_l+1);
+   //info() << "date_path: " << date_path << endmsg;
+   int found_l_file = monitoring_file.find_last_of("l");
+   string date_file = monitoring_file.substr(found_l_file+1);
+   //info() << "date_file: " << date_file << endmsg;
 
    // Run number
    unsigned int run = 0;
@@ -372,13 +386,25 @@ StatusCode OTt0OnlineClbr::calibrate(string saveSet, string task)
       }
 
       // Save your own TFile
-      outFile = unique_ptr<TFile>{new TFile((monitoring_path+"/OTOnlineClbr-"+fileName).c_str(), "RECREATE")};
+      //outFile = unique_ptr<TFile>{new TFile((monitoring_path+"OTOnlineClbr-"+fileName).c_str(), "RECREATE")};
+      if(m_saveFits){
+	fs::path mpath((first_path+"OTOnlineClbr"+date_path).c_str());
+	if(!exists(mpath))
+	  fs::create_directories( mpath );
+	outFile = unique_ptr<TFile>{new TFile((first_path+"OTOnlineClbr"+date_path+"OTOnlineClbr"+date_file).c_str(), "RECREATE")};
+      }
 
    } else {
       // Test mode.
       m_calibrating[0].push_back(m_InputFilePath + m_InputFileName);
       //outFile = unique_ptr<TFile>{new TFile("calibration_monitoring.root", "RECREATE")};
-      outFile = unique_ptr<TFile>{new TFile((monitoring_path+"/OTOnlineClbr-"+m_InputFileName).c_str(), "RECREATE")};
+      //outFile = unique_ptr<TFile>{new TFile((monitoring_path+"OTOnlineClbr-"+m_InputFileName).c_str(), "RECREATE")};
+      if(m_saveFits){
+	fs::path mpath((first_path+"OTOnlineClbr"+date_path).c_str());
+	if(!exists(mpath))
+	  fs::create_directories( mpath );
+	outFile = unique_ptr<TFile>{new TFile((first_path+"OTOnlineClbr"+date_path+"OTOnlineClbr"+date_file).c_str(), "RECREATE")};
+      }
       run = 0;
    }
 
@@ -432,7 +458,9 @@ StatusCode OTt0OnlineClbr::calibrate(string saveSet, string task)
    // Check and improve condition for writing and publishing
    if (std::abs(residual) > m_threshold) {
       if (std::abs(diffWithPhase) < m_maxDifference) {
-         writeXML(*latest + 1, run, phase, t0);
+	//writeXML(*latest + 1, run, phase, t0);
+	 fs::path filename_xml = xmlFileName(*latest + 1);
+	 writeXML(*latest + 1,filename_xml, 0, phase, t0);
          publish(std::move(runs), *latest + 1, "good");
          info() << "Wrote global t0 xml. global t0 = "<< t0
                 << ", global t0 threshold = " << m_threshold <<endmsg;
@@ -462,15 +490,22 @@ fs::path OTt0OnlineClbr::xmlFileName(FileVersion v) const
 }
 
 //=============================================================================
+// fs::path OTt0OnlineClbr::writeXML(const FileVersion version,
+//                                   const unsigned int run,
+//                                   const boost::optional<double> phase,
+//                                   const double t0)
 fs::path OTt0OnlineClbr::writeXML(const FileVersion version,
-                                  const unsigned int run,
-                                  const boost::optional<double> phase,
-                                  const double t0)
+				  const boost::filesystem::path XML_path,
+				  const unsigned int run,
+				  const boost::optional<double> phase,
+				  const double t0)
 {
 
    StatusCode sc = StatusCode::SUCCESS ;
 
-   fs::path filename = xmlFileName(version);
+   //   fs::path filename = xmlFileName(version);
+   //   fs::path filename(XML_path+XML_filename);
+   fs::path filename = XML_path;
    ofstream file(filename.string().c_str());
 
    info() << "Writing the global t0 XML for online to "
@@ -484,13 +519,15 @@ fs::path OTt0OnlineClbr::writeXML(const FileVersion version,
    if (phase) file << "<!-- phase: " << phase << " -->" << endl;
    file << "<condition classID=\"5\" name=\"" << "CalibrationGlobal" << "\">\n";
    file << "  <param name=\"TZero\" type=\"double\" comment=\"Global t0 of OT\">\n";
-   //file << "      " << 0.001 * (int)(1000.0 * t0 + 0.5) << "\n";
-   file << "    " <<  t0  << "\n";
+   //file << "      " << 0.0001 * (int)(10000.0 * t0 + 0.5) << "\n";
+   file << "      " << std::setprecision(4) << t0 << "\n";
+   //file << "    " <<  t0  << "\n";
    file << "  </param>\n";
    file << "</condition>\n";
    // file << "</DDDB>\n";
    //  }
    file.close();
+
 
    // Insert the version we wrote.
    m_versions.insert(version);
@@ -519,14 +556,19 @@ void OTt0OnlineClbr::fitHistogram(TH1D* hist, double& result,
    if(m_saveFits && m_RunOnline){
      //to save your own TH1 in your own file
      outFile->cd();
-     declareInfo( "hist", hist, "Global_hist" );
-     info()<< "Saving histogram" <<endmsg;
-     hist->SetName("Global_hist");
+     info()<< "Saving histogram" <<endmsg;                                                                                                      
+     hist->SetName("Global_hist");                                                                                                              
+     hist->SetTitle("Global t0");                                                                                                               
+     m_hist_aida = book1D( "Global_hist", "Global t0", hist->GetXaxis()->GetXmin(),hist->GetXaxis()->GetXmax(),hist->GetNbinsX());              
+     declareInfo( "Global_hist", m_hist_aida, "Global t0" );                                                                                    
+     for(int i = 0; i<hist->GetNbinsX()+1;i++){                                                                                                 
+       m_hist_aida->fill(hist->GetBinCenter(i),hist->GetBinContent(i));                                                                         
+     }                                                                                                                             
      hist->Write();
    }
 
    //only to save stuff
-   if(m_saveFits && outFile){
+   if(m_saveFits && outFile && !m_RunOnline){
       outFile->cd();
       info()<< "Saving histogram" <<endmsg;
       hist->SetName("Global_hist");

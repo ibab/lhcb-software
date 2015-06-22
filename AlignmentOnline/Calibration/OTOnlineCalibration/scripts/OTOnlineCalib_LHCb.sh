@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # environment
-. /group/online/dataflow/cmtuser/AlignmentOnlineDev_v10r3/setup.x86_64-slc6-gcc48-dbg.vars
+. /group/online/dataflow/cmtuser/AlignmentRelease/setup.x86_64-slc6-gcc48-dbg.vars
 
 # Extra stuff for the task
 export UTGID;
