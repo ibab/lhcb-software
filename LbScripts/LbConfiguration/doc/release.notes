@@ -1,3 +1,7 @@
+2015-06-22  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: LBCORE-840 release of version v8r4p1
+
 2015-06-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-project-init: fixed LBCORE-839 (added script to initialize a checked out project)
