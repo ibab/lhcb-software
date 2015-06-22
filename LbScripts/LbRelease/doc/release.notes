@@ -1,3 +1,7 @@
+2015-06-22  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v5r4p1
+
 2015-06-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* getpack: use the same function as lb-project-init (LBCORE-839) to prepare projects
