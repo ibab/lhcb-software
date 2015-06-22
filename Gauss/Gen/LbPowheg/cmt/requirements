@@ -1,47 +1,22 @@
 #============================================================================
 # Created    : 2013-06-18
-# Maintainer : Bartek , Marcin
+# Maintainer : Bartek Rachwal, Marcin Kucharczyk, Philip Ilten
 #============================================================================
 package           LbPowheg
-version           v3r0
+version           v4r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src options
 
-# Environment
-# Treat symbol as an environment variable. 
-# The symbol will be visible from the shell after executing SetupProject:
-#============================================================================
-set               LBPOWHEGOPTS $(LBPOWHEGROOT)/options 
-set               POWHEGEXE $(powhegbox_execs)
-
-set            	  CTEQPDF $(LHAPDF_DATA_PATH)
-
-
 # Used packages. 
 #============================================================================
-use           Generators    v*          Gen
-use           Boost         v*          LCG_Interfaces -no_auto_imports
-use           powhegbox     v*          LCG_GeneratorsInterfaces
-use           LbPythia      v* 	        Gen
+use           LbHard      v* 	        Gen
 
-
-# Include directories
-#============================================================================
-apply_pattern install_more_includes more=LbPowheg
-
-# Linker and Component library building rule
+# Component library building rule.
 #============================================================================
 library       LbPowheg          component/*.cpp
 
-# define component library link options
+# Define component library link options.
 #============================================================================
-apply_pattern component_library library=LbPowheg 
-
-# define component and linker library options (the order is essential!)
-#============================================================================
-private
-macro_append Boost_linkopts " $(Boost_linkopts_filesystem) $(Boost_linkopts_system) "
-end_private
-
+apply_pattern component_library library=LbPowheg

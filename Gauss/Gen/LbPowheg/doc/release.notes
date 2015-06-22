@@ -1,8 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package     : Gen/LbPowheg
-! Responsible	: Bartek Rachwal, Marcin Kucharczyk
+! Responsible : Bartek Rachwal, Marcin Kucharczyk
 ! Purpose     : Implementation of the powheg-box in Gauss
 !-----------------------------------------------------------------------------
+
+! 2015-06-22 - Philip Ilten
+ - Complete re-write to use Pythia 8 showering and proper matching.
 
 !========================== LbPowheg v3r0 2015-03-13 =========================
 ! 2015-03-06 - Gloria Corti
