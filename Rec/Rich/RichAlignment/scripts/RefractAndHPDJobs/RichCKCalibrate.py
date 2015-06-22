@@ -174,44 +174,15 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     #mySandBoxLFNs += [lfnname]
 
     # Custom DB slices for both job types (calibration and verification)
-    dbFiles = [ ]
-
-    # New 2012 MDMS with per HPD corrections (not used)
-    #dbFiles += [ "MDCS-RICH1-PerHPD-14082014" ]
-
-    # New 2011 MDMS with global shift - V1
-    #dbFiles += [ "MDCS-RICH1-GLOBAL_SHIFT-FOR2011-11102014" ]
-    
-    # New 2012 MDMS with global shift - V1
-    #dbFiles += [ "MDCS-RICH1-GLOBAL_SHIFT-S21-08082014" ]
-    # New 2012 MDMS with global shift - V2
-    #dbFiles += [ "MDCS-Global-Shift-08092014" ]
-    # New 2012 MDMS with global shift - V3
-    #dbFiles += [ "MDCS-RICH1-GLOBAL_SHIFT-25092014" ]
-    # New 2012 MDMS with global shift - V4
-    #dbFiles += [ "MDCS-RICH1-GLOBAL_SHIFT-FOR2012-11102014" ]
-
-    # 2012 HPD image calibrations with radius values
-    #dbFiles += ["2012-NewMDMSCalib-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-17062014"]
-
-    # Antonis's test 2012 DB with fixed Magnification
-    #dbFiles += ["MDCS-RICH1_FixedMag_210515"]
-    # No MDCS (Zero field)
-    #dbFiles += ["MDCS-RICH1_ZeroField_240515"]
-    # Run II test - First Scan
-    #dbFiles += ["MDCS-RICH1-FirstScans-RunI-IOV-26052015"]
-    # Run II test - Second Scan
-    #dbFiles += ["MDCS-RICH1-SecondScans-RunI-IOV-26052015"]
-
-    # 2012 test with one alignment for up and down
-    #dbFiles += ["2012-MagTest-10062015"]
+    dbFiles = { }
 
     # 2015 DBs
-    dbFiles += ["Alignment2015"] # Tracking
-    dbFiles += ["MDCS-RICH1-SecondScans-26052015"] # MDCS
-    dbFiles += ["ResetHPDAlign-13062015"]
-    #dbFiles += ["2015-MirrorAlign-V1-It2-15062015"]
-    dbFiles += ["2015-MirrorAlign-V2-It3-15062015"]
+    #dbFiles += ["Alignment2015"] # Tracking
+    dbFiles += { "MDCS-RICH1-SecondScans-26052015" : "LHCBCOND" } # MDCS
+    dbFiles += { "ResetHPDAlign-13062015" : "LHCBCOND" }
+    dbFiles += { "2015-MirrorAlign-V2-It3-15062015" : "LHCBCOND" }
+    dbFiles += { "2015RootFiles-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-20062015" : "LHCBCOND" }
+    #dbFiles += { "2015RootFiles-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-22062015" : "CALIBOFF" }
 
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
@@ -227,8 +198,9 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
         #dbFiles += ["2010MirrorAlign-28052014"]
 
     # Configure additional DBs
-    for dbFile in dbFiles :
-        dbopts += ["CondDB().addLayer(CondDBAccessSvc(\""+dbFile+"\",ConnectionString=\"sqlite_file:"+dbFile+".db/LHCBCOND\",DefaultTAG=\"HEAD\"))\n"]
+    for dbFile,dbType in dbFiles.iteritems() :
+        print "Using DB", dbFile, dbType
+        dbopts += ["CondDB().addLayer(CondDBAccessSvc(\""+dbFile+"\",ConnectionString=\"sqlite_file:"+dbFile+".db/"+dbType+"\",DefaultTAG=\"HEAD\"))\n"]
         # Upload to LFNs
         lfnname = "LFN:/lhcb/user/j/jonrob/DBs/"+dbFile+".db"
         if not uploadFile("databases/"+dbFile+".db",lfnname) : return False

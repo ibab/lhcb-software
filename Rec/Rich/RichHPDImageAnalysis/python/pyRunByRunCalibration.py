@@ -53,11 +53,6 @@ def initialise():
         LHCbApp().DDDBtag    = "dddb-20150526"
         LHCbApp().CondDBtag  = "cond-20150601"
 
-        # Move HPD Occs
-        #cDB.addLayer(CondDBAccessSvc("NewMDMSCondDB-28022011",
-        #                             ConnectionString="sqlite_file:/usera/jonesc/cmtuser/Rec_HEAD/Rich/RichAlignment/scripts/RefractAndHPDJobs/databases/MoveHPDOccs-11052011.db/LHCBCOND",
-        #                             DefaultTAG="HEAD"))
-
         # Set message level to info and above only
         msgSvc().setOutputLevel(3)
 
@@ -168,7 +163,7 @@ def siliconAlignmentFilePath(copyNumber):
     # RichSmartID
     smartID = richSystem().richSmartID(copyNumber)
     
-    return "/Conditions/"+rich(smartID)+"/Alignment/SiSensors"+panel(smartID)+".xml"
+    return "/Conditions/Online/"+rich(smartID)+"/Alignment/SiSensors"+panel(smartID)+".xml"
 
 def getHPDmagCond(polarity,copyNumber):
 
@@ -1346,7 +1341,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
         # Create HPD.xml updates (RICH2 demag)
         if createMagUpdate :
             for R in ["Rich2"] :
-                XmlPath = "/Conditions/"+R+"/Environment/HPD.xml"
+                XmlPath = "/Conditions/Online/"+R+"/Environment/HPD.xml"
                 if XmlPath not in alignments.keys() : alignments[XmlPath] = ""
                 for pol in ["MagDown","MagUp"]:
                     for P in ["P0","P1"] : 
@@ -1356,7 +1351,7 @@ def calibration(rootfiles,type,fitType,followType,pol,smoothSigmaHours,
         if createHPDOccUpdate :
             if hpdOccDataOK :
                 for R in ["Rich1","Rich2"] :
-                    XmlPath = "/Conditions/"+R+"/Environment/HPDOccupancies.xml"
+                    XmlPath = "/Conditions/Online/"+R+"/Environment/HPDOccupancies.xml"
                     if XmlPath not in alignments.keys() : alignments[XmlPath] = ""
                     alignments[XmlPath] += xmlHPDOccs(hpdOccs[R])
             else :
