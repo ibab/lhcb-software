@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! ====================================================================
 
+! 2015-06-23 - Marco Clemencic
+ - Fixed a flow in the logic of CondDB.Admin.CompareDBToFiles.
+
 ! 2015-06-19 - Marco Clemencic
  - Added the CondDB.Admin.CompareDBToFiles function to check that
    CondDB.Admin.MakeDBFromFiles worked.

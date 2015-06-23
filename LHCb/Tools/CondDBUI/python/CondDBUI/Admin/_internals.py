@@ -283,7 +283,7 @@ def CompareDBToFiles(source, db, includes, excludes, basepath = "",
                     errors[err_id] = 'bad IOVs count'
                     continue
                 found = found[0][:-1]
-                if expected != found:
+                if expected[0] != found[0]:
                     errors[err_id] = 'bad content'
                     #if verbose:
                     #    from pprint import pprint
