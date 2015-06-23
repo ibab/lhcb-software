@@ -1,4 +1,4 @@
-import os
+import os, sys
 import OnlineEnvBase as Online
 
 vsn = os.environ['ONLINEBRUNELSYSROOT']

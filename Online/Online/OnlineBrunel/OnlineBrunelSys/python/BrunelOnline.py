@@ -125,51 +125,49 @@ def patchBrunel(true_online_version):
 
         @author M.Frank
   """
+  from   Configurables import TrackSys, CondDB
   import GaudiConf.DstConf
   import Brunel.Configuration
+  import ConditionsMap
   import OnlineEnv
 
   brunel = Brunel.Configuration.Brunel()
   brunel.OnlineMode = True
   try:
-    brunel.DDDBtag    = OnlineEnv.DDDBTag
+    brunel.DDDBtag  = OnlineEnv.DDDBTag
   except:
     print "DDDBTag not found, use default"
-
   try:
     brunel.CondDBtag = OnlineEnv.CondDBTag
   except:
     print "CondDBTag not found, use default"
 
+  brunel.DataType = "2015"
+  brunel.UseDBSnapshot = True  # Try it
+
   conddb = CondDB()
-  conddb.IgnoreHeartBeat = True
+  conddb.Online = True
   #
-  # Adjust to pickup the proper online conditions
+  # Adjust to pickup the proper online conditions from ConditionsMap
   #
-  import Online as RunChange_All
-  conddb.setProp('RunChangeHandlerConditions', RunChange_All.ConditionMap)
+  conddb.RunChangeHandlerConditions = ConditionsMap.RunChangeHandlerConditions
   conddb.setProp('EnableRunChangeHandler', True)
+  #
+  # Stops the reconstruction if tracking hits beyond some reasonable limit.
+  # Not necessary anymore, since memory leak in Brunel is fixed....
+  #### TrackSys().GlobalCuts = { 'Velo': 5000, 'IT': 3000, 'OT': 8000 }
   #
   # Brunel output configuration
   #
-  brunel.WriteFSR  = False # This crashes Jaap's stuff
-  brunel.DataType = "2013"
-
+  brunel.WriteFSR  = False     # This crashes Jaap's stuff
   EventLoopMgr().OutputLevel = MSG_DEBUG #ERROR
   EventLoopMgr().Warnings    = False
 
-  from Configurables import EventClockSvc
-  EventClockSvc().InitialTime = 1322701200000000000
+  # from Configurables import EventClockSvc
+  # EventClockSvc().InitialTime = 1322701200000000000
 
-  brunel.UseDBSnapshot = True     # try it
-  #  brunel.PartitionName = "FEST"
-  # Hack by Chris
-  print "# Warning using CKThetaQuartzRefractCorrections = [ 0,-0.0001,0 ]"
-  from Configurables import RichRecSysConf
-  rConf = RichRecSysConf("RichOfflineRec")
-  rConf.richTools().photonReco().CKThetaQuartzRefractCorrections = [ 0,-0.001,0 ]
   if true_online_version:
-    brunel.OutputLevel       = MSG_ERROR
+    # brunel.OutputLevel       = MSG_INFO
     brunel.OutputLevel       = MSG_WARNING
     brunel.PrintFreq         = -1
 
@@ -208,7 +206,7 @@ def patchBrunel(true_online_version):
   HistogramPersistencySvc().OutputFile = ""
   HistogramPersistencySvc().OutputLevel = MSG_ERROR
 
-  print brunel
+  ####print brunel
   return brunel
 
 #============================================================================================================
@@ -291,11 +289,11 @@ def getProcessingType():
 processingType = getProcessingType()
 #print 'Warning: Setup writing: Processing type :',processingType,hasattr(os.environ,'Standalone_test')
 
-true_online = os.environ.has_key('LOGFIFO') and os.environ.has_key('PARTITION')
+true_online = os.environ.has_key('LOGFIFO') and (os.environ.has_key('PARTITION') or os.environ.has_key('PARTITION_NAME'))
 debug = not true_online
 
 if not true_online:
-  print '\n            Running terminal version 1.1 of Escher Online\n\n'
+  print '\n            Running terminal version 1.1 of Brunel Online\n\n'
   requirement = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0x300;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 
   ##requirement = "EvType=1;TriggerMask=0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF;VetoMask=0,0,0,0x0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
