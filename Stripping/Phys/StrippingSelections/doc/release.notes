@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-22 - Andrea Contu
+ - Added private PVRefit algorithm for python/StrippingSelections/StrippingBandQ/StrippingB2JpsiXforEM_s.py
+
 ! 2015-06-22 - Marco Gersabeck
  - Updated default_configs in StrippingCharm/StrippingDstarD0ToHHPi0.py, StrippingDstarD2KShh.py, StrippingD2hh.py
 

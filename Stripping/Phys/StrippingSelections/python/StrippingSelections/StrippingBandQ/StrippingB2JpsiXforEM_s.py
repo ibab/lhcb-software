@@ -10,7 +10,8 @@ __version__ = '$Revision: 0.0 $'
 __all__ = ('B2JpsiXforEM_sConf','default_config')
 
 from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+from Configurables import LoKi__PVReFitter, CombineParticles
 from CommonParticles.Utils import updateDoD
 from StandardParticles import StdLoosePions
 from StandardParticles import StdLooseKaons
@@ -162,11 +163,22 @@ class B2JpsiXforEM_sConf(LineBuilder) :
                           PostVertexCuts = "ALL",
                           ReFitPVs = False ) :
         '''create a selection using a ParticleCombiner with a single decay descriptor'''
-        combiner = CombineParticles( DecayDescriptor = DecayDescriptor,
+        combiner = CombineParticles( name=self.name+"combiner", DecayDescriptor = DecayDescriptor,
                                      DaughtersCuts = DaughterCuts,
                                      MotherCut = PostVertexCuts,
                                      CombinationCut = PreVertexCuts,
                                      ReFitPVs = ReFitPVs)
+        
+        if ReFitPVs:
+            mypvrefitter=LoKi__PVReFitter("mypvrefitter")
+            mypvrefitter.CheckTracksByLHCbIDs = True
+            mypvrefitter.DeltaChi2 = 1.
+            mypvrefitter.DeltaDistance = 100.
+            combiner.IgnoreP2PVFromInputLocations = True
+            combiner.addTool(mypvrefitter)
+            combiner.PVReFitters.update( {"": "LoKi::PVReFitter/mypvrefitter"} )
+            
+        
         return Selection ( OutputList,
                            Algorithm = combiner,
                            RequiredSelections = DaughterLists)
@@ -179,7 +191,7 @@ class B2JpsiXforEM_sConf(LineBuilder) :
                           PostVertexCuts = "ALL",
                           ReFitPVs = False ) :
         '''For taking in multiple decay descriptors'''
-        combiner = CombineParticles( DecayDescriptors = DecayDescriptors,
+        combiner = CombineParticles( name=self.name+"combiners",DecayDescriptors = DecayDescriptors,
                                  DaughtersCuts = DaughterCuts,
                                  MotherCut = PostVertexCuts,
                                  CombinationCut = PreVertexCuts,
