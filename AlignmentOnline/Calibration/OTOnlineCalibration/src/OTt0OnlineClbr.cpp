@@ -214,6 +214,11 @@ StatusCode OTt0OnlineClbr::initialize()
       }
    }
 
+
+   //monitoring histogram
+   m_hist_aida = book1D( "Global_hist", "Global t0", -20.0, 20.0, 100);              
+   declareInfo( "Global_hist", m_hist_aida, "Global t0" );                                                                                    
+
    return sc;
 }
 
@@ -559,8 +564,6 @@ void OTt0OnlineClbr::fitHistogram(TH1D* hist, double& result,
      info()<< "Saving histogram" <<endmsg;                                                                                                      
      hist->SetName("Global_hist");                                                                                                              
      hist->SetTitle("Global t0");                                                                                                               
-     m_hist_aida = book1D( "Global_hist", "Global t0", hist->GetXaxis()->GetXmin(),hist->GetXaxis()->GetXmax(),hist->GetNbinsX());              
-     declareInfo( "Global_hist", m_hist_aida, "Global t0" );                                                                                    
      for(int i = 0; i<hist->GetNbinsX()+1;i++){                                                                                                 
        m_hist_aida->fill(hist->GetBinCenter(i),hist->GetBinContent(i));                                                                         
      }                                                                                                                             
