@@ -3,6 +3,8 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2015-06-23 - Wouter Hulsbergen
+ - fixed initialization of alignmentframe from 'now' to 'firstevent' in AlignAlgorithm for online
 
 ! 2015-06-16 - Stefania Vecchi
  - change configuration and track selection for muon alignment

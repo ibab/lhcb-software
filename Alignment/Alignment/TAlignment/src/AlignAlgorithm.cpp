@@ -239,9 +239,16 @@ StatusCode AlignAlgorithm::execute() {
     return StatusCode::FAILURE ;
   }
 
+  Gaudi::Time eventtime ;
+  if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default ) ){
+    const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+    eventtime = odin->eventTime() ;
+    m_runnr = odin->runNumber() ;
+  }
+
   if( m_equations->initTime() == 0 ) {
     if ( m_align->initTime() == 0 )
-      m_align->initAlignmentFrame() ;
+      m_align->initAlignmentFrame(eventtime) ;
     m_align->initEquations( *m_equations ) ;
   }
 
@@ -390,12 +397,6 @@ StatusCode AlignAlgorithm::execute() {
     if( res && accumulate( *res ) ) ++numusedtracks ;
   }
 
-  Gaudi::Time eventtime ;
-  if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default ) ){
-    const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
-    eventtime = odin->eventTime() ;
-    m_runnr = odin->runNumber() ;
-  }
   m_equations->addEventSummary( numusedtracks, numusedvertices, numuseddimuons, eventtime, m_runnr ) ;
 
   return StatusCode::SUCCESS;
