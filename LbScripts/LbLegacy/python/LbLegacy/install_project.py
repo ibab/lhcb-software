@@ -2795,11 +2795,11 @@ def parseArgs():
             url_dist = value
         if key in ('-B', '--boot-scripts'):
             boot_script_loc = value
-        if key in ('--no-self-check'):
+        if key == '--no-self-check':
             check_self = False
-        if key in ('--no-boot-scripts'):
+        if key == '--no-boot-scripts':
             get_boot_scripts_flag = False
-        if key in ('--no-compat'):
+        if key == '--no-compat':
             get_compat_flag = False
         if key in ('-t', '--tmp-dir'):
             try :
