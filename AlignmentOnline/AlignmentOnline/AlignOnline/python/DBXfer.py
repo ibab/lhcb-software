@@ -89,6 +89,7 @@ class WriterConf:#(LHCbConfigurableUser):
       alg.XmlWriters.append("WriteOTCalibrationsTool")
       alg.WriteOTCalibrationsTool.Directory = self.getProp('CondFilePrefix')
       alg.WriteOTCalibrationsTool.WriteGlobalCalibration = True
+      alg.WriteOTCalibrationsTool.Precision = 6
     if 'muon' in listOfCondToWrite:
       #self.addXmlWriter( alg, 'Muon','Detectors', [] )
       self.addXmlWriter( alg, 'Muon','Global', [0,1,2] )
@@ -210,6 +211,9 @@ stat = Gaudi.run(1)
 print "============= Status :",stat
 if stat.isFailure():
   sys.exit(44)
+print "============= Gaudi.ReturnCode :",Gaudi.ReturnCode
+if Gaudi.ReturnCode != 0:
+  sys.exit(44)
 print "===================== Stopping the XML conversion ========================"
 stat = Gaudi.stop()
 print "============= Status :",stat
@@ -245,6 +249,18 @@ status = CondDBUI.Admin.MakeDBFromFiles(RunOption.OutputDirectory+"/offl", db,
                                    until = RunEnd,
                                    writeDuplicate = False
                                     )
+RunEnd =  (HLT2Params.RunStartTime+HLT2Params.RunDuration)*1000000000
+Fails = CondDBUI.Admin.CompareDBToFiles(RunOption.OutputDirectory+"/offl", db,
+                                   includes = [], excludes = [],
+                                   verbose = True,
+                                   since = RunStart,
+                                   until = RunEnd
+                                    )
+from pprint import pprint
+if Fails:
+  print "Readback check on DB failed\n"
+  pprint(Fails)
+  sys.exit(44)
 MakeTick(RunOption.OutputDirectory,RunOption.RunNumber)
 RunEnd =  (HLT2Params.RunStartTime+HLT2Params.RunDuration)*1000000000
 status = CondDBUI.Admin.MakeDBFromFiles(RunOption.OutputDirectory+"/onl", db,
@@ -254,14 +270,15 @@ status = CondDBUI.Admin.MakeDBFromFiles(RunOption.OutputDirectory+"/onl", db,
                                    until = RunEnd,
                                    writeDuplicate = False
                                     )
+Fails = CondDBUI.Admin.CompareDBToFiles(RunOption.OutputDirectory+"/onl", db,
+                                   includes = [], excludes = [],
+                                   verbose = True,
+                                   since = RunStart,
+                                   until = RunEnd
+                                    )
+if Fails:
+  print "Readback check on DB failed\n"
+  pprint(Fails)
+  sys.exit(44)
 
 print "===================== Updated the Database ======================== Status = ",status
-
-
-
-
-
-
-
-
-
