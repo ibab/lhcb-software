@@ -4,6 +4,13 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2015-06-23 - Christopher Rob Jones
+ - Sort the active particle type enum list in Rich::ParticleProperties to
+   ensure a strict (increasing) mass ordering. This ordering is assumed in
+   the software in various places for efficiency (i.e. if iterating over the
+   list I find one hypothesis is below threshold, I know all the remaining
+   ones, which are heavier, will also be below threshold).
+
 !========================= RichTools v2r48 2015-05-26 =========================
 ! 2015-05-05 - Chris Jones
  - Force the use of the HLT refractive index in TabulatedRefractiveIndex

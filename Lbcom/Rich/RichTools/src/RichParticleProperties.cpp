@@ -73,16 +73,14 @@ StatusCode Rich::ParticleProperties::initialize()
   sc = release(ppSvc);
 
   // PID Types
-  bool hasPion(true);
   if ( !m_pidTypesJO.empty() )
   {
-    hasPion = false;
     m_pidTypes.clear();
     for ( const auto& S : m_pidTypesJO )
     {
       if      ( "electron"       == S ) { m_pidTypes.push_back(Rich::Electron); }
       else if ( "muon"           == S ) { m_pidTypes.push_back(Rich::Muon); }
-      else if ( "pion"           == S ) { m_pidTypes.push_back(Rich::Pion); hasPion = true; }
+      else if ( "pion"           == S ) { m_pidTypes.push_back(Rich::Pion); }
       else if ( "kaon"           == S ) { m_pidTypes.push_back(Rich::Kaon); }
       else if ( "proton"         == S ) { m_pidTypes.push_back(Rich::Proton); }
       else if ( "belowThreshold" == S ) { m_pidTypes.push_back(Rich::BelowThreshold); }
@@ -92,6 +90,12 @@ StatusCode Rich::ParticleProperties::initialize()
       }
     }
   }
+  // sort the list to ensure strict (increasing) mass ordering.
+  std::sort( m_pidTypes.begin(), m_pidTypes.end() );
+  // is pion in the list ?
+  const bool hasPion = std::find( m_pidTypes.begin(),
+                                  m_pidTypes.end(),
+                                  Rich::Pion ) != m_pidTypes.end();
   info() << "Particle types considered = " << m_pidTypes << endmsg;
   if ( m_pidTypes.empty() ) return Error( "No particle types specified" );
   if ( !hasPion )           return Error( "Pion hypothesis must be included in list" );
