@@ -4,7 +4,10 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
-!========================= VeloRecMonitors v2r30 2014-12-11 =========================
+! 2015-06-23 - Marco Cattaneo
+ - Remove obsolete special case for Velo track location on RDST
+
+!========================= VeloRecMonitors v2r30 2014-12-11 =====================
 ! 2014-11-21 - Silvia Borghi
  - Fix the check in case of no MC hit association in VeloTrackMonitorNT
 

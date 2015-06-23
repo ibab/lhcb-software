@@ -50,8 +50,6 @@ class VeloRecMonitors(ConfigurableUser):
             VCM.PropertiesPrint = False
             VTM.PropertiesPrint = False
             VIM.PropertiesPrint = False
-            if TrackSys().getProp( "OutputType" ).upper() == "RDST":
-                VTM.TrackLocation = 'Rec/Track/PreparedVelo'
             theseq.Members += [ VCM, VTM, VIM ]
             
         return
