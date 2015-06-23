@@ -1,6 +1,6 @@
 from TAlignment.Alignables import *
 from TAlignment.SurveyConstraints import *
-from Configurables import TAlignment
+from Configurables import TAlignment,  Al__AlignUpdateTool
 
 #class AlignmentScenario():
 #    __slots__ = {
@@ -337,6 +337,11 @@ def configure2012DataAlignment( fixQOverPBias = False, surveyVer = 'latest' ) :
 # Alignment scenario used for 2012 data
 def configureMuonAlignment( surveyVer = 'latest' ) :
     TAlignment().WriteCondSubDetList += ['Muon']
+
+    # change convergence criteria
+    updatetool = Al__AlignUpdateTool("Al::AlignUpdateTool")
+    updatetool.MaxDeltaChi2PDofForConvergence = 2
+    updatetool.MaxModeDeltaChi2ForConvergence = 10
   
     # define the alignment elements
     elements = Alignables()
