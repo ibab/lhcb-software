@@ -492,11 +492,14 @@ namespace
   typedef std::map<std::string,_PAIR>         _FUNCTIONS  ;
   typedef std::map<std::string,_FUNCTIONS>    _ALLFUNCS   ;
   // ==========================================================================
+  const std::vector<std::string>  s_emptylines ;
+  const _ALLFUNCS                 s_emptyfuncs ;
+  // ==========================================================================
   std::unique_ptr<std::ostream>
-  openFile ( std::string                     namebase , 
-             const unsigned short            findex   , 
-             const std::vector<std::string>& lines    , 
-             const _ALLFUNCS&                allfuncs )  
+  openFile ( std::string                     namebase                 , 
+             const unsigned short            findex                   , 
+             const std::vector<std::string>& lines     = s_emptylines , 
+             const _ALLFUNCS&                allfuncs  = s_emptyfuncs )  
   {
     // 
     // construct the file name 
@@ -588,28 +591,42 @@ void LoKi::Hybrid::Base::writeCpp () const
   unsigned short ifile  = 0 ;
   unsigned int   iwrite = 0 ;
   //
-  unsigned int split = 0 ;
+  int split = 0 ;
   //
   const std::string split_ = System::getEnv( "LOKI_GENERATE_CPPCODE" ) ;
   //
+  // Positive: write N-files 
+  // Negative: write N-functors per file 
+  // Zero    : write one file 
+  // 
 #if defined(BOOST_VERSION) && BOOST_VERSION>105599
   //
   // for Boost >= 1.56
-  if ( !boost::conversion::try_lexical_cast ( split_, split ) )
-  { split = 0 ; }
+  if ( !boost::conversion::try_lexical_cast ( split_, split ) ) { split = 0 ; }
   //
 #else 
   //
   // for Boost < 1.56 
-  try { split = boost::lexical_cast<unsigned int> ( split_ ) ; }
+  try  { split = boost::lexical_cast<int> ( split_ ) ; }
   catch( const boost::bad_lexical_cast& /* e */ ) { split = 0 ; }
   //
 #endif 
   //
-  for ( ALLFUNCS::const_iterator ia = m_allfuncs.begin() ;
-        m_allfuncs.end() != ia ; ++ia ) 
+  // number of files (if defined)
+  const unsigned int n_files = 0 < split ? (unsigned int) split : 0 ;
+  //
+  // total number of functors 
+  unsigned int ftotal = 0 ;
+  for ( ALLFUNCS::const_iterator ia = m_allfuncs.begin() ; m_allfuncs.end() != ia ; ++ia ) 
+  { ftotal += ia->second.size() ; }
+  //
+  // number of functors per file
+  const unsigned int i_split = 
+    0 > split ?  std::abs ( split ) : 
+    0 < split ?  int ( double ( ftotal ) / split ) + 1 : 0 ;
+  //
+  for ( ALLFUNCS::const_iterator ia = m_allfuncs.begin() ; m_allfuncs.end() != ia ; ++ia ) 
   {
-    if ( !file ) {}
     //
     const std::string& cpptype = ia->first  ;
     const FUNCTIONS&   funcs   = ia->second ;
@@ -634,13 +651,23 @@ void LoKi::Hybrid::Base::writeCpp () const
                               pytype     ) ;
       *file << std::endl ;
       //
-      if ( 1 < split && 0 == iwrite % split ) { file.reset() ; }
+      if ( 1 <= i_split && 0 == iwrite % i_split ) { file.reset() ; }
       //
     }
     //
-    file.reset() ;
   }
-  
+  // close the file
+  file.reset() ;
+  //
+  if ( 0 < n_files ) 
+  {
+    while ( ifile < n_files ) 
+    {
+      file = openFile ( m_cppname , ++ifile ) ;
+      file.reset() ;
+    }
+  }
+  //
 }
 // ============================================================================
 

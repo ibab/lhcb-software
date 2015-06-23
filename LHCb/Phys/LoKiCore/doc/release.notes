@@ -13,6 +13,16 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-06-23 - Vanya Belyaev
+
+ - HybridBase.cpp
+   modify the functionality to building of C++ cache
+   
+   Cache building strategy depends on environment variable "LOKI_GENERATE_CPPCODE"
+   positive:  number of files 
+   negative:  number of functors per file 
+   zero:      single file 
+
 !========================= LoKiCore v11r23 2015-03-31 =========================
 ! 2015-03-25 - Vanya Belyaev
  -  Functors and Trees
