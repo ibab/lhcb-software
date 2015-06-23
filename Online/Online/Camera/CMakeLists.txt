@@ -84,5 +84,7 @@ endif()
 
 cam_exe(CameraGui src/applications/MessagePresenter.C src/applications/Elog.cpp src/applications/ElogDialog.cpp cintBootstrapDictCamera.cpp)
 target_link_libraries(CameraGui ${CMAKE_DL_LIBS})
+# ensure that cintBootstrapDictCamera.cpp is generated only once in parallel builds
+add_dependencies(CameraGui cintBootstrapDictCameraGen)
 
 #cam_exe(CameraViewContainer ../src/applications/ViewCont.C MessagePresenterDict.cpp)

@@ -4,6 +4,10 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2015-06-23 - Marco Clemencic
+ - Minor change in CMake configuration to avoid double calls to rootcling in
+   parallel builds.
+
 ! 2015-05-26 - Chris Jones
  - Add support for sending reports straight to the elog.
 
