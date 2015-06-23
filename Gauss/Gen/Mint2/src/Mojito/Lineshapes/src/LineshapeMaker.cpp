@@ -9,6 +9,7 @@
 //#include "Mint/IDalitzEventAccess.h"
 #include "Mint/BW_BW.h"
 #include "Mint/SBW.h"
+#include "Mint/VBW.h"
 #include "Mint/GounarisSakurai.h"
 #include "Mint/Lass.h"
 #include "Mint/Flatte.h"
@@ -59,6 +60,11 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
     return new SBW(*tree);
   }
 
+  if(A_is_in_B("VBW_"+anythingToString(abs(tree->getVal().pdg())), lopt)){
+        if(dbThis) cout << "LineshapeMaker returns VBW for PID="<<  abs(tree->getVal().pdg())<< endl;
+        return new VBW(*tree);
+  }  
+    
   if(A_is_in_B("ALWAYS_BW", lopt)){
     if(dbThis) cout << "LineshapeMaker returns BW_BW" << endl;
     return new BW_BW(*tree);

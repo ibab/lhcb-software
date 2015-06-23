@@ -814,16 +814,25 @@ int NamedDecayTreeList::makePsiKpipiList(){
     this->add(AmpInitialiser(*dk, "SBW_10323_"));
     this->add(AmpInitialiser(*dk, "SBW_10323_GS"));
     this->add(AmpInitialiser(*dk, "SBW_10323_RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "VBW_10323_"));
+    this->add(AmpInitialiser(*dk, "VBW_10323_GS"));
+    this->add(AmpInitialiser(*dk, "VBW_10323_RHO_OMEGA"));
     dk->getVal().setL(1);
     this->add(*dk); 
     this->add(AmpInitialiser(*dk, "SBW_10323_"));
     this->add(AmpInitialiser(*dk, "SBW_10323_GS"));
     this->add(AmpInitialiser(*dk, "SBW_10323_RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "VBW_10323_"));
+    this->add(AmpInitialiser(*dk, "VBW_10323_GS"));
+    this->add(AmpInitialiser(*dk, "VBW_10323_RHO_OMEGA"));
     dk->getVal().setL(2);
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "SBW_10323_"));
     this->add(AmpInitialiser(*dk, "SBW_10323_GS"));
     this->add(AmpInitialiser(*dk, "SBW_10323_RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "VBW_10323_"));
+    this->add(AmpInitialiser(*dk, "VBW_10323_GS"));
+    this->add(AmpInitialiser(*dk, "VBW_10323_RHO_OMEGA"));
     delete dk;
     
     // B->psi K1(1270); K1->K omega; omega->pi pi  
@@ -839,6 +848,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     this->add(AmpInitialiser(*dk, "Lass"));
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "SBW_10323_"));
+    this->add(AmpInitialiser(*dk, "VBW_10323_"));
     delete dk;
     
     // B->psi K1(1400); K1->K*(892) pi; K*->K pi  
@@ -854,6 +864,9 @@ int NamedDecayTreeList::makePsiKpipiList(){
     this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
     this->add(AmpInitialiser(*dk, "GS"));
     this->add(*dk);
+    this->add(AmpInitialiser(*dk, "VBW_20323_"));
+    this->add(AmpInitialiser(*dk, "VBW_20323_GS"));
+    this->add(AmpInitialiser(*dk, "VBW_20323_RHO_OMEGA"));
     delete dk;
 
     // B->psi K*(1410); K*(1410)->K*(892) pi; K*->K pi  
@@ -872,6 +885,9 @@ int NamedDecayTreeList::makePsiKpipiList(){
     this->add(AmpInitialiser(*dk, "SBW_100323_GS"));   
     this->add(AmpInitialiser(*dk, "SBW_100323_"));  
     this->add(AmpInitialiser(*dk, "SBW_100323_RHO_OMEGA"));  
+    this->add(AmpInitialiser(*dk, "VBW_100323_GS"));   
+    this->add(AmpInitialiser(*dk, "VBW_100323_"));  
+    this->add(AmpInitialiser(*dk, "VBW_100323_RHO_OMEGA"));  
     delete dk;
     
     // B->psi K2*(1430); K2->K*(892) pi; K*->K pi  
@@ -2303,9 +2319,9 @@ int NamedDecayTreeList::makeJpsiKpipiList(){
     this->add(AmpInitialiser(*dk, "SBW_321_"));
     this->add(AmpInitialiser(*dk, "SBW_10323_GS"));
     this->add(AmpInitialiser(*dk, "SBW_10323_RHO_OMEGA"));
-    //this->add(AmpInitialiser(*dk, "VBW_10323_"));
-    //this->add(AmpInitialiser(*dk, "VBW_10323_GS"));
-    //this->add(AmpInitialiser(*dk, "VBW_10323_RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "VBW_10323_"));
+    this->add(AmpInitialiser(*dk, "VBW_10323_GS"));
+    this->add(AmpInitialiser(*dk, "VBW_10323_RHO_OMEGA"));
     //this->add(AmpInitialiser(*dk, "VBW_321_"));
     dk->getVal().setL(1);
     this->add(*dk);
@@ -5651,12 +5667,46 @@ int NamedDecayTreeList::make4PiList() {
   dk->addDgtr(9993)->addDgtr(211, -211);
   dk->addDgtr(9985)->addDgtr(211, -211);
   add(*dk);
+  add(AmpInitialiser(*dk, "NonRes"));
+  add(AmpInitialiser(*dk, "NonResExp"));
   delete dk;  
+    
+  //D0 -> NV NS
+  dk = new DecayTree(421);
+  dk->addDgtr(9993)->addDgtr(211, -211);
+  dk->addDgtr(9981)->addDgtr(211, -211);
+  add(*dk);
+  add(AmpInitialiser(*dk, "NonRes"));
+  add(AmpInitialiser(*dk, "NonResExp"));
+  delete dk;    
+    
+  //D0 -> NV NV
+  dk = new DecayTree(421);
+  dk->addDgtr(9993)->addDgtr(211, -211);
+  dk->addDgtr(9993)->addDgtr(211, -211);
+  add(*dk);
+  add(AmpInitialiser(*dk, "NonRes"));
+  add(AmpInitialiser(*dk, "NonResExp"));
+  delete dk;   
 
+  //D0 -> NA pi-, NA->NV pi+
+  dk = new DecayTree(421);
+  dk->addDgtr(-211, 9983)->addDgtr(211, 9993)->addDgtr(211, -211);
+  add(*dk);
+  add(AmpInitialiser(*dk, "NonRes"));
+  add(AmpInitialiser(*dk, "NonResExp"));
+  delete dk;  
+    
   //D0 -> a1(1260)pi-, a1(1260)->rho(770)pi+, rho->pi+pi-   [S-WAVE]
   dk = new DecayTree(421);
   dk->addDgtr(-211, 20213)->addDgtr(211, 113)->addDgtr(211, -211);
   add(*dk);
+  this->add(AmpInitialiser(*dk, "SBW_20213")); 
+  this->add(AmpInitialiser(*dk, "SBW_20213GS")); 
+  this->add(AmpInitialiser(*dk, "VBW_20213")); 
+  this->add(AmpInitialiser(*dk, "VBW_20213GS"));   
+  this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+  this->add(AmpInitialiser(*dk, "GS")); 
   if(dbThis) cout << "first decay: " << *dk << endl;
   delete dk;
 
@@ -5667,6 +5717,12 @@ int NamedDecayTreeList::make4PiList() {
   a1->addDgtr(211, 113)->addDgtr(211, -211);
   dk->addDgtr(-211), dk->addDgtr(a1);
   add(*dk);
+  this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+  this->add(AmpInitialiser(*dk, "GS"));  
+  this->add(AmpInitialiser(*dk, "SBW_20213")); 
+  this->add(AmpInitialiser(*dk, "SBW_20213GS")); 
+  this->add(AmpInitialiser(*dk, "VBW_20213")); 
+  this->add(AmpInitialiser(*dk, "VBW_20213GS"));  
   if(dbThis) cout << "first decay: " << *dk << endl;
   delete a1;
   delete dk;
@@ -5675,6 +5731,12 @@ int NamedDecayTreeList::make4PiList() {
   dk = new DecayTree(421);
   dk->addDgtr(-211, 20213)->addDgtr(211, 100113)->addDgtr(211, -211);
   add(*dk);
+  this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+  this->add(AmpInitialiser(*dk, "GS"));
+  this->add(AmpInitialiser(*dk, "SBW_20213")); 
+  this->add(AmpInitialiser(*dk, "SBW_20213GS")); 
+  this->add(AmpInitialiser(*dk, "VBW_20213")); 
+  this->add(AmpInitialiser(*dk, "VBW_20213GS"));  
   if(dbThis) cout << "first decay rho(1450): " << *dk << endl;
   delete dk;
     
@@ -5685,6 +5747,12 @@ int NamedDecayTreeList::make4PiList() {
   a1->addDgtr(211, 100113)->addDgtr(211, -211);
   dk->addDgtr(-211), dk->addDgtr(a1);
   add(*dk);
+  this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+  this->add(AmpInitialiser(*dk, "GS"));  
+  this->add(AmpInitialiser(*dk, "SBW_20213")); 
+  this->add(AmpInitialiser(*dk, "SBW_20213GS")); 
+  this->add(AmpInitialiser(*dk, "VBW_20213")); 
+  this->add(AmpInitialiser(*dk, "VBW_20213GS"));  
   if(dbThis) cout << "first decay rho(1450): " << *dk << endl;
   delete a1;
   delete dk;
@@ -5703,6 +5771,8 @@ int NamedDecayTreeList::make4PiList() {
   dk = new DecayTree(421);
   dk->addDgtr(-211, 20213)->addDgtr(211,999001)->addDgtr(211, -211);
   add(*dk);
+  this->add(AmpInitialiser(*dk, "SBW_20213")); 
+  this->add(AmpInitialiser(*dk, "VBW_20213"));
   if(dbThis) cout << "second decay: " << *dk << endl;
   delete dk;
     
@@ -5710,13 +5780,187 @@ int NamedDecayTreeList::make4PiList() {
   dk = new DecayTree(421);
   dk->addDgtr(-211, 20213)->addDgtr(211,223)->addDgtr(211, -211);
   add(*dk);
+  this->add(AmpInitialiser(*dk, "SBW_20213")); 
+  this->add(AmpInitialiser(*dk, "VBW_20213"));
   delete dk;
     
   //D0 -> a1(1260)pi-, a1(1260)->f0(1370) pi+, rho->pi+pi-
-  //dk = new DecayTree(421);
-  //dk->addDgtr(-211, 20213)->addDgtr(211,10221)->addDgtr(211, -211);
-  //add(*dk);
-  //delete dk;
+  dk = new DecayTree(421);
+  dk->addDgtr(-211, 20213)->addDgtr(211,10221)->addDgtr(211, -211);
+  add(*dk);
+  this->add(AmpInitialiser(*dk, "SBW_20213")); 
+  this->add(AmpInitialiser(*dk, "VBW_20213"));
+  delete dk;
+        
+    //D0 -> a1(1640)pi-, a1->rho(770)pi+, rho->pi+pi-   [S-WAVE]
+    dk = new DecayTree(421);
+    dk->addDgtr(-211, 920213)->addDgtr(211, 113)->addDgtr(211, -211);
+    add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_920213")); 
+    this->add(AmpInitialiser(*dk, "SBW_920213GS")); 
+    this->add(AmpInitialiser(*dk, "VBW_920213")); 
+    this->add(AmpInitialiser(*dk, "VBW_920213GS"));   
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS")); 
+    if(dbThis) cout << "first decay: " << *dk << endl;
+    delete dk;
+    
+    //D0 -> a1(1640)pi-, a1->rho(770)pi+, rho->pi+pi-   [D-WAVE decay of a1]
+    dk = new DecayTree(421);
+    a1 = new DecayTree(920213);
+    a1->getVal().setL(2);
+    a1->addDgtr(211, 113)->addDgtr(211, -211);
+    dk->addDgtr(-211), dk->addDgtr(a1);
+    add(*dk);
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS"));  
+    this->add(AmpInitialiser(*dk, "SBW_920213")); 
+    this->add(AmpInitialiser(*dk, "SBW_920213GS")); 
+    this->add(AmpInitialiser(*dk, "VBW_920213")); 
+    this->add(AmpInitialiser(*dk, "VBW_920213GS"));  
+    if(dbThis) cout << "first decay: " << *dk << endl;
+    delete a1;
+    delete dk;
+    
+    //D0 -> a1(1640)pi-, a1(1640)->rho(1450)pi+, rho->pi+pi-   [S-WAVE]
+    dk = new DecayTree(421);
+    dk->addDgtr(-211, 920213)->addDgtr(211, 100113)->addDgtr(211, -211);
+    add(*dk);
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "SBW_920213")); 
+    this->add(AmpInitialiser(*dk, "SBW_920213GS")); 
+    this->add(AmpInitialiser(*dk, "VBW_920213")); 
+    this->add(AmpInitialiser(*dk, "VBW_920213GS"));  
+    if(dbThis) cout << "first decay rho(1450): " << *dk << endl;
+    delete dk;
+    
+    //D0 -> a1(1640)pi-, a1(1640)->rho(1450)pi+, rho->pi+pi-   [D-WAVE decay of a1]
+    dk = new DecayTree(421);
+    a1 = new DecayTree(920213);
+    a1->getVal().setL(2);
+    a1->addDgtr(211, 100113)->addDgtr(211, -211);
+    dk->addDgtr(-211), dk->addDgtr(a1);
+    add(*dk);
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS"));  
+    this->add(AmpInitialiser(*dk, "SBW_920213")); 
+    this->add(AmpInitialiser(*dk, "SBW_920213GS")); 
+    this->add(AmpInitialiser(*dk, "VBW_920213")); 
+    this->add(AmpInitialiser(*dk, "VBW_920213GS"));  
+    if(dbThis) cout << "first decay rho(1450): " << *dk << endl;
+    delete a1;
+    delete dk;
+    
+    //D0 -> a1(1640)pi-, a1(1640)->sigma_1 pi+, rho->pi+pi-
+    dk = new DecayTree(421);
+    dk->addDgtr(-211, 920213)->addDgtr(211,999001)->addDgtr(211, -211);
+    add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_920213")); 
+    this->add(AmpInitialiser(*dk, "VBW_920213"));
+    if(dbThis) cout << "second decay: " << *dk << endl;
+    delete dk;
+    
+    //D0 -> a1(1640)pi-, a1(1640)->f2(1270) pi+, rho->pi+pi-
+    dk = new DecayTree(421);
+    dk->addDgtr(-211, 920213)->addDgtr(211,223)->addDgtr(211, -211);
+    add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_920213")); 
+    this->add(AmpInitialiser(*dk, "VBW_920213"));
+    delete dk;
+    
+    //D0 -> a1(1640)pi-, a1(1640)->f0(1370) pi+
+    dk = new DecayTree(421);
+    dk->addDgtr(-211, 920213)->addDgtr(211,10221)->addDgtr(211, -211);
+    add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_920213")); 
+    this->add(AmpInitialiser(*dk, "VBW_920213"));
+    delete dk;
+    
+    //D0 -> a1Bkg pi-, a1->rho(770)pi+, rho->pi+pi-   [S-WAVE]
+    dk = new DecayTree(421);
+    dk->addDgtr(-211, 9920213)->addDgtr(211, 113)->addDgtr(211, -211);
+    add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_9920213")); 
+    this->add(AmpInitialiser(*dk, "SBW_9920213GS")); 
+    this->add(AmpInitialiser(*dk, "VBW_9920213")); 
+    this->add(AmpInitialiser(*dk, "VBW_9920213GS"));   
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS")); 
+    if(dbThis) cout << "first decay: " << *dk << endl;
+    delete dk;
+    
+    //D0 -> a1Bkg pi-, a1->rho(770)pi+, rho->pi+pi-   [D-WAVE decay of a1]
+    dk = new DecayTree(421);
+    a1 = new DecayTree(9920213);
+    a1->getVal().setL(2);
+    a1->addDgtr(211, 113)->addDgtr(211, -211);
+    dk->addDgtr(-211), dk->addDgtr(a1);
+    add(*dk);
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS"));  
+    this->add(AmpInitialiser(*dk, "SBW_9920213")); 
+    this->add(AmpInitialiser(*dk, "SBW_9920213GS")); 
+    this->add(AmpInitialiser(*dk, "VBW_9920213")); 
+    this->add(AmpInitialiser(*dk, "VBW_9920213GS"));  
+    if(dbThis) cout << "first decay: " << *dk << endl;
+    delete a1;
+    delete dk;
+    
+    //D0 -> a1Bkg pi-, a1->rho(1450)pi+, rho->pi+pi-   [S-WAVE]
+    dk = new DecayTree(421);
+    dk->addDgtr(-211, 9920213)->addDgtr(211, 100113)->addDgtr(211, -211);
+    add(*dk);
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "SBW_9920213")); 
+    this->add(AmpInitialiser(*dk, "SBW_9920213GS")); 
+    this->add(AmpInitialiser(*dk, "VBW_9920213")); 
+    this->add(AmpInitialiser(*dk, "VBW_9920213GS"));  
+    if(dbThis) cout << "first decay rho(1450): " << *dk << endl;
+    delete dk;
+    
+    //D0 -> a1Bkg pi-, a1->rho(1450)pi+, rho->pi+pi-   [D-WAVE decay of a1]
+    dk = new DecayTree(421);
+    a1 = new DecayTree(920213);
+    a1->getVal().setL(2);
+    a1->addDgtr(211, 100113)->addDgtr(211, -211);
+    dk->addDgtr(-211), dk->addDgtr(a1);
+    add(*dk);
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS"));  
+    this->add(AmpInitialiser(*dk, "SBW_9920213")); 
+    this->add(AmpInitialiser(*dk, "SBW_9920213GS")); 
+    this->add(AmpInitialiser(*dk, "VBW_9920213")); 
+    this->add(AmpInitialiser(*dk, "VBW_9920213GS"));  
+    if(dbThis) cout << "first decay rho(1450): " << *dk << endl;
+    delete a1;
+    delete dk;
+    
+    //D0 -> a1Bkg pi-, a1(1640)->sigma_1 pi+, rho->pi+pi-
+    dk = new DecayTree(421);
+    dk->addDgtr(-211, 9920213)->addDgtr(211,999001)->addDgtr(211, -211);
+    add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_9920213")); 
+    this->add(AmpInitialiser(*dk, "VBW_9920213"));
+    if(dbThis) cout << "second decay: " << *dk << endl;
+    delete dk;
+    
+    //D0 -> a1Bkg pi-, a1(1640)->f2(1270) pi+, rho->pi+pi-
+    dk = new DecayTree(421);
+    dk->addDgtr(-211, 9920213)->addDgtr(211,223)->addDgtr(211, -211);
+    add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_9920213")); 
+    this->add(AmpInitialiser(*dk, "VBW_9920213"));
+    delete dk;
+    
+    //D0 -> a1Bkg pi-, a1(1640)->f0(1370) pi+
+    dk = new DecayTree(421);
+    dk->addDgtr(-211, 9920213)->addDgtr(211,10221)->addDgtr(211, -211);
+    add(*dk);
+    this->add(AmpInitialiser(*dk, "SBW_9920213")); 
+    this->add(AmpInitialiser(*dk, "VBW_9920213"));
+    delete dk;
 
   //D0 -> a2(1320)pi-, a2(1230)->pi+pi+pi-
   //dk = new DecayTree(421);
@@ -5729,6 +5973,8 @@ int NamedDecayTreeList::make4PiList() {
   dk->addDgtr(113)->addDgtr(211, -211);
   dk->addDgtr(113)->addDgtr(211, -211);
   add(*dk);
+  this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+  this->add(AmpInitialiser(*dk, "GS"));    
   if(dbThis) cout << "third decay: " << *dk << endl;
   delete dk;
 
@@ -5748,6 +5994,8 @@ int NamedDecayTreeList::make4PiList() {
   dk->addDgtr(113)->addDgtr(211, -211);
   dk->getVal().setL(1);
   add(*dk);
+  this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+  this->add(AmpInitialiser(*dk, "GS"));  
   if(dbThis) cout << "third decay: " << *dk << endl;
   delete dk;
 
@@ -5757,6 +6005,8 @@ int NamedDecayTreeList::make4PiList() {
   dk->addDgtr(113)->addDgtr(211, -211);
   dk->getVal().setL(2);
   add(*dk);
+  this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+  this->add(AmpInitialiser(*dk, "GS")); 
   if(dbThis) cout << "third decay: " << *dk << endl;
   delete dk;
 
@@ -5824,6 +6074,8 @@ int NamedDecayTreeList::make4PiList() {
   dk->addDgtr(999001)->addDgtr(211, -211);
   dk->addDgtr(113)->addDgtr(211, -211);
   add(*dk);
+  this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+  this->add(AmpInitialiser(*dk, "GS"));  
   if(dbThis) cout << "tenth decay: " << *dk << endl;
   delete dk;  
     
@@ -5832,6 +6084,9 @@ int NamedDecayTreeList::make4PiList() {
   dk->addDgtr(113)->addDgtr(211, -211);
   dk->addDgtr(9993)->addDgtr(211, -211);
   add(*dk);
+  add(AmpInitialiser(*dk, "NonResExp"));
+  this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+  this->add(AmpInitialiser(*dk, "GS"));  
   if(dbThis) cout << "eleventh decay: " << *dk << endl;
   delete dk;
     
@@ -5855,6 +6110,8 @@ int NamedDecayTreeList::make4PiList() {
   dk->addDgtr(100113)->addDgtr(211, -211);
   dk->addDgtr(9993)->addDgtr(211, -211);
   add(*dk);
+  this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+  this->add(AmpInitialiser(*dk, "GS"));    
   delete dk;
   
   // added on 9 Oct 2013, using new/refurbished spin factors (mainly tensor/pseudo tensor)
@@ -5863,12 +6120,15 @@ int NamedDecayTreeList::make4PiList() {
   dk = new DecayTree(421);
   dk->addDgtr(-211,100211)->addDgtr(211, 113)->addDgtr(211, -211);
   add(*dk);
+  this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+  this->add(AmpInitialiser(*dk, "GS"));  
   delete dk;
 
   // D0 -> pi(1300)+ pi-, pi(1300)+ ->NS pi+
   dk = new DecayTree(421);
   dk->addDgtr(-211,100211)->addDgtr(211, 9981)->addDgtr(211, -211);
   add(*dk);
+  add(AmpInitialiser(*dk, "NonResExp"));
   delete dk;
     
   // D0 -> pi(1300)+ pi-, pi(1300)+ ->NV pi+
@@ -5892,6 +6152,8 @@ int NamedDecayTreeList::make4PiList() {
   dk = new DecayTree(421);
   dk->addDgtr(-211, 215)->addDgtr(211, 113)->addDgtr(-211, 211);
   add(*dk);
+  this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+  this->add(AmpInitialiser(*dk, "GS"));  
   delete dk;
 
   // D->a2(1320) pi, a2(1320)->f2(1270) pi, f2-> rho pi
@@ -5924,6 +6186,8 @@ int NamedDecayTreeList::make4PiList() {
   dk = new DecayTree(421);
   dk->addDgtr(-211, 10215)->addDgtr(211, 113)->addDgtr(211, -211);
   add(*dk);
+  this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+  this->add(AmpInitialiser(*dk, "GS"));  
   delete dk;
 
   // D -> pi(1300) pi, pi(1300)->f(600) pi (trivial spin factor)
