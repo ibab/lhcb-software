@@ -5,6 +5,23 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2015-06-23 - Vanya Belyaev
+ - add new functor LoKi::DeltaAngle ( alias "ALV" ) for
+                        Jessica PRISCIANDARO and Diego MARTINEZ SANTOS 
+    to get a cosine angle between two daughter particles in lab-frame 
+
+     *
+     *  @code
+     *  
+     *  xxx.CombinationCut = "         ALV ( 1 , 2 )   < 0.999999   "
+     *
+     *  xxx.MotherCut      = " PFUNA ( ALV ( 1 , 2 ) ) < 0.999999   "
+     *
+     *  xxx.MotherCut      = " PCUTA ( ALV ( 1 , 2 )   < 0.999999 ) "
+     *
+     *  @endcode 
+
+
 ! 2015-06-22 - Eduardo Rodrigues
  - Removed unused class rules producing warnings in genflex.
 

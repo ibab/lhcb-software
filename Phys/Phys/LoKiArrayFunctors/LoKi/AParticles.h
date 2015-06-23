@@ -1192,6 +1192,66 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
+    /** @class DeltaAngle 
+     *  evaluate the cosine of the 
+     *  angle between two daughter particles (in lab-frame)
+     * 
+     *  The functor is requested by 
+     *     Jessica Prisciandaro and Diego Martinez Santos
+     *
+     *  @code
+     *  
+     *  xxx.CombinationCut = "         ALV ( 1 , 2 )   < 0.999999   "
+     *
+     *  xxx.MotherCut      = " PFUNA ( ALV ( 1 , 2 ) ) < 0.999999   "
+     *
+     *  xxx.MotherCut      = " PCUTA ( ALV ( 1 , 2 )   < 0.999999 ) "
+     *
+     *  @endcode 
+     *
+     *  @see @ALV 
+     *  @see @LoKi::AParticles::DecayAngle
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2015-06-23
+     */ 
+    class GAUDI_API DeltaAngle
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
+    {
+    public: 
+      // ======================================================================
+      /** constructor with daughter index (starts from 1).
+       *  E.g. for 2-body decays it could be 1 or 2 
+       *  @param child1 index of first daughter particle
+       *  @param child2 index of first daughter particle
+       */
+      DeltaAngle ( const unsigned short child1 ,
+                   const unsigned short child2 ) ;
+      /// copy constructor 
+      DeltaAngle ( const DeltaAngle& rigth) ;
+      /// MANDATORY: virual destructor
+      virtual ~DeltaAngle();
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  DeltaAngle* clone() const ;
+      /// MANDATORY: the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// OPTIONAL: specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      DeltaAngle();
+      // ======================================================================
+    private:
+      // ======================================================================
+      // index of the daughter particle
+      unsigned short m_child1 ;
+      // index of the daughter particle
+      unsigned short m_child2 ;
+      // ======================================================================
+    };  
+    // ========================================================================
     /** @class WrongMass
      *  Simple function which evaluates the invarinat mass of the 
      *  combinations using wrong mass-assignements

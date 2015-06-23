@@ -43,7 +43,7 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date 2007-12-01
  */
 // ============================================================================

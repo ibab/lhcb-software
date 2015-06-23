@@ -1312,6 +1312,82 @@ LoKi::AParticles::DecayAngle::fillStream ( std::ostream& s ) const
   return s ;
 }
 // ============================================================================
+/*  constructor with daughter index (starts from 1).
+ *  E.g. for 2-body decays it could be 1 or 2 
+ *  @param child1 index of first daughter particle
+ *  @param child2 index of first daughter particle
+ */
+// ============================================================================
+LoKi::AParticles::DeltaAngle::DeltaAngle 
+( const unsigned short child1 ,
+  const unsigned short child2 ) 
+  : LoKi::AuxFunBase ( std::tie ( child1 , child2 ) ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
+  , m_child1 ( child1 ) 
+  , m_child2 ( child2 ) 
+{}
+// ============================================================================
+// copy constructor 
+// ============================================================================
+LoKi::AParticles::DeltaAngle::DeltaAngle 
+( const LoKi::AParticles::DeltaAngle& right ) 
+  : LoKi::AuxFunBase ( right  ) 
+  , LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function( right ) 
+  , m_child1 ( right.m_child1 ) 
+  , m_child2 ( right.m_child2 ) 
+{}
+// ============================================================================
+// MANDATORY: virual destructor
+// ============================================================================
+LoKi::AParticles::DeltaAngle::~DeltaAngle(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::AParticles::DeltaAngle*
+LoKi::AParticles::DeltaAngle::clone() const 
+{ return new LoKi::AParticles::DeltaAngle ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::AParticles::DeltaAngle::result_type 
+LoKi::AParticles::DeltaAngle::operator() 
+  ( LoKi::AParticles::DeltaAngle::argument a ) const
+{
+  // get the gaughter particles
+  const LHCb::Particle* child1 = LoKi::Child::child ( a , m_child1 ) ;
+  if ( 0 == child1 ) 
+  { 
+    Error ( " 'Child1' is invalid, return 'InvalidAngle' " ) ;
+    return LoKi::Constants::InvalidAngle;                         // RETURN 
+  }               
+  //
+  const LHCb::Particle* child2 = LoKi::Child::child ( a , m_child2 ) ;
+  if ( 0 == child2 ) 
+  { 
+    Error ( " 'Child2' is invalid, return 'InvalidAngle' " ) ;
+    return LoKi::Constants::InvalidAngle;                         // RETURN 
+  }
+  //
+  if ( child1 == child2 ) { return 1 ; }  // RETURN
+  //
+  const LoKi::LorentzVector& p1 = child1 -> momentum() ;
+  const LoKi::LorentzVector& p2 = child2 -> momentum() ;
+  //
+  const LoKi::Vector3D v1 ( p1.Vect() ) ;
+  const LoKi::Vector3D v2 ( p2.Vect() ) ;
+  //
+  return v1.Dot ( v2 ) / std::sqrt ( v1.Mag2() * v2.Mag2() ) ;
+}
+// ============================================================================
+// OPTIONAL:  the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::AParticles::DeltaAngle::fillStream ( std::ostream& s ) const 
+{ return s << "ALV(" << m_child1 << "," << m_child2 << ")" ; }
+// ============================================================================
+
+
+// ============================================================================
 // constructor from two masses 
 // ============================================================================
 LoKi::AParticles::WrongMass:: WrongMass  

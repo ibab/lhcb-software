@@ -146,6 +146,8 @@ ALV02         = LoKi.AParticles.DecayAngle ( 2 )
 ALV03         = LoKi.AParticles.DecayAngle ( 3 ) 
 ## @see LoKi::Cuts::ALV04
 ALV04         = LoKi.AParticles.DecayAngle ( 4 ) 
+## @see LoKi::Cuts::ALV
+ALV           = LoKi.AParticles.DeltaAngle
 ## @see LoKi::Cuts::AM
 AM            = LoKi.AParticles.InvariantMass ( 0 ) 
 ## @see LoKi::Cuts::AM0
