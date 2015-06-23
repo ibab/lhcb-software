@@ -28,7 +28,7 @@ class TrackSys(LHCbConfigurableUser):
        ,"TrackPatRecAlgorithms": []  # List of track pattern recognition algorithms to run
        ,"TrackExtraInfoAlgorithms": []  # List of track 'extra info' algorithms to run
        ,"WithMC":       False # set to True to use MC truth
-       ,"OutputType": "" # set to "RDST" for special RDST sequence
+       ,"OutputType": "" # DST type, currently not used
        ,"FilterBeforeFit": True  #Clone kill before fit of the Best container only. False = fit before clone killing
        ,"DataType": "2011" # propagated from Brunel(), used to determine which monitors to run
        ,"ForceNewSeq" : False  # use new tracking sequence independent of DataType

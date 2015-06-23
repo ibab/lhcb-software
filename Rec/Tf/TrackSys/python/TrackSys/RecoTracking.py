@@ -285,11 +285,10 @@ def RecoTracking(exclude=[]):
          GaudiSequencer("TrackVeloFitSeq").Members += [ TrackPrepareVelo()]
          ## Fit the velo tracks
          GaudiSequencer("TrackVeloFitSeq").Members += [ ConfiguredFit("FitVelo","Rec/Track/PreparedVelo") ]
-         ## copy the velo tracks to the "best" container (except in RDST case)
-         if TrackSys().getProp( "OutputType" ).upper() != "RDST":
-            copyVelo = TrackContainerCopy( "CopyVelo" )
-            copyVelo.inputLocations = [ "Rec/Track/PreparedVelo" ];
-            GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
+         ## copy the velo tracks to the "best" container
+         copyVelo = TrackContainerCopy( "CopyVelo" )
+         copyVelo.inputLocations = [ "Rec/Track/PreparedVelo" ];
+         GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
    else:
       # complete the list of track lists
       if "Velo" in trackAlgs or "FastVelo" in trackAlgs :
