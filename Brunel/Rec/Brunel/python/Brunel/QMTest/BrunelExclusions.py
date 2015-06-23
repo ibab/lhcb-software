@@ -16,6 +16,10 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["| BeforeMagnetRegion/"]) +\
   LineSkipper(["| DownstreamRegion/"]) +\
   LineSkipper(["MD5 sum:"]) + \
+  LineSkipper(["RichAlignMoniR1...   INFO  Match       : P = "]) + \
+  LineSkipper(["RichAlignMoniR1...   INFO  Forward     : P = "]) + \
+  LineSkipper(["RichAlignMoniR2...   INFO  Match       : P = "]) + \
+  LineSkipper(["RichAlignMoniR2...   INFO  Forward     : P = "]) + \
   RegexpReplacer(when = "DeFTDetector         INFO Current FT geometry version =   20",
                  orig = r'Current FT geometry version =   20', repl = r'==> Initialize DeFTDetector') +\
   RegexpReplacer(when = "RichHotPixels     WARNING Rich::HPDAnalysisAlg::",

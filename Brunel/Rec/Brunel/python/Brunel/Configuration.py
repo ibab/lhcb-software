@@ -200,6 +200,8 @@ class Brunel(LHCbConfigurableUser):
         if self.getProp( "OnlineMode" ) :
             if not self.isPropertySet("Histograms") :
                 self.setProp("Histograms","Online")
+            if not CondDB().isPropertySet("Online") :
+                CondDB().setProp("Online", True)
 
         inputType = self.getProp( "InputType" ).upper()
         if inputType not in self.KnownInputTypes:

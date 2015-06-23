@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to configuration
+ . In OnlineMode, set CondDB().Online = True if not already set.
+
+- Changes to tests
+ . In BrunelExclusions.py: temporarily suppress failures arising from changes
+   in momentum cuts of RichAlignmentMonitors 
+
 </PRE><H1><A NAME=v47r9>2015-06-18 Brunel v47r9</A></H1><PRE>
 This version uses projects LHCb v38r7, Lbcom v16r6, Rec v17r7, Gaudi v26r2
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
