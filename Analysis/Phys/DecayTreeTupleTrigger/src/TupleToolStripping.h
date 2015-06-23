@@ -29,7 +29,7 @@ public:
   virtual ~TupleToolStripping( ); ///< Destructor
 
   StatusCode initialize();
-  virtual StatusCode fill( Tuples::Tuple& );
+  virtual StatusCode fill( Tuples::Tuple& tuple );
 
 private:
 
