@@ -1,6 +1,6 @@
 # Import the necessary modules.
-from Configurables import Generation, Special, Pythia8Production
-from Configruables import GenXiccProduction
+from Configurables import Generation, MinimumBias, Special, Pythia8Production
+from Configurables import GenXiccProduction
 
 # Add Pythia as minimum bias production tool.
 Generation().addTool(MinimumBias)
