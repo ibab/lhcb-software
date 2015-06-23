@@ -10,7 +10,8 @@
 !                by $Author$
 ! -----------------------------------------------------------------------------
 
-
+! 2015-06-23 - Vanya Belyaev
+ - test with new setting of hybrid base 
 
 ! 2015-02-22 - Vanya Belyaev
  - commit fixed version of script directory 

@@ -1,4 +1,4 @@
-#!/bin/zsh 
+#!/bin/bash
 
 
 ## prepare pkl file 
@@ -10,7 +10,10 @@ rm -f *.mdst
 rm -f *.root 
 rm -f *.xml 
 
-export LOKI_GENERATE_CPPCODE=5
+# positive: number of files 
+# negative: number of functors per file 
+# zero:     single file 
+export LOKI_GENERATE_CPPCODE=200
 
 ## run it and write C++ code 
 gaudirun.py CACHE.pkl | tee phase_1.log 
