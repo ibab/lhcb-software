@@ -4,6 +4,9 @@
 ! Purpose: Tests reading and writing of legacy datasets
 !-------------------------------------------------------------------------------
 
+! 2015-06-18 - Marco Cattaneo
+ . Fix tests to follow changes in output due to introduction of CondDB Run Stamp
+
 !========================= IOExample v4r15 2015-04-20 =========================
 ! 2015-04-12 - Marco Cattaneo
  - Follow PackParticlesAndVertices packing changes

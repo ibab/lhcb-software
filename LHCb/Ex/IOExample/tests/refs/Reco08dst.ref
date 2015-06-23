@@ -41,6 +41,7 @@
 # applying configuration of DstConf
 # /***** User DstConf/DstConf ************************************************************************
 # |-OutputName          = ''
+# |-Turbo               = False
 # |-SimType             = 'None'
 # |-PackType            = 'TES'
 # |-DstType             = 'NONE'
@@ -59,6 +60,7 @@
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
 # /***** User DstConf/DstConf ************************************************************************
 # |-OutputName          = ''
+# |-Turbo               = False
 # |-SimType             = 'None'
 # |-PackType            = 'TES'
 # |-DstType             = 'NONE'
@@ -80,6 +82,7 @@
 # <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-Upgrade                    = False
+# |-EnableRunStampCheck        = True
 # |-DBSnapshotDirectory        = '/group/online/hlt/conditions'
 # |-LatestLocalTagsByDataType  = []  (default: [])
 # |-Online                     = False
@@ -92,6 +95,7 @@
 # |-LoadCALIBDB                = 'OFFLINE'
 # |-AllLocalTagsByDataType     = []  (default: [])
 # |-UseOracle                  = False
+# |-RunStampCondition          = ''
 # |-PartitionConnectionString  = {}  (default: {})
 # |-LocalTags                  = {}  (default: {})
 # |-IgnoreHeartBeat            = False
@@ -110,8 +114,8 @@
 # No Writer defined for DIGI
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r3)
-                                          running on lxplus0072.cern.ch on Thu Apr 16 06:44:29 2015
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r4)
+                                          running on mcat.cern.ch on Tue Jun 23 16:21:32 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -152,7 +156,7 @@ TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditRestart':False
 TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditReinitialize':False
 TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditInitialize':False
 TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
-TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorCount':0
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorCounter':0
 TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorMax':1
 TESFingerPrint      DEBUG Property ['Name': Value] =  'Enable':True
 TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputLevel':1
@@ -193,7 +197,7 @@ DumpTracks          DEBUG Property ['Name': Value] =  'AuditRestart':False
 DumpTracks          DEBUG Property ['Name': Value] =  'AuditReinitialize':False
 DumpTracks          DEBUG Property ['Name': Value] =  'AuditInitialize':False
 DumpTracks          DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
-DumpTracks          DEBUG Property ['Name': Value] =  'ErrorCount':0
+DumpTracks          DEBUG Property ['Name': Value] =  'ErrorCounter':0
 DumpTracks          DEBUG Property ['Name': Value] =  'ErrorMax':1
 DumpTracks          DEBUG Property ['Name': Value] =  'Enable':True
 DumpTracks          DEBUG Property ['Name': Value] =  'OutputLevel':2
@@ -204,12 +208,17 @@ FSRInputCopyStream   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:R
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/data/2010/BHADRON.DST/00008399/0000/00008399_00001052_1.bhadron.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
+EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 ApplicationMgr       INFO Application Manager Started successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
+COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
+COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
+ONLINE_2008          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2008.db/ONLINE"
+ONLINE_2008          INFO Using TAG ""
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0xaab55e0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x5df9140@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -635,7 +644,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x114980c0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0xc389bb0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -1045,7 +1054,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x11498090@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0xc389b80@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -1445,7 +1454,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x12c7f890@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0xd9e4750@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -1859,7 +1868,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x11bec050@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0xd7debc0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -2299,7 +2308,7 @@ FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 5/5/81(Alg/Node/Total).
 ToolSvc              INFO Removing all tools created by ToolSvc
-RootCnvSvc           INFO Disconnected data IO:082F5A74-DDE0-E411-8C4E-02163E010D9F [ROOT-Reco08.dst]
 RootCnvSvc           INFO Disconnected data IO:1E6C5061-A145-E011-9550-002481E10D3E [root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/data/2010/BHADRON.DST/00008399/0000/00008399_00001052_1.bhadron.dst]
+RootCnvSvc           INFO Disconnected data IO:4EA23B3C-9F16-E511-AE96-02163E008F18 [ROOT-Reco08.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

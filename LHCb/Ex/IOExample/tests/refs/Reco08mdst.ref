@@ -43,30 +43,34 @@
 # --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
-# |-Upgrade                   = False
-# |-DBSnapshotDirectory       = '/group/online/hlt/conditions'
-# |-SQLiteLocalCopiesDir      = ''
-# |-Online                    = False
-# |-LogFile                   = ''
-# |-EnableRunChangeHandler    = False
-# |-Tags                      = {}  (default: {})
-# |-LoadCALIBDB               = 'OFFLINE'
-# |-LatestLocalTagsByDataType = []  (default: [])
-# |-AllLocalTagsByDataType    = []  (default: [])
-# |-PartitionName             = 'LHCb'
-# |-PartitionConnectionString = {}  (default: {})
-# |-LocalTags                 = {}  (default: {})
-# |-IgnoreHeartBeat           = False
-# |-Overrides                 = []  (default: [])
-# |-Simulation                = False  (default: False)
-# |-QueryGranularity          = 0
-# |-UseOracle                 = False
-# |-LatestGlobalTagByDataType = ''
-# |-UseDBSnapshot             = False
-# |-DisableLFC                = False
-# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
-# |-UseLatestTags             = []  (default: [])
-# |-OverwriteSQLiteLocalCopy  = False
+# |-Upgrade                    = False
+# |-EnableRunStampCheck        = True
+# |-DBSnapshotDirectory        = '/group/online/hlt/conditions'
+# |-LatestLocalTagsByDataType  = []  (default: [])
+# |-Online                     = False
+# |-LogFile                    = ''
+# |-SQLiteLocalCopiesDir       = ''
+# |-EnableRunChangeHandler     = False
+# |-RunChangeHandlerConditions = {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']}
+# |                            (default: {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']})
+# |-Tags                       = {}  (default: {})
+# |-LoadCALIBDB                = 'OFFLINE'
+# |-AllLocalTagsByDataType     = []  (default: [])
+# |-UseOracle                  = False
+# |-RunStampCondition          = ''
+# |-PartitionConnectionString  = {}  (default: {})
+# |-LocalTags                  = {}  (default: {})
+# |-IgnoreHeartBeat            = False
+# |-Overrides                  = []  (default: [])
+# |-Simulation                 = False  (default: False)
+# |-QueryGranularity           = 0
+# |-LatestGlobalTagByDataType  = ''
+# |-UseDBSnapshot              = False
+# |-DisableLFC                 = False
+# |-HeartBeatCondition         = '/Conditions/Online/LHCb/Tick'
+# |-LatestGlobalTagByDataTypes = []  (default: [])
+# |-UseLatestTags              = []  (default: [])
+# |-OverwriteSQLiteLocalCopy   = False
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 # skipping configuration of DigiConf
 # skipping configuration of CaloDstPackConf
@@ -74,8 +78,8 @@
 # skipping configuration of CaloDstUnPackConf
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r1)
-                                          running on lxplus0046 on Fri Apr 11 13:53:59 2014
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r4)
+                                          running on mcat.cern.ch on Tue Jun 23 16:21:55 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -116,7 +120,7 @@ TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditRestart':False
 TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditReinitialize':False
 TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditInitialize':False
 TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
-TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorCount':0
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorCounter':0
 TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorMax':1
 TESFingerPrint      DEBUG Property ['Name': Value] =  'Enable':True
 TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputLevel':1
@@ -129,11 +133,16 @@ FSRInputCopyStream   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:R
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/data/2010/CHARM.MDST/00008397/0000/00008397_00000939_1.charm.mdst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
+EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 ApplicationMgr       INFO Application Manager Started successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
+COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
+COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
+ONLINE_2008          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2008.db/ONLINE"
+ONLINE_2008          INFO Using TAG ""
 PrintHeader          INFO Run 80845, Event 71425568
-StoreExplorerAlg     INFO ========= /Event[0x604b9b0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x438c220@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /ODIN [Address: CLID=0x3ed Type=0x2]  LHCb::ODIN
@@ -211,7 +220,7 @@ StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type
 TESFingerPrint      DEBUG ==> Execute
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader          INFO Run 80845, Event 71457874
-StoreExplorerAlg     INFO ========= /Event[0x6356a60@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x46c25e0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /ODIN [Address: CLID=0x3ed Type=0x2]  LHCb::ODIN
@@ -287,7 +296,7 @@ StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type
 TESFingerPrint      DEBUG ==> Execute
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader          INFO Run 80845, Event 71441314
-StoreExplorerAlg     INFO ========= /Event[0x7322960@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x47a6f30@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /ODIN [Address: CLID=0x3ed Type=0x2]  LHCb::ODIN
@@ -348,7 +357,7 @@ StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type
 TESFingerPrint      DEBUG ==> Execute
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader          INFO Run 80845, Event 71496385
-StoreExplorerAlg     INFO ========= /Event[0x6ef8d50@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x5e0a700@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /ODIN [Address: CLID=0x3ed Type=0x2]  LHCb::ODIN
@@ -399,7 +408,7 @@ StoreExplorerAlg     INFO     +--> /Particle2LHCbIDMap [Address: CLID=0x370 Type
 TESFingerPrint      DEBUG ==> Execute
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader          INFO Run 80845, Event 71490736
-StoreExplorerAlg     INFO ========= /Event[0x78918d0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x5582e70@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /ODIN [Address: CLID=0x3ed Type=0x2]  LHCb::ODIN
@@ -471,7 +480,7 @@ FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 ToolSvc              INFO Removing all tools created by ToolSvc
-RootCnvSvc           INFO Disconnected data IO:2C23306B-46C1-E311-99BA-02163E00A743 [ROOT-Reco08.mdst]
+RootCnvSvc           INFO Disconnected data IO:BE077E51-9F16-E511-9396-02163E008F18 [ROOT-Reco08.mdst]
 RootCnvSvc           INFO Disconnected data IO:F44A5139-A045-E011-95EE-003048CF632E [root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/data/2010/CHARM.MDST/00008397/0000/00008397_00000939_1.charm.mdst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
