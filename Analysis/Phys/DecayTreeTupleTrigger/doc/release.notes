@@ -4,6 +4,9 @@
 ! Purpose     : Trigger and stripping related tuple tools
 !-----------------------------------------------------------------------------
 
+! 2015-06-24 - Eduardo Rodrigues
+ - Now really fixing the compilation warning in TupleToolStripping.cpp.
+
 ! 2015-06-23 - Eduardo Rodrigues
  - Removed compilation warning in TupleToolStripping.cpp.
 

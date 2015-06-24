@@ -29,6 +29,8 @@ public:
   virtual ~TupleToolStripping( ); ///< Destructor
 
   StatusCode initialize();
+
+  using TupleToolTriggerBase::fill;
   virtual StatusCode fill( Tuples::Tuple& tuple );
 
 private:
