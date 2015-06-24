@@ -167,14 +167,17 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
     // Only loop on hits with measurement that is IT type
     const LHCb::FitNode* fNode = dynamic_cast<const LHCb::FitNode*>(*iNodes);
 
-    if ( fNode->hasMeasurement() == false ||  fNode->measurement().type() != LHCb::Measurement::IT) continue;
+    if ( fNode->hasMeasurement() == false || 
+	 !(fNode->measurement().type() == LHCb::Measurement::IT ||
+	   fNode->measurement().type() == LHCb::Measurement::ITLite)) continue;
     if( m_hitsOnTrack && ( (*iNodes)->type() != LHCb::Node::HitOnTrack ) ) continue;
     if( (*iNodes)->errResidual2() <= TrackParameters::lowTolerance ) continue;
 
-    const STMeasurement* hit = dynamic_cast<const STMeasurement*>(&fNode->measurement());    
+    const Measurement& meas = fNode->measurement() ;
+    const STMeasurement* hit = dynamic_cast<const STMeasurement*>(&meas);    
 
     // unbiased residuals and biased residuals
-    const STChannelID chan = hit->lhcbID().stID();
+    const STChannelID chan = meas.lhcbID().stID();
     unsigned int uniquelayer = chan.detRegion()-1 + 4*( chan.layer() -1 + 4* (chan.station()-1) ) ;
     nodesByUniqueLayer[ uniquelayer ].push_back( fNode ) ;
 
@@ -188,7 +191,7 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
     double residual = fNode->residual() * std::sqrt(fNode->errMeasure2()/fNode->errResidual2()) ;
     plot(residual, "Residual","Residual (rms-unbiased)",-0.5,0.5,100) ;
     plot(residual, ittype+"/Residual","Residual (rms-unbiased)",-0.5,0.5,100) ;
-    if ( m_plotsBySector ) {
+    if ( hit && m_plotsBySector ) {
       std::string sectorName = hit->cluster()->sectorName();
       plot(residual, "BySector/Residual_"+sectorName, "Residual (rms-unbiased)", -0.5, 0.5, 100);
       plot(fNode->unbiasedResidual(), "BySector/UnbiasedResidual_"+sectorName, "Residual (unbiased)", -0.5, 0.5, 100);
@@ -215,45 +218,50 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
              "unbiasedResSector"+boxName  , 99.5, 400.5, -2., 2.,301 , 200  );
       plot2D(bin, fNode->residual() , ittype+"/biasedResSector"+boxName , 
              "/biasedResSector"+boxName  , 99.5, 400.5, -2., 2.,301 , 200  );
-      double noise = hit->sector().noise(chan);
-      if(noise>0) {
-        const double signalToNoise = hit->totalCharge()/noise;
-        plot2D(bin, signalToNoise,ittype+"/SNSector"+boxName ,"SNSector"+boxName  , 99.5, 400.5, -0.25, 100.25, 301, 201);
-        plot2D(bin, hit->totalCharge(),ittype+"/CSector"+boxName ,"CSector"+boxName  , 99.5, 400.5, -0.5, 200.5,301,201 );
-        if(m_plotsBySector) 
-        {
-          std::string sectorName = hit->cluster()->sectorName();
-          plot(signalToNoise, "BySector/SignalToNoise_"+sectorName, "Signal-to-noise", -0.5, 200.5, 200);
-        }
+      if( hit ) {
+	double noise = hit->sector().noise(chan);
+	if(noise>0) {
+	  const double signalToNoise = hit->totalCharge()/noise;
+	  plot2D(bin, signalToNoise,ittype+"/SNSector"+boxName ,"SNSector"+boxName  , 99.5, 400.5, -0.25, 100.25, 301, 201);
+	  plot2D(bin, hit->totalCharge(),ittype+"/CSector"+boxName ,"CSector"+boxName  , 99.5, 400.5, -0.5, 200.5,301,201 );
+	  if(m_plotsBySector) 
+	    {
+	      std::string sectorName = hit->cluster()->sectorName();
+	      plot(signalToNoise, "BySector/SignalToNoise_"+sectorName, "Signal-to-noise", -0.5, 200.5, 200);
+	    }
+	}
       }
     }
-    
-    // get the measurement and plot ST related quantities
-    plot(hit->totalCharge(),ittype+"/charge", "clusters charge", 0., 200., 100);
-    plot(hit->size(), ittype+"/size",  "cluster size", -0.5, 10.5, 11);
 
-    // get the measurement and plot ST related quantities
-    const std::string stationName = ITNames().StationToString(chan);
-    plot(hit->totalCharge(),stationName + "/charge", "clusters charge", 0., 200., 100);
-    plot(hit->size(), stationName + "/size",  "cluster size", -0.5, 10.5, 11);
+    if ( hit ) {
+      // get the measurement and plot ST related quantities
+      plot(hit->totalCharge(),ittype+"/charge", "clusters charge", 0., 200., 100);
+      plot(hit->size(), ittype+"/size",  "cluster size", -0.5, 10.5, 11);
       
-    // for this one we actually need the component perpendicular to B field.
-    Gaudi::XYZVector dir = fNode->state().slopes() ;
-    profile1D(dir.x() , hit->size(), stationName + "/cluster size vs tx", "cluster size vs tx", -0.3, 0.3 ) ;
-    profile1D(std::sqrt( dir.x() * dir.x() + dir.y() * dir.y() )/ dir.z(),
-              hit->totalCharge(), stationName + "/cluster charge vs slope", "cluster charge vs local slope",0,0.4) ;
+      // get the measurement and plot ST related quantities
+      const std::string stationName = ITNames().StationToString(chan);
+      plot(hit->totalCharge(),stationName + "/charge", "clusters charge", 0., 200., 100);
+      plot(hit->size(), stationName + "/size",  "cluster size", -0.5, 10.5, 11);
       
-    if (hit->highThreshold() ) ++nHigh;
-    measVector.push_back(hit);
-
+      // for this one we actually need the component perpendicular to B field.
+      Gaudi::XYZVector dir = fNode->state().slopes() ;
+      profile1D(dir.x() , hit->size(), stationName + "/cluster size vs tx", "cluster size vs tx", -0.3, 0.3 ) ;
+      profile1D(std::sqrt( dir.x() * dir.x() + dir.y() * dir.y() )/ dir.z(),
+		hit->totalCharge(), stationName + "/cluster charge vs slope", "cluster charge vs local slope",0,0.4) ;
+      
+      if (hit->highThreshold() ) ++nHigh;
+      measVector.push_back(hit);
+    }
   } // nodes
 
-  // plot high fraction and also shorth
-  plot(nHigh/double(itIds.size()), ittype+"/highFrac", "high fraction", 0., 1., 100);
-  const double shorth = SiChargeFun::shorth(measVector.begin(),measVector.end());
-  plot(shorth,ittype+"/shorth" ,"shorth charge", 0., 100., 200);
-  const double gm = SiChargeFun::generalizedMean(measVector.begin(), measVector.end()); 
-  plot(gm,ittype+"/generalized mean","generalized mean charge",  0., 100, 200);
+  if( measVector.size()>0 ) {
+    // plot high fraction and also shorth
+    plot(nHigh/double(itIds.size()), ittype+"/highFrac", "high fraction", 0., 1., 100);
+    const double shorth = SiChargeFun::shorth(measVector.begin(),measVector.end());
+    plot(shorth,ittype+"/shorth" ,"shorth charge", 0., 100., 200);
+    const double gm = SiChargeFun::generalizedMean(measVector.begin(), measVector.end()); 
+    plot(gm,ittype+"/generalized mean","generalized mean charge",  0., 100, 200);
+  }
 
   // make overlap histograms.
 
