@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-06-15 - Andrea Contu
+ - Updated references for stripping tests
+
 !======================= DaVinciTests v2r32 2015-06-03 =======================
 
 ! 2015-06-03 - Eduardo Rodrigues
