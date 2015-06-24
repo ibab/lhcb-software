@@ -56,6 +56,8 @@ TrackMonitorBase( name , pSvcLocator )
 {
   // FIXME: remove this unused flag
   declareProperty( "UseUT"       , m_useUT =  false );
+  declareProperty( "MaxMomentum", m_maxMomentum = 100. ) ;
+  declareProperty( "MaxChi2Dof", m_maxChi2Dof = 5. ) ;
 }
 
 //=============================================================================
@@ -185,7 +187,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
 {
   // plots we should always make...
   plot(track.probChi2(),type+"/2","probChi2",0, 1, 50);
-  plot(track.chi2PerDoF(),type+"/3","chi2/ndof",0,20);
+  plot(track.chi2PerDoF(),type+"/3","chi2/ndof",0,m_maxChi2Dof);
   plot(track.nLHCbIDs(),type+"/4","#nLHCbIDs", -0.5, 60.5, 61);
   plot(track.pseudoRapidity(),type+"/7", "eta", 0.95 , 6.05, 50);
   plot(track.phi(),type+"/8", "phi",-M_PI,M_PI,50) ;
@@ -211,7 +213,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   }
 
   if( firststate.qOverP()!=0 ) {
-    plot(track.p()/Gaudi::Units::GeV, type+"/5" ,"momentum", 0., 100., 100);
+    plot(track.p()/Gaudi::Units::GeV, type+"/5" ,"momentum", 0., m_maxMomentum, 100);
     plot(track.pt()/Gaudi::Units::GeV,type+"/6", "pt", 0, 10, 100);
   }
 
@@ -313,27 +315,39 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   if(kalfit) {
     LHCb::ChiSquare tmp;
     if( (tmp=kalfit->chi2Velo()).nDoF() > 0 ) 
-      plot(tmp.chi2PerDoF(),type+"/chi2PerDofVelo","chi/dof for velo segment",0,20) ;
+      plot(tmp.chi2PerDoF(),type+"/chi2PerDofVelo","chi/dof for velo segment",0,m_maxChi2Dof) ;
     if( (tmp=kalfit->chi2Downstream()).nDoF() > 0 ) 
-      plot(tmp.chi2PerDoF(),type+"/chi2PerDofDownstream","chi/dof for T(Muon) segment",0,20) ;
+      plot(tmp.chi2PerDoF(),type+"/chi2PerDofDownstream","chi/dof for T(Muon) segment",0,m_maxChi2Dof) ;
     if( (tmp=kalfit->chi2Match()).nDoF() > 0 )
-      plot(tmp.chi2PerDoF(),type+"/chi2PerDofMatch","chi/dof upstream-downstream match",0,20) ;
+      plot(tmp.chi2PerDoF(),type+"/chi2PerDofMatch","chi/dof upstream-downstream match",0,m_maxChi2Dof) ;
     if( (tmp=kalfit->chi2Muon()).nDoF() > 0 ) 
-      plot(tmp.chi2PerDoF(),type+"/chi2PerDofMuon","chi/dof for muon segment",0,20) ; 
-    double mom = track.p()/Gaudi::Units::GeV ;
-    if( kalfit->chi2Velo().nDoF() > 0 ) 
+      plot(tmp.chi2PerDoF(),type+"/chi2PerDofMuon","chi/dof for muon segment",0,m_maxChi2Dof) ; 
+    const double mom = track.p()/Gaudi::Units::GeV ;
+    const double phi = track.phi() ;
+    if( kalfit->chi2Velo().nDoF() > 0 ) {
       profile1D( mom, kalfit->chi2Velo().prob(), type+"/chi2ProbVeloVsMom",
-                 "chi2 prob for velo segment versus momentum",0,30,30) ;
-    if( kalfit->chi2Downstream().nDoF() > 0 ) 
+                 "chi2 prob for velo segment versus momentum",0,m_maxMomentum,50) ;
+      profile1D( phi, kalfit->chi2Velo().prob(), type+"/chi2ProbVeloVsPhi",
+                 "chi2 prob for velo segment versus phi",-M_PI,M_PI,50) ;
+    }
+    if( kalfit->chi2Downstream().nDoF() > 0 ) {
+      const LHCb::State* Tstate = track.stateAt( LHCb::State::AtT ) ;
+      const double phiT = Tstate ? std::atan2(Tstate->y(),Tstate->x()) : phi ;
       profile1D( mom, kalfit->chi2Downstream().prob(), type+"/chi2ProbDownstreamVsMom",
-                 "chi2 prob for T(muon) segment versus momentum",0,30,30) ;
-    if( kalfit->chi2Match().nDoF() > 0 )
+                 "chi2 prob for T(muon) segment versus momentum",0,m_maxMomentum,50) ;
+      profile1D( phiT, kalfit->chi2Downstream().prob(), type+"/chi2ProbDownstreamVsPhi",
+                 "chi2 prob for T(muon) segment versus phi",-M_PI,M_PI,50) ;
+    }
+    if( kalfit->chi2Match().nDoF() > 0 ) {
       profile1D(mom, kalfit->chi2Match().prob(),type+"/chi2ProbMatchVsMom",
-                "chi2 prob upstream-downstream match versus momentum",0,30,30) ;
+                "chi2 prob upstream-downstream match versus momentum",0,m_maxMomentum,50) ;
+      profile1D(phi, kalfit->chi2Match().prob(),type+"/chi2ProbMatchVsPhi",
+                "chi2 prob upstream-downstream match versus phi",-M_PI,M_PI,50) ;
+    }
     if( kalfit->chi2().nDoF() > 0 ) {
-      profile1D(mom, kalfit->chi2().prob(),type+"/chi2ProbVsMom","chi2 prob versus momentum",0,50,50) ;
+      profile1D(mom, kalfit->chi2().prob(),type+"/chi2ProbVsMom","chi2 prob versus momentum",0,m_maxMomentum,50) ;
       profile1D(track.pseudoRapidity(), kalfit->chi2().prob(),type+"/chi2ProbVsEta","chi2 prob versus eta",2,5,30) ;
-      profile1D(track.phi(), kalfit->chi2().prob(),type+"/chi2ProbVsPhi","chi2 prob versus phi",-M_PI,M_PI,50) ;
+      profile1D(phi, kalfit->chi2().prob(),type+"/chi2ProbVsPhi","chi2 prob versus phi",-M_PI,M_PI,50) ;
     }
     
   }
