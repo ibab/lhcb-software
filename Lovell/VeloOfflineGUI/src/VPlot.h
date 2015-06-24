@@ -39,6 +39,9 @@ public:
   VPlotOps * m_plotOps;
   QWidget * m_statsBox;
   unsigned int m_moduleNum;
+  bool m_yRangeSpecified;
+  double m_yLow;
+  double m_yUp;
 
 
   // Methods __________________________________________________________________

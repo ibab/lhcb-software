@@ -10,7 +10,10 @@ VPlot::VPlot() :
   m_drawn(false),
   m_vcp(NULL),
   m_layout(NULL),
-  m_multipleModules(false){}
+  m_multipleModules(false),
+	m_yRangeSpecified(false),
+	m_yLow(0),
+	m_yUp(1) {}
 
 
 //_____________________________________________________________________________
@@ -25,7 +28,10 @@ VPlot::VPlot(std::string title,
   m_vcp(NULL),
   m_layout(NULL),
   m_multipleModules(multipleModules),
-  m_moduleNum(0)
+  m_moduleNum(0),
+	m_yRangeSpecified(false),
+	m_yLow(0),
+	m_yUp(1)
 {
   m_title = title;
   m_tab = tab;
@@ -41,6 +47,7 @@ void VPlot::draw() {
   m_vcp = setupPlot(false);
   m_layout->addWidget(m_vcp, 1, 1, 1, 1);
   m_vcp->makeSelected();
+  if (m_yRangeSpecified) m_vcp->m_qcp->yAxis->setRange(QCPRange(m_yLow, m_yUp));
 }
 
 
@@ -250,9 +257,9 @@ void VPlot::add1dPlot(VCustomPlot * vcp, VPlottable* plottable) {
 
   if (plottable->m_plottableStyle == 2) {
     // Like a TGraph with scatter points (red line and discs).
-    QCPScatterStyle ss(QCPScatterStyle::ssDisc, Qt::white, 6);
+    QCPScatterStyle ss(QCPScatterStyle::ssDisc, Qt::blue, 6);
     vcp->m_qcp->graph()->setScatterStyle(ss);
-    vcp->m_qcp->graph()->setPen(QPen(Qt::white));
+    vcp->m_qcp->graph()->setPen(QPen(Qt::blue));
   }
 
   if (plottable->m_plottableStyle == 1) {
@@ -269,6 +276,7 @@ void VPlot::add1dPlot(VCustomPlot * vcp, VPlottable* plottable) {
 
 void VPlot::makePopUp() {
   VCustomPlot * vcp = setupPlot(true);
+  if (m_yRangeSpecified) vcp->m_qcp->yAxis->setRange(QCPRange(m_yLow, m_yUp));
   vcp->resize(800, 600);
   vcp->show();
 }
@@ -281,6 +289,7 @@ void VPlot::refresh() {
   m_vcp = setupPlot(false);
   m_layout->addWidget(m_vcp, 1, 1, 1, 1);
   m_plotOps->newSelection(this, true);
+  if (m_yRangeSpecified) m_vcp->m_qcp->yAxis->setRange(QCPRange(m_yLow, m_yUp));
 }
 
 

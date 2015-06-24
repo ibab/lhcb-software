@@ -31,7 +31,6 @@ public:
     std::string rawData;
     while(fgets(buff, sizeof(buff), in)!=NULL) rawData.append(buff);
     pclose(in);
-
     rapidjson::Document d;
     d.Parse(rawData.c_str());
     // Successful plot retrieval means an array of two plotables
@@ -65,6 +64,12 @@ public:
     	else std::cout<<"Unknown root object: "<<className<<std::endl;
     }
     else std::cout<<"Unknown root object: "<<className<<std::endl;
+
+    if (v["data"].HasMember("yAxisMaximum")) {
+    	m_plot->m_yRangeSpecified = true;
+    	m_plot->m_yLow = v["data"]["yAxisMinimum"].GetDouble();
+    	m_plot->m_yUp = v["data"]["yAxisMaximum"].GetDouble();
+    }
   }
 
 
@@ -115,6 +120,8 @@ public:
     m_plot->m_xAxisTitle = a[0].GetString();
     m_plot->m_yAxisTitle = a[1].GetString();
     std::cout<<"Plot retrieval successful: "<<m_name<<std::endl;
+
+    if ((*d)["data"]["asPoints"].GetBool()) m_plottableStyle = 2;
   }
 
   //___________
