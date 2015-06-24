@@ -89,16 +89,16 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'LambdaProtonPT': 0.0 * GeV},
                  'Lambda2PPiLLhighPT' : {
                                 'LambdaProtonP' : 2.0 * GeV,
-                                'LambdaProtonPT': 3.5 * GeV},
+                                'LambdaProtonPT': 3.0 * GeV},
                  'Lambda2PPiDDhighPT' : {
                                 'LambdaProtonP' : 2.0 * GeV,
-                                'LambdaProtonPT': 3.5 * GeV},
+                                'LambdaProtonPT': 3.0 * GeV},
                  'Lambda2PPiLLveryhighPT' : {
                                 'LambdaProtonP' : 2.0 * GeV,
-                                'LambdaProtonPT': 10.0 * GeV},
+                                'LambdaProtonPT': 6.0 * GeV},
                  'Lambda2PPiDDveryhighPT' : {
                                 'LambdaProtonP' : 2.0 * GeV,
-                                'LambdaProtonPT': 10.0 * GeV},
+                                'LambdaProtonPT': 6.0 * GeV},
                  'Lambda2PPiLLisMuon' : {
                                 'LambdaProtonP' : 2.0 * GeV,
                                 'LambdaProtonPT': 0.0 * GeV},

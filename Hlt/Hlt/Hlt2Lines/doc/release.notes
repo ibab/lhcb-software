@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-06-24 - Olli Lupton
+ - Update default L0->ppi thresholds, to match EM thresholds in r189993 of HltSettings
+
 ! 2015-06-24 - Francesco Dettori
  - Added PIDe cut and enlarged the mass window for RareCharm lines with electrons.
 
