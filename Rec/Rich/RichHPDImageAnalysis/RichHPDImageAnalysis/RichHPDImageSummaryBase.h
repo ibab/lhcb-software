@@ -83,15 +83,16 @@ namespace Rich
 
       /// Get 2D image histograms, given a smart ID
       TH2D* getHPDImageHist( const LHCb::RichSmartID& smartID ) ;
-
-
+      
+    protected:
+      
+      /// Fit paramaters
+      HPDFit::Params m_params;
+      
     private:
 
       /// Minimum number of hits required in HPD
       unsigned int m_minOccupancy ;
-
-      /// Fit paramaters
-      HPDFit::Params m_params;
 
       /// Pointer to Rich Sys Detector Element
       const DeRichSystem * m_RichSys;

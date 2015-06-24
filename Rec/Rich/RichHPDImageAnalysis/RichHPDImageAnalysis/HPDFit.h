@@ -16,7 +16,7 @@ namespace Rich
      *  Simple class to do a fit to the image in an HPD
      *
      *  @author Chris Jones
-     *  @date   02/03/0211
+     *  @date   02/03/2011
      */
     class HPDFit
     {
@@ -28,7 +28,7 @@ namespace Rich
        *  Fit parameters for HPDFit
        *
        *  @author Chris Jones
-       *  @date   02/03/0211
+       *  @date   02/03/2011
        */
       class Params
       {
@@ -61,7 +61,7 @@ namespace Rich
        *  Fit result for HPDFit
        *
        *  @author Chris Jones
-       *  @date   02/03/0211
+       *  @date   02/03/2011
        */
       class Result
       {

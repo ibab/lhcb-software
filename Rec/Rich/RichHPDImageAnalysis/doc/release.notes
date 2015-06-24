@@ -4,6 +4,10 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2015-06-24 - jonesc
+ - Make parameters object in HPD fitting base class protected, to allow
+   direct use in derived classes.
+
 ! 2015-06-06 - Chris Jones
  - Add support for fitting log-z images when the first fit gave unusual fit
    errors. Designed to try and deal with image fits for HPDs with strongly 

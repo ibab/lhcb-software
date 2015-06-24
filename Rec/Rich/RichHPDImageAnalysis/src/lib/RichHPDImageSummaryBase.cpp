@@ -23,7 +23,8 @@ SummaryBase::SummaryBase( const std::string& name,
 {
   setProperty( "StatPrint", false );
   declareProperty( "MinHPDOccupancy",    m_minOccupancy = 1000 );
-  declareProperty( "HPDFitType" ,        m_params.type );
+  declareProperty( "HPDFitType" ,        m_params.type = "Sobel" );
+  declareProperty("RetryWithLogzImage",  m_params.retryWithLogzImage = true );
   declareProperty( "CompareToCondDB" ,   m_compareCondDB = true );
   declareProperty( "MaxAllowedMovement", m_maxMovement = 0.3 );
   declareProperty( "Keep2DHistograms",   m_keep2Dhistos = false );
