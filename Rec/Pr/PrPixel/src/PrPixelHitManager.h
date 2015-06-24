@@ -5,12 +5,13 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
+
 // LHCb
-// Event/DigiEvent
-#include "Event/VPCluster.h"
 // Kernel/LHCbKernel
 #include "Kernel/VPConstants.h"
 #include "Kernel/VPChannelID.h"
+// DAQ/DAQKernel
+#include "DAQKernel/DecoderToolBase.h"
 // Det/VPDet
 #include "VPDet/DeVP.h"
 // Local
@@ -33,7 +34,7 @@ static const InterfaceID IID_PrPixelHitManager("PrPixelHitManager", 1, 0);
  *  @date   2012-01-05
  */
 
-class PrPixelHitManager : public GaudiTool, public IIncidentListener {
+class PrPixelHitManager : public Decoder::ToolBase, public IIncidentListener {
 
  public:
   // Return the interface ID
@@ -48,8 +49,8 @@ class PrPixelHitManager : public GaudiTool, public IIncidentListener {
   virtual StatusCode initialize();
   virtual StatusCode finalize();
 
-  void buildHitsFromRawBank();
-  void buildHitsFromClusters();
+  bool buildHitsFromRawBank();
+  bool buildHitsFromClusters();
   void clearHits();
 
   void handle(const Incident &incident);
@@ -85,11 +86,7 @@ class PrPixelHitManager : public GaudiTool, public IIncidentListener {
   /// Sort hits by X within every module (to speed up the search).
   void sortByX();
   /// Wrapper for storing clusters on TES (trigger or offline)
-  void storeClusters();
-  /// Store trigger clusters on TES.
-  void storeTriggerClusters();
-  /// Store offline (all) clusters on TES.
-  void storeOfflineClusters();
+  bool storeClusters();
 
  private:
   /// Cache Super Pixel patterns for isolated Super Pixel clustering.
@@ -161,7 +158,12 @@ class PrPixelHitManager : public GaudiTool, public IIncidentListener {
   /// Storage for 3D points of all clusters. Not used in trigger.
   std::vector<PrPixelHit> m_allHits;
 
+  /// Decode super pixel raw banks.
   void buildHitsFromSPRawBank(const std::vector<LHCb::RawBank *> &tBanks);
+  /// Store trigger clusters on TES.
+  void storeTriggerClusters();
+  /// Store offline (all) clusters on TES.
+  void storeOfflineClusters();
 };
 
 #endif  // PRPIXELHITMANAGER_H

@@ -93,7 +93,6 @@ class PrPixelTracking : public GaudiAlgorithm {
   std::string m_debugToolName;
   int m_wantedKey;
   IPrDebugTool *m_debugTool;
-  bool m_isDebug;
   bool m_debug;
 
   /// Use lite clusters or raw banks.

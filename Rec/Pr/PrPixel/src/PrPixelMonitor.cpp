@@ -3,6 +3,7 @@
 // LHCb
 #include "Event/Track.h"
 #include "Event/StateParameters.h"
+#include "Event/VPCluster.h"
 // Local
 #include "PrPixelMonitor.h"
 

@@ -75,7 +75,6 @@ StatusCode PrPixelTracking::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc;
-  m_isDebug = msgLevel(MSG::DEBUG);
   // Setup the hit manager.
   m_hitManager = tool<PrPixelHitManager>("PrPixelHitManager");
   m_hitManager->setMaxClusterSize(m_maxClusterSize);
@@ -115,13 +114,17 @@ StatusCode PrPixelTracking::execute() {
   }
   if (m_clearHits) m_hitManager->clearHits();
   if (m_runOnRawBanks) {
-    m_hitManager->buildHitsFromRawBank();
+    if (!m_hitManager->buildHitsFromRawBank()) {
+      return Error("Cannot retrieve/decode raw bank.", StatusCode::SUCCESS);
+    }
   } else {
-    m_hitManager->buildHitsFromClusters();
+    if (!m_hitManager->buildHitsFromClusters()) {
+      return Error("Cannot retrieve clusters.", StatusCode::SUCCESS);
+    }
   }
   m_hitManager->sortByX();
 
-  if (m_isDebug || 0 <= m_wantedKey) {
+  if (0 <= m_wantedKey) {
     if (0 <= m_wantedKey) {
       info() << "--- Looking for track " << m_wantedKey << endmsg;
     }
@@ -130,7 +133,7 @@ StatusCode PrPixelTracking::execute() {
     for (unsigned int i = firstModule; i <= lastModule; ++i) {
       const PrPixelHits& hits = m_hitManager->hits(i);
       for (auto it = hits.cbegin(), end = hits.cend(); it != end; ++it) { 
-        if (m_isDebug || matchKey(*it)) printHit(*it);
+        if (matchKey(*it)) printHit(*it);
       }
     }
   }
@@ -253,7 +256,7 @@ void PrPixelTracking::searchByPair() {
         // Skip hits out of Y-pos. limit.
         if (fabs(y1 - y0) > dyMax) continue;
 
-        m_debug = m_isDebug;
+        m_debug = false;
         if (m_debugTool) {
           if (matchKey(*ith0) && matchKey(*ith1)) m_debug = true;
           if (m_debug) {
@@ -317,7 +320,7 @@ void PrPixelTracking::searchByPair() {
 }
 
 //=========================================================================
-//  Convert the local tracks to LHCb tracks
+// Convert the local tracks to LHCb tracks
 //=========================================================================
 void PrPixelTracking::makeLHCbTracks() {
 

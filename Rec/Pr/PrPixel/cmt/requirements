@@ -13,6 +13,8 @@ branches          cmt doc src
 # Used packages
 #=====================================================================
 use     VPDet           v*      Det
+use     DAQKernel       v*      DAQ
+use     DAQEvent        v*      Event
 use     DigiEvent       v*      Event
 use     TrackEvent      v*      Event
 use     PrKernel        v*      Pr 

@@ -1,19 +1,14 @@
 #include <cmath>
 
+// Gaudi
 #include "GaudiKernel/ToolFactory.h"
-
+// LHCb
 #include "Event/RawEvent.h"
-
+#include "Event/VPCluster.h"
+// Local
 #include "PrPixelHitManager.h"
 
 using namespace PrPixel;
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : PrPixelHitManager
-//
-// 2012-01-05 : Olivier Callot
-// 2014-03-11 : Kurt Rinnert
-//-----------------------------------------------------------------------------
 
 DECLARE_TOOL_FACTORY(PrPixelHitManager)
 
@@ -23,11 +18,17 @@ DECLARE_TOOL_FACTORY(PrPixelHitManager)
 PrPixelHitManager::PrPixelHitManager(const std::string &type,
                                      const std::string &name,
                                      const IInterface *parent)
-    : GaudiTool(type, name, parent),
+    : Decoder::ToolBase(type, name, parent),
       m_maxClusterSize(4),
       m_trigger(false),
       m_clusterLocation(LHCb::VPClusterLocation::Default) {
   declareInterface<PrPixelHitManager>(this);
+  // Initialise default search paths.
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Velo);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
+  initRawEventSearch();
+
 }
 
 //=============================================================================
@@ -40,7 +41,7 @@ PrPixelHitManager::~PrPixelHitManager() {}
 //=============================================================================
 StatusCode PrPixelHitManager::initialize() {
 
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = Decoder::ToolBase::initialize();
   if (sc.isFailure()) return sc;
   m_isDebug = msgLevel(MSG::DEBUG);
   if (m_isDebug) debug() << "==> Initialize" << endmsg;
@@ -93,7 +94,7 @@ StatusCode PrPixelHitManager::initialize() {
 //=========================================================================
 StatusCode PrPixelHitManager::finalize() {
   info() << "Maximum number of Velo hits " << m_maxSize << endmsg;
-  return GaudiTool::finalize();
+  return Decoder::ToolBase::finalize();
 }
 
 //=========================================================================
@@ -215,14 +216,12 @@ void PrPixelHitManager::cacheSPPatterns() {
   return;
 }
 
-//=========================================================================
-// Rebuild the geometry. Needed in case something changes in the Velo during the
-// run...
-//=========================================================================
+//============================================================================
+// Rebuild the geometry (in case something changes in the Velo during the run)
+//============================================================================
 StatusCode PrPixelHitManager::rebuildGeometry() {
 
   // Delete the existing modules.
-  std::vector<PrPixelModule *>::iterator itm;
   m_modules.clear();
   m_module_pool.clear();
   m_firstModule = 999;
@@ -296,7 +295,7 @@ StatusCode PrPixelHitManager::rebuildGeometry() {
   if (msgLevel(MSG::DEBUG)) {
     debug() << "Found modules from " << m_firstModule << " to " << m_lastModule
             << endmsg;
-    for (itm = m_modules.begin(); m_modules.end() != itm; ++itm) {
+    for (auto itm = m_modules.begin(); m_modules.end() != itm; ++itm) {
       if (*itm) {
         debug() << "  Module " << (*itm)->number() << " prev "
                 << (*itm)->previous() << endmsg;
@@ -336,41 +335,28 @@ void PrPixelHitManager::clearHits() {
 }
 
 //=========================================================================
-// Build PrPixelHits from Super Pixel or Cluster Raw Bank
+// Build PrPixelHits from raw bank.
 //=========================================================================
-void PrPixelHitManager::buildHitsFromRawBank() {
-  if (m_eventReady) return;
+bool PrPixelHitManager::buildHitsFromRawBank() {
+  if (m_eventReady) return true;
   m_eventReady = true;
 
-  // Retrieve the RawEvent:
-  LHCb::RawEvent *rawEvent =
-      GaudiTool::getIfExists<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+  // Retrieve the RawEvent.
+  LHCb::RawEvent* rawEvent = findFirstRawEvent();
   if (NULL == rawEvent) {
-    rawEvent =
-        GaudiTool::getIfExists<LHCb::RawEvent>(LHCb::RawEventLocation::Other);
+     warning() << "Cannot retrieve raw event." << endmsg;
+     return false;
   }
-  if (NULL == rawEvent) {
-    return;
-  }
+  auto tBanks = rawEvent->banks(LHCb::RawBank::VP);
+  if (tBanks.empty()) return true;
 
-  const std::vector<LHCb::RawBank *> &tBanks =
-      rawEvent->banks(LHCb::RawBank::VP);
-  if (0 == tBanks.size()) {
-    return;
+  const unsigned int version = (*tBanks.begin())->version();
+  if (version != 2) {
+    warning() << "Unsupported raw bank version (" << version << ")" << endmsg;
+    return false;
   }
-
-  const unsigned int bankVersion = (*tBanks.begin())->version();
-  switch (bankVersion) {
-    case 1:
-      error() << "Lite cluster banks are not supported any more." << endmsg;
-      break;
-    case 2:
-      buildHitsFromSPRawBank(tBanks);
-      break;
-    default:
-      error() << "Unsupported VP Raw Bank version." << endmsg;
-      break;
-  }
+  buildHitsFromSPRawBank(tBanks);
+  return true;
 }
 
 //=========================================================================
@@ -699,13 +685,13 @@ void PrPixelHitManager::buildHitsFromSPRawBank(
 //=========================================================================
 // Wrapper for storing clusters (either trigger or offline).
 //=========================================================================
-void PrPixelHitManager::storeClusters() {
+bool PrPixelHitManager::storeClusters() {
 
   // If the event is not ready (that is, we are asked to store
   // clusters without running the pixel tracking before), we have
   // to run the clustering/3D point creation first.
   if (!m_eventReady) {
-    buildHitsFromRawBank();
+    if (!buildHitsFromRawBank()) return false;
   }
 
   // Store the clusters.
@@ -714,6 +700,7 @@ void PrPixelHitManager::storeClusters() {
   } else {
     storeOfflineClusters();
   }
+  return true;
 }
 
 //=========================================================================
@@ -757,7 +744,6 @@ void PrPixelHitManager::storeTriggerClusters() {
         new LHCb::VPCluster(std::make_pair(fx, fy), x, y, z, pixels), cid);
   }
 
-  return;
 }
 
 //=========================================================================
@@ -796,7 +782,6 @@ void PrPixelHitManager::storeOfflineClusters() {
         cid);
   }
 
-  return;
 }
 
 //=========================================================================
@@ -819,18 +804,16 @@ void PrPixelHitManager::sortByX() {
 //=========================================================================
 // Convert the clusters to PrPixelHits
 //=========================================================================
-void PrPixelHitManager::buildHitsFromClusters() {
+bool PrPixelHitManager::buildHitsFromClusters() {
 
-  if (m_eventReady) return;
+  if (m_eventReady) return true;
   m_eventReady = true;
 
   // Get the clusters.
   const LHCb::VPClusters *clusters =
       GaudiTool::getIfExists<LHCb::VPClusters>(LHCb::VPClusterLocation::Default);
-  if (!clusters) {
-    error() << "No clusters in " << LHCb::VPClusterLocation::Default << endmsg;
-    return;
-  }
+  if (!clusters) return false;
+
   // If necessary adjust the size of the hit pool.
   if (clusters->size() > m_pool.size()) {
     m_pool.resize(clusters->size() + 100);
@@ -860,4 +843,5 @@ void PrPixelHitManager::buildHitsFromClusters() {
     m_pool[m_nHits].setHit(LHCb::LHCbID(cid), gx, gy, gz, w, w, module);
     m_modules[module]->addHit(&(m_pool[m_nHits++]));
   }
+  return true;
 }
