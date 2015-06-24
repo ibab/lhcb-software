@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to references to reflect changes since v47r9
+  . Remove list of detectors to process for FieldOff as it was the same as for
+    FieldOn - just, CALO and RICH processing order was inverted. (RecConf)
+  . Follow changes in Rich Alignment monitoring
+
 - Changes to configuration
  . In OnlineMode, set CondDB().Online = True if not already set.
 
