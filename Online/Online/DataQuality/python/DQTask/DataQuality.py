@@ -147,7 +147,7 @@ def setupOnline():
   mep = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,buffs,True)
   mep.ConnectWhen = "start";
   sel = OnlineEnv.mbmSelector(input=buffs[0],type='ONE',decode=False,event_type=2)
-  sel.REQ1 = "EvType=2;TriggerMask=0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+  sel.REQ1 = "EvType=2;TriggerMask=0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
   app.EvtSel  = sel
   app.Runable = OnlineEnv.evtRunable(mep)
   app.Runable.NumErrorToStop = -1;

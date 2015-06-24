@@ -6,25 +6,40 @@ QioEvent  = 5
 TkEvent   = 6
 PVSSEvent = 7
 
-import sys, platform
-try:
-  import cppyy as Dict
-  if platform.system()=='Linux':
-    Dict.loadDictionary('libOnlineKernelDict')
-  else:
-    Dict.loadDictionary('OnlineKernelDict.dll')
+CPP = None
+gbl = None
+std = None
 
-  CPP = Dict.makeNamespace('CPP')
-  gbl = Dict.gbl
-  std = gbl.std
+Interactor  = None
+Event       = None
+BaseSensor  = None
+IocSensor   = None
+TimeSensor  = None
+Sensor      = None
+UpiSensor   = None
 
-  Interactor           = CPP.PyInteractor
-  Event                = CPP.Event
-  BaseSensor           = CPP.Sensor
-  IocSensor            = CPP.IocSensor
-  TimeSensor           = CPP.TimeSensor
-  Sensor               = gbl.UpiSensor
-  UpiSensor            = gbl.UpiSensor
-except Exception,X:
-  print 'OnlineKernel: Failed to use cppyy - you need to live without. [%s]'%(str(X),)
 
+def have_cppyy():
+  import sys, platform
+  try:
+    import cppyy as Dict
+    if platform.system()=='Linux':
+      Dict.loadDictionary('libOnlineKernelDict')
+    else:
+      Dict.loadDictionary('OnlineKernelDict.dll')
+
+    CPP = Dict.makeNamespace('CPP')
+    gbl = Dict.gbl
+    std = gbl.std
+
+    Interactor           = CPP.PyInteractor
+    Event                = CPP.Event
+    BaseSensor           = CPP.Sensor
+    IocSensor            = CPP.IocSensor
+    TimeSensor           = CPP.TimeSensor
+    Sensor               = gbl.UpiSensor
+    UpiSensor            = gbl.UpiSensor
+    return True
+  except Exception,X:
+    print 'OnlineKernel: Failed to use cppyy - you need to live without. [%s]'%(str(X),)
+    return None

@@ -1,25 +1,50 @@
 //==============================================================
 #include "$INFO_OPTIONS"
 //==============================================================
-ApplicationMgr.ExtSvc               += { "AdderSvc/HistoAdder","AdderSvc/CountAdder" };
+ApplicationMgr.ExtSvc               += { 
+  "MonitorSvc", 
+    "AdderSvc/DQRcvCountAdder",
+    "AdderSvc/DQWorkerHistoAdder",
+    "AdderSvc/DQWorkerCountAdder",
+    "LHCb::TransitionSleepSvc/TransitionSleepSvc"
+};
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
+
+MessageSvc.fifoPath                  = "$LOGFIFO";
+MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+MonitorSvc.CounterUpdateInterval     = 15;
+
+TransitionSleepSvc.StopSleep         = 30;
+TransitionSleepSvc.FinializeSleep    = 20;
+
 Runable.Wait                         = 3;  // 1 of running as daemon
 HistogramPersistencySvc.Warnings     = false;
 
-CountAdder.MyName                      = "<part>_NodeAdder";
-CountAdder.PartitionName               = @OnlineEnv.PartitionName;
-CountAdder.TaskPattern                 = "<part>_MONA10[0-9][0-9]_DQWorker_";
-CountAdder.ServicePattern              = "MON_<part>_MONA10[0-9][0-9]_DQWorker/Counter/";
-CountAdder.InDNS                       = "mona10";  // Otherwise default: hlt01 !
-CountAdder.AdderClass                  = "counter";
+DQRcvCountAdder.PartitionName        = @OnlineEnv.PartitionName;
+DQRcvCountAdder.MyName               = "<part>_<node>_DQRcv";
+DQRcvCountAdder.TaskPattern          = "<part>_<node>_DQRcv_(.*)";
+DQRcvCountAdder.ServicePattern       = "MON_<part>_<node>_DQRcv_(.*)/Counter/";
+DQRcvCountAdder.AdderClass           = "Counter";
+DQRcvCountAdder.ReceiveTimeout       = 2;
 
-HistoAdder.MyName                      = "<part>_NodeAdder";
-HistoAdder.PartitionName               = @OnlineEnv.PartitionName;
-HistoAdder.TaskPattern                 = "<part>_MONA10[0-9][0-9]_DQWorker_";
-HistoAdder.ServicePattern              = "MON_<part>_MONA10[0-9][0-9]_DQWorker/Histos/";
-HistoAdder.InDNS                       = "mona10";  // Otherwise default: hlt01 !
-HistoAdder.AdderClass                  = "hists";
-HistoAdder.IsSaver                     = false;
+DQWorkerCountAdder.MyName            = "<part>_<node>_DQWorker";
+DQWorkerCountAdder.PartitionName     = @OnlineEnv.PartitionName;
+DQWorkerCountAdder.TaskPattern       = "<part>_<node>_DQWorker_(.*)";
+DQWorkerCountAdder.ServicePattern    = "MON_<part>_<node>_DQWorker_(.*)/Counter/";
+DQWorkerCountAdder.InDNS             = "mona10";  // Otherwise default: hlt01 !
+DQWorkerCountAdder.AdderClass        = "counter";
+DQWorkerCountAdder.ReceiveTimeout    = 3;
+
+DQWorkerHistoAdder.MyName            = "<part>_<node>_DQWorker";
+DQWorkerHistoAdder.PartitionName     = @OnlineEnv.PartitionName;
+DQWorkerHistoAdder.TaskPattern       = "<part>_<node>_DQWorker_(.*)";
+DQWorkerHistoAdder.ServicePattern    = "MON_<part>_<node>_DQWorker_(.*)/Histos/";
+DQWorkerHistoAdder.InDNS             = "mona10";  // Otherwise default: hlt01 !
+DQWorkerHistoAdder.AdderClass        = "hists";
+DQWorkerHistoAdder.ReceiveTimeout    = 10;
+
+MessageSvc.OutputLevel               = 2;

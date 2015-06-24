@@ -33,7 +33,7 @@
 #include <map>
 #include <vector>
 #include "WT/wtdef.h"
-#include "MBM/bmstruct.h"
+//#include "MBM/bmstruct.h"
 #include "MBM/bmdef.h"
 #include "RTL/rtl.h"
 #include "RTL/Lock.h"

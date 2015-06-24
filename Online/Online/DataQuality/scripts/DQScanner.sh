@@ -2,7 +2,7 @@
 #
 cd /group/online/dataflow/cmtuser/DataQuality;
 . ./setup.x86_64-slc6-gcc48-dbg.vars
-echo $PYTHONPATH;
+##echo $PYTHONPATH;
 export PY_EXE=`which python`;
 export PYTHONHOME=`dirname $PY_EXE`;
 export PYTHONHOME=`dirname $PYTHONHOME`;

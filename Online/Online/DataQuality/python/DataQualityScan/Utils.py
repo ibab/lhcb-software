@@ -3,6 +3,12 @@ import Config
 
 configuration = Config.Config()
 
+run_hdr  = '| %-5s | %6s | %-8s | %-15s | %-15s | %-20s | %-8s | %-8s |'%\
+          ('Part','Run','State','Activity','Run Type','Start Time', 'Todo', 'Done')
+run_line = ('| %-5s | %6s | %-8s | %-15s | %-15s | %-20s | %-8s | %-8s |'%\
+            ('','','','','','', '', '')).replace(' ','-').replace('|','+')
+run_fmt  = '| %-5s | %6d | %-8s | %-15s | %-15s | %-20s | %-8s | %-8s |'
+
 
 # ------------------------------------------------------------------------------
 class Utils:
@@ -25,7 +31,8 @@ class Utils:
     self.config = configuration
     self.__mondb = None
     self.__rundb = None
-
+    self.output  = sys.stdout
+    
   # ----------------------------------------------------------------------------
   def rund(self):
     import DbAccess
@@ -43,40 +50,34 @@ class Utils:
                             table=self.config.mondb_table)
     return self.__mondb
 
-utilities = Utils()
+  def printRun(self, run):
+    if run:
+      tm = time.localtime(run[11])
+      start = time.strftime('%Y-%m-%d %H-%M-%S',tm)
+      tm = time.localtime(run[2])
+      todo = time.strftime('%H-%M-%S',tm)
+      done = ' n/a '
+      if run[3]>0:
+        tm = time.localtime(run[3])
+        done = time.strftime('%H-%M-%S',tm)
+      print >> self.output, run_fmt%(run[7],run[0],run[1],run[8],run[9],start,todo,done,)
 
-run_hdr  = '| %-5s | %6s | %-8s | %-15s | %-15s | %-20s | %-8s | %-8s |'%\
-          ('Part','Run','State','Activity','Run Type','Start Time', 'Todo', 'Done')
-run_line = ('| %-5s | %6s | %-8s | %-15s | %-15s | %-20s | %-8s | %-8s |'%\
-            ('','','','','','', '', '')).replace(' ','-').replace('|','+')
-run_fmt  = '| %-5s | %6d | %-8s | %-15s | %-15s | %-20s | %-8s | %-8s |'
+  # -------------------------------------------------------------------------------
+  def printRuns(self, runs):
+    l = len(run_hdr)
+    s = '+'
+    s = s + (l-2)*'-'
+    s = s + '+'
+    print >> self.output, run_line
+    print >> self.output, run_hdr
+    print >> self.output, run_line
+    for run in runs:
+      self.printRun(run)
+    print >> self.output, run_line
 
-def printRun(run):
-  if run:
-    tm = time.localtime(run[11])
-    start = time.strftime('%Y-%m-%d %H-%M-%S',tm)
-    tm = time.localtime(run[2])
-    todo = time.strftime('%H-%M-%S',tm)
-    done = ' n/a '
-    if run[3]>0:
-      tm = time.localtime(run[3])
-      done = time.strftime('%H-%M-%S',tm)
-    print run_fmt%(run[7],run[0],run[1],run[8],run[9],start,todo,done,)
-    #print run
 
 # -------------------------------------------------------------------------------
-def printRuns(runs):
-  l = len(run_hdr)
-  s = '+'
-  s = s + (l-2)*'-'
-  s = s + '+'
-  print run_line
-  print run_hdr
-  print run_line
-  for run in runs:
-    printRun(run)
-  print run_line
-
+utilities = Utils()
 # -------------------------------------------------------------------------------
 def runsByState(state):
   """
@@ -96,7 +97,7 @@ def runsByState(state):
   cursor = utilities.mondb().execute(stmt, params)
   runs = cursor.fetchall()
   cursor.close()
-  printRuns(runs)
+  utilities.printRuns(runs)
 
 # -------------------------------------------------------------------------------
 def runsByNumber(run_numbers):
@@ -122,7 +123,7 @@ def runsByNumber(run_numbers):
   cursor = utilities.mondb().execute(stmt, {})
   runs = cursor.fetchall()
   cursor.close()
-  printRuns(runs)
+  utilities.printRuns(runs)
 
 # -------------------------------------------------------------------------------
 def rescheduleRun(run):
@@ -199,4 +200,3 @@ def processArgs():
 # -------------------------------------------------------------------------------
 if __name__=="__main__":
   processArgs()
-  

@@ -48,6 +48,7 @@
     <class pattern="MBM::*"/>
 -->
     <function pattern="mbm_*"/>
+<!--
     <class name="REQ"/>
     <class name="BUFFERS"/>
     <class name="BUFFERS::BUFF"/>
@@ -55,5 +56,6 @@
     <class name="USER"/>
     <class name="USERDesc"/>
     <class name="EVENTDesc"/>
+-->
   </selection>
 </lcgdict>
