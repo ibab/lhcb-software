@@ -210,7 +210,44 @@ run_view_pages = OrderedDict([
         'layout': (3,3)
     }),
     ('tracks', {
-        'title': 'Tracks'
+        'title': 'Tracks',
+				'plots': [
+					{
+						'title': 'Number of clusters associated to a track',
+						'name': 'Velo/VeloTrackMonitor/NMeasurements',
+						'options' : {'asPoints': True, 'yAxisZeroSuppressed': False}, 
+					},
+					{
+						'title': 'Pseudo efficiency by interpolation',
+						'name': 'Velo/VeloTrackMonitor/Track_pseudoEfficiencyByInterp',
+						'options' : {'asPoints': True, 'yAxisZeroSuppressed': False}, 
+					},
+					{
+						'title': 'ADC for R clusters associated to a track',
+						'name': 'Velo/VeloTrackMonitor/Track_radc',
+						'options' : {'asPoints': True, 'yAxisZeroSuppressed': False}, 
+					},
+					{
+						'title': 'ADC for Phi clusters associated to a track',
+						'name': 'Velo/VeloTrackMonitor/Track_phiadc',
+						'options' : {'asPoints': True, 'yAxisZeroSuppressed': False}, 
+					},
+					{
+						'title': 'Track polar angle theta (degrees)',
+						'name': 'Velo/VeloTrackMonitor/Track_Theta',
+						'options' : {'asPoints': True, 'yAxisZeroSuppressed': False}, 
+					},
+					{
+						'title': 'Track pseudo rapidity eta',
+						'name': 'Velo/VeloTrackMonitor/Track_Eta',
+						'options' : {'asPoints': True, 'yAxisZeroSuppressed': False}, 
+					},
+					{
+						'title': 'Track aimuth phi (degrees)',
+						'name': 'Velo/VeloTrackMonitor/Track_Phi',
+						'options' : {'asPoints': True, 'yAxisZeroSuppressed': False}, 
+					},
+				]
     }),
     ('vertices', {
         'title': 'Vertices'

@@ -4,6 +4,11 @@
 ! Purpose     : Analysis framework and configuration for offline and web GUIs
 !----------------------------------------------------------------------------
 
+! 2015-06-24 - Kurt Rinnert
+ - Added tracking run view configuration.  For now only for plots produced by
+   Vetra w/o postprocessing.  The others would not work yet as they heavily
+   rely on overlay and the options dictionary to be functional.
+
 !=================== VeloAnalysisFramework v1r3 2015-06-12 ==================
 ! 2015-06-12 - Alex Pearce
  - Add bad channels run view configuration, on behalf of Sophie Richards.
