@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-06-15 - Wouter Hulsbergen
+ - Modified TT and IT trackmonitor such that more functionality works for hits with Lite clusters.
+ - In TrackMonitor: reduced max chi2/dof to 5 and added prof for average chi2prb vs phi in T stations
+
 !========================= TrackMonitors v2r8 2015-06-08 =========================
 ! 2015-06-07 - Sascha Stahl
  - OTTrackMonitor: Increase the range of the OT hit multiplicity to 15000.
