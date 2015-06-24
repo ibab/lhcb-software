@@ -3,6 +3,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2015-06-24 - Eduardo Rodrigues
+  - Got rid of compilation warnings of methods in concrete class being hidden.
+
 !======================== TisTosTobbing v9r0 2015-05-27 =======================
 
 ! 2015-05-11 - Tomasz Skwarnicki

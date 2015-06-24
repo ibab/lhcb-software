@@ -80,6 +80,7 @@ public:
    /// analysis report
   std::string analysisReportSelection(const std::string & selectionName);
 
+  using ParticleTisTos::analysisReport;
   template<class T>
   std::string analysisReport( const std::vector<T*> & list )
   {
