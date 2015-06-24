@@ -4,19 +4,22 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2015-06-24 - Eduardo Rodrigues
+ - Updated expected reference block for test force_disconnect.
+
 !========================= DetCond v12r42 2015-06-17 =========================
-! 2014-06-16 - Marco Clemencic
+! 2015-06-16 - Marco Clemencic
  - LHCBPS-1421: Modified RunStampCheck to instantiate EventClockSvc.
    To ensure that it does get a "current event time", RunStampCheck triggers
    the instantiation of EventClockSvc, so that it is not needed to explicitly
    do it in the configuration.
 
-! 2014-06-16 - Marco Clemencic
+! 2015-06-16 - Marco Clemencic
  - LHCBPS-1421: Updated CondDB configurable to enable/disable RunStampCheck
    The RunStampCheck is enabled by default for "Offline" (i.e. not Online
    nor Simulation).
 
-! 2014-06-11 - Marco Clemencic
+! 2015-06-11 - Marco Clemencic
  - LHCBPS-1421: added a first implementation of RunStampCheck
    The optional service RunStampCheck can be instantiated (via
    ApplicationManager::ExtSvc) to check if a special "run stamp"

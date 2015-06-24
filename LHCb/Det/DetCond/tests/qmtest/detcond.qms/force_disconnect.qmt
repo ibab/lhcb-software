@@ -7,14 +7,14 @@ TEST ===> start
 LHCBCOND            DEBUG Forced disconnect from database (will reconnect automatically)
 LHCBCOND.TimeOu...VERBOSE Stopping
 DQFLAGS             DEBUG Database already disconnected
-ONLINE_2008         DEBUG Forced disconnect from database (will reconnect automatically)
-ONLINE_2008.Tim...VERBOSE Stopping
 DDDB                DEBUG Forced disconnect from database (will reconnect automatically)
 DDDB.TimeOutChe...VERBOSE Stopping
 TEST ===> reconnect
-ONLINE_2008.Tim...VERBOSE Starting
 DDDB.TimeOutChe...VERBOSE Starting
 TEST ===> end
+ApplicationMgr       INFO Application Manager Stopped successfully
+DQFLAGS             DEBUG Finalize
+LHCBCOND            DEBUG Finalize
 """)
 </text></argument>
 </extension>
