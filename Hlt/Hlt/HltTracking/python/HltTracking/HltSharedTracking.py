@@ -117,22 +117,40 @@ prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
 def fittedVelo(inputTracks, outputTracks, name='VeloOnlyFitterAlg'):
     from Configurables import TrackEventFitter, TrackInitFit
     from Configurables import TrackStateInitTool, TrackMasterFitter
-    fa = TrackEventFitter(name)
-    fa.TracksInContainer = inputTracks
-    fa.TracksOutContainer = outputTracks
-    fa.Fitter = "TrackInitFit/Fit"
-    fa.addTool(TrackInitFit, "Fit")
-    fa.Fit.Init = "TrackStateInitTool/VeloOnlyStateInit"
-    fa.Fit.addTool(TrackStateInitTool, "VeloOnlyStateInit")
-    fa.Fit.VeloOnlyStateInit.VeloFitterName = "FastVeloFitLHCbIDs"
-    fa.Fit.VeloOnlyStateInit.addTool(TrackMasterExtrapolator, "Extrapolator")
-    fa.Fit.VeloOnlyStateInit.Extrapolator.addTool(SimplifiedMaterialLocator,
-                                                  name = "MaterialLocator")
-    fa.Fit.Fit = "TrackMasterFitter/Fit"
-    fa.Fit.addTool(TrackMasterFitter, name = "Fit")
-    from TrackFitter.ConfiguredFitters import ConfiguredForwardFitter
-    fitter = ConfiguredForwardFitter(fa.Fit.Fit)
-    return fa
+    if HltRecoConf().getProp("FastFitVelo"):
+        # For now use the save option where Velo tracks are copied and the original ones are not changed
+        from Configurables import TrackStateInitAlg, TrackStateInitTool,FastVeloFitLHCbIDs
+        from Configurables import TrackContainerCopy
+        copy = TrackContainerCopy(name+"CopyVelo")
+        copy.inputLocations = [ inputTracks ]
+        copy.outputLocation = outputTracks
+        init = TrackStateInitAlg(name)
+        init.TrackLocation = copy.outputLocation
+        init.addTool(TrackStateInitTool, name="StateInitTool")
+        init.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
+        init.StateInitTool.addTool(TrackMasterExtrapolator, "Extrapolator")
+        init.StateInitTool.Extrapolator.addTool(SimplifiedMaterialLocator,
+                                                name = "MaterialLocator")
+        init.StateInitTool.addTool(FastVeloFitLHCbIDs,name="FastVeloFitLHCbIDs")
+        init.StateInitTool.FastVeloFitLHCbIDs.UseKalmanFit = True
+        return [copy,init]
+    else:
+        fa = TrackEventFitter(name)
+        fa.TracksInContainer = inputTracks
+        fa.TracksOutContainer = outputTracks
+        fa.Fitter = "TrackInitFit/Fit"
+        fa.addTool(TrackInitFit, "Fit")
+        fa.Fit.Init = "TrackStateInitTool/VeloOnlyStateInit"
+        fa.Fit.addTool(TrackStateInitTool, "VeloOnlyStateInit")
+        fa.Fit.VeloOnlyStateInit.VeloFitterName = "FastVeloFitLHCbIDs"
+        fa.Fit.VeloOnlyStateInit.addTool(TrackMasterExtrapolator, "Extrapolator")
+        fa.Fit.VeloOnlyStateInit.Extrapolator.addTool(SimplifiedMaterialLocator,
+                                                      name = "MaterialLocator")
+        fa.Fit.Fit = "TrackMasterFitter/Fit"
+        fa.Fit.addTool(TrackMasterFitter, name = "Fit")
+        from TrackFitter.ConfiguredFitters import ConfiguredForwardFitter
+        fitter = ConfiguredForwardFitter(fa.Fit.Fit)
+        return [ fa ]
 
 #############################################################################################
 # HLT2 tracking codes
@@ -291,7 +309,7 @@ veloAlgs = [DecodeTRACK, DecodeVELO, recoVelo( OutputTracksName=HltSharedTrackLo
 if Hlt2Conf().getProp('Hlt1TrackOption') == "Rerun":
     veloAlgs.remove(DecodeTRACK)
 RevivedVelo = bindMembers( None, veloAlgs ).setOutputSelection( HltSharedTrackLoc["Velo"] )
-FittedVelo  = bindMembers( None, RevivedVelo.members() + [fittedVelo(RevivedVelo.outputSelection(), Hlt1TrackLoc["FittedVelo"])]).setOutputSelection(Hlt1TrackLoc["FittedVelo"])
+FittedVelo  = bindMembers( None, RevivedVelo.members() + fittedVelo(RevivedVelo.outputSelection(), Hlt1TrackLoc["FittedVelo"])).setOutputSelection(Hlt1TrackLoc["FittedVelo"])
 
 
 # TODO: put selection revive/redo here (ask Sebastian)

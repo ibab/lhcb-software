@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-06-24 - Sascha Stahl
+ - HltRecoConf and HltSharedTracking: Added option "FastFitVelo" to fit Velo tracks
+   used as input to the PV finding with a fast Kalman filter.
+
 ! 2015-06-22 - Sascha Stahl
  - HltRecoConf: Fixed order of RICH hypotheses.
 

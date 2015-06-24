@@ -41,6 +41,7 @@ class HltRecoConf(LHCbConfigurableUser):
                  ,"MaxTrGHOSTPROB"              : 0.5  # Cut value of ghost probability in the making of protoparticles.
                  ,"VeloSelectionCut"            : "(~TrBACKWARD) & ( TrNVELOMISS < 100 )"
                  ,"FitVelo"                     : True
+                 ,"FastFitVelo"                 : False
                  ,"OfflineSeeding"              : True
                  ,"OfflineRich"                 : True
                  ,"AddGhostProb"                : True
