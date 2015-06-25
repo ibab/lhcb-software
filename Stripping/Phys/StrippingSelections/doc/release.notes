@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-25 - Roberta Cardinale
+ - Added private PVRefit algorithm in all the CombineParticle for python/StrippingSelections/StrippingBandQ/StrippingB2JpsiXforEM_s.py
+
 ! 2015-06-22 - Andrea Contu
  - Added private PVRefit algorithm for python/StrippingSelections/StrippingBandQ/StrippingB2JpsiXforEM_s.py
 

@@ -196,6 +196,16 @@ class B2JpsiXforEM_sConf(LineBuilder) :
                                  MotherCut = PostVertexCuts,
                                  CombinationCut = PreVertexCuts,
                                  ReFitPVs = ReFitPVs)
+        if ReFitPVs:
+            mypvrefitter=LoKi__PVReFitter("mypvrefitter")
+            mypvrefitter.CheckTracksByLHCbIDs = True
+            mypvrefitter.DeltaChi2 = 1.
+            mypvrefitter.DeltaDistance = 100.
+            combiner.IgnoreP2PVFromInputLocations = True
+            combiner.addTool(mypvrefitter)
+            combiner.PVReFitters.update( {"": "LoKi::PVReFitter/mypvrefitter"} )
+
+        
         return Selection ( OutputList,
                        Algorithm = combiner,
                        RequiredSelections = DaughterLists)
