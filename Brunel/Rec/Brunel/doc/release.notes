@@ -6,14 +6,12 @@ Purpose: LHCb reconstruction program
 - Changes to references to reflect changes since v47r9
   . Remove list of detectors to process for FieldOff as it was the same as for
     FieldOn - just, CALO and RICH processing order was inverted. (RecConf)
-  . Follow changes in Rich Alignment monitoring
+  . Follow changes in Rich Alignment monitoring (RichAlignment)
+  . Inherit PrPixelHitManager from Decoder::ToolBase (PrPixel)
+  . Updates in TT and IT TrackMonitors (TrackMonitors)
 
 - Changes to configuration
  . In OnlineMode, set CondDB().Online = True if not already set.
-
-- Changes to tests
- . In BrunelExclusions.py: temporarily suppress failures arising from changes
-   in momentum cuts of RichAlignmentMonitors 
 
 </PRE><H1><A NAME=v47r9>2015-06-18 Brunel v47r9</A></H1><PRE>
 This version uses projects LHCb v38r7, Lbcom v16r6, Rec v17r7, Gaudi v26r2
