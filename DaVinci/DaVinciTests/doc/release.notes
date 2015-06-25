@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-06-25 - Eduardo Rodrigues
+ - Updated reference file of fsrs.qms/davinci-merge-small-files.qmt test.
+
 ! 2015-06-15 - Andrea Contu
  - Updated references for stripping tests
 
