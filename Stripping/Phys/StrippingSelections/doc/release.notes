@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-25 - Vanya Belyaev
+ - StrippingBandQ/StrippingUpsilonExotic.py  update a bit the selection 
+   StrippingBandQ/StrippingPsiX0.py 
+   StrippingBandQ/StrippingPsiXForBandQ.py - more coherent treatment 
+
 ! 2015-06-25 - Roberta Cardinale
  - Added private PVRefit algorithm in all the CombineParticle for python/StrippingSelections/StrippingBandQ/StrippingB2JpsiXforEM_s.py
 

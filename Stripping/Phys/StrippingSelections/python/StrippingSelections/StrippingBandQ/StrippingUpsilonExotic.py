@@ -21,6 +21,8 @@
 - eta 
 - eta'
 - omega 
+- proton
+- prton + kaon 
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
@@ -45,13 +47,13 @@ logger.setLevel(logging.INFO)
 ## Define the default configuration 
 _default_configuration_ = {
     #    
-    'NOPIDHADRONS'   : False ,  ## USE FOR SUIMULATION 
+    'NOPIDHADRONS'   : False ,  ## USE FOR SIMULATION "True"
     ## use for B&Q wg production
-    'DIMUONLINE'     : None  ,  ## USE FOR B&Q WG-selection 
+    'DIMUONLINE'     : None  ,  ## USE FOR B&Q WG-selection  
     #
-    'ETA_PT'    : 1 * GeV ,
-    'ETAP_PT'   : 1 * GeV ,
-    'OMEGA_PT'  : 1 * GeV ,    
+    'ETA_PT'    : 1.5 * GeV ,
+    'ETAP_PT'   : 1.5 * GeV ,
+    'OMEGA_PT'  : 1.5 * GeV ,    
     #
     #
     ## photon selection for eta' -> rho gamma
@@ -142,23 +144,6 @@ _default_configuration_ = {
     'chi2vxNDF = VFASPF(VCHI2PDOF) '                           , 
     'chi2vxndf = chi2vxNDF         '                           ,
     'vrho2     = VX**2 + VY**2'                                , 
-    ## shortcut for the c*tau
-    "from GaudiKernel.PhysicalConstants import c_light"        , 
-    ## use the embedded cut for chi2(LifetimeFit)<25
-    "ctau      = BPVLTIME ( 25 ) * c_light "                   ,
-    "ctau_9    = BPVLTIME (  9 ) * c_light "                   ,
-    "ctau_16   = BPVLTIME ( 16 ) * c_light "                   ,
-    "APT23     = LoKi.AParticles.TransverseMomentum ( 2 , 3 )" ,
-    ## Combination mass-cut for beauty particles 
-    "mb0_acut   = in_range ( 4.50 * GeV , AM , 6.00 * GeV ) "  ,
-    "mbu_acut   = in_range ( 4.50 * GeV , AM , 6.00 * GeV ) "  ,
-    "mbl_acut   = in_range ( 5.00 * GeV , AM , 6.50 * GeV ) "  ,
-    "mbc_acut   = in_range ( 4.50 * GeV , AM , 6.75 * GeV ) "  ,
-    ## mass-cut for beauty particles 
-    "mb0_cut    = in_range ( 4.55 * GeV ,  M , 5.95 * GeV ) "  ,
-    "mbu_cut    = in_range ( 4.55 * GeV ,  M , 5.95 * GeV ) "  ,
-    "mbl_cut    = in_range ( 5.05 * GeV ,  M , 6.45 * GeV ) "  ,
-    "mbc_cut    = in_range ( 4.55 * GeV ,  M , 6.70 * GeV ) "  ,
     ] ,
     }
 ## ============================================================================
@@ -168,8 +153,8 @@ default_config = {
     'NAME'        :   'UpsilonExotic'        ,
     'WGs'         : [ 'BandQ' ]              ,
     'CONFIG'      : _default_configuration_  , 
-    'BUILDERTYPE' :   'UpsilonExoticConf'            ,
-    'STREAMS'     : ['Dimuon']
+    'BUILDERTYPE' :   'UpsilonExoticConf'    ,
+    'STREAMS'     : { 'Dimuon'    : [] }
     }
 # =============================================================================
 ## @class  UpsilonExoticConf
@@ -329,6 +314,8 @@ class UpsilonExoticConf(LineBuilder) :
             self.upsilon_eta       () ,
             self.upsilon_eta_prime () ,
             self.upsilon_omega     () ,
+            self.upsilon_proton    () ,
+            self.upsilon_pK        () 
             #
             ]
         
@@ -379,6 +366,30 @@ class UpsilonExoticConf(LineBuilder) :
             FilterDesktop          ,
             [ inpts ]              ,
             Code = kaoncut         ,
+            )
+
+    # ========================================================================
+    ## protons 
+    # ========================================================================
+    def protons     ( self ) :
+        """
+        Kaons for X -> Upsilon P 
+        """
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        ## 
+        if self['NOPIDHADRONS'] :
+            from StandardParticles import   StdAllNoPIDsProtons as inpts
+            kaoncut = self['ProtonCut']
+        else                    :
+            from StandardParticles import StdAllLooseANNProtons as inpts 
+            kaoncut = "(%s)&(%s)" % ( self['ProtonCut'] , self['ProtonPIDCut'] ) 
+        #
+        ##
+        return self.make_selection (
+            'Proton'               ,
+            FilterDesktop          ,
+            [ inpts ]              ,
+            Code = protoncut       ,
             )
     
     # ========================================================================
@@ -648,6 +659,9 @@ class UpsilonExoticConf(LineBuilder) :
             [ self.pions () , self.eta_ ()  ] ,
             ##
             DecayDescriptor = " eta_prime -> pi+ pi- eta" ,
+            DaughtersCuts   = {
+            'eta' : " ( ADMASS ('eta') < 100 * MeV ) "
+            } ,
             ## 
             Combination12Cut  = """  ( AM < 600 * MeV  ) &
             ( ACHI2DOCA(1,2) < 12 ) 
@@ -758,13 +772,13 @@ class UpsilonExoticConf(LineBuilder) :
             ( ACHI2DOCA(1,2) < 16 )
             """ ,
             CombinationCut = """
-            ( AM       < 15   * GeV ) &
-            ( AM23     < 1050 * MeV ) & 
-            ( AM - AM1 < 2.0  * GeV ) &
-            ( ACHI2DOCA(1,3)  < 16  ) &
-            ( ACHI2DOCA(2,3)  < 16  )
+            ( AM                  < 15   * GeV ) &
+            ( AM23                < 1050 * MeV ) & 
+            ( ( AM - AM1 - AM23 ) < 2.5  * GeV ) &
+            ( ACHI2DOCA(1,3)      < 16  ) &
+            ( ACHI2DOCA(2,3)      < 16  )
             """ ,
-            MotherCut      = " chi2vxndf< 10 " ,
+            MotherCut      = " chi2vxndf<10" ,
             )
     
     # =========================================================================
@@ -787,15 +801,67 @@ class UpsilonExoticConf(LineBuilder) :
             ( ACHI2DOCA(1,2) < 16 )
             """ ,
             CombinationCut = """
-            ( AM       < 15   * GeV ) &
-            ( AM23     < 1050 * MeV ) & 
-            ( AM - AM1 < 2.0  * GeV ) &
-            ( ACHI2DOCA(1,3)  < 16  ) &
-            ( ACHI2DOCA(2,3)  < 16  )
+            ( AM                  < 15   * GeV ) &
+            ( AM23                < 1050 * MeV ) & 
+            ( ( AM - AM1 - AM23 ) < 2.5  * GeV ) &
+            ( ACHI2DOCA(1,3)      < 16         ) &
+            ( ACHI2DOCA(2,3)      < 16         )
             """ ,
             MotherCut      = " chi2vxndf< 10 " ,
             )
 
+    # =========================================================================
+    # X -> Upsilon proton 
+    # =========================================================================
+    def  upsilon_proton ( self ) :
+        """
+        X -> Upsilon proton
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        #
+        return self.make_selection  (
+            'YP'                 ,
+            CombineParticles ,
+            [ self.upsilons() , self.protons() ] ,
+            ## algorithm properties 
+            DecayDescriptor  = "[Upsilon(4S) -> J/psi(1S) p+]cc" ,
+            CombinationCut   = """
+            ( AM                 < 15   * GeV ) &
+            ( ( AM - AM1 - AM2 ) < 2.5  * GeV ) &
+            ( ACHI2DOCA(1,2)     < 16  ) 
+            """ ,
+            MotherCut      = " chi2vxndf<10" ,
+            )
+
+    # =========================================================================
+    # X -> Upsilon proton kaon 
+    # =========================================================================
+    def  upsilon_pK ( self ) :
+        """
+        X -> Upsilon proton kaon 
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
+        #
+        return self.make_selection  (
+            'YPK'                   ,
+            DaVinci__N3BodyDecays   ,
+            [ self.upsilons() , self.protons() , self.kaons() ] ,
+            ## algorithm properties 
+            DecayDescriptor  = "[Upsilon(4S) -> J/psi(1S) p+ K-]cc" ,
+            Combination12Cut = """
+            ( AM < 15 * GeV       ) &
+            ( ACHI2DOCA(1,2) < 16 )
+            """ ,
+            CombinationCut = """
+            ( AM                  < 15   * GeV ) &
+            ( AM23                < 2000 * MeV ) & 
+            ( ( AM - AM1 - AM23 ) < 2.5  * GeV ) &
+            ( ACHI2DOCA(1,3)      < 16         ) &
+            ( ACHI2DOCA(2,3)      < 16         )
+            """ ,
+            MotherCut      = " chi2vxndf< 10 " ,
+            )            
+    
     # =========================================================================
     # X -> Upsilon eta
     # =========================================================================
@@ -812,8 +878,8 @@ class UpsilonExoticConf(LineBuilder) :
             ## algorithm properties 
             DecayDescriptor = " chi_b0(1P) -> J/psi(1S) eta" ,
             CombinationCut  = """
-            (   AM         < 15  * GeV ) &
-            ( ( AM - AM1 ) < 2.0 * GeV )
+            (   AM               < 15  * GeV ) &
+            ( ( AM - AM1 - AM2 ) < 2.5 * GeV )
             """,
             MotherCut      = " chi2vxndf< 10 " 
             )
@@ -834,12 +900,12 @@ class UpsilonExoticConf(LineBuilder) :
             ## algorithm properties 
             DecayDescriptor = " chi_b1(1P) -> J/psi(1S) eta_prime" ,
             CombinationCut  = """
-            (   AM         < 15  * GeV ) &
-            ( ( AM - AM1 ) < 2.0 * GeV )
+            (   AM               < 15  * GeV ) &
+            ( ( AM - AM1 - AM2 ) < 2.5 * GeV )
             """,
             MotherCut      = " chi2vxndf< 10 " 
             )
-
+    
     # =========================================================================
     # X -> Upsilon omega
     # =========================================================================
@@ -856,8 +922,8 @@ class UpsilonExoticConf(LineBuilder) :
             ## algorithm properties 
             DecayDescriptor = " chi_b2(1P) -> J/psi(1S) omega(782)" ,
             CombinationCut  = """
-            (   AM         < 15  * GeV ) &
-            ( ( AM - AM1 ) < 2.0 * GeV )
+            (   AM               < 15  * GeV ) &
+            ( ( AM - AM1 - AM2 ) < 2.5 * GeV )
             """,
             MotherCut      = " chi2vxndf< 10 " 
             )

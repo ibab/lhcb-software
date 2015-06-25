@@ -835,10 +835,10 @@ class PsiX_BQ_Conf(LineBuilder) :
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         ##
         if self['NOPIDHADRONS'] :
-            from StandardParticles import   StdNoPIDsPions as inpts
+            from StandardParticles import   StdAllNoPIDsPions as inpts
             pioncut = self['PionCut']
         else                    :
-            from StandardParticles import StdLooseANNPions as inpts
+            from StandardParticles import StdAllLooseANNPions as inpts
             pioncut = "(%s)&(%s)" % ( self['PionCut'] , self['PionPIDCut'] ) 
         ##
         return self.make_selection (
@@ -858,10 +858,10 @@ class PsiX_BQ_Conf(LineBuilder) :
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         ## 
         if self['NOPIDHADRONS'] :
-            from StandardParticles import   StdNoPIDsKaons as inpts
+            from StandardParticles import   StdAllNoPIDsKaons as inpts
             kaoncut = self['KaonCut']
         else                    :
-            from StandardParticles import StdLooseANNKaons as inpts 
+            from StandardParticles import StdAllLooseANNKaons as inpts 
             kaoncut = "(%s)&(%s)" % ( self['KaonCut'] , self['KaonPIDCut'] ) 
         #
         ##
@@ -881,10 +881,10 @@ class PsiX_BQ_Conf(LineBuilder) :
         """
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         if self['NOPIDHADRONS'] :
-            from StandardParticles import   StdNoPIDsProtons as inpts
+            from StandardParticles import   StdAllNoPIDsProtons as inpts
             protoncut = self['ProtonCut']
         else                    :
-            from StandardParticles import StdLooseANNProtons as inpts 
+            from StandardParticles import StdAllLooseANNProtons as inpts 
             protoncut = "(%s)&(%s)" % ( self['ProtonCut'] , self['ProtonPIDCut'] ) 
         ##
         return self.make_selection (
