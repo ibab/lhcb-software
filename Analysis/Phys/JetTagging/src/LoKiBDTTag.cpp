@@ -30,7 +30,7 @@ LoKi::BDTTag::BDTTag(const std::string& type, const std::string& name,
 		  "BDT1 TMVA weights filename and path from $JETTAGGINGROOT.");
   declareProperty("TmvaOptions", m_tmvaOptions = "Silent",
 		  "Options to pass to the TMVA reader.");
-  declareProperty("FitName", m_fitName = "OfflineVertexFitter",
+  declareProperty("FitName", m_fitName = "LoKi::VertexFitter",
 		  "Name of the vertex fitter tool used to create SVRs.");
   declareProperty("DstName", m_dstName = "LoKi::DistanceCalculator:PUBLIC",
 		  "Name of the distance calculator tool used to create SVRs.");
