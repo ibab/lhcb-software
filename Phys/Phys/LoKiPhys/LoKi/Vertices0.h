@@ -264,6 +264,31 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
+    /** @class PositionRho
+     *  the trivial evaluator of Rho-position of the vertex 
+     *
+     *  @see LoKi::Cuts::VRHO
+     *  @see LHCb::VertexBase
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date   2015-06-25
+     */
+    class GAUDI_API PositionRho
+      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
+    {      
+    public:
+      // ======================================================================
+      /// Default Constructor
+      PositionRho() { }
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual PositionRho* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument v ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    };
+    // ========================================================================
     /** @class  NumberOfOutgoing 
      *  The trivial function which evalautes to 
      *  number of outgoing particles 

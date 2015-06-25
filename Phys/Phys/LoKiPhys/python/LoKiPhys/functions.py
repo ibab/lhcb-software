@@ -594,11 +594,13 @@ VDOF      = LoKi.Vertices.VertexDoF  ()
 ## @see LoKi::Cuts::VXNDOF
 VXNDOF    =  VDOF 
 ## @see LoKi::Cuts::VX 
-VX        = LoKi.Vertices.PositionX  ()
+VX        = LoKi.Vertices.PositionX    ()
 ## @see LoKi::Cuts::VY
-VY        = LoKi.Vertices.PositionY  ()
+VY        = LoKi.Vertices.PositionY    ()
 ## @see LoKi::Cuts::VZ 
-VZ        = LoKi.Vertices.PositionZ  ()
+VZ        = LoKi.Vertices.PositionZ    ()
+## @see LoKi::Cuts::VRHO
+VRHO      = LoKi.Vertices.PositionRho  ()
 ## @see LoKi::Cuts::VHASINFO
 VHASINFO  = LoKi.Vertices.HasInfo
 ## @see LoKi::Cuts::VINFO

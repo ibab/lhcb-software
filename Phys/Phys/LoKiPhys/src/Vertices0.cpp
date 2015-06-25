@@ -201,6 +201,7 @@ std::ostream&
 LoKi::Vertices::PositionY::fillStream
 ( std::ostream& s ) const
 { return s << "VY" ; }
+
 // ============================================================================
 LoKi::Vertices::PositionZ*
 LoKi::Vertices::PositionZ::clone() const
@@ -219,6 +220,30 @@ std::ostream&
 LoKi::Vertices::PositionZ::fillStream
 ( std::ostream& s ) const
 { return s << "VZ" ; }
+
+
+
+// ============================================================================
+LoKi::Vertices::PositionRho*
+LoKi::Vertices::PositionRho::clone() const
+{ return new PositionRho( *this ) ; }
+// ============================================================================
+LoKi::Vertices::PositionRho::result_type
+LoKi::Vertices::PositionRho::operator()
+  ( LoKi::Vertices::PositionRho::argument v ) const
+{
+  if ( v ) { return v -> position () . Rho () ; }         // RETURN
+  Error ( "Invalid Vertex, return 'InvalidDistance'" ) ;
+  return LoKi::Constants::InvalidDistance;                   // RETURN
+}
+// ============================================================================
+std::ostream& LoKi::Vertices::PositionRho::fillStream
+( std::ostream& s ) const
+{ return s << "VRHO" ; }
+// ============================================================================
+
+
+
 // ============================================================================
 LoKi::Vertices::NumberOfOutgoing*
 LoKi::Vertices::NumberOfOutgoing::clone() const
