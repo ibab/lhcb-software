@@ -4,6 +4,11 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-06-24 - Roel Aaij
+ - Use a base class for all services.
+ - Add initial SaverSvc.
+ - Add MonInfoSvc.
+
 ! 2015-06-19 - Roel Aaij
  - Switch to per-bin differences in Chunk.
 
