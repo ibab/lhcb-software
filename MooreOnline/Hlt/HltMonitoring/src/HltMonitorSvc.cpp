@@ -1,5 +1,6 @@
 // Include files
 #include <thread>
+#include <functional>
 
 // boost
 #include <boost/regex.hpp>
@@ -44,13 +45,19 @@ DECLARE_COMPONENT(HltMonitorSvc)
 //===============================================================================
 HltMonitorSvc::HltMonitorSvc(const string& name, ISvcLocator* loc)
    : base_class(name, loc),
-   m_context{nullptr},
-   m_output{nullptr},
+   m_zmqSvc{nullptr},
+   m_incidentSvc{nullptr},
+   m_updMgrSvc{nullptr},
+   m_evtSvc{nullptr},
+   m_runPars{nullptr},
+   m_dataOut{nullptr},
+   m_infoOut{nullptr},
    m_run{0},
    m_tck{0},
    m_startOfRun{0}
 {
-   declareProperty("OutputConnection", m_outCon = "ipc:///tmp/hlt2mon_0");
+   declareProperty("DataConnection", m_dataCon = "ipc:///tmp/hlt2MonData_0");
+   declareProperty("InfoConnection", m_infoCon = "ipc:///tmp/hlt2MonInfo_0");
    declareProperty("HltDecReportsLocation", m_decRepLoc = "Hlt2/DecReports");
    declareProperty("UpdateInterval", m_updateInterval = 10.);
 }
@@ -61,6 +68,9 @@ HltMonitorSvc::~HltMonitorSvc()
    for (const auto& counter : m_counters) {
       delete counter.second;
    }
+   for (const auto& histo : m_histograms) {
+      delete histo.second;
+   }
 }
 
 //===============================================================================
@@ -69,6 +79,7 @@ StatusCode HltMonitorSvc::initialize()
    StatusCode sc = Service::initialize();
 
    MsgStream msg(msgSvc(), name());
+   // IncidentSvc
    msg << MSG::INFO << "Initialized ZeroMQ based HltMonitorSvc" << endmsg;
    sc = serviceLocator()->service("IncidentSvc", m_incidentSvc, true);
    if(!sc.isSuccess()) {
@@ -78,6 +89,14 @@ StatusCode HltMonitorSvc::initialize()
    m_incidentSvc->addListener(this, IncidentType::RunChange);
    m_incidentSvc->addListener(this, IncidentType::BeginRun);
 
+   // ZQM service
+   sc = serviceLocator()->service("ZeroMQSvc", m_zmqSvc, true);
+   if( !sc.isSuccess() ) {
+      msg << MSG::FATAL << "ZeroMQSvc not found" << endmsg;
+      return sc;
+   }
+
+   // UpdateManagerSvc
    sc = serviceLocator()->service("UpdateManagerSvc", m_updMgrSvc, true);
    if (!sc.isSuccess()) {
       msg << MSG::FATAL << "UpdateManagerSvc not found" << endmsg;
@@ -104,10 +123,16 @@ StatusCode HltMonitorSvc::start()
    auto sc = Service::start();
    if (!sc.isSuccess()) return sc;
 
-   if (!m_context) {
-      m_context = new zmq::context_t{1};
-      m_output = new zmq::socket_t{*m_context, ZMQ_PUB};
-      m_output->connect(m_outCon.c_str());
+   // Data output connection
+   if (!m_dataOut) {
+      m_dataOut = new zmq::socket_t{m_zmqSvc->context(), ZMQ_PUB};
+      m_dataOut->connect(m_dataCon.c_str());
+   }
+
+   // Info output connection
+   if (!m_infoOut) {
+      m_infoOut = new zmq::socket_t{m_zmqSvc->context(), ZMQ_PUSH};
+      m_infoOut->connect(m_infoCon.c_str());
    }
 
    return sc;
@@ -124,10 +149,12 @@ StatusCode HltMonitorSvc::finalize()
 {
    MsgStream msg(msgSvc(), name());
 
-   delete m_output;
-   m_output = nullptr;
-   delete m_context;
-   m_context = nullptr;
+   // Clean up
+   for (auto socket : {&m_dataOut, &m_infoOut}) {
+      (*socket)->setsockopt(ZMQ_LINGER, 0, 1);
+      delete *socket;
+      *socket = nullptr;
+   }
 
    if (m_incidentSvc) {
       m_incidentSvc->removeListener(this);
@@ -140,7 +167,11 @@ StatusCode HltMonitorSvc::finalize()
 //===============================================================================
 RateCounter& HltMonitorSvc::rateCounter(const std::string& identifier) const
 {
-   return item<RateCounter, decltype(m_counters)>(identifier, m_counters);
+   auto& r = item<RateCounter, decltype(m_counters)>(identifier, m_counters);
+
+   // Add info message
+   addInfo(r.id().__hash__(), Monitoring::s_Rate, r.id().str());
+   return r;
 }
 
 //===============================================================================
@@ -184,8 +215,17 @@ HltHistogram& HltMonitorSvc::histogram(const std::string& identifier,
                                        double left, double right,
                                        size_t bins) const
 {
-   return item<HltHistogram, decltype(m_histograms)>(identifier, m_histograms,
-                                                     left, right, bins);
+   auto& r = item<HltHistogram, decltype(m_histograms)>(identifier, m_histograms,
+                                                                left, right, bins);
+
+   // Serialize the Histo1DDef
+   std::stringstream ss;
+   boost::archive::text_oarchive oa{ss};
+   oa << r.def();
+
+   // Add info message
+   addInfo(r.id().__hash__(), Monitoring::s_Histo1D, ss.str());
+   return r;
 }
 
 //===============================================================================
@@ -250,6 +290,14 @@ void HltMonitorSvc::handle(const Incident& incident)
 //===============================================================================
 void HltMonitorSvc::sendChunks()
 {
+   for (auto& message : m_infoMessages) {
+      for (decltype(m_infoMessages)::value_type::iterator it = begin(message),
+              last = end(message); it != last; ++it) {
+         m_infoOut->send(*it, (it != last ? ZMQ_SNDMORE : 0));
+      }
+   }
+   m_infoMessages.clear();
+
    for (auto& entry : m_chunks) {
       // Don't send empty chunks.
       if (entry.second.data.empty()) continue;
@@ -262,9 +310,35 @@ void HltMonitorSvc::sendChunks()
       // Prepare message and send
       zmq::message_t msg(s.size());
       memcpy(static_cast<void*>(msg.data()), s.c_str(), s.size());
-      m_output->send(msg);
+      m_dataOut->send(msg);
       entry.second = Chunk{m_run, tck(), entry.second.histId};
    }
+}
+
+//===============================================================================
+void HltMonitorSvc::addInfo(Monitoring::HistId id, const std::string& type,
+                            const std::string& info) const
+{
+   // Prepare info message
+   vector<zmq::message_t> message{};
+   zmq::message_t msg(sizeof(Monitoring::HistId));
+
+   // First run number
+   memcpy(msg.data(), &m_run, sizeof(Monitoring::RunNumber));
+   message.push_back(std::move(msg));
+
+   // Then HistID
+   msg.rebuild(sizeof(Monitoring::HistId));
+   memcpy(msg.data(), &id, sizeof(Monitoring::HistId));
+   message.push_back(std::move(msg));
+
+   // Prepare the rest of the message and send it.
+   for (const auto& part : {type, info}) {
+      msg.rebuild(part.size());
+      memcpy(static_cast<void*>(msg.data()), part.c_str(), part.size());
+      message.push_back(std::move(msg));
+   }
+   m_infoMessages.push_back(std::move(message));
 }
 
 //===============================================================================

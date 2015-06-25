@@ -4,6 +4,7 @@
 // STD & STL
 #include <string>
 #include <map>
+#include <array>
 #include <set>
 #include <unordered_map>
 
@@ -19,6 +20,9 @@
 #include <Kernel/IHltMonitorSvc.h>
 #include <Kernel/RateCounter.h>
 #include <Kernel/HltHistogram.h>
+
+// ZeroMQ
+#include <ZeroMQ/IZeroMQSvc.h>
 
 class ISvcLocator;
 class IIncidentSvc;
@@ -81,27 +85,33 @@ private:
 
    void sendChunks();
 
+   void addInfo(Monitoring::HistId id, const std::string& type, const std::string& info) const;
+
    unsigned int tck() const;
 
    // properties
-   std::string m_outCon;
+   std::string m_dataCon;
+   std::string m_infoCon;
    std::string m_decRepLoc;
    double m_updateInterval;
 
    // data members
+   IZeroMQSvc* m_zmqSvc;
    IIncidentSvc* m_incidentSvc;
    IUpdateManagerSvc *m_updMgrSvc;
    IDataProviderSvc* m_evtSvc;
    Condition *m_runPars;
 
-   zmq::context_t* m_context;
-   zmq::socket_t* m_output;
+   zmq::socket_t* m_dataOut;
+   zmq::socket_t* m_infoOut;
 
-   unsigned int m_run;
-   mutable unsigned int m_tck;
+   Monitoring::RunNumber m_run;
+   mutable Monitoring::TCK m_tck;
 
    std::chrono::high_resolution_clock::time_point m_latestUpdate;
    double m_startOfRun;
+
+   mutable std::vector<std::vector<zmq::message_t>> m_infoMessages;
 
    mutable std::unordered_map<Gaudi::StringKey, RateCounter*> m_counters;
    mutable std::unordered_map<Gaudi::StringKey, HltHistogram*> m_histograms;

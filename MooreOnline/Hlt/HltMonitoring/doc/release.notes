@@ -4,6 +4,10 @@
 ! Purpose     : Monitoring of the HLT
 !-----------------------------------------------------------------------------
 
+! 2015-06-25 - Roel Aaij
+ - Add info service where title of rate histos and histo def of regular histos
+   is sent.
+
 ! 2015-06-19 - Roel Aaij
  - Switch to sending per bin differences in Chunk.
  - Add "standard" histogram.
