@@ -4,6 +4,10 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2015-06-25 - Eduardo Rodrigues
+ - Undid the reference update from yesterday as the difference is in fact
+   *not* expected nor understood, see https://its.cern.ch/jira/browse/LHCBPS-1425.
+
 ! 2015-06-24 - Eduardo Rodrigues
  - Updated expected reference block for test force_disconnect.
 
