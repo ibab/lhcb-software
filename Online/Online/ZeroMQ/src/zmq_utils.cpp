@@ -1,17 +1,27 @@
 /*
-    Copyright (c) 2007-2013 Contributors as noted in the AUTHORS file
+    Copyright (c) 2007-2015 Contributors as noted in the AUTHORS file
 
-    This file is part of 0MQ.
+    This file is part of libzmq, the ZeroMQ core engine in C++.
 
-    0MQ is free software; you can redistribute it and/or modify it under
-    the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation; either version 3 of the License, or
+    libzmq is free software; you can redistribute it and/or modify it under
+    the terms of the GNU Lesser General Public License (LGPL) as published
+    by the Free Software Foundation; either version 3 of the License, or
     (at your option) any later version.
 
-    0MQ is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
+    As a special exception, the Contributors give you permission to link
+    this library with independent modules to produce an executable,
+    regardless of the license terms of these independent modules, and to
+    copy and distribute the resulting executable under terms of your choice,
+    provided that you also meet, for each linked independent module, the
+    terms and conditions of the license of that module. An independent
+    module is a module which is not derived from or based on this library.
+    If you modify this library, you must extend this exception to your
+    version of the library.
+
+    libzmq is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+    License for more details.
 
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -30,8 +40,13 @@
 #else
 #include "windows.hpp"
 #endif
+
 #ifdef HAVE_LIBSODIUM
-#   include <sodium.h>
+#ifdef HAVE_TWEETNACL
+#include "tweetnacl_base.h"
+#else
+#include "sodium.h"
+#endif
 #endif
 
 
@@ -106,7 +121,7 @@ static uint8_t decoder [96] = {
 //  dest. Size must be a multiple of 4.
 //  Returns NULL and sets errno = EINVAL for invalid input.
 
-char *zmq_z85_encode (char *dest, uint8_t *data, size_t size)
+char *zmq_z85_encode (char *dest, const uint8_t *data, size_t size)
 {
     if (size % 4 != 0) {
         errno = EINVAL;
@@ -140,7 +155,7 @@ char *zmq_z85_encode (char *dest, uint8_t *data, size_t size)
 //  must be a multiple of 5.
 //  Returns NULL and sets errno = EINVAL for invalid input.
 
-uint8_t *zmq_z85_decode (uint8_t *dest, char *string)
+uint8_t *zmq_z85_decode (uint8_t *dest, const char *string)
 {
     if (strlen (string) % 5 != 0) {
         errno = EINVAL;
@@ -173,9 +188,9 @@ uint8_t *zmq_z85_decode (uint8_t *dest, char *string)
 //  Returns 0 on success, -1 on failure, setting errno.
 //  Sets errno = ENOTSUP in the absence of libsodium.
 
-#ifdef HAVE_LIBSODIUM
-int zmq_curve_keypair (char * z85_public_key, char *z85_secret_key)
+int zmq_curve_keypair (char *z85_public_key, char *z85_secret_key)
 {
+#ifdef HAVE_LIBSODIUM
 #   if crypto_box_PUBLICKEYBYTES != 32 \
     || crypto_box_SECRETKEYBYTES != 32
 #       error "libsodium not built correctly"
@@ -194,8 +209,7 @@ int zmq_curve_keypair (char * z85_public_key, char *z85_secret_key)
 
     return 0;
 #else // requires libsodium
-int zmq_curve_keypair (char *, char *)
-{
+    (void) z85_public_key, (void) z85_secret_key;
     errno = ENOTSUP;
     return -1;
 #endif

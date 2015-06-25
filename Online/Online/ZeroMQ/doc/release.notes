@@ -1,10 +1,14 @@
 !-----------------------------------------------------------------------------
 ! Package     : Online/ZeroMQ
 ! Responsible : Roel Aaij
-! Purpose     : Import of 0MQ 4.0.5. Code in this package is covered under the
+! Purpose     : Import of 0MQ 4.1.2. Code in this package is covered under the
                 GNU Lesser General Public Licence (LGPL). For details see
                 COPYING.LESSER. See README.md for more information.
 !-----------------------------------------------------------------------------
+
+! 2015-06-25 - Roel Aaij
+ - Updated to 4.1.2
+ - Added (I)ZeroMQSvc
 
 ! 2015-05-31 - Roel Aaij
  - Initial import
