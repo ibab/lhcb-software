@@ -1,10 +1,15 @@
 #ifndef HLT2MONITORING_SERIALIZE_H
 #define HLT2MONITORING_SERIALIZE_H 1
 
-// Include files
+
+// Gaudi
+#include <GaudiKernel/HistoDef.h>
+
+// Local include files
 #include "Chunk.h"
 #include "Histogram.h"
 
+// Boost
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/map.hpp>
 
@@ -43,7 +48,7 @@ inline void load(
 }
 
 // split non-intrusive serialization function member into separate
-// non intrusive save/load member functions
+// non intrusive save/load member functions for std::unordered_map<Key, Type, Compare, Allocator>
 template<class Archive, class Type, class Key, class Compare, class Allocator >
 inline void serialize(
     Archive & ar,
@@ -51,6 +56,55 @@ inline void serialize(
     const unsigned int file_version
 ){
     boost::serialization::split_free(ar, t, file_version);
+}
+
+// Gaudi::Histo1DDef
+template<class Archive>
+inline void save(
+    Archive& archive,
+    const Gaudi::Histo1DDef &def,
+    const unsigned int /* file_version */
+){
+   std::string title = def.title();
+   int bins = def.bins();
+   double low = def.lowEdge();
+   double high = def.highEdge();
+
+   archive& title;
+   archive& bins;
+   archive& low;
+   archive& high;
+}
+
+template<class Archive>
+inline void load(
+    Archive & archive,
+    Gaudi::Histo1DDef &def,
+    const unsigned int /* file_version */
+){
+   std::string title;
+   int bins;
+   double low, high;
+
+   archive& title;
+   archive& bins;
+   archive& low;
+   archive& high;
+
+   def.setTitle(title);
+   def.setLowEdge(low);
+   def.setHighEdge(high);
+   def.setBins(bins);
+}
+
+// split non-intrusive serialization function member into separate
+// non intrusive save/load member functions for Histo1DDef
+template<class Archive>
+auto serialize(
+    Archive& archive,
+    Gaudi::Histo1DDef &def,
+    const unsigned int file_version) -> void {
+    boost::serialization::split_free(archive, def, file_version);
 }
 
 // Serialize Chunk
@@ -61,6 +115,16 @@ auto serialize(Archive& archive, Monitoring::Chunk& chunk,
    archive& chunk.histId;
    archive& chunk.tck;
    archive& chunk.data;
+}
+
+// Serialize Histogram
+template <typename Archive>
+auto serialize(Archive& archive, Monitoring::Histogram& histo,
+               const unsigned int) -> void {
+   archive& histo.runNumber;
+   archive& histo.tck;
+   archive& histo.histId;
+   archive& histo.data;
 }
 
 }

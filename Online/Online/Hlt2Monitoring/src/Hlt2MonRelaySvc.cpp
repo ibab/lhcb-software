@@ -25,23 +25,10 @@ namespace {
 DECLARE_SERVICE_FACTORY(Hlt2MonRelaySvc)
 
 //===============================================================================
-Hlt2MonRelaySvc::Hlt2MonRelaySvc(const string& name, ISvcLocator* loc)
-   : base_class(name, loc),
-   m_top{false},
-   m_relay{true},
-   m_incidentSvc{nullptr},
-   m_thread{nullptr},
-   m_control{nullptr},
-   m_context{nullptr}
+Hlt2MonRelaySvc::Hlt2MonRelaySvc(const string& svcName, ISvcLocator* loc)
+   : Hlt2MonBaseSvc(svcName, loc)
 {
    declareProperty("HostnameRegex", m_hostRegex = "hlt(01|(?<subfarm>[a-f]{1}[0-9]{2})(?<node>[0-9]{2})?)");
-   declareProperty("InPort", m_inPort = 31337);
-   declareProperty("OutPort", m_outPort = 31338);
-   declareProperty("FrontConnection", m_frontCon);
-   declareProperty("BackConnection", m_backCon);
-   declareProperty("ForceTopRelay", m_forceTop = false);
-   declareProperty("PartitionName", m_partition);
-   declareProperty("RunInPartitions", m_partitions = {"LHCb2"});
 }
 
 //===============================================================================
@@ -53,24 +40,8 @@ Hlt2MonRelaySvc::~Hlt2MonRelaySvc()
 //===============================================================================
 StatusCode Hlt2MonRelaySvc::initialize()
 {
-   StatusCode sc = Service::initialize();
-
-   MsgStream msg(msgSvc(), name());
-   msg << MSG::INFO << "Initialized ZeroMQ based Hlt2MonRelaySvc" << endmsg;
-   sc = serviceLocator()->service("IncidentSvc", m_incidentSvc, true);
-   if( !sc.isSuccess() ) {
-      msg << MSG::FATAL << "IncidentSvc not found" << endmsg;
-      return sc;
-   }
-   m_incidentSvc->addListener(this, "APP_RUNNING");
-   m_incidentSvc->addListener(this, "APP_STOPPED");
-
-   if (std::find(begin(m_partitions), end(m_partitions), m_partition) == end(m_partitions)) {
-      MsgStream log(msgSvc(), name());
-      log << MSG::INFO << "Running in partition: " << m_partition
-          << ", not starting relay." << endmsg;
-      return sc;
-   }
+   StatusCode sc = Hlt2MonBaseSvc::initialize();
+   if (!sc.isSuccess()) return sc;
 
    char hname[_POSIX_HOST_NAME_MAX];
    if (!gethostname(hname, sizeof(hname))) {
@@ -88,9 +59,9 @@ StatusCode Hlt2MonRelaySvc::initialize()
       }
 
       if (!result && (m_frontCon.empty() || m_backCon.empty())) {
-         msg << MSG::WARNING << "Not a known host type, and connections not correctly configured, "
+         warning() << "Not a known host type, and connections not correctly configured, "
              << "relay disabled" << endmsg;
-         m_relay = false;
+         m_enabled = false;
          return sc;
       } else if (!m_frontCon.empty() && !m_backCon.empty()) {
          // If connections were explicitly configured, we're done
@@ -107,109 +78,44 @@ StatusCode Hlt2MonRelaySvc::initialize()
          m_backCon  = string("tcp://hlt01:") + to_string(m_inPort);
       } else {
          // node relay
-         m_frontCon = string("ipc:///tmp/hlt2mon/0");
+         m_frontCon = string("ipc:///tmp/hlt2MonData_0");
          m_backCon  = string("tcp://") + matches.str("subfarm") + ":" + to_string(m_inPort);
       }
       return sc;
    } else {
-      msg << MSG::FATAL << "Could not determine hostname." << endmsg;
+      fatal() << "Could not determine hostname." << endmsg;
       return StatusCode::FAILURE;
    }
 }
 
 //===============================================================================
-void Hlt2MonRelaySvc::handle(const Incident& /* incident */)
+void Hlt2MonRelaySvc::function()
 {
+   // Create frontend, backend and control sockets
+   zmq::socket_t front{context(), ZMQ_XSUB};
+   zmq::socket_t back{context(), ZMQ_XPUB};
+   zmq::socket_t control{context(), ZMQ_SUB};
 
-}
-
-//===============================================================================
-StatusCode Hlt2MonRelaySvc::start()
-{
-   auto sc = Service::start();
-   if (!sc.isSuccess()) return sc;
-
-   if (m_thread) {
-      string resume{"RESUME"};
-      zmq::message_t msg(resume.size());
-      memcpy(static_cast<void*>(msg.data()), resume.c_str(), resume.size());
-      m_control->send(msg);
-      return sc;
+   //  Bind sockets to TCP ports
+   front.bind(m_frontCon.c_str());
+   info() << "Bound frontend to: " << m_frontCon << endmsg;
+   if (!m_top) {
+      back.connect(m_backCon.c_str());
+      info() << "Connected backend to " << m_backCon << endmsg;
+   } else {
+      back.bind(m_backCon.c_str());
+      info() << "Bound backend to " << m_backCon << endmsg;
    }
 
-   if (!m_context) {
-      m_context = new zmq::context_t{1};
-   }
+   // use inproc for the control.
+   control.connect(ctrlCon().c_str());
+   control.setsockopt(ZMQ_SUBSCRIBE, "", 0);
 
-   m_thread = new std::thread([this](void) -> void {
-         // Create frontend, backend and control sockets
-         zmq::socket_t front{*m_context, ZMQ_XSUB};
-         zmq::socket_t back{*m_context, ZMQ_XPUB};
-         zmq::socket_t control{*m_context, ZMQ_PAIR};
-
-         MsgStream log(msgSvc(), name());
-         //  Bind sockets to TCP ports
-         front.bind(m_frontCon.c_str());
-         log << MSG::INFO << "Bound frontend to: " << m_frontCon << endmsg;
-         if (!m_top) {
-            back.connect(m_backCon.c_str());
-            log << MSG::INFO << "Connected backend to " << m_backCon << endmsg;
-         } else {
-            back.bind(m_backCon.c_str());
-            log << MSG::INFO << "Bound backend to " << m_backCon << endmsg;
-         }
-
-         // use inproc for the control.
-         control.connect("inproc://control");
-
-         //  Start the queue proxy, which runs until ETERM or "TERMINATE"
-         //  received on the control socket
-         zmq_proxy_steerable (front, back, nullptr, control);
-      });
-
-   m_control = new zmq::socket_t{*m_context, ZMQ_PAIR};
-   m_control->bind("inproc://control");
-
-   MsgStream msg(msgSvc(), name());
-   msg << MSG::INFO << "Relay started." << endmsg;
-
-   return sc;
-}
-
-
-//===============================================================================
-StatusCode Hlt2MonRelaySvc::stop()
-{
-   if (m_control) {
-      string pause{"PAUSE"};
-      zmq::message_t msg(pause.size());
-      memcpy(static_cast<void*>(msg.data()), pause.c_str(), pause.size());
-      m_control->send(msg);
-   }
-   return StatusCode::SUCCESS;
-}
-
-//===============================================================================
-StatusCode Hlt2MonRelaySvc::finalize()
-{
-   MsgStream msg(msgSvc(), name());
-
-   // terminate the proxy
-   if (m_thread) {
-      zmq_send(*m_control, "TERMINATE", 9, 0);
-      m_thread->join();
-      delete m_thread;
-      m_thread = nullptr;
-      delete m_control;
-      m_control = nullptr;
-   }
-   delete m_context;
-   m_context = nullptr;
-
-   if (m_incidentSvc) {
-      m_incidentSvc->removeListener(this);
-      m_incidentSvc->release();
-      m_incidentSvc = 0;
-   }
-   return Service::finalize();
+   //  Start the queue proxy, which runs until ETERM or "TERMINATE"
+   //  received on the control socket
+   zmq_proxy_steerable (front, back, nullptr, control);
+   int linger = 0;
+   front.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
+   back.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
+   control.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
 }

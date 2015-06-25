@@ -4,18 +4,29 @@
 // Include files
 #include <string>
 #include <unordered_map>
+#include <chrono>
+
+// boost
+#include <boost/unordered_map.hpp>
 
 // Gaudi
 #include <GaudiKernel/Service.h>
 #include <GaudiKernel/IIncidentListener.h>
 
+// ZeroMQ
+#include <ZeroMQ/IZeroMQSvc.h>
+
+// Local
+#include "Hlt2Monitoring/Common.h"
+#include "Hlt2MonBaseSvc.h"
+
 /** @class Hlt2Adder Hlt2Adder.h
  *
  *
- *  @author
+ *  @author Roel Aaij
  *  @date   2015-06-13
  */
-class Hlt2AdderSvc :public extends1<Service, IIncidentListener> {
+class Hlt2AdderSvc : public Hlt2MonBaseSvc {
 public:
    /// Standard constructor
    Hlt2AdderSvc(const std::string& name, ISvcLocator* sl);
@@ -24,30 +35,19 @@ public:
 
    // Service pure virtual member functions
    virtual StatusCode initialize();
-   virtual StatusCode start();
-   virtual StatusCode stop();
-   virtual StatusCode finalize();
 
-   /// Incident handler implemenentation: Inform that a new incident has occured
-   virtual void handle(const Incident& inc);
+   // The function that does the work
+   void function() override;
 
 private:
 
    // properties
-   std::string m_partition;
-   std::vector<std::string> m_partitions;
-   std::string m_frontCon;
-   std::string m_backCon;
-   unsigned int m_outPort;
+   double m_sendInterval;
 
    // data members
-   bool m_add;
-   std::unordered_map<Monitoring::HistId, Monitoring::Histogram> m_histograms;
-
-   IIncidentSvc* m_incidentSvc;
-   std::thread* m_thread;
-   zmq::socket_t* m_control;
-   zmq::context_t* m_context;
+   typedef std::pair<Monitoring::RunNumber, Monitoring::HistId> key_t;
+   boost::unordered_map<key_t, Monitoring::Histogram> m_histograms;
+   boost::unordered_map<key_t, std::chrono::time_point<std::chrono::high_resolution_clock>> m_updates;
 
 };
 #endif // HLT2ADDER_H
