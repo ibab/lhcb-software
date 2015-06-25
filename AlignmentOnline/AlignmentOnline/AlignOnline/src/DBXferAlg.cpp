@@ -102,7 +102,11 @@ StatusCode DBXferAlg::execute()
 
     detDataSvc->setEventTime(m_RunStartTime);
     incSvc->fireIncident(RunChangeIncident(name(), m_RunNumber));
-    updMgrSvc()->newEvent();
+    sc = updMgrSvc()->newEvent();
+    if (!sc)
+    {
+      printf("DBXferAlg Bad return from the update service\n");
+    }
 
   return sc;
 }
