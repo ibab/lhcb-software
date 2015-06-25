@@ -694,13 +694,13 @@ DiMuonForXsection = {
     'Prescale'   :  1.,
     'CheckPV'    :  False
     },
-    'STREAMS' : [ 'ALLTURBO' ] ,
+    'STREAMS' : [ 'ALL','ALLTURBO' ] ,
     'WGs'    : [ 'BandQ' ]
     }
 
 B2JpsiXforEM = {
     'BUILDERTYPE'       : 'B2JpsiXforEM_sConf',
-    'CONFIG'    : {'ReFitPVsFlag'            :  True 
+    'CONFIG'    : {'ReFitPVsFlag'            :  False
                    ,       'TRCHI2DOF'                 :       5
                    ,       'BPVLTIME'                  :       0.2
                    ,       'JpsiMassWindow'            :       80
@@ -735,6 +735,49 @@ B2JpsiXforEM = {
     'STREAMS' : {'ALL' : ['StrippingB2JpsiXforEMBu2JpsiKDetachedLine',
                              'StrippingB2JpsiXforEMBd2JpsiKstarDetachedLine',
                              'StrippingB2JpsiXforEMBs2JpsiPhiDetachedLine'
+                             ]},
+    'WGs'               : ['BandQ']
+    
+    }
+
+
+B2JpsiXforEMPVR = {
+    'BUILDERTYPE'       : 'B2JpsiXforEM_sConf',
+    'CONFIG'    : {'ReFitPVsFlag'            :  True 
+                   ,       'TRCHI2DOF'                 :       5
+                   ,       'BPVLTIME'                  :       0.2
+                   ,       'JpsiMassWindow'            :       80
+                   ,       'DaughterPT'                :       1000
+                   ,       'VCHI2PDOF'                 :       10
+                   ,       'BuVCHI2PDOF'               :       10.0 #ok
+                   ,       'BdVCHI2PDOF'               :       10.0 #ok
+                   ,       'BsVCHI2PDOF'               :       10.0 #ok
+                   ,       'MinBsMass'                 :       5150.0
+                   ,       'MaxBsMass'                 :       5550.0
+                   ,       'MinBuMass'                 :       5150.0 #ok
+                   ,       'MaxBuMass'                 :       5550.0 #ok
+                   ,       'MinBdMass'                 :       5150.0
+                   ,       'MaxBdMass'                 :       5550.0
+                   ,       'CombMinBuMass'                 :       5050.0 #ok
+                   ,       'CombMaxBuMass'                 :       5650.0 #ok
+                   ,       'CombMinBdMass'                 :       5050.0
+                   ,       'CombMaxBdMass'                 :       5650.0
+                   ,       'CombMinBsMass'                 :       5050.0
+                   ,       'CombMaxBsMass'                 :       5650.0
+                   ,       'PIDKaon'                       : -2
+                   , 'MinPhiMass'                  : 980.0
+                   , 'MaxPhiMass'                  : 1050.0
+                   , 'phiPT'                       : 500.0
+                   , 'phiVCHI2'                    : 16.0
+                   , 'MinKstarMass'                : 826.0
+                   , 'MaxKstarMass'                : 966.0
+                   , 'KstarPT'                     : 500.0
+                   , 'KstarVCHI2'                  : 16.0
+                   , 'PTKaon'                      : 500.     
+                   },
+    'STREAMS' : {'ALL' : ['StrippingB2JpsiXforEMPVRBu2JpsiKDetachedLine',
+                             'StrippingB2JpsiXforEMPVRBd2JpsiKstarDetachedLine',
+                             'StrippingB2JpsiXforEMPVRBs2JpsiPhiDetachedLine'
                              ]},
     'WGs'               : ['BandQ']
     

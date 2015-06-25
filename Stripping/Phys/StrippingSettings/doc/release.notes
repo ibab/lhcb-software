@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-25 - Andrea Contu
+ - DimuonEM sento to ALL as well, copy w/wo refit for JpsiX and new dbase for S22
+
 ! 2015-06-15 - Chitsanu Khurewathanakul
  - Fill Settings for QEE
 
