@@ -2,12 +2,14 @@
 Stripping line for Omega --> Lambda,K and Xi --> Lambda pi derived from
   Stripping line for HeavyBaryons studies : Xi_b-, Xi_b0 and Omega_b-
   Author: Yasmine Amhis
+
+Updated for Run 2 from Run1 version; the only changes are in format
 '''
 __author__ = ['Mike Sokoloff, Laurence Carson']
-__date__ = '15/08/2012'
-__version__ = '$Revision: 0.0 $'
-__all__ = ('ChargedHyperonsConf'
-           ,'config_default')
+__date__ = '21/06/2015'
+__version__ = '$Revision: 1.0 $'
+__all__ = ('StrippingChargedHyperonsConf'
+           ,'default_config')
 
 
 from Gaudi.Configuration import *
@@ -19,11 +21,46 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from PhysSelPython.Wrappers import MultiSelectionSequence
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from GaudiKernel.SystemOfUnits import MeV, mm
+from GaudiKernel.SystemOfUnits import MeV, mm, picosecond
 
 
+default_name='ChargedHyperons'
+    #### This is the dictionary of all tunable cuts ########
+default_config={
+      'NAME'        :   'ChargedHyperons',
+      'WGs'         :   ['Charm'],
+      'BUILDERTYPE' : 'StrippingChargedHyperonsConf',
+      'STREAMS'     : ['CharmCompleteEvent'],
+      'CONFIG'      : {
+                     'TRCHI2DOFMax'           : 3.0
+                   , 'PionPIDK'               :  5.0
+                   , 'KaonPIDK'               :  -5.0
+                   , 'XiMassWindow'           :  25 * MeV
+                   , 'OmegaMassWindow'        :  25 * MeV
+                   , 'LambdaLLMinDecayTime'   :  5.0 * picosecond
+                   , 'LambdaLLVtxChi2Max'     :   5.0
+                   , 'LambdaDDVtxChi2Max'     :   5.0
+                   , 'LambdaLLMassWin'        : 5.7 * MeV
+                   , 'LambdaDDMassWin'        : 5.7 * MeV
+                   , 'LambdaLLMinVZ'          : -100. * mm
+                   , 'LambdaLLMaxVZ'          :  400. * mm
+                   , 'LambdaDDMinVZ'          :  400. * mm
+                   , 'LambdaDDMaxVZ'          : 2275. * mm
+                   , 'TrGhostProbMax'         :  0.25
+                   , 'ProbNNkMin'             :  0.20
+                   , 'ProbNNpMinLL'           :  0.20
+                   , 'ProbNNpMinDD'           :  0.05
+                   , 'Bachelor_PT_MIN'        : 100 * MeV
+                   , 'Bachelor_BPVIPCHI2_MIN' : 100.
+                   , 'LambdaDeltaZ_MIN'       :  5.0 * mm
+                   , 'Hyperon_BPVLTIME_MIN'   :  5.0 * picosecond
+                   , 'PostVertexChi2_MIN'     :  5.0
+                   , 'LambdaPr_PT_MIN'        : 500. * MeV
+                   , 'LambdaPi_PT_MIN'        : 100. * MeV
+      } ## end of 'CONFIG' 
+}  ## end of default_config
 #-------------------------------------------------------------------------------------------------------------
-class ChargedHyperonsConf(LineBuilder) :
+class StrippingChargedHyperonsConf(LineBuilder) :
        __configuration_keys__ = (
                                     "TRCHI2DOFMax"    ##  3.0
                                   , "PionPIDK"        ##  5.0
@@ -43,30 +80,15 @@ class ChargedHyperonsConf(LineBuilder) :
                                   , "ProbNNkMin"            ##   0.20
                                   , "ProbNNpMinLL"          ##   0.20
                                   , "ProbNNpMinDD"          ##   0.05
+                                  , "Bachelor_PT_MIN"       ##   100 * MeV
+                                  , "Bachelor_BPVIPCHI2_MIN" ## 100.
+                                  , "LambdaDeltaZ_MIN"       ##  5.0 * mm
+                                  , "Hyperon_BPVLTIME_MIN"   ##  5.0 * picosecond
+                                  , "PostVertexChi2_MIN"     ##  5.0
+                                  , "LambdaPr_PT_MIN"          ## 500. * MeV
+                                  , "LambdaPi_PT_MIN"        ## 100. * MeV
 )
 
-    #### This is the dictionary of all tunable cuts ########
-       config_default={
-                            'TRCHI2DOFMax'    : 3.0
-                          , 'PionPIDK'        :  5.0
-                          , 'KaonPIDK'        :  -5.0
-                          , 'XiMassWindow'    :  25 * MeV
-                          , 'OmegaMassWindow' :  25 * MeV
-                          , 'LambdaLLMinDecayTime'  :  5.0 ##   (ps)
-                          , 'LambdaLLVtxChi2Max'    :   5.0
-                          , 'LambdaDDVtxChi2Max'    :   5.0
-                          , 'LambdaLLMassWin'  : 5.7 * MeV
-                          , 'LambdaDDMassWin'  : 5.7 * MeV
-                          , 'LambdaLLMinVZ'    : -100. * mm
-                          , 'LambdaLLMaxVZ'    :  400. * mm
-                          , 'LambdaDDMinVZ'    :  400. * mm
-                          , 'LambdaDDMaxVZ'    : 2275. * mm
-                          , 'TrGhostProbMax'   :  0.25
-                          , 'ProbNNkMin'       :  0.20
-                          , 'ProbNNpMinLL'     :  0.20
-                          , 'ProbNNpMinDD'     :  0.05
-       }                
-   
        def __init__(self, name, config) :
            LineBuilder.__init__(self, name, config)
            self.name = name
@@ -128,8 +150,8 @@ class ChargedHyperonsConf(LineBuilder) :
 
            self.LambdaListLL =  self.createSubSel(OutputList = "LambdaLLFor" + self.name,
                                                 InputList = self.LambdaListLooseLL ,
-                                                Cuts = "(MAXTREE('p+'==ABSID, PT) > 500.*MeV) "\
-                                                "& (MAXTREE('pi-'==ABSID, PT) > 100.*MeV) " \
+                                                Cuts = "(MAXTREE('p+'==ABSID, PT) > %(LambdaPr_PT_MIN)s ) "\
+                                                "& (MAXTREE('pi-'==ABSID, PT) > %(LambdaPi_PT_MIN)s ) " \
                                                 "& (MAXTREE('p+'==ABSID,PROBNNp) > %(ProbNNpMinLL)s ) "\
                                                 "& (MINTREE('pi-'==ABSID, TRGHOSTPROB) < %(TrGhostProbMax)s )"\
                                                 "& (MINTREE('p+'==ABSID, TRGHOSTPROB) < %(TrGhostProbMax)s )"\
@@ -137,13 +159,13 @@ class ChargedHyperonsConf(LineBuilder) :
                                                 "& (VFASPF(VCHI2/VDOF) < %(LambdaLLVtxChi2Max)s ) "\
                                                 "& (VFASPF(VZ) > %(LambdaLLMinVZ)s ) " \
                                                 "& (VFASPF(VZ) < %(LambdaLLMaxVZ)s ) " \
-                                                "& (BPVLTIME() > %(LambdaLLMinDecayTime)s * ps )" % self.config \
+                                                "& (BPVLTIME() > %(LambdaLLMinDecayTime)s )" % self.config \
                                                 )
            
            self.LambdaListDD =  self.createSubSel(OutputList = "LambdaDDFor" + self.name,
                                                 InputList = self.LambdaListLooseDD ,
-                                                Cuts = "(MAXTREE('p+'==ABSID, PT) > 500.*MeV) "\
-                                                "& (MAXTREE('pi-'==ABSID, PT) > 100.*MeV) " \
+                                                Cuts = "(MAXTREE('p+'==ABSID, PT) > %(LambdaPr_PT_MIN)s ) "\
+                                                "& (MAXTREE('pi-'==ABSID, PT) > %(LambdaPi_PT_MIN)s ) " \
                                                 "& (MAXTREE('p+'==ABSID, PROBNNp) > %(ProbNNpMinDD)s ) "\
                                                 "& (ADMASS('Lambda0') < %(LambdaDDMassWin)s ) " \
                                                 "& (VFASPF(VCHI2/VDOF) <  %(LambdaDDVtxChi2Max)s ) "\
@@ -190,11 +212,13 @@ class ChargedHyperonsConf(LineBuilder) :
               Ximinus2LambdaPiLLL = self.createCombinationSel(OutputList = "Ximinus2LambdaPiLLL"+ self.name,
                                                            DecayDescriptor = "[Xi- -> Lambda0 pi-]cc",
                                                            DaughterLists   = [self.GoodLongPionsList, self.LambdaListLL],
-                                                           DaughterCuts    = {"pi-"      : "(PT>0.1*GeV) & (BPVIPCHI2()>100)"},
+                                                           DaughterCuts    = {"pi-"      : "(PT> %(Bachelor_PT_MIN)s ) &"\
+                                                                             " (BPVIPCHI2() > %(Bachelor_BPVIPCHI2_MIN)s )"% self.config},
                                                            PreVertexCuts   = "(ADAMASS('Xi-') < %(XiMassWindow)s*MeV)"% self.config,
-                                                           PostVertexCuts  = "(VFASPF(VCHI2/VDOF)<5) &(BPVLTIME() > 5.0 * ps) & "\
+                                                           PostVertexCuts  = "(VFASPF(VCHI2/VDOF)<%(PostVertexChi2_MIN)s ) & "\
+                                                                             " (BPVLTIME() > %(Hyperon_BPVLTIME_MIN)s)  & "\
                                                                              "(BPVVDZ>0) & "\
-                                                                             "(CHILD(VFASPF(VZ),1)-VFASPF(VZ) > 5.0 * mm)"
+                                                                             "(CHILD(VFASPF(VZ),1)-VFASPF(VZ) > %(LambdaDeltaZ_MIN)s)"% self.config
                                                            )
               
             
@@ -202,22 +226,27 @@ class ChargedHyperonsConf(LineBuilder) :
               Ximinus2LambdaPiDDL = self.createCombinationSel(OutputList = "Ximinus2LambdaPiDDL"+ self.name,
                                                            DecayDescriptor = "[Xi- -> Lambda0 pi-]cc",
                                                            DaughterLists   = [self.GoodLongPionsList, self.LambdaListDD],
-                                                           DaughterCuts    = {"pi-"      : "(PT>0.1*GeV) & (BPVIPCHI2()>100)"},
+                                                           DaughterCuts    = {"pi-"      : "(PT> %(Bachelor_PT_MIN)s ) &"\
+                                                                             " (BPVIPCHI2() > %(Bachelor_BPVIPCHI2_MIN)s )"% self.config},
                                                            PreVertexCuts   = "(ADAMASS('Xi-') < %(XiMassWindow)s*MeV)"% self.config,
-                                                           PostVertexCuts  = "(VFASPF(VCHI2/VDOF)<5) &(BPVLTIME() > 5.0 * ps) & "\
+                                                           PostVertexCuts  = "(VFASPF(VCHI2/VDOF)< %(PostVertexChi2_MIN)s) &"\
+                                                                             "(BPVLTIME() > %(Hyperon_BPVLTIME_MIN)s) & "\
                                                                              "(BPVVDZ>0) & "\
-                                                                             "(CHILD(VFASPF(VZ),1)-VFASPF(VZ) > 5.0 * mm)"
+                                                                             "(CHILD(VFASPF(VZ),1)-VFASPF(VZ) > %(LambdaDeltaZ_MIN)s )"% self.config
                                                            ) 
             
               ''' Make a Xi minus candidate  from downstream tracks'''
               Ximinus2LambdaPiDDD = self.createCombinationSel(OutputList = "Ximinus2LambdaPiDDD"+ self.name,
                                                            DecayDescriptor = "[Xi- -> Lambda0 pi-]cc",
                                                            DaughterLists   = [self.GoodDownstreamPionsList, self.LambdaListDD],
-                                                           DaughterCuts    = {"pi-"      : "(PT>0.1*GeV) & (BPVIPCHI2()>100)"},
+                                                           DaughterCuts    = {"pi-"      : "(PT> %(Bachelor_PT_MIN)s ) &"\
+                                                                             " (BPVIPCHI2() > %(Bachelor_BPVIPCHI2_MIN)s )"% self.config},
                                                            PreVertexCuts   = "(ADAMASS('Xi-') < %(XiMassWindow)s*MeV)"% self.config,
-                                                           PostVertexCuts  = "(VFASPF(VCHI2/VDOF)<3) &(BPVLTIME() > 5.0 * ps) & "\
+                                                           PostVertexCuts  = "(VFASPF(VCHI2/VDOF)< %(PostVertexChi2_MIN)s ) &"\
+                                                                             "(BPVLTIME() >  %(Hyperon_BPVLTIME_MIN)s ) & "\
                                                                              "(BPVVDZ>0) & "\
-                                                                             "(CHILD(VFASPF(VZ),1)-VFASPF(VZ) > 5.0 * mm)"
+                                                                             "(CHILD(VFASPF(VZ),1)-VFASPF(VZ) > %(LambdaDeltaZ_MIN)s )"% self.config
+
                                                            )
 ## Ximinus2LambdaPi is a "Selection" object; MergedSelection passes everything which gets to it
 ## even when the output list is empty
@@ -247,11 +276,13 @@ class ChargedHyperonsConf(LineBuilder) :
               Omegaminus2LambdaKLLL = self.createCombinationSel(OutputList = "Omegaminus2LambdaKLLL"+ self.name,
                                                            DecayDescriptor = "[Omega- -> Lambda0 K-]cc",
                                                            DaughterLists   = [self.GoodLongKaonsList, self.LambdaListLL],
-                                                           DaughterCuts    = {"K-"      : "(PT>0.1*GeV) & (BPVIPCHI2()>100)"},
+                                                           DaughterCuts    = {"K-"      : "(PT> %(Bachelor_PT_MIN)s ) &"\
+                                                                             " (BPVIPCHI2() > %(Bachelor_BPVIPCHI2_MIN)s )"% self.config},
                                                            PreVertexCuts   = "(ADAMASS('Omega-') < %(OmegaMassWindow)s*MeV)"% self.config,
-                                                           PostVertexCuts  = "(VFASPF(VCHI2/VDOF)<5) &(BPVLTIME() > 5.0 * ps) & "\
+                                                           PostVertexCuts  = "(VFASPF(VCHI2/VDOF)< %(PostVertexChi2_MIN)s) &"\
+                                                                             "(BPVLTIME() > %(Hyperon_BPVLTIME_MIN)s) & "\
                                                                              "(BPVVDZ>0) & "\
-                                                                             "(CHILD(VFASPF(VZ),1)-VFASPF(VZ) > 5.0 * mm)"
+                                                                             "(CHILD(VFASPF(VZ),1)-VFASPF(VZ) > %(LambdaDeltaZ_MIN)s )"% self.config
                                                            )
              
             
@@ -259,22 +290,26 @@ class ChargedHyperonsConf(LineBuilder) :
               Omegaminus2LambdaKDDL = self.createCombinationSel(OutputList = "Omegaminus2LambdaKDDL"+ self.name,
                                                            DecayDescriptor = "[Omega- -> Lambda0 K-]cc",
                                                            DaughterLists   = [self.GoodLongKaonsList, self.LambdaListDD],
-                                                           DaughterCuts    = {"K-"      : "(PT>0.1*GeV) & (BPVIPCHI2()>100)"},
+                                                           DaughterCuts    = {"K-"      : "(PT> %(Bachelor_PT_MIN)s ) &"\
+                                                                             " (BPVIPCHI2() > %(Bachelor_BPVIPCHI2_MIN)s )"% self.config},
                                                            PreVertexCuts   = "(ADAMASS('Omega-') < %(OmegaMassWindow)s*MeV)"% self.config,
-                                                           PostVertexCuts  = "(VFASPF(VCHI2/VDOF)<5) &(BPVLTIME() > 5.0 * ps) & "\
+                                                           PostVertexCuts  = "(VFASPF(VCHI2/VDOF)< %(PostVertexChi2_MIN)s) &"\
+                                                                             "(BPVLTIME() > %(Hyperon_BPVLTIME_MIN)s) & "\
                                                                              "(BPVVDZ>0) & "\
-                                                                             "(CHILD(VFASPF(VZ),1)-VFASPF(VZ) > 5.0 * mm)"
+                                                                             "(CHILD(VFASPF(VZ),1)-VFASPF(VZ) > %(LambdaDeltaZ_MIN)s )"% self.config
                                                            )
              
               ''' Make an Omega minus candidate '''
               Omegaminus2LambdaKDDD = self.createCombinationSel(OutputList = "Omegaminus2LambdaKDDD"+ self.name,
                                                            DecayDescriptor = "[Omega- -> Lambda0 K-]cc",
                                                            DaughterLists   = [self.GoodDownstreamKaonsList, self.LambdaListDD],
-                                                           DaughterCuts    = {"K-"      : "(PT>0.1*GeV) & (BPVIPCHI2()>100)"},
+                                                           DaughterCuts    = {"K-"      : "(PT> %(Bachelor_PT_MIN)s ) &"\
+                                                                             " (BPVIPCHI2() > %(Bachelor_BPVIPCHI2_MIN)s )"% self.config},
                                                            PreVertexCuts   = "(ADAMASS('Omega-') < %(OmegaMassWindow)s*MeV)"% self.config,
-                                                           PostVertexCuts  = "(VFASPF(VCHI2/VDOF)<3) &(BPVLTIME() > 5.0 * ps) & "\
+                                                           PostVertexCuts  = "(VFASPF(VCHI2/VDOF)< %(PostVertexChi2_MIN)s) &"\
+                                                                             "(BPVLTIME() > %(Hyperon_BPVLTIME_MIN)s) & "\
                                                                              "(BPVVDZ>0) & "\
-                                                                             "(CHILD(VFASPF(VZ),1)-VFASPF(VZ) > 5.0 * mm)"
+                                                                             "(CHILD(VFASPF(VZ),1)-VFASPF(VZ) > %(LambdaDeltaZ_MIN)s )"% self.config
                                                            )
 
 
