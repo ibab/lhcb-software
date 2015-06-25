@@ -4,7 +4,7 @@
 gaudi_subdir(PrPixel v1r11)
 
 gaudi_depends_on_subdirs(Det/VPDet
-                         DAQKernel/DAQ
+                         DAQ/DAQKernel
                          Event/DAQEvent
                          Event/DigiEvent
                          Event/TrackEvent

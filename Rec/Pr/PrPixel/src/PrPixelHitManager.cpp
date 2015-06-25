@@ -788,15 +788,13 @@ void PrPixelHitManager::storeOfflineClusters() {
 // Sort hits by X within every module to speed up the track search
 //=========================================================================
 void PrPixelHitManager::sortByX() {
-  std::vector<PrPixelModule *>::iterator itm;
-  for (itm = m_modules.begin(); m_modules.end() != itm; ++itm) {
-    if (*itm) {
-      if (!((*itm)->empty())) {
-        std::sort((*itm)->hits().begin(), (*itm)->hits().end(),
-                  PrPixelHit::LowerByX());
-        (*itm)->setFirstHitX((*itm)->hits().front()->x());
-        (*itm)->setLastHitX((*itm)->hits().back()->x());
-      }
+  for (auto it = m_modules.begin(), end = m_modules.end(); it != end; ++it) {
+    if (*it) {
+      if ((*it)->empty()) continue;
+      std::sort((*it)->hits().begin(), (*it)->hits().end(),
+                PrPixelHit::LowerByX());
+      (*it)->setFirstHitX((*it)->hits().front()->x());
+      (*it)->setLastHitX((*it)->hits().back()->x());
     }
   }
 }
