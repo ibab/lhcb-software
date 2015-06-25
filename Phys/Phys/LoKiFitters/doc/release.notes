@@ -5,10 +5,11 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2015-06-25 - Eduardo Rodrigues
+ - PVReFitter: removed unusued variable to get rid of compilation warning.
+
 ! 2015-06-16 - Vanya Belyaev
-
  - PVReFitter.cpp
-
    Add new option "CheckAncestors" (default value is "true")
    if activated, the track is copnsidered to be form PV, 
    is any of its "ancestors" in PV.
@@ -16,8 +17,6 @@
    ancestors are properly filled/stored...
    Tests and feedback from experts (both online and offline) 
    is needed here. 
-
-
 
 ! 2015-06-13 - Michel De Cian
  - Make minimum numbers of tracks in PV configurable, set default to 4, compare tracks by ID by default (all in PVRefitter.cpp).

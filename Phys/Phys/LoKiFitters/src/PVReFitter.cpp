@@ -754,7 +754,6 @@ StatusCode LoKi::PVReFitter::_reFit_ ( LHCb::RecVertex& pv ) const
 {
   //
   typedef SmartRefVector<LHCb::Track> TRACKS ;
-  typedef TRACKS::const_iterator      TIT    ;
   //
   const TRACKS& tracks = pv.tracks() ;
   //
