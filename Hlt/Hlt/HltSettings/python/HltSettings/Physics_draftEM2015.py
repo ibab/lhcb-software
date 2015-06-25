@@ -81,7 +81,7 @@ class Physics_draftEM2015( object ):
                                                , 'Muon_Velo_Qcut'    : 999 #OFF
                                                , 'Muon_PT'           : 800.
                                                , 'Muon_P'            : 3000.
-                                               , 'Muon_IPChi2'       : 4.0
+                                               , 'Muon_IPChi2'       : 8.0
                                                , 'Muon_TrChi2'       : 3.0
                                                , 'Muon_GEC'          : 'Loose'
                                                , 'ODINFilter'        : {'AllL0'  : 'jbit( ODIN_EVTTYP, 2)'}
@@ -138,10 +138,12 @@ class Physics_draftEM2015( object ):
                                                         'ODIN'               : 'jbit( ODIN_EVTTYP, 2)'
                                                    }
 
-                     , Hlt1CalibRICHMirrorLinesConf :    { 'Prescale' : { 'Hlt1CalibHighPTLowMultTrks'     : 0.0001 }
-                                                         , 'DoTiming' : False
+                     , Hlt1CalibRICHMirrorLinesConf :    { 'Prescale' : { 'Hlt1CalibHighPTLowMultTrks'     : 0.0001,
+                                                                          'Hlt1CalibRICHMirrorRICH1'       : 1.0,
+                                                                          'Hlt1CalibRICHMirrorRICH2'       : 1.0}
+                                                          , 'DoTiming' : False
                                                          , 'R2L_PT'       : 500. * MeV
-                                                         , 'R2L_P'        : 20000. * MeV
+                                                         , 'R2L_P'        : 40000. * MeV
                                                          , 'R2L_MinETA'   : 2.59
                                                          , 'R2L_MaxETA'   : 2.97
                                                          , 'R2L_Phis'     : [(-2.69, -2.29 ), (-0.85, -0.45), (0.45, 0.85), (2.29, 2.69)]
@@ -239,7 +241,7 @@ class Physics_draftEM2015( object ):
                         ,CommissioningLines :  {'Prescale'    : {'Hlt2PassThrough' : 1.0,
                                                                  'Hlt2Forward'     : 0.00001,
                                                                  'Hlt2DebugEvent'  : 0.00001},
-                                                'PassThrough' : {'HLT1' : "HLT_PASS_RE('^Hlt1(MBNoBiasLeadingCrossing|HighVeloMult|HighVeloMultSinglePV)Decision$')"},
+                                                'PassThrough' : {'HLT1' : "HLT_PASS_RE('^Hlt1(HighVeloMult|HighVeloMultSinglePV)Decision$')"},
                                                 'NoBiasPassThrough' : {'HLT1' : "HLT_PASS('Hlt1NoBiasPrescaledDecision')"},
                                                 'Postscale'   : {'Hlt2ErrorEvent'  : 'RATE(0.01)'}
                                                 }
@@ -274,7 +276,7 @@ class Physics_draftEM2015( object ):
         """
         Returns a list of active lines
         """
-        hlt2 = ['Hlt2PassThrough', 'Hlt2NoBiasPassThrough', # passthrough of leading crossing + high mult, passthrough of Hlt1NoBiasPrescaled
+        hlt2 = ['Hlt2PassThrough', # passthrough of high mult
                 'Hlt2Lumi','Hlt2DebugEvent','Hlt2ErrorEvent','Hlt2Transparent', # technical lines
                 'Hlt2MBNoBiasLeadingCrossing'] # Special line for leading crossing
 
@@ -326,7 +328,6 @@ class Physics_draftEM2015( object ):
                  , 'Hlt1BeamGasCrossingParasitic', 'Hlt1BeamGasHighRhoVertices'
                  , 'Hlt1MBNoBias'  # nobias lines
                  , 'Hlt1MBNoBiasRateLimited'
-                 , 'Hlt1NoBiasPrescaled'
                  , 'Hlt1L0Any','Hlt1L0AnyNoSPD' # technical lines
                  , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent'
                  , 'Hlt1VeloClosingMicroBias'
