@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-06-25 - Maurizio Martinelli
+ - Modified TrackFitMatchMonitor to use Lite clusters as well.
+
 ! 2015-06-15 - Wouter Hulsbergen
  - Modified TT and IT trackmonitor such that more functionality works for hits with Lite clusters.
  - In TrackMonitor: reduced max chi2/dof to 5 and added prof for average chi2prb vs phi in T stations

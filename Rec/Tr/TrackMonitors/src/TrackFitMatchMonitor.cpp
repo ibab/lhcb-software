@@ -252,11 +252,13 @@ StatusCode TrackFitMatchMonitor::execute()
 	    if( !lastVelo || (lastVelo->z() < fitnode->z()) ) lastVelo = fitnode ;
 	    break ;
 	  case LHCb::Measurement::TT:
+	  case LHCb::Measurement::TTLite:
 	    if( !firstTT || (firstTT->z() > fitnode->z()) ) firstTT=fitnode ;
 	    if( !lastTT || (lastTT->z() < fitnode->z()) ) lastTT=fitnode ;
 	    break;
 	  case LHCb::Measurement::OT:
 	  case LHCb::Measurement::IT:
+	  case LHCb::Measurement::ITLite:
 	    if( !firstT || (firstT->z() > fitnode->z() ) ) firstT=fitnode ;
 	    break;
 	  default:
@@ -275,7 +277,7 @@ StatusCode TrackFitMatchMonitor::execute()
 	  //plotDelta("Velo-TT",*lastVelo,false) ;
 	  
 	  if( firstT )
-	    plotDelta("T-TT",*firstT,true) ;
+	    plotDelta("T-TT",*firstT,true) ; 
 	  //plotDelta("T-TT",*lastTT,false) ;
 	  
 	} else if (firstT) {
