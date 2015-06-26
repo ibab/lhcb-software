@@ -1779,41 +1779,8 @@ class Gauss(LHCbConfigurableUser):
         gen_t0.addTool(FixedNInteractions,name="FixedNInteractions")
         gen_t0.FixedNInteractions.NInteractions = 1
 
-        #  Special signal with LbPowheg
-        from Configurables import PowhegProductionbb, PowhegProductiontt, PowhegProductionWbb
-        from Configurables import PowhegProductionWZ, PowhegProductionZZ
-
-        pInGeV   = beamMom*SystemOfUnits.GeV/SystemOfUnits.TeV
-        gen_t0.addTool( Special, name="Special" )
-        gen_t0.Special.addTool( PowhegProductionbb , name = "PowhegProductionbb" )
-        gen_t0.Special.addTool( PowhegProductiontt , name = "PowhegProductiontt" )
-        gen_t0.Special.addTool( PowhegProductionWbb , name = "PowhegProductionWbb" )
-        gen_t0.Special.addTool( PowhegProductionWZ , name = "PowhegProductionWZ" )
-        gen_t0.Special.addTool( PowhegProductionZZ , name = "PowhegProductionZZ" )
-        gen_t0.Special.PowhegProductionbb.ebeam1 = pInGeV
-        gen_t0.Special.PowhegProductionbb.ebeam2 = pInGeV
-        gen_t0.Special.PowhegProductiontt.ebeam1 = pInGeV
-        gen_t0.Special.PowhegProductiontt.ebeam2 = pInGeV
-        gen_t0.Special.PowhegProductionWbb.ebeam1 = pInGeV
-        gen_t0.Special.PowhegProductionWbb.ebeam2 = pInGeV
-        gen_t0.Special.PowhegProductionWZ.ebeam1 = pInGeV
-        gen_t0.Special.PowhegProductionWZ.ebeam2 = pInGeV
-        gen_t0.Special.PowhegProductionZZ.ebeam1 = pInGeV
-        gen_t0.Special.PowhegProductionZZ.ebeam2 = pInGeV
-        #
-        gen_t0.Special.PowhegProductionbb.numevts = LHCbApp().EvtMax
-        gen_t0.Special.PowhegProductiontt.numevts = LHCbApp().EvtMax
-        gen_t0.Special.PowhegProductionWbb.numevts = LHCbApp().EvtMax
-        gen_t0.Special.PowhegProductionWZ.numevts = LHCbApp().EvtMax
-        gen_t0.Special.PowhegProductionZZ.numevts = LHCbApp().EvtMax
-        #
-        gen_t0.Special.PowhegProductionbb.iseed = genInit.getProp("RunNumber") + genInit.getProp("FirstEventNumber")
-        gen_t0.Special.PowhegProductiontt.iseed = genInit.getProp("RunNumber") + genInit.getProp("FirstEventNumber")
-        gen_t0.Special.PowhegProductionWbb.iseed = genInit.getProp("RunNumber") + genInit.getProp("FirstEventNumber")
-        gen_t0.Special.PowhegProductionWZ.iseed = genInit.getProp("RunNumber") + genInit.getProp("FirstEventNumber")
-        gen_t0.Special.PowhegProductionZZ.iseed = genInit.getProp("RunNumber") + genInit.getProp("FirstEventNumber")
-
         # or with Hijing
+        pInGeV   = beamMom*SystemOfUnits.GeV/SystemOfUnits.TeV
         txtP = "hijinginit efrm "+str(pInGeV)
         gen_t0.addTool(MinimumBias,name="MinimumBias")
         gen_t0.MinimumBias.addTool(HijingProduction,name="HijingProduction")
