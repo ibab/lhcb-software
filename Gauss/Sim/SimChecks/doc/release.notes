@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-06-26 - Luca Pescatore
+ - Added rad_length_scan_velo_z.py to perform scans of radiation length
+   in the velo using a range of different initial positions. 
+
 ! 2015-06-17 - Luca Pescatore
  - Forgot to add TargetSetup.py in svn. And added python/Target folder. 
 

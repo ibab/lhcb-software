@@ -2,11 +2,11 @@
 #################################################################################
 ## This option file helps you save time by running in sequence                 ##
 ## RanLengthAna.py and RadLengthAna_VELO.py and merging the outputs.           ##
-## You can run this simply by "python Run_RadLenScan.py"                       ##
+## You can run this simply by "python rad_length_scan.py"                      ##
 ## Twiki at: https://twiki.cern.ch/twiki/bin/view/LHCb/RadLengthStudies        ##
 ##                                                                             ##
 ##  @author : L.Pescatore                                                      ##
-##  @date   : last modified on 2014-02-14                                      ##
+##  @date   : last modified on 2015-06-16                                      ##
 #################################################################################
 
 import sys
