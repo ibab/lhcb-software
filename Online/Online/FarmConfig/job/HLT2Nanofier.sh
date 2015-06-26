@@ -13,5 +13,6 @@ export TAN_PORT=YES;
 export TAN_NODE=${DATAINTERFACE};
 echo [DEBUG] SUBFARM_OPTIONS: ${SUBFARM_OPTIONS};
 echo [DEBUG] Eventselector request: ${EVENTSELECTOR_REQ1};
-#exec -a ${UTGID} ${Class2_task} -opts=../options/HLT2Nanofier.opts
-exec -a ${UTGID} ${Class1_task} -opts=../options/HLT2Nanofier.opts
+
+exec -a ${UTGID} ${Class2_task} -opts=../options/HLT2Nanofier.opts
+#exec -a ${UTGID} ${Class1_task} -opts=../options/HLT2Nanofier.opts

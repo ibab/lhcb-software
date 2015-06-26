@@ -34,6 +34,6 @@ EventSelector.Decode                 = false;
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true ;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
-//EventSelector.REQ1                   = "EvType=2;TriggerMask=0x0,0x2,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
-EventSelector.REQ1                   = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
+EventSelector.REQ1                   = "EvType=2;TriggerMask=0x0,0x2,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
+//EventSelector.REQ1                   = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
 #include "$ONLINETASKS/options/MessageSvc.opts"
