@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-26 - Andrea Contu
+ - Prescale to TrackEffDownMuon on ALL and new S22 dbase
+
 ! 2015-06-25 - Andrea Contu
  - DimuonEM sento to ALL as well, copy w/wo refit for JpsiX and new dbase for S22
 

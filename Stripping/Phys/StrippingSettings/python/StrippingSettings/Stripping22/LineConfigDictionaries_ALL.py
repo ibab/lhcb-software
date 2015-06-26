@@ -190,7 +190,7 @@ TrackEffDownMuon = {
     'NAME'        : 'TrackEffDownMuon',
     'WGs'         : ['ALL'],
     'BUILDERTYPE' : 'StrippingTrackEffDownMuonConf',
-    'STREAMS'           : [ 'ALL','ALLTURBO' ],
+    'STREAMS'           : [ 'ALLTURBO' ],
     'CONFIG'      : { 
 				'MuMom':		2000.	# MeV
 			,	'MuTMom':		200.	# MeV
@@ -212,6 +212,56 @@ TrackEffDownMuon = {
 			,	'SeedingMinP':		1500.	# MeV
             ,   'DataType':             '2015'  # for ConfiguredMuonIDs configuration
 			,	'NominalLinePrescale':  1. # proposal: 0.2 to stay below 0.15% retention rate 
+			,	'NominalLinePostscale': 1.
+			,	'ValidationLinePrescale':0.0015 #0.5 in stripping15: 0.1 gives 1.42% retention rate , ValidationLine further prescaled
+			,	'ValidationLinePostscale': 1.
+			,	'ZLinePrescale':  1. # proposal: 0.2 to stay below 0.15% retention rate 
+			,	'ZLinePostscale':  1.  
+			,	'UpsilonLinePrescale':  1. # proposal: 0.2 to stay below 0.15% retention rate 
+			,	'UpsilonLinePostscale':  1. 
+            ,   'JpsiHlt1Filter' : 'Hlt1.*Decision'
+            ,   'JpsiHlt2Filter' : 'Hlt2.*Decision'
+			,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
+			,	'ZHLT1TisTosSpecs': { "Hlt1SingleMuonHighPTDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
+			,	'UpsilonHLT1TisTosSpecs': { "Hlt1SingleMuonHighPTDecision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
+			,	'HLT1PassOnAll': True
+			,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0, "Hlt2TrackEffDiMuonDownstream.*Decision%TOS" : 0 } #reg. expression allowed
+			,	'ZHLT2TisTosSpecs': { "Hlt2SingleMuonHighPTDecision%TOS" : 0 } #reg. expression allowed
+			,	'UpsilonHLT2TisTosSpecs': { "Hlt2SingleMuonLowPTDecision%TOS" : 0} #reg. expression allowed
+			,	'HLT2PassOnAll': False
+                    }
+    }
+
+
+#-------------#
+# Calibration #
+#-------------#
+TrackEffDownMuonFS = {
+    'NAME'        : 'TrackEffDownMuonFS',
+    'WGs'         : ['ALL'],
+    'BUILDERTYPE' : 'StrippingTrackEffDownMuonConf',
+    'STREAMS'           : [ 'ALL' ],
+    'CONFIG'      : { 
+				'MuMom':		2000.	# MeV
+			,	'MuTMom':		200.	# MeV
+			,	'ZMuMom':		0.	# MeV
+			,	'ZMuTMom':		20000.	# MeV
+			,	'UpsilonMuMom':		0.	# MeV
+			,	'UpsilonMuTMom':	500.	# MeV
+			,	'ZMuMinEta':		2.	# adimensional
+			,	'ZMuMaxEta':		4.5	# adimensional
+			,	'TrChi2':		10.	# MeV
+			,	'MassPreComb':		2000.	# MeV
+			,	'MassPostComb':		200.	# MeV
+			,	'ZMassPreComb':		100000.	# MeV
+			,	'ZMassPostComb':	1500.	# MeV
+			,	'UpsilonMassPreComb':	100000.	# MeV
+			,	'UpsilonMassPostComb':	00.	# MeV
+			,	'Doca':			5.	# mm
+			,	'VertChi2':		25.	# adimensional
+			,	'SeedingMinP':		1500.	# MeV
+            ,   'DataType':             '2015'  # for ConfiguredMuonIDs configuration
+			,	'NominalLinePrescale':  0.2 # proposal: 0.2 to stay below 0.15% retention rate 
 			,	'NominalLinePostscale': 1.
 			,	'ValidationLinePrescale':0.0015 #0.5 in stripping15: 0.1 gives 1.42% retention rate , ValidationLine further prescaled
 			,	'ValidationLinePostscale': 1.
