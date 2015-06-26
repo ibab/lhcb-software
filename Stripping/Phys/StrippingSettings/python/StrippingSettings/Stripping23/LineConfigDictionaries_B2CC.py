@@ -32,6 +32,7 @@ BetaS = {
                     , 'JpsiMassWindow'       :       80
                     , 'DaughterPT'           :       1000
                     , 'VCHI2PDOF'            :       10
+                    , 'HLTCuts'              :       "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')"
                     , 'Jpsi2MuMuPrescale'    :       0.15
                     , 'Bd2JpsiKstarPrescale' :       1.0
                     , 'Bd2JpsiKsPrescale'    :       1.0
@@ -66,6 +67,7 @@ BetaSPi0 = {
     'CONFIG'      : { 'BPVLTIME'             :       0.2
                     , 'VCHI2PDOF'            :       10
                     , 'JpsiMassWindow'       :       80
+                    , 'HLTCuts'              :       "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')"
                     , 'Bs2JpsiPi0Prescale'   :       1.0
                     },
     'STREAMS'     : [ 'Leptonic' ],

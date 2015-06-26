@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-26 - Carlos Vazquez Sierra
+ - Solved hardcoded triggers of B2CC settings
+
 ! 2015-06-26 - Andrea Contu
  - Prescale to TrackEffDownMuon on ALL and new S22 dbase
 
