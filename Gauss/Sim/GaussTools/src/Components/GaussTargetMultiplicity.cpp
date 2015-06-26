@@ -43,22 +43,22 @@
 DECLARE_TOOL_FACTORY( GaussTargetMultiplicity )
 
 
-// ============================================================================
-/** standard constructor 
- *  @see GiGaTrackActionBase 
- *  @see GiGaBase 
- *  @see AlgTool 
- *  @param type type of the object (?)
- *  @param name name of the object
- *  @param parent  pointer to parent object
- */
-// ============================================================================
-GaussTargetMultiplicity::GaussTargetMultiplicity
+	// ============================================================================
+	/** standard constructor 
+	 *  @see GiGaTrackActionBase 
+	 *  @see GiGaBase 
+	 *  @see AlgTool 
+	 *  @param type type of the object (?)
+	 *  @param name name of the object
+	 *  @param parent  pointer to parent object
+	 */
+	// ============================================================================
+	GaussTargetMultiplicity::GaussTargetMultiplicity
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
 	: GiGaTrackActionBase( type , name , parent )
-	, m_intVolumeName(), m_intVolumeString(), mp_targMat(), mp_physList(), mp_projPdgID(), mp_projEng(), mp_targThick()
+, m_intVolumeName(), m_intVolumeString(), mp_targMat(), mp_physList(), mp_projPdgID(), mp_projEng(), mp_targThick()
 {
 	// declare own properties
 	declareProperty( "InteractionVolumeName" , m_intVolumeName ) ;
@@ -95,7 +95,7 @@ StatusCode GaussTargetMultiplicity::initialize ()
 			status ) ; }
 	///
 	info() << "********** Initialize GaussTargetMultiplicity tool **********"
-         << endmsg;
+		<< endmsg;
 
 	std::string filename = "/NTUPLES/FILE1";
 	NTupleFilePtr ntfile(ntupleSvc(), filename);
@@ -245,8 +245,8 @@ void GaussTargetMultiplicity::PostUserTrackingAction ( const G4Track* track )
 	else
 	{
 		m_projPdgID  = mp_projPdgID[0];
-  		m_projEng    = mp_projEng[0];
-  		m_targThick  = mp_targThick[0];
+		m_projEng    = mp_projEng[0];
+		m_targThick  = mp_targThick[0];
 		m_targMat    = ((char *)mp_targMat[0].c_str())[0];
 		m_physList   = ((char *)mp_physList[0].c_str())[0];
 	}
@@ -255,7 +255,7 @@ void GaussTargetMultiplicity::PostUserTrackingAction ( const G4Track* track )
 	G4ParticleDefinition* partdefin = track->GetDefinition();
 	std::string PartName = partdefin->GetParticleName();
 	G4int PartPdgId = partdefin->GetPDGEncoding();
-	
+
 	const G4VProcess* proc = track->GetCreatorProcess();
 	m_trackpar = track->GetParentID();
 
@@ -301,12 +301,12 @@ void GaussTargetMultiplicity::PostUserTrackingAction ( const G4Track* track )
 	double ended_at_y = track->GetPosition().y();
 	double ended_at_z = track->GetPosition().z();
 
-	
+
 	debug() << "Track momentum (x,y,z) "<<m_momx <<" "<<m_momy<<" "<<m_momz<< endmsg;
 	debug() << "Track Ekine "<<m_kine<<" and charge "<<m_charge<< endmsg;
 	debug() << "Produced at (x,y,z) "<<prod_at_x <<" "<<prod_at_y<<" "<<prod_at_z<< endmsg;
 	debug() << "Ended at (x,y,z) "<<ended_at_x<<" "<<ended_at_y<<" "<<ended_at_z<< endmsg;
-	
+
 
 	// The following three lines commented to avoid compilation warnings. SE.
 	//const G4Step* tstep = track->GetStep();

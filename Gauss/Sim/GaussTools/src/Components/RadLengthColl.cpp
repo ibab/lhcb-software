@@ -176,8 +176,8 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 	initial_position = thePreStepPoint->GetPosition();
 
 	// initialize the counters at the origin of the track
-	if(initial_position[0] == 0 && initial_position[1] == 0 && initial_position[2] == 0 )
-	{
+	//if(initial_position[0] == 0 && initial_position[1] == 0 && initial_position[2] == 0 )
+	//{
 		// Radiation Length
 		theRadLength = 0;
 		theCumulatedRadLength = 0;
@@ -191,7 +191,7 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 		// Other stuff
 		index = 0;
 		m_ntrk = 0;
-	}
+	//}
 
 	// Getting Step Length
 	StepLength = theStep->GetStepLength();
