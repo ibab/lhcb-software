@@ -420,13 +420,13 @@ int HltBufferedIOReader::openFile()   {
       }
       m_current = fname;
       if ( m_max_events_per_file < 0 )  {
-	info("Opened file: " + fname + " for HLT processing");
+        info("Opened file: " + fname + " for HLT processing");
       }
       else  {
-	stringstream s;
-	s << "Opened file: " << fname << " for HLT processing [" 
-	  << m_max_events_per_file << " events]";
-	info(s.str());
+        stringstream s;
+        s << "Opened file: " << fname << " for HLT processing [" 
+          << m_max_events_per_file << " events]";
+        info(s.str());
       }
       return fd;
     }
@@ -513,7 +513,13 @@ StatusCode HltBufferedIOReader::i_run()  {
   
   while (1)  {
     files_processed = (GO_PROCESS==m_goValue) && (scanFiles() == 0);
+
+    // Handle case to go to paused or change of the GO value
     if ( (m_goto_paused && files_processed) || (m_goValue != GO_PROCESS) )   {
+      if ( file_handle )  {
+        safeRestOfFile(file_handle);
+        file_handle = 0;
+      }
       /// Before actually declaring PAUSED, we wait until no events are pending anymore.
       waitForPendingEvents(mbmInfo);
       // Sleep a bit before goung to pause
@@ -521,11 +527,14 @@ StatusCode HltBufferedIOReader::i_run()  {
       ::lib_rtl_sleep(10000);
       /// Go to state PAUSED, all the work is done
       incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
+      info("Quitting...");
+      break;
     }
     else if ( files_processed ) {
       info("Locking event loop. Waiting for work....");
       ::lib_rtl_lock(m_lock);
     }
+    // Again check if the GO value changed, since we may have been waiting in the lock!
     if ( !m_receiveEvts || (m_goValue == GO_DONT_PROCESS) )    {
       if ( file_handle )  {
         safeRestOfFile(file_handle);
@@ -545,7 +554,7 @@ StatusCode HltBufferedIOReader::i_run()  {
     while ( m_receiveEvts && (m_goValue != GO_DONT_PROCESS) )   {
       if (file_handle == 0 && (m_goValue == GO_PROCESS) )  {
         file_handle = openFile();
-	m_evtCountFile = 0;
+        m_evtCountFile = 0;
         if ( file_handle == 0 )   {
           files_processed = (GO_PROCESS!=m_goValue) || (scanFiles() == 0);
           if ( files_processed )    {
@@ -660,13 +669,13 @@ StatusCode HltBufferedIOReader::i_run()  {
             status = m_producer->sendSpace();
             if (status == MBM_NORMAL)    {
               m_evtCount++;
-	      m_evtCountFile++;
-	      // If we have exceeded the total number of events per file, close it!
-	      if ( m_max_events_per_file>0 && m_evtCountFile>m_max_events_per_file )  {
-		::close(file_handle);
-		file_handle = 0;
-		m_current = "";
-	      }
+              m_evtCountFile++;
+              // If we have exceeded the total number of events per file, close it!
+              if ( m_max_events_per_file>0 && m_evtCountFile>m_max_events_per_file )  {
+                ::close(file_handle);
+                file_handle = 0;
+                m_current = "";
+              }
             }
           }
         }

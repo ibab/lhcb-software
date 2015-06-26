@@ -20,14 +20,15 @@ using namespace std;
 
 /// Standard algorithm constructor
 NetworkDataSender::NetworkDataSender(const string& nam, ISvcLocator* pSvc)
-   :  MDFWriter(MDFIO::MDF_BANKS, nam, pSvc),
-      m_sendReq(0), m_sendError(0), m_sendBytes(0), m_evtSelector(0),
-      m_sendEvents(false), m_incidentSvc(0)
+  :  MDFWriter(MDFIO::MDF_BANKS, nam, pSvc),
+     m_sendReq(0), m_sendError(0), m_sendBytes(0), m_evtSelector(0),
+     m_sendEvents(false), m_incidentSvc(0)
 {
   declareProperty("DataSink",         m_target);
   declareProperty("UseEventRequests", m_useEventRequests=false);
   declareProperty("AllowSuspend",     m_allowSuspend=true);
   declareProperty("SendErrorDelay",   m_sendErrorDelay=1000);
+  declareProperty("PauseOnError",     m_pauseOnError=true);
   lib_rtl_create_lock(0,&m_lock);
 }
 
@@ -63,6 +64,7 @@ StatusCode NetworkDataSender::initialize()   {
   }
   m_sendEvents = true;
   m_incidentSvc->addListener(this,"DAQ_CANCEL");
+  m_incidentSvc->addListener(this,"DAQ_PAUSE");
   try  {
     sc = suspendEvents();
     if ( !sc.isSuccess() )  {
@@ -222,6 +224,9 @@ StatusCode NetworkDataSender::writeBuffer(void* const /* ioDesc */, const void* 
     if ( m_sendEvents )   {
       ::lib_rtl_sleep(m_sendErrorDelay);
       ++m_sendError;
+      if ( m_pauseOnError )  {
+        m_incidentSvc->fireIncident(Incident(name(),"DAQ_PAUSE"));
+      }
       return StatusCode::FAILURE;
     }
     return StatusCode::SUCCESS;

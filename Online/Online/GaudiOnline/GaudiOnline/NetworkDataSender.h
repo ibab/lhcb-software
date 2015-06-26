@@ -110,6 +110,8 @@ namespace LHCb  {
     bool                m_useEventRequests;
     /// Property: [Producer] Allow suspending Event selector
     bool                m_allowSuspend;
+    /// Property: [Sender] Invoke DAQ_PAUSE incident on error
+    bool                m_pauseOnError;
     /// Property: [Sender] Delay before resending after failure
     int                 m_sendErrorDelay;
     /// Monitoring item: Total number of items sent to receiver(s)
