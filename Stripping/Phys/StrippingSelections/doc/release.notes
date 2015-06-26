@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-26 - Carlos Vazquez Sierra
+ - Solved hardcoded triggers issue in B2CC lines.
+
 ! 2015-06-25 - Vanya Belyaev
  - StrippingBandQ/StrippingUpsilonExotic.py  update a bit the selection 
    StrippingBandQ/StrippingPsiX0.py 

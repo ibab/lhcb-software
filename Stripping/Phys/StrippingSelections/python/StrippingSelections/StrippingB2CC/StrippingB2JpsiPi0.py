@@ -21,6 +21,7 @@ default_config = {
     'CONFIG'            : { 'BPVLTIME'                  :       0.2
                           , 'VCHI2PDOF'                 :       10
                           , 'JpsiMassWindow'            :       80
+                          , 'HLTCuts'                   :       "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')"
                           , 'Bs2JpsiPi0Prescale'        :       1.0     # 2011: 0.185, 2012: 0.9
                           },
     'STREAMS'          : { 'Leptonic' : [ 'StrippingBetaSBd2JpsiPi0PrescaledLine' ,
@@ -35,6 +36,7 @@ class B2JpsiPi0Conf(LineBuilder) :
     __configuration_keys__ = ('BPVLTIME',
                               'VCHI2PDOF',
                               'JpsiMassWindow',
+                              'HLTCuts',
                               'Bs2JpsiPi0Prescale')
 
     def __init__(self, name, config) :
@@ -76,7 +78,7 @@ class B2JpsiPi0Conf(LineBuilder) :
 
         Bd2JpsiPi0PrescaledLine = StrippingLine( self.name + "Bd2JpsiPi0PrescaledLine",
                                                  algos = [ Bd2JpsiPi0 ] ,
-                                                 HLT2 = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')",
+                                                 HLT2 = self.config['HLTCuts'],
                                                  prescale = self.config['Bs2JpsiPi0Prescale'],
                                                  MDSTFlag = True,
                                                  EnableFlavourTagging = True )
