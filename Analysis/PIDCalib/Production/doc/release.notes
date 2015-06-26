@@ -1,9 +1,0 @@
-!-----------------------------------------------------------------------------
-! Package     : PIDCalib/Production
-! Responsible : Lucio Anderlini
-! Purpose     : Production environmen for PIDCalib datasets
-!-----------------------------------------------------------------------------
-
-! 2015-06-26 - Lucio Anderlini
-  - Package created, files moved from CalibDataSel dev
-
