@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2015-06-26 - jonesc
+ - Fix DataDecodingErrorMoni 2D histogram so L1 logical IDs start from 0 not 1.
+
 ! 2015-06-19 - Chris Jones
  - Small cleanup of the RichDataDecodingErrorMoni monitor.
 

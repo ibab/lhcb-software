@@ -76,7 +76,7 @@ StatusCode DataDecodingErrorMoni::prebookHistograms()
 
   richHisto2D( HID("decodingErrorsByBoard"),
                "DAQ Decoding Errors by UKL1 Hardware ID",
-               0.5, nL1s    + 0.5, nL1s,
+               -0.5, nL1s   - 0.5, nL1s,
                0.5, nlabels + 0.5, nlabels,
                "UKL1 Hardware ID", "",
                "# of errors", l1HardIDLabels, labels() );
