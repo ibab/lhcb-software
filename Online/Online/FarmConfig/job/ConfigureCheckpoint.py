@@ -5,8 +5,9 @@ restore_args = ''
 
 sep = '/'
 
+checkpoint_zip = True
 checkpoint_dir = '/group/online/dataflow/cmtuser/checkpoints'
-checkpoint_local_area = '/dev/shm'
+checkpoint_expand_area = '/dev/shm'
 checkpoint_local_area = '/localdisk/checkpoints'
 if os.environ.has_key('LOCAL_CHECKPOINT_DIR'):
   checkpoint_local_area = os.environ['LOCAL_CHECKPOINT_DIR']
@@ -41,21 +42,25 @@ class Checkpoint:
       self.task_type = self.config_brunel
     elif self.config_brunel:
       self.task_type = 'OnlineBrunel' # FixME: runinfo.HLTType
-      ##checkpoint_local_area = checkpoint_dir
+    elif runinfo.MooreOnlineVersion == "" or runinfo.MooreOnlineVersion == "DEFAULT":
+      self.task_type = 'PassThrough'
     else:
       self.task_type = 'Moore1' # FixME: runinfo.HLTType
 
     self.torrent_file   = self._getTorrentFile()
     self.checkpoint_bin = os.environ['CHECKPOINTING_BIN']
-    self.restore = self.checkpoint_bin + '/bin/restore.exe'
+    self.restore        = self.checkpoint_bin + '/bin/restore.exe'
     if self.torrent_file:
-      self.target_path = self.checkpointTargetDir()+sep+self.torrent_file
+      if checkpoint_zip:
+        self.target_path = checkpoint_expand_area+sep+self.task_type+sep+"Checkpoint.data"
+      else:
+        self.target_path = checkpoint_local_area+self.checkpointRelativeDir()+sep+self.torrent_file
       self.lib_dir = os.path.dirname(self.target_path)+'/lib'
 
   def _getTorrentFile(self):
     try:
       if (self.config_brunel and self.runinfo.RecoStartupMode > 1) or self.runinfo.MooreStartupMode > 1:
-        directory = self.checkpointLocationDir() 
+        directory = checkpoint_dir + self.checkpointRelativeDir()
         for i in os.listdir(directory):
           idx=i.find('.data')
           if idx>0 and idx==len(i)-5:
@@ -80,17 +85,12 @@ class Checkpoint:
           Mapping+sep+self.task_type
     return checkpoint_reloc
 
-  def checkpointLocationDir(self):
-    return checkpoint_dir + self.checkpointRelativeDir()
-
-  def checkpointTargetDir(self):
-    return checkpoint_local_area + self.checkpointRelativeDir()
-
   def torrentFile(self):
     return self.torrent_file
 
   def output(self, message):
     print message
+    ## print 'echo [INFO] ',message
     return self
 
   def initProcess(self):
@@ -121,9 +121,9 @@ class Checkpoint:
 
   #=======================================================================================
   def setupCheckpointFile(self):
-    self.output('export CHECKPOINT_DIR='+os.path.dirname(self.target_path)+';') \
-        .output('export CHECKPOINT_FILE='+self.target_path+';') \
-        .output('export CHECKPOINT_SETUP_OPTIONS=${FARMCONFIGROOT}/options/Checkpoint.opts;') \
+    #self.output('export CHECKPOINT_DIR='+os.path.dirname(self.target_path)+';') \
+    #    .output('export CHECKPOINT_FILE='+self.target_path+';') 
+    self.output('export CHECKPOINT_SETUP_OPTIONS=${FARMCONFIGROOT}/options/Checkpoint.opts;') \
         .output('export CHECKPOINT_RESTART_OPTIONS=${FARMCONFIGROOT}/options/CheckpointRestart.opts;')
     return self
 
@@ -167,18 +167,20 @@ class Checkpoint:
   def copyTorrent(self):
     ldir = self.checkpointRelativeDir()
     relocate_path = self.checkpointRelativeDir()+sep+self.torrent_file
+    expand_path   = self.target_path
     self.setupCheckpointFile() \
-        .output('echo "[INFO] Copy checkpoint:'+self.target_path+'";')
+        .output('echo "[INFO] Copy checkpoint:'+relocate_path+'";')
     if self.config_brunel:
-      self.output('bash '+checkpoint_dir+'/cmds/copy_data '+relocate_path+';')
+      self.output('bash '+checkpoint_dir+'/cmds/copy_data '+relocate_path+' '+self.task_type+';')
     else:
-      self.output('bash '+checkpoint_dir+'/cmds/copy_torrent '+relocate_path+';')
-    return self.output('if test ! -f "'+self.target_path+'"; then') \
+      self.output('bash '+checkpoint_dir+'/cmds/copy_torrent.zipped '+relocate_path+' '+self.task_type+';')
+    self.output('if test ! -f "'+self.target_path+'"; then') \
         .output('  echo "[FATAL] '+line+'";') \
         .output('  echo "[FATAL] == CHECKPOINT FILE '+self.target_path+' DOES NOT EXIST!";') \
         .output('  echo "[FATAL] '+line+'";') \
         .output('  exit 1;') \
         .output('fi;')
+    return self
 
 #=========================================================================================
 def torrent_restore(cp, extract=True):
