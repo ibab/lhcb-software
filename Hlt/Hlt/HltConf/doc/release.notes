@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-06-26 - Christian Linn
+ - removed MB lines from routing bit 40
+ - replaced NoBiasPassThrough by PassThrough in routing bit 91
+
 ! 2015-06-18 - Sascha Stahl
  - HltAfterburner: Protected adding of extra infos by checking if track locations exist.
 

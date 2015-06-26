@@ -299,7 +299,7 @@ class HltConf(LHCbConfigurableUser):
                       , 37 : "HLT_PASS_RE('Hlt1(?!BeamGas).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global # full stream
                       , 38 : "HLT_PASS('Hlt1ODINTechnicalDecision')"
                       , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"
-                      , 40 : "HLT_PASS_RE('Hlt1(Velo|MB|BeamGas).*Decision')"  # bit (to be) used by the Velo (closing) monitoring
+                      , 40 : "HLT_PASS_RE('Hlt1(Velo|BeamGas).*Decision')"  # bit (to be) used by the Velo (closing) monitoring
                       , 41 : "HLT_PASS_RE('Hlt1(Single|Track)Muon.*Decision')"
                       , 42 : "HLT_PASS_RE('Hlt1.*DiMuon.*Decision')"
                       , 43 : "HLT_PASS_RE('Hlt1.*MuonNoL0.*Decision')"
@@ -349,7 +349,7 @@ class HltConf(LHCbConfigurableUser):
                       # routing bit 90 for TurboCalib stream, includes lumi events.
                       , 90 : "HLT_TURBOPASS_RE('^Hlt2.*TurboCalibDecision$') | HLT_PASS('Hlt2LumiDecision')"
                       # Leading crossing events during early measurements
-                      , 91 : "HLT_PASS_RE('Hlt2(MBNoBiasLeadingCrossing|NoBiasPassThrough)Decision') | HLT_PASS('Hlt2LumiDecision')"
+                      , 91 : "HLT_PASS_RE('Hlt2(MBNoBiasLeadingCrossing|PassThrough)Decision') | HLT_PASS('Hlt2LumiDecision')"
                       # VVG 01-05-2015
                       }
         HltRoutingBitsWriter('Hlt1RoutingBitsWriter').RoutingBits = routingBits
