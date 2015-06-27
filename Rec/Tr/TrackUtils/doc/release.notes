@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-06-27 - Michel De Cian
+ - Make list of locations to erase configurable in 'TrackEraseExtraInfo', add print option, remove unnecessary includes, add doxygen comments.
+
 !========================= TrackUtils v1r60 2015-04-21 =========================
 ! 2015-04-16 - Sascha Stahl
  - TrackBestTrackCreator: Added the possibility to save clone killed and fitted 

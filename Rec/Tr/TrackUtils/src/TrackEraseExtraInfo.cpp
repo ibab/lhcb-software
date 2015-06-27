@@ -5,58 +5,92 @@
 // track interfaces
 #include "Event/Track.h"
 
-#include "TrackInterfaces/ITrackManipulator.h"
 #include "TrackEraseExtraInfo.h"
-#include "GaudiKernel/ToStream.h"
-
-#include "TrackInterfaces/IHitExpectation.h"
-#include "TrackInterfaces/IVeloExpectation.h"
-
 
 
 using namespace LHCb;
 
 DECLARE_ALGORITHM_FACTORY( TrackEraseExtraInfo )
-
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 TrackEraseExtraInfo::TrackEraseExtraInfo(const std::string& name,
 					 ISvcLocator* pSvcLocator):
   GaudiAlgorithm(name, pSvcLocator)
 {
   
-  declareProperty("inputLocation", m_inputLocation = TrackLocation::Default);
-    
-}
+  std::vector<int> tmp = {
+    LHCb::Track::PatQuality,
+    LHCb::Track::Cand1stQPat, 
+    LHCb::Track::Cand2ndQPat, 
+    LHCb::Track::Cand1stChi2Mat,
+    LHCb::Track::Cand2ndChi2Mat, 
+    LHCb::Track::MatchChi2,
+    LHCb::Track::TsaLikelihood, 
+    LHCb::Track::nPRVeloRZExpect,
+    LHCb::Track::nPRVelo3DExpect
+  };
+  
+  
+  declareProperty("InputLocation",  m_inputLocation  = TrackLocation::Default);
+  declareProperty("ErasableInfo",   m_erasableInfo   = tmp);
+  declareProperty("PrintExtraInfo", m_printExtraInfo = false);
 
+}
+//=============================================================================
+// Destructor
+//=============================================================================
 TrackEraseExtraInfo::~TrackEraseExtraInfo()
 {
   // destructor
 }
-
-
+//=============================================================================
+// Initialization
+//=============================================================================
 StatusCode TrackEraseExtraInfo::initialize() {
+
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "==> initialize" << endmsg;
   
   return StatusCode::SUCCESS;
 }
-
+//=============================================================================
+// Main execution
+//=============================================================================
 StatusCode TrackEraseExtraInfo::execute(){
 
-  Tracks* inCont = get<Tracks>(m_inputLocation);
-
-  // loop 
-  for (Tracks::iterator iterT = inCont->begin(); iterT != inCont->end(); ++iterT) {
-
-    (*iterT)->eraseInfo(LHCb::Track::PatQuality);
-    (*iterT)->eraseInfo(LHCb::Track::Cand1stQPat);
-    (*iterT)->eraseInfo(LHCb::Track::Cand2ndQPat);
-    (*iterT)->eraseInfo(LHCb::Track::Cand1stChi2Mat);
-    (*iterT)->eraseInfo(LHCb::Track::Cand2ndChi2Mat); 
-    (*iterT)->eraseInfo(LHCb::Track::MatchChi2);
-    (*iterT)->eraseInfo(LHCb::Track::TsaLikelihood); 
-    (*iterT)->eraseInfo(LHCb::Track::nPRVeloRZExpect);
-    (*iterT)->eraseInfo(LHCb::Track::nPRVelo3DExpect);
-   
+  Tracks* inCont = getIfExists<Tracks>(m_inputLocation);
+  if( inCont == nullptr){
+    warning() << "Input container: " << m_inputLocation << " does not exist" << endmsg;
+    return StatusCode::SUCCESS;
   }
-   
+  
+  // -- Print extra info which is on track
+  if( UNLIKELY( m_printExtraInfo )){
+
+    for( LHCb::Track* track : *inCont){
+
+      info() << "ExtraInfo for track: " << track->type() << " : " << track->key() << endmsg;
+
+      const LHCb::Track::ExtraInfo extraInfo = track->extraInfo();
+      for ( LHCb::Track::ExtraInfo::const_iterator i = extraInfo.begin();
+            i != extraInfo.end(); ++i ){
+        const LHCb::Track::AdditionalInfo addInfo =
+          static_cast<LHCb::Track::AdditionalInfo>(i->first);
+        info() << " " << addInfo << "=" << i->second << endmsg;
+      }
+    }
+  }
+  // --
+      
+  // -- loop 
+  for (Tracks::iterator iterT = inCont->begin(); iterT != inCont->end(); ++iterT) {
+    for(int i : m_erasableInfo) (*iterT)->eraseInfo( i );
+  }
+  
   return StatusCode::SUCCESS;
+  
 }
 
