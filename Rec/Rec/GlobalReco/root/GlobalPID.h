@@ -12,11 +12,14 @@
 #include <map>
 #include <vector>
 #include <cmath>
+
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
 #include <TCanvas.h>
 #include <TH2F.h>
+#include "TSystem.h"
+#include "TPad.h"
 
 /// ROOT class for producing PID plots from a TTree
 class GlobalPID
@@ -93,6 +96,8 @@ public: // classes
         minGhostProb(0), maxGhostProb(0.9),
         minTrackLikelihood(-40), maxTrackLikelihood(999),
         minCut(-15), maxCut(15),
+        //minAngle(-9999),maxAngle(9999),
+        minAngle(30),maxAngle(300),
         mustHaveAerogel(false),mustHaveR1Gas(false),mustHaveR2Gas(false),mustHaveAnyRICH(false),
         mustHaveECAL(false),mustHaveHCAL(false),mustHavePRS(false),mustHaveBREM(false),
         mustHaveECALorPRS(false),
@@ -110,13 +115,13 @@ public: // classes
         subtitle(""),
         recreateCombinedDLLs(false),
         superImpose(false),writeCutValues(true),
-        color(kBlack),textSize(0.024),
+        color(kBlack),
+        textSize(0.018),
         imageFile(""),
         cutType(">"),
         secCutType(">"),
         useFixedGraphRange(true),
-        minGraphX(60), maxGraphX(100), minGraphY(1), maxGraphY(40),
-        minAngle(30.0),maxAngle(300.0)
+        minGraphX(60), maxGraphX(100), minGraphY(1), maxGraphY(40)
     { }
   public:
     double minIDeff,maxIDeff,minMisIDeff,maxMisIDeff;
@@ -124,6 +129,7 @@ public: // classes
     double minGhostProb, maxGhostProb;
     double minTrackLikelihood, maxTrackLikelihood;
     double minCut, maxCut;
+    double minAngle, maxAngle;
     bool mustHaveAerogel,mustHaveR1Gas,mustHaveR2Gas,mustHaveAnyRICH;
     bool mustHaveECAL,mustHaveHCAL,mustHavePRS,mustHaveBREM,mustHaveECALorPRS;
     bool mustHaveMUON,mustHaveECALorPRSorRICH;
@@ -143,7 +149,7 @@ public: // classes
     std::string imageFile;
     std::string cutType, secCutType;
     bool useFixedGraphRange;
-    double minGraphX,maxGraphX,minGraphY,maxGraphY,minAngle, maxAngle ;
+    double minGraphX,maxGraphX,minGraphY,maxGraphY;
   };
 
 public:
@@ -173,7 +179,7 @@ public: // User methods
   void makeCurve( const Long64_t nTracks = -1 );
 
   /// Save the current canvases to file. Optional argument is the image type
-  void saveFigures( const std::string & type = "png" );
+  void saveFigures( const std::string & type = "pdf" );
 
   /// Reset the config object
   void configReset();

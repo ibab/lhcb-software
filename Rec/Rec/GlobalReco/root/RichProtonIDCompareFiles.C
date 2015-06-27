@@ -1,9 +1,14 @@
 
+#include "TROOT.h"
+
+#include "GlobalPID.h"
+gROOT->ProcessLine(".L GlobalPID.C");
+
+void RichProtonIDCompareFiles()
 {
 
-  const Long64_t nTracks = 1000000;
+  const Long64_t nTracks = 10e5;
 
-  gROOT->ProcessLine(".L GlobalPID.C+");
   const double GeV(1000);
 
   // make a new pid object
@@ -38,39 +43,19 @@
   defaultConfig.var1      = GlobalPID::richDLLp;
   defaultConfig.var2      = GlobalPID::richDLLk;
 
-  // DC06 v30
-  pid->loadTTree("/Users/chris/LHCb/RootFiles/DC06/DC06-v30.protoparticles.tuples.root");
+  pid->loadTTree("/usera/jonesc/LHCbCMake/BrunelDevNightly/Run2/AllTracks/protoparticles.tuples.root");
   pid->config = defaultConfig;
-  pid->config.subtitle = "DC06 (v30)";
+  pid->config.subtitle = "All Tracks in Likelihood";
   pid->config.superImpose = false;
-  pid->config.color = kBlack;
+  pid->config.color = kRed+1;;
   // create the plot
   pid->makeCurve(nTracks);
 
-  // DC06 v31
-  pid->loadTTree("/Users/chris/LHCb/RootFiles/DC06/DC06-v31.protoparticles.tuples.root");
+  pid->loadTTree("/usera/jonesc/LHCbCMake/BrunelDevNightly/Run2/LongTracks/protoparticles.tuples.root");
   pid->config = defaultConfig;
-  pid->config.subtitle = "DC06 (v31)";
+  pid->config.subtitle = "Long Tracks only in Likelihood";
   pid->config.superImpose = true;
   pid->config.color = kBlue+1;
-  // create the plot
-  pid->makeCurve(nTracks);
-
-  // DC09
-  pid->loadTTree("/Users/chris/LHCb/RootFiles/DC09/DC09-Test3.NormalPixClean.protoparticles.tuples.root");
-  pid->config = defaultConfig;
-  pid->config.subtitle = "DC09 (Test3)";
-  pid->config.superImpose = true;
-  pid->config.color = kRed+1;
-  // create the plot
-  pid->makeCurve(nTracks);
-
-  // DC09
-  pid->loadTTree("/Users/chris/LHCb/RootFiles/DC09/DC09-Test3.NoPixClean.protoparticles.tuples.root");
-  pid->config = defaultConfig;
-  pid->config.subtitle = "DC09 (Test3) | No Pixel Cleaning";
-  pid->config.superImpose = true;
-  pid->config.color = kGreen+2;
   // create the plot
   pid->makeCurve(nTracks);
 

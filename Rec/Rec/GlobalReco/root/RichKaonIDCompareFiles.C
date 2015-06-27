@@ -1,16 +1,22 @@
 
+#include "TROOT.h"
+
+#include "GlobalPID.h"
+
+void RichKaonIDCompareFiles()
 {
-
-  const Long64_t nTracks = 1000000;
-
+  
   gROOT->ProcessLine(".L GlobalPID.C+");
-  const double GeV(1000);
 
   // make a new pid object
   GlobalPID * pid = new GlobalPID();
 
   // Default Config Object
   GlobalPID::Configuration defaultConfig;
+
+  const Long64_t nTracks = 1e7;
+
+  const double GeV(1000);
 
   // Histo range
   defaultConfig.useFixedGraphRange = true;
@@ -25,10 +31,12 @@
   // Momentum range
   defaultConfig.minP      = 3   * GeV;
   defaultConfig.maxP      = 100 * GeV;
-  defaultConfig.minPt     = 0.5 * GeV;
+  defaultConfig.minPt     = 0.0 * GeV;
   defaultConfig.maxPt     = 100 * GeV;
   // track selection
-  defaultConfig.trackType = GlobalPID::Long;
+  //defaultConfig.trackType = GlobalPID::Long;
+  //defaultConfig.trackType = GlobalPID::Upstream;
+  defaultConfig.trackType = GlobalPID::Downstream;
   // detector selection
   defaultConfig.mustHaveAnyRICH = true;
   // Plot Type
@@ -38,35 +46,19 @@
   defaultConfig.var1      = GlobalPID::richDLLk;
   defaultConfig.var2      = GlobalPID::richDLLpi;
 
-  pid->loadTTree("/usera/jonesc/cmtuser/Brunel_HEAD/Rec/Brunel/cmt/before/protoparticles.tuples.root");
+  pid->loadTTree("/usera/jonesc/LHCbCMake/BrunelDevNightly/Run2/AllTracksAtOnce/protoparticles.tuples.root");
   pid->config = defaultConfig;
-  pid->config.subtitle = "Before Fix";
+  pid->config.subtitle = "Tracks Combined";
   pid->config.superImpose = false;
-  pid->config.color = kBlack;
+  pid->config.color = kRed+1;;
   // create the plot
   pid->makeCurve(nTracks);
 
-  pid->loadTTree("/usera/jonesc/cmtuser/Brunel_HEAD/Rec/Brunel/cmt/after-fixIter1/protoparticles.tuples.root");
+  pid->loadTTree("/usera/jonesc/LHCbCMake/BrunelDevNightly/Run2/TracksSeperately/protoparticles.tuples.root");
   pid->config = defaultConfig;
-  pid->config.subtitle = "After Fix 1";
+  pid->config.subtitle = "Tracks Seperately";
   pid->config.superImpose = true;
   pid->config.color = kBlue+1;
-  // create the plot
-  pid->makeCurve(nTracks);
-
-  pid->loadTTree("/usera/jonesc/cmtuser/Brunel_HEAD/Rec/Brunel/cmt/after-fixIter1-newBkg/protoparticles.tuples.root");
-  pid->config = defaultConfig;
-  pid->config.subtitle = "After Fix 2";
-  pid->config.superImpose = true;
-  pid->config.color = kRed+1;
-  // create the plot
-  pid->makeCurve(nTracks);
-
-  pid->loadTTree("/usera/jonesc/cmtuser/Brunel_HEAD/Rec/Brunel/cmt/after-fixIter1-newBkg-3it/protoparticles.tuples.root");
-  pid->config = defaultConfig;
-  pid->config.subtitle = "After Fix 3";
-  pid->config.superImpose = true;
-  pid->config.color = kGreen+2;
   // create the plot
   pid->makeCurve(nTracks);
 

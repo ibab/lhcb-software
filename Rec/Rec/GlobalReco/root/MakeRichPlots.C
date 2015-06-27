@@ -1,16 +1,25 @@
+#include "TROOT.h"
+#include "TSystem.h"
+#include "TPad.h"
+#include "TCanvas.h"
+#include "TH1F.h"
 
+void MakeRichPlots()
 {
 
+  const std::string imageType = "pdf";
+
   // load the file
-  TFile * f = new TFile("protoparticles.tuples.root");
+  //TFile * f = new TFile("/usera/jonesc/LHCbCMake/BrunelDevNightly/Run2/AllTracks/protoparticles.tuples.root");
+  TFile * f = new TFile("/usera/jonesc/LHCbCMake/BrunelDevNightly/Run2/LongTracks/protoparticles.tuples.root");
 
   TTree * tree = (TTree*)gDirectory->Get("ChargedProtoTuple/protoPtuple");
 
   TCut detOK = "RichUsedAero || RichUsedR1Gas || RichUsedR2Gas";
 
-  std::string trackSelS = "TrackType==3 && TrackP>10000 && TrackP<100000 && TrackPt>1000 && TrackChi2PerDof<2";
-  trackSelS += " && TrackGhostProb<0.9"; // add ghost prob cut
-  trackSelS += " && TrackLikelihood>-40"; // Likelihood
+  std::string trackSelS = "TrackType==3 && TrackP>3000 && TrackP<100000 && TrackChi2PerDof<5";
+  //trackSelS += " && TrackGhostProb<0.9"; // add ghost prob cut
+  //trackSelS += " && TrackLikelihood>-40"; // Likelihood
   //trackSelS += " && (TrackCloneDist>5000 || TrackCloneDist<0)"; // clone distance
   TCut trackSel = trackSelS.c_str();
 
@@ -42,19 +51,28 @@
                 detOK && realK  && trackSel && kAboveThres, "prof" );
     tree->Draw( ("(RichDLLk>"+cC.str()+"?100:0):TrackP>>piMisIDEff").c_str(), 
                 detOK && realPi && trackSel && piAboveThres, "prof" );
+    TH1F * kIDEff     = (TH1F*) gDirectory->Get("kIDEff");
+    TH1F * piMisIDEff = (TH1F*) gDirectory->Get("piMisIDEff");
 
-    kIDEff->SetTitle( ( "DLLk>"+cC.str() + " && " + trackSelS ).c_str() );
-    kIDEff->GetXaxis()->SetTitle( "Momentum / MeV/c" );
-    kIDEff->GetYaxis()->SetTitle( "Efficiency / %" );
-    kIDEff->Draw();
-    kIDEff->SetMarkerColor(kRed);
-    kIDEff->SetLineColor(kRed);
-
-    piMisIDEff->Draw("SAME");
-    piMisIDEff->SetMarkerColor(kBlue);
-    piMisIDEff->SetLineColor(kBlue);
-
-    c->SaveAs( ("KaonID-DLL"+cC.str()+".png").c_str() );
+    if ( kIDEff && piMisIDEff )
+    {
+      kIDEff->SetTitle( ( "DLLk>"+cC.str() + " && " + trackSelS ).c_str() );
+      kIDEff->GetXaxis()->SetTitle( "Momentum / MeV/c" );
+      kIDEff->GetYaxis()->SetTitle( "Efficiency / %" );
+      kIDEff->Draw();
+      kIDEff->SetMarkerColor(kRed);
+      kIDEff->SetLineColor(kRed);
+      
+      piMisIDEff->Draw("SAME");
+      piMisIDEff->SetMarkerColor(kBlue);
+      piMisIDEff->SetLineColor(kBlue);
+      
+      c->SaveAs( ("KaonID-DLL"+cC.str()+"."+imageType).c_str() );
+    }
+    else
+    {
+      std::cerr << "Error making kaon plots" << std::endl;
+    }
 
   }
 
@@ -69,19 +87,28 @@
                 detOK && realPr && trackSel && prAboveThres, "prof" );
     tree->Draw( ("(RichDLLp>"+cC.str()+"?100:0):TrackP>>piMisIDEff").c_str(), 
                 detOK && realPi && trackSel && piAboveThres, "prof" );
+    TH1F * prIDEff    = (TH1F*) gDirectory->Get("prIDEff");
+    TH1F * piMisIDEff = (TH1F*) gDirectory->Get("piMisIDEff");
 
-    prIDEff->SetTitle( ( "DLLp>"+cC.str() + " && " + trackSelS ).c_str() );
-    prIDEff->GetXaxis()->SetTitle( "Momentum / MeV/c" );
-    prIDEff->GetYaxis()->SetTitle( "Efficiency / %" );
-    prIDEff->Draw();
-    prIDEff->SetMarkerColor(kRed);
-    prIDEff->SetLineColor(kRed);
-
-    piMisIDEff->Draw("SAME");
-    piMisIDEff->SetMarkerColor(kBlue);
-    piMisIDEff->SetLineColor(kBlue);
-
-    c->SaveAs( ("ProtonID-DLL"+cC.str()+".png").c_str() );
+    if ( prIDEff && piMisIDEff )
+    {
+      prIDEff->SetTitle( ( "DLLp>"+cC.str() + " && " + trackSelS ).c_str() );
+      prIDEff->GetXaxis()->SetTitle( "Momentum / MeV/c" );
+      prIDEff->GetYaxis()->SetTitle( "Efficiency / %" );
+      prIDEff->Draw();
+      prIDEff->SetMarkerColor(kRed);
+      prIDEff->SetLineColor(kRed);
+      
+      piMisIDEff->Draw("SAME");
+      piMisIDEff->SetMarkerColor(kBlue);
+      piMisIDEff->SetLineColor(kBlue);
+      
+      c->SaveAs( ("ProtonID-DLL"+cC.str()+"."+imageType).c_str() );   
+    }
+    else
+    {
+      std::cerr << "Error making proton plots" << std::endl;
+    }
 
   }
 
