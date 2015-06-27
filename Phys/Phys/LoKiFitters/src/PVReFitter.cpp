@@ -340,7 +340,6 @@ namespace LoKi
     mutable TrEntry     m_entry   ;
     mutable LHCb::State m_state   ;
     // ========================================================================
-    // ========================================================================
   }; //                                           end of class LoKi::PVReFitter 
   // ==========================================================================
 } //                                                      end of namespace LoKi 
@@ -599,6 +598,9 @@ StatusCode LoKi::PVReFitter::_remove_
     //
   }
   //
+  // some statistics 
+  ++counter ("#removed") += removed.size() ;
+  //
   // - nothing to be removed 
   if ( removed.empty() ) { return StatusCode::SUCCESS ; }   // RETURN
   //
@@ -646,6 +648,10 @@ StatusCode LoKi::PVReFitter::_remove_
     }
   }
   //
+  // some statistics 
+  ++counter ("#toremove") += removed.size() ;
+  ++counter ("#loaded"  ) += m_entries.size() ;
+  //
   // the data entries are loaded properly, make a step of kalman filter:
   //
   // 1) prepare the gain-matrix for PV 
@@ -668,8 +674,6 @@ StatusCode LoKi::PVReFitter::_remove_
   // 3) finally update the vertex
   for ( LHCb::Track::ConstVector::const_iterator it = removed.begin() ; 
         removed.end() != it ; ++it ) { pv.removeFromTracks ( *it  ) ; }
-  // some statistics 
-  ++counter ("#removed") += removed.size() ;
   //
   const TrEntry& last = m_entries.back() ;
   //
