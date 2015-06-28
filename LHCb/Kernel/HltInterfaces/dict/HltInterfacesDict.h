@@ -1,4 +1,4 @@
-#ifndef DICT_HLTINTERFACESDICT_H 
+#ifndef DICT_HLTINTERFACESDICT_H
 #define DICT_HLTINTERFACESDICT_H 1
 
 #include "Kernel/IANNSvc.h"
@@ -10,6 +10,7 @@
 #include "Kernel/IPropertyConfigSvc.h"
 #include "Kernel/IConfigAccessSvc.h"
 #include "Kernel/IConfigTreeEditor.h"
+#include "Kernel/ReadRoutingBits.h"
 
 namespace {
 
@@ -24,4 +25,3 @@ namespace {
 
 
 #endif // DICT_HLTINTERFACESDICT_H
-

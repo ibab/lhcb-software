@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+! 2015-06-29 - Roel Aaij
+ - Add firedRoutingBits function to dictionary.
+
 !========================= HltInterfaces v6r0 2015-02-23 =========================
 ! 2015-02-08 - Gerhard Raven
  - switch print() to json format, but allow ConfigArchiveAccessSvc access to
@@ -26,7 +29,7 @@
 
 !========================= HltInterfaces v5r2 2014-10-14 =========================
 ! 2014-10-13 - Gerhard Raven
- - PropertyConfig, ConfigTreeNode: avoid strstream in computation of digest 
+ - PropertyConfig, ConfigTreeNode: avoid strstream in computation of digest
 
 !========================= HltInterfaces v5r1 2014-06-10 ========================
 ! 2014-05-28 - Gerhard Raven
@@ -149,5 +152,3 @@
 ! 2008-06-17 - Patrick Koppenburg
  - First import
  - IANNSvc and IHltSummaryTool moved to here
-
-
