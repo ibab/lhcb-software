@@ -1,33 +1,34 @@
 package HltSys
-version           v23r7p1
+version           v23r7p2
 
 branches cmt doc
 
-use Hlt1Lines           v7r12    Hlt   # Roel Aaij, Vava Gligorov, Gerhard Raven
+use Hlt1Lines           v7r13    Hlt   # Roel Aaij, Vava Gligorov, Gerhard Raven
 use Hlt1Muons           v1r14    Hlt   # Vasilis Syropoulos
 use Hlt2Lines           v9r9p1   Hlt   # Vava Gligorov, Roel Aaij, Mika Vesterinen
-use Hlt2SharedParticles v7r6p1   Hlt   # Vava Gligorov
+use Hlt2SharedParticles v7r6p2   Hlt   # Vava Gligorov
 use HltBase             v15r6    Hlt   # Gerhard Raven
 use HltBeamGasAlley     v4r1     Hlt   # Rosen Matev
 use HltCommon           v10r5    Hlt   # Gerhard Raven
-use HltConf             v12r10   Hlt   # Roel Aaij, Gerhard Raven
+use HltConf             v13r0    Hlt   # Roel Aaij, Gerhard Raven
 use HltCosmics          v1r3     Hlt   #
 use HltDisplVertices    v4r3     Hlt   # Pieter David, Victor Coco
-use HltGlobalMonitor    v4r7p1   Hlt   # Eric van Herwijnen
+use HltGlobalMonitor    v5r0     Hlt   # Eric van Herwijnen
 use HltL0Conf           v4r2     Hlt   # Johannes Albrecht
 use HltLine             v7r11    Hlt   # Roel Aaij, Gerhard Raven
 use HltLuminosity       v4r3     Hlt   # Rosen Matev
 use HltRawData          v5r5p1   Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v3r2     Hlt   # Jose Angel Hernando-Morata
-use HltSettings         v6r15    Hlt   # Vava Gligorov, Roel Aaij
-use HltTracking         v13r8p1  Hlt   # Sascha Stahl, Vava Gligorov
+use HltSettings         v6r16    Hlt   # Vava Gligorov, Roel Aaij
+use HltTracking         v13r9    Hlt   # Sascha Stahl, Vava Gligorov
 use TCKUtils            v1r15p1  Hlt   # Gerhard Raven
 use LoKiTrigger         v15r7    Phys  # Vanya Belyaev
 
 # Additional packages for v23r7p1
-use HltDAQ              v4r15    Hlt
+use HltDAQ              v4r18    Hlt
 use DAQSys              v8r8p2   DAQ
 use RecAlgs             v3r3p1   Rec
+use HltServices         v2r8     Hlt
 
 # Declare this as a container package
 apply_pattern container_package
