@@ -17,7 +17,7 @@ use HltGlobalMonitor    v5r0     Hlt   # Eric van Herwijnen
 use HltL0Conf           v4r2     Hlt   # Johannes Albrecht
 use HltLine             v7r11    Hlt   # Roel Aaij, Gerhard Raven
 use HltLuminosity       v4r3     Hlt   # Rosen Matev
-use HltRawData          v5r5p1   Hlt   # Tomasz Skwarnicki
+use HltRawData          v5r6     Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v3r2     Hlt   # Jose Angel Hernando-Morata
 use HltSettings         v6r16    Hlt   # Vava Gligorov, Roel Aaij
 use HltTracking         v13r9    Hlt   # Sascha Stahl, Vava Gligorov
