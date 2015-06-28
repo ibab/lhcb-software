@@ -4,20 +4,20 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
-!========================= HltDAQ v4r17 2015-06-28 =========================
-
 ! 2015-06-28 - Roel Aaij
  - Update DecoderBase to only supply the selection IDs that correspond to it's
    source ID.
  - Update VertexReportsWriter to only check for selection IDs that correspond
    to its source ID.
 
+! 2015-06-12 - Roel Aaij
+ - Use HltMonitorSvc to monitor additional stuff for HLT2.
+
 !========================= HltDAQ v4r16 2015-06-22 =========================
 ! 2015-06-19 - Sean Benson
  - Only fill info fields in Tesla if not default value.
 
 !========================= HltDAQ v4r15 2015-06-10 =========================
-
 ! 2015-06-09 - Sean Benson
  - Add first state covariance matrix.
  - Choose states properly.

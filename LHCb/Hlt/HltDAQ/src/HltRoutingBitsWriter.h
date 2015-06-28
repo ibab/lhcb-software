@@ -1,5 +1,5 @@
 // $Id: HltRoutingBitsWriter.h,v 1.5 2010-08-10 14:05:37 graven Exp $
-#ifndef HLTCOMMON_HLTROUTINGBITSWRITER_H 
+#ifndef HLTCOMMON_HLTROUTINGBITSWRITER_H
 #define HLTCOMMON_HLTROUTINGBITSWRITER_H 1
 
 // Include files
@@ -10,18 +10,20 @@
 #include "DetDesc/Condition.h"
 #include <array>
 
+#include "Kernel/IHltMonitorSvc.h"
+
 #include "LoKi/OdinTypes.h"
 #include "LoKi/L0Types.h"
 #include "LoKi/HLTTypes.h"
 
 /** @class HltRoutingBitsWriter HltRoutingBitsWriter.h
- *  
+ *
  *
  *  @author Gerhard Raven
  *  @date   2008-07-29
  */
 class HltRoutingBitsWriter : public GaudiHistoAlg, IIncidentListener {
-public: 
+public:
   /// Standard constructor
   HltRoutingBitsWriter( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -37,16 +39,19 @@ private:
     LoKi::Types::HLT_Cut *predicate;
     StatEntity *counter;
     AIDA::IHistogram1D* hist;
+    RateCounter* rate;
   } ;
   struct l0_eval_t {
     LoKi::Types::L0_Cut *predicate;
     StatEntity *counter;
     AIDA::IHistogram1D* hist;
+    RateCounter* rate;
   } ;
   struct odin_eval_t {
     LoKi::Types::ODIN_Cut *predicate;
     StatEntity *counter;
     AIDA::IHistogram1D* hist;
+    RateCounter* rate;
   } ;
   // 8 ODIN, 24 L0DU, 32 Hlt1, 32 Hlt2
   std::array<odin_eval_t,8> m_odin_evaluators;
@@ -56,10 +61,12 @@ private:
 
   Condition *m_runpars;
   IUpdateManagerSvc *m_updMgrSvc;
-  
+  IHltMonitorSvc* m_hltMonSvc;
+
   StatusCode i_updateConditions();
   void handle(const Incident&);
- 
+
+  std::string m_monSvc;
   std::string m_odin_location;
   std::string m_l0_location;
   std::string m_hlt_location[2];
