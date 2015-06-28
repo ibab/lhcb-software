@@ -1,5 +1,5 @@
 // $Id: HltVertexReportsWriter.h,v 1.2 2009-11-26 13:06:07 tskwarni Exp $
-#ifndef HLTVERTEXREPORTSWRITER_H 
+#ifndef HLTVERTEXREPORTSWRITER_H
 #define HLTVERTEXREPORTSWRITER_H 1
 
 // Include files
@@ -11,7 +11,7 @@
 
 
 /** @class HltvertexReportsWriter HltvertexReportsWriter.h
- *  
+ *
  *  @author Tomasz Skwarnicki
  *  @date   2008-08-05
  *
@@ -44,8 +44,12 @@ public:
   StatusCode execute   () override;    ///< Algorithm execution
 
 private:
-  
-  // ----------------------- data members 
+
+  // ----------------------- methods
+
+  boost::optional<int> selectionNameToInt(const IANNSvc& ann, const std::string& name) const;
+
+  // ----------------------- data members
 
   /// location of input
   StringProperty m_inputHltVertexReportsLocation;
@@ -57,7 +61,7 @@ private:
   IntegerProperty m_sourceID;
 
   /// HltANNSvc for making selection names to int selection ID
-  IANNSvc* m_hltANNSvc = nullptr;  
+  IANNSvc* m_hltANNSvc = nullptr;
 
 };
 

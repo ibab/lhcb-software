@@ -4,6 +4,12 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-06-28 - Roel Aaij
+ - Update DecoderBase to only supply the selection IDs that correspond to it's
+   source ID.
+ - Update VertexReportsWriter to only check for selection IDs that correspond
+   to its source ID.
+
 !========================= HltDAQ v4r16 2015-06-22 =========================
 ! 2015-06-19 - Sean Benson
  - Only fill info fields in Tesla if not default value.
@@ -56,14 +62,14 @@
 
 !========================= HltDAQ v4r10 2014-12-11 =========================
 ! 2014-12-10 - Sebastian Neubert
- - adjusted track locations to shared ones for the upfront tracking  
+ - adjusted track locations to shared ones for the upfront tracking
  - write out VeloTT tracks from HltHPTTracking
 
 ! 2014-12-09 - Gerhard Raven
  - small speed-up of HltVertexReportsWriter and HltTrackingCoder
 
 ! 2014-12-01 - Gerhard Raven
- - add a big deprecation warning when decoding both Hlt1 and Hlt2 to 
+ - add a big deprecation warning when decoding both Hlt1 and Hlt2 to
    a single TES location
 
 ! 2014-11-19 - Gerhard Raven
@@ -78,7 +84,7 @@
  - HltSelReportsDecoder: avoid stringstream, prefer range-based for
 
 ! 2014-11-02 - Gerhard Raven
- - added extra checking & diagnostics. 
+ - added extra checking & diagnostics.
  - generic C++ code cleanup.
 
 ! 2014-10-16 - Gerhard Raven
@@ -97,15 +103,15 @@
  - Small hack to be able to compile against LCG experimental builds.
 
 ! 2014-09-13 - Sebastian Neubert
- - Hlt track root locations changed to Hlt1/Track and Hlt/Track   
- - Renamed track location Hlt/Track/ForwardPEsti to Hlt1/Track/ForwardHPT 
+ - Hlt track root locations changed to Hlt1/Track and Hlt/Track
+ - Renamed track location Hlt/Track/ForwardPEsti to Hlt1/Track/ForwardHPT
 
 !========================= HltDAQ v4r7 2014-09-08 =========================
 ! 2014-09-02 - Sebastian Neubert
  - Added one more location to TrackReportsDecoder/Writer
- - Changed bit shift for Major SourceID from 13 to 11 
+ - Changed bit shift for Major SourceID from 13 to 11
    to make place for SourceIDs > 3
-   All raw files containing TrackReports have to be rewritten!  
+   All raw files containing TrackReports have to be rewritten!
 
 !========================= HltDAQ v4r6 2014-08-16 =========================
 
@@ -118,26 +124,26 @@
    banksize is zero.
 
 ! 2014-07-18 - Marco Cattaneo
- - HltTrackReportsDecoder: Suppress unused variable warning by wrapping 
+ - HltTrackReportsDecoder: Suppress unused variable warning by wrapping
    execute method with a #pragma
 
 ! 2014-07-14 - Gerhard Raven
- - HltTrackReportsWriter/Decoder: 
-   o change of strategy: make it possible to use one writer/decoder instance 
+ - HltTrackReportsWriter/Decoder:
+   o change of strategy: make it possible to use one writer/decoder instance
      which deals with all TES location / sourceIDs if so configured
    o make sure that an emtpy rawbank is properly written
 
 !========================= HltDAQ v4r5 2014-06-18 =========================
 
 ! 2014-06-19 - Gerhard Raven
- - OOPS: fix logic in HltTrackReportsDecoder 
+ - OOPS: fix logic in HltTrackReportsDecoder
 
 ! 2014-06-18 - Gerhard Raven
  - add dependency on LumiEvent
 
 ! 2014-06-17 - Gerhard Raven
  - fix brace-elision problem under clang (brace elision will be
-   in C++14, not C++11, and while gcc accepts it already, clang 
+   in C++14, not C++11, and while gcc accepts it already, clang
    does not)
 
 ! 2014-06-14 - Gerhard Raven
@@ -150,13 +156,13 @@
 ! 2014-06-13 - Gerhard Raven
  - implement same policy on warning messages in HltTrackReportsDecoder
  - use more STL in HltTrackReportsDecoder
- - update warning message in case TCK=0 
+ - update warning message in case TCK=0
  - empty (but present) track rawbank is not an error
  - run clang-format
  - add option to update 3rd word (Hlt2) of existing RoutingBits rawbank
- - make it possible to skip setting Hlt2 routing bits (needed when 
+ - make it possible to skip setting Hlt2 routing bits (needed when
    running Hlt1 only)
- 
+
 
 ! 2014-06-12 - Gerhard Raven
  - change policy on warning messages from HltTrackReportsWriter: if the
@@ -194,13 +200,13 @@
                          or RawEvent does not contain a HltDecReportsRawbank, put
                          an empty HltDecReports onto the TES, print error, and return
  - update HltSelReportsDecoder to use HltRawBankdDecoderBase
- 
+
 ! 2014-05-30 - Gerhard Raven
  - Factor out code in common between the various raw bank decoders into
-   HltRawBankDecoderBase. 
+   HltRawBankDecoderBase.
  - HltSelReportsWriter: more optimizations + C++11 changes..
  - HltLumiWriter: C++11 changes
- 
+
 
 ! 2014-05-29 - Gerhard Raven
  - HltDecReportsDecoder now uses (if a TCK is present in the decreport rawbank)
@@ -214,7 +220,7 @@
 !========================= HltDAQ v4r3 2014-05-12 =========================
 ! 2014-05-05 - Gerhard Raven
  - HltSelReportsWriter: further optimize LHCbID overlap search.
-   Note: the order of the LHCbID sequences in the raw bank has changed, any 
+   Note: the order of the LHCbID sequences in the raw bank has changed, any
          overlap now occurs 'prior' to the non-overlap. The corresponding
          references to these sequences take this into account. So although the
          bank content is not identical, it is still correct.
@@ -224,14 +230,14 @@
  - Suppress warnings about splitting big banks into pieces. Make them debug.
 
 ! 2014-04-21 - Gerhard Raven
- - optimize HltSelReportsWriter, esp. the LHCbID packing, which now  uses move 
+ - optimize HltSelReportsWriter, esp. the LHCbID packing, which now  uses move
    semantics to avoid explcit heap storage.
  - various C++11 optimizations
 
 ! 2014-04-08 - Sebastian Neubert
  - HltTrackReports updates:
  - Added check against reading over the end of the bank
- - Added ability to split big banks into several pieces 
+ - Added ability to split big banks into several pieces
    using major and minor source IDs
 
 ! 2014-04-02 - Sebastian Neubert
@@ -239,7 +245,7 @@
 
 ! 2014-04-01 - Sebastian Neubert
  - TrackReportsWriter uses straight SourceID
- - TrackReportsDecoder only decodes the Bank with the correct SourceID 
+ - TrackReportsDecoder only decodes the Bank with the correct SourceID
 
 !========================= HltDAQ v4r1 2014-03-26 =========================
 ! 2014-03-26 - Marco Cattaneo
@@ -266,7 +272,7 @@
  - Fixed CMake configuration.
 
 ! 2014-02-26 - Sebastian Neubert
- - Using the StandardPacker functions to pack the strack states 
+ - Using the StandardPacker functions to pack the strack states
  	 to 32bit per parameter
 
 ! 2014-02-25 - Sebastian Neubert
@@ -291,7 +297,7 @@
  - Renamed TrackingWriter/Decoder to TrackWriter/Decoder
 
 ! 2014-01-20 - Sebastian Neubert
- - New signature for the decodeTracks function: 
+ - New signature for the decodeTracks function:
    now it takes a pointer to the rawBank data as delivered by RawBank::data()
  - Updated unit tests
  - HltTrackingDecoder implemented.
@@ -311,7 +317,7 @@
  - Added Writer and Decoder for Tracks
  - see task #48807
  - Added unit testing support
- - added HltDAQcore library to hold core en/decoder functions (so far only for HltTrackingCoder)  
+ - added HltDAQcore library to hold core en/decoder functions (so far only for HltTrackingCoder)
  - these changes depend on an updated RawEvent (to include tha HltTrackingReports RawBank type)
 
 !========================= HltDAQ v3r0 2013-12-09 =========================
@@ -322,13 +328,13 @@
 ! 2013-11-30 - Tomasz Skwarnicki
  - changes in Dec, Sel, Vertex Writers and Decoders to equip with SourceID (0=Hlt, 1=Hlt1, 2=Hlt2)
    bank version numbers advanced to 2
-   Decoders will decode SourceID=1 or 2 from RawBanks with SourceID=0 if 1,2 not present 
+   Decoders will decode SourceID=1 or 2 from RawBanks with SourceID=0 if 1,2 not present
      (allows splitting of the old Hlt report into two separate Hlt1,Hlt2 reports in TES)
 
 !========================= HltDAQ v2r18 2013-09-30 =========================
 ! 2013-08-23 - Gerhard Raven
- - HltRoutingBitsWriter: use two different, configurable, TES location for HltDecReports used to fill 
-   bits 32-63 (Hlt1) and 64-95 (Hlt2). The default maintains the existing behaviour, i.e. both use the 
+ - HltRoutingBitsWriter: use two different, configurable, TES location for HltDecReports used to fill
+   bits 32-63 (Hlt1) and 64-95 (Hlt2). The default maintains the existing behaviour, i.e. both use the
    same (default) location
 
 ! 2013-07-26 - Rob Lambert
@@ -381,7 +387,7 @@
 
 ! 2011-12-06 - Marco Cattaneo
  - Fix some unprotected debug() (in PropertyConfigSvc) and verbose()
-   (in ANNDispatchSvc) streams. Only those in non-const methods have been 
+   (in ANNDispatchSvc) streams. Only those in non-const methods have been
    protected, because the msgLevel() function is not declared as const...
 
 ! 2011-11-23 - Marco Cattaneo

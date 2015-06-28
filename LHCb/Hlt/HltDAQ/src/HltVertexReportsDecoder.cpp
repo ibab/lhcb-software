@@ -1,8 +1,8 @@
 // $Id: HltVertexReportsDecoder.cpp,v 1.5 2010-06-14 13:38:00 tskwarni Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 #include "Event/HltVertexReports.h"
 #include "Event/RawEvent.h"
@@ -11,7 +11,7 @@
 #include "HltVertexReportsDecoder.h"
 #include "HltVertexReportsWriter.h"
 
-namespace { 
+namespace {
     double doubleFromInt(unsigned int i) {
             union IntFloat { unsigned int mInt; float mFloat; };
             IntFloat a; a.mInt=i;
@@ -39,7 +39,7 @@ HltVertexReportsDecoder::HltVertexReportsDecoder( const std::string& name,
 : HltRawBankDecoderBase( name , pSvcLocator )
 {
   declareProperty("OutputHltVertexReportsLocation",
-    m_outputHltVertexReportsLocation= LHCb::HltVertexReportsLocation::Default);  
+    m_outputHltVertexReportsLocation= LHCb::HltVertexReportsLocation::Default);
 }
 
 //=============================================================================
@@ -69,15 +69,15 @@ StatusCode HltVertexReportsDecoder::execute() {
   if( hltvertexreportsRawBank->magic() != RawBank::MagicPattern ){
     return Error(" HltVertexReports RawBank has wrong magic number. Return without decoding.",StatusCode::FAILURE );
   }
-  const unsigned int bankVersionNumber = hltvertexreportsRawBank->version();  
+  const unsigned int bankVersionNumber = hltvertexreportsRawBank->version();
   if( bankVersionNumber > kVersionNumber ){
     Warning( std::string{ " HltVertexReports Raw Bank version number " }
-           + std::to_string( bankVersionNumber) 
+           + std::to_string( bankVersionNumber)
            + " higher than the one of the decoder " + std::to_string(kVersionNumber),
              StatusCode::SUCCESS, 20 ).ignore();
   }
 
-  const auto& tbl = id2string( tck() ); 
+  const auto& tbl = id2string( tck() );
 
   const unsigned int *i   = hltvertexreportsRawBank->begin<unsigned int>();
   const unsigned int *end = hltvertexreportsRawBank->end<unsigned int>();
@@ -87,7 +87,7 @@ StatusCode HltVertexReportsDecoder::execute() {
     unsigned nVert    = ( ( *i ) & 0xFFFFL ); // can we decode the per vertex size here???
     unsigned intSelID = ( *i++ >> 16 );
 
-    auto  value = tbl.find( intSelID ); 
+    auto  value = tbl.find( intSelID );
     if (value == std::end(tbl)) {
       Error( std::string{ " did not find name for id = "} + std::to_string(intSelID) + "; skipping this selection",
             StatusCode::SUCCESS, 50 );
@@ -113,8 +113,8 @@ StatusCode HltVertexReportsDecoder::execute() {
       double z = doubleFromInt( *i++ );
       pVtx->setPosition( { x,y,z } );
       pVtx->setChi2( doubleFromInt( *i++ ) );
-      pVtx->setNDoF( *i++ ) ; 
-      if( bankVersionNumber>0 ){          
+      pVtx->setNDoF( *i++ ) ;
+      if( bankVersionNumber>0 ){
         Gaudi::SymMatrix3x3 cov;
         cov[0][0] = doubleFromInt( *i++ ) ;
         cov[1][1] = doubleFromInt( *i++ ) ;
@@ -131,15 +131,15 @@ StatusCode HltVertexReportsDecoder::execute() {
 
     // insert selection into the container
     if( outputSummary->insert(value->second,pVtxs) == StatusCode::FAILURE ){
-      Error(" Failed to add Hlt vertex selection name " 
+      Error(" Failed to add Hlt vertex selection name "
             + std::string(value->second)
             + " to its container ",StatusCode::SUCCESS, 20 );
-    }    
+    }
   }
-  if (nSel!=0) { 
+  if (nSel!=0) {
      error()  << "Unexpected banksize while decoding (case 1).... " << endmsg;
   }
-  if (i!=end) { 
+  if (i!=end) {
      error()  << "Unexpected banksize while decoding (case 2).... " << endmsg;
   }
 

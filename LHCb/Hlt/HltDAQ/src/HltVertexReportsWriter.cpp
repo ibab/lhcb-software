@@ -30,12 +30,6 @@ unsigned int doubleToInt(double d)
 static const Gaudi::StringKey Hlt1SelectionID{"Hlt1SelectionID"};
 static const Gaudi::StringKey Hlt2SelectionID{"Hlt2SelectionID"};
 
-boost::optional<int> selectionNameToInt(const IANNSvc& ann, const std::string& name) 
-  {
-        auto r = ann.value(Hlt1SelectionID,name);
-        if (!r) r = ann.value(Hlt2SelectionID,name);
-        return r ? boost::optional<int>{ r->second } : boost::optional<int>{ } ;
-  }
 }
 
 //-----------------------------------------------------------------------------
@@ -59,7 +53,7 @@ HltVertexReportsWriter::HltVertexReportsWriter( const std::string& name,
   declareProperty("OutputRawEventLocation",
     m_outputRawEventLocation= LHCb::RawEventLocation::Default);
   declareProperty("SourceID",
-    m_sourceID= kSourceID_Dummy );  
+    m_sourceID= kSourceID_Dummy );
 }
 
 //=============================================================================
@@ -92,13 +86,13 @@ StatusCode HltVertexReportsWriter::execute() {
   if( !inputSummary) {
     return Warning( " No HltVertexReports at " + m_inputHltVertexReportsLocation.value(),
                     StatusCode::SUCCESS, 20 );
-  }  
+  }
 
  // get output
   RawEvent* rawEvent = getIfExists<RawEvent>(m_outputRawEventLocation);
   if( !rawEvent ) {
     return Error(" No RawEvent at " + m_outputRawEventLocation.value(),StatusCode::SUCCESS, 20 );
-  }  
+  }
 
   std::vector< unsigned int > hltVertexReportsRawBank;
   // first word will count number of vertex selections saved
@@ -122,14 +116,14 @@ StatusCode HltVertexReportsWriter::execute() {
 
      // first word for each selection contains number of vertices (low short) and selection ID (high short)
      *out++ =  (unsigned int)( std::min( s.second.size(), 65535ul ) | (*si << 16) ) ;
-     
-     for(const auto& vtx : s.second ) { 
+
+     for(const auto& vtx : s.second ) {
        // now push vertex info
        *out++ = doubleToInt( vtx->position().x() );
        *out++ = doubleToInt( vtx->position().y() );
        *out++ = doubleToInt( vtx->position().z() );
        *out++ = doubleToInt( vtx->chi2() );
-       *out++ = std::max( vtx->nDoF(), 0 ); 
+       *out++ = std::max( vtx->nDoF(), 0 );
        const auto& cov = vtx->covMatrix();
        *out++ = doubleToInt( cov[0][0] );
        *out++ = doubleToInt( cov[1][1] );
@@ -151,7 +145,7 @@ StatusCode HltVertexReportsWriter::execute() {
   rawEvent->addBank(  int(m_sourceID<<kSourceID_BitShift), RawBank::HltVertexReports, kVersionNumber, hltVertexReportsRawBank );
   if ( msgLevel(MSG::VERBOSE) ){
     verbose() << " ======= HltVertexReports RawBank size= " << hltVertexReportsRawBank.size() << endmsg;
-    verbose() << " VersionNumber= " << kVersionNumber;  
+    verbose() << " VersionNumber= " << kVersionNumber;
     verbose() << " SourceID= " << m_sourceID;
     verbose() << " number of selections stored = " << hltVertexReportsRawBank[0] << endmsg;
     unsigned int iWord = 1;
@@ -180,4 +174,17 @@ StatusCode HltVertexReportsWriter::execute() {
     }
   }
   return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+boost::optional<int> HltVertexReportsWriter::selectionNameToInt
+(const IANNSvc& ann, const std::string& name) const
+{
+   boost::optional<IANNSvc::minor_value_type> v{};
+   if (m_sourceID == kSourceID_Hlt1) {
+      v = ann.value(Hlt1SelectionID,name);
+   } else if (m_sourceID == kSourceID_Hlt2) {
+      v = ann.value(Hlt2SelectionID,name);
+   }
+   return v ? boost::optional<int>{ v->second } : boost::optional<int>{ } ;
 }
