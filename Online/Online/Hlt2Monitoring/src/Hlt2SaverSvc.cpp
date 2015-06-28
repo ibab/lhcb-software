@@ -1,9 +1,15 @@
 // Include files
 #include <thread>
+#include <set>
 
 // boost
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
+#include <boost/algorithm/string/find.hpp>
+#include <boost/range/iterator_range.hpp>
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/format.hpp>
 
 // zeromq
 #include "zmq/zmq.hpp"
@@ -20,6 +26,10 @@
 #include <Hlt2Monitoring/Histogram.h>
 #include <Hlt2Monitoring/Serialize.h>
 
+// ROOT
+#include <TH1D.h>
+#include <TFile.h>
+
 // local
 #include "Hlt2SaverSvc.h"
 
@@ -30,7 +40,8 @@ namespace {
    using std::vector;
    using Monitoring::Chunk;
    using Monitoring::Histogram;
-
+   namespace ba = boost::algorithm;
+   namespace fs = boost::filesystem;
 }
 
 //-----------------------------------------------------------------------------
@@ -44,11 +55,12 @@ DECLARE_SERVICE_FACTORY(Hlt2SaverSvc)
 
 //=============================================================================
 Hlt2SaverSvc::Hlt2SaverSvc(const string& name, ISvcLocator* loc)
-   : Hlt2MonBaseSvc(name, loc)
+ : Hlt2MonBaseSvc(name, loc)
 {
    declareProperty("DataConnection", m_dataCon);
    declareProperty("InfoConnection", m_infoCon);
    declareProperty("Directory", m_directory);
+   declareProperty("Filename", m_fileName);
    declareProperty("SaveInterval", m_saveInterval = 60.);
    declareProperty("RateStart", m_saveInterval = 0.);
    declareProperty("RunDuration", m_runDuration = 3600.);
@@ -58,7 +70,10 @@ Hlt2SaverSvc::Hlt2SaverSvc(const string& name, ISvcLocator* loc)
 //=============================================================================
 Hlt2SaverSvc::~Hlt2SaverSvc()
 {
-
+   // Delete histograms that were written
+   for (const auto& entry : m_histos) {
+      delete entry.second.second;
+   }
 }
 
 //===============================================================================
@@ -66,6 +81,10 @@ StatusCode Hlt2SaverSvc::initialize()
 {
    StatusCode sc = Hlt2MonBaseSvc::initialize();
    if (!sc.isSuccess()) return sc;
+
+   if (m_fileName.empty()) {
+      m_fileName = "Hlt2Saver-%d.root";
+   }
 
    if (m_dataCon.empty() || m_infoCon.empty()) {
       warning() << "Connections not correctly configured, "
@@ -89,7 +108,7 @@ void Hlt2SaverSvc::function()
    inf.setsockopt(ZMQ_RCVTIMEO, &timeo, sizeof(timeo));
    info() << "Bound backend to: " << m_infoCon << endmsg;
 
-   // WORKING: control socket and zmq_poll to stop. Check restart logic.
+   // Control socket
    zmq::socket_t control{context(), ZMQ_SUB};
    control.connect(ctrlCon().c_str());
    control.setsockopt(ZMQ_SUBSCRIBE, "", 0);
@@ -157,28 +176,44 @@ void Hlt2SaverSvc::function()
                reply.push_back(string{static_cast<char*>(rep.data())});
             } while(rep.more());
 
+            // If we get an error or the histogram is not known, continue.
             if (err || reply[0] != Monitoring::s_Known)
                continue;
 
+            auto addHisto = [this](histoKey_t key, Gaudi::Histo1DDef def) {
+               auto result = ba::find_last(def.title(), "/");
+               string dir{begin(def.title()), begin(result)};
+               string title{begin(result), end(def.title())};
+               auto histo = new TH1D(title.c_str(), title.c_str(), def.bins(),
+                                     def.lowEdge(), def.highEdge());
+               histo->Sumw2();
+               m_histos[key] = make_pair(dir, histo);
+               return make_pair(dir, title);
+            };
+
             if (reply[1] == Monitoring::s_Rate) {
-               m_rates[key] = reply[2];
-               // TODO: Create ROOT rate histo from properties
+               int nBins = boost::numeric_cast<int>(m_runDuration / m_rateInterval);
+               m_rates[key] = addHisto(key, Gaudi::Histo1DDef(reply[2], nBins, m_rateStart,
+                                                              m_rateStart + m_rateInterval * nBins));
             } else if (reply[1] == Monitoring::s_Histo1D) {
+               // Deserialize Histo1DDef
                std::stringstream is{reply[2]};
                boost::archive::text_iarchive ia{is};
                Gaudi::Histo1DDef def;
                ia >> def;
-               m_defs[key] = def;
-               // TODO: Create ROOT histo from def
+
+               // Add histo and known def
+               m_defs[key] = make_pair(addHisto(key, def).first, def);
             }
          }
 
-         if (m_defs.count(key)) {
-            // It's a regular histo that we know about
-            // TODO: Add received histo to ROOT histo
-         } else if (m_rates.count(key)) {
-            // It's a rate histo that we know about
-            // TODO: Add received histo to ROOT rate histo
+         if (m_defs.count(key) || m_rates.count(key)) {
+            // It's a regular or rate histo that we know about, add the
+            auto rHisto = m_histos[key].second;
+            for (size_t i = 0; i < histo.data.size(); ++i) {
+               auto binContent = rHisto->GetBinContent(i);
+               rHisto->SetBinContent(i, binContent + histo.data[i]);
+            }
          }
       }
 
@@ -186,7 +221,54 @@ void Hlt2SaverSvc::function()
       auto now = std::chrono::high_resolution_clock::now();
       if (std::chrono::duration_cast<std::chrono::seconds>(now - lastUpdate).count() >
           m_saveInterval) {
-
+         saveHistograms();
       }
    }
+}
+
+//===============================================================================
+void Hlt2SaverSvc::saveHistograms() const
+{
+   // Store histograms per run and all runs.
+   std::set<Monitoring::RunNumber> runs;
+   boost::unordered_multimap<Monitoring::RunNumber, std::pair<std::string, TH1D*>> histosPerRun;
+   for (const auto& entry : m_histos) {
+      histosPerRun.emplace(make_pair(entry.first.first, entry.second));
+      runs.insert(entry.first.first);
+   }
+
+   // Loop over runs
+   for (const auto run : runs) {
+      auto filename = boost::format(m_fileName) % run;
+      auto file = fs::path(m_directory) / fs::path(filename.str());
+      TFile rootFile(file.string().c_str(), (fs::exists(file) ? "UPDATE" : "NEW"));
+
+      // Loop over histograms for that run
+      for (const auto& entry : boost::make_iterator_range(histosPerRun.equal_range(run))) {
+         auto histo = entry.second.second;
+         auto dir = entry.second.first;
+         auto rDir = static_cast<TDirectoryFile*>(rootFile.Get(dir.c_str()));
+         if (!rDir) {
+            rootFile.mkdir(dir.c_str());
+            rDir = static_cast<TDirectoryFile*>(rootFile.Get(dir.c_str()));
+         }
+         auto savedHisto = static_cast<TH1D*>(rDir->Get(histo->GetName()));
+         if (!savedHisto) {
+            // No previous histogram present
+            savedHisto = histo;
+         } else {
+            // Previously saved histogram present
+            savedHisto->Add(histo);
+         }
+         // Write histogram to file
+         rDir->WriteTObject(savedHisto, savedHisto->GetName(), "overwrite");
+      }
+   }
+
+   // Delete histograms that were written
+   for (const auto& entry : m_histos) {
+      delete entry.second.second;
+   }
+   // Clear store
+   m_histos.clear();
 }

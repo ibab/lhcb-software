@@ -41,6 +41,7 @@ protected:
 
    IZeroMQSvc* zmqSvc() const { return m_zmqSvc; }
    inline zmq::context_t& context() const { return m_zmqSvc->context(); }
+   inline zmq::socket_t& control() const { return *m_control; }
    const std::string& ctrlCon() const { return m_ctrlCon; }
 
    // properties

@@ -126,12 +126,13 @@ void Hlt2AdderSvc::function()
 
          key_t key{c.runNumber, c.histId};
          auto now = std::chrono::high_resolution_clock::now();
+         auto it = m_histograms.find(key);
          // Add to internal store
-         if (!m_histograms.count(key)) {
-            m_histograms[key] = Monitoring::Histogram{c.runNumber, c.tck, c.histId};
+         if (it == end(m_histograms)) {
+            it = m_histograms.emplace(key, Monitoring::Histogram{c.runNumber, c.tck, c.histId}).first;
             m_updates[key] = now;
          }
-         m_histograms[key].addChunk(c);
+         it->second.addChunk(c);
 
          // If not sent for interval seconds, send all histograms
          if (std::chrono::duration_cast<std::chrono::seconds>(now - m_updates[key]).count() >
@@ -140,13 +141,17 @@ void Hlt2AdderSvc::function()
             // Serialize
             std::stringstream ss;
             boost::archive::text_oarchive oa{ss};
-            oa << m_histograms[key];
+            oa << it->second;
             auto s = ss.str();
 
+            // Send message
             zmq::message_t msg(s.size());
             memcpy(static_cast<void*>(msg.data()), s.c_str(), s.size());
             back.send(msg);
             m_updates[key] = now;
+
+            // Zero out histogram
+            it->second.data = std::vector<Monitoring::BinContent>(it->second.data.size(), 0);
          }
       }
    }

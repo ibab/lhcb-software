@@ -41,8 +41,11 @@ public:
 
 private:
 
+   void saveHistograms() const;
+
    // properties
    std::string m_directory;
+   std::string m_fileName;
    std::string m_dataCon;
    std::string m_infoCon;
    double m_saveInterval;
@@ -52,13 +55,11 @@ private:
 
    // data members
    typedef std::pair<Monitoring::RunNumber, Monitoring::HistId> histoKey_t;
-   boost::unordered_map<histoKey_t, Gaudi::Histo1DDef> m_defs;
-   boost::unordered_map<histoKey_t, std::string> m_rates;
+   boost::unordered_map<histoKey_t, std::pair<std::string, Gaudi::Histo1DDef>> m_defs;
+   boost::unordered_map<histoKey_t, std::pair<std::string, std::string>> m_rates;
 
    // Histograms are kept as {(run, id) : (directory, histo)}
-   boost::unordered_map<histoKey_t, std::pair<std::string, TH1D*>> m_histos;
-
-   TFile* m_file;
+   mutable boost::unordered_map<histoKey_t, std::pair<std::string, TH1D*>> m_histos;
 
 };
 #endif // HLT2ADDER_H
