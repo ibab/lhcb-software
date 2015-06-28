@@ -4,6 +4,8 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v13r0 2015-06-28 =========================
+
 ! 2015-06-28 - Roel Aaij
  - Add routing bit 56 for pure detached DiMuon sample.
  - Remove ProtoPV3D vertices.
