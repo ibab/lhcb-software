@@ -4,14 +4,16 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-06-12 - Roel Aaij
+ - Use HltMonitorSvc to monitor additional stuff for HLT2.
+
+!========================= HltDAQ v4r17 2015-06-28 =========================
+
 ! 2015-06-28 - Roel Aaij
  - Update DecoderBase to only supply the selection IDs that correspond to it's
    source ID.
  - Update VertexReportsWriter to only check for selection IDs that correspond
    to its source ID.
-
-! 2015-06-12 - Roel Aaij
- - Use HltMonitorSvc to monitor additional stuff for HLT2.
 
 !========================= HltDAQ v4r16 2015-06-22 =========================
 ! 2015-06-19 - Sean Benson
