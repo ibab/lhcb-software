@@ -4,6 +4,8 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+!========================= HltDAQ v4r17 2015-06-28 =========================
+
 ! 2015-06-28 - Roel Aaij
  - Update DecoderBase to only supply the selection IDs that correspond to it's
    source ID.
