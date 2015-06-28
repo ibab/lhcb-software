@@ -38,6 +38,14 @@ public:
   StatusCode initialize();  ///<  initialization
   StatusCode finalize();    ///<  finalization
 
+  //----------------------------------------------------------------------------
+  // acessors to fitters
+  const IPVReFitter*          PVReFitter() const { return m_PVReFitter; }
+  const ILifetimeFitter*      LifetimeFitter() const { return m_LifetimeFitter; }
+  const IVertexFit*           VertexFitter() const { return m_VertexFitter; }
+  const IDistanceCalculator*  DistanceCalculator() const { return m_DistanceCalculator; }
+  IParticleDescendants* ParticleDescendants() const { return m_ParticleDescendants; }
+  
   //-------------------------------------------------------------
   StatusCode calcIP( const LHCb::Particle* axp,
                      const LHCb::VertexBase* v,
@@ -65,15 +73,28 @@ public:
 
   //-------------------------------------------------------------
 
+
+
 private:
 
-  std::string m_ChoosePV ;
-  std::string m_personality;
-  const IDistanceCalculator *m_Dist;
   IDVAlgorithm* m_dva;
-  const IPVReFitter* m_pvReFitter;
+  std::string m_personality;
 
-  IParticleDescendants*      m_descend;
+  std::string m_PVSelCriterion;
+
+  std::string m_algNamePVReFitter;
+  std::string m_algNameLifetimeFitter;
+  std::string m_algNameVertexFitter;
+  std::string m_algNameDistanceCalculator;
+  std::string m_algNameParticleDescendants;
+
+  const IPVReFitter*          m_PVReFitter;
+  const ILifetimeFitter*      m_LifetimeFitter;
+  const IVertexFit*           m_VertexFitter;
+  const IDistanceCalculator*  m_DistanceCalculator;
+  IParticleDescendants* m_ParticleDescendants; // cannot be const, as 
+                                               // descendants() is not a const 
+                                               // function.
 
   MultiplePersonalityCall<boost::function<
       int(const LHCb::Particle::ConstVector&)> > m_countTracks;
@@ -89,8 +110,6 @@ private:
 
   bool isinTreeReco14(const LHCb::Particle*,
                  const LHCb::Particle::ConstVector& , double& );
-
-  const IDistanceCalculator* getDistanceCalculator() { return m_Dist;}
 
   unsigned int lambda_pid, pi_pid, pi0_pid, k_pid, ks_pid, p_pid, e_pid, mu_pid, d0_pid, d_pid, lambdaC_pid;
 

@@ -46,7 +46,8 @@ StatusCode SVertexOneSeedTool::initialize()
   if (sc.isFailure()) return sc;
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
 
-  fitter = tool<IVertexFit>("OfflineVertexFitter");
+  fitter = m_util->VertexFitter();
+  //tool<IVertexFit>("OfflineVertexFitter");
 
  // register (multiple) personalities of tag
   m_buildVertex.registerPersonality("Reco12",this, &SVertexOneSeedTool::buildVertexReco12);

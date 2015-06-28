@@ -55,7 +55,7 @@ private:
   PionSSWrapper* m_myBDT_reader;
 
   //  INNetTool* m_nnet;
-  IVertexFit *m_fitter;
+  const IVertexFit *m_fitter;
   //IParticleDescendants* m_descend;
   ITaggingUtils* m_util;
   std::string m_CombinationTechnique, m_NeuralNetName;

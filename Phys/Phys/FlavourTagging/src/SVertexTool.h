@@ -42,7 +42,7 @@ private:
 
   ITaggingUtils* m_util;
 
-  IVertexFit *fitter;
+  const IVertexFit *fitter;
   double m_lcs_Long_cut;
   double m_lcs_Upstream_cut;
 

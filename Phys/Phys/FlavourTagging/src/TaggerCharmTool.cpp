@@ -62,11 +62,14 @@ TaggerCharmTool::TaggerCharmTool( const std::string& type,
 GaudiTool ( type, name, parent ),
 //  m_myDATAreader( NULL ),
   m_util(0),
+  m_pLifetimeFitterAlgName("LoKi::LifetimeFitter"),
   m_pLifetimeFitter(0),
   m_descend(0),
   m_dva(0)
 {
   declareInterface<ITagger>(this);
+  
+  declareProperty( "LifetimeFitterAlgName", m_pLifetimeFitterAlgName = "LoKi::LifetimeFitter");
 
   std::vector<std::string> def_CharmTagLocations;
   def_CharmTagLocations.push_back("Phys/Tag_StdD02KPi/Particles");
@@ -115,12 +118,12 @@ StatusCode TaggerCharmTool::initialize()
     fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
     return StatusCode::FAILURE;
   }
-  m_pLifetimeFitter = tool<ILifetimeFitter>("PropertimeFitter", this);
+  m_pLifetimeFitter = m_util->LifetimeFitter(); //tool<ILifetimeFitter>(m_pLifetimeFitterAlgName, this);
   if(!m_pLifetimeFitter){
-    fatal() << "Unable to retrieve LifetimeFitter tool" << endreq;
+    fatal() << "Unable to retrieve " << m_pLifetimeFitterAlgName << "." << endreq;
     return StatusCode::FAILURE;
   }
-  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  m_descend = m_util->ParticleDescendants();//tool<IParticleDescendants> ( "ParticleDescendants", this );
   if( ! m_descend ) {
     fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
     return StatusCode::FAILURE;
@@ -425,7 +428,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
         Fun fCTAU = CTAU(cand->endVertex());
 
         LHCb::VertexBase::ConstVector verts; verts.push_back(RecVert);
-        Fun ipPvChi2 = MIPCHI2 ( verts , m_util->getDistanceCalculator() ) ;
+        Fun ipPvChi2 = MIPCHI2 ( verts , m_util->DistanceCalculator() ) ;
         const MIPCHI2DV ipChi2Min  = MIPCHI2DV ( "" ) ;
 
         double maxProbGhostDaus = 0.0;

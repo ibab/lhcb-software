@@ -37,8 +37,8 @@ public:
   //-------------------------------------------------------------
 
 private:
-  IVertexFit *fitter;
   ITaggingUtils* m_util;
+  const IVertexFit *fitter;
 
   double NNseeding(double P1,
                    double P2,

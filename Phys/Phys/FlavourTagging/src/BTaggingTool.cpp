@@ -29,6 +29,7 @@ GaudiTool ( type, name, parent )
 
   declareProperty( "ChoosePVCriterium",     m_ChoosePV    = "bestPV");
   declareProperty( "UseReFitPV",            m_UseReFitPV  = true );
+  declareProperty( "PVReFitterAlgName",     m_PVReFitterAlgName = "LoKi::PVReFitter");
   declareProperty( "VetoFailedRefits",      m_VetoFailedRefits = false);
 
   //preselction of tagging candidates
@@ -84,7 +85,7 @@ StatusCode BTaggingTool::initialize()
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
 
-  m_descend    = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  m_descend    = m_util->ParticleDescendants();
 
   m_taggerMu   = tool<ITagger> ("TaggerMuonTool", this);
 
@@ -112,11 +113,12 @@ StatusCode BTaggingTool::initialize()
 
   m_combine = tool<ICombineTaggersTool> (m_CombineTaggersName, this);
 
+
   if(m_UseReFitPV)
   {
     if ( msgLevel(MSG::DEBUG) )
       debug() << "BTaggingTool: ReFitPV selected " << endreq;
-    m_pvReFitter = tool<IPVReFitter>("AdaptivePVReFitter", this );
+    m_pvReFitter = m_util->PVReFitter();
   }
   else
   {

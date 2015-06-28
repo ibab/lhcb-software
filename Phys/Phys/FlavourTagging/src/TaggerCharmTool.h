@@ -157,7 +157,8 @@ private:
   Classifiers m_classifiers;
 
   ITaggingUtils* m_util;
-  ILifetimeFitter*           m_pLifetimeFitter;
+  std::string m_pLifetimeFitterAlgName;
+  const ILifetimeFitter*           m_pLifetimeFitter;
   IParticleDescendants* m_descend;
   IDVAlgorithm* m_dva;
 

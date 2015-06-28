@@ -104,13 +104,13 @@ private:
 private:
 
   ITaggingUtils* m_util;
-  IParticleDescendants* m_descend;
+  IParticleDescendants* m_descend; // had to break const correctness
 
   ITagger *m_taggerMu,    *m_taggerEle,   *m_taggerKaon,     *m_taggerVtxCh,     *m_taggerJetS;
   ITagger *m_taggerKaonS, *m_taggerPionS, *m_taggerNNetKaon, *m_taggerNNetKaonS, *m_taggerProtonS, *m_taggerPionBDTS;
   ITagger *m_taggerCharm;
   ICombineTaggersTool *m_combine;
-  IPVReFitter* m_pvReFitter;
+  const IPVReFitter* m_pvReFitter;
 
   IDVAlgorithm* m_dva;
 
@@ -127,7 +127,9 @@ private:
   bool m_EnableProtonSS;
   bool m_EnableCharm;
   
-  bool m_UseReFitPV,  m_VetoFailedRefits, m_CombineWithNNetTagger, m_CombineWithCharmTagger;
+  std::string m_PVReFitterAlgName;
+  bool m_UseReFitPV, m_VetoFailedRefits; 
+  bool m_CombineWithNNetTagger, m_CombineWithCharmTagger;
   std::string m_personality;
 
   std::vector<LHCb::Particle*> m_extraInfoToClear; ///< Particles to clear extra info from

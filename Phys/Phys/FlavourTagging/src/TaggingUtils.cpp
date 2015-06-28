@@ -1,9 +1,13 @@
 // Include files 
 #include <limits>
-#include <Kernel/IDVAlgorithm.h>
-#include <Kernel/GetIDVAlgorithm.h>
-#include <Kernel/IDistanceCalculator.h>
+#include "Kernel/IDVAlgorithm.h"
+#include "Kernel/GetIDVAlgorithm.h"
+#include "Kernel/IDistanceCalculator.h"
+#include "Kernel/IParticleDescendants.h"
+#include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IPVReFitter.h"
+#include "Kernel/IVertexFit.h"
+
 
 #include "TaggingHelpers.h"
 #include "TaggingUtils.h"
@@ -36,14 +40,32 @@ DECLARE_TOOL_FACTORY( TaggingUtils )
                               const std::string& name,
                               const IInterface* parent ) :
     GaudiTool ( type, name, parent ),
-    m_Dist(0),
-    m_dva(0),
-    m_descend(0)
+    m_dva(nullptr),
+    m_personality("Reco14"),
+    m_PVSelCriterion("PVbyIPs"),
+    m_algNamePVReFitter("LoKi::PVReFitter"),
+    m_algNameLifetimeFitter("LoKi::LifetimeFitter"),
+    m_algNameVertexFitter("LoKi::VertexFitter"),
+    m_algNameDistanceCalculator("LoKi::DistanceCalculator"),
+    m_algNameParticleDescendants("ParticleDescendants"),
+    m_PVReFitter(nullptr),
+    m_LifetimeFitter(nullptr),
+    m_VertexFitter(nullptr),
+    m_DistanceCalculator(nullptr),
+    m_ParticleDescendants(nullptr)
 {
-  declareProperty( "ChoosePVCriterium", m_ChoosePV = "PVbyIPs");
-  declareProperty( "Personality", m_personality = "Reco14" );
   declareInterface<ITaggingUtils>(this);
-}
+ 
+  declareProperty( "Personality"    , m_personality    = "Reco14" );  
+  declareProperty( "PVSelCriterion" , m_PVSelCriterion = "PVbyIPs");
+
+  declareProperty( "PVReFitter"         , m_algNamePVReFitter          =  m_algNamePVReFitter        );
+  declareProperty( "LifetimeFitter"     , m_algNameLifetimeFitter      =  m_algNameLifetimeFitter    );
+  declareProperty( "VertexFitter"       , m_algNameVertexFitter        =  m_algNameVertexFitter      );
+  declareProperty( "DistanceCalculator" , m_algNameDistanceCalculator  =  m_algNameDistanceCalculator);
+  declareProperty( "ParticleDescendants", m_algNameParticleDescendants = m_algNameParticleDescendants);
+
+ }
 
 TaggingUtils::~TaggingUtils() {}
 
@@ -53,24 +75,42 @@ StatusCode TaggingUtils::initialize()
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
 
-  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this ) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
-                             StatusCode::FAILURE);
-
-  m_Dist = m_dva->distanceCalculator();
-  if( !m_Dist ) {
-    Error("Unable to retrieve the IDistanceCalculator tool");
-    return StatusCode::FAILURE;
-  }
-  m_pvReFitter = tool<IPVReFitter>("AdaptivePVReFitter", this );
-  if(! m_pvReFitter) {
-    fatal() << "Unable to retrieve AdaptivePVReFitter" << endreq;
+  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this );
+  if ( m_dva == nullptr ) {
+    fatal() << "Coudn't get parent DVAlgorithm" << endmsg;
     return StatusCode::FAILURE;
   }
   
-  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
-  if( ! m_descend ) {
-    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
+  m_PVReFitter = tool<IPVReFitter>( m_algNamePVReFitter, this );  
+  if ( m_PVReFitter == nullptr ) {
+    fatal() << "Unable to retrieve IPVRefitter \'" << m_algNamePVReFitter << "\'" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  m_LifetimeFitter = tool<ILifetimeFitter>( m_algNameLifetimeFitter, this );
+  if ( m_LifetimeFitter == nullptr ) {
+    fatal() << "Unable to retrieve ILifetimFitter \'" << m_algNameLifetimeFitter << "\'" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  m_VertexFitter = tool<IVertexFit>( m_algNameVertexFitter, this );
+  if ( m_VertexFitter == nullptr ) {
+    fatal() << "Unable to retrieve IVertexFit \'" << m_algNameVertexFitter << "\'" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  m_DistanceCalculator = tool<IDistanceCalculator>( m_algNameDistanceCalculator, this );//m_dva->distanceCalculator();
+  if( m_DistanceCalculator == nullptr ) {
+    fatal() << "Unable to retrieve the IDistanceCalculator tool " 
+            << m_algNameDistanceCalculator << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
+  m_ParticleDescendants = tool<IParticleDescendants> ( m_algNameParticleDescendants, this );
+  if( ! m_ParticleDescendants ) {
+    fatal() << "Unable to retrieve ParticleDescendants tool " 
+            << m_algNameParticleDescendants
+            << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -119,8 +159,8 @@ StatusCode TaggingUtils::calcDOCAmin( const Particle* axp,
                                       double& doca, double& docaerr) 
 {
   double doca1(0), doca2(0), err1(0), err2(0);
-  const StatusCode sc1 = m_Dist->distance (axp, p1, doca1, err1);
-  const StatusCode sc2 = m_Dist->distance (axp, p2, doca2, err2);
+  const StatusCode sc1 = m_DistanceCalculator->distance (axp, p1, doca1, err1);
+  const StatusCode sc2 = m_DistanceCalculator->distance (axp, p2, doca2, err2);
 
   doca = std::min(doca1, doca2);
   if(doca == doca1) docaerr=err1; else docaerr=err2;
@@ -137,10 +177,10 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
   iperr= 0.0;
   int zsign = 0;
   double ipC=0, ipChi2=0;
-  StatusCode sc2 = m_Dist->distance (axp, v, ipC, ipChi2);
+  StatusCode sc2 = m_DistanceCalculator->distance (axp, v, ipC, ipChi2);
   Gaudi::XYZVector ipV;
-  StatusCode sc = m_Dist->distance (axp, v, ipV);
-  if ( msgLevel(MSG::DEBUG) ) debug()<<"ipS: "<<ipC<<", ipV.R: "<<ipV.R()<<endreq;
+  StatusCode sc = m_DistanceCalculator->distance (axp, v, ipV);
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"ipS: "<<ipC<<", ipV.R: "<<ipV.R()<<endmsg;
   if(sc2 && ipChi2!=0) 
   {
     if (sc) zsign = ipV.z()>0? 1:-1;
@@ -148,7 +188,7 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
     iperr=ipC/std::sqrt(ipChi2);
   }
   if ( msgLevel(MSG::DEBUG) ) 
-    debug()<<"IP: "<<ipC<<", "<<ip<<", (sign = "<<zsign<<" )"<<endreq;
+    debug()<<"IP: "<<ipC<<", "<<ip<<", (sign = "<<zsign<<" )"<<endmsg;
   return sc2;
 }
 
@@ -165,7 +205,7 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
   {
     double ipx=0, ipex=0;
     double ipC=0, ipChi2=0;
-    sc = m_Dist->distance (axp, *iv, ipC, ipChi2);
+    sc = m_DistanceCalculator->distance (axp, *iv, ipC, ipChi2);
     if(ipChi2) { ipx=ipC; ipex=ipC/sqrt(ipChi2); }
 
     if( sc ) {
@@ -258,7 +298,7 @@ bool TaggingUtils::isinTreeReco12(const LHCb::Particle* axp,
         verbose() << " isinTree part: " << axp->particleID().pid() 
                   << " with p="<<p_axp/Gaudi::Units::GeV 
                   << " pt="<<pt_axp/Gaudi::Units::GeV 
-                  << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto()<<endreq;
+                  << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto()<<endmsg;
       return true;
     }
   }
@@ -291,7 +331,7 @@ bool TaggingUtils::isinTreeReco14(const LHCb::Particle* axp,
                   << " isinTree part: " << axp->particleID().pid()
                   << " with p="<< axp->p()/Gaudi::Units::GeV
                   << " pt="<< axp->pt()/Gaudi::Units::GeV
-                  << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto() << endreq;
+                  << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto() << endmsg;
       return true;
     }
   }
@@ -299,18 +339,18 @@ bool TaggingUtils::isinTreeReco14(const LHCb::Particle* axp,
 }
 
 //=============================================================================
-LHCb::Particle::ConstVector TaggingUtils::purgeCands(const LHCb::Particle::Range& cands, const LHCb::Particle& BS)
-{
+LHCb::Particle::ConstVector TaggingUtils::purgeCands(const LHCb::Particle::Range& cands, 
+                                                     const LHCb::Particle& BS) {
   // remove any charm cand that has descendents in common with the signal B
   LHCb::Particle::ConstVector purgedCands;
 
-  Particle::ConstVector signalDaus = m_descend->descendants(&BS);
+  Particle::ConstVector signalDaus = m_ParticleDescendants->descendants(&BS);
 
   Particle::ConstVector::const_iterator icand;
   for( icand = cands.begin(); icand != cands.end(); ++icand ) {  
 
     const Particle* cand = *icand;
-    Particle::ConstVector candDaus = m_descend->descendants(cand);
+    Particle::ConstVector candDaus = m_ParticleDescendants->descendants(cand);
     bool isUsedForSignal = false;
 
     Particle::ConstVector::const_iterator icandDau;
@@ -378,7 +418,7 @@ CharmMode TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int candTy
         break;
 
       default:
-        fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endreq;
+        fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endmsg;
 
       }
       
@@ -400,12 +440,12 @@ CharmMode TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int candTy
         break;
       
       default:
-        fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endreq;
+        fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endmsg;
 
       }
 
     } else {
-      fatal() << "Invalid charm type: " << cand->particleID().abspid() << " for candtype: " << candType << endreq;
+      fatal() << "Invalid charm type: " << cand->particleID().abspid() << " for candtype: " << candType << endmsg;
     }
     
     break;
@@ -429,7 +469,7 @@ CharmMode TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int candTy
         break;
         
       default:
-        fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endreq;
+        fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endmsg;
 
       }
       
@@ -450,12 +490,12 @@ CharmMode TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int candTy
       //   break;
       
       default:
-        fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endreq;
+        fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endmsg;
         
       }
 
     } else {
-      fatal() << "Invalid charm type: " << cand->particleID().abspid() << " for candtype: " << candType << endreq;
+      fatal() << "Invalid charm type: " << cand->particleID().abspid() << " for candtype: " << candType << endmsg;
     }
 
     break;
@@ -472,7 +512,7 @@ CharmMode TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int candTy
     //   break;
 
     default:
-      fatal() << "Invalid daus size: " << numDaus << " candtype: " << candType << endreq;
+      fatal() << "Invalid daus size: " << numDaus << " candtype: " << candType << endmsg;
 
     }
     break;
@@ -500,17 +540,17 @@ CharmMode TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int candTy
         break;
         
       default:
-        fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endreq;
+        fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endmsg;
         
       }
 
     } else {
-      fatal() << "Invalid charm type: " << cand->particleID().abspid() << " for candtype: " << candType << endreq;
+      fatal() << "Invalid charm type: " << cand->particleID().abspid() << " for candtype: " << candType << endmsg;
     }
     break;
       
   default:
-    fatal() << "Invalid candtype: " << candType << endreq;
+    fatal() << "Invalid candtype: " << candType << endmsg;
 
   }
   

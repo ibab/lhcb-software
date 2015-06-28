@@ -31,7 +31,7 @@ StatusCode SVertexNNTool::initialize()
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
 
-  fitter = tool<IVertexFit>("UnconstVertexFitter");
+  fitter = m_util->VertexFitter(); //tool<IVertexFit>("UnconstVertexFitter");
 
   return sc;
 }
