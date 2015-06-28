@@ -121,7 +121,7 @@ class HltMonitoringConf(LHCbConfigurableUser):
         ## Mass monitor
         from Configurables import HltMassMonitor
         from DAQSys.Decoders import DecoderDB
-        decRepLoc = DecoderDB["HltDecReportsDecoder/%sDecReportsDecoder" % stage].listOutputs()[0]
+        decRepLoc = DecoderDB["HltDecReportsDecoder/Hlt1sDecReportsDecoder"].listOutputs()[0]
         massMon = HltMassMonitor("Hlt1MassMonitor")
         massMon.DecReportsLocation = decRepLoc
         massMon.Decisions  = {"Jpsi"     : "Hlt1DiMuonHighMassDecision",
