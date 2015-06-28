@@ -40,6 +40,7 @@ private:
   bool   m_stateAtBeam;
   bool   m_useKalmanFit ;
   double m_kalmanPtForScattering ;
+  std::vector<double>  m_kalmanScatteringNoiseParameters;
   bool   m_kalmanUseTrackMomentum ;
   bool   m_kalmanStateLastMeasurement ;
   bool   m_kalmanStateEndVelo ;

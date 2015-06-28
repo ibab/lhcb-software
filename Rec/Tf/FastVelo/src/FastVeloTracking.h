@@ -129,7 +129,8 @@ private:
   double m_kalmanPtForScattering ;
   bool   m_kalmanStateLastMeasurement ;
   bool   m_kalmanStateEndVelo ;
-
+  std::vector<double>  m_kalmanScatteringNoiseParameters;
+  
   //== Debugging controls
   std::string      m_debugToolName;
   int              m_wantedKey;

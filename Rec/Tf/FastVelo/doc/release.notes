@@ -4,6 +4,11 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2015-06-28 - Sascha Stahl
+ - Made the scattering noise parameters in VeloFastKalmanTrack configurable from
+   FastVeloTracking and FastVeloFitLHCbIDs. Property is called "KalmanScatteringNoiseParameters".
+   Requires 4 parameters.
+
 ! 2015-06-06 - Wouter Hulsbergen
  - Added code to refit FastTrack with kalman fit with scattering.
 

@@ -79,6 +79,7 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
   declareProperty( "KalmanStateLastMeasurement", m_kalmanStateLastMeasurement = false ) ;
   declareProperty( "KalmanStateEndVelo", m_kalmanStateEndVelo = false ) ;
   declareProperty( "KalmanTransverseMomentumForScattering", m_kalmanPtForScattering = 400 * Gaudi::Units::MeV ) ;
+  declareProperty( "KalmanScatteringNoiseParameters", m_kalmanScatteringNoiseParameters = {} ) ;
 
   // Parameters for debugging
   declareProperty( "DebugToolName"     , m_debugToolName  = ""        );
@@ -957,7 +958,7 @@ void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
       // as tracks share hits, we need to update everything
       track.updateRPhi() ;
       FastVeloKalmanTrack kalmantrack( track ) ;
-      kalmantrack.addStates( *newTrack,newTrack->firstState(),m_kalmanPtForScattering,
+      kalmantrack.addStates( *newTrack,newTrack->firstState(),m_kalmanPtForScattering,m_kalmanScatteringNoiseParameters,
 			     m_stateAtBeam,m_kalmanStateLastMeasurement,m_kalmanStateEndVelo ) ;
     }
 

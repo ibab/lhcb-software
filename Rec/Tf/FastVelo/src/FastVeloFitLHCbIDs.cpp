@@ -33,6 +33,7 @@ FastVeloFitLHCbIDs::FastVeloFitLHCbIDs( const std::string& type,
   declareProperty( "KalmanStateLastMeasurement", m_kalmanStateLastMeasurement = false ) ;
   declareProperty( "KalmanStateEndVelo", m_kalmanStateEndVelo = false ) ;
   declareProperty( "KalmanTransverseMomentumForScattering", m_kalmanPtForScattering = 400 * Gaudi::Units::MeV ) ;
+  declareProperty( "KalmanScatteringNoiseParameters", m_kalmanScatteringNoiseParameters = {} ) ;
   declareProperty( "KalmanUseTrackMomentum", m_kalmanUseTrackMomentum = false ) ;
 }
 //=============================================================================
@@ -180,7 +181,7 @@ StatusCode FastVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID) {
     // call the fit etc.
     FastVeloKalmanTrack kalmantrack( fastTrack ) ;
     double ptscat = m_kalmanUseTrackMomentum && std::abs( state.qOverP() ) > 0 ? -1 : m_kalmanPtForScattering ;
-    kalmantrack.addStates( track,state,ptscat,
+    kalmantrack.addStates( track,state,ptscat, m_kalmanScatteringNoiseParameters,
 			   m_stateAtBeam,
 			   m_kalmanStateLastMeasurement,
 			   m_kalmanStateEndVelo ) ;

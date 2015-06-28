@@ -16,7 +16,8 @@ class FastVeloKalmanTrack
   const FastVeloTrack* m_track ;
   bool m_hitsIncreasingZ ;
   std::vector<const FastVeloHit*> m_hits ;
- private:
+  std::vector<double>  kalmanScatteringNoiseParameters;
+private:
   enum Direction { Forward = +1, Backward = -1 } ;
   void fit(LHCb::State& state,
 	   double& chi2,
@@ -30,6 +31,7 @@ class FastVeloKalmanTrack
   void addStates(LHCb::Track& lhcbtrack,
 		 const LHCb::State& basestate,
 		 double transverseMomentumForScattering,
+     std::vector<double>  kalmanScatteringNoiseParameters,
 		 bool addStateBeamLine,
 		 bool addStateLastMeasurement,
 		 bool addStateEndVelo) const ;

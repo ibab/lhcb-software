@@ -122,7 +122,7 @@ void FastVeloKalmanTrack::fit(LHCb::State& state,
 
     for(int i=0; i<4; ++i) {
       for(int j=0; j<=i; ++j)
-	cov(i,j) += -CHT[i]*CHT[j]/R ;
+        cov(i,j) += -CHT[i]*CHT[j]/R ;
     }
     
     // finally, add the noise, using the direction of the reference.
@@ -148,6 +148,7 @@ namespace {
 void FastVeloKalmanTrack::addStates(LHCb::Track& track,
 				    const LHCb::State& basestate,
 				    double transverseMomentumForScattering,
+            std::vector<double> scatteringNoiseParameters,
 				    bool addStateBeamLine,
 				    bool addStateLastMeasurement,
 				    bool addStateEndVelo) const
@@ -176,8 +177,20 @@ void FastVeloKalmanTrack::addStates(LHCb::Track& track,
     scatmom2 = basestate.p() * basestate.p() ;
   }
 
-  const double scat2PerPlane = 0.5 * (1.0 + 0.002/t2) / scatmom2 ;
-  const double scat2RFFoil   = 2.0 * (1.0 + 0.004/t2) / scatmom2 ;
+  if (scatteringNoiseParameters.empty()){
+    // Use defaults
+    scatteringNoiseParameters.push_back(0.5);
+    scatteringNoiseParameters.push_back(0.002);
+    scatteringNoiseParameters.push_back(2.0);
+    scatteringNoiseParameters.push_back(0.004);
+  }else if (scatteringNoiseParameters.size()!=4){
+    // Make it fail...
+    return;
+  }
+  
+  
+  const double scat2PerPlane = scatteringNoiseParameters[0] * (1.0 + scatteringNoiseParameters[1]/t2) / scatmom2 ;
+  const double scat2RFFoil   = scatteringNoiseParameters[2] * (1.0 + scatteringNoiseParameters[3]/t2) / scatmom2 ;
   
   // Call the fit
   double chi2 ;
