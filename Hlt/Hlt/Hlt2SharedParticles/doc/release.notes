@@ -4,6 +4,8 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================= Hlt2SharedParticles v7r6p2 2015-06-28 =========================
+
 ! 2015-06-28- V. Gligorov
  - Fix misconfiguration of shared AllPi0 sequence.
 
