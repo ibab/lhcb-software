@@ -34,6 +34,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'DiMuonLowMass_PT'         :  200.
                  , 'DiMuonLowMass_TrChi2'     :    4.
                  , 'DiMuonLowMass_M'          : 1000.
+                 , 'DiMuonLowMass_MSS'          : 220.
                  , 'DiMuonLowMass_IPChi2'     :    9.
                  , 'DiMuonLowMass_GEC'        : 'Loose'
                  , 'DiMuonHighMass_VxDOCA'    :  0.2
@@ -46,16 +47,32 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'DiMuonNoL0_VxDOCA'     :  0.2
                  , 'DiMuonNoL0_VxChi2'     :   25.
                  , 'DiMuonNoL0_P'          : 3000.
-                 , 'DiMuonNoL0_PT'         :    0.
+                 , 'DiMuonNoL0_PT'         :    5000.
+                 , 'DiMuonNoL0_IP'         :    100
                  , 'DiMuonNoL0_TrChi2'     :    2.
                  , 'DiMuonNoL0_M'          :    0.
+                 , 'DiMuonNoL0_MSS'        : 220.   
                  , 'DiMuonNoL0_IPChi2'     :    9.
                  , 'DiMuonNoL0_GEC'        : 'Loose'
                  , 'MultiMuonNoL0_P'          : 6000.
-                 , 'MultiMuonNoL0_PT'         :  500.
+                 , 'MultiMuonNoL0_PT'         :  5000.
+                 , 'MultiMuonNoL0_IP'         :    100.
                  , 'MultiMuonNoL0_TrChi2'     :    4.
                  , 'MultiMuonNoL0_GT'         :  2.5
                  , 'MultiMuonNoL0_GEC'        : 'Loose'
+                 , 'CalibMuonAlignJpsi_ParticlePT'             : 800     # MeV
+                 , 'CalibMuonAlignJpsi_ParticleP'              : 6000    # MeV
+                 , 'CalibMuonAlignJpsi_TrackCHI2DOF'           : 2       # dimensionless
+                 , 'CalibMuonAlignJpsi_CombMaxDaughtPT'        : 800     # MeV
+                 , 'CalibMuonAlignJpsi_CombAPT'                : 1500    # MeV
+                 , 'CalibMuonAlignJpsi_CombDOCA'               : 0.2     # mm
+                 , 'CalibMuonAlignJpsi_CombVCHI2DOF'           : 10      # dimensionless
+                 , 'CalibMuonAlignJpsi_CombVCHI2DOFLoose'      : 10      # dimensionless
+                 , 'CalibMuonAlignJpsi_CombDIRA'               : 0.9     # dimensionless
+                 , 'CalibMuonAlignJpsi_CombTAU'                : 0.     # ps
+                 , 'CalibMuonAlignJpsi_JpsiMassWinLoose'         : 150     # MeV
+                 , 'CalibMuonAlignJpsi_JpsiMassWin'              : 100     # MeV
+                   
                  , 'NoPVPassThrough_L0ChannelRe' : "L0_CHANNEL_RE('.*lowMult')"
                  , 'ODINFilter'               : {}
                  , 'L0Channels'               : { 'SingleMuonHighPT' : ( 'Muon', ),
@@ -63,13 +80,16 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                                                   'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
                                                   'DiMuonNoL0'       : None,
                                                   'DiMuonHighMass'   : ( 'Muon', 'DiMuon' ),
-                                                  'MultiMuonNoL0'    : ( 'Muon', 'DiMuon' )}
+                                                  'MultiMuonNoL0'    : ( 'Muon', 'DiMuon' ),
+                                                  'CalibMuonAlignJpsi'    : ( 'Muon', 'DiMuon' ),
+                                                  }
                  , 'Priorities'               : { 'SingleMuonHighPT' : 7,
                                                   'SingleMuonNoIP'   : 6,
                                                   'DiMuonLowMass'    : 5,
                                                   'DiMuonHighMass'   : 4,
                                                   'MultiMuonNoL0'    : 8,
                                                   'DiMuonNoL0'       : 9,
+                                                  'CalibMuonAlignJpsi'    : 9,
                                                   }
                  }
 
@@ -152,7 +172,11 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         preambulo = self.singleMuon_preambulo( properties ) + \
              [ "VertexConf = LoKi.Hlt1.VxMakerConf( %(VxDOCA)f * mm, %(VxChi2)f )" % properties,
                "MakeDiMuons = TC_VXMAKE4( '', VertexConf )",
-               "from LoKiPhys.decorators import RV_MASS" ]
+               "from LoKiPhys.decorators import RV_MASS, RV_TrFUN" ]
+        preambulo += [ "Q1 = RV_TrFUN(TrQ,0)",
+                       "Q2 = RV_TrFUN(TrQ,1)",
+                       "QProd = Q1*Q2",
+                       ]
         return preambulo
 
     def diMuon_streamer( self, properties ):
@@ -239,6 +263,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  tee  ( monitor( TC_SIZE > 0, '# pass vertex', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nVertices' , LoKi.Monitoring.ContextSvc ) )
             >>  ( RV_MASS ( 'mu+' , 'mu-' ) > %(M)s * MeV )
+            >>  ( ( QProd == -1 ) | ( RV_MASS ( 'mu+' , 'mu-' ) > %(MSS)s * MeV ) )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass mass', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nDiMuons' , LoKi.Monitoring.ContextSvc ) )
             >>  SINK( 'Hlt1%(name)sDecision' )
@@ -268,6 +293,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.diMuon_preambulo( properties ),
             Code = """
             VeloTTCandidates
+            >>  ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm ) 
             >>  MatchVeloTTMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# MatchMuon', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
@@ -290,6 +316,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  tee  ( monitor( TC_SIZE > 0, '# pass vertex', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nVertices' , LoKi.Monitoring.ContextSvc ) )
             >>  ( RV_MASS ( 'mu+' , 'mu-' ) > %(M)s * MeV )
+            >>  ( ( QProd == -1 ) | ( RV_MASS ( 'mu+' , 'mu-' ) > %(MSS)s * MeV ) )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass mass', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nDiMuons' , LoKi.Monitoring.ContextSvc ) )
             >>  SINK( 'Hlt1%(name)sDecision' )
@@ -319,6 +346,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.singleMuon_preambulo( properties ),
             Code = """
             VeloTTCandidates
+            >>  ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm ) 
             >>  MatchVeloTTMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# MatchMuon', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
@@ -343,6 +371,101 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             )
         gec = properties[ 'GEC' ]
         return [ Hlt1GECUnit( gec ), unit ]
+
+
+    
+    def MuMu_Unit( self, properties ) :
+        # Let's start with pions and ask ismuon first... this should be changed putting it in shared particles
+        props = {}
+        props['MuonCuts']      = """( (PT>%(ParticlePT)s) & (P>%(ParticleP)s) & (TRCHI2DOF<%(TrackCHI2DOF)s) )"""%properties
+        props['MuMuDecay']     = """'J/psi(1S) -> mu+ mu-'"""
+        props['MuMuCombCut']   = ("""( in_range( PDGM('J/psi(1S)') - %(JpsiMassWinLoose)s * MeV , AM , PDGM('J/psi(1S)')   + %(JpsiMassWinLoose)s * MeV ) )  """ +
+                                  """& (APT>%(CombAPT)s*MeV)  """ +
+                                  """& (AMAXCHILD(PT)>%(CombMaxDaughtPT)s*MeV)  """ +
+                                  """& (ACUTDOCA(%(CombDOCA)s*mm,'')) """) %properties
+        props['MuMuMothCut']   = ("""( in_range( PDGM('J/psi(1S)') - %(JpsiMassWin)s * MeV , M , PDGM('J/psi(1S)')   + %(JpsiMassWin)s * MeV ) )  """ +
+                                  """& (BPVDIRA > %(CombDIRA)s)  """ +
+                                  """& (VFASPF(VCHI2/VDOF)<%(CombVCHI2DOF)s)  """ +
+                                  """& (BPVLTIME()>%(CombTAU)s*ps)""") %properties
+        
+        MuMu_Preambulo = [ "from LoKiArrayFunctors.decorators import AP, APT, ADAMASS, ACUTDOCA, DAMASS, ASUM, AMAXCHILD, PDGM, AM",
+                           "from LoKiPhys.decorators import PT",
+                           "MuMuCombinationConf = LoKi.Hlt1.Hlt1CombinerConf( %(MuMuDecay)s, %(MuMuCombCut)s, %(MuMuMothCut)s )" %props
+                           ]
+        
+        MuMu_LineCode = """
+        TC_HLT1COMBINER( '',
+        MuMuCombinationConf,
+        'Hlt1SharedMuons', %(MuonCuts)s )
+        >>  tee ( monitor( TC_SIZE > 0, '# pass ToMuMus', LoKi.Monitoring.ContextSvc ) )
+        >>  tee ( monitor( TC_SIZE    , 'nMuMus',         LoKi.Monitoring.ContextSvc ) )
+        >>  SINK ( 'Hlt1MuonsMuMus' )
+        >>  ~TC_EMPTY
+        """ %props
+        
+        from Configurables import LoKi__HltUnit as HltUnit
+        from HltTracking.HltPVs import PV3D
+        
+        hlt1Jpsi_MuMuUnit = HltUnit(
+            'Hlt1Jpsi2MuMuUnit',
+            PVSelection = "PV3D",
+            #OutputLevel = 1,
+            Monitor = True,
+            Preambulo = MuMu_Preambulo,
+            Code = MuMu_LineCode
+            )
+        
+        return hlt1Jpsi_MuMuUnit
+
+
+    def Jpsi2MuMu_Unit( self, props ) :
+        
+        Jpsi2MuMu_LineCode = """
+        SELECTION( 'Hlt1MuonsMuMus' )
+        >>  in_range( PDGM('J/psi(1S)') - %(JpsiMassWin)s * MeV , M , PDGM('J/psi(1S)') + %(JpsiMassWin)s * MeV )
+        >>  tee ( monitor( TC_SIZE > 0, '# pass Jpsi2MuMu', LoKi.Monitoring.ContextSvc ) )
+        >>  tee ( monitor( TC_SIZE, 'nJpsi2MuMus',          LoKi.Monitoring.ContextSvc ) )
+        >>  SINK ('Hlt1CalibMuonAlignJpsiDecision')
+        >>  ~TC_EMPTY
+        """ %props
+        
+        from Configurables import LoKi__HltUnit as HltUnit
+        from HltTracking.HltPVs import PV3D
+        from HltTracking.Hlt1Tracking import FitTrack
+        hlt1Muons_Jpsi2MuMuUnit = HltUnit(
+            'Hlt1MuonsJpsi2MuMuUnit',
+            PVSelection = "PV3D",
+            #OutputLevel = 1,
+            Monitor = True,
+            Preambulo = [FitTrack],
+            Code = Jpsi2MuMu_LineCode
+            )
+        
+        return  hlt1Muons_Jpsi2MuMuUnit 
+
+
+    def build_Jpsi2MuMuLine(self):
+        from Hlt1SharedParticles import Hlt1SharedParticles
+        muons = Hlt1SharedParticles().muonUnit()
+        name = "CalibMuonAlignJpsi"
+        myproperties = self.localise_props(name)
+        #print " XXXXXXX" , myproperties
+        algos = [ muons, self.MuMu_Unit(self.localise_props(name)), self.Jpsi2MuMu_Unit(self.localise_props(name)) ]
+        fullname = name
+        from HltLine.HltLine import Hlt1Line
+        priorities = self.getProp( "Priorities" )
+        priority = priorities[ name ] if name in priorities else None
+                
+        line = Hlt1Line (
+            fullname,
+            prescale  = self.prescale,
+            postscale = self.postscale,
+            priority  = priority,
+            L0DU = self.__l0du(name),
+            ODIN = self.__odin(name),
+            algos = algos
+            )
+
 
     
     def build_NoPVMuonPassThrough(self): 
@@ -398,4 +521,4 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             self.build_line( line, streamer )
 
         self.build_NoPVMuonPassThrough() 
-
+        self.build_Jpsi2MuMuLine()

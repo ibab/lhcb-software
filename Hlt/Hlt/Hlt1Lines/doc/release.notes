@@ -5,6 +5,13 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-06-26 - Francesco Dettori
+ - Changing line name to the Muon align line (CalibMuonAlignJpsi)
+
+! 2015-06-24 - Francesco Dettori
+ - Adding JpsiLine for muon alignment 
+ - Adding cut at low dimuon mass for same-sign dimuons to reject clones 
+
 ! 2015-06-17 - V. Gligorov
  - Separate RICH mirror alignment line into RICH1 and RICH2 lines, with separate
    slots and cuts. This change is NOT backwards compatible.

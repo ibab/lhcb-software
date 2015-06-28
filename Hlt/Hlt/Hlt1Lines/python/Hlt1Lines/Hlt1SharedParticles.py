@@ -86,3 +86,40 @@ class Hlt1SharedParticles(HltLinesConfigurableUser):
         from HltLine.HltLine import bindMembers
         bm = bindMembers(None, [protoUnit, kaonUnit]).setOutputSelection(selection)
         return bm
+
+
+
+    def muonUnit(self):
+        selection = 'Hlt1SharedMuons'
+        props = self.getProps().copy()
+        props.update({'selection' : selection})
+
+        code = """
+        TrackCandidates
+        >>  IsMuon
+        >>  tee ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
+        >>  FitTrack
+        >>  ( ( TrPT > %(PT)s * MeV ) & \
+              ( TrP  > %(P)s  * MeV ) )
+        >>  tee ( monitor( TC_SIZE > 0, '# pass Cuts', LoKi.Monitoring.ContextSvc ) )
+        >>  tee ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
+        >>  TC_TOPROTOPARTICLES( '' )
+        >>  TC_TOPARTICLES( 'mu+', '', ALL )
+        >>  tee ( monitor( TC_SIZE > 0, '# pass ToMuons', LoKi.Monitoring.ContextSvc ) )
+        >>  tee ( monitor( TC_SIZE    , 'nMuons',         LoKi.Monitoring.ContextSvc ) )
+        >>  SINK(  '%(selection)s' )
+        >>  ~TC_EMPTY
+        """ % props
+
+        from Configurables import LoKi__HltUnit as HltUnit
+        from HltTracking.Hlt1Tracking import (TrackCandidates, IsMuon, FitTrack)
+        muonUnit = HltUnit(
+            'Hlt1SharedMuonUnit',
+            Preambulo = [ TrackCandidates('SharedMuons'), IsMuon , FitTrack],
+            Monitor = True,
+            Code = code)
+
+        from HltLine.HltLine import bindMembers
+        bm = bindMembers(None, [ muonUnit]).setOutputSelection(selection)
+        return bm
+
