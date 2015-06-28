@@ -71,7 +71,7 @@ __all__ = ( 'MergedPi0s', 'ResolvedPi0s', 'AllPi0s', 'MergedPi0sFromL0', 'Resolv
 
 MergedPi0s    = bindMembers( None, [ neutralProtos, Hlt2MergedPi0s ] ).setOutputSelection(Hlt2MergedPi0s.Output)
 ResolvedPi0s  = bindMembers( None, [ neutralProtos, Hlt2ResolvedPi0s ] ).setOutputSelection(Hlt2ResolvedPi0s.Output)
-AllPi0s       = bindMembers( None, [ SeqHlt2Pi0 ] ).setOutputSelection( [ Hlt2MergedPi0s.Output, Hlt2ResolvedPi0s.Output ] )
+AllPi0s       = bindMembers( None, [ neutralProtos, SeqHlt2Pi0 ] ).setOutputSelection( [ Hlt2MergedPi0s.Output, Hlt2ResolvedPi0s.Output ] )
 MergedPi0sFromL0    = bindMembers( None, [ neutralProtosFromL0, Hlt2MergedPi0sFromL0 ] ).setOutputSelection(Hlt2MergedPi0sFromL0.Output)
 ResolvedPi0sFromL0  = bindMembers( None, [ neutralProtosFromL0, Hlt2ResolvedPi0sFromL0 ] ).setOutputSelection(Hlt2ResolvedPi0sFromL0.Output)
 AllPi0sFromL0       = bindMembers( None, [ SeqHlt2Pi0FromL0 ] ).setOutputSelection([Hlt2MergedPi0sFromL0.Output, Hlt2ResolvedPi0sFromL0.Output])
