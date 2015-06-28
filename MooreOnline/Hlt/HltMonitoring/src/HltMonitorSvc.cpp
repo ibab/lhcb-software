@@ -78,12 +78,11 @@ StatusCode HltMonitorSvc::initialize()
 {
    StatusCode sc = Service::initialize();
 
-   MsgStream msg(msgSvc(), name());
    // IncidentSvc
-   msg << MSG::INFO << "Initialized ZeroMQ based HltMonitorSvc" << endmsg;
+   info() << "Initialized ZeroMQ based HltMonitorSvc" << endmsg;
    sc = serviceLocator()->service("IncidentSvc", m_incidentSvc, true);
    if(!sc.isSuccess()) {
-      msg << MSG::FATAL << "IncidentSvc not found" << endmsg;
+      fatal() << "IncidentSvc not found" << endmsg;
       return sc;
    }
    m_incidentSvc->addListener(this, IncidentType::RunChange);
@@ -92,27 +91,27 @@ StatusCode HltMonitorSvc::initialize()
    // ZQM service
    sc = serviceLocator()->service("ZeroMQSvc", m_zmqSvc, true);
    if( !sc.isSuccess() ) {
-      msg << MSG::FATAL << "ZeroMQSvc not found" << endmsg;
+      fatal() << "ZeroMQSvc not found" << endmsg;
       return sc;
    }
 
    // UpdateManagerSvc
    sc = serviceLocator()->service("UpdateManagerSvc", m_updMgrSvc, true);
    if (!sc.isSuccess()) {
-      msg << MSG::FATAL << "UpdateManagerSvc not found" << endmsg;
+      fatal() << "UpdateManagerSvc not found" << endmsg;
       return StatusCode::FAILURE;
    }
    m_updMgrSvc->registerCondition(this, "Conditions/Online/LHCb/RunParameters",
                                   &HltMonitorSvc::updateConditions, m_runPars);
    sc = m_updMgrSvc->update(this);
    if (!sc.isSuccess()) {
-      msg << MSG::FATAL << "Could not update run parameter condition." << endmsg;
+      fatal() << "Could not update run parameter condition." << endmsg;
       return sc;
    }
 
    sc = serviceLocator()->service("EventDataSvc", m_evtSvc, true);
    if (!sc.isSuccess()) {
-      msg << MSG::FATAL << "EventDataSvc not found" << endmsg;
+      fatal() << "EventDataSvc not found" << endmsg;
    }
    return sc;
 }
@@ -147,8 +146,6 @@ StatusCode HltMonitorSvc::stop()
 //===============================================================================
 StatusCode HltMonitorSvc::finalize()
 {
-   MsgStream msg(msgSvc(), name());
-
    // Clean up
    for (auto socket : {&m_dataOut, &m_infoOut}) {
       (*socket)->setsockopt(ZMQ_LINGER, 0, 1);
@@ -241,8 +238,6 @@ vector<string> HltMonitorSvc::histograms() const
 //===============================================================================
 void HltMonitorSvc::fill(const Gaudi::StringKey& key, size_t bin)
 {
-   MsgStream msg(msgSvc(), name());
-
    // Create a new chunk if we don't have one for this identifier
    auto it = m_chunks.find(key);
    if (it == end(m_chunks)) {
@@ -276,9 +271,8 @@ void HltMonitorSvc::handle(const Incident& incident)
    const RunChangeIncident* rci = dynamic_cast<const RunChangeIncident*>(&incident);
    if (rci) {
       if (m_run != rci->runNumber()) {
-         MsgStream msg(msgSvc(), name());
-         msg << MSG::DEBUG << "Change of run number detected " << m_run
-             << " -> " << rci->runNumber() << endmsg;
+         debug() << "Change of run number detected " << m_run
+                 << " -> " << rci->runNumber() << endmsg;
       }
       m_run = rci->runNumber();
 
@@ -290,6 +284,7 @@ void HltMonitorSvc::handle(const Incident& incident)
 //===============================================================================
 void HltMonitorSvc::sendChunks()
 {
+   // If there are info messages, send them and then clear them out.
    for (auto& message : m_infoMessages) {
       for (decltype(m_infoMessages)::value_type::iterator it = begin(message),
               last = end(message); it != last; ++it) {
