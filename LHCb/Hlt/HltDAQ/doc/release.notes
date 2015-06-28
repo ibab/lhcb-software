@@ -4,6 +4,8 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+!========================= HltDAQ v4r18 2015-06-28 =========================
+
 ! 2015-06-12 - Roel Aaij
  - Use HltMonitorSvc to monitor additional stuff for HLT2.
 
