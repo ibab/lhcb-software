@@ -7,6 +7,15 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2015-06-27 - Julian Wishahi
+ - ITaggerUtils and TaggerUtils: added PVReFitter, LifetimeFitter, 
+   DistanceCalculator, VertexFit, ParticleDescendants tools as members. These 
+   can be chosen through Tunings.py
+ - Changed TaggerXYZTools to get their fitters from TaggerUtils.
+ - Added a new Stripping23 tuning that uses the LoKi fitters.
+ - Added the old fitter choice to the Stripping21 and Reco14 tunings.
+ - Changed the VertexFitter used in CharmTaggerLists.py to LoKi version.
+
 !====================== FlavourTagging v13r13 2015-05-20 =====================
 
 ! 2015-05-13 - Jack Wimberley
