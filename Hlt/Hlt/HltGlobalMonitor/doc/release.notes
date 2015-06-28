@@ -1,9 +1,16 @@
 ! -----------------------------------------------------------------------------
 !$Id: release.notes,v 1.90 2010-08-26 08:47:30 graven Exp $
 !Package     : Hlt/HltGlobalMonitor
-!Package Coordinator : Eric van Herwijnen 
+!Package Coordinator : Eric van Herwijnen
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+
+! 2015-06-25 - Roel Aaij
+ - Rework algorithms to allow two instances, one for HLT1 and one for HLT2.
+
+! 2015-06-19 - Roel Aaij
+ - Add simplified version of HltMassMonitor from Monitor/HltMonitor to make
+   mass plots on the farm.
 
 !========================= HltGlobalMonitor v4r7p1 2015-06-10 =========================
 
@@ -108,11 +115,11 @@
  - Add an algorithm to monitor number of IT and Velo hits versus SPD multiplicity.
 
 !========================== HltGlobalMonitor v3r8p1 2011-08-03 ===================
-! 2011-07-12 - Eric van Herwijnen 
+! 2011-07-12 - Eric van Herwijnen
  - Modify HltL0GlobalMonitor, add new L0 channels for Hlt shift page 4 histos
 !========================== HltGlobalMonitor v3r8   2011-07-11 ===================
 
-! 2011-04-03 - Eric van Herwijnen 
+! 2011-04-03 - Eric van Herwijnen
  - Add resolver position monitoring histograms
 
 !========================== HltGlobalMonitor v3r7   2011-03-18 ===================
@@ -154,7 +161,7 @@
 
 !========================== HltGlobalMonitor v3r4 2010-04-19 ===================
 ! 2010-04-14 - Johannes Albrecht
- - add L0 and ODIN histograms after HLT1 and HLT2 
+ - add L0 and ODIN histograms after HLT1 and HLT2
 
 ! 2010-04-13 - Johannes Albrecht
  - add two histograms with enabled and disabled L0 channels
@@ -198,12 +205,12 @@
  - fix windows compiler warnings
 
 ! 2010-02-12 - Gerhard Raven
- - streamline and generalize code 
+ - streamline and generalize code
 
 !========================== HltGlobalMonitor v3r0 2010-02-01 ===================
 ! 2010-01-29 - Kim Vervink
  - Changed done by Danielle Tostes (UFRJ - summer student).
- - Added histograms to monitor Hlt2 in the same way as Hlt1 was monitored and 
+ - Added histograms to monitor Hlt2 in the same way as Hlt1 was monitored and
    structured.
  - Added more Hlt1 histograms, dividing the plot of the accepted events per
    line in several plots according to their corresponding alley.
@@ -253,7 +260,7 @@
 !========================== HltGlobalMonitor v2r4p1 2009-05-06 ================
 
 2009-05-01 - Gerhard Raven
- - fix warning messages about filling histogram with Infinity, caused by a 
+ - fix warning messages about filling histogram with Infinity, caused by a
    divide by zero
  - fix error message about not being able to set bins, caused by a histogram
    with the wrong # of bins
@@ -281,7 +288,7 @@
 
 !2009-03-05 - Kim Vervink
  - add memory histograms
- - add axis titles 
+ - add axis titles
 
 !2009-03-05 - Gerhard Raven
  - check for illegal bin numbers
@@ -292,7 +299,7 @@
  - fix accept rate counters
 
 !2009-03-03 - Gerhard Raven
- - slight change of logic to avoid using TISTOS tool 
+ - slight change of logic to avoid using TISTOS tool
  - add helper function to help set axis labels
  - move axis labeling to 'initialize'
 
@@ -309,7 +316,7 @@
 
 !========================== HltGlobalMonitor v2r0 2009-01-15 =================
 !2008-12-18 - Gerhard Raven
- - some more cleanup & additional monitoring histograms 
+ - some more cleanup & additional monitoring histograms
  - remove unused code
 
 ! 2008-12-18 - Gerhard Raven
@@ -317,9 +324,9 @@
  - some cleanup in HltGlobalMonitor
 
 ! 2008-12-07 - Vanya BELYAEV
- - cmt/requirements 
-    add "-import" directive for AIDA 
-    version inrement to v1r6p1 
+ - cmt/requirements
+    add "-import" directive for AIDA
+    version inrement to v1r6p1
  - HltGlobalMonitor.cpp
     tiny fixes..
 
@@ -339,9 +346,9 @@
  - for now, absence of an DecReport is not an error (note: will change in future!)
  - make sure odin histogram is filled once per event
 
-! 2008-09-17 - Bruno Souza de Paula 
+! 2008-09-17 - Bruno Souza de Paula
  - make HltGlobalMonitor more generic
- 
+
 !========================= HltGlobalMonitor v1r3 2008-09-10 ===================
 ! 2008-09-10 - Juan PALACIOS
  - No idea what has changed. See CVS log.
@@ -357,4 +364,3 @@
 -First release, for tests with the Online software
 -Takes information from HltSummary, makes and publishes histograms for the Global Monitoring of HLT counting alleys entries and success
 -To run it just add the "HltGlobalMonitor" after "HltSequencer/HltEndSequence" in the Hlt Sequence
-

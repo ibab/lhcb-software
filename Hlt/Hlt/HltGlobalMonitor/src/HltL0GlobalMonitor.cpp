@@ -43,8 +43,11 @@
 #include "HltL0GlobalMonitor.h"
 // ============================================================================
 
-using namespace LHCb;
-using namespace Gaudi::Utils::Histos;
+namespace {
+   using namespace LHCb;
+   using namespace Gaudi::Utils::Histos;
+   using std::string;
+}
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltL0GlobalMonitor
@@ -60,17 +63,16 @@ DECLARE_ALGORITHM_FACTORY( HltL0GlobalMonitor )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-HltL0GlobalMonitor::HltL0GlobalMonitor( const std::string& name,
+HltL0GlobalMonitor::HltL0GlobalMonitor( const string& name,
                                         ISvcLocator* pSvcLocator )
     : HltBaseAlg( name, pSvcLocator ), m_events( 0 ), m_lastL0TCK( 0 )
 {
+    declareProperty( "Stage", m_stage = "Hlt1" );
     declareProperty( "ODIN", m_ODINLocation = LHCb::ODINLocation::Default );
-    declareProperty( "Hlt1DecReports", m_Hlt1DecReportsLocation = LHCb::HltDecReportsLocation::Default );
-    declareProperty( "Hlt2DecReports", m_Hlt2DecReportsLocation = LHCb::HltDecReportsLocation::Default );
+    declareProperty( "DecReports", m_decReportsLocation = LHCb::HltDecReportsLocation::Default );
     declareProperty( "L0DUReport",
                      m_L0DUReportLocation = LHCb::L0DUReportLocation::Default );
-    declareProperty( "Hlt1DecName", m_hlt1Decision = "Hlt1Global" );
-    declareProperty( "Hlt2DecName", m_hlt2Decision = "Hlt2Global" );
+    declareProperty( "HltDecName", m_hltDecision = "Hlt1Global" );
 }
 //=============================================================================
 // Destructor
@@ -85,43 +87,6 @@ StatusCode HltL0GlobalMonitor::initialize()
     StatusCode sc = HltBaseAlg::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error printed already by GaudiAlgorithm
     m_nboflabels = 0;
-
-    // #if 0
-    //   /**
-    //    * 2010-03-29 J.A.
-    //    *This is to put labels on the histogram at initialize
-    //    *Will be updated with corresponding flags during the run
-    //    *I am not sure if the saveset has a "2010 type" L0 TCK
-    //    * --> be save and do it by hand
-    //    */
-    //   std::vector< std::pair<unsigned, std::string> > labels;
-    //   labels.push_back(std::make_pair( 0, "HCAL"));
-    //   labels.push_back(std::make_pair( 1, "SPD"));
-    //   labels.push_back(std::make_pair( 2, "CALO"));
-    //   labels.push_back(std::make_pair( 3, "MUON,minbias"));
-    //   labels.push_back(std::make_pair( 4, "PU"));
-    //   labels.push_back(std::make_pair( 5, "SPD40"));
-    //   labels.push_back(std::make_pair( 6, "PU20"));
-    //   labels.push_back(std::make_pair( 7, "Electron"));
-    //   labels.push_back(std::make_pair( 8, "Photon"));
-    //   labels.push_back(std::make_pair( 9, "Hadron"));
-    //   labels.push_back(std::make_pair( 10, "Muon"));
-    //   labels.push_back(std::make_pair( 11, "DiMuon"));
-    //   labels.push_back(std::make_pair( 12, "Muon,lowMult"));
-    //   labels.push_back(std::make_pair( 13, "DiMuon,lowMult"));
-    //   labels.push_back(std::make_pair( 14, "LocalPi0"));
-    //   labels.push_back(std::make_pair( 15, "GlobalPi0"));
-    //   labels.push_back(std::make_pair( 16, "B1gas"));
-    //   labels.push_back(std::make_pair( 17, "B2gas"));
-    //   labels.push_back(std::make_pair( 18, "B1gas * ODIN BE"));
-    //   labels.push_back(std::make_pair( 19, "B2gas * ODIN EB"));
-    //   labels.push_back(std::make_pair( 20, "L0 Global"));
-    //   if (!setBinLabels( m_L0Input, labels )) {
-    //     error() << "failed to set binlables on L0 hist" << endmsg;
-    //   }
-
-    //   m_L0Input->setTitle("L0 channel summary, L0TCK: _not yet set_");
-    // #endif
 
     declareInfo( "COUNTER_TO_RATE[L0Accept]", counter( "L0Accept" ), "L0Accept" );
 
@@ -169,7 +134,7 @@ void HltL0GlobalMonitor::monitorL0DU( const LHCb::L0DUReport* l0du )
     // define the bin labels
     unsigned int L0TCK = l0du->tck();
     if ( L0TCK != m_lastL0TCK ) {
-        std::vector<std::pair<unsigned, std::string>> labels;
+        std::vector<std::pair<unsigned, string>> labels;
         for ( const auto& i : channels ) {
             labels.emplace_back( i.second->id(), i.first );
         }
@@ -184,40 +149,26 @@ void HltL0GlobalMonitor::monitorL0DU( const LHCb::L0DUReport* l0du )
             book1D( "L0 channel summary, enabled", xmin, xmax, m_nboflabels );
         m_histL0Disabled =
             book1D( "L0 channel summary, disabled", xmin, xmax, m_nboflabels );
-        m_histL0EnabledHLT1 = book1D( "L0 channel summary, enabled, after HLT1",
-                                      xmin, xmax, m_nboflabels );
-        m_histL0EnabledHLT2 = book1D( "L0 channel summary, enabled, after HLT2",
-                                      xmin, xmax, m_nboflabels );
+        m_histL0EnabledHLT = book1D( string{"L0 channel summary, enabled, after "} + m_stage,
+                                     xmin, xmax, m_nboflabels );
 
         setBinLabels( m_L0Input, labels );
         if ( m_histL0Enabled ) setBinLabels( m_histL0Enabled, labels );
         if ( m_histL0Disabled ) setBinLabels( m_histL0Disabled, labels );
-        if ( m_histL0EnabledHLT1 ) setBinLabels( m_histL0EnabledHLT1, labels );
-        if ( m_histL0EnabledHLT2 ) setBinLabels( m_histL0EnabledHLT2, labels );
+        if ( m_histL0EnabledHLT ) setBinLabels( m_histL0EnabledHLT, labels );
         m_lastL0TCK = L0TCK;
-        // #if 0
-        //       char txt[128];
-        //       sprintf(txt,"L0 channel summary, L0TCK: 0x%x",L0TCK);
-        //       m_L0Input->setTitle(txt);
-        // #endif
     }
 
     LHCb::ODIN* odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default );
     if ( !odin ) return;
 
     // now check HLT decisions for rejected events after Hlt
-    bool hlt1 = false;
-    LHCb::HltDecReports* hlt1dec = fetch<LHCb::HltDecReports>( m_Hlt1DecReportsLocation );
-    if ( hlt1dec ) {
-        const LHCb::HltDecReport* report = hlt1dec->decReport( m_hlt1Decision );
-        if ( report ) hlt1 = report->decision();
+    bool hlt = false;
+    LHCb::HltDecReports* decReps = fetch<LHCb::HltDecReports>( m_decReportsLocation );
+    if ( decReps ) {
+        const LHCb::HltDecReport* report = decReps->decReport( m_hltDecision );
+        if ( report ) hlt = report->decision();
     }
-    bool hlt2 = false;
-    LHCb::HltDecReports* hlt2dec =  fetch<LHCb::HltDecReports>( m_Hlt2DecReportsLocation, hlt1 );
-    if ( hlt2dec ) {
-        const LHCb::HltDecReport* report = hlt2dec->decReport( m_hlt2Decision );
-        if ( report ) hlt2 = report->decision();
-    } // end if hlt
 
     bool odinBGas = false;
     bool l0Physics = false;
@@ -230,8 +181,7 @@ void HltL0GlobalMonitor::monitorL0DU( const LHCb::L0DUReport* l0du )
 
         if ( i.second->decisionType() != LHCb::L0DUDecision::Disable ) {
             fill( m_histL0Enabled, id, l0chan );
-            fill( m_histL0EnabledHLT1, id, l0chan && hlt1 );
-            fill( m_histL0EnabledHLT2, id, l0chan && hlt2 );
+            fill( m_histL0EnabledHLT, id, l0chan && hlt );
         } else {
             fill( m_histL0Disabled, id, l0chan );
         }
@@ -239,16 +189,14 @@ void HltL0GlobalMonitor::monitorL0DU( const LHCb::L0DUReport* l0du )
         if ( id == 21 && odin->bunchCrossingType() == LHCb::ODIN::Beam1 ) {
             fill( m_L0Input, m_nboflabels - 3, l0chan );
             fill( m_histL0Enabled, m_nboflabels - 3, l0chan );
-            fill( m_histL0EnabledHLT1, m_nboflabels - 3, l0chan && hlt1 );
-            fill( m_histL0EnabledHLT2, m_nboflabels - 3, l0chan && hlt2 );
+            fill( m_histL0EnabledHLT, m_nboflabels - 3, l0chan && hlt );
             if ( l0chan ) odinBGas = true;
         }
 
         if ( id == 22 && odin->bunchCrossingType() == LHCb::ODIN::Beam2 ) {
             fill( m_L0Input, m_nboflabels - 2, l0chan );
             fill( m_histL0Enabled, m_nboflabels - 2, l0chan );
-            fill( m_histL0EnabledHLT1, m_nboflabels - 2, l0chan && hlt1 );
-            fill( m_histL0EnabledHLT2, m_nboflabels - 2, l0chan && hlt2 );
+            fill( m_histL0EnabledHLT, m_nboflabels - 2, l0chan && hlt );
             if ( l0chan ) odinBGas = true;
         }
 
@@ -262,7 +210,6 @@ void HltL0GlobalMonitor::monitorL0DU( const LHCb::L0DUReport* l0du )
     if ( odinBGas || l0Physics ) {
         fill( m_L0Input, m_nboflabels - 1, 1 );
         fill( m_histL0Enabled, m_nboflabels - 1, 1 );
-        fill( m_histL0EnabledHLT1, m_nboflabels - 1, hlt1 );
-        fill( m_histL0EnabledHLT2, m_nboflabels - 1, hlt2 );
+        fill( m_histL0EnabledHLT, m_nboflabels - 1, hlt );
     }
 }

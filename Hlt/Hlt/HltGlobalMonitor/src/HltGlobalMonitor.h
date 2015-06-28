@@ -23,7 +23,7 @@ class Condition;
  *        monitor the global Hlt results
  *        make histograms with Hlt diagnostics info
  *
- *  @author Arthur Maciel
+ *  @author Gerhard Raven, Eric v. Herwijnen, Roel Aaij
  *  @date   2003-03-06
  */
 class HltGlobalMonitor : public HltBaseAlg, virtual public IIncidentListener
@@ -47,10 +47,11 @@ class HltGlobalMonitor : public HltBaseAlg, virtual public IIncidentListener
     StatusCode updateCondition_lumipars();
 
   private:
+
     size_t rawEvtLength( const LHCb::RawEvent* evt );
     size_t rawEvtLength( const std::vector<LHCb::RawBank*>& banks );
-    void monitorODIN( const LHCb::ODIN*, const LHCb::HltDecReports*,  const LHCb::HltDecReports* );
-    void monitorHLT( const LHCb::ODIN*, const LHCb::HltDecReports*,  const LHCb::HltDecReports* );
+    void monitorODIN( const LHCb::ODIN*, const LHCb::HltDecReports* );
+    void monitorHLT( const LHCb::ODIN*, const LHCb::HltDecReports* );
     void monitorVertices();
     void monitorTrends();
     void monitorResolverpositions();
@@ -66,39 +67,31 @@ class HltGlobalMonitor : public HltBaseAlg, virtual public IIncidentListener
         return t;
     }
 
-    typedef std::map<std::string, std::vector<std::string>> DecToGroupType;
-    DecToGroupType m_DecToGroup1;
-    DecToGroupType m_DecToGroup2;
+    typedef std::map<std::string, std::vector<std::string>> decToGroup_t;
+    decToGroup_t m_decToGroup;
 
     // index in m_hlt1Alleys, m_hlt1AlleyRates , followed by binnumber inside alley
-    std::map<Gaudi::StringKey, std::pair<unsigned, unsigned>> m_hlt1Line2AlleyBin;
-    std::map<Gaudi::StringKey, std::pair<unsigned, unsigned>> m_hlt2Line2AlleyBin;
-    std::vector<AIDA::IHistogram1D*> m_hlt1Alleys;
-    std::vector<AIDA::IHistogram1D*> m_hlt2Alleys;
-    std::vector<StatEntity*> m_hlt1AlleyRates;
-    std::vector<StatEntity*> m_hlt2AlleyRates;
+    std::map<Gaudi::StringKey, std::pair<unsigned, unsigned>> m_hltLine2AlleyBin;
+    std::vector<AIDA::IHistogram1D*> m_hltAlleys;
+    std::vector<StatEntity*> m_hltAlleyRates;
 
-    std::string m_Hlt1DecReportsLocation;
-    std::string m_Hlt2DecReportsLocation;
+    std::string m_stage;
+    std::string m_hltDecReportsLocation;
     std::string m_ODINLocation;
-    std::string m_hlt1Decision;
-    std::string m_hlt2Decision;
+    std::string m_hltDecision;
     std::string m_rawEventLocation;
 
     AIDA::IHistogram1D* m_odin = nullptr;
-    AIDA::IHistogram1D* m_odinHLT1 = nullptr;
-    AIDA::IHistogram1D* m_odinHLT2 = nullptr;
+    AIDA::IHistogram1D* m_odinHLT = nullptr;
 
-    AIDA::IHistogram1D* m_hlt1Alley = nullptr;
-    AIDA::IHistogram1D* m_hlt2Alley = nullptr;
+    AIDA::IHistogram1D* m_hltAlley = nullptr;
 
     AIDA::IProfile1D* m_hltVirtMem = nullptr;
     AIDA::IHistogram1D* m_hltTime = nullptr;
     AIDA::IProfile1D* m_hltEventsTime = nullptr;
     AIDA::IHistogram1D* m_tasks = nullptr;
 
-    AIDA::IHistogram2D* m_hlt1AlleysCorrelations = nullptr;
-    AIDA::IHistogram2D* m_hlt2AlleysCorrelations = nullptr;
+    AIDA::IHistogram2D* m_hltCorrelations = nullptr;
 
     AIDA::IProfile1D* m_hltTimeVsEvtSize = nullptr;
 

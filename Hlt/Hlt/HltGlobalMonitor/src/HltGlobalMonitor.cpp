@@ -49,28 +49,36 @@
 #include "HltGlobalMonitor.h"
 // ============================================================================
 
-using namespace LHCb;
-using namespace Gaudi::Utils::Histos;
+namespace {
+   using namespace LHCb;
+   using namespace Gaudi::Utils::Histos;
+   using namespace std::chrono;
+   using std::string;
+   using std::vector;
+   using std::array;
+   using std::pair;
+   using std::to_string;
+}
 
-HltGlobalMonitor::histopair::histopair( GaudiHistoAlg& parent, std::string loc,
+HltGlobalMonitor::histopair::histopair( GaudiHistoAlg& parent, string loc,
                                         const Gaudi::Histo1DDef& def,
                                         const char* yaxislabel )
     : m_parent{&parent}
     , m_histo{parent.book( def )}
-    , m_profile{parent.bookProfile1D( std::string( "CPUvs" ) + def.title(),
+    , m_profile{parent.bookProfile1D( string( "CPUvs" ) + def.title(),
                                       def.lowEdge(), def.highEdge(), def.bins() )}
     , m_loc{std::move( loc )}
 {
     if ( yaxislabel ) {
-        setAxisLabels( m_histo, std::string( "# of " ) + m_loc, "Entries" );
-        setAxisLabels( m_profile, std::string( "# of " ) + m_loc, yaxislabel );
+        setAxisLabels( m_histo, string( "# of " ) + m_loc, "Entries" );
+        setAxisLabels( m_profile, string( "# of " ) + m_loc, yaxislabel );
     }
 }
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltGlobalMonitor
 //
-// 2007-05-16 : Bruno Souza de Paula
+// 2007-05-16 : Gerhard Raven, Eric v. Herwijnen, Roel Aaij
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -81,31 +89,28 @@ DECLARE_ALGORITHM_FACTORY( HltGlobalMonitor )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
+HltGlobalMonitor::HltGlobalMonitor( const string& name,
                                     ISvcLocator* pSvcLocator )
     : HltBaseAlg( name, pSvcLocator )
 {
-    declareProperty( "ODIN", m_ODINLocation = LHCb::ODINLocation::Default );
-    declareProperty( "Hlt1DecReports", m_Hlt1DecReportsLocation = LHCb::HltDecReportsLocation::Default );
-    declareProperty( "Hlt2DecReports", m_Hlt2DecReportsLocation = LHCb::HltDecReportsLocation::Default );
-    declareProperty( "TimeSize", m_timeSize = 120 ); // number of minutes of history
-                                                     // (half an hour)
-    declareProperty( "TimeInterval", m_timeInterval = 1 ); // binwidth in minutes
-    declareProperty( "DecToGroupHlt1", m_DecToGroup1 );
-    declareProperty( "DecToGroupHlt2", m_DecToGroup2 );
-    declareProperty( "Hlt1DecName", m_hlt1Decision = "Hlt1Global" );
-    declareProperty( "Hlt2DecName", m_hlt2Decision = "Hlt2Global" );
-    declareProperty( "RawEventLocation",
-                     m_rawEventLocation = LHCb::RawEventLocation::Default );
-    declareProperty(
-        "CorrelateCPUWith",
-        m_correlateCPU = {
-            {"Hlt/Vertex/PV3D", Gaudi::Histo1DDef( "PV3D", -0.5, 10.5, 11 )},
-            {"Hlt/Track/Velo", Gaudi::Histo1DDef( "Velo", -0.5, 599.5, 120 )},
-            {"Hlt2/Track/Forward",
-             Gaudi::Histo1DDef( "Forward", -0.5, 599.5, 120 )}} );
 
-    declareProperty( "VertexLocations", m_vertexLocations );
+   declareProperty( "Stage", m_stage = "Hlt1" );
+   declareProperty( "ODIN", m_ODINLocation = LHCb::ODINLocation::Default );
+   declareProperty( "HltDecReports", m_hltDecReportsLocation = LHCb::HltDecReportsLocation::Default );
+   declareProperty( "TimeSize", m_timeSize = 120 ); // number of minutes of history
+                                                     // (half an hour)
+   declareProperty( "TimeInterval", m_timeInterval = 1 ); // binwidth in minutes
+   declareProperty( "DecToGroup", m_decToGroup );
+   declareProperty( "HltDecName", m_hltDecision = "Hlt1Global" );
+   declareProperty( "RawEventLocation",
+                    m_rawEventLocation = LHCb::RawEventLocation::Default );
+   declareProperty("CorrelateCPUWith",
+                   m_correlateCPU = {
+                      {"Hlt/Vertex/PV3D", Gaudi::Histo1DDef( "PV3D", -0.5, 10.5, 11 )},
+                      {"Hlt/Track/Velo", Gaudi::Histo1DDef( "Velo", -0.5, 599.5, 120 )},
+                      {"Hlt2/Track/Forward", Gaudi::Histo1DDef( "Forward", -0.5, 599.5, 120 )}} );
+
+   declareProperty( "VertexLocations", m_vertexLocations );
 }
 //=============================================================================
 // Destructor
@@ -121,6 +126,11 @@ StatusCode HltGlobalMonitor::initialize()
 {
     StatusCode sc = HltBaseAlg::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error printed already by GaudiAlgorithm
+
+    if (m_stage != "Hlt1" && m_stage != "Hlt2") {
+       error() << "Stage must be either Hlt1 or Hlt2" << endmsg;
+       return StatusCode::FAILURE;
+    }
 
     m_beamSpotX = 0.;
     m_beamSpotY = 0.;
@@ -140,12 +150,9 @@ StatusCode HltGlobalMonitor::initialize()
     m_lhcNCollidingBunches = 0;
 
     m_odin = book1D( "ODIN trigger type", "ODIN trigger Type ", -0.5, 7.5, 8 );
-    m_odinHLT1 =
-        book1D( "ODIN_HLT1", "ODIN trigger Type, after HLT1 ", -0.5, 7.5, 8 );
-    m_odinHLT2 =
-        book1D( "ODIN_HLT2", "ODIN trigger Type, after HLT2 ", -0.5, 7.5, 8 );
+    m_odinHLT = book1D( string{"ODIN_"} + m_stage, string{"ODIN trigger Type, after "} + m_stage, -0.5, 7.5, 8 );
 
-    std::vector<std::pair<unsigned, std::string>> odinLabels = {
+    vector<pair<unsigned, string>> odinLabels = {
         {ODIN::PhysicsTrigger, "Physics"},
         {ODIN::BeamGasTrigger, "BeamGas"},
         {ODIN::LumiTrigger, "Lumi"},
@@ -157,133 +164,83 @@ StatusCode HltGlobalMonitor::initialize()
     if ( !setBinLabels( m_odin, odinLabels ) ) {
         error() << "failed to set binlables on ODIN hist" << endmsg;
     }
-    if ( m_odinHLT1 ) setBinLabels( m_odinHLT1, odinLabels );
-    if ( m_odinHLT2 ) setBinLabels( m_odinHLT2, odinLabels );
+    if ( m_odinHLT ) setBinLabels( m_odinHLT, odinLabels );
 
     m_gpstimesec = 0;
-    m_startClock = std::chrono::high_resolution_clock::now(); // System::currentTime( System::microSec );
+    m_startClock = high_resolution_clock::now(); // System::currentTime( System::microSec );
     // create a histogram with one bin per Alley
     // the order and the names for the bins are
     // configured in HLTConf/Configuration.py
 
-   
-    if (!m_Hlt1DecReportsLocation.empty()  && !m_DecToGroup1.empty()) {
-        std::vector<std::string> hlt1AlleyLabels;
-        for ( const auto& i : m_DecToGroup1 ) hlt1AlleyLabels.push_back( i.first );
-        m_hlt1Alley = book1D( "Hlt1 Alleys", "Hlt1 Alleys", -0.5,
-                              hlt1AlleyLabels.size() - 0.5, hlt1AlleyLabels.size() );
-        if ( !setBinLabels( m_hlt1Alley, hlt1AlleyLabels ) ) {
-            error() << "failed to set binlables on Hlt1 Alley hist" << endmsg;
+
+    if (!m_hltDecReportsLocation.empty() && !m_decToGroup.empty()) {
+        vector<string> hltAlleyLabels;
+        for ( const auto& i : m_decToGroup ) hltAlleyLabels.push_back( i.first );
+        m_hltAlley = book1D( m_stage + " Alleys", m_stage + " Alleys", -0.5,
+                              hltAlleyLabels.size() - 0.5, hltAlleyLabels.size() );
+        if ( !setBinLabels( m_hltAlley, hltAlleyLabels ) ) {
+           error() << "failed to set binlables on " << m_stage << " Alley hist" << endmsg;
         }
-        m_hlt1AlleysCorrelations =
-            book2D( "Hlt1Alleys Correlations", -0.5, hlt1AlleyLabels.size() - 0.5,
-                    hlt1AlleyLabels.size(), -0.5, hlt1AlleyLabels.size() - 0.5,
-                    hlt1AlleyLabels.size() );
-        if ( !setBinLabels( m_hlt1AlleysCorrelations, hlt1AlleyLabels,
-                            hlt1AlleyLabels ) ) {
-            error() << "failed to set binlables on Hlt1Alleys Correlation hist"
+        m_hltCorrelations =
+            book2D( m_stage + " Correlations", -0.5, hltAlleyLabels.size() - 0.5,
+                    hltAlleyLabels.size(), -0.5, hltAlleyLabels.size() - 0.5,
+                    hltAlleyLabels.size() );
+        if ( !setBinLabels( m_hltCorrelations, hltAlleyLabels, hltAlleyLabels ) ) {
+           error() << "failed to set binlables on " << m_stage << " Alleys Correlation hist"
                     << endmsg;
         }
 
         /*One Histogram for each alley*/
-        for ( const auto& i : m_DecToGroup1 ) {
-            std::string alleyName = std::string( "Hlt1 " ) + i.first + " Lines";
-            m_hlt1Alleys.push_back( book1D( alleyName, -0.5, i.second.size() - 0.5, i.second.size() ) );
-            m_hlt1AlleyRates.push_back( &counter( alleyName ) );
-            declareInfo( "COUNTER_TO_RATE[" + alleyName + "]", *m_hlt1AlleyRates.back(),
+        for ( const auto& i : m_decToGroup ) {
+            string alleyName = m_stage + i.first + " Lines";
+            m_hltAlleys.push_back( book1D( alleyName, -0.5, i.second.size() - 0.5, i.second.size() ) );
+            m_hltAlleyRates.push_back( &counter( alleyName ) );
+            declareInfo( "COUNTER_TO_RATE[" + alleyName + "]", *m_hltAlleyRates.back(),
                          alleyName );
-            std::vector<std::string> labels;
-            for ( const std::string& s : i.second ) {
-                std::string label = s;
-                for ( const auto& strip : std::array<std::string,3>{
+            vector<string> labels;
+            for ( const string& s : i.second ) {
+                string label = s;
+                for ( const auto& strip : array<string,3>{
                          {  "Decision"  // and of course 'Decision'...
-                         ,  "Hlt1"     // just strip 'Hlt1'
+                         ,  m_stage     // just strip 'Hlt{1,2}'
                          , i.first    } }    // finally try to remove alley prefix
                       ) {
                     if ( label != strip ) boost::algorithm::erase_all( label, strip );
                 }
                 labels.push_back( label );
-                m_hlt1Line2AlleyBin[s] = {m_hlt1Alleys.size() - 1, labels.size() - 1};
+                m_hltLine2AlleyBin[s] = {m_hltAlleys.size() - 1, labels.size() - 1};
             }
-            if ( !setBinLabels( m_hlt1Alleys.back(), labels ) ) {
-                error() << "failed to set binlables on Hlt1 " << i.first << " Alley hist"
-                        << endmsg;
+            if ( !setBinLabels( m_hltAlleys.back(), labels ) ) {
+               error() << "failed to set binlables on " << m_stage << " " << i.first
+                       << " Alley hist" << endmsg;
             }
         }
 
     }
 
-    if (!m_Hlt2DecReportsLocation.empty()  && !m_DecToGroup2.empty()) {
-        std::vector<std::string> hlt2AlleyLabels;
-        for ( const auto& i : m_DecToGroup2 ) hlt2AlleyLabels.push_back( i.first );
-
-        m_hlt2Alley = book1D( "Hlt2 Alleys", "Hlt2 Alleys", -0.5,
-                              hlt2AlleyLabels.size() - 0.5, hlt2AlleyLabels.size() );
-        if ( !setBinLabels( m_hlt2Alley, hlt2AlleyLabels ) ) {
-            error() << "failed to set binlables on Hlt2 Alley hist" << endmsg;
-        }
-        m_hlt2AlleysCorrelations =
-            book2D( "Hlt2Alleys Correlations", -0.5, hlt2AlleyLabels.size() - 0.5,
-                    hlt2AlleyLabels.size(), -0.5, hlt2AlleyLabels.size() - 0.5,
-                    hlt2AlleyLabels.size() );
-        if ( !setBinLabels( m_hlt2AlleysCorrelations, hlt2AlleyLabels,
-                            hlt2AlleyLabels ) ) {
-            error() << "failed to set binlables on Hlt2Alleys Correlation hist"
-                    << endmsg;
-        }
-
-        // for hlt2
-        for ( const auto& i : m_DecToGroup2 ) {
-            std::string alleyName = std::string( "Hlt2 " ) + i.first + " Lines";
-            m_hlt2Alleys.push_back(
-                book1D( alleyName, -0.5, i.second.size() - 0.5, i.second.size() ) );
-            m_hlt2AlleyRates.push_back( &counter( alleyName ) );
-            declareInfo( "COUNTER_TO_RATE[" + alleyName + "]", *m_hlt2AlleyRates.back(),
-                         alleyName );
-            std::vector<std::string> labels;
-            for ( std::string s : i.second ) {
-                std::string label = s;
-                for ( const auto& strip : std::array<std::string,3>{
-                         { "Decision" // always remove 'Decision'...
-                         , "Hlt2"     // and Hlt2
-                         , i.first }}    // finally try to remove alley prefix
-                      ) {
-                    if ( label != strip ) boost::algorithm::erase_all( label, strip );
-                }
-                labels.push_back( label );
-                m_hlt2Line2AlleyBin[s] = {m_hlt2Alleys.size() - 1, labels.size() - 1};
-            }
-            if ( !setBinLabels( m_hlt2Alleys.back(), labels ) ) {
-                error() << "failed to set binlables on Hlt2 " << i.first << " Alley hist"
-                        << endmsg;
-            }
-        }
-    }
-
-
-    m_hltVirtMem = bookProfile1D( "Virtual memory", 0, m_timeSize,
+    m_hltVirtMem = bookProfile1D( m_stage + " Virtual memory", 0, m_timeSize,
                                    int( m_timeSize / m_timeInterval + 0.5 ) );
     setAxisLabels( m_hltVirtMem, "time since start of run [min]", "memory[MB]" );
 
-    m_hltEventsTime = bookProfile1D( "average time per event", 0, m_timeSize,
+    m_hltEventsTime = bookProfile1D( m_stage + " average time per event", 0, m_timeSize,
                                      int( m_timeSize / m_timeInterval + 0.5 ) );
     setAxisLabels( m_hltEventsTime, "time since start of run [min]",
                    "average time/event [ms]" );
 
-    m_tasks = book1D( "# of tasks", 0, m_timeSize,
+    m_tasks = book1D( m_stage + " # of tasks", 0, m_timeSize,
                       int( m_timeSize / m_timeInterval + 0.5 ) );
     setAxisLabels( m_tasks, "time since start of run [min]", "# of tasks" );
 
-    m_hltTime = book1D( "time per event ", -1, 4 );
+    m_hltTime = book1D( m_stage + " time per event ", -1, 4 );
     setAxisLabels( m_hltTime, "log10(time/event/ms)", "events" );
 
     declareInfo( "COUNTER_TO_RATE[virtmem]", m_virtmem, "Virtual memory" );
     declareInfo( "COUNTER_TO_RATE[elapsed time]", m_currentTime, "Elapsed time" );
 
     m_hltTimeVsEvtSize =
-        bookProfile1D( "Hlt CPU time vs raw event size", 0, 200000, 100 );
+        bookProfile1D( m_stage + " Hlt CPU time vs raw event size", 0, 200000, 100 );
     setAxisLabels( m_hltTimeVsEvtSize, "raw event length",
-                   "HLT processing time [ms]" );
+                   m_stage + " processing time [ms]" );
 
     for ( const auto& j : m_correlateCPU ) {
         m_CPUcorrelations.emplace_back( *this, j.first, j.second,
@@ -386,70 +343,42 @@ StatusCode HltGlobalMonitor::initialize()
     setBinLabels( m_lumipars, {{0, "b-b"}, {1, "b-e"}, {2, "e-b"}, {3, "e-e"}} );
 
     // Monitor vertex positions
-    std::string veloCondition = "/dd/Conditions/Online/Velo/MotionSystem";
+    string veloCondition = "/dd/Conditions/Online/Velo/MotionSystem";
     registerCondition<HltGlobalMonitor>( veloCondition, m_veloCondition,
                                          &HltGlobalMonitor::updateCondition_velo );
 
     // Monitor magnet polarity
-    std::string magnetCondition = "/dd/Conditions/Online/LHCb/Magnet/Set";
+    string magnetCondition = "/dd/Conditions/Online/LHCb/Magnet/Set";
     registerCondition<HltGlobalMonitor>( magnetCondition, m_magnetCondition,
                                          &HltGlobalMonitor::updateCondition_magnet );
 
     // Monitor rich1
-    std::string rich1Condition = "/dd/Conditions/Online/Rich1/R1HltGasParameters";
+    string rich1Condition = "/dd/Conditions/Online/Rich1/R1HltGasParameters";
     registerCondition<HltGlobalMonitor>( rich1Condition, m_rich1Condition,
                                          &HltGlobalMonitor::updateCondition_rich1 );
 
     // Monitor rich2
-    std::string rich2Condition = "/dd/Conditions/Online/Rich2/R2HltGasParameters";
+    string rich2Condition = "/dd/Conditions/Online/Rich2/R2HltGasParameters";
     registerCondition<HltGlobalMonitor>( rich2Condition, m_rich2Condition,
                                          &HltGlobalMonitor::updateCondition_rich2 );
 
     // Monitor lhc
-    std::string lhcfillingschemeCondition =
+    string lhcfillingschemeCondition =
         "/dd/Conditions/Online/LHCb/LHCFillingScheme";
     registerCondition<HltGlobalMonitor>( lhcfillingschemeCondition,
                                          m_lhcfillingschemeCondition,
                                          &HltGlobalMonitor::updateCondition_lhcfillingscheme );
 
     // Monitor lumipars
-    std::string lumiparsCondition = "/dd/Conditions/Online/LHCb/Lumi/LumiSettings";
+    string lumiparsCondition = "/dd/Conditions/Online/LHCb/Lumi/LumiSettings";
     registerCondition<HltGlobalMonitor>( lumiparsCondition, m_lumiparsCondition,
                                          &HltGlobalMonitor::updateCondition_lumipars );
-    /*
-    // Monitor runinfo
-    std::string runinfoCondition = "/dd/Conditions/Online/LHCb/Runinfo";
-    registerCondition< HltGlobalMonitor >( runinfoCondition, m_runinfoCondition,
-                                           &HltGlobalMonitor::updateCondition );
-
-    // Monitor run parameters
-    std::string runparsCondition = "/dd/Conditions/Online/LHCb/RunParameters";
-    registerCondition< HltGlobalMonitor >( runparsCondition, m_runparsCondition,
-                                           &HltGlobalMonitor::updateCondition );*/
-
-    // updateCondition().ignore();
-
-    // sc = runUpdate();
-    // if ( sc.isFailure() ) {
-    //   Error( "Could not update conditions from the CondDB" );
-    //   return sc;
-    //}
-
-    // fill the histograms when the condition is updated;don't fill yet, we don't
-    // have the runnumber and cant get to the online.xml
-    // m_resolvxr50->fill(m_xRC);
-    // m_resolvxr5->fill(m_xRC);
-    // m_resolvxl50->fill(m_xLA);
-    // m_resolvxl5->fill(m_xLA);
-    // m_resolvy50->fill(m_Y);
-    // m_resolvy5->fill(m_Y);
-    // monitorResolverpositions();
 
     // Book the vertex monitoring histograms
     for ( const LocationMap::value_type& loc : m_vertexLocations ) {
-        const std::string& name = loc.first;
+        const string& name = loc.first;
         for ( double e : {1., 10.} ) {
-            std::string s{  name +  "_Beamspot_" + std::to_string(e) };
+            string s{  name + "_" + m_stage + "_Beamspot_" + to_string(e) };
             auto histo = book2D( s.c_str(), -e, e, 100, -e, e, 100 );
             auto it = m_vertexHistos.find( name );
             if ( it == m_vertexHistos.end() ) {
@@ -467,16 +396,11 @@ StatusCode HltGlobalMonitor::initialize()
 //=============================================================================
 StatusCode HltGlobalMonitor::execute()
 {
-
-    //TODO: what if running Hlt1+Hlt2, and we fail Hlt1 -- then there is no Hlt2 decrep...
-    //      or only running Hlt1?
-    LHCb::HltDecReports* hlt1 = fetch<LHCb::HltDecReports>( m_Hlt1DecReportsLocation );
-    auto hlt1Global = hlt1 ? hlt1->decReport("Hlt1Global") : nullptr;
-    LHCb::HltDecReports* hlt2 = fetch<LHCb::HltDecReports>( m_Hlt2DecReportsLocation, hlt1Global!=nullptr && hlt1Global->decision()!=0  );
+    auto decReports = fetch<LHCb::HltDecReports>( m_hltDecReportsLocation );
     LHCb::ODIN* odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default );
 
-    monitorODIN( odin, hlt1, hlt2 );
-    monitorHLT( odin, hlt1, hlt2 );
+    monitorODIN( odin, decReports );
+    monitorHLT( odin, decReports );
     monitorVertices();
     monitorTrends();
     monitorResolverpositions();
@@ -489,13 +413,13 @@ StatusCode HltGlobalMonitor::execute()
 //=============================================================================
 void HltGlobalMonitor::handle( const Incident& incident )
 {
-    m_startEvent = std::chrono::high_resolution_clock::now(); // System::currentTime( System::microSec );
-    if ( m_startClock.time_since_epoch().count()  == 0 || 
+    m_startEvent = high_resolution_clock::now(); // System::currentTime( System::microSec );
+    if ( m_startClock.time_since_epoch().count()  == 0 ||
          incident.type() == IncidentType::BeginRun ||
          incident.type() == "RunChange" )
         m_startClock = m_startEvent;
-    using seconds = std::chrono::duration<double>;
-    m_currentTime = std::chrono::duration_cast<seconds>( std::chrono::high_resolution_clock::now() - m_startClock ).count();
+    using seconds = duration<double>;
+    m_currentTime = duration_cast<seconds>( high_resolution_clock::now() - m_startClock ).count();
 }
 
 //==============================================================================
@@ -547,8 +471,7 @@ StatusCode HltGlobalMonitor::updateCondition_lumipars()
 
 //==============================================================================
 void HltGlobalMonitor::monitorODIN( const LHCb::ODIN* odin,
-                                    const LHCb::HltDecReports* hlt1,
-                                    const LHCb::HltDecReports* hlt2 )
+                                    const LHCb::HltDecReports* decReports )
 {
     if ( !odin ) return;
     auto gpstime = odin->gpsTime();
@@ -560,62 +483,34 @@ void HltGlobalMonitor::monitorODIN( const LHCb::ODIN* odin,
     fill( m_odin, odin->triggerType(), 1. );
 
     // now check HLT decisions for rejected events after Hlt
-    const auto* report = hlt1 ? hlt1->decReport( m_hlt1Decision ) : nullptr;
-    if ( report && report->decision() ) fill( m_odinHLT1, odin->triggerType(), 1. );
-
-    report = hlt2 ? hlt2->decReport( m_hlt2Decision ) : nullptr;
-    if ( report && report->decision() ) fill( m_odinHLT2, odin->triggerType(), 1. );
+    const auto* report = decReports ? decReports->decReport( m_hltDecision ) : nullptr;
+    if ( report && report->decision() ) fill( m_odinHLT, odin->triggerType(), 1. );
 }
 
 //==============================================================================
 void HltGlobalMonitor::monitorHLT( const LHCb::ODIN* /*odin*/,
-                                   const LHCb::HltDecReports* hlt1 ,
-                                   const LHCb::HltDecReports* hlt2 )
+                                   const LHCb::HltDecReports* decReports  )
 {
-    // filling the histograms for the alleys instead of the lines
-    if (hlt1)  {
-        std::vector<unsigned> nAcc1Alley( m_hlt1Alleys.size(), 0u );
-        for ( auto& i : *hlt1 ) {
-            if ( !i.second.decision() ) continue;
-            if ( i.first.compare( 0, 4, "Hlt1" ) != 0 ) continue;
-            auto j = m_hlt1Line2AlleyBin.find( i.first );
-            if ( j != m_hlt1Line2AlleyBin.end() ) {
-                assert( j->second.first < nAcc1Alley.size() );
-                ++nAcc1Alley[j->second.first];
-                fill( m_hlt1Alleys[j->second.first], j->second.second, 1.0 );
-            }
-        }
-        for ( unsigned i = 0; i < m_DecToGroup1.size(); ++i ) {
-            *m_hlt1AlleyRates[i] += ( nAcc1Alley[i] > 0 );
-            fill( m_hlt1Alley, i, ( nAcc1Alley[i] > 0 ) );
-            if ( nAcc1Alley[i] == 0 ) continue;
-            for ( unsigned j = 0; j < m_DecToGroup1.size(); ++j ) {
-                fill( m_hlt1AlleysCorrelations, i, j, ( nAcc1Alley[j] > 0 ) );
-            }
-        }
-    }
-        
-    if (hlt2) {
-        std::vector<unsigned> nAcc2Alley( m_hlt2Alleys.size(), 0u );
-        for ( auto& i : *hlt2 ) {
-            if ( !i.second.decision() ) continue;
-            if ( i.first.compare( 0, 4, "Hlt2" ) != 0 ) continue;
-            auto j = m_hlt2Line2AlleyBin.find( i.first );
-            if ( j != m_hlt2Line2AlleyBin.end() ) {
-                assert( j->second.first < nAcc2Alley.size() );
-                ++nAcc2Alley[j->second.first];
-                fill( m_hlt2Alleys[j->second.first], j->second.second, 1.0 );
-            }
-        }
-        for ( unsigned i = 0; i < m_DecToGroup2.size(); ++i ) {
-            *m_hlt2AlleyRates[i] += ( nAcc2Alley[i] > 0 );
-            fill( m_hlt2Alley, i, ( nAcc2Alley[i] > 0 ) );
-            if ( nAcc2Alley[i] == 0 ) continue;
-            for ( unsigned j = 0; j < m_DecToGroup2.size(); ++j ) {
-                fill( m_hlt2AlleysCorrelations, i, j, ( nAcc2Alley[j] > 0 ) );
-            }
-        }
-    }
+   // filling the histograms for the alleys instead of the lines
+   vector<unsigned> nAccAlley( m_hltAlleys.size(), 0u );
+   for ( auto& i : *decReports ) {
+      if ( !i.second.decision() ) continue;
+      if ( i.first.compare( 0, 4, m_stage ) != 0 ) continue;
+      auto j = m_hltLine2AlleyBin.find( i.first );
+      if ( j != m_hltLine2AlleyBin.end() ) {
+         assert( j->second.first < nAccAlley.size() );
+         ++nAccAlley[j->second.first];
+         fill( m_hltAlleys[j->second.first], j->second.second, 1.0 );
+      }
+   }
+   for ( unsigned i = 0; i < m_decToGroup.size(); ++i ) {
+      *m_hltAlleyRates[i] += ( nAccAlley[i] > 0 );
+      fill( m_hltAlley, i, ( nAccAlley[i] > 0 ) );
+      if ( nAccAlley[i] == 0 ) continue;
+      for ( unsigned j = 0; j < m_decToGroup.size(); ++j ) {
+         fill( m_hltCorrelations, i, j, ( nAccAlley[j] > 0 ) );
+      }
+   }
 }
 
 //==============================================================================
@@ -634,7 +529,6 @@ void HltGlobalMonitor::monitorVertices()
 }
 
 //==============================================================================
-
 void HltGlobalMonitor::monitorResolverpositions()
 {
     double when  = m_currentTime/60;
@@ -667,8 +561,8 @@ void HltGlobalMonitor::monitorResolverpositions()
 
 void HltGlobalMonitor::monitorTrends()
 {
-    using ms = std::chrono::duration<float,std::milli>;
-    auto elapsedTime = std::chrono::duration_cast<ms>( std::chrono::high_resolution_clock::now() - m_startEvent );
+    using ms = duration<float,std::milli>;
+    auto elapsedTime = duration_cast<ms>( high_resolution_clock::now() - m_startEvent );
     fill( m_hltTime, std::log10( elapsedTime.count() ) , 1.0 ); // convert to log(time/ms)
 
     auto t = elapsedTime.count();
@@ -706,9 +600,9 @@ size_t HltGlobalMonitor::rawEvtLength( const LHCb::RawEvent* evt )
 }
 //==============================================================================
 /// Determine length of the sequential buffer from RawEvent object
-size_t HltGlobalMonitor::rawEvtLength( const std::vector<RawBank*>& banks )
+size_t HltGlobalMonitor::rawEvtLength( const vector<RawBank*>& banks )
 {
     return std::accumulate(
-        std::begin( banks ), std::end( banks ), size_t( 0 ),
+        begin( banks ), end( banks ), size_t( 0 ),
         []( size_t x, const RawBank* bank ) { return x += bank->totalSize(); } );
 }

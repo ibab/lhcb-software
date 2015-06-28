@@ -1,4 +1,4 @@
-#ifndef HLTL0GLOBALMONITOR_H 
+#ifndef HLTL0GLOBALMONITOR_H
 #define HLTL0GLOBALMONITOR_H 1
 
 #include "Event/L0DUReport.h"
@@ -10,18 +10,18 @@
 /** @class HltL0GlobalMonitor HltL0GlobalMonitor.h
  *
  *  functionality:
- *        monitor the L0 decisions seen by Hlt 
+ *        monitor the L0 decisions seen by Hlt
  *
  *
  *  @author Johannes Albrecht
- *  @date   2010-03-24 
+ *  @date   2010-03-24
  *
  *  original version from Arthur Maciel (2003)
  *
  */
 
 class HltL0GlobalMonitor : public HltBaseAlg {
-public: 
+public:
   /// Standard constructor
   HltL0GlobalMonitor( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -39,19 +39,17 @@ private:
        if (!t && warn && this->msgLevel(MSG::WARNING) ) Warning( " could not retrieve "  + location,StatusCode::SUCCESS,10) ;
        return t;
   }
+
+  std::string m_stage;
   std::string m_ODINLocation;
   std::string m_L0DUReportLocation;
-  std::string m_Hlt1DecReportsLocation;
-  std::string m_Hlt2DecReportsLocation;
-  std::string m_hlt1Decision;
-  std::string m_hlt2Decision;
-  
+  std::string m_decReportsLocation;
+  std::string m_hltDecision;
 
   AIDA::IHistogram1D* m_L0Input;
   AIDA::IHistogram1D* m_histL0Enabled;
   AIDA::IHistogram1D* m_histL0Disabled;
-  AIDA::IHistogram1D* m_histL0EnabledHLT1;
-  AIDA::IHistogram1D* m_histL0EnabledHLT2;
+  AIDA::IHistogram1D* m_histL0EnabledHLT;
 
   int m_events;
   int m_nboflabels;
