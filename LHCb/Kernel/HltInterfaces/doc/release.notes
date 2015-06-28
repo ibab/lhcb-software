@@ -6,6 +6,15 @@
 ! 2015-06-29 - Roel Aaij
  - Add firedRoutingBits function to dictionary.
 
+! 2015-06-25 - Roel Aaij
+ - Use Gaudi::Histo1DDef in HltHistogram.
+
+! 2015-06-19 - Roel Aaij
+ - Add simple histogram wrapper for HLT2 monitoring.
+
+! 2015-06-10 - Roel Aaij
+ - Add code for Hlt2 online monitoring.
+
 !========================= HltInterfaces v6r0 2015-02-23 =========================
 ! 2015-02-08 - Gerhard Raven
  - switch print() to json format, but allow ConfigArchiveAccessSvc access to

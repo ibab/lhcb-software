@@ -11,6 +11,7 @@
 #include "Kernel/IConfigAccessSvc.h"
 #include "Kernel/IConfigTreeEditor.h"
 #include "Kernel/ReadRoutingBits.h"
+#include "Kernel/IHltMonitorSvc.h"
 
 namespace {
 

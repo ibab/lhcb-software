@@ -3,6 +3,7 @@
   <class name = "IANSvc"        />
   <class name = "IConfigAccessSvc" />
   <class name = "IPropertyConfigSvc" />
+  <class name = "IHltMonitorSvc" />
   <class name = "PropertyConfig" />
   <class name = "ConfigTreeNode" />
   <class name = "ConfigTreeNodeAlias" />
