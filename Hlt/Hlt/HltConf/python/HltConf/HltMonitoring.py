@@ -55,7 +55,7 @@ class HltMonitoringConf(LHCbConfigurableUser):
         globalMon = HltGlobalMonitor(name)
 
         from DAQSys.Decoders import DecoderDB
-        decRepLoc = DecoderDB["HltDecReportsDecoder/%sDecReportsDecoder" % stage].listOutputs()[0]
+        decRepLoc = DecoderDB["HltDecReportsDecoder/%sDecReportsDecoder" % name[:4]].listOutputs()[0]
         globalMon.HltDecReports = decRepLoc
 
         from HltConf.Configuration import onlinePV
@@ -165,7 +165,7 @@ class HltMonitoringConf(LHCbConfigurableUser):
         l0Mon = self.__l0_monitoring("Hlt1")
 
         from Configurables import HltGlobalMonitor
-        globalMon = HltGlobalMonitor("Hlt2GlobalMonitor")
+        globalMon = self.__globalMonitor("Hlt2GlobalMonitor")
         globalMon.DecToGroup = self.__groupLines( [ i.decision() for i in lines2 ],
                                  [ ("Topo"           , "Hlt2Topo.*Decision"),
                                    ("IncPhi"         , "Hlt2IncPhi.*Decision"),
