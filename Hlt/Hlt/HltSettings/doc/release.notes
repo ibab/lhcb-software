@@ -4,10 +4,13 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-06-28 - Roel Aaij
+ - Add CalibMuonAlignJpsi to Hlt1 lines of Phyisics_draftEM2015 and
+   Commissioning_Physics_2015.
 
 ! 2015-06-25 - Christian Linn
  - Changed thresholds of TrackMuon and RichCalib lines in Physics_draftEM2015
- - removed NoBias lines, removed LeadingCrossing from Hlt2PassThrough 
+ - removed NoBias lines, removed LeadingCrossing from Hlt2PassThrough
 
 !========================= HltSettings v6r15 2015-06-10 =========================
 

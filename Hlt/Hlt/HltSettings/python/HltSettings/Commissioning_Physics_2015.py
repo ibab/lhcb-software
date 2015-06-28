@@ -2,12 +2,12 @@ from GaudiKernel.SystemOfUnits import GeV, MeV, mm
 
 def __update_conf__( current, extra ) :
     for (conf,d) in extra.iteritems() :
-        if conf not in current : 
+        if conf not in current :
             current[conf] = d
             continue
         cur = current[conf]
         for (k,v) in d.iteritems() :
-            if k not in cur : 
+            if k not in cur :
                 cur[k] = v
                 continue
             if cur[k] == v : continue
@@ -22,15 +22,15 @@ def __update_conf__( current, extra ) :
 
 class Commissioning_Physics_2015( object ):
     """
-    Settings for Commissioning trigger 2015 
+    Settings for Commissioning trigger 2015
     Derived from Physics_Septemeber2012.
 
     WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
-    
+
     @author S. Neubert, J. Albrecht, V. Gligorov
     @date 2014-12-10
     """
-    
+
     __all__ = ( 'ActiveHlt1Lines', 'ActiveHlt2Lines', 'Thresholds', 'L0TCK' )
 
     def verifyType(self,ref) :
@@ -42,14 +42,14 @@ class Commissioning_Physics_2015( object ):
         if ( self.ActiveHlt1Lines() != ref.ActiveHlt1Lines(self)  or
              self.ActiveHlt2Lines() != ref.ActiveHlt2Lines(self) ) :
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
-        
+
     def L0TCK(self) :
         return '0x0046'
 
     def HltType(self) :
-        self.verifyType( Commissioning_Physics_2015 ) 
+        self.verifyType( Commissioning_Physics_2015 )
         return          'Commissioning_Physics_2015'
-    
+
     def Thresholds(self) :
         """
         Returns a dictionary of cuts
@@ -64,7 +64,7 @@ class Commissioning_Physics_2015( object ):
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt1Lines.Hlt1MVALines            import Hlt1MVALinesConf
         from Hlt1Lines.Hlt1CalibTrackingLines  import Hlt1CalibTrackingLinesConf
-        
+
         thresholds = { Hlt1TrackLinesConf :   {  'AllL0_Velo_NHits'  : 9
                                                , 'AllL0_Velo_Qcut'   : 3
                                                , 'AllL0_TrNTHits'    : 16
@@ -180,7 +180,7 @@ class Commissioning_Physics_2015( object ):
                        , Hlt1L0LinesConf :     {  'Postscale' : { 'Hlt1L0AnyRateLimited'       : 'RATE(1)'
                                                                 , 'Hlt1L0AnyNoSPDRateLimited'  : 'RATE(1)'
                                                                 }
-                                               ,  'Prescale' : { 'Hlt1L0HighSumETJet' : 1 
+                                               ,  'Prescale' : { 'Hlt1L0HighSumETJet' : 1
                                                                , 'Hlt1L0AnyNoSPD'     : 0.01
                                                                }
                                                }
@@ -212,7 +212,7 @@ class Commissioning_Physics_2015( object ):
                                                         ,'D0MassWin'             : 60      # MeV
                                                         ,'B0MassWinLoose'        : 200     # MeV
                                                         ,'B0MassWin'             : 150     # MeV
-                                                        ,'D0DetachedDaughtsIPCHI2': 9      # dimensionless 
+                                                        ,'D0DetachedDaughtsIPCHI2': 9      # dimensionless
                                                         ,'D0DetachedIPCHI2'       : 9      # dimensionless
                                                         ,'BsPhiGammaMassMinLoose': 3350    # MeV
                                                         ,'BsPhiGammaMassMaxLoose': 6900    # MeV
@@ -236,7 +236,7 @@ class Commissioning_Physics_2015( object ):
 
                                                                         }
                                                         }
-                       # micro bias lines switched off for high mu physics running              
+                       # micro bias lines switched off for high mu physics running
                        , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBMicroBiasVelo'                : 0
                                                               , 'Hlt1MBMicroBiasTStation'            : 0
                                                               , 'Hlt1MBMicroBiasVeloRateLimited'     : 0
@@ -246,7 +246,7 @@ class Commissioning_Physics_2015( object ):
                        }
 
         from Hlt2Lines.Commissioning.Lines  import CommissioningLines
-        thresholds.update({CommissioningLines : { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001 
+        thresholds.update({CommissioningLines : { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001
                                                                , 'Hlt2Forward'      : 0.00001
                                                                , 'Hlt2DebugEvent'   : 0.000001  }
                                                 , 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' }
@@ -263,7 +263,7 @@ class Commissioning_Physics_2015( object ):
         __update_conf__(thresholds,   Radiative_April2015().Thresholds() )
 
         return thresholds
-                       
+
     def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines
@@ -276,12 +276,12 @@ class Commissioning_Physics_2015( object ):
 
         from Hadrons_March2015 import Hadrons_March2015
         hlt2.extend( Hadrons_March2015().ActiveHlt2Lines() )
-        
+
         from Radiative_April2015 import Radiative_April2015
         hlt2.extend( Radiative_April2015().ActiveHlt2Lines() )
-       
+
         return hlt2
-    
+
     def ActiveHlt1Lines(self) :
         """
         Returns a list of active lines
@@ -296,6 +296,7 @@ class Commissioning_Physics_2015( object ):
                    , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA'
                    , 'Hlt1CalibTrackingKPi' , 'Hlt1CalibTrackingKK' , 'Hlt1CalibTrackingPiPi'
                    , 'Hlt1CalibTrackingKPiDetached'
+                   , 'Hlt1CalibMuonAlignJpsi'
                    , 'Hlt1B2HH_LTUNB_KPi' , 'Hlt1B2HH_LTUNB_KK' , 'Hlt1B2HH_LTUNB_PiPi'
                    , 'Hlt1IncPhi'
                    , 'Hlt1B2PhiGamma_LTUNB'
@@ -307,9 +308,9 @@ class Commissioning_Physics_2015( object ):
                    , 'Hlt1CEPVeloCut'
                    , 'Hlt1NoPVPassThrough'
                    , 'Hlt1NonBeamBeamNoBias']
-                   
-        
-        ## from Hlt1TechnicalLines import Hlt1TechnicalLines 
+
+
+        ## from Hlt1TechnicalLines import Hlt1TechnicalLines
         ## lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )
-        
-        return lines 
+
+        return lines

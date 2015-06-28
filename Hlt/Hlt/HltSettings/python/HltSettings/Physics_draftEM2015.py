@@ -316,19 +316,19 @@ class Physics_draftEM2015( object ):
                  , 'Hlt1CEPVeloCut'
                  , 'Hlt1NoPVPassThrough'
                  , 'Hlt1NonBeamBeamNoBias'
-                 , 'Hlt1MBNoBiasLeadingCrossing'  # nobias leading crossing
-                 , 'Hlt1CalibRICHMirrorRICH1', 'Hlt1CalibRICHMirrorRICH2' # calibration lines
-                 , 'Hlt1CalibHighPTLowMultTrks'
-                 , 'Hlt1CalibTrackingKPiDetached'
-                 , 'Hlt1Lumi' # lumi lines 'Hlt1LumiMidBeamCrossing' excluded
+                 , 'Hlt1MBNoBiasLeadingCrossing'                                 # nobias leading crossing
+                 , 'Hlt1CalibRICHMirrorRICH1', 'Hlt1CalibRICHMirrorRICH2'        # RICH mirror alignment lines
+                 , 'Hlt1CalibHighPTLowMultTrks' , 'Hlt1CalibTrackingKPiDetached' # Tracker alignment lines
+                 , 'Hlt1CalibMuonAlignJpsi'                                      # Muon alignment line
+                 , 'Hlt1Lumi'                                                    # lumi lines 'Hlt1LumiMidBeamCrossing' excluded
                  , 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'
                  , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
                  , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
                  , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingForcedRecoFullZ'
                  , 'Hlt1BeamGasCrossingParasitic', 'Hlt1BeamGasHighRhoVertices'
-                 , 'Hlt1MBNoBias'  # nobias lines
+                 , 'Hlt1MBNoBias'
                  , 'Hlt1MBNoBiasRateLimited'
-                 , 'Hlt1L0Any','Hlt1L0AnyNoSPD' # technical lines
+                 , 'Hlt1L0Any','Hlt1L0AnyNoSPD'                                  # technical lines
                  , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent'
                  , 'Hlt1VeloClosingMicroBias'
             ]
