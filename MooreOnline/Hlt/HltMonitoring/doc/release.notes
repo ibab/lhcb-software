@@ -4,6 +4,8 @@
 ! Purpose     : Monitoring of the HLT
 !-----------------------------------------------------------------------------
 
+!========================= HltMonitoring v1r0 2015-06-28 =========================
+
 ! 2015-06-25 - Roel Aaij
  - Add info service where title of rate histos and histo def of regular histos
    is sent.

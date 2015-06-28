@@ -3,7 +3,7 @@
 # Maintainer : Roel Aaij
 #============================================================================
 package           Hlt2Monitoring
-version           v0r1
+version           v1r0
 
 #============================================================================
 # Structure, i.e. directories to process.
