@@ -5,6 +5,8 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v7r13 2015-06-28 =========================
+
 ! 2015-06-26 - Francesco Dettori
  - Changing line name to the Muon align line (CalibMuonAlignJpsi)
 
