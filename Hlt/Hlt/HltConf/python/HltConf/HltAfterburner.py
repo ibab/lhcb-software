@@ -15,10 +15,11 @@ from Configurables import GaudiSequencer as Sequence
 class HltAfterburnerConf(LHCbConfigurableUser):
     __used_configurables__ = []
 
-    __slots__ = {"EnableHltRecSummary" : True,
-                 "RecSummaryLocation"  : "Hlt2/RecSummary",
-                 "AddAdditionalTrackInfos"   : True,
-                 "Hlt2Filter"          : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
+    __slots__ = {"Sequence"                : None,
+                 "EnableHltRecSummary"     : True,
+                 "RecSummaryLocation"      : "Hlt2/RecSummary",
+                 "AddAdditionalTrackInfos" : True,
+                 "Hlt2Filter"              : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
                 }
 
 ###################################################################################
@@ -29,7 +30,10 @@ class HltAfterburnerConf(LHCbConfigurableUser):
         """
         HLT Afterburner configuration
         """
-        Afterburner = Sequence("HltAfterburner", IgnoreFilterPassed = True)
+
+        Afterburner = self.getProp("Sequence") if self.isPropertySet("Sequence") else None
+        if not Afterburner:
+            return
         if self.getProp("Hlt2Filter"):
             from DAQSys.Decoders import DecoderDB
             decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
@@ -91,7 +95,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             #infoSeq.Members +=  Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks().members() + Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks().members()
             for name, location in trackLocations.iteritems():
                 from Configurables import TrackBuildCloneTable, TrackCloneCleaner
-                prefix =  name 
+                prefix = name
                 trackClones = GaudiSequencer(prefix + "TrackClonesSeq")
                 checkTracks =  Filter(prefix+"CheckTrackLoc",Code = "EXISTS('%(trackLoc)s')"% {"trackLoc" : location})
                 trackClones.Members += [checkTracks]
@@ -128,5 +132,3 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             decodeVeloFullClusters = DecoderDB["DecodeVeloRawBuffer/createVeloClusters"].setup()
             veloChargeSeq.Members +=  [checkProto, decodeVeloFullClusters, addVeloCharge]
             Afterburner.Members += [veloChargeSeq]
-            
-

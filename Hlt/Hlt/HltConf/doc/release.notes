@@ -12,6 +12,9 @@
  - removed MB lines from routing bit 40
  - replaced NoBiasPassThrough by PassThrough in routing bit 91
 
+! 2015-06-25 - Roel Aaij
+ - Separate configurable for monitoring.
+
 ! 2015-06-18 - Sascha Stahl
  - HltAfterburner: Protected adding of extra infos by checking if track locations exist.
 

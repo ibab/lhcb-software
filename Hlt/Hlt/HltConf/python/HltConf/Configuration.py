@@ -11,7 +11,7 @@ from Configurables       import GaudiSequencer as Sequence
 from Hlt1                import Hlt1Conf
 from Hlt2                import Hlt2Conf
 from HltAfterburner      import HltAfterburnerConf
-
+from HltMonitoring       import HltMonitoringConf
 
 #############################################################################
 # Helper functions
@@ -36,7 +36,7 @@ def __forAll__( c, prop_value_dict, types=['FilterDesktop','CombineParticles',"D
         for i in seq : __forAll__(i,prop_value_dict,types)
 
 ### TODO: move this into HltPVs...
-def __onlinePV__():
+def onlinePV():
     """Use the tracking cofigurables to define the onlinePV location
     """
     import HltTracking
@@ -55,6 +55,7 @@ class HltConf(LHCbConfigurableUser):
     """
     __used_configurables__ = [ Hlt1Conf
                              , Hlt2Conf
+                             , HltMonitoringConf
                              , HltAfterburnerConf ]
     __slots__ = { "L0TCK"                          : ''
                 , 'ForceSingleL0Configuration'     : True
@@ -64,11 +65,10 @@ class HltConf(LHCbConfigurableUser):
                 , "HistogrammingLevel"             : 'Line'     # or 'Line'
                 , "ThresholdSettings"              : ''         #  select a predefined set of settings, eg. 'Effective_Nominal'
                 , "Split"                          : ''         # Hlt1 or Hlt2 (will also be set by Moore)
-                , "EnableMonitoring"               : False      # enable embedded monitoring in FilterDesktop/CombineParticles
+                , "EnableMonitoring"               : True
                 , "EnableHltGlobalMonitor"         : True
                 , "EnableHltL0GlobalMonitor"       : True
                 , "EnableBeetleSyncMonitor"        : False
-                , "EnableHlt1TrackMonitor"         : True
                 , "EnableHltDecReports"            : True
                 , "EnableHltSelReports"            : True
                 , "EnableHltVtxReports"            : True
@@ -85,7 +85,6 @@ class HltConf(LHCbConfigurableUser):
                 , 'SkipHltRawBankOnRejectedEvents' : True
                 , 'LumiBankKillerPredicate'        : "(HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision'))"
                 , 'BeetleSyncMonitorRate'          : 5000
-                , 'Hlt1TrackMonitorPrescale'       : 0.005
                 , "LumiBankKillerAcceptFraction"   : 0.9999     # fraction of lumi-only events where raw event is stripped down
                                                                 # (only matters if EnablelumiEventWriting = True)
                 , "AdditionalHlt1Lines"            : []         # must be configured
@@ -207,8 +206,9 @@ class HltConf(LHCbConfigurableUser):
         if activehlt2lines:
             Dec.Members.append(Sequence("Hlt2"))
             if self.getProp("EnableHltAfterburner"):
-                Dec.Members.append(Sequence("HltAfterburner"))
-                HltAfterburnerConf()
+                seq = Sequence("HltAfterburner", IgnoreFilterPassed = True)
+                Dec.Members.append(seq)
+                HltAfterburnerConf().Sequence = seq
             Dec.Members.append(Sequence("Hlt2Postamble"))
             Hlt2Conf()
             self.setOtherProps(Hlt2Conf(),[ "DataType" ])
@@ -220,25 +220,29 @@ class HltConf(LHCbConfigurableUser):
                 decoder = DecoderDB["HltTrackReportsDecoder"]
                 decoder.setup().Enable = False
 
-        Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
+        Hlt = Sequence('Hlt', ModeOR = True, ShortCircuit = False
                        , Members = [ Sequence('HltDecisionSequence')
                                    , Sequence('HltEndSequence')
                                    ]
                        )
+
+        if self.getProp('EnableMonitoring'):
+            Hlt.Members.insert(1, Sequence('HltMonitorSequence'))
+
         if self.getProp('RequireRoutingBits') or self.getProp('VetoRoutingBits') :
             from Configurables import HltRoutingBitsFilter
             filter = HltRoutingBitsFilter( "PhysFilter" )
             if self.getProp('RequireRoutingBits') : filter.RequireMask = self.getProp('RequireRoutingBits')
             if self.getProp('VetoRoutingBits')    : filter.VetoMask    = self.getProp('VetoRoutingBits')
-            Sequence("HltDecisionSequence").Members.insert(0,filter)
-            Sequence("HltEndSequence").Members.insert(0,filter)
-
+            Sequence("HltDecisionSequence").Members.insert(0, filter)
+            Sequence("HltEndSequence").Members.insert(0, filter)
+            Sequence('HltMonitorSequence').Members.insert(0, filter)
 
         #fix input locations, for the moment do with a post-config action,
         #TODO: in the future set in Hlt1 and Hlt2 separately
 
         #get the vertex locations required
-        loc=__onlinePV__()["PV3D"]
+        loc= onlinePV()["PV3D"]
         def __setOnlinePV__(hlt=Hlt, loc=loc):
             __forAll__(hlt, {"InputPrimaryVertices":loc})
         appendPostConfigAction(__setOnlinePV__)
@@ -382,7 +386,7 @@ class HltConf(LHCbConfigurableUser):
         HltVertexReportsMaker(name).VertexSelections = vertices
         #Can't do this any longer, need replacing with a smart way to get the vertex locations
         #HltVertexReportsMaker().Context = "HLT"
-        HltVertexReportsMaker(name).PVLocation=__onlinePV__()["PV3D"]
+        HltVertexReportsMaker(name).PVLocation= onlinePV()["PV3D"]
         ## do not write out the candidates for the vertices we store
         from Configurables import HltSelReportsMaker
         HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )
@@ -495,99 +499,6 @@ class HltConf(LHCbConfigurableUser):
                 else :
                     log.warning( 'Hlt1Line %s not known to ANNSvc??' % i.name() )
 
-##################################################################################
-    def groupLines( self, lines , mapping ) :
-        import re
-        groups = {}
-        taken = []
-        for pos in range(len(mapping)):
-          (name, pattern) = mapping[pos]
-          expr = re.compile(pattern)
-          groups[ name ] = [ i for i in lines if expr.match(i) and i not in taken ]
-          taken += groups[ name ]
-        #prune empty groups
-        return dict( (k,v) for k,v in groups.iteritems() if v )
-
-##################################################################################
-    def configureHltMonitoring(self, lines1, lines2) :
-        """
-        Hlt Monitoring
-        """
-        ## and tell the monitoring what it should expect..
-        # the keys are the Labels for the Histograms in the GUI
-        # the values are the Pattern Rules to for the Decisions contributing
-        from Configurables import HltGlobalMonitor,HltL0GlobalMonitor
-        HltGlobalMonitor().DecToGroupHlt1  = self.groupLines( [ i.decision() for i in lines1 ],
-                                [ ("L0"         , "Hlt1L0.*Decision"),
-                                  ("LumiBeamGas", "Hlt1(Lumi|BeamGas).*Decision"),
-                                  ("SingleMuon" , "Hlt1(Single|Track)Muon.*Decision"),
-                                  ("DiMuon"     , "Hlt1DiMuon.*Decision"),
-                                  ("TrackAllL0" , "Hlt1TrackAllL0.*Decision"),
-                                  ("ECAL"       , "Hlt1.*(Electron|Photon).*Decision"),
-                                  ("Commissioning" , "Hlt1(ODIN.*|Tell1Error|Incident)Decision"),
-                                  ("MinBias"    , "Hlt1MB.*Decision"),
-                                  ("Global"     , ".*Global.*"),
-                                  ("Other"      , ".*") # add a 'catch all' term to pick up all remaining decisions...
-                                ]
-                                )
-        HltGlobalMonitor().DecToGroupHlt2 = self.groupLines( [ i.decision() for i in lines2 ],
-                                 [ ("Topo"           , "Hlt2Topo.*Decision"),
-                                   ("IncPhi"         , "Hlt2IncPhi.*Decision"),
-                                   ("SingleMuon"     , "Hlt2Single.*Muon.*Decision"),
-                                   ("DiMuon"         , "Hlt2.*DiMuon.*Decision"),
-                                   ("B2DX"           , "Hlt2B2D2.*Decision"),
-                                   ("B2XGamma"       , "Hlt2.*Gamma.*Decision"),
-                                   ("B2HH"           , "Hlt2B2HH.*Decision"),
-                                   ("Commissioning"  , "Hlt2(PassThrough|Transparent|Forward|DebugEvent).*Decision"),
-                                   ("DisplVertices"  , "Hlt2DisplVertices.*Decision"),
-                                   ("HighPtJets"     , "Hlt2HighPtJets.*Decision"),
-                                   ("Charm"          , "Hlt2Charm.*Decision"),
-                                   ("Global"         , ".*Global.*"),
-                                   ("Other"          , ".*") # add a 'catch all' term to pick up all remaining decisions...
-                                 ]
-                                 )
-
-        # don't look for things that won't be there...
-        if not lines1 :
-            HltGlobalMonitor().Hlt1DecReports = ""
-            HltL0GlobalMonitor().Hlt1DecReports = ""
-        if not lines2 :
-            HltGlobalMonitor().Hlt2DecReports = ""
-            HltL0GlobalMonitor().Hlt2DecReports = ""
-        # Configure vertex monitoring
-        HltGlobalMonitor().VertexLocations = __onlinePV__()
-
-        def _recurse(c,fun) :
-            fun(c)
-            for p in [ 'Members','Filter0','Filter1' ] :
-                if not hasattr(c,p) : continue
-                x = getattr(c,p)
-                if list is not type(x) : x = [ x ]
-                for i in x : _recurse(i,fun)
-
-        def _enableMonitoring(c) :
-            if c.getType() in ['FilterDesktop','CombineParticles' ] :
-                c.Monitor = True
-                c.HistoProduce = True
-
-        def _disableHistograms(c,filter = lambda x : True) :
-            if 'HistoProduce' in c.getDefaultProperties() and filter(c):
-                c.HistoProduce = False
-            for p in [ 'Members','Filter0','Filter1' ] :
-                if not hasattr(c,p) : continue
-                x = getattr(c,p)
-                if list is not type(x) : x = [ x ]
-                for i in x : _disableHistograms(i,filter)
-        from HltLine.HltLine     import hlt1Lines, hlt2Lines
-        if   self.getProp('HistogrammingLevel') == 'None' :
-            for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable() )
-        elif self.getProp('HistogrammingLevel') == 'Line' :
-            for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()!='Hlt::Line' )
-        elif self.getProp('HistogrammingLevel') == 'NotLine' :
-            for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()=='Hlt::Line' )
-        if self.getProp('EnableMonitoring') :
-            for i in hlt1Lines()+hlt2Lines() : _recurse( i.configurable(),_enableMonitoring )
-
 
 ##################################################################################
     def _runHltLines(self):
@@ -678,10 +589,12 @@ class HltConf(LHCbConfigurableUser):
                 i.configurable().AcceptIfSlow =  self.getProp('EnableAcceptIfSlow')
                 i.configurable().FlagAsSlowThreshold = self.getProp('SlowHlt2Threshold')
 
-        self.configureHltMonitoring(lines1, lines2)
         for stage, lines in zip(('Hlt1', 'Hlt2'), (lines1, lines2)):
             self.configureVertexPersistence( [ i.name() for i in lines ], stage + "VtxReportsMaker" )
         self.configureANNSelections()
+
+        from HltConf.HltMonitoring import HltMonitoringConf
+        HltMonitoringConf().configureHltMonitoring(lines1, lines2)
 
         if self.getProp("Verbose") : print Sequence('Hlt')
 
@@ -706,9 +619,6 @@ class HltConf(LHCbConfigurableUser):
         define end sequence (persistence + monitoring)
         """
         from Configurables        import GaudiSequencer as Sequence
-        from Configurables        import HltGlobalMonitor, HltL0GlobalMonitor
-        from Configurables        import HltBeetleSyncMonitor
-        from Configurables        import Hlt1TrackMonitor
         from Configurables        import bankKiller
         from Configurables        import LoKi__HDRFilter   as HltFilter
         from Configurables        import HltSelReportsMaker, HltSelReportsWriter
@@ -725,40 +635,11 @@ class HltConf(LHCbConfigurableUser):
         if sets and hasattr(sets, 'StripEndSequence') and getattr(sets,'StripEndSequence'):
             log.warning('### Setting requests stripped down HltEndSequence ###')
             strip = getattr(sets,'StripEndSequence')
-            for option in ['EnableHltGlobalMonitor','EnableHltL0GlobalMonitor','EnableBeetleSyncMonitor','EnableHlt1TrackMonitor',
-                           'EnableHltSelReports','EnableHltVtxReports', 'EnableHltTrkReports','EnableLumiEventWriting']:
+            for option in ['EnableHltSelReports','EnableHltVtxReports', 'EnableHltTrkReports','EnableLumiEventWriting']:
                 self._safeSet(option, (option in strip))
 
 
         activehlt1lines, activehlt2lines = self._runHltLines()
-
-        # Setup the beetle sync sequence
-        BeetleMonitorAccept = Sequence( 'BeetleSyncMonitorAcceptSequence' )
-        BeetleMonitorAccept.ModeOR = True
-        BeetleMonitor = Sequence( 'BeetleSyncMonitorSequence' )
-        BeetleMonitor.Members = [ Filter( 'BeetleSyncScaler',
-                                          Code = 'RATE(%d)' % self.getProp('BeetleSyncMonitorRate') ) ]
-        BeetleMonitor.Members += DecodeL0DU.members() + DecodeVELO.members() \
-                                 + DecodeIT.members() + [ HltBeetleSyncMonitor() ]
-        BeetleMonitorAccept.Members = [ BeetleMonitor, Filter( 'ForceAccept', Code = 'FALL' ) ]
-
-        # Setup the track monitoring
-        import HltTracking
-        from HltTracking.HltSharedTracking import MinimalVelo, VeloTTTracking, HltHPTTracking
-        from Configurables import DeterministicPrescaler
-        Hlt1TrackMonitorSequence = Sequence( 'Hlt1TrackMonitorSequence' )
-        Hlt1TrackMonitorPrescaler = DeterministicPrescaler("Hlt1TrackMonitorPrescaler", AcceptFraction = self.getProp("Hlt1TrackMonitorPrescale") )
-        Hlt1TrackMonitorSequence.Members = [ Hlt1TrackMonitorPrescaler ] + HltHPTTracking.members() + [ Hlt1TrackMonitor() ]
-        Hlt1TrackMonitor().VeloTrackLocation = MinimalVelo.outputSelection()
-        Hlt1TrackMonitor().VeloTTTrackLocation = VeloTTTracking.outputSelection()
-        Hlt1TrackMonitor().ForwardTrackLocation = HltHPTTracking.outputSelection()
-        # This is not so nice but currently unavoidable
-        from HltTracking.Hlt1TrackNames import Hlt1TrackLoc
-        from HltTracking.HltTrackNames import HltDefaultFitSuffix
-        if activehlt1lines:
-            Hlt1TrackMonitor().FittedTrackLocation = Hlt1TrackLoc["FitTrack"]
-        if activehlt2lines and not activehlt1lines:
-            Hlt1TrackMonitor().FittedTrackLocation =  HltHPTTracking.outputSelection()+HltDefaultFitSuffix
 
         # make sure we encode from the locations the decoders will use...
         from DAQSys.Decoders import DecoderDB
@@ -769,19 +650,11 @@ class HltConf(LHCbConfigurableUser):
         hlt1_vtxrep_loc = DecoderDB["HltVertexReportsDecoder/Hlt1VertexReportsDecoder"].listOutputs()[0]
         hlt2_vtxrep_loc = DecoderDB["HltVertexReportsDecoder/Hlt2VertexReportsDecoder"].listOutputs()[0]
 
+        ## L0 decoder
         from DAQSys.DecoderClass import decodersForBank
         l0decoder = decodersForBank( DecoderDB, 'L0DU' )
         assert len(l0decoder)
         l0decoder = l0decoder[0].setup()
-        # note: the following is a list and not a dict, as we depend on the
-        # order of iterating through it!!!
-        _endlist = ( # ( "RequireL0ForEndSequence",  )
-            ( "EnableHltGlobalMonitor",    HltGlobalMonitor , 'HltGlobalMonitor',  {'Hlt1DecReports': hlt1_decrep_loc,'Hlt2DecReports' : hlt2_decrep_loc,  } ),
-            ( "EnableHltL0GlobalMonitor",  type(l0decoder), l0decoder.getName(), {} ),
-            ( "EnableHltL0GlobalMonitor",  HltL0GlobalMonitor , 'HltL0GlobalMonitor', {'Hlt1DecReports': hlt1_decrep_loc,'Hlt2DecReports' : hlt2_decrep_loc,  } ),
-            ( "EnableBeetleSyncMonitor",   Sequence , 'BeetleMonitorAccept', { }),
-            ( "EnableHlt1TrackMonitor",  type(Hlt1TrackMonitorSequence), Hlt1TrackMonitorSequence.getName(),  {})
-            )
 
         ### store the BDT response (and a bit more) through ExtraInfo on particles:
         sel_rep_opts =  dict( InfoLevelDecision = 3, InfoLevelTrack = 3, InfoLevelRecVertex = 3,
@@ -840,10 +713,13 @@ class HltConf(LHCbConfigurableUser):
         instantiate = lambda name, cfg : Sequence( name,
                                                    IgnoreFilterPassed = True,
                                                    Members = [ tp( nm, **props ) for (gate,tp,nm,props) in cfg if self.getProp(gate) ]  )
-        End           = instantiate( 'HltEndSequence',_endlist )
+        Monitoring    = Sequence("HltMonitorSequence", IgnoreFilterPassed = True)
+        End           = Sequence( 'HltEndSequence', [] )
         Hlt1PostAmble = instantiate( 'Hlt1Postamble',_hlt1postamble )
         Hlt2PostAmble = instantiate( 'Hlt2Postamble',_hlt2postamble )
 
+        from HltMonitoring import HltMonitoringConf
+        HltMonitoringConf().MonitorSequence = Monitoring
 
         if (self.getProp("EnableLumiEventWriting")) :
             if sets and hasattr(sets, 'NanoBanks') :
@@ -886,6 +762,9 @@ class HltConf(LHCbConfigurableUser):
         self.confType()
         self.endSequence()
         self.configureRoutingBits()
+
+        from HltConf.HltMonitoring import HltMonitoringConf
+        self.setOtherProps(HltMonitoringConf(), ["HistogrammingLevel"])
 
         #appendPostConfigAction( self.postConfigAction )
         GaudiKernel.Configurable.postConfigActions.insert( 0,  self.postConfigAction )
