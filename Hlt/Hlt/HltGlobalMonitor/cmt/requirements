@@ -1,10 +1,10 @@
 #$Id: requirements,v 1.40 2010-08-26 08:47:30 graven Exp $
 #============================================================================
 # Created    : 2008-01-21
-# Maintainer : Eric van Herwijnen 
+# Maintainer : Eric van Herwijnen
 #============================================================================
 package           HltGlobalMonitor
-version           v4r8
+version           v5r0
 
 # Structure
 #============================================================================
@@ -24,7 +24,7 @@ use L0Event     		v*    Event
 use TrackEvent          v*    Event
 
 use HltBase             v*    Hlt
-use GaudiUtils          v*    
+use GaudiUtils          v*
 
 use TrackInterfaces     v*    Tr
 
@@ -44,6 +44,5 @@ private
   macro LHCbAlgs_use "" QMTest "LHCbAlgs v* Kernel  -no_auto_imports"
   use $(SQL_use)
   use $(LHCbAlgs_use)
-  use PRConfig v* 
+  use PRConfig v*
 end_private
-

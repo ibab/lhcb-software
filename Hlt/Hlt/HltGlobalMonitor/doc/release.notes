@@ -5,7 +5,7 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
-!========================= HltGlobalMonitor v4r8 2015-06-28 =========================
+!========================= HltGlobalMonitor v5r0 2015-06-28 =========================
 
 ! 2015-06-25 - Roel Aaij
  - Rework algorithms to allow two instances, one for HLT1 and one for HLT2.
