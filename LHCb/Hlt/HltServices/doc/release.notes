@@ -4,6 +4,8 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+!========================= HltServices v2r8 2015-06-28 =========================
+
 ! 2015-06-28 - Roel Aaij
  - Add an expert property to TCKANNSvc to allow injection of selection IDs.
 
