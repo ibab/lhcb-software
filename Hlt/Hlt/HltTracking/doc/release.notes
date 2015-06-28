@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-06-28 - Roel Aaij
+ - Remove ProtoPV3D vertices.
+
 ! 2015-06-24 - Sascha Stahl
  - HltRecoConf and HltSharedTracking: Added option "FastFitVelo" to fit Velo tracks
    used as input to the PV finding with a fast Kalman filter.

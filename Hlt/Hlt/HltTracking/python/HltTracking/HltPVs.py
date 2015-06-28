@@ -8,13 +8,13 @@
 #  @date 2010-02-21
 # =============================================================================
 #
-# the (ordered) list of (configurables corresponding to the) algorithms needed to 
-# obtain the Hlt1 selection 'PV3D' can be obtained by doing 
+# the (ordered) list of (configurables corresponding to the) algorithms needed to
+# obtain the Hlt1 selection 'PV3D' can be obtained by doing
 #
 #   from HltTracking.HltPVs import PV3D
-#   PV3D.members() 
+#   PV3D.members()
 #
-# in addition, the 'outputselection' of the last member can be 
+# in addition, the 'outputselection' of the last member can be
 # obtained by doing:
 #
 #   PV3D.outputSelection()
@@ -43,8 +43,6 @@ from HltLine.HltLine import bindMembers
 from HltVertexNames import Hlt3DPrimaryVerticesName as PV3DSelection
 from HltVertexNames import _vertexLocation
 
-ProtoPV3DSelection = 'Proto' + PV3DSelection
-
 def PV3D(where):
     """ PV3D(where) -- where must either by Hlt1 or Hlt2 """
     #from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix, _baseTrackLocation
@@ -54,12 +52,11 @@ def PV3D(where):
     from Configurables import PatPV3D
     from Configurables import PVOfflineTool, LSAdaptPV3DFitter
     from Configurables import SimplifiedMaterialLocator, TrackMasterExtrapolator
-    
+
     if where.upper() not in ['HLT1','HLT2'] : raise KeyError('PV3D: where must be either HLT1 or HLT2')
 
     #TODO: Move these options to HltRecoConf
-    output3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,PV3DSelection)
-    proto3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,ProtoPV3DSelection)
+    output3DVertices = _vertexLocation(HltSharedVerticesPrefix, HltGlobalVertexLocation, PV3DSelection)
     recoPV3D = PatPV3D('HltPVsPV3D' )
     recoPV3D.addTool(PVOfflineTool,"PVOfflineTool")
     recoPV3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
@@ -90,35 +87,33 @@ def PV3D(where):
     if HltRecoConf().getProp("FitVelo"):
         recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.UseFittedTracks = True
     #recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.zVtxShift = 0.0
-    recoPV3D.OutputVerticesName = proto3DVertices
-    
+    recoPV3D.OutputVerticesName = output3DVertices
+
     from HltSharedTracking import FittedVelo, RevivedVelo
     velo = FittedVelo if HltRecoConf().getProp("FitVelo") else RevivedVelo
 
     pv3dAlgos = ','.join( [ "'%s'"%m.getFullName() for m in velo.members() + [ recoPV3D ] ] )
     recoPV3D.PVOfflineTool.InputTracks = [ velo.outputSelection() ]
-    
+
     from Configurables import LoKi__HltUnit as HltUnit
     ## Hlt vertex beamspot filter
     ##-- todo: can we integrate this in the main streamers directly, using 'tee' ?
     ## TODO: Make this a configurable.
     name = "HltPV3D"
-    filterPV3D = HltUnit(
+    makePV3DSel = HltUnit(
         name,
         Preambulo = [ 'from LoKiPhys.decorators import *',
                       'from LoKiTrigger.decorators import *',
                       'from LoKiHlt.algorithms import *' ],
         Code = """
         execute( %(algo)s ) * VSOURCE( '%(tesInput)s' )
-        >> RV_SINKTES( '%(tesFinal)s' )
         >> VX_SINK( '%(hltFinal)s' )
         >> ~VEMPTY
         """ % { 'algo'     : pv3dAlgos,
                 'tesInput' : recoPV3D.OutputVerticesName,
-                'tesFinal' : output3DVertices,
                 'hltFinal' : PV3DSelection   }
         )
-    
-    pv3d = bindMembers( name + 'Sequence', [ filterPV3D ] ).setOutputSelection( PV3DSelection ) 
+
+    pv3d = bindMembers( name + 'Sequence', [ makePV3DSel ] ).setOutputSelection( PV3DSelection )
     pv3d.output = output3DVertices
     return pv3d
