@@ -5,6 +5,8 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+!========================= HltRawData v5r6 2015-06-28 =========================
+
 ! 2015-06-15 - Sean Benson
  - Save muon LHCbIDs even for particles all particles where they are present.
  - Add up to 3 CaloClusters for charged particles in Turbo.
