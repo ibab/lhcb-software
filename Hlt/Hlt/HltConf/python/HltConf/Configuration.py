@@ -44,10 +44,8 @@ def __onlinePV__():
     from HltTracking.HltVertexNames import ( _vertexLocation,
                                              HltSharedVerticesPrefix,
                                              HltGlobalVertexLocation )
-    from HltTracking.HltPVs import ProtoPV3DSelection
     pv3d  = _vertexLocation( HltSharedVerticesPrefix, HltGlobalVertexLocation, PV3DSelection )
-    proto = _vertexLocation( HltSharedVerticesPrefix, HltGlobalVertexLocation, ProtoPV3DSelection )
-    return {"PV3D" : pv3d, "Proto": proto}
+    return {"PV3D" : pv3d}
 
 ##################################################################################
 
@@ -314,6 +312,7 @@ class HltConf(LHCbConfigurableUser):
                       , 53 : "HLT_PASS_RE('Hlt1Calib(TrackingKPiDetached|HighPTLowMultTrks)Decision')"
                       , 54 : "HLT_PASS_RE('Hlt1CalibRICH.*Decision')"
                       , 55 : "HLT_PASS('Hlt1MBNoBiasRateLimitedDecision')"
+                      , 56 : "HLT_PASS('Hlt1CalibMuonAlignJpsiDecision')"
                       , 60 : "HLT_PASS('Hlt1TrackAllL0Decision')"
 
                       # 64--96: Hlt2
@@ -374,7 +373,7 @@ class HltConf(LHCbConfigurableUser):
         """
         ## and persist some vertices...
         from Configurables import HltVertexReportsMaker
-        vertices =[ 'PV3D', 'ProtoPV3D'  ]
+        vertices =[ 'PV3D' ]
         selections = []
         from HltLine.HltLine     import hlt1Lines
         for i in hlt1Lines() :
@@ -812,8 +811,8 @@ class HltConf(LHCbConfigurableUser):
                                                                                                          'InputHltSelReportsLocation': hlt1_selrep_loc } )
                          , ( "EnableHltTrkReports"  ,  HltTrackReportsWriter,  'Hlt1TrkReportsWriter',  {})
                          , ( "EnableHltVtxReports"  ,  HltVertexReportsMaker,  'Hlt1VtxReportsMaker',   {'OutputHltVertexReportsLocation' : hlt1_vtxrep_loc } )
-                         , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt1VtxReporteWriter',  { 'SourceID' : 1,
-                                                                                                          'InputHltVertexReportsLocation': hlt1_vtxrep_loc } )
+                         , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt1VtxReportWriter',  { 'SourceID' : 1,
+                                                                                                         'InputHltVertexReportsLocation': hlt1_vtxrep_loc } )
                          )
         _hlt2postamble = ( ( "EnableHltRoutingBits" ,  type(l0decoder), l0decoder.getName(), {})
                          , ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter, 'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc,
@@ -829,7 +828,7 @@ class HltConf(LHCbConfigurableUser):
                                                                                                         'InputHltSelReportsLocation': hlt2_selrep_loc } )
                          , ( "EnableHltVtxReports"  ,  HltVertexReportsMaker,  'Hlt2VtxReportsMaker',   {'OutputHltVertexReportsLocation' : hlt2_vtxrep_loc } )
                          , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt2VtxReportWriter',  { 'SourceID' : 2,
-                                                                                                          'InputHltVertexReportsLocation': hlt2_vtxrep_loc } ) )
+                                                                                                         'InputHltVertexReportsLocation': hlt2_vtxrep_loc } ) )
 
         # Don't try to decode L0 for the routing bits writer if no L0TCK has
         # been set. This allows forward compatibility.
