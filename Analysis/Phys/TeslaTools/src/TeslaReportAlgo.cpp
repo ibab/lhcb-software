@@ -90,6 +90,8 @@ StatusCode TeslaReportAlgo::execute()
   if ( exist<LHCb::HltVertexReports>( m_VertRepLoc.c_str() ) ) { // exist --> get content
     vtxReports = getIfExists<LHCb::HltVertexReports>( m_VertRepLoc.c_str() );
     vtxRep = vtxReports->vertexReport("PV3D");
+    if( vtxRep )debug() << "# of PVs in vertex reports: " << vtxRep->size() << endmsg;
+    else debug() << "# of PVs in vertex reports: 0 - Could be decoding problem" << endmsg;
     if ( msgLevel(MSG::DEBUG) ){
       std::vector<std::string> vnames = vtxReports->selectionNames();
       debug() << "Available vertex reports:" << endmsg;
