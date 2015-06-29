@@ -52,7 +52,7 @@ StatusCode HltRoutingBitsWriter::decode() {
             odin_eval_t& odin_eval = m_odin_evaluators[i->first];
             odin_eval.predicate = cut.clone();
             odin_eval.counter   = &counter(title);
-            if (m_hltMonSvc) odin_eval.rate = &(m_hltMonSvc->rateCounter(name() + "/" + htitle));
+            if (m_hltMonSvc.isValid()) odin_eval.rate = &(m_hltMonSvc->rateCounter(name() + "/" + htitle));
             declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]") % htitle ),
                         *(odin_eval.counter), htitle);
             odin_eval.hist = book1D(htitle, 0, nBins * m_binWidth, nBins); //TODO: set AxisLabels
@@ -63,7 +63,7 @@ StatusCode HltRoutingBitsWriter::decode() {
             l0_eval_t l0_eval = m_l0_evaluators[i->first - 8];
             l0_eval.predicate = cut.clone();
             l0_eval.counter   = &counter(title);
-            if (m_hltMonSvc) l0_eval.rate = &(m_hltMonSvc->rateCounter(name() + "/" + htitle));
+            if (m_hltMonSvc.isValid()) l0_eval.rate = &(m_hltMonSvc->rateCounter(name() + "/" + htitle));
             declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]")% htitle ),
                         *(l0_eval.counter), htitle);
             l0_eval.hist = book1D(htitle, 0, nBins * m_binWidth, nBins); //TODO: set AxisLabels
@@ -74,7 +74,7 @@ StatusCode HltRoutingBitsWriter::decode() {
             hlt_eval_t& hlt_eval = m_hlt_evaluators[i->first-32];
             hlt_eval.predicate = cut.clone();
             hlt_eval.counter   = &counter(title);
-            if (m_hltMonSvc) hlt_eval.rate = &(m_hltMonSvc->rateCounter(name() + "/" + htitle));
+            if (m_hltMonSvc.isValid()) hlt_eval.rate = &(m_hltMonSvc->rateCounter(name() + "/" + htitle));
             declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]")% htitle ),
                         *(hlt_eval.counter), htitle);
             hlt_eval.hist   = book1D(htitle, 0, nBins * m_binWidth, nBins); //TODO: set AxisLabels
@@ -120,7 +120,6 @@ HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
    : GaudiHistoAlg ( name , pSvcLocator )
    , m_runpars{nullptr}
    , m_updMgrSvc{nullptr}
-   , m_hltMonSvc{nullptr}
    , m_startOfRun(0)
    , m_binWidth(1) // in minutes!!!
    , m_timeSpan(125) // in minutes!!!
@@ -197,9 +196,10 @@ StatusCode HltRoutingBitsWriter::initialize() {
    }
 
    // Hlt Monitoring Service
-   try {
-      m_hltMonSvc = svc<IHltMonitorSvc>(m_monSvc, false);
-   } catch (const GaudiException&) {
+   // Hlt Monitoring Service
+   m_hltMonSvc = svcLoc()->service(m_monSvc, false);
+   // If we cannot retrieve it, HLT2 style monitoring is disabled.
+   if (!m_hltMonSvc.isValid()) {
       info() << "Could not retrieve " << m_monSvc << endmsg;
    }
 

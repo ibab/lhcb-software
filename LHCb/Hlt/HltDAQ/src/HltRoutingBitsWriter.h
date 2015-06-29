@@ -61,7 +61,7 @@ private:
 
   Condition *m_runpars;
   IUpdateManagerSvc *m_updMgrSvc;
-  IHltMonitorSvc* m_hltMonSvc;
+  SmartIF<IHltMonitorSvc> m_hltMonSvc;
 
   StatusCode i_updateConditions();
   void handle(const Incident&);
