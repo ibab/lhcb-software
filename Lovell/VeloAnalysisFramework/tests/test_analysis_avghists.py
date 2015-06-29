@@ -2,13 +2,10 @@ import os
 import tempfile
 import shutil
 
-from veloview.analysis import (FloorThreshold, CeilingThreshold,
-                               MeanWidthDiffRef, AbsoluteBandRef,
-                               ZeroCentredBandRef)
-from veloview.core import Combiner
-from veloview.core.combiner_description_dictionary import (merge_dicts,
-                                                           create_leaf_dict_with_path)
+from veloview.core.analysis_config_wrapper import AnalysisConfigWrapper
 from veloview.core.score_manipulation import ERROR_LEVELS
+from veloview.core.combiners import BranchCombiner
+
 # aliases
 OK = ERROR_LEVELS.OK
 WARNING = ERROR_LEVELS.WARNING
@@ -16,8 +13,6 @@ ERROR = ERROR_LEVELS.ERROR
 
 from ROOT import TFile
 import unittest
-from veloview.utils.testutils import get_avg_hist, get_avg_trend
-
 
 class TestAvgHistCombiners(unittest.TestCase):
 
@@ -38,86 +33,22 @@ class TestAvgHistCombiners(unittest.TestCase):
         assert(not orfdata.IsZombie())
         assert(not orfref.IsZombie())
 
-        self.tdir = tempfile.mkdtemp()
-        self.rfdata = TFile(os.path.join(self.tdir, 'fdata.root'), 'recreate')
-        self.rfref = TFile(os.path.join(self.tdir, 'fref.root'), 'recreate')
-
-        # histogram recipes: function to call, dir in orig ROOT file,
-        # rest of the arguments for function (orig hist name, new hist
-        # name, other options, etc)
-        hist_recipes = [
-            (get_avg_trend, 'Vetra/NoiseMon/ADCCMSuppressed',
-             ('RMSNoise_vs_ChipChannel', 'AvgRMSNoise_trend')),
-            (get_avg_hist, 'Vetra/NoiseMon/ADCCMSuppressed',
-             ('RMSNoise_vs_ChipChannel', 'AvgRMSNoise_all')),
-            (get_avg_hist, 'Vetra/NoiseMon/ADCCMSuppressed',
-             ('RMSNoise_vs_ChipChannel', 'AvgRMSNoise_R', 'r')),
-            (get_avg_hist, 'Vetra/NoiseMon/ADCCMSuppressed',
-             ('RMSNoise_vs_ChipChannel', 'AvgRMSNoise_Phi', 'p')),
-            # (get_avg_hist, 'Vetra/VeloPedestalSubtractorMoni',
-            #  ('Ped_Sub_ADCs_Profile', 'Ped_Sub_ADCs_all'))
-        ]
-
-        # comparison fns: fn, argument, expected DQ status, histogram
-        # to compare
-        comp_fns = [
-            (FloorThreshold(), 1.5, OK, 0), # avg noise trend
-            (CeilingThreshold(), 2.5, OK, 0),
-            (MeanWidthDiffRef(), 0.1, OK, 1), # avg all TELL1 noise
-            (MeanWidthDiffRef(), 0.1, OK, 2), # avg R TELL1 noise
-            (MeanWidthDiffRef(), 0.1, OK, 3), # avg Phi TELL1 noise
-            # (ZeroCentredBandRef(), 5, OK, 4), # pedestal subtracted ADC
-        ]
-
-        # FIXME: add uniformity tests, maybe in different test file
-
-        comb_dict = {}
-        eval_dict = {}
-        self.results = []
-        for i in comp_fns:
-            # i[] - recipe #, last element in recipe, 2nd argument
-            hname = hist_recipes[i[-1]][-1][1]
-            # should be of the form: *Combiner
-            cname = '{}_{}_Combiner'.format(hname, type(i[0]).__name__)
-            comb_dict[cname] = create_leaf_dict_with_path(hname)
-            eval_dict[cname] = {'Function': i[0], 'Argument': i[1]}
-            # expected result
-            self.results.append((cname, i[2]))
-
-        comb_dict = {
-            'MasterCombiner': merge_dicts(
-                {"weight": 1.0, "minWW": 10, "minWE": 25, "minEW": 1, "minEE": 2},
-                comb_dict)
-        }
-        self.results.append(('MasterCombiner', OK))
-
-        # histograms: make, save, and cleanup
-        for recipe in hist_recipes:
-            href = recipe[0](orfref.GetDirectory(recipe[1]), *recipe[2])
-            self.rfref.WriteTObject(href)
-            del href
-            hdata = recipe[0](orfdata.GetDirectory(recipe[1]), *recipe[2])
-            self.rfdata.WriteTObject(hdata)
-            del hdata
-        self.rfref.Close()
-        self.rfdata.Close()
-
-        self.mycombiner = Combiner(comb_dict, eval_dict,
-                                   self.rfdata.GetName(), self.rfref.GetName())
+        configfile = os.path.abspath(os.path.join(os.path.dirname(__file__), 'analysis_config_test.py'))
+        config = AnalysisConfigWrapper(configfile)
+        self.mycombiner = config.getTrunk(orfdata.GetName(), orfref.GetName(), r"noise\S*")
         self.mycombiner.evaluate()
 
     def tearDown(self):
-        shutil.rmtree(self.tdir)
         del self.mycombiner
 
     def for_each_combiner(self, combiner, res):
         """Call test on each node/leaf of combiner."""
 
-        if combiner.children:
+        if isinstance(combiner, BranchCombiner):
             for child_combiner in combiner.children:
                 self.for_each_combiner(child_combiner, res)
         # append my result
-        res.append((combiner.name, combiner.results['lvl']))
+        res.append((combiner.getName(), combiner.getLevel()))
         return res
 
     def test_combiners(self):
@@ -125,8 +56,8 @@ class TestAvgHistCombiners(unittest.TestCase):
 
         res = self.for_each_combiner(self.mycombiner, [])
         self.maxDiff = None
-        self.assertSequenceEqual(sorted(self.results), sorted(res))
-
+        self.assertSequenceEqual(sorted(res),\
+            [('MasterCombiner', OK), ('noise', OK), ('noise_phi', OK), ('noise_phi_TELL1_064', OK), ('noise_phi_TELL1_065', OK), ('noise_phi_TELL1_066', OK), ('noise_phi_TELL1_067', OK), ('noise_phi_TELL1_068', OK), ('noise_phi_TELL1_069', OK), ('noise_phi_TELL1_070', OK), ('noise_phi_TELL1_071', OK), ('noise_phi_TELL1_072', OK), ('noise_phi_TELL1_073', OK), ('noise_phi_TELL1_074', OK), ('noise_phi_TELL1_075', OK), ('noise_phi_TELL1_076', OK), ('noise_phi_TELL1_077', OK), ('noise_phi_TELL1_078', OK), ('noise_phi_TELL1_079', OK), ('noise_phi_TELL1_080', OK), ('noise_phi_TELL1_081', OK), ('noise_phi_TELL1_082', OK), ('noise_phi_TELL1_083', OK), ('noise_phi_TELL1_084', OK), ('noise_phi_TELL1_085', OK), ('noise_phi_TELL1_086', OK), ('noise_phi_TELL1_087', OK), ('noise_phi_TELL1_088', OK), ('noise_phi_TELL1_089', OK), ('noise_phi_TELL1_090', OK), ('noise_phi_TELL1_091', OK), ('noise_phi_TELL1_092', OK), ('noise_phi_TELL1_093', OK), ('noise_phi_TELL1_094', OK), ('noise_phi_TELL1_095', OK), ('noise_phi_TELL1_096', OK), ('noise_phi_TELL1_097', OK), ('noise_phi_TELL1_098', OK), ('noise_phi_TELL1_099', OK), ('noise_phi_TELL1_100', OK), ('noise_phi_TELL1_101', OK), ('noise_phi_TELL1_102', OK), ('noise_phi_TELL1_103', OK), ('noise_phi_TELL1_104', OK), ('noise_phi_TELL1_105', OK), ('noise_r', OK), ('noise_r_TELL1_000', OK), ('noise_r_TELL1_001', OK), ('noise_r_TELL1_002', OK), ('noise_r_TELL1_003', OK), ('noise_r_TELL1_004', OK), ('noise_r_TELL1_005', OK), ('noise_r_TELL1_006', OK), ('noise_r_TELL1_007', OK), ('noise_r_TELL1_008', OK), ('noise_r_TELL1_009', OK), ('noise_r_TELL1_010', OK), ('noise_r_TELL1_011', OK), ('noise_r_TELL1_012', OK), ('noise_r_TELL1_013', OK), ('noise_r_TELL1_014', OK), ('noise_r_TELL1_015', OK), ('noise_r_TELL1_016', OK), ('noise_r_TELL1_017', OK), ('noise_r_TELL1_018', OK), ('noise_r_TELL1_019', OK), ('noise_r_TELL1_020', OK), ('noise_r_TELL1_021', OK), ('noise_r_TELL1_022', OK), ('noise_r_TELL1_023', OK), ('noise_r_TELL1_024', OK), ('noise_r_TELL1_025', OK), ('noise_r_TELL1_026', OK), ('noise_r_TELL1_027', OK), ('noise_r_TELL1_028', OK), ('noise_r_TELL1_029', OK), ('noise_r_TELL1_030', OK), ('noise_r_TELL1_031', OK), ('noise_r_TELL1_032', OK), ('noise_r_TELL1_033', OK), ('noise_r_TELL1_034', OK), ('noise_r_TELL1_035', OK), ('noise_r_TELL1_036', OK), ('noise_r_TELL1_037', OK), ('noise_r_TELL1_038', OK), ('noise_r_TELL1_039', OK), ('noise_r_TELL1_040', OK), ('noise_r_TELL1_041', OK)])
 
 if __name__ == '__main__':
     unittest.main()

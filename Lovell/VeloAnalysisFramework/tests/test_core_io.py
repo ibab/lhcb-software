@@ -69,10 +69,6 @@ class TestGRFIO(unittest.TestCase):
         if os.path.exists(self.temppath):
             os.remove(self.temppath)
 
-        # from glob import glob
-        # locks = glob('/tmp/test.root.lock*')
-        # if locks: map(os.remove, locks)
-
     def make_grf(self):
         for entry in self.entries:
             self.grf.fill(entry)
