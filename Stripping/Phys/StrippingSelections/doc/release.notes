@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-29 - Marco Gersabeck
+ - Fixes to StrippingDstarD0ToHHPi0.py and StrippingD2hh.py
+
 ! 2015-06-29 - Jon Harrison
  - Added four new lines for LFV/LNV decays to StrippingCharm/StrippingD2XMuMuSS.py
 

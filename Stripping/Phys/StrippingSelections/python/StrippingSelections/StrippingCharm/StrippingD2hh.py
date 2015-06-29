@@ -3,6 +3,14 @@ __author__ = ['Marco Gersabeck']
 __date__ = '21/02/2011'
 __version__ = '$Revision: 1.1 $'
 
+__all__ = ('D2hhBuilder',
+           'makeD2hhAsymm',
+	   'makeDstar2D0Pi',
+	   'makeDPartial',
+	   'makeDstarPartial',
+	   'makePseudoPsi',
+	   'default_config')
+
 '''
 This file contains stripping lines for time-dependent two-body charm analyses of mixing, yCP, and A_Gamma
 '''
@@ -17,7 +25,7 @@ default_config = {
     'NAME'        : 'D2hh',
     'WGs'         : ['Charm'],
     'STREAMS'     : [ 'Charm' ],
-    'BUILDERTYPE' : 'D2hhLines',
+    'BUILDERTYPE' : 'D2hhBuilder',
     'CONFIG'      : {
            'DaugPtMin': 800.,
            'DaugPtMax': 1500.,
@@ -79,7 +87,7 @@ default_config = {
          }
 }
 
-class D2hhConf(LineBuilder) :
+class D2hhBuilder(LineBuilder) :
 
     '''
     Produces 7 lines, 3 untagged and 4 tagged D->hh lines:
@@ -491,7 +499,8 @@ class D2hhConf(LineBuilder) :
                                        )
 
         # Pseudo Psi line
-        self.pseudoPsi_line = StrippingLine(pseudoPsi_name+"Line",
+        if config['AddPartialD']:
+            self.pseudoPsi_line = StrippingLine(pseudoPsi_name+"Line",
                                         prescale = 1.,
                                         postscale = 1.,
                                         selection = self.selPseudoPsi

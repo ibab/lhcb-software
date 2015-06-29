@@ -15,15 +15,16 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllLoosePions, StdLoosePions, StdLooseKaons, StdLooseResolvedPi0, StdLooseMergedPi0
 from Configurables import TisTosParticleTagger
 
-__all__ = ('DstarD0ToHHPi0AllLinesConf',
+__all__ = ('DstarD0ToHHPi0AllLinesBuilder',
+           'DstarMaker',
            'TOSFilter',
            'default_config')
 
 default_config = {
-    'DstarD0ToHHPi0' : {
+        'NAME': 'DstarD0ToHHPi0',
         'WGs'         : ['Charm'],
-        'BUILDERTYPE' : 'DstarD0ToHHPi0AllLinesConf',
         'STREAMS':["Charm"],
+        'BUILDERTYPE' : 'DstarD0ToHHPi0AllLinesBuilder',
         'CONFIG'      : {
             "prescale_Pi0R_WIDEMASS" : 1.0 #adimensional
             ,"Pi0R_PT" : 500  # MeV
@@ -44,13 +45,12 @@ default_config = {
             ,"D0_APT" : 1400  #MeV
             ,"useTOS" : True  #adimensional
             ,"useHLT2" : True  #adimensional
-            ,"TOSFilter" : "{ 'Hlt2CharmHad.*HHX.*Decision%TOS' : 0}"  #adimensional
+            ,"TOSFilter" : { 'Hlt2CharmHad.*HHX.*Decision%TOS' : 0}  #adimensional
             ,"Hlt2Filter" : "HLT_PASS_RE('Hlt2CharmHad.*HHX.*Decision%TOS')"  #adimensional
             }
         }
-    }
 
-class DstarD0ToHHPi0AllLinesConf(LineBuilder) :
+class DstarD0ToHHPi0AllLinesBuilder(LineBuilder) :
     """
     """
     
@@ -252,7 +252,7 @@ def DstarMaker(_name,_KstDecays,_D0Decays,_DstDecays,_ChargedTracks,_Pi0s,_Slowp
                        Algorithm = DstComb,
                        RequiredSelections = [D0Sel,_Slowpions])
     
-    _tosFilter = "%(TOSFilter)s" %config
+    _tosFilter = config['TOSFilter']
     DstSelTOS = TOSFilter( "SelDstKPiPi0_Hlt2TOS"+_name
                            ,DstSel
                            ,_tosFilter)
