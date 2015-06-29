@@ -3,7 +3,7 @@
 # Maintainer : Roel Aaij
 #============================================================================
 package           ZeroMQ
-version           v4r0p5
+version           v4r1p2
 
 #============================================================================
 # Structure, i.e. directories to process.
@@ -17,13 +17,16 @@ branches          cmt doc src zmq
 use GaudiKernel v*
 
 apply_pattern install_more_includes more=zmq
+apply_pattern install_more_includes more=ZeroMQ
 
 #============================================================================
 # Component library building rule
 #============================================================================
 library          zmq    ../src/*.cpp
+library          ZeroMQ ../component/*.cpp
 
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    component_library library=zmq
+apply_pattern    linker_library library=zmq
+apply_pattern    component_library library=ZeroMQ
