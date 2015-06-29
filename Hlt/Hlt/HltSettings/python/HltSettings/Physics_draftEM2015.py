@@ -41,7 +41,7 @@ class Physics_draftEM2015( object ):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
 
     def L0TCK(self) :
-        return '0x014D'
+        return '0x014E'
 
     def HltType(self) :
         self.verifyType( Physics_draftEM2015 )
@@ -111,11 +111,24 @@ class Physics_draftEM2015( object ):
                                                , 'DiMuonHighMass_TrChi2'    :    3
                                                , 'DiMuonHighMass_M'         : 2700
                                                , 'DiMuonHighMass_GEC'       : 'Loose'
+                                               , 'CalibMuonAlignJpsi_ParticlePT'             : 800     # MeV
+                                               , 'CalibMuonAlignJpsi_ParticleP'              : 6000    # MeV
+                                               , 'CalibMuonAlignJpsi_TrackCHI2DOF'           : 2       # dimensionless
+                                               , 'CalibMuonAlignJpsi_CombMaxDaughtPT'        : 800     # MeV
+                                               , 'CalibMuonAlignJpsi_CombAPT'                : 1500    # MeV
+                                               , 'CalibMuonAlignJpsi_CombDOCA'               : 0.2     # mm
+                                               , 'CalibMuonAlignJpsi_CombVCHI2DOF'           : 10      # dimensionless
+                                               , 'CalibMuonAlignJpsi_CombVCHI2DOFLoose'      : 10      # dimensionless
+                                               , 'CalibMuonAlignJpsi_CombDIRA'               : 0.9     # dimensionless
+                                               , 'CalibMuonAlignJpsi_CombTAU'                : 0.     # ps
+                                               , 'CalibMuonAlignJpsi_JpsiMassWinLoose'         : 150     # MeV
+                                               , 'CalibMuonAlignJpsi_JpsiMassWin'              : 100     # MeV
                                                , 'NoPVPassThrough_L0ChannelRe' : "(L0_CHANNEL_RE('.*lowMult')) & ~(L0_CHANNEL_RE('.*DiHadron,lowMult'))"
                                                , 'L0Channels'               : {
                                                    'SingleMuonHighPT' : ( 'Muon', ),
                                                    'DiMuonLowMass'    : ( 'Muon', ),
-                                                   'DiMuonHighMass'   : ( 'Muon', )}
+                                                   'DiMuonHighMass'   : ( 'Muon', ),
+                                                   'CalibMuonAlignJpsi'    : ( 'Muon', )}
 
                                                }
                        , Hlt1CEPLinesConf : {    'SpdMult'    :   100.   # dimensionless, Spd Multiplicy cut
@@ -139,8 +152,8 @@ class Physics_draftEM2015( object ):
                                                    }
 
                      , Hlt1CalibRICHMirrorLinesConf :    { 'Prescale' : { 'Hlt1CalibHighPTLowMultTrks'     : 0.0001,
-                                                                          'Hlt1CalibRICHMirrorRICH1'       : 1.0,
-                                                                          'Hlt1CalibRICHMirrorRICH2'       : 1.0}
+                                                                          'Hlt1CalibRICHMirrorRICH1'       : 0.143,
+                                                                          'Hlt1CalibRICHMirrorRICH2'       : 0.05}
                                                           , 'DoTiming' : False
                                                          , 'R2L_PT'       : 500. * MeV
                                                          , 'R2L_P'        : 40000. * MeV
