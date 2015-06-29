@@ -2,7 +2,7 @@
 # Maintainer : Stripping coordinators
 
 package           StrippingArchive
-version           v1r29
+version           v1r30
 
 # Structure, i.e. directories to process.
 #============================================================================

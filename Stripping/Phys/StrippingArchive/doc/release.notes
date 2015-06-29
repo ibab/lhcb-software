@@ -4,6 +4,8 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r30 2015-06-29 =========================
+
 ! 2015-06029 - Andrea Contu
  - Modified StrippingB2JpsiXforEM_s.py
 
