@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-29 - Andrea Contu
+ - Updated dbase for s22
+
 ! 2015-06-26 - Carlos Vazquez Sierra
  - Solved hardcoded triggers of B2CC settings
 
