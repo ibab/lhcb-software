@@ -3,6 +3,57 @@ Package     : StrippingSys
 Package Coordinator : Andrea.Contu@cern.ch, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v9r8 2015-06-29 =========================
+
+*Phys/DisplVertices
+ - bugfix in name of a property
+
+*Phys/IncTopoVert
+ - Change declareProperty to setProperty to avoid compilation warnings from properties
+  already declared.
+
+*Phys/IsolationTools
+ - Add fixes to avoid compiler warnings
+ - Change form declareProperty to setProperty to avoid compilation warnings
+
+*Phys/StrippingSelections
+ - Solved hardcoded triggers issue in B2CC lines.
+ - StrippingBandQ/StrippingUpsilonExotic.py  update a bit the selection 
+   StrippingBandQ/StrippingPsiX0.py 
+   StrippingBandQ/StrippingPsiXForBandQ.py - more coherent treatment 
+ - Added private PVRefit algorithm in all the CombineParticle for python/StrippingSelections/StrippingBandQ/StrippingB2JpsiXforEM_s.py
+ - Added private PVRefit algorithm for python/StrippingSelections/StrippingBandQ/StrippingB2JpsiXforEM_s.py
+ - Updated default_configs in StrippingCharm/StrippingDstarD0ToHHPi0.py, StrippingDstarD2KShh.py, StrippingD2hh.py
+ - New trigger filtered sample for EM tuning
+ - Added test script for EM tuning
+ - StrippingCharm/StrippingD2PiPi0.py : removed cut on chi2 of DTF beam-constrained fit and tightened 
+   other selections.
+ - Stream adjustments in Radiative lines
+ - Added two temporary builders to StrippingB2CC for some tests (already deleted, tests finished).
+ - Modified collect_dicts.py output engine to use json builtin-lib. 
+ - Added RefitPVs in the default_config in StrippingBandQ/StrippingB2JpsiXforEM_s.py
+ - Updated StrippingKshort2eePiPi.py to reduce multiple candidates
+ - Fix test scripts to use algorithm correlation
+ - Remove the line StrippingH24MuLooseLine from the registerLine in StrippingH24MuLines.py as
+   suggested by authors.
+ - Comment out the modules from BandQ not going into production  in the __init__.py file
+ - Added new test scripts for liaisons and cordinators and modified collect_dicts.py script
+    
+*Phys/StrippingArchive
+ - Modified StrippingB2JpsiXforEM_s.py
+ - Add RefitPVs in the default_config in StrippingBandQ/StrippingB2JpsiXforEM_s.py
+ 
+*Phys/StrippingSettings
+ - Updated dbase for s22
+ - Solved hardcoded triggers of B2CC settings
+ - Prescale to TrackEffDownMuon on ALL and new S22 dbase
+ - DimuonEM sento to ALL as well, copy w/wo refit for JpsiX and new dbase for S22
+ - Fill Settings for QEE
+ - New dbase for s22 for B2JpsiX
+ - New dbase for s23 and filled up Charm dict as a test
+ - Fix to LineConfigDictionaries_Calib.py
+ - Copied all needed S23 configurations to LineConfigDictionaries_Calib.py
+
 !========================= StrippingSys v9r7 2015-05-29 =========================
 
 *Phys/CommonParticles
