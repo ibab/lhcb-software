@@ -4,6 +4,8 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v23r7p2 2015-06-29 =========================
+
 ! 2015-06-29 - Roel Aaij
  - Update transforms for split configuration to take the new monitoring
    sequence into account.
