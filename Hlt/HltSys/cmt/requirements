@@ -24,11 +24,12 @@ use HltTracking         v13r9    Hlt   # Sascha Stahl, Vava Gligorov
 use TCKUtils            v1r15p1  Hlt   # Gerhard Raven
 use LoKiTrigger         v15r7    Phys  # Vanya Belyaev
 
-# Additional packages for v23r7p1
+# Additional packages for v23r7p2
 use HltDAQ              v4r18    Hlt
 use DAQSys              v8r8p2   DAQ
 use RecAlgs             v3r3p1   Rec
 use HltServices         v2r8     Hlt
+use HltInterfaces       v6r1     Kernel
 
 # Declare this as a container package
 apply_pattern container_package
