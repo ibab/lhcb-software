@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v4r3 2015-06-29 ===============
+
 ! 2015-06-26 - Carlos Vazquez Sierra
  - Solved hardcoded triggers issue in B2CC lines.
 
