@@ -1,7 +1,7 @@
 ################################################################################
 # Package: IsolationTools
 ################################################################################
-gaudi_subdir(IsolationTools v1r3)
+gaudi_subdir(IsolationTools v1r4)
 
 gaudi_depends_on_subdirs(Phys/DaVinciTools
                          Phys/MVADictTools
