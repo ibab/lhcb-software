@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MooreOnlineConf
 ################################################################################
-gaudi_subdir(MooreOnlineConf v1r8)
+gaudi_subdir(MooreOnlineConf v1r9)
 
 gaudi_depends_on_subdirs(Det/DDDB
                          GaudiConf

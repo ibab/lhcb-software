@@ -4,6 +4,8 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+!========================= MooreOnlineConf v1r9 2015-06-29 =========================
+
 ! 2015-06-29 - Roel Aaij
  - Add property to indicate online process priority.
 
