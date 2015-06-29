@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-06-29 - Michael Kolpin
+ - Update for tag trigger requirements for trackeff lines
+
 !========================= StrippingSettings v2r37 2015-06-29 =========================
 
 ! 2015-06-29 - Andrea Contu
