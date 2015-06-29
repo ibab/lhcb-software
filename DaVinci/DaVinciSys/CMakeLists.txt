@@ -1,13 +1,14 @@
 ################################################################################
 # Package: DaVinciSys
 ################################################################################
-gaudi_subdir(DaVinciSys v36r7p4)
+gaudi_subdir(DaVinciSys v36r7p5)
 
 gaudi_depends_on_subdirs(DaVinciTests
 ########################################################
 ###  ADDED JUST FOR THIS PATCH RELEASE !!!
                          Event/EventPacker
                          Hlt/HltDAQ
+                         Hlt/HltServices
                          Phys/DaVinciMonitors
                          Phys/TeslaTools
                          Phys/DecayTreeTupleTrigger

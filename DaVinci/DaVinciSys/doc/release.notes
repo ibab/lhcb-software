@@ -4,6 +4,33 @@ Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
 
+</PRE><H1><A NAME=v36r7p5>2015-06-29 DaVinci v36r7p5</A></H1><PRE>
+
+Patch release identical to v36r7p5 except for
+
+- Packages updated :
+  DaVinciTests v2r33, Phys/DaVinci v36r7p5.
+
+- Patched package updated :
+  Hlt/HltDAQ v4r17.
+
+- Extra external packages added atop all the patches already in v36r7p4:
+  Hlt/HltServices v2r8.
+
+- In DaVinciTests v2r33 :
+  . Updated reference file of fsrs.qms/davinci-merge-small-files.qmt test.
+  . Updated references for stripping tests.
+
+- In Phys/DaVinci v36r7p5 :
+  . New patch release.
+
+- In Hlt/HltDAQ v4r17 :
+  . Updated DecoderBase to only supply the selection IDs that correspond to it's source ID. 
+  . Updated VertexReportsWriter to only check for selection IDs that correspond to its source ID.
+
+- In Hlt/HltServices v2r8 :
+  . Added an expert property to TCKANNSvc to allow injection of selection IDs.
+
 </PRE><H1><A NAME=v36r7p4>2015-06-22 DaVinci v36r7p4</A></H1><PRE>
 
 Patch release identical to v36r7p3 except for the
