@@ -111,7 +111,7 @@ class Tree:
         ctypes.c_int64: 'L', ctypes.c_uint64:   'l',
         ctypes.c_float: 'F', ctypes.c_double:   'D'
         }
-    
+
     ## return the object associated with a branch of the given tree.
     #
     # There are two modes of operation:

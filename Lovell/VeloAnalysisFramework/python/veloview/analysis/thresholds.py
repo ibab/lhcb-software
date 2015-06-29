@@ -13,8 +13,9 @@ class FloorThreshold(ComparisonFunction):
 
     """
 
+    @classmethod
     @check_hists1
-    def compare(self, data_hist, ref_hist, floor):
+    def compare(cls, data_hist, ref_hist, floor):
         """Reference histogram is ignored.
 
         data_hist -- data histogram
@@ -25,9 +26,9 @@ class FloorThreshold(ComparisonFunction):
 
         debug('Min: {}'.format(min_skip_empty(data_hist)))
         if min_skip_empty(data_hist) > floor:
-            return self.create_final_dict(Score(100), ERROR_LEVELS.OK)
+            return cls.create_final_dict(Score(100), ERROR_LEVELS.OK)
         else:
-            return self.create_final_dict(Score(0), ERROR_LEVELS.ERROR)
+            return cls.create_final_dict(Score(0), ERROR_LEVELS.ERROR)
 
 
 class CeilingThreshold(ComparisonFunction):
@@ -35,8 +36,9 @@ class CeilingThreshold(ComparisonFunction):
 
     """
 
+    @classmethod
     @check_hists1
-    def compare(self, data_hist, ref_hist, ceiling):
+    def compare(cls, data_hist, ref_hist, ceiling):
         """Reference histogram is ignored.
 
         data_hist -- data histogram
@@ -47,9 +49,9 @@ class CeilingThreshold(ComparisonFunction):
 
         debug('Max: {}'.format(maximum(data_hist)))
         if maximum(data_hist) < ceiling:
-            return self.create_final_dict(Score(100), ERROR_LEVELS.OK)
+            return cls.create_final_dict(Score(100), ERROR_LEVELS.OK)
         else:
-            return self.create_final_dict(Score(0), ERROR_LEVELS.ERROR)
+            return cls.create_final_dict(Score(0), ERROR_LEVELS.ERROR)
 
 
 class MeanWidthDiffRef(ComparisonFunction):
@@ -68,8 +70,9 @@ class MeanWidthDiffRef(ComparisonFunction):
 
     """
 
+    @classmethod
     @check_hists2
-    def compare(self, data_hist, ref_hist, tolerance):
+    def compare(cls, data_hist, ref_hist, tolerance):
         """
         data_hist -- data histogram
         ref_hist  -- reference histogram
@@ -87,7 +90,7 @@ class MeanWidthDiffRef(ComparisonFunction):
         else:                   # both fails: 0
             level = ERROR_LEVELS.ERROR
         debug('score: {}, level: {}'.format(score, level))
-        return self.create_final_dict(Score(score), level)
+        return cls.create_final_dict(Score(score), level)
 
 
 class AbsoluteBandRef(ComparisonFunction):
@@ -105,8 +108,9 @@ class ZeroCentredBandRef(ComparisonFunction):
 
     """
 
+    @classmethod
     @check_hists2
-    def compare(self, data_hist, ref_hist, abs_band):
+    def compare(cls, data_hist, ref_hist, abs_band):
         """If abs_band is evaluates to True, reference histogram is ignored.
 
         data_hist -- data histogram
@@ -124,6 +128,6 @@ class ZeroCentredBandRef(ComparisonFunction):
         debug('Fraction outside: {}, above: {}, below: {}'.
               format(frac_outside, frac_above, frac_below))
         if frac_outside > 0.01:
-            return self.create_final_dict(Score(0), ERROR_LEVELS.ERROR)
+            return cls.create_final_dict(Score(0), ERROR_LEVELS.ERROR)
         else:
-            return self.create_final_dict(Score(100), ERROR_LEVELS.OK)
+            return cls.create_final_dict(Score(100), ERROR_LEVELS.OK)

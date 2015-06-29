@@ -1,124 +1,116 @@
 """This module implements an interface to GiantRootFileIO"""
 
 from ..utils.rootutils import ROOT
+from ..utils.utils import flatten, unflatten
 from veloview.giantrootfile.gui_tree import Tree
-
-def flatten(pydict):
-    from copy import deepcopy
-    pydict = deepcopy(pydict)
-    if not isinstance(pydict, dict):
-        raise ValueError('Only dictionaries are supported: {}'.format(type(pydict)))
-    children = {}
-    for key in pydict:
-        if isinstance(pydict[key], dict):
-            children[key] = flatten(pydict[key])
-    for key, value in children.iteritems():
-        pydict.update([('.'.join([key,k]), v) for k,v in value.iteritems()])
-        del pydict[key]
-    return pydict
-
-def unflatten(pydict):
-    from copy import deepcopy
-    pydict = deepcopy(pydict)
-    if not isinstance(pydict, dict):
-        raise ValueError('Only dictionaries are supported: {}'.format(type(pydict)))
-    def nestkey(key, value):
-        keys = key.split('.')
-        res = {}
-        for k in reversed(keys):
-            res = {k: value}
-            value = res
-        return res
-    def mergedicts(res, new):
-        for k in new:
-            if res.has_key(k):
-                mergedicts(res[k], new[k])
-            else:
-                res.update({k: new[k]})
-    rows = [nestkey(key, pydict[key]) for key in pydict]
-    res = {}
-    for row in rows:
-        mergedicts(res, row)
-    return res
+import os
 
 class GRFIO(object):
-    """interface for versioned objects implemented by GiantRootFileIO."""
+    """Interface for versioned objects implemented by GiantRootFileIO."""
 
-    def __init__(self, fname, mode='read', tree='DQTree', title='', branches = None):
-        """Instantiating GRFIO needs the filename, mode, and tree name.
+    def __init__(self, fname, mode = 'read', treeName = 'DQTree', title ='',  branches = None):
+        """
+        Instantiate a new GRFIO object for interfacing with an (un)versioned
+        ROOT tree.
 
         fname    -- The ROOT file with versioned objects
         mode     -- Mode to open the file (create/new, read, update)
-        tree     -- Name of tree with versioned objects
+        treeName -- Name of tree with versioned objects
         branches -- List of branches, or dictionary of name and types
-
         """
+
+        if not isinstance(fname, str):
+            raise ValueError('File name must be a string')
+
         self.mode = mode.lower()
-        if self.mode == 'recreate':
-            raise ValueError('recreating not allowed')
-        if ((self.mode == 'create' or self.mode == 'new') and
-            not isinstance(branches, dict)):
-            raise ValueError('Branch name-type dictionary mandatory for creation')
+        if self.mode == 'new':
+            self.mode = 'create' #internally store 'new' as 'create' for easier parsing
+
+        if self.mode not in ['create', 'read', 'update']:
+            raise ValueError('File mode {} not allowed, must be one of create, new, read or update'.format(self.mode))
+
+        if self.mode == 'create':
+            if not isinstance(branches, dict):
+                raise ValueError('Branch name-type dictionary mandatory for creation')
+            if os.path.isfile(fname):
+                raise ValueError("Can't create existing file {}".format(fname))
+
         self._open_file(fname, self.mode)
-        self._open_tree(tree, title, branches)
+        self._open_tree(treeName, title, flatten(branches) if branches else None)
 
     def _open_file(self, fname, mode):
         """Internal method to open file"""
-        self.lock = ROOT.DotLock(fname)
+        #self.lock = ROOT.DotLock(fname)
         self.rfile = ROOT.TFile.Open(fname, mode)
+        if not self.rfile:
+            raise IOError("Giant ROOT file {} not found".format(fname))
 
-    def _open_tree(self, tree, title, branches):
+    def _open_tree(self, treeName, title, branches):
         """Internal method to open tree"""
         self.title = title
         self.branches = branches
-        testtree = self.rfile.Get(tree)
-        try:
-            self.tree = Tree(tree, treetitle = title, branches = branches)
-        except TypeError:
-            raise ValueError('Cannot find valid tree: {}'.format(tree))
+        if self.mode == 'create':
+            try:
+                self.tree = Tree(treeName, treetitle = title, branches = branches)
+            except TypeError:
+                raise ValueError('Cannot find valid tree: {}'.format(treeName))
+        else:
+            getTree = self.rfile.Get(treeName)
+            self.tree = Tree(treeName)
 
-    @staticmethod
-    def if_versioned(tree, branchname):
-        """Check if branch is versioned"""
+    @classmethod
+    def __getBranch(cls, tree, branchname):
+        """
+        Returns a tuple (isVersioned, branch), where isVersioned is a bool
+        specifiying whether the branch is versioned, and branch is the branch
+        of the specified tree corresponding to the branch name.
+        """
         branch = getattr(tree, branchname)
         return (hasattr(branch, 'value'), branch)
 
     def fill(self, dqdict):
         """Flatten and fill dictionary"""
-        if 'read' == self.mode:
+        if self.mode == 'read':
             raise RuntimeError('Cannot fill GRF in READ mode.')
         self._fill(self.tree, dqdict)
 
     def _fill(self, tree, dqdict):
-        """Internal method: flatten and fill dictionary
+        """
+        Internal method: flatten and fill dictionary
 
         FIXME: doesn't check if branches match type'
-
         """
         now = ROOT.TimeStamp()
         dqflat = flatten(dqdict)
         # FIXME: verify dqflat matches branch scheme
         for key, value in dqflat.iteritems():
-            versioned, branch = self.if_versioned(tree, key)
-            if versioned: branch[now] = value
-            else: setattr(tree, key, value)
+            isVersioned, branch = self.__class__.__getBranch(tree, key)
+            if isVersioned:
+                branch[now] = value
+            else:
+                setattr(tree, key, value)
         tree.Fill()
 
     def read(self, branches, version = None):
         """Read branches and return unflattened dictionaries."""
         res = {}
         for br in branches:
-            versioned, branch = self.if_versioned(self.tree, br)
+            isVersioned, branch = self.__class__.__getBranch(self.tree, br)
             # FIXME: check if requested version is valid
-            if version and versioned: value = branch[version]
-            else: value = branch
-            if versioned: res[br] = value.value()
-            else: res[br] = value
+            if version and isVersioned:
+                value = branch[version]
+            else:
+                value = branch
+
+            if isVersioned:
+                res[br] = value.value()
+            else:
+                res[br] = value
         return unflatten(res)
 
     def edit(self, entry_p, dqdict):
-        if 'read' == self.mode:
-            raise RuntimeError('Cannot fill GRF in READ mode.')
+        if self.mode == 'read':
+            raise RuntimeError('Cannot edit GRF in READ mode.')
 
         newfilename = '{}.new'.format(self.rfile.GetName())
         newlock = ROOT.DotLock(newfilename)
@@ -144,7 +136,7 @@ class GRFIO(object):
 
         from os import rename
         rename(newfilename, filename)
-        del self.lock
+        #del self.lock
         del newlock
 
         self.mode = 'update'

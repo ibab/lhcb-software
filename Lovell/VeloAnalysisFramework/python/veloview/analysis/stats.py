@@ -23,8 +23,9 @@ class KolmogorovSmirnovTest(ComparisonFunction):
 
     """
 
+    @classmethod
     @check_hists2
-    def compare(self, data_hist, ref_hist, options=''):
+    def compare(cls, data_hist, ref_hist, options=''):
         """
         data_hist -- data histogram
         ref_hist  -- reference histogram
@@ -57,7 +58,7 @@ class KolmogorovSmirnovTest(ComparisonFunction):
             raise NotImplementedError('KS distance option not implemented yet')
         debug('level: {}'.format(lvl))
 
-        return self.create_final_dict(score, lvl)
+        return cls.create_final_dict(score, lvl)
 
 
 class Chi2Test(ComparisonFunction):
@@ -82,9 +83,10 @@ class Chi2Test(ComparisonFunction):
 
     """
 
+    @classmethod
     @check_hists2
     @check_binning
-    def compare(self, data_hist, ref_hist, options):
+    def compare(cls, data_hist, ref_hist, options):
         """
         data_hist -- data histogram
         ref_hist  -- reference histogram (ignored)
@@ -132,4 +134,4 @@ class Chi2Test(ComparisonFunction):
                 lvl = ERROR_LEVELS.OK
         debug('level: {}'.format(lvl))
 
-        return self.create_final_dict(score, lvl)
+        return cls.create_final_dict(score, lvl)

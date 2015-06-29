@@ -3,10 +3,8 @@
 from .exceptions import AddingScoreException, ScoreAssignmentException, WeightedScoreException
 from ..utils.utils import enum
 
-
 # definition of the error levels for the project
 ERROR_LEVELS = enum("OK", "WARNING", "ERROR")
-
 
 class Score(object):
     """A class that will hold a score (integer value between 0 and 100). Scores will be later assigned to histograms."""
@@ -16,7 +14,7 @@ class Score(object):
             val = float(val)
 
         if isinstance(val, float):
-            if self.check_if_in_range(val):
+            if self.isInRange(val):
                 self.value = val
                 return
 
@@ -26,12 +24,12 @@ class Score(object):
         try:
             temp_val = self.value + other.value
         except AttributeError:
-            if self.check_if_number(other):
+            if self.isNumeric(other):
                 temp_val = self.value + other
             else:
                 raise AddingScoreException
 
-        if self.check_if_in_range(temp_val):
+        if self.isInRange(temp_val):
             return Score(temp_val)
         else:
             raise AddingScoreException
@@ -40,12 +38,12 @@ class Score(object):
         try:
             temp_val = self.value + other.value
         except AttributeError:
-            if self.check_if_number(other):
+            if self.isNumeric(other):
                 temp_val = self.value + other
             else:
                 raise AddingScoreException
 
-        if self.check_if_in_range(temp_val):
+        if self.isInRange(temp_val):
             self.value = temp_val
             return self
         else:
@@ -53,14 +51,14 @@ class Score(object):
 
     def __mul__(self, other):
         temp_val = self.value * other
-        if self.check_if_in_range(temp_val):
+        if self.isInRange(temp_val):
             return Score(temp_val)
         else:
             raise WeightedScoreException
 
     def __imul__(self, other):
         temp_val = self.value * other
-        if self.check_if_in_range(temp_val):
+        if self.isInRange(temp_val):
             self.value = temp_val
             return self
         else:
@@ -68,14 +66,14 @@ class Score(object):
 
     def __div__(self, other):
         temp_val = self.value / other
-        if self.check_if_in_range(temp_val):
+        if self.isInRange(temp_val):
             return Score(temp_val)
         else:
             raise WeightedScoreException
 
     def __idiv__(self, other):
         temp_val = self.value / other
-        if self.check_if_in_range(temp_val):
+        if self.isInRange(temp_val):
             self.value = temp_val
             return self
         else:
@@ -91,9 +89,9 @@ class Score(object):
         return repr(self)
 
     @staticmethod
-    def check_if_in_range(value):
-        return 0.0 <= value <= 100.0
+    def isInRange(value):
+        return Score.isNumeric(value) and 0.0 <= value <= 100.0
 
     @staticmethod
-    def check_if_number(value):
-        return isinstance(value, int) or isinstance(value, float)
+    def isNumeric(value):
+        return isinstance(value, (int, long, float))

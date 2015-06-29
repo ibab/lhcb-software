@@ -11,7 +11,6 @@ class CombinerExceptionWithNameAndOtherInfo(Exception):
         self.name = name
         self.other = other
 
-
 # Score exceptions
 class ScoreAssignmentException(Exception):
     def __str__(self):
@@ -31,8 +30,7 @@ class WeightedScoreException(Exception):
 # Container exceptions
 class ComparisonFunctionNotFoundInEvalDictException(CombinerExceptionWithName):
     def __str__(self):
-        return "A comparison function could not been found in the evaluation dictionary for the combiner {}".format(
-            self.name)
+        return "A comparison function could not been found in the evaluation dictionary for the combiner {}".format(self.name)
 
 
 class ComparisonFunctionNotCollableException(CombinerExceptionWithNameAndOtherInfo):
@@ -47,10 +45,14 @@ class WeightContainerLackingWeightException(Exception):
 
 class DescriptionDictionaryKeyException(CombinerExceptionWithNameAndOtherInfo):
     def __str__(self):
-        return "Combiner's name: {} could not be found in the clipped combiners description dictionary ({})".format(
-            self.name, self.other)
+        return "Combiner's name: {} could not be found in the clipped combiners description dictionary ({})".format(self.name, self.other)
 
 
 class CombinerIdentificationException(CombinerExceptionWithNameAndOtherInfo):
     def __str__(self):
         return "Combiner: {} could not be assign appropriate expected state values ({})".format(self.name, self.other)
+
+
+class HistogramNotFoundException(CombinerExceptionWithNameAndOtherInfo):
+    def __str__(self):
+        return "Combiner {} can't find expected histogram {}".format(self.name, self.other)
