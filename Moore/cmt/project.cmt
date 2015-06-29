@@ -1,6 +1,6 @@
 project MOORE
 
-use HLT     HLT_v23r7p1
+use HLT     HLT_v23r7p2
 
 container       MooreSys
 build_strategy	with_installarea
