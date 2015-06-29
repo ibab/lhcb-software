@@ -49,7 +49,7 @@ HistoWrapper::HistoWrapper( HltMassMonitor* algo, const std::string& histoName,
    }
 
    auto monSvc = algo->hltMonSvc();
-   if (monSvc) {
+   if (monSvc.isValid()) {
       auto bins = boost::numeric_cast<size_t>(massDef[2]);
       HltHistogram& mass = monSvc->histogram(algo->name() + "/" + name() + "_mass()",
                                              massDef[0], massDef[1], bins);

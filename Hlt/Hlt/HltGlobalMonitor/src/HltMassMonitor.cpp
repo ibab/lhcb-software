@@ -93,9 +93,9 @@ StatusCode HltMassMonitor::initialize()
    }
 
    // Hlt Monitoring Service
-   try {
-      m_hltMonSvc = svc<IHltMonitorSvc>(m_monSvc, false);
-   } catch (const GaudiException&) {
+   m_hltMonSvc = svcLoc()->service(m_monSvc, false);
+   // If we cannot retrieve it, HLT2 style monitoring is disabled.
+   if (!m_hltMonSvc.isValid()) {
       info() << "Could not retrieve " << m_monSvc << endmsg;
    }
 

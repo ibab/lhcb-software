@@ -48,13 +48,13 @@ public:
    // update the condition
    StatusCode updateCondition();
 
-   IHltMonitorSvc* hltMonSvc() {
+   SmartIF<IHltMonitorSvc> hltMonSvc() {
       return m_hltMonSvc;
    }
 
 private:
 
-   IHltMonitorSvc* m_hltMonSvc = nullptr;
+   SmartIF<IHltMonitorSvc> m_hltMonSvc;
    std::string m_monSvc;
 
    // Histogram definitions
