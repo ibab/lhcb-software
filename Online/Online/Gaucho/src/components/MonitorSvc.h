@@ -4,6 +4,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IMonitorSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IUpdateable.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "GaudiKernel/StatEntity.h"
 #include <typeinfo>
@@ -41,6 +42,7 @@ Algorithm.Property and returns the value of the property.
 class MonitorSvc
 : virtual public IGauchoMonitorSvc,
   virtual public IIncidentListener,
+  virtual public IUpdateableIF,
   virtual public Service
 {
   StatusCode i_start();
@@ -48,7 +50,7 @@ class MonitorSvc
 
   void i_unsupported(const std::string& name, const std::type_info& typ, const IInterface* owner);
   template<class T> void i_declareCounter(const std::string& name, const T&  var,
-					  const std::string& desc, const IInterface* owner);
+            const std::string& desc, const IInterface* owner);
 
 public:
   MonitorSvc(const std::string& name, ISvcLocator* sl);
@@ -128,6 +130,7 @@ public:
   void updateAll( bool  , const IInterface*  = 0) {};
   void resetHistos( const IInterface* owner = 0 ) ;
   void setRunNo(int runno);
+  StatusCode update(int id){updateSvc("",id,0);return StatusCode::SUCCESS;};
   //void resetHistos(bool saveHistos);
 
 private:

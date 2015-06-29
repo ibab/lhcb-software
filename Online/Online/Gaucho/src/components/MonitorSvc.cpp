@@ -46,6 +46,9 @@ StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
   else if ( IIncidentListener::interfaceID().versionMatch(riid) ) {
     *ppvIF = (IIncidentListener*)this;
   }
+  else if ( IUpdateableIF::interfaceID().versionMatch(riid) ) {
+    *ppvIF = (IUpdateableIF*)this;
+  }
   else {
     return Service::queryInterface(riid, ppvIF);
   }
@@ -592,7 +595,7 @@ void MonitorSvc::declareInfo(const string& name, const string& format, const voi
 void MonitorSvc::declareInfo(const string& name, const StatEntity& var,
                              const string& desc, const IInterface* owner)
 {
-	  string oname = infoOwnerName(owner);
+    string oname = infoOwnerName(owner);
   if (m_started)
   {
     printf("Delcare Info called after start for Name %s\n",name.c_str());
