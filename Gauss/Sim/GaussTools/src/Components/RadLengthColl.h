@@ -68,6 +68,15 @@ private:
   NTuple::Array< float >  m_cumradlgh, m_p2pradlgh, m_cuminterlgh, m_p2pinterlgh;
   NTuple::Array< float >  m_eta, m_phi;
   NTuple::Array< long >   m_planeID;
+  NTuple::Item< float >  m_origx;
+  NTuple::Item< float >  m_origy;
+  NTuple::Item< float >  m_origz;
+  //std::vector< float >   mp_origx;
+  //std::vector< float >   mp_origy;
+  //std::vector< float >   mp_origz;
+  float    mp_origx;
+  float    mp_origy;
+  float    mp_origz;
 
   NTuple::Tuple* m_matScan_PlaneDatas ;
 

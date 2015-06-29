@@ -4,10 +4,10 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
-! 2015-06-26 - Luca Pescatore
- - Removed safe in RadLengthColl causing tool to break if
-   the origin of the particles was not (0,0,0).
-   Compiles and runs but needs more testing
+! 2015-06-29 - Luca Pescatore
+ - Introduced the possibility of having a origin vertex 
+   different than (0,0,0) in the RadLengthColl tool.
+   Vertex information is also saved in the output tuple.
 
 !======================= GaussTools v19r2p2 2014-11-18 =======================
 ! 2014-11-19 - Marco Clemencic

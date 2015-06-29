@@ -59,11 +59,17 @@
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( RadLengthColl )
 
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
-RadLengthColl::RadLengthColl( const std::string& name, const std::string& type, const IInterface*  parent )
-	: GiGaStepActionBase( name , type, parent ){}
+	//=============================================================================
+	// Standard constructor, initializes variables
+	//=============================================================================
+	RadLengthColl::RadLengthColl( const std::string& name, const std::string& type, const IInterface*  parent )
+: GiGaStepActionBase( name , type, parent ),
+	mp_origx(0.), mp_origy(0.), mp_origz(0.)
+{
+	declareProperty( "orig_x" , mp_origx ) ;	
+	declareProperty( "orig_y" , mp_origy ) ;
+	declareProperty( "orig_z" , mp_origz ) ;
+}
 
 
 //=============================================================================
@@ -119,6 +125,9 @@ StatusCode RadLengthColl::initialize()  {
 			status = m_matScan_PlaneDatas->addIndexedItem ("p2pradlgh",m_ntrk,m_p2pradlgh);
 			status = m_matScan_PlaneDatas->addIndexedItem ("cuminterlgh",m_ntrk,m_cuminterlgh);
 			status = m_matScan_PlaneDatas->addIndexedItem ("p2pinterlgh",m_ntrk,m_p2pinterlgh);
+			status = m_matScan_PlaneDatas->addItem ("origx",m_origx);
+			status = m_matScan_PlaneDatas->addItem ("origy",m_origy);
+			status = m_matScan_PlaneDatas->addItem ("origz",m_origz);
 			if( !status.isSuccess() ) 
 			{
 				err() << "Failure booking ntuples" << endmsg;
@@ -176,8 +185,13 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 	initial_position = thePreStepPoint->GetPosition();
 
 	// initialize the counters at the origin of the track
-	//if(initial_position[0] == 0 && initial_position[1] == 0 && initial_position[2] == 0 )
-	//{
+	debug() << "Origin vertex position: " << mp_origx << "  " << mp_origy << "  " << mp_origz << endmsg;
+	if(initial_position[0] - mp_origx < 1e-6 && initial_position[1] - mp_origy < 1e-6  && initial_position[2] - mp_origz < 1e-6 )
+	{
+		m_origx  = mp_origx;
+		m_origy  = mp_origy;
+		m_origz  = mp_origz;
+
 		// Radiation Length
 		theRadLength = 0;
 		theCumulatedRadLength = 0;
@@ -191,7 +205,7 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 		// Other stuff
 		index = 0;
 		m_ntrk = 0;
-	//}
+	}
 
 	// Getting Step Length
 	StepLength = theStep->GetStepLength();
@@ -212,14 +226,14 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 	VolName = (std::string) Vol->GetName();
 
 	// This commented block of code does not include interaction lengths
-	
-	   debug() << "*** - VolName - *** = " << VolName << endmsg;
-	
-	   debug() << "*** - Zpos - *** = " << thePreStepPoint->GetPosition().z() << endmsg;
-	   debug() << "*** - stepsize  - *** = " << StepLength << endmsg;
-		debug() << "*** - Material RadLength - *** = " << MaterialRadiationLength << endmsg;
-		debug() << "*** - theRadLength  - *** = " << theRadLength << endmsg;
-		debug() << "*** - CumulativeRadLength  - *** = " << theCumulatedRadLength << endmsg;
+
+	debug() << "*** - VolName - *** = " << VolName << endmsg;
+
+	debug() << "*** - Zpos - *** = " << thePreStepPoint->GetPosition().z() << endmsg;
+	debug() << "*** - stepsize  - *** = " << StepLength << endmsg;
+	debug() << "*** - Material RadLength - *** = " << MaterialRadiationLength << endmsg;
+	debug() << "*** - theRadLength  - *** = " << theRadLength << endmsg;
+	debug() << "*** - CumulativeRadLength  - *** = " << theCumulatedRadLength << endmsg;
 
 
 
@@ -234,7 +248,7 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 
 			VolumeName="Scoring_Plane";
 			IDPlane = VolName.substr(pos+13,100);
-			
+
 			debug() << IDPlane << endmsg;
 			IDP = atoi(IDPlane.c_str());
 
