@@ -24,8 +24,8 @@
  *  
 
  *
- *  @author Yasmine Sarah Amhis
- *  @date   2005-07-15
+ *  @author Yasmine Sarah Amhis, Luca Pescatore
+ *  @date   2015-06-29
  */
 
 class RadLengthColl : virtual public GiGaStepActionBase {

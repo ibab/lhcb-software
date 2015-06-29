@@ -54,6 +54,7 @@
 //
 // 2005-07-19 : Yasmine Sarah Amhis
 // 2009-05-29 : Silvia Migliranzi
+// 2015-06-29 : Luca Pescatore
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
