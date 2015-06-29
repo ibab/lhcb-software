@@ -1,4 +1,4 @@
-/*****************************************************************************
+/*********************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenModels
  *    File: $Id: EvtD0mixDalitz.cpp,v 1.2 2009-10-19 15:47:44 robbep Exp $
@@ -8,7 +8,10 @@
  *
  * Modification history:
  *   Jordi Garra Ticó     2008/07/03         File created
- *****************************************************************************/
+ *   Jordi Garra Ticó     2015/06/29         Bug solved for negative values of y
+ *********************************************************************************/
+
+#include <cmath> // for std::fabs
 
 #include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtParticle.hh"
@@ -149,11 +152,11 @@ void EvtD0mixDalitz::decay( EvtParticle* part )
   EvtComplex chi = _qp * barAOverA;
 
   // Generate a negative exponential life time. p( gt ) = ( 1 - y ) * e^{ - ( 1 - y ) gt }
-  double gt = -log( EvtRandom::Flat() ) / ( 1.0 - _y );
+  double gt = -log( EvtRandom::Flat() ) / ( 1.0 - std::fabs( _y ) );
   part->setLifetime( gt / _gamma );
 
   // Compute time dependent amplitude.
-  EvtComplex amp = 0.5 * ampDalitz * exp( - _y * gt / 2.0 ) * ( ( 1.0 + chi ) * h1( gt ) + ( 1.0 - chi ) * h2( gt ) );
+  EvtComplex amp = 0.5 * ampDalitz * exp( - std::fabs( _y ) * gt / 2.0 ) * ( ( 1.0 + chi ) * h1( gt ) + ( 1.0 - chi ) * h2( gt ) );
 
   vertex( amp );
 
