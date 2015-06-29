@@ -1,3 +1,7 @@
+2015-06-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* getpack: fixed LBCORE-849, missing tag of package was not an error
+
 2015-06-22  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v5r4p1

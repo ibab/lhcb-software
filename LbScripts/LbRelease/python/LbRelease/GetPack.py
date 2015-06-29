@@ -1012,6 +1012,7 @@ class GetPack(Script):
             print "Skipped packages (not in the repositories):"
             for p in sorted(skipped_packages):
                 print "\t%s\t%s" % (p, skipped_packages[p])
+            self.retval = 1 # this is a failure
 
     def _fixProjectNameCase(self, name):
         # Check if the project is known using a case insensitive comparison
