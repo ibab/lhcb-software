@@ -106,8 +106,8 @@ LowMultINC = {
         'PrescaleLowMultPi0'              : 1,
         'DecisionLowMultPi0'              : "HLT_PASS_RE('Hlt2LowMultPi0Decision')",
         #
-        'PrescaleLowMultTMP'         : 0,
-        'DecisionLowMultTMP'         : None,
+        'PrescaleLowMultTMP'         : 1,
+        'DecisionLowMultTMP'         : "HLT_PASS_RE('Hlt2NonBeamBeamNoBiasDecision')  | HLT_PASS_RE('Hlt2LowMultTechnical_MinBiasDecision')",
     }
 }
 
