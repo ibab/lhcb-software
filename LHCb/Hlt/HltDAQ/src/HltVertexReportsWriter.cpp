@@ -185,6 +185,9 @@ boost::optional<int> HltVertexReportsWriter::selectionNameToInt
       v = ann.value(Hlt1SelectionID,name);
    } else if (m_sourceID == kSourceID_Hlt2) {
       v = ann.value(Hlt2SelectionID,name);
+   } else if (m_sourceID == kSourceID_Hlt) {
+      v = ann.value(Hlt1SelectionID,name);
+      if (!v) ann.value(Hlt2SelectionID,name);
    }
    return v ? boost::optional<int>{ v->second } : boost::optional<int>{ } ;
 }
