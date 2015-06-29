@@ -2,7 +2,7 @@
 ################################################################################
 # Package: IncTopoVert
 ################################################################################
-gaudi_subdir(IncTopoVert v1r5)
+gaudi_subdir(IncTopoVert v1r6)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          Event/RecEvent

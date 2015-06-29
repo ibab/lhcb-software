@@ -3,7 +3,7 @@
 # Maintainer : Mathieu Perrin-Terrin
 #============================================================================
 package           IncTopoVert
-version           v1r5
+version           v1r6
 
 #============================================================================
 # Structure, i.e. directories to process.
