@@ -123,4 +123,12 @@ def frac_below_threshold(hist, threshold):
     return hist.Integral(1, tbin)/hist.Integral()
 
 
-## Tree utils
+## File utils
+def detect_zombies(file1, file2):
+    """Detect root zombie files, return None in place of file if zombie."""
+    if not file1 or file1.IsZombie():
+        file1 = None
+    if not file2 or file2.IsZombie():
+        file2 = None
+
+    return file1, file2
