@@ -25,6 +25,7 @@ class HCDigitMonitor : public GaudiHistoAlg {
 
   virtual StatusCode initialize();  ///< Algorithm initialization
   virtual StatusCode execute();     ///< Algorithm execution
+  virtual StatusCode finalize();    ///< Algorithm finalization
 
  private:
   /// TES location of digits.
@@ -37,6 +38,9 @@ class HCDigitMonitor : public GaudiHistoAlg {
   unsigned int m_crateB;
   /// Number of F-side crate
   unsigned int m_crateF;
+
+  /// ADC binning
+  std::vector<double> m_edges;
 
   /// Channel mappings
   std::vector<unsigned int> m_channelsB0;
@@ -89,6 +93,13 @@ class HCDigitMonitor : public GaudiHistoAlg {
   std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrant;
   std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantEven;
   std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantOdd;
+
+  /// Additional term added to the ADC to get the correct average.
+  std::vector<double> m_adcCorrection;
+
+  void scale(AIDA::IHistogram1D* h);
+  void mapChannels(const std::vector<unsigned int>& channels,
+                   const bool bwd, const unsigned int station);
 };
 
 #endif

@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-06-29 - Heinrich Schindler
+ - Use variable ADC binning. 
+
 ! 2015-06-19 - Heinrich Schindler
  - Add python module.
 

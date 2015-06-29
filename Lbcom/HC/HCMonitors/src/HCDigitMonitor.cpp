@@ -1,6 +1,10 @@
+// ROOT
+#include "TH1.h"
+
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiUtils/HistoLabels.h"
+#include "GaudiUtils/Aida2ROOT.h"
 
 // LHCb
 // Event/DAQEvent
@@ -21,7 +25,7 @@ DECLARE_ALGORITHM_FACTORY(HCDigitMonitor)
 HCDigitMonitor::HCDigitMonitor(const std::string& name, ISvcLocator* pSvcLocator)
     : GaudiHistoAlg(name, pSvcLocator),
       m_odin(NULL),
-      m_parAdc("", -0.5, 1023.5, 1023) {
+      m_parAdc("", -0.5, 1023.5, 64) {
 
   declareProperty("DigitLocation", m_digitLocation = LHCb::HCDigitLocation::Default);
   declareProperty("CrateB", m_crateB = 0);
@@ -50,6 +54,21 @@ StatusCode HCDigitMonitor::initialize() {
 
   // Get ODIN.
   m_odin = tool<IEventTimeDecoder>("OdinTimeDecoder", "OdinDecoder", this);
+
+  // Setup the binning and ADC correction.
+  m_adcCorrection.resize(1024, 0.);
+  unsigned int adc = 0;
+  unsigned int step = 1;
+  m_edges.clear();
+  while (adc < 1024) {
+    m_edges.push_back(adc - 0.5);
+    if (adc == 128) step = 2;
+    else if (adc == 256) step = 8;
+    else if (adc == 512) step = 16; 
+    m_adcCorrection[adc] = 0.5 * (step - 1.);
+    adc += step;   
+  } 
+  m_edges.push_back(1023.5);
 
   // Setup the histograms.
   std::vector<std::string> stations = {"B0", "B1", "B2", "F1", "F2"};
@@ -82,16 +101,13 @@ StatusCode HCDigitMonitor::initialize() {
   const unsigned int nChannels = 64;
   for (unsigned int i = 0; i < nChannels; ++i) {
     // Book histograms for ADC distributions for each channel.
-    auto bins = m_parAdc.bins();
-    const double low = m_parAdc.lowEdge();
-    const double high = m_parAdc.highEdge();
     const std::string ch = "Channel" + std::to_string(i);
-    m_hAdcB.push_back(book1D("ADC/B/" + ch, ch, low, high, bins));
-    m_hAdcF.push_back(book1D("ADC/F/" + ch, ch, low, high, bins));
-    m_hAdcEvenB.push_back(book1D("ADC/B/Even/" + ch, ch, low, high, bins));
-    m_hAdcEvenF.push_back(book1D("ADC/F/Even/" + ch, ch, low, high, bins));
-    m_hAdcOddB.push_back(book1D("ADC/B/Odd/" + ch, ch, low, high, bins));
-    m_hAdcOddF.push_back(book1D("ADC/F/Odd/" + ch, ch, low, high, bins));
+    m_hAdcB.push_back(book1D("ADC/B/" + ch, ch, m_edges));
+    m_hAdcF.push_back(book1D("ADC/F/" + ch, ch, m_edges));
+    m_hAdcEvenB.push_back(book1D("ADC/B/Even/" + ch, ch, m_edges));
+    m_hAdcEvenF.push_back(book1D("ADC/F/Even/" + ch, ch, m_edges));
+    m_hAdcOddB.push_back(book1D("ADC/B/Odd/" + ch, ch, m_edges));
+    m_hAdcOddF.push_back(book1D("ADC/F/Odd/" + ch, ch, m_edges));
     setAxisLabels(m_hAdcB[i], "ADC", "Entries");
     setAxisLabels(m_hAdcF[i], "ADC", "Entries");
     setAxisLabels(m_hAdcEvenB[i], "ADC", "Entries");
@@ -101,17 +117,14 @@ StatusCode HCDigitMonitor::initialize() {
   }
   for (unsigned int i = 0; i < 4; ++i) {
     // Book histograms for ADC distributions for each quadrant.
-    auto bins = m_parAdc.bins();
-    const double low = m_parAdc.lowEdge();
-    const double high = m_parAdc.highEdge();
     const std::string qu = "Quadrant" + std::to_string(i);
     for (unsigned int j = 0; j < nStations; ++j) {
       std::string name = "ADC/" + stations[j] + "/" + qu;
-      m_hAdcQuadrant.push_back(book1D(name, qu, low, high, bins));
+      m_hAdcQuadrant.push_back(book1D(name, qu, m_edges));
       name = "ADC/" + stations[j] + "/Even/" + qu;
-      m_hAdcQuadrantEven.push_back(book1D(name, qu, low, high, bins));
+      m_hAdcQuadrantEven.push_back(book1D(name, qu, m_edges));
       name = "ADC/" + stations[j] + "/Odd/" + qu;
-      m_hAdcQuadrantOdd.push_back(book1D(name, qu, low, high, bins));
+      m_hAdcQuadrantOdd.push_back(book1D(name, qu, m_edges));
       const unsigned int index = i * nStations + j;
       setAxisLabels(m_hAdcQuadrant[index], "ADC", "Entries");
       setAxisLabels(m_hAdcQuadrantEven[index], "ADC", "Entries");
@@ -140,83 +153,11 @@ StatusCode HCDigitMonitor::initialize() {
   m_stationF.resize(nChannels, 0);
   m_quadrantB.resize(nChannels, 0);
   m_quadrantF.resize(nChannels, 0);
-  bool okB0 = true;
-  if (m_channelsB0.size() != 4) {
-    warning() << "Invalid channel map for station B0." << endmsg;
-    okB0 = false;
-  }
-  bool okB1 = true;
-  if (m_channelsB1.size() != 4) {
-    warning() << "Invalid channel map for station B1." << endmsg;
-    okB1 = false;
-  }
-  bool okB2 = true;
-  if (m_channelsB2.size() != 4) {
-    warning() << "Invalid channel map for station B2." << endmsg;
-    okB2 = false;
-  }
-  bool okF1 = true;
-  if (m_channelsF1.size() != 4) {
-    warning() << "Invalid channel map for station F1." << endmsg;
-    okF1 = false;
-  }
-  bool okF2 = true;
-  if (m_channelsF2.size() != 4) {
-    warning() << "Invalid channel map for station F2." << endmsg;
-    okF2 = false;
-  }
-  for (unsigned int i = 0; i < 4; ++i) {
-    if (okB0) {
-      const unsigned int channel = m_channelsB0[i];
-      if (m_mappedB[channel]) {
-        warning() << "Channel " << channel << " (B) "
-                  << "is mapped to more than one PMT." << endmsg;
-      }
-      m_mappedB[channel] = true;
-      m_stationB[channel] = 0;
-      m_quadrantB[channel] = i;
-    }
-    if (okB1) {
-      const unsigned int channel = m_channelsB1[i];
-      if (m_mappedB[channel]) {
-        warning() << "Channel " << channel << " (B) "
-                  << "is mapped to more than one PMT." << endmsg;
-      }
-      m_mappedB[channel] = true;
-      m_stationB[channel] = 1;
-      m_quadrantB[channel] = i;
-    }
-    if (okB2) {
-      const unsigned int channel = m_channelsB2[i];
-      if (m_mappedB[channel]) {
-        warning() << "Channel " << channel << " (B) "
-                  << "is mapped to more than one PMT." << endmsg;
-      }
-      m_mappedB[channel] = true;
-      m_stationB[channel] = 2;
-      m_quadrantB[channel] = i;
-    }
-    if (okF1) {
-      const unsigned int channel = m_channelsF1[i];
-      if (m_mappedF[channel]) {
-        warning() << "Channel " << channel << " (F) "
-                  << "is mapped to more than one PMT." << endmsg;
-      }
-      m_mappedF[channel] = true;
-      m_stationF[channel] = 1;
-      m_quadrantF[channel] = i;
-    }
-    if (okF2) {
-      const unsigned int channel = m_channelsF2[i];
-      if (m_mappedF[channel]) {
-        warning() << "Channel " << channel << " (F) "
-                  << "is mapped to more than one PMT." << endmsg;
-      }
-      m_mappedF[channel] = true;
-      m_stationF[channel] = 2;
-      m_quadrantF[channel] = i;
-    }
-  }
+  mapChannels(m_channelsB0, true, 0);
+  mapChannels(m_channelsB1, true, 1);
+  mapChannels(m_channelsB2, true, 2);
+  mapChannels(m_channelsF1, false, 1);
+  mapChannels(m_channelsF2, false, 2);
   return StatusCode::SUCCESS;
 }
 
@@ -245,7 +186,7 @@ StatusCode HCDigitMonitor::execute() {
   for (LHCb::HCDigit* digit : *digits) {
     const unsigned int crate = digit->cellID().crate();
     const unsigned int channel = digit->cellID().channel();
-    const int adc = digit->adc();
+    const double adc = digit->adc() + m_adcCorrection[digit->adc()];
     unsigned int station = 0;
     unsigned int quadrant = 0;
     unsigned int offset = 0;
@@ -301,3 +242,75 @@ StatusCode HCDigitMonitor::execute() {
   }
   return StatusCode::SUCCESS;
 }
+
+//=============================================================================
+// Finalisation
+//=============================================================================
+StatusCode HCDigitMonitor::finalize() {
+
+  const unsigned int nChannels = 64;
+  for (unsigned int i = 0; i < nChannels; ++i) {
+    scale(m_hAdcB[i]);
+    scale(m_hAdcF[i]);
+    scale(m_hAdcEvenB[i]);
+    scale(m_hAdcEvenF[i]);
+    scale(m_hAdcOddB[i]);
+    scale(m_hAdcOddF[i]);
+  }
+  const unsigned int nStations = 5;
+  for (unsigned int i = 0; i < 4; ++i) {
+    for (unsigned int j = 0; j < nStations; ++j) {
+      const unsigned int index = i * nStations + j;
+      scale(m_hAdcQuadrant[index]);
+      scale(m_hAdcQuadrantEven[index]);
+      scale(m_hAdcQuadrantOdd[index]);
+    }
+  }
+  return GaudiHistoAlg::finalize();
+}
+
+//=============================================================================
+// Rescale variable-bin histogram using bin width.
+//=============================================================================
+void HCDigitMonitor::scale(AIDA::IHistogram1D* h) {
+
+  auto hRoot = Gaudi::Utils::Aida2ROOT::aida2root(h);
+  // hRoot->Sumw2();
+  hRoot->Scale(1., "width");
+}
+
+//=============================================================================
+// Setup channel map for a given station.
+//=============================================================================
+void HCDigitMonitor::mapChannels(const std::vector<unsigned int>& channels,
+                                 const bool bwd, const unsigned int station) {
+
+  if (channels.size() != 4) {
+    std::string s = bwd ? "B" : "F";
+    s += std::to_string(station); 
+    warning() << "Invalid channel map for station " << s << "." << endmsg;
+    return;
+  }
+  for (unsigned int i = 0; i < 4; ++i) {
+    const unsigned int channel = channels[i];
+    if (bwd) {
+      if (m_mappedB[channel]) {
+        warning() << "Channel " << channel << " (B) "
+                  << "is mapped to more than one PMT." << endmsg;
+      }
+      m_mappedB[channel] = true;
+      m_stationB[channel] = station;
+      m_quadrantB[channel] = i;
+    } else {
+      if (m_mappedF[channel]) {
+        warning() << "Channel " << channel << " (F) "
+                  << "is mapped to more than one PMT." << endmsg;
+      }
+      m_mappedF[channel] = true;
+      m_stationF[channel] = station;
+      m_quadrantF[channel] = i;
+    }
+  }
+
+}
+
