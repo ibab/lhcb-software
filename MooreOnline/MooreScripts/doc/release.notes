@@ -4,6 +4,11 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2015-06-29 - Roel Aaij
+ - Set the priority of the tasks according to the MooreOnlineConf propery.
+ - Remove special options for running in LHCb1 partition; this partition is
+   no longer in use.
+
 !========================= MooreScripts v1r10 2015-05-28 =========================
 
 ! 2015-05-XX - Markus Frank
@@ -16,11 +21,11 @@
  - Allow Hlt2 to run on MDF files in partition TEST.
  - Hlt2 will run in partition LHCb2 on MDF files from disk. Make sure it actually
    registers it's interest in MDF events with the buffer manager.
-   
+
 ! 2015-01-06 - Roel Aaij
  - Update MooreOnline.ForceMDF to ForceMDFInput
  - Fix printing of timing table in runOfflineOnline.py
- 
+
 ! 2015-01-05 - Roel Aaij
  - Remove default database tags from runOnline.py and force presence of CondDB
    and DDDTag in module ConditionsMap.
@@ -56,7 +61,7 @@
 
 ! 2014-06-30 - Eric van Herwijnen
  - Previous version of CreateRunEFF.py was corrupted
- - Fix some bugs in runOnline.py 
+ - Fix some bugs in runOnline.py
 
 
 !========================= MooreScripts v1r3 2014-06-19 =========================
@@ -64,7 +69,7 @@
 ! 2014-06-07 - Eric van Herwijnen
  - CreateRunEFF.py for checkpointing
  - runOnline.py Hlt1 reads MEPS, Hlt2 MDF files
- 
+
 
 !========================= MooreScripts v1r2 2014-04-29 =========================
 

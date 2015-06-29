@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import os
+
 def configure(**kwargs) :
     # Add some expected stuff to OnlineEnv
     import OnlineEnv
@@ -14,7 +16,7 @@ def configure(**kwargs) :
     moore_tests = __import__("MooreTests" , globals(), locals(), [kwargs.get('UserPackage')])
     user_package = getattr(moore_tests, kwargs.pop('UserPackage'))
     input_type = kwargs.pop('InputType', 'MEP')
-    
+
     # Only a single setting directly for Moore
     from Moore.Configuration import Moore, MooreExpert
     moore = Moore()
@@ -29,6 +31,10 @@ def configure(**kwargs) :
     mooreOnline.EnableRunChangeHandler = None
     mooreOnline.UseDBSnapshot = False
     mooreOnline.CheckOdin = False
+
+    ### Process priority
+    nice = mooreOnline.getProp("Priority")[HltLevel]
+    os.nice(nice)
 
     # Add the timing auditor by hand with output level INFO, as Moore is never
     # going to do it for us if the rest is at WARNING
@@ -51,12 +57,12 @@ def configure(**kwargs) :
         from Gaudi.Configuration import allConfigurables
         from Configurables import CondDBAccessSvc
         for conf in allConfigurables.itervalues():
-            if type(conf) == CondDBAccessSvc:  
+            if type(conf) == CondDBAccessSvc:
                 conf.ConnectionTimeOut = 0
-        
+
     from Gaudi.Configuration import appendPostConfigAction
     appendPostConfigAction(no_timeout)
-    
+
     ## from Gaudi.Configuration import appendPostConfigAction
     ## def info_dammit():
     ##     from Configurables import LHCbTimingAuditor, LHCbSequencerTimerTool
@@ -65,7 +71,7 @@ def configure(**kwargs) :
     ##     ta.addTool(LHCbSequencerTimerTool, name = 'TIMER')
     ##     ta.TIMER.OutputLevel = OnlineEnv.OutputLevel
     ## appendPostConfigAction(info_dammit)
-                    
+
     # This is the stuff that should come from the PRConfig user module
     for conf, d in { moore: {'DDDBtag' : str, 'CondDBtag' : str},
                      mooreOnline : {'UseTCK' : bool, 'Simulation' : bool,
@@ -88,10 +94,10 @@ def configure(**kwargs) :
         mooreOnline.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
     elif mooreOnline.HltLevel == 'Hlt2':
         mooreOnline.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
-        
+
     # Apparently we need to set this, otherwise something goes wrong with
     # default properties being retrieved that have the wrong type.
-    from Gaudi.Configuration import EventSelector    
+    from Gaudi.Configuration import EventSelector
     moore.inputFiles = [ ]
     EventSelector().Input = []
 
