@@ -127,8 +127,6 @@ StatusCode HltMassMonitor::execute()
       for (HistoWrapper* wrapper : m_wrappers) {
          wrapper->fill(selReports);
       }
-   } else {
-      warning() << "No HltSelReports found at " << m_selReportsLocation << endmsg;
    }
    setFilterPassed(true);
    return StatusCode::SUCCESS;

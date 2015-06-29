@@ -396,8 +396,9 @@ StatusCode HltGlobalMonitor::initialize()
 //=============================================================================
 StatusCode HltGlobalMonitor::execute()
 {
-    auto decReports = fetch<LHCb::HltDecReports>( m_hltDecReportsLocation );
     LHCb::ODIN* odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default );
+    auto decReports = fetch<LHCb::HltDecReports>( m_hltDecReportsLocation, false );
+    if (!decReports) return StatusCode::SUCCESS;
 
     monitorODIN( odin, decReports );
     monitorHLT( odin, decReports );
