@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Gaucho
 ################################################################################
-gaudi_subdir(Hlt2Monitoring v0r1)
+gaudi_subdir(Hlt2Monitoring v1r0)
 
 gaudi_depends_on_subdirs(GaudiKernel
                          Online/DIM

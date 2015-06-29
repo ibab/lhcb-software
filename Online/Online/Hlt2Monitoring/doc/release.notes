@@ -4,6 +4,8 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+!========================= Hlt2Monitoring v1r0 2015-06-29 ====================
+
 ! 2015-06-24 - Roel Aaij
  - Use a base class for all services.
  - Add initial SaverSvc.
