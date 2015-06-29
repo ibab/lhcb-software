@@ -725,20 +725,18 @@ class Moore(LHCbConfigurableUser):
             # Hlt1 transform: remove items starting with Hlt2
             #                 enable track reports writers
             #                 remove lumi stripper...
-            trans['Hlt1'] = { 'GaudiSequencer/HltDecisionSequence' : { 'Members' : { ",[^']*'[^/]*/Hlt(2|Afterburner)[^']*'" : "" } }
-                            , 'HltTrackReportsWriter/.*'           : { 'Enable'  : { "^.*$" : 'True' } }
-                            , 'GaudiSequencer/HltEndSequence'      : { 'Members' : { ", 'GaudiSequencer/LumiStripper'": "" } }
-                            , 'HltGlobalMonitor/.*'                : { 'Hlt2DecReports' : { '^.*$' : ''    } }
-                            , 'HltL0GlobalMonitor/.*'              : { 'Hlt2DecReports' : { '^.*$' : ''    } }
+            trans['Hlt1'] = { 'GaudiSequencer/Hlt(Decision|Monitor)Sequence$' : { 'Members' : { ",[^']*'[^/]*/Hlt(2|Afterburner)[^']*'" : "" } }
+                            , 'HltTrackReportsWriter/.*'                      : { 'Enable'  : { "^.*$" : 'True' } }
+                            , 'GaudiSequencer/HltEndSequence'                 : { 'Members' : { ", 'GaudiSequencer/LumiStripper'": "" } }
             }
             ### Hlt2 transform: remove all algorithms starting with Hlt1
             ###                 enable various reports decoders
             ###                 TODO: remove/disable the 'producers'
             ###                 TODO: if running 'independent' somehow replace track decoder with velo reco ...
-            trans['Hlt2'] = { 'GaudiSequencer/Hlt(Decision|End)Sequence$' : { 'Members' : { "'[^'/]*/Hlt1[^']*'[^,]*," : ""  } }
-                            , 'HltTrackReportsDecoder/.*' : { 'Enable' : { '^.*$' : '%s' % ( not MooreExpert().getProp("Hlt2Independent") ) } }
-                            , 'HltSelReportsDecoder/.*'   : { 'Enable' : { '^.*$' : 'True' } }
-                            , 'HltDecReportsDecoder/.*'   : { 'Enable' : { '^.*$' : 'True' } }
+            trans['Hlt2'] = { 'GaudiSequencer/Hlt(Decision|Monitor|End)Sequence$' : { 'Members' : { "'[^'/]*/Hlt1[^']*'[^,]*," : ""  } }
+                            , 'HltTrackReportsDecoder/.*'                         : { 'Enable' : { '^.*$' : '%s' % ( not MooreExpert().getProp("Hlt2Independent") ) } }
+                            , 'HltSelReportsDecoder/.*'                           : { 'Enable' : { '^.*$' : 'True' } }
+                            , 'HltDecReportsDecoder/.*'                           : { 'Enable' : { '^.*$' : 'True' } }
             }
             Funcs._mergeTransform(trans[split])
             # Tell the HltConfigSvc that we will only be running
