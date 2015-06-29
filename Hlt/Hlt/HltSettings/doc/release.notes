@@ -4,14 +4,14 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v6r16 2015-06-28 =========================
+
 ! 2015-06-29 - Francesco Dettori
  - Added a first settings draft for 25ns running: python/HltSettings/Commissioning_Physics_25ns_2015.py
-   It includes a more realistic setting for the Muon lines. 
+   It includes a more realistic setting for the Muon lines.
 
 ! 2015-06-29 - Sean Benson
  - Added 2 new low mult lines to LowMultEM2015.
-
-!========================= HltSettings v6r16 2015-06-28 =========================
 
 ! 2015-06-29 - Christian Linn
  - changed L0 TCK in Physics_draftEM2015 to 0x014E
