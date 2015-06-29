@@ -105,30 +105,36 @@ HltRawBankDecoderBase::IdTable_t::const_iterator
 HltRawBankDecoderBase::fetch_id2string(unsigned int tck) const
 {
     IdTable_t::mapped_type tbl;
-    auto append0 =  [&]( const Gaudi::StringKey& id) {
+    auto append0 =  [&]( const Gaudi::StringKey& id, bool decode ) {
            for ( const auto& item : m_hltANNSvc->item_map( id ) ) {
-               tbl.insert( { item.second, { item.first , true }  } );
+               tbl.insert( { item.second, { item.first , decode }  } );
            }
     };
-    auto append1 =  [&]( const Gaudi::StringKey& id) {
+    auto append1 =  [&]( const Gaudi::StringKey& id, bool decode ) {
            for ( const auto& item : m_TCKANNSvc->i2s( tck,  id ) ) {
-               tbl.insert( { item.first, { item.second , true  } } ); // TODO: check for clashes...
+               tbl.insert( { item.first, { item.second , decode  } } ); // TODO: check for clashes...
            }
     };
-    std::function<void(const Gaudi::StringKey&)> append;
+
+    std::function<void(const Gaudi::StringKey&, bool)> append;
     if (tck==0) {
        warning() << "TCK obtained from rawbank seems to be 0 -- blindly ASSUMING that the current HltANNSvc somehow has the same configuration as when the input data was written. Proceed at your own risk, good luck..." << endmsg;
        append = append0;
     } else {
        append = append1;
     }
+
+    bool decode_hlt1 = ( m_sourceID == kSourceID_Hlt1 || m_sourceID == kSourceID_Hlt);
+    bool decode_hlt2 = ( m_sourceID == kSourceID_Hlt2 || m_sourceID == kSourceID_Hlt);
     if (m_sourceID == kSourceID_Hlt1) {
-       append(Hlt1SelectionID);
+       append(Hlt1SelectionID, decode_hlt1);
+       append(Hlt2SelectionID, decode_hlt2);
     } else if (m_sourceID == kSourceID_Hlt2) {
-       append(Hlt2SelectionID);
+       append(Hlt2SelectionID, decode_hlt2);
+       append(Hlt1SelectionID, decode_hlt1);
     } else if (m_sourceID == kSourceID_Hlt) {
-       append(Hlt1SelectionID);
-       append(Hlt2SelectionID);
+       append(Hlt1SelectionID, decode_hlt1);
+       append(Hlt2SelectionID, decode_hlt2);
     }
     auto res = m_idTable.insert( tck, tbl );
     assert(res.second);
