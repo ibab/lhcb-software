@@ -6,6 +6,8 @@
                 COPYING.LESSER. See README.md for more information.
 !-----------------------------------------------------------------------------
 
+!========================= ZeroMQ v4r1p2 2015-06-29 =======================
+
 ! 2015-06-25 - Roel Aaij
  - Updated to 4.1.2
  - Added (I)ZeroMQSvc
