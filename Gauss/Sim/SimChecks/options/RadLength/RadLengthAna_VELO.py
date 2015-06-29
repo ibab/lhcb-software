@@ -5,7 +5,7 @@
 ## In order for this to work you also need Gauss-Job.py and MaterialEvalGun.py ##
 ##                                                                             ##
 ##  @author : L.Pescatore                                                      ##
-##  @date   : last modified on 2013-06-09                                      ##
+##  @date   : last modified on 2015-06-29                                      ##
 #################################################################################
 
 from Gaudi.Configuration import *

@@ -15,8 +15,6 @@ import os
 base = os.environ["SIMCHECKSROOT"] + "/options/RadLength/"
 from RadLengthMakePlots import makePlots
 
-useganga = False
-
 pwd = os.environ['PWD']
 outputpath = pwd
 out = 'Rad_merged.root'

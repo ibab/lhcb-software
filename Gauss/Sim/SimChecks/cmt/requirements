@@ -38,4 +38,5 @@ apply_pattern install_python_modules
 set	TARGETOPTS $(SIMCHECKSROOT)/options/Target
 
 alias 'rad_length_scan' 'rad_length_scan.py'
+alias 'rad_length_scan_velo_z' 'rad_length_scan_velo_z.py'
 
