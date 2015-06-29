@@ -16,8 +16,7 @@ branches          cmt doc src zmq
 # use   Package      v1r*    Hat
 use GaudiKernel v*
 
-apply_pattern install_more_includes more=zmq
-apply_pattern install_more_includes more=ZeroMQ
+apply_pattern install_more_includes more=zmq offset=ZeroMQ
 
 #============================================================================
 # Component library building rule
@@ -25,6 +24,11 @@ apply_pattern install_more_includes more=ZeroMQ
 library          zmq    ../src/*.cpp
 library          ZeroMQ ../component/*.cpp
 
+private
+macro_append     cppflags "" \
+                 target-gcc " -D_REENTRANT -D_THREAD_SAFE -DZMQ_USE_POLL "
+macro_append     zmq_shlibflags " -lrt " WIN32 ""
+end_private
 #============================================================================
 # define component library link options
 #============================================================================
