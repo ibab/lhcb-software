@@ -91,7 +91,9 @@ class TurboOnly( object ):
                 'Hlt2DiMuonPsi2STurbo',
 		'Hlt2DiMuonBTurbo',
 		'Hlt2JPsiReFitPVsTurbo',
-		'Hlt2RadiativeB2GammaGammaTurbo'
+		'Hlt2RadiativeB2GammaGammaTurbo',
+                'Hlt2LowMultDiMuonTurboCalib',
+                'Hlt2LowMultLMR2HHTurboCalib'
           ]
 
 
