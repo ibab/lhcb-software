@@ -4,11 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+
+!========================= HltSettings v6r16 2015-06-28 =========================
+
 ! 2015-06-29 - Christian Linn
  - changed L0 TCK in Physics_draftEM2015 to 0x014E
  - Added prescales for RichMirror lignes and default thresholds for CalibMuonAlignJpsi
-
-!========================= HltSettings v6r16 2015-06-28 =========================
 
 ! 2015-06-28 - Roel Aaij
  - Add CalibMuonAlignJpsi to Hlt1 lines of Phyisics_draftEM2015 and
