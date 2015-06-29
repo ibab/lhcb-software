@@ -4,6 +4,8 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+!========================= MooreScripts v1r11 2015-06-29 =========================
+
 ! 2015-06-29 - Roel Aaij
  - Set the priority of the tasks according to the MooreOnlineConf propery.
  - Remove special options for running in LHCb1 partition; this partition is
