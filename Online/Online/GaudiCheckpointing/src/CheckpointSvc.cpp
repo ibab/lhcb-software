@@ -263,53 +263,53 @@ namespace  {
       // Decouple as quickly as possible from the DIM command loop !
       std::string cmd = getString();
       if      ( cmd == "configure"  ) {
-	// This may never occur again for the checkpointed process!
-	m_fsm->output(MSG::FATAL,"Logic error: A checkpointed process may never be initialized a second time!");
-	m_fsm->setTargetState(ITaskFSM::ST_READY);
-	m_fsm->declareState(ITaskFSM::ST_READY);
-	m_check->restartChildren(false);
+        // This may never occur again for the checkpointed process!
+        m_fsm->output(MSG::FATAL,"Logic error: A checkpointed process may never be initialized a second time!");
+        m_fsm->setTargetState(ITaskFSM::ST_READY);
+        m_fsm->declareState(ITaskFSM::ST_READY);
+        m_check->restartChildren(false);
       }
       else if ( cmd == "start"      ) {
-	m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
-	m_fsm->declareState(ITaskFSM::ST_RUNNING);
-	m_check->restartChildren(true);
+        m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
+        m_fsm->declareState(ITaskFSM::ST_RUNNING);
+        m_check->restartChildren(true);
       }
       else if ( cmd == "stop"       ) {
-	m_fsm->setTargetState(ITaskFSM::ST_STOPPED);
-	m_fsm->declareState  (ITaskFSM::ST_STOPPED);
-	m_check->restartChildren(false);
+        m_fsm->setTargetState(ITaskFSM::ST_STOPPED);
+        m_fsm->declareState  (ITaskFSM::ST_STOPPED);
+        m_check->restartChildren(false);
       }
       else if ( cmd == "pause"      ) {
-	m_fsm->setTargetState(ITaskFSM::ST_PAUSED);
-	m_fsm->declareState  (ITaskFSM::ST_PAUSED);
-	m_check->restartChildren(false);
+        m_fsm->setTargetState(ITaskFSM::ST_PAUSED);
+        m_fsm->declareState  (ITaskFSM::ST_PAUSED);
+        m_check->restartChildren(false);
       }
       else if ( cmd == "continue"   ) {
-	m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
-	m_fsm->declareState(ITaskFSM::ST_RUNNING);
-	m_check->restartChildren(false);
+        m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
+        m_fsm->declareState(ITaskFSM::ST_RUNNING);
+        m_check->restartChildren(false);
       }
       else if ( cmd == "reset"      ) {
-	m_fsm->setTargetState(ITaskFSM::ST_NOT_READY);
-	m_fsm->declareState(ITaskFSM::ST_NOT_READY);
-	m_check->restartChildren(false);
+        m_fsm->setTargetState(ITaskFSM::ST_NOT_READY);
+        m_fsm->declareState(ITaskFSM::ST_NOT_READY);
+        m_check->restartChildren(false);
       }
       else if ( cmd == "!state" )  {
-	const std::string& old_state = m_fsm->stateName();
+        const std::string& old_state = m_fsm->stateName();
         m_fsm->_declareState(old_state);
         return;
       }
       else if ( cmd == "unload" || cmd == "recover" || cmd == "RESET" ) {
-	m_fsm->setTargetState(ITaskFSM::ST_UNKNOWN);
-	m_fsm->declareState(ITaskFSM::ST_UNKNOWN);
-	// Sleep for 1 second, then exit
-	::lib_rtl_sleep(1000);
-	m_check->releaseChildren();
-	::_exit(EXIT_SUCCESS);
+        m_fsm->setTargetState(ITaskFSM::ST_UNKNOWN);
+        m_fsm->declareState(ITaskFSM::ST_UNKNOWN);
+        // Sleep for 1 second, then exit
+        ::lib_rtl_sleep(1000);
+        m_check->releaseChildren();
+        ::_exit(EXIT_SUCCESS);
       }
       else {
-	m_fsm->declareState(ITaskFSM::ST_ERROR);
-	m_fsm->declareSubState(ITaskFSM::UNKNOWN_ACTION);
+        m_fsm->declareState(ITaskFSM::ST_ERROR);
+        m_fsm->declareSubState(ITaskFSM::UNKNOWN_ACTION);
       }
     }
   };
@@ -368,8 +368,8 @@ StatusCode CheckpointSvc::initialize() {
     if ( m_connectDIM ) {
       sc = System::getProcedureByName(0,"DimTaskFSM_instance",(System::EntryPoint*)&func);
       if( !sc.isSuccess() ) {
-	log << MSG::FATAL << "Cannot access function: DimTaskFSM_instance" << endmsg;
-	return sc;
+        log << MSG::FATAL << "Cannot access function: DimTaskFSM_instance" << endmsg;
+        return sc;
       }
       log << MSG::INFO << RTL::processName() << "> Reconnect handle:" << (unsigned long)func;
       m_fsm = (ITaskFSM*)func();
@@ -409,20 +409,19 @@ StatusCode CheckpointSvc::start() {
     m_forkQueue.clear();
     if ( m_useCores || (m_numInstances != 0) )   {
       stopMainInstance();
-      checkpointing_dump_threads();
       int n_child = m_useCores ? numCores() + m_numInstances : m_numInstances;
       for(int i=0; i<n_child; ++i)    {
-	pid_t pid = forkChild(i+1);
-	if ( 0 == pid )   {
-	  return execChild();
-	}
+        pid_t pid = forkChild(i+1);
+        if ( 0 == pid )   {
+          return execChild();
+        }
       }
       m_restartChildren = true;
       m_state = m_targetState;     // Update internal Gaudi FSM
       resumeMainInstance(true);    // And restore execution
       if ( m_connectDIM )  {
-	m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
-	m_fsm->declareState(ITaskFSM::ST_RUNNING);
+        m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
+        m_fsm->declareState(ITaskFSM::ST_RUNNING);
       }
       return watchChildren();  // Will never return for the parent's instance!
     }
@@ -464,7 +463,7 @@ void CheckpointSvc::debugWait(int value)  const  {
     if ( cnt>0 ) {
       char text[1024];
       ::snprintf(text,sizeof(text),"[ERROR] +++ Going into wait loop (%d seconds)"
-		 " for debugging: --pid %d\n",value,(int)syscall(SYS_getpid));
+                 " for debugging: --pid %d\n",value,(int)syscall(SYS_getpid));
       ::write(STDOUT_FILENO,text,strlen(text));
     }
     while( r && cnt>0 ) {
@@ -531,15 +530,15 @@ int CheckpointSvc::numCores() const {
     ::close(fd);
     if ( rc > 0 ) {
       for(q=p=buff; p<buff+rc;++p) {
-	if ( *p == '\n' ) {
-	  if( *(short*)q == *(short*)"cpu" ) {
-	    if      ( q[3]==' ' ) n_core = 1;
-	    else if ( q[4]==' ' ) n_core = (q[3]-'0') + 1;
-	    else if ( q[5]==' ' ) n_core = (q[3]-'0')*10 + (q[4]-'0') + 1;
-	  }
-	  else if ( *(int*)q == *(int*)"intr" ) break;
-	  q = p+1;
-	}
+        if ( *p == '\n' ) {
+          if( *(short*)q == *(short*)"cpu" ) {
+            if      ( q[3]==' ' ) n_core = 1;
+            else if ( q[4]==' ' ) n_core = (q[3]-'0') + 1;
+            else if ( q[5]==' ' ) n_core = (q[3]-'0')*10 + (q[4]-'0') + 1;
+          }
+          else if ( *(int*)q == *(int*)"intr" ) break;
+          q = p+1;
+        }
       }
     }
   }
@@ -621,41 +620,41 @@ int CheckpointSvc::parseRestartOptions()    {
       SmartIF<IProperty> prp(msgSvc());
       sc = jos->setMyProperties("MessageSvc", prp);
       if ( sc.isSuccess() ) {
-     	sc = setProperties();
-	if ( sc.isSuccess() ) {
-	  RTL::RTL_reset();
-	  string utgid = buildChildUTGID(m_firstChild);
-	  checkpointing_set_utgid(utgid.c_str());
-	  const char* dns = ::getenv("DIM_DNS_NODE");
-	  MsgStream log(msgSvc(),name());
-	  SmartIF<IAlgManager> algMgr(serviceLocator());
-	  for(vector<string>::const_iterator i=m_restoreOptionClients.begin(); i!=m_restoreOptionClients.end();++i) {
-	    const string& nam = *i;
-	    IAlgorithm* alg = 0;
-	    IProperty* prop = 0;
-	    sc = StatusCode::FAILURE;
-	    if ( (sc=algMgr->getAlgorithm(nam,alg)).isSuccess() ) {
-	      prp = alg;
-	      sc = jos->setMyProperties(alg->name(), prp);
-	    }
-	    else if ( (sc=serviceLocator()->service(nam,prop)).isSuccess() )  {
-	      sc = jos->setMyProperties(nam, prop);
-	    }
-	    if ( !sc.isSuccess() )  {
-	      log << MSG::FATAL << "Failed to update properties of:" << nam << endmsg;
-	      return sc;
-	    }
-	  }
-	  log << MSG::INFO << "Processed RESTARTOPTS:" << env
-	      << " Process:" << RTL::processName()
-	      << " Node:" << RTL::nodeNameShort()
-	      << " DNS:" << (const char*)(dns ? dns : "???????")
-	      << endmsg;
-	  return StatusCode::SUCCESS;
-	}
-	MsgStream err(msgSvc(),name());
-	err << MSG::FATAL << "Failed to update properties of MessageSvc." << endmsg;
-	return sc.getCode();
+        sc = setProperties();
+        if ( sc.isSuccess() ) {
+          RTL::RTL_reset();
+          string utgid = buildChildUTGID(m_firstChild);
+          checkpointing_set_utgid(utgid.c_str());
+          const char* dns = ::getenv("DIM_DNS_NODE");
+          MsgStream log(msgSvc(),name());
+          SmartIF<IAlgManager> algMgr(serviceLocator());
+          for(vector<string>::const_iterator i=m_restoreOptionClients.begin(); i!=m_restoreOptionClients.end();++i) {
+            const string& nam = *i;
+            IAlgorithm* alg = 0;
+            IProperty* prop = 0;
+            sc = StatusCode::FAILURE;
+            if ( (sc=algMgr->getAlgorithm(nam,alg)).isSuccess() ) {
+              prp = alg;
+              sc = jos->setMyProperties(alg->name(), prp);
+            }
+            else if ( (sc=serviceLocator()->service(nam,prop)).isSuccess() )  {
+              sc = jos->setMyProperties(nam, prop);
+            }
+            if ( !sc.isSuccess() )  {
+              log << MSG::FATAL << "Failed to update properties of:" << nam << endmsg;
+              return sc;
+            }
+          }
+          log << MSG::INFO << "Processed RESTARTOPTS:" << env
+              << " Process:" << RTL::processName()
+              << " Node:" << RTL::nodeNameShort()
+              << " DNS:" << (const char*)(dns ? dns : "???????")
+              << endmsg;
+          return StatusCode::SUCCESS;
+        }
+        MsgStream err(msgSvc(),name());
+        err << MSG::FATAL << "Failed to update properties of MessageSvc." << endmsg;
+        return sc.getCode();
       }
     }
     MsgStream err(msgSvc(),name());
@@ -684,18 +683,18 @@ int CheckpointSvc::saveCheckpoint() {
       write(3,"[Error] Restore complete.....\n",31);
       ::close(fd);
       if ( ret == 1 )   {
-	//!!!!!!! No printing here! other threads may lock output!!!!!!!
-	// MsgStream log(msgSvc(),name());
-	// log << MSG::INFO << MARKER;
-	// log << " FINISHED loading process from checkpoint..."
-	//    << "Continue processing... " << endmsg;
+        //!!!!!!! No printing here! other threads may lock output!!!!!!!
+        // MsgStream log(msgSvc(),name());
+        // log << MSG::INFO << MARKER;
+        // log << " FINISHED loading process from checkpoint..."
+        //    << "Continue processing... " << endmsg;
       }
       else {
-	MsgStream log(msgSvc(),name());
-	log << MSG::INFO << MARKER << " FINISHED CHECKPOINT " << endmsg;
-	if ( m_connectDIM ) {
-	  log << "Wrote checkpoint with " << ret << " bytes to " << m_checkPoint << endmsg;
-	}
+        MsgStream log(msgSvc(),name());
+        log << MSG::INFO << MARKER << " FINISHED CHECKPOINT " << endmsg;
+        if ( m_connectDIM ) {
+          log << "Wrote checkpoint with " << ret << " bytes to " << m_checkPoint << endmsg;
+        }
       }
       return StatusCode::SUCCESS;
     }
@@ -710,8 +709,8 @@ int CheckpointSvc::saveCheckpoint() {
 
 /// Checkpoint main process instance. Stops dim
 int CheckpointSvc::stopMainInstance() {
-  MsgStream log(msgSvc(),name());
   // First get rid of DIM
+  // Debug ONLY: checkpointing_set_print_level(1);
   if ( m_connectDIM ) {
     m_fsm->disconnectDIM();
   }
@@ -756,7 +755,7 @@ int CheckpointSvc::resumeMainInstance(bool with_resume_child_threads) {
     Command* command = 0;
     if ( m_useCores || (m_numInstances != 0) )   {
       if ( FSMState() == Gaudi::StateMachine::RUNNING )    {
-	command = new Command(proc,this,m_fsm);
+        command = new Command(proc,this,m_fsm);
       }
     }
     m_fsm->connectDIM(command);
@@ -789,10 +788,17 @@ int CheckpointSvc::forkChild(int which) {
     checkpointing_set_utgid(proc.c_str());
   }
   else if (pid < 0)    {        // failed to fork
-    char text[256];
-    ::snprintf(text,sizeof(text),"[ERROR] Failed to fork child:%s %s\n",utgid.c_str(),::strerror(errno));
-    ::write(STDOUT_FILENO,text,strlen(text));
-    ::_exit(EXIT_FAILURE);
+    bool do_wait = true;
+    char text[512];
+    int err = errno;
+    ::snprintf(text,sizeof(text),"[ERROR] Failed to fork child:%s -> %s [%d]\n",utgid.c_str(),::strerror(err),err);
+    while (do_wait)   {
+      ::write(STDOUT_FILENO,text,strlen(text));
+      ::write(STDOUT_FILENO,text,strlen(text));
+      ::write(STDERR_FILENO,text,strlen(text));
+      //::_exit(EXIT_FAILURE);
+      ::lib_rtl_sleep(5000);
+    }
   }
   return pid;
 }
@@ -846,19 +852,19 @@ int CheckpointSvc::watchChildren() {
     if ( count > 0 && m_restartChildren ) {
       stopMainInstance();
       for(Children::const_iterator i=m_children.begin(); i!=m_children.end();++i) {
-	int id  = (*i).first;
-	if ( (*i).second == -1 ) {
-	  int pid = forkChild(id);
-	  if ( 0 == pid )    {
-	    // This is a child process. Exit here and ensure start() is completed!
-	    return execChild();
-	  }
-	  // Parents continue with the loop until all dead childen are restarted!
-	  if ( m_forkQueLen > 0 )  {
-	    m_forkQueue.push_back(time(0));
-	    if ( int(m_forkQueue.size()) > m_forkQueLen ) m_forkQueue.pop_front();
-	  }
-	}
+        int id  = (*i).first;
+        if ( (*i).second == -1 ) {
+          int pid = forkChild(id);
+          if ( 0 == pid )    {
+            // This is a child process. Exit here and ensure start() is completed!
+            return execChild();
+          }
+          // Parents continue with the loop until all dead childen are restarted!
+          if ( m_forkQueLen > 0 )  {
+            m_forkQueue.push_back(time(0));
+            if ( int(m_forkQueue.size()) > m_forkQueLen ) m_forkQueue.pop_front();
+          }
+        }
       }
       resumeMainInstance(true);
       checkForkFrequency();
@@ -867,10 +873,10 @@ int CheckpointSvc::watchChildren() {
       MsgStream log(msgSvc(),name());
       log << MSG::DEBUG << "watchChildren:";
       for(Children::const_iterator i=m_children.begin(); i!=m_children.end();++i) {
-	if ( (*i).second != -1 )
-	  log << (*i).second << " ";
-	else
-	  log << "No." << (*i).first << "/DEAD ";
+        if ( (*i).second != -1 )
+          log << (*i).second << " ";
+        else
+          log << "No." << (*i).first << "/DEAD ";
       }
       log << endmsg;
     }
@@ -887,12 +893,12 @@ int CheckpointSvc::waitChildren() {
     w_pid = ::waitpid(0, &status, WUNTRACED | WCONTINUED | WNOHANG);
     if ( w_pid > 0 ) {
       for(Children::const_iterator i=m_children.begin(); i!=m_children.end();++i) {
-	int id  = (*i).first;
-	int pid = (*i).second;
-	if ( pid == w_pid ) {
-	  m_children[id] = -1;
-	  ++count;
-	}
+        int id  = (*i).first;
+        int pid = (*i).second;
+        if ( pid == w_pid ) {
+          m_children[id] = -1;
+          ++count;
+        }
       }
     }
   } while (w_pid>0);
@@ -921,7 +927,7 @@ void CheckpointSvc::checkForkFrequency()  {
       // stop us if the flag m_restartChildren is going to false.
       MsgStream log(msgSvc(),name());
       log << MSG::FATAL << "HLT_FUCKED: Forked the last " << m_forkQueLen 
-	  << " children in only " << (end-start) << " seconds. THIS IS NOT NORMAL." << endmsg;
+          << " children in only " << (end-start) << " seconds. THIS IS NOT NORMAL." << endmsg;
       log << MSG::FATAL << "Will stop forking until reset command." << endmsg;
       m_restartChildren = false;
     }
@@ -939,16 +945,16 @@ void CheckpointSvc::handle(const Incident& inc) {
       StatusCode sc;
       stopMainInstance();
       if ( !(sc=saveCheckpoint()).isSuccess() ) {
-	MsgStream log(msgSvc(),name());
-	log << MSG::FATAL << "Failed to create checkpoint for process:"
-	    << RTL::processName() << endmsg;
-	throw GaudiException("Failed to save checkpoint:"+m_checkPoint, name(), StatusCode::FAILURE);
+        MsgStream log(msgSvc(),name());
+        log << MSG::FATAL << "Failed to create checkpoint for process:"
+            << RTL::processName() << endmsg;
+        throw GaudiException("Failed to save checkpoint:"+m_checkPoint, name(), StatusCode::FAILURE);
       }
       int typ = checkpointing_restart_type();
       bool restore =  typ == 1;
       sc = ( restore ) ? finishRestore() : finishCheckpoint();
       if ( !sc.isSuccess() ) {
-	throw GaudiException("Failed to continue from checkpoint.", name(), StatusCode::FAILURE);
+        throw GaudiException("Failed to continue from checkpoint.", name(), StatusCode::FAILURE);
       }
       resumeMainInstance(!restore);
     }

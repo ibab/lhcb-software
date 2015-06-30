@@ -3,8 +3,7 @@
 #include "linux/futex.h"
 #include "Restore.h"
 
-static FutexState s_threadslocked;
-
+static FutexState s_threadslocked(0);
 
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_threads_unlock() {
   WMB; // flush data written before unlocking

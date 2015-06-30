@@ -377,16 +377,16 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_stack(SysInfo* sys,
         }
         else if ( 0 == m_strncmp(ep,"MTCP_OUTPUT=",11) ) {
           char* ptr = ep + 12;
-	  if ( *ptr == 'D' || *ptr == 'V' || *ptr=='0' || *ptr == '1' )
-	    mtcp_set_debug_level(MTCP_DEBUG);
-	  if ( *ptr == 'I' || *ptr=='2' )
-	    mtcp_set_debug_level(MTCP_INFO);
-	  if ( *ptr == 'W' || *ptr=='3' )
-	    mtcp_set_debug_level(MTCP_WARNING);
-	  if ( *ptr == 'E' || *ptr=='4' )
-	    mtcp_set_debug_level(MTCP_ERROR);
-	  if ( *ptr == 'F' || *ptr=='5' )
-	    mtcp_set_debug_level(MTCP_FATAL);
+          if ( *ptr == 'D' || *ptr == 'V' || *ptr=='0' || *ptr == '1' )
+            mtcp_set_debug_level(MTCP_DEBUG);
+          if ( *ptr == 'I' || *ptr=='2' )
+            mtcp_set_debug_level(MTCP_INFO);
+          if ( *ptr == 'W' || *ptr=='3' )
+            mtcp_set_debug_level(MTCP_WARNING);
+          if ( *ptr == 'E' || *ptr=='4' )
+            mtcp_set_debug_level(MTCP_ERROR);
+          if ( *ptr == 'F' || *ptr=='5' )
+            mtcp_set_debug_level(MTCP_FATAL);
         }
         else if ( *(short*)ep == *(short*)"_=" ) break;
       }

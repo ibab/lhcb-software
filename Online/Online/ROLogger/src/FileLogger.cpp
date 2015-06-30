@@ -58,9 +58,10 @@ FileLogger::FileLogger(int argc, char** argv)
   : MessageLogger(3,true,false), m_useTimeForName(true), m_connected(false)
 {
   bool not_use_time = false;
-  string partition, title;
+  string partition, title, facility;
   RTL::CLI cli(argc, argv, help_fun);
   cli.getopt("partition",1,partition);
+  cli.getopt("facility",1,facility);
   cli.getopt("logdir",1,m_outdir);
   cli.getopt("severity",1,m_severity);
   not_use_time = cli.getopt("notime",1) != 0;
@@ -75,6 +76,11 @@ FileLogger::FileLogger(int argc, char** argv)
     ::lib_rtl_sleep(3000);
     closeUPI();
   }
+  if ( facility.empty() && partition == "LHCb1" ) facility = "lhcb1";
+  else if ( facility.empty() && partition == "LHCb2" ) facility = "lhcb2";
+  else if ( facility.empty() && partition == "LHCbA" ) facility = "lhcba";
+  else if ( facility.empty() ) facility = "gaudi";
+
   m_id = UpiSensor::instance().newID();
   title = "Error logger:"+partition;
   ::strncpy(m_msgSeverity,s_SevList[m_severity-1],sizeof(m_msgSeverity));
@@ -100,7 +106,7 @@ FileLogger::FileLogger(int argc, char** argv)
     ::lib_rtl_sleep(3000);
     closeUPI();
   }
-  m_listener = new PartitionListener(this,partition);
+  m_listener = new PartitionListener(this,partition,facility);
   UpiSensor::instance().add(this,m_id);
   m_quit = new UPI::ReallyClose(m_id,CMD_CLOSE);
   ::upic_set_cursor(m_id,CMD_SHOW,0);

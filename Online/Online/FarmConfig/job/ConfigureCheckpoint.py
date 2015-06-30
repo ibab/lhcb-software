@@ -107,17 +107,19 @@ class Checkpoint:
     return self.output('export NUM_CORES=${NBOFSLAVES};')
 
   def setupNormal(self):
+    ##.output('export LD_PRELOAD='+self.checkpoint_bin+'/lib/libCheckpointing.so;') \    
     return self.initProcess().output('export APP_STARTUP_OPTS=-normal;') \
         .output('export CHECKPOINTING_BIN='+self.checkpoint_bin+';') \
-        .output('export LD_PRELOAD='+self.checkpoint_bin+'/lib/libCheckpointing.so;') \
+        .output('export LD_PRELOAD=libCheckpointing.so;') \
         .output('export CHECKPOINT_SETUP_OPTIONS=${FARMCONFIGROOT}/options/Empty.opts;')
 
   #=======================================================================================
   def setupForking(self):
+    #.output('export LD_PRELOAD='+self.checkpoint_bin+'/lib/libCheckpointing.so;')
     return self.initProcess().addSlaves() \
         .output('export APP_STARTUP_OPTS=-forking;') \
         .output('export CHECKPOINTING_BIN='+self.checkpoint_bin+';') \
-        .output('export LD_PRELOAD='+self.checkpoint_bin+'/lib/libCheckpointing.so;')
+        .output('export LD_PRELOAD=libCheckpointing.so;')
 
   #=======================================================================================
   def setupCheckpointFile(self):

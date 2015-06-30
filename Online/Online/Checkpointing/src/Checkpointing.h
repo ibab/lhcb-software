@@ -4,7 +4,6 @@
 #include <cstdlib>
 #include "Checkpointing/Namespace.h"
 
-
 #ifdef CHECKPOINTING_HAS_NAMESPACE
 namespace CHECKPOINTING_NAMESPACE  {
 

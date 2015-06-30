@@ -8,6 +8,7 @@
 #include "Restore.h"
 #include <cstring>
 #include <cerrno>
+#include <cstdio>
 #include <unistd.h>
 
 using namespace Checkpointing;
@@ -18,21 +19,21 @@ using namespace Checkpointing;
  */
 static unsigned long int myinfo_gs;
 
-# define mtcp_sys_get_thread_area(uinfo)				\
-  ( mtcp_inline_syscall(arch_prctl,2,ARCH_GET_FS,			\
-			(unsigned long int)(&(((struct user_desc *)uinfo)->base_addr))), \
-    mtcp_inline_syscall(arch_prctl,2,ARCH_GET_GS, &myinfo_gs)		\
+# define mtcp_sys_get_thread_area(uinfo)                                \
+  ( mtcp_inline_syscall(arch_prctl,2,ARCH_GET_FS,                       \
+                        (unsigned long int)(&(((struct user_desc *)uinfo)->base_addr))), \
+    mtcp_inline_syscall(arch_prctl,2,ARCH_GET_GS, &myinfo_gs)           \
     )
-# define mtcp_sys_set_thread_area_base(base)			\
-  ( mtcp_inline_syscall(arch_prctl,2,ARCH_SET_FS,		\
-			*(unsigned long*)base),			\
+# define mtcp_sys_set_thread_area_base(base)                  \
+  ( mtcp_inline_syscall(arch_prctl,2,ARCH_SET_FS,             \
+                        *(unsigned long*)base),               \
     mtcp_inline_syscall(arch_prctl,2,ARCH_SET_GS, myinfo_gs)	\
     )
 
-# define mtcp_sys_set_thread_area(uinfo)				\
-  ( mtcp_inline_syscall(arch_prctl,2,ARCH_SET_FS,			\
-			*(unsigned long int *)&(((struct user_desc *)uinfo)->base_addr)), \
-    mtcp_inline_syscall(arch_prctl,2,ARCH_SET_GS, myinfo_gs)		\
+# define mtcp_sys_set_thread_area(uinfo)                                \
+  ( mtcp_inline_syscall(arch_prctl,2,ARCH_SET_FS,                       \
+                        *(unsigned long int *)&(((struct user_desc *)uinfo)->base_addr)), \
+    mtcp_inline_syscall(arch_prctl,2,ARCH_SET_GS, myinfo_gs)            \
     )
 
 static Thread     *s_threads = 0;
@@ -204,17 +205,17 @@ __asm__ (".global pthread_create ; .type pthread_create,@function ; pthread_crea
  *									     
  *****************************************************************************/
 extern "C" int __clone(int (*fn) (void *arg), void *child_stack, int flags, void *arg,
-		       int *parent_tidptr, struct user_desc *newtls, int *child_tidptr)
+                       int *parent_tidptr, struct user_desc *newtls, int *child_tidptr)
 {
   int rc;
   Thread*  mother = chkpt_sys.motherofall;
 #if 0
   mtcp_output(MTCP_DEBUG,"clone wrapper: %p(%p) ptid:%p ctid:%p tls:%p %s [%p]\n", 
-	      fn, arg, parent_tidptr, child_tidptr, newtls, arg==mother ? "MOTHER_OF_ALL" : "",mother);
+              fn, arg, parent_tidptr, child_tidptr, newtls, arg==mother ? "MOTHER_OF_ALL" : "",mother);
 #endif
   if ( mother != 0 ) {
     // Track this thread
-    Thread *t = new Thread();
+    Thread *t = new Thread;
 
     t->m_startFunc  = fn;   // this is the user's function
     t->m_startArg   = arg;  // ... and the parameter
@@ -270,7 +271,7 @@ STATIC(Thread*) CHECKPOINTING_NAMESPACE::checkpointing_thread_queue() {
 
 STATIC(Thread*) CHECKPOINTING_NAMESPACE::checkpointing_thread_current()  {
   int tid = mtcp_sys_kernel_gettid();
-  ThreadsLock lock;
+  checkpointing_threads_lock();
   for(Thread* thread = s_threads; thread != 0; thread = thread->next) {
     if (thread->m_tid == tid) {
       checkpointing_threads_unlock();
@@ -312,9 +313,10 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_cleanup_handler(void*
     ThreadsLock lock;
     checkpointing_thread_cleanup(t);
     int cnt = checkpointing_thread_count();
-    mtcp_output(MTCP_INFO,"+++ Thread CLEANUP action "
-		"TLS->pid:%d tid:%d tid:%d otid:%d Checkpoint pid:%d Mother pid:%d Count:%d\n",
-		pid,tid,t->m_tid,t->m_originalTID,chkpt_sys.chkptPID,chkpt_sys.motherPID,cnt);
+    mtcp_output(MTCP_INFO,
+                "+++ Thread CLEANUP action [%p] "
+                "TLS->pid:%d tid:%d tid:%d otid:%d Checkpoint pid:%d Mother pid:%d Count:%d\n",
+                t,pid,tid,t->m_tid,t->m_originalTID,chkpt_sys.chkptPID,chkpt_sys.motherPID,cnt);
   }
 }
 
@@ -370,7 +372,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_cleanup(Thread* thr)  
   mtcp_output(MTCP_DEBUG,"cleanup: %p->tid:%d\n",thr,thr->m_tid);
 
   // Remove thread block from 'threads' list
-  if ((*(thr->prev) = thr->next) != 0) {
+  if ( (*(thr->prev) = thr->next) != 0) {
     thr->next->prev = thr->prev;
   }
   // Remove thread block from parent's list of children
@@ -457,7 +459,7 @@ WEAK(int) Thread::Main()  {
   tid = THREAD_GET_TID(tls_base);
   if (pid != motherpid && pid != chkpt_sys.chkptPID && pid != (pid_t)-1) {
     mtcp_output(MTCP_ERROR,"Thread_Main: tid:%d opid:%d pid:%d, must match tls pid %X/%d or %X/%d\n", 
-		m_tid, m_originalTID, motherpid, pid, pid, chkpt_sys.chkptPID, chkpt_sys.chkptPID);
+                m_tid, m_originalTID, motherpid, pid, pid, chkpt_sys.chkptPID, chkpt_sys.chkptPID);
     for (rc = 0; rc < 256; rc += 4) {
       int data = *(pid_t*) (tls_base + rc);
       mtcp_output(MTCP_ERROR|MTCP_NO_HEADER,"   %d: %X", rc, data);
@@ -474,7 +476,7 @@ WEAK(int) Thread::Main()  {
   // Instrument thread to be "stopable"
   this->instrument();
   mtcp_output(MTCP_DEBUG,"Thread_Main: Starting pid:%d tid:%d TLS->pid:%d tid:%d otid:%d thread %p, call %p(%p)\n",
-	      motherpid, m_tid, pid, tid, m_originalTID, this, m_startFunc, m_startArg);
+              motherpid, m_tid, pid, tid, m_originalTID, this, m_startFunc, m_startArg);
   // Call the user's function for whatever processing they want done
   rc = (*m_startFunc)(m_startArg);
   //
@@ -530,14 +532,14 @@ WEAK(int) Thread::stop()  {
       static char *orig_stack_ptr;
       int kbStack = 2048;
       if (is_first_checkpoint) {
-	orig_stack_ptr = (char*)&kbStack;
+        orig_stack_ptr = (char*)&kbStack;
         is_first_checkpoint = 0;
         mtcp_output(MTCP_DEBUG,"stop: temp. grow main stack by %d kilobytes");
         growstack(kbStack);
       } else if (orig_stack_ptr - (char *)&kbStack > 3 * kbStack*1024 / 4) {
         mtcp_output(MTCP_WARNING,"WARNING:  Stack within %d bytes of end;\n"
-		    "  Consider increasing 'kbStack' at line %d of mtcp/%s\n",
-		    kbStack*1024/4, __LINE__-9, __FILE__);
+                    "  Consider increasing 'kbStack' at line %d of mtcp/%s\n",
+                    kbStack*1024/4, __LINE__-9, __FILE__);
       }
     }
 
@@ -556,8 +558,8 @@ WEAK(int) Thread::stop()  {
       // Next comes the first time we use the old stack.
       // Tell the checkpoint thread that we're all saved away
       if (!state.set(ST_SUSPENDED, ST_SUSPINPROG))  { // tell checkpointhread all our context is saved
-	mtcp_output(MTCP_FATAL,"Fatal inconsistency in Thread::stop. tid:%d State:%d SUSPENDED:%d SUSPINPROG:%d\n",
-		    m_tid,state.value, ST_SUSPENDED, ST_SUSPINPROG);
+        mtcp_output(MTCP_FATAL,"Fatal inconsistency in Thread::stop. tid:%d State:%d SUSPENDED:%d SUSPINPROG:%d\n",
+                    m_tid,state.value, ST_SUSPENDED, ST_SUSPINPROG);
       }
       state.wake();
       // Then we wait for the checkpoint thread to write the checkpoint file then wake us up
@@ -569,16 +571,16 @@ WEAK(int) Thread::stop()  {
     else {
       // Else s_restoreinprog >= 1;  This stuff executes to do a restart
       mtcp_output(MTCP_DEBUG,"stop(restoreinprog:%d): Change state from %d to Running[%d]/Suspended[%d]\n",
-		  s_restoreinprog.value,state.value,ST_RUNENABLED,ST_SUSPENDED);
+                  s_restoreinprog.value,state.value,ST_RUNENABLED,ST_SUSPENDED);
       if ( !state.set(ST_RUNENABLED, ST_SUSPENDED) )  {
-	mtcp_output(MTCP_ERROR,"ERROR: Thread::stop: checkpoint was written when thread in SUSPENDED state\n");
+        mtcp_output(MTCP_ERROR,"ERROR: Thread::stop: checkpoint was written when thread in SUSPENDED state\n");
       }
       waitForRestore();
       mtcp_output(MTCP_DEBUG,"stop: tid:%d restored. State:%d\n", m_tid,state.value);
     }
   }
   mtcp_output(MTCP_DEBUG,"stop: tid:%d return to address %p\n",
-	      (int)mtcp_sys_kernel_gettid(),(void*)__builtin_return_address(0));
+              (int)mtcp_sys_kernel_gettid(),(void*)__builtin_return_address(0));
   return 1;
 }
 
@@ -597,14 +599,14 @@ WEAK(void) Thread::waitForRestore()    {
     pid = mtcp_sys_getpid();
     for (int i=1; i<NSIG; ++i) {
       if (sigismember(&s_sigpending_global, i) == 1) {
-	mtcp_output(MTCP_INFO,"waitForRestore: Send signal %d to pid:%d\n",i,pid);
+        mtcp_output(MTCP_INFO,"waitForRestore: Send signal %d to pid:%d\n",i,pid);
         kill(pid,i);
       }
     }
     s_restoreinprog.wake(999999999);  // if this was last of all, wake everyone up
     checkpointing_threads_unlock(); // ... and release the thread list
     mtcp_output(MTCP_INFO,"waitForRestore%s restoreinprog:%d State:%d Complete -> Continue.\n",
-		_thread_type(this==chkpt_sys.motherofall), s_restoreinprog.value, state.value);
+                _thread_type(this==chkpt_sys.motherofall), s_restoreinprog.value, state.value);
   }
   else {
     // otherwise, wait for last of all to wake this one up
@@ -613,7 +615,7 @@ WEAK(void) Thread::waitForRestore()    {
     }
   }
   mtcp_output(MTCP_INFO,"waitForRestore%s thread restore finished.\n",
-	      _thread_type(this==chkpt_sys.motherofall));
+              _thread_type(this==chkpt_sys.motherofall));
 }
 
 ///  Save state necessary for TLS restore
@@ -624,7 +626,7 @@ WEAK(void) Thread::saveTLS()    {
   rc = mtcp_sys_get_thread_area (&m_tls[0]);
   if (rc < 0) {
     mtcp_output(MTCP_FATAL,"thread: error saving GDT TLS entry[%d]: %s\n",
-		i,::strerror(mtcp_sys_errno));
+                i,::strerror(mtcp_sys_errno));
   }
 }
 
@@ -673,8 +675,8 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_save_signals(Thread* 
     struct sigaction* a = &thr->m_sigactions[i];
     if (_real_sigaction(i,0,a) < 0) {
       if (errno == EINVAL)  {
-	::memset(a,0,sizeof(struct sigaction));
-	continue;
+        ::memset(a,0,sizeof(struct sigaction));
+        continue;
       }
       mtcp_output(MTCP_FATAL,"saveSignals: error saving signal %d action: %s\n", i, ::strerror(errno));
     }
@@ -708,17 +710,17 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_restore_tls(Thread* t
   int rc = mtcp_sys_set_thread_area_base(base);
   if (rc < 0) {
     mtcp_output(MTCP_FATAL,"restoreTLS%s: error %d restoring TLS entry[%d]\n",
-		thr_typ,mtcp_sys_errno,thr->m_tls[0].entry_number);
+                thr_typ,mtcp_sys_errno,thr->m_tls[0].entry_number);
   }
   thr->m_tid = mtcp_sys_kernel_gettid();
   mtcp_output(MTCP_INFO,"restoreTLS%s: pid:%d tid:%d opid:%d otid:%d restoring TLS entry[%d] thread:%p\n",
-	      thr_typ,motherpid,thr->m_tid,opid,thr->m_originalTID,thr->m_tls[0].entry_number,thr);
+              thr_typ,motherpid,thr->m_tid,opid,thr->m_originalTID,thr->m_tls[0].entry_number,thr);
 }
 
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_restore_signals(Thread* thr) {
   const char* thr_typ = _thread_type(thr==chkpt_sys.motherofall);
   mtcp_output(MTCP_DEBUG,"restoreSIG%s: pid:%d tid:%d\n",
-	      thr_typ,mtcp_sys_getpid(),thr->m_tid);
+              thr_typ,mtcp_sys_getpid(),thr->m_tid);
 
   if (thr == chkpt_sys.motherofall) {
     // Compute the set of signals which was pending for all the threads at the
@@ -736,9 +738,9 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_restore_signals(Threa
     // Raise the signals which were pending for only this thread at the time of checkpoint.
     for (int i = 1; i<NSIG; ++i ) {
       if (sigismember(&thr->m_sigpending, i)  == 1  && 
-	  sigismember(&thr->m_sigblockmask, i) == 1 &&
-	  sigismember(&s_sigpending_global, i) == 0) {
-	raise(i);
+          sigismember(&thr->m_sigblockmask, i) == 1 &&
+          sigismember(&s_sigpending_global, i) == 0) {
+        raise(i);
       }
     }
     return;
@@ -755,26 +757,26 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_restore_sigactions() 
     if ( i != STOPSIGNAL ) {
       void** mask = (void**)&a->sa_mask;
       if ( i == SIG_THREAD_CANCEL && (a->sa_sigaction!=_thread_cancel_action || s_thrCancel==0) )  {
-	if (a->sa_sigaction!=_thread_cancel_action) s_thrCancel = act.sa_sigaction;
-	*a = act;
-	a->sa_sigaction = _thread_cancel_action;
+        if (a->sa_sigaction!=_thread_cancel_action) s_thrCancel = act.sa_sigaction;
+        *a = act;
+        a->sa_sigaction = _thread_cancel_action;
       }
       else if ( i == SIG_THREAD_SETXID && (a->sa_sigaction!=_thread_setxid_action || s_thrSetxid==0) )  {
-	if (a->sa_sigaction!=_thread_setxid_action) s_thrSetxid  = act.sa_sigaction;
-	*a = act;
-	a->sa_sigaction = _thread_setxid_action;
+        if (a->sa_sigaction!=_thread_setxid_action) s_thrSetxid  = act.sa_sigaction;
+        *a = act;
+        a->sa_sigaction = _thread_setxid_action;
       }
       if ( act.sa_sigaction != a->sa_sigaction ) {
-	if ( _real_sigaction(i,a,0) < 0) {
-	  mtcp_output(MTCP_FATAL,"restoreACT: Failed to set stored sigaction[%d]:%p. [%s]\n",
-		      i,a->sa_sigaction,::strerror(errno));
-	}
-	mtcp_output(MTCP_INFO,"restoreACT: Restore action [sig:%d] -> %p Flags:%X Mask:%p\n",
-		    i, a->sa_sigaction, a->sa_flags, *mask);
+        if ( _real_sigaction(i,a,0) < 0) {
+          mtcp_output(MTCP_FATAL,"restoreACT: Failed to set stored sigaction[%d]:%p. [%s]\n",
+                      i,a->sa_sigaction,::strerror(errno));
+        }
+        mtcp_output(MTCP_INFO,"restoreACT: Restore action [sig:%d] -> %p Flags:%X Mask:%p\n",
+                    i, a->sa_sigaction, a->sa_flags, *mask);
       }
       else if ( 0 != act.sa_sigaction && SIG_DFL != act.sa_handler && SIG_IGN != act.sa_handler ) {
-	//mtcp_output(MTCP_DEBUG,"restoreSigActions: Skip... action [sig:%d] -> %p Flags:%X Mask:%p\n",
-	//	    i, a->sa_sigaction, a->sa_flags, *mask);
+        //mtcp_output(MTCP_DEBUG,"restoreSigActions: Skip... action [sig:%d] -> %p Flags:%X Mask:%p\n",
+        //	    i, a->sa_sigaction, a->sa_flags, *mask);
       }
     }
   }
@@ -787,7 +789,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_restart(Thread* thr, i
   pid_t tid = mtcp_sys_kernel_gettid();
   const char* thr_typ = _thread_type(thr == chkpt_sys.motherofall);
   mtcp_output(MTCP_DEBUG,"restart%s pid:%d otid:%d thread:%p ctxt:%p\n",
-	      thr_typ,chkpt_sys.motherPID,thr->m_tid,thr,thr->m_savctx.SAVEDSP);
+              thr_typ,chkpt_sys.motherPID,thr->m_tid,thr,thr->m_savctx.SAVEDSP);
 
   checkpointing_thread_restore_tls(thr);
   checkpointing_thread_setup_signals();
@@ -805,7 +807,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_restart(Thread* thr, i
     } while (!s_restoreinprog.set(rip+1,rip));
   }
   mtcp_output(MTCP_INFO,"restart%s: pid:%d restoreinprog:%d thread:%p Start children...\n",
-	      thr_typ,chkpt_sys.motherPID,s_restoreinprog.value,thr);
+              thr_typ,chkpt_sys.motherPID,s_restoreinprog.value,thr);
   // No create the children
   for (child = thr->m_children; child != 0; child = child->m_siblings)     {
     // Create the thread so it can finish restoring itself.
@@ -826,22 +828,22 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_restart(Thread* thr, i
     child->m_restartArgs.tid  = child->m_originalTID;
     void* p = (void*)(child->m_savctx.SAVEDSP - 128);
     mtcp_output(MTCP_DEBUG,"restart%s: pid:%d CLONE: otid:%d %p %p State:%d\n",
-		thr_typ, chkpt_sys.motherPID, child->m_originalTID, 
-		child->m_pParentTID, child->m_pActualTID,
-		child->state.value);
+                thr_typ, chkpt_sys.motherPID, child->m_originalTID, 
+                child->m_pParentTID, child->m_pActualTID,
+                child->state.value);
 
     tid = (*CLONE_CALL)(checkpointing_thread_restart_main,
-			p,  // -128 for red zone
-			cloneFlags,
-			&child->m_restartArgs, child->m_pParentTID, 0, child->m_pActualTID);
+                        p,  // -128 for red zone
+                        cloneFlags,
+                        &child->m_restartArgs, child->m_pParentTID, 0, child->m_pActualTID);
     if ( tid < 0 )  {
       mtcp_output(MTCP_FATAL,"restart: error %d recreating thread. Flags:%X SP:%p\n", 
-		  errno, child->m_cloneFlags, child->m_savctx.SAVEDSP);
+                  errno, child->m_cloneFlags, child->m_savctx.SAVEDSP);
     }
 #if 0
     mtcp_output(MTCP_INFO,"%s\t--> [%d] pid:%d CHILD otid:%d/%d State:%d Restart:Progress:%d Type:%d\n",
-		thr_typ, cnt, chkpt_sys.motherPID,tid,thr->m_tid,thr->m_originalTID,child->state.value,
-		restoreinprog.value,chkpt_sys.restart_type);
+                thr_typ, cnt, chkpt_sys.motherPID,tid,thr->m_tid,thr->m_originalTID,child->state.value,
+                restoreinprog.value,chkpt_sys.restart_type);
 #endif
     ++cnt;
   }
@@ -863,7 +865,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_restart(Thread* thr, i
     mtcp_output(MTCP_ERROR,"restart%s: FATAL: returned from setcontext.\n",thr_typ);
   }
   mtcp_output(MTCP_INFO,"restart%s: All done: pid:%d tid:%d, orgTID:%d this:%p\n",
-	      thr_typ, chkpt_sys.motherPID,thr->m_tid,thr->m_originalTID,thr);
+              thr_typ, chkpt_sys.motherPID,thr->m_tid,thr->m_originalTID,thr);
   return 0;
 }
 

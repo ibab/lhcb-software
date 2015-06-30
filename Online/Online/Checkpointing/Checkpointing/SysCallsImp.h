@@ -22,7 +22,16 @@ STATIC(void) rwrite(char const *buff, int size)   {
   }
 }
 
-STATIC(void) mtcp_print_int_dec(int n) {
+STATIC(int) bwrite(char* text, int len, int off, char const *buff, int size)   {
+  text += off;
+  len -= off;
+  for(; len>0 && size>0; --size, --len, ++off, ++text, ++buff)  {
+    *text = *buff;
+  }
+  return off;
+}
+
+STATIC(int) mtcp_print_int_dec(char* text, int len, int off, int n) {
   char buff[16];
   int i = sizeof(buff);
   int neg = (n < 0);
@@ -32,39 +41,40 @@ STATIC(void) mtcp_print_int_dec(int n) {
     n /= 10;
   } while (n > 0);
   if (neg) buff[--i] = '-';
-  rwrite (buff + i, sizeof(buff) - i);
+  return bwrite (text, len, off, buff + i, sizeof(buff) - i);
 }
 
-STATIC(void) mtcp_print_int_unsigned(unsigned int n) {
+STATIC(int) mtcp_print_int_unsigned(char* text, int len, int off, unsigned int n) {
   char buff[16];
   int i = sizeof(buff);
   do {
     buff[--i] = (n % 10) + '0';
     n /= 10;
   } while (n > 0);
-  rwrite (buff + i, sizeof(buff) - i);
+  return bwrite (text,len,off, buff + i, sizeof(buff) - i);
 }
 
-STATIC(void) mtcp_print_int_oct(unsigned int n) {
+STATIC(int) mtcp_print_int_oct(char* text, int len, int off, unsigned int n) {
   char buff[16];
   int i = sizeof(buff);
   do {
     buff[--i] = (n & 7) + '0';
     n /= 8;
   } while (n > 0);
-  rwrite (buff + i, sizeof(buff) - i);
+  return bwrite (text, len, off, buff + i, sizeof(buff) - i);
 }
-STATIC(void) mtcp_print_int_hex(unsigned int n) {
+
+STATIC(int) mtcp_print_int_hex(char* text, int len, int off, unsigned int n) {
   char buff[16];
   int i = sizeof(buff);
   do {
     buff[--i] = s_mtcp_hexdigits[n%16];
     n /= 16;
   } while (n > 0);
-  rwrite (buff + i, sizeof(buff) - i);
+  return bwrite (text, len, off, buff + i, sizeof(buff) - i);
 }
 
-STATIC(void) mtcp_print_addr(VA n) {
+STATIC(int) mtcp_print_addr(char* text, int len, int off, VA n) {
   char buff[16];
   int i = sizeof(buff);
   do {
@@ -73,17 +83,14 @@ STATIC(void) mtcp_print_addr(VA n) {
   } while (n > 0);
   buff[--i] = 'x';
   buff[--i] = '0';
-  rwrite (buff + i, sizeof(buff) - i);
+  return bwrite (text, len, off, buff + i, sizeof(buff) - i);
 }
 
 STATIC(void) mtcp_output(int lvl,char const *format, ...)  {
-#if defined(CHECKPOINTING_MUTEXED_WRITE)
-  static FutexState printflocked(0);
-#endif
   struct helper {
     static inline const char* chrfind(const char* s, const char pattern) {
       for(; *s; ++s)
-	if (*s==pattern) return s;
+        if (*s==pattern) return s;
       return 0;
     }
     static inline size_t stringlen(const char* s) {
@@ -98,38 +105,35 @@ STATIC(void) mtcp_output(int lvl,char const *format, ...)  {
   lvl &= MTCP_MAX_LEVEL;
 
   if ( ((s_mtcp_debug_syscalls&~MTCP_NO_HEADER)&~MTCP_PRINT_NO_PID) > lvl ) return;
-#if defined(CHECKPOINTING_MUTEXED_WRITE)
-  while (!printflocked.set(1,0))
-    printflocked.wait(1);
-#endif
   va_start (ap, format);
-
+  char buff[400];
+  size_t str_len = 0;
   if ( hdr )   {
     if ( s_mtcp_debug_syscalls&MTCP_PRINT_NO_PID ) {
-      rwrite ("mtcp ",5);
+      str_len=bwrite (buff, sizeof(buff), str_len,"mtcp ",5);
     }
     else {
-      rwrite ("mtcp[",5);
-      mtcp_print_int_dec(mtcp_sys_getpid());
-      rwrite ("] ",2);
+      str_len=bwrite(buff,sizeof(buff),str_len,"mtcp[",5);
+      str_len=mtcp_print_int_dec(buff,sizeof(buff),str_len,mtcp_sys_getpid());
+      str_len=bwrite (buff,sizeof(buff),str_len,"] ",2);
     }
     switch(lvl) {
-    case MTCP_DEBUG:   rwrite(" DEBUG   ",9); break;
-    case MTCP_INFO:    rwrite(" INFO    ",9); break;
-    case MTCP_WARNING: rwrite(" WARNING ",9); break;
-    case MTCP_ERROR:   rwrite(" ERROR   ",9); break;
-    case MTCP_FATAL:   rwrite(" FATAL   ",9); break;
-    case MTCP_ALWAYS:  rwrite(" ALWAYS  ",9); break;
-    default:           rwrite(" ALWAYS  ",9); break;
+    case MTCP_DEBUG:   str_len=bwrite(buff,sizeof(buff), str_len," DEBUG   ",9); break;
+    case MTCP_INFO:    str_len=bwrite(buff,sizeof(buff), str_len," INFO    ",9); break;
+    case MTCP_WARNING: str_len=bwrite(buff,sizeof(buff), str_len," WARNING ",9); break;
+    case MTCP_ERROR:   str_len=bwrite(buff,sizeof(buff), str_len," ERROR   ",9); break;
+    case MTCP_FATAL:   str_len=bwrite(buff,sizeof(buff), str_len," FATAL   ",9); break;
+    case MTCP_ALWAYS:  str_len=bwrite(buff,sizeof(buff), str_len," ALWAYS  ",9); break;
+    default:           str_len=bwrite(buff,sizeof(buff), str_len," ALWAYS  ",9); break;
     }
   }
 
   // Scan along until we find a % 
   for(p = format; (q = helper::chrfind(p,'%')) != 0; p = ++ q) {
     /* Print all before the % as is */
-    if (q > p) rwrite (p, q - p);
+    if (q > p) str_len = bwrite (buff, sizeof(buff), str_len, p, q - p);
     /* Process based on character following the % */
-gofish:
+  gofish:
     switch (*(++ q)) {
     case 'l': {
       goto gofish;
@@ -138,62 +142,72 @@ gofish:
       goto gofish;
     }
     case 'c': {      // Single character
-      char buff[4];
-      buff[0] = va_arg (ap, int); // va_arg (ap, char);
-      rwrite (buff, 1);
+      char chars[4];
+      chars[0] = va_arg (ap, int); // va_arg (ap, char);
+      str_len = bwrite (buff, sizeof(buff), str_len, chars, 1);
       break;
     }
 
     case 'd': {      // Signed decimal integer
       int n = va_arg (ap, int);
-      mtcp_print_int_dec(n);
+      str_len=mtcp_print_int_dec(buff, sizeof(buff), str_len, n);
       break;
     }
 
     case 'u': {      // Unsigned decimal integer
       unsigned int n = va_arg (ap, unsigned int);
-      mtcp_print_int_unsigned(n);
+      str_len=mtcp_print_int_unsigned(buff, sizeof(buff), str_len, n);
       break;
     }
 
     case 'o': {      // Unsigned octal number
       unsigned int n = va_arg (ap, unsigned int);
-      mtcp_print_int_oct(n);
+      str_len=mtcp_print_int_oct(buff, sizeof(buff), str_len, n);
       break;
     }
 
     case 'X':
     case 'x': {      // Unsigned hexadecimal number
       unsigned int n = va_arg (ap, unsigned int);
-      mtcp_print_int_hex(n);
+      str_len=mtcp_print_int_hex(buff, sizeof(buff), str_len, n);
       break;
     }
 
     case 'p': {      // Address in hexadecimal
       VA n = (VA)va_arg (ap, void*);
-      mtcp_print_addr(n);
+      str_len=mtcp_print_addr(buff, sizeof(buff), str_len, n);
       break;
     }
 
     case 's': {      // Null terminated string
-      p = va_arg (ap, char*);
-      rwrite (p, helper::stringlen(p));
+      char* n = va_arg (ap, char*);
+      str_len=bwrite (buff, sizeof(buff), str_len, n, helper::stringlen(n));
       break;
     }
 
     default:         // Anything else, print the character as is
-      rwrite (q, 1);
+      str_len=bwrite (buff, sizeof(buff), str_len, q, 1);
       break;
     }
   }
   va_end (ap);
 
   // Print whatever comes after the last format spec
-  rwrite(p,helper::stringlen(p));
+  str_len = bwrite(buff,sizeof(buff), str_len,p,helper::stringlen(p));
+  buff[sizeof(buff)-2] = '\n';
+  buff[sizeof(buff)-1] = 0;
 
+  //#define CHECKPOINTING_MUTEXED_WRITE 1
 #if defined(CHECKPOINTING_MUTEXED_WRITE)
-  printflocked.set(0,1);
-  printflocked.wake(1);
+  static volatile int printflocked(0);
+ again:
+  while (printflocked != 0) mtcp_sys_nanosleep(100);
+  if ( printflocked != 0 ) goto again;
+  printflocked = 1;
+  rwrite(buff,helper::stringlen(buff));
+  printflocked = 0;
+#else
+  rwrite(buff,helper::stringlen(buff));
 #endif
   if ( lvl >= MTCP_FATAL )   {
     const char* mp = "Calling abort due to internal errors.\n";
