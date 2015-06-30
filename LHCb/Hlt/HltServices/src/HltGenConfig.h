@@ -5,6 +5,8 @@
 // Include files
 #include <string>
 #include <vector>
+#include <unordered_map>
+
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Kernel/IConfigAccessSvc.h"
@@ -44,8 +46,10 @@ class HltGenConfig : public GaudiAlgorithm, public IToolSvc::Observer
     std::vector<std::string> m_svcConfig; ///< Which services to configure
     std::string m_hltType; ///< what runtype do we label this config as?
     std::string m_release; ///< what is the Moore release we use as a label?
-    std::string m_label;   ///< what is the Moore release we use as a label?
+    std::string m_label;   ///< what is the label?
     std::map<std::string, std::vector<std::string>> m_overrule;
+    std::vector<std::string> m_envVars; ///< Which environment variables do we put back in.
+    std::unordered_map<std::string, std::string> m_envVarValues;
 
     StatusCode generateConfig() const;
 

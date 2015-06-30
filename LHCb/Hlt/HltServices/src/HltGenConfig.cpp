@@ -2,6 +2,9 @@
 // Include files
 #include <algorithm>
 
+// boost
+#include <boost/algorithm/string.hpp>
+
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IAlgManager.h"
@@ -11,6 +14,7 @@
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/Service.h"
+#include "GaudiKernel/System.h"
 
 #include "GaudiKernel/TypeNameString.h"
 
@@ -18,7 +22,10 @@
 #include "HltGenConfig.h"
 #include "Kernel/PropertyConfig.h"
 
-using namespace std;
+namespace {
+   using namespace std;
+   namespace ba = boost::algorithm;
+}
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltGenConfig
@@ -46,6 +53,7 @@ HltGenConfig::HltGenConfig(const string &name, ISvcLocator *pSvcLocator)
   declareProperty("MooreRelease", m_release);
   declareProperty("Label", m_label);
   declareProperty("Overrule", m_overrule);
+  declareProperty("EnvironmentVariables", m_envVars = {"PARAMFILESROOT"});
 }
 
 //=============================================================================
@@ -70,6 +78,16 @@ StatusCode HltGenConfig::initialize() {
         << endmsg;
     return StatusCode::FAILURE;
   }
+
+  // Save the environment variables
+  for (const auto& var : m_envVars) {
+     auto val = System::getEnv(var.c_str());
+     if (val.empty()) {
+        throw GaudiException(string{"Failed to obtain environment variable "} + var,
+                             name(), StatusCode::FAILURE);
+     }
+     m_envVarValues[val] = var;
+  }
   return sc;
 }
 
@@ -90,7 +108,7 @@ HltGenConfig::gatherDependencies(const INamedInterface &obj) const {
       auto digest = generateConfig(*dep);
       if (digest.invalid()) error() << "problem creating dependant configuration for "
                                     << dep->name() << endmsg;
-      return digest; 
+      return digest;
     } );
   }
 
@@ -134,6 +152,31 @@ HltGenConfig::generateConfig(const INamedInterface &obj) const {
       return ConfigTreeNode::digest_type::createInvalid();
     }
   }
+
+  // Find known environment variables in options and replace them with the environment variable again.
+  using iter_t = ba::find_iterator<string::const_iterator>;
+  std::vector<string> over;
+  for (const auto& valVar : m_envVarValues) {
+    for (const auto& prop : currentConfig.properties()) {
+      auto it = ba::make_find_iterator(prop.second, ba::first_finder(valVar.first, ba::is_iequal()));
+      for(;it != iter_t(); ++it) {
+        over.push_back(prop.first + ":" + ba::replace_range_copy(prop.second, *it, string{"$"} + valVar.second));
+      }
+    }
+  }
+  // If some overrules were found, apply them
+  if (!over.empty()) {
+    warning() << " applying environment variable overrule to " << obj.name() << " : " << over
+              << endmsg;
+    currentConfig = currentConfig.copyAndModify(std::begin(over), std::end(over));
+    if (!currentConfig.digest().valid()) {
+      error() << " overruling of " << obj.name() << " : " << over
+              << " failed" << endmsg;
+      return ConfigTreeNode::digest_type::createInvalid();
+    }
+  }
+
+  // Write the actual config
   auto propRef = m_accessSvc->writePropertyConfig(currentConfig);
   if (propRef.invalid()) {
     error() << "problem writing PropertyConfig" << endmsg;
@@ -150,7 +193,7 @@ HltGenConfig::generateConfig(const INamedInterface &obj) const {
 }
 
 template <typename I, typename INS, typename R>
-StatusCode HltGenConfig::getDependencies(I i, I end, INS inserter, R resolver) const 
+StatusCode HltGenConfig::getDependencies(I i, I end, INS inserter, R resolver) const
 {
   for (; i != end; ++i) {
     info() << "Generating config for " << *i << endmsg;
@@ -186,7 +229,7 @@ StatusCode HltGenConfig::generateConfig() const {
                         std::back_inserter(depRefs),
                         [&](const std::string &name) {
           IAlgorithm *alg { nullptr };
-          return m_appMgr->getAlgorithm(name, alg).isSuccess() ? alg : nullptr; 
+          return m_appMgr->getAlgorithm(name, alg).isSuccess() ? alg : nullptr;
   }) ;
   if (sc.isFailure()) return sc;
 
