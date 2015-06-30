@@ -139,38 +139,34 @@ HltGenConfig::generateConfig(const INamedInterface &obj) const {
 
   // create and write the leaf object
   auto currentConfig = m_configSvc->currentConfiguration(obj);
+
   // check whether there is a modification request for this component...
-  auto overrule = m_overrule.find(obj.name());
-  if (overrule != std::end(m_overrule)) {
-    warning() << " applying overrule to " << obj.name() << " : " << *overrule
-              << endmsg;
-    currentConfig = currentConfig.copyAndModify(std::begin(overrule->second),
-                                                std::end(overrule->second));
-    if (!currentConfig.digest().valid()) {
-      error() << " overruling of " << obj.name() << " : " << *overrule
-              << " failed" << endmsg;
-      return ConfigTreeNode::digest_type::createInvalid();
-    }
-  }
+  vector<string> overrule;
 
   // Find known environment variables in options and replace them with the environment variable again.
   using iter_t = ba::find_iterator<string::const_iterator>;
-  std::vector<string> over;
   for (const auto& valVar : m_envVarValues) {
     for (const auto& prop : currentConfig.properties()) {
       auto it = ba::make_find_iterator(prop.second, ba::first_finder(valVar.first, ba::is_iequal()));
       for(;it != iter_t(); ++it) {
-        over.push_back(prop.first + ":" + ba::replace_range_copy(prop.second, *it, string{"$"} + valVar.second));
+        overrule.push_back(prop.first + ":" + ba::replace_range_copy(prop.second, *it, string{"$"} + valVar.second));
       }
     }
   }
+
+  // Overrules from property
+  auto it = m_overrule.find(obj.name());
+  if (it != end(m_overrule)) {
+     std::copy(begin(it->second), end(it->second), std::back_inserter(overrule));
+  }
+
   // If some overrules were found, apply them
-  if (!over.empty()) {
-    warning() << " applying environment variable overrule to " << obj.name() << " : " << over
+  if (!overrule.empty()) {
+    warning() << " applying overrule to " << obj.name() << " : " << overrule
               << endmsg;
-    currentConfig = currentConfig.copyAndModify(std::begin(over), std::end(over));
+    currentConfig = currentConfig.copyAndModify(std::begin(overrule), std::end(overrule));
     if (!currentConfig.digest().valid()) {
-      error() << " overruling of " << obj.name() << " : " << over
+      error() << " overruling of " << obj.name() << " : " << overrule
               << " failed" << endmsg;
       return ConfigTreeNode::digest_type::createInvalid();
     }
