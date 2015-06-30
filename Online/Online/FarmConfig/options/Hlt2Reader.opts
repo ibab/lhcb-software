@@ -7,3 +7,4 @@ Runable.Buffer                       = @OnlineEnv.Hlt2Reader_Output;
 Runable.DeleteFiles                  = true;
 Runable.InitialSleep                 = 0;
 Runable.GoService                    = "$GO_SERVICE_NAME";
+// Runable.GoService                    = "GO_SERVICE_NAME";
