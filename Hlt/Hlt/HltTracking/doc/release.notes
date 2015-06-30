@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-06-30 - Sascha Stahl
+ - Hlt2Tracking and Hlt2RecoConf: Added option to apply ghost probability cut in 
+   TrackBestTrackCreator directly.
+
 !========================= HltTracking v13r9 2015-06-28 =========================
 
 ! 2015-06-28 - Roel Aaij

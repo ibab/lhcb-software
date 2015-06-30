@@ -877,7 +877,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         if HltRecoConf().getProp("ApplyGHOSTPROBCut") == True:
             ts.setProp("MinGhostProbCut", 0.)
             ts.setProp("MaxGhostProbCut", HltRecoConf().getProp("MaxTrGHOSTPROB"))
-            ts.PropertiesPrint = True
 
         if self.__trackType() == "Long":
             ts.TrackTypes = ["Long"]
@@ -1165,10 +1164,13 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 bestTrackCreator.TracksOutContainer = ""
                 bestTrackCreator.TracksOutContainers["Long"] = self.__trackLocationByType("Long")
                 bestTrackCreator.TracksOutContainers["Downstream"] = self.__trackLocationByType("Downstream")
+                if HltRecoConf().getProp("ApplyGHOSTPROBCutInTBTC"):
+                    bestTrackCreator.AddGhostProb = True
+                    bestTrackCreator.MaxGhostProb = HltRecoConf().getProp("MaxTrGHOSTPROB")
                 hlt2TrackingOutput = [ self.__trackLocationByType("Long"), self.__trackLocationByType("Downstream") ]
                 trackRecoSequence        +=      [bestTrackCreator]
                 from Configurables import HltRecoConf
-                if HltRecoConf().getProp("AddGhostProb"):
+                if HltRecoConf().getProp("AddGhostProb") and not HltRecoConf().getProp("ApplyGHOSTPROBCutInTBTC"):
                     from Configurables import TrackAddNNGhostId
                     addNNGhostIdLong = TrackAddNNGhostId( self.getProp("Prefix") + "LongTrackAddNNGhostID",GhostIdTool="Run2GhostId")
                     addNNGhostIdLong.inputLocation = self.__trackLocationByType("Long")
@@ -1501,8 +1503,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
             if HltRecoConf().getProp("ApplyGHOSTPROBCut") == True:
                 ts.setProp("MinGhostProbCut", 0.)
                 ts.setProp("MaxGhostProbCut", HltRecoConf().getProp("MaxTrGHOSTPROB"))
-                ts.PropertiesPrint = True
-
+                
             if self.__trackType() == "Long":
                 ts.TrackTypes = ["Long"]
             elif self.__trackType() == "Downstream":
