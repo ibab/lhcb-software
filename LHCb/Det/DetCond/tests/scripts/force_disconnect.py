@@ -3,7 +3,7 @@
 from Gaudi.Configuration  import *
 from Configurables import CondDB, CondDBAccessSvc, DDDBConf
 
-DDDBConf()
+DDDBConf(DataType="2008")
 
 #DDDB = CondDBAccessSvc("DDDB")
 #DDDB.ConnectionTimeOut = 5
