@@ -1,26 +1,26 @@
 package DaVinciSys
-version v36r7p5
+version v36r7p6
 
 branches doc cmt
 
 # Packages
-use  DaVinci         v36r7p5  Phys   # DaVinci coordinator
+use  DaVinci         v36r7p6  Phys   # DaVinci coordinator
 use  DaVinciTests    v2r33
 use  KaliCalo        v4r17    Phys   # Olivier Deschamps
 use  Tesla           v1r8     Phys   # Sean Benson
 
 
-#########################################
+##########################################
 # Extra packages just for this release !!!
-use  DetCond                 v12r42 Det
-use  DDDB                    v1r77  Det
-use  EventPacker             v5r3   Event
-use  HltDAQ                  v4r17  Hlt
-use  HltServices             v2r8   Hlt
-use  DaVinciMonitors         v1r22  Phys
-use  TeslaTools              v1r9   Phys
-use  DecayTreeTupleTrigger   v1r7   Phys
-#########################################
+use  DetCond                 v12r42   Det
+use  DDDB                    v1r77    Det
+use  EventPacker             v5r3     Event
+use  HltDAQ                  v4r17p1  Hlt
+use  HltServices             v2r8     Hlt
+use  DaVinciMonitors         v1r22    Phys
+use  TeslaTools              v1r9     Phys
+use  DecayTreeTupleTrigger   v1r7     Phys
+##########################################
 
 # Declare this as a container package
 apply_pattern container_package

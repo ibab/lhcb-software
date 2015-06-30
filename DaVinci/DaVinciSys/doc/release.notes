@@ -4,6 +4,16 @@ Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
 
+</PRE><H1><A NAME=v36r7p6>2015-06-30 DaVinci v36r7p6</A></H1><PRE>
+
+Patch release identical to v36r7p5 except for a fix to the patch externaled package Hlt/HltDAQ.
+
+- In Phys/DaVinci v36r7p6 :
+  . New patch release.
+
+- In Hlt/HltDAQ v4r17p1 :
+  . Fixed decoding of non-split data format.
+
 </PRE><H1><A NAME=v36r7p5>2015-06-29 DaVinci v36r7p5</A></H1><PRE>
 
 Patch release identical to v36r7p5 except for
