@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v6r16p1 2015-07-01 =========================
+
 ! 2015-07-01 - Christian Linn
  - added Hlt2CharmHadDst_2D0Gamma_D02KPi_XSecTurbo to CharmHad_EM2015
 
