@@ -118,6 +118,7 @@ FSM::ErrCond Slave::iamDead()  {
   m_alive  = false;
   m_meta   = SLAVE_LIMBO;
   m_status = SLAVE_LIMBO;
+  setInternal(!m_mayStart);
   m_state  = type()->initialState();
   if ( !m_machine->currTrans() )
     return notifyMachine(SLAVE_TRANSITION);
@@ -191,10 +192,10 @@ FSM::ErrCond Slave::startSlave(const Transition* tr)  {
   }
   else if ( m_mayStart )  {  // Formerly internal slaves may NOT be started
     ret = start();
-    startTimer(SLAVE_START_TIMEOUT);
+    startTimer(SLAVE_START_TIMEOUT,tr);
   }
   else  {                    // Here simply set timeout
-    startTimer(1);
+    startTimer(1,tr);
   }
   return ret;
 }
@@ -231,7 +232,7 @@ static inline bool _onTimeoutKill(const Rule* r) {
 /// Handle timeout according to timer ID
 void Slave::handleTimeout()  {
   int st = currentState();
-  display(ALWAYS,c_name(),"Slave TIMEOUT. State:%08X [%s] value:%08X [%s]",
+  display(INFO,c_name(),"Slave TIMEOUT. State:%08X [%s] value:%08X [%s]",
 	  st,metaStateName(),m_timerID.second,_metaStateName(m_timerID.second));
   if ( m_timerID.second == SLAVE_UNLOAD_TIMEOUT ) {
     handleUnloadTimeout();

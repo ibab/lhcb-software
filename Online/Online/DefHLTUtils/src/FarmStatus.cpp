@@ -54,7 +54,7 @@ FarmStatus::FarmStatus()
     }
   }
   row = 'F';
-  for (int rack=1;rack<=7;rack++)
+  for (int rack=1;rack<=12;rack++)
   {
     sprintf(sf,"HLT%c%02d",row,rack);
     srvcstring = "/RO/";
