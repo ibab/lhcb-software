@@ -158,7 +158,7 @@ BusyAdderCountAdder.ReceiveTimeout          = 3;
     elif level == "3":
         f.write("ApplicationMgr.ExtSvc               += {\"AdderSvc/"+"BusyAdder"+"CountAdder\"};\n")
         f.write("""
-BusyAdderCountAdder.MyName                = "<part>_<node>_BusySvc_00";
+BusyAdderCountAdder.MyName                = "<part>_Busy_00";
 BusyAdderCountAdder.PartitionName         = @OnlineEnv.PartitionName;
 BusyAdderCountAdder.TaskPattern           = "<part>_hlt[a-z][0-9][0-9]_SubFarmAdder_0";
 BusyAdderCountAdder.ServicePattern        = "MON_<part>_hlt[a-z][0-9][0-9]_BusySvc/Counter/";
