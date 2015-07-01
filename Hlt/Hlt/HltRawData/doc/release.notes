@@ -5,6 +5,9 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-07-01 - Sean Benson
+ - Make sure saved refitted PVs don't also save tracks.
+
 !========================= HltRawData v5r6 2015-06-28 =========================
 
 ! 2015-06-15 - Sean Benson

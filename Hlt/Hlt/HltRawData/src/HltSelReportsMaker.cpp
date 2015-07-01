@@ -840,82 +840,84 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::RecVertex& 
   // find mutations of the same object
   HltObjectSummary::Info theseInfo = infoToSave( *hos );
 
-  SmartRefVector<LHCb::HltObjectSummary> thisSubstructure;
-  const auto& tracks = object.tracks();
-  std::transform( std::begin(tracks), std::end(tracks),
-                  std::back_inserter(thisSubstructure),
-                  [&](const LHCb::Track* t) { return store_(*t); } );
-  SmartRefVector<LHCb::HltObjectSummary>::const_iterator rbegin1=thisSubstructure.end(); --rbegin1;
-  SmartRefVector<LHCb::HltObjectSummary>::const_iterator rend1=thisSubstructure.begin(); --rend1;
+  if( !m_Turbo ){ // For Turbo, this saves Refitted PVs, save it and do nothing else
+    SmartRefVector<LHCb::HltObjectSummary> thisSubstructure;
+    const auto& tracks = object.tracks();
+    std::transform( std::begin(tracks), std::end(tracks),
+        std::back_inserter(thisSubstructure),
+        [&](const LHCb::Track* t) { return store_(*t); } );
+    SmartRefVector<LHCb::HltObjectSummary>::const_iterator rbegin1=thisSubstructure.end(); --rbegin1;
+    SmartRefVector<LHCb::HltObjectSummary>::const_iterator rend1=thisSubstructure.begin(); --rend1;
 
-  //    look for objects with the same lhcbids
-  //      if many then the one which leaves least amount info on this one
-  int smallestSize = theseInfo.size();
-  const HltObjectSummary* pBestHos { nullptr };
+    //    look for objects with the same lhcbids
+    //      if many then the one which leaves least amount info on this one
+    int smallestSize = theseInfo.size();
+    const HltObjectSummary* pBestHos { nullptr };
 
-  //   couldn't get reverse operator to work
-  HltObjectSummarys::iterator rbegin=m_objectSummaries->end();  --rbegin;
-  HltObjectSummarys::iterator rend  =m_objectSummaries->begin(); --rend;
-  for( auto ppHos=rbegin;ppHos!=rend;--ppHos){
-    const HltObjectSummary* pHos{*ppHos};
-    if( pHos->summarizedObjectCLID() == object.clID() ){
-      SmartRefVector<LHCb::HltObjectSummary> otherSubstructure = pHos->substructureFlattened();
-      bool different=false;
-      if( otherSubstructure.size() == thisSubstructure.size() ){
-        auto h2=otherSubstructure.end(); --h2;
-        for( auto h1=rbegin1;h1!=rend1;--h1,--h2){
-          if( (*h1) != (*h2) ){
-            different=true;
-            break;
-          }
-        }
-        if( different )continue;
-        // found object of the same type with the same (flattened) substructure!
-        // now check if its Info content is a subset of this one
-        HltObjectSummary::Info otherInfo = pHos->numericalInfoFlattened();
-        if( otherInfo.size() <= theseInfo.size() ){
-          bool notcontained=false;
-          for( const auto&  i1 : otherInfo ) {
-            auto i2 = theseInfo.find( i1.first );
-            if( i2==theseInfo.end() ){
-              notcontained = true;
+    //   couldn't get reverse operator to work
+    HltObjectSummarys::iterator rbegin=m_objectSummaries->end();  --rbegin;
+    HltObjectSummarys::iterator rend  =m_objectSummaries->begin(); --rend;
+    for( auto ppHos=rbegin;ppHos!=rend;--ppHos){
+      const HltObjectSummary* pHos{*ppHos};
+      if( pHos->summarizedObjectCLID() == object.clID() ){
+        SmartRefVector<LHCb::HltObjectSummary> otherSubstructure = pHos->substructureFlattened();
+        bool different=false;
+        if( otherSubstructure.size() == thisSubstructure.size() ){
+          auto h2=otherSubstructure.end(); --h2;
+          for( auto h1=rbegin1;h1!=rend1;--h1,--h2){
+            if( (*h1) != (*h2) ){
+              different=true;
               break;
             }
-            if( i1.second != i2->second ) break;
           }
-          if( notcontained )continue;
-          if( otherInfo.size() == theseInfo.size() ){
-            smallestSize=0;
-            pBestHos=pHos;
-            // don't need to look any more since subobject has all the info
-            break;
-          } else {
-            int presentSize = theseInfo.size()-otherInfo.size();
-            if( presentSize < smallestSize ){
-              smallestSize = presentSize;
+          if( different )continue;
+          // found object of the same type with the same (flattened) substructure!
+          // now check if its Info content is a subset of this one
+          HltObjectSummary::Info otherInfo = pHos->numericalInfoFlattened();
+          if( otherInfo.size() <= theseInfo.size() ){
+            bool notcontained=false;
+            for( const auto&  i1 : otherInfo ) {
+              auto i2 = theseInfo.find( i1.first );
+              if( i2==theseInfo.end() ){
+                notcontained = true;
+                break;
+              }
+              if( i1.second != i2->second ) break;
+            }
+            if( notcontained )continue;
+            if( otherInfo.size() == theseInfo.size() ){
+              smallestSize=0;
               pBestHos=pHos;
+              // don't need to look any more since subobject has all the info
+              break;
+            } else {
+              int presentSize = theseInfo.size()-otherInfo.size();
+              if( presentSize < smallestSize ){
+                smallestSize = presentSize;
+                pBestHos=pHos;
+              }
             }
           }
         }
       }
     }
-  }
-  // found subobject
-  if( pBestHos ){
-    if( smallestSize==0 ){
-      theseInfo.clear();
-    } else {
-      for( const auto& i1 : pBestHos->numericalInfoFlattened()) {
-        theseInfo.erase( i1.first );
+    // found subobject
+    if( pBestHos ){
+      if( smallestSize==0 ){
+        theseInfo.clear();
+      } else {
+        for( const auto& i1 : pBestHos->numericalInfoFlattened()) {
+          theseInfo.erase( i1.first );
+        }
       }
+      // set subobject link
+      thisSubstructure.clear();
+      // set substructure link
+      thisSubstructure.push_back( pBestHos );
     }
-    // set subobject link
-    thisSubstructure.clear();
-    // set substructure link
-    thisSubstructure.push_back( pBestHos );
-  }
 
-  hos->setSubstructure( thisSubstructure );
+    hos->setSubstructure( thisSubstructure );
+  }
   hos->setNumericalInfo( std::move(theseInfo) );
   m_objectSummaries->push_back(hos.release());
   return m_objectSummaries->back();
