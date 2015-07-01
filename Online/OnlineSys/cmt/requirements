@@ -29,7 +29,7 @@ use DefHLTUtils         v1r12    Online
 use DIM                 v20r7p4  Online
 use EventBuilder        v0r12    Online
 use FarmConfig          v0r18    Online
-use FarmMonitor         v2r14    Online
+use FarmMonitor         v2r13    Online
 use Gaucho              v7r41    Online
 use GauchoAppl          v1r25    Online
 use GaudiCheckpointing  v0r23    Online
