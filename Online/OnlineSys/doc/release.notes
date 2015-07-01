@@ -6,6 +6,25 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v5r22>2015-07-01 OnlineSys v5r22</A></H1>
+<PRE>
+  Use Gaudi v26r2
+  Updated/new packages:	
+     Camera              v1r33    Online
+     Checkpointing       v0r23    Online
+     Controller          v0r20    Online
+     DefHLTUtils         v1r12    Online
+     FarmConfig          v0r18    Online
+     FarmMonitor         v2r14    Online
+     Gaucho              v7r41    Online
+     GaudiCheckpointing  v0r23    Online
+     GaudiOnline         v2r83    Online
+     OnlineKernel        v2r23    Online
+     ROMon               v1r55    Online
+     ROLogger            v0r31    Online
+     Trending            v2r4     Online
+</PRE>
+
 <H1><A NAME=v5r21>2015-06-19 OnlineSys v5r21</A></H1>
 <PRE>
   Use Gaudi v26r2
