@@ -3,7 +3,15 @@ Package             : MooreSys
 Package Coordinator : R. Aaij
 Purpose             : LHCb HLT application
 
-</PRE><H1><A NAME=v23r7p2>2015-06-10 MooreSys v23r7p2</A></H1><PRE>
+</PRE><H1><A NAME=v23r7p3>2015-07-01 MooreSys v23r7p3</A></H1><PRE>
+
+Patch Release as part of stack based on LHCb v38r7 and Gaudi v26r2.
+Depends on Hlt v23r7p2.
+
+Release for data EM taking in July 2015. Includes patch of
+HltRawData to not save PV tracks in the Turbo reports.
+
+</PRE><H1><A NAME=v23r7p2>2015-06-28 MooreSys v23r7p2</A></H1><PRE>
 
 Patch Release as part of stack based on LHCb v38r7 and Gaudi v26r2.
 Depends on Hlt v23r7p2.
