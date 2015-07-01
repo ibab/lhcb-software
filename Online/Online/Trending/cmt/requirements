@@ -3,7 +3,7 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           Trending
-version           v2r3
+version           v2r4
 
 #============================================================================
 # Structure, i.e. directories to process. 

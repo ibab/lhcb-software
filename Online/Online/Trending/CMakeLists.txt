@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Trending
 ################################################################################
-gaudi_subdir(Trending v2r3)
+gaudi_subdir(Trending v2r4)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          Online/OnlineKernel)
