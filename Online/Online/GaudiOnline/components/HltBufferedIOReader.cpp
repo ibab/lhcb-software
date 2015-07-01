@@ -85,6 +85,10 @@ namespace LHCb
     int                      m_evtCount;
     /// Monitoring quantity: Number of events per current input file
     int                      m_evtCountFile;
+    /// DIM service ID for publishing currentRun
+    int                      m_runSvcID;
+    /// Monitoring quantity: Currently processed run number
+    int                      m_currentRun;
     /// DIM service ID for 'GO' command
     int                      m_goSvcID;
     /// DIM value of GO service
@@ -98,6 +102,8 @@ namespace LHCb
 
     /// DIM command service callback
     static void go_handler(void* tag, void* address, int* size);
+    /// DIM service update handler
+    static void run_no_update(void* tag, void** buf, int* size, int* first);
 
     /// Scan directory for matching files
     size_t scanFiles();
@@ -151,6 +157,7 @@ namespace LHCb
 #include <cerrno>
 #include <sstream>
 #include "dic.h"
+#include "dis.h"
 #ifdef _WIN32
 #include <io.h>
 #else
@@ -197,11 +204,22 @@ void HltBufferedIOReader::go_handler(void* tag, void* address, int* size) {
   }
 }
 
+/// DIM service update handler
+void HltBufferedIOReader::run_no_update(void* tag, void** buf, int* size, int* first)  {
+  HltBufferedIOReader* h = *(HltBufferedIOReader**)tag;  
+  if ( *first )  {
+  }
+  if ( h )  {
+    *size = sizeof(h->m_currentRun);
+    *buf  = &h->m_currentRun;
+  }
+}
+
 /// Standard Constructor
 HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
   : OnlineService(nam, svcLoc), m_receiveEvts(false), m_lock(0), m_mepMgr(0), 
-    m_producer(0), m_evtCount(0), m_evtCountFile(0), m_goSvcID(0), 
-    m_goValue(0), m_disabled(false)
+    m_producer(0), m_evtCount(0), m_evtCountFile(0), m_runSvcID(0), m_currentRun(0),
+    m_goSvcID(0), m_goValue(0), m_disabled(false)
 {
   declareProperty("Buffer",        m_buffer          = "Mep");
   declareProperty("Directory",     m_directory       = "/localdisk");
@@ -281,6 +299,7 @@ StatusCode HltBufferedIOReader::initialize()   {
   incidentSvc()->addListener(this, "DAQ_STOP_TRIGGER");
   declareInfo("EvtCount", m_evtCount = 0, "Number of events processed");
   declareInfo("EvtCountFile", m_evtCountFile = 0, "Number of events processed from current input");
+  m_currentRun = 0;
   ::lib_rtl_lock(m_lock);
   m_files.clear();
   m_current = "";
@@ -290,11 +309,17 @@ StatusCode HltBufferedIOReader::initialize()   {
     m_goSvcID = ::dic_info_service(m_goService.c_str(),MONITORED,
                                    0,0,0,go_handler,(long)this,0,0);
   }
+  string nam = RTL::processName() + "/CurrentRunNumber";
+  m_runSvcID = ::dis_add_service(nam.c_str(),"I",0,0,run_no_update,(long)this);
   return sc;
 }
 
 /// IService implementation: finalize the service
 StatusCode HltBufferedIOReader::finalize()  {
+  if ( m_runSvcID )  {
+    ::dic_release_service(m_runSvcID);
+    m_runSvcID = 0;
+  }
   if ( m_goSvcID )  {
     ::dic_release_service(m_goSvcID);
     m_goSvcID = 0;
@@ -428,6 +453,9 @@ int HltBufferedIOReader::openFile()   {
           << m_max_events_per_file << " events]";
         info(s.str());
       }
+      m_currentRun = 0;
+      ::sscanf(fname.c_str(),"%06d",&m_currentRun);
+      if ( m_runSvcID ) ::dis_update_service(m_runSvcID);
       return fd;
     }
     error("FAILD to open file: " + fname + " for deferred HLT processing: "
@@ -519,6 +547,8 @@ StatusCode HltBufferedIOReader::i_run()  {
       if ( file_handle )  {
         safeRestOfFile(file_handle);
         file_handle = 0;
+	m_currentRun = 0;
+	if ( m_runSvcID ) ::dis_update_service(m_runSvcID);
       }
       /// Before actually declaring PAUSED, we wait until no events are pending anymore.
       waitForPendingEvents(mbmInfo);
@@ -532,6 +562,8 @@ StatusCode HltBufferedIOReader::i_run()  {
     }
     else if ( files_processed ) {
       info("Locking event loop. Waiting for work....");
+      m_currentRun = 0;
+      if ( m_runSvcID ) ::dis_update_service(m_runSvcID);
       ::lib_rtl_lock(m_lock);
     }
     // Again check if the GO value changed, since we may have been waiting in the lock!
@@ -543,6 +575,8 @@ StatusCode HltBufferedIOReader::i_run()  {
       info("Quitting...");
       break;
     }
+    m_currentRun = 0;
+    if ( m_runSvcID ) ::dis_update_service(m_runSvcID);
     m_evtCount = 0;
     m_evtCountFile = 0;
     files_processed = (GO_PROCESS != m_goValue) && scanFiles() == 0;
@@ -688,6 +722,8 @@ StatusCode HltBufferedIOReader::i_run()  {
     safeRestOfFile(file_handle);
     file_handle = 0;
     // Bad file: Cannot read input (m_evtCount==0)
+    m_currentRun = 0;
+    if ( m_runSvcID ) ::dis_update_service(m_runSvcID);
     m_evtCount = 0;
     m_evtCountFile = 0;
   }
