@@ -95,7 +95,7 @@ AlignDataWriter_Muon.PartitionName             = @OnlineEnv.PartitionName;
 // Requirements for Physics
 //
 AlignDataWriter_Muon.Requirements         = {
-"EvType=2;TriggerMask=0x0,0x00000400,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+"EvType=2;TriggerMask=0x0,0x01000000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
 //
 // Requirements for TED and other stuff
