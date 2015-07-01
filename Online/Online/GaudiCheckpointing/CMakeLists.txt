@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaudiCheckpointing
 ################################################################################
-gaudi_subdir(GaudiCheckpointing v0r22)
+gaudi_subdir(GaudiCheckpointing v0r23)
 
 gaudi_depends_on_subdirs(GaudiKernel
                          Online/Checkpointing
