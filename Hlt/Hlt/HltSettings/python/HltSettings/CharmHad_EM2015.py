@@ -31,6 +31,7 @@ class CharmHad_EM2015 :
             'Hlt2CharmHadDst_2D0Pi0_D02KPi_XSecTurbo',
             'Hlt2CharmHadDst_2DsGamma_Ds2KKPi_XSecTurbo',
             'Hlt2CharmHadDst_2D0Pi_D02K3Pi_XSecTurbo',
+            'Hlt2CharmHadDst_2D0Gamma_D02KPi_XSecTurbo',
             'Hlt2CharmHadSigmac_2LcPi_XSecTurbo',
             'Hlt2CharmHadXic02PKKPi_Turbo'
        ]

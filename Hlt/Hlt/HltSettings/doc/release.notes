@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-07-01 - Christian Linn
+ - added Hlt2CharmHadDst_2D0Gamma_D02KPi_XSecTurbo to CharmHad_EM2015
+
+! 2015-07-01 - Christian Linn
  - corrected momentum thresholds and prescales of RichMirror lines in Physics_draftEM2015
 
 !========================= HltSettings v6r16 2015-06-28 =========================
