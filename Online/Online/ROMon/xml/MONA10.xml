@@ -1,0 +1,10 @@
+<TaskInventory>
+  <NodeList name="MONA10">
+   <Name>MONA10</Name>
+   <Node name="mona10"     type="DQControl"/>
+   <Node name="mona1001"   type="DQWorker"/>
+   <Node name="mona1002"   type="DQWorker"/>
+   <Node name="mona1003"   type="DQWorker"/>
+   <Node name="mona1004"   type="DQWorker"/>
+  </NodeList>
+</TaskInventory>

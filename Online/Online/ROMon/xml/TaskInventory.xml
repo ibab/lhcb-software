@@ -83,14 +83,17 @@
 </TaskList>
 
 <TaskList name="StandardHLT">
- <Task name="flukamon"/>
- <Task name="diracmon"/>
  <Task name="TANServ"/>
  <Task name="ROcollect"/>
  <Task name="LogGaudiSrv"/>
  <Task name="LogLHCb1Srv"/>
  <Task name="LogLHCb2Srv"/>
  <Task name="LogLHCbASrv"/>
+</TaskList>
+
+<TaskList name="Dirac">
+  <Task name="flukamon"/>
+  <Task name="diracmon"/>
 </TaskList>
 
 <TaskList name="ControlsPC">
@@ -236,6 +239,10 @@
   <Connection name="&lt;DIM_DNS_NODE&gt;"/>
 </ConnectionList>
 
+<ConnectionList name="HLTWorker">
+  <Connection name="&lt;DATAINTERFACE&gt;"/>
+</ConnectionList>
+
 <ConnectionList name="ControlsPC">
   <Connection name="hlt01"/>
   <Connection name="ecs01"/>
@@ -246,20 +253,30 @@
 <ConnectionList name="StorageReceiver">
   <Connection name="storerecv01-d1"/>
   <Connection name="storerecv02-d1"/>
+  <Connection name="storerecv03-d1"/>
+  <Connection name="storerecv04-d1"/>
 </ConnectionList>
 
 <ConnectionList name="StorageControl">
   <Connection name="storerecv01"/>
   <Connection name="storerecv02"/>
+  <Connection name="storerecv03"/>
+  <Connection name="storerecv04"/>
   <Connection name="storestrm01"/>
   <Connection name="storestrm02"/>
+  <Connection name="storestrm03"/>
+  <Connection name="storestrm04"/>
 </ConnectionList>
 
 <ConnectionList name="StorageWorker">
   <Connection name="storerecv01-d1"/>
   <Connection name="storerecv02-d1"/>
+  <Connection name="storerecv03-d1"/>
+  <Connection name="storerecv04-d1"/>
   <Connection name="storestrm01-d1"/>
   <Connection name="storestrm02-d1"/>
+  <Connection name="storestrm03-d1"/>
+  <Connection name="storestrm04-d1"/>
 </ConnectionList>
 
 <ConnectionList name="StorageWriters">
@@ -287,6 +304,7 @@
   <TaskList name="FMC"/>
   <TaskList name="StandardHLT"/>
   <TaskList name="ControlsPC"/>
+  <TaskList name="Dirac"/>
   <Task name="HLTEQBridge"/>
   <Task name="LogDef"/>
   <Task name="LogSumDefSrv"/>
@@ -313,6 +331,7 @@
   <TaskList name="FMC"/>
   <TaskList name="StandardHLT"/>
   <TaskList name="ControlsPC"/>
+  <TaskList name="Dirac"/>
   <Task name="LogGaudi"/>
   <Task name="LogGaudiSumSrv"/>
   <Task name="LogLHCb1SumSrv"/>
@@ -328,6 +347,7 @@
   <TaskList name="FMC"/>
   <TaskList name="StandardHLT"/>
   <TaskList name="ControlsPC"/>
+  <TaskList name="Dirac"/>
   <Task name="LogGaudi"/>
   <Task name="LogGaudiSumSrv"/>
   <Task name="LogLHCb1SumSrv"/>
@@ -341,9 +361,45 @@
 <NodeType name="HLTWorker">
   <TaskList name="FMC"/>
   <TaskList name="StandardHLT"/>
+  <TaskList name="Dirac"/>
   <Task name="TorrentLoader"/>
   <ConnectionList name="Standard"/>
+  <ConnectionList name="HLTWorker"/>
   <ConnectionList name="StorageReceiver"/>
+</NodeType>
+
+<NodeType name="DQControl">
+  <TaskList name="FMC"/>
+  <TaskList name="StandardHLT"/>
+  <TaskList name="ControlsPC"/>
+  <Task name="LogDef"/>
+  <Task name="LogSumDefSrv"/>
+  <Task name="LogGaudi"/>
+  <Task name="LogLHCb1"/>
+  <Task name="LogLHCb2"/>
+  <Task name="LogLHCbA"/>
+  <Task name="LogGaudiSumSrv"/>
+  <Task name="LogLHCb1SumSrv"/>
+  <Task name="LogLHCb2SumSrv"/>
+  <Task name="LogLHCbASumSrv"/>
+  <Task name="LogPVSS"/>
+  <Task name="LogPVSSSrv"/>
+  <Task name="TorrentPublish"/>
+  <Task name="TorrentLoader"/>
+  <ConnectionList name="ControlsPC"/>
+  <Project name="LBMON"/>
+</NodeType>
+
+<NodeType name="DQWorker">
+  <TaskList name="FMC"/>
+  <TaskList name="StandardHLT"/>
+  <Task name="TorrentLoader"/>
+  <ConnectionList name="Standard"/>
+  <Connection name="mona08"/>
+  <Connection name="mona0801"/>
+  <Connection name="mona0802"/>
+  <Connection name="mona0803"/>
+  <Connection name="mona0804"/>
 </NodeType>
 
 <NodeType name="CALControl">

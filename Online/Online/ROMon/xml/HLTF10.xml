@@ -1,0 +1,39 @@
+<TaskInventory>
+  <NodeList name="HLTF10">
+   <Name>HLTF10</Name>
+   <Node name="hltf10"   type="HLTControl"/>
+   <Node name="hltf1001"   type="HLTWorker"/>
+   <Node name="hltf1002"   type="HLTWorker"/>
+   <Node name="hltf1003"   type="HLTWorker"/>
+   <Node name="hltf1004"   type="HLTWorker"/>
+   <Node name="hltf1005"   type="HLTWorker"/>
+   <Node name="hltf1006"   type="HLTWorker"/>
+   <Node name="hltf1007"   type="HLTWorker"/>
+   <Node name="hltf1008"   type="HLTWorker"/>
+   <Node name="hltf1009"   type="HLTWorker"/>
+   <Node name="hltf1010"   type="HLTWorker"/>
+   <Node name="hltf1011"   type="HLTWorker"/>
+   <Node name="hltf1012"   type="HLTWorker"/>
+   <Node name="hltf1013"   type="HLTWorker"/>
+   <Node name="hltf1014"   type="HLTWorker"/>
+   <Node name="hltf1015"   type="HLTWorker"/>
+   <Node name="hltf1016"   type="HLTWorker"/>
+   <Node name="hltf1017"   type="HLTWorker"/>
+   <Node name="hltf1018"   type="HLTWorker"/>
+   <Node name="hltf1019"   type="HLTWorker"/>
+   <Node name="hltf1020"   type="HLTWorker"/>
+   <Node name="hltf1021"   type="HLTWorker"/>
+   <Node name="hltf1022"   type="HLTWorker"/>
+   <Node name="hltf1023"   type="HLTWorker"/>
+   <Node name="hltf1024"   type="HLTWorker"/>
+   <Node name="hltf1025"   type="HLTWorker"/>
+   <Node name="hltf1026"   type="HLTWorker"/>
+   <Node name="hltf1027"   type="HLTWorker"/>
+   <Node name="hltf1028"   type="HLTWorker"/>
+   <Node name="hltf1029"   type="HLTWorker"/>
+   <Node name="hltf1030"   type="HLTWorker"/>
+   <Node name="hltf1031"   type="HLTWorker"/>
+   <Node name="hltf1032"   type="HLTWorker"/>
+  </NodeList>
+</TaskInventory>
+
