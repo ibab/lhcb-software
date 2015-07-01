@@ -23,12 +23,15 @@ fi;
 #
 export PYTHONPATH=${FARMCONFIGROOT}/job:${PYTHONPATH};
 
-###echo `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -s` | tr ";" ";\n";
+##echo `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -s` | tr ";" ";\n";
 eval `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -s`;
 if test "${APP_STARTUP_OPTS}" = "-restore";      ## RunInfo flag=2
     then
     echo "+++ [INFO] ${ONLINE_PROJECT_ROOT} ==> ${RESTORE_CMD}";
-    eval "python -c \"import ConfigureFromCheckpoint\" | ${RESTORE_CMD}";
+    mkdir -p /tmp/Commands;
+    python -c "import ConfigureFromCheckpoint" > /tmp/Commands/$$.cmds;
+    ${RESTORE_CMD} < /tmp/Commands/$$.cmds;
+    #eval "python -c \"import ConfigureFromCheckpoint\" | ${RESTORE_CMD}";
 else
     echo "+++ [INFO] ${ONLINE_PROJECT_ROOT} ==> exec -a ${UTGID} ${Checkpoint_task} ${OPTIONS}";
     exec -a ${UTGID} ${Checkpoint_task} ${OPTIONS} ${APP_STARTUP_OPTS};
