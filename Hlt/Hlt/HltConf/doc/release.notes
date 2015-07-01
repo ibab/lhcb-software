@@ -4,6 +4,8 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v13r0p1 2015-07-01 =========================
+
 ! 2015-07-01 - Roel Aaij
  - Update HLT2 mass plots created by HltMassMonitor.
  - Disable creation of monitoring histograms by CombineParticles and
