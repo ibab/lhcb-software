@@ -39,8 +39,6 @@ public:
 
   virtual void close();
 
-  virtual int Fileexists(std::string &fnam);
-
 protected:
 
 private:
