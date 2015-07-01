@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-07-01 - Sascha Stahl
+ - RecoTest/Lines.py: Remove the priority of 1 from the JPsiReFitPVsTurbo line.
+
 ! 2015-07-01 - Roel Aaij
  - Fix TrackGEC in TrackEff and CharmHad to be specific to the respective
    sets of lines.

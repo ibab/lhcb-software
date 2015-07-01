@@ -31,9 +31,9 @@ class RecoTestLines(Hlt2LinesConfigurableUser) :
         for nickname, algos in self.algorithms(stages).iteritems():
             if nickname is 'JPsiReFitPVsTurbo':
                 HltANNSvc().Hlt2SelectionID.update( { "Hlt2JPsiReFitPVsTurboDecision":  57221 } )
-                Hlt2Line(nickname, priority = 1, prescale = self.prescale,
-                        algos = algos, postscale = self.postscale, Turbo=True)
+                Hlt2Line(nickname, prescale = self.prescale,
+                         algos = algos, postscale = self.postscale, Turbo=True)
             else:
                 Hlt2Line(nickname, priority = 1, prescale = self.prescale,
-                        algos = algos, postscale = self.postscale)
+                         algos = algos, postscale = self.postscale)
 
