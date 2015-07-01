@@ -392,41 +392,12 @@ StatusCode AlignmentElement::updateGeometry( const AlParameters& parameters)
       msg(MSG::FATAL) << "Updating element without alignment condition: " << (*i)->name() << endmsg ;
       sc = StatusCode::FAILURE ;
     } else {
-      /// let's add some debug shit:
-      const Gaudi::Transform3D before = (*i)->geometry()->ownToOffNominalMatrix() ;
-
       /// Transform global delta matrix to new local delta matrix (takes current local delta matrix into account!!)
       const Gaudi::Transform3D localDeltaMatrix  = DetDesc::localDeltaMatrix((*i), globalDeltaMatrix);
-
-      if( std::abs( AlParameters( before ).parameters()(0) - AlParameters( localDeltaMatrix ).parameters()(0) ) < 1e-8 &&
-	  parameters.parameters()(0) > 1e-4 ) {
-	msg(MSG::FATAL) << "computed new localDeltaMatrix is too close to original!"
-			<< name() << " " 
-			<< AlParameters(before ).parameters()(0) << " " << AlParameters(localDeltaMatrix ).parameters()(0)
-			<< " " << parameters.parameters()(0) << endmsg ;
-      }
-
       /// Update position of detector element with new local delta matrix
       sc = const_cast<IGeometryInfo*>((*i)->geometry())->ownToOffNominalMatrix(localDeltaMatrix);
       if (sc.isFailure()) {
 	msg(MSG::FATAL) << "Failed to update local delta matrix of detector element " + (*i)->name() << endmsg;
-      }
-
-      /// let's add some debug shit:                                                                                                                                            
-      const Gaudi::Transform3D after = (*i)->geometry()->ownToOffNominalMatrix() ;
-      if( std::abs( AlParameters( before ).parameters()(0) - AlParameters( after ).parameters()(0) ) < 1e-8 &&
-          parameters.parameters()(0) > 1e-4 ) {
-        msg(MSG::FATAL) << "retrieved new localDeltaMatrix is too close to original!"
-                        << name() << " "
-                        << AlParameters(before ).parameters()(0) << " " << AlParameters(after).parameters()(0)
-                        << " " << parameters.parameters()(0) << endmsg ;
-      }
-
-      if(  std::abs( AlParameters( localDeltaMatrix ).parameters()(0) - AlParameters( after ).parameters()(0) ) > 1e-6 ) {
-	msg(MSG::FATAL) << "retrieved new localDeltaMatrix does not correspond to set value"
-			<< name() << " "
-			<< AlParameters( localDeltaMatrix ).parameters()(0) << " " << AlParameters(after).parameters()(0)
-                        << " " << parameters.parameters()(0) << endmsg ;
       }
     }
   }
