@@ -5,6 +5,8 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================= HltLine v7r11p1 2015-07-01 =========================
+
 ! 2015-07-01 - Roel Aaij
  - Allow VoidFilter to be an Hlt2Member to make VoidFilter based global event
    cuts work properly when they are shared or not shared.

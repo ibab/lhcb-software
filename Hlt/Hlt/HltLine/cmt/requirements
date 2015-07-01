@@ -3,7 +3,7 @@
 # Maintainer : Gerhard Raven 
 #============================================================================
 package           HltLine
-version           v7r11
+version           v7r11p1
 # Structure
 #============================================================================
 branches          cmt doc src python
