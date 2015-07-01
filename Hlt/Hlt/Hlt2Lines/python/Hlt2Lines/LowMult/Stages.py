@@ -5,17 +5,17 @@ class TrackGEC(Hlt2VoidFilter):
     def __init__(self, name):
 #        from Configurables import LoKi__Hybrid__CoreFactory as Factory
 #        modules =  Factory().Modules
-#        for i in [ 'LoKiTrigger.decorators' ] : 
+#        for i in [ 'LoKiTrigger.decorators' ] :
 #            if i not in modules : modules.append(i)
 
-        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking 
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
         velotracks = Hlt2BiKalmanFittedForwardTracking().hlt2VeloTracking()
         VT = velotracks.outputSelection()
         code = ("(CONTAINS('%s')" % VT) + (" < %(nVeloTracksmax)s)") + " & " + ("(TrNUM('%s', TrBACKWARD)" % VT) + (" < %(nBackTracksmax)s)")
-        Hlt2VoidFilter.__init__(self, "CEPTrackGEC_"+name, code, [velotracks], nickname = name)
+        Hlt2VoidFilter.__init__(self, "CEPTrackGEC_"+name, code, [velotracks], nickname = name, shared = True)
 
 ################################
-# create track filters for 
+# create track filters for
 # pions, kaons and protons
 ################################
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
@@ -26,7 +26,7 @@ class InHadronFilter(Hlt2ParticleFilter):
                        "& (TRCHI2DOF < %(H_TrkChi2max)s)")
         Hlt2ParticleFilter.__init__(self, name, cut, inputs, shared = True)
 # Global hadronic inputs
-from Inputs import Hlt2NoPIDsPions, Hlt2LooseKaons,Hlt2LooseProtons       
+from Inputs import Hlt2NoPIDsPions, Hlt2LooseKaons,Hlt2LooseProtons
 SharedChild_pi = InHadronFilter( 'LowMultSharedChild_pi',
                                  [Hlt2NoPIDsPions] );
 SharedChild_K  = InHadronFilter( 'LowMultSharedChild_K',
@@ -51,7 +51,7 @@ class MuonCombiner(Hlt2Combiner):
               'mu-'   : "(PT > %(mu_PTmin)s)"}
         cc = ("(AM > %(AMmin)s)")
         mc = "ALL"
-        Hlt2Combiner.__init__(self, name, decay, inputs, 
+        Hlt2Combiner.__init__(self, name, decay, inputs,
                               dependencies = [TrackGEC(name)],
                               DaughtersCuts = dc, CombinationCut = cc, MotherCut = mc, Preambulo = []);
 
@@ -199,7 +199,7 @@ class LowMultChiC2HHHHFilter(HadronicCombiner):
     def __init__(self, name):
         pidcut  = {'K+' : "(PIDK > %(K_PIDKmin)s)", 'K-'  : "(PIDK > %(K_PIDKmin)s)",
                    'pi+': "(PIDK < %(Pi_PIDKmax)s)",'pi-' : "(PIDK < %(Pi_PIDKmax)s)"}
-        decay   = ["chi_c1(1P) -> K+ K- K+ K-", "chi_c1(1P) -> K+ K- pi+ pi-", 
+        decay   = ["chi_c1(1P) -> K+ K- K+ K-", "chi_c1(1P) -> K+ K- pi+ pi-",
                    "chi_c1(1P) -> K+ K+ pi- pi-", "chi_c1(1P) -> pi+ pi+ pi- pi-"]
         inputs  = [SharedChild_K, SharedChild_pi]
         HadronicCombiner.__init__(self,name,decay,inputs,pidcut)

@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-07-01 - Roel Aaij
+ - Fix TrackGEC in TrackEff and CharmHad to be specific to the respective
+   sets of lines.
+
 ! 2015-06-24 - Olli Lupton
  - Update default L0->ppi thresholds, to match EM thresholds in r189993 of HltSettings
 
@@ -80,7 +84,7 @@
 
 ! 2015-06-19 - Simone Stracka
  - Fix in CharmHad/Stages.py and CharmHad/D2HHLines.py to apply a looser mass cut before
-   combination and refine it afterwards. 
+   combination and refine it afterwards.
 
 ! 2015-06-18 - Mika Vesterinen
  - Fix spurious mbda0KmKpPimPp in cut string in V0H combiner in CharmHad/Stages.py
@@ -93,7 +97,7 @@
      . Copy on Full DST for use in flavour tagging calibration
 
 ! 2015-06-12 - Tom Hadavizadeh
- - CharmHad: Fixed D* lines in D2HHLines 
+ - CharmHad: Fixed D* lines in D2HHLines
     M python/Hlt2Lines/CharmHad/D2HHLines.py
     M python/Hlt2Lines/CharmHad/Stages.py
 
@@ -102,9 +106,9 @@
    passthrough of Hlt1NoBiasPrescaled line
 
 ! 2015-06-10 - Simone Stracka
-	. CharmHad: fixed wrong syntax for lifetime cut in D2HHPi0Lines 
-    M python/Hlt2Lines/CharmHad/D2HHPi0Lines.py - fixed bug 
-    M python/Hlt2Lines/CharmHad/D2HHLines.py - minor adjustment 		
+	. CharmHad: fixed wrong syntax for lifetime cut in D2HHPi0Lines
+    M python/Hlt2Lines/CharmHad/D2HHPi0Lines.py - fixed bug
+    M python/Hlt2Lines/CharmHad/D2HHLines.py - minor adjustment
 
 ! 2015-06-09 - Mika Vesterinen
   D2HHPi0Lines.py - moved from turbo to full

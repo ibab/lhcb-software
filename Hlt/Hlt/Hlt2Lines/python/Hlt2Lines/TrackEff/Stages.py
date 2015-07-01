@@ -10,12 +10,12 @@ class TrackGEC(Hlt2VoidFilter):
     def __init__(self, name):
         from Configurables import LoKi__Hybrid__CoreFactory as Factory
         modules =  Factory().Modules
-        for i in [ 'LoKiTrigger.decorators' ] : 
+        for i in [ 'LoKiTrigger.decorators' ] :
             if i not in modules : modules.append(i)
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking as Hlt2LongTracking
         tracks = Hlt2LongTracking().hlt2PrepareTracks()
         code = ("CONTAINS('%s')" % tracks.outputSelection()) + " < %(NTRACK_MAX)s"
-        Hlt2VoidFilter.__init__(self, name, code, [tracks])
+        Hlt2VoidFilter.__init__(self, "TrackEff" + name, code, [tracks], shared = True, nickname = 'TrackGEC')
 
 class TrackEffTagFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
@@ -45,9 +45,9 @@ class DstTagger(Hlt2Combiner):
         mag = "math.sqrt(ACHILD( VFASPF( VX ),1)**2+ACHILD( VFASPF( VY ),1)**2+ACHILD( VFASPF( VZ ),1)**2)"
         formula = "(180./3.1415)*acos( %(dot_prod)s / (ACHILD(P,2)*%(mag)s) )" %{"dot_prod":dot_prod,
                                                                                  "mag":mag}
-        
+
         DstCombinationCut = "("+formula+" < %(Dst_MaxAOA)s) & (APT > %(Dst_MinAPT)s ) & (AALLSAMEBPV)"
-        DstMotherCut      = "(Dst_M - D0_M < %(Dst_MaxSimpleFitDeltaMass)s)" 
+        DstMotherCut      = "(Dst_M - D0_M < %(Dst_MaxSimpleFitDeltaMass)s)"
         DaughtersCuts     = {'pi+' : "(PT > %(Slowpi_MinPt)s)"}
         from HltTracking.HltPVs import PV3D
         from Preambulo import DstPreambulo

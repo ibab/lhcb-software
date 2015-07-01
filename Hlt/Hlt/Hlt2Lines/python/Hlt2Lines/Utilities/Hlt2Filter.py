@@ -13,7 +13,7 @@ class Hlt2ParticleFilter(Hlt2TisTosStage):
 
     def hasOutput(self):
         return True
-        
+
     def clone(self, name, **kwargs):
         args = deepcopy(self.__kwargs)
         args['name'] = name
@@ -35,7 +35,7 @@ class Hlt2ParticleFilter(Hlt2TisTosStage):
         stages += inputs
         return Hlt2Member(FilterDesktop, self._name() + 'Filter', shared = self._shared(),
                           Inputs = inputs, **args)
-                                     
+
     def stage(self, stages, cuts):
         key = self._hashCuts(cuts)
         if key in self.__cache:
@@ -69,7 +69,7 @@ class Hlt2ParticleFilter(Hlt2TisTosStage):
         stages += deps
         self.__cache[key] = (stage, deps)
         return stage
-    
+
 class Hlt2VoidFilter(Hlt2Stage):
     def __init__(self, name, code, inputs, dependencies = [], nickname = None,
                  shared = False, **kwargs):
@@ -89,23 +89,26 @@ class Hlt2VoidFilter(Hlt2Stage):
             args[arg] = kwargs.pop(arg) if arg in kwargs else default
         args.update(kwargs)
         return Hlt2VoidFilter(**args)
-                                 
+
     def stage(self, stages, cuts):
         key = self._hashCuts(cuts)
         if key in self.__cache:
             cached = self.__cache[key]
             stages += cached[1]
             return cached[0]
-        
+
         from Configurables import LoKi__VoidFilter as VoidFilter
         cuts = self._localCuts(cuts)
         code = self.__code % cuts
-        vfilter = VoidFilter('Hlt2' + self._name(), Code = code)
+
+        ## Also use Hlt2Member here to make sure that only the shared ones are
+        ## actually shared.
+        from HltLine.HltLine import Hlt2Member
+        vfilter = Hlt2Member(VoidFilter, self._name(), shared = self._shared(), Code = code)
 
         ## Add inputs and dependencies to stages and return our own stage.
         deps =self.dependencies(cuts)
         inputs = self.inputStages(deps, cuts)
         stages += deps
         self.__cache[key] = (vfilter, deps)
-        from HltLine.HltLine import bindMembers
-        return bindMembers(None, [vfilter]).ignoreOutputSelection()
+        return vfilter
