@@ -10,8 +10,6 @@ use  Moore               v23r7p2    Hlt
 use  IndependenceTests   v1r10      Hlt
 use  L0App               v2r4       L0
 
-## Additional packages for this release
-use  HltRawData          v5r7       Hlt
 # Declare this as a container package
 apply_pattern container_package
 
