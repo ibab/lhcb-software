@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Checkpointing
 ################################################################################
-gaudi_subdir(Checkpointing v0r22)
+gaudi_subdir(Checkpointing v0r23)
 
 # this package works only on 64 bits platforms
 if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
