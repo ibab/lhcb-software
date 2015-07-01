@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltSys
 ################################################################################
-gaudi_subdir(HltSys v23r7p2)
+gaudi_subdir(HltSys v23r7p3)
 
 gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/Hlt1Muons
