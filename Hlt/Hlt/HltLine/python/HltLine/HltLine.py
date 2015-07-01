@@ -1262,26 +1262,25 @@ class Hlt2Member ( object ) :
                    shared = False,    ## If shared, do not inject the line name in the name
                    **Args        ) :  ## arguments
         """
-        The standard constructor to create the  Hlt1Member instance:
+        The standard constructor to create the  Hlt2Member instance:
         >>> m1 = Hlt2Member ( FilterDesktop , 'Filter', Code = '...', Inputs = ... ,
         """
         from Configurables import FilterDesktop, CombineParticles, TisTosParticleTagger
         from Configurables import DaVinci__N3BodyDecays, DaVinci__N4BodyDecays, DaVinci__N5BodyDecays, DaVinci__N6BodyDecays, DaVinci__N7BodyDecays
-        from Configurables import DiElectronMaker
+        from Configurables import DiElectronMaker, LoKi__VoidFilter
         ## (0) verify input
         # Type must be a (configurable) class name, and only
         # a limited set is allowed (which must be DVAlgorithms...)
         if Type not in [ FilterDesktop, CombineParticles, TisTosParticleTagger
                          , DaVinci__N3BodyDecays, DaVinci__N4BodyDecays
                          , DaVinci__N5BodyDecays, DaVinci__N6BodyDecays
-                         , DaVinci__N7BodyDecays, DiElectronMaker ] :
+                         , DaVinci__N7BodyDecays, DiElectronMaker
+                         , LoKi__VoidFilter ] :
             raise AttributeError, "The type  %s is not known for Hlt2Member"%Type
         for key in Args :
             if  key not in Type.__slots__  :
                 raise AttributeError, "The key %s is not allowed for type %s"%(key,Type.__name__)
         if Type == TisTosParticleTagger :
-            ### How to insert the Hlt1SelRep decoder just prior to the TisTosParticleTagger???
-            ### -- that's the responsibility of the lines author... but we may want to verify it for him/her..
             Args['Context'] = "" # make sure context is NOT Hlt...
 
         ## (1) "clone" all agruments
@@ -1344,8 +1343,8 @@ class Hlt2Member ( object ) :
             args['Inputs'] = [ i for i in flatten(inputLocations) ]
 
         _name = self.name( line )
-        if 'Output' not in args :
-            args['Output'] = 'Hlt2/%s/Particles' % _name
+        if 'Output' not in args:
+            if hasattr(self.Type, 'Output'): args['Output'] = 'Hlt2/%s/Particles' % _name
         else :
             print 'WARNING: Output for %s has been explicitly specified as %s' % ( _name, args['Output'] )
         from GaudiConfUtils import configurableExists
