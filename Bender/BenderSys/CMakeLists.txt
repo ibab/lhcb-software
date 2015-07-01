@@ -1,7 +1,7 @@
 ################################################################################
 # Package: BenderSys
 ################################################################################
-gaudi_subdir(BenderSys v25r7p2)
+gaudi_subdir(BenderSys v25r7p3)
 
 gaudi_depends_on_subdirs(Ex/BenderExample
                          Phys/Bender
