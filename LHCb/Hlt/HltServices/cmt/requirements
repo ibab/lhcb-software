@@ -3,7 +3,7 @@
 # Maintainer : Rob Lambert, Gerhard Raven
 #=====================================================================
 package           HltServices
-version           v2r8
+version           v2r9
 
 #=====================================================================
 # Structure, i.e. directories to process.

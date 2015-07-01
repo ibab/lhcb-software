@@ -4,6 +4,8 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+!========================= HltServices v2r9 2015-07-01 =========================
+
 ! 2015-06-30 - Roel Aaij
  - Add possibility to put environment variables back in the properties. The
    list of environment variables to be put back in is specified through a
