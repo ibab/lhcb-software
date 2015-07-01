@@ -18,7 +18,7 @@ MEPManager.Buffers                   = @OnlineEnv.DskWriter_Buffers;
 //WrManager.WriterServicePatt          = "DskWriter_";
 WrManager.WriterList                += { "LHCb::FileWriterSvc/DskWriter"};
 WrManager.Input                     = @OnlineEnv.DskWriter_Input;
-DskWriter.SizeLimit                 = 1000;
+DskWriter.SizeLimit                 = 400;
 DskWriter.PrintFreq                 = 1.0;
 DskWriter.Requirements         = {
 "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
