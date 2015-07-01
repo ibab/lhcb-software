@@ -7,7 +7,7 @@ sep = '/'
 
 checkpoint_zip = True
 checkpoint_dir = '/group/online/dataflow/cmtuser/checkpoints'
-checkpoint_expand_area = '/dev/shm'
+checkpoint_expand_area = '/dev/shm/Torrents'
 checkpoint_local_area = '/localdisk/checkpoints'
 if os.environ.has_key('LOCAL_CHECKPOINT_DIR'):
   checkpoint_local_area = os.environ['LOCAL_CHECKPOINT_DIR']
@@ -49,7 +49,7 @@ class Checkpoint:
 
     self.torrent_file   = self._getTorrentFile()
     self.checkpoint_bin = os.environ['CHECKPOINTING_BIN']
-    self.restore        = self.checkpoint_bin + '/bin/restore.exe'
+    self.restore        = 'restore.exe' ##self.checkpoint_bin + '/bin/restore.exe'
     if self.torrent_file:
       if checkpoint_zip:
         self.target_path = checkpoint_expand_area+sep+self.task_type+sep+"Checkpoint.data"
@@ -88,38 +88,42 @@ class Checkpoint:
   def torrentFile(self):
     return self.torrent_file
 
+  #=======================================================================================
   def output(self, message):
     print message
     ## print 'echo [INFO] ',message
     return self
 
+  #=======================================================================================
   def initProcess(self):
     self.output('unset CHECKPOINT_DIR;') \
         .output('unset CHECKPOINT_FILE;') \
-        .output('unset LD_PRELOAD;')
+        .output('unset LD_PRELOAD;') \
+        .output('export CHECKPOINTING_BIN='+self.checkpoint_bin+';')
+
     if self.config_brunel:
       self.output('export PYTHONPATH=/group/online/dataflow/options/'+self.runinfo.PartitionName+'/RECONSTRUCTION:${PYTHONPATH};')
     else:
       self.output('export PYTHONPATH=/group/online/dataflow/options/'+self.runinfo.PartitionName+'/HLT:${PYTHONPATH};')
     return self
 
+  #=======================================================================================
   def addSlaves(self):
     return self.output('export NUM_CORES=${NBOFSLAVES};')
 
+  #=======================================================================================
+  def preload(self):
+    return self.output('export LD_PRELOAD=libCheckpointing.so;')
+
+  #=======================================================================================
   def setupNormal(self):
-    ##.output('export LD_PRELOAD='+self.checkpoint_bin+'/lib/libCheckpointing.so;') \    
-    return self.initProcess().output('export APP_STARTUP_OPTS=-normal;') \
-        .output('export CHECKPOINTING_BIN='+self.checkpoint_bin+';') \
-        .output('export LD_PRELOAD=libCheckpointing.so;') \
-        .output('export CHECKPOINT_SETUP_OPTIONS=${FARMCONFIGROOT}/options/Empty.opts;')
+    return self.initProcess().output('export APP_STARTUP_OPTS=-normal;').preload() \
+	       .output('export CHECKPOINT_SETUP_OPTIONS=${FARMCONFIGROOT}/options/Empty.opts;')
 
   #=======================================================================================
   def setupForking(self):
-    #.output('export LD_PRELOAD='+self.checkpoint_bin+'/lib/libCheckpointing.so;')
-    return self.initProcess().addSlaves() \
-        .output('export APP_STARTUP_OPTS=-forking;') \
-        .output('export CHECKPOINTING_BIN='+self.checkpoint_bin+';') \
-        .output('export LD_PRELOAD=libCheckpointing.so;')
+    return self.initProcess().addSlaves().preload() \
+        .output('export APP_STARTUP_OPTS=-forking;')
 
   #=======================================================================================
   def setupCheckpointFile(self):
@@ -131,7 +135,75 @@ class Checkpoint:
 
   #=======================================================================================
   def extractLibs(self):
-    self.output(self.restore + ' -p 4 -x -C -i '+self.target_path+' -l '+self.lib_dir+'/;') 
+    """
+    Note:
+    There is quite some optimization here by checking the modifcation date
+    of the libs directory against the modification date of the checkpoint file.
+    """
+    lib_md5 = self.target_path+'.libs.md5'
+    tar_md5 = checkpoint_dir + self.checkpointRelativeDir()+os.sep+self.torrent_file+'.libs.md5'
+    self.output('if test ! -d "'+self.lib_dir+'"; then') \
+        .output('  need_extract=1;')\
+        .output('elif test ! -f "'+lib_md5+'"; then') \
+        .output('  need_extract=1;')\
+        .output('elif test -d "'+self.lib_dir+'"; then')
+    #self.output('  echo md5sum '+tar_md5+';')\
+    #    .output('  echo md5sum '+lib_md5+';')
+    self.output('  torrent_stat=`md5sum '+tar_md5+' | cut -b 1-32`;')\
+        .output('  libsdir_stat=`md5sum '+lib_md5+' | cut -b 1-32`;')\
+        .output('  if test "${libsdir_stat}" != "${torrent_stat}"; then')\
+        .output('    need_extract=1;')\
+        .output('  fi;') \
+        .output('fi;')
+
+    self.output('if test -n "${need_extract}"; then')\
+        .output('  echo "[INFO] Need to expand libraries from checkpoint before start [Check-sum].";') \
+        .output('  rm -f '+self.lib_dir+'/*;') \
+        .output(   self.restore + ' -p 4 -x -C -i '+self.target_path+' -l '+self.lib_dir+'/;') \
+        .output('  cd '+self.lib_dir+'; md5sum `ls -S -1 . | grep -v passwd` > '+lib_md5+'; cd -;') \
+        .output('else') \
+        .output('  echo "[INFO] MD5 of libs[${libsdir_stat}] fits torrent[${torrent_stat}]  Nothing to expand before start [Checksum-OK].";') \
+        .output('fi;')
+
+    self.output('if test ! -d "'+self.lib_dir+'"; then') \
+        .output('  echo "[FATAL] '+line+'";') \
+        .output('  echo "[FATAL] == CHECKPOINT LIBS DIRECTORY '+self.lib_dir+' DOES NOT EXIST!";') \
+        .output('  echo "[FATAL] '+line+'";') \
+        .output('  exit 1;') \
+        .output('fi;')
+    self.output('if test ! -f "'+lib_md5+'"; then') \
+        .output('  echo "[FATAL] '+line+'";') \
+        .output('  echo "[FATAL] == CHECKPOINT LIBS MD5 '+lib_md5+' DOES NOT EXIST!";') \
+        .output('  echo "[FATAL] '+line+'";') \
+        .output('  exit 1;') \
+        .output('fi;')
+    return self
+
+  #=======================================================================================
+  def extractLibs_old(self):
+    """
+    Note:
+    There is quite some optimization here by checking the modifcation date
+    of the libs directory against the modification date of the checkpoint file.
+    """
+    self.output('if test ! -d "'+self.lib_dir+'"; then') \
+        .output('  need_extract=1;')\
+        .output('fi;')
+    self.output('if test -d "'+self.lib_dir+'"; then') \
+        .output('  torrent_stat=`stat -c "%Y" '+self.target_path+'`;')\
+        .output('  libsdir_stat=`stat -c "%Y" '+self.lib_dir+'`;')\
+        .output('  if test ${libsdir_stat} -le ${torrent_stat};then')\
+        .output('    need_extract=1;')\
+        .output('  fi;') \
+        .output('fi;')
+
+    self.output('if test -n "${need_extract}"; then')\
+        .output('  echo "[INFO] Need to expand libraries from checkpoint before start [Time-stams].";') \
+        .output(   self.restore + ' -p 4 -x -C -i '+self.target_path+' -l '+self.lib_dir+'/;') \
+        .output('else') \
+        .output('  echo "[INFO] lib[${libsdir_stat}] is younger than torrent[${torrent_stat}]  Nothing to expand before start [Time-stamps-OK].";') \
+        .output('fi;')
+
     self.output('if test ! -d "'+self.lib_dir+'"; then') \
         .output('  echo "[FATAL] '+line+'";') \
         .output('  echo "[FATAL] == CHECKPOINT LIBS DIRECTORY '+self.lib_dir+' DOES NOT EXIST!";') \
@@ -143,20 +215,25 @@ class Checkpoint:
   #=======================================================================================
   def setupRestoreEnv(self):
     return self.initProcess().addSlaves() \
-        .output('export APP_STARTUP_OPTS=-restore;') \
-        .output('export CHECKPOINTING_BIN='+self.checkpoint_bin+';')
+        .output('export APP_STARTUP_OPTS=-restore;')
 
   #=======================================================================================
   def setupRestore(self, extract=True):
     ldir = self.checkpointRelativeDir()
     relocate_path = ldir+sep+self.torrent_file
-    if extract: e_opt = '-x'
-    else:       e_opt = '-X'
+    if extract: extract_libs_opt = '-x'
+    else:       extract_libs_opt = '-X'
+    local_libs_opt = ' -l '+self.lib_dir
+
+    restore_cmd = 'exec -a ${UTGID} '+self.restore+' -p 4 -e '+\
+                  extract_libs_opt+local_libs_opt+' -i '+self.target_path
+
+    print 'echo "[INFO] Checkpointing Restore from torrent: '+restore_cmd+'";'
     self.initProcess().setupCheckpointFile() \
         .output('echo "[DEBUG] Setup restore process for %s";'%(self.task_type,)) \
         .output('export APP_STARTUP_OPTS=-restore;') \
-        .output('RESTORE_CMD="exec -a ${UTGID} '+self.restore+' -p 4 -e '+e_opt+' -l '+\
-                  self.lib_dir+' -i '+self.target_path+'";') \
+        .output('sleep 3;') \
+        .output('RESTORE_CMD="'+restore_cmd+'";') \
         .output('if test ! -f "'+self.target_path+'"; then') \
         .output('  echo "[FATAL] '+line+'";') \
         .output('  echo "[FATAL] == CHECKPOINT FILE '+self.target_path+' DOES NOT EXIST!";') \
@@ -283,10 +360,10 @@ def configureForCheckpoint(runinfo):
   print 'echo "[ERROR] == Running in checkkpoint PRODUCTION mode....";'
   print 'echo "[ERROR] == File:  ${CHECKPOINT_FILE} MBM setup:${MBM_SETUP_OPTIONS}";'
   print 'echo "[ERROR] == Producing CHECKPOINT file......Please be patient. RunInfo:'+runinfo+'";'
-  print 'echo "[ERROR] == LD_PRELOAD=${CHECKPOINTING_BIN}/lib/libCheckpointing.so";'
+  print 'echo "[ERROR] == LD_PRELOAD=libCheckpointing.so";'
   print 'echo "[ERROR] '+line+'";'
   # Note: This is the VERY LAST statement. Afterwards the executable MUST run!
-  print 'export LD_PRELOAD=${CHECKPOINTING_BIN}/lib/libCheckpointing.so;'
+  print 'export LD_PRELOAD=libCheckpointing.so;'
 
 #=========================================================================================
 def configureForTest(runinfo):
@@ -307,6 +384,7 @@ def configureForTest(runinfo):
   print '  echo "[FATAL] '+line+'";'
   print '  exit 1;'
   print 'fi;'
+  print 'cd /dev/shm/checkpoint; md5sum `ls -S . | grep -v passwd` > ${CHECKPOINT_FILE}.libs.md5; cd -;'
   
 #=========================================================================================
 def doIt():
