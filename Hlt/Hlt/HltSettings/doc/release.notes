@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-07-01 - Christian Linn
+ - corrected momentum thresholds and prescales of RichMirror lines in Physics_draftEM2015
+
 !========================= HltSettings v6r16 2015-06-28 =========================
 
 ! 2015-06-29 - Francesco Dettori

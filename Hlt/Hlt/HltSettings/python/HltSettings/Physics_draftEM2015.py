@@ -152,8 +152,8 @@ class Physics_draftEM2015( object ):
                                                    }
 
                      , Hlt1CalibRICHMirrorLinesConf :    { 'Prescale' : { 'Hlt1CalibHighPTLowMultTrks'     : 0.0001,
-                                                                          'Hlt1CalibRICHMirrorRICH1'       : 0.143,
-                                                                          'Hlt1CalibRICHMirrorRICH2'       : 0.05}
+                                                                          'Hlt1CalibRICHMirrorRICH1'       : 0.05,
+                                                                          'Hlt1CalibRICHMirrorRICH2'       : 0.143}
                                                           , 'DoTiming' : False
                                                          , 'R2L_PT'       : 500. * MeV
                                                          , 'R2L_P'        : 40000. * MeV
@@ -164,7 +164,7 @@ class Physics_draftEM2015( object ):
                                                          , 'R2L_MinTr'    : 0.5
                                                          , 'R2L_GEC'      : 'Loose'
                                                          , 'R1L_PT'       : 500. * MeV
-                                                         , 'R1L_P'        : 20000. * MeV
+                                                         , 'R1L_P'        : 10000. * MeV
                                                          , 'R1L_MinETA'   : 1.6
                                                          , 'R1L_MaxETA'   : 2.04
                                                          , 'R1L_Phis'     : [(-2.65, -2.30 ), (-0.80, -0.50), (0.50, 0.80), (2.30, 2.65)]
