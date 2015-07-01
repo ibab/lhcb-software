@@ -38,7 +38,7 @@ def _disableHistograms(c,filter = lambda x : True) :
 class HltMonitoringConf(LHCbConfigurableUser):
     __used_configurables__ = []
 
-    __slots__ = {"EnableMonitoring"         : True,
+    __slots__ = {"EnableMonitoring"         : False,
                  "EnableL0Monitor"          : True,
                  "EnableHltMonitor"         : True,
                  "EnableHlt1TrackMonitor"   : True,
@@ -178,6 +178,8 @@ class HltMonitoringConf(LHCbConfigurableUser):
                                    ("DisplVertices"  , "Hlt2DisplVertices.*Decision"),
                                    ("HighPtJets"     , "Hlt2HighPtJets.*Decision"),
                                    ("Charm"          , "Hlt2Charm.*Decision"),
+                                   ("Turbo"          , "Hlt2.*TurboDecision"),
+                                   ("TurCal"         , "Hlt2.*TurboCalibDecision"),
                                    ("Global"         , ".*Global.*"),
                                    ("Other"          , ".*") # add a 'catch all' term to pick up all remaining decisions...
                                  ]
@@ -185,8 +187,16 @@ class HltMonitoringConf(LHCbConfigurableUser):
 
         from Configurables import HltMassMonitor
         massMon = HltMassMonitor("Hlt2MassMonitor")
-        massMon.Decisions  = {"Jpsi" : "Hlt1DiMuonJPsiDecision"}
-        massMon.Histograms = {"Jpsi" : [3005, 3186, 50]}
+        massMon.Decisions  = {"Jpsi"       : "Hlt1DiMuonJPsiDecision",
+                              "JpsiRefit"  : "Hlt2JPsiReFitPVsTurboDecision",
+                              "Psi2S"      : "Hlt2DiMuonPsi2STurboDecision",
+                              "D0->Kpi"    : "Hlt2CharmHadD02KPi_XSecTurboDecision",
+                              "Dpm->Kpipi" : "Hlt2CharmHadDpm2KPiPi_XSecTurboDecision"}
+        massMon.Histograms = {"Jpsi"       : [3005, 3186, 50],
+                              "JpsiRefit"  : [3005, 3186, 50],
+                              "Psi2S"      : [3600, 3770, 50],
+                              "D0->Kpi"    : [1790, 1940, 50],
+                              "Dpm->Kpipi" : [1795, 1945, 50]}
 
         monSeq = Sequence("Hlt2MonitorSequence", IgnoreFilterPassed = True,
                           Members = l0Mon + [globalMon, massMon])
