@@ -4,6 +4,9 @@
 ! Purpose     : Analysis framework and configuration for offline and web GUIs
 !----------------------------------------------------------------------------
 
+! 2015-07-01 - Michael Alexander
+ - Removing IP monitoring plots for the moment as they're not made by default.
+
 ! 2015-06-24 - Kurt Rinnert
  - Added tracking run view configuration.  For now only for plots produced by
    Vetra w/o postprocessing.  The others would not work yet as they heavily
