@@ -37,20 +37,22 @@ namespace LHCb {
    * @version: 1.0
    */
   class GAUDI_API OdinPrescaler: public Algorithm   {
+    /// Random number seed.
+    unsigned int m_seed;
 
   public:
     /// Standard Algorithm Constructor(s)
     OdinPrescaler(const std::string& nam, ISvcLocator* svc) 
-      : Algorithm(nam,svc)
+      : Algorithm(nam,svc), m_seed(0)
     {
-      unsigned int seed = InterfaceID::hash32((RTL::processName()+"@"+RTL::nodeName()).c_str());
-      ::srand(seed);
+      m_seed = InterfaceID::hash32((RTL::processName()+"@"+RTL::nodeName()).c_str());
+      ::srand(m_seed);
       declareProperty("AcceptRate", m_rate=1.0,
-		      "Fraction of the events allowed to pass the filter");
+                      "Fraction of the events allowed to pass the filter");
       declareProperty("DownscaleTriggerTypes", m_downScale, 
-		      "Downscaled ODIN trigger types");
+                      "Downscaled ODIN trigger types");
       declareProperty("PassthroughTriggerTypes", m_passThrough, 
-		      "Downscaled ODIN trigger types");
+                      "Downscaled ODIN trigger types");
       declareProperty("BankLocation",m_bankLocation=RawEventLocation::Default);
     }
 
@@ -59,6 +61,13 @@ namespace LHCb {
 
     /// Algorithm overload: Initialize the algorithm
     virtual StatusCode initialize() {
+      return StatusCode::SUCCESS; 
+    }
+
+    /// Algorithm overload: Start the algorithm
+    virtual StatusCode start() {
+      m_seed = InterfaceID::hash32((RTL::processName()+"@"+RTL::nodeName()).c_str());
+      ::srand(m_seed);
       return StatusCode::SUCCESS; 
     }
 
@@ -72,42 +81,42 @@ namespace LHCb {
       std::vector<int>::const_iterator vi;
       MsgStream log(msgSvc(),name());
       DataObject* pDO = 0;
-      double frac = double(rand());
+      double frac = double(rand_r(&m_seed));
 
       frac /= double(RAND_MAX);
       log << MSG::DEBUG << "Fraction:" << frac << " Rate:" << m_rate << endmsg;
       StatusCode sc = eventSvc()->retrieveObject(m_bankLocation,pDO);
       if ( sc.isSuccess() ) {
-	typedef std::vector<RawBank*> _V;
-	RawEvent *raw = (RawEvent*)pDO;
-	const _V& bnks = raw->banks(RawBank::ODIN);
-	for(_V::const_iterator i=bnks.begin(); i != bnks.end(); ++i)  {
-	  RawBank* bank = *i;
-	  const OnlineRunInfo* info = bank->begin<OnlineRunInfo>();
-	  int triggerType = info->triggerType;
+        typedef std::vector<RawBank*> _V;
+        RawEvent *raw = (RawEvent*)pDO;
+        const _V& bnks = raw->banks(RawBank::ODIN);
+        for(_V::const_iterator i=bnks.begin(); i != bnks.end(); ++i)  {
+          RawBank* bank = *i;
+          const OnlineRunInfo* info = bank->begin<OnlineRunInfo>();
+          int triggerType = info->triggerType;
 #if 0
-	  int readoutType = info->readoutType;
-	  int eventType   = info->EventType;
+          int readoutType = info->readoutType;
+          int eventType   = info->EventType;
 #endif
-	  if ( (vi=std::find(m_passThrough.begin(),m_passThrough.end(),triggerType)) != 
-	       m_passThrough.end() )  {
-	    setFilterPassed(true);
-	    return StatusCode::SUCCESS;
-	  }
-	  else if ( (vi=std::find(m_downScale.begin(),m_downScale.end(),triggerType)) != 
-	       m_downScale.end() )  {
-	    setFilterPassed(m_rate>=frac);
-	    return StatusCode::SUCCESS;
-	  }
-	  else if ( m_downScale.empty() && m_passThrough.empty() ) {
-	    setFilterPassed(m_rate>=frac);
-	    return StatusCode::SUCCESS;
-	  }
-	  else {
-	    setFilterPassed(true);
-	    return StatusCode::SUCCESS;
-	  }
-	}
+          if ( (vi=std::find(m_passThrough.begin(),m_passThrough.end(),triggerType)) != 
+               m_passThrough.end() )  {
+            setFilterPassed(true);
+            return StatusCode::SUCCESS;
+          }
+          else if ( (vi=std::find(m_downScale.begin(),m_downScale.end(),triggerType)) != 
+                    m_downScale.end() )  {
+            setFilterPassed(m_rate>=frac);
+            return StatusCode::SUCCESS;
+          }
+          else if ( m_downScale.empty() && m_passThrough.empty() ) {
+            setFilterPassed(m_rate>=frac);
+            return StatusCode::SUCCESS;
+          }
+          else {
+            setFilterPassed(true);
+            return StatusCode::SUCCESS;
+          }
+        }
       }
       return StatusCode::SUCCESS;
     }
