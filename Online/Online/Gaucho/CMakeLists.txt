@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Gaucho
 ################################################################################
-gaudi_subdir(Gaucho v7r40)
+gaudi_subdir(Gaucho v7r41)
 
 gaudi_depends_on_subdirs(DAQ/MDF
                          Event/DAQEvent
