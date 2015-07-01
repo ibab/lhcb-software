@@ -9,7 +9,7 @@
 #
 # =========================================================================
 #
-export PYTHONPATH=${ONLINE_ENV_DIR}:${PYTHONPATH}
-export AdderOptsFile=/tmp/${PARTITION_NAME}_AdderOpts.opts
-python ./Tasklist_from_architecture.py 1 ${AdderOptsFile}
-exec -a ${UTGID} ${Class1_task} -opts=../options/genAdder.opts
+export PYTHONPATH=${ONLINE_ENV_DIR}:${PYTHONPATH};
+export AdderOptsFile=/tmp/${PARTITION_NAME}_AdderOpts.opts;
+python ./Tasklist_from_architecture.py 1 ${AdderOptsFile};
+exec -a ${UTGID} ${Class1_task} -opts=../options/genAdder.opts;
