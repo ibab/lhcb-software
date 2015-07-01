@@ -37,16 +37,11 @@ namespace LHCb {
    * @version: 1.0
    */
   class GAUDI_API OdinPrescaler: public Algorithm   {
-    /// Random number seed.
-    unsigned int m_seed;
-
   public:
     /// Standard Algorithm Constructor(s)
     OdinPrescaler(const std::string& nam, ISvcLocator* svc) 
       : Algorithm(nam,svc), m_seed(0)
     {
-      m_seed = InterfaceID::hash32((RTL::processName()+"@"+RTL::nodeName()).c_str());
-      ::srand(m_seed);
       declareProperty("AcceptRate", m_rate=1.0,
                       "Fraction of the events allowed to pass the filter");
       declareProperty("DownscaleTriggerTypes", m_downScale, 
@@ -66,7 +61,7 @@ namespace LHCb {
 
     /// Algorithm overload: Start the algorithm
     virtual StatusCode start() {
-      m_seed = InterfaceID::hash32((RTL::processName()+"@"+RTL::nodeName()).c_str());
+      m_seed = ::clock();
       ::srand(m_seed);
       return StatusCode::SUCCESS; 
     }
@@ -81,9 +76,8 @@ namespace LHCb {
       std::vector<int>::const_iterator vi;
       MsgStream log(msgSvc(),name());
       DataObject* pDO = 0;
-      double frac = double(rand_r(&m_seed));
+      double frac = double(::rand_r(&m_seed)) / double(RAND_MAX);
 
-      frac /= double(RAND_MAX);
       log << MSG::DEBUG << "Fraction:" << frac << " Rate:" << m_rate << endmsg;
       StatusCode sc = eventSvc()->retrieveObject(m_bankLocation,pDO);
       if ( sc.isSuccess() ) {
@@ -121,16 +115,17 @@ namespace LHCb {
       return StatusCode::SUCCESS;
     }
 
-
   private:
-    /// Raw bank location
+    /// Property: Raw bank location
     std::string      m_bankLocation;
-    /// Percentage of events that should be passed
+    /// Property: Percentage of events that should be passed
     double           m_rate;
-    /// Odin event type to be filtered
+    /// Property: Odin event type to be filtered
     std::vector<int> m_downScale;
-    /// Odin event type for forced pass-through
+    /// Property: Odin event type for forced pass-through
     std::vector<int> m_passThrough;
+    /// Random number seed.
+    unsigned int m_seed;
   };
 }
 

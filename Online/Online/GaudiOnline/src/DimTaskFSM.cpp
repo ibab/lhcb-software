@@ -79,7 +79,6 @@ namespace  {
       }
       else if ( cmd == "pause"      ) {
         m_target->setTargetState(Target::ST_PAUSED);
-        IOCSENSOR.send(m_target, DimTaskFSM::CANCEL);
         IOCSENSOR.send(m_target, DimTaskFSM::PAUSE);
       }
       else if ( cmd == "continue"   ) {
