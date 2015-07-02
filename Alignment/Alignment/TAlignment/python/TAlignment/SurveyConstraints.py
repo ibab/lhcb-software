@@ -6,7 +6,7 @@ from Configurables import LHCbConfigurableUser
 XmlFilesDict = { 'VP': {'latest': ['Modules']},
                  'Velo': {'latest': ['Modules'],
                           'Run1': ['Modules_run1', 'Detectors_run1']},
-                 'OT': {'latest': ['Elements_OTSurvey2011StationYCorrected'],
+                 'OT': {'latest': ['ElementsBowingCorrected'],
                         '2010': [],
                         'old': ['Elements', 'ElementsBowingCorrected']},
                  'IT': {'latest': ['Detectors_ITSurvey_MagOn_2012ZSurvey2011YBoxBilayerCorrected','ITBoxSurvey20150413'],
@@ -103,7 +103,8 @@ class SurveyConstraints( LHCbConfigurableUser ):
                                    "TT.                  : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
                                    "TT..Layer            : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
                                    "TT..Layer.Side       : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
-                                   "TT..LayerR.Module.*? : 0.1 0.1 0.1 0.0005 0.0005 0.0005"]
+                                   "TT..LayerR.Module.{1,2}    : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
+                                   "TT..LayerR.Module..Sensor. : 0.005 0.005 0.005 0.000005 0.000005 0.000005"]  
         self.XmlUncertainties += [ "TT.*?(Low|High)Z     : 0.1 0.1 1.0 0.0005 0.0005 0.0005"]
         
         # boxes
