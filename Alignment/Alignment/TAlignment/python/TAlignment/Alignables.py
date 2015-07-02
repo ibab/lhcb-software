@@ -234,10 +234,13 @@ class Alignables( list ):
 
     def TTHalfModules( self, dofs = "" ) :
         self.__append( self.m_tt + "/TT./.{4}Layer/.{2}Module.{2}", dofs )
-        
-    def TTModules( self, dofs = "" ) :
+
+    def TTSensors( self, dofs = "" ) :
+        self.__append( self.m_tt + "/TT./.{4}Layer/.{2}Module.{2}/Ladder./Sensor.{2}", dofs )
+
+    def TTLongModules( self, dofs = "" ) :
+        elements = []
         for layer in ['TTaXLayer','TTaULayer']:
-            elements = []
             # first R1 and R3
             for i in range(1,7):
                 elements.append( layer + "R1Module" + str(i) + " : " + self.m_tt + "/TTa/"+layer+"/R1Module"+str(i)+"." )
@@ -245,9 +248,6 @@ class Alignables( list ):
             # now R2
             for i in [1,3]:
                 elements.append( layer + "R2Module" + str(i) + " : " + self.m_tt + "/TTa/"+layer+"/R2Module"+str(i)+"." )
-            elements.append( layer + "R2Module2T" + " : " + self.m_tt + "/TTa/"+layer+"/R2Module2T")
-            elements.append( layer + "R2Module2B" + " : " + self.m_tt + "/TTa/"+layer+"/R2Module2B")
-            self.__append( sorted(elements), dofs )
         for layer in ['TTbVLayer','TTbXLayer']:
             elements = []
             # first R1 and R3
@@ -257,10 +257,22 @@ class Alignables( list ):
             # now R2 
             for i in [1,2,4,5]:
                 elements.append( layer + "R2Module" + str(i) + " : " + self.m_tt + "/TTb/"+layer+"/R2Module"+str(i)+"." )
+        self.__append( sorted(elements), dofs )
+            
+    def TTShortModules( self, dofs = "" ) :
+        elements = []
+        for layer in ['TTaXLayer','TTaULayer']:
+            elements.append( layer + "R2Module2T" + " : " + self.m_tt + "/TTa/"+layer+"/R2Module2T")
+            elements.append( layer + "R2Module2B" + " : " + self.m_tt + "/TTa/"+layer+"/R2Module2B")
+        for layer in ['TTbVLayer','TTbXLayer']:
             elements.append( layer + "R2Module3T" + " : " + self.m_tt + "/TTb/"+layer+"/R2Module3T")
             elements.append( layer + "R2Module3B" + " : " + self.m_tt + "/TTb/"+layer+"/R2Module3B")
-            self.__append( sorted(elements), dofs )
-               
+        self.__append( sorted(elements), dofs )
+            
+    def TTModules( self, dofs = "" ) :
+        self.TTLongModules( dofs )
+        self.TTShortModules( dofs )
+                    
     ## IT #################################################################################
     def IT( self, dofs = "" ) :
         self.__append( self.m_it, dofs )
@@ -324,7 +336,8 @@ class Alignables( list ):
                 elements.append( self.m_ot + i + j )
         self.__append( elements, dofs )    
 
-    def OTModules( self, dofs = "" ) :
+    def OTModules( self, dofs = "", modules = None ) :
+        if modules == None: modules = self.m_otModules
         elements = []
         ## 3 Stations numbered from 1 to 3
         for i in self.m_otStations :
@@ -333,11 +346,12 @@ class Alignables( list ):
                 ## Quarters 0 and 2 (C-Side) and Quarters 1 and 3 (A-side)
                 for k in self.m_otQuarters :
                     ## Nine modules numbered from 1 to 9
-                    for l in self.m_otModules :
+                    for l in modules :
                         elements.append( 'OT/' + i.strip('/') + j.strip('/') + k.strip('/') + l.strip('/') + " : " + self.m_ot + i + j + k + l )
         self.__append( elements, dofs )    
 
-    def OTHalfModules( self, dofs = "" ) :
+    def OTHalfModules( self, dofs = "", modules = None ) :
+        if modules == None: modules = self.m_otModules
         elements = []
         ## 3 Stations numbered from 1 to 3
         for i in self.m_otStations :
@@ -346,10 +360,13 @@ class Alignables( list ):
                 ## Quarters 0 and 2 (C-Side) and Quarters 1 and 3 (A-side)
                 for k in self.m_otRealQuarters :
                     ## Nine modules numbered from 1 to 9
-                    for l in self.m_otModules :
+                    for l in modules :
                         elements.append( 'OT/' + i.strip('/') + j.strip('/') + k.strip('/') + l.strip('/') + " : " + self.m_ot + i + j + k + l )
         self.__append( elements, dofs )
-        
+
+    def OTShortHalfModules( self, dofs = "" ) :
+        self.OTHalfModules( dofs = dofs, modules = [ '/M8', '/M9' ] )
+                
     def XOTModules( self, dofs = '' ) :
         elements = []
         for i in self.m_otStations :
