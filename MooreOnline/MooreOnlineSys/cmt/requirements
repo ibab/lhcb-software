@@ -1,5 +1,5 @@
 package MooreOnlineSys
-version           v23r7p2
+version           v23r7p3
 branches doc cmt tests
 
 #=======================================================
@@ -12,6 +12,7 @@ use  MooreOnlineConf  v1r9
 ## Temporary packages.
 use  ZeroMQ           v4r1p2   Online
 use  Hlt2Monitoring   v1r0     Online
+use  HltMonitoring    v1r0p1   Hlt
 
 # Declare this as a container package
 apply_pattern container_package
