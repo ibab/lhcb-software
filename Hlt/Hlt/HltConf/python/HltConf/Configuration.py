@@ -57,7 +57,7 @@ class HltConf(LHCbConfigurableUser):
                              , Hlt2Conf
                              , HltMonitoringConf
                              , HltAfterburnerConf ]
-    __slots__ = { "L0TCK"                          : ''
+    __slots__ = { "L0TCK"                          : None
                 , 'ForceSingleL0Configuration'     : True
                 , 'SkipDisabledL0Channels'         : False
                 , "DataType"                       : '2012'
@@ -158,7 +158,7 @@ class HltConf(LHCbConfigurableUser):
         ## what L0 configuration are we running on top of?
         L0TCK = None
         if thresClass : L0TCK = thresClass.L0TCK()
-        if self.getProp('L0TCK') :
+        if self.isPropertySet('L0TCK') and self.getProp('L0TCK') :
             if L0TCK != self.getProp('L0TCK') :
                 log.warning( '####################################################################################' )
                 log.warning( '## WARNING You are configuring the HLT to run on top of an L0 configuration       ##' )
@@ -167,7 +167,7 @@ class HltConf(LHCbConfigurableUser):
                 log.warning( '## WARNING Please make sure you know what you are doing!!                         ##' )
                 log.warning( '####################################################################################' )
             L0TCK = self.getProp('L0TCK')
-        if not self.getProp('L0TCK') :
+        if not self.isPropertySet('L0TCK') or not self.getProp('L0TCK') and L0TCK != None:
             self.setProp('L0TCK', L0TCK)
 
         self.defineL0Channels( L0TCK )
@@ -705,7 +705,7 @@ class HltConf(LHCbConfigurableUser):
 
         # Don't try to decode L0 for the routing bits writer if no L0TCK has
         # been set. This allows forward compatibility.
-        if self.getProp('L0TCK') == '':
+        if self.getProp('L0TCK') is None:
             _hlt1postamble = _hlt1postamble[1 :]
             _hlt2postamble = _hlt2postamble[1 :]
 
