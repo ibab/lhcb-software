@@ -348,7 +348,19 @@ const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::Node& no
       // for TT locate the sensor using the estimated position of the track
       if( meas.lhcbID().isTT() ) {
 	const DeTTSector* ladder = dynamic_cast<const DeTTSector*>(detelem) ;
-	if( ladder ) detelem = ladder->findSensor( node.state().position() ) ;
+	if( ladder ) {
+	  // the following does not always work as it relies on 'isinside':
+	  //    detelem = ladder->findSensor( node.state().position() ) ;
+	  // so, we'll use the trajectory, gambling a bit. I checked
+	  // that 99% of the time it returns the same as the call
+	  // above.
+	  const int N = ladder->sensors().size() ;
+	  const LHCb::Trajectory& traj = meas.trajectory() ;
+	  double mu   = traj.muEstimate( node.state().position() ) ;
+	  int i = int(N*(mu - traj.beginRange()) / (traj.endRange() - traj.beginRange())) ;
+	  unsigned int index = i<=0 ? 0 : (i>=int(N) ? N-1 : i ) ;
+	  detelem = ladder->sensors()[index] ;
+	}
       }
       elem = findElement( *detelem ) ;
     } else {
