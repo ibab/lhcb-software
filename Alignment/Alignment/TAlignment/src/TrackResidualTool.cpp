@@ -178,7 +178,7 @@ namespace Al
     for( std::vector< NodeWithIndex >::const_iterator it = nodeswithindex.begin() ;
 	 it != nodeswithindex.end(); ++it ) {
       const LHCb::Node* node = it->first ;
-      const AlignmentElement* elem = m_elementTool->findElement(node->measurement()) ;
+      const AlignmentElement* elem = m_elementTool->findElement(*node) ;
       if( elem ) { 
 	rc->m_residuals.push_back( Al::Residual1D( *node, *elem) ) ;
 	residualnodeindices.push_back( it->second ) ;
