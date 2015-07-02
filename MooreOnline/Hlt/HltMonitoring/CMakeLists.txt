@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Gaucho
 ################################################################################
-gaudi_subdir(HltMonitoring v1r0)
+gaudi_subdir(HltMonitoring v1r0p1)
 
 gaudi_depends_on_subdirs(GaudiKernel
                          Kernel/HltInterfaces
