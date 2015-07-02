@@ -64,9 +64,9 @@ namespace Al {
 *  @author Jan Amoraal
 *  @date   2007-03-05
 */
-
+class IAlignWork;
+class HistoUpdater;
 class AlignAlgorithm : public GaudiHistoAlg, virtual public IIncidentListener {
-
 public:
   /// Some handy typedefs
   typedef IGetElementsToBeAligned::Elements                        Elements;
@@ -114,14 +114,15 @@ protected:
   typedef std::vector<LHCb::RecVertex> VertexContainer ;
   typedef std::vector<const LHCb::Track*> TrackContainer ;
   void selectVertexTracks( const LHCb::RecVertex& vertex, const TrackContainer& tracks,
-			   TrackContainer& tracksinvertex) const ;
+        TrackContainer& tracksinvertex) const ;
   void removeVertexTracks( const LHCb::RecVertex& vertex, TrackContainer& tracks) const ;
   void removeParticleTracks( const LHCb::Particle& p, TrackContainer& tracks) const ;
   void splitVertex( const LHCb::RecVertex& vertex, const TrackContainer& tracks,
-		    VertexContainer& splitvertices) const  ;
+        VertexContainer& splitvertices) const  ;
   LHCb::RecVertex* cloneVertex( const LHCb::RecVertex& vertex, const TrackContainer& selectedtracks ) const ;
   bool testNodes( const LHCb::Track& track ) const ;
 
+  HistoUpdater *m_HistoUpdater;
 private:
   size_t                            m_iteration;                     ///< Iteration counter
   size_t                            m_nIterations;                   ///< Number of iterations
@@ -163,6 +164,7 @@ private:
   bool                              m_resetHistos ; // reset histos on next event processing
   long long                         m_forcedInitTime ; // force the alignment geometry to initialize with this time (rather than first event)
   bool															m_Online;
+  IAlignWork*												m_IAlwork;
 };
 
 #endif // TALIGNMENT_ALIGNALGORITHM_H
