@@ -10,7 +10,12 @@
 # =========================================================================
 #
 act=${RUN_TYPE}
-if [ "$act" = "Alignment|Tracker" ]; then
+if [ "$act" = "Alignment|Muon" ]; then
+  . /group/online/dataflow/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-dbg.vars
+  export PYTHONPATH=${ALIGNONLINEROOT}/python:$PYTHONPATH
+  cd ${FARMCONFIGROOT}/job
+  exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; from TrAligAnalyzer import doIt; doIt('/localdisk/Alignment/Muon', 'MuonAlignment');"
+elif [ "$act" = "Alignment|Tracker" ]; then
   . /group/online/dataflow/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-dbg.vars
   export PYTHONPATH=${ALIGNONLINEROOT}/python:$PYTHONPATH
   cd ${FARMCONFIGROOT}/job
@@ -30,16 +35,22 @@ elif [ "$act" = "Alignment|TED" ]; then
   export PYTHONPATH=${ALIGNONLINEROOT}/python:$PYTHONPATH
   cd ${FARMCONFIGROOT}/job
   exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; from TrAligAnalyzer import doIt; doIt('/localdisk/Alignment/Tracker', 'TEDAlignment');"
-elif [ "$act" = "Alignment|Rich" ]; then
-  . /group/online/dataflow/cmtuser/Panoptes/OnlPanoptesSys/cmt/setup.x86_64-slc6-gcc48-dbg.vars
-  cd ${FARMCONFIGROOT}/job
-  export PYTHONPATH=${ONLPANOPTESSYSROOT}/python:$PYTHONPATH
-  exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; importOptions('${ONLPANOPTESSYSROOT}/python/RichAnalyzer.py');"
+elif [ "$act" = "Alignment|Rich1" ]; then
+  . /group/rich/sw/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-dbg.vars
+  export PYTHONPATH=/group/online/bw_division/pydim/lib/python2.7/site-packages:$PYTHONPATH
+  export PYTHONPATH=/group/online/dataflow/options/LHCbA/HLT:$PYTHONPATH
+  exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; from PyMirrAlignOnline import RichAnalyzer; RichAnalyzer.doIt(filename = '/localdisk/Alignment/Rich', whichRich = 1);"
+elif [ "$act" = "Alignment|Rich2" ]; then
+  . /group/rich/sw/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-dbg.vars
+  export PYTHONPATH=/group/online/bw_division/pydim/lib/python2.7/site-packages:$PYTHONPATH
+  export PYTHONPATH=/group/online/dataflow/options/LHCbA/HLT:$PYTHONPATH
+  exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; from PyMirrAlignOnline import RichAnalyzer; RichAnalyzer.doIt(filename = '/localdisk/Alignment/Rich', whichRich = 2);"
 elif [ "$act" = "Calibration|Calo" ]; then
-  . /group/calo/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-dbg.vars
+  . /group/calo/cmtuser/CaloCalibrationDev_v10r4p1/setup.x86_64-slc6-gcc48-dbg.vars
+  export PYTHONPATH=/group/online/bw_division/pydim/lib/python2.7/site-packages:$PYTHONPATH
   export PYTHONPATH=/group/online/dataflow/options/LHCbA/HLT:$PYTHONPATH
   cd ${FARMCONFIGROOT}/job
-  python -c "from PyKaliOnline import Analyzer; Analyzer.run('/group/calo/cmtuser/data')"
+  python -c "from PyKaliOnline import Analyzer; Analyzer.run(0, '/group/online/CalibWork')"
 elif [ "$act" = "BWDivision" ]; then
   . /group/online/bw_division/cmtuser/BWDivisionDev/setup.x86_64-slc6-gcc48-opt.vars
   export PYTHONPATH=/group/online/bw_division/pydim/lib/python2.7/site-packages:$PYTHONPATH
