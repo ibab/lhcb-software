@@ -35,12 +35,12 @@ class Monitor( Task ):
         if 'Catalogs' in self._config.keys():
             FileCatalog().Catalogs = self._config[ 'Catalogs' ]
 
-    importOptions('$STDOPTS/DecodeRawEvent.py')
-    EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
-    from Configurables import DataOnDemandSvc
-    DataOnDemandSvc().AlgMap[ 'Hlt/DecReports' ] =  "HltDecReportsDecoder"
-    DataOnDemandSvc().AlgMap[ 'Hlt/SelReports' ] =  "HltSelReportsDecoder"
-    ApplicationMgr().ExtSvc.append( 'DataOnDemandSvc' )
+        importOptions('$STDOPTS/DecodeRawEvent.py')
+        EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
+        from Configurables import DataOnDemandSvc
+        DataOnDemandSvc().AlgMap[ 'Hlt/DecReports' ] =  "HltDecReportsDecoder"
+        DataOnDemandSvc().AlgMap[ 'Hlt/SelReports' ] =  "HltSelReportsDecoder"
+        ApplicationMgr().ExtSvc.append( 'DataOnDemandSvc' )
 
         EventSelector().PrintFreq = 1000
 
