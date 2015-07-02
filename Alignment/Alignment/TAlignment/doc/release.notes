@@ -3,6 +3,12 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+
+! 2015-07-02 - Wouter Hulsbergen
+ - add functionality to get alignment element for an TTSensor. it is a special case since the reconstruction only uses TTSectors, as the sensors are ganged together.
+ - added several Alignables
+ - added option to apply filter to particles list from dst after fitting tracks
+
 ! 2015-07-02 - Maurizio Martinelli
  - Fixed a missing commit
 
