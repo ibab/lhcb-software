@@ -2,7 +2,7 @@
 # Restarting with LD_PRELOAD='libtcmalloc.so'
 # --> Including file '/afs/cern.ch/user/a/acontu/MyWorkingArea/DaVinciDev_HEAD/DaVinciTests/tests/options/EnableCaloReprocessing.py'
 # <-- End of file '/afs/cern.ch/user/a/acontu/MyWorkingArea/DaVinciDev_HEAD/DaVinciTests/tests/options/EnableCaloReprocessing.py'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r221/options/DaVinci/DV-Stripping20r1p2-Stripping.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r226/options/DaVinci/DV-Stripping20r1p2-Stripping.py'
 Requested Stripping20r1p2
 Stripping20r1p2 is a duplicate of Stripping20r0p2
 Trying to import module StrippingArchive.Stripping20r0p2
@@ -730,13 +730,13 @@ Creating Leptonic stream with 7 lines
 # DaVinci                   INFO    Append to Main Sequence has been called
 # DaVinci                   INFO    Append to Main Sequence has been called
 # DaVinci                   INFO    Append to Main Sequence has been called
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r221/options/DaVinci/DV-Stripping20r1p2-Stripping.py'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r221/options/DaVinci/DataType-2011.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r221/options/DaVinci/DataType-2011.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r226/options/DaVinci/DV-Stripping20r1p2-Stripping.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r226/options/DaVinci/DataType-2011.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r226/options/DaVinci/DataType-2011.py'
 # --> Including file '/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/PRConfig/options/DaVinci/Stripping/Collision11-3.5TeV-Reco14-FULLDST.py'
 # <-- End of file '/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/PRConfig/options/DaVinci/Stripping/Collision11-3.5TeV-Reco14-FULLDST.py'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r221/options/Persistency/Compression-ZLIB-1.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r221/options/Persistency/Compression-ZLIB-1.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r226/options/Persistency/Compression-ZLIB-1.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r226/options/Persistency/Compression-ZLIB-1.py'
 # --> Including file '/afs/cern.ch/user/a/acontu/MyWorkingArea/DaVinciDev_HEAD/DaVinciTests/tests/options/DaVinci-1000events.py'
 # <-- End of file '/afs/cern.ch/user/a/acontu/MyWorkingArea/DaVinciDev_HEAD/DaVinciTests/tests/options/DaVinci-1000events.py'
 # --> Including file '/afs/cern.ch/user/a/acontu/MyWorkingArea/DaVinciDev_HEAD/DaVinciTests/tests/options/EnableFPEAuditor.py'
@@ -778,10 +778,10 @@ Creating Leptonic stream with 7 lines
 |-EnableUnpack         = None
 |-EventPreFilters      = []  (default: [])
 \----- (End of User DaVinci/DaVinci) ---------------------------------------------------------------
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/PreloadUnits.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/units.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/units.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/PreloadUnits.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Thu/LHCB/LHCB_HEAD/GaudiConf/options/PreloadUnits.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Thu/LHCB/LHCB_HEAD/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Thu/LHCB/LHCB_HEAD/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Thu/LHCB/LHCB_HEAD/GaudiConf/options/PreloadUnits.opts'
 # Apply CaloProcessor configuration for ['Digits', 'Clusters', 'Photons', 'MergedPi0s', 'SplitPhotons', 'Electrons'] and ['InAcceptance', 'Match', 'Energy', 'Chi2', 'DLL', 'NeutralPID']
 # CaloDigits onDemand for ['Ecal', 'Hcal', 'Prs', 'Spd']
 # ClusterReco onDemand
@@ -846,14 +846,14 @@ Creating Leptonic stream with 7 lines
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0x7fcb7b133240>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0x7f96a3b05240>  (default: None)
 # |-IgnoreDQFlags     = False
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of L0Conf
 # Applying L0Conf
 # L0 on demand activated (rootInTES : )
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/TCK/L0TCK/v4r27/options/L0DUConfig.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/TCK/L0TCK/v4r27/options/L0DUConfig.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/TCK/L0TCK/v4r28/options/L0DUConfig.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/TCK/L0TCK/v4r28/options/L0DUConfig.opts'
 # /***** User L0Conf/L0Conf **************************************************************************
 # |-FullL0MuonDecoding         = True  (default: False)
 # |-verbose                    = False
@@ -890,7 +890,7 @@ Creating Leptonic stream with 7 lines
 # \----- (End of User L0Conf/L0Conf) -----------------------------------------------------------------
 # applying configuration of PhysConf
 # Applying Phys configuration
-# WARNING: file '/afs/cern.ch/lhcb/software/releases/DBASE/TCK/L0TCK/v4r27/options/L0DUConfig.opts' already included, ignored.
+# WARNING: file '/afs/cern.ch/lhcb/software/releases/DBASE/TCK/L0TCK/v4r28/options/L0DUConfig.opts' already included, ignored.
 # PhysConf: Configuring EventClockSvc to use RecHeader
 # /***** User PhysConf/PhysConf **********************************************************************
 # |-CaloReProcessing  = True  (default: False)
@@ -921,14 +921,14 @@ Creating Leptonic stream with 7 lines
 # applying configuration of MyDSTWriter
 # Configuring BaseDSTWriter
 # /***** User SelDSTWriter/MyDSTWriter ***************************************************************
-# |-MicroDSTElements   = {'default': [<DSTWriters.microdstelements.FindDuplicates object at 0x7fcb7d972350>, <DSTWriters.microdstelements.CloneParticleTrees object at 0x7fcb7d972390>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0x7fcb7d9723d0>, <DSTWriters.microdstelements.CloneRelatedInfo object at 0x7fcb7d972410>, <DSTWriters.microdstelements.ClonePVRelations object at 0x7fcb7d972450>, <DSTWriters.microdstelements.PackStrippingReports object at 0x7fcb7d972490>, <DSTWriters.microdstelements.PackTrackingClusters object at 0x7fcb7d9724d0>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0x7fcb7d972510>, <DSTWriters.microdstelements.PackRecObjects object at 0x7fcb7d972550>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0x7fcb7d972590>], 'PID': [<DSTWriters.microdstelements.ClonePVs object at 0x7fcb7d9e9fd0>, <DSTWriters.microdstelements.FindDuplicates object at 0x7fcb7d9720d0>, <DSTWriters.microdstelements.CloneParticleTrees object at 0x7fcb7d972110>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0x7fcb7d972150>, <DSTWriters.microdstelements.CloneRelatedInfo object at 0x7fcb7d972190>, <DSTWriters.microdstelements.ClonePVRelations object at 0x7fcb7d9721d0>, <DSTWriters.microdstelements.PackStrippingReports object at 0x7fcb7d972210>, <DSTWriters.microdstelements.PackTrackingClusters object at 0x7fcb7d972250>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0x7fcb7d972290>, <DSTWriters.microdstelements.PackRecObjects object at 0x7fcb7d9722d0>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0x7fcb7d972310>], 'Leptonic': [<DSTWriters.microdstelements.ClonePVs object at 0x7fcb7d9e9fd0>, <DSTWriters.microdstelements.FindDuplicates object at 0x7fcb7d9720d0>, <DSTWriters.microdstelements.CloneParticleTrees object at 0x7fcb7d972110>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0x7fcb7d972150>, <DSTWriters.microdstelements.CloneRelatedInfo object at 0x7fcb7d972190>, <DSTWriters.microdstelements.ClonePVRelations object at 0x7fcb7d9721d0>, <DSTWriters.microdstelements.PackStrippingReports object at 0x7fcb7d972210>, <DSTWriters.microdstelements.PackTrackingClusters object at 0x7fcb7d972250>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0x7fcb7d972290>, <DSTWriters.microdstelements.PackRecObjects object at 0x7fcb7d9722d0>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0x7fcb7d972310>], 'Charm': [<DSTWriters.microdstelements.ClonePVs object at 0x7fcb7d9e9fd0>, <DSTWriters.microdstelements.FindDuplicates object at 0x7fcb7d9720d0>, <DSTWriters.microdstelements.CloneParticleTrees object at 0x7fcb7d972110>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0x7fcb7d972150>, <DSTWriters.microdstelements.CloneRelatedInfo object at 0x7fcb7d972190>, <DSTWriters.microdstelements.ClonePVRelations object at 0x7fcb7d9721d0>, <DSTWriters.microdstelements.PackStrippingReports object at 0x7fcb7d972210>, <DSTWriters.microdstelements.PackTrackingClusters object at 0x7fcb7d972250>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0x7fcb7d972290>, <DSTWriters.microdstelements.PackRecObjects object at 0x7fcb7d9722d0>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0x7fcb7d972310>], 'Bhadron': [<DSTWriters.microdstelements.ClonePVs object at 0x7fcb7d9e9fd0>, <DSTWriters.microdstelements.FindDuplicates object at 0x7fcb7d9720d0>, <DSTWriters.microdstelements.CloneParticleTrees object at 0x7fcb7d972110>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0x7fcb7d972150>, <DSTWriters.microdstelements.CloneRelatedInfo object at 0x7fcb7d972190>, <DSTWriters.microdstelements.ClonePVRelations object at 0x7fcb7d9721d0>, <DSTWriters.microdstelements.PackStrippingReports object at 0x7fcb7d972210>, <DSTWriters.microdstelements.PackTrackingClusters object at 0x7fcb7d972250>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0x7fcb7d972290>, <DSTWriters.microdstelements.PackRecObjects object at 0x7fcb7d9722d0>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0x7fcb7d972310>]}
-# |                    (default: {'default': [<DSTWriters.microdstelements.CloneParticleTrees object at 0x7fcb7d9e9710>, <DSTWriters.microdstelements.ClonePVRelations object at 0x7fcb7d9e9750>]})
+# |-MicroDSTElements   = {'default': [<DSTWriters.microdstelements.FindDuplicates object at 0x7f96a6350450>, <DSTWriters.microdstelements.CloneParticleTrees object at 0x7f96a6350490>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0x7f96a63504d0>, <DSTWriters.microdstelements.CloneRelatedInfo object at 0x7f96a6350510>, <DSTWriters.microdstelements.ClonePVRelations object at 0x7f96a6350550>, <DSTWriters.microdstelements.PackStrippingReports object at 0x7f96a6350590>, <DSTWriters.microdstelements.PackTrackingClusters object at 0x7f96a63505d0>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0x7f96a6350610>, <DSTWriters.microdstelements.PackRecObjects object at 0x7f96a6350650>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0x7f96a6350690>], 'PID': [<DSTWriters.microdstelements.ClonePVs object at 0x7f96a6350110>, <DSTWriters.microdstelements.FindDuplicates object at 0x7f96a63501d0>, <DSTWriters.microdstelements.CloneParticleTrees object at 0x7f96a6350210>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0x7f96a6350250>, <DSTWriters.microdstelements.CloneRelatedInfo object at 0x7f96a6350290>, <DSTWriters.microdstelements.ClonePVRelations object at 0x7f96a63502d0>, <DSTWriters.microdstelements.PackStrippingReports object at 0x7f96a6350310>, <DSTWriters.microdstelements.PackTrackingClusters object at 0x7f96a6350350>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0x7f96a6350390>, <DSTWriters.microdstelements.PackRecObjects object at 0x7f96a63503d0>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0x7f96a6350410>], 'Leptonic': [<DSTWriters.microdstelements.ClonePVs object at 0x7f96a6350110>, <DSTWriters.microdstelements.FindDuplicates object at 0x7f96a63501d0>, <DSTWriters.microdstelements.CloneParticleTrees object at 0x7f96a6350210>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0x7f96a6350250>, <DSTWriters.microdstelements.CloneRelatedInfo object at 0x7f96a6350290>, <DSTWriters.microdstelements.ClonePVRelations object at 0x7f96a63502d0>, <DSTWriters.microdstelements.PackStrippingReports object at 0x7f96a6350310>, <DSTWriters.microdstelements.PackTrackingClusters object at 0x7f96a6350350>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0x7f96a6350390>, <DSTWriters.microdstelements.PackRecObjects object at 0x7f96a63503d0>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0x7f96a6350410>], 'Charm': [<DSTWriters.microdstelements.ClonePVs object at 0x7f96a6350110>, <DSTWriters.microdstelements.FindDuplicates object at 0x7f96a63501d0>, <DSTWriters.microdstelements.CloneParticleTrees object at 0x7f96a6350210>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0x7f96a6350250>, <DSTWriters.microdstelements.CloneRelatedInfo object at 0x7f96a6350290>, <DSTWriters.microdstelements.ClonePVRelations object at 0x7f96a63502d0>, <DSTWriters.microdstelements.PackStrippingReports object at 0x7f96a6350310>, <DSTWriters.microdstelements.PackTrackingClusters object at 0x7f96a6350350>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0x7f96a6350390>, <DSTWriters.microdstelements.PackRecObjects object at 0x7f96a63503d0>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0x7f96a6350410>], 'Bhadron': [<DSTWriters.microdstelements.ClonePVs object at 0x7f96a6350110>, <DSTWriters.microdstelements.FindDuplicates object at 0x7f96a63501d0>, <DSTWriters.microdstelements.CloneParticleTrees object at 0x7f96a6350210>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0x7f96a6350250>, <DSTWriters.microdstelements.CloneRelatedInfo object at 0x7f96a6350290>, <DSTWriters.microdstelements.ClonePVRelations object at 0x7f96a63502d0>, <DSTWriters.microdstelements.PackStrippingReports object at 0x7f96a6350310>, <DSTWriters.microdstelements.PackTrackingClusters object at 0x7f96a6350350>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0x7f96a6350390>, <DSTWriters.microdstelements.PackRecObjects object at 0x7f96a63503d0>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0x7f96a6350410>]}
+# |                    (default: {'default': [<DSTWriters.microdstelements.CloneParticleTrees object at 0x7f96a63c4810>, <DSTWriters.microdstelements.ClonePVRelations object at 0x7f96a63c4850>]})
 # |-RootInTES          = '/Event'
 # |-WriteFSR           = True
-# |-StreamConf         = {'default': <DSTWriters.streamconf.OutputStreamConf object at 0x7fcb7d9725d0>, 'Bhadron': <DSTWriters.streamconf.OutputStreamConf object at 0x7fcb7dbfac90>, 'Leptonic': <DSTWriters.streamconf.OutputStreamConf object at 0x7fcb7dbfac90>, 'Charm': <DSTWriters.streamconf.OutputStreamConf object at 0x7fcb7dbfac90>, 'PID': <DSTWriters.streamconf.OutputStreamConf object at 0x7fcb7d972610>}
-# |                    (default: {'default': <DSTWriters.streamconf.OutputStreamConf object at 0x7fcb7d9e96d0>})
+# |-StreamConf         = {'default': <DSTWriters.streamconf.OutputStreamConf object at 0x7f96a63506d0>, 'Bhadron': <DSTWriters.streamconf.OutputStreamConf object at 0x7f96a65d9a50>, 'Leptonic': <DSTWriters.streamconf.OutputStreamConf object at 0x7f96a65d9a50>, 'Charm': <DSTWriters.streamconf.OutputStreamConf object at 0x7f96a65d9a50>, 'PID': <DSTWriters.streamconf.OutputStreamConf object at 0x7f96a6350710>}
+# |                    (default: {'default': <DSTWriters.streamconf.OutputStreamConf object at 0x7f96a63c47d0>})
 # |-OutputFileSuffix   = '000000'  (default: 'Sel')
-# |-SelectionSequences = [<StrippingConf.StrippingStream.StrippingStream object at 0x7fcb7f7c2b90>, <StrippingConf.StrippingStream.StrippingStream object at 0x7fcb7f7c2b50>, <StrippingConf.StrippingStream.StrippingStream object at 0x7fcb7e1c2890>, <StrippingConf.StrippingStream.StrippingStream object at 0x7fcb7dd263d0>, <StrippingConf.StrippingStream.StrippingStream object at 0x7fcb7dd26350>, <StrippingConf.StrippingStream.StrippingStream object at 0x7fcb7dd26410>, <StrippingConf.StrippingStream.StrippingStream object at 0x7fcb7dd26390>, <StrippingConf.StrippingStream.StrippingStream object at 0x7fcb7dd26750>, <StrippingConf.StrippingStream.StrippingStream object at 0x7fcb7dd266d0>]
+# |-SelectionSequences = [<StrippingConf.StrippingStream.StrippingStream object at 0x7f96a81a0910>, <StrippingConf.StrippingStream.StrippingStream object at 0x7f96a81a08d0>, <StrippingConf.StrippingStream.StrippingStream object at 0x7f96a6869f90>, <StrippingConf.StrippingStream.StrippingStream object at 0x7f96a6704150>, <StrippingConf.StrippingStream.StrippingStream object at 0x7f96a67040d0>, <StrippingConf.StrippingStream.StrippingStream object at 0x7f96a6704190>, <StrippingConf.StrippingStream.StrippingStream object at 0x7f96a6704110>, <StrippingConf.StrippingStream.StrippingStream object at 0x7f96a67044d0>, <StrippingConf.StrippingStream.StrippingStream object at 0x7f96a6704450>]
 # |                    (default: [])
 # \----- (End of User SelDSTWriter/MyDSTWriter) ------------------------------------------------------
 # skipping configuration of RawEventFormatConf
@@ -1000,7 +1000,7 @@ Creating Leptonic stream with 7 lines
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to DaVinciDev version HEAD
-                                          running on lxplus0028.cern.ch on Wed Jun 24 16:44:37 2015
+                                          running on lxplus0163.cern.ch on Thu Jul  2 16:54:15 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc           INFO Added successfully Conversion service:XmlCnvSvc
@@ -1008,7 +1008,7 @@ DetectorDataSvc               SUCCESS Detector description database: conddb:/lhc
 RndmGenSvc.Engine                INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine                INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                       INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER              INFO This machine has a speed about   3.36 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER              INFO This machine has a speed about   3.21 times the speed of a 2.8 GHz Xeon.
 RootCnvSvc                       INFO Setting global ROOT compression to:ZLIB:1
 DaVinciEventSeq                  INFO Member list: DaVinciInit/DaVinciInitAlg, GaudiSequencer/FilteredEventSeq, GaudiSequencer/LumiSeq
 DaVinciInitAlg                SUCCESS ==================================================================
@@ -1586,7 +1586,7 @@ StdAllNoPIDsElectrons            INFO Particle/AntiParticle to be created : 'e+'
 StdAllLooseANNPions              INFO Particle/AntiParticle to be created : 'pi+'/'pi-'
 StdAllLooseANNProtons            INFO Particle/AntiParticle to be created : 'p+'/'p~-'
 PropertyConfigSvc                INFO  resolving alias TCK/0x006d0032
-ConfigCDBAccessSvc               INFO  opening /afs/cern.ch/lhcb/software/releases/DBASE/TCK/HltTCK/v3r13p1/config.cdb in mode ReadOnly
+ConfigCDBAccessSvc               INFO  opening /afs/cern.ch/lhcb/software/releases/DBASE/TCK/HltTCK/v3r13p2/config.cdb in mode ReadOnly
 PropertyConfigSvc                INFO  resolved TCK/0x006d0032 to e6713cde105f6c1202d81c6a4306da5d
 StdLooseEta2gg.PhotonMaker       INFO  Following technique(s) will be used for CL evaluation : [IsNotH]
 StdLooseEta2gg.PhotonMaker       INFO  Switch to [PhotonDLL] if one technique is not available
@@ -1604,7 +1604,7 @@ ToolSvc.L0DUConfig.TCK_0x0032    INFO Short description :: TCK = 0x0032 : 1350 b
 ToolSvc.L0DUConfig.TCK_0x0032    INFO The configuration 0x0032 matches the hardware limitations
 ToolSvc.L0DUConfig.TCK_0x0032    INFO - Usage : Channels [68.8% ]  |  Conditions [21.9% ]; max/type [75.0% ]; order : OK ; reported  : 28/28
 L0MuonFromRaw                    INFO XML config file = /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r999/data/L0MuonKernel.xml
-DaVinciInitAlg                   INFO Memory has changed from 1869560 to 2004756 KB (135196KB, 7.23143%) in last 10 events
+DaVinciInitAlg                   INFO Memory has changed from 1869504 to 2006076 KB (136572KB, 7.30525%) in last 10 events
 EventSelector                 SUCCESS Reading Event record 11. Record number within stream 1: 11
 B2XEtaB2etapKSLLLine.LoKi::...   INFO Option for Optimised Kalman Filter fit is activated
 B2XEtaB2etapKSLLLine.LoKi::...   INFO ``Massage''-option is ON
@@ -1614,7 +1614,7 @@ B2XEtaB2etapKSDDLine.LoKi::...   INFO Option for Optimised Kalman Filter fit is 
 B2XEtaB2etapKSDDLine.LoKi::...   INFO ``Massage''-option is ON
 B2XEtaLb2etapLDDLine.LoKi::...   INFO Option for Optimised Kalman Filter fit is activated
 B2XEtaLb2etapLDDLine.LoKi::...   INFO ``Massage''-option is ON
-DaVinciInitAlg                   INFO Memory has changed from 2004756 to 2005048 KB (292KB, 0.0145654%) in last 10 events
+DaVinciInitAlg                   INFO Memory has changed from 2006076 to 2071904 KB (65828KB, 3.28143%) in last 10 events
 EventSelector                 SUCCESS Reading Event record 21. Record number within stream 1: 21
 B2XEtaB2eta3piKSDDLine.LoKi...   INFO Option for Optimised Kalman Filter fit is activated
 B2XEtaB2eta3piKSDDLine.LoKi...   INFO ``Massage''-option is ON
@@ -1622,7 +1622,7 @@ EventSelector                 SUCCESS Reading Event record 31. Record number wit
 RareStrangeSigmaPMuMuLFVLin...WARNING OfflineVertexFitter is no longer maintained and thus depreciated.
 EventSelector                 SUCCESS Reading Event record 41. Record number within stream 1: 41
 createVeloClusters               INFO Cancel processing of events with more than 10000 Velo clusters
-DaVinciInitAlg                   INFO Memory has changed from 2005048 to 2007076 KB (2028KB, 0.101145%) in last 10 events
+DaVinciInitAlg                   INFO Memory has changed from 2071904 to 2073932 KB (2028KB, 0.097881%) in last 10 events
 EventSelector                 SUCCESS Reading Event record 51. Record number within stream 1: 51
 EventSelector                 SUCCESS Reading Event record 61. Record number within stream 1: 61
 Inflaton2MuMu_Bd2InflatonKs...WARNING OfflineVertexFitter is no longer maintained and thus depreciated.
@@ -1633,7 +1633,6 @@ EventSelector                 SUCCESS Reading Event record 91. Record number wit
 EventSelector                 SUCCESS Reading Event record 101. Record number within stream 1: 101
 EventSelector                 SUCCESS Reading Event record 111. Record number within stream 1: 111
 Inflaton2MuMu_Bd2InflatonKs...WARNING OfflineVertexFitter is no longer maintained and thus depreciated.
-DaVinciInitAlg                   INFO Memory has changed from 2007076 to 2072612 KB (65536KB, 3.26525%) in last 10 events
 EventSelector                 SUCCESS Reading Event record 121. Record number within stream 1: 121
 EventSelector                 SUCCESS Reading Event record 131. Record number within stream 1: 131
 EventSelector                 SUCCESS Reading Event record 141. Record number within stream 1: 141
@@ -1641,7 +1640,7 @@ EventSelector                 SUCCESS Reading Event record 151. Record number wi
 EventSelector                 SUCCESS Reading Event record 161. Record number within stream 1: 161
 EventSelector                 SUCCESS Reading Event record 171. Record number within stream 1: 171
 EventSelector                 SUCCESS Reading Event record 181. Record number within stream 1: 181
-DaVinciInitAlg                   INFO Memory has changed from 2072612 to 2138148 KB (65536KB, 3.162%) in last 10 events
+DaVinciInitAlg                   INFO Memory has changed from 2073932 to 2139468 KB (65536KB, 3.15999%) in last 10 events
 EventSelector                 SUCCESS Reading Event record 191. Record number within stream 1: 191
 EventSelector                 SUCCESS Reading Event record 201. Record number within stream 1: 201
 EventSelector                 SUCCESS Reading Event record 211. Record number within stream 1: 211
@@ -1654,42 +1653,22 @@ EventSelector                 SUCCESS Reading Event record 251. Record number wi
 EventSelector                 SUCCESS Reading Event record 261. Record number within stream 1: 261
 LoKiSvc.REPORT                WARNING LoKi::Particles::MCorrectedWithBestVertex: 	 mCorrDir: M^2 < 0 !! [BetaSQ2B3piSelection] StatusCode=FAILURE
 EventSelector                 SUCCESS Reading Event record 271. Record number within stream 1: 271
-BTag_Global.BTaggingTool.Ta...WARNING AdaptivePVReFitter is no longer maintained and thus depreciated.
-BTag_Global.BTaggingTool.Ta...WARNING AdaptivePVReFitter is no longer maintained and thus depreciated.
-BTag_Global.BTaggingTool.Ta...WARNING AdaptivePVReFitter is no longer maintained and thus depreciated.
-BTag_Global.BTaggingTool.Ta...WARNING AdaptivePVReFitter is no longer maintained and thus depreciated.
-BTag_Global.BTaggingTool.Ta...WARNING AdaptivePVReFitter is no longer maintained and thus depreciated.
-BTag_Global.BTaggingTool.Ta...WARNING AdaptivePVReFitter is no longer maintained and thus depreciated.
-BTag_Global.BTaggingTool.Ta...WARNING AdaptivePVReFitter is no longer maintained and thus depreciated.
-ToolSvc.OfflineVertexFitter   WARNING OfflineVertexFitter is no longer maintained and thus depreciated.
-BTag_Global.BTaggingTool.Ta...WARNING AdaptivePVReFitter is no longer maintained and thus depreciated.
-BTag_Global.BTaggingTool.Ta...WARNING AdaptivePVReFitter is no longer maintained and thus depreciated.
-BTag_Global.BTaggingTool.Ta...WARNING AdaptivePVReFitter is no longer maintained and thus depreciated.
-BTag_Global.BTaggingTool.Ta...WARNING AdaptivePVReFitter is no longer maintained and thus depreciated.
-BTag_Global.BTaggingTool.Ta...WARNING AdaptivePVReFitter is no longer maintained and thus depreciated.
-BTag_Global.BTaggingTool.Ta...WARNING AdaptivePVReFitter is no longer maintained and thus depreciated.
-BTag_Global.BTaggingTool.Ta...WARNING PropertimeFitter is no longer maintained and thus depreciated.
-BTag_Global.BTaggingTool.Ad...WARNING AdaptivePVReFitter is no longer maintained and thus depreciated.
+BTag_Global.BTaggingTool.Ta...   INFO Option for Optimised Kalman Filter fit is activated
+BTag_Global.BTaggingTool.Ta...   INFO Option for Optimised Kalman Filter fit is activated
+BTag_Global.BTaggingTool.Ta...   INFO Option for Optimised Kalman Filter fit is activated
+BTag_Global.BTaggingTool.Ta...   INFO Option for Optimised Kalman Filter fit is activated
+BTag_Global.BTaggingTool.Ta...   INFO Option for Optimised Kalman Filter fit is activated
+BTag_Global.BTaggingTool.Ta...   INFO Option for Optimised Kalman Filter fit is activated
+BTag_Global.BTaggingTool.Ta...   INFO Option for Optimised Kalman Filter fit is activated
+BTag_Global.BTaggingTool.Ta...   INFO Option for Optimised Kalman Filter fit is activated
+BTag_Global.BTaggingTool.Ta...   INFO Option for Optimised Kalman Filter fit is activated
+BTag_Global.BTaggingTool.Ta...   INFO Option for Optimised Kalman Filter fit is activated
+BTag_Global.BTaggingTool.Ta...   INFO Option for Optimised Kalman Filter fit is activated
+BTag_Global.BTaggingTool.Ta...   INFO Option for Optimised Kalman Filter fit is activated
+BTag_Global.BTaggingTool.Ta...   INFO Option for Optimised Kalman Filter fit is activated
 TaggingElectrons                 INFO Particle/AntiParticle to be created : 'e+'/'e-'
 TaggingMuons                     INFO Particle/AntiParticle to be created : 'mu+'/'mu-'
 TaggingPions                     INFO Particle/AntiParticle to be created : 'pi+'/'pi-'
-LHCBCOND.TimeOutChecker          INFO Disconnect from database after being idle for 120s (will reconnect if needed)
-ONLINE_2011.TimeOutChecker       INFO Disconnect from database after being idle for 120s (will reconnect if needed)
-DDDB.TimeOutChecker              INFO Disconnect from database after being idle for 120s (will reconnect if needed)
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerCharmTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerElectronTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerKaonOppositeTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerKaonSameTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerMuonTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerNEWKaonOppositeTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerNEWKaonSameTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerPionBDTSameTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerPionSameTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerProtonSameTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.SVertexOneSeedTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'BBDecTreeTool/B02D0D0D02K3PiUPFULLDSTBeauty2CharmB2CBBDTBeauty2CharmFilter.B2CBBDT' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'BBDecTreeTool/B02D0PPbarD2HHFULLDSTBeauty2CharmB2CBBDTBeauty2CharmFilter.B2CBBDT' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'BBDecTreeTool/B02DDFULLDSTBeauty2CharmB2CBBDTBeauty2CharmFilter.B2CBBDT' Counts = 1
@@ -2047,6 +2026,19 @@ GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DecayTreeFit/D
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DecayTreeFit/D2PiPi0_eegammaPiEtaPromptLine.LoKi::DecayTreeFit' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DecayTreeFit/D2PiPi0_eegammaPiPi0PromptLine.LoKi::DecayTreeFit' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DecayTreeFit/DpforD2PiPi0_eegammaPiPi0SLSelection.LoKi::DecayTreeFit' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerCharmTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerElectronTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerKaonOppositeTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerKaonSameTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerMuonTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerNEWKaonOppositeTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerNEWKaonSameTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerPionBDTSameTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerPionSameTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerProtonSameTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerVertexChargeTool.SVertexOneSeedTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerVertexChargeTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DistanceCalculator/ToolSvc.LoKi::DistanceCalculator' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::DistanceCalculator/ToolSvc.P2PVWithIPChi2.LoKi::DistanceCalculator' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::Hybrid::CoreFactory/ToolSvc.CoreFactory' Counts = 1
@@ -2073,8 +2065,34 @@ GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::Hybrid::DictOf
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::Hybrid::DictOfFunctors/Lb2D0Lambda0LLD02HHBeauty2CharmB2CBBDTBeauty2CharmFilter.B2CBBDT.VarHandler' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::Hybrid::HltFactory/ToolSvc.HltFactory' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::Hybrid::Tool/ToolSvc.HybridFactory' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerCharmTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerElectronTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerKaonOppositeTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerKaonSameTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerMuonTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerNEWKaonOppositeTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerNEWKaonSameTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerPionBDTSameTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerPionSameTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerProtonSameTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.SVertexOneSeedTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::LifetimeFitter/ToolSvc.lifetime' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::MassFitter/StdMassConstrainedJpsi2MuMu.LoKi::MassFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerCharmTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerElectronTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerKaonOppositeTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerKaonSameTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerMuonTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerNEWKaonOppositeTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerNEWKaonSameTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerPionBDTSameTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerPionSameTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerProtonSameTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.SVertexOneSeedTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::PVReFitter/ToolSvc.LoKi::PVReFitter' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::Reporter/LoKiSvc.REPORT' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::Reporter/ToolSvc.LoKi::Reporter' Counts = 1
@@ -2085,6 +2103,19 @@ GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/B
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/B2XEtaLb2eta3piLLLLine.LoKi::VertexFitter' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/B2XEtaLb2etapLDDLine.LoKi::VertexFitter' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/B2XEtaLb2etapLLLLine.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerCharmTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerElectronTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerKaonOppositeTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerKaonSameTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerMuonTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerNEWKaonOppositeTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerNEWKaonSameTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerPionBDTSameTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerPionSameTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerProtonSameTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.SVertexOneSeedTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/Eta3PiforB2XEta.LoKi::VertexFitter' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/EtapforB2XEta.LoKi::VertexFitter' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::VertexFitter/ToolSvc.LoKi::VertexFitter' Counts = 1
@@ -2140,7 +2171,6 @@ GaudiTool       WARNING   Initialize/Finalize (mis)balance 'OfflineVertexFitter/
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'OfflineVertexFitter/RareStrangeSigmaPEELine.OfflineVertexFitter' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'OfflineVertexFitter/RareStrangeSigmaPMuMuLFVLine.OfflineVertexFitter' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'OfflineVertexFitter/RareStrangeSigmaPMuMuLine.OfflineVertexFitter' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'OfflineVertexFitter/ToolSvc.OfflineVertexFitter' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'Particle2State/ToolSvc.Particle2State' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ParticleAdder/Bu2Kpi0MergedLine.ParticleAdder' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ParticleAdder/Bu2Kpi0ResolvedLine.ParticleAdder' Counts = 1
@@ -2162,8 +2192,6 @@ GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ParticleCloner/CopyP
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ParticleCloner/CopyParticles_EW.ParticleCloner' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ParticleCloner/CopyParticles_Leptonic.ParticleCloner' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ParticleCloner/CopyParticles_Semileptonic.ParticleCloner' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ParticleDescendants/BTag_Global.BTaggingTool.ParticleDescendants' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ParticleDescendants/BTag_Global.BTaggingTool.TaggerCharmTool.ParticleDescendants' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ParticleDescendants/BTag_Global.BTaggingTool.TaggerCharmTool.TaggingUtils.ParticleDescendants' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ParticleDescendants/BTag_Global.BTaggingTool.TaggerElectronTool.ParticleDescendants' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ParticleDescendants/BTag_Global.BTaggingTool.TaggerElectronTool.TaggingUtils.ParticleDescendants' Counts = 1
@@ -2191,7 +2219,6 @@ GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PhotonMaker/StdLoose
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PhotonMaker/StdLooseEta2gg.PhotonMaker' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PhotonMaker/StdLoosePi02gg.PhotonMaker' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PhotonMaker/StdVeryLooseAllPhotons.PhotonMaker' Counts = 1
-GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PropertimeFitter/BTag_Global.BTaggingTool.TaggerCharmTool.PropertimeFitter' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'PropertimeFitter/ToolSvc.properTime' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ProtoParticleCALOFilter/StdAllLooseANNKaons.Kaon' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ProtoParticleCALOFilter/StdAllLooseANNPions.Pion' Counts = 1
@@ -2554,20 +2581,6 @@ GaudiTool       WARNING   Initialize/Finalize (mis)balance 'VertexCloner/CopyPar
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'VertexCloner/CopyParticles_Semileptonic.VertexCloner' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'VertexIsolation/BhadronExtraInfo.BhadronExtraInfo.VertexIsolation' Counts = 1
 GaudiTool       WARNING   Initialize/Finalize (mis)balance 'VertexIsolation/LeptonicExtraInfo.LeptonicExtraInfo.VertexIsolation' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerCharmTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerElectronTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerKaonOppositeTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerKaonSameTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerMuonTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerNEWKaonOppositeTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerNEWKaonSameTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerPionBDTSameTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerPionSameTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerProtonSameTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.SVertexOneSeedTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'AdaptivePVReFitter/BTag_Global.BTaggingTool.TaggingUtils.AdaptivePVReFitter' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'BBDecTreeTool/B02D0D0D02K3PiUPFULLDSTBeauty2CharmB2CBBDTBeauty2CharmFilter.B2CBBDT' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'BBDecTreeTool/B02D0PPbarD2HHFULLDSTBeauty2CharmB2CBBDTBeauty2CharmFilter.B2CBBDT' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'BBDecTreeTool/B02DDFULLDSTBeauty2CharmB2CBBDTBeauty2CharmFilter.B2CBBDT' Counts = 1
@@ -2925,6 +2938,19 @@ GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DecayTreeFit/D
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DecayTreeFit/D2PiPi0_eegammaPiEtaPromptLine.LoKi::DecayTreeFit' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DecayTreeFit/D2PiPi0_eegammaPiPi0PromptLine.LoKi::DecayTreeFit' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DecayTreeFit/DpforD2PiPi0_eegammaPiPi0SLSelection.LoKi::DecayTreeFit' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerCharmTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerElectronTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerKaonOppositeTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerKaonSameTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerMuonTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerNEWKaonOppositeTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerNEWKaonSameTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerPionBDTSameTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerPionSameTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerProtonSameTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerVertexChargeTool.SVertexOneSeedTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggerVertexChargeTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DistanceCalculator/BTag_Global.BTaggingTool.TaggingUtils.LoKi::DistanceCalculator' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DistanceCalculator/ToolSvc.LoKi::DistanceCalculator' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::DistanceCalculator/ToolSvc.P2PVWithIPChi2.LoKi::DistanceCalculator' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::Hybrid::CoreFactory/ToolSvc.CoreFactory' Counts = 1
@@ -2951,8 +2977,34 @@ GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::Hybrid::DictOf
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::Hybrid::DictOfFunctors/Lb2D0Lambda0LLD02HHBeauty2CharmB2CBBDTBeauty2CharmFilter.B2CBBDT.VarHandler' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::Hybrid::HltFactory/ToolSvc.HltFactory' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::Hybrid::Tool/ToolSvc.HybridFactory' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerCharmTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerElectronTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerKaonOppositeTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerKaonSameTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerMuonTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerNEWKaonOppositeTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerNEWKaonSameTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerPionBDTSameTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerPionSameTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerProtonSameTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.SVertexOneSeedTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::LifetimeFitter/BTag_Global.BTaggingTool.TaggingUtils.LoKi::LifetimeFitter' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::LifetimeFitter/ToolSvc.lifetime' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::MassFitter/StdMassConstrainedJpsi2MuMu.LoKi::MassFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerCharmTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerElectronTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerKaonOppositeTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerKaonSameTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerMuonTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerNEWKaonOppositeTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerNEWKaonSameTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerPionBDTSameTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerPionSameTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerProtonSameTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.SVertexOneSeedTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::PVReFitter/BTag_Global.BTaggingTool.TaggingUtils.LoKi::PVReFitter' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::PVReFitter/ToolSvc.LoKi::PVReFitter' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::Reporter/LoKiSvc.REPORT' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::Reporter/ToolSvc.LoKi::Reporter' Counts = 1
@@ -2963,6 +3015,19 @@ GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/B
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/B2XEtaLb2eta3piLLLLine.LoKi::VertexFitter' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/B2XEtaLb2etapLDDLine.LoKi::VertexFitter' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/B2XEtaLb2etapLLLLine.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerCharmTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerElectronTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerKaonOppositeTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerKaonSameTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerMuonTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerNEWKaonOppositeTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerNEWKaonSameTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerPionBDTSameTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerPionSameTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerProtonSameTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.SVertexOneSeedTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggerVertexChargeTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/BTag_Global.BTaggingTool.TaggingUtils.LoKi::VertexFitter' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/Eta3PiforB2XEta.LoKi::VertexFitter' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/EtapforB2XEta.LoKi::VertexFitter' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::VertexFitter/ToolSvc.LoKi::VertexFitter' Counts = 1
@@ -3018,7 +3083,6 @@ GaudiTool       WARNING   Create/Destroy      (mis)balance 'OfflineVertexFitter/
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'OfflineVertexFitter/RareStrangeSigmaPEELine.OfflineVertexFitter' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'OfflineVertexFitter/RareStrangeSigmaPMuMuLFVLine.OfflineVertexFitter' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'OfflineVertexFitter/RareStrangeSigmaPMuMuLine.OfflineVertexFitter' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'OfflineVertexFitter/ToolSvc.OfflineVertexFitter' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'Particle2State/ToolSvc.Particle2State' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'ParticleAdder/Bu2Kpi0MergedLine.ParticleAdder' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'ParticleAdder/Bu2Kpi0ResolvedLine.ParticleAdder' Counts = 1
@@ -3040,8 +3104,6 @@ GaudiTool       WARNING   Create/Destroy      (mis)balance 'ParticleCloner/CopyP
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'ParticleCloner/CopyParticles_EW.ParticleCloner' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'ParticleCloner/CopyParticles_Leptonic.ParticleCloner' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'ParticleCloner/CopyParticles_Semileptonic.ParticleCloner' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'ParticleDescendants/BTag_Global.BTaggingTool.ParticleDescendants' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'ParticleDescendants/BTag_Global.BTaggingTool.TaggerCharmTool.ParticleDescendants' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'ParticleDescendants/BTag_Global.BTaggingTool.TaggerCharmTool.TaggingUtils.ParticleDescendants' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'ParticleDescendants/BTag_Global.BTaggingTool.TaggerElectronTool.ParticleDescendants' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'ParticleDescendants/BTag_Global.BTaggingTool.TaggerElectronTool.TaggingUtils.ParticleDescendants' Counts = 1
@@ -3069,7 +3131,6 @@ GaudiTool       WARNING   Create/Destroy      (mis)balance 'PhotonMaker/StdLoose
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'PhotonMaker/StdLooseEta2gg.PhotonMaker' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'PhotonMaker/StdLoosePi02gg.PhotonMaker' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'PhotonMaker/StdVeryLooseAllPhotons.PhotonMaker' Counts = 1
-GaudiTool       WARNING   Create/Destroy      (mis)balance 'PropertimeFitter/BTag_Global.BTaggingTool.TaggerCharmTool.PropertimeFitter' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'PropertimeFitter/ToolSvc.properTime' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'ProtoParticleCALOFilter/StdAllLooseANNKaons.Kaon' Counts = 1
 GaudiTool       WARNING   Create/Destroy      (mis)balance 'ProtoParticleCALOFilter/StdAllLooseANNPions.Pion' Counts = 1
