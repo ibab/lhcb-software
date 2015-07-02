@@ -257,7 +257,7 @@ def configureEarlyDataAlignment( fixQOverPBias = True ) :
     # make sure we fix the z-scale
     surveyconstraints.XmlUncertainties += ["OT/T3X1U : 0.5 0.5 0.00001 0.0001 0.0001 0.0001" ]
 
-# Alignment scenario used for 2012 data
+# Default Tracker Alignment scenario
 def configureTrackerAlignment( fixQOverPBias = False, surveyVer = 'latest' ) :
     TAlignment().WriteCondSubDetList += ['TT','IT','OT']
   

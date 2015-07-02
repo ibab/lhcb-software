@@ -86,8 +86,8 @@ namespace Al
     declareProperty("LogFile"                     , m_logFileName                  = "alignlog.txt" ) ;
     declareProperty("SurveyConstraintTool", m_chisqconstrainttool ) ;
     declareProperty("LagrangeConstraintTool", m_lagrangeconstrainttool ) ;
-    declareProperty("MaxDeltaChi2PDofForConvergence",m_maxDeltaChi2PDofForConvergence = 2) ;//4) ;
-    declareProperty("MaxModeDeltaChi2ForConvergence",m_maxModeDeltaChi2ForConvergence = 10); //25) ;
+    declareProperty("MaxDeltaChi2PDofForConvergence",m_maxDeltaChi2PDofForConvergence = 4) ;
+    declareProperty("MaxModeDeltaChi2ForConvergence",m_maxModeDeltaChi2ForConvergence = 25) ;
   }
 
   AlignUpdateTool::~AlignUpdateTool()

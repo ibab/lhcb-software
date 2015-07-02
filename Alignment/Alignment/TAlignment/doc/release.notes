@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2015-07-02 - Maurizio Martinelli
+ - Fixed a missing commit
+
 ! 2015-06-23 - Maurizio Martinelli
  - reverted the convergence criteria to the values used for early Run2 alignment
  - added options in configureMuonAlignment to tighten the aforementioned criteria
