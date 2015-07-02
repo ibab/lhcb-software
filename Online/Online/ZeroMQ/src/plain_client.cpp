@@ -143,7 +143,7 @@ int zmq::plain_client_t::produce_hello (msg_t *msg_) const
 }
 
 int zmq::plain_client_t::process_welcome (
-        const unsigned char *cmd_data, size_t data_size)
+        const unsigned char *, size_t data_size)
 {
     if (state != waiting_for_welcome) {
         errno = EPROTO;

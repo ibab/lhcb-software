@@ -4,7 +4,7 @@
 
 gaudi_subdir(ZeroMQ v4r1p2)
 
-add_definitions(-D_REENTRANT -D_THREAD_SAFE -DZMQ_USE_EPOLL)
+add_definitions(-D_REENTRANT -D_THREAD_SAFE -DZMQ_USE_POLL)
 gaudi_add_library(zmq src/*.cpp
                   PUBLIC_HEADERS zmq
                   LINK_LIBRARIES ${CMAKE_DL_LIBS} -lrt)

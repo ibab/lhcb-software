@@ -6,6 +6,9 @@
                 COPYING.LESSER. See README.md for more information.
 !-----------------------------------------------------------------------------
 
+! 2015-07-02 - raaij
+ - Fix compilation warning.
+
 !========================= ZeroMQ v4r1p2 2015-06-29 =======================
 
 ! 2015-06-25 - Roel Aaij
