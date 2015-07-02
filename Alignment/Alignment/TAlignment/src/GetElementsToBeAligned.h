@@ -54,6 +54,9 @@ public:
   virtual const AlignmentElement* findElement(const LHCb::LHCbID& anLHCbID) const ;
 
   // Return method that finds an alignment element for a given Measuerment
+  virtual const AlignmentElement* findElement(const LHCb::Node& node) const ;
+
+  // Return method that finds an alignment element for a given Measuerment
   virtual const AlignmentElement* findElement(const LHCb::Measurement& meas) const;
 
   // Return method that finds an alignment element for a given detector element

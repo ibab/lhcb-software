@@ -31,6 +31,7 @@ static const InterfaceID IID_IGetElementsToBeAligned ( "IGetElementsToBeAligned"
 
 namespace LHCb {
   class Measurement ;
+  class Node ;
 }
 
 namespace Gaudi {
@@ -54,6 +55,9 @@ class IGetElementsToBeAligned : virtual public IAlgTool {
   
   // Return method that finds an alignment element for a given LHCb id
   virtual const AlignmentElement* findElement(const LHCb::LHCbID& anLHCbID) const = 0;
+
+  // Return method that finds an alignment element for a given Measuerment
+  virtual const AlignmentElement* findElement(const LHCb::Node& node) const = 0 ;
 
   // Return method that finds an alignment element for a given Measuerment
   virtual const AlignmentElement* findElement(const LHCb::Measurement& meas) const = 0;

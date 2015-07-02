@@ -14,6 +14,7 @@
 
 // from TrackEvent
 #include "Event/Measurement.h"
+#include "Event/Node.h"
 
 // from Det
 #include "OTDet/DeOTDetector.h"
@@ -23,6 +24,7 @@
 #include "STDet/DeUTDetector.h"
 #include "FTDet/DeFTDetector.h"
 #include "MuonDet/DeMuonDetector.h"
+#include "STDet/DeTTSector.h"
 
 // from Boost
 #include "boost/lambda/bind.hpp"
@@ -336,10 +338,29 @@ StatusCode GetElementsToBeAligned::findElements(const std::string& path,
   return StatusCode::SUCCESS ;
 }
 
+const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::Node& node) const
+{
+  const AlignmentElement* elem(0) ;
+  if( node.hasMeasurement() ) {
+    const LHCb::Measurement& meas = node.measurement() ;
+    const DetectorElement* detelem = meas.detectorElement() ;
+    if( detelem ) {
+      // for TT locate the sensor using the estimated position of the track
+      if( meas.lhcbID().isTT() ) {
+	const DeTTSector* ladder = dynamic_cast<const DeTTSector*>(detelem) ;
+	if( ladder ) detelem = ladder->findSensor( node.state().position() ) ;
+      }
+      elem = findElement( *detelem ) ;
+    } else {
+      elem = findElement(meas.lhcbID()) ;
+    }
+  }
+  return elem ;
+}
+
 const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::Measurement& meas) const {
-  if( meas.detectorElement() ) 
-    return findElement( *meas.detectorElement() ) ;
-  return findElement(meas.lhcbID()) ;
+  const DetectorElement* detelem = meas.detectorElement() ;
+  return detelem ?  findElement( *detelem ) : findElement(meas.lhcbID()) ;
 }
 
 const AlignmentElement* GetElementsToBeAligned::findElement(const DetectorElement& element) const 
