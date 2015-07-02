@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of the HLT
 !-----------------------------------------------------------------------------
 
+! 2015-07-02 - raaij
+ - Add run start time to info messages.
+
 !========================= HltMonitoring v1r0 2015-06-28 =========================
 
 ! 2015-06-25 - Roel Aaij

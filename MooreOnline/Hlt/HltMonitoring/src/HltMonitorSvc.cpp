@@ -322,6 +322,10 @@ void HltMonitorSvc::addInfo(Monitoring::HistId id, const std::string& type,
    memcpy(msg.data(), &m_run, sizeof(Monitoring::RunNumber));
    message.push_back(std::move(msg));
 
+   // Then run start time in seconds since 1970
+   memcpy(msg.data(), &m_startOfRun, sizeof(int));
+   message.push_back(std::move(msg));
+
    // Then HistID
    msg.rebuild(sizeof(Monitoring::HistId));
    memcpy(msg.data(), &id, sizeof(Monitoring::HistId));
