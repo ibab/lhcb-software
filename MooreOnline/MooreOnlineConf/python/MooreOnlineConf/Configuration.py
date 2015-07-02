@@ -47,7 +47,7 @@ class MooreOnline(LHCbConfigurableUser):
         , 'DataType' : '2012'
         , "CheckOdin" : True
         , "HltLevel" : 'Hlt1'
-        , 'Priority' : {'Hlt1' : -10, 'Hlt2' : 10, 'Hlt1Hlt2' : 0}
+        , 'Priority' : {'Hlt1' : 0, 'Hlt2' : 10, 'Hlt1Hlt2' : 0}
         }
 
     def _configureDBSnapshot(self):
