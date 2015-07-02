@@ -23,23 +23,33 @@ class ParticleSelection:
 # making sure to refit the particles. It would make sense to add some
 # cuts here as well.
 ##################################################################
-def configuredParticleListFromDST( ParticleLocation ) :
+def configuredParticleListFromDST( ParticleLocation, FilterCode = "" ) :
     from Configurables import GaudiSequencer
     from Configurables import TrackParticleRefitter, TrackMasterFitter
     from TrackFitter.ConfiguredFitters  import ConfiguredMasterFitter
     # create a sequence to refit and monitor
     name = ParticleLocation
-    name.replace("Event","")
-    name.replace("/Phys","")
-    name.replace("/Particle","")
-    name.replace("/","_")
+    name = name.replace("/Event","")
+    name = name.replace("/Phys","")
+    name = name.replace("/Particles","")
+    name = name.replace("/","")
     fitter = TrackParticleRefitter( name + "Refitter", 
                                     TrackFitter = TrackMasterFitter(),
                                     ParticleLocation = ParticleLocation )
     ConfiguredMasterFitter( fitter.TrackFitter, SimplifiedGeometry = True )
-    seq = GaudiSequencer(name + "Seq")
+    seq = GaudiSequencer(name + "Seq",IgnoreFilterPassed = True)
     seq.Members.append( fitter )
-    sel = ParticleSelection( Name = 'ParticlesFromDST',
+    if FilterCode != "":
+        from Configurables import FilterDesktop
+        newLocation = ParticleLocation.replace("/Particles","") + "Filtered"
+        newfilter = FilterDesktop( #name + "Filter",#Output = 
+                                   newLocation, 
+                                   Inputs = [ParticleLocation],
+                                   CloneFilteredParticles = False,
+                                   Code = FilterCode )
+        seq.Members.append( newfilter )
+        ParticleLocation = newLocation + "/Particles"
+    sel = ParticleSelection( Name = name,
                              Location = ParticleLocation,
                              Algorithm = seq)
     return sel
