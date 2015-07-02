@@ -195,6 +195,12 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
         plot2D(bin, fNode->residual() , "biasedResSector"+layerName , 
                "biasedResSector"+layerName  , 99.5, 500.5, -2., 2.,401 , 200  );
 	
+	// plot residual versus Y position for every module
+	const DeSTSector* sector = static_cast<const DeSTSector*>(measurement.detectorElement()) ;
+	const std::string& name = sector->name();
+	const std::string hisname = name.substr(45,4) + "/" + name.substr(55,9) ;
+	profile1D(fNode->state().y(),fNode->unbiasedResidual(),hisname,hisname,-700,700,70) ;
+
 	if( hit ) {
 	  double noise = hit->sector().noise(chan) ;
 	  if(noise>0) {
