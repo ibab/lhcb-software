@@ -10,6 +10,9 @@
 !                by $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-07-03 - Marco Clemencic
+ - Moved the CMake code to generate functors factories to Phys/LoKiCore.
+
 ! 2015-06-25 - Marco Clemencic
  - Added (preliminary) CMake integration.
 
