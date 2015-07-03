@@ -180,6 +180,8 @@ def defaultHLTD0Selection():
     # this still needs to be worked out
     from Configurables import Escher
     Escher().RecoSequence = ["Hlt","Decoding","AlignTr",'VELO', 'TrHLT1',"Vertex","RICH" ]
+    if Escher().DataType in ['2011','2012']:
+        Escher().RecoSequence = ["Hlt","Decoding","AlignTr","Vertex","RICH" ]
     Escher().MoniSequence = ["Tr","OT"]
 
     # if the Escher hlt filter is not set, set it here
@@ -210,11 +212,14 @@ def defaultHLTD0Selection():
 
     # add tight PID cuts basically toensure that we don't swap the
     # kaon and pion.
+    AlignD02KPiWideCode = "(ADMASS('D0') < 50.*MeV) & (VFASPF(VCHI2) < 9.)"
+    if Escher().DataType in ['2011','2012']:
+        AlignD02KPiWideCode = AlignD02KPiWideCode + \
+            " & (MINTREE('K+'==ABSID, PIDK) > 0)" \
+            " & (MINTREE('pi+'==ABSID, PIDK) < 0)"
     AlignD02KPiWide = FilterDesktop("AlignD02KPiWide",
                                     Inputs = ["Phys/StdLooseD02KPi"], 
-                                    Code = "(ADMASS('D0') < 50.*MeV) & (VFASPF(VCHI2) < 9.)" \
-                                    " & (MINTREE('K+'==ABSID, PIDK) > 0)" \
-                                    " & (MINTREE('pi+'==ABSID, PIDK) < 0)" )
+                                    Code = AlignD02KPiWideCode )
     
     # tighten the mass window for candidates used in alignment.
     AlignD02KPi = FilterDesktop("AlignD02KPi",

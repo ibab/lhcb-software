@@ -3,6 +3,8 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2015-07-03 - Maurizio Martinelli
+ - Released cuts on D0 selection for Run2
 
 ! 2015-07-02 - Wouter Hulsbergen
  - add functionality to get alignment element for an TTSensor. it is a special case since the reconstruction only uses TTSectors, as the sensors are ganged together.
