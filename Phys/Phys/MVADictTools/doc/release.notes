@@ -4,6 +4,10 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+! 2015-07-03 - Roel Aaij
+ - Fix resolution of environment variables when opening files.
+ - Remove useless and unused default path properties.
+
 !========================= MVADictTools v1r9 2015-03-31 =========================
 
 ! 2015-03-12 - Roel Aaij

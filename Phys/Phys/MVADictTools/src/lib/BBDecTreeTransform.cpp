@@ -11,7 +11,6 @@ BBDecTreeTransform::BBDecTreeTransform()
   , m_keep_all_vars(true)
   , m_bbdt_file("")
   , m_name("")
-  , m_default_path("BBDECTREETRANSFORMPATH") // ???
   , m_ntrees(-1)
   , m_splits(0)
   , m_values(0)
@@ -67,12 +66,6 @@ BBDecTreeTransform::checkWeightsFile(std::ostream& info) {
     return true;
   }
   fin.close();
-  // Check existence of WeightFile: in path
-  m_bbdt_file = m_default_path + "/" + m_bbdt_file;
-  fin.open(resolveEnv(m_bbdt_file.c_str()));
-  if (fin.good()) {
-    return true;
-  }
   // else ERROR
   if (m_bbdt_file == "") {
     info << "ERROR  ";
@@ -90,7 +83,7 @@ void BBDecTreeTransform::readWeightsFile(std::ostream& info) {
   if (!checkWeightsFile(info)) {
     return;
   }
-  std::ifstream inFile(m_bbdt_file.c_str());
+  std::ifstream inFile(resolveEnv(m_bbdt_file.c_str()));
   unsigned int nvar = 0;
   unsigned int index = 0;
   unsigned int value = 0;

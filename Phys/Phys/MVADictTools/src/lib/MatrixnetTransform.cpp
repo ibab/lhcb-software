@@ -142,7 +142,6 @@ MatrixnetTransform::MatrixnetTransform()
   , m_keep_all_vars(true)
   , m_matrixnet_file("")
   , m_name("")
-  , m_default_path("MATRIXNETTRANSFORMPATH") // ???
   , m_formula("")
   , m_debug(false)
   , m_variables(0)
@@ -192,12 +191,6 @@ MatrixnetTransform::checkWeightsFile(std::ostream& info) {
     return true;
   }
   fin.close();
-  // Check existence of WeightFile: in path
-  m_matrixnet_file = m_default_path + "/" + m_matrixnet_file;
-  fin.open(resolveEnv(m_matrixnet_file).c_str());
-  if (fin.good()) {
-    return true;
-  }
   // else ERROR
   if (m_matrixnet_file == "") {
     info << "ERROR  ";
@@ -215,7 +208,7 @@ void MatrixnetTransform::readWeightsFile(std::ostream& info) {
     m_setup_success = false;
     return;
   }
-  std::ifstream fin(m_matrixnet_file.c_str(), std::ios::in | std::ios::binary);
+  std::ifstream fin(resolveEnv(m_matrixnet_file).c_str(), std::ios::in | std::ios::binary);
   std::ostringstream oss;
   oss << fin.rdbuf();
   std::string temp(oss.str());
@@ -253,4 +246,3 @@ bool MatrixnetTransform::parseOpts(const optmap& options, std::ostream& info) {
   pass = parse.check(info);
   return pass;
 }
-

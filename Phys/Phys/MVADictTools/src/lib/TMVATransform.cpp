@@ -1,4 +1,4 @@
-// Include files 
+// Include files
 
 #include "MVADictTools/TMVATransform.h"
 #include "Utils.h"
@@ -17,7 +17,6 @@ TMVATransform::TMVATransform()
   , m_weightfile("")
   , m_name("")
   , m_branchname("")
-  , m_default_path("TMVATRANSFORMPATH")
   , m_reader(NULL)
   , m_debug(false)
 {
@@ -87,12 +86,6 @@ TMVATransform::checkWeightsFile(std::ostream& info) {
     return true;
   }
   fin.close();
-  // Check existence of WeightFile: in path
-  m_weightfile = m_default_path + "/" + m_weightfile;
-  fin.open(resolveEnv(m_weightfile.c_str()));
-  if (fin.good()) {
-    return true;
-  }
   // else ERROR
   if (m_weightfile == "") {
     info << "ERROR  ";
@@ -113,11 +106,11 @@ void TMVATransform::readWeightsFile(std::ostream& info) {
   m_variables.clear();
   m_spectator.clear();
   // Check that the WeightFile exists
-  std::ifstream fin(m_weightfile.c_str());
   m_setup_success &= checkWeightsFile(info);
   if (!m_setup_success) {
     return;
   }
+  std::ifstream fin(resolveEnv(m_weightfile.c_str()));
   // Setup the XML parser
   if (m_debug) info << "Reading WeightFile \"" << m_weightfile << "\"" << std::endl;
   TXMLEngine xmlparser;
@@ -210,4 +203,3 @@ bool TMVATransform::parseOpts(const optmap& options, std::ostream& info)
   pass = parse.check(info);
   return pass;
 }
-
