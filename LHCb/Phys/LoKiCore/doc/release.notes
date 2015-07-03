@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-07-03 - Marco Clemencic
+ - Moved here the CMake code to generate functors factories from StrippingCache.
+
 ! 2015-06-23 - Vanya Belyaev
 
  - HybridBase.cpp

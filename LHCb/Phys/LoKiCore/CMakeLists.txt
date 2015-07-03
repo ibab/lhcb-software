@@ -38,16 +38,10 @@ if(GAUDI_BUILD_TESTS)
                        src/tests/NodeGrammarTest.cpp
                        INCLUDE_DIRS ROOT AIDA Boost RELAX ROOT PythonLibs
                        LINK_LIBRARIES ROOT Boost RELAX ROOT PythonLibs GaudiAlgLib LHCbKernel LHCbMathLib PartPropLib LoKiCoreLib)
-endif()
-
-if(GAUDI_BUILD_TESTS)
   gaudi_add_executable(TreeGrammarTest
                        src/tests/TreeGrammarTest.cpp
                        INCLUDE_DIRS ROOT AIDA Boost RELAX ROOT PythonLibs
                        LINK_LIBRARIES ROOT Boost RELAX ROOT PythonLibs GaudiAlgLib LHCbKernel LHCbMathLib PartPropLib LoKiCoreLib)
-endif()
-
-if(GAUDI_BUILD_TESTS)
   gaudi_add_executable(CCGrammarTest
                        src/tests/CCGrammarTest.cpp
                        INCLUDE_DIRS ROOT AIDA Boost RELAX ROOT PythonLibs
@@ -56,5 +50,10 @@ endif()
 
 gaudi_install_python_modules()
 
+# Install CMake modules
+gaudi_install_cmake_modules()
+# note: gaudi_install_cmake_modules only install .cmake files
+install(FILES cmake/LoKiFunctorsCachePostActionOpts.py
+        DESTINATION cmake)
 
 gaudi_add_test(QMTest QMTEST)
