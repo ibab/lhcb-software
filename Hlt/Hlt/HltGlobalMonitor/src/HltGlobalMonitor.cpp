@@ -362,13 +362,17 @@ StatusCode HltGlobalMonitor::initialize()
     registerCondition<HltGlobalMonitor>( rich2Condition, m_rich2Condition,
                                          &HltGlobalMonitor::updateCondition_rich2 );
 
-    // Monitor lhc
+    // Monitor lhc. Check if the condition exists to protect against its unavailability in
+    // simcond.
     string lhcfillingschemeCondition =
         "/dd/Conditions/Online/LHCb/LHCFillingScheme";
-    registerCondition<HltGlobalMonitor>( lhcfillingschemeCondition,
-                                         m_lhcfillingschemeCondition,
-                                         &HltGlobalMonitor::updateCondition_lhcfillingscheme );
-
+    m_lhcfillingschemeCondition = getIfExists<Condition>(detSvc(), lhcfillingschemeCondition);
+    if (m_lhcfillingschemeCondition) {
+       registerCondition<HltGlobalMonitor>( lhcfillingschemeCondition,
+                                            m_lhcfillingschemeCondition,
+                                            &HltGlobalMonitor::updateCondition_lhcfillingscheme );
+    }
+    
     // Monitor lumipars
     string lumiparsCondition = "/dd/Conditions/Online/LHCb/Lumi/LumiSettings";
     registerCondition<HltGlobalMonitor>( lumiparsCondition, m_lumiparsCondition,
@@ -439,11 +443,13 @@ StatusCode HltGlobalMonitor::updateCondition_magnet()
 {
     m_magnetCurrent =  m_magnetCondition->paramAsDouble( "Current" );
     m_magnetPolarity =  m_magnetCondition->paramAsInt( "Polarity" );
-    auto magnetState = m_magnetCondition->paramAsString( "State" );
-    m_magnetState = 0.;
-    if ( magnetState.compare( "OFF" ) ) m_magnetState = 0.;
-    if ( magnetState.compare( "UP" ) ) m_magnetState = 1.;
-    if ( magnetState.compare( "DOWN" ) ) m_magnetState = -1.;
+    if (m_magnetCondition->exists( "State" )) {
+       auto magnetState = m_magnetCondition->paramAsString( "State" );
+       m_magnetState = 0.;
+       if ( magnetState.compare( "OFF" ) ) m_magnetState = 0.;
+       if ( magnetState.compare( "UP" ) ) m_magnetState = 1.;
+       if ( magnetState.compare( "DOWN" ) ) m_magnetState = -1.;
+    }
     return StatusCode::SUCCESS;
 }
 
@@ -564,9 +570,14 @@ void HltGlobalMonitor::monitorTrends()
 {
     using ms = duration<float,std::milli>;
     auto elapsedTime = duration_cast<ms>( high_resolution_clock::now() - m_startEvent );
+    auto t = elapsedTime.count();
+
+    // Safety check
+    if (t < 0.0001) {
+       return;
+    }
     fill( m_hltTime, std::log10( elapsedTime.count() ) , 1.0 ); // convert to log(time/ms)
 
-    auto t = elapsedTime.count();
     auto  when  = m_currentTime/60;;
 
     m_hltEventsTime->fill( when, t );
