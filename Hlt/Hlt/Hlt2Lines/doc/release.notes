@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-07-03 - Jon Harrison
+ - Updates to RareCharm lines to include 4 more same-sign LFV/LNV combinations.
+
 ! 2015-07-01 - Sascha Stahl
  - RecoTest/Lines.py: Remove the priority of 1 from the JPsiReFitPVsTurbo line.
 

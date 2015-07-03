@@ -32,7 +32,6 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             ,'DDira'              : 0.9997     # adimensional
                             ,'DMinFlightChi2'     : 20         # adimensional
                             ,'DMaxIPChi2'         : 15         # adimensional
-                            ,'ePIDe'              :  2         # adimensional
                             #three body lines
                             ,'TrkPt_Hmumu'                 : 300.0 * MeV
                             ,'TrkP_Hmumu'                  : 3000.0 * MeV ## 1
@@ -48,8 +47,8 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             ,'DSumPt_Hmumu'                : 500.0 * MeV ## 1
                             ,'DDira_Hmumu'              : 0.9999     # adimensional
                             ,'MCOR_MAX_Hmumu'              : 3500.0 * MeV
-                            ,'Sig_M_MIN'                   : 1800.0 * MeV
-                            ,'Sig_M_MAX'                   : 2050.0 * MeV
+                            ,'Sig_M_MIN_Hmumu'                   : 1800.0 * MeV
+                            ,'Sig_M_MAX_Hmumu'                   : 2050.0 * MeV
                             ,'WideMass_M_MIN_Hmumu'              : 1700.0 * MeV
                             ,'WideMass_M_MAX_Hmumu'              : 2100.0 * MeV
                             ,'Lambda_c_Sig_M_MIN'                   : 2200.0 * MeV
@@ -71,15 +70,11 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             , 'DSumPt_HHmumu'                : 3000.0 * MeV
                             , 'DDira_HHmumu'              : 0.9999     # adimensional                    
                             , 'MCOR_MAX_HHmumu'              : 3500.0 * MeV
-                            , 'Sig_M_MIN'                   : 1800.0 * MeV
-                            , 'Sig_M_MAX'                   : 1950.0 * MeV
+                            , 'Sig_M_MIN_HHmumu'                   : 1800.0 * MeV
+                            , 'Sig_M_MAX_HHmumu'                   : 1950.0 * MeV
                             , 'WideMass_M_MIN_HHmumu'              : 1700.0 * MeV
                             , 'WideMass_M_MAX_HHmumu'              : 2100.0 * MeV
                             #for Lines with Electrons
-                            ,'WideMass_M_MIN_Hee'              : 1500.0 * MeV
-                            ,'WideMass_M_MAX_Hee'              : 2100.0 * MeV
-                            , 'WideMass_M_MIN_HHee'              : 1500.0 * MeV
-                            , 'WideMass_M_MAX_HHee'              : 2100.0 * MeV
                             , 'VtxPVDispChi2_XeeORmue'         : 49.0     #  unitless
                             , 'TrkPVIPChi2_XeeORmue'           : 3.0      # unitless
                             },
@@ -94,9 +89,7 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             , 'Pair_SumAPT_MIN_mumuX'           : 0.0 * MeV
                             , 'Pair_BPVCORRM_MAX_mumuX'         : 3500.0 * MeV
                               },
-                 'EMu' : {'DMassWin'           : 200. * MeV       # MeV
-                             },
-                 'TwoElectronForD2XXH' : {
+                   'TwoElectronForD2XXH' : {
                               'Trk_PT_MIN_eeX'                :  300.0 * MeV# 500.0 /300
                             , 'Trk_P_MIN_eeX'                 : 3000.0 * MeV # 5000.0 /3000
                             , 'Trk_MIPCHI2DV_MIN_eeX'         :    3.0      # 2.0 /0  unitless
@@ -117,39 +110,8 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             , 'Pair_BPVVD_MIN_mueX'            :    0.0 * mm
                             , 'Pair_SumAPT_MIN_mueX'           : 0.0 * MeV
                             , 'Pair_BPVCORRM_MAX_mueX'         : 3500.0 * MeV
-                            , 'ePIDe'                          : 2.        # adimensional
-                   },
-                 'D2PiMueFilter'  :  { 'Sig_M_MIN'                   : 1600.0 * MeV
-                                       , 'Sig_M_MAX'                   : 1950.0 * MeV
-                                       },
-                 'D2KMueFilter'   :  { 'Sig_M_MIN'                   : 1600.0 * MeV
-                                       , 'Sig_M_MAX'                   : 1950.0 * MeV
-                                       },
-                 'D2PieeFilter'  :  { 'Sig_M_MIN'                   : 1600.0 * MeV
-                                       , 'Sig_M_MAX'                   : 1950.0 * MeV
-                                       },
-                 'D2KeeFilter'   :  { 'Sig_M_MIN'                   : 1600.0 * MeV
-                                       , 'Sig_M_MAX'                   : 1950.0 * MeV
-                                       },
-                 'D02PiPiMueFilter':  { 'Sig_M_MIN'                   : 1600.0 * MeV
-                                       , 'Sig_M_MAX'                   : 1950.0 * MeV
-                                       },
-                 'D02KKMueFilter':  { 'Sig_M_MIN'                   : 1600.0 * MeV
-                                       , 'Sig_M_MAX'                   : 1950.0 * MeV
-                                       },
-                 'D02KPiMueFilter' :  { 'Sig_M_MIN'                   : 1600.0 * MeV
-                                       , 'Sig_M_MAX'                   : 1950.0 * MeV
-                                       },
-                 'D02PiPieeFilter':  { 'Sig_M_MIN'                   : 1600.0 * MeV
-                                       , 'Sig_M_MAX'                   : 1950.0 * MeV
-                                       },
-                 'D02KKeeFilter':  { 'Sig_M_MIN'                   : 1600.0 * MeV
-                                     , 'Sig_M_MAX'                   : 1950.0 * MeV
-                                     },
-                 'D02KPieeFilter':  { 'Sig_M_MIN'                   : 1600.0 * MeV
-                                      , 'Sig_M_MAX'                   : 1950.0 * MeV
-                                      },
-
+                   }
+		   
                  }
     
     def stages(self, nickname=""):
@@ -178,8 +140,12 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             D2KMuMuSSComb,
                             D2PieeComb,
                             D2KeeComb,
+                            D2PieeSSComb,
+                            D2KeeSSComb,
                             D2PiMueComb,
                             D2KMueComb,
+                            D2PiMueSSComb,
+                            D2KMueSSComb,
                             Lc2PMuMuComb,
                             Lc2PMuMuSSComb,
                             Lc2PeeComb,
@@ -200,8 +166,12 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             D2KMuMuSSFilter,
                             D2PieeFilter,
                             D2KeeFilter,
+                            D2PieeSSFilter,
+                            D2KeeSSFilter,
                             D2PiMueFilter,
                             D2KMueFilter,
+                            D2PiMueSSFilter,   # New
+                            D2KMueSSFilter,    # New
                             Lc2PMuMuFilter,
                             Lc2PMuMuSSFilter,
                             Lc2PeeFilter,
@@ -225,8 +195,12 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                    'D2KMuMuFilter' : [ D2KMuMuFilter ],
                    'D2PieeFilter' : [ D2PieeFilter ],
                    'D2KeeFilter' : [ D2KeeFilter ],
+                   'D2PieeSSFilter' : [ D2PieeSSFilter ],
+                   'D2KeeSSFilter' : [ D2KeeSSFilter ],
                    'D2PiMueFilter' : [ D2PiMueFilter ],
                    'D2KMueFilter' : [ D2KMueFilter ],
+                   'D2PiMueSSFilter' : [ D2PiMueSSFilter ],
+                   'D2KMueSSFilter' : [ D2KMueSSFilter ],
                    'D2PiMuMuSSFilter' : [ D2PiMuMuSSFilter ],
                    'D2KMuMuSSFilter' : [ D2KMuMuSSFilter ],
                    'Lc2PMuMuFilter' : [ Lc2PMuMuFilter ],

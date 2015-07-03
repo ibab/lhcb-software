@@ -20,15 +20,6 @@ class D2xxCombiner(Hlt2Combiner):
                     "(PT                 > %(XminPT)s * MeV) &" + \
                     "(TRCHI2DOF          < %(XTrackChi2)s  ) &" + \
                     "(MIPCHI2DV(PRIMARY) > %(XminIPChi2)s  )  "
-    # Particle type specific PID
-    d0comb_pid = {
-        "mu" : "",
-        "pi" : "",
-        "K" : "",
-        "p" : "",
-        "e" : "& ( PIDe > %(ePIDe)s )",
-        }
-
     # Cuts on the combination 
     d0comb_combcut = \
                    "(AMAXCHILD(PT) > %(XmaxPT)s   * MeV) &" + \
@@ -64,9 +55,9 @@ class D2xxCombiner(Hlt2Combiner):
         inputs = [ inputlist[xminus] ]  if (xminus == xplus ) else [ inputlist[xminus] , inputlist[xplus]]
         # dictionary of the daughter cuts 
         d0comb_childcut_list =\
-                             ( { xplus+'+'  : self.d0comb_childcut + self.d0comb_pid[xplus] } if ( xplus == xminus ) else \
-                               { xplus+'+'  : self.d0comb_childcut + self.d0comb_pid[xplus],
-                                 xminus+'+' : self.d0comb_childcut + self.d0comb_pid[xminus]}
+                             ( { xplus+'+'  : self.d0comb_childcut } if ( xplus == xminus ) else \
+                               { xplus+'+'  : self.d0comb_childcut,
+                                 xminus+'+' : self.d0comb_childcut}
                                )
         # Decay descriptor 
         decay = "D0 -> "+xplus+"+ "+xminus+"-"    if (xplus == xminus)  else   "[D0 -> "+xplus+"+ "+xminus+"- ]cc"
@@ -145,7 +136,7 @@ class TwoElectronForD2XXHCombiner(Hlt2Combiner):
         #First stage - Combine 2 Body with pt > 500MeV        
         
         inputs = [Hlt2Electrons]
-        Hlt2Combiner.__init__(self, name, ["J/psi(1S) -> e+ e-"], 
+        Hlt2Combiner.__init__(self, name, ["J/psi(1S) -> e+ e-","phi(1020) -> e+ e+", "rho(770)0 -> e- e-"],
                               inputs,
                               dependencies = [PV3D('Hlt2')],
                               DaughtersCuts = { "e+" : twoElectronDaughterCut}, 
@@ -163,7 +154,7 @@ class TwoMuElForD2XXHCombiner(Hlt2Combiner):
                              "& (PT> %(Trk_PT_MIN_mueX)s)" \
                              "& (P> %(Trk_P_MIN_mueX)s)" \
                              "& (MIPCHI2DV(PRIMARY)> %(Trk_MIPCHI2DV_MIN_mueX)s )"
-        electron_pid =   " & (PIDe > %(ePIDe)s )"
+ 
         twoMuElCombCut = "(AM<2100)" \
                          "& ((APT1+APT2)> %(Pair_SumAPT_MIN_mueX)s)" \
                          "& (AMINDOCA('LoKi::TrgDistanceCalculator') < %(Pair_AMINDOCA_MAX_mueX)s )" \
@@ -175,10 +166,10 @@ class TwoMuElForD2XXHCombiner(Hlt2Combiner):
         #First stage - Combine 2 Body with pt > 500MeV        
         
         inputs = [Hlt2Muons,Hlt2Electrons]
-        Hlt2Combiner.__init__(self, name, ["J/psi(1S) -> mu+ e-","phi(1020) -> e+ mu-"], 
+        Hlt2Combiner.__init__(self, name, ["J/psi(1S) -> mu+ e-","phi(1020) -> e+ mu-","rho(770)0 -> mu+ e+", "eta -> mu- e-"],
                               inputs,
                               dependencies = [PV3D('Hlt2')],
-                              DaughtersCuts = { "mu+" : twoMuElDaughterCut, "e-" : twoMuElDaughterCut+electron_pid}, 
+                              DaughtersCuts = { "mu+" : twoMuElDaughterCut, "e-" : twoMuElDaughterCut}, 
                               CombinationCut = twoMuElCombCut,
                               MotherCut = twoMuElMotherCut,
                               Preambulo = [],
@@ -249,7 +240,7 @@ class D2HXXCombiner(Hlt2Combiner):
 class D2HXX_Ele_Combiner(Hlt2Combiner):
     def __init__(self, name, decayDesc, inputSeq):
         from HltTracking.HltPVs import PV3D
-        masscut = "in_range( %(WideMass_M_MIN_Hee)s , M , %(WideMass_M_MAX_Hee)s )"
+        masscut = "in_range( %(WideMass_M_MIN_Hmumu)s , M , %(WideMass_M_MAX_Hmumu)s )"
 
         combcuts = "(AM<2100)" \
                    "& (AMAXCHILD(PT) > %(TrkPtMAX_Hmumu)s) "  \
@@ -278,12 +269,15 @@ D2KMuMuComb = D2HXXCombiner("D2KMuMuComb",[ "D+ -> J/psi(1S) K+", "D- -> J/psi(1
 D2PiMuMuSSComb = D2HXXCombiner("D2PiMuMuSSComb", ["D+ -> phi(1020) pi-", "D- -> rho(770)0 pi+"],[InPartFilterHXX_Pions,TwoMuonForD2XXH])
 D2KMuMuSSComb = D2HXXCombiner("D2KMuMuSSComb", ["D+ -> phi(1020) K-", "D- -> rho(770)0 K+"],[InPartFilterHXX_Kaons,TwoMuonForD2XXH])
 
-
 D2PieeComb = D2HXX_Ele_Combiner("D2PieeComb",[ "D+ -> J/psi(1S) pi+", "D- -> J/psi(1S) pi-"],[InPartFilterHXX_Pions,TwoElectronForD2XXH])
+D2PieeSSComb = D2HXX_Ele_Combiner("D2PieeSSComb",["D+ -> phi(1020) pi-", "D- -> rho(770)0 pi+"],[InPartFilterHXX_Pions,TwoElectronForD2XXH])
 D2KeeComb = D2HXX_Ele_Combiner("D2KeeComb",[ "D+ -> J/psi(1S) K+", "D- -> J/psi(1S) K-"],[InPartFilterHXX_Kaons,TwoElectronForD2XXH])
-D2PiMueComb = D2HXX_Ele_Combiner("D2PiMueComb",[ "D+ -> J/psi(1S) pi+", "D- -> J/psi(1S) pi-","D+ -> phi(1020) pi+", "D- -> phi(1020) pi-"],[InPartFilterHXX_Pions,TwoMuElForD2XXH])
-D2KMueComb = D2HXX_Ele_Combiner("D2KMueComb",[ "D+ -> J/psi(1S) K+", "D- -> J/psi(1S) K-","D+ -> phi(1020) K+", "D- -> phi(1020) K-"],[InPartFilterHXX_Kaons,TwoMuElForD2XXH])
+D2KeeSSComb = D2HXX_Ele_Combiner("D2KeeSSComb",["D+ -> phi(1020) K-", "D- -> rho(770)0 K+"],[InPartFilterHXX_Kaons,TwoElectronForD2XXH])
 
+D2PiMueComb = D2HXX_Ele_Combiner("D2PiMueComb",[ "D+ -> J/psi(1S) pi+", "D- -> J/psi(1S) pi-","D+ -> phi(1020) pi+", "D- -> phi(1020) pi-"],[InPartFilterHXX_Pions,TwoMuElForD2XXH])
+D2PiMueSSComb = D2HXX_Ele_Combiner("D2PiMueSSComb",[ "D+ -> rho(770)0 pi-","D- -> eta pi+"],[InPartFilterHXX_Pions,TwoMuElForD2XXH])
+D2KMueComb = D2HXX_Ele_Combiner("D2KMueComb",[ "D+ -> J/psi(1S) K+", "D- -> J/psi(1S) K-","D+ -> phi(1020) K+", "D- -> phi(1020) K-"],[InPartFilterHXX_Kaons,TwoMuElForD2XXH])
+D2KMueSSComb = D2HXX_Ele_Combiner("D2KMueSSComb",["D+ -> rho(770)0 K-","D- -> eta K+"],[InPartFilterHXX_Kaons,TwoMuElForD2XXH])
 
 
 #Lc2PXX COMBINER
@@ -355,6 +349,10 @@ class D02HHXXCombiner(Hlt2Combiner):
     def __init__(self, name, decayDesc, inputSeq):
         from HltTracking.HltPVs import PV3D
        
+  #      massmin = min(float("%(Sig_M_MIN_HHmumu)s"), float("%(WideMass_M_MIN_HHmumu)s"))
+ #       massmax = max(float("%(Sig_M_MAX_HHmumu)s"), float("%(WideMass_M_MAX_HHmumu)s"))
+
+#        masscut = "in_range(%s,  M, %s)" % (massmin, massmax)
         masscut = "in_range( %(WideMass_M_MIN_HHmumu)s , M , %(WideMass_M_MAX_HHmumu)s )"
         combcuts = "(AM<2100)" \
                    "& (AMAXCHILD(PT) > %(TrkPtMAX_HHmumu)s) "  \
@@ -381,8 +379,12 @@ class D02HHXXCombiner(Hlt2Combiner):
 class D02HHXX_Ele_Combiner(Hlt2Combiner):
     def __init__(self, name, decayDesc, inputSeq):
         from HltTracking.HltPVs import PV3D
+       
+  #      massmin = min(float("%(Sig_M_MIN_HHmumu)s"), float("%(WideMass_M_MIN_HHmumu)s"))
+ #       massmax = max(float("%(Sig_M_MAX_HHmumu)s"), float("%(WideMass_M_MAX_HHmumu)s"))
 
-        masscut = "in_range( %(WideMass_M_MIN_HHee)s , M , %(WideMass_M_MAX_HHee)s )"
+#        masscut = "in_range(%s,  M, %s)" % (massmin, massmax)
+        masscut = "in_range( %(WideMass_M_MIN_HHmumu)s , M , %(WideMass_M_MAX_HHmumu)s )"
         combcuts = "(AM<2100)" \
                    "& (AMAXCHILD(PT) > %(TrkPtMAX_HHmumu)s) "  \
                    "& (AMINCHILD( MIPCHI2DV(PRIMARY) ) > %(TrkPVIPChi2_XeeORmue)s  ) "  \
@@ -428,7 +430,7 @@ D02KPieeComb = D02HHXX_Ele_Combiner("D02KPieeComb",["D0 -> J/psi(1S) K+ pi-","D0
 class D2HXXFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         from HltTracking.HltPVs import PV3D
-        cut  = "in_range(%(Sig_M_MIN)s, M, %(Sig_M_MAX)s)"
+        cut  = "in_range(%(Sig_M_MIN_Hmumu)s, M, %(Sig_M_MAX_Hmumu)s)"
         Hlt2ParticleFilter.__init__(self, name, cut, inputs, dependencies=[PV3D('Hlt2')])
 
 D2PiMuMuFilter = D2HXXFilter("D2PiMuMuFilter",[D2PiMuMuComb])
@@ -438,9 +440,13 @@ D2KMuMuSSFilter = D2HXXFilter("D2KMuMuSSFilter",[D2KMuMuSSComb])
 
 D2PiMueFilter = D2HXXFilter("D2PiMueFilter",[D2PiMueComb])
 D2KMueFilter = D2HXXFilter("D2KMueFilter",[D2KMueComb])
+D2PiMueSSFilter = D2HXXFilter("D2PiMueSSFilter",[D2PiMueSSComb])
+D2KMueSSFilter = D2HXXFilter("D2KMueSSFilter",[D2KMueSSComb])
 
 D2PieeFilter = D2HXXFilter("D2PieeFilter",[D2PieeComb])
 D2KeeFilter = D2HXXFilter("D2KeeFilter",[D2KeeComb])
+D2PieeSSFilter = D2HXXFilter("D2PieeSSFilter",[D2PieeSSComb])
+D2KeeSSFilter = D2HXXFilter("D2KeeSSFilter",[D2KeeSSComb])
 
 #Lc2PXX FILTER
 class Lc2PXXFilter(Hlt2ParticleFilter):
@@ -459,7 +465,7 @@ Lc2PeeFilter = Lc2PXXFilter("Lc2PeeFilter",[Lc2PeeComb])
 class D02HHXXFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         from HltTracking.HltPVs import PV3D
-        cut  = "in_range(%(Sig_M_MIN)s, M, %(Sig_M_MAX)s)"
+        cut  = "in_range(%(Sig_M_MIN_HHmumu)s, M, %(Sig_M_MAX_HHmumu)s)"
         Hlt2ParticleFilter.__init__(self, name, cut, inputs, dependencies=[PV3D('Hlt2')])
 
 
