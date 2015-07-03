@@ -14,57 +14,63 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-07-03 - Marco Clemencic
+ - Added some documentation for the generation of LoKi Functors caches.
+ - Minor improvements to LoKiFunctorsCache.cmake.
+ - Added CMake option (LOKI_BUILD_FUNCTOR_CACHE) to turn on/off build of cache
+   libraries (ON by default).
+
+! 2015-07-03 - Marco Clemencic
  - Moved here the CMake code to generate functors factories from StrippingCache.
 
 ! 2015-06-23 - Vanya Belyaev
 
  - HybridBase.cpp
    modify the functionality to building of C++ cache
-   
+
    Cache building strategy depends on environment variable "LOKI_GENERATE_CPPCODE"
-   positive:  number of files 
-   negative:  number of functors per file 
-   zero:      single file 
+   positive:  number of files
+   negative:  number of functors per file
+   zero:      single file
 
 !========================= LoKiCore v11r23 2015-03-31 =========================
 ! 2015-03-25 - Vanya Belyaev
  -  Functors and Trees
-     add some "move" constructors/assignements 
-     add swapping methods 
-   for decay matching some non-negligible speedup could be expected 
+     add some "move" constructors/assignements
+     add swapping methods
+   for decay matching some non-negligible speedup could be expected
 
 ! 2015-03-20 - Vanya Belyaev
  - ToCpp:
-   Using nice example by Sascha MAzurov, 
-   extend maximal number of arguments from 7 to (compile-time) infinity 
+   Using nice example by Sascha MAzurov,
+   extend maximal number of arguments from 7 to (compile-time) infinity
    (And it is important: Matt Kenzie has 8-argument functor in LoKiTrigger)
-   
+
 ! 2015-03-19 - Vanya Belyaev
  - fix stupid bug in Operations.h
 
 
 ! 2015-03-12 - Vanya Belyaev
- - add "FakeSource" , useful for testing, 
+ - add "FakeSource" , useful for testing,
    in particular for creation of fake streams
 
 ! 2015-03-06 - Vanya Belyaev
- - add 3 and 4-argument variants of no_empty_union 
+ - add 3 and 4-argument variants of no_empty_union
 
 ! 2015-03-06 - Vanya Belyaev
  - add NoEmptyUnion
-   union of two streamers that is empty if one of inputs is empty, 
-   and equal to the union of inputs otherwise 
+   union of two streamers that is empty if one of inputs is empty,
+   and equal to the union of inputs otherwise
 
 
 !========================= LoKiCore v11r22 2015-02-23 =========================
 ! 2015-02-11 - Vanya Belyaev
- - Instrument some destructors 
+ - Instrument some destructors
 
 !  2015-01-13 -> 2015-02-03 - Vanya Belyaev
- - Several commits to add autogeneration of C++ code from functors      
+ - Several commits to add autogeneration of C++ code from functors
 
 ! 2015-01-16 - Vanya Belyaev
- - restore scalers and llstener 
+ - restore scalers and llstener
 
 !========================= LoKiCore v11r21 2014-12-11 =========================
 ! 2014-12-11 - Marco Clemencic

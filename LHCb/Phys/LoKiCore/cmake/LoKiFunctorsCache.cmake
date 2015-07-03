@@ -1,17 +1,63 @@
+################################################################################
+# LoKiFunctorsCache
+# -----------------
+#
+# This module provides a function to generate and build cache libraries for
+# LoKi Functors.
+# @see https://its.cern.ch/jira/browse/LHCBPS-1357
+#
+# Usage: loki_functors_cache(<cache library name> optionfile1 [optionfile2...]
+#                            [LINK_LIBRARIES library1 library2...]
+#                            [INCLUDE_DIRS dir1 dir2...]
+#                            [DEPENDS target1 target2...]
+#                            [SPLIT <N>]
+#                            [FACTORIES factory1 factory2...])
+#
+# where:
+# - <cache library name> defines the name of the generated library
+# - optionfile1 [optionfile2...] are the options defining the functors
+#                                (usually the options used for the application
+#                                we need to generate the cache for)
+# - LINK_LIBRARIES, INCLUDE_DIRS have the same meaning as in gaudi_add_module()
+# - DEPENDS target1 target2... declare tergets to be build before we can
+#                              generate the cache code (e.g. "genconf" steps)
+# - SPLIT <N> stated the number of files to generate per factory (default: 1)
+# - FACTORIES factory1 factory2... name of the hybrids factories that will be
+#                                  invoked (default: CoreFactory, HltFactory,
+#                                  HybridFactory)
+#
+# Note: the CMake option LOKI_BUILD_FUNCTOR_CACHE can be set to False to disable
+#       generation/build of declared functor caches.
+#
+# @author Marco Clemencic <marco.clemencic@cern.ch>
+#
 
 set(LOKI_FUNCTORS_CACHE_POST_ACTION_OPTS
     ${CMAKE_CURRENT_LIST_DIR}/LoKiFunctorsCachePostActionOpts.py
     CACHE FILEPATH "Special options file for LoKi Functors cache generation.")
 mark_as_advanced(LOKI_FUNCTORS_CACHE_POST_ACTION_OPTS)
 
+option(LOKI_BUILD_FUNCTOR_CACHE "Enable building of LoKi Functors Caches."
+       TRUE)
+
 # Usage: loki_functors_cache(cache_name option_file_1 [option_file_2 ...])
 function(loki_functors_cache name)
+  # ignore cache declaration if requested
+  if(NOT LOKI_BUILD_FUNCTOR_CACHE)
+    return()
+  endif()
+
+  # default values
+  set(ARG_FACTORIES CoreFactory HltFactory HybridFactory)
 
   CMAKE_PARSE_ARGUMENTS(ARG "" "SPLIT"
-                            "LIBRARIES;LINK_LIBRARIES;INCLUDE_DIRS;DEPENDS" ${ARGN})
+                            "LINK_LIBRARIES;INCLUDE_DIRS;DEPENDS;FACTORIES" ${ARGN})
+
+  # where all the files are generated
+  file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${name}_srcs)
 
   # Output filename(s)
-  foreach(factory_type CoreFactory HltFactory HybridFactory)
+  foreach(factory_type ${ARG_FACTORIES})
     if(ARG_SPLIT)
       set(idx ${ARG_SPLIT})
       while(${idx} GREATER 0)
@@ -25,12 +71,14 @@ function(loki_functors_cache name)
         else()
           set(idx_string "${idx}")
         endif()
-        set(output FUNCTORS_${factory_type}_${idx_string}.cpp ${output})
+        set(output_names FUNCTORS_${factory_type}_${idx_string}.cpp ${output_names})
+        set(outputs ${name}_srcs/FUNCTORS_${factory_type}_${idx_string}.cpp ${outputs})
         math(EXPR idx "${idx} - 1")
       endwhile()
     else()
       set(ARG_SPLIT 0)
-      set(output FUNCTORS_${factory_type}_0001.cpp ${output})
+      set(output_names FUNCTORS_${factory_type}_0001.cpp)
+      set(outputs ${name}_srcs/FUNCTORS_${factory_type}_0001.cpp)
     endif()
   endforeach()
 
@@ -43,21 +91,25 @@ function(loki_functors_cache name)
   endforeach()
 
   set(tmp_ext pkl)
-  add_custom_command(OUTPUT ${name}.${tmp_ext}
+  add_custom_command(OUTPUT ${name}_srcs/${name}.${tmp_ext}
                      COMMAND ${env_cmd} --xml ${env_xml}
-                       gaudirun.py -n -o ${name}.${tmp_ext} ${inputs} ${LOKI_FUNCTORS_CACHE_POST_ACTION_OPTS}
-                     DEPENDS ${inputs} ${ARG_DEPENDS})
+                       gaudirun.py -n -o ${name}_srcs/${name}.${tmp_ext} ${inputs} ${LOKI_FUNCTORS_CACHE_POST_ACTION_OPTS}
+                     DEPENDS ${inputs} ${ARG_DEPENDS}
+                     COMMENT "Preprocess options for ${name}")
 
-  add_custom_command(OUTPUT ${output}
+  add_custom_command(OUTPUT ${outputs}
                      COMMAND ${env_cmd} --xml ${env_xml} LOKI_GENERATE_CPPCODE=${ARG_SPLIT}
                        gaudirun.py ${name}.${tmp_ext}
-                     COMMAND touch ${output}
-                     DEPENDS ${name}.${tmp_ext})
+                     COMMAND touch ${output_names}
+                     WORKING_DIRECTORY ${name}_srcs
+                     DEPENDS ${name}_srcs/${name}.${tmp_ext}
+                     COMMENT "Generating sources for ${name}")
 
-  gaudi_common_add_build(${output} LIBRARIES ${ARG_LIBRARIES}
-                         LINK_LIBRARIES ${ARG_LINK_LIBRARIES} INCLUDE_DIRS ${ARG_INCLUDE_DIRS})
+  gaudi_common_add_build(${outputs}
+                         LINK_LIBRARIES ${ARG_LINK_LIBRARIES}
+                         INCLUDE_DIRS ${ARG_INCLUDE_DIRS})
 
-  add_library(${name} MODULE ${output})
+  add_library(${name} MODULE ${outputs})
   target_link_libraries(${name} GaudiPluginService
                                 ${ARG_LINK_LIBRARIES})
   _gaudi_detach_debinfo(${name})
