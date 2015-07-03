@@ -1,8 +1,0 @@
-#include "$FARMCONFIGROOT/options/BasicDiskReader.opts"
-#include "$NODE_OPTIONS"
-Runable.Directory                    = "/tmp/OFFLINE_MON";
-Runable.FilePrefix                   = "Run_";
-Runable.Buffer                       = @OnlineEnv.HLT2RecoReader_Output;
-MEPManager.Buffers                   = @OnlineEnv.HLT2RecoReader_Buffers;
-Runable.DeleteFiles                  = true;
-Runable.InitialSleep                 = 0;

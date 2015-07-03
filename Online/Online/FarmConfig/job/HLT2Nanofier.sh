@@ -14,5 +14,5 @@ export TAN_NODE=${DATAINTERFACE};
 echo [DEBUG] SUBFARM_OPTIONS: ${SUBFARM_OPTIONS};
 echo [DEBUG] Eventselector request: ${EVENTSELECTOR_REQ1};
 
-exec -a ${UTGID} ${Class2_task} -opts=../options/HLT2Nanofier.opts
-#exec -a ${UTGID} ${Class1_task} -opts=../options/HLT2Nanofier.opts
+###exec -a ${UTGID} ${Class2_task} -opts=../options/HLT2Nanofier.opts
+exec -a ${UTGID} $gaudi_task -tasktype=LHCb::Class2Task -main=../options/Hlt2Main.opts -opts=../options/HLT2Nanofier.opts

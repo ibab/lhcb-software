@@ -7,4 +7,7 @@ Runable.Buffer                       = @OnlineEnv.Hlt2Reader_Output;
 Runable.DeleteFiles                  = true;
 Runable.InitialSleep                 = 0;
 Runable.GoService                    = "$GO_SERVICE_NAME";
+Runable.PauseSleep                   = 5;  // Optional wait time until 'Output' event queue is empty
 // Runable.GoService                    = "GO_SERVICE_NAME";
+MessageSvc.OutputLevel = 3;
+

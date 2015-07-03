@@ -1,0 +1,33 @@
+#pragma print off
+#include "$INFO_OPTIONS"
+#include "$SUBFARM_OPTIONS"
+#include "$MBM_SETUP_OPTIONS"
+#include "$STATIC_OPTS/SvcMapping.opts"
+#include "$STATIC_OPTS/Monitoring.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.ExtSvc               += {"IncidentSvc", "MEPManager", "EventSelector"};
+ApplicationMgr.Runable               =  "Runable";
+//
+Runable.MEPManager                   = "MEPManager";
+MonitorSvc.CounterUpdateInterval     = 5;
+//
+MEPManager.PartitionBuffers          = @OnlineEnv.PartitionBuffers;
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
+MEPManager.Buffers                   = @OnlineEnv.Hlt2Sender_Buffers;
+
+ApplicationMgr.TopAlg               += {"LHCb::SocketDataSender/SND"};
+SND.DataSink                         = @OnlineEnv.Target;
+SND.Compress                         = 0;
+SND.DataType                         = 3; // MDF_NONE=1, MDF_RECORDS=2, MDF_BANKS=3 
+SND.InputDataType                    = 3;
+
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+EventPersistencySvc.CnvServices      = { "RawDataCnvSvc" };
+EventSelector.MEPManager             = "MEPManager";
+EventSelector.Input                  = @OnlineEnv.Hlt2Sender_Input;
+EventSelector.AllowSuspend           = true;
+EventSelector.Decode                 = false;
+EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
+#include "$STATIC_OPTS/MessageSvc.opts"

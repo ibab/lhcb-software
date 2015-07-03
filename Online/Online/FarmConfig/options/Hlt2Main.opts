@@ -1,0 +1,10 @@
+#pragma print off
+ApplicationMgr.ExtSvc                = {"LHCb::GaudiTask::Configuration/Configuration" };
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+//MessageSvc.fifoPath                  = "$LOGFIFO";
+MessageSvc.OutputLevel               = 4;
+Runable.Wait                         = 1;
+Main.DeclareStateOnPAUSE             = false;

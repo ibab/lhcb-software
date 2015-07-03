@@ -13,8 +13,6 @@
 # Debug:    -sleep=20 \
 #
 #
-export PRINT_LEVEL=4;
-#export PRINT_LEVEL=2;
 if test "${MOORESTARTUP_MODE}" = "RESTORE";
 then
     mkdir -p /tmp/Commands; # Needed by the tasks
@@ -30,6 +28,20 @@ then
 	fi;
     fi;
 fi;
+#
+#
+#
+ctrl_args="";
+if test "${PARTITION_NAME}" = "LHCb2"; then
+    # This will make the controller wait until on PAUSE all slaves are paused.
+    #export PRINT_LEVEL=3;
+    export PRINT_LEVEL=4;
+    #ctrl_args="-fsm=DAQPause";
+    #echo "[INFO] ${UTGID} FSM protocol: ${ctrl_args}";
+else
+    export PRINT_LEVEL=4;
+    #export PRINT_LEVEL=2;
+fi;
 exec -a ${UTGID} fsm_ctrl.exe \
     -print=${PRINT_LEVEL} -sleep=0 \
     -partition=${PARTITION_NAME} \
@@ -37,4 +49,4 @@ exec -a ${UTGID} fsm_ctrl.exe \
     -mode=${MOORESTARTUP_MODE} \
     -taskconfig=${ARCH_FILE} \
     -bindcpu=1 \
-    -count=${NBOFSLAVES}
+    -count=${NBOFSLAVES} ${ctrl_args}
