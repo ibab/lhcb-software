@@ -75,7 +75,7 @@ default_config = {
 	"GEC_nLongTrk"        : 250.  , #adimensional
 	"TRGHOSTPROB"         : 0.5    ,#adimensional
 	#Muons
-	"MuonGHOSTPROB"       : 0.5    ,#adimensional
+	"MuonGHOSTPROB"       : 0.35  ,#adimensional
 	"MuonTRCHI2"          : 4.    ,#adimensional
 	"MuonP"               : 3000. ,#MeV
 	"MuonPTight"          : 6000. ,#MeV
@@ -87,13 +87,14 @@ default_config = {
 	"MuonMINIPCHI2"       : 12    ,#adminensional
 	#Xu
 	#K channel
-	"KaonTRCHI2"          : 6.   ,#adimensional
-	"KaonP"               : 3000. ,#MeV
-	"KaonPT"              : 800.  ,#MeV
-	"KaonPIDK"            : 5.    ,#adimensional 
-	"KaonPIDmu"           : 0.    ,#adimensional
-	"KaonPIDp"            : 0.    ,#adimensional
-	"KaonPIDK_phi"        : 0.    ,#adimensional 
+	"KaonTRCHI2"          : 6.     ,#adimensional
+	"KaonP"               : 3000.  ,#MeV
+	"KaonPTight"          : 10000. ,#MeV
+	"KaonPT"              : 800.   ,#MeV
+	"KaonPIDK"            : 5.     ,#adimensional 
+	"KaonPIDmu"           : 5.     ,#adimensional
+	"KaonPIDp"            : 5.     ,#adimensional
+	"KaonPIDK_phi"        : 0.     ,#adimensional 
 	"KaonPIDmu_phi"       : -2.    ,#adimensional
 	"KaonPIDp_phi"        : -2.    ,#adimensional
 	"KaonMINIPCHI2"       : 16     ,#adminensional
@@ -148,10 +149,11 @@ default_config = {
 	"BVCHI2DOF"           : 4.    ,#adminensional
 	"BVCHI2DOFTight"      : 2.    ,#adminensional
 	"BDIRA"               : 0.99  ,#adminensional
-	"BDIRATight"          : 0.999  ,#adminensional
+	"BDIRAMed"            : 0.994 ,#adminensional
+	"BDIRATight"          : 0.999 ,#adminensional
 	"BFDCHI2HIGH"         : 100.  ,#adimensional
 	"BFDCHI2Tight"        : 120.  ,#adimensional
-	"BFDCHI2ForPhi"       : 50.  ,#adimensional
+	"BFDCHI2ForPhi"       : 50.   ,#adimensional
 	#B Mass Minima
 	"KMuMassLowTight"     : 1500. ,#MeV
 	"PhiMu_MCORR"         : 2500. ,#MeV
@@ -213,6 +215,7 @@ class B2XuMuNuBuilder(LineBuilder):
         ,"MuonMINIPCHI2"       
         ,"KaonTRCHI2"          
         ,"KaonP"               
+        ,"KaonPTight"               
         ,"KaonPT"              
         ,"KaonPIDK"             
         ,"KaonPIDmu"           
@@ -264,6 +267,7 @@ class B2XuMuNuBuilder(LineBuilder):
         ,"BVCHI2DOF"
         ,"BVCHI2DOFTight"      
         ,"BDIRA"
+        ,"BDIRAMed"
         ,"BDIRATight"               
         ,"BFDCHI2HIGH"
         ,"BFDCHI2Tight"         
@@ -365,7 +369,7 @@ class B2XuMuNuBuilder(LineBuilder):
                "&(PIDmu-PIDK> %(MuonPIDK)s )&(MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s)"\
                
     def _NominalKSelection( self ):
-        return "(TRCHI2DOF < %(KaonTRCHI2)s )&  (P> %(KaonP)s *MeV) &  (PT> %(KaonPT)s *MeV)"\
+        return "(TRCHI2DOF < %(KaonTRCHI2)s )&  (P> %(KaonPTight)s *MeV) &  (PT> %(KaonPT)s *MeV)"\
                "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
                "& (PIDK-PIDpi> %(KaonPIDK)s )& (PIDK-PIDp> %(KaonPIDp)s )& (PIDK-PIDmu> %(KaonPIDmu)s ) "\
                "& (MIPCHI2DV(PRIMARY)> %(KaonMINIPCHI2)s )"
@@ -555,7 +559,6 @@ class B2XuMuNuBuilder(LineBuilder):
         from StandardParticles import StdLooseKaons
         
         _ka = FilterDesktop( Code = self._KforPhiSelection() % self._config )
-        print self._KforPhiSelection()
         _kaSel=Selection("K_Phi"+self._name,
                          Algorithm=_ka,
                          RequiredSelections = [StdLooseKaons])
@@ -848,8 +851,8 @@ class B2XuMuNuBuilder(LineBuilder):
         _KMu = CombineParticles(
             DecayDescriptors = ["[B_s~0 -> K+ mu-]cc"],
             CombinationCut = "(AM>%(KMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self._config,
-            MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOFTight)s) & (BPVDIRA> %(BDIRATight)s)"\
-            "& (BPVVDCHI2 >%(BFDCHI2Tight)s)  & (ratio > 0.4)"
+            MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRAMed)s)"\
+            "& (BPVVDCHI2 >%(BFDCHI2Tight)s)"
             % self._config,
             ReFitPVs = True
             )
@@ -890,8 +893,9 @@ class B2XuMuNuBuilder(LineBuilder):
         _KMuSS = CombineParticles(
             DecayDescriptors = ["[B_s~0 -> K- mu-]cc"],
             CombinationCut = "(AM>%(KMuMassLowTight)s*MeV) & (AM<%(XMuMassUpper)s*MeV)" % self._config,
-            MotherCut = " (VFASPF(VCHI2/VDOF)< %(BVCHI2DOFTight)s) & (BPVDIRA> %(BDIRATight)s)"\
-            "& (BPVVDCHI2 >%(BFDCHI2Tight)s)  & (ratio > 0.4)" % self._config,
+            MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRAMed)s)"\
+            "& (BPVVDCHI2 >%(BFDCHI2Tight)s)"
+            % self._config,
             ReFitPVs = True
             )
         _KMuSS.Preambulo = [ "from LoKiPhys.decorators import *",

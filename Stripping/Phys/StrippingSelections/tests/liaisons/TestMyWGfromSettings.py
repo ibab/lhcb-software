@@ -21,7 +21,7 @@ juggler = RawEventJuggler( DataOnDemand=True, Input=2.0, Output=4.0 )
 
 
 # Specify the name of your configuration
-my_wg='Charm' #FOR LIAISONS
+my_wg='ALL' #FOR LIAISONS
 stripping='stripping23'
 
 

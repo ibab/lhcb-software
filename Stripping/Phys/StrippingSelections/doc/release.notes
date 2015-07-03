@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-03 - Michael Kolpin
+ - Fix to StrippingSL/StrippingB2XuMuNu.py
+
 ! 2015-06-29 - Marco Gersabeck
  - Fixes to StrippingDstarD0ToHHPi0.py and StrippingD2hh.py
 
