@@ -6,7 +6,7 @@ find_package(GaudiProject)
 #---------------------------------------------------------------
 
 # Declare project name and version
-gaudi_project(Moore v23r7p3
+gaudi_project(Moore v23r7p4
               USE Hlt v23r7p3
               DATA AppConfig VERSION v3r*
                    FieldMap VERSION v5r*
