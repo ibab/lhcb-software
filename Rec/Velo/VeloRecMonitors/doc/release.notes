@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2015-07-03 - Shanzhen Chen
+ - Add few histogrms in VeloClusterMonitor
+ - Implement convoluted Landau and Gaussian function fit in VeloClusterMonitor
+
 ! 2015-06-23 - Marco Cattaneo
  - Remove obsolete special case for Velo track location on RDST
 
