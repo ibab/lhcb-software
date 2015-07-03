@@ -1,5 +1,7 @@
 # Each stage must specify its own inputs
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
+from LoKiTrigger.decorators import *
+
 
 from HltTracking.HltPVs import PV3D
 from Inputs import TrackFittedDiMuon
@@ -38,13 +40,20 @@ class DetachedDiMuonHeavyFilter(Hlt2ParticleFilter):
 class SoftDiMuonFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         code = ("(MINTREE('mu-' == ABSID, MIPDV(PRIMARY)) > %(IP)s)" +
-                " & (MM < %(MaxMass)s) & (PT> %(Pt)s)" +
-                " & (ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > %(KsVeto)s ) " +
-                " & (MINTREE('mu-' == ABSID, PT) > %(MuPt)s)" +
+                " & (CHILDCUT((TRGHOSTPROB < %(TRACK_TRGHOSTPROB_MAX)s),1))"
+                " & (CHILDCUT((TRGHOSTPROB < %(TRACK_TRGHOSTPROB_MAX)s),2))"
+                " & (TRCUT (TrIDC('isTT') > %(TTHits)s))" +
+                " & (MINTREE('mu-' == ABSID, MIPCHI2DV(PRIMARY)) > %(IPChi2Min)s)" +
+                " & (MAXTREE('mu-' == ABSID, MIPCHI2DV(PRIMARY)) < %(IPChi2Max)s)" +
+                " & ( VFASPF (sqrt(VX*VX+VY*VY)) > %(Rho)s) " +
+                " & ( VFASPF ( VZ ) > %(SVZ)s) " +
+                " & ((MIPDV(PRIMARY)/BPVVDZ)< %(MaxIpDistRatio)s)"+
+                " & (MM < %(MaxMass)s)" +
                 " & (VFASPF(VCHI2PDOF)<%(VertexChi2)s )" +
-                " & (MAXTREE('mu-' == ABSID, TRCHI2DOF) < %(TrChi2Tight)s)" +
                 " & (DOCAMAX < %(doca)s)" +
-                " & (BPVVDZ > %(MinVDZ)s) "
+                " & (BPVVDZ > %(MinVDZ)s) " +
+                "&  (BPVDIRA > %(MinBPVDira)s) " +
+                "& (PCUTA (ALV (1,2) < %(cosAngle)s))"  
                 )
         inputs = [TrackFittedDiMuon]
         Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True)
