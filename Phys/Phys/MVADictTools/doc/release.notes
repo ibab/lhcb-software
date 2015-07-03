@@ -1,8 +1,11 @@
+
 ----------------------------------------------------------------------------
 ! Package     : Phys/MVADictTools
 ! Responsible : Sam Hall, Sebastian Neubert
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
+
+!========================= MVADictTools v1r9p1 2015-07-03 =======================
 
 ! 2015-07-03 - Roel Aaij
  - Fix resolution of environment variables when opening files.
