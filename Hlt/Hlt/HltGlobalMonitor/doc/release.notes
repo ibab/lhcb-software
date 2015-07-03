@@ -5,6 +5,8 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+!========================= HltGlobalMonitor v5r0p1 2015-07-03 =========================
+
 ! 2015-07-03 - Roel Aaij
  - Add safety check on time per event to HltGLobalMonitor.
  - Check for presence of State parameter in Magnet Set current condition; it seems

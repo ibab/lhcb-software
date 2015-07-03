@@ -4,7 +4,7 @@
 # Maintainer : Eric van Herwijnen
 #============================================================================
 package           HltGlobalMonitor
-version           v5r0
+version           v5r0p1
 
 # Structure
 #============================================================================
