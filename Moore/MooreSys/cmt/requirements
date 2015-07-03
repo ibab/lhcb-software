@@ -1,5 +1,5 @@
 package MooreSys
-version           v23r7p3
+version           v23r7p4
 branches doc cmt
 
 #=======================================================
@@ -9,6 +9,10 @@ branches doc cmt
 use  Moore               v23r7p2    Hlt
 use  IndependenceTests   v1r10      Hlt
 use  L0App               v2r4       L0
+
+# Packages only included in this patch release
+use HltGlobalMonitor     v5r0p1     Hlt
+use MVADictTools         v1r9p1     Phys
 
 # Declare this as a container package
 apply_pattern container_package
