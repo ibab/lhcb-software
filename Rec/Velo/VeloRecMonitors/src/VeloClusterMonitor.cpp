@@ -152,7 +152,7 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
       "Active chip links versus sensor",
       -0.5, 131.5, 132, -0.5, 63.5, 64 );
   m_hCluADC_low = book1D( "Cluster ADC value (low ADC clusters)", "ADC value per cluster (low ADC clusters)",
-      -0.5, 20+0.5, 84 );
+      -0.5, 20+0.5, 21 );
   m_histCluADC_FitParLandauWidth = Gaudi::Utils::Aida2ROOT::aida2root( 
       book1D( "Cluster ADC value fit parameter LandauWidth", "ADC value per cluster fit parameter LandauWidth",
 	-0.5, 0.5, 1 ));
