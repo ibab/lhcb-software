@@ -147,6 +147,56 @@ run_view_pages = OrderedDict([
                 'title': 'Number of strips per cluster versus sensor',
                 'short': 'Strips per cluster vs. sensor',
                 'name': 'Velo/VeloClusterMonitor/Cluster size vs sensor'
+            },
+            {
+                'title': 'Cluster ADC value',
+                'short': 'Cluster ADC value',
+                'name': 'Velo/VeloClusterMonitor/Cluster ADC value'
+            },
+            {
+                'title': 'Cluster ADC values vs sensor',
+                'short': 'Cluster ADC values vs sensor',
+                'name': 'Velo/VeloClusterMonitor/Cluster ADC values vs sensor'
+            },
+            {
+                'title': 'Number of VELO clusters per event for each sensor',
+                'short': 'Clusters per event per sensor',
+                'name': 'Velo/VeloClusterMonitor/# VELO clusters sensor {0}',
+                'sensor_dependent': True
+            },
+            {
+                'title': 'Cluster ADC values for each sensor',
+                'short': 'Cluster ADC values for each sensor',
+                'name': 'Velo/VeloClusterMonitor/Cluster ADC value sensor {0}',
+                'sensor_dependent': True
+            },
+            {
+                'title': 'Rate vs DistToM2[um]',
+                'short': 'Rate vs DistToM2[um]',
+                'name': 'Velo/VeloTrackMonitor/Rate_DistToM2',
+                'options': {
+                    'yAxisMinimum': 0,
+                    'yAxisMaximum': 1
+                }
+            },
+            {
+                'title': 'Rate vs DistToOutStrip[um]',
+                'short': 'Rate vs DistToOutStrip[um]',
+                'name': 'Velo/VeloTrackMonitor/Rate_DistToOutStrip',
+                'options': {
+                    'yAxisMinimum': 0,
+                    'yAxisMaximum': 1
+                }
+            },
+            {
+                'title': 'Cluster ADC values fit parameter : MPV',
+                'short': 'Cluster ADC values fit parameter : MPV',
+                'name': 'Velo/VeloClusterMonitor/Cluster ADC value MPV vs Sensor number'
+            },
+            {
+                'title': 'Cluster ADC values fit parameter : FWHM',
+                'short': 'Cluster ADC values fit parameter : FWHM',
+                'name': 'Velo/VeloClusterMonitor/Cluster ADC value FWHM vs Sensor number'
             }
         ]
     }),
