@@ -135,7 +135,6 @@ StatusCode AlignOnlineIterator::initialize()
   {
     error() << "cannot retrieve the Publishing Service" << endmsg;
   }
-
   sc = service("UpdateManagerSvc",m_updateMgrSvc, false);
   if (!sc.isSuccess())  return Error("==> Failed to retrieve UpdateManagerSvc",  StatusCode::FAILURE);
 
@@ -174,6 +173,9 @@ StatusCode AlignOnlineIterator::initialize()
   }
   fflush(stdout);
 
+  // set reference base
+  m_parent->setReferenceBase(0);
+  
   return sc;
 }
 
