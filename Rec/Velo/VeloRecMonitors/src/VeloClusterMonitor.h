@@ -16,6 +16,9 @@
 
 /** @class VeloClusterMonitor VeloClusterMonitor.h
  *  
+ *  @author Shanzhen Chen
+ *  @date   2015-07-03
+ *
  *  @author Eduardo Rodrigues
  *  @date   2008-08-18
  *
@@ -42,7 +45,13 @@ namespace Velo
     virtual StatusCode initialize();    ///< Algorithm initialization
     virtual StatusCode execute   ();    ///< Algorithm execution
     virtual StatusCode finalize  ();    ///< Algorithm finalization
-    
+//    Double_t langaufun(Double_t *x, Double_t *par);
+//    TF1 *langaufit(TH1D *his, Double_t *fitrange, Double_t *startvalues,
+//                   Double_t *parlimitslo, Double_t *parlimitshi,
+//                   Double_t *fitparams,
+//                   Double_t *fiterrors, Double_t *ChiSqr, Int_t *NDF);
+//    Int_t langaupro(double *params, double &maxx, double &FWHM) ;
+   
   protected:
     
   private:
@@ -97,6 +106,8 @@ namespace Velo
     TH1D* m_histCluADC_Sensor_FitParMPV;
     TH1D* m_histCluADC_Sensor_FitParArea;
     TH1D* m_histCluADC_Sensor_FitParGSigma;
+    TH1D* m_histCluADC_Sensor_MPV;
+    TH1D* m_histCluADC_Sensor_FWHM;
     TF1* func[84];
     TF1* func_all;
 

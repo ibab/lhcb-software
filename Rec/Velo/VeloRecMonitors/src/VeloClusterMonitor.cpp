@@ -48,7 +48,7 @@
 // VELO clusters monitoring algorithm.
 // Produces a set of histograms from the clusters bank in the TES.
 //
-// 2015-07-02 : Shanzhen Chen
+// 2015-07-03 : Shanzhen Chen
 // 2008-08-18 : Eduardo Rodrigues
 // 2008-06-28 : Mark Tobin, Kazu Akiba
 // 2008-04-30 : Aras Papadelis, Thijs Versloot
@@ -176,6 +176,12 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
 	-0.5, 131+0.5, 131+1 ));
   m_histCluADC_Sensor_FitParGSigma = Gaudi::Utils::Aida2ROOT::aida2root(
       book1D( "Cluster ADC value fit parameter GSigma vs Sensor number", "ADC value per cluster fit parameter GSigma vs Sensor number",
+	-0.5, 131+0.5, 131+1 ));
+  m_histCluADC_Sensor_MPV= Gaudi::Utils::Aida2ROOT::aida2root(
+      book1D( "Cluster ADC value MPV vs Sensor number", "ADC value per cluster MPV vs Sensor number",
+	-0.5, 131+0.5, 131+1 ));
+  m_histCluADC_Sensor_FWHM= Gaudi::Utils::Aida2ROOT::aida2root(
+      book1D( "Cluster ADC value FWHM vs Sensor number", "ADC value per cluster FWHM vs Sensor number",
 	-0.5, 131+0.5, 131+1 ));
   char hname[100];
   char hname1[100];
@@ -316,6 +322,112 @@ Double_t langaufun(Double_t *x, Double_t *par) {
   return (par[2] * step * sum * invsq2pi / par[3]);
 }
 
+//=============================================================================
+// Looking for MPV and FWHM
+//=============================================================================
+
+Int_t langaupro(Double_t *params,Double_t &maxx,Double_t &FWHM) {
+
+  // Seaches for the location (x value) at the maximum of the
+  // Landau-Gaussian convolute and its full width at half-maximum.
+
+  Double_t p,x,fy,fxr,fxl;
+  Double_t step;
+  Double_t l,lold;
+  //Double_t maxx;
+  //Double_t FWHM;
+  Int_t i = 0;
+  Int_t MAXCALLS = 10000;
+
+
+  // Search for maximum
+
+  p = params[1] - 0.1 * params[0];
+  step = 0.05 * params[0];
+  lold = -2.0;
+  l    = -1.0;
+
+
+  while ( (l != lold) && (i < MAXCALLS) ) {
+    i++;
+
+    lold = l;
+    x = p + step;
+    l = langaufun(&x,params);
+
+    if (l < lold)
+      step = -step/10;
+
+    p += step;
+  }
+
+  if (i == MAXCALLS)
+    return (-1);
+
+  maxx = x;
+
+  fy = l/2;
+
+
+  // Search for right x location of fy
+
+  p = maxx + params[0];
+  step = params[0];
+  lold = -2.0;
+  l    = -1e300;
+  i    = 0;
+
+
+  while ( (l != lold) && (i < MAXCALLS) ) {
+    i++;
+
+    lold = l;
+    x = p + step;
+    l = TMath::Abs(langaufun(&x,params) - fy);
+
+    if (l > lold)
+      step = -step/10;
+
+    p += step;
+  }
+
+  if (i == MAXCALLS)
+    return (-2);
+
+  fxr = x;
+
+
+  // Search for left x location of fy
+
+  p = maxx - 0.5 * params[0];
+  step = -params[0];
+  lold = -2.0;
+  l    = -1e300;
+  i    = 0;
+
+  while ( (l != lold) && (i < MAXCALLS) ) {
+    i++;
+
+    lold = l;
+    x = p + step;
+    l = TMath::Abs(langaufun(&x,params) - fy);
+
+    if (l > lold)
+      step = -step/10;
+
+    p += step;
+  }
+
+  if (i == MAXCALLS)
+    return (-3);
+
+
+  fxl = x;
+
+  FWHM = fxr - fxl;
+  return 1;
+}
+
 
 //=============================================================================
 // Monitor the VeloClusters
@@ -360,7 +472,6 @@ void Velo::VeloClusterMonitor::monitorClusters() {
     double adc           = cluster -> totalCharge();
 
     m_hCluSize->fill(nstrips);
-    //m_hCluADC->fill(adc);
     m_hCluADC_low->fill(adc);
     m_histCluADC->Fill(adc);
 
@@ -533,7 +644,11 @@ unsigned int Velo::VeloClusterMonitor::getNClustersFromRaw() {
 //=============================================================================
 StatusCode Velo::VeloClusterMonitor::finalize() {
 
+  Double_t fp[84][4];
   TF1 *fit[84];
+  Double_t mpv;
+  Double_t FWHM;
+  Double_t langau_return;
   for (int i = 0; i < 84; i++){
     if (m_histCluADC_Sensor[i]->Integral("width")==0) ; 
     else{
@@ -570,6 +685,21 @@ StatusCode Velo::VeloClusterMonitor::finalize() {
 	m_histCluADC_Sensor_FitParArea->SetBinContent(i+1+22,fit[i]->GetParameter(2));
 	m_histCluADC_Sensor_FitParGSigma->SetBinContent(i+1+22,fit[i]->GetParameter(3));
 
+      }
+      fp[i][0]=fit[i]->GetParameter(0);
+      fp[i][1]=fit[i]->GetParameter(1);
+      fp[i][2]=fit[i]->GetParameter(2);
+      fp[i][3]=fit[i]->GetParameter(3);
+      langau_return = langaupro(fp[i],mpv,FWHM);
+      if (langau_return > 0 ) { 
+	if (i<42){
+	  m_histCluADC_Sensor_MPV->SetBinContent(i+1,mpv);
+	  m_histCluADC_Sensor_FWHM->SetBinContent(i+1,FWHM);
+	}
+	else{ 
+	  m_histCluADC_Sensor_MPV->SetBinContent(i+1+22,mpv);
+	  m_histCluADC_Sensor_FWHM->SetBinContent(i+1+22,FWHM);
+	}
       }
     }
     //
