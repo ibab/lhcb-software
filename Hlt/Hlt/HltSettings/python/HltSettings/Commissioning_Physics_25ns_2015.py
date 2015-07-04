@@ -175,7 +175,9 @@ class Commissioning_Physics_25ns_2015( object ):
                                                                               'MultiMuonNoL0'    : None
                                                                              }
                                                , 'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.1,
-                                                                                'Hlt1MultiMuonNoL0'  : 1. }
+                                                                                'Hlt1DiMuonNoL0'  : 0.01,
+                                                                                'Hlt1MultiMuonNoL0'  : 0.01
+                                                                                }
                                                }
                        , Hlt1L0LinesConf :     {  'Postscale' : { 'Hlt1L0AnyRateLimited'       : 'RATE(1)'
                                                                 , 'Hlt1L0AnyNoSPDRateLimited'  : 'RATE(1)'

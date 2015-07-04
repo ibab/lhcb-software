@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-07-04 - Francesco Dettori
+ - Adding 0.01 prescale to Hlt1DiMuonNoL0 and Hlt1MultiMuonNoL0 in settings for 25 ns running. 
+
 !========================= HltSettings v6r16p1 2015-07-01 =========================
 
 ! 2015-07-01 - Christian Linn
