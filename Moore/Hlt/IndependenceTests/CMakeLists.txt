@@ -7,7 +7,7 @@ gaudi_depends_on_subdirs(Event/HltEvent
                          GaudiAlg
                          GaudiKernel
                          Hlt/HltDAQ
-                         Hlt/HltMonitor)
+                         Hlt/HltMonitoring)
 
 find_package(Boost COMPONENTS program_options)
 

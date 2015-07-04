@@ -7,7 +7,7 @@ package           IndependenceTests
 version           v1r10
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc python src
 #============================================================================
@@ -19,7 +19,7 @@ use     HltDAQ                  v*      Hlt
 use     GaudiKernel             v*
 use     GaudiAlg                v*
 use     HltEvent                v*      Event
-use     HltMonitor              v*      Hlt
+use     HltMonitoring           v*      Hlt
 
 apply_pattern install_more_includes more=Independence
 
