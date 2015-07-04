@@ -121,17 +121,18 @@ void VPlot::addStatsBox(VCustomPlot * vcp, bool isPopUp) {
     lay->setVerticalSpacing(0);
     lay->setHorizontalSpacing(0);
     QLabel * lab;
-    QFont f(font().family(), 8);
+    QFont f(font().family(), 10);
     QPalette p;
     p.setColor(QPalette::WindowText, Qt::black);
 
     int irow = 0;
     for (std::vector<VPlottable*>::iterator iplottable = m_plottables.begin();
        iplottable!= m_plottables.end(); iplottable++) {
-      lab = new QLabel((*iplottable)->m_name.c_str());
-      lab->setFont(f);
-      lay->addWidget(lab, irow, 1, 1, 1);
-      lab->setPalette(p);
+       lab = new QLabel((*iplottable)->m_name.c_str());
+       lab->setFont(f);
+       lay->addWidget(lab, irow, 1, 1, 1);
+       lab->setPalette(p);
+       lab->setWordWrap(true);
 
       for (unsigned int istat = 0; istat < (*iplottable)->m_statsTitles.size(); istat++) {
         lab = new QLabel(((*iplottable)->m_statsTitles[istat] + " " + (*iplottable)->m_statsValues[istat]).c_str());
@@ -156,7 +157,7 @@ QWidget * VPlot::exportStatsBox() {
   lay->setVerticalSpacing(0);
   lay->setHorizontalSpacing(0);
   QLabel * lab;
-  QFont f(font().family(), 12);
+  QFont f(font().family(), 13);
   //f.setBold(true);
   QPalette p;
   p.setColor(QPalette::WindowText, Qt::black);
@@ -168,7 +169,7 @@ QWidget * VPlot::exportStatsBox() {
   int irow = 0;
   for (std::vector<VPlottable*>::iterator iplottable = m_plottables.begin();
      iplottable!= m_plottables.begin() + 1; iplottable++) {
-    lab = new QLabel((*iplottable)->m_name.c_str());
+    lab = new QLabel(" ");
     lab->setFont(f);
     lab->setWordWrap(true);
     lay->addWidget(lab, lay->rowCount(), 0, 2, 2);
@@ -256,7 +257,7 @@ void VPlot::add1dPlot(VCustomPlot * vcp, VPlottable* plottable) {
   }
 
   if (plottable->m_plottableStyle == 2) {
-    // Like a TGraph with scatter points (red line and discs).
+    // Like a TGraph with scatter points (blue line and discs).
     QCPScatterStyle ss(QCPScatterStyle::ssDisc, Qt::blue, 6);
     vcp->m_qcp->graph()->setScatterStyle(ss);
     vcp->m_qcp->graph()->setPen(QPen(Qt::blue));

@@ -33,6 +33,7 @@ public:
   std::string * m_dataDir;
   QTextBrowser * m_textBrowser;
   void notify(std::string);
+  bool m_waitSwitch;
 
   VPlotOps(QGroupBox*, std::string *);
   void newSelection(VPlot*, bool);

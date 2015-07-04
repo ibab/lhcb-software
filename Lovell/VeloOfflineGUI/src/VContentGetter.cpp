@@ -2,6 +2,11 @@
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
+//#include "PythonQt3.0/src/PythonQt.h"
+//#include "TPython.h"
+#include <unistd.h>
+
+
 
 class jsonPlottable : public VPlottable {
 public:
@@ -24,8 +29,8 @@ public:
     std::string * dataDir = m_plot->m_plotOps->m_dataDir;
     command += " --run-data-dir=" + (*dataDir);
     command += " --no-reference";
-    std::cout<<"Sending command: "<<std::endl;
-    std::cout<<command<<std::endl;
+//    std::cout<<"Sending command: "<<std::endl;
+//    std::cout<<command<<std::endl;
     in = popen(command.c_str(), "r");
 
     std::string rawData;
@@ -64,12 +69,6 @@ public:
     	else std::cout<<"Unknown root object: "<<className<<std::endl;
     }
     else std::cout<<"Unknown root object: "<<className<<std::endl;
-
-    if (v["data"].HasMember("yAxisMaximum")) {
-    	m_plot->m_yRangeSpecified = true;
-    	m_plot->m_yLow = v["data"]["yAxisMinimum"].GetDouble();
-    	m_plot->m_yUp = v["data"]["yAxisMaximum"].GetDouble();
-    }
   }
 
 
@@ -121,7 +120,6 @@ public:
     m_plot->m_yAxisTitle = a[1].GetString();
     std::cout<<"Plot retrieval successful: "<<m_name<<std::endl;
 
-    if ((*d)["data"]["asPoints"].GetBool()) m_plottableStyle = 2;
   }
 
   //___________
@@ -489,8 +487,8 @@ VTabContent * VContentGetter::veloFileConfigs(VPlotOps * plotOps, std::string in
   }
 
   jsonToOps(&allRawData, &ops);
-  fourPlotsPerTabLimiter(&ops);
-  findChildren(topDummyTab, &allTabs, &ops); // Called recursively.
+  //fourPlotsPerTabLimiter(&ops);
+  findChildren(topDummyTab, &allTabs, &ops, 0); // Called recursively.
   findPlots(&allTabs, &ops, plotOps);
   return topDummyTab;
 }
@@ -518,12 +516,43 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
     	for (rapidjson::SizeType i = 0; i < numPlots; ++i) {
     		std::vector<std::string> plotInfo;
     		const rapidjson::Value &plot = plots[i];
+        std::string parentTabName;
+        if (tab.HasMember("layout")) parentTabName = tab["title"].GetString();
+        else {
+          parentTabName = plot["title"].GetString();
+          std::vector<std::string> tabInfo2;
+          tabInfo2.push_back("Tab");
+          tabInfo2.push_back(plot["title"].GetString());
+          tabInfo2.push_back(tab["title"].GetString());
+          ops->push_back(tabInfo2);
+        }
+
     		plotInfo.push_back("Plot");
     		plotInfo.push_back(plot["title"].GetString());
-    		plotInfo.push_back(tab["title"].GetString());
+    		plotInfo.push_back(parentTabName);
     		plotInfo.push_back(plot["name"].GetString());
     	  if (plot["sensor_dependent"].GetBool()) plotInfo.push_back("multipleModules");
     	  else plotInfo.push_back("singleModule");
+        if (plot["options"]["asPoints"].GetBool()) plotInfo.push_back("2");
+        else plotInfo.push_back("1");
+
+
+        if (plot["options"].HasMember("yAxisMinimum") && plot["options"].HasMember("yAxisMaximum")) {
+          plotInfo.push_back("true");
+          std::stringstream ss1;
+          std::stringstream ss2;
+          ss1 << plot["options"]["yAxisMinimum"].GetDouble();
+          ss2 << plot["options"]["yAxisMaximum"].GetDouble();
+
+          plotInfo.push_back(ss1.str());
+          plotInfo.push_back(ss2.str());
+        }
+        else {
+          plotInfo.push_back("false");
+          plotInfo.push_back("0.0");
+          plotInfo.push_back("0.0");
+        }
+        
     	  ops->push_back(plotInfo);
     	}
     }
@@ -535,15 +564,16 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
 
 void VContentGetter::findChildren(VTabContent * parentTab,
     std::vector<VTabContent*> * allTabs,
-    std::vector< std::vector< std::string > > * ops)
+    std::vector< std::vector< std::string > > * ops, int depth)
 {
   std::vector< std::vector< std::string > >::iterator iop;
   for (iop = ops->begin(); iop != ops->end(); iop++) {
     if ((*iop)[0] != "Tab" || (*iop)[0].substr(0, 1) == "#") continue;
     if ((*iop)[2] == parentTab->m_title) {
       VTabContent * tab = new VTabContent((*iop)[1], parentTab);
+      tab->m_depth = depth;
       allTabs->push_back(tab);
-      findChildren(tab, allTabs, ops);
+      findChildren(tab, allTabs, ops, depth+1);
     }
   }
 }
@@ -555,62 +585,85 @@ void VContentGetter::findChildren(VTabContent * parentTab,
 void VContentGetter::findPlots(std::vector<VTabContent*> * allTabs,
   std::vector< std::vector< std::string > > * ops, VPlotOps * plotOps)
 {
-	std::vector<jsonPlottable*> firstTab;
-	std::vector<jsonPlottable*> otherPlottables;
+	std::vector< std::vector< VPlottable*> >
+		allPlottablesByTab(allTabs->size(), std::vector<VPlottable*>());
+
   std::vector< std::vector< std::string > >::iterator iop;
   for (iop = ops->begin(); iop != ops->end(); iop++) {
     if ((*iop)[0] != "Plot" || (*iop)[0].substr(0, 1) == "#") continue;
     std::vector<VTabContent*>::iterator itab;
+    int iTab = 0;
     for (itab = allTabs->begin(); itab != allTabs->end(); itab++){
       if ((*iop)[2] == (*itab)->m_title) {
       	bool hasRef = false; // SET ME.
         VPlot * plot = new VPlot((*iop)[1], (*itab), true, plotOps);
         jsonPlottable * plottable = new jsonPlottable(plot, 1);
-        if ((*iop)[2] == "Pedestals") firstTab.push_back(plottable);
-        else otherPlottables.push_back(plottable);
+        allPlottablesByTab[iTab].push_back(plottable);
         plottable->m_retrivalCommand = (*iop)[3];
+        if ((*iop)[5] == "2") plottable->m_plottableStyle = 2;
+
+        if ((*iop)[6] == "true") {
+          plot->m_yRangeSpecified = true;
+          plot->m_yLow = atof((*iop)[7].c_str());
+          plot->m_yUp = atof((*iop)[8].c_str());
+        }
 
         if (hasRef) {
 					jsonPlottable * plottableRef = new jsonPlottable(plot, 0);
-					if ((*iop)[2] == "Pedestals") firstTab.push_back(plottableRef);
-					else otherPlottables.push_back(plottableRef);
+					allPlottablesByTab[iTab].push_back(plottableRef);
 					plottableRef->m_retrivalCommand = (*iop)[3]; // SET ME.
       	}
 
         if ((*iop)[4] == "multipleModules") plot->m_multipleModules = true;
         else plot->m_multipleModules = false;
       }
+    	iTab++;
     }
   }
+  std::thread t(&VContentGetter::fillTabsThread, allPlottablesByTab, plotOps);
+  t.detach();
+}
 
-  std::vector<std::thread*> firstTabThreads;
-  plotOps->notify("Filling pedestals...");
-  for (unsigned int i=0; i<firstTab.size(); i++)
-  	firstTabThreads.push_back(new std::thread(&VPlottable::getData, firstTab[i]));
+void VContentGetter::fillTabsThread(std::vector< std::vector< VPlottable*> > plottables, VPlotOps * plotOps) {
+	while (plotOps->m_waitSwitch) {
+		usleep(1000);
+	}
 
-  for (unsigned int i=0; i<firstTabThreads.size(); i++)
-  	firstTabThreads[i]->join();
+	plotOps->notify("Filling tabs...");
+	std::vector<std::thread*> tabThreads;
+	std::vector<VPlottable*> tabPlottabls;
+	unsigned int waiting = 8;
+  for (unsigned int i=0; i<plottables.size(); i++) {
+  	for (unsigned int j=0; j<plottables[i].size(); j++) {
+  		tabThreads.push_back(new std::thread(&VPlottable::getData, plottables[i][j]));
+  		tabPlottabls.push_back(plottables[i][j]);
 
-  plotOps->notify("Pedestals done.");
 
-  plotOps->notify("Filling others...");
-
-  for (unsigned int i=0; i<otherPlottables.size(); i++) {
-  	if (i==otherPlottables.size()-1) {
-			std::thread t(&VContentGetter::lastPlottable, otherPlottables[i], plotOps);
-			t.detach();
-  	}
-  	else {
-  		std::thread t(&VPlottable::getData, otherPlottables[i]);
-			t.detach();
+			if (tabThreads.size() == waiting) {
+				for (unsigned int k=0; k<tabThreads.size(); k++) {
+					tabThreads[k]->join();
+					tabPlottabls[k]->m_plot->m_tab->m_qtab->setTabEnabled(tabPlottabls[k]->m_plot->m_tab->m_qtabID, true);
+					if (tabPlottabls[k]->m_plot->m_tab->m_parentTab->m_qtab != NULL)
+						tabPlottabls[k]->m_plot->m_tab->m_parentTab->m_qtab->setTabEnabled(tabPlottabls[k]->m_plot->m_tab->m_parentTab->m_qtabID, true);
+				}
+				tabThreads.clear();
+				tabPlottabls.clear();
+			}
+//  	std::stringstream ss1; ss1<<i+1;
+//  	std::stringstream ss2; ss2<<plottables.size();
+  	//std::string command  = "Tab " + ss1.str() + "/" + ss2.str() + " filled.";
+  	//plotOps->notify(command);
   	}
   }
+  for (unsigned int j=0; j<tabThreads.size(); j++) {
+		tabThreads[j]->join();
+		tabPlottabls[j]->m_plot->m_tab->m_qtab->setTabEnabled(tabPlottabls[j]->m_plot->m_tab->m_qtabID, true);
+		if (tabPlottabls[j]->m_plot->m_tab->m_parentTab->m_qtab != NULL)
+						tabPlottabls[j]->m_plot->m_tab->m_parentTab->m_qtab->setTabEnabled(tabPlottabls[j]->m_plot->m_tab->m_parentTab->m_qtabID, true);
+  }
+  plotOps->notify("All tabs filled.");
 }
 
-void VContentGetter::lastPlottable(VPlottable * p, VPlotOps * ops) {
-	p->getData();
-	ops->notify("Others done.");
-}
 
 //_____________________________________________________________________________
 
@@ -625,16 +678,20 @@ void VContentGetter::fourPlotsPerTabLimiter(
 	// First find if there is a problem.
 	std::vector< std::vector< std::string > >::iterator iopTab;
   for (iopTab = ops->begin(); iopTab != ops->end(); iopTab++) {
+    if ((*iopTab).size() == 0) continue;
     if ((*iopTab)[0] != "Tab" || (*iopTab)[0].substr(0, 1) == "#") continue;
     std::string parentName = (*iopTab)[1];
+    std::cout<<parentName<<__LINE__<<std::endl;
     unsigned int nPlots = 0;
     std::vector< std::vector< std::string > >::iterator iopPlot;
+    std::cout<<__LINE__<<std::endl;
 		for (iopPlot = ops->begin(); iopPlot != ops->end(); iopPlot++) {
 			if ((*iopPlot)[0] != "Plot" || (*iopPlot)[0].substr(0, 1) == "#") continue;
 			if ((*iopPlot)[2] == parentName) nPlots++;
 		}
 
 		if (nPlots <= 4) continue;
+    std::cout<<__LINE__<<std::endl;
 		unsigned int nNeeded = nPlots/4 + 1;
 		for (unsigned int iSubTab=0; iSubTab<nNeeded; iSubTab++) {
 			std::stringstream ssiSubTab;
@@ -646,7 +703,6 @@ void VContentGetter::fourPlotsPerTabLimiter(
 			tab.push_back(parentName);
 			ops->push_back(tab);
 		}
-
 		// Adjust the parent plots.
 		nPlots = 0;
 		for (iopPlot = ops->begin(); iopPlot != ops->end(); iopPlot++) {

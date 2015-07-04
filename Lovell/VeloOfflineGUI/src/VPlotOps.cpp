@@ -4,6 +4,7 @@
 //_____________________________________________________________________________
 
 VPlotOps::VPlotOps(QGroupBox * opsHolder, std::string * dataDir) {
+	m_waitSwitch = true;
 	m_dataDir = dataDir;
   m_firstTime = true;
   m_opsHolder = opsHolder;

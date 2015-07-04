@@ -2,3 +2,13 @@ QWidget {
   font-size: 11px;
   background-color: #E8E8E8;
 }
+
+QTabBar::tab:enabled {
+    border-color: #9B9B9B;
+    background-color: darkBlue
+    border-bottom-color: #C2C7CB; /* same as pane color */
+}
+
+QTabBar::tab:!enabled {
+    margin-top: 2px; /* make non-selected tabs look smaller */
+}

@@ -1,5 +1,56 @@
 #include "VeloView.h"
 #include "ui_VeloView.h"
+#include <QStylePainter>
+
+//_____________________________________________________________________________
+
+class TestTabBar : public QTabBar
+{
+public:
+    explicit TestTabBar(QWidget* parent=0) : QTabBar(parent)
+    {
+        setIconSize(QSize(120, 25));
+    }
+
+protected:
+    QSize tabSizeHint(int) const
+    {
+        return QSize(120, 25);
+    }
+    void paintEvent(QPaintEvent *)
+    {
+        QStylePainter p(this);
+        for (int index = 0; index < count(); index++)
+        {
+            QStyleOptionTabV3 tab;
+            initStyleOption(&tab, index);
+
+            QIcon tempIcon = tab.icon;
+            QString tempText = tab.text;
+            tab.icon = QIcon();
+            tab.text = QString();
+
+            p.drawControl(QStyle::CE_TabBarTab, tab);
+
+            QPainter painter;
+            painter.begin(this);
+            QRect tabrect = tabRect(index);
+            //tabrect.adjust(0, 8, 0, -8);
+            painter.drawText(tabrect, Qt::AlignVCenter | Qt::AlignHCenter, tempText);
+            tempIcon.paint(&painter, 0, tabrect.top(), tab.iconSize.width(), tab.iconSize.height(), Qt::AlignTop | Qt::AlignHCenter);    
+            painter.end();
+        }
+    }
+};
+
+class TestTabWidget : public QTabWidget
+{
+public:
+    explicit TestTabWidget(QWidget *parent = 0) : QTabWidget(parent)
+    {
+        setTabBar(new TestTabBar());
+    }
+};
 
 //_____________________________________________________________________________
 
@@ -36,7 +87,7 @@ veloview::veloview(int runMode, std::vector<std::string> * ops, QWidget *parent)
 
   ui->l_logo->setText(QString(m_logoText.c_str()));
 
-  this->setStyleSheet("QWidget{font-size:10px}");
+  this->setStyleSheet("QWidget{font-size:11px}");
   ui->l_logo->setStyleSheet("QWidget{font-size:30px}");
   connect(ui->b_load, SIGNAL(clicked()), this, SLOT(setContent()));  
 
@@ -182,6 +233,8 @@ void veloview::setContent() {
   completeTabs(m_content->m_subContents, ui->m_contentHolder, lay);
   m_ran = true;
   ui->b_load->setText("Reload");
+  m_plotOps->m_waitSwitch = false;
+
   QApplication::restoreOverrideCursor();
 }
 
@@ -196,8 +249,13 @@ void veloview::completeTabs(std::vector<VTabContent*> & tabsContents,
 
   // tabsHolder is passed as a parameter but not used in the function body
   Q_UNUSED(tabsHolder);
-
-  QTabWidget * tabPages = new QTabWidget();
+  QTabWidget * tabPages;
+  if (tabsContents[0]->m_depth == 0) {
+    tabPages = new TestTabWidget();
+    tabPages->setTabPosition(QTabWidget::West);
+  }
+  else tabPages = new QTabWidget();
+  
   topLay->addWidget(tabPages, 1, 1, 1, 1);
 
   // Complete the rest of the tabs.
@@ -208,6 +266,9 @@ void veloview::completeTabs(std::vector<VTabContent*> & tabsContents,
     lay->setContentsMargins(2,2,2,2);
     (*itabPage)->setLayout(lay);
     tabPages->addTab((*itabPage), QString((*itabPage)->m_title.c_str()));
+    (*itabPage)->m_qtab = tabPages;
+    (*itabPage)->m_qtabID = tabPages->count()-1;
+    tabPages->setTabEnabled(tabPages->count()-1, false);
     if ((*itabPage)->m_subContents.size() > 0) {
       completeTabs((*itabPage)->m_subContents, (*itabPage), lay);
     }

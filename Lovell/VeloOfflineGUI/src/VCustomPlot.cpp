@@ -53,10 +53,11 @@ VCustomPlot::VCustomPlot(QWidget * parent, std::string title, bool isPopUp, VPlo
 
 
   // Fonts.
-  QFont ftick(font().family(), 8);
-  QFont faxistitle(font().family(), 8, QFont::Bold);
-  QFont flegend(font().family(), 8);
-  QFont ftitle(font().family(), 8, QFont::Bold);
+  int size = 9;
+  QFont ftick(font().family(), size);
+  QFont faxistitle(font().family(), size);
+  QFont flegend(font().family(), size);
+  QFont ftitle(font().family(), size);
   m_qcp->legend->setFont(flegend);
   m_qcp->xAxis->setLabelFont(faxistitle);
   m_qcp->yAxis->setLabelFont(faxistitle);

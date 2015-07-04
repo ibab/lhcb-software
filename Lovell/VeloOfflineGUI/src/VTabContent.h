@@ -30,6 +30,9 @@ public:
   int m_ID;
   int m_parentID;
   bool m_drawn;
+  int m_depth;
+  QTabWidget * m_qtab;
+  unsigned int m_qtabID;
   
 
   // Methods __________________________________________________________________
@@ -42,7 +45,8 @@ public:
                   m_plotLayout(NULL),
                   m_parentTab(NULL),
                   m_ID(0),
-									m_drawn(false){} // Top tab constructor.
+									m_drawn(false),
+									m_qtab(NULL){} // Top tab constructor.
 
   VTabContent(std::string title) :
                   m_subContents(),
@@ -53,7 +57,8 @@ public:
                   m_plotLayout(NULL),
                   m_parentTab(NULL),
                   m_ID(0),
-									m_drawn(false){
+									m_drawn(false),
+									m_qtab(NULL){
                     m_title = title;
                   } // Top tab constructor.
 
@@ -66,7 +71,8 @@ public:
                 m_subTabViewMethod(0),
                 m_widget(NULL),
                 m_plotLayout(NULL),
-								m_drawn(false){
+								m_drawn(false),
+								m_qtab(NULL){
                   m_title = title;
                   m_parentTab = parentTab;
                   m_parentTab->m_subContents.push_back(this);
@@ -80,7 +86,8 @@ public:
                 m_subTabViewMethod(0),
                 m_widget(NULL),
                 m_plotLayout(NULL),
-								m_drawn(false){
+								m_drawn(false),
+								m_qtab(NULL){
                   m_title = title;
                   m_parentTab = parentTab;
                   m_parentTab->m_subContents.push_back(this);

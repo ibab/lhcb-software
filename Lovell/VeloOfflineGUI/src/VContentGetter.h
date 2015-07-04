@@ -16,7 +16,7 @@
 
 // Author: Daniel Saunders
 
-
+ 
 class VContentGetter {
 public:
 
@@ -26,12 +26,12 @@ public:
   static VTabContent * veloFileConfigs(VPlotOps*, std::string);
   static void findChildren(VTabContent * parentTab,
     std::vector<VTabContent*> * allTabs,
-    std::vector< std::vector< std::string > > * ops);
+    std::vector< std::vector< std::string > > * ops, int);
   static void findPlots(std::vector<VTabContent*> * allTabs,
     std::vector< std::vector< std::string > > * ops, VPlotOps * plotOps);
   static void jsonToOps(std::string *, std::vector< std::vector< std::string > > *);
   static void fourPlotsPerTabLimiter(std::vector< std::vector< std::string > > *);
-  static void lastPlottable(VPlottable *, VPlotOps *);
+  static void fillTabsThread(std::vector< std::vector< VPlottable*> >, VPlotOps *);
 };
 
 #endif
