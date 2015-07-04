@@ -4,7 +4,9 @@
 gaudi_subdir(MooreSys v23r7p5)
 
 gaudi_depends_on_subdirs(Hlt/Moore
-                         L0/L0App)
+                         L0/L0App
+                         Hlt/HltGlobalMonitor
+                         Phys/MVADictTools)
 
 gaudi_add_test(QMTest QMTEST)
 
