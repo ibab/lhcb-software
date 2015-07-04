@@ -525,7 +525,8 @@ fs::path OTt0OnlineClbr::writeXML(const FileVersion version,
    file << "<condition classID=\"5\" name=\"" << "CalibrationGlobal" << "\">\n";
    file << "  <param name=\"TZero\" type=\"double\" comment=\"Global t0 of OT\">\n";
    //file << "      " << 0.0001 * (int)(10000.0 * t0 + 0.5) << "\n";
-   file << "      " << std::setprecision(4) << t0 << "\n";
+   file << std::fixed; 
+   file << "      " << std::setprecision(5) << t0 << "\n";
    //file << "    " <<  t0  << "\n";
    file << "  </param>\n";
    file << "</condition>\n";
