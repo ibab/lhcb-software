@@ -54,7 +54,7 @@ class fakeEventTime(object):
     from Configurables import GaudiSequencer, createODIN
     initSeq = GaudiSequencer("InitEscherSeq")
     initSeq.Members.insert(0, createODIN())
-  
+
 def patchEscher(true_online_version, alignment_module, n = -1):
   import GaudiConf.DstConf
   import Escher.Configuration
@@ -70,7 +70,7 @@ def patchEscher(true_online_version, alignment_module, n = -1):
 
   from Gaudi.Configuration import appendPostConfigAction
   appendPostConfigAction(fakeEventTime(initialTime))
-  
+
   escher = EscherCommon(true_online_version, alignment_module)
   hostname = HostName()
   escher.InputType  = "MDF"
@@ -100,6 +100,7 @@ def setupOnline(directory, prefix, filename):
   app.HistogramPersistency = ''
   app.SvcOptMapping.append('LHCb::FILEEvtSelector/EventSelector')
   app.SvcOptMapping.append('LHCb::FmcMessageSvc/MessageSvc')
+  app.ExtSvc.insert(0,"MonitorSvc")
   sel = es("EventSelector")
   sel.Input = filename
   sel.Directory = directory

@@ -89,7 +89,7 @@ class WriterConf:#(LHCbConfigurableUser):
       alg.XmlWriters.append("WriteOTCalibrationsTool")
       alg.WriteOTCalibrationsTool.Directory = self.getProp('CondFilePrefix')
       alg.WriteOTCalibrationsTool.WriteGlobalCalibration = True
-      alg.WriteOTCalibrationsTool.Precision = 6
+      alg.WriteOTCalibrationsTool.Precision = 6u
     if 'muon' in listOfCondToWrite:
       #self.addXmlWriter( alg, 'Muon','Detectors', [] )
       self.addXmlWriter( alg, 'Muon','Global', [0,1,2] )

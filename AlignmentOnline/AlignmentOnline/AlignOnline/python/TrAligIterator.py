@@ -34,6 +34,8 @@ MSG_ERROR   = 5
 MSG_FATAL   = 6
 MSG_ALWAYS  = 7
 
+MAX_NITER   = 20
+
 configureBrunelOutput = None
 from TAlignment.AlignmentScenarios import *
 from TAlignment.TrackSelections import *
@@ -48,7 +50,7 @@ def patchEscher(true_online_version, alignment_module):
   from Configurables import GaudiSequencer
 
   escher = EscherCommon(true_online_version, alignment_module)
-  TAlignment().NumIterations = 10
+  TAlignment().NumIterations = MAX_NITER
 
   print escher
   return escher
@@ -106,7 +108,7 @@ def setupOnline():
   ai.PartitionName  = Online.PartitionName
   ai.ASDFilePattern = "_Escher.out"
   ai.OutputLevel    = 3
-  ai.MaxIteration   = 10
+  ai.MaxIteration   = MAX_NITER
   ai.ServiceInfix   = ""
 
   runType = os.environ.get('RUN_TYPE', 'Unknown')

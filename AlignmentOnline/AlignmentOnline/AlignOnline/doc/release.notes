@@ -5,6 +5,9 @@ Purpose: Code for running and testing Alignment in the online environment
 
 ! 2015-07-03 - Maurizio Martinelli
  - Initialized the reference in the iterator to 0
+ - Added monitor service to analyser (beat?)
+ - Changed OT calibration tool xml writer precision (unknown)
+ - Set the maximum number of iterations to 20
 
 </PRE><H1><A NAME=v1r4>2015-06-10 AlignOnline v1r4</A></H1><PRE>
 
