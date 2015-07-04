@@ -325,21 +325,21 @@ class PID_EM2015 :
                                 'DeltaM_AM_MAX'            :  190.0 * MeV,
                                 'DeltaM_MIN'               :  0.0,
                                 'DeltaM_MAX'               :  170.0 * MeV},
-                 'D02KPi' : {   'Trk_ALL_PT_MIN'           : 800.0 * MeV,   # Stripping has 250
-                                'Trk_ALL_P_MIN'            : 5.0 * GeV,     # Stripping has 2.0
-                                'Trk_ALL_MIPCHI2DV_MIN'    : 2.0,           # Stripping has 16
+                 'D02KPi' : {   'Trk_ALL_PT_MIN'           : 250.0 * MeV,   # Stripping has 250
+                                'Trk_ALL_P_MIN'            : 2.0 * GeV,     # Stripping has 2.0
+                                'Trk_ALL_MIPCHI2DV_MIN'    : 16.0,           # Stripping has 16
                                 # We currently have an implicit cut on track chi2/dof < 3 coming
                                 # from the CharmHad filtered NoPIDs inputs; stripping had < 5
                                 'Pair_AMINDOCA_MAX'        : 0.10 * mm,     # Not in stripping
-                                'Trk_Max_APT_MIN'          : 1500.0 * MeV,  # Not in stripping
-                                'D0_BPVVDCHI2_MIN'         : 25.0,          # Stripping has 49
-                                'D0_BPVDIRA_MIN'           : 0.99985,       # Stripping has 0.9999
+                                'Trk_Max_APT_MIN'          : 1000.0 * MeV,  # Not in stripping
+                                'D0_BPVVDCHI2_MIN'         : 49.0,          # Stripping has 49
+                                'D0_BPVDIRA_MIN'           : 0.9999,       # Stripping has 0.9999
                                 'D0_VCHI2PDOF_MAX'         : 10.0,          # Stripping has 13
-                                'D0_PT_MIN'                : 2.0 * GeV,     # Stripping has 1.5
-                                'Mass_M_MIN'               : 1815.0 * MeV,  # This is an M cut, stripping says 1790
-                                'Comb_AM_MIN'              : 1805.0 * MeV,  # This is an AM cut, stripping says 1780
-                                'Mass_M_MAX'               : 1915.0 * MeV,  # This is an M cut, stripping says 1940
-                                'Comb_AM_MAX'              : 1925.0 * MeV,  # This is an AM cut, stripping says 1950
+                                'D0_PT_MIN'                : 1.5 * GeV,     # Stripping has 1.5
+                                'Mass_M_MIN'               : 1790.0 * MeV,  # This is an M cut, stripping says 1790
+                                'Comb_AM_MIN'              : 1780.0 * MeV,  # This is an AM cut, stripping says 1780
+                                'Mass_M_MAX'               : 1940.0 * MeV,  # This is an M cut, stripping says 1940
+                                'Comb_AM_MAX'              : 1950.0 * MeV,  # This is an AM cut, stripping says 1950
                                 'TisTosSpec'               : [ ]},#"Hlt1(Two)?TrackMVADecision%TOS"},
                  'D02KPiTag' : {
                                 'TagVCHI2PDOF_MAX'         :  15.0,         # Stripping has 13
