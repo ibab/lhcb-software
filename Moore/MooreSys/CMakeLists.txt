@@ -1,10 +1,9 @@
 ################################################################################
 # Package: MooreSys
 ################################################################################
-gaudi_subdir(MooreSys v23r7p4)
+gaudi_subdir(MooreSys v23r7p5)
 
-gaudi_depends_on_subdirs(Hlt/IndependenceTests
-                         Hlt/Moore
+gaudi_depends_on_subdirs(Hlt/Moore
                          L0/L0App)
 
 gaudi_add_test(QMTest QMTEST)

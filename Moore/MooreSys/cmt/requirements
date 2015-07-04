@@ -1,5 +1,5 @@
 package MooreSys
-version           v23r7p4
+version           v23r7p5
 branches doc cmt
 
 #=======================================================
@@ -7,7 +7,6 @@ branches doc cmt
 #=======================================================
 
 use  Moore               v23r7p2    Hlt
-use  IndependenceTests   v1r10      Hlt
 use  L0App               v2r4       L0
 
 # Packages only included in this patch release
