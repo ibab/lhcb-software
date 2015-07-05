@@ -4,6 +4,9 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+! 2015-07-05 - Roel Aaij
+ - Update Hlt1 process priority to 0.
+
 !========================= MooreOnlineConf v1r9 2015-06-29 =========================
 
 ! 2015-06-29 - Roel Aaij
