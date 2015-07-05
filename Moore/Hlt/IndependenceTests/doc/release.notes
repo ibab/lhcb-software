@@ -2,6 +2,9 @@ Package     : Hlt/IndepenceTests
 Package Coordinator : Mika Vesterinen
 Purpose     : HLT application to test indepence of Hlt lines
 
+! 2015-07-05 - Roel Aaij
+ - Switch dependency to Hlt/HltMonitoring.
+
 !========================= IndependenceTests v1r10 2015-01-20 =========================
 
 ! 2015-01-20 - Roel Aaij
@@ -31,7 +34,7 @@ Purpose     : HLT application to test indepence of Hlt lines
  - Added CMake configuration file.
 
 !========================= IndependenceTests v1r5 2013-08-01 =========================
-! 2013-07-12 - Mika Vesterinen 
+! 2013-07-12 - Mika Vesterinen
  - Fix the nightly test. Changes to DecisionMap.cpp, test_independence.py, Tasks.py, test_independence.qmt.
 
 !========================= IndependenceTests v1r4 2013-02-28 =========================
@@ -67,4 +70,3 @@ Purpose     : HLT application to test indepence of Hlt lines
 
 ! 2011-07-29 - Eric van Herwijnen
  - First release: took original code from Roel Aaij and put it in svn.
-
