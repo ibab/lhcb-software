@@ -16,8 +16,7 @@ export DIM_DNS_NODE=${4}
 export CMTCONFIG=x86_64-slc6-gcc48-opt;
 #
 . setup.${CMTCONFIG}.vars
-#
-export PYTHONPATH=/group/online/dataflow/options/${PARTITION_NAME}:${DATAQUALITYROOT}/python/DataQualityScan:${PYTHONPATH}
+##echo "[ERROR] Exec  setup.${CMTCONFIG}.vars";
 #
 ulimit -v 3221225472
 #
@@ -25,10 +24,11 @@ ulimit -v 3221225472
 if test -z "${RUNINFO}"; then
   export RUNINFO=/group/online/dataflow/options/${PARTITION_NAME}/OnlineEnvBase.py;
 fi;
+export PYTHONPATH=`dirname ${RUNINFO}`:$PYTHONPATH;
 eval `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py --runinfo ${RUNINFO} --brunel --environ --task_type=DataQuality`;
 #
 # Enable this for debugging only:
-python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py --runinfo ${RUNINFO} --brunel --environ --task_type=DataQuality;
+##python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py --runinfo ${RUNINFO} --brunel --environ --task_type=DataQuality;
 #
 #
 if test "${exec_restart}" = "restart" -o "${APP_STARTUP_OPTS}" = "-restore";
@@ -36,7 +36,7 @@ then
     export LOCAL_CHECKPOINT_DIR=/scratchlocal/checkpoints;
     #
     # Enable this for debugging only:
-    python       ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py  --runinfo ${RUNINFO} --copy --libs --start --brunel;
+    ##python       ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py  --runinfo ${RUNINFO} --copy --libs --start --brunel;
     #
     # Copy checkpoint and extract libraries
     #

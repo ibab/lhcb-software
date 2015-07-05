@@ -16,35 +16,38 @@ ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 if running as daemon
 HistogramPersistencySvc.Warnings     = false;
 
-TransitionSleepSvc.StopSleep         = 50;
+TransitionSleepSvc.StopSleep         = 25;
 TransitionSleepSvc.FinializeSleep    = 15;
 
 DQRcvCountAdder.PartitionName        = @OnlineEnv.PartitionName;
 DQRcvCountAdder.MyName               = "<part>_DQRcv";
 DQRcvCountAdder.TaskPattern          = "<part>_MONA100[2-9]_DQNodeAdder_(.*)";
-DQRcvCountAdder.ServicePattern       = "MON_<part>_MONA100[2-9]_DQRcv_(.*)/Counter/";
+DQRcvCountAdder.ServicePattern       = "MON_<part>_mona100[2-9]_DQRcv_(.*)/Counter/";
 DQRcvCountAdder.AdderClass           = "Counter";
 DQRcvCountAdder.ReceiveTimeout       = 3;
+DQRcvCountAdder.DoHistos = false;
 
 DQWorkerCountAdder.MyName            = "<part>_DQWorker";
 DQWorkerCountAdder.PartitionName     = @OnlineEnv.PartitionName;
 DQWorkerCountAdder.TaskPattern       = "<part>_MONA100[2-9]_DQNodeAdder_";
-DQWorkerCountAdder.ServicePattern    = "MON_<part>_MONA100[0-9]_DQWorker/Counter/";
+DQWorkerCountAdder.ServicePattern    = "MON_<part>_mona100[0-9]_DQWorker/Counter/";
 DQWorkerCountAdder.InDNS             = "mona10";  // Otherwise default: hlt01 !
 DQWorkerCountAdder.AdderClass        = "counter";
 DQWorkerCountAdder.ReceiveTimeout    = 3;
+DQWorkerCountAdder.DoHistos = false;
 
 DQWorkerHistoAdder.MyName            = "<part>_DQWorker";
 DQWorkerHistoAdder.PartitionName     = @OnlineEnv.PartitionName;
 DQWorkerHistoAdder.TaskPattern       = "<part>_MONA100[2-9]_DQNodeAdder_";
-DQWorkerHistoAdder.ServicePattern    = "MON_<part>_MONA100[0-9]_DQWorker/Histos/";
+DQWorkerHistoAdder.ServicePattern    = "MON_<part>_mona100[0-9]_DQWorker/Histos/";
 DQWorkerHistoAdder.InDNS             = "mona10";  // Otherwise default: hlt01 !
 DQWorkerHistoAdder.AdderClass        = "hists";
 DQWorkerHistoAdder.ReceiveTimeout    = 10;
+DQWorkerHistoAdder.DoHistos = false;
 
 DQWorkerHistoAdder.SaveSetTaskName   = "DataQuality";
 DQWorkerHistoAdder.IsSaver           = true;
 DQWorkerHistoAdder.SaveRootDir       = "/hist/Savesets";
 DQWorkerHistoAdder.SaveInterval      = 300;   // Save snapshot every 15 minutes
 
-MessageSvc.OutputLevel               = 2;
+MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;

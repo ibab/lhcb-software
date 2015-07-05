@@ -259,6 +259,7 @@ class DataQualityScanner:
       if not num_files_total > 0:
         # This run will never be processed. There are simply no data
         self.runs_rejected[run] = 1
+        #print 'Run ',run,' is rejected [No-files]'
         continue
 
       # Now check if a sufficient amount of files was processed:
@@ -268,6 +269,7 @@ class DataQualityScanner:
         num_files_waiting = float(int(runs_pending[srun]))
       
       if num_files_waiting/num_files_total > self.config.min_files_processed:
+        #print 'Run ',run,' is rejected [Not-enough-files]'
         continue
 
       # This is a new run to be processed:
@@ -286,6 +288,7 @@ class DataQualityScanner:
 
       # Check if the number of events is above threshold
       if not num_events > self.config.min_event_count:
+        #print 'Run ',run,' is rejected [Not-enough events]'
         continue
       msg = 'Run:%d In MonDb:%s Files waiting:%4d total:%4d daq-area:%3d Events:%10d'%\
           (run,str(in_mondb),num_files_waiting,num_files_total,len(usable_files),num_events,)
@@ -323,6 +326,9 @@ class DataQualityScanner:
     """
     if run:
       files = self.rundb.runFiles(run=run,stream=self.config.file_stream_name)
+      # Check if there are any files to be processed
+      if not len(files):
+        return None
       # Create option file
       if with_options:
         num_event_per_file = int(float(self.config.req_event_count)/float(len(files)) + 1.0)
@@ -484,7 +490,7 @@ class Steer(FSM):
     self.controller.register(FSM.ST_RUNNING, self.onCtrlRunning)
     self.controller.register(FSM.ST_READY,   self.onCtrlReady)
     self.controller.register(FSM.ST_ERROR,   self.onCtrlError)
-    self.work = IntegerService('LHCb2_MONA10_R/Work',0)
+    self.work = IntegerService(scanner.config.announceService,0)
   # -----------------------------------------------------------------------------
   def printCtrl(self):
     log(INFO,'Controller in state: %s [Active:%s Working:%s]'%\
@@ -604,7 +610,7 @@ def run(run_auto=False):
   log(INFO,"Started scanner...")
 
   fsm = Steer(os.environ['UTGID'],
-              controller='MONA1001_R_Controller/status',
+              controller=scanner.config.statusService,
               scanner=scanner,auto=auto)
 
   fsm.run()

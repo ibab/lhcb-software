@@ -1,5 +1,6 @@
 #include "$FARMCONFIGROOT/options/BasicDiskReader.opts"
-#include "$DQREADER_NODE_OPTIONS"
+#include "$READER_NODE_OPTIONS"
+
 Runable.Directory                    = @OnlineEnv.DataDirectory;
 Runable.FilePrefix                   = "Run_";
 Runable.Buffer                       = @OnlineEnv.DQReader_Output;
@@ -7,3 +8,6 @@ MEPManager.Buffers                   = @OnlineEnv.DQReader_Buffers;
 Runable.DeleteFiles                  = true;
 Runable.InitialSleep                 = 0;
 Runable.EventsPerFile                = @OnlineEnv.EventsPerFile;
+
+Runable.PauseSleep                   = 40;
+

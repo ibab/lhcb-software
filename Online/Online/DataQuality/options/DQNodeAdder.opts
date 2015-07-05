@@ -18,8 +18,8 @@ MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 MonitorSvc.CounterUpdateInterval     = 15;
 
-TransitionSleepSvc.StopSleep         = 30;
-TransitionSleepSvc.FinializeSleep    = 20;
+TransitionSleepSvc.StopSleep         = 15;
+TransitionSleepSvc.FinializeSleep    = 10;
 
 Runable.Wait                         = 3;  // 1 of running as daemon
 HistogramPersistencySvc.Warnings     = false;
@@ -38,6 +38,7 @@ DQWorkerCountAdder.ServicePattern    = "MON_<part>_<node>_DQWorker_(.*)/Counter/
 DQWorkerCountAdder.InDNS             = "mona10";  // Otherwise default: hlt01 !
 DQWorkerCountAdder.AdderClass        = "counter";
 DQWorkerCountAdder.ReceiveTimeout    = 3;
+DQWorkerCountAdder.DoHistos = false;
 
 DQWorkerHistoAdder.MyName            = "<part>_<node>_DQWorker";
 DQWorkerHistoAdder.PartitionName     = @OnlineEnv.PartitionName;
@@ -46,5 +47,4 @@ DQWorkerHistoAdder.ServicePattern    = "MON_<part>_<node>_DQWorker_(.*)/Histos/"
 DQWorkerHistoAdder.InDNS             = "mona10";  // Otherwise default: hlt01 !
 DQWorkerHistoAdder.AdderClass        = "hists";
 DQWorkerHistoAdder.ReceiveTimeout    = 10;
-
-MessageSvc.OutputLevel               = 2;
+DQWorkerHistoAdder.DoHistos = false;

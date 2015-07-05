@@ -1,0 +1,13 @@
+// 
+// ---------------- General partition parameters:    
+OnlineEnv.PartitionID              = 259;
+OnlineEnv.PartitionName            = "$PARTITION_NAME";
+OnlineEnv.Activity                 = "PHYSICS";
+OnlineEnv.TAE                      = 0;
+OnlineEnv.OutputLevel              = 4;
+// ---------------- Trigger parameters:    
+OnlineEnv.DeferredRuns             = {"*"};
+// DataQuality Specific stuff: 
+MessageSvc.OutputLevel             = @OnlineEnv.OutputLevel;
+
+

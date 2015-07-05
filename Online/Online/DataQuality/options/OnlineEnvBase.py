@@ -6,11 +6,19 @@
 #  \version 1.0
 #
 #-------------------------------------------------------------------------------
-
+def _getPartName():
+  import os
+  if os.environ.has_key('PARTITION_NAME'):
+    return os.environ['PARTITION_NAME']
+  elif os.environ['UTGID'].find('_R_')>0 or os.environ['UTGID'].find('DQ_')==0:
+    return 'DQ'
+  elif os.environ['UTGID'].find('_M_')>0 or os.environ['UTGID'].find('H2_')==0:
+    return 'H2'
+  return 'None'
 #----------------- OnlineEnvBase default values: -------------------------------
 # ---------------- General partition parameters:    
 PartitionID              = 259
-PartitionName            = "DQ"
+PartitionName            = _getPartName()
 Activity                 = "PHYSICS"
 TAE                      = 0
 OutputLevel              = 4
@@ -88,18 +96,26 @@ def __patchValues():
   """
   import os
   try:
-    import sys, Config
-    c = Config.Config()
-    mod = __importModule2OnlineEnv(c.optsDirectory+os.sep+'ReaderInput.py')
-    runs = getattr(sys.modules['OnlineEnvBase'],'AllowedRuns')
-    if len(runs)>0:
-      run = runs[0]
-      cfg = c.condDirectory+os.sep+str(run) + os.sep + 'HLT2Params.py'
-      return __importModule2OnlineEnv(cfg)
+    import sys
+    if os.environ.has_key('PARTITION_NAME'):
+      e = '/group/online/dataflow/options/'+os.environ['PARTITION_NAME']
+      sys.path.insert(0,e)
+      if os.environ.has_key('DATAQUALITYROOT'):
+        sys.path.insert(0,os.environ['DATAQUALITYROOT']+'/python')
+        ##print 'echo "[INFO] PYTHONPATH='+os.oenviron['PYTHONPATH']+'";'
+        import DataQualityScan.Config as Config
+        c = Config.Config()
+        mod = __importModule2OnlineEnv(c.optsDirectory+os.sep+'ReaderInput.py')
+        runs = getattr(sys.modules['OnlineEnvBase'],'AllowedRuns')
+        if len(runs)>0:
+          run = runs[0]
+          cfg = c.condDirectory+os.sep+str(run) + os.sep + 'HLT2Params.py'
+          return __importModule2OnlineEnv(cfg)
   except Exception,X:
-    pass
+    print 'echo "[ERROR] Severe exception: ',str(X),'";'
+
   if os.environ.has_key('DQ_DEBUG'):
-    print '[INFO] No run to be processed take OnlineEnvBase defaults: ',str(X)+';'
+    print 'echo "[INFO] No run to be processed take OnlineEnvBase defaults.";'
 
 #-------------------------------------------------------------------------------
 #

@@ -1,57 +1,43 @@
 """
-     HLT2 monitoring parameter configuration
+     DataQuality monitoring parameter configuration
 
      \author  M.Frank
      \version 1.0
 """
+#-------------------------------------------------------------------------------
+def _addData(module):
+  import sys
+  attrs = dir(module)
+  ##print sys.modules
+  nodeInfo = sys.modules['DataQualityScan.Config']
+  for i in attrs:
+    if len(i)>2 and i[:2] != '__':
+      setattr(nodeInfo,i,getattr(module,i))
 
-# ------------------------------------------------------------------------------
-class Config:
-  """
-  Configuration setup for the Data quality monitoring system
+#-------------------------------------------------------------------------------
+def __importModule2Config(configuration):
+  import os, sys, imp
+  cfg = os.path.abspath(configuration)
+  dir_name = os.path.dirname(cfg)
+  nam,ext = os.path.splitext(os.path.basename(cfg))
+  if not sys.modules.has_key(nam):
+    if not dir_name in sys.path:
+      if os.environ.has_key('DQ_DEBUG'):
+        print 'echo "[DEBUG] add python path:'+dir_name+'";'
+      sys.path.insert(0,dir_name)
+    mod = imp.find_module(nam,None)
+    module=imp.load_module(nam,mod[0],mod[1],mod[2])
+    _addData(module)
+  return sys.modules[nam]
 
-  \author  M.Frank
-  \version 1.0
-  """
-
-  # ----------------------------------------------------------------------------
-  def __init__(self):
-    import time, rundb_params, mondb_params
-    # Intrinsic options:
-    #
-    # Database state names
-    #
-    self.st_failed             = 'FAILED'      # State name in the monitoring DB
-    self.st_todo               = 'TODO'        # State name in the monitoring DB
-    self.st_done               = 'DONE'        # State name in the monitoring DB
-    self.st_initial            = 'CREATED'     # State name in the monitoring DB
-    self.st_running            = 'RUNNING'     # State name in the monitoring DB
-    #
-    # User setup options:
-    #
-    # Database access
-    #
-    ## Directory where to find the conditions files (HLT2Params.py)
-    self.condDirectory         = "/group/online/hlt/conditions/LHCb/%s"%(time.ctime()[20:],)
-    ## Directory where to place the data links to the files to be processed
-    self.linkDirectory         = '/localdisk/DQ/DATAQUALITY_MON'
-    ## Directory where to place processing options
-    self.optsDirectory         = '/group/online/dataflow/cmtuser/DQ/DATAQUALITY_OPT'
+def __load_config():
+  import os
+  if os.environ.has_key('DQ_CONFIG'):
+    __importModule2Config(os.environ['DQ_CONFIG'])
+  else:
+    name = os.environ['DATAQUALITYROOT']+os.sep+'python'+\
+        os.sep+'DataQualityScan'+os.sep+'DQ_Config.py'
+    #print 'echo "[INFO] Import module '+name+'";'
+    __importModule2Config(name)
     
-    ## Run database login credentials
-    self.rundb       = 'oracle:'+rundb_params.login+'@'+rundb_params.tns+'/'+rundb_params.pwd
-    ## Monitoring database login credentials
-    self.mondb       = 'oracle:'+mondb_params.login+'@'+mondb_params.tns+'/'+mondb_params.pwd
-    self.mondb               = 'sqlite:/localdisk/DQ/DATAQUALITY_MON.db'
-    ## Monitoring database table name
-    self.mondb_table         = 'DQ_mon'
-    #
-    # Process steering:
-    #
-    ## Data stream type in the rundb which files to be processed
-    self.file_stream_name    = 'FULL'         # Stream name to pick up input files
-    ## Minimal number of events in the data stream files per run (must be >0)
-    self.min_event_count     = 1000           # Minimal event count in input files
-    self.req_event_count     = 50000          # Optimum/max event count in input files
-    ## Minimal fraction of data files already processed by HLT2
-    self.min_files_processed = 0.1            # Minimal fraction of files processed
+__load_config()

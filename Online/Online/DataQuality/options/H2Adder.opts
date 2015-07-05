@@ -1,0 +1,45 @@
+//==============================================================
+#include "$INFO_OPTIONS"
+//==============================================================
+ApplicationMgr.ExtSvc               += { 
+  "MonitorSvc", 
+    "AdderSvc/H2WorkerHistoAdder",
+    "AdderSvc/H2WorkerCountAdder",
+    "LHCb::TransitionSleepSvc/TransitionSleepSvc"
+};
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+
+MessageSvc.fifoPath                  = "$LOGFIFO";
+MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+MonitorSvc.CounterUpdateInterval     = 15;
+
+TransitionSleepSvc.StopSleep         = 20;
+TransitionSleepSvc.FinializeSleep    = 15;
+
+Runable.Wait                         = 3;  // 1 of running as daemon
+HistogramPersistencySvc.Warnings     = false;
+
+H2WorkerCountAdder.MyName            = "<part>_<node>_H2Worker";
+H2WorkerCountAdder.PartitionName     = @OnlineEnv.PartitionName;
+H2WorkerCountAdder.TaskPattern       = "<part>_<node>_H2Worker_(.*)";
+H2WorkerCountAdder.ServicePattern    = "MON_<part>_<node>_H2Worker_(.*)/Counter/";
+H2WorkerCountAdder.InDNS             = "mona10";  // Otherwise default: hlt01 !
+H2WorkerCountAdder.AdderClass        = "counter";
+H2WorkerCountAdder.ReceiveTimeout    = 3;
+
+H2WorkerHistoAdder.MyName            = "<part>_<node>_H2Worker";
+H2WorkerHistoAdder.PartitionName     = @OnlineEnv.PartitionName;
+H2WorkerHistoAdder.TaskPattern       = "<part>_<node>_H2Worker_(.*)";
+H2WorkerHistoAdder.ServicePattern    = "MON_<part>_<node>_H2Worker_(.*)/Histos/";
+H2WorkerHistoAdder.InDNS             = "mona10";  // Otherwise default: hlt01 !
+H2WorkerHistoAdder.AdderClass        = "hists";
+H2WorkerHistoAdder.ReceiveTimeout    = 10;
+
+H2WorkerHistoAdder.SaveSetTaskName   = "HLT2Mon";
+H2WorkerHistoAdder.IsSaver           = true;
+H2WorkerHistoAdder.SaveRootDir       = "/hist/Savesets";
+H2WorkerHistoAdder.SaveInterval      = 300;   // Save snapshot every 15 minutes

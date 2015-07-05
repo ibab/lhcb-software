@@ -4,10 +4,10 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.5)
 # Load macros and functions for Gaudi-based projects
 find_package(GaudiProject)
 #---------------------------------------------------------------
-gaudi_project(DataQuality   v5r18
-              USE OnlineDev v5r20
-                  Brunel    v47r8
-                  DaVinci   v36r7p1
+gaudi_project(DataQuality   v5r22
+              USE OnlineDev v5r22
+                  Brunel    v47r9
+                  DaVinci   v36r7p2
              DATA AppConfig VERSION v3r*
                   FieldMap VERSION v5r*
                   ParamFiles VERSION v8r*
