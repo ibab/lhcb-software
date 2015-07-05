@@ -32,15 +32,13 @@ fi;
 #
 #
 ctrl_args="";
+PRINT_LEVEL=4;
 if test "${PARTITION_NAME}" = "LHCb2"; then
     # This will make the controller wait until on PAUSE all slaves are paused.
-    #export PRINT_LEVEL=3;
-    export PRINT_LEVEL=4;
+    #PRINT_LEVEL=2;
+    #PRINT_LEVEL=4;
     #ctrl_args="-fsm=DAQPause";
-    #echo "[INFO] ${UTGID} FSM protocol: ${ctrl_args}";
-else
-    export PRINT_LEVEL=4;
-    #export PRINT_LEVEL=2;
+    echo "[INFO] ${UTGID} Partition:${PARTITION_NAME} FSM protocol: ${ctrl_args} Print-Level:${PRINT_LEVEL}";
 fi;
 exec -a ${UTGID} fsm_ctrl.exe \
     -print=${PRINT_LEVEL} -sleep=0 \

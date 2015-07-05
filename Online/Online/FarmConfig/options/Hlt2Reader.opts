@@ -1,6 +1,7 @@
 #include "$FARMCONFIGROOT/options/BasicDiskReader.opts"
 #include "$NODE_OPTIONS"
 MEPManager.Buffers                   = @OnlineEnv.Hlt2Reader_Buffers;
+MEPManager.Buffers                   = @OnlineEnv.Moore2_Buffers;
 Runable.Directory                    = "/localdisk/hlt1";
 Runable.FilePrefix                   = "Run_";
 Runable.Buffer                       = @OnlineEnv.Hlt2Reader_Output;
@@ -8,6 +9,8 @@ Runable.DeleteFiles                  = true;
 Runable.InitialSleep                 = 0;
 Runable.GoService                    = "$GO_SERVICE_NAME";
 Runable.PauseSleep                   = 5;  // Optional wait time until 'Output' event queue is empty
+Runable.CheckedBuffers               = @OnlineEnv.Moore2_Buffers;
+
 // Runable.GoService                    = "GO_SERVICE_NAME";
 MessageSvc.OutputLevel = 3;
 
