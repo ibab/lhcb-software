@@ -91,7 +91,8 @@ namespace LHCb  {
     bool                      m_dumpFD;
     /// Property: Distribute children according to number of cores
     bool                      m_useCores;
-
+    /// Property: Choose to declare state on 'pause' command (Default: false)
+    bool                      m_declarePAUSE;
     /// Internal flag to identify the master process with respect to children
     bool                      m_masterProcess;
     /// Internal flag to indicate child checking
@@ -174,6 +175,9 @@ namespace LHCb  {
 
     /// Release children. We are no longer the owner of them!
     void releaseChildren();
+
+    bool declarePAUSE() const    {  return m_declarePAUSE;   }    
+
   };
 }
 #endif // GAUDICHECKPOINTING_CHECKPOINTSVC_H
@@ -280,9 +284,16 @@ namespace  {
         m_check->restartChildren(false);
       }
       else if ( cmd == "pause"      ) {
-        m_fsm->setTargetState(ITaskFSM::ST_PAUSED);
-        m_fsm->declareState  (ITaskFSM::ST_PAUSED);
-        m_check->restartChildren(false);
+        if ( m_check->declarePAUSE() ) {
+          m_fsm->setTargetState(ITaskFSM::ST_PAUSED);
+          m_fsm->declareState  (ITaskFSM::ST_PAUSED);
+          m_check->restartChildren(false);
+        }
+        else        {
+          m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
+          m_fsm->declareState(ITaskFSM::ST_RUNNING);          
+          m_check->restartChildren(true);
+        }
       }
       else if ( cmd == "continue"   ) {
         m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
@@ -345,6 +356,7 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   declareProperty("ConnectToDIM",           m_connectDIM    = true);
   declareProperty("ForkQueueLength",        m_forkQueLen    = 30); // Store last 10 subsequent forks
   declareProperty("ForkTimeDistance",       m_forkDistance  = 60); // Maximally once per minute
+  declareProperty("DeclareStateOnPAUSE",    m_declarePAUSE  = false);
 }
 
 /// IInterface implementation : queryInterface
