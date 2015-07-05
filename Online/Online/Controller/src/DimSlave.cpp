@@ -34,7 +34,7 @@ DimSlave::DimSlave(const Type* typ, const string& nam, Machine* machine, bool in
 {
   m_commandName = nam;
   m_tmo = 3;
-  display(INFO,c_name(),"State data point: %s",(nam+"/status").c_str());
+  display(DEBUG,c_name(),"State data point: %s",(nam+"/status").c_str());
   m_dimState.first  = ::dic_info_service((char*)(nam+"/status").c_str(),MONITORED,0,0,0,stateHandler,(long)this,0,0);
   m_dimState.second = ::dic_info_service((char*)(nam+"/fsm_status").c_str(),MONITORED,0,0,0,infoHandler,(long)this,0,0);
 }

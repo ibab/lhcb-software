@@ -217,7 +217,7 @@ static Type* defineDAQActiveType(DaqType daqType = DAQ_NORMAL)    {
 /// Create DAQ machine type
 static Type* defineDAQType(DaqType daqType = DAQ_NORMAL)    {
   typedef Transition Tr;
-  Type *daq = new Type("DAQ");
+  Type *daq = new Type(daqType&DAQ_PAUSE_ALL ? "DAQPause" : "DAQ");
   const State* offline   = daq->addState(ST_NAME_OFFLINE, State::STARTUP);
   const State* not_ready = daq->addState(ST_NAME_NOT_READY);
   const State* ready     = daq->addState(ST_NAME_READY);
@@ -241,7 +241,7 @@ static Type* defineDAQType(DaqType daqType = DAQ_NORMAL)    {
   running->when  (  anyChildInState(offline),      moveTo(offline));
   running->when  (  anyChildInState(not_ready),    moveTo(not_ready));
   if ( daqType&DAQ_PAUSE_ALL )
-    running->when(  allChildrenInState(paused),       moveTo(paused));
+    running->when(  allChildrenInState(paused),    moveTo(paused));
   else
     running->when(  anyChildInState(paused),       moveTo(paused));
   running->when  (  allChildrenInState(ready),     moveTo(ready));

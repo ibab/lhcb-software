@@ -29,6 +29,7 @@ static void help_ctrl() {
 	    " fsm_ctrl -arg=<value> [ -arg=<value> ... ]                                 \n"
 	    "          -help                     Print this help message.                \n"
 	    "          -print=[number]           Print level (0 for debug).              \n"
+	    "          -fsm=<type>               FSM protocol type (default:DAQ)         \n"
 	    "          -partition=[string]       Partition name.                         \n"
 	    "          -runinfo=[string]         Path to file with python formatted      \n"
 	    "                                    information from RunInfo datapoint.     \n"
@@ -70,11 +71,13 @@ namespace Online {
 /// Test routine
 extern "C" int fsm_ctrl(int argc, char** argv)  {
   auto_ptr<Online::FMCLogger> logger;
-  string utgid = RTL::processName(), runinfo, taskdefs, mode, partition, type="FmcSlave";
+  string utgid = RTL::processName(), runinfo, taskdefs, mode, partition;
+  string fsm_typ_name = "DAQ", slave_type="FmcSlave";
   int    print = 0, count=-1, secs_sleep=0, bind_cpus=0;
   RTL::CLI cli(argc, argv, help_ctrl);
+  cli.getopt("fsm",3,fsm_typ_name);
   cli.getopt("mode",2,mode);
-  cli.getopt("type",2,type);
+  cli.getopt("type",2,slave_type);
   cli.getopt("print",2,print);
   cli.getopt("count",2,count);
   cli.getopt("runinfo",2,runinfo);
@@ -87,7 +90,7 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
     for(secs_sleep *= 1000; secs_sleep >= 0; secs_sleep -= 100)
       ::lib_rtl_sleep(100);
   }
-  if ( type == "FmcSlave" ) {
+  if ( slave_type == "FmcSlave" ) {
     /// Need to install a proper printer, which directy writes in the 
     /// proper format to the FCM fifo
     logger = auto_ptr<Online::FMCLogger>(new Online::FMCLogger("CTRL"));
@@ -102,12 +105,12 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
   else if ( count < 0     ) invalid_arg("Invalid argument -count='%d'\n",count);
 
   TypedObject::setPrintLevel(print);
-  Machine              mach(fsm_type("DAQ"),utgid+"::daq");
+  Machine              mach(fsm_type(fsm_typ_name),utgid+"::daq");
   Controller           ctrl(utgid,&mach);
   XmlTaskConfiguration cfg(partition,taskdefs,runinfo,mode,count);
   
   ctrl.display(ctrl.INFO,utgid.c_str(),"Selected running mode is:%s",mode.c_str());
-  if ( !cfg.attachTasks(mach,type,bind_cpus != 0) )  {
+  if ( !cfg.attachTasks(mach,slave_type,bind_cpus != 0) )  {
     ::fprintf(stderr,"Failed to interprete XML tasklist.\n");
     ::exit(EINVAL);
   }
