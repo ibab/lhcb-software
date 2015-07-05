@@ -1,18 +1,19 @@
 package MooreOnlineSys
-version           v23r7p3
+version           v23r7p5
 branches doc cmt tests
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  MooreScripts     v1r11
-use  MooreOnlineConf  v1r9
+use  MooreScripts      v1r11p1
+use  MooreOnlineConf   v1r9p1
+use  IndependenceTests v1r10    Hlt
+use  HltMonitoring     v1r0p1   Hlt
 
 ## Temporary packages.
-use  ZeroMQ           v4r1p2   Online
-use  Hlt2Monitoring   v1r0     Online
-use  HltMonitoring    v1r0p1   Hlt
+use  ZeroMQ            v4r1p2   Online
+use  Hlt2Monitoring    v1r0     Online
 
 # Declare this as a container package
 apply_pattern container_package

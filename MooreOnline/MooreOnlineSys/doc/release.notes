@@ -3,6 +3,14 @@ Package             : MooreOnlineSys
 Package Coordinator : R. Aaij
 Purpose             : Running and testing Moore in the online environment
 
+</PRE><H1><A NAME=v23r7p5>2015-07-05 MooreOnlineSys v23r7p5</A></H1><PRE>
+
+Depends on Moore v23r7p5 and Online v5r22.
+
+Contains fixes for renicing and additional packages for HLT2 monitoring.
+Hlt/IndependenceTests has been moved to this project to resolve a
+dependency problem.
+
 </PRE><H1><A NAME=v23r7p3>2015-07-02 MooreOnlineSys v23r7p3</A></H1><PRE>
 
 Depends on Moore v23r7p3 and Online v5r22.

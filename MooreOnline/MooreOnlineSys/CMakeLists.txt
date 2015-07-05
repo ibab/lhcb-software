@@ -1,10 +1,13 @@
 ################################################################################
 # Package: MooreOnlineSys
 ################################################################################
-gaudi_subdir(MooreOnlineSys v23r7p3)
+gaudi_subdir(MooreOnlineSys v23r7p5)
 
 gaudi_depends_on_subdirs(MooreScripts
-                         MooreOnlineConf)
-
+                         MooreOnlineConf
+                         Hlt/IndependenceTests
+                         Hlt/HltMonitoring
+						 Online/ZeroMQ
+						 Online/Hlt2Monitoring)
 
 gaudi_add_test(QMTest QMTEST)
