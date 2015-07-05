@@ -6,7 +6,7 @@
 
 #============================================================================
 package MooreOnlineConf
-version           v1r9
+version           v1r9p1
 
 branches doc cmt python options tests
 
