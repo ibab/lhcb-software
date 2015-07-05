@@ -4,6 +4,8 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+!========================= MooreScripts v1r11p1 2015-07-05 =========================
+
 ! 2015-07-05 - Roel Aaij
  - The priority level should be absolute and check that it's smaller than 0.
 
