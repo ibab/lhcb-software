@@ -1,6 +1,6 @@
 project MOOREONLINE
 
-use MOORE     MOORE_v23r7p3
+use MOORE     MOORE_v23r7p5
 use ONLINE    ONLINE_v5r22
 
 container       MooreOnlineSys
