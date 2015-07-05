@@ -3,6 +3,7 @@
 
 // Framework includes
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/Service.h"
 #include "GaudiOnline/DimTaskFSM.h"
 #include "RTL/rtl.h"
 
@@ -84,6 +85,12 @@ namespace LHCb  {
     bool              m_eventThread;
     /// Flag to ignore incidents on PAUSE/CONTINUE
     bool              m_ignoreIncident;
+
+    /// Flag to not declare state on DAQ_PAUSE incident
+    bool              m_declarePAUSE;
+    /// Flag to not declare state on DAQ_CONTINUE incident
+    bool              m_declareCONTINUE;
+    
     // Static thread routine to execute a Gaudi runable
     static int execRunable(void* arg);
 
@@ -104,7 +111,7 @@ namespace LHCb  {
     StatusCode configPythonSubManager();
 
     /// Wait for runable thread to stop. If it does not, send kill signal
-    void stopRunable();
+    virtual void stopRunable();
     /// Internal helper: configure  application manager
     virtual int configApplication();
     /// Internal helper: initialize application manager
@@ -119,6 +126,18 @@ namespace LHCb  {
     virtual int finalizeApplication();
     /// Internal helper: terminate  application manager
     virtual int terminateApplication();
+
+  public:
+    /// Configuration helper to use Gaudi for setting job options
+    class Configuration : public Service    {
+    public:
+      /// Default constructor
+      Configuration(const std::string& nam, ISvcLocator* svc) : Service(nam,svc)      {}
+      /// Default destructor
+      virtual ~Configuration()      {      }
+      /// Initialize (sets object properties on initialize of the lower level instance)
+      virtual StatusCode initialize();
+    };
 
   public:
     /// Standard constructor

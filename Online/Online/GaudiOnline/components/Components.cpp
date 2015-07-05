@@ -10,6 +10,8 @@ DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,Class0Task)
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,Class1Task)
 #include "GaudiOnline/Class2Task.h"
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,Class2Task)
+namespace LHCb { typedef GaudiTask::Configuration GaudiTaskConfiguration;  }
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,GaudiTaskConfiguration)
 #include "GaudiOnline/MEPOverflowWriterSvc.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPOverflowWriterSvc)
 #include "GaudiOnline/MBMCnvSvc.h"

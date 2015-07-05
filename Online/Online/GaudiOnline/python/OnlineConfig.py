@@ -255,9 +255,9 @@ def netSelector(input=None,type=None,event_type=2):
 
 #------------------------------------------------------------------------------------------------
 def dummy_exit_handler(*args,**kwd):
-  import GaudiPython.Bindings
-  print '[INFO] *** GaudiPython.Bindings.AppMgr: Executing dummy exithandler.....'
-  return GaudiPython.Bindings.SUCCESS
+  ###import GaudiPython.Bindings
+  #print '[INFO] *** GaudiPython.Bindings.AppMgr: Executing dummy exithandler.....'
+  return 1 ###GaudiPython.Bindings.SUCCESS
 
 #------------------------------------------------------------------------------------------------
 def end_config_normal(print_config=True):

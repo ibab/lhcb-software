@@ -55,6 +55,7 @@ StatusCode EventRunable::initialize()   {
     return error("Error retrieving EventDataSvc interface IDataProviderSvc.");
   }
   incidentSvc()->addListener(this,"DAQ_CANCEL");
+  incidentSvc()->addListener(this,"DAQ_PAUSE");
   incidentSvc()->addListener(this,"DAQ_ERROR");
   incidentSvc()->addListener(this,"DAQ_PROCESS_EVENT");
   incidentSvc()->addListener(this,m_tmoIncident);
@@ -77,7 +78,13 @@ void EventRunable::handle(const Incident& inc)    {
     return;
   }
   info("Got incident:"+inc.source()+" of type "+inc.type());  
-  if ( inc.type() == "DAQ_CANCEL" )  {
+  if ( inc.type() == "DAQ_PAUSE" )  {
+    //m_receiveEvts = false;
+  }
+  else if ( inc.type() == "DAQ_ENABLE" )  {
+    m_receiveEvts = true;
+  }
+  else if ( inc.type() == "DAQ_CANCEL" )  {
     m_receiveEvts = false;
     if ( !m_mepMgrName.empty() )  {
       if ( 0 == m_mepMgr ) {
@@ -106,9 +113,6 @@ void EventRunable::handle(const Incident& inc)    {
         m_mepMgr->cancel();
       }
     }
-  }
-  else if ( inc.type() == "DAQ_ENABLE" )  {
-    m_receiveEvts = true;
   }
   else if ( inc.type() == m_tmoIncident )  {
     m_eventTMO = true;

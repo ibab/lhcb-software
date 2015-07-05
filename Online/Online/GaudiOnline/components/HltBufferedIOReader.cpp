@@ -7,6 +7,7 @@
 #include "GaudiKernel/IEvtSelector.h"
 #include "GaudiOnline/OnlineService.h"
 #include "GaudiKernel/IEventProcessor.h"
+#include "MBM/BufferInfo.h"
 #include "MBM/Producer.h"
 #include "RTL/rtl.h"
 
@@ -77,10 +78,15 @@ namespace LHCb
     int                      m_maxConsWait;
     /// Property: Time for initial sleep before starting to process files (default: 10 sec)
     int                      m_initialSleep;
+    /// Property: Time for sleep before finishing the PAUSE transition (default: 5 sec)
+    int                      m_pauseSleep;
     /// Property: Inhibit rescan of the source directory
     int                      m_rescan;
     /// Property: Maximum number of events to be read from 1 single input file
     int                      m_max_events_per_file;
+    /// Property: Buffer names to be checked on special transitions
+    std::vector<std::string> m_mbmNames;
+
     /// Monitoring quantity: Number of events processed
     int                      m_evtCount;
     /// Monitoring quantity: Number of events per current input file
@@ -97,6 +103,13 @@ namespace LHCb
     bool                     m_deleteFiles;
     /// Flag to indicate if the node is in the broken hosts file and hence disabled
     bool                     m_disabled;
+    /// Flag to indicate if PAUSE incident was received or should be sent.
+    bool                     m_paused;
+    /// Buffer information blocks to be checked before special transitions are completed
+    MBM::BufferInfo*         m_mbmInfos;
+    /// String keyed map of buffer information blocks.
+    std::map<std::string,MBM::BufferInfo*> m_mbmInfo;
+    
 
     // Helper routines
 
@@ -111,6 +124,9 @@ namespace LHCb
     int openFile();
     /// Save remainder of currently read file
     void safeRestOfFile(int file_handle);
+
+    /// Wait until event buffers are empty before finishing....
+    void waitForPendingEvents(int seconds=100);
 
     /// IRunable implementation : Run the class implementation
     virtual StatusCode i_run();
@@ -148,7 +164,6 @@ namespace LHCb
 #include "GaudiKernel/IIncidentSvc.h"
 //#include "GaudiOnline/HltBufferedIOReader.h"
 #include "GaudiOnline/MEPManager.h"
-#include "MBM/BufferInfo.h"
 #include "MDF/MEPEvent.h"
 #include "MDF/MDFHeader.h"
 #include "RTL/rtl.h"
@@ -196,6 +211,13 @@ static bool file_write(int file, const void* data, int len)   {
   return true;
 }
 
+static bool check_consumers(const MBM::BufferInfo& info, int pid, int evtyp)   {
+  return info.num_consumers_partid_evtype(pid,evtyp) != 0;
+}
+static bool check_consumers_partid(const MBM::BufferInfo& info, int pid)   {
+  return info.num_consumers_partid(pid) != 0;
+}
+
 /// DIM command service callback
 void HltBufferedIOReader::go_handler(void* tag, void* address, int* size) {
   if ( address && tag && *size > 0 ) {
@@ -219,19 +241,22 @@ void HltBufferedIOReader::run_no_update(void* tag, void** buf, int* size, int* f
 HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
   : OnlineService(nam, svcLoc), m_receiveEvts(false), m_lock(0), m_mepMgr(0), 
     m_producer(0), m_evtCount(0), m_evtCountFile(0), m_runSvcID(0), m_currentRun(0),
-    m_goSvcID(0), m_goValue(0), m_disabled(false)
+    m_goSvcID(0), m_goValue(0), m_disabled(false), m_paused(false), m_mbmInfos(0)
 {
-  declareProperty("Buffer",        m_buffer          = "Mep");
-  declareProperty("Directory",     m_directory       = "/localdisk");
-  declareProperty("FilePrefix",    m_filePrefix      = "Run_");
-  declareProperty("BrokenHosts",   m_brokenHostsFile = "");
-  declareProperty("DeleteFiles",   m_deleteFiles     = true);
-  declareProperty("ConsumerWait",  m_maxConsWait     = 20);
-  declareProperty("AllowedRuns",   m_allowedRuns);
-  declareProperty("InitialSleep",  m_initialSleep    = 10);
-  declareProperty("Rescan",        m_rescan          = 1);
-  declareProperty("GoService",     m_goService       = "");
-  declareProperty("EventsPerFile", m_max_events_per_file = -1);
+  declareProperty("Buffer",         m_buffer          = "Mep");
+  declareProperty("Directory",      m_directory       = "/localdisk");
+  declareProperty("FilePrefix",     m_filePrefix      = "Run_");
+  declareProperty("BrokenHosts",    m_brokenHostsFile = "");
+  declareProperty("DeleteFiles",    m_deleteFiles     = true);
+  declareProperty("ConsumerWait",   m_maxConsWait     = 20);
+  declareProperty("AllowedRuns",    m_allowedRuns);
+  declareProperty("InitialSleep",   m_initialSleep    = 10);
+  declareProperty("PauseSleep",     m_pauseSleep      = 5);
+  declareProperty("Rescan",         m_rescan          = 1);
+  declareProperty("GoService",      m_goService       = "");
+  declareProperty("EventsPerFile",  m_max_events_per_file = -1);
+  declareProperty("CheckedBuffers", m_mbmNames);
+  
   m_allowedRuns.push_back("*");
   ::lib_rtl_create_lock(0, &m_lock);
 }
@@ -295,6 +320,7 @@ StatusCode HltBufferedIOReader::initialize()   {
   if (0 == m_producer)  {
     return error("Fatal error: Failed to create MBM producer object.");
   }
+  incidentSvc()->addListener(this, "DAQ_PAUSE");
   incidentSvc()->addListener(this, "DAQ_CANCEL");
   incidentSvc()->addListener(this, "DAQ_STOP_TRIGGER");
   declareInfo("EvtCount", m_evtCount = 0, "Number of events processed");
@@ -303,6 +329,7 @@ StatusCode HltBufferedIOReader::initialize()   {
   ::lib_rtl_lock(m_lock);
   m_files.clear();
   m_current = "";
+  m_paused = false;
   m_goValue = GO_PROCESS;
   if ( !m_goService.empty() )  {
     m_goValue = GO_DONT_PROCESS;
@@ -311,19 +338,38 @@ StatusCode HltBufferedIOReader::initialize()   {
   }
   string nam = RTL::processName() + "/CurrentRunNumber";
   m_runSvcID = ::dis_add_service(nam.c_str(),"I",0,0,run_no_update,(long)this);
+
+  // Buffer information blocks
+  if ( m_mbmNames.empty() ) m_mbmNames.push_back(m_buffer);
+  m_mbmInfos = new MBM::BufferInfo[m_mbmNames.size()];
+  for(size_t i=0; i<m_mbmNames.size(); ++i)  {
+    string nam = m_mbmNames[i];
+    string bm_name = m_mepMgr->bufferName(nam);
+    m_mbmInfo[nam] = &m_mbmInfos[i];
+    m_mbmInfos[i].attach(bm_name.c_str());
+  }
   return sc;
 }
 
 /// IService implementation: finalize the service
 StatusCode HltBufferedIOReader::finalize()  {
+  m_mbmInfo.clear();
+  if ( m_mbmInfos )  {
+    delete [] m_mbmInfos;
+    m_mbmInfos = 0;
+  }
+  
   if ( m_runSvcID )  {
-    ::dic_release_service(m_runSvcID);
+    ::dis_remove_service(m_runSvcID);
     m_runSvcID = 0;
   }
+
   if ( m_goSvcID )  {
     ::dic_release_service(m_goSvcID);
     m_goSvcID = 0;
   }
+
+  m_paused = false;
   m_goValue = GO_DONT_PROCESS;
   if ( m_producer )  {
     if (m_mepMgr->FSMState() != Gaudi::StateMachine::OFFLINE)    {
@@ -346,6 +392,7 @@ StatusCode HltBufferedIOReader::sysStart()  {
   }
   m_producer = m_mepMgr->createProducer(m_buffer,RTL::processName());
 #endif
+  m_paused = false;
   m_receiveEvts = true;
   ::lib_rtl_unlock(m_lock);
   return StatusCode::SUCCESS;
@@ -353,6 +400,7 @@ StatusCode HltBufferedIOReader::sysStart()  {
 
 /// IService implementation: finalize the service
 StatusCode HltBufferedIOReader::sysStop()   {
+  m_paused = false;
   m_goValue = GO_DONT_PROCESS;
   incidentSvc()->removeListener(this);
   if (m_receiveEvts)  {
@@ -365,17 +413,44 @@ StatusCode HltBufferedIOReader::sysStop()   {
   return StatusCode::SUCCESS;
 }
 
+void HltBufferedIOReader::waitForPendingEvents(int seconds)    {
+  size_t count;
+  do    {
+    count = 0;
+    for(auto i=m_mbmInfo.begin(); i!=m_mbmInfo.end(); ++i)
+      count += (*i).second->num_events();
+    if ( count > 0 ) ::lib_rtl_sleep(1000);
+  } while ( count > 0 && --seconds >= 0 );
+  ::lib_rtl_sleep(1000);
+}
+
 /// Incident handler implemenentation: Inform that a new incident has occured
 void HltBufferedIOReader::handle(const Incident& inc)
 {
   info("Got incident:" + inc.source() + " of type " + inc.type());
-  if (inc.type() == "DAQ_CANCEL")  {
+  if (inc.type() == "DAQ_CANCEL" )  {
     m_goValue = GO_DONT_PROCESS;
     m_receiveEvts = false;
     if (m_mepMgr)    {
       m_mepMgr->cancel();
     }
     ::lib_rtl_unlock(m_lock);
+  }
+  else if ( m_mepMgr && inc.type() == "DAQ_PAUSE" )  {
+    // This is not terribly elegant, but we have to stop the DIM callback
+    // and wait until the pipeline is empty....
+    MBM::BufferInfo mbmInfo;
+    m_paused = true;
+    m_goValue = GO_DONT_PROCESS;
+    m_receiveEvts = false;
+    if (m_mepMgr)    {
+      info("Waiting until event pipeline is empty.....");
+      waitForPendingEvents();
+      m_mepMgr->cancel();
+    }
+    ::lib_rtl_unlock(m_lock);
+    ::lib_rtl_sleep(1000*m_pauseSleep);
+    info("No events pending anymore...continue with PAUSE processing.....");
   }
   else if (inc.type() == "DAQ_ENABLE")  {
     m_receiveEvts = true;
@@ -490,17 +565,6 @@ void HltBufferedIOReader::safeRestOfFile(int file_handle)     {
   m_current = "";
 }
 
-static bool check_consumers(const MBM::BufferInfo& info, int pid, int evtyp)   {
-  return info.num_consumers_partid_evtype(pid,evtyp) != 0;
-}
-static bool check_consumers_partid(const MBM::BufferInfo& info, int pid)   {
-  return info.num_consumers_partid(pid) != 0;
-}
-static void waitForPendingEvents(const MBM::BufferInfo& info, int seconds=100)    {
-  while(info.num_events() > 0 && --seconds >= 0 )
-    ::lib_rtl_sleep(1000);
-}
-
 /// IRunable implementation : Run the class implementation
 StatusCode HltBufferedIOReader::i_run()  {
   const RawBank* bank = (RawBank*)this;
@@ -510,9 +574,7 @@ StatusCode HltBufferedIOReader::i_run()  {
   int partid = m_mepMgr->partitionID();
   bool files_processed = false;
   bool m_goto_paused = true;
-  std::string bm_name = m_mepMgr->bufferName(m_buffer);
-  MBM::BufferInfo mbmInfo;
-  
+  MBM::BufferInfo* mbmInfo = m_mbmInfo[m_buffer];
 
   if ( m_initialSleep > 0 )   {
     ::lib_rtl_sleep(1000*m_initialSleep);
@@ -529,9 +591,7 @@ StatusCode HltBufferedIOReader::i_run()  {
   }
 
   /// Before we start, we need to check if there are consumers present:
-  mbmInfo.attach(bm_name.c_str());
-
-  for(cons_wait = m_maxConsWait; !check_consumers_partid(mbmInfo,partid) && --cons_wait>=0; )
+  for(cons_wait = m_maxConsWait; !check_consumers_partid(*mbmInfo,partid) && --cons_wait>=0; )
     ::lib_rtl_sleep(1000);
 
   if ( cons_wait <= 0 )   {
@@ -547,16 +607,18 @@ StatusCode HltBufferedIOReader::i_run()  {
       if ( file_handle )  {
         safeRestOfFile(file_handle);
         file_handle = 0;
-	m_currentRun = 0;
-	if ( m_runSvcID ) ::dis_update_service(m_runSvcID);
+        m_currentRun = 0;
+        if ( m_runSvcID ) ::dis_update_service(m_runSvcID);
       }
       /// Before actually declaring PAUSED, we wait until no events are pending anymore.
-      waitForPendingEvents(mbmInfo);
-      // Sleep a bit before goung to pause
-      info("Sleeping before going to PAUSE....");
-      ::lib_rtl_sleep(10000);
+      waitForPendingEvents();
       /// Go to state PAUSED, all the work is done
-      incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
+      if ( !m_paused )  {
+        // Sleep a bit before goung to pause
+        info("Sleeping before going to PAUSE....");
+        ::lib_rtl_sleep(1000*m_pauseSleep);
+        incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
+      }
       info("Quitting...");
       break;
     }
@@ -677,7 +739,7 @@ StatusCode HltBufferedIOReader::i_run()  {
             // This should be a rare case, since there ARE (were?) consumers.
             // Though: In this case the event is really lost!
             // But what can I do...
-            for(cons_wait = m_maxConsWait; !check_consumers(mbmInfo,partid,dsc.type) && --cons_wait>=0; )
+            for(cons_wait = m_maxConsWait; !check_consumers(*mbmInfo,partid,dsc.type) && --cons_wait>=0; )
               ::lib_rtl_sleep(1000);
 
             if ( cons_wait <= 0 )  {
@@ -688,8 +750,8 @@ StatusCode HltBufferedIOReader::i_run()  {
               ::lseek(file_handle, file_position, SEEK_SET);
               safeRestOfFile(file_handle);
               file_handle = 0;
-              /// Before actually declaring PAUSED, we wait until no events are pending anymore.
-              waitForPendingEvents(mbmInfo);
+              /// Before actually declaring ERROR, we wait until no events are pending anymore.
+              waitForPendingEvents();
               /// Go to state PAUSED, all the work is done
               incidentSvc()->fireIncident(Incident(name(),"DAQ_ERROR"));
               return StatusCode::FAILURE;
@@ -728,7 +790,7 @@ StatusCode HltBufferedIOReader::i_run()  {
     m_evtCountFile = 0;
   }
   /// Before actually declaring PAUSED, we wait until no events are pending anymore.
-  waitForPendingEvents(mbmInfo);
+  waitForPendingEvents();
   return StatusCode::SUCCESS;
 }
 

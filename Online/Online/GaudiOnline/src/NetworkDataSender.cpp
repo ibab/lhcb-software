@@ -117,6 +117,9 @@ void LHCb::NetworkDataSender::handle(const Incident& inc)    {
     cancelNetwork();
     info << MSG::INFO << "Executing DAQ_CANCEL" << endmsg;
   }
+  else if ( inc.type() == "DAQ_PAUSE" )  {
+    // Nothing to do for now....
+  }  
 }
 
 /// Producer implementation: Resume event access from MBM

@@ -96,7 +96,10 @@ namespace  {
         IOCSENSOR.send(m_target, DimTaskFSM::CANCEL);
         IOCSENSOR.send(m_target, DimTaskFSM::UNLOAD);
       }
-      else if ( cmd == "RESET"      )   {
+      else if ( cmd == "cancel"     ) {
+        IOCSENSOR.send(m_target, DimTaskFSM::CANCEL);
+      }
+      else if ( cmd == "RESET"      ) {
         m_target->setTargetState(Target::ST_UNKNOWN);
         IOCSENSOR.send(m_target, DimTaskFSM::CANCEL);
         IOCSENSOR.send(m_target, DimTaskFSM::UNLOAD);

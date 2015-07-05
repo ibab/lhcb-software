@@ -5,6 +5,7 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/IEventProcessor.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Bootstrap.h"
@@ -32,6 +33,7 @@ using namespace LHCb;
 using namespace std;
 
 static    lib_rtl_lock_t  s_lock = 0;
+static    GaudiTask*      s_task = 0;
 
 int gauditask_task_lock() {
   return ::lib_rtl_lock(s_lock);
@@ -43,6 +45,7 @@ int gauditask_task_trylock() {
   return ::lib_rtl_trylock(s_lock);
 #endif
 }
+
 int gauditask_task_unlock() {
   return ::lib_rtl_unlock(s_lock);
 }
@@ -108,6 +111,20 @@ GaudiTask::PythonGlobalState::~PythonGlobalState() {
   }
 }
 
+/// Default constructor
+StatusCode GaudiTask::Configuration::initialize()  {
+  Service::initialize();
+  SmartIF<IJobOptionsSvc> jos(serviceLocator()->service("JobOptionsSvc", true));
+  if( !jos.isValid() )   {
+    MsgStream log(msgSvc(), name());
+    log << MSG::ERROR << "Failed to access first layer job options service." << endmsg;
+    return StatusCode::FAILURE;
+  }
+  GaudiTask* task = s_task;
+  if ( task ) jos->setMyProperties("Main", &task->propertyMgr());
+  return StatusCode::SUCCESS;
+}
+
 /// Static thread routine to execute a Gaudi runable
 int GaudiTask::execRunable(void* arg)  {
   pair<IRunable*,GaudiTask*>* p = (pair<IRunable*,GaudiTask*>*)arg;
@@ -117,10 +134,6 @@ int GaudiTask::execRunable(void* arg)  {
 
   try {
     PythonGlobalState state;
-    //char text[64];
-    //PyThreadState* st = PyGILState_GetThisThreadState();
-    //::sprintf(text," %p ",(void*)st);
-    //t->output(MSG::ERROR,"PyGILState_GetThisThreadState():  "+string(text));
     int ret = r->run();
     t->setEventThread(false);
     return ret;
@@ -141,12 +154,15 @@ GaudiTask::GaudiTask(IInterface*)
 {
   propertyMgr().declareProperty("Runable",        m_runable     = "LHCb::OnlineRunable/Runable");
   propertyMgr().declareProperty("EventLoop",      m_evtloop     = "LHCb::OnlineRunable/EmptyEventLoop");
-  propertyMgr().declareProperty("MessageSvcType", m_msgsvcType  = "MessageSvc");
-  propertyMgr().declareProperty("JobOptionsPath", m_mainOptions = "");
-  propertyMgr().declareProperty("OptionalOptions",m_optOptions  = "");
-  propertyMgr().declareProperty("AutoStart",      m_autostart   = 0);
+  propertyMgr().declareProperty("MessageSvcType",         m_msgsvcType      = "MessageSvc");
+  propertyMgr().declareProperty("JobOptionsPath",         m_mainOptions     = "");
+  propertyMgr().declareProperty("OptionalOptions",        m_optOptions      = "");
+  propertyMgr().declareProperty("AutoStart",              m_autostart       = 0);
+  propertyMgr().declareProperty("DeclareStateOnPAUSE",    m_declarePAUSE    = true);
+  propertyMgr().declareProperty("DeclareStateOnCONTINUE", m_declareCONTINUE = true);
   ::lib_rtl_create_lock(0,&s_lock);
   m_eventThread = false;
+  s_task = this;
 }
 
 GaudiTask::~GaudiTask()  {
@@ -155,6 +171,7 @@ GaudiTask::~GaudiTask()  {
   if ( m_appMgr ) m_appMgr->release();
   m_appMgr= 0;
   ::lib_rtl_delete_lock(s_lock);
+  s_task = 0;
 }
 
 void GaudiTask::lock() {
@@ -185,6 +202,7 @@ StatusCode GaudiTask::run()  {
         ip->setProperty(StringProperty("JobOptionsPath", m_mainOptions));
       }
       m_appMgr = ui;
+
       if ( m_autostart == 1 )  {
         cout << "Commencing checkpoint sequence..." << endl;
         IOCSENSOR.send(this,CONFIGURE);
@@ -280,8 +298,10 @@ void GaudiTask::handle(const Incident& inc)    {
     if ( !m_ignoreIncident ) continueProcessing();
   }
   else if ( inc.type() == "DAQ_START_TRIGGER" )  {
+    if ( !m_ignoreIncident )    {}
   }
   else if ( inc.type() == "DAQ_STOP_TRIGGER" )  {
+    if ( !m_ignoreIncident )    {}
   }
 }
 
@@ -304,9 +324,8 @@ StatusCode GaudiTask::pause()  {
     m_incidentSvc->fireIncident(incident);
     m_ignoreIncident = false;
   }
-  //return DimTaskFSM::pauseProcessing();
   m_continue = false;
-  return declareState(ST_PAUSED);
+  return m_declarePAUSE ? declareState(ST_PAUSED) :  declareState(ST_RUNNING);
 }
 
 /// Pause the application  ( PAUSED -> RUNNING )
@@ -318,8 +337,7 @@ StatusCode GaudiTask::continuing()  {
     m_ignoreIncident = false;
   }
   m_continue = true;
-  return declareState(ST_RUNNING);
-  // return DimTaskFSM::continueProcessing();
+  return m_declareCONTINUE ? declareState(ST_RUNNING) : StatusCode::SUCCESS;
 }
 
 StatusCode GaudiTask::cancel()  {
@@ -399,7 +417,8 @@ int GaudiTask::configApplication()  {
       return sc;
     }
     // This means job options were not found - this is an error
-    log << MSG::FATAL << "Failed to configure 2nd. level. Bad options ?" << endmsg;
+    log << MSG::FATAL << "Failed to configure 2nd. level. Bad options ? "
+        << "See INFO output from history for more ...." << endmsg;
   }
   if ( m_subMgr ) {
     m_subMgr->terminate();

@@ -243,19 +243,19 @@ extern "C" int OnlineTask(int argc, char** argv)  {
   std::string msgsvc  = "MessageSvc";
   std::string opts    = "";
   std::string optopts = "";
-  bool autostart  = cli.getopt("autostart",3) != 0;
-  bool checkpoint = cli.getopt("checkpoint",1) != 0;
-  bool evtLoop    = cli.getopt("loop",4) != 0;
-  cli.getopt("dll",3,dll);
-  cli.getopt("dbg",3,milli);
-  cli.getopt("tasktype",8,type);
-  cli.getopt("runable",3,runable);
-  cli.getopt("evtloop",3,evtloop);
-  cli.getopt("msgsvc", 3,msgsvc);
-  cli.getopt("mainoptions",3,opts);
-  cli.getopt("options",3,optopts);
-  if ( cli.getopt("help",4) )    return 1;
-  if ( cli.getopt("debug",5) ) ::lib_rtl_start_debugger();
+  bool autostart  = cli.getopt("autostart", 3) != 0;
+  bool checkpoint = cli.getopt("checkpoint", 1) != 0;
+  bool evtLoop    = cli.getopt("loop", 4) != 0;
+  cli.getopt("dll", 3, dll);
+  cli.getopt("dbg", 3, milli);
+  cli.getopt("tasktype", 8, type);
+  cli.getopt("runable", 3, runable);
+  cli.getopt("evtloop", 3, evtloop);
+  cli.getopt("msgsvc",  3, msgsvc);
+  cli.getopt("mainoptions", 3, opts);
+  cli.getopt("options", 3, optopts);
+  if ( cli.getopt("help", 4) )    return 1;
+  if ( cli.getopt("debug", 5) ) ::lib_rtl_start_debugger();
   if ( milli > 1000 && milli < 900000 ) {
     std::cout << "[ERROR] Connect debugger:   gdb --pid " << (int)::lib_rtl_pid() << std::endl;
     while(milli > 0) {
@@ -263,15 +263,15 @@ extern "C" int OnlineTask(int argc, char** argv)  {
       milli -= 10;
     }
   }
-  SmartIF<IProperty> p(Gaudi::createInstance("",type,dll));
+  SmartIF<IProperty> p(Gaudi::createInstance("", type, dll));
   if ( p )  {
-    p->setProperty(StringProperty("JobOptionsPath",opts));
-    p->setProperty(StringProperty("MessageSvcType",msgsvc));
-    p->setProperty(StringProperty("EventLoop",evtloop));
-    p->setProperty(StringProperty("Runable",runable));
-    p->setProperty(StringProperty("OptionalOptions",optopts));
-    p->setProperty(BooleanProperty("HaveEventLoop",evtLoop));
-    p->setProperty(IntegerProperty("AutoStart",checkpoint ? 1 : (autostart ? 2 : 0)));
+    p->setProperty(StringProperty("JobOptionsPath", opts));
+    p->setProperty(StringProperty("MessageSvcType", msgsvc));
+    p->setProperty(StringProperty("EventLoop", evtloop));
+    p->setProperty(StringProperty("Runable", runable));
+    p->setProperty(StringProperty("OptionalOptions", optopts));
+    p->setProperty(BooleanProperty("HaveEventLoop", evtLoop));
+    p->setProperty(IntegerProperty("AutoStart", checkpoint ? 1 : (autostart ? 2 : 0)));
     SmartIF<IRunable> runner(p);
     if ( runner )  {
       return runner->run();

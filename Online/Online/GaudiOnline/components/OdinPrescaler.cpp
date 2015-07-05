@@ -20,6 +20,12 @@
 #include <vector>
 #include <ctime>
 
+namespace {
+  unsigned int lib_rtl_clock_count()  {
+    return ::clock();
+  }
+}
+
 /*
  *  LHCb namespace declaration
  */
@@ -61,7 +67,7 @@ namespace LHCb {
 
     /// Algorithm overload: Start the algorithm
     virtual StatusCode start() {
-      m_seed = ::clock();
+      m_seed = InterfaceID::hash32((RTL::processName()+"@"+RTL::nodeName()).c_str());
       ::srand(m_seed);
       return StatusCode::SUCCESS; 
     }
@@ -73,10 +79,11 @@ namespace LHCb {
 
     /// Algorithm overload: Event execution routine
     virtual StatusCode execute() {
+      double frac = double(::rand()) / double(RAND_MAX);
+      //double frac = double(::rand_r(&m_seed)) / double(RAND_MAX);
       std::vector<int>::const_iterator vi;
       MsgStream log(msgSvc(),name());
       DataObject* pDO = 0;
-      double frac = double(::rand_r(&m_seed)) / double(RAND_MAX);
 
       log << MSG::DEBUG << "Fraction:" << frac << " Rate:" << m_rate << endmsg;
       StatusCode sc = eventSvc()->retrieveObject(m_bankLocation,pDO);
