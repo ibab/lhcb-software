@@ -58,19 +58,20 @@ int ROMonServer::handle(void* buff, size_t /* len */)   {
         if ( buffers->buffers[i].used == 1 )  {
           const char* bm_name = buffers->buffers[i].name;
           BufferMemory* dsc = ::mbm_map_mon_memory(bm_name);
-          if ( dsc ) {
+          if ( dsc && BMID(dsc) != MBM_INV_DESC ) {
             try {
               dumpBufferInfo(bm_name,dsc,mbm);
+              mbm = b->add(mbm);
             }
             catch(...)    {
             }
-            mbm = b->add(mbm);
             ::mbm_unmap_mon_memory(dsc);
           }
         }
       }
     }
     catch(...) {
+      ::lib_rtl_output(LIB_RTL_WARNING,"Cannot extract MBM information.\n");
     }
     ::mbm_unmap_global_buffer_info(m_bm_all,false);
     return 1;
@@ -95,13 +96,13 @@ void ROMonServer::dumpBufferInfo(const char* bm_name, BufferMemory* dsc, MBMBuff
     t->reqs[0] = t->reqs[1] = t->reqs[2] = t->reqs[3] = ' ';
     for (int k=0; k<us->n_req; ++k )  {
       if      ( us->req[k].user_type == BM_REQ_USER ) 
-	t->reqs[2] = 'U';
+        t->reqs[2] = 'U';
       else if ( us->req[k].user_type == BM_REQ_ALL  )
-	t->reqs[3] = 'A';
+        t->reqs[3] = 'A';
       else if ( us->req[k].user_type == BM_REQ_ONE  ) 
-	t->reqs[1] = 'a' + us->req[k].user_type_one;
+        t->reqs[1] = 'a' + us->req[k].user_type_one;
       else if ( us->req[k].freq < 100.0             )
-	t->reqs[0] = 'S';
+        t->reqs[0] = 'S';
     }
     strncpy(t->name,us->name,sizeof(t->name));
     t->name[sizeof(t->name)-1] = 0;

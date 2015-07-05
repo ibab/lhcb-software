@@ -28,7 +28,7 @@ using namespace std;
 using namespace ROMon;
 
 static void check_dbg(RTL::CLI& cli) {
-  bool dbg = cli.getopt("debug",3) != 0;
+  volatile bool dbg = cli.getopt("debug",3) != 0;
   while(dbg) {
     ::lib_rtl_sleep(100);
     if ( !dbg ) break;
@@ -38,9 +38,9 @@ static void check_dbg(RTL::CLI& cli) {
 /// Standard constructor
 NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
   : m_sys(0), m_print(0), m_verbose(false),
-    m_mbmDelay(500), m_mbmSvc(0), m_mbmSize(100), m_mbmBuffer(0),
-    m_statDelay(4000), m_statSvc(0), m_statSize(300), m_statBuffer(0),
-    m_hltSize(10), m_hlt_1_Svc(0), m_hlt_2_Svc(0), 
+    m_mbmDelay(500), m_mbmSvc(0), m_mbmSize(500), m_mbmBuffer(0),
+    m_statDelay(4000), m_statSvc(0), m_statSize(500), m_statBuffer(0),
+    m_hltSize(100), m_hlt_1_Svc(0), m_hlt_2_Svc(0), 
     m_hlt_1_Buffer(0), m_hlt_2_Buffer(0),
     m_mbm(0), m_fsm()
 {
@@ -50,7 +50,7 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
   cli.getopt("publish",   2, svc);
   cli.getopt("statSize",  5, m_statSize);
   cli.getopt("mbmSize",   4, m_mbmSize);
-  cli.getopt("hltSize",   4, m_hltSize);
+  cli.getopt("filesSize", 4, m_hltSize);
   cli.getopt("statDelay", 5, m_statDelay);
   cli.getopt("mbmDelay",  4, m_mbmDelay);
   m_print   = cli.getopt("print",2) != 0;
@@ -113,12 +113,12 @@ void NodeStatsCollector::overflowHandler(void* tag, void* address, int* size) {
       it->m_overflow = '?';
       it->m_overflowTime = ::time(0);
       if ( address && size && *size>0 ) {
-	if ( ::strncmp((char*)address,"Overflow disabled",16)==0 )
-	  it->m_overflow = 'N';
-	else if ( ::strncmp((char*)address,"Overflow enabled",16)==0 )
-	  it->m_overflow = 'Y';
-	else if ( ::strncmp((char*)address,"Overflow active",15)==0 )
-	  it->m_overflow = 'Y';
+        if ( ::strncmp((char*)address,"Overflow disabled",16)==0 )
+          it->m_overflow = 'N';
+        else if ( ::strncmp((char*)address,"Overflow enabled",16)==0 )
+          it->m_overflow = 'Y';
+        else if ( ::strncmp((char*)address,"Overflow active",15)==0 )
+          it->m_overflow = 'Y';
       }
     }
     catch(const exception& e) {
@@ -148,13 +148,13 @@ void NodeStatsCollector::feedStats(void* tag, void** buff, int* size, int* ) {
     if ( h->m_sys ) {
       CPUMonData cpu(h->m_statBuffer);
       if ( h->m_statBuffer && cpu.node ) {
-	*buff = h->m_statBuffer;
-	*size = cpu.node->length();
-	if ( h->m_verbose ) {
-	  log() << "[NodeStatsCollector] Published " << *size 
-		<< " Bytes of Stat data @" << *buff << std::endl;
-	}
-	return;
+        *buff = h->m_statBuffer;
+        *size = cpu.node->length();
+        if ( h->m_verbose ) {
+          log() << "[NodeStatsCollector] Published " << *size 
+                << " Bytes of Stat data @" << *buff << std::endl;
+        }
+        return;
       }
     }
   }
@@ -172,8 +172,8 @@ void NodeStatsCollector::feedMBM(void* tag, void** buff, int* size, int* ) {
       *buff = h->m_mbmBuffer;
       *size  = ro.node->length();
       if ( h->m_verbose ) {
-	log() << "[NodeStatsCollector] Published " << *size 
-	      << " Bytes of data MBM @" << *buff << std::endl;
+        log() << "[NodeStatsCollector] Published " << *size 
+              << " Bytes of data MBM @" << *buff << std::endl;
       }
       return;
     }
@@ -202,8 +202,8 @@ void NodeStatsCollector::feedHLT(char* data_buff, void** buff, int* size, int* )
       *buff = data_buff;
       *size = hlt.hlt->length();
       if ( m_verbose ) {
-	log() << "[NodeStatsCollector] Published " << *size 
-	      << " Bytes of data HLTMon @" << *buff << std::endl;
+        log() << "[NodeStatsCollector] Published " << *size 
+              << " Bytes of data HLTMon @" << *buff << std::endl;
       }
       return;
     }
@@ -249,13 +249,13 @@ int NodeStatsCollector::monitorHLT(char* buffer, const std::string& dir_name) {
       int run=0,date;
       int ret = ::sscanf(entry->d_name,"Run_%07d_%8d-",&run,&date);
       if ( ret == 2 ) {
-	map<int,int>::iterator i=files.find(run);
-	if ( i==files.end() ) files[run]=1;
-	else ++((*i).second);
-	++count;
+        map<int,int>::iterator i=files.find(run);
+        if ( i==files.end() ) files[run]=1;
+        else ++((*i).second);
+        ++count;
       }
       else if( !(0==::strcmp(entry->d_name,".") || 0==::strcmp(entry->d_name,"..")) ) {
-	// log() << "Strange file name for HLT deferred processing:" << entry->d_name << endl;
+        // log() << "Strange file name for HLT deferred processing:" << entry->d_name << endl;
       }
     }
     ::closedir(dir);
@@ -289,18 +289,29 @@ int NodeStatsCollector::monitorTasks() {
   Node::Tasks::iterator it = tasks->reset();
   const Clients& cl = m_fsm.clients();
   task_data.node->type = Node::TYPE;
-  for(Clients::const_iterator ic = cl.begin(); ic != cl.end(); ++ic) {
-    const FSMTask* t = (*ic).second->data<FSMTask>();
-    if ( ((char*)it) > task_data.str+m_mbmSize ) {
-      log() << "Task Buffer section memory too small.....exiting" << endl;
-      return 0;
+  try  {
+    for(Clients::const_iterator ic = cl.begin(); ic != cl.end(); ++ic) {
+      const FSMTask* t = (*ic).second->data<FSMTask>();
+      if ( ((char*)it) > task_data.str+m_mbmSize ) {
+        log() << "Task Buffer section memory too small.....exiting" << endl;
+        return 0;
+      }
+      if ( t->processID != -1 ) {
+        ::memcpy(it,t,sizeof(FSMTask));
+        it = tasks->add(it);
+      }
     }
-    if ( t->processID != -1 ) {
-      ::memcpy(it,t,sizeof(FSMTask));
-      it = tasks->add(it);
-    }
+    task_data.node->fixup();
   }
-  task_data.node->fixup();
+  catch(const exception& e)  {
+    log() << "Exception collecting task data:" << e.what() << endl;
+    tasks->reset();
+  }
+  catch (...)  {
+    tasks->reset();
+  }
+  
+
   if ( m_print ) {
     log() << "========================" << ::lib_rtl_timestr() 
           << "========================" << endl
@@ -341,30 +352,30 @@ int NodeStatsCollector::monitor() {
     }
     if ( 0 != m_mbmSvc ) {
       if ( (nclients=::dis_update_service(m_mbmSvc)) == 0 ) {
-	if ( m_print )   {
-	  //log() << "No client was listening to my MBM information......" << std::endl;
-	}
+        if ( m_print )   {
+          //log() << "No client was listening to my MBM information......" << std::endl;
+        }
       }
     }
     if ( stat_delay<=0 ) {
       if ( (nclients=::dis_update_service(m_statSvc)) == 0 ) {
-	if ( m_print )   {
-	  log() << "No client was listening to my node statistics information." << std::endl;
-	}
+        if ( m_print )   {
+          log() << "No client was listening to my node statistics information." << std::endl;
+        }
       }
       if ( 0 != m_hlt_1_Svc ) {
-	if ( (nclients=::dis_update_service(m_hlt_1_Svc)) == 0 ) {
-	  if ( m_print )  {
-	    log() << "No client was listening to the deferred HLT information." << std::endl;
-	  }
-	}
+        if ( (nclients=::dis_update_service(m_hlt_1_Svc)) == 0 ) {
+          if ( m_print )  {
+            log() << "No client was listening to the deferred HLT information." << std::endl;
+          }
+        }
       }
       if ( 0 != m_hlt_2_Svc ) {
-	if ( (nclients=::dis_update_service(m_hlt_2_Svc)) == 0 ) {
-	  if ( m_print )  {
-	    log() << "No client was listening to the deferred HLT information." << std::endl;
-	  }
-	}
+        if ( (nclients=::dis_update_service(m_hlt_2_Svc)) == 0 ) {
+          if ( m_print )  {
+            log() << "No client was listening to the deferred HLT information." << std::endl;
+          }
+        }
       }
       stat_delay = m_statDelay;
     }
