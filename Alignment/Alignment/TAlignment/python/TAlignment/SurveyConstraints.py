@@ -103,8 +103,9 @@ class SurveyConstraints( LHCbConfigurableUser ):
                                    "TT.                  : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
                                    "TT..Layer            : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
                                    "TT..Layer.Side       : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
-                                   "TT..LayerR.Module.{1,2}    : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
-                                   "TT..LayerR.Module..Sensor. : 0.005 0.005 0.005 0.000005 0.000005 0.000005"]  
+                                   "TT..LayerR.Module.*? : 0.1 0.1 0.1 0.0005 0.0005 0.0005"]
+#                                   "TT..LayerR.Module.{1,2}    : 0.1 0.1 0.1 0.0005 0.0005 0.0005", ## To match Wouter's new definition
+#                                   "TT..LayerR.Module..Sensor. : 0.005 0.005 0.005 0.000005 0.000005 0.000005"]  
         self.XmlUncertainties += [ "TT.*?(Low|High)Z     : 0.1 0.1 1.0 0.0005 0.0005 0.0005"]
         
         # boxes

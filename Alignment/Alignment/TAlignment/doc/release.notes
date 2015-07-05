@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2015-07-04 - Maurizio Martinelli
+ - commented out changes from Wouter to get alignment for a TTSensor and the added alignables: they introduced a crash in the sum of the derivatives
+
 ! 2015-07-03 - Maurizio Martinelli
  - Released cuts on D0 selection for Run2
 

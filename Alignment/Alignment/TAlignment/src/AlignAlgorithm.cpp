@@ -39,12 +39,12 @@
 
 #include <boost/foreach.hpp>
 #include "DetDesc/RunChangeIncident.h"
+
 #include <vector>
 #include <OnlineAlign/IAlignSys.h>
 #include "GaudiKernel/IMonitorSvc.h"
 #include "GaudiKernel/IUpdateable.h"
 #include "GaudiKernel/SmartIF.h"
-
 
 
 //-----------------------------------------------------------------------------
@@ -104,6 +104,7 @@ class HistoUpdater
       }
     }
 };
+
 AlignAlgorithm::AlignAlgorithm( const std::string& name,
         ISvcLocator* pSvcLocator)
   : GaudiHistoAlg( name , pSvcLocator ),
@@ -209,10 +210,9 @@ StatusCode AlignAlgorithm::initialize() {
       debug() << endmsg;
     }
   }
-  if (m_HistoUpdater->m_RefFileName.empty())
-  {
+  if (m_HistoUpdater->m_RefFileName.empty()) {
     m_HistoUpdater->m_RefFileName =
-        "/group/online/dataflow/options/"+m_HistoUpdater->m_PartitionName+"/Alignement_Reference_File.txt";
+        "/group/online/dataflow/options/"+m_HistoUpdater->m_PartitionName+"/Alignment_Reference_File.txt";
   }
 
   /// create the summary data and register in the TES

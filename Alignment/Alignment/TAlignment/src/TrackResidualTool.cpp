@@ -179,6 +179,7 @@ namespace Al
 	 it != nodeswithindex.end(); ++it ) {
       const LHCb::Node* node = it->first ;
       const AlignmentElement* elem = m_elementTool->findElement(*node) ;
+      //const AlignmentElement* elem = m_elementTool->findElement(node->measurement()) ; // commented to revert to Wouter's change and test
       if( elem ) { 
 	rc->m_residuals.push_back( Al::Residual1D( *node, *elem) ) ;
 	residualnodeindices.push_back( it->second ) ;

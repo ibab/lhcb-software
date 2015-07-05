@@ -64,8 +64,10 @@ namespace Al {
 *  @author Jan Amoraal
 *  @date   2007-03-05
 */
+
 class IAlignWork;
 class HistoUpdater;
+
 class AlignAlgorithm : public GaudiHistoAlg, virtual public IIncidentListener {
 public:
   /// Some handy typedefs
@@ -123,6 +125,7 @@ protected:
   bool testNodes( const LHCb::Track& track ) const ;
 
   HistoUpdater *m_HistoUpdater;
+
 private:
   size_t                            m_iteration;                     ///< Iteration counter
   size_t                            m_nIterations;                   ///< Number of iterations
@@ -163,8 +166,8 @@ private:
   std::vector<AlElementHistos*>     m_elemHistos ;
   bool                              m_resetHistos ; // reset histos on next event processing
   long long                         m_forcedInitTime ; // force the alignment geometry to initialize with this time (rather than first event)
-  bool															m_Online;
-  IAlignWork*												m_IAlwork;
+  bool				    m_Online;
+  IAlignWork*			    m_IAlwork;
 };
 
 #endif // TALIGNMENT_ALIGNALGORITHM_H
