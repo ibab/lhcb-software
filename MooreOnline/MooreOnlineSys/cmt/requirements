@@ -8,7 +8,7 @@ branches doc cmt tests
 
 use  MooreScripts      v1r11p1
 use  MooreOnlineConf   v1r9p1
-use  IndependenceTests v1r10    Hlt
+use  IndependenceTests v1r11    Hlt
 use  HltMonitoring     v1r0p1   Hlt
 
 ## Temporary packages.
