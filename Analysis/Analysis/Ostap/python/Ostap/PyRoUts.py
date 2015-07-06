@@ -388,7 +388,24 @@ def _axis_iter_1_ ( a ) :
         yield i
         i+=1        
 
-ROOT.TAxis . __iter__ = _axis_iter_1_
+# =============================================================================
+## iterator for histogram  axis (reversed order) 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _axis_iter_reversed_ ( a ) :
+    """
+    Iterator for axis
+
+    >>> axis = ...
+    >>> for i in reverse(axis) : 
+    """
+    s = a.GetNbins()
+    i = long( s )
+    while i <= 1 :
+        yield i
+        i-=1
+        
+ROOT.TAxis . __reversed__ = _axis_iter_reversed_
 
 # =============================================================================
 ## get item for the 1-D histogram 
@@ -422,22 +439,23 @@ def _h1_set_item_ ( h1 , ibin , v ) :
     
     """
     #
+    vv = VE ( v ) 
     if   isinstance ( v , ( int , long ) ) :
         
-        if   0  < v   : return _h1_set_item_ ( h1 , ibin , VE   ( v , v ) )
-        elif 0 == v   : return _h1_set_item_ ( h1 , ibin , VE   ( v , 1 ) )
-        else          : return _h1_set_item_ ( h1 , ibin , VE   ( v , 0 ) )
-        
+        if   0  < v   : vv = VE ( v , v )  
+        elif 0 == v   : vv = VE ( 0 , 1 ) 
+        else          : vv = VE ( v , 0 ) 
+
     elif isinstance ( v , float ) :
         
-        if _int ( v ) : return _h1_set_item_ ( h1 , ibin , long ( v     ) )
-        else          : return _h1_set_item_ ( h1 , ibin , VE   ( v , 0 ) )
+        if _int ( v ) : return _h1_set_item_ ( h1 , ibin , long ( v ) )
+        else          : vv = VE ( v , 0 ) 
 
     ## check the validity of the bin 
     if not ibin in h1 : raise IndexError 
     #
-    h1.SetBinContent ( ibin , v.value () )
-    h1.SetBinError   ( ibin , v.error () )
+    h1.SetBinContent ( ibin , vv.value () )
+    h1.SetBinError   ( ibin , vv.error () )
     
 ROOT.TH1F. __setitem__ = _h1_set_item_
 ROOT.TH1D. __setitem__ = _h1_set_item_
@@ -454,22 +472,23 @@ def _h2_set_item_ ( h2 , ibin , v ) :
     
     """
     #
+    vv = VE ( v ) 
     if   isinstance ( v , ( int , long ) ) :
         
-        if   0  < v   : return _h2_set_item_ ( h2 , ibin , VE ( v , v ) )
-        elif 0 == v   : return _h2_set_item_ ( h2 , ibin , VE ( v , 1 ) )
-        else          : return _h2_set_item_ ( h2 , ibin , VE ( v , 0 ) )
+        if   0  < v   : vv = VE ( v , v ) 
+        elif 0 == v   : vv = VE ( 0 , 1 ) 
+        else          : vv = VE ( v , 0 ) 
         
     elif isinstance ( v , float ) :
         
         if _int ( v ) : return _h2_set_item_ ( h2 , ibin , long ( v ) )
-        else          : return _h2_set_item_ ( h2 , ibin , VE ( v , 0 ) )
+        else          : vv = VE ( v , 0 ) 
 
     ## check the validity of the bin 
     if not ibin in h2 : raise IndexError 
     #
-    h2.SetBinContent ( ibin[0] , ibin[1] , v.value () )
-    h2.SetBinError   ( ibin[0] , ibin[1] , v.error () )
+    h2.SetBinContent ( ibin[0] , ibin[1] , vv.value () )
+    h2.SetBinError   ( ibin[0] , ibin[1] , vv.error () )
     
 ROOT.TH2F. __setitem__ = _h2_set_item_
 ROOT.TH2D. __setitem__ = _h2_set_item_
@@ -487,22 +506,23 @@ def _h3_set_item_ ( h3 , ibin , v ) :
     
     """
     #
+    vv = VE ( v ) 
     if   isinstance ( v , ( int , long ) ) :
         
-        if   0  < v   : return _h3_set_item_ ( h3 , ibin , VE ( v , v ) )
-        elif 0 == v   : return _h3_set_item_ ( h3 , ibin , VE ( v , 1 ) )
-        else          : return _h3_set_item_ ( h3 , ibin , VE ( v , 0 ) )
+        if   0  < v   : vv = VE ( v , v )
+        elif 0 == v   : vv = VE ( 0 , 1 ) 
+        else          : vv = VE ( v , 0 ) 
         
     elif isinstance ( v , float ) :
         
         if _int ( v ) : return _h3_set_item_ ( h3 , ibin , long ( v ) )
-        else          : return _h3_set_item_ ( h3 , ibin , VE ( v , 0 ) )
+        else          : vv = VE ( v , 0 ) 
 
     ## check the validity of the bin 
     if not ibin in h3 : raise IndexError 
     #
-    h3.SetBinContent ( ibin[0] , ibin[1] , ibin[2] , v.value () )
-    h3.SetBinError   ( ibin[0] , ibin[1] , ibin[2] , v.error () )
+    h3.SetBinContent ( ibin[0] , ibin[1] , ibin[2] , vv.value () )
+    h3.SetBinError   ( ibin[0] , ibin[1] , ibin[2] , vv.error () )
     
 ROOT.TH3F. __setitem__ = _h3_set_item_
 ROOT.TH3D. __setitem__ = _h3_set_item_
@@ -565,9 +585,27 @@ def _h1_iter_ ( h1 ) :
     for i in range ( 1 , sx + 1 ) : 
         yield i
 
-ROOT.TH1  . __iter__ = _h1_iter_ 
-ROOT.TH1F . __iter__ = _h1_iter_ 
-ROOT.TH1D . __iter__ = _h1_iter_ 
+
+# =============================================================================
+## iterator for 1D-histogram in reverse order 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-06
+def _h1_iter_reversed_ ( h1 ) :
+    """
+    Iterator over 1D-histogram
+    
+    >>> for i in reversed(h1) : print i 
+    """
+    ax = h1.GetXaxis () 
+    sx = ax.GetNbins ()
+    for i in range ( sx , 0 , -1 ) : 
+        yield i
+        
+ROOT.TH1  . __iter__     = _h1_iter_ 
+ROOT.TH1F . __iter__     = _h1_iter_ 
+ROOT.TH1D . __iter__     = _h1_iter_ 
+ROOT.TH1F . __reversed__ = _h1_iter_reversed_ 
+ROOT.TH1D . __reversed__ = _h1_iter_reversed_ 
 
 # =============================================================================
 ## iterator for 2D-histogram 
@@ -590,10 +628,33 @@ def _h2_iter_ ( h2 ) :
         for iy in range ( 1 , sy + 1 ) : 
             yield ix , iy
 
+# =============================================================================
+## iterator for 2D-histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _h2_iter_reversed_ ( h2 ) :
+    """
+    Iterator over 2D-histogram
+    
+    >>> for i in reversed(h2) : print i 
+    """
+    #
+    ax = h2.GetXaxis()
+    ay = h2.GetYaxis()
+    #
+    sx = ax.GetNbins()
+    sy = ay.GetNbins()
+    #
+    for iy in range ( sy , 0 , -1 ) : 
+        for ix in range ( sx , 0 , -1  ) : 
+            yield ix , iy
 
-ROOT.TH2  . __iter__ = _h2_iter_ 
-ROOT.TH2F . __iter__ = _h2_iter_ 
-ROOT.TH2D . __iter__ = _h2_iter_ 
+
+ROOT.TH2  . __iter__     = _h2_iter_ 
+ROOT.TH2F . __iter__     = _h2_iter_ 
+ROOT.TH2D . __iter__     = _h2_iter_ 
+ROOT.TH2F . __reversed__ = _h2_iter_reversed_ 
+ROOT.TH2D . __reversed__ = _h2_iter_reversed_ 
 
 # =============================================================================
 ## iterator for 3D-histogram 
@@ -619,10 +680,36 @@ def _h3_iter_ ( h3 ) :
             for iz in range ( 1 , sz + 1 ) : 
                 yield  ix , iy , iz
 
+# =============================================================================
+## iterator for 3D-histogram 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _h3_iter_reversed_ ( h3 ) :
+    """
+    Iterator over 3D-histogram
+    
+    >>> for i in reversed(h3) : print i 
+    """
+    #
+    ax = h3.GetXaxis()
+    ay = h3.GetYaxis()
+    az = h3.GetZaxis()
+    #
+    sx = ax.GetNbins()
+    sy = ay.GetNbins()    
+    sz = az.GetNbins()
+    #
+    for iz in range ( sz , 0 , -1 ) : 
+        for iy in range ( sy , 0 , -1  ) : 
+            for ix in range ( sx , 0 , -1  ) : 
+                yield  ix , iy , iz
+                
                     
-ROOT.TH3  . __iter__ = _h3_iter_ 
-ROOT.TH3F . __iter__ = _h3_iter_ 
-ROOT.TH3D . __iter__ = _h3_iter_ 
+ROOT.TH3  . __iter__     = _h3_iter_ 
+ROOT.TH3F . __iter__     = _h3_iter_ 
+ROOT.TH3D . __iter__     = _h3_iter_ 
+ROOT.TH3F . __reversed__ = _h3_iter_reversed_ 
+ROOT.TH3D . __reversed__ = _h3_iter_reversed_ 
 
 # =============================================================================
 # interpolate 
@@ -1421,6 +1508,9 @@ ROOT.TH2D . colz = _h2_colz_
 ROOT.TH2F . Colz = _h2_colz_
 ROOT.TH2D . Colz = _h2_colz_
 
+## add it also for TF2 
+ROOT.TF2  . colz = _h2_colz_
+
 # =============================================================================
 ## Draw 2D-histogram as 'text'
 def _h2_text_ ( h2 , opts = '' , fmt = '' ) :
@@ -1899,6 +1989,44 @@ ROOT.TH2D . __mod__  = zechEff_h2
 ROOT.TH3F . __mod__  = zechEff_h3
 ROOT.TH3D . __mod__  = zechEff_h3
 
+
+# =============================================================================
+## consider object as function:
+def objectAsFunc ( obj ) :
+    
+    if   isinstance ( obj , ( int , long , float ) ) :
+        
+        val  = float  ( obj ) 
+        func = lambda x,*y : VE ( val , 0 )
+        return func                                     ## RETURN
+    
+    elif isinstance ( obj  ,    VE ) :
+        
+        val  =     VE ( obj )
+        func = lambda x,*y : val
+        return func                                      ## RETURN
+    
+    elif isinstance ( obj ,   ROOT.TF1 ) :
+        
+        f1   = obj
+        func = lambda x,*y     : VE ( f1 ( float ( x ) , 0 ) )
+        return func                                      ## RETURN 
+
+    elif isinstance ( obj ,   ROOT.TF2 ) :
+        
+        f2   = obj
+        func = lambda x,y,*z   : VE ( f2 ( float ( x ) , float ( y ) , 0 ) )
+        return func                                      ## RETURN 
+
+    elif isinstance ( obj ,   ROOT.TF3 ) :
+        
+        f3   = obj
+        func = lambda x,y,z,*t : VE ( f3 ( float ( x ) , float ( y ) , float ( z ) , 0 ) )
+        return func                                      ## RETURN 
+
+    ## the original stuff 
+    return obj
+
 # =============================================================================
 ## operation with the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -1920,25 +2048,19 @@ def _h1_oper_ ( h1 , h2 , oper ) :
     #
     result = h1.Clone( hID() )
     if not result.GetSumw2() : result.Sumw2()
-    #
-    if   isinstance ( h2 , ( int , long , float ) ) :
-        v1 = float  ( h2 ) 
-        h2 = lambda s : VE ( v1 , 0 )
-    elif isinstance ( h2 ,    VE ) :
-        v1 =     VE ( h2 )
-        h2 = lambda s : v1  
-    elif isinstance ( h2 ,   ROOT.TF1 ) :
-        v1 =          h2  
-        h2 = lambda s : VE ( v1 ( float ( s ) , 0 ) ) 
-    #
+
+    ## 
+    f2 = objectAsFunction ( h2 )
+    
+    ##
     for i1,x1,y1 in h1.iteritems() :
         #
         result.SetBinContent ( i1 , 0 ) 
         result.SetBinError   ( i1 , 0 )
         #
-        y2 = h2 ( x1.value() ) 
+        y2 = f2 ( x1.value() ) 
         #
-        v = VE  ( oper ( y1 , y2 ) ) 
+        v  = VE ( oper ( y1 , y2 ) ) 
         #
         if not v.isfinite() : continue 
         #
@@ -1959,15 +2081,7 @@ def _h1_ioper_ ( h1 , h2 , oper ) :
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
     #
-    if   isinstance ( h2 , ( int , long , float ) ) :
-        v1 = float  ( h2 ) 
-        h2 = lambda s : VE ( v1 , 0 )
-    elif isinstance ( h2 ,    VE ) :
-        v1 =          h2  
-        h2 = lambda s : v1  
-    elif isinstance ( h2 ,   ROOT.TF1 ) :
-        v1 =          h2  
-        h2 = lambda s : VE ( v1 ( float ( s ) , 0 ) )    
+    h2 = objectAsFunction ( h2 ) 
     #    
     for i1,x1,y1 in h1.iteritems() :
         #
@@ -2165,7 +2279,6 @@ def _h1_abs_ ( h1 ) :
         
     return result 
 
-
 # =============================================================================
 ## Division with the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -2180,8 +2293,9 @@ def _h1_idiv_ ( h1 , h2 ) :
     
     """
     return _h1_ioper_ ( h1 , h2 , lambda x,y : x/y ) 
+
 # =============================================================================
-##  Division with the histograms 
+## Multiplication with the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_imul_ ( h1 , h2 ) :
@@ -2194,8 +2308,9 @@ def _h1_imul_ ( h1 , h2 ) :
     
     """
     return _h1_ioper_ ( h1 , h2 , lambda x,y : x*y ) 
+
 # =============================================================================
-##  Addition with the histograms 
+## Addition with the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_iadd_ ( h1 , h2 ) :
@@ -2237,7 +2352,7 @@ def _h1_rdiv_ ( h1 , h2 ) :
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : y/x ) 
 # =============================================================================
-##  Division with the histograms 
+## Multiplication with the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_rmul_ ( h1 , h2 ) :
@@ -2249,8 +2364,9 @@ def _h1_rmul_ ( h1 , h2 ) :
     >>> result = obj * h1 
     """
     return _h1_oper_ ( h1 , h2 , lambda x,y : y*x ) 
+
 # =============================================================================
-##  Addition with the histograms 
+## Addition with the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_radd_ ( h1 , h2 ) :
@@ -2261,9 +2377,10 @@ def _h1_radd_ ( h1 , h2 ) :
     >>> obj    = ...
     >>> result = obj + h1 
     """
-    return _h1_oper_ ( h1 , h2 , lambda x,y : y+x ) 
+    return _h1_oper_ ( h1 , h2 , lambda x,y : y+x )
+
 # =============================================================================
-##  Subtraction of the histograms 
+## Subtraction of the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_rsub_ ( h1 , h2 ) :
@@ -2277,33 +2394,59 @@ def _h1_rsub_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : y-x ) 
 
 # =============================================================================
+## Feed the histogram from other object, e.g. function
+#  @code
+#  h1 = ....         ## create the histogram 
+#  math.sin  >> h1   ## feed it using function  
+#  @endcode
+#  The action is equivalent to
+#  @code
+#  h1.Reset()        ## reset it 
+#  h1 += math.sin    ## update it using function  
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _h1_rrshift_ ( h1 , obj ) :
+    """
+    Feed the histogram from external source, e.g. function
+    
+    >>> h1 = ...        ## the histogram
+    >>> math.sin >> h1  ## feed it from the function
+    
+    """
+    h1.Reset() 
+    h1 += obj
+    
+    return h1
 
 for t in ( ROOT.TH1F , ROOT.TH1D ) : 
     
-    t . _oper_    = _h1_oper_
-    t . _ioper_   = _h1_ioper_
-    t . __div__   = _h1_div_
-    t . __mul__   = _h1_mul_
-    t . __add__   = _h1_add_
-    t . __sub__   = _h1_sub_
-    t . __pow__   = _h1_pow_
+    t . _oper_      = _h1_oper_
+    t . _ioper_     = _h1_ioper_
+    t . __div__     = _h1_div_
+    t . __mul__     = _h1_mul_
+    t . __add__     = _h1_add_
+    t . __sub__     = _h1_sub_
+    t . __pow__     = _h1_pow_
     
-    t . __idiv__  = _h1_idiv_
-    t . __imul__  = _h1_imul_
-    t . __iadd__  = _h1_iadd_
-    t . __isub__  = _h1_isub_
+    t . __idiv__    = _h1_idiv_
+    t . __imul__    = _h1_imul_
+    t . __iadd__    = _h1_iadd_
+    t . __isub__    = _h1_isub_
     
-    t . __rdiv__  = _h1_rdiv_
-    t . __rmul__  = _h1_rmul_
-    t . __radd__  = _h1_radd_
-    t . __rsub__  = _h1_rsub_
+    t . __rdiv__    = _h1_rdiv_
+    t . __rmul__    = _h1_rmul_
+    t . __radd__    = _h1_radd_
+    t . __rsub__    = _h1_rsub_
+
+    t . __rrshift__ = _h1_rrshift_
     
-    t . __abs__   = _h1_abs_
-    t .  frac     = _h1_frac_
-    t .  asym     = _h1_asym_
-    t .  diff     = _h1_diff_
-    t .  chi2     = _h1_chi2_
-    t .  average  = _h1_mean_
+    t . __abs__     = _h1_abs_
+    t .  frac       = _h1_frac_
+    t .  asym       = _h1_asym_
+    t .  diff       = _h1_diff_
+    t .  chi2       = _h1_chi2_
+    t .  average    = _h1_mean_
 
 # =============================================================================
 ## find the first X-value for the given Y-value 
@@ -2671,21 +2814,16 @@ def _h2_oper_ ( h1 , h2 , oper ) :
     result = h1.Clone( hID() )
     if not result.GetSumw2() : result.Sumw2()
     #
-    if   isinstance ( h2 , (int,long,float) ) :
-        vv = float ( h2 )  
-        h2 = lambda x,y : VE(vv,0)
-    elif isinstance ( h2 ,  VE              ) :
-        vv =     VE ( h2 )
-        h2 = lambda x,y :    vv
-    #
+    f2 = objectAsFunction ( h2 )
+    # 
     for ix1,iy1,x1,y1,z1 in h1.iteritems() :
         #
         result.SetBinContent ( ix1 , iy1 , 0 ) 
         result.SetBinError   ( ix1 , iy1 , 0 )
         #
-        z2 = h2 ( x1.value() , y1.value() ) 
+        z2 = f2 ( x1.value() , y1.value() ) 
         #
-        v = VE ( oper ( z1 , z2 ) ) 
+        v  = VE ( oper ( z1 , z2 ) ) 
         #
         if not v.isfinite() : continue 
         #
@@ -2705,21 +2843,16 @@ def _h2_ioper_ ( h1 , h2 , oper ) :
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
     #
-    if   isinstance ( h2 , ( int , long , float ) ) :
-        vv = float  ( h2 ) 
-        h2 = lambda x,y : VE ( vv , 0 )
-    elif isinstance ( h2 ,    VE ) :
-        vv = VE     ( h2 )   
-        h2 = lambda x,y :      vv  
-    #
+    f2 = objectAsFunction ( h2 )
+    # 
     for ix1,iy1,x1,y1,z1 in h1.iteritems() :
         #
         h1.SetBinContent ( ix1 , iy1 , 0 ) 
         h1.SetBinError   ( ix1 , iy1 , 0 )
         #
-        z2 = h2 ( x1.value() , y1.value() ) 
+        z2 = f2 ( x1.value() , y1.value() ) 
         #
-        v = VE ( oper ( z1 , z2 ) ) 
+        v  = VE ( oper ( z1 , z2 ) ) 
         #
         if not v.isfinite() : continue 
         #
@@ -3076,19 +3209,14 @@ def _h3_oper_ ( h1 , h2 , oper ) :
     result = h1.Clone( hID() )
     if not result.GetSumw2() : result.Sumw2()
     #
-    if   isinstance ( h2 , (int,long,float) ) :
-        vv = float ( h2 )  
-        h2 = lambda x,y,z : VE ( vv , 0 )
-    elif isinstance ( h2 ,  VE              ) :
-        vv =     VE ( h2 )
-        h2 = lambda x,y,z :      vv
+    f2 = objectAsFunction ( h2 ) 
     # 
     for ix1,iy1,iz1,x1,y1,z1,v1 in h1.iteritems() :
         #
         result.SetBinContent ( ix1 , iy1 , iz1 , 0 ) 
         result.SetBinError   ( ix1 , iy1 , iz1 , 0 )
         #
-        v2 = h2 ( x1.value() , y1.value() , z1.value() ) 
+        v2 = f2 ( x1.value() , y1.value() , z1.value() ) 
         #
         v  = VE ( oper ( v1 , v2 ) )
         #
@@ -3110,19 +3238,14 @@ def _h3_ioper_ ( h1 , h2 , oper ) :
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
     #
-    if   isinstance ( h2 , ( int , long , float ) ) :
-        vv = float  ( h2 ) 
-        h2 = lambda x,y,z : VE ( vv , 0 )
-    elif isinstance ( h2 ,    VE ) :
-        vv = VE     ( h2 ) 
-        h2 = lambda x,y,z :      vv  
-    #
+    f2 = objectAsFunction ( h2 ) 
+    # 
     for ix1,iy1,iz1,x1,y1,z1,v1 in h1.iteritems() :
         #
         h1.SetBinContent ( ix1 , iy1 , iz1 , 0 ) 
         h1.SetBinError   ( ix1 , iy1 , iz1 , 0 )
         #
-        v2 = h2 ( x1.value() , y1.value() , z1.value() ) 
+        v2 = f2 ( x1.value() , y1.value() , z1.value() ) 
         #
         v  = VE ( oper ( v1 , v2 ) ) 
         #
@@ -5056,34 +5179,115 @@ def _h1_shift_ ( h , bias ) :
 ## simple shift of the histogram
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
-def _h1_ishift_ ( h , ibias ) :
+def _h1_irshift_ ( h , ibias ) :
+    """
+    Simple shift of the histogram :
+    
+    >>> h   = ... # the histogram
+    >>> h >>= 5   # shift for 5 bins left 
+    
+    """
+    #
+    ##
+    if not isinstance ( ibias , ( int , long ) ) : return NotImplemented 
+    if not h     .GetSumw2()  : h    .Sumw2()
+    ##
+    if   0 == ibias : return h ## RETURN 
+    elif ibias < 0  :
+        h <<= abs(ibias)
+        return h               ## RETURN
+    ##
+    for i in reversed ( h ) : 
+        j  = i - ibias
+        if j in h :  h [ i ] = h[ j ]
+        else      :  h [ i ] = VE() 
+        
+    return h     
+
+# =============================================================================
+## simple shift of the histogram
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _h1_ilshift_ ( h , ibias ) :
+    """
+    Simple shift of the histogram :
+    
+    >>> h   = ...  # the histogram
+    >>> h <<= 5    # shift for 5 bins left 
+    
+    """
+    #
+    ##
+    if not isinstance ( ibias , ( int , long ) ) : return NotImplemented 
+    if not h     .GetSumw2()  : h    .Sumw2()
+    ##
+    if   0 == ibias : return h  ## RETURN 
+    elif ibias < 0  :
+        h >>= abs(ibias) 
+        return h                ## RETURN
+    ##
+    for i in h :
+        j = i + ibias
+        if j in h :  h [ i ] = h[ j ]
+        else      :  h [ i ] = VE() 
+        
+    return h     
+
+# =============================================================================
+## simple shift of the histogram
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _h1_lshift_ ( h , ibias ) :
+    """
+    Simple shift of the histogram :
+    
+    >>> h = ...      # the histogram
+    >>> h2 = h << 5  # shift for 5 bins left 
+    
+    """
+    #
+    ##
+    if not isinstance ( ibias , ( int , long ) ) : return NotImplemented 
+    ## 
+    if not h     .GetSumw2()  : h    .Sumw2()
+    result = h.Clone( hID() ) ;
+    result.Reset() ;
+    if not result.GetSumw2()  : result.Sumw2()
+    #
+    result <<= ibias
+    return result 
+
+
+# =============================================================================
+## simple shift of the histogram
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _h1_rshift_ ( h , ibias ) :
     """
     Simple shift of the histogram :
     
     >>> h = ...      # the histogram
     >>> h2 = h >> 5  # shift for 5 bins right 
-    >>> h2 = h << 5  # shift for 3 bins left
     
     """
     #
-    if not h     .GetSumw2()  : h    .Sumw2()
-    result = h.Clone( hID() ) ;
-    result.Reset() ;
-    if not result.GetSumw2() : result.Sumw2()
-    #
-    for i in result :
-        j = i - ibias
-        if j in h :  result[i] = h[ j ] 
-        
-    return result      
+    if isinstance ( ibias , ROOT.TH1 ) : return _h1_rrshift_ ( ibias , h ) 
+    ##
+    if not isinstance ( ibias , ( int , long ) ) : return NotImplemented 
+    ##
+    return _h1_lshift_ ( h1 , -1 * ibias )
 
 
-ROOT.TH1F .   shift    = _h1_shift_
-ROOT.TH1D .   shift    = _h1_shift_
-ROOT.TH1D . __rshift__ = _h1_ishift_
-ROOT.TH1F . __rshift__ = _h1_ishift_
-ROOT.TH1D . __lshift__ = lambda s,i : _h1_ishift_ ( s , -1 * i ) 
-ROOT.TH1F . __lshift__ = lambda s,i : _h1_ishift_ ( s , -1 * i ) 
+ROOT.TH1F .   shift     = _h1_shift_
+ROOT.TH1D .   shift     = _h1_shift_
+ROOT.TH1D . __rshift__  = _h1_rshift_
+ROOT.TH1F . __rshift__  = _h1_rshift_
+ROOT.TH1D . __lshift__  = _h1_lshift_
+ROOT.TH1F . __lshift__  = _h1_lshift_
+ROOT.TH1D . __ilshift__ = _h1_ilshift_
+ROOT.TH1F . __ilshift__ = _h1_ilshift_
+ROOT.TH1D . __irshift__ = _h1_irshift_
+ROOT.TH1F . __irshift__ = _h1_irshift_
 
 
 # =============================================================================    

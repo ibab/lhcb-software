@@ -8,6 +8,26 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-07-06 - Vanya Belyaev
+
+ - impove shift and feed operations with historgams 
+
+     h >>= 5 
+     h <<= 5
+     h >>  5
+     h <<  5
+  	 math.sin >> h1 
+  	 math.cos >> h2 
+     h1 >> h2 
+     1  >> h1 
+
+ - add reverse iteration over axis and histograms:
+
+     for i in reversed(h) : print i 
+
+ - improve and simplify treatment of objects "as-functions" 
+
+
 ! 2015-06-22 - Vanya Belyaev
  - Data.py:   improve treatment of "empty" trees/chains 
 
