@@ -14,7 +14,9 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 
 class RareCharmLines(Hlt2LinesConfigurableUser):
     __slots__ = {'_stages' : {},
-                 'Prescale' : {},
+                 'Prescale' : {"Hlt2RareCharmD02KPi"    : 0.01,
+                               "Hlt2RareCharmD02PiPi"    : 0.02
+                               },
                  'Common' : {#two body lines
                             'XTrackChi2'         : 5               # adimensional
                             ,'XminP'              : 4000 * MeV      # MeV

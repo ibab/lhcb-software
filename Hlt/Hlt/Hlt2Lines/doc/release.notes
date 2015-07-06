@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-07-06 - Francesco Dettori
+ - Adding prescales for control channels in RareCharm lines.
+
 ! 2015-07-03 - Jon Harrison
  - Updates to RareCharm lines to include 4 more same-sign LFV/LNV combinations.
 
