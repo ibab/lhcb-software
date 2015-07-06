@@ -4,6 +4,9 @@
 ! Purpose     : Analysis framework and configuration for offline and web GUIs
 !----------------------------------------------------------------------------
 
+! 2015-07-06 - Alex Pearce
+ - Allow any real number type for yAxis{Minimum,Maximum} configuration keys.
+
 ! 2015-07-01 - Michael Alexander
  - Removing IP monitoring plots for the moment as they're not made by default.
 

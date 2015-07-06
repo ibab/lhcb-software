@@ -58,8 +58,8 @@ No key in the `options` dictionary is required, and valid keys are:
 
     showUncertainties: Should the GUI display the uncertainties defined in the
                        plots (boolean)
-    yAxisMinimum: Fixed y-axis minimum to display (float)
-    yAxisMaximum: Fixed y-axis maximum to display (float)
+    yAxisMinimum: Fixed y-axis minimum to display (Real)
+    yAxisMaximum: Fixed y-axis maximum to display (Real)
     yAxisZeroSuppressed: Set the y-axis range to be centered around the minimum
                          and maximum histogram values (boolean)
     asPoints: Display the histogram as a set of points centered within each
@@ -102,7 +102,10 @@ run_view_pages = OrderedDict([
             {
                 'title': 'RMS noise vs. chip channel',
                 'name': 'Vetra/NoiseMon/DecodedADC/TELL1_{0:03d}/RMSNoise_vs_ChipChannel',
-                'sensor_dependent': True
+                'sensor_dependent': True,
+                'options': {
+                    'asPoints': True
+                }
             },
             {
                 'title': 'RMS noise vs. strip',

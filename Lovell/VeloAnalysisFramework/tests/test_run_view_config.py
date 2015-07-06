@@ -1,4 +1,5 @@
 import unittest
+from numbers import Real
 
 from veloview.config import Config
 run_view_pages = Config().run_view_pages
@@ -32,8 +33,8 @@ PLOT_VALUE_TYPES = {
 # Value types for a given option with plot options dictionary
 PLOT_OPTIONS_TYPES = {
     'showUncertainties': bool,
-    'yAxisMinimum': float,
-    'yAxisMaximum': float,
+    'yAxisMinimum': Real,
+    'yAxisMaximum': Real,
     'yAxisZeroSuppressed': bool,
     'asPoints': bool
 }
@@ -110,7 +111,11 @@ class TestRunViewConfig(unittest.TestCase):
                 for key, key_type in PLOT_OPTIONS_TYPES.iteritems():
                     if key not in plot[OPTIONS_KEY]:
                         continue
-                    self.assertIsInstance(plot[OPTIONS_KEY][key], key_type)
+                    key_val = plot[OPTIONS_KEY][key]
+                    err = 'Expected type {0} for key {1}.{2}, got {3}'.format(
+                        key_type, plot['name'], key, type(key_val)
+                    )
+                    self.assertIsInstance(key_val, key_type, err)
 
 
 if __name__ == "__main__":
