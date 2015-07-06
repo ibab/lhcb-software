@@ -362,7 +362,7 @@ int main()
   gStyle->SetTitleYOffset(1.05);
   gStyle->SetTitleStyle(0);
 
-  bool OTIS_calibration = true;
+  bool OTIS_calibration = false;
 
   double t0s[3][4][4][9]; memset(t0s, 0, sizeof(t0s));
   double OTIS_t0s[3][4][4][9][4]; memset(OTIS_t0s, 0, sizeof(t0s));
@@ -385,8 +385,8 @@ int main()
   }
 
   std::cout << "Load file ..." << std::endl;
-  //TFile* file = new TFile("clbr_hists_data2012.root");
-  TFile* file = new TFile("/tmp/lgrillo/clbr_hists_2015.root");
+  //TFile* file = new TFile("clbr_hists_data2015.root");
+  TFile* file = new TFile("/afs/cern.ch/work/l/lgrillo/OT_ModuleClbr_Validation/clbr_hists_run154882.root");
 
   std::cout << "Book hists ..." << std::endl;
   TH1D* hdt0 = new TH1D("hdt0", "", 432, 0, 432);
@@ -437,7 +437,7 @@ int main()
 	OTIS_t0s[s][l][q][m][1] = t0s[s][l][q][m] +  residual01R ;
 	OTIS_t0s[s][l][q][m][2] = t0s[s][l][q][m] +  residual23L ;
 	OTIS_t0s[s][l][q][m][3] = t0s[s][l][q][m] +  residual23R ;
-	dt0 =  OTIS_t0s[s][l][q][m][3];
+	dt0 =  (OTIS_t0s[s][l][q][m][3]+OTIS_t0s[s][l][q][m][2]+OTIS_t0s[s][l][q][m][1]+OTIS_t0s[s][l][q][m][0])*0.25;
       }
       else{
 	if(m==8 && (q == 0 || q == 2))
@@ -452,6 +452,8 @@ int main()
       double t0 = t0s[s][l][q][m];
 //      t0 = t0s[s][l][q][m] = mtoff[modulen] - (28.0 + 2.0 * s);
       //   t0 -= mtoff[modulen];
+
+      std::cout << "dt0 = " << dt0 << "err " << dt0err << "t0" <<  t0 << std::endl;
 
       hdt0->SetBinContent(hdt0->FindBin(modulen), dt0);
       hdt0->SetBinError(hdt0->FindBin(modulen), dt0err);

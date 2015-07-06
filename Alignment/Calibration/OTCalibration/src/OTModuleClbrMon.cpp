@@ -82,6 +82,7 @@ OTModuleClbrMon::OTModuleClbrMon(const std::string& name, ISvcLocator* pSvcLocat
   declareProperty("Save_Fits", save_fits = true, " Save fitted gaussian (default false,)");
 
   declareProperty("OTIS_calibration", OTIS_calibration = true, "OTIS calibration (instead of half module left and right)");
+  declareProperty("OTIS_LR_calibration", OTIS_LR_calibration = false, "OTIS calibration, left and right contributions");
 
   declareProperty("Verbose", verbose = true, " Verbose, for debugging (default false,)");
   //  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/group/online/alignment/" );
@@ -157,6 +158,23 @@ StatusCode OTModuleClbrMon::initialize()
     histModuleDriftTimeResidual23R[s][l][q][m] = book(histPath + "/" + "driftTimeResidual23R", "drift time residual (otis23 && dist > 0)",
       histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
 
+    histModuleDriftTimeResidual_otis0_L[s][l][q][m] = book(histPath + "/" + "driftTimeResidual_otis0_L", "drift time residual (otis0 && dist < 0)",
+      histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
+    histModuleDriftTimeResidual_otis0_R[s][l][q][m] = book(histPath + "/" + "driftTimeResidual_otis0_R", "drift time residual (otis0 && dist > 0)",
+      histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
+    histModuleDriftTimeResidual_otis1_L[s][l][q][m] = book(histPath + "/" + "driftTimeResidual_otis1_L", "drift time residual (otis1 && dist < 0)",
+      histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
+    histModuleDriftTimeResidual_otis1_R[s][l][q][m] = book(histPath + "/" + "driftTimeResidual_otis1_R", "drift time residual (otis1 && dist > 0)",
+      histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
+    histModuleDriftTimeResidual_otis2_L[s][l][q][m] = book(histPath + "/" + "driftTimeResidual_otis2_L", "drift time residual (otis2 && dist < 0)",
+      histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
+    histModuleDriftTimeResidual_otis2_R[s][l][q][m] = book(histPath + "/" + "driftTimeResidual_otis2_R", "drift time residual (otis2 && dist > 0)",
+      histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
+    histModuleDriftTimeResidual_otis3_L[s][l][q][m] = book(histPath + "/" + "driftTimeResidual_otis3_L", "drift time residual (otis3 && dist < 0)",
+      histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
+    histModuleDriftTimeResidual_otis3_R[s][l][q][m] = book(histPath + "/" + "driftTimeResidual_otis3_R", "drift time residual (otis3 && dist > 0)",
+      histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
+
     //   std::cout << "book mY module histograms" << std::endl;
 
     TString name_station [3]= {"station_0", "station_1", "station_2"};
@@ -170,6 +188,18 @@ StatusCode OTModuleClbrMon::initialize()
     m_histModuleDriftTimeResidual01R[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual01R"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual (otis01 && dist > 0)",200, -25, 25);
     m_histModuleDriftTimeResidual23L[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual23L"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual (otis23 && dist < 0)",200, -25, 25);
     m_histModuleDriftTimeResidual23R[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual23R"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual (otis23 && dist > 0)",200, -25, 25);
+
+
+    m_histModuleDriftTimeResidual_otis0_L[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual_otis0_L"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual (otis0 && dist < 0)",200, -25, 25);
+    m_histModuleDriftTimeResidual_otis0_R[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual_otis0_R"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual (otis0 && dist > 0)",200, -25, 25);
+    m_histModuleDriftTimeResidual_otis1_L[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual_otis1_L"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual (otis0 && dist < 0)",200, -25, 25);
+    m_histModuleDriftTimeResidual_otis1_R[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual_otis1_R"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual (otis0 && dist > 0)",200, -25, 25);
+    m_histModuleDriftTimeResidual_otis2_L[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual_otis2_L"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual (otis0 && dist < 0)",200, -25, 25);
+    m_histModuleDriftTimeResidual_otis2_R[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual_otis2_R"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual (otis0 && dist > 0)",200, -25, 25);
+    m_histModuleDriftTimeResidual_otis3_L[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual_otis3_L"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual (otis0 && dist < 0)",200, -25, 25);
+    m_histModuleDriftTimeResidual_otis3_R[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual_otis3_R"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual (otis0 && dist > 0)",200, -25, 25);
+
+
     histModuleDriftTimeResidual[s][l][q][m] = book(histPath + "/" + "driftTimeResidual", "drift time residual",
       histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
 
@@ -399,7 +429,29 @@ StatusCode OTModuleClbrMon::execute()
         fill(histStationDriftTime[s], tdrift, 1.0);
 
         int otis = (channel.straw() - 1) / 32;
-	if(OTIS_calibration){
+	if(OTIS_LR_calibration){
+	  if(otis == 0 && dist < 0) fill(histModuleDriftTimeResidual_otis0_L[s][l][q][m], timeResidual, 1.0);
+	  if(otis == 1 && dist < 0) fill(histModuleDriftTimeResidual_otis1_L[s][l][q][m], timeResidual, 1.0);
+	  if(otis == 2 && dist < 0) fill(histModuleDriftTimeResidual_otis2_L[s][l][q][m], timeResidual, 1.0);
+	  if(otis == 3 && dist < 0) fill(histModuleDriftTimeResidual_otis3_L[s][l][q][m], timeResidual, 1.0);
+
+	  if(otis == 0 && dist > 0) fill(histModuleDriftTimeResidual_otis0_R[s][l][q][m], timeResidual, 1.0);
+	  if(otis == 1 && dist > 0) fill(histModuleDriftTimeResidual_otis1_R[s][l][q][m], timeResidual, 1.0);
+	  if(otis == 2 && dist > 0) fill(histModuleDriftTimeResidual_otis2_R[s][l][q][m], timeResidual, 1.0);
+	  if(otis == 3 && dist > 0) fill(histModuleDriftTimeResidual_otis3_R[s][l][q][m], timeResidual, 1.0);
+
+	  if(otis == 0 && dist < 0) m_histModuleDriftTimeResidual_otis0_L[s][l][q][m]->Fill(timeResidual);
+	  if(otis == 1 && dist < 0) m_histModuleDriftTimeResidual_otis1_L[s][l][q][m]->Fill(timeResidual);
+	  if(otis == 2 && dist < 0) m_histModuleDriftTimeResidual_otis2_L[s][l][q][m]->Fill(timeResidual);
+	  if(otis == 3 && dist < 0) m_histModuleDriftTimeResidual_otis3_L[s][l][q][m]->Fill(timeResidual);
+
+	  if(otis == 0 && dist > 0) m_histModuleDriftTimeResidual_otis0_R[s][l][q][m]->Fill(timeResidual);
+	  if(otis == 1 && dist > 0) m_histModuleDriftTimeResidual_otis1_R[s][l][q][m]->Fill(timeResidual);
+	  if(otis == 2 && dist > 0) m_histModuleDriftTimeResidual_otis2_R[s][l][q][m]->Fill(timeResidual);
+	  if(otis == 3 && dist > 0) m_histModuleDriftTimeResidual_otis3_R[s][l][q][m]->Fill(timeResidual);
+
+	}
+	else if(OTIS_calibration){
 	  if(otis == 0) fill(histModuleDriftTimeResidual01L[s][l][q][m], timeResidual, 1.0);
 	  if(otis == 1) fill(histModuleDriftTimeResidual01R[s][l][q][m], timeResidual, 1.0);
 	  if(otis == 2) fill(histModuleDriftTimeResidual23L[s][l][q][m], timeResidual, 1.0);
@@ -576,6 +628,27 @@ StatusCode OTModuleClbrMon::finalize()
           TH1D* hist23L = (TH1D*)m_histModuleDriftTimeResidual23L[s][l][q][m]->Clone("hist23L");
           TH1D* hist23R = (TH1D*)m_histModuleDriftTimeResidual23R[s][l][q][m]->Clone("hist23R");
 
+	  TH1D* hist_otis0_L;
+	  TH1D* hist_otis0_R;
+	  TH1D* hist_otis1_L;
+	  TH1D* hist_otis1_R;
+	  TH1D* hist_otis2_L;
+	  TH1D* hist_otis2_R;
+	  TH1D* hist_otis3_L;
+	  TH1D* hist_otis3_R;
+
+	  if(OTIS_LR_calibration){
+	    hist_otis0_L = (TH1D*)m_histModuleDriftTimeResidual_otis0_L[s][l][q][m]->Clone("hist_otis0_L");
+	    hist_otis1_L = (TH1D*)m_histModuleDriftTimeResidual_otis1_L[s][l][q][m]->Clone("hist_otis1_L");
+	    hist_otis2_L = (TH1D*)m_histModuleDriftTimeResidual_otis2_L[s][l][q][m]->Clone("hist_otis2_L");
+	    hist_otis3_L = (TH1D*)m_histModuleDriftTimeResidual_otis3_L[s][l][q][m]->Clone("hist_otis3_L");
+
+	    hist_otis0_R = (TH1D*)m_histModuleDriftTimeResidual_otis0_R[s][l][q][m]->Clone("hist_otis0_R");
+	    hist_otis1_R = (TH1D*)m_histModuleDriftTimeResidual_otis1_R[s][l][q][m]->Clone("hist_otis1_R");
+	    hist_otis2_R = (TH1D*)m_histModuleDriftTimeResidual_otis2_R[s][l][q][m]->Clone("hist_otis2_R");
+	    hist_otis3_R = (TH1D*)m_histModuleDriftTimeResidual_otis3_R[s][l][q][m]->Clone("hist_otis3_R");
+	  }
+
 	  int modulen = m + 9 * (q + 4 * (l + 4 * s));
 
           //if(hist == 0 || hist->GetEntries() < 1000 || (s == 0 && m == 0))//this is the normal condition  
@@ -603,23 +676,78 @@ StatusCode OTModuleClbrMon::finalize()
           double residual_23L_err=0.0;
           double residual_23R_err=0.0;
 
+          double residual_0L=0.0;
+          double residual_1L=0.0;
+          double residual_2L=0.0;
+          double residual_3L=0.0;
+
+          double residual_0R=0.0;
+          double residual_1R=0.0;
+          double residual_2R=0.0;
+          double residual_3R=0.0;
+
+          double residual_0L_err=0.0;
+          double residual_1L_err=0.0;
+          double residual_2L_err=0.0;
+          double residual_3L_err=0.0;
+
+          double residual_0R_err=0.0;
+          double residual_1R_err=0.0;
+          double residual_2R_err=0.0;
+          double residual_3R_err=0.0;
+
+
           StatusCode sc_01L = fit_single_hist(hist01L,s,l,q, m, "01L", residual_01L, residual_01L_err, outFile);
           StatusCode sc_01R = fit_single_hist(hist01R,s,l,q, m, "01R", residual_01R, residual_01R_err, outFile);
           StatusCode sc_23L = fit_single_hist(hist23L,s,l,q, m, "23L", residual_23L, residual_23L_err, outFile);
           StatusCode sc_23R = fit_single_hist(hist23R,s,l,q, m, "23R", residual_23R, residual_23R_err, outFile);
 
-          if(OTIS_calibration){
+	  StatusCode sc_0_L;
+	  StatusCode sc_1_L;
+	  StatusCode sc_2_L;
+	  StatusCode sc_3_L;
+
+	  StatusCode sc_0_R;
+	  StatusCode sc_1_R;
+	  StatusCode sc_2_R;
+	  StatusCode sc_3_R;
+
+	  if(OTIS_LR_calibration){
+	    sc_0_L= fit_single_hist(hist_otis0_L,s,l,q, m, "0L", residual_0L, residual_0L_err, outFile);
+	    sc_1_L= fit_single_hist(hist_otis1_L,s,l,q, m, "1L", residual_1L, residual_1L_err, outFile);
+	    sc_2_L= fit_single_hist(hist_otis2_L,s,l,q, m, "2L", residual_2L, residual_2L_err, outFile);
+	    sc_3_L= fit_single_hist(hist_otis3_L,s,l,q, m, "3L", residual_3L, residual_3L_err, outFile);
+	    
+	    sc_0_R= fit_single_hist(hist_otis0_R,s,l,q, m, "0L", residual_0R, residual_0R_err, outFile);
+	    sc_1_R= fit_single_hist(hist_otis1_R,s,l,q, m, "1L", residual_1R, residual_1R_err, outFile);
+	    sc_2_R= fit_single_hist(hist_otis2_R,s,l,q, m, "2L", residual_2R, residual_2R_err, outFile);
+	    sc_3_R= fit_single_hist(hist_otis3_R,s,l,q, m, "3L", residual_3R, residual_3R_err, outFile);
+	    
+	    test_OTIS[s][l][q][m][0] = 0.5*(residual_0L + residual_0R);
+	    test_OTIS[s][l][q][m][1] = 0.5*(residual_1L + residual_1R);
+	    test_OTIS[s][l][q][m][2] = 0.5*(residual_2L + residual_2R);
+	    test_OTIS[s][l][q][m][3] = 0.5*(residual_3L + residual_3R);
+	    
+	    if(Apply_Calibration){
+	      for (int a = 0; a<4;a++){
+		test_OTIS[s][l][q][m][a] = test_OTIS[s][l][q][m][a]+t0s[s][l][q][m];
+	      }
+	    }
+	    
+	    
+	  }
+          else if(OTIS_calibration){
 	    test_OTIS[s][l][q][m][0] = residual_01L;
 	    test_OTIS[s][l][q][m][1] = residual_01R;
 	    test_OTIS[s][l][q][m][2] = residual_23L;
 	    test_OTIS[s][l][q][m][3] = residual_23R;
 
-		if(Apply_Calibration){
-		  for (int a = 0; a<4;a++){
-		    test_OTIS[s][l][q][m][a] = test_OTIS[s][l][q][m][a]+t0s[s][l][q][m];
-		  }
-		}
-
+	    if(Apply_Calibration){
+	      for (int a = 0; a<4;a++){
+		test_OTIS[s][l][q][m][a] = test_OTIS[s][l][q][m][a]+t0s[s][l][q][m];
+	      }
+	    }
+	    
           }
 	  else{
 	    if( m==8 && (q == 0 || q == 2) && hist23L->GetEntries()==0 && hist23R->GetEntries()==0){ //only 2 half monlayer contributions 

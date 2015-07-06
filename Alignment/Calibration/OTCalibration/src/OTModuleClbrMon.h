@@ -60,6 +60,17 @@ private:
   AIDA::IHistogram1D* histModuleDriftTimeResidual23L[3][4][4][9]; // otis23 && distance < 0
   AIDA::IHistogram1D* histModuleDriftTimeResidual23R[3][4][4][9]; // otis23 && distance > 0
 
+
+  AIDA::IHistogram1D* histModuleDriftTimeResidual_otis0_L[3][4][4][9]; // otis0 && distance < 0
+  AIDA::IHistogram1D* histModuleDriftTimeResidual_otis1_L[3][4][4][9]; // otis1 && distance < 0
+  AIDA::IHistogram1D* histModuleDriftTimeResidual_otis2_L[3][4][4][9]; // otis2 && distance < 0
+  AIDA::IHistogram1D* histModuleDriftTimeResidual_otis3_L[3][4][4][9]; // otis3 && distance < 0
+
+  AIDA::IHistogram1D* histModuleDriftTimeResidual_otis0_R[3][4][4][9]; // otis0 && distance > 0
+  AIDA::IHistogram1D* histModuleDriftTimeResidual_otis1_R[3][4][4][9]; // otis1 && distance > 0
+  AIDA::IHistogram1D* histModuleDriftTimeResidual_otis2_R[3][4][4][9]; // otis2 && distance > 0
+  AIDA::IHistogram1D* histModuleDriftTimeResidual_otis3_R[3][4][4][9]; // otis3 && distance > 0
+
   AIDA::IHistogram1D* histModuleDriftTimeResidual[3][4][4][9];
   AIDA::IHistogram1D* histQuarterDriftTimeResidual[3][4][4];
   AIDA::IHistogram1D* histLayerDriftTimeResidual[3][4];
@@ -153,6 +164,10 @@ private:
    * OTIS calibration (instead of 4 sub contributions per module)               
    */
   bool OTIS_calibration;
+  /**                                                                                                                                                            
+   * OTIS calibration separating left and right tracks               
+   */
+  bool OTIS_LR_calibration;
 
 
 public:
@@ -187,6 +202,16 @@ public:
   TH1D* m_histModuleDriftTimeResidual01R[3][4][4][9];
   TH1D* m_histModuleDriftTimeResidual23L[3][4][4][9];
   TH1D* m_histModuleDriftTimeResidual23R[3][4][4][9];
+
+  TH1D* m_histModuleDriftTimeResidual_otis0_L[3][4][4][9];
+  TH1D* m_histModuleDriftTimeResidual_otis1_L[3][4][4][9];
+  TH1D* m_histModuleDriftTimeResidual_otis2_L[3][4][4][9];
+  TH1D* m_histModuleDriftTimeResidual_otis3_L[3][4][4][9];
+
+  TH1D* m_histModuleDriftTimeResidual_otis0_R[3][4][4][9];
+  TH1D* m_histModuleDriftTimeResidual_otis1_R[3][4][4][9];
+  TH1D* m_histModuleDriftTimeResidual_otis2_R[3][4][4][9];
+  TH1D* m_histModuleDriftTimeResidual_otis3_R[3][4][4][9];
 
   std::string m_xmlFilePath;
   std::string m_xmlFileName;  

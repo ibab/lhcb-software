@@ -19,7 +19,7 @@ from Gaudi.Configuration import *
 theApp = Brunel()
 theApp.DataType   = "2015"
 theApp.InputType  = "MDF"
-theApp.EvtMax = 100000
+theApp.EvtMax = 100
 theApp.PrintFreq = 100
 theApp.Simulation = False
 theApp.OutputType = "NONE"
@@ -35,16 +35,17 @@ theApp.CondDBtag = "cond-20150601"
 from Configurables import CondDB
 conddb = CondDB()
 conddb.IgnoreHeartBeat = True
-conddb.UseDBSnapshot = True
-conddb.EnableRunChangeHandler = True
-conddb.Tags['ONLINE'] = 'fake'
-import AllHlt1
-conddb.RunChangeHandlerConditions = AllHlt1.ConditionMap
+#if running online
+#conddb.UseDBSnapshot = True
+#conddb.EnableRunChangeHandler = True
+#conddb.Tags['ONLINE'] = 'fake'
+#import AllHlt1
+#conddb.RunChangeHandlerConditions = AllHlt1.ConditionMap
 
 # Further selection
-theApp.VetoHltErrorEvents = False
-from Configurables import L0Conf
-L0Conf().EnsureKnownTCK=False
+#theApp.VetoHltErrorEvents = False
+#from Configurables import L0Conf
+#L0Conf().EnsureKnownTCK=False
 
 from Configurables import TrajOTProjector
 Projector = TrajOTProjector("OTProjector", UseDrift = True)
