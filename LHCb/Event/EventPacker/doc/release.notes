@@ -4,7 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
-! 2015-07-07 - Marco Clemenci
+!======================== EventPacker v5r4 2015-07-07 ========================
+
+! 2015-07-07 - Marco Clemencic
  - Fixed reference count of JobOptionsSvc in MapperToolBase.
 
 !======================== EventPacker v5r3 2015-06-03 ========================
