@@ -1,5 +1,4 @@
-// $Id: $
-#ifndef MAPPERTOOLBASE_H 
+#ifndef MAPPERTOOLBASE_H
 #define MAPPERTOOLBASE_H 1
 
 // from Gaudi
@@ -17,9 +16,9 @@
 #define LOG_DEBUG   ON_DEBUG   debug()
 
 /** @class MapperToolBase MapperToolBase.h
- *  
+ *
  *  Base class for mapper tools
- *  
+ *
  *  @author Chris Jones
  *  @date   2012-03-26
  */
@@ -28,10 +27,10 @@ class MapperToolBase : public extends2< GaudiTool,
                                         IDODNodeMapper >
 {
 
-public: 
+public:
 
   /// Standard constructor
-  MapperToolBase( const std::string& type, 
+  MapperToolBase( const std::string& type,
                   const std::string& name,
                   const IInterface* parent );
 
@@ -46,7 +45,7 @@ public:
 protected:
 
   /// Access the Job Option Service
-  IJobOptionsSvc * joSvc() const;
+  SmartIF<IJobOptionsSvc>& joSvc() const;
 
   /// Get the Stream name from a data path
   std::string streamName( const std::string & path ) const;
@@ -64,13 +63,13 @@ protected:
     if ( tmp.substr(0,7) != "/Event/" ) { tmp = "/Event/"+tmp; }
     return tmp;
   }
-  
+
 private:
-  
+
   /// Reference to the JobOptionsSvc.
   /// It is needed to configure the Algorithm instances.
-  mutable IJobOptionsSvc * m_jos;
-  
+  mutable SmartIF<IJobOptionsSvc> m_jos;
+
 };
 
 #endif // MAPPERTOOLBASE_H

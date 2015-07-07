@@ -1,8 +1,4 @@
-// $Id: $
 // Include files
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "MapperToolBase.h"
@@ -16,8 +12,7 @@
 MapperToolBase::MapperToolBase( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : base_class ( type, name , parent ),
-    m_jos      ( NULL )
+  : base_class ( type, name , parent )
 {
 }
 
@@ -39,13 +34,13 @@ StatusCode MapperToolBase::initialize()
 
 StatusCode MapperToolBase::finalize()
 {
-  if ( m_jos ) { m_jos->release(); m_jos = NULL; }
+  m_jos.reset();
   return GaudiTool::finalize();
 }
 
 //=============================================================================
 
-IJobOptionsSvc * MapperToolBase::joSvc() const
+SmartIF<IJobOptionsSvc>& MapperToolBase::joSvc() const
 {
   if ( !m_jos )
   {

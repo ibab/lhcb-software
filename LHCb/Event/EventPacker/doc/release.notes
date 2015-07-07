@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-07-07 - Marco Clemenci
+ - Fixed reference count of JobOptionsSvc in MapperToolBase.
+
 !======================== EventPacker v5r3 2015-06-03 ========================
 
 ! 2015-05-28 - Christopher Rob Jones
@@ -45,7 +48,7 @@
 
 !========================= EventPacker v5r0 2015-03-13 =========================
 ! 2015-03-10 - Chris Jones
- - Fix typo in MuonPIDPacker where version 2 was not declared as a known 
+ - Fix typo in MuonPIDPacker where version 2 was not declared as a known
    packing version in MuonPIDPacker::unpack
 
 ! 2015-03-08 - Chris Jones
@@ -62,7 +65,7 @@
    pointer dereference in the case of corrupted reference information, due
    to truncation when attempting to pack it to a 32 bit int. Fixes issues
    seen when running over Stripping21 MC samples where some Track references
-   in packed ProtoParticles have been corrupted due to data truncation. In 
+   in packed ProtoParticles have been corrupted due to data truncation. In
    these cases the smart refs are now just skipped (so set to NULL).
  - Update the packing of all remaining classes that still use 32 bit reference
    packing to use 64 bit packing. Reading is backwards compatible with old data
@@ -91,7 +94,7 @@
  - Add support for packing custom MuonPID objects produced by stripping lines.
 
 ! 2014-08-20 - Chris Jones
- - Add support for packing custom Track and ProtoParticles produced by 
+ - Add support for packing custom Track and ProtoParticles produced by
    Stripping Lines.
  - Change the key in the PackedTrack and PackedProtoParticle classes from a
    32 to 64 bit int. Needed to allow the packing of the container information.
@@ -108,7 +111,7 @@
 !========================= EventPacker v4r2 2014-07-14 =========================
 ! 2014-06-29 - Chris Jones
  - Add a check in the ProtoParticle packer to test for over or under flow errors
-   when packing ExtraInfo. 
+   when packing ExtraInfo.
 
 ! 2014-06-27 - Chris Jones
  - Adapt to changes in the job options of the ChargedProtoANNPID algorithm.
@@ -122,7 +125,7 @@
  - I had made an error in the previous commit. Now solved.
 
 ! 2014-02-18 - Maurizio Martinelli
- - Fix an FPE exception due to division by zero and a bug in tracks extra info 
+ - Fix an FPE exception due to division by zero and a bug in tracks extra info
   comparison.
 
 ! 2014-02-15 - Chris Jones
