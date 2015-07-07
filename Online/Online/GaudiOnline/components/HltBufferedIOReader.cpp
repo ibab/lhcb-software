@@ -351,7 +351,7 @@ StatusCode HltBufferedIOReader::initialize()   {
   // Patch the string array with allowed runs
   for(size_t i=0; i<m_allowedRuns.size(); ++i)   {
     const char* crun = m_allowedRuns[i].c_str();
-    if ( ::isdigit(crun[0]) )   {
+    if ( ::isdigit(crun[0]) && crun[0] != '*' )   {
       char text[PATH_MAX];
       long runno = ::strtol(crun,0,10);
       ::snprintf(text,sizeof(text),"%s_%06ld_",m_filePrefix.c_str(),runno);
