@@ -4,6 +4,9 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2015-07-07 - Gloria Corti
+ - Removed obsolete and now wrong Pythia8.opts in old format
+
 ! 2015-06-22 - Philip Ilten
  - Fixed initialization and memory handling of the beam shape tool
 
