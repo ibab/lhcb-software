@@ -486,7 +486,7 @@ size_t HltBufferedIOReader::scanFiles()   {
         else if ( !take_all )  {
           bool take_run = false;
           for(vector<string>::const_iterator i=m_allowedRuns.begin(); i!=m_allowedRuns.end(); ++i) {
-            if ( ::strstr(entry->d_name,(*i).c_str()) != entry->d_name ) {
+            if ( ::strstr(entry->d_name,(*i).c_str()) == entry->d_name ) {
               take_run = true;
               break;
             }
