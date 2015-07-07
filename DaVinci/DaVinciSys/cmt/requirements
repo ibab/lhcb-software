@@ -14,7 +14,7 @@ use  Tesla           v1r8     Phys   # Sean Benson
 # Extra packages just for this release !!!
 use  DetCond                 v12r42   Det
 use  DDDB                    v1r77    Det
-use  EventPacker             v5r3     Event
+use  EventPacker             v5r4     Event
 use  HltDAQ                  v4r17p1  Hlt
 use  HltServices             v2r8     Hlt
 use  DaVinciMonitors         v1r22    Phys
