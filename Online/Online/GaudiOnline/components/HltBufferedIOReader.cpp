@@ -348,6 +348,13 @@ StatusCode HltBufferedIOReader::initialize()   {
     m_mbmInfo[nam] = &m_mbmInfos[i];
     m_mbmInfos[i].attach(bm_name.c_str());
   }
+  // Patch the string array with allowed runs
+  for(size_t i=0; i<m_allowedRuns.size(); ++i)   {
+    char text[PATH_MAX];
+    int runno = ::atoi(m_allowedRuns[i].c_str());
+    ::snprintf(text,sizeof(text),"%s_%06d_",m_filePrefix.c_str(),runno);
+    m_allowedRuns[i] = text;
+  }  
   return sc;
 }
 
@@ -473,13 +480,13 @@ size_t HltBufferedIOReader::scanFiles()   {
       bool take_all = (m_allowedRuns.size() > 0 && m_allowedRuns[0]=="*");
       while ((entry = ::readdir(dir)) != 0)    {
         //cout << "File:" << entry->d_name << endl;
-        if ( 0 != ::strncmp(entry->d_name,m_filePrefix.c_str(),4) ) {
+        if ( 0 != ::strncmp(entry->d_name,m_filePrefix.c_str(),m_filePrefix.length()) ) {
           continue;
         }
         else if ( !take_all )  {
           bool take_run = false;
           for(vector<string>::const_iterator i=m_allowedRuns.begin(); i!=m_allowedRuns.end(); ++i) {
-            if ( ::strstr(entry->d_name,(*i).c_str()) != 0 ) {
+            if ( ::strstr(entry->d_name,(*i).c_str()) != entry->d_name ) {
               take_run = true;
               break;
             }

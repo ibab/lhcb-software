@@ -73,22 +73,22 @@ int FileScanner::isBrokenHost()  const   {
       const std::string node = RTL::nodeNameShort();
       int   fd   = ::open(broken_hosts.c_str(),O_RDONLY);
       if ( -1 == fd )  {
-	m_comment = "Failed to access broken node file:"+broken_hosts+" [Error ignored]";
-	return -1;
+        m_comment = "Failed to access broken node file:"+broken_hosts+" [Error ignored]";
+        return -1;
       }
       char* data = new char[file.st_size+1];
       int rc = file_read(fd,data,file.st_size);
       if ( 1 == rc ) {
         data[file.st_size] = 0;
-        for(int i=0; i<file.st_size; ++i) 
+        for(int i=0; i<file.st_size; ++i)
           data[i] = ::toupper(data[i]);
         for(char* ptr=(char*)node.c_str(); *ptr; ++ptr)
           *ptr = ::toupper(*ptr);
         if ( ::strstr(data,node.c_str()) ) {
           m_comment = "Node is disabled and will not process any deferred files.";
-	  delete [] data;
-	  ::close(fd);
-	  return 1;
+          delete [] data;
+          ::close(fd);
+          return 1;
         }
       }
       delete [] data;
@@ -112,17 +112,17 @@ size_t FileScanner::scanFiles()   {
     bool take_all = (m_allowedRuns.size() > 0 && m_allowedRuns[0]=="*");
     while ((entry = ::readdir(dir)) != 0)    {
       if ( 0 != ::strncmp(entry->d_name,m_filePrefix.c_str(),m_filePrefix.length()) ) {
-	continue;
+        continue;
       }
       else if ( !take_all )  {
-	bool take_run = false;
-	for(vector<string>::const_iterator i=m_allowedRuns.begin(); i!=m_allowedRuns.end(); ++i) {
-	  if ( ::strstr(entry->d_name,(*i).c_str()) != 0 ) {
-	    take_run = true;
-	    break;
-	  }
-	}
-	if ( !take_run ) continue;
+        bool take_run = false;
+        for(vector<string>::const_iterator i=m_allowedRuns.begin(); i!=m_allowedRuns.end(); ++i) {
+          if ( ::strstr(entry->d_name,(*i).c_str()) != entry->d_name ) {
+            take_run = true;
+            break;
+          }
+        }
+        if ( !take_run ) continue;
       }
       m_files.insert(m_directory + "/" + entry->d_name);
     }
@@ -148,7 +148,7 @@ int FileScanner::openFile()   {
         if (sc != 0)   {
           m_comment = "CANNOT UNLINK file: " + fname + ": " + RTL::errorString();
           //::exit(EBADF);
-	  ::close(fd);
+          ::close(fd);
           return 0;
         }
       }
@@ -211,47 +211,47 @@ int FileScanner::readEvent(int file_handle, void* baseAddr)  {
       char*  read_ptr = 0;
       size_t read_len = 0;
       if ( is_mdf ) {
-	b = (RawBank*)dsc.data;
-	b->setMagic();
-	b->setType(RawBank::DAQ);
-	b->setSize(MDFHeader::sizeOf(3));
-	b->setVersion(DAQ_STATUS_BANK);
-	read_ptr = b->begin<char>();
-	::memcpy(read_ptr,size_buf,sizeof(size_buf));
-	read_ptr += sizeof(size_buf);
-	read_len = evt_size-sizeof(size_buf);
-	dsc.len  = evt_size+b->hdrSize();
-	dsc.type = EVENT_TYPE_EVENT;
+        b = (RawBank*)dsc.data;
+        b->setMagic();
+        b->setType(RawBank::DAQ);
+        b->setSize(MDFHeader::sizeOf(3));
+        b->setVersion(DAQ_STATUS_BANK);
+        read_ptr = b->begin<char>();
+        ::memcpy(read_ptr,size_buf,sizeof(size_buf));
+        read_ptr += sizeof(size_buf);
+        read_len = evt_size-sizeof(size_buf);
+        dsc.len  = evt_size+b->hdrSize();
+        dsc.type = EVENT_TYPE_EVENT;
       }
       else {
-	static int id = -1;
-	MEPEVENT* e = (MEPEVENT*) dsc.data;
-	MEPEvent* me = (MEPEvent*) e->data;
-	me->setSize(evt_size);
-	e->refCount = 1;
-	e->evID = ++id;
-	e->begin = long(e) - long(baseAddr);
-	e->packing = -1;
-	e->valid = 1;
-	e->magic = mep_magic_pattern();
-	for (size_t j = 0; j < MEP_MAX_PACKING; ++j)   {
-	  e->events[j].begin = 0;
-	  e->events[j].evID = 0;
-	  e->events[j].status = EVENT_TYPE_OK;
-	  e->events[j].signal = 0;
-	}
-	read_ptr = (char*)me->start();
-	::memcpy(read_ptr,size_buf+1,2*sizeof(size_buf[0]));
-	read_ptr += 2*sizeof(size_buf[0]);
-	read_len = me->size() - 2*sizeof(int);
-	dsc.len  = sizeof(MEPEVENT) + me->sizeOf() + me->size();
-	dsc.type = EVENT_TYPE_MEP;
+        static int id = -1;
+        MEPEVENT* e = (MEPEVENT*) dsc.data;
+        MEPEvent* me = (MEPEvent*) e->data;
+        me->setSize(evt_size);
+        e->refCount = 1;
+        e->evID = ++id;
+        e->begin = long(e) - long(baseAddr);
+        e->packing = -1;
+        e->valid = 1;
+        e->magic = mep_magic_pattern();
+        for (size_t j = 0; j < MEP_MAX_PACKING; ++j)   {
+          e->events[j].begin = 0;
+          e->events[j].evID = 0;
+          e->events[j].status = EVENT_TYPE_OK;
+          e->events[j].signal = 0;
+        }
+        read_ptr = (char*)me->start();
+        ::memcpy(read_ptr,size_buf+1,2*sizeof(size_buf[0]));
+        read_ptr += 2*sizeof(size_buf[0]);
+        read_len = me->size() - 2*sizeof(int);
+        dsc.len  = sizeof(MEPEVENT) + me->sizeOf() + me->size();
+        dsc.type = EVENT_TYPE_MEP;
       }
       status = ::file_read(file_handle,read_ptr, read_len);
       if (status <= 0)   {
-	::close(file_handle);
-	file_handle = 0;
-	m_current = "";
+        ::close(file_handle);
+        file_handle = 0;
+        m_current = "";
         return END_OF_DATA;
       }
       dsc.mask[0] = ~0x0;

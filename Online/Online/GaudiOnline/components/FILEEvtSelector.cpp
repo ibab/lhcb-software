@@ -33,9 +33,9 @@ namespace LHCb  {
 
 
   /** @class FILEContext
-    *
-    * @author M.Frank
-    */
+   *
+   * @author M.Frank
+   */
   class FILEContext : public OnlineContext  {
   private:
     /// The event descriptor
@@ -69,10 +69,10 @@ namespace LHCb  {
   };
 
   /** @class FILEEvtSelector  FILEEvtSelector.h
-    *
-    * @author  M.Frank
-    * @vrsion  1.0
-    */
+   *
+   * @author  M.Frank
+   * @vrsion  1.0
+   */
   class FILEEvtSelector : public OnlineBaseEvtSelector, public FileScanner  {
     friend class FILEContext;
   public:
@@ -90,24 +90,24 @@ namespace LHCb  {
 
     /// Create a new event loop context
     /** @param refpCtxt   [IN/OUT]  Reference to pointer to store the context
-      * 
-      * @return StatusCode indicating success or failure
-      */
+     * 
+     * @return StatusCode indicating success or failure
+     */
     virtual StatusCode createContext(Context*& refpCtxt) const;
 
     /// Release existing event iteration context
     /** @param refCtxt   [IN/OUT]  Reference to the context
-      * 
-      * @return StatusCode indicating success or failure
-      */
+     * 
+     * @return StatusCode indicating success or failure
+     */
     virtual StatusCode releaseContext(Context*& ctxt) const;
 
     /** Will set a new criteria for the selection of the next list of events and will change
-      * the state of the context in a way to point to the new list.
-      * 
-      * @param cr The new criteria string.
-      * @param c  Reference pointer to the Context object.
-      */
+     * the state of the context in a way to point to the new list.
+     * 
+     * @param cr The new criteria string.
+     * @param c  Reference pointer to the Context object.
+     */
     virtual StatusCode resetCriteria(const std::string& cr,Context& c)const;
 
     /// Service Constructor
@@ -214,7 +214,7 @@ StatusCode FILEContext::rearmEvent()  {
   if ( !handleCancel() )   {
     if ( m_events.empty() ) {
       if ( m_fileSel->readNext().isSuccess() )
-	return StatusCode::SUCCESS;
+        return StatusCode::SUCCESS;
       releaseEvent();
       close();
       return StatusCode::FAILURE;
@@ -292,7 +292,15 @@ FILEEvtSelector::FILEEvtSelector(const string& nam, ISvcLocator* svc)
 // IService implementation: Db event selector override
 StatusCode FILEEvtSelector::initialize()    {
   // Initialize base class
-  return OnlineBaseEvtSelector::initialize();
+  StatusCode sc = OnlineBaseEvtSelector::initialize();
+  // Patch the string array with allowed runs
+  for(size_t i=0; i<m_allowedRuns.size(); ++i)   {
+    char text[PATH_MAX];
+    int runno = ::atoi(m_allowedRuns[i].c_str());
+    ::snprintf(text,sizeof(text),"%s_%06d_",m_filePrefix.c_str(),runno);
+    m_allowedRuns[i] = text;
+  }
+  return sc;
 }
 
 /// IService overload: start MEP manager service
@@ -368,11 +376,11 @@ StatusCode FILEEvtSelector::scan(const std::string& input)  {
     struct stat stat_buff;
     if ( 0 == ::stat(input.c_str(),&stat_buff) ) {
       if ( S_ISDIR(stat_buff.st_mode) )   {
-	m_directory = input;
-	scanFiles();
+        m_directory = input;
+        scanFiles();
       }
       else  {
-	m_files.insert(input);
+        m_files.insert(input);
       }
     }
   }
