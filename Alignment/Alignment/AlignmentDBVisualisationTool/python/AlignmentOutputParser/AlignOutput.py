@@ -94,7 +94,7 @@ class Alignable:
         self.NumOutliers = nOutliers
         self.EnoughHits = enough_hits
         self.LocatToGlobalDiagonal = local_to_global_diag if local_to_global_diag != None else []
-        self.LocatDeltaChi2 = local_delta_chi2
+        self.LocalDeltaChi2 = local_delta_chi2
         self.SurveyChi2Before = surveyChi2Before
         self.SurveyChi2After = surveyChi2After
         self.AlignmentDOFs = AlignDofs if AlignDofs != None else []
@@ -470,7 +470,7 @@ class AlignOutput:
                 self.AlignIterations[self.index].Alignables[self.alignableName].HitErrorContribution['relative'] = float(words[-1])
                 return
             if 'local delta chi2 / dof:' in line:
-                self.AlignIterations[self.index].Alignables[self.alignableName].LocatDeltaChi2 = float(words[-3])
+                self.AlignIterations[self.index].Alignables[self.alignableName].LocalDeltaChi2 = float(words[-3])
                 return
         return
     # Decode Time

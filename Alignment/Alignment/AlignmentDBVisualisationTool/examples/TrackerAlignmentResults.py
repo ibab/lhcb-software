@@ -5,17 +5,15 @@ from matplotlib.backends.backend_pdf import PdfPages
 ###########################
 # Load log-files
 alIters = []
-#for fdir in ['startfromITsurvey','startfromITsurvey2']:
-for fdir in ['startfromITsurvey']:
+for fdir in ['startfromITsurvey','startfromITsurvey2']:
     fileName = '/afs/cern.ch/work/m/mamartin/Alignment2015/outputs/run154182_%s/alignlog.txt' %fdir
-    fileName = '/afs/cern.ch/user/s/siborghi/run154182_Ok/alignlog.txt'
     aout = AlignOutput(fileName)
     aout.Parse()
     alIters += aout.AlignIterations
 
 ###########################
 # Check img directory existence
-imgPath = 'img/TrackeAlignmentResults/'
+imgPath = 'img/TrackerAlignmentResults/'
 if not os.path.exists(imgPath): os.makedirs(imgPath)
 
 ###########################

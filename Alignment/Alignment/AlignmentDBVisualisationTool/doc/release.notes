@@ -3,6 +3,9 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2015-07-07 - Maurizio Martinelli
+ - added example to make plots of local delta chi2 per iteration
+
 ! 2015-06-15 - Silvia Borghi
  - added example to make plots of conditions from Muon alignment
 

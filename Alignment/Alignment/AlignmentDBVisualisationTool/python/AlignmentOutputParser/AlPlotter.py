@@ -22,7 +22,7 @@ from AlignOutput import AlignIter
 
 # Dicts
 units= {'Delta':'mm', 'DeltaErr':'mm', 'Cur': 'mm', 'CurTot': 'mm' }
-colors=['red','blue','black','orange','green','magenta','yellow','cyan','gray']
+colors=['red','blue','magenta','black','orange','green','yellow','cyan','gray']
 
 # BEGIN ALPLOTTER
 class AlPlotter:
@@ -371,6 +371,26 @@ class AlPlotter:
         plt.axhline(ls='--',c='black')
         # add a legend
         plt.legend(loc='best')
+        return
+
+    def PlotLocalDeltaChi2(self, Iter=-2):
+        """
+          Plot the distribution of the local delta chi2 / ndof for a specific iteration
+        """
+        # add figure
+        self.Plots += [ plt.figure() ]
+        plt.title('Local delta chi2/ndof distribution')
+        plt.xlabel('delta Chi2/ndof')
+        plt.ylabel('# Alignables')
+        for iter in xrange(len(self.AlignJobs)):
+          if Iter != -2 and iter != Iter: continue
+          vals = []
+          for alName, al in self.AlignJobs[iter].Alignables.iteritems():
+            if len(al.AlignmentDOFs):
+              vals += [al.LocalDeltaChi2 / len(al.AlignmentDOFs)]
+          plt.hist(vals, bins=[5*i for i in xrange(20)], histtype='step', log=True, color=colors[iter], alpha=0.5, label='Iter%d' % iter)
+        plt.legend()
+        plt.show()
         return
     
     # UTILITIES
