@@ -354,7 +354,7 @@ StatusCode HltBufferedIOReader::initialize()   {
     if ( ::isdigit(crun[0]) && crun[0] != '*' )   {
       char text[PATH_MAX];
       long runno = ::strtol(crun,0,10);
-      ::snprintf(text,sizeof(text),"%s_%06ld_",m_filePrefix.c_str(),runno);
+      ::snprintf(text,sizeof(text),"%s%06ld_",m_filePrefix.c_str(),runno);
       m_allowedRuns[i] = text;
       info("Add run "+m_allowedRuns[i]+" to allowed run-list.");
     }
