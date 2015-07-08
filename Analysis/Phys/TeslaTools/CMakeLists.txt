@@ -17,6 +17,7 @@ gaudi_depends_on_subdirs(Event/MicroDst
 
 gaudi_add_module(TeslaTools
                  src/*.cpp
+                 PUBLIC_HEADERS TeslaTools
                  LINK_LIBRARIES DAQEventLib HltEvent RecEvent DaVinciKernelLib
                  LoKiArrayFunctorsLib LoKiPhysLib
                  DaVinciInterfacesLib)
