@@ -4,8 +4,8 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
-! 2015-07-06 - Elena Graverini
- - Added TrackTuple tool. It is equivalent to IT/TTTrackMonitor, but outputs ntuples instead of histograms.
+! 2015-07-08 - Elena Graverini
+ - Added STTrackTuple tool. It is equivalent to IT/TTTrackMonitor, but outputs ntuples instead of histograms.
 
 ! 2015-07-02 - Wouter Hulsbergen
  - Added histogram with residuals vs y for every module to TTTrackMonitor (in 'fullDetail')

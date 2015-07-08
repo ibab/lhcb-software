@@ -5,7 +5,7 @@
 #include "GaudiKernel/PhysicalConstants.h"
 
 // local
-#include "TrackTuple.h"
+#include "STTrackTuple.h"
 
 // track interfaces
 #include "TrackInterfaces/IHitExpectation.h"
@@ -60,7 +60,7 @@ using namespace Gaudi;
 using namespace boost::assign;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : TrackTuple
+// Implementation file for class : STTrackTuple
 //
 // 2009-06-16 : Johan Luisier
 // 2010-07-27 : Frederic Dupertuis
@@ -68,13 +68,13 @@ using namespace boost::assign;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackTuple )
+DECLARE_ALGORITHM_FACTORY( STTrackTuple )
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TrackTuple::TrackTuple( const std::string& name,
+STTrackTuple::STTrackTuple( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : TrackMonitorTupleBase ( name , pSvcLocator ),
     m_totalExpected( 0u ),
@@ -110,12 +110,12 @@ TrackTuple::TrackTuple( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackTuple::~TrackTuple() {} 
+STTrackTuple::~STTrackTuple() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode TrackTuple::initialize()
+StatusCode STTrackTuple::initialize()
 {
   StatusCode sc( TrackMonitorTupleBase::initialize() ); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by TrackMonitorTupleBase
@@ -244,7 +244,7 @@ StatusCode TrackTuple::initialize()
   m_binNumber++;
   
   return StatusCode::SUCCESS;
-} // TrackTuple::initialize()
+} // STTrackTuple::initialize()
 
 
 
@@ -252,13 +252,13 @@ StatusCode TrackTuple::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode TrackTuple::execute()
+StatusCode STTrackTuple::execute()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   if (m_branchBySector && !m_everyHit)
   {
-    error() << "TrackTuple ERROR: trying to compute hit "
+    error() << "STTrackTuple ERROR: trying to compute hit "
             << "efficiency using only hits on tracks! Set "
             << "TakeEveryHit and unset HitsOnTracks to avoid!\n";
     return StatusCode::FAILURE;
@@ -266,7 +266,7 @@ StatusCode TrackTuple::execute()
 
   if (m_branchBySector && m_branchByTrack)
   {
-    warning() << "TrackTuple WARNING: I'm producing an ntuple "
+    warning() << "STTrackTuple WARNING: I'm producing an ntuple "
               << "branched by sector AND by track, possible "
               << "ntuple clash. To avoid, select either "
               << "BranchByTrack or BranchBySector.\n";
@@ -595,7 +595,7 @@ StatusCode TrackTuple::execute()
 
       else
       {
-        error() << "TrackTuple ERROR: cannot select both TakeEveryHits and HitsOnTracks!\n";
+        error() << "STTrackTuple ERROR: cannot select both TakeEveryHits and HitsOnTracks!\n";
         return StatusCode::FAILURE;
       } 
 
@@ -656,7 +656,7 @@ StatusCode TrackTuple::execute()
   } // end loop (tracks)
 
   return StatusCode::SUCCESS;
-} // TrackTuple::execute()
+} // STTrackTuple::execute()
 
 
 /**
@@ -668,7 +668,7 @@ StatusCode TrackTuple::execute()
  *
  * @return \e true if yes.
  */
-bool TrackTuple::foundHitInSector( const ISTClusterCollector::Hits& hits,
+bool STTrackTuple::foundHitInSector( const ISTClusterCollector::Hits& hits,
                                      Track* const& track,
                                      const unsigned int testsector,
                                      const double resCut,
@@ -696,7 +696,7 @@ bool TrackTuple::foundHitInSector( const ISTClusterCollector::Hits& hits,
       }
     } // end loop (hits)
   return false;
-} // TrackTuple::foundHitInSector()
+} // STTrackTuple::foundHitInSector()
 
 
 /**
@@ -708,7 +708,7 @@ bool TrackTuple::foundHitInSector( const ISTClusterCollector::Hits& hits,
  *
  * @return \e true if yes.
  */
-bool TrackTuple::foundHitInLayer( const ISTClusterCollector::Hits& hits,
+bool STTrackTuple::foundHitInLayer( const ISTClusterCollector::Hits& hits,
                                      Track* const& track,
                                      const unsigned int testlayer,
                                      const double resCut ) const
@@ -726,7 +726,7 @@ bool TrackTuple::foundHitInLayer( const ISTClusterCollector::Hits& hits,
       }
     } // end loop (hits)
   return false;
-} // TrackTuple::foundHitInLayer
+} // STTrackTuple::foundHitInLayer
 
 
 /**
@@ -738,7 +738,7 @@ bool TrackTuple::foundHitInLayer( const ISTClusterCollector::Hits& hits,
  *
  * @return \e residual or -500000 um if no hits are found.
  */
-double TrackTuple::foundResInSector( const ISTClusterCollector::Hits& hits,
+double STTrackTuple::foundResInSector( const ISTClusterCollector::Hits& hits,
                                      Track* const& track,
                                      const unsigned int testsector,
                                      const double resCut ) const
@@ -756,13 +756,13 @@ double TrackTuple::foundResInSector( const ISTClusterCollector::Hits& hits,
       }
     } // end loop (hits)
   return -500000.* Gaudi::Units::um;
-} // TrackTuple::foundResInSector
+} // STTrackTuple::foundResInSector
 
 
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode TrackTuple::finalize()
+StatusCode STTrackTuple::finalize()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   
@@ -950,7 +950,7 @@ StatusCode TrackTuple::finalize()
   delete propNbFoundHits;
   
   return TrackMonitorTupleBase::finalize();  // must be called after all other actions
-} // TrackTuple::finalize()
+} // STTrackTuple::finalize()
 
 
 /**
@@ -963,14 +963,14 @@ StatusCode TrackTuple::finalize()
  *
  * @return a string with the correct number of decimals.
  */
-std::string TrackTuple::formatNumber(const double& nbr,
+std::string STTrackTuple::formatNumber(const double& nbr,
                                        const unsigned int& digits ) const
 {
   std::stringstream ss;
   ss.setf(std::ios::fixed, std::ios::floatfield);
   ss << std::setprecision( digits ) << nbr;
   return ss.str();
-} // TrackTuple::formatNumber()
+} // STTrackTuple::formatNumber()
 
 
 /**
@@ -978,7 +978,7 @@ std::string TrackTuple::formatNumber(const double& nbr,
  *
  * @return \e true if yes.
  */
-bool TrackTuple::hasMinStationPassed(LHCb::Track* const& aTrack) const
+bool STTrackTuple::hasMinStationPassed(LHCb::Track* const& aTrack) const
 {
   std::set<unsigned int> stations;
   const std::vector<LHCb::LHCbID>& ids = aTrack -> lhcbIDs();
@@ -996,7 +996,7 @@ bool TrackTuple::hasMinStationPassed(LHCb::Track* const& aTrack) const
   if(stations.size() >= m_minStationPassed)
     return true;
   return false;
-} // TrackTuple::hasMinStationPassed()
+} // STTrackTuple::hasMinStationPassed()
 
 
 /**
@@ -1007,7 +1007,7 @@ bool TrackTuple::hasMinStationPassed(LHCb::Track* const& aTrack) const
  *
  * @return the sensor.
  */
-DeSTSensor* TrackTuple::findSensor(const DeSTSector* sector,
+DeSTSensor* STTrackTuple::findSensor(const DeSTSector* sector,
                                     STChannelID id)
 {
   std::vector<DeSTSensor*> sensors = sector->sensors();
@@ -1020,7 +1020,7 @@ DeSTSensor* TrackTuple::findSensor(const DeSTSector* sector,
     }
   }
   return foundSensor;
-} // TrackTuple::findSensor()
+} // STTrackTuple::findSensor()
 
 
 /**
@@ -1030,7 +1030,7 @@ DeSTSensor* TrackTuple::findSensor(const DeSTSector* sector,
  *
  * @return true if yes.
  */
-bool TrackTuple::crossedLayer(LHCb::Track* const& aTrack,
+bool STTrackTuple::crossedLayer(LHCb::Track* const& aTrack,
                                 DeSTLayer * &aLayer) const
 {
   const std::vector<LHCb::LHCbID>& ids = aTrack -> lhcbIDs();
@@ -1043,7 +1043,7 @@ bool TrackTuple::crossedLayer(LHCb::Track* const& aTrack,
     //  return true;
   }
   return false;
-} // TrackTuple::crossedLayer()
+} // STTrackTuple::crossedLayer()
 
 
 /**
@@ -1054,7 +1054,7 @@ bool TrackTuple::crossedLayer(LHCb::Track* const& aTrack,
  *
  * @return number of hits on the layer.
  */
-unsigned int TrackTuple::hitsOnLayer(std::vector<const LHCb::STMeasurement*> measVector,
+unsigned int STTrackTuple::hitsOnLayer(std::vector<const LHCb::STMeasurement*> measVector,
                                      DeSTLayer * &aLayer) const
 {
   unsigned int counter = 0;
@@ -1064,7 +1064,7 @@ unsigned int TrackTuple::hitsOnLayer(std::vector<const LHCb::STMeasurement*> mea
       counter = counter + 1;
   }
   return counter;
-} // TrackTuple::hitsOnLayer()
+} // STTrackTuple::hitsOnLayer()
 
 
 /**
@@ -1075,7 +1075,7 @@ unsigned int TrackTuple::hitsOnLayer(std::vector<const LHCb::STMeasurement*> mea
  *
  * @return number of hits on the layer.
  */
-unsigned int TrackTuple::hitsOnLayer(ISTClusterCollector::Hits hits,
+unsigned int STTrackTuple::hitsOnLayer(ISTClusterCollector::Hits hits,
                                     DeSTLayer * &aLayer) const
 {
   unsigned int counter = 0;
@@ -1085,7 +1085,7 @@ unsigned int TrackTuple::hitsOnLayer(ISTClusterCollector::Hits hits,
       counter = counter + 1;
   }
   return counter;
-} // TrackTuple::hitsOnLayer()
+} // STTrackTuple::hitsOnLayer()
 
 
 /**
@@ -1096,7 +1096,7 @@ unsigned int TrackTuple::hitsOnLayer(ISTClusterCollector::Hits hits,
  *
  * @return the LHCbID.
  */
-LHCb::LHCbID TrackTuple::findHitId(LHCb::Track* const& aTrack,
+LHCb::LHCbID STTrackTuple::findHitId(LHCb::Track* const& aTrack,
                                     const LHCb::STMeasurement* aHit) const
 {
   LHCb::LHCbID hitId(0);
@@ -1107,7 +1107,7 @@ LHCb::LHCbID TrackTuple::findHitId(LHCb::Track* const& aTrack,
       hitId = (*iter);
   }
   return hitId;
-} // TrackTuple::findHitId()
+} // STTrackTuple::findHitId()
 
 
 // Hit type namespace
@@ -1163,7 +1163,7 @@ namespace {
  *
  * @return the square of the residual error.
  */
-double TrackTuple::retrieveErrResidual2(LHCb::Track* const& aTrack,
+double STTrackTuple::retrieveErrResidual2(LHCb::Track* const& aTrack,
                                         LHCb::LHCbID aID) const
 {
   double errResidual2(0);
@@ -1186,7 +1186,7 @@ double TrackTuple::retrieveErrResidual2(LHCb::Track* const& aTrack,
     }// end if (node not discarded)
   }// end loop on nodes
   return errResidual2;
-} // TrackTuple::retrieveErrResidual2
+} // STTrackTuple::retrieveErrResidual2
 
 
 

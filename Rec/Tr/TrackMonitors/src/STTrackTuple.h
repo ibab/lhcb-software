@@ -1,5 +1,5 @@
-#ifndef TRACKTUPLE_H 
-#define TRACKTUPLE_H 1
+#ifndef STTRACKTUPLE_H 
+#define STTRACKTUPLE_H 1
 
 // Include files
 #include "TrackMonitorTupleBase.h"
@@ -17,18 +17,18 @@ class DeSTSensor;
 #include <map>
 #include <vector>
 
-/** @class TrackTuple TrackTuple.h
+/** @class STTrackTuple STTrackTuple.h
  *  
  *
  *  @author Johan Luisier, Frederic Dupertuis, Ilya Komarov and Elena Graverini
  *  @date   2009-06-16, 2010-07-27, 2015-04-15
  */
-class TrackTuple : public TrackMonitorTupleBase {
+class STTrackTuple : public TrackMonitorTupleBase {
 public: 
   /// Standard constructor
-  TrackTuple( const std::string& name, ISvcLocator* pSvcLocator );
+  STTrackTuple( const std::string& name, ISvcLocator* pSvcLocator );
   
-  virtual ~TrackTuple( ); ///< Destructor
+  virtual ~STTrackTuple( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -226,5 +226,5 @@ private:
   bool m_savePositions;
 
 };
-#endif // TRACKTUPLE_H
+#endif // STTRACKTUPLE_H
 
