@@ -3,6 +3,12 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-07-08 - Lucio Anderlini
+ - Added folder TeslaTools for tool interfaces
+ - Added file TeslaTools/ITeslaMatcher.h as interface for TeslaMatcher tool
+ - Added files src/TeslaMatcher.{cpp|h} as implementation of TeslaMatcher
+ - Modified cmt/requirements to process TeslaTools as branch
+
 ! 2015-6-29 - Sean Benson
  - Some PV debug printout.
 

@@ -5,7 +5,7 @@
 package TeslaTools
 version           v1r9
 
-branches doc cmt options src python tests
+branches doc cmt options src python tests TeslaTools
 
 use GaudiPolicy v*
 use GaudiKernel v*
@@ -13,6 +13,7 @@ use GaudiKernel v*
 # Component library building rule
 #============================================================================
 library          TeslaTools    ../src/*.cpp
+
 
 #########################################
 # Configurable (python) dependencies
@@ -33,6 +34,7 @@ use   LoKiArrayFunctors                      v*    Phys
 
 # standard patterns (order is essential!)
 # ============================================================================
+apply_pattern install_more_includes more=TeslaTools
 apply_pattern component_library library=TeslaTools
 apply_pattern install_python_modules
 # ============================================================================
