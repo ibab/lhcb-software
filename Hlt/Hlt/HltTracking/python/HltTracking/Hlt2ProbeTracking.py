@@ -35,7 +35,7 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
     # First of all the dependencies and the slots
     #
     #############################################################################################
-    __slots__ = { "DataType"                        : '2012' # datatype  2009, MC09, DC06...
+    __slots__ = { "DataType"                        : '2012' 
                 , "ProbeTrack"                      : "MuonTT"  #Define probe track type
                 , "Prefix"                          : "Hlt2"   # Why should we need this? It's never changed
                 }
@@ -187,12 +187,13 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         elif (self.trackType() == "FullDownstream" ) :
                 # add muon ID
                 bm_members = [ self.__hlt2FullDownstreamTracking() ]
-                idalg = MuonIDAlg("IDalg")
-                cm=ConfiguredMuonIDs.ConfiguredMuonIDs( self.getProp("DataType") )
-                cm.configureMuonIDAlg(idalg)
+                idalgname = self.__pidAlgosAndToolsPrefix()+"IDalg"
+                cm=ConfiguredMuonIDs.ConfiguredMuonIDs( data = self.getProp("DataType") )
+                idalg = cm.configureMuonIDAlg(idalgname)
                 idalg.TrackLocation = self.__hlt2FullDownstreamTracking().outputSelection()
                 idalg.MuonIDLocation = Hlt2TrackRoot+HltDefaultFitSuffix+"/"+HltSharedPIDPrefix+"/"+HltMuonIDSuffix
                 idalg.MuonTrackLocation = Hlt2TrackRoot+HltDefaultFitSuffix+"/"+HltSharedPIDPrefix+"/"+HltMuonTracksName
+                idalg.FindQuality = False
                 # make protos
                 Hlt2ProbeMuonProtoMaker.Inputs = [self.__hlt2FullDownstreamTracking().outputSelection()]
                 Hlt2ProbeMuonProtoMaker.Output = ProbeMuonProtosOutputLocation

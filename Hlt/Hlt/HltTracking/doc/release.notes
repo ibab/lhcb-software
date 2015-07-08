@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-07-08 - Michael Kolpin
+ - Changed MuonID definition in Hlt2ProbeTracking to be on par with Hlt2Tracking
+
 ! 2015-06-30 - Sascha Stahl
  - Hlt2Tracking and Hlt2RecoConf: Added option to apply ghost probability cut in 
    TrackBestTrackCreator directly.
