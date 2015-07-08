@@ -61,7 +61,7 @@ class TrackEffDiMuon_EM2015 :
                                 'ProbeTrChi2'   : 9999, #dummy
                                 'JPsiPt'        : 1000 * MeV,
                                 'JPsiDOCA'      : 9999 * mm, #dummy
-                                'JPsiMaxIP'     : 0.8 * mm,
+                                'JPsiMaxIP'     : 1.0 * mm,
                                 'JPsiMaxIPchi2' : 9999, #dummy
                                 'JPsiVtxChi2'   : 2,
                                 'JPsiMassWin'   : 500 * MeV},
@@ -69,7 +69,7 @@ class TrackEffDiMuon_EM2015 :
                                 'TagP'          : 7 * GeV,
                                 'TagPt'         : 0 * MeV,
                                 'TagTrChi2'     : 3,
-                                'TagMinIP'      : 0.2 * mm,
+                                'TagMinIP'      : 0.0 * mm,
                                 'TagMinIPchi2'  : 0, #dummy
                                 'ProbeP'        : 0 * GeV,
                                 'ProbePt'       : 0 * MeV,

@@ -4,9 +4,6 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
-! 2015-07-08 - Michael Kolpin
- - Slightly tightened IP requirements on TrackEffDiMuon VeloMuon and MuonTT lines
-
 ! 2015-07-04 - Christian Linn
  - Corrected cuts of D02KPi PID line in PID_EM2015
 
