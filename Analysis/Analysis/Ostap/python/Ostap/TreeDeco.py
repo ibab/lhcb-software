@@ -324,6 +324,131 @@ ROOT.TChain. files = _rc_files_
 
 
 # =============================================================================
+## get "slice" from TTree in a form of numpy.array
+#  @code
+#  tree = ...
+#  varr = tree.slice('Pt','eta>3')
+#  print varr 
+#  @endcode 
+#  @see numpy.array 
+#  @author Albert BURSCHE
+#  @date 2015-07-08
+def _rt_slice_ ( tree , varname , cut = '' ) :
+    """
+    Get ``slice'' from TTree in a form of numpy.array
+    ##
+    >>> tree = ...
+    >>> varr = tree.slice('Pt','eta>3')
+    >>> print varr 
+    """
+    #
+    ## decode the name (if needed)
+    if isinstance ( varname , str ) :
+        varname = varname.strip()
+        print 'AFTER1: #%s#' % varname 
+        varname = varname.replace ( ':' , ',' )
+        print 'AFTER2: #%s#' % varname 
+        varname = varname.replace ( ';' , ',' )
+        print 'AFTER3: #%s#' % varname 
+        varname = varname.replace ( ' ' , ',' )
+        print 'AFTER4: #%s#' % varname 
+        varname = varname.split   (       ',' )
+        print 'AFTER5: #%s#' % varname 
+        if 1 == len ( varname ) : varname = varname[0].strip()
+        else :
+            for i in range( 0 , len(varname) ) : 
+                varname[i] = varname[i].strip()  
+    #
+    print 'AFTER6: #%s#' % varname 
+    if       isinstance ( varname ,  ( list , tuple ) ) :
+        ## forward to appropriate method 
+        return tree.slices ( varname , cut )
+    elif not isinstance ( varname , str ) :
+        raise AttibuteError ( 'Invalid type %s' % varname )
+    
+    ##
+    p1 = varname.find( '[')
+    if 0 < p1 :
+        p2 = varname.find( ']' , p1 + 1 )
+        if p1 < p2 :
+            raise AttributeError("TTree:slice: can't slice array-like variable '%s'" % varname )
+            
+    ge   = long( tree.GetEstimate() ) 
+    tree.SetEstimate ( max ( len ( tree ) , ge ) )
+    ##
+    n    = tree.Draw ( varname , cut , "goff" )
+    ##
+    import numpy
+    sl =   numpy.array ( numpy.frombuffer ( tree.GetV1() , count = n ) , copy = True )
+    ##
+    tree.SetEstimate ( ge ) 
+    return sl 
+
+
+# =============================================================================
+## get "slices" from TTree in a form of numpy.array
+#  @code
+#  tree = ...
+#  varrs1 = tree.slices ( ['Pt','eta'] , 'eta>3' )
+#  print varrs1 
+#  varrs2 = tree.slices (  'Pt , eta'  , 'eta>3' )
+#  print varrs2
+#  varrs3 = tree.slices (  'Pt : eta'  , 'eta>3' )
+#  print varrs3
+#  @endcode 
+#  @see numpy.array 
+#  @author Albert BURSCHE
+#  @date 2015-07-08  
+def _rt_slices_ ( tree , varnames , cut = '' ) :
+    """
+    Get ``slices// from TTree in a form of numpy.array
+    
+    >>> tree = ...
+    
+    >>> varrs1 = tree.slices( ['Pt' , 'eta'] ,'eta>3')
+    >>> print varrs1
+    
+    >>> varrs2 = tree.slices( 'Pt,eta'  ,'eta>3')
+    >>> print varrs2
+    
+    >>> varrs3 = tree.slices( 'Pt : eta' ,'eta>3')
+    >>> print varrs3
+    """
+    #
+    varname = varnames 
+    ## decode the name (if needed)
+    for sep in ( ',' , ':' , ';' ) :
+        if isinstance ( varname , str ) :
+            varname = varname.strip() 
+            varname = varname.split( sep )
+            if 1 == len ( varname ) : varname = varname[0].strip()
+            else :
+                for i in range( 0 , len(varname) ) : 
+                    varname[i] = varname[i].strip()  
+    #
+    if       isinstance ( varname , str ) :
+        ## forward to appropriate method 
+        return tree.slice ( varname , cut )
+    elif not isinstance ( varname ,  ( list , tuple ) ) :
+        raise AttibuteError ( 'Invalid type %s' % varname )
+    ##
+    import numpy
+    a = numpy.array ( [tree.slice(name, cut) for name in varname ] )
+    a.sort()
+    return a
+
+
+ROOT.TTree .slice  = _rt_slice_
+ROOT.TTree .slices = _rt_slices_
+
+def _not_implemented_ ( self , method , *args , **kwargs ) :
+    raise NotImplementedError('%s: the method "%s" is not implemented' % ( self.__class__ , method ) ) 
+
+ROOT.TChain.slice  = lambda s,*x : _not_implemented_( s , 'slice'  , *x ) 
+ROOT.TChain.slices = lambda s,*x : _not_implemented_( s , 'slices' , *x ) 
+
+
+# =============================================================================
 if '__main__' == __name__ :
     
     import Ostap.Line

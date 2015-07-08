@@ -8,6 +8,11 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-07-08 - Vanya Belyaev
+ - add function "slice/slices" by Albert Bursche 
+   to get  numpy-slice(s) of variables 
+   from TTree
+
 ! 2015-07-06 - Vanya Belyaev
 
  - impove shift and feed operations with historgams 
