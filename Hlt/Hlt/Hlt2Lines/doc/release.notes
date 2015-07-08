@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-07-08 - Michael Kolpin
+ - Slightly tightened IP requirements on TrackEffDiMuon VeloMuon and MuonTT lines
+
 ! 2015-07-06 - Francesco Dettori
  - Adding prescales for control channels in RareCharm lines.
 

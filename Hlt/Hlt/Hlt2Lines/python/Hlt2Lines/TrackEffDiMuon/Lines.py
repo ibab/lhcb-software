@@ -44,7 +44,7 @@ class TrackEffDiMuonLines(Hlt2LinesConfigurableUser):
 			        'ProbeTrChi2'	: 9999, #dummy
 			        'JPsiPt'	: 1000 * MeV,
 			        'JPsiDOCA'	: 9999 * mm, #dummy
-			        'JPsiMaxIP'	: 1.0 * mm,
+			        'JPsiMaxIP'	: 0.8 * mm,
 			        'JPsiMaxIPchi2'	: 9999, #dummy
 			        'JPsiVtxChi2'	: 2,
 			        'JPsiMassWin'	: 500 * MeV},
@@ -52,7 +52,7 @@ class TrackEffDiMuonLines(Hlt2LinesConfigurableUser):
 			        'TagP'		: 7 * GeV,
 			        'TagPt'		: 0 * MeV,
 			        'TagTrChi2'	: 3,
-			        'TagMinIP'	: 0 * mm,
+			        'TagMinIP'	: 0.2 * mm,
 			        'TagMinIPchi2'	: 0, #dummy
 			        'ProbeP'	: 0 * GeV,
 			        'ProbePt'	: 0 * MeV,
