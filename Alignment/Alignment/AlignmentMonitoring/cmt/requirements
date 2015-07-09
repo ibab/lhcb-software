@@ -1,0 +1,56 @@
+#============================================================================
+# Created     : 2015-07-09
+# Maintainer  : Maurizio Martinelli
+#============================================================================
+package         AlignmentMonitoring
+version         v0r1
+#============================================================================
+# Structure, i.e. directories to process.
+#============================================================================
+branches        doc cmt python src dict
+include_path      none
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use GSL               	v*  LCG_Interfaces
+use ROOT                v*  LCG_Interfaces
+use Boost               v*  LCG_Interfaces -no_auto_imports
+#============================================================================
+# Install python modules and scripts
+#============================================================================
+apply_pattern   install_python_modules
+#============================================================================
+# Tests
+#============================================================================
+#apply_pattern   QMTest
+#============================================================================
+
+# ================ environment ============================================
+#apply_pattern install_more_includes more=AlignmentMonitoring
+
+# ================ linker library ===========================================
+#private
+#macro_append ROOT_linkopts " -lHist -lGraf -lGraf3d -lGpad -lRint -lPostscript -lMatrix -lPhysics -lMinuit2 " \
+#   WIN32 " libHist.lib libGraf.lib libGraf3d.lib libGpad.lib libRint.lib libPostscript.lib libMatrix.lib libPhysics.lib libMinuit2.lib"
+#macro_append Boost_linkopts " $(Boost_linkopts_serialization) "
+#end_private
+
+#=====================================================================
+# Linker library building rule
+#=====================================================================
+library AlignmentMonitoringLib ../src/*.cpp
+#apply_pattern linker_library library=AlignmentMonitoringLib
+
+# =============== LCG Dictionaries ==========================================
+apply_pattern     reflex_dictionary					\
+                  dictionary=AlignmentMonitoring			\
+                  headerfiles=$(ALIGNMENTMONITORINGROOT)/dict/AlignmentMonitoringDict.h	\
+                  selectionfile=$(ALIGNMENTMONITORINGROOT)/dict/AlignmentMonitoringDict.xml \
+                  options="-U__MINGW32__"
+
+private
+macro_append Boost_linkopts " $(Boost_linkopts_system) $(Boost_linkopts_filesystem) "
+end_private
+
+macro AlignmentMonitoringDict_use_linkopts $(use_linkopts)

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Maurizio Martinelli -->
+<!--- Created : 2015-07-08 -->
+
+<lcgdict>
+  <class pattern = "std::map&lt;std::string,*&gt;" />
+  <class pattern = "std::pair&lt;std::string,*&gt;" />
+  <class name = "Alignment::AlignmentMonitoring::AlignmentMonitoring" />
+  <class name = "Alignment::AlignmentMonitoring::AlignmentMonitoringHistHelper" />
+  <class name = "Alignment::AlignmentMonitoring::CompareConstants" />
+  <class name = "Alignment::AlignmentMonitoring::ParseConstants" />
+  <class name = "Alignment::AlignmentMonitoring::Utilities" />
+</lcgdict>
