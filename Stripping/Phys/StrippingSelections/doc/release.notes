@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-09 - Ricardo Vazquez Gomez
+ - Add documentation folder for the coordinators 
+
 ! 2015-07-09 - Andrea Contu
  - Remove hard coded trigger lines from StrippingDstarD02xx.py
 
