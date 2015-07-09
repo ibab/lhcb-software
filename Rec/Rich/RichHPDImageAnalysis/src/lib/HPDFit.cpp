@@ -304,22 +304,20 @@ HPDFit::Result HPDFit::fit ( const TH2D& hist,
   if ( params.cleanHistogram ) { delete hToUse; }
 
   // Check the final result to see if we should retry with a log-z image
-  if ( params.retryWithLogzImage )
+  if ( params.retryWithLogzImage && 
+       asymErrors( result, params ) )
   {
-    if ( ! errorsOK( result, params ) )
-    {
-      // create the log-z image
-      TH2D * logZhist = createLogzImage(hist);
-      // clone the params to turn off log-z fit, to avoid infinite recursion ...
-      auto new_params = params;
-      new_params.retryWithLogzImage = false;
-      // fit it
-      result = fit( *logZhist, new_params, nEvents );
-      // set the flag to say Log-Z was used
-      result.setUsedLogZ( true );
-      // remove the temporary hist
-      delete logZhist;
-    }
+    // create the log-z image
+    TH2D * logZhist = createLogzImage(hist);
+    // clone the params to turn off log-z fit, to avoid infinite recursion ...
+    auto new_params = params;
+    new_params.retryWithLogzImage = false;
+    // fit it
+    result = fit( *logZhist, new_params, nEvents );
+    // set the flag to say Log-Z was used
+    result.setUsedLogZ( true );
+    // remove the temporary hist
+    delete logZhist;
   }
 
   // return the final status

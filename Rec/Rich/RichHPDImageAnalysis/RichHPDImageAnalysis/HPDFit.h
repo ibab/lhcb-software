@@ -34,18 +34,19 @@ namespace Rich
       {
       public:
         /// Default Constructor
-        Params() : type             ( "Sobel" ),
-                   cleanHistogram   (  true   ),
-                   maxImageShift    (  3.0    ), // in mm
-                   maxXYErrDevation ( 99999   ),
-                   retryWithLogzImage ( true  )
-        { }
+        Params() : type               ( "Sobel" ),
+                   cleanHistogram     (  true   ),
+                   maxImageShift      (  3.0    ), // in mm
+                   maxXYErr           (  99999  ),
+                   maxXYErrDeviation  (  99999  ),
+                   retryWithLogzImage (  true   ) { }
       public:
-        std::string type;        ///< Fit type
-        bool cleanHistogram;     ///< Flag to turn on image cleaning prior to the fit
-        double maxImageShift;    ///< Max allowed image shift for a good fit
-        double maxXYErrDevation; ///< HPD image fit max errors max deviation
-        bool retryWithLogzImage; ///< Retry the fit as needed with a log-z image
+        std::string type;         ///< Fit type
+        bool cleanHistogram;      ///< Flag to turn on image cleaning prior to the fit
+        double maxImageShift;     ///< Max allowed image shift for a good fit
+        double maxXYErr;          ///< Max allowed x,y error
+        double maxXYErrDeviation; ///< HPD image fit max errors max deviation
+        bool retryWithLogzImage;  ///< Retry the fit as needed with a log-z image
       public:
         /// Overload output to ostream
         friend inline std::ostream& operator << ( std::ostream& os,
@@ -168,9 +169,21 @@ namespace Rich
       inline bool errorsOK( const HPDFit::Result& result,
                             const Params& params ) const
       {
+  
+        return ( result.xErr() < params.maxXYErr &&
+                 result.yErr() < params.maxXYErr &&
+                 !asymErrors(result,params)      );
+      }
+
+    private:
+
+      /// Check for a large asymmetry in the (x,y) errors
+      inline bool asymErrors( const HPDFit::Result& result,
+                              const Params& params ) const
+      {
         const double avErr = ( result.xErr() + result.yErr() ) / 2.0;
-        return ( fabs( result.xErr() - avErr ) < avErr*params.maxXYErrDevation &&
-                 fabs( result.yErr() - avErr ) < avErr*params.maxXYErrDevation );
+        return ( fabs( result.xErr() - avErr ) > avErr*params.maxXYErrDeviation ||
+                 fabs( result.yErr() - avErr ) > avErr*params.maxXYErrDeviation );
       }
 
     public:
