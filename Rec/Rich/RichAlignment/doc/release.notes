@@ -4,13 +4,18 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+!========================= RichAlignment v1r12 2015-07-09 ======================
+! 2015-07-09 - Paras Naik
+ - Changed from 20 bins in phi to 60 bins in phi, for the 2D histograms used 
+   in the mirror alignment. Can always rebin later, within the mirror alignment.
+
 !========================= RichAlignment v1r11 2015-06-11 ======================
-! 2014-05-23 - Paras Naik
+! 2015-05-23 - Paras Naik
  - Added several TrackSelector cuts in order to remove background photons from 
    our deltaTheta histograms. 
 
 !========================= RichAlignment v1r10p1 2015-04-23 ====================
-! 2014-05-23 - Paras Naik
+! 2015-05-23 - Paras Naik
  - Decreased Bins in phi (from 25 to 20) in 2D dThetavphiRec histograms for 
    specific mirror combinations. (Reversed decision of 2011-06-07, see below)
 
