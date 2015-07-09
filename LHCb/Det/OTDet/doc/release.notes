@@ -2,6 +2,9 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+! 2015-07-09 - Michel De Cian
+ - Fix bug that caused only one monolayer per module to be filled (in DeOTModule.cpp)
+
 ! 2015-06-04 - Wouter Hulsbergen
  - Small fix in OTWireTraj to get rid of compiler warning.
 

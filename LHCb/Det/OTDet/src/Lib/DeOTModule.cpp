@@ -250,7 +250,7 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
       wB.SetZ(z);
       wT.SetZ(z);
       for (auto straw: straws) {
-        const double x = localUOfStraw(straw);
+        const double x = localUOfStraw(straw + m_nStraws);
         wB.SetX(x);
         wT.SetX(x);
         const auto wire = Gaudi::Math::XYZLine(wB, (wT-wB).Unit());
@@ -259,7 +259,7 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
           const auto dist = driftDistance(lambda-mu);
           if (isEfficientB(mu.y()) && std::abs(dist) < m_cellRadius) {
             chanAndDist.push_back(std::make_pair(
-			OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw),
+			OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw + m_nStraws),
 			dist));
           }
         }
