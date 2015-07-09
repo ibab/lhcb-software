@@ -19,6 +19,12 @@
 //------------------------------------------------------------------------------
 #include "GaudiAlg/GaudiTool.h"
 
+#define MATCHING_FUNC(name, original, cand, defaultCand) \
+    const Particle* name(\
+                               const Particle* original,\
+                               const Particle* cand,\
+                               const Particle* defaultCand)
+
 class TeslaMatcher : public GaudiTool, virtual public ITeslaMatcher 
 {
   public:
@@ -29,6 +35,7 @@ class TeslaMatcher : public GaudiTool, virtual public ITeslaMatcher
     ~TeslaMatcher();
 
     virtual StatusCode initialize();
+    virtual StatusCode finalize();
 
     virtual StatusCode findBestMatch (
         const Particle* inputParticle,
@@ -38,10 +45,10 @@ class TeslaMatcher : public GaudiTool, virtual public ITeslaMatcher
 
 
   protected:
-    static const Particle* defaultBestMatching(
-                               const Particle* original,
-                               const Particle* cand,
-                               const Particle* defaultCand);
+    static MATCHING_FUNC(defaultBestMatching,original,cand,defaultCand);
+    static MATCHING_FUNC(t2bBestMatching,original,cand,defaultCand);
+    static MATCHING_FUNC(trackBestMatching,original,cand,defaultCand);
+    static MATCHING_FUNC(momentumBestMatching,original,cand,defaultCand);
 
   private:
     std::function<const Particle*(const Particle*, 
@@ -49,8 +56,11 @@ class TeslaMatcher : public GaudiTool, virtual public ITeslaMatcher
                                   const Particle*)> m_bestMatching;
 
     bool m_checkPid;
+    std::string m_matchingTechnique;
 
 
 };
+
+#undef MATCHING_FUNC
 
 #endif //TESLATOOLS_TESLAMATCHER_H

@@ -1,4 +1,4 @@
-from Configurables import TeslaMonitor
+from Configurables import TeslaMonitor, TeslaBrunelMonitor
 
 class TeslaH1:
   def __init__ (self, input, title, nBins, min, max, cut=None):
@@ -112,4 +112,70 @@ class TeslaH3:
 
   def getAlgorithm(self):
     return self._alg
+
+
+class TeslaBrunelMonitorConf:
+  def __init__ (self, name, TurboInput,       
+                      Folder          = None,
+                      MatchLocations  = None, 
+                      HistName        = None, 
+                      HistTitle       = None,
+                      Variables       = None,
+                      Tools           = None,
+                      TeslaMatcher    = None):
+    self.name = name;
+    if not isinstance(TurboInput, list): TurboInput = [TurboInput]
+    self.TurboInput = TurboInput
+    self.Folder = Folder if Folder else "TeslaBrunelMonitor";
+    self.MatchLocations = MatchLocations if MatchLocations else {}
+    self.HistName   = HistName   if HistName  else "TeslaBrunelMonitor"
+    self.HistTitle  = HistTitle  if HistTitle else "TeslaBrunelMonitor"
+    self.TeslaMatcher= TeslaMatcher if TeslaMatcher else "TeslaMatcher:PUBLIC"
+    self.Tools= Tools if Tools else []
+    self.Variables = Variables if Variables else []
+
+  def addVariable ( self, name, particle, code,  max, cut=None):
+    self.Variables += [{
+      "NAME"     : name,
+      "PARTICLE" : particle,
+      "CODE"     : code,
+      "MAX"      : max,
+      "CUT"      : cut if cut else "(ALL)"
+    }]
+
+  def addTool ( self, tool ):
+    self.Tools += tool;
+
+  def _list ( self, row ):
+    return [ var[row] for var in self.Variables ]
+
+
+  def getAlgorithm ( self ):
+    alg = TeslaBrunelMonitor ( self.name, Folder = self.Folder,
+                      Inputs   = ["/Event/Turbo/"+line+"/Particles" 
+                                              for line in self.TurboInput],
+                      Particle = ["["+p+"]CC" for p in self._list('PARTICLE')],
+                      Cut      = self._list("CUT"),
+                      Code     = self._list("CODE"),
+                      Name     = self._list("NAME"),
+                      Max      = self._list("MAX"),
+                      HistName = self.HistName,
+                      HistTitle= self.HistTitle,
+                      TeslaMatcher=self.TeslaMatcher,
+                      MatchLocations = self.MatchLocations,
+                    )
+
+
+    for tool in self.Tools:
+      alg.addTool ( tool )
+
+    return alg;
+
+
+
+
+
+
+
+ 
 

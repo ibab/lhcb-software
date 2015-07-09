@@ -3,6 +3,12 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-07-09 - Lucio Anderlini
+ - Added TeslaBrunelMonitor algorithm to 
+    . match the Tesla Candidates with the Brunel ones using TeslaMatcher 
+    . draw 1D plots of the differences. A plot per variable.
+    . draw 2D plot summarizing the discrepancies in all variables.
+
 ! 2015-07-08 - Lucio Anderlini
  - Added folder TeslaTools for tool interfaces
  - Added file TeslaTools/ITeslaMatcher.h as interface for TeslaMatcher tool

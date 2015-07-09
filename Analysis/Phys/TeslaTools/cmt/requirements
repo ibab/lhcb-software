@@ -24,6 +24,7 @@ use  HltEvent    v* Event
 use  DAQEvent    v* Event
 use  LHCbAlgs    v* Kernel
 use  GaudiConf   v*
+use  GaudiUtils  v*
 use  RecEvent    v* Event
 use  DaVinciKernel v*    Phys
 use  DaVinciInterfaces v*    Phys
