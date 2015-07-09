@@ -76,10 +76,10 @@ class Commissioning_Physics_2015( object ):
                                                , 'Muon_TrNTHits'     : 0 #OFF
                                                , 'Muon_Velo_NHits'   : 0 #OFF
                                                , 'Muon_Velo_Qcut'    : 999 #OFF
-                                               , 'Muon_PT'           : 800.
+                                               , 'Muon_PT'           : 910.
                                                , 'Muon_P'            : 6000.
-                                               , 'Muon_IPChi2'       : 6.
-                                               , 'Muon_TrChi2'       : 5.
+                                               , 'Muon_IPChi2'       : 10.
+                                               , 'Muon_TrChi2'       : 3.
                                                , 'Muon_GEC'          : 'Loose'
                                                , 'Photon_PT'         : 1200.
                                                , 'Photon_P'          : 6000.
@@ -132,12 +132,12 @@ class Commissioning_Physics_2015( object ):
                                                , 'SingleElectronNoIP_GEC'        : 'Loose'
                                                , 'L0Channels': { 'SingleElectronNoIP' : ( 'Electron', ) }
                                                }
-                     , Hlt1MuonLinesConf :     { 'SingleMuonHighPT_P'       : 3000
-                                               , 'SingleMuonHighPT_PT'      : 4800
+                     , Hlt1MuonLinesConf :     { 'SingleMuonHighPT_P'       : 6000
+                                               , 'SingleMuonHighPT_PT'      : 4340
                                                , 'SingleMuonHighPT_TrChi2'  :    3.
                                                , 'SingleMuonHighPT_GEC'     : 'Loose'
-                                               , 'SingleMuonNoIP_P'         : 3000
-                                               , 'SingleMuonNoIP_PT'        : 1300
+                                               , 'SingleMuonNoIP_P'         : 6000
+                                               , 'SingleMuonNoIP_PT'        : 1400
                                                , 'SingleMuonNoIP_TrChi2'    :    3.
                                                , 'SingleMuonNoIP_GEC'       : 'Loose'
                                                , 'DiMuonLowMass_VxDOCA'     :  0.2
@@ -146,22 +146,22 @@ class Commissioning_Physics_2015( object ):
                                                , 'DiMuonLowMass_PT'         :  300
                                                , 'DiMuonLowMass_TrChi2'     :    4
                                                , 'DiMuonLowMass_M'          :    0.
-                                               , 'DiMuonLowMass_IPChi2'     :    6.
+                                               , 'DiMuonLowMass_IPChi2'     :    4.
                                                , 'DiMuonLowMass_GEC'        : 'Loose'
                                                , 'DiMuonHighMass_VxDOCA'    :  0.2
                                                , 'DiMuonHighMass_VxChi2'    :   25
-                                               , 'DiMuonHighMass_P'         : 3000
-                                               , 'DiMuonHighMass_PT'        :  300
-                                               , 'DiMuonHighMass_TrChi2'    :    4
+                                               , 'DiMuonHighMass_P'         : 6000
+                                               , 'DiMuonHighMass_PT'        :    0
+                                               , 'DiMuonHighMass_TrChi2'    :    3
                                                , 'DiMuonHighMass_M'         : 2700
                                                , 'DiMuonHighMass_GEC'       : 'Loose'
                                                , 'DiMuonNoL0_VxDOCA'     :  0.2
-                                               , 'DiMuonNoL0_VxChi2'     :   24.
+                                               , 'DiMuonNoL0_VxChi2'     :   25.
                                                , 'DiMuonNoL0_P'          : 3000.
                                                , 'DiMuonNoL0_PT'         :    0.
                                                , 'DiMuonNoL0_TrChi2'     :    2.
                                                , 'DiMuonNoL0_M'          :    0.
-                                               , 'DiMuonNoL0_IPChi2'     :    9.
+                                               , 'DiMuonNoL0_IPChi2'     :    4.
                                                , 'DiMuonNoL0_GEC'        : 'Loose'
                                                , 'MultiMuonNoL0_P'          : 6000
                                                , 'MultiMuonNoL0_PT'         :  500
@@ -175,7 +175,9 @@ class Commissioning_Physics_2015( object ):
                                                                               'MultiMuonNoL0'    : None
                                                                              }
                                                , 'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.1,
-                                                                                'Hlt1MultiMuonNoL0'  : 1. }
+                                                                                'Hlt1DiMuonNoL0'  : 0.01,
+                                                                                'Hlt1MultiMuonNoL0'  : 0.01
+                                                                                }
                                                }
                        , Hlt1L0LinesConf :     {  'Postscale' : { 'Hlt1L0AnyRateLimited'       : 'RATE(1)'
                                                                 , 'Hlt1L0AnyNoSPDRateLimited'  : 'RATE(1)'
