@@ -91,7 +91,7 @@ namespace
    *  equality comparison 
    *  @see LHCb::Math::Equal_To
    */
-  const LHCb::Math::Equal_To<double> s_equal ; // equailty comparison 
+  const LHCb::Math::Equal_To<double> s_equal ; // equality comparison 
   // ==========================================================================
 }
 // ============================================================================
@@ -101,21 +101,19 @@ StatusCode LoKi::VertexFitter::_load
 ( const LHCb::Particle::ConstVector& ds ) const 
 {
   StatusCode sc = StatusCode::SUCCESS ;
-  m_entries.clear() ;
-  m_entries.resize ( ds.size() ) ;
-  LHCb::Particle::ConstVector::const_iterator c = ds.begin()        ;
-  Entries::iterator                           e = m_entries.begin() ;
+  m_entries.clear   () ;
+  m_entries.reserve ( ds.size() ) ;
   //
-  for ( ; ds.end() != c && sc.isSuccess() ; ++c , ++e ) 
-  { sc = _load ( *c , *e ) ; } ;
+  for ( LHCb::Particle::ConstVector::const_iterator c = ds.begin() ;
+        ds.end() != c && sc.isSuccess() ; ++c ) { sc = _load ( *c ) ; } 
+  //
   if ( sc.isFailure () ) 
   { return _Warning ( "_load(): the error from _load:" , sc          ) ; } // RETURN 
   if ( m_entries.empty() ) 
   { return _Warning ( "_load(): no valid data found"   , InvalidData ) ; } // RETURN 
   //
   if ( !LoKi::KalmanFilter::okForVertex ( m_entries ) &&
-       ( !m_use_rho_like_branch || 
-         !LoKi::KalmanFilter::rhoPlusLike ( m_entries ) ) )
+       ( !m_use_rho_like_branch || !LoKi::KalmanFilter::rhoPlusLike ( m_entries ) ) )
   { return _Error( "Input set could not be vertexed"  , InvalidData ) ; }
   //
   return StatusCode::SUCCESS ;
@@ -123,15 +121,30 @@ StatusCode LoKi::VertexFitter::_load
 // ============================================================================
 // load the data into internal representation 
 // ============================================================================
-StatusCode LoKi::VertexFitter::_load      
-( const LHCb::Particle*     particle , 
-  LoKi::VertexFitter::Entry& entry    ) const 
+StatusCode LoKi::VertexFitter::_load ( const LHCb::Particle* particle  ) const 
 {
   //
   if ( 0 == particle ) 
   { return _Warning ( "_load(): invalid particle" , InvalidParticle ) ; } // RETURN 
   //
-  return LoKi::KalmanFilter::load ( *particle , particleType_ ( particle ) , entry ) ;
+  const LoKi::KalmanFilter::ParticleType t = particleType_( particle ) ;
+  // regular particles 
+  if ( LoKi::KalmanFilter::JetLikeParticle != t )
+  {
+    m_entries.push_back( Entry() ) ;
+    return LoKi::KalmanFilter::load ( *particle , t , m_entries.back() ) ;
+  }
+  // for jets, load all components...
+  typedef SmartRefVector<LHCb::Particle> DAUGHTERS ;
+  const DAUGHTERS& daughters = particle->daughters() ;
+  for ( DAUGHTERS::const_iterator idau = daughters.begin() ; 
+        daughters.end() != idau ; ++idau ) 
+  {
+    StatusCode sc = _load ( *idau ) ;
+    if ( sc.isFailure() ) { return sc ; } // RETURN
+  }
+  // 
+  return StatusCode::SUCCESS ;
 }
 // ============================================================================
 // add one particle at the end of the queue
@@ -140,8 +153,7 @@ StatusCode LoKi::VertexFitter::_add
 ( const LHCb::Particle*  child , 
   const Gaudi::XYZPoint& point ) const
 {
-  m_entries.push_back( Entry() ) ;
-  StatusCode sc = _load      ( child , m_entries.back() ) ;
+  StatusCode sc = _load ( child ) ;
   if ( sc.isFailure() ) 
   { _Warning ("_add(): the error from _add()      , ignore", sc ) ; }
   sc = _transport ( m_entries.back() , point ) ;
@@ -216,10 +228,15 @@ bool LoKi::VertexFitter::stop_iter
 
  
 // ============================================================================
-// make optimised fKalman filter iterations 
+// make optimised Kalman filter iterations 
 // ============================================================================
 StatusCode LoKi::VertexFitter::_iterate_opt ( const size_t nMax ) const 
 {
+  // timing measurements 
+  std::unique_ptr<Chrono> timer ;
+  if ( m_timing || msgLevel ( MSG::INFO ) )  
+  { timer.reset( new Chrono( chronoSvc() , name() + ":optimized" ) ) ; }
+  //
   Gaudi::Vector3  x0    ;
   for ( size_t iIter = 0 ; iIter <= nMax + 1 ; ++iIter ) 
   {
@@ -230,7 +247,7 @@ StatusCode LoKi::VertexFitter::_iterate_opt ( const size_t nMax ) const
     const Gaudi::Vector3&      x  = m_entries[0].m_x ;
     const Gaudi::SymMatrix3x3& ci = m_entries[0].m_ci ;
     //
-    if ( 1 <= iIter && stop_iter ( x - x0 , ci , iIter ) ) 
+    if ( sc.isSuccess() && 1 <= iIter && stop_iter ( x - x0 , ci , iIter ) ) 
     {
       counter ( "#iterations/Opt") += ( iIter - 1 ) ; // the first one acts as seeding
       return StatusCode::SUCCESS ; 
@@ -253,6 +270,11 @@ StatusCode LoKi::VertexFitter::_iterate
 ( const size_t               nIterMax , 
   const Gaudi::Vector3&      _x       ) const 
 {  
+  // timing measurements 
+  std::unique_ptr<Chrono> timer ;
+  if ( m_timing || msgLevel ( MSG::INFO ) )  
+  { timer.reset( new Chrono( chronoSvc() , name() + ":iterate" ) ) ; }
+  //
   // initial position
   const Gaudi::Vector3* x = &_x ;
   // chi2 
@@ -261,12 +283,6 @@ StatusCode LoKi::VertexFitter::_iterate
   // inverse covariance matrix for the position  
   const Gaudi::SymMatrix3x3* ci = &m_seedci ;
   //
-  const bool two_prongs   = 
-    m_use_twobody_branch    && LoKi::KalmanFilter::twoProngs   ( m_entries ) ;
-  const bool three_prongs = 
-    m_use_threebody_branch  && LoKi::KalmanFilter::threeProngs ( m_entries ) ;
-  const bool four_prongs  = 
-    m_use_fourbody_branch   && LoKi::KalmanFilter::fourProngs  ( m_entries ) ;
   const bool rho_like     = 
     m_use_rho_like_branch   && LoKi::KalmanFilter::rhoPlusLike ( m_entries ) ;
   //
@@ -284,55 +300,24 @@ StatusCode LoKi::VertexFitter::_iterate
     // initialize the chi2 
     chi2 = &_chi2 ;
     const Gaudi::Vector3 x0 ( *x ) ;    
-    // start the kalman filter 
-    bool special = false ;
-    // A) the simplest case: 2 body fit 
-    if      ( two_prongs ) 
-    {
-      sc = LoKi::KalmanFilter::step ( m_entries[0] , 
-                                      m_entries[1] , *chi2 ) ;
-      if ( sc.isSuccess() ) { special = true ; }
-      else { _Warning ( "Error from three-body Kalman step" , sc ) ; }      
-    }
-    // B) use three-body branch 
-    else if ( three_prongs ) 
-    {
-      sc = LoKi::KalmanFilter::step ( m_entries[0] , 
-                                      m_entries[1] ,
-                                      m_entries[2] , *chi2 ) ;
-      if ( sc.isSuccess() ) { special = true ; }
-      else { _Warning ( "Error from three-body Kalman step" , sc ) ; }      
-    }
-    // C) use four-body branch 
-    else if ( four_prongs ) 
-    {
-      sc = LoKi::KalmanFilter::step ( m_entries[0] , 
-                                      m_entries[1] ,
-                                      m_entries[2] ,
-                                      m_entries[3] , *chi2 ) ;
-      if ( sc.isSuccess() ) { special = true ; }
-      else { _Warning ( "Error from  four-body Kalman step" , sc ) ; }      
-    }
     // D) use ``rho+-Like'' branch 
-    else if ( rho_like ) 
+    if ( rho_like ) 
     {
       sc = LoKi::KalmanFilter::stepRho ( m_entries , *chi2 ) ;
-      if ( sc.isSuccess() ) { special = true ; }
-      else { _Warning ( "Error from  rho+-like Kalman step" , sc ) ; }      
+      if ( sc.isFailure() ) { _Warning ( "Error from  rho+-like Kalman step" , sc ) ; } 
+      else 
+      {
+        // update the parameters 
+        const LoKi::KalmanFilter::Entry& last = m_entries.back() ;
+        ci   = &last.m_ci   ;
+        x    = &last.m_x    ;
+        chi2 = &last.m_chi2 ;
+      } 
     }
     //
-    if ( special && sc.isSuccess () ) 
-    {
-      // update the parameters 
-      const LoKi::KalmanFilter::Entry& last = m_entries.back() ;
-      ci   = &last.m_ci   ;
-      x    = &last.m_x    ;
-      chi2 = &last.m_chi2 ;
-    }
+    // D) general case (or failure specialization ) 
     //
-    // D) general case (or failure of any N-body specialiation) 
-    //
-    if  ( !special || sc.isFailure()  ) 
+    if  ( !rho_like || sc.isFailure()  ) 
     {
       for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
       {
@@ -351,9 +336,64 @@ StatusCode LoKi::VertexFitter::_iterate
       }
     }
     //
-    if ( stop_iter ( *x - x0 , *ci , iIter ) ) 
+    if ( sc.isSuccess() && stop_iter ( *x - x0 , *ci , iIter ) ) 
     {
       counter("#iterations/Gen") += iIter ;
+      return StatusCode::SUCCESS ; 
+    }
+    //
+  } // end of iterations
+  //
+  return _Warning( "No convergency has been reached", NoConvergency, 0 ) ; // RETURN 
+} 
+// ============================================================================
+// make few kalman iterations 
+// ============================================================================
+StatusCode LoKi::VertexFitter::_iterate_rho 
+( const size_t               nIterMax ) const 
+{  
+  // timing measurements 
+  std::unique_ptr<Chrono> timer ;
+  if ( m_timing || msgLevel ( MSG::INFO ) )  
+  { timer.reset( new Chrono( chronoSvc() , name() + ":rho" ) ) ; }
+  //
+  // initial position
+  const Gaudi::Vector3*      x    = 0 ; 
+  const Gaudi::SymMatrix3x3* ci   = 0 ;
+  //
+  Entries::const_iterator igood = m_entries.begin() ;
+  for ( Entries::const_iterator ientry = m_entries.begin() ; m_entries.end() != ientry ; ++ientry ) 
+  {
+    if ( LoKi::KalmanFilter::LongLivedParticle  == ientry->m_type || 
+         LoKi::KalmanFilter::ShortLivedParticle == ientry->m_type ) { igood = ientry ; break ; }
+  }
+  //
+  x = &igood->m_x ;
+  // iterate 
+  for ( size_t iIter = 1 ; iIter <= nIterMax ; ++iIter ) 
+  {
+    // make a proper transportation 
+    Gaudi::XYZPoint point ;
+    Gaudi::Math::la2geo ( *x , point ) ;
+    StatusCode sc = _transport ( point ) ;
+    if ( sc.isFailure() ) { _Warning ( "_iterate(): problem with transport ", sc ) ; }    
+    //
+    const Gaudi::Vector3 x0 ( *x ) ;    
+    //
+    // use ``rho+-Like'' branch 
+    sc = LoKi::KalmanFilter::stepRho ( m_entries ,  0  ) ;
+    if ( sc.isFailure() ) { _Warning ( "Error from  rho+-like Kalman step" , sc ) ; } 
+    else 
+    {
+      // update the parameters 
+      const LoKi::KalmanFilter::Entry& last = m_entries.back() ;
+      ci   = &last.m_ci   ;
+      x    = &last.m_x    ;
+    }
+    //
+    if ( sc.isSuccess() && 0 != ci && stop_iter ( *x - x0 , *ci , iIter ) ) 
+    {
+      counter("#iterations/rho") += iIter ;
       return StatusCode::SUCCESS ; 
     }
     //
@@ -396,25 +436,6 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
     } 
   }
   //
-  // specific cases:
-  //
-  StatusCode sc = StatusCode::FAILURE ;
-  if      ( m_use_twobody_branch   && LoKi::KalmanFilter::twoProngs   ( m_entries ) )  
-  { sc = LoKi::KalmanFilter::step ( m_entries[0] , m_entries[1] , 0 ) ; }
-  else if ( m_use_threebody_branch && LoKi::KalmanFilter::threeProngs ( m_entries ) )
-  { sc = LoKi::KalmanFilter::step ( m_entries[0] , m_entries[1] , m_entries[2] , 0 ) ; }
-  else if ( m_use_fourbody_branch  && LoKi::KalmanFilter::fourProngs   ( m_entries ) )
-  { sc = LoKi::KalmanFilter::step ( m_entries[0] , m_entries[1] , 
-                                    m_entries[2] , m_entries[3] , 0 ) ; }
-  if ( sc.isSuccess() ) 
-  {
-    m_seed   = m_entries[0].m_x  ;
-    m_seedci = m_entries[0].m_ci ;
-    Gaudi::Math::scale ( m_seedci , s_scale2 ) ;
-    ++counter("Seed:case(1)") ;
-    return StatusCode::SUCCESS ;                            // RETURN 
-  }
-  //
   if ( m_use_shortlived_as_seed ) 
   {
     for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry )
@@ -430,10 +451,10 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
     }
   }
   //
-  //
-  //
+  StatusCode sc = StatusCode::FAILURE ;
   const bool massage = forMassage ( m_entries ) ;
   //
+  // the simple case with no-massage 
   if ( !massage && okForVertex ( m_entries ) )
   {
     sc = LoKi::KalmanFilter::steps ( m_entries , 0 ) ;
@@ -447,6 +468,26 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
     }
   }
   //
+  // specific cases: seeds for 2,3,4-body decays 
+  //
+  if      ( 2 == m_entries.size() && LoKi::KalmanFilter::twoProngs   ( m_entries ) )  
+  { sc = LoKi::KalmanFilter::step ( m_entries[0] , m_entries[1] , 0 ) ; }
+  else if ( 3 == m_entries.size() && LoKi::KalmanFilter::threeProngs ( m_entries ) )
+  { sc = LoKi::KalmanFilter::step ( m_entries[0] , m_entries[1] , m_entries[2] , 0 ) ; }
+  else if ( 4 == m_entries.size() && LoKi::KalmanFilter::fourProngs   ( m_entries ) )
+  { sc = LoKi::KalmanFilter::step ( m_entries[0] , m_entries[1] , 
+                                    m_entries[2] , m_entries[3] , 0 ) ; }
+  //
+  if ( sc.isSuccess() ) 
+  {
+    m_seed   = m_entries[0].m_x  ;
+    m_seedci = m_entries[0].m_ci ;
+    Gaudi::Math::scale ( m_seedci , s_scale2 ) ;
+    ++counter("Seed:case(1)") ;
+    return StatusCode::SUCCESS ;                            // RETURN 
+  }
+  //
+  // simple case: make seed ignoring massaged stuff
   const Entries* entries = 0 ;
   //
   Entries e_good ;
@@ -573,19 +614,25 @@ StatusCode LoKi::VertexFitter::fit
   if ( sc.isFailure() ) 
   { return _Error ( "fit(): failure from _load() ", sc, 0 ) ; }      // RETURN 
   //
-  // use opetima branch when possible 
-  const bool opt = m_use_optimized && okForVertex ( m_entries ) && !forMassage ( m_entries ) ;
-  if ( opt ) { sc = _iterate_opt ( m_nIterMaxI ) ; }
-  // use regular branch
-  if ( !opt || sc.isFailure() ) 
+  bool special = false ;
+  // special case:  use optimized branch when possible 
+  if      ( m_use_optimized && okForVertex ( m_entries ) && !forMassage ( m_entries ) ) 
+  { sc = _iterate_opt  ( m_nIterMaxI ) ; special = true ; }
+  // special case: rho+-like branch 
+  else if ( m_use_rho_like_branch && LoKi::KalmanFilter::rhoPlusLike ( m_entries ) ) 
+  {  sc = _iterate_rho ( m_nIterMaxI ) ; special = true ; }
+  //
+  // regular case 
+  if ( !special || sc.isFailure() )
   {
+    /// make a seed 
     sc = _seed ( &vertex ) ; 
     if ( sc.isFailure() ) 
     { _Warning  ( "fit(): failure from _seed()"     , sc, 0 ) ; }
     // make "m_nIterMax" iterations 
     sc = _iterate ( m_nIterMaxI , m_seed ) ;
-    if ( sc.isFailure() ) { return sc; }
-    //{ return _Warning ( "fit(): failure from _iterate()", sc, 0 ) ; } // RETURN 
+    if ( sc.isFailure() ) 
+    { return _Warning ( "fit(): failure from _iterate()", sc, 0 ) ; } // RETURN 
   }
   // get the data from filter 
   const Entry&               entry = m_entries.back() ;
@@ -899,12 +946,6 @@ LoKi::VertexFitter::VertexFitter
   , m_seedZmax             (  3.0 * Gaudi::Units::meter      ) 
   , m_seedRhoZmax          ( 80.0 * Gaudi::Units::centimeter )
   , m_seedRhoZmin          ( 20.0 * Gaudi::Units::centimeter )
-    /// Use the special branch for   two-body decays ?
-  , m_use_twobody_branch      ( true   ) // Use the special branch for   two-body decays?
-    /// Use the special branch for three-body decays ?
-  , m_use_threebody_branch    ( true   ) // Use the special branch for three-body decays?
-    /// Use the special branch for  four-body decays ?
-  , m_use_fourbody_branch     ( true   ) // Use the special branch for  four-body decays?
     /// Allow "rho+"-like particles ?
   , m_use_rho_like_branch     ( true   ) // allow "rho+"-like particles ?
     // Use short-lived particles as seeds 
@@ -973,18 +1014,6 @@ LoKi::VertexFitter::VertexFitter
       m_DistanceChi2       , 
       "Delta-chi2     as convergency criterion"    ) ;
   declareProperty 
-    ( "UseTwoBodyBranch"     , 
-      m_use_twobody_branch   , 
-      "Use the special branch for   two-body decays" ) ;
-  declareProperty 
-    ( "UseThreeBodyBranch"   , 
-      m_use_threebody_branch , 
-      "Use the special branch for three-body decays" ) ;
-  declareProperty 
-    ( "UseFourBodyBranch"    , 
-      m_use_fourbody_branch  , 
-      "Use the special branch for  four-body decays" ) ;
-  declareProperty 
     ( "AllowRhoPlusLikeParticle"  , 
       m_use_rho_like_branch       , 
       "Allow ``rho+''-like particles?" ) ;
@@ -997,9 +1026,9 @@ LoKi::VertexFitter::VertexFitter
       m_transport_tolerance , 
       "The tolerance for particle transport" ) ;
   declareProperty 
-    ( "MeasureCPUPerformace"   , 
-      m_timing                 , 
-      "Measure CPU perormance" ) ;
+    ( "MeasureCPUPerformace"    , 
+      m_timing                  , 
+      "Measure CPU perormance"  ) ;
   declareProperty 
     ( "UseOptimizedAlgorithm"   , 
       m_use_optimized           , 

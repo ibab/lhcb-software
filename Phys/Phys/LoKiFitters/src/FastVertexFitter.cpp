@@ -113,12 +113,6 @@ LoKi::FastVertexFitter::FastVertexFitter
   Assert ( sc.isSuccess() , "Unable to redefine property 'DeltaDistance'"      ) ;   
   sc            = setProperty ( "DeltaChi2"          , 10 * Gaudi::Units::perCent    ) ;
   Assert ( sc.isSuccess() , "Unable to redefine property 'DeltaChi2'"          ) ;   
-  sc            = setProperty ( "UseTwoBodyBranch"   , true ) ;
-  Assert ( sc.isSuccess() , "Unable to redefine property 'UseTwoBodyBranch'"   ) ;
-  sc            = setProperty ( "UseThreeBodyBranch" , true ) ;
-  Assert ( sc.isSuccess() , "Unable to redefine property 'UseThreeBodyBranch'" ) ;
-  sc            = setProperty ( "UseFourBodyBranch"  , true ) ;
-  Assert ( sc.isSuccess() , "Unable to redefine property 'UseFourBodyBranch'"  ) ;
   sc            = setProperty ( "TransportTolerance" , 40 * Gaudi::Units::micrometer ) ;
   Assert ( sc.isSuccess() , "Unable to redefine property 'TransportTolerance'" ) ;   
   sc            = setProperty ( "TransportTolerance" , 40 * Gaudi::Units::micrometer ) ;

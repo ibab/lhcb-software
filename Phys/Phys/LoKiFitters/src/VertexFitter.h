@@ -490,8 +490,7 @@ namespace LoKi
   protected:
     // ========================================================================
     /// load the data into internal representation 
-    StatusCode _load      
-    ( const LHCb::Particle* particle , Entry& entry ) const ;
+    StatusCode _load ( const LHCb::Particle*              particle ) const ;
     /// load the data from the daughter particles into the internal structures 
     StatusCode _load ( const LHCb::Particle::ConstVector& daughters ) const ;
     /// add one particle at the end of the queue
@@ -519,6 +518,8 @@ namespace LoKi
     { return _transport ( Gaudi::XYZPoint( p[0] , p[1] , p[2] ) ) ; }
     /// make optimised fKalman filter iterations 
     StatusCode  _iterate_opt ( const size_t nMax ) const ;
+    /// special iterations for rho+like branch 
+    StatusCode  _iterate_rho ( const size_t nMax ) const ;
     /// stopping criteria for iterations 
     bool        stop_iter    ( const Gaudi::Vector3&      dx   , 
                                const Gaudi::SymMatrix3x3& ci   ,
@@ -607,12 +608,6 @@ namespace LoKi
     double                             m_seedZmax        ;
     double                             m_seedRhoZmax     ;
     double                             m_seedRhoZmin     ;
-    /// use the special branch for   two-body decays 
-    bool   m_use_twobody_branch     ; // use the special branch for   two-body decays 
-    /// use the special branch for three-body decays 
-    bool   m_use_threebody_branch   ; // use the special branch for three-body decays 
-    /// use the special branch for  four-body decays 
-    bool   m_use_fourbody_branch    ; // use the special branch for  four-body decays 
     /// allow "rho+"-like particles 
     bool   m_use_rho_like_branch    ; // allow "rho+"-like particles 
     /// use short-lived particles as seed 

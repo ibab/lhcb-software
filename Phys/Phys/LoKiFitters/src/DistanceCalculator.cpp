@@ -899,22 +899,22 @@ StatusCode LoKi::DistanceCalculator::_distance
   double*                 chi2     ) const 
 {
   //
-  if ( allow )
+  // the particle
+  LoKi::KalmanFilter::ParticleType type1 = particleType_ ( particle ) ;
+  switch ( type1 ) 
   {
-    // the first particle
-    LoKi::KalmanFilter::ParticleType type1 = particleType_ ( particle ) ;
-    switch ( type1 ) 
+  case LoKi::KalmanFilter::GammaLikeParticle   : ;
+  case LoKi::KalmanFilter::DiGammaLikeParticle :
     {
-    case LoKi::KalmanFilter::GammaLikeParticle   : ;
-    case LoKi::KalmanFilter::DiGammaLikeParticle :
-      {
-        impact =  Gaudi::XYZVector() ;
-        if ( 0 != chi2 ) { *chi2 = 0 ; }
-        if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "IP->(DI)GAMMA" ) ; }
-        return StatusCode::SUCCESS ;                                    // RETURN 
-      }
-    case LoKi::KalmanFilter::ShortLivedParticle : 
-      {
+      impact =  Gaudi::XYZVector() ;
+      if ( 0 != chi2 ) { *chi2 = 0 ; }
+      if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "IP->(DI)GAMMA" ) ; }
+      return StatusCode::SUCCESS ;                                    // RETURN 
+    }
+  case LoKi::KalmanFilter::ShortLivedParticle : 
+    {
+      if ( allow ) 
+      { 
         const LHCb::VertexBase* v1 = particle.endVertex() ;
         if ( 0 == v1 ) { break ; }  
         if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "IP->VD" ) ; }
@@ -923,10 +923,11 @@ StatusCode LoKi::DistanceCalculator::_distance
         StatusCode sc = i_distance ( *v1 , vertex , dist , chi2 ) ; // RETURN 
         impact = v1->position() - vertex.position () ;
         return sc ;
-      } 
-    default: ;
-    }    
+      }
+    } 
+  default: ;
   }
+  
   //
   // start normal processing 
   //
@@ -1018,23 +1019,22 @@ StatusCode LoKi::DistanceCalculator::_distance
   Gaudi::XYZVector&       impact   , 
   const bool              allow    , 
   double*                 chi2     ) const 
-{ 
-  //
-  if ( allow )
+{
+  // the first particle
+  LoKi::KalmanFilter::ParticleType type1 = particleType_ ( particle ) ;
+  switch ( type1 ) 
   {
-    // the first particle
-    LoKi::KalmanFilter::ParticleType type1 = particleType_ ( particle ) ;
-    switch ( type1 ) 
+  case LoKi::KalmanFilter::GammaLikeParticle   : ;
+  case LoKi::KalmanFilter::DiGammaLikeParticle :
     {
-    case LoKi::KalmanFilter::GammaLikeParticle   : ;
-    case LoKi::KalmanFilter::DiGammaLikeParticle :
-      {
-        impact =  Gaudi::XYZVector() ;
-        if ( 0 != chi2 ) { *chi2 = 0 ; }
-        if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "IP->(DI)GAMMA" ) ; }
-        return StatusCode::SUCCESS ;                                    // RETURN 
-      }
-    case LoKi::KalmanFilter::ShortLivedParticle : 
+      impact =  Gaudi::XYZVector() ;
+      if ( 0 != chi2 ) { *chi2 = 0 ; }
+      if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "IP->(DI)GAMMA" ) ; }
+      return StatusCode::SUCCESS ;                                    // RETURN 
+    }
+  case LoKi::KalmanFilter::ShortLivedParticle : 
+    {
+      if ( allow )
       {
         const LHCb::VertexBase* v1 = particle.endVertex() ;
         if ( 0 == v1 ) { break ; }  
@@ -1045,8 +1045,8 @@ StatusCode LoKi::DistanceCalculator::_distance
         impact        = v1->position() - point ;
         return sc ;
       } 
-    default: ;
-    }    
+    }
+  default: ;
   }
   //
   // regular processing  
@@ -1141,21 +1141,21 @@ StatusCode LoKi::DistanceCalculator::_distance
     return _Warning("distance(p,p): the same particle",StatusCode::SUCCESS,0);  
   }
   //
-  if ( allow )
+  // the first particle
+  LoKi::KalmanFilter::ParticleType type1 = particleType_ ( p1 ) ;
+  switch ( type1 ) 
   {
-    // the first particle
-    LoKi::KalmanFilter::ParticleType type1 = particleType_ ( p1 ) ;
-    switch ( type1 ) 
+  case LoKi::KalmanFilter::GammaLikeParticle   : ;
+  case LoKi::KalmanFilter::DiGammaLikeParticle :
     {
-    case LoKi::KalmanFilter::GammaLikeParticle   : ;
-    case LoKi::KalmanFilter::DiGammaLikeParticle :
-      {
-        dist = 0 ;
-        if ( 0 != chi2 ) { *chi2 = 0 ; }
-        if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "DOCA->(DI)GAMMA" ) ; }
-        return StatusCode::SUCCESS ;                                    // RETURN 
-      }
-    case LoKi::KalmanFilter::ShortLivedParticle : 
+      dist = 0 ;
+      if ( 0 != chi2 ) { *chi2 = 0 ; }
+      if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "DOCA->(DI)GAMMA" ) ; }
+      return StatusCode::SUCCESS ;                                    // RETURN 
+    }
+  case LoKi::KalmanFilter::ShortLivedParticle : 
+    {
+      if ( allow )
       {
         const LHCb::VertexBase* v1 = p1.endVertex() ;
         if ( 0 == v1 ) { break ; }  
@@ -1166,21 +1166,25 @@ StatusCode LoKi::DistanceCalculator::_distance
         dist           = impact.R() ;
         return sc  ;                                                    // RETURN 
       } 
-    default: ;
-    }    
-    // the second particle
-    LoKi::KalmanFilter::ParticleType type2 = particleType_ ( p2 ) ;
-    switch ( type2 ) 
+    }
+  default: ;
+  }   
+  //
+  // the second particle
+  LoKi::KalmanFilter::ParticleType type2 = particleType_ ( p2 ) ;
+  switch ( type2 ) 
+  {
+  case LoKi::KalmanFilter::GammaLikeParticle   : ;
+  case LoKi::KalmanFilter::DiGammaLikeParticle :
     {
-    case LoKi::KalmanFilter::GammaLikeParticle   : ;
-    case LoKi::KalmanFilter::DiGammaLikeParticle :
-      {
-        dist = 0 ;
-        if ( 0 != chi2 ) { *chi2 = 0 ; }
-        if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "DOCA->(DI)GAMMA" ) ; }
-        return StatusCode::SUCCESS ;                                    // RETURN 
-      }
-    case LoKi::KalmanFilter::ShortLivedParticle :
+      dist = 0 ;
+      if ( 0 != chi2 ) { *chi2 = 0 ; }
+      if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "DOCA->(DI)GAMMA" ) ; }
+      return StatusCode::SUCCESS ;                                    // RETURN 
+    }
+  case LoKi::KalmanFilter::ShortLivedParticle :
+    {
+      if ( allow ) 
       {
         const LHCb::VertexBase* v2 = p2.endVertex() ;
         if ( 0 == v2 ) { break ; }  
@@ -1191,8 +1195,8 @@ StatusCode LoKi::DistanceCalculator::_distance
         dist           = impact.R() ;
         return sc ;                                                    // RETURN 
       }
-    default: ;
     }
+  default: ;
   }
   //
   using namespace Gaudi::Math::Operators ;
@@ -1396,21 +1400,23 @@ StatusCode LoKi::DistanceCalculator::_distance
   double&                 dist     ,         // the distance 
   double*                 error    ) const   // the error in distance 
 {
-  
+
   using namespace Gaudi::Math::Operators ;
   
   // propagate the particle into its own decay vertex:
   StatusCode sc = transport ( &particle , decay.position() , m_particle1 ) ;
   if ( sc.isFailure() ) 
   { return _Error ( "distance(V):Error from IParticleTransporter" , sc ) ; }
-  
+
   const LHCb::Particle* good = &m_particle1 ; // the properly transported particle
   
   // evaluate the projected distance 
   dist = i_distance ( primary  , *good , decay ) ;
+
   // evaluate the error? 
   if ( 0 == error ) { return StatusCode::SUCCESS ; }         // RETURN 
   //
+  
   const Gaudi::XYZPoint& vd   = decay    . position() ;
   const Gaudi::XYZPoint& vpv  = primary  . position() ;
   const Gaudi::XYZVector  p   = good     -> momentum() . Vect () ;

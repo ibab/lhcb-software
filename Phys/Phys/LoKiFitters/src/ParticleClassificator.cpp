@@ -66,15 +66,18 @@ LoKi::ParticleClassificator::ParticleClassificator
   , m_gammaCLike          ( Decays::Trees::Invalid_<const LHCb::Particle*>() )
   , m_digammaLike         ( Decays::Trees::Invalid_<const LHCb::Particle*>() )
   , m_mergedPi0Like       ( "pi0"   )
+  , m_jetsLike            ( Decays::Nodes::Invalid() ) 
     //
-  , m_dd_gammaC  (" gamma -> e+ e- ")
-  , m_dd_digamma (" [ ( pi0 -> <gamma> <gamma> ) , ( eta -> <gamma> <gamma> ) , <pi0> ] ")
+  , m_dd_gammaC  ( " gamma -> e+ e-    "  )
+  , m_dd_digamma ( " [ ( pi0 -> <gamma> <gamma> ) , ( eta -> <gamma> <gamma> ) , <pi0> ] ")
+  , m_dd_jets    ( " CELLjet | CLUSjet "  ) 
     //
   , m_unclassified   ()
   , m_gamma_like     ()
   , m_gammaC_like    ()
   , m_digamma_like   ()
   , m_mergedPi0_like ()
+  , m_jets_like      ()
     //
 {
   // ==========================================================================
@@ -160,10 +163,31 @@ StatusCode LoKi::ParticleClassificator::initialize ()
   }
   else
   {
-    // disable gamma_c treatment
+    // disable di-gamma treatment
     m_digammaLike = Decays::Trees::Any_<const LHCb::Particle*>() ;
     m_digammaLike = Decays::Trees::Not_<const LHCb::Particle*>( m_digammaLike ) ;
     Warning ( "The special treatment of DiGamma is disabled" , ok ) ;
+  }
+  //
+  // Jets 
+  //
+  if ( !m_dd_jets.empty() )
+  { // construct digamma descriptors
+    Decays::IDecay* decay = tool<Decays::IDecay> ( "LoKi::Decay/Decays" ) ;
+    //
+    m_jetsLike =  decay->node ( m_dd_jets ) ;
+    if ( !m_jetsLike.valid() )
+    { return Error ( "Unable to decode JetLike: '" + m_dd_jets + "'" ) ; }
+    //
+    debug () << " Jets-like descriptor : " << m_jetsLike << endmsg ;
+    //
+    release ( decay ) ;
+  }
+  else
+  {
+    // disable jets-like treatment
+    m_jetsLike = Decays::Nodes::Not ( Decays::Nodes::Any() ) ;
+    Warning ( "The special treatment of Jets-like objects is disabled" , ok ) ;
   }
   //
   return StatusCode::SUCCESS ;
@@ -221,6 +245,14 @@ StatusCode LoKi::ParticleClassificator::finalize()
       log << endmsg ;
     }
     //
+    // jets-like 
+    if ( !m_jets_like.empty() )
+    {
+      log << "Jets-like  particles : " << m_jetsLike << std::endl ;
+      LHCb::ParticleProperties::printAsTable ( m_jets_like , log , m_ppSvc ) ;
+      log << endmsg ;
+    }
+    //
   }
   //
   if ( !m_unclassified.empty() )
@@ -247,7 +279,12 @@ LoKi::KalmanFilter::ParticleType
 LoKi::ParticleClassificator::particleType_ ( const LHCb::Particle& p ) const
 {
   //
-  if      ( m_gammaCLike  ( &p ) )
+  if ( m_jetsLike( p.particleID()  ) )
+  {
+    m_jets_like.insert   ( p.particleID () ) ;
+    return LoKi::KalmanFilter::JetLikeParticle     ;    // RETURN
+  }
+  else if ( m_gammaCLike  ( &p ) )
   {
     m_gammaC_like.insert ( p.particleID () ) ;
     // ATTENTION! GammaC is *LONG_LIVED_PARTICLE*

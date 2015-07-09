@@ -180,11 +180,15 @@ namespace LoKi
     mutable Decays::IDecay::Tree              m_digammaLike  ;
     /// Merged-pi0-like particles 
     mutable Decays::Trees::Stable_<const LHCb::Particle*> m_mergedPi0Like ;
+    /// get like particle 
+    Decays::Node                              m_jetsLike      ;
     // ========================================================================
     /// decay descriptor for gammaC-like particles:
     std::string m_dd_gammaC  ;  //   decay descriptor for gammaC-like particles
     /// decay descriptor for di-gamma-like particles:
     std::string m_dd_digamma ;  // decay descriptor for di-gamma-like particles
+    /// descriptor for jets-like particle
+    std::string m_dd_jets    ;  // descriptor for jets-like particle
     // ========================================================================
   private:
     // ========================================================================
@@ -194,6 +198,7 @@ namespace LoKi
     mutable std::set<LHCb::ParticleID>        m_gammaC_like    ;
     mutable std::set<LHCb::ParticleID>        m_digamma_like   ;
     mutable std::set<LHCb::ParticleID>        m_mergedPi0_like ;
+    mutable std::set<LHCb::ParticleID>        m_jets_like      ;
     // ========================================================================
   };
   // ==========================================================================
