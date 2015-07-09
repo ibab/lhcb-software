@@ -70,6 +70,11 @@ default_config = {'NAME': 'DstarD02xx',
                   ,'DstD0DMWin'         : 10.        # MeV
                   ,'DstD0DMWinMuMu'      : 30.        # MeV  
                   ,'RequireHlt'         : 1
+                  ,'HLT2String'          :  "Hlt2Dst2PiD02LAB1LAB2*Decision"
+                  ,'HLT1MB'             : "HLT_PASS_RE('Hlt1(MB|L0).*Decision')"
+                  ,'HLT2MB'             : "HLT_PASS_RE('Hlt2CharmHadMinBiasD02KPiDecision')"
+                  #hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"
+                  #hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"
                  ,'ConeAngles'     : {"08":0.8,"10":1.0,"12":1.2,"14":1.4}
                  ,'ConeVariables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
                  ,'prefix'         : '' 
@@ -120,6 +125,9 @@ class StrippingDstarD02xxConf(LineBuilder):
                                  ,'DstD0DMWin'
                                  ,'DstD0DMWinMuMu'
                                  ,'RequireHlt'
+                                 ,'HLT2String'
+                                 ,'HLT1MB'
+                                 ,'HLT2MB'
                                  ,'ConeAngles'
                                  ,'ConeVariables'
                                  ,'prefix'
@@ -254,7 +262,9 @@ class StrippingDstarD02xxConf(LineBuilder):
                                      )
             
         else:
-            hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"  # * matches Signal, Sidebands and Box lines
+            hltname = config['HLT2String']  # * matches Signal, Sidebands and Box lines
+            hltname = hltname.replace('LAB1',Xplus)
+            hltname = hltname.replace('LAB2',Xminus)
             line_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"Box",
                                      HLT2 = "HLT_PASS_RE('"+hltname+"')",
                                      algos = [ _tag_sel ], 
@@ -281,7 +291,9 @@ class StrippingDstarD02xxConf(LineBuilder):
         # Capitalize particle names to match Hlt2 D*->pi D0-> xx lines
         Xplus  = xplus[0].upper() + xplus[1:]    
         Xminus = xminus[0].upper() + xminus[1:]
-        hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"  # * matches Signal, Sidebands and Box lines
+        hltname = config['HLT2String']  # * matches Signal, Sidebands and Box lines
+        hltname = hltname.replace('LAB1',Xplus)
+        hltname = hltname.replace('LAB2',Xminus)
         inputLoc = {
              "pi" : "Phys/StdAllNoPIDsPions/Particles"
             ,"mu" : "Phys/StdAllLooseMuons/Particles"
@@ -311,14 +323,14 @@ class StrippingDstarD02xxConf(LineBuilder):
                                       })
         if(minbias==1):
             line_untagged_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"_untagged_BoxMB",
-                                              HLT1 = "HLT_PASS_RE('Hlt1(MB|L0).*Decision')",
+                                              HLT1 = config['HLT1MB'],
                                               algos = [ xxCombSel ], 
                                               prescale = config[ pres+"MB" ],
                                               RelatedInfoTools = coneinfo
                                               )
         elif(minbias==2):
             line_untagged_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"_untagged_BoxMBTrEff",
-                                              HLT2 = "HLT_PASS_RE('Hlt2CharmHadMinBiasD02KPiDecision')",
+                                              HLT2 = config['HLT2MB'],
                                               algos = [ xxCombSel ], 
                                               prescale = config[ pres+"MBTrEff" ],
                                               RelatedInfoTools = coneinfo

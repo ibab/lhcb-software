@@ -21,9 +21,7 @@ juggler = RawEventJuggler( DataOnDemand=True, Input=2.0, Output=4.0 )
 
 
 # Specify the name of your configuration
-#confname='Bc2hhh' #FOR USERS
-#confname = 'StrippingLb2L0Gamma'
-confname = 'Beauty2XGamma'
+confname='DstarD02xx' #FOR USERS
 
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 

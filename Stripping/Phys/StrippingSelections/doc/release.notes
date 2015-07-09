@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-09 - Andrea Contu
+ - Remove hard coded trigger lines from StrippingDstarD02xx.py
+
 ! 2015-07-03 - Michael Kolpin
  - Fix to StrippingSL/StrippingB2XuMuNu.py
 
