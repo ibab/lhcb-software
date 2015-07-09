@@ -151,8 +151,7 @@ StatusCode AlignmentMonitor::initialize()
       std::ostringstream title;
       title << "Alignment Histogram: Sph " << sph << " flat " << flat << " R" << rich+1;
       richHisto2D( Rich::HistogramID(h_id,m_radiator), title.str(),
-      //             0.0, 2*Gaudi::Units::pi, 25, -m_deltaThetaHistoRange,
-                   0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+                   0.0, 2*Gaudi::Units::pi, 60, -m_deltaThetaHistoRange, // previously used nPhiBin values: 25, 20
                    m_deltaThetaHistoRange, 50 );
       if ( m_useMCTruth )
       {
@@ -160,14 +159,15 @@ StatusCode AlignmentMonitor::initialize()
         h_id += "MC";
         title << " MC";
         richHisto2D( Rich::HistogramID(h_id,m_radiator), title.str(),
-                     0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+                     0.0, 2*Gaudi::Units::pi, 60, -m_deltaThetaHistoRange, // previously used nPhiBin values: 20
                      m_deltaThetaHistoRange, 50 );
         title << " TrueP";
         h_id += "TruP";
         richHisto2D( Rich::HistogramID(h_id,m_radiator), title.str(),
-                     0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange,
+                     0.0, 2*Gaudi::Units::pi, 60, -m_deltaThetaHistoRange, // previously used nPhiBin values: 20
                      m_deltaThetaHistoRange, 50 );
       }
+      // NOTE: The Histograms have only been pre-booked, not filled! This happens later in this code.
     }
   }
 
@@ -428,13 +428,13 @@ StatusCode AlignmentMonitor::execute()
         {
           h_id << thisCombiNr.str();
           richHisto2D( HID(h_id.str(),rad), title.str(),
-                       0.0, 2*Gaudi::Units::pi, 20,
+                       0.0, 2*Gaudi::Units::pi, 60, // formerly nPhiBins was 20, not sure if this is important to change here as the number of bins was prebooked, but doing it anyway
                        -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 )
             ->fill( phiRec, delTheta );
 
           if ( m_histoOutputLevel > 3 && isolated )
             richHisto2D( HID(h_id.str()+"Iso",rad), title.str()+" Iso",
-                         0.0, 2*Gaudi::Units::pi, 20,
+                         0.0, 2*Gaudi::Units::pi, 60, // formerly nPhiBins was 20, this one does NOT seem to be pre-booked
                          -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 )
               ->fill( phiRec, delTheta );
 
@@ -444,7 +444,7 @@ StatusCode AlignmentMonitor::execute()
             h_id << "MC";
             title << " MC";
             richHisto2D( HID(h_id.str(),rad), title.str(),
-                         0.0, 2*Gaudi::Units::pi, 20,
+                         0.0, 2*Gaudi::Units::pi, 60, // formerly nPhiBins was 20, not sure if this is important to change here as the number of bins was prebooked, but doing it anyway
                          -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 )
               ->fill(phiRec, delThetaTrue);
             // test to see if this photon was emitted from this track
@@ -453,7 +453,7 @@ StatusCode AlignmentMonitor::execute()
               h_id << "TruP";
               title << " TrueP";
               richHisto2D( HID(h_id.str(),rad), title.str(),
-                           0.0, 2*Gaudi::Units::pi, 20,
+                           0.0, 2*Gaudi::Units::pi, 60, // formerly nPhiBins was 20, not sure if this is important to change here as the number of bins was prebooked, but doing it anyway
                            -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50 )
                 ->fill(phiRec, delThetaTrue);
             }
