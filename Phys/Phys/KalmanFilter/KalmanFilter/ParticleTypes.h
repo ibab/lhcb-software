@@ -26,7 +26,7 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @author Vanya BELYAEV ibelyaev@itep.ru
  *  @date   2006-04-12
  */
 // ============================================================================
@@ -38,7 +38,7 @@ namespace LoKi
     // ========================================================================
     /** @enum ParticleType 
      *  the particle types for Kalman Filter-based vertex fitter
-     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2010-01-04
      */
     enum ParticleType
@@ -55,7 +55,9 @@ namespace LoKi
         /// Di-Photon-like 
         DiGammaLikeParticle     ,               //      Di-Photon-like particle 
         /// Merged-pi0-like 
-        MergedPi0LikeParticle                   //     Merged-pi0-like particle 
+        MergedPi0LikeParticle   ,               //     Merged-pi0-like particle 
+        /// Jet-like 
+        JetLikeParticle                         //            Jet-like particle 
         // ====================================================================
       } ;
     // ========================================================================

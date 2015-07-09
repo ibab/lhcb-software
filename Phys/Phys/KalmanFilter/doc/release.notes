@@ -6,6 +6,9 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit
 ! -----------------------------------------------------------------------------
 
+! 2015-07-09 - Vanya Belyaev
+ - add JetLikeParticle (for Wouter) 
+
 ! 2015-06-12 - Marco Clemencic
  - Modified CMakeLists.txt to install headers from 'Kernel' (needed for
    Kernel/IParticleClassifier.h).
