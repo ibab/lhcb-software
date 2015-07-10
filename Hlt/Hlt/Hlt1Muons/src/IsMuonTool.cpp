@@ -43,8 +43,11 @@ StatusCode IsMuonTool::initialize() {
  */
 StatusCode IsMuonTool::tracksFromTrack(const LHCb::Track& track,
                                        std::vector<LHCb::Track*>& tracks) {
+  if (!m_muonTool->preSelection(track)) {
+    return StatusCode::SUCCESS;
+  }
   const auto extrapolation = m_muonTool->extrapolateTrack(track);
-  if (!m_muonTool->preSelection(track, extrapolation)) {
+  if (!m_muonTool->inAcceptance(extrapolation)) {
     return StatusCode::SUCCESS;
   }
   CommonConstMuonHits hits;

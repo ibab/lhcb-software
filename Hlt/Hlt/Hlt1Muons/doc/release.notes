@@ -1,8 +1,11 @@
-! 2015-03-20 - Vasileios Syropoulos!-----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Muons
-! Responsible : Vasilis Syropoulos, Roel Aaij
+! Responsible : Vasilis Syropoulos, Roel Aaij, Francesco Dettori
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
+
+! 2015-07-10 - Francesco Dettori
+ - Minor change in IsMuonTool to align with the changes in the CommonMuonTool in Muon/MuonID package.
 
 !========================= Hlt1Muons v1r14 2015-04-29 =========================
 
