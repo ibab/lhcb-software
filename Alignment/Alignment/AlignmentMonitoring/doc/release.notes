@@ -3,10 +3,11 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
-! 2015-07-09 - Maurizio Martinelli
+! 2015-07-10 - Maurizio Martinelli
  - forgot CMakeLists.txt
  - added references
+ - corrected cmt/requirements
 
-! 2015-07-08 - Maurizio Martinelli
+! 2015-07-09 - Maurizio Martinelli
  - first import of the package
  - added examples directory
