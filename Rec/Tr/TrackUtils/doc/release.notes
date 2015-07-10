@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-07-10 - Michel De Cian
+ - Suppress warning about non-existing container in TrackEraseExtraInfo.
+
 ! 2015-06-27 - Michel De Cian
  - Make list of locations to erase configurable in 'TrackEraseExtraInfo', add print option, remove unnecessary includes, add doxygen comments.
 

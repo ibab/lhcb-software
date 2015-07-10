@@ -63,7 +63,7 @@ StatusCode TrackEraseExtraInfo::execute(){
 
   Tracks* inCont = getIfExists<Tracks>(m_inputLocation);
   if( inCont == nullptr){
-    warning() << "Input container: " << m_inputLocation << " does not exist" << endmsg;
+    Warning( "Input container "+m_inputLocation+" does not exist", StatusCode::SUCCESS, 20 );
     return StatusCode::SUCCESS;
   }
   
