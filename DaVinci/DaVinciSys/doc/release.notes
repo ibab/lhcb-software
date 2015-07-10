@@ -3,6 +3,30 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v36r7p7>2015-07-10 DaVinci v36r7p7</A></H1><PRE>
+
+Patch release identical to v36r7p6 except for a couple of important fixes to patched external packages,
+and an update to DaVinciTests.
+
+- In Event/EventPacker v5r4 :
+  . Fixed reference count of JobOptionsSvc in MapperToolBase.
+
+- In Phys/TeslaTools v1r10 :
+  . Added folder TeslaTools for tool interfaces.
+  . Added file TeslaTools/ITeslaMatcher.h as interface for TeslaMatcher tool.
+  . Added files src/TeslaMatcher.{cpp|h} as implementation of TeslaMatcher.
+  . Modified cmt/requirements to process TeslaTools as branch.
+  . Added TeslaBrunelMonitor algorithm to
+    . match the Tesla Candidates with the Brunel ones using TeslaMatcher
+    . draw 1D plots of the differences. A plot per variable.
+    . draw 2D plot summarizing the discrepancies in all variables.
+  . Some PV debug printout.
+
+- In Phys/DaVinci v36r7p7 :
+  . New patch release.
+
+- In DaVinciTests v2r34 :
+  . References for stripping tests updated.
 
 </PRE><H1><A NAME=v36r7p6>2015-06-30 DaVinci v36r7p6</A></H1><PRE>
 
