@@ -17,8 +17,8 @@ class ICommonMuonTool : virtual public IAlgTool {
 
   virtual auto extrapolateTrack(const LHCb::Track&) const
       -> MuonTrackExtrapolation = 0;
-  virtual auto preSelection(const LHCb::Track&,
-                            const MuonTrackExtrapolation&) const noexcept
+  virtual auto preSelection(const LHCb::Track&) const noexcept -> bool = 0;
+  virtual auto inAcceptance(const MuonTrackExtrapolation&) const noexcept
       -> bool = 0;
   virtual auto hitsAndOccupancies(const LHCb::Track&,
                                   const MuonTrackExtrapolation&) const

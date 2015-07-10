@@ -11,10 +11,11 @@ import os,sys,copy
 from Gaudi.Configuration import *
 import GaudiKernel.ProcessJobOptions
 
-from Configurables import MuonIDAlg,Chi2MuIDTool,DistMuIDTool
-from Configurables import TrackMasterFitter,TrackMasterExtrapolator, SimplifiedMaterialLocator, IsMuonCandidateC, MakeMuonMeasurements, CLTool, GetArrival, NShared
+from Configurables import MuonIDAlg, Chi2MuIDTool, DistMuIDTool
+from Configurables import TrackMasterFitter, TrackMasterExtrapolator, TrackLinearExtrapolator, SimplifiedMaterialLocator, IsMuonCandidateC, MakeMuonMeasurements, CLTool, GetArrival, NShared
 from Configurables import GaudiSequencer
 from TrackFitter.ConfiguredFitters import *
+from Configurables import CommonMuonTool, DLLMuonTool, MakeMuonTool, MuonIDAlgLite
 
 class ConfiguredMuonIDs():
 
@@ -22,6 +23,9 @@ class ConfiguredMuonIDs():
     """
     initialization for the class. Use as input data type (DC06,MC08,etc) and version of it if necessary.
     """
+    ## this is a by hand panic switch
+    self.newAlgo = True
+
     self.debug=debug
     if self.debug: print "# INITIALIZING"
 
@@ -60,20 +64,16 @@ class ConfiguredMuonIDs():
     else: self.kalman_foi = False
     if self.debug: print "# FOI KALMAN = ",self.kalman_foi
 
-
     ## fast extrapolator/fitter
     if "FastKalman" in dir(self.info): self.fast=info.FastKalman
     else: self.fast = True
     if self.debug: print "# FAST=",self.fast
-
 
     ## use dist/chi2
     if "UseDist" in dir(self.info): self.use_dist=info.UseDist
     else: self.use_dist = False
     if self.debug: print "# USE_DIST=",self.use_dist
 
-
-    
   def configureFitter(self,fitter):
     """
     configure fitter to be used inside MuonID chi2 calculation
@@ -89,16 +89,15 @@ class ConfiguredMuonIDs():
     myfitter.UseSeedStateErrors = self.info.UseSeedStateErrors
     myfitter.FitUpstream = self.info.FitUpstream
     myfitter.MaxNumberOutliers = self.info.MaxNumberOutliers
-    myfitter.NumberFitIterations = self.info.NumberFitIterations
+    myfitter.NumberFitIterations = 1    #### self.info.NumberFitIterations
     myfitter.StateAtBeamLine = self.info.StateAtBeamLine
     myfitter.AddDefaultReferenceNodes = self.info.AddDefaultReferenceNodes
     ## Change TrackKalmanFilter default to avoid warning about negative nDOF
-    from Configurables import TrackKalmanFilter
-    myfitter.addTool(TrackKalmanFilter, name="NodeFitter")
-    myfitter.NodeFitter.DoF = 0
+    #from Configurables import TrackKalmanFilter
+    #myfitter.addTool(TrackKalmanFilter, name="NodeFitter")
+    #myfitter.NodeFitter.DoF = 0
 
     return myfitter
-
 
   def configureIsMuonCandidateC(self, ismc):
     """
@@ -115,7 +114,6 @@ class ConfiguredMuonIDs():
     myismc.MinHits = self.info.MinHits
 
     return myismc
-
 
   def configureGetArrival(self,geta):
     """
@@ -135,7 +133,6 @@ class ConfiguredMuonIDs():
     mygeta.MinHits = self.info.MinHits
 
     return mygeta
-
 
   def configureCLTool(self, cltool, use_dist=-1):
     """
@@ -170,7 +167,6 @@ class ConfiguredMuonIDs():
       mycltool.Bkg = self.info.chi2Bkg
 
     return mycltool
-    
 
   def configureMuIDTool(self,muidtool):
     """
@@ -216,7 +212,6 @@ class ConfiguredMuonIDs():
 
     ## add and configure fitter and extrapolator to be used for finding chi2
     if self.debug: print "# \tCONFIGURING MUIDTOOL: adding tools"
-
     
     ## configure fast extrapolator
     if self.fast:
@@ -234,7 +229,6 @@ class ConfiguredMuonIDs():
       ## add and configure ismuoncandidatec tool
       mymuidtool.addTool(IsMuonCandidateC(), name='IsMuonCandidateC')
       out=self.configureIsMuonCandidateC(mymuidtool.IsMuonCandidateC)
-
 
     ## for MuonIDAlg, can stop here (no use or extra subtools)
     if self.initializeAll:
@@ -254,7 +248,6 @@ class ConfiguredMuonIDs():
 
       return mymuidtool
 
-    
   def configureMakeMuonMeasurements(self,mmm):
     ## check if input is already an instance or this must be created
     if isinstance(mmm,MakeMuonMeasurements): mymmm=mmm
@@ -439,12 +432,10 @@ class ConfiguredMuonIDs():
       mymuid.IsMuonTool.IsMuonOpt = 3
       mymuid.IsMuonTool.MomRangeIsMuon = mom_cuts
 
-
       mymuid.addTool(IsMuonCandidateC(), name='IsMuonLooseTool')
       out=self.configureIsMuonCandidateC(mymuid.IsMuonLooseTool)
       mymuid.IsMuonLooseTool.IsMuonOpt = 2
       mymuid.IsMuonLooseTool.MomRangeIsMuon = mom_cuts
-
       
       mymuid.addTool(DistMuIDTool(), name='DistMuIDTool')
       prev = self.initializeAll
@@ -456,6 +447,144 @@ class ConfiguredMuonIDs():
 
     return mymuid
 
+
+  def configureMuonIDAlgLite (self,muonid):
+    """
+    general configuration of MuonIDAlgLite.
+    """
+
+    if self.debug: print "# CONFIGURING MUONIDALGLITE"
+
+    ## check if input is already an instance or this must be created
+    if isinstance(muonid,MuonIDAlgLite): mymuid=muonid
+    else: mymuid=MuonIDAlgLite(str(muonid))
+
+    if "DLL_flag" in dir(self.info): mymuid.DLL_flag= self.info.DLL_flag
+
+    return mymuid
+ 
+  def configureIsMuonTool(self, ismutool):
+    if isinstance(ismutool,CommonMuonTool): myISMUT = ismutool
+    else: myISMUT=CommonMuonTool(str(ismutool))
+
+    return ismutool
+
+  def configureMakeMuonTool(self, mmtool):
+    if isinstance(mmtool,MakeMuonTool): myMMT = mmtool
+    else: myMMT=MakeMuonTool(str(mmtool))
+
+    ## configure fast extrapolator
+    mmtool.addTool(TrackLinearExtrapolator, name='extrapol')
+    #mmtool.addTool(TrackMasterExtrapolator, name='extrapol')
+    #mmtool.extrapol.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
+    #mmtool.extrapol.ApplyMultScattCorr = False
+    #mmtool.extrapol.ApplyEnergyLossCorr = False
+    #mmtool.extrapol.ApplyElectronEnergyLossCorr = False
+    
+
+    mmtool.addTool(TrackMasterFitter, name='fitter')
+    ## configure fast fitter
+    ConfiguredMasterFitter( Name = mmtool.fitter,
+                            SimplifiedGeometry = True,
+                            FieldOff = True,
+                            #ApplyMaterialCorrections = False
+                            )
+    self.configureFitter(mmtool.fitter)
+
+    return mmtool
+
+  def configureDLLMuonTool (self, dlltool):
+
+    if isinstance(dlltool,DLLMuonTool): myDLL=dlltool
+    else: myDLL=DLLMuonTool(str(dlltool))
+
+    ## general MuonIDAlg properties
+    if "OverrideDB" in dir(self.info): myDLL.OverrideDB = self.info.OverrideDB
+    if "MomentumCuts" in dir(self.info): myDLL.MomentumCuts  = self.info.MomentumCuts
+    if "FOIfactor" in dir(self.info): myDLL.FOIfactor = self.info.FOIfactor
+    if "PreSelMomentum" in dir(self.info): myDLL.PreSelMomentum = self.info.PreSelMomentum
+
+    if "MupBinsR1" in dir(self.info): myDLL.MupBinsR1= self.info.MupBinsR1
+    if "MupBinsR2" in dir(self.info): myDLL.MupBinsR2= self.info.MupBinsR2
+    if "MupBinsR3" in dir(self.info): myDLL.MupBinsR3= self.info.MupBinsR3
+    if "MupBinsR4" in dir(self.info): myDLL.MupBinsR4= self.info.MupBinsR4
+
+    if "NonMupBinsR1" in dir(self.info): myDLL.NonMupBinsR1= self.info.NonMupBinsR1
+    if "NonMupBinsR2" in dir(self.info): myDLL.NonMupBinsR2= self.info.NonMupBinsR2
+    if "NonMupBinsR3" in dir(self.info): myDLL.NonMupBinsR3= self.info.NonMupBinsR3
+    if "NonMupBinsR4" in dir(self.info): myDLL.NonMupBinsR4= self.info.NonMupBinsR4
+
+    ## Configure Landau parameters for Non muons (DLLflag = 4)
+    if "NonMuLandauParameterR1" in dir(self.info): myDLL.NonMuLandauParameterR1 = self.info.NonMuLandauParameterR1
+    if "NonMuLandauParameterR2" in dir(self.info): myDLL.NonMuLandauParameterR2 = self.info.NonMuLandauParameterR2
+    if "NonMuLandauParameterR3" in dir(self.info): myDLL.NonMuLandauParameterR3 = self.info.NonMuLandauParameterR3
+    if "NonMuLandauParameterR4" in dir(self.info): myDLL.NonMuLandauParameterR4 = self.info.NonMuLandauParameterR4
+
+    ## Configure hyperbolic tangent tanh(dist2) parameters
+    if "tanhScaleFactorsMuonR1" in dir(self.info): myDLL.tanhScaleFactorsMuonR1= self.info.tanhScaleFactorsMuonR1
+    if "tanhScaleFactorsMuonR2" in dir(self.info): myDLL.tanhScaleFactorsMuonR2= self.info.tanhScaleFactorsMuonR2
+    if "tanhScaleFactorsMuonR3" in dir(self.info): myDLL.tanhScaleFactorsMuonR3= self.info.tanhScaleFactorsMuonR3
+    if "tanhScaleFactorsMuonR4" in dir(self.info): myDLL.tanhScaleFactorsMuonR4= self.info.tanhScaleFactorsMuonR4
+
+    if "tanhScaleFactorsNonMuonR1" in dir(self.info): myDLL.tanhScaleFactorsNonMuonR1= self.info.tanhScaleFactorsNonMuonR1
+    if "tanhScaleFactorsNonMuonR2" in dir(self.info): myDLL.tanhScaleFactorsNonMuonR2= self.info.tanhScaleFactorsNonMuonR2
+    if "tanhScaleFactorsNonMuonR3" in dir(self.info): myDLL.tanhScaleFactorsNonMuonR3= self.info.tanhScaleFactorsNonMuonR3
+    if "tanhScaleFactorsNonMuonR4" in dir(self.info): myDLL.tanhScaleFactorsNonMuonR4= self.info.tanhScaleFactorsNonMuonR4
+
+     ## Signal muons
+    if "tanhCumulHistoMuonR1_1" in dir(self.info): myDLL.tanhCumulHistoMuonR1_1= self.info.tanhCumulHistoMuonR1_1
+    if "tanhCumulHistoMuonR1_2" in dir(self.info): myDLL.tanhCumulHistoMuonR1_2= self.info.tanhCumulHistoMuonR1_2
+    if "tanhCumulHistoMuonR1_3" in dir(self.info): myDLL.tanhCumulHistoMuonR1_3= self.info.tanhCumulHistoMuonR1_3
+    if "tanhCumulHistoMuonR1_4" in dir(self.info): myDLL.tanhCumulHistoMuonR1_4= self.info.tanhCumulHistoMuonR1_4
+    if "tanhCumulHistoMuonR1_5" in dir(self.info): myDLL.tanhCumulHistoMuonR1_5= self.info.tanhCumulHistoMuonR1_5
+    if "tanhCumulHistoMuonR1_6" in dir(self.info): myDLL.tanhCumulHistoMuonR1_6= self.info.tanhCumulHistoMuonR1_6
+    if "tanhCumulHistoMuonR1_7" in dir(self.info): myDLL.tanhCumulHistoMuonR1_7= self.info.tanhCumulHistoMuonR1_7
+
+    if "tanhCumulHistoMuonR2_1" in dir(self.info): myDLL.tanhCumulHistoMuonR2_1= self.info.tanhCumulHistoMuonR2_1
+    if "tanhCumulHistoMuonR2_2" in dir(self.info): myDLL.tanhCumulHistoMuonR2_2= self.info.tanhCumulHistoMuonR2_2
+    if "tanhCumulHistoMuonR2_3" in dir(self.info): myDLL.tanhCumulHistoMuonR2_3= self.info.tanhCumulHistoMuonR2_3
+    if "tanhCumulHistoMuonR2_4" in dir(self.info): myDLL.tanhCumulHistoMuonR2_4= self.info.tanhCumulHistoMuonR2_4
+    if "tanhCumulHistoMuonR2_5" in dir(self.info): myDLL.tanhCumulHistoMuonR2_5= self.info.tanhCumulHistoMuonR2_5
+
+    if "tanhCumulHistoMuonR3_1" in dir(self.info): myDLL.tanhCumulHistoMuonR3_1= self.info.tanhCumulHistoMuonR3_1
+    if "tanhCumulHistoMuonR3_2" in dir(self.info): myDLL.tanhCumulHistoMuonR3_2= self.info.tanhCumulHistoMuonR3_2
+    if "tanhCumulHistoMuonR3_3" in dir(self.info): myDLL.tanhCumulHistoMuonR3_3= self.info.tanhCumulHistoMuonR3_3
+    if "tanhCumulHistoMuonR3_4" in dir(self.info): myDLL.tanhCumulHistoMuonR3_4= self.info.tanhCumulHistoMuonR3_4
+    if "tanhCumulHistoMuonR3_5" in dir(self.info): myDLL.tanhCumulHistoMuonR3_5= self.info.tanhCumulHistoMuonR3_5
+
+    if "tanhCumulHistoMuonR4_1" in dir(self.info): myDLL.tanhCumulHistoMuonR4_1= self.info.tanhCumulHistoMuonR4_1
+    if "tanhCumulHistoMuonR4_2" in dir(self.info): myDLL.tanhCumulHistoMuonR4_2= self.info.tanhCumulHistoMuonR4_2
+    if "tanhCumulHistoMuonR4_3" in dir(self.info): myDLL.tanhCumulHistoMuonR4_3= self.info.tanhCumulHistoMuonR4_3
+    if "tanhCumulHistoMuonR4_4" in dir(self.info): myDLL.tanhCumulHistoMuonR4_4= self.info.tanhCumulHistoMuonR4_4
+    if "tanhCumulHistoMuonR4_5" in dir(self.info): myDLL.tanhCumulHistoMuonR4_5= self.info.tanhCumulHistoMuonR4_5
+
+    ## Bakground Comb muons: Also per regions AND momentum bins. Not suitable for low statistics
+    if "tanhCumulHistoNonMuonR1_1" in dir(self.info): myDLL.tanhCumulHistoNonMuonR1_1= self.info.tanhCumulHistoNonMuonR1_1
+    if "tanhCumulHistoNonMuonR1_2" in dir(self.info): myDLL.tanhCumulHistoNonMuonR1_2= self.info.tanhCumulHistoNonMuonR1_2
+    if "tanhCumulHistoNonMuonR1_3" in dir(self.info): myDLL.tanhCumulHistoNonMuonR1_3= self.info.tanhCumulHistoNonMuonR1_3
+    if "tanhCumulHistoNonMuonR1_4" in dir(self.info): myDLL.tanhCumulHistoNonMuonR1_4= self.info.tanhCumulHistoNonMuonR1_4
+    if "tanhCumulHistoNonMuonR1_5" in dir(self.info): myDLL.tanhCumulHistoNonMuonR1_5= self.info.tanhCumulHistoNonMuonR1_5
+    if "tanhCumulHistoNonMuonR1_6" in dir(self.info): myDLL.tanhCumulHistoNonMuonR1_6= self.info.tanhCumulHistoNonMuonR1_6
+    if "tanhCumulHistoNonMuonR1_7" in dir(self.info): myDLL.tanhCumulHistoNonMuonR1_7= self.info.tanhCumulHistoNonMuonR1_7
+
+    if "tanhCumulHistoNonMuonR2_1" in dir(self.info): myDLL.tanhCumulHistoNonMuonR2_1= self.info.tanhCumulHistoNonMuonR2_1
+    if "tanhCumulHistoNonMuonR2_2" in dir(self.info): myDLL.tanhCumulHistoNonMuonR2_2= self.info.tanhCumulHistoNonMuonR2_2
+    if "tanhCumulHistoNonMuonR2_3" in dir(self.info): myDLL.tanhCumulHistoNonMuonR2_3= self.info.tanhCumulHistoNonMuonR2_3
+    if "tanhCumulHistoNonMuonR2_4" in dir(self.info): myDLL.tanhCumulHistoNonMuonR2_4= self.info.tanhCumulHistoNonMuonR2_4
+    if "tanhCumulHistoNonMuonR2_5" in dir(self.info): myDLL.tanhCumulHistoNonMuonR2_5= self.info.tanhCumulHistoNonMuonR2_5
+
+    if "tanhCumulHistoNonMuonR3_1" in dir(self.info): myDLL.tanhCumulHistoNonMuonR3_1= self.info.tanhCumulHistoNonMuonR3_1
+    if "tanhCumulHistoNonMuonR3_2" in dir(self.info): myDLL.tanhCumulHistoNonMuonR3_2= self.info.tanhCumulHistoNonMuonR3_2
+    if "tanhCumulHistoNonMuonR3_3" in dir(self.info): myDLL.tanhCumulHistoNonMuonR3_3= self.info.tanhCumulHistoNonMuonR3_3
+    if "tanhCumulHistoNonMuonR3_4" in dir(self.info): myDLL.tanhCumulHistoNonMuonR3_4= self.info.tanhCumulHistoNonMuonR3_4
+    if "tanhCumulHistoNonMuonR3_5" in dir(self.info): myDLL.tanhCumulHistoNonMuonR3_5= self.info.tanhCumulHistoNonMuonR3_5
+
+    if "tanhCumulHistoNonMuonR4_1" in dir(self.info): myDLL.tanhCumulHistoNonMuonR4_1= self.info.tanhCumulHistoNonMuonR4_1
+    if "tanhCumulHistoNonMuonR4_2" in dir(self.info): myDLL.tanhCumulHistoNonMuonR4_2= self.info.tanhCumulHistoNonMuonR4_2
+    if "tanhCumulHistoNonMuonR4_3" in dir(self.info): myDLL.tanhCumulHistoNonMuonR4_3= self.info.tanhCumulHistoNonMuonR4_3
+
+    return myDLL
+
   def getMuonIDSeq(self):
     """
     general method for MuonIDAlg configuration.
@@ -466,15 +595,34 @@ class ConfiguredMuonIDs():
     if self.debug: print "# APPLYING GENERAL MUONID CONFIGURATION"
     ## create output gaudi sequencer
     myg = GaudiSequencer("MuonIDSeq")
-    ## create and configure MuonIDAlg instance
-    muid = MuonIDAlg()
-    self.configureMuonIDAlg(muid)
+    
+    ## for the new algorithm
+    ## create and configure MuonIDAlgLite instance
+    if(self.newAlgo):
+      muid = MuonIDAlgLite()
+      self.configureMuonIDAlgLite(muid)
+      ismutool = CommonMuonTool()
+      self.configureIsMuonTool(ismutool)
+      dlltool = DLLMuonTool()
+      self.configureDLLMuonTool(dlltool)
+      mmtool = MakeMuonTool()
+      self.configureMakeMuonTool(mmtool)
 
-    ## if kalman_foi: add the algorithm that looks for muon hits
-    if self.kalman_foi:
-      mmm = MakeMuonMeasurements()
-      self.configureMakeMuonMeasurements(mmm)
-      myg.Members.append(mmm)
+      muid.addTool(ismutool)
+      muid.addTool(dlltool)
+      muid.addTool(mmtool)
+
+    ## for the new algorithm
+    ## create and configure MuonIDAlgLite instance
+    else:
+      muid = MuonIDAlg()
+      self.configureMuonIDAlg(muid)
+
+      ## if kalman_foi: add the algorithm that looks for muon hits
+      if self.kalman_foi:
+        mmm = MakeMuonMeasurements()
+        self.configureMakeMuonMeasurements(mmm)
+        myg.Members.append(mmm)
 
     ## add to gaudi sequencer and return
     myg.Members.append(muid)

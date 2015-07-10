@@ -49,7 +49,7 @@ StatusCode CommonMuonHitManager::initialize() {
        {-5656, -1392, -696, 696, 1392, 5656},
        {-6052, -1488, -744, 744, 1488, 6052}}};
 
-  for (int i = 0; i < stations; ++i) {
+  for (int i = 0; i != stations; ++i) {
     m_stations.emplace_back(m_muonDet, i, x_regions[i]);
   }
   return sc;

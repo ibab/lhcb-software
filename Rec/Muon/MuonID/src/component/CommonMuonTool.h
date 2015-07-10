@@ -33,8 +33,8 @@ class CommonMuonTool final : public extends1<GaudiTool, ICommonMuonTool> {
   virtual auto initialize() -> StatusCode override;
   virtual auto extrapolateTrack(const LHCb::Track&) const
       -> MuonTrackExtrapolation override;
-  virtual auto preSelection(const LHCb::Track&,
-                            const MuonTrackExtrapolation&) const noexcept
+  virtual auto preSelection(const LHCb::Track&) const noexcept -> bool override;
+  virtual auto inAcceptance(const MuonTrackExtrapolation&) const noexcept
       -> bool override;
   virtual auto hitsAndOccupancies(const LHCb::Track&,
                                   const MuonTrackExtrapolation&) const
@@ -47,6 +47,7 @@ class CommonMuonTool final : public extends1<GaudiTool, ICommonMuonTool> {
       -> bool override;
   virtual auto foi(int, int, double) const noexcept
       -> std::pair<double, double> override;
+
  private:
   // Helpers
   auto i_foi(int, int, double) const noexcept -> std::pair<double, double>;

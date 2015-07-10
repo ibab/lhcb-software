@@ -9,6 +9,7 @@
 
 #include "MuonID/ICommonMuonTool.h"
 #include "DLLMuonTool.h"
+#include "MakeMuonTool.h"
 
 /** @class MuonIDAlgLite MuonIDAlgLite.h
  * A lightweight version of MuonIDAlg that uses the CommonMuonTool.
@@ -19,8 +20,6 @@
  * @date 2015-01-06
  */
 class MuonIDAlgLite final : public GaudiAlgorithm {
- 
-  std::map< LHCb::MuonPID*, CommonConstMuonHits > m_muonMap;
 
  public:
   MuonIDAlgLite(const std::string &name, ISvcLocator *pSvcLocator);
@@ -34,10 +33,12 @@ class MuonIDAlgLite final : public GaudiAlgorithm {
   bool isGoodOfflineTrack(const LHCb::Track &) const;
   int m_dllFlag;
 
+  std::vector<CommonConstMuonHits> m_muonVector; 
   LHCb::Track makeMuonTrack(const LHCb::MuonPID &) const;
   // Members
   ICommonMuonTool *muonTool_;
   DLLMuonTool *DLLTool_;
+  MakeMuonTool *makeMuonTool_;
   bool useTTrack_;
   std::string tesPathInputTracks_, tesPathOutputMuonPid_,
       tesPathOutputMuonTracks_;

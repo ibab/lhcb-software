@@ -2279,12 +2279,11 @@ StatusCode MuonIDAlg::get_closest(LHCb::MuonPID *pMuid, double *closest_x,
 
     // only for M2-M3-M4-M5:
     if (station >= m_iM2 ) {  // JHL: station == 0 is OK in the case of no M1  12/Oct./2013
-
       if(  ( fabs( x - m_trackX[station] ) < foiXDim ) &&
            ( fabs( y - m_trackY[station] ) < foiYDim )  ) {
-
-        Fdist[station] =((x - m_trackX[station])/dx * (x - m_trackX[station])/dx)
-          +((y - m_trackY[station])/dy * (y - m_trackY[station])/dy);
+        
+        Fdist[station] =(((x - m_trackX[station])/dx) * ((x - m_trackX[station])/dx))
+          +(((y - m_trackY[station])/dy) * ((y - m_trackY[station])/dy));
 
         nhits++;
 

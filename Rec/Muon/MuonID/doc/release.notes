@@ -4,11 +4,68 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2015-07-10 - Francesco Dettori
+ - Merging from branch MuIDDev. Changes are detailed below. 
+   
+! 2015-06-25 - Ricardo Vazquez Gomez
+ - Change syntax in loops to speed up
+
+! 2015-06-19 - Ricardo Vazquez Gomez
+ - Update the ConfiguredMuonIDs.py so as not to perform the muon track fit.
+
+! 2015-06-03 - Francesco Dettori
+ - Various changes in MakeMuonTool, DLLMuonTool and MuonIDAlgLite in order to speed up the running for Moore. 
+ - The m_muonMap is now moved to DLLMuonTool 
+ - Various little modifications to avoid repeated calculations: introduced a map of the distances, global variables instead of local assignments, optimization of some for loops 
+ - The variable chi2 of the muon track is now changed from the chi2 of the fit of this track to the chi2 of the track extrapolation w.r.t. the muonHits. 
+
+! 2015-05-28 - Ricardo Vazquez Gomez
+ - add the cleaning of m_muonMap after each event
+
+! 2015-05-27 - Ricardo Vazquez Gomez
+ - Add a requirement of ismuonloose for compareHits
+
 !========================= MuonID v9r15 2015-05-26 =========================
+
+! 2015-05-26 - Ricardo Vazquez Gomez
+ - Delete non used muPids to avoid memory leaks.
+
+! 2015-05-25 - Ricardo Vazquez Gomez
+ - Remove from the configuration file the setting to KalmanFilter as yielded
+   an error.
+
+! 2015-05-25 - Ricardo Vazquez Gomez
+ - Change in the fill of the muonPIDs to do it for all tracks passing 
+   InAcceptance to match the original criteria. 
+ - Modify the ConfiguredMuonIDs.py with a panic swithc between the new and
+   old algorithm.
+
+! 2015-05-25 - Francesco Dettori
+ - Quick bug fix to preSelection function
+
 ! 2015-05-24 - Ricardo Vazquez Gomez
  - Bugfix in the foiYDim for MuonIDAlg that was used the dx coordinate.
  - Bugfix in the NShared computation that was comparing a distance with a 
    distance squared 
+
+! 2015-05-24 - Ricardo Vazquez Gomez
+ - Add the distSquare in the muonPID. Revise the logic in crossedHits
+
+! 2015-05-23 - Ricardo Vazquez Gomez
+ - Add the setInAcceptance filling
+
+! 2015-05-22 - Ricardo Vazquez Gomez
+ - Bug fix in extractCrossed to get the correct number of IsMuonTight
+
+! 2015-05-22 - Ricardo Vazquez Gomez
+ - Bug fix in MuonIDAlg.cpp that prevented a correct computation of the DLLs
+
+! 2015-05-21 - Ricardo Vazquez Gomez
+ - Remove the dependency on the SmartMuonMeasurementProvider
+
+! 2015-05-20 - Ricardo Vazquez Gomez
+ - Further splitting of the DLLTool and MakeMuonTool.
+ - Clean up of the tools and imports not needed.
 
 ! 2015-05-18 - Ricardo Vazquez Gomez
  - Bugfix in MuonIDAlgLite.cpp

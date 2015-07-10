@@ -16,18 +16,18 @@ MuonIDAlgLite::MuonIDAlgLite(const std::string &name, ISvcLocator *pSvcLocator)
                   tesPathOutputMuonPid_ = LHCb::MuonPIDLocation::Default);
   declareProperty("MuonTrackLocation",
                   tesPathOutputMuonTracks_ = LHCb::TrackLocation::Muon);
- 
-  // Usage of TTracks for MuonID
   declareProperty("useTTrack", useTTrack_ = false);
 
+  // TODO: This has to go
   //--------------------
   // flag to use DLL:
   //--------------------
-  // 3 -- binned tanh(distance) with closest hit(Muon) + integral. New tunning with runI data 
-  // 4 -- binned tanh(distance) with closest hit(Muon) + integral of Landau fit(NonMuon).
+  // 4 -- binned tanh(distance) with closest hit(Muon) + integral of Landau
+  // fit(NonMuon).
+  // 5 -- binned tanh(distance) with closest hit(Muon) + integral. New tunning
+  // with runI data
   //-----------------------------
-  declareProperty("DLL_flag",m_dllFlag = 4); 
-
+  declareProperty("DLL_flag", m_dllFlag = 4);
 }
 
 /** Load the CommonMuonTool.
@@ -39,9 +39,7 @@ StatusCode MuonIDAlgLite::initialize() {
   }
   muonTool_ = tool<ICommonMuonTool>("CommonMuonTool");
   DLLTool_ = tool<DLLMuonTool>("DLLMuonTool");
-  if(msgLevel(MSG::DEBUG)) debug() << "The tools have been loaded" << endmsg;
-  StatusCode scNorm = DLLTool_->calcLandauNorm();
-  if ( scNorm.isFailure() ) return Error(" Normalizations of Landaus not properly set ",scNorm);
+  makeMuonTool_ = tool<MakeMuonTool>("MakeMuonTool");
   return StatusCode::SUCCESS;
 }
 
@@ -49,11 +47,17 @@ StatusCode MuonIDAlgLite::initialize() {
  * Resulting PID objects as well as muon tracks are stored on the TES.
  */
 StatusCode MuonIDAlgLite::execute() {
-  if(msgLevel(MSG::DEBUG)) debug() << "Start the algorithm execution " << endmsg;
-    
-  const LHCb::Tracks *tracks = getIfExists<LHCb::Tracks>(tesPathInputTracks_);
-  
+  const auto tracksPtr = get<LHCb::Tracks>(tesPathInputTracks_);
+  if (tracksPtr == nullptr) {
+    // TODO: What is the right thing to do here? Error or Warning and return
+    // "Success"?
+    return Error("Got nullptr from TES.");
+  }
+  const auto& tracks = *tracksPtr;
+
   // Acquire TES containers for storing muon PIDs and tracks
+  //const auto muPidsPtr = 
+  //    getOrCreate<LHCb::MuonPIDs, LHCb::MuonPIDs>(tesPathOutputMuonPid_);
   LHCb::MuonPIDs *muPids =
       getOrCreate<LHCb::MuonPIDs, LHCb::MuonPIDs>(tesPathOutputMuonPid_);
   if (!muPids->empty()) {
@@ -62,6 +66,8 @@ StatusCode MuonIDAlgLite::execute() {
               << "'. Container has been cleared and its contents will be "
                  "replaced.";
   }
+  //const auto &muPids = *muPidsPtr;
+  
   LHCb::Tracks *muTracks =
       getOrCreate<LHCb::Tracks, LHCb::Tracks>(tesPathOutputMuonTracks_);
   if (!muTracks->empty()) {
@@ -71,108 +77,135 @@ StatusCode MuonIDAlgLite::execute() {
         << "'. Container has been cleared and its contents will be replaced.";
   }
 
+
   muPids->setVersion(1);  // TODO: still valid? do we need a new version?
 
+  counter("nMomentumCut");
   counter("nPreSelTrack");
-  counter("nExtrapolated");
   counter("nGoodOffline");
   counter("nMuonPIDs");
-  counter("nIsAcceptance");
+  counter("nInAcceptance");
   counter("nIsMuon");
   counter("nIsMuonLoose");
   counter("nIsMuonTight");
-  counter("nHitAndOcc");
-  double ProbMu = -1., ProbNonMu = -1.;
   // Iterate over all tracks and do the offline identification for each of them
-  LHCb::Tracks::const_iterator iTrack;
-  for( iTrack = tracks->begin() ; iTrack != tracks->end() ; iTrack++){
-    const auto &track = *iTrack;
-    LHCb::MuonPID *muPid = new LHCb::MuonPID;
-
-    // set default values for the muonPID 
-    muPid->setMuonLLMu(-10000.);
-    muPid->setMuonLLBg(-10000.);
+  for (const auto trackPtr : tracks) {
+    const auto &track = *trackPtr;
+    if (!isGoodOfflineTrack(track)) {
+      continue;
+    }
+    counter("nGoodOffline")++;
+    auto muPid =
+        new LHCb::MuonPID;  // TODO: Put to where the values are set after the
+                            // muonMap thing has been figured out...
+    muPid->setIDTrack(trackPtr);
     muPid->setIsMuon(0);
     muPid->setIsMuonLoose(0);
     muPid->setIsMuonTight(0);
     muPid->setNShared(0);
+    muPid->setPreSelMomentum(0);
+    muPid->setInAcceptance(0);
+    muPid->setMuonLLMu(-10000.);
+    muPid->setMuonLLBg(-10000.);
 
-    if(msgLevel(MSG::DEBUG)) debug() << "################# New track with p = " << track->p() << "##################" << endmsg;
-    if (!isGoodOfflineTrack(*track)) {
+    double probMu = 0.00000000001, probNonMu = 0.00000000001;
+    double Dsquare = -1;
+
+    bool preSel = muonTool_->preSelection(track);
+    const auto extrapolation = muonTool_->extrapolateTrack(track);
+    bool inAcc = muonTool_->inAcceptance(extrapolation); 
+    if (preSel) {
+      muPid->setPreSelMomentum(1);
+      counter("nMomentumCut")++;
+    }
+    if (inAcc) {
+      muPid->setInAcceptance(1);
+      counter("nInAcceptance")++;
+    }
+    
+    // Store the muonPIDs for tracks passing InAcceptance
+    if (!inAcc) {
+      delete muPid;
       continue;
     }
-    counter("nGoodOffline")++;
-    const auto extrapolation = muonTool_->extrapolateTrack(*track);
-    if(msgLevel(MSG::DEBUG)) debug() << "The extrapolation in X went to " << extrapolation[1].first << ", " << extrapolation[2].first << ", "<< extrapolation[3].first << ", " << extrapolation[4].first << endmsg;
-    if(msgLevel(MSG::DEBUG)) debug() << "The extrapolation in Y went to " << extrapolation[1].second << ", " << extrapolation[2].second << ", "<< extrapolation[3].second << ", " << extrapolation[4].second << endmsg;
-    counter("nExtrapolated")++;
-    if (!muonTool_->preSelection(*track, extrapolation)) {
-      continue;
-    }
-    counter("nPreSelTrack")++;
     CommonConstMuonHits hits, hitsTight;
-    std::array<unsigned, ICommonMuonTool::nStations> occupancies, occupanciesTight;
-    std::tie(hits, occupancies) =
-        muonTool_->hitsAndOccupancies(*track, extrapolation);
-    counter("nHitAndOcc")++;
-    std::tie(hitsTight, occupanciesTight) = muonTool_->extractCrossed(hits);
-    const auto isMuon = muonTool_->isMuon(occupancies, track->p());
-    const auto isMuonTight = muonTool_->isMuon(occupanciesTight, track->p());
-    const auto isMuonLoose = muonTool_->isMuonLoose(occupancies, track->p());
-    muPid->setIsMuon(isMuon);
-    muPid->setIsMuonLoose(isMuonLoose);
-    muPid->setIsMuonTight(isMuonTight);
+    if (preSel) {
+      counter("nPreSelTrack")++;
+
+      ICommonMuonTool::MuonTrackOccupancies occupancies, occupanciesTight;
+      std::tie(hits, occupancies) =
+         muonTool_->hitsAndOccupancies(track, extrapolation);
+      std::tie(hitsTight, occupanciesTight) = muonTool_->extractCrossed(hits);
+      const auto isMuon = muonTool_->isMuon(occupancies, track.p());
+      const auto isMuonTight = muonTool_->isMuon(occupanciesTight, track.p());
+      const auto isMuonLoose = muonTool_->isMuonLoose(occupancies, track.p());
+      muPid->setIsMuon(isMuon);
+      muPid->setIsMuonLoose(isMuonLoose);
+      muPid->setIsMuonTight(isMuonTight);
+      if (isMuon) {
+        counter("nIsMuon")++;
+      }
+      if (isMuonTight) {
+        counter("nIsMuonTight")++;
+      }
+      if (isMuonLoose) {
+        counter("nIsMuonLoose")++;
+
+        // TODO: This has to go
+        if (m_dllFlag == 4) {
+          std::tie(probMu, probNonMu, Dsquare) = DLLTool_->calcMuonLL_tanhdist_landau(
+              track, extrapolation, hits, occupancies);
+        } else if (m_dllFlag == 5) {
+          std::tie(probMu, probNonMu, Dsquare) = DLLTool_->calcMuonLL_tanhdist(
+              track, extrapolation, hits, occupancies);
+        } else {
+          Error("Invalid DLL flag");  // TODO: seriously this is just a quick fix,
+          // this whole flag thing has to go
+        }
+        
+        muPid->setMuonLLMu(log(probMu));
+        muPid->setMuonLLBg(log(probNonMu));
+
+        DLLTool_->calcNShared(muPid, muPids, hits, extrapolation);
+      }
+    }
     
-    if(msgLevel(MSG::DEBUG)) debug() << " ---------  ISMUON ALREADY COMPUTED ------------" << endmsg;
-    if(msgLevel(MSG::DEBUG)) debug() << "For track with p = "<< track->p() << ", isMuon = " << isMuon << ", and isMuonLoose = " <<isMuonLoose << ". Occ M2 = " << occupancies[1] << ", occ M3= " << occupancies[2] << ", occ M4= " << occupancies[3] << ", occ M5= " << occupancies[4] << endmsg;
-    if (isMuon==1) counter("nIsMuon")++;
-    if (isMuonTight==1) counter("nIsMuonTight")++;
+    muPids->insert(muPid, track.key());  // Necessary, as the insertion sets
+                                         // the key which is then used in
+                                         // making the track...
+    counter("nMuonPIDs")++; 
     
-    LHCb::Track* muTrack = 0;
-    if (isMuonLoose==1) {
-      counter("nIsMuonLoose")++;
-//      if(msgLevel(MSG::DEBUG)) debug() << "Inserting the track with momentum = " << track->p() << " into muonPids" << endmsg;
-//      muPids->insert(muPid,(*track).key()); // insert only the tracks that pass the isMuonLoose as afterwards this requirement is asked
-      counter("nMuonPIDs")++;
-      muPid->setIDTrack(*iTrack);
+    // make the muon track only for tracks passing IsMuonLoose
+    if(muPid->IsMuonLoose()){
+      auto muTrack = makeMuonTool_->makeMuonTrack(muPid, hits, extrapolation);
       
-      // fill the muonMap with the hits in FoI already computed
-      m_muonMap[muPid] = hits;
-
-      if(msgLevel(MSG::DEBUG)) debug() << "########## CALCULATE THE DLL for track with p = << "  << track->p() << " #############" << endmsg;
-      if (m_dllFlag == 4){
-        std::tie(ProbMu, ProbNonMu) = DLLTool_->calcMuonLL_tanhdist_landau(*track,extrapolation,hits,occupancies);
-      }
-      else if(m_dllFlag == 5){
-        if(msgLevel(MSG::DEBUG)) debug() << "######## DLLFLAG = 5 ##### " << endmsg;
-        std::tie(ProbMu, ProbNonMu) = DLLTool_->calcMuonLL_tanhdist(*track,extrapolation,hits,occupancies);
-      }
-      muPid->setMuonLLMu(log(ProbMu));
-      muPid->setMuonLLBg(log(ProbNonMu));
-
-      if(msgLevel(MSG::DEBUG)) debug() << "Inserting the track with momentum = " << track->p() << " into muonPids" << endmsg;
-      muPids->insert(muPid,(*track).key()); // insert only the tracks that pass the isMuonLoose as afterwards this requirement is asked
-
-      // compute the NShared
-      DLLTool_->calcNShared(muPid,&(*muPids),hits,extrapolation,m_muonMap);
-    
-      muTrack = DLLTool_->makeMuonTrack(muPid,m_muonMap); 
-      muPid->setMuonTrack(muTrack);  
-      muTracks->insert( muTrack, (*iTrack)->key() );
-
-    } // end calculations for isMuonLoose tracks  
-    if(msgLevel(MSG::DEBUG)) debug() << " ProbMu = " << exp(muPid->MuonLLMu()) << ", ProbNonMu = " << exp(muPid->MuonLLBg()) << ". Momentum p = " << track->p() << endmsg;  
+      // Insert in muonTrack
+      muTrack->setType(LHCb::Track::Muon);
+      muTrack->setHistory(LHCb::Track::MuonID);
+      muTrack->addInfo(LHCb::Track::MuonMomentumPreSel, muPid->PreSelMomentum());
+      muTrack->addInfo(LHCb::Track::MuonInAcceptance, muPid->InAcceptance());
+      muTrack->addInfo(LHCb::Track::IsMuonLoose, muPid->IsMuonLoose());
+      muTrack->addInfo(LHCb::Track::IsMuon, muPid->IsMuon());
+      muTrack->addInfo(LHCb::Track::IsMuonTight, muPid->IsMuonTight()); 
+      muTrack->addInfo(LHCb::Track::MuonDist2, Dsquare);
+      muTrack->addInfo(LHCb::Track::MuonDLL, muPid->MuonLLMu() - muPid->MuonLLBg());
+      muTrack->addInfo(LHCb::Track::MuonNShared, muPid->nShared());
+      muTrack->addInfo(LHCb::Track::MuonChi2perDoF, muTrack->chi2PerDoF());
+      muPid->setMuonTrack(muTrack);
+      muTracks->insert(muTrack, track.key());
+    }
+  }
   
-  } // end loop over tracks
-  
+  // Clear the tool maps
+  DLLTool_->clearMap();
+
   return StatusCode::SUCCESS;
 }
 
 /** Tear down.
  */
 StatusCode MuonIDAlgLite::finalize() { 
-    if(msgLevel(MSG::DEBUG)) debug() << "End of the execution" << endmsg;    
-    return GaudiAlgorithm::finalize(); 
+  return GaudiAlgorithm::finalize(); 
 }
 
 /** Offline requirement for a good track. The track mustn't be a clone. Also it
@@ -185,4 +218,3 @@ bool MuonIDAlgLite::isGoodOfflineTrack(const LHCb::Track &track) const {
           track.checkType(LHCb::Track::Downstream) ||
           (useTTrack_ && track.checkType(LHCb::Track::Ttrack)));
 }
-

@@ -47,11 +47,11 @@ auto CommonMuonTool::initialize() -> StatusCode {
   m_det = getDet<DeMuonDetector>(DeMuonLocation::Default);
 
   // Load station information from detector description
-  for (unsigned s = 0; s < nStations; ++s) {
+  for (unsigned s = 0; s != nStations; ++s) {
     m_regionInner[s] = std::make_pair(m_det->getInnerX(s), m_det->getInnerY(s));
     m_regionOuter[s] = std::make_pair(m_det->getOuterX(s), m_det->getOuterY(s));
     m_stationZ[s] = m_det->getStationZ(s);
-    for (unsigned r = 0; r < nRegions; ++r) {
+    for (unsigned r = 0; r != nRegions; ++r) {
       m_padSize[s * nRegions + r] =
           std::make_pair(m_det->getPadSizeX(s, r), m_det->getPadSizeY(s, r));
     }
@@ -102,7 +102,7 @@ auto CommonMuonTool::extrapolateTrack(const LHCb::Track& track) const
   const auto& state = track.closestState(9450.0);  // state closest to M1
 
   // Project the state into the muon stations
-  for (unsigned station = 0; station < nStations; ++station) {
+  for (unsigned station = 0; station != nStations; ++station) {
     // x(z') = x(z) + (dx/dz * (z' - z))
     extrapolation[station] = {
         state.x() + state.tx() * (m_stationZ[station] - state.z()),
@@ -112,17 +112,18 @@ auto CommonMuonTool::extrapolateTrack(const LHCb::Track& track) const
   return extrapolation;
 }
 
-/** Require minimum momentum of track. Also check whether track extrapolation
- * is within detector acceptance.
+/** Require minimum momentum of track.
  */
-auto CommonMuonTool::preSelection(
-    const LHCb::Track& track,
+auto CommonMuonTool::preSelection(const LHCb::Track& track) const noexcept
+    -> bool {
+  return track.p() > m_preSelMomentum;
+}
+
+/** Check whether track extrapolation is within detector acceptance.
+ */
+auto CommonMuonTool::inAcceptance(
     const ICommonMuonTool::MuonTrackExtrapolation& extrapolation) const noexcept
     -> bool {
-  if (track.p() < m_preSelMomentum) {
-    return false;
-  }
-
   using xy_t = std::pair<double, double>;
   auto abs_lt = [](const xy_t& p1, const xy_t& p2) {
     return fabs(p1.first) < p2.first && fabs(p1.second) < p2.second;
@@ -196,12 +197,12 @@ auto CommonMuonTool::hitsAndOccupancies(
   occupancies[0] = 0;
 
   // Start from 1 because M1 does not matter for IsMuon
-  for (unsigned s = 1; s < nStations; ++s) {
+  for (unsigned s = 1; s != nStations; ++s) {
     auto predicate = makeIsInWindow(s);
     const auto& station = m_hitManager->station(s);
     if (msgLevel(MSG::DEBUG))
       debug() << "max number of regions = " << station.nRegions() << endmsg;
-    for (unsigned r = 0; r < station.nRegions(); ++r) {
+    for (unsigned r = 0; r != station.nRegions(); ++r) {
       if (msgLevel(MSG::DEBUG)) debug() << "REGION = " << r << endmsg;
       auto hr = m_hitManager->hits(-m_regionOuter[s].first, s, r);
       std::for_each(
@@ -231,6 +232,15 @@ auto CommonMuonTool::hitsAndOccupancies(
 /** Given a container of hits that are sorted by station this function extracts
  * all of the hits that are crossed and calculates the corresponding
  * occupancies.
+ * The stations,regions M1RX, M4R1, M5R1 are made out by pads, and hence
+ * they behave as crossed hits always. These regions yield mapInRegion == 1,
+ * the others yield mapInRegion == 2.
+ * The hits can be separated as:
+ * 1) uncrossed == 0 && mapInRegion == 1 (crossed hit)
+ * 2) uncrossed == 0 && mapInRegion == 2 (crossed hit)
+ * 3) uncrossed == 1 && mapInRegion == 1 (crossed hit, due to mapInRegion == 1)
+ * 4) uncrossed == 1 && mapInRegion == 2 (uncross hit)
+ * For the crossed hits we want to select 1), 2) and 3)
  */
 auto CommonMuonTool::extractCrossed(const CommonConstMuonHits& hits) const
     noexcept
@@ -239,9 +249,9 @@ auto CommonMuonTool::extractCrossed(const CommonConstMuonHits& hits) const
   res.reserve(hits.size());
   std::copy_if(std::begin(hits), std::end(hits), std::back_inserter(res),
                [&](const CommonMuonHit* hit) {
-                 return !hit->uncrossed() &&
+                 return !hit->uncrossed() ||
                         m_det->mapInRegion(hit->tile().station(),
-                                           hit->tile().region()) != 1;
+                                           hit->tile().region()) == 1;
                });
   res.shrink_to_fit();
   // Recalculate occupancies - makes use of the fact that hits are ordered by
@@ -250,7 +260,7 @@ auto CommonMuonTool::extractCrossed(const CommonConstMuonHits& hits) const
   occupancies[0] = 0;
   auto ppl = std::begin(res);
   auto ppr = std::begin(res);
-  for (auto s = 1u; s < nStations; ++s) {
+  for (auto s = 1u; s != nStations; ++s) {
     ppr = std::partition_point(
         ppl, std::end(res),
         [s](const CommonMuonHit* hit) { return hit->tile().station() == s; });
@@ -316,8 +326,8 @@ auto CommonMuonTool::isMuonLoose(
   return id;
 }
 
-auto CommonMuonTool::foi(int station, int region, double p) const
-    noexcept -> std::pair<double, double> {
+auto CommonMuonTool::foi(int station, int region, double p) const noexcept
+    -> std::pair<double, double> {
   return i_foi(station, region, p);
 }
 
