@@ -9,6 +9,8 @@
 
 #include "Event/Track.h"
 #include "Event/RecSummary.h"
+#include "HltDAQ/IReportConvert.h"
+#include "HltDAQ/ReportConvertTool.h"
 
 /** @class TupleToolRecoStats TupleToolRecoStats.h
  *
@@ -30,6 +32,10 @@ public:
 
   virtual ~TupleToolRecoStats( ); ///< Destructor
   virtual StatusCode fill( Tuples::Tuple& );///< Fill tuple
+
+private:
+  /// for converting objects in to summaries
+  IReportConvert* m_conv;
 
 };
 

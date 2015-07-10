@@ -20,6 +20,7 @@ TupleToolRecoStats::TupleToolRecoStats( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
   : TupleToolBase ( type, name, parent )
+,m_conv(NULL)
 {
   declareInterface<IEventTupleTool>(this);
 }
@@ -32,18 +33,43 @@ TupleToolRecoStats::~TupleToolRecoStats() {}
 //=============================================================================
 StatusCode TupleToolRecoStats::fill( Tuples::Tuple& tup )
 {
+  // Initialise the converter tool
+  m_conv = tool<IReportConvert>("ReportConvertTool", this );
+  if ( !m_conv ){
+    return Error("Unable to retrieve the Report converter tool");
+  }
+  m_conv->setReportVersionLatest();
+  bool toDelete=false;
+  
   const std::string prefix = fullName();
 
   // Load the RecSummary object
-  const LHCb::RecSummary * rS = 
-    getIfExists<LHCb::RecSummary>(evtSvc(),LHCb::RecSummaryLocation::Default);
+  LHCb::RecSummary * rS = getIfExists<LHCb::RecSummary>(evtSvc(),LHCb::RecSummaryLocation::Default);
   if ( !rS ) 
   {
     rS = getIfExists<LHCb::RecSummary>(evtSvc(),LHCb::RecSummaryLocation::Default,false); 
   }
   if ( !rS ) 
   {
-    rS = getIfExists<LHCb::RecSummary>(evtSvc(),"/Event/Turbo/Rec/Summary",false); 
+    rS = getIfExists<LHCb::RecSummary>(evtSvc(),"/Event/Turbo/Rec/Summary",false);
+    if(rS) always() << "Found rS in online location" << endmsg;
+  }
+  // If not there then try to recreate from selection reports
+  if ( !rS ) 
+  {
+    toDelete=true;
+    rS = new LHCb::RecSummary();
+    const LHCb::HltSelReports* selReports = get<LHCb::HltSelReports>( "Hlt2/SelReports" );
+    if(selReports){
+      const LHCb::HltObjectSummary* recsummaryObj = selReports->selReport("Hlt2RecSummary");
+      if(recsummaryObj){
+        const LHCb::HltObjectSummary* Rec_subobj = recsummaryObj->substructure()[0].target();
+        if(Rec_subobj){
+          const LHCb::HltObjectSummary::Info& Rec_info = Rec_subobj->numericalInfo();
+          m_conv->RecSummaryObjectFromSummary(&Rec_info,rS);
+        }
+      }
+    }
   }
 
   // Fill the tuple
@@ -77,6 +103,7 @@ StatusCode TupleToolRecoStats::fill( Tuples::Tuple& tup )
   test &= tup->column( prefix+"nMuonCoordsS4",     rS ? rS->info(LHCb::RecSummary::nMuonCoordsS4,-1) : -2 );
   test &= tup->column( prefix+"nMuonTracks",       rS ? rS->info(LHCb::RecSummary::nMuonTracks,-1)   : -2 );
 
+  if(toDelete) delete rS;
   return StatusCode(test);
 }
 

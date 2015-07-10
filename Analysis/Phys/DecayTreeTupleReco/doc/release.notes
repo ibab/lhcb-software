@@ -4,6 +4,9 @@
 ! Purpose     : Reconstruction related tuple tools
 !-----------------------------------------------------------------------------
 
+! 2015-07-10
+ - Add additional fallback to make the RecSummary from the HLT selection reports as a last resort.
+
 ! 2015-06-06
  - Make TupleToolRecoStats look in one more place.
 
