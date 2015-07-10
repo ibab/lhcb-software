@@ -52,7 +52,6 @@ StatusCode TupleToolRecoStats::fill( Tuples::Tuple& tup )
   if ( !rS ) 
   {
     rS = getIfExists<LHCb::RecSummary>(evtSvc(),"/Event/Turbo/Rec/Summary",false);
-    if(rS) always() << "Found rS in online location" << endmsg;
   }
   // If not there then try to recreate from selection reports
   if ( !rS ) 
