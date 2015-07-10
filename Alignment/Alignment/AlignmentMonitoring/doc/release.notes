@@ -5,6 +5,7 @@
 
 ! 2015-07-09 - Maurizio Martinelli
  - forgot CMakeLists.txt
+ - added references
 
 ! 2015-07-08 - Maurizio Martinelli
  - first import of the package
