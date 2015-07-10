@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-07-10 - Michel De Cian
+ - Adapt StateThickMSCorrectionTool to omit log term in calculation if wanted. Default for the moment is: Use the log term.
+
 !========================= TrackTools v5r10 2015-06-15 =========================
 ! 2015-06-15 - Chris Jones
  - Reinstate the const nature of the Velo dE/dx nTracks method.

@@ -44,13 +44,39 @@ StateThickMSCorrectionTool::StateThickMSCorrectionTool( const std::string& type,
                                                         const std::string& name,
                                                         const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    // break things good and hard if initialize isn't called
-    m_msff2MoliereFact2(std::numeric_limits<double>::quiet_NaN())
+// break things good and hard if initialize isn't called
+  m_msff2MoliereFact2(std::numeric_limits<double>::quiet_NaN())
 {
   declareInterface<IStateCorrectionTool>(this);
-  declareProperty( "MSFudgeFactor2" , m_msff2 = 1.0 );
+  declareProperty( "MSFudgeFactor2" ,      m_msff2 = 1.0 );
+  declareProperty( "UseRossiAndGreisen" ,  m_useRossiAndGreisen = false );
+  declareProperty( "RossiAndGreisenFact2", m_msff2RossiAndGreisenFact2 = -1e42 );
 }
-
+//=============================================================================
+// Initialize variables
+//=============================================================================
+StatusCode StateThickMSCorrectionTool::initialize()
+{
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
+  // move computation out of the hot code path
+  m_msff2MoliereFact2 = m_msff2 * pow_2(TrackParameters::moliereFactor);
+  
+  if( m_msff2RossiAndGreisenFact2 < 0 ) m_msff2RossiAndGreisenFact2 = m_msff2MoliereFact2;
+  if ( msgLevel(MSG::DEBUG) ){
+    if (m_useRossiAndGreisen){
+      debug() << "Using Rossi & Greisen Factor squared of " 
+              <<  m_msff2RossiAndGreisenFact2 << endmsg;
+    }else{
+      debug() << "Using log term with Moliere factor squared of " 
+              << m_msff2MoliereFact2 << endmsg;
+    }
+  }
+  
+  
+  
+  return sc;
+}
 //=============================================================================
 // Correct a State for multiple scattering in the case of a thick scatter
 //=============================================================================
@@ -71,8 +97,7 @@ void StateThickMSCorrectionTool::correctState( LHCb::State& state,
   const auto norm2 = 1 + pow_2(stv[2]) + pow_2(stv[3]);
   // protect against zero momentum
   static constexpr decltype(stv[4]) iMeV = 1. / MeV;
-  const auto norm2cnoisetmp = norm2 * m_msff2MoliereFact2 *
-      pow_2(std::min(std::abs(stv[4]), iMeV));
+  const auto norm2cnoisetmp = norm2 * pow_2(std::min(std::abs(stv[4]), iMeV));
 
   const auto radThick = t * std::sqrt(norm2);
   // in a normal tracking run, for around 95% of cases, radThick is in the
@@ -81,9 +106,15 @@ void StateThickMSCorrectionTool::correctState( LHCb::State& state,
   // approximate it in a quick and dirty way
   //
   // be FMA friendly
-  const auto norm2cnoise = norm2cnoisetmp *
-      pow_2(.038 * vdt::fast_log(radThick) + 1) * radThick;
-
+  auto norm2cnoise = norm2cnoisetmp * radThick;
+  
+  // -- first one omits log-term, which 'solves' the problem of having a non-linear behaviour when going through many layers
+  if( m_useRossiAndGreisen ){
+    norm2cnoise *= m_msff2RossiAndGreisenFact2;
+  }else{
+    norm2cnoise *= m_msff2MoliereFact2 *  pow_2(.038 * vdt::fast_log(radThick) + 1);
+  }
+  
   const auto covTxTx = norm2cnoise * (1 + pow_2(stv[2]));
   const auto covTyTy = norm2cnoise * (1 + pow_2(stv[3]));
   const auto covTxTy = norm2cnoise * stv[2] * stv[3];
@@ -103,15 +134,5 @@ void StateThickMSCorrectionTool::correctState( LHCb::State& state,
   cov(3, 1) += covTyTy * wallThicknessD,
   cov(3, 2) += covTxTy,
   cov(3, 3) += covTyTy;
-}
-//=============================================================================
-
-StatusCode StateThickMSCorrectionTool::initialize()
-{
-  StatusCode sc = GaudiTool::initialize();
-  if (sc.isFailure()) return sc;
-  // move computation out of the hot code path
-  m_msff2MoliereFact2 = m_msff2 * pow_2(TrackParameters::moliereFactor);
-  return sc;
 }
 
