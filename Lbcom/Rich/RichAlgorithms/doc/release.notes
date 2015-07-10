@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-07-10 - Chris Jones
+ - Clean up the HPD analysis algorithm a little.
+
 !========================= RichAlgorithms v1r8 2015-02-23 =========================
 ! 2015-02-06 - Chris Jones
  - Update location of RICH RawEvent in RichLoadRawEvent to be the new split 
