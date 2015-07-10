@@ -4,6 +4,11 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2015-07-10 - Michael Alexander
+ - VeloIPResolutionMonitorNT: Added functionality for multi-PV events, option
+   to compare tracks using LHCbIDs when refitting PVs, and option to use the
+   SimplifiedMaterialLocator when determining material intersected by tracks.
+
 ! 2015-06-23 - Marco Cattaneo
  - Remove obsolete special case for Velo track location on RDST
 

@@ -58,7 +58,11 @@ namespace Velo
     bool m_withMC;
 
     bool m_refitPVs;
-    
+    bool m_checkIDs ;
+    float m_checkFrac ;
+    std::string m_trackExtrapolatorType ;
+    std::string m_materialLocatorType ;
+
     ITrackExtrapolator* m_trackExtrapolator;
     IPVOfflineTool* m_pvtool;
     IMaterialLocator* m_materialLocator ;
@@ -73,7 +77,8 @@ namespace Velo
     void distance( const LHCb::RecVertex*, LHCb::State, double&, double&, int );
     
     StatusCode checkMCAssoc( const LHCb::Track*, const LHCb::RecVertex*, LHCb::MCVertex*&, double&, unsigned int& );
-    
+
+    const LHCb::Track* matchTrack(const LHCb::Track&, const LHCb::RecVertex&) const ;
   };
 }
 

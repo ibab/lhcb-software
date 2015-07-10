@@ -58,19 +58,38 @@ namespace Velo
 //=============================================================================
 Velo::VeloIPResolutionMonitorNT::VeloIPResolutionMonitorNT( const string& name,
                                                         ISvcLocator* pSvcLocator)
-  : GaudiTupleAlg ( name , pSvcLocator )
+  : GaudiTupleAlg ( name , pSvcLocator ),
+    m_vertexLocation(RecVertexLocation::Primary),
+    m_trackLocation(TrackLocation::Default),
+    m_pv(NULL),
+    m_track(NULL),
+    m_withMC(false),
+    m_refitPVs(true),
+    m_checkIDs(false), 
+    m_checkFrac(0.7),
+    m_trackExtrapolatorType(),
+    m_materialLocatorType(),
+    m_trackExtrapolator(NULL),
+    m_pvtool(NULL),
+    m_materialLocator(NULL),
+    m_TTExpectTool(NULL),
+    m_VeloExpectTool(NULL)
 {
 
   // set input locations
-  declareProperty("TrackLocation", m_trackLocation = TrackLocation::Default ) ;
-  declareProperty("VertexLocation", m_vertexLocation = RecVertexLocation::Primary );
+  declareProperty("TrackLocation", m_trackLocation) ;
+  declareProperty("VertexLocation", m_vertexLocation);
 
   // set whether to do comparison to MC
   declareProperty("WithMC",m_withMC=false);
 
   // Set whether to refit PVs without the track for which IP is being calculated
-  declareProperty("RefitPVs", m_refitPVs = true );
-  
+  declareProperty("RefitPVs", m_refitPVs);
+  declareProperty("CheckIDs", m_checkIDs) ;
+  declareProperty("CheckIDsFraction", m_checkFrac) ;
+
+  declareProperty("TrackExtrapolatorType", m_trackExtrapolatorType) ;
+  declareProperty("MaterialLocatorType", m_materialLocatorType) ;
 }
 //=============================================================================
 // Destructor
@@ -96,11 +115,31 @@ StatusCode Velo::VeloIPResolutionMonitorNT::initialize() {
     info() << "Will refit PVs excluding each track in turn" << endmsg ;
   }
   
-  // get the track extrapolator used in calculating the IPs
-  m_trackExtrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator","Extrapolator",this);
+  // Tried to get the material locator and track extrapolator from the 
+  // TrackMasterFitter, but it crashed when trying to retrieve the properties
+  // from the tool.
+  //AlgTool* masterFitter = dynamic_cast<AlgTool*>(tool<ITrackFitter>("TrackMasterFitter")) ;
+  
+  string materialLocatorType = 
+    m_materialLocatorType.size() > 0 ? m_materialLocatorType
+    //: NULL != masterFitter ? 
+    //static_cast<const PropertyWithValue<ToolHandle<IMaterialLocator> >* >(&masterFitter->getProperty("MaterialLocator"))->value()->name()
+    : "DetailedMaterialLocator" ;
 
-  // get the material locator
-  m_materialLocator = tool<IMaterialLocator>("DetailedMaterialLocator","MaterialLocator",this) ;
+  string trackExtrapolatorType = 
+    m_trackExtrapolatorType.size() > 0 ? m_trackExtrapolatorType
+    //: NULL != masterFitter ? 
+    //static_cast<const PropertyWithValue<ToolHandle<IMaterialLocator> >* >(&masterFitter->getProperty("Extrapolator"))->value()->name()
+    : "TrackMasterExtrapolator" ;
+
+  m_materialLocator = 
+    tool<IMaterialLocator>(materialLocatorType,
+			   "MaterialLocator",this) ;
+
+  // get the track extrapolator used in calculating the IPs
+  m_trackExtrapolator = 
+    tool<ITrackExtrapolator>(trackExtrapolatorType,
+			     "Extrapolator",this);
 
   // get hit expectation tools
   m_TTExpectTool = tool<IHitExpectation>( "TTHitExpectation");
@@ -113,7 +152,9 @@ StatusCode Velo::VeloIPResolutionMonitorNT::initialize() {
 // Main execution
 //=============================================================================
 StatusCode Velo::VeloIPResolutionMonitorNT::execute() {
+  //std::cout << "begin execute" << std::endl ;
 
+  
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   counter( "Events Analysed" )++;
@@ -129,7 +170,36 @@ StatusCode Velo::VeloIPResolutionMonitorNT::execute() {
   }
 
   // select only events with 1 reconstructed PV
-  if( pvs->size() != 1 ) return StatusCode::SUCCESS;
+  // comment out ???
+  //if( pvs->size() != 1 ) return StatusCode::SUCCESS;
+
+  //std::cout << pvs->size() << " PVs in event" << std::endl;
+
+  //Create Vector of PVs
+  RecVertex::ConstVector PVertices;
+  std::vector<unsigned int> nVeloTracks;//create empty vector for nVeloTtracks count 
+  // *** You probably want RecVertices::const_iterator it_pv as pvs is of type RecVertices.
+  for ( RecVertices::const_iterator it_pv = pvs->begin(); it_pv != pvs->end(); it_pv++)
+  { 
+    counter("PVs Analysed")++;
+    //pv_noRefit and track# requirements moved to this loop
+    // *** You want to check whether the vertex is primary and how many tracks
+    // it has before you add it to the vector of PVs. I think you want something like
+    // (*it_pv)->isPrimary()
+    if( !(*it_pv)->isPrimary() ) continue;    
+    if( m_refitPVs && (*it_pv)->tracks().size() < 3 ) continue;
+    PVertices.push_back( &(**it_pv) );
+    nVeloTracks.push_back(0);
+    // can't refit a PV with only one track!
+    // *** You haven't declared or filled PVtracks yet, so this won't work.
+    // Again I think you'll want something like (*it_pv)->tracks().size()
+
+    counter("PVs Selected")++;
+    // *** You want to increment this counter before you apply any selection 
+    // criteria to the PVs, ie, put this at the start of this code block.
+    
+  }
+  RecVertex::ConstVector pv_noRefit(PVertices);
 
   // get the tracks
   Tracks* tracks = getIfExists<Tracks>(m_trackLocation);
@@ -141,77 +211,149 @@ StatusCode Velo::VeloIPResolutionMonitorNT::execute() {
   }
   
   counter("Events Selected")++;
-
-  m_pv = *(pvs->begin()) ;
-  const LHCb::RecVertex* pv_noRefit = m_pv ;
-    
-  if( !m_pv->isPrimary() ) return StatusCode::SUCCESS ;
-
-  counter("PVs Analysed")++;
+  // Set up PV containesr???
+  // Loop over PVs here???
+  //m_pv = *(pvs->begin()) ;
+  //const LHCb::RecVertex* pv_noRefit = m_pv ;    
+  
+  
   
   // Get tracks from current PV & loop
-  Track::ConstVector PVtracks;
+  std::vector<Track::ConstVector> PVtracks(PVertices.size()) ;
+
+
+  //std::cout << "store pvs" << std::endl ;
 
   // count number of tracks making this pv that are reconstructed in the velo 
-  unsigned int nVeloTracks(0);
-  for ( SmartRefVector< Track >::const_iterator tr = m_pv->tracks().begin(); 
-        tr != m_pv->tracks().end() ; tr++ ){
-    PVtracks.push_back( &(**tr) );
-    if( (*tr)->type()==Track::Velo || (*tr)->type()==Track::Upstream || (*tr)->type()==Track::Long ){
-      nVeloTracks += 1;
+  // loop over PVs
+  for( unsigned int jpv=0; jpv<PVertices.size(); jpv++)
+  { 
+    for ( SmartRefVector< Track >::const_iterator tr = PVertices[jpv]->tracks().begin(); 
+        tr != PVertices[jpv]->tracks().end() ; tr++ ){
+      PVtracks[jpv].push_back( &(**tr) );//will this work?
+      if( (*tr)->type()==Track::Velo || (*tr)->type()==Track::Upstream || (*tr)->type()==Track::Long ){
+        nVeloTracks[jpv] += 1;
+      }
     }
   }
-    
-  // can't refit a PV with only one track!
-  if( m_refitPVs && PVtracks.size() < 3 ) return StatusCode::SUCCESS ;
-  counter("PVs Selected")++;
-        
-  // loop over tracks
+ 
+  // loop over tracks 
+  //std::cout << "loop over tracks, " << tracks->size() << " tracks" << std::endl ;
+
   for( Tracks::const_iterator tr = tracks->begin(); tr != tracks->end(); ++tr ){
-    
+
+    //std::cout << "next loop" << endl ;
+    //int _itrack = (tr - tracks->begin()) ;
+    //std::cout << "track " << _itrack << std::endl ;
+
     if( (*tr)->type() != Track::Velo && (*tr)->type() != Track::Upstream && (*tr)->type() != Track::Long ) continue;      
     
     m_track = *tr;     
-    
-    // refit PV removing current track
-    bool isInPV = ( find( PVtracks.begin(), PVtracks.end(), m_track ) != PVtracks.end() ) ;
-    
-    if( m_refitPVs && isInPV ){
-      
-      RecVertex* newVertex = new RecVertex( *m_pv ) ;
-      vector< const Track* > trackToRemove( 1, m_track ) ;
-      StatusCode scPVfit = 
-        m_pvtool->reDoSinglePV( Gaudi::XYZPoint( newVertex->position() ), trackToRemove, *newVertex ) ;
-      if( scPVfit.isFailure() ){
-        delete newVertex ;
-        continue ;
-      }
-      else
-        m_pv = newVertex ;
-    }             
-    
-    double ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma ;
-    State POCAtoPVstate, stateAtPVZ ;
-    StatusCode scCalcIPs = calculateIPs( m_pv, m_track, ip3d, ip3dsigma, ipx, ipxsigma, ipy, ipysigma, 
-                                         stateAtPVZ, POCAtoPVstate );
-    if( scCalcIPs.isFailure() ) continue ;
 
+    // *** You want to declare *all* the vectors like this.
+    vector<double> ip3d(PVertices.size(), 0.);
+    vector<double> ip3dsigma(PVertices.size(), 0);
+    vector<double> ipx(PVertices.size(), 0.); 
+    vector<double> ipxsigma(PVertices.size(), 0.); 
+    vector<double> ipy(PVertices.size(), 0.); 
+    vector<double> ipysigma(PVertices.size(), 0.);  
+    // *** I think you'll only need to store the track states at whichever PV gives the smallest IP, 
+    // so you won't need vectors for these, just a single instance.
+    State POCAtoPVstate, stateAtPVZ ;
+    double temp_ip3d, temp_ip3dsigma, temp_ipx, temp_ipxsigma, temp_ipy, temp_ipysigma ;//temporary variables to store info for current PV
+    State temp_POCAtoPVstate, temp_stateAtPVZ ;
+    vector<double> vec_PVNTracks(PVertices.size(), 0.), vec_PVChi2(PVertices.size(), 0.), vec_PVNDOF(PVertices.size(), 0.), vec_PVX(PVertices.size(), 0.), vec_PVY(PVertices.size(), 0.), vec_PVZ(PVertices.size(), 0.);
+    vector<double> vec_PVXerr(PVertices.size(), 0.), vec_PVYerr(PVertices.size(), 0.), vec_PVZerr(PVertices.size(), 0.), vec_PVXNoRefit(PVertices.size(), 0.), vec_PVYNoRefit(PVertices.size(), 0.);
+    vector<double> vec_PVZNoRefit(PVertices.size(), 0.), vec_PVXerrNoRefit(PVertices.size(), 0.), vec_PVYerrNoRefit(PVertices.size(), 0.), vec_PVZerrNoRefit(PVertices.size(), 0.);
+    vector<bool> isInPV(PVertices.size(), false);
+    int index_minIP=0;
+    double TestIP=1e8;
+    
+    //Loop over PVs
+    //std::cout << "track " << _itrack << " loop over pvs" << std::endl ;
+    for(unsigned int kpv=0; kpv<PVertices.size(); kpv++)
+    {
+      
+      // refit PV removing current track
+      const Track* pvTrack = matchTrack(*m_track, *PVertices[kpv]) ;
+      bool temp_isInPV = (pvTrack != NULL) ;
+      isInPV[kpv] =  temp_isInPV ;
+      
+      //std::cout << "track " << _itrack << " pv " << kpv << " check isinPV " << temp_isInPV <<  std::endl ;
+
+      if( m_refitPVs && isInPV[kpv] ){
+        
+        RecVertex* newVertex = new RecVertex( *PVertices[kpv] ) ;
+        vector< const Track* > trackToRemove( 1, pvTrack ) ;
+        StatusCode scPVfit = 
+          m_pvtool->reDoSinglePV( Gaudi::XYZPoint( newVertex->position() ), trackToRemove, *newVertex ) ;
+        if( scPVfit.isFailure() ){
+          delete newVertex ;
+	  isInPV[kpv] = false ;
+	  //std::cout << "track " << _itrack << " pv " << kpv << "refit failed" << std::endl; 
+          continue ;
+        }
+        else
+          //m_pv = newVertex ;//Does this need to change? 
+          PVertices[kpv] = newVertex;
+      }             
+
+    
+      //std::cout << "track " << _itrack << " pv " << kpv << " calcIPs" << std::endl ;
+
+      StatusCode scCalcIPs = calculateIPs( PVertices[kpv], m_track, temp_ip3d, temp_ip3dsigma, temp_ipx, temp_ipxsigma, temp_ipy, 
+                                           temp_ipysigma, temp_stateAtPVZ, temp_POCAtoPVstate );
+      if( scCalcIPs.isFailure() ) continue ;
+      
+      //fill vectors for PV variables
+      // *** Remember you need to check which PV gives the smallest IP and store its index.
+      ip3d[kpv] = temp_ip3d;
+      ip3dsigma[kpv] = temp_ip3dsigma;
+      ipx[kpv] = temp_ipx;
+      ipxsigma[kpv] = temp_ipxsigma;
+      ipy[kpv] = temp_ipy;
+      ipysigma[kpv] = temp_ipysigma;
+    
+      // Record the index of smallest IP PV
+      if(temp_ip3d < TestIP){
+        TestIP = temp_ip3d;
+        index_minIP = kpv;
+        stateAtPVZ = temp_stateAtPVZ;
+        POCAtoPVstate = temp_POCAtoPVstate;
+      }
+      
+      //stateAtPVZ.push_back( temp_stateAtPVZ );
+      //POCAtoPVstate.push_back( temp_POCAtoPVstate );
+     
+      //std::cout << "track " << _itrack << " pv " << kpv << " fill vectors" << std::endl ;
+ 
+      vec_PVNTracks[kpv] = PVertices[kpv]->tracks().size();
+      vec_PVChi2[kpv] = PVertices[kpv]->chi2();
+      vec_PVNDOF[kpv] = PVertices[kpv]->nDoF();
+      vec_PVX[kpv] = PVertices[kpv]->position().x();
+      vec_PVY[kpv] = PVertices[kpv]->position().y();
+      vec_PVZ[kpv] = PVertices[kpv]->position().z();
+      vec_PVXerr[kpv] = sqrt(PVertices[kpv]->covMatrix()(0,0));
+      vec_PVYerr[kpv] = sqrt(PVertices[kpv]->covMatrix()(1,1));
+      vec_PVZerr[kpv] = sqrt(PVertices[kpv]->covMatrix()(2,2));
+      vec_PVXNoRefit[kpv] = pv_noRefit[kpv]->position().x();
+      vec_PVYNoRefit[kpv] = pv_noRefit[kpv]->position().y();
+      vec_PVZNoRefit[kpv] = pv_noRefit[kpv]->position().z();
+      vec_PVXerrNoRefit[kpv] = sqrt(pv_noRefit[kpv]->covMatrix()(0,0));
+      vec_PVYerrNoRefit[kpv] = sqrt(pv_noRefit[kpv]->covMatrix()(1,1));
+      vec_PVZerrNoRefit[kpv] = sqrt(pv_noRefit[kpv]->covMatrix()(2,2));
+    
+    }
+  
+  
     counter("Tracks selected")++;
     
     double inversePT = 1./(m_track->pt()/GeV);
     
+    //std::cout << "track " << _itrack << " fill tuple" << endl ;
+
     Tuple tuple = nTuple( "IPResolutionsTuple" );
-    
-    tuple->column( "isInPV", isInPV );
-    tuple->column( "TrackType", m_track->type() );
-    tuple->column( "IsTrackForward", m_track->flag() != Track::Backward ) ;
-    tuple->column( "IPRes3D", ip3d );
-    tuple->column( "IPRes3Dsigma", ip3dsigma );
-    tuple->column( "IPRes_X", ipx );
-    tuple->column( "IPRes_Xsigma", ipxsigma );
-    tuple->column( "IPRes_Y", ipy );
-    tuple->column( "IPRes_Ysigma", ipysigma );
-    tuple->column( "InversePT", inversePT );
+    //Track variables
     tuple->column( "P", m_track->p() );
     tuple->column( "Eta", m_track->pseudoRapidity() );
     tuple->column( "Phi", m_track->phi() );
@@ -220,22 +362,39 @@ StatusCode Velo::VeloIPResolutionMonitorNT::execute() {
     tuple->column( "TrackCharge", m_track->charge() );
     tuple->column( "TrackChi2", m_track->chi2() );
     tuple->column( "TrackNDOF", m_track->nDoF() );
-    tuple->column( "PVNTracks", m_pv->tracks().size() );
-    tuple->column( "PVNVeloTracks", nVeloTracks );
-    tuple->column( "PVChi2", m_pv->chi2() );
-    tuple->column( "PVNDOF", m_pv->nDoF() );
-    tuple->column( "PVX", m_pv->position().x() );
-    tuple->column( "PVY", m_pv->position().y() );
-    tuple->column( "PVZ", m_pv->position().z() );
-    tuple->column( "PVXerr", sqrt( m_pv->covMatrix()(0,0) ) );
-    tuple->column( "PVYerr", sqrt( m_pv->covMatrix()(1,1) ) );
-    tuple->column( "PVZerr", sqrt( m_pv->covMatrix()(2,2) ) );
-    tuple->column( "PVXNoRefit", pv_noRefit->position().x() );
-    tuple->column( "PVYNoRefit", pv_noRefit->position().y() );
-    tuple->column( "PVZNoRefit", pv_noRefit->position().z() );
-    tuple->column( "PVXerrNoRefit", sqrt( pv_noRefit->covMatrix()(0,0) ) );
-    tuple->column( "PVYerrNoRefit", sqrt( pv_noRefit->covMatrix()(1,1) ) );
-    tuple->column( "PVZerrNoRefit", sqrt( pv_noRefit->covMatrix()(2,2) ) );
+    tuple->column( "TrackType", m_track->type() );
+    tuple->column( "IsTrackForward", m_track->flag() != Track::Backward ) ;
+    tuple->column( "MinIPindex", index_minIP );
+    tuple->column( "InversePT", inversePT );
+    
+    //fill tuple arrays
+    tuple->farray( "isInPV", isInPV, "nPVs", 50 );
+    tuple->farray( "IPRes3D", ip3d , "nPVs", 50);
+    tuple->farray( "IPRes3Dsigma", ip3dsigma , "nPVs", 50);
+    tuple->farray( "IPRes_X", ipx , "nPVs", 50);
+    tuple->farray( "IPRes_Xsigma", ipxsigma , "nPVs", 50);
+    tuple->farray( "IPRes_Y", ipy , "nPVs", 50);
+    tuple->farray( "IPRes_Ysigma", ipysigma , "nPVs", 50);
+
+    tuple->farray( "PVNVeloTracks", nVeloTracks , "nPVs", 50);
+
+    tuple->farray( "PVNTracks", vec_PVNTracks , "nPVs", 50);
+    tuple->farray( "PVChi2", vec_PVChi2 , "nPVs", 50);
+    tuple->farray( "PVNDOF", vec_PVNDOF , "nPVs", 50);
+    tuple->farray( "PVX", vec_PVX , "nPVs", 50);
+    tuple->farray( "PVY", vec_PVY , "nPVs", 50);
+    tuple->farray( "PVZ", vec_PVZ , "nPVs", 50);
+    tuple->farray( "PVXerr", vec_PVXerr , "nPVs", 50);
+    tuple->farray( "PVYerr", vec_PVYerr , "nPVs", 50);
+    tuple->farray( "PVZerr", vec_PVZerr , "nPVs", 50);
+    tuple->farray( "PVXNoRefit", vec_PVXNoRefit , "nPVs", 50);
+    tuple->farray( "PVYNoRefit", vec_PVYNoRefit , "nPVs", 50);
+    tuple->farray( "PVZNoRefit", vec_PVZNoRefit , "nPVs", 50);
+    tuple->farray( "PVXerrNoRefit", vec_PVXerrNoRefit , "nPVs", 50);
+    tuple->farray( "PVYerrNoRefit", vec_PVYerrNoRefit , "nPVs", 50);
+    tuple->farray( "PVZerrNoRefit", vec_PVZerrNoRefit , "nPVs", 50);
+
+    //std::cout << "track " << _itrack << " ip info filled" << endl ;
     
     vector<double> statesX;
     vector<double> statesY;
@@ -315,11 +474,11 @@ StatusCode Velo::VeloIPResolutionMonitorNT::execute() {
     }
     tuple->column( "xOverX0", xOverX0 ) ;
     tuple->column( "nIntersections", nIntersections ) ;
-    tuple->farray( "materialDistances", distances, "dummyNIntersections", 100 ) ;
-    tuple->farray( "materialX0s", X0s, "dummyNIntersections", 100 ) ;
-    //tuple->farray( "materialNames", names, "dummyNIntersections", 100 ) ;
-    tuple->farray( "materialZ1s", z1s, "dummyNIntersections", 100 ) ;
-    tuple->farray( "materialZ2s", z2s, "dummyNIntersections", 100 ) ;
+    tuple->farray( "materialDistances", distances, "dummyNIntersections", 200 ) ;
+    tuple->farray( "materialX0s", X0s, "dummyNIntersections", 200 ) ;
+    //tuple->farray( "materialNames", names, "dummyNIntersections", 200 ) ;
+    tuple->farray( "materialZ1s", z1s, "dummyNIntersections", 200 ) ;
+    tuple->farray( "materialZ2s", z2s, "dummyNIntersections", 200 ) ;
     
     const vector<LHCb::LHCbID>& ids = m_track->lhcbIDs();
     const unsigned int nTTHits=count_if(ids.begin(),ids.end(),bind(&LHCbID::isTT,_1));
@@ -343,7 +502,7 @@ StatusCode Velo::VeloIPResolutionMonitorNT::execute() {
       mcpv->setPosition( Gaudi::XYZPoint( -999, -999, -999 ) );
       unsigned int mctype;
       double mcInversePT;
-      checkMCAssoc( m_track, m_pv, mcpv, mcInversePT, mctype );
+      checkMCAssoc( m_track, PVertices[index_minIP], mcpv, mcInversePT, mctype );
       RecVertex dummyPV = RecVertex( mcpv->position() );
       vector<float> matrixValues( 6, 0. );
       dummyPV.setCovMatrix( Gaudi::SymMatrix3x3( matrixValues.begin(), matrixValues.end() ) );
@@ -367,12 +526,21 @@ StatusCode Velo::VeloIPResolutionMonitorNT::execute() {
     
     tuple->write();
     
-    if( m_refitPVs && isInPV ) delete m_pv;
+    for(unsigned int lpv = 0 ; lpv < PVertices.size() ; lpv++)
+    {
+      if(m_refitPVs && isInPV[lpv]) {
+	//std::cout << "track " << _itrack << " deleting pv " << lpv << std::endl ;
+	delete PVertices[lpv] ;
+      }
+    }
+    PVertices = pv_noRefit ;
+
+    //std::cout << "track " << _itrack << " tuple filled" << endl ;
     
   } // close loop over tracks
   
   return StatusCode::SUCCESS;
-}
+}  
 
 //=============================================================================
 //  Finalize
@@ -519,5 +687,42 @@ Gaudi::XYZPoint Velo::VeloIPResolutionMonitorNT::extrapolateToPOCA(const Track *
   Gaudi::XYZPoint result = coord - slope*(delta.Dot( slope )/slope.mag2() ) ;
   
   return result;
+}
+
+//========================================================
+// Check if the given track is used in the given PV.
+//========================================================
+const Track* Velo::VeloIPResolutionMonitorNT::matchTrack(const Track& track, 
+							 const RecVertex& pv) const {
+  // First do a pointer comparison using RecVertex::trackWeight
+  pair<bool, float> trWeight = pv.trackWeight(&track) ;
+  if(trWeight.first){
+    // The track is contained in the PV and has non-zero weight.
+    if(trWeight.second != 0.)
+      return &track ;
+    // The track is contained in the PV but has zero weight.
+    return NULL ;
+  }
+  if(!m_checkIDs)
+    return NULL ;
+
+  // Compare LHCb IDs if requested.
+  const unsigned int nIDs = track.nLHCbIDs() ;
+  // Loop over tracks in the PV & their weights.
+  const RecVertex::TrackWithWeightVector& tracksAndWeights = pv.tracksWithWeights() ;
+  for(RecVertex::TrackWithWeightVector::const_iterator iTrW = tracksAndWeights.begin() ;
+      iTrW != tracksAndWeights.end() ; ++iTrW){
+    const Track* pvtr = iTrW->first ;
+    // Check PV track is not NULL and has non-zero weight.
+    if(NULL == iTrW->first || 0. == iTrW->second)
+      continue ;
+    const unsigned int nPVTrIDs = pvtr->nLHCbIDs() ;
+    const float nCommon = float(track.nCommonLhcbIDs(*pvtr)) ;
+    // If the PV track shares a certain fraction of LHCbIDs then they match.
+    if(nCommon/min(nIDs, nPVTrIDs) > m_checkFrac)
+      return pvtr ;
+  }
+  // No matching tracks with non zero weight were found in the PV.
+  return NULL ;
 }
 
