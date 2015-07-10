@@ -13,22 +13,20 @@ MaterialLocatorBase::MaterialLocatorBase(const std::string& type,
     m_maxDeviation( 5*Gaudi::Units::cm),
     m_maxDeviationAtRefstates( 2*Gaudi::Units::mm),
     m_maxDeviationAtVeloRefstates( 0.5*Gaudi::Units::mm),
-    m_scatteringtool("StateThickMSCorrectionTool"),
     m_elecdedxtool("StateElectronEnergyCorrectionTool")
 {
   declareInterface<IMaterialLocator>(this);
-  declareProperty( "GeneralDedxToolName" , m_dedxtoolname="StateDetailedBetheBlochEnergyCorrectionTool");
-
+  declareProperty( "GeneralDedxToolName" ,       m_dedxtoolname="StateDetailedBetheBlochEnergyCorrectionTool");
+  declareProperty( "StateMSCorrectionToolName" , m_msCorrectionToolName="StateThickMSCorrectionTool");
 }
 
 StatusCode MaterialLocatorBase::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   
-  m_dedxtool     = tool<IStateCorrectionTool>( m_dedxtoolname, "GeneralDedxTool", this);
+  m_dedxtool       = tool<IStateCorrectionTool>( m_dedxtoolname, "GeneralDedxTool", this);
+  m_scatteringTool = tool<IStateCorrectionTool>( m_msCorrectionToolName, "StateMSCorrectionTool", this );
   
-  if( sc.isSuccess() )
-    sc = m_scatteringtool.retrieve() ;
   if( sc.isSuccess() )
     sc = m_elecdedxtool.retrieve() ;
   
@@ -37,13 +35,12 @@ StatusCode MaterialLocatorBase::initialize()
 
 StatusCode MaterialLocatorBase::finalize()
 {
-  m_scatteringtool.release().ignore() ;
   m_elecdedxtool.release().ignore() ;
   return GaudiTool::finalize() ;
 }
 
 size_t MaterialLocatorBase::intersect( const Gaudi::XYZPoint& p, const Gaudi::XYZVector& v, 
-				       IMaterialLocator::Intersections& intersepts ) const 
+                                       IMaterialLocator::Intersections& intersepts ) const 
   
 {
   static ILVolume::Intersections origintersepts ;
@@ -67,15 +64,15 @@ size_t MaterialLocatorBase::intersect( const Gaudi::XYZPoint& p, const Gaudi::XY
 }
 
 inline double pointerror(const LHCb::StateVector& begin,
-			 const LHCb::StateVector& end,
-			 const LHCb::StateVector& mid )
+                         const LHCb::StateVector& end,
+                         const LHCb::StateVector& mid )
 {
   double rc(0) ;
   double dz = end.z() - begin.z();
   if(fabs(dz)> TrackParameters::propagationTolerance) {
     double tx = (end.x() - begin.x())/dz ;
     double ty = (end.y() - begin.y())/dz ;
-           dz = mid.z() - begin.z() ;
+    dz = mid.z() - begin.z() ;
     double dx = begin.x() + dz*tx - mid.x() ;
     double dy = begin.y() + dz*ty - mid.y() ;
     rc = std::sqrt(dx*dx+dy*dy) ;
@@ -84,7 +81,7 @@ inline double pointerror(const LHCb::StateVector& begin,
 }
 
 inline double linearerror(const LHCb::StateVector& origin,
-			  const LHCb::StateVector& destination)
+                          const LHCb::StateVector& destination)
 {
   // calculate deviation from a parabola
   double dz = destination.z() - origin.z() ;
@@ -100,7 +97,7 @@ inline std::list<LHCb::StateVector>::iterator next(const std::list<LHCb::StateVe
 }
 
 size_t MaterialLocatorBase::intersect( const LHCb::ZTrajectory& traj,
-				       IMaterialLocator::Intersections& intersepts ) const 
+                                       IMaterialLocator::Intersections& intersepts ) const 
 {
   intersepts.clear() ;
   if( std::abs(traj.endRange() - traj.beginRange())  > TrackParameters::propagationTolerance) {
@@ -130,27 +127,27 @@ size_t MaterialLocatorBase::intersect( const LHCb::ZTrajectory& traj,
       const std::vector<LHCb::StateVector> refstates = traj.refStateVectors() ;
       // First insert nodes at the reference positions, if required
       if( !refstates.empty()) {
-	while(  (nextnode = next(inode)) != nodes.end() && nodes.size() < maxnumnodes ) {
-	  std::vector<LHCb::StateVector>::const_iterator worstref = refstates.end() ;
-	  double reldeviation(0) ;
-	  for(std::vector<LHCb::StateVector>::const_iterator iref = refstates.begin() ;
-	      iref != refstates.end(); ++iref) 
-	    if( inode->z() < iref->z() && iref->z() < nextnode->z() ) {
-	      double thisdeviation    = pointerror( *inode, *nextnode, *iref ) ;
-	      double thisreldeviation =  thisdeviation / 
-		( iref->z() < StateParameters::ZEndVelo ? 
-		  m_maxDeviationAtVeloRefstates : m_maxDeviationAtRefstates ) ;
-	      if( thisreldeviation > reldeviation ) {
-		reldeviation = thisreldeviation ;
-		worstref = iref ;
-	      }
-	    }
-	  if( reldeviation > 1 && worstref!=refstates.end()) {
-	    nodes.insert(nextnode,*worstref) ;
-	  }
-	  else 
-	    ++inode ;
-	}
+        while(  (nextnode = next(inode)) != nodes.end() && nodes.size() < maxnumnodes ) {
+          std::vector<LHCb::StateVector>::const_iterator worstref = refstates.end() ;
+          double reldeviation(0) ;
+          for(std::vector<LHCb::StateVector>::const_iterator iref = refstates.begin() ;
+              iref != refstates.end(); ++iref) 
+            if( inode->z() < iref->z() && iref->z() < nextnode->z() ) {
+              double thisdeviation    = pointerror( *inode, *nextnode, *iref ) ;
+              double thisreldeviation =  thisdeviation / 
+                ( iref->z() < StateParameters::ZEndVelo ? 
+                  m_maxDeviationAtVeloRefstates : m_maxDeviationAtRefstates ) ;
+              if( thisreldeviation > reldeviation ) {
+                reldeviation = thisreldeviation ;
+                worstref = iref ;
+              }
+            }
+          if( reldeviation > 1 && worstref!=refstates.end()) {
+            nodes.insert(nextnode,*worstref) ;
+          }
+          else 
+            ++inode ;
+        }
       }
     }
     
@@ -163,13 +160,13 @@ size_t MaterialLocatorBase::intersect( const LHCb::ZTrajectory& traj,
       LHCb::StateVector midpoint = traj.stateVector( 0.5*(inode->z()+nextnode->z())) ;
       double deviation = pointerror( *inode, *nextnode, midpoint  ) ;
       if( deviation > m_maxDeviation ) {
-	nodes.insert(nextnode,midpoint ) ;
+        nodes.insert(nextnode,midpoint ) ;
       } else {
-	if( deviation > worstdeviation ) {
-	  worstdeviation = deviation ;
-	  worstnode = inode ;
-	}
-	++inode ;
+        if( deviation > worstdeviation ) {
+          worstdeviation = deviation ;
+          worstnode = inode ;
+        }
+        ++inode ;
       }
     }
     
@@ -181,16 +178,16 @@ size_t MaterialLocatorBase::intersect( const LHCb::ZTrajectory& traj,
     if(msgLevel( MSG::VERBOSE ) ||
        (msgLevel( MSG::DEBUG) && nodes.size()==maxnumnodes ) ) {
       debug() << "Trajectory approximation: numnodes=" << nodes.size() 
-	      << ", deviation=" << worstdeviation 
-	      << " at z= " << 0.5*(worstnode->z()+next(worstnode)->z())
-	      << endmsg ;
+              << ", deviation=" << worstdeviation 
+              << " at z= " << 0.5*(worstnode->z()+next(worstnode)->z())
+              << endmsg ;
       for( inode = nodes.begin(); (nextnode = next(inode)) != nodes.end(); ++inode) {
-	LHCb::StateVector midpoint = traj.stateVector( 0.5*(inode->z()+nextnode->z() ) ) ;
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-    debug() << "interval: "
-            << "(" << inode->z() << ", " << nextnode->z() << ")"
-            << " ---> midpoint deviation: " 
-            << pointerror(*inode,*nextnode,midpoint) << endmsg ;
+        LHCb::StateVector midpoint = traj.stateVector( 0.5*(inode->z()+nextnode->z() ) ) ;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug() << "interval: "
+                  << "(" << inode->z() << ", " << nextnode->z() << ")"
+                  << " ---> midpoint deviation: " 
+                  << pointerror(*inode,*nextnode,midpoint) << endmsg ;
       }
     }
     
@@ -200,13 +197,13 @@ size_t MaterialLocatorBase::intersect( const LHCb::ZTrajectory& traj,
     for( inode = nodes.begin(); (nextnode = next(inode)) != nodes.end(); ++inode) {
       Gaudi::XYZPoint p2 = nextnode->position() ;
       try {
-	MaterialLocatorBase::intersect(p1,p2-p1,tmpintersepts) ;
+        MaterialLocatorBase::intersect(p1,p2-p1,tmpintersepts) ;
       }
       catch (GaudiException& exception) {
-	error() << "propagating pos1, pos2: "
-		<< p1 << " " << p2 << " "
-		<< traj.beginPoint() << " " << traj.endPoint() << endmsg ;
-	throw exception ;
+        error() << "propagating pos1, pos2: "
+                << p1 << " " << p2 << " "
+                << traj.beginPoint() << " " << traj.endPoint() << endmsg ;
+        throw exception ;
       }
       intersepts.insert(intersepts.end(),tmpintersepts.begin(),tmpintersepts.end()) ;
       p1 = p2 ;
@@ -217,8 +214,8 @@ size_t MaterialLocatorBase::intersect( const LHCb::ZTrajectory& traj,
 }
 
 size_t MaterialLocatorBase::intersect( const LHCb::StateVector& origin, 
-				       const LHCb::StateVector& target,
-				       IMaterialLocator::Intersections& intersepts ) const 
+                                       const LHCb::StateVector& target,
+                                       IMaterialLocator::Intersections& intersepts ) const 
 {
   intersepts.clear() ;
   if( std::abs(origin.z() - target.z()) > TrackParameters::propagationTolerance) {
@@ -231,11 +228,11 @@ size_t MaterialLocatorBase::intersect( const LHCb::StateVector& origin,
 
 void
 MaterialLocatorBase::applyMaterialCorrections(LHCb::State& stateAtTarget,
-					      const IMaterialLocator::Intersections& intersepts,
-					      double zorigin,
-					      LHCb::ParticleID pid,
-					      bool applyScatteringCorrection,
-					      bool applyEnergyLossCorrection) const
+                                              const IMaterialLocator::Intersections& intersepts,
+                                              double zorigin,
+                                              LHCb::ParticleID pid,
+                                              bool applyScatteringCorrection,
+                                              bool applyEnergyLossCorrection) const
 {
   double ztarget = stateAtTarget.z() ;
   bool upstream = zorigin > ztarget ;
@@ -271,7 +268,7 @@ MaterialLocatorBase::applyMaterialCorrections(LHCb::State& stateAtTarget,
       
       // now add the wall
       if( applyScatteringCorrection ) {
-        m_scatteringtool->correctState( state, it->material, thickness, upstream, pid );
+        m_scatteringTool->correctState( state, it->material, thickness, upstream, pid );
       }
       if( applyEnergyLossCorrection) {
         dedxtool->correctState( state, it->material, thickness, upstream, pid );

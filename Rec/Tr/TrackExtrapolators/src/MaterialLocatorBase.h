@@ -57,11 +57,12 @@ public:
 				bool applyEnergyLossCorrection) const ;
 private:
   std::string m_dedxtoolname;
+  std::string m_msCorrectionToolName;
   size_t m_maxNumIntervals ;
   double m_maxDeviation ;
   double m_maxDeviationAtRefstates ;
   double m_maxDeviationAtVeloRefstates ;
-  ToolHandle<IStateCorrectionTool> m_scatteringtool;
+  IStateCorrectionTool* m_scatteringTool;
   IStateCorrectionTool* m_dedxtool;
   ToolHandle<IStateCorrectionTool> m_elecdedxtool;
 };
