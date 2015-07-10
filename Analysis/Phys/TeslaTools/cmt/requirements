@@ -3,7 +3,7 @@
 ###############################################
 
 package TeslaTools
-version           v1r10
+version v1r10
 
 branches doc cmt options src python tests TeslaTools
 
@@ -29,8 +29,8 @@ use  RecEvent    v* Event
 use  DaVinciKernel v*    Phys
 use  DaVinciInterfaces v*    Phys
 use  HltDAQ      v* Hlt
-use   LoKiPhys                  v*    Phys
-use   LoKiArrayFunctors                      v*    Phys
+use  LoKiPhys                  v*    Phys
+use  LoKiArrayFunctors                      v*    Phys
 
 
 # standard patterns (order is essential!)
