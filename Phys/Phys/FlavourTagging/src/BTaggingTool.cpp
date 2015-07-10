@@ -85,7 +85,7 @@ StatusCode BTaggingTool::initialize()
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
 
-  m_descend    = m_util->ParticleDescendants();
+  m_descend    = m_util->getParticleDescendants();
 
   m_taggerMu   = tool<ITagger> ("TaggerMuonTool", this);
 
@@ -118,7 +118,7 @@ StatusCode BTaggingTool::initialize()
   {
     if ( msgLevel(MSG::DEBUG) )
       debug() << "BTaggingTool: ReFitPV selected " << endreq;
-    m_pvReFitter = m_util->PVReFitter();
+    m_pvReFitter = m_util->getPVReFitter();
   }
   else
   {

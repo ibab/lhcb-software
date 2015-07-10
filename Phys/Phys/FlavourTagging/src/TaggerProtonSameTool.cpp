@@ -78,7 +78,7 @@ StatusCode TaggerProtonSameTool::initialize()
 
   //m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
 
-  m_fitter = m_util->VertexFitter();//tool<IVertexFit>("OfflineVertexFitter");
+  m_fitter = m_util->getVertexFitter();//tool<IVertexFit>("OfflineVertexFitter");
 
   //m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
 

@@ -64,11 +64,11 @@ public:
   virtual bool isinTree( const LHCb::Particle*, 
                          const LHCb::Particle::ConstVector& , double& )=0;
 
-  virtual const IPVReFitter*          PVReFitter() const = 0;
-  virtual const ILifetimeFitter*      LifetimeFitter() const = 0;
-  virtual const IVertexFit*           VertexFitter() const = 0;
-  virtual const IDistanceCalculator*  DistanceCalculator() const = 0;
-  virtual IParticleDescendants* ParticleDescendants() const = 0; //had to break const correctness
+  virtual const IPVReFitter*          getPVReFitter() const = 0;
+  virtual const ILifetimeFitter*      getLifetimeFitter() const = 0;
+  virtual const IVertexFit*           getVertexFitter() const = 0;
+  virtual const IDistanceCalculator*  getDistanceCalculator() const = 0;
+  virtual IParticleDescendants*       getParticleDescendants() const = 0; //had to break const correctness
 
 
   virtual CharmTaggerSpace::CharmMode getCharmDecayMode(const LHCb::Particle*, int)=0;

@@ -118,12 +118,12 @@ StatusCode TaggerCharmTool::initialize()
     fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
     return StatusCode::FAILURE;
   }
-  m_pLifetimeFitter = m_util->LifetimeFitter(); //tool<ILifetimeFitter>(m_pLifetimeFitterAlgName, this);
+  m_pLifetimeFitter = m_util->getLifetimeFitter(); //tool<ILifetimeFitter>(m_pLifetimeFitterAlgName, this);
   if(!m_pLifetimeFitter){
     fatal() << "Unable to retrieve " << m_pLifetimeFitterAlgName << "." << endreq;
     return StatusCode::FAILURE;
   }
-  m_descend = m_util->ParticleDescendants();//tool<IParticleDescendants> ( "ParticleDescendants", this );
+  m_descend = m_util->getParticleDescendants();//tool<IParticleDescendants> ( "ParticleDescendants", this );
   if( ! m_descend ) {
     fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
     return StatusCode::FAILURE;
@@ -428,7 +428,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
         Fun fCTAU = CTAU(cand->endVertex());
 
         LHCb::VertexBase::ConstVector verts; verts.push_back(RecVert);
-        Fun ipPvChi2 = MIPCHI2 ( verts , m_util->DistanceCalculator() ) ;
+        Fun ipPvChi2 = MIPCHI2 ( verts , m_util->getDistanceCalculator() ) ;
         const MIPCHI2DV ipChi2Min  = MIPCHI2DV ( "" ) ;
 
         double maxProbGhostDaus = 0.0;

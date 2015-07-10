@@ -50,7 +50,7 @@ StatusCode SVertexTool::initialize()
   if (sc.isFailure()) return sc;
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
 
-  fitter = m_util->VertexFitter();
+  fitter = m_util->getVertexFitter();
 
   return sc;
 }

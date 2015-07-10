@@ -7,6 +7,10 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2015-07-10 - Julian Wishahi
+ - Changed the names of the getters in ITaggerUtils to ensure backward 
+   compatibility.
+
 ! 2015-06-27 - Julian Wishahi
  - ITaggerUtils and TaggerUtils: added PVReFitter, LifetimeFitter, 
    DistanceCalculator, VertexFit, ParticleDescendants tools as members. These 

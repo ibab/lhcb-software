@@ -40,11 +40,11 @@ public:
 
   //----------------------------------------------------------------------------
   // acessors to fitters
-  const IPVReFitter*          PVReFitter() const { return m_PVReFitter; }
-  const ILifetimeFitter*      LifetimeFitter() const { return m_LifetimeFitter; }
-  const IVertexFit*           VertexFitter() const { return m_VertexFitter; }
-  const IDistanceCalculator*  DistanceCalculator() const { return m_DistanceCalculator; }
-  IParticleDescendants* ParticleDescendants() const { return m_ParticleDescendants; }
+  const IPVReFitter*          getPVReFitter() const { return m_PVReFitter; }
+  const ILifetimeFitter*      getLifetimeFitter() const { return m_LifetimeFitter; }
+  const IVertexFit*           getVertexFitter() const { return m_VertexFitter; }
+  const IDistanceCalculator*  getDistanceCalculator() const { return m_DistanceCalculator; }
+  IParticleDescendants*       getParticleDescendants() const { return m_ParticleDescendants; }
   
   //-------------------------------------------------------------
   StatusCode calcIP( const LHCb::Particle* axp,
