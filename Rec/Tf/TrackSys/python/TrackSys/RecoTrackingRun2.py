@@ -396,9 +396,14 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    # (not of the ones beforehand).
    addExtraInfo.DetectorList += ["EraseExtraInfo"]
    from Configurables import TrackEraseExtraInfo
-   GaudiSequencer("AddExtraInfoEraseExtraInfoSeq").Members += [ TrackEraseExtraInfo("TrackEraseExtraInfo") ]
 
-   
+   # erase extra info on Best tracks and on fitted Velo tracks (i.e. on everything that is saved on a DST)
+   eraseExtraInfoBest = TrackEraseExtraInfo("TrackEraseExtraInfoBest")
+   eraseExtraInfoFittedVelo = TrackEraseExtraInfo("TrackEraseExtraInfoFittedVelo")
+   eraseExtraInfoFittedVelo.InputLocation = "Rec/Track/FittedHLT1VeloTracks"
+
+   GaudiSequencer("AddExtraInfoEraseExtraInfoSeq").Members += [ eraseExtraInfoBest, eraseExtraInfoFittedVelo ]
+      
    
    
    ## Muon alignment tracks

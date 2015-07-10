@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-07-10 - Michel De Cian
+ - Erase ExtraInfo from the Fitted HLT1 Velo Track (in RecoTrackingRun2.py)
+
 ! 2015-06-23 Marco Cattaneo
  - In RecoTracking.py, remove treatment of fitted Velo tracks for obsolete Run 1
    RDST format
