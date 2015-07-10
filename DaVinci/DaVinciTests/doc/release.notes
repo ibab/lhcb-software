@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-07-10 - Julian Wishahi
+ - Updated the flavour tagging test script to use Stripping23 settings
+
 !======================= DaVinciTests v2r34 2015-07-08 =======================
 
 ! 2015-07-06 - Andrea Contu

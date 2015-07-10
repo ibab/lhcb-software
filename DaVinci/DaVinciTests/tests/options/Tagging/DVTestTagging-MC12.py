@@ -45,7 +45,7 @@ tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
 
 # Reco14
 from FlavourTagging.Tunings import TuneTool
-TuneTool(tag,"Reco14_2012") 
+TuneTool(tag,"Stripping23") 
 
 # Flavour tagging Checker:
 tagcheck = BTaggingChecker("BTaggingChecker")
