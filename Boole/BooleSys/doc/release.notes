@@ -3,8 +3,24 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v29r7>2015-07-10 Boole v29r7</A></H1><PRE>
+This version uses projects:
+ LCG_76root6 (ROOT 6.02.08), Gaudi v26r2, LHCb v38r7, Lbcom v16r6
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- New functionality
+  . Set SiPMResponse as ToolSvc property instead of private, to allow for 
+    setting properties (FTDigitisation v2r6)
+
+- Bug fixes
+  . Ignore CALIBOFF partition for simulation (DetCond v12r42) 
+  . LHCBGAUSS-481: Fix bug that caused only one monolayer per OT module to be
+    filled (OTDet v8r17)
+
 - Changes to tests
   . Remove sam.qms test suite, no longer used and not supported by CMake
+  . latestdb tests now pick up field101.* maps that were default for real data
+    in Reco14
 
 </PRE><H1><A NAME=v29r6>2015-06-01 Boole v29r6</A></H1><PRE>
 This version uses projects:
