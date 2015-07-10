@@ -4,6 +4,10 @@
 ! Purpose     : Distribution of parametrization data files
 !-----------------------------------------------------------------------------
 
+! 2015-07-10 - Julien Cogan
+- Add a new LUT (V7) for L0Muon pt. Computed with the alignment constant obtained
+with 350 k J/Psi candidates recorded after the TS.
+
 ! 2015-06-01 - Julien Cogan
 - Add a new LUT (V6) for L0Muon pt. Computed with the best knowledge of the Muon
 station position at this time (the muon stations have been repositioned following
