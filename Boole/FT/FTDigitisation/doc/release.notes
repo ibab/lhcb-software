@@ -4,6 +4,7 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+!========================= FTDigitisation v2r6 2015-07-10 =========================
 ! 2015-06-08 - Eric Cogneras
  - ntuple max sizes in FTNtupleMaker now changeable from joboption files.
 
