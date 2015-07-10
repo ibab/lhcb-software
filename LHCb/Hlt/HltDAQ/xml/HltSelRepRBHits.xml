@@ -62,6 +62,7 @@ Then sequences must be pushed back in the sequencial order.'
         type = 'void'
         desc = 'throw exception on access to non-allocated bank'
         const= 'TRUE'
+        access = 'PRIVATE'
         >
         <code>
           if( !m_location )
@@ -315,6 +316,7 @@ Then sequences must be pushed back in the sequencial order.'
         >
         <code>
           delete[] m_location;
+          m_location = nullptr;
         </code>
       </method>
 

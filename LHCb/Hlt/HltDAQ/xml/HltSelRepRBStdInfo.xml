@@ -170,6 +170,7 @@ Info can only be read and stored sequencially.'
         type = 'void'
         desc = 'throw exception on access to non-allocated bank'
         const= 'TRUE'
+        access = 'PRIVATE'
         >
         <code>
           if( !m_location )
@@ -328,6 +329,7 @@ Info can only be read and stored sequencially.'
         >
         <code>
           delete[] m_location;
+          m_location = nullptr;
         </code>
       </method>
 

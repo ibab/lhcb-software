@@ -135,6 +135,7 @@ by the CLID before using this insertor.
         type = 'void'
         desc = 'throw exception on access to non-allocated bank'
         const= 'TRUE'
+        access = 'PRIVATE'
         >
         <code>
           if( !m_location )
@@ -254,6 +255,7 @@ by the CLID before using this insertor.
         >
         <code>
           delete[] m_location;
+          m_location = nullptr;
         </code>
       </method>
 

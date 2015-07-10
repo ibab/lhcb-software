@@ -123,6 +123,7 @@ Never write into into the bank with iterator not at its end-of-the bank position
         type = 'void'
         desc = 'throw exception on access to non-allocated bank'
         const= 'TRUE'
+        access = 'PRIVATE'
         >
         <code>
           if( !m_location )
@@ -343,6 +344,7 @@ Never write into into the bank with iterator not at its end-of-the bank position
         >
         <code>
           delete[] m_location;
+          m_location = nullptr;
         </code>
       </method>
 

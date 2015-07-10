@@ -68,6 +68,7 @@ Sub-banks immediately follow the header.'
         type = 'void'
         desc = 'throw exception on access to non-allocated bank'
         const= 'TRUE'
+        access = 'PRIVATE'
         >
         <code>
           if( !m_location )
@@ -366,6 +367,7 @@ Sub-banks immediately follow the header.'
         >
         <code>
           delete[] m_location;
+          m_location = nullptr;
         </code>
       </method>
 
