@@ -965,24 +965,24 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
 
         from MuonID import ConfiguredMuonIDs
-        from Configurables import MuonRec, MuonIDAlg
+        from Configurables import MuonRec, MuonIDAlgLite
         from HltLine.HltLine import bindMembers
 
         cm                  = ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
 
-        HltMuonIDAlg_name   = self.__pidAlgosAndToolsPrefix()+"MuonIDAlg"
-        HltMuonIDAlg        = cm.configureMuonIDAlg(HltMuonIDAlg_name)
+        HltMuonIDAlg_name   = self.__pidAlgosAndToolsPrefix()+"MuonIDAlgLite"
+        HltMuonIDAlg        = cm.configureMuonIDAlgLite(HltMuonIDAlg_name)
         #The tracks to use
         tracks              = self.__hlt2StagedFastFit()
         #Enforce naming conventions
-        HltMuonIDAlg.TrackLocation          = tracks.outputSelection()
+        HltMuonIDAlg.TracksLocation          = tracks.outputSelection()
         HltMuonIDAlg.MuonIDLocation         = self.__muonIDLocation() #output
         HltMuonIDAlg.MuonTrackLocation      = self._trackifiedMuonIDLocation()
-        HltMuonIDAlg.MuonTrackLocationAll   = self._trackifiedAllMuonIDLocation()
+        #HltMuonIDAlg.MuonTrackLocationAll   = self._trackifiedAllMuonIDLocation()
         # CRJ : Disable FindQuality in HLT since it increases CPU time for MuonID by
         #       a factor 3-4
         # TODO: Do we want to keep this? Which difference does it make.
-        HltMuonIDAlg.FindQuality            = False
+        #HltMuonIDAlg.FindQuality            = False
 
         # Build the bindMembers
         bm_name         = self.__pidAlgosAndToolsPrefix()+"MuonIDSeq"

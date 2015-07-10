@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-07-10 - Francesco Dettori
+ - Changes in HltTracking/Hlt2Tracking.py in order to configure MuonIDAlgLite instead of MuonIDAlg (Muon/MuonID package)
+
 ! 2015-07-08 - Michael Kolpin
  - Changed MuonID definition in Hlt2ProbeTracking to be on par with Hlt2Tracking
 
