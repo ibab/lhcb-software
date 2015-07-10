@@ -134,17 +134,53 @@ def particles ( p , c ) :
     Get the particles from the decay tree, which satisfy certrain criteria
 
     >>> p = ...
-    >>> pions = getParticles ( p , 'pi+' == ABSID )
+    >>> pions = p.particles ( 'pi+' == ABSID )
     >>> for pion in pions :
     ...   print pion
 
     """
     return LoKi.Dicts.Extract.particles ( p , c )
 
-particles . __doc__ += "\n\n" + LoKi.Dicts.Extract.particles . __doc__  
+particles . __doc__ += "\n\n" + LoKi.Dicts.Extract.particles . __doc__
 
-getParticles = particles
-extract      = particles
+# =============================================================================
+## Get the particles from the decay tree, which satisfy certain criteria
+def protoparticles ( p , c ) :
+    """
+    Get the protoparticles from the decay tree, which satisfy certrain criteria
+
+    >>> p = ...
+    >>> pion_pps = p.protoparticles ( 'pi+' == ABSID )
+    >>> for pp in pions_pps :
+    ...   print pp
+
+    """
+    return LoKi.Dicts.Extract.protoParticles ( p , c )
+
+# =============================================================================
+## Get the tarcks from the decay tree, which satisfy certain criteria
+def tracks ( p , *c ) :
+    """
+    Get the tracks from the decay tree, which satisfy certrain criteria
+
+    >>> p = ...
+    >>> pion_trks = p.tracks ( 'pi+' == ABSID )
+    >>> for t in pions_trks :
+    ...   print t
+
+    """
+    return LoKi.Dicts.Extract.tracks ( p , *c )
+
+
+protoparticles . __doc__ += "\n\n" + LoKi.Dicts.Extract.particles . __doc__  
+
+
+getParticles      = particles
+getProtoParticles = protoparticles
+getTracks         = tracks 
+
+extract           = particles
+
 
 LHCb.Particle .   particles      = particles 
 LHCb.Particle . __particles__    =  particles 
@@ -154,6 +190,14 @@ LHCb.Particle .   extract        = particles
 LHCb.Particle . __extract__      =  particles 
 LHCb.Particle .   vertex         =  LHCb.Particle . endVertex   
 LHCb.Particle .   decayVertex    =  LHCb.Particle . endVertex   
+
+LHCb.Particle .   protoparticles = protoparticles 
+LHCb.Particle .   protoParticles = protoparticles
+LHCb.Particle .getProtoParticles = protoparticles
+
+LHCb.Particle .   tracks         = tracks 
+LHCb.Particle .getTracks         = tracks 
+
 
 # =============================================================================
 ## Count number of 'interesting' elements in the decay tree or container,
