@@ -1,5 +1,5 @@
-#ifndef ALIGNMENTMONITORINGHISTHELPER_H
-#define ALIGNMENTMONITORINGHISTHELPER_H
+#ifndef ALIGNMENT_ALIGNMENTMONITORING_HISTHELPER_H
+#define ALIGNMENT_ALIGNMENTMONITORING_HISTHELPER_H 1
 // ROOT
 #include "TCanvas.h"
 #include "TFile.h"
@@ -15,13 +15,13 @@ namespace Alignment
 {
   namespace AlignmentMonitoring
   {
-    class AlignmentMonitoringHistHelper
+    class HistHelper
     {
     public:
       // Constructors
-      AlignmentMonitoringHistHelper() {}
+      HistHelper() {}
       // Destructor
-      ~AlignmentMonitoringHistHelper() {}
+      ~HistHelper() {}
       
       // Methods
       TCanvas* getCanvas(const TString& name, const TString& title, int w=700, int h=500);

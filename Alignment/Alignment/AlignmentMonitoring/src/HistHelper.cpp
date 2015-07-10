@@ -1,4 +1,4 @@
-#include "AlignmentMonitoring/AlignmentMonitoringHistHelper.h"
+#include "AlignmentMonitoring/HistHelper.h"
 // ROOT
 #include "TString.h"
 #include "TH1.h"
@@ -19,9 +19,9 @@
 using namespace Alignment::AlignmentMonitoring;
 
 TCanvas*
-AlignmentMonitoringHistHelper::getCanvas(const TString& name,
-                                         const TString& title,
-                                         int w, int h)
+HistHelper::getCanvas(const TString& name,
+		      const TString& title,
+		      int w, int h)
 {
   TCanvas* rc= dynamic_cast<TCanvas*>(gROOT->GetListOfCanvases()->FindObject(name)) ;
   if(rc==0) rc = new TCanvas(name,title,w,h) ;
@@ -31,10 +31,10 @@ AlignmentMonitoringHistHelper::getCanvas(const TString& name,
 }
 
 void
-AlignmentMonitoringHistHelper::createPage(TCanvas* canvas,
-                                          const char* title,
-                                          int nx,
-                                          int ny)
+HistHelper::createPage(TCanvas* canvas,
+		       const char* title,
+		       int nx,
+		       int ny)
 {
   double titlepady = 0.95 ;
   canvas->Clear() ;
@@ -76,11 +76,11 @@ AlignmentMonitoringHistHelper::createPage(TCanvas* canvas,
 }
 
 TCanvas*
-AlignmentMonitoringHistHelper::createPage(const char* name,
-                                          const char* title,
-                                          int nx,
-                                          int ny,
-                                          int w, int h)
+HistHelper::createPage(const char* name,
+		       const char* title,
+		       int nx,
+		       int ny,
+		       int w, int h)
 {
   TCanvas* canvas = getCanvas(name,title,w,h) ;
   createPage(canvas,title,nx,ny) ;
@@ -88,7 +88,7 @@ AlignmentMonitoringHistHelper::createPage(const char* name,
 }
 
 TFile*
-AlignmentMonitoringHistHelper::getFile(const TString& filename)
+HistHelper::getFile(const TString& filename)
 {
   TFile* file(0) ;
   file = dynamic_cast<TFile*>(gROOT->GetListOfFiles()->FindObject(filename)) ;
@@ -99,9 +99,9 @@ AlignmentMonitoringHistHelper::getFile(const TString& filename)
 }
 
 TObject *
-AlignmentMonitoringHistHelper::getObject(const TString& filename,
-                                         const TString& directory,
-                                         const TString& hisname)
+HistHelper::getObject(const TString& filename,
+		      const TString& directory,
+		      const TString& hisname)
 {
   TFile* file = getFile(filename) ;
   TObject* h1(0) ;
@@ -121,8 +121,8 @@ AlignmentMonitoringHistHelper::getObject(const TString& filename,
 }
 
 TObject *
-AlignmentMonitoringHistHelper::getObject(const TString& filename,
-                                         const TString& name)
+HistHelper::getObject(const TString& filename,
+		      const TString& name)
 {
   
   int ipos = name.Last('/') ;
@@ -132,8 +132,8 @@ AlignmentMonitoringHistHelper::getObject(const TString& filename,
 }
 
 TH1*
-AlignmentMonitoringHistHelper::getH1(const TString& filename,
-                                     const TString& hisname)
+HistHelper::getH1(const TString& filename,
+		  const TString& hisname)
 {
   TH1* h1 = dynamic_cast<TH1*>(getObject(filename,hisname)) ;
   if(h1) {
@@ -143,8 +143,8 @@ AlignmentMonitoringHistHelper::getH1(const TString& filename,
 }
 
 TH2*
-AlignmentMonitoringHistHelper::getH2(const TString& filename,
-                                     const TString& hisname)
+HistHelper::getH2(const TString& filename,
+		  const TString& hisname)
 {
   TH2* h2 = dynamic_cast<TH2*>(getObject(filename,hisname)) ;
   if(h2) {
@@ -154,17 +154,17 @@ AlignmentMonitoringHistHelper::getH2(const TString& filename,
 }
 
 bool
-AlignmentMonitoringHistHelper::is1D( TH1* h1 ) {
-    return h1 && h1->GetNbinsY()==1 && dynamic_cast<TProfile*>(h1)==0 ;
+HistHelper::is1D( TH1* h1 ) {
+  return h1 && h1->GetNbinsY()==1 && dynamic_cast<TProfile*>(h1)==0 ;
 }
 
 bool
-AlignmentMonitoringHistHelper::isProfile1D( TH1* h1 ) {
+HistHelper::isProfile1D( TH1* h1 ) {
   return h1 && h1->GetNbinsY()==1 && dynamic_cast<TProfile*>(h1)!=0 ;
 }
 
 double
-AlignmentMonitoringHistHelper::max1D( const TH1& h1 ) {
+HistHelper::max1D( const TH1& h1 ) {
   int firstbin = h1.GetXaxis()->GetFirst() ;
   int lastbin  = h1.GetXaxis()->GetLast() ;
   double rc = -1e9 ;
@@ -176,7 +176,7 @@ AlignmentMonitoringHistHelper::max1D( const TH1& h1 ) {
 }
 
 double
-AlignmentMonitoringHistHelper::min1D( const TH1& h1 ) {
+HistHelper::min1D( const TH1& h1 ) {
   int firstbin = h1.GetXaxis()->GetFirst() ;
   int lastbin  = h1.GetXaxis()->GetLast() ;
   double rc = 1e9 ;
@@ -188,11 +188,11 @@ AlignmentMonitoringHistHelper::min1D( const TH1& h1 ) {
 }
 
 TH1*
-AlignmentMonitoringHistHelper::drawH1(TString filename,
-                                      TString hisname,
-                                      const char* drawopt,
-                                      int color,
-                                      bool normalize)
+HistHelper::drawH1(TString filename,
+		   TString hisname,
+		   const char* drawopt,
+		   int color,
+		   bool normalize)
 {
   TH1* h1 = getH1(filename,hisname) ;
   if(h1) {
@@ -213,10 +213,10 @@ AlignmentMonitoringHistHelper::drawH1(TString filename,
 
 
 TH1*
-AlignmentMonitoringHistHelper::drawH2(TString filename,
-                                      TString hisname,
-                                      const char* drawopt,
-                                      int color)
+HistHelper::drawH2(TString filename,
+		   TString hisname,
+		   const char* drawopt,
+		   int color)
 {
   TH1* h1 = getH1(filename,hisname) ;
   TH2* h2 = dynamic_cast<TH2*>(h1) ;
@@ -248,7 +248,7 @@ AlignmentMonitoringHistHelper::drawH2(TString filename,
 }
 
 int
-AlignmentMonitoringHistHelper::colorFromIndex(int index)
+HistHelper::colorFromIndex(int index)
 {
   int colors[] = {1,2,9,3,5,6,7} ;
   return colors[index] ;
@@ -256,10 +256,10 @@ AlignmentMonitoringHistHelper::colorFromIndex(int index)
 
 
 TH1*
-AlignmentMonitoringHistHelper::drawH1(const std::vector<TString>& files,
-                                      const TString& hisname,
-                                      TString drawopt,
-                                      bool normalize)
+HistHelper::drawH1(const std::vector<TString>& files,
+		   const TString& hisname,
+		   TString drawopt,
+		   bool normalize)
 {
   TH1* rc = drawH1(files[0],hisname,drawopt,colorFromIndex(0),false) ;
   if(rc ) {
@@ -322,9 +322,9 @@ AlignmentMonitoringHistHelper::drawH1(const std::vector<TString>& files,
 }
 
 TH1*
-AlignmentMonitoringHistHelper::drawH2(std::vector<TString> files,
-                                      TString hisname,
-                                      TString drawopt)
+HistHelper::drawH2(std::vector<TString> files,
+		   TString hisname,
+		   TString drawopt)
 {
   TH1* rc = drawH2(files[0],hisname,drawopt) ;
   for( unsigned int i=1; i<files.size(); ++i)

@@ -3,8 +3,10 @@
 
 // Include files
 #include "AlignmentMonitoring/AlignmentMonitoring.h"
-#include "AlignmentMonitoring/AlignmentMonitoringHistHelper.h"
 #include "AlignmentMonitoring/CompareConstants.h"
+#include "AlignmentMonitoring/HistHelper.h"
+#include "AlignmentMonitoring/MonitoringApplication.h"
+#include "AlignmentMonitoring/MonitoringPage.h"
 #include "AlignmentMonitoring/ParseConstants.h"
 #include "AlignmentMonitoring/Utilities.h"
 

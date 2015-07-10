@@ -1,8 +1,8 @@
-#ifndef ALIGNMENTMONITORING_H
-#define ALIGNMENTMONITORING_H
+#ifndef ALIGNMENT_ALIGNMENTMONITORING_ALIGNMENTMONITORING_H
+#define ALIGNMENT_ALIGNMENTMONITORING_ALIGNMENTMONITORING_H
 
 // USER
-#include "AlignmentMonitoringHistHelper.h"
+#include "HistHelper.h"
 // STL
 #include <map>
 #include <string>
@@ -49,7 +49,7 @@ namespace Alignment
       std::string m_inputFileName;
       std::map<std::string, int> m_mapWarnings;
       std::map<std::string, std::vector<double>> m_mapGausFitReference;
-      AlignmentMonitoringHistHelper m_hhelp;
+      HistHelper m_hhelp;
       bool m_verbose;
       std::map<std::string, TCanvas*> m_pages;
     };

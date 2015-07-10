@@ -7,8 +7,10 @@
   <class pattern = "std::map&lt;std::string,*&gt;" />
   <class pattern = "std::pair&lt;std::string,*&gt;" />
   <class name = "Alignment::AlignmentMonitoring::AlignmentMonitoring" />
-  <class name = "Alignment::AlignmentMonitoring::AlignmentMonitoringHistHelper" />
   <class name = "Alignment::AlignmentMonitoring::CompareConstants" />
+  <class name = "Alignment::AlignmentMonitoring::HistHelper" />
+  <class name = "Alignment::AlignmentMonitoring::MonitoringApplication" />
+  <class name = "Alignment::AlignmentMonitoring::MonitoringPage" />
   <class name = "Alignment::AlignmentMonitoring::ParseConstants" />
   <class name = "Alignment::AlignmentMonitoring::Utilities" />
 </lcgdict>

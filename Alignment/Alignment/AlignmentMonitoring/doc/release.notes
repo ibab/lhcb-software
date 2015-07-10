@@ -7,6 +7,8 @@
  - forgot CMakeLists.txt
  - added references
  - corrected cmt/requirements
+ - added Monitoring page and application classes
+ - changed name of histhelper class
 
 ! 2015-07-09 - Maurizio Martinelli
  - first import of the package
