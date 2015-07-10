@@ -48,8 +48,8 @@ namespace
     if ( std::string::npos != ldot )
     {
       return !pub ?
-        tool -> type () + "/" + std::string ( name , ldot ) :
-        tool -> type () + "/" + std::string ( name , ldot ) + ":PUBLIC" ;
+        tool -> type () + "/" + std::string ( name , ldot + 1 ) :
+        tool -> type () + "/" + std::string ( name , ldot + 1 ) + ":PUBLIC" ;
     }
     //
     return tool->type() ;
