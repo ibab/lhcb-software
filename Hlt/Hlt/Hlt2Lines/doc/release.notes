@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-07-11 - Francesco Dettori
+ - Aligning the DiMuon lines cuts to the ones in the settings to avoid confusions.
+
 ! 2015-07-08 - Michael Kolpin
  - Slightly tightened IP requirements on TrackEffDiMuon VeloMuon and MuonTT lines
 
