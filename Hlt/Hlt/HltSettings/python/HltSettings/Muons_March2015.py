@@ -2,12 +2,12 @@ from GaudiKernel.SystemOfUnits import GeV, mm, MeV
 
 class Muons_March2015(object) :
     """
-    Threshold settings for Hlt2 muon lines: setting for high lumi running in 2012
+    Threshold settings for Hlt2 muon lines
     
     WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
     
-    @author J. Albrecht
-    @date 2012-03-01
+    @author F. Dettori
+    @date 2015-07-01
     """
     
     __all__ = ( 'ActiveHlt2Lines' )
@@ -19,30 +19,28 @@ class Muons_March2015(object) :
         """
 
         lines = [
-
-            #'Hlt2MuonFromHLT1',
             'Hlt2SingleMuon',
-            #'Hlt2SingleMuonRateLimited',
             'Hlt2SingleMuonHighPT',
             'Hlt2SingleMuonVHighPT',
             'Hlt2SingleMuonLowPT',
 
             # control rate via: 1) mass: 120 --> 70,
-            # then rediscuss with beta_s DO NOT INCREASE PT!!
+            # DO NOT INCREASE PT!
             'Hlt2DiMuonJPsi',
             'Hlt2DiMuonJPsiHighPT',
             'Hlt2DiMuonPsi2S',
             'Hlt2DiMuonPsi2SHighPT',
+            
+            
             'Hlt2DiMuonB',
             'Hlt2DiMuonZ',
+            'Hlt2DiMuonSoft',
 
             # control rate via: DLS cut, dimuon PT
             'Hlt2DiMuonDetached',
             'Hlt2DiMuonDetachedJPsi',
             'Hlt2DiMuonDetachedHeavy',
             'Hlt2DiMuonDetachedPsi2S',
-
-            #'Hlt2DiMuonNoPV',#remove on request buy Dermot Morgan, May3, 2011
 
             # control rate via: prescale
             'Hlt2EWDiMuonDY1',
@@ -87,7 +85,7 @@ class Muons_March2015(object) :
                                             'MuPt'        :     0 * MeV,
                                             'VertexChi2'  :    25},
                    'B' :                   {'MinMass'     :  4700 * MeV,
-                                            'VertexChi2'  :    10},
+                                            'VertexChi2'  :    25},
                    'Z' :                   {'MinMass'     : 40000 * MeV,
                                             'Pt'          :     0 * MeV},
                    'Detached' :            {'IPChi2'      :    25,
@@ -98,6 +96,21 @@ class Muons_March2015(object) :
                                             'VertexChi2'  :    25,
                                             'IPChi2'      :     0,
                                             'DLS'         :     5},
+                   'Soft' :          {'IP'         :   0.3 * mm ,
+                                      'IPChi2Min'  :   1.5,
+                                      'IPChi2Max'  :   1500,
+                                      'TTHits'     :      -1,
+                                      'TRACK_TRGHOSTPROB_MAX': 0.4,
+                                      'MaxMass'    :   1000 * MeV,
+                                      'VertexChi2' :    25,
+                                      'Rho'        :     3,
+                                      'SVZ'        :   650,
+                                      'doca'       :   0.3,
+                                      'MinVDZ'     :     0,
+                                      'MinBPVDira' :     0,
+                                      'MaxIpDistRatio':  1./60,
+                                      'cosAngle'   :9.99998
+                                    },                    
                    'DetachedJPsi' :        {'DLS'         :     3},
                    'DetachedPsi2S' :       {'DLS'         :     3},
                    'Prescale'   : {'Hlt2DiMuon'        :  0,   
@@ -114,7 +127,7 @@ class Muons_March2015(object) :
 
         from Hlt2Lines.SingleMuon.Lines import SingleMuonLines
         d.update({SingleMuonLines : {'Prescale'   : { 'Hlt2SingleMuon'      : 0.5
-                                                    , 'Hlt2SingleHighPT'    : 1.0
+                                                    , 'Hlt2SingleMuonHighPT'    : 1.0
                                                     , 'Hlt2SingleMuonLowPT' : 0.002}
                                     }
                  })

@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-07-11 - Francesco Dettori
+ - Adding Hlt2DiMuonSoft in HltSettings/Muons_March2015.py
+ - Fixing the tuning of Hlt1 muon lines 
+
 ! 2015-07-09 - Sascha Stahl
  - Update Commissioning_AllHlt2Lines_2015.py and merge Commissioning_Physics_2015 
    with Commissioning_Physics_25ns_2015.

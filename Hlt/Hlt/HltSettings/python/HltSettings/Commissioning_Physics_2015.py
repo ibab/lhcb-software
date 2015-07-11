@@ -143,7 +143,7 @@ class Commissioning_Physics_2015( object ):
                                                , 'DiMuonLowMass_VxDOCA'     :  0.2
                                                , 'DiMuonLowMass_VxChi2'     :   25
                                                , 'DiMuonLowMass_P'          : 3000
-                                               , 'DiMuonLowMass_PT'         :  300
+                                               , 'DiMuonLowMass_PT'         :    0
                                                , 'DiMuonLowMass_TrChi2'     :    4
                                                , 'DiMuonLowMass_M'          :    0.
                                                , 'DiMuonLowMass_IPChi2'     :    4.
@@ -151,7 +151,7 @@ class Commissioning_Physics_2015( object ):
                                                , 'DiMuonHighMass_VxDOCA'    :  0.2
                                                , 'DiMuonHighMass_VxChi2'    :   25
                                                , 'DiMuonHighMass_P'         : 6000
-                                               , 'DiMuonHighMass_PT'        :    0
+                                               , 'DiMuonHighMass_PT'        :  300
                                                , 'DiMuonHighMass_TrChi2'    :    3
                                                , 'DiMuonHighMass_M'         : 2700
                                                , 'DiMuonHighMass_GEC'       : 'Loose'
@@ -159,7 +159,7 @@ class Commissioning_Physics_2015( object ):
                                                , 'DiMuonNoL0_VxChi2'     :   25.
                                                , 'DiMuonNoL0_P'          : 3000.
                                                , 'DiMuonNoL0_PT'         :    0.
-                                               , 'DiMuonNoL0_TrChi2'     :    2.
+                                               , 'DiMuonNoL0_TrChi2'     :    3.
                                                , 'DiMuonNoL0_M'          :    0.
                                                , 'DiMuonNoL0_IPChi2'     :    4.
                                                , 'DiMuonNoL0_GEC'        : 'Loose'
