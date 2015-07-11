@@ -280,7 +280,11 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
       # timing?
       # global conf?
       tracklists  += ["Rec/Track/Match"]
-         
+
+   ## avoid running both downstream algos
+   if "Downstream" in trackAlgs and "PatLongLivedTracking" in trackAlgs :
+      raise RuntimeError("Cannot run both PatDownstream and PatLongLivedTracking at once")
+   
    ## Downstream
    if "Downstream" in trackAlgs :
       track.DetectorList += [ "DownstreamPat" ]
@@ -293,6 +297,14 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
          PatDownstream("PatDownstream").TimingMeasurement = True;
       tracklists += ["Rec/Track/Downstream"]
 
+   ## PatLongLivedTracking (aka improved Downstream)
+   if "PatLongLivedTracking" in trackAlgs :
+      track.DetectorList += [ "DownstreamPat" ]
+      from Configurables import PatLongLivedTracking
+      GaudiSequencer("TrackHLT2DownstreamPatSeq").Members += [ PatLongLivedTracking("PatLongLivedTracking") ];
+      if TrackSys().timing() :
+         PatLongLivedTracking("PatLongLivedTracking").TimingMeasurement = True;
+      tracklists += ["Rec/Track/Downstream"]
 
 
    fit = ProcessPhase("FitHLT2");

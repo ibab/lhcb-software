@@ -23,20 +23,20 @@ class TrackSys(LHCbConfigurableUser):
     # Steering options
     __slots__ = {
         "ExpertHistos": False # set to True to write out expert histos
-       ,"SpecialData"  : []   # Various special data processing options.
-       ,"ExpertTracking":  []  # list of expert Tracking options, see KnownExpertTracking
-       ,"TrackPatRecAlgorithms": []  # List of track pattern recognition algorithms to run
-       ,"TrackExtraInfoAlgorithms": []  # List of track 'extra info' algorithms to run
-       ,"WithMC":       False # set to True to use MC truth
-       ,"OutputType": "" # DST type, currently not used
-       ,"FilterBeforeFit": True  #Clone kill before fit of the Best container only. False = fit before clone killing
-       ,"DataType": "2011" # propagated from Brunel(), used to determine which monitors to run
-       ,"ForceNewSeq" : False  # use new tracking sequence independent of DataType
-       ,"ForceOldSeq" : False  # use old tracking sequence independent of DataType
-       ,"GlobalCuts"  : {}     # global event cuts for tracking
-       ,"OldCloneKiller" : False # Switch between old and new (in 2012) clone killers
-       ,"Simulation" : False # True if using simulated data/SIMCOND
-       ,"TrackTypes" : [] 
+        ,"SpecialData"  : []   # Various special data processing options.
+        ,"ExpertTracking":  []  # list of expert Tracking options, see KnownExpertTracking
+        ,"TrackPatRecAlgorithms": []  # List of track pattern recognition algorithms to run
+        ,"TrackExtraInfoAlgorithms": []  # List of track 'extra info' algorithms to run
+        ,"WithMC":       False # set to True to use MC truth
+        ,"OutputType": "" # DST type, currently not used
+        ,"FilterBeforeFit": True  #Clone kill before fit of the Best container only. False = fit before clone killing
+        ,"DataType": "2011" # propagated from Brunel(), used to determine which monitors to run
+        ,"ForceNewSeq" : False  # use new tracking sequence independent of DataType
+        ,"ForceOldSeq" : False  # use old tracking sequence independent of DataType
+        ,"GlobalCuts"  : {}     # global event cuts for tracking
+        ,"OldCloneKiller" : False # Switch between old and new (in 2012) clone killers
+        ,"Simulation" : False # True if using simulated data/SIMCOND
+        ,"TrackTypes" : [] 
         }
     
     ## Possible expert options
@@ -52,7 +52,7 @@ class TrackSys(LHCbConfigurableUser):
     ## Default track pattern recognition algorithms to run in 2011
     DefaultPatRecAlgorithms    = ["FastVelo","Forward","PatSeed","PatMatch","Downstream","VeloTT"]
     ## Default track pattern recognition algorithms to run in Run II
-    DefaultPatRecAlgorithmsRun2    = ["FastVelo","ForwardHLT1","ForwardHLT2","PatSeed","PatMatch","Downstream","VeloTT"]
+    DefaultPatRecAlgorithmsRun2    = ["FastVelo","ForwardHLT1","ForwardHLT2","PatSeed","PatMatch","PatLongLivedTracking","VeloTT"]
     ## Default global cuts from 2011
     DefaultGlobalCuts          = { 'Velo':6000, 'IT':999999, 'OT':15000 }
     ## Global cuts for pA, from 2013
@@ -65,7 +65,10 @@ class TrackSys(LHCbConfigurableUser):
     CosmicExpertTracking      = ["noDrifttimes"] 
     ## DefaultTrackTypes
     DefaultTrackTypes = ["Velo","Upstream","Forward","Seeding","Match","Downstream"]
-        
+
+    ## Available Pat Reco algorithms
+    AvailablePatRecoAlgos = [ "Velo", "FastVelo", "VeloTT", "Forward", "ForwardHLT1","ForwardHLT2","TsaSeed", "PatSeed", "Match", "PatMatch", "Downstream", "PatLongLivedTracking" ]
+
     ## @brief Check the options are sane etc.
     def defineOptions(self):
         
@@ -82,6 +85,11 @@ class TrackSys(LHCbConfigurableUser):
           if track not in self.DefaultTrackTypes:
               log.warning("Using non-default track type: '%s'" %track)
               log.warning("Default track types are: %s" %self.DefaultTrackTypes)
+
+      for algo in self.getProp( "TrackPatRecAlgorithms" ):
+          if algo not in self.AvailablePatRecoAlgos:
+              log.warning("Using non-default pat reco algorithm: '%s'" %algo)
+              log.warning("Default pat reco algorithms are: %s" %self.AvailablePatRecoAlgos)
 
                   
       if "cosmics" not in self.getProp("SpecialData"):

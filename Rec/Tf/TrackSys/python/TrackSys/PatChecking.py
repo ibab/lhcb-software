@@ -54,7 +54,7 @@ def PatChecking():
       TrackAssociator("AssocMatch").TracksInContainer      = "Rec/Track/Match";
       TrackEffChecker("Match").GhostClassification = "LongGhostClassification"
        
-   if "Downstream" in trackAlgs :
+   if "Downstream" in trackAlgs or "PatLongLivedTracking" in trackAlgs:
       GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocDownstream") ]
       GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("Downstream") ]
       TrackAssociator("AssocDownstream").TracksInContainer = "Rec/Track/Downstream";
