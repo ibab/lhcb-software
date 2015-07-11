@@ -26,7 +26,7 @@ namespace Alignment
     {
     public:
       // Constructors
-      AlignmentMonitoring(const char* fName);
+      AlignmentMonitoring(const char* filename);
       // Destructor
       ~AlignmentMonitoring() {}
       
@@ -40,7 +40,7 @@ namespace Alignment
       
       // Fitters
       //  TFitResult GaussFit(TH1* h);
-      void LoadGausFitReferences(const char* fName);
+      void LoadGausFitReferences(const char* fName="");
       void PrintWarnings();
       WarningLevel CheckFitPar(double x, double xerr, double xmin, double xmax);
       

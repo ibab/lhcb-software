@@ -5,6 +5,7 @@
 
 ! 2015-07-11 - Maurizio Martinelli
  - fixed a compilation error
+ - added an example for the monitoring
 
 ! 2015-07-10 - Maurizio Martinelli
  - forgot CMakeLists.txt

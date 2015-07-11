@@ -1,5 +1,6 @@
 #include "AlignmentMonitoring/AlignmentMonitoring.h"
 // STL
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 // ROOT
@@ -13,11 +14,11 @@
 using namespace Alignment::AlignmentMonitoring;
 
 // Constructor
-AlignmentMonitoring::AlignmentMonitoring(const char* fName)
- : m_inputFileName(fName)
+AlignmentMonitoring::AlignmentMonitoring(const char* filename)
+ : m_inputFileName(filename)
  , m_verbose(false)
 {
-  LoadGausFitReferences("files/GausFitReferences.txt");
+  LoadGausFitReferences();
 }
 
 // Methods
@@ -141,11 +142,13 @@ AlignmentMonitoring::CheckFitPar(double x, double xerr, double xmin, double xmax
 }
 
 void 
-AlignmentMonitoring::LoadGausFitReferences(const char* fName)
+AlignmentMonitoring::LoadGausFitReferences(const char* filename)
 {
   Utilities ut;
   std::string line;
-  std::ifstream ifile(fName);
+  if ( std::string(filename).size() == 0 && std::string(std::getenv("ALIGNMENTMONITORINGROOT")).size() == 0)
+    std::cout << "ERROR(AlignmentMonitoring::LoadGausFitReference): ALIGNMENTMONITORINGROOT environment variable is not set! Cannot find default references.\n";
+  std::ifstream ifile( std::string(filename).size() == 0 ? (std::getenv("ALIGNMENTMONITORINGROOT")+std::string("/files/GausFitReferences.txt")).c_str() : filename);
   if (ifile.is_open()) {
     while ( std::getline (ifile,line) ) {
       std::vector<std::string> refs = ut.splitString(line,"\t");

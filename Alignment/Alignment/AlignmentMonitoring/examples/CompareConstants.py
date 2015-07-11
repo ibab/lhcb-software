@@ -1,3 +1,5 @@
+#!/bin/python
+
 from GaudiPython import gbl
 AlMon = gbl.Alignment.AlignmentMonitoring
 
