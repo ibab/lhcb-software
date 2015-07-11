@@ -44,7 +44,10 @@
   <class name    = "Gaudi::Math::Apolonios2"              />
   <class name    = "Gaudi::Math::BifurcatedGauss"         />
   <class name    = "Gaudi::Math::SinhAsinh"               />
+  <class name    = "Gaudi::Math::JohnsonSU"               />
   <class name    = "Gaudi::Math::GramCharlierA"           />
+  <class name    = "Gaudi::Math::Tsallis"                 />
+  <class name    = "Gaudi::Math::QGSM"                    />
   <class name    = "Gaudi::Math::PhaseSpace2"             />
   <class name    = "Gaudi::Math::PhaseSpace3"             />
   <class name    = "Gaudi::Math::PhaseSpaceLeft"          />

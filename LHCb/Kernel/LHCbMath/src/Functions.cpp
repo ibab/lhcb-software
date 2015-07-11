@@ -256,7 +256,6 @@ namespace
    */
   const double      s_LN10 = std::log ( 10 ) ;
   // ==========================================================================
-  // ==========================================================================
   // Constants
   // ==========================================================================
   /** @var s_SQRTPIHALF
@@ -1082,6 +1081,30 @@ namespace
   {
     //
     const Gaudi::Math::Apolonios2* f = (Gaudi::Math::Apolonios2*) params ;
+    //
+    return (*f)(x) ;
+  }
+  // ==========================================================================
+  /** helper function for integration of Tsallis shape 
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2015-07-11
+   */
+  double tsallis_GSL ( double x , void* params )
+  {
+    //
+    const Gaudi::Math::Tsallis* f = (Gaudi::Math::Tsallis*) params ;
+    //
+    return (*f)(x) ;
+  }
+  // ==========================================================================
+  /** helper function for integration of QGSM shape 
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2015-07-11
+   */
+  double qgsm_GSL ( double x , void* params )
+  {
+    //
+    const Gaudi::Math::QGSM* f = (Gaudi::Math::QGSM*) params ;
     //
     return (*f)(x) ;
   }
@@ -7752,6 +7775,117 @@ double Gaudi::Math::SinhAsinh::integral ( const double low  ,
   return cdf ( high ) - cdf ( low ) ;
 }
 
+
+// ============================================================================
+// Johnson-SU
+// ============================================================================
+/*  constructor with all parameters
+ *  @param xi     \f$\xi\f$-parameter       \f$-\inf<\xi<+\inf\f$
+ *  @param lambda \f$\lambda\f$-parameter   \f$   0<\lambda<+\inf\f$
+ *  @param delta  \f$\delta\f$-parameter    \f$   0<\delta<+\inf\f$
+ *  @param gamma  \f$\gamma\f$-parameter    \f$-\inf<\epsilon<+\inf\f$
+ */
+// ============================================================================
+Gaudi::Math::JohnsonSU::JohnsonSU  
+( const double xi      ,   // related to location 
+  const double lambda  ,   // related to variance
+  const double delta   ,   // shape 
+  const double gamma   )  // shape 
+  : std::unary_function<double,double> () 
+  , m_xi      (            xi) 
+  , m_lambda  ( std::abs ( lambda ) ) 
+  , m_delta   ( std::abs ( delta  ) ) 
+  , m_gamma   (            gamma    ) 
+{}
+// ============================================================================
+// Destructor
+// ============================================================================
+Gaudi::Math::JohnsonSU::~JohnsonSU(){}
+// ============================================================================
+// get the mean value
+// ============================================================================
+double Gaudi::Math::JohnsonSU::mean() const 
+{
+  const double d = 
+    std::exp   ( 0.5 / ( m_delta * m_delta ) ) * 
+    std::sinh  ( m_gamma / m_delta           ) ;
+  //
+  return m_xi - m_lambda * d ;
+}
+// ============================================================================
+// get the variance
+// ============================================================================
+double Gaudi::Math::JohnsonSU::variance () const 
+{
+  const double d1 = std::exp ( 1.0 / ( m_delta * m_delta ) );
+  //
+  const double d2 = ( d1 - 1 ) * ( d1 * std::cosh ( 2  *m_gamma / m_delta ) + 1 ) ;
+  //
+  return 0.5 * m_lambda * m_lambda * d2 ;
+}
+// ============================================================================
+bool Gaudi::Math::JohnsonSU::setXi( const double value ) 
+{
+  if ( s_equal ( value , m_xi ) ) { return false ; }
+  m_xi = value ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::JohnsonSU::setGamma( const double value ) 
+{
+  if ( s_equal ( value , m_gamma ) ) { return false ; }
+  m_gamma = value ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::JohnsonSU::setLambda ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;  
+  if ( s_equal ( value_ , m_lambda ) ) { return false ; }
+  m_lambda = value_ ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::JohnsonSU::setDelta ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;  
+  if ( s_equal ( value_ , m_delta ) ) { return false ; }
+  m_delta = value_ ;
+  return true ;
+}
+// ============================================================================
+// evaluate JohnsonSU-distributions
+// ============================================================================
+double Gaudi::Math::JohnsonSU::pdf        ( const double x ) const 
+{
+  // get z 
+  const long double dx  = ( x - m_xi ) / m_lambda ;
+  const long double z   = m_gamma + m_delta * std::asinh ( dx ) ;
+  //
+  const long double res = std::exp ( -0.5 * z * z ) / std::sqrt ( 1 + dx * dx ) ;
+  //
+  return res * m_delta / ( m_lambda * s_SQRT2PI ) ;
+}
+// ============================================================================
+// evaluate JohnsonSU-distributions
+// ============================================================================
+double Gaudi::Math::JohnsonSU::cdf        ( const double x ) const 
+{
+  // get z 
+  const long double dx  = ( x - m_xi ) / m_lambda ;
+  const long double z   = m_gamma + m_delta * std::asinh ( dx ) ;
+  //
+  return gsl_cdf_ugaussian_P ( z ) ;
+}
+// ============================================================================
+// get the integral
+// ============================================================================
+double Gaudi::Math::JohnsonSU::integral 
+( const double low  ,
+  const double high ) const 
+{ return  s_equal ( low , high ) ? 0.0 : ( cdf ( high ) - cdf ( low ) ) ; }
+
+
 // ============================================================================
 // Argus
 // ============================================================================
@@ -9165,6 +9299,239 @@ double Gaudi::Math::TwoExpoPositive::integral
   //
   return ( r1 - r2 ) / _moment_ ( alpha() , delta () , 0 ) ;
 }
+// ============================================================================
+
+
+
+
+
+// ============================================================================
+// Tsallis function 
+// ============================================================================
+/*  constructor from all parameters 
+ *  @param mass particle mass  (M>0)
+ *  @param n    n-parameter    (N>1)  
+ *  @param T    T-parameter    (T>0)
+ */
+// ============================================================================
+Gaudi::Math::Tsallis::Tsallis 
+( const double mass  , 
+  const double n     ,  
+  const double T     ) 
+  : std::unary_function<double,double>() 
+  , m_mass ( std::abs ( mass ) ) 
+  , m_n    ( std::abs ( n    ) )
+  , m_T    ( std::abs ( T    ) )
+  , m_workspace() 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::Tsallis::~Tsallis(){}
+// ============================================================================
+// set new value for mass
+// ============================================================================
+bool Gaudi::Math::Tsallis::setMass ( const double value )
+{
+  const double avalue = std::abs ( value ) ;
+  if ( s_equal ( m_mass , avalue ) ) { return false ; }
+  m_mass = avalue ;
+  return true ;
+}
+// ============================================================================
+// set new value for n-parameter
+// ============================================================================
+bool Gaudi::Math::Tsallis::setN ( const double value )
+{
+  const double avalue = std::abs ( value ) ;
+  if ( s_equal ( m_n , avalue ) ) { return false ; }
+  m_n = avalue ;
+  return true ;
+}
+// ============================================================================
+// set new value for T-parameter
+// ============================================================================
+bool Gaudi::Math::Tsallis::setT ( const double value )
+{
+  const double avalue = std::abs ( value ) ;
+  if ( s_equal ( m_T , avalue ) ) { return false ; }
+  m_T = avalue ;
+  return true ;
+}
+// ============================================================================
+//  get Tsallis PDF  
+// ============================================================================
+double Gaudi::Math::Tsallis::pdf ( const double x ) const 
+{ return x <= 0 ? 0.0 : x * std::pow ( 1.0 + eTkin ( x ) / ( m_T * m_n ) , -m_n ) ; }
+// ============================================================================
+//  get Tsallis integrals  
+// ============================================================================
+double Gaudi::Math::Tsallis::integral 
+( const double low  , 
+  const double high ) const
+{
+  if      ( s_equal ( low , high ) ) { return 0 ; }
+  else if ( high < low             ) { return - integral ( high , low ) ; }
+  else if ( high <= 0              ) { return 0 ; }
+  //
+  const double _low = std::max ( low , 0.0 ) ;
+  //
+  // split too large intervals
+  if ( 0 < m_mass ) 
+  {
+    // split points 
+    static const std::array<int,5> s_split = {{ 1 ,  3  , 10 , 20 , 50 }} ;
+    for( const auto p : s_split )
+    {
+      const double middle = m_mass * p ;
+      if (  _low < middle && middle < high ) 
+      { return integral ( _low , middle ) + integral ( middle , high ) ; }
+    }
+  }
+  //
+  // use GSL to evaluate the integral
+  //
+  Sentry sentry ;
+  //
+  gsl_function F                ;
+  F.function = &tsallis_GSL ;
+  F.params   = const_cast<Tsallis*> ( this ) ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //
+  const int ierror = gsl_integration_qag
+    ( &F                ,            // the function
+      _low   , high     ,            // low & high edges
+      s_PRECISION       ,            // absolute precision
+      s_PRECISION       ,            // relative precision
+      s_SIZE            ,            // size of workspace
+      GSL_INTEG_GAUSS31 ,            // integration rule
+      workspace ( m_workspace ) ,    // workspace
+      &result           ,            // the result
+      &error            ) ;          // the error in result
+  //
+  if ( ierror )
+  { gsl_error ( "Gaudi::Math::Tsallis::QAG" , __FILE__ , __LINE__ , ierror ) ; }
+  //
+  return result ;
+  //
+}
+
+
+
+
+
+// ============================================================================
+// QGSM function 
+// ============================================================================
+/*  constructor from all parameters 
+ *  @param mass particle mass  (M>0)
+ *  @param n    n-parameter    (N>1)  
+ *  @param T    T-parameter    (T>0)
+ */
+// ============================================================================
+Gaudi::Math::QGSM::QGSM 
+( const double mass , 
+  const double b    ) 
+  : std::unary_function<double,double>() 
+  , m_mass ( std::abs ( mass ) ) 
+  , m_b    ( std::abs ( b    ) )
+  , m_workspace() 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::QGSM::~QGSM(){}
+// ============================================================================
+// set new value for mass
+// ============================================================================
+bool Gaudi::Math::QGSM::setMass ( const double value )
+{
+  const double avalue = std::abs ( value ) ;
+  if ( s_equal ( m_mass , avalue ) ) { return false ; }
+  m_mass = avalue ;
+  return true ;
+}
+// ============================================================================
+// set new value for b-parameter
+// ============================================================================
+bool Gaudi::Math::QGSM::setB ( const double value )
+{
+  const double avalue = std::abs ( value ) ;
+  if ( s_equal ( m_b , avalue ) ) { return false ; }
+  m_b = avalue ;
+  return true ;
+}
+// ============================================================================
+//  get QGSM PDF  
+// ============================================================================
+double Gaudi::Math::QGSM::pdf ( const double x ) const 
+{ return x <= 0 ? 0.0 : x * std::exp ( -m_b * eTkin ( x ) ) ; }
+// ============================================================================
+//  get QGSM integrals  
+// ============================================================================
+double Gaudi::Math::QGSM::integral 
+( const double low  , 
+  const double high ) const
+{
+  if      ( s_equal ( low , high ) ) { return 0 ; }
+  else if ( high < low             ) { return - integral ( high , low ) ; }
+  else if ( high <= 0              ) { return 0 ; }
+  //
+  const double _low = std::max ( low , 0.0 ) ;
+  //
+  // split too large intervals
+  if ( 0 < m_mass ) 
+  {
+    // split points 
+    static const std::array<int,5> s_split = {{ 1 ,  3  , 10 , 20 , 50 }} ;
+    for( const auto p : s_split )
+    {
+      const double middle = m_mass * p ;
+      if (  _low < middle && middle < high ) 
+      { return integral ( _low , middle ) + integral ( middle , high ) ; }
+    }
+  }
+  //
+  // use GSL to evaluate the integral
+  //
+  Sentry sentry ;
+  //
+  gsl_function F                ;
+  F.function = &qgsm_GSL ;
+  F.params   = const_cast<QGSM*> ( this ) ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //
+  const int ierror = gsl_integration_qag
+    ( &F                ,            // the function
+      _low   , high     ,            // low & high edges
+      s_PRECISION       ,            // absolute precision
+      s_PRECISION       ,            // relative precision
+      s_SIZE            ,            // size of workspace
+      GSL_INTEG_GAUSS31 ,            // integration rule
+      workspace ( m_workspace ) ,    // workspace
+      &result           ,            // the result
+      &error            ) ;          // the error in result
+  //
+  if ( ierror )
+  { gsl_error ( "Gaudi::Math::QGSM::QAG" , __FILE__ , __LINE__ , ierror ) ; }
+  //
+  return result ;
+  //
+}
+
+
+
+
+
+
+
+
+
+
 // ============================================================================
 // The END
 // ============================================================================

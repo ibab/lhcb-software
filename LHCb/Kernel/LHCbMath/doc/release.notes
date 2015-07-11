@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-07-11 - Vanya Belyaev
+ - functions.h/cpp - small update 
+
 ! 2015-06-02 - Marco Clemencic
  - Minor change to the fix to similarity timing test.
 
