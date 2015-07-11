@@ -24,8 +24,7 @@ DECLARE_ALGORITHM_FACTORY(HCDigitMonitor)
 //=============================================================================
 HCDigitMonitor::HCDigitMonitor(const std::string& name, ISvcLocator* pSvcLocator)
     : GaudiHistoAlg(name, pSvcLocator),
-      m_odin(NULL),
-      m_parAdc("", -0.5, 1023.5, 64) {
+      m_odin(NULL) {
 
   declareProperty("DigitLocation", m_digitLocation = LHCb::HCDigitLocation::Default);
   declareProperty("CrateB", m_crateB = 0);
@@ -35,7 +34,8 @@ HCDigitMonitor::HCDigitMonitor(const std::string& name, ISvcLocator* pSvcLocator
   declareProperty("ChannelsB2", m_channelsB2);
   declareProperty("ChannelsF1", m_channelsF1);
   declareProperty("ChannelsF2", m_channelsF2);
-  declareProperty("ParametersADC", m_parAdc);
+  declareProperty("VariableBins", m_variableBins = false);
+  declareProperty("RandomiseADC", m_randomiseAdc = true);
 }
 
 //=============================================================================
@@ -57,6 +57,7 @@ StatusCode HCDigitMonitor::initialize() {
 
   // Setup the binning and ADC correction.
   m_adcCorrection.resize(1024, 0.);
+  m_adcStep.resize(1024, 0);
   unsigned int adc = 0;
   unsigned int step = 1;
   m_edges.clear();
@@ -66,6 +67,7 @@ StatusCode HCDigitMonitor::initialize() {
     else if (adc == 256) step = 8;
     else if (adc == 512) step = 16; 
     m_adcCorrection[adc] = 0.5 * (step - 1.);
+    m_adcStep[adc] = step;
     adc += step;   
   } 
   m_edges.push_back(1023.5);
@@ -75,9 +77,9 @@ StatusCode HCDigitMonitor::initialize() {
   const unsigned int nStations = 5;
   for (unsigned int i = 0; i < nStations; ++i) {
     // Book histograms for ADC sum distributions for each station.
-    auto bins = 4 * m_parAdc.bins();
-    const double low = m_parAdc.lowEdge();
-    const double high = 4 * m_parAdc.highEdge();
+    const unsigned int bins = m_variableBins ? 256 : 4096;
+    const double low = -0.5;
+    const double high = 4095.5;
     const std::string st = stations[i];
     std::string name = "ADC/Sum/" + st;
     m_hAdcSum.push_back(book1D(name, st, low, high, bins));
@@ -102,12 +104,24 @@ StatusCode HCDigitMonitor::initialize() {
   for (unsigned int i = 0; i < nChannels; ++i) {
     // Book histograms for ADC distributions for each channel.
     const std::string ch = "Channel" + std::to_string(i);
-    m_hAdcB.push_back(book1D("ADC/B/" + ch, ch, m_edges));
-    m_hAdcF.push_back(book1D("ADC/F/" + ch, ch, m_edges));
-    m_hAdcEvenB.push_back(book1D("ADC/B/Even/" + ch, ch, m_edges));
-    m_hAdcEvenF.push_back(book1D("ADC/F/Even/" + ch, ch, m_edges));
-    m_hAdcOddB.push_back(book1D("ADC/B/Odd/" + ch, ch, m_edges));
-    m_hAdcOddF.push_back(book1D("ADC/F/Odd/" + ch, ch, m_edges));
+    if (m_variableBins) {
+      m_hAdcB.push_back(book1D("ADC/B/" + ch, ch, m_edges));
+      m_hAdcF.push_back(book1D("ADC/F/" + ch, ch, m_edges));
+      m_hAdcEvenB.push_back(book1D("ADC/B/Even/" + ch, ch, m_edges));
+      m_hAdcEvenF.push_back(book1D("ADC/F/Even/" + ch, ch, m_edges));
+      m_hAdcOddB.push_back(book1D("ADC/B/Odd/" + ch, ch, m_edges));
+      m_hAdcOddF.push_back(book1D("ADC/F/Odd/" + ch, ch, m_edges));
+    } else {
+      const double low = -0.5;
+      const double high = 1023.5;
+      const unsigned int bins = 1024;
+      m_hAdcB.push_back(book1D("ADC/B/" + ch, ch, low, high, bins));
+      m_hAdcF.push_back(book1D("ADC/F/" + ch, ch, low, high, bins));
+      m_hAdcEvenB.push_back(book1D("ADC/B/Even/" + ch, ch, low, high, bins));
+      m_hAdcEvenF.push_back(book1D("ADC/F/Even/" + ch, ch, low, high, bins));
+      m_hAdcOddB.push_back(book1D("ADC/B/Odd/" + ch, ch, low, high, bins));
+      m_hAdcOddF.push_back(book1D("ADC/F/Odd/" + ch, ch, low, high, bins));
+    }
     setAxisLabels(m_hAdcB[i], "ADC", "Entries");
     setAxisLabels(m_hAdcF[i], "ADC", "Entries");
     setAxisLabels(m_hAdcEvenB[i], "ADC", "Entries");
@@ -116,15 +130,31 @@ StatusCode HCDigitMonitor::initialize() {
     setAxisLabels(m_hAdcOddF[i], "ADC", "Entries");
   }
   for (unsigned int i = 0; i < 4; ++i) {
+    // Histogram range and number of bins (in case of uniform binning).
+    const double low = -0.5;
+    const double high = 1023.5;
+    const unsigned int bins = 1024;
     // Book histograms for ADC distributions for each quadrant.
     const std::string qu = "Quadrant" + std::to_string(i);
     for (unsigned int j = 0; j < nStations; ++j) {
       std::string name = "ADC/" + stations[j] + "/" + qu;
-      m_hAdcQuadrant.push_back(book1D(name, qu, m_edges));
+      if (m_variableBins) {
+        m_hAdcQuadrant.push_back(book1D(name, qu, m_edges));
+      } else {
+        m_hAdcQuadrant.push_back(book1D(name, qu, low, high, bins));
+      }
       name = "ADC/" + stations[j] + "/Even/" + qu;
-      m_hAdcQuadrantEven.push_back(book1D(name, qu, m_edges));
+      if (m_variableBins) {
+        m_hAdcQuadrantEven.push_back(book1D(name, qu, m_edges));
+      } else {
+        m_hAdcQuadrantEven.push_back(book1D(name, qu, low, high, bins));
+      }
       name = "ADC/" + stations[j] + "/Odd/" + qu;
-      m_hAdcQuadrantOdd.push_back(book1D(name, qu, m_edges));
+      if (m_variableBins) {
+        m_hAdcQuadrantOdd.push_back(book1D(name, qu, m_edges));
+      } else {
+        m_hAdcQuadrantOdd.push_back(book1D(name, qu, low, high, bins));
+      }
       const unsigned int index = i * nStations + j;
       setAxisLabels(m_hAdcQuadrant[index], "ADC", "Entries");
       setAxisLabels(m_hAdcQuadrantEven[index], "ADC", "Entries");
@@ -158,6 +188,11 @@ StatusCode HCDigitMonitor::initialize() {
   mapChannels(m_channelsB2, true, 2);
   mapChannels(m_channelsF1, false, 1);
   mapChannels(m_channelsF2, false, 2);
+
+  // Setup the random number generator.
+  if (!m_uniform.initialize(randSvc(), Rndm::Flat(0., 2.))) {
+    return Error("Unable to initialize random number generator.", StatusCode::FAILURE);
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -180,13 +215,19 @@ StatusCode HCDigitMonitor::execute() {
   if (!digits) {
     return Error("No digits in " + m_digitLocation, StatusCode::FAILURE);
   }
-  std::vector<unsigned int> sum = {0, 0, 0, 0, 0};
   const unsigned int nStations = 5;
+  std::vector<double> sum(nStations, 0.);
   // Loop over the digits.
   for (LHCb::HCDigit* digit : *digits) {
     const unsigned int crate = digit->cellID().crate();
     const unsigned int channel = digit->cellID().channel();
-    const double adc = digit->adc() + m_adcCorrection[digit->adc()];
+    double adc = digit->adc();
+    if (m_randomiseAdc) {
+      const double step = m_adcStep[digit->adc()];
+      if (step > 1) adc += int(m_uniform.shoot() * step); 
+    } else {
+      adc += m_adcCorrection[digit->adc()];
+    }
     unsigned int station = 0;
     unsigned int quadrant = 0;
     unsigned int offset = 0;
@@ -248,6 +289,7 @@ StatusCode HCDigitMonitor::execute() {
 //=============================================================================
 StatusCode HCDigitMonitor::finalize() {
 
+  if (!m_variableBins) return GaudiHistoAlg::finalize();
   const unsigned int nChannels = 64;
   for (unsigned int i = 0; i < nChannels; ++i) {
     scale(m_hAdcB[i]);

@@ -9,6 +9,7 @@
 // Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/IEventTimeDecoder.h"
+#include "GaudiKernel/RndmGenerators.h"
 
 /** @class HCDigitMonitor HCDigitMonitor.h
  *
@@ -60,9 +61,6 @@ class HCDigitMonitor : public GaudiHistoAlg {
   std::vector<unsigned int> m_quadrantB;
   std::vector<unsigned int> m_quadrantF;
 
-  /// Parameters for ADC distribution histograms
-  Gaudi::Histo1DDef m_parAdc;
-
   /// ADC distributions of all channels
   std::vector<AIDA::IHistogram1D*> m_hAdcB;
   std::vector<AIDA::IHistogram1D*> m_hAdcF;
@@ -94,9 +92,18 @@ class HCDigitMonitor : public GaudiHistoAlg {
   std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantEven;
   std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantOdd;
 
+  /// Random number generator
+  Rndm::Numbers m_uniform;
+  /// Flag whether to use variable binning in ADC histograms.
+  bool m_variableBins;
+  /// Flag whether to randomise the ADC values.
+  bool m_randomiseAdc;
+
   /// Additional term added to the ADC to get the correct average.
   std::vector<double> m_adcCorrection;
+  std::vector<unsigned int> m_adcStep;
 
+  /// Scale histograms (in case of variable binning).
   void scale(AIDA::IHistogram1D* h);
   void mapChannels(const std::vector<unsigned int>& channels,
                    const bool bwd, const unsigned int station);
