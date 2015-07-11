@@ -5,7 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-07-11 - Heinrich Schindler
- - Add randomisation of ADC values and BX ID range (by Victor).
+ - Add randomisation of ADC values and BX ID range (from Victor).
+ - Add monitoring base class and HCClockScan (from Victor).
 
 ! 2015-06-29 - Heinrich Schindler
  - Use variable ADC binning. 
