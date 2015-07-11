@@ -240,6 +240,10 @@ HltANNSvc().Hlt1SelectionID = {
     # 50K+ : used by Hlt2
 }
 
+# Hlt2 selection IDs. The one for Hlt2Global is hardcoded in the SelReportsMaker.
+# The others are selections that are not created by trigger lines.
+if "Hlt2Global" not in HltANNSvc().Hlt2SelectionID :
+    HltANNSvc().Hlt2SelectionID.update( { "Hlt2Global" : 2 } )
 HltANNSvc().Hlt2SelectionID.update({'PV3D'                : 50103,
                                     'Hlt2RecSummary'      : 65000 } )
 

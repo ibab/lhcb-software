@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-07-08 - Roel Aaij
+ - Improve integration of Hlt2ProbeTracking configuration.
+
 ! 2015-07-07 - Roel Aaij
  - Add Hlt2RecSummary back in to HltInit.py
 

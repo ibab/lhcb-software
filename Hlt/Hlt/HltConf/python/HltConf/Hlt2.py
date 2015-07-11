@@ -24,13 +24,21 @@ globals().update( ( cfg.__name__, cfg ) for cfg in _hlt2linesconfs )
 # The tracking configurations
 #
 from HltTracking.Hlt2Tracking import Hlt2Tracking
+from HltTracking.Hlt2ProbeTracking import Hlt2ProbeTracking
 #
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
 
+from HltTracking.Hlt2ProbeTrackingConfigurations import (Hlt2MuonTTTracking,
+                                                         Hlt2VeloMuonTracking,
+                                                         Hlt2FullDownstreamTracking)
+
 class Hlt2Conf(LHCbConfigurableUser):
     __used_configurables__ = [ (Hlt2Tracking, "Hlt2LongTracking"),
-                               (Hlt2Tracking, "Hlt2DownstreamTracking")
+                               (Hlt2Tracking, "Hlt2DownstreamTracking"),
+                               (Hlt2ProbeTracking, "Hlt2MuonTTTracking"),
+                               (Hlt2ProbeTracking, "Hlt2VeloMuonTracking"),
+                               (Hlt2ProbeTracking, "Hlt2FullDownstreamTracking")
                                ] + _hlt2linesconfs
 
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
@@ -82,7 +90,10 @@ class Hlt2Conf(LHCbConfigurableUser):
     def configureReconstruction(self):
 
         definedTrackings = [ Hlt2BiKalmanFittedDownstreamTracking()
-                           , Hlt2BiKalmanFittedForwardTracking() ]
+                           , Hlt2BiKalmanFittedForwardTracking()
+                           , Hlt2MuonTTTracking()
+                           , Hlt2VeloMuonTracking()
+                           , Hlt2FullDownstreamTracking()]
 
         # And now we have to, for each of the configurables we just created,
         # tell it the data type and tell it to use all the Hlt2 lines...
@@ -91,7 +102,8 @@ class Hlt2Conf(LHCbConfigurableUser):
         from HltTracking.Hlt2TrackingConfigurations import setDataTypeForTracking
         for thistracking in definedTrackings :
             setDataTypeForTracking(thistracking,self.getProp("DataType"))
-            if self.getProp('Hlt2ForwardMaxVelo') : thistracking.Hlt2ForwardMaxVelo = self.getProp("Hlt2ForwardMaxVelo")
+            if self.getProp('Hlt2ForwardMaxVelo') and hasattr(thistracking, 'Hlt2ForwardMaxVelo'):
+                 thistracking.Hlt2ForwardMaxVelo = self.getProp("Hlt2ForwardMaxVelo")
 
 ###################################################################################
 #
