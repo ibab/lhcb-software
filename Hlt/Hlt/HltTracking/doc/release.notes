@@ -4,14 +4,18 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-07-08 - Roel Aaij
+ - Create separate file to define Hlt2ProbeTracking configurations.
+
 ! 2015-07-10 - Francesco Dettori
- - Changes in HltTracking/Hlt2Tracking.py in order to configure MuonIDAlgLite instead of MuonIDAlg (Muon/MuonID package)
+ - Changes in HltTracking/Hlt2Tracking.py in order to configure MuonIDAlgLite
+   instead of MuonIDAlg (Muon/MuonID package)
 
 ! 2015-07-08 - Michael Kolpin
  - Changed MuonID definition in Hlt2ProbeTracking to be on par with Hlt2Tracking
 
 ! 2015-06-30 - Sascha Stahl
- - Hlt2Tracking and Hlt2RecoConf: Added option to apply ghost probability cut in 
+ - Hlt2Tracking and Hlt2RecoConf: Added option to apply ghost probability cut in
    TrackBestTrackCreator directly.
 
 !========================= HltTracking v13r9 2015-06-28 =========================

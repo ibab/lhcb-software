@@ -35,7 +35,7 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
     # First of all the dependencies and the slots
     #
     #############################################################################################
-    __slots__ = { "DataType"                        : '2012' 
+    __slots__ = { "DataType"                        : '2012'
                 , "ProbeTrack"                      : "MuonTT"  #Define probe track type
                 , "Prefix"                          : "Hlt2"   # Why should we need this? It's never changed
                 }
@@ -156,8 +156,8 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         from Configurables import ( ChargedProtoParticleAddMuonInfo
                                    , ChargedProtoCombineDLLsAlg
                                    , MuonIDAlg
-				   , ChargedProtoParticleMaker
-				   , DelegatingTrackSelector
+                                   , ChargedProtoParticleMaker
+                                   , DelegatingTrackSelector
 				   )
         from MuonID	      import ConfiguredMuonIDs
 
