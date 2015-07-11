@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-07-11 - Roel Aaij
+ - Add (hardcoded in SelReportsMaker) value of 2 for Hlt2Global back in to
+   HltInit.py
+
 ! 2015-07-08 - Roel Aaij
  - Improve integration of Hlt2ProbeTracking configuration.
 
