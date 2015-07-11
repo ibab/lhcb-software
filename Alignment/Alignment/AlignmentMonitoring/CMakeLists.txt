@@ -9,7 +9,7 @@ gaudi_depends_on_subdirs(GaudiAlg
 find_package(GSL)
 find_package(PythonLibs) 
 find_package(Boost COMPONENTS program_options REQUIRED)
-find_package(ROOT COMPONENTS Core Tree RIO Hist TreePlayer Graf Graf3d
+find_package(ROOT COMPONENTS Core Tree RIO Hist TreePlayer Graf Graf3d Postscript
                              Gpad Matrix MathCore MathMore RooFitCore RooFit
                              RooStats TMVA)
 
