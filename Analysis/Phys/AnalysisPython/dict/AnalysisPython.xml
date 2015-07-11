@@ -79,7 +79,10 @@
   <class name = "Analysis::Models::BetaPrime"          />
   <class name = "Analysis::Models::Landau"             />
   <class name = "Analysis::Models::SinhAsinh"          />
+  <class name = "Analysis::Models::JohnsonSU"          />
   <class name = "Analysis::Models::Argus"              />
+  <class name = "Analysis::Models::Tsallis"            />
+  <class name = "Analysis::Models::QGSM"               />
   <class name = "Analysis::Models::TwoExpos"           />
   <class name = "Analysis::Models::BifurcatedGauss"    />
   <class name = "Analysis::Models::GenGaussV1"         />

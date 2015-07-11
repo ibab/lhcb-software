@@ -5222,6 +5222,101 @@ Double_t Analysis::Models::SinhAsinh::analyticalIntegral
 // ============================================================================
 // constructor from all parameters 
 // ============================================================================
+Analysis::Models::JohnsonSU::JohnsonSU
+( const char*          name    , 
+  const char*          title   ,
+  RooAbsReal&          x       ,
+  RooAbsReal&          xi      ,
+  RooAbsReal&          lam     ,
+  RooAbsReal&          delta   ,
+  RooAbsReal&          gamma   )
+  : RooAbsPdf ( name , title ) 
+    //
+  , m_x       ( "x"       , "Observable"    , this , x       ) 
+  , m_xi      ( "xi"      , "mu/location"   , this , xi      ) 
+  , m_lambda  ( "lambda"  , "lambda/scale"  , this , lam     ) 
+  , m_delta   ( "delta"   , "delta/shape"   , this , delta   ) 
+  , m_gamma   ( "gamma"   , "gamma/shape"   , this , gamma   ) 
+    //
+  , m_johnsonSU  ( 0 , 1 , 1 , 0 )  
+{
+  setPars() ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::JohnsonSU::JohnsonSU
+( const Analysis::Models::JohnsonSU&  right , 
+  const char*                         name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x       ( "x"       , this , right.m_x       ) 
+  , m_xi      ( "xi"      , this , right.m_xi      )
+  , m_lambda  ( "sigma"   , this , right.m_lambda  )
+  , m_delta   ( "delta"   , this , right.m_delta   )
+  , m_gamma   ( "gamma"   , this , right.m_gamma   )
+    //
+  , m_johnsonSU ( right.m_johnsonSU ) 
+{
+  setPars () ;
+}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::JohnsonSU::~JohnsonSU(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::JohnsonSU*
+Analysis::Models::JohnsonSU::clone( const char* name ) const 
+{ return new Analysis::Models::JohnsonSU ( *this , name) ; }
+// ============================================================================
+void Analysis::Models::JohnsonSU::setPars () const 
+{
+  //
+  m_johnsonSU.setXi       ( m_xi      ) ;
+  m_johnsonSU.setLambda   ( m_lambda  ) ;
+  m_johnsonSU.setDelta    ( m_delta   ) ;
+  m_johnsonSU.setGamma    ( m_gamma   ) ;
+  //
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::JohnsonSU::evaluate() const 
+{
+  //
+  setPars () ;
+  //
+  return m_johnsonSU ( m_x ) ;
+}
+// ============================================================================
+Int_t Analysis::Models::JohnsonSU::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::JohnsonSU::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  setPars () ;
+  //
+  return m_johnsonSU.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+}
+// ============================================================================
+
+
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
 Analysis::Models::Landau::Landau
 ( const char*          name   , 
   const char*          title  ,
@@ -5393,6 +5488,186 @@ Double_t Analysis::Models::Argus::analyticalIntegral
   setPars () ;
   //
   return m_argus.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+}
+// ============================================================================
+
+
+
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::Tsallis::Tsallis
+( const char*           name      , 
+  const char*           title     ,
+  RooAbsReal&           x         , 
+  RooAbsReal&           n         ,   // parameter N 
+  RooAbsReal&           T         ,   // parameter T
+  RooAbsReal&           mass      )   // particle mass (fixed)
+  : RooAbsPdf ( name , title ) 
+    //
+  , m_x       ( "x"      , "Observable"  , this , x      ) 
+  , m_n       ( "n"      , "shape"       , this , n      ) 
+  , m_T       ( "T"      , "temperature" , this , T      ) 
+  , m_mass    ( "m"      , "mass"        , this , mass   ) 
+    //
+  , m_tsallis  ( 0 , 10 , 1 ) 
+{
+  setPars() ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::Tsallis::Tsallis
+( const Analysis::Models::Tsallis& right ,
+  const char*                      name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x       ( "x"  , this , right.m_x       ) 
+  , m_n       ( "n"  , this , right.m_n       )
+  , m_T       ( "T"  , this , right.m_T       )
+  , m_mass    ( "m"  , this , right.m_mass    )
+    //
+  , m_tsallis (               right.m_tsallis ) 
+{
+  setPars () ;
+}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::Tsallis::~Tsallis () {}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Tsallis*
+Analysis::Models::Tsallis::clone( const char* name ) const 
+{ return new Analysis::Models::Tsallis ( *this , name) ; }
+// ============================================================================
+void Analysis::Models::Tsallis::setPars () const 
+{
+  //
+  m_tsallis.setMass  ( m_mass ) ;
+  m_tsallis.setN     ( m_n    ) ;
+  m_tsallis.setT     ( m_T    ) ;
+  //
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Tsallis::evaluate() const 
+{
+  //
+  setPars () ;
+  //
+  return m_tsallis ( m_x ) ;
+}
+// ============================================================================
+Int_t Analysis::Models::Tsallis::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::Tsallis::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  setPars () ;
+  //
+  return m_tsallis.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+}
+// ============================================================================
+
+
+
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::QGSM::QGSM
+( const char*           name      , 
+  const char*           title     ,
+  RooAbsReal&           x         , 
+  RooAbsReal&           b         ,   // parameter b 
+  RooAbsReal&           mass      )   // particle mass (fixed)
+  : RooAbsPdf ( name , title ) 
+    //
+  , m_x       ( "x"      , "Observable"  , this , x      ) 
+  , m_b       ( "b"      , "slope"       , this , b      ) 
+  , m_mass    ( "m"      , "mass"        , this , mass   ) 
+    //
+  , m_qgsm  ( 0 , 1 ) 
+{
+  setPars() ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::QGSM::QGSM
+( const Analysis::Models::QGSM&    right ,
+  const char*                      name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x    ( "x"  , this , right.m_x    ) 
+  , m_b    ( "b"  , this , right.m_b    )
+  , m_mass ( "m"  , this , right.m_mass )
+    //
+  , m_qgsm (               right.m_qgsm ) 
+{
+  setPars () ;
+}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::QGSM::~QGSM () {}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::QGSM*
+Analysis::Models::QGSM::clone( const char* name ) const 
+{ return new Analysis::Models::QGSM ( *this , name) ; }
+// ============================================================================
+void Analysis::Models::QGSM::setPars () const 
+{
+  //
+  m_qgsm.setMass  ( m_mass ) ;
+  m_qgsm.setB     ( m_b    ) ;
+  //
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::QGSM::evaluate() const 
+{
+  //
+  setPars () ;
+  //
+  return m_qgsm ( m_x ) ;
+}
+// ============================================================================
+Int_t Analysis::Models::QGSM::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::QGSM::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  setPars () ;
+  //
+  return m_qgsm.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
 }
 // ============================================================================
 
