@@ -261,6 +261,7 @@ void VPlot::add1dPlot(VCustomPlot * vcp, VPlottable* plottable) {
     QCPScatterStyle ss(QCPScatterStyle::ssDisc, Qt::blue, 6);
     vcp->m_qcp->graph()->setScatterStyle(ss);
     vcp->m_qcp->graph()->setPen(QPen(Qt::blue));
+    vcp->m_qcp->graph()->setLineStyle(QCPGraph::lsNone);
   }
 
   if (plottable->m_plottableStyle == 1) {

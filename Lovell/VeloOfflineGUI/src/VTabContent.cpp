@@ -17,24 +17,12 @@ void VTabContent::drawPlots() {
   m_plotLayout->setVerticalSpacing(2);
   setLayout(m_plotLayout);
 
-  // Decide on the number of plots.
-  unsigned int nx, ny;
-  if (m_plots.size() < 5) {
-    nx = 2;
-    ny = 2;
-  }
-
-  else {
-    nx = 3;
-    ny = 3;
-  }
-
 
   // Add the plots.
   for (unsigned int i = 0; i<m_plots.size(); i++) {
     unsigned int row, column;
-    if (m_plotFillDirection == 0) {row = i / nx; column = i % nx;}
-    else {row = i % ny; column = i / ny;}
+    if (m_plotFillDirection == 0) {row = i / m_layoutX; column = i % m_layoutX;}
+    else {row = i % m_layoutX; column = i / m_layoutX;}
     m_plotLayout->addWidget(m_plots[i], row, column, 1, 1);
     m_plots[i]->draw();
   }

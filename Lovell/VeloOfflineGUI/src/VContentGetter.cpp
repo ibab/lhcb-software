@@ -508,6 +508,22 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
     const rapidjson::Value &tab = itr->value;
     tabInfo.push_back(tab["title"].GetString());
     tabInfo.push_back("Top");
+
+    // Layout
+    std::string layoutX, layoutY;
+    if (tab.HasMember("layout")) {
+			std::stringstream ssX, ssY;
+			ssX << tab["layout"][0].GetDouble();
+			ssY << tab["layout"][1].GetDouble();
+			layoutX = ssX.str();
+			layoutY = ssY.str();
+		}
+		else {
+			layoutX = "1";
+			layoutY = "1";
+		}
+    tabInfo.push_back(layoutX);
+    tabInfo.push_back(layoutY);
     ops->push_back(tabInfo);
 
     if (tab.HasMember("plots")) {
@@ -517,16 +533,20 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
     		std::vector<std::string> plotInfo;
     		const rapidjson::Value &plot = plots[i];
         std::string parentTabName;
-        if (tab.HasMember("layout")) parentTabName = tab["title"].GetString();
+        std::string layoutX, layoutY;
+        if (tab.HasMember("layout")) {
+        	parentTabName = tab["title"].GetString();
+        }
         else {
           parentTabName = plot["title"].GetString();
           std::vector<std::string> tabInfo2;
           tabInfo2.push_back("Tab");
           tabInfo2.push_back(plot["title"].GetString());
           tabInfo2.push_back(tab["title"].GetString());
+          tabInfo2.push_back("1");
+          tabInfo2.push_back("1");
           ops->push_back(tabInfo2);
         }
-
     		plotInfo.push_back("Plot");
     		plotInfo.push_back(plot["title"].GetString());
     		plotInfo.push_back(parentTabName);
@@ -571,6 +591,7 @@ void VContentGetter::findChildren(VTabContent * parentTab,
     if ((*iop)[0] != "Tab" || (*iop)[0].substr(0, 1) == "#") continue;
     if ((*iop)[2] == parentTab->m_title) {
       VTabContent * tab = new VTabContent((*iop)[1], parentTab);
+      tab->setPlotLayout(atoi((*iop)[3].c_str()), atoi((*iop)[4].c_str()));
       tab->m_depth = depth;
       allTabs->push_back(tab);
       findChildren(tab, allTabs, ops, depth+1);
