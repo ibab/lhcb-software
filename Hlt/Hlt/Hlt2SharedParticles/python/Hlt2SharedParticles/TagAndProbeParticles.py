@@ -15,15 +15,21 @@ from Configurables import FilterDesktop
 from Configurables import CombinedParticleMaker, BestPIDParticleMaker, NoPIDsParticleMaker, TrackSelector
 from Configurables import ProtoParticleMUONFilter
 #
-# These are all based on unfitted tracks
+# These are all based on fitted tracks
 #
-from HltTracking.Hlt2ProbeTracking import Hlt2ProbeTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking, Hlt2BiKalmanFittedDownstreamTracking
 Hlt2BiKalmanFittedForwardTracking   			= Hlt2BiKalmanFittedForwardTracking()
 Hlt2BiKalmanFittedDownstreamTracking   			= Hlt2BiKalmanFittedDownstreamTracking()
-Hlt2MuonTTTracking = Hlt2ProbeTracking('Hlt2MuonTTTracking',ProbeTrack='MuonTT')
-Hlt2VeloMuonTracking = Hlt2ProbeTracking('Hlt2VeloMuonTracking',ProbeTrack='VeloMuon')
-Hlt2FullDownstreamTracking = Hlt2ProbeTracking('Hlt2FullDownstreamTracking',ProbeTrack='FullDownstream')
+
+# Tag and probe tracking configurations
+from HltTracking.Hlt2ProbeTrackingConfigurations import (Hlt2MuonTTTracking,
+                                                         Hlt2VeloMuonTracking,
+                                                         Hlt2FullDownstreamTracking)
+
+Hlt2MuonTTTracking = Hlt2MuonTTTracking()
+Hlt2VeloMuonTracking = Hlt2VeloMuonTracking()
+Hlt2FullDownstreamTracking = Hlt2FullDownstreamTracking()
+
 ##########################################################################
 #
 # Charged protoparticles -> pulls all the pid

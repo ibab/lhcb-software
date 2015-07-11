@@ -4,6 +4,10 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-07-08 - Roel Aaij
+ - Use module that defines Hlt2ProbeTracking configurations instead of instantiating them
+   here.
+
 !========================= Hlt2SharedParticles v7r6p2 2015-06-28 =========================
 
 ! 2015-06-28- V. Gligorov
@@ -12,7 +16,7 @@
 !========================= Hlt2SharedParticles v7r6p1 2015-05-22 =========================
 
 ! 2015-05-03 - Simone Stracka
- - Fixed resolved eta option file. 
+ - Fixed resolved eta option file.
 
 !========================= Hlt2SharedParticles v7r6 2015-04-28 =========================
 
@@ -21,7 +25,7 @@
  - Fix bad output selection of AllPiO.
 
 ! 2015-04-16 - Simone Stracka
- - Enlarged mass window for resolved pi0. Added resolved eta. 
+ - Enlarged mass window for resolved pi0. Added resolved eta.
 
 ! 2015-04-16 - Sascha Stahl
  - Fix last commit. Had unintentionally removed all pids from BiKalmanFittedChargedCaloProtoMaker.
