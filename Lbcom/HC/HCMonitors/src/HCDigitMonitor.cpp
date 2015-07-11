@@ -36,6 +36,8 @@ HCDigitMonitor::HCDigitMonitor(const std::string& name, ISvcLocator* pSvcLocator
   declareProperty("ChannelsF2", m_channelsF2);
   declareProperty("VariableBins", m_variableBins = false);
   declareProperty("RandomiseADC", m_randomiseAdc = true);
+  declareProperty("MinBX", m_bxMin = 0);
+  declareProperty("MaxBX", m_bxMax = 10000); 
 }
 
 //=============================================================================
@@ -54,7 +56,7 @@ StatusCode HCDigitMonitor::initialize() {
 
   // Get ODIN.
   m_odin = tool<IEventTimeDecoder>("OdinTimeDecoder", "OdinDecoder", this);
-
+ 
   // Setup the binning and ADC correction.
   m_adcCorrection.resize(1024, 0.);
   m_adcStep.resize(1024, 0);
@@ -208,6 +210,8 @@ StatusCode HCDigitMonitor::execute() {
     return Error("Cannot retrieve ODIN", StatusCode::SUCCESS);
   }
   const unsigned int bxid = odin->bunchId();
+  // Skip events with out-of-range bunch-crossing ID. 
+  if (bxid < m_bxMin || bxid > m_bxMax) return StatusCode::SUCCESS;
   const bool even = (bxid % 2 == 0);
 
   // Grab the digits.

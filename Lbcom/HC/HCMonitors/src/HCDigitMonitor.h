@@ -103,6 +103,11 @@ class HCDigitMonitor : public GaudiHistoAlg {
   std::vector<double> m_adcCorrection;
   std::vector<unsigned int> m_adcStep;
 
+  /// Smallest BX ID to be included in the plots.
+  unsigned int m_bxMin;
+  /// Highest BX ID to be included in the plots.
+  unsigned int m_bxMax;
+
   /// Scale histograms (in case of variable binning).
   void scale(AIDA::IHistogram1D* h);
   void mapChannels(const std::vector<unsigned int>& channels,
