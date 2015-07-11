@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-07-11 - Vanya Belyaev
+ - update 
+
 ! 2015-07-08 - Vanya Belyaev
  - add function "slice/slices" by Albert Bursche 
    to get  numpy-slice(s) of variables 

@@ -3,7 +3,7 @@
 # =============================================================================
 # $Id$
 # =============================================================================
-## @file FitSpeicifModels.py
+## @file FitSpecificModels.py
 #
 #  A set of predefined ready-to-use shapes and PDFs 
 #

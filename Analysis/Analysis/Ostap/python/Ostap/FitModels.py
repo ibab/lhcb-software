@@ -161,6 +161,11 @@ __all__ = (
     'ExpoPol2Dsym_pdf', ## Symmetric version of above
     'Spline2Dsym_pdf' , ## Symmetric 2D positive spline 
     #
+    ## models for Pt-spectra fitting
+    #
+    'Tsallis_pdf'     , ## useful model for fitting pT-spectra 
+    'QGSM_pdf'        , ## useful model for fitting pT-spectra
+    # 
     ## helpers
     #
     'H1D_dset'        , ## convertor of 1D-histogram to dataset 

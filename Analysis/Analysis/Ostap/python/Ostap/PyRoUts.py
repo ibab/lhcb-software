@@ -4748,7 +4748,8 @@ def _lw_graph_ ( histo , func ) :
     ## use splines:
     >>> spline = histo.(p,i,d)spline( .... ) 
     >>> graph  = histo.lw_graph ( spline[2] )
-    
+    >>> histo.Draw('e1')
+    >>> graph.Draw('e1p same')    
     """
     
     #
@@ -4765,35 +4766,40 @@ def _lw_graph_ ( histo , func ) :
         ibin  = item[0]
         x     = item[1]
         y     = item[2]
-            
-        xmx   = x.value() + x.error()        
-        xmn   = x.value() - x.error()
+
+        yv    = y.value()
+        ye    = y.error()
+        
+        xv    = x.value() 
+        xe    = x.error()
+        
+        xmx   = xv + xe 
+        xmn   = xv - xe 
 
         #
         ##  solve the equation f(x) = 1/dx*int(f,xmin,xmax)
         #
 
-        ##  int(f,xmin,xmax)
-        fint  = integrate.quad ( lambda x : float ( func ( x ) ) ,
-                                 x.value() - x.error() ,
-                                 x.value() + x.error() )
+        ##  1) calculate int(f,xmin,xmax)
+        fint  = integrate.quad ( lambda x : float ( func ( x ) ) , xmn , xmx ) 
+
+        ## bin-width 
+        dx    = 2.0 * xe 
         
-        dx    = 2.0 * x.error()
+        fx    = float ( fint[0]/dx  ) 
         
-        fx    = fint[0]/dx 
+        fxmin = float ( func ( xmn ) ) 
+        fxmax = float ( func ( xmx ) ) 
         
-        fxmin = float ( func( xmn ) ) 
-        fxmax = float ( func( xmx ) ) 
-        
-        if ( fxmin - fx ) * ( fxmax - fx ) >= 0 :
-            logger.warning('Lafferty-Wyatt graph: no valid point is found!')
+        if 0 <= ( fxmin - fx ) * ( fxmax - fx ) : 
+            logger.warning('Lafferty-Wyatt graph: invalid point: %s ' % x )
             r0 = x.value()
         else :
             ##  solve the equation f(x) - 1/dx*int(f,xmin,xmax) = 0 
             r0 = optimize.brentq ( lambda x : (float(func(x))-fx)  ,
                                    xmn               ,
                                    xmx               ,
-                                   xtol = 0.001 * dx ) 
+                                   xtol = 0.005 * dx )
             
         ## fill graph
             
@@ -4802,8 +4808,8 @@ def _lw_graph_ ( histo , func ) :
         xep  = xmx - r0
         xen  =       r0 - xmn
         
-        graph.SetPoint      ( ip , r0  ,  y.value()  )
-        graph.SetPointError ( ip , xen , xep , y.error() , y.error() )
+        graph.SetPoint      ( ip , r0  ,  yv           )
+        graph.SetPointError ( ip , xen , xep , ye, ye  )
 
     return graph
 

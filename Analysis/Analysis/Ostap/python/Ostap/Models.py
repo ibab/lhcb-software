@@ -221,7 +221,107 @@ def sp_integrate_2D_ ( pdf   ,
     func = pdf.function()
     return func.sp_integrate_2D ( xmin , xmax , ymin , ymax , *args , **kwargs ) 
 
-    
+
+# =============================================================================
+## get the mean value of variable, considering function to be PDF 
+#  @code 
+#  >>> fun = ...
+#  >>> mean = fun.mean()
+#  >>> mean = fun.mean( xmin = 10 , xmax = 50 )
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-07-11
+def sp_mean ( func , xmin = None , xmax = None ) :
+    """
+    Get the mean-value for the distribution using scipy/numpy
+    >>> fun = ...
+    >>> mean = fun.mean()
+    >>> mean = fun.mean( xmin = 10 , xmax = 50 )
+    """
+    ##
+    import numpy
+    ##
+    if   isinstance  ( xmin , (float,int,long) ) : xmn =  float ( xmin            ) 
+    elif hasattr     ( func ,'GetXmin' )         : xmn =  float ( func.GetXmin () )
+    elif hasattr     ( func ,'xmin'    )         : xmn =  float ( func.xmin    () ) 
+    else                                         : xmn = -numpy.inf
+    ##
+    if   isinstance  ( xmax , (float,int,long) ) : xmx =  float ( xmax            )
+    elif hasattr     ( func ,'GetXmax' )         : xmx =  float ( func.GetXmax () ) 
+    elif hasattr     ( func ,'xmax'    )         : xmx =  float ( func.xmax    () )
+    else                                         : xmx = +numpy.inf
+
+    ## 
+    from  scipy import integrate
+    ##  1) calculate int(f  ,xmin,xmax)
+    fint   = integrate.quad ( lambda x :     float ( func ( x ) ) , xmn , xmx ) [0]
+    ##  2) calculate int(f*x,xmin,xmax)
+    fintx  = integrate.quad ( lambda x : x * float ( func ( x ) ) , xmn , xmx ) [0] 
+    #
+    return float( fintx ) / float ( fint )
+
+# =============================================================================
+## get the variance of vthe ariable, considering function to be PDF 
+#  @code 
+#  >>> fun = ...
+#  >>> mean = fun.variance()
+#  >>> mean = fun.variance( xmin = 10 , xmax = 50 )
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-07-11
+def sp_variance ( func , xmin = None , xmax = None ) :
+    """
+    Get the mean-value for the distribution using scipy/numpy
+    >>> fun = ...
+    >>> v   = fun.variance()
+    >>> v   = fun.variance( xmin = 10 , xmax = 50 )
+    """
+    ##
+    import numpy
+    ##
+    if   isinstance  ( xmin , (float,int,long) ) : xmn =  float ( xmin            ) 
+    elif hasattr     ( func ,'GetXmin' )         : xmn =  float ( func.GetXmin () )
+    elif hasattr     ( func ,'xmin'    )         : xmn =  float ( func.xmin    () ) 
+    else                                         : xmn = -numpy.inf
+    ##
+    if   isinstance  ( xmax , (float,int,long) ) : xmx =  float ( xmax            )
+    elif hasattr     ( func ,'GetXmax' )         : xmx =  float ( func.GetXmax () ) 
+    elif hasattr     ( func ,'xmax'    )         : xmx =  float ( func.xmax    () )
+    else                                         : xmx = +numpy.inf
+    ## 
+    from  scipy import integrate
+    ##  1) calculate int(f  ,xmin,xmax)
+    fint   = integrate.quad ( lambda x :         float ( func ( x ) ) , xmn , xmx ) [0]
+    ##  2) calculate int(f*x,xmin,xmax)
+    fintx  = integrate.quad ( lambda x :     x * float ( func ( x ) ) , xmn , xmx ) [0]
+    ##  3) calculate int(f*x*x,xmin,xmax)
+    fintx2 = integrate.quad ( lambda x : x * x * float ( func ( x ) ) , xmn , xmx ) [0] 
+    #
+    meanx  = float(fintx )/float(fint)
+    meanx2 = float(fintx2)/float(fint)
+    # 
+    return meanx2 - meanx * meanx 
+
+# =============================================================================
+## get the rms of the ariable, considering function to be PDF 
+#  @code 
+#  >>> fun = ...
+#  >>> mean = fun.rms()
+#  >>> mean = fun.rms( xmin = 10 , xmax = 50 )
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-07-11
+def sp_rms ( func , xmin = None , xmax = None ) :
+    """
+    Get RMS for the distribution using scipy/numpy
+    >>> fun = ...
+    >>> v   = fun.rms()
+    >>> v   = fun.ems( xmin = 10 , xmax = 50 )
+    """
+    ##
+    import  math
+    return  math.sqrt ( sp_variance ( func , xmin , xmax ) )
+
 # =============================================================================
 ## decorate 1D-models/functions 
 # =============================================================================
@@ -278,6 +378,10 @@ for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.LogGamma               ,
                Gaudi.Math.BetaPrime              ,
                Gaudi.Math.Landau                 ,
+               Gaudi.Math.JohnsonSU              ,
+               Gaudi.Math.Argus                  ,
+               Gaudi.Math.Tsallis                ,
+               Gaudi.Math.QGSM                   ,
                Gaudi.Math.TwoExpos               ,
                Gaudi.Math.Sigmoid                ,
                #
@@ -289,8 +393,11 @@ for model in ( Gaudi.Math.Chebyshev              ,
                ) :
     model . tf1 = _tf1_ 
     model.sp_integrate = sp_integrate_1D
-
     
+    if not hasattr ( model , 'mean'     ) : model.mean     = sp_mean 
+    if not hasattr ( model , 'variance' ) : model.variance = sp_variance 
+    if not hasattr ( model , 'rms'      ) : model.rms      = sp_rms  
+        
 ## add some drawing method for some shapes 
 for model in ( Gaudi.Math.Bernstein         ,
                Gaudi.Math.Positive          ,
@@ -370,7 +477,10 @@ for pdf in ( Analysis.Models.BreitWigner          ,
              Analysis.Models.BetaPrime          ,
              Analysis.Models.Landau             ,
              Analysis.Models.SinhAsinh          , 
+             Analysis.Models.JohnsonSU          ,
              Analysis.Models.Argus              ,
+             Analysis.Models.Tsallis            ,
+             Analysis.Models.QGSM               ,
              Analysis.Models.BifurcatedGauss    ,
              Analysis.Models.GenGaussV1         , 
              Analysis.Models.GenGaussV2         , 
