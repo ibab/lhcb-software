@@ -5,7 +5,7 @@
 # =============================================================================
 ## @file Models.py
 #
-#  Module with some useful fit-models
+#  Module with some useful utilities for simple functions and fit models.
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-12-01
@@ -160,7 +160,7 @@ def sp_integrate_1D ( func , xmin , xmax , *args , **kwargs ) :
     >>> func = ...
     >>> print func.sp_integrate ( -10 , 10 )
     
-    """
+    """    
     from scipy import integrate
     ##
     result = integrate.quad ( func , xmin , xmax , *args , **kwargs )
@@ -206,6 +206,7 @@ def sp_integrate_1D_ ( pdf , xmin , xmax , *args , **kwargs ) :
     if hasattr ( pdf , 'setPars' ) : pdf.setPars() 
     func = pdf.function()
     return func.sp_integrate_1D ( xmin , xmax , *args , **kwargs ) 
+
 # =============================================================================
 ## make 2D-integration using SciPy
 #  @see http://www.scipy.org/
@@ -222,105 +223,13 @@ def sp_integrate_2D_ ( pdf   ,
     return func.sp_integrate_2D ( xmin , xmax , ymin , ymax , *args , **kwargs ) 
 
 
-# =============================================================================
-## get the mean value of variable, considering function to be PDF 
-#  @code 
-#  >>> fun = ...
-#  >>> mean = fun.mean()
-#  >>> mean = fun.mean( xmin = 10 , xmax = 50 )
-#  @endcode
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date 2015-07-11
-def sp_mean ( func , xmin = None , xmax = None ) :
-    """
-    Get the mean-value for the distribution using scipy/numpy
-    >>> fun = ...
-    >>> mean = fun.mean()
-    >>> mean = fun.mean( xmin = 10 , xmax = 50 )
-    """
-    ##
-    import numpy
-    ##
-    if   isinstance  ( xmin , (float,int,long) ) : xmn =  float ( xmin            ) 
-    elif hasattr     ( func ,'GetXmin' )         : xmn =  float ( func.GetXmin () )
-    elif hasattr     ( func ,'xmin'    )         : xmn =  float ( func.xmin    () ) 
-    else                                         : xmn = -numpy.inf
-    ##
-    if   isinstance  ( xmax , (float,int,long) ) : xmx =  float ( xmax            )
-    elif hasattr     ( func ,'GetXmax' )         : xmx =  float ( func.GetXmax () ) 
-    elif hasattr     ( func ,'xmax'    )         : xmx =  float ( func.xmax    () )
-    else                                         : xmx = +numpy.inf
-
-    ## 
-    from  scipy import integrate
-    ##  1) calculate int(f  ,xmin,xmax)
-    fint   = integrate.quad ( lambda x :     float ( func ( x ) ) , xmn , xmx ) [0]
-    ##  2) calculate int(f*x,xmin,xmax)
-    fintx  = integrate.quad ( lambda x : x * float ( func ( x ) ) , xmn , xmx ) [0] 
-    #
-    return float( fintx ) / float ( fint )
-
-# =============================================================================
-## get the variance of vthe ariable, considering function to be PDF 
-#  @code 
-#  >>> fun = ...
-#  >>> mean = fun.variance()
-#  >>> mean = fun.variance( xmin = 10 , xmax = 50 )
-#  @endcode
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date 2015-07-11
-def sp_variance ( func , xmin = None , xmax = None ) :
-    """
-    Get the mean-value for the distribution using scipy/numpy
-    >>> fun = ...
-    >>> v   = fun.variance()
-    >>> v   = fun.variance( xmin = 10 , xmax = 50 )
-    """
-    ##
-    import numpy
-    ##
-    if   isinstance  ( xmin , (float,int,long) ) : xmn =  float ( xmin            ) 
-    elif hasattr     ( func ,'GetXmin' )         : xmn =  float ( func.GetXmin () )
-    elif hasattr     ( func ,'xmin'    )         : xmn =  float ( func.xmin    () ) 
-    else                                         : xmn = -numpy.inf
-    ##
-    if   isinstance  ( xmax , (float,int,long) ) : xmx =  float ( xmax            )
-    elif hasattr     ( func ,'GetXmax' )         : xmx =  float ( func.GetXmax () ) 
-    elif hasattr     ( func ,'xmax'    )         : xmx =  float ( func.xmax    () )
-    else                                         : xmx = +numpy.inf
-    ## 
-    from  scipy import integrate
-    ##  1) calculate int(f  ,xmin,xmax)
-    fint   = integrate.quad ( lambda x :         float ( func ( x ) ) , xmn , xmx ) [0]
-    ##  2) calculate int(f*x,xmin,xmax)
-    fintx  = integrate.quad ( lambda x :     x * float ( func ( x ) ) , xmn , xmx ) [0]
-    ##  3) calculate int(f*x*x,xmin,xmax)
-    fintx2 = integrate.quad ( lambda x : x * x * float ( func ( x ) ) , xmn , xmx ) [0] 
-    #
-    meanx  = float(fintx )/float(fint)
-    meanx2 = float(fintx2)/float(fint)
-    # 
-    return meanx2 - meanx * meanx 
-
-# =============================================================================
-## get the rms of the ariable, considering function to be PDF 
-#  @code 
-#  >>> fun = ...
-#  >>> mean = fun.rms()
-#  >>> mean = fun.rms( xmin = 10 , xmax = 50 )
-#  @endcode
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date 2015-07-11
-def sp_rms ( func , xmin = None , xmax = None ) :
-    """
-    Get RMS for the distribution using scipy/numpy
-    >>> fun = ...
-    >>> v   = fun.rms()
-    >>> v   = fun.ems( xmin = 10 , xmax = 50 )
-    """
-    ##
-    import  math
-    return  math.sqrt ( sp_variance ( func , xmin , xmax ) )
+from LHCbMath.deriv import moment   as sp_moment
+from LHCbMath.deriv import mean     as sp_mean
+from LHCbMath.deriv import variance as sp_variance
+from LHCbMath.deriv import rms      as sp_rms 
+from LHCbMath.deriv import mediane  as sp_mediane
+from LHCbMath.deriv import quantile as sp_quantile
+from LHCbMath.deriv import mode     as sp_mode 
 
 # =============================================================================
 ## decorate 1D-models/functions 
@@ -397,6 +306,10 @@ for model in ( Gaudi.Math.Chebyshev              ,
     if not hasattr ( model , 'mean'     ) : model.mean     = sp_mean 
     if not hasattr ( model , 'variance' ) : model.variance = sp_variance 
     if not hasattr ( model , 'rms'      ) : model.rms      = sp_rms  
+    if not hasattr ( model , 'mediane'  ) : model.mediane  = sp_mediane
+    if not hasattr ( model , 'mode'     ) : model.mode     = sp_mode 
+    if not hasattr ( model , 'moment'   ) : model.moment   = sp_moment
+    if not hasattr ( model , 'quantile' ) : model.quantile = sp_quantile 
         
 ## add some drawing method for some shapes 
 for model in ( Gaudi.Math.Bernstein         ,
@@ -514,7 +427,8 @@ Gaudi.Math.Flatte23L   . amp = _amp_
 Gaudi.Math.BreitWigner . amp = _amp_
     
 # =============================================================================
-    
+
+            
 # =============================================================================
 if '__main__' == __name__ :
     

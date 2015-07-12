@@ -2612,6 +2612,16 @@ ROOT.TF1 .  maxv    =  lambda s : s.GetMaximum()
 ROOT.TF1 .  minmax  = _f_minmax_
 ROOT.TF1 . xminmax  = _f_xminmax_
 
+import LHCbMath.deriv 
+_tf1 = ROOT.TF1
+if not hasattr ( _tf1 , 'mean'     ) : _tf1.mean     = LHCbMath.deriv.mean 
+if not hasattr ( _tf1 , 'variance' ) : _tf1.variance = LHCbMath.deriv.variance 
+if not hasattr ( _tf1 , 'rms'      ) : _tf1.rms      = LHCbMath.deriv.rms  
+if not hasattr ( _tf1 , 'mediane'  ) : _tf1.mediane  = LHCbMath.deriv.mediane
+if not hasattr ( _tf1 , 'mode'     ) : _tf1.mode     = LHCbMath.deriv.mode 
+if not hasattr ( _tf1 , 'moment'   ) : _tf1.moment   = LHCbMath.deriv.moment
+if not hasattr ( _tf1 , 'quantile' ) : _tf1.quantile = LHCbMath.deriv.quantile            
+
 # ============================================================================
 ## get the minimum value for X-axis 
 def _ax_min_ ( self ) :
@@ -6027,6 +6037,7 @@ import Ostap.HTextDeco
 import Ostap.HParamDeco
 import Ostap.HCmpDeco
 import Ostap.MiscDeco
+import Ostap.Models 
 
 
 
