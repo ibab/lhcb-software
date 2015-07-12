@@ -5112,6 +5112,11 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
+      /// get the min-value
+      double xmin() const { return 0 ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       /// get the transverse kinetic energy 
       inline double eTkin ( const double x ) const 
       { return std::sqrt ( x * x + m_mass * m_mass ) - m_mass ; }  
@@ -5205,6 +5210,11 @@ namespace Gaudi
       bool setM    ( const double value ) { return setMass ( value ) ; }
       /// update b-parameter 
       bool setB    ( const double value ) ; // update b-parameter 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the min-value
+      double xmin() const { return 0 ; }
       // ======================================================================
     public:
       // ======================================================================

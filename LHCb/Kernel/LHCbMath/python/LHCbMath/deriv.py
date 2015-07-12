@@ -41,10 +41,30 @@ __version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2014-06-06"
 __all__     = (
-    "derivative" , ## numerical differentiation (as function)
-    "integral"   , ## numerical integration     (as function,  using scipy)
-    "Derivative" , ## numerical differentiation (as object) 
-    "Integral"   , ## numerical integration     (as as object, using scipy)
+    ##
+    "derivative"    , ## numerical differentiation (as function)
+    "integral"      , ## numerical integration     (as function,  using scipy)
+    "Derivative"    , ## numerical differentiation (as object) 
+    "Integral"      , ## numerical integration     (as as object, using scipy)
+    ##
+    "IntegralCache" , ## numerical integration     (as object, using scipy and cache)
+    ## stat-quantities   (based on generic SciPy-actions)
+    "Moment"        , ## calculate N-th moment of functions/distribitions, etc (scipy)
+    "Mean"          , ## calculate "mean"     for functions/distribitions, etc (scipy)
+    "Variance"      , ## calculate "variance" for functions/distribitions, etc (scipy)
+    "RMS"           , ## calculate "RMS"      for functions/distribitions, etc (scipy)
+    "Mediane"       , ## calculate "mediane"  for functions/distribitions, etc (scipy)
+    "Quantile"      , ## calculate "quantile" for functions/distribitions, etc (scipy)
+    "Mode"          , ## calculate "mode"     for functions/distribitions, etc (scipy)
+    ##
+    ## stat-quantities   (based on generic SciPy-actions)
+    "moment"        , ## calculate N-th moment of functions/distribitions, etc (scipy)
+    "mean"          , ## calculate "mean"     for functions/distribitions, etc (scipy)
+    "variance"      , ## calculate "variance" for functions/distribitions, etc (scipy)
+    "rms"           , ## calculate "RMS"      for functions/distribitions, etc (scipy)
+    "mediane"       , ## calculate "mediane"  for functions/distribitions, etc (scipy)
+    "quantile"      , ## calculate "quantile" for functions/distribitions, etc (scipy)
+    "mode"          , ## calculate "mode"     for functions/distribitions, etc (scipy)
     ) 
 # =============================================================================
 from sys import float_info
@@ -240,7 +260,6 @@ def derivative ( func , x , h = 0  , I = 2 , err = False ) :
     ## adjust the rule 
     I  = min ( max ( I , 1 ) , 5 )
     J  = 2 * I + 1
-
     
     _dfun_ = _funcs_[I]
     delta  = _delta_ ( x )
@@ -318,8 +337,8 @@ class Derivative(object) :
 # =============================================================================
 ## Calculate the integral (from x0 to x) for the 1D-function 
 #  @code 
-#  >>> func = ...
-#  >>> a = integral(func,0,1)
+#  func = ...
+#  v    = integral ( func , 0 , 1 )
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-06
@@ -327,8 +346,8 @@ def integral ( func , x0 , x , err = False , *args ) :
     """
     Calculate the integral for the 1D-function using scipy
     
-    >>> func = ...
-    >>> i = integral(func,0,1)
+    >>> func = lambda x : x * x 
+    >>> v = integral(func,0,1)
     """
     from scipy import integrate
     result = integrate.quad ( func , x0 , x , args = args )
@@ -338,28 +357,80 @@ def integral ( func , x0 , x , err = False , *args ) :
 ## @class Integral
 #  Calculate the integral (from x0 to x) for the 1D-function 
 #  @code 
-#  >>> func = ...
-#  >>> func_0 = Integral(func,0)
-#  >>> func_0 ( 10 )
+#  func  = lambda x : x * x 
+#  iint  = Integral ( func , 0 ) ## specify x_low 
+#  value = iiint (  10  )        ## specify x_high 
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-06
 class Integral(object) :
     """
     Calculate the integral for the 1D-function using scipy
+    >>> func  = lambda x : x * x      ## define function 
+    >>> iint  = Integral ( func , 0 ) ## specify x_low 
+    >>> value = iint (  10  )         ## specify x_high 
     """
     ## Calculate the integral for the 1D-function using scipy
-    def __init__ ( self , func , x0 = 0 , err = False , *args ) :
+    def __init__ ( self , func , xlow = 0 , err = False , *args ) :
+        """
+        Calculate the integral for the 1D-function using scipy
+        
+        >>> func   = ...
+        >>> func_0 = Integral(func,0)
+        >>> value  = func_
+        """
+        self._func   = func 
+        self._xmin   = float ( xlow ) if isinstance ( xlow , (int,long) ) else xlow 
+        self._err    = err
+        self._args   = args
+        
+    def _integrate_ ( self , xmn , xmx , *args ) :
+        from scipy import integrate
+        args   = args if args else self._args
+        try : 
+            result = integrate.quad ( self._func , xmn , xmx , args = args )
+            return VE ( result[0] , result[1] * result[1] ) if self._err else float(result[0])
+        except :
+            print 'EXCEPT' , xmn, xmx , type(xmn), type(xmx)
+            
+    ## Calculate the integral for the 1D-function using scipy
+    def __call__ ( self , x , *args ) :
+        """
+        Calculate the integral for the 1D-function using scipy
+        
+        >>> func = ...
+        >>> func_0 = Integral(func,0)
+        >>> func_0 ( 10 ) 
+        """
+        return self._integrate_ ( self._xmin , x , *args )
+
+# =============================================================================
+## @class IntegralCache
+#  Calculate the integral (from x0 to x) for the 1D-function 
+#  @code 
+#  >>> func  = lambda x : x * x 
+#  >>> iint  = IntegralCache(func,0) ## specify x_low 
+#  >>> value = iint  ( 10 )          ## specify x_hgh 
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-06-06
+class IntegralCache(Integral) :
+    """
+    Calculate the integral for the 1D-function using scipy
+    >>> func   = lambda x : x*x 
+    >>> iint   = IntegralCache ( func , 0 ) ## specify x_low 
+    >>> value  = iint ( 10 )                ## specify x_high
+    """
+    ## Calculate the integral for the 1D-function using scipy
+    def __init__ ( self , func , xlow = 0 , err = False , *args ) :
         """
         Calculate the integral for the 1D-function using scipy
         
         >>> func = ...
         >>> func_0 = Integral(func,0)
         """
-        self._func   = func 
-        self._x0     = x0
-        self._err    = err
-        self._args   = args
+        Integral.__init__ ( self , func , xlow , err , *args )
+        self._prev   = None 
         
     ## Calculate the integral for the 1D-function using scipy
     def __call__ ( self , x , *args ) :
@@ -370,10 +441,29 @@ class Integral(object) :
         >>> func_0 = Integral(func,0)
         >>> func_0 ( 10 ) 
         """
-        from scipy import integrate
-        args   = args if args else self._args 
-        result = integrate.quad ( self._func , self._x0 , x , args = args )
-        return VE ( result[0] , result[1] * result[1] ) if self._err else result[0] 
+        x      = float ( x ) if isinstance ( x , ( int , long ) ) else x  
+        args   = args if args else self._args
+
+        xmn = self._xmin
+        dlt = 0
+        
+        ## check previos calculations 
+        if not args  and isinstance ( x , float ) and self._prev :
+            if       isinstance ( self._xmin , float ) and ( self._prev[0] - x ) < abs ( self._xmin - x ) :
+                xmn = self._prev[0]
+                dlt = self._prev[1]
+            elif not isinstance ( self._xmin , float ) :                        
+                xmn = self._prev[0]
+                dlt = self._prev[1]
+                
+        ## use scipy
+        result = self._integrate_ ( xmn , x , *args )
+        result += dlt 
+        
+        if not args and isinstance ( x , float ) :
+            self._prev =  x , result 
+            
+        return result 
 
 # =============================================================================
 ## @class Moment
@@ -403,26 +493,32 @@ class Moment(object) :
             raise TypeError('Moment: illegal order')
         
         self._N    = N 
-        self._xmin = xmin
-        self._xmax = xmax
+        self._xmin = float ( xmin ) if isinstance ( xmin , ( int , long ) ) else xmin 
+        self._xmax = float ( xmax ) if isinstance ( xmax , ( int , long ) ) else xmax 
         self._x0   = x0  
         self._err  = err
         self._args = args
-        
-    ## calculate un-normalized k-moment  
+
+    ## make an integral 
+    def _integral_ ( self , func , xmn , xmx , *args ) :
+        integrator = Integral ( func , xmn , err = self._err )
+        return integrator ( xmx , *args )
+    
+    ## calculate un-normalized 0-moment  
     def _moment0_ ( self , func , *args ) :
-        from scipy import integrate
-        args = args if args else self._args 
-        return integrate.quad ( func , self._xmin , self._xmax , args = args )
-        
+        """
+        Calculate un-normalized 0-moment
+        """
+        return self._integral_ ( func , self._xmin , self._xmax , *args )
+    
     ## calculate un-normalized k-moment  
     def _momentK_ ( self , k , func , *args ) :
-        from scipy import integrate
+        """
+        Calculate unnormalized k-moment
+        """
         x0     = self._x0 
         func_N = lambda x,*a : func( x , *a ) * ( ( x - x0 ) ** k  )
-        ##
-        args = args if args else self._args 
-        return integrate.quad ( func_N , self._xmin , self._xmax , args = args )
+        return self._integral_ ( func_N , self._xmin , self._xmax , *args )
     
     ## calculate the moment 
     def __call__ ( self , func , *args ) :
@@ -430,12 +526,7 @@ class Moment(object) :
         n0  = self._moment0_ (            func , *args ) 
         nN  = self._momentK_ ( self._N  , func , *args ) 
         ##
-        if not self._err : return nN[0]/n0[0]
-        ##
-        n_0    = VE ( n0[0] , n0[1] * n0[1] )
-        n_N    = VE ( nN[0] , nN[1] * nN[1] )
-        ##
-        return n_N/n_0
+        return nN/n0
 
 # =============================================================================
 ## get the mean-value
@@ -449,19 +540,19 @@ class Moment(object) :
 #  @date   2014-06-06
 class Mean(Moment) :
     """
-    Calculate the N-th moment for the distribution
+    Calculate the N-th moment for the distribution or function 
     
     >>> xmin,xmax = 0,math.pi 
     >>> mean  = Mean ( xmin , xmax )  ## specify min/max
     >>> value = mean ( math.sin    )
     
     """
-    def __init__ ( self , xmin , xmax , err = False , x0  = 0 ) :
-        Moment.__init__ ( self , 1 , xmin , xmax , err , x0 )
+    def __init__ ( self , xmin , xmax , err = False ) :
+        Moment.__init__ ( self , 1 , xmin , xmax , err )
 
 # =============================================================================
 ## get the variance
-#  Calculate the mean-value for the distribution 
+#  Calculate the variance for the distribution or function  
 #  @code
 #   xmin,xmax = 0,math.pi 
 #   variance  = Variance ( xmin,xmax )  ## specify min/max
@@ -469,9 +560,15 @@ class Mean(Moment) :
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-06
-class Variance(Moment) :
-    def __init__ ( self , xmin , xmax , err = False , x0  = 0 ) :
-        Moment.__init__ ( self , 2 , xmin , xmax , err , x0 )
+class Variance(Mean) :
+    """
+    Calculate the variance for the distribution or function  
+    >>> xmin,xmax = 0,math.pi 
+    >>> variance  = Variance ( xmin,xmax )  ## specify min/max
+    >>> value     = variance ( math.sin  )
+    """
+    def __init__ ( self , xmin , xmax , err = False ) :
+        Mean.__init__ ( self , xmin , xmax , err )
     ## calculate the variance 
     def __call__ ( self , func , *args ) :
         ## 
@@ -479,17 +576,378 @@ class Variance(Moment) :
         n1 = self._momentK_ ( 1 , func , *args ) 
         n2 = self._momentK_ ( 2 , func , *args ) 
         ##
-        if not self._err :
-            n_0 = n0[0]
-            n_1 = n1[0]
-            n_2 = n2[0]
-        else : 
-            n_0 = VE ( n0[0] , n0[1] * n0[1] )
-            n_1 = VE ( n1[0] , n1[1] * n1[1] )
-            n_2 = VE ( n2[0] , n2[1] * n2[1] )
-        ##
-        return (n_2*n_0 - n_1*n_1)/(n_0*n_0)
+        return ( n2 * n0 - n1 * n1 ) / ( n0 * n0 )
     
+
+# =============================================================================
+## get the RMS 
+#  Calculate the variance for the distribution or function  
+#  @code
+#   xmin,xmax = 0,math.pi 
+#   rms       = RMS ( xmin,xmax )  ## specify min/max
+#   value     = rms ( math.sin  )
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-06-06
+class RMS(Variance) :
+    """
+    Calculate the RMS for the distribution or function  
+    >>> xmin,xmax = 0,math.pi 
+    >>> rms       = RMS ( xmin,xmax )  ## specify min/max
+    >>> value     = rms ( math.sin  )
+    """
+    def __init__ ( self , xmin , xmax , err = False ) :
+        Variance.__init__ ( self , xmin , xmax , err )
+        
+    ## calculate the variance 
+    def __call__ ( self , func , *args ) :
+        """
+        Calculate the RMS for the distribution or function          
+        """
+        var2 = Variance.__call__ ( self , func , *args )
+        import LHCbMath.math_ve as ME 
+        return ME.sqrt ( var2 ) 
+
+
+# =============================================================================
+## get the mediane
+#  Calculate the mediane for the distribution or function  
+#  @code
+#  xmin,xmax = 0,math.pi 
+#  mediane   = Mediane ( xmin,xmax )  ## specify min/max
+#  value     = mediane ( math.sin  )
+#  @endcode 
+#  @see https://en.wikipedia.org/wiki/Median#Inequality_relating_means_and_medians
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-12
+class Mediane(RMS) :
+    """
+    Calculate mediane for the distribution or function  
+    >>> xmin,xmax = 0,math.pi 
+    >>> mediane   = Mediane ( xmin,xmax )  ## specify min/max
+    >>> value     = mediane ( math.sin  )
+    """
+    def __init__ ( self , xmin , xmax ) :
+        RMS.__init__ ( self , xmin , xmax , err = False )
+
+    ## calculate he mediane
+    def _mediane_ ( self , func , xmin , xmax , *args ) :
+        ## need to know the integral
+        iint   = IntegralCache ( func ,  xmin , False , *args )
+        half   = 2.0 / iint    ( xmax ) 
+        
+        from scipy import optimize
+        ifun   = lambda x : iint( x ) * half - 1.0
+
+        ## @see https://en.wikipedia.org/wiki/Median#Inequality_relating_means_and_medians
+        try: 
+            meanv = Mean . __call__ ( self , func , *args )
+            sigma = RMS  . __call__ ( self , func , *args )
+            import math
+            xmn   = meanv - 2 * sigma ## use 2 instead of 1 
+            xmx   = meanv + 2 * sigma ## use 2 instead of 1
+            #
+            if isinstance ( xmin , float ) : xmn = max ( xmn , xmin ) 
+            if isinstance ( xmax , float ) : xmx = min ( xmx , xmax )
+            #
+            result = optimize.brentq ( ifun , xmn , xmx )
+        except :
+            result = optimize.brentq ( ifun , xmin , xmax )
+            
+        return result
+
+        
+    ## calculate the mediane 
+    def __call__ ( self , func , *args ) :
+        return self._mediane_ ( func , self._xmin , self._xmax )
+
+# =============================================================================
+## get the quantile
+#  Calculate the mediane for the distribution or function  
+#  @code
+#  xmin,xmax = 0,math.pi 
+#  quantile  = Quantile ( 0.1 , xmin,xmax )  ## specify min/max
+#  value     = quantile ( math.sin  )
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-12
+class Quantile(Mediane) :
+    """
+    Calculate mediane for the distribution or function  
+    >>> xmin,xmax = 0,math.pi 
+    >>> quantile  = Quantile ( 0.1 , xmin,xmax )  ## specify min/max
+    >>> value     = quantile ( math.sin  )
+    """
+    def __init__ ( self , Q , xmin , xmax ) :
+        Mediane.__init__ ( self , xmin , xmax )
+        #
+        if Q < 0 : raise ArrtibuteError ( 'Quantile is invalid %s' % Q )
+        if Q > 1 : raise ArrtibuteError ( 'Quantile is invalid %s' % Q )
+        self._Q = float( Q ) 
+        
+    ## calculate the mediane 
+    def __call__ ( self , func , *args ) :
+        ##
+
+        if    0.5 == self._Q : return Mediane.__call__ ( self , func , *args ) 
+        elif  0.0 == self._Q : return self._xmin
+        elif  1.0 == self._Q : return self._xmax
+
+        ## need to know the integral
+        iint = IntegralCache ( func, self._xmin, False , *args )
+        quan = 1.0 / iint    (  self._xmax ) / self._Q 
+        
+        from scipy import optimize
+        ifun   = lambda x : iint( x ) * quan - 1.0
+
+
+        xmn = self._xmin
+        xmx = self._xmax
+
+        p   = 0.5
+        l   = 0.5
+
+        ## make some bracketing before next step 
+        while ( not isinstance ( xmn , float ) ) or ( not isinstance ( xmx , float ) ) or l>0.1 :   
+        
+            l /= 2            
+            m = self._mediane_ ( func , xmn , xmx , *args ) 
+            
+            if   self._Q < p :
+                xmn   = xmn 
+                xmx   = float( m ) 
+                p    -= l 
+            elif self._Q > p :
+                xmn   = float ( m ) 
+                xmx   = xmx
+                p    +=  l  
+            else : return m               ## RETURN 
+
+        ## finally, calculate quantile 
+        result = optimize.brentq ( ifun , xmn , xmx )
+            
+        return result
+
+
+# =============================================================================
+## get the mode 
+#  Calculate the mode for the distribution or function  
+#  @code
+#  xmin,xmax = 0,math.pi 
+#  mode      = Mode ( xmin,xmax )  ## specify min/max
+#  value     = mode ( math.sin  )
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-12
+class Mode(Mediane) :
+    """
+    Calculate the mode for the distribution or function  
+    >>> xmin,xmax = 0,math.pi 
+    >>> mode      = Mode ( xmin,xmax )  ## specify min/max
+    >>> value     = mode ( math.sin  )
+    """
+    def __init__ ( self , xmin , xmax ) :
+        Mediane.__init__ ( self , xmin , xmax )
+        
+    ## calculate the mode 
+    def __call__ ( self , func , *args ) :
+        ##
+        from scipy import optimize
+        
+        ## use mean    as intial aprpoximation for mode 
+        m1     = Mean   .__call__ ( self , func , *args )
+        
+        ## use mediane as intial aprpoximation for mode 
+        ## m2     = Mediane.__call__ ( self , func , *args )
+        
+        ## use the point intermediate between mean and mediane as approximation 
+        ## m0     = 0.5 * ( m1 + m2 )
+
+        m0 = m1 
+        result = optimize.minimize ( 
+            lambda x : -1 * float (func ( x ) )   , 
+            x0     = float ( m0 )                 ,
+            bounds = [ (self._xmin , self._xmax)] ,
+            args   = args )
+        
+        return result.x[0] 
+
+
+# =============================================================================
+## calculate some statistical quantities of variable,
+#  considering function to be PDF 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-07-11
+def sp_action ( func , actor , xmin = None , xmax = None ) :
+    """
+    Calculate some statistical quantities of variable, considering function to be PDF 
+    """
+    ##
+    import numpy
+    ##
+    if   isinstance  ( xmin , (float,int,long) ) : xmn =  float ( xmin            ) 
+    elif hasattr     ( func ,'GetXmin' )         : xmn =  float ( func.GetXmin () )
+    elif hasattr     ( func ,'xmin'    )         : xmn =  float ( func.xmin    () ) 
+    else                                         : xmn = -numpy.inf
+    ##
+    if   isinstance  ( xmax , (float,int,long) ) : xmx =  float ( xmax            )
+    elif hasattr     ( func ,'GetXmax' )         : xmx =  float ( func.GetXmax () ) 
+    elif hasattr     ( func ,'xmax'    )         : xmx =  float ( func.xmax    () )
+    else                                         : xmx = +numpy.inf
+    ##
+    xmn = float ( xmn ) if isinstance ( xmn , ( int , long ) ) else xmn 
+    xmx = float ( xmx ) if isinstance ( xmx , ( int , long ) ) else xmx
+    #
+    ## instantiate calculator and use it 
+    calc = actor ( xmn , xmx )
+    ##
+    return calc  ( func )
+
+# =============================================================================
+## get the N-moment of variable, considering function to be PDF 
+# @code 
+# >>> fun  = ...
+# >>> mom5 = fun.moment( 5 )
+# >>> mom5 = fun.moment( 5 , xmin = 10 , xmax = 50 )
+# @endcode
+# @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+# @date 2015-07-11
+def moment ( func , N , xmin = None , xmax = None , err = False , x0 = 0 ) :
+    """
+    Get the mean-value for the distribution using scipy/numpy
+    >>> fun = ...
+    >>> mom5 = fun.moment ( 5 )
+    >>> mom5 = fun.moment ( 5 , xmin = 10 , xmax = 50 )
+    """
+    ## get the functions from LHCbMath.deriv 
+    actor = lambda x1,x2 : Moment ( N , x1 , x2 , err , x0 ) 
+    return sp_action ( func , actor , xmin , xmax )
+
+# =============================================================================
+## get the mean value of variable, considering function to be PDF 
+#  @code 
+#  >>> fun = ...
+#  >>> mean = fun.mean()
+#  >>> mean = fun.mean( xmin = 10 , xmax = 50 )
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-07-11
+def mean ( func , xmin = None , xmax = None , err = False ) :
+    """
+    Get the mean-value for the distribution using scipy/numpy
+    >>> fun = ...
+    >>> mean = fun.mean()
+    >>> mean = fun.mean( xmin = 10 , xmax = 50 )
+    """
+    ## get the functions from LHCbMath.deriv 
+    actor = lambda x1,x2 : Mean ( x1 , x2 , err ) 
+    ## use it! 
+    return sp_action ( func , actor , xmin , xmax )
+
+# =============================================================================
+## get the variance of the variable, considering function to be PDF 
+#  @code 
+#  >>> fun = ...
+#  >>> mean = fun.variance()
+#  >>> mean = fun.variance( xmin = 10 , xmax = 50 )
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-07-11
+def variance ( func , xmin = None , xmax = None , err = False ) :
+    """
+    Get the mean-value for the distribution using scipy/numpy
+    >>> fun = ...
+    >>> v   = fun.variance()
+    >>> v   = fun.variance( xmin = 10 , xmax = 50 )
+    """
+    ##
+    ## get the functions from LHCbMath.deriv 
+    actor = lambda x1,x2 : Variance ( x1 , x2 , err ) 
+    ## use it! 
+    return sp_action ( func , actor  , xmin , xmax )
+
+# =============================================================================
+## get the rms of the variable, considering function to be PDF 
+#  @code 
+#  >>> fun = ...
+#  >>> mean = fun.rms()
+#  >>> mean = fun.rms( xmin = 10 , xmax = 50 )
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-07-11
+def rms ( func , xmin = None , xmax = None , err = False ) :
+    """
+    Get RMS for the distribution using scipy/numpy
+    >>> fun = ...
+    >>> v   = fun.rms()
+    >>> v   = fun.ems( xmin = 10 , xmax = 50 )
+    """
+    ##
+    ## get the functions from LHCbMath.deriv 
+    actor = lambda x1,x2 : RMS ( x1 , x2 , err ) 
+    ## use it! 
+    return sp_action ( func , actor  , xmin , xmax )
+
+
+# =============================================================================
+## get the mediane the variable, considering function to be PDF 
+#  @code 
+#  >>> fun = ...
+#  >>> mean = fun.mediane()
+#  >>> mean = fun.mediane( xmin = 10 , xmax = 50 )
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-07-11
+def mediane ( func , xmin = None , xmax = None ) :
+    """
+    Get the mediane for the distribution using scipy/numpy
+    >>> fun = ...
+    >>> v   = fun.mediane()
+    >>> v   = fun.mediane( xmin = 10 , xmax = 50 )
+    """
+    ##
+    return sp_action ( func , Mediane , xmin , xmax )
+
+# =============================================================================
+## get the quantile of variable, considering function to be PDF 
+#  @code 
+#  >>> fun  = ...
+#  >>> quan = fun.quantile( 0.1 )
+#  >>> quan = fun.quantile( 0.1 ) , xmin = 10 , xmax = 50 )
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-07-11
+def quantile ( func , Q , xmin = None , xmax = None , err = False , x0 = 0 ) :
+    """
+    Get the mean-value for the distribution using scipy/numpy
+    >>> fun   = ...
+    >>> quan = fun.quantile ( 0.1 )
+    >>> quan = fun.quantile ( 0.1 , xmin = 10 , xmax = 50 )
+    """
+    ## get the functions from LHCbMath.deriv 
+    actor = lambda x1,x2 : Quantile ( Q , x1 , x2 ) 
+    return sp_action ( func , actor , xmin , xmax )
+
+# =============================================================================
+## get the mode the variable, considering function to be PDF 
+#  @code 
+#  >>> fun = ...
+#  >>> mean = fun.mode()
+#  >>> mean = fun.mode( xmin = 10 , xmax = 50 )
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-07-11
+def mode ( func , xmin = None , xmax = None ) :
+    """
+    Get the mediane for the distribution using scipy/numpy
+    >>> fun = ...
+    >>> v   = fun.mode()
+    >>> v   = fun.mode( xmin = 10 , xmax = 50 )
+    """
+    ## get the functions from LHCbMath.deriv 
+    ## use it! 
+    return sp_action ( func , Mode , xmin , xmax )
+
 # =============================================================================
 if '__main__' == __name__ :
     
@@ -553,11 +1011,44 @@ if '__main__' == __name__ :
 
         x = random.uniform( 0 , 0.5*math.pi )
         
-        print "x=%10.5g f=%10.5g delta(f')= %+10.4g delta(f\")= %+10.4g "  %  ( x       ,
-                                                                                func(x) ,
-                                                                                1-deriv_1(x)/deriv_a(x),
-                                                                                1+deriv_2(x)/func(x) )
+        fmt = "x=%10.5g f=%10.5g delta(f')= %+10.4g delta(f\")= %+10.4g "
+        print fmt %  ( x       ,
+                       func(x) ,
+                       1-deriv_1(x)/deriv_a(x),
+                       1+deriv_2(x)/func(x) )
+        
 
+    #
+    ## test mean/vars
+    #
+    import math
+    mean = Mean     (0, math.pi)
+    print 'sin@[0,pi]           mean: %s ' % mean (math.sin) 
+
+    var2 = Variance (0, math.pi)
+    print 'sin@[0,pi]       variance: %s ' % var2 (math.sin) 
+
+    med  = Mediane  (0, math.pi)
+    print 'sin@[0,pi]        mediane: %s ' % med  (math.sin) 
+
+    mode = Mode     (0, math.pi)
+    print 'sin@[0,pi]           mode: %s ' % mode (math.sin) 
+
+    rms  = RMS     (0, math.pi)
+    print 'sin@[0,pi]            rms: %s ' % rms  (math.sin) 
+
+    mom5 = Moment  ( 5, 0, math.pi)
+    print 'sin@[0,pi]           mom5: %s ' % mom5 (math.sin) 
+
+    quan = Quantile ( 0.980 , 0, 10)
+    print 'sin@[0,pi] 0.980-quantile: %s ' % quan (math.sin) 
+
+    quan = Quantile ( 0.252 , 0, 10)
+    print '1@[0,10]   0.252-quantile: %s ' % quan ( lambda x : 1 ) 
+
+    print '1@[0,1]    0.501-quantile: %s ' % quantile ( lambda x : 1 , 0.501 , 0 , 1 ) 
+    print '1@[0,1]    0.201-quantile: %s ' % quantile ( lambda x : 1 , 0.201 , 0 , 1 ) 
+    
     print 80*'*'
             
 # =============================================================================

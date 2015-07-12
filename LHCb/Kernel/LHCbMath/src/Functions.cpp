@@ -9372,9 +9372,9 @@ double Gaudi::Math::Tsallis::integral
 {
   if      ( s_equal ( low , high ) ) { return 0 ; }
   else if ( high < low             ) { return - integral ( high , low ) ; }
-  else if ( high <= 0              ) { return 0 ; }
+  else if ( high <= xmin ()        ) { return 0 ; }
   //
-  const double _low = std::max ( low , 0.0 ) ;
+  const double _low = std::max ( low , xmin () ) ;
   //
   // split too large intervals
   if ( 0 < m_mass ) 
@@ -9477,9 +9477,9 @@ double Gaudi::Math::QGSM::integral
 {
   if      ( s_equal ( low , high ) ) { return 0 ; }
   else if ( high < low             ) { return - integral ( high , low ) ; }
-  else if ( high <= 0              ) { return 0 ; }
+  else if ( high <= xmin()         ) { return 0 ; }
   //
-  const double _low = std::max ( low , 0.0 ) ;
+  const double _low = std::max ( low , xmin() ) ;
   //
   // split too large intervals
   if ( 0 < m_mass ) 
