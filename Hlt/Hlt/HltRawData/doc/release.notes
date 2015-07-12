@@ -5,6 +5,9 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-07-12 - Sean Benson
+ - Introduce duplication protection for tracks and protoparticles (compatible with Turbo).
+
 !========================= HltRawData v5r7 2015-07-01 =========================
 
 ! 2015-07-01 - Sean Benson
