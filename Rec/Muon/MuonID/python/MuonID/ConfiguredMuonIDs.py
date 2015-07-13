@@ -31,7 +31,10 @@ class ConfiguredMuonIDs():
 
     self.specialData=specialData
     if self.debug: print "# SPECIAL DATA=",self.specialData
-    
+   
+    self.data = data
+    if self.debug: print "# DATA TYPE=", self.data
+
     ## from datatype and version look for module with data. Store extra modules in case desired does not exist
     mod=[data+"_"+version,data+"_def","2011_def"]
     mod = map(lambda x: "Muon_"+x,mod)
@@ -598,7 +601,7 @@ class ConfiguredMuonIDs():
     
     ## for the new algorithm
     ## create and configure MuonIDAlgLite instance
-    if(self.newAlgo):
+    if(self.newAlgo and self.data in ['2015']):
       muid = MuonIDAlgLite()
       self.configureMuonIDAlgLite(muid)
       ismutool = CommonMuonTool()

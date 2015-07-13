@@ -4,6 +4,10 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2015-07-13 - Ricardo Vazquez Gomez
+ - Change in ConfiguredMuonIDs.py to fix the nightlies. Require only to run the new algorithm for
+   2015 data.
+
 ! 2015-07-10 - Francesco Dettori
  - Merging from branch MuIDDev. Changes are detailed below. 
    
