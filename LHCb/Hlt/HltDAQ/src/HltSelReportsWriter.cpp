@@ -1,4 +1,5 @@
 #include <memory>
+#include <cctype>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -20,8 +21,25 @@
 using namespace LHCb;
 
 namespace {
+void sanityCheck(const HltSelRepRBStdInfo& stdInfo) {
+    auto l = stdInfo.location();
+    auto sizeStored = ( l[0] >> 16 );
+    std::cout << "sanityCheck: stored = "  << sizeStored <<  " computed aka. .size() = " << stdInfo.size() <<  "  nObj " << stdInfo.numberOfObj() << std::endl;
+}
 
-const Gaudi::StringKey InfoID{"InfoID"};
+bool isStdInfo(const std::string& s) {
+    // check for [0-9]+# at the start, i.e. first non-numerical item is a '#', and it cannot be the first character
+    auto i = std::find_if(std::begin(s), std::end(s), [](const char& c) { return std::isdigit(c)==0; });
+    return i != std::begin(s) && i != std::end(s) && *i == '#' ;
+}
+
+int asUInt( float x ) {
+    union IntFloat { unsigned int mInt; float mFloat; };
+    IntFloat a; a.mFloat = x;
+    return a.mInt;
+}
+
+static const Gaudi::StringKey InfoID{"InfoID"};
 
 template <typename Input1,  typename Input2,
           typename Output1, typename Output2, typename Output3>
@@ -165,7 +183,7 @@ StatusCode HltSelReportsWriter::execute() {
 
   // protection against too many objectSummaries to store
   if( objectSummaries->size() > 0xFFFFL ){
-    return Error( std::string{ "Too many HltObjectSummaries to store " }
+    return Error( "Too many HltObjectSummaries to store " 
                 + std::to_string(objectSummaries->size())
                 + " HltSelReports RawBank cannot be created ",
                   StatusCode::SUCCESS, 50 );
@@ -199,7 +217,7 @@ StatusCode HltSelReportsWriter::execute() {
       [](unsigned int n, LhcbidSequences::const_reference s) { return n+s.size(); });
 
   if( lhcbidSequences.size()/2 + 1 + nHits >  0xFFFFL  ){
-    return Error( std::string{ "Too many hits or hit-sequences to store hits=" }
+    return Error( "Too many hits or hit-sequences to store hits=" 
                 + std::to_string(nHits) +  " seq=" + std::to_string( lhcbidSequences.size())
                 + " HltSelReports RawBank cannot be created ",
                   StatusCode::SUCCESS, 50 );
@@ -242,7 +260,7 @@ StatusCode HltSelReportsWriter::execute() {
   unsigned int nStdInfo=0;
   for( const auto&  hos : sortedHosPtrs ) {
     for( const auto&  i : hos->numericalInfo() ) {
-      if( i.first.find("#")!=std::string::npos ){
+      if( isStdInfo(i.first) ) { 
         ++nStdInfo;
       } else {
         ++nExtraInfo;
@@ -251,17 +269,16 @@ StatusCode HltSelReportsWriter::execute() {
   }
   bool saveExtraInfo = extraInfoSubBank.initialize( sortedHosPtrs.size(), nExtraInfo );
   if( !saveExtraInfo ){
-        Error( std::string{ "ExtraInfoSubBank too large to store nObj=" } 
-             + std::to_string( sortedHosPtrs.size() )
-             + " nInfo=" + std::to_string(nExtraInfo) + " No Extra Info will be saved!",
-               StatusCode::SUCCESS, 50 );
+        Error( "ExtraInfoSubBank too large to store nObj="  + std::to_string( sortedHosPtrs.size() )
+             + " nInfo=" + std::to_string(nExtraInfo) 
+             + " No Extra Info will be saved!", StatusCode::SUCCESS, 50 );
         if( !extraInfoSubBank.initialize( sortedHosPtrs.size(), 0 ) ){
           Error( "Cannot save even empty ExtraInfoSubBank  - expect a fatal error", StatusCode::SUCCESS, 50 );
         }
   }
   bool saveStdInfo = stdInfoSubBank.initialize( sortedHosPtrs.size(), nStdInfo );
   if( !saveStdInfo ){
-        Error( std::string{ "StdInfoSubBank too large to store nObj=" }
+        Error( "StdInfoSubBank too large to store nObj=" 
              + std::to_string( sortedHosPtrs.size()) 
              + " nInfo=" + std::to_string(nStdInfo) + " No Std Info will be saved!",
                StatusCode::SUCCESS, 50 );
@@ -272,7 +289,7 @@ StatusCode HltSelReportsWriter::execute() {
                 const auto&  ni = hos->numericalInfo();
                 n+=std::count_if( std::begin(ni), std::end(ni),
                                [](HltObjectSummary::Info::const_reference i) {
-                    return i.first.find("#")!=std::string::npos ;
+                    return isStdInfo(i.first);
                 } );
             }
             return n;
@@ -290,15 +307,13 @@ StatusCode HltSelReportsWriter::execute() {
     HltSelRepRBExtraInfo::ExtraInfo extraInfo;
     HltSelRepRBStdInfo::StdInfo stdInfo;
 
-    for( const auto&  i : hos->numericalInfo() ){
+    for( const auto& i : hos->numericalInfo() ) {
 
-      if( i.first.find("#")!=std::string::npos ){
+      if( isStdInfo(i.first) ){
 
-        if( saveStdInfo || ( hos->summarizedObjectCLID() == 1 ) ){
+        if ( saveStdInfo || ( hos->summarizedObjectCLID() == 1 ) ){
           // push floats as ints (allows for possible compression in future versions)
-          union IntFloat { unsigned int mInt; float mFloat; };
-          IntFloat a; a.mFloat = i.second;
-          stdInfo.push_back( a.mInt);
+          stdInfo.push_back( asUInt(i.second) );
         }
 
       } else if(saveExtraInfo) {
@@ -306,14 +321,15 @@ StatusCode HltSelReportsWriter::execute() {
         // convert string-id to a short
         auto j = m_hltANNSvc->value(InfoID, i.first ) ;
         if ( j ) {
-          extraInfo.emplace_back(  j->second, i.second );
+          extraInfo.emplace_back( j->second, i.second );
         } else {
           // this is very unexpected but shouldn't be fatal
-          Error( std::string{ "Int key for string info key=" } +  i.first + " not found ",
+          Error( "Int key for string info key=" + i.first + " not found ",
                  StatusCode::SUCCESS, 50 );
         }
       }
     }
+
     stdInfoSubBank.push_back( stdInfo );
     extraInfoSubBank.push_back( extraInfo );
 
@@ -367,6 +383,8 @@ StatusCode HltSelReportsWriter::execute() {
   hltSelReportsBank.push_back( HltSelRepRBEnums::kSubstrID, substrSubBank.location(), substrSubBank.size() );
   substrSubBank.deleteBank();
 
+  // add some sanity checking on the stdInfo bank
+  sanityCheck(stdInfoSubBank );
   // std info
   stdInfoSubBank.saveSize();
   hltSelReportsBank.push_back( HltSelRepRBEnums::kStdInfoID, stdInfoSubBank.location(), stdInfoSubBank.size() );
@@ -407,7 +425,7 @@ StatusCode HltSelReportsWriter::execute() {
     rawEvent->addBank(  sourceID, RawBank::HltSelReports, kVersionNumber, bankBody );
   }
   if( nBank>1 ){
-    Warning( std::string{ "HltSelReports is huge. Saved in " }
+    Warning( "HltSelReports is huge. Saved in " 
            + std::to_string( nBank ) + " separate RawBanks ",
              StatusCode::SUCCESS, 10 );
   }

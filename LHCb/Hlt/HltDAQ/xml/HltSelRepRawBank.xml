@@ -140,6 +140,7 @@ Sub-banks immediately follow the header.'
           argList='unsigned int iBank'
           desc ='relative location of the sub-bank in the bank body in number of words given its index (0=means first word)'
           const='TRUE'
+          access = 'PRIVATE'
           >
         <code>
           validateIndex(iBank);
@@ -157,6 +158,7 @@ Sub-banks immediately follow the header.'
           argList='unsigned int iBank'
           desc ='relative location of the end() of sub-bank in the bank body in number of words given its index (0=means first word)'
           const='TRUE'
+          access = 'PRIVATE'
           >
         <code>
           validateIndex(iBank);
@@ -326,7 +328,7 @@ Sub-banks immediately follow the header.'
           if( !m_location ){
             unsigned int len = kDefaultAllocation;
             len=((sizeSubBank+kHeaderSize)&lt;len)?len:(sizeSubBank+len);
-	    initialize( len );
+            initialize( len );
           }
 
           // re-locate the bank body if necessary  
@@ -336,7 +338,7 @@ Sub-banks immediately follow the header.'
             unsigned int len = aSize + kDefaultAllocation;
             len= ( nSize&lt;len ) ? len : (nSize+kDefaultAllocation) ;
             unsigned int* newLocation = new unsigned int[len];
-            for(unsigned int i=0;i!=size();++i){ newLocation[i]=m_location[i]; }
+            std::copy_n(m_location,size(),newLocation);
             delete[] m_location;            
             m_location=newLocation;  
             m_location[kAllocatedSize] =len;
@@ -356,7 +358,7 @@ Sub-banks immediately follow the header.'
           // set its end()
           m_location[kSubBankLocations+iBank] =  locBank + sizeSubBank;
           // copy content
-          for(unsigned int i=0;i!=sizeSubBank;++i){ m_location[locBank+i]=pSubBank[i]; }
+          std::copy_n(pSubBank,sizeSubBank,m_location+locBank);
         </code>
       </method>
 

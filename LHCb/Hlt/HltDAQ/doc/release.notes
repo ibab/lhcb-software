@@ -4,6 +4,12 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-07-13 - Gerhard Raven
+ - allow stdInfo selrep subbank larger than 64K words -- this is done completely
+   forward and backwards compatible. Drawback of doing it this way is that in
+   case there are more than 64K words required, an internal 'out of bounds' check 
+   is bypassed. If the bank is less than 64K words, this check is still there.
+
 ! 2015-07-10 - Gerhard Raven
  - make noBank() private in various HltSelRepRB* classes, and zero pointer
    after delete[] so that writing to no longer owned memory becomes a SEGV

@@ -79,17 +79,14 @@ Info can only be read and stored sequencially.'
           name='sizeInfo'
           type='unsigned int'
           argList='unsigned int iObj'
-	  desc='length of std info for object specified by index'
+          desc='length of std info for object specified by index'
           const='TRUE'
           >
         <code>
           noBank();
           validateIndex(iObj);
-          unsigned int iWord = 1 + iObj/4;
-          unsigned int iPart = iObj % 4;
-          unsigned int bits = iPart*8;
-          unsigned int mask = 0xFFL &lt;&lt; bits;
-          return (unsigned int)(( m_location[iWord] &amp; mask ) &gt;&gt; bits);
+          auto bits = 8*(iObj%4);
+          return ( m_location[1+(iObj/4)]  &gt;&gt; bits ) &amp; 0xFFu;
         </code>
       </method>
 
@@ -99,11 +96,10 @@ Info can only be read and stored sequencially.'
           desc ='initialize existing complete bank for reading'
           >
         <code>
-          if( m_floatLoc )return true;
-          unsigned int nObj = numberOfObj();
-          m_floatLoc = 1;
-          if( nObj ) m_floatLoc += 1 + (nObj-1)/4 ;
-          rewind();
+          if( m_floatLoc == 0 ) {
+             m_floatLoc = 1 + ( 3 + numberOfObj() )/4 ;
+             rewind();
+          }
           return true;
         </code>
       </method>
@@ -116,7 +112,20 @@ Info can only be read and stored sequencially.'
           >
         <code>
           noBank();
-          return (unsigned int)( m_location[0] &amp; 0xFFFFL );
+          return (unsigned int)( m_location[0] &amp; 0xFFFFu );
+        </code>
+      </method>
+
+     <method
+	name = 'sizeStored'
+	type = 'unsigned int'
+	desc = 'length of the subbank in long words'
+        const='TRUE'
+        access = 'PRIVATE'
+         >
+        <code>
+          noBank();
+          return ( m_location[0] &gt;&gt; 16 ) &amp; 0xFFFFu;
         </code>
       </method>
 
@@ -125,28 +134,27 @@ Info can only be read and stored sequencially.'
 	type = 'unsigned int'
 	desc = 'length of the subbank in long words'
         const='TRUE'
+        access = 'PRIVATE'
          >
         <code>
-          noBank();
-          return (unsigned int)( ( m_location[0] &amp; 0xFFFF0000L ) &gt;&gt; 16 );
+          auto s = sizeStored();
+          return  s != 0xFFFFu ? s : size(); // in case of 'overflow' of the stored size, return the _computed_ size from the content instead
         </code>
       </method>
 
       <method
           name ='size'
           type ='unsigned int'
-          desc ='actualy size in words'
+          desc ='actual (computed) size in words'
           const='TRUE'
           >
         <code>
-          unsigned int nObj = numberOfObj();
-          unsigned int nInfo=0;
-          for(unsigned int iObj=0; iObj!=nObj; ++iObj){
-             nInfo += sizeInfo(iObj);
+          auto nObj = numberOfObj();
+          unsigned int len = 1 + (3+nObj)/4;
+          for(unsigned int i=0; i!=nObj; ++i) { 
+              auto bits = 8*(i%4);
+              len += ( m_location[1+(i/4)]  &gt;&gt; bits ) &amp; 0xFFu;
           }
-          unsigned int len= 1;
-          if( nObj ) len += 1 + (nObj-1)/4 ;
-          len += nInfo;
           return len;
         </code>
       </method>
@@ -159,9 +167,9 @@ Info can only be read and stored sequencially.'
          >
         <code>
           noBank();
-            unsigned int s=size(); // size() looks at allocated size so calculate it before we mess up with allocated
- 	    m_location[0] &amp;= 0xFFFFL;
-            m_location[0] |=  ( s &lt;&lt; 16 );
+          unsigned int s=size(); // size() looks at allocated size so calculate it before we mess up with allocated
+ 	      m_location[0] &amp;= 0xFFFFu;
+          m_location[0] |=  ( std::min(s,0xFFFFu) &lt;&lt; 16 );
         </code>
       </method>
 
@@ -203,29 +211,29 @@ Info can only be read and stored sequencially.'
 	<code>
 	  if( !m_location )return ((unsigned int)HltSelRepRBEnums::kNoBank); 
 	  //empty bank is OK: if( !numberOfObj() )return ((unsigned int)HltSelRepRBEnums::kEmptyBank); 
-	  if( !sizeAllocated() )return ((unsigned int)HltSelRepRBEnums::kZeroAllocatedSize); 
-          unsigned int s=sizeAllocated();
+      auto s = sizeAllocated();
+	  if( s==0 )return ((unsigned int)HltSelRepRBEnums::kZeroAllocatedSize); 
 
 	  unsigned int iteraInfo=0;
-	  for(unsigned int itera=0;itera!=numberOfObj(); ){
+	  for (unsigned int itera=0;itera!=numberOfObj(); ){
           
             unsigned int iWord = 1 + itera/4;
-	    if( iWord &gt;= s ) return ((unsigned int)HltSelRepRBEnums::kPtrOutOfRange);
+            if( iWord &gt;= s ) return ((unsigned int)HltSelRepRBEnums::kPtrOutOfRange);
 
             unsigned int nInfo = sizeInfo( itera );
-             ++itera;
+            ++itera;
 
-             for(unsigned int i=0;i!=nInfo;++i){
+            for(unsigned int i=0;i!=nInfo;++i){
 
                 unsigned int iWord2 = m_floatLoc +  iteraInfo;
-	        if( iWord2 &gt;= s ) return ((unsigned int)HltSelRepRBEnums::kPtrOutOfRange);
+                if( iWord2 &gt;= s ) return ((unsigned int)HltSelRepRBEnums::kPtrOutOfRange);
 
                 ++iteraInfo;
 
              }
 
 	  }
-          return ((unsigned int)HltSelRepRBEnums::kBankIsOK);
+      return HltSelRepRBEnums::kBankIsOK;
 	</code>
       </method>
 
@@ -237,7 +245,7 @@ Info can only be read and stored sequencially.'
         <code>
           noBank();
           if( !numberOfObj() )
-          throw GaudiException( "Iterating in empty bank in HltSelRepRBStdInfo","HltSelRepRBStdInfo",StatusCode::FAILURE );
+             throw GaudiException( "Iterating in empty bank in HltSelRepRBStdInfo","HltSelRepRBStdInfo",StatusCode::FAILURE );
           if( !m_floatLoc )initialize();
 
           unsigned int s=sizeAllocated();
@@ -251,7 +259,7 @@ Info can only be read and stored sequencially.'
 
              unsigned int iWord2 = m_floatLoc +  m_iteratorInfo;
              if( iWord2 &gt;= s )
-             throw GaudiException( "Iterating beyond extend of the bank in HltSelRepRBStdInfo","HltSelRepRBStdInfo",StatusCode::FAILURE );
+                throw GaudiException( "Iterating beyond extend of the bank in HltSelRepRBStdInfo","HltSelRepRBStdInfo",StatusCode::FAILURE );
 
              ++m_iteratorInfo;
 
@@ -283,25 +291,18 @@ Info can only be read and stored sequencially.'
         desc ='Add StdInfo its content to current iterator position. The later is advanced. Bank must be properly initialized with size info.'
         >
         <code>
-          noBank();          
-          if( !sizeAllocated() )
-          throw GaudiException( "Pushing into empty bank in HltSelRepRBStdInfo","HltSelRepRBStdInfo",StatusCode::FAILURE );
-          if( !m_floatLoc )
-          throw GaudiException( "Pushing into uninitialized bank in HltSelRepRBStdInfo","HltSelRepRBStdInfo",StatusCode::FAILURE );
+          auto s=sizeStored();
+          if( s==0  ) throw GaudiException( "Pushing into empty bank in HltSelRepRBStdInfo","HltSelRepRBStdInfo",StatusCode::FAILURE );
+          if( m_floatLoc==0 ) throw GaudiException( "Pushing into uninitialized bank in HltSelRepRBStdInfo","HltSelRepRBStdInfo",StatusCode::FAILURE );
 
-          unsigned int s=sizeAllocated();
+          unsigned int nInfo = std::min(stdInfo.size(),255ul); // can't store more than this; non-essential output anyway          
 
-          unsigned int nInfo = stdInfo.size();
-          if( nInfo &gt; 255 )nInfo=255; // can't store more than this; non-essential output anyway          
+          unsigned int iObj = numberOfObj();
+          unsigned int iWord = 1 + (iObj/4);
+          if ( iWord &gt;= m_floatLoc ) throw GaudiException( "Iterating beyond extend of count table in HltSelRepRBStdInfo","HltSelRepRBStdInfo",StatusCode::FAILURE );
+          m_location[0] = (  m_location[0] &amp; ~0xFFFFL ) | (iObj+1) ;
 
-          unsigned int iObj = ( m_location[0] &amp; 0xFFFFL );
-          unsigned int iWord = 1 + iObj/4;
-             if( iWord &gt;= s )
-             throw GaudiException( "Iterating beyond extend of the bank in HltSelRepRBStdInfo","HltSelRepRBStdInfo",StatusCode::FAILURE );
           unsigned int iPart = iObj % 4;
-          ++iObj;
-          m_location[0] = ( (  m_location[0] &amp; ~0xFFFFL ) | iObj );
-
           unsigned int bits = iPart*8;
           unsigned int mask = 0xFFL &lt;&lt; bits;
           m_location[iWord] = ( (  m_location[iWord] &amp; ~mask ) | ( nInfo &lt;&lt; bits ) );
@@ -311,8 +312,8 @@ Info can only be read and stored sequencially.'
           for(unsigned int i=0;i!=nInfo;++i){
 
              unsigned int iWord2 = m_floatLoc +  m_iteratorInfo;
-             if( iWord2 &gt;= s )
-             throw GaudiException( "Iterating beyond extend of the bank in HltSelRepRBStdInfo","HltSelRepRBStdInfo",StatusCode::FAILURE );
+             if( iWord2 &gt;= s &amp;&amp; s!=0xFFFFu ) //FIXME: skip check in case of overflow... in order to avoid breaking strict backwards compatibility...
+                throw GaudiException( "Iterating beyond extend of the bank in HltSelRepRBStdInfo","HltSelRepRBStdInfo",StatusCode::FAILURE );
 
              ++m_iteratorInfo;
 
@@ -341,15 +342,12 @@ Info can only be read and stored sequencially.'
         desc ='create a new bank to hold nObj and max of nAllInfo info words, initialize for writing (does not delete old bank if any)'
         >
         <code>
-             unsigned int len = 2;
-            if( nObj ) len += (nObj-1)/4;
-            if( nAllInfo ) len += 1 +  nAllInfo;
-            if( len  &gt; 0xFFFFL )return false;
+            unsigned int len = 1 + ( 3 + nObj )/4 + nAllInfo;
+            // if( len  &gt; 0xFFFFL )return false;
             m_location = new unsigned int[len];           
-            m_location[0] =   (len &lt;&lt; 16);
-            m_location[1] =  0;
-            m_floatLoc = 1;
-            if( nObj ) m_floatLoc += 1 + (nObj-1)/4 ;
+            m_location[0] = ( std::min(len,0xFFFFu) &lt;&lt; 16);
+            std::fill_n(m_location+1,len-1,0u); // this wasn't always done, so the table of  # of info of old data contains garbage beyond the last count...
+            m_floatLoc = 1 + (3 + nObj )/4 ;
             rewind();
             return true;
         </code>

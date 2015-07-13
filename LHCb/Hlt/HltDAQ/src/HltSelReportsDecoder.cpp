@@ -142,7 +142,7 @@ StatusCode HltSelReportsDecoder::execute() {
   unsigned int nObj = objTypSubBank.numberOfObj();
 
   if( bankSize < hltSelReportsBank.size() ){
-    Error( std::string{ " HltSelReportsRawBank internally reported size " } 
+    Error( " HltSelReportsRawBank internally reported size "
          + std::to_string( hltSelReportsBank.size() )
          + " less than bank size delivered by RawEvent " 
          + std::to_string(bankSize),
@@ -153,7 +153,7 @@ StatusCode HltSelReportsDecoder::execute() {
 
   ic = hltSelReportsBank.integrityCode();
   if( ic ){
-    Error( std::string{ " HltSelReportsRawBank fails integrity check with code "}
+    Error( " HltSelReportsRawBank fails integrity check with code "
          + std::to_string(ic) +  " " + HltSelRepRBEnums::IntegrityCodesToString(ic),
            StatusCode::SUCCESS, 100 );
     errors=true;
@@ -161,7 +161,7 @@ StatusCode HltSelReportsDecoder::execute() {
 
   ic = hitsSubBank.integrityCode();
   if( ic ){
-    Error( std::string{" HltSelRepRBHits fails integrity check with code " }
+    Error( " HltSelRepRBHits fails integrity check with code " 
          + std::to_string(ic) + " " + HltSelRepRBEnums::IntegrityCodesToString(ic),
            StatusCode::SUCCESS, 100 );
     errors=true;
@@ -169,7 +169,7 @@ StatusCode HltSelReportsDecoder::execute() {
 
   ic = objTypSubBank.integrityCode();
   if( ic ){
-    Error( std::string{ " HltSelRepRBObjTyp fails integrity check with code " }
+    Error( " HltSelRepRBObjTyp fails integrity check with code "
          + std::to_string(ic) + " " + HltSelRepRBEnums::IntegrityCodesToString(ic),
            StatusCode::SUCCESS, 100 );
     errors=true;
@@ -177,13 +177,13 @@ StatusCode HltSelReportsDecoder::execute() {
 
   ic = substrSubBank.integrityCode();
   if( ic ){
-    Error( std::string{ " HltSelRepRBSubstr fails integrity check with code " }
+    Error( " HltSelRepRBSubstr fails integrity check with code " 
          + std::to_string(ic) +  " " + HltSelRepRBEnums::IntegrityCodesToString(ic),
            StatusCode::SUCCESS, 100 );
     errors=true;
   }
   if( nObj != substrSubBank.numberOfObj() ){
-    Error( std::string{ " HltSelRepRBSubstr has number of objects "  }
+    Error( " HltSelRepRBSubstr has number of objects " 
          + std::to_string(substrSubBank.numberOfObj())
          + " which is different than HltSelRepRBObjTyp " 
          + std::to_string(nObj),
@@ -193,13 +193,13 @@ StatusCode HltSelReportsDecoder::execute() {
 
   ic = stdInfoSubBank.integrityCode();
   if( ic ){
-    Error( std::string{ " HltSelRepRBStdInfo fails integrity check with code " }
+    Error( " HltSelRepRBStdInfo fails integrity check with code "
          + std::to_string(ic ) +  " " + HltSelRepRBEnums::IntegrityCodesToString(ic),
            StatusCode::SUCCESS, 100 );
     errors=true;
   }
   if( nObj != stdInfoSubBank.numberOfObj() ){
-    Error( std::string{ " HltSelRepRBStdInfo has number of objects " }
+    Error( " HltSelRepRBStdInfo has number of objects " 
          + std::to_string( stdInfoSubBank.numberOfObj() )
          + " which is different than HltSelRepRBObjTyp " 
          + std::to_string( nObj ),
@@ -209,13 +209,13 @@ StatusCode HltSelReportsDecoder::execute() {
 
   ic = extraInfoSubBank.integrityCode();
   if( ic ){
-    Error( std::string{ " HltSelRepRBExtraInfo fails integrity check with code " }
+    Error( " HltSelRepRBExtraInfo fails integrity check with code " 
          + std::to_string(ic) + " " + HltSelRepRBEnums::IntegrityCodesToString(ic),
            StatusCode::SUCCESS, 100 );
     exInfOn=false; // the only non-fatal info corruption
   }
   if( nObj != extraInfoSubBank.numberOfObj() ){
-    Error( std::string{  " HltSelRepRBExtraInfo has number of objects " }
+    Error( " HltSelRepRBExtraInfo has number of objects " 
          + std::to_string( extraInfoSubBank.numberOfObj() )
          + " which is different than HltSelRepRBObjTyp " 
          + std::to_string( nObj ),
@@ -327,14 +327,14 @@ StatusCode HltSelReportsDecoder::execute() {
             int id = (int)(  floatFromInt(stdInfo[1])+0.1 );            
             auto iselName = idmap.find(id);
             if (iselName == std::end(idmap)) {
-              Error( std::string{  " Did not find string key for PV-selection-ID in trigger selection in storage id=" } + std::to_string(id),
+              Error( " Did not find string key for PV-selection-ID in trigger selection in storage id=" + std::to_string(id),
                      StatusCode::SUCCESS, 10 ); 
               infoPersistent.insert( "10#Unknown" , floatFromInt(id) );        
             } else 
               infoPersistent.insert( "10#" + iselName->second.str(), floatFromInt(stdInfo[1]) );
             }
             for( unsigned int ipvkeys=2; ipvkeys< stdInfo.size(); ++ipvkeys ){
-              infoPersistent.insert( std::string{ "11#" }+ boost::str(boost::format("%1$=08X") % (ipvkeys-2)),
+              infoPersistent.insert( "11#" + boost::str(boost::format("%1$=08X") % (ipvkeys-2)),
                                      floatFromInt( stdInfo[ipvkeys] ) );        
             }
 
@@ -343,12 +343,11 @@ StatusCode HltSelReportsDecoder::execute() {
       default:
         { 
 
-          Warning( std::string{ " StdInfo on unsupported class type "}+ std::to_string(hos->summarizedObjectCLID()),
+          Warning( " StdInfo on unsupported class type " + std::to_string(hos->summarizedObjectCLID()),
                    StatusCode::SUCCESS, 20 );
           int e = 0;
           for (const auto& i : stdInfo) { 
-            infoPersistent.insert( std::string { "z#Unknown.unknown" } + std::to_string( e++ ),
-                                   floatFromInt(i) );        
+            infoPersistent.insert( "z#Unknown.unknown" + std::to_string( e++ ), floatFromInt(i) );        
           }      
         }    
       }
@@ -362,7 +361,7 @@ StatusCode HltSelReportsDecoder::execute() {
         if ( infos!=std::end(infomap) ) {
           infoPersistent.insert( infos->second, i.second );
         } else {
-          Warning( std::string{ " String key for Extra Info item in storage not found id=" } + std::to_string(i.first),
+          Warning( " String key for Extra Info item in storage not found id=" + std::to_string(i.first),
                    StatusCode::SUCCESS, 20 );
         }
       }
@@ -454,7 +453,7 @@ StatusCode HltSelReportsDecoder::execute() {
       // insert selection into the container
       if( outputSummary->insert(selName->second,selSumOut) == StatusCode::FAILURE ){
         Error( "  Failed to add Hlt selection name " 
-               + std::string(selName->second)
+               + std::string{ selName->second }
                + " to its container ", StatusCode::SUCCESS, 10 );
       }
     } else {    
