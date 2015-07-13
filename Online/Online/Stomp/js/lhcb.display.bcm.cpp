@@ -211,8 +211,11 @@ if ( !lhcb.widgets ) {
     tab.handle_data = function(data) {
       //var c = this.c_chart;
       var d = this.c_data;
+      var date = new Date();
+      var tim  = date.getTime()-date.getTimezoneOffset()*60*1000;
+      date.setTime(tim);
       if ( d.length>100 ) d.splice(0,d.length-100);
-      d.push([(new Date()).getTime(),data]);
+      d.push([date.getTime(),data]);
       this.c_series.getDataHandler().setArray(d);
       this.c_series.reload();
       return data;
