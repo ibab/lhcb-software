@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-07-13 - Jessica Prisciandaro
+ - Update of DiMuonSoft line cuts.
+
 ! 2015-07-11 - Francesco Dettori
  - Aligning the DiMuon lines cuts to the ones in the settings to avoid confusions.
 
