@@ -236,24 +236,26 @@ _numbers_ = (
 #  R. De Levie, "An improved numerical approximation for the first derivative"
 #  @see http://www.ias.ac.in/chemsci/Pdf-Sep2009/935.pdf
 #  @code
-#  >>> func =  lambda x : x*x
-#  >>> print derivative ( func , x = 1 ) 
+#  >>> fun =  lambda x : x*x
+#  >>> print derivative ( fun , x = 1 ) 
 #  @endcode
-#  @param func (INPUT) the function itself
+#  @param fun  (INPUT) the function itself
 #  @param x    (INPUT) the argument
 #  @param h    (INPUT) the guess for the step used in numeric differentiation
 #  @param I    (INPUT) the rule to be used ("N-point rule" = 2*I+1)
 #  @param err  (INPUT) calcualte the uncertainty?
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-06
-def derivative ( func , x , h = 0  , I = 2 , err = False ) : 
+def derivative ( fun , x , h = 0  , I = 2 , err = False ) : 
     """
     Calculate the first derivative for the function
     #  @code
-    #  >>> func =  lambda x : x*x
-    #  >>> print derivative ( func , x = 1 ) 
+    #  >>> fun =  lambda x : x*x
+    #  >>> print derivative ( fun , x = 1 ) 
     """
 
+    func = lambda x : float ( fun ( x ) )
+    
     ## get the function value at the given point 
     f0 = func(x)
 
