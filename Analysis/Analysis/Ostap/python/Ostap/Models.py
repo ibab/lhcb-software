@@ -30,15 +30,17 @@ from   AnalysisPython.Logger import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.Models' )
 else                       : logger = getLogger ( __name__       )
 # =============================================================================
-_wrappers_ = {} 
-# =============================================================================
+# helper adapter for 1D-functions 
 class _WO1_ (object)  :
+    "Helper adapter for 1D-functions"
     def __init__ ( self , o              ) :        self._o   =  o 
     def __call__ ( self , x , pars  = [] ) : return self._o ( x [0]        )
+# helper adapter for 1D-functions 
 class _WO2_ (object)  :
+    "Helper adapter for 2D-functions"
     def __init__ ( self , o              ) :        self._o   =  o 
     def __call__ ( self , x , pars  = [] ) : return self._o ( x [0] , x[1] )
-    
+
 # =============================================================================
 ## convert the model into TF1
 def _tf1_ ( self , *args ) :
@@ -51,14 +53,13 @@ def _tf1_ ( self , *args ) :
     
     >>> fun.Draw() 
     """
-    key = funID ()
     #
-    wo  = _WO1_ ( self )
-    #
-    fun = ROOT.TF1 ( key , wo , *args )
+    if not hasattr ( self , '_wo1' ) : self._wo1 = _WO1_ ( self )
+    if not self._wo1                 : self._wo1 = _WO1_ ( self )
+    ## 
+    _wo = self._wo1 
+    fun = ROOT.TF1 ( funID()  , _wo , *args )
     fun.SetNpx ( 500 ) 
-    #
-    _wrappers_ [ key ] = wo,fun 
     #
     return fun 
 
@@ -74,15 +75,14 @@ def _tf2_ ( self , *args ) :
     
     >>> fun.Draw() 
     """
-    key = funID ()
-    #
-    wo  = _WO2_ ( self )
-    #
-    fun = ROOT.TF2 ( key , wo , *args )
+    ##
+    if not hasattr ( self , '_wo2' ) : self._wo1 = _WO2_ ( self )
+    if not self._wo2                 : self._wo1 = _WO2_ ( self )
+    ## 
+    _wo = self._wo1 
+    fun = ROOT.TF2 ( funID ()  , _wo , *args )
     fun.SetNpx ( 100 ) 
     fun.SetNpy ( 100 ) 
-    #
-    _wrappers_ [ key ] = wo,fun 
     #
     return fun 
 
@@ -428,7 +428,11 @@ Gaudi.Math.BreitWigner . amp = _amp_
     
 # =============================================================================
 
-            
+
+import LHCbMath.deriv as _M
+for i in ( _M.Derivative , _M.Integral , _M.IntegralCache ) :
+    if not hasattr ( i , 'tf1' ) : i.tf1 = _tf1_
+                
 # =============================================================================
 if '__main__' == __name__ :
     
