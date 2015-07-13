@@ -1040,6 +1040,15 @@ def _fit_repr_ ( self ) :
         a = VE ( v ,e*e )
         _r  += " \n %s " % a 
     return _r
+
+# =============================================================================
+## get number of parameters 
+def _fit_len_ ( r ) :
+    """
+    Get number of parameters 
+    """
+    return len ( r.Parameters() ) 
+
 # =============================================================================
 ## iterator over fit-result object 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -1048,29 +1057,72 @@ def _fit_iter_ ( r ) :
     """
     Iterator over fit-result object 
     """
-    _i = 0
-    _p = r.Parameters ()
-    _e = r.Errors     ()
-    _l = len(_p)
-    while _i < _l :
-        a = VE ( _p[_i] , _e[_i]**2 )
-        yield a
-        _i += 1
-        
+    l = len( r )
+    i = 0
+    while i < l :
+        yield i
+        i += 1
+
+# =============================================================================
+## get parameter number
+#  @code
+#  r    = h1.Fit( ... )
+#  name = r.GetParNumber ( 1 ) 
+#  @endcode
+def _fit_parnum_ ( self , par ) : 
+    """
+    Get parameter number:
+    >>> r    = h1.Fit( ... )
+    >>> name = r.GetParNumber ( 1 ) 
+    """ 
+    if isinstance ( par , ( int , long ) ) :
+        if 0<= par< len ( self ) : return int( par )   ## RETURN 
+        else                     : return       -1     ## RETURN 
+    #
+    if isinstance   ( par , str )  :
+        ll = len ( self )
+        for i in range ( 0 , ll ) :
+            if self.ParName(i) == par : return i       ## RETURN 
+            
+    ## nothing is found 
+    return -1                                          ## RETURN 
+
+# =============================================================================
+## check parameter
+#  @code
+#  r = h1.Fit(....) ##
+#  if i   in r :   ...  ## check parameter by index  
+#  if 'm' in r :   ...  ## check parameter by name  
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-12
+def _fit_contains_ ( self , par ) :
+    """
+    Check parameter
+    >>> r = h1.Fit(....) ##
+    >>> if i   in r :   ...  ## check parameter by index  
+    >>> if 'm' in r :   ...  ## check parameter by name  
+    """
+    return  0 <= _fit_parnum_ ( self , par )
+
+    
 # =============================================================================
 ## getitem for fit-result-object            
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
-def _fit_get_item_ ( self , i ) :
+def _fit_getitem_ ( self , par ) :
     """
     Getitem for fit-result-object            
     """
-    _p = self.Parameters ()
-    _e = self.Errors     ()
-    _l = len(_p)
-    if 0<= i < _l :
-        return VE ( _p[i]  , _e[i]**2 )
-    raise IndexError 
+    ## convert parameter into integer 
+    ipar = _fit_parnum_ ( par )
+    if not 0<= ipar : raise IndexError("TFitResult:illegal index %s" % par)
+    #
+    _p = self.Parameter ( ipar )
+    _e = self.Error     ( ipar )
+    #
+    return VE( _p , _e * _e )
+
 
 # =============================================================================
 ## Get correlation coefficient for parameters 'i' and 'j'
@@ -1081,13 +1133,19 @@ def _fit_cor_ ( self , i , j ) :
     >>> r = ...
     >>> print r.cor(1,2)
     """
-    _p = self.Parameters ()
-    _e = self.Errors     ()
-    _l = len(_p)
-    if 0 <= i <_l and 0 <= j <_l :
-        return self.CovMatrix( i , j ) / ( _e[i] * _e[j] )
-    raise IndexError 
-
+    ipar = _fit_parnum_ ( self , i )
+    jpar = _fit_parnum_ ( self , j )
+    #
+    if  0 > ipar : raise IndexError( "TFitResult:invalid index %s" % i )
+    if  0 > jpar : raise IndexError( "TFitResult:invalid index %s" % j )
+    #
+    _cij = self.CovMatrix ( ipar , jpar )
+    _ei  = self.Errors    ( ipar )
+    _ej  = self.Errors    ( jpar )
+    ##
+    if 0 == _ei or 0 == _ej : return 0   ## RETURN 
+    #
+    return _cij / ( _ei * _ej ) 
 
 # =============================================================================
 ## Get correlation matrix 
@@ -1098,48 +1156,49 @@ def _fit_corm_ ( self , root = False ) :
     >>> r = ...
     >>> print r.corMtrx ()
     """
-    _p = self.Parameters ()
-    _e = self.Errors     ()
-    _l = len(_p)
-    ##
-    
+    _l = len (self) 
     matrix = None
     
     from LHCbMath.Types import Gaudi as _G 
     _GM    = _G.Math
-    
-    if   1 == _l and hasattr ( _GM , 'SymMatrix1x1' ) : matrix = _GM.SymMatrix1x1
-    elif 2 == _l and hasattr ( _GM , 'SymMatrix2x2' ) : matrix = _GM.SymMatrix2x2
-    elif 3 == _l and hasattr ( _GM , 'SymMatrix3x3' ) : matrix = _GM.SymMatrix3x3
-    elif 4 == _l and hasattr ( _GM , 'SymMatrix4x4' ) : matrix = _GM.SymMatrix4x4
-    elif 5 == _l and hasattr ( _GM , 'SymMatrix5x5' ) : matrix = _GM.SymMatrix5x5
-    elif 6 == _l and hasattr ( _GM , 'SymMatrix6x6' ) : matrix = _GM.SymMatrix6x6
-    elif 7 == _l and hasattr ( _GM , 'SymMatrix7x7' ) : matrix = _GM.SymMatrix7x7
-    elif 8 == _l and hasattr ( _GM , 'SymMatrix8x8' ) : matrix = _GM.SymMatrix8x8
-    elif 9 == _l and hasattr ( _GM , 'SymMatrix9x9' ) : matrix = _GM.SymMatrix9x9
+    if   1 == _l and hasattr ( _GM , 'SymMatrix1x1' ) : matrix = _GM.SymMatrix1x1 ()
+    elif 2 == _l and hasattr ( _GM , 'SymMatrix2x2' ) : matrix = _GM.SymMatrix2x2 ()
+    elif 3 == _l and hasattr ( _GM , 'SymMatrix3x3' ) : matrix = _GM.SymMatrix3x3 ()
+    elif 4 == _l and hasattr ( _GM , 'SymMatrix4x4' ) : matrix = _GM.SymMatrix4x4 ()
+    elif 5 == _l and hasattr ( _GM , 'SymMatrix5x5' ) : matrix = _GM.SymMatrix5x5 ()
+    elif 6 == _l and hasattr ( _GM , 'SymMatrix6x6' ) : matrix = _GM.SymMatrix6x6 ()
+    elif 7 == _l and hasattr ( _GM , 'SymMatrix7x7' ) : matrix = _GM.SymMatrix7x7 ()
+    elif 8 == _l and hasattr ( _GM , 'SymMatrix8x8' ) : matrix = _GM.SymMatrix8x8 ()
+    elif 9 == _l and hasattr ( _GM , 'SymMatrix9x9' ) : matrix = _GM.SymMatrix9x9 ()
     
     ## use ROOT matrices
-    if not matrix : matrix = ROOT.TMatrix( _l , _l )
+    if not matrix :
+        matrix = ROOT.TMatrix( _l , _l )
 
     ## fill matrix 
-    for i in range ( 0 , _l ) :
-        for j in range ( 0 , _l ) :
+    for i in range (0,_l):
+        for j in range (i, _l):
             _cij = self.CovMatrix( i , j ) 
-            _eij = _e[i] * _e[j]
-            matrix [ i , j ] = _cij / _eij 
-            matrix [ j , i ] = _cij / _eij 
+            _eij = self.Error( i ) * self.Error( j )
+            if 0 != _eij : _vij = _cij / _eij
+            else         : _vij = 0
+            matrix [ i , j ] = _vij 
+            matrix [ j , i ] = _vij
             
     return matrix
 
 
+ROOT.TFitResultPtr.__contains__ = _fit_contains_ 
+
 ROOT.TFitResultPtr.__repr__     = _fit_repr_ 
 ROOT.TFitResultPtr.__str__      = _fit_repr_ 
 ROOT.TFitResultPtr.__iter__     = _fit_iter_ 
-ROOT.TFitResultPtr.__getitem__  = _fit_get_item_ 
-ROOT.TFitResultPtr.__call__     = _fit_get_item_ 
-ROOT.TFitResultPtr.__len__      = lambda s : len( s.Parameters() ) 
+ROOT.TFitResultPtr.__getitem__  = _fit_getitem_ 
+ROOT.TFitResultPtr.__call__     = _fit_getitem_ 
+ROOT.TFitResultPtr.__len__      = _fit_len_ 
 ROOT.TFitResultPtr.cor          = _fit_cor_ 
 ROOT.TFitResultPtr.corMtrx      = _fit_corm_ 
+ROOT.TFitResultPtr.GetParNumber = _fit_parnum_ 
 
 
 # =============================================================================
