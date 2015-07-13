@@ -1369,7 +1369,6 @@ ROOT.TF1.rel          = _tf1_release_
 ROOT.TF1.release      = _tf1_release_
 
 ROOT.TF1.__iter__     = _tf1_iter_
-ROOT.TF1.__call__     = _tf1_par_
 ROOT.TF1.__getitem__  = _tf1_par_
 ROOT.TF1.__getattr__  = _tf1_getattr_
 
