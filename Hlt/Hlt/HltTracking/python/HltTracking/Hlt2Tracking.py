@@ -75,6 +75,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "UseTrackBestTrackCreator"        : True  # Intended default True. Development options
                                                              # This one disables separate fitting of Hlt2 Forward, Match
                                                              # and Downstream tracks. Leave DoCleanups true for Hlt1 track filtering
+                , "NewDownstreamAlg"                : True  # TODO: Remove this option after some grace period
                 , "RichHypos"                       : HltRichDefaultHypos
                 , "RichRadiators"                   : HltRichDefaultRadiators
                 , "RichTrackCuts"                   : HltRichDefaultTrackCuts
@@ -1401,7 +1402,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         Downstream track reconstruction for Hlt2 using seeding
         """
-        from Configurables    import PatDownstream
+        from Configurables    import PatDownstream, PatLongLivedTracking
         from HltLine.HltLine    import bindMembers
 
         downstreamTrackOutputLocation    = Hlt2TrackLoc["Downstream"]
@@ -1410,7 +1411,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
         matchtracks = self.__hlt2MatchTracking()
 
         ### Downstream tracking
-        PatDownstream                 = PatDownstream(self.getProp("Prefix")+'PatDownstream')
+
+
+        if self.getProp("NewDownstreamAlg"):
+            PatDownstream                 = PatLongLivedTracking(self.getProp("Prefix")+'PatLongLivedTracking')
+        else:
+            PatDownstream                 = PatDownstream(self.getProp("Prefix")+'PatDownstream')
         PatDownstream.InputLocation   = self.__hlt2SeedTracking().outputSelection()
         PatDownstream.OutputLocation  = downstreamTrackOutputLocation
         PatDownstream.ForwardLocation = fwdtracks.outputSelection()

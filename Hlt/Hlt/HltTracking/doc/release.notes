@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-07-13 - Sascha Stahl
+ - Hlt2Tracking: Replace PatDownstream by new and better PatLongLivedTracking,
+   PatDownstream can still be activated by an option Hlt2Tracking, NewDownstreamAlg.
+
 ! 2015-07-08 - Roel Aaij
  - Create separate file to define Hlt2ProbeTracking configurations.
 
