@@ -4,6 +4,12 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2015-07-13 - Manuel Tobias Schiller
+ - My last commit was not enabled due to overly clever preprocessor directives
+   that got overlooked before the final commit; thus the old code ran until
+   this fix was committed. Since I expect no changes apart from timing, this
+   one should be innocuous.
+
 !========================= TfKernel v2r32 2015-05-26 =========================
 ! 2015-05-23 - Manuel Tobias Schiller
  - SIMDChi2Fit: speed up using custom vectorisable dot product implementation

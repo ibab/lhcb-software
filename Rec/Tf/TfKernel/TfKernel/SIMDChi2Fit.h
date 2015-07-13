@@ -1187,7 +1187,7 @@ void SIMDChi2Fit<MEASUREMENTPROVIDER, MEASUREMENTPROJECTOR,
     for (unsigned i = 0, idx = 0; LIKELY(i != nDim); ++i) {
 	// update m_rhs
 	// vectorises
-#if !defined(__GNUC__) || 1
+#if !defined(__GNUC__)
 	m_rhs[i] += std::inner_product(
 		std::begin(wgrads[i]), std::begin(wgrads[i]) + iHitMax,
 		std::begin(wmeass), value_type(0));
@@ -1199,7 +1199,7 @@ void SIMDChi2Fit<MEASUREMENTPROVIDER, MEASUREMENTPROJECTOR,
 	// update m_icov
 	for (unsigned j = 0; LIKELY(j <= i); ++j, ++idx) {
 	    // vectorises
-#if !defined(__GNUC__) || 1
+#if !defined(__GNUC__)
 	    m_icov[idx] += std::inner_product(
 	    	    std::begin(wgrads[i]), std::begin(wgrads[i]) + iHitMax,
 	    	    std::begin(wgrads[j]), value_type(0));
