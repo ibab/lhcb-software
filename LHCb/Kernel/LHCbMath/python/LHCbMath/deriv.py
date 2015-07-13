@@ -344,7 +344,7 @@ class Derivative(object) :
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-06
-def integral ( func , x0 , x , err = False , *args ) :
+def integral ( fun , x0 , x , err = False , *args ) :
     """
     Calculate the integral for the 1D-function using scipy
     
@@ -352,6 +352,7 @@ def integral ( func , x0 , x , err = False , *args ) :
     >>> v = integral(func,0,1)
     """
     from scipy import integrate
+    func   = lambda x : float ( fun ( x ) ) 
     result = integrate.quad ( func , x0 , x , args = args )
     return VE( result[0] , result[1] * result[1] ) if err else result[0] 
 
@@ -386,12 +387,11 @@ class Integral(object) :
         self._err    = err
         self._args   = args
         
+    ## Calculate the integral for the 1D-function using scipy
     def _integrate_ ( self , xmn , xmx , *args ) :
-        from scipy import integrate
         args   = args if args else self._args
-        try : 
-            result = integrate.quad ( self._func , xmn , xmx , args = args )
-            return VE ( result[0] , result[1] * result[1] ) if self._err else float(result[0])
+        try :
+            return integral ( self._func , xmn , xmx , self._err , *args )
         except :
             print 'EXCEPT' , xmn, xmx , type(xmn), type(xmx)
             
