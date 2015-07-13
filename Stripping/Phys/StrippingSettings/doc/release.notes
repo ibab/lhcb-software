@@ -6,6 +6,9 @@
 
 !========================= StrippingSettings v2r37 2015-06-29 =========================
 
+! 2015-07-13 - Jinlin Fu
+ - update Charm dict s23 for hardcoded trigger lines remove from StrippingDstarD02xx by Andrea 
+
 ! 2015-07-02 - Jinlin Fu
  - update Charm dict s23 
 
