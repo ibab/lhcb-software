@@ -109,7 +109,7 @@ class Muons_March2015(object) :
                                       'MinVDZ'     :     0,
                                       'MinBPVDira' :     0,
                                       'MaxIpDistRatio':  1./60,
-                                      'cosAngle'   :9.99998
+                                      'cosAngle'   : 0.999998
                                     },                    
                    'DetachedJPsi' :        {'DLS'         :     3},
                    'DetachedPsi2S' :       {'DLS'         :     3},
