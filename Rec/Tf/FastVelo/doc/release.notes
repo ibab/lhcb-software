@@ -4,6 +4,10 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2015-07-13 - Sascha Stahl
+ - Changed the default of the scattering noise parameters in  FastVeloTracking and FastVeloFitLHCbIDs 
+   to improve the pull distribution of primary vertices.
+
 ! 2015-06-28 - Sascha Stahl
  - Made the scattering noise parameters in VeloFastKalmanTrack configurable from
    FastVeloTracking and FastVeloFitLHCbIDs. Property is called "KalmanScatteringNoiseParameters".

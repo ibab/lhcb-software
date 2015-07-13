@@ -79,7 +79,7 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
   declareProperty( "KalmanStateLastMeasurement", m_kalmanStateLastMeasurement = false ) ;
   declareProperty( "KalmanStateEndVelo", m_kalmanStateEndVelo = false ) ;
   declareProperty( "KalmanTransverseMomentumForScattering", m_kalmanPtForScattering = 400 * Gaudi::Units::MeV ) ;
-  declareProperty( "KalmanScatteringNoiseParameters", m_kalmanScatteringNoiseParameters = {} ) ;
+  declareProperty( "KalmanScatteringNoiseParameters", m_kalmanScatteringNoiseParameters = { 0.5,0.002,0.5,0.004 } ) ;
 
   // Parameters for debugging
   declareProperty( "DebugToolName"     , m_debugToolName  = ""        );
