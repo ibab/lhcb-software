@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-07-13 - Michel De Cian
+ - Switch on new multiple scattering correction in 'RecoTrackingRun2.py'
+
 ! 2015-07-11 - Michel De Cian
  - Replace PatDownstream with PatLongLivedTracking in the default sequence, put in warning if non-standard Pat Reco algorithm is used, adapt PatChecking.py such that new algo fires up the TrackAssociator.
 

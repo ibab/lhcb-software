@@ -175,6 +175,8 @@ def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
 
    ######
    ### Fitter for Forward tracks
+   ### Need to be careful: This is all a little fragile, so if you plan to change something, check that everything configures the way you expect
+   ### The Extrapolator for the StateInitTool does not use material corrections, so don't need to explicitely add the StateThickMSCorrectionTool 
    ######
    if "ForwardHLT1" in trackAlgs:
       fwdFitter = TrackEventFitter('ForwardHLT1FitterAlg')
@@ -198,7 +200,7 @@ def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
       fwdFitter.Fit.addTool(TrackMasterFitter, name = "Fit")
    
       from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter
-      ConfiguredMasterFitter(fwdFitter.Fit.Fit, SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit)
+      ConfiguredMasterFitter(fwdFitter.Fit.Fit, SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit, MSRossiAndGreisen = True)
       
       GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ fwdFitter ]
   
@@ -320,6 +322,7 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
       tracklists += ["Rec/Track/VeloTT"]
       
    # create the best track creator
+   # note the comment for the HLT1 forward fitter about configurations
    from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter  
    from Configurables import TrackBestTrackCreator, TrackMasterFitter, TrackStateInitTool
    bestTrackCreator = TrackBestTrackCreator( TracksInContainers = tracklists )
@@ -328,7 +331,7 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    bestTrackCreator.addTool( TrackStateInitTool, name = "StateInitTool")
    bestTrackCreator.StateInitTool.UseFastMomentumEstimate = True
    # configure its fitter and stateinittool
-   ConfiguredMasterFitter( getattr(bestTrackCreator, "Fitter"), SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit )
+   ConfiguredMasterFitter( getattr(bestTrackCreator, "Fitter"), SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit, MSRossiAndGreisen = True )
    if "FastVelo" in trackAlgs :
       bestTrackCreator.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
    # add to the sequence
