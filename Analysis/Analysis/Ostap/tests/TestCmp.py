@@ -115,7 +115,6 @@ for i in range ( 0, 50000 ) :
     
 def compare ( h1 , h2 ) :
 
-    
     r1  = h1.cmp_fit       ( h2 , opts = 'WL' )
     if r1 : logger.info    ( 'h1 vs h2 : fit probability is %g%% ' % ( r1.Prob()*100 ) )
     else  : logger.warning ( 'h1 vs h2 : fit problems ')
@@ -135,10 +134,18 @@ def compare ( h1 , h2 ) :
     
     h1.cmp_prnt ( h2 , 'h1 vs h2 ' ) 
 
+    ## @see http://www.itl.nist.gov/div898/handbook/eda/section3/eda35g.htm
+    ## ks1 = h1.KolmogorovTest ( h2 )
+    ## logger.info           ( 'h1 vs h2 : Kolmogorov test    %s ' % ks1 )
+    
+    ## ks2 = h2.KolmogorovTest ( h1 )
+    ## logger.info           ( 'h2 vs h1 : Kolmogorov test    %s ' % ks2 )
+    
+
 
 ## @todo find better solution
-import warnings
-warnings.simplefilter("ignore")
+## import warnings
+## warnings.simplefilter("ignore")
 
 logger.info( 'Compare gaussians    (1) and (2)' )
 compare ( h1g , h2g )

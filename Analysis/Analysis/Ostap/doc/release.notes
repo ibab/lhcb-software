@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-07-13 - Vanya Belyaev
+ - fix a few typos inducd by cut-n-paste 
+
 ! 2015-07-12 - Vanya Belyaev
  - imporve a bit treatment of scipy code 
 

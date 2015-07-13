@@ -89,7 +89,6 @@ isequal         = cpp.LHCb.Math.Equal_To ('double')()
 #
 ##
 import math, sys
-from array import array
 # =============================================================================
 # logging 
 # =============================================================================
@@ -387,6 +386,8 @@ def _axis_iter_1_ ( a ) :
     while i <= s :
         yield i
         i+=1        
+
+ROOT.TAxis . __iter__ = _axis_iter_1_
 
 # =============================================================================
 ## iterator for histogram  axis (reversed order) 
@@ -1992,7 +1993,7 @@ ROOT.TH3D . __mod__  = zechEff_h3
 
 # =============================================================================
 ## consider object as function:
-def objectAsFunc ( obj ) :
+def objectAsFunction ( obj ) :
     
     if   isinstance ( obj , ( int , long , float ) ) :
         
@@ -2081,11 +2082,11 @@ def _h1_ioper_ ( h1 , h2 , oper ) :
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
     #
-    h2 = objectAsFunction ( h2 ) 
+    f2 = objectAsFunction ( h2 ) 
     #    
     for i1,x1,y1 in h1.iteritems() :
         #
-        y2 = h2 ( x1.value() ) 
+        y2 = f2 ( x1.value() ) 
         #
         v  = VE ( oper ( y1 , y2 ) ) 
         #
@@ -4862,10 +4863,13 @@ def axis_bins ( bins         ) :
     bins = set  ( bins )
     bins = [ i for i in bins ]
     bins.sort()
-    # 
-    assert ( 1 < len ( bins ) )
     #
-    return ROOT.TAxis ( len ( bins ) - 1 , array ( 'd' , bins ) ) 
+    if 2 > len ( bins ) :
+        raise AtributeError("axis_bins: insufficient length of bins: %s" % bins )
+    #
+    from array import array 
+    return ROOT.TAxis ( len ( bins ) - 1 , array ( 'd' , bins ) )
+    #
 
 # =============================================================================
 ## prepare "slice" for the axis
@@ -4931,7 +4935,8 @@ def _h1_getslice_ ( h1 , i , j ) :
     edges = axis.edges ()
     edges = edges [i-1:j]
     
-    typ = h1.__class__ 
+    typ = h1.__class__
+    from array import array
     result = typ ( hID  ()       ,
                    h1.GetTitle() ,
                    len ( edges ) - 1 , array ( 'd' , edges ) )
@@ -4963,10 +4968,11 @@ def h1_axis ( axis           ,
     if not name : name = hID()
     #
     if not issubclass ( type ( axis ) , ROOT.TAxis ) : axis = axis_bins   ( axis )
-    # 
+    #
     bins  = axis.edges()
     #
     typ = ROOT.TH1D if double else ROOT.TH1F
+    from array import array 
     h1  = typ ( name  ,
                 title ,
                 len ( bins ) - 1 , array ( 'd' , bins ) )
@@ -5002,6 +5008,7 @@ def h2_axes ( x_axis            ,
     y_bins  = y_axis.edges()
     #
     typ = ROOT.TH2D if double else ROOT.TH2F
+    from array import array 
     h2  =  typ ( name  ,
                  title ,
                  len ( x_bins ) - 1 , array ( 'd' , x_bins ) ,
@@ -5042,6 +5049,7 @@ def h3_axes ( x_axis            ,
     z_bins  = z_axis.edges()
     #
     typ = ROOT.TH3D if double else ROOT.TH3F
+    from array import array 
     return typ ( name  ,
                  title ,
                  len ( x_bins ) - 1 , array ( 'd' , x_bins ) ,
