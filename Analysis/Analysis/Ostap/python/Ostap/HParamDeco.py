@@ -1142,6 +1142,177 @@ ROOT.TFitResultPtr.cor          = _fit_cor_
 ROOT.TFitResultPtr.corMtrx      = _fit_corm_ 
 
 
+# =============================================================================
+## check existence parameter for the function
+#  @code 
+#  fun = ...         ## function
+#    >>> if i   in fun : ... ## check if i   is valid parameter number 
+#    >>> if 'm' in fun : ... ## check if 'm' is valid parameter name
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-13
+def _tf1_contains_ ( func , par ) :
+    """
+    >>> fun = ...         ## function
+    >>> if i   in fun : ... ## check if i   is valid parameter number 
+    >>> if 'm' in fun : ... ## check if 'm' is valid parameter name  
+    """
+    ## check name 
+    if   isinstance ( par , str            ) : return 0<=func.GetParNumber ( par ) 
+    elif isinstance ( par , ( int , long ) ) : return 0<= par<func.GetNpar (     )
+    #
+    return False 
+
+# =============================================================================
+## Fix parameter for TF1
+#  @code
+#  fun =  ...     ## function
+#  fun.fix(1,0)   ## fix parameter #1  at 0 
+#  fun.fix(2)     ## fix parameter #2  at current value
+#  fun.fix('m',1) ## fix parameter 'm' at 1 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-13
+def _tf1_fix_ ( func , par , value = None ) :
+    """
+    Fix parameter for TF1
+    >>> fun =  ...   ## function 
+    >>> fun.fix(1,0) ## fix parameter #1 at 0 
+    >>> fun.fix(2)   ## fix parameter #2 at current value 
+    """
+    if not par in func : raise IndexError("Invalid parameter index %s" % par )
+    if     isinstance ( par , str  ) : par = func.GetParNumber( par )
+    ##
+    if not isinstance ( value , ( float , int , long ) )  :
+        value = func.GetParameter(par)
+    #
+    func.FixParameter( par , value ) 
+
+# =============================================================================
+## Release parameter for TF1
+#  @code
+#  fun =  ...       ## function
+#  fun.release(1)   ## release parameter #1 
+#  fun.release('m') ## release parameter 'm'
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _tf1_release_ ( func , par ) :
+    """
+    Release parameter for TF1
+    >>> fun =  ...       ## function
+    >>> fun.release(1)   ## release parameter #1 
+    >>> fun.release('m') ## release parameter 'm'
+    """
+    #
+    if not par in func : raise IndexError("Invalid parameter index %s" % par )
+    #
+    if     isinstance ( par , str  ) : par = func.GetParNumber( par )
+    func.ReleaseParameter( par ) 
+
+
+# =============================================================================
+## get the parameter from TF1
+#  @code
+#  fun =  ...   ## function
+#  p = fun.par(1) 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _tf1_par_ ( func , par ) :
+    """
+    Get parameter from TF1
+    >>> fun =  ...        ## function 
+    >>> p2 = fun.par(2)   ## get parameter #2 
+    >>> pm = fun.par('m') ## get parameter 'm'
+    """
+    if not par in func : raise IndexError("Invalid parameter index %s" % par )
+    #
+    if isinstance ( par , str  ) : par = func.GetParNumber( par )    
+    v = func.GetParameter ( par )
+    e = func.GetParError  ( par )
+    #
+    return VE ( v , e * e )
+
+# =============================================================================
+## set parameter of TF1
+#  @code
+#  fun =  ...   ## function
+#  fun.setPar(1,1) 
+#  fun.setPar('m',2) 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _tf1_setpar_ ( func , par , value ) :
+    """
+    Set parameter of TF1 
+    >>> fun =  ...          ## function 
+    >>> fun.setPar(1,1)     ## set parameter #1 to be 1 
+    >>> fun.setPar('m',2)   ## set parameter 'm' to be 2
+    """
+    if not par in func : raise IndexError("Invalid parameter index %s" % par )
+    #
+    if isinstance ( par , str  ) : par = func.GetParNumber( par )
+    #
+    func.SetParameter ( par , float ( value ) )
+
+# =============================================================================
+## primitive iteration over parameters:
+#  @code
+#  fun =  ...        ## function
+#  for p in fun: print fun(p)
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _tf1_iter_ ( func ) :
+    """
+    Primitive iteration over parameters 
+    >>> fun =  ...        ## function 
+    >>> for p in fun: print fun(p)
+    """
+    s = func.GetNpar()
+    i = 0
+    while i < s :
+        yield i
+        i += 1
+        
+# =============================================================================
+## get parameter as attribute
+#  @code
+#  fun =  ...   ## function
+#  pm  = fun.m  ## get parameter 'm'
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _tf1_getattr_ ( func , par ) :
+    """
+    Det parameter as attribute
+    >>> fun =  ...   ## function
+    >>> pm  = fun.m  ## get parameter 'm'
+    """
+    if not isinstance ( par , str ) : raise AttributeError('TF1:Invalid attribute %s' % par )
+    if not par in func              : raise AttributeError('TF1:Invalid attribute %s' % par )
+    return _tf1_par_  ( func , par )
+
+    
+ROOT.TF1.__contains__ = _tf1_contains_
+ROOT.TF1.__len__      = lambda s : s.GetNpar() 
+    
+ROOT.TF1.par          = _tf1_par_
+ROOT.TF1.param        = _tf1_par_
+ROOT.TF1.parameter    = _tf1_par_
+
+ROOT.TF1.setPar       = _tf1_setpar_
+ROOT.TF1.__setitem__  = _tf1_setpar_
+
+ROOT.TF1.fix          = _tf1_fix_
+ROOT.TF1.rel          = _tf1_release_
+ROOT.TF1.release      = _tf1_release_
+
+ROOT.TF1.__iter__     = _tf1_iter_
+ROOT.TF1.__call__     = _tf1_par_
+ROOT.TF1.__getitem__  = _tf1_par_
+ROOT.TF1.__getattr__  = _tf1_getattr_
 
     
 # =============================================================================
