@@ -11,18 +11,20 @@ from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackKalmanFilt
                             TrackSimpleExtraSelector, TrackDistanceExtraSelector,
                             TrackHerabExtrapolator,
                             SimplifiedMaterialLocator, DetailedMaterialLocator,
-                            MeasurementProvider, StateDetailedBetheBlochEnergyCorrectionTool)
+                            MeasurementProvider, StateDetailedBetheBlochEnergyCorrectionTool,
+                            StateThickMSCorrectionTool)
 
 def ConfiguredMasterFitter( Name,
-                            FieldOff = None,
-                            SimplifiedGeometry = None,
-                            NoDriftTimes       = None,
-                            KalmanSmoother     = None,
-                            LiteClusters       = False,
+                            FieldOff                 = None,
+                            SimplifiedGeometry       = None,
+                            NoDriftTimes             = None,
+                            KalmanSmoother           = None,
+                            LiteClusters             = False,
                             ApplyMaterialCorrections = None,
-                            StateAtBeamLine = True,
-                            MaxNumberOutliers = 2 ,
-                            FastOutlierIteration = False ):
+                            StateAtBeamLine          = True,
+                            MaxNumberOutliers        = 2 ,
+                            FastOutlierIteration     = False,
+                            MSRossiAndGreisen        = False):
     # set the mutable default arguments
     if FieldOff is None:                 FieldOff = TrackSys().fieldOff()
     if SimplifiedGeometry is None:       SimplifiedGeometry = TrackSys().simplifiedGeometry()
@@ -51,9 +53,24 @@ def ConfiguredMasterFitter( Name,
     fitter.MaxNumberOutliers = MaxNumberOutliers
     
     # set up the material locator
+    # Using 'RossiAndGreisen' will omit the log term in the multiple scattering calculation (which should give better pulls).
     if SimplifiedGeometry:
         fitter.MaterialLocator = SimplifiedMaterialLocator()
+        fitter.addTool(SimplifiedMaterialLocator, name = "MaterialLocator")
         fitter.Extrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
+    else:
+        fitter.MaterialLocator = DetailedMaterialLocator()
+        fitter.addTool(DetailedMaterialLocator, name="MaterialLocator")
+        fitter.Extrapolator.addTool(DetailedMaterialLocator, name="MaterialLocator")
+        
+    fitter.MaterialLocator.StateMSCorrectionToolName = "StateThickMSCorrectionTool/StateMSCorrectionTool"
+    fitter.MaterialLocator.addTool( StateThickMSCorrectionTool,  "StateMSCorrectionTool")
+    fitter.MaterialLocator.StateMSCorrectionTool.UseRossiAndGreisen = MSRossiAndGreisen
+    fitter.Extrapolator.MaterialLocator.StateMSCorrectionToolName = "StateThickMSCorrectionTool/StateMSCorrectionTool"
+    fitter.Extrapolator.MaterialLocator.addTool( StateThickMSCorrectionTool,  "StateMSCorrectionTool")
+    fitter.Extrapolator.MaterialLocator.StateMSCorrectionTool.UseRossiAndGreisen = MSRossiAndGreisen
+
+
         
     # not yet used for DC09 production    
     # else:
