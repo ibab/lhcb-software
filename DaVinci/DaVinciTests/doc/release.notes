@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+
+! 2015-07-13 - Eduardo Rodrigues
+ - Updated reference file for test test_standardintermediate_reco14_run.qmt.
+
 ! 2015-07-10 - Julian Wishahi
  - Updated the flavour tagging test script to use Stripping23 settings
 
