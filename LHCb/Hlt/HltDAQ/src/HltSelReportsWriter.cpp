@@ -22,9 +22,10 @@ using namespace LHCb;
 
 namespace {
 void sanityCheck(const HltSelRepRBStdInfo& stdInfo) {
-    auto l = stdInfo.location();
-    auto sizeStored = ( l[0] >> 16 );
-    std::cout << "sanityCheck: stored = "  << sizeStored <<  " computed aka. .size() = " << stdInfo.size() <<  "  nObj " << stdInfo.numberOfObj() << std::endl;
+    auto sizeStored = ( stdInfo.location()[0] >> 16 );
+    if (sizeStored!=0xFFFFu && sizeStored != stdInfo.size()) { 
+        throw GaudiException( "Inconsistent HltSelRepRBStdInfo bank","HltSelReportsWriter",StatusCode::FAILURE );
+    }
 }
 
 bool isStdInfo(const std::string& s) {
@@ -383,7 +384,6 @@ StatusCode HltSelReportsWriter::execute() {
   hltSelReportsBank.push_back( HltSelRepRBEnums::kSubstrID, substrSubBank.location(), substrSubBank.size() );
   substrSubBank.deleteBank();
 
-  // add some sanity checking on the stdInfo bank
   sanityCheck(stdInfoSubBank );
   // std info
   stdInfoSubBank.saveSize();
