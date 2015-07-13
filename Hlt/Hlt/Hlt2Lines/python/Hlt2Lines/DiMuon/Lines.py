@@ -54,7 +54,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                                     'MinVDZ'     :     0,
                                     'MinBPVDira' :     0,
                                     'MaxIpDistRatio':  1./60,
-                                    'cosAngle'   :9.99998
+                                    'cosAngle'   :0.999998
                                     },                    
 
                  'DetachedHeavy' : {'MinMass'    :  2950 * MeV,
