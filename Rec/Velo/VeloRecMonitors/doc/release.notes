@@ -4,6 +4,11 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2015-07-13 - Shanzhen Chen
+ - VeloClusterMonitor: Added convoluted Landau-Gaussian fits of cluster ADC 
+   values for offline monitoring purpose. A job option switched these fit off 
+   by default. 
+
 ! 2015-07-10 - Michael Alexander
  - VeloIPResolutionMonitorNT: Added functionality for multi-PV events, option
    to compare tracks using LHCbIDs when refitting PVs, and option to use the
