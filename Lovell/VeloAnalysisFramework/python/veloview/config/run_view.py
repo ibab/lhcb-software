@@ -127,7 +127,7 @@ run_view_pages = OrderedDict([
     }),
     ('clusters', {
         'title': 'Clusters',
-        'plots': [
+        'plots': [ 
             {
                 'title': 'Number of VELO clusters per event (Default)',
                 'short': 'Clusters per event',
@@ -164,7 +164,7 @@ run_view_pages = OrderedDict([
             {
                 'title': 'Number of VELO clusters per event for each sensor',
                 'short': 'Clusters per event per sensor',
-                'name': 'Velo/VeloClusterMonitor/# VELO clusters sensor {0}',
+                'name': 'Velo/VeloClusterMonitor/# clusters sensor {0}',
                 'sensor_dependent': True
             },
             {
@@ -201,7 +201,8 @@ run_view_pages = OrderedDict([
                 'short': 'Cluster ADC values fit parameter : FWHM',
                 'name': 'Velo/VeloClusterMonitor/Cluster ADC value FWHM vs Sensor number'
             }
-        ]
+        ],
+        'layout': (1, 2)
     }),
     ('occupancy', {
         'title': 'Occupancy',
