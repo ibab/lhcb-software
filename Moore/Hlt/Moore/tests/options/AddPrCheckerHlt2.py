@@ -36,6 +36,7 @@ def myActionHlt2() :
     tracks = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
     tracksDown = Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks()
     PrChecker2("PrCheckerHlt2").BestTracks = tracks.outputSelection()
+    PrChecker2("PrCheckerHlt2Down").BestTracks = tracksDown.outputSelection()
     #PrChecker2("PrCheckerHlt2").DownTracks = tracksDown.outputSelection()
 
     PrTrackAssociator("AssocAllHlt2").RootOfContainers = Hlt2TrackRoot
@@ -49,8 +50,10 @@ def myActionHlt2() :
 
 
     PatCheck.Members += [ PrTrackAssociator("AssocAllHlt2"), PrTrackAssociator("AssocFittedHlt2") ]
-    PatCheck.Members += [ PrChecker2("PrCheckerHlt2") ]
     PatCheck.Members += [ PrChecker2("PrCheckerHlt2Forward") ]
+    PatCheck.Members += [ PrChecker2("PrCheckerHlt2") ]
+    PatCheck.Members += [ PrChecker2("PrCheckerHlt2Down") ]
+
 
     #EndMembers = GaudiSequencer("HltEndSequence").Members
     #EndMembers.insert(1,  PatCheck )

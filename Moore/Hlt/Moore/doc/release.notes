@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2015-07-13 - Sascha Stahl
+ - Fixed AddPrCheckerHlt2.py to pick up the correct location of Downstream tracks.
+
 !========================= Moore v23r7p2 2015-06-29 =========================
 
 ! 2015-06-29 - Roel Aaij
