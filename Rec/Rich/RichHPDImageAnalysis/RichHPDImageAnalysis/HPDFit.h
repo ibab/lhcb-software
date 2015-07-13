@@ -169,10 +169,12 @@ namespace Rich
       inline bool errorsOK( const HPDFit::Result& result,
                             const Params& params ) const
       {
-  
-        return ( result.xErr() < params.maxXYErr &&
-                 result.yErr() < params.maxXYErr &&
-                 !asymErrors(result,params)      );
+        // if the fit used log_z image scale expected max error...
+        const double maxErr = 
+          ( result.usedLogZ() ? 10.0 * params.maxXYErr : params.maxXYErr );
+        return ( result.xErr() < maxErr &&
+                 result.yErr() < maxErr &&
+                 !asymErrors(result,params) );
       }
 
     private:
