@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-07-13 - Michel De Cian
+ - Fix bug in PatLongLivedTracking that did not take custom input location into account.
+
 ! 2015-06-09 - Michel De Cian
  - First commit of PatLongLivedTracking, an improved version of PatDownstream for Run II.
 

@@ -240,14 +240,16 @@ StatusCode PatLongLivedTracking::execute() {
   if (m_printing) debug() << "==> Execute" << endmsg;
 
   // -- If no specified input location, get seed if it exists, else Tsa.
-  if ( exist<LHCb::Tracks>( LHCb::TrackLocation::Seed ) ) {
-    m_inputLocation = LHCb::TrackLocation::Seed;
-  } else {
-    if ( exist<LHCb::Tracks>( LHCb::TrackLocation::Tsa ) ) {
-      m_inputLocation = LHCb::TrackLocation::Tsa;
+  if ( m_inputLocation.empty() ) {
+    if ( exist<LHCb::Tracks>( LHCb::TrackLocation::Seed ) ) {
+      m_inputLocation = LHCb::TrackLocation::Seed;
     } else {
-      error() << "Could not find input location: " << LHCb::TrackLocation::Seed 
-              << " or " << LHCb::TrackLocation::Tsa << endmsg;
+      if ( exist<LHCb::Tracks>( LHCb::TrackLocation::Tsa ) ) {
+        m_inputLocation = LHCb::TrackLocation::Tsa;
+      } else {
+        error() << "Could not find input location: " << LHCb::TrackLocation::Seed 
+                << " or " << LHCb::TrackLocation::Tsa << endmsg;
+      }
     }
   }
   
