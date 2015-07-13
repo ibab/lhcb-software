@@ -24,7 +24,7 @@ MakeMuonTool::MakeMuonTool(const std::string& type, const std::string& name,
       m_NStation(0){
   declareInterface<MakeMuonTool>(this);
 
-  declareProperty("FindQuality", m_FindQuality = true);
+  declareProperty("FindQuality", m_FindQuality = false);
 }
 
 StatusCode MakeMuonTool::initialize() {
@@ -63,11 +63,10 @@ StatusCode MakeMuonTool::muonCandidate(
     debug() << "ids_init.size()=" << ids_init.size() << endmsg;
 
   // get closest hit to the seed extrapolation
-  StatusCode sc1 = StatusCode::SUCCESS; 
   StatusCode sc2 = makeStates(seed); 
   if (sc2.isFailure()) {
-    sc1.setCode(202);
-    return Error("search: make states", sc1);
+    sc.setCode(202);
+    return Error("search: make states", sc);
   }
 
   // get states and hits
@@ -81,17 +80,13 @@ StatusCode MakeMuonTool::muonCandidate(
   // TODO: the following does also the chi2 now.
   // it could be divided, but at present is faster like this.
   addLHCbIDsToMuTrack(muTrack, ids_init, extrapolation); 
-  // apply a sort of isMuon
-  if (muTrack.lhcbIDs().size() > 0)
-    return sc1;
-  else {
-    sc1.setCode(204);
-    return sc1;
+  
+  // Check that the size of the muTrack lhcbID is at least 2.
+  if (muTrack.lhcbIDs().size() < 2){
+    sc.setCode(204);
+    return sc;
   }
-  // ============================================================
-  // TODO: what is the point of what follows? 
-  //       the code can never reach here. 
-
+  
   // check to how many different stations the hits belong
   const std::vector<LHCb::LHCbID>& idsFromTrack=muTrack.lhcbIDs();
   std::vector<LHCb::LHCbID>::const_iterator id;
@@ -109,8 +104,8 @@ StatusCode MakeMuonTool::muonCandidate(
   }
 
   if(stations.size() < 2){ // at least two different stations
-    sc1.setCode(203);
-    return sc1;
+    sc.setCode(203);
+    return sc;
   }
  
   // add seed track to muon track ancestors

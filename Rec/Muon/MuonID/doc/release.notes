@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-07-13 - Ricardo Vazquez Gomez
+ - Bug fix in MakeMuonTool
+
+! 2015-07-13 - Ricardo Vazquez Gomez
  - Change in ConfiguredMuonIDs.py to fix the nightlies. Require only to run the new algorithm for
    2015 data.
 
