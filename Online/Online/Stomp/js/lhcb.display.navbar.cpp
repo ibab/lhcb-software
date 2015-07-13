@@ -255,7 +255,7 @@ var navbar_body = function()  {
   navBar.addURL(  'LHC collider home page',lhcb.constants.urls.lhc.project);
   navBar.addSized('Operations',
 		  'CERN collider operations home page',
-		  'JavaScript:navBar.open_abs_url("http://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr=LHC1")',
+		  'JavaScript:navBar.open_abs_url("'+lhcb.constants.operations_url('LHC1')+'")',
 		  'NavigationBar',
 		  lhcb.constants.images.beams_department.icon,80,16,
 		  lhcb.constants.images.beams_department.src,120,32);

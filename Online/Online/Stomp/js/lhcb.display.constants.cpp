@@ -94,7 +94,7 @@ if ( !_lhcb().constants ) {
 	size:      {width:100,height:100}
       },
       cern: {
-	src:    'http://cern.ch',
+      src:      'https://home.web.cern.ch', //'http://cern.ch',
 	img:    this.images.cern,
 	title:  'CERN',
 	nick:   'cern-win',
@@ -103,7 +103,7 @@ if ( !_lhcb().constants ) {
       },
       lhc: {
 	project: {
-	  src:    'http://cern.ch/lhc',
+	  src:    'https://home.web.cern.ch/topics/large-hadron-collider',
 	  img:    this.images.lhc,
 	  title:  'LHC Project',
 	  nick:   'lhc-win',

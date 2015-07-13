@@ -139,7 +139,7 @@ var Page1 = function(msg, sys)   {
     tr = document.createElement('tr');
     td = document.createElement('td');
     td.appendChild(this.LHC_operator=lhcb.widgets.LHC_operator_comments());    
-    td.onclick     = function() { document.location = "http://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr=LHCCOORD"; };
+    td.onclick     = function() { document.location = lhcb.constants.operations_url("LHCCOORD"); };
     tooltips.set(td,'Comment from the LHC operator<br>Click to move to LHC coodination planning page.');
     tr.appendChild(td);
     tb.appendChild(tr);
