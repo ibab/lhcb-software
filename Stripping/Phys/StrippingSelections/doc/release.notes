@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-14 - Albert Puig
+ - Updated HLT filters in Lb2L0Gamma to use split HLT
+
 ! 2015-07-09 - Ricardo Vazquez Gomez
  - Add documentation folder for the coordinators 
 
