@@ -33,38 +33,38 @@ class D2XCombiner(Hlt2Combiner):
             dc[child] = "(PT > %(DTrk_ALL_PT_MIN)s)" \
                         "& (P > %(DTrk_ALL_P_MIN)s)" \
                         "& (MIPCHI2DV(PRIMARY) > %(DTrk_ALL_MIPCHI2DV_MIN)s)"
-    dc['pi+'] = dc['pi+'] + "& (PIDK < %(Pi_PIDK)s)"
-    dc['K+'] = dc['K+'] + "& (PIDK > %(K_PIDK)s)"
-    dc['p+'] = dc['p+'] + "& (PIDp > %(P_PIDp)s)"
+        dc['pi+'] = dc['pi+'] + "& (PIDK < %(Pi_PIDK)s)"
+        dc['K+'] = dc['K+'] + "& (PIDK > %(K_PIDK)s)"
+        dc['p+'] = dc['p+'] + "& (PIDp > %(P_PIDp)s)"
         masscut = ''
         if masswindow == 'D':
-          masscut = "in_range(%(D_AM_MIN)s,  AM, %(D_AM_MAX)s)"
+            masscut = "in_range(%(D_AM_MIN)s,  AM, %(D_AM_MAX)s)"
         if masswindow == 'Ds':
-          masscut = "in_range(%(Ds_AM_MIN)s,  AM, %(Ds_AM_MAX)s)"
+            masscut = "in_range(%(Ds_AM_MIN)s,  AM, %(Ds_AM_MAX)s)"
         if masswindow == 'Lc':
-          masscut = "(in_range(%(Lc_AM_MIN)s,  AM, %(Lc_AM_MAX)s))"
+            masscut = "(in_range(%(Lc_AM_MIN)s,  AM, %(Lc_AM_MAX)s))"
         combcuts = masscut + "& ((APT1 > %(MIN_D_CHILDPT)s) " \
-                       "| (APT2 > %(MIN_D_CHILDPT)s)" \
-                       "| (APT3 > %(MIN_D_CHILDPT)s)" \
-                       "| (APT4 > %(MIN_D_CHILDPT)s))" \
-                   "& (APT > %(D0_PT_MIN)s)" \
-                   "& (AMINDOCA('') " \
-                       "< %(Pair_AMINDOCA_MAX)s )"\
-                   "& ((APT1+APT2+APT3+APT4) > %(D_SUMPT)s)" 
+            "| (APT2 > %(MIN_D_CHILDPT)s)" \
+            "| (APT3 > %(MIN_D_CHILDPT)s)" \
+            "| (APT4 > %(MIN_D_CHILDPT)s))" \
+            "& (APT > %(D0_PT_MIN)s)" \
+            "& (AMINDOCA('') " \
+            "< %(Pair_AMINDOCA_MAX)s )"\
+            "& ((APT1+APT2+APT3+APT4) > %(D_SUMPT)s)" 
 
         parentcuts = "(VFASPF(VCHI2PDOF) < %(D0_VCHI2PDOF_MAX)s)" \
-                     "& (BPVVDCHI2> %(D0_BPVVDCHI2_MIN)s )" \
-                     "& (BPVDIRA > %(D0_BPVDIRA_MIN)s )"
+            "& (BPVVDCHI2> %(D0_BPVVDCHI2_MIN)s )" \
+            "& (BPVDIRA > %(D0_BPVDIRA_MIN)s )"
                      
     Hlt2Combiner.__init__(self, name, decayDesc,
-			      [Hlt2Pions, Hlt2Kaons,Hlt2Protons],
-                              dependencies = [ PV3D('Hlt2') ],
-                              #tistos = 'TisTosSpec',
-                              DaughtersCuts = dc,
-                              CombinationCut = combcuts,
-                              MotherCut = parentcuts,
-                              Preambulo = [])
-
+                          [Hlt2Pions, Hlt2Kaons,Hlt2Protons],
+                          dependencies = [ PV3D('Hlt2') ],
+                          #tistos = 'TisTosSpec',
+                          DaughtersCuts = dc,
+                          CombinationCut = combcuts,
+                          MotherCut = parentcuts,
+                          Preambulo = [])
+    
 # Combiners
 D02kpiComb   = D2XCombiner("KPi","[D0 -> K- pi+]cc","D")
 D02k3piComb   = D2XCombiner("K3Pi","[D0 -> K- pi+ pi- pi+]cc","D")
