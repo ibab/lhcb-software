@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2015-07-14 - Michel De Cian
+ - Added python configuration for the FastKalmanFit for the PV finding
+
 ! 2015-07-13 - Sascha Stahl
  - Changed the default of the scattering noise parameters in  FastVeloTracking and FastVeloFitLHCbIDs 
    to improve the pull distribution of primary vertices.

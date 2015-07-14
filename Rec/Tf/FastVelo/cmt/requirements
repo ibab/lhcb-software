@@ -8,7 +8,7 @@ version           v1r20
 #=====================================================================
 # Structure, i.e. directories to process. 
 #=====================================================================
-branches          cmt doc src
+branches          cmt doc src python
 #=====================================================================
 # Used packages
 #=====================================================================
@@ -31,3 +31,4 @@ library          FastVelo    ../src/*.cpp
 # define component library link options
 #=====================================================================
 apply_pattern    component_library library=FastVelo
+apply_pattern    install_python_modules

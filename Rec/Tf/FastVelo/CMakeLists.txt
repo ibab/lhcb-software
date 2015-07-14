@@ -18,3 +18,4 @@ gaudi_add_module(FastVelo
                  INCLUDE_DIRS Event/DigiEvent Tf/PatKernel, Tr/TrackInterfaces
                  LINK_LIBRARIES STDetLib VeloDetLib RecEvent TrackEvent GaudiAlgLib STKernelLib)
 
+gaudi_install_python_modules()
