@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-07-14 - Vanya Belyaev
+ - fix test_poly.py
+
 ! 2015-07-13 - Vanya Belyaev
  - tiny fix 
 

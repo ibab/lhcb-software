@@ -135,7 +135,7 @@ bp   = BP ( bb    , xmin , xmax )
 def i_fun ( x ) :
     return bp ( x ) * math.exp( tau * x )
 
-II = Integral( i_fun , x0 = xmin )
+II = Integral( i_fun    , xlow = xmin )
 a1 = integra ( bb , tau )
 a2 = integra ( bp , tau , xmin , xmax )
 a3 = integra ( bp , tau )
