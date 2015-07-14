@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2015-07-14 - Michel De Cian
+ - Add the fitted Velo tracks for the PV to the packing / unpacking and to the DST for 2015.
+
 !========================= GaudiConf v19r10 2015-05-26 =========================
 ! 2015-05-06 - Marco Cattaneo
  - LHCbExclusions.py: add temporary exclusion for printout of Algorithm

@@ -117,7 +117,11 @@ class DstConf(LHCbConfigurableUser):
         writer.ItemList += [ "/Event/Rec/Summary"                      + depth]
 
         writer.ItemList += [ "/Event/" + recDir + "/Track/Best"        + depth]
-        
+
+        # for 2015, fitted velo tracks are stored on DST to make PV refit possible offline
+        if( self.getProp("DataType") is "2015" ):
+            writer.ItemList += [ "/Event/" + recDir + "/Track/FittedHLT1VeloTracks"        + depth]
+
         if "Rich" in self.getProp("Detectors"):
             writer.ItemList += [ "/Event/" + recDir + "/Rich/PIDs"         + depth]
         if "Muon" in self.getProp("Detectors"):
@@ -266,7 +270,15 @@ class DstConf(LHCbConfigurableUser):
             packDST.Members += [ PackTrack( name               = "PackTracks",
                                             AlwaysCreateOutput = alwaysCreate,
                                             EnableCheck        = doChecks ) ]
-
+            # for 2015, add packed Velo tracks
+            if( self.getProp("DataType") is "2015" ):
+                packFittedVelo = PackTrack( name               = "PackTracksFittedVelo",
+                                            InputName          = "Rec/Track/FittedHLT1VeloTracks",
+                                            OutputName         = "pRec/Track/FittedHLT1VeloTracks",
+                                            AlwaysCreateOutput = alwaysCreate ,
+                                            EnableCheck        = doChecks )
+                packDST.Members += [ packFittedVelo ]
+            ###
         richpidpack = DataPacking__Pack_LHCb__RichPIDPacker_( name               = "PackRichPIDs",
                                                               AlwaysCreateOutput = alwaysCreate,
                                                               EnableCheck        = doChecks )
@@ -331,6 +343,7 @@ class DstConf(LHCbConfigurableUser):
         # Tests
         if self.getProp("EnablePackingChecks") : self._doPackChecks()
 
+        
     def _doPackChecks(self):
 
         packDST = self.getProp("PackSequencer")
@@ -371,6 +384,13 @@ class DstConf(LHCbConfigurableUser):
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/V0" ]      = UnpackTwoProngVertex()
         pvWunpack = DataPacking__Unpack_LHCb__WeightsVectorPacker_("UnpackPVWeights")
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Weights" ] = pvWunpack
+
+        if( self.getProp("DataType") is "2015" ):
+            unpackFittedVeloTracks = UnpackTrack("unpackFittedVeloTracks")
+            unpackFittedVeloTracks.InputName = "pRec/Track/FittedHLT1VeloTracks"
+            unpackFittedVeloTracks.OutputName = "Rec/Track/FittedHLT1VeloTracks"
+            DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/FittedHLT1VeloTracks" ] = UnpackFittedVeloTracks
+
 
         if "Tracking" in self.getProp("EnableUnpack") : return # skip the rest
 
