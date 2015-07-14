@@ -160,6 +160,7 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
   }
 
   if ( m_ADCFitParameters ) {
+/*
     m_histCluADC_FitParLandauWidth = Gaudi::Utils::Aida2ROOT::aida2root( 
 	book1D( "Cluster ADC value fit parameter LandauWidth", "ADC value per cluster fit parameter LandauWidth",
 	  -0.5, 0.5, 1 ));
@@ -172,6 +173,7 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
     m_histCluADC_FitParGSigma = Gaudi::Utils::Aida2ROOT::aida2root(
 	book1D( "Cluster ADC value fit parameter GSigma", "ADC value per cluster fit parameter GSigma",
 	  -0.5, 0.5, 1 ));
+*/
     m_histCluADC_Sensor_FitParLandauWidth = Gaudi::Utils::Aida2ROOT::aida2root( 
 	book1D( "Cluster ADC value fit parameter LandauWidth vs Sensor number", "ADC value per cluster fit parameter LandauWidth vs Sensor number",
 	  -0.5, 131+0.5, 131+1 ));
@@ -650,7 +652,7 @@ StatusCode Velo::VeloClusterMonitor::finalize() {
 	  m_histCluADC_Sensor_FitParGSigma->SetBinContent(i+1+22,fit[i]->GetParameter(3));
 
 	}
-	
+
 	// Get MPV and FWHM of cluster ADC values for each sensor
 	// ------------------------------------------------------
 
@@ -673,22 +675,27 @@ StatusCode Velo::VeloClusterMonitor::finalize() {
       //
     }
 
-    func_all = new TF1("func_all",langaufun,18,500,4);
-    func_all->SetParameters(10, 0.8*m_histCluADC->GetMean(), m_histCluADC->Integral("width"), m_histCluADC->GetRMS());
-    func_all->SetParLimits(0,  2.5, 100.);
-    func_all->SetParLimits(1,  0., m_histCluADC->GetMean()+3*m_histCluADC->GetRMS());
-    func_all->SetParLimits(2,  m_histCluADC->Integral("width")*0.95, m_histCluADC->Integral("width")*1.05);
-    func_all->SetParLimits(3,  0., 3*m_histCluADC->GetRMS());
-    m_histCluADC->Fit("func_all","0Q");
-    TF1 *fit_all = m_histCluADC->GetFunction("func_all");
+/*
+    if (m_histCluADC->Integral("width")==0) ;
+    else{
+      func_all = new TF1("func_all",langaufun,18,500,4);
+      func_all->SetParameters(10, 0.8*m_histCluADC->GetMean(), m_histCluADC->Integral("width"), m_histCluADC->GetRMS());
+      func_all->SetParLimits(0,  2.5, 100.);
+      func_all->SetParLimits(1,  0., m_histCluADC->GetMean()+3*m_histCluADC->GetRMS());
+      func_all->SetParLimits(2,  m_histCluADC->Integral("width")*0.95, m_histCluADC->Integral("width")*1.05);
+      func_all->SetParLimits(3,  0., 3*m_histCluADC->GetRMS());
+      m_histCluADC->Fit("func_all","0Q");
+      TF1 *fit_all = m_histCluADC->GetFunction("func_all");
 
 
-    m_histCluADC_FitParLandauWidth->SetBinContent(1,fit_all->GetParameter(0));
-    m_histCluADC_FitParMPV->SetBinContent(1,fit_all->GetParameter(1));
-    m_histCluADC_FitParArea->SetBinContent(1,fit_all->GetParameter(2));
-    m_histCluADC_FitParGSigma->SetBinContent(1,fit_all->GetParameter(3));
-
+      m_histCluADC_FitParLandauWidth->SetBinContent(1,fit_all->GetParameter(0));
+      m_histCluADC_FitParMPV->SetBinContent(1,fit_all->GetParameter(1));
+      m_histCluADC_FitParArea->SetBinContent(1,fit_all->GetParameter(2));
+      m_histCluADC_FitParGSigma->SetBinContent(1,fit_all->GetParameter(3));
+    }
+*/
   }
+
 
   return VeloMonitorBase::finalize(); // must be called after all other actions
 }

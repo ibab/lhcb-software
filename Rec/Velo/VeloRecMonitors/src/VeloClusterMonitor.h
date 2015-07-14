@@ -86,10 +86,10 @@ namespace Velo
     AIDA::IHistogram2D* m_hActiveLinkSens;
     TH1D* m_histCluADC;
     TH1D* m_histCluADC_Sensor[84];
-    TH1D* m_histCluADC_FitParLandauWidth;
-    TH1D* m_histCluADC_FitParMPV;
-    TH1D* m_histCluADC_FitParArea;
-    TH1D* m_histCluADC_FitParGSigma;
+//    TH1D* m_histCluADC_FitParLandauWidth;
+//    TH1D* m_histCluADC_FitParMPV;
+//    TH1D* m_histCluADC_FitParArea;
+//    TH1D* m_histCluADC_FitParGSigma;
     TH1D* m_histCluADC_Sensor_FitParLandauWidth;
     TH1D* m_histCluADC_Sensor_FitParMPV;
     TH1D* m_histCluADC_Sensor_FitParArea;
