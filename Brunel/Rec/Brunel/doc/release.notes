@@ -9,6 +9,8 @@ Purpose: LHCb reconstruction program
   . Follow changes in Rich Alignment monitoring (RichAlignment)
   . Inherit PrPixelHitManager from Decoder::ToolBase (PrPixel)
   . Updates in TT and IT TrackMonitors (TrackMonitors)
+  . Replace MuonIDAlg by MuonIDAlgLite in 2015 configuration (MuonID)
+  . Replace PatDownstream by PatLongLivedTracking in Run2 configuration (TrackSys)
 
 - Changes to configuration
  . In OnlineMode, set CondDB().Online = True if not already set.
