@@ -56,14 +56,14 @@ class D2XCombiner(Hlt2Combiner):
             "& (BPVVDCHI2> %(D0_BPVVDCHI2_MIN)s )" \
             "& (BPVDIRA > %(D0_BPVDIRA_MIN)s )"
                      
-    Hlt2Combiner.__init__(self, name, decayDesc,
-                          [Hlt2Pions, Hlt2Kaons,Hlt2Protons],
-                          dependencies = [ PV3D('Hlt2') ],
-                          #tistos = 'TisTosSpec',
-                          DaughtersCuts = dc,
-                          CombinationCut = combcuts,
-                          MotherCut = parentcuts,
-                          Preambulo = [])
+        Hlt2Combiner.__init__(self, name, decayDesc,
+                              [Hlt2Pions, Hlt2Kaons,Hlt2Protons],
+                              dependencies = [ PV3D('Hlt2') ],
+                              #tistos = 'TisTosSpec',
+                              DaughtersCuts = dc,
+                              CombinationCut = combcuts,
+                              MotherCut = parentcuts,
+                              Preambulo = [])
     
 # Combiners
 D02kpiComb   = D2XCombiner("KPi","[D0 -> K- pi+]cc","D")
