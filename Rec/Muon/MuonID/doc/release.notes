@@ -4,6 +4,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2015-07-14 - Ricardo Vazquez Gomez
+ - Change in ConfiguredMuonIDs.py to deactivate the fitter configuration for new MuonIDAlgLite
+
 ! 2015-07-13 - Ricardo Vazquez Gomez
  - Bug fix in MakeMuonTool
 

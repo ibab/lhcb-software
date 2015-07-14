@@ -485,14 +485,14 @@ class ConfiguredMuonIDs():
     #mmtool.extrapol.ApplyElectronEnergyLossCorr = False
     
 
-    mmtool.addTool(TrackMasterFitter, name='fitter')
+    #mmtool.addTool(TrackMasterFitter, name='fitter')
     ## configure fast fitter
-    ConfiguredMasterFitter( Name = mmtool.fitter,
-                            SimplifiedGeometry = True,
-                            FieldOff = True,
+    #ConfiguredMasterFitter( Name = mmtool.fitter,
+    #                        SimplifiedGeometry = True,
+    #                        FieldOff = True,
                             #ApplyMaterialCorrections = False
-                            )
-    self.configureFitter(mmtool.fitter)
+    #                        )
+    #self.configureFitter(mmtool.fitter)
 
     return mmtool
 
@@ -601,7 +601,7 @@ class ConfiguredMuonIDs():
     
     ## for the new algorithm
     ## create and configure MuonIDAlgLite instance
-    if(self.newAlgo and self.data in ['2015']):
+    if(self.newAlgo and self.data in ['2015','2012','2011']):
       muid = MuonIDAlgLite()
       self.configureMuonIDAlgLite(muid)
       ismutool = CommonMuonTool()
