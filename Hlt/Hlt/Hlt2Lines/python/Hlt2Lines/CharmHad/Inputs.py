@@ -1,3 +1,4 @@
+from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedMuons       as Hlt2LooseMuons
 from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichPions   as Hlt2LoosePions
 from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichKaons   as Hlt2LooseKaons
 from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichProtons as Hlt2LooseProtons

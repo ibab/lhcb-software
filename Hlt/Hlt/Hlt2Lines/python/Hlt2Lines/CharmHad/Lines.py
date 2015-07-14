@@ -160,6 +160,10 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KmKpTurbo'               : 0.1,
                  'CharmHadSharedSoftTagChild_pi' : {
                                  'Trk_ALL_PT_MIN'           :  100.0 * MeV,
                                            },
+                 'CharmHadSharedSoftTagChild_mu' : { 
+                                 'Trk_ALL_PT_MIN'           :  300.0 * MeV,
+                                           },  
+
                  # NoPID protons for the Sigma_c tagged Lambda_c line for PID calibration
                  # the IPCHI2 cut is tight because the PT/PT cuts have to be loose to give
                  # a useful sample, and we need to reduce the combinatorics

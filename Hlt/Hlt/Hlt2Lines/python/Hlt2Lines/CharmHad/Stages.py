@@ -67,7 +67,7 @@ class InParticleFilter(Hlt2ParticleFilter) : # {
 ## Names of shared particles  begin with CharmHad to avoid name conflicts
 ##   with other subdirectories.
 ## ------------------------------------------------------------------------- ##
-from Inputs import Hlt2LoosePions, Hlt2LooseKaons, Hlt2LooseProtons
+from Inputs import Hlt2LoosePions, Hlt2LooseKaons, Hlt2LooseMuons, Hlt2LooseProtons
 from Inputs import Hlt2NoPIDsPions, Hlt2NoPIDsKaons, Hlt2NoPIDsProtons
 SharedPromptChild_pi = InParticleFilter( 'CharmHadSharedPromptChild_pi',
                                          [Hlt2LoosePions], 'PIDK', True )
@@ -77,6 +77,8 @@ SharedPromptChild_p = InParticleFilter( 'CharmHadSharedPromptChild_p',
                                         [Hlt2LooseProtons], 'PIDp' )
 SharedSoftTagChild_pi = InParticleFilter( 'CharmHadSharedSoftTagChild_pi',
                                           [Hlt2NoPIDsPions] )
+SharedSoftTagChild_mu = InParticleFilter( 'CharmHadSharedSoftTagChild_mu',
+                                          [Hlt2LooseMuons] )
 
 ## ------------------------------------------------------------------------- ##
 class TighterProtonFilter(Hlt2ParticleFilter):

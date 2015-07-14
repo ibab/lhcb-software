@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-07-14 - V. Gligorov
+ - Add muon-tagged prompt D0->hh for secondary studies
+
 ! 2015-07-13 - Jessica Prisciandaro
  - Update of DiMuonSoft line cuts.
 

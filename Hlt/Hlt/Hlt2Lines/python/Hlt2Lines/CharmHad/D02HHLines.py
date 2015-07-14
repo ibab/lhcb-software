@@ -53,6 +53,15 @@ class CharmHadD02HHLines : # {
                                         'TagVCHI2PDOF_MAX'         :  25.0
                                       }  
 
+        # The muon tagger config
+        self.slotDict['D0_MUTAG_CPV'] = { 
+                                        'DeltaM_AM_MIN'            :  100.0 * MeV,
+                                        'DeltaM_MIN'               :  100.0 * MeV,
+                                        'DeltaM_AM_MAX'            :  5000. * MeV,
+                                        'DeltaM_MAX'               :  5000. * MeV,
+                                        'TagVCHI2PDOF_MAX'         :  25.0
+                                      } 
+
         # The lifetime unbiased lines, these are all tagged, TOS linked to the
         # HLT1 lifetime unbiased lines
         self.slotDict['D02HH_LTUNB'] = {
@@ -92,7 +101,7 @@ class CharmHadD02HHLines : # {
             from Stages import D02HH_D0ToKmPip, D02HH_D0ToKmKp, D02HH_D0ToPimPip
             from Stages import D02HH_D0ToKmPip_LTUNB, D02HH_D0ToKmKp_LTUNB, D02HH_D0ToPimPip_LTUNB
             from Stages import D0_TAG_CPV_Dstp2D0Pip_D02KmPip
-            from Stages import TagDecay, SharedSoftTagChild_pi
+            from Stages import TagDecay, SharedSoftTagChild_pi, SharedSoftTagChild_mu
 
             ## Create D*+ -> D0 pi+
 
@@ -125,7 +134,22 @@ class CharmHadD02HHLines : # {
                         , inputs = [ D02HH_D0ToPimPip, SharedSoftTagChild_pi ]
                         , ReFitPVs = True)
 
-            ## For lifetime maximally biased D0s.
+            ## Muon tagged lines
+            MuTag_D0Mu_D02KpPim = TagDecay('D0_MUTAG_CPV'
+                        , ["[D*(2010)- -> D0 mu-]cc","[D*(2010)+ -> D0 mu+]cc",]
+                        , inputs = [ D02HH_D0ToKmPip, SharedSoftTagChild_mu ]
+                        , ReFitPVs = True)
+            MuTag_D0Mu_D02KmKp  = TagDecay('D0_MUTAG_CPV'
+                        , decay = ["D*(2010)+ -> D0 mu+","D*(2010)- -> D0 mu-"]
+                        , inputs = [ D02HH_D0ToKmKp, SharedSoftTagChild_mu ]
+                        , ReFitPVs = True)
+            MuTag_D0Mu_D02PimPip = TagDecay('D0_MUTAG_CPV'
+                        , decay = ["D*(2010)+ -> D0 mu+","D*(2010)- -> D0 mu-"]
+                        , inputs = [ D02HH_D0ToPimPip, SharedSoftTagChild_mu ]
+                        , ReFitPVs = True)
+
+        
+            ## For decay-time-PDF unbiased D0s.
             Dstp2D0Pip_D02KmPip_LTUNB = TagDecay('D0_TAG_CPV'
                         , ["[D*(2010)+ -> D0 pi+]cc"]
                         , inputs = [ D02HH_D0ToKmPip_LTUNB, SharedSoftTagChild_pi ]
@@ -159,6 +183,11 @@ class CharmHadD02HHLines : # {
                 , 'Dstp2D0Pip_D02PimPipTurbo'       : [ Dstp2D0Pip_D02PimPip ]
                 , 'Dstp2D0Pip_D02KmPipTurbo'        : [ D0_TAG_CPV_Dstp2D0Pip_D02KmPip ]
                 , 'Dstp2D0Pip_D02KpPimTurbo'        : [ Dstp2D0Pip_D02KpPim ]
+
+                ## The muon tagged lines
+                , 'MuTag_D0Mu_D02KpPimTurbo'        : [ MuTag_D0Mu_D02KpPim ]
+                , 'MuTag_D0Mu_D02KmKpTurbo'         : [ MuTag_D0Mu_D02KmKp ]
+                , 'MuTag_D0Mu_D02PimPipTurbo'       : [ MuTag_D0Mu_D02PimPip ]
 
                 ## The tagged LTUNB lines
                 , 'Dstp2D0Pip_D02KmKp_LTUNBTurbo'   : [ Dstp2D0Pip_D02KmKp_LTUNB ]
