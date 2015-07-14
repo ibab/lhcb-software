@@ -650,8 +650,13 @@ class Brunel(LHCbConfigurableUser):
             from Configurables import ProcessPhase
             ProcessPhase("Output").DetectorList += [ "DST" ]
             GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
-
-
+            
+            ### for 2015, filter the fitted Velo tracks for PV
+            if( self.getProp("DataType") is "2015" ):
+                fittedVeloTracksFilter = TrackToDST("FilterFittedVeloTrackStates", veloStates = [""])
+                fittedVeloTracksFilter.TracksInContainer = "Rec/Track/FittedHLT1VeloTracks"
+                GaudiSequencer("OutputDSTSeq").Members += [ fittedVeloTracksFilter ]
+           
             if "Muon" in self.getProp("Detectors"):
                 # Filter Muon Track States            
                 muonTrackFilter = TrackToDST("FilterMuonTrackStates")
