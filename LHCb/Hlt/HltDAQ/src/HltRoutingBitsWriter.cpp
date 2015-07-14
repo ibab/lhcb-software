@@ -60,7 +60,7 @@ StatusCode HltRoutingBitsWriter::decode() {
             LoKi::Types::L0_Cut cut( LoKi::BasicFunctors<const LHCb::L0DUReport*>::BooleanConstant( false ) );
             StatusCode sc = factory->get( i->second, cut, m_preambulo );
             if (sc.isFailure()) return sc;
-            l0_eval_t l0_eval = m_l0_evaluators[i->first - 8];
+            l0_eval_t& l0_eval = m_l0_evaluators[i->first - 8];
             l0_eval.predicate = cut.clone();
             l0_eval.counter   = &counter(title);
             if (m_hltMonSvc.isValid()) l0_eval.rate = &(m_hltMonSvc->rateCounter(name() + "/" + htitle));
