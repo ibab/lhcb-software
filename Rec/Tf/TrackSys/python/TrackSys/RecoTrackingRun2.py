@@ -179,14 +179,14 @@ def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
       else:
          # and this is the option for after the early measurements
          # copy tracks from pat reco output container to a new one
-         copy = TrackContainerCopy("CopyVeloTracks")
-         copy.inputLocations = [ "Rec/Track/Velo" ]
-         copy.outputLocation = "Rec/Track/FittedHLT1VeloTracks"
+         copyVeloTracks = TrackContainerCopy("CopyVeloTracks")
+         copyVeloTracks.inputLocations = [ "Rec/Track/Velo" ]
+         copyVeloTracks.outputLocation = "Rec/Track/FittedHLT1VeloTracks"
          
          from FastVelo import FastVeloAlgConf
          stateInit = TrackStateInitAlg('VeloOnlyInitAlg')
          FastVeloAlgConf.FastVeloKalmanConf().configureFastKalmanFit(init = stateInit)
-         GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ copy, stateInit ]
+         GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ copyVeloTracks, stateInit ]
 
 
    ######
