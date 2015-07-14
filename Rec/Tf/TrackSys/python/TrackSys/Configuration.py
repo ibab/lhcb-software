@@ -42,7 +42,7 @@ class TrackSys(LHCbConfigurableUser):
     ## Possible expert options
     KnownExpertTracking        = ["noDrifttimes", "simplifiedGeometry", "kalmanSmoother", "noMaterialCorrections",
                                   "fastSequence", "timing", "disableOTTimeWindow", "fullGeometryHLT1", "fullGeometryHLT2",
-                                  "fullClustersHLT1", "fullClustersHLT2" ]
+                                  "fullClustersHLT1", "fullClustersHLT2", "VeloForwardKalmanHLT1" ]
 
     ## Default track pattern recognition algorithms to run in 2010
     #DefaultPatRecAlgorithms_old    = ["Velo","Forward","TsaSeed","Match","Downstream","VeloTT"]

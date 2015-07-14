@@ -144,34 +144,50 @@ def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    track.DetectorList += ["FitHLT1"]
 
 
-   from Configurables import TrackEventFitter, TrackInitFit, TrackStateInitTool, TrackMasterExtrapolator, TrackMasterFitter
+   from Configurables import TrackEventFitter, TrackInitFit, TrackStateInitTool, TrackStateInitAlg, TrackMasterExtrapolator, TrackMasterFitter
    from Configurables import SimplifiedMaterialLocator, DetailedMaterialLocator
+   from Configurables import TrackContainerCopy
    
    ######
    ### Fitter for Velo tracks
    ######
    if "FastVelo" in trackAlgs:
-      veloFitter = TrackEventFitter('VeloOnlyFitterAlg')
-      veloFitter.TracksInContainer = "Rec/Track/Velo"
-      veloFitter.TracksOutContainer = "Rec/Track/FittedHLT1VeloTracks"
-      veloFitter.Fitter = "TrackInitFit/Fit"
-      veloFitter.addTool(TrackInitFit, "Fit")
-      veloFitter.Fit.Init = "TrackStateInitTool/VeloOnlyStateInit"
-      veloFitter.Fit.addTool(TrackStateInitTool, "VeloOnlyStateInit")
-      veloFitter.Fit.VeloOnlyStateInit.VeloFitterName = "FastVeloFitLHCbIDs"
-      veloFitter.Fit.VeloOnlyStateInit.addTool(TrackMasterExtrapolator, "Extrapolator")
-      if( simplifiedGeometryFit ) :
-         veloFitter.Fit.VeloOnlyStateInit.Extrapolator.addTool(SimplifiedMaterialLocator, name = "MaterialLocator")
-      else:
-         veloFitter.Fit.VeloOnlyStateInit.Extrapolator.addTool(DetailedMaterialLocator, name = "MaterialLocator")
-      
-      veloFitter.Fit.Fit = "TrackMasterFitter/Fit"
-      veloFitter.Fit.addTool(TrackMasterFitter, name = "Fit")
-   
-      from TrackFitter.ConfiguredFitters import ConfiguredForwardFitter
-      ConfiguredForwardFitter(veloFitter.Fit.Fit, LiteClusters = liteClustersFit)
+      if "VeloForwardKalmanHLT1" in TrackSys().getProp("ExpertTracking"):
+         # This is the option for the 2015 early measurements
+         veloFitter = TrackEventFitter('VeloOnlyFitterAlg')
+         veloFitter.TracksInContainer = "Rec/Track/Velo"
+         veloFitter.TracksOutContainer = "Rec/Track/FittedHLT1VeloTracks"
+         veloFitter.Fitter = "TrackInitFit/Fit"
+         veloFitter.addTool(TrackInitFit, "Fit")
+         veloFitter.Fit.Init = "TrackStateInitTool/VeloOnlyStateInit"
+         veloFitter.Fit.addTool(TrackStateInitTool, "VeloOnlyStateInit")
+         veloFitter.Fit.VeloOnlyStateInit.VeloFitterName = "FastVeloFitLHCbIDs"
+         veloFitter.Fit.VeloOnlyStateInit.addTool(TrackMasterExtrapolator, "Extrapolator")
+         if( simplifiedGeometryFit ) :
+            veloFitter.Fit.VeloOnlyStateInit.Extrapolator.addTool(SimplifiedMaterialLocator, name = "MaterialLocator")
+         else:
+            veloFitter.Fit.VeloOnlyStateInit.Extrapolator.addTool(DetailedMaterialLocator, name = "MaterialLocator")
+            
+         veloFitter.Fit.Fit = "TrackMasterFitter/Fit"
+         veloFitter.Fit.addTool(TrackMasterFitter, name = "Fit")
+            
+         from TrackFitter.ConfiguredFitters import ConfiguredForwardFitter
+         ConfiguredForwardFitter(veloFitter.Fit.Fit, LiteClusters = liteClustersFit)
          
-      GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ veloFitter ]
+         GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ veloFitter ]
+
+      else:
+         # and this is the option for after the early measurements
+         # copy tracks from pat reco output container to a new one
+         copy = TrackContainerCopy("CopyVeloTracks")
+         copy.inputLocations = [ "Rec/Track/Velo" ]
+         copy.outputLocation = "Rec/Track/FittedHLT1VeloTracks"
+         
+         from FastVelo import FastVeloAlgConf
+         stateInit = TrackStateInitAlg('VeloOnlyInitAlg')
+         FastVeloAlgConf.FastVeloKalmanConf().configureFastKalmanFit(init = stateInit)
+         GaudiSequencer("TrackHLT1FitHLT1Seq").Members += [ copy, stateInit ]
+
 
    ######
    ### Fitter for Forward tracks
