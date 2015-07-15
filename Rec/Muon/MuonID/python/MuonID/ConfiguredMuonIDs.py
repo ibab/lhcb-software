@@ -601,7 +601,7 @@ class ConfiguredMuonIDs():
     
     ## for the new algorithm
     ## create and configure MuonIDAlgLite instance
-    if(self.newAlgo and self.data in not ['2008','2009','MC09','Upgrade']):
+    if(self.newAlgo and self.data not in ['2008','2009','MC09','Upgrade']):
       muid = MuonIDAlgLite()
       self.configureMuonIDAlgLite(muid)
       ismutool = CommonMuonTool()
