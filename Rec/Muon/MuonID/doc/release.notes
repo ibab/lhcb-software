@@ -4,6 +4,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2015-07-15 - Ricardo Vazquez Gomez
+ - Modify the Configuration file so as not to use the new MuonID in 2008, 2009, MC09 and Upgrade datatypes
+
 ! 2015-07-14 - Ricardo Vazquez Gomez
  - Change in ConfiguredMuonIDs.py to deactivate the fitter configuration for new MuonIDAlgLite
 
