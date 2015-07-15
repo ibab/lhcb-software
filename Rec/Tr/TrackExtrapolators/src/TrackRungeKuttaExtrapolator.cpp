@@ -550,6 +550,15 @@ void TrackRungeKuttaExtrapolator::evaluateRKStep( double dz,
     
     // evaluate the derivatives
     //std::cout << "stage " << m << " --> " << cache.stage[m].state.z << std::endl ;
+
+    if( UNLIKELY( std::abs( cache.stage[m].state.x() ) > 1e6 ||  
+                  std::abs( cache.stage[m].state.y() ) > 1e6 ||  
+                  std::abs( cache.stage[m].state.z ) > 1e6  )){
+      Warning( "Very large value (> 1e6 mm) for state position. Breaking iteration", StatusCode::FAILURE,1);
+      break;
+    }
+    
+
     cache.stage[m].Bfield = fieldVector( Gaudi::XYZPoint(cache.stage[m].state.x(), 
                                                          cache.stage[m].state.y(), 
                                                          cache.stage[m].state.z ) ) ;

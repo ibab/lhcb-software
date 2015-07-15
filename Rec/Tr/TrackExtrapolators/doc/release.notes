@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
+
+! 2015-07-15 - Michel De Cian
+ - Break iteration in TrackRungeKuttaExtrapolator - evaluateRKStep if the values of the state are obviously too large, to prevent FPE in fieldVector calculation.
+
 ! 2015-07-10 - Michel De Cian
  - Replace ToolHandle with tool<> to get the MSScatteringTool. Add a property to set its name.
 
