@@ -1,0 +1,28 @@
+- Top level:
+  - Receive all histo data.
+  - Keep track of runs received in last 10 minutes and only keep histos for those.
+  - If missing info, request from a few (4) random subfarms with REQ "INFOZPLX", wait for "INCOMINGZ",
+    if timeout, try others.
+    - Receive info on SUB socket, wait for {"THATSALLFOLKS", subfarm} of all subfarms with timeout.
+      If timeout, or we didn't get what we wanted, ask a few others.
+  - Keep track of runs received in last 10 minutes and only keep keys and histos for those,
+
+- Subfarm level
+  - Relay all histo data.
+  - Keep track of runs received and requested in last 10 minutes and only keep keys and histos for those.
+  - Listen to request {"INFOZPLX", node name, run, run, 0, key, key, key, 0, "KKTHXBAI"} answer with "INCOMINGZ",
+    - Then connect to SUB service of node with PUB socket and send all infos of requested runs corresponding to
+      keys they don't have, end with {"THATSALLFOLKS", subfarm}.
+    - If there are some keys we don't have, ask all our node adders for their infos for given runs
+  - Every so often (1 minute?), ask four random other subfarms for their infos using the method described above.
+
+- Node level
+  - Keep track of runs received and requested in last 10 minutes and only keep keys for those.
+  - Strip task name from histo chunks, but save {key : taskname} to allow info from top level to be sent
+  - If we don't have info for a key, ask for it from the corresponding
+  - Listen to signal of tasks that they are finalizing. Clear info for those.
+
+- Task level
+  - Send task name with key and histo id for every chunk.
+  - Send signal to node level adder when we are finalized to indicate that we are about to loose info.
+  - Listen to request for info in the form of {key}, reply with {known, info} for that key.
