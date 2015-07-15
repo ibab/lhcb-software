@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2015-07-15 - Michel De Cian
+ - Add check for empty preselection vector in PatLongLivedTracking.
+
 ! 2015-07-13 - Michel De Cian
  - Fix bug in PatLongLivedTracking that did not take custom input location into account.
 

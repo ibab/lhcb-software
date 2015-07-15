@@ -922,6 +922,7 @@ void PatLongLivedTracking::findMatchingHits( const PatDownTrack& track, const in
   
   int planeToConsider = 0;
   if( plane == 0 ) planeToConsider = 3;
+  if( m_preSelHits[planeToConsider].empty() ) return;
   const double xPred = track.xAtZ( m_preSelHits[planeToConsider].front()->z() );
   
   PatTTHits::iterator it = std::lower_bound( m_preSelHits[planeToConsider].begin(), 
