@@ -5,6 +5,9 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-07-15 - Sean Benson
+ - Move creation of RecSummary so that we do not get duplications.
+
 ! 2015-07-12 - Sean Benson
  - Introduce duplication protection for tracks and protoparticles (compatible with Turbo).
 
