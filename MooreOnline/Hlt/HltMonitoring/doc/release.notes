@@ -4,6 +4,11 @@
 ! Purpose     : Monitoring of the HLT
 !-----------------------------------------------------------------------------
 
+! 2015-07-15 - Roel Aaij
+ - Add HltInfoSvc to supply run information to Hlt2 monitoring.
+ - Update parallel monitoring script.
+ - Updates to HltMonitorSvc to follow changes in Online/Hlt2Monitoring.
+
 !========================= HltMonitoring v1r0p1 2015-07-02 =======================
 
 ! 2015-07-02 - raaij

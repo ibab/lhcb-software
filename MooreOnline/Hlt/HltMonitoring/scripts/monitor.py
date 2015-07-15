@@ -23,7 +23,7 @@ def configureInput( run_info, n_processes, options ) :
     ## dirname = prefix + '/lhcb/data/%(year)s/RAW/FULL/LHCb/%(runType)s/%(runID)s' % run_info
 
     # Run on raw files from castor or daqarea
-    prefix = { 'daqarea' : '/daqarea/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11',
+    prefix = { 'daqarea' : '/daqarea/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15EM',
                'castor'  : '/castorfs/cern.ch/grid/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11',
                'calib'  : '/calib/hlt/spillover' }
 

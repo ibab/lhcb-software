@@ -83,7 +83,7 @@ private:
 
    StatusCode updateConditions();
 
-   void sendChunks();
+   void sendChunks(bool all = true);
 
    void addInfo(Monitoring::HistId id, const std::string& type, const std::string& info) const;
 
@@ -109,7 +109,7 @@ private:
    mutable Monitoring::TCK m_tck;
 
    std::chrono::high_resolution_clock::time_point m_latestUpdate;
-   double m_startOfRun;
+   int m_startOfRun;
 
    mutable std::vector<std::vector<zmq::message_t>> m_infoMessages;
 

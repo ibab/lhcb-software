@@ -86,7 +86,7 @@ StatusCode HltMonitorSvc::initialize()
       return sc;
    }
    m_incidentSvc->addListener(this, IncidentType::RunChange);
-   m_incidentSvc->addListener(this, IncidentType::BeginRun);
+   m_incidentSvc->addListener(this, IncidentType::BeginEvent);
 
    // ZQM service
    sc = serviceLocator()->service("ZeroMQSvc", m_zmqSvc, true);
@@ -130,7 +130,7 @@ StatusCode HltMonitorSvc::start()
 
    // Info output connection
    if (!m_infoOut) {
-      m_infoOut = new zmq::socket_t{m_zmqSvc->context(), ZMQ_PUSH};
+      m_infoOut = new zmq::socket_t{m_zmqSvc->context(), ZMQ_PUB};
       m_infoOut->connect(m_infoCon.c_str());
    }
 
@@ -148,7 +148,8 @@ StatusCode HltMonitorSvc::finalize()
 {
    // Clean up
    for (auto socket : {&m_dataOut, &m_infoOut}) {
-      (*socket)->setsockopt(ZMQ_LINGER, 0, 1);
+      int linger = 0;
+      (*socket)->setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
       delete *socket;
       *socket = nullptr;
    }
@@ -217,11 +218,14 @@ HltHistogram& HltMonitorSvc::histogram(const std::string& identifier,
 
    // Serialize the Histo1DDef
    std::stringstream ss;
-   boost::archive::text_oarchive oa{ss};
-   oa << r.def();
-
+   {
+      boost::archive::text_oarchive oa{ss};
+      oa << r.def();
+   }
+   string s = ss.str();
+   
    // Add info message
-   addInfo(r.id().__hash__(), Monitoring::s_Histo1D, ss.str());
+   addInfo(r.id().__hash__(), Monitoring::s_Histo1D, s);
    return r;
 }
 
@@ -255,10 +259,38 @@ void HltMonitorSvc::fill(const Gaudi::StringKey& key, size_t bin)
 //===============================================================================
 void HltMonitorSvc::handle(const Incident& incident)
 {
+   const RunChangeIncident* rci = dynamic_cast<const RunChangeIncident*>(&incident);
+   if (rci && m_run != rci->runNumber()) {
+      debug() << "Change of run number detected " << m_run
+              << " -> " << rci->runNumber() << endmsg;
+      m_run = rci->runNumber();
+
+      // Send info messages with the new run.
+      for (auto& message : m_infoMessages) {
+         // First type of info
+         auto type = Monitoring::s_HistoInfo;
+         zmq::message_t msg(type.length());
+         memcpy(static_cast<void*>(msg.data()), type.c_str(), type.length());
+         m_infoOut->send(msg, ZMQ_SNDMORE);
+
+         // Then run number
+         msg.rebuild(sizeof(Monitoring::RunNumber));
+         memcpy(msg.data(), &m_run, sizeof(Monitoring::RunNumber));
+         m_infoOut->send(msg, ZMQ_SNDMORE);
+
+         // Then the rest
+         for (decltype(m_infoMessages)::value_type::iterator it = begin(message),
+                 last = end(message); it != last; ++it) {
+            m_infoOut->send(*it, (it != (last - 1) ? ZMQ_SNDMORE : 0));
+         }
+      }
+
+      // On a run change, always send the chunks
+      sendChunks();
+   }
 
    auto now = std::chrono::high_resolution_clock::now(); // System::currentTime( System::microSec );
    if ( m_latestUpdate.time_since_epoch().count() == 0 ||
-        incident.type() == IncidentType::BeginRun ||
         incident.type() == "RunChange" )
       m_latestUpdate = now;
    using seconds = std::chrono::duration<double>;
@@ -266,45 +298,41 @@ void HltMonitorSvc::handle(const Incident& incident)
        > m_updateInterval) {
       sendChunks();
       m_latestUpdate = now;
+   } else {
+      sendChunks(false);
    }
 
-   const RunChangeIncident* rci = dynamic_cast<const RunChangeIncident*>(&incident);
-   if (rci) {
-      if (m_run != rci->runNumber()) {
-         debug() << "Change of run number detected " << m_run
-                 << " -> " << rci->runNumber() << endmsg;
-      }
-      m_run = rci->runNumber();
-
-      // On a run change, always send the chunks
-      sendChunks();
-   }
 }
 
 //===============================================================================
-void HltMonitorSvc::sendChunks()
+void HltMonitorSvc::sendChunks(bool all)
 {
-   // If there are info messages, send them and then clear them out.
-   for (auto& message : m_infoMessages) {
-      for (decltype(m_infoMessages)::value_type::iterator it = begin(message),
-              last = end(message); it != last; ++it) {
-         m_infoOut->send(*it, (it != last ? ZMQ_SNDMORE : 0));
-      }
+   if (UNLIKELY(all && msgLevel(MSG::DEBUG))) {
+      info() << "Sending all histogram chunks." << endmsg;
    }
-   m_infoMessages.clear();
-
    for (auto& entry : m_chunks) {
-      // Don't send empty chunks.
-      if (entry.second.data.empty()) continue;
+      // Don't send empty chunks and if all is false, don't send small chunks.
+      if (entry.second.data.empty() ||
+          (!all && (entry.second.data.size() < boost::numeric_cast<size_t>(m_updateInterval)))) {
+         continue;
+      }
 
+      if (UNLIKELY(!all && msgLevel(MSG::DEBUG))) {
+         info() << "Sending histogram chunk " << entry.second.runNumber
+                << " " << entry.second.histId << endmsg;
+      }
+
+      // serialize
       std::stringstream ss;
-      boost::archive::text_oarchive oa{ss};
-      oa << entry.second;
-      auto s = ss.str();
+      {
+         boost::archive::text_oarchive oa{ss};
+         oa << entry.second;
+      }
+      string s = ss.str();
 
       // Prepare message and send
-      zmq::message_t msg(s.size());
-      memcpy(static_cast<void*>(msg.data()), s.c_str(), s.size());
+      zmq::message_t msg(s.size() + 1);
+      memcpy(static_cast<void*>(msg.data()), s.c_str(), s.size() + 1);
       m_dataOut->send(msg);
       entry.second = Chunk{m_run, tck(), entry.second.histId};
    }
@@ -312,31 +340,33 @@ void HltMonitorSvc::sendChunks()
 
 //===============================================================================
 void HltMonitorSvc::addInfo(Monitoring::HistId id, const std::string& type,
-                            const std::string& info) const
+                            const std::string& inf) const
 {
-   // Prepare info message
-   vector<zmq::message_t> message{};
-   zmq::message_t msg(sizeof(Monitoring::HistId));
+   debug() << "Adding info: " << id << " " << m_startOfRun << " "
+           << type << " " << inf << endmsg;
 
-   // First run number
-   memcpy(msg.data(), &m_run, sizeof(Monitoring::RunNumber));
-   message.push_back(std::move(msg));
+   vector<zmq::message_t> message{};
+      
+   // Then HistId
+   zmq::message_t msgId(sizeof(Monitoring::HistId));
+   memcpy(msgId.data(), &id, sizeof(Monitoring::HistId));
+   message.push_back(std::move(msgId));
 
    // Then run start time in seconds since 1970
-   memcpy(msg.data(), &m_startOfRun, sizeof(int));
-   message.push_back(std::move(msg));
+   zmq::message_t msgStart(sizeof(m_startOfRun));
+   memcpy(msgStart.data(), &m_startOfRun, sizeof(m_startOfRun));
+   message.push_back(std::move(msgStart));
 
-   // Then HistID
-   msg.rebuild(sizeof(Monitoring::HistId));
-   memcpy(msg.data(), &id, sizeof(Monitoring::HistId));
-   message.push_back(std::move(msg));
+   // The type of histogram
+   zmq::message_t typeMsg(type.length());
+   memcpy(static_cast<void*>(typeMsg.data()), type.c_str(), type.length());
+   message.push_back(std::move(typeMsg));
 
-   // Prepare the rest of the message and send it.
-   for (const auto& part : {type, info}) {
-      msg.rebuild(part.size());
-      memcpy(static_cast<void*>(msg.data()), part.c_str(), part.size());
-      message.push_back(std::move(msg));
-   }
+   // The infomation
+   zmq::message_t infMsg(inf.length());
+   memcpy(static_cast<void*>(infMsg.data()), inf.c_str(), inf.length());
+   message.push_back(std::move(infMsg));
+
    m_infoMessages.push_back(std::move(message));
 }
 
