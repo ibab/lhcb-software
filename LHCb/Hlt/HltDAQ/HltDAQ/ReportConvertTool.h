@@ -654,6 +654,31 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
           , {"20#RecSummary.nMuonCoordsS4",            {13,20}}
           , {"21#RecSummary.nMuonTracks",              {14,21}}}
       }
+      , { 6
+        , {{"0#RecSummary.nLongTracks",                {0,0}}
+          , {"1#RecSummary.nDownstreamTracks",         {1,1}}
+          , {"2#RecSummary.nUpstreamTracks",           {12,2}}
+          , {"3#RecSummary.nVeloTracks",               {16,3}}
+          , {"4#RecSummary.nTTracks",                  {17,4}}
+          , {"5#RecSummary.nBackTracks",               {18,5}}
+          , {"6#RecSummary.nTracks",                   {19,6}}
+          , {"7#RecSummary.nRich1Hits",                {20,7}}
+          , {"8#RecSummary.nRich2Hits",                {21,8}}
+          , {"9#RecSummary.nVeloClusters",             {22,9}}
+          , {"10#RecSummary.nITClusters",              {2,10}}
+          , {"11#RecSummary.nTTClusters",              {3,11}}
+          , {"12#RecSummary.nUTClusters",              {4,12}}
+          , {"13#RecSummary.nOTClusters",              {5,13}}
+          , {"14#RecSummary.nFTClusters",              {6,14}}
+          , {"15#RecSummary.nSPDhits",                 {7,15}}
+          , {"16#RecSummary.nMuonCoordsS0",            {8,16}}
+          , {"17#RecSummary.nMuonCoordsS1",            {9,17}}
+          , {"18#RecSummary.nMuonCoordsS2",            {10,18}}
+          , {"19#RecSummary.nMuonCoordsS3",            {11,19}}
+          , {"20#RecSummary.nMuonCoordsS4",            {13,20}}
+          , {"21#RecSummary.nMuonTracks",              {14,21}}
+          , {"22#RecSummary.nPVs",                     {15,22}}}
+      }
     };
 }; // End of class header. 
 

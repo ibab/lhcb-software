@@ -4,6 +4,11 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-07-15 - Sean Benson
+ - Introduce v6 of sel reports.
+ - Make getLatestVersion more robust.
+ - Put nPVs in RecSummary.
+
 ! 2015-07-14 - Roel Aaij
  - Fix L0 routing bits.
 

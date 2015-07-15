@@ -27,8 +27,29 @@ ReportConvertTool::ReportConvertTool( const std::string& type,
   declareInterface<IReportConvert>(this);
 
   m_LatestVersion=1;
-  for(it_unordered_map2 track_it = m_track_unordered_map2_Turbo.begin(); track_it!=m_track_unordered_map2_Turbo.end(); track_it++){
-    if(track_it->first > m_LatestVersion) m_LatestVersion = track_it->first;
+  for(it_unordered_map2 map_it = m_track_unordered_map2_Turbo.begin(); map_it!=m_track_unordered_map2_Turbo.end(); map_it++){
+    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
+  }
+  for(it_unordered_map2 map_it = m_particle_unordered_map2_Turbo.begin(); map_it!=m_particle_unordered_map2_Turbo.end(); map_it++){
+    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
+  }
+  for(it_unordered_map2 map_it = m_proto_unordered_map2_Turbo.begin(); map_it!=m_proto_unordered_map2_Turbo.end(); map_it++){
+    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
+  }
+  for(it_unordered_map2 map_it = m_rpid_unordered_map2_Turbo.begin(); map_it!=m_rpid_unordered_map2_Turbo.end(); map_it++){
+    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
+  }
+  for(it_unordered_map2 map_it = m_mpid_unordered_map2_Turbo.begin(); map_it!=m_mpid_unordered_map2_Turbo.end(); map_it++){
+    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
+  }
+  for(it_unordered_map2 map_it = m_recvertex_unordered_map2_Turbo.begin(); map_it!=m_recvertex_unordered_map2_Turbo.end(); map_it++){
+    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
+  }
+  for(it_unordered_map2 map_it = m_vertex_unordered_map2_Turbo.begin(); map_it!=m_vertex_unordered_map2_Turbo.end(); map_it++){
+    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
+  }
+  for(it_unordered_map2 map_it = m_recsummary_unordered_map2.begin(); map_it!=m_recsummary_unordered_map2.end(); map_it++){
+    if(map_it->first > m_LatestVersion) m_LatestVersion = map_it->first;
   }
 }
 
@@ -582,6 +603,7 @@ void ReportConvertTool::RecSummaryObject2Summary( HltObjectSummary::Info* info, 
       case 19: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nMuonCoordsS3,0 ) ) ); break;
       case 20: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nMuonCoordsS4,0 ) ) ); break;
       case 21: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nMuonTracks,0 ) ) ); break;
+      case 22: info->insert( recsummary_it->first, float( object->info( LHCb::RecSummary::nPVs,0 ) ) ); break;
     }
   }
 
@@ -1042,6 +1064,7 @@ void ReportConvertTool::RecSummaryObjectFromSummary( const HltObjectSummary::Inf
       case 19: ( object->addInfo( LHCb::RecSummary::nMuonCoordsS3, (*info)[ recsummary_it->first ] ) ); break;
       case 20: ( object->addInfo( LHCb::RecSummary::nMuonCoordsS4, (*info)[ recsummary_it->first ] ) ); break;
       case 21: ( object->addInfo( LHCb::RecSummary::nMuonTracks, (*info)[ recsummary_it->first ] ) ); break;
+      case 22: ( object->addInfo( LHCb::RecSummary::nPVs, (*info)[ recsummary_it->first ] ) ); break;
     }
   }
 }
