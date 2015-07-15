@@ -6,6 +6,9 @@
                 COPYING.LESSER. See README.md for more information.
 !-----------------------------------------------------------------------------
 
+! 2015-07-15 - Roel Aaij
+ - Switch back to epoll.
+
 ! 2015-07-02 - raaij
  - Fix compilation warning.
 
