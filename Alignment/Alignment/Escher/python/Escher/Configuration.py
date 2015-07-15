@@ -469,7 +469,13 @@ class Escher(LHCbConfigurableUser):
         if not self.getProp("OnlineMode"):
             self.setOtherProps(RecMoniConf(),["Context","DataType"])
             RecMoniConf().MoniSequence = self.getProp("MoniSequence")
-        
+        else:
+            self.setOtherProps(RecMoniConf(),["Context","DataType"])
+            RecMoniConf().MoniSequence = self.getProp("MoniSequence")
+            RecMoniConf().Context = "Offline"
+            RecMoniConf().OutputLevel = FATAL
+            RecMoniConf().Histograms = "OfflineFull"
+
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()

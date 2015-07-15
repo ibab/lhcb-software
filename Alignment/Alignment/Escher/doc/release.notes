@@ -4,6 +4,9 @@ Package Coordinator : Maurizio Martinelli
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+! 2015-07-15 - Silvia Borghi
+ - change configuration to run monitoring also in online alignment framework
+
 ! 2015-06-16 - Stefania Vecchi
  - change configuration for muon alignment (includes also changes in the configuration of TT that someone did)
 
