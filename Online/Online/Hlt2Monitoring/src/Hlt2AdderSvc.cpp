@@ -102,28 +102,32 @@ void Hlt2AdderSvc::function()
       if (!paused) zmq::poll (&items [0], 2, -1);
 
       if (paused || (items[0].revents & ZMQ_POLLIN)) {
-         control.recv(&message);
-         if (message.size() == 9 && memcmp(message.data(), "TERMINATE", 9) == 0) {
+         auto cmd = receiveString(control);
+         if (cmd == "TERMINATE") {
             int linger = 0;
             front.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
             back.setsockopt(ZMQ_LINGER, &linger,sizeof(linger));
             control.setsockopt(ZMQ_LINGER, &linger,sizeof(linger));
             break;
-         } else if (message.size() == 5 && memcmp(message.data(), "PAUSE", 5) == 0) {
+         } else if (cmd == "PAUSE") {
             paused = true;
-         } else if (message.size() == 6 && memcmp(message.data(), "RESUME", 6) == 0) {
+         } else if (cmd == "RESUME") {
             paused = false;
          }
       }
       if (!paused && (items[1].revents & ZMQ_POLLIN)) {
-         front.recv(&message);
-
          // Deserialize
-         std::stringstream ss{static_cast<char*>(message.data())};
-         boost::archive::text_iarchive ia{ss};
          Monitoring::Chunk c;
-         ia >> c;
+         std::stringstream inStream{receiveString(front)};
+         try {
+            boost::archive::text_iarchive ia{inStream};
+            ia >> c;
+         } catch (boost::archive::archive_exception) {
+            warning() << "Faulty chunk, ignoring " << endmsg;
+            continue;
+         }
 
+         bool first = false;
          key_t key{c.runNumber, c.histId};
          auto now = std::chrono::high_resolution_clock::now();
          auto it = m_histograms.find(key);
@@ -131,27 +135,30 @@ void Hlt2AdderSvc::function()
          if (it == end(m_histograms)) {
             it = m_histograms.emplace(key, Monitoring::Histogram{c.runNumber, c.tck, c.histId}).first;
             m_updates[key] = now;
+            first = true;
          }
          it->second.addChunk(c);
 
-         // If not sent for interval seconds, send all histograms
-         if (std::chrono::duration_cast<std::chrono::seconds>(now - m_updates[key]).count() >
-             m_sendInterval) {
+         // If not sent for interval seconds, send histogram
+         if (first || (std::chrono::duration_cast<std::chrono::seconds>(now - m_updates[key]).count() >
+                       m_sendInterval)) {
 
             // Serialize
-            std::stringstream ss;
-            boost::archive::text_oarchive oa{ss};
-            oa << it->second;
-            auto s = ss.str();
+            string msg;
+            std::stringstream outStream;
+            {
+               boost::archive::text_oarchive oa{outStream};
+               oa << it->second;
+               msg = outStream.str();
+            }
 
             // Send message
-            zmq::message_t msg(s.size());
-            memcpy(static_cast<void*>(msg.data()), s.c_str(), s.size());
-            back.send(msg);
+            sendString(back, msg);
             m_updates[key] = now;
 
             // Zero out histogram
-            it->second.data = std::vector<Monitoring::BinContent>(it->second.data.size(), 0);
+            for (size_t i = 0; i < it->second.data.size(); ++i)
+               it->second.data[i] = 0;
          }
       }
    }

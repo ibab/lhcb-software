@@ -10,6 +10,9 @@
 #include <GaudiKernel/Service.h>
 #include <GaudiKernel/IIncidentListener.h>
 
+// Hlt2Monitoring
+#include <Hlt2Monitoring/RunInfo.h>
+
 // ZeroMQ
 #include <ZeroMQ/IZeroMQSvc.h>
 
@@ -36,11 +39,24 @@ public:
 
 private:
 
-   void runTop();
-   void runRelay();
+   bool receiveHistoInfo(zmq::socket_t& data) const;
+   bool receiveRunInfo(zmq::socket_t& data) const;
 
+   bool histoInfoRequest(zmq::socket_t& inf) const;
+   bool runInfoRequest(zmq::socket_t& inf) const;
+   
    // properties
    std::string m_hostRegex;
+
+   // data members
+   using histoKey_t = std::pair<Monitoring::RunNumber, Monitoring::HistId>;
+   mutable boost::unordered_map<histoKey_t, Gaudi::Histo1DDef> m_histograms;
+   mutable boost::unordered_map<histoKey_t, std::string> m_rates;
+
+   mutable boost::unordered_map<Monitoring::RunNumber, int> m_startTimes;
+
+   // Run Info
+   mutable boost::unordered_map<Monitoring::RunNumber, Monitoring::RunInfo> m_runInfo;
 
 };
 

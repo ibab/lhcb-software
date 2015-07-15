@@ -3,6 +3,7 @@
 
 // STD & STL
 #include <string>
+#include <functional>
 #include <map>
 #include <set>
 
@@ -10,16 +11,28 @@
 #include <GaudiKernel/Service.h>
 #include <GaudiKernel/IIncidentListener.h>
 
+// HLT2 monitoring
+#include <Hlt2Monitoring/Common.h>
+
 // ZeroMQ
 #include <ZeroMQ/IZeroMQSvc.h>
 
 class ISvcLocator;
 class IIncidentSvc;
 
-/** @class Hlt2MonBaseSvc
+namespace {
+   template <class T>
+   size_t defaultSizeOf(const T&) {
+      return sizeof(T);
+   }
+}
 
+/** @class Hlt2Saver Hlt2Saver.h
+ *
+ *
+ *  @author Roel Aaij
+ *  @date   2015-07-06
  */
-
 class Hlt2MonBaseSvc : public extends1<Service, IIncidentListener> {
 public:
 
@@ -43,6 +56,23 @@ protected:
    inline zmq::context_t& context() const { return m_zmqSvc->context(); }
    inline zmq::socket_t& control() const { return *m_control; }
    const std::string& ctrlCon() const { return m_ctrlCon; }
+
+   // General method to send simple objects
+   template <class T>
+   bool sendMessage(zmq::socket_t& socket, const T& item, int flag = 0,
+                    std::function<size_t(const T& t)> sizeFun = defaultSizeOf<T>) const {
+      size_t s = sizeFun(item);
+      zmq::message_t msg(s);
+      memcpy(static_cast<void*>(msg.data()), &item, s);
+      return socket.send(msg, flag);
+   }
+
+   bool sendString(zmq::socket_t& socket, const std::string& item, int flags = 0) const {
+      return sendMessage<const char>(socket, *item.c_str(), flags, [](const char& cs){ return strlen(&cs); });
+   }
+
+   std::string receiveString(zmq::socket_t& socket, bool* more = nullptr) const;
+   std::pair<Monitoring::RunNumber, Monitoring::HistId> receiveRunAndId(zmq::socket_t& socket, bool* more = nullptr) const;
 
    // properties
    bool m_top;

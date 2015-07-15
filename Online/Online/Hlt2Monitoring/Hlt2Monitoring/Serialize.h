@@ -1,12 +1,12 @@
 #ifndef HLT2MONITORING_SERIALIZE_H
 #define HLT2MONITORING_SERIALIZE_H 1
 
-
 // Gaudi
 #include <GaudiKernel/HistoDef.h>
 
 // Local include files
 #include "Chunk.h"
+#include "RunInfo.h"
 #include "Histogram.h"
 
 // Boost
@@ -127,6 +127,14 @@ auto serialize(Archive& archive, Monitoring::Histogram& histo,
    archive& histo.data;
 }
 
+// Serialize RunInfo
+template <typename Archive>
+auto serialize(Archive& archive, Monitoring::RunInfo& info,
+               const unsigned int) -> void {
+   archive& info.lumiPars;
+   archive& info.run;
+}
+   
 }
 }
 

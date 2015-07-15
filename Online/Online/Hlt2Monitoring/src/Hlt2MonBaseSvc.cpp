@@ -19,6 +19,7 @@
 namespace {
    using std::string;
    using std::to_string;
+   using std::make_pair;
 }
 
 //===============================================================================
@@ -36,7 +37,7 @@ Hlt2MonBaseSvc::Hlt2MonBaseSvc(const string& name, ISvcLocator* loc)
    declareProperty("OutPort", m_outPort = 31338);
    declareProperty("FrontConnection", m_frontCon);
    declareProperty("BackConnection", m_backCon);
-   declareProperty("ControlConnection", m_ctrlCon = string{"ipc:///tmp/"} + name + "Control");
+   declareProperty("ControlConnection", m_ctrlCon = string{"inproc://"} + name + "Control");
    declareProperty("ForceTop", m_forceTop = false);
    declareProperty("PartitionName", m_partition);
    declareProperty("RunInPartitions", m_partitions = {"LHCb2"});
@@ -91,7 +92,7 @@ StatusCode Hlt2MonBaseSvc::start()
    if (!m_enabled) return sc;
 
    if (m_thread) {
-      zmq_send(*m_control, "RESUME", 6, 0);
+      sendString(*m_control, "RESUME");
       return sc;
    }
 
@@ -107,7 +108,7 @@ StatusCode Hlt2MonBaseSvc::start()
 StatusCode Hlt2MonBaseSvc::stop()
 {
    if (m_control) {
-      zmq_send(*m_control, "PAUSE", 5, 0);
+      sendString(*m_control, "PAUSE");
    }
    return StatusCode::SUCCESS;
 }
@@ -117,7 +118,7 @@ StatusCode Hlt2MonBaseSvc::finalize()
 {
    // terminate the proxy
    if (m_thread) {
-      zmq_send(*m_control, "TERMINATE", 9, 0);
+      sendString(*m_control, "TERMINATE");
       m_thread->join();
       delete m_thread;
       m_thread = nullptr;
@@ -133,4 +134,36 @@ StatusCode Hlt2MonBaseSvc::finalize()
       m_incidentSvc = 0;
    }
    return Service::finalize();
+}
+
+//===============================================================================
+std::pair<Monitoring::RunNumber, Monitoring::HistId>
+Hlt2MonBaseSvc::receiveRunAndId(zmq::socket_t& socket, bool* more) const
+{
+   // Incoming IDs
+   zmq::message_t message;
+   socket.recv(&message);
+   Monitoring::RunNumber run{0};
+   memcpy(&run, message.data(), sizeof(run));
+
+   // Histogram ID
+   message.rebuild(sizeof(Monitoring::HistId));
+   socket.recv(&message);
+   Monitoring::HistId id{0};
+   memcpy(&id, message.data(), sizeof(id));
+
+   if (more) *more = message.more();
+   return make_pair(run, id);
+}
+
+//===============================================================================
+std::string Hlt2MonBaseSvc::receiveString(zmq::socket_t& socket, bool* more) const
+{
+   zmq::message_t msg;
+   socket.recv(&msg);
+   if (more) *more = msg.more();
+
+   string r(msg.size() + 1, char{});
+   r.assign(static_cast<char*>(msg.data()), msg.size());
+   return r;
 }

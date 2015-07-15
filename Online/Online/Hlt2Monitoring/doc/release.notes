@@ -4,6 +4,25 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-07-15 - Roel Aaij
+ - Add design document for next step.
+ - Strings on the wire should not be null terminated.
+ - Add Hlt2RootPublishSvc that converts the custom format histograms to TH1D.
+   These are then picked up by the Hlt2SaverSvc and saved to files.
+ - Hlt2MonBaseSvc
+   - Implement methods for sending and receiving PODs and standard objects;
+     strings and (run number, histo id).
+ - Hlt2SaverSvc
+   - Implement normalization of rate histos in the Hlt2SaverSvc. The histogram
+     to normalize to is configurable through a property.
+  - Use boost::multi_index_container.
+ - Hlt2MonInfoSvc
+   - Add a new type of info: RunInfo. For now it only contains the lumi
+     parameters needed for normalization of the lumi rate histogram.
+   - Remove relay functionality, this can be done by Hlt2MonRelaySvc
+ - 
+ - 
+
 !========================= Hlt2Monitoring v1r0 2015-06-29 ====================
 
 ! 2015-06-24 - Roel Aaij
