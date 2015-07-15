@@ -97,9 +97,12 @@ const LHCb::State* ChargedParticleMakerBase::usedState( const LHCb::Track* track
   const LHCb::State* uState = 0 ;
   if (msgLevel(MSG::VERBOSE))
   { verbose() << "ChargedParticleMakerBase::usedState :: Looking for State" << endmsg ; }
-  // default: closest to the beam:
-  if ( ! uState ) { uState = track->stateAt( LHCb::State::ClosestToBeam    ) ; }
-  // if not availabel: first measurementr
+  // default: closest to the beam for track types with a Velo part.
+  if ( ! uState  && 
+       !(track->checkType(LHCb::Track::Downstream) || track->checkType(LHCb::Track::Ttrack))) { 
+    uState = track->stateAt( LHCb::State::ClosestToBeam    ) ; 
+  }
+  // if not available: first measurement. Default for Downstream and T tracks
   if ( ! uState ) { uState = track->stateAt( LHCb::State::FirstMeasurement ) ; }
   // backup
   if ( ! uState )

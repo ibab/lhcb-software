@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
+! 2015-07-15 - Sascha Stahl
+ - ChargedParticleMakerBase: Ensure that Downstream and T-tracks use the state at
+   first measurement to fill the particle. This behaviour reflects that at the end of Brunel,
+   the state closest to beam is removed for these track types.
 
 ! 2015-06-03 - Eduardo Rodrigues
  - Various declareProperty changed to setProperty to remove compilation warnings
