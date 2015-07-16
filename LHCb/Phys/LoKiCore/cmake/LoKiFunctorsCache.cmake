@@ -47,11 +47,13 @@ function(loki_functors_cache name)
     return()
   endif()
 
-  # default values
-  set(ARG_FACTORIES CoreFactory HltFactory HybridFactory)
-
   CMAKE_PARSE_ARGUMENTS(ARG "" "SPLIT"
                             "LINK_LIBRARIES;INCLUDE_DIRS;DEPENDS;FACTORIES" ${ARGN})
+
+  if(NOT ARG_FACTORIES)
+    # default values
+    set(ARG_FACTORIES CoreFactory HltFactory HybridFactory)
+  endif()
 
   # where all the files are generated
   file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${name}_srcs)

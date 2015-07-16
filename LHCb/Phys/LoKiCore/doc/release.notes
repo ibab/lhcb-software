@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-07-16 - Marco Clemencic
+ - Fixed bug in LoKiFunctorsCache.cmake.
+
 ! 2015-07-03 - Marco Clemencic
  - Added some documentation for the generation of LoKi Functors caches.
  - Minor improvements to LoKiFunctorsCache.cmake.
