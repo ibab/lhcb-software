@@ -319,7 +319,34 @@ std::ostream&
 LoKi::Particles::IsMuonLoose::fillStream ( std::ostream& s ) const 
 { return s << "ISMUONLOOSE" ; }
 // ============================================================================
-
+LoKi::Particles::IsMuonTight::result_type
+LoKi::Particles::IsMuonTight::operator()
+  ( LoKi::Particles::IsMuonTight::argument p ) const
+{
+  //
+  if ( 0 == p )
+  {
+    Error ( "Invalid Particle, return 'false'" ) ;
+    return false ;                                     // RETURN 
+  }
+  //
+  const LHCb::MuonPID* pid = muonPID ( p ) ;
+  //
+  if ( 0 == pid )
+  {
+    Warning ( "Invalid MuonPID, return 'false'", StatusCode::SUCCESS, 0 ) ;
+    return false ;                                       // RETURN 
+  }
+  //
+  return pid -> IsMuonTight() ;                          // RETURN   
+}
+// ============================================================================
+//  OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream&
+LoKi::Particles::IsMuonTight::fillStream ( std::ostream& s ) const
+{ return s << "ISMUONTIGHT" ; }
+// ============================================================================
 
 // ============================================================================
 // MANDATORY: virtual destructor 

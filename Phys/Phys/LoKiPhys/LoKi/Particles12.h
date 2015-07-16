@@ -312,6 +312,35 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     } ;
+    // ========================================================================    
+    /** @class IsMuonTight
+     *  The trivial predicate whith returns LHCb::MuonPID::isMuonTight
+     *
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::MuonPID 
+     *  @see LoKi::Cuts::ISMUONTIGHT
+     *  @see LoKi::Cuts::ISTIGHTMUON
+     *
+     *  @author Ricardo VAZQUEZ GOMEZ rvazquez@cern.ch
+     *  @date 2015-07-16
+     */
+    class GAUDI_API IsMuonTight : public IsMuon
+    {
+    public:
+      // ======================================================================
+      /// Default Constructor
+      IsMuonTight() { }
+      /// MANDATORY: virtual destructor 
+      virtual ~IsMuonTight() {} ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  IsMuonTight* clone() const { return new IsMuonTight(*this); }
+      /// MANDATORY: the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
     // ========================================================================
     /** @class InMuonAcceptance
      *  Simple functor that checks if the particle is in muon acceptance

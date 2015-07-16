@@ -257,6 +257,10 @@ ISMUON   = LoKi.Particles.IsMuon            ()
 ISMUONLOOSE = LoKi.Particles.IsMuonLoose    ()
 ## @see LoKi::Cuts::ISLOOSEMUON
 ISLOOSEMUON = LoKi.Particles.IsMuonLoose    ()
+## @see LoKi::Cuts::ISMUONTIGHT
+ISMUONTIGHT = LoKi.Particles.IsMuonTight    ()
+## @see LoKi::Cuts::ISTIGHTMUON
+ISTIGHTMUON = LoKi.Particles.IsMuonTight    ()
 ## @see LoKi::Cuts::INMUON
 INMUON   = LoKi.Particles.InMuonAcceptance  ()
 ## @see LoKi::Cuts::NDAUGS  

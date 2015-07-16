@@ -2696,6 +2696,27 @@ namespace LoKi
      */
     const LoKi::Particles::IsMuonLoose                            ISLOOSEMUON ;
     // ========================================================================
+    /** @var ISTIGHTMUON
+     *  The simple evaluator of LHCb::MuonPID::IsMuonTight
+     *  
+     *  @code 
+     *
+     *  const LHCb::Particle* p = ... ;
+     * 
+     *  bool muon = ISTIGHTMUON ( p ) ;
+     *
+     *  @endcode 
+     *     
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::MuonPID 
+     *  @see LoKi::Particles::IsMuonTight
+     *  
+     *  @author Ricardo VAZQUEZ GOMEZ rvazquez@cern.ch
+     *  @date 2015-07-16
+     */
+    const LoKi::Particles::IsMuonTight                            ISTIGHTMUON ; 
+    // ========================================================================
     /** @var ISMUONPID
      *  The simple evaluator of LHCb::MuonPID::isMuon
      *  
@@ -2758,6 +2779,27 @@ namespace LoKi
      *  @date 2009-09-26
      */
     const LoKi::Particles::IsMuonLoose                            ISMUONLOOSE ;
+    // ========================================================================
+    /** @var ISMUONTIGHT
+     *  The simple evaluator of LHCb::MuonPID::IsMuonTight
+     *  
+     *  @code 
+     *
+     *  const LHCb::Particle* p = ... ;
+     * 
+     *  bool muon = ISMUONTIGHT ( p ) ;
+     *
+     *  @endcode 
+     *     
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::MuonPID 
+     *  @see LoKi::Particles::IsMuonTight
+     *  
+     *  @author Ricardo VAZQUEZ GOMEZ rvazquez@cern.ch
+     *  @date 2015-07-16
+     */
+    const LoKi::Particles::IsMuonTight                            ISMUONTIGHT ;
     // ========================================================================
     /** @var ISTTRACK
      *  The trivial predicate whoch evalauted to true for particles, 
