@@ -1129,6 +1129,40 @@ std::ostream& LoKi::ProtoParticles::IsLooseMuon::fillStream ( std::ostream& s ) 
 { return s << " PP_ISLOOSEMUON " ; }
 // ============================================================================
 
+// ======================================================================
+// MANDATORY: virtual destructor 
+// ======================================================================
+LoKi::ProtoParticles::IsTightMuon::~IsTightMuon(){}
+// ======================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ======================================================================
+LoKi::ProtoParticles::IsTightMuon*
+LoKi::ProtoParticles::IsTightMuon::clone() const
+{ return new LoKi::ProtoParticles::IsTightMuon ( *this ) ; }
+// ======================================================================
+// MANDATORY: the only one essential method
+// ======================================================================
+LoKi::ProtoParticles::IsTightMuon::result_type
+LoKi::ProtoParticles::IsTightMuon::operator()
+  ( LoKi::ProtoParticles::IsTightMuon::argument p ) const
+{
+  if ( 0 == p )
+  {
+    Error ( "LHCb::ProtoParticle* points to NULL, return 'false'" ) ;
+    return false ;                                                    // RETURN    
+  }
+  //
+  const LHCb::MuonPID* pid = muon ( p ) ;
+  //
+  return ( NULL != pid && pid->IsMuonTight() );
+}
+// ============================================================================
+// OPTIONAL: the nice printtout 
+// ============================================================================
+std::ostream& LoKi::ProtoParticles::IsTightMuon::fillStream ( std::ostream& s ) const
+{ return s << " PP_ISTIGHTMUON " ; }
+// ============================================================================
+
 // ============================================================================
 // constructor from the service, TES location and cuts 
 // ============================================================================

@@ -366,8 +366,12 @@ PP_ProbNNghost     = PP_INFO ( LHCb.ProtoParticle.ProbNNghost     , -1000  )
 PP_ISMUON          = LoKi.ProtoParticles.IsMuon      ()
 ## @see LoKi::Cuts::PP_ISLOOSEMUON 
 PP_ISLOOSEMUON     = LoKi.ProtoParticles.IsLooseMuon ()
-## @see LoKi::Cuts::PP_ISMUONLOOSe
+## @see LoKi::Cuts::PP_ISMUONLOOSE
 PP_ISMUONLOOSE     = LoKi.ProtoParticles.IsLooseMuon ()
+## @see LoKi::Cuts::PP_ISTIGHTMUON 
+PP_ISTIGHTMUON     = LoKi.ProtoParticles.IsTightMuon ()
+## @see LoKi::Cuts::PP_ISMUONTIGHT
+PP_ISMUONTIGHT     = LoKi.ProtoParticles.IsTightMuon ()
 ## @see LoKi::Cuts::PP_NSHAREDMU
 PP_NSHAREDMU       = LoKi.ProtoParticles.NShared     ()
 

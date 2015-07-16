@@ -609,6 +609,28 @@ namespace LoKi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @clas IsTightMuon 
+     *  @see LoKi::Cuts::PP_ISTIGHTMUON 
+     *  @author Ricardo VAZQUEZ GOMEZ rvazquez@cern.ch
+     *  @date   2015-07-16
+     */
+    class GAUDI_API IsTightMuon : public IsMuon
+    {
+    public:
+      // ======================================================================
+      /// Default Constructor
+      IsTightMuon() { }
+      /// MANDATORY: virtual destructor 
+      virtual ~IsTightMuon () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  IsTightMuon* clone() const ;
+      /// MANDATORY: the only one essential method
+      virtual  result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class NShared 
      *  Get number of shared muon hits 
      *  @see LoKi::Cuts::PP_NSHAREDMU 
@@ -1431,6 +1453,22 @@ namespace LoKi
      *  @date 2010-05-27
      */
     const LoKi::ProtoParticles::IsLooseMuon                    PP_ISMUONLOOSE ;
+    // ========================================================================
+    /** @var PP_ISTIGHTMUON
+     *  check 'is-tight-muon'
+     *  @see LHCb::MuonPID::IsMuonTight 
+     *  @author Ricardo VAZQUEZ GOMEZ rvazquez@cern.ch
+     *  @date 2015-07-16
+     */
+    const LoKi::ProtoParticles::IsTightMuon                    PP_ISTIGHTMUON ;
+    // ========================================================================
+    /** @var PP_ISMUONTIGHT
+     *  check 'is-tight-muon'
+     *  @see LHCb::MuonPID::IsMuonTight 
+     *  @author Ricardo VAZQUEZ GOMEZ rvazquez@cern.ch
+     *  @date 2015-07-16
+     */
+    const LoKi::ProtoParticles::IsTightMuon                    PP_ISMUONTIGHT ; 
     // ========================================================================
     /** @typedef PP_SOURCE 
      *  Simple source of protoparticles 

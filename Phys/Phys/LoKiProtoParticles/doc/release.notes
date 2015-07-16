@@ -6,6 +6,9 @@
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
 
+! 2015-07-16 - Ricardo Vazquez Gomez
+ - Added functor to get IsMuonTight for ProtoParticle
+
 ! 2015-06-22 - Eduardo Rodrigues
  - Removed unused class rules producing warnings in genflex.
 
