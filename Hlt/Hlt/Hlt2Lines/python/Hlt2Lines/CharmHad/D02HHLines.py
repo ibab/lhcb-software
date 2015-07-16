@@ -118,37 +118,43 @@ class CharmHadD02HHLines : # {
             ## D0 -> K pi reconstructed as "[D0 -> K- pi+]cc
             ## D0_TAG_CPV_Dstp2D0Pip_D02KmPip is a shared instance defined in
             ##   Stages.py because it is also used in CharmSpectroscopyLines.py
-            Dstp2D0Pip_D02KpPim = TagDecay('D0_TAG_CPV'
+            Dstp2D0Pip_D02KpPim = TagDecay('CharmHadDstp2D0Pip_D02KpPim'
                         , ["[D*(2010)- -> D0 pi-]cc"]
                         , inputs = [ D02HH_D0ToKmPip, SharedSoftTagChild_pi ]
+                        , shared = True
+                        , nickname = 'D0_TAG_CPV'
                         , ReFitPVs = True)
 
             ## Self-conjugate final state reconstructed only as D0
-            Dstp2D0Pip_D02KmKp  = TagDecay('D0_TAG_CPV'
+            Dstp2D0Pip_D02KmKp  = TagDecay('CharmHadDstp2D0Pip_D02KmKp'
                         , decay = ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"]
                         , inputs = [ D02HH_D0ToKmKp, SharedSoftTagChild_pi ]
+                        , shared = True
+                        , nickname = 'D0_TAG_CPV'
                         , ReFitPVs = True)
 
-            Dstp2D0Pip_D02PimPip = TagDecay('D0_TAG_CPV'
+            Dstp2D0Pip_D02PimPip = TagDecay('CharmHadDstp2D0Pip_D02PimPip'
                         , decay = ["D*(2010)+ -> D0 pi+","D*(2010)- -> D0 pi-"]
                         , inputs = [ D02HH_D0ToPimPip, SharedSoftTagChild_pi ]
+                        , shared = True
+                        , nickname = 'D0_TAG_CPV'
                         , ReFitPVs = True)
 
             ## Muon tagged lines
             MuTag_DstpMu_Dstp2D0Pip_D02KpPim = TagDecay('DSTP_MUTAG_CPV'
-                        , ["[B0 -> D*(2010)- mu+]cc"]
+                        , ["[B0 -> D*(2010)- mu+]cc","[B0 -> D*(2010)- mu-]cc"]
                         , inputs = [ Dstp2D0Pip_D02KpPim, SharedSoftTagChild_mu ]
                         , ReFitPVs = True)
             MuTag_DstpMu_Dstp2D0Pip_D02KmPip = TagDecay('DSTP_MUTAG_CPV'
-                        , ["[B0 -> D*(2010)- mu+]cc"]
+                        , ["[B0 -> D*(2010)- mu+]cc","[B0 -> D*(2010)- mu-]cc"]
                         , inputs = [ D0_TAG_CPV_Dstp2D0Pip_D02KmPip, SharedSoftTagChild_mu ]
                         , ReFitPVs = True)
             MuTag_DstpMu_Dstp2D0Pip_D02KmKp  = TagDecay('DSTP_MUTAG_CPV'
-                        , decay = ["[B0 -> D*(2010)- mu+]cc"]
+                        , decay = ["[B0 -> D*(2010)- mu+]cc","[B0 -> D*(2010)- mu-]cc"]
                         , inputs = [ Dstp2D0Pip_D02KmKp, SharedSoftTagChild_mu ]
                         , ReFitPVs = True)
             MuTag_DstpMu_Dstp2D0Pip_D02PimPip = TagDecay('DSTP_MUTAG_CPV'
-                        , decay = ["[B0 -> D*(2010)- mu+]cc"]
+                        , decay = ["[B0 -> D*(2010)- mu+]cc","[B0 -> D*(2010)- mu-]cc"]
                         , inputs = [ Dstp2D0Pip_D02PimPip, SharedSoftTagChild_mu ]
                         , ReFitPVs = True)
 
