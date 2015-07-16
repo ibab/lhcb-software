@@ -4,6 +4,10 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!  2015-07-15  -  Mike Sokoloff
+   - added BiKalmanFittedDownKaons to TrackFittedBasicParticles
+   - primarily for use in building DDD charged hyperon candidates
+
 ! 2015-07-08 - Roel Aaij
  - Use module that defines Hlt2ProbeTracking configurations instead of instantiating them
    here.
