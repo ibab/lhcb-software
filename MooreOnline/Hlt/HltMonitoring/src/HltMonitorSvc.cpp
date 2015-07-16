@@ -223,7 +223,7 @@ HltHistogram& HltMonitorSvc::histogram(const std::string& identifier,
       oa << r.def();
    }
    string s = ss.str();
-   
+
    // Add info message
    addInfo(r.id().__hash__(), Monitoring::s_Histo1D, s);
    return r;
@@ -265,24 +265,9 @@ void HltMonitorSvc::handle(const Incident& incident)
               << " -> " << rci->runNumber() << endmsg;
       m_run = rci->runNumber();
 
-      // Send info messages with the new run.
-      for (auto& message : m_infoMessages) {
-         // First type of info
-         auto type = Monitoring::s_HistoInfo;
-         zmq::message_t msg(type.length());
-         memcpy(static_cast<void*>(msg.data()), type.c_str(), type.length());
-         m_infoOut->send(msg, ZMQ_SNDMORE);
-
-         // Then run number
-         msg.rebuild(sizeof(Monitoring::RunNumber));
-         memcpy(msg.data(), &m_run, sizeof(Monitoring::RunNumber));
-         m_infoOut->send(msg, ZMQ_SNDMORE);
-
-         // Then the rest
-         for (decltype(m_infoMessages)::value_type::iterator it = begin(message),
-                 last = end(message); it != last; ++it) {
-            m_infoOut->send(*it, (it != (last - 1) ? ZMQ_SNDMORE : 0));
-         }
+      // Send all info messages again, with the new run.
+      for (const auto& entry : m_infoMessages) {
+         m_toSend.insert(entry.first);
       }
 
       // On a run change, always send the chunks
@@ -301,7 +286,57 @@ void HltMonitorSvc::handle(const Incident& incident)
    } else {
       sendChunks(false);
    }
+}
 
+//===============================================================================
+void HltMonitorSvc::sendInfo()
+{
+   if (!m_run)
+      return;
+
+   for (auto msgId : m_toSend) {
+      const auto& it = m_infoMessages.find(msgId);
+      if (it == end(m_infoMessages)) {
+         warning() << "No info message for id " << msgId << endmsg;
+         continue;
+      }
+
+      auto& infoMsg = it->second;
+
+      // First type of info
+      auto type = Monitoring::s_HistoInfo;
+      zmq::message_t msg(type.length());
+      memcpy(static_cast<void*>(msg.data()), type.c_str(), type.length());
+      m_infoOut->send(msg, ZMQ_SNDMORE);
+
+      // Then run number
+      msg.rebuild(sizeof(Monitoring::RunNumber));
+      memcpy(msg.data(), &m_run, sizeof(Monitoring::RunNumber));
+      m_infoOut->send(msg, ZMQ_SNDMORE);
+
+      // Then HistId
+      msg.rebuild(sizeof(Monitoring::HistId));
+      memcpy(msg.data(), &infoMsg.id, msg.size());
+      m_infoOut->send(msg, ZMQ_SNDMORE);
+
+      // Then run start time in seconds since 1970
+      msg.rebuild(sizeof(m_startOfRun));
+      memcpy(msg.data(), &m_startOfRun, msg.size());
+      m_infoOut->send(msg, ZMQ_SNDMORE);
+
+      // The type of histogram
+      msg.rebuild(infoMsg.type.length());
+      memcpy(static_cast<void*>(msg.data()), infoMsg.type.c_str(), msg.size());
+      m_infoOut->send(msg, ZMQ_SNDMORE);
+
+      // The infomation
+      msg.rebuild(infoMsg.info.length());
+      memcpy(static_cast<void*>(msg.data()), infoMsg.info.c_str(), msg.size());
+      m_infoOut->send(msg);
+   }
+
+   // Clear set of messages to send
+   m_toSend.clear();
 }
 
 //===============================================================================
@@ -310,6 +345,9 @@ void HltMonitorSvc::sendChunks(bool all)
    if (UNLIKELY(all && msgLevel(MSG::DEBUG))) {
       info() << "Sending all histogram chunks." << endmsg;
    }
+
+   sendInfo();
+
    for (auto& entry : m_chunks) {
       // Don't send empty chunks and if all is false, don't send small chunks.
       if (entry.second.data.empty() ||
@@ -342,32 +380,11 @@ void HltMonitorSvc::sendChunks(bool all)
 void HltMonitorSvc::addInfo(Monitoring::HistId id, const std::string& type,
                             const std::string& inf) const
 {
-   debug() << "Adding info: " << id << " " << m_startOfRun << " "
-           << type << " " << inf << endmsg;
+   debug() << "Adding info: " << id << " " << type << " " << inf << endmsg;
 
-   vector<zmq::message_t> message{};
-      
-   // Then HistId
-   zmq::message_t msgId(sizeof(Monitoring::HistId));
-   memcpy(msgId.data(), &id, sizeof(Monitoring::HistId));
-   message.push_back(std::move(msgId));
-
-   // Then run start time in seconds since 1970
-   zmq::message_t msgStart(sizeof(m_startOfRun));
-   memcpy(msgStart.data(), &m_startOfRun, sizeof(m_startOfRun));
-   message.push_back(std::move(msgStart));
-
-   // The type of histogram
-   zmq::message_t typeMsg(type.length());
-   memcpy(static_cast<void*>(typeMsg.data()), type.c_str(), type.length());
-   message.push_back(std::move(typeMsg));
-
-   // The infomation
-   zmq::message_t infMsg(inf.length());
-   memcpy(static_cast<void*>(infMsg.data()), inf.c_str(), inf.length());
-   message.push_back(std::move(infMsg));
-
-   m_infoMessages.push_back(std::move(message));
+   auto msgId = m_infoMessages.size();
+   m_infoMessages.emplace(msgId, InfoMessage{id, type, inf});
+   m_toSend.insert(msgId);
 }
 
 //===============================================================================

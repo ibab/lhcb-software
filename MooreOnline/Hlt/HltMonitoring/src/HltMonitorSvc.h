@@ -7,6 +7,7 @@
 #include <array>
 #include <set>
 #include <unordered_map>
+#include <unordered_set>
 
 // Gaudi
 #include <GaudiKernel/Service.h>
@@ -83,6 +84,7 @@ private:
 
    StatusCode updateConditions();
 
+   void sendInfo();
    void sendChunks(bool all = true);
 
    void addInfo(Monitoring::HistId id, const std::string& type, const std::string& info) const;
@@ -111,7 +113,19 @@ private:
    std::chrono::high_resolution_clock::time_point m_latestUpdate;
    int m_startOfRun;
 
-   mutable std::vector<std::vector<zmq::message_t>> m_infoMessages;
+   struct InfoMessage {
+      InfoMessage(Monitoring::HistId i,
+                  const std::string& t, const std::string& inf)
+         : id{i}, type{t}, info{inf} { }
+
+      Monitoring::HistId id;
+      std::string type;
+      std::string info;
+   };
+
+   using infoMessages_t = std::unordered_map<unsigned int, InfoMessage>;
+   mutable infoMessages_t m_infoMessages;
+   mutable std::unordered_set<unsigned int> m_toSend;
 
    mutable std::unordered_map<Gaudi::StringKey, RateCounter*> m_counters;
    mutable std::unordered_map<Gaudi::StringKey, HltHistogram*> m_histograms;

@@ -157,7 +157,7 @@ void HltInfoSvc::sendInfo()
    if (FSMState() < Gaudi::StateMachine::RUNNING) {
       return;
    }
-   info() << "Sending run info." << endmsg;
+   debug() << "Sending run info." << endmsg;
 
    // First type of info
    auto it = Monitoring::s_RunInfo;
