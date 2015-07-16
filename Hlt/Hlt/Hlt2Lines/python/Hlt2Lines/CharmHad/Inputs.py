@@ -15,3 +15,6 @@ from Hlt2SharedParticles.Pi0 import ResolvedPi0s as Hlt2ResolvedPi0
 from Hlt2SharedParticles.Pi0 import MergedPi0s as Hlt2MergedPi0
 from Hlt2SharedParticles.Pi0 import AllPi0s as Hlt2AllPi0
 from Hlt2SharedParticles.Eta import Hlt2ResolvedEtas as Hlt2ResolvedEta 
+
+from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedDownPions as Hlt2DownPions
+from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedDownKaons as Hlt2DownKaons
