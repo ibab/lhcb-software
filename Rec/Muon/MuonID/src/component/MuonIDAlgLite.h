@@ -40,8 +40,10 @@ class MuonIDAlgLite final : public GaudiAlgorithm {
   DLLMuonTool *DLLTool_;
   MakeMuonTool *makeMuonTool_;
   bool useTTrack_;
-  std::string tesPathInputTracks_, tesPathOutputMuonPid_,
-      tesPathOutputMuonTracks_;
+  std::string tesPathInputTracks_, tesPathOutputMuonPid_, 
+    tesPathOutputMuonTracks_;
+  std::vector<std::string> tesPathsInputTracks_;
+
 };
 
 #endif  // MUONIDALGLITE_H

@@ -11,7 +11,9 @@ DECLARE_ALGORITHM_FACTORY(MuonIDAlgLite)
 MuonIDAlgLite::MuonIDAlgLite(const std::string &name, ISvcLocator *pSvcLocator)
     : GaudiAlgorithm(name, pSvcLocator) {
   declareProperty("TracksLocation",
-                  tesPathInputTracks_ = LHCb::TrackLocation::Default);
+                  tesPathInputTracks_ = ""); // obsolete
+  declareProperty("TracksLocations",
+                  tesPathsInputTracks_ = {LHCb::TrackLocation::Default});
   declareProperty("MuonIDLocation",
                   tesPathOutputMuonPid_ = LHCb::MuonPIDLocation::Default);
   declareProperty("MuonTrackLocation",
@@ -37,6 +39,12 @@ StatusCode MuonIDAlgLite::initialize() {
   if (sc.isFailure()) {
     return sc;
   }
+  // backwards compatibile. Retain for a while to allow for transistion...
+  if ( !tesPathInputTracks_.empty() ) {
+    Warning( "'TrackLocation' Property is obsolete. Please change to use 'TrackLocations' instead").ignore();
+    tesPathsInputTracks_ = { tesPathInputTracks_ };
+  }
+  
   muonTool_ = tool<ICommonMuonTool>("CommonMuonTool");
   DLLTool_ = tool<DLLMuonTool>("DLLMuonTool");
   makeMuonTool_ = tool<MakeMuonTool>("MakeMuonTool");
@@ -47,13 +55,20 @@ StatusCode MuonIDAlgLite::initialize() {
  * Resulting PID objects as well as muon tracks are stored on the TES.
  */
 StatusCode MuonIDAlgLite::execute() {
-  const auto tracksPtr = get<LHCb::Tracks>(tesPathInputTracks_);
-  if (tracksPtr == nullptr) {
-    // TODO: What is the right thing to do here? Error or Warning and return
-    // "Success"?
-    return Error("Got nullptr from TES.");
-  }
-  const auto& tracks = *tracksPtr;
+  
+  std::vector<LHCb::Track*> tracks;
+  for( const std::string inputLoc : tesPathsInputTracks_){ 
+    const auto tracksPtr = get<LHCb::Tracks>(inputLoc);
+    if (tracksPtr == nullptr){
+      // TODO: What is the right thing to do here? Error or Warning and return
+      // "Success"?
+      return Error("Got nullptr from TES.");
+    }
+    const auto& tracksFromTES = *tracksPtr;
+    for (const auto trackPtr : tracksFromTES) {
+      tracks.push_back(trackPtr);
+    }
+  }  
 
   // Acquire TES containers for storing muon PIDs and tracks
   //const auto muPidsPtr = 
@@ -89,8 +104,8 @@ StatusCode MuonIDAlgLite::execute() {
   counter("nIsMuonLoose");
   counter("nIsMuonTight");
   // Iterate over all tracks and do the offline identification for each of them
-  for (const auto trackPtr : tracks) {
-    const auto &track = *trackPtr;
+  for(const auto newTrackPtr: tracks) {
+    const auto &track = *newTrackPtr;
     if (!isGoodOfflineTrack(track)) {
       continue;
     }
@@ -98,7 +113,7 @@ StatusCode MuonIDAlgLite::execute() {
     auto muPid =
         new LHCb::MuonPID;  // TODO: Put to where the values are set after the
                             // muonMap thing has been figured out...
-    muPid->setIDTrack(trackPtr);
+    muPid->setIDTrack(newTrackPtr);
     muPid->setIsMuon(0);
     muPid->setIsMuonLoose(0);
     muPid->setIsMuonTight(0);
@@ -169,10 +184,7 @@ StatusCode MuonIDAlgLite::execute() {
         DLLTool_->calcNShared(muPid, muPids, hits, extrapolation);
       }
     }
-    
-    muPids->insert(muPid, track.key());  // Necessary, as the insertion sets
-                                         // the key which is then used in
-                                         // making the track...
+    muPids->insert(muPid);
     counter("nMuonPIDs")++; 
     
     // make the muon track only for tracks passing IsMuonLoose
@@ -192,7 +204,7 @@ StatusCode MuonIDAlgLite::execute() {
       muTrack->addInfo(LHCb::Track::MuonNShared, muPid->nShared());
       muTrack->addInfo(LHCb::Track::MuonChi2perDoF, muTrack->chi2PerDoF());
       muPid->setMuonTrack(muTrack);
-      muTracks->insert(muTrack, track.key());
+      muTracks->insert(muTrack);
     }
   }
   
