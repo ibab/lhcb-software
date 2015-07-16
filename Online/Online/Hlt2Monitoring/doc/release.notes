@@ -12,7 +12,7 @@
    message as string. It is only enabled when the output level of the service
    is less than debug.
  - Fix saving:
-   - Create new temporary file.
+   - Create new unique temporary file.
    - Close and remove old file and copy temporary file to old file
    - remove temporary file.
 

@@ -241,7 +241,9 @@ void Hlt2SaverSvc::saveHistograms() const
       if (fs::exists(file)) {
          inFile = std::unique_ptr<TFile>{new TFile(file.string().c_str(), "read")};
       }
-      TFile outFile("/tmp/Hlt2Saver.root", "new");
+
+      auto outPath = fs::unique_path("/tmp/HltSaver-%%%%-%%%%-%%%%-%%%%.root");
+      TFile outFile(outPath.string().c_str(), "new");
 
       // Get the normalization histogram, including the already saved bit.
       auto normIt = normalizers.find(run);
@@ -331,7 +333,6 @@ void Hlt2SaverSvc::saveHistograms() const
       outFile.Close();
 
       // Rename temporary file to output file
-      auto outPath = fs::path{outFile.GetName()};
       fs::remove(file);
       fs::copy_file(outPath, file);
       fs::remove(outPath);
