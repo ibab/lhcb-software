@@ -165,6 +165,7 @@ void Hlt2RootPublishSvc::function()
             string title{end(result), end(def.title())};
             auto histo = new TH1D(title.c_str(), title.c_str(), def.bins(),
                                   def.lowEdge(), def.highEdge());
+            histo->SetDirectory(nullptr);
             histo->Sumw2();
             m_histos.emplace(key, make_pair(dir, histo));
             return make_pair(dir, title);
@@ -193,7 +194,8 @@ void Hlt2RootPublishSvc::function()
                continue;
             }
 
-            m_startTimes[key.first] = boost::lexical_cast<int>(reply[1]);
+            auto startTime = boost::lexical_cast<int>(reply[1]);
+            m_startTimes[key.first] = startTime;
 
             if (reply[2] == Monitoring::s_Rate) {
                int nBins = boost::numeric_cast<int>(m_runDuration / m_rateInterval);

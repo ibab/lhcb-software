@@ -237,7 +237,11 @@ void Hlt2SaverSvc::saveHistograms() const
          debug() << "Saving histograms for run " << run << " to " << file.string() << endmsg;
       }
 
-      TFile rootFile(file.string().c_str(), (fs::exists(file) ? "UPDATE" : "NEW"));
+      std::unique_ptr<TFile> inFile;
+      if (fs::exists(file)) {
+         inFile = std::unique_ptr<TFile>{new TFile(file.string().c_str(), "read")};
+      }
+      TFile outFile("/tmp/Hlt2Saver.root", "new");
 
       // Get the normalization histogram, including the already saved bit.
       auto normIt = normalizers.find(run);
@@ -246,10 +250,14 @@ void Hlt2SaverSvc::saveHistograms() const
       if (normIt != end(normalizers)) {
          norm = normIt->second.second;
          auto path = normIt->second.first + "/" + norm->GetName();
-         auto saved = static_cast<TH1D*>(rootFile.Get(path.c_str()));
-         if (saved) {
-            totalNorm = std::unique_ptr<TH1D>{static_cast<TH1D*>(saved->Clone())};
-            totalNorm->Add(norm);
+         std::unique_ptr<TH1D> saved;
+         if (inFile) {
+            saved = std::unique_ptr<TH1D>{static_cast<TH1D*>(inFile->Get(path.c_str()))};
+            if (saved) {
+               saved->SetDirectory(nullptr);
+               totalNorm = std::unique_ptr<TH1D>{static_cast<TH1D*>(saved->Clone())};
+               totalNorm->Add(norm);
+            }
          } else {
             totalNorm = std::unique_ptr<TH1D>{static_cast<TH1D*>(norm->Clone())};
          }
@@ -269,47 +277,64 @@ void Hlt2SaverSvc::saveHistograms() const
       for (const auto& entry : boost::make_iterator_range(m_histos.get<byRun>().equal_range(run))) {
          auto histo = entry.histo.get();
          auto dir = entry.dir;
-         auto rDir = static_cast<TDirectoryFile*>(rootFile.Get(dir.c_str()));
-         if (!rDir) {
-            rootFile.mkdir(dir.c_str());
-            rDir = static_cast<TDirectoryFile*>(rootFile.Get(dir.c_str()));
-            if (!rDir) {
-               warning() << "Could not create directory in SaveSet file "
-                         << filename << " " << dir << endmsg;
-               continue;
-            }
+         auto inDir = static_cast<TDirectoryFile*>(inFile->Get(dir.c_str()));
+         outFile.mkdir(dir.c_str());
+         auto outDir = static_cast<TDirectoryFile*>(outFile.Get(dir.c_str()));
+         if (!outDir) {
+            warning() << "Could not create directory in SaveSet file "
+                      << filename << " " << dir << endmsg;
+            continue;
          }
 
-         auto savedHisto = static_cast<TH1D*>(rDir->Get(histo->GetName()));
-         if (!savedHisto) {
+         std::unique_ptr<TH1D> outHisto;
+         if (inDir) {
+            outHisto = std::unique_ptr<TH1D>{static_cast<TH1D*>(inDir->Get(histo->GetName()))};
+            if (outHisto) outHisto->SetDirectory(nullptr);
+         }
+
+         if (!outHisto) {
             // No previous histogram present
-            savedHisto = histo;
+            outHisto = std::unique_ptr<TH1D>{static_cast<TH1D*>(histo->Clone())};
+            outHisto->SetDirectory(nullptr);
          } else {
             // Previously saved histogram present
-            savedHisto->Add(histo);
+            outHisto->Add(histo);
          }
 
          // Normalize
          if (totalNorm.get() && entry.type == Monitoring::s_Rate) {
-            auto normName = string{savedHisto->GetName()} + "_Rate";
-            auto clone = static_cast<TH1D*>(savedHisto->Clone(normName.c_str()));
+            auto normName = string{outHisto->GetName()} + "_Rate";
+            auto clone = static_cast<TH1D*>(outHisto->Clone(normName.c_str()));
             std::unique_ptr<TH1D> normHisto{clone};
             // Normalize to our normalization histogram
             normHisto->Divide(totalNorm.get());
             // Write normalized histogram to file
-            rDir->WriteTObject(normHisto.get(), normName.c_str(), "overwrite");
+            outDir->WriteTObject(normHisto.get(), normName.c_str(), "overwrite");
             debug() << "Saved " << entry.dir << "/" << normName << endmsg;
          }
 
          // Write normal histogram to file
-         rDir->WriteTObject(savedHisto, savedHisto->GetName(), "overwrite");
-         debug() << "Saved " << entry.dir << "/" << savedHisto->GetName() << endmsg;
+         outDir->WriteTObject(outHisto.get(), outHisto->GetName());
+         debug() << "Saved " << entry.dir << "/" << outHisto->GetName() << endmsg;
 
          // Reset all hisograms that are not the normalization histogram
          if (histo != norm) {
             histo->Reset("ICESM");
          }
       }
+
+      // Close input and output files
+      if (inFile) {
+         inFile->Close();
+         inFile.reset();
+      }
+      outFile.Close();
+
+      // Rename temporary file to output file
+      auto outPath = fs::path{outFile.GetName()};
+      fs::remove(file);
+      fs::copy_file(outPath, file);
+      fs::remove(outPath);
 
       // All other histograms for this run are saved, reset the normalization histogram.
       if (norm) {

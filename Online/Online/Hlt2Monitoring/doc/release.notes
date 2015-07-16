@@ -10,7 +10,11 @@
    should also be done for the others.
  - Add a capture thread to Hlt2MonRelaySvc, which dumps the first part of every
    message as string. It is only enabled when the output level of the service
-   is less than debug. It
+   is less than debug.
+ - Fix saving:
+   - Create new temporary file.
+   - Close and remove old file and copy temporary file to old file
+   - remove temporary file.
 
 ! 2015-07-15 - Roel Aaij
  - Add design document for next step.

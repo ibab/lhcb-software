@@ -135,7 +135,11 @@ void Hlt2MonRelaySvc::function()
 
    //  Start the queue proxy, which runs until ETERM or "TERMINATE"
    //  received on the control socket
-   zmq_proxy_steerable (front, back, *cap, control);
+   if (cap) {
+      zmq_proxy_steerable (front, back, *cap, control);
+   } else {
+      zmq_proxy_steerable (front, back, nullptr, control);
+   }
    int linger = 0;
    front.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
    back.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
