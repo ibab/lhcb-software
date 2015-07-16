@@ -282,10 +282,10 @@ void ReportConvertTool::ParticleObject2Summary( HltObjectSummary::Info* info, co
       case 35: info->insert( particle_it->first, float( object->posCovMatrix()(1,0) ) ); break;
       case 36: info->insert( particle_it->first, float( object->posCovMatrix()(2,0) ) ); break;
       case 37: info->insert( particle_it->first, float( object->posCovMatrix()(2,1) ) ); break;
-      case 38: info->insert( particle_it->first, float( object->momentum().M() ) ); break;
-      case 39: info->insert( particle_it->first, float( object->momentum().px() ) ); break;
-      case 40: info->insert( particle_it->first, float( object->momentum().py() ) ); break;
-      case 41: info->insert( particle_it->first, float( object->momentum().pz() ) ); break;
+      case 38: info->insert( particle_it->first, float( object->momentum().M()*100.0 ) ); break;
+      case 39: info->insert( particle_it->first, float( object->momentum().px()*100.0 ) ); break;
+      case 40: info->insert( particle_it->first, float( object->momentum().py()*100.0 ) ); break;
+      case 41: info->insert( particle_it->first, float( object->momentum().pz()*100.0 ) ); break;
     }
   }
 
@@ -639,7 +639,7 @@ void ReportConvertTool::ParticleObjectFromSummary( const HltObjectSummary::Info*
   }
 
   // Raw
-  float raw_m {0.0}, raw_p1 {0.0}, raw_p2 {0.0}, raw_p3 {0.0};
+  double raw_m {0.0}, raw_p1 {0.0}, raw_p2 {0.0}, raw_p3 {0.0};
 
   // Momentum components
   float p=0;
@@ -693,10 +693,10 @@ void ReportConvertTool::ParticleObjectFromSummary( const HltObjectSummary::Info*
       case 35: posCov(1,0) = (*info)[ particle_it->first ] ; break;
       case 36: posCov(2,0) = (*info)[ particle_it->first ] ; break;
       case 37: posCov(2,1) = (*info)[ particle_it->first ] ; break;
-      case 38: raw_m = (*info)[ particle_it->first ] ; break;
-      case 39: raw_p1 = (*info)[ particle_it->first ] ; break;
-      case 40: raw_p2 = (*info)[ particle_it->first ] ; break;
-      case 41: raw_p3 = (*info)[ particle_it->first ] ; break;
+      case 38: raw_m = (*info)[ particle_it->first ]/100.0 ; break;
+      case 39: raw_p1 = (*info)[ particle_it->first ]/100.0 ; break;
+      case 40: raw_p2 = (*info)[ particle_it->first ]/100.0 ; break;
+      case 41: raw_p3 = (*info)[ particle_it->first ]/100.0 ; break;
     }
   }
   object->setReferencePoint(xyz);
@@ -711,8 +711,8 @@ void ReportConvertTool::ParticleObjectFromSummary( const HltObjectSummary::Info*
   Gaudi::LorentzVector part_mom(px,py,pz,pe);
   //
   
-  float psq = raw_p1*raw_p1 + raw_p2*raw_p2 + raw_p3*raw_p3;
-  float raw_pe = sqrt(psq+raw_m*raw_m);
+  double psq = raw_p1*raw_p1 + raw_p2*raw_p2 + raw_p3*raw_p3;
+  double raw_pe = sqrt(psq+raw_m*raw_m);
   Gaudi::LorentzVector part_mom_raw(raw_p1,raw_p2,raw_p3,raw_pe);
   object->setMomentum(part_mom_raw);
 }
