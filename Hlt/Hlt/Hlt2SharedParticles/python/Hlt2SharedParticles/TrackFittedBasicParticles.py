@@ -124,6 +124,16 @@ Hlt2BiKalmanFittedKaons = NoPIDsParticleMaker("Hlt2BiKalmanFittedKaons"
                                             )
 ##########################################################################
 #
+# Make the downstream kaons
+#
+Hlt2BiKalmanFittedDownKaons = NoPIDsParticleMaker("Hlt2BiKalmanFittedDownKaons"
+                                                 , Particle 			=  "pion"
+                                                 , Input 			=  BiKalmanFittedChargedDownProtoMaker.outputSelection()
+                                                 , Output                   = 'Hlt2/Hlt2BiKalmanFittedDownKaons/Particles'
+                                                 , WriteP2PVRelations 		=  False
+                                                 )
+##########################################################################
+#
 # Make the pions w/ muon ID available
 #
 Hlt2BiKalmanFittedPionsWithMuonID = NoPIDsParticleMaker("Hlt2BiKalmanFittedPionsWithMuonID"
@@ -358,6 +368,7 @@ BiKalmanFittedKaons         = bindMembers( None, [ BiKalmanFittedChargedRichHadr
 BiKalmanFittedPions         = bindMembers( None, [ BiKalmanFittedChargedRichHadronProtoMaker, Hlt2BiKalmanFittedPions 	] )
 
 BiKalmanFittedDownPions     = bindMembers( None, [ BiKalmanFittedChargedDownProtoMaker      , Hlt2BiKalmanFittedDownPions   ] )
+BiKalmanFittedDownKaons     = bindMembers( None, [ BiKalmanFittedChargedDownProtoMaker      , Hlt2BiKalmanFittedDownKaons   ] )
 BiKalmanFittedProtons       = bindMembers( None, [ BiKalmanFittedChargedRichHadronProtoMaker, Hlt2BiKalmanFittedProtons 	] )
 BiKalmanFittedDownProtons   = bindMembers( None, [ BiKalmanFittedChargedDownProtoMaker      , Hlt2BiKalmanFittedDownProtons ] )
 BiKalmanFittedMuons         = bindMembers( None, [ BiKalmanFittedMuonProtoMaker				, Hlt2BiKalmanFittedMuons 	] )
