@@ -31,12 +31,19 @@ class CharmHadD2V0V0Lines():
                                  'Mass_M_MAX'               :  1949.0 * MeV,
                                  'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS"
                                 }, 
+                  # The tagger config
+                  'D02V0V0_TAG_CPV' : { 'DeltaM_AM_MIN'            :  130.0 * MeV,
+                                        'DeltaM_MIN'               :  130.0 * MeV,
+                                        'DeltaM_AM_MAX'            :  165.0 * MeV,
+                                        'DeltaM_MAX'               :  160.0 * MeV,
+                                        'TagVCHI2PDOF_MAX'         :  25.0
+                                      }
                 }
     
     def locallines(self):
         from Stages import MassFilter, DetachedV0V0Combiner
         from Stages import CharmHadSharedKsLL, CharmHadSharedKsDD
-
+        from Stages import TagDecay, SharedSoftTagChild_pi
 
         ## If either KS0 is DD,  use the DD dictionary, otherwise use LL.
         D2KS0KS0_2LLComb = DetachedV0V0Combiner( 'Comb'
@@ -62,11 +69,30 @@ class CharmHadD2V0V0Lines():
 
         D2KS0KS0_2DD = MassFilter('D2KS0KS0_DD', inputs = [D2KS0KS0_2DDComb])
 
+        # Now the tagged lines
+        Dstp2D0Pip_D2KS0KS0_2LL = TagDecay('D02V0V0_TAG_CPV'
+                        , ["D*(2010)- -> D0 pi-","D*(2010)+ -> D0 pi+"]
+                        , inputs = [ D2KS0KS0_2LL, SharedSoftTagChild_pi ]
+                        , ReFitPVs = True) 
 
+        Dstp2D0Pip_D2KS0KS0_LLDD = TagDecay('D02V0V0_TAG_CPV'
+                        , ["D*(2010)- -> D0 pi-","D*(2010)+ -> D0 pi+"]
+                        , inputs = [ D2KS0KS0_LLDD, SharedSoftTagChild_pi ]
+                        , ReFitPVs = True) 
+
+        Dstp2D0Pip_D2KS0KS0_2DD = TagDecay('D02V0V0_TAG_CPV'
+                        , ["D*(2010)- -> D0 pi-","D*(2010)+ -> D0 pi+"]
+                        , inputs = [ D2KS0KS0_2DD, SharedSoftTagChild_pi ]
+                        , ReFitPVs = True)
 
         stages = {
+                  # First untagged
                   'D02KS0KS0_KS0LLTurbo'        : [D2KS0KS0_2LL],
                   'D02KS0KS0_KS0LL_KS0DDTurbo'  : [D2KS0KS0_LLDD],
                   'D02KS0KS0_KS0DDTurbo'        : [D2KS0KS0_2DD],
+                  # Now tagged
+                  'Dstp2D0Pip_D02KS0KS0_KS0LLTurbo' : [Dstp2D0Pip_D2KS0KS0_2LL],
+                  'Dstp2D0Pip_D02KS0KS0_KS0LL_KS0DDTurbo' : [Dstp2D0Pip_D2KS0KS0_LLDD],
+                  'Dstp2D0Pip_D02KS0KS0_KS0DDTurbo' : [Dstp2D0Pip_D2KS0KS0_2DD]
                  }
         return stages

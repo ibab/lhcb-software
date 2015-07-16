@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-07-16 - V. Gligorov
+ - Switch muon tagged lines from D0+mu to Dstp+mu
+ - Add Dstp tag to the D0->V0V0 lines 
+
 ! 2015-07-14 - V. Gligorov
  - Add muon-tagged prompt D0->hh for secondary studies
 

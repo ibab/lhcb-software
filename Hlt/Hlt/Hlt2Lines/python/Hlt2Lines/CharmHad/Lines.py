@@ -161,7 +161,7 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KmKpTurbo'               : 0.1,
                                  'Trk_ALL_PT_MIN'           :  100.0 * MeV,
                                            },
                  'CharmHadSharedSoftTagChild_mu' : { 
-                                 'Trk_ALL_PT_MIN'           :  300.0 * MeV,
+                                 'Trk_ALL_PT_MIN'           :  500.0 * MeV,
                                            },  
 
                  # NoPID protons for the Sigma_c tagged Lambda_c line for PID calibration
