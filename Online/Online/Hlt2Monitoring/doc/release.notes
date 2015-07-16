@@ -8,6 +8,9 @@
  - Add python package to contain configuration module.
  - Catch errors from connection and bind attempts in Hlt2MonRelaySvc. This
    should also be done for the others.
+ - Add a capture thread to Hlt2MonRelaySvc, which dumps the first part of every
+   message as string. It is only enabled when the output level of the service
+   is less than debug. It
 
 ! 2015-07-15 - Roel Aaij
  - Add design document for next step.
