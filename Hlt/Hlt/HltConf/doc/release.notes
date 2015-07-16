@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-07-16 - Roel Aaij
+ - Removed routing bit 91 (NoBias stream) for 25ns data taking.
+
 ! 2015-07-11 - Roel Aaij
  - Add (hardcoded in SelReportsMaker) value of 2 for Hlt2Global back in to
    HltInit.py

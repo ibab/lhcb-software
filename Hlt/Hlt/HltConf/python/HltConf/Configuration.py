@@ -351,8 +351,6 @@ class HltConf(LHCbConfigurableUser):
                       # RB 89 is reserved for the parked stream but is not set for now
                       # routing bit 90 for TurboCalib stream, includes lumi events.
                       , 90 : "HLT_TURBOPASS_RE('^Hlt2.*TurboCalibDecision$') | HLT_PASS('Hlt2LumiDecision')"
-                      # Leading crossing events during early measurements
-                      , 91 : "HLT_PASS_RE('Hlt2(MBNoBiasLeadingCrossing|PassThrough)Decision') | HLT_PASS('Hlt2LumiDecision')"
                       # VVG 01-05-2015
                       }
         HltRoutingBitsWriter('Hlt1RoutingBitsWriter').RoutingBits = routingBits
