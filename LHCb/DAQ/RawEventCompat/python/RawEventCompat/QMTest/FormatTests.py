@@ -17,7 +17,10 @@ def dirThisFile(afile,causes, result, testname):
         causes.append("File was not openable by ROOT "+afile)
         result[testname]=result.Quote("File was not openable by ROOT "+afile)
         return []
-    names=[b.GetName().replace("_","/").lstrip("/").rstrip("/").rstrip(".") for b in f.Event.GetListOfBranches()]
+    try:
+        names = [b.GetName().replace("_","/").lstrip("/").rstrip("/").rstrip(".") for b in f.Event.GetListOfBranches()]
+    except:
+        names = []
     #print names
     f.Close()
     return names
@@ -76,4 +79,4 @@ def checkIsGone(afile, shouldbegone, causes, result, testname):
     quote="Locations which should not be there: "+therewrongly.__str__()
     result[testname]=result.Quote(quote)
     return
-    
+

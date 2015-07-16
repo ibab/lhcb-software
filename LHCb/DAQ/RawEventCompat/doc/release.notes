@@ -4,6 +4,9 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
+! 2015-07-16 - Marco Clemencic
+ - Avoid crashes in tests when the QMTest validators are called on empty files.
+
 !========================= RawEventCompat v1r6 2014-07-28 =========================
 
 ! 2014-07-18 - Marco Cattaneo
