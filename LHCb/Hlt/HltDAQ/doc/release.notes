@@ -8,6 +8,7 @@
  - Introduce v6 of sel reports.
  - Make getLatestVersion more robust.
  - Put nPVs in RecSummary.
+ - Preserve mother mass value.
 
 ! 2015-07-14 - Roel Aaij
  - Fix L0 routing bits.

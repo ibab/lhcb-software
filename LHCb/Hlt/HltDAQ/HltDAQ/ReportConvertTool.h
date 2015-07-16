@@ -181,6 +181,50 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
           , {"36#Particle.posCov20",                   {30,36}}
           , {"37#Particle.posCov21",                   {31,37}}}
       }
+      , { 6
+        , {{"0#Particle.particleID.pid",                {0, 0}}
+          , {"1#Particle.measuredMass",                 {1, 1}}
+          , {"2#Particle.referencePoint.z",            {12, 2}}
+          , {"3#Particle.referencePoint.x",            {23, 3}}
+          , {"4#Particle.referencePoint.y",            {34, 4}}
+          , {"5#Particle.slopes.x",                    {37, 5}}
+          , {"6#Particle.slopes.y",                    {38, 6}}
+          , {"7#Particle.1/p",                         {39, 7}}
+          , {"8#Particle.conflevel",                   {40, 8}}
+          , {"9#Particle.massErr",                     {41, 9}}
+          , {"10#Particle.momCov00",                   {2, 10}}
+          , {"11#Particle.momCov11",                   {3, 11}}
+          , {"12#Particle.momCov22",                   {4, 12}}
+          , {"13#Particle.momCov33",                    {5,13}}
+          , {"14#Particle.momCov10",                    {6,14}}
+          , {"15#Particle.momCov20",                    {7,15}}
+          , {"16#Particle.momCov21",                    {8,16}}
+          , {"17#Particle.momCov30",                    {9,17}}
+          , {"18#Particle.momCov31",                   {10,18}}
+          , {"19#Particle.momCov32",                   {11,19}}
+          , {"20#Particle.posmomCov00",                {13,20}}
+          , {"21#Particle.posmomCov11",                {14,21}}
+          , {"22#Particle.posmomCov22",                {15,22}}
+          , {"23#Particle.posmomCov10",                {16,23}}
+          , {"24#Particle.posmomCov01",                {17,24}}
+          , {"25#Particle.posmomCov20",                {18,25}}
+          , {"26#Particle.posmomCov02",                {19,26}}
+          , {"27#Particle.posmomCov21",                {20,27}}
+          , {"28#Particle.posmomCov12",                {21,28}}
+          , {"29#Particle.posmomCov30",                {22,29}}
+          , {"30#Particle.posmomCov31",                {24,30}}
+          , {"31#Particle.posmomCov32",                {25,31}}
+          , {"32#Particle.posCov00",                   {26,32}}
+          , {"33#Particle.posCov11",                   {27,33}}
+          , {"34#Particle.posCov22",                   {28,34}}
+          , {"35#Particle.posCov10",                   {29,35}}
+          , {"36#Particle.posCov20",                   {30,36}}
+          , {"37#Particle.posCov21",                   {31,37}}
+          , {"38#Particle.raw.m",                      {32,38}}
+          , {"39#Particle.raw.p1",                     {33,39}}
+          , {"40#Particle.raw.p2",                     {35,40}}
+          , {"41#Particle.raw.p3",                     {36,41}}}
+      }
     };
     //===========================================================================
     /// Version unordered_map for LHCb::Particle in the Full stream
