@@ -79,7 +79,7 @@ StatusCode Hlt2MonRelaySvc::initialize()
       } else {
          // node relay
          m_frontCon = string("ipc:///tmp/hlt2MonData_0");
-         m_backCon  = string("tcp://") + matches.str("subfarm") + ":" + to_string(m_inPort);
+         m_backCon  = string("tcp://hlt") + matches.str("subfarm") + ":" + to_string(m_inPort);
       }
       return sc;
    } else {

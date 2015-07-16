@@ -112,7 +112,7 @@ def configure(host_type = None):
     appMgr = ApplicationMgr()
 
     hostname = socket.gethostname()
-    host_regex = re.compile(r"hlt(01|(?<subfarm>[a-f]{1}[0-9]{2})(?<node>[0-9]{2})?)")
+    host_regex = re.compile(r"hlt(01|(?P<subfarm>[a-f]{1}[0-9]{2})(?P<node>[0-9]{2})?)")
     r = host_regex.match(hostname)
     ht = ''
     if host_type and host_type in services:
