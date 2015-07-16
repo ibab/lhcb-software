@@ -554,7 +554,7 @@ void TrackRungeKuttaExtrapolator::evaluateRKStep( double dz,
     if( UNLIKELY( std::abs( cache.stage[m].state.x() ) > 1e6 ||  
                   std::abs( cache.stage[m].state.y() ) > 1e6 ||  
                   std::abs( cache.stage[m].state.z ) > 1e6  )){
-      Warning( "Very large value (> 1e6 mm) for state position. Breaking iteration", StatusCode::FAILURE,1);
+      Info( "Very large value (> 1e6 mm) for state position. Breaking iteration", StatusCode::FAILURE,1).ignore();
       break;
     }
     
