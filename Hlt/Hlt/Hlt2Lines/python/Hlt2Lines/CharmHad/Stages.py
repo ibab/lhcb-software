@@ -1114,7 +1114,14 @@ Omega2LambdaK_LLL = ChargedHyperonLambdaHCombiner('Omegaminus2LambdaK_LLL',
 Omega2LambdaK_DDL = ChargedHyperonLambdaHCombiner('Omegaminus2LambdaK_DDL',
                      decay="[Omega- -> Lambda0 K-]cc",
                      inputs=[CharmHadSharedSecondaryLambdaDD,SharedDetachedDpmChild_K])
-
+##  added 150715  mds
+from Inputs import Hlt2DownPions, Hlt2DownKaons
+Xi2LambdaPi_DDD =   ChargedHyperonLambdaHCombiner('Ximinus2LambdaPi_DDD',
+                     decay="[Xi- -> Lambda0 pi-]cc",
+                     inputs=[CharmHadSharedSecondaryLambdaDD,Hlt2DownPions])
+Omega2LambdaK_DDD = ChargedHyperonLambdaHCombiner('Omegaminus2LambdaK_DDD',
+                     decay="[Omega- -> Lambda0 K-]cc",
+                     inputs=[CharmHadSharedSecondaryLambdaDD,Hlt2DownKaons])
 ##   ------------  end of code for Charged Hyperons
 class DetachedV0V0Combiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs, lldd = False, shared = False, nickname = None):
