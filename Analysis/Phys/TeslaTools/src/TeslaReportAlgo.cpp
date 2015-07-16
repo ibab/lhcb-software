@@ -502,7 +502,11 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
     debug() << "p = " << part->p() << endmsg;
     debug() << "p (par_mom) = " << part->p() << endmsg; // duplicate to make test match ref
     debug() << "pT (par_mom) = " << part->pt() << endmsg;
+    debug() << "pX (par_mom) = " << part->momentum().px() << endmsg;
+    debug() << "pY (par_mom) = " << part->momentum().py() << endmsg;
+    debug() << "pZ (par_mom) = " << part->momentum().pz() << endmsg;
     debug() << "Particle measured mass = " << part->measuredMass() << endmsg;
+    debug() << "Particle mass = " << part->momentum().M() << endmsg;
     if(turbo==true) debug() << "Particle CL = " << part->confLevel() << endmsg;
   }
 
