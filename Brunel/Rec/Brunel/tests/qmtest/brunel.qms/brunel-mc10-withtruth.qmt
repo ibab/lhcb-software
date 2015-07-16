@@ -5,7 +5,7 @@
   <argument name="args"><set>
     <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; from PRConfig import TestFileDB; TestFileDB.test_file_db['brunel-mc10'].run(); Brunel().InputType="DIGI"; Brunel().WithMC=True; Brunel().Monitors+=["NameAuditor"]; Brunel().DataType="2010";</text>
+    <text>from Brunel.Configuration import *; from PRConfig import TestFileDB; TestFileDB.test_file_db['brunel-mc10'].run(); Brunel().InputType="DIGI"; Brunel().WithMC=True; Brunel().Monitors+=["NameAuditor"]; Brunel().DataType="2010";from Configurables import LHCbApp; LHCbApp().CondDBtag="sim-20140625-vc-md100"</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBrunel-MC10-WithTruth.ref</text></argument>
   <argument name="validator"><text>

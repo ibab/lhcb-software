@@ -22,18 +22,18 @@ validateWithReference(preproc = preprocessor)
 findReferenceBlock("""
 ChargedProtoANN...SUCCESS List of booked 1D histograms in directory         "PROTO/ChargedProtoANNPIDMoni" :-
  | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | Downstream/ElectronANN    | "Downstream Electron ANN PID"                 |   4414  |   0.067517 | 0.1818     |     3.6074 |     12.699 |
- | Downstream/GhostANN       | "Downstream Ghost ANN PID"                    |   4414  |    0.79109 | 0.29454    |    -1.4919 |    0.80957 |
- | Downstream/KaonANN        | "Downstream Kaon ANN PID"                     |   4414  |  0.0092578 | 0.044237   |      13.59 |     217.98 |
- | Downstream/MuonANN        | "Downstream Muon ANN PID"                     |   4414  |    0.00218 | 0.034319   |     23.335 |     578.43 |
- | Downstream/PionANN        | "Downstream Pion ANN PID"                     |   4414  |    0.10763 | 0.21312    |     2.6728 |     6.4333 |
- | Downstream/ProtonANN      | "Downstream Proton ANN PID"                   |   4414  |   0.017205 | 0.054737   |     7.0812 |     61.339 |
- | Long/ElectronANN          | "Long Electron ANN PID"                       |  10456  |   0.027807 | 0.11804    |     5.8508 |      36.37 |
- | Long/GhostANN             | "Long Ghost ANN PID"                          |  10456  |    0.42402 | 0.42875    |    0.34981 |    -1.7155 |
- | Long/KaonANN              | "Long Kaon ANN PID"                           |  10456  |   0.057859 | 0.1541     |     4.0258 |     17.139 |
- | Long/MuonANN              | "Long Muon ANN PID"                           |  10456  |  0.0069377 | 0.062139   |     11.694 |     147.11 |
- | Long/PionANN              | "Long Pion ANN PID"                           |  10456  |    0.44352 | 0.4051     |    0.15056 |    -1.7334 |
- | Long/ProtonANN            | "Long Proton ANN PID"                         |  10456  |   0.031936 | 0.09083    |     5.6033 |     39.739 |
+ | Downstream/ElectronANN    | "Downstream Electron ANN PID"                 |   4414  |   0.067515 | 0.18185    |     3.6073 |       12.7 |
+ | Downstream/GhostANN       | "Downstream Ghost ANN PID"                    |   4414  |     0.7911 | 0.2945     |    -1.4912 |    0.80633 |
+ | Downstream/KaonANN        | "Downstream Kaon ANN PID"                     |   4414  |  0.0092506 | 0.044189   |     13.619 |     219.03 |
+ | Downstream/MuonANN        | "Downstream Muon ANN PID"                     |   4414  |  0.0020968 | 0.03389    |     23.867 |     601.76 |
+ | Downstream/PionANN        | "Downstream Pion ANN PID"                     |   4414  |    0.10761 | 0.21313    |     2.6732 |     6.4343 |
+ | Downstream/ProtonANN      | "Downstream Proton ANN PID"                   |   4414  |   0.017195 | 0.054702   |     7.0845 |     61.431 |
+ | Long/ElectronANN          | "Long Electron ANN PID"                       |  10456  |   0.027823 | 0.11809    |     5.8471 |     36.327 |
+ | Long/GhostANN             | "Long Ghost ANN PID"                          |  10456  |    0.42421 | 0.42862    |    0.34898 |    -1.7152 |
+ | Long/KaonANN              | "Long Kaon ANN PID"                           |  10456  |   0.057867 | 0.15412    |     4.0243 |     17.128 |
+ | Long/MuonANN              | "Long Muon ANN PID"                           |  10456  |   0.006559 | 0.05976    |     12.039 |     156.75 |
+ | Long/PionANN              | "Long Pion ANN PID"                           |  10456  |     0.4438 | 0.40516    |    0.14928 |     -1.734 |
+ | Long/ProtonANN            | "Long Proton ANN PID"                         |  10456  |   0.031939 | 0.090837   |     5.6018 |     39.722 |
  | Upstream/ElectronANN      | "Upstream Electron ANN PID"                   |   1457  |   0.070112 | 0.14567    |     3.2411 |     11.497 |
  | Upstream/GhostANN         | "Upstream Ghost ANN PID"                      |   1457  |    0.40603 | 0.3549     |    0.31985 |    -1.4909 |
  | Upstream/KaonANN          | "Upstream Kaon ANN PID"                       |   1457  |   0.049848 | 0.06149    |     3.5774 |     19.734 |

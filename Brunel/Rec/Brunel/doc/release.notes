@@ -11,11 +11,21 @@ Purpose: LHCb reconstruction program
   . Follow changes in Rich Alignment monitoring (RichAlignment)
   . Inherit PrPixelHitManager from Decoder::ToolBase (PrPixel)
   . Updates in TT and IT TrackMonitors (TrackMonitors)
-  . Replace MuonIDAlg by MuonIDAlgLite in 2015 configuration (MuonID)
+  . Replace MuonIDAlg by MuonIDAlgLite in all configurations except 2008, 2009,
+    MC09, Upgrade (MuonID)
   . Replace PatDownstream by PatLongLivedTracking in Run2 configuration (TrackSys)
 
 - Changes to configuration
  . In OnlineMode, set CondDB().Online = True if not already set.
+ . Filter fitted Velo tracks for PV reconstruction in 2015 such that they use
+   less space on the DST.
+
+- Changes to tests
+ . In brunel-mc10-withtruth, use sim-20140625-vc-md100 tag (2010 compatible, but
+   not MC10 compatible), to pick up muon-20140505 tag, needed by MuonIDAlgLite
+ . Remove fixedfile-sim2010 test, since this particular simcond tag is no longer
+   supported by this release and a more recent working tag is already tested by
+   fixedfile-sim2010-latestdb
 
 </PRE><H1><A NAME=v47r9>2015-06-18 Brunel v47r9</A></H1><PRE>
 This version uses projects LHCb v38r7, Lbcom v16r6, Rec v17r7, Gaudi v26r2
