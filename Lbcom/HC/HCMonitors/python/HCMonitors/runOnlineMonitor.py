@@ -24,7 +24,7 @@ def configMsgSvc(app):
         log.warning( '# WARNING: LOGFIFO was not set -- now set to ' + os.environ['LOGFIFO'] )
     msg.fifoPath = os.environ['LOGFIFO']
     import OnlineEnv
-#    msg.OutputLevel = OnlineEnv.OutputLevel
+    # msg.OutputLevel = OnlineEnv.OutputLevel
     msg.OutputLevel = 3
     msg.doPrintAlways = False
 
@@ -138,8 +138,8 @@ def configMonitor():
     monitor.ChannelsB0 = [47, 46, 45, 44]
     monitor.ChannelsB1 = [23, 22, 21, 20]
     monitor.ChannelsB2 = [11, 10, 9, 8]
-    monitor.ChannelsF1 = [47, 46, 45, 44]
-    monitor.ChannelsF2 = [27, 26, 25, 24]
+    monitor.ChannelsF1 = [27, 26, 25, 24]
+    monitor.ChannelsF2 = [47, 46, 45, 44]
 
     # Top level sequence
     topSeq = GaudiSequencer("TopSequence")

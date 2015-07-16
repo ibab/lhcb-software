@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-07-16 - Heinrich Schindler
+ - Fix F-side channel mapping in online monitor.
+
 ! 2015-07-11 - Heinrich Schindler
  - Add randomisation of ADC values and BX ID range (from Victor).
  - Add monitoring base class and HCClockScan (from Victor).
