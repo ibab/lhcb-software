@@ -20,6 +20,8 @@
    - Add a new type of info: RunInfo. For now it only contains the lumi
      parameters needed for normalization of the lumi rate histogram.
    - Remove relay functionality, this can be done by Hlt2MonRelaySvc
+ - Hlt2AdderSvc
+   - Configure connections from ports if both connection strings are empty.
 
 !========================= Hlt2Monitoring v1r0 2015-06-29 ====================
 

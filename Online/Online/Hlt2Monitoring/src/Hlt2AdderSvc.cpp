@@ -62,7 +62,10 @@ StatusCode Hlt2AdderSvc::initialize()
    StatusCode sc = Hlt2MonBaseSvc::initialize();
    if (!sc.isSuccess()) return sc;
 
-   if ((m_frontCon.empty() || m_backCon.empty())) {
+   if ((m_frontCon.empty() && m_backCon.empty())) {
+         m_frontCon = string("tcp://*:") + to_string(m_inPort);
+         m_backCon  = string("tcp://*:") + to_string(m_outPort);
+   } else if ((m_frontCon.empty() || m_backCon.empty())) {
       warning() << "Connections not correctly configured, "
                 << "Hlt2 adder disabled" << endmsg;
       m_enabled = false;
