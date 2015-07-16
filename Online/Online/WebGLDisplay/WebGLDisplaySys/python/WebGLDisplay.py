@@ -142,7 +142,7 @@ def patchMessages():
 def postConfig():
   import OnlineEnv
   from Configurables import JsonConverter, NoPIDsParticleMaker, LHCb__DelaySleepAlg
-  pmaker = NoPIDsParticleMaker ( 'StdNoPIDsPions' , Particle = 'pion'  )
+  pmaker = NoPIDsParticleMaker ( 'StdAllNoPIDsPions' , Particle = 'pion'  )
   conv  = JsonConverter()
   conv.OutputLevel = MSG_DEBUG
   conv.OutputDirectory = '/group/online/dataflow/cmtuser/EventDisplay/events'
