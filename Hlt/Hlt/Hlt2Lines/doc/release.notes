@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+!  2015-08-16  Mike Sokoloff
+   - modified Inputs.py, Stages.py, and ChargedHyperons.py to build
+   -  DDD charged hyperons in addition to LLL and DDL; also changed
+   -  the trigger line names so they encode all these possibilities
+
 ! 2015-07-16 - V. Gligorov
  - Switch muon tagged lines from D0+mu to Dstp+mu
  - Add Dstp tag to the D0->V0V0 lines 
