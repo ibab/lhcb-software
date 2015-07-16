@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2015-07-16 - Michel De Cian
+ - Fix typo in DstConf.py
+
 ! 2015-07-14 - Michel De Cian
  - Add the fitted Velo tracks for the PV to the packing / unpacking and to the DST for 2015.
 

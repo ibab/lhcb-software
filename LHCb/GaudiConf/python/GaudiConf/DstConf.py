@@ -389,7 +389,7 @@ class DstConf(LHCbConfigurableUser):
             unpackFittedVeloTracks = UnpackTrack("unpackFittedVeloTracks")
             unpackFittedVeloTracks.InputName = "pRec/Track/FittedHLT1VeloTracks"
             unpackFittedVeloTracks.OutputName = "Rec/Track/FittedHLT1VeloTracks"
-            DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/FittedHLT1VeloTracks" ] = UnpackFittedVeloTracks
+            DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/FittedHLT1VeloTracks" ] = unpackFittedVeloTracks
 
 
         if "Tracking" in self.getProp("EnableUnpack") : return # skip the rest
