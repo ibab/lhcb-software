@@ -4,6 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-07-16 - Sascha Stahl
+ - HltRecoConf and HltSharedTracking: Added option "NewMSinFit" to switch on
+   an improved description of the multiple scattering term in the Kalman fit. 
+   Default is on. Changed default of FastFitVelo to true.
+ 
+
 ! 2015-07-13 - Sascha Stahl
  - Hlt2Tracking: Replace PatDownstream by new and better PatLongLivedTracking,
    PatDownstream can still be activated by an option Hlt2Tracking, NewDownstreamAlg.

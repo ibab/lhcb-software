@@ -42,7 +42,7 @@ class HltRecoConf(LHCbConfigurableUser):
                  ,"MaxTrGHOSTPROB"              : 0.5  # Cut value of ghost probability for above options.
                  ,"VeloSelectionCut"            : "(~TrBACKWARD) & ( TrNVELOMISS < 100 )"
                  ,"FitVelo"                     : True
-                 ,"FastFitVelo"                 : False
+                 ,"FastFitVelo"                 : True
                  ,"OfflineSeeding"              : True
                  ,"OfflineRich"                 : True
                  ,"AddGhostProb"                : True
@@ -50,7 +50,7 @@ class HltRecoConf(LHCbConfigurableUser):
                  ,"MoreOfflineLikeFit"          : True   # This runs a fit in HLT1 and HLT2 which uses the default offline fit
                                                          # with a simplified material description
                  ,"FitIterationsInHltFit"       : 1      # Increases the number of fit iterations in the current Hlt fit.
-                                                         # Default is 1.
+                 ,"NewMSinFit"                  : True  # Use the new description of the multiple scattering term
                  }
 
    def getConfiguredForward(Name) :

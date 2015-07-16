@@ -238,7 +238,7 @@ def ConfigureFitter( fitter ):
         ConfiguredHltFitter( fitter )
         fitter.NumberFitIterations = HltRecoConf().getProp("FitIterationsInHltFit")
     else:
-        ConfiguredMasterFitter( fitter , SimplifiedGeometry = True, LiteClusters = True)
+        ConfiguredMasterFitter( fitter , SimplifiedGeometry = True, LiteClusters = True, MSRossiAndGreisen = HltRecoConf().getProp("NewMSinFit"))
     # Ignore Muon hits
     fitter.MeasProvider.IgnoreMuon = True
     return fitter
