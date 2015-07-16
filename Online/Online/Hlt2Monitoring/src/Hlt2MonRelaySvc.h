@@ -34,8 +34,12 @@ public:
 
 private:
 
+   // Helper method
+   void capture() const;
+
    // properties
    std::string m_hostRegex;
+   std::string m_captureCon;
 
 };
 

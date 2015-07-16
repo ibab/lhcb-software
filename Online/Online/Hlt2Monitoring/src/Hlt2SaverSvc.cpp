@@ -45,7 +45,7 @@ namespace {
    using std::vector;
    using std::array;
    using std::pair;
-   
+
    using Monitoring::Chunk;
    using Monitoring::Histogram;
    using boost::lexical_cast;
@@ -171,7 +171,7 @@ void Hlt2SaverSvc::function()
          auto cl = TClass::GetClass(typeid(TH1D));
          std::unique_ptr<TH1D> histo{static_cast<TH1D*>(buffer.ReadObject(cl))};
          histo->SetDirectory(nullptr);
-         
+
          debug() << "Received ROOT histogram " << key.first << " " << key.second
                  << " " << dir << " " << histo->GetName() << endmsg;
 
@@ -211,7 +211,7 @@ void Hlt2SaverSvc::saveHistograms() const
          normalizers.emplace(entry.run(), make_pair(dir, histo));
       }
    }
-   
+
    // Loop over runs
    for (const auto run : runs) {
       auto ti = timeInfo(run);
@@ -231,6 +231,12 @@ void Hlt2SaverSvc::saveHistograms() const
       auto filename = boost::format(m_fileName) % run % ti[0] % ti[1] % ti[2] % ti[3] % ti[4] % ti[5];
 
       auto file = fs::path(directory) / fs::path(filename.str());
+      if (fs::exists(file)) {
+         debug() << "Updating histograms for run " << run << " in " << file.string() << endmsg;
+      } else {
+         debug() << "Saving histograms for run " << run << " to " << file.string() << endmsg;
+      }
+
       TFile rootFile(file.string().c_str(), (fs::exists(file) ? "UPDATE" : "NEW"));
 
       // Get the normalization histogram, including the already saved bit.
@@ -258,7 +264,7 @@ void Hlt2SaverSvc::saveHistograms() const
       } else {
          totalNorm.reset();
       }
-      
+
       // Loop over histograms for that run
       for (const auto& entry : boost::make_iterator_range(m_histos.get<byRun>().equal_range(run))) {
          auto histo = entry.histo.get();
@@ -282,7 +288,7 @@ void Hlt2SaverSvc::saveHistograms() const
             // Previously saved histogram present
             savedHisto->Add(histo);
          }
-         
+
          // Normalize
          if (totalNorm.get() && entry.type == Monitoring::s_Rate) {
             auto normName = string{savedHisto->GetName()} + "_Rate";

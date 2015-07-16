@@ -29,6 +29,7 @@ Hlt2MonRelaySvc::Hlt2MonRelaySvc(const string& svcName, ISvcLocator* loc)
    : Hlt2MonBaseSvc(svcName, loc)
 {
    declareProperty("HostnameRegex", m_hostRegex = "hlt(01|(?<subfarm>[a-f]{1}[0-9]{2})(?<node>[0-9]{2})?)");
+   declareProperty("CaptureConnection", m_captureCon = string{"inproc://"} + svcName + "Capture");
 }
 
 //===============================================================================
@@ -91,10 +92,11 @@ StatusCode Hlt2MonRelaySvc::initialize()
 //===============================================================================
 void Hlt2MonRelaySvc::function()
 {
-   // Create frontend, backend and control sockets
+   // Create frontend, backend, control and possible capture sockets
    zmq::socket_t front{context(), ZMQ_XSUB};
    zmq::socket_t back{context(), ZMQ_XPUB};
    zmq::socket_t control{context(), ZMQ_SUB};
+   zmq::socket_t* cap{nullptr};
 
    //  Bind sockets to TCP ports
    try {
@@ -120,15 +122,77 @@ void Hlt2MonRelaySvc::function()
       }
    }
 
+   std::thread* captureThread{nullptr};
+   if (msgLevel() <= MSG::DEBUG) {
+      captureThread = new std::thread{[this]{capture();}};
+      cap = new zmq::socket_t{context(), ZMQ_PUB};
+      cap->bind(m_captureCon.c_str());
+   }
+
    // use inproc for the control.
    control.connect(ctrlCon().c_str());
    control.setsockopt(ZMQ_SUBSCRIBE, "", 0);
 
    //  Start the queue proxy, which runs until ETERM or "TERMINATE"
    //  received on the control socket
-   zmq_proxy_steerable (front, back, nullptr, control);
+   zmq_proxy_steerable (front, back, *cap, control);
    int linger = 0;
    front.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
    back.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
    control.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
+
+   if (captureThread) {
+      captureThread->join();
+      delete captureThread;
+      cap->setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
+      delete cap;
+   }
+
+}
+
+//===============================================================================
+void Hlt2MonRelaySvc::capture() const
+{
+   // Create frontend, backend and control sockets
+   zmq::socket_t capture{context(), ZMQ_SUB};
+   capture.connect(m_captureCon.c_str());
+   capture.setsockopt(ZMQ_SUBSCRIBE, "", 0);
+
+   zmq::socket_t control{context(), ZMQ_SUB};
+   control.connect(ctrlCon().c_str());
+   control.setsockopt(ZMQ_SUBSCRIBE, "", 0);
+
+   //  Initialize poll set
+   zmq::pollitem_t items [] = {
+      { control, 0, ZMQ_POLLIN, 0 },
+      { capture, 0, ZMQ_POLLIN, 0 }
+   };
+
+   bool paused = false;
+
+   debug() << "Starting capture loop" << endmsg;
+
+   while (true) {
+      //  Process messages from both sockets
+      zmq::poll(&items[0], 2, -1);
+
+      if (items[0].revents & ZMQ_POLLIN) {
+         auto cmd = receiveString(control);
+         if (cmd == "TERMINATE") {
+            int linger = 0;
+            control.setsockopt(ZMQ_LINGER, &linger,sizeof(linger));
+            capture.setsockopt(ZMQ_LINGER, &linger,sizeof(linger));
+            break;
+         } else if (cmd == "PAUSE") {
+            paused = true;
+         } else if (cmd == "RESUME") {
+            paused = false;
+         }
+      }
+      if (!paused && (items[1].revents & ZMQ_POLLIN)) {
+         // Capture
+         auto first = receiveString(capture);
+         debug() << "Captured message; first part: " << first << endmsg;
+      }
+   }
 }
