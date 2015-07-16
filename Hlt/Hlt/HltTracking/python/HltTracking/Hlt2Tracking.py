@@ -493,7 +493,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
         return self.__trackLocation() + "/" + HltSharedPIDPrefix
     #
     def __muonIDLocation(self) :
-        return self.__hltBasePIDLocation() + "/" + HltMuonIDSuffix
+        #muonBase = self.__hltBasePIDLocation() + "/" + HltMuonIDSuffix
+        # This is now the same for all Hlt2Tracking instances
+        muonBase = self.getProp("Prefix")+"/"+HltSharedPIDPrefix+"/"+HltMuonIDSuffix
+        return muonBase
 
     #
     def __richIDLocation(self) :
@@ -970,13 +973,16 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from HltLine.HltLine import bindMembers
 
         cm                  = ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
-
-        HltMuonIDAlg_name   = self.__pidAlgosAndToolsPrefix()+"MuonIDAlgLite"
+        
+        #HltMuonIDAlg_name   = self.__pidAlgosAndToolsPrefix()+"MuonIDAlgLite"
+        HltMuonIDAlg_name   =  self.getProp("Prefix") +"MuonIDAlgLite"
         HltMuonIDAlg        = cm.configureMuonIDAlgLite(HltMuonIDAlg_name)
         #The tracks to use
-        tracks              = self.__hlt2StagedFastFit()
+        #tracks              = self.__hlt2StagedFastFit()
+        # We want all tracks
+        tracks              = self.__hlt2Tracking()
         #Enforce naming conventions
-        HltMuonIDAlg.TracksLocation          = tracks.outputSelection()
+        HltMuonIDAlg.TracksLocations        = tracks.outputSelection() 
         HltMuonIDAlg.MuonIDLocation         = self.__muonIDLocation() #output
         HltMuonIDAlg.MuonTrackLocation      = self._trackifiedMuonIDLocation()
         #HltMuonIDAlg.MuonTrackLocationAll   = self._trackifiedAllMuonIDLocation()
@@ -1539,7 +1545,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # We need all tracks: Long, Downstream (and possibly more in the future)
         tracks = self.__hlt2Tracking()
         trackLocations = tracks.outputSelection()
-
         chargedProtos               = self.__hlt2ChargedProtos(HltCaloProtosSuffix)
         chargedProtosOutputLocation = chargedProtos.outputSelection()
         neutralProtosOutputLocation = self.__protosLocation(Hlt2NeutralProtoParticleSuffix)
