@@ -97,14 +97,27 @@ void Hlt2MonRelaySvc::function()
    zmq::socket_t control{context(), ZMQ_SUB};
 
    //  Bind sockets to TCP ports
-   front.bind(m_frontCon.c_str());
-   info() << "Bound frontend to: " << m_frontCon << endmsg;
+   try {
+      front.bind(m_frontCon.c_str());
+      info() << "Bound frontend to: " << m_frontCon << endmsg;
+   } catch (const zmq::error_t&) {
+      error() << "Failed to bind frontend to: " << m_frontCon << endmsg;
+   }
+
    if (!m_top) {
-      back.connect(m_backCon.c_str());
-      info() << "Connected backend to " << m_backCon << endmsg;
+      try {
+         back.connect(m_backCon.c_str());
+         info() << "Connected backend to " << m_backCon << endmsg;
+      } catch (const zmq::error_t&) {
+         error() << "Failed to connect backend to: " << m_backCon << endmsg;
+      }
    } else {
-      back.bind(m_backCon.c_str());
-      info() << "Bound backend to " << m_backCon << endmsg;
+      try {
+         back.bind(m_backCon.c_str());
+         info() << "Bound backend to " << m_backCon << endmsg;
+      } catch (const zmq::error_t&) {
+         error() << "Failed to bind backend to: " << m_backCon << endmsg;
+      }
    }
 
    // use inproc for the control.

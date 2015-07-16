@@ -6,6 +6,8 @@
 
 ! 2015-07-16 - Roel Aaij
  - Add python package to contain configuration module.
+ - Catch errors from connection and bind attempts in Hlt2MonRelaySvc. This
+   should also be done for the others.
 
 ! 2015-07-15 - Roel Aaij
  - Add design document for next step.

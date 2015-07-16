@@ -1,4 +1,5 @@
 import os, sys, socket, re
+import importlib
 
 __ports = {'HistoRelay' : {'in' : 31337, 'out' : 31338},
            'InfoRelay'  : {'in' : 31339, 'out' : 31340},
@@ -6,8 +7,34 @@ __ports = {'HistoRelay' : {'in' : 31337, 'out' : 31338},
            'InfoSvc'    : {'out' : 31342}
           }
 
+def staticVar(varname, value):
+    def decorate(func):
+        setattr(func, varname, value)
+        return func
+    return decorate
+
+@staticVar("Online", None)
+def importOnline():
+  if importOnline.Online:
+    return importOnline.Online
+  if 'RUNINFO' in os.environ:
+    runinfo = os.environ['RUNINFO']
+    d, f = os.path.split(runinfo)
+    name, ext = os.path.splitext(f)
+    sys.path.insert(1, d)
+    Online = importlib.import_module('OnlineEnv')
+    sys.path.remove(d)
+  else:
+    import OnlineEnv as Online
+  importOnline.Online = Online
+  return Online
+
 def configMsgSvc( app ):
     import os
+    if 'LOGFIFO' not in os.environ :
+        print '# WARNING: LOGFIFO was not set -- not configuring FMCMessageSvc.'
+        return
+
     from Gaudi.Configuration import allConfigurables
 
     # setup the message service
@@ -18,11 +45,8 @@ def configMsgSvc( app ):
     app.MessageSvcType = msg.getType()
     app.SvcOptMapping.append( msg.getFullName() )
     msg.LoggerOnly = True
-    if 'LOGFIFO' not in os.environ :
-        os.environ['LOGFIFO'] = '/tmp/logGaudi.fifo'
-        log.warning( '# WARNING: LOGFIFO was not set -- now set to ' + os.environ['LOGFIFO'] )
     msg.fifoPath = os.environ['LOGFIFO']
-    import OnlineEnv
+    OnlineEnv = importOnline()
     msg.OutputLevel = OnlineEnv.OutputLevel
     msg.doPrintAlways = False
 
@@ -40,6 +64,7 @@ def configOnline(appMgr):
     from Configurables import AuditorSvc
     AuditorSvc().Auditors = []
     configMsgSvc( appMgr )
+    OnlineEnv = importOnline()
     OnlineEnv.end_config(False)
 
 def configureTop(appMgr, node_info):
@@ -55,7 +80,7 @@ def configureTop(appMgr, node_info):
     ## The top histo relay ports
     from Configurables import Hlt2MonRelaySvc
     histoRelay = Hlt2MonRelaySvc("HistoRelay")
-    histoRelay.FrontConnection = "tcp://hlt01:%d" % __ports['HistoRelay']['in']
+    histoRelay.FrontConnection = "tcp://*:%d" % __ports['HistoRelay']['in']
     histoRelay.BackConnection  = "ipc:///tmp/hlt2MonData_0"
 
     ## The histogram adder service
@@ -66,9 +91,9 @@ def configureTop(appMgr, node_info):
 
     ## The info svc ports
     from Configurables import Hlt2MonInfoSvc
-    infoSvc = Hlt2MonRelaySvc()
+    infoSvc = Hlt2MonInfoSvc()
     infoSvc.FrontConnection = infoRelay.BackConnection
-    infoSvc.BackConnection  = "ipc://hlt2MonInfo_1"
+    infoSvc.BackConnection  = "ipc:///tmp/hlt2MonInfo_1"
 
     ## The root conversion service
     from Configurables import Hlt2RootPublishSvc
@@ -78,10 +103,12 @@ def configureTop(appMgr, node_info):
     rootSvc.InfoConnection  = infoSvc.BackConnection
 
     ## The saver svc
-    from Configurables import Hlt2MonInfoSvc
+    from Configurables import Hlt2SaverSvc
     saverSvc = Hlt2SaverSvc()
     saverSvc.DataConnection = rootSvc.BackConnection
     saverSvc.InfoConnection = infoSvc.BackConnection
+
+    return (infoRelay, histoRelay, adderSvc, infoSvc, rootSvc, saverSvc)
 
 def configureSubfarm(appMgr, node_info):
     ## The info relay ports
@@ -94,6 +121,8 @@ def configureSubfarm(appMgr, node_info):
     histoRelay = Hlt2MonRelaySvc("HistoRelay")
     histoRelay.InPort  = __ports['HistoRelay']['in']
 
+    return (infoRelay, histoRelay)
+
 def configureNode(appMgr, node_info):
     ## The info relay svc needs to be explicitly configured
     from Configurables import Hlt2MonRelaySvc
@@ -105,6 +134,8 @@ def configureNode(appMgr, node_info):
     from Configurables import Hlt2MonRelaySvc
     histoRelay = Hlt2MonRelaySvc("HistoRelay")
     histoRelay.InPort = __ports['HistoRelay']['in']
+
+    return (infoRelay, histoRelay)
 
 def configure(host_type = None):
 
@@ -141,6 +172,11 @@ def configure(host_type = None):
     configs = {'node' : configureNode,
                'subfarm' : configureSubfarm,
                'top' : configureTop}
-    configs[ht](appMgr, node_info)
+    svcConfs = configs[ht](appMgr, node_info)
+
+    ## Set the partition we are running in
+    OnlineEnv = importOnline()
+    for svcConf in svcConfs:
+        svcConf.PartitionName = OnlineEnv.PartitionName
 
     configOnline(appMgr)

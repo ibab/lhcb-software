@@ -106,9 +106,9 @@ void Hlt2MonInfoSvc::function()
 
    // Create frontend, backend and control sockets
    zmq::socket_t data{context(), ZMQ_SUB};
-   data.bind(m_frontCon.c_str());
+   data.connect(m_frontCon.c_str());
    data.setsockopt(ZMQ_SUBSCRIBE, "", 0);
-   info() << "Bound data input socket to: " << m_frontCon << endmsg;
+   info() << "Connected data input socket to: " << m_frontCon << endmsg;
 
    zmq::socket_t inf{context(), ZMQ_REP};
    inf.bind(m_backCon.c_str());
@@ -313,7 +313,7 @@ bool Hlt2MonInfoSvc::runInfoRequest(zmq::socket_t& inf) const
       }
       reply = ss.str();
    }
-   
+
    debug() << "Sending info reply: |";
    array<string, 2> rep = {known, reply};
    for (auto it = begin(rep), last = end(rep); it != last; ++it) {
