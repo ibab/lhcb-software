@@ -28,3 +28,6 @@ library          Hlt2Monitoring    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=Hlt2Monitoring
+
+#============================================================================
+apply_pattern install_python_modules

@@ -4,6 +4,9 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-07-16 - Roel Aaij
+ - Add python package to contain configuration module.
+
 ! 2015-07-15 - Roel Aaij
  - Add design document for next step.
  - Strings on the wire should not be null terminated.

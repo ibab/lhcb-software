@@ -16,3 +16,5 @@ gaudi_add_module(Hlt2MonitoringLib src/*.cpp
                  LINK_LIBRARIES GaudiKernel Boost ROOT zmq OnlineKernel)
 
 gaudi_install_headers(Hlt2Monitoring)
+
+gaudi_install_python_modules()
