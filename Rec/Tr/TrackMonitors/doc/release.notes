@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2015-07-16 - Michel De Cian
+ - Protected TrackVertexMonitor from division by zero, as fast Kalman fitted tracks seem to cause problems for the internal fits in the TrackVertexMonitor. Note: This only cures the symptoms, not the cause.
+
 ! 2015-07-08 - Elena Graverini
  - Added STTrackTuple tool. It is equivalent to IT/TTTrackMonitor, but outputs ntuples instead of histograms.
 
