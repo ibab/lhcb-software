@@ -3,6 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Remove "" in TrackToDST setting in Configuration.py
+
 - Filter fitted Velo tracks for PV reconstruction in 2015 such that they use less space on the DST.
 
 - Changes to references to reflect changes since v47r9
