@@ -7,8 +7,14 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
+!
 
-!  2015-08-16  Mike Sokoloff
+!  2015-07-16/16  Mike Sokoloff
+   -  modified CharmSpectroscopy.py to split D0 and D*+ --> D0,pi+
+   -  lines into separate categories for D0 --> K,pi and D0 --> K,pi,pi,pi
+   -  also fixed typos in some decay descriptors
+  
+!  2015-07-15  Mike Sokoloff
    - modified Inputs.py, Stages.py, and ChargedHyperons.py to build
    -  DDD charged hyperons in addition to LLL and DDL; also changed
    -  the trigger line names so they encode all these possibilities
