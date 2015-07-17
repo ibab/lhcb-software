@@ -714,7 +714,8 @@ void ReportConvertTool::ParticleObjectFromSummary( const HltObjectSummary::Info*
   double psq = raw_p1*raw_p1 + raw_p2*raw_p2 + raw_p3*raw_p3;
   double raw_pe = sqrt(psq+raw_m*raw_m);
   Gaudi::LorentzVector part_mom_raw(raw_p1,raw_p2,raw_p3,raw_pe);
-  object->setMomentum(part_mom_raw);
+  if(raw_p3>0.001) object->setMomentum(part_mom_raw);
+  else object->setMomentum(part_mom);
 }
 
 void ReportConvertTool::ProtoParticleObjectFromSummary( const HltObjectSummary::Info* info, LHCb::ProtoParticle* object, bool turbo) {
