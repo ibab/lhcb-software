@@ -1784,7 +1784,10 @@ class PromptSpectroscopyFilter(Hlt2ParticleFilter):
         ipchi2_cut = "(BPVIPCHI2() < %(IPCHI2_MAX)s )"
         decaytime_cut = "(BPVLTIME() > %(D_BPVLTIME_MIN)s )" 
         mass_cut = "(%(DMASS_MIN)s < M) & (M < %(DMASS_MAX)s)"
+        pt_cut   = "(%(DPT_MIN)s < PT)"
+        p_cut    = "(%(DMom_MIN < P)"
         cut = ipchi2_cut + " & " + decaytime_cut + " & " + mass_cut
+        cut = cut + "&" + pt_cut "&" + p_cut
         nickname = name if nickname == None else nickname
         name     = name if not shared       else 'CharmHad%sPromptSpectroscopy' % name
         Hlt2ParticleFilter.__init__(self, name, cut, inputs,
