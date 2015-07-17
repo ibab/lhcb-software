@@ -87,6 +87,8 @@ StatusCode PrintMCDecayTreeTool::initialize( void ){
     else if( tok=="theta" ) m_keys.push_back(theta);
     else if( tok=="phi" )   m_keys.push_back(phi);
     else if( tok=="eta" )   m_keys.push_back(eta);
+    else if( tok=="flags" ) m_keys.push_back(flags);
+    else if( tok=="fromSignal") m_keys.push_back(fromSignal);
     else if( tok=="IDCL" )  m_keys.push_back(idcl);
     else
       err() << "Unknown output key '" << tok << "'. Ignoring it."
@@ -172,6 +174,8 @@ void PrintMCDecayTreeTool::printHeader( MsgStream& log )
     case theta:     log << std::setw(m_fWidth) << "theta";     break;
     case phi:       log << std::setw(m_fWidth) << "phi";       break;
     case eta:       log << std::setw(m_fWidth) << "eta";       break;
+    case flags:     log << std::setw(m_fWidth) << "Flags ";    break;
+    case fromSignal:  log <<  std::setw(m_fWidth) << "fromSignal";     break; 
     case idcl:      log << std::setw(m_fWidth) << "ID CL";     break;
     }
 
@@ -194,6 +198,8 @@ void PrintMCDecayTreeTool::printHeader( MsgStream& log )
     case theta:     log << std::setw(m_fWidth) << "mrad";      break;
     case phi:       log << std::setw(m_fWidth) << "mrad";      break;
     case eta:       log << std::setw(m_fWidth) << "prap";      break;
+    case flags:     log << std::setw(m_fWidth) << " ";     break;
+    case fromSignal:  log <<  std::setw(m_fWidth) << " ";     break; 
     case idcl:      log << std::setw(m_fWidth) << " ";         break;
     }
 
@@ -293,6 +299,14 @@ void PrintMCDecayTreeTool::printInfo( const std::string &prefix,
     case eta:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
           << part->momentum().Eta();
+      break;
+    case flags:
+      log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
+          << part->flags();
+      break;
+    case fromSignal:
+      log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
+          << part->fromSignal();
       break;
     case idcl:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)

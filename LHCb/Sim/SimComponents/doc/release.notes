@@ -5,6 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2015-07-17 - Gloria Corti
+ - Add printing of signal flag value in PrintMCDecayTreeTool when specified in
+   options
+
 !========================= SimComponents v2r24p1 2013-07-17 ======================
 ! 2013-06-17 - Marco Cattaneo
  - Fix clang32 warning
