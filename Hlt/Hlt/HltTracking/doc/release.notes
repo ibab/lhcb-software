@@ -6,6 +6,8 @@
 
 ! 2015-07-17 - Sascha Stahl
  - Hlt2Tracking: Remove workaround for Rich dictionary loading as it now crashes Moore.
+ - HltRecoConf: Increase muon pt cut in Hlt1 to 300 MeV to save CPU time.
+ - Hlt2ProbeTracking: Switch to using MuonIDAlgLite.
 
 ! 2015-07-16 - Sascha Stahl
  - Hlt2Tracking: Muon ID algorithm is run always for long and downstream tracks

@@ -189,11 +189,10 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
                 bm_members = [ self.__hlt2FullDownstreamTracking() ]
                 idalgname = self.__pidAlgosAndToolsPrefix()+"IDalg"
                 cm=ConfiguredMuonIDs.ConfiguredMuonIDs( data = self.getProp("DataType") )
-                idalg = cm.configureMuonIDAlg(idalgname)
-                idalg.TrackLocation = self.__hlt2FullDownstreamTracking().outputSelection()
+                idalg = cm.configureMuonIDAlgLite(idalgname)
+                idalg.TracksLocations = [ self.__hlt2FullDownstreamTracking().outputSelection() ]
                 idalg.MuonIDLocation = Hlt2TrackRoot+HltDefaultFitSuffix+"/"+HltSharedPIDPrefix+"/"+HltMuonIDSuffix
                 idalg.MuonTrackLocation = Hlt2TrackRoot+HltDefaultFitSuffix+"/"+HltSharedPIDPrefix+"/"+HltMuonTracksName
-                idalg.FindQuality = False
                 # make protos
                 Hlt2ProbeMuonProtoMaker.Inputs = [self.__hlt2FullDownstreamTracking().outputSelection()]
                 Hlt2ProbeMuonProtoMaker.Output = ProbeMuonProtosOutputLocation

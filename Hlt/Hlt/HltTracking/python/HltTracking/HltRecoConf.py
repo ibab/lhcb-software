@@ -29,7 +29,7 @@ from GaudiKernel.SystemOfUnits import MeV, mm, m
 class HltRecoConf(LHCbConfigurableUser):
    __slots__ = { "Forward_HPT_MinPt"            :  500. * MeV
                  ,"Forward_HPT_MinP"            : 3000. * MeV
-                 ,"Forward_LPT_Muon_MinPt"      :   80. * MeV  
+                 ,"Forward_LPT_Muon_MinPt"      :  300. * MeV  
                  ,"Forward_LPT_Muon_MinP"       : 3000. * MeV 
                  ,"Forward_LPT_MinPt"           :   80. * MeV  # was 200
                  ,"Forward_LPT_MinP"            : 1000. * MeV # was 3000
