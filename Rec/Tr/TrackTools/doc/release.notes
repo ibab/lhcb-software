@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-07-16 - Paul Seyfert
+ - bugfix in Run2GhostId: count *lite* clusters when determining the outliers
+   per subdetector
+ - retrain network and flattening function for new multiple scattering
+   treatment
+
 ! 2015-07-10 - Michel De Cian
  - Adapt StateThickMSCorrectionTool to omit log term in calculation if wanted. Default for the moment is: Use the log term.
 
@@ -16,7 +22,7 @@
    and print a line in log file of average number of real tracks per VELO track
 
 ! 2015-05-28 - Christoph Hombach
-	- added src/VPTrackSelecor.cpp
+   - added src/VPTrackSelecor.cpp
 
 !========================= TrackTools v5r9 2015-05-26 =========================
 ! 2015-05-05 - Michael Kolpin
