@@ -271,7 +271,7 @@ std::vector<float> Run2GhostId::netInputs(LHCb::Track& aTrack) const
   if (aTrack.hasTT()) { // includes longtracks w/o ut hits
     variables.push_back(obsarray[LHCb::LHCbID::TT] );
     //variables.push_back(m_Expectations[0]->nExpected(aTrack));
-    variables.push_back((fit->nMeasurements(LHCb::Measurement::TT) - fit->nActiveMeasurements(LHCb::Measurement::TT)));// "UpgradeGhostInfo_UToutlier",'F'
+    variables.push_back((fit->nMeasurements(LHCb::Measurement::TTLite) - fit->nActiveMeasurements(LHCb::Measurement::TTLite)));
   }
   //if (LHCb::Track::Downstream == tracktype || LHCb::Track::Long == tracktype || LHCb::Track::Ttrack == tracktype) {
   if (aTrack.hasT()) {
@@ -279,7 +279,7 @@ std::vector<float> Run2GhostId::netInputs(LHCb::Track& aTrack) const
     variables.push_back(obsarray[LHCb::LHCbID::OT] );
     //variables.push_back(m_Expectations[1]->nExpected(aTrack)); // IT
     //variables.push_back(m_Expectations[2]->nExpected(aTrack)); // OT
-    variables.push_back((fit->nMeasurements(LHCb::Measurement::IT) - fit->nActiveMeasurements(LHCb::Measurement::IT)));// "UpgradeGhostInfo_UToutlier",'F'
+    variables.push_back((fit->nMeasurements(LHCb::Measurement::ITLite) - fit->nActiveMeasurements(LHCb::Measurement::ITLite)));
     float nMeas = fit->nMeasurements( LHCb::Measurement::OT );
     float nOTBad = nMeas-nMeas*aTrack.info(25 , 0 );// info 25 : FitFracUsedOTTimes
     variables.push_back(nOTBad);
