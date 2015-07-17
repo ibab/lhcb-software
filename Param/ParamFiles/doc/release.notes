@@ -4,6 +4,13 @@
 ! Purpose     : Distribution of parametrization data files
 !-----------------------------------------------------------------------------
 
+! 2015-07-17 - Patrick Spradlin
+  Added updated versions of the lookup tables for inclusive D* and inclusive
+  Sigc triggers in Hlt2.  These new lookup tables were tuned with background
+  samples from 2015 data and signal MC.
+    + data/Hlt2Dst2PiD02HHX_BDTParams_v1r0.txt
+    + data/Hlt2Sigc2PiLc2HHX_BDTParams_v1r0.txt
+
 !========================= ParamFiles v8r15 2015-07-15 =========================
 ! 2015-07-10 - Julien Cogan
 - Add a new LUT (V7) for L0Muon pt. Computed with the alignment constant obtained
