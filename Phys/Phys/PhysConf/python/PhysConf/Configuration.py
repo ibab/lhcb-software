@@ -159,6 +159,24 @@ class PhysConf(LHCbConfigurableUser) :
         #require L0 just in case I need to do L0 decoding
         importOptions( "$L0TCK/L0DUConfig.opts" )
 
+        # for 2015, unpack and refit velo tracks for PV refitting
+        if( self.getProp("DataType") is "2015" ):
+            from Configurables import UnpackTrack
+            unpackFittedVeloTracks = UnpackTrack("unpackFittedVeloTracks")
+            unpackFittedVeloTracks.InputName = "pRec/Track/FittedHLT1VeloTracks"
+            unpackFittedVeloTracks.OutputName = "Rec/Track/FittedHLT1VeloTracks"
+
+            from FastVelo import FastVeloAlgConf
+            from Configurables import TrackStateInitAlg
+            stateInit = TrackStateInitAlg('VeloOnlyInitAlg')
+            FastVeloAlgConf.FastVeloKalmanConf().configureFastKalmanFit(init = stateInit)
+
+            getFittedVeloSeq = GaudiSequencer("getFittedVeloSeq")
+            getFittedVeloSeq.Members = [ unpackFittedVeloTracks, stateInit ]
+            
+            dataOnDemand.AlgMap[ "/Event/Rec/Track/FittedHLT1VeloTracks" ] = getFittedVeloSeq
+
+        
         # ANN PID recalibration
         if self.getProp("AllowPIDRecalib") :
 
