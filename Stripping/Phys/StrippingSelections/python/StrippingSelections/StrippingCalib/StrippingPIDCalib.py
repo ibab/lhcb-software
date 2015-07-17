@@ -33,7 +33,6 @@ __all__ = (
 
 default_config = {
     'NAME'              : 'PIDCalib',
-    'BUILDERTYPE'       : 'DiMuonConf',
     'WGs'               : [ 'ALL' ],
     'BUILDERTYPE'       : 'PIDCalibLineBuilder',
     'STREAMS'           : [ 'PID' ],
@@ -457,7 +456,8 @@ class PIDCalibLineBuilder(LineBuilder):
       if (bodies == 2)   :
         _algorithm = CombineParticles(self.name + configRowId + 'Algorithm')
       elif (bodies == 3) :
-        _algorithm = DaVinci__N3BodyDecays(self.name + configRowId + 'Line')
+        #_algorithm = DaVinci__N3BodyDecays(self.name + configRowId + 'Line')
+        _algorithm = DaVinci__N3BodyDecays(self.name + configRowId + 'Algorithm')
         _algorithm.Combination12Cut = _config['Combination12Cut']
 
       ## Prepares the tag&probe cut if needed

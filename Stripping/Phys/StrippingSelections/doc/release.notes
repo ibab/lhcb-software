@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-17 - Stefano Perazzini
+ - Corrected a mis-named algorithm in python/StrippingCalib/StrippingPIDCalib.py that
+   was preventing the correct cloning of some line
+
 ! 2015-06-29 - Jon Harrison
  - Added line EtaCToLL to StrippingRD/StrippingPhiToKSKS.py on behalf of Francesco Dettori
 
