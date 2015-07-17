@@ -4,6 +4,12 @@
 ! Purpose     : Distribution of parametrization data files
 !-----------------------------------------------------------------------------
 
+! 2015-07-17 - Albert Puig
+  - Updated inclusive radiative BDTs
+    + data/Hlt2_RadiativeInc_2plus1_BDTParams_v2r0.txt
+    + data/Hlt2_RadiativeInc_3plus1_BDTParams_v2r0.txt
+
+
 ! 2015-07-17 - Patrick Spradlin
   Added updated versions of the lookup tables for inclusive D* and inclusive
   Sigc triggers in Hlt2.  These new lookup tables were tuned with background
