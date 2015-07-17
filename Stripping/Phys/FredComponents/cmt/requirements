@@ -1,0 +1,32 @@
+# $Id: requirements 184170 2015-02-22 11:45:31Z ibelyaev $ 
+# =============================================================================
+# Created    : 2015-02-02
+# Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
+#
+#                   $Revision: 184170 $    
+# Last Modification $Date: 2015-02-22 12:45:31 +0100(dom, 22 feb 2015) $
+#                by $Author: ibelyaev $
+#
+# =============================================================================
+package           StrippingCache
+version           v1r0
+
+# =============================================================================
+branches          cmt doc src work scripts 
+
+# =============== dependencies ================================================
+use               LoKiArrayFunctors  v* Phys 
+use               LoKiHlt            v* Phys 
+ 
+# =============== constituents ================================================
+library           StrippingCache ../src/*.cpp 
+
+# =============== patterns =====================================================
+apply_pattern     linker_library          library=StrippingCache
+apply_pattern     install_scripts
+apply_pattern     generate_componentslist library=StrippingCache
+
+# =============================================================================
+# The END 
+# =============================================================================
+
