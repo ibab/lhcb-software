@@ -1064,8 +1064,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         richConf.trackConfig().InputTracksLocation = tracks.outputSelection()
 
         # Workaround for Rich dictionary loading.
-        import cppyy
-        cppyy.gbl.LHCb.RichRecSegment
+        #import cppyy
+        #cppyy.gbl.LHCb.RichRecSegment
 
         from HltLine.HltLine import bindMembers
         # Build the bindMembers
