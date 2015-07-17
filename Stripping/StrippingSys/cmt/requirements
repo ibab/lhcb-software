@@ -21,10 +21,11 @@ use  StrippingAlgs               v1r15    Phys   # Anton Poluektov
 use  StrippingArchive            v1r30    Phys   # Stripping coordinators
 use  StrippingConf               v4r17    Phys   # Anton Poluektov
 use  StrippingNeuroBayes         v1r9     Phys   # Ulrich Kerzel
-use  StrippingSelections         v4r3    Phys   # Stripping coordinators
+use  StrippingSelections         v4r3     Phys   # Stripping coordinators
 use  StrippingSettings           v2r37    Phys   # Stripping coordinators
 use  StrippingTCK                v1r4     Phys   # Anton Poluektov
-use  StrippingUtils              v1r11     Phys   # Juan Palacios
+use  StrippingUtils              v1r11    Phys   # Juan Palacios
+use  StrippingCache              v1r0     Phys   # Juan Palacios
 
 ####################################################################
 
