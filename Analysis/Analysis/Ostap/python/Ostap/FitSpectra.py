@@ -172,7 +172,7 @@ class GammaDistFun(PtFitBase) :
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-07-11
-def tsallisTF1( ptmax , ptmin = 0 , mass = None ) :
+def tsallisTF1( ptmax , ptmin = 0 , mass = None , name = '' ) :
     """
     create Tsallis function (as TF1) for fitting pt-spectra:
     
@@ -184,7 +184,8 @@ def tsallisTF1( ptmax , ptmin = 0 , mass = None ) :
         raise ArrtibuteError("Tsallis/TF1: wrong ptmin/ptmax: %s/%s" % ( ptmin ,ptmax ) )
     
     obj       = TsallisFun ( ptmax , ptmin )
-    func      = ROOT.TF1( funID() , obj , ptmin , ptmax , 4 )
+    if not name : name =  funID() 
+    func      = ROOT.TF1( name , obj , ptmin , ptmax , 4 )
     func._obj = obj
     func.SetParNames (
         'norm' , ## 0
@@ -210,7 +211,7 @@ def tsallisTF1( ptmax , ptmin = 0 , mass = None ) :
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-07-11
-def qgsmTF1 ( ptmax , ptmin = 0 , mass = None ) :
+def qgsmTF1 ( ptmax , ptmin = 0 , mass = None , name = '') :
     """
     Create QGSM functin (as TF1) for fitting pt-spectra
     
@@ -222,7 +223,8 @@ def qgsmTF1 ( ptmax , ptmin = 0 , mass = None ) :
         raise ArrtibuteError("QGSM/TF1: wrong ptmin/ptmax: %s/%s" % ( ptmin ,ptmax ) )
     
     obj       = QGSMFun  (                 ptmax , ptmin     )
-    func      = ROOT.TF1 ( funID() , obj , ptmin , ptmax , 3 )
+    if not name : name =  funID() 
+    func      = ROOT.TF1 ( name , obj , ptmin , ptmax , 3 )
     func._obj = obj
     func.SetParNames (
         'norm' , ## 0
@@ -246,7 +248,7 @@ def qgsmTF1 ( ptmax , ptmin = 0 , mass = None ) :
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-07-11
-def gammaDistTF1 ( ptmax , ptmin = 0 , mass = None ) :
+def gammaDistTF1 ( ptmax , ptmin = 0 , mass = None , name = '' ) :
     """
     Create GammaDist function (as TF1) for fitting pt-spectra
     >>> histo =
@@ -257,7 +259,8 @@ def gammaDistTF1 ( ptmax , ptmin = 0 , mass = None ) :
         raise ArrtibuteError("GammaDist/TF1: wrong ptmin/ptmax: %s/%s" % ( ptmin ,ptmax ) )
     
     obj       = GammaDistFun (                 ptmax , ptmin     )
-    func      = ROOT.TF1     ( funID() , obj , ptmin , ptmax , 3 )
+    if not name : name =  funID() 
+    func      = ROOT.TF1     ( name , obj , ptmin , ptmax , 3 )
     func._obj = obj
     func.SetParNames (
         'norm'  , ## 0
