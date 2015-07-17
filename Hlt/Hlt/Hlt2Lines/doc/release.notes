@@ -9,6 +9,12 @@
 !----------------------------------------------------------------------------
 !
 
+! 2015-07-17 Patrick Spradlin
+  - Use updated lookup tables in the charm inclusive lines.
+    . python/Hlt2Lines/CharmHad/Dst2PiD02HHXBDTLines.py
+    !!NOTE!! This change depends on ParamFiles 191994.
+
+
 !  2015-07-17  Mike Sokoloff
    -  added minimum p and pT cuts for PromptSpectroscopyFilter in
    - the class definition (Stages.py) and the relevant dictionaries
