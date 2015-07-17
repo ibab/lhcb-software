@@ -9,6 +9,10 @@
 !----------------------------------------------------------------------------
 !
 
+
+! 2015-07-17 - Jessica Prisciandaro
+ - Fixed bug in DiMuonSoftLine. Removed cut on TTHits 
+
 ! 2015-07-17 Patrick Spradlin
   - Use updated lookup tables in the charm inclusive lines.
     . python/Hlt2Lines/CharmHad/Dst2PiD02HHXBDTLines.py
