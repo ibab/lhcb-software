@@ -5,6 +5,9 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2015-07-17 - Vanya Belyaev
+ - VertexFit:_load
+   add error message to debug misterious problem reported by Julian 
 
 ! 2015-07-09 - Vanya Belyaev
 

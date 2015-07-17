@@ -6,6 +6,7 @@
 // ============================================================================
 #include <algorithm>
 #include <memory>
+#include <sstream>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -132,7 +133,15 @@ StatusCode LoKi::VertexFitter::_load ( const LHCb::Particle* particle  ) const
   if ( LoKi::KalmanFilter::JetLikeParticle != t )
   {
     m_entries.push_back( Entry() ) ;
-    return LoKi::KalmanFilter::load ( *particle , t , m_entries.back() ) ;
+    StatusCode sc = LoKi::KalmanFilter::load ( *particle , t , m_entries.back() ) ;
+    if ( sc.isFailure() )
+    {
+      std::ostringstream ostr ; 
+      ostr << " Failure to load particle ID " << particle->particleID().abspid() 
+           << " as particle type "            << t ;
+      return _Error( ostr.str() , sc ) ;                   // RETURN
+    }
+    return sc ;                                            // RETURN 
   }
   // for jets, load all components...
   typedef SmartRefVector<LHCb::Particle> DAUGHTERS ;
@@ -141,7 +150,7 @@ StatusCode LoKi::VertexFitter::_load ( const LHCb::Particle* particle  ) const
         daughters.end() != idau ; ++idau ) 
   {
     StatusCode sc = _load ( *idau ) ;
-    if ( sc.isFailure() ) { return sc ; } // RETURN
+    if ( sc.isFailure() ) { return sc ; }  // RETURN 
   }
   // 
   return StatusCode::SUCCESS ;
