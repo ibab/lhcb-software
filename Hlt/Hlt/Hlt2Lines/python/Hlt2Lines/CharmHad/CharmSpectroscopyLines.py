@@ -76,14 +76,14 @@ class CharmSpectroscopyLines :
                                        }
 
                  # these are cuts for the PromptSpectroscopyFilter
-                 # For the Lc lines, despite the name, the mass window is
-                 # wide enough to catch the Xi_c as well.
-                 #  the default values, 2211 - 2543 correspond to the values in D2HHHLines.py
+                 # the default mass window, 2211 - 2362 correspond to the values in D2HHHLines.py
                  ,'LcSpec' : {
                                 'IPCHI2_MAX'       :  15,
                                 'D_BPVLTIME_MIN'   :  0.3 * picosecond,
                                 'DMASS_MIN'        :  2211 * MeV,
-                                'DMASS_MAX'        :  2543 * MeV,
+                                'DMASS_MAX'        :  2362 * MeV,
+                                'DPT_MIN'          :  2000 * MeV,
+                                'DMom_MIN'         :  30000 * MeV
                                }
 
                  , 'D02KPiPiPiSpec' : {
@@ -91,6 +91,8 @@ class CharmSpectroscopyLines :
                                 'D_BPVLTIME_MIN'   :  0.3 * picosecond,
                                 'DMASS_MIN'        :  1790 * MeV,
                                 'DMASS_MAX'        :  1940 * MeV,
+                                'DPT_MIN'          :  2000 * MeV,
+                                'DMom_MIN'         :  30000 * MeV
                    }
         }
 
