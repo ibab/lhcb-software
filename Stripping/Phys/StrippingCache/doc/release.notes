@@ -1,0 +1,76 @@
+! $Id: release.notes 191329 2015-07-03 10:39:11Z marcocle $
+! -----------------------------------------------------------------------------
+! Package     : StrippingCache
+! Responsible : Vanya Belyaev
+! Purpose     : Keep C++ functors for stripping
+! Created     : 2015-02-4
+! -----------------------------------------------------------------------------
+!                   $Revision: 191329 $
+! Last modification $Date: 2015-07-03 12:39:11 +0200(ven, 03 lug 2015) $
+!                by $Author: marcocle $
+! -----------------------------------------------------------------------------
+
+! 2015-07-17 - Stefano Perazzini
+ - Introduced options to create caches for S21 and S20.
+ - Added package to STRIPPING under Phys/StrippingCache.
+
+! 2015-07-03 - Marco Clemencic
+ - Moved the CMake code to generate functors factories to Phys/LoKiCore.
+
+! 2015-06-25 - Marco Clemencic
+ - Added (preliminary) CMake integration.
+
+! 2015-06-23 - Vanya Belyaev
+ - test with new setting of hybrid base
+
+! 2015-02-22 - Vanya Belyaev
+ - commit fixed version of script directory
+
+! 2015-02-11 - Vanya Belyaev
+
+ - INSTRUCTIONS:
+
+1. get the package:
+
+   getpack StrippingCache head
+   cd StrippingCache/options
+
+
+2&3. set environment variable and run stripping:
+
+     export LOKI_GENERATE_CPPCODE=20
+
+     gaudirun.py  <options>...
+
+  I've actually used 2 step action:
+
+     export LOKI_GENERATE_CPPCODE=20
+
+     gaudirun.py DV-Stripping21-Stripping.py DataType.py -n -o Stripping21.pkl
+
+     gaudirun.py ./Stripping21.pkl
+
+4. move generated cpp code to src directori and build the cache:
+
+     mv *.cpp ../src
+
+     make -j 10
+
+ Thats all...
+ for next run of gaudirun it will pick up functors from cache:
+
+ ToolSvc.HybridFactory         SUCCESS Number of counters : 2
+ |    Counter                                      |     #     |
+ | "# loaded from CACHE"                           |     14770 |
+ | "# loaded from PYTHON"                          |         1 |
+ToolSvc.CoreFactory           SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |
+ | "# loaded from CACHE"                           |      1212 |
+
+
+! 2015-02-04 - Vanya Belyaev
+ - the first import
+
+! -----------------------------------------------------------------------------
+! The END
+! -----------------------------------------------------------------------------
