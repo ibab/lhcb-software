@@ -181,7 +181,14 @@ StatusCode TrackMasterFitter::failure( const std::string& comment ) const
   if ( m_debugLevel ) debug() << "TrackMasterFitter failure: " + comment << endmsg ;
   return Warning(comment,StatusCode::FAILURE,1) ;
 }
-
+//=========================================================================
+// Helper to print a failure comment (with info instead of warning)
+//=========================================================================
+StatusCode TrackMasterFitter::failureInfo( const std::string& comment ) const
+{
+  if ( m_debugLevel ) debug() << "TrackMasterFitter failure: " + comment << endmsg ;
+  return Info(comment,StatusCode::FAILURE,1) ;
+}
 //=========================================================================
 // Fit the track
 //=========================================================================
@@ -210,12 +217,12 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     sc = makeNodes( track,pid );
     if ( sc.isFailure() ) {
       kalfitresult->clearNodes() ;
-      return failure( "unable to make nodes from the measurements" );
+      return failureInfo( "unable to make nodes from the measurements" );
     }
   } else {
     sc = updateRefVectors( track, pid ) ;
     if ( sc.isFailure() )
-      return failure( "unable to update the ref vectors" );
+      return failureInfo( "unable to update the ref vectors" );
   }
 
   // create a covariance matrix to seed the Kalman fit
@@ -258,14 +265,14 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     // TODO: combine this with the projection of the residuals which now resides in TrackKalmanFilter
     if( iter > 1) {
       sc = updateRefVectors( track, pid );
-      if ( sc.isFailure() ) return failure( "problem updating ref vectors" );
+      if ( sc.isFailure() ) return failureInfo( "problem updating ref vectors" );
     }
 
     bool prevwasprefit = isPrefit( *kalfitresult ) ;
     double prevchi2 = track.chi2() ;
     sc = m_trackNodeFitter -> fit( track );
 
-    if ( sc.isFailure() )  return failure( std::string("unable to fit the track. ") +
+    if ( sc.isFailure() )  return failureInfo( std::string("unable to fit the track. ") +
                                            kalfitresult->getError() );
 
     if ( m_debugLevel ) debug() << "chi2 =  " << track.chi2()
@@ -288,7 +295,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     // update reference trajectories with smoothed states
     if (m_updateReferenceInOutlierIters) {
       sc = updateRefVectors( track, pid );
-      if ( sc.isFailure() ) return failure( "problem updating ref vectors" );
+      if ( sc.isFailure() ) return failureInfo( "problem updating ref vectors" );
     }
 
     // deactivate the outlier
@@ -302,7 +309,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
       //std::ostringstream mess;
       //mess << "unable to fit the track # " << track.key();
       //return failure( mess.str() );
-      return failure( "unable to fit the track" );
+      return failureInfo( "unable to fit the track" );
     }
 
     if ( m_debugLevel ) debug() << "chi2 =  " << track.chi2()
@@ -316,7 +323,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   // determine the track states at user defined z positions
   sc = determineStates( track );
   if ( sc.isFailure() )
-    return failure( "failed in determining states" ) ;
+    return failureInfo( "failed in determining states" ) ;
 
   if ( m_debugLevel && !track.states().empty() )
     debug() << "first state = " << track.firstState() << endmsg;
@@ -541,18 +548,18 @@ StatusCode TrackMasterFitter::updateRefVectors( Track& track, LHCb::ParticleID p
   // update the projections. need to be done every time ref is
   // updated. we can move this code here at some point.
   sc = projectReference( track ) ;
-  if( sc.isFailure() ) return failure( "problem projecting reference" );
+  if( sc.isFailure() ) return failureInfo( "problem projecting reference" );
 
   // update the material using the new ref vectors
   if(m_applyMaterialCorrections && m_updateMaterial) {
     sc = updateMaterialCorrections(track,pid) ;
-    if ( sc.isFailure() ) return failure( "problem updating material" );
+    if ( sc.isFailure() ) return failureInfo( "problem updating material" );
   }
 
   // update the transport using the new ref vectors
   if(m_updateTransport) {
     sc = updateTransport(track) ;
-    if ( sc.isFailure() ) return failure( "problem updating transport" );
+    if ( sc.isFailure() ) return failureInfo( "problem updating transport" );
   }
   return sc ;
 }

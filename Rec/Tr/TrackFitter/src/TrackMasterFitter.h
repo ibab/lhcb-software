@@ -151,7 +151,8 @@ private:
 
   //! helper to print a failure comment
   StatusCode failure( const std::string& comment ) const;
-
+  StatusCode failureInfo( const std::string& comment ) const;
+  
   bool m_debugLevel;
 
 };
