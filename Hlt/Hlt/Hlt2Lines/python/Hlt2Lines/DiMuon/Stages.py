@@ -40,9 +40,8 @@ class DetachedDiMuonHeavyFilter(Hlt2ParticleFilter):
 class SoftDiMuonFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         code = ("(MINTREE('mu-' == ABSID, MIPDV(PRIMARY)) > %(IP)s)" +
-                " & (CHILDCUT((TRGHOSTPROB < %(TRACK_TRGHOSTPROB_MAX)s),1))"
-                " & (CHILDCUT((TRGHOSTPROB < %(TRACK_TRGHOSTPROB_MAX)s),2))"
-                " & (TRCUT (TrIDC('isTT') > %(TTHits)s))" +
+                " & (CHILDCUT((TRGHOSTPROB < %(TRACK_TRGHOSTPROB_MAX)s),1))" +
+                " & (CHILDCUT((TRGHOSTPROB < %(TRACK_TRGHOSTPROB_MAX)s),2))" +
                 " & (MINTREE('mu-' == ABSID, MIPCHI2DV(PRIMARY)) > %(IPChi2Min)s)" +
                 " & (MAXTREE('mu-' == ABSID, MIPCHI2DV(PRIMARY)) < %(IPChi2Max)s)" +
                 " & ( VFASPF (sqrt(VX*VX+VY*VY)) > %(Rho)s) " +
@@ -56,8 +55,10 @@ class SoftDiMuonFilter(Hlt2ParticleFilter):
                 "& (PCUTA (ALV (1,2) < %(cosAngle)s))"  
                 )
         inputs = [TrackFittedDiMuon]
-        Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True)
-
+        Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True, 
+                                    dependencies = [PV3D('Hlt2')],
+                                    UseP2PVRelations = False)
+        
 
 class JpsiFilter(Hlt2ParticleFilter):
     def __init__(self, name):
