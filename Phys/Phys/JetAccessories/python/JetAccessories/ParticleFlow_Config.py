@@ -248,8 +248,10 @@ class ParticleFlowConf:
         self.PFSeq.Members += [hcal2Track]
 
     def _fixMCDATAConfig():
-        from Configurables import DaVinci
-        if (DaVinci().getProp("Simulation")):
+        #from Configurables import DaVinci
+        from Configurables import PhysConf
+        #if (DaVinci().getProp("Simulation")):
+        if (PhysConf().getProp("Simulation")):
             from Gaudi.Configuration import allConfigurables
             for c in allConfigurables.values():
                 if hasattr(c,"MC_recovery"):

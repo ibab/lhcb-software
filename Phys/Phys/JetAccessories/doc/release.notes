@@ -4,6 +4,10 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2015-07-17 - Stefano Perazzini
+ - Removed any reference to DaVinci from python/JetAccessories/ParticleFlow_Config.py
+   in order to avoid StrippingCache creation. The dependency is modified with PhysConf.
+
 !====================== JetAccessories v3r12 2015-05-27 =======================
 
 ! 2015-05-01 - Cedric Potterat
