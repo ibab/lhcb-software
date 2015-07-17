@@ -24,7 +24,7 @@ using namespace Rich::DAQ;
 //=============================================================================
 RawDataSize::RawDataSize( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : HistoAlgBase       ( name , pSvcLocator ),
+  : HistoAlgBase       ( name, pSvcLocator ),
     m_SmartIDDecoder   ( NULL  ),
     m_RichSys          ( NULL  )
 {
@@ -258,27 +258,26 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
     } // loop over L1 boards
 
     // loop over HPDs
-    for ( HPDWordMap::const_iterator iHPD = hpdWordMap.begin();
-          iHPD != hpdWordMap.end(); ++iHPD )
+    for ( const auto& hpd : hpdWordMap )
     {
-      if ( iHPD->first.isValid() )
+      if ( hpd.first.isValid() )
       {
         // use a try block in case of DB lookup errors
         try
         {
-          const Rich::DAQ::HPDCopyNumber copyN = m_RichSys->copyNumber(iHPD->first);
+          const Rich::DAQ::HPDCopyNumber copyN = m_RichSys->copyNumber(hpd.first);
           // fill plots
-          richProfile1D(HID("hpds/SizeVHPDCopyNumber"))->fill(copyN.data(),iHPD->second);
+          richProfile1D(HID("hpds/SizeVHPDCopyNumber"))->fill(copyN.data(),hpd.second);
           if ( UNLIKELY(m_detailedHPDPlots) )
           {
-            const Rich::DAQ::HPDHardwareID hpdHardID = m_RichSys->hardwareID(iHPD->first);
-            const Rich::DAQ::Level0ID l0ID           = m_RichSys->level0ID(iHPD->first);
-            const Rich::DetectorType rich            = iHPD->first.rich();
+            const Rich::DAQ::HPDHardwareID hpdHardID = m_RichSys->hardwareID(hpd.first);
+            const Rich::DAQ::Level0ID l0ID           = m_RichSys->level0ID(hpd.first);
+            const Rich::DetectorType rich            = hpd.first.rich();
             std::ostringstream title, ID;
             title << "# Words (32bit) | "
-                  << iHPD->first << " L0ID=" << l0ID << " hardID=" << hpdHardID;
+                  << hpd.first << " L0ID=" << l0ID << " hardID=" << hpdHardID;
             ID << "hpds/" << rich << "/HPDHardwareID" << hpdHardID;
-            richHisto1D( ID.str(), title.str(), -0.5, 35.5, 36 ) -> fill( iHPD->second );
+            richHisto1D( ID.str(), title.str(), -0.5, 35.5, 36 ) -> fill( hpd.second );
           }
         }
         catch ( const GaudiException & excpt )
@@ -295,69 +294,73 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
 
 StatusCode RawDataSize::finalize()
 {
-  if ( m_writeTextFile )
-  {
-
-    // load the HPD occ plot
-    TProfile * hist =
-      Gaudi::Utils::Aida2ROOT::aida2root( richProfile1D(HID("hpds/SizeVHPDCopyNumber")) );
-    if ( hist )
-    {
-
-      // Open a text file
-      const std::string filename = name() + ".txt";
-      info() << "Writing HPD data to text file '" << filename << "'" << endmsg;
-      std::ofstream file(filename.c_str());
-
-      // loop over bins (ROOT numbers from 1 ....)
-      for ( int bin = 1; bin <= hist->GetNbinsX(); ++bin )
-      {
-
-        // use a try block in case of DB lookup errors
-        try
-        {
-
-          // Get HPD data
-          const Rich::DAQ::HPDCopyNumber hpdCopyN(bin-1); // convert bin number to copy number
-          const LHCb::RichSmartID hpdSmartID         = m_RichSys->richSmartID(hpdCopyN);
-          const Rich::DAQ::HPDHardwareID hpdHardID   = m_RichSys->hardwareID(hpdSmartID);
-          const Rich::DAQ::Level0ID l0ID             = m_RichSys->level0ID(hpdSmartID);
-          const Rich::DAQ::Level1HardwareID l1HardID = m_RichSys->level1HardwareID(l0ID);
-          const Rich::DAQ::Level1LogicalID  l1LogID  = m_RichSys->level1LogicalID(l1HardID);
-          const Rich::DAQ::Level1Input l1Input       = m_RichSys->level1InputNum(hpdSmartID);
-
-          // HPD occ data from histogram
-          const double hpdOcc    ( hist->GetBinContent(bin) );
-          const double hpdOccErr ( hist->GetBinError(bin)   );
-
-          // write data to file
-          file << hpdCopyN.data() << " "
-               << hpdHardID.data() << " "
-               << l0ID.data() << " "
-               << l1HardID.data() << " "
-               << l1LogID.data() << " "
-               << l1Input.data() << " "
-               << l1Input.ingressID().data() << " "
-               << hpdOcc << " " << hpdOccErr
-               << std::endl;
-
-        }
-        catch ( const GaudiException & excpt )
-        {
-          Error( excpt.message() ).ignore();
-        }
-
-      }
-
-      // close the file
-      file.close();
-
-    } // hist OK
-
-  } // write to text file
-
+  // write text file
+  if ( m_writeTextFile ) { writeToTextFile(); } 
   // return
   return HistoAlgBase::finalize();
+}
+
+//=============================================================================
+
+void RawDataSize::writeToTextFile() const
+{
+
+  // load the HPD occ plot
+  TProfile * hist =
+    Gaudi::Utils::Aida2ROOT::aida2root( richProfile1D(HID("hpds/SizeVHPDCopyNumber")) );
+  if ( hist )
+  {
+
+    // Open a text file
+    const std::string filename = name() + ".txt";
+    info() << "Writing HPD data to text file '" << filename << "'" << endmsg;
+    std::ofstream file(filename.c_str());
+
+    // loop over bins (ROOT numbers from 1 ....)
+    for ( int bin = 1; bin <= hist->GetNbinsX(); ++bin )
+    {
+
+      // use a try block in case of DB lookup errors
+      try
+      {
+
+        // Get HPD data
+        const Rich::DAQ::HPDCopyNumber hpdCopyN(bin-1); // convert bin number to copy number
+        const LHCb::RichSmartID hpdSmartID         = m_RichSys->richSmartID(hpdCopyN);
+        const Rich::DAQ::HPDHardwareID hpdHardID   = m_RichSys->hardwareID(hpdSmartID);
+        const Rich::DAQ::Level0ID l0ID             = m_RichSys->level0ID(hpdSmartID);
+        const Rich::DAQ::Level1HardwareID l1HardID = m_RichSys->level1HardwareID(l0ID);
+        const Rich::DAQ::Level1LogicalID  l1LogID  = m_RichSys->level1LogicalID(l1HardID);
+        const Rich::DAQ::Level1Input l1Input       = m_RichSys->level1InputNum(hpdSmartID);
+
+        // HPD occ data from histogram
+        const double hpdOcc    ( hist->GetBinContent(bin) );
+        const double hpdOccErr ( hist->GetBinError(bin)   );
+
+        // write data to file
+        file << hpdCopyN.data() << " "
+             << hpdHardID.data() << " "
+             << l0ID.data() << " "
+             << l1HardID.data() << " "
+             << l1LogID.data() << " "
+             << l1Input.data() << " "
+             << l1Input.ingressID().data() << " "
+             << hpdOcc << " " << hpdOccErr
+             << std::endl;
+
+      }
+      catch ( const GaudiException & excpt )
+      {
+        Error( excpt.message() ).ignore();
+      }
+
+    }
+
+    // close the file
+    file.close();
+
+  } // hist OK
+
 }
 
 //=============================================================================

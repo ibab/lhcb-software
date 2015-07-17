@@ -79,6 +79,9 @@ namespace Rich
       /// Create an empty map of all active HPDs and data size
       void initHPDMap( HPDWordMap & hpdMap );
 
+      /// Write results to a text file
+      void writeToTextFile() const;
+
     private:
 
       /// Raw Buffer Decoding tool
