@@ -7,8 +7,9 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
-!
 
+! 2015-07-18 - Sascha Stahl
+ - CharmHad: Fixed bugs in Stages.py connected to PromptSpectroscopyFilter.
 
 ! 2015-07-17 - Jessica Prisciandaro
  - Fixed bug in DiMuonSoftLine. Removed cut on TTHits 
