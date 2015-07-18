@@ -47,8 +47,12 @@ class CharmHadD2HHHKsLines() :
             'BPVIPCHI2_MAX'         :  20.0,
             'Mass_M_MIN'            :  1795.0 * MeV,
             'Mass_M_MAX'            :  1935.0 * MeV,
-            'TisTosSpec'            :  "Hlt1.*Track.*Decision%TOS"
-        }
+            'TisTosSpec'            :  "Hlt1.*Track.*Decision%TOS",
+            'AMOM_MIN'                 :  25000 * MeV,
+            'DPT_MIN'                  :  2000 * MeV,
+            'DMOM_MIN'                 :  30000 * MeV,
+            'BPVVDCHI2_MIN'            :  25,
+    }
         cutsForDsp2HHHKs = copy.deepcopy(cutsForDp2HHHKs)
         cutsForDsp2HHHKs.update({
             'Mass_M_MIN'            : 1895.0 * MeV,
@@ -62,7 +66,7 @@ class CharmHadD2HHHKsLines() :
                 'AM_4'                     : (139.5) * MeV,
                 'AM_MIN'                   :  2186 * MeV,
                 'AM_MAX'                   :  2586 * MeV,
-                'ASUMPT_MIN'               :  2000.0 * MeV,
+                'ASUMPT_MIN'               :  1800.0 * MeV,
                 'ADOCA_MAX'                :  100.0 * mm,
                 'ACHI2DOCA_MAX'            :  10.0,
                 'VCHI2PDOF_MAX'            :  12.0,
@@ -70,7 +74,11 @@ class CharmHadD2HHHKsLines() :
                 'BPVLTIME_MIN'             :  0.1*picosecond,
                 'Mass_M_MIN'               :  2206 * MeV,
                 'Mass_M_MAX'               :  2348 * MeV,
-                'TisTosSpec'               :  "Hlt1.*Track.*Decision%TOS"
+                'TisTosSpec'               :  "Hlt1.*Track.*Decision%TOS",
+                'AMOM_MIN'                 :  25000 * MeV,
+                'DPT_MIN'                  :  2000 * MeV,
+                'DMOM_MIN'                 :  30000 * MeV,
+                'BPVVDCHI2_MIN'            :  25,
                 }
         cutsForLcpToLambda0KmPipPip = {
                 'Trk_ALL_PT_MIN'           :  250 * MeV,
@@ -87,7 +95,11 @@ class CharmHadD2HHHKsLines() :
                 'BPVLTIME_MIN'             :  0.1*picosecond,
                 'Mass_M_MIN'               :  2206 * MeV,
                 'Mass_M_MAX'               :  2348 * MeV,
-                'TisTosSpec'               :  "Hlt1.*Track.*Decision%TOS"
+                'TisTosSpec'               :  "Hlt1.*Track.*Decision%TOS",
+                'AMOM_MIN'                 :  25000 * MeV,
+                'DPT_MIN'                  :  2000 * MeV,
+                'DMOM_MIN'                 :  30000 * MeV,
+                'BPVVDCHI2_MIN'            :  25,
                 }
 
         cuts = {   'Dp2HHHKs'  : cutsForDp2HHHKs
