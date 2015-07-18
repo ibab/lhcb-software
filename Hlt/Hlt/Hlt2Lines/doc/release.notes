@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-07-18 - Mike Sokoloff
+  - CharmHad: added knobs to DV4BCombiner class and added relevant dictionary entries
+  - in D2HHHKsLines.py, D02HHHHLines.py, XSecLines.py and PID/Lines.py
+ 
 ! 2015-07-18 - Sascha Stahl
  - CharmHad: Fixed bugs in Stages.py connected to PromptSpectroscopyFilter.
 
