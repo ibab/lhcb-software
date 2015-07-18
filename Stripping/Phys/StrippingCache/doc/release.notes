@@ -10,6 +10,10 @@
 !                by $Author: marcocle $
 ! -----------------------------------------------------------------------------
 
+! 2015-07-18 - Stefano Perazzini
+ - Changed the cmt/requirements and CMakeList.txt to add dependency on
+   StrippingArchive
+
 ! 2015-07-17 - Stefano Perazzini
  - Introduced options to create caches for S21 and S20.
  - Added package to STRIPPING under Phys/StrippingCache.

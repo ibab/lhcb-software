@@ -15,9 +15,11 @@ version           v1r0
 branches          cmt doc src work scripts 
 
 # =============== dependencies ================================================
-use               LoKiArrayFunctors  v* Phys 
-use               LoKiHlt            v* Phys 
- 
+use               LoKiArrayFunctors   v* Phys 
+use               LoKiHlt             v* Phys 
+
+use               StrippingArchive    v* Phys 
+use               StrippingSelections v* Phys 
 # =============== constituents ================================================
 library           StrippingCache ../src/*.cpp 
 

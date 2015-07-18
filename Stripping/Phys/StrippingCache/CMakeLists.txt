@@ -4,7 +4,9 @@
 gaudi_subdir(StrippingCache v1r0)
 
 gaudi_depends_on_subdirs(Phys/LoKiArrayFunctors
-                         Phys/LoKiHlt)
+                         Phys/LoKiHlt
+                         Phys/StrippingSelections
+                         Phys/StrippingArchive)
 
 # Build the cache
 include(LoKiFunctorsCache)
