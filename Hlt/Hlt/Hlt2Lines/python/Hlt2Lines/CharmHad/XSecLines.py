@@ -41,6 +41,10 @@ class CharmHadXSecLines() :
                                  'BPVLTIME_MIN'             :  0.1*picosecond,
                                  'Mass_M_MIN'               :  1784.0 * MeV,
                                  'Mass_M_MAX'               :  1944.0 * MeV,
+                                 'AMOM_MIN'                 :  0 * MeV,
+                                 'DPT_MIN'                  :  0 * MeV,
+                                 'DMOM_MIN'                 :  0 * MeV,
+                                 'BPVVDCHI2_MIN'            :  9,
                                 },
                  'Dpm2HHH_XSec' : {
                                  'TisTosSpec'               : "Hlt1TrackAllL0Decision%TOS",
