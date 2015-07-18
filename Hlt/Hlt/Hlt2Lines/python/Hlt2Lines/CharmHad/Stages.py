@@ -780,6 +780,9 @@ class DV4BCombiner(Hlt2Combiner):
         'BPVDIRA_MIN'   : Lower limit on DIRA wrt bestPV in MotherCut
         'BPVLTIME_MIN'  : Lower limit on Lifetime wrt bestPV in MotherCut
         'TisTosSpec'    : Configuration string of the Hlt1 TISTOS filter.
+        'AMOM_MIN'      : combination minimum  momentum
+        'DPT_MIN'       : mother minimum pT
+        'DMOM_MIN'      : mother minimum momentum
     """
     def __init__(self, name, decay,inputs, shared = False, nickname = None):
         dc =  {}
@@ -800,10 +803,14 @@ class DV4BCombiner(Hlt2Combiner):
                "&( ACHI2DOCA(3,4) < %(ACHI2DOCA_MAX)s ) " +
                "&( ADOCA(1,4) < %(ADOCA_MAX)s ) " +
                "&( ADOCA(2,4) < %(ADOCA_MAX)s ) " +
-               "&( ADOCA(3,4) < %(ADOCA_MAX)s ) " )
+               "&( ADOCA(3,4) < %(ADOCA_MAX)s ) " +
+               "&( AP > %(AMOM_MIN)s )"    )
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
                  " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
-                 " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
+                 " & (BPVLTIME() > %(BPVLTIME_MIN)s )" +
+                 " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
+                 " & (PT > %(DPT_MIN)s )" +
+                 " & (P  > %(DMOM_MIN)s )" )
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs, shared = shared,
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
@@ -823,7 +830,7 @@ LcpToLambda0KmKpPip = DV4BCombiner('CharmHadLcpToLamKmKpPip'
         , inputs =[CharmHadSharedSecondaryLambdaLL,CharmHadSharedSecondaryLambdaDD,
                    SharedDetachedLcChild_K, SharedDetachedLcChild_pi]
         , nickname = 'LcpToLamKmKpPip'  ## def in D2HHHKsLines.py
-        , shared = True )
+        , shared = True)
 
 LcpToLambda0KmPipPip = DV4BCombiner('CharmHadLcpToLamKmPipPip'
         , decay = "[Lambda_c+ -> Lambda0 K- pi+ pi+]cc"
