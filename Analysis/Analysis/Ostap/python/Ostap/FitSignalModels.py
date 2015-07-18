@@ -41,6 +41,7 @@ Empricial PDFs to describe narrow peaks
   - Student-T
   - bifurcated Student-T
   - SinhAsinh_pdf   
+  - JohnsonSU_pdf   
   
 PDF to describe ``wide'' peaks
 
@@ -76,10 +77,11 @@ __all__ = (
     'GenGaussV1_pdf'         , ## generalized normal v1  
     'GenGaussV2_pdf'         , ## generalized normal v2 
     'SkewGauss_pdf'          , ## skewed gaussian
-    'Bukin_pdf'              , ## generic Bukin PDF: skewed gaussian with exponential tails     
+    'Bukin_pdf'              , ## generic Bukin PDF: skewed gaussian with exponential tails
     'StudentT_pdf'           , ## Student-T function 
     'BifurcatedStudentT_pdf' , ## bifurcated Student-T function
     'SinhAsinh_pdf'          , ## "Sinh-arcsinh distributions". Biometrika 96 (4): 761
+    'JohnsonSU_pdf'          , ## JonhsonSU-distribution 
     #
     ## pdfs for "wide" peaks, to be used with care - phase space corrections are large!
     # 
@@ -146,7 +148,8 @@ models.append ( Gauss_pdf )
 #  @see Analysis::Models::CrystalBall
 #  @see Gaudi::Math::CrystalBall
 #  @see http://en.wikipedia.org/wiki/Crystal_Ball_function
-#  - T. Skwarnicki, A study of the radiative CASCADE transitions between the Upsilon-Prime and Upsilon resonances,
+#  - T. Skwarnicki, A study of the radiative CASCADE transitions between
+#                   the Upsilon-Prime and Upsilon resonances,
 #                   Ph.D Thesis, DESY F31-86-02(1986), Appendix E.
 #                   @see http://inspirehep.net/record/230779/files/f31-86-02.pdf
 #  - J. E. Gaiser,  Charmonium Spectroscopy from Radiative Decays of the J/Psi and Psi-Prime,
@@ -164,11 +167,17 @@ class CrystalBall_pdf(MASS) :
     Crystal Ball function
     http://en.wikipedia.org/wiki/Crystal_Ball_function
     
-    - T. Skwarnicki, ``A study of the radiative cascade transitions between the Upsilon-Prime and Upsilon resonances'', Ph.D Thesis, DESY F31-86-02(1986), Appendix E.
+    - T. Skwarnicki,
+    ``A study of the radiative cascade transitions between the Upsilon-Prime
+    and Upsilon resonances'', Ph.D Thesis, DESY F31-86-02(1986), Appendix E.
     http://inspirehep.net/record/230779/files/f31-86-02.pdf
-    - J. E. Gaiser, ``Charmonium Spectroscopy from Radiative Decays of the J/Psi and Psi-Prime'', Ph.D. Thesis, SLAC-R-255 (1982), Appendix F, p 178
+    - J. E. Gaiser,
+    ``Charmonium Spectroscopy from Radiative Decays of the J/Psi and Psi-Prime'',
+    Ph.D. Thesis, SLAC-R-255 (1982), Appendix F, p 178
     http://www.slac.stanford.edu/cgi-wrap/getdoc/slac-r-255.pdf
-    - M. J. Oreglia, ``A Study of the Reactions psi prime --> gamma gamma psi'', Ph.D. Thesis, SLAC-R-236 (1980), Appendix D.
+    - M. J. Oreglia,
+    ``A Study of the Reactions psi prime --> gamma gamma psi'',
+    Ph.D. Thesis, SLAC-R-236 (1980), Appendix D.
     http://www.slac.stanford.edu/pubs/slacreports/slac-r-236.html
     
     Note:
@@ -499,8 +508,8 @@ models.append ( Apolonios_pdf )
 #  A convinient reparameterization is applied to keep reduce 
 #  the correlations between "sigma"s and "beta" 
 #  \f[ f(x;\mu,\sigma_l,\sigma_r,\beta) \propto 
-#         \mathrm{e}^{\left|\beta\right|( \left|\beta\right| - \sqrt{ \beta^2+\left(\delta x\right)^2}} 
-#  \f] 
+#         \mathrm{e}^{\left|\beta\right|( \left|\beta\right| -
+#         \sqrt{ \beta^2+\left(\delta x\right)^2}} \f] 
 #   where 
 #  \f[ \delta x  = \left\{ \begin{array}{ccc}
 #          \frac{x-\mu}{\sigma_l} & \text{for} & x \le \mu \\
@@ -662,7 +671,8 @@ models.append ( BifurcatedGauss_pdf )
 #  It includes all normal and Laplace distributions, and as limiting cases it includes all
 #  continuous uniform distributions on bounded intervals of the real line.
 #
-#  This family includes the normal distribution when beta=2 (with mean mu and variance alpha^2/2)
+#  This family includes the normal distribution when beta=2
+#  (with mean mu and variance alpha^2/2)
 #  and it includes the Laplace distribution when beta=1
 #  As beta->inf, the density converges pointwise to a uniform density on (mu-alpha,mu+alpha)
 # 
@@ -692,7 +702,8 @@ class GenGaussV1_pdf(MASS) :
     It includes all normal and Laplace distributions, and as limiting cases it includes all
     continuous uniform distributions on bounded intervals of the real line.
 
-    This family includes the normal distribution when beta=2 (with mean mu and variance alpha^2/2)
+    This family includes the normal distribution when beta=2
+    (with mean mu and variance alpha^2/2)
     and it includes the Laplace distribution when beta=1
     As beta->inf, the density converges pointwise to a uniform density on (mu-alpha,mu+alpha)
     
@@ -769,8 +780,9 @@ class GenGaussV2_pdf(MASS) :
     This is a family of continuous probability distributions in which the shape
     parameter can be used to introduce skew.
     When the shape parameter is zero, the normal distribution results.
-    Positive values of the shape parameter yield left-skewed distributions bounded to the right,
-    and negative values of the shape parameter yield right-skewed distributions bounded to the left.
+    Positive values of the shape parameter yield left-skewed distributions
+    bounded to the right, and negative values of the shape parameter yield
+    right-skewed distributions bounded to the left.
 
     Parameters:
     - mu      : location 
@@ -797,20 +809,20 @@ class GenGaussV2_pdf(MASS) :
         ## rename it!
         #
         self.alpha = self.sigma        
-        sname  = self.alpha.GetName  ()
-        stitle = self.alpha.GetTitle ()
-        gname  = sname .replace ( 'sigma' , 'alpha' )
-        gtitle = stitle.replace ( 'sigma' , 'alpha' )
+        sname      = self.alpha.GetName  ()
+        stitle     = self.alpha.GetTitle ()
+        gname      = sname .replace ( 'sigma' , 'alpha' )
+        gtitle     = stitle.replace ( 'sigma' , 'alpha' )
         self.alpha.SetName  ( gname  ) 
         self.alpha.SetTitle ( gtitle )
         
-        self.xi    = self.mean 
-        # sname  = self.xi.GetName  ()
-        # stitle = self.xi.GetTitle ()
-        # gname  = sname .replace ( 'mean' , 'xi' )
-        # gtitle = stitle.replace ( 'mean' , 'xi' )
-        # self.xi.SetName     ( gname  ) 
-        # self.xi.SetTitle    ( gtitle )
+        self.xi   = self.mean 
+        ## sname     = self.xi.GetName  ()
+        ## stitle    = self.xi.GetTitle ()
+        ## gname     = sname .replace   ( 'mean' , 'xi' )
+        ## gtitle    = stitle.replace   ( 'mean' , 'xi' )
+        ## self.xi.SetName              ( gname  ) 
+        ## self.xi.SetTitle             ( gtitle )
         
         self.kappa = makeVar ( kappa ,
                                'kappa_%s'        % name  ,
@@ -872,7 +884,7 @@ class SkewGauss_pdf(MASS) :
         gtitle = stitle.replace ( 'sigma' , 'omega' )
         self.omega.SetName  ( gname  ) 
         self.omega.SetTitle ( gtitle )
-        
+
         self.alpha = makeVar ( alpha                      ,
                                'alpha_%s'          % name ,
                                '#alpha_{Skew}(%s)' % name , alpha , 
@@ -1136,6 +1148,7 @@ class BifurcatedStudentT_pdf(MASS) :
             self.nR     ) 
         
 models.append ( BifurcatedStudentT_pdf )      
+
 # =============================================================================
 ## @class SinhAsinh_pdf
 #  
@@ -1159,7 +1172,8 @@ models.append ( BifurcatedStudentT_pdf )
 class SinhAsinh_pdf(MASS) :
     """
     SinhAsing-function: 
-    see Jones, M. C.; Pewsey, A. (2009). ``Sinh-arcsinh distributions''. Biometrika 96 (4): 761. 
+    see Jones, M. C.; Pewsey, A. (2009).
+    ``Sinh-arcsinh distributions''. Biometrika 96 (4): 761. 
     doi:10.1093/biomet/asp053
     http://oro.open.ac.uk/22510
     
@@ -1212,6 +1226,133 @@ class SinhAsinh_pdf(MASS) :
             self.delta     ) 
 
 models.append ( SinhAsinh_pdf )      
+
+
+# =============================================================================
+## @class JohnsonSU_pdf
+#
+#  Johnson, N. L. (1949) 
+#  "Systems of frequency curves generated by methods of translation"
+#  Biometrika 36: 149–176 JSTOR 2332539
+#  @see https://en.wikipedia.org/wiki/Johnson_SU_distribution
+#
+#  When variable \f$x\f$ follows Johnson-SU distribution, 
+#  the variable 
+#  \f$ z = \gamma + \delta \sinh^{-1}\frac{ x - \xi}{\lambda} \f$
+#  follows normal distribtion with mean 0 and sigma 1.
+#
+#  Note:
+#  Symmetric case of JonhsonSU distribution is 
+#  recovere by \f$\delta\rightarrow0\f$ for 
+#  "sinh-asinh" distribution, see 
+#  Jones, M. C.; Pewsey, A. (2009). 
+#  "Sinh-arcsinh distributions". Biometrika 96 (4): 761. 
+#  doi:10.1093/biomet/asp053
+#  http://oro.open.ac.uk/22510
+#  
+#  @see Gaudi::Math::JohnsonSU
+#  @see Analysis::Models::JohnsonSU
+#
+#   Location & scale  parameters are the usual representation of the family of 
+#   distributions:
+#    - \f$\epsilon\f$ parameter control the skewness 
+#    - \f$\delta\f$   parameter control the kurtosis 
+#   Normal distribution reappears as \f$\epsilon=0\f$ and \f$\delta=1\f$ 
+#  The heavy tails correspond to \f$\delta<1\f$, 
+#  light tails correpond to \f$\delta>1\f$
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-019
+class JohnsonSU_pdf(MASS) :
+    """
+    Johnson, N. L. (1949) 
+    Systems of frequency curves generated by methods of translation
+    Biometrika 36: 149–176 JSTOR 2332539
+    
+    https://en.wikipedia.org/wiki/Johnson_SU_distribution
+    
+    When variable x follows Johnson-SU distribution, 
+    the variable  z = gamma +  delta  sinh^{-1} ( x - xi)/ lambda 
+    follows normal distribtion with mean 0 and sigma 1.
+    
+    Note:
+    Symmetric case of JonhsonSU distribution is 
+    recovered by delta -> 0  for 
+    'sinh-asinh' distribution, see 
+    Jones, M. C.; Pewsey, A. (2009). 
+    'Sinh-arcsinh distributions'. Biometrika 96 (4): 761. 
+    doi:10.1093/biomet/asp053
+    http://oro.open.ac.uk/22510
+    
+    """
+    def __init__ ( self             ,
+                   name             ,
+                   mn        = None ,
+                   mx        = None , 
+                   mass      = None ,
+                   xi        = None ,   ## related to mean 
+                   lam       = None ,   ## related to sigma 
+                   delta     = 1    ,
+                   gamma     = 0    ) :  
+
+        #
+        ## initialize the base
+        #
+        
+        MASS.__init__  ( self    , name   ,
+                         mn      , mx     , mass    ,
+                         xi      , lam    ) ## mean    , sigma  )
+
+        self.xi = self.mean
+        if None == xi : ## newly created 
+            oname   = self.xi.GetName ()
+            otitle  = self.xi.GetTitle()
+            nname   = oname .replace ( 'mean' , 'xi' )
+            ntitle  = otitle.replace ( 'mean' , 'xi' )
+            self.xi.SetName  ( nname  )
+            self.xi.SetTitle ( ntitle )
+            
+        self.lam = self.sigma
+        if None == lam : ## newly created 
+            oname    = self.lam.GetName ()
+            otitle   = self.lam.GetTitle()
+            nname    = oname .replace ( 'sigma' , 'lambda' )
+            ntitle   = otitle.replace ( 'sigma' , 'lambda' )
+            self.lam.SetName  ( nname  )
+            self.lam.SetTitle ( ntitle )
+            self.lam.setMax ( self.lam.getMax() * 10 ) ## adjust it! 
+
+
+        ## provdie backup name 
+        self.lambda_ = self.lam
+        
+        del self.mean
+        del self.sigma
+        
+        self.delta   = makeVar ( delta                 ,
+                                 'delta_%s'     % name ,
+                                 '#delta(%s)'   % name , delta ,
+                                 1 , 1.e-6 , 1000   )
+        
+        self.gamma   = makeVar ( gamma               ,
+                                 'gamma_%s'   % name ,
+                                 '#gamma(%s)' % name , gamma ,
+                                 0 , -1000 , +1000 )
+        
+        
+        #
+        ## finally build pdf
+        # 
+        self.pdf = cpp.Analysis.Models.JohnsonSU (
+            "jSU_"          + name ,
+            "JohnsonSU(%s)" % name ,
+            self.mass      ,
+            self.xi        ,
+            self.lam       ,
+            self.delta     ,
+            self.gamma     ) 
+
+models.append ( JohnsonSU_pdf )      
 # =============================================================================
 ## @class Voigt_pdf
 #  Voigt-pdf distribution
@@ -1445,7 +1586,8 @@ models.append ( BW23L_pdf )
 class Flatte_pdf(MASS) :
     """
     Flatte function:
-    S.M.Flatte, ``Coupled-channel analysis of the (pi eta) and (KbarK) systems near (KbarK) threshold'' 
+    S.M.Flatte, ``Coupled-channel analysis of the (pi eta)
+    and (KbarK) systems near (KbarK) threshold'' 
     Phys. Lett. B63, 224 (1976
     http://www.sciencedirect.com/science/article/pii/0370269376906547
 

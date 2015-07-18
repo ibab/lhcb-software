@@ -504,6 +504,8 @@ model_shash = Models.Fit1D (
                                    mean = signal_gauss.mean ) ,
     background = model_gauss.background  )
 
+signal = model_shash.signal
+
 # m_shash.mu      .setVal (  0.79 )
 # m_shash.sigma   .setVal (  0.88 ) 
 # m_shash.epsilon .setVal ( -0.76 ) 
@@ -521,10 +523,40 @@ if 0 != result.status() or 3 != result.covQual() :
     logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
     print result
 else :
-    print  "\tSinhAsinh:   mu   = %s " % result( model_shash. signal.mu      )[0]   
-    print  "\tSinhAsinh:   sigma= %s " % result( model_shash. signal.sigma   )[0]   
-    print  "\tSinhAsinh:   eps  = %s " % result( model_shash. signal.epsilon )[0]   
-    print  "\tSinhAsinh:   delta= %s " % result( model_shash. signal.delta   )[0]   
+    print  "\tSinhAsinh:   mu   = %s " % result( signal.mu      )[0]   
+    print  "\tSinhAsinh:   sigma= %s " % result( signal.sigma   )[0]   
+    print  "\tSinhAsinh:   eps  = %s " % result( signal.epsilon )[0]   
+    print  "\tSinhAsinh:   delta= %s " % result( signal.delta   )[0]   
+
+
+# =============================================================================
+logger.info("Test  JohnsonSU-Distribution")
+# =============================================================================
+model_jsu = Models.Fit1D (
+    signal = Models.JohnsonSU_pdf( 'JSU'                    ,
+                                   mass = mass              , 
+                                   xi   = signal_gauss.mean ) ,
+    background = model_gauss.background  )
+
+signal = model_jsu.signal
+
+
+with rooSilent() : 
+    result,f  = model_jsu.fitTo ( dataset0 )  
+    result,f  = model_jsu.fitTo ( dataset0 )  
+    model_jsu.signal.lam  .release()
+    model_jsu.signal.delta.release()
+    result,f  = model_jsu.fitTo ( dataset0 )  
+    
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % (
+        result.status() , result.covQual()  ) )
+    print result
+else :
+    print  "\tJohnsonSU:   xi   = %s " % result ( signal.xi      )[0]
+    print  "\tJohnsonSU:   lam  = %s " % result ( signal.lam     )[0]
+    print  "\tJohnsonSU:   delta= %s " % result ( signal.delta   )[0]
+    print  "\tJohnsonSU:   gamma= %s " % result ( signal.gamma   )[0]
 
 # =============================================================================
 ## Voigt
@@ -537,8 +569,10 @@ model_vgt = Models.Fit1D (
                                 sigma = signal_gauss.sigma  ) , 
     background = model_gauss.background  )
 
-model_vgt.signal.sigma.fix ( m.error() )
-model_vgt.signal.gamma.fix ( 0.010     )
+signal = model_vgt.signal
+signal.sigma.fix ( m.error() )
+signal.gamma.fix ( 0.010     )
+
 with rooSilent() : 
     result, frame = model_vgt. fitTo ( dataset0 )
     model_vgt.signal.gamma.release() 
@@ -550,9 +584,10 @@ if 0 != result.status() or 3 != result.covQual() :
     logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual () ) )
     print result 
 else :
-    print 'Signal & Background are: ', result ( 'S'           )[0] , result ( 'B'       )[0]
-    print 'Mean   & Gamma      are: ', result ( 'mean_Gauss'  )[0] , result ( 'gamma_V' )[0]
-    print 'Sigma               is : ', result ( model_vgt.signal.sigma.GetName() )[0] 
+    print  result 
+    print 'Signal & Background are: ', result ( 'S'           )[0] , result ( 'B'           )[0]
+    print 'Mean   & Gamma      are: ', result ( signal.mean   )[0] , result ( signal.gamma  )[0]
+    print 'Sigma               is : ', result ( signal.sigma  )[0] 
     
 
 # =============================================================================

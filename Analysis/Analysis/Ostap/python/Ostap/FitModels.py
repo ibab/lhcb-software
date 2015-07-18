@@ -41,6 +41,7 @@ Empricial PDFs to describe narrow peaks :
   - Student-T
   - bifurcated Student-T
   - sinh-asinh shape
+  - Johnson-SU shape
 
   
 PDF to describe ``wide'' peaks : 
@@ -85,6 +86,7 @@ __all__ = (
     'StudentT_pdf'           , ## Student-T function 
     'BifurcatedStudentT_pdf' , ## bifurcated Student-T function 
     'SinhAsinh_pdf'          , ## "Sinh-arcsinh distributions". Biometrika 96 (4): 761
+    'JohnsonSU_pdf'          , ## Johnson-SU distributon
     #
     ## specializations:
     # 
