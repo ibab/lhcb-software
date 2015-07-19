@@ -10,6 +10,9 @@
 !                by $Author: marcocle $
 ! -----------------------------------------------------------------------------
 
+! 2015-07-19 - Stefano Perazzini
+ - Update to cmt/requirements and CMakeList.txt
+
 ! 2015-07-18 - Stefano Perazzini
  - Changed the cmt/requirements and CMakeList.txt to add dependency on
    StrippingArchive

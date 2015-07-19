@@ -18,6 +18,7 @@ branches          cmt doc src work scripts
 use               LoKiArrayFunctors   v* Phys 
 use               LoKiHlt             v* Phys 
 
+use               StrippingAlgs       v* Phys 
 use               StrippingArchive    v* Phys 
 use               StrippingSelections v* Phys 
 # =============== constituents ================================================

@@ -5,6 +5,7 @@ gaudi_subdir(StrippingCache v1r0)
 
 gaudi_depends_on_subdirs(Phys/LoKiArrayFunctors
                          Phys/LoKiHlt
+                         Phys/StrippingAlgs
                          Phys/StrippingSelections
                          Phys/StrippingArchive)
 
