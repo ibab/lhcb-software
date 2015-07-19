@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-07-19 - Heinrich Schindler
+ - Add ADC distributions for only NoBeam bunch-crossings.
+
 ! 2015-07-16 - Heinrich Schindler
  - Fix F-side channel mapping in online monitor.
 

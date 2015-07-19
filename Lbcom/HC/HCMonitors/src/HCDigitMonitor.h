@@ -42,11 +42,13 @@ class HCDigitMonitor : public HCMonitorBase {
   std::vector<AIDA::IHistogram1D*> m_hAdcQuadrant;
   std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantEven;
   std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantOdd;
+  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantNoBeam;
 
   /// ADC sum distributions
   std::vector<AIDA::IHistogram1D*> m_hAdcSum;
   std::vector<AIDA::IHistogram1D*> m_hAdcSumEven;
   std::vector<AIDA::IHistogram1D*> m_hAdcSumOdd;
+  std::vector<AIDA::IHistogram1D*> m_hAdcSumNoBeam;
 
   /// Mean ADC vs. channel number
   AIDA::IProfile1D* m_hAdcVsChannelB;
@@ -60,6 +62,7 @@ class HCDigitMonitor : public HCMonitorBase {
   std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrant;
   std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantEven;
   std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantOdd;
+  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantNoBeam;
 
 };
 
