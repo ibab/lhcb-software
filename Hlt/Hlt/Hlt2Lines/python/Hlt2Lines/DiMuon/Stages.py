@@ -45,7 +45,7 @@ class SoftDiMuonFilter(Hlt2ParticleFilter):
                 " & (MINTREE('mu-' == ABSID, MIPCHI2DV(PRIMARY)) > %(IPChi2Min)s)" +
                 " & (MAXTREE('mu-' == ABSID, MIPCHI2DV(PRIMARY)) < %(IPChi2Max)s)" +
                 " & ( VFASPF (sqrt(VX*VX+VY*VY)) > %(Rho)s) " +
-                " & ( VFASPF ( VZ ) > %(SVZ)s) " +
+                " & ( VFASPF ( VZ ) < %(SVZ)s) " +
                 " & ((MIPDV(PRIMARY)/BPVVDZ)< %(MaxIpDistRatio)s)"+
                 " & (MM < %(MaxMass)s)" +
                 " & (VFASPF(VCHI2PDOF)<%(VertexChi2)s )" +
