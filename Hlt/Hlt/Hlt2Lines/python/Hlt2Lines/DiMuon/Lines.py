@@ -6,7 +6,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                  'Prescale' : {},
 
                  'Common' :        {'TrChi2'     :   10,
-                                    'TrChi2Tight':    4},
+                                    'TrChi2Tight':    5},
 
                  'DiMuon' :        {'MinMass'    :  2900 * MeV,
                                     'Pt'         :     0 * MeV,
@@ -67,6 +67,19 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                  'DetachedJPsi' :  {'DLS'        :     3},
 
                  'DetachedPsi2S' : {'DLS'        :     3},
+
+                 # Turbo lines
+                 'JPsiTurbo' :          {'MassWindow' :   120 * MeV,
+                                         'Pt'         :     0 * MeV,
+                                         'MuPt'       :     0 * MeV,
+                                         'VertexChi2' :    25},
+                 'Psi2STurbo' :         {'MassWindow' :   120 * MeV,
+                                         'Pt'         :  2000 * MeV,
+                                         'MuPt'       :     0 * MeV,
+                                         'VertexChi2' :    25},
+                 'BTurbo' :             {'MinMass'    :   4700 * MeV,
+                                         'VertexChi2' :    25},
+
                  }
 
     def stages(self, nickname = ""):
@@ -91,7 +104,12 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                         'Soft'          : [SoftDiMuonFilter('Soft')],
                         'DetachedHeavy' : [DetachedDiMuonHeavyFilter('DetachedHeavy')],
                         'DetachedJPsi'  : [DetachedJpsiFilter('DetachedJPsi')],
-                        'DetachedPsi2S' : [DetachedPsi2SFilter('DetachedPsi2S')]}
+                        'DetachedPsi2S' : [DetachedPsi2SFilter('DetachedPsi2S')],
+                        # Turbo lines 
+                        'JPsiTurbo'     : [JpsiFilter('JPsiTurbo')],
+                        'Psi2STurbo'    : [Psi2SFilter('Psi2STurbo')],
+                        'BTurbo'        : [BFilter('BTurbo')],
+                        }
         if nickname:
             return self._stages[nickname]
         else:
@@ -107,3 +125,8 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                      algos = algos, postscale = self.postscale)
             if nickname is 'JPsi':
                 HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonJPsiDecision":  50201 } )
+            if nickname is 'JPsiTurbo':
+                HltANNSvc().Hlt2SelectionID.update( { 'Hlt2DiMuonJPsiTurboDecision':  50212 } )
+
+
+

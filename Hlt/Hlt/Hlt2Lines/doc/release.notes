@@ -7,6 +7,10 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
+
+! 2015-07-19 - Francesco Dettori
+ - Moving the Turbo DiMuon lines to DiMuon/Lines.py
+
 ! 2015-07-19 - Jessica Prisciandaro
  -  DiMuonSoftLine: Cut on secondary vertex z position changed. DiMuonSoft/Stages.py modified 
 
