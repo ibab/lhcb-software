@@ -1,20 +1,19 @@
 # Based on Phys/StrippingSelections/python/StrippingSelections/StrippingCalib/StrippingPIDCalib.py
 from Inputs import Muons, NoPIDsMuons, Electrons, NoPIDsElectrons, L0Electrons, NoDLLCutL0Electrons, NoPIDsKaons, NoPIDsPions, KsLL, KsDD, NoPIDsDownPions
-from Inputs import NoPIDsProtons, NoPIDsDownProtons
+from Inputs import NoPIDsProtons, NoPIDsDownProtons, Protons, Kaons
 
 # For tag and probe we need to make sure that we use exactly one tag and one probe track...
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
 # Tag filter
 class TagFilter(Hlt2ParticleFilter):
-    def __init__(self, name, input, mode, nickname, muons):
+    def __init__(self, name, input, mode, nickname, extracut = ""):
         if mode == 1:
             charge_cut = "(Q<0)"
         else:
             charge_cut = "(Q>0)"
-        muon_cut = "(ISMUON)" if muons else "(PIDe > %(TagPIDe)s)"
         name += 'Tag'
 
-        cut = (charge_cut + " & " + muon_cut + 
+        cut = (charge_cut + extracut + 
                " & (TRCHI2DOF <%(TagTrChi2)s )" +
                " & (ISLONG)" +
                " & (P >%(TagP)s )" +
@@ -44,28 +43,44 @@ class LLCombiner(Hlt2Combiner):
     def __init__(self, name, taginput, probeinput, mode, nickname, dependencies = [ ]):
         if nickname == "JPsiMuMu":
           decay = "J/psi(1S) -> mu+ mu-"
-          muons = True
-          l = "mu"
+          extra_cut = " & (ISMUON)"
+          lp = "mu+"
+          lm = "mu-"
         elif nickname == "JPsiEE":
           decay = "J/psi(1S) -> e+ e-"
-          muons = False
-          l = "e"
-        else:
+          extra_cut = " & (PIDe > %(TagPIDe)s)"
+          lp = "e+"
+          lm = "e-"
+        elif nickname == "JPsiPP":
+          decay = "J/psi(1S) -> p+ p~-"
+          extra_cut = " & (PIDp > %(TagPIDp)s)"
+          lp = "p+"
+          lm = "p~-"
+        elif nickname == "PhiMuMu":
           decay = "phi(1020) -> mu+ mu-"
-          muons = True
-          l = "mu"
+          extra_cut = " & (ISMUON)"
+          lp = "mu+"
+          lm = "mu-"
+        elif nickname == "PhiKK":
+          decay = "phi(1020) -> K+ K-"
+          extra_cut = " & (PIDK > %(TagPIDK)s)"
+          lp = "K+"
+          lm = "K-"
+        else:
+          print "Don't know how to handle: " + nickname
+
         name = "PID" + name + "Tagged"
        
         dc = {
-            l + "+" : "ALL",
-            l + "-" : "ALL"
+            lp : "ALL",
+            lm : "ALL"
             }
         cc = ("(in_range(%(LLCombAMLow)s, AM, %(LLCombAMHigh)s)) & (ACHI2DOCA(1,2) < %(LLCombMaxDocaChi2)s)")
         mc = ("(in_range(%(LLCombMLow)s, M, %(LLCombMHigh)s))")
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name,
             decay,
-            [ TagFilter(name, taginput, mode, nickname, muons), ProbeFilter(name, probeinput, mode, nickname) ],
+            [ TagFilter(name, taginput, mode, nickname, extra_cut), ProbeFilter(name, probeinput, mode, nickname) ],
             dependencies = [ PV3D('Hlt2') ] + dependencies,
             #tistos = 'LLTisTos',
             DaughtersCuts = dc,
@@ -86,6 +101,7 @@ class BCombiner(Hlt2Combiner):
           mc_mass = " & (in_range(%(LLhCombMLow)s, M, %(LLhCombMHigh)s))"
         mc = ("(VFASPF(VCHI2)<%(LLhVChi2)s) & (BPVVDCHI2 > %(LLhVDChi2)s)"
               + " & (BPVIPCHI2()<%(LLhMaxIPChi2)s)"
+              + " & (BPVDIRA > %(LLhMinBPVDIRA)s)"
               + mc_mass)
 
         dc = { }
@@ -97,7 +113,7 @@ class BCombiner(Hlt2Combiner):
         if nickname is None:
           nickname = name
         from HltTracking.HltPVs import PV3D
-        Hlt2Combiner.__init__(self, 'PID' + name,
+        Hlt2Combiner.__init__(self, 'PID' + name + 'BCombiner',
             decay,
             inputs,
             shared = True,
@@ -117,7 +133,8 @@ class DetachedLLFilter(Hlt2ParticleFilter):
         cut = ("(VFASPF(VCHI2)<%(DetLLVChi2)s)" +
                " & (PT > %(DetLLPt)s)" +
                " & (BPVVDCHI2 > %(DetLLVDChi2)s)" +
-               " & (MIPCHI2DV(PRIMARY) > %(DetLLMinIPChi2)s)")
+               " & (MIPCHI2DV(PRIMARY) > %(DetLLMinIPChi2)s)" +
+               " & (BPVDIRA > %(DetLLMinBPVDIRA)s)")
         from HltTracking.HltPVs import PV3D
         Hlt2ParticleFilter.__init__(self, 'PID' + name, cut, [ input ],
                                     #tistos = 'LLhTisTos',
@@ -146,41 +163,13 @@ class LambdaFilter(Hlt2ParticleFilter):
         ismuonstr = " & (CHILDCUT( ISMUONLOOSE , 1) )" if ismuon else ""
         cut = ("( ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > %(LambdaKsVeto)s ) & " +
                "(ADMASS('Lambda0') < %(LambdaMWindow)s ) & " +
-               "(CHILDCUT( ( P > %(LambdaProtonP)s ) & (PT > %(LambdaProtonPT)s), 1) )" +
+               "(CHILDCUT( ( P > %(LambdaProtonP)s ) & (PT > %(LambdaProtonPT)s), 1) ) & " +
+               "(MIPCHI2DV(PRIMARY) < %(LambdaIPChi2Max)s )" + 
                ismuonstr) # ASSUME proton is 1st child
         Hlt2ParticleFilter.__init__(self, 'PID' + name, cut, [ input ],
                                     shared = True,
                                     nickname = name,
                                     UseP2PVRelations = False)
-
-# Obsolete attempt to see if you could make Lambda0 fast enough by using
-# 'rare' kinds of proton (very high P, passing isMuon, ...) that
-# other cuts could be relaxed w.r.t. the shared L0
-class LambdaCombiner(Hlt2Combiner):
-    def __init__(self, name, inputs, ismuon = False, ll = True):
-        ismuonstr = "(ISMUON) & " if ismuon else ""
-        dispcutstr = "(BPVLTIME() > %(LambdaLLTau)s) & " if ll else "(BPVVDZ > %(LambdaDDBPVVDZ)s) & "
-        dc = {
-            "p+"  : ismuonstr + "(P > %(LambdaProtonP)s ) & ( TRCHI2DOF < %(LambdaProtonTrChi2)s ) & ( MIPCHI2DV(PRIMARY) > %(LambdaProtonMinIPChi2)s )",
-            "pi-" : "(P > %(LambdaPionP)s ) & ( TRCHI2DOF < %(LambdaPionTrChi2)s ) & ( MIPCHI2DV(PRIMARY) > %(LambdaPionMinIPChi2)s )"
-            }
-        cc = ("(ADAMASS('Lambda0') < %(LambdaAMWindow)s)")
-        mc = ("(ADMASS('Lambda0') < %(LambdaMWindow)s ) & " +
-              "(VFASPF(VCHI2PDOF) < %(LambdaVChi2)s) & " +
-              dispcutstr + 
-              "(BPVVDCHI2 > %(LambdaVDChi2)s ) & " + 
-              "( ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > %(LambdaKsVeto)s )")
-        from HltTracking.HltPVs import PV3D
-        Hlt2Combiner.__init__(self, 'PID' + name,
-                              "[Lambda0 -> p+ pi-]cc",
-                              inputs,
-                              shared = True,
-                              nickname = name,
-                              dependencies = [ PV3D('Hlt2') ],
-                              DaughtersCuts = dc,
-                              CombinationCut = cc,
-                              MotherCut = mc,
-                              Preambulo = [ ])
 
 class MassVetoFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs, vetoes = { }, windows = { }):
@@ -203,12 +192,47 @@ class PIDGhostInFilter(Hlt2ParticleFilter):
         Hlt2ParticleFilter.__init__(self, 'PID' + name + 'PIDGhostFilter', cut, inputs,
                                     shared = True, nickname = name, UseP2PVRelations = False)
 
+
+class PromptIPChi2Filter(Hlt2ParticleFilter):
+    def __init__(self, name, inputs):
+        cut = ("(MIPCHI2DV(PRIMARY) < %(D0_BPVIPCHI2_Max)s)")
+        Hlt2ParticleFilter.__init__(self, 'PID' + name + 'PromptIPChi2Filter', cut,
+                                    inputs, shared = True, nickname = name,
+                                    UseP2PVRelations = False)
+
 class PromptFilter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         cut = ("(BPVDIRA > %(BPVDIRA_MIN)s) & (BPVLTIME() > %(BPVLTIME_MIN)s )")
         Hlt2ParticleFilter.__init__(self, 'PID' + name + 'PromptFilter', cut, inputs,
                                     shared = True, nickname = name, UseP2PVRelations = False,
                                     tistos = 'PromptTisTosSpec')
+
+class UnbiasedPhi(Hlt2Combiner):
+    def __init__(self, name, inputs):
+        dc = {
+            'K+' : "(MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s) & "
+                 + "(PT > %(Trk_ALL_PT_MIN)s)"
+            }
+        cc = ("(ADAMASS('phi(1020)') < %(AMWindow)s) & "
+            + "(ACHI2DOCA(1,2) < %(MaxDocaChi2)s) & "
+            + "((APT1+APT2) > %(ASUMPT_MIN)s) & "
+            + "(AHASCHILD(MIPCHI2DV(PRIMARY) > %(Trk_1OF2_MIPCHI2DV_MIN)s)) & "
+            + "(AHASCHILD(PT > %(Trk_1OF2_PT_MIN)s))")
+        mc = ("(ADMASS('phi(1020)') < %(MWindow)s)")
+        
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, 'PID' + name,
+                              "phi(1020) -> K+ K-",
+                              inputs,
+                              shared = True,
+                              nickname = name,
+                              dependencies = [ PV3D('Hlt2') ],
+                              DaughtersCuts = dc,
+                              CombinationCut = cc,
+                              MotherCut = mc,
+                              Preambulo = [ ])
+
+UnbiasedPhiKK = UnbiasedPhi("PhiKKUnbiased", [ NoPIDsKaons ])
 
 from HltLine.HltDecodeRaw import DecodeL0CALO
 JPsiMuMuPosTagged = LLCombiner("JPsiMuMuPos",  Muons, NoPIDsMuons, 0, "JPsiMuMu")
@@ -219,17 +243,19 @@ JPsiEEL0PosTagged = LLCombiner("JPsiEEL0Pos",  L0Electrons, NoDLLCutL0Electrons,
 JPsiEEL0NegTagged = LLCombiner("JPsiEEL0Neg",  L0Electrons, NoDLLCutL0Electrons, 1, "JPsiEE", [DecodeL0CALO])
 PhiMuMuPosTagged  = LLCombiner("PhiMuMuPos",   Muons, NoPIDsMuons, 0, "PhiMuMu")
 PhiMuMuNegTagged  = LLCombiner("PhiMuMuNeg",   Muons, NoPIDsMuons, 1, "PhiMuMu")
-#from Hlt2Lines.CharmHad.Stages import SharedNoPIDDetachedChild_K as FilteredKaons
-#FilteredKaons     = BachelorFilter("SharedKaonsForPIDB2JPsiK", NoPIDsKaons)  # TODO perhaps use the generic shared NoPIDs particles instead?
-#FilteredPions     = BachelorFilter("SharedPionsForPIDDs2PhiPi", NoPIDsPions) # TODO use shared charm daughters?
-#FilteredDownPions = BachelorFilter("SharedDownPionsForPID", NoPIDsDownPions)
-FilteredProtons = NoPIDsProtons
-FilteredDownProtons = NoPIDsDownProtons
+
+#FilteredDownProtons = NoPIDsDownProtons
+
+from Hlt2Lines.CharmHad.Stages import DetachedInParticleFilter
+JPsiPPPosTagged   = LLCombiner("JPsiPPPos",    Protons, NoPIDsProtons, 0, "JPsiPP")
+JPsiPPNegTagged   = LLCombiner("JPsiPPNeg",    Protons, NoPIDsProtons, 1, "JPsiPP")
+PhiKKPosTagged    = LLCombiner("PhiKKPos",     Kaons, NoPIDsKaons, 0, "PhiKK")
+PhiKKNegTagged    = LLCombiner("PhiKKNeg",     Kaons, NoPIDsKaons, 1, "PhiKK")
 
 from Hlt2Lines.CharmHad.Lines import CharmHadLines
 from Hlt2Lines.CharmHad.Stages import DetachedHHHCombiner, SharedNoPIDDetachedChild_p, SharedDetachedLcChild_K, \
     SharedDetachedLcChild_pi, MassFilter, DV4BCombiner, SharedNoPIDDetachedChild_pi, SharedNoPIDDetachedChild_K, \
-    DetachedD02HHCombiner, DetachedInParticleFilter, SharedSoftTagChild_pi
+    DetachedD02HHCombiner, SharedSoftTagChild_pi
 from Hlt2Lines.Utilities.Hlt2Stage import Hlt2ExternalStage
 
 SharedNoPIDPions  = Hlt2ExternalStage(CharmHadLines(), SharedNoPIDDetachedChild_pi)
@@ -246,7 +272,6 @@ LcTightChild_pi = PIDGhostInFilter("LcTightChild_pi",
 LcTightChild_p  = PIDGhostInFilter("LcTightChild_p",
                     [ Hlt2ExternalStage(CharmHadLines(), SharedNoPIDDetachedChild_p) ])
 
-from Inputs import Muons
 BachelorKaons = DetachedInParticleFilter('PIDSharedBachelor_K', [ SharedNoPIDKaons ], 'PIDK' )
 BachelorPions = DetachedInParticleFilter('PIDSharedBachelor_pi', [ SharedNoPIDPions ], 'PIDK', True)
 BachelorMuons = DetachedInParticleFilter('PIDSharedBachelor_mu', [ Muons ], 'PIDmu')
@@ -274,14 +299,14 @@ Lc2KPPi = MassVetoFilter('Lc2KPPi', [Lc2KPPi_Loose], vetoes = {
 
 Lc2KPPi_Prompt = PromptFilter('Lc2KPPiPrompt', [Lc2KPPi])
 
-D02KPi = MassFilter('PIDD02KPi', inputs = [ 
+D02KPi = PromptIPChi2Filter('D02KPi', [MassFilter('PIDD02KPi', inputs = [ 
   DetachedD02HHCombiner('PIDD02KPi',
     decay = "[D0 -> K- pi+]cc",
     inputs = [ SharedNoPIDPions, SharedNoPIDKaons ],
     nickname = 'D02KPi',
     shared = True
     )
-  ], shared = True, nickname = 'D02KPi')
+  ], shared = True, nickname = 'D02KPi')])
 
 # Make the D0 -> K- pi+ pi- pi+ candidates without any PID
 # These will be used both for tagged and untagged lines

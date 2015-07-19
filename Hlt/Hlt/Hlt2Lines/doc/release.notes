@@ -8,6 +8,14 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-07-19 - Olli Lupton
+ - PID:
+  . Add phi->KK and J/psi->ppbar lines
+  . Rename SS/OS -> Pos/Neg in time line names
+  . Update defaults with cuts changed in EM TCK
+  . Update defaults based on EM samples.
+  . Add new cuts based on EM samples.
+
 ! 2015-07-19 - Francesco Dettori
  - Moving the Turbo DiMuon lines to DiMuon/Lines.py
 
