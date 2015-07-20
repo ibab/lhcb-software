@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v15r11 2015-07-20 =========================
 ! 2015-06-12 - Heinrich Schindler
  - Redefine bitfields of HCCellID.
 
