@@ -1,9 +1,9 @@
-
 !-----------------------------------------------------------------------------
 ! Package     : MuonID
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+!========================= MuonID v9r16 2015-07-20 =========================
 ! 2015-07-16 - Ricardo Vazquez Gomez
  - Adapt the algorithm to take several inputLocations and remove the insertion of the muonPID and muonTrack using the key of the mother track. This change is necessary to produce the same value of nShared online and offline, which will reduce the differences in ProbNN outputs. 
 
