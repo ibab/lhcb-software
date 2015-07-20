@@ -4,6 +4,7 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+!========================= RichHPDImageAnalysis v1r17 2015-07-20 =====================
 ! 2015-06-24 - jonesc
  - Make parameters object in HPD fitting base class protected, to allow
    direct use in derived classes.

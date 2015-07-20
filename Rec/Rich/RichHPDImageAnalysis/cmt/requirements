@@ -4,7 +4,7 @@
 #=====================================================================
 
 package           RichHPDImageAnalysis
-version           v1r16
+version           v1r17
 
 #=====================================================================
 branches          cmt doc src python RichHPDImageAnalysis dict
