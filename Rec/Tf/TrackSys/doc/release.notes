@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-07-20 - Michel De Cian
+ - Switch on new multiple scattering treatment for public tools like TrackExtrapolator, TrackInterpolator and TrackStateProvider
+
 ! 2015-07-14 - Michel De Cian
  - Add switch for fast Kalman fitting of Velo tracks for PV reconstruction. Default is on, old behaviour can be set via 'ExpertTracking'
 

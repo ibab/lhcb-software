@@ -81,6 +81,32 @@ def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
       from Configurables import TrackMasterExtrapolator, TrackInterpolator
       TrackMasterExtrapolator().MaterialLocator = 'SimplifiedMaterialLocator'
       TrackInterpolator().addTool( TrackMasterExtrapolator( MaterialLocator = 'SimplifiedMaterialLocator' ), name='Extrapolator')
+      
+
+   ### This configures public tools to use the new multiple scattering description without the log term
+   from Configurables import TrackMasterExtrapolator, DetailedMaterialLocator, StateThickMSCorrectionTool
+   me = TrackMasterExtrapolator()
+   me.addTool(DetailedMaterialLocator(), name="MaterialLocator")
+   me.MaterialLocator.addTool( StateThickMSCorrectionTool, name= "StateMSCorrectionTool")
+   me.MaterialLocator.StateMSCorrectionTool.UseRossiAndGreisen = True
+
+   from Configurables import TrackInterpolator
+   ti = TrackInterpolator()
+   ti.addTool( me )
+
+   from Configurables import TrackStateProvider
+   tsp = TrackStateProvider()
+   tsp.addTool( TrackInterpolator, name = "TrackInterpolator" )
+   tsp.TrackInterpolator.addTool( TrackMasterExtrapolator, name='TrackMasterExtrapolator')
+   tsp.TrackInterpolator.TrackMasterExtrapolator.addTool(DetailedMaterialLocator, name = "MaterialLocator" ) 
+   tsp.TrackInterpolator.TrackMasterExtrapolator.MaterialLocator.addTool( StateThickMSCorrectionTool, name= "StateMSCorrectionTool")
+   tsp.TrackInterpolator.TrackMasterExtrapolator.MaterialLocator.StateMSCorrectionTool.UseRossiAndGreisen = True
+   ###
+      
+
+
+
+
    
    ## Velo tracking
    ## Why is Velo not in the tracking sequence?
