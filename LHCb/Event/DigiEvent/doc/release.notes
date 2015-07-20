@@ -4,6 +4,7 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================= DigiEvent v4r4 2015-07-20 =========================
 ! 2015-06-12 - Heinrich Schindler
  - Add additional attributes to HCDigit.
 
