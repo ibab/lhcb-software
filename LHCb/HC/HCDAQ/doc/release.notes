@@ -4,6 +4,7 @@
 ! Purpose     : Decoding of Herschel raw banks
 !-----------------------------------------------------------------------------
 
+!========================= HCDAQ v1r4 2015-07-20 =========================
 ! 2015-06-14 - Heinrich Schindler
  - Add monitoring histograms.
 
