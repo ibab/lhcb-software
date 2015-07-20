@@ -4,9 +4,12 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2015-07-20 - Marco Clemencic
+ - Fixed problem with access to Gaussian fit parameters in RecoQC.
+
 ! 2015-07-17 - Chris Jones
  - Rework RichRawDataSize a little.
- - Remove space from TH1 parameter names, to test if this works around an 
+ - Remove space from TH1 parameter names, to test if this works around an
    issue with ROOT 6.04.02
 
 ! 2015-06-26 - Chris Jones
@@ -119,12 +122,12 @@
  - Add a plot giving the fitted CK theta resolution per PD
 
 ! 2012-07-10 - Chris Jones
- - Revert a small change to the histograms IDs used in HPDHitsMoni, as it 
+ - Revert a small change to the histograms IDs used in HPDHitsMoni, as it
    unintentionally made things complicated in the run-by-run calibration.
 
 !========================= RichRecQC v2r58 2012-06-25 =========================
 ! 2012-06-04 - Marco Cattaneo
- - Remove L0DUFromRawAlg and HltDecReportsDecoder from L0 Filter, now done in 
+ - Remove L0DUFromRawAlg and HltDecReportsDecoder from L0 Filter, now done in
    Brunel main sequence
  - L0 Filter returns and empty list for 2008 and 2009 data
 
@@ -133,7 +136,7 @@
  - Various small improvements to the HPDHitsMoni
 
 ! 2012-05-28 - Chris Jones
- - Enable by default the resolution plots per PD column in RecoQC. 
+ - Enable by default the resolution plots per PD column in RecoQC.
    Useful for spotting issues like column timing problems.
 
 ! 2012-05-02 - Chris Jones
@@ -167,25 +170,25 @@
 
 !========================= RichRecQC v2r54 2011-08-31 ========================
 ! 2011-08-15 - Chris Jones
- - Add a 2D plot to the decoding errors monitor to show the number of each 
+ - Add a 2D plot to the decoding errors monitor to show the number of each
    error type, for each L1 board, by copy number.
  - Get the number L1 boards from DeRichSystem, instead of hard coding them.
 
 !======================== RichRecQC v2r53 2011-07-27 =========================
 ! 2011-07-25 - Chris Jones
  - Add some missing debug printout protection to RichPIDQC
- - Add more optional (disabled by default) plots to RecoQC to show the 
+ - Add more optional (disabled by default) plots to RecoQC to show the
    resolutions per PD column
 
 ! 2011-07-24 - Chris Jones
- - Remove "DBConsistencyCheck" from the list of monitors run Online. 
+ - Remove "DBConsistencyCheck" from the list of monitors run Online.
  - Add optional (disabled by default) per PD resolution plots to RecoQC.
  - Reduce a message in RichDataDBCheck from Error to Warning.
 
 ! 2011-07-19 - Chris Jones
  - Add new flag "Simulation" to RichRecQCConf
  - Turn off monitors that require HLT DecReports, when running on MC data.
- - Fix a small configuration bug, that leave to some monitoring sequence 
+ - Fix a small configuration bug, that leave to some monitoring sequence
    being included twice in the overall monitoring.
 
 ! 2011-07-15 - Chris Jones
@@ -239,7 +242,7 @@
  - Extend HPDHits monitors to run a monitor on un biased L0 selected events
 
 ! 2011-05-07 - Chris Jones
- - Remove assumption in TrackSelEff that RichRecTrack always has the same key 
+ - Remove assumption in TrackSelEff that RichRecTrack always has the same key
    as its associated Track object
 
 ! 2011-05-06 - Chris Jones
@@ -285,7 +288,7 @@
  - Add plots for total number of tracks to track selection efficiency monitor
 
 ! 2010-11-11 - Chris Jones
- - Add profile plots showing the average data size version HPD copy number 
+ - Add profile plots showing the average data size version HPD copy number
    and L1 logical ID.
 
 !======================== RichRecQC v2r47 2010-10-28 ========================
@@ -294,7 +297,7 @@
    data is sent.
 
 ! 2010-10-18 - Chris Jones
- - Add a new option to the python Configurable to allow the CK theta 
+ - Add a new option to the python Configurable to allow the CK theta
    resolution histogram ranges to be set.
 
 ! 2010-10-14 - Chris Jones
@@ -328,7 +331,7 @@
  - Revert an inadvertant change in the number of bins in the pixel monitor
 
 ! 2010-07-26 - Thomas BLAKE
- - Update Configuration.py to turn on histogram production for image centre 
+ - Update Configuration.py to turn on histogram production for image centre
 	 analysis.
 
 ! 2010-07-26 - Chris Jones
@@ -338,12 +341,12 @@
 ! 2010-07-22 - Chris Jones
  - Add an monitor monitoring option "RichPerfFromData" that runs the PID
    selections from RichPIDQC to monitor the PID performance without the need
-   for MC information (i.e. on real data). 
-   NOTE : This option requires runtime access to DaVinci components, so has 
+   for MC information (i.e. on real data).
+   NOTE : This option requires runtime access to DaVinci components, so has
    to be run under a combined environment like
     > SetupProject Brunel vXrY --runtime DaVinci vNrM --use DaVinciSys
-   where vXrY and vNrM are compatible versions (share the same underlying 
-   projects). For this reason, it is not enabled by default in any histogram 
+   where vXrY and vNrM are compatible versions (share the same underlying
+   projects). For this reason, it is not enabled by default in any histogram
    mode.
  - Add histogram axis labels to all plots in RichRecoQC.
 
@@ -366,7 +369,7 @@
 ! 2010-07-08 - Chris Jones
  - Update the Configuration of the processingh time monitors.
  - Slight change to binning in the pixel monitor.
- - Add a plot to the reco monitor for the total number of photon candidates 
+ - Add a plot to the reco monitor for the total number of photon candidates
    produced by the reconstruction.
 
 !======================= RichRecQC v2r42 2010-06-21 ========================
@@ -385,19 +388,19 @@
  - Review of warnings
 
 ! 2010-04-30 - Chris Jones
- - Add a couple new plots (as requested by L1 expert) to show the number of 
+ - Add a couple new plots (as requested by L1 expert) to show the number of
    active HPDs in RICH1 and RICH2 (have at least 1 hit in them).
 
 !======================= RichRecQC v2r40 2010-04-26 ========================
 ! 2010-04-26 - Chris Jones
- - Suppress check between ODIN and Ingress Event ID (known not to work). 
+ - Suppress check between ODIN and Ingress Event ID (known not to work).
    Change aerogel CK theta plot lower limit.
 
 ! 2010-04-24 - Chris Jones
  - Fix some doxygen comments
  - Add some options to RichRecoQC to allow a tuned 'aerogel' monitor, better
    suited to extracting the signal.
- - Add a new monitor that produces a single histogram that summarises the 
+ - Add a new monitor that produces a single histogram that summarises the
    decoding errors (to be extended).
 
 ! 2010-04-21 - Chris Jones
@@ -409,7 +412,7 @@
  - Make CK theta pull plots for isolated tracks only in RichRecoQC
  - Fix bug in Configuration that caused the trackless ring monitoring to be
    looking in the wrong TES locations ...
- - Add a warning to the trackless ring monitor to print a warning in the 
+ - Add a warning to the trackless ring monitor to print a warning in the
    case the requested TES location to monitor has no data ...
 
 ! 2010-04-15 - Sajan Easo
@@ -417,7 +420,7 @@
 
 !======================= RichRecQC v2r39 2010-04-12 ========================
 ! 2010-04-02 - Chris Jones
- - Make sure MC histograms that can be made without extended MC RICH 
+ - Make sure MC histograms that can be made without extended MC RICH
 
 ! 2010-03-29 - Chris Jones
  - Downgrade DB mis-match messages from ERROR to WARNING
@@ -431,32 +434,32 @@
    to be useful (runs fine without it, just doesn't do anything).
 
 ! 2010-03-05 - Chris Jones
- - Various changes to support the configuration of multiple reconstruction 
-   sequences in the same application. Needed to support neccessary changes in 
+ - Various changes to support the configuration of multiple reconstruction
+   sequences in the same application. Needed to support neccessary changes in
    HLT2.
 
 ! 2010-03-04 - Chris Jones
- - Update RichPIDQC to support BelowThreshold DLL values if activated in the 
+ - Update RichPIDQC to support BelowThreshold DLL values if activated in the
    reconstruction and particle PID algorithms.
 
 !======================= RichRecQC v2r37 2010-02-24 ========================
 
 ! 2010-02-24 - Chris Jones
- - Add a few methods to RichRecQCConf to allow users to easily add or remove 
+ - Add a few methods to RichRecQCConf to allow users to easily add or remove
    monitors to run
 
 ! 2010-02-22 - Chris Jones
- - Disable a few more histograms for OnlineBrunel, since the Adders cannot 
+ - Disable a few more histograms for OnlineBrunel, since the Adders cannot
    handle more than a very small number :( ...
 
 ! 2010-02-19 - Chris Jones
- - Added support for different levels of histogramming (Online, OfflineFull, 
+ - Added support for different levels of histogramming (Online, OfflineFull,
    OfflineExpress etc.)
  -  A few more minor changes to the histogramms produced by RichRecoQC
 
 !======================= RichRecQC v2r36 2010-02-15 ========================
 ! 2010-02-12 - Ross Young
- - In Configuration.py: suppresscornerpixels generalised to IsDark; 
+ - In Configuration.py: suppresscornerpixels generalised to IsDark;
 	 2-D IFB hitmaps disabled
 
 ! 2010-02-11 - Chris Jones
@@ -464,7 +467,7 @@
  - Remove a few 2D histograms no longer needed.
 
 ! 2010-02-04 - Antonis Papanestis
- - Added a momentum histogram to the alignment monitor and change the 
+ - Added a momentum histogram to the alignment monitor and change the
    default histogram limits.
 
 ! 2010-02-03 - Chris Jones
@@ -496,7 +499,7 @@
  - Fix bug in filling signal HPD occupancy plots in PixelQC
 
 ! 2009-12-13 - Chris Jones
- - Extend Configurable to allow min beta to be controlled in RichRecQC 
+ - Extend Configurable to allow min beta to be controlled in RichRecQC
    monitors.
  - Add CK theta versus momentum plots to RichRecQC monitors.
 
@@ -506,7 +509,7 @@
 
 !======================= RichRecQC v2r34 2009-10-20 ==========================
 ! 2009-10-10 - Christopher Rob Jones
- - Remove dedicated hot pixel finder algorithm (now implemented as a generic 
+ - Remove dedicated hot pixel finder algorithm (now implemented as a generic
    HPD analysis tool). Update python options accordingly.
 
 ! 2009-10-07 - Antonis Papanestis
@@ -514,7 +517,7 @@
  - Change default options to fill mirror histograms as well.
 
 ! 2009-09-04 - Chris Jones
- - Add option to monitoring Configurable to apply custom selection of events 
+ - Add option to monitoring Configurable to apply custom selection of events
    used by the monitoring algorithms.
  - Add new ring search monitor
 
@@ -525,11 +528,11 @@
 ! 2009-09-02 - Chris Jones
  - Add hot pixel finder
  - Disable sending messages about mis-matches in raw data size between
-   RawEvent and decoded data structures, until I understand the origin of 
+   RawEvent and decoded data structures, until I understand the origin of
    the warnings in real data ...
 
 ! 2009-09-01 - Chris Jones
- - Extend the data consistency checking algorithm to check for the same HPD 
+ - Extend the data consistency checking algorithm to check for the same HPD
    L0ID appearing twice in the data.
 
 ! 2009-08-26 - Gareth Rogers
@@ -537,7 +540,7 @@
    HPD L0 ID.
 
 ! 2009-08-05 - Stephanie Hansmann-Menzemer
- - addpat to changes in LHCb::Track 
+ - addpat to changes in LHCb::Track
 
 ! 2009-08-05 - Chris Jones
  - Add HPD hit monitor to expert checks.
@@ -547,14 +550,14 @@
  - Convert all endreq to endmsg
 
 ! 2009-07-29 - Chris Jones
- - Convert (most) remaining monitors over to pre-booking all MC-free 
-   histograms during initialisation. MC histograms are still booked on-demand 
+ - Convert (most) remaining monitors over to pre-booking all MC-free
+   histograms during initialisation. MC histograms are still booked on-demand
    as needed. The remaing monitors that have not been converted are not widely
    used, so it is not important to do this right now.
 
 !======================= RichRecQC v2r32 2009-07-28 ==========================
 ! 2009-07-27 - Chris Jones
- - Update RichRecoQC and RichTracklessRingMoni to use new histogramming 
+ - Update RichRecoQC and RichTracklessRingMoni to use new histogramming
    methods in Rich/RichKernel. Improves CPU usage a little and also moves
    histogram booking to initialize(). Other monitors will follow.
 
@@ -595,7 +598,7 @@
    Message Service type is used.
 
 ! 2009-05-26 - Chris Jones
- - Rework the configurables a little to avoid importing the ring finders by 
+ - Rework the configurables a little to avoid importing the ring finders by
    default
 
 ! 2009-05-22 - Chris Jones
@@ -607,7 +610,7 @@
 
 !======================= RichRecQC v2r28 2009-05-08 ==========================
 ! 2009-05-03 - Ulrich Kerzel
-- correct typo in in Configurable: IFB monitoring was running if 
+- correct typo in in Configurable: IFB monitoring was running if
   AlignmentMonitoring was set to true
 
 ! 2009-04-23 - Chris Jones
@@ -636,7 +639,7 @@
    + Minimal - only the most basic alignment histograms
    + OnlyPrebooked mirrors - include a predefined list of mirror combinations
    + Full - as before
- - Activate alignment histograms by default at level "Minimal" 
+ - Activate alignment histograms by default at level "Minimal"
 
 ! 2009-02-09 - Chris Jones
  - Update Alignment.py to
@@ -753,7 +756,7 @@
    new DC06 data when uses the latest additions to MCEvent, which adds
    support for new HPD reflection backgrounds but also fixes a few minor
    issues, where signal hits would not be identified as such. The logic
-   is not 100% ideal, so once DC06 support is no longer needed it should be 
+   is not 100% ideal, so once DC06 support is no longer needed it should be
    changed.
 
 ! 2008-01-30 - Chris Jones
@@ -781,7 +784,7 @@
  - Add MC-fake and inclusive CK theta resolution plots to RichRecoQC
 
 ! 2007-09-28 - Chris Jones
- - Add some formatting to verbose printout to aid comparisons between 
+ - Add some formatting to verbose printout to aid comparisons between
    different platforms.
 
 !======================= RichRecQC v2r14 2007-09-20 ==========================
@@ -812,7 +815,7 @@
 
 !======================= RichRecQC v2r9 2007-03-21 =========================
 ! 2007-03-21 - Marco Cattaneo
- - Remove obsolete file RichRecQC_load.cpp 
+ - Remove obsolete file RichRecQC_load.cpp
 
 ! 2007-03-19 - Chris Jones
  - Replace use of Gaudi format with boost::format to fix various issues
@@ -895,8 +898,8 @@
 
 ! 2005-10-13 - Chris Jones
  - Add support for new track event model
- - Adapt to context() 
- - Re-activate RichRecoQC algorithm previously turned off due to MC 
+ - Adapt to context()
+ - Re-activate RichRecoQC algorithm previously turned off due to MC
    association problems
 
 !======================= RichRecQC v1r11 2005-06-24 ========================
@@ -934,7 +937,7 @@
 !======================== RichRecQC v1r8 2004-06-18 ========================
 ! 2004-06-18 - Chris Jones
  - Update includes for new package structure
- - Remove DaVinci includes (Brunel files can be used by simply adding the 
+ - Remove DaVinci includes (Brunel files can be used by simply adding the
    appropriate Sequencer to the application
 
 ! 2004-05-31 - Chris Jones
@@ -978,4 +981,4 @@
 
 ! 2003-05-11 - Chris Jones
  - First version
- - Formerly contained in RichMonitor 
+ - Formerly contained in RichMonitor

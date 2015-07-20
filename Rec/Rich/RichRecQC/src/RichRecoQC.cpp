@@ -51,7 +51,7 @@ RecoQC::RecoQC( const std::string& name,
   declareProperty( "ChThetaRecHistoLimitMax", m_ckThetaMax = { 0.325, 0.065, 0.036 } );
   declareProperty( "CKResHistoRange", m_ckResRange = { 0.025, 0.005, 0.0025 } );
   declareProperty( "Radiators", m_rads = { true, true, true } );
-  
+
   declareProperty( "MinRadSegs", m_minRadSegs = { 0, 0, 0 } );
   declareProperty( "MaxRadSegs", m_maxRadSegs = { 9999999,9999999,9999999 } );
 
@@ -713,7 +713,7 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
         fFitF->SetParName(2,"Sigma");
 
         // Initialise parameters from last fit
-        const unsigned int nParamsToSet = ( nPol > 1 ? 3+nPol : 3 );
+        const unsigned int nParamsToSet = ( nPol > 1 ? 3+nPol : 2 );
         for ( unsigned int p = 0; p <= nParamsToSet; ++p )
         {
           fFitF->SetParameter(p,lastFitF->GetParameter(p));
