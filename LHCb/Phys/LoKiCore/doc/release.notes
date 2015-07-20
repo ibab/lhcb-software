@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r24 2015-07-20 =========================
 ! 2015-07-16 - Marco Clemencic
  - Fixed bug in LoKiFunctorsCache.cmake.
 
