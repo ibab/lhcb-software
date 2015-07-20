@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic
 ! ====================================================================
 
+!========================= CondDBUI v3r35 2015-07-20 =========================
 ! 2015-06-23 - Marco Clemencic
  - Fixed a flow in the logic of CondDB.Admin.CompareDBToFiles.
 
