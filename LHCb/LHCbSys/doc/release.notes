@@ -5,6 +5,178 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v39r0>2015-07-21 LHCbSys v39r0</A></H1><PRE>
+This version uses Gaudi v26r3 and LCG_79 with ROOT 6.04.02.
+
+- Packages modified: Calo/CaloUtils v10r5, DAQ/DAQSys v8r9, DAQ/DAQUtils v1r13p1,
+    DAQ/RawEventCompat v1r6p1, Det/DDDB v1r78, Det/DetCond v12r42,
+    Det/DetDescChecks v5r12, Det/OTDet v8r17, Det/RichDet v17r4,
+    Event/DAQEvent v9r20, Event/DigiEvent v4r4, Event/EventPacker v5r4,
+    Event/SwimmingEvent v1r7, Event/TrackEvent v6r3, Ex/IOExample v4r16,
+    GaudiConf v19r11, HC/HCDAQ v1r4, Hlt/HltDAQ v4r19, Hlt/HltServices v2r9,
+    Kernel/HltInterfaces v6r1, Kernel/LHCbKernel v15r11, Kernel/LHCbMath v3r58,
+    L0/L0DU v10r33, OT/OTDAQ v7r20, Phys/LoKiCore v11r24, Phys/LoKiMC v10r18,
+    Sim/SimComponents v2r25, Tools/CondDBUI v3r35
+
+- In Calo/CaloUtils v10r5, Det/RichDet v17r4
+  . Fix a pattern selection rule to please genreflex
+
+- In DAQ/DAQSys v8r8p2, v8r9
+  . Set outputs of Calorimeter decoders anyway to allow usage of the correct
+    values from python.
+  . Fix decoder-compare test to follow this change
+
+- In DAQ/DAQUtils v1r13p1
+  . Fix dumpmultievents test to follow changes in output due to introduction
+    of Run Stamp in CondDB
+
+- In DAQ/RawEventCompat v1r6p1
+  . Avoid crashes in tests when the QMTest validators are called on empty files.
+
+- In Det/DDDB v1r77, v1r78
+  . Update default database tags to the latest ones:
+    o LHCBCOND, 2015: cond-20150716
+    o DQFLAGS,  2015: dq-20150717
+    o DDDB,     2015: dddb-20150703
+
+  . Set default initial time for 2013 to end of last physics fill (fill 3564)
+  . Default database tag for CALIBOFF: head-2015604, empty content
+    (note typo in tag date, follows corresponding typo in the database)
+
+- In Det/DetCond v12r42, v12r43
+  . LHCBPS-1425: fix to ensure that the "InitialTime" is stable.
+  . LHCBPS-1421: added a first implementation of RunStampCheck service
+    o Can be instantiated (via ApplicationManager::ExtSvc) to check if a special
+      "run stamp" condition exists for the current run.
+    o To ensure that it does get a "current event time", RunStampCheck triggers
+      the instantiation of EventClockSvc, so that it is not needed to explicitly
+      do it in the configuration.
+    o CondDB configurable enables/disables RunStampCheck. It is enabled by
+      default for "Offline" (i.e. not Online nor Simulation).
+  . Set LoadCALIBDB default value to HLT1 for Simulation, Online and Upgrade
+    options
+  . Change in detcond.configuration_module to avoid checking layered ONLINE
+    partition
+  . Finalized support for CALIBOFF by loading the partition as an additional
+    layer only above every ONLINE snapshot no earlier than 2015
+  . Bug fix for mistakenly loading CALIBOFF for upgrade CondDB
+
+- In Det/DetDescChecks v5r12
+  . Disable RunStamp check in loaddddb-2015, to avoid frequent failure as we
+    initialise with time = now
+
+- In Det/OTDet v8r17
+  . Fix bug that caused only one monolayer per module to be filled in Boole
+  . Small fix in OTWireTraj to get rid of compiler warning.
+
+- In Event/DAQEvent v9r20
+  . Add HCError raw bank type.
+
+- In Event/DigiEvent v4r4
+  . Add additional attributes to HCDigit.
+
+- In Event/EventPacker v5r3, v5r4
+  . Fixed reference count of JobOptionsSvc in MapperToolBase.
+  . Fix typo in PackedWeightedRelations::clID() that was causing the wrong
+    class ID to be returned...
+
+- In Event/SwimmingEvent v1r7
+  . Remove unused classes from SwimmingEvent.xml to suppress genreflex warnings
+
+- In Event/TrackEvent v6r3
+  . Fixed bug in 'State::linearTransportTo'
+
+- In Ex/IOExample v4r16
+  . Fix tests to follow changes in output due to introduction of CondDB Run Stamp
+
+- In GaudiConf v19r11
+  In DstConf.py: add the fitted Velo tracks for the PV to the packing / unpacking
+                 and to the DST for 2015.
+
+- In HC/HCDAQ v1r4
+  . Add monitoring histograms.
+  . Remove decoding of obsolete raw bank formats.
+  . Follow modified cell ID scheme (channel and crate).
+  . Add option to skip error bank decoding.
+
+- In Hlt/HltDAQ v4r15 to v4r19
+  . Introduce v6 of sel reports.
+  . Make getLatestVersion more robust.
+  . Put nPVs in RecSummary.
+  . Preserve mother mass value.
+  . Fix L0 routing bits.
+  . Allow stdInfo selrep subbank larger than 64K words
+  . Make noBank() private in various HltSelRepRB* classes, and zero pointer
+    after delete[] so that writing to no longer owned memory becomes a SEGV
+    instead of a silent corruption
+  . Use HltMonitorSvc to monitor additional stuff for HLT2.
+  . Update DecoderBase to only supply the selection IDs that correspond to its
+    source ID.
+  . Update VertexReportsWriter to only check for selection IDs that correspond
+    to its source ID.
+  . Only fill info fields in Tesla if not default value.
+  . Add first state covariance matrix.
+  . Choose states properly.
+  . Do not require every map present for each bank version.
+  . Update unit test.
+
+-In Hlt/HltServices v2r8, v2r9
+  . Add possibility to put environment variables back in the properties. The
+    list of environment variables to be put back in is specified through a
+    property. By default it contains only PARAMFILESROOT.
+  . Add an expert property to TCKANNSvc to allow injection of selection IDs.
+
+- In Kernel/HltInterfaces v6r1
+  . Add firedRoutingBits function to dictionary.
+  . Use Gaudi::Histo1DDef in HltHistogram.
+  . Add simple histogram wrapper for HLT2 monitoring.
+  . Add code for Hlt2 online monitoring.
+
+- In Kernel/LHCbKernel v15r11
+  . Redefine bitfields of HCCellID.
+
+- In Kernel/LHCbMath v3r58
+  . Fix test_poly.py
+  . Various small updates and fixes
+  . Minor change to the fix to similarity timing test.
+
+- In L0/L0DU v10r33
+  . L0CondDBProvider : patch for muonPtScale() to account for hardware change in
+    scale on 2015/06/02. The new code is backwards compatible
+    (but previous sw version is not correct for data taken after 2015/06)
+
+- In OT/OTDAQ v7r20
+  . Add dictionaries for OTLiteTime and OTLiteTimeContainer classes; they are
+    needed for OT the python code used in calibration jobs
+
+- In Phys/LoKiCore v11r24
+  . Moved here (from StrippingCache) the CMake code to generate functors factories
+  . Added some documentation for the generation of LoKi Functors caches.
+  . Minor improvements to LoKiFunctorsCache.cmake.
+  . Added CMake option (LOKI_BUILD_FUNCTOR_CACHE) to turn on/off build of cache
+    libraries (ON by default).
+  . Modify the functionality to building of C++ cache
+    Cache building strategy depends on environment variable
+    "LOKI_GENERATE_CPPCODE"
+    positive:  number of files
+    negative:  number of functors per file
+    zero:      single file
+
+- In Phys/LoKiMC v10r18
+  . Remove Rich-enum from xml 
+  . Add new test for segmentation fault in loading the dictionaries 
+  . Try to reshuffle the files... 
+
+- In Sim/SimComponents v2r25
+  . Add printing of signal flag value in PrintMCDecayTreeTool when specified in
+    options
+
+- In Tools/CondDBUI v3r35
+  . Added the CondDB.Admin.CompareDBToFiles function to check that
+    CondDB.Admin.MakeDBFromFiles worked.
+  . Add menu support for CALIBOFF
+
+
 </PRE><H1><A NAME=v38r7>2015-05-26 LHCbSys v38r7</A></H1><PRE>
 This version uses Gaudi v26r2 and LCG_76root6 with ROOT 6.02.08.
 
