@@ -3,7 +3,7 @@
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # ====================================================================
 package           LoKiMC
-version           v10r17
+version           v10r18
 
 # =============== structure ===============================================
 branches          cmt doc src dict python LoKi
