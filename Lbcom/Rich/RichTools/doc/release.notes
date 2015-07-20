@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!========================= RichTools v2r49 2015-07-20 =========================
 ! 2015-06-23 - Christopher Rob Jones
  - Sort the active particle type enum list in Rich::ParticleProperties to
    ensure a strict (increasing) mass ordering. This ordering is assumed in
