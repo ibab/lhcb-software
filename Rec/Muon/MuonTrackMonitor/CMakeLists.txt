@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MuonTrackMonitor
 ################################################################################
-gaudi_subdir(MuonTrackMonitor v2r8)
+gaudi_subdir(MuonTrackMonitor v2r9)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Event/HltEvent
