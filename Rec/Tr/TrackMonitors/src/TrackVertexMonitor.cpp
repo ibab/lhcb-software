@@ -343,31 +343,31 @@ StatusCode TrackVertexMonitor::execute()
         if(cov(0,0) > 1e-10 ){
           plot( dx.x()/std::sqrt(cov(0,0)), "PV left-right delta x pull",-5,5) ;
         }else{
-          Error("cov(0,0) too small", StatusCode::SUCCESS,10).ignore();
+          Info("cov(0,0) too small", StatusCode::SUCCESS,10).ignore();
         }
         // cov(1,1)
         if(cov(1,1) > 1e-10 ){
           plot( dx.y()/std::sqrt(cov(1,1)), "PV left-right delta y pull",-5,5) ;
         }else{
-          Error("cov(1,1) too small", StatusCode::SUCCESS,10).ignore();
+          Info("cov(1,1) too small", StatusCode::SUCCESS,10).ignore();
         }
         // cov(2,2)
         if(cov(2,2) > 1e-10 ){
           plot( dx.z()/std::sqrt(cov(2,2)), "PV left-right delta z pull",-5,5) ;
         }else{
-          Error("cov(2,2) too small", StatusCode::SUCCESS,10).ignore();
+          Info("cov(2,2) too small", StatusCode::SUCCESS,10).ignore();
         }
         
         // draw the chisquares
         if( leftvertex->nDoF() > 0 ){
           plot( leftvertex->chi2() / leftvertex->nDoF(), "PV left chisquare per dof",0,10) ;
         }else{
-          Error("left ndof = 0", StatusCode::SUCCESS,10).ignore();
+          Info("left ndof = 0", StatusCode::SUCCESS,10).ignore();
         }
         if( rightvertex->nDoF() > 0 ){
            plot( rightvertex->chi2() / rightvertex->nDoF(), "PV right chisquare per dof",0,10) ;
         }else{
-          Error("right ndof = 0", StatusCode::SUCCESS,10).ignore();
+          Info("right ndof = 0", StatusCode::SUCCESS,10).ignore();
         }
         
       }
@@ -397,30 +397,30 @@ StatusCode TrackVertexMonitor::execute()
         if(cov(0,0) > 1e-10 ){
           plot( dx.x()/std::sqrt(cov(0,0)), "PV forward-backward delta x pull",-5,5) ;
         }else{
-          Error("cov(0,0) too small", StatusCode::SUCCESS,10).ignore();
+          Info("cov(0,0) too small", StatusCode::SUCCESS,10).ignore();
         }
         // cov(1,1)
         if(cov(1,1) > 1e-10 ){
           plot( dx.y()/std::sqrt(cov(1,1)), "PV forward-backward delta y pull",-5,5) ;
         }else{
-          Error("cov(1,1) too small", StatusCode::SUCCESS,10).ignore();
+          Info("cov(1,1) too small", StatusCode::SUCCESS,10).ignore();
         }
         // cov(2,2)
         if(cov(2,2) > 1e-10 ){
           plot( dx.z()/std::sqrt(cov(2,2)), "PV forward-backward delta z pull",-5,5) ;
         }else{
-          Error("cov(2,2) too small", StatusCode::SUCCESS,10).ignore();
+          Info("cov(2,2) too small", StatusCode::SUCCESS,10).ignore();
         }
         // draw the chisquares
         if( forwardvertex->nDoF() > 0 ){
           plot( forwardvertex->chi2() / forwardvertex->nDoF(), "PV forward chisquare/dof",0,10) ;
         }else{
-          Error("forward ndof = 0", StatusCode::SUCCESS,10).ignore();
+          Info("forward ndof = 0", StatusCode::SUCCESS,10).ignore();
         }
         if( backwardvertex->nDoF() > 0 ){
           plot( backwardvertex->chi2() / backwardvertex->nDoF(), "PV backward chisquare/dof",0,10) ;
         }else{
-          Error("backward ndof = 0", StatusCode::SUCCESS,10).ignore();
+          Info("backward ndof = 0", StatusCode::SUCCESS,10).ignore();
         }
         
       }
