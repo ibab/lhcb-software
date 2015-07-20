@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PatKernel
 ################################################################################
-gaudi_subdir(PatKernel v2r9)
+gaudi_subdir(PatKernel v2r10)
 
 gaudi_depends_on_subdirs(Det/OTDet
                          Det/STDet
