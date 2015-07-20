@@ -7,14 +7,14 @@ program ranging from testing the SM parameters to searches for exotic particles 
 
 __version__ = "$Revision: $"
 __author__  = "Karlis Dreimanis k.dreimanis@liverpool.ac.uk"
-__date__    = "2015-05-28"
+__date__    = "2015-07-20"
 #======================================================================================
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm 
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 class EWLines(Hlt2LinesConfigurableUser) :
 
-    __slots__ = {'Prescale' : {'HLT2EWDiMuonZ'                : 1.000,
+    __slots__ = {'Prescale' : {'Hlt2EWDiMuonZ'                : 1.000,
                                'Hlt2EWDiMuonDY1'              :  0.02,
                                'Hlt2EWDiMuonDY2'              :   0.3,
                                'Hlt2EWDiMuonDY3'              : 1.000,
@@ -147,7 +147,7 @@ class EWLines(Hlt2LinesConfigurableUser) :
                                               'childPT'        :     5 * GeV,
                                               'maxchildPT'     :     5 * GeV,
                                               'M_MIN'          :     0 * GeV,
-                                              'M_MAX'          :   1.5 * GeV}, #'DR2_MAX'      : 0.25
+                                              'M_MAX'          :   1.5 * GeV},
                  ## single tau
                  'SingleTauHighPt2Prong' :   {'PT'             :    15 * GeV},
                  'SingleTauHighPt3Prong' :   {'PT'             :    12 * GeV}
