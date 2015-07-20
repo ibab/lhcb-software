@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2015=07-20 - Gloria Corti
+ - Updated Gauss reference tests for current detector
+
+! 2015-MM-DD - Phil Ilten
+ - Removed configuration of powheg no longer necessary
+
 !========================== Gauss v48r2 2015-06-08 ===========================
 ! 2015-06-08 - Gloria Corti
  - Updated some qmtest reference files

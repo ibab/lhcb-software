@@ -1,19 +1,19 @@
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v48r2/Gen/LbPGuns/options/PGuns.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v48r2/Gen/LbPGuns/options/PGuns.py'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v27r46/options/56000050.py'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v27r46/options/CaloAcceptance.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v27r46/options/CaloAcceptance.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v27r46/options/56000050.py'
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v48r2/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v48r2/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v48r2/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v48r2/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v48r2/Sim/Gauss/options/Gauss-DEV.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v48r2/Sim/Gauss/options/Gauss-DEV.py'
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v48r2/Sim/Gauss/options/CaloOnly.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v48r2/Sim/Gauss/options/CaloOnly.py'
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v48r2/Sim/Gauss/tests/options/testGauss-QMTests.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v48r2/Sim/Gauss/tests/options/testGauss-QMTests.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Gen/LbPGuns/options/PGuns.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Gen/LbPGuns/options/PGuns.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v27r49/options/56000050.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v27r49/options/CaloAcceptance.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v27r49/options/CaloAcceptance.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v27r49/options/56000050.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/tests/options/testGauss-gen-10evts-defaults.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/Gauss-DEV.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/Gauss-DEV.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/CaloOnly.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/CaloOnly.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/tests/options/testGauss-QMTests.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/tests/options/testGauss-QMTests.py'
 # applying configuration of Gauss
 Ecut value = 5.0
 # WARNING: Sim Detector not known : magnet
@@ -65,7 +65,7 @@ Ecut value = 5.0
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Gauss version v48r2
-                                          running on lbbuild02.cern.ch on Sun Jun  7 08:04:20 2015
+                                          running on lbbuild03.cern.ch on Mon Jul 20 09:13:14 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc     INFO Added successfully Conversion service:XmlCnvSvc
@@ -79,7 +79,7 @@ ChronoStatSvc              INFO  Number of skipped events for MemStat-1
                             WWW : http://cern.ch/geant4
 *************************************************************
 
-SimulationSvc              INFO Loading simulation attributes file "/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v48r2/Sim/Gauss/xml/SimulationRICHesOff.xml" ...
+SimulationSvc              INFO Loading simulation attributes file "/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/xml/SimulationRICHesOff.xml" ...
 GiGa.ModularPL             INFO GiGaPhysListModular initializing
 GiGa.ModularPL             INFO Registered GiGa.ModularPL.EmOpt1NoCutsPhysics
 GiGa.ModularPL             INFO Registered GiGa.ModularPL.DecayPhysics
@@ -151,9 +151,9 @@ RndmGenSvc.Engine          INFO Generator engine type:CLHEP::MTwistEngine
 RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
 RndmGenSvc.Engine          INFO This is the GEANT4 engine!
 RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::MTwistEngine>
-TimingAuditor.TIMER        INFO This machine has a speed about   4.45 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   4.37 times the speed of a 2.8 GHz Xeon.
 GaussSequencer             INFO Member list: GaudiSequencer/Generator, GaudiSequencer/Simulation
-ToolSvc.SequencerTime...   INFO This machine has a speed about   4.45 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   4.46 times the speed of a 2.8 GHz Xeon.
 Generator                  INFO Member list: GaudiSequencer/GeneratorSlotMainSeq
 GeneratorSlotMainSeq       INFO Member list: GenInit/GaussGen, ParticleGun, GaudiSequencer/GenMonitor
 GaussGen                SUCCESS ==================================================================
@@ -300,7 +300,7 @@ AntiNeutronInelastic  Crs sctns:              AntiAGlauber: Emin(GeV)=    0  Ema
    KaonPlusInelastic  Models:                         FTFP: Emin(GeV)=    4  Emax(GeV)= 100000
                                             BertiniCascade: Emin(GeV)=    0  Emax(GeV)= 5
 
-   KaonPlusInelastic  Crs sctns:  ChipsKaonPlusInelasticXS: Emin(GeV)=    0  Emax(GeV)= 100000
+   KaonPlusInelastic  Crs sctns:            Glauber-Gribov: Emin(GeV)=    0  Emax(GeV)= 1.79769e+305
                                           GheishaInelastic: Emin(GeV)=    0  Emax(GeV)= 100000
 
 
@@ -313,7 +313,7 @@ AntiNeutronInelastic  Crs sctns:              AntiAGlauber: Emin(GeV)=    0  Ema
   KaonMinusInelastic  Models:                         FTFP: Emin(GeV)=    4  Emax(GeV)= 100000
                                             BertiniCascade: Emin(GeV)=    0  Emax(GeV)= 5
 
-  KaonMinusInelastic  Crs sctns: ChipsKaonMinusInelasticXS: Emin(GeV)=    0  Emax(GeV)= 100000
+  KaonMinusInelastic  Crs sctns:            Glauber-Gribov: Emin(GeV)=    0  Emax(GeV)= 1.79769e+305
                                           GheishaInelastic: Emin(GeV)=    0  Emax(GeV)= 100000
 
 
@@ -533,82 +533,82 @@ ToolSvc                    INFO Removing all tools created by ToolSvc
 MainEventGaussSim.Mai...SUCCESS Booked 4 Histogram(s) : 1D=4
 MainEventGaussSim.Mai...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |         9 |     21.496 |     2.3884 |     6.7090 |      0.0000 |      21.364 |
- | "Total Memory/MB"                               |        10 |   10892.52 |     1089.3 |     6.4402 |      1069.9 |      1091.4 |
+ | "Delta Memory/MB"                               |         9 |     21.512 |     2.3902 |     6.7140 |      0.0000 |      21.380 |
+ | "Total Memory/MB"                               |        10 |   9682.304 |     968.23 |     6.4450 |      948.90 |      970.41 |
 GaussGen.GaussGenMemory SUCCESS Booked 4 Histogram(s) : 1D=4
 GaussGen.GaussGenMemory SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |         9 |    314.268 |     34.919 |     98.718 |      0.0000 |      314.14 |
- | "Total Memory/MB"                               |        10 |   10599.75 |     1060.0 |     94.272 |      777.16 |      1091.4 |
+ | "Delta Memory/MB"                               |         9 |    314.416 |     34.935 |     98.765 |      0.0000 |      314.28 |
+ | "Total Memory/MB"                               |        10 |     9389.4 |     938.94 |     94.316 |      655.99 |      970.41 |
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO This machine has a speed about   4.45 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   4.46 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO This machine has a speed about   4.45 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   4.37 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO EVENT LOOP                    | 16747.854 | 16763.400 | 1414.999  154132.0 |      10 |   167.634 |
-TimingAuditor.TIMER        INFO  GaussSequencer               | 16741.855 | 16757.200 | 1413.999  154131.0 |      10 |   167.572 |
-TimingAuditor.TIMER        INFO   Generator                   |     1.100 |     1.200 |    0.000       8.0 |      10 |     0.012 |
-TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |     1.100 |     1.100 |    0.000       8.0 |      10 |     0.011 |
-TimingAuditor.TIMER        INFO     GaussGen                  |     0.600 |     0.500 |    0.000       3.0 |      10 |     0.005 |
-TimingAuditor.TIMER        INFO     ParticleGun               |     0.400 |     0.500 |    0.000       4.0 |      10 |     0.005 |
-TimingAuditor.TIMER        INFO     GenMonitor                |     0.100 |     0.100 |    0.000       1.0 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.100 |     0.100 |    0.000       1.0 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO   Simulation                  | 16740.755 | 16756.001 | 1413.999  154123.0 |      10 |   167.560 |
-TimingAuditor.TIMER        INFO    GiGaStore                  |     0.000 |     0.100 |    0.000       1.0 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO    Geo                        | 13804.901 | 13819.800 |    0.000  138198.0 |      10 |   138.198 |
-TimingAuditor.TIMER        INFO    MainEventSeq               |  2935.854 |  2936.101 | 1413.999   15925.0 |      10 |    29.361 |
-TimingAuditor.TIMER        INFO     MainEventGaussSim         |     0.700 |     0.300 |    0.000       1.0 |      10 |     0.003 |
-TimingAuditor.TIMER        INFO     MainSimulation            |  2935.154 |  2935.800 | 1413.999   15924.0 |      10 |    29.358 |
-TimingAuditor.TIMER        INFO      MakeMainSim              |  2933.554 |  2934.201 | 1413.002   15919.0 |      10 |    29.342 |
-TimingAuditor.TIMER        INFO       GenToSim                |  1442.181 |  1442.500 |    0.000   14423.0 |      10 |    14.425 |
-TimingAuditor.TIMER        INFO       GiGaFlush               |  1490.473 |  1491.101 | 1413.002    1564.0 |      10 |    14.911 |
-TimingAuditor.TIMER        INFO       GiGaCheckEvent          |     0.000 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO       SimToMCTruth            |     0.400 |     0.200 |    0.000       2.0 |      10 |     0.002 |
-TimingAuditor.TIMER        INFO       DetectorsHits           |     0.300 |     0.200 |    0.000       1.0 |      10 |     0.002 |
-TimingAuditor.TIMER        INFO        GetSpdHits             |     0.000 |     0.200 |    0.000       1.0 |      10 |     0.002 |
-TimingAuditor.TIMER        INFO        GetPrsHits             |     0.100 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        GetEcalHits            |     0.200 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        GetHcalHits            |     0.000 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO       MainEventDataPacking    |     0.200 |     0.200 |    0.000       2.0 |      10 |     0.002 |
-TimingAuditor.TIMER        INFO        PackMCParticle         |     0.000 |     0.100 |    0.000       1.0 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO        PackMCVertex           |     0.100 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCPrsHitPacker         |     0.000 |     0.100 |    0.000       1.0 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO        MCSpdHitPacker         |     0.100 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCEcalHitPacker        |     0.000 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        MCHcalHitPacker        |     0.000 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO      SimMonitor               |     1.600 |     1.600 |    0.997       5.0 |      10 |     0.016 |
-TimingAuditor.TIMER        INFO       GiGaGetMainEvent        |     0.400 |     0.200 |    0.000       1.0 |      10 |     0.002 |
-TimingAuditor.TIMER        INFO       MainMCTruthMonitor      |     0.000 |     0.100 |    0.000       1.0 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO       GiGaGetHitsAlg          |     0.000 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO       DetectorsMonitor        |     0.300 |     0.700 |    0.000       3.0 |      10 |     0.007 |
-TimingAuditor.TIMER        INFO        SpdMonitor             |     0.100 |     0.101 |    0.000       1.0 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO        PrsMonitor             |     0.200 |     0.310 |    0.000       1.1 |      10 |     0.003 |
-TimingAuditor.TIMER        INFO        EcalMonitor            |     0.000 |     0.100 |    0.000       1.0 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO        HcalMonitor            |     0.000 |     0.189 |    0.000       1.0 |      10 |     0.002 |
-TimingAuditor.TIMER        INFO       DataUnpackTest          |     0.900 |     0.600 |    0.000       2.0 |      10 |     0.006 |
-TimingAuditor.TIMER        INFO        UnpackMCVertex         |     0.100 |     0.100 |    0.000       1.0 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO        UnpackMCParticle       |     0.000 |     0.100 |    0.000       1.0 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO        CompareMCVertex        |     0.000 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CompareMCParticle      |     0.000 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackSpdHits          |     0.100 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckSpdHits           |     0.100 |     0.299 |    0.000       1.0 |      10 |     0.003 |
-TimingAuditor.TIMER        INFO        UnpackPrsHits          |     0.000 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckPrsHits           |     0.200 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackEcalHits         |     0.200 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckEcalHits          |     0.100 |     0.100 |    0.000       1.0 |      10 |     0.001 |
-TimingAuditor.TIMER        INFO        UnpackHcalHits         |     0.000 |     0.000 |    0.000       0.0 |      10 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckHcalHits          |     0.100 |     0.000 |    0.000       0.0 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO EVENT LOOP                    | 17029.211 | 19384.462 | 1559.356  177861.1 |      10 |   193.845 |
+TimingAuditor.TIMER        INFO  GaussSequencer               | 17024.112 | 19379.170 | 1524.618  177860.8 |      10 |   193.792 |
+TimingAuditor.TIMER        INFO   Generator                   |     0.900 |     0.987 |    0.249       5.9 |      10 |     0.010 |
+TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |     0.900 |     0.984 |    0.249       5.9 |      10 |     0.010 |
+TimingAuditor.TIMER        INFO     GaussGen                  |     0.400 |     0.405 |    0.000       1.9 |      10 |     0.004 |
+TimingAuditor.TIMER        INFO     ParticleGun               |     0.500 |     0.439 |    0.000       3.7 |      10 |     0.004 |
+TimingAuditor.TIMER        INFO     GenMonitor                |     0.000 |     0.134 |    0.000       0.5 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.000 |     0.129 |    0.000       0.5 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO   Simulation                  | 17023.212 | 19378.180 | 1524.132  177854.9 |      10 |   193.782 |
+TimingAuditor.TIMER        INFO    GiGaStore                  |     0.000 |     0.006 |    0.000       0.0 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO    Geo                        | 13722.214 | 16004.257 |    0.000  160042.5 |      10 |   160.043 |
+TimingAuditor.TIMER        INFO    MainEventSeq               |  3300.998 |  3373.852 | 1524.124   17812.3 |      10 |    33.739 |
+TimingAuditor.TIMER        INFO     MainEventGaussSim         |     0.600 |     0.210 |    0.000       1.0 |      10 |     0.002 |
+TimingAuditor.TIMER        INFO     MainSimulation            |  3300.398 |  3373.613 | 1523.746   17811.3 |      10 |    33.736 |
+TimingAuditor.TIMER        INFO      MakeMainSim              |  3298.899 |  3371.860 | 1521.947   17805.3 |      10 |    33.719 |
+TimingAuditor.TIMER        INFO       GenToSim                |  1550.564 |  1621.559 |    0.000   16212.1 |      10 |    16.216 |
+TimingAuditor.TIMER        INFO       GiGaFlush               |  1747.034 |  1749.348 | 1519.937    2208.1 |      10 |    17.493 |
+TimingAuditor.TIMER        INFO       GiGaCheckEvent          |     0.000 |     0.008 |    0.000       0.1 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO       SimToMCTruth            |     0.300 |     0.269 |    0.000       2.3 |      10 |     0.003 |
+TimingAuditor.TIMER        INFO       DetectorsHits           |     0.300 |     0.197 |    0.000       0.8 |      10 |     0.002 |
+TimingAuditor.TIMER        INFO        GetSpdHits             |     0.100 |     0.048 |    0.000       0.4 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        GetPrsHits             |     0.000 |     0.015 |    0.000       0.1 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        GetEcalHits            |     0.100 |     0.063 |    0.000       0.3 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        GetHcalHits            |     0.100 |     0.059 |    0.000       0.5 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO       MainEventDataPacking    |     0.600 |     0.439 |    0.000       1.6 |      10 |     0.004 |
+TimingAuditor.TIMER        INFO        PackMCParticle         |     0.000 |     0.109 |    0.000       0.6 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        PackMCVertex           |     0.100 |     0.057 |    0.000       0.4 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        MCPrsHitPacker         |     0.300 |     0.103 |    0.000       0.4 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        MCSpdHitPacker         |     0.100 |     0.073 |    0.000       0.4 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        MCEcalHitPacker        |     0.000 |     0.033 |    0.000       0.3 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        MCHcalHitPacker        |     0.100 |     0.058 |    0.000       0.4 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO      SimMonitor               |     1.500 |     1.751 |    0.562       6.0 |      10 |     0.018 |
+TimingAuditor.TIMER        INFO       GiGaGetMainEvent        |     0.600 |     0.103 |    0.000       0.6 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO       MainMCTruthMonitor      |     0.000 |     0.054 |    0.000       0.5 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO       GiGaGetHitsAlg          |     0.000 |     0.049 |    0.000       0.4 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO       DetectorsMonitor        |     0.300 |     0.682 |    0.000       3.0 |      10 |     0.007 |
+TimingAuditor.TIMER        INFO        SpdMonitor             |     0.000 |     0.236 |    0.000       0.6 |      10 |     0.002 |
+TimingAuditor.TIMER        INFO        PrsMonitor             |     0.100 |     0.120 |    0.000       0.4 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        EcalMonitor            |     0.100 |     0.174 |    0.000       1.1 |      10 |     0.002 |
+TimingAuditor.TIMER        INFO        HcalMonitor            |     0.100 |     0.147 |    0.000       0.9 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO       DataUnpackTest          |     0.600 |     0.859 |    0.328       2.0 |      10 |     0.009 |
+TimingAuditor.TIMER        INFO        UnpackMCVertex         |     0.100 |     0.069 |    0.000       0.4 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        UnpackMCParticle       |     0.000 |     0.035 |    0.000       0.2 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        CompareMCVertex        |     0.000 |     0.014 |    0.000       0.1 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        CompareMCParticle      |     0.000 |     0.055 |    0.000       0.5 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        UnpackSpdHits          |     0.100 |     0.063 |    0.000       0.3 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckSpdHits           |     0.000 |     0.047 |    0.000       0.3 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        UnpackPrsHits          |     0.000 |     0.070 |    0.000       0.5 |      10 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckPrsHits           |     0.100 |     0.209 |    0.000       1.0 |      10 |     0.002 |
+TimingAuditor.TIMER        INFO        UnpackEcalHits         |     0.200 |     0.045 |    0.000       0.2 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckEcalHits          |     0.000 |     0.197 |    0.000       0.6 |      10 |     0.002 |
+TimingAuditor.TIMER        INFO        UnpackHcalHits         |     0.000 |     0.035 |    0.000       0.3 |      10 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckHcalHits          |     0.000 |     0.002 |    0.000       0.0 |      10 |     0.000 |
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
 GiGa.GiGaMgr               INFO GiGaRunManager:: GiGaRunManager Finalization
 *****Chrono*****           INFO ****************************************************************************************************
 *****Chrono*****           INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****           INFO ****************************************************************************************************
-GiGa.GiGaMgr::process...   INFO Time User   : Tot= 14.9  [s] Ave/Min/Max= 1.49(+-0.0392)/ 1.41/ 1.56  [s] #= 10
-ChronoStatSvc              INFO Time User   : Tot=  168  [s]                                             #=  1
+GiGa.GiGaMgr::process...   INFO Time User   : Tot= 17.5  [s] Ave/Min/Max= 1.75(+-0.232)/ 1.52/ 2.21  [s] #= 10
+ChronoStatSvc              INFO Time User   : Tot=  175  [s]                                             #=  1
 *****Chrono*****           INFO ****************************************************************************************************
 ******Stat******           INFO ****************************************************************************************************
 ******Stat******           INFO  The Final stat Table (not ordered)
