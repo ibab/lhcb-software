@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+!========================= DAQEvent v9r20 2015-07-20 =========================
 ! 2015-06-12 - Heinrich Schindler
  - Add HCError raw bank type.
 
