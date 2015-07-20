@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r42 2015-07-20 =========================
 ! 2015-07-15 - Michel De Cian
  - Add check for empty preselection vector in PatLongLivedTracking.
 
