@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v17r4 2015-07-20 =========================
 ! 2015-06-02 - Marco Cattaneo
  - Fix xml selection rule for dict, to please genreflex
 
