@@ -3,10 +3,11 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
-!========================= STCheckers v4r2 2013-06-03 =========================
+!========================= STCheckers v4r3 2015-07-20 =========================
 ! 2015-06-06 - Vincenzo Battista
  - STClusterTuple algorithm included
 
+!========================= STCheckers v4r2 2013-06-03 =========================
 ! 2013-05-27 - Marco Cattaneo
  - Fix a clang32 warning and a Coverity FORWARD_NULL warning
 
