@@ -2,6 +2,7 @@
 ! Package manager : J. van Tilburg
 !------------------------------------------------------------------------------
 
+!========================= STAssociators v1r8 2015-07-20 =========================
 ! 2015-06-05 - Vincenzo Battista
  - The following (previously hardcoded) properties have been added:
    In STCluster2MCHitLinker.cpp: "DigitASCTlocation"

@@ -1,5 +1,5 @@
 package           STAssociators
-version           v1r7
+version           v1r8
         
 # =============== structure =================================================== 
 branches          src cmt doc options 
