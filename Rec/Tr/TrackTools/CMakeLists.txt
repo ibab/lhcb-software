@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackTools
 ################################################################################
-gaudi_subdir(TrackTools v5r10)
+gaudi_subdir(TrackTools v5r11)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          Det/MuonDet
