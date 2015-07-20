@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!========================= DetCond v12r43 2015-07-20 =========================
 ! 2015-06-30 - Marco Clemencic
  - Fixed LHCBPS-1425: ensure that the "InitialTime" is stable.
 
