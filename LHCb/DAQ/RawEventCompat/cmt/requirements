@@ -1,5 +1,5 @@
 package RawEventCompat
-version           v1r6
+version           v1r6p1
 
 branches cmt doc python tests
 
