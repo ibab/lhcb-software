@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+!========================= HltDAQ v4r19 2015-07-20 =========================
 ! 2015-07-15 - Sean Benson
  - Introduce v6 of sel reports.
  - Make getLatestVersion more robust.
