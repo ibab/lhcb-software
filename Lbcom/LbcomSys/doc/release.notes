@@ -6,6 +6,28 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v17r0>2015-07-21 LbcomSys v17r0</A></H1><PRE>
+This version uses Gaudi v26r3 and LHCb v39r0 (and ROOT 6.04.02)
+
+- Packages added:    HC/HCMonitors - Monitoring of Herschel data
+- Packages modified: Rich/RichTools v2r49,  ST/STAssociators v1r8,
+    ST/STCheckers v4r3, ST/STMonitors v4r3
+
+- In Rich/RichTools v2r49
+  . Sort the active particle type enum list in Rich::ParticleProperties to
+    ensure a strict (increasing) mass ordering. 
+
+- In ST/STAssociators v1r8
+  . The following (previously hardcoded) properties have been added:
+    In STCluster2MCHitLinker.cpp: "DigitASCTlocation"
+    In STCluster2MCParticleLinker.cpp: "ClusterASCTlocation"
+
+- In ST/STCheckers v4r3
+  . STClusterTuple algorithm included
+
+- In ST/STMonitors v4r3
+  . STClusterTuple moved to STCheckers
+
 </PRE><H1><A NAME=v16r6>2015-05-26 LbcomSys v16r6</A></H1><PRE>
 This version uses Gaudi v26r2 and LHCb v38r7 (and ROOT 6.02.08)
 

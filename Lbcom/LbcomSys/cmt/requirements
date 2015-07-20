@@ -1,5 +1,5 @@
 package           LbcomSys
-version           v16r6
+version           v17r0
 
 branches doc cmt tests
 
@@ -34,16 +34,16 @@ use OTMonitor         v3r8     OT        # Francesco Dettori
 use RichAlgorithms    v1r8     Rich      # Chris Jones
 use RichMCMonitors    v1r10    Rich      # Chris Jones
 use RichMCTools       v3r18    Rich      # Chris Jones
-use RichTools         v2r48    Rich      # Chris Jones
+use RichTools         v2r49    Rich      # Chris Jones
 
 # Silicon detectors
 use SiTools           v1r9     Si        # Matt Needham
 
 # Silicon Tracker
 use STAlgorithms      v4r7     ST        # Jeroen van Tilburg
-use STAssociators     v1r7     ST        # Jeroen van Tilburg
-use STCheckers        v4r2     ST        # Jeroen van Tilburg
-use STMonitors        v4r2p1   ST        # Mark Tobin
+use STAssociators     v1r8     ST        # Jeroen van Tilburg
+use STCheckers        v4r3     ST        # Jeroen van Tilburg
+use STMonitors        v4r3     ST        # Mark Tobin
 use STTools           v4r17    ST        # Jeroen van Tilburg
 
 # Velo
