@@ -4,6 +4,13 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+
+! 2015-07-20 - Simone Stracka
+ - Edited DPS/DPS_25ns_August2015.py 
+
+! 2015-07-19 - Simone Stracka
+ - Added draft DPS, Bc2JpsiX and CcDiHadron folders and 25 ns settings.
+
 ! 2015-07-19 - Olli Lupton
  - Update AllHlt2Lines for new PID lines and changed names of existing ones.
 

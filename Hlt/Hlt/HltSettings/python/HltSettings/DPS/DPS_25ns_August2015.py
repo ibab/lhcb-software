@@ -37,15 +37,18 @@ class DPS_25ns_August2015 :
             {
               DPSLines : {
                  'DPS:2x2mu' : {            
-
+                            'Prescale' :  1.0,
+                            'Postscale' :  1.0
                                },
                  'DPS:2xHc' : {            
-
+                            'Prescale' :  1.0,
+                            'Postscale' :  1.0
                                },
                  'DPS:2mu&Hc' : {            
-
+                            'Prescale' :  1.0,
+                            'Postscale' :  1.0
                                },
-                 }              
+                 }
               }
             )
         
