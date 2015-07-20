@@ -1,7 +1,7 @@
-# Options file for the QMTest to check that the containers have not 
+# Options file for the QMTest to check that the containers have not
 # changed, either in values or in size.
 
-from Configurables import Tesla 
+from Configurables import Tesla
 from Gaudi.Configuration import *
 
 from Configurables import HltANNSvc
@@ -39,6 +39,13 @@ input.run(configurable=Tesla())
 import GaudiPython
 from Gaudi.Configuration import ApplicationMgr
 from Configurables import LoKiSvc
+
+from GaudiKernel import ROOT6WorkAroundEnabled
+if ROOT6WorkAroundEnabled('ROOT-7492'):
+    # trigger autoloading of LHCbKernel dictionary
+    GaudiPython.gbl.LHCb.LHCbID
+    # trigger autoloading of DigiEvent dictionary
+    GaudiPython.gbl.LHCb.CaloDigit
 
 gaudi = GaudiPython.AppMgr()
 gaudi.initialize()
@@ -78,7 +85,7 @@ meanSizeProto = 0.0
 while n<1000:
     n+=1
     #
-    gaudi.run(1) 
+    gaudi.run(1)
     if not tes['/Event/DAQ/RawEvent']:
         print "End of file"
         break
@@ -86,7 +93,7 @@ while n<1000:
     gaudi.executeEvent()
     gaudi.algorithm("TeslaReportAlgo"+prefix).execute()
 
-    
+
     parts   = tes[partLoc]
     tracks  = tes[trackLoc]
     verts   = tes[vertLoc]

@@ -4,6 +4,9 @@ Package Coordinator : Sean Benson
 Purpose             : Turbo Stream Analysis
 !-----------------------------------------------------------------------------
 
+! 2015-07-20 - Marco Clemencic
+ - Added workaround for ROOT-7492 (some dictionaries not loaded).
+
 !========================= Tesla v1r8 2015-06-18 =========================
 
 ! 2015-6-16 - Sean Benson
@@ -99,7 +102,7 @@ Purpose             : Turbo Stream Analysis
  - Changed default output level.
 
 ! 2014-10-09 - Sean Benson
- - Give Tesla more slots so the report algorithm does not need 
+ - Give Tesla more slots so the report algorithm does not need
  congiguring by the user.
 
 ! 2014-09-07 - Sean Benson
