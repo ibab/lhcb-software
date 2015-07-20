@@ -5,6 +5,180 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v18r0>2015-07-21 RecSys v18r0</A></H1><PRE>
+This version uses Gaudi v26r3, LHCb v39r0 and Lbcom v17r0 (and ROOT 6.04.02)
+
+- Packages modified: Muon/MuonID v9r16, Muon/MuonTrackMonitor v2r9,
+    Pr/PrMCTools v2r10, Pr/PrPixel v1r12, Rec/ChargedProtoANNPID v2r11,
+    Rec/GlobalReco v6r53, Rec/LumiAlgs v9r9, Rec/RecAlgs v3r3p1, 
+    Rec/RecConf v2r22, Rich/RichAlignment v1r12, Rich/RichHPDImageAnalysis v1r17,
+    Rich/RichRecQC v2r71, Tf/FastVelo v1r21, Tf/PatAlgorithms v4r42,
+    Tf/PatKernel v2r10, Tf/TfKernel v2r33, Tf/TrackSys v9r9,
+    Tr/TrackExtrapolators v2r38, Tr/TrackFitter v5r7, Tr/TrackMCTools v3r12,
+    Tr/TrackMonitors v2r9, Tr/TrackTools v5r11, Tr/TrackUtils v1r61,
+    Velo/VeloRecMonitors v2r31
+
+- In Muon/MuonID v9r16
+  . Introduction of MuonIDAlgLite algorithm to replace old MuonIDAlg. See MuonID
+    release notes for details of improvements in speed and performance
+  . Adapt the algorithm to take several inputLocations and remove the insertion
+    of the muonPID and muonTrack using the key of the mother track. This change
+    is necessary to produce the same value of nShared online and offline, which
+    will reduce the differences in ProbNN outputs. 
+  . Modify the Configuration file so as not to use the new MuonID in 2008, 2009,
+    MC09 and Upgrade datatypes
+
+- In Muon/MuonTrackMonitor v2r9
+  . Implement switch in configuration such that the new multiple scattering
+    treatment is used for 2015.
+
+- In Pr/PrMCTools v2r10
+  . Make sure PrTrackAssociator writes out linker location, even if there are no
+    tracks in the event.
+
+- In Pr/PrPixel v1r12
+  . Inherit PrPixelHitManager from Decoder::ToolBase.
+
+- In Rec/ChargedProtoANNPID v2r11
+  . Improved debug messages, including the inputs for each MVA.
+
+- In Rec/GlobalReco v6r53
+  . Small clean up of the AddVelo algorithm.
+
+- In Rec/LumiAlgs v9r9
+  . Update references to follow introduction or Run heartbeat
+  . Fix LumiEventTuple when running with Moore (directly reading the
+    HltLumiSummary object).
+
+- In Rec/RecAlgs v3r3p1
+  . Fully suppress the warnings in absence of data and write a size of 0.
+
+- In Rec/RecConf v2r22
+  . Remove list of detectors for fieldOff, as it was never used and is identical
+    to list for fieldOn (in Configuration.py)
+
+- In Rich/RichAlignment v1r11, v1r12
+  . Changed from 20 bins in phi to 60 bins in phi, for the 2D histograms used 
+    in the mirror alignment. Can always rebin later, within the mirror alignment.
+  . Added several TrackSelector cuts in order to remove background photons from 
+    our deltaTheta histograms.
+
+- In Rich/RichHPDImageAnalysis v1r17
+  . Make parameters object in HPD fitting base class protected, to allow
+    direct use in derived classes.
+  . Add support for fitting log-z images when the first fit gave unusual fit
+    errors. Designed to try and deal with image fits for HPDs with strongly 
+    varying occupancies.
+  . Add a method to extract a copy of the cleaned histogram from the fitter.
+
+- In Rich/RichRecQC v2r71
+  . Fixed problem with access to Gaussian fit parameters in RecoQC.
+  . Rework RichRawDataSize a little.
+  . Remove space from TH1 parameter names
+  . Fix DataDecodingErrorMoni 2D histogram so L1 logical IDs start from 0 not 1.
+  . Small cleanup of the RichDataDecodingErrorMoni monitor.
+
+- In Tf/FastVelo v1r21
+  . Added python configuration for the FastKalmanFit for the PV finding
+  . Changed the default of the scattering noise parameters in  FastVeloTracking
+    and FastVeloFitLHCbIDs to improve the pull distribution of primary vertices.
+  . Made the scattering noise parameters in VeloFastKalmanTrack configurable from
+    FastVeloTracking and FastVeloFitLHCbIDs. Property is called
+    "KalmanScatteringNoiseParameters". Requires 4 parameters.
+  . Added code to refit FastTrack with kalman fit with scattering.
+
+- In Tf/PatAlgorithms v4r42
+  . Add check for empty preselection vector in PatLongLivedTracking.
+  . First commit of PatLongLivedTracking, an improved version of PatDownstream
+    for Run II.
+  . Modify PatDownTrack, and as a consequence PatDownstream, in preparation for
+    PatLongLivedTracking
+
+- In Tf/PatKernel v2r10
+  . Put in some virtual methods in IPatDebugTTTool.h.
+
+- In Tf/TfKernel v2r33
+  . Fix SIMDChi2Fit. In the previous release the new code did not get enabled by
+    accident 
+
+- In Tf/TrackSys v9r8, v9r9
+  . Switch on new multiple scattering treatment for public tools like
+    TrackExtrapolator, TrackInterpolator and TrackStateProvider
+  . Add switch for fast Kalman fitting of Velo tracks for PV reconstruction.
+    Default is on, old behaviour can be set via 'ExpertTracking'
+  . Switch on new multiple scattering correction in 'RecoTrackingRun2.py'
+  . Replace PatDownstream with PatLongLivedTracking in the default sequence, 
+    put in warning if non-standard Pat Reco algorithm is used, adapt 
+    PatChecking.py such that new algo fires up the TrackAssociator.
+  . Erase ExtraInfo from the Fitted HLT1 Velo Track (in RecoTrackingRun2.py)
+  . In RecoTracking.py, remove treatment of fitted Velo tracks for obsolete Run 1
+    RDST format
+  . Add TrackLikelihood to ExtraInfos, as it is needed by the ANNPID variables
+    (in RecoTrackingRun2.py)
+  . Check that fitters in HLT1 sequence only run when the corresponding PatReco
+    algorithms have run.
+
+- In Tr/TrackExtrapolators v2r38
+  . Break iteration in TrackRungeKuttaExtrapolator - evaluateRKStep if the values
+    of the state are obviously too large, to prevent FPE in fieldVector
+    calculation.
+  . Replace ToolHandle with tool<> to get the MSScatteringTool.
+    Add a property to set its name.
+
+- In Tr/TrackFitter v5r6, v5r7
+  . Add option for multiple scattering correction to ConfiguredEventFitter,
+    and remove some unnecessary lines
+  . Change some warning messages to info in TrackMasterFitter, such that they can
+    be suppressed in the HLT.
+  . Adapt 'ConfiguredMasterFitter' in ConfiguredEventFitters to have a switch for
+    omitting the log term for multiple scattering or not.
+    Default is using the log term.
+  . Check if input location in TrackEventFitter exists, otherwise skip and print
+    an error.
+  . TrackEventFitter: Added missing delete in case track chisq cut is not passed.
+
+- In Tr/TrackMCTools v3r12
+  . Add new methods in PatDebugTTTruthTool to use some more truth information.
+
+- In Tr/TrackMonitors v2r8, v2r9
+  . Protected TrackVertexMonitor from division by zero, as fast Kalman fitted
+    tracks seem to cause problems for the internal fits in the TrackVertexMonitor.
+  . Added STTrackTuple tool. It is equivalent to IT/TTTrackMonitor, but outputs
+    ntuples instead of histograms.
+  . Added histogram with residuals vs y for every module to TTTrackMonitor
+    (in 'fullDetail')
+  . Modified TrackFitMatchMonitor to use Lite clusters as well.
+  . Modified TT and IT trackmonitor such that more functionality works for hits
+    with Lite clusters.
+  . In TrackMonitor: reduced max chi2/dof to 5 and added prof for average
+    chi2prb vs phi in T stations
+  . OTTrackMonitor: Increase the range of the OT hit multiplicity to 15000.
+  . Fix bug in BeamGasVertexMonitor (matching of vertices).
+
+- In Tr/TrackTools v5r10, v5r11
+  . Bug fix in Run2GhostId: count *lite* clusters when determining the outliers
+    per subdetector
+  . Retrain network and flattening function for new multiple scattering
+    treatment
+  . Adapt StateThickMSCorrectionTool to omit log term in calculation if wanted.
+    Default for the moment is: Use the log term.
+  . Made TrackVelodEdxCharge work properly with 2015 configured tracking 
+    and print a line in log file of average number of real tracks per VELO track
+  . Added src/VPTrackSelecor.cpp
+
+- In Tr/TrackUtils v1r61
+  . Make list of locations to erase configurable in 'TrackEraseExtraInfo', add
+    print option, remove unnecessary includes, add doxygen comments.
+
+- In Velo/VeloRecMonitors v2r31
+  . VeloClusterMonitor: Added convoluted Landau-Gaussian fits of cluster ADC 
+    values for offline monitoring purpose. A job option switched these fit off 
+    by default. 
+  . VeloIPResolutionMonitorNT: Added functionality for multi-PV events, option
+    to compare tracks using LHCbIDs when refitting PVs, and option to use the
+    SimplifiedMaterialLocator when determining material intersected by tracks.
+  . Remove obsolete special case for Velo track location on RDST
+
 </PRE><H1><A NAME=v17r7>2015-05-26 RecSys v17r7</A></H1><PRE>
 This version uses Gaudi v26r2, LHCb v38r7 and Lbcom v16r6 (and ROOT 6.02.08)
 

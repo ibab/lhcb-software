@@ -1,5 +1,5 @@
 package RecSys
-version           v17r7
+version           v18r0
 
 branches cmt doc tests
 
@@ -17,36 +17,36 @@ use CaloTools            v6r10   Calo # Olivier Deschamps
 use HltMonitors          v1r7    Hlt  # Roel Aaij
 
 # Muon
-use MuonID               v9r15   Muon # Erica Polycarpo, Miriam Gandelman
+use MuonID               v9r16   Muon # Erica Polycarpo, Miriam Gandelman
 use MuonPIDChecker       v5r5    Muon # Erica Polycarpo, Miriam Gandelman
 use MuonTools            v5r5    Muon # Alessia Satta
 use MuonTrackAlign       v1r10   Muon # Silvia Pozzi
 use MuonInterfaces       v1r6    Muon # Giovanni Passaleva
-use MuonTrackMonitor     v2r8    Muon # Giacomo Graziani
+use MuonTrackMonitor     v2r9    Muon # Giacomo Graziani
 use MuonTrackRec         v3r13   Muon # Giacomo Graziani
 
 # Pr packages: Track Pattern Recognition for upgrade detectors
 use PrAlgorithms         v1r16   Pr   # Yasmine Amhis, Manuel Schiller
 use PrFitParams          v2r0    Pr   # Yasmine Amhis
 use PrKernel             v1r9    Pr   # Manuel Schiller
-use PrMCTools            v2r9    Pr   # Manuel Schiller
-use PrPixel              v1r11   Pr   # Tim Head, Heinrich Schindler
+use PrMCTools            v2r10   Pr   # Manuel Schiller
+use PrPixel              v1r12   Pr   # Tim Head, Heinrich Schindler
 use PrUtils              v2r0    Pr   # Thomas Nikodem
 use PrVeloUT             v2r2    Pr   # Jianchun Wang
 
 # Non sub-detector specific components
-use ChargedProtoANNPID   v2r10    Rec  # Chris Jones
-use GlobalReco           v6r52   Rec  # Chris Jones, Olivier Deschamps
-use LumiAlgs             v9r8    Rec  # Rosen Matev
-use RecAlgs              v3r3    Rec  # Marco Cattaneo
-use RecConf              v2r21   Rec  # Marco Cattaneo
+use ChargedProtoANNPID   v2r11   Rec  # Chris Jones
+use GlobalReco           v6r53   Rec  # Chris Jones, Olivier Deschamps
+use LumiAlgs             v9r9    Rec  # Rosen Matev
+use RecAlgs              v3r3p1  Rec  # Marco Cattaneo
+use RecConf              v2r22   Rec  # Marco Cattaneo
 use RecInterfaces        v1r4    Rec  # Chris Jones
 
 # Rich
-use RichAlignment        v1r10p1 Rich # Chris Jones, Antonis Papanestis
+use RichAlignment        v1r12   Rich # Chris Jones, Antonis Papanestis
 use RichENNRingFinder    v1r5p1  Rich # Chris Jones
 use RichGlobalPID        v3r24   Rich # Chris Jones
-use RichHPDImageAnalysis v1r16   Rich # Thomas Blake, Chris Jones
+use RichHPDImageAnalysis v1r17   Rich # Thomas Blake, Chris Jones
 use RichIFBAnalysis      v1r4    Rich # Ross Young, Chris Jones
 use RichParticleSearch   v1r12   Rich # Matt Coombes
 use RichPIDMerge         v2r11   Rich # Chris Jones
@@ -56,7 +56,7 @@ use RichRecMCAlgorithms  v1r6    Rich # Chris Jones
 use RichRecMCTools       v2r32   Rich # Chris Jones
 use RichRecMonitors      v2r36   Rich # Chris Jones
 use RichRecPhotonTools   v1r17   Rich # Chris Jones
-use RichRecQC            v2r70   Rich # Chris Jones
+use RichRecQC            v2r71   Rich # Chris Jones
 use RichRecStereoTools   v1r10   Rich # Chris Jones
 use RichRecSys           v5r7    Rich # Chris Jones
 use RichRecTemplateRings v1r7    Rich # Sajan Easo
@@ -64,14 +64,14 @@ use RichRecTools         v4r28   Rich # Chris Jones
 use RichRecTrackTools    v1r40   Rich # Chris Jones
 
 # Tf packages: Track Pattern Recognition
-use FastVelo             v1r20   Tf   # David Hutchcroft
-use PatAlgorithms        v4r41   Tf   # Michel De Cian
-use PatKernel            v2r9    Tf   # Michel De Cian
+use FastVelo             v1r21   Tf   # David Hutchcroft
+use PatAlgorithms        v4r42   Tf   # Michel De Cian
+use PatKernel            v2r10   Tf   # Michel De Cian
 use PatVelo              v3r32   Tf   # David Hutchcroft
 use PatVeloTT            v4r7    Tf   # Mariusz Witek
-use TfKernel             v2r32   Tf   # Michel De Cian
+use TfKernel             v2r33   Tf   # Michel De Cian
 use TfTools              v1r20   Tf   # Michel De Cian
-use TrackSys             v9r7    Tf   # Michel De Cian
+use TrackSys             v9r9    Tf   # Michel De Cian
 use TsaAlgorithms        v3r29   Tf   # Matt Needham
 use TsaKernel            v3r8    Tf   # Matt Needham
 
@@ -80,24 +80,24 @@ use PatChecker           v3r15   Tr   # David Hutchcroft
 use PatFitParams         v4r3    Tr   # Michel De Cian
 use TrackAssociators     v2r12   Tr   # Eduardo Rodrigues, Edwin Bos
 use TrackCheckers        v4r22   Tr   # Eduardo Rodrigues
-use TrackExtrapolators   v2r37   Tr   # Eduardo Rodrigues
+use TrackExtrapolators   v2r38   Tr   # Eduardo Rodrigues
 use TrackFitEvent        v6r5    Tr   # Eduardo Rodrigues
-use TrackFitter          v5r5    Tr   # Wouter Hulsbergen
+use TrackFitter          v5r7    Tr   # Wouter Hulsbergen
 use TrackIdealPR         v2r20   Tr   # Eduardo Rodrigues
 use TrackInterfaces      v4r28   Tr   # Wouter Hulsbergen
 use TrackKernel          v2r3    Tr   # Wouter Hulsbergen
-use TrackMCTools         v3r11p1 Tr   # Eduardo Rodrigues
-use TrackMonitors        v2r7    Tr   # Wouter Hulsbergen, Stephanie Menzemer
+use TrackMCTools         v3r12   Tr   # Eduardo Rodrigues
+use TrackMonitors        v2r9    Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v3r2    Tr   # Wouter Hulsbergen
-use TrackTools           v5r9    Tr   # Wouter Hulsbergen
-use TrackUtils           v1r60   Tr   # Eduardo Rodrigues
+use TrackTools           v5r11   Tr   # Wouter Hulsbergen
+use TrackUtils           v1r61   Tr   # Eduardo Rodrigues
 
 # Primary Vertex Finder
 use PatPV                v3r28   Tr   # Mariusz Witek
 use FastPV               v1r2    Tf   # Pawel Jalocha
 
 # Velo
-use VeloRecMonitors      v2r30   Velo # Malcom John, Eduardo Rodrigues
+use VeloRecMonitors      v2r31   Velo # Malcom John, Eduardo Rodrigues
 
 # Declare this as a container package
 apply_pattern container_package
