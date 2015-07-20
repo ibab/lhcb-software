@@ -3,7 +3,7 @@
 # Maintainer : Vanya Belyaev ibelyaev@physics.syr.edu
 # =====================================================================
 package           DetDescChecks
-version           v5r11
+version           v5r12
 
 # =============== structure ================================================
 branches          cmt doc src python

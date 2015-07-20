@@ -5,6 +5,7 @@
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
 
+!========================= DetDescChecks v5r12 2015-07-20 =========================
 ! 2015-06-19 - Marco Cattaneo
  - Disable RunStamp check in loaddddb-2015, to avoid frequent failure as we
    initialise with time = now

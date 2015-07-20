@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DetDescChecks
 ################################################################################
-gaudi_subdir(DetDescChecks v5r11)
+gaudi_subdir(DetDescChecks v5r12)
 
 gaudi_depends_on_subdirs(Det/DDDB
                          Det/DetDesc
