@@ -4,6 +4,7 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+!========================= PrPixel v1r12 2015-07-20 =========================
 ! 2015-06-24 - Heinrich Schindler
  - Inherit PrPixelHitManager from Decoder::ToolBase.
 
