@@ -52,6 +52,7 @@ BW_BW::BW_BW( const AssociatedDecayTree& decay)
   , _RPL(0)
   , _fittableResonancePropertiesPtr(0)
   , _fittableGlobalRadiusPtr(0)
+  , _normBF("NormBF", 0)
 {
   //  const fitSetup* fs = fitSetup::getMe();
   resetPDG();
@@ -105,6 +106,7 @@ BW_BW::BW_BW(const BW_BW& other)
   , _RPL(other._RPL)
   , _fittableResonancePropertiesPtr(0)
   , _fittableGlobalRadiusPtr(0)
+  , _normBF(other._normBF)
 {
   
   /*  if(_RPL->get(mumsPID())==0){
@@ -1104,9 +1106,11 @@ std::complex<double> BW_BW::getVal(IDalitzEvent& evt){
   setEventPtr(evt);
   resetInternals();
 
-  if(nonResonant()){
-    return 1;
+  if( nonResonant() ){
+        if( _normBF != 0 )return Fr();
+        else return Fr_PDG_BL();
   }
+    
   if(startOfDecayChain()){
     // in principle there is no need to distinguish the start
     // of the decay chain from the rest - it could just get
@@ -1121,22 +1125,15 @@ std::complex<double> BW_BW::getVal(IDalitzEvent& evt){
       // all calculations of Fr etc are meaningless in this case
       // assume Fr=1;
       if(dbThis){
-	cout << "BW_BW::getVal() for " << name() << endl;
-	cout << "instead of Fr() for 2l+1 = " << twoLPlusOne() << endl;
-	cout << " I'll return 1 " << endl;
+          cout << "BW_BW::getVal() for " << name() << endl;
+          cout << "instead of Fr() for 2l+1 = " << twoLPlusOne() << endl;
+          cout << " I'll return 1 " << endl;
       }
       return 1;
     }
-    //double returnVal = Fr(); //Old version uses unnormalised Barrier Factors
-    const double returnVal = Fr_PDG_BL();
-    if(dbThis && (returnVal > 2 || returnVal < 0.5)){
-      cout << " BW_BW for " 
-	   << _theDecay.oneLiner() << endl; // dbg
-      cout << "Fr() " << returnVal << endl;
-    }
-    return returnVal;
+    if( _normBF != 0 )return Fr();
+    else return Fr_PDG_BL();
   }
-
   
   if(dbThis){
     if(0 != getEvent()){
@@ -1154,8 +1151,12 @@ std::complex<double> BW_BW::getVal(IDalitzEvent& evt){
 	 << "\n    > EvtGenValue " << EvtGenValue(*(getEvent()))
 	 << endl;
   }
-  //std::complex<double> returnVal = Fr()*BreitWigner(); //Unnormalised BFs
-  const std::complex<double> returnVal = Fr_PDG_BL()*BreitWigner();
+    
+  double formFactor= 1.;
+  if( _normBF != 0 ) formFactor = Fr();
+  else formFactor = Fr_PDG_BL();
+  const std::complex<double> returnVal = formFactor*BreitWigner();
+
   if(dbThis) cout << " value = " << returnVal 
        << "|A|^2 | " << returnVal.real()*returnVal.real() 
 	       + returnVal.imag()*returnVal.imag()
@@ -1204,17 +1205,23 @@ double BW_BW::peakPosition() const{
 }
 
 void BW_BW::makeGeneratingFunction() const{
-  if(! _genFct){
-    if(nonResonant()){
-      counted_ptr<IGenFct> gptr(new FlatFct(getDalitzCoordinate()));
-      _genFct = gptr;
-    }else{
-      counted_ptr<IGenFct> gptr(new BWFct(getDalitzCoordinate()
-					  , peakPosition()
-					  , mumsWidth() * 1.02 ));
-      _genFct = gptr;
+    if(! _genFct){
+        if(nonResonant()){
+            counted_ptr<IGenFct> gptr(new FlatFct(getDalitzCoordinate()));
+            _genFct = gptr;
+        }
+        else if (_theDecay.nDgtr()==2 && (_theDecay.getDgtrVal(0).isNonResonant() || _theDecay.getDgtrVal(1).isNonResonant()) ){
+            counted_ptr<IGenFct> gptr(new BWFct(getDalitzCoordinate()
+                                                , mumsMass()
+                                                , mumsWidth() * 1.02 ));
+            _genFct = gptr;
+        }else{
+            counted_ptr<IGenFct> gptr(new BWFct(getDalitzCoordinate()
+                                                , peakPosition()
+                                                , mumsWidth() * 1.02 ));
+            _genFct = gptr;
+        }
     }
-  }
 }
 
 counted_ptr<IGenFct> BW_BW::generatingFunction() const{

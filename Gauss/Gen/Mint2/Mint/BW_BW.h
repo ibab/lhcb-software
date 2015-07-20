@@ -18,6 +18,7 @@
 #include "Mint/ResonancePropertiesList.h"
 #include "Mint/FitParDependent.h"
 #include "ResonancePropertiesFitRef.h"
+#include "Mint/NamedParameter.h"
 
 #include "TRandom.h"
 
@@ -27,6 +28,7 @@ class ParticleProperties;
 // Can only do 2 body decays for now... (it's the BW penetration factors)
 class BW_BW : virtual public ILineshape, public MINT::FitParDependent{
  private:
+  MINT::NamedParameter<int> _normBF;
   mutable IDalitzEvent* _eventPtr;
   //  mutable std::stack<IDalitzEvent*> _oldPointers;
 
