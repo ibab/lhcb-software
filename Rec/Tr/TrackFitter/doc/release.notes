@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!========================= TrackFitter v5r7 2015-07-20 =========================
 ! 2015-07-20 - Michel De Cian
  - Add option for multiple scattering correction to ConfiguredEventFitter, and remove some unnecessary lines
 
