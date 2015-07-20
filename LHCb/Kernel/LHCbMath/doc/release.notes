@@ -6,6 +6,16 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-07-20 - Vanya Belyaev
+ - pdg_format.py
+   simple module, implementing PDG rounding scheme 
+
+   >>> print pdg_format ( 1./3 , 0.0012345 )
+   >>> print pdg_format ( 1./3 , 0.0012345 , latex = True )
+   >>> print pdg_format2( 1./3 , 0.0012345 , 0.05 )
+   >>> print pdg_format ( 1./3 , 0.0012345 , 0.05 , latex = True )
+
+
 !========================= LHCbMath v3r58 2015-07-20 =========================
 ! 2015-07-14 - Vanya Belyaev
  - fix test_poly.py
