@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CaloUtils
 ################################################################################
-gaudi_subdir(CaloUtils v10r4)
+gaudi_subdir(CaloUtils v10r5)
 
 gaudi_depends_on_subdirs(Calo/CaloInterfaces
                          Det/CaloDet
