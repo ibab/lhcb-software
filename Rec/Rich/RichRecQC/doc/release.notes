@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r71 2015-07-20 =========================
 ! 2015-07-20 - Marco Clemencic
  - Fixed problem with access to Gaussian fit parameters in RecoQC.
 
