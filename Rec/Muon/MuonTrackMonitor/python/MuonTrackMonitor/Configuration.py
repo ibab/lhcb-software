@@ -20,7 +20,13 @@ class MuonTrackMonitorConf(LHCbConfigurableUser):
 
     def applyConf(self):
 
-        muonTrackFit = ConfiguredEventFitter( 'MuonTrackFitter', 'Rec/Track/Muon')
+        MSRossiAndGreisen = False
+        # For 2015, we want the new multiple scattering
+        if( self.getProp("DataType") == "2015" ):
+            MSRossiAndGreisen = True
+
+
+        muonTrackFit = ConfiguredEventFitter( 'MuonTrackFitter', 'Rec/Track/Muon', MSRossiAndGreisen = MSRossiAndGreisen)
         muonTrackFit.Fitter.addTool( TrackKalmanFilter , 'NodeFitter' )
         muonTrackFit.Fitter.addTool( MeasurementProvider, name = 'MeasProvider')
         muonTrackFit.Fitter.MeasProvider.IgnoreVelo = True 
@@ -53,5 +59,14 @@ class MuonTrackMonitorConf(LHCbConfigurableUser):
         monalig.chi2nCut = 3
         monalig.chi2matchCut = 10
         monalig.IsCosmics = False
+
+        # For 2015, we want the new multiple scattering
+        if( self.getProp("DataType") == "2015" ):
+            from Configurables import TrackMasterExtrapolator, DetailedMaterialLocator, StateThickMSCorrectionTool
+            monalig.addTool(TrackMasterExtrapolator, name = "Extrapolator")
+            monalig.Extrapolator.addTool(DetailedMaterialLocator, name="MaterialLocator")
+            monalig.Extrapolator.MaterialLocator.addTool( StateThickMSCorrectionTool,  "StateMSCorrectionTool")
+            monalig.Extrapolator.MaterialLocator.StateMSCorrectionTool.UseRossiAndGreisen = True
+            
         muonMoniSeq.Members += [muonTrackFit, monalig]
         

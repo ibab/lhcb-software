@@ -4,6 +4,9 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2015-07-20 - Michel De Cian
+ - Implement switch in configuration such that the new multiple scattering treatment is used for 2015.
+
 !========================= MuonTrackMonitor v2r8 2013-07-18 ========================
 ! 2013-06-19 - Marco Cattaneo
  - Add missing TrackInterfaces dependency
