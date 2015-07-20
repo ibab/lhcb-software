@@ -4,6 +4,7 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+!========================= HCMonitors v1r0 2015-07-20 =========================
 ! 2015-07-19 - Heinrich Schindler
  - Add ADC distributions for only NoBeam bunch-crossings.
 
