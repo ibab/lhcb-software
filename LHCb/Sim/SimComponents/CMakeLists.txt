@@ -1,7 +1,7 @@
 ################################################################################
 # Package: SimComponents
 ################################################################################
-gaudi_subdir(SimComponents v2r24p1)
+gaudi_subdir(SimComponents v2r25)
 
 gaudi_depends_on_subdirs(Det/CaloDet
                          Event/GenEvent

@@ -5,6 +5,7 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!========================= SimComponents v2r25 2015-07-20 =========================
 ! 2015-07-17 - Gloria Corti
  - Add printing of signal flag value in PrintMCDecayTreeTool when specified in
    options
