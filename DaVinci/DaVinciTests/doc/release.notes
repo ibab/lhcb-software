@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-07-20 - Eduardo Rodrigues
+ - Added workaround for ROOT-7492 (some dictionaries not loaded) to avoid
+   strange errors in test tagging.qms/test_tag_mc12.qmt.
 
 ! 2015-07-13 - Eduardo Rodrigues
  - Updated reference file for test test_standardintermediate_reco14_run.qmt.
