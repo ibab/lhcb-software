@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-07-20 - Karlis Dreimanis
+  - Fixed a minor typo in EW/Lines.py
+
 ! 2015-07-19 - Olli Lupton
  - PID:
   . Add phi->KK and J/psi->ppbar lines
