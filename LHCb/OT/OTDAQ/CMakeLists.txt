@@ -1,7 +1,7 @@
 ################################################################################
 # Package: OTDAQ
 ################################################################################
-gaudi_subdir(OTDAQ v7r19)
+gaudi_subdir(OTDAQ v7r20)
 
 gaudi_depends_on_subdirs(Det/OTDet
                          Event/DAQEvent
