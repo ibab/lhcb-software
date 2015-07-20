@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2015-07-20 - Michel De Cian
+ - Add option for multiple scattering correction to ConfiguredEventFitter, and remove some unnecessary lines
+
 ! 2015-07-17 - Michel De Cian
  - Change some warning messages to info in TrackMasterFitter, such that they can be suppressed in the HLT.
 
