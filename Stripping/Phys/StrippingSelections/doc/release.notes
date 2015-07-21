@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-21 - Ricardo Vazquez Gomez
+ - Update the TestMyStrippingLine.py for S23 tuning 
+
 ! 2015-07-21 - Vanya Belyaev
 
  -  StrippingCharm/StrippingtPromptCharm.py

@@ -17,11 +17,20 @@ DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
 #Raw event juggler to split Other/RawEvent into Velo/RawEvent and Tracker/RawEvent
 #
 from Configurables import RawEventJuggler
-juggler = RawEventJuggler( DataOnDemand=True, Input=2.0, Output=4.0 )
+juggler = RawEventJuggler( DataOnDemand=True, Input=0.3, Output=4.1 )
 
+#
+#Fix for TrackEff lines
+#
+from Configurables import DecodeRawEvent
+DecodeRawEvent().setProp("OverrideInputs",4.1)
+
+from Configurables import ConfigCDBAccessSvc
+ConfigCDBAccessSvc().File = '$STRIPPINGSELECTIONSROOT/tests/users/config.cdb'
 
 # Specify the name of your configuration
-confname='DstarD02xx' #FOR USERS
+confname='PIDCalib' #FOR USERS
+
 
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 
@@ -29,8 +38,18 @@ confname='DstarD02xx' #FOR USERS
 from StrippingSelections import buildersConf
 confs = buildersConf()
 from StrippingSelections.Utils import lineBuilder, buildStreamsFromBuilder
+#print confs[confname]["CONFIG"]["LineName"]["CutName"] = NewValue
 streams = buildStreamsFromBuilder(confs,confname)
 
+#clone lines for CommonParticles overhead-free timing
+print "Creating line clones for timing"
+for s in streams:
+    for l in s.lines:
+        if "_TIMING" not in l.name():
+            cloned = l.clone(l.name().strip("Stripping")+"_TIMING")
+            s.appendLines([cloned])
+
+#define stream names
 leptonicMicroDSTname   = 'Leptonic'
 charmMicroDSTname      = 'Charm'
 pidMicroDSTname        = 'PID'
@@ -124,15 +143,26 @@ sr = StrippingReport(Selections = sc.selections())
 from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 
+## Configure PV refitter
+from Configurables import LoKi__PVReFitter
+LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").CheckTracksByLHCbIDs = True
+
+## Configure the VeloTrack unpacker
+from Configurables import UnpackTrack
+unpackIt = UnpackTrack("unpackIt")
+unpackIt.InputName = "pRec/Track/FittedHLT1VeloTracks"
+unpackIt.OutputName = "Rec/Track/FittedHLT1VeloTracks"
+
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().EvtMax = 10000
 DaVinci().PrintFreq = 2000
+DaVinci().appendToMainSequence( [unpackIt] )
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
 DaVinci().ProductionType = "Stripping"
-DaVinci().DataType  = "2012"
+DaVinci().DataType  = "2015"
 DaVinci().InputType = "DST"
 
 # change the column size of timing table
@@ -143,8 +173,11 @@ TimingAuditor().TIMER.NameSize = 60
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 # database
-DaVinci().DDDBtag  = "dddb-20130929-1"
-DaVinci().CondDBtag = "cond-20141107"
+DaVinci().DDDBtag  = "dddb-20150526"
+DaVinci().CondDBtag = "cond-20150625"
 
 # input file
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15_NoBias.py")
+#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
+#importOptions("/afs/cern.ch/user/r/rvazquez/StrippingS23/DaVinciDev_v36r7p7/Phys/StrippingSelections/tests/data/validationReco15_NoBias.py")
+#importOptions("/afs/cern.ch/user/r/rvazquez/StrippingS23/DaVinciDev_v36r7p7/Phys/StrippingSelections/tests/data/validationReco15_NoBias2.py")
