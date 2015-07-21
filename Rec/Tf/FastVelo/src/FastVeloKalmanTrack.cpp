@@ -65,6 +65,7 @@ void FastVeloKalmanTrack::fit(LHCb::State& state,
   }
   cov(0,0) = cov(1,1) = 1  ; //mm^2
   cov(2,2) = cov(3,3) = 0.01  ; //rad^2
+  cov(4,4) = 0.0001  ; // reflects the default behaviour of the default track fitter
   
   // reset the chi2
   const int nhits = hits.size() ;

@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2015-07-20 - Sascha Stahl
+ - VeloFastKalmanTrack: Initialize element (4,4) of the covariance matrix to 0.0001.
+
 !========================= FastVelo v1r21 2015-07-20 =========================
 ! 2015-07-14 - Michel De Cian
  - Added python configuration for the FastKalmanFit for the PV finding
