@@ -1717,7 +1717,9 @@ class StrippingPromptCharmConf(LineBuilder) :
                                    self.Dstar  () ,
                                    self.Ds     () ,
                                    self.Dplus  () ,
-                                   self.LamC   () ]
+                                   self.LamC   () ,
+                                   self.SigC   ()  ## added for pentaquark searches 
+                                   ] 
             )
         
         return self._add_selection ( 'PromptCharm_Selection' , sel )
@@ -1774,20 +1776,35 @@ class StrippingPromptCharmConf(LineBuilder) :
             " [ psi(3770) -> D0        D-         ]cc "  ,
             " [ psi(3770) -> D0        D_s-       ]cc "  ,
             " [ psi(3770) -> D0        Lambda_c~- ]cc "  ,
+            " [ psi(3770) -> D0        Sigma_c~0  ]cc "  , ## addded 2015-07-21
+            " [ psi(3770) -> D0        Sigma_c~-- ]cc "  , ## addded 2015-07-21
             #
             "   psi(3770) -> D*(2010)+ D*(2010)-      "  ,
             " [ psi(3770) -> D*(2010)+ D-         ]cc "  ,
             " [ psi(3770) -> D*(2010)+ D_s-       ]cc "  ,
             " [ psi(3770) -> D*(2010)+ Lambda_c~- ]cc "  ,
+            " [ psi(3770) -> D*(2010)+ Sigma_c~0  ]cc "  , ## addded 2015-07-21
+            " [ psi(3770) -> D*(2010)+ Sigma_c~-- ]cc "  , ## addded 2015-07-21
             #
             "   psi(3770) -> D+        D-             "  ,
             " [ psi(3770) -> D+        D_s-       ]cc "  ,
             " [ psi(3770) -> D+        Lambda_c~- ]cc "  ,
+            " [ psi(3770) -> D+        Sigma_c~0  ]cc "  , ## addded 2015-07-21
+            " [ psi(3770) -> D+        Sigma_c~-- ]cc "  , ## addded 2015-07-21
             #
             "   psi(3770) -> D_s+      D_s-           "  ,
             " [ psi(3770) -> D_s+      Lambda_c~- ]cc "  ,
+            " [ psi(3770) -> D_s+      Sigma_c~0  ]cc "  , ## addded 2015-07-21
+            " [ psi(3770) -> D_s       Sigma_c~-- ]cc "  , ## addded 2015-07-21
             #
             "   psi(3770) -> Lambda_c+ Lambda_c~-     "  ,
+            " [ psi(3770) -> Lambda_c+ Sigma_c~0  ]cc "  , ## addded 2015-07-21
+            " [ psi(3770) -> Lambda_c+ Sigma_c~-- ]cc "  , ## addded 2015-07-21
+            #
+            "   psi(3770) -> Sigma_c0  Sigma_c~0      "  , ## addded 2015-07-21
+            " [ psi(3770) -> Sigma_c0  Sigma_c~-- ]cc "  , ## addded 2015-07-21
+            #
+            "   psi(3770) -> Sigma_c++ Sigma_c~--     "  , ## addded 2015-07-21
             #
             # double charm
             #
@@ -1796,21 +1813,36 @@ class StrippingPromptCharmConf(LineBuilder) :
             " [ psi(3770) -> D0        D+         ]cc "  ,
             " [ psi(3770) -> D0        D_s+       ]cc "  ,
             " [ psi(3770) -> D0        Lambda_c+  ]cc "  ,
+            " [ psi(3770) -> D0        Sigma_c0   ]cc "  , ## addded 2015-07-21
+            " [ psi(3770) -> D0        Sigma_c++  ]cc "  , ## addded 2015-07-21
             #
             " [ psi(3770) -> D*(2010)+ D*(2010)+  ]cc "  ,
             " [ psi(3770) -> D*(2010)+ D+         ]cc "  ,
             " [ psi(3770) -> D*(2010)+ D_s+       ]cc "  ,
             " [ psi(3770) -> D*(2010)+ Lambda_c+  ]cc "  ,
+            " [ psi(3770) -> D*(2010)+ Sigma_c0   ]cc "  , ## addded 2015-07-21
+            " [ psi(3770) -> D*(2010)+ Sigma_c++  ]cc "  , ## addded 2015-07-21
             #
             " [ psi(3770) -> D+        D+         ]cc "  ,
             " [ psi(3770) -> D+        D_s+       ]cc "  ,
             " [ psi(3770) -> D+        Lambda_c+  ]cc "  ,
+            " [ psi(3770) -> D+        Sigma_c0   ]cc "  , ## addded 2015-07-21
+            " [ psi(3770) -> D+        Sigma_c++  ]cc "  , ## addded 2015-07-21
             #
             " [ psi(3770) -> D_s+      D_s+       ]cc "  ,
             " [ psi(3770) -> D_s+      Lambda_c+  ]cc "  ,
+            " [ psi(3770) -> D_s+      Sigma_c0   ]cc "  , ## addded 2015-07-21
+            " [ psi(3770) -> D_s       Sigma_c++  ]cc "  , ## addded 2015-07-21
             #
             " [ psi(3770) -> Lambda_c+ Lambda_c+  ]cc "
-
+            " [ psi(3770) -> Lambda_c+ Sigma_c0   ]cc "  , ## addded 2015-07-21
+            " [ psi(3770) -> Lambda_c+ Sigma_c++  ]cc "  , ## addded 2015-07-21
+            #
+            " [ psi(3770) -> Sigma_c0  Sigma_c0   ]cc "  , ## addded 2015-07-21
+            " [ psi(3770) -> Sigma_c0  Sigma_c++  ]cc "  , ## addded 2015-07-21
+            #
+            " [ psi(3770) -> Sigma_c++ Sigma_c++  ]cc "  , ## addded 2015-07-21
+            #
             ] ,
             ## combination cut : accept all
             CombinationCut = " AALL " ,

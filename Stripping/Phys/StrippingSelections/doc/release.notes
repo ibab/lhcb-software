@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-21 - Vanya Belyaev
+
+ -  StrippingCharm/StrippingtPromptCharm.py
+    add combinations with Sigma_c0 and Sigma_c++, 
+    in particular (D* Sigma_c) pairs that could 
+    be very useful for pentaquark cross-checks
+
 ! 2015-07-17 - Stefano Perazzini
  - Corrected a mis-named algorithm in python/StrippingCalib/StrippingPIDCalib.py that
    was preventing the correct cloning of some line
