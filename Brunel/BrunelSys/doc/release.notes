@@ -3,7 +3,6 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-
 </PRE><H1><A NAME=v48r0>2015-07-22 Brunel v48r0</A></H1><PRE>
 This version uses projects:
  LCG_79 (ROOT 6.04.02), Gaudi v26r3, LHCb v39r0, Lbcom v17r0, Rec v18r0

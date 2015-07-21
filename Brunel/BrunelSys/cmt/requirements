@@ -1,5 +1,5 @@
 package           BrunelSys
-version           v47r9
+version           v48r0
 
 branches cmt doc tests
  
@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v47r9 Rec
+use Brunel v48r0 Rec
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: BrunelSys
 ################################################################################
-gaudi_subdir(BrunelSys v47r9)
+gaudi_subdir(BrunelSys v48r0)
 
 gaudi_depends_on_subdirs(Rec/Brunel
 )
