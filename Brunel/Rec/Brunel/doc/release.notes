@@ -3,16 +3,21 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-- Changes to references to reflect changes since v47r9
+</PRE><H1><A NAME=v48r0>2015-07-22 Brunel v48r0</A></H1><PRE>
+This version uses projects LHCb v39r0, Lbcom v17r0, Rec v18r0, Gaudi v26r3
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+-- Changes to references to reflect changes since v47r9
   . Remove list of detectors to process for FieldOff as it was the same as for
-    FieldOn - just, CALO and RICH processing order was inverted. (RecConf)
-  . Follow changes in Rich Alignment monitoring (RichAlignment)
-  . Inherit PrPixelHitManager from Decoder::ToolBase (PrPixel)
-  . Updates in TT and IT TrackMonitors (TrackMonitors)
+    FieldOn - just, CALO and RICH processing order was inverted. (RecConf v2r22)
+  . Follow changes in Rich Alignment monitoring (RichAlignment v1r12)
+  . Inherit PrPixelHitManager from Decoder::ToolBase (PrPixel v1r12)
+  . Updates in TT and IT TrackMonitors (TrackMonitors v2r9)
   . Replace MuonIDAlg by MuonIDAlgLite in all configurations except 2008, 2009,
-    MC09, Upgrade (MuonID)
-  . Replace PatDownstream by PatLongLivedTracking in Run2 configuration (TrackSys)
-  . Change some warning messages to info in TrackMasterFitter (TrackFitter)
+    MC09, Upgrade (MuonID v9r16)
+  . Replace PatDownstream by PatLongLivedTracking in Run2 configuration
+    (TrackSys v9r9)
+  . Change some warning messages to info in TrackMasterFitter (TrackFitter v5r7)
 
 - Changes to configuration
  . In OnlineMode, set CondDB().Online = True if not already set.
