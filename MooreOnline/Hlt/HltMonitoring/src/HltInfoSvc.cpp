@@ -11,7 +11,6 @@
 #include "zmq/zmq.hpp"
 
 // Gaudi
-#include <GaudiKernel/IIncidentSvc.h>
 #include <GaudiKernel/IDataProviderSvc.h>
 #include <GaudiKernel/IAlgorithm.h>
 #include <GaudiKernel/IAlgTool.h>
@@ -22,9 +21,6 @@
 #include <Kernel/RateCounter.h>
 #include <Hlt2Monitoring/Chunk.h>
 #include <Hlt2Monitoring/Serialize.h>
-
-// Det
-#include <DetDesc/RunChangeIncident.h>
 
 // Event
 #include <Event/HltDecReports.h>
@@ -44,15 +40,14 @@ DECLARE_COMPONENT(HltInfoSvc)
 
 //===============================================================================
 HltInfoSvc::HltInfoSvc(const string& name, ISvcLocator* loc)
-   : base_class(name, loc),
+   : Service(name, loc),
    m_zmqSvc{nullptr},
-   m_incidentSvc{nullptr},
    m_updMgrSvc{nullptr},
-   m_infoOut{nullptr},
-   m_run{0}
+   m_infoOut{nullptr}
 {
    declareProperty("InfoConnection", m_infoCon = "ipc:///tmp/hlt2MonInfo_0");
    declareProperty("LumiSettingsCondition", m_lumiCond = "Conditions/Online/LHCb/Lumi/LumiSettings");
+   declareProperty("StartTimeCondition", m_runCond = "Conditions/Online/LHCb/RunParameters");
 }
 
 //===============================================================================
@@ -64,15 +59,6 @@ HltInfoSvc::~HltInfoSvc()
 StatusCode HltInfoSvc::initialize()
 {
    StatusCode sc = Service::initialize();
-
-   // IncidentSvc
-   info() << "Initialized ZeroMQ based HltInfoSvc" << endmsg;
-   sc = serviceLocator()->service("IncidentSvc", m_incidentSvc, true);
-   if(!sc.isSuccess()) {
-      fatal() << "IncidentSvc not found" << endmsg;
-      return sc;
-   }
-   m_incidentSvc->addListener(this, IncidentType::RunChange);
 
    // ZQM service
    sc = serviceLocator()->service("ZeroMQSvc", m_zmqSvc, true);
@@ -88,12 +74,19 @@ StatusCode HltInfoSvc::initialize()
       return StatusCode::FAILURE;
    }
 
-   m_conditions[m_lumiCond] = nullptr;
-   m_updMgrSvc->registerCondition(this, m_lumiCond, &HltInfoSvc::updateConditions,
-                                  m_conditions[m_lumiCond]);
+   // Register conditions
+   auto register_ = [this](const std::string& cond) {
+      m_conditions[cond] = nullptr;
+      m_updMgrSvc->registerCondition(this, cond, &HltInfoSvc::updateConditions,
+                                     m_conditions[cond]);
+   };
+
+   register_(m_lumiCond);
+   register_(m_runCond);
+
    sc = m_updMgrSvc->update(this);
    if (!sc.isSuccess()) {
-      fatal() << "Could not update lumi settings condition." << endmsg;
+      fatal() << "Could not update conditions." << endmsg;
    }
    return sc;
 }
@@ -128,27 +121,7 @@ StatusCode HltInfoSvc::finalize()
    delete m_infoOut;
    m_infoOut = nullptr;
 
-   if (m_incidentSvc) {
-      m_incidentSvc->removeListener(this);
-      m_incidentSvc->release();
-      m_incidentSvc = 0;
-   }
    return Service::finalize();
-}
-
-//===============================================================================
-void HltInfoSvc::handle(const Incident& incident)
-{
-   const RunChangeIncident* rci = dynamic_cast<const RunChangeIncident*>(&incident);
-   if (rci) {
-      if (m_run != rci->runNumber()) {
-         debug() << "Change of run number detected " << m_run
-                 << " -> " << rci->runNumber() << endmsg;
-      }
-      m_run = rci->runNumber();
-      m_info.run = m_run;
-      sendInfo();
-   }
 }
 
 //===============================================================================
@@ -181,14 +154,35 @@ void HltInfoSvc::sendInfo()
 //===============================================================================
 StatusCode HltInfoSvc::updateConditions()
 {
-    if (m_conditions[m_lumiCond] == 0) {
-        error() << "Could not obtain Condition for run parameters from conditions DB" << endmsg;
+   auto check = [this](const std::string& cond, std::string par) -> StatusCode {
+      if (m_conditions[cond] == 0) {
+         error() << "Could not obtain Condition " << cond << " from conditions DB" << endmsg;
         return StatusCode::FAILURE;
-    }
-    if (!m_conditions[m_lumiCond]->exists("LumiPars")) {
-        error() << "Condition does not contain LumiPars " << endmsg;
-        return StatusCode::FAILURE;
-    }
-    m_info.lumiPars = m_conditions[m_lumiCond]->paramVect<double>("LumiPars"); // seconds
-    return StatusCode::SUCCESS;
+      }
+      if (!m_conditions[cond]->exists(par)) {
+         error() << "Condition does not contain " << par << endmsg;
+         return StatusCode::FAILURE;
+      }
+      return StatusCode::SUCCESS;
+   };
+
+   // Lumi parameters
+   auto sc = check(m_lumiCond, "LumiPars");
+   if (!sc.isSuccess()) return sc;
+   m_info.lumiPars = m_conditions[m_lumiCond]->paramVect<double>("LumiPars"); // seconds
+
+   // Start time
+   sc = check(m_runCond, "RunStartTime");
+   if (!sc.isSuccess()) return sc;
+   m_info.start = m_conditions[m_runCond]->param<int>("RunStartTime"); // seconds
+
+   // Run number
+   sc = check(m_runCond, "RunNumber");
+   if (!sc.isSuccess()) return sc;
+   m_info.run = m_conditions[m_runCond]->param<int>("RunNumber");
+
+   // Send new info
+   sendInfo();
+
+   return StatusCode::SUCCESS;
 }

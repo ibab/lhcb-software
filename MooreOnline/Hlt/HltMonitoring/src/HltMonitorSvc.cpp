@@ -319,11 +319,6 @@ void HltMonitorSvc::sendInfo()
       memcpy(msg.data(), &infoMsg.id, msg.size());
       m_infoOut->send(msg, ZMQ_SNDMORE);
 
-      // Then run start time in seconds since 1970
-      msg.rebuild(sizeof(m_startOfRun));
-      memcpy(msg.data(), &m_startOfRun, msg.size());
-      m_infoOut->send(msg, ZMQ_SNDMORE);
-
       // The type of histogram
       msg.rebuild(infoMsg.type.length());
       memcpy(static_cast<void*>(msg.data()), infoMsg.type.c_str(), msg.size());

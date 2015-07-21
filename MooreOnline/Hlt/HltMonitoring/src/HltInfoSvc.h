@@ -32,7 +32,7 @@ class IDataProviderSvc;
 
  */
 
-class HltInfoSvc : public extends1<Service, IIncidentListener> {
+class HltInfoSvc : public Service {
 public:
 
    HltInfoSvc(const std::string& name, ISvcLocator* sl);
@@ -44,8 +44,6 @@ public:
    virtual StatusCode stop();
    virtual StatusCode finalize();
 
-   virtual void handle(const Incident& incident);
-
 private:
 
    StatusCode updateConditions();
@@ -56,17 +54,16 @@ private:
    std::string m_infoCon;
    std::string m_decRepLoc;
    std::string m_lumiCond;
+   std::string m_runCond;
 
    // data members
    IZeroMQSvc* m_zmqSvc;
-   IIncidentSvc* m_incidentSvc;
    IUpdateManagerSvc* m_updMgrSvc;
 
    std::map<std::string, Condition*> m_conditions;
 
    zmq::socket_t* m_infoOut;
 
-   Monitoring::RunNumber m_run;
    Monitoring::RunInfo m_info;
 
    mutable std::vector<std::vector<zmq::message_t>> m_infoMessages;

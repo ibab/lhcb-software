@@ -4,6 +4,10 @@
 ! Purpose     : Monitoring of the HLT
 !-----------------------------------------------------------------------------
 
+! 2015-07-21 - Roel Aaij
+ - HltInfoSvc also sends run start time.
+ - Fix and simplify HltInfoSvc to send the correct run number and lumi info.
+
 ! 2015-07-15 - Roel Aaij
  - Add HltInfoSvc to supply run information to Hlt2 monitoring.
  - Update parallel monitoring script.
