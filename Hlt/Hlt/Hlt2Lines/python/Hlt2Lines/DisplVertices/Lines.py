@@ -138,11 +138,14 @@ class DisplVerticesLines(Hlt2LinesConfigurableUser) :
     def postscale(self, nickname):
         return self.Postscale.get(nickname, 1.)
 
-    def __apply_configuration__(self) :
-        for nick, cuts in self.__slots__.iteritems():
+    @staticmethod
+    def fillInDefaults(confDict):
+        ## fill in defaults (to avoid copy-paste errors)
+        from copy import deepcopy
+        dct = deepcopy(confDict)
+        for nick, cuts in dct.iteritems():
             if nick.startswith("RV2P") or nick.startswith("Single") or nick.startswith("Double"):
-                ## fill in defaults (to avoid copy-paste errors)
-                for k, defaultVal in self.DefaultLLP.iteritems():
+                for k, defaultVal in dct["DefaultLLP"].iteritems():
                     if k not in cuts:
                         cuts[k] = defaultVal
 
@@ -153,6 +156,11 @@ class DisplVerticesLines(Hlt2LinesConfigurableUser) :
                         cuts["extra"] = " & ".join((cuts.get("extra", ""), "(~INMATTER)"))
                 elif cuts.get("ApplyMatterVetoOne", False):
                     cuts["extraComb"] = " & ".join((cuts.get("extraComb", ""), "AHASCHILD(~INMATTER)"))
+        return dct
+
+    def __apply_configuration__(self) :
+        for k,v in DisplVerticesLines.fillInDefaults(self.__slots__).iteritems():
+            setattr(self, k, v)
 
         from Stages import (SingleFilter,
                             #SingleDownFilter,

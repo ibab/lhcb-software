@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-07-21 - Pieter David
+  - Update DisplVerticesLines to work with thresholds from HltSettings
+
 ! 2015-07-20 - Karlis Dreimanis
   - Fixed a minor typo in EW/Lines.py
 
