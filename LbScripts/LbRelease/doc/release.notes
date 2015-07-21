@@ -1,3 +1,9 @@
+2015-07-21  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-880: Added functionality to remove platforms from a Project/Version.
+	* python/LbRelease/SoftConfDB/LbSdbAddPlatform.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+
 2015-07-21  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-deployment-oldtarballs: fixed support for Gaudi

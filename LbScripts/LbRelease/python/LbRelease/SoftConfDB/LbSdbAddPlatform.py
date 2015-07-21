@@ -31,6 +31,11 @@ class LbSdbAddPlatform(Script):
                           dest = "debug",
                           action = "store_true",
                           help = "Display debug output")
+        parser.add_option("-r",
+                          dest = "remove",
+                          action = "store_true",
+                          default=False,
+                          help = "Remove platform instead of adding")
 
     def main(self):
         """ Main method for bootstrap and parsing the options.
@@ -52,7 +57,10 @@ class LbSdbAddPlatform(Script):
 
             # Connect to the ConfDB to update the platform
             self.mConfDB = SoftConfDB()
-            self.mConfDB.addPVPlatform(project, version, platform)
+            if opts.remove:
+                self.mConfDB.delPVPlatform(project, version, platform)
+            else:
+                self.mConfDB.addPVPlatform(project, version, platform)
 
 if __name__=='__main__':
     sUsage = """%prog project version platform   """

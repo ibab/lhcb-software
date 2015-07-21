@@ -522,7 +522,26 @@ class SoftConfDB(object):
         self.mNeoDB.get_or_create_relationships((node_pv, "PLATFORM", node_platform))
         self.mNeoDB.get_or_create_relationships((self.getPlatformParent(), "TYPE", node_platform))
 
+    def delPVPlatform(self, project, version, platform):
+        """ Get the dependencies for a single project """
 
+        # First create the indices needed
+        node_platform = self.mNeoDB.get_or_create_indexed_node("Platform",
+                                                           "Platform",
+                                                           platform,
+                                                           {"platform": platform})
+        node_pv =  self.mNeoDB.get_or_create_indexed_node("ProjectVersion",
+                                                           "ProjectVersion",
+                                                           project + "_" + version,
+                                                           {"project": project, "version": version})
+        rels = node_pv.get_relationships()
+        for r in rels:
+            if r.type == 'PLATFORM':
+                props = r.end_node.get_properties()
+                if props["platform"] == platform:
+                    self.log.warning("Removing relationship: %s" % str(r))
+                    r.delete()
+                    
     def versionIsPattern(self, version):
         return '*' in version
 
