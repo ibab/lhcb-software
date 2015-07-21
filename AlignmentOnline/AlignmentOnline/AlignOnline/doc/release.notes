@@ -3,6 +3,9 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-07-21 - Giulio Dujany
+ - Add possiblity to prescale colision for VeloAignment
+
 ! 2015-07-21 - Beat Jost
  - Change needed to include the monitoring 
  - Add algorithm to reset histograms before the next iteration
