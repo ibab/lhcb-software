@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PhysSelPython
 ################################################################################
-gaudi_subdir(PhysSelPython v9r6)
+gaudi_subdir(PhysSelPython v9r7)
 
 gaudi_depends_on_subdirs(GaudiConf
                          GaudiConfUtils

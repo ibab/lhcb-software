@@ -5,6 +5,8 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+!======================= PhysSelPython v9r7 2015-07-21 =======================
+
 ! 2015-06-11 - Vanya Belyaev
  - allow coexistence of Selections and RootInTES 
 
