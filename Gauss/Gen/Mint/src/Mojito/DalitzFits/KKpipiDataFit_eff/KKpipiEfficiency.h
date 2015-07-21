@@ -2,8 +2,8 @@
 #define KKPIPI_EFFICIENCY_HH
 
 #include <string>
-#include "IGetDalitzEvent.h"
-#include "DalitzEventAccess.h"
+#include "Mint/IGetDalitzEvent.h"
+#include "Mint/DalitzEventAccess.h"
 
 class TH1F;
 class TFile;
