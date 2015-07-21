@@ -18,7 +18,7 @@ macro(add_exe name)
   gaudi_add_executable(${name} src/${name} LINK_LIBRARIES DefUtil)
 endmacro()
 
-foreach(app DiracMon FarmStatus HLTFileEqualizer HLTDefBridge DefHltPlot)
+foreach(app DiracMon FarmStatus HLTFileEqualizer HLTDefBridge DefHltPlot FileDeleter)
   add_exe(${app})
 endforeach()
 
