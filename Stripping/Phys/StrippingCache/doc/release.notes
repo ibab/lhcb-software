@@ -5,6 +5,11 @@
 ! Created     : 2015-02-04
 ! -----------------------------------------------------------------------------
 
+! 2015-07-21 - Marco Clemencic
+ - Clean up
+   - removed unneeded files
+   - removed CMT configuration
+
 ! 2015-07-20 - Marco Clemencic
  - Fixed compilation of the caches adding required dependencies.
 
