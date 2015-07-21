@@ -26,7 +26,7 @@ from Configurables import DecodeRawEvent
 DecodeRawEvent().setProp("OverrideInputs",4.1)
 
 from Configurables import ConfigCDBAccessSvc
-ConfigCDBAccessSvc().File = '$STRIPPINGSELECTIONSROOT/tests/users/config.cdb'
+ConfigCDBAccessSvc().File = '$STRIPPINGSELECTIONSROOT/tests/data/config.cdb'
 
 # Specify the name of your configuration
 confname='PIDCalib' #FOR USERS
