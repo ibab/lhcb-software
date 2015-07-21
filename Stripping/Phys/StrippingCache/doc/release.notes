@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-07-21 - Marco Clemencic
+ - LHCBPS-1427: Suppress spurious warnings from S20/21 functors cache generation
+
+! 2015-07-21 - Marco Clemencic
  - Clean up
    - removed unneeded files
    - removed CMT configuration

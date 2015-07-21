@@ -34,13 +34,15 @@ endforeach()
 # Build the cache
 include(LoKiFunctorsCache)
 loki_functors_cache(S21FunctorsCache
-                    options/DV-Stripping21-Stripping.py #options/DataType.py
+                    options/SuppressS21LogMessages.py
+                    options/DV-Stripping21-Stripping.py options/SilenceErrors.py #options/DataType.py
                     LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
                     DEPENDS ${conf_deps}
                     SPLIT 50)
 
 loki_functors_cache(S20FunctorsCache
-                    options/DV-Stripping20-Stripping.py #options/DataType.py
+                    options/SuppressS21LogMessages.py
+                    options/DV-Stripping20-Stripping.py options/SilenceErrors.py #options/DataType.py
                     LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
                     DEPENDS ${conf_deps}
                     SPLIT 50)
