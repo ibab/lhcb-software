@@ -4,6 +4,19 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-07-21 - Roel Aaij
+ - Update Histogram class with constructors and assignment operators.
+ - Add run start time to RunInfo.
+ - Remove left-over messages when services start.
+ - Fix Hlt2AdderSvc (boost::unordered_map::emplace seems to be a bad idea...)
+ - Bind control socket in main thread, connect from other places.
+ - Hlt2SavesSvc
+   - Fix saving of histograms; create separate temporary file and replace
+     original with temporary.
+   - Put trigger for saving into separate thread.
+   - Remove histograms from memory that have not been updated during the last
+     2 save intervals.
+
 ! 2015-07-16 - Roel Aaij
  - Add python package to contain configuration module.
  - Catch errors from connection and bind attempts in Hlt2MonRelaySvc. This

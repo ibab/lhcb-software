@@ -12,11 +12,24 @@ namespace Monitoring {
 class RunInfo {
 public:
 
+   RunInfo() = default;
+   RunInfo(const RunInfo&) = default;
+   RunInfo(RunInfo&&) = default;
+   RunInfo& operator=(const RunInfo&) = default;
+   RunInfo& operator=(RunInfo&&) = default;
+   
+   RunInfo(const std::vector<double> pars, Monitoring::RunNumber r,
+           size_t s)
+      : lumiPars{pars},
+        run{r},
+        start{s} { }
+   
    virtual ~RunInfo( ) {}; ///< Destructor
 
    std::vector<double> lumiPars;
    Monitoring::RunNumber run;
-
+   size_t start;
+   
 };
 }
 #endif // HLT2MONITORING_RUNINFO_H

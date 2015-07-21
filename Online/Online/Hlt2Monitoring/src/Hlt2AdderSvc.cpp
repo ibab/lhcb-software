@@ -81,13 +81,19 @@ void Hlt2AdderSvc::function()
    front.setsockopt(ZMQ_SUBSCRIBE, "", 0);
    info() << "Connected frontend to: " << m_frontCon << endmsg;
 
+   // Clean up queue
+   zmq::message_t msg;
+   while (front.recv(&msg, ZMQ_DONTWAIT)) {
+      msg.rebuild();
+   }
+
    zmq::socket_t back{context(), ZMQ_PUB};
    back.bind(m_backCon.c_str());
    info() << "Bound backend to: " << m_backCon << endmsg;
 
    // WORKING: control socket and zmq_poll to stop. Check restart logic.
    zmq::socket_t control{context(), ZMQ_SUB};
-   control.connect(ctrlCon().c_str());
+   control.bind(ctrlCon().c_str());
    control.setsockopt(ZMQ_SUBSCRIBE, "", 0);
 
    //  Initialize poll set
@@ -121,22 +127,26 @@ void Hlt2AdderSvc::function()
       if (!paused && (items[1].revents & ZMQ_POLLIN)) {
          // Deserialize
          Monitoring::Chunk c;
-         std::stringstream inStream{receiveString(front)};
-         try {
-            boost::archive::text_iarchive ia{inStream};
-            ia >> c;
-         } catch (boost::archive::archive_exception) {
-            warning() << "Faulty chunk, ignoring " << endmsg;
-            continue;
+         {
+            std::stringstream inStream{receiveString(front)};
+            try {
+               boost::archive::text_iarchive ia{inStream};
+               ia >> c;
+            } catch (boost::archive::archive_exception) {
+               warning() << "Faulty chunk, ignoring " << endmsg;
+               continue;
+            }
          }
 
          bool first = false;
          key_t key{c.runNumber, c.histId};
          auto now = std::chrono::high_resolution_clock::now();
-         auto it = m_histograms.find(key);
          // Add to internal store
+         auto it = m_histograms.find(key);
          if (it == end(m_histograms)) {
-            it = m_histograms.emplace(key, Monitoring::Histogram{c.runNumber, c.tck, c.histId}).first;
+            auto r = m_histograms.insert(make_pair(key, Monitoring::Histogram{c.runNumber, c.tck, c.histId}));
+            assert(r.second);
+            it = r.first;
             m_updates[key] = now;
             first = true;
          }
@@ -147,16 +157,15 @@ void Hlt2AdderSvc::function()
                        m_sendInterval)) {
 
             // Serialize
-            string msg;
             std::stringstream outStream;
             {
                boost::archive::text_oarchive oa{outStream};
                oa << it->second;
-               msg = outStream.str();
             }
+            auto str = outStream.str();
 
             // Send message
-            sendString(back, msg);
+            sendString(back, str);
             m_updates[key] = now;
 
             // Zero out histogram

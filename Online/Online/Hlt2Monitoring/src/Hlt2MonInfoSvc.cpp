@@ -110,12 +110,18 @@ void Hlt2MonInfoSvc::function()
    data.setsockopt(ZMQ_SUBSCRIBE, "", 0);
    info() << "Connected data input socket to: " << m_frontCon << endmsg;
 
+   // Clean up queue
+   zmq::message_t msg;
+   while (data.recv(&msg, ZMQ_DONTWAIT)) {
+      msg.rebuild();
+   }
+
    zmq::socket_t inf{context(), ZMQ_REP};
    inf.bind(m_backCon.c_str());
    info() << "Bound info service socket to: " << m_backCon << endmsg;
 
    zmq::socket_t control{context(), ZMQ_SUB};
-   control.connect(ctrlCon().c_str());
+   control.bind(ctrlCon().c_str());
    control.setsockopt(ZMQ_SUBSCRIBE, "", 0);
 
    //  Initialize poll set
@@ -179,7 +185,6 @@ void Hlt2MonInfoSvc::function()
 bool Hlt2MonInfoSvc::receiveHistoInfo(zmq::socket_t& data) const
 {
    auto key = receiveRunAndId(data);
-   Monitoring::RunNumber run = key.first;
 
    zmq::message_t message;
    if (m_histograms.count(key) || m_rates.count(key)) {
@@ -192,18 +197,10 @@ bool Hlt2MonInfoSvc::receiveHistoInfo(zmq::socket_t& data) const
          message.rebuild();
       }
    } else {
-
-      // Run start time
-      message.rebuild();
-      data.recv(&message);
-      int start{0};
-      memcpy(&start, message.data(), sizeof(start));
-      m_startTimes[run] = start;
-
       // What type
       std::string type = receiveString(data);
 
-      debug() << "New histogram: " << start << " " << type;
+      debug() << "New histogram: " << type;
 
       // Last part, the content.
       if (type == Monitoring::s_Rate) {
@@ -233,15 +230,18 @@ bool Hlt2MonInfoSvc::receiveRunInfo(zmq::socket_t& data) const
 {
    // Deserialize RunInfo
    Monitoring::RunInfo runInfo;
-   std::stringstream ss{receiveString(data)};
+   auto info = receiveString(data);
+   std::stringstream ss{info};
    {
       boost::archive::text_iarchive ia{ss};
       ia >> runInfo;
    }
 
    // Add to internal store
-   debug() << "New run info for run: " << runInfo.run << endmsg;
-   m_runInfo[runInfo.run] = runInfo;
+   if (!m_runInfo.count(runInfo.run)) {
+      debug() << "New run info for run: " << runInfo.run << " " << info << endmsg;
+      m_runInfo.emplace(runInfo.run, runInfo);
+   }
    return true;
 }
 
@@ -256,7 +256,6 @@ bool Hlt2MonInfoSvc::histoInfoRequest(zmq::socket_t& inf) const
 
    // Prepare reply
    string known;
-   string start;
    string type;
    string reply;
 
@@ -270,19 +269,17 @@ bool Hlt2MonInfoSvc::histoInfoRequest(zmq::socket_t& inf) const
          oa << m_histograms[key];
       }
       reply = output.str();
-      start = to_string(m_startTimes[run]);
    } else if (m_rates.count(key)) {
       known = Monitoring::s_Known;
       type = Monitoring::s_Rate;
       reply = m_rates[key];
-      start = to_string(m_startTimes[run]);
    } else {
       known = Monitoring::s_Unknown;
    }
 
    debug() << "Sending info reply: " << run << " " << id << " |";
    // Send reply
-   array<string, 4> rep = {known, start, type, reply};
+   array<string, 4> rep = {known, type, reply};
    for (auto it = begin(rep), last = end(rep); it != last; ++it) {
       debug() << *it << "|";
       sendString(inf, *it, (it != (last -1) ? ZMQ_SNDMORE : 0));

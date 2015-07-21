@@ -99,7 +99,7 @@ StatusCode Hlt2MonBaseSvc::start()
    m_thread = new std::thread([this]{function();});
 
    m_control = new zmq::socket_t{context(), ZMQ_PUB};
-   m_control->bind(m_ctrlCon.c_str());
+   m_control->connect(m_ctrlCon.c_str());
    return sc;
 }
 

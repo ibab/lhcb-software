@@ -133,8 +133,9 @@ auto serialize(Archive& archive, Monitoring::RunInfo& info,
                const unsigned int) -> void {
    archive& info.lumiPars;
    archive& info.run;
+   archive& info.start;
 }
-   
+
 }
 }
 

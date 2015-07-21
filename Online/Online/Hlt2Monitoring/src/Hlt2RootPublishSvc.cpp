@@ -105,6 +105,12 @@ void Hlt2RootPublishSvc::function()
    front.setsockopt(ZMQ_SUBSCRIBE, "", 0);
    info() << "Connected front socket to: " << m_frontCon << endmsg;
 
+   // Clean up queue
+   zmq::message_t msg;
+   while (front.recv(&msg, ZMQ_DONTWAIT)) {
+      msg.rebuild();
+   }
+
    zmq::socket_t inf{context(), ZMQ_REQ};
    inf.connect(m_infoCon.c_str());
    int timeo = 1000;
@@ -117,7 +123,7 @@ void Hlt2RootPublishSvc::function()
 
    // Control socket
    zmq::socket_t control{context(), ZMQ_SUB};
-   control.connect(ctrlCon().c_str());
+   control.bind(ctrlCon().c_str());
    control.setsockopt(ZMQ_SUBSCRIBE, "", 0);
 
    //  Initialize poll set
@@ -194,20 +200,16 @@ void Hlt2RootPublishSvc::function()
                continue;
             }
 
-            auto startTime = boost::lexical_cast<int>(reply[1]);
-            m_startTimes[key.first] = startTime;
-
-            if (reply[2] == Monitoring::s_Rate) {
+            if (reply[1] == Monitoring::s_Rate) {
                int nBins = boost::numeric_cast<int>(m_runDuration / m_rateInterval);
-               auto r = addHisto(key, Gaudi::Histo1DDef(reply[3], m_rateStart,
+               auto r = addHisto(key, Gaudi::Histo1DDef(reply[2], m_rateStart,
                                                         m_rateStart + m_rateInterval * nBins, nBins));
                m_rates[key] = r;
-               debug() << "Added Rate histo: " << r.first << " " << r.second << " "
-                       << m_startTimes[key.first] << endmsg;
-            } else if (reply[2] == Monitoring::s_Histo1D) {
+               debug() << "Added Rate histo: " << r.first << " " << r.second << endmsg;
+            } else if (reply[1] == Monitoring::s_Histo1D) {
                // Deserialize Histo1DDef
                Gaudi::Histo1DDef def;
-               std::stringstream is{reply[3]};
+               std::stringstream is{reply[2]};
                {
                   boost::archive::text_iarchive ia{is};
                   ia >> def;
@@ -216,8 +218,7 @@ void Hlt2RootPublishSvc::function()
                // Add histo and known def
                auto r = addHisto(key, def);
                m_defs[key] = make_pair(r.first, def);
-               debug() << "Added 1D histo: " << r.first << " " << r.second << " "
-                       << m_startTimes[key.first] << endmsg;
+               debug() << "Added 1D histo: " << r.first << " " << r.second << endmsg;
             }
          }
 
@@ -261,21 +262,8 @@ void Hlt2RootPublishSvc::publishHistograms(zmq::socket_t& socket) const
       // Skip empty histograms
       if (!histo->GetEntries()) continue;
 
-      auto dir = entry.second.first;
-      debug() << "Publishing " << entry.first.first << " " << entry.first.second
-              << " " << entry.second.first << " " << histo->GetName() << endmsg;
-
       Monitoring::RunNumber run = entry.first.first;
-      sendMessage(socket, run, ZMQ_SNDMORE);
-      sendMessage(socket, entry.first.second, ZMQ_SNDMORE);
-      auto it = m_startTimes.find(run);
-      int startTime{0};
-      if (it != end(m_startTimes)) {
-         startTime = it->second;
-      } else {
-         warning() << "Cannot find start time for run " << run << endmsg;
-      }
-      sendMessage(socket, startTime, ZMQ_SNDMORE);
+      Monitoring::HistId id = entry.first.second;
 
       string type;
       if (m_rates.count(entry.first)) {
@@ -283,11 +271,24 @@ void Hlt2RootPublishSvc::publishHistograms(zmq::socket_t& socket) const
       } else if (m_defs.count(entry.first)) {
          type = Monitoring::s_Histo1D;
       } else {
-         warning() << "Histogram " << run << " " << entry.first.second
+         warning() << "Histogram " << run << " " << id
                  << " is of unknown type." << endmsg;
          continue;
       }
+
+
+      auto dir = entry.second.first;
+      debug() << "Publishing " << run << " " << id
+              << " " << dir << " " << histo->GetName() << endmsg;
+
+      // Send run and ID
+      sendMessage(socket, run, ZMQ_SNDMORE);
+      sendMessage(socket, id, ZMQ_SNDMORE);
+
+      // Send type of histogram
       sendString(socket, type, ZMQ_SNDMORE);
+
+      // Send histogram directory
       sendString(socket, dir, ZMQ_SNDMORE);
 
       // Serialize histogram

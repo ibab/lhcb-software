@@ -130,7 +130,7 @@ void Hlt2MonRelaySvc::function()
    }
 
    // use inproc for the control.
-   control.connect(ctrlCon().c_str());
+   control.bind(ctrlCon().c_str());
    control.setsockopt(ZMQ_SUBSCRIBE, "", 0);
 
    //  Start the queue proxy, which runs until ETERM or "TERMINATE"

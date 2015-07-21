@@ -108,9 +108,6 @@ def configureTop(appMgr, node_info):
     saverSvc.DataConnection = rootSvc.BackConnection
     saverSvc.InfoConnection = infoSvc.BackConnection
 
-    for svc in (adderSvc, infoSvc, rootSvc, saverSvc):
-        svc.OutputLevel = 2
-
     return (infoRelay, histoRelay, adderSvc, infoSvc, rootSvc, saverSvc)
 
 def configureSubfarm(appMgr, node_info):
