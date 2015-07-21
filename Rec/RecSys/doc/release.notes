@@ -86,6 +86,9 @@ This version uses Gaudi v26r3, LHCb v39r0 and Lbcom v17r0 (and ROOT 6.04.02)
     FastVeloTracking and FastVeloFitLHCbIDs. Property is called
     "KalmanScatteringNoiseParameters". Requires 4 parameters.
   . Added code to refit FastTrack with kalman fit with scattering.
+  . LHCBPS-1426 - VeloFastKalmanTrack: Initialize element (4,4) of the covariance 
+    matrix to 0.0001.
+
 
 - In Tf/PatAlgorithms v4r42
   . Add check for empty preselection vector in PatLongLivedTracking.
