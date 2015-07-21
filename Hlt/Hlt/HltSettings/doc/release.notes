@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-07-21 - Pieter David
+ - Added DisplVertices/DisplVertices_25ns_August25.py
 
 ! 2015-07-20 - Simone Stracka
  - Edited DPS/DPS_25ns_August2015.py 
