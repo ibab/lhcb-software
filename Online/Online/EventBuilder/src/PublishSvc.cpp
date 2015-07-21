@@ -26,6 +26,7 @@ StatusCode PublishSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
 
 PublishSvc::PublishSvc(CSTR name, ISvcLocator* svcLoc): Service(name, svcLoc), m_started(false)
 {
+  declareProperty("ServicePrefix",m_Prefix="/Publisher/");
 }
 
 StatusCode PublishSvc::initialize() {
@@ -68,7 +69,7 @@ void PublishSvc::regItem(CSTR item_name,const void* ptr, IType typ)
   {
     ITEM *item = new ITEM();
     item->item_name = item_name;
-    item->SrvName = "/Publisher/"+item_name;
+    item->SrvName = m_Prefix+item_name;
     item->typ = typ;
     item->m_ptr = (void*)ptr;
     if (m_started)

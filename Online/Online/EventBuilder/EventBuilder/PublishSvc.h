@@ -109,7 +109,7 @@ namespace LHCb
     /// Finalize service
     virtual StatusCode finalize();
     virtual StatusCode start();
-
+    std::string m_Prefix;
 #define _DECL(t,typ)  virtual void declarePubItem(CSTR n,t& v) {regItem(n,&v,typ); }
 //#define _DECLP(t) virtual void declarePubItem(CSTR n,t  v,CSTR d,Client c) {regItem(n,v,d,c);  }
     typedef std::pair<double,double> Rate;
