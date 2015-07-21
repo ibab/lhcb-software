@@ -4,7 +4,10 @@ Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
 ! 2015-07-21 - Giulio Dujany
- - Add possiblity to prescale colision for VeloAignment
+ - Added scripts to check that the same constants are used online and offline
+
+! 2015-07-21 - Giulio Dujany
+ - Add possiblity to prescale colision for VeloAlignment
 
 ! 2015-07-21 - Beat Jost
  - Change needed to include the monitoring 
