@@ -47,9 +47,9 @@ RecoQC::RecoQC( const std::string& name,
   declareProperty( "MaxBeta", m_maxBeta );
 
   // Ch Theta Rec histogram limits: low, high             -> aerogel, Rich1Gas, Rich2Gas
-  declareProperty( "ChThetaRecHistoLimitMin", m_ckThetaMin = { 0.150, 0.030, 0.010 } );
-  declareProperty( "ChThetaRecHistoLimitMax", m_ckThetaMax = { 0.325, 0.065, 0.036 } );
-  declareProperty( "CKResHistoRange", m_ckResRange = { 0.025, 0.005, 0.0025 } );
+  declareProperty( "ChThetaRecHistoLimitMin", m_ckThetaMin = { 0.150, 0.030, 0.010  } );
+  declareProperty( "ChThetaRecHistoLimitMax", m_ckThetaMax = { 0.325, 0.065, 0.036  } );
+  declareProperty( "CKResHistoRange",         m_ckResRange = { 0.025, 0.005, 0.0025 } );
   declareProperty( "Radiators", m_rads = { true, true, true } );
 
   declareProperty( "MinRadSegs", m_minRadSegs = { 0, 0, 0 } );
@@ -60,6 +60,8 @@ RecoQC::RecoQC( const std::string& name,
   declareProperty( "EnablePerPDPlots",    m_pdResPlots    = false );
   declareProperty( "EnablePerPDColPlots", m_pdColResPlots = false );
   declareProperty( "EnablePerPDFittedResPlots", m_fittedPDResPlots = false );
+
+  declareProperty( "RejectAmbiguousPhotons", m_rejectAmbigPhots = false );
 
   declareProperty( "HistoFitFreq", m_histFitFreq = -1 );
 
@@ -386,8 +388,12 @@ StatusCode RecoQC::execute()
     double avRecTrueTheta(0);
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " -> Found " << segment->richRecPhotons().size() << " photons" << endmsg;
-    for ( const auto photon : segment->richRecPhotons() )
+    for ( const auto* photon : segment->richRecPhotons() )
     {
+      // photon sel
+      if ( m_rejectAmbigPhots && !photon->geomPhoton().unambiguousPhoton() )
+      { continue; }
+
       // count photons
       ++photsPerRad[rad];
 

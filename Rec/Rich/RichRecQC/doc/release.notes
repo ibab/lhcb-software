@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2015-07-21 - Chris Jones
+ - Add option to RichRecoQC to reject ambiguous photons
+ - Add a new set of resolution monitors to make plots for unambigous photons.
+
 !========================= RichRecQC v2r71 2015-07-20 =========================
 ! 2015-07-20 - Marco Clemencic
  - Fixed problem with access to Gaussian fit parameters in RecoQC.

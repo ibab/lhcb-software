@@ -486,8 +486,10 @@ class RichRecQCConf(RichConfigurableUser):
             
         # Reconstruction monitoring
         if "PhotonMonitoring" in monitors :
-            self.recPerf(self.newSeq(sequence,"RichRecoMoni"),"None")
-            self.recPerf(self.newSeq(sequence,"RichRecoMoniTight"),"Tight")
+            self.recPerf(self.newSeq(sequence,"RichRecoMoni"),tkCuts="None")
+            self.recPerf(self.newSeq(sequence,"RichRecoMoniTight"),tkCuts="Tight")
+            self.recPerf(self.newSeq(sequence,"RichRecoMoniTightUnambig"),
+                         tkCuts="Tight",photCuts="UnambPhots")
 
         # Aerogel specific monitoring
         if "AerogelMonitoring" in monitors :
@@ -639,7 +641,7 @@ class RichRecQCConf(RichConfigurableUser):
             sequence.Members += [mon]
 
     ## Reconstruction performance
-    def recPerf(self,sequence,tkCuts="None"):
+    def recPerf(self,sequence,tkCuts="None",photCuts="None"):
 
         from Configurables import Rich__Rec__MC__RecoQC
         
@@ -649,7 +651,8 @@ class RichRecQCConf(RichConfigurableUser):
             # Construct the name for this monitor
             tkShortName = self.trackSelName(trackType)
             name = "RiCKRes" + tkShortName
-            if tkCuts != "None" : name += tkCuts
+            if tkCuts   != "None" : name += tkCuts
+            if photCuts != "None" : name += photCuts
             
             # Make a monitor alg
             mon = self.createMonitor(Rich__Rec__MC__RecoQC,name,trackType,tkCuts)
@@ -657,6 +660,7 @@ class RichRecQCConf(RichConfigurableUser):
             
             # cuts
             mon.MinBeta = self.getProp("MinTrackBeta")
+            if photCuts == "UnambPhots" : mon.RejectAmbiguousPhotons = True
 
             # Radiators
             mon.Radiators = self.usedRadiators()

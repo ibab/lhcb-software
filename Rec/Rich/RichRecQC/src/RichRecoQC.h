@@ -171,6 +171,9 @@ namespace Rich
         /// Enable Fitted CK theta resolution plots per PD
         bool m_fittedPDResPlots;
 
+        /// Reject ambiguous photons
+        bool m_rejectAmbigPhots;
+
         /// Event count
         unsigned long long m_nEvts;
 
