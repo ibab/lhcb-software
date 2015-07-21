@@ -3,6 +3,10 @@
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
 
+! 2015-07-21 - Beat Jost and Silvia Borghi
+ - In AlEquations.cpp, skip events with different equations size (instead 
+   to stop the job)
+
 !========================= AlignKernel v3r7 2015-01-23 =========================
 ! 2015-01-12 - Wouter Hulsbergen
  - Added class to hold otmonolayer alignment data
