@@ -46,7 +46,6 @@
 #include "GaudiKernel/IUpdateable.h"
 #include "GaudiKernel/SmartIF.h"
 
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : AlignAlgorithm
 //
@@ -152,6 +151,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
 //  For Online Running
   declareProperty("PartitionName",m_HistoUpdater->m_PartitionName="LHCbA");
   declareProperty("ReferenceFile",m_HistoUpdater->m_RefFileName="");
+  declareProperty("RunList",m_RunList);
 
   m_runnr = 0;
 }
@@ -212,7 +212,7 @@ StatusCode AlignAlgorithm::initialize() {
   }
   if (m_HistoUpdater->m_RefFileName.empty()) {
     m_HistoUpdater->m_RefFileName =
-        "/group/online/dataflow/options/"+m_HistoUpdater->m_PartitionName+"/Alignment_Reference_File.txt";
+        "/group/online/dataflow/options/"+m_HistoUpdater->m_PartitionName+"/Alignement_Reference_File.txt";
   }
 
   /// create the summary data and register in the TES
@@ -708,7 +708,13 @@ void AlignAlgorithm::handle(const Incident& incident) {
   }
   if (m_Online && incident.type() == "DAQ_PAUSE")
   {
-    m_HistoUpdater->Update(m_runnr);
+    if (m_RunList.size() >0)
+    {
+      if (m_RunList[0] != "*")
+      {
+        m_HistoUpdater->Update(::atoi(m_RunList[0].c_str()));
+      }
+    }
   }
 }
 

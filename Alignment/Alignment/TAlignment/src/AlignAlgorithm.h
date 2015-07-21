@@ -105,7 +105,7 @@ public:
   * @param alignConstants reference to a flat vector of alignment constants, i.e. std::vector<double>
   */
   void getAlignmentConstants(const Elements& elements, AlignConstants& alignConstants) const;
-
+  std::vector<std::string> m_RunList;
 protected:
 
   bool printDebug()   const {return msgLevel(MSG::DEBUG);};

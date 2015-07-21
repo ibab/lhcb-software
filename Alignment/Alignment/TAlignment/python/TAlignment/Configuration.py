@@ -55,13 +55,14 @@ class TAlignment( LHCbConfigurableUser ):
         , "OutputLevel"                  : INFO                        # Output level
         , "LogFile"                      : "alignlog.txt"              # log file for kalman type alignment
         , "Incident"                     : ""                          # name of handle to be executed on incident by incident server
-        , "DataCondType"                 : "Run2"                      # Set the format of xml file for run1 or run2 
+        , "DataCondType"                 : "Run2"                      # Set the format of xml file for run1 or run2
         , "UpdateInFinalize"             : True
         , "OutputDataFile"               : ""
         , "DatasetName"                  : "Unknown"
         , "OnlineMode"                   : False
         , "OnlineAligWorkDir"            : "/group/online/AligWork/running"
         , "Upgrade"                      : False
+        , "RunList"                      : []
         }
 
     def __apply_configuration__(self):
@@ -136,7 +137,7 @@ class TAlignment( LHCbConfigurableUser ):
         if not self.getProp( "Upgrade" ):
             seq = [TrackMonitor(name + "TrackMonitor",
                                 TracksInContainer = location),
-                   
+
                    TrackVeloOverlapMonitor(name + "VeloOverlapMonitor",
                                            TrackLocation =location),
                    TrackITOverlapMonitor(name + "ITOverlapMonitor",
@@ -181,7 +182,7 @@ class TAlignment( LHCbConfigurableUser ):
         import getpass
         name = 'Write' + subdet + condname + 'ToXML'
         alg.addTool( WriteAlignmentConditionsTool, name )
-        handle = getattr ( alg , name ) 
+        handle = getattr ( alg , name )
         handle.topElement = self.getProp( subdet + 'TopLevelElement' )
         handle.precision = self.getProp( "Precision" )
         handle.depths = depths
@@ -245,7 +246,7 @@ class TAlignment( LHCbConfigurableUser ):
         import getpass
         name = 'Write' + subdet + condname + 'ToXML'
         alg.addTool( WriteAlignmentConditionsTool, name )
-        handle = getattr ( alg , name ) 
+        handle = getattr ( alg , name )
         handle.topElement = self.getProp( subdet + 'TopLevelElement' )
         handle.precision = self.getProp( "Precision" )
         handle.depths = depths
@@ -278,7 +279,7 @@ class TAlignment( LHCbConfigurableUser ):
             self.addOnlineXmlWriter( alg, 'Muon','Modules', [2] )
         if 'Ecal' in listOfCondToWrite:
             self.addOnlineXmlWriter( alg, 'Ecal','alignment', [] )
-            
+
     def alignmentSeq( self, outputLevel = INFO ) :
         if not allConfigurables.get( "AlignmentSeq" ) :
             if outputLevel == VERBOSE: print "VERBOSE: Alignment Sequencer not defined! Defining!"
@@ -290,7 +291,7 @@ class TAlignment( LHCbConfigurableUser ):
                                         gslSVDsolver, CLHEPSolver, SparseSolver, DiagSolvTool,
                                         Al__AlignConstraintTool, Al__AlignUpdateTool,
                                         Al__TrackResidualTool, WriteMultiAlignmentConditionsTool )
-            
+
             alignAlg = AlignAlgorithm( "Alignment" )
             alignAlg.OutputLevel                  = outputLevel
             alignAlg.NumberOfIterations           = self.getProp( "NumIterations" )
@@ -304,9 +305,10 @@ class TAlignment( LHCbConfigurableUser ):
             alignAlg.UpdateInFinalize             = self.getProp( "UpdateInFinalize" )
             alignAlg.OutputDataFile               = self.getProp( "OutputDataFile" )
             alignAlg.OnlineMode                   = self.getProp( "OnlineMode" )
+            alignAlg.RunList                      = self.getProp( "RunList")
 #            self.addXmlWriters(alignAlg)
 
-            #print alignAlg
+            #print "Error",alignAlg
             # and also the update tool is in the toolsvc
             updatetool = Al__AlignUpdateTool("Al::AlignUpdateTool")
             updatetool.MinNumberOfHits            = self.getProp( "MinNumberOfHits"    )
@@ -338,8 +340,8 @@ class TAlignment( LHCbConfigurableUser ):
                 self.addXmlWriters(xmlwriter)
             else :
                 self.addXmlRun1Writers(xmlwriter)
-            print '=================== OnlineMode = ', self.getProp( "OnlineMode" ) 
-                
+            print '=================== OnlineMode = ', self.getProp( "OnlineMode" )
+
             # and these too
             gslSVDsolver().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
             DiagSolvTool().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
