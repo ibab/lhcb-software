@@ -110,13 +110,15 @@ def setupOnline():
   ai.OutputLevel    = 3
   ai.MaxIteration   = MAX_NITER
   ai.ServiceInfix   = ""
-
+  ai.ReferenceRunNr = Online.DeferredRuns[0] if hasattr(Online, "DeferredRuns") else -1
   runType = os.environ.get('RUN_TYPE', 'Unknown')
   runType = runType.split('|')[-1].strip() if '|' in runType else runType
   if runType == 'Tracker':
     sds = ['TT', 'IT', 'OT']
+    ai.RunType=runType
   elif runType in ('Velo', 'Muon'):
     sds = [runType]
+    ai.RunType=runType
   else:
     print 'WARNING: RUN_TYPE is not one of Velo, Tracker or Muon. Will assume all subdetectors'
     sds = ['Velo', 'TT', 'IT', 'OT', 'Muon']

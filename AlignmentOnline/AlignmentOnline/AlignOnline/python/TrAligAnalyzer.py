@@ -71,6 +71,9 @@ def patchEscher(true_online_version, alignment_module, n = -1):
   from Gaudi.Configuration import appendPostConfigAction
   appendPostConfigAction(fakeEventTime(initialTime))
 
+  TAlignment().RunList=Online.DeferredRuns if hasattr(Online, "DeferredRuns") else []
+  sys.stdout.flush()
+  sys.stderr.flush()
   escher = EscherCommon(true_online_version, alignment_module)
   hostname = HostName()
   escher.InputType  = "MDF"
@@ -91,6 +94,12 @@ def setupOnline(directory, prefix, filename):
 
         @author M.Frank
   """
+  class __MonAdd:
+    def __init__(self):
+      pass
+    def addMonitors(self):
+      GaudiSequencer("EscherSequencer").Members += ["HistogramResetter"]
+
   from Configurables import LHCb__FILEEvtSelector as es
   Online = importOnline()
 
@@ -125,7 +134,10 @@ def setupOnline(directory, prefix, filename):
   Configs.MonitorSvc().OutputLevel = MSG_ERROR
   Configs.MonitorSvc().UniqueServiceNames = 1
   Configs.MonitorSvc().CounterUpdateInterval = -1
+  Configs.MonitorSvc().DimUpdateInterval = -1
   Configs.RootHistCnv__PersSvc("RootHistSvc").OutputLevel = MSG_ERROR
+  mon = __MonAdd()
+  Gaudi.appendPostConfigAction(mon.addMonitors)
   app.OutputLevel = MSG_INFO
   # print sel
 

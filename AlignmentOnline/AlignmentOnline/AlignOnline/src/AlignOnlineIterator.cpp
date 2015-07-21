@@ -59,6 +59,7 @@ class AlignOnlineIterator: public GaudiTool, virtual public LHCb::IAlignIterator
     LHCb::IAlignDrv *m_parent;
     lib_rtl_thread_t m_thread;
     string m_PartitionName;
+    string m_runType;
     ToolHandle<Al::IAlignUpdateTool> m_alignupdatetool;
     ToolHandle<IWriteAlignmentConditionsTool> m_xmlwriter;
     unsigned int m_maxIteration;
@@ -69,6 +70,7 @@ class AlignOnlineIterator: public GaudiTool, virtual public LHCb::IAlignIterator
     string m_runningdir ;  // sub directory where this job runs
     string m_runningxmldir ;  // directory where the iterator stores the xml
     bool m_keepIterXml ;
+    int m_refRunNr;
     vector<AlignOnlineXMLCopier*> m_xmlcopiers;
     IPublishSvc *m_PubSvc;
     map<string, string*> m_condmap;
@@ -108,6 +110,8 @@ AlignOnlineIterator::AlignOnlineIterator(const string & type,
   declareProperty("ServiceInfix", m_ServInfix = "TrackerAlignment/");
   declareProperty("SubDetectors", m_subDets);
   declareProperty("KeepIterXml", m_keepIterXml = true ) ;
+  declareProperty("RunType", m_runType = "NotDefined");
+  declareProperty("ReferenceRunNr",m_refRunNr);
 
   m_iteration = 0;
   IInterface *p = (IInterface*) parent;
@@ -122,6 +126,7 @@ StatusCode AlignOnlineIterator::initialize()
   debug() << "ASDFilePattern : " << m_asdCollector.m_filePatt << endreq;
   debug() << "PartitionName  : " << m_PartitionName << endreq;
   debug() << "MaxIteration    : " << m_maxIteration << endreq;
+  debug() << "ReferenceRunNumber  :" << m_refRunNr <<endreq;
 
   StatusCode sc = GaudiTool::initialize();
   if (sc.isSuccess())
@@ -129,6 +134,10 @@ StatusCode AlignOnlineIterator::initialize()
     sc = m_alignupdatetool.retrieve();
     if (!sc.isSuccess())
       error() << "Cannot retrieve alignupdatetool" << endreq;
+  }
+  if (m_refRunNr == -1)
+  {
+    error() << "reference Run Number not defined. seems that there are no runs specified in the RunInfo" <<endreq;
   }
   sc = service("LHCb::PublishSvc", m_PubSvc, true);
   if (!sc.isSuccess())
@@ -175,7 +184,7 @@ StatusCode AlignOnlineIterator::initialize()
 
   // set reference base
   m_parent->setReferenceBase(0);
-  
+
   return sc;
 }
 
@@ -202,7 +211,7 @@ StatusCode AlignOnlineIterator::i_run()
   StatusCode sc = StatusCode::SUCCESS;
   // only called once
 
-  int runnr = 0;
+  int runnr = m_refRunNr;
   IDetDataSvc* detDataSvc(0);
   sc = service("DetectorDataSvc", detDataSvc, false);
   if (sc.isFailure())
@@ -222,11 +231,11 @@ StatusCode AlignOnlineIterator::i_run()
     debug() << "Iteration " << m_iteration << endreq;
     // 4. read ASDs and compute new constants
     debug() << "Collecting ASD files" << endreq;
-    Al::Equations equations;
+    Al::Equations equations(0);
     m_asdCollector.collectASDs(equations);
     debug() << "Collected ASDs: numevents = " << equations.numEvents()
         << endreq;
-    runnr = equations.firstRun();
+//    runnr = equations.firstRun();
 
     // FIXME: fire incident in the run changehandler to read the xml:
     // otherwise it will just use the geometry from the snapshot
@@ -248,9 +257,20 @@ StatusCode AlignOnlineIterator::i_run()
     // copy the xml directory to a directory with the iteration name
     if( m_keepIterXml ) {
       const std::string xmliterdir = m_runningdir + "/Iter" + to_string(m_iteration);
-      boost::filesystem::rename(m_runningxmldir, xmliterdir);
+      boost::system::error_code ec;
+      boost::filesystem::rename(m_runningxmldir, xmliterdir,ec);
+      if (ec.value() != 0)
+      {
+        error() << "Rename from " << m_runningxmldir << " to " << xmliterdir << "failed: Return"
+            << ec.value()<<" " << ec.message()<<". Retrying..."<< endreq;
+        boost::filesystem::remove_all(xmliterdir,ec);
+        boost::filesystem::rename(m_runningxmldir, xmliterdir,ec);
+        if (ec.value() != 0)
+          error() << "Rename from " << m_runningxmldir << " to " << xmliterdir << "failed again: Return"
+              << ec.value()<<" " <<ec.message() << "giving up..."<<endreq;
+      }
     }
-    
+
     // write the xml
     debug() << "writing xml files" << endreq;
     sc = m_xmlwriter->write("run" + to_string(runnr) ) ;
@@ -322,7 +342,7 @@ StatusCode AlignOnlineIterator::i_run()
   fflush(stdout);
 
   // move the 'running' dir to a dirname with current run
-  string rundir = m_alignworkdir + "/run" + to_string(runnr);
+  string rundir = m_alignworkdir + "/"+ m_runType+"/run" + to_string(runnr);
   if (boost::filesystem::exists(rundir))
     boost::filesystem::remove_all(rundir);
   boost::filesystem::rename(m_runningdir,rundir);
@@ -368,7 +388,7 @@ StatusCode AlignOnlineIterator::i_start()
 
   // Write the wrappers for the generated conditions, this only needs to happen once.
   if (sc.isSuccess()) sc = writeWrappers() ;
-  
+
   // 3. start the analyzers and wait
   debug() << "wait for analyzers" << endreq;
   m_asdCollector.setTime();

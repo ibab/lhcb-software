@@ -14,18 +14,17 @@
 
 class ASDCollector
 {
-	public:
-		std::string m_dir;
-		std::string m_filePatt;
-		time_t m_time;
-		ASDCollector() {}
-		ASDCollector(std::string &FilePatt, std::string &dir);
-		void setTime(time_t t);
-		void setTime();
-		void collectASDs(Al::Equations &eqs);
-	private:
-		int getfiles(std::string dir, std::vector<std::string> &fileList);
-		int isDir(std::string path);
+  public:
+    std::string m_dir;
+    std::string m_filePatt;
+    time_t m_time;
+    ASDCollector() {}
+    ASDCollector(std::string &FilePatt, std::string &dir);
+    void setTime(time_t t);
+    void setTime();
+    void collectASDs(Al::Equations &eqs);
+    int getfiles(std::string dir, std::vector<std::string> &fileList);
+    int isDir(std::string path);
 };
 
 #endif /* ASDCOLLECTOR_H_ */

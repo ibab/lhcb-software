@@ -18,4 +18,14 @@ gaudi_add_module(AlignOnline
                  INCLUDE_DIRS ${RTL_include_dir}
                  LINK_LIBRARIES AlignKernel DetDescLib OnlineKernel GaudiAlgLib)
 
+gaudi_add_library(AlignOnlinelib
+                 src/*.cpp
+                 NO_PUBLIC_HEADERS
+                 LINK_LIBRARIES AlignKernel DetDescLib OnlineKernel GaudiAlgLib)
+
 gaudi_install_python_modules()
+macro(ga_test name)
+  gaudi_add_executable(${name} ${ARGN}
+                       LINK_LIBRARIES AlignOnlinelib)
+endmacro()
+ga_test(ASDAnalyzer src/Tests/ASDAnalyzer.cpp)
