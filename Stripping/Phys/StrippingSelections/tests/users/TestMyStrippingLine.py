@@ -29,8 +29,7 @@ from Configurables import ConfigCDBAccessSvc
 ConfigCDBAccessSvc().File = '$STRIPPINGSELECTIONSROOT/tests/data/config.cdb'
 
 # Specify the name of your configuration
-confname='PIDCalib' #FOR USERS
-
+confname='Bu2hhh' #FOR USERS
 
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 
@@ -38,7 +37,7 @@ confname='PIDCalib' #FOR USERS
 from StrippingSelections import buildersConf
 confs = buildersConf()
 from StrippingSelections.Utils import lineBuilder, buildStreamsFromBuilder
-#print confs[confname]["CONFIG"]["LineName"]["CutName"] = NewValue
+#confs[confname]["CONFIG"]["CutName"] = NewValue ## FOR USERS, YOU ONLY NEED TO MODIFY CutName and NewValue
 streams = buildStreamsFromBuilder(confs,confname)
 
 #clone lines for CommonParticles overhead-free timing
@@ -154,7 +153,7 @@ unpackIt.InputName = "pRec/Track/FittedHLT1VeloTracks"
 unpackIt.OutputName = "Rec/Track/FittedHLT1VeloTracks"
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 10000
+DaVinci().EvtMax = 1000
 DaVinci().PrintFreq = 2000
 DaVinci().appendToMainSequence( [unpackIt] )
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
