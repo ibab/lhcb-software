@@ -270,10 +270,7 @@ StatusCode UpdateAndReset::execute()
     {
       this->m_incs->fireIncident(Incident(name(),IncidentType::EndRun));
     }
-    if (this->m_resetHistosAfterSave)
-    {
-      m_pGauchoMonitorSvc->resetHistos( this  );
-    }
+    m_pGauchoMonitorSvc->resetHistos( this  );
     m_one = 1;
     m_pGauchoMonitorSvc->setRunNo(runno);
     m_runNumber = runno;

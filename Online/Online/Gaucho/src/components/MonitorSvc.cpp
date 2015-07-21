@@ -677,7 +677,8 @@ void MonitorSvc::declareInfo(const string& nam, const AIDA::IBaseHistogram* var,
 
   if (m_started)
   {
-    msg << MSG::INFO << "Declare Info (Histogram) called after start for Name " << nam << endmsg;
+    msg << MSG::WARNING << "Declare Info (Histogram) called after start for Name " <<
+        nam <<"(" << oname << ")" << endmsg;
   }
   if (0 != m_disableDeclareInfoHistos)
   {
@@ -695,7 +696,8 @@ void MonitorSvc::declareInfo(const string& nam, const AIDA::IBaseHistogram* var,
   }
   else
   {
-    msg << MSG::ERROR << "Unknown histogram type. Source " << nam << endmsg;
+    msg << MSG::ERROR << "Unknown histogram type ("<<typeid(var).name()<<"). Source " << nam << endmsg;
+//    this->i_unsupported(nam,typeid(var),owner);
     return;
   }
   if (m_HistSubSys == 0)
@@ -720,6 +722,11 @@ void MonitorSvc::declareInfo(const string& nam, const AIDA::IBaseHistogram* var,
     mhist = new MonHist(msgSvc(),hnam,var);
     m_InfoMap.insert(make_pair(hnam,m_HistSubSys));
     m_HistSubSys->addObj(mhist);
+    void *aaa = m_HistSubSys->findobj(hnam.c_str());
+    if (aaa == 0)
+    {
+      msg << MSG::ERROR << "Histogram" <<hnam << "added to SubSystem, but name not found in Map"<<endmsg;
+    }
   }
   else
   {
