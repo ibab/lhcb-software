@@ -4,7 +4,7 @@ class EW_25ns_August2015( object ) :
 	"""
 	Threshold settings for Hlt2 Electroweak (EW) lines
 
-	WARNING: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
+	WARNING:: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
 
 	@author K. Dreimanis, k.dreimanis@liverpool.ac.uk
 	@date 2015-07-21
@@ -13,33 +13,31 @@ class EW_25ns_August2015( object ) :
 	__all__ = ( 'ActiveHlt2Lines' )
 
 	def ActiveHlt2Lines( self ) :
-	"""
-	Returns the list of ACTIVE lines
-	"""
-
-	lines = [
-		# DiMuon
-		'Hlt2EWDiMuonZ',
-		'Hlt2EWDiMuonDY1',
-		'Hlt2EWDiMuonDY2',
-		'Hlt2EWDiMuonDY3',
-		'Hlt2EWDiMuonDY4',
-		# Single Muon
-		'Hlt2EWSingleMuonLowPt',
-		'Hlt2EWSingleMuonHighPt',
-		'Hlt2EWSingleMuonVHighPt',
-		# DiElectron
-		'Hlt2EWDiElectronDY',
-		'Hlt2EWDiElectronHighMass',
-		# Single Electron
-		'Hlt2EWSingleElectronLowPt',
-		'Hlt2EWSingleElectronHighPt',
-		'Hlt2EWSingleElectronVHighPt',
-		# Single Tau
-		'Hlt2EWSingleTauHighPt2Prong',
-		'Hlt2EWSingleTauHighPt3Prong'
-		]
-
+		"""
+		Returns the list of ACTIVE lines
+		"""
+		lines = [
+			# DiMuon
+			'Hlt2EWDiMuonZ',
+			'Hlt2EWDiMuonDY1',
+			'Hlt2EWDiMuonDY2',
+			'Hlt2EWDiMuonDY3',
+			'Hlt2EWDiMuonDY4',
+			# Single Muon
+			'Hlt2EWSingleMuonLowPt',
+			'Hlt2EWSingleMuonHighPt',
+			'Hlt2EWSingleMuonVHighPt',
+			# DiElectron
+			'Hlt2EWDiElectronDY',
+			'Hlt2EWDiElectronHighMass',
+			# Single Electron
+			'Hlt2EWSingleElectronLowPt',
+			'Hlt2EWSingleElectronHighPt',
+			'Hlt2EWSingleElectronVHighPt',
+			# Single Tau
+			'Hlt2EWSingleTauHighPt2Prong',
+			'Hlt2EWSingleTauHighPt3Prong'
+			]
 	return lines
 
 	def Thresholds( self ) :
