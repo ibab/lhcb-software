@@ -36,7 +36,7 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
 {
     addBuffer(buff,siz,h);
 }
-void HistAdder::addBuffer(void *buff, int siz,MonInfo *)
+void HistAdder::addBuffer(void *buff, int siz,MonInfo *HTsk)
 {
 //    //printf("Adding %s\n",h->m_TargetService.c_str());
   MonMap hmap;
@@ -154,7 +154,7 @@ void HistAdder::addBuffer(void *buff, int siz,MonInfo *)
     }
     else
     {
-//        //printf("New Histogram... re-allocating...\n");
+      printf("[WARNING]New Histogram..'%s' from '%s'. re-allocating...\n",i->first.c_str(),HTsk->getName());
       int csiz = m_usedSize;
       int hsiz;
       DimHistbuff1 *srch = (DimHistbuff1*)(i->second);

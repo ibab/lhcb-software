@@ -58,6 +58,7 @@ private:
   bool m_isEOR;
   bool m_started;
   bool m_doPause;
+  bool m_PauseOnEOR;
   int  m_SaveInterval; //in seconds
   bool m_SaveonUpdate;
   std::string m_MyServiceName;
