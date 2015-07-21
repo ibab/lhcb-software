@@ -328,7 +328,7 @@ def pdg_format2( value , error1 , error2  , latex = False ) :
         q +=  3 * n 
         
         if latex : fmt = "$(%%.%df \pm %%.%df \pm %%.%df)\cdot10^{%%d}$" % ( q , q , q )
-        else     : fmt = "$(%%.%df +/- %%.%df +/- %%.%df)*10^{%%d}"      % ( q , q , q )
+        else     : fmt =  "(%%.%df +/- %%.%df +/- %%.%df)*10^{%%d}"      % ( q , q , q )
 
         v  /= 10**(3*n)
         e1 /= 10**(3*n)
@@ -339,7 +339,7 @@ def pdg_format2( value , error1 , error2  , latex = False ) :
     else :
             
         if latex : fmt = "$(%%.%df \pm %%.%df \pm %%.%df)$" % ( q , q , q )
-        else     : fmt = "$(%%.%df +/- %%.%df +/- %%.%df)"  % ( q , q , q )
+        else     : fmt =  "(%%.%df +/- %%.%df +/- %%.%df)"  % ( q , q , q )
         ##
         return fmt % ( v , e1 , e2 )
 
