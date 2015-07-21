@@ -20,7 +20,7 @@
 #include "Kernel/STXMLUtils.h"
 
 
-class WriteOTCalibrationsTool 
+class WriteOTCalibrationsTool
   : public GaudiTool, virtual public IWriteAlignmentConditionsTool
 {
 public:
@@ -28,19 +28,19 @@ public:
   WriteOTCalibrationsTool( const std::string& type,
 			   const std::string& name,
 			   const IInterface* parent); ///< Standard constructor
-  
+
   /// destructer
   virtual ~WriteOTCalibrationsTool();
 
   /// initialize
   StatusCode initialize();
-  
+
   // Everything configured via options
   StatusCode write() const ;
-  
+
   // Everything configured via options
   StatusCode write(const std::string& version) const ;
-  
+
 
 private:
   StatusCode createXmlFile(const std::string& filename,
@@ -97,7 +97,6 @@ WriteOTCalibrationsTool::WriteOTCalibrationsTool( const std::string& type,
   declareProperty("WriteModuleCalibration" , m_writeModuleCalibration  = false  );
   declareProperty("WriteModuleStatus"     , m_writeModuleStatus      = false );
   declareProperty("WriteGlobalCalibration", m_writeGlobalCalibration = false ) ;
-  declareProperty("Precision"             , m_precision         = 3u    );
   declareProperty("Directory", m_directory = "xml" );
   declareProperty("Precision", m_precision = 5u);
   declareProperty("Author", m_author = "");
@@ -107,10 +106,10 @@ WriteOTCalibrationsTool::WriteOTCalibrationsTool( const std::string& type,
 }
 
 
-WriteOTCalibrationsTool::~WriteOTCalibrationsTool() {} 
+WriteOTCalibrationsTool::~WriteOTCalibrationsTool() {}
 
 
-StatusCode WriteOTCalibrationsTool::initialize() 
+StatusCode WriteOTCalibrationsTool::initialize()
 {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
@@ -132,7 +131,7 @@ StatusCode WriteOTCalibrationsTool::write(const std::string& version) const
   if( m_writeGlobalCalibration ) sc = writeGlobalCalibration(version) ;
   if( m_writeModuleCalibration ) sc = writeModuleConditions("Calibration","Conditions/OT/Calibration","CalibrationModules",version) ;
   if( m_writeModuleStatus      ) sc = writeModuleConditions("Status","Conditions/OT/ChannelInfo","ReadoutModules",version) ;
-  
+
   if (sc.isFailure() ) return Warning( "Failed to write conditions to xml", StatusCode::FAILURE );
   return sc ;
 }
@@ -150,7 +149,7 @@ namespace {
     }
   }
 
-  std::string formattedcondition( const Condition& condition, unsigned int precision ) 
+  std::string formattedcondition( const Condition& condition, unsigned int precision )
   {
     std::ostringstream strstream ;
     strstream << condition.toXml( "", false , precision ) << std::endl ;
@@ -174,7 +173,7 @@ namespace {
     return std::string(name) ;
   }
 }
- 
+
 StatusCode WriteOTCalibrationsTool::createXmlFile(const std::string& filename,
 						  const std::string& version,
 						  const std::string& contents) const
@@ -233,7 +232,7 @@ StatusCode WriteOTCalibrationsTool::writeModuleConditions(const std::string& con
   /// create the path
   std::string fullpath = m_directory + "/" + path ;
   /// Write condition file for every quarter
-  typedef std::map< LHCb::OTChannelID, std::vector< DeOTModule* > >::const_iterator ITER;  
+  typedef std::map< LHCb::OTChannelID, std::vector< DeOTModule* > >::const_iterator ITER;
   for( const auto& quarter: m_otdetector->quarters() ) {
     /// get the OT nickname for a quarter: cannot we get this from the geometry?
     const std::string qname = qNickName( *quarter ) ;
