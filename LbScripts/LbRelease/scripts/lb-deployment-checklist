@@ -101,7 +101,13 @@ def rpm_copied(project, version):
     You need to add the RPMs to the RPM repository.
     See https://twiki.cern.ch/twiki/bin/view/LHCb/ProjectRelease#PublishRPMs
     '''
+    global rpm_platforms
     rex = '%s_%s' % (project.upper(), version)
+    cache_file = os.path.join(os.environ.get('HOME', os.getcwd()),
+                              '.cache', 'lb-deployment', rex + '.rpm_copied')
+    if os.path.exists(cache_file):
+        rpms, rpm_platforms = eval(open(cache_file).read())
+        return '%d rpms, %d platforms (cached)' % (rpms, len(rpm_platforms))
     with TemporaryDir() as tmp:
         out = check_output([LBPKR, 'list', '-siteroot', tmp, rex])
     if 'shared' in out:
@@ -109,7 +115,6 @@ def rpm_copied(project, version):
     else:
         diff_rpm_count = 2
     out = [l for l in out.splitlines() if re.match(rex + '[-_]', l)]
-    global rpm_platforms
     rpm_platforms = [m.group(1)
                      for m in [re.match(rex + r'_(.*(?:opt|dbg|do0))', l) for l in out]
                      if m]
@@ -119,6 +124,10 @@ def rpm_copied(project, version):
 
     assert rpms == (diff_rpm_count+platforms), \
         'wrong rpm count: %d rpms, %d platforms' % (rpms, platforms)
+    if not os.path.isdir(os.path.dirname(cache_file)):
+        os.makedirs(os.path.dirname(cache_file))
+    with open(cache_file, 'w') as f:
+        f.write(repr((rpms, rpm_platforms)))
     return '%d rpms, %d platforms' % (rpms, platforms)
 
 
@@ -249,7 +258,7 @@ def tarballs(project, version):
     rex = re.compile(prefix + r'(_.*)?\.tar\.gz')
     tarfiles = [f for f in alltars if rex.match(f)]
     tar_platforms = [m.group(1).replace('-', '_')
-                     for m in [re.match(prefix + r'_(.*(?:opt|dbg))', l) for l in tarfiles]
+                     for m in [re.match(prefix + r'_(.*(?:opt|dbg|do0))', l) for l in tarfiles]
                      if m]
     assert (prefix + '.tar.gz') in tarfiles, 'missing shared tar (%s)' % (prefix + '.tar.gz')
 

@@ -1,3 +1,7 @@
+2015-07-21  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-deployment-checklist: fixed problem with the support to *-do0
+
 2015-06-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* getpack: fixed LBCORE-849, missing tag of package was not an error
