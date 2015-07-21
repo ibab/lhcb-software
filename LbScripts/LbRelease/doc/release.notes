@@ -1,10 +1,8 @@
 2015-07-21  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-deployment-oldtarballs: fixed support for Gaudi
-
-2015-07-21  Marco Clemencic  <Marco.Clemencic@cern.ch>
-
-	* lb-deployment-checklist: fixed problem with the support to *-do0
+	* lb-deployment-checklist: fixed problem with the support to *-do0, and added
+	preliminary caching of the list of copied RPMs
 
 2015-06-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
