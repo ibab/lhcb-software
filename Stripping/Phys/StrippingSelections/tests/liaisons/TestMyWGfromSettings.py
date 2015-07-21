@@ -17,11 +17,19 @@ DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
 #Raw event juggler to split Other/RawEvent into Velo/RawEvent and Tracker/RawEvent
 #
 from Configurables import RawEventJuggler
-juggler = RawEventJuggler( DataOnDemand=True, Input=2.0, Output=4.0 )
+juggler = RawEventJuggler( DataOnDemand=True, Input=0.3, Output=4.1 )
 
+#
+#Fix for TrackEff lines
+#
+from Configurables import DecodeRawEvent
+DecodeRawEvent().setProp("OverrideInputs",4.1)
+
+from Configurables import ConfigCDBAccessSvc
+ConfigCDBAccessSvc().File = '$STRIPPINGSELECTIONSROOT/tests/data/config.cdb'
 
 # Specify the name of your configuration
-my_wg='ALL' #FOR LIAISONS
+my_wg='Charm' #FOR LIAISONS
 stripping='stripping23'
 
 
@@ -127,15 +135,26 @@ sr = StrippingReport(Selections = sc.selections())
 from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 
+## Configure PV refitter
+from Configurables import LoKi__PVReFitter
+LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").CheckTracksByLHCbIDs = True
+
+## Configure the VeloTrack unpacker
+from Configurables import UnpackTrack
+unpackIt = UnpackTrack("unpackIt")
+unpackIt.InputName = "pRec/Track/FittedHLT1VeloTracks"
+unpackIt.OutputName = "Rec/Track/FittedHLT1VeloTracks"
+
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().EvtMax = 10000
 DaVinci().PrintFreq = 100
+DaVinci().appendToMainSequence( [unpackIt] )
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 #DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
 DaVinci().ProductionType = "Stripping"
-DaVinci().DataType  = "2012"
+DaVinci().DataType  = "2015"
 DaVinci().InputType = "DST"
 
 # change the column size of timing table
@@ -146,8 +165,8 @@ TimingAuditor().TIMER.NameSize = 60
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 # database
-DaVinci().DDDBtag  = "dddb-20130929-1"
-DaVinci().CondDBtag = "cond-20141107"
+DaVinci().DDDBtag  = "dddb-20150526"
+DaVinci().CondDBtag = "cond-20150625"
 
 # input file
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15_NoBias.py")

@@ -1795,7 +1795,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             "   psi(3770) -> D_s+      D_s-           "  ,
             " [ psi(3770) -> D_s+      Lambda_c~- ]cc "  ,
             " [ psi(3770) -> D_s+      Sigma_c~0  ]cc "  , ## addded 2015-07-21
-            " [ psi(3770) -> D_s       Sigma_c~-- ]cc "  , ## addded 2015-07-21
+            " [ psi(3770) -> D_s+      Sigma_c~-- ]cc "  , ## addded 2015-07-21
             #
             "   psi(3770) -> Lambda_c+ Lambda_c~-     "  ,
             " [ psi(3770) -> Lambda_c+ Sigma_c~0  ]cc "  , ## addded 2015-07-21
@@ -1832,9 +1832,9 @@ class StrippingPromptCharmConf(LineBuilder) :
             " [ psi(3770) -> D_s+      D_s+       ]cc "  ,
             " [ psi(3770) -> D_s+      Lambda_c+  ]cc "  ,
             " [ psi(3770) -> D_s+      Sigma_c0   ]cc "  , ## addded 2015-07-21
-            " [ psi(3770) -> D_s       Sigma_c++  ]cc "  , ## addded 2015-07-21
+            " [ psi(3770) -> D_s+      Sigma_c++  ]cc "  , ## addded 2015-07-21
             #
-            " [ psi(3770) -> Lambda_c+ Lambda_c+  ]cc "
+            " [ psi(3770) -> Lambda_c+ Lambda_c+  ]cc "  ,
             " [ psi(3770) -> Lambda_c+ Sigma_c0   ]cc "  , ## addded 2015-07-21
             " [ psi(3770) -> Lambda_c+ Sigma_c++  ]cc "  , ## addded 2015-07-21
             #

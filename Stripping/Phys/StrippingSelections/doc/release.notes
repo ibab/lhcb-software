@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-07-21 - Ricardo Vazquez Gomez
+ - Update the scripts for liaisons for the S23 tuning.
+ - Small bug fixes in syntax of StrippingPrompCharm.py lines
+
+! 2015-07-21 - Ricardo Vazquez Gomez
  - Update the TestMyStrippingLine.py for S23 tuning 
 
 ! 2015-07-21 - Vanya Belyaev
