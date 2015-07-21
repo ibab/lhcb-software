@@ -221,11 +221,13 @@
   <function name = "Gaudi::Math::clenshaw_polynom"   />
   
   <function name    = "LHCb::Math::round"                  />
+  <function name    = "LHCb::Math::round_N"                />
   <function name    = "LHCb::Math::isint"                  />
   <function name    = "LHCb::Math::islong"                 />
   <function name    = "LHCb::Math::equal_to_int"           />
   <function name    = "LHCb::Math::equal_to_uint"          />
   <function name    = "LHCb::Math::equal_to_double"        />
+  <function name    = "LHCb::Math::frexp10"                />
   <function name    = "LHCb::Math::knuth_equal_to_double"  />
   <function name    = "Gaudi::Math::lomont_compare_double" />
   <function name    = "Gaudi::Math::next_double"           />
@@ -249,8 +251,10 @@
   <class name = "Gaudi::Math::Chi2Solution<4,2,double>::CMTRX2" />
   <class name = "Gaudi::Math::Chi2Solution<6,2,double>"         />
   <class name = "Gaudi::Math::Chi2Solution<6,2,double>::CMTRX2" />
-
+  
   <enum name = "GaudiMath::Interpolation::Type" />
+
+  <enum name = "std::pair<double,int>" />
   
   <exclusion>
     <class name = "ROOT::Math::SVector&lt;double,2&gt;"     />

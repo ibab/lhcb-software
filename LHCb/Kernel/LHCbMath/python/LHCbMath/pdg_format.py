@@ -53,37 +53,46 @@ VE = cpp.Gaudi.Math.ValueWithError
 ## round to nearest integer, rounds half integers to nearest even integer 
 #  It is just a simple wrapper around boost::numeric::converter 
 #  @see LHCb::Math::round 
-cpp_round = cpp.LHCb.Math.round
-
+cpp_round   = cpp.LHCb.Math.round
+cpp_frexp10 = cpp.LHCb.Math.frexp10 
+cpp_round_N = cpp.LHCb.Math.round_N 
 
 # =============================================================================
-## get the exponent and mantissa for radix10
+## get mantissa (0.1<=m<1) and exponent for radix10
 #  similar for frexp, but use radix=10
 #  @code
 #  m,e = frexp10 ( value ) 
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-07-20
-#  @todo replace with proper math-calcualtions, withour trick with string formatting
-def frexp10 ( value , precision = 12 ) :
+def frexp10 ( value ) :
     """
-    Get the exponent and mantissa for radix10
+    Get the mantissa (0.1<=m<1) and exponent for radix10
     (similar for frexp, but use radix=10)
     
     >>> a,b = frexp10 ( value ) 
     """
     #
-    value = float ( value )
-    #
-    ## adjust the precision 
-    if not isinstance ( precision , ( int , long ) ) or 0 >= precision  : precision = 12
-    #
-    fmt = "%%.%de" % precision
-    rep = ( fmt %  value ) .split('e')
-    #
-    return float ( rep[0] ) , int ( rep[1] )
+    p = cpp_frexp10 ( value )
+    return p.first, p.second
 
-    
+# =============================================================================
+## get ``mantissa'' (1<=m<10) and exponent for radix10
+#  similar for frexp, but use radix=10
+#  @code
+#  m,e = _frexp10_ ( value ) 
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-07-20
+def _frexp10_ ( value ) :
+    """
+    Get ``mantissa'' (1<=m<10) and exponent for radix10
+    similar for frexp, but use radix=10
+    >>> m,e = _frexp10_ ( value ) 
+    """
+    m,e = frexp10 ( value ) 
+    return m*10,e-1
+
 # =============================================================================
 ## get three significant digits from the floating value
 #  @code
@@ -98,13 +107,12 @@ def _3digits_ ( value ) :
     >>> nums = _3digits_ ( value ) 
     """
     #
-    if abs ( value ) <   1.0 : value  = frexp10 ( value ) [0] 
-    if abs ( value ) >= 10.0 : value  = frexp10 ( value ) [0]
+    if not 0.1<= abs ( value ) < 1 : value  = frexp10 ( value ) [0]
     #
-    return int ( round ( float ( value ) * 100 , 0 ) )
+    return int ( round ( float ( value ) * 1000 , 0 ) )
 
 ## ============================================================================
-#  round value to to n-digits
+#  round value to N-digits
 #  @code
 #  new_value = round_N ( value , 3 )
 #  @endcode
@@ -112,17 +120,13 @@ def _3digits_ ( value ) :
 #  @date 2015-07-20
 def round_N ( value , n ) :
     """
-    Round value to to n-digits
+    Round value to to N-digits
     
     >>> new_value = round_N ( value , 3 )    
     """
-    m , e = frexp10 ( value )
-    ##
-    ni =  int ( n - 1 ) 
-    f  = 10 ** ni  
-    return 1.0 * cpp.Gaudi.Math.round ( 1.0 * m * f ) * 10 ** ( e - ni )
+    return cpp_round_N ( value , n ) 
 
-# ===============================================================================================
+# ===============================================================================
 ## make a rounding according to PDG prescription
 #  @see http://pdg.lbl.gov/2010/reviews/rpp2010-rev-rpp-intro.pdf
 #  @see section 5.3 of doi:10.1088/0954-3899/33/1/001
@@ -162,14 +166,14 @@ def pdg_round_ ( value , error ) :
     elif abs ( ne ) <= 949 : pr,pe = 1,1
     else                   : pr,pe = 2,1
     ##
-    ev , bv = frexp10 ( value )
-    ee , be = frexp10 ( error )
+    ev , bv = _frexp10_ ( value )
+    ee , be = _frexp10_ ( error )
     ##
     e = round_N ( error , pe )
     ##
     q  = be + 1 - pe 
     r  = 10**q
-    v  = cpp.Gaudi.Math.round ( value / r ) * r
+    v  = cpp_round ( value / r ) * r
     ##
     return v , e , q 
 
@@ -212,7 +216,7 @@ def pdg_round ( value , error ) :
     return v, e 
 
 # =============================================================================
-## Round value/error accoridng to PDG prescription and format it for print
+## Round value/error accoriding to PDG prescription and format it for print
 #  @see http://pdg.lbl.gov/2010/reviews/rpp2010-rev-rpp-intro.pdf
 #  @see section 5.3 of doi:10.1088/0954-3899/33/1/001
 #  
@@ -248,9 +252,8 @@ def pdg_format ( value , error , latex = False ) :
     v , e , q = pdg_round_  ( value , error )
     
     ## get scaling factors for printout 
-    qv , bv   = frexp10 (  value  )
-    n         = int     ( math.floor ( bv / 3. ) ) 
-    
+    qv , bv   = _frexp10_ (  value  )
+    n         = int       ( math.floor ( bv / 3. ) ) 
     
     q = abs ( min ( 0 , q ) ) 
     
@@ -272,7 +275,6 @@ def pdg_format ( value , error , latex = False ) :
         else     : fmt = "$(%%.%df +/- %%.%df)"  % ( q , q )
         ##
         return fmt % ( v , e )
-
 
 # =============================================================================
 ## Round value/error accoridng to PDG prescription and format it for print
@@ -316,9 +318,8 @@ def pdg_format2( value , error1 , error2  , latex = False ) :
     v_ , e2 , q_ = pdg_round_  ( value , error2 )
 
     ## get scaling factors for printout 
-    qv , bv   = frexp10 (  value  )
-    n         = int     ( math.floor ( bv / 3. ) ) 
-    
+    qv , bv   = _frexp10_ (  value  )
+    n         = int       ( math.floor ( bv / 3. ) ) 
     
     q = abs ( min ( 0 , q ) ) 
     

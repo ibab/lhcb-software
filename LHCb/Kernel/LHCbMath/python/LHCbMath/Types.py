@@ -1476,17 +1476,20 @@ for t in ( 'int'                ,
     v.__repr__ = lambda s : str ( [ i for i in s ] ) ## print it !
     v.__str__  = lambda s : str ( [ i for i in s ] ) ## print it !
 
-
-
+# =============================================================================
 LHCb  = cpp.LHCb
+# =============================================================================
+LHCb.Math.lomont_compare_double  = Gaudi.Math.lomont_compare_double
+LHCb.Math.lomont_compare_float   = Gaudi.Math.lomont_compare_float 
 Gaudi.Math.round                 = LHCb.Math.round
 Gaudi.Math.equal_to_int          = LHCb.Math.equal_to_int
 Gaudi.Math.equal_to_uint         = LHCb.Math.equal_to_uint
 Gaudi.Math.isint                 = LHCb.Math.isint
 Gaudi.Math.islong                = LHCb.Math.islong
 Gaudi.Math.knuth_equal_to_double = LHCb.Math.knuth_equal_to_double
-__lomont = Gaudi.Math.lomont_compare_double
-Gaudi.Math.lomont_compare_double = __lomont
+Gaudi.Math.round_N               = LHCb.Math.round_N
+Gaudi.Math.frexp10               = LHCb.Math.frexp10
+
 
 if not hasattr ( Gaudi.Math.Splines , 'DATA'    ) or \
    not hasattr ( Gaudi.Math.Splines , 'PAIR'    ) or \

@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-07-21 - Vanya Belyaev
+ - move some useful python code fragments to C++
+
 ! 2015-07-20 - Vanya Belyaev
  - pdg_format.py
    simple module, implementing PDG rounding scheme 

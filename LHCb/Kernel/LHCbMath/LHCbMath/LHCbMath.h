@@ -550,6 +550,59 @@ using namespace std;
       return Converter::convert ( x ) ; 
     }    
     // ========================================================================
+    /** get mantissa and exponent 
+     *  similar to std::frexp, but radix=10)
+     *  @param x  INPUT  value 
+     *  @param e  UPDATE exponent 
+     *  @return  mantissa     (0.1<=m<1)
+     *  @author Vanya BELYAEV Ivan.Belyaev       
+     *  @date 2015-07-21
+     */
+    GAUDI_API
+    double frexp10 ( const double x , long& e ) ;
+    // ========================================================================
+    /** get mantissa and exponent 
+     *  similar to std::frexp, but radix=10)
+     *  @param x  INPUT  value 
+     *  @param e  UPDATE exponent 
+     *  @return  mantissa    (0.1<=m<1) 
+     *  @author Vanya BELYAEV Ivan.Belyaev       
+     *  @date 2015-07-21
+     */
+    GAUDI_API
+    float frexp10 ( const float x , long& e ) ;
+    // ========================================================================
+    /** get mantissa and exponent 
+     *  similar to std::frexp, but radix=10)
+     *  @param x  INPUT  value 
+     *  @return   pair of mantissa (0.1<=m<1) and exponent 
+     *  @author Vanya BELYAEV Ivan.Belyaev       
+     *  @date 2015-07-21
+     */
+    GAUDI_API
+    std::pair<double,int>
+    frexp10 ( const double x ) ;
+    // ========================================================================
+    /** round to N-significant digits 
+     *  @param x  INPUT  input value 
+     *  @param n  INPUT  number of significnat digits 
+     *  @return rounded value 
+     *  @author Vanya BELYAEV Ivan.Belyaev       
+     *  @date 2015-07-21
+     */
+    GAUDI_API
+    double round_N ( const double x , const unsigned short n ) ;
+    // ========================================================================
+    /** round to N-significant digits 
+     *  @param x  INPUT  input value 
+     *  @param n  INPUT  number of significnat digits 
+     *  @return rounded value 
+     *  @author Vanya BELYAEV Ivan.Belyaev       
+     *  @date 2015-07-21
+     */
+    GAUDI_API
+    float round_N ( const float x , const unsigned short n ) ;
+    // ========================================================================
     /** is the value actually long ?
      *  @author Vanya BELYAEV Ivan.Belyaev       
      *  @date 2011-07-18
