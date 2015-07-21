@@ -6,6 +6,8 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit
 ! -----------------------------------------------------------------------------
 
+!========================= KalmanFilter v1r13 2015-07-21 ======================
+
 ! 2015-07-09 - Vanya Belyaev
  - add JetLikeParticle (for Wouter) 
 
@@ -18,7 +20,6 @@
 
 ! 2015-06-11 - Vanya Belyaev
   - cmt/requirements  fix CMT compilation problem
-
 
 !========================= KalmanFilter v1r12 2015-05-27 ======================
 
