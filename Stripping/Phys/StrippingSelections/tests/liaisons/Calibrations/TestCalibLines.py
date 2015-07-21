@@ -13,6 +13,9 @@ from CommonParticles.Utils import DefaultTrackingCuts
 DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
                                 "CloneDistCut" : [5000, 9e+99 ] }
 
+from Configurables import DecodeRawEvent
+DecodeRawEvent().setProp("OverrideInputs",4.1)
+
 #
 #Raw event juggler to split Other/RawEvent into Velo/RawEvent and Tracker/RawEvent
 #

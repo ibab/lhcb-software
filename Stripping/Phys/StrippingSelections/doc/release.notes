@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-21 - Michael Kolpin
+ - Updated ConfiguredMuonIDs definition in StrippingTrackEffDownMuon
+ - Updated Calibration liaison test options
+
 ! 2015-07-21 - Ricardo Vazquez Gomez
  - Update the scripts for liaisons for the S23 tuning.
  - Small bug fixes in syntax of StrippingPrompCharm.py lines

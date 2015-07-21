@@ -39,7 +39,7 @@ from Configurables import UnpackTrack, ChargedProtoParticleMaker, DelegatingTrac
 from TrackFitter.ConfiguredFitters import ConfiguredFit
 from Configurables import TrackStateInitAlg
 from StrippingConf.StrippingLine import StrippingLine
-from Configurables import ChargedProtoParticleAddMuonInfo, MuonIDAlg
+from Configurables import ChargedProtoParticleAddMuonInfo, MuonIDAlgLite
 from MuonID import ConfiguredMuonIDs
 from Configurables import ChargedProtoCombineDLLsAlg, ProtoParticleMUONFilter 
 from PhysSelPython.Wrappers import Selection, DataOnDemand
@@ -234,10 +234,9 @@ def selMuonPParts(name, DataType, downstreamSeq):
    unpacker.InputName="pRec/"+name+"_Downstream/FittedTracks"
    unpacker.OutputName="Rec/"+name+"_Downstream/FittedTracks"
 
-   idalg = MuonIDAlg(name+"IDalg")
    cm=ConfiguredMuonIDs.ConfiguredMuonIDs( DataType ) #data=DaVinci().getProp("DataType"))
-   cm.configureMuonIDAlg(idalg)
-   idalg.TrackLocation = "Rec/"+name+"_Downstream/FittedTracks"
+   idalg = cm.configureMuonIDAlgLite(name+"IDalg")
+   idalg.TracksLocations = ["Rec/"+name+"_Downstream/FittedTracks"]
    idalg.MuonIDLocation = "Rec/"+name+"_Muon/DownstreamMuonPID"
    idalg.MuonTrackLocation = "Rec/"+name+"_Track/MuonForDownstream" # I would call it FromDownstream
 
