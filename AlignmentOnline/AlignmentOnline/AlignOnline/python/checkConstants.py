@@ -7,6 +7,8 @@ list_runs_dir = '/group/online/AligWork/CheckConstants'
 runs_fileName = os.path.join(list_runs_dir, 'runsAnalised.pkl')
 bads_fileName = os.path.join(list_runs_dir, 'bads.pkl')
 
+lock_fileName = os.path.join(list_runs_dir, '.lock')
+
 this_file_dir = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(this_file_dir)
 
@@ -65,9 +67,24 @@ def addAnalisedRun(run, fileName):
     pickle.dump(analised_runs, open(fileName, 'wb'))
 
 
+def lock():
+    if os.path.exists(lock_fileName):
+        sendEmail(555, 'Lockfile '+lock_fileName+' present when it should not!')
+        sys.exit(1)
+    open(lock_fileName, 'a').close()
+
+
+def unlock():
+    if not os.path.exists(lock_fileName):
+        sendEmail(555, 'Lockfile '+lock_fileName+' not present when it should!')
+        sys.exit(1)
+    os.remove(lock_fileName)
+
+
 if __name__ == '__main__':
 
     print 'Retrieving runs to process'
+    lock()
     toAnalise = [i for i in getOfflineRuns() if i not in getAnalisedRuns()]
 
     from diffConds import diffOnlineOffline
@@ -81,4 +98,6 @@ if __name__ == '__main__':
         else:
             addAnalisedRun(run, bads_fileName)
             sendEmail(run, diff)
+
+    unlock()
         

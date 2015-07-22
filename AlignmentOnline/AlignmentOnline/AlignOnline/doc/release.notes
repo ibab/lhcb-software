@@ -4,6 +4,9 @@ Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
 ! 2015-07-21 - Giulio Dujany
+ - Added lock to the scripts to check that the same constants are used online and offline
+
+! 2015-07-21 - Giulio Dujany
  - Added scripts to check that the same constants are used online and offline
 
 ! 2015-07-21 - Giulio Dujany
