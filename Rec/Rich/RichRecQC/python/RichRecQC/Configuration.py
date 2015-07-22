@@ -488,8 +488,8 @@ class RichRecQCConf(RichConfigurableUser):
         if "PhotonMonitoring" in monitors :
             self.recPerf(self.newSeq(sequence,"RichRecoMoni"),tkCuts="None")
             self.recPerf(self.newSeq(sequence,"RichRecoMoniTight"),tkCuts="Tight")
-            self.recPerf(self.newSeq(sequence,"RichRecoMoniTightUnambig"),
-                         tkCuts="Tight",photCuts="UnambPhots")
+            #self.recPerf(self.newSeq(sequence,"RichRecoMoniTightUnambig"),
+            #             tkCuts="Tight",photCuts="UnambPhots")
 
         # Aerogel specific monitoring
         if "AerogelMonitoring" in monitors :
