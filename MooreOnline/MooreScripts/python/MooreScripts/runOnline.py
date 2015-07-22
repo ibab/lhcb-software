@@ -25,7 +25,7 @@ def start(**kwargs) :
     elif kwargs.get('Split','')  == 'Hlt2' :
        HltLevel = 'Hlt2'
     else :
-       HltLevel = ''
+       HltLevel = 'Hlt1Hlt2'
 
     moore = Moore()
 
