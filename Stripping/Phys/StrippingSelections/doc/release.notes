@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2015-07-21 - Federico Redi
+ - In StrippingRD/StrippingB2Lambda0MuLines.py added DD candidates, Rate: 0.055 %; Timing: 0.045 ms/evt.
+
 ! 2015-07-21 - Michael Kolpin
  - Updated ConfiguredMuonIDs definition in StrippingTrackEffDownMuon
  - Updated Calibration liaison test options
@@ -13,13 +17,13 @@
  - Small bug fixes in syntax of StrippingPrompCharm.py lines
 
 ! 2015-07-21 - Ricardo Vazquez Gomez
- - Update the TestMyStrippingLine.py for S23 tuning 
+ - Update the TestMyStrippingLine.py for S23 tuning
 
 ! 2015-07-21 - Vanya Belyaev
 
  -  StrippingCharm/StrippingtPromptCharm.py
-    add combinations with Sigma_c0 and Sigma_c++, 
-    in particular (D* Sigma_c) pairs that could 
+    add combinations with Sigma_c0 and Sigma_c++,
+    in particular (D* Sigma_c) pairs that could
     be very useful for pentaquark cross-checks
 
 ! 2015-07-17 - Stefano Perazzini
@@ -33,7 +37,7 @@
  - Updated HLT filters in Lb2L0Gamma to use split HLT
 
 ! 2015-07-09 - Ricardo Vazquez Gomez
- - Add documentation folder for the coordinators 
+ - Add documentation folder for the coordinators
 
 ! 2015-07-09 - Andrea Contu
  - Remove hard coded trigger lines from StrippingDstarD02xx.py
@@ -53,9 +57,9 @@
  - Solved hardcoded triggers issue in B2CC lines.
 
 ! 2015-06-25 - Vanya Belyaev
- - StrippingBandQ/StrippingUpsilonExotic.py  update a bit the selection 
-   StrippingBandQ/StrippingPsiX0.py 
-   StrippingBandQ/StrippingPsiXForBandQ.py - more coherent treatment 
+ - StrippingBandQ/StrippingUpsilonExotic.py  update a bit the selection
+   StrippingBandQ/StrippingPsiX0.py
+   StrippingBandQ/StrippingPsiXForBandQ.py - more coherent treatment
 
 ! 2015-06-25 - Roberta Cardinale
  - Added private PVRefit algorithm in all the CombineParticle for python/StrippingSelections/StrippingBandQ/StrippingB2JpsiXforEM_s.py
@@ -73,7 +77,7 @@
  - Added test script for EM tuning
 
 ! 2015-06-16 - Simone Stracka
- - StrippingCharm/StrippingD2PiPi0.py : removed cut on chi2 of DTF beam-constrained fit and tightened 
+ - StrippingCharm/StrippingD2PiPi0.py : removed cut on chi2 of DTF beam-constrained fit and tightened
    other selections.
 
 ! 2015-06-16 - Pablo Ruiz Valls
@@ -83,7 +87,7 @@
  - Added two temporary builders to StrippingB2CC for some tests (already deleted, tests finished).
 
 ! 2015-06-15 - Chitsanu Khurewathanakul.
- - Modified collect_dicts.py output engine to use json builtin-lib. 
+ - Modified collect_dicts.py output engine to use json builtin-lib.
 
 ! 2015-06-11 - Roberta Cardinale
  - Added RefitPVs in the default_config in StrippingBandQ/StrippingB2JpsiXforEM_s.py
@@ -108,8 +112,8 @@
  - De-hardcoded all HLT-dependent line into default_config
  - Fix StrippingInclbJets vertexfitter dependency to LoKi's.
 
-! 2015-05-29 Erica Polycarpo  
- - Remove HLT filter from StrippingD2hhh_conf.py 
+! 2015-05-29 Erica Polycarpo
+ - Remove HLT filter from StrippingD2hhh_conf.py
 
 ! 2015-05-29 Roberta Cardinale
  - Small modifications to StrippinBandQ/StrippingDiMuonNew.py and StrippingDiMuonInherit.py
@@ -173,7 +177,7 @@
 ! 2015-05-19 - Alex Pearce
  - Tighten selection in StrippingCharm/StrippingLambdac2V0H.py
 
-! 2015-05-18 - Roberta Cardinale				
+! 2015-05-18 - Roberta Cardinale
  - Fixed typo in StrippingUpsilonExotic.py
 
 ! 2015-05-18 - Maurizio Martinelli
@@ -191,8 +195,8 @@
 ! 2015-05-18 - Andrea Contu
  - Prescaling to zero charm cross section lines until more suitable tuning is provided
 
-! 2015-05-18 - Yasmine Amhis 
- - Fix gamma lines for StrippingRD/StrippingBu2LLK 
+! 2015-05-18 - Yasmine Amhis
+ - Fix gamma lines for StrippingRD/StrippingBu2LLK
 
 ! 2015-05-18 - Mika Vesterinen
  - Dictionary fix to StrippingCharm/StrippingDstarD0ToHHPi0
@@ -201,14 +205,14 @@
  - Fix to StrippingTrackEffD2K(3)Pi
 
 ! 2015-05-18 - Roberta Cardinale
- - Fixed small bug in RelatedInfo variables in StrippingBandQ/StrippingXic2HHH.py 
+ - Fixed small bug in RelatedInfo variables in StrippingBandQ/StrippingXic2HHH.py
 
 ! 2015-05-18 - Stefano Perazzini
  - Fixed small bug in StrippingBnoC/StrippingBc2hhh_BnoC.py
 
 ! 2015-05-18  - Adlene hicheur
  - StrippingBnoC/StrippingBc2hhh_BnoC.py: fix warning message for gecFilter, put filter as stripping line property
- 
+
 ! 2015-05-18  - Wenbin Qian
   Remove FT request for lines in full DST for B2OC
 
@@ -241,7 +245,7 @@
  - Updated StrippingSigmacForPID in StrippingCalib module
 
 ! 2015-05-16 - Maurizio Martinelli
- - Added StrippingD2HHHKsLines in StrippingCharm 
+ - Added StrippingD2HHHKsLines in StrippingCharm
 
 ! 2015-05-15 - Maurizio Martinelli
  - Added converted photons to D*+->D0(XGamma)pi+ stripping lines
@@ -250,7 +254,7 @@
  - Fixed a typo in DstarD2HHHH stripping line
 
 ! 2015-05-15 - Francesco Dettori
- - Updated StrippingRareStrange 
+ - Updated StrippingRareStrange
  - Updated StrippingDstarD02xx
 
 ! 2015-05-15 - Roberta Cardinale
@@ -261,7 +265,7 @@
 
 ! 2015-05-15 - Vanya Belyaev
  - StrippingCharm/StrippingPropmtCharm.py
-   update lines for excited baryons 
+   update lines for excited baryons
 
 ! 2015-05-15 - Pablo Ruiz Valls
  - Added StrippingTau2LambdaMuLines,
@@ -279,12 +283,12 @@
 
 ! 2015-05-15 - Roberta Cardinale
  - Fixed typo in __init__.py in StrippingBandQ
- 
+
 ! 2015-05-15 - Andrea Contu
  - Fixed CharmFromBSemi
 
 ! 2015-05-15 - Simone Stracka
- - Added 3 new lines to StrippingD2PiPi0.py 
+ - Added 3 new lines to StrippingD2PiPi0.py
 
 ! 2015-05-15 - Chitsau Khurewathanakul
  - Added StrippingDitau.py to StrippingQEE
@@ -296,7 +300,7 @@
  - Added StrippingDstarD02KShhForTrackingEff and StrippingSigmacForPID to StrippingCalib module
 
 ! 2015-05-15 - Regis Lefevre
- - Added StrippingB2HHPi0.py in StrippingBnoC 
+ - Added StrippingB2HHPi0.py in StrippingBnoC
  - Added StrippingD02KPiPi0.py in StrippingCalib
 
 ! 2015-05-15 - Jibo He
@@ -306,7 +310,7 @@
  - added StrippingB2KstTauTau for B->K*TauTau analysis
 
 ! 2015-05-15 - Jibo He
-  - Moved Bd2eeKstarBDT line to new structure 
+  - Moved Bd2eeKstarBDT line to new structure
   . Switched off the line not-using DiElectronMaker
 
 ! 2015-05-15 - Paula Alvarez Cartelle
@@ -332,10 +336,10 @@
 
 ! 2015-05-15 - Vanya Belyaev
  - StrippingCharm/StrippingPropmtCharm.py
-   update lines for excited baryons 
+   update lines for excited baryons
 
 ! 2015-05-15 - Roberta Cardinale
- - Updated default_config of 
+ - Updated default_config of
    - StrippingBandQ/StrippingXic2HHH.py
 	 - StrippingBandQ/StrippingHeavyBaryons.py
 	 - StrippingBandQ/StrippingCC2DD.py
