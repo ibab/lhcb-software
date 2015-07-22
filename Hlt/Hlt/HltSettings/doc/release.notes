@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-07-22 - Karlis Dreimanis
+ - Add LowMult/LowMult_25ns_August2015.py
+
 ! 2015-07-21 - Olli Lupton
  - Add PID/PID_25ns_August2015.py file with an early draft tuning.
 
