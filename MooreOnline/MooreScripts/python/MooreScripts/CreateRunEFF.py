@@ -21,8 +21,8 @@ export HOME=/home/$(/usr/bin/whoami)
 #
 # Enable next line for Debug printout
 #python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -s;
-eval `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -s`;
-renice 19 -p $$>>/dev/null
+eval `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -s %(WhichMoore)s`;
+renice -n %(Priority)s -p $$>>/dev/null
 #
 if test "${MOORESTARTUP_MODE}" = "RESTORE";      ## RunInfo flag=2
     then
@@ -38,8 +38,10 @@ else
 	-opt=command="import MooreScripts.runOnline; MooreScripts.runOnline.start(NbOfSlaves = "${NBOFSLAVES}", Split = '%(split)s', %(checkOdin)s WriterRequires = %(WriterRequires)s  )" \\
 	${APP_STARTUP_OPTS};
 fi;
-    """%({'split': split, \
-          'checkOdin': { 'Hlt1' : '' , 'Hlt2' : 'CheckOdin = False, ' }.get( split, "" ), \
+    """%({'split': split,
+          'Priority' : { 'Hlt1' : '10', 'Hlt2' : '19' },
+          'WhichMoore' : { 'Hlt1' : '', 'Hlt2' : '-t Moore2' },
+          'checkOdin': { 'Hlt1' : '' , 'Hlt2' : 'CheckOdin = False, ' }.get( split, "" ),
           'WriterRequires': { 'Hlt1' : "[ 'Hlt1' ]" , 'Hlt2' : "[ 'Hlt2' ]" }.get(split, "['HltDecisionSequence']")}))
 
     from stat import S_IRUSR, S_IRGRP, S_IROTH, S_IWUSR, S_IWGRP, S_IXUSR, S_IXGRP, S_IXOTH

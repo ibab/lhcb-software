@@ -33,13 +33,6 @@ def start(**kwargs) :
     mooreOnline.HltLevel = HltLevel
     mooreOnline.RunOnline = True
 
-    ### Absolute process priority, anything smaller than 0 will not work.
-    nice = mooreOnline.getProp("Priority")[HltLevel] - os.nice(0)
-    if nice < 0:
-        print "# WARNING: nice of %s requested, this cannot work, setting it to 0." % nice
-        nice = 0
-    os.nice(nice)
-
     ### default database setup -- require an explit tag when running in the LHCb or FEST partitions...
     #not needed, moore.Simulation = False
     moore.DDDBtag    = 'unknown-please-specify-in-PVSS-RunInfo'
@@ -84,5 +77,12 @@ def start(**kwargs) :
 
     if OnlineEnv.PartitionName in ('TEST', 'LHCb2') and HltLevel == 'Hlt2' :
         mooreOnline.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
+
+    from Moore import Funcs
+    comps = (".*Hlt2.*Fitter$", ".*Hlt2SelReportsWriter", ".*TrackEff.*[01]N3Body.*",
+             ".*Hlt2.*TrackMasterExtrapolator", ".*DBAccessor", r".*\.PhotonMatch",
+              r".*ToolSvc\.ParticleTransporter", ".*LoKiSvc.REPORT")
+    outputTrans = {c : {"OutputLevel" : {"^.*$": "5"}} for c in comps}
+    Funcs._mergeTransform(outputTrans)
 
     OnlineEnv.end_config(False)

@@ -4,6 +4,14 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2015-07-22 - Roel Aaij
+ - Update CreateEFF.py to pass the correct arguments to ConfigureCheckpoint.py
+   when starting HLT2.
+ - Get rid of spurious warning messages. This should be done in the code itself
+   as much as possible.
+ - Do the renicing in the startup script when running online to allow it to work
+   when checkpointing. For the timing test it stays in the python.
+
 !========================= MooreScripts v1r11p1 2015-07-05 =========================
 
 ! 2015-07-05 - Roel Aaij
