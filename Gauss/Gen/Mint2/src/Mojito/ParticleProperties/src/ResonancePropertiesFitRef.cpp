@@ -12,6 +12,8 @@ ResonancePropertiesFitRef::ResonancePropertiesFitRef(const ResonanceProperties& 
   , _fitWidth(repo._fitWidth, this)
   , _fitRadius(repo._fitRadius, this)
   , _fitAlpha(repo._fitAlpha, this)
+  , _fitFermiLambda(repo._fitFermiLambda, this)
+  , _fitFermiS0(repo._fitFermiS0, this)
 {
 }
 

@@ -1069,5 +1069,74 @@ public:
 };
 
 
+// ==========================================
+// Spin Factor 25
+
+class SF_BtoPV0_PtoP1V1_V1toP2P3_BASE : public SpinFactor{
+protected:
+    // static DecayTree* _exampleDecay;
+    MINT::const_counted_ptr<AssociatedDecayTree> V, P;// *P1, *P2, *P3, *P4;
+    
+    virtual bool parseTree(const DalitzEventPattern& pat);
+    
+public:
+    virtual void printYourself(std::ostream& os=std::cout) const=0;
+    SF_BtoPV0_PtoP1V1_V1toP2P3_BASE(const DecayTree& theDecay) 
+    : SpinFactor(theDecay, 4)
+    , V(0), P(0)
+    {
+        //if( ! parseTree(const DalitzEventPattern& pat)){
+        //    throw "error in parseTree in constructor of SF_BtoAV0_AtoVP1_VtoP2P3_BASE";
+        //}
+        //printYourself();
+    }
+    
+    virtual ~SF_BtoPV0_PtoP1V1_V1toP2P3_BASE(){}
+    virtual double getVal(IDalitzEvent& evt)=0;
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt)=0;
+    
+    virtual const DecayTree& exampleDecay()=0;
+    virtual std::string name() const{
+        return "SpinFactor4:SF_BtoPV0_PtoP1V1_V1toP2P3_BASE(" 
+        + theBareDecay().oneLiner() + ")";
+    }
+    
+};
+
+
+class SF_BtoPV0_PtoP1V1_V1toP2P3 : public SF_BtoPV0_PtoP1V1_V1toP2P3_BASE{
+    //int _pol;
+protected:
+    const int _pol;
+    static DecayTree* _exampleDecay;
+    //static int _pol;  
+public:
+    virtual void printYourself(std::ostream& os=std::cout) const;
+    SF_BtoPV0_PtoP1V1_V1toP2P3(const DecayTree& theDecay, const int pol) 
+    : SF_BtoPV0_PtoP1V1_V1toP2P3_BASE(theDecay), _pol(pol)
+    {
+        //  if( ! parseTree(const DalitzEventPattern& pat)){
+        //throw "error in parseTree in constructor of SF_BtoAV0_AtoVP1_VtoP2P3";
+        //  }
+        // _pol=pol;  
+        //      printYourself();
+    }
+    
+    virtual ~SF_BtoPV0_PtoP1V1_V1toP2P3(){}
+    virtual double getVal(IDalitzEvent& evt){return getNewVal(evt).real();}
+    virtual std::complex<double> getNewVal(IDalitzEvent& evt);
+    
+    static const DecayTree& getExampleDecay();
+    virtual const DecayTree& exampleDecay();
+    virtual std::string name() const{
+        return "SpinFactor4:SF_BtoPV0_PtoP1V1_V1toP2P3(" 
+        + theBareDecay().oneLiner() + ")";
+    }
+    const int getPolarisation() {return _pol;}
+    
+    
+};
+
+
 #endif
 //

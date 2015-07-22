@@ -49,6 +49,8 @@ DecayTree* SF_BtoPS_PtoP1V0_StoP2P3::_exampleDecay=0;
 
 DecayTree* SF_BtoPV_PtoP1V0_VtoP2P3::_exampleDecay=0;
 DecayTree* SF_BtoPV0_PtoS_StoP2P3::_exampleDecay=0;
+DecayTree* SF_BtoPV0_PtoP1V1_V1toP2P3::_exampleDecay=0;
+
 
 DecayTree* SF_BtoVP1_VtoAP2_AtoV0P3::_exampleDecay=0;
 DecayTree* SF_BtoVP1_VtoSV0_StoP2P3::_exampleDecay=0;
@@ -2411,6 +2413,120 @@ void SF_BtoVP1_VtoSV0_StoP2P3::printYourself(ostream& os) const{
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) return;
     os << "spin factor SF_BtoVP1_VtoSV0_StoP2P3"
+    << "\n\t    parsed tree " << theBareDecay().oneLiner()
+    << "\n      like this:" << endl;
+    this->printParsing(os);
+}
+
+
+
+
+//==================================================================
+// SF 25
+bool SF_BtoPV0_PtoP1V1_V1toP2P3_BASE::parseTree(const DalitzEventPattern& pat){
+    bool debugThis=false;
+    
+    if(fsPS.size() < 4) fsPS.reserve(4);
+    for(int i=0; i< theDecay(pat).nDgtr(); i++){
+        const_counted_ptr<AssociatedDecayTree> dgtr= theDecay(pat).getDgtrTreePtr(i);
+        if(dgtr->getVal().SVPAT() == "P") P = dgtr;
+        else if(dgtr->getVal().SVPAT() == "V") fsPS[0] = dgtr;;
+    }
+    if(0==P || 0==fsPS[0]){
+        cout << "ERROR in SF_BtoPV0_PtoP1V1_V1toP2P3::parseTree"
+        << " Didn't find P or V0 " << P.get() << ", " << fsPS[0].get() << endl;
+        return false;
+    }
+    
+    
+    if(P->nDgtr() != 2){
+        cout << "ERROR in SF_BtoPV0_PtoP1V1_V1toP2P3::parseTree"
+        << " P should have 2 daughters, but it says it has "
+        << P->nDgtr() << "."
+        << endl;
+        return false;
+    }
+    
+    for(int i=0; i< P->nDgtr(); i++){
+        const_counted_ptr<AssociatedDecayTree> dgtr= P->getDgtrTreePtr(i);
+        if(dgtr->getVal().SVPAT() == "V") V = dgtr;
+        else if(dgtr->getVal().SVPAT() == "P") fsPS[1] = dgtr;
+    }
+    
+    if(V->nDgtr() != 2){
+        cout << "ERROR in SF_BtoPV0_PtoP1V1_V1toP2P3::parseTree"
+        << " V should have 2 daughters, but it says it has "
+        << V->nDgtr() << "."
+        << endl;
+        return false;
+    }
+    
+    fsPS[2] = V->getDgtrTreePtr(0);
+    fsPS[3] = V->getDgtrTreePtr(1);
+    ////normalOrder(fsPS[2], fsPS[3]);
+    
+    if(debugThis){
+        cout << "parsed Tree: P:\n"
+        << *P
+        << "\n V:"
+        << *V
+        << endl;
+        for(int i=0; i<4; i++){
+            cout << "fsPS[" << i << "]\n"
+            << *(fsPS[i])
+            << endl;
+        }
+    }
+    // this->printYourself();
+    return true;
+}
+
+
+const DecayTree& SF_BtoPV0_PtoP1V1_V1toP2P3::getExampleDecay(){
+    if(0==_exampleDecay){
+        // B->J/psi (K(1460)-> K rho)
+        _exampleDecay = new DecayTree(521);
+        _exampleDecay->addDgtr(443, 100321)->addDgtr(321,213)->addDgtr(211,-211);
+    }
+    return *_exampleDecay;
+}
+
+const DecayTree& SF_BtoPV0_PtoP1V1_V1toP2P3::exampleDecay(){
+    return getExampleDecay();
+}
+
+complex<double> SF_BtoPV0_PtoP1V1_V1toP2P3::getNewVal(IDalitzEvent& evt){
+    //bool debugThis = false;
+    
+    if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
+    
+    double MV0   = mRes(fsPS[0], evt); // ??  
+    //double MV0   = p(0, evt).M(); // ??  
+    TLorentzVector pP= p(1, evt)+p(2, evt)+p(3,evt); 
+    TLorentzVector qP= p(1, evt)-p(2, evt)-p(3,evt); 
+    ZTspin1 ZP(qP,pP,pP.M());
+    
+    TLorentzVector pB=pP+p(0,evt);
+    TLorentzVector qB=pP-p(0,evt);    
+    ZTspin1 ZB(qB,pB,pB.M());
+
+    TLorentzVector pV= p(2, evt)+p(3,evt); 
+    TLorentzVector qV= p(2, evt)-p(3,evt);    
+    ZTspin1 ZV(qV,pV,pV.M());
+    
+    polVector e = polVector(p(0, evt),MV0,getPolarisation());  
+    e.conj();   
+    
+    double tmp = ZP.Dot(ZV); 
+    
+    complex<double> sfm(ZB.Dot(e.Re()),ZB.Dot(e.Im()));
+    return sfm*tmp/(GeV*GeV*GeV);
+}
+void SF_BtoPV0_PtoP1V1_V1toP2P3::printYourself(ostream& os) const{
+    //  bool debugThis = false;
+    
+    if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) return;
+    os << "spin factor SF_BtoPV0_PtoP1V1_V1toP2P3"
     << "\n\t    parsed tree " << theBareDecay().oneLiner()
     << "\n      like this:" << endl;
     this->printParsing(os);

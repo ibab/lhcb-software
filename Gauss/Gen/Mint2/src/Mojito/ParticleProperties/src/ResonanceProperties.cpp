@@ -60,6 +60,8 @@ ResonanceProperties::ResonanceProperties(int pdg_id)
   , _fitWidth("width_"   + nameFromPid(abs(pdg_id)), 1, widthInit(pdg_id) , 0, 0, 0, 0,  NamedParameterBase::QUIET)
   , _fitRadius("radius_" + nameFromPid(abs(pdg_id)), 1, radiusInit(pdg_id), 0, 0, 0, 0,  NamedParameterBase::QUIET)
   , _fitAlpha("alpha_"   + nameFromPid(abs(pdg_id)), 1, 1.0               , 0, 0, 0, 0,  NamedParameterBase::QUIET)
+  , _fitFermiLambda("Fermi_lambda_"   + nameFromPid(abs(pdg_id)), 1, 1.0  , 0, 0, 0, 0,  NamedParameterBase::QUIET)
+  , _fitFermiS0("Fermi_s0_"   + nameFromPid(abs(pdg_id)), 1, 1.0          , 0, 0, 0, 0,  NamedParameterBase::QUIET)
 { 
 
         //fix to PDG value if not explicitly initiallised 
@@ -77,9 +79,10 @@ ResonanceProperties::ResonanceProperties(const std::string& name):
   , _fitWidth("width_"   + nameFromPid(_pid), 1, widthInit(_pid) , 0, 0, 0, 0,  NamedParameterBase::QUIET)
   , _fitRadius("radius_" + nameFromPid(_pid), 1, radiusInit(_pid), 0, 0, 0, 0,  NamedParameterBase::QUIET)
   , _fitAlpha("alpha_"   + nameFromPid(_pid), 1, 1.0             , 0, 0, 0, 0,  NamedParameterBase::QUIET)
+  , _fitFermiLambda("Fermi_lambda_"   + nameFromPid(_pid), 1, 1.0  , 0, 0, 0, 0,  NamedParameterBase::QUIET)
+  , _fitFermiS0("Fermi_s0_"   + nameFromPid(_pid), 1, 1.0          , 0, 0, 0, 0,  NamedParameterBase::QUIET)
 { 
 }
-
 
 
 

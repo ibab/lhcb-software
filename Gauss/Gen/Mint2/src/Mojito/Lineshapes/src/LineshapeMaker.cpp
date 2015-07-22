@@ -9,7 +9,8 @@
 //#include "Mint/IDalitzEventAccess.h"
 #include "Mint/BW_BW.h"
 #include "Mint/SBW.h"
-#include "Mint/VBW.h"
+#include "Mint/FermiPS_BW.h"
+#include "Mint/Histo_BW.h"
 #include "Mint/GounarisSakurai.h"
 #include "Mint/Lass.h"
 #include "Mint/Flatte.h"
@@ -31,12 +32,14 @@ using namespace MINT;
    ExpNonRes
    PowNonRes
    SBW
+   FermiPS_BW
+   Histo_BW
 */
 
 ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
 			   , const std::string& lopt
 			   ){
-  bool dbThis=false;
+  bool dbThis=true;
 
   if(A_is_in_B("CLEO2012", lopt)){
     return CLEO2012_LineshapeMaker(tree, lopt);
@@ -48,7 +51,7 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
     cout << "LineshapeMaker called with " 
 	 << tree->getVal().pdg() 
 	 << " lopt = " << lopt << endl;
-
+      cout << "final state size = " << tree->finalState().size() << endl;
     cout << tree->getVal().pdg() << ", "
 	 << (abs(tree->getVal().pdg())%1000)
 	 << endl;
@@ -60,10 +63,20 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
     return new SBW(*tree);
   }
 
-  if(A_is_in_B("VBW_"+anythingToString(abs(tree->getVal().pdg())), lopt)){
-        if(dbThis) cout << "LineshapeMaker returns VBW for PID="<<  abs(tree->getVal().pdg())<< endl;
-        return new VBW(*tree);
+  if(A_is_in_B("SBW_", lopt) && tree->finalState().size()==3){
+        if(dbThis) cout << "LineshapeMaker returns SBW for PID="<<  abs(tree->getVal().pdg())<< endl;
+        return new SBW(*tree);
   }  
+    
+  if(A_is_in_B("FermiPS", lopt) && tree->finalState().size()==3){
+        if(dbThis) cout << "LineshapeMaker returns FermiPS_BW for PID="<<  abs(tree->getVal().pdg())<< endl;
+        return new FermiPS_BW(*tree);
+  }    
+  
+  if(A_is_in_B("HistoPS", lopt) && tree->finalState().size()==3){
+        if(dbThis) cout << "LineshapeMaker returns Histo_BW for PID="<<  abs(tree->getVal().pdg())<< endl;
+        return new Histo_BW(*tree);
+  }     
     
   if(A_is_in_B("ALWAYS_BW", lopt)){
     if(dbThis) cout << "LineshapeMaker returns BW_BW" << endl;

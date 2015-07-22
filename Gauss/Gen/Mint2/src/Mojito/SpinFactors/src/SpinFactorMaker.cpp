@@ -63,6 +63,10 @@ void PrintAllSpinFactors(std::ostream& out){
     << SF_BtoV1V0_V1toV2P1_V2toP2P3::getExampleDecay()
     << " -------------------- " << std::endl;  
     
+    out << " SF_BtoPV0_PtoP1V1_V1toP2P3:\n" 
+    << SF_BtoPV0_PtoP1V1_V1toP2P3::getExampleDecay()
+    << " -------------------- " << std::endl;  
+    
   out << " SF_DtoPP0_PtoVP1_VtoP2P3:\n" 
       << SF_DtoPP0_PtoVP1_VtoP2P3::getExampleDecay()
       << " -------------------- " << std::endl;
@@ -409,6 +413,16 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy, char SPD_Wave, const
         else if(A_is_in_B("ZERO", lopt))return new SF_BtoVP1_VtoAP2_AtoV0P3(thisDcy,0);  
         else if(A_is_in_B("MINUS", lopt))return new SF_BtoVP1_VtoAP2_AtoV0P3(thisDcy,-1);  
         else return new SF_BtoVP1_VtoAP2_AtoV0P3(thisDcy,-999);
+    }
+    
+    if( equalBySVPAT_L(SF_BtoPV0_PtoP1V1_V1toP2P3::getExampleDecay(), thisDcy) ){
+        if(dbThis){
+            std::cout << "found a spin factor for this decay:\n" << thisDcy << std::endl;
+        }
+        if(A_is_in_B("PLUS", lopt))return new SF_BtoPV0_PtoP1V1_V1toP2P3(thisDcy,1);  
+        else if(A_is_in_B("ZERO", lopt))return new SF_BtoPV0_PtoP1V1_V1toP2P3(thisDcy,0);  
+        else if(A_is_in_B("MINUS", lopt))return new SF_BtoPV0_PtoP1V1_V1toP2P3(thisDcy,-1);  
+        else return new SF_BtoPV0_PtoP1V1_V1toP2P3(thisDcy,-999);
     }
     
   // final state pseudo scalars  

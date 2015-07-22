@@ -25,7 +25,12 @@ FitAmpIncoherentSum::FitAmpIncoherentSum(const DalitzEventPattern& pat
 		     , const std::string& opt
 		     )
   : FitAmpList(pat, fname, pset, FitAmpIncoherentSum::IncPrefix()+ prefix, opt)
-{}
+{
+    //Important! Ensures everything is initialised
+    DalitzEventList eventTest;
+    eventTest.generatePhaseSpaceEvents(1,pat);
+    this->getVal(eventTest[0]);  
+}
 
 FitAmpIncoherentSum::FitAmpIncoherentSum(const DalitzEventPattern& pat
 		     , MinuitParameterSet* pset
@@ -33,27 +38,47 @@ FitAmpIncoherentSum::FitAmpIncoherentSum(const DalitzEventPattern& pat
 		     , const std::string& opt
 		     )
   : FitAmpList(pat, pset, FitAmpIncoherentSum::IncPrefix() + prefix, opt)
-{}
+{
+    //Important! Ensures everything is initialised
+    DalitzEventList eventTest;
+    eventTest.generatePhaseSpaceEvents(1,pat);
+    this->getVal(eventTest[0]);  
+}
 FitAmpIncoherentSum::FitAmpIncoherentSum(const DalitzEventPattern& pat
 		     , const std::string& prefix
 		     , const std::string& opt
 		     )
   : FitAmpList(pat, FitAmpIncoherentSum::IncPrefix() + prefix, opt)
-{}
+{
+    //Important! Ensures everything is initialised
+    DalitzEventList eventTest;
+    eventTest.generatePhaseSpaceEvents(1,pat);
+    this->getVal(eventTest[0]);  
+}
 
 FitAmpIncoherentSum::FitAmpIncoherentSum(const FitAmpIncoherentSum& other)
   : IReturnRealForEvent<IDalitzEvent>()
   , IFastAmplitudeIntegrable()
   , ILookLikeFitAmpSum()
   , FitAmpList(other)
-{}
+{
+    //Important! Ensures everything is initialised
+    DalitzEventList eventTest;
+    eventTest.generatePhaseSpaceEvents(1,_pat);
+    this->getVal(eventTest[0]);  
+}
 
 FitAmpIncoherentSum::FitAmpIncoherentSum(const FitAmpList& other)
   : IReturnRealForEvent<IDalitzEvent>()
   , IFastAmplitudeIntegrable()
   , ILookLikeFitAmpSum()
   , FitAmpList(other)
-{}
+{
+    //Important! Ensures everything is initialised
+    DalitzEventList eventTest;
+    eventTest.generatePhaseSpaceEvents(1,_pat);
+    this->getVal(eventTest[0]);  
+}
 counted_ptr<FitAmpList> FitAmpIncoherentSum::GetCloneSameFitParameters() const{ 
 // need to reform these one day...
 // ... it all relies on the copy-constructur/=operator in FitAmpitude
