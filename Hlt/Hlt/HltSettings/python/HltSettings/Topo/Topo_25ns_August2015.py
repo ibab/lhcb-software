@@ -29,6 +29,8 @@ class Topo_25ns_August2015 :
         """Return the trigger thresholds."""
 
         d = {}
+
+        from Hlt2Lines.Topo.Lines import TopoLines
         d.update( { TopoLines : {'Common' : {
             'TOS'               : ('Hlt1(Two)?Track(MVA)?(Muon)?'
                                    'Decision%TOS'),

@@ -21,8 +21,8 @@ class LowMult_25ns_August2015 :
         lines = [
              'Hlt2LowMultDiMuon_PS'
             ,'Hlt2LowMultDiMuon'
-            ,'Hlt2LowMultDiMuonTurboCalib'
-            ,'Hlt2LowMultLMR2HHTurboCalib'
+            # ,'Hlt2LowMultDiMuonTurboCalib'
+            # ,'Hlt2LowMultLMR2HHTurboCalib'
             ,'Hlt2LowMultMuon'
             ,'Hlt2LowMultDiElectron_noTrFilt'
             ,'Hlt2LowMultDiElectron'

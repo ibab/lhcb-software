@@ -31,7 +31,7 @@ class XcMuXForTau_25ns_August2015 :
             'B2LcPKPiFakeMu'
             ]
         
-        return lines
+        return ['Hlt2XcMuXForTau' + l for l in lines]
 
 
     def Thresholds(self) :

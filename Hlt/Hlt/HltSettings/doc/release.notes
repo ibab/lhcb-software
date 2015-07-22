@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-07-22 - Roel Aaij
+ - Added Physics_25ns_August2015.py, which uses settings and lines from all
+   subdirectories defined so far.
+ - Remove two non-existent lines from LowMult/LowMult_25ns_August2015.py.
+ 
 ! 2015-07-22 - Karlis Dreimanis
  - Add LowMult/LowMult_25ns_August2015.py
 

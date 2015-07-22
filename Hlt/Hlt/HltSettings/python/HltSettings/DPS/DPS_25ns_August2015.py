@@ -36,18 +36,12 @@ class DPS_25ns_August2015 :
         d.update (
             {
               DPSLines : {
-                 'DPS:2x2mu' : {            
-                            'Prescale' :  1.0,
-                            'Postscale' :  1.0
-                               },
-                 'DPS:2xHc' : {            
-                            'Prescale' :  1.0,
-                            'Postscale' :  1.0
-                               },
-                 'DPS:2mu&Hc' : {            
-                            'Prescale' :  1.0,
-                            'Postscale' :  1.0
-                               },
+                  'Prescale'  : {'DPS:2x2mu'  : 1.0,
+                                 'DPS:2xHc'   : 1.0,
+                                 'DPS:2mu&Hc' : 1.0},
+                  'Postscale' : {'DPS:2x2mu'  : 1.0,
+                                 'DPS:2xHc'   : 1.0,
+                                 'DPS:2mu&Hc' : 1.0}
                  }
               }
             )

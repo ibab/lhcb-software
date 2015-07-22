@@ -39,12 +39,6 @@ class DiMuon_25ns_August2015(object) :
             'Hlt2DiMuonDetachedHeavy',
             'Hlt2DiMuonDetachedPsi2S',
 
-            # control rate via: prescale
-            'Hlt2EWDiMuonDY1',
-            'Hlt2EWDiMuonDY2',
-            'Hlt2EWDiMuonDY3',
-            'Hlt2EWDiMuonDY4',
-
             # Turbo lines 
             'Hlt2DiMuonJPsiTurbo',
             'Hlt2DiMuonPsi2STurbo',

@@ -77,7 +77,7 @@ class EW_25ns_August2015( object ) :
 								   'TkChi2'            :    10},
 					
 					'DiMuonDY4'             : {'MinMass'           : 20000 * MeV,
-								   'MuPt'              :     0 * Mev,
+								   'MuPt'              :     0 * MeV,
 								   'TkChi2'            :    10},
 					
 					# Single Muon
