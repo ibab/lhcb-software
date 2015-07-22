@@ -4,6 +4,10 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-07-22 - Roel Aaij
+ - Fix lastUpdate time for newly received histograms.
+ - Remove debug stuff from options.
+
 ! 2015-07-21 - Roel Aaij
  - Update Histogram class with constructors and assignment operators.
  - Add run start time to RunInfo.

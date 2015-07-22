@@ -204,16 +204,23 @@ void Hlt2SaverSvc::function()
          debug() << "Received ROOT histogram " << key.first << " " << key.second
                  << " " << dir << " " << histo->GetName() << endmsg;
 
+         // For newly created or updated histograms, update their lastUpdate member.
          auto now = std::chrono::high_resolution_clock::now();
+
+         // Find the right histogram, byName finds histograms with that name for all runs.
          auto& hbn = m_histos.get<byName>();
          auto range = boost::make_iterator_range(hbn.equal_range(dir + "/" + histo->GetName()));
+
+         // Find the one that belongs to the run we care about. The range should be very small.
          auto it = std::find_if(begin(range), end(range), [&key](const entry_t& entry) {
                return entry.run == key.first;
             });
+
+         // Either create a new histogram, or update the existing one.
          if (it == end(range)) {
-            m_histos.insert({key.first, type, dir, histo.release()});
+            m_histos.insert({key.first, type, dir, histo.release(), now});
          } else {
-            hbn.modify(it, [&now](entry_t& entry) {entry.lastUpdate = now;});
+            hbn.modify(it, [&now](entry_t& entry){entry.lastUpdate = now;});
             it->histo->Add(histo.get());
          }
       }
@@ -474,7 +481,8 @@ void Hlt2SaverSvc::loadSavedHistograms(Monitoring::RunNumber run) const
             if (it == end(range)) {
                // The type (rate or regular histo) comes from the title... ugly,
                // but least problematic alternative...
-               m_histos.insert({run, savedHisto->GetTitle(), path, savedHisto.release()});
+               std::string dir = savedHisto->GetTitle();
+               m_histos.insert({run, dir, path, savedHisto.release()});
             } else {
                it->histo->Add(savedHisto.get());
             }

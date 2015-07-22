@@ -184,8 +184,8 @@ void Hlt2MonRelaySvc::capture() const
          auto cmd = receiveString(control);
          if (cmd == "TERMINATE") {
             int linger = 0;
-            control.setsockopt(ZMQ_LINGER, &linger,sizeof(linger));
-            capture.setsockopt(ZMQ_LINGER, &linger,sizeof(linger));
+            control.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
+            capture.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
             break;
          } else if (cmd == "PAUSE") {
             paused = true;

@@ -107,8 +107,6 @@ def configureTop(appMgr, node_info):
     saverSvc = Hlt2SaverSvc()
     saverSvc.DataConnection = rootSvc.BackConnection
     saverSvc.InfoConnection = infoSvc.BackConnection
-    saverSvc.OutputLevel = 2
-    saverSvc.NormalizeRateTo = "HltRoutingBitsWriter/RoutingBit33"
 
     return (infoRelay, histoRelay, adderSvc, infoSvc, rootSvc, saverSvc)
 
