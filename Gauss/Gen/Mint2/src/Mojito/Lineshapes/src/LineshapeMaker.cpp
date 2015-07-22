@@ -17,6 +17,7 @@
 #include "Mint/FocusFlatte.h"
 #include "Mint/CrystalBarrelFOCUS.h"
 #include "Mint/NonRes.h"
+#include "Mint/Bugg_BW.h"
 
 #include <iostream>
 
@@ -34,6 +35,7 @@ using namespace MINT;
    SBW
    FermiPS_BW
    Histo_BW
+   Bugg
 */
 
 ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
@@ -77,6 +79,13 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
         if(dbThis) cout << "LineshapeMaker returns Histo_BW for PID="<<  abs(tree->getVal().pdg())<< endl;
         return new Histo_BW(*tree);
   }     
+    
+  if(abs(tree->getVal().pdg()) == 9000221 || abs(tree->getVal().pdg()) == 999001 ){ // sigma
+        if(A_is_in_B("Bugg", lopt)){
+            if(dbThis) cout << "LineshapeMaker: " << "\n\t> returning Bugg lineshape" << endl;
+            return new Bugg_BW(*tree);  
+        }
+  }
     
   if(A_is_in_B("ALWAYS_BW", lopt)){
     if(dbThis) cout << "LineshapeMaker returns BW_BW" << endl;
