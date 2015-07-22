@@ -106,8 +106,8 @@ void Hlt2SaverSvc::save()
    zmq::socket_t control{context(), ZMQ_PUB};
    control.connect(ctrlCon().c_str());
 
-   int n = 0;
    while(!m_stopSaving) {
+      int n = 0;
       while(n < m_saveInterval) {
          if (m_stopSaving)
             break;
@@ -260,9 +260,18 @@ void Hlt2SaverSvc::saveHistograms() const
       runs.insert(entry.run);
    }
 
+
    // Load saved histograms for runs where we have updates.
+   std::set<Monitoring::RunNumber> skip;
    for (auto run : runs) {
-      loadSavedHistograms(run);
+      auto info = runInfo(run);
+      if (info) {
+         loadSavedHistograms(run);
+      } else {
+         warning() << "No run info for run " << run << " not saving its histograms."
+                   << endmsg;
+         skip.insert(run);
+      }
    }
 
    // Find rate normalization histograms
@@ -278,6 +287,9 @@ void Hlt2SaverSvc::saveHistograms() const
    // Write ROOT histograms to file
    // Loop over runs
    for (const auto run : runs) {
+      if (skip.count(run)) {
+         continue;
+      }
       bool exists{false};
       fs::path file;
       std::tie(file, exists) = filename(run);
