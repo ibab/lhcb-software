@@ -39,8 +39,8 @@ else
 	${APP_STARTUP_OPTS};
 fi;
     """%({'split': split,
-          'Priority' : { 'Hlt1' : '10', 'Hlt2' : '19' },
-          'WhichMoore' : { 'Hlt1' : '', 'Hlt2' : '-t Moore2' },
+          'Priority' : { 'Hlt1' : '10', 'Hlt2' : '19' }.get(split, ""),
+          'WhichMoore' : { 'Hlt1' : '', 'Hlt2' : '-t Moore2' }.get(split, ""),
           'checkOdin': { 'Hlt1' : '' , 'Hlt2' : 'CheckOdin = False, ' }.get( split, "" ),
           'WriterRequires': { 'Hlt1' : "[ 'Hlt1' ]" , 'Hlt2' : "[ 'Hlt2' ]" }.get(split, "['HltDecisionSequence']")}))
 
