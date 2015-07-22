@@ -9,6 +9,7 @@ def setThresholds(ThresholdSettings,conf_):
     @author G. Raven, P. Koppenburg
     @date 23/7/2009 (moved)
     """
+    from Gaudi.Configuration import log
     from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
     assert issubclass(conf_,HltLinesConfigurableUser) , '%s is not an HltLinesConfigurableUser'%i.__name__
     conf = conf_()  # The configurable _must_ be instantiated even if not explicitly configured. Or it will be ignored
@@ -21,11 +22,15 @@ def setThresholds(ThresholdSettings,conf_):
         # hence we _assume_ that, even if we have an attr, but it matches the
         # default, it wasn't set explicitly, and we overrule it...
         if hasattr(conf,k) and conf.getProp(k) != conf.getDefaultProperty(k) :
-                from Gaudi.Configuration import log
-                log.warning('%s.%s has explicitly been set, NOT using requested predefined threshold %s, but keeping explicit value: %s '%(conf.name(),k,str(v),getattr(conf,k)))
+            log.warning('%s.%s has explicitly been set, NOT using requested predefined threshold %s, but keeping explicit value: %s '%(conf.name(),k,str(v),getattr(conf,k)))
         else :
             if ( type(v) == dict ): # special case for dictionaries (needed in topo)
-                val = conf.getProp(k)
+                val = None
+                try:
+                    val = conf.getProp(k)
+                except KeyError as ke:
+                    log.warning("Cannot get property %s of Configurable %s" % (k, conf.getName()))
+                    raise ke
                 val.update(v)
                 setattr(conf,k,val)
             else :
@@ -61,7 +66,18 @@ def importLineConfigurables(pkg, endsWithLines = False) :
     old_style = [getattr(importlib.import_module(pkg.__name__ + '.' + name), name + 'Conf')
                  for _, name, is_pkg in pkgutil.iter_modules(pkg.__path__[:2])
                  if (not endsWithLines or (endsWithLines and name.endswith('Lines'))) and not is_pkg]
-    new_style = [getattr(importlib.import_module(pkg.__name__ + '.' + name + '.Lines'), name + 'Lines')
-                 for _, name, is_pkg in pkgutil.iter_modules(pkg.__path__[:2])
-                 if is_pkg and name != 'Utilities']
+    new_style = []
+    for _, name, is_pkg in pkgutil.iter_modules(pkg.__path__[:2]):
+        if not is_pkg or name == "Utilities":
+            continue
+        pkg_name = pkg.__name__ + '.' + name + '.Lines'
+        conf = name + 'Lines'
+        try:
+            mod = getattr(importlib.import_module(pkg_name), conf)
+            new_style += [mod]
+        except ImportError as e:
+            from Gaudi.Configuration import log
+            log.error("Could not import configurable %s from package %s", pkg_name, conf)
+            raise e
+            
     return old_style + new_style

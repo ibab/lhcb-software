@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-07-22 - Roel Aaij
+ - Improve the error reporting if the import of a configuration modules fails.
+
 ! 2015-07-16 - Roel Aaij
  - Removed routing bit 91 (NoBias stream) for 25ns data taking.
 
