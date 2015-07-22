@@ -162,7 +162,7 @@ class HltMonitoringConf(LHCbConfigurableUser):
 
     def __hlt2_monitoring(self, lines2):
 
-        l0Mon = self.__l0_monitoring("Hlt1")
+        l0Mon = self.__l0_monitoring("Hlt2")
 
         from Configurables import HltGlobalMonitor
         globalMon = self.__globalMonitor("Hlt2GlobalMonitor")
