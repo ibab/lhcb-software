@@ -125,7 +125,6 @@ StatusCode SuperChicProduction::initialize() {
 StatusCode SuperChicProduction::finalize() {
 
   // Print summary info.
-  assert(m_herwigpp);
   always() << "==============================================================="
     "===============\n";
   always() << "SuperChic Event Summary\n";
