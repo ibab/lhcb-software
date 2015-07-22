@@ -55,6 +55,3 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use DetCond v12r42 Det
-use DDDB    v1r77  Det
-use OTDet   v8r17  Det
