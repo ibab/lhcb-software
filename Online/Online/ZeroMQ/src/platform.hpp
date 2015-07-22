@@ -155,7 +155,7 @@
 #define PACKAGE_BUGREPORT "zeromq-dev@lists.zeromq.org"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "zeromq"
+#define ZMQ_PACKAGE_NAME "zeromq"
 
 /* Define to the full name and version of this package. */
 #define PACKAGE_STRING "zeromq 4.1.2"
@@ -167,7 +167,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "4.1.2"
+#define ZMQ_PACKAGE_VERSION "4.1.2"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void

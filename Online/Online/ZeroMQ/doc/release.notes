@@ -6,6 +6,10 @@
                 COPYING.LESSER. See README.md for more information.
 !-----------------------------------------------------------------------------
 
+! 2015-07-22 - Roel Aaij
+ - Fix double definition of PACKAGE_NAME and PACKAGE_VERSION from cmake and
+   platform.hpp by renaming the definitions in platform.hpp.
+
 ! 2015-07-15 - Roel Aaij
  - Switch back to epoll.
 
