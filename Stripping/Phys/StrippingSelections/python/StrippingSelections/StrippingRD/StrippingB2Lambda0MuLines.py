@@ -4,7 +4,7 @@ B->Lambda0 Mu  reconstruction
 
 __author__ = ['Federico Redi']
 __date__ = '08/04/2015'
-__version__ = '$Revision: 0.1 $'
+__version__ = '$Revision: 0.2 $'
 
 __all__ = ('B2Lambda0MuLines',
            '_Bu2LambdaSSMu',
@@ -85,6 +85,7 @@ class B2Lambda0MuLines( LineBuilder ) :
         self.GECs = { "Code":"( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(GEC_nLongTrk)s )" % config,
                       "Preambulo": ["from LoKiTracks.decorators import *"]}
         self._muonSel=None
+        self._downmuonSel=None
         self._muonFilter()
         self._selMu=None
         self.registerLine(self._LambdaMajoranaSSMu_line())
@@ -105,14 +106,14 @@ class B2Lambda0MuLines( LineBuilder ) :
 
     ######--######
     def _downMuonFilter( self ):
-        if self._muonSel is not None:
-            return self._muonSel
+        if self._downmuonSel is not None:
+            return self._downmuonSel
 
         _mu = FilterDesktop( Code = self._NominalMuSelection() % self._config )
         _muSel=Selection("downMuon_for"+self._name,
                          Algorithm=_mu,
                          RequiredSelections = [StdLooseDownMuons])
-        self._muonSel=_muSel
+        self._downmuonSel=_muSel
         return _muSel
 
     def _muonFilter( self ):
