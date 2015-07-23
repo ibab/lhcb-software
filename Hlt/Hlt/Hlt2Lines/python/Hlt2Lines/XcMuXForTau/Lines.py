@@ -14,7 +14,7 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 class XcMuXForTauLines(Hlt2LinesConfigurableUser):
     __slots__ = {'_stages' : {},
                  'Prescale' : {},
-                 'Common' : {
+                 'Xc' : {
                               'Pair_AMINDOCA_MAX'        : 0.10 * mm
                             , 'MIN_D_CHILDPT'          : 800.0 * MeV
                             , 'D0_BPVVDCHI2_MIN'         : 25.0       # neuter
@@ -24,11 +24,6 @@ class XcMuXForTauLines(Hlt2LinesConfigurableUser):
                             , 'DTrk_ALL_PT_MIN'           : 200.0 * MeV
                             , 'DTrk_ALL_P_MIN'            : 5.0  * GeV
                             , 'DTrk_ALL_MIPCHI2DV_MIN'    : 9.0
-                            , 'XcMu_DOCA_MAX'        : 0.50 * mm
-                            , 'XcMu_VTXCHI2'        : 15
-                            , 'XcMu_DIRA'        : 0.999
-                            , 'XcMu_FDCHI2'        : 50
-                            , 'Mu_IPCHI2'    : 16
                             , 'D_IPCHI2'    : 5
                             , 'D_SUMPT'    : 2500 * MeV
                             , 'K_PIDK'    : 2 
@@ -40,6 +35,16 @@ class XcMuXForTauLines(Hlt2LinesConfigurableUser):
                             , 'Ds_AM_MAX'              : 2010.0 * MeV
                             , 'Lc_AM_MIN'              : 2230.0 * MeV
                             , 'Lc_AM_MAX'              : 2330.0 * MeV
+                            },
+                 'Muon' : {
+                             'Mu_IPCHI2'    : 16
+                            },
+                 'B' : {
+                
+                             'XcMu_VTXCHI2'        : 15
+                            , 'XcMu_DOCA_MAX'        : 0.50 * mm
+                            , 'XcMu_DIRA'        : 0.999
+                            , 'XcMu_FDCHI2'        : 50
                             }
 		   
                  }

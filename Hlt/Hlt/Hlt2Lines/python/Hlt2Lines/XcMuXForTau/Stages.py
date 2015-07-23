@@ -14,19 +14,19 @@ from Inputs import Hlt2Muons, Hlt2Pions, Hlt2Kaons, Hlt2Protons
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
 class MuonFilter(Hlt2ParticleFilter):
     """Filter the Hlt1 TOS track"""
-    def __init__(self, name, inputs):
+    def __init__(self, name, nickname, inputs):
         cut = ("(MIPCHI2DV(PRIMARY) > %(Mu_IPCHI2)s)")
         from HltTracking.HltPVs import PV3D
-        Hlt2ParticleFilter.__init__(self, name, cut, inputs, dependencies=[PV3D('Hlt2')])
+        Hlt2ParticleFilter.__init__(self, name, cut, inputs,nickname = nickname, dependencies=[PV3D('Hlt2')])
 
 
-filteredMuons = MuonFilter('FilteredMuons', [Hlt2Muons])
-filteredPions = MuonFilter('FilteredPions', [Hlt2Pions])
+filteredMuons = MuonFilter('FilteredMuons','Muon', [Hlt2Muons])
+filteredPions = MuonFilter('FilteredPions','Muon', [Hlt2Pions])
 
                                          
 class D2XCombiner(Hlt2Combiner):
     
-    def __init__(self, name,decayDesc,masswindow):
+    def __init__(self, name, nickname, decayDesc, masswindow):
         from HltTracking.HltPVs import PV3D
         dc = { }
         for child in ['pi+','K+','p+'] :
@@ -56,9 +56,10 @@ class D2XCombiner(Hlt2Combiner):
             "& (BPVVDCHI2> %(D0_BPVVDCHI2_MIN)s )" \
             "& (BPVDIRA > %(D0_BPVDIRA_MIN)s )"
                      
-        Hlt2Combiner.__init__(self, name, decayDesc,
+        Hlt2Combiner.__init__(self, name,  decayDesc,
                               [Hlt2Pions, Hlt2Kaons,Hlt2Protons],
                               dependencies = [ PV3D('Hlt2') ],
+                              nickname = nickname,
                               #tistos = 'TisTosSpec',
                               DaughtersCuts = dc,
                               CombinationCut = combcuts,
@@ -66,14 +67,14 @@ class D2XCombiner(Hlt2Combiner):
                               Preambulo = [])
     
 # Combiners
-D02kpiComb   = D2XCombiner("KPi","[D0 -> K- pi+]cc","D")
-D02k3piComb   = D2XCombiner("K3Pi","[D0 -> K- pi+ pi- pi+]cc","D")
-Dplus2kpipiComb   = D2XCombiner("KPiPi","[D+ -> K- pi+ pi+]cc","D")
-Ds2kkpiComb   = D2XCombiner("KKPi","[D+ -> K- K+ pi+]cc","Ds")
-Lc2pkpiComb   = D2XCombiner("PKPi","[Lambda_c+ -> p+ K- pi+]cc","Ds")
+D02kpiComb   = D2XCombiner("KPi","Xc","[D0 -> K- pi+]cc","D")
+D02k3piComb   = D2XCombiner("K3Pi","Xc","[D0 -> K- pi+ pi- pi+]cc","D")
+Dplus2kpipiComb   = D2XCombiner("KPiPi","Xc","[D+ -> K- pi+ pi+]cc","D")
+Ds2kkpiComb   = D2XCombiner("KKPi","Xc","[D+ -> K- K+ pi+]cc","Ds")
+Lc2pkpiComb   = D2XCombiner("PKPi","Xc","[Lambda_c+ -> p+ K- pi+]cc","Ds")
 
 class B2XMuCombiner(Hlt2Combiner):
-    def __init__(self, name, decayDesc, inputSeq):
+    def __init__(self, name, nickname, decayDesc, inputSeq):
         from HltTracking.HltPVs import PV3D
         masscut = "(M < 10500)"
 
@@ -85,21 +86,22 @@ class B2XMuCombiner(Hlt2Combiner):
                      "& (BPVVDCHI2> %(XcMu_FDCHI2)s )" 
         Hlt2Combiner.__init__(self, name, decayDesc, inputSeq,
                               dependencies = [PV3D('Hlt2')],
+                              nickname = nickname,
                               CombinationCut = combcuts,
                               MotherCut = mothercuts,
                               Preambulo = [],
                               shared=True)
 
 
-B2D0KPiMuComb = B2XMuCombiner("B2D0KPiMuComb",[ "B+ -> D0 mu+", "B+ -> D0 mu-"],[D02kpiComb,filteredMuons])
-B2D0K3PiMuComb = B2XMuCombiner("B2D0K3PiMuComb",[ "B+ -> D0 mu+", "B+ -> D0 mu-"],[D02k3piComb,filteredMuons])
-B2DplusKPiPiMuComb = B2XMuCombiner("B2DplusKPiPiMuComb",[ "B+ -> D- mu+", "B+ -> D- mu-"],[Dplus2kpipiComb,filteredMuons])
-B2DsKKPiMuComb = B2XMuCombiner("B2DsKKPiMuComb",[ "B+ -> D- mu+", "B+ -> D- mu-"],[Ds2kkpiComb,filteredMuons])
-B2LcPKPiMuComb = B2XMuCombiner("B2LcPKPiMuComb",[ "B+ -> Lambda_c~- mu+", "B+ -> Lambda_c~- mu-"],[Lc2pkpiComb,filteredMuons])
+B2D0KPiMuComb = B2XMuCombiner("B2D0KPiMuComb","B",[ "B+ -> D0 mu+", "B+ -> D0 mu-"],[D02kpiComb,filteredMuons])
+B2D0K3PiMuComb = B2XMuCombiner("B2D0K3PiMuComb","B",[ "B+ -> D0 mu+", "B+ -> D0 mu-"],[D02k3piComb,filteredMuons])
+B2DplusKPiPiMuComb = B2XMuCombiner("B2DplusKPiPiMuComb","B",[ "B+ -> D- mu+", "B+ -> D- mu-"],[Dplus2kpipiComb,filteredMuons])
+B2DsKKPiMuComb = B2XMuCombiner("B2DsKKPiMuComb","B",[ "B+ -> D- mu+", "B+ -> D- mu-"],[Ds2kkpiComb,filteredMuons])
+B2LcPKPiMuComb = B2XMuCombiner("B2LcPKPiMuComb","B",[ "B+ -> Lambda_c~- mu+", "B+ -> Lambda_c~- mu-"],[Lc2pkpiComb,filteredMuons])
 
-B2D0KPiFakeMuComb = B2XMuCombiner("B2D0KPiFakeMuComb",[ "B+ -> D0 pi+", "B+ -> D0 pi-"],[D02kpiComb,filteredPions])
-B2D0K3PiFakeMuComb = B2XMuCombiner("B2D0K3PiFakeMuComb",[ "B+ -> D0 pi+", "B+ -> D0 pi-"],[D02k3piComb,filteredPions])
-B2DplusKPiPiFakeMuComb = B2XMuCombiner("B2DplusKPiPiFakeMuComb",[ "B+ -> D- pi+", "B+ -> D- pi-"],[Dplus2kpipiComb,filteredPions])
-B2DsKKPiFakeMuComb = B2XMuCombiner("B2DsKKPiFakeMuComb",[ "B+ -> D- pi+", "B+ -> D- pi-"],[Ds2kkpiComb,filteredPions])
-B2LcPKPiFakeMuComb = B2XMuCombiner("B2LcPKPiFakeMuComb",[ "B+ -> Lambda_c~- pi+", "B+ -> Lambda_c~- pi-"],[Lc2pkpiComb,filteredPions])
+B2D0KPiFakeMuComb = B2XMuCombiner("B2D0KPiFakeMuComb","B",[ "B+ -> D0 pi+", "B+ -> D0 pi-"],[D02kpiComb,filteredPions])
+B2D0K3PiFakeMuComb = B2XMuCombiner("B2D0K3PiFakeMuComb","B",[ "B+ -> D0 pi+", "B+ -> D0 pi-"],[D02k3piComb,filteredPions])
+B2DplusKPiPiFakeMuComb = B2XMuCombiner("B2DplusKPiPiFakeMuComb","B",[ "B+ -> D- pi+", "B+ -> D- pi-"],[Dplus2kpipiComb,filteredPions])
+B2DsKKPiFakeMuComb = B2XMuCombiner("B2DsKKPiFakeMuComb","B",[ "B+ -> D- pi+", "B+ -> D- pi-"],[Ds2kkpiComb,filteredPions])
+B2LcPKPiFakeMuComb = B2XMuCombiner("B2LcPKPiFakeMuComb","B",[ "B+ -> Lambda_c~- pi+", "B+ -> Lambda_c~- pi-"],[Lc2pkpiComb,filteredPions])
 
