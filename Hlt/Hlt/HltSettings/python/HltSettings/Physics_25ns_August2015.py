@@ -59,7 +59,7 @@ class Physics_25ns_August2015( object ):
         return ('CcDiHadron', 'DPS', 'EW', 'PID', 'XcMuXForTau', 'Topo',
                 'Bc2JpsiX', 'DiMuon', 'DisplVertices', 'LowMult',  'SingleMuon',
                 'TrackEff', 'TrackEffDiMuon', "Commissioning", 'RareStrange',
-                'Radiative', 'TriMuon')
+                'Radiative', 'TriMuon', 'B2HH', 'B2Kpi0')
 
     def Thresholds(self) :
         """
