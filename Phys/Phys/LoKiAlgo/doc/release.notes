@@ -5,6 +5,8 @@
 ! Purpose     : LoKi-algorithm related stuff
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiAlgo v9r10 2015-07-23 ==========================
+
 ! 2015-06-22 - Eduardo Rodrigues
  - Removed unused class rules producing warnings in genflex.
 
