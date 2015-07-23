@@ -5,6 +5,8 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!=================== LoKiArrayFunctors v11r3 2015-07-23 =======================
+
 ! 2015-06-23 - Vanya Belyaev
  - add new functor LoKi::DeltaAngle ( alias "ALV" ) for
                         Jessica PRISCIANDARO and Diego MARTINEZ SANTOS 
