@@ -113,6 +113,7 @@ class Gauss(LHCbConfigurableUser):
         ,"ReplaceWithGDML"   : [ { "volsToReplace" : [], "gdmlFile" : "" } ]
         #,"BeamPipe" : "BeamPipeOff"  # _beamPipeSwitch = 0
         #,"BeamPipe" : "BeamPipeInDet"  # _beamPipeSwitch = -1
+        ,"RandomGenerator"   : 'Ranlux'
       }
     
     _detectorsDefaults = {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
@@ -134,6 +135,7 @@ class Gauss(LHCbConfigurableUser):
        ,"WriteFSR"       : """Add file summary record, default True"""
        ,"BeamPipe"       : """Switch for beampipe definition; BeamPipeOn: On everywhere, BeamPipeOff: Off everywhere, BeamPipeInDet: Only in named detectors """
        ,"ReplaceWithGDML": """Replace a list of specified volumes with GDML description from file provided """
+       ,"RandomGenerator": """Name of randon number generator engine: Ranlux or MTwist"""
        }
     KnownHistOptions     = ['NONE','DEFAULT']
     TrackingSystem       = ['VELO','TT','IT','OT']
@@ -1551,10 +1553,18 @@ class Gauss(LHCbConfigurableUser):
     def configureRndmEngine( self ):
         # Random number service
         rndmSvc = RndmGenSvc()
-        rndmSvc.Engine = "HepRndm::Engine<CLHEP::MTwistEngine>"
-        from Configurables import HepRndm__Engine_CLHEP__MTwistEngine_
-        engine = HepRndm__Engine_CLHEP__MTwistEngine_("RndmGenSvc.Engine")
-        engine.SetSingleton = True
+        rndmGenName = self.getProp("RandomGenerator")
+        if rndmGenName == "Ranlux":
+            from Configurables import HepRndm__Engine_CLHEP__RanluxEngine_
+            engine = HepRndm__Engine_CLHEP__RanluxEngine_("RndmGenSvc.Engine")
+            engine.SetSingleton = True
+        elif rndmGenName == "MTwist" :
+            rndmSvc.Engine = "HepRndm::Engine<CLHEP::MTwistEngine>"
+            from Configurables import HepRndm__Engine_CLHEP__MTwistEngine_
+            engine = HepRndm__Engine_CLHEP__MTwistEngine_("RndmGenSvc.Engine")
+            engine.SetSingleton = True
+        else :
+            raise RuntimeError("ERROR: RandomNumber engine '%s' not recognised!" %rndmGenName)
 
 
 
