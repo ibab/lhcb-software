@@ -5,7 +5,7 @@ def __get_conf__(folder, suffix):
     conf = folder + suffix
     module = importlib.import_module("HltSettings.{0}.{1}".format(folder, conf))
     return getattr(module, conf)()
-    
+
 def __update_conf__( current, extra ) :
     for (conf,d) in extra.iteritems() :
         if conf not in current :
@@ -58,8 +58,9 @@ class Physics_25ns_August2015( object ):
     def SubDirs(self):
         return ('CcDiHadron', 'DPS', 'EW', 'PID', 'XcMuXForTau', 'Topo',
                 'Bc2JpsiX', 'DiMuon', 'DisplVertices', 'LowMult',  'SingleMuon',
-                'TrackEff', 'TrackEffDiMuon',"Commissioning")
-    
+                'TrackEff', 'TrackEffDiMuon', "Commissioning", 'RareStrange',
+                'Radiative', 'TriMuon')
+
     def Thresholds(self) :
         """
         Returns a dictionary of cuts
@@ -267,14 +268,14 @@ class Physics_25ns_August2015( object ):
         """
         Returns a list of active lines
         """
-        
+
         hlt2 = []
         for subdir in self.SubDirs():
             conf = __get_conf__(subdir, "_25ns_August2015")
             hlt2.extend(conf.ActiveHlt2Lines())
 
         return hlt2
-            
+
     def ActiveHlt1Lines(self) :
         """
         Returns a list of active lines

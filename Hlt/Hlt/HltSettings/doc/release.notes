@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-07-23 - Albert Puig
+  - Add Radiative, RareStrange and TriMuon folders and modified
+    Physics_25ns_August2015.py accordingly
+
 ! 2015-07-23 - Mika Vesterinen
  - Added Commissioning_25ns_August2015.py and it's parent directory
  - Also changed the name of the Hlt1NonBeamBeamNoBias line
