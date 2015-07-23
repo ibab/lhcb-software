@@ -9,7 +9,11 @@
 #
 # =========================================================================
 #
-export PYTHONPATH=${ONLINE_ENV_DIR}:${PYTHONPATH}
-export AdderOptsFile=/tmp/${PARTITION_NAME}_AdderOpts.opts
-python ./Tasklist_from_architecture.py 2 ${AdderOptsFile}
-exec -a ${UTGID} ${Class1_task} -opts=../options/genAdder.opts
+if [ "${PARTITION_NAME}" = "LHCb2" ]; then
+    ./Hlt2Adder.sh
+else 
+    export PYTHONPATH=${ONLINE_ENV_DIR}:${PYTHONPATH}
+    export AdderOptsFile=/tmp/${PARTITION_NAME}_AdderOpts.opts
+    python ./Tasklist_from_architecture.py 2 ${AdderOptsFile}
+    exec -a ${UTGID} ${Class1_task} -opts=../options/genAdder.opts
+fi
