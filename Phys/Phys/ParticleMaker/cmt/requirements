@@ -2,7 +2,7 @@
 # Maintainer : P. Koppenburg, J. Palacios
 
 package           ParticleMaker
-version           v6r14
+version           v6r15
 
 # Structure, i.e. directories to process. 
 #============================================================================
