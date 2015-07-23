@@ -4,6 +4,8 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v13r1 2015-07-23 =========================
+
 ! 2015-07-22 - Roel Aaij
  - Improve the error reporting if the import of a configuration modules fails.
  - Fix the instance of L0GlobalMonitor running in Hlt2.
