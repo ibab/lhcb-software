@@ -5,10 +5,13 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+!========================= PhysConf v1r28 2015-07-23 =========================
+
 ! 2015-07-17  - Michel De Cian
  - Add unpacking and fitting of Velo tracks for PV refitting to Data-On-Demand service.
 
 !========================= PhysConf v1r27 2014-04-22 =========================
+
 ! 2015-03-06 - Vanya Belyaev
  - LoKi_Filters
    add new properties:
