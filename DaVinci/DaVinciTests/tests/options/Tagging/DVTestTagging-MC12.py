@@ -7,6 +7,7 @@
 #
 ########################################################################
 from Gaudi.Configuration import *
+from GaudiPython import gbl
 from Configurables import GaudiSequencer
 ########################################################################
 #
@@ -17,9 +18,9 @@ from Configurables import CheatedSelection, BDecayTool, MCDecayFinder
 from GaudiKernel import ROOT6WorkAroundEnabled
 if ROOT6WorkAroundEnabled('ROOT-7492'):
     # trigger autoloading of LHCbKernel dictionary
-    GaudiPython.gbl.LHCb.LHCbID
+    gbl.LHCb.LHCbID
     # trigger autoloading of DigiEvent dictionary
-    GaudiPython.gbl.LHCb.CaloDigit
+    gbl.LHCb.CaloDigit
 
 
 myDecay = '[B+ -> (J/psi(1S) => mu+ mu- ) K+]cc'
