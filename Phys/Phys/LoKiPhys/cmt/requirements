@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhys
-version           v11r2
+version           v11r3
 	
 # =============== structure ==================================================
 branches          cmt doc src dict python LoKi 

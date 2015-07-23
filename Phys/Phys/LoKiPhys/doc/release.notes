@@ -5,6 +5,8 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhys v11r3 2015-07-23 =========================
+
 ! 2015-07-16 - Ricardo Vazquez Gomez
  - Added functor to get IsMuonTight of a Particle
 
