@@ -57,7 +57,8 @@ class Physics_25ns_August2015( object ):
 
     def SubDirs(self):
         return ('CcDiHadron', 'DPS', 'EW', 'PID', 'XcMuXForTau', 'Topo',
-                'Bc2JpsiX', 'DiMuon', 'DisplVertices', 'LowMult',  'SingleMuon')
+                'Bc2JpsiX', 'DiMuon', 'DisplVertices', 'LowMult',  'SingleMuon',
+                'TrackEff', 'TrackEffDiMuon')
     
     def Thresholds(self) :
         """

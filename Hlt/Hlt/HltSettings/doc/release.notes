@@ -6,6 +6,7 @@
 
 ! 2015-07-23 - Michael Kolpin
  - Added TrackEff_25ns_August2015.py and TrackEffDiMuon_25ns_August2015.py
+ - Updated Physics_25ns_August2015.py with these directories
 
 ! 2015-07-22 - Roel Aaij
  - Added Physics_25ns_August2015.py, which uses settings and lines from all
