@@ -73,7 +73,7 @@ StatusCode Hlt2MonInfoSvc::initialize()
       if (!result && (m_frontCon.empty() || m_backCon.empty())) {
          warning() << "Not a known host type, and connections not correctly configured, "
                    << "relay disabled" << endmsg;
-         m_enabled = false;
+         disable();
          return sc;
       } else if (!m_frontCon.empty() && !m_backCon.empty()) {
          // If connections were explicitly configured, we're done
@@ -147,8 +147,10 @@ void Hlt2MonInfoSvc::function()
             control.setsockopt(ZMQ_LINGER, &linger,sizeof(linger));
             break;
          } else if (cmd == "PAUSE") {
+            debug() << name() << " paused." << endmsg;
             paused = true;
          } else if (cmd == "RESUME") {
+            debug() << name() << " resumed." << endmsg;
             paused = false;
          }
       }

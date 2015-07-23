@@ -91,7 +91,7 @@ StatusCode Hlt2RootPublishSvc::initialize()
    if (m_frontCon.empty() || m_backCon.empty() || m_infoCon.empty()) {
       warning() << "Connections not correctly configured, "
                 << "Hlt2 ROOT publisher disabled" << endmsg;
-      m_enabled = false;
+      disable();
    }
 
    return sc;
@@ -150,8 +150,10 @@ void Hlt2RootPublishSvc::function()
             control.setsockopt(ZMQ_LINGER, &linger,sizeof(linger));
             break;
          } else if (cmd == "PAUSE") {
+            debug() << name() << " paused." << endmsg;
             paused = true;
          } else if (cmd == "RESUME") {
+            debug() << name() << " resumed." << endmsg;
             paused = false;
          }
       }

@@ -4,6 +4,22 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-07-23 - Roel Aaij
+ - Updated design.txt with an idea on how to improve state transitions.
+ - Disable pausing of processing threads to allow late messages to be received
+   and processed.
+ - Fix capturing in Hlt2MonRelaySvc.
+ - The Hlt2MonBaseSvc contructor takes a optional third argument to select
+   binding or connecting of the control socket so messages can be sent from
+   multiple sources. This is used in the SaverSvc to allow regular saving
+   without reception of messages. This should be done in all services. The
+   control socket is connected in the base class by default.
+ - Add an explicit Capture property to Hlt2MonRelaySvc.
+ - Configure the output levels of services such that the debug output of the
+   SaverSvc is visible on hlt01.
+ - Add a little hack to the configuration script to allow configuration from
+   python for a tasks that don't run on the farm nodes.
+
 ! 2015-07-22 - Roel Aaij
  - Fix lastUpdate time for newly received histograms.
  - Remove debug stuff from options.

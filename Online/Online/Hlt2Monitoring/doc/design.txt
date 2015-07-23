@@ -20,9 +20,17 @@
   - Keep track of runs received and requested in last 10 minutes and only keep keys for those.
   - Strip task name from histo chunks, but save {key : taskname} to allow info from top level to be sent
   - If we don't have info for a key, ask for it from the corresponding
+  - Send regular heartbeats to tasks that we know about. If they time out, try
+    again a bit and if still no answer, remove knowledge of them.
   - Listen to signal of tasks that they are finalizing. Clear info for those.
+  - Listen to signal of tasks that they are paused. When all are paused, go to paused ourselves
 
 - Task level
   - Send task name with key and histo id for every chunk.
+  - Reply to heartbeat requests from node adder.
+  - Send signal to node level adder when we are paused to indicate that we are done.
   - Send signal to node level adder when we are finalized to indicate that we are about to loose info.
   - Listen to request for info in the form of {key}, reply with {known, info} for that key.
+
+- General development
+  - Put triggered sending/saving in all services in the same way it is done in Hlt2SaverSvc.

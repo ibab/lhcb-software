@@ -40,7 +40,8 @@ private:
    // properties
    std::string m_hostRegex;
    std::string m_captureCon;
-
+   bool m_capture;
+   
 };
 
 #endif // HLT2MONRELAYSVC_H

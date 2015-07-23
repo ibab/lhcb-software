@@ -36,7 +36,7 @@ namespace {
 class Hlt2MonBaseSvc : public extends1<Service, IIncidentListener> {
 public:
 
-   Hlt2MonBaseSvc(const std::string& name, ISvcLocator* sl);
+   Hlt2MonBaseSvc(const std::string& name, ISvcLocator* sl, bool bindControl = false);
    virtual ~Hlt2MonBaseSvc();
 
    // Service pure virtual member functions
@@ -74,6 +74,11 @@ protected:
    std::string receiveString(zmq::socket_t& socket, bool* more = nullptr) const;
    std::pair<Monitoring::RunNumber, Monitoring::HistId> receiveRunAndId(zmq::socket_t& socket, bool* more = nullptr) const;
 
+   // Are we enabled?
+   bool enabled() const { return m_enabled; }
+   void disable() { m_enabled = false; }
+   void enable()  { m_enabled = true; }
+   
    // properties
    bool m_top;
    bool m_forceTop;
@@ -85,12 +90,12 @@ protected:
    unsigned int m_inPort;
    unsigned int m_outPort;
 
-   // data members
-   bool m_enabled;
-
+   
 private:
 
    // data members
+   bool m_bindControl;
+   bool m_enabled;
    IIncidentSvc* m_incidentSvc;
    std::thread* m_thread;
    zmq::socket_t* m_control;

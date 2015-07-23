@@ -7,6 +7,14 @@ __ports = {'HistoRelay' : {'in' : 31337, 'out' : 31338},
            'InfoSvc'    : {'out' : 31342}
           }
 
+## The next few lines make the OnlineNodeEnv do nothig, we don't need it anyway.
+class EmptyNodeEnv(object):
+    def load_node_info(self):
+        pass
+
+sys.modules['OnlineNodeEnv'] = EmptyNodeEnv()
+
+## End hack start regular code
 def staticVar(varname, value):
     def decorate(func):
         setattr(func, varname, value)
@@ -29,7 +37,7 @@ def importOnline():
   importOnline.Online = Online
   return Online
 
-def configMsgSvc( app ):
+def configMsgSvc( app, msgLevel = None ):
     import os
     if 'LOGFIFO' not in os.environ :
         print '# WARNING: LOGFIFO was not set -- not configuring FMCMessageSvc.'
@@ -47,10 +55,10 @@ def configMsgSvc( app ):
     msg.LoggerOnly = True
     msg.fifoPath = os.environ['LOGFIFO']
     OnlineEnv = importOnline()
-    msg.OutputLevel = OnlineEnv.OutputLevel
+    msg.OutputLevel = msgLevel if msgLevel != None else OnlineEnv.OutputLevel
     msg.doPrintAlways = False
 
-def configOnline(appMgr):
+def configOnline(appMgr, level):
     appMgr.SvcOptMapping         += ["LHCb::OnlineRunable/EmptyEventLoop"]
     appMgr.HistogramPersistency  = "NONE"
     appMgr.EvtSel                = "NONE"
@@ -63,7 +71,7 @@ def configOnline(appMgr):
 
     from Configurables import AuditorSvc
     AuditorSvc().Auditors = []
-    configMsgSvc( appMgr )
+    configMsgSvc( appMgr, 2 if level == 'top' else 3 )
     OnlineEnv = importOnline()
     OnlineEnv.end_config(False)
 
@@ -76,24 +84,28 @@ def configureTop(appMgr, node_info):
     infoRelay = Hlt2MonRelaySvc("InfoRelay")
     infoRelay.FrontConnection = "tcp://*:%d" % __ports['InfoRelay']['in']
     infoRelay.BackConnection  = "ipc:///tmp/hlt2MonInfo_0"
+    infoRelay.OutputLevel = 3
 
     ## The top histo relay ports
     from Configurables import Hlt2MonRelaySvc
     histoRelay = Hlt2MonRelaySvc("HistoRelay")
     histoRelay.FrontConnection = "tcp://*:%d" % __ports['HistoRelay']['in']
     histoRelay.BackConnection  = "ipc:///tmp/hlt2MonData_0"
+    histoRelay.OutputLevel = 3
 
     ## The histogram adder service
     from Configurables import Hlt2AdderSvc
     adderSvc = Hlt2AdderSvc()
     adderSvc.FrontConnection = histoRelay.BackConnection
     adderSvc.BackConnection  = "ipc:///tmp/hlt2MonData_1"
+    adderSvc.OutputLevel = 3
 
     ## The info svc ports
     from Configurables import Hlt2MonInfoSvc
     infoSvc = Hlt2MonInfoSvc()
     infoSvc.FrontConnection = infoRelay.BackConnection
     infoSvc.BackConnection  = "ipc:///tmp/hlt2MonInfo_1"
+    infoSvc.OutputLevel = 3
 
     ## The root conversion service
     from Configurables import Hlt2RootPublishSvc
@@ -101,12 +113,14 @@ def configureTop(appMgr, node_info):
     rootSvc.FrontConnection = adderSvc.BackConnection
     rootSvc.BackConnection  = "ipc:///tmp/hlt2MonData_2"
     rootSvc.InfoConnection  = infoSvc.BackConnection
+    rootSvc.OutputLevel = 3
 
     ## The saver svc
     from Configurables import Hlt2SaverSvc
     saverSvc = Hlt2SaverSvc()
     saverSvc.DataConnection = rootSvc.BackConnection
     saverSvc.InfoConnection = infoSvc.BackConnection
+    saverSvc.OutputLevel = 2
 
     return (infoRelay, histoRelay, adderSvc, infoSvc, rootSvc, saverSvc)
 
@@ -179,4 +193,4 @@ def configure(host_type = None):
     for svcConf in svcConfs:
         svcConf.PartitionName = OnlineEnv.PartitionName
 
-    configOnline(appMgr)
+    configOnline(appMgr, ht)

@@ -95,7 +95,7 @@ StatusCode Hlt2SaverSvc::initialize()
    if (m_dataCon.empty()) {
       warning() << "Connections not correctly configured, "
                 << "Hlt2 saver disabled" << endmsg;
-      m_enabled = false;
+      disable();
    }
    return sc;
 }
@@ -162,13 +162,17 @@ void Hlt2SaverSvc::function()
       if (items[0].revents & ZMQ_POLLIN) {
          auto cmd = receiveString(control);
          if (cmd == "TERMINATE") {
+            pruneHistograms();
+            saveHistograms();
             int linger = 0;
             data.setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
             control.setsockopt(ZMQ_LINGER, &linger,sizeof(linger));
             break;
          } else if (cmd == "PAUSE") {
+            debug() << name() << " paused." << endmsg;
             paused = true;
          } else if (cmd == "RESUME") {
+            debug() << name() << " resumed." << endmsg;
             paused = false;
          } else if (!paused && cmd == "SAVE") {
             pruneHistograms();

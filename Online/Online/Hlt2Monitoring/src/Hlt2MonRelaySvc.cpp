@@ -26,10 +26,11 @@ DECLARE_SERVICE_FACTORY(Hlt2MonRelaySvc)
 
 //===============================================================================
 Hlt2MonRelaySvc::Hlt2MonRelaySvc(const string& svcName, ISvcLocator* loc)
-   : Hlt2MonBaseSvc(svcName, loc)
+ : Hlt2MonBaseSvc(svcName, loc, true)
 {
    declareProperty("HostnameRegex", m_hostRegex = "hlt(01|(?<subfarm>[a-f]{1}[0-9]{2})(?<node>[0-9]{2})?)");
    declareProperty("CaptureConnection", m_captureCon = string{"inproc://"} + svcName + "Capture");
+   declareProperty("Capture", m_capture = false);
 }
 
 //===============================================================================
@@ -62,7 +63,7 @@ StatusCode Hlt2MonRelaySvc::initialize()
       if (!result && (m_frontCon.empty() || m_backCon.empty())) {
          warning() << "Not a known host type, and connections not correctly configured, "
              << "relay disabled" << endmsg;
-         m_enabled = false;
+         disable();
          return sc;
       } else if (!m_frontCon.empty() && !m_backCon.empty()) {
          // If connections were explicitly configured, we're done
@@ -123,14 +124,14 @@ void Hlt2MonRelaySvc::function()
    }
 
    std::thread* captureThread{nullptr};
-   if (msgLevel() <= MSG::DEBUG) {
+   if (m_capture) {
       captureThread = new std::thread{[this]{capture();}};
       cap = new zmq::socket_t{context(), ZMQ_PUB};
       cap->bind(m_captureCon.c_str());
    }
 
    // use inproc for the control.
-   control.bind(ctrlCon().c_str());
+   control.connect(ctrlCon().c_str());
    control.setsockopt(ZMQ_SUBSCRIBE, "", 0);
 
    //  Start the queue proxy, which runs until ETERM or "TERMINATE"

@@ -23,15 +23,15 @@ namespace {
 }
 
 //===============================================================================
-Hlt2MonBaseSvc::Hlt2MonBaseSvc(const string& name, ISvcLocator* loc)
+Hlt2MonBaseSvc::Hlt2MonBaseSvc(const string& name, ISvcLocator* loc, bool bindControl)
  : base_class(name, loc),
    m_top{false},
+   m_bindControl{bindControl},
    m_enabled{true},
    m_incidentSvc{nullptr},
    m_thread{nullptr},
    m_control{nullptr},
    m_zmqSvc{nullptr}
-
 {
    declareProperty("InPort", m_inPort = 31337);
    declareProperty("OutPort", m_outPort = 31338);
@@ -99,7 +99,11 @@ StatusCode Hlt2MonBaseSvc::start()
    m_thread = new std::thread([this]{function();});
 
    m_control = new zmq::socket_t{context(), ZMQ_PUB};
-   m_control->connect(m_ctrlCon.c_str());
+   if (m_bindControl) {
+      m_control->bind(m_ctrlCon.c_str());
+   } else {
+      m_control->connect(m_ctrlCon.c_str());
+   }
    return sc;
 }
 
@@ -107,9 +111,10 @@ StatusCode Hlt2MonBaseSvc::start()
 //===============================================================================
 StatusCode Hlt2MonBaseSvc::stop()
 {
-   if (m_control) {
-      sendString(*m_control, "PAUSE");
-   }
+   // Disable the pause command until some better synchronisation is available
+   // if (m_control) {
+   //    sendString(*m_control, "PAUSE");
+   // }
    return StatusCode::SUCCESS;
 }
 
