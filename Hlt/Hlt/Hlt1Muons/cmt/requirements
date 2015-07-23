@@ -3,7 +3,7 @@
 # Maintainer : Roel Aaij
 #============================================================================
 package           Hlt1Muons
-version           v1r14
+version           v1r14p1
 
 # Structure, i.e. directories to process. 
 #============================================================================

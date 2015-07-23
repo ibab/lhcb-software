@@ -4,8 +4,11 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Muons v1r14p1 2015-07-23 =========================
+
 ! 2015-07-10 - Francesco Dettori
- - Minor change in IsMuonTool to align with the changes in the CommonMuonTool in Muon/MuonID package.
+ - Minor change in IsMuonTool to align with the changes in the CommonMuonTool in
+   Muon/MuonID package.
 
 !========================= Hlt1Muons v1r14 2015-04-29 =========================
 
