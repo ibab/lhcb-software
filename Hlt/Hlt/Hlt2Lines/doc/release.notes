@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-07-23 - Mika Vesterinen
+  - name change Hlt2NonBeamBeamNoBias ->  Hlt2NoBiasNonBeamBeam 
+
 ! 2015-07-21 - Pieter David
   - Update DisplVerticesLines to work with thresholds from HltSettings
 
