@@ -58,7 +58,7 @@ class Physics_25ns_August2015( object ):
     def SubDirs(self):
         return ('CcDiHadron', 'DPS', 'EW', 'PID', 'XcMuXForTau', 'Topo',
                 'Bc2JpsiX', 'DiMuon', 'DisplVertices', 'LowMult',  'SingleMuon',
-                'TrackEff', 'TrackEffDiMuon')
+                'TrackEff', 'TrackEffDiMuon',"Commissioning")
     
     def Thresholds(self) :
         """
@@ -257,14 +257,6 @@ class Physics_25ns_August2015( object ):
                                                }
                        }
 
-        from Hlt2Lines.Commissioning.Lines  import CommissioningLines
-        thresholds.update({CommissioningLines : { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001
-                                                               , 'Hlt2Forward'      : 0.00001
-                                                               , 'Hlt2DebugEvent'   : 0.000001  }
-                                                , 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' }
-                                                }
-                          })
-
         for subdir in self.SubDirs():
             conf = __get_conf__(subdir, "_25ns_August2015")
             __update_conf__(thresholds, conf.Thresholds())
@@ -275,9 +267,8 @@ class Physics_25ns_August2015( object ):
         """
         Returns a list of active lines
         """
-        hlt2 = ['Hlt2PassThrough','Hlt2Lumi','Hlt2DebugEvent',
-                'Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent']
-
+        
+        hlt2 = []
         for subdir in self.SubDirs():
             conf = __get_conf__(subdir, "_25ns_August2015")
             hlt2.extend(conf.ActiveHlt2Lines())
@@ -309,7 +300,7 @@ class Physics_25ns_August2015( object ):
                    , 'Hlt1CEP'
                    , 'Hlt1CEPVeloCut'
                    , 'Hlt1NoPVPassThrough'
-                   , 'Hlt1NonBeamBeamNoBias']
+                   , 'Hlt1NoBiasNonBeamBeam']
 
 
         ## from Hlt1TechnicalLines import Hlt1TechnicalLines

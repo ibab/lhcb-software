@@ -59,7 +59,7 @@ class LowMult_25ns_August2015 :
             ,'Hlt2LowMultD2KPiWS'
             ,'Hlt2LowMultLMR2HHHH_mediumPS'
             ,'Hlt2LowMultTechnical_MinBias'
-            ,'Hlt2NonBeamBeamNoBias',
+            ,'Hlt2NoBiasNonBeamBeam',
         ]
 
 
