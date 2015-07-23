@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-07-23 - Michael Kolpin
+ - Added TrackEff_25ns_August2015.py and TrackEffDiMuon_25ns_August2015.py
+
 ! 2015-07-22 - Roel Aaij
  - Added Physics_25ns_August2015.py, which uses settings and lines from all
    subdirectories defined so far.
