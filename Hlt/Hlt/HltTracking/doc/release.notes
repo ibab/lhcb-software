@@ -4,6 +4,8 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================= HltTracking v13r10 2015-07-23 =========================
+
 ! 2015-07-17 - Sascha Stahl
  - Hlt2Tracking: Remove workaround for Rich dictionary loading as it now crashes Moore.
  - HltRecoConf: Increase muon pt cut in Hlt1 to 300 MeV to save CPU time.
