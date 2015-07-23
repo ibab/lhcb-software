@@ -1,7 +1,112 @@
-0;136;0c<PRE>
+<PRE>
 Package             : PhysSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics packages
+
+</PRE><H1><A NAME=v20r0>2015-07-23 Phys v20r0</A></H1><PRE>
+Development release for the 2015 25ns data taking, based on Gaudi v26r3, LHCb v39r0 and Rec v18r0.
+Uses LCG_79 with ROOT 6.04.02.
+
+- Packages updated :
+  Phys/DaVinciKernel v12r2, Phys/FlavourTagging v14r0, Phys/JetAccessories v3r13, Phys/KalmanFilter v1r13,
+  Phys/LoKiAlgo v9r10, Phys/LoKiArrayFunctors v11r3, Phys/LoKiFitters v4r15, Phys/LoKiPhys v11r3,
+  Phys/LoKiProtoParticles v3r1, Phys/LoKiTracks v3r2, Phys/MVADictTools v1r9p1,
+  Phys/ParticleMaker v6r15, Phys/PhysConf v1r28, PhysSel/PhysSelPython v9r7, Phys/TisTosTobbing v9r1.
+
+- In Phys/DaVinciKernel v12r2 :
+  . DVCommonBase: "root-in-tes" prefix from input locations removed.
+
+- In Phys/FlavourTagging v14r0 :
+  . ITaggerUtils and TaggerUtils: added PVReFitter, LifetimeFitter,
+    DistanceCalculator, VertexFit, ParticleDescendants tools as members.
+    These can be chosen through Tunings.py.
+  . Changed TaggerXYZTools to get their fitters from TaggerUtils.
+  . Added a new Stripping23 tuning that uses the LoKi fitters.
+  . Added the old fitter choice to the Stripping21 and Reco14 tunings.
+  . Changed the VertexFitter used in CharmTaggerLists.py to LoKi version.
+  . Changed the names of the getters in ITaggerUtils to ensure backward
+    compatibility.
+
+- In Phys/JetAccessories v3r13 :
+  . Removed any reference to DaVinci from python/JetAccessories/ParticleFlow_Config.py
+    in order to avoid StrippingCache creation. The dependency is modified with PhysConf.
+
+- In Phys/KalmanFilter v1r13 :
+  . cmt/requirements - fix CMT compilation problem.
+  . Modified CMakeLists.txt to install headers from 'Kernel' (needed for Kernel/IParticleClassifier.h).
+  . Added JetLikeParticle.
+
+- In Phys/LoKiAlgo v9r10 :
+  . Removed unused class rules producing warnings in genflex.
+
+- In Phys/LoKiArrayFunctors v11r3 :
+  . Added new functor LoKi::DeltaAngle ( alias "ALV" )
+    to get a cosine angle between two daughter particles in lab-frame
+     *
+     *  @code
+     *
+     *  xxx.CombinationCut = "         ALV ( 1 , 2 )   < 0.999999   "
+     *
+     *  xxx.MotherCut      = " PFUNA ( ALV ( 1 , 2 ) ) < 0.999999   "
+     *
+     *  xxx.MotherCut      = " PCUTA ( ALV ( 1 , 2 )   < 0.999999 ) "
+     *
+     *  @endcode
+  . Removed unused class rules producing warnings in genflex.
+
+- In Phys/LoKiFitters v4r15 :
+  . PVReFitter: duplicate property "MinChi2Iterations" corrected to a new name
+    since it's in fact not a duplicate but a different property.
+  . Make minimum number of tracks in PV configurable; set default to 4, compare tracks by ID by default (all in PVRefitter.cpp).
+  . PVReFitter.cpp: added new option "CheckAncestors" (default value is "true").
+    If activated, the track is considered to be from PV, is any of its "ancestors" in PV.
+    This *could* be very fragile and depends on ancestors are properly filled/stored...
+    Tests and feedback from experts (both online and offline) is needed here.
+  . PVReFitter: removed unusued variable to get rid of compilation warning.
+  . Vertex Fitter:
+    - Removed unnesessary branches.
+    - Added treatment of jets according to Wouter's needs.
+  . Distance calculator: make IP,chi2(IP), DOCA,chi2(DOCA) for gammas and digammas always zero..
+  . Particle classificator: added notion of jet-like particle.
+  . VertexFit:_load: added error message to debug misterious problem reported by Julian.
+
+- In Phys/LoKiPhys v11r3 :
+  . Fixed a few pattern selection rules to please genreflex.
+  . Removed unused class rules producing warnings in genflex.
+  . VRHO added.
+  . Added few more signatures for "tracks"-method.
+  . Added functor to get IsMuonTight of a Particle.
+
+- In Phys/LoKiProtoParticles v3r1 :
+  . Removed unused class rules producing warnings in genflex.
+  . Added functor to get IsMuonTight for ProtoParticle.
+
+- In Phys/LoKiTracks v3r2 :
+  . Removed unused class rule producing warning in genflex.
+
+- In Phys/MVADictTools v1r9p1 :
+  . Return tool configurable from helper functions.
+  . Added utility function to resolve environment variable in filename.
+  . Add support for BBDT models (from Phys/BBDecTreeTool) and example of usage (options/mvaDfromB_bbdt.py).
+  . Fixed eos URL to sample file for mvaDfromB scripts.
+  . Fixed resolution of environment variables when opening files.
+  . Removed useless and unused default path properties.
+
+- In Phys/ParticleMaker v6r15 :
+  . Various declareProperty changed to setProperty to remove compilation warnings of the kind
+    "WARNING duplicated property name 'Particle', see https://its.cern.ch/jira/browse/GAUDI-1023".
+  . ChargedParticleMakerBase: Ensure that Downstream and T-tracks use the state at
+    first measurement to fill the particle. This behaviour reflects that at the end of Brunel,
+    the state closest to beam is removed for these track types.
+
+- In Phys/PhysConf v1r28 :
+  . Added unpacking and fitting of Velo tracks for PV refitting to Data-On-Demand service.
+
+- In PhysSel/PhysSelPython v9r7 :
+  . Allow coexistence of Selections and RootInTES.
+
+- In Phys/TisTosTobbing v9r1 :
+  . Got rid of compilation warnings of methods in concrete class being hidden.
 
 </PRE><H1><A NAME=v19r7>2015-05-27 Phys v19r7</A></H1><PRE>
 Development release, based on Gaudi v26r2, LHCb v38r7 and Rec v17r7.
