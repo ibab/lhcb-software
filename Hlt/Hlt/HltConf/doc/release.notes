@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-07-23 - Mika Vesterinen
+ - name change Hlt1NonBeamBeamNoBiasDecision -> Hlt1NoBiasNonBeamBeamDecision
+
 !========================= HltConf v13r1 2015-07-23 =========================
 
 ! 2015-07-22 - Roel Aaij
