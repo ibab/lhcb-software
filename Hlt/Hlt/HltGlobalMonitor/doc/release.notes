@@ -5,6 +5,8 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+!========================= HltGlobalMonitor v5r0p2 2015-07-23 =========================
+
 ! 2015-07-22 - Roel Aaij
  - Fix names of mass histograms registerd to the HltMonitorSvc.
 
