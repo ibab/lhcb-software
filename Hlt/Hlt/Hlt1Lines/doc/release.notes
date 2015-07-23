@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-07-23 - Mika Vesterinen
+ - Changed name Hlt1NonBeamBeamNoBias -> Hlt1NoBiasNonBeamBeam
+
 !========================= Hlt1Lines v7r13 2015-06-28 =========================
 
 ! 2015-06-26 - Francesco Dettori
