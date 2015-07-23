@@ -7,6 +7,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!====================== FlavourTagging v14r0 2015-07-23 ======================
+
 ! 2015-07-10 - Julian Wishahi
  - Changed the names of the getters in ITaggerUtils to ensure backward 
    compatibility.
