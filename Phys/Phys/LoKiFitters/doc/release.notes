@@ -5,23 +5,21 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+!====================== Phys/LoKiFitters v4r15 2015-07-23 =====================
+
 ! 2015-07-17 - Vanya Belyaev
  - VertexFit:_load
    add error message to debug misterious problem reported by Julian 
 
 ! 2015-07-09 - Vanya Belyaev
-
  - Vertex Fitter
    1) remove unnesessary branches
    2) add treatment of jets according to Wouter's needs  
-
  - Distance calculator:
    make IP,chi2(IP), DOCA,chi2(DOCA) for gammas and digammas always zero..
-
  - Particle classificator:
     add notion of jet-like particle
     default CELLjet and CLUSjet 
-
 
 ! 2015-06-27 - Vanya Belyaev
  - minor aestetic changes 
