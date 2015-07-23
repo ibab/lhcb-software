@@ -5,6 +5,8 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+!========================= HltRawData v5r8 2015-07-23 =========================
+
 ! 2015-07-15 - Sean Benson
  - Move creation of RecSummary so that we do not get duplications.
 
