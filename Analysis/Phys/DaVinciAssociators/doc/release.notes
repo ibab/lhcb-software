@@ -4,6 +4,8 @@
 ! Responsible : Vladimir Gligorov
 !==============================================================================
 
+!==================== DaVinciAssociators v9r8 2015-07-24 ======================
+
 ! 2015-06-03 - Eduardo Rodrigues
  - ChargedPP2MC algo.: a declareProperty changed to setProperty to remove
    compilation warnings of the kind "WARNING duplicated property name 'InputData',
