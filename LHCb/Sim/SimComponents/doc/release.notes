@@ -5,6 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2015-07-24 - Gloria Corti
+ - New tool to flag children from a signal particle propagating the relevant
+   flag
+ 
 !========================= SimComponents v2r25 2015-07-20 =========================
 ! 2015-07-17 - Gloria Corti
  - Add printing of signal flag value in PrintMCDecayTreeTool when specified in
