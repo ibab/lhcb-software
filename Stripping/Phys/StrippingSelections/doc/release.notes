@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v4r4 2015-07-24 ===============
+
 ! 2015-07-24 - Xabier Cid Vidal
  - Tighten cuts in H24MuLines to lower the rate
 
