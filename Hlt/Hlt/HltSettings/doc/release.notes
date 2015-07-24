@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-07-24 - Matthew Kenzie
+  - And add the Phi thresholds to Physics_25ns_August2015
+
+! 2015-07-24 - Matthew Kenzie
   - Add 25ns threshold settings for Phi lines
 
 ! 2015-07-23 - Albert Puig
