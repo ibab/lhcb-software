@@ -4,6 +4,8 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+!=================== DaVinciMonitors v1r23 2015-07-24 ========================
+
 ! 2015-06-11 - Ricardo Vazquez Gomez
  - Fix the requirement of having only one selected candidate in MuIDMonitor.cpp.
    Now the monitor accepts multiple candidates.
