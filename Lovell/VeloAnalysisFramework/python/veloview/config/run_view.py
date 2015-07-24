@@ -131,46 +131,47 @@ run_view_pages = OrderedDict([
             {
                 'title': 'Number of VELO clusters per event (Default)',
                 'short': 'Clusters per event',
-                'name': 'Velo/VeloClusterMonitor/# VELO clusters'
+                'name': 'Velo/VeloPrivateClusterMonitor/# VELO clusters'
             },
             {
                 'title': 'Number of strips per cluster',
                 'short': 'Strips per cluster',
-                'name': 'Velo/VeloClusterMonitor/Cluster size',
+                'name': 'Velo/VeloPrivateClusterMonitor/Cluster size',
                 'options': {
                     'showUncertainties': True
-                }
+                },
+                'normalised': True
             },
             {
                 'title': 'Active chip links versus sensor',
                 'short': 'Active links per sensor',
-                'name': 'Velo/VeloClusterMonitor/Active chip links vs sensor'
+                'name': 'Velo/VeloPrivateClusterMonitor/Active chip links vs sensor'
             },
             {
                 'title': 'Number of strips per cluster versus sensor',
                 'short': 'Strips per cluster vs. sensor',
-                'name': 'Velo/VeloClusterMonitor/Cluster size vs sensor'
+                'name': 'Velo/VeloPrivateClusterMonitor/Cluster size vs sensor'
             },
             {
                 'title': 'Cluster ADC value',
                 'short': 'Cluster ADC value',
-                'name': 'Velo/VeloClusterMonitor/Cluster ADC value'
+                'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value'
             },
             {
                 'title': 'Cluster ADC values vs sensor',
                 'short': 'Cluster ADC values vs sensor',
-                'name': 'Velo/VeloClusterMonitor/Cluster ADC values vs sensor'
+                'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC values vs sensor'
             },
             {
                 'title': 'Number of VELO clusters per event for each sensor',
                 'short': 'Clusters per event per sensor',
-                'name': 'Velo/VeloClusterMonitor/# clusters sensor {0}',
+                'name': 'Velo/VeloPrivateClusterMonitor/# clusters sensor {0}',
                 'sensor_dependent': True
             },
             {
                 'title': 'Cluster ADC values for each sensor',
                 'short': 'Cluster ADC values for each sensor',
-                'name': 'Velo/VeloClusterMonitor/Cluster ADC value sensor {0}',
+                'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value sensor {0}',
                 'sensor_dependent': True
             },
             {
@@ -194,12 +195,12 @@ run_view_pages = OrderedDict([
             {
                 'title': 'Cluster ADC values fit parameter : MPV',
                 'short': 'Cluster ADC values fit parameter : MPV',
-                'name': 'Velo/VeloClusterMonitor/Cluster ADC value MPV vs Sensor number'
+                'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value MPV vs Sensor number'
             },
             {
                 'title': 'Cluster ADC values fit parameter : FWHM',
                 'short': 'Cluster ADC values fit parameter : FWHM',
-                'name': 'Velo/VeloClusterMonitor/Cluster ADC value FWHM vs Sensor number'
+                'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value FWHM vs Sensor number'
             }
         ],
         'layout': (1, 2)

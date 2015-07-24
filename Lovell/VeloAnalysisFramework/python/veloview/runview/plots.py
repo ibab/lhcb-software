@@ -49,6 +49,14 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter):
     clone = obj.Clone(obj.GetName())
     f.Close()
 
+    # normalise histogram if required
+    plot_dict = get_plot_dictionary(name)
+    if plot_dict.has_key['normalised'] and plot_dict['normalised']:
+      print 'normalising', name
+      integral = clone.Integral()
+      if 0 < integral:
+        clone.Scale(1./integral)
+
     return formatter(clone)
 
 
@@ -67,8 +75,17 @@ def get_run_plot_with_reference(name, run, formatter=dictionary_formatter):
     """
     nominal = get_run_plot(name, run, reference=False, formatter=formatter)
     try:
-        reference = get_run_plot(name, run, reference=False,
+        reference = get_run_plot(name, run, reference=True,
                                  formatter=formatter)
     except KeyError:
         reference = None
     return nominal, reference
+
+
+def get_plot_dictionary(name):
+  from veloview.config.run_view import run_view_pages
+  for key in run_view_pages.keys():
+    if not run_view_pages[key].has_key('plots'): continue
+    for plot in run_view_pages[key]['plots']:
+      if name == plot['name']:
+        return plot
