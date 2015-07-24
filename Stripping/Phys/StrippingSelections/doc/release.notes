@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-24 - Andrea Contu
+ - Added default settings for LoKi::PVRrefitter in test scripts
 
 ! 2015-07-21 - Federico Redi
  - In StrippingRD/StrippingB2Lambda0MuLines.py added DD candidates, Rate: 0.055 %; Timing: 0.045 ms/evt.

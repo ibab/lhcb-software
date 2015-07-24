@@ -29,7 +29,7 @@ from Configurables import ConfigCDBAccessSvc
 ConfigCDBAccessSvc().File = '$STRIPPINGSELECTIONSROOT/tests/data/config.cdb'
 
 # Specify the name of your configuration
-confname='Bu2hhh' #FOR USERS
+confname='B2JpsiXforEM' #FOR USERS
 
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 
@@ -37,7 +37,7 @@ confname='Bu2hhh' #FOR USERS
 from StrippingSelections import buildersConf
 confs = buildersConf()
 from StrippingSelections.Utils import lineBuilder, buildStreamsFromBuilder
-#confs[confname]["CONFIG"]["CutName"] = NewValue ## FOR USERS, YOU ONLY NEED TO MODIFY CutName and NewValue
+#confs[confname]["CONFIG"]["CutName"] = NewValue ## FOR USERS, YOU ONLY NEED TO QUICKLY MODIFY CutName and NewValue (no need to recompile the package but please update the default_config)
 streams = buildStreamsFromBuilder(confs,confname)
 
 #clone lines for CommonParticles overhead-free timing
@@ -143,8 +143,11 @@ from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 
 ## Configure PV refitter
+from GaudiKernel.SystemOfUnits import micrometer
 from Configurables import LoKi__PVReFitter
 LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").CheckTracksByLHCbIDs = True
+LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").DeltaChi2 = 0.01
+LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").DeltaDistance = 5*micrometer
 
 ## Configure the VeloTrack unpacker
 from Configurables import UnpackTrack

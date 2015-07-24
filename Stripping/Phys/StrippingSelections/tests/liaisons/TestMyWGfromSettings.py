@@ -136,8 +136,11 @@ from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 
 ## Configure PV refitter
+from GaudiKernel.SystemOfUnits import micrometer
 from Configurables import LoKi__PVReFitter
 LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").CheckTracksByLHCbIDs = True
+LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").DeltaChi2 = 0.01
+LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").DeltaDistance = 5*micrometer
 
 ## Configure the VeloTrack unpacker
 from Configurables import UnpackTrack
