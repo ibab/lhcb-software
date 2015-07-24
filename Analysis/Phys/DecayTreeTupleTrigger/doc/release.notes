@@ -4,6 +4,8 @@
 ! Purpose     : Trigger and stripping related tuple tools
 !-----------------------------------------------------------------------------
 
+!=================== DecayTreeTupleTrigger v1r8 2015-07-24 ===================
+
 ! 2015-06-24 - Eduardo Rodrigues
  - Now really fixing the compilation warning in TupleToolStripping.cpp.
 
