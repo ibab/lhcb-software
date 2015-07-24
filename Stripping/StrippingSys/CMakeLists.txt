@@ -1,7 +1,7 @@
 ################################################################################
 # Package: StrippingSys
 ################################################################################
-gaudi_subdir(StrippingSys v9r8)
+gaudi_subdir(StrippingSys v9r9)
 
 gaudi_depends_on_subdirs(Phys/CommonParticles
                          Phys/CommonParticlesArchive
@@ -15,7 +15,6 @@ gaudi_depends_on_subdirs(Phys/CommonParticles
                          Phys/StrippingSelections
                          Phys/StrippingSettings
                          Phys/StrippingTCK
-                         Phys/StrippingCache
                          Phys/StrippingUtils
                          Phys/TMVASelections
                          Phys/IsolationTools)

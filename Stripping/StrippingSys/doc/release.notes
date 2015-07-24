@@ -3,6 +3,36 @@ Package     : StrippingSys
 Package Coordinator : Andrea.Contu@cern.ch, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v9r9 2015-07-24 =========================
+
+*Phys/StrippingSettings
+ - updated S23 dbase
+ - update Charm dict s23 for hardcoded trigger lines remove from StrippingDstarD02xx
+ - update Charm dict s23 
+
+*Phys/StrippingSelections
+ - Tighten cuts in H24MuLines to lower the rate
+ - Added default settings for LoKi::PVRrefitter in test scripts
+ - In StrippingRD/StrippingB2Lambda0MuLines.py added DD candidates, Rate: 0.055 %; Timing: 0.045 ms/evt.
+ - Updated ConfiguredMuonIDs definition in StrippingTrackEffDownMuon
+ - Updated Calibration liaison test options
+ - Update the scripts for liaisons for the S23 tuning.
+ - Small bug fixes in syntax of StrippingPrompCharm.py lines
+ - Update the TestMyStrippingLine.py for S23 tuning
+ -  StrippingCharm/StrippingtPromptCharm.py
+    add combinations with Sigma_c0 and Sigma_c++,
+    in particular (D* Sigma_c) pairs that could
+    be very useful for pentaquark cross-checks
+ - Corrected a mis-named algorithm in python/StrippingCalib/StrippingPIDCalib.py that
+   was preventing the correct cloning of some line
+ - Added line EtaCToLL to StrippingRD/StrippingPhiToKSKS.py on behalf of Francesco Dettori
+ - Updated HLT filters in Lb2L0Gamma to use split HLT
+ - Add documentation folder for the coordinators
+ - Remove hard coded trigger lines from StrippingDstarD02xx.py
+ - Fix to StrippingSL/StrippingB2XuMuNu.py
+ - Fixes to StrippingDstarD0ToHHPi0.py and StrippingD2hh.py
+ - Added four new lines for LFV/LNV decays to StrippingCharm/StrippingD2XMuMuSS.py
+
 !========================= StrippingSys v9r8 2015-06-29 =========================
 
 *Phys/DisplVertices
