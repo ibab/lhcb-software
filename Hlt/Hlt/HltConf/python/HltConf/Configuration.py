@@ -369,7 +369,7 @@ class HltConf(LHCbConfigurableUser):
         # and, last but not least, tell the writer what it should write..
 
 ##################################################################################
-    def configureVertexPersistence(self,lines,name) :
+    def configurePersistence(self, lines, stage) :
         """
         persistify vertices
         """
@@ -381,13 +381,17 @@ class HltConf(LHCbConfigurableUser):
         for i in hlt1Lines() :
              if i.name() in lines : selections.extend( [ j for j in i.outputSelections() if j not in selections ] )
         vertices = [ i for i in vertices if i in selections ]
-        HltVertexReportsMaker(name).VertexSelections = vertices
+
+        vtxMaker = HltVertexReportsMaker(stage + "VtxReportsMaker")
+        vtxMaker.VertexSelections = vertices
         #Can't do this any longer, need replacing with a smart way to get the vertex locations
         #HltVertexReportsMaker().Context = "HLT"
-        HltVertexReportsMaker(name).PVLocation= onlinePV()["PV3D"]
+        vtxMaker.PVLocation= onlinePV()["PV3D"]
+
         ## do not write out the candidates for the vertices we store
         from Configurables import HltSelReportsMaker
-        HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )
+        selMaker = HltSelReportsMaker(stage + "SelReportsMaker")
+        selMaker.SelectionMaxCandidates.update( dict( [ (i, 0) for i in vertices if i.endswith('Decision') ] ) )
         # We are in a post-config action so Hlt2 has already been called and has set the properties
         # of the unfitted tracking. Therefore it is safe to use it this way
         # What we are doing is to let the SelReportsMaker know where the "trackified" muonID objects
@@ -399,17 +403,17 @@ class HltConf(LHCbConfigurableUser):
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
         Hlt2BiKalmanFittedForwardTracking = Hlt2BiKalmanFittedForwardTracking()
         # We need to get the "extra" piece of the Muon stubs location compared to the track location
-        tracking = 0
+        tracking = None
         try:
             tracking = Hlt2BiKalmanFittedForwardTracking.hlt2PrepareTracks()
         except:
             # Nobody configured the tracking so no meaningful Hlt2 was run
             # so just pass some default value
-            HltSelReportsMaker().MuonIDSuffix = "/PID/MuonSegments"
+            selMaker.MuonIDSuffix = "/PID/MuonSegments"
         if tracking :
             trackLoc    = tracking.outputSelection()
             muonStubLoc	= Hlt2BiKalmanFittedForwardTracking._trackifiedMuonIDLocation()
-            HltSelReportsMaker().MuonIDSuffix = "/" + muonStubLoc.strip(trackLoc)
+            selMaker.MuonIDSuffix = "/" + muonStubLoc.strip(trackLoc)
 
         veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
                , 'TES:Hlt/Vertex/ASidePV3D','TES:Hlt/Vertex/CSidePV3D' , 'TES:Hlt2/Track/Forward',
@@ -418,7 +422,7 @@ class HltConf(LHCbConfigurableUser):
                , 'TES:Hlt/Track/MuonSegmentForL0Single'
                , 'RZVeloBW'
                ]
-        HltSelReportsMaker().SelectionMaxCandidatesDebug = dict( [ (i,0) for i in veto ] )
+        selMaker.SelectionMaxCandidatesDebug = dict( [ (i,0) for i in veto ] )
 
 ##################################################################################
     def configureANNSelections(self) :
@@ -436,13 +440,15 @@ class HltConf(LHCbConfigurableUser):
         ### TODO: what about shared selections??? (which appear with multiple indices!)
         ###       but which have names not prefixed by the line name
         ### Make sure that the ANN Svc has everything it will need
-        from HltLine.HltLine     import hlt1Selections, hlt2Selections
+        from HltLine.HltLine     import hlt1Selections, hlt1Decisions
+        from HltLine.HltLine     import hlt2Selections, hlt2Decisions
         from Configurables       import HltANNSvc
-        hltSelections = {'Hlt1' : (hlt1Selections(), 1000, 11000),
-                         'Hlt2' : (hlt2Selections(), 5000, 50000)}
-        for stage, (selections, decStart, selStart) in hltSelections.iteritems():
+        hltSelections = {'Hlt1' : (hlt1Selections(), hlt1Decisions(), 1000, 11000),
+                         'Hlt2' : (hlt2Selections(), hlt2Decisions(), 5000, 50000)}
+        for stage, (selections, decisions, decStart, selStart) in hltSelections.iteritems():
             ids = getattr(HltANNSvc(), '%sSelectionID' % stage)
-            missing = [ i for i in sorted(set(selections['All']) - set(ids.keys())) if not i.startswith('TES:') ]
+            missing  = [ i for i in sorted(set(selections['Output']) - set(ids.keys())) if not i.startswith('TES:') ]
+            missing += [ i for i in sorted(set(decisions) - set(ids.keys())) ]
             missingDecisions  = [ i for i in missing if i.endswith('Decision') ]
             updateDict( ids, decStart, missingDecisions )
             missingSelections = [ i for i in missing if not i.endswith('Decision') ]
@@ -588,7 +594,7 @@ class HltConf(LHCbConfigurableUser):
                 i.configurable().FlagAsSlowThreshold = self.getProp('SlowHlt2Threshold')
 
         for stage, lines in zip(('Hlt1', 'Hlt2'), (lines1, lines2)):
-            self.configureVertexPersistence( [ i.name() for i in lines ], stage + "VtxReportsMaker" )
+            self.configurePersistence( [ i.name() for i in lines ], stage )
         self.configureANNSelections()
 
         from HltConf.HltMonitoring import HltMonitoringConf

@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-07-24 - Roel Aaij
+ - Remove most selection IDs, leave only those that are not auto-generated
+   and are really needed in the SelReports.
+
 ! 2015-07-23 - Mika Vesterinen
  - name change Hlt1NonBeamBeamNoBiasDecision -> Hlt1NoBiasNonBeamBeamDecision
 
