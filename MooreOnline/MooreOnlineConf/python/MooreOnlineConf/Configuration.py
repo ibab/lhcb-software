@@ -1,3 +1,4 @@
+
 """
 High level configuration tool(s) for MooreOnline
 """
@@ -19,7 +20,6 @@ class MooreOnline(LHCbConfigurableUser):
         ############################################
         "NbOfSlaves":        0
         , 'EnableMonitoring' : False
-        , "RunMonitoringFarm" : False
         , 'REQ1' : ''
         , 'ForceMDFInput' : False
         ################################################################
@@ -47,7 +47,6 @@ class MooreOnline(LHCbConfigurableUser):
         , 'DataType' : '2012'
         , "CheckOdin" : True
         , "HltLevel" : 'Hlt1'
-        , 'Priority' : {'Hlt1' : 0, 'Hlt2' : 10, 'Hlt1Hlt2' : 0}
         }
 
     def _configureDBSnapshot(self):
@@ -76,12 +75,12 @@ class MooreOnline(LHCbConfigurableUser):
         EventLoopMgr().Warnings = False
 
         from Configurables import MonitorSvc
-        MonitorSvc().disableDimPropServer      = 1
-        MonitorSvc().disableDimCmdServer       = 1
-        MonitorSvc().disableMonRate            = 0
-        MonitorSvc().CounterUpdateInterval     = 15
+        MonitorSvc().disableDimPropServer  = 1
+        MonitorSvc().disableDimCmdServer   = 1
+        MonitorSvc().disableMonRate        = 0
+        MonitorSvc().CounterUpdateInterval = 15
 
-        app=ApplicationMgr()
+        app = ApplicationMgr()
 
         # setup the histograms and the monitoring service
         from Configurables import UpdateAndReset
@@ -97,78 +96,69 @@ class MooreOnline(LHCbConfigurableUser):
         if 'EventSelector' in allConfigurables :
             del allConfigurables['EventSelector']
 
-        if not self.getProp('RunMonitoringFarm') :
-            ## Setup Checkpoint & forking: Do this EXACTLY here. Just befor the MEPManager & event selector.
-            ## It will not work if these are created before.
+        # Enable Hlt2 ZeroMQ based monitoring
+        app.ExtSvc += ['HltMonitorSvc/Hlt2MonSvc', 'HltInfoSvc']
 
-            if OnlineEnv.MooreStartupMode == 1:
-                self._configureOnlineForking()
-            elif OnlineEnv.MooreStartupMode == 2:
-                self._configureOnlineCheckpointing()
+        ## Setup Checkpoint & forking: Do this EXACTLY here. Just befor the MEPManager & event selector.
+        ## It will not work if these are created before.
+        if OnlineEnv.MooreStartupMode == 1:
+            self._configureOnlineForking()
+        elif OnlineEnv.MooreStartupMode == 2:
+            self._configureOnlineCheckpointing()
 
+        importOptions('$MBM_SETUP_OPTIONS')
+        mbm_setup = allConfigurables['OnlineEnv']
+        task_type = os.environ['TASK_TYPE']
 
-            importOptions('$MBM_SETUP_OPTIONS')
-            mbm_setup = allConfigurables['OnlineEnv']
-            task_type = os.environ['TASK_TYPE']
+        ## The next four lines are a temporary hack for the timing tests. It
+        ## will be removed once the permanent solution for the
+        ## CheckPointingSvc is in place.
+        import re
+        m = re.match("(.*)_(?:\\d+)$", task_type)
+        if m:
+            task_type = m.group(1)
 
-            ## The next four lines are a temporary hack for the timing tests. It
-            ## will be removed once the permanent solution for the
-            ## CheckPointingSvc is in place.
-            import re
-            m = re.match("(.*)_(?:\\d+)$", task_type)
-            if m:
-                task_type = m.group(1)
+        input_buffer  = mbm_setup.__getattribute__(task_type + '_Input')   #'Events'
+        output_buffer = mbm_setup.__getattribute__(task_type + '_Output')  #'Send'
 
-            input_buffer  = mbm_setup.__getattribute__(task_type + '_Input')   #'Events'
-            output_buffer = mbm_setup.__getattribute__(task_type + '_Output')  #'Send'
+        TAE = (OnlineEnv.TAE != 0)
+        mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID, OnlineEnv.PartitionName,
+                                      [input_buffer, output_buffer], False)
+        mepMgr.PartitionBuffers = True
+        mepMgr.PartitionName    = OnlineEnv.PartitionName
+        mepMgr.PartitionID      = OnlineEnv.PartitionID
+        mepMgr.ConnectWhen      = 'start'
 
-            TAE = (OnlineEnv.TAE != 0)
-            mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID, OnlineEnv.PartitionName,
-                                          [input_buffer, output_buffer], False)
-            mepMgr.PartitionBuffers = True
-            mepMgr.PartitionName    = OnlineEnv.PartitionName
-            mepMgr.PartitionID      = OnlineEnv.PartitionID
-            mepMgr.ConnectWhen      = 'start'
+        app.Runable = OnlineEnv.evtRunable(mepMgr)
+        app.ExtSvc.append(mepMgr)
+        evtMerger = OnlineEnv.evtMerger(name = 'Output', buffer = output_buffer,
+                                        location = 'DAQ/RawEvent', datatype = OnlineEnv.MDF_NONE,
+                                        routing = 1)
+        evtMerger.DataType = OnlineEnv.MDF_BANKS
 
-            app.Runable = OnlineEnv.evtRunable(mepMgr)
-            app.ExtSvc.append(mepMgr)
-            evtMerger = OnlineEnv.evtMerger(name = 'Output', buffer = output_buffer,
-                                            location = 'DAQ/RawEvent', datatype = OnlineEnv.MDF_NONE,
-                                            routing = 1)
-            evtMerger.DataType = OnlineEnv.MDF_BANKS
+        if TAE:
+             eventSelector = OnlineEnv.mbmSelector(input = input_buffer, TAE = TAE, decode = False)
+        elif self.getProp('HltLevel') == "Hlt2" or self.getProp('ForceMDFInput'):
+             eventSelector = OnlineEnv.mbmSelector(input = input_buffer, TAE = TAE, decode = False)  # decode=False for HLT2 ONLY!!!!!
+        else:
+             eventSelector = OnlineEnv.mbmSelector(input = input_buffer, TAE = TAE, decode = True)
+        app.ExtSvc.append(eventSelector)
 
-            if TAE:
-                 eventSelector = OnlineEnv.mbmSelector(input = input_buffer, TAE = TAE, decode = False)
-            elif self.getProp('HltLevel') == "Hlt2" or self.getProp('ForceMDFInput'):
-                 eventSelector = OnlineEnv.mbmSelector(input = input_buffer, TAE = TAE, decode = False)  # decode=False for HLT2 ONLY!!!!!
-            else:
-                 eventSelector = OnlineEnv.mbmSelector(input = input_buffer, TAE = TAE, decode = True)
-            app.ExtSvc.append(eventSelector)
+        OnlineEnv.evtDataSvc()
+        if self.getProp('REQ1') : eventSelector.REQ1 = self.getProp('REQ1')
 
-            OnlineEnv.evtDataSvc()
-            if self.getProp('REQ1') : eventSelector.REQ1 = self.getProp('REQ1')
-
-            # define the send sequence
-            writer =  GaudiSequencer('SendSequence')
-            writer.OutputLevel = OnlineEnv.OutputLevel
-            if len(Moore().getProp('WriterRequires')):
-                from Configurables import LoKi__VoidFilter as Filter
-                writer.Members.append( Filter( "SendSequenceFilter"
-                                             , Preambulo = [ 'from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED' ]
-                                             , Code = ' & '.join( [ "ALG_EXECUTED('{0}') & ALG_PASSED('{0}')".format(i) for i in Moore().getProp('WriterRequires') ] )
-                                             )
-                                     )
-            writer.Members.append(evtMerger)
-            app.OutStream.append( writer )
-        else :
-            input = 'Events'
-            mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input],True)
-            app.Runable = OnlineEnv.evtRunable(mepMgr)
-            app.ExtSvc.append(mepMgr)
-            eventSelector = OnlineEnv.mbmSelector(input=input,decode=False)
-            app.ExtSvc.append(eventSelector)
-            OnlineEnv.evtDataSvc()
-            if self.getProp('REQ1') : eventSelector.REQ1 = self.getProp('REQ1')
+        # define the send sequence
+        writer =  GaudiSequencer('SendSequence')
+        writer.OutputLevel = OnlineEnv.OutputLevel
+        if len(Moore().getProp('WriterRequires')):
+            from Configurables import LoKi__VoidFilter as Filter
+            writer.Members.append( Filter( "SendSequenceFilter"
+                                         , Preambulo = [ 'from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED' ]
+                                         , Code = ' & '.join( [ "ALG_EXECUTED('{0}') & ALG_PASSED('{0}')".format(i) for i in Moore().getProp('WriterRequires') ] )
+                                         )
+                                 )
+        writer.Members.append(evtMerger)
+        app.OutStream.append( writer )
 
         #ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;
         from Configurables import AuditorSvc
@@ -284,6 +274,10 @@ class MooreOnline(LHCbConfigurableUser):
 
         #pass certain properties to Moore
         propagator(Moore(), ["RunOnline","UseTCK",'EnableTimer','Simulation','DataType','CheckOdin'] )
+
+        from Configurables import LoKiSvc, LoKi__Reporter
+        LoKiSvc().addTool(LoKi__Reporter, 'REPORT')
+        LoKiSvc().REPORT.OutputLevel = 5
 
         if self.getProp("UseDBSnapshot"): self._configureDBSnapshot()
 
