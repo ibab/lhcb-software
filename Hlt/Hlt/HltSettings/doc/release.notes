@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-07-24 - Matthew Kenzie
+  - Add 25ns threshold settings for Phi lines
+
 ! 2015-07-23 - Albert Puig
   - Add Radiative, RareStrange and TriMuon folders and modified
     Physics_25ns_August2015.py accordingly
