@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2015-07-24 - Roel Aaij
+ - Improve auto detection of Hlt1 selections.
+
 !========================= HltLine v7r11p1 2015-07-01 =========================
 
 ! 2015-07-01 - Roel Aaij

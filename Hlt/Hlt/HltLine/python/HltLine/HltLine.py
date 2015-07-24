@@ -346,7 +346,7 @@ def hlt2Selections() :
     """
     Get the dictionary of all Hlt2 selections, only decision
     """
-    return {'All' : hlt2Decisions()}
+    return {'Output' : hlt2Decisions()}
 
 # =============================================================================
 ## the list of possible Hlt1Members types of an Hlt1Line
@@ -1017,20 +1017,19 @@ class Hlt1Line(object):
                     _add_to_hlt1_input_selections_ ( getattr( _m, attr ) )
             from Configurables import LoKi__HltUnit
             if hasattr ( type(_m) , 'OutputSelection' ) :
-                if hasattr ( _m , 'OutputSelection' ) :
+                if hasattr ( _m , 'OutputSelection' ) and 'Decision' in _m.OutputSelection:
                     self._outputSelections += [ _m.OutputSelection ]
                     _add_to_hlt1_output_selections_ ( _m.OutputSelection )
-                else :
+                elif 'Decision' in _m.name():
                     self._outputSelections += [ _m.name() ]
-                    _add_to_hlt1_output_selections_ ( _m.name         () )
+                    _add_to_hlt1_output_selections_ ( _m.name() )
             elif type(_m) is LoKi__HltUnit and (hasattr( _m, 'Code') or hasattr( _m, 'Preambulo')):
-                ex = r"(SOURCE|SELECTION|SINK)\s*\(\s*'(\w+)'\s*\)"
+                ex = r"SINK\s*\(\s*'(\w+Decision)'\s*\)"
                 import re
                 from itertools import chain
                 for s in chain.from_iterable((re.finditer(ex, line) for line in [getattr(_m, 'Code', '')] + getattr(_m, 'Preambulo', []))):
-                    if s.group(1) == 'SINK':
-                        self._outputSelections.append(s.group(2))
-                    _add_to_hlt1_output_selections_ (s.group(2))
+                    self._outputSelections.append(s.group(1))
+                    _add_to_hlt1_output_selections_ (s.group(1))
 
         if self._outputsel is None and self._outputSelections :
             self._outputsel = self._outputSelections[-1]
