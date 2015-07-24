@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to tests
+  . Change 2015-em input file to a file more representative of the 2015 EM data
+    taking period
+
 </PRE><H1><A NAME=v48r0>2015-07-22 Brunel v48r0</A></H1><PRE>
 This version uses projects LHCb v39r0, Lbcom v17r0, Rec v18r0, Gaudi v26r3
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*

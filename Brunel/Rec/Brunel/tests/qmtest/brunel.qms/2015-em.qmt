@@ -5,7 +5,6 @@
 # ...................
 # Author: M.Cattaneo
 # Purpose: Check that Brunel().DataType = "2015" is working correctly on 50ns ("EM") data.
-#          Currently using input file directly from tape, to be moved to SWTEST when we have a physics quality file.
 #          Currently explicitly setting an initial time, to avoid changes due to changing magnet polarity "today". Remove when set in DDDB
 # Prerequisites: brunel.2015-em-rdst, so that in case of failure the new 
 #                reference file of this test is the one that survives 
@@ -19,8 +18,9 @@
   <argument name="timeout"><integer>3600</integer></argument>
   <argument name="args"><set>
     <text>$APPCONFIGOPTS/Brunel/saveFittedVeloTracks.py</text>
+    <text>$PRCONFIGOPTS/Brunel/PR-COLLISION15EM-Beam6500GeV-VeloClosed-MagDown.py</text>
     <text>--option</text>
-    <text>from Configurables import Brunel; Brunel().DataType = "2015"; Brunel().EvtMax = 1000; Brunel().DatasetName="2015-em"; Brunel().Monitors=["SC","FPE"]; from Gaudi.Configuration import EventSelector; EventSelector().Input = [ "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15EM/153759/153759_0000000066.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'" ];from Configurables import EventClockSvc; EventClockSvc( InitialTime = 1433509200000000000 )
+    <text>from Configurables import Brunel; Brunel().DataType = "2015"; Brunel().EvtMax = 1000; Brunel().DatasetName="2015-em"; Brunel().Monitors=["SC","FPE"]; from Configurables import EventClockSvc; EventClockSvc( InitialTime = 1433509200000000000 )
 </text>
   </set></argument>
   <argument name="reference"><text>../refs/2015-em.ref</text></argument>
