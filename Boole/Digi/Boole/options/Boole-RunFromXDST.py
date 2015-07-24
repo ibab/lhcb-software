@@ -62,6 +62,8 @@ xdstPaths = [
     '/Event/Rec/Status',
     '/Event/Rec/Summary',
     '/Event/Trigger/RawEvent',
+    '/Event/Tracker/RawEvent',
+    '/Event/Velo/RawEvent',
     '/Event/Calo/RawEvent',
     '/Event/Calo',
     '/Event/Muon/RawEvent',

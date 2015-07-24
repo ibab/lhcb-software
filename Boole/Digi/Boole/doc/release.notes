@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2015-07-24 - Michel De Cian
+ - Add more RawEvent locations to be killed in options/Boole-RunFromXDST.py
+
+
 </PRE><H1><A NAME=v29r8>2015-07-22 Boole v29r8</A></H1><PRE>
 This version uses projects:
  LCG_79 (ROOT 6.04.02), Gaudi v26r3, LHCb v39r0, Lbcom v17r0
