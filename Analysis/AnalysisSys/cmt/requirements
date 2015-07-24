@@ -1,5 +1,5 @@
 package AnalysisSys
-version v13r6
+version v14r0
 
 branches doc cmt
 
@@ -8,22 +8,22 @@ branches doc cmt
 use  AnalysisConf               v2r4     Phys   # Patrick Koppenburg
 use  DSTWriters                 v4r20    Phys   # Chris Jones
 use  DSTWriterTests             v2r5     Phys   # Chris Jones
-use  DaVinciMonitors            v1r21    Phys   # Patrick Koppenburg
+use  DaVinciMonitors            v1r23    Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r9     Rich   # Chris Jones
 
 ####################################################################
 
 use  DaVinciMCTools     	v10r12   Phys   # Chris Jones
 use  LoKiAlgoMC                 v9r6p1   Phys   # Vanya Belyaev
-use  LoKiGenMC                  v9r1p2   Phys   # Vanya Belyaev
-use  LoKiPhysMC                 v9r8     Phys   # Vanya Belyaev
-use  DaVinciAssociators         v9r7     Phys   # Vladimir Gligorov
+use  LoKiGenMC                  v9r2     Phys   # Vanya Belyaev
+use  LoKiPhysMC                 v9r9     Phys   # Vanya Belyaev
+use  DaVinciAssociators         v9r8     Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r5p1   Phys   # Chris Jones
 use  VertexFitCheck             v1r9     Phys   # Yuehong Xie
 use  FlavourTaggingChecker      v7r9     Phys   # Marc Grabalosa
 use  ParticleMakerChecker       v1r5p1   Phys   # Chris Jones
 use  DisplVerticesMC            v1r4p5   Phys   # Victor Coco
-use  JetTagging                 v1r7     Phys   # Cedric Potterat
+use  JetTagging                 v1r8     Phys   # Cedric Potterat
 use  JetAccessoriesMC		v2r9     Phys   # Victor Coco, Cedric Potterat
 use  CommonMCParticles          v1r1     Phys   # Conor Fitzpatrick
 use  DaVinciAngleCalculators    v1r0     Phys   # ?
@@ -31,15 +31,15 @@ use  DaVinciAngleCalculators    v1r0     Phys   # ?
 ####################################################################
 
 use  DecayTreeTupleBase         v1r4     Phys
-use  DecayTreeTupleReco         v1r4p1   Phys   
+use  DecayTreeTupleReco         v1r5     Phys   
 use  DecayTreeTupleDalitz       v1r3     Phys
-use  DecayTreeTupleJets         v1r2     Phys
+use  DecayTreeTupleJets         v1r3     Phys
 use  DecayTreeTupleMC           v1r6     Phys
-use  DecayTreeTupleTrigger      v1r6     Phys
+use  DecayTreeTupleTrigger      v1r8     Phys
 use  DecayTreeTupleMuonCalib    v1r4     Phys
 use  DecayTreeTupleTracking     v1r2     Phys
 use  DecayTreeTupleANNPID       v1r2     Phys 
-use  DecayTreeTuple             v5r0     Phys 
+use  DecayTreeTuple             v5r1     Phys 
 
 ####################################################################
 
@@ -47,9 +47,9 @@ use  HltSelChecker              v12r4    Hlt    # Patrick Koppenburg
 
 ####################################################################
 
-use  AnalysisPython             v2r36    Phys     # Vanya Belyaev
+use  AnalysisPython             v2r37    Phys     # Vanya Belyaev
 use  PyAna                      v1r3p1   Analysis # Vanya Belyaev
-use  Ostap                      v1r8     Analysis # Vanya Belyaev
+use  Ostap                      v1r9     Analysis # Vanya Belyaev
 
 ####################################################################
 
@@ -68,12 +68,12 @@ use  MicroDSTExample            v2r15   Ex         # Chris Jones
 ####################################################################
 
 use  TrackSmearing              v1r6p1  Phys   # Alex Shires
-use  DaVinciTrackRefitting      v2r0    Phys   # Matt Needham
+use  DaVinciTrackRefitting      v2r1    Phys   # Matt Needham
 use  DaVinciTrackScaling        v1r4    Phys   # Vanya Belyaev
 
 ####################################################################
 
-use  TeslaTools                 v1r5    Phys   # Sean Benson
+use  TeslaTools                 v1r10p1 Phys   # Sean Benson
 
 ####################################################################
 

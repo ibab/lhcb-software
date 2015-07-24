@@ -3,6 +3,86 @@ Package             : AnalysisSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb analysis packages
 
+</PRE><H1><A NAME=v14r0>2015-07-24 Analysis v14r0</A></H1><PRE>
+
+Development release for the 2015 25ns data taking, based on Gaudi v26r3, LHCb v39r0, Rec v18r0 and Phys v20r0.
+Uses LCG_79 with ROOT 6.04.02.
+
+- Packages updated :
+  Phys/AnalysisPython v2r37, Phys/DaVinciAssociators v9r8, Phys/DaVinciMonitors v1r23, Phys/DaVinciTrackRefitting v2r1,
+  Phys/DecayTreeTupleJets v1r3, Phys/DecayTreeTupleReco v1r5, Phys/DecayTreeTupleTrigger v1r8, Phys/DecayTreeTuple v5r1,
+  Phys/JetTagging v1r8, Phys/LoKiGenMC v9r2, Phys/LoKiPhysMC v9r9, Analysis/Ostap v1r9, Phys/TeslaTools v1r10p1.
+
+- In Phys/AnalysisPython v2r37 :
+  . Minor/trivial updates.
+
+- In Phys/DaVinciAssociators v9r8 :
+  . ChargedPP2MC algo.: a declareProperty changed to setProperty to remove compilation warnings of the kind
+    "WARNING duplicated property name 'InputData', see https://its.cern.ch/jira/browse/GAUDI-1023".
+
+- In Phys/DaVinciMonitors v1r23 :
+  . Fix the requirement of having only one selected candidate in MuIDMonitor.cpp.
+    Now the monitor accepts multiple candidates.
+
+- In Phys/DaVinciTrackRefitting v2r1 :
+  . Bug fix for event initialisation of RefitParticleTracks with latest GhostProbability interface.
+
+- In Phys/DecayTreeTupleJets v1r3 :
+  . Added new TupleTool to add variables related to the use of jets in B physics
+  . Added Event/HltEvent CMakeLists.txt to fix CMake compilation.
+  . Fixed CMakeLists.txt ... hopefully, so that the package builds again.
+  . Removed recent "fix" from CMakeLists.txt as it did not help.
+
+- In Phys/DecayTreeTupleReco v1r5 :
+  . Made TupleToolRecoStats look in one more place.
+  . Added additional fallback to make the RecSummary from the HLT selection reports as a last resort.
+
+- In Phys/DecayTreeTupleTrigger v1r8 :
+  . Removed compilation warning in TupleToolStripping.cpp.
+
+- In Phys/DecayTreeTuple v5r1 :
+  . Fixed a bug in TupleToolTwoParticleMatching: matching was achieved with positive particles only.
+  . Added the IsMuonTight variable to the TupleToolPid.cpp.
+
+- In Phys/JetTagging v1r8 :
+  . LoKiBDTTag algorithm: switched to the LoKi vertex fitter by default.
+
+- In  Phys/LoKiGenMC v9r2 :
+  . Corrected setProperty and declareProperty duplicates to remove compilation warnings related to
+    https://its.cern.ch/jira/browse/GAUDI-1023.
+
+- In Phys/LoKiPhysMC v9r9 :
+  . Removed unused class rule producing warning in genflex.
+
+- In Analysis/Ostap v1r9 :
+  . Data.py: improved treatment of "empty" trees/chains.
+  . Improved and simplified treatment of objects "as-functions".
+  . Impoved shift and feed operations with histograms
+     h >>= 5
+     h <<= 5
+     h >>  5
+     h <<  5
+         math.sin >> h1
+         math.cos >> h2
+     h1 >> h2
+     1  >> h1
+  . Added reverse iteration over axis and histograms:
+     for i in reversed(h) : print i
+  . Added function "slice/slices" by Albert Bursche to get numpy-slice(s) of variables from TTree.
+  . Treatment of scipy code improved.
+  . More decorations added.
+  . Various miscellaneous and tiny updates/improvements.
+
+- In Phys/TeslaTools v1r10p1 :
+  . Added folder TeslaTools for tool interfaces.
+  . Added file TeslaTools/ITeslaMatcher.h as interface for TeslaMatcher tool.
+  . Added files src/TeslaMatcher.{cpp|h} as implementation of TeslaMatcher.
+  . Modified cmt/requirements to process TeslaTools as branch.
+  . Added TeslaBrunelMonitor algorithm to
+    . Match the Tesla Candidates with the Brunel ones using TeslaMatcher
+    . Draw 1D plots of the differences. A plot per variable.
+    . Draw 2D plot summarizing the discrepancies in all variables.
+  . More debug printout.
 
 </PRE><H1><A NAME=v13r6>2015-06-03 Analysis v13r6</A></H1><PRE>
 
