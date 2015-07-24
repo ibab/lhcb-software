@@ -9,6 +9,9 @@ branches cmt doc
 
 # Temporarily to pick up fix in GaudiConf
 use GaudiConf           v19r9
+# Temporarily to pick up new tool with its interface
+use MCInterfaces        v1r18   Kernel
+use SimComponents       v2r25   Sim
 
 # Gauss application: the application is not built on Win32
 use Gauss               v48r2   Sim
