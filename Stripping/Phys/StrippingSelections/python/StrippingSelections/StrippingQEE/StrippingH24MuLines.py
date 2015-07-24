@@ -37,28 +37,28 @@ default_config={
               'LooseLinePrescale'      : 0.01,
               
               'MuTrackChi2DoF'         : 3,
-              'MupTprompt'             : 350,  #MeV
-              'MupTdetached'           : 150,  #MeV
+              'MupTprompt'             : 375,  #MeV
+              'MupTdetached'           : 250,  #MeV
               'MuGhostProb'            : 0.4,
-              'MuMaxIPchi2'            : 4,
+              'MuMaxIPchi2'            : 3,
               'MuMinIPchi2'            : 1,
               'MuPIDdll'               : -3, # muon combDLL
               'MuNShared'              : 3, # muon NShared
               
               'A1maxMass'              : 2000, #MeV
-              'A1Doca'                 : 0.3,   #mm
+              'A1Doca'                 : 0.2,   #mm
               'A1DocaTight'            : 0.1,   #mm
-              'A1Vchi2'                : 10,
+              'A1Vchi2'                : 7.5,
               'A1Vchi2Tight'           : 1,
               'A1Dira'                 : 0,
-              'A1maxIPchi2'            : 36,
+              'A1maxIPchi2'            : 25,
               'A1FDChi2'               : 4,
               
-              'HmaxDOCA'               : 1, #mm
+              'HmaxDOCA'               : 0.75, #mm
               'HmaxDOCATight'          : 0.25, #mm
-              'HVchi2'                 : 15,
+              'HVchi2'                 : 10,
               'HVchi2Tight'            : 2,
-              'HpT'                    : 1000, #MeV
+              'HpT'                    : 1200, #MeV
               
               'MuTrackChi2DoF_loose'   : 10,
               'MupT_loose'             : 0,
