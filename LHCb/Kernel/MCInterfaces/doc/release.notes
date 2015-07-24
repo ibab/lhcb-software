@@ -4,6 +4,10 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+!========================= MCInterfaces v1r19 2015-07-25 =========================
+! 2015-07-24 - Gloria Corti
+ - New interface for setting fromSignal flag in MCParticles
+
 !========================= MCInterfaces v1r18 2014-06-18 =========================
 ! 2014-06-18 - Gloria Corti
  - Move here QQqBaryons.h from LbGenXicc since it is just a class with enum and
