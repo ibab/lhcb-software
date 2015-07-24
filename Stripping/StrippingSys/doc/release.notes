@@ -3,6 +3,10 @@ Package     : StrippingSys
 Package Coordinator : Andrea.Contu@cern.ch, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+
+!2015-07-24 - Andrea Contu
+ - Re-added Phys/StrippingCache after previous tag
+
 !========================= StrippingSys v9r9 2015-07-24 =========================
 
 *Phys/StrippingSettings

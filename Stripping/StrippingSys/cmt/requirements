@@ -25,6 +25,7 @@ use  StrippingSelections         v4r4     Phys   # Stripping coordinators
 use  StrippingSettings           v2r38    Phys   # Stripping coordinators
 use  StrippingTCK                v1r4     Phys   # Anton Poluektov
 use  StrippingUtils              v1r11    Phys   # Juan Palacios
+use  StrippingCache              v1r0     Phys   # Stripping Coordinators
 
 ####################################################################
 
