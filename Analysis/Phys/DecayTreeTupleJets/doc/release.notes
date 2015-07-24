@@ -4,6 +4,8 @@
 ! Purpose     : Jet related Tuple Tools
 !-----------------------------------------------------------------------------
 
+!==================== DecayTreeTupleJets v1r3 2015-07-24 ====================
+
 ! 2015-06-12 - Eduardo Rodrigues
  - Removed recent "fix" from CMakeLists.txt as it did not help.
 
@@ -17,6 +19,7 @@
  - add new TupleTool to add variables related to the use of jets in B physics
 
 !==================== DecayTreeTupleJets v1r2 2015-02-26 ====================
+
 ! 2015-01-23 - Vanya Belyaev
  - minor fix to account changes in structure of LoKi header files
 

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DecayTreeTupleJets
 ################################################################################
-gaudi_subdir(DecayTreeTupleJets v1r2)
+gaudi_subdir(DecayTreeTupleJets v1r3)
 
 gaudi_depends_on_subdirs(Event/HltEvent
                          Phys/DecayTreeTupleBase
