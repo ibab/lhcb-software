@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+
+! 2015-07-24 - Gloria Corti
+ - Updated Gauss reference tests for current detector followign change in
+   default random numbers generator
+
 ! 2015-07-23 - Gloria Corti
  - Provide options to Gauss() to choose between Ranlux and MTwist as random
    number engine. Set the default to Ranlux since MTwist does not re-initialize
