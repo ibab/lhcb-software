@@ -3,7 +3,7 @@
 # Maintainer : Cedric Potterat cedric.potterat@cern.ch Victor Coco victor.coco@cern.ch
 # =============================================================================
 package           JetTagging
-version           v1r7
+version           v1r8
 
 # =============== structure ===================================================
 branches          cmt doc python src Kernel dict
