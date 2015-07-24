@@ -4,6 +4,9 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-07-24 - Roel Aaij
+ - Fix CMT build.
+
 ! 2015-07-23 - Roel Aaij
  - Updated design.txt with an idea on how to improve state transitions.
  - Disable pausing of processing threads to allow late messages to be received
