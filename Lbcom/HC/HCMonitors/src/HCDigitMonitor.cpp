@@ -55,10 +55,12 @@ StatusCode HCDigitMonitor::initialize() {
     m_hAdcSumEven.push_back(book1D("ADC/Sum/Even/" + st, st, low, high, bins));
     m_hAdcSumOdd.push_back(book1D("ADC/Sum/Odd/" + st, st, low, high, bins));
     m_hAdcSumNoBeam.push_back(book1D("ADC/Sum/NoBeam/" + st, st, low, high, bins));
+    m_hAdcSumBeam.push_back(book1D("ADC/Sum/Beam/" + st, st, low, high, bins));
     setAxisLabels(m_hAdcSum[i], "Sum ADC", "Entries");
     setAxisLabels(m_hAdcSumEven[i], "Sum ADC", "Entries");
     setAxisLabels(m_hAdcSumOdd[i], "Sum ADC", "Entries");
     setAxisLabels(m_hAdcSumNoBeam[i], "Sum ADC", "Entries");
+    setAxisLabels(m_hAdcSumBeam[i], "Sum ADC", "Entries");
     // Book profile histograms of average ADC vs. quadrant for each station.
     name = "ADC/" + st + "/Average";
     m_hAdcVsQuadrant.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
@@ -68,10 +70,13 @@ StatusCode HCDigitMonitor::initialize() {
     m_hAdcVsQuadrantOdd.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
     name = "ADC/" + st + "/NoBeam/Average";
     m_hAdcVsQuadrantNoBeam.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
+    name = "ADC/" + st + "/Beam/Average";
+    m_hAdcVsQuadrantBeam.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
     setAxisLabels(m_hAdcVsQuadrant[i], "Quadrant", "ADC");
     setAxisLabels(m_hAdcVsQuadrantEven[i], "Quadrant", "ADC");
     setAxisLabels(m_hAdcVsQuadrantOdd[i], "Quadrant", "ADC");
     setAxisLabels(m_hAdcVsQuadrantNoBeam[i], "Quadrant", "ADC");
+    setAxisLabels(m_hAdcVsQuadrantBeam[i], "Quadrant", "ADC");
   }
 
   const unsigned int nChannels = 64;
@@ -115,22 +120,26 @@ StatusCode HCDigitMonitor::initialize() {
       const std::string nameEven = "ADC/" + stations[j] + "/Even/" + qu;
       const std::string nameOdd = "ADC/" + stations[j] + "/Odd/" + qu;
       const std::string nameNoBeam = "ADC/" + stations[j] + "/NoBeam/" + qu;
+      const std::string nameBeam = "ADC/" + stations[j] + "/Beam/" + qu;
       if (m_variableBins) {
         m_hAdcQuadrant.push_back(book1D(name, qu, m_edges));
         m_hAdcQuadrantEven.push_back(book1D(nameEven, qu, m_edges));
         m_hAdcQuadrantOdd.push_back(book1D(nameOdd, qu, m_edges));
         m_hAdcQuadrantNoBeam.push_back(book1D(nameNoBeam, qu, m_edges));
+        m_hAdcQuadrantBeam.push_back(book1D(nameBeam, qu, m_edges));
       } else {
         m_hAdcQuadrant.push_back(book1D(name, qu, low, high, bins));
         m_hAdcQuadrantEven.push_back(book1D(nameEven, qu, low, high, bins));
         m_hAdcQuadrantOdd.push_back(book1D(nameOdd, qu, low, high, bins));
         m_hAdcQuadrantNoBeam.push_back(book1D(nameNoBeam, qu, low, high, bins));
+        m_hAdcQuadrantBeam.push_back(book1D(nameBeam, qu, low, high, bins));
       }
       const unsigned int index = i * nStations + j;
       setAxisLabels(m_hAdcQuadrant[index], "ADC", "Entries");
       setAxisLabels(m_hAdcQuadrantEven[index], "ADC", "Entries");
       setAxisLabels(m_hAdcQuadrantOdd[index], "ADC", "Entries");
       setAxisLabels(m_hAdcQuadrantNoBeam[index], "ADC", "Entries");
+      setAxisLabels(m_hAdcQuadrantBeam[index], "ADC", "Entries");
     }
   }
  
@@ -227,6 +236,9 @@ StatusCode HCDigitMonitor::execute() {
     if (bxtype == LHCb::ODIN::NoBeam) {
       m_hAdcVsQuadrantNoBeam[station + offset]->fill(quadrant, adc);
       m_hAdcQuadrantNoBeam[index]->fill(adc);
+    } else if (bxtype == LHCb::ODIN::BeamCrossing) {
+      m_hAdcVsQuadrantBeam[station + offset]->fill(quadrant, adc);
+      m_hAdcQuadrantBeam[index]->fill(adc);
     }
     sum[station + offset] += adc;
   }
@@ -239,6 +251,8 @@ StatusCode HCDigitMonitor::execute() {
     }
     if (bxtype == LHCb::ODIN::NoBeam) {
       m_hAdcSumNoBeam[i]->fill(sum[i]);
+    } else if (bxtype == LHCb::ODIN::BeamCrossing) {
+      m_hAdcSumBeam[i]->fill(sum[i]);
     }
   }
   return StatusCode::SUCCESS;
@@ -267,6 +281,7 @@ StatusCode HCDigitMonitor::finalize() {
       scale(m_hAdcQuadrantEven[index]);
       scale(m_hAdcQuadrantOdd[index]);
       scale(m_hAdcQuadrantNoBeam[index]);
+      scale(m_hAdcQuadrantBeam[index]);
     }
   }
   return HCMonitorBase::finalize();
