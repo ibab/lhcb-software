@@ -190,15 +190,20 @@ StatusCode HltSelReportsMaker::initialize() {
   Hlt::IRegister::Lock lock(m_regSvc,this);
   for ( const auto& s : selectionIDs ) {
      struct selectionInfo info; info.id = s;
+
+     // Skip selections that have no ID configured.
+     // This is now fine, since they are all auto generated.
+     auto im = selectionNameToIntMap.find( s );
+     if( im==selectionNameToIntMap.end() ){
+       debug() << " selectionName = " << s << " not found in HltANNSvc. Skipped. " << endmsg;
+       continue;
+     }
+
      if (lock->registerInput(info.id,this).isFailure()) {
        Warning( " selectionName="+s+" could not register as input. Skipped. " , StatusCode::SUCCESS, 10 );
        continue;
      }
-     auto im = selectionNameToIntMap.find( s );
-     if( im==selectionNameToIntMap.end() ){
-       Warning( " selectionName="+s+" not found in HltANNSvc. Skipped. " , StatusCode::SUCCESS, 10 );
-       continue;
-     }
+
      info.intId =  im->second ;
      info.selection = m_hltSvc->selection(info.id,this);
      if (info.selection==0) {

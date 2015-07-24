@@ -133,7 +133,7 @@ private:
   
 
   // ----------------------- data members 
-
+   
   /// location of input Hlt Dec Reports
   StringProperty m_inputHltDecReportsLocation;
 
