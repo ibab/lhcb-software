@@ -15,6 +15,7 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiGenMC v9r2 2015-07-24 ==========================
 
 ! 2015-06-19 - Eduardo Rodrigues
  - Corrected setProperty and declareProperty duplicates to remove compilation

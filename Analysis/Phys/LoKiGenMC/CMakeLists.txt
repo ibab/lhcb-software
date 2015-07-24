@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiGenMC
 ################################################################################
-gaudi_subdir(LoKiGenMC v9r1p2)
+gaudi_subdir(LoKiGenMC v9r2)
 
 gaudi_depends_on_subdirs(Kernel/Relations
                          Phys/DaVinciMCKernel
