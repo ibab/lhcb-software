@@ -38,7 +38,7 @@ class HltRecoConf(LHCbConfigurableUser):
                  ,"GoodTrCHI2PDOF"              : 3.0  # This TrCHI2PDOF is used in the sequence to mark hits of good tracks.
                  ,"MaxTrCHI2PDOF"               : 3.0  # This TrCHI2PDOF is used in the making of fitted tracks.
                  ,"ApplyGHOSTPROBCut"           : False  # Enable cut on ghost probability in the making of protoparticles.
-                 ,"ApplyGHOSTPROBCutInTBTC"     : False  # Enable cut on ghost probability in the creation of fitted tracks.
+                 ,"ApplyGHOSTPROBCutInTBTC"     : True  # Enable cut on ghost probability in the creation of fitted tracks.
                  ,"MaxTrGHOSTPROB"              : 0.5  # Cut value of ghost probability for above options.
                  ,"VeloSelectionCut"            : "(~TrBACKWARD) & ( TrNVELOMISS < 100 )"
                  ,"FitVelo"                     : True
