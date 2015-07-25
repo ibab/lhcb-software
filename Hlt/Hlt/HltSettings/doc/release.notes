@@ -4,6 +4,13 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-07-24 and 2015-07-25  - Mike Sokoloff
+  -  added CharmHad and RareCharm  subdirectories 
+  -   CharmHad_25ns_August2015.py and RareCharm_25ns_August2015.py
+  -   have been reviewed (at least in part) by WG and some problems
+  -   have been fixed
+  -  Updated Physics_25ns_August2015.py with these directories
+
 ! 2015-07-24 - Matthew Kenzie
   - And add the Phi thresholds to Physics_25ns_August2015
 
