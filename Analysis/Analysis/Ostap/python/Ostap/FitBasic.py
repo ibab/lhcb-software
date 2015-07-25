@@ -764,7 +764,7 @@ class PDF2 (object) :
                    xbins   = 20   ,
                    ybins   = 20   ) :
         """
-        Mak/draw 2D-histograms 
+        Make/draw 2D-histograms 
         """
         
         _xbins = ROOT.RooFit.Binning ( xbins ) 
