@@ -41,7 +41,8 @@ __all__ = (
     'round_N'     , ## round floaing value to N-significant digits
     'pdg_round'   , ## round value,error-pair according to PDG prescription
     'pdg_format'  , ## format value&error according to PDF prescription
-    'pdg_format2' , ## format value&error1&error2 structure accoring to PDF
+    'pdg_format2' , ## format value+2errorr according to PDF
+    'pdg_format3' , ## format value+3errors according to PDF
     )
 # ===============================================================================
 import ROOT,          math
@@ -254,26 +255,34 @@ def pdg_format ( value , error , latex = False ) :
     ## get scaling factors for printout 
     qv , bv   = _frexp10_ (  value  )
     n         = int       ( math.floor ( bv / 3. ) ) 
+
+
+    q = abs ( q ) 
+    short = ( 0 == n ) or (  1 == n and  abs(v) < 10000 ) or ( -1 == n and  abs(v) > 0.1 ) 
     
-    q = abs ( min ( 0 , q ) ) 
-    
-    if 0 != n :
+    if not short :
+
+        q += 3 * n
         
-        q +=  3 * n 
+        q  = abs ( q )
         
         if latex : fmt = "$(%%.%df \pm %%.%df)\cdot10^{%%d}$" % ( q , q )
-        else     : fmt = "$(%%.%df +/- %%.%df)*10^{%%d}"      % ( q , q )
-        
+        else     : fmt =  "(%%.%df +/- %%.%df)*10^{%%d}"      % ( q , q )
+
         v  /= 10**(3*n)
         e  /= 10**(3*n)
         ##
+                
         return fmt % ( v , e , n*3 )
         
     else :
-            
-        if latex : fmt = "$(%%.%df \pm %%.%df)$" % ( q , q )
-        else     : fmt = "$(%%.%df +/- %%.%df)"  % ( q , q )
+        
+        q = abs ( q ) 
+
+        if latex : fmt = "$%%.%df \pm %%.%df$" % ( q , q )
+        else     : fmt =  "%%.%df +/- %%.%df"  % ( q , q )
         ##
+
         return fmt % ( v , e )
 
 # =============================================================================
@@ -292,7 +301,7 @@ def pdg_format ( value , error , latex = False ) :
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-07-20 
-def pdg_format2( value , error1 , error2  , latex = False ) :
+def pdg_format2( value , error1 , error2  , latex = False , mode = 'total' ) :
     """
     Round value/error accoridng to PDG prescription and format it for print
     @see http://pdg.lbl.gov/2010/reviews/rpp2010-rev-rpp-intro.pdf
@@ -309,8 +318,18 @@ def pdg_format2( value , error1 , error2  , latex = False ) :
     >>> print ' Rounded value/error is %s ' % pdg_format2 ( value , error1 , error2 , True ) 
     """
 
-    error = min ( abs ( error1 ) , abs ( error2 ) )
-    
+    if isinstance ( mode , str ) : mode = mode.lower()
+    ## 
+    if   mode in ( 'min'   , 'mn'  ) : 
+        error = min ( abs ( error1 ) , abs ( error2 ) )
+    elif mode in ( 'max'   , 'mx'  ) : 
+        error = min ( abs ( error1 ) , abs ( error2 ) )
+    elif mode in ( 'total' , 'tot' ) : 
+        error = math.sqrt ( 1.0 * error1 * error1 + error2 * error2 )
+    else :
+        ## use the default policy 
+        error = math.sqrt ( 1.0 * error1 * error1 + error2 * error2 )
+
     ## round value, error and get the scaling factor
     v  , e  , q  = pdg_round_  ( value , error )
 
@@ -318,14 +337,18 @@ def pdg_format2( value , error1 , error2  , latex = False ) :
     v_ , e2 , q_ = pdg_round_  ( value , error2 )
 
     ## get scaling factors for printout 
-    qv , bv   = _frexp10_ (  value  )
-    n         = int       ( math.floor ( bv / 3. ) ) 
+    qv , bv   = frexp10 (  value  )
+    n         = int     ( math.floor ( bv / 3. ) ) 
+
+
+    q = abs ( q ) 
+    short = ( 0 == n ) or (  1 == n and  abs(v) < 10000 ) or ( -1 == n and  abs(v) > 0.1 ) 
     
-    q = abs ( min ( 0 , q ) ) 
-    
-    if 0 != n :
+    if not short :
+
+        q += 3 * n
         
-        q +=  3 * n 
+        q  = abs ( q )
         
         if latex : fmt = "$(%%.%df \pm %%.%df \pm %%.%df)\cdot10^{%%d}$" % ( q , q , q )
         else     : fmt =  "(%%.%df +/- %%.%df +/- %%.%df)*10^{%%d}"      % ( q , q , q )
@@ -334,15 +357,106 @@ def pdg_format2( value , error1 , error2  , latex = False ) :
         e1 /= 10**(3*n)
         e2 /= 10**(3*n)
         ##
+                
         return fmt % ( v , e1 , e2 , n*3 )
         
     else :
-            
-        if latex : fmt = "$(%%.%df \pm %%.%df \pm %%.%df)$" % ( q , q , q )
-        else     : fmt =  "(%%.%df +/- %%.%df +/- %%.%df)"  % ( q , q , q )
+        
+        q = abs ( q ) 
+
+        if latex : fmt = "$%%.%df \pm %%.%df \pm %%.%df$" % ( q , q , q )
+        else     : fmt =  "%%.%df +/- %%.%df +/- %%.%df"  % ( q , q , q )
         ##
+
         return fmt % ( v , e1 , e2 )
 
+
+# =============================================================================
+## Round value/error accoridng to PDG prescription and format it for print
+#  @see http://pdg.lbl.gov/2010/reviews/rpp2010-rev-rpp-intro.pdf
+#  @see section 5.3 of doi:10.1088/0954-3899/33/1/001
+#  
+#  The basic rule states that if the three highest order digits of the error
+#  lie between 100 and 354, we round to two significant digits. If they lie between
+#  355 and 949, we round to one significant digit. Finally,
+#   if they lie between 950 and 999, we round up to 1000 and keep two significant digits.
+#  In all cases, the central value is given with a precision that matches that of the error.
+#
+#  @code
+#  print ' Rounded value/error is %s ' % pdg_format2 ( value , error , error2 , True ) 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-07-20 
+def pdg_format3( value , error1 , error2 , error3 , latex = False , mode = 'total' ) :
+    """
+    Round value/error accoridng to PDG prescription and format it for print
+    @see http://pdg.lbl.gov/2010/reviews/rpp2010-rev-rpp-intro.pdf
+    @see section 5.3 of doi:10.1088/0954-3899/33/1/001
+      
+    Quote:
+    The basic rule states that if the three highest order digits of the error
+    lie between 100 and 354, we round to two significant digits. If they lie between
+    355 and 949, we round to one significant digit. Finally,
+    if they lie between 950 and 999, we round up to 1000 and keep two significant digits.
+    In all cases, the central value is given with a precision that matches that of the error.
+    
+    >>> value, error1, error2 = ...
+    >>> print ' Rounded value/error is %s ' % pdg_format2 ( value , error1 , error2 , True ) 
+    """
+
+    if isinstance ( mode , str ) : mode = mode.lower()
+    ## 
+    if   mode in ( 'min'   , 'mn'  ) : 
+        error = min ( abs ( error1 ) , abs ( error2 ) , abs ( error3 ) )
+    elif mode in ( 'max'   , 'mx'  ) : 
+        error = min ( abs ( error1 ) , abs ( error2 ) , abs ( error3 ) )
+    elif mode in ( 'total' , 'tot' ) : 
+        error = math.sqrt ( 1.0 * error1 * error1 + error2 * error2 + error3 * error3 )
+    else :
+        ## use the default policy 
+        error = math.sqrt ( 1.0 * error1 * error1 + error2 * error2 + error3 * error3 )
+
+    ## round value, error and get the scaling factor
+    v  , e  , q  = pdg_round_  ( value , error )
+
+    v_ , e1 , q_ = pdg_round_  ( value , error1 )
+    v_ , e2 , q_ = pdg_round_  ( value , error2 )
+    v_ , e3 , q_ = pdg_round_  ( value , error3 )
+
+    ## get scaling factors for printout 
+    qv , bv   = frexp10 (  value  )
+    n         = int     ( math.floor ( bv / 3. ) ) 
+
+
+    q = abs ( q ) 
+    short = ( 0 == n ) or (  1 == n and  abs(v) < 10000 ) or ( -1 == n and  abs(v) > 0.1 ) 
+    
+    if not short :
+
+        q += 3 * n
+        
+        q  = abs ( q )
+        
+        if latex : fmt = "$(%%.%df \pm %%.%df \pm %%.%df \pm %%.%df)\cdot10^{%%d}$" % ( q , q , q , q )
+        else     : fmt =  "(%%.%df +/- %%.%df +/- %%.%df +/- %%.%df)*10^{%%d}"      % ( q , q , q , q )
+
+        v  /= 10**(3*n)
+        e1 /= 10**(3*n)
+        e2 /= 10**(3*n)
+        e3 /= 10**(3*n)
+        ##
+                
+        return fmt % ( v , e1 , e2 , e3 , n*3 )
+        
+    else :
+        
+        q = abs ( q ) 
+
+        if latex : fmt = "$%%.%df \pm %%.%df \pm %%.%df \pm %%.%df$" % ( q , q , q , q )
+        else     : fmt =  "%%.%df +/- %%.%df +/- %%.%df +/- %%.%df"  % ( q , q , q , q )
+        ##
+
+        return fmt % ( v , e1 , e2 , e3 )
 
 # ====================================================================================
 ## make a rounding according to PDG prescription
@@ -441,11 +555,24 @@ if '__main__' == __name__ :
             ve = VE ( 1./3 , e*e ) * s 
             print ' Value %s,\tround: %s,\tTeX: %s' % ( ve , ve.pdg() , ve.pdg_format( True ) ) 
 
-    print pdg_format2(  1./3 , 0.000012345 , 0.00500      )
-    print pdg_format2(  1./3 , 0.0050      , 0.000012345  )
-    print pdg_format2(  1./3 , 0.0020      , 0.0040       )
-    print pdg_format2(  1./3 , 0.0099      , 0.0040       )
-    print pdg_format2(  1./3 , 0.0099      , 0.0020       )
+    ##for s in ( 1 , 100 , 10000 , 0.1 ) :
+    for s in ( 1 , 10000 , 0.01 ) :
+        
+        print pdg_format  ( 1.0*s/3 , 0.000012345 )
+        print pdg_format  ( 1.0*s/3 , 0.0020      )
+        print pdg_format  ( 1.0*s/3 , 0.0050      )
+        print pdg_format  ( 1.0*s/3 , 0.0099      )
+        
+        print pdg_format2 ( 1.0*s/3 , 0.000012345 , 0.00500      )
+        print pdg_format2 ( 1.0*s/3 , 0.0020      , 0.0040       )
+        print pdg_format2 ( 1.0*s/3 , 0.0050      , 0.000012345  )
+        print pdg_format2 ( 1.0*s/3 , 0.0099      , 0.0020       )
+
+        print pdg_format3 ( 1.0*s/3 , 0.000012345 , 0.00500      , 0.0001 )
+        print pdg_format3 ( 1.0*s/3 , 0.0020      , 0.0040       , 0.0001 )
+        print pdg_format3 ( 1.0*s/3 , 0.0050      , 0.000012345  , 0.0001 )
+        print pdg_format3 ( 1.0*s/3 , 0.0099      , 0.0020       , 0.0001 )
+        
 # =============================================================================
 # The END 
 # =============================================================================
