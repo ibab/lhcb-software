@@ -41,7 +41,6 @@
 #include "DetDesc/RunChangeIncident.h"
 
 #include <vector>
-#include <OnlineAlign/IAlignSys.h>
 #include "GaudiKernel/IMonitorSvc.h"
 #include "GaudiKernel/IUpdateable.h"
 #include "GaudiKernel/SmartIF.h"
