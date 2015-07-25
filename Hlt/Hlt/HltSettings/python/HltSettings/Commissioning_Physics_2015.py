@@ -309,7 +309,7 @@ class Commissioning_Physics_2015( object ):
                    , 'Hlt1CEP'
                    , 'Hlt1CEPVeloCut'
                    , 'Hlt1NoPVPassThrough'
-                   , 'Hlt1NonBeamBeamNoBias']
+                   , 'Hlt1NoBiasNonBeamBeam']
 
 
         ## from Hlt1TechnicalLines import Hlt1TechnicalLines
