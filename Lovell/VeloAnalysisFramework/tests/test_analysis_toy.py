@@ -5,7 +5,6 @@ import shutil
 from veloview.analysis import (FloorThreshold, CeilingThreshold,
                                MeanWidthDiffRef, AbsoluteBandRef,
                                ZeroCentredBandRef)
-from veloview.core.analysis_config_wrapper import AnalysisConfigWrapper
 from veloview.core.score_manipulation import ERROR_LEVELS
 from veloview.core.combiners import (BranchCombiner, RootCombiner)
 from veloview.utils.rootutils import (get_fns, get_simple_fns)
