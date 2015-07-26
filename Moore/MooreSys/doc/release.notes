@@ -3,6 +3,13 @@ Package             : MooreSys
 Package Coordinator : R. Aaij
 Purpose             : LHCb HLT application
 
+</PRE><H1><A NAME=v24r0>2015-07-26 MooreSys v24r0</A></H1><PRE>
+
+Release as part of stack based on LHCb v39r0 and Gaudi v26r3.
+Depends on Hlt v24r0
+
+Release for data 25ns data taking in August 2015.
+
 </PRE><H1><A NAME=v23r7p5>2015-07-04 MooreSys v23r7p5</A></H1><PRE>
 
 Patch Release as part of stack based on LHCb v38r7 and Gaudi v26r2.

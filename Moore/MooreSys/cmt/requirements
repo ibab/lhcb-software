@@ -1,17 +1,13 @@
 package MooreSys
-version           v23r7p5
+version v24r0
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v23r7p2    Hlt
-use  L0App               v2r4       L0
-
-# Packages only included in this patch release
-use HltGlobalMonitor     v5r0p1     Hlt
-use MVADictTools         v1r9p1     Phys
+use  Moore               v24r0    Hlt
+use  L0App               v2r4     L0
 
 # Declare this as a container package
 apply_pattern container_package
