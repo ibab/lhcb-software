@@ -49,7 +49,7 @@ class Tree:
             if type(tree) == type(''):
                 # open for reading, get matching branches from Tree
                 self.tree = ROOT.gROOT.FindObject(tree)
-                if not self.tree.InheritsFrom('TTree'):
+                if not self.tree or not self.tree.InheritsFrom('TTree'):
                     raise Exception('Unsupported type (\'%s\') used for tree!'
                             % str(type(tree)))
                 treetitle = self.tree.GetTitle()
