@@ -164,7 +164,7 @@ void HltL0GlobalMonitor::monitorL0DU( const LHCb::L0DUReport* l0du )
 
     // now check HLT decisions for rejected events after Hlt
     bool hlt = false;
-    LHCb::HltDecReports* decReps = fetch<LHCb::HltDecReports>( m_decReportsLocation );
+    LHCb::HltDecReports* decReps = fetch<LHCb::HltDecReports>( m_decReportsLocation, false );
     if ( decReps ) {
         const LHCb::HltDecReport* report = decReps->decReport( m_hltDecision );
         if ( report ) hlt = report->decision();
