@@ -1998,7 +1998,7 @@ ROOT.TH3D . __mod__  = zechEff_h3
 # =============================================================================
 ## consider object as function:
 def objectAsFunction ( obj ) :
-    
+
     if   isinstance ( obj , ( int , long , float ) ) :
         
         val  = float  ( obj ) 
@@ -2087,10 +2087,10 @@ def _h1_ioper_ ( h1 , h2 , oper ) :
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
     #
     f2 = objectAsFunction ( h2 ) 
-    #    
+    ##
     for i1,x1,y1 in h1.iteritems() :
         #
-        y2 = f2 ( x1.value() ) 
+        y2 = h2 ( x1.value() ) 
         #
         v  = VE ( oper ( y1 , y2 ) ) 
         #

@@ -31,12 +31,14 @@ from   Ostap.Utils   import timing
 # =============================================================================
 from AnalysisPython.Logger import getLogger
 if '__main__' == __name__  or '__builtin__'  == __name__ : 
-    logger = getLogger ( 'Ostap.TestCmp' )
+    logger = getLogger ( 'Ostap.TestHParam' )
 else : 
     logger = getLogger ( __name__ )
 # =============================================================================
-logger.info ( 'Test for specific historgam comparisons')
+logger.info ( 'Test for various parameterizations of histograms')
 # =============================================================================
+
+from Ostap.HParamDeco import legendre_sum, chebyshev_sum
 
 #
 ## histos for exponential distribution 
@@ -63,6 +65,7 @@ h4 = 1.2*h1.minmax()[1].value() - h2
 # h3 - increasing concave
 # h4 - decreasing concave 
 
+""" 
 with timing ( 'Bershtein' ) :
     rB1 = h1.bernstein  ( 3 )
     rB2 = h2.bernstein  ( 3 )
@@ -74,19 +77,26 @@ with timing ( 'Chebyshev' ) :
     rC2 = h2.chebyshev  ( 3 )
     rC3 = h3.chebyshev  ( 3 )
     rC4 = h4.chebyshev  ( 3 )
-    
-with timing ( 'Legendre' ) : 
+
+with timing ( 'Legendre' ) :
     rL1 = h1.legendre   ( 3 )
     rL2 = h2.legendre   ( 3 )
     rL3 = h3.legendre   ( 3 )
     rL4 = h4.legendre   ( 3 )
-    
+
 with timing ( 'Polynomial' ) : 
     rP1 = h1.polynomial ( 3 )
     rP2 = h2.polynomial ( 3 )
     rP3 = h3.polynomial ( 3 )
     rP4 = h4.polynomial ( 3 )
-        
+
+"""
+
+with timing ( 'Fourier' ) :
+    rF1 = h1.fourier   ( 3 )
+    rF2 = h2.fourier   ( 3 )
+    rF3 = h3.fourier   ( 3 )
+    rF4 = h4.fourier   ( 3 )
 
 ## bad :-( 
 with timing ( 'Positive' ) :
@@ -95,6 +105,16 @@ with timing ( 'Positive' ) :
     rp3 = h3.positive  ( 3 )
     rp4 = h4.positive  ( 3 )
 
+## good! :-) 
+with timing ( 'Positive-PDF' ) :
+    rp1p = h1.pdf_positive  ( 3 , silent = True )
+    rp2p = h2.pdf_positive  ( 3 , silent = True )
+    rp3p = h3.pdf_positive  ( 3 , silent = True )
+    rp4p = h4.pdf_positive  ( 3 , silent = True )
+
+print 'REGULAR',rp1
+print 'PDF'    ,rp1p
+"""
 with timing ( 'Monothonic' ) :
     rm1 = h1.monothonic ( 3 , increasing = False )
     rm2 = h2.monothonic ( 3 , increasing = True  )
@@ -148,6 +168,15 @@ sp1 = h1c.asSpline()
 sp2 = h2c.asSpline()
 sp3 = h3c.asSpline()
 sp4 = h4c.asSpline()
+
+"""
+
+
+import Ostap.FitModels as Models
+
+tmp    = ROOT.RooRealVar('tmp','',*h1.xminmax() )
+degree = 3 
+pdf    = Models.PolyPos_pdf (  'NAME' , tmp , degree )
 
 
 

@@ -18,9 +18,13 @@
 __version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
-__all__     = () 
+__all__     = (
+    'legendre_sum'  ,
+    'chebyshev_sum' ,
+    'fourier_sum'   ,
+    ) 
 # =============================================================================
-import ROOT, cppyy              ## attention here!!
+import ROOT, cppyy                     ## attention here!!
 cpp = cppyy.makeNamespace('')
 VE  = cpp.Gaudi.Math.ValueWithError 
 # 
@@ -33,6 +37,204 @@ else                       : logger = getLogger( __name__ )
 # =============================================================================
 logger.debug ( 'Some parameterization utilities for Histo objects')
 # =============================================================================
+## helper function to catch xmin/xmax from histogram/function 
+def _get_xminmax_ ( func , xmin , xmax , name = 'get_xminmax') :
+    """
+    Helper function to catch xmin/xmax from histogram/function 
+    """
+    ## xmin 
+    if not isinstance ( xmin , ( int , long , float ) ) :
+        if   hasattr ( func , 'xmin'     ) : xmin = func.xmin     () 
+        elif hasattr ( func , 'GetXmin'  ) : xmin = func.GetXmin  ()
+        elif hasattr ( func , 'GetXaxis' ) : xmin = func.GetXaxis ().GetXmin()
+        elif hasattr ( func , 'GetRange' ) :
+            xmn  = ROOT.Double()
+            xmx  = ROOT.Double()
+            func.GetRange(xmn,xmx)
+            xmin = xmn 
+        else :
+            raise AttributeError( "%s: unable to catch xmin %s" % ( name , xmin ) )
+        
+    ## xmax 
+    if not isinstance ( xmax , ( int , long , float ) ) :
+        if   hasattr ( func , 'xmax'     ) : xmax = func.xmax     () 
+        elif hasattr ( func , 'GetXmax'  ) : xmax = func.GetXmax  () 
+        elif hasattr ( func , 'GetXaxis' ) : xmax = func.GetXaxis ().GetXmax()  
+        elif hasattr ( func , 'GetRange' ) :
+            xmn  = ROOT.Double()
+            xmx  = ROOT.Double()
+            func.GetRange ( xmn , xmx )
+            xmax = xmx
+        else :
+            raise AttributeError( "%s: unable to catch xmax %s" % ( name , xmax ) )
+
+    return min ( xmin , xmax ) , max ( xmin , xmax )
+
+# =============================================================================
+## make a function representation in terms of Legendre polynomials
+#  @code 
+#  func = lambda x : x * x
+#  lsum = legendre_sum ( func , 4 , -1 , 1 )
+#  print lsum.pars()
+#  @see Gaudi::Math::LegendreSum
+#  @author Vanya Belyaev Ivan.Belyaev@iter.ru
+#  It is not very CPU efficient (scipy is used for integration), but stable enough...
+#  @date 2015-07-26
+def legendre_sum ( func , N , xmin , xmax , **kwargs ) :
+    """
+    Make a function representation in terms of Legendre polynomials
+    It is not very CPU efficient (scipy is used for integration), but stable enough...
+    >>> func = lambda x : x * x
+    >>> lsum = legendre_sum ( func , 4 , -1 , 1 )
+    >>> print lsum.pars()
+    see Gaudi::Math::LegendreSum
+    """
+    from copy import deepcopy
+    
+    if not isinstance ( N , (int,long) ) or 0 > N :
+        raise ArrtibuteError( "legendre_sum: invalid N %s " % N )
+
+    xmin,xmax = _get_xminmax_ ( func , xmin , xmax , 'legendre_sum' )
+
+    ## prepare the result
+    lsum  = cpp.Gaudi.Math.LegendreSum ( N , xmin , xmax )
+    
+    ## the type for the basic legendre polynomials, used for integration 
+    L_    = cpp.Gaudi.Math.Legendre 
+
+    ## transform x to local variable -1<t<1 
+    tx    = lambda x : lsum.t ( x )
+
+    idx   = 1.0 / ( xmax - xmin ) ## scale factor 
+    from scipy import integrate
+    args  = {}
+    for n in range ( N + 1 ) :
+        
+        li     = L_ ( n ) 
+        fun_n  = lambda x : func ( x ) * li ( tx ( x ) )
+        if kwargs : args   = deepcopy ( kwargs ) 
+        c_n    = integrate.quad ( fun_n , xmin , xmax , **args )[0] * ( 2 * n + 1 ) * idx
+        lsum.setPar ( n , c_n ) 
+        
+    return lsum
+
+# =============================================================================
+## make a function representation in terms of Chebyshev polynomials
+#  @code 
+#  func = lambda x : x * x
+#  csum = chebyshev_sum ( func , 4 , -1 , 1 )
+#  print lsum.pars()
+#  @see Gaudi::Math::ChebyshevSum
+#  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+#  @date 2015-07-26
+def chebyshev_sum ( func , N , xmin , xmax ) :
+    """
+    make a function representation in terms of Chebyshev polynomials
+    >>> func = lambda x : x * x
+    >>> csum = chebyshev_sum ( func , 4 , -1 , 1 )
+    >>> print csum.pars()
+    see Gaudi::Math::ChebyshevSum
+    """
+    if not isinstance ( N , (int,long) ) or 0 > N :
+        raise ArrtibuteError( "chebyshev_sum: invalid N %s " % N )
+
+    xmin,xmax = _get_xminmax_ ( func , xmin , xmax , 'chebyshev_sum' )
+
+    ## prepare the result
+    csum = cpp.Gaudi.Math.ChebyshevSum ( N , xmin , xmax )
+    
+    ## transform x to local variable -1<t<1 
+    tx   = lambda x : lsum.t ( x )
+
+    import math 
+    _cos = math.cos
+    _piN = math.pi/N
+
+    ## conversion from  -1<t<1 to  xmin<x<xmax 
+    xt   = lambda t : csum.x ( t )
+    
+    ## precalculate function
+    fk   = [ func ( xt ( _cos ( _piN * ( k + 0.5 ) ) ) ) for k in range ( 0 , N ) ]
+    
+    scale   = 2.0 / N ## scale factor 
+    for n in range ( N + 1 ) :
+        
+        c_n = 0.0
+        for k in range ( 0, N  ) :
+            c_n += fk[k] * _cos( _piN * n * ( k + 0.5 ) )
+            
+        if 0 == n : c_n *= 0.5
+        csum.setPar ( n , c_n * scale ) 
+        
+    return csum
+
+
+# =============================================================================
+## make a function representation in terms of Fourier series
+#  @code 
+#  func = lambda x : x * x
+#  fsum = fourier_sum ( func , 4 , -1 , 1 )
+#  print fsum.pars()
+#  @see Gaudi::Math::FourierSum
+#  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+#  @date 2015-07-26
+def fourier_sum ( func , N , xmin , xmax , fejer = False ) :
+    """
+    Make a function/histiogram representation in terms of Fourier series
+    >>> func = lambda x : x * x
+    >>> fsum = fourier_sum ( func , 4 , -1 , 1 )
+    >>> print fsum
+    """
+    if not isinstance ( N , (int,long) ) or 0 > N :
+        raise ArrtibuteError( "fourier_sum: invalid N %s " % N )
+
+    xmin,xmax = _get_xminmax_ ( func , xmin , xmax , 'legendre_sum' )
+
+    ## start to play with numpy 
+    import numpy
+    
+    ## 1) vectorize the function
+    vfunc = numpy.vectorize ( func ) 
+    
+    ## prepare sampling 
+    f_sample = 2 * N
+    t, dt    = numpy.linspace ( xmin , xmax , f_sample + 2, endpoint=False , retstep=True )
+    
+    ## make Fast Fourier Transform 
+    y = numpy.fft.rfft ( vfunc ( t ) ) / t.size
+    y *= 2
+    
+    #
+    ## decode the results:
+    #
+    
+    a0 = y[0].real
+    a  = y[1:-1].real
+    b  = y[1:-1].imag
+
+    #
+    ## prepare the output
+    #
+    fsum = cpp.Gaudi.Math.FourierSum ( N, xmin , xmax , fejer )
+
+    #
+    ## fill it!
+    #
+    fsum.setPar( 0, a0 )
+    for i in range ( 1 , N + 1 ) :
+        
+        if 0 == i % 2 :
+            fsum.setA ( i ,  a[i-1] )
+            fsum.setB ( i , -b[i-1] )
+        else          :
+            fsum.setA ( i , -a[i-1] )
+            fsum.setB ( i ,  b[i-1] )
+
+    
+    return fsum
+
+
+# =============================================================================
 ## @class H_fit
 #  simple function to fit/represent the histogram with bernstein/spline
 #  expansion 
@@ -41,7 +243,7 @@ logger.debug ( 'Some parameterization utilities for Histo objects')
 class H_fit(object) :
     """
     Simple function to fit/represent the histogram with sum of
-    bernstein/b-spline functions 
+    bernstein/b-spline/legendre/chebyshev, etc functions 
     """
     def __init__ ( self ,  hfit ) :
         self._hfit = hfit
@@ -62,6 +264,7 @@ class H_fit(object) :
     def __call__ ( self , x , pars = [] ) :
         
         x0 = x if isinstance ( x ,  ( int , long , float ) ) else x[0]
+        
         if pars :
             np = self._hfit.npars() 
             for i in range ( 0 , np ) :    
@@ -102,7 +305,7 @@ class H_Nfit (object) :
     def __call__ ( self , x , pars = [] ) :
 
         norm = 1.0
-        x0 = x if isinstance ( x ,  ( int , long , float ) ) else x[0]
+        x0   = x if isinstance ( x ,  ( int , long , float ) ) else x[0]
         
         if pars :
 
@@ -130,7 +333,7 @@ def _h1_param_sum_ ( h1             ,
     bfit.fun.SetNpx  ( max ( 100 , 3 * h1.bins() ) )  
     
     bfit.histo     = h1
-    
+
     if bfit.norm() : 
         mn,mx = h1.xminmax ()    
         mi    = h1.accumulate().value()*(mn-mx)/h1.bins() 
@@ -150,7 +353,7 @@ def _h1_param_sum_ ( h1             ,
         fun.FixParameter    (0,mi)
         r = fun.Fit(h1,opts+'0Q')
         fun.ReleaseParameter(0)
-        
+    
     r = fun.Fit( h1 , opts )
         
     if 0 != r.Status() :
@@ -178,10 +381,8 @@ def _h1_param_sum_ ( h1             ,
         if 0 != r.Status() :
             logger.error ('Fit status is  %d [%s]' % ( r.Status() , type(b).__name__ ) )
             
-                
     bfit.fitresult = r 
     return bfit.fun , bfit , b , bfit.fitresult 
-
 
 # =============================================================================
 ## represent 1D-histo as Bernstein polynomial
@@ -205,7 +406,7 @@ def _h1_bernstein_ ( h1 , degree , interpolate = True , opts = 'SQ0' ) :
     """
     #
     mn,mx = h1.xminmax ()    
-    func = cpp.Gaudi.Math.Bernstein ( degree , mn , mx ) 
+    func  = cpp.Gaudi.Math.Bernstein ( degree , mn , mx ) 
     #
     ## make the approximation for bernstein coefficients
     #
@@ -218,7 +419,6 @@ def _h1_bernstein_ ( h1 , degree , interpolate = True , opts = 'SQ0' ) :
     func.setPar ( degree , h1[ h1.bins() ].value() )
 
     return _h1_param_sum_ ( h1 , func , H_fit , opts )  
-
 
 # =============================================================================
 ## represent 1D-histo as Chebyshev polynomial
@@ -241,31 +441,12 @@ def _h1_chebyshev_ ( h1 , degree , interpolate = True , opts = 'SQ0I' ) :
     >>> print fit_result.CovMatrix(1,1)
     """
     #
-    mn,mx = h1.xminmax ()    
-    func  = cpp.Gaudi.Math.ChebyshevSum ( degree , mn , mx ) 
-    #
-    ## make reasonable approximation
-    import math 
-    N  = func.npars()  
-    for j in range ( 0 , N ) :
 
-        cj = 0 
-        for k in range(1,N+1)  :
-            qk  = math.pi * j * ( k - 0.5 ) / N
-            ck  = math.cos ( qk )
-            tk  = math.pi *     ( k - 0.5 ) / N 
-            tk  = math.cos ( tk )
-            xk  = func.x   ( tk )
-            fk  = h1 ( xk ) 
-            cj += fk * ck
-            
-        if 0 == j : cj /=       N  
-        else      : cj *= 2.0 / N 
-        
-        func.setPar ( j , cj ) 
-        
+    ## make reasonable approximation: 
+    func = chebyshev_sum ( h1 , degree , *h1.xminmax() )
+
+    ## fit it!
     return _h1_param_sum_ ( h1 , func , H_fit , opts )  
-
 
 # =============================================================================
 ## represent 1D-histo as Legendre polynomial
@@ -289,25 +470,51 @@ def _h1_legendre_ ( h1 , degree , interpolate = True , opts = 'SQ0' ) :
     >>> print fit_result.CovMatrix(1,1)
     
     """
-    mn,mx = h1.xminmax ()    
-    func  = cpp.Gaudi.Math.LegendreSum ( degree , mn , mx ) 
-    #
-    ## make some reasonable approximation
-    #
-    _b    = 1.0 / h1.bins() 
-    _f    = cpp.Gaudi.Math.LegendreSum ( degree , mn , mx )
-    for i in range ( 0 , _f.npars()  ) :
-        _f  .setPar ( i ,  1 )
-        _h  = h1 * _f 
-        _c  = _h.accumulate().value()*(2*i+1) * _b 
-        _f  .setPar ( i ,  0 ) 
-        func.setPar ( i , _c )
-        del _h
-
-    del _f
-    
+    ## make reasonable approximation:
+    mn,mx  = h1.xminmax()
+    ##
+    if 1 > h1.GetEntries() : sw = 1
+    else :
+        vmn,vmx = h1.minmax()     
+        sw      = max ( abs ( h1.GetSumOfWeights() ) ,
+                        abs ( h1.Integral()        ) , abs ( vmn ) , abs ( vmx ) ) 
+    ##
+    func   = legendre_sum   ( h1 , degree , mn , mx  ,
+                              epsabs = 1.e-4 * sw    ,
+                              epsrel = 1.e-3         ,
+                              limit  = 2 * h1.bins() ) 
+    ## fit it!
     return _h1_param_sum_ ( h1 , func , H_fit , opts )  
 
+
+# =============================================================================
+## represent 1D-histo as Fourier polynomial
+def _h1_fourier_ ( h1 , degree , fejer = False , opts = 'SQ0I' ) :
+    """
+    Represent histo as Bernstein polynomial
+    
+    >>> h = ... # the historgam
+    >>> b = h.fouriner ( 3 )  ## make a fit... 
+    
+    >>> tfun       = r[0]  ## get TH1 object
+    >>> tfun.Draw()
+
+    Underlying C++ object:
+    >>> fun        = b[2]
+    >>> print fun.pars() 
+
+    ## fit result and status 
+    >>> fit_result = r[3]
+    >>> print fit_result.CovMatrix(1,1)
+    """
+    #
+
+    ## make reasonable approximation:
+    mn,mx = h1.xminmax() 
+    func = fourier_sum ( h1 , degree , mn , mx , fejer )
+
+    ## fit it!
+    return _h1_param_sum_ ( h1 , func , H_fit , opts )  
 
 # =============================================================================
 ## represent 1D-histo as plain vanilla polynomial
@@ -495,6 +702,7 @@ for t in ( ROOT.TH1D , ROOT.TH1F ) :
     t.bernstein  = _h1_bernstein_
     t.chebyshev  = _h1_chebyshev_
     t.legendre   = _h1_legendre_
+    t.fourier    = _h1_fourier_
     t.polynomial = _h1_polinomial_
     t.positive   = _h1_positive_
     t.monothonic = _h1_monothonic_
@@ -504,7 +712,7 @@ for t in ( ROOT.TH1D , ROOT.TH1F ) :
     t.mSpline    = _h1_mspline_
     t.cSpline    = _h1_cspline_
 
-    
+
 ## create function object 
 def  _funobj0_ ( self ) :
     """
@@ -532,6 +740,7 @@ def _sp_draw_   ( self , opts = '' ) :
 cpp.Gaudi.Math.Bernstein        .funobj = _funobj0_
 cpp.Gaudi.Math.ChebyshevSum     .funobj = _funobj0_
 cpp.Gaudi.Math.LegendreSum      .funobj = _funobj0_
+cpp.Gaudi.Math.FourierSum       .funobj = _funobj0_
 cpp.Gaudi.Math.Polynomial       .funobj = _funobj0_
 cpp.Gaudi.Math.BSpline          .funobj = _funobj0_
 cpp.Gaudi.Math.Positive         .funobj = _funobjN_
@@ -995,6 +1204,362 @@ def _h_Fit_ ( self                              ,
 ROOT.TH1F. hFit = _h_Fit_ 
 ROOT.TH1D. hFit = _h_Fit_ 
 
+
+# =============================================================================
+## parameterize positive histogram with certain PDF
+def _h1_pdf_ ( h1 , pdf_type , pars , *args, **kwargs ) :
+    ##
+    mn,mx = h1.minmax()
+    if mn.value() < 0 or mx.value() <= 0 :
+        raise AttributeError("Histo goes to negative %s/%s" % ( mn , mx ) )
+    ##
+    if not hasattr ( h1 , 'xvar' ) :
+        h1.xvar = ROOT.RooRealVar ( 'x' + h1.GetName() , 'xvar(%s)' % h1.GetName() , *h1.xminmax() )
+
+    ## create pdf 
+    pdf = pdf_type     (" pdf_" + h1.GetName() , h1.xvar , *pars )
+    ## fit the histogram 
+    r,f = pdf.fitHisto ( h1 , *args, **kwargs )
+    ##
+    func = pdf.pdf.function()
+    ##
+    return r , pdf , func, f  
+
+# =============================================================================
+## parameterize/fit histogram with the positive polynomial
+#  @code
+#  h1 = ...
+#  results = h1.pdf_positive ( 3 )
+#  results = h1.pdf_positive ( 3 , draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_positive_ ( h1 , degree , *args , **kwargs ) :
+    """
+    Parameterize/fit histogram with the positive polynomial
+    >>> h1 = ...
+    >>> results = h1.pdf_positive ( 3 )
+    >>> results = h1.pdf_positive ( 3 , draw = 3 , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    from Ostap.FitBkgModels import PolyPos_pdf
+    return _h1_pdf_ ( h1 , PolyPos_pdf , (degree,) , *args , **kwargs )
+
+# =============================================================================
+## parameterize/fit histogram with the monothonic positive polynomial
+#  @code
+#  h1 = ...
+#  results = h1.pdf_monothonic ( 3 , increasing = True )
+#  results = h1.pdf_monothonic ( 3 , increasing = True , draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_monothonic_ ( h1 , degree , increasing , *args , **kwargs ) :
+    """
+    :arameterize/fit histogram with the monothonic positive polynomial
+    >>> h1 = ...
+    >>> results = h1.pdf_monothonic ( 3 , increasing = True )
+    >>> results = h1.pdf_monothonic ( 3 , increasing = True , draw = 3 , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    from Ostap.FitBkgModels import Monothonic_pdf
+    return _h1_pdf_ ( h1 , Monothonic_pdf , (degree,increasing) , *args , **kwargs )
+
+# =============================================================================
+## parameterize/fit histogram with the increasing positive polynomial
+#  @code
+#  h1 = ...
+#  results = h1.pdf_increasing ( 3 )
+#  results = h1.pdf_increasing ( 3 , draw = 3 , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_increasing_ ( h1 , degree , *args , **kwargs ) :
+    """
+    :arameterize/fit histogram with the monothonic positive polynomial
+    >>> h1 = ...
+    >>> results = h1.pdf_increasing ( 3 )
+    >>> results = h1.pdf_increasing ( 3 , draw = True , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    return _h1_pdf_monothonic_ ( h1 , degree , True , *args , **kwargs ) 
+
+# =============================================================================
+## parameterize/fit histogram with the decreasing positive polynomial
+#  @code
+#  h1 = ...
+#  results = h1.pdf_decreasing ( 3 )
+#  results = h1.pdf_decreasing ( 3 , draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_decreasing_ ( h1 , degree , *args , **kwargs ) :
+    """
+    Parameterize/fit histogram with the monothonic positive polynomial
+    >>> h1 = ...
+    >>> results = h1.pdf_decreasing ( 3 )
+    >>> results = h1.pdf_decreasing ( 3 , draw = True , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    return _h1_pdf_monothonic_ ( h1 , degree , False , *args , **kwargs ) 
+
+# =============================================================================
+## parameterize/fit histogram with the convex polynomial
+#  @code
+#  h1 = ...
+#  results = h1.pdf_convex ( 3 , increasing = True )
+#  results = h1.pdf_convex ( 3 , increasing = True , draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_convex_ ( h1 , degree , increasing , *args , **kwargs ) :
+    """
+    Parameterize/fit histogram with convex polynomial
+    >>> h1 = ...
+    >>> results = h1.pdf_convex ( 3 , increasing = True )
+    >>> results = h1.pdf_convex ( 3 , increasing = True , draw = True , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    from Ostap.FitBkgModels import Convex_pdf
+    return _h1_pdf_ ( h1 , Convex_pdf , (degree,increasing,True) , *args , **kwargs )
+
+# =============================================================================
+## parameterize/fit histogram with the convex increasing polynomial
+#  @code
+#  h1 = ...
+#  results = h1.pdf_convex_increasing ( 3 ,)
+#  results = h1.pdf_convex_increasing ( 3 , draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_convex_increasing_ ( h1 , degree , *args , **kwargs ) :
+    """
+    Parameterize/fit histogram with convex increasing polynomial
+    >>> h1 = ...
+    >>> results = h1.pdf_convex_increasing ( 3 ,)
+    >>> results = h1.pdf_convex_increasing ( 3 , draw = True , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    return _h1_convex_ ( h1 , degree , True , *args , **kwargs )
+
+# =============================================================================
+## parameterize/fit histogram with the convex decreasing polynomial
+#  @code
+#  h1 = ...
+#  results = h1.pdf_convex_decreasing ( 3 ,)
+#  results = h1.pdf_convex_decreasing  ( 3 , draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_convex_decreasing_ ( h1 , degree , *args , **kwargs ) :
+    """
+    Parameterize/fit histogram with convex decreasing polynomial
+    >>> h1 = ...
+    >>> results = h1.pdf_convex_decreasing ( 3 ,)
+    >>> results = h1.pdf_convex_decreasing ( 3 , draw = True , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    return _h1_convex_ ( h1 , degree , False , *args , **kwargs )
+
+# =============================================================================
+## parameterize/fit histogram with the concave polynomial
+#  @code
+#  h1 = ...
+#  results = h1.pdf_concave ( 3 , increasing = True )
+#  results = h1.pdf_concave ( 3 , increasing = True , draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_concave_ ( h1 , degree , increasing , *args , **kwargs ) :
+    """
+    Parameterize/fit histogram with concave polynomial
+    >>> h1 = ...
+    >>> results = h1.pdf_concave ( 3 , increasing = True )
+    >>> results = h1.pdf_concave ( 3 , increasing = True , draw = True , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    from Ostap.FitBkgModels import Convex_pdf
+    return _h1_pdf_ ( h1 , Convex_pdf , (degree,increasing,False) , *args , **kwargs )
+
+# =============================================================================
+## parameterize/fit histogram with the concave increasing polynomial
+#  @code
+#  h1 = ...
+#  results = h1.pdf_concave_increasing ( 3 )
+#  results = h1.pdf_concave_increasing ( 3 , draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_concave_increasing_ ( h1 , degree , *args , **kwargs ) :
+    """
+    Parameterize/fit histogram with concave increasing polynomial
+    >>> h1 = ...
+    >>> results = h1.pdf_concave_increasing ( 3 )
+    >>> results = h1.pdf_concave_increasing ( 3 , draw = True , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    return _h1_concave_ ( h1 , degree , True , *args , **kwargs )
+
+# =============================================================================
+## parameterize/fit histogram with the concave decreasing polynomial
+#  @code
+#  h1 = ...
+#  results = h1.pdf_concave_decreasing ( 3 )
+#  results = h1.pdf_concave_decreasing ( 3 , draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_concave_decreasing_ ( h1 , degree , *args , **kwargs ) :
+    """
+    Parameterize/fit histogram with concave decreasing polynomial
+    >>> h1 = ...
+    >>> results = h1.pdf_concave_decreasing ( 3 )
+    >>> results = h1.pdf_concave_decreasing ( 3 , draw = True , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    return _h1_concave_ ( h1 , degree , False , *args , **kwargs )
+
+# =============================================================================
+
+for t in ( ROOT.TH1D , ROOT.TH1F ) :
+    t.pdf_positive           = _h1_pdf_positive_
+    t.pdf_monothonic         = _h1_pdf_monothonic_
+    t.pdf_increasing         = _h1_pdf_increasing_
+    t.pdf_decreasing         = _h1_pdf_decreasing_
+    t.pdf_convex             = _h1_pdf_convex_
+    t.pdf_convex_increasing  = _h1_pdf_convex_increasing_
+    t.pdf_convex_decreasing  = _h1_pdf_convex_decreasing_
+    t.pdf_concave            = _h1_pdf_concave_
+    t.pdf_concave_increasing = _h1_pdf_concave_increasing_
+    t.pdf_concave_decreasing = _h1_pdf_concave_decreasing_
+
+
+# =============================================================================
+## make a histogram representation in terms of Legendre polynomials
+#  @code 
+#  histo  = ...
+#  lsum   = histo.legendre_sum ( 4 )
+#  print lsum.pars()
+#  @see Gaudi::Math::LegendreSum
+#  @author Vanya Belyaev Ivan.Belyaev@iter.ru
+#  It is not very CPU efficient (scipy is used for integration), but stable enough...
+#  @date 2015-07-26
+def _h1_legendre_sum_ ( h1 , N , **kwargs ) :
+    """
+    Make a histogram representation in terms of Legendre polynomials
+    >>> histo  = ...
+    >>> lsum   = histo.legendre_sum ( 4 )
+    >>> print lsum
+    It is not very CPU efficient (scipy is used for integration), but stable enough...
+    """
+    ##
+    xmin = max ( kwargs.get( 'xmin' , h1.xmin() ) , h1.xmin () ) 
+    xmax = min ( kwargs.get( 'xmax' , h1.xmax() ) , h1.xmax () ) 
+    ##
+    return legendre_sum ( h1 , N , xmin , xmax , *kwargs )
+
+# =============================================================================
+## make a histogram representation in terms of Chebyshev polynomials
+#  @code 
+#  histo  = ...
+#  csum   = histo.chebyshev_sum ( 4 )
+#  print csum
+#  @see Gaudi::Math::ChebyshevSum
+#  @author Vanya Belyaev Ivan.Belyaev@iter.ru
+#  It is not very CPU efficient (scipy is used for integration), but stable enough...
+#  @date 2015-07-26
+def _h1_chebyshev_sum_ ( h1 , N , **kwargs ) :
+    """
+    Make a histogram representation in terms of Chebyshev polynomials
+    >>> histo  = ...
+    >>> csum   = histo.chebyshev_sum ( 4 )
+    >>> print csum
+    """
+    ##
+    xmin = max ( kwargs.get( 'xmin' , h1.xmin() ) , h1.xmin () ) 
+    xmax = min ( kwargs.get( 'xmax' , h1.xmax() ) , h1.xmax () ) 
+    ##
+    return chebyshev_sum ( h1 , N , xmin , xmax )
+
+# =============================================================================
+## make a histogram representation in terms of Fourier serie
+#  @code 
+#  histo  = ...
+#  fsum   = histo.fourier_sum ( 4 )
+#  print fsum
+#  @see Gaudi::Math::FourierSum
+#  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+#  @date 2015-07-26
+def _h1_fourier_sum_ ( h1 , N , fejer = False , **kwargs ) :
+    """
+    Make a histogram representation in terms of Fourier serie
+    >>> histo  = ...
+    >>> fsum   = histo.fourier_sum ( 4 )
+    >>> print fsum
+    """
+    ##
+    xmin = max ( kwargs.get( 'xmin' , h1.xmin() ) , h1.xmin () ) 
+    xmax = min ( kwargs.get( 'xmax' , h1.xmax() ) , h1.xmax () ) 
+    ##
+    return fourier_sum ( h1 , N , xmin , xmax , fejer )
+
+
+for h in ( ROOT.TH1F , ROOT.TH1D ) :
+
+    h.legendre_sum  = _h1_legendre_sum_
+    h.chebyshev_sum = _h1_chebyshev_sum_
+    h.fourier_sum   = _h1_fourier_sum_
+    
 # =============================================================================
 ## fit histo
 #  @see TH1::Fit 
@@ -1371,6 +1936,7 @@ ROOT.TF1.release      = _tf1_release_
 ROOT.TF1.__iter__     = _tf1_iter_
 ROOT.TF1.__getitem__  = _tf1_par_
 ROOT.TF1.__getattr__  = _tf1_getattr_
+
 
     
 # =============================================================================
