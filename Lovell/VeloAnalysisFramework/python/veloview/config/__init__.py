@@ -18,7 +18,7 @@ or by running Python with the RUN_DATA_DIR environment variable set:
 """
 import os
 
-from veloview.config import run_view
+from veloview.config import run_view, analysis_config
 
 # Default configuration values
 # The keys define the properties of the Config object that can be get _and_ set
@@ -30,7 +30,8 @@ DEFAULTS = {
     ),
     'processed_run_list': 'RunList.txt',
     'reference_db': 'ReferenceDB.sqlite',
-    'run_view_pages': run_view.run_view_pages
+    'run_view_pages': run_view.run_view_pages,
+    'analysis_config': (analysis_config.analysis_config_branches, analysis_config.analysis_config_leaves),
 }
 
 # Only export the Config class
