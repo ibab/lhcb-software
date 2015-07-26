@@ -62,7 +62,9 @@ class TestCombiners(unittest.TestCase):
         self.rfdata.Close()
 
         configfile = os.path.join(os.path.dirname(__file__), 'analysis_config_test.py')
-        config = AnalysisConfigWrapper(configfile)
+        with open(configfile, 'r') as inputFile:
+            exec(inputFile.read())
+        config = AnalysisConfigWrapper((analysis_config_branches, analysis_config_leaves))
         self.mycombiner = config.getTrunk(orfdata.GetName(), orfref.GetName())
 
         # Results to compare against

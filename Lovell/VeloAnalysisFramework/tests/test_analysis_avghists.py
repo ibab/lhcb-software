@@ -34,7 +34,9 @@ class TestAvgHistCombiners(unittest.TestCase):
         assert(not orfref.IsZombie())
 
         configfile = os.path.abspath(os.path.join(os.path.dirname(__file__), 'analysis_config_test.py'))
-        config = AnalysisConfigWrapper(configfile)
+        with open(configfile, 'r') as inputFile:
+            exec(inputFile.read())
+        config = AnalysisConfigWrapper((analysis_config_branches, analysis_config_leaves))
         self.mycombiner = config.getTrunk(orfdata.GetName(), orfref.GetName(), r"noise\S*")
         self.mycombiner.evaluate()
 
