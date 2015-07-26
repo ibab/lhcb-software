@@ -5,6 +5,8 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+!========================= HltGlobalMonitor v5r0p3 2015-07-26 =========================
+
 ! 2015-07-27 - Roel Aaij
  - Silence warnings about missing HltDecReports. This always occurs when running
    the non-split configuration, so is not usefull.
