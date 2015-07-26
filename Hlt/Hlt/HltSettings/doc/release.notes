@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v7r0 2015-07-26 =========================
+
 ! 2015-07-24 and 2015-07-25  - Mike Sokoloff
   -  added CharmHad and RareCharm  subdirectories 
   -   CharmHad_25ns_August2015.py and RareCharm_25ns_August2015.py
