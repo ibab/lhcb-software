@@ -1,0 +1,44 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: Roel Aaij
+# Purpose: Check that Moore runs on the 2015 validation dataset with the draft settings.
+# Prerequisites: 
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception, stderr, nonzero return code
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MINOR: additional WARNING messages, it is unclear how severe these may be, you will need to hunt down the cause and either fix the problem or suppress the warning.
+#               . MINOR: This test also currently checks the number of lines of stdout, which are demanded to be less than a given amount. Ideally this nubmer would be very small and not allowed to increase.
+#######################################################
+-->
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout">
+    <integer>1200</integer>
+  </argument>
+  <argument name="args"><set>
+    <text>../options/Moore_Hlt1And2.py</text>
+    <text>../options/Input_2015_0x0050.py</text>
+    <text>../options/2015-threshold.py</text>
+    <text>--option</text>
+    <text>from Configurables import Moore; Moore().RemoveInputHltRawBanks = True; Moore().EnableTimer='physics.2015_25ns.csv'; from Configurables import EventSelector; EventSelector().PrintFreq=100;</text>
+  </set></argument>
+  <argument name="validator"><text>
+myname='moore.physics.2015_25ns'
+
+if len(stdout.split('\n'))&lt;128:
+    causes.append('stdout is too short, aiming for at least 128 lines')
+    result['moore.physics.2015_25ns.lt_lines']=result.Quote('Expected at least 128 lines, got '+ str(len(stdout.split('\n'))))
+
+if len(stdout.split('\n'))&gt;500:
+    causes.append('stdout is too long, aiming for at most 2000 lines')
+    result['moore.physics.2015_25ns.gt_lines']=result.Quote('Expected at most 2000 lines, got '+ str(len(stdout.split('\n'))))
+
+#count error lines, shouldn't be any warnings or errors, ideally
+countErrorLines({"FATAL":0,"ERROR":0,"WARNING":5})
+
+</text></argument>
+</extension>
+

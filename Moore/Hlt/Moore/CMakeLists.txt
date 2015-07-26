@@ -8,6 +8,7 @@ gaudi_depends_on_subdirs(Det/DDDB
                          GaudiKernel
                          GaudiPython
                          GaudiSvc
+                         Hlt/HltConf
                          L0/L0Interfaces)
 
 find_package(HepMC)

@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2015-07-22 - Roel Aaij
+ - Add test for 2015 25ns configuration.
+
 ! 2015-07-13 - Sascha Stahl
  - Fixed AddPrCheckerHlt2.py to pick up the correct location of Downstream tracks.
 
