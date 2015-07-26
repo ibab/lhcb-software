@@ -3,14 +3,14 @@ import glob
 
 import ROOT
 
+from veloview.core import io
 from veloview.runview import utils
 from veloview.runview.response_formatters import dictionary_formatter
-
 
 def get_run_plot(name, run, reference=False, formatter=dictionary_formatter):
     """Return the formatted object at the plot path in the run file.
 
-    If reference is True, the corresponding plot from the reference file will 
+    If reference is True, the corresponding plot from the reference file will
     be returned, else the plot from the `run` run will be returned.
     If no reference run can be found for `run`, None is returned.
     Keyword arguments:
@@ -89,3 +89,20 @@ def get_plot_dictionary(name):
     for plot in run_view_pages[key]['plots']:
       if name == plot['name']:
         return plot
+
+def get_trending_plot(name, runRange, formatter = dictionary_formatter):
+    """
+    Get a trending plot, showing a certain variable plotted against run number.
+    """
+    hist = ROOT.TH1F(name, name, len(runRange), runRange[0], runRange[-1])
+    for runNr in runRange:
+        base = utils.run_file_path(runNr)
+        files = sorted(glob.glob("{0}/analysis.root".format(base)))
+        if files:
+            f = io.GRFIO(files[-1])
+            if f:
+                runValues = f.read([name])
+                hist.SetBinContent(runNr, runValues[0])
+                f.Close()
+
+    return formatter(hist)
