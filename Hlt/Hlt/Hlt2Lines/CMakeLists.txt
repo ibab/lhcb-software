@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Hlt2Lines
 ################################################################################
-gaudi_subdir(Hlt2Lines v9r9)
+gaudi_subdir(Hlt2Lines v10r0)
 
 gaudi_depends_on_subdirs(Hlt/Hlt2SharedParticles
                          Hlt/HltLine
