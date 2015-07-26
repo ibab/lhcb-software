@@ -2,8 +2,10 @@ import ROOT
 import re
 import types
 import veloview.analysis
+from ..config import Config
 from .combiners import RootCombiner
 from .interface import ComparisonFunction
+from ..runview.utils import run_file, reference_run_file
 
 class AnalysisConfigWrapper(object):
     """
@@ -13,20 +15,37 @@ class AnalysisConfigWrapper(object):
     TELL1_NUMBERS_R   = range(42)
     TELL1_NUMBERS_PHI = range(64, 106)
 
-    def __init__(self, inputFileName):
+    def __init__(self, config):
         """
-        Initialise an AnalysisConfigWrapper from an input file.
+        Initialise an AnalysisConfigWrapper from a configuration.
 
-        @type  inputFileName: string
-        @param inputFileName: path to the file containing the configuration.
+        @type  config: 2-tuple of dictionaries
+        @param config: First element is dictionary of branches, second element
+                       is dictionary of leaves.
         """
-        with open(inputFileName, 'r') as inputFile:
-            exec(inputFile.read())
         self.masterBranch = "MasterCombiner"
-        self.branches = analysis_config_branches
-        self.leaves = analysis_config_leaves
+        self.branches = config[0]
+        self.leaves = config[1]
 
-    def getTrunk(self, dataFilePath, refFilePath, limitRegExp = None):
+    def getTrunkForRun(self, runNr, limitRegExp = None, outputPath = "."):
+        """
+        Get a Combiner object that represents the trunk of the tree.
+
+        @type  runNr:        int
+        @param runNr:        Run number.
+        @type  limitRegExp:  string
+        @param limitRegExp:  Regular expression to which a leaf name must match
+                             for it to be included in the tree, or None to
+                             match any leaf name. Default None.
+        @type  outputPath:   string
+        @param outputPath:   Path to write output to. Default "."
+        @return              A Combiner object.
+        """
+        dataFilePath = run_file(runNr)
+        refFilePath = reference_run_file(runNr)
+        return self.getTrunk(dataFilePath, refFilePath, limitRegExp, outputPath)
+
+    def getTrunk(self, dataFilePath, refFilePath, limitRegExp = None, outputPath = "."):
         """
         Get a Combiner object that represents the trunk of the tree.
 
@@ -40,6 +59,8 @@ class AnalysisConfigWrapper(object):
         @param limitRegExp:  Regular expression to which a leaf name must match
                              for it to be included in the tree, or None to
                              match any leaf name. Default None.
+        @type  outputPath:   string
+        @param outputPath:   Path to write output to. Default "."
         @return              A Combiner object.
         """
         comb_dict = {}
@@ -61,7 +82,7 @@ class AnalysisConfigWrapper(object):
             branchComb = self._parseBranch(branchDict)
             comb_dict[branchName] = branchComb
 
-        return RootCombiner(comb_dict, eval_dict, dataFilePath, refFilePath)
+        return RootCombiner(comb_dict, eval_dict, dataFilePath, refFilePath, outputPath)
 
     def _parseLeaf(self, leafName, leafDict):
         """
