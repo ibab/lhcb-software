@@ -4,6 +4,10 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-07-26 - Heinrich Schindler
+ - Add Victor's analysis python scripts. 
+ - Add bash script for online monitoring.
+
 ! 2015-07-24 - Heinrich Schindler
  - Add ADC distributions also for BeamBeam bunch-crossings.
 

@@ -1,0 +1,163 @@
+#!/usr/bin/env python
+import sys 
+from ROOT import *
+from Gaudi.Configuration import *
+from Configurables import LHCbApp
+from array import array
+from optparse import OptionParser
+lhcbApp = LHCbApp()
+
+
+print 'enter brunel'
+# Checking out the configuration
+
+parser = OptionParser()
+parser.add_option("-a", "--analysisType", type="string",
+                  help="type of analyses (DelayScan, Pedestals)",
+                  dest="analysisType")
+
+parser.add_option("-r", "--runNumber", type="string",
+                  help="Run number to be analysed",
+                  dest="runNumber")
+
+parser.add_option("-n", "--NumberOfEvents", type="int",
+                  help="Number of events to be analysed",
+                  dest="NumberOfEvents" , default = -1)
+
+parser.add_option( "--minBx", type="int",
+                  help="minimum bxID to consider",
+                  dest="minBx" , default = 0)
+
+parser.add_option( "--maxBx", type="int",
+                  help="maximum bxID to consider",
+                  dest="maxBx" , default = 10000)
+
+parser.add_option("-d", "--DataDirectory", type="string",
+                  help="Top directory for data",
+                  dest="DataDirectory", default = "/daqarea/lhcb/data/2015/RAW/FULL/HRC/TEST")
+
+parser.add_option("-f", "--filename", type="string",
+                  help="RAW file name",
+                  dest="FileName", default = "")
+
+parser.add_option("-o", "--OutputDirectory", type="string",
+                  help="Ouptut Directory",
+                  dest="OutputDirectory", default = "/home/herschel/AnalysedRuns")
+
+parser.add_option("-t", "--TAE", type="int",
+                  help="TAE mode, number of prev and next",
+                  dest="TAE", default = -1 )
+
+
+options, arguments = parser.parse_args()
+
+listOfFiles = []
+for runNumber in  options.runNumber.split(','):
+  dirname =options.DataDirectory+'/'+runNumber
+  listOfAllFiles = os.listdir(dirname)
+  if options.FileName != "":
+    listOfFiles.append(options.FileName)
+  else:
+    for f in listOfAllFiles:
+      if f.count('.raw')==1:
+        listOfFiles.append("DATAFILE='PFN:mdf:" + dirname+ '/'+f + "' SVC='LHCb::MDFSelector'")
+
+if len(options.runNumber.split(','))>1:
+   options.runNumber = options.runNumber.split(',')[0]+'_'+options.runNumber.split(',')[-1]
+
+EventSelector().PrintFreq = 100000
+EventSelector().Input = listOfFiles
+
+from DAQSys.DecoderClass import Decoder
+DecoderDB = {}
+
+if options.TAE > 0:
+  for k in ['Prev','Next']:
+    for i in range(options.TAE):
+      location = k + repr(options.TAE - i)
+      decoderName = "HCRawBankDecoder/HCRawBankDecoder" + location
+      dec = Decoder(decoderName,
+              active = True, banks = ["HC"],
+              outputs = {"DigitLocation" : location + "/Raw/HC/Digits",
+                         "L0DigitLocation" : location + "/Raw/HC/L0Digits"},
+              inputs = {"RawEventLocations" : ['/Event/' + location + '/DAQ/RawEvent']},
+              properties = {"DigitLocation" : location + "/Raw/HC/Digits",
+                            "L0DigitLocation" : location + "/Raw/HC/L0Digits"},
+              conf = DecoderDB)
+      conf = dec.setup()
+
+
+decoderName = "HCRawBankDecoder/HCRawBankDecoder"
+dec = Decoder(decoderName,
+              active = True, banks = ["HC"],
+              outputs = {"DigitLocation" : "Raw/HC/Digits",
+                         "L0DigitLocation" : "Raw/HC/L0Digits"},
+              inputs = {"RawEventLocations" : ['/Event/DAQ/RawEvent']},
+              properties = {"DigitLocation" :  "Raw/HC/Digits",
+                            "L0DigitLocation" : "Raw/HC/L0Digits"},
+              conf = DecoderDB)
+conf = dec.setup()
+
+
+from GaudiPython.Bindings import AppMgr
+appMgr = AppMgr()
+appMgr.HistogramPersistency = "ROOT"
+hpSvc = appMgr.service('HistogramPersistencySvc')
+hpSvc.OutputFile = 'scan_'+options.runNumber+'.root'
+
+ntSvc = appMgr.ntupleSvc()
+ntSvc.Output     = [ "FILE1 DATAFILE='"+options.OutputDirectory+'/'+options.runNumber+"/HC_Digits_run"+options.runNumber+".root'  TYP='ROOT'  OPT='NEW'" ]
+
+
+eventTimeDecoder = appMgr.toolsvc().create("OdinTimeDecoder", interface = "IEventTimeDecoder")
+
+appMgr.addAlgorithm('LbAppInit')
+
+from Configurables import HCRawBankDecoder
+
+if options.TAE > 0:
+  for k in ['Prev','Next']:
+    for i in range(options.TAE):
+      location = k + repr(options.TAE - i)
+      decoderName = "HCRawBankDecoder/HCRawBankDecoder" + location
+      appMgr.addAlgorithm(decoderName)
+
+appMgr.addAlgorithm("HCRawBankDecoder/HCRawBankDecoder")
+
+
+
+
+if options.analysisType == 'DelayScan':
+  from Configurables import HCClockScan
+  appMgr.addAlgorithm("HCClockScan")
+  appMgr.algorithm('HCClockScan').CrateB = 0
+  appMgr.algorithm('HCClockScan').CrateF = 1
+  appMgr.algorithm('HCClockScan').ChannelsB0 = [47, 46, 45, 44]
+  appMgr.algorithm('HCClockScan').ChannelsB1 = [23, 22, 21, 20]
+  appMgr.algorithm('HCClockScan').ChannelsB2 = [11, 10, 9, 8]
+  appMgr.algorithm('HCClockScan').ChannelsF2 = [47, 46, 45, 44]
+  appMgr.algorithm('HCClockScan').ChannelsF1 = [27, 26, 25, 24]
+  appMgr.algorithm('HCClockScan').MinimumStepNr = 0
+  appMgr.algorithm('HCClockScan').MaximumStepNr = 512
+  appMgr.algorithm('HCClockScan').VFEClkPitch = 1
+  appMgr.algorithm('HCClockScan').ADCClkPitch = 2
+  appMgr.algorithm('HCClockScan').DigitLocation = ["Raw/HC/Digits","Prev1/Raw/HC/Digits","Next1/Raw/HC/Digits"]
+  appMgr.algorithm('HCClockScan').CentralThreshold = 0
+  appMgr.algorithm('HCClockScan').BxRange = [options.minBx,options.maxBx]
+
+elif  options.analysisType == 'Pedestals':
+  print '############################################# P'
+  from Configurables import HCDigitMonitor
+  appMgr.addAlgorithm("HCDigitMonitor")
+  appMgr.algorithm('HCDigitMonitor').CrateB = 0
+  appMgr.algorithm('HCDigitMonitor').CrateF = 1
+  appMgr.algorithm('HCDigitMonitor').ChannelsB0 = [47, 46, 45, 44]
+  appMgr.algorithm('HCDigitMonitor').ChannelsB1 = [23, 22, 21, 20]
+  appMgr.algorithm('HCDigitMonitor').ChannelsB2 = [11, 10, 9, 8]
+  appMgr.algorithm('HCDigitMonitor').ChannelsF2 = [47, 46, 45, 44]
+  appMgr.algorithm('HCDigitMonitor').ChannelsF1 = [27, 26, 25, 24]
+  appMgr.algorithm('HCDigitMonitor').MinBx = options.minBx
+  appMgr.algorithm('HCDigitMonitor').MaxBx =  options.maxBx
+
+appMgr.run(options.NumberOfEvents)
+
