@@ -193,6 +193,15 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
                 idalg.TracksLocations = [ self.__hlt2FullDownstreamTracking().outputSelection() ]
                 idalg.MuonIDLocation = Hlt2TrackRoot+HltDefaultFitSuffix+"/"+HltSharedPIDPrefix+"/"+HltMuonIDSuffix
                 idalg.MuonTrackLocation = Hlt2TrackRoot+HltDefaultFitSuffix+"/"+HltSharedPIDPrefix+"/"+HltMuonTracksName
+
+                # Configure moun ID tools explicitly, would be better if the ConfiguredMuonIDs class
+                # provided a comprehensive method. All tools are public, but should configure
+                # everywhere, where they are used to be safe.
+                for tool, fun in (("CommonMuonTool" ,"IsMuonTool"),
+                        ("DLLMuonTool", "DLLMuonTool"),
+                        ("MakeMuonTool", "MakeMuonTool")):
+                        getattr(cm, "configure" + fun)(tool)
+
                 # make protos
                 Hlt2ProbeMuonProtoMaker.Inputs = [self.__hlt2FullDownstreamTracking().outputSelection()]
                 Hlt2ProbeMuonProtoMaker.Output = ProbeMuonProtosOutputLocation

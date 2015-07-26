@@ -972,17 +972,25 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from Configurables import MuonRec, MuonIDAlgLite
         from HltLine.HltLine import bindMembers
 
-        cm                  = ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
-        
+        cm = ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
+
         #HltMuonIDAlg_name   = self.__pidAlgosAndToolsPrefix()+"MuonIDAlgLite"
-        HltMuonIDAlg_name   =  self.getProp("Prefix") +"MuonIDAlgLite"
-        HltMuonIDAlg        = cm.configureMuonIDAlgLite(HltMuonIDAlg_name)
+        HltMuonIDAlg = cm.configureMuonIDAlgLite(self.getProp("Prefix") + "MuonIDAlgLite")
+
+        # Configure moun ID tools explicitly, would be better if the ConfiguredMuonIDs class
+        # provided a comprehensive method. All tools are public, but should configure
+                # everywhere, where they are used to be safe.
+        for tool, fun in (("CommonMuonTool" ,"IsMuonTool"),
+                     ("DLLMuonTool", "DLLMuonTool"),
+                     ("MakeMuonTool", "MakeMuonTool")):
+            getattr(cm, "configure" + fun)(tool)
+
         #The tracks to use
         #tracks              = self.__hlt2StagedFastFit()
         # We want all tracks
         tracks              = self.__hlt2Tracking()
         #Enforce naming conventions
-        HltMuonIDAlg.TracksLocations        = tracks.outputSelection() 
+        HltMuonIDAlg.TracksLocations        = tracks.outputSelection()
         HltMuonIDAlg.MuonIDLocation         = self.__muonIDLocation() #output
         HltMuonIDAlg.MuonTrackLocation      = self._trackifiedMuonIDLocation()
         #HltMuonIDAlg.MuonTrackLocationAll   = self._trackifiedAllMuonIDLocation()
@@ -1515,7 +1523,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
             if HltRecoConf().getProp("ApplyGHOSTPROBCut") == True:
                 ts.setProp("MinGhostProbCut", 0.)
                 ts.setProp("MaxGhostProbCut", HltRecoConf().getProp("MaxTrGHOSTPROB"))
-                
+
             if self.__trackType() == "Long":
                 ts.TrackTypes = ["Long"]
             elif self.__trackType() == "Downstream":
