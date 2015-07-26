@@ -187,7 +187,7 @@ namespace
   LHCb::Math::Equal_To<double> s_equal ;       // equality criteria for doubles
   /// zero for doubles  
   LHCb::Math::Zero<double>     s_zero  ;       // zero for doubles
-  /// zero fo vectors 
+  /// zero for vectors 
   LHCb::Math::Zero< std::vector<double> > s_vzero ; // zero foro vectors
   // ==========================================================================
   typedef Gaudi::Math::GSL::GSL_Error_Handler Sentry ;
@@ -9522,16 +9522,276 @@ double Gaudi::Math::QGSM::integral
   return result ;
   //
 }
+// ============================================================================
 
 
-
-
-
-
-
-
-
-
+// ============================================================================
+// constructor from the degree 
+// ============================================================================
+Gaudi::Math::FourierSum::FourierSum 
+( const unsigned short degree , 
+  const double         xmin   , 
+  const double         xmax   , 
+  const bool           fejer  )
+  : std::unary_function<double,double>() 
+  , m_pars  ( 2 * degree + 1 , 0.0 ) 
+  , m_xmin  ( std::min ( xmin , xmax ) )
+  , m_xmax  ( std::max ( xmin , xmax ) )
+  , m_scale ( 1 ) 
+  , m_delta ( 0 ) 
+  , m_fejer ( fejer ) 
+{
+  //
+  if ( s_equal ( -M_PI     , m_xmin ) ) { m_xmin = -M_PI     ; }
+  if ( s_equal ( -1        , m_xmin ) ) { m_xmin = -1        ; }
+  if ( s_equal (  0        , m_xmin ) ) { m_xmin =  0        ; }
+  //
+  if ( s_equal (  1        , m_xmax ) ) { m_xmax =  1        ; }
+  if ( s_equal (      M_PI , m_xmax ) ) { m_xmax =  M_PI     ; }
+  if ( s_equal (  2 * M_PI , m_xmax ) ) { m_xmax =  2 * M_PI ; }
+  //
+  m_scale = 2 * M_PI / ( m_xmax - m_xmin ) ;
+  m_delta = 0.5      * ( m_xmax + m_xmin ) ;
+}  
+// ============================================================================
+// protected constructor from the parameters 
+// ============================================================================
+Gaudi::Math::FourierSum::FourierSum
+( const std::vector<double>& pars  , 
+  const double               xmin  , 
+  const double               xmax  , 
+  const double               fejer )
+  : std::unary_function<double,double>() 
+  , m_pars  ( pars )
+  , m_xmin  ( std::min ( xmin , xmax ) )
+  , m_xmax  ( std::max ( xmin , xmax ) )
+  , m_scale ( 1 ) 
+  , m_delta ( 0 ) 
+  , m_fejer ( fejer ) 
+{
+  m_scale = 2 * M_PI / ( m_xmax - m_xmin ) ;
+  m_delta = 0.5      * ( m_xmax + m_xmin ) ;
+}
+// ============================================================================
+// all zero ?
+// ============================================================================
+bool Gaudi::Math::FourierSum::zero  () const { return s_vzero ( m_pars ) ; }
+// ============================================================================
+// set k-parameter
+// ============================================================================
+bool Gaudi::Math::FourierSum::setPar 
+( const unsigned short k , const double value ) 
+{
+  if ( m_pars.size() <= k            ) { return false ; }
+  if ( s_equal ( m_pars[k] , value ) ) { return false ; }
+  m_pars[k] = value ;
+  return true ;
+}
+// ============================================================================
+// define summation algorithm
+// ============================================================================
+bool Gaudi::Math::FourierSum::setFejer ( const bool value ) 
+{
+  if ( m_fejer == value ) { return false ; }
+  m_fejer = value ;
+  return true ;
+}
+// ============================================================================
+// get the value
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  /// Fourier sums 
+  template <class TYPE>
+  long double _fourier_sum_ ( const std::vector<TYPE>& pars , const long double x ) 
+  {
+    /// start summation
+    const unsigned long   N  = pars.size() ;
+    long double          sum = 0.5 * pars[0] ;
+    for ( unsigned short k   = 1 ; 2 * k < N ; ++k  ) 
+    {
+      sum += pars [ 2 * k - 1 ] * std::sin ( k * x ) ;
+      sum += pars [ 2 * k     ] * std::cos ( k * x ) ;
+    }
+    //
+    return sum ;
+  }
+  // ==========================================================================
+  /// Fejer sums 
+  template <class TYPE>
+  long double _fejer_sum_ ( const std::vector<TYPE>& pars , const long double x ) 
+  {
+    ///
+    const unsigned long N  = pars.size() ;
+    const double   long fd = 1.0L / ( N + 1 ) ;
+    /// start summation
+    long double sum        = 0.5 * pars[0] ;  
+    for ( unsigned short k   = 1 ; 2 * k < N ; ++k  ) 
+    {
+      const long double f = ( N + 1 - 2 * k )        * fd ;
+      sum += pars [ 2 * k - 1 ] * std::sin ( k * x ) * f  ;
+      sum += pars [ 2 * k     ] * std::cos ( k * x ) * f  ;
+    }
+    //
+    return sum ;
+  }
+  // ==========================================================================
+}
+// ============================================================================
+// calculate Fourier sum 
+// ============================================================================
+double Gaudi::Math::FourierSum::fourier_sum ( const double x ) const 
+{
+  /// transform to "t"-representation 
+  const long double tv = t(x) ;
+  return _fourier_sum_ ( m_pars , tv ) ;
+}
+// ============================================================================
+// calculate Fejer sum 
+// ============================================================================
+double Gaudi::Math::FourierSum::fejer_sum ( const double x ) const 
+{
+  /// transform to "t"-representation 
+  const long double tv = t(x) ;
+  return _fejer_sum_ ( m_pars , tv ) ;
+}
+// ============================================================================
+//  get the derivative at point x 
+// ============================================================================
+double Gaudi::Math::FourierSum::derivative ( const double x ) const 
+{
+  //
+  std::vector<double> deriv ( m_pars.begin() , m_pars.end() ) ; 
+  deriv[0] = 0.0 ;
+  //
+  const unsigned long  N = m_pars.size() ;
+  for ( unsigned short k = 1 ; 2 * k < N ; ++k  ) 
+  {
+    deriv[ 2 * k     ] =  k * m_pars[ 2 * k - 1 ] / m_scale ;
+    deriv[ 2 * k - 1 ] = -k * m_pars[ 2 * k     ] / m_scale ;
+    //
+  }
+  /// transform to "t"-representation 
+  const long double tv = t(x) ;
+  /// make evaluation of fourier serie
+  return 
+    m_fejer ? 
+    _fejer_sum_   ( deriv , tv ) :
+    _fourier_sum_ ( deriv , tv ) ;
+}
+// ============================================================================
+//  get the derivative at point x 
+// ============================================================================
+Gaudi::Math::FourierSum Gaudi::Math::FourierSum::derivative () const 
+{
+  // create derivate obejct 
+  FourierSum deriv ( m_pars , m_xmin , m_xmax , m_fejer ) ;
+  /// fill it! 
+  deriv.m_pars [0] = 0.0 ;
+  const unsigned long  N = m_pars.size() ;
+  for ( unsigned short k = 1 ; 2 * k < N ; ++k  ) 
+  {
+    deriv.m_pars[ 2 * k     ] =  k * m_pars[ 2 * k - 1 ] / m_scale ;
+    deriv.m_pars[ 2 * k - 1 ] = -k * m_pars[ 2 * k     ] / m_scale ;
+    //
+  }
+  //
+  return deriv ;
+}
+// ============================================================================
+// get integral between low and high 
+// ============================================================================
+double Gaudi::Math::FourierSum::integral 
+( const double low , const double high ) const 
+{
+  if ( s_equal ( low , high ) ) { return 0 ; }
+  //
+  // optionally shrink interval for period. but not now..
+  //
+  std::vector<double> integ ( m_pars.begin() , m_pars.end() ) ; 
+  //
+  integ[0] = 0 ;
+  const unsigned long  N = m_pars.size() ;
+  for ( unsigned short k = 1 ; 2 * k < N ; ++k  ) 
+  {
+    integ[ 2 * k     ] = -m_pars[ 2 * k - 1 ] / k * m_scale ;
+    integ[ 2 * k - 1 ] =  m_pars[ 2 * k     ] / k * m_scale ;
+  }
+  /// transform to "t"-representation 
+  const long double tl = t ( low  ) ;
+  const long double th = t ( high ) ;
+  /// evaluate Fourier series
+  return
+    m_fejer ? 
+    _fejer_sum_   ( integ , th ) - 
+    _fejer_sum_   ( integ , tl ) + m_pars[0] * ( th - tl ) :
+    _fourier_sum_ ( integ , th ) - 
+    _fourier_sum_ ( integ , tl ) + m_pars[0] * ( th - tl ) ;
+}
+// ============================================================================
+// get integral as object 
+// ============================================================================
+Gaudi::Math::FourierSum
+Gaudi::Math::FourierSum::integral ( const double c0 ) const 
+{
+  //
+  FourierSum integ ( m_pars , m_xmin , m_xmax , m_fejer ) ;
+  //
+  integ.m_pars[0] = c0 ;
+  const unsigned long  N   = m_pars.size() ;
+  const double         a0  = m_pars[0]     ;
+  const bool           add = s_zero ( a0 ) ;
+  for ( unsigned short k   = 1 ; 2 * k < N ; ++k  ) 
+  {
+    integ.m_pars[ 2 * k     ] = -m_pars[ 2 * k - 1 ] / k * m_scale ;
+    integ.m_pars[ 2 * k - 1 ] =  m_pars[ 2 * k     ] / k * m_scale ;
+    //
+    // add a serie for f(x) = a0*x 
+    if ( add ) { integ.m_pars[ 2 * k - 1 ] += 
+        ( 0 == k % 2  ? 1 : -1 ) * 2.0L * a0 / k * m_scale ; }
+  }  
+  //
+  return integ ;
+}
+// ============================================================================
+// simple  manipulations with polynoms: scale it! 
+// ============================================================================
+Gaudi::Math::FourierSum&
+Gaudi::Math::FourierSum::operator*=( const double a ) 
+{
+  for ( std::vector<double>::iterator it = m_pars.begin() ; 
+        m_pars.end() != it ; ++it ) {  (*it ) *= a ; }
+  return *this ;
+}
+// ============================================================================
+// simple  manipulations with polynoms: scale it! 
+// ============================================================================
+Gaudi::Math::FourierSum&
+Gaudi::Math::FourierSum::operator/=( const double a ) 
+{
+  for ( std::vector<double>::iterator it = m_pars.begin() ; 
+        m_pars.end() != it ; ++it ) {  (*it ) /= a ; }
+  return *this ;
+}
+// ============================================================================
+// simple  manipulations with polynoms: add constant 
+// ===========================================================================
+Gaudi::Math::FourierSum&
+Gaudi::Math::FourierSum::operator+=( const double a ) 
+{
+  m_pars[0] += a ;
+  return *this ;
+}
+// ============================================================================
+// simple  manipulations with polynoms: subtract constant 
+// ============================================================================
+Gaudi::Math::FourierSum&
+Gaudi::Math::FourierSum::operator-=( const double a ) 
+{
+  m_pars[0] -= a ;
+  return *this ;
+}
 // ============================================================================
 // The END
 // ============================================================================

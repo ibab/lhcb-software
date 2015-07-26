@@ -86,6 +86,7 @@
   <class name    = "Gaudi::Math::Positive"         />
   <class name    = "Gaudi::Math::Monothonic"       />
   <class name    = "Gaudi::Math::Convex"           />
+  <class name    = "Gaudi::Math::FourierSum"       />
   <class name    = "Gaudi::Math::Bernstein::Basic" />
   <class name    = "Gaudi::Math::Positive2D"       />
   <class name    = "Gaudi::Math::Bernstein2D"      />

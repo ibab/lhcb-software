@@ -5244,6 +5244,154 @@ namespace Gaudi
       // ======================================================================
     } ;  
     // ========================================================================
+    /** @class FourierSum
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-07-26
+     */
+     /** @class LegendreSum 
+     *  Sum of Legendre polinomials 
+     *  \f$ f(x) = \sum_i \p_i P_i(x)\f$
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-02-22
+     */
+    class GAUDI_API FourierSum : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** @param degree  degree 
+       *  @param xmin    low  edge 
+       *  @param xmax    high edge 
+       *  @param fejer   use fejer summation 
+       */
+      FourierSum ( const unsigned short degree = 0     ,   // degree            
+                   const double         xmin   = 0     ,   // low edge 
+                   const double         xmax   = 1     ,   // high edge
+                   const bool           fejer  = false );  // use Fejer summation
+      // ======================================================================
+    protected:  // protected constructor from parameters 
+      // ======================================================================
+      /// protected constructor from parameters 
+      FourierSum ( const std::vector<double>& pars  , 
+                   const double               xmin  , 
+                   const double               xmax  , 
+                   const double               fejer );
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value
+      double operator () ( const double x ) const 
+      { return m_fejer ? fejer_sum ( x ) : fourier_sum ( x ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// calculate Fourier sum
+      double fourier_sum ( const double x ) const ;
+      /// calculate Fejer sum
+      double fejer_sum   ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get lower edge
+      double xmin  () const { return m_xmin  ; }
+      /// get upper edge
+      double xmax  () const { return m_xmax  ; }
+      /// use Fejer summation?
+      bool   fejer () const { return m_fejer ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      double x ( const double t ) const { return    t / m_scale   + m_delta ; }
+      double t ( const double x ) const { return  ( x - m_delta ) * m_scale ; }
+      // ======================================================================
+    public:
+      // ====================================================================== 
+      /// define summation algorithm
+      bool setFejer ( const bool value ) ; // define summation algorithm
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// degree  of polynomial 
+      unsigned short degree () const { return ( m_pars.size() - 1 ) / 2 ; }
+      /// number of parameters 
+      unsigned short npars  () const { return m_pars.size()     ; }
+      /// all zero ?
+      bool           zero   () const ;
+      /** set k-parameter
+       *  @param k index
+       *  @param value new value 
+       *  @return true if parameter is actually changed 
+       */
+      bool setPar          ( const unsigned short k , const double value ) ;
+      /** set k-parameter
+       *  @param k index
+       *  @param value new value 
+       *  @return true iof parameter is actually changed 
+       */
+      bool setParameter    ( const unsigned short k , const double value )
+      { return setPar      ( k , value ) ; }
+      /// get the parameter value
+      double  par          ( const unsigned short k ) const
+      { return ( k < m_pars.size() ) ? m_pars[k] : 0.0 ; }
+      /// get the parameter value
+      double  parameter    ( const unsigned short k ) const { return par ( k ) ; }
+      /// get all parameters:
+      const std::vector<double>& pars () const { return m_pars ; }
+      /// get k-th cos-parameter 
+      double a ( const unsigned short k ) const { return par ( 2 * k     ) ; }
+      /// get k-th sin-parameter 
+      double b ( const unsigned short k ) const 
+      { return 1 <= k ? par ( 2 * ( k - 1 ) + 1 ) : 0 ; }  
+      // set cosine terms 
+      bool setA ( const unsigned short k , const double value ) 
+      { return setPar ( 2 * k , value ) ; }
+      // set cosine terms 
+      bool setB ( const unsigned short k , const double value ) 
+      { return 1<= k ? setPar ( 2 * k - 1 , value ) : false ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the derivative at point x 
+      double     derivative ( const double x ) const ;
+      /// get the derivative as function 
+      FourierSum derivative ( ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================      
+      // get integral between low and high 
+      double     integral   ( const double low , const double high ) const ;
+      /** get integral as function 
+       *  @param c0  integration constant
+       */
+      FourierSum integral   ( const double c0 = 0 ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// simple  manipulations with polynoms: scale it! 
+      FourierSum& operator *= ( const double a ) ;     // scale it! 
+      /// simple  manipulations with polynoms: scale it! 
+      FourierSum& operator /= ( const double a ) ;     // scale it! 
+      /// simple  manipulations with polynoms: add constant
+      FourierSum& operator += ( const double a ) ;     // add constant 
+      /// simple  manipulations with polynoms: subtract constant 
+      FourierSum& operator -= ( const double a ) ;     // subtract constant 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// actual vector of coefficients
+      std::vector<double> m_pars ; // actual vector of coefficients      
+      /// low edge  
+      double m_xmin  ;             // the low edge 
+      /// high edge  
+      double m_xmax  ;             // the high edge       
+      /// scale factor 
+      double m_scale ;             // scale factor 
+      /// delta 
+      double m_delta ;             // delta 
+      /// summation algorithm
+      bool m_fejer   ;             // summation algorithm
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================
 } //                                                     end of namespace Gaudi
