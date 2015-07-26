@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltSys
 ################################################################################
-gaudi_subdir(HltSys v23r7p3)
+gaudi_subdir(HltSys v24r0)
 
 gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/Hlt1Muons
@@ -22,11 +22,6 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/HltSettings
                          Hlt/HltTracking
                          Hlt/TCKUtils
-                         Phys/LoKiTrigger
-						 Hlt/HltDAQ
-						 DAQ/DAQSys
-						 Rec/RecAlgs
-                         Hlt/HltServices
-                         Kernel/HltInterfaces)
+                         Phys/LoKiTrigger)
 
 gaudi_add_test(QMTest QMTEST)
