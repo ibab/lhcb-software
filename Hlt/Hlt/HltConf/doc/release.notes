@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-07-26 - Roel Aaij
+ - Fix configuration of split SelReportsMaker and remove obsolete part.
+
 ! 2015-07-24 - Roel Aaij
  - Remove most selection IDs, leave only those that are not auto-generated
    and are really needed in the SelReports.

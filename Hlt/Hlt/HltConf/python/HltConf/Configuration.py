@@ -392,28 +392,6 @@ class HltConf(LHCbConfigurableUser):
         from Configurables import HltSelReportsMaker
         selMaker = HltSelReportsMaker(stage + "SelReportsMaker")
         selMaker.SelectionMaxCandidates.update( dict( [ (i, 0) for i in vertices if i.endswith('Decision') ] ) )
-        # We are in a post-config action so Hlt2 has already been called and has set the properties
-        # of the unfitted tracking. Therefore it is safe to use it this way
-        # What we are doing is to let the SelReportsMaker know where the "trackified" muonID objects
-        # live directly from the tracking in question and the "rule" for computing their location
-        # TODO: fix locations from tracking!!!!!
-        # Note : if no Hlt2 lines are run, this is meaningless since the Hlt1 muons are
-        #        handled differently, so we pass some empty "default" location instead
-
-        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
-        Hlt2BiKalmanFittedForwardTracking = Hlt2BiKalmanFittedForwardTracking()
-        # We need to get the "extra" piece of the Muon stubs location compared to the track location
-        tracking = None
-        try:
-            tracking = Hlt2BiKalmanFittedForwardTracking.hlt2PrepareTracks()
-        except:
-            # Nobody configured the tracking so no meaningful Hlt2 was run
-            # so just pass some default value
-            selMaker.MuonIDSuffix = "/PID/MuonSegments"
-        if tracking :
-            trackLoc    = tracking.outputSelection()
-            muonStubLoc	= Hlt2BiKalmanFittedForwardTracking._trackifiedMuonIDLocation()
-            selMaker.MuonIDSuffix = "/" + muonStubLoc.strip(trackLoc)
 
         veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
                , 'TES:Hlt/Vertex/ASidePV3D','TES:Hlt/Vertex/CSidePV3D' , 'TES:Hlt2/Track/Forward',
