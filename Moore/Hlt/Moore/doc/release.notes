@@ -4,6 +4,8 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v24r0 2015-07-26 =========================
+
 ! 2015-07-22 - Roel Aaij
  - Add test for 2015 25ns configuration.
 
