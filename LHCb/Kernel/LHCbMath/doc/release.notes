@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-07-26 - Vanya Belyaev
+ - minor fix 
+
 ! 2015-07-25 - Vanya Belyaev
  - improve a bit PDG-style formatting 
 

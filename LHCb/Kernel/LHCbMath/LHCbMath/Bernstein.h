@@ -356,6 +356,10 @@ namespace Gaudi
       /// get the parameter value 
       double  par       ( const unsigned short k ) const 
       { return m_sphere.par ( k ) ; }
+      /// get all parameters (phases on sphere) 
+      const std::vector<double>& pars  () const { return m_sphere   .pars () ; }
+      /// get bernstein coefficients
+      const std::vector<double>& bpars () const { return m_bernstein.pars () ; }
       // ======================================================================
     public:
       // ======================================================================

@@ -238,16 +238,16 @@ namespace
    *  @param x  the argument 
    *  @return value of chebyshev polynomial (1st kind) at point x 
    */
-  inline double _legendre_ 
+  inline long double _legendre_ 
   ( const unsigned int N , 
-    const double       x )
+    const long double       x )
   {
     //
     return 
       0 == N             ? 1.0 :
       1 == N             ?   x :
-      ( ( 2 * N - 1 ) * _legendre_ ( N - 1 , x ) - 
-        (     N - 1 ) * _legendre_ ( N - 2 , x ) ) / N ;
+      ( ( 2 * N - 1 ) * x * _legendre_ ( N - 1 , x ) - 
+        (     N - 1 )     * _legendre_ ( N - 2 , x ) ) / N ;
   }
   // ==========================================================================
   /** evaluate the integral for legendre polynomial
@@ -255,10 +255,10 @@ namespace
    *  @param low  low edge of integration 
    *  @param high high edge of integration 
    */  
-  inline double _legendre_int_ 
+  inline long double _legendre_int_ 
   ( const unsigned int N    ,
-    const double       low  , 
-    const double       high ) 
+    const long double  low  , 
+    const long double  high ) 
   {
     // trivial cases 
     if      ( s_equal ( low , high ) ) { return 0          ; }
@@ -268,8 +268,8 @@ namespace
     else if ( high < low ) 
     { return -_legendre_int_ ( N ,  high , low )  ; }
     //
-    const double ihigh = _legendre_ ( N + 1 , high ) - _legendre_ ( N - 1 , high ) ;
-    const double ilow  = _legendre_ ( N + 1 , low  ) - _legendre_ ( N - 1 , low  ) ;
+    const long double ihigh = _legendre_ ( N + 1 , high ) - _legendre_ ( N - 1 , high ) ;
+    const long double ilow  = _legendre_ ( N + 1 , low  ) - _legendre_ ( N - 1 , low  ) ;
     //
     return ( ihigh - ilow ) / ( 2 * N + 1 ) ;
   }
@@ -278,9 +278,9 @@ namespace
    *  @param N the polynomial degree
    *  @param x the point 
    */
-  inline double _legendre_der_
+  inline long double _legendre_der_
   ( const unsigned int N ,
-    const double       x )  
+    const long double  x )  
   {
     //
     if      ( 0 == N ) { return 0   ; }
@@ -290,7 +290,7 @@ namespace
     else if ( s_equal ( x , -1 ) ) 
     { return 1 == N % 2 ?  0.5 * N * ( N + 1 ) : -0.5 * N * ( N + 1 ) ; }
     //
-    const double t1 = x * _legendre_ ( N , x ) - _legendre_ ( N - 1 , x  ) ;
+    const long double t1 = x * _legendre_ ( N , x ) - _legendre_ ( N - 1 , x  ) ;
     //
     return N * t1 / ( x * x - 1 ) ;  // ATTENTION HERE!!! it should be safe...
   }
