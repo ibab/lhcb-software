@@ -5,6 +5,8 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+!========================= HltRawData v5r9 2015-07-26 =========================
+
 ! 2015-07-26 - Roel Aaij
  - Don't try to save muon hits for proto-particles with a MuonPID that is not
    at least IsMuonLoose.
