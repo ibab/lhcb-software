@@ -1,5 +1,5 @@
 // $Id: HltSelReportsMaker.h,v 1.13 2010-07-17 06:11:31 tskwarni Exp $
-#ifndef HLTSELREPORTSMAKER_H 
+#ifndef HLTSELREPORTSMAKER_H
 #define HLTSELREPORTSMAKER_H 1
 
 // Include files
@@ -21,30 +21,30 @@
 #include "HltDAQ/ReportConvertTool.h"
 
 namespace LHCb {
-  class CaloCluster;  
+  class CaloCluster;
   class Particle;
   class RecVertex;
 }
 
 
 /** @class HltSelReportsMaker HltSelReportsMaker.h
- *  
+ *
  *  @author Tomasz Skwarnicki
  *  @date   2008-07-23
  *
  *  Algorithm to translate HltSummary  into HltSelResults and associated HltObjectSummaries
  *
  */
-class HltSelReportsMaker : public GaudiAlgorithm 
+class HltSelReportsMaker : public GaudiAlgorithm
                          , virtual public IIncidentListener {
 public:
 
   enum OutputInfoLevel { kMinInfoLevel=0, ///< lhcbIDs only
                          kStandardInfoLevel=1, ///< lhcbIDs + standard numerical info(object specific)
                          kExtraInfoLevel=2, ///< lhcbIDs + extra numerical info (no standard info!)
-                         kMaxInfoLevel=3 ///< lhcbIDs + standard + extra numerical info 
+                         kMaxInfoLevel=3 ///< lhcbIDs + standard + extra numerical info
   };
-  
+
   enum GlobalSelectionIDs { kHlt1GlobalID=1,
                             kHlt2GlobalID=2
   };
@@ -64,7 +64,7 @@ private:
 
   /// for producing numerical info to be saved on the object
   LHCb::HltObjectSummary::Info infoToSave( const LHCb::HltObjectSummary& hos ) const;
- 
+
   /// for converting objects in to summaries
   IReportConvert* m_conv;
 
@@ -89,29 +89,29 @@ private:
       auto t = dynamic_cast<const T*>(obj);
       if (!t) return nullptr;
       auto i = std::find_if( std::begin(*m_objectSummaries), std::end(*m_objectSummaries),
-                             [&t]( const LHCb::HltObjectSummary* hos ) { 
-            return hos->summarizedObjectCLID() == t->clID() && hos->summarizedObject() == t ; 
+                             [&t]( const LHCb::HltObjectSummary* hos ) {
+            return hos->summarizedObjectCLID() == t->clID() && hos->summarizedObject() == t ;
       });
       return ( (i!=std::end(*m_objectSummaries)) && (m_Turbo == false) ) ? *i : store_(*t);
   }
-  
+
 
 
   /// rank Track for selection rank
   int rank_(const LHCb::Track& object) const;
-  /// rank RecVertex 
+  /// rank RecVertex
   int rank_(const LHCb::RecVertex& object) const;
-  /// rank Vertex 
+  /// rank Vertex
   int rank_(const LHCb::Vertex& object) const;
-  /// rank ProtoParticle 
+  /// rank ProtoParticle
   int rank_(const LHCb::ProtoParticle& object) const;
-  /// rank RichPID 
+  /// rank RichPID
   int rank_(const LHCb::RichPID& object) const;
-  /// rank MuonPID 
+  /// rank MuonPID
   int rank_(const LHCb::MuonPID& object) const;
-  /// rank Particle 
+  /// rank Particle
   int rank_(const LHCb::Particle& object) const;
-  /// rank CaloCluster 
+  /// rank CaloCluster
   int rank_(const LHCb::CaloCluster& object) const;
 
   template <typename T> bool rank(const ContainedObject* obj, int& rnk) {
@@ -120,37 +120,31 @@ private:
       if (ret) rnk = rank_(*c);
       return ret;
   }
-  
+
   /// rank LHCbIDs for selection rank
   int rankLHCbIDs( const std::vector<LHCb::LHCbID> & lhcbIDs ) const;
-  
+
 
   /// for trimming output size and disabling output all together (if 0)
-  unsigned int maximumNumberOfCandidatesToStore( const std::string & selectionName ) const;  
+  unsigned int maximumNumberOfCandidatesToStore( const std::string & selectionName ) const;
 
   /// set present output parameters
   void setPresentInfoLevel( const std::string & selectionName );
-  
 
-  // ----------------------- data members 
-   
+
+  // ----------------------- data members
+
   /// location of input Hlt Dec Reports
   StringProperty m_inputHltDecReportsLocation;
 
   /// location of output Hlt Summary
   StringProperty m_outputHltSelReportsLocation;
 
-  /// location of HLT muon-track-stubs
-  std::string m_muonIDSuffix; 
-  std::string m_HltMuonTracksLocation;
-  /// pointer to container of the HLT muon-track-stubs
-  LHCb::Tracks* m_HLTmuonTracks;
-
   /// HltObjectSummary container
-  LHCb::HltObjectSummary::Container* m_objectSummaries;  
+  LHCb::HltObjectSummary::Container* m_objectSummaries;
 
   /// HltANNSvc for making selection names to int selection ID
-  IANNSvc* m_hltANNSvc;  
+  IANNSvc* m_hltANNSvc;
   Hlt::IData* m_hltSvc;
   Hlt::IRegister* m_regSvc;
   Hlt::IInspector* m_inspectionSvc;
@@ -159,7 +153,7 @@ private:
   GaudiUtils::VectorMap< int, std::string > m_infoIntToName;
 
   // get trigger selection names //  -- amalgamate into vector<struct>
-  struct selectionInfo { 
+  struct selectionInfo {
       const Hlt::Selection* selection;
       Gaudi::StringKey id;
       int intId;
@@ -167,7 +161,7 @@ private:
       int maxCandDebug;
   };
   std::vector< selectionInfo> m_selectionInfo;
-     
+
   /// for ranking selections
   typedef std::pair<int, selectionInfo > RankedSelection;
    //static bool rankSelLess( const RankedSelection & elem1, const RankedSelection & elem2);
@@ -181,7 +175,7 @@ private:
   /// for setting per selection properties
   typedef std::map<std::string,int> SelectionSetting;
   typedef SimpleProperty< std::map<std::string,int> > SelectionSettingProp;
-  
+
   /// cache last PV selection name
   std::string m_lastPVSelectionName;
   int m_intPVSelID;
@@ -202,7 +196,7 @@ private:
   unsigned int m_presentInfoLevelParticle;
   unsigned int m_presentInfoLevelCaloCluster;
   unsigned int m_presentInfoLevelSelection;
-  
+
   /// debug event period (global, can't be change per selection)  0=never 1=always e.g. 100=every 100th event
   UnsignedIntegerProperty m_debugPeriod;
 
@@ -216,11 +210,11 @@ private:
   /// default max number of candidates for non-Decision selections (can be overruled by per selection setting)
   UnsignedIntegerProperty m_maxCandidatesNonDecision;
   UnsignedIntegerProperty m_maxCandidatesNonDecisionDebug;
-  
+
   /// per selection max number of candidates
   SelectionSettingProp m_maxCandidates;
   SelectionSettingProp m_maxCandidatesDebug;
-  
+
 
   /// default output info level for Decision selections (can be overruled by per selection setting)
   UnsignedIntegerProperty m_infoLevelDecision;
@@ -229,7 +223,7 @@ private:
   /// default output info level for non-Decision selections (can be overruled by per selection setting)
   UnsignedIntegerProperty m_infoLevelNonDecision;
   UnsignedIntegerProperty m_infoLevelNonDecisionDebug;
-  
+
   /// per selection info level
   SelectionSettingProp m_infoLevel;
   SelectionSettingProp m_infoLevelDebug;
@@ -246,7 +240,7 @@ private:
   UnsignedIntegerProperty m_infoLevelSelection;
   UnsignedIntegerProperty m_infoLevelSelectionDebug;
 
-  /// whether selections killed by postscale are allowed to save candidates 
+  /// whether selections killed by postscale are allowed to save candidates
   bool m_SuppressPostscale;
   bool m_SuppressPostscaleDebug;
 

@@ -5,6 +5,10 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-07-26 - Roel Aaij
+ - Don't try to save muon hits for proto-particles with a MuonPID that is not
+   at least IsMuonLoose.
+
 ! 2015-07-24 - Roel Aaij
  - Skip selections for which there is no selection ID. There are many in HLT1
    that we don't want to store in the reports.

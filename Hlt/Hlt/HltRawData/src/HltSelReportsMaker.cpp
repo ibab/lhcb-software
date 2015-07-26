@@ -82,7 +82,6 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
 
   declareProperty("OutputHltSelReportsLocation",
       m_outputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);
-  declareProperty("MuonIDSuffix", m_muonIDSuffix = "");
   declareProperty("InputHltDecReportsLocation",
       m_inputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);
 
@@ -242,8 +241,6 @@ StatusCode HltSelReportsMaker::execute() {
   ++m_event;
   m_debugMode = ( m_event == m_debugPeriod );
   if( m_debugMode ) m_event =0;
-
-  m_HLTmuonTracks=nullptr;  // will get them only if needed
 
   // create output container and put it on TES
   HltSelReports* outputSummary = new HltSelReports();
@@ -577,7 +574,7 @@ StatusCode HltSelReportsMaker::execute() {
      }
      m_Turbo = false;
   }
-  
+
   // Add a selection for event level data (make sure only done in the HLT2 level)
   string outLoc = m_outputHltSelReportsLocation;
   if( boost::algorithm::contains( outLoc, "Hlt2") ){
@@ -764,7 +761,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Track& obje
   // First assume we keep this one
   bool reuse=false;
   pBestHos = hos;
-  
+
   // find mutations of the same object
   // leave the one with the most info, should be the Turbo
   HltObjectSummarys::const_iterator rbegin=m_objectSummaries->end();  --rbegin;
@@ -783,7 +780,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Track& obje
           }
         }
         if( different )continue;
-        
+
         // found object of the same type with the same lhcbid content!
         //
         // If:
@@ -810,7 +807,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Track& obje
       }
     }
   }
-  
+
   if(!reuse){
     hos->setLhcbIDs( std::move(theseHits) );
     hos->setNumericalInfo( theseInfo );
@@ -951,9 +948,9 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::ProtoPartic
   HltObjectSummary* hos = new HltObjectSummary();
   hos->setSummarizedObjectCLID( object.clID() );
   hos->setSummarizedObject(&object);
-  
+
   HltObjectSummary::Info theseInfo = infoToSave( *hos );
-  
+
   // look for objects with the same info
   // if many then the one which leaves least amount info on this one
   HltObjectSummary* pBestHos(0);
@@ -961,7 +958,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::ProtoPartic
   // First assume we keep this one
   bool reuse=false;
   pBestHos = hos;
-  
+
   // find mutations of the same object
   // leave the one with the most info, should be the Turbo
   HltObjectSummarys::const_iterator rbegin=m_objectSummaries->end();  --rbegin;
@@ -988,7 +985,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::ProtoPartic
       }
     }
   }
-  
+
   if(!reuse){
     hos->setNumericalInfo( theseInfo );
     m_objectSummaries->push_back(hos);
@@ -1096,24 +1093,8 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
         if ( msgLevel(MSG::DEBUG) ) debug() << "requesting track store" << endmsg;
         // if muon add muon stub too
         const LHCb::MuonPID* muid = pp->muonPID();
-        if ( muid ){
-          const LHCb::Track*  muStub=muid->muonTrack();
-          if (!muStub ){
-            if( !m_HLTmuonTracks ) {
-              //Now we need to derive the muon segment container from
-              //the track container
-              m_HltMuonTracksLocation.clear() ;
-              const DataObject* obj = track->parent() ;
-              const IRegistry* reg = ( obj ? obj->registry() : nullptr );
-              if ( reg ) m_HltMuonTracksLocation = reg->identifier() + m_muonIDSuffix;
-              m_HLTmuonTracks = ( !m_HltMuonTracksLocation.empty() ? getIfExists<LHCb::Tracks>(m_HltMuonTracksLocation) : nullptr);
-              if( !m_HLTmuonTracks) {
-                Warning(" Found Particle which is a muon but no muon tracks at " + m_HltMuonTracksLocation
-                    ,StatusCode::SUCCESS,10 );
-              }
-            }
-            muStub = ( m_HLTmuonTracks ?  m_HLTmuonTracks->object(track->key()) : nullptr );
-          }
+        if ( muid && muid->IsMuonLoose() ) {
+          const LHCb::Track* muStub = muid->muonTrack();
           if( muStub ){
             hos->addToSubstructure( store_( *muStub ) );
           } else {
