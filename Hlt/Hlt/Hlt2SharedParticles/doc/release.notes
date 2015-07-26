@@ -6,6 +6,10 @@
 
 !========================= Hlt2SharedParticles v7r7 2015-07-23 =========================
 
+! 2015-07-25 - Roel Aaij
+ - Add proto-particles as inputs to ConvPhoton{LL,DD}, they aren't used, but
+   there is no other way to shut up the warnings.
+
 !  2015-07-15  -  Mike Sokoloff
    - added BiKalmanFittedDownKaons to TrackFittedBasicParticles
    - primarily for use in building DDD charged hyperon candidates

@@ -16,12 +16,21 @@ from HltLine.HltLine import bindMembers, Hlt2Member
 from HltTracking.HltPVs import PV3D
 from HltLine.HltLine import Hlt1Tool as Tool
 
+## Tracking configurations to silence useless warnings
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+LongTracking = Hlt2BiKalmanFittedForwardTracking()
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
+DownstreamTracking = Hlt2BiKalmanFittedDownstreamTracking()
+
+
 __all__ = ( 'ConvPhotonLL', 'ConvPhotonDD' )
- 
-BA = Tool(type = BremAdder, name = 'BremAdder', BremInput = "Hlt2/Hlt2BiKalmanFittedPhotons/Particles")
+
+BA = Tool(type = BremAdder, name = 'BremAdder', BremInput = Photons.outputSelection())
 Hlt2DiEl_LL = Hlt2Member(DiElectronMaker
-        ,'ConvPhotonLL'
+        ,'LL'
         , DecayDescriptor = "gamma -> e+ e-"
+        ## Inputs are not actually used, but this silences the silly warnings
+        , Inputs = [LongTracking.hlt2ChargedAllPIDsProtos()]
         , ElectronInputs = [Electrons.outputSelection()]
         , DeltaY = 3.
         , DeltaYmax = 200. * mm
@@ -30,8 +39,10 @@ Hlt2DiEl_LL = Hlt2Member(DiElectronMaker
         , tools = [BA]
         )
 Hlt2DiEl_DD = Hlt2Member(DiElectronMaker
-        ,'ConvPhotonDD'
+        ,'DD'
         , DecayDescriptor = "gamma -> e+ e-"
+        ## Inputs are not actually used, but this silences the silly warnings
+        , Inputs = [DownstreamTracking.hlt2ChargedCaloProtos()]
         , ElectronInputs = [DownElectrons.outputSelection()]
         , DeltaY = 3.
         , DeltaYmax = 200. * mm
@@ -40,5 +51,5 @@ Hlt2DiEl_DD = Hlt2Member(DiElectronMaker
         , tools = [BA]
         )
 
-ConvPhotonLL = bindMembers( "ConvPhotonLL", [ PV3D('Hlt2'), Photons, Electrons, Hlt2DiEl_LL ] )
-ConvPhotonDD = bindMembers( "ConvPhotonDD", [ PV3D('Hlt2'), Photons, DownElectrons, Hlt2DiEl_DD ] )
+ConvPhotonLL = bindMembers( "ConvPhoton", [ PV3D('Hlt2'), Photons, Electrons, Hlt2DiEl_LL ] )
+ConvPhotonDD = bindMembers( "ConvPhoton", [ PV3D('Hlt2'), Photons, DownElectrons, Hlt2DiEl_DD ] )
