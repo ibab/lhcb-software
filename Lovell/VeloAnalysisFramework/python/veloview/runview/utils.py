@@ -3,6 +3,7 @@ from veloview.config import Config
 from veloview.runview.reference_database import ReferenceDatabase
 from veloview.utils import paths, rundb
 
+import glob
 
 def run_list():
     """Return a list of run numbers as integers sorted high-to-low."""
@@ -35,7 +36,21 @@ def reference_run(plot, run):
     polarity = rundb.RunDB().polarity(run)
     return refdb.reference_run_for_plot(run, plot, polarity)
 
-
 def run_file_path(run):
     """Return TFile object directory path for the given run."""
     return paths.make_dir_tree(run, Config().run_data_dir)
+
+def run_file(run):
+    base = run_file_path(run)
+    files = sorted(glob.glob("{0}/*.root".format(base)))
+    try:
+        return files[-1]
+    except IndexError:
+        raise IOError("Run file not found for run {0}".format(run))
+
+def reference_run_file(run):
+    """Return the reference run file for the given run."""
+    refdb = ReferenceDatabase(Config().reference_db_path)
+    polarity = rundb.RunDB().polarity(run)
+    ref_run = refdb.reference_run(run, polarity)
+    return run_file(ref_run)
