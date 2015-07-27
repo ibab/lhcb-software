@@ -6,6 +6,9 @@
 
 !========================= HltConf v13r1 2015-07-23 =========================
 
+! 2015-07-27 - Roel Aaij
+ - Add _RefitPVs to HltInit to silence HltSelReportsMaker warnings.
+
 ! 2015-07-26 - Roel Aaij
  - Fix configuration of split SelReportsMaker and remove obsolete part.
 
