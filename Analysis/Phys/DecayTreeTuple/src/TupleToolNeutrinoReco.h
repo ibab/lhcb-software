@@ -19,7 +19,7 @@
  * 0 = aP(neutrino)^2+bP(neutrino)+c
  * a = 4(PT^2+M^2)
  * b = 4P||(2PT^2 - mB^2 + M^2)             = X - 4P||*mB^2
- * c = 4PT^2(2P||^2 + mB^2) -(mB^2 - M^2)^2 = Y + 4PT ^2*mB*2 - (mB^2 - M^2)^2
+ * c = 4PT^2(P||^2 + mB^2) -(mB^2 - M^2)^2 = Y + 4PT ^2*mB*2 - (mB^2 - M^2)^2
  *
  * P*(neutrino)= [-b +/- sqrt(b^2 - 4ac)]/(2a)
  *
@@ -42,7 +42,7 @@
  * If the verbose flag is set, the intemediate working will also be stored
  * - head_Nu_a    : a in the above equation
  * - head_Nu_X    : X in the above equation, 4P||(2PT^2 + M^2)
- * - head_Nu_Y    : Y in the above equation, 8PT^2*P||^2
+ * - head_Nu_Y    : Y in the above equation, 4PT^2*P||^2
  *
  * It can be useful to store these variables, since they are the part of the
  * equation which does not depend on the mass of the mother particle, in case an

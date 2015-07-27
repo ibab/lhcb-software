@@ -86,7 +86,7 @@ StatusCode TupleToolNeutrinoReco::fill( const LHCb::Particle*
 
       double a=4.*(Nu_Perp*Nu_Perp+P->measuredMass()*P->measuredMass());
       double X=4.*Nu_Parl*(2*Nu_Perp*Nu_Perp+P->measuredMass()*P->measuredMass());
-      double Y=8.*Nu_Perp*Nu_Perp*Nu_Parl*Nu_Parl;
+      double Y=4.*Nu_Perp*Nu_Perp*Nu_Parl*Nu_Parl;
       test &= tuple->column( prefix+"_Nu_a", a );
       test &= tuple->column( prefix+"_Nu_X", X );
       test &= tuple->column( prefix+"_Nu_Y", Y );
@@ -185,7 +185,7 @@ double TupleToolNeutrinoReco::MomentumSqrt(const double Parl,
   double a=4.*(Perp*Perp+Mass*Mass);
   double b=4.*Parl*(2.*Perp*Perp-m_motherMass*m_motherMass+Mass*Mass);
   double c=
-    4.*Perp*Perp*(2*Parl*Parl+m_motherMass*m_motherMass)
+    4.*Perp*Perp*(Parl*Parl+m_motherMass*m_motherMass)
     -
     (m_motherMass*m_motherMass-Mass*Mass)*(m_motherMass*m_motherMass-Mass*Mass);
 
