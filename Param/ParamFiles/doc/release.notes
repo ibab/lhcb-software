@@ -4,11 +4,12 @@
 ! Purpose     : Distribution of parametrization data files
 !-----------------------------------------------------------------------------
 
+!========================= ParamFiles v8r16 2015-07-27 =========================
+
 ! 2015-07-17 - Albert Puig
   - Updated inclusive radiative BDTs
     + data/Hlt2_RadiativeInc_2plus1_BDTParams_v2r0.txt
     + data/Hlt2_RadiativeInc_3plus1_BDTParams_v2r0.txt
-
 
 ! 2015-07-17 - Patrick Spradlin
   Added updated versions of the lookup tables for inclusive D* and inclusive
@@ -18,6 +19,7 @@
     + data/Hlt2Sigc2PiLc2HHX_BDTParams_v1r0.txt
 
 !========================= ParamFiles v8r15 2015-07-15 =========================
+
 ! 2015-07-10 - Julien Cogan
 - Add a new LUT (V7) for L0Muon pt. Computed with the alignment constant obtained
 with 350 k J/Psi candidates recorded after the TS.
