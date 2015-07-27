@@ -4,6 +4,10 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-07-27 - Roel Aaij
+ - Use ipc for relay control connections.
+ - Prepare for the appearance of hlt02.
+
 ! 2015-07-24 - Roel Aaij
  - Fix CMT build.
 

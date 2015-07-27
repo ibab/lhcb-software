@@ -40,7 +40,7 @@ DECLARE_SERVICE_FACTORY(Hlt2MonInfoSvc)
 Hlt2MonInfoSvc::Hlt2MonInfoSvc(const string& name, ISvcLocator* loc)
    : Hlt2MonBaseSvc(name, loc)
 {
-   declareProperty("HostnameRegex", m_hostRegex = "hlt(01|(?<subfarm>[a-f]{1}[0-9]{2})(?<node>[0-9]{2})?)");
+   declareProperty("HostnameRegex", m_hostRegex = "hlt(0[12]|(?<subfarm>[a-f]{1}[0-9]{2})(?<node>[0-9]{2})?)");
 }
 
 //===============================================================================
@@ -65,7 +65,7 @@ StatusCode Hlt2MonInfoSvc::initialize()
       auto result = boost::regex_match(begin(hostname), end(hostname), matches, re_host, flags);
 
       // This one first as we want to check for forced top/forced on.
-      if (matches[1] == "01" || m_forceTop) {
+      if (matches[1] == "01" || matches[1] == "02" || m_forceTop) {
          // top relay
          m_top = true;
       }
