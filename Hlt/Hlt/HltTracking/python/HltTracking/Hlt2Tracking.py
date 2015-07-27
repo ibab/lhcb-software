@@ -980,9 +980,11 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # Configure moun ID tools explicitly, would be better if the ConfiguredMuonIDs class
         # provided a comprehensive method. All tools are public, but should configure
                 # everywhere, where they are used to be safe.
+        import Configurables
         for tool, fun in (("CommonMuonTool" ,"IsMuonTool"),
                      ("DLLMuonTool", "DLLMuonTool"),
                      ("MakeMuonTool", "MakeMuonTool")):
+            tool = getattr(Configurables, tool)()
             getattr(cm, "configure" + fun)(tool)
 
         #The tracks to use
