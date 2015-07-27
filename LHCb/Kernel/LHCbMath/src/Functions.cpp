@@ -9552,7 +9552,37 @@ Gaudi::Math::FourierSum::FourierSum
   //
   m_scale = 2 * M_PI / ( m_xmax - m_xmin ) ;
   m_delta = 0.5      * ( m_xmax + m_xmin ) ;
-}  
+}
+
+// ============================================================================
+// constructor from cosine series 
+// ============================================================================
+Gaudi::Math::FourierSum::FourierSum 
+( const Gaudi::Math::CosineSum& sum )
+  : std::unary_function<double,double>() 
+  , m_pars  ( 2 * sum.degree() + 1 , 0.0  ) 
+  , m_xmin  ( 2 * sum.xmin() - sum.xmax() )
+  , m_xmax  ( sum.xmax() )
+  , m_scale ( 1 ) 
+  , m_delta ( 0 ) 
+  , m_fejer ( sum.fejer() )
+{
+  //
+  if ( s_equal ( -M_PI     , m_xmin ) ) { m_xmin = -M_PI     ; }
+  if ( s_equal ( -1        , m_xmin ) ) { m_xmin = -1        ; }
+  if ( s_equal (  0        , m_xmin ) ) { m_xmin =  0        ; }
+  //
+  if ( s_equal (  1        , m_xmax ) ) { m_xmax =  1        ; }
+  if ( s_equal (      M_PI , m_xmax ) ) { m_xmax =  M_PI     ; }
+  if ( s_equal (  2 * M_PI , m_xmax ) ) { m_xmax =  2 * M_PI ; }
+  //
+  m_scale = 2 * M_PI / ( m_xmax - m_xmin ) ;
+  m_delta = 0.5      * ( m_xmax + m_xmin ) ;
+  //
+  for ( unsigned short i = 0 ; i <= degree() ; ++i ) 
+  { setA ( i , sum.par(i) ) ; }
+  //
+}
 // ============================================================================
 // protected constructor from the parameters 
 // ============================================================================
@@ -9584,7 +9614,8 @@ bool Gaudi::Math::FourierSum::setPar
 {
   if ( m_pars.size() <= k            ) { return false ; }
   if ( s_equal ( m_pars[k] , value ) ) { return false ; }
-  m_pars[k] = value ;
+  //
+  m_pars[k] = s_zero ( value ) ? 0.0 : value ;
   return true ;
 }
 // ============================================================================
@@ -9632,6 +9663,44 @@ namespace
       const long double f = ( N + 1 - 2 * k )        * fd ;
       sum += pars [ 2 * k - 1 ] * std::sin ( k * x ) * f  ;
       sum += pars [ 2 * k     ] * std::cos ( k * x ) * f  ;
+    }
+    //
+    return sum ;
+  }
+  // ==========================================================================
+  /// Fourier sums 
+  template <class TYPE>
+  long double _fourier_cosine_sum_ ( const std::vector<TYPE>& pars , const long double x ) 
+  {
+    /// start summation
+    //
+    const unsigned long N  = pars.size() ;
+    if      ( 0 == N ) { return 0             ; }
+    else if ( 1 == N ) { return 0.5 * pars[0] ; }
+    //              
+    long double          sum = 0.5 * pars[0] ;
+    for ( unsigned short k   = 1 ; k < N ; ++k  ) 
+    { sum += pars [ k ] * std::cos ( k * x ) ; }
+    //
+    return sum ;
+  }
+  // ==========================================================================
+  /// Fejer sums 
+  template <class TYPE>
+  long double _fejer_cosine_sum_ ( const std::vector<TYPE>& pars , const long double x ) 
+  {
+    //
+    const unsigned long N  = pars.size() ;
+    if      ( 0 == N ) { return 0             ; }
+    else if ( 1 == N ) { return 0.5 * pars[0] ; }
+    //              
+    long double sum        = 0.5 * pars[0] ;  
+    const double   long fd = 1.0L / N  ;
+    /// start summation
+    for ( unsigned short k   = 1 ; k < N ; ++k  ) 
+    {
+      const long double f = ( N - k ) * fd ;
+      sum += pars [ k ] * std::cos ( k * x ) * f  ;
     }
     //
     return sum ;
@@ -9788,6 +9857,142 @@ Gaudi::Math::FourierSum::operator+=( const double a )
 // ============================================================================
 Gaudi::Math::FourierSum&
 Gaudi::Math::FourierSum::operator-=( const double a ) 
+{
+  m_pars[0] -= a ;
+  return *this ;
+}
+
+
+// ============================================================================
+// constructor from the degree 
+// ============================================================================
+Gaudi::Math::CosineSum::CosineSum 
+( const unsigned short degree , 
+  const double         xmin   , 
+  const double         xmax   , 
+  const bool           fejer  )
+  : std::unary_function<double,double>() 
+  , m_pars  ( degree + 1 , 0.0 ) 
+  , m_xmin  ( std::min ( xmin , xmax ) )
+  , m_xmax  ( std::max ( xmin , xmax ) )
+  , m_scale ( 1 ) 
+  , m_fejer ( fejer ) 
+{
+  //
+  if ( s_equal ( -M_PI     , m_xmin ) ) { m_xmin = -M_PI     ; }
+  if ( s_equal ( -1        , m_xmin ) ) { m_xmin = -1        ; }
+  if ( s_equal (  0        , m_xmin ) ) { m_xmin =  0        ; }
+  //
+  if ( s_equal (  1        , m_xmax ) ) { m_xmax =  1        ; }
+  if ( s_equal (      M_PI , m_xmax ) ) { m_xmax =  M_PI     ; }
+  if ( s_equal (  2 * M_PI , m_xmax ) ) { m_xmax =  2 * M_PI ; }
+  //
+  m_scale = M_PI / ( m_xmax - m_xmin ) ;
+}
+// ============================================================================
+// constructor from Fourier sum 
+// ============================================================================
+Gaudi::Math::CosineSum::CosineSum 
+( const Gaudi::Math::FourierSum& sum ) 
+  : std::unary_function<double,double>() 
+  , m_pars  ( sum.degree() + 1 , 0.0 ) 
+  , m_xmin  ( 0.5 * ( sum.xmax() + sum.xmin() ) )
+  , m_xmax  (         sum.xmax()                )
+  , m_scale ( 1 ) 
+  , m_fejer ( sum.fejer() ) 
+{
+  //
+  if ( s_equal ( -M_PI     , m_xmin ) ) { m_xmin = -M_PI     ; }
+  if ( s_equal ( -1        , m_xmin ) ) { m_xmin = -1        ; }
+  if ( s_equal (  0        , m_xmin ) ) { m_xmin =  0        ; }
+  //
+  if ( s_equal (  1        , m_xmax ) ) { m_xmax =  1        ; }
+  if ( s_equal (      M_PI , m_xmax ) ) { m_xmax =  M_PI     ; }
+  if ( s_equal (  2 * M_PI , m_xmax ) ) { m_xmax =  2 * M_PI ; }
+  //
+  m_scale = M_PI / ( m_xmax - m_xmin ) ;
+  //
+  for ( unsigned short i = 0 ; i< m_pars.size() ; ++i ) 
+  { setPar ( i , sum.a(i) ) ; }
+}
+// ============================================================================
+// all zero ?
+// ============================================================================
+bool Gaudi::Math::CosineSum::zero  () const { return s_vzero ( m_pars ) ; }
+// ============================================================================
+// set k-parameter
+// ============================================================================
+bool Gaudi::Math::CosineSum::setPar 
+( const unsigned short k , const double value ) 
+{
+  if ( m_pars.size() <= k            ) { return false ; }
+  if ( s_equal ( m_pars[k] , value ) ) { return false ; }
+  //
+  m_pars[k] = s_zero ( value ) ? 0.0 : value ;
+  //
+  return true ;
+}
+// ============================================================================
+// define summation algorithm
+// ============================================================================
+bool Gaudi::Math::CosineSum::setFejer ( const bool value ) 
+{
+  if ( m_fejer == value ) { return false ; }
+  m_fejer = value ;
+  return true ;
+}
+// ============================================================================
+// calculate Fourier sum 
+// ============================================================================
+double Gaudi::Math::CosineSum::fourier_sum ( const double x ) const 
+{
+  /// transform to "t"-representation 
+  const long double tv = t(x) ;
+  return _fourier_cosine_sum_ ( m_pars , tv ) ;
+}
+// ============================================================================
+// calculate Fejer sum 
+// ============================================================================
+double Gaudi::Math::CosineSum::fejer_sum ( const double x ) const 
+{
+  /// transform to "t"-representation 
+  const long double tv = t(x) ;
+  return _fejer_cosine_sum_ ( m_pars , tv ) ;
+}
+// ============================================================================
+// simple  manipulations with polynoms: scale it! 
+// ============================================================================
+Gaudi::Math::CosineSum&
+Gaudi::Math::CosineSum::operator*=( const double a ) 
+{
+  for ( std::vector<double>::iterator it = m_pars.begin() ; 
+        m_pars.end() != it ; ++it ) {  (*it ) *= a ; }
+  return *this ;
+}
+// ============================================================================
+// simple  manipulations with polynoms: scale it! 
+// ============================================================================
+Gaudi::Math::CosineSum&
+Gaudi::Math::CosineSum::operator/=( const double a ) 
+{
+  for ( std::vector<double>::iterator it = m_pars.begin() ; 
+        m_pars.end() != it ; ++it ) {  (*it ) /= a ; }
+  return *this ;
+}
+// ============================================================================
+// simple  manipulations with polynoms: add constant 
+// ===========================================================================
+Gaudi::Math::CosineSum&
+Gaudi::Math::CosineSum::operator+=( const double a ) 
+{
+  m_pars[0] += a ;
+  return *this ;
+}
+// ============================================================================
+// simple  manipulations with polynoms: subtract constant 
+// ============================================================================
+Gaudi::Math::CosineSum&
+Gaudi::Math::CosineSum::operator-=( const double a ) 
 {
   m_pars[0] -= a ;
   return *this ;
