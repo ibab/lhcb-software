@@ -368,22 +368,22 @@ bool Minimiser::doMinosFit(){
   return success;
 }
 
-bool Minimiser::doSeekFit(){
+bool Minimiser::doSeekFit(int maxCalls, int devs){
     bool dbThis=false;
     bool success = true;
     success &= prepFit();
-    success &= CallSeek();
+    success &= CallSeek(maxCalls, devs);
     if(dbThis) cout << "called SEEK" << endl;
     //scanMarked();
     success &= this->endOfFit();
     return success;
 }
 
-bool Minimiser::doSimplexFit(){
+bool Minimiser::doSimplexFit(int maxCalls, double tolerance){
     bool dbThis=false;
     bool success = true;
     success &= prepFit();
-    success &= CallSimplex();
+    success &= CallSimplex(maxCalls, tolerance);
     if(dbThis) cout << "called SIMPLEX" << endl;
     //scanMarked();
     success &= this->endOfFit();

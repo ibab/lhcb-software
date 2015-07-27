@@ -83,8 +83,8 @@ class Minimiser : public TMinuit{
   bool prepFit();
   bool doFit();
   bool doMinosFit();
-  bool doSeekFit();
-  bool doSimplexFit();
+  bool doSeekFit(int maxCalls = 100, int devs = 5);
+  bool doSimplexFit(int maxCalls = 300, double tolerance = 1. );
 
   bool scanMarked();
   bool scanAll();
