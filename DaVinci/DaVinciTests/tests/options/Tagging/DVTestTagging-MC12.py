@@ -7,7 +7,7 @@
 #
 ########################################################################
 from Gaudi.Configuration import *
-from GaudiPython import gbl
+import GaudiPython
 from Configurables import GaudiSequencer
 ########################################################################
 #
@@ -18,9 +18,9 @@ from Configurables import CheatedSelection, BDecayTool, MCDecayFinder
 from GaudiKernel import ROOT6WorkAroundEnabled
 if ROOT6WorkAroundEnabled('ROOT-7492'):
     # trigger autoloading of LHCbKernel dictionary
-    gbl.LHCb.LHCbID
+    GaudiPython.gbl.LHCb.LHCbID
     # trigger autoloading of DigiEvent dictionary
-    gbl.LHCb.CaloDigit
+    GaudiPython.gbl.LHCb.CaloDigit
 
 
 myDecay = '[B+ -> (J/psi(1S) => mu+ mu- ) K+]cc'
@@ -88,3 +88,8 @@ DaVinci().MoniSequence = [   #PrintDecayTree()
 #from GaudiConf import IOHelper 
 #IOHelper().inputFiles(['PFN:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/MC/2012/ALLSTREAMS.DST/00021062/0000/00021062_00000001_1.allstreams.dst']) # Bu2JpsiK 
 
+importOptions( '$PRCONFIGOPTS/DaVinci/FlavourTagging/MC12-B2JPsiMuMuK.py' )
+
+appMgr = GaudiPython.AppMgr()
+
+appMgr.run( DaVinci().EvtMax )
