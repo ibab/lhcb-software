@@ -2,7 +2,10 @@
 ! Responsible : Silvia Borghi, Marco Gersabeck
 !=============================================================================
 
-! 2014-06-05 - Silvia Borghi
+! 2015-07-27 - Maurizio Martinelli
+ - Solved some compilation errors due to less permissive configuration.
+
+! 2015-06-05 - Silvia Borghi
  - Corrected a sign  in CompareModuleXml.py
 
 !========================= VeloAlignment v4r12 2014-08-23 =========================

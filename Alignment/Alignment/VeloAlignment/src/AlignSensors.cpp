@@ -962,7 +962,7 @@ StatusCode AlignSensors::fitSensorResiduals() {
     m_h_profile->Fit( m_fit_func , "Q" );
     verbose() << "Retrieving fit results." << endmsg;
     m_fit_func->GetParameters( &par[0] );
-    parerr = m_fit_func->GetParErrors();
+    parerr = (double*)m_fit_func->GetParErrors();
     debug() << "Fit result for R sensor of module " << i << ": " << par[0] 
             << ", " << par[1] << ", " << par[2] << endmsg;
     debug() << "Fit errors for R sensor of module " << i << ": " << parerr[0] 
@@ -1026,7 +1026,7 @@ StatusCode AlignSensors::fitSensorResiduals() {
     m_h_profile->Fit( m_fit_func , "Q" );
     verbose() << "Retrieving fit results." << endmsg;
     m_fit_func->GetParameters( &par[0] );
-    parerr = m_fit_func->GetParErrors();
+    parerr = (double*)m_fit_func->GetParErrors();
     debug() << "Fit result for Phi sensor of module " << i << ": " << par[0] << ", " 
             << par[1] << ", " << par[2] << endmsg;
     debug() << "Fit errors for Phi sensor of module " << i << ": " << parerr[0] << ", " 
