@@ -18,6 +18,7 @@ __all__     = [ "FillTask" , "FillHistos" ]
 # =============================================================================
 import os
 import tempfile
+import sets
 
 import GaudiMP.Parallel          as     Parallel
 from   GaudiKernel.SystemOfUnits import MeV
