@@ -106,6 +106,9 @@ class CLEO2012_BW_BW : virtual public ILineshape, public MINT::FitParDependent{
   virtual double mumsRecoMass2() const;
   virtual double mumsRecoMass() const;
   virtual const MultiQuarkContent& mumsQuarkContent() const;
+
+  bool nonResonant() const;
+    
   virtual int numDaughters() const;
   virtual TLorentzVector daughterP4(int i) const;
 

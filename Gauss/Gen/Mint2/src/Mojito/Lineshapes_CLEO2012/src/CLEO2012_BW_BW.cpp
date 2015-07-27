@@ -975,11 +975,19 @@ const GaussFct& CLEO2012_BW_BW::gaussianApprox(){
 }
 */
 
+bool CLEO2012_BW_BW::nonResonant() const{
+    return mumsProperties()->isNonResonant();
+}
 
 std::complex<double> CLEO2012_BW_BW::getVal(IDalitzEvent& evt){
   bool dbThis=false;
   setEventPtr(evt);
   resetInternals();
+    
+  if( nonResonant() ){
+        return 1.;
+  }  
+    
   if(startOfDecayChain()){
     // in principle there is no need to distinguish the start
     // of the decay chain from the rest - it could just get
