@@ -2,6 +2,9 @@ Package     : Hlt/IndepenceTests
 Package Coordinator : Mika Vesterinen
 Purpose     : HLT application to test indepence of Hlt lines
 
+! 2015-07-27 - Mika Vesterinen
+ - change import of configureHltMonitoring in python/IndependenceTests/Config.py
+
 !========================= IndependenceTests v1r11 2015-07-05 =========================
 
 ! 2015-07-05 - Roel Aaij

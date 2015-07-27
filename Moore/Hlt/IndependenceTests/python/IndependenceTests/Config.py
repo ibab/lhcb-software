@@ -82,8 +82,9 @@ class Config( object ):
         Sequence( "Hlt2" ).Members = [ i.configurable() for i in lines2 ]
 
         # Reconfigure the monitoring to expect the correct lines
-        HltConf().configureHltMonitoring( lines1, lines2 )
-
+        from HltConf.HltMonitoring import HltMonitoringConf
+        HltMonitoringConf().configureHltMonitoring(lines1, lines2)
+  
         for hltLine in Sequence( "Hlt1" ).Members + Sequence( "Hlt2" ).Members:
             try:
                 prescale = getattr( hltLine, "Prescale" )
