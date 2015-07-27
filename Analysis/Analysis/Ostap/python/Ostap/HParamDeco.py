@@ -22,6 +22,7 @@ __all__     = (
     'legendre_sum'  ,
     'chebyshev_sum' ,
     'fourier_sum'   ,
+    'cosine_sum'    ,
     ) 
 # =============================================================================
 import ROOT, cppyy                     ## attention here!!
@@ -233,6 +234,48 @@ def fourier_sum ( func , N , xmin , xmax , fejer = False ) :
     
     return fsum
 
+# =============================================================================
+## make a function representation in terms of cosine Fourier series
+#  @code 
+#  func = lambda x : x * x
+#  fsum = cosine_sum ( func , 4 , -1 , 1 )
+#  print fsum.pars()
+#  @see Gaudi::Math::CosineSum
+#  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+#  @date 2015-07-26
+def cosine_sum ( func , N , xmin , xmax , fejer = False ) :
+    """
+    Make a function/histiogram representation in terms of Fourier series
+    >>> func = lambda x : x * x
+    >>> fsum = fourier_sum ( func , 4 , -1 , 1 )
+    >>> print fsum
+    """
+    if not isinstance ( N , (int,long) ) or 0 > N :
+        raise ArrtibuteError( "cosine_sum: invalid N %s " % N )
+
+    xmin,xmax = _get_xminmax_ ( func , xmin , xmax , 'cosine_sum' )
+
+    ## start to play with numpy 
+    import numpy
+    
+    ## 1) prepare sampling
+    t     = numpy.linspace ( xmin , xmax , N + 1 , endpoint=True )
+
+    ## 2) vectorize the function
+    vfunc = numpy.vectorize ( lambda x : float ( func ( x ) ) )
+
+    ## make cosine fourier transform 
+    import scipy.fftpack 
+    r = scipy.fftpack.dct ( vfunc ( t ) , 1 ) / N 
+    
+    #
+    ## decode the results & prepare the output
+    #
+    csum = cpp.Gaudi.Math.CosineSum ( N, xmin , xmax , fejer )
+    for i in range ( 0 , N + 1 ) : csum.setPar ( i , r[i] )
+
+    ##
+    return csum
 
 # =============================================================================
 ## @class H_fit
@@ -517,6 +560,35 @@ def _h1_fourier_ ( h1 , degree , fejer = False , opts = 'SQ0I' ) :
     return _h1_param_sum_ ( h1 , func , H_fit , opts )  
 
 # =============================================================================
+## represent 1D-histo as cosine Fourier polynomial
+def _h1_cosine_ ( h1 , degree , fejer = False , opts = 'SQ0I' ) :
+    """
+    Represent histo as Bernstein polynomial
+    
+    >>> h = ... # the historgam
+    >>> b = h.cosine ( 3 )  ## make a fit... 
+    
+    >>> tfun       = r[0]  ## get TH1 object
+    >>> tfun.Draw()
+
+    Underlying C++ object:
+    >>> fun        = b[2]
+    >>> print fun.pars() 
+
+    ## fit result and status 
+    >>> fit_result = r[3]
+    >>> print fit_result.CovMatrix(1,1)
+    """
+    #
+
+    ## make reasonable approximation:
+    mn , mx = h1.xminmax() 
+    func = cosine_sum ( h1 , degree , mn , mx , fejer )
+
+    ## fit it!
+    return _h1_param_sum_ ( h1 , func , H_fit , opts )  
+
+# =============================================================================
 ## represent 1D-histo as plain vanilla polynomial
 def _h1_polinomial_ ( h1 , degree , interpolate = True , opts = 'SQ0' ) :
     """
@@ -703,6 +775,7 @@ for t in ( ROOT.TH1D , ROOT.TH1F ) :
     t.chebyshev  = _h1_chebyshev_
     t.legendre   = _h1_legendre_
     t.fourier    = _h1_fourier_
+    t.cosine     = _h1_cosine_
     t.polynomial = _h1_polinomial_
     t.positive   = _h1_positive_
     t.monothonic = _h1_monothonic_
@@ -741,6 +814,7 @@ cpp.Gaudi.Math.Bernstein        .funobj = _funobj0_
 cpp.Gaudi.Math.ChebyshevSum     .funobj = _funobj0_
 cpp.Gaudi.Math.LegendreSum      .funobj = _funobj0_
 cpp.Gaudi.Math.FourierSum       .funobj = _funobj0_
+cpp.Gaudi.Math.CosineSum        .funobj = _funobj0_
 cpp.Gaudi.Math.Polynomial       .funobj = _funobj0_
 cpp.Gaudi.Math.BSpline          .funobj = _funobj0_
 cpp.Gaudi.Math.Positive         .funobj = _funobjN_
@@ -1485,6 +1559,108 @@ for t in ( ROOT.TH1D , ROOT.TH1F ) :
 
 
 # =============================================================================
+## parameterize/fit histogram with the positive  b-spline 
+#  @code
+#  h1 = ...
+#  results = h1.pdf_pSpline ( spline = ( 3 ,2 )  ) ## order=3, inner knots=2
+#  results = h1.pdf_pSpline ( ( 3 , 2 ) ,  draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_pspline_ ( h1 , spline , *args , **kwargs ) :
+    """
+    Parameterize/fit histogram with positive b-spline 
+    >>> h1 = ...
+    >>> results = h1.pdf_pSpline ( spline = (3,2) )
+    >>> results = h1.pdf_pSpline ( (3,2) , draw = True , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    #
+    if isinstance ( spline , (tuple,list) ) : 
+        ## create the spline with uniform binning 
+        PS     = cpp.Gaudi.Math.PositiveSpline
+        spline = PS ( h1.xmin() , h1.xmax() , spline[1] , spline[0] )
+    #
+    from Ostap.FitBkgModels import PSpline_pdf
+    return _h1_pdf_ ( h1 , PSpline_pdf , ( spline , ) , *args , **kwargs )
+
+
+# =============================================================================
+## parameterize/fit histogram with the monothonic positive  b-spline 
+#  @code
+#  h1 = ...
+#  results = h1.pdf_mSpline ( spline = ( 3 , 2 , True )  ) ## order=3, inner knots=2
+#  results = h1.pdf_mSpline ( ( 3 , 2, False ) ,  draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_mspline_ ( h1 , spline , *args , **kwargs ) :
+    """
+    Parameterize/fit histogram with monothonic positive b-spline 
+    >>> h1 = ...
+    >>> results = h1.pdf_mSpline ( spline = (3,2,True) )
+    >>> results = h1.pdf_mSpline ( (3,2,True) , draw = True , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    #
+    if isinstance ( spline , ( tuple , list ) ) :
+        ## create the spline with uniform binning 
+        MS     = cpp.Gaudi.Math.MonothonicSpline
+        spline = MS ( h1.xmin() , h1.xmax() , spline[1] , spline[0] , spline[2] )
+        #
+    from Ostap.FitBkgModels import MSpline_pdf
+    return _h1_pdf_ ( h1 , MSpline_pdf , ( spline , ) , *args , **kwargs )
+
+# =============================================================================
+## parameterize/fit histogram with the convex/concave monothonic positive  b-spline 
+#  @code
+#  h1 = ...
+#  results = h1.pdf_cSpline ( spline = ( 3 , 2 , True )  ) ## order=3, inner knots=2
+#  results = h1.pdf_cSpline ( ( 3 , 2, False ) ,  draw = True , silent = True )
+#  print results[0]
+#  pdf = results[2]
+#  print results[3]
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-26
+def _h1_pdf_cspline_ ( h1 , spline , *args , **kwargs ) :
+    """
+    Parameterize/fit histogram with convex/concave montonic positive b-spline 
+    >>> h1 = ...
+    >>> results = h1.pdf_cSpline ( spline = (3,2,True,True) )
+    >>> results = h1.pdf_cSpline ( (3,2,True,True), draw = True , silent = True )
+    >>> print results[0] ## fit results 
+    >>> pdf = results[1] ## get PDF 
+    >>> print results[2] ## underlying parameterization 
+    """
+    #
+    if isinstance ( spline , (tuple,list) ) : 
+        ## create the spline with uniform binning 
+        CS     = cpp.Gaudi.Math.ConvexSpline
+        spline = CS ( h1.xmin() , h1.xmax() , spline[1] , spline[0] , spline[2] , spline[3] )
+    #
+    from Ostap.FitBkgModels import CSpline_pdf
+    return _h1_pdf_ ( h1 , CSpline_pdf , ( spline , ) , *args , **kwargs )
+
+
+
+for t in ( ROOT.TH1D , ROOT.TH1F ) :
+    t.pdf_pSpline = _h1_pdf_pspline_
+    t.pdf_mSpline = _h1_pdf_mspline_
+    t.pdf_cSpline = _h1_pdf_cspline_
+
+
+# =============================================================================
 ## make a histogram representation in terms of Legendre polynomials
 #  @code 
 #  histo  = ...
@@ -1553,12 +1729,35 @@ def _h1_fourier_sum_ ( h1 , N , fejer = False , **kwargs ) :
     ##
     return fourier_sum ( h1 , N , xmin , xmax , fejer )
 
+# =============================================================================
+## make a histogram representation in terms of cosine Fourier serie
+#  @code 
+#  histo  = ...
+#  fsum   = histo.cosine_sum ( 4 )
+#  print fsum
+#  @see Gaudi::Math::CosineSum
+#  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+#  @date 2015-07-26
+def _h1_cosine_sum_ ( h1 , N , fejer = False , **kwargs ) :
+    """
+    Make a histogram representation in terms of cosine Fourier serie
+    >>> histo  = ...
+    >>> csum   = histo.cosine_sum ( 4 )
+    >>> print csum
+    """
+    ##
+    xmin = max ( kwargs.get( 'xmin' , h1.xmin() ) , h1.xmin () ) 
+    xmax = min ( kwargs.get( 'xmax' , h1.xmax() ) , h1.xmax () ) 
+    ##
+    return cosine_sum ( h1 , N , xmin , xmax , fejer )
+
 
 for h in ( ROOT.TH1F , ROOT.TH1D ) :
 
     h.legendre_sum  = _h1_legendre_sum_
     h.chebyshev_sum = _h1_chebyshev_sum_
     h.fourier_sum   = _h1_fourier_sum_
+    h.cosine_sum    = _h1_cosine_sum_
     
 # =============================================================================
 ## fit histo

@@ -783,7 +783,13 @@ def _h1_call_ ( h1 , x , func = lambda s : s , interpolate = True ) :
     #
     ax = h1.GetXaxis (   )
     ix = ax.FindBin  ( x )
-    if not 1 <= ix <= ax.GetNbins () : return VE(0,0)
+    mx = ax.GetXmax  (   )
+    mn = ax.GetXmin  (   )
+    nb = ax.GetNbins (   )
+
+    if  0      == ix and isequal ( x , mn ) : ix += 1  ## fresh trick
+    if  nb + 1 == ix and isequal ( x , mx ) : ix -= 1  ## fresh trick 
+    elif not 1 <= ix <= nb               : return VE(0,0)
     #
     val = h1.GetBinContent ( ix ) 
     err = h1.GetBinError   ( ix )

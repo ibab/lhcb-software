@@ -243,6 +243,7 @@ for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.ChebyshevSum           ,
                Gaudi.Math.LegendreSum            ,
                Gaudi.Math.FourierSum             ,
+               Gaudi.Math.CosineSum              ,
                Gaudi.Math.Polynomial             ,               
                Gaudi.Math.Positive               ,
                Gaudi.Math.Monothonic             ,
@@ -320,6 +321,7 @@ for model in ( Gaudi.Math.Bernstein         ,
                Gaudi.Math.ChebyshevSum      ,               
                Gaudi.Math.LegendreSum       ,               
                Gaudi.Math.FourierSum        ,               
+               Gaudi.Math.CosineSum         ,               
                Gaudi.Math.Polynomial        ,               
                Gaudi.Math.ExpoPositive      , 
                Gaudi.Math.TwoExpoPositive   , 
@@ -342,6 +344,7 @@ Gaudi.Math.Polynomial  .__str__  = lambda s : _f_print_ ( s , 'Polynomial'   )
 Gaudi.Math.Bernstein   .__str__  = lambda s : _f_print_ ( s , 'Bernstein'    )
 Gaudi.Math.Positive    .__str__  = lambda s : _f_print_ ( s , 'Positive'     )
 Gaudi.Math.FourierSum  .__str__  = lambda s : _f_print_ ( s , 'FourierSum'   )
+Gaudi.Math.CosineSum   .__str__  = lambda s : _f_print_ ( s , 'CosineSum'    )
 
 Gaudi.Math.LegendreSum .__repr__ = lambda s : _f_print_ ( s , 'LegendreSum'  )
 Gaudi.Math.ChebyshevSum.__repr__ = lambda s : _f_print_ ( s , 'ChebyshevSum' )
@@ -349,6 +352,7 @@ Gaudi.Math.Polynomial  .__repr__ = lambda s : _f_print_ ( s , 'Polynomial'   )
 Gaudi.Math.Bernstein   .__repr__ = lambda s : _f_print_ ( s , 'Bernstein'    )
 Gaudi.Math.Positive    .__repr__ = lambda s : _f_print_ ( s , 'Positive'     )
 Gaudi.Math.FourierSum  .__repr__ = lambda s : _f_print_ ( s , 'FourierSum'   )
+Gaudi.Math.CosineSum   .__repr__ = lambda s : _f_print_ ( s , 'CosineSum'    )
 
 
 # =============================================================================

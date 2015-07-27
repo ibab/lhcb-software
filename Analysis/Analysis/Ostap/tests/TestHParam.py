@@ -65,7 +65,6 @@ h4 = 1.2*h1.minmax()[1].value() - h2
 # h3 - increasing concave
 # h4 - decreasing concave 
 
-""" 
 with timing ( 'Bershtein' ) :
     rB1 = h1.bernstein  ( 3 )
     rB2 = h2.bernstein  ( 3 )
@@ -90,13 +89,17 @@ with timing ( 'Polynomial' ) :
     rP3 = h3.polynomial ( 3 )
     rP4 = h4.polynomial ( 3 )
 
-"""
-
 with timing ( 'Fourier' ) :
     rF1 = h1.fourier   ( 3 )
     rF2 = h2.fourier   ( 3 )
     rF3 = h3.fourier   ( 3 )
     rF4 = h4.fourier   ( 3 )
+
+with timing ( 'Cosine' ) :
+    rC1 = h1.cosine    ( 3 )
+    rC2 = h2.cosine    ( 3 )
+    rC3 = h3.cosine    ( 3 )
+    rC4 = h4.cosine    ( 3 )
 
 ## bad :-( 
 with timing ( 'Positive' ) :
@@ -112,9 +115,6 @@ with timing ( 'Positive-PDF' ) :
     rp3p = h3.pdf_positive  ( 3 , silent = True )
     rp4p = h4.pdf_positive  ( 3 , silent = True )
 
-print 'REGULAR',rp1
-print 'PDF'    ,rp1p
-"""
 with timing ( 'Monothonic' ) :
     rm1 = h1.monothonic ( 3 , increasing = False )
     rm2 = h2.monothonic ( 3 , increasing = True  )
@@ -132,7 +132,7 @@ with timing ( 'Spline' ) :
     rS2 = h2.bSpline  ( 2 , 1  )
     rS3 = h3.bSpline  ( 2 , 1  )
     rS4 = h4.bSpline  ( 2 , 1  )
-
+    
 ## bad :-( 
 with timing ( 'pSpline' ) :
     rb1 = h1.pSpline  ( 2 , 1  )
@@ -140,18 +140,41 @@ with timing ( 'pSpline' ) :
     rb3 = h3.pSpline  ( 2 , 1  )
     rb4 = h4.pSpline  ( 2 , 1  )
 
+## good :-) 
+with timing ( 'pSpline-PDF' ) :
+    rb1p = h1.pdf_pSpline  ( spline = ( 2 , 1 ) , silent = True )
+    rb2p = h2.pdf_pSpline  ( spline = ( 2 , 1 ) , silent = True )
+    rb3p = h3.pdf_pSpline  ( spline = ( 2 , 1 ) , silent = True )
+    rb4p = h4.pdf_pSpline  ( spline = ( 2 , 1 ) , silent = True )
+
+## bad :-( 
 with timing ( 'mSpline' ) :
     rM1 = h1.mSpline  ( 2 , 1  , increasing = False ) 
     rM2 = h2.mSpline  ( 2 , 1  , increasing = True  ) 
     rM3 = h3.mSpline  ( 2 , 1  , increasing = True  ) 
     rM4 = h4.mSpline  ( 2 , 1  , increasing = False )
 
+## good :-) 
+with timing ( 'mSpline-PDF' ) :
+    rM1p = h1.pdf_mSpline  ( (2,1,False) , silent = True  ) 
+    rM2p = h2.pdf_mSpline  ( (2,1,True ) , silent = True  ) 
+    rM3p = h3.pdf_mSpline  ( (2,1,True ) , silent = True  )
+    rM4p = h4.pdf_mSpline  ( (2,1,False) , silent = True  ) 
 
+
+## bad :-(
 with timing ( 'cSpline' ) :
     rc1 = h1.cSpline  ( 2 , 1  , increasing = False , convex = True  )
     rc2 = h2.cSpline  ( 2 , 1  , increasing = True  , convex = True  )
     rc3 = h3.cSpline  ( 2 , 1  , increasing = True  , convex = False )
     rc4 = h4.cSpline  ( 2 , 1  , increasing = False , convex = False )
+
+## good :-)
+with timing ( 'cSpline-PDF' ) :
+    rc1p = h1.pdf_cSpline  ( ( 2 , 1  , False , True  ) , silent = True )
+    rc2p = h2.pdf_cSpline  ( ( 2 , 1  , True  , True  ) , silent = True )
+    rc3p = h3.pdf_cSpline  ( ( 2 , 1  , True  , False ) , silent = True )
+    rc4p = h4.pdf_cSpline  ( ( 2 , 1  , False , False ) , silent = True )
 
 #
 ## another splines 
@@ -168,16 +191,6 @@ sp1 = h1c.asSpline()
 sp2 = h2c.asSpline()
 sp3 = h3c.asSpline()
 sp4 = h4c.asSpline()
-
-"""
-
-
-import Ostap.FitModels as Models
-
-tmp    = ROOT.RooRealVar('tmp','',*h1.xminmax() )
-degree = 3 
-pdf    = Models.PolyPos_pdf (  'NAME' , tmp , degree )
-
 
 
 # =============================================================================
