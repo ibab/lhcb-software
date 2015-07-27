@@ -6,6 +6,10 @@
 
 !========================= HltSettings v7r0 2015-07-26 =========================
 
+! 2015-07028  - Mike Sokoloff
+  -  added four lines to RareCharm_25ns_August2015.py;
+  -  they were previously left out by mistake
+
 ! 2015-07-27  - Mike Sokoloff
   -  modified D02HH configuration dictionary in CharmHad_25ns_August2015.py
   -  following request from Vava
