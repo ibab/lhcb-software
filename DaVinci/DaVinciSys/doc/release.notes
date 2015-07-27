@@ -3,6 +3,29 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v37r0>2015-07-27 DaVinci v37r0</A></H1><PRE>
+
+Development release for the 2015 25ns data taking, based on Gaudi v26r3, LHCb v39r0, Lbcom v17r0, Rec v18r0,
+Phys v20r0, Analysis v14r0 and Stripping v9r9. Uses LCG_79 with ROOT 6.04.02.
+
+- Refer to the release notes of Phys, Analysis and Stripping for details
+  on updates to these dependency projects.
+
+- Packages updated :
+  DaVinciTests v2r35, Phys/DaVinci v37r0, Phys/Tesla v1r9.
+
+- In DaVinciTests v2r35 :
+  . Updated the flavour tagging test script to use Stripping23 settings.
+  . Updated reference file for test test_standardintermediate_reco14_run.qmt.
+  . Added workaround for ROOT-7492 (some dictionaries not loaded) to avoid strange errors in test tagging.qms/test_tag_mc12.qmt.
+  . References of stripping tests updated.
+
+- In Phys/DaVinci v37r0 :
+  . New patch release.
+
+- In Phys/Tesla v1r9 :
+  . Added workaround for ROOT-7492 (some dictionaries not loaded).
+
 </PRE><H1><A NAME=v36r7p7>2015-07-10 DaVinci v36r7p7</A></H1><PRE>
 
 Patch release identical to v36r7p6 except for a couple of important fixes to patched external packages,
