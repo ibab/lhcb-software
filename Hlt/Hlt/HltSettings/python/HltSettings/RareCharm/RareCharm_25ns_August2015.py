@@ -43,6 +43,10 @@ class RareCharm_25ns_August2015 :
                     'Hlt2RareCharmD02KMu',
                     'Hlt2RareCharmLc2PMuMuFilter',
                     'Hlt2RareCharmD02PiPiMueFilter',
+                    'Hlt2RareCharmD2PieeSSFilter',
+                    'Hlt2RareCharmD2KeeSSFilter',
+                    'Hlt2RareCharmD2PiMueSSFilter',
+                    'Hlt2RareCharmD2KMueSSFilter',
                  ]
 
         return lines
