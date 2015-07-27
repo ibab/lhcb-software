@@ -274,13 +274,13 @@ class CharmHad_25ns_August2015 :
            'Comb_AM_MIN': 1715.0 * MeV,
            'D0_BPVDIRA_MIN': 0.99985,
            'D0_BPVVDCHI2_MIN': 25.0,
-           'D0_PT_MIN': 2000.0 * MeV,
+           'D0_PT_MIN': 1000.0 * MeV,  ## changed from 2000 20150726 per e-mail from Vava
            'D0_VCHI2PDOF_MAX': 10.0,
            'Pair_AMINDOCA_MAX': 0.1 * mm,
            'Trk_ALL_MIPCHI2DV_MIN': 4.0,
-           'Trk_ALL_PT_MIN': 800.0 * MeV,
+           'Trk_ALL_PT_MIN': 500.0 * MeV,  ## changed from 800 20150726 per e-mail from Vava
            'Trk_ALL_P_MIN': 5.0 * GeV,
-           'Trk_Max_APT_MIN': 1500.0 * MeV},
+           'Trk_Max_APT_MIN': 1000.0 * MeV}, ## changed from 1500 20150726 per e-mail from Vava
  'D02HHHH': {'ACHI2DOCA_MAX': 10.0,
              'ADOCA_MAX': 100.0 * mm,
              'AMOM_MIN': 25000 * MeV,
@@ -342,14 +342,14 @@ class CharmHad_25ns_August2015 :
                  'AM_MIN': 1774 * MeV,
                  'D0_BPVDIRA_MIN': 0.99,
                  'D0_BPVLTIME_MIN': 0.25 * picosecond,
-                 'D0_PT_MIN': 2000 * MeV,
+                 'D0_PT_MIN': 2000 * MeV,  ##  differs from D02HH std, per Vava
                  'D0_VCHI2PDOF_MAX': 10.0,
                  'Mass_M_MAX': 1924.0 * MeV,
                  'Mass_M_MIN': 1804.0 * MeV,
                  'Pair_AMINDOCA_MAX': 0.1 * mm,
                  'TisTosSpec': 'Hlt1CalibTracking.*Decision%TOS',
-                 'Trk_ALL_PT_MIN': 800 * MeV,
-                 'Trk_Max_APT_MIN': 1200 * MeV},
+                 'Trk_ALL_PT_MIN': 800 * MeV,  ##  differs from D02HH std, per Vava
+                 'Trk_Max_APT_MIN': 1200 * MeV},  ##  differs from D02HH std, per Vava
  'D02HH_XSec': {'Comb_AM_MAX': 1955.0 * MeV,
                 'Comb_AM_MIN': 1775.0 * MeV,
                 'D0_BPVDIRA_MIN': 0.99985,
