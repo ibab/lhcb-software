@@ -3,8 +3,9 @@
 from copy import deepcopy
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from Configurables import DaVinci__N3BodyDecays, DaVinci__N4BodyDecays
-from PhysSelPython.Wrappers import Selection
+from Configurables import ( DaVinci__N3BodyDecays, DaVinci__N4BodyDecays,
+                            DaVinci__N5BodyDecays )
+from PhysSelPython.Wrappers import Selection, MergedSelection
 from Beauty2Charm_LoKiCuts import LoKiCuts
 from Beauty2Charm_Utils import *
 from Configurables import SubPIDMMFilter 
@@ -60,10 +61,19 @@ class DBuilder(object):
         self.ksh_dd  = self._makeD2KSh("DD")
         self.kshh_ll  = self._makeD2KShh("LL")
         self.kshh_dd  = self._makeD2KShh("DD")
+        self.kshhh_ll  = self._makeD2KShhh("LL")
+        self.kshhh_dd  = self._makeD2KShhh("DD")
         self.pi0hh_merged = self._makeD2Pi0hh("Merged")
         self.pi0hh_resolved = self._makeD2Pi0hh("Resolved") 
         self.pi0hhh_merged = self._makeD2Pi0hhh("Merged")
         self.pi0hhh_resolved = self._makeD2Pi0hhh("Resolved")
+        self.pi0hhhh_merged = self._makeD2Pi0hhhh("Merged")
+        self.pi0hhhh_resolved = self._makeD2Pi0hhhh("Resolved")
+
+        self.kspi0h_ll_merged = self._makeD2KSPi0h("LL","Merged")
+        self.kspi0h_ll_resolved = self._makeD2KSPi0h("LL","Resolved")
+        self.kspi0h_dd_merged = self._makeD2KSPi0h("DD","Merged")
+        self.kspi0h_dd_resolved = self._makeD2KSPi0h("DD","Resolved")
 
         self.kspi0hh_ll_merged = self._makeD2KSPi0hh("LL","Merged")
         self.kspi0hh_ll_resolved = self._makeD2KSPi0hh("LL","Resolved")
@@ -78,10 +88,24 @@ class DBuilder(object):
         self.ksh_dd_up  = self._makeD2KSh("DD",True)
         self.kshh_ll_up  = self._makeD2KShh("LL",True)
         self.kshh_dd_up  = self._makeD2KShh("DD",True)
+        self.kshhh_ll_up  = self._makeD2KShhh("LL",True)
+        self.kshhh_dd_up  = self._makeD2KShhh("DD",True)
         self.pi0hh_merged_up = self._makeD2Pi0hh("Merged",True)
         self.pi0hh_resolved_up = self._makeD2Pi0hh("Resolved",True)
         self.pi0hhh_merged_up = self._makeD2Pi0hhh("Merged",True)
         self.pi0hhh_resolved_up = self._makeD2Pi0hhh("Resolved",True)
+        self.pi0hhhh_merged_up = self._makeD2Pi0hhhh("Merged",True)
+        self.pi0hhhh_resolved_up = self._makeD2Pi0hhhh("Resolved",True)
+
+        self.kspi0h_ll_merged_up = self._makeD2KSPi0h("LL","Merged",True)
+        self.kspi0h_ll_resolved_up = self._makeD2KSPi0h("LL","Resolved",True)
+        self.kspi0h_dd_merged_up = self._makeD2KSPi0h("DD","Merged",True)
+        self.kspi0h_dd_resolved_up = self._makeD2KSPi0h("DD","Resolved",True)
+
+        self.kspi0hh_ll_merged_up = self._makeD2KSPi0hh("LL","Merged",True)
+        self.kspi0hh_ll_resolved_up = self._makeD2KSPi0hh("LL","Resolved",True)
+        self.kspi0hh_dd_merged_up = self._makeD2KSPi0hh("DD","Merged",True)
+        self.kspi0hh_dd_resolved_up = self._makeD2KSPi0hh("DD","Resolved",True)
         
         # PID filtered selections
         self.hh_pid = [filterPID('D2HHPID',self.hh,config_pid)]
@@ -267,8 +291,9 @@ class DBuilder(object):
         comboCuts = LoKiCuts.combine(comboCuts)
         comboCuts12 = LoKiCuts.combine(comboCuts12)
         momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
-        cp = DaVinci__N3BodyDecays(Combination12Cut=comboCuts12,CombinationCut=comboCuts,MotherCut=momCuts,
-                              DecayDescriptors=decays)
+        cp = DaVinci__N3BodyDecays(Combination12Cut=comboCuts12,
+                                   CombinationCut=comboCuts,MotherCut=momCuts,
+                                   DecayDescriptors=decays)
         return  Selection('Proto'+name+'Beauty2Charm',Algorithm=cp,
                           RequiredSelections=[self.pions]+extrainputs)
 
@@ -290,13 +315,42 @@ class DBuilder(object):
         comboCuts123 = LoKiCuts.combine(comboCuts123)
         momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
         cp = DaVinci__N4BodyDecays(Combination12Cut=comboCuts12,
-                              Combination123Cut=comboCuts123,
-                              CombinationCut=comboCuts,MotherCut=momCuts,
-                              DecayDescriptors=decays)
+                                   Combination123Cut=comboCuts123,
+                                   CombinationCut=comboCuts,MotherCut=momCuts,
+                                   DecayDescriptors=decays)
         return  Selection('Proto'+name+'Beauty2Charm',Algorithm=cp,   
                           RequiredSelections=[self.pions]+extrainputs)
 
-
+    def _makeD2FiveBody(self,name,decays,wm,up,config,extrainputs):
+        ''' Makes all D -> HHHHH selections.'''
+        if up:
+            wm += '& (ANUM(ISUP)==1)'
+            name += 'UP'
+        comboCuts = [LoKiCuts(['ASUMPT'],config).code(),wm,hasTopoChild()]
+        comboCuts12 = [LoKiCuts(['ADOCA12'],config).code()]
+        comboCuts123 = ["AALL"]
+        comboCuts123.append(LoKiCuts(['ADOCA13'],config).code())
+        comboCuts123.append(LoKiCuts(['ADOCA23'],config).code())
+        comboCuts1234 = ["AALL"]
+        comboCuts1234.append(LoKiCuts(['ADOCA14'],config).code())
+        comboCuts1234.append(LoKiCuts(['ADOCA24'],config).code())
+        comboCuts1234.append(LoKiCuts(['ADOCA34'],config).code())
+        comboCuts.append(LoKiCuts(['ADOCA15'],config).code())
+        comboCuts.append(LoKiCuts(['ADOCA25'],config).code())
+        comboCuts.append(LoKiCuts(['ADOCA35'],config).code())
+        comboCuts.append(LoKiCuts(['ADOCA45'],config).code())
+        comboCuts     = LoKiCuts.combine(comboCuts)
+        comboCuts12   = LoKiCuts.combine(comboCuts12)
+        comboCuts123  = LoKiCuts.combine(comboCuts123)
+        comboCuts1234 = LoKiCuts.combine(comboCuts1234)
+        momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
+        cp = DaVinci__N5BodyDecays(Combination12Cut=comboCuts12,
+                                   Combination123Cut=comboCuts123,
+                                   Combination1234Cut=comboCuts1234,
+                                   CombinationCut=comboCuts,MotherCut=momCuts,
+                                   DecayDescriptors=decays)
+        return  Selection('Proto'+name+'Beauty2Charm',Algorithm=cp,   
+                          RequiredSelections=[self.pions]+extrainputs)
 
     def _massWindow(self,which):
         dm,units = LoKiCuts.cutValue(self.config['MASS_WINDOW'])
@@ -342,10 +396,10 @@ class DBuilder(object):
         decays = [['pi+','pi+'],['pi+','K+'],['K+','pi+'],['K+','K+']]
         wm = awmFunctor(decays,min,max)
         psel = self._makeD2TwoBody('D2HHWSPlus',['D0 -> pi+ pi+'],wm,up,self.config,
-                             [self.uppions] if up else [])
+                                   [self.uppions] if up else [])
         psel = subPIDSels(decays,'D2HHWSPlus'+tag,'',min,max,[psel])
         msel = self._makeD2TwoBody('D2HHWSMinus',['D0 -> pi- pi-'],wm,up,self.config,
-                             [self.uppions] if up else [])
+                                   [self.uppions] if up else [])
         msel = subPIDSels(getCCs(decays),'D2HHWSMinus'+tag,'',min,max,[msel])
         return [MergedSelection('D2HHWSBeauty2Charm'+tag,
                                 RequiredSelections=[psel,msel])]
@@ -361,10 +415,10 @@ class DBuilder(object):
                   ['K+','K+','pi-']]
         wm = awmFunctor(decays,min,max)
         protoDp2hhh = self._makeD2ThreeBody('D+2HHH',['D+ -> pi+ pi+ pi-'],wm,up,
-                                    self.config, [self.uppions] if up else [])
+                                            self.config, [self.uppions] if up else [])
         psels = subPIDSels(decays,'D+2HHH'+tag,'',min,max,[protoDp2hhh])
         protoDm2hhh = self._makeD2ThreeBody('D-2HHH',['D- -> pi- pi- pi+'],wm,up,
-                                    self.config, [self.uppions] if up else [])
+                                            self.config, [self.uppions] if up else [])
         msels = subPIDSels(getCCs(decays),'D-2HHH'+tag,'',min,max,[protoDm2hhh])
         return [MergedSelection('D2HHHBeauty2Charm'+tag,RequiredSelections=[psels,msels])]
 
@@ -403,6 +457,28 @@ class DBuilder(object):
         if up: name += 'UP'
         return [subPIDSels(decays,name,which,min,max,[protoD2Kshh])]
 
+    def _makeD2KShhh(self,which,up=False):
+        '''Makes D->Kshhh'''
+        tag = ''
+        if up: tag = 'UP'        
+        min,max  = self._massWindow('D+')
+        decays = [['pi+','pi-','pi+','KS0'],['pi+','K-','pi+','KS0'],
+                  ['K+','pi-','pi+','KS0'], ['K+','K-','pi+','KS0'],
+                  ['K+','pi-','K+','KS0'],  ['K+','K-','K+','KS0']]
+        wm = awmFunctor(decays,min,max)
+        config = deepcopy(self.config)    
+        config.pop('ADOCA14_MAX')
+        config.pop('ADOCA24_MAX')
+        config.pop('ADOCA34_MAX')
+        if up : extrainputs = self.ks[which] + [self.uppions]
+        else: extrainputs = self.ks[which]
+        protoDp2Kshhh = self._makeD2FourBody('D+2KsHHH_'+which,['D+ -> pi+ pi- pi+ KS0'],wm,up,config,extrainputs)
+        psels = subPIDSels(decays,'D+2KsHHH'+tag,which,min,max,[protoDp2Kshhh])
+        protoDm2Kshhh = self._makeD2FourBody('D-2KsHHH_'+which,['D- -> pi- pi+ pi- KS0'],wm,up,config,extrainputs)
+        msels = subPIDSels(getCCs(decays),'D-2KsHHH'+tag,which,min,max,[protoDm2Kshhh])
+        return [MergedSelection('D2KsHHHBeauty2Charm_%s%s'%(which,tag),
+                                RequiredSelections=[psels,msels])]
+
     def _makeD2KShhWS(self,which,up=False):
         '''Makes D->Kshh WS'''
         tag = ''
@@ -434,7 +510,7 @@ class DBuilder(object):
         decays = [['pi+','pi+','pi-','pi0'],['pi+','pi+','K-','pi0'],
                   ['K+','pi+','pi-','pi0'],['K+','pi+','K-','pi0'],
                   ['pi+','K+','pi-','pi0'],['pi+','K+','K-','pi0'],
-                  ['K+','K+','pi-','pi0']]
+                  ['K+','K+','pi-','pi0'],['K+','K+','K-','pi0']]
         wm = awmFunctor(decays,min,max)
         config = deepcopy(self.config)    
         config.pop('ADOCA14_MAX')
@@ -443,16 +519,43 @@ class DBuilder(object):
         if up : extrainputs = self.pi0[which] + [self.uppions]
         else : extrainputs = self.pi0[which]
         protoDp2pi0hhh = self._makeD2FourBody('D+2Pi0HHH_'+which,
-                                       ['D+ -> pi+ pi+ pi- pi0'],
-                                       wm,up,config,extrainputs)
+                                              ['D+ -> pi+ pi+ pi- pi0'],
+                                              wm,up,config,extrainputs)
         psels = subPIDSels(decays,'D+2Pi0HHH'+tag,which,min,max,[protoDp2pi0hhh])
         protoDm2pi0hhh = self._makeD2FourBody('D-2Pi0HHH_'+which,
-                                       ['D- -> pi- pi- pi+ pi0'],
-                                       wm,up,config,extrainputs)
+                                              ['D- -> pi- pi- pi+ pi0'],
+                                              wm,up,config,extrainputs)
         msels = subPIDSels(getCCs(decays),'D-2Pi0HHH'+tag,which,min,max,
-                          [protoDm2pi0hhh])
+                           [protoDm2pi0hhh])
         return [MergedSelection('D2Pi0HHHBeauty2Charm_%s%s'%(which,tag),
                                 RequiredSelections=[psels,msels])]
+    
+    def _makeD2Pi0hhhh(self,which,up=False):
+        '''Makes D->Pi0hhhh'''
+        min,max = self._massWindow('D0wide')
+        decays = [
+            ['pi+','pi-','pi+','pi-','pi0'],
+            ['pi+','pi-','pi+','K-','pi0'],['pi+','pi-','K+','pi-','pi0'],
+            ['pi+','K-','pi+','pi-','pi0'],['K+','pi-','pi+','pi-','pi0'],
+            ['pi+','pi-','K+','K-','pi0'],['pi+','K-','pi+','K-','pi0'],
+            ['K+','pi-','pi+','K-','pi0'],
+            ['pi+','K-','K+','K-','pi0'],['K+','pi-','K+','K-','pi0'],
+            ['K+','K-','K+','pi-','pi0'],
+            ['K+','K-','K+','K-','pi0']
+            ]
+        wm = awmFunctor(decays,min,max)
+        config = deepcopy(self.config)    
+        config.pop('ADOCA15_MAX')
+        config.pop('ADOCA25_MAX')
+        config.pop('ADOCA35_MAX')
+        config.pop('ADOCA45_MAX')
+        if up : extrainputs = self.pi0[which]+ [self.uppions]
+        else : extrainputs = self.pi0[which]  
+        protoD2pi0hh = self._makeD2FiveBody('D2Pi0HHHH_'+which,['D0 -> pi+ pi- pi+ pi- pi0'],
+                                            wm,up,config,extrainputs)
+        name = 'D2Pi0HHHH'
+        if up: name += 'UP'
+        return [subPIDSels(decays,name,which,min,max,[protoD2pi0hh])]
     
     def _makeD2Pi0hh(self,which,up=False):
         '''Makes D->Pi0hh'''
@@ -466,7 +569,7 @@ class DBuilder(object):
         if up : extrainputs = self.pi0[which]+ [self.uppions]
         else : extrainputs = self.pi0[which]  
         protoD2pi0hh = self._makeD2ThreeBody('D2Pi0HH_'+which,['D0 -> pi+ pi- pi0'],
-                                     wm,up,config,extrainputs)
+                                             wm,up,config,extrainputs)
         name = 'D2Pi0HH'
         if up: name += 'UP'
         return [subPIDSels(decays,name,which,min,max,[protoD2pi0hh])]
@@ -492,6 +595,28 @@ class DBuilder(object):
         msel = subPIDSels(getCCs(decays),'D2Pi0HHWSMinus'+tag,which,min,max,[msel])
         return [MergedSelection('D2Pi0HHWSBeauty2Charm'+which+tag,
                                 RequiredSelections=[psel,msel])]
+
+    def _makeD2KSPi0h(self,whichKs,whichPi0,up=False):
+        '''Makes D->KsPi0h'''
+        tag = ''
+        if up: tag = 'UP'
+        which = whichKs+whichPi0
+        min,max = self._massWindow('D+')
+        decays = [['pi+','KS0','pi0'],
+                  ['K+','KS0','pi0']]
+        wm = awmFunctor(decays,min,max)
+        config = deepcopy(self.config)    
+        config.pop('ADOCA13_MAX')
+        config.pop('ADOCA23_MAX')
+        if up : extrainputs = self.pi0[whichPi0]+self.ks[whichKs] + [self.uppions]
+        else  : extrainputs = self.pi0[whichPi0]+self.ks[whichKs]
+        protoDp2Kspi0h = self._makeD2ThreeBody('D+2KSPi0H_'+whichKs+'_'+whichPi0,['D+ -> pi+ KS0 pi0'],
+                                               wm,up,config,extrainputs)
+        psel = subPIDSels(decays,'D+2KSPi0H'+tag,which,min,max,[protoDp2Kspi0h])
+        protoDm2Kspi0h = self._makeD2ThreeBody('D-2KSPi0H_'+whichKs+'_'+whichPi0,['D- -> pi- KS0 pi0'],
+                                               wm,up,config,extrainputs)
+        msel = subPIDSels(getCCs(decays),'D-2KSPi0H'+tag,which,min,max,[protoDm2Kspi0h])
+        return [MergedSelection('D2KSPi0HBeauty2Charm_'+which+tag,RequiredSelections=[psel,msel])]
 
     def _makeD2KSPi0hh(self,whichKs,whichPi0,up=False):
         '''Makes D->KsPi0hh'''
@@ -578,29 +703,124 @@ class DBuilder(object):
 class DstarBuilder(object):
     '''Makes D* mesons for Beauty2Charm.'''
 
-    def __init__(self,d,pions,pi0,photons,config,config_pid):
+    def __init__(self,d,pions,uppions,pi0,photons,config,config_pid):
         self.d              = d
         self.pions          = pions
+        self.uppions        = uppions
         self.pi0            = pi0
         self.photons        = photons
         self.config         = config
         self.d0pi           = self._makeDstar2D0pi('',self.d.hh)
         self.d0pi_k3pi      = self._makeDstar2D0pi('D2K3Pi',self.d.k3pi)
         self.d0pi_hhhh      = self._makeDstar2D0pi('D2HHHH',self.d.hhhh)
-        self.d0pi_hhhh_ws      = self._makeDstar2D0pi('D2HHHHWS',self.d.hhhh_ws)
+        self.d0pi_hhhh_ws   = self._makeDstar2D0pi('D2HHHHWS',self.d.hhhh_ws)
         self.d0pi_kshh_ll   = self._makeDstar2D0pi('D2KSHHLL',self.d.kshh_ll)
         self.d0pi_kshh_dd   = self._makeDstar2D0pi('D2KSHHDD',self.d.kshh_dd)
         self.d0pi_pid       = [filterPID('Dstar2D0PiPID',self.d0pi,config_pid,2)]
-        self.d0pi0_merged   = self._makeDstar02D0Pi0( '', 'Merged'  , self.d.hh )
-        self.d0pi0_resolved = self._makeDstar02D0Pi0( '', 'Resolved', self.d.hh )
 
+        self.d0pi_kspi0hh_ll_merged = self._makeDstar2D0pi('D2KSLLPI0MERGEDHH',self.d.kspi0hh_ll_merged)
+        self.d0pi_kspi0hh_dd_merged = self._makeDstar2D0pi('D2KSDDPI0MERGEDHH',self.d.kspi0hh_dd_merged)
+        self.d0pi_kspi0hh_ll_resolved = self._makeDstar2D0pi('D2KSLLPI0RESOLVEDHH',self.d.kspi0hh_ll_resolved)
+        self.d0pi_kspi0hh_dd_resolved = self._makeDstar2D0pi('D2KSDDPI0RESOLVEDHH',self.d.kspi0hh_dd_resolved)
+        # With Upstream D's
+        self.d0pi_kspi0hh_ll_merged_dup = self._makeDstar2D0pi('UPD2KSLLPI0MERGEDHH',self.d.kspi0hh_ll_merged_up)
+        self.d0pi_kspi0hh_dd_merged_dup = self._makeDstar2D0pi('UPD2KSDDPI0MERGEDHH',self.d.kspi0hh_dd_merged_up)
+        self.d0pi_kspi0hh_ll_resolved_dup = self._makeDstar2D0pi('UPD2KSLLPI0RESOLVEDHH',self.d.kspi0hh_ll_resolved_up)
+        self.d0pi_kspi0hh_dd_resolved_dup = self._makeDstar2D0pi('UPD2KSDDPI0RESOLVEDHH',self.d.kspi0hh_dd_resolved_up)
+        # With Upstream bachelor h
+        self.d0pi_kspi0hh_ll_merged_hup = self._makeDstar2D0pi('D2KSLLPI0MERGEDHHUP',self.d.kspi0hh_ll_merged,True)
+        self.d0pi_kspi0hh_dd_merged_hup = self._makeDstar2D0pi('D2KSDDPI0MERGEDHHUP',self.d.kspi0hh_dd_merged,True)
+        self.d0pi_kspi0hh_ll_resolved_hup = self._makeDstar2D0pi('D2KSLLPI0RESOLVEDHHUP',self.d.kspi0hh_ll_resolved,True)
+        self.d0pi_kspi0hh_dd_resolved_hup = self._makeDstar2D0pi('D2KSDDPI0RESOLVEDHHUP',self.d.kspi0hh_dd_resolved,True)
+        
+        self.d0pi0_merged        = self._makeDstar02D0Pi0( '', 'Merged'  , self.d.hh )
+        self.d0pi0_resolved      = self._makeDstar02D0Pi0( '', 'Resolved', self.d.hh )
+        self.d0pi0_hhhh_merged   = self._makeDstar02D0Pi0( 'D2HHHH', 'Merged'  , self.d.hhhh )
+        self.d0pi0_hhhh_resolved = self._makeDstar02D0Pi0( 'D2HHHH', 'Resolved', self.d.hhhh )
+        # With Upstream D's
+        self.d0pi0_merged_dup        = self._makeDstar02D0Pi0( 'UPD2HH', 'Merged'  , self.d.hh_up )
+        self.d0pi0_resolved_dup      = self._makeDstar02D0Pi0( 'UPD2HH', 'Resolved', self.d.hh_up )
+        self.d0pi0_hhhh_merged_dup   = self._makeDstar02D0Pi0( 'UPD2HHHH', 'Merged'  , self.d.hhhh_up )
+        self.d0pi0_hhhh_resolved_dup = self._makeDstar02D0Pi0( 'UPD2HHHH', 'Resolved', self.d.hhhh_up )
+
+        # CRJ : With upstream D candidates
+        self.d0pi_dup           = self._makeDstar2D0pi('UPD2HH',self.d.hh_up)
+        self.d0pi_hhhh_dup      = self._makeDstar2D0pi('UPD2HHHH',self.d.hhhh_up)
+        self.d0pi_kshh_ll_dup   = self._makeDstar2D0pi('UPD2KSHHLL',self.d.kshh_ll_up)
+        self.d0pi_kshh_dd_dup   = self._makeDstar2D0pi('UPD2KSHHDD',self.d.kshh_dd_up)
+
+        # CRJ : With Upstream bachelor pi
+        self.d0pi_hup               = self._makeDstar2D0pi('',self.d.hh,True)
+        self.d0pi_hhhh_hup          = self._makeDstar2D0pi('D2HHHH',self.d.hhhh,True)
+        self.d0pi_kshh_ll_hup       = self._makeDstar2D0pi('D2KSHHLL',self.d.kshh_ll,True)
+        self.d0pi_kshh_dd_hup       = self._makeDstar2D0pi('D2KSHHDD',self.d.kshh_dd,True)
+        self.d0pi_dup_hup           = self._makeDstar2D0pi('UPD2HH',self.d.hh_up,True)
+        self.d0pi_hhhh_dup_hup      = self._makeDstar2D0pi('UPD2HHHH',self.d.hhhh_up,True)
+        self.d0pi_kshh_ll_dup_hup   = self._makeDstar2D0pi('UPD2KSHHLL',self.d.kshh_ll_up,True)
+        self.d0pi_kshh_dd_dup_hup   = self._makeDstar2D0pi('UPD2KSHHDD',self.d.kshh_dd_up,True)
+ 
+        # CRJ : Modes for Ds*+ -> Ds+ pi0
+        self.dpi0_merged              = self._makeDstar2DPi0( '', 'Merged'  ,   self.d.hhh )
+        self.dpi0_resolved            = self._makeDstar2DPi0( '', 'Resolved'  , self.d.hhh )
+        self.dpi0_merged_ksh_ll       = self._makeDstar2DPi0( 'D2KSHLL', 'Merged', self.d.ksh_ll )
+        self.dpi0_merged_ksh_dd       = self._makeDstar2DPi0( 'D2KSHDD', 'Merged', self.d.ksh_dd )
+        self.dpi0_merged_kshhh_ll     = self._makeDstar2DPi0( 'D2KSHHHLL', 'Merged', self.d.kshhh_ll )
+        self.dpi0_merged_kshhh_dd     = self._makeDstar2DPi0( 'D2KSHHHDD', 'Merged', self.d.kshhh_dd )
+        self.dpi0_resolved_ksh_ll     = self._makeDstar2DPi0( 'D2KSHLL', 'Resolved', self.d.ksh_ll )
+        self.dpi0_resolved_ksh_dd     = self._makeDstar2DPi0( 'D2KSHDD', 'Resolved', self.d.ksh_dd )
+        self.dpi0_resolved_kshhh_ll   = self._makeDstar2DPi0( 'D2KSHHHLL', 'Resolved', self.d.kshhh_ll )
+        self.dpi0_resolved_kshhh_dd   = self._makeDstar2DPi0( 'D2KSHHHDD', 'Resolved', self.d.kshhh_dd )
+        self.dpi0_merged_kspi0h_ll    = self._makeDstar2DPi0( 'D2KSPI0HLL', 'Merged', self.d.kspi0h_ll_resolved+self.d.kspi0h_ll_merged )
+        self.dpi0_merged_kspi0h_dd    = self._makeDstar2DPi0( 'D2KSPI0HDD', 'Merged', self.d.kspi0h_dd_resolved+self.d.kspi0h_dd_merged )
+        self.dpi0_resolved_kspi0h_ll  = self._makeDstar2DPi0( 'D2KSPI0HLL', 'Resolved', self.d.kspi0h_ll_resolved+self.d.kspi0h_ll_merged )
+        self.dpi0_resolved_kspi0h_dd  = self._makeDstar2DPi0( 'D2KSPI0HDD', 'Resolved', self.d.kspi0h_dd_resolved+self.d.kspi0h_dd_merged )
+        
+        # With Upstream D
+        self.dpi0_merged_dup   = self._makeDstar2DPi0( 'UPD2HHH', 'Merged'  , self.d.hhh_up )
+        self.dpi0_resolved_dup = self._makeDstar2DPi0( 'UPD2HHH', 'Resolved', self.d.hhh_up )
+        self.dpi0_merged_ksh_ll_dup     = self._makeDstar2DPi0( 'UPD2KSHLL', 'Merged', self.d.ksh_ll_up )
+        self.dpi0_merged_ksh_dd_dup     = self._makeDstar2DPi0( 'UPD2KSHDD', 'Merged', self.d.ksh_dd_up )
+        self.dpi0_merged_kshhh_ll_dup   = self._makeDstar2DPi0( 'UPD2KSHHHLL', 'Merged', self.d.kshhh_ll_up )
+        self.dpi0_merged_kshhh_dd_dup   = self._makeDstar2DPi0( 'UPD2KSHHHDD', 'Merged', self.d.kshhh_dd_up )
+        self.dpi0_resolved_ksh_ll_dup   = self._makeDstar2DPi0( 'UPD2KSHLL', 'Resolved', self.d.ksh_ll_up )
+        self.dpi0_resolved_ksh_dd_dup   = self._makeDstar2DPi0( 'UPD2KSHDD', 'Resolved', self.d.ksh_dd_up )
+        self.dpi0_resolved_kshhh_ll_dup = self._makeDstar2DPi0( 'UPD2KSHHHLL', 'Resolved', self.d.kshhh_ll_up )
+        self.dpi0_resolved_kshhh_dd_dup = self._makeDstar2DPi0( 'UPD2KSHHHDD', 'Resolved', self.d.kshhh_dd_up )
+        self.dpi0_merged_kspi0h_ll_dup    = self._makeDstar2DPi0( 'UPD2KSPI0HLL', 'Merged', self.d.kspi0h_ll_resolved_up+self.d.kspi0h_ll_merged_up )
+        self.dpi0_merged_kspi0h_dd_dup    = self._makeDstar2DPi0( 'UPD2KSPI0HDD', 'Merged', self.d.kspi0h_dd_resolved_up+self.d.kspi0h_dd_merged_up )
+        self.dpi0_resolved_kspi0h_ll_dup  = self._makeDstar2DPi0( 'UPD2KSPI0HLL', 'Resolved', self.d.kspi0h_ll_resolved_up+self.d.kspi0h_ll_merged_up )
+        self.dpi0_resolved_kspi0h_dd_dup  = self._makeDstar2DPi0( 'UPD2KSPI0HDD', 'Resolved', self.d.kspi0h_dd_resolved_up+self.d.kspi0h_dd_merged_up )
+        
+        # CRJ : Modes for Ds*+ -> Ds+ gamma
+        self.dgamma_hhh       = self._makeDstar2DGamma( 'D2HHH', self.d.hhh )
+        self.dgamma_ksh_ll    = self._makeDstar2DGamma( 'D2KsHLL', self.d.ksh_ll )
+        self.dgamma_ksh_dd    = self._makeDstar2DGamma( 'D2KsHDD', self.d.ksh_dd )
+        self.dgamma_kshhh_ll  = self._makeDstar2DGamma( 'D2KsHHHLL', self.d.kshhh_ll )
+        self.dgamma_kshhh_dd  = self._makeDstar2DGamma( 'D2KsHHHDD', self.d.kshhh_dd )
+        self.dgamma_kspi0h_ll = self._makeDstar2DGamma( 'D2KsPI0HLL', self.d.kspi0h_ll_resolved+self.d.kspi0h_ll_merged )
+        self.dgamma_kspi0h_dd = self._makeDstar2DGamma( 'D2KsPI0HDD', self.d.kspi0h_dd_resolved+self.d.kspi0h_dd_merged )
+        # With Upstream D
+        self.dgamma_hhh_dup       = self._makeDstar2DGamma( 'UPD2HHH', self.d.hhh_up )
+        self.dgamma_ksh_ll_dup    = self._makeDstar2DGamma( 'UPD2KsHLL', self.d.ksh_ll_up )
+        self.dgamma_ksh_dd_dup    = self._makeDstar2DGamma( 'UPD2KsHDD', self.d.ksh_dd_up )
+        self.dgamma_kshhh_ll_dup  = self._makeDstar2DGamma( 'UPD2KsHHHLL', self.d.kshhh_ll_up )
+        self.dgamma_kshhh_dd_dup  = self._makeDstar2DGamma( 'UPD2KsHHHDD', self.d.kshhh_dd_up )
+        self.dgamma_kspi0h_ll_dup = self._makeDstar2DGamma( 'UPD2KsPI0HLL', self.d.kspi0h_ll_resolved_up+self.d.kspi0h_ll_merged_up )
+        self.dgamma_kspi0h_dd_dup = self._makeDstar2DGamma( 'UPD2KsPI0HDD', self.d.kspi0h_dd_resolved_up+self.d.kspi0h_dd_merged_up )
+        
         # Jordi: create the lists of selections for D*0 -> D0 pi0 with merged and resolved LL and DD Ks.
-        self.d0pi0_kshh_ll   = self._makeDstar02D0Pi0( 'KsHHLL', 'all', self.d.kshh_ll )
-        self.d0pi0_kshh_dd   = self._makeDstar02D0Pi0( 'KsHHDD', 'all', self.d.kshh_dd )
+        self.d0pi0_kshh_ll     = self._makeDstar02D0Pi0( 'KsHHLL', 'all', self.d.kshh_ll )
+        self.d0pi0_kshh_dd     = self._makeDstar02D0Pi0( 'KsHHDD', 'all', self.d.kshh_dd )
+        # With Upstream D's
+        self.d0pi0_kshh_ll_dup = self._makeDstar02D0Pi0( 'UPKsHHLL', 'all', self.d.kshh_ll_up )
+        self.d0pi0_kshh_dd_dup = self._makeDstar02D0Pi0( 'UPKsHHDD', 'all', self.d.kshh_dd_up )
 
         # Jordi: create the lists of selections for D*0 -> D0 gamma for LL and DD Ks.
         self.d0gamma_kshh_ll = self._makeDstar02D0Gamma( 'KsHHLL', self.d.kshh_ll )
         self.d0gamma_kshh_dd = self._makeDstar02D0Gamma( 'KsHHDD', self.d.kshh_dd )
+        # With Upstream D's
+        self.d0gamma_kshh_ll_dup = self._makeDstar02D0Gamma( 'UPKsHHLL', self.d.kshh_ll_up )
+        self.d0gamma_kshh_dd_dup = self._makeDstar02D0Gamma( 'UPKsHHDD', self.d.kshh_dd_up )
 
         d0pi_2460 = self._makeDstar24602D0pi()
         self.d0pi_2460_pid = [filterPID('Dstar24602D0PiPID',d0pi_2460,
@@ -619,11 +839,15 @@ class DstarBuilder(object):
         return [Selection(name+'2D0PiBeauty2Charm',Algorithm=cp,
                           RequiredSelections=inputs)]
         
-    def _makeDstar2D0pi(self,name,d2x):
+    def _makeDstar2D0pi(self,name,d2x,up=False):
         '''Makes D*+ -> D0 pi+ + c.c.'''
+        pions = [self.pions]
+        if up :
+            name += 'UP'
+            pions += [self.uppions]
         massCut = "(ADAMASS('D*(2010)+') < %(MASS_WINDOW)s) " % self.config
         decays=["D*(2010)+ -> pi+ D0","D*(2010)- -> pi- D0"]
-        return self._makeHc2Dpi('Dstar'+name,massCut,decays,d2x+[self.pions])
+        return self._makeHc2Dpi('Dstar'+name,massCut,decays,d2x+pions)
 
     def _makeDstar24602D0pi(self):
         '''Makes D*2(2460)+- -> D0 pi+-'''
@@ -641,7 +865,7 @@ class DstarBuilder(object):
 
 
     def _makeDstar02D0X0(self,name,decays,inputs):
-        ''' Makes all X+ -> HH selections involving neutrals.'''
+        ''' Makes all X -> HH selections involving neutrals.'''
         comboCuts = "(ADAMASS('D*(2007)0') < %(MASS_WINDOW)s) " % self.config
         momCuts = "ALL"
         cp = CombineParticles( CombinationCut   = comboCuts,
@@ -652,6 +876,24 @@ class DstarBuilder(object):
         return Selection( 'Dstar02D0' + name + 'Beauty2Charm',
                           Algorithm          = cp            ,
                           RequiredSelections = inputs         )
+
+    def _makeDstar2DX0(self,name,decays,inputs):
+        ''' Makes all X+ -> HH selections involving neutrals.'''
+        comboCuts = "(ADAMASS('D*_s+') < %(MASS_WINDOW)s) " % self.config
+        momCuts = "ALL"
+        cp = CombineParticles( CombinationCut   = comboCuts,
+                               MotherCut        = momCuts  ,
+                               DecayDescriptors = decays    )
+        cp = cp.configurable( name + 'Beauty2CharmCombiner' )
+        #cp.ParticleCombiners.update( { '' : 'MomentumCombiner' } )
+        return Selection( 'Dstar2D' + name + 'Beauty2Charm',
+                          Algorithm          = cp            ,
+                          RequiredSelections = inputs         )
+
+    # CRJ: make the list of selections of D*+ -> D+ pi0 with given selection of D and pi0 type.
+    def _makeDstar2DPi0( self, name, pi0type, d2x ):
+        decays = [ "[D*_s+ -> D+ pi0]cc" ]
+        return [ self._makeDstar2DX0( name + 'Pi0' + pi0type, decays, d2x + self.pi0[ pi0type ] ) ]
 
     # Jordi: make the list of selections of D*0 -> D0 pi0 with given selection of D and pi0 type.
     def _makeDstar02D0Pi0( self, name, pi0type, d2x ):
@@ -677,6 +919,40 @@ class DstarBuilder(object):
                             Algorithm          = cp                    ,
                             RequiredSelections = d2x + [ self.photons ] ) ]
 
+        # Jordi: make the list of selections of D*0 -> D0 gamma with given selection of D.
+    def _makeDstar02D0Gamma( self, name, d2x ):
+        decays = [ "D*(2007)0 -> D0 gamma" ]
+        # return [ self._makeDstar02D0X0( name + 'Gamma', decays, d2x + [ self.photons ] ) ]
 
+        combinationCuts = "(AALL)"
+        motherCuts      = "(M-MAXTREE(ABSID=='D0',M)<200*MeV)"
+
+        cp = CombineParticles( CombinationCut   = combinationCuts,
+                               MotherCut        = motherCuts     ,
+                               DecayDescriptors = decays          )
+
+        cp = cp.configurable( name + 'Beauty2CharmCombiner' )
+        #cp.ParticleCombiners.update( { '' : 'MomentumCombiner' } )
+
+        return [ Selection( 'Dstar02D0' + name + 'Beauty2Charm'        ,
+                            Algorithm          = cp                    ,
+                            RequiredSelections = d2x + [ self.photons ] ) ]
+
+    # CRJ: make the list of selections of D*+ -> D+ gamma with given selection of D.
+    def _makeDstar2DGamma( self, name, d2x ):
+        decays = [ "[D*_s+ -> D+ gamma]cc" ]
+
+        combinationCuts = "(AALL)"
+        motherCuts      = "(M-MAXTREE(ABSID=='D*_s+',M)<200*MeV)"
+
+        cp = CombineParticles( CombinationCut   = combinationCuts,
+                               MotherCut        = motherCuts     ,
+                               DecayDescriptors = decays          )
+
+        cp = cp.configurable( name + 'Beauty2CharmCombiner' )
+
+        return [ Selection( 'Dstar2DGamma' + name + 'Beauty2Charm'        ,
+                            Algorithm          = cp                    ,
+                            RequiredSelections = d2x + [ self.photons ] ) ]
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

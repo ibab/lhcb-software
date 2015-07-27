@@ -31,6 +31,7 @@ from Beauty2Charm_HHHBuilder import *
 from Beauty2Charm_B2DXBuilder import *
 from Beauty2Charm_Lb2XBuilder import *
 from Beauty2Charm_LTUnbiased import *
+from Beauty2Charm_Bc2DDBuilder import *
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -83,6 +84,10 @@ default_config ={
     'ADOCA14_MAX'   : '0.5*mm',
     'ADOCA24_MAX'   : '0.5*mm',
     'ADOCA34_MAX'   : '0.5*mm',
+    'ADOCA15_MAX'   : '0.5*mm',
+    'ADOCA25_MAX'   : '0.5*mm',
+    'ADOCA35_MAX'   : '0.5*mm',
+    'ADOCA45_MAX'   : '0.5*mm',
     'VCHI2DOF_MAX'  : 10,
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
@@ -96,6 +101,16 @@ default_config ={
     'BPVDIRA_MIN'   : 0.999,
     'AM_MIN'        : '4750*MeV', # Lb->X sets this to 5200*MeV
     'AM_MAX'        : '7000*MeV', # B->Dh+-h0 sets this to 5800*MeV
+    'B2CBBDT_MIN'   : 0.05
+    },
+    "Bc2DD" : { # Cuts made on Bc -> DD lines
+    'SUMPT_MIN'     : '5000*MeV',
+    'VCHI2DOF_MAX'  : 10,
+    'BPVIPCHI2_MAX' : 25,
+    'BPVLTIME_MIN'  : '0.1*ps',
+    'BPVDIRA_MIN'   : 0.999,
+    'AM_MIN'        : '6000*MeV', 
+    'AM_MAX'        : '7000*MeV',
     'B2CBBDT_MIN'   : 0.05
     },
     "Dstar" : { # Cuts made on all D*'s used in all lines 
@@ -933,7 +948,8 @@ default_config ={
     'StrippingB02LcLambda0PiLc2PKPiBeauty2CharmLine', 
     'StrippingB02LcLambda0PiWSLc2PKPiBeauty2CharmLine', 
     'StrippingB02LcLambda0KWSLc2PKPiBeauty2CharmLine', 
-    'StrippingB02DKLTUBD2HHHBeauty2CharmLine', 
+    'StrippingB02DKLTUBD2HHHBeauty2CharmLine',
+    
     'StrippingDstarUPB2D0KD2HHBeauty2CharmLine', 
     'StrippingDstarUPB2D0PiD2HHBeauty2CharmLine', 
     'StrippingDstarUPB2D0KD2HHUPBeauty2CharmLine', 
@@ -973,7 +989,6 @@ default_config ={
     'StrippingDstarUPB2D0KPi0ResolvedD2HHHHBeauty2CharmLine', 
     'StrippingDstarUPB2D0KsPiLLD2HHHHBeauty2CharmLine', 
     'StrippingDstarUPB2D0PiPi0ResolvedD2HHHHBeauty2CharmLine',
-
  
     'StrippingDstarUPB02DKD2PhiMuNuBeauty2CharmLine', 
     'StrippingDstarUPB02DPiD2PhiMuNuBeauty2CharmLine', 
@@ -1026,7 +1041,6 @@ default_config ={
     'StrippingDstarUPB02DstarMuNuDst2D0Pi_D2KSHHLLBeauty2CharmLine', 
     'StrippingDstarUPB02DstarMuNuDst2D0Pi_D2KSHHDDBeauty2CharmLine', 
     'StrippingDstarUPB02DstarMuNuDst2D0Pi_D2HHHHBeauty2CharmLine',
-
 
     'StrippingDstarUPB02DstarKsPiDDDst2D0PiBeauty2CharmLine', 
     'StrippingDstarUPB02DstarKsKDDDst2D0PiBeauty2CharmLine', 
@@ -1174,7 +1188,133 @@ default_config ={
     'StrippingDstarUPB02DstDKKDstarD02K3PiBeauty2CharmLine', 
     'StrippingDstarUPB02DstDstKKBeauty2CharmLine', 
     'StrippingDstarUPB02DstDstKKDstarD02K3PiBeauty2CharmLine', 
-    'StrippingDstarUPB02DstDstKKDstarD02K3PiDstarD02K3PiBeauty2CharmLine', 
+    'StrippingDstarUPB02DstDstKKDstarD02K3PiDstarD02K3PiBeauty2CharmLine',
+
+    # Bc+ -> D+ D0
+    'StrippingBc2DD0D2KSHPI0D02HHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHPI0D02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHPI0D02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KSHPI0D02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KSHPI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHHHD02HHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHHHD02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KSHHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KSHHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHD02HHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHD02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KSHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KSHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DD0D2HHHD02HHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2HHHD02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2HHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2HHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2HHHD02KSHHBeauty2CharmLine',
+    
+    # Bc+ -> D*+ D0
+    'StrippingBc2DstD0Dst2DPI0D2HHHD02HHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2HHHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2HHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2HHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2HHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSPI0HD02HHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSPI0HD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSPI0HD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSPI0HD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSPI0HD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSPI0HD02HHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSPI0HD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSPI0HD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSPI0HD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSPI0HD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHHHD02HHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHHHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02HHHHD02HHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02HHHHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02HHHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02HHHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02HHHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02HHD02HHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02HHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02HHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02HHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02HHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHHHD02HHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHHHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHD02HHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSHHD02HHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSHHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSPI0HHD02HHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSPI0HHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSPI0HHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSPI0HHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSPI0HHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHD02HHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHD02KSHHBeauty2CharmLine',
+
+    # Bc+ -> D*+ D*0
+    'StrippingBc2DstDst0Dst2DPI0D2HHHDst02D0PI0D02HHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2HHHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2HHHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2HHHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSPI0HDst02D0PI0D02HHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSPI0HDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSPI0HDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSPI0HDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSPI0HDst02D0PI0D02HHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSPI0HDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSPI0HDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSPI0HDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHHHDst02D0PI0D02HHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHHHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHHHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHHHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02HHHHDst02D0PI0D02HHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02HHHHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02HHHHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02HHHHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02HHDst02D0PI0D02HHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02HHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02HHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02HHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHHHDst02D0PI0D02HHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHHHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHHHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHHHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHDst02D0PI0D02HHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSHHDst02D0PI0D02HHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSHHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSHHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSHHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSPI0HHDst02D0PI0D02HHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSPI0HHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSPI0HHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSPI0HHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0PI0D02HHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0PI0D02HHBeauty2CharmLine'
+
     ]
   },
   'WGs' : [ 'B2OC' ]
@@ -1182,9 +1322,10 @@ default_config ={
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 class Beauty2CharmConf(LineBuilder):
-    __configuration_keys__ = ('ALL','UPSTREAM','KS0','Lambda0','Pi0','gamma','D2X','B2X','Dstar','HH','HHH',
-                              'PID','FlavourTagging','RelatedInfoTools', 'RawEvents','MDSTChannels',
- 			      '2TOPO','BB','D0INC','Prescales','GECNTrkMax')
+    
+    __configuration_keys__ = ('ALL','UPSTREAM','KS0','Lambda0','Pi0','gamma','D2X','B2X','Bc2DD',
+                              'Dstar','HH','HHH','PID','FlavourTagging','RelatedInfoTools',
+                              'RawEvents','MDSTChannels','2TOPO','BB','D0INC','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
         
@@ -1232,7 +1373,7 @@ class Beauty2CharmConf(LineBuilder):
 
         # make D->X, etc. inputs
         d = DBuilder(pions,kaons,ks,pi0,uppions,muons,config['D2X'],config['PID'])
-        dst = DstarBuilder(d,pions,pi0,photons,config['Dstar'],config['PID'])
+        dst = DstarBuilder(d,pions,uppions,pi0,photons,config['Dstar'],config['PID'])
 
         # X -> hh
         hh = HHBuilder(pions,kaons,protons,ks,pi0_fromB,config['HH'],
@@ -1250,9 +1391,13 @@ class Beauty2CharmConf(LineBuilder):
                            config['B2X'])
         self._makeLines(b2dx.lines,config)
 
+        # Bc -> DD lines
+        bc2dd = Bc2DDBuilder( d, dst, config['Bc2DD'] )
+        self._makeLines(bc2dd.lines,config)
+
         # Lb -> X
-        lb2x = Lb2XBuilder(lc,xicc,d,hh,topoPions,topoKaons,topoProtons,pions,kaons,ks,hhh,dst,lambda0, 
-                           config['B2X'])
+        lb2x = Lb2XBuilder(lc,xicc,d,hh,topoPions,topoKaons,topoProtons,
+                           pions,kaons,ks,hhh,dst,lambda0,config['B2X'])
         self._makeLines(lb2x.lines,config)
 
         # Unbiased lines

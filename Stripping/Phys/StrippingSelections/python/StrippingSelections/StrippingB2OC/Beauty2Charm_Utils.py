@@ -100,8 +100,9 @@ def makeTISTOSFilter(name):
 def tisTosSelection(sel):
     '''Filters Selection sel to be TOS OR TIS.'''
     tisTosFilter = makeTISTOSFilter(sel.name())
-    return Selection(sel.name()+'TISTOS', Algorithm=tisTosFilter,
+    tsel = Selection(sel.name()+'TISTOS', Algorithm=tisTosFilter,
                      RequiredSelections=[sel])
+    return tsel
 
 def filterPID(name,input,config,level=1):
     cuts = ["(NINGENERATION(('p+'==ABSID) & (PIDp < %s),%d) == 0)" \
@@ -261,9 +262,12 @@ def makeB2X(name,decay,inputs,config,useIP=True,resVert=True):
     if name.find('B02') >= 0 or name.find('B2D0PiNoIP') >= 0:
         config['AM_MAX'] = '6000*MeV'
     if name.find('B02DPiD2HHHBeauty2Charm') >=0 or name.find('B02DKD2HHHBeauty2Charm') >=0 :
-         config['AM_MAX'] = '7000*MeV'
+        config['AM_MAX'] = '7000*MeV'
     if name.find('B02DPiD2Pi0HHHResolvedBeauty2Charm') >=0 or name.find('B02DKD2Pi0HHHResolvedBeauty2Charm') >=0 :
-         config['AM_MAX'] = '7000*MeV'
+        config['AM_MAX'] = '7000*MeV'
+    #if name.find('Bc') >=0 : 
+    #    config['AM_MIN'] = '6000*MeV'
+    #    config['AM_MAX'] = '7000*MeV'
     comboCuts = LoKiCuts(['SUMPT','AM'],config).code()
     flightCuts = ['BPVLTIME','DZ1','DZ2']
     if useIP: flightCuts += ['BPVIPCHI2','BPVDIRA']
@@ -296,13 +300,11 @@ def makeB2XSels(decays,xtag,inputs,config,useIP=True,resVert=True):
                    + "| (5 == ((ABSID / 100) % 10))" \
                    + "| (4 == ((ABSID / 100) % 10)) )"
         hvChi2DOFTot = "SUMTREE(VFASPF(VCHI2),%s,0.0) / SUMTREE(VFASPF(VDOF),%s,0.0)" % (heavyIDs, heavyIDs)
-        varHandler.Variables = {
-                                   "FDCHI2"     :  "BPVVDCHI2"
-                                 , "PT"         :  "PT"
-                                 , "HVCHI2DOFTOT" : hvChi2DOFTot
-                               }
-
+        varHandler.Variables = { "FDCHI2"     :  "BPVVDCHI2",
+                                 "PT"         :  "PT",
+                                 "HVCHI2DOFTOT" : hvChi2DOFTot }
         sels.append(sel)
+        
     return sels
 
 def makeB2DstarX(sel,uppions,config):

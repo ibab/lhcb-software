@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-27 - Chris Jones
+ - Add new Bc -> DD builder in the B20C stripping lines.
+
 !========================== StrippingSelections v4r4 2015-07-24 ===============
 
 ! 2015-07-27 - Ricardo Vazquez Gomez
