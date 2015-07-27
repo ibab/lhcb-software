@@ -177,7 +177,16 @@ class DalitzPdfBaseFastInteg
     getNorm();
     return _norm;
   }
-
+    
+  double sumOfSqrtFitFractions() {
+      if(!_faint.initialised())getNorm();
+      return _faint.sumOfSqrtFitFractions();
+  }   
+    
+  int numberOfFitFractionsLargerThanThreshold(double threshold){
+        return _faint.numberOfFitFractionsLargerThanThreshold(threshold);
+  }
+    
   void doFinalStats(MINT::Minimiser* mini=0);
 };
 

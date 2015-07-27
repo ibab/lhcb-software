@@ -34,6 +34,11 @@ std::complex<double> NonRes::getVal( IDalitzEvent& evt ) {
   else
     non_res = 1.0;
 
+  double formFactor= 1.;
+  if( _normBF == 1 ) formFactor = Fr();
+  else if( _normBF == 0 ) formFactor = Fr_PDG_BL();  
+  else if(_normBF == 3 ) formFactor = Fr_BELLE(0.);   
+    
   return Fr_PDG_BL()*non_res;
 }
 

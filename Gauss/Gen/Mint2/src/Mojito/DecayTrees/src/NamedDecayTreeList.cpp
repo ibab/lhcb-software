@@ -6156,6 +6156,7 @@ int NamedDecayTreeList::make4PiList() {
   dk->addDgtr(30221)->addDgtr(211, -211);
   dk->addDgtr(9993)->addDgtr(211, -211);
   add(*dk);
+  add(AmpInitialiser(*dk, "NonResExp"));
   delete dk;
     
   // D0 -> rho(1450) pi-pi+, rho(1450)->NonRes pi+pi-

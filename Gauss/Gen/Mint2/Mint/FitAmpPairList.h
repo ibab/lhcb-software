@@ -71,7 +71,9 @@ class FitAmpPairList
   virtual double integral() const;
   virtual double variance() const;
   virtual double sumOfVariances() const;
-
+  double sumOfSqrtFitFractions();
+  int numberOfFitFractionsLargerThanThreshold(double threshold);
+    
   FitFractionList getFractions() const{return _singleAmpFractions;}
   FitFractionList getInterferenceTerms() const{return _interferenceFractions;}
 

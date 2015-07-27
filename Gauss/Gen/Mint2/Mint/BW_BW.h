@@ -28,7 +28,6 @@ class ParticleProperties;
 // Can only do 2 body decays for now... (it's the BW penetration factors)
 class BW_BW : virtual public ILineshape, public MINT::FitParDependent{
  private:
-  MINT::NamedParameter<int> _normBF;
   mutable IDalitzEvent* _eventPtr;
   //  mutable std::stack<IDalitzEvent*> _oldPointers;
 
@@ -57,6 +56,7 @@ class BW_BW : virtual public ILineshape, public MINT::FitParDependent{
 
  protected:
 
+  MINT::NamedParameter<int> _normBF;
   const AssociatedDecayTree& _theDecay; 
   double _gen_s_mi, _gen_s_ma;
 

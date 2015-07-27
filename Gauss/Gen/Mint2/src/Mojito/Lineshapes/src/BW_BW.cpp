@@ -1106,9 +1106,13 @@ std::complex<double> BW_BW::getVal(IDalitzEvent& evt){
   setEventPtr(evt);
   resetInternals();
 
+  double formFactor= 1.;
+  if( _normBF == 1 ) formFactor = Fr();
+  else if( _normBF == 0 ) formFactor = Fr_PDG_BL();  
+  else if(_normBF == 3 ) formFactor = Fr_BELLE(0.);  
+    
   if( nonResonant() ){
-        if( _normBF != 0 )return Fr();
-        else return Fr_PDG_BL();
+        return formFactor;
   }
     
   if(startOfDecayChain()){
@@ -1131,8 +1135,7 @@ std::complex<double> BW_BW::getVal(IDalitzEvent& evt){
       }
       return 1;
     }
-    if( _normBF != 0 )return Fr();
-    else return Fr_PDG_BL();
+    return formFactor;
   }
   
   if(dbThis){
@@ -1152,9 +1155,6 @@ std::complex<double> BW_BW::getVal(IDalitzEvent& evt){
 	 << endl;
   }
     
-  double formFactor= 1.;
-  if( _normBF != 0 ) formFactor = Fr();
-  else formFactor = Fr_PDG_BL();
   const std::complex<double> returnVal = formFactor*BreitWigner();
 
   if(dbThis) cout << " value = " << returnVal 

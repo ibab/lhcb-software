@@ -180,6 +180,26 @@ double FitAmpPairList::integral() const{
   return sum;
 }
 
+double FitAmpPairList::sumOfSqrtFitFractions() {
+    double sum = 0;
+    for(unsigned int i=0; i< this->size(); i++){
+        if((*this)[i].isSingleAmp())sum += sqrt((*this)[i].integral());
+    }
+    return sum;
+}
+
+int FitAmpPairList::numberOfFitFractionsLargerThanThreshold(double threshold){
+    int n=0;
+    double norm = integral();
+    for(unsigned int i=0; i< this->size(); i++){
+        if((*this)[i].isSingleAmp()){
+            if((*this)[i].integral()/norm > threshold)n++ ;
+        }
+    }
+    return n;
+}
+
+
 double FitAmpPairList::phaseSpaceIntegral()const{
   // only for debug
   if(_Nevents <= 0) return -9999;

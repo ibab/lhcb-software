@@ -280,7 +280,7 @@ bool Minimiser::SetSomeMinuitOptions(){
 }
 
 bool Minimiser::CallMigrad(){
-  bool dbThis=false;
+  bool dbThis=true;
   bool success=true;
   arglist[0] = _maxCalls; arglist[1] = 1.e-2;
   if(dbThis) cout << "calling MIGRAD" << endl;
@@ -299,6 +299,39 @@ bool Minimiser::CallMinos(){
   if(dbThis) cout << "did that. How did I do? ierflg=" << ierflg << endl;
   success &= (! ierflg);
   return success;
+}
+
+bool Minimiser::CallSimplex(int maxCalls, double tolerance ){
+    bool dbThis=true;
+    bool success=true;
+    arglist[0] = maxCalls; arglist[1] = tolerance;
+    if(dbThis) cout << "calling SIMPLEX" << endl;
+    TMinuit::mnexcm("SIMPLEX", arglist ,2,ierflg);
+    if(dbThis) cout << "did that. How did I do? ierflg=" << ierflg << endl;
+    success &= (! ierflg);
+    return success;
+}
+
+bool Minimiser::CallSeek(int maxCalls, int devs){
+    bool dbThis=true;
+    bool success=true;
+    arglist[0] = maxCalls; arglist[1] = devs; 
+    if(dbThis) cout << "calling SEEK" << endl;
+    TMinuit::mnexcm("SEEK", arglist ,2,ierflg);
+    if(dbThis) cout << "did that. How did I do? ierflg=" << ierflg << endl;
+    success &= (! ierflg);
+    return success;
+}
+
+bool Minimiser::CallImprove(int maxCalls, int searches ){
+    bool dbThis=true;
+    bool success=true;
+    arglist[0] = maxCalls; arglist[1] = searches;
+    if(dbThis) cout << "calling IMPROVE" << endl;
+    TMinuit::mnexcm("IMPROVE", arglist ,2,ierflg);
+    if(dbThis) cout << "did that. How did I do? ierflg=" << ierflg << endl;
+    success &= (! ierflg);
+    return success;
 }
 
 bool Minimiser::prepFit(){
@@ -334,6 +367,29 @@ bool Minimiser::doMinosFit(){
   success &= this->endOfFit();
   return success;
 }
+
+bool Minimiser::doSeekFit(){
+    bool dbThis=false;
+    bool success = true;
+    success &= prepFit();
+    success &= CallSeek();
+    if(dbThis) cout << "called SEEK" << endl;
+    //scanMarked();
+    success &= this->endOfFit();
+    return success;
+}
+
+bool Minimiser::doSimplexFit(){
+    bool dbThis=false;
+    bool success = true;
+    success &= prepFit();
+    success &= CallSimplex();
+    if(dbThis) cout << "called SIMPLEX" << endl;
+    //scanMarked();
+    success &= this->endOfFit();
+    return success;
+}
+
 
 bool Minimiser::scanMarked(){
   bool sc=true;

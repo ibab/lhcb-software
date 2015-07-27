@@ -76,9 +76,15 @@ class Minimiser : public TMinuit{
   bool SetSomeMinuitOptions();
   bool CallMigrad();
   bool CallMinos();
+  bool CallSeek(int maxCalls = 100, int devs = 5);
+  bool CallSimplex(int maxCalls = 300, double tolerance = 1. );
+  bool CallImprove(int maxCalls= 1500, int searches= 5);
+
   bool prepFit();
   bool doFit();
   bool doMinosFit();
+  bool doSeekFit();
+  bool doSimplexFit();
 
   bool scanMarked();
   bool scanAll();

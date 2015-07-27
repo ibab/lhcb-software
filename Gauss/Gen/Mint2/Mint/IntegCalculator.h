@@ -55,6 +55,14 @@ class IntegCalculator : public virtual IIntegrationCalculator{
   virtual double integral() const;
   virtual double variance() const;
 
+  double sumOfSqrtFitFractions() {
+        return withEff().sumOfSqrtFitFractions();
+  }     
+    
+  int numberOfFitFractionsLargerThanThreshold(double threshold){
+        return withEff().numberOfFitFractionsLargerThanThreshold(threshold);
+  }  
+    
   virtual bool makeAndStoreFractions(MINT::Minimiser* mini=0);
   virtual double getFractionChi2() const;
 

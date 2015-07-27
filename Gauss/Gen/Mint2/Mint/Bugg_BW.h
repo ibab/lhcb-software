@@ -30,7 +30,7 @@ class Bugg_BW  : public BW_BW, virtual public ILineshape{
     , _alpha("Bugg_alpha", 1, 1.3  , 0, 0, 0, 0,  NamedParameterBase::QUIET)
     , _sA("Bugg_sA", 1, 0.41 , 0, 0, 0, 0,  NamedParameterBase::QUIET)
     , _4pi_s0("Bugg_4pi_s0", 1, 7.082/2.845  , 0, 0, 0, 0,  NamedParameterBase::QUIET)
-    , _4pi_lambda("Bugg_4pi_lambda", 2.845, 0.  , 0, 0, 0, 0,  NamedParameterBase::QUIET)
+    , _4pi_lambda("Bugg_4pi_lambda", 1, 2.845  , 0, 0, 0, 0,  NamedParameterBase::QUIET)
     , _m_pi(ParticlePropertiesList::mass(211)/GeV)
     , _m_K(ParticlePropertiesList::mass(321)/GeV)
     , _m_eta(ParticlePropertiesList::mass(221)/GeV)

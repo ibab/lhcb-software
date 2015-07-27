@@ -127,6 +127,14 @@ class FastAmplitudeIntegrator : virtual public IDalitzIntegrator{
   double RealVal(){
     return getVal();
   }
+    
+  double sumOfSqrtFitFractions() {
+        return _integCalc->sumOfSqrtFitFractions();
+  }     
+    
+  int numberOfFitFractionsLargerThanThreshold(double threshold){
+        return _integCalc->numberOfFitFractionsLargerThanThreshold(threshold);
+  } 
 
   double variance() const;
 
