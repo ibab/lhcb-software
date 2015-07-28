@@ -518,6 +518,13 @@ int HltBufferedIOReader::openFile()   {
     m_files.erase(i);
     int fd = ::open(fname.c_str(), O_RDONLY | O_BINARY, S_IREAD);
     if ( -1 != fd )    {
+      const char* ptr = fname.c_str()+m_directory.length()+1+m_filePrefix.length();
+      m_currentRun = 0;
+      ::sscanf(ptr,"%07d",&m_currentRun);
+      if ( m_runSvcID ) {
+        ::dis_update_service(m_runSvcID);
+      }
+      
       if (m_deleteFiles)      {
         int sc = ::unlink(fname.c_str());
         if (sc != 0)        {
@@ -539,9 +546,6 @@ int HltBufferedIOReader::openFile()   {
           << m_max_events_per_file << " events]";
         info(s.str());
       }
-      m_currentRun = 0;
-      ::sscanf(fname.c_str(),"%06d",&m_currentRun);
-      if ( m_runSvcID ) ::dis_update_service(m_runSvcID);
       return fd;
     }
     error("FAILD to open file: " + fname + " for deferred HLT processing: "
@@ -690,11 +694,12 @@ StatusCode HltBufferedIOReader::i_run()  {
           status = m_producer->spaceRearm(buf_size);
         }
         catch (const exception& e)        {
-          error("Exception while reading Input files (spaceRearm): %s Event:%d. "
-                "Skipping rest of file: %s", e.what(),event_number,m_current.c_str());
-          ::close(file_handle);
-          file_handle = 0;
-          m_current = "";
+          error("Exception while reading Input files (spaceRearm): %s "
+                "Event:%d file:%s BuffSize:%d. ",
+                e.what(),event_number,m_current.c_str(),buf_size);
+          // Set back the file position to the beginning of the event and continue.
+          // If there was a cancel in between, the file shall be saved.
+          ::lseek(file_handle, file_position, SEEK_SET);
           continue;
         }
         if (status == MBM_NORMAL)        {
@@ -739,13 +744,13 @@ StatusCode HltBufferedIOReader::i_run()  {
             dsc.type = EVENT_TYPE_MEP;
           }
           status = ::file_read(file_handle,read_ptr, read_len);
-          if (status <= 0)   {
+          if (status <= 0)   {  // End-of file, continue with next file
             ::close(file_handle);
             file_handle = 0;
             m_current = "";
             continue;
           }
-          if (status == MBM_NORMAL)  {
+          else   {
             // Check if there are consumers pending before declaring the event.
             // This should be a rare case, since there ARE (were?) consumers.
             // Though: In this case the event is really lost!
@@ -757,6 +762,10 @@ StatusCode HltBufferedIOReader::i_run()  {
               error("No consumers (partition:%d event type:%d) present to consume event %d",
                     partid,dsc.type,event_number);
               error("Safe rest of file and finish. Skipping rest of file: %s",m_current.c_str());
+              // If we did not see an MDF header, the file may also be corrupted:
+              if ( dsc.type == EVENT_TYPE_MEP )  {
+                error("If Moores are alive, this file may be corrupted: %s",m_current.c_str());
+              }
               m_receiveEvts = false;
               ::lseek(file_handle, file_position, SEEK_SET);
               safeRestOfFile(file_handle);
@@ -772,9 +781,45 @@ StatusCode HltBufferedIOReader::i_run()  {
             dsc.mask[1] = ~0x0;
             dsc.mask[2] = ~0x0;
             dsc.mask[3] = ~0x0;
-            m_producer->declareEvent();
-            status = m_producer->sendSpace();
-            if (status == MBM_NORMAL)    {
+            //
+            // Declare the event to the buffer manager
+            //
+            try {
+              status = m_producer->declareEvent();
+            }
+            catch (const exception& e)        {
+              info("Exception while delareEvent: %s Event:%d File:%s.",
+                   e.what(),event_number,m_current.c_str());
+              status = MBM_ERROR;
+            }
+            catch(...)   {
+              info("UNKNOWN Exception while delareEvent: Event:%d File:%s.",
+                   event_number,m_current.c_str());
+              status = MBM_ERROR;
+            }
+            if (status != MBM_NORMAL)    {
+              continue;
+            }
+            //
+            // Now send space
+            //
+            try  {
+              status = m_producer->sendSpace();
+            }
+            catch (const exception& e)        {
+              info("Exception while sendSpace: %s Event:%d File:%s.",
+                   e.what(),event_number,m_current.c_str());
+              status = MBM_ERROR;
+            }
+            catch(...)   {
+              info("UNKNOWN Exception while sendSpace: Event:%d File:%s.",
+                   event_number,m_current.c_str());
+              status = MBM_ERROR;
+            }
+            if (status != MBM_NORMAL)    {
+              continue;
+            }
+            else  {
               m_evtCount++;
               m_evtCountFile++;
               // If we have exceeded the total number of events per file, close it!
