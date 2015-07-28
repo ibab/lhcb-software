@@ -15,6 +15,7 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IHistogram3D.h"
+#include "AIDA/IProfile2D.h"
 #include "AIDA/IProfile1D.h"
 #include <GaudiUtils/Aida2ROOT.h>
 #include "Gaucho/dimhist.h"
@@ -236,6 +237,13 @@ void MonHist::setup(IMessageSvc* msgs, const std::string& source, const AIDA::IB
       rhist->SetName(source.c_str());
       m_rootobj = rhist;
     }
+  else if( 0 != dynamic_cast<const AIDA::IProfile2D * >(aidahist) )
+    {
+      m_type = H_2DPROFILE;
+      MyTProfile2D *rhist = (MyTProfile2D*)Gaudi::Utils::Aida2ROOT::aida2root(const_cast<AIDA::IProfile2D *>(dynamic_cast<const AIDA::IProfile2D* >(aidahist)));
+      rhist->SetName(source.c_str());
+      m_rootobj = rhist;
+    }
   else
     {
       msg << MSG::ERROR << "Unknown histogram type. Source " << source << endreq;
@@ -279,22 +287,11 @@ void MonHist::resetup(void)
     case H_2DIM:
     case H_PROFILE:
     case H_3DIM:
+    case H_2DPROFILE:
     {
       m_Xlabels.clear();
       m_Ylabels.clear();
       m_Zlabels.clear();
-//      deallocPtr(m_Xlabels);
-//      if (m_Xlabels != 0)
-//      {
-//        free (m_Xlabels);
-//        m_Xlabels = 0;
-//      }
-//      deallocPtr(m_Ylabels);
-//      if (m_Ylabels != 0)
-//      {
-//        free (m_Ylabels);
-//        m_Ylabels = 0;
-//      }
       m_xlablen = 0;
       m_ylablen = 0;
       m_zlablen = 0;
@@ -312,6 +309,11 @@ void MonHist::resetup(void)
       break;
   }
 }
+#define getProfileDataPtrs(h) \
+    m_hentries = h->GetEntryArr();\
+    m_hsumw2 = h->GetSumw2Arr();\
+    m_hbinsumw2 = h->GetBinSumw2Arr();\
+    m_hsumw = h->GetSumwArr();
 
 void MonHist::setup(IMessageSvc* msgs)
 {
@@ -323,10 +325,7 @@ void MonHist::setup(IMessageSvc* msgs)
     case H_RATE:
     {
       MyTProfile *rhist = (MyTProfile*)m_rootobj;
-      m_hentries = rhist->GetEntryArr();
-      m_hsumw2 = rhist->GetSumw2Arr();
-      m_hbinsumw2 = rhist->GetBinSumw2Arr();
-      m_hsumw = rhist->GetSumwArr();
+      getProfileDataPtrs(rhist);
       m_rootobj = rhist;
       m_Xaxis = rhist->GetXaxis();
       m_name = rhist->GetName();
@@ -360,7 +359,6 @@ void MonHist::setup(IMessageSvc* msgs)
     }
     case H_2DIM:
     {
-      m_type = H_2DIM;
       MyTH2D *rhist = (MyTH2D*)m_rootobj;
       m_hentries = rhist->GetEntryArr();
       m_hsumw2 = rhist->GetSumw2Arr();
@@ -380,10 +378,32 @@ void MonHist::setup(IMessageSvc* msgs)
     }
     case H_3DIM:
     {
-      m_type = H_3DIM;
       MyTH2D *rhist = (MyTH2D*)m_rootobj;
       m_hentries = rhist->GetEntryArr();
       m_hsumw2 = rhist->GetSumw2Arr();
+      m_rootobj = rhist;
+      m_name = rhist->GetName();
+      m_namelen = m_name.length();
+      m_title = rhist->GetTitle();
+      m_bookopts = std::string(rhist->GetOption());
+//      printf("+++++++++++++++++++++++++++++++2Dim Histogram. Name %s, Title %s \n",m_name, m_title);
+      m_title = m_title+MonHist::optsep+m_bookopts;
+      m_titlen = m_title.length();
+      m_Xaxis =  rhist->GetXaxis();
+      m_Yaxis = rhist->GetYaxis();
+      m_Zaxis = rhist->GetZaxis();
+      m_blocksize = rhist->fN*sizeof(double);
+      m_hdrlen = sizeof(DimHistbuff3)+titlen()+1+namelength()+1;
+      break;
+    }
+    case H_2DPROFILE:
+    {
+      MyTProfile2D *rhist = (MyTProfile2D*)m_rootobj;
+//      m_hentries = rhist->GetEntryArr();
+//      m_hsumw2 = rhist->GetSumw2Arr();
+//      m_hbinsumw2 = rhist->GetBinSumw2Arr();
+//      m_hsumw = rhist->GetSumwArr();
+      getProfileDataPtrs(rhist);
       m_rootobj = rhist;
       m_name = rhist->GetName();
       m_namelen = m_name.length();
@@ -464,6 +484,24 @@ void MonHist::setup(IMessageSvc* msgs)
       m_hdrlen += m_zlablen;
       break;
     }
+    case H_2DPROFILE:
+    {
+      m_ny = m_Yaxis->GetNbins();
+      m_ymin = m_Yaxis->GetXmin();
+      m_ymax = m_Yaxis->GetXmax();
+      m_nz = m_Zaxis->GetNbins();
+      m_zmin = m_Zaxis->GetXmin();
+      m_zmax = m_Zaxis->GetXmax();
+      m_hdrlen = sizeof(DimHistbuff3)+titlen()+1+namelength()+1;
+      m_buffersize = 4*m_blocksize;
+      m_xlablen = GetBinLabels(m_Xaxis,m_Xlabels);
+      m_ylablen = GetBinLabels(m_Yaxis,m_Ylabels);
+      m_zlablen = GetBinLabels(m_Zaxis,m_Zlabels);
+      m_hdrlen += m_xlablen;
+      m_hdrlen += m_ylablen;
+      m_hdrlen += m_zlablen;
+      break;
+    }
     default:
     {
       return;
@@ -495,29 +533,6 @@ MonHist::~MonHist()
   TH1::AddDirectory(dirstat);
 }
 
-//int MonHist::GetBinLabels(TAxis *ax, char ***labs)
-//{
-//  int l=0;
-//  int i;
-//  int nbin=ax->GetNbins();
-//  for (i = 1; i < (nbin+1) ; ++i)
-//  {
-//    char *binLab = (char*)ax->GetBinLabel(i);
-//    l += strlen(binLab);
-//  }
-//  if (l>0)
-//  {
-//    *labs = (char**)malloc(nbin*sizeof(char*));
-//    char **lab = *labs;
-//    for (i=1;i<nbin+1;i++)
-//    {
-//      (lab)[i-1] = (char*)ax->GetBinLabel(i);
-////      printf("Bin %d Label %s\n",i,lab[i-1]);
-//    }
-//    l+= nbin+1;
-//  }
-//  return l;
-//}
 int MonHist::GetBinLabels(TAxis *ax, std::vector<std::string> &labs)
 {
   int l=0;
@@ -530,12 +545,9 @@ int MonHist::GetBinLabels(TAxis *ax, std::vector<std::string> &labs)
   }
   if (l>0)
   {
-//    *labs = (char**)malloc(nbin*sizeof(char*));
-//    char **lab = *labs;
     for (i=1;i<nbin+1;i++)
     {
       labs.push_back(ax->GetBinLabel(i));
-//      printf("Bin %d Label %s\n",i,lab[i-1]);
     }
     l+= nbin+1;
   }
@@ -595,6 +607,11 @@ void MonHist::clear()
     case H_RATE:
     {
       ((TProfile*) m_rootobj)->Reset();
+      break;
+    }
+    case H_2DPROFILE:
+    {
+      ((TProfile2D*) m_rootobj)->Reset();
       break;
     }
     case C_STATENT:
@@ -691,20 +708,45 @@ int MonHist::serialize(void* &ptr)
   {
     case H_3DIM:
     {
-      pp->nameoff = sizeof(DimHistbuff2);
-      pp->dim = 3;
-      pp->titoff  = pp->nameoff+namelength();
-      pp->xlaboff = pp->titoff+pp->titlen;
+      pp3->nameoff = sizeof(DimHistbuff3);
+      pp3->dim = 3;
+      pp3->titoff  = pp->nameoff+namelength();
+      pp3->xlaboff = pp->titoff+pp->titlen;
       nam = (char*)AddPtr(pp,pp->nameoff);
       tit = (char*)AddPtr(pp,pp->titoff);
       ntries = (double*)AddPtr(ptr,pp->dataoff);
       errp  = (double*)AddPtr(ntries,m_blocksize);
       xtits = (char*)AddPtr(pp,pp->xlaboff);
-      pp2->nybin = m_ny;
-      pp2->ymin  = m_ymin;
-      pp2->ymax  = m_ymax;
-      pp2->ylablen = m_ylablen;
-      pp2->ylaboff = pp->xlaboff+pp2->xlablen;
+      pp3->nybin = m_ny;
+      pp3->ymin  = m_ymin;
+      pp3->ymax  = m_ymax;
+      pp3->ylablen = m_ylablen;
+      pp3->ylaboff = pp->xlaboff+pp2->xlablen;
+      ytits = (char*)AddPtr(pp2,pp2->ylaboff);
+      pp3->nzbin = m_nz;
+      pp3->zmin  = m_zmin;
+      pp3->zmax  = m_zmax;
+      pp3->zlablen = m_zlablen;
+      pp3->zlaboff = pp2->ylaboff+pp2->ylablen;
+      ztits = (char*)AddPtr(pp3,pp3->zlaboff);
+      break;
+    }
+    case H_2DPROFILE:
+    {
+      pp3->nameoff = sizeof(DimHistbuff3);
+      pp3->dim = 3;
+      pp3->titoff  = pp->nameoff+namelength();
+      pp3->xlaboff = pp->titoff+pp->titlen;
+      nam = (char*)AddPtr(pp,pp->nameoff);
+      tit = (char*)AddPtr(pp,pp->titoff);
+      ntries = (double*)AddPtr(ptr,pp->dataoff);
+      errp  = (double*)AddPtr(ntries,m_blocksize);
+      xtits = (char*)AddPtr(pp,pp->xlaboff);
+      pp3->nybin = m_ny;
+      pp3->ymin  = m_ymin;
+      pp3->ymax  = m_ymax;
+      pp3->ylablen = m_ylablen;
+      pp3->ylaboff = pp->xlaboff+pp2->xlablen;
       ytits = (char*)AddPtr(pp2,pp2->ylaboff);
       pp3->nzbin = m_nz;
       pp3->zmin  = m_zmin;
@@ -716,10 +758,10 @@ int MonHist::serialize(void* &ptr)
     }
     case H_2DIM:
     {
-      pp->nameoff = sizeof(DimHistbuff2);
-      pp->dim = 2;
-      pp->titoff  = pp->nameoff+namelength();
-      pp->xlaboff = pp->titoff+pp->titlen;
+      pp2->nameoff = sizeof(DimHistbuff2);
+      pp2->dim = 2;
+      pp2->titoff  = pp->nameoff+namelength();
+      pp2->xlaboff = pp->titoff+pp->titlen;
       nam = (char*)AddPtr(pp,pp->nameoff);
       tit = (char*)AddPtr(pp,pp->titoff);
       ntries = (double*)AddPtr(ptr,pp->dataoff);
@@ -770,18 +812,18 @@ int MonHist::serialize(void* &ptr)
     case   H_1DIM:
     {
       cpyBinLabels(xtits,m_Xlabels,m_nx);
-      pp->nentries = ((TH1D*)m_rootobj)->GetEntries();
-      memcpy(ntries,m_hentries,m_blocksize);
-      memcpy(errp,m_hsumw2,m_blocksize);
+      MyTH1D *h=(MyTH1D*)m_rootobj;
+      pp->nentries = h->GetEntries();
+      h->movetodimbuffer(AddPtr(ptr,pp->dataoff));
 //      status  = 0;
       break;
     }
     case H_2DIM:
     {
       cpyBinLabels(xtits,m_Xlabels,m_nx);
-      pp->nentries = ((TH2D*)m_rootobj)->GetEntries();
-      memcpy(ntries,m_hentries,m_blocksize);
-      memcpy(errp,m_hsumw2,m_blocksize);
+      MyTH2D *h=(MyTH2D*)m_rootobj;
+      pp->nentries = h->GetEntries();
+      h->movetodimbuffer(AddPtr(ptr,pp->dataoff));
       cpyBinLabels(ytits,m_Ylabels,m_ny);
 //      status  = 0;
       break;
@@ -789,9 +831,9 @@ int MonHist::serialize(void* &ptr)
     case H_3DIM:
     {
       cpyBinLabels(xtits,m_Xlabels,m_nx);
-      pp->nentries = ((TH3D*)m_rootobj)->GetEntries();
-      memcpy(ntries,m_hentries,m_blocksize);
-      memcpy(errp,m_hsumw2,m_blocksize);
+      MyTH3D *h=(MyTH3D*)m_rootobj;
+      pp->nentries = h->GetEntries();
+      h->movetodimbuffer(AddPtr(ptr,pp->dataoff));
       cpyBinLabels(ytits,m_Ylabels,m_ny);
       cpyBinLabels(ztits,m_Zlabels,m_nz);
 //      status  = 0;
@@ -802,28 +844,32 @@ int MonHist::serialize(void* &ptr)
     {
       cpyBinLabels(xtits,m_Xlabels,m_nx);
       MyTProfile *h =  (MyTProfile*)m_rootobj;
-      pp->nentries = ((TProfile*)m_rootobj)->GetEntries();
+      pp->nentries = h->GetEntries();
 
 
-      double *ents = (double*)AddPtr(pp,pp->dataoff); //0
-      double *sum = (double*)AddPtr(ents,m_blocksize); //1
-      double *sum2 = (double*)AddPtr(sum,m_blocksize); //2
-      double *bsum2 = (double*)AddPtr(sum2,m_blocksize); //3
-      double *hsum=h->fArray;
-      double *hsum2 = h->fSumw2.fArray;
-      double *hbines = h->fBinEntries.fArray;
-      double *hbinsum2 = h->fBinSumw2.fArray;
-      memcpy(ents,hbines,m_blocksize);
-      memcpy(sum,hsum,m_blocksize);
-      memcpy(sum2,hsum2,m_blocksize);
-      memcpy(bsum2,hbinsum2,m_blocksize);
-
+      h->movetodimbuffer(AddPtr(ptr,pp->dataoff));
       pp->yminval = ((MyTProfile*)m_rootobj)->fYmin;
       pp->ymaxval = ((MyTProfile*)m_rootobj)->fYmax;
 //      status  = 0;
       break;
     }
 
+    case H_2DPROFILE:
+    {
+      MyTProfile2D *h =  (MyTProfile2D*)m_rootobj;
+      cpyBinLabels(xtits,m_Xlabels,m_nx);
+      pp->nentries = h->GetEntries();
+      cpyBinLabels(ytits,m_Ylabels,m_ny);
+      cpyBinLabels(ztits,m_Zlabels,m_nz);
+      pp->nentries = h->GetEntries();
+      h->movetodimbuffer(AddPtr(ptr,pp->dataoff));
+      pp3->zmin = h->GetZmin();
+      pp3->zmax = h->GetZmax();
+      pp3->zminval = h->fZmin;
+      pp3->zmaxval = h->fZmax;
+//      status  = 0;
+      break;
+    }
     default:
     {
 //      status  = -2;
@@ -889,6 +935,11 @@ void MonHist::List()
       typ="H_PROFILE";
       break;
     }
+    case H_2DPROFILE:
+    {
+      typ="H_2DPROFILE";
+      break;
+    }
     case H_RATE:
     {
       typ="H_RATE";
@@ -921,11 +972,6 @@ void *MonHist::de_serialize(void *ptr, char *nam)
     {
       DimHistbuff1 *b=(DimHistbuff1*)ptr;
       char *tit = (char*)AddPtr(b,b->titoff);
-//      if (m_rootdeser != 0)
-//      {
-//        delete m_rootdeser;
-//        m_rootdeser = 0;
-//      }
       std::string titopt = tit;
       std::string bopt;
       size_t seppos;
@@ -936,16 +982,8 @@ void *MonHist::de_serialize(void *ptr, char *nam)
         titopt.erase(seppos);
       }
       MyTH1D *h = (MyTH1D*)new TH1D(nam,titopt.c_str(),b->nxbin,b->xmin,b->xmax);
-//      this->m_rootdeser = h;
-      mhentries = h->GetEntryArr();
-      mhsumw2 = h->GetSumw2Arr();
-//      m_hsumw = h->GetSumwArr();
       h->SetEntries( b->nentries);
-      double *ents = (double*)AddPtr(b,b->dataoff);
-      mblocksize = (b->nxbin+2)*sizeof(double);
-      double *errp = (double*)AddPtr(ents,mblocksize);
-      memcpy(mhentries,ents,mblocksize);
-      memcpy(mhsumw2,errp,mblocksize);
+      h->movefromdimbuffer(AddPtr(b,b->dataoff));
       if (b->xlablen > 0)
       {
         char *xl = (char*)AddPtr(b,b->xlaboff);
@@ -959,11 +997,6 @@ void *MonHist::de_serialize(void *ptr, char *nam)
     {
       DimHistbuff2 *b=(DimHistbuff2*)ptr;
       char *tit = (char*)AddPtr(b,b->titoff);
-//      if (m_rootdeser != 0)
-//      {
-//        delete m_rootdeser;
-//        m_rootdeser = 0;
-//      }
       std::string titopt = tit;
       std::string bopt;
       size_t seppos;
@@ -974,16 +1007,8 @@ void *MonHist::de_serialize(void *ptr, char *nam)
         titopt.erase(seppos);
       }
       MyTH2D *h = (MyTH2D*)new TH2D(nam,titopt.c_str(),b->nxbin,b->xmin,b->xmax,b->nybin,b->ymin,b->ymax);
-//      this->m_rootdeser  = h;
-      mhentries = h->GetEntryArr();
-      mhsumw2 = h->GetSumw2Arr();
-//      m_hsumw = h->GetSumwArr();
       h->SetEntries( b->nentries);
-      double *ents = (double*)AddPtr(b,b->dataoff);
-      mblocksize = (b->nxbin+2)*(b->nybin+2)*sizeof(double);
-      double *errp = (double*)AddPtr(ents,mblocksize);
-      memcpy(mhentries,ents,mblocksize);
-      memcpy(mhsumw2,errp,mblocksize);
+      h->movefromdimbuffer(AddPtr(b,b->dataoff));
       if (b->xlablen > 0)
       {
         char *xl = (char*)AddPtr(b,b->xlaboff);
@@ -1002,11 +1027,6 @@ void *MonHist::de_serialize(void *ptr, char *nam)
     {
       DimHistbuff3 *b=(DimHistbuff3*)ptr;
       char *tit = (char*)AddPtr(b,b->titoff);
-//      if (m_rootdeser != 0)
-//      {
-//        delete m_rootdeser;
-//        m_rootdeser = 0;
-//      }
       std::string titopt = tit;
       std::string bopt;
       size_t seppos;
@@ -1017,16 +1037,8 @@ void *MonHist::de_serialize(void *ptr, char *nam)
         titopt.erase(seppos);
       }
       MyTH3D *h = (MyTH3D*)new TH3D(nam,titopt.c_str(),b->nxbin,b->xmin,b->xmax,b->nybin,b->ymin,b->ymax,b->nzbin,b->zmin,b->zmax);
-//      this->m_rootdeser  = h;
-      mhentries = h->GetEntryArr();
-      mhsumw2 = h->GetSumw2Arr();
-//      m_hsumw = h->GetSumwArr();
       h->SetEntries( b->nentries);
-      double *ents = (double*)AddPtr(b,b->dataoff);
-      mblocksize = (b->nxbin+2)*(b->nybin+2)*(b->nybin+2)*sizeof(double);
-      double *errp = (double*)AddPtr(ents,mblocksize);
-      memcpy(mhentries,ents,mblocksize);
-      memcpy(mhsumw2,errp,mblocksize);
+      h->movefromdimbuffer(AddPtr(b,b->dataoff));
       if (b->xlablen > 0)
       {
         char *xl = (char*)AddPtr(b,b->xlaboff);
@@ -1051,11 +1063,6 @@ void *MonHist::de_serialize(void *ptr, char *nam)
     {
       DimHistbuff1 *b=(DimHistbuff1*)ptr;
       char *tit = (char*)AddPtr(b,b->titoff);
-//      if (m_rootdeser != 0)
-//      {
-//        delete m_rootdeser;
-//        m_rootdeser = 0;
-//      }
       std::string titopt = tit;
       std::string bopt;
       size_t seppos;
@@ -1065,23 +1072,9 @@ void *MonHist::de_serialize(void *ptr, char *nam)
         bopt = titopt.substr(seppos+MonHist::optsep.length());
         titopt.erase(seppos);
       }
-      MyTProfile *h = (MyTProfile*)new TProfile(nam,titopt.c_str(),b->nxbin,b->xmin,b->xmax,bopt.c_str());
-//      this->m_rootdeser  = h;
-      mblocksize = (b->nxbin+2)*sizeof(double);
-      double *ents = (double*)AddPtr(b,b->dataoff); //0
-      double *sum = (double*)AddPtr(ents,mblocksize); //1
-      double *sum2 = (double*)AddPtr(sum,mblocksize); //2
-      double *bsum2 = (double*)AddPtr(sum2,mblocksize); //3
-      double *hsum=h->fArray;
-      double *hsum2 = h->fSumw2.fArray;
-      double *hbines = h->fBinEntries.fArray;
-      double *hbinsum2 = h->fBinSumw2.fArray;
-      memcpy(hbines,ents,mblocksize);
-      memcpy(hsum,sum,mblocksize);
-      memcpy(hsum2,sum2,mblocksize);
-      memcpy(hbinsum2,bsum2,mblocksize);
-//      h->fBinEntries.Set(b->nxbin,ents);
-//      h->fBinSumw2.Set(b->nxbin,sum2);
+      MyTProfile *h = (MyTProfile*)new TProfile(nam,titopt.c_str(),
+          b->nxbin,b->xmin,b->xmax,bopt.c_str());
+      h->movefromdimbuffer(AddPtr(b,b->dataoff));
       h->SetEntries( b->nentries);
       h->fYmin = b->yminval;
       h->fYmax = b->ymaxval;
@@ -1091,43 +1084,59 @@ void *MonHist::de_serialize(void *ptr, char *nam)
         char *xl = (char*)AddPtr(b,b->xlaboff);
         SetBinLabels(&h->fXaxis,xl);
       }
-//      if (p->type == H_RATE)
-//      {
-//        MyTProfile *hh = (MyTProfile*)m_rootdeser;
-//        hh->Dump();
-//        MyTArrayD* a;
-//        a = (MyTArrayD*)&(hh->fBinEntries);
-//        a->Dump((char*)"fBinEntries");
-//        a = (MyTArrayD*)&(hh->fSumw2);
-//        a->Dump((char*)"fSumw2");
-//        a = (MyTArrayD*)&(hh->fBinSumw2);
-//        a->Dump((char*)"fBinSumw2");
-//      }
-
       TH1::AddDirectory(dirstat);
       return h;
       break;
     }
+
+
+
+    case  H_2DPROFILE:
+    {
+      DimHistbuff3 *b=(DimHistbuff3*)ptr;
+      char *tit = (char*)AddPtr(b,b->titoff);
+      std::string titopt = tit;
+      std::string bopt;
+      size_t seppos;
+      seppos = titopt.find(MonHist::optsep);
+      if (seppos != std::string::npos)
+      {
+        bopt = titopt.substr(seppos+MonHist::optsep.length());
+        titopt.erase(seppos);
+      }
+      MyTProfile2D *h = (MyTProfile2D*)new TProfile2D(nam,titopt.c_str(),
+          b->nxbin,b->xmin,b->xmax,b->nybin,b->ymin,b->ymax,b->zmin,b->zmax,bopt.c_str());
+      h->movefromdimbuffer(AddPtr(b,b->dataoff));
+      h->SetEntries( b->nentries);
+      h->fZmin = b->zminval;
+      h->fZmax = b->zmaxval;
+      if (h->fZmin == h->fZmax) h->fZmax++;
+      if (b->xlablen > 0)
+      {
+        char *xl = (char*)AddPtr(b,b->xlaboff);
+        SetBinLabels(&h->fXaxis,xl);
+      }
+      if (b->ylablen > 0)
+      {
+        char *yl = (char*)AddPtr(b,b->ylaboff);
+        SetBinLabels(&h->fYaxis,yl);
+      }
+      TH1::AddDirectory(dirstat);
+      return h;
+      break;
+    }
+
+
+
+
     case  C_STATENT:
     {
       DimStatBuff *b = (DimStatBuff*)ptr;
-//      mtype = (MONTYPE)b->type;
-//      char *tit;
-//      if (m_rootdeser != 0)
-//      {
-//        delete m_rootdeser;
-//        m_rootdeser = 0;
-//      }
       StatEntity *s = new StatEntity ( (unsigned long) b->nentries ,
                    b->m_sumw    ,
                    b->m_sumw2   ,
                    b->m_min ,
                    b->m_max ) ;
-      /// destructor
-//      this->m_rootdeser = (TObject*)s;
-//      tit = (char*)AddPtr(b,b->titoff);
-//      cpyName(nam);
-//      cpytitle(tit);
       TH1::AddDirectory(dirstat);
       return s;
       break;

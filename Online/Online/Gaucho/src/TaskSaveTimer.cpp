@@ -54,7 +54,7 @@ void TaskSaveTimer::timerHandler ( void )
     {
       if (m_buffadd != 0)
       {
-	free (m_buffadd);
+  free (m_buffadd);
       }
       m_buffadd = malloc(m_subsys->m_ser->buffersize);
       m_bsiz = m_subsys->m_ser->buffersize;
@@ -148,6 +148,7 @@ void TaskSaveTimer::SavetoFile(void *buff)
       case H_2DIM:
       case H_3DIM:
       case H_PROFILE:
+      case H_2DPROFILE:
       case H_RATE:
       {
         dyn_string *hname;
@@ -174,6 +175,7 @@ void TaskSaveTimer::SavetoFile(void *buff)
           case H_2DIM:
           case H_3DIM:
           case H_PROFILE:
+          case H_2DPROFILE:
           case H_RATE:
           {
             m_subsys->Lock();

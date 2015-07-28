@@ -77,6 +77,8 @@ public:
   double zmax;
   int zlablen;
   int zlaboff;
+  double zminval;
+  double zmaxval;
 };
 
 #endif

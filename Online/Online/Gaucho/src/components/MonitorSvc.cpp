@@ -16,6 +16,7 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IProfile1D.h"
+#include "AIDA/IProfile2D.h"
 
 #include "TH1D.h"
 #include "TProfile.h"
@@ -173,6 +174,7 @@ void MonitorSvc::undeclareInfo( const string& name, const IInterface*  owner)
     }
     return;
   }
+//  printf("UndeclareInfo called with name '%s'\n",name.c_str());
   newName = oname +"/"+name;
   it = m_InfoMap.find(newName);
   if (it != m_InfoMap.end())
@@ -598,7 +600,7 @@ void MonitorSvc::declareInfo(const string& name, const StatEntity& var,
     string oname = infoOwnerName(owner);
   if (m_started)
   {
-    printf("Delcare Info called after start for Name %s\n",name.c_str());
+    printf("Declare Info called after start for Name %s\n",name.c_str());
   }
   MsgStream msg(msgSvc(),"MonitorSvc");
    msg << MSG::DEBUG << "=========================== DeclareInfo for StatEntity "<< name << endmsg;
@@ -675,11 +677,11 @@ void MonitorSvc::declareInfo(const string& nam, const AIDA::IBaseHistogram* var,
   string oname = infoOwnerName(owner);
  // msg << MSG::INFO << "m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endmsg;
 
-  if (m_started)
-  {
-    msg << MSG::WARNING << "Declare Info (Histogram) called after start for Name " <<
-        nam <<"(" << oname << ")" << endmsg;
-  }
+//  if (m_started)
+//  {
+//    msg << MSG::ERROR << "Declare Info (Histogram) called after start for Name " <<
+//        nam <<"(" << oname << ")" << endmsg;
+//  }
   if (0 != m_disableDeclareInfoHistos)
   {
     msg << MSG::DEBUG << "m_disableDeclareInfoHistos DISABLED " << endmsg;
@@ -692,6 +694,9 @@ void MonitorSvc::declareInfo(const string& nam, const AIDA::IBaseHistogram* var,
   {
   }
   else if( 0 != dynamic_cast<const AIDA::IHistogram2D * >(var) )
+  {
+  }
+  else if( 0 != dynamic_cast<const AIDA::IProfile2D * >(var) )
   {
   }
   else
