@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-28 - Lucio Anderlini
+ - Fixed TISTOS in DiMuonInherit
+
 ! 2015-07-27 - Chris Jones
  - Add new Bc -> DD builder in the B20C stripping lines.
 

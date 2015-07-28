@@ -112,16 +112,19 @@ default_config = {
         "Prescale"      : 1.0,
         "Inherit"       : "VirtualBase",
         "InputDiMuon"   : "StdLooseJpsi2MuMu",
-        "TOScut"        : { "L0.*Mu.*Decision%TOS":0,
-                            "Hlt1DiMuonHighMassDecision%TOS" : 0,
-                            "Hlt2DiMuonJPsiHighPTDecision%TOS" : 0 
-                          },
+#        "TOScut"        : { "L0.*Mu.*Decision%TOS":0,
+#                            "Hlt1DiMuonHighMassDecision%TOS" : 0,
+#                            "Hlt2DiMuonJPsiHighPTDecision%TOS" : 0 
+#                          },
 
         "Cuts"          : {
           "MuonP"         : "MINTREE('mu+'==ABSID,P) > 10 *GeV",
           "JpsiPt"        : "PT > 3 *GeV",
           "Mass"          : "(MM > 3010) & (MM < 3170)",
-          "MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0"
+          "MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0",
+          "TOSL0"         : "TOS('L0.*Mu.*Decision', 'L0TriggerTisTos')",
+          "TOSHlt1"       : "TOS('Hlt1DiMuonHighMassDecision', 'Hlt1TriggerTisTos')",
+          "TOSHlt2"       : "TOS('Hlt2DiMuonJPsiHighPTDecision', 'Hlt2TriggerTisTos')",
           }   
       },
 
@@ -129,14 +132,17 @@ default_config = {
         "Prescale"      : 1.0,
         "Inherit"       : "FullDSTDiMuonJpsi2MuMuTOSLine",
         "InputDiMuon"   : "StdLooseDiMuon",
-        "TOScut"        : { "L0.*Mu.*Decision%TOS":0,
-                            "Hlt1DiMuonHighMassDecision%TOS" : 0,
-                            "Hlt2DiMuonPsi2SHighPTDecision%TOS" : 0 
-                          },
+#        "TOScut"        : { "L0.*Mu.*Decision%TOS":0,
+#                            "Hlt1DiMuonHighMassDecision%TOS" : 0,
+#                            "Hlt2DiMuonPsi2SHighPTDecision%TOS" : 0 
+#                          },
         "Cuts"          : {
           "Mass"        : "ADMASS('psi(2S)') < 100.0",
           "MuonPt"      : "MINTREE('mu+'==ABSID,PT) > 1 *GeV",
-          "MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0"
+          "MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0",
+          "TOSL0"         : "TOS('L0.*Mu.*Decision', 'L0TriggerTisTos')",
+          "TOSHlt1"       : "TOS('Hlt1DiMuonHighMassDecision', 'Hlt1TriggerTisTos')",
+          "TOSHlt2"       : "TOS('Hlt2DiMuonPsi2SHighPTDecision', 'Hlt2TriggerTisTos')",
           }   
       },
 
