@@ -97,7 +97,7 @@ elif test "`uname -a | grep el5`" != "";      # SLC5
     then
     export CMTCONFIG=x86_64-slc5-gcc46-dbg;
 fi;
-. /group/online/dataflow/cmtuser/${ONLINE_VERSION}/MyOnline/cmt/setup.${CMTCONFIG}.vars
+. /group/online/dataflow/cmtuser/OnlineRelease/MyOnline/cmt/setup.${CMTCONFIG}.vars
 cd ${FARMCONFIGROOT}/job;
 ##echo [ERROR] cd ${FARMCONFIGROOT}/job;
 ##cd /home/frankm/ONLINE/${ONLINE_VERSION}/Online/FarmConfig/job;

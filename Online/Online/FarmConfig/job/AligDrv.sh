@@ -37,12 +37,12 @@ elif [ "$act" = "Alignment|TED" ]; then
   exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; from TrAligIterator import doIt; doIt('TEDAlignment');"
 elif [ "$act" = "Alignment|Rich1" ]; then
   . /group/rich/sw/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-opt.vars
-  export PYTHONPATH=/group/online/bw_division/pydim/lib/python2.7/site-packages:$PYTHONPATH
+#  export PYTHONPATH=/group/online/bw_division/pydim/lib/python2.7/site-packages:$PYTHONPATH
   export PYTHONPATH=/group/online/dataflow/options/LHCbA/HLT:$PYTHONPATH
   python -c "from PyMirrAlignOnline import Iterator; Iterator.run(1)"
 elif [ "$act" = "Alignment|Rich2" ]; then
   . /group/rich/sw/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-opt.vars
-  export PYTHONPATH=/group/online/bw_division/pydim/lib/python2.7/site-packages:$PYTHONPATH
+#  export PYTHONPATH=/group/online/bw_division/pydim/lib/python2.7/site-packages:$PYTHONPATH
   export PYTHONPATH=/group/online/dataflow/options/LHCbA/HLT:$PYTHONPATH
   python -c "from PyMirrAlignOnline import Iterator; Iterator.run(2)"
 elif [ "$act" = "Calibration|Calo" ]; then

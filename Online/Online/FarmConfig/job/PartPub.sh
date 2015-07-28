@@ -9,7 +9,10 @@
 #
 # =========================================================================
 #
-#export PYTHONPATH=${ONLINE_ENV_DIR}:${PYTHONPATH}
-#export AdderOptsFile=/tmp/${PARTITION_NAME}_PublisherOpts.opts
-#python ./Tasklist_from_architecture.py 4 ${AdderOptsFile}
-exec -a ${UTGID} ${Class1_task} -opts=../options/pooper.opts
+if [ "$PARTITION_NAME" = "LHCbA" ]; then
+  cd ${FARMCONFIGROOT}/job
+#  export LOGFIFO=/tmp/logSrv.fifo;
+  exec -a ${UTGID} ${Class1_task} -opt=../options/DummyTask.opts
+else
+  exec -a ${UTGID} ${Class1_task} -opts=../options/pooper.opts
+fi;

@@ -32,15 +32,15 @@ class RunInfo:
       self.OnlineBrunelVersion = 'OnlineBrunel'
 
 class Checkpoint:
-  def __init__(self, runinfo, config_brunel):
+  def __init__(self, runinfo, config_task_type, config_task_family=None):
     global checkpoint_local_area
     self.runinfo = runinfo
-    self.config_brunel = config_brunel
-    
-    ##print 'echo "[INFO] '+str(isinstance(self.config_brunel,str))+'";'
-    if isinstance(self.config_brunel,str):
-      self.task_type = self.config_brunel
-    elif self.config_brunel:
+    self.config_task_type = config_task_type
+    self.config_task_family = config_task_family
+    ##print 'echo "[INFO] '+str(isinstance(self.config_task_type,str))+'";'
+    if isinstance(self.config_task_type,str):
+      self.task_type = self.config_task_type
+    elif self.config_task_type:
       self.task_type = 'OnlineBrunel' # FixME: runinfo.HLTType
     elif runinfo.MooreOnlineVersion == "" or runinfo.MooreOnlineVersion == "DEFAULT":
       self.task_type = 'PassThrough'
@@ -59,19 +59,25 @@ class Checkpoint:
 
   def _getTorrentFile(self):
     try:
-      if (self.config_brunel and self.runinfo.RecoStartupMode > 1) or self.runinfo.MooreStartupMode > 1:
+      if (self.config_task_family=='REC' and self.runinfo.RecoStartupMode > 1):
+        directory = checkpoint_dir + self.checkpointRelativeDir()
+        for i in os.listdir(directory):
+          idx=i.find('.data')
+          if idx>0 and idx==len(i)-5:
+            return i
+      elif (self.config_task_family=='HLT' and self.runinfo.MooreStartupMode > 1):
         directory = checkpoint_dir + self.checkpointRelativeDir()
         for i in os.listdir(directory):
           idx=i.find('.data')
           if idx>0 and idx==len(i)-5:
             return i
     except Exception,X:
-      print 'echo "[ERROR] '+str(X)+'";'
+      print 'echo "[ERROR] Check torrent file: '+str(X)+'";'
     return None
 
   def checkpointRelativeDir(self):
     ri = self.runinfo
-    if self.config_brunel:
+    if self.config_task_family == 'REC' and self.config_task_type:
       Mapping = os.path.basename(ri.ConditionsMapping)
       checkpoint_reloc = sep+self.task_type+sep+ri.OnlineBrunelVersion+sep+\
           ri.HLTType+sep+ri.CondDBTag+sep+ri.DDDBTag+sep+Mapping+\
@@ -101,8 +107,10 @@ class Checkpoint:
         .output('unset LD_PRELOAD;') \
         .output('export CHECKPOINTING_BIN='+self.checkpoint_bin+';')
 
-    if self.config_brunel:
+    if self.config_task_family=='REC':
       self.output('export PYTHONPATH=/group/online/dataflow/options/'+self.runinfo.PartitionName+'/RECONSTRUCTION:${PYTHONPATH};')
+    elif self.config_task_family=='DQ':
+      self.output('export PYTHONPATH=/group/online/dataflow/options/'+self.runinfo.PartitionName+':${PYTHONPATH};')
     else:
       self.output('export PYTHONPATH=/group/online/dataflow/options/'+self.runinfo.PartitionName+'/HLT:${PYTHONPATH};')
     return self
@@ -249,7 +257,7 @@ class Checkpoint:
     expand_path   = self.target_path
     self.setupCheckpointFile() \
         .output('echo "[INFO] Copy checkpoint:'+relocate_path+'";')
-    if self.config_brunel:
+    if self.config_task_family=='REC':
       self.output('bash '+checkpoint_dir+'/cmds/copy_data '+relocate_path+' '+self.task_type+';')
     else:
       self.output('bash '+checkpoint_dir+'/cmds/copy_torrent.zipped '+relocate_path+' '+self.task_type+';')
@@ -283,16 +291,16 @@ def torrent_copy(cp,copy,extract):
   return None
 
 #=========================================================================================
-def setupEnviron(runinfo, config_brunel):
+def setupEnviron(runinfo, config_task_family, config_task_type):
   ri = RunInfo(runinfo)
-  ##print 'echo "[ERROR] Configure CHECKPOINT environment. Reco:%s/%d Moore:%d";'%(str(config_brunel),ri.RecoStartupMode,ri.MooreStartupMode,)
-  cp = Checkpoint(ri,config_brunel)
+  ##print 'echo "[ERROR] Configure CHECKPOINT environment. Reco:%s/%d Moore:%d";'%(str(config_task_type),ri.RecoStartupMode,ri.MooreStartupMode,)
+  cp = Checkpoint(ri,config_task_type,config_task_family)
 
-  if   config_brunel and ri.RecoStartupMode == 0:
+  if   config_task_family=='REC' and ri.RecoStartupMode == 0:
     return cp.setupNormal()
-  elif config_brunel and ri.RecoStartupMode == 1:
+  elif config_task_family=='REC' and ri.RecoStartupMode == 1:
     return cp.setupForking()
-  elif config_brunel and ri.RecoStartupMode == 2:
+  elif config_task_family=='REC' and ri.RecoStartupMode == 2:
     return cp.setupRestoreEnv()
   elif ri.MooreStartupMode == 0:
     return cp.setupNormal()
@@ -306,16 +314,16 @@ def setupEnviron(runinfo, config_brunel):
   return None
 
 #=========================================================================================
-def configureForRunning(runinfo, config_brunel, extract=True):
+def configureForRunning(runinfo, config_task_family, config_task_type, extract=True):
   ri = RunInfo(runinfo)
-  ##print 'echo "[ERROR] Configure CHECKPOINT for running. Reco:%s/%d Moore:%d";'%(str(config_brunel),ri.RecoStartupMode,ri.MooreStartupMode,)
-  cp = Checkpoint(ri,config_brunel)
+  ##print 'echo "[ERROR] Configure CHECKPOINT for running. Reco:%s/%d Moore:%d";'%(str(config_task_type),ri.RecoStartupMode,ri.MooreStartupMode,)
+  cp = Checkpoint(ri,config_task_type,config_task_family)
 
-  if   config_brunel and ri.RecoStartupMode == 0:
+  if   config_task_family=='REC' and ri.RecoStartupMode == 0:
     return cp.setupNormal()
-  elif config_brunel and ri.RecoStartupMode == 1:
+  elif config_task_family=='REC' and ri.RecoStartupMode == 1:
     return cp.setupForking()
-  elif config_brunel and ri.RecoStartupMode == 2:
+  elif config_task_family=='REC' and ri.RecoStartupMode == 2:
     return torrent_restore(cp, extract)
   elif ri.MooreStartupMode == 0:
     return cp.setupNormal()
@@ -329,13 +337,13 @@ def configureForRunning(runinfo, config_brunel, extract=True):
   return None
 
 #=========================================================================================
-def extractLibraries(runinfo,copy,extract,config_brunel):
+def extractLibraries(runinfo,copy,extract,config_task_family,config_task_type):
   ri = RunInfo(runinfo)
-  cp = Checkpoint(ri,config_brunel)
-  if config_brunel and (ri.RecoStartupMode == 0 or ri.RecoStartupMode == 1):
+  cp = Checkpoint(ri,config_task_type,config_task_family)
+  if config_task_family=='REC' and (ri.RecoStartupMode == 0 or ri.RecoStartupMode == 1):
     print 'echo "[DEBUG] No checkpoints to be manipulated for BRUNEL startup mode:'+str(ri.RecoStartupMode)+'.";'
     return 1
-  elif config_brunel and ri.RecoStartupMode == 2:
+  elif config_task_family=='REC' and ri.RecoStartupMode == 2:
     return torrent_copy(cp,copy,extract)
   elif ri.MooreStartupMode == 0 or ri.MooreStartupMode == 1:
     #print 'echo "[DEBUG] No checkpoints to be manipulated for MOORE startup mode:'+str(ri.MooreStartupMode)+'.";'
@@ -424,20 +432,29 @@ def doIt():
       parser.format_help()
       return
 
-    config_brunel = opts.brunel
-    if opts.brunel and opts.task_type:
-      config_brunel = opts.task_type
+    task_family = 'HLT'
+    config_task_type = 'Moore1'
+    if opts.brunel and not opts.task_type:
+      config_task_type = 'OnlineBrunel'
+      task_family = 'REC'
+    elif opts.brunel and opts.task_type:
+      config_task_type = opts.task_type
+      task_family = 'REC'
+    elif opts.task_type:
+      config_task_type = opts.task_type
+    else:
+      config_task_type = 'Moore1'
       
     if opts.environ:
-      setupEnviron(opts.runinfo,config_brunel=config_brunel)
+      setupEnviron(opts.runinfo,config_task_family=task_family,config_task_type=config_task_type)
     if opts.copy and opts.libs:
-      extractLibraries(opts.runinfo,copy=True,extract=True,config_brunel=config_brunel)
+      extractLibraries(opts.runinfo,copy=True,extract=True,config_task_family=task_family,config_task_type=config_task_type)
     elif opts.copy:
-      extractLibraries(opts.runinfo,copy=True,extract=False,config_brunel=config_brunel)
+      extractLibraries(opts.runinfo,copy=True,extract=False,config_task_family=task_family,config_task_type=config_task_type)
     elif opts.libs:
-      extractLibraries(opts.runinfo,copy=False,extract=True,config_brunel=config_brunel)
+      extractLibraries(opts.runinfo,copy=False,extract=True,config_task_family=task_family,config_task_type=config_task_type)
     if opts.start:
-      configureForRunning(opts.runinfo,config_brunel=config_brunel,extract=opts.libs)
+      configureForRunning(opts.runinfo,config_task_family=task_family,config_task_type=config_task_type,extract=opts.libs)
 
   except Exception,X:
     traceback.print_stack()

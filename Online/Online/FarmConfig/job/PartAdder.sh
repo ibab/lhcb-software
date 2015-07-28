@@ -9,7 +9,7 @@
 #
 # =========================================================================
 #
-source /group/online/dataflow/cmtuser/OnlineDev_v5r17/setup.x86_64-slc6-gcc48-dbg.vars
+#source /group/online/dataflow/cmtuser/OnlineDev_v5r17/setup.x86_64-slc6-gcc48-dbg.vars
 export PYTHONPATH=${ONLINE_ENV_DIR}:${PYTHONPATH}
 export AdderOptsFile=/tmp/${PARTITION_NAME}_AdderOpts.opts
 python ./Tasklist_from_architecture.py 3 ${AdderOptsFile}

@@ -82,7 +82,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
               f.write(svc+".SaveInterval = -1;\n");
               f.write(svc+".SaveonUpdate = false;\n");
               f.write(svc+".SaveSetTaskName= \""+svc+"\";\n");
-              f.write(svc+".ReceiveTimeout = 0;\n")
+              f.write(svc+".ReceiveTimeout = 1000000;\n")
         for s in cntsvc:
             svc = s+"CountAdder"
             f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
@@ -137,7 +137,7 @@ BusyAdderCountAdder.ReceiveTimeout          = 3;
               f.write(svc+".SaveInterval = -1;\n");
               f.write(svc+".SaveonUpdate = false;\n");
               f.write(svc+".SaveSetTaskName= \""+svc+"\";\n");
-              f.write(svc+".ReceiveTimeout = 0;\n")
+              f.write(svc+".ReceiveTimeout = 1000000;\n")
             f.write("\n")
 
 
@@ -171,7 +171,7 @@ BusyAdderCountAdder.ReceiveTimeout          = 6;
         cntsvc = []
         histsvc.append("Adder")
         cntsvc.append("BusySvc")
-        tasklist.remove("MEPrx")
+#        tasklist.remove("MEPrx")
         for s in tasklist:
             hsvc = s#+"HistAdder"
             f.write("ApplicationMgr.ExtSvc               += {\"AdderSvc/"+hsvc+"HistAdder\"};\n")
@@ -193,14 +193,22 @@ BusyAdderCountAdder.ReceiveTimeout          = 6;
             f.write(svc+".OutDNS = "+OutDns+";\n")
             f.write(svc+".SaveRootDir = \"/hist/Savesets\";\n");
             f.write(svc+".IsSaver = true;\n");
-            f.write(svc+".SaveInterval = 900;\n");
+            f.write(svc+".SaveInterval = -1;\n");
             f.write(svc+".SaveonUpdate = false;\n");
             f.write(svc+".SaveSetTaskName= \""+svc+"\";\n");
-            if pname == "LHCbA": # overwrite certain options for the Alignment...
+            if pname == "LHCbA" and s=="AligWrk": # overwrite certain options for the Alignment...
+              act = ""
+              act=OnlineEnvBase.Activity
+              acts = act.split('|')
+              if len(acts) > 1:
+                altype = acts[1]
+              else:
+                altype = acts[0]
               f.write(svc+".SaveInterval = -1;\n");
-              f.write(svc+".SaveonUpdate = true;\n");
-              f.write(svc+".SaveSetTaskName= \""+svc+"\";\n");
-              f.write(svc+".ReceiveTimeout = 0;\n")
+              f.write(svc+".SaveonUpdate = false;\n");
+              f.write(svc+".SaveSetTaskName= \"AligWrk_"+altype+"\";\n");
+              f.write(svc+".ReceiveTimeout = 1000000;\n")
+              f.write(svc+".PauseOnEOR = true;\n")
             f.write("\n")
 
         for s in cntsvc:
@@ -254,7 +262,7 @@ BusyAdderCountAdder.ReceiveTimeout          = 6;
             f.write(svc+".InDNS = "+InDns+";\n")
             f.write(svc+".OutDNS = "+OutDns+";\n")
             if pname == "LHCbA":
-              f.write(svc+".ReceiveTimeout = 0;\n")
+              f.write(svc+".ReceiveTimeout = 1000000;\n")
             f.write("\n")
 
 tasklist = []

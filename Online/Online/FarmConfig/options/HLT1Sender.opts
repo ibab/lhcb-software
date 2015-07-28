@@ -38,5 +38,5 @@ Prescaler.Requirements = {
 "Name=Velo;EvType=2;TriggerMask=0x0,0x00000008,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
 "Name=Muon;EvType=2;TriggerMask=0x0,0x00000400,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=10.0",
 "Name=Calo;EvType=2;TriggerMask=0x0,0x18000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=1.0",
-"Name=VClose;EvType=2;TriggerMask=0x0,0x100,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=5.0"
+"Name=VClose;EvType=2;TriggerMask=0x0,0x100,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };

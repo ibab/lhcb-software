@@ -22,7 +22,7 @@ then
 	    ##echo `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -c -l` | tr ";" ";\n";
 	    eval `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -c -l`;
 	elif test "${PARTITION_NAME}" = "LHCb2"; then
-	    eval `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -c -l`;
+	    eval `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -c -l -t Moore2`;
 	elif test "${PARTITION_NAME}" = "FEST"; then
 	    eval `python ${FARMCONFIGROOT}/job/ConfigureCheckpoint.py -r ${RUNINFO} -c -l`;
 	fi;

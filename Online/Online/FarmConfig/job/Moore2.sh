@@ -16,8 +16,12 @@ then
   export PYTHONPATH=/group/online/dataflow/options/LHCb2/Nodes;
   unset MOOREONLINE_VERSION;
   export MOOREONLINE_VERSION=`python -c "import ${HN}_TriggerInfo as H; print H.MooreOnlineVersion"`;
-  ##. /group/hlt/MOORE/${MOOREONLINE_VERSION}/InstallArea/runMooreHlt2Online_EFF.sh ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES};
-  source ${FARMCONFIGROOT}/job/runMooreHlt2Online_EFF.sh ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES};
+  if test "${MOOREONLINE_VERSION}" = "MooreOnline_v23r7p3";then
+      source ${FARMCONFIGROOT}/job/runMooreHlt2Online_EFF.sh ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES};
+  else
+      # . /group/hlt/MOORE/${MOOREONLINE_VERSION}/InstallArea/runMooreHlt2Online_EFF.sh ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES};
+      . /group/online/dataflow/cmtuser/OnlineDev_v5r22/Online/FarmConfig/job/runMooreHlt2Online_EFF.sh  ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES};
+      fi;
 else
   echo "[ERROR] Cannot determine MOOREONLINE_VERSION. No file: /group/online/dataflow/options/LHCb2/Nodes/${HN}_TriggerInfo.py";
 fi;
