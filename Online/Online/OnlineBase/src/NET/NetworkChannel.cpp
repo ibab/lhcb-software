@@ -64,16 +64,16 @@ int NetworkChannel::reuseAddress()  const  {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 int NetworkChannel::TmoAST ( void* par )   {
-    NetworkChannel* chan = (NetworkChannel*)par;
-    chan->m_bCancel = true;
+  NetworkChannel* chan = (NetworkChannel*)par;
+  chan->m_bCancel = true;
 #ifdef _VMS
-    chan->m_errno  = SS$_CANCEL;
+  chan->m_errno  = SS$_CANCEL;
 #else
-    chan->m_errno  = EIO;
+  chan->m_errno  = EIO;
 #endif
-    chan->m_alarmID = 0;
-    lib_rtl_cancel_io(chan->m_socket);    
-    return 0x1;
+  chan->m_alarmID = 0;
+  lib_rtl_cancel_io(chan->m_socket);    
+  return 0x1;
 }
 // ----------------------------------------------------------------------------
 //  Start timer before receiving data, if you don't want to wait forever

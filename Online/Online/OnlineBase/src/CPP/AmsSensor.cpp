@@ -165,7 +165,7 @@ void AmsSensor::remove( Interactor* interactor, const Address* source )   {
       InteractorTable::iterator i = s_interactorTable.find(as);
       if ( i != s_interactorTable.end() )  {
         if( (*i).second == interactor )  {
-	  AmsSource* a = as;
+          AmsSource* a = as;
           s_interactorTable.erase(i);
           if ( last_as ) { last_as->setNext(as->next()); as = last_as; }
           else           { as = SourceHead = as->next();               }
@@ -197,7 +197,7 @@ int AmsSensor::receive( Message** msg, Address* src, int timeout )  {
   Message* message = (Message*)ptr;
   size_t size = MAXMSGSIZE;
   int status = ::amsc_get_message((int*)message+1,&size,source,(char*)src->node_process.c_str(),
-    timeout, &facility, src->facility, 0);
+                                  timeout, &facility, src->facility, 0);
   if ( AMS_SUCCESS != status )  {
     delete [] ptr;
     return status;

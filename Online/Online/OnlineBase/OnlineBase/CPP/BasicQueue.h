@@ -15,10 +15,10 @@
 
 /// Definition of queueable objects 
 /**
-{\Large{\bf Class BasicQueue}}
-Basic object for queueable objects.
-VMS: The object uses atomic queuing functions to manipulate
-the Queue, which are not interruptable and thread safe.
+   {\Large{\bf Class BasicQueue}}
+   Basic object for queueable objects.
+   VMS: The object uses atomic queuing functions to manipulate
+   the Queue, which are not interruptable and thread safe.
 */
 template <class Type> class BasicQueue : public qentry_t {
 

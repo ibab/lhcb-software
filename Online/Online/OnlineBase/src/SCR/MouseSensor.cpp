@@ -75,11 +75,11 @@ void MouseSensor::dispatch( void* arg )  {
     if ( display ) {
       Clients::const_iterator i = m_clients.find(display);
       if ( i != m_clients.end() ) {
-	const Targets& t = (*i).second;
-	m->display = display;
-	for(Targets::const_iterator j=t.begin(); j!=t.end(); ++j) {
-	  (*j)->handle(*(ev.get()));
-	}
+        const Targets& t = (*i).second;
+        m->display = display;
+        for(Targets::const_iterator j=t.begin(); j!=t.end(); ++j) {
+          (*j)->handle(*(ev.get()));
+        }
       }
     }
   }
@@ -110,10 +110,10 @@ void MouseSensor::remove(CPP::Interactor* actor, void* display) {
     }
     else {
       for(Targets::iterator j=t.begin(); j!=t.end(); ++j) {
-	if ( (*j) == actor ) {
-	  t.erase(j);
-	  break;
-	}
+        if ( (*j) == actor ) {
+          t.erase(j);
+          break;
+        }
       }
     }
     if ( t.empty() ) m_clients.erase(i);

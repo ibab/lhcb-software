@@ -100,7 +100,7 @@ int TcpConnection::receive(BasicRequest* req, NetworkAddress& org)  {
     //  ----------------------------  D E B U G -----------------------------
     m_status = m_channel.error();
     ::lib_rtl_output(LIB_RTL_ERROR,"%s  TcpConnection::receive> Bad IO status. Status=0x%X %s\n",
-		     timestr(),m_channel.error(),m_channel.errMsg());
+                     timestr(),m_channel.error(),m_channel.errMsg());
     return CONNECTION_ERROR;
   }
   return CONNECTION_SUCCESS;
@@ -118,7 +118,7 @@ int TcpConnection::send(BasicRequest* req, NetworkAddress& target)  {
     //  ----------------------------  D E B U G -----------------------------
     m_status = m_channel.error();
     ::lib_rtl_output(LIB_RTL_ERROR,"%s  TcpConnection::send> Bad IO status. Status=0x%X %s\n",
-		     timestr(),m_channel.error(),m_channel.errMsg());
+                     timestr(),m_channel.error(),m_channel.errMsg());
     return CONNECTION_ERROR;
   }
   return CONNECTION_SUCCESS;

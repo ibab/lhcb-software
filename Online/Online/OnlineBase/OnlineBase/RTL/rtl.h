@@ -8,25 +8,25 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
 }
 
 #ifdef __cplusplus
-  #include <cstdlib>
-  #include <cstdarg>
-  #include <cstdio>
-  #include <ctime>
-  #ifndef _WIN32
-    #include <semaphore.h>
-    #include <unistd.h>
-  #endif
-  #ifndef __CXX_CONST
-    #define __CXX_CONST const
-  #endif
-  namespace RTL {}
-  extern "C" {
+#include <cstdlib>
+#include <cstdarg>
+#include <cstdio>
+#include <ctime>
+#ifndef _WIN32
+#include <semaphore.h>
+#include <unistd.h>
+#endif
+#ifndef __CXX_CONST
+#define __CXX_CONST const
+#endif
+namespace RTL {}
+extern "C" {
 #else
-  #include <stdio.h>
-  #include <time.h>
-  #ifndef __CXX_CONST
-    #define __CXX_CONST
-  #endif
+#include <stdio.h>
+#include <time.h>
+#ifndef __CXX_CONST
+#define __CXX_CONST
+#endif
 #endif
   struct _IOSB {
     unsigned short condition;
@@ -36,14 +36,14 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
   typedef _IOSB IOSB_t;
 #if defined(_WIN32)
   typedef __int64       int64_t;
-  #ifdef __cplusplus
-    namespace { 
-      inline FILE* popen(__CXX_CONST char* cmd, __CXX_CONST char* typ)
-	{ return ::_popen(cmd,typ); }
-    }
-  #else
-    #define popen _popen
-  #endif
+#ifdef __cplusplus
+  namespace { 
+    inline FILE* popen(__CXX_CONST char* cmd, __CXX_CONST char* typ)
+    { return ::_popen(cmd,typ); }
+  }
+#else
+#define popen _popen
+#endif
 #elif !defined(__int8_t_defined)
   typedef long long int int64_t;
 #endif
@@ -83,17 +83,17 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
   };
 
   /**RTL: Online runtime library wrapper for OS specific functions.
-    *
-    *   All RTL routines return 1 if successful and
-    *   0 if an OS specific error occurred.
-    *   The error code can be examined using the fucntion:
-    *   lib_rtl_get_error() or lib_rtl_socket_error() in the
-    *   event the error occurred on calling a function
-    *   from the socket library.
-    *
-    *    @author M.Frank
-    *
-    */
+   *
+   *   All RTL routines return 1 if successful and
+   *   0 if an OS specific error occurred.
+   *   The error code can be examined using the fucntion:
+   *   lib_rtl_get_error() or lib_rtl_socket_error() in the
+   *   event the error occurred on calling a function
+   *   from the socket library.
+   *
+   *    @author M.Frank
+   *
+   */
 
   /// Access to error code
   int lib_rtl_get_error();
@@ -276,8 +276,8 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
 
   /// Access total/free disk space on file system (linux:statvfs call)
   int lib_rtl_diskspace(__CXX_CONST char* name, unsigned long long int* blk_size,
-			unsigned long long int* total_blk,
-			unsigned long long int* availible_blk);
+                        unsigned long long int* total_blk,
+                        unsigned long long int* availible_blk);
   /// Check for read/write/exectute permissions or existence using bit mask mode (1, 2, 4, 8)
   int lib_rtl_access(__CXX_CONST char *name, int mode);			  
 
@@ -328,12 +328,12 @@ namespace RTL  {
   const char* errorString(int status);
 
   /**@class CLU rtl.h RTL/rtl.h
-    * 
-    * Small helper class to interprete command line options
-    *
-    * @author  M.Frank
-    * @version 1.0
-    */
+   * 
+   * Small helper class to interprete command line options
+   *
+   * @author  M.Frank
+   * @version 1.0
+   */
   class CLI  {
   private:
     int    m_argc;

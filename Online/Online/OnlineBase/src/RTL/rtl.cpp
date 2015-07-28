@@ -170,18 +170,18 @@ void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void *ptr) {
     func_cast<void (*)(int,siginfo_t*, void*)> dsc(dsc0.ptr);
     if ( s_RTL_exit_handler_print ) {
       printf("[ERROR] (ExitSignalHandler) RTL:Handled signal: %d [%s] Old action:%p Mem:%p Code:%08X\n",
-		       signum,(*i).second.first.c_str(),dsc.ptr,info->si_addr,info->si_code);
+             signum,(*i).second.first.c_str(),dsc.ptr,info->si_addr,info->si_code);
     }
     if ( signum == SIGINT || signum == SIGHUP || signum == SIGFPE || signum == SIGPIPE ) {
       if ( old && old != SIG_IGN && dsc.fun )
-	dsc.fun(signum,info,ptr);
+        dsc.fun(signum,info,ptr);
     }
     else if ( signum == SIGSEGV && old && old != SIG_IGN && old != SIG_DFL ) {
       RTL::ExitHandler::execute();
       if ( dsc.fun ) 
-	dsc.fun(signum,info,ptr);
+        dsc.fun(signum,info,ptr);
       else 
-	(*old)(signum);
+        (*old)(signum);
       ::_exit(0);
     }
     else if ( old && old != SIG_IGN && dsc.fun )  {
@@ -207,13 +207,13 @@ const char* RTL::errorString(int status)  {
   static int len = sizeof(s)-1;
   void* lpMessageBuffer;
   ::FormatMessage( 
-    FORMAT_MESSAGE_ALLOCATE_BUFFER |  FORMAT_MESSAGE_FROM_SYSTEM,
-    0,
-    status,
-    MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), //The user default language
-    (LPTSTR) &lpMessageBuffer,
-    0,
-    0 );
+                  FORMAT_MESSAGE_ALLOCATE_BUFFER |  FORMAT_MESSAGE_FROM_SYSTEM,
+                  0,
+                  status,
+                  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), //The user default language
+                  (LPTSTR) &lpMessageBuffer,
+                  0,
+                  0 );
   if ( lpMessageBuffer )  {
     strncpy(s, (const char*)lpMessageBuffer, len);
     s[len] = 0;
@@ -366,9 +366,9 @@ int lib_rtl_signal_message(int action, const char* fmt, ...)  {
       }
       break;
     case LIB_RTL_DEFAULT:
-        ::vsnprintf(buff, sizeof(buff), fmt, args);
-        ::lib_rtl_output(LIB_RTL_ERROR,"RTL: %s\n",buff);
-        status = 0;
+      ::vsnprintf(buff, sizeof(buff), fmt, args);
+      ::lib_rtl_output(LIB_RTL_ERROR,"RTL: %s\n",buff);
+      status = 0;
       break;
     case LIB_RTL_OS:
     default:
@@ -390,7 +390,7 @@ extern "C" int lib_rtl_start_debugger()    {
 #ifdef _WIN32
   _asm int 3
 #else
-  char txt[128];
+    char txt[128];
   ::snprintf(txt,sizeof(txt),"ddd --pid=%d &",lib_rtl_pid()); 
   ::system(txt);
   ::lib_rtl_sleep(5000);  // Sleep a few seconds to allow 
@@ -463,13 +463,13 @@ extern "C" int lib_rtl_get_datainterface_name(char* node, size_t len)  {
         tmp = inet_ntoa(*(in_addr*)h->h_addr);
       }
       else {
-	::strncat(nn,"1",3);
-	if ( (h=::gethostbyname(nn)) ) {
-	  tmp = inet_ntoa(*(in_addr*)h->h_addr);
-	}
-	else if ( (h=::gethostbyname(n)) ) {
-	  tmp = inet_ntoa(*(in_addr*)h->h_addr);
-	}
+        ::strncat(nn,"1",3);
+        if ( (h=::gethostbyname(nn)) ) {
+          tmp = inet_ntoa(*(in_addr*)h->h_addr);
+        }
+        else if ( (h=::gethostbyname(n)) ) {
+          tmp = inet_ntoa(*(in_addr*)h->h_addr);
+        }
       }
     }
   }
@@ -539,14 +539,14 @@ const char* lib_rtl_getenv(const char* value) {
 
 /// Access total/free disk space on file system (linux:statvfs call)
 extern "C" int lib_rtl_diskspace(const char* name, 
-		      unsigned long long int* blk_size,
-		      unsigned long long int* total_blk,
-		      unsigned long long int* availible_blk)
+                                 unsigned long long int* blk_size,
+                                 unsigned long long int* total_blk,
+                                 unsigned long long int* availible_blk)
 {
 #ifdef _WIN32
   DWORD SectorsPerCluster,BytesPerSector,NumberOfFreeClusters,TotalNumberOfClusters;
   if ( ::GetDiskFreeSpace(name,&SectorsPerCluster,&BytesPerSector,
-			&NumberOfFreeClusters,&TotalNumberOfClusters) ) {
+                          &NumberOfFreeClusters,&TotalNumberOfClusters) ) {
     *blk_size = BytesPerSector;
     *total_blk = SectorsPerCluster*TotalNumberOfClusters;
     *availible_blk = SectorsPerCluster*NumberOfFreeClusters;
@@ -562,7 +562,7 @@ extern "C" int lib_rtl_diskspace(const char* name,
     return 1;
   }
 #endif
- return 0;
+  return 0;
 }
 
 /// access checks it is ok to read, write, execute the file *name
@@ -570,7 +570,7 @@ extern "C" int lib_rtl_diskspace(const char* name,
 extern "C" int lib_rtl_access(const char *name, int mode)
 {
 #ifdef _WIN32
-// under windows AFAICS this requires using the security API so we just assume it's fine
+  // under windows AFAICS this requires using the security API so we just assume it's fine
   return 1;
 #else
   int amode = 0;

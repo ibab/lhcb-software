@@ -138,17 +138,17 @@ template <typename FUNCTOR> long BufferInfo::loop_users(FUNCTOR& fcn, int cons, 
     CONTROL* ctr = dsc->ctrl;
     for (j = 0, us = dsc->user; j < ctr->p_umax; j++, us++)    {
       if (us == utst || us == 0)
-	break;
+        break;
       if (us->block_id == BID_USER && us->busy == 1 )  {
-	if (us->ev_actual > 0 || us->get_ev_calls > 0 || us->n_req > 0)  {
-	  if ( cons ) fcn(us);
-	}
-	else if (us->ev_produced > 0 || us->get_sp_calls > 0)  {
-	  if ( prod ) fcn(us);
-	}
-	else if ( other )  {
-	  fcn(us);
-	}
+        if (us->ev_actual > 0 || us->get_ev_calls > 0 || us->n_req > 0)  {
+          if ( cons ) fcn(us);
+        }
+        else if (us->ev_produced > 0 || us->get_sp_calls > 0)  {
+          if ( prod ) fcn(us);
+        }
+        else if ( other )  {
+          fcn(us);
+        }
       }
     }
     return MBM_NORMAL;
@@ -170,10 +170,10 @@ namespace  {
   template<> void Counter<event_type>::operator()(const USER* us)   {
     for (int k = 0; k < us->n_req; ++k)   {
       if ( us->req[k].ev_type == arg.ev_type )   {
-	if (us->req[k].user_type == BM_REQ_ALL || us->req[k].user_type == BM_REQ_ONE )  {
-	  ++count;
-	  return;
-	}
+        if (us->req[k].user_type == BM_REQ_ALL || us->req[k].user_type == BM_REQ_ONE )  {
+          ++count;
+          return;
+        }
       }
     }
   }
@@ -187,12 +187,12 @@ namespace  {
   template<> void Counter<pair<int,int> >::operator()(const USER* us)   {
     if ( us->partid == arg.first ) {
       for (int k = 0; k < us->n_req; ++k)   {
-	if ( us->req[k].ev_type == arg.second )   {
-	  if (us->req[k].user_type == BM_REQ_ALL || us->req[k].user_type == BM_REQ_ONE )  {
-	    ++count;
-	    return;
-	  }
-	}
+        if ( us->req[k].ev_type == arg.second )   {
+          if (us->req[k].user_type == BM_REQ_ALL || us->req[k].user_type == BM_REQ_ONE )  {
+            ++count;
+            return;
+          }
+        }
       }
     }
   }

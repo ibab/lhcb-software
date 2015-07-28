@@ -11,7 +11,7 @@ RTL::TimerManager& RTL::TimerManager::instance() {
 
 /// Standard Constructor
 RTL::TimerManager::TimerManager() 
-: m_head(new qentry_t(0,0)), m_active(false) 
+  : m_head(new qentry_t(0,0)), m_active(false) 
 {
   int sc = ::lib_rtl_create_lock(0,&m_lock);
   if ( !lib_rtl_is_success(sc) )  {

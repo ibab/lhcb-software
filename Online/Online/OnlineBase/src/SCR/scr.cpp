@@ -8,9 +8,9 @@ using namespace SCR;
 #define BUFFER_GUARD 64
 
 #define belongs_to(d,r,c) (r >= d->row0+d->row-1 && \
-  r <= d->row1+d->row-1 && \
-  c >= d->col0+d->col-1 && \
-  c <= d->col1+d->col-1 )
+                           r <= d->row1+d->row-1 && \
+                           c >= d->col0+d->col-1 && \
+                           c <= d->col1+d->col-1 )
 
 #define visible(p,r,c) (r > 0 && r<=p->rows && c > 0 && c<=p->cols)
 
@@ -652,7 +652,7 @@ int scrc_undraw_block (Display *disp, int r1, int r2, int c1, int c2)   {
         if (belongs_to(dd, r, c))  {
           offset = (r - dd->row + 1)*(dd->cols + 2) + c - dd->col + 1;
           ::scrc_draw_char(disp, pb, pb_offset, *(dd->map + offset),
-            *(dd->attr + offset), dd, r, c);
+                           *(dd->attr + offset), dd, r, c);
           break;
         }
         d = d->prev;
@@ -1077,8 +1077,8 @@ int scrc_action_moving_display (Pasteboard *pb, int key)    {
       dcol = Moving_display->col - d->col;
       if (drow || dcol)  {
         /*
-        if ((drag = d->drag))
-        (*drag) (d, Moving_display->row, Moving_display->col);
+          if ((drag = d->drag))
+          (*drag) (d, Moving_display->row, Moving_display->col);
         */
         if (d->drag)   {
           (*d->drag) (d, drow, dcol);
@@ -1108,13 +1108,13 @@ int scrc_fflush(Pasteboard *pb)    {
 //----------------------------------------------------------------------------
 int scrc_save_cursor(Pasteboard * /* pb */, int ** /* context */ )    {
   /*
-  *context = (int *) list_malloc (3*4);
+   *context = (int *) list_malloc (3*4);
 
-  (*context)[0] = pb->curs.row;
-  (*context)[1] = pb->curs.col;
-  (*context)[2] = pb->old_attr;
+   (*context)[0] = pb->curs.row;
+   (*context)[1] = pb->curs.col;
+   (*context)[2] = pb->old_attr;
 
-  if (pb->updating <= 0) ::scrc_putes ("7", pb);
+   if (pb->updating <= 0) ::scrc_putes ("7", pb);
   */
   return 1;
 }
@@ -1122,17 +1122,17 @@ int scrc_save_cursor(Pasteboard * /* pb */, int ** /* context */ )    {
 //----------------------------------------------------------------------------
 int scrc_restore_cursor(Pasteboard * /* pb */ , int* /* context */ )    {
   /*
-  pb->curs.row = context[0];
-  pb->curs.col = context[1];
-  pb->old_attr = context[2];
+    pb->curs.row = context[0];
+    pb->curs.col = context[1];
+    pb->old_attr = context[2];
 
-  if (pb->updating > 0) cursor (pb, pb->curs.row, pb->curs.col) {
-  }
-  else  {
-  ::scrc_putes ("8", pb);
-  ::scrc_fflush (pb);
-  }
-  free (context);
+    if (pb->updating > 0) cursor (pb, pb->curs.row, pb->curs.col) {
+    }
+    else  {
+    ::scrc_putes ("8", pb);
+    ::scrc_fflush (pb);
+    }
+    free (context);
   */
   return 1;
 }
@@ -1201,12 +1201,12 @@ int scrc_end_pasteboard_update (Pasteboard *pb)   {
 
   if (!pb) return 0;
   /*
-  if (pb->updating == 0)
-  {
-  cursor (pb, pb->curs.row, pb->curs.col);
-  ::scrc_fflush(pb);
-  return 0;
-  }
+    if (pb->updating == 0)
+    {
+    cursor (pb, pb->curs.row, pb->curs.col);
+    ::scrc_fflush(pb);
+    return 0;
+    }
   */
   pb->updating--;
   if (pb->updating > 0) return 1;

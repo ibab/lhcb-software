@@ -1,13 +1,13 @@
 /*
-        A_PUBAREA$SRC:PUBAREA.H;
-        Created           :  5-AUG-1996 by A.Pacheco
+  A_PUBAREA$SRC:PUBAREA.H;
+  Created           :  5-AUG-1996 by A.Pacheco
 
-   This is the file that defines the structures and classes used by the 
-   Publishing Area package (PubArea). Mainly there are three structures:
+  This is the file that defines the structures and classes used by the 
+  Publishing Area package (PubArea). Mainly there are three structures:
 
-   PubAreaHeader: Structure of the top header information of the publising area
-   PubAreaIndex : Structure of the index record for each slot 
-   PubArea      : Class handling the publishing area.
+  PubAreaHeader: Structure of the top header information of the publising area
+  PubAreaIndex : Structure of the index record for each slot 
+  PubArea      : Class handling the publishing area.
 
 */
 
@@ -38,15 +38,15 @@
 // *********************
 // Structure of the header in the beginning of the public area
 struct PubAreaHeader    {
-    int  MagicWord; //........ Magic word to determine if byteswapping is needed
-    int  PubAreaBufferOffset;//....................... Offset to the buffer area
-    int  AreaSize; //................................. Size of the area in bytes
-    int  NumIndex; //..................................... Number of index slots
-    char LockPrcName[64]; //.................................... Locking Process
-    char PubAreaStamp[5]; //................. Identifier of the Public Area 'PA'
-    char OpSys[11]; //.............................. Operating system: VMS or OS9
-    char NodeName[64]; //................ Node name where the module was created
-    char Name[64];     //............................Name of the publishing area
+  int  MagicWord; //........ Magic word to determine if byteswapping is needed
+  int  PubAreaBufferOffset;//....................... Offset to the buffer area
+  int  AreaSize; //................................. Size of the area in bytes
+  int  NumIndex; //..................................... Number of index slots
+  char LockPrcName[64]; //.................................... Locking Process
+  char PubAreaStamp[5]; //................. Identifier of the Public Area 'PA'
+  char OpSys[11]; //.............................. Operating system: VMS or OS9
+  char NodeName[64]; //................ Node name where the module was created
+  char Name[64];     //............................Name of the publishing area
 };
 
 // ********************

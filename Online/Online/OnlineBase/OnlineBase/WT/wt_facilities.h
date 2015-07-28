@@ -2,13 +2,13 @@
 #define WT_WT_FACILITIES_H
 
 /*
-        A_WT$SRC:WT_FACILITIES.H
-         Created           : 29-JAN-1990 by ???
+  A_WT$SRC:WT_FACILITIES.H
+  Created           : 29-JAN-1990 by ???
 
-         Modified          : 11-FEB-1991    Author : C.Arnault
-                  Installed Facility number for XWindow Events.
-         Modified          : 20-APR-1995    Author : O.Carmona
-                  Update from VMS.
+  Modified          : 11-FEB-1991    Author : C.Arnault
+  Installed Facility number for XWindow Events.
+  Modified          : 20-APR-1995    Author : O.Carmona
+  Update from VMS.
 */
 
 #define WT_FACILITY_AMS            1    /* Message system facility    */

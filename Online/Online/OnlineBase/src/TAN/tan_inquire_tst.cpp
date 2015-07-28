@@ -46,12 +46,12 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
   quiet = cli.getopt("quiet",1) != 0;
 
 #define _PRINT  succ++; if ( !quiet ) printf
-#define _PRINTERROR(buff,status)  {             \
-  if ( status == AMS_TASKNOTFOUND ) notfnd++;          \
-  if ( !quiet || status != AMS_TASKNOTFOUND )  {	     \
-    ::printf("GetAddressByName(%-24s) %4d ", buff, status);  \
-    lib_signal(status);					     \
-  } fail++;						\
+#define _PRINTERROR(buff,status)  {                           \
+    if ( status == AMS_TASKNOTFOUND ) notfnd++;               \
+    if ( !quiet || status != AMS_TASKNOTFOUND )  {            \
+      ::printf("GetAddressByName(%-24s) %4d ", buff, status); \
+      lib_signal(status);                                     \
+    } fail++;                                                 \
   }
 
   if ( interf.Status() == TAN_SS_SUCCESS ) {
@@ -66,7 +66,7 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
         tot_inq += num_inq;
         num_inq = 0;
         ::printf("->%-4ld sec<-  Queries:%6d Aliases:%6d  Success:%-4d TaskNotFound:%-4d Failure:%-4d.\n",
-		 time(0) - start, tot_inq, nalias, succ, notfnd, fail);
+                 time(0) - start, tot_inq, nalias, succ, notfnd, fail);
       }
       for ( int i = 0; i < MAXTASKS; i++ )         {
         if ( (i % 10)==0 && !quiet ) status = tan_dump_dbase ( host_name.c_str() );
@@ -77,8 +77,8 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
           num_inq++;
           if ( status == AMS_SUCCESS ) {
             _PRINT ("GetAddressByName[%d]: %s Port:%04X Fam:%1X Saddr:%08X (%s)\n",
-		    num_inq, buff, addr.sin_port, addr.sin_family, addr.sin_addr.s_addr,
-		    inet_ntoa(addr.sin_addr) );
+                    num_inq, buff, addr.sin_port, addr.sin_family, addr.sin_addr.s_addr,
+                    inet_ntoa(addr.sin_addr) );
           }
           else {
             nalias++;
@@ -90,8 +90,8 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
         num_inq++;
         if ( status == AMS_SUCCESS ) {
           _PRINT ("GetAddressByName[%d]: %s Port:%04X Fam:%1X Saddr:%08X (%s)\n",
-		  num_inq, buff, addr.sin_port, addr.sin_family, addr.sin_addr.s_addr,
-		  inet_ntoa(addr.sin_addr) );
+                  num_inq, buff, addr.sin_port, addr.sin_family, addr.sin_addr.s_addr,
+                  inet_ntoa(addr.sin_addr) );
         }
         else {
           nalias++;

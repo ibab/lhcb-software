@@ -14,13 +14,13 @@ static void ConvertINTfromHost( void*, const void*, int, DataFormat );
 static void ConvertSHORTfromHost( void*, const void*, int, DataFormat );
 
 static inline void ConvertINTtoHost( void* out, const void* in, int s, DataFormat df)
-       { ConvertINTfromHost( out, in, s, df ); } 
+{ ConvertINTfromHost( out, in, s, df ); } 
 static inline void ConvertSHORTtoHost( void* out, const void* in, int s, DataFormat df)
-       { ConvertSHORTfromHost( out, in, s, df ); } 
+{ ConvertSHORTfromHost( out, in, s, df ); } 
 static inline void ConvertCHARtoHost( void* out, const void* in, int s, DataFormat)
-       { memcpy( out, in, s ); }
+{ memcpy( out, in, s ); }
 static inline void ConvertCHARfromHost( void* out, const void* in, int s, DataFormat)
-       { memcpy( out, in, s ); }
+{ memcpy( out, in, s ); }
 
 static void ConvertFLOATtoHost( void*, const void*, int, DataFormat);
 static void ConvertFLOATfromHost( void*, const void*, int, DataFormat);
@@ -90,30 +90,30 @@ DataStructure& DataStructure::Add( const char* form ) {
       AtomicDataType type;
       if( !number ) number = 1;
       switch( *c )  {
-        case 'i':
-        case 'I':
-          type = DATATYPE_INT;
-          break;
-        case 's':
-        case 'S':
-          type = DATATYPE_SHORT;
-          break;
-        case 'a':
-        case 'A':
-        case 'c':
-        case 'C':
-          type = DATATYPE_CHAR;
-          break;
-        case 'f':
-        case 'F':
-          type = DATATYPE_FLOAT;
-          break;
-        case 'd':
-        case 'D':
-          type = DATATYPE_DOUBLE;
-          break;
-        default:
-          type = DATATYPE_INT;
+      case 'i':
+      case 'I':
+        type = DATATYPE_INT;
+      break;
+      case 's':
+      case 'S':
+        type = DATATYPE_SHORT;
+      break;
+      case 'a':
+      case 'A':
+      case 'c':
+      case 'C':
+        type = DATATYPE_CHAR;
+      break;
+      case 'f':
+      case 'F':
+        type = DATATYPE_FLOAT;
+      break;
+      case 'd':
+      case 'D':
+        type = DATATYPE_DOUBLE;
+      break;
+      default:
+        type = DATATYPE_INT;
       }
       Add( type, number);
     }
@@ -266,7 +266,7 @@ void net2host( void* out_buffer, void* in_buffer, size_t size, DataStructure& fo
 
 //------------------------------------------------------------------------------
 void DataStructure::ConvertfromHost( void* out_buffer, const void* in_buffer, size_t buffer_size,
-                      DataStructure& ds, DataFormat df) {
+                                     DataStructure& ds, DataFormat df) {
   int    i;
   const char*  in;
   char*  out;  
@@ -280,29 +280,29 @@ void DataStructure::ConvertfromHost( void* out_buffer, const void* in_buffer, si
     for( i = 0; i < nitem ; i++)  {
       size_t m, n = ds[i].length;
       switch ( ds[i].type )      {
-        case DATATYPE_INT:
-          m = MIN( n * sizeof(int) , s );
-          ConvertINTfromHost( out, in, m, df );
-          break;
-        case DATATYPE_SHORT:
-          m = MIN( n * sizeof(short), s);
-          ConvertSHORTfromHost( out, in, m, df );
-          break;
-        case DATATYPE_CHAR:
-          m = MIN( n, s);
-          ConvertCHARfromHost (out, in, m, df);
-          break;
-        case DATATYPE_FLOAT:
-          m = MIN( n * sizeof(float) , s );
-          ConvertFLOATfromHost (out, in, m, df);
-          break;
-        case DATATYPE_DOUBLE:
-          m = MIN( n * sizeof(double), s );
-          ConvertDOUBLEfromHost (out, in, m, df);
-          break;
-        default:
-          m = 0;
-          break;
+      case DATATYPE_INT:
+        m = MIN( n * sizeof(int) , s );
+        ConvertINTfromHost( out, in, m, df );
+        break;
+      case DATATYPE_SHORT:
+        m = MIN( n * sizeof(short), s);
+        ConvertSHORTfromHost( out, in, m, df );
+        break;
+      case DATATYPE_CHAR:
+        m = MIN( n, s);
+        ConvertCHARfromHost (out, in, m, df);
+        break;
+      case DATATYPE_FLOAT:
+        m = MIN( n * sizeof(float) , s );
+        ConvertFLOATfromHost (out, in, m, df);
+        break;
+      case DATATYPE_DOUBLE:
+        m = MIN( n * sizeof(double), s );
+        ConvertDOUBLEfromHost (out, in, m, df);
+        break;
+      default:
+        m = 0;
+        break;
       }
       s   -= m;
       in  += m;
@@ -313,7 +313,7 @@ void DataStructure::ConvertfromHost( void* out_buffer, const void* in_buffer, si
 
 //------------------------------------------------------------------------------
 void ConverttoHost( void* out_buffer, const void* in_buffer, size_t buffer_size,
-                      DataStructure& ds, DataFormat df)
+                    DataStructure& ds, DataFormat df)
 {
   int    i;
   const char*  in;
@@ -328,29 +328,29 @@ void ConverttoHost( void* out_buffer, const void* in_buffer, size_t buffer_size,
     for( i = 0; i < nitem ; i++)  {
       size_t m, n = ds[i].length;
       switch ( ds[i].type )  {
-        case DATATYPE_INT:
-          m = MIN( n * sizeof(int) , s );
-          ConvertINTtoHost( out, in, m, df );
-          break;
-        case DATATYPE_SHORT:
-          m = MIN( n * sizeof(short), s );
-          ConvertSHORTtoHost( out, in, m, df );
-          break;
-        case DATATYPE_CHAR:
-          m = MIN( n, s);
-          ConvertCHARtoHost (out, in, m, df);
-          break;
-        case DATATYPE_FLOAT:
-          m = MIN( n * sizeof(float), s );
-          ConvertFLOATtoHost (out, in, m, df);
-          break;
-        case DATATYPE_DOUBLE:
-          m = MIN( n * sizeof(double), s );
-          ConvertDOUBLEtoHost (out, in, m, df);
-          break;
-        default:
-          m = 0;
-          break;
+      case DATATYPE_INT:
+        m = MIN( n * sizeof(int) , s );
+        ConvertINTtoHost( out, in, m, df );
+        break;
+      case DATATYPE_SHORT:
+        m = MIN( n * sizeof(short), s );
+        ConvertSHORTtoHost( out, in, m, df );
+        break;
+      case DATATYPE_CHAR:
+        m = MIN( n, s);
+        ConvertCHARtoHost (out, in, m, df);
+        break;
+      case DATATYPE_FLOAT:
+        m = MIN( n * sizeof(float), s );
+        ConvertFLOATtoHost (out, in, m, df);
+        break;
+      case DATATYPE_DOUBLE:
+        m = MIN( n * sizeof(double), s );
+        ConvertDOUBLEtoHost (out, in, m, df);
+        break;
+      default:
+        m = 0;
+        break;
       }
       s   -= m;
       in  += m;
@@ -362,13 +362,13 @@ void ConverttoHost( void* out_buffer, const void* in_buffer, size_t buffer_size,
 //------------------------------------------------------------------------------
 void ConvertINTfromHost( void* out, const void* in, int s, DataFormat df )  {
   switch( df )  {
-    case DATAFORMAT_OS9:
-    case DATAFORMAT_VMS:
-      memcpy( out, in, s);
-      break;
-    default:
-      SwapBytes( (char*)out, (char*)in, s);
-      break;
+  case DATAFORMAT_OS9:
+  case DATAFORMAT_VMS:
+    memcpy( out, in, s);
+    break;
+  default:
+    SwapBytes( (char*)out, (char*)in, s);
+    break;
   }
 }
 //------------------------------------------------------------------------------
@@ -376,20 +376,20 @@ void ConvertSHORTfromHost( void* out, const void* in, int s, DataFormat df )
 //------------------------------------------------------------------------------
 {
   switch( df )  {
-    case DATAFORMAT_OS9:
-    case DATAFORMAT_VMS:
-      memcpy( out, in, s);
-      break;
-    default:
-      SwapShorts( (char*)out, (char*)in, s);
-      break;
+  case DATAFORMAT_OS9:
+  case DATAFORMAT_VMS:
+    memcpy( out, in, s);
+    break;
+  default:
+    SwapShorts( (char*)out, (char*)in, s);
+    break;
   }
 }
 
 #ifdef __VMS
 #include cvtdef
-  extern "C" unsigned long cvt$convert_float( const void* in, int in_code,
-                                              void* out, int out_code, int opt);
+extern "C" unsigned long cvt$convert_float( const void* in, int in_code,
+                                            void* out, int out_code, int opt);
 #endif
 
 //------------------------------------------------------------------------------
@@ -397,123 +397,123 @@ void ConvertSHORTfromHost( void* out, const void* in, int s, DataFormat df )
 void ConvertFLOATtoHost( void* out, const void* in, int s, DataFormat df)   {
   int i, n;
   switch( df )  {
-    case DATAFORMAT_OS9:
-    case DATAFORMAT_NETWORK:
-      n = s/sizeof(float);
-      SwapBytes( (char*)out, (char*)in, s);
-      for( i = 0; i < n; i++)  {
-	cvt$convert_float((float*)out+i,CVT$K_IEEE_S,(float*)out+i,CVT$K_VAX_F,0);
-      }
-      break;
-    default:
-      memcpy( out, in, s );
-      break;
+  case DATAFORMAT_OS9:
+  case DATAFORMAT_NETWORK:
+    n = s/sizeof(float);
+    SwapBytes( (char*)out, (char*)in, s);
+    for( i = 0; i < n; i++)  {
+      cvt$convert_float((float*)out+i,CVT$K_IEEE_S,(float*)out+i,CVT$K_VAX_F,0);
+    }
+    break;
+  default:
+    memcpy( out, in, s );
+    break;
   }
 #elif defined(_WIN32) || defined(__linux)
-void ConvertFLOATtoHost(void*, const void*, int, DataFormat)   {
+  void ConvertFLOATtoHost(void*, const void*, int, DataFormat)   {
 #elif defined(_OSK)
-void ConvertFLOATtoHost(void*, const void*, int, DataFormat)   {
-  // not yet implemented
+    void ConvertFLOATtoHost(void*, const void*, int, DataFormat)   {
+      // not yet implemented
 #endif
-}
+    }
 
-//-----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 #if defined(__VMS)
-void ConvertFLOATfromHost(void* out, const void* in, int s, DataFormat df)   {
-  int i, n;
-  switch( df )  {
-    case DATAFORMAT_OS9:
-    case DATAFORMAT_NETWORK:
-      n = s/sizeof(float);
-      for( i = 0; i < n; i++) {
-	cvt$convert_float((float*)in+i,CVT$K_VAX_F,(float*)out+i,CVT$K_IEEE_S,0);
+    void ConvertFLOATfromHost(void* out, const void* in, int s, DataFormat df)   {
+      int i, n;
+      switch( df )  {
+      case DATAFORMAT_OS9:
+      case DATAFORMAT_NETWORK:
+        n = s/sizeof(float);
+        for( i = 0; i < n; i++) {
+          cvt$convert_float((float*)in+i,CVT$K_VAX_F,(float*)out+i,CVT$K_IEEE_S,0);
+        }
+        SwapBytes( (char*)out, (char*)out, s);
+        break;
+      default:
+        memcpy( out, in, s );
+        break;
       }
-      SwapBytes( (char*)out, (char*)out, s);
-      break;
-    default:
-      memcpy( out, in, s );
-      break;
-  }
 #elif defined(_WIN32) || defined(__linux)
-void ConvertFLOATfromHost(void*, const void*, int, DataFormat)   {
+      void ConvertFLOATfromHost(void*, const void*, int, DataFormat)   {
 #elif defined(_OSK)
-void ConvertFLOATfromHost(void*, const void*, int, DataFormat)   {
-  // not yet implemented
+        void ConvertFLOATfromHost(void*, const void*, int, DataFormat)   {
+          // not yet implemented
 #endif
-}
+        }
 
-//-----------------------------------------------------------------------------
+        //-----------------------------------------------------------------------------
 #if defined(__VMS)
-void ConvertDOUBLEtoHost( void* out, const void* in, int s, DataFormat df)  {
-  int i, n;
-  switch( df )  {
-    case DATAFORMAT_OS9:
-    case DATAFORMAT_NETWORK:
-      n = s/sizeof(double);
-      SwapBytes( (char*)out, (char*)in, s);
-      for( i = 0; i < n; i++) {
-	cvt$convert_float((double*)out+i,CVT$K_IEEE_T,(double*)out+i,CVT$K_VAX_D,0);
-      break;
-    default:
-      memcpy( out, in, s );
-      break;
-  }
+        void ConvertDOUBLEtoHost( void* out, const void* in, int s, DataFormat df)  {
+          int i, n;
+          switch( df )  {
+          case DATAFORMAT_OS9:
+          case DATAFORMAT_NETWORK:
+            n = s/sizeof(double);
+            SwapBytes( (char*)out, (char*)in, s);
+            for( i = 0; i < n; i++) {
+              cvt$convert_float((double*)out+i,CVT$K_IEEE_T,(double*)out+i,CVT$K_VAX_D,0);
+              break;
+            default:
+              memcpy( out, in, s );
+              break;
+            }
 #elif defined(_WIN32) || defined(__linux)
-void ConvertDOUBLEtoHost(void*, const void*, int, DataFormat)  {
+            void ConvertDOUBLEtoHost(void*, const void*, int, DataFormat)  {
 #elif defined(_OSK)
-void ConvertDOUBLEtoHost(void*, const void*, int, DataFormat)  {
-  // not yet implemented
+              void ConvertDOUBLEtoHost(void*, const void*, int, DataFormat)  {
+                // not yet implemented
 #endif
-}
+              }
 
-//----------------------------------------------------------------------------
+              //----------------------------------------------------------------------------
 #ifdef __VMS
-void ConvertDOUBLEfromHost( void* out, const void* in, int s, DataFormat df) {
-  int i, n;
-  switch( df )  {
-    case DATAFORMAT_OS9:
-    case DATAFORMAT_NETWORK:
-      n = s/sizeof(double);
-      for( i = 0; i < n; i++) cvt$convert_float( (double*)in + i, CVT$K_VAX_D,
-                                                 (double*)out + i, CVT$K_IEEE_T,0);
-      SwapBytes((char*)out, (char*)out, s);
-      break;
-    default:
-      memcpy( out, in, s );
-      break;
-  }
+              void ConvertDOUBLEfromHost( void* out, const void* in, int s, DataFormat df) {
+                int i, n;
+                switch( df )  {
+                case DATAFORMAT_OS9:
+                case DATAFORMAT_NETWORK:
+                  n = s/sizeof(double);
+                  for( i = 0; i < n; i++) cvt$convert_float( (double*)in + i, CVT$K_VAX_D,
+                                                             (double*)out + i, CVT$K_IEEE_T,0);
+                  SwapBytes((char*)out, (char*)out, s);
+                  break;
+                default:
+                  memcpy( out, in, s );
+                  break;
+                }
 #elif defined(_WIN32) || defined(__linux)
-void ConvertDOUBLEfromHost(void*, const void*, int, DataFormat)  {
+                void ConvertDOUBLEfromHost(void*, const void*, int, DataFormat)  {
 #elif defined(_OSK)
-void ConvertDOUBLEfromHost(void*, const void*, int, DataFormat)  {
-  // not yet implemented
+                  void ConvertDOUBLEfromHost(void*, const void*, int, DataFormat)  {
+                    // not yet implemented
 #endif
-}
+                  }
 
-//------------------------------------------------------------------------------
-void SwapBytes( char* out, char* in, int n)  {
-  char c;
-  while( n > 0 )  {
-    c = in[0];
-    out[0] = in[3];
-    out[3] = c;    
-    c = in[1];
-    out[1] = in[2];
-    out[2] = c;    
-    in   += sizeof(int);
-    out  += sizeof(int);
-    n    -= sizeof(int);
-  }
-}
-//------------------------------------------------------------------------------
-void SwapShorts( char* out, char* in, int n)    {
-  char c;
-  while( n > 0 )  {
-    c = in[0];
-    out[0] = in[1];
-    out[1] = c;    
-    in   += sizeof(short);
-    out  += sizeof(short);
-    n    -= sizeof(short);
-  }
-}
+                  //------------------------------------------------------------------------------
+                  void SwapBytes( char* out, char* in, int n)  {
+                    char c;
+                    while( n > 0 )  {
+                      c = in[0];
+                      out[0] = in[3];
+                      out[3] = c;    
+                      c = in[1];
+                      out[1] = in[2];
+                      out[2] = c;    
+                      in   += sizeof(int);
+                      out  += sizeof(int);
+                      n    -= sizeof(int);
+                    }
+                  }
+                  //------------------------------------------------------------------------------
+                  void SwapShorts( char* out, char* in, int n)    {
+                    char c;
+                    while( n > 0 )  {
+                      c = in[0];
+                      out[0] = in[1];
+                      out[1] = c;    
+                      in   += sizeof(short);
+                      out  += sizeof(short);
+                      n    -= sizeof(short);
+                    }
+                  }

@@ -1,7 +1,7 @@
 /*
-              Definition of the TANMESSAGE structure
-              C interface
-              C++ usage
+  Definition of the TANMESSAGE structure
+  C interface
+  C++ usage
 
 */
 #ifndef ONLINEKERNEL_TAN_TANMESSAGE_H
@@ -20,7 +20,7 @@
 /**
    {\Large{\bf Class TanMessage}}
 
-    Message structure to communicate with the nameserver task
+   Message structure to communicate with the nameserver task
 */
 class TanMessage  {
 public:
@@ -37,15 +37,15 @@ public:
   typedef __NetworkSubAddress__ SubAddress;
 public:
 #else
-typedef struct  {
+  typedef struct  {
 #endif
-  unsigned int       m_length;
-  unsigned int       m_error;
-  unsigned int       m_function;
-  char               m_name[128];
-  __NetworkAddress__ m_sin;
+    unsigned int       m_length;
+    unsigned int       m_error;
+    unsigned int       m_function;
+    char               m_name[128];
+    __NetworkAddress__ m_sin;
 #ifndef __cplusplus
-}  TAN_MSG, TanMessage;
+  }  TAN_MSG, TanMessage;
 #else                                            /*   C++ Only!!!   */
 public:
   /// Enumeration: Request codes

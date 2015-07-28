@@ -85,7 +85,7 @@ int Sensor::run()  {
     status = ::wtc_wait( &facility, &param, &substatus );  
     if ( status != WT_SUCCESS && status != WT_BADACTIONSTAT && status != WT_NOSUBSCRIBED) {
       ::lib_rtl_output(LIB_RTL_INFO," exiting wt_wait status = %d param %p substat %d, fac %d.\n",
-		       status, param, substatus, facility);
+                       status, param, substatus, facility);
     }
   } 
   return 1;

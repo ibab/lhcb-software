@@ -36,18 +36,18 @@ namespace {
       char txt[132];
       const MouseEvent* m = ev.get<MouseEvent>();
       sprintf(txt,"((%s-Mouse event: %d  %d x:%d y:%d  %u))",
-	      m->msec != (unsigned int)~0x0 ? "DBLE" : "SNGL",m->button,m->modifier,m->x,m->y,m->msec);
+              m->msec != (unsigned int)~0x0 ? "DBLE" : "SNGL",m->button,m->modifier,m->x,m->y,m->msec);
       addText(txt);
     }
 
     void addText(const char* txt) {
       int l = ::strlen(txt);
       if ( posx+l > pasteboard_cols-2 ) { 
-	posx = 1;
-	++posy;
-	if ( posy >= pasteboard_rows-2) {
-	  posy = 1;
-	}
+        posx = 1;
+        ++posy;
+        if ( posy >= pasteboard_rows-2) {
+          posy = 1;
+        }
       }
       ::scrc_begin_pasteboard_update (pasteboard);
       ::scrc_put_chars (display, txt, NORMAL, posy, posx, 1);

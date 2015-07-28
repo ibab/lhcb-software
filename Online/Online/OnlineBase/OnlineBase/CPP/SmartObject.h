@@ -5,15 +5,15 @@
 
 /// Useful template class for object, which may fail
 /** @class SmartObject
-  *
-  *   template <class Type> class SmartObject
-  *
-  *   SmartObject class:
-  *   - Hold a status word, which may be filled and checked.
-  *   - Automatic conversion to requested parent class
-  *
-  *   @author M.Frank
-  */
+ *
+ *   template <class Type> class SmartObject
+ *
+ *   SmartObject class:
+ *   - Hold a status word, which may be filled and checked.
+ *   - Automatic conversion to requested parent class
+ *
+ *   @author M.Frank
+ */
 template <class Type> class SmartObject {
 protected:
   //@Man: Protected member variables

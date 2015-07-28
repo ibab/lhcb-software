@@ -59,11 +59,11 @@ int MBM::Dumper::optparse (const char* c)   {
   default:
   case 'h':
     ::lib_rtl_output(LIB_RTL_ALWAYS,"bm - Buffer Manager Monitor                 \n");
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"Options:                                    \n");
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -i=<bm_name>   Select Buffer Identifier \n");
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -a           Dumper all table entries   \n");
-    exit(0);
-    break;
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"Options:                                    \n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -i=<bm_name>   Select Buffer Identifier \n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"    -a           Dumper all table entries   \n");
+  exit(0);
+  break;
   }
   return 1;
 }

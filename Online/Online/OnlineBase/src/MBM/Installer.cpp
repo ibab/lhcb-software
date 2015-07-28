@@ -127,7 +127,7 @@ int MBM::Installer::optparse (const char* c)  {
   case '?':
   case 'h':
     help();
-    throw std::runtime_error("Help only requested");
+  throw std::runtime_error("Help only requested");
   default:
     help();
     throw std::runtime_error("Bad parameter supplied!");
@@ -158,21 +158,21 @@ int MBM::Installer::install()  {
   m_bm->ctrl->bytes_p_Bit = (1<<p_bits)-1;
   bytes_per_bit = m_bm->ctrl->bytes_p_Bit + 1;
   ::lib_rtl_output(LIB_RTL_INFO,"Control: %p  0x%08X             [0x%06x Bytes]\n",(void*)m_bm->ctrl,
-		   ((char*)m_bm->ctrl)-((char*)m_bm->ctrl), sizeof(CONTROL));
+                   ((char*)m_bm->ctrl)-((char*)m_bm->ctrl), sizeof(CONTROL));
 
   m_bm->usDesc = (USERDesc*)(m_bm->gbl+ctrl_len);
   m_bm->user   = m_bm->usDesc->users;
   ::lib_rtl_output(LIB_RTL_INFO,"User:    %p  0x%08X  %p [0x%06x Bytes]\n",(void*)m_bm->user,
-           ((char*)m_bm->user)-((char*)m_bm->ctrl),(void*)m_bm->usDesc, len);
+                   ((char*)m_bm->user)-((char*)m_bm->ctrl),(void*)m_bm->usDesc, len);
 
   m_bm->evDesc = (EVENTDesc*)(m_bm->gbl+ctrl_len+user_len);
   m_bm->event  = m_bm->evDesc->events;
   ::lib_rtl_output(LIB_RTL_INFO,"Event:   %p  0x%08X  %p [0x%06x Bytes]\n",(void*)m_bm->event,
-           ((char*)m_bm->event)-((char*)m_bm->ctrl),(void*)m_bm->evDesc, len);
+                   ((char*)m_bm->event)-((char*)m_bm->ctrl),(void*)m_bm->evDesc, len);
 
   m_bm->bitmap = m_bm->gbl+ctrl_len+user_len+evnt_len;
   ::lib_rtl_output(LIB_RTL_INFO,"Bitmap:  %p  0x%08X             [0x%06x Bytes]\n",(void*)m_bm->bitmap,
-           ((char*)m_bm->bitmap)-((char*)m_bm->ctrl), len);
+                   ((char*)m_bm->bitmap)-((char*)m_bm->ctrl), len);
 
   len = p_size<<10;
   status = ::lib_rtl_create_section(buff_mod,buff_len,&m_bm->buff_add);
@@ -184,7 +184,7 @@ int MBM::Installer::install()  {
   m_bm->buffer_add = (char*)m_bm->buff_add->address;
   ::memset(m_bm->buffer_add,0xDD,len);
   ::lib_rtl_output(LIB_RTL_INFO,"Buffer:  %p  0x%08X             [0x%06x Bytes]\n",(void*)m_bm->buffer_add,
-		   ((char*)m_bm->buffer_add)-((char*)m_bm->ctrl), len);
+                   ((char*)m_bm->buffer_add)-((char*)m_bm->ctrl), len);
 
   CONTROL* ctrl  = m_bm->ctrl;
   USER*    user  = m_bm->user;
@@ -295,21 +295,21 @@ ServerBMID mbm_install_server(int argc , char** argv) {
       if ( inst.startMonitor() )  {
         lib_rtl_sleep(1000);
         mbm_mon(0, argv); 
-	::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ All done.\n");
-	return 0;
+        ::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ All done.\n");
+        return 0;
       }
       else if ( inst.startBlocking() ) {
-	ServerBMID bmid = inst.bmid();
-	::mbmsrv_dispatch_nonblocking(bmid);
-	::mbmsrv_wait_dispatch(bmid);
-	::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ All done.\n");
-	return 0;
+        ServerBMID bmid = inst.bmid();
+        ::mbmsrv_dispatch_nonblocking(bmid);
+        ::mbmsrv_wait_dispatch(bmid);
+        ::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ All done.\n");
+        return 0;
       }
       else if ( inst.continueInstallation() ) {
-	ServerBMID bmid = inst.releaseBMID();
-	::mbmsrv_dispatch_nonblocking(bmid);
-	::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ All done.\n");
-	return bmid;
+        ServerBMID bmid = inst.releaseBMID();
+        ::mbmsrv_dispatch_nonblocking(bmid);
+        ::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ All done.\n");
+        return bmid;
       }
     }
     ::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ MBM installation failed.\n");

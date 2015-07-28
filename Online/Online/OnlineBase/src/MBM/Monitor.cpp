@@ -33,7 +33,7 @@ using namespace std;
 namespace
 {
   static const char *sstat[17] =
-  { " nl", "   ", "*SL", "*EV", "*SP", "WSL", "WEV", "WSP", "wsl", "wev", "wsp",
+    { " nl", "   ", "*SL", "*EV", "*SP", "WSL", "WEV", "WSP", "wsl", "wev", "wsp",
       " ps", " ac", "SPR", "WER", "   " };
 
   static int cont = 1;
@@ -43,29 +43,29 @@ namespace MBM
 {
   struct ManagerImp: public Manager
   {
-      virtual int optparse(const char*)
-      {
-        return 1;
-      }
-      ManagerImp()
-      {
-      }
-      virtual ~ManagerImp()
-      {
-      }
+    virtual int optparse(const char*)
+    {
+      return 1;
+    }
+    ManagerImp()
+    {
+    }
+    virtual ~ManagerImp()
+    {
+    }
   };
 
   struct DisplayDescriptor
   {
-      ManagerImp m_mgr;
-      BUFFERS::BUFF* m_buff;
-      DisplayDescriptor() :
-          m_buff(0)
-      {
-      }
-      ~DisplayDescriptor()
-      {
-      }
+    ManagerImp m_mgr;
+    BUFFERS::BUFF* m_buff;
+    DisplayDescriptor() :
+      m_buff(0)
+    {
+    }
+    ~DisplayDescriptor()
+    {
+    }
   };
 }
 
@@ -134,14 +134,14 @@ void Monitor::handle(const Event& ev)
 {
   switch (ev.eventtype)
   {
-    case TimeEvent:
-      updateDisplay();
-      TimeSensor::instance().add(this, 2, 0);
-      break;
-    default:
-      display()->draw_line_normal("Unknown event received of type: %d",
-          ev.eventtype);
-      break;
+  case TimeEvent:
+    updateDisplay();
+    TimeSensor::instance().add(this, 2, 0);
+    break;
+  default:
+    display()->draw_line_normal("Unknown event received of type: %d",
+                                ev.eventtype);
+    break;
   }
 }
 
@@ -208,24 +208,24 @@ size_t Monitor::draw_buffer(const char* name, CONTROL* ctr)
     ::snprintf(rate3, sizeof(rate3), "%.3f", double(ctr->tot_seen-st->evcons)/deltaTime*1000.0);
   }
   display()->draw_line_normal(
-			      "%-26s  Events: Produced:%d (%s kHz) Actual:%d (%s kHz) Seen:%d (%s kHz) Pending:%d Max:%d",
-			      txt,
-			      ctr->tot_produced,rate1,
-			      ctr->tot_actual,  rate2,
-			      ctr->tot_seen,    rate3,
-			      ctr->i_events, ctr->p_emax);
+                              "%-26s  Events: Produced:%d (%s kHz) Actual:%d (%s kHz) Seen:%d (%s kHz) Pending:%d Max:%d",
+                              txt,
+                              ctr->tot_produced,rate1,
+                              ctr->tot_actual,  rate2,
+                              ctr->tot_seen,    rate3,
+                              ctr->i_events, ctr->p_emax);
   display()->draw_line_normal(
-			      "%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]", "",
-			      (ctr->bm_size * ctr->bytes_p_Bit) / 1024,
-			      (ctr->i_space * ctr->bytes_p_Bit) / 1024, ctr->i_users, ctr->p_umax);
+                              "%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]", "",
+                              (ctr->bm_size * ctr->bytes_p_Bit) / 1024,
+                              (ctr->i_space * ctr->bytes_p_Bit) / 1024, ctr->i_users, ctr->p_umax);
 
   display()->draw_line_normal(" Occupancy [Events]:");
   display()->draw_bar(30, display()->currLine() - 1,
-		      float(ctr->i_events) / float(ctr->p_emax), display()->width() - 30);
+                      float(ctr->i_events) / float(ctr->p_emax), display()->width() - 30);
   display()->draw_line_normal("           [Space]: ");
   display()->draw_bar(30, display()->currLine() - 1,
-		      float(ctr->bm_size - ctr->i_space) / float(ctr->bm_size),
-		      display()->width() - 30);
+                      float(ctr->bm_size - ctr->i_space) / float(ctr->bm_size),
+                      display()->width() - 30);
   return 1;
 }
 
@@ -253,9 +253,9 @@ int Monitor::show_information()
   char line[256];
   display()->draw_line_normal("");
   display()->draw_line_reverse(
-      "                 Buffer Manager Monitor [%s]  pid:%d on %s",
-      ::lib_rtl_timestr("%a %d %b %Y  %H:%M:%S", 0), lib_rtl_pid(),
-      RTL::nodeName().c_str());
+                               "                 Buffer Manager Monitor [%s]  pid:%d on %s",
+                               ::lib_rtl_timestr("%a %d %b %Y  %H:%M:%S", 0), lib_rtl_pid(),
+                               RTL::nodeName().c_str());
   display()->draw_line_normal("");
   for (i = 0; m_numBM > 0 && i < m_buffers->p_bmax; i++)
   {
@@ -284,11 +284,11 @@ int Monitor::show_information()
           continue;
         if (us->busy == 0)
           continue;
-	USSTAT* ust = 0;
-	if ( st )  {
-	  UMap_t::iterator uit = st->UserMap.find(string(us->name));
-	  ust = (uit == st->UserMap.end()) ? 0 : (*uit).second;
-	}
+        USSTAT* ust = 0;
+        if ( st )  {
+          UMap_t::iterator uit = st->UserMap.find(string(us->name));
+          ust = (uit == st->UserMap.end()) ? 0 : (*uit).second;
+        }
         char spy_val[5] = { ' ', ' ', ' ', ' ', 0 };
         for (k = 0; k < us->n_req; ++k)
         {
@@ -309,15 +309,15 @@ int Monitor::show_information()
           if (!rateMode)
           {
             ::snprintf(line, sizeof(line), fmt_prod, us->serverid, us->name,
-                us->partid, us->pid, "P", sstat[us->state + 1], us->ev_produced,
-                perc + 0.1, spy_val, dsc->bm_name);
+                       us->partid, us->pid, "P", sstat[us->state + 1], us->ev_produced,
+                       perc + 0.1, spy_val, dsc->bm_name);
           }
           else
           {
             ::snprintf(line, sizeof(line), fmt_prod, us->serverid, us->name,
-		       us->partid, us->pid, "P", sstat[us->state + 1], 
-		       ust ? double(us->ev_produced-ust->evprod)/deltaTime*1000 : 0.0,
-		       perc + 0.1, spy_val, dsc->bm_name);
+                       us->partid, us->pid, "P", sstat[us->state + 1], 
+                       ust ? double(us->ev_produced-ust->evprod)/deltaTime*1000 : 0.0,
+                       perc + 0.1, spy_val, dsc->bm_name);
           }
         }
         else if (us->ev_actual > 0 || us->get_ev_calls > 0 || us->n_req > 0)
@@ -328,22 +328,22 @@ int Monitor::show_information()
           if (!rateMode)
           {
             ::snprintf(line, sizeof(line), fmt_cons, us->serverid, us->name,
-		       us->partid, us->pid, "C", sstat[us->state + 1], us->ev_seen,
-		       us->ev_freed, perc + 0.1, spy_val, dsc->bm_name);
+                       us->partid, us->pid, "C", sstat[us->state + 1], us->ev_seen,
+                       us->ev_freed, perc + 0.1, spy_val, dsc->bm_name);
           }
           else
           {
-          ::snprintf(line, sizeof(line), fmt_cons, us->serverid, us->name,
-		     us->partid, us->pid, "C", sstat[us->state + 1], 
-		     ust ? double(us->ev_seen-ust->evseen)/deltaTime*1000 : 0.0,
-		     ust ? double(us->ev_freed - ust->evfreed)/deltaTime*1000 : 0.0, 
-		     perc + 0.1, spy_val, dsc->bm_name);
+            ::snprintf(line, sizeof(line), fmt_cons, us->serverid, us->name,
+                       us->partid, us->pid, "C", sstat[us->state + 1], 
+                       ust ? double(us->ev_seen-ust->evseen)/deltaTime*1000 : 0.0,
+                       ust ? double(us->ev_freed - ust->evfreed)/deltaTime*1000 : 0.0, 
+                       perc + 0.1, spy_val, dsc->bm_name);
           }
         }
         else
         {
           ::snprintf(line, sizeof(line), fmt_def, us->serverid, us->name,
-		     us->partid, us->pid, "?", "", spy_val, dsc->bm_name);
+                     us->partid, us->pid, "?", "", spy_val, dsc->bm_name);
         }
         display()->draw_line_normal(line);
       }
@@ -357,31 +357,31 @@ int Monitor::optparse(const char* c)
   int iret;
   switch (*c | 0x20)
   {
-    case 's': /*      Single Update*/
-      cont = 0;
-      break;
-    case 'i': /*      buffer_id        */
-      iret = ::sscanf(c + 1, "=%s", m_buffID);
-      if (iret != 1)
-      {
-        ::lib_rtl_output(LIB_RTL_ERROR,
-            "Error reading Buffer identifier parameter.\n");
-        ::exit(0);
-      }
-      m_bmid = m_buffID;
-      break;
-    case 'r':
-      rateMode = true;
-      break;
-    case '?':
-    case 'h':
-    default:
-      ::lib_rtl_output(LIB_RTL_ALWAYS, "mbm_mon - Buffer Manager Monitor\n");
-      ::lib_rtl_output(LIB_RTL_ALWAYS, "Options:\n");
-      ::lib_rtl_output(LIB_RTL_ALWAYS,
-          "    -i=<bm_name>   Select Buffer Identifier\n");
-      ::lib_rtl_output(LIB_RTL_ALWAYS, "    -s             Single update \n");
-      exit(0);
+  case 's': /*      Single Update*/
+    cont = 0;
+    break;
+  case 'i': /*      buffer_id        */
+    iret = ::sscanf(c + 1, "=%s", m_buffID);
+    if (iret != 1)
+    {
+      ::lib_rtl_output(LIB_RTL_ERROR,
+                       "Error reading Buffer identifier parameter.\n");
+      ::exit(0);
+    }
+    m_bmid = m_buffID;
+    break;
+  case 'r':
+    rateMode = true;
+    break;
+  case '?':
+  case 'h':
+  default:
+    ::lib_rtl_output(LIB_RTL_ALWAYS, "mbm_mon - Buffer Manager Monitor\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS, "Options:\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,
+                   "    -i=<bm_name>   Select Buffer Identifier\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS, "    -s             Single update \n");
+  exit(0);
   }
   return 1;
 }
@@ -435,9 +435,9 @@ void Monitor::CopyData()
         {
           ust->Name = us->name;
         }
-	ust->evprod = us->ev_produced;
-	ust->evseen = us->ev_seen;
-	ust->evfreed = us->ev_freed;
+        ust->evprod = us->ev_produced;
+        ust->evseen = us->ev_seen;
+        ust->evfreed = us->ev_freed;
       }
     }
   }

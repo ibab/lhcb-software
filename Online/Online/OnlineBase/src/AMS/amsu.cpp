@@ -53,13 +53,13 @@ static amsu_deadfac_entry *find_deadfacility(const char* source) {
   for (fac = (amsu_deadfac_entry*)((long)deadfac_list->next+(long)deadfac_list);
        fac != (amsu_deadfac_entry*)deadfac_list ; 
        fac = (amsu_deadfac_entry*)((long)fac->next+(long)fac))    {
-      if (srclen==fac->srclen)      {
-        if (strncmp (fac->source, source, srclen) == 0)        {
-          break;
-        }
+    if (srclen==fac->srclen)      {
+      if (strncmp (fac->source, source, srclen) == 0)        {
+        break;
       }
     }
-    return fac;
+  }
+  return fac;
 }
 
 int amsuc_init( )   {

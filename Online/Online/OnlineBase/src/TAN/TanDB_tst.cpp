@@ -2,10 +2,10 @@
 #include <iostream>
 #include "RTL/rtl.h"
 #include "TAN/TanDB.h"
-#define LINE(ll,x)   { \
-  for ( int i=0; i < ll; i++ ) std::cout << x;    \
-  std::cout << std::endl;   \
-}
+#define LINE(ll,x)   {                            \
+    for ( int i=0; i < ll; i++ ) std::cout << x;  \
+    std::cout << std::endl;                       \
+  }
 
 extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
   char buff[32];
@@ -70,7 +70,7 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
 
   LINE(80,'-');
   printf("   Create and delete %d x %d tasks with 0...%d aliases\n",
-    num_loop,num_task,num_task-1);
+         num_loop,num_task,num_task-1);
   printf(" ... including to retrieve inserted port entries by task/alias name\n");
   TanMessage msg;
   for ( int k = 0; k < num_loop; k++ )  {
@@ -83,19 +83,19 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
       NetworkChannel::Port fnd  = db.findPort(msg);
       if ( fnd != port ) {
         std::cout << "!!!!!!!!!!! Port allocated:" << std::hex << port 
-		  << " found:" << std::hex << fnd << std::endl;
+                  << " found:" << std::hex << fnd << std::endl;
       }
 
       // Insert alias(s)
       for ( int j = 0; j < i; j++ )  {
         ::snprintf(e->_Message()._Name(),sizeof(e->_Message().m_name),"MYTASK_%02d_%02d",i,j);
-	::snprintf(msg._Name(),sizeof(msg.m_name),"%s",e->_Message()._Name());
+        ::snprintf(msg._Name(),sizeof(msg.m_name),"%s",e->_Message()._Name());
         int status = db.insertAlias (e);
         NetworkChannel::Port fnd  = db.findPort(msg);
         if ( fnd != port ) {
-	  std::cout << "!!!!!!!!!!! Port allocated:" << std::hex << port 
-		    << " found:" << std::hex << fnd 
-		    << " status:" << std::hex << status << std::endl;
+          std::cout << "!!!!!!!!!!! Port allocated:" << std::hex << port 
+                    << " found:" << std::hex << fnd 
+                    << " status:" << std::hex << status << std::endl;
         }
       }
     }

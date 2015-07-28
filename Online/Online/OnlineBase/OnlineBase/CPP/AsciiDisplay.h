@@ -18,9 +18,8 @@
  *
  * @author Markus Frank
  */
-class AsciiDisplay : public MonitorDisplay 
-{
- protected:
+class AsciiDisplay : public MonitorDisplay  {
+protected:
   /// Pointer to WINDOW structure
   SCR::Pasteboard* m_pasteboard;
   SCR::Display*    m_display;
@@ -33,7 +32,7 @@ class AsciiDisplay : public MonitorDisplay
   int              m_height;
   /// Display title
   std::string      m_title;
- public:
+public:
   /// Setup display window
   virtual void setup_window();
   /// Reset display window

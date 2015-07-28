@@ -19,17 +19,17 @@ extern "C" {
 #ifdef _WIN32
 
 #if 0
-        VC 6   -> _MSC_VER 1200 
-        VC 7   -> _MSC_VER 1300 
-        VC 7.1 -> _MSC_VER 1310 
-        VC 8   -> _MSC_VER 1400 
-        VC 9   -> _MSC_VER 1500 
+  VC 6   -> _MSC_VER 1200 
+  VC 7   -> _MSC_VER 1300 
+  VC 7.1 -> _MSC_VER 1310 
+  VC 8   -> _MSC_VER 1400 
+  VC 9   -> _MSC_VER 1500 
 #endif
 
-  #define tzset       _tzset
-  #define daylight    _daylight
-  #define timezone    _timezone
-  #define tzname      _tzname
+#define tzset       _tzset
+#define daylight    _daylight
+#define timezone    _timezone
+#define tzname      _tzname
 #if _MSC_VER<1400
   struct timezone {
     int tz_minuteswest;
@@ -45,7 +45,7 @@ extern "C" {
   int getfilesystemtime(struct timeval *time_Info);
 
 #else
-  #include <sys/time.h>
+#include <sys/time.h>
 #endif  /* WIN32                          */
 
 #ifdef __cplusplus

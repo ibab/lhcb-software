@@ -19,7 +19,7 @@ enum WT_Constants{
 };
 
 #ifdef __cplusplus
-  extern "C" {
+extern "C" {
   typedef int (*wt_callback_t)(unsigned int,void*);
 #define DEF_ARG(x)   =x
 #else

@@ -18,12 +18,12 @@ typedef qentry qentry_t;
 #include <memory>
 extern "C" {
 #endif
-int insqti (qentry_t *qent, qentry_t *head);
-int insqhi (qentry_t *qent, qentry_t *head);
-int remqhi (qentry_t *head, qentry_t **qent);
-int remqti (qentry_t *head, qentry_t **qent);
-qentry_t* remqent(qentry_t* e);
-qentry_t *remqhead(qentry_t* head);
+  int insqti (qentry_t *qent, qentry_t *head);
+  int insqhi (qentry_t *qent, qentry_t *head);
+  int remqhi (qentry_t *head, qentry_t **qent);
+  int remqti (qentry_t *head, qentry_t **qent);
+  qentry_t* remqent(qentry_t* e);
+  qentry_t *remqhead(qentry_t* head);
 #ifdef __cplusplus
 }
 static inline bool lib_rtl_queue_success(int sc)  { return (sc > 0); }

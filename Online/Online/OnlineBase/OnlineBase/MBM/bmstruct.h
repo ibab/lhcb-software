@@ -8,7 +8,7 @@
 #include "RTL/rtl.h"
 #include "MBM/bmdef.h"
 #ifndef _WIN32
-  #include "semaphore.h"
+#include "semaphore.h"
 #endif
 #include "RTL/Pack.h"
 

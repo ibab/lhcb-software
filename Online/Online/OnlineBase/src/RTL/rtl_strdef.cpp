@@ -35,7 +35,7 @@ int str_trim(const char* src, char* dst, size_t* resultant_length)    {
       size_t s2_length = strlen(src);		// Length of string
       // Determine the end of the string
       while ((s2_length > 0) && ((src[s2_length-1] == ' ') || (src[s2_length-1] == '\t')))	{
-	s2_length--;
+        s2_length--;
       }
       *resultant_length = *resultant_length < s2_length ? *resultant_length - 1 : s2_length;
       dst[*resultant_length] = 0;
@@ -81,7 +81,7 @@ static bool match1(const char* pat, const char* str, bool case_sensitive) {
       goto loopStart;
     default:
       if ( *(table+*s) != *(table+*p) )
-	goto starCheck;
+        goto starCheck;
       break;
     } /* endswitch */
   } /* endfor */
@@ -151,28 +151,28 @@ int str_match_wild (const char *candidate_string, const char *pattern_string)   
     result = STR_MATCH;
     for ( s1_pos = 0; s1_pos < s1_len; s1_pos++  )	  {
       if ( candidate_string[s1_pos] == pattern_string[s2_pos] )  {
-	result = STR_MATCH;
-	s2_pos++;
+        result = STR_MATCH;
+        s2_pos++;
       }
       else if ( pattern_string[s2_pos] == '%' )	 {
-	result = STR_MATCH;
-	s2_pos++;
+        result = STR_MATCH;
+        s2_pos++;
       }
       else if ( pattern_string[s2_pos] == '*' )   {
         if (s2_pos+1 >= s2_len )	{ // wild card last char 
-	  s1_pos = s1_len;
-	  s2_pos++;
-	  result = STR_MATCH;
-	}
+          s1_pos = s1_len;
+          s2_pos++;
+          result = STR_MATCH;
+        }
         else	 { // wild card not last character
-	  if ( candidate_string[s1_pos] == pattern_string[s2_pos+1] )  {
-	    s2_pos += 2;
-	  } 
-	}
+          if ( candidate_string[s1_pos] == pattern_string[s2_pos+1] )  {
+            s2_pos += 2;
+          } 
+        }
       }
       else  {
-	result = STR_NOMATCH;
-	// s1_pos = s1_len;
+        result = STR_NOMATCH;
+        // s1_pos = s1_len;
         s2_pos = 0;
       }
     } // end for

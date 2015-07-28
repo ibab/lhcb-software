@@ -1,25 +1,25 @@
 /******************************************************************************
-**      Small class to implement a Finite State Machine
-**
-**  AUTHORS:
-**
-**      M.Frank
-**
-**  CREATION DATE:  22-MAR-2013
-**
-******************************************************************************/
+ **      Small class to implement a Finite State Machine
+ **
+ **  AUTHORS:
+ **
+ **      M.Frank
+ **
+ **  CREATION DATE:  22-MAR-2013
+ **
+ ******************************************************************************/
 #ifndef ONLINEKERNEL_CPP_CALLBACK_H
 #define ONLINEKERNEL_CPP_CALLBACK_H
 #include <algorithm>
 
 /**@class Callback  Callback.h CPP/Callback.h
-*
-*  Definition of the generic callback structure for member functions
-*
-* @author  M.Frank
-* @date    01/03/2013
-* @version 0.1
-*/
+ *
+ *  Definition of the generic callback structure for member functions
+ *
+ * @author  M.Frank
+ * @date    01/03/2013
+ * @version 0.1
+ */
 struct Callback  {
   typedef unsigned long (*func_t)(void*,const void*,const void*);
   typedef std::pair<void*,void*> mfunc_t;

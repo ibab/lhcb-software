@@ -107,7 +107,7 @@ int UdpConnection::receive(BasicRequest* req, NetworkAddress& origine)  {
     //  ----------------------------  D E B U G -----------------------------
     m_status = m_channel.error();
     ::lib_rtl_output(LIB_RTL_ERROR,"%s  UdpConnection::receive> Bad IO status. Status=0x%X %s\n",
-		   timestr(),m_channel.error(),m_channel.errMsg());
+                     timestr(),m_channel.error(),m_channel.errMsg());
     return CONNECTION_ERROR;
   }
   return CONNECTION_SUCCESS;
@@ -129,7 +129,7 @@ int UdpConnection::send(BasicRequest* req, NetworkAddress& target)  {
     //  ----------------------------  D E B U G -----------------------------
     m_status = m_channel.error();
     ::lib_rtl_output(LIB_RTL_ERROR,"%s  UdpConnection::send> Bad IO status. Status=0x%X %s\n",
-		     timestr(),m_channel.error(),m_channel.errMsg());
+                     timestr(),m_channel.error(),m_channel.errMsg());
     return CONNECTION_ERROR;
   }
   return CONNECTION_SUCCESS;

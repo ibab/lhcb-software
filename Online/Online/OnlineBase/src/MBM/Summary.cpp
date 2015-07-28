@@ -44,7 +44,7 @@ int Summary::show(bool show_states) {
     Buffs bs;
     for (int i = 0; i < buffs->p_bmax; ++i)  {
       if ( buffs->buffers[i].used == 1 )  {
-	bs[buffs->buffers[i].name] = i;
+        bs[buffs->buffers[i].name] = i;
       }
     }
     for(Buffs::const_iterator j=bs.begin(); j!=bs.end();++j) {
@@ -77,11 +77,11 @@ int Summary::show(BufferMemory* dsc, bool show_states)   {
   ::printf("\n======================== MBM Bufer summary for buffer \"%s\" ========================\n\n",dsc->bm_name);
   ::snprintf(txt,sizeof(txt)," Buffer \"%s\"",dsc->bm_name);
   ::printf("%-26s  Events: Produced:%ld Seen:%ld Pending:%ld Max:%ld\n",
-	   txt, long(ctr->tot_produced), long(ctr->tot_seen), long(ctr->i_events), long(ctr->p_emax));
+           txt, long(ctr->tot_produced), long(ctr->tot_seen), long(ctr->i_events), long(ctr->p_emax));
   ::printf("%-26s  Space(kB):[Tot:%ld Free:%ld] Users:[Tot:%ld Max:%ld]\n\n",
-	   "",long((ctr->bm_size*ctr->bytes_p_Bit)/1024), 
-	   long((ctr->i_space*ctr->bytes_p_Bit)/1024), 
-	   long(ctr->i_users), long(ctr->p_umax));
+           "",long((ctr->bm_size*ctr->bytes_p_Bit)/1024), 
+           long((ctr->i_space*ctr->bytes_p_Bit)/1024), 
+           long(ctr->i_users), long(ctr->p_umax));
 
   bool first = true;
   Users users;
@@ -111,32 +111,32 @@ int Summary::show(BufferMemory* dsc, bool show_states)   {
       float perc = 0;
       if ( ctr->tot_produced>0 ) perc = ((float)us->ev_produced/(float)ctr->tot_produced)*100;
       if ( m_oneTasks.find(us->name) != m_oneTasks.end() ) {
-	prod_one.ev_produced += us->ev_produced;
-	prod_one.state  = 0;
-	prod_one.partid = us->partid;
-	::strncpy(prod_one.name,"PROD_ONE",sizeof(prod_one.name)-1);
-	continue;
+        prod_one.ev_produced += us->ev_produced;
+        prod_one.state  = 0;
+        prod_one.partid = us->partid;
+        ::strncpy(prod_one.name,"PROD_ONE",sizeof(prod_one.name)-1);
+        continue;
       }
       const char* st = show_states ? sstat[us->state+1] : "";
       ::printf(fmt_prod,us->name,us->partid,"P",st,us->ev_produced,
-	       perc+0.1, spy_val, dsc->bm_name);
+               perc+0.1, spy_val, dsc->bm_name);
     }
     else if ( us->ev_actual>0 || us->get_ev_calls>0 || us->n_req>0 ) {
       float perc = 0;
       if ( spy_val[1]=='1' )   {
-	m_oneTasks[us->name] = 0;
-	cons_one.ev_seen += us->ev_seen;
-	cons_one.state    = 0;
-	cons_one.partid   = us->partid;
-	::strncpy(cons_one.name,"CONS_ONE",sizeof(cons_one.name)-1);
-	continue;
+        m_oneTasks[us->name] = 0;
+        cons_one.ev_seen += us->ev_seen;
+        cons_one.state    = 0;
+        cons_one.partid   = us->partid;
+        ::strncpy(cons_one.name,"CONS_ONE",sizeof(cons_one.name)-1);
+        continue;
       }
       if ( ctr->tot_produced>0 ) {
-	perc = ((float)us->ev_seen/(float)ctr->tot_produced)*100;
+        perc = ((float)us->ev_seen/(float)ctr->tot_produced)*100;
       }
       const char* st = show_states ? sstat[us->state+1] : "";
       ::printf(fmt_cons,us->name,us->partid,"C",st,
-	       us->ev_seen, perc+0.1, spy_val, dsc->bm_name);
+               us->ev_seen, perc+0.1, spy_val, dsc->bm_name);
     }
     else        {
       ::printf(fmt_def,us->name,us->partid,"?","",spy_val, dsc->bm_name);    
@@ -147,7 +147,7 @@ int Summary::show(BufferMemory* dsc, bool show_states)   {
     float perc = 0;
     if ( ctr->tot_produced>0 ) perc = ((float)us->ev_produced/(float)ctr->tot_produced)*100;
     ::printf(fmt_prod,us->name,us->partid,"P","",us->ev_produced,
-	     perc+0.1, "", dsc->bm_name);
+             perc+0.1, "", dsc->bm_name);
   }
   if ( cons_one.name[0] ) {
     us = &cons_one;

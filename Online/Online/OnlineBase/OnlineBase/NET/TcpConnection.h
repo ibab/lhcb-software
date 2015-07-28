@@ -31,7 +31,7 @@
  *  \version 1.0
  */
 class TcpNetworkAddress : public NetworkAddress {
-  public:
+public:
   //@Man: Class specific enumerations and typedefs
   /// Address data type
   typedef TcpNetworkChannel::Address Data;
@@ -43,7 +43,7 @@ class TcpNetworkAddress : public NetworkAddress {
   //@Man: Public member functions
   /// Automatic cast to the data object
   operator Data& () {
-      return m_addr;
+    return m_addr;
   }
   /// Retrieve Name of Network Host
   const char* hostName() const {

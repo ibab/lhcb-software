@@ -14,10 +14,10 @@
  * @version 1.0
  */
 class IOPortManager  {
- protected:
+protected:
   /// Data member: port number identifier for this connection group.
   __NetworkPort__ m_port;  
- public:
+public:
   /// Standard constructor
   explicit IOPortManager(NetworkChannel::Port p): m_port(p)  {}
   /// Set port number for this connection group

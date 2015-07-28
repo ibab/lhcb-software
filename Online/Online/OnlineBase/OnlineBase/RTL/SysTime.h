@@ -10,7 +10,7 @@
 namespace RTL  {
 
   /** @class SysTime
-    */
+   */
   class SysTime {
   private:
     SysTime() {}

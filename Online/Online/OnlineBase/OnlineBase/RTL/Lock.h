@@ -9,7 +9,7 @@
 namespace RTL  {
 
   /**@class Lock Lock.h RTL/Lock.h
-    */
+   */
   class Lock  {
     /// Execution mode (inverted or not
     bool           m_mode;

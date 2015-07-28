@@ -129,7 +129,7 @@ int gettimeofday(timeval *time_Info, const void*)  {
 void usleep(unsigned int useconds)    {
   struct timeval tnow, tthen;
   if (useconds >= 1000) {
-        ::Sleep(useconds/1000);
+    ::Sleep(useconds/1000);
     useconds = useconds%1000000;
     if ( 10 > useconds ) return;  // Inaccuracy ... forget about it!
   }
@@ -138,7 +138,7 @@ void usleep(unsigned int useconds)    {
   tthen.tv_usec += useconds;
   while (1) {
     getfilesystemtime(&tnow); 
-        //    gettimeofday(&tnow, NULL);
+    //    gettimeofday(&tnow, NULL);
     if (tnow.tv_sec >= tthen.tv_sec) {
       return;
     }
@@ -169,11 +169,11 @@ static struct dtconv        En_US = {
   { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" },
   { "January", "February", "March", "April",
-  "May", "June", "July", "August",
-  "September", "October", "November", "December" },
+    "May", "June", "July", "August",
+    "September", "October", "November", "December" },
   { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" },
   { "Sunday", "Monday", "Tuesday", "Wednesday",
-  "Thursday", "Friday", "Saturday" },
+    "Thursday", "Friday", "Saturday" },
   "%H:%M:%S",
   "%m/%d/%y",
   "%a %b %e %T %Z %Y",
@@ -206,7 +206,7 @@ char* strptime(const char *buf, const char *fmt, struct tm *tm)  {
     case 0:
     case '%':
       if (*buf++ != '%')return 0;
-      break;
+    break;
 
     case 'C':
       buf = ::strptime(buf, En_US.ldate_format, tm);
@@ -263,21 +263,21 @@ char* strptime(const char *buf, const char *fmt, struct tm *tm)  {
     case 'S':
       if (*buf == 0 || isspace(*buf))
         break;
-      if (!isdigit(*buf)) return 0;
-      for (i=0, j=0; j<2 && *buf != 0 && isdigit(*buf); ++j, ++buf)        {
-        i *= 10;
-        i += *buf - '0';
-      }
-      if (i > 59)
-        return 0;
-      if (c == 'M')
-        tm->tm_min = i;
-      else
-        tm->tm_sec = i;
-      if (*buf != 0 && isspace(*buf))
-        while (*ptr != 0 && !isspace(*ptr))
-          ptr++;
-      break;
+    if (!isdigit(*buf)) return 0;
+    for (i=0, j=0; j<2 && *buf != 0 && isdigit(*buf); ++j, ++buf)        {
+      i *= 10;
+      i += *buf - '0';
+    }
+    if (i > 59)
+      return 0;
+    if (c == 'M')
+      tm->tm_min = i;
+    else
+      tm->tm_sec = i;
+    if (*buf != 0 && isspace(*buf))
+      while (*ptr != 0 && !isspace(*ptr))
+        ptr++;
+    break;
 
     case 'H':
     case 'I':
@@ -285,19 +285,19 @@ char* strptime(const char *buf, const char *fmt, struct tm *tm)  {
     case 'l':
       if (!isdigit(*buf))
         return 0;
-      for (i=0, j=0; j<2 && *buf != 0 && isdigit(*buf); ++j, ++buf)     {
-        i *= 10;
-        i += *buf - '0';
-      }
-      if (c == 'H' || c == 'k') {
-        if (i > 23) return 0;
-      } else if (i > 11)
-        return 0;
-      tm->tm_hour = i;
-      if (*buf != 0 && isspace(*buf))
-        while (*ptr != 0 && !isspace(*ptr))
-          ++ptr;
-      break;
+    for (i=0, j=0; j<2 && *buf != 0 && isdigit(*buf); ++j, ++buf)     {
+      i *= 10;
+      i += *buf - '0';
+    }
+    if (c == 'H' || c == 'k') {
+      if (i > 23) return 0;
+    } else if (i > 11)
+      return 0;
+    tm->tm_hour = i;
+    if (*buf != 0 && isspace(*buf))
+      while (*ptr != 0 && !isspace(*ptr))
+        ++ptr;
+    break;
 
     case 'p':
       len = strlen(En_US.am_string);
@@ -330,23 +330,23 @@ char* strptime(const char *buf, const char *fmt, struct tm *tm)  {
         if (_strnicmp(buf,En_US.abbrev_weekday_names[i],len) == 0)
           break;
       }
-      if (i == asizeof(En_US.weekday_names))        return 0;
-      tm->tm_wday = i + 1;
-      buf += len;
-      break;
+    if (i == asizeof(En_US.weekday_names))        return 0;
+    tm->tm_wday = i + 1;
+    buf += len;
+    break;
 
     case 'd':
     case 'e':
       if (!isdigit(*buf)) return 0;
-      for (i=0, j=0; j<2 && *buf != 0 && isdigit(*buf); ++j, ++buf)        {
-        i *= 10;
-        i += *buf - '0';
-      }
-      if (i > 31) return 0;
-      tm->tm_mday = i;
-      if (*buf != 0 && isspace(*buf))
-        while (*ptr != 0 && !isspace(*ptr)) ++ptr;
-      break;
+    for (i=0, j=0; j<2 && *buf != 0 && isdigit(*buf); ++j, ++buf)        {
+      i *= 10;
+      i += *buf - '0';
+    }
+    if (i > 31) return 0;
+    tm->tm_mday = i;
+    if (*buf != 0 && isspace(*buf))
+      while (*ptr != 0 && !isspace(*ptr)) ++ptr;
+    break;
 
     case 'B':
     case 'b':
@@ -360,10 +360,10 @@ char* strptime(const char *buf, const char *fmt, struct tm *tm)  {
         if (_strnicmp(buf,En_US.abbrev_month_names[i],len) == 0)
           break;
       }
-      if (i == asizeof(En_US.month_names)) return 0;
-      tm->tm_mon = i + 1;
-      buf += len;
-      break;
+    if (i == asizeof(En_US.month_names)) return 0;
+    tm->tm_mon = i + 1;
+    buf += len;
+    break;
 
     case 'm':
       if (!isdigit(*buf))  return 0;
@@ -383,21 +383,21 @@ char* strptime(const char *buf, const char *fmt, struct tm *tm)  {
     case 'y':
       if (*buf == 0 || isspace(*buf))
         break;
-      if (!isdigit(*buf)) return 0;
-      ndigit = c=='Y' ? 4 : 2;
-      for (i=0, j=0; j<ndigit && *buf != 0 && isdigit(*buf); ++j, ++buf)        {
-        i *= 10;
-        i += *buf - '0';
-      }
-      if (c == 'y' && i < 69)        /* Unix Epoch pivot year */
-        i += 100;
-      if (c == 'Y') i -= 1900;
-      if (i < 0   ) return 0;
-      tm->tm_year = i;
-      if (*buf != 0 && isspace(*buf))
-        while (*ptr != 0 && !isspace(*ptr))
-          ptr++;
-      break;
+    if (!isdigit(*buf)) return 0;
+    ndigit = c=='Y' ? 4 : 2;
+    for (i=0, j=0; j<ndigit && *buf != 0 && isdigit(*buf); ++j, ++buf)        {
+      i *= 10;
+      i += *buf - '0';
+    }
+    if (c == 'y' && i < 69)        /* Unix Epoch pivot year */
+      i += 100;
+    if (c == 'Y') i -= 1900;
+    if (i < 0   ) return 0;
+    tm->tm_year = i;
+    if (*buf != 0 && isspace(*buf))
+      while (*ptr != 0 && !isspace(*ptr))
+        ptr++;
+    break;
     }
   }
   return (char*) buf;

@@ -1,6 +1,6 @@
 /*
-A_PUBAREA$SRC:PUBAREA.CC
-Created           :  5-AUG-1996 by A.Pacheco
+  A_PUBAREA$SRC:PUBAREA.CC
+  Created           :  5-AUG-1996 by A.Pacheco
 */
 #include <cstdio> 
 #include <cctype>
@@ -124,7 +124,7 @@ int PubArea::AllocateSlot(int typ, int SSize, void* &slot)
   ind->SlotType   = typ;
   ind->SlotSize   = ReqSize;
   PubAreaPrint(0,0,"%s New slot created with index %d!",me,head->NumIndex);
-Alloc:
+ Alloc:
   strncpy(ind->SlotProcess,LocalProcess,sizeof(ind->SlotProcess));
   ind->SlotProcess[sizeof(ind->SlotProcess)-1]=0;
   slot = (void*)((char*)(m_ptr) + ind->SlotOffset);
@@ -423,7 +423,7 @@ void PubArea::PubAreaPrint(int Severity, int ReturnCode, const char *message,...
   fprintf(stdout,"%s %s",lvl[Severity],msg);
   if (ReturnCode)   {
     fprintf(stdout,"%s Errno: 0x%08x Msg: %s\n",
-      lvl[0],ReturnCode,lib_rtl_error_message(ReturnCode));
+            lvl[0],ReturnCode,lib_rtl_error_message(ReturnCode));
   }
   return;
 }
@@ -439,7 +439,7 @@ int PubArea::DeletePubArea()  {
   }
   else  {
     PubAreaPrint(3,status,
-      "%s Cannot delete global section",me);
+                 "%s Cannot delete global section",me);
     status = PA_FAILURE;
   }
 #elif defined(_OSK)
@@ -466,9 +466,9 @@ int PubArea::PrintIndex()   {
   int nindex =  m_header->NumIndex;
   if (nindex==0) return PA_SUCCESS;
   PubAreaPrint(4,0,"%4s %2s %8s %8s %12s %s","Slot","Tp","  Size  "," OffSet ",
-    "  Process   ","Used");
+               "  Process   ","Used");
   PubAreaPrint(4,0,"%4s %2s %8s %8s %12s %s","----","--","--------","--------",
-    "------------","----");
+               "------------","----");
   int i = 0;
   PubAreaIndex *index[PA_MAX_INDEX], *indexinc = m_index;
   for (i=0;i<PA_MAX_INDEX;i++)  {  
@@ -477,9 +477,9 @@ int PubArea::PrintIndex()   {
   }
   for (i=0;i<nindex;i++)  {
     PubAreaPrint(4,0,
-      "%4d %2d %8d %8d %12s %1d",
-      i,index[i]->SlotType,index[i]->SlotSize,index[i]->SlotOffset,
-      index[i]->SlotProcess, index[i]->InUse);
+                 "%4d %2d %8d %8d %12s %1d",
+                 i,index[i]->SlotType,index[i]->SlotSize,index[i]->SlotOffset,
+                 index[i]->SlotProcess, index[i]->InUse);
   }
   return PA_SUCCESS;
 }
@@ -544,7 +544,7 @@ int PubArea::GetSlotofType(int Type, int* context, void* &slot)  {
           return PA_SUCCESS;
         }
       }
-      }
+    }
   }
   *context = -1;
   slot = 0;
@@ -578,7 +578,7 @@ int PubArea::GetPAfromVMS(const char *Node)   {
   int status = amsc_send_message("DUMP",4,source,0,0);
   if ( status != AMS_SUCCESS )  { 
     PubAreaPrint(3,status,"PubArea::GetPAfromVMS: Error sending request "
-      "to VMS node %s. Is the server running ?",Node);
+                 "to VMS node %s. Is the server running ?",Node);
     return PA_FAILURE;
   }
   status = amsc_get_message(m_remote,&buffersize,source,0,100,0,0,0);
@@ -609,16 +609,16 @@ int PubArea::GetPAfromOS9(const char * /*node*/) {
   tmpbuffer = (char *) m_remote;
 
   status = os9_read_data_module(&node_desc,
-    (dsc$descriptor*) &name_desc,
-    tmpbuffer,
-    &buffersize);
+                                (dsc$descriptor*) &name_desc,
+                                tmpbuffer,
+                                &buffersize);
 
   if (status==OS9_OVERRUN) return PA_FAILURE;
   if (status==OS9_COMMSFAIL) return PA_FAILURE;
   if (!(status&1))
   {  PubAreaPrint(3,status,
-  "PubArea::GetPAfromVMS: Fic data module scan error");
-  return PA_FAILURE;
+                  "PubArea::GetPAfromVMS: Fic data module scan error");
+    return PA_FAILURE;
   }
 
   // memcpy(m_remote,tmpbuffer,PA_SIZE_OSK_DEFAULT);
@@ -646,10 +646,10 @@ int PubArea::ConvertPubAreafromOS9()    {
         int SlotSize   = indexinc->SlotSize;
         void* Buffer = (void*)((char*)m_ptr + SlotOffset);
         DataStructure::ConvertfromHost(Buffer, 
-          Buffer, 
-          SlotSize, 
-          *(m_idxBuffer[SlotType]), 
-          DATAFORMAT_OS9);
+                                       Buffer, 
+                                       SlotSize, 
+                                       *(m_idxBuffer[SlotType]), 
+                                       DATAFORMAT_OS9);
       }
     }
     //
@@ -704,7 +704,7 @@ int PubArea::DumpSlot(void* slot)   {
       memcpy(tmp,(unsigned char*)slot,size);
       memcpy(tmp2,(unsigned char*)slot,size);
       PubAreaPrint(4,0,"\n Dumping slot %d Size %d bytes Type %d Offset %d Addr %d",
-        i,size,type,SlotOffset,(int*)slot);
+                   i,size,type,SlotOffset,(int*)slot);
 
       if (size==0) return PA_SUCCESS; //.......................... No slot size
 
@@ -731,7 +731,7 @@ int PubArea::DumpSlot(void* slot)   {
     }      
   }
   PubAreaPrint(3,0,"PubArea::DumpSlot: Slot: %d not found. Offset: %d",
-    (int*)slot,Offset);
+               (int*)slot,Offset);
   return(PA_NOMORE);
 }
 
@@ -754,7 +754,7 @@ int PubArea::DumpSlot(int slot)  {
   }
   if (slot>=nindex)  {
     PubAreaPrint(1,0,
-      "%s Slot number (%d) bigger than number of slots (%d)!",me,slot,nindex);
+                 "%s Slot number (%d) bigger than number of slots (%d)!",me,slot,nindex);
     return PA_FAILURE;
   }
   PubAreaIndex *index[PA_MAX_INDEX], *indexinc = m_index;
@@ -769,7 +769,7 @@ int PubArea::DumpSlot(int slot)  {
   memcpy(tmp,(unsigned char*)slotptr,size);
   memcpy(tmp2,(unsigned char*)slotptr,size);
   PubAreaPrint(4,0,"\n Slot number %d Size %d bytes Type %d Offset %d Addr %d",
-    i,size,type,index[slot]->SlotOffset,(int*)slotptr);
+               i,size,type,index[slot]->SlotOffset,(int*)slotptr);
 
   if (size==0) return PA_SUCCESS; //.......................... No slot size
 

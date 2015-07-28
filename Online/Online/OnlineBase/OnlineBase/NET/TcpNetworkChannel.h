@@ -15,13 +15,13 @@
  *  \version 1.0
  */
 class TcpNetworkChannel : public NetworkChannel {
- public:
+public:
   struct IOSB  {
     unsigned short condition;          /* I/O status code           */
     unsigned short count;              /* Number of Bytes I/O'ed    */
     unsigned int   information;        /* Device specific info      */
   };
- protected:
+protected:
   //@Man: protected variables
   /// Accept IOSB:
   IOSB m_iosb;
@@ -29,7 +29,7 @@ class TcpNetworkChannel : public NetworkChannel {
   int  m_recvBuff;
   /// Default ACTION after AST callback -> Call handler callback....
   static int _defaultAction ( void* par );    
- public:
+public:
   //@Man: public member functions
   /// Standard Constructor to initialize the connection for CONNECTOR
   TcpNetworkChannel();

@@ -67,9 +67,9 @@ extern "C"  {
 
 /// TAN Database entry definition
 /** @class TANDB_ENTRY
-  *
-  * @author  M.Frank
-  */
+ *
+ * @author  M.Frank
+ */
 class TANDB_ENTRY  {
 public:
   //@Man: public member variables
@@ -123,7 +123,7 @@ public:
 /// Database class storing all connections the nameserver knows about
 /** @class TanDataBase TanDB.h TAN/TanDB.h
 
-   M.Frank
+    M.Frank
 */
 class TanDataBase : public SmartObject<TanDataBase>  {
 public:

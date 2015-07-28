@@ -5,8 +5,8 @@
 namespace RTL {
 
   /** @class ConsoleDisplay ConsoleDisplay.h RTL/ConsoleDisplay.h
-    *
-    */
+   *
+   */
   class ConsoleDisplay  {
   protected:
     enum { NORMAL = SCR::NORMAL, REVERSE=SCR::INVERSE, INVERSE=SCR::INVERSE };

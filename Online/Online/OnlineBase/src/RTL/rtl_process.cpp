@@ -1,4 +1,4 @@
-// $ID:
+// $Id:$
 #include <cstdio>
 #include <cstdlib>
 #include <signal.h>

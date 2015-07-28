@@ -1,6 +1,6 @@
 /*
-LISTR.C
-Created           :  1-DEC-1989 by Christian Arnault
+  LISTR.C
+  Created           :  1-DEC-1989 by Christian Arnault
 */
 
 #define __LISTS_C__
@@ -121,7 +121,7 @@ void listr_transfer_entry (Link* _entry, Linked_list* _list,
   }
   if (_before && _after)  {
     if (listr_next(_before) != _after ||
-      _before != listr_prev(_after)) return;
+        _before != listr_prev(_after)) return;
   }
 
   listr_disconnect_entry (_entry);

@@ -7,9 +7,9 @@
 
 /// Definition of the general purpose NetworkChannel data structure
 /** @class NetworkChannel NetworkChannel.h NET/NetworkChannel.h
-*
-* General purpose networking object, which allows sending and receiving with timeouts
-*/
+ *
+ * General purpose networking object, which allows sending and receiving with timeouts
+ */
 class NetworkChannel  {
 public:
   //@Man: Public type definitions:

@@ -59,7 +59,7 @@ public:
 #ifndef _OSK
     NumEntries = 512
 #else // _OSK
-    #define OS9_PORT_FLIP 512
+#define OS9_PORT_FLIP 512
     NumEntries = 32
 #endif
   };
@@ -288,7 +288,7 @@ NetworkChannel::Port TanDataBase::_allocatePort ( Entry* ce)   {
           count++;
           used++;
         }
-Done:
+      Done:
         if ( count > ports_availible )     {
           ports_availible = count;
           first_free     = next-NAMESERVICE_BASE_PORT;
@@ -309,8 +309,8 @@ Done:
       first_free = 8;  // a guess
     }
     ::lib_rtl_output(LIB_RTL_ALWAYS,"New start port %d -> %X slots availible:%d\n",
-      first_free, NAMESERVICE_BASE_PORT+first_free, 
-      ports_availible);
+                     first_free, NAMESERVICE_BASE_PORT+first_free, 
+                     ports_availible);
     current_port     = first_free-1;
     ports_availible += first_free-2;
   }
@@ -478,9 +478,9 @@ TanDataBase::Entry* TanDataBase::_findEntry( const char* proc_name)  {
   strup(s, proc_name);
   qentry_t *e = (qentry_t*)&_pData->_name_head;
   for ( Entry* a  = (Entry*)_NextEntry(e), *last = 0; 
-    a != (Entry*) e && a != 0 && a != last;
+        a != (Entry*) e && a != 0 && a != last;
 #ifdef _OSK
-    last = a, a = (Entry*) a->hl.next )
+        last = a, a = (Entry*) a->hl.next )
 #else
     last = a, a  = (Entry*)((char*)a + (long)a->hl.next) )
 #endif
@@ -491,8 +491,8 @@ TanDataBase::Entry* TanDataBase::_findEntry( const char* proc_name)  {
       }
     }
   }
-  _iError = TAN_SS_TASKNOTFOUND;
-  return 0;
+_iError = TAN_SS_TASKNOTFOUND;
+return 0;
 }
 // ----------------------------------------------------------------------------
 // Find port associated to e valid entry
@@ -525,61 +525,61 @@ int TanDataBase::Dump( std::ostream& os )  {
   char text[1024];
   const char *func;
   ::snprintf(text,sizeof(text),"NameServer Database entry dump: #Allocated %d With port:%d",
-    _pData->_allocated,_pData->_ports);
+             _pData->_allocated,_pData->_ports);
   os << text << std::endl;
   ::snprintf(text,sizeof(text),"%-32s %-4s(%-3s) %-4s Msg:%-6s %-3s %-32s %s",
-    "Name","Port","Flg","Chan","Reqst","Len","Name","Address");
+             "Name","Port","Flg","Chan","Reqst","Len","Name","Address");
   os << text << std::endl;
   for ( int i = 0; i < TanPaSlot::NumEntries; i++ )     {
     if ( _pData->_pEntry[i] != 0 )  {
       Entry& e = _pData->_Entry[i];
       if ( e.m_port_flag )  {
         switch ( htonl(e.m_msg.m_function) ) {
-          case TanMessage::ALLOCATE:
-            func = "ALLOC";  
-            break;
-          case TanMessage::DEALLOCATE:
-            func = "DEALLOC"; 
-            break;
-          case TanMessage::INQUIRE:
-            func = "INQUIRE";
-            break;
-          case TanMessage::ALIAS:
-            func = "ALIAS"; 
-            break;
-          case TanMessage::DEALIAS:
-            func = "DEALIAS";
-            break;
-          case TanMessage::DUMP:
-            func = "DUMPDB";
-            break;
-          default:
-            func = "-----";
-            break;
+        case TanMessage::ALLOCATE:
+          func = "ALLOC";  
+          break;
+        case TanMessage::DEALLOCATE:
+          func = "DEALLOC"; 
+          break;
+        case TanMessage::INQUIRE:
+          func = "INQUIRE";
+          break;
+        case TanMessage::ALIAS:
+          func = "ALIAS"; 
+          break;
+        case TanMessage::DEALIAS:
+          func = "DEALIAS";
+          break;
+        case TanMessage::DUMP:
+          func = "DUMPDB";
+          break;
+        default:
+          func = "-----";
+          break;
         }
         ::snprintf(text,sizeof(text),"%-32s %04X Prt  %-4d %-3s %-7s%-4d%-32s %s",
-          e._Name(), e.port(), e.channel(), e.m_dead==1 ? "***" : "",
-          func, htonl(e.m_msg._Length()), e.m_msg._Name(),
-          inet_ntoa(e.m_msg.address()));
+                   e._Name(), e.port(), e.channel(), e.m_dead==1 ? "***" : "",
+                   func, htonl(e.m_msg._Length()), e.m_msg._Name(),
+                   inet_ntoa(e.m_msg.address()));
         os << text << std::endl;
         for ( qentry_t* a  = _NextEntry(&e.al), *last = 0; 
-          a != _TheEntry(&e.al) && a != 0 && a != last;
-          last = a, a  = _NextEntry(a) )  
+              a != _TheEntry(&e.al) && a != 0 && a != last;
+              last = a, a  = _NextEntry(a) )  
         {
           Entry* ee  = (Entry*) ((char*)a - sizeof(qentry_t));
           a = (qentry_t*)&ee->al;
           switch ( htonl(ee->m_msg.m_function) ) {
-            case TanMessage::ALLOCATE:       func = "ALLOC";       break;
-            case TanMessage::DEALLOCATE:     func = "DEALLOC";     break;
-            case TanMessage::INQUIRE:        func = "INQUIRE";     break;
-            case TanMessage::ALIAS:          func = "ALIAS";       break;
-            case TanMessage::DEALIAS:        func = "DEALIAS";     break;
-            case TanMessage::DUMP:           func = "DUMPDB";      break;
-            default:                         func = "-----";       break;
+          case TanMessage::ALLOCATE:       func = "ALLOC";       break;
+          case TanMessage::DEALLOCATE:     func = "DEALLOC";     break;
+          case TanMessage::INQUIRE:        func = "INQUIRE";     break;
+          case TanMessage::ALIAS:          func = "ALIAS";       break;
+          case TanMessage::DEALIAS:        func = "DEALIAS";     break;
+          case TanMessage::DUMP:           func = "DUMPDB";      break;
+          default:                         func = "-----";       break;
           }
           ::snprintf(text,sizeof(text),"%-32s %04X Als  %-4d %-3s %-7s%-4d%-32s %s",
-            ee->_Name(), ee->port(), ee->channel(), ee->m_dead==1 ? "***" : "",
-            func, ee->m_msg._Length(), ee->m_msg._Name(), inet_ntoa(ee->m_msg.address()));
+                     ee->_Name(), ee->port(), ee->channel(), ee->m_dead==1 ? "***" : "",
+                     func, ee->m_msg._Length(), ee->m_msg._Name(), inet_ntoa(ee->m_msg.address()));
           os << text << std::endl;
         }
       }
@@ -604,27 +604,27 @@ int TanDataBase::DumpXML(std::ostream& s)  {
       Entry& e = _pData->_Entry[i];
       if ( e.m_port_flag )  {
         switch ( htonl(e.m_msg.m_function) ) {
-          case TanMessage::ALLOCATE:
-            func = "ALLOC";  
-            break;
-          case TanMessage::DEALLOCATE:
-            func = "DEALLOC"; 
-            break;
-          case TanMessage::INQUIRE:
-            func = "INQUIRE";
-            break;
-          case TanMessage::ALIAS:
-            func = "ALIAS"; 
-            break;
-          case TanMessage::DEALIAS:
-            func = "DEALIAS";
-            break;
-          case TanMessage::DUMP:
-            func = "DUMPDB";
-            break;
-          default:
-            func = "-----";
-            break;
+        case TanMessage::ALLOCATE:
+          func = "ALLOC";  
+          break;
+        case TanMessage::DEALLOCATE:
+          func = "DEALLOC"; 
+          break;
+        case TanMessage::INQUIRE:
+          func = "INQUIRE";
+          break;
+        case TanMessage::ALIAS:
+          func = "ALIAS"; 
+          break;
+        case TanMessage::DEALIAS:
+          func = "DEALIAS";
+          break;
+        case TanMessage::DUMP:
+          func = "DUMPDB";
+          break;
+        default:
+          func = "-----";
+          break;
         }
         XML::Guard entry(os, "Entry", i);
         os << XML::item("Name", XML::text(e._Name()))
@@ -636,19 +636,19 @@ int TanDataBase::DumpXML(std::ostream& s)  {
            << XML::item("Address", XML::text(inet_ntoa(e.m_msg.address())));
         j = 0;
         for ( qentry_t* a  = _NextEntry(&e.al), *last = 0; 
-          a != _TheEntry(&e.al) && a != 0 && a != last;
-          last = a, a  = _NextEntry(a), ++j )  
+              a != _TheEntry(&e.al) && a != 0 && a != last;
+              last = a, a  = _NextEntry(a), ++j )  
         {
           Entry* ee  = (Entry*) ((char*)a - sizeof(qentry_t));
           a = (qentry_t*)&ee->al;
           switch ( htonl(ee->m_msg.m_function) ) {
-            case TanMessage::ALLOCATE:       func = "ALLOC";       break;
-            case TanMessage::DEALLOCATE:     func = "DEALLOC";     break;
-            case TanMessage::INQUIRE:        func = "INQUIRE";     break;
-            case TanMessage::ALIAS:          func = "ALIAS";       break;
-            case TanMessage::DEALIAS:        func = "DEALIAS";     break;
-            case TanMessage::DUMP:           func = "DUMPDB";      break;
-            default:                         func = "-----";       break;
+          case TanMessage::ALLOCATE:       func = "ALLOC";       break;
+          case TanMessage::DEALLOCATE:     func = "DEALLOC";     break;
+          case TanMessage::INQUIRE:        func = "INQUIRE";     break;
+          case TanMessage::ALIAS:          func = "ALIAS";       break;
+          case TanMessage::DEALIAS:        func = "DEALIAS";     break;
+          case TanMessage::DUMP:           func = "DUMPDB";      break;
+          default:                         func = "-----";       break;
           }
           XML::Guard aliases(os, "Aliases", i);
           os << XML::item("Name", XML::text(ee->_Name()))

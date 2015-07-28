@@ -1,6 +1,6 @@
 /*
-        lists.c
-         Created           : 18-OCT-1989 by Christian Arnault
+  lists.c
+  Created           : 18-OCT-1989 by Christian Arnault
 */
  
 /*---------------------------------------------------------------------------*/

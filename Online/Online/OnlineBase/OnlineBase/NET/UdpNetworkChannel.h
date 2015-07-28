@@ -15,7 +15,7 @@
  * 
  *  \author  M.Frank
  *  \version 1.0
-*/
+ */
 class UdpNetworkChannel : public NetworkChannel {
 protected:
   /// Accept IOSB:

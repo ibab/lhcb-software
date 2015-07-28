@@ -21,7 +21,7 @@ namespace CPP  {
       Interactor*  Destination;
       int          Type;
       void*        Data;
-    Message(Interactor* dst, int t, void* d) : Destination(dst), Type(t), Data(d) {}
+      Message(Interactor* dst, int t, void* d) : Destination(dst), Type(t), Data(d) {}
     };
   public:
     IocSensor();

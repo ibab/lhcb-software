@@ -27,13 +27,13 @@ int continuous = 0;
 
 void terminal_response(void) {
 #ifdef _OSK
-    void keyboard_handler(int);
-    intercept( keyboard_handler );
+  void keyboard_handler(int);
+  intercept( keyboard_handler );
 }
 void keyboard_handler( int signal ) {
-   if( signal == 2 )
-      continuous = 0;
-   else if( signal == 3 ) {}
+  if( signal == 2 )
+    continuous = 0;
+  else if( signal == 3 ) {}
 #endif
 }
 
@@ -49,10 +49,10 @@ extern "C" int tanmon( int argc, char* argv[])   {
       case '?':
       default:
         puts ("Syntax: tanmon [<-opt>]");
-        puts ("Function: tan monitor");
-        puts ("Options:");
-        puts ("    -c                    Continuous mode");
-        return lib_rtl_default_return();
+      puts ("Function: tan monitor");
+      puts ("Options:");
+      puts ("    -c                    Continuous mode");
+      return lib_rtl_default_return();
       }
     }
   }

@@ -1,11 +1,11 @@
 #ifndef MBM_BMSSDEF_H
 #define MBM_BMSSDEF_H
 /*
- BMSSDEF.H
+  BMSSDEF.H
 
- From object module BMSSDEF
- Module version 0
- Compiled on  7-MAR-1995 16:24
+  From object module BMSSDEF
+  Module version 0
+  Compiled on  7-MAR-1995 16:24
 */
 #define MBM_NO_CONS    0X9CA807C
 #define MBM_NO_FREE_SL 0X9CA8072

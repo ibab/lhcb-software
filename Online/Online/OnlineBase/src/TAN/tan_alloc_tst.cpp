@@ -70,7 +70,7 @@ extern "C" int rtl_tan_alloc_test ( int argc, char* argv[] )  {
           alias++;
           if ( !quiet || status != TAN_SS_SUCCESS ) {
             ::printf("     DeclareAlias: %s   status:%d %08X errno:%d\n", 
-		     buff, status, status, errno);
+                     buff, status, status, errno);
             if ( status != TAN_SS_SUCCESS ) lib_signal(status);
           }
         }
@@ -90,7 +90,7 @@ extern "C" int rtl_tan_alloc_test ( int argc, char* argv[] )  {
         }
         if ( dealloc%50 == 0 )  {
           ::printf("->%-4ld sec<-  Allocations:%-6d  Aliases:%-8d  Deallocations:%-6d\n",
-		   time(0) - start, alloc, alias, dealloc);
+                   time(0) - start, alloc, alias, dealloc);
         }
       }
     }  while ( status == TAN_SS_SUCCESS && continuous );

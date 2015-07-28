@@ -56,13 +56,13 @@ public:
   DataStructure& operator += ( const DataStructure& );
   DataStructure& operator += ( const char* );
   DataStructure& operator *= ( int );
-          operator char* ();
+  operator char* ();
   DataElem& operator[](int i) { return array[i]; }
   int     size() { return curr_size; }
   void    Dump();
   friend DataStructure operator + ( const DataStructure&, const DataStructure& );
   static void ConvertfromHost( void* buffer_out, const void* buffer_in, size_t buffer_size,
-                    DataStructure& dstruct, DataFormat dformat );  
+                               DataStructure& dstruct, DataFormat dformat );  
 };
 
 void host2net( void* buffer_out, void* buffer_in, size_t size, DataStructure& DataStructure);  

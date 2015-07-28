@@ -7,12 +7,12 @@ class Worker;
 
 /// Basic interface definition of objects containing a request, which can be served by threads
 /** @class BasicRequest
-  *  virtual BasicRequest class:
-  *  - Handle() function known how to process the request.
-  *
-  *  @author  M.Frank
-  *
-  */
+ *  virtual BasicRequest class:
+ *  - Handle() function known how to process the request.
+ *
+ *  @author  M.Frank
+ *
+ */
 class BasicRequest : public BasicQueue<BasicRequest> {
   //@Man: Friends
   /// Worker class needs eventually access to internal structure

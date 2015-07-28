@@ -23,12 +23,12 @@ namespace SCR {
  * @author Markus Frank
  */
 class ScrDisplay : public MonitorDisplay     {
- protected:
+protected:
   SCR::Pasteboard* m_pb;
   SCR::Display*    m_display;
   Area             m_area;
   void print_char(int x, int y, int attr, int val);
- public:
+public:
   /// Set global pasteborard area
   static void setPasteboard(SCR::Pasteboard* pasteboard);
   /// Set global border types
@@ -48,7 +48,7 @@ class ScrDisplay : public MonitorDisplay     {
   /// Access in write mode to display position
   Position& position()                        { return m_position;                   }
 
- public:
+public:
   /// Setup display window
   virtual void setup_window();
   /// Default Constructor with display sizes

@@ -8,7 +8,7 @@ RTL::Thread::Thread() /* : m_id(0) */ {
 }
 
 RTL::Thread::~Thread()  {
-//  m_status = lib_rtl_unthread(m_id);
+  //  m_status = lib_rtl_unthread(m_id);
   if ( !m_status )  {
     // throw exception ?
   }

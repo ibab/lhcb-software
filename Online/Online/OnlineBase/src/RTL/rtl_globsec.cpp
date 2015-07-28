@@ -54,7 +54,7 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
     h->address = ::mmap (0, h->size, sysprot, sysflags, h->fd, 0);
     if ( h->address != MAP_FAILED && h->address != 0 )  {
       if ( !keep ) {
-	allSections().insert(std::make_pair(h->name,h.get()));
+        allSections().insert(std::make_pair(h->name,h.get()));
       }
       *address = h.release();
       return 1;

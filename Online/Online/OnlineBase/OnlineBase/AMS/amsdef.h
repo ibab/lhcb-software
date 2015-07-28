@@ -9,7 +9,7 @@
 
 #define AMS_SUCCESS      1
 #define AMS_ERROR        0
-                                                   // Possible errno mappings
+// Possible errno mappings
 #define AMS_NONAME              (AMS_FAC*256 + 2)  // ESRCH (3)
                                                    // ESRCH
 #define AMS_NONODE              (AMS_FAC*256 + 4)  // ENONET (64)
@@ -32,7 +32,7 @@
                                                    // WSAENAMETOOLONG
 #define AMS_ALRINITED            AMS_SUCCESS
 #define AMS_NOTINITED           (AMS_FAC*256 + 36) 
-                                                   // WSASYSNOTREADY     WSANOTINITIALISED
+// WSASYSNOTREADY     WSANOTINITIALISED
 #define AMS_CONNCLOSED          (AMS_FAC*256 + 38) // ECONNRESET (104)   ENOTCONN (106)
                                                    // WSAECONNRESET      WSAENOTCONN
 #define AMS_NOPEND              (AMS_FAC*256 + 40) // ENODATA (61)
@@ -58,19 +58,19 @@ extern "C" {
 #include <stdlib.h>
 #define __CXX_CONSTANT 
 #endif
-enum { AMS_NAME_LENGTH = 128 };
-struct amsuc_info  {
-  char message[80];
-  char source[AMS_NAME_LENGTH];
-  unsigned int  facility;
-  size_t length;
-  int  status;
-};
+  enum { AMS_NAME_LENGTH = 128 };
+  struct amsuc_info  {
+    char message[80];
+    char source[AMS_NAME_LENGTH];
+    unsigned int  facility;
+    size_t length;
+    int  status;
+  };
 
-enum AddressStyles   {
+  enum AddressStyles   {
     DECNET_STYLE,
     INTERNET_STYLE
-};
+  };
   /** Initialize AMS with the given task name                     */
   int amsc_init             ( __CXX_CONSTANT char* );
   /** Shutdown AMS                                                */
@@ -126,15 +126,15 @@ enum AddressStyles   {
 #endif
 #undef __CXX_CONSTANT
 
-#define FACILITIES__USER 1      /* User messages (default) */
-#define FACILITIES__SERVER 2    /* No insertion into WT facility */
-#define FACILITIES__UPI 3        /* Private remote UPI protocol */
-#define FACILITIES__FSM 4        /* Protocol used by fsm messages */
-#define FACILITIES__SL_IMMED 2  /* Slow control immed. answer */
-#define FACILITIES__SL_DEFER 5  /* Slow control deferred answer */
-#define FACILITIES__SL_WARN 6    /* Slow control warning messages */
-#define FACILITIES__SL_RESERV 7  /* Reserved for slow control */
-#define FACILITIES__EXPERT 8    /* Expert system protocol */
+#define FACILITIES__USER       1      /* User messages (default) */
+#define FACILITIES__SERVER     2      /* No insertion into WT facility */
+#define FACILITIES__UPI        3      /* Private remote UPI protocol */
+#define FACILITIES__FSM        4        /* Protocol used by fsm messages */
+#define FACILITIES__SL_IMMED   2  /* Slow control immed. answer */
+#define FACILITIES__SL_DEFER   5  /* Slow control deferred answer */
+#define FACILITIES__SL_WARN    6    /* Slow control warning messages */
+#define FACILITIES__SL_RESERV  7  /* Reserved for slow control */
+#define FACILITIES__EXPERT     8    /* Expert system protocol */
 #define FACILITIES__USER1 10    /*  */
 #define FACILITIES__USER2 11    /*  Reserved for user use */
 #define FACILITIES__USER3 12    /*  */

@@ -39,7 +39,7 @@ static inline int mbm_error(const char* fn, int line)  {
 #define MBM_USER_MAGIC 0xFEEDBABE
 #define CHECKED_CONSUMER(u)  (u); if ( !(u) || (u)->magic != MBM_USER_MAGIC || (u)->uid == -1 ) return MBM_ILL_CONS;
 #define CHECKED_CLIENT(u)    (u); if ( !(u) || (u)->magic != MBM_USER_MAGIC || (u)->uid == -1 ) return MBM_ERROR;
-
+#define CHECK_BMID(bm)       (bm); if ( !(bm) || 0 == (bm)->lockid ) return MBM_ERROR;
 #define  MBM_ERROR_CODE mbm_error_code()
 #undef   MBM_ERROR
 #define  MBM_ERROR  mbm_error(__FILE__,__LINE__);
@@ -1345,8 +1345,9 @@ int mbmsrv_free_space(ServerBMID bm, MSG& msg) {
 
 /// Check wait consumer event queue
 int _mbmsrv_check_wev (ServerBMID bm, EVENT* e)  {
+  int count = 0;
   MBMScanner<USER> que(&bm->usDesc->wev_head, -USER_we_off);
-  for(USER* u = que.get(); u != 0; u = que.get() )  {
+  for(USER* u = que.get(); u != 0; u = que.get(), ++count )  {
     if ( u->state == S_wevent ) {
       int uid = u->uid;
       bool req_pending = e->umask0.test(uid) || e->umask1.test(uid);
@@ -1385,6 +1386,12 @@ int _mbmsrv_check_wev (ServerBMID bm, EVENT* e)  {
         u->state = S_active;
         return _mbmsrv_reply(bm,msg,u->fifo);
       }
+    }
+    if ( count == (bm->ctrl->p_umax+1) )    {
+      // Something is really odd here.
+      // The BM internal structure looks corrupted....
+      ::lib_rtl_output(LIB_RTL_ERROR,"MBM server structures '%s' look corrupted. Something ugly happened!",bm->bm_name);
+      return MBM_NORMAL;
     }
   }
   return MBM_NORMAL;
@@ -1426,7 +1433,8 @@ int mbmsrv_send_space(ServerBMID bm, MSG& msg) {
 }
 
 /// Consumer/Producer interface: cancel pending request(s)
-int mbmsrv_cancel_request(ServerBMID bm, MSG& msg) {
+int mbmsrv_cancel_request(ServerBMID bmid, MSG& msg) {
+  ServerBMID bm = CHECK_BMID(bmid);
   USER* u = CHECKED_CLIENT(msg.user);
   LOCK lock(bm->lockid);
   if (u->state == S_wevent || u->state == S_active)    {

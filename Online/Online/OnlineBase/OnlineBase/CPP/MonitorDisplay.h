@@ -27,7 +27,7 @@ public:
  * @author M.Frank
  */
 class MonitorDisplay {
- protected:
+protected:
   /// Display Client to handle interface callbacks
   Interactor*        m_client;
   /// Currentl ine when drawing display
@@ -37,7 +37,7 @@ class MonitorDisplay {
   /// Display title
   std::string        m_title;
 
- public:
+public:
   /// Access to the display width in fixed size characters
   virtual size_t width() const  = 0;
   /// Access to the display height in fixed size characters

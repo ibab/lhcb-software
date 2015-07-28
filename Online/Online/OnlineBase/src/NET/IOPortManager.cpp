@@ -32,10 +32,10 @@ extern "C" int console_read_test(int, char**)  {
   while (1) {
     // Wait for the events. 
     if (! ReadConsoleInput( 
-      hStdin,      // input buffer handle 
-      &irInBuf,     // buffer to read into 
-      1,         // size of read buffer 
-      &cNumRead) ) // number of records read 
+                           hStdin,      // input buffer handle 
+                           &irInBuf,     // buffer to read into 
+                           1,         // size of read buffer 
+                           &cNumRead) ) // number of records read 
       lib_rtl_output(LIB_RTL_ALWAYS,"ReadConsoleInput\n"); 
     switch(irInBuf.EventType) 
     { 
@@ -149,10 +149,10 @@ namespace {
 #ifdef _WIN32
       else {
         if (! ReadConsoleInput( 
-              hStdin,         // input buffer handle 
-              &irInBuf,       // buffer to read into 
-              1,              // size of read buffer 
-              &cNumRead) )    // number of records read 
+                               hStdin,         // input buffer handle 
+                               &irInBuf,       // buffer to read into 
+                               1,              // size of read buffer 
+                               &cNumRead) )    // number of records read 
         {
           lib_rtl_output(LIB_RTL_ALWAYS,"ReadConsoleInput\n"); 
         }
@@ -241,7 +241,7 @@ namespace {
 #ifdef _WIN32
                   _asm int 3
 #endif
-                }
+                    }
               }
               if ( t == 1 && nb < 0 )  {
                 k = find(fd);
@@ -249,7 +249,7 @@ namespace {
 #ifdef _WIN32
                   _asm int 3
 #endif
-                  if ( (*k).second ) delete (*k).second;
+                    if ( (*k).second ) delete (*k).second;
                   erase(k);
                 }
               }
@@ -262,7 +262,7 @@ namespace {
   }
 
   EntryMap::EntryMap(__NetworkPort__ p) 
-  : m_thread(0), m_port(p), m_dirty(false), m_stop(false), m_mutex_id(0) {
+    : m_thread(0), m_port(p), m_dirty(false), m_stop(false), m_mutex_id(0) {
     lib_rtl_create_lock(0, &m_mutex_id);
   }
   EntryMap::~EntryMap() {
@@ -285,15 +285,15 @@ namespace {
     if ( !m_thread )  {
       int (*call)(void*);
       switch(m_port)  {
-        case 0:
+      case 0:
 #ifdef _WIN32
-          call = consoleCall;
-          break;
+        call = consoleCall;
+        break;
 #endif
-        default: 
-          //lib_rtl_output(LIB_RTL_ERROR,"Installing thread call!\n");
-          call = threadCall;
-          break;
+      default: 
+        //lib_rtl_output(LIB_RTL_ERROR,"Installing thread call!\n");
+        call = threadCall;
+        break;
       }
       int sc = lib_rtl_start_thread(call, this, &m_thread);
       if ( !lib_rtl_is_success(sc) )  {

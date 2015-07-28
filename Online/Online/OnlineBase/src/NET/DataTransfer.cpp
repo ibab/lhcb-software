@@ -213,28 +213,28 @@ NetErrorCode netentry_t::recv(void *buffer, size_t siz, unsigned int flag)  {
       errno = lib_rtl_socket_error();
       _net_printf("NET: receive error errno=%d\n",errno);
       switch(errno)  {
-        case ESOCK_CONNREFUSED:
-        case ESOCK_NOTCONN:
-        case ESOCK_CONNABORTED:
-        case ESOCK_CONNRESET:
-        case ESOCK_NETRESET:
-        case ESOCK_NETDOWN:
-        case ESOCK_SHUTDOWN:
-          return NET_CONNCLOSED;
-        case ESOCK_NOTSOCK:
-        case ESOCK_FAULT:
-        case ESOCK_INVAL:
-        case ESOCK_BADF:
-          return NET_TERRIBLE;
-        case ESOCK_AGAIN:
-          continue;
-        default:
-          if (++count == MAX_TCP_ERRORS)
-            return NET_NODATA;
-          else {
-            _net_printf("NET: receive error (ignored) errno=%d\n",errno);
-            got_now = 0;
-          }
+      case ESOCK_CONNREFUSED:
+      case ESOCK_NOTCONN:
+      case ESOCK_CONNABORTED:
+      case ESOCK_CONNRESET:
+      case ESOCK_NETRESET:
+      case ESOCK_NETDOWN:
+      case ESOCK_SHUTDOWN:
+        return NET_CONNCLOSED;
+      case ESOCK_NOTSOCK:
+      case ESOCK_FAULT:
+      case ESOCK_INVAL:
+      case ESOCK_BADF:
+        return NET_TERRIBLE;
+      case ESOCK_AGAIN:
+        continue;
+      default:
+        if (++count == MAX_TCP_ERRORS)
+          return NET_NODATA;
+        else {
+          _net_printf("NET: receive error (ignored) errno=%d\n",errno);
+          got_now = 0;
+        }
       }
     }
     got += got_now;
@@ -666,8 +666,8 @@ namespace {
       net_receive(s->m_net,e, s->m_buffer);
       if ( (++cnt)%1000 == 0 )  {
         ::printf("%3ld %s %d messages [%s]. chan:%d port:%d addr:%s\n",
-          time(0)-start, s->m_bounce ? "Bounced" : "Received",cnt,
-          hdr.name,e->chan,e->addr.sin_port,inet_ntoa(e->addr.sin_addr));
+                 time(0)-start, s->m_bounce ? "Bounced" : "Received",cnt,
+                 hdr.name,e->chan,e->addr.sin_port,inet_ntoa(e->addr.sin_addr));
       }
       if ( s->m_bounce )  {
         int sc = net_send(s->m_net,s->m_buffer,e->header.size,e,e->header.facility);
@@ -717,7 +717,7 @@ extern "C" int net_send(int argc, char **argv)  {
   std::string proc = name.empty() ? host_name()+"::SND_0" : name;
   std::string to   = target.empty() ? host_name()+"::RCV_0" : target;
   ::printf (" Starting net sender:%d turns:%d name:%s target:%s\n",
-	    length,loop,name.c_str(),target.c_str());
+            length,loop,name.c_str(),target.c_str());
   while(count-- > 0)  {
     NetSensor cl(proc,bounce);
     if ( length<=0 ) length=10;
@@ -732,13 +732,13 @@ extern "C" int net_send(int argc, char **argv)  {
       if (sc != NET_SUCCESS)
         printf("Client::send Failed: Error=%d\n",sc);
       if ((i+1) % 1000 == 0) {
-	struct timeval now;
-	::gettimeofday(&now,0);
-	double diff = double(now.tv_sec-start.tv_sec)+double(now.tv_usec-start.tv_usec)/1e6;
-	if ( diff == 0 ) diff = 1;
-	double diff2 = double(i+1)/diff;
-	printf ("%-4ld Sent %6d messages rate:%9.3f kHz %9.3f MB/sec  total:%7.3f [sec]\n",
-		time(0)-start.tv_sec,i+1,diff2/1000.0,diff2*length/1024.0/1024.0,diff);
+        struct timeval now;
+        ::gettimeofday(&now,0);
+        double diff = double(now.tv_sec-start.tv_sec)+double(now.tv_usec-start.tv_usec)/1e6;
+        if ( diff == 0 ) diff = 1;
+        double diff2 = double(i+1)/diff;
+        printf ("%-4ld Sent %6d messages rate:%9.3f kHz %9.3f MB/sec  total:%7.3f [sec]\n",
+                time(0)-start.tv_sec,i+1,diff2/1000.0,diff2*length/1024.0/1024.0,diff);
       }
     }
     if ( bounce )  {

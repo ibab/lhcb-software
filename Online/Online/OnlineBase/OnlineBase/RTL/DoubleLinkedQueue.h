@@ -11,10 +11,10 @@
  */
 namespace RTL  {
   /**@class DoubleLinkedQueue DoubleLinkedQueue.h RTL/DoubleLinkedQueue.h
-    *
-    *  @author  M.Frank
-    *  @version 1.0
-    */
+   *
+   *  @author  M.Frank
+   *  @version 1.0
+   */
   template <class T> class DoubleLinkedQueue  {
   private:
     /// Queue head

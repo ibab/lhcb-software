@@ -16,12 +16,12 @@
  * @version 1.0
  */
 class CheckpointRestoreWrapper  {
- protected:
+protected:
   /// Standard constructor
   CheckpointRestoreWrapper() {}
   /// Standard destructor
   virtual ~CheckpointRestoreWrapper() {}
- public:
+public:
   /// Initialization callback with startup arguments
   virtual void init_instance(int argc, char** argv, char** environ) = 0;
 };

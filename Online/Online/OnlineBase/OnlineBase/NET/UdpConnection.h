@@ -24,31 +24,31 @@
 //
 /// Definition of the NetworkAddress data structure for UDP sockets
 /** 
-        {\Large{\bf Class NetworkAddress}}
+    {\Large{\bf Class NetworkAddress}}
 
- Small wrapper containing the inet socket address.
+    Small wrapper containing the inet socket address.
 */
 class UdpNetworkAddress : public NetworkAddress  {
   //@Man: Friend classes
   /// Friend NetworkConnection
   friend class NetworkConnection;
   friend class UdpConnection;
-  public:
+public:
   //@Man: Class specific enumerations and typedefs
   /// Address data type
   typedef sockaddr_in Data;
-  protected:
+protected:
   //@Man: Protected member variables
   /// Structure holding an inet address
   Data         m_addr;
   //@Man: Protected member variables
   /// Name of network connection host
   char         m_cHost[64];
-  public:
+public:
   //@Man: Public member functions
   /// Automatic cast to the data object
   operator Data& () {
-      return m_addr;
+    return m_addr;
   }
   /// Retrieve Name of Network Host
   const char* hostName() const {
@@ -60,10 +60,10 @@ class UdpNetworkAddress : public NetworkAddress  {
 
 /// Definition of a network connection based on UDP sockets
 /**
-  *  {\Large{\bf Class UdpConnection}}
-  *
-  *  Definition of the UdpConnection class.
-  */
+ *  {\Large{\bf Class UdpConnection}}
+ *
+ *  Definition of the UdpConnection class.
+ */
 class UdpConnection  : public NetworkConnection {
 public:
   //@Man: Class specific enumerations and typedefs

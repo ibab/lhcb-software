@@ -64,9 +64,9 @@ SystemCPU* SystemCPU::reset() {
 /// Print CPU core data
 void SystemCPU::print() const   {
   ::printf("Processor:%2d Cores:%2d PhyID:%1d CoreID:%2d Family:%2d "
-	   "Cache:%5d kB clock:%5.0f MHz Bogo:%5.0f\n",
-	   int(processor),int(numCore),int(physID),int(coreID),
-	   int(family),int(cache),clock,bogomips);
+           "Cache:%5d kB clock:%5.0f MHz Bogo:%5.0f\n",
+           int(processor),int(numCore),int(physID),int(coreID),
+           int(family),int(cache),clock,bogomips);
 }
 
 /// Empty constructor
@@ -92,22 +92,27 @@ StatusProcess* StatusProcess::reset() {
   return this;
 }
 
+/// Default destructor. Non-virtuality is intended. Do not inherit!
+SysFile::FileDescriptor::~FileDescriptor()   {
+  if (m_fd > 0)  ::close(m_fd);
+  m_fd = 0;
+}
+
 /// Read buffer from file in  one go
 int SysFile::read(char* buf, size_t siz) const  {
-  int fd;
-  if((fd = ::open(m_name.c_str(),O_RDONLY))<0)  {
+  FileDescriptor fd(::open(m_name.c_str(),O_RDONLY));  
+  if( fd.get() < 0 )  {
     string err = "Failed to open "+m_name+" ";
     throw runtime_error(err+::strerror(errno));
   }
   size_t tmp = 0;
   while ( tmp < siz )  {
-    int sc = ::read(fd,buf+tmp,siz-tmp);
+    int sc = ::read(fd.get(),buf+tmp,siz-tmp);
     if ( sc >  0 ) {
       tmp += sc;
     }
     else if ( sc == 0 )  {
       buf[tmp] = 0;
-      ::close(fd);
       return tmp;
     }
     else if ( errno == EINTR )  {
@@ -121,7 +126,6 @@ int SysFile::read(char* buf, size_t siz) const  {
   if ( tmp != siz )  {
     string err = "Read of system file "+m_name+" failed:";
     err += ::strerror(errno);
-    ::close(fd);
     throw runtime_error(err);
   }
   return tmp;
@@ -129,20 +133,19 @@ int SysFile::read(char* buf, size_t siz) const  {
 
 /// Write buffer to file in  one go
 int SysFile::write(char* buf, size_t siz, int flags) const  {
-  int fd;
-  if((fd = ::open(m_name.c_str(),O_WRONLY|O_CREAT|O_TRUNC,flags))<0)  {
+  FileDescriptor fd(::open(m_name.c_str(),O_WRONLY|O_CREAT|O_TRUNC,flags));  
+  if( fd.get() < 0 )  {
     string err = "Failed to open "+m_name+" ";
     throw runtime_error(err+::strerror(errno));
   }
   size_t tmp = 0;
   while ( tmp < siz )  {
-    int sc = ::write(fd,buf+tmp,siz-tmp);
+    int sc = ::write(fd.get(),buf+tmp,siz-tmp);
     if ( sc >  0 ) {
       tmp += sc;
     }
     else if ( sc == 0 )  {
       buf[tmp] = 0;
-      ::close(fd);
       return tmp;
     }
     else if ( errno == EINTR )  {
@@ -156,7 +159,6 @@ int SysFile::write(char* buf, size_t siz, int flags) const  {
   if ( tmp != siz )  {
     string err = "Write of system file "+m_name+" failed:";
     err += ::strerror(errno);
-    ::close(fd);
     throw runtime_error(err);
   }
   return tmp;
@@ -270,7 +272,7 @@ int RTL::read(StatusProcess& proc, int proc_id) {
       switch(++nitem) {
       case 1:   ::sscanf(p,"%s",proc.comm);          break;
       case 2:   ::sscanf(p,"%c",&proc.state);        break;
-	//case 3:   ::sscanf(p,"%d%%",&proc.sleepAvg);   break;
+        //case 3:   ::sscanf(p,"%d%%",&proc.sleepAvg);   break;
       case 3:   ::sscanf(p,"%d",&proc.tgid);         break;
       case 4:   ::sscanf(p,"%d",&proc.pid);          break;
       case 5:   ::sscanf(p,"%d",&proc.ppid);         break;
@@ -289,9 +291,9 @@ int RTL::read(StatusProcess& proc, int proc_id) {
       case 20:  ::sscanf(p,"%d",&proc.vmLib);        break;
       case 21:  ::sscanf(p,"%d",&proc.vmPTE);        break;
       case 22:  ::sscanf(p,"%d",&proc.vmSwap);       break;
-	//case 22:  ::sscanf(p,"%08lx",&proc.staBrk);    break;
-	//case 23:  ::sscanf(p,"%08lx",&proc.brk);       break;
-	//case 24:  ::sscanf(p,"%08lx",&proc.staStk);    break;
+        //case 22:  ::sscanf(p,"%08lx",&proc.staBrk);    break;
+        //case 23:  ::sscanf(p,"%08lx",&proc.brk);       break;
+        //case 24:  ::sscanf(p,"%08lx",&proc.staStk);    break;
       case 23:  ::sscanf(p,"%d",&proc.nThreads);     break;
       case 24:  break; // SigQ
       case 25:  ::sscanf(p,"%016lx",&proc.sigPend);  break;  // Fmt: SigCgt: 00000001808044e9
@@ -356,42 +358,42 @@ int RTL::read(SysProcess& proc, int proc_id) {
   if(cnt>0)  {
     //                       1  2  3  4  5  6  7  8  9   10  1   2   3   4   5   6   7   8   9   20  1   2   3   4   5   6   7   8   9   30  1   2   3   4   5
     int ret = ::sscanf(buff,"%d %s %c %d %d %d %d %d %lu %lu %lu %lu %lu %lu %lu %lu %lu %ld %ld %ld %lu %lu %lu %ld %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu",
-             &proc.pid,      // 1
-             proc.comm,      // 2
-             &proc.state,    // 3
-             &proc.ppid,     // 4
-             &proc.pgrp,     // 5
-             &proc.session,  // 6
-             &proc.tty,      // 7
-             &proc.tpgid,    // 8
-             &proc.flags,    // 9
-             &proc.minflt,   // 10
-             &proc.cminflt,  // 1
-             &proc.majflt,   // 2
-             &proc.cmajflt,  // 3
-             &proc.utime,    // 4
-             &proc.stime,    // 5
-             &proc.cutime,   // 6
-             &proc.cstime,   // 7
-             &proc.priority, // 8
-             &proc.nice,     // 9
-             &proc.num_threads, // 20
-             &proc.itrealvalue, // 1
-             &proc.starttime,   // 2
-             &proc.vsize,       // 3
-             &proc.rss,         // 4
-             &proc.rlim,        // 5
-             &proc.startcode,   // 6
-             &proc.endcode,     // 7
-             &proc.startstack,  // 8
-             &proc.kstkesp,     // 9
-             &proc.kstkeip,     // 30
-             &proc.signal,      // 1
-             &proc.blocked,     // 2
-             &proc.sigignore,   // 3
-             &proc.sigcatch,    // 4
-             &proc.wchan        // 5
-             );
+                       &proc.pid,      // 1
+                       proc.comm,      // 2
+                       &proc.state,    // 3
+                       &proc.ppid,     // 4
+                       &proc.pgrp,     // 5
+                       &proc.session,  // 6
+                       &proc.tty,      // 7
+                       &proc.tpgid,    // 8
+                       &proc.flags,    // 9
+                       &proc.minflt,   // 10
+                       &proc.cminflt,  // 1
+                       &proc.majflt,   // 2
+                       &proc.cmajflt,  // 3
+                       &proc.utime,    // 4
+                       &proc.stime,    // 5
+                       &proc.cutime,   // 6
+                       &proc.cstime,   // 7
+                       &proc.priority, // 8
+                       &proc.nice,     // 9
+                       &proc.num_threads, // 20
+                       &proc.itrealvalue, // 1
+                       &proc.starttime,   // 2
+                       &proc.vsize,       // 3
+                       &proc.rss,         // 4
+                       &proc.rlim,        // 5
+                       &proc.startcode,   // 6
+                       &proc.endcode,     // 7
+                       &proc.startstack,  // 8
+                       &proc.kstkesp,     // 9
+                       &proc.kstkeip,     // 30
+                       &proc.signal,      // 1
+                       &proc.blocked,     // 2
+                       &proc.sigignore,   // 3
+                       &proc.sigcatch,    // 4
+                       &proc.wchan        // 5
+                       );
     if ( ret != 35 ) {
       lib_rtl_output(LIB_RTL_ERROR,"Failed to convert process information for PID: %d",proc_id);
     }
@@ -403,41 +405,41 @@ int RTL::read(SysProcess& proc, int proc_id) {
 /// Print process data from proc file system
 void SysProcess::print() const {
 #define _PRT(x)  cout << setw(16) << left << #x << ":" << right << setw(32) << x << endl
-_PRT(pid);      // 1
-_PRT(comm);      // 2
-_PRT(state);    // 3
-_PRT(ppid);     // 4
-_PRT(pgrp);     // 5
-_PRT(session);  // 6
-_PRT(tty);      // 7
-_PRT(tpgid);    // 8
-_PRT(flags);    // 9
-_PRT(minflt);   // 10
-_PRT(cminflt);  // 1
-_PRT(majflt);   // 2
-_PRT(cmajflt);  // 3
-_PRT(utime);    // 4
-_PRT(stime);    // 5
-_PRT(cutime);   // 6
-_PRT(cstime);   // 7
-_PRT(priority); // 8
-_PRT(nice);     // 9
-_PRT(num_threads); // 20
-_PRT(itrealvalue); // 1
-_PRT(starttime);   // 2
-_PRT(vsize);       // 3
-_PRT(rss);         // 4
-_PRT(rlim);        // 5
-_PRT(startcode);   // 6
-_PRT(endcode);     // 7
-_PRT(startstack);  // 8
-_PRT(kstkesp);     // 9
-_PRT(kstkeip);     // 30
-_PRT(signal);      // 1
-_PRT(blocked);     // 2
-_PRT(sigignore);   // 3
-_PRT(sigcatch);    // 4
-_PRT(wchan);      // 5
+  _PRT(pid);      // 1
+  _PRT(comm);      // 2
+  _PRT(state);    // 3
+  _PRT(ppid);     // 4
+  _PRT(pgrp);     // 5
+  _PRT(session);  // 6
+  _PRT(tty);      // 7
+  _PRT(tpgid);    // 8
+  _PRT(flags);    // 9
+  _PRT(minflt);   // 10
+  _PRT(cminflt);  // 1
+  _PRT(majflt);   // 2
+  _PRT(cmajflt);  // 3
+  _PRT(utime);    // 4
+  _PRT(stime);    // 5
+  _PRT(cutime);   // 6
+  _PRT(cstime);   // 7
+  _PRT(priority); // 8
+  _PRT(nice);     // 9
+  _PRT(num_threads); // 20
+  _PRT(itrealvalue); // 1
+  _PRT(starttime);   // 2
+  _PRT(vsize);       // 3
+  _PRT(rss);         // 4
+  _PRT(rlim);        // 5
+  _PRT(startcode);   // 6
+  _PRT(endcode);     // 7
+  _PRT(startstack);  // 8
+  _PRT(kstkesp);     // 9
+  _PRT(kstkeip);     // 30
+  _PRT(signal);      // 1
+  _PRT(blocked);     // 2
+  _PRT(sigignore);   // 3
+  _PRT(sigcatch);    // 4
+  _PRT(wchan);      // 5
 }
 
 /// Read memory information block
@@ -473,32 +475,32 @@ int RTL::read(vector<SystemCPU>& info) {
         if ( (q=::strchr(desc,'\t')) ) *q = 0;
         if ( ::strncmp(desc,"power management",16)==0 )  {
           /// This is the last item. get the next bugger
-	  info.push_back(cpu);
-	  cpu.reset();
+          info.push_back(cpu);
+          cpu.reset();
           ++ncores;
           continue;
         }
         *item = 0;
         item += 2;
-	char dd = desc[0];
-	if ( dd == 'p' )  {
-	  if ( ::strncmp(desc,"processor",sizeof("processor"))==0 )
-	    cpu.processor = (int)::atoi(item);
-	  else if ( ::strncmp(desc,"physical id",sizeof("physical id"))==0 )
-	    cpu.physID = (int)::atoi(item);
+        char dd = desc[0];
+        if ( dd == 'p' )  {
+          if ( ::strncmp(desc,"processor",sizeof("processor"))==0 )
+            cpu.processor = (int)::atoi(item);
+          else if ( ::strncmp(desc,"physical id",sizeof("physical id"))==0 )
+            cpu.physID = (int)::atoi(item);
         }
-	else if ( dd == 'c' )  {
-	  if ( ::strncmp(desc,"cpu MHz",sizeof("cpu MHz"))==0 )
-	    cpu.clock = (float)::atof(item);
-	  else if ( ::strncmp(desc,"cache size",sizeof("cache size"))==0 )
-	    cpu.cache = (int)::atoi(item);
-	  else if ( ::strncmp(desc,"core id",sizeof("core id"))==0 )
-	    cpu.coreID = (int)::atoi(item);
-	  else if ( ::strncmp(desc,"cpu cores",sizeof("cpu cores"))==0 )
-	    cpu.numCore = (int)::atoi(item);
-	  else if ( ::strncmp(desc,"cpu family",sizeof("cpu family"))==0 )
-	    cpu.family = (int)::atoi(item);
-	}
+        else if ( dd == 'c' )  {
+          if ( ::strncmp(desc,"cpu MHz",sizeof("cpu MHz"))==0 )
+            cpu.clock = (float)::atof(item);
+          else if ( ::strncmp(desc,"cache size",sizeof("cache size"))==0 )
+            cpu.cache = (int)::atoi(item);
+          else if ( ::strncmp(desc,"core id",sizeof("core id"))==0 )
+            cpu.coreID = (int)::atoi(item);
+          else if ( ::strncmp(desc,"cpu cores",sizeof("cpu cores"))==0 )
+            cpu.numCore = (int)::atoi(item);
+          else if ( ::strncmp(desc,"cpu family",sizeof("cpu family"))==0 )
+            cpu.family = (int)::atoi(item);
+        }
         else if ( dd == 'b' && ::strncmp(desc,"bogomips",sizeof("bogomips"))==0 )  {
           cpu.bogomips = (float)::atof(item);
         }
@@ -552,7 +554,7 @@ extern "C" int rtl_test_cpuinfo(int,char**) {
     ExtractCPUInfo<SYSTEMCPU_EXTRACT_CPUSLOTS> actor(-1);
     actor = for_each(info.begin(), info.end(), actor);
     ::lib_rtl_output(LIB_RTL_ALWAYS,"Got a total of %d CPU slots %s\n",
-		     int(actor.result.size()));
+                     int(actor.result.size()));
 
     for(set<int>::iterator i=actor.result.begin(); i!=actor.result.end(); ++i)  {
       int slot = *i;
@@ -561,13 +563,13 @@ extern "C" int rtl_test_cpuinfo(int,char**) {
       str.str("");
       os << pact;
       ::lib_rtl_output(LIB_RTL_ALWAYS,"Got %d processors for CPU slot %s\n",
-		       int(pact.result.size()),str.str().c_str());
+                       int(pact.result.size()),str.str().c_str());
       ExtractCPUInfo<SYSTEMCPU_EXTRACT_CPUCORES>  cact(slot);
       cact = for_each(info.begin(), info.end(), cact);
       str.str("");
       os << cact;
       ::lib_rtl_output(LIB_RTL_ALWAYS,"Got %d cores      for CPU slot %s\n",
-		       int(cact.result.size()),str.str().c_str());      
+                       int(cact.result.size()),str.str().c_str());      
     }
   }
   else

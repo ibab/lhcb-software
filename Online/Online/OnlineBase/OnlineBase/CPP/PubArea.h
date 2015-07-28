@@ -10,10 +10,10 @@
 class _PubArea      {
 public:
 #ifdef _pubarea_C
-typedef PubArea PaObject;
+  typedef PubArea PaObject;
 #else
 #define PubArea _PubArea
-typedef void PaObject;
+  typedef void PaObject;
 #endif
 protected:  
   /// Pointer to the actual PubArea object  

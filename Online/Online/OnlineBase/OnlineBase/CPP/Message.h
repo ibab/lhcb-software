@@ -27,13 +27,13 @@ namespace CPP  {
     explicit Address(const std::string& n="", unsigned int f=0) : node_process(n), facility(f) {
     }
     /// Copy constructor
-  Address(const Address& c) : node_process(c.node_process), facility(c.facility) {
+    Address(const Address& c) : node_process(c.node_process), facility(c.facility) {
     }
     /// Assignment operator
     Address& operator=(const Address& c) { 
       if ( &c != this ) {
-	node_process=c.node_process;
-	facility=c.facility;
+        node_process=c.node_process;
+        facility=c.facility;
       }
       return *this;
     }

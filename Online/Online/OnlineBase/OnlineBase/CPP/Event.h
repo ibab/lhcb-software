@@ -48,23 +48,23 @@ namespace CPP  {
     char*       buffer_ptr;
     int         buffer_len;
     /// Initializing constructor
-  Event(Interactor* tar, EventType typ) 
-    : sensor(0), target(tar), eventtype(typ),
-      timer_id(0), timer_data(0), 
-      message(0), source(0),
-      menu_id(0), command_id(0), param_id(0), index_id(0), 
-      type(0), data(0),
-      device(0), buffer_ptr(0), buffer_len(0)
-      {}
+    Event(Interactor* tar, EventType typ) 
+      : sensor(0), target(tar), eventtype(typ),
+        timer_id(0), timer_data(0), 
+        message(0), source(0),
+        menu_id(0), command_id(0), param_id(0), index_id(0), 
+        type(0), data(0),
+        device(0), buffer_ptr(0), buffer_len(0)
+    {}
     /// Standard constructor
-  Event()
-    : sensor(0), target(0), eventtype(NoEventType),
-      timer_id(0), timer_data(0), 
-      message(0), source(0),
-      menu_id(0), command_id(0), param_id(0), index_id(0), 
-      type(0), data(0),
-      device(0), buffer_ptr(0), buffer_len(0)
-      {}
+    Event()
+      : sensor(0), target(0), eventtype(NoEventType),
+        timer_id(0), timer_data(0), 
+        message(0), source(0),
+        menu_id(0), command_id(0), param_id(0), index_id(0), 
+        type(0), data(0),
+        device(0), buffer_ptr(0), buffer_len(0)
+    {}
     /// Standard destructor
     ~Event() {}
     int iocType() const                        {  return type;                      }

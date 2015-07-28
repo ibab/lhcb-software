@@ -1,5 +1,6 @@
 #ifndef ONLINEKERNEL_CPP_VALUE_H
 #define ONLINEKERNEL_CPP_VALUE_H
+
 namespace CPP {
   template <class T> class _Item {
   public:

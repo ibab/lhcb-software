@@ -102,7 +102,7 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
 #endif
   if ( h->handle == 0 )  {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to create %s event flag.", 
-      name ? name : "<unnamed>");
+                             name ? name : "<unnamed>");
     *event_flag = 0;
     return 0;
   }
@@ -167,9 +167,9 @@ int lib_rtl_wait_for_event(lib_rtl_event_t h)    {
 #if defined(USE_PTHREADS)
     if ( 0 == ::i_sem_wait(h->handle) )
 #elif defined(_WIN32)
-    if ( ::WaitForSingleObjectEx(h->handle,INFINITE, TRUE) == WAIT_OBJECT_0 )  
+      if ( ::WaitForSingleObjectEx(h->handle,INFINITE, TRUE) == WAIT_OBJECT_0 )  
 #endif
-      return 1;
+        return 1;
   }
   return 0;
 }
@@ -182,14 +182,14 @@ int lib_rtl_try_event(lib_rtl_event_t h)    {
     else if ( errno == EAGAIN ) return 2;
     else
 #elif defined(_WIN32)
-    DWORD sc = ::WaitForSingleObjectEx(h->handle,0,TRUE);
+      DWORD sc = ::WaitForSingleObjectEx(h->handle,0,TRUE);
     if ( sc == WAIT_OBJECT_0 ) return 1;
     else if ( sc == WAIT_ABANDONED || sc == WAIT_TIMEOUT ) return 2;
     else
 #endif
     {
       return lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X",
-				    h->name,h->handle);
+                                    h->name,h->handle);
     }
 #if !defined(USE_PTHREADS)  // not reachable
     h->held = 1;
@@ -215,7 +215,7 @@ int lib_rtl_timedwait_for_event(lib_rtl_event_t h, int milliseconds)    {
       return 2;
     else if ( sc == 0 )
 #elif defined(_WIN32)
-    DWORD diff = (milliseconds>0) ? milliseconds : INFINITE;
+      DWORD diff = (milliseconds>0) ? milliseconds : INFINITE;
     if ( ::WaitForSingleObjectEx(h->handle,diff, TRUE) == WAIT_OBJECT_0 )  
 #endif
       return 1;

@@ -32,7 +32,7 @@ namespace XML  {
   typedef const std::string CSTR;
 
   /** Stream XMLStream.h CPP/XMLStream.h
-    */
+   */
   class Stream   {
   protected:
     std::ostream m_os;
@@ -76,14 +76,14 @@ namespace XML  {
     Stream& operator<<(const void* arg)         {m_os << arg; return *this;}
     Stream& operator<<(const std::string& arg)  {m_os << arg; return *this;}
     Stream& operator<<(long long arg)           {
-    #ifdef WIN32
+#ifdef WIN32
       int flg = m_os.flags();
       char buf[128];
       (flg & std::ios::hex) ? ::sprintf(buf,"%I64x",arg) : ::sprintf(buf,"%I64d",arg);
       m_os << buf;
-    #else
+#else
       m_os << arg;
-    #endif
+#endif
       return *this;
     }
     Stream& operator<<(std::ostream& (*_f)(std::ostream&))     
@@ -207,7 +207,7 @@ namespace XML  {
     T begin, end;
     const P& pred;
     _iteration(CSTR& t, T b, T e, const P& p)
-    : tag(t), begin(b), end(e), pred(p) {}
+      : tag(t), begin(b), end(e), pred(p) {}
   };
   template <class T> inline 
   _iteration<T, _predicate<T> > iteration(CSTR& t, T b, T e)
@@ -220,7 +220,7 @@ namespace XML  {
   template<class T, class P> 
   struct _collection : public _iteration<typename T::const_iterator, P>  {
     _collection(CSTR& t, const T& d) 
-    : _iteration<typename T::const_iterator, P >(t,d.begin(),d.end()) {}
+      : _iteration<typename T::const_iterator, P >(t,d.begin(),d.end()) {}
   };
   template <class T> inline 
   _collection<T, _predicate<T> > collection(CSTR& t, const T& d)  

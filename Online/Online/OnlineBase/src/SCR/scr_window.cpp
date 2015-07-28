@@ -1,6 +1,6 @@
 /*
-        scrc_window.c
-         Created           : 21-NOV-1989 by Christian Arnault
+  scrc_window.c
+  Created           : 21-NOV-1989 by Christian Arnault
 */
  
 #include <cstring>
@@ -166,7 +166,7 @@ int scrc_change_window (Window *w, int height, int width)   {
   w->width  += dw;
   if (w->type == DETACHED_WINDOW)  {
     scrc_move_window (w, ((System.rows - w->height) >> 1) - w->row,
-                         ((System.cols - w->width) >> 1) - w->col);
+                      ((System.cols - w->width) >> 1) - w->col);
   }
   else  {
     for (Window *ww = w->next; ww; ww = ww->next)
@@ -202,30 +202,30 @@ static int scrc_scroll_result (int key)   {
   
   Window *w = System.dragged;
   switch (key)  {
-    case KPD_PREV :
-      if ((w1 = w->prev))      {
-        dcol = w1->width;
-        if (w1->type != PULLDOWN_WINDOW) dcol++;
-        scrc_move_window (w, 0, -dcol);
-        dcol = w->width;
-        if (w->type != PULLDOWN_WINDOW) dcol++;
-        scrc_move_window (w1, 0, dcol);
-        list_move_entry (w, 0, w1);
-        scrc_show_window (w, w->on_screen);
-      }
-      break;
-    case KPD_NEXT :
-      if ((w1 = w->next))      {
-        dcol = w1->width;
-        if (w1->type != PULLDOWN_WINDOW) dcol++;
-        scrc_move_window (w, 0, dcol);
-        dcol = w->width;
-        if (w->type != PULLDOWN_WINDOW) dcol++;
-        scrc_move_window (w1, 0, -dcol);
-        list_move_entry (w, w1, 0);
-        scrc_show_window (w, w->on_screen);
-      }
-      break;
+  case KPD_PREV :
+    if ((w1 = w->prev))      {
+      dcol = w1->width;
+      if (w1->type != PULLDOWN_WINDOW) dcol++;
+      scrc_move_window (w, 0, -dcol);
+      dcol = w->width;
+      if (w->type != PULLDOWN_WINDOW) dcol++;
+      scrc_move_window (w1, 0, dcol);
+      list_move_entry (w, 0, w1);
+      scrc_show_window (w, w->on_screen);
+    }
+    break;
+  case KPD_NEXT :
+    if ((w1 = w->next))      {
+      dcol = w1->width;
+      if (w1->type != PULLDOWN_WINDOW) dcol++;
+      scrc_move_window (w, 0, dcol);
+      dcol = w->width;
+      if (w->type != PULLDOWN_WINDOW) dcol++;
+      scrc_move_window (w1, 0, -dcol);
+      list_move_entry (w, w1, 0);
+      scrc_show_window (w, w->on_screen);
+    }
+    break;
   }
   return 1;
 }

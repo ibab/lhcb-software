@@ -116,7 +116,7 @@ int MBM::XMLMonitorServer::handleAcceptRequest ( EventHandler* handler )  {
   int status = m_pNetwork->queueAccept(m_port,handler);            // Rearm ACCEPT
   if ( !lib_rtl_is_success(status) )  {
     lib_rtl_output(LIB_RTL_ALWAYS,"handleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s\n",
-      accept_error,retry,m_pNetwork->errMsg());
+                   accept_error,retry,m_pNetwork->errMsg());
   }
   if ( channel > 0 )   {
     TcpNetworkChannel chan(channel);
@@ -144,9 +144,9 @@ int MBM::XMLMonitorServer::handleAcceptRequest ( EventHandler* handler )  {
         dumpBuffers(o);
         std::string text = buff.str();
         ::snprintf(reply, sizeof(reply), "HTTP/1.0 200 OK\n"
-		   "Content-Type: text/html\n"
-		   "Content-Length: %d\n"
-		   "\n",int(text.length()));
+                   "Content-Type: text/html\n"
+                   "Content-Length: %d\n"
+                   "\n",int(text.length()));
         std::string result = reply;
         result += text;
         num_byte = chan.send(result.c_str(),result.length());
@@ -231,8 +231,8 @@ int MBM::XMLMonitorServer::optparse (const char* c)  {
   case 'h':
   default:
     lib_rtl_output(LIB_RTL_ALWAYS,"mbm_mon_serv - Buffer Manager XMLMonitorServer\n");
-    lib_rtl_output(LIB_RTL_ALWAYS,"Options: None\n");
-    exit(0);
+  lib_rtl_output(LIB_RTL_ALWAYS,"Options: None\n");
+  exit(0);
   }
   return 1;
 }

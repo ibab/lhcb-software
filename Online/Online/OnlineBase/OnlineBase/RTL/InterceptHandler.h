@@ -9,7 +9,7 @@
 namespace RTL  {
 
   /**@class InterceptHandler InterceptHandler.h RTL/InterceptHandler.h
-    */
+   */
   template<bool mode=true> class InterceptHandler  {
   public:
     /// Initializing constructor for inverted lock

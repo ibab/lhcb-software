@@ -52,12 +52,12 @@ int lib_rtl_start_thread(lib_rtl_thread_routine_t start_routine, void* thread_ar
 #elif defined(_WIN32)
   DWORD thr_id;
   HANDLE h = ::CreateThread( 
-      NULL,                        // default security attributes 
-      0,                           // use default stack size  
-      (LPTHREAD_START_ROUTINE)start_routine,               // thread function 
-      thread_arg,                  // argument to thread function 
-      0,                           // use default creation flags 
-      (LPDWORD)&thr_id);           // returns the thread identifier 
+                            NULL,                        // default security attributes 
+                            0,                           // use default stack size  
+                            (LPTHREAD_START_ROUTINE)start_routine,               // thread function 
+                            thread_arg,                  // argument to thread function 
+                            0,                           // use default creation flags 
+                            (LPDWORD)&thr_id);           // returns the thread identifier 
   // Check the return value for success.  
   if (handle == 0)    {
     lib_rtl_signal_message(LIB_RTL_OS, "CreateThread failed");
@@ -117,17 +117,17 @@ int lib_rtl_join_thread(lib_rtl_thread_t handle)   {
     lib_rtl_signal_message(LIB_RTL_ERRNO, "lib_rtl_join_thread failed");
 #elif defined(_WIN32)
     DWORD sc = ::WaitForSingleObject(handle->handle, INFINITE);
-   switch(sc)  {
-     case WAIT_OBJECT_0:
-     case WAIT_ABANDONED:
+    switch(sc)  {
+    case WAIT_OBJECT_0:
+    case WAIT_ABANDONED:
       ::CloseHandle(handle->handle);
       delete handle;
       return 1;
-     case WAIT_TIMEOUT:
+    case WAIT_TIMEOUT:
       lib_rtl_signal_message(LIB_RTL_OS, "lib_rtl_join_thread failed");
       delete handle;
       return 0;
-   }
+    }
 #endif
   }
   lib_rtl_signal_message(LIB_RTL_DEFAULT, "lib_rtl_join_thread failed [Invalid Handle]");

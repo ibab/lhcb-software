@@ -8,7 +8,7 @@
 class BasicRequest;
 
 /**@class NetworkAddress
-  */
+ */
 class NetworkAddress  {
 public:
   NetworkAddress() {
@@ -19,17 +19,17 @@ public:
 
 /// Defintion of the basic interface of ANY networking connection.
 /**
-    {\Large{\bf Class NetworkConnection}}
-    Basic interface of ANY networking connection.
+   {\Large{\bf Class NetworkConnection}}
+   Basic interface of ANY networking connection.
 
- This is a tricky: NetworkAddress should not be used
- as a variable type at all!
- Instead use the defined variable type of the specific
- connection class:
- e.g.   UdpConnection::Address  new_address;
- The wrapped address type contains the required structure
- and only this structure, i.e. the meory mapping and
- size is identical.
+   This is a tricky: NetworkAddress should not be used
+   as a variable type at all!
+   Instead use the defined variable type of the specific
+   connection class:
+   e.g.   UdpConnection::Address  new_address;
+   The wrapped address type contains the required structure
+   and only this structure, i.e. the meory mapping and
+   size is identical.
 
 */
 class NetworkConnection  : public SmartObject<NetworkConnection> {

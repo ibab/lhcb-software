@@ -43,12 +43,12 @@ namespace {
     }
   }
 #ifdef _DEBUG_MBM_MSG
+#endif
   const char* __msg_user(const USER* user)  {
     static char text[32];
     ::snprintf(text,sizeof(text),"%12X",(void*)user);
     return text;
   }
-#endif
 }
 
 const char* MBMMessage::typeStr(int typ) {
@@ -191,22 +191,41 @@ int MBMMessage::communicate(int fdout, int fdin, int* cancelled)   {
 #ifdef _DEBUG_MBM_MSG
   ::lib_rtl_output(LIB_RTL_ALWAYS,"Poll MBM message %-16s --> %-16s status=%d\n",__msg_user(user),__msg_type(type),status);
 #endif
-  struct pollfd fds;
-  //fds.events  = POLLIN;
-  //fds.revents = 0;
-  //fds.fd      = fdin;
-  //::poll(&fds,1,-1);
+  struct pollfd fds[2];
   while (1)  {
-    fds.events  = POLLIN;
-    fds.revents = POLLIN|POLLERR;
-    fds.fd      = fdin;
-    ::poll(&fds,1,100);
-    if ( fds.revents&POLLIN ) break;
+    fds[0].events  = POLLIN;
+    fds[0].revents = POLLIN|POLLERR|POLLHUP;
+    fds[0].fd      = fdin;
+    fds[1].events  = POLLIN;
+    fds[1].revents = POLLIN|POLLERR|POLLHUP;
+    fds[1].fd      = fdout;
+
+    ::poll(fds,2,100);
+    if ( fds[0].revents&POLLIN )   {
+      break;
+    }
     else if ( cancelled && *cancelled )   {
 #ifdef _DEBUG_MBM_MSG
-      ::lib_rtl_output(LIB_RTL_ALWAYS,"Recv MBM CANCEL %-16s --> %-16s status=%d\n",__msg_user(user),__msg_type(type),status);
+      ::lib_rtl_output(LIB_RTL_ALWAYS,"Recv MBM CANCEL %-16s --> %-16s status=%d\n",
+                       __msg_user(user),__msg_type(type),status);
 #endif
       return status=MBM_REQ_CANCEL;
+    }
+    else if ( fds[0].revents&POLLHUP )    {
+      ::lib_rtl_output(LIB_RTL_ALWAYS,"Recv MBM POLLHUP(IN) %-16s --> %-16s status=%d\n",
+                       __msg_user(user),__msg_type(type),status);
+    }
+    else if ( fds[0].revents&POLLERR )    {
+      ::lib_rtl_output(LIB_RTL_ALWAYS,"Recv MBM POLLERR(IN) %-16s --> %-16s status=%d\n",
+                       __msg_user(user),__msg_type(type),status);
+    }
+    else if ( fds[1].revents&POLLHUP )    {
+      ::lib_rtl_output(LIB_RTL_ALWAYS,"Recv MBM POLLHUP(OUT) %-16s --> %-16s status=%d\n",
+                       __msg_user(user),__msg_type(type),status);
+    }
+    else if ( fds[1].revents&POLLERR )    {
+      ::lib_rtl_output(LIB_RTL_ALWAYS,"Recv MBM POLLERR(OUT) %-16s --> %-16s status=%d\n",
+                       __msg_user(user),__msg_type(type),status);
     }
   }
   if ( !read(fdin) ) {

@@ -2,7 +2,7 @@
 
 int lib_rtl_cancel_io(int channel)    {
 #ifdef _VMS
-   int status = sys$cancel(channel);
+  int status = sys$cancel(channel);
 #else
   int status = channel == 0 ? 0 : 1;
 #endif

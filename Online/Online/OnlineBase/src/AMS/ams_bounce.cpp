@@ -27,7 +27,7 @@ static void check (char *buff1,char *buff2,int len1,int len2)    {
         break;
       if (buff1 [i] != buff2 [i])
         printf ("Mismatch: sent 0x%X received 0x%X at %d\n",
-		buff2 [i], buff1 [i], i);
+                buff2 [i], buff1 [i], i);
     }
 }
 static void help() {
@@ -58,7 +58,7 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
   if ( length==0 ) length=10;
   if (length > SIZE) length = SIZE;
   ::printf (" Starting ams test task (%s) %s for %d turns\n",
-	    (fanout) ? "Sender" : "Reader", amsname.c_str(),loop);
+            (fanout) ? "Sender" : "Reader", amsname.c_str(),loop);
   if (fanout)  {
     ::snprintf(source,sizeof(source),target.c_str());
     ::printf(" task %s: size %d\n",source,length);
@@ -88,8 +88,8 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
       ams_status = amsc_read_message (rmessage, &rsize, source, &ams_fac, 0);
 
       /* for no wt_wait 
-      ams_status = amsc_get_message (rmessage, &rsize, source,
-      0, 10, 0, 0, 0);
+         ams_status = amsc_get_message (rmessage, &rsize, source,
+         0, 10, 0, 0, 0);
       */
       if (ams_status != AMS_SUCCESS)
         err_print (ams_status);
@@ -110,7 +110,7 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
       while ( (p=strchr(p,':')) ) *p++ = 0, q = p; 
       if ( 0 == q ) q = source;
       ::printf("%s %d / %d -- Last msg from:%s\n", 
-	       my_name.c_str(), loop, mx_loop, q);
+               my_name.c_str(), loop, mx_loop, q);
       ::fflush(stdout);
     }
     if (mx_loop == 0 ) {

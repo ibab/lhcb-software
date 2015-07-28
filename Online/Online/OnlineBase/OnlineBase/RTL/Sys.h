@@ -175,6 +175,21 @@ namespace RTL {
    */
   class SysFile  {
   public:
+    class FileDescriptor    {
+      /// File handle
+      int m_fd;
+      
+    public:
+      /// Initializing constructor
+      FileDescriptor(int value) : m_fd(value)      {}
+      /// Default destructor. Non-virtuality is intended. Do not inherit!
+      ~FileDescriptor();
+      /// Access file handle
+      int get() const      {   return m_fd;   }
+    };
+    
+      
+  public:
     /// File name
     std::string m_name;
     /// Initializing constructor

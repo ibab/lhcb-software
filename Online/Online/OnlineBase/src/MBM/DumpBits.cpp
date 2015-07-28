@@ -52,7 +52,7 @@ namespace MBM {
         BufferMemory* id = *j;
         Bits::dumpWords(id->bitmap, id->bitmap_size>>3, words);
         draw_line(REVERSE,  "                          %s Buffer Bitmap Monitor [%s]  pid:%d", 
-          id->bm_name, ::lib_rtl_timestr("%a %d %b %Y  %H:%M:%S",0), lib_rtl_pid());
+                  id->bm_name, ::lib_rtl_timestr("%a %d %b %Y  %H:%M:%S",0), lib_rtl_pid());
         if ( m_bm.size() == 1 )  {
           draw_line(NORMAL,"");
         }

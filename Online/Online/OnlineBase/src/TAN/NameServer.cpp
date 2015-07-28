@@ -56,14 +56,14 @@ public:
 #define NAME_SERVER_ERROR     0
 
 /** @class Nameservice NameServer.cpp TAN/NameServer.cpp
-  *
-  * Interpretation of nameserver requests
-  * - Interprete the received message and build the appropriate
-  *   reply.
-  *
-  *  @author  M.Frank
-  *  @version 1.0
-  */
+ *
+ * Interpretation of nameserver requests
+ * - Interprete the received message and build the appropriate
+ *   reply.
+ *
+ *  @author  M.Frank
+ *  @version 1.0
+ */
 class NameService : public CPP::EventReactor  {
 protected:
   //@Man: Protected member variables
@@ -104,14 +104,14 @@ public:
 };
 
 /** @class UdpNameService NameServer.cpp TAN/NameServer.cpp
-  *
-  *  handle TAN messages in UDP mode
-  *  A network connection is forseen to reply the 
-  *  requested information.                       
-  *
-  *  @author  M.Frank
-  *  @version 1.0
-  */
+ *
+ *  handle TAN messages in UDP mode
+ *  A network connection is forseen to reply the 
+ *  requested information.                       
+ *
+ *  @author  M.Frank
+ *  @version 1.0
+ */
 class UdpNameService : public NameService {
 public:
   //@Man Public member functions
@@ -138,14 +138,14 @@ public:
 
 
 /** @class TcpNameService NameServer.cpp TAN/NameServer.cpp
-  *
-  *  handle TAN messages in TCP/IP mode
-  *  A network connection is forseen to reply the 
-  *  requested information.                       
-  *
-  *  @author  M.Frank
-  *  @version 1.0
-  */
+ *
+ *  handle TAN messages in TCP/IP mode
+ *  A network connection is forseen to reply the 
+ *  requested information.                       
+ *
+ *  @author  M.Frank
+ *  @version 1.0
+ */
 class TcpNameService : public NameService {
 protected:
   //@Man: Protected member variables
@@ -217,12 +217,12 @@ static void _printEntry(const char* msg, TanDataBase::Entry* ent) {
   if ( msg ) {
     if ( ent ) {
       /*
-      ::lib_rtl_output(LIB_RTL_DEBUG,"%s> handle message: %s Name:%s Port=%d [%d] %p\n",
-		       RTL::nodeName().c_str(),msg,ent->_Name(),ent->port(),
-		       ntohs(ent->port()),(void*)ent);
-    }
-    else {
-      ::lib_rtl_output(LIB_RTL_DEBUG,"%s> handle message: %s [No entry]\n",RTL::nodeName().c_str(),msg);
+        ::lib_rtl_output(LIB_RTL_DEBUG,"%s> handle message: %s Name:%s Port=%d [%d] %p\n",
+        RTL::nodeName().c_str(),msg,ent->_Name(),ent->port(),
+        ntohs(ent->port()),(void*)ent);
+        }
+        else {
+        ::lib_rtl_output(LIB_RTL_DEBUG,"%s> handle message: %s [No entry]\n",RTL::nodeName().c_str(),msg);
       */
     }
   }
@@ -238,47 +238,47 @@ void NameService::handleMessage( TanDataBase::Entry*& ent, TanMessage& rec_msg, 
   snd_msg.m_error  = TAN_SS_SUCCESS;
   snd_msg.m_length = sizeof(snd_msg);
   switch ( func )  {
-    case TanMessage::ALLOCATE:                                // Allocation service...
-      if ( (port = m_tandb.allocatePort(ent)) == 0 )
-        snd_msg.m_error = m_tandb.Error();
-      _printEntry("ALLOCATE",ent);
-      break;
-    case TanMessage::DEALLOCATE:
-      _printEntry("DEALLOCATE",ent);
-      if ( TAN_SS_SUCCESS != m_tandb.freePort(ent) ) 
-        snd_msg.m_error = m_tandb.Error();
-      break;
-    case TanMessage::ALIAS:
-      _printEntry("ALIAS",ent);
-      if ( TAN_SS_SUCCESS != m_tandb.insertAlias(ent) )
-        snd_msg.m_error = m_tandb.Error();
-      break;
-    case TanMessage::DEALIAS:
-      _printEntry("DEALIAS",ent);
-      if ( TAN_SS_SUCCESS != m_tandb.removeAlias(ent) )
-        snd_msg.m_error = m_tandb.Error();
-      break;
-    case TanMessage::DUMP:
-      _printEntry("DUMP",ent);
-      m_tandb.Dump(std::cout);
-      break;
-    case TanMessage::SHUTDOWN:
-      _printEntry("SHUTDOWN",ent);
-      ::lib_rtl_output(LIB_RTL_ALWAYS,"+======================================================================+\n");
-      ::lib_rtl_output(LIB_RTL_ALWAYS,"|                  TAN NAMESERVER SHUTDOWN requested.                  |\n");
-      ::lib_rtl_output(LIB_RTL_ALWAYS,"+======================================================================+\n");
-      m_shutdown = true;
-      break;
-    case TanMessage::INQUIRE:                                 // Inquire service...
-      _printEntry("INQUIRE",ent);
-      if ( (port=m_tandb.findPort(rec_msg)) == 0 )  {
-        snd_msg.m_error = m_tandb.Error();
-      }
-      break;
-    default:
-      _printEntry("TAN_SS_UNKNOWNMODE",0);
-      snd_msg.m_error = TAN_SS_UNKNOWNMODE;
-      break;
+  case TanMessage::ALLOCATE:                                // Allocation service...
+    if ( (port = m_tandb.allocatePort(ent)) == 0 )
+      snd_msg.m_error = m_tandb.Error();
+    _printEntry("ALLOCATE",ent);
+    break;
+  case TanMessage::DEALLOCATE:
+    _printEntry("DEALLOCATE",ent);
+    if ( TAN_SS_SUCCESS != m_tandb.freePort(ent) ) 
+      snd_msg.m_error = m_tandb.Error();
+    break;
+  case TanMessage::ALIAS:
+    _printEntry("ALIAS",ent);
+    if ( TAN_SS_SUCCESS != m_tandb.insertAlias(ent) )
+      snd_msg.m_error = m_tandb.Error();
+    break;
+  case TanMessage::DEALIAS:
+    _printEntry("DEALIAS",ent);
+    if ( TAN_SS_SUCCESS != m_tandb.removeAlias(ent) )
+      snd_msg.m_error = m_tandb.Error();
+    break;
+  case TanMessage::DUMP:
+    _printEntry("DUMP",ent);
+    m_tandb.Dump(std::cout);
+    break;
+  case TanMessage::SHUTDOWN:
+    _printEntry("SHUTDOWN",ent);
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"+======================================================================+\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"|                  TAN NAMESERVER SHUTDOWN requested.                  |\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"+======================================================================+\n");
+    m_shutdown = true;
+    break;
+  case TanMessage::INQUIRE:                                 // Inquire service...
+    _printEntry("INQUIRE",ent);
+    if ( (port=m_tandb.findPort(rec_msg)) == 0 )  {
+      snd_msg.m_error = m_tandb.Error();
+    }
+    break;
+  default:
+    _printEntry("TAN_SS_UNKNOWNMODE",0);
+    snd_msg.m_error = TAN_SS_UNKNOWNMODE;
+    break;
   }
   if ( port != 0 )  {
     snd_msg.m_sin.sin_family  = rec_msg.m_sin.sin_family;
@@ -303,7 +303,7 @@ UdpNameService::UdpNameService(bool verbose) : NameService(0)  {
   if ( verbose )  {
     ::lib_rtl_output(LIB_RTL_INFO,"|         U D P         N A M E    S E R V I C E                       |\n");
     ::lib_rtl_output(LIB_RTL_INFO,"|         Port(local): %6d %04X Network:%6d %04X                 |\n",
-        m_port, m_port, htons(m_port), htons(m_port));
+                     m_port, m_port, htons(m_port), htons(m_port));
     ::lib_rtl_output(LIB_RTL_INFO,"+======================================================================+\n");
     ::fflush(stdout);
   }
@@ -340,7 +340,7 @@ void UdpNameService::handle ()   {
     status = snd.send(&rep,sizeof(rep),0,0,&addr);
     if ( status != sizeof(rep) )  {
       ::lib_rtl_output(LIB_RTL_ERROR,"NameService::handle> Error sending message to [%s] on port 0x%X\n",
-        inet_ntoa(rep.address()), rep.port());
+                       inet_ntoa(rep.address()), rep.port());
     }
   }
   if ( m_shutdown ) ::exit(0);
@@ -352,14 +352,14 @@ void UdpNameService::handle ()   {
 #ifdef SERVICE
 TcpNameService::TcpNameService(bool verbose) : NameService(m_tcp=new TcpConnection(NAME_SERVICE_NAME),verbose)
 #else
-TcpNameService::TcpNameService(bool verbose) : NameService(m_tcp=new TcpConnection(NAME_SERVICE_PORT),verbose)
+                                               TcpNameService::TcpNameService(bool verbose) : NameService(m_tcp=new TcpConnection(NAME_SERVICE_PORT),verbose)
 #endif
 {
   m_port = m_tcp->port();
   if ( verbose )  {
     ::lib_rtl_output(LIB_RTL_INFO,"|         T C P / I P   N A M E    S E R V I C E                       |\n");
     ::lib_rtl_output(LIB_RTL_INFO,"|         Port(local): %6d %04X Network:%6d %04X                 |\n",
-        m_port, m_port, htons(m_port), htons(m_port));
+                     m_port, m_port, htons(m_port), htons(m_port));
     ::lib_rtl_output(LIB_RTL_INFO,"+======================================================================+\n");
   }
   m_pAccepthandler = new EventHandler(this);
@@ -375,7 +375,7 @@ TcpNameService::TcpNameService(int port, bool verbose) : NameService(m_tcp=new T
   if ( verbose )  {
     ::lib_rtl_output(LIB_RTL_INFO,"|         T C P / I P   N A M E    S E R V I C E                       |\n");
     ::lib_rtl_output(LIB_RTL_INFO,"|         Port(local): %6d %04X Network:%6d %04X                 |\n",
-        m_port, m_port, htons(m_port), htons(m_port));
+                     m_port, m_port, htons(m_port), htons(m_port));
     ::lib_rtl_output(LIB_RTL_INFO,"+======================================================================+\n");
   }
   m_pAccepthandler = new EventHandler(this);
@@ -436,7 +436,7 @@ int TcpNameService::handleAcceptRequest ( EventHandler* handler )  {
   int status = m_pNetwork->queueAccept(m_port,handler);            // Rearm ACCEPT
   if ( !lib_rtl_is_success(status) )  {
     lib_rtl_output(LIB_RTL_ERROR,"handleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s",
-      m_pNetwork->error(),retry,m_pNetwork->errMsg());             //
+                   m_pNetwork->error(),retry,m_pNetwork->errMsg());             //
   }                                                                //
   if ( channel <= 0 )   {                                          // Error!
     return NAME_SERVER_SUCCESS;                                    // Return status code
@@ -465,9 +465,9 @@ int TcpNameService::handleReceiveRequest ( EventHandler* handler )  {
 
   num_byte = chan->recv( &ent->_Message(), sizeof(ent->_Message()));
   if ( num_byte <= 1 )  {          // Socket closed by Client
-      m_tandb.Close ( ent );         // No need to return error
-      //status = chan->error();      // condition in this case!
-      chan->_unqueueIO (m_port);
+    m_tandb.Close ( ent );         // No need to return error
+    //status = chan->error();      // condition in this case!
+    chan->_unqueueIO (m_port);
   }
   else {
     TanMessage reply;
@@ -481,10 +481,10 @@ int TcpNameService::handleReceiveRequest ( EventHandler* handler )  {
     else  {
       int func = ntohl(reply.function());
       switch( func ) {
-	//case TanMessage::DUMP:
-	//case TanMessage::INQUIRE:       // Inquire service...
+        //case TanMessage::DUMP:
+        //case TanMessage::INQUIRE:       // Inquire service...
       case TanMessage::DEALLOCATE:    // Deallocate port
-	// Here the channel must be closed.
+        // Here the channel must be closed.
         // No task dead message! chan->recv(&reply, 1);
         chan->_unqueueIO (m_port);
         break;
@@ -494,8 +494,8 @@ int TcpNameService::handleReceiveRequest ( EventHandler* handler )  {
           if ( !lib_rtl_is_success(status) ) {
             ::lib_rtl_output(LIB_RTL_ERROR,"Error rearming receive: %s",chan->errMsg());
           }
-	  if ( func != TanMessage::INQUIRE )
-	    return status;
+          if ( func != TanMessage::INQUIRE )
+            return status;
         }
         m_tandb.Close ( ent );
         chan->_unqueueIO (m_port);
@@ -523,7 +523,7 @@ int TcpNameService::suspend  ()   {
 // ----------------------------------------------------------------------------
 int TcpNameService::resume ()   {
   int retry = 0;
-New_allocation:
+ New_allocation:
   if ( m_connection != 0 ) suspend();
   m_connection = m_tcp = new TcpConnection(m_port);
   m_pNetwork = &((TcpNetworkChannel&)m_tcp->recvChannel());
@@ -545,23 +545,23 @@ extern "C" int tan_nameserver (int argc, char* argv[]) {
   while( --argc > 0 )      {
     if ( *(c = *++argv) == '-' )   {
       switch( *++c | 0x20 )  {
-         case 'i':  inquirer  = true;   break;
-         case 'a':  allocator = true;   break;
-         case 't':  tcp       = true;   break;
-         case 'u':  udp       = true;   break;
-         case 'n':  nowait    = true;   break;
-         case 'v':  verbose   = true;   break;
-         case 'd':  delgbl    = true;   break;
-         default:
-Options:
-           ::lib_rtl_output(LIB_RTL_ALWAYS,"NameServer -<opt>\n");
-           ::lib_rtl_output(LIB_RTL_ALWAYS,"  -a(llocator)   listen and serve (DE)ALLOCATION requests\n");
-           ::lib_rtl_output(LIB_RTL_ALWAYS,"  -i(nqquirer)   listen and serve INQUIRE        requests\n");
-           ::lib_rtl_output(LIB_RTL_ALWAYS,"  -tcp           run service in tcp/ip mode (default:udp/INQUIRE tcp/ALLOCATE)\n");
-           ::lib_rtl_output(LIB_RTL_ALWAYS,"  -udp           run service in udp mode    (default:udp/INQUIRE tcp/ALLOCATE)\n");
-           ::lib_rtl_output(LIB_RTL_ALWAYS,"  -n(owait)      Continue execution after routine call. Requires wtc_wait later!\n");
-           ::lib_rtl_output(LIB_RTL_ALWAYS,"  -v(erbose)     Print header at startup.\n");
-           return 0x1;
+      case 'i':  inquirer  = true;   break;
+      case 'a':  allocator = true;   break;
+      case 't':  tcp       = true;   break;
+      case 'u':  udp       = true;   break;
+      case 'n':  nowait    = true;   break;
+      case 'v':  verbose   = true;   break;
+      case 'd':  delgbl    = true;   break;
+      default:
+      Options:
+        ::lib_rtl_output(LIB_RTL_ALWAYS,"NameServer -<opt>\n");
+        ::lib_rtl_output(LIB_RTL_ALWAYS,"  -a(llocator)   listen and serve (DE)ALLOCATION requests\n");
+        ::lib_rtl_output(LIB_RTL_ALWAYS,"  -i(nqquirer)   listen and serve INQUIRE        requests\n");
+        ::lib_rtl_output(LIB_RTL_ALWAYS,"  -tcp           run service in tcp/ip mode (default:udp/INQUIRE tcp/ALLOCATE)\n");
+        ::lib_rtl_output(LIB_RTL_ALWAYS,"  -udp           run service in udp mode    (default:udp/INQUIRE tcp/ALLOCATE)\n");
+        ::lib_rtl_output(LIB_RTL_ALWAYS,"  -n(owait)      Continue execution after routine call. Requires wtc_wait later!\n");
+        ::lib_rtl_output(LIB_RTL_ALWAYS,"  -v(erbose)     Print header at startup.\n");
+        return 0x1;
       }
     }
   }

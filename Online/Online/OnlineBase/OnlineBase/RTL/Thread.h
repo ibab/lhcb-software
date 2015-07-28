@@ -9,7 +9,7 @@
 namespace RTL  {
 
   /**@class Thread Thread.h RTL/Thread.h
-    */
+   */
   class Thread  {
     /// Thread status
     int            m_status;

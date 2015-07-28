@@ -11,10 +11,10 @@
  */
 namespace RTL  {
   /**@class DoubleLinkedQueueScan DoubleLinkedQueueScan.h RTL/DoubleLinkedQueueScan.h
-    *
-    *  @author  M.Frank
-    *  @version 1.0
-    */
+   *
+   *  @author  M.Frank
+   *  @version 1.0
+   */
   template <class T> class DoubleLinkedQueueScan  {
   private:
     /// Queue head
@@ -33,12 +33,12 @@ namespace RTL  {
     /// Get next element in the queue
     T* get()  {
       if ( m_next ) {
-	qentry_t* e = m_next;
-	if ( e != m_head ) {
-	  m_next = (qentry_t*)(((char*)m_next)+(((long)m_next->next)));
-	  return (T*)add_ptr(e, m_offset);
-	}
-	m_next = 0;
+        qentry_t* e = m_next;
+        if ( e != m_head ) {
+          m_next = (qentry_t*)(((char*)m_next)+(((long)m_next->next)));
+          return (T*)add_ptr(e, m_offset);
+        }
+        m_next = 0;
       }
       return 0;
     }
