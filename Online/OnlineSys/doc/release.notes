@@ -6,6 +6,23 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v5r23>2015-07-28 OnlineSys v5r23</A></H1>
+<PRE>
+  Use Gaudi v26r3
+  Updated/new packages:	
+     DAQEvent            v9r20    Event
+     Controller          v0r21    Online
+     DefHLTUtils         v1r13    Online
+     EventBuilder        v0r13    Online
+     FarmConfig          v0r19    Online
+     Gaucho              v7r42    Online
+     GauchoAppl          v1r26    Online
+     GaudiCheckpointing  v0r24    Online
+     GaudiOnline         v2r84    Online
+     OnlineBase          v1r36    Online
+     ROMon               v1r56    Online
+</PRE>
+
 <H1><A NAME=v5r22>2015-07-01 OnlineSys v5r22</A></H1>
 <PRE>
   Use Gaudi v26r2

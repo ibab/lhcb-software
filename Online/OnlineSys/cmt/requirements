@@ -1,5 +1,5 @@
 package OnlineSys
-version v5r22
+version v5r23
 ###
 ### Note: 
 ### last v4 release: v4r69 based on Gaudi v23r7
@@ -12,7 +12,7 @@ branches cmt doc
 #=======================================================
 use MDF                 v3r41    DAQ
 use MDF_ROOT            v1r9     DAQ
-use DAQEvent            v9r19    Event
+use DAQEvent            v9r20    Event
 use GaudiObjDesc        v11r23
 #=======================================================
 # LHCb Online packages
@@ -22,18 +22,18 @@ use Checkpointing       v0r23    Online
 macro CondDBServer_use "CondDBServer v1r6 Online" target-i686 ""
 use $(CondDBServer_use)
 ####use CondDBServer        v1r6     Online
-use Controller          v0r20    Online
+use Controller          v0r21    Online
 use ControllerTests     v0r3     Online
 use DailyReport         v1r3     Online
-use DefHLTUtils         v1r12    Online
+use DefHLTUtils         v1r13    Online
 use DIM                 v20r7p4  Online
-use EventBuilder        v0r12    Online
-use FarmConfig          v0r18    Online
+use EventBuilder        v0r13    Online
+use FarmConfig          v0r19    Online
 use FarmMonitor         v2r13    Online
-use Gaucho              v7r41    Online
-use GauchoAppl          v1r25    Online
-use GaudiCheckpointing  v0r23    Online
-use GaudiOnline         v2r83    Online
+use Gaucho              v7r42    Online
+use GauchoAppl          v1r26    Online
+use GaudiCheckpointing  v0r24    Online
+use GaudiOnline         v2r84    Online
 use GaudiOnlineTests    v1r5     Online
 use GaudiRootCnvTests   v1r13    Online
 use GaudiSerialize      v0r15    Online
@@ -44,7 +44,7 @@ use InsertDB            v1r10    Online
 use MBMDump             v1r16    Online
 use OMAlib              v4r5     Online
 use OnlineAlign         v0r6     Online
-use OnlineBase          v1r35    Online
+use OnlineBase          v1r36    Online
 use OnlineHistDB        v8r2     Online
 use OnlineKernel        v2r23    Online
 use OnlineTools         v1r5     Online
@@ -54,7 +54,7 @@ use PresenterDoc        v1r1     Online
 use PyDIM               v2r15    Online
 use RawBankSizes        v2r21    Online
 use RootCnv             v1r25    Online
-use ROMon               v1r55    Online
+use ROMon               v1r56    Online
 use ROLogger            v0r31    Online
 ## Only at the pit: macro Stomp_use "" CERN "Stomp v1r2 Online"
 ##use $(Stomp_use)
