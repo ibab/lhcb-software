@@ -334,9 +334,9 @@ class B2DXBuilder(object):
         decays = {'B2DRho0'   : ["B+ -> D+ rho(770)0","B- -> D- rho(770)0"],
                   'B2DKstar0' : ["[B- -> D- K*(892)0]cc","[B+ -> D+ K*(892)0]cc"],
                   'B2DPhi'    : ["B+ -> D+ phi(1020)","B- -> D- phi(1020)"]}
-        inputs = {'B2DRho0': d2x+self.hh.rho0_pid,
+        inputs = {'B2DRho0':    d2x+self.hh.rho0_pid,
                   'B2DKstar0' : d2x+self.hh.kstar0_pid,
-                  'B2DPhi'  : d2x+self.hh.phi_pid}
+                  'B2DPhi'  :   d2x+self.hh.phi_pid}
         b2dv = makeB2XSels(decays,dname,inputs,self.config)
         self.lines.append(ProtoLine(b2dv,1.0))
 

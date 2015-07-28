@@ -44,28 +44,32 @@ class Bc2DDBuilder(object):
 
         # ( D->hh )
         name = "D02HH"
-        dmodes = self.d.hh
+        #dmodes = self.d.hh
+        dmodes = self.d.hh_pid
         # With Upstream tracks as well
         #dmodes += self.d.hh_up
         self._buildSel(dmodes,name,self.d0modes)
 
         # ( D->hhhh )
         name = "D02HHHH"
-        dmodes = self.d.hhhh
+        #dmodes = self.d.hhhh
+        dmodes = self.d.hhhh_pid
         # With Upstream tracks as well
         #dmodes += self.d.hhhh_up
         self._buildSel(dmodes,name,self.d0modes)
 
         # ( D->Kshh )
         name = "D02KSHH"
-        dmodes = self.d.kshh_ll  + self.d.kshh_dd
+        #dmodes = self.d.kshh_ll  + self.d.kshh_dd
+        dmodes = self.d.kshh_ll_pid  + self.d.kshh_dd_pid
         # With Upstream tracks as well
         #dmodes += self.d.kshh_ll_up + self.d.kshh_dd_up
         self._buildSel(dmodes,name,self.d0modes)
 
         # ( D->hhpi0 )
         name = "D02HHPI0"
-        dmodes = self.d.pi0hh_merged  + self.d.pi0hh_resolved
+        #dmodes = self.d.pi0hh_merged  + self.d.pi0hh_resolved
+        dmodes = self.d.pi0hh_merged_pid  + self.d.pi0hh_resolved_pid
         # With Upstream tracks as well
         #dmodes += self.d.pi0hh_merged_up + self.d.pi0hh_resolved_up
         self._buildSel(dmodes,name,self.d0modes)
@@ -79,8 +83,10 @@ class Bc2DDBuilder(object):
          
         # ( D0->Kshhpi0 )
         name = "D02KSHHPI0"
-        dmodes  = self.d.kspi0hh_ll_merged + self.d.kspi0hh_ll_resolved
-        dmodes += self.d.kspi0hh_dd_merged + self.d.kspi0hh_dd_resolved
+        #dmodes  = self.d.kspi0hh_ll_merged + self.d.kspi0hh_ll_resolved
+        #dmodes += self.d.kspi0hh_dd_merged + self.d.kspi0hh_dd_resolved
+        dmodes  = self.d.kspi0hh_ll_merged_pid + self.d.kspi0hh_ll_resolved_pid
+        dmodes += self.d.kspi0hh_dd_merged_pid + self.d.kspi0hh_dd_resolved_pid
         # With Upstream
         #dmodes += self.d.kspi0hh_ll_merged_up + self.d.kspi0hh_ll_resolved_up
         #dmodes += self.d.kspi0hh_dd_merged_up + self.d.kspi0hh_dd_resolved_up
@@ -88,35 +94,39 @@ class Bc2DDBuilder(object):
 
     def _createDpModes(self):
         
-        # ( D->hhh ) No PID so far
+        # ( D->hhh )
         name = "D2HHH"
-        dmodes = self.d.hhh
+        #dmodes = self.d.hhh
+        dmodes = self.d.hhh_pid
         # With Upstream tracks as well
         #dmodes += self.d.hhh_up
         self._buildSel(dmodes,name,self.dpmodes)
 
         # ( D->Ksh )
         name = "D2KSH"
-        dmodes = self.d.ksh_ll   + self.d.ksh_dd
+        #dmodes = self.d.ksh_ll   + self.d.ksh_dd
+        dmodes = self.d.ksh_ll_pid   + self.d.ksh_dd_pid
         # With Upstream tracks as well
         #dmodes += self.d.ksh_ll_up + self.d.ksh_dd_up
         self._buildSel(dmodes,name,self.dpmodes)
 
         # ( D->Kshhh )
         name = "D2KSHHH"
-        dmodes = self.d.kshhh_ll + self.d.kshhh_dd
+        #dmodes = self.d.kshhh_ll + self.d.kshhh_dd
+        dmodes = self.d.kshhh_ll_pid + self.d.kshhh_dd_pid
         # With Upstream tracks as well
         #dmodes += self.d.kshhh_ll_up + self.d.kshhh_dd_up
         self._buildSel(dmodes,name,self.dpmodes)
 
-        ## # ( D->hhhpi0 )
-        ## name = "D2HHHPI0"
-        ## dmodes = self.d.pi0hhh_merged + self.d.pi0hhh_resolved # High rate ?
-        ## # With Upstream tracks as well
-        ## #dmodes += self.d.pi0hhh_merged_up + self.d.pi0hhh_resolved_up
-        ## self._buildSel(dmodes,name)
+        # ( D->hhhpi0 )
+        name = "D2HHHPI0"
+        #dmodes = self.d.pi0hhh_merged + self.d.pi0hhh_resolved
+        dmodes = self.d.pi0hhh_merged_pid + self.d.pi0hhh_resolved_pid 
+        # With Upstream tracks as well
+        #dmodes += self.d.pi0hhh_merged_up + self.d.pi0hhh_resolved_up
+        self._buildSel(dmodes,name,self.dpmodes)
 
-        # ( D0->Kshpi0 )
+        # ( D->Kshpi0 )
         name = "D2KSHPI0"
         dmodes  = self.d.kspi0h_ll_merged + self.d.kspi0h_ll_resolved
         dmodes += self.d.kspi0h_dd_merged + self.d.kspi0h_dd_resolved
@@ -125,31 +135,51 @@ class Bc2DDBuilder(object):
         #dmodes += self.d.kspi0h_dd_merged_up + self.d.kspi0h_dd_resolved_up
         self._buildSel(dmodes,name,self.dpmodes)
 
+        # ( D -> K*+hh )
+        name = "D2KstHH"
+        dmodes = self.d.kstarhh
+        self._buildSel(dmodes,name,self.dpmodes)
+
+        # ( D -> K*+K*0 )
+        name = "D2KstKst0"
+        dmodes = self.d.kstarkstar0
+        self._buildSel(dmodes,name,self.dpmodes)
+
+        # ( D -> K*+Ks )
+        name = "D2KstKS"
+        dmodes = self.d.kstarks_ll + self.d.kstarks_dd
+        self._buildSel(dmodes,name,self.dpmodes)
+  
     def _createDstarPlusModes(self):
 
         # D*+ modes ( D0 -> hh )
         name = "Dst2D0PID02HH"
-        dmodes = self.dst.d0pi
+        #dmodes = self.dst.d0pi
+        dmodes = self.dst.d0pi_pid
         #dmodes += self.dst.d0pi_dup + self.dst.d0pi_hup + self.dst.d0pi_dup_hup
         self._buildSel(dmodes,name,self.dstarpmodes)
 
         # D*+ modes ( D0 -> hhhh )
         name = "Dst2D0PID02HHHH"
-        dmodes = self.dst.d0pi_hhhh
+        #dmodes = self.dst.d0pi_hhhh
+        dmodes = self.dst.d0pi_hhhh_pid
         #dmodes += self.dst.d0pi_hhhh_dup + self.dst.d0pi_hhhh_hup + self.dst.d0pi_hhhh_dup_hup
         self._buildSel(dmodes,name,self.dstarpmodes)
 
         # D*+ modes ( D0 -> Kshh )
         name = "Dst2D0PID02KSHH"
-        dmodes = self.dst.d0pi_kshh_ll + self.dst.d0pi_kshh_dd
+        #dmodes = self.dst.d0pi_kshh_ll + self.dst.d0pi_kshh_dd
+        dmodes = self.dst.d0pi_kshh_ll_pid + self.dst.d0pi_kshh_dd_pid
         #dmodes += self.dst.d0pi_kshh_ll_dup + self.dst.d0pi_kshh_dd_dup
         #dmodes += self.dst.d0pi_kshh_ll_hup + self.dst.d0pi_kshh_dd_hup
         self._buildSel(dmodes,name,self.dstarpmodes)
 
         # D*+ modes ( D0 -> KsPi0hh )
         name = "Dst2D0PID02KSPI0HH"
-        dmodes  = self.dst.d0pi_kspi0hh_ll_merged + self.dst.d0pi_kspi0hh_dd_merged
-        dmodes += self.dst.d0pi_kspi0hh_ll_resolved + self.dst.d0pi_kspi0hh_dd_resolved
+        #dmodes  = self.dst.d0pi_kspi0hh_ll_merged + self.dst.d0pi_kspi0hh_dd_merged
+        #dmodes += self.dst.d0pi_kspi0hh_ll_resolved + self.dst.d0pi_kspi0hh_dd_resolved
+        dmodes  = self.dst.d0pi_kspi0hh_ll_merged_pid + self.dst.d0pi_kspi0hh_dd_merged_pid
+        dmodes += self.dst.d0pi_kspi0hh_ll_resolved_pid + self.dst.d0pi_kspi0hh_dd_resolved_pid
         #dmodes += self.dst.d0pi_kspi0hh_ll_merged_dup + self.dst.d0pi_kspi0hh_dd_merged_dup
         #dmodes += self.dst.d0pi_kspi0hh_ll_resolved_dup + self.dst.d0pi_kspi0hh_dd_resolved_dup
         #dmodes += self.dst.d0pi_kspi0hh_ll_merged_hup + self.dst.d0pi_kspi0hh_dd_merged_hup
@@ -158,7 +188,8 @@ class Bc2DDBuilder(object):
 
         # Ds*+ pi0 modes ( Ds+ -> hhh )
         name = "Dst2DPI0D2HHH"
-        dmodes = self.dst.dpi0_merged + self.dst.dpi0_resolved
+        #dmodes = self.dst.dpi0_merged + self.dst.dpi0_resolved
+        dmodes = self.dst.dpi0_merged_pid + self.dst.dpi0_resolved_pid
         #dmodes += self.dst.dpi0_merged_dup + self.dst.dpi0_resolved_dup
         self._buildSel(dmodes,name,self.dstarpmodes)
         
@@ -172,8 +203,10 @@ class Bc2DDBuilder(object):
 
         # Ds*+ pi0 modes ( Ds+ -> Kshhh )
         name = "Dst2DPI0D2KSHHH"
-        dmodes  = self.dst.dpi0_merged_kshhh_ll + self.dst.dpi0_resolved_kshhh_ll
-        dmodes += self.dst.dpi0_merged_kshhh_dd + self.dst.dpi0_resolved_kshhh_dd
+        #dmodes  = self.dst.dpi0_merged_kshhh_ll + self.dst.dpi0_resolved_kshhh_ll
+        #dmodes += self.dst.dpi0_merged_kshhh_dd + self.dst.dpi0_resolved_kshhh_dd
+        dmodes  = self.dst.dpi0_merged_kshhh_ll_pid + self.dst.dpi0_resolved_kshhh_ll_pid
+        dmodes += self.dst.dpi0_merged_kshhh_dd_pid + self.dst.dpi0_resolved_kshhh_dd_pid
         #dmodes += self.dst.dpi0_merged_kshhh_ll_dup + self.dst.dpi0_resolved_kshhh_ll_dup
         #dmodes += self.dst.dpi0_merged_kshhh_dd_dup + self.dst.dpi0_resolved_kshhh_dd_dup
         self._buildSel(dmodes,name,self.dstarpmodes)
@@ -185,12 +218,13 @@ class Bc2DDBuilder(object):
         #dmodes += self.dst.dpi0_merged_kspi0h_ll_dup + self.dst.dpi0_merged_kspi0h_dd_dup
         #dmodes += self.dst.dpi0_resolved_kspi0h_ll_dup + self.dst.dpi0_resolved_kspi0h_dd_dup
         self._buildSel(dmodes,name,self.dstarpmodes)
-  
-        ## # Ds*+ gamma modes ( Ds+ -> hhh )
-        ## name = "DStar2DGammaD2HHH"
-        ## dmodes = self.dst.dgamma_hhh
-        ## #dmodes += self.dst.dgamma_hhh_dup
-        ## self._buildSel(dmodes,name,self.dstarpmodes)
+
+        # Ds*+ gamma modes ( Ds+ -> hhh )
+        name = "DStar2DGammaD2HHH"
+        #dmodes = self.dst.dgamma_hhh
+        dmodes = self.dst.dgamma_hhh_pid
+        #dmodes += self.dst.dgamma_hhh_dup
+        self._buildSel(dmodes,name,self.dstarpmodes)
 
         # Ds*+ gamma modes ( Ds+ -> Ksh )
         name = "Dst2DGammaD2KSH"
@@ -200,7 +234,8 @@ class Bc2DDBuilder(object):
 
         # Ds*+ gamma modes ( Ds+ -> Kshhh )
         name = "Dst2DGammaD2KSHHH"
-        dmodes = self.dst.dgamma_kshhh_ll + self.dst.dgamma_kshhh_dd
+        #dmodes = self.dst.dgamma_kshhh_ll + self.dst.dgamma_kshhh_dd
+        dmodes = self.dst.dgamma_kshhh_ll_pid + self.dst.dgamma_kshhh_dd_pid
         #dmodes += self.dst.dgamma_kshhh_ll_dup + self.dst.dgamma_kshhh_dd_dup
         self._buildSel(dmodes,name,self.dstarpmodes)
 
@@ -215,25 +250,29 @@ class Bc2DDBuilder(object):
 
         # D0* pi0 ( D0 -> hh )
         name = "Dst02D0PI0D02HH"
-        dmodes  = self.dst.d0pi0_merged      + self.dst.d0pi0_resolved
+        #dmodes  = self.dst.d0pi0_merged      + self.dst.d0pi0_resolved
+        dmodes  = self.dst.d0pi0_merged_pid      + self.dst.d0pi0_resolved_pid
         #dmodes += self.dst.d0pi0_merged_dup  + self.dst.d0pi0_resolved_dup
         self._buildSel(dmodes,name,self.dstar0modes)
 
         # D0* pi0 ( D0 -> hhhh )
         name = "Dst02D0PI0D02HHHH"
-        dmodes = self.dst.d0pi0_hhhh_merged + self.dst.d0pi0_hhhh_resolved
+        #dmodes = self.dst.d0pi0_hhhh_merged + self.dst.d0pi0_hhhh_resolved
+        dmodes = self.dst.d0pi0_hhhh_merged_pid + self.dst.d0pi0_hhhh_resolved_pid
         #dmodes += self.dst.d0pi0_hhhh_merged_dup + self.dst.d0pi0_hhhh_resolved_dup
         self._buildSel(dmodes,name,self.dstar0modes)
 
         # D0* pi0 ( D0 -> Kshh )
         name = "Dst02D0PI0D02KSHH"
-        dmodes = self.dst.d0pi0_kshh_ll     + self.dst.d0pi0_kshh_dd
+        #dmodes = self.dst.d0pi0_kshh_ll     + self.dst.d0pi0_kshh_dd
+        dmodes = self.dst.d0pi0_kshh_ll_pid     + self.dst.d0pi0_kshh_dd_pid
         #dmodes += self.dst.d0pi0_kshh_ll_dup + self.dst.d0pi0_kshh_dd_dup
         self._buildSel(dmodes,name,self.dstar0modes)
 
          # D0* pi0 ( D0 -> Kshh )
         name = "Dst02D0GammaD02KSHH"
-        dmodes = self.dst.d0gamma_kshh_ll   + self.dst.d0gamma_kshh_dd
+        #dmodes = self.dst.d0gamma_kshh_ll   + self.dst.d0gamma_kshh_dd
+        dmodes = self.dst.d0gamma_kshh_ll_pid   + self.dst.d0gamma_kshh_dd_pid
         #dmodes += self.dst.d0gamma_kshh_ll_dup + self.dst.d0gamma_kshh_dd_dup
         self._buildSel(dmodes,name,self.dstar0modes)
 

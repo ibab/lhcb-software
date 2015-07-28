@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-28 - Chris Jones
+ - Add some additional K*+ K*0 lines to the Bc->DD builder in the B2OC module.
+ - Enable by default loose PID preselection in the B2OC Bc->DD builder.
+ - Fix a bug in the B2OC HH builder _makeKsPi method where DD Ks candidates
+   where incorrectly being used in the LL version of the line.
+
 ! 2015-07-28 - Lucio Anderlini
  - Fixed TISTOS in DiMuonInherit
 

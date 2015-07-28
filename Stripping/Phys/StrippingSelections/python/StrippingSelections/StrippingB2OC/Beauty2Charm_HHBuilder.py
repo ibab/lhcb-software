@@ -151,7 +151,7 @@ class HHBuilder(object):
                                 self.ks["DD"]+[self.pions])
         ll = self._makeXPLUS2HH('X2KsPiLL',['[K*(892)+ -> KS0 pi+]cc'],
                                 '(AM < 5.2*GeV)',self.config,
-                                self.ks["DD"]+[self.pions])
+                                self.ks["LL"]+[self.pions])
         return [MergedSelection('X2KsPiBeauty2Charm',
                                 RequiredSelections=[dd,ll])]
 

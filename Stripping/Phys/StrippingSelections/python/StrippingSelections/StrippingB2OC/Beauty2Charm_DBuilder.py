@@ -45,24 +45,28 @@ def subPIDSels(decays,prefix,suffix,min,max,inputs):
 class DBuilder(object):
     '''Produces all D mesons for the Beauty2Charm module.'''
 
-    def __init__(self,pions,kaons,ks,pi0,uppions,muons,config,config_pid):
+    def __init__(self,pions,kaons,ks,pi0,uppions,muons,hh,config,config_pid):
+        
         self.pions = pions
         self.kaons = kaons
         self.ks    = ks
         self.pi0   = pi0
         self.uppions = uppions
         self.muons = muons
+        self.hhBuilder = hh
         self.config = config
         self.config_pid = config_pid
-        self.hh = self._makeD2hh()
-        self.hhh = self._makeD2hhh()
+        self.hh   = self._makeD2hh()
+        self.hhh  = self._makeD2hhh()
         self.hhhh = self._makeD2hhhh()
-        self.ksh_ll  = self._makeD2KSh("LL")
-        self.ksh_dd  = self._makeD2KSh("DD")
-        self.kshh_ll  = self._makeD2KShh("LL")
-        self.kshh_dd  = self._makeD2KShh("DD")
+        
+        self.ksh_ll    = self._makeD2KSh("LL")
+        self.ksh_dd    = self._makeD2KSh("DD")
+        self.kshh_ll   = self._makeD2KShh("LL")
+        self.kshh_dd   = self._makeD2KShh("DD")
         self.kshhh_ll  = self._makeD2KShhh("LL")
         self.kshhh_dd  = self._makeD2KShhh("DD")
+        
         self.pi0hh_merged = self._makeD2Pi0hh("Merged")
         self.pi0hh_resolved = self._makeD2Pi0hh("Resolved") 
         self.pi0hhh_merged = self._makeD2Pi0hhh("Merged")
@@ -75,10 +79,20 @@ class DBuilder(object):
         self.kspi0h_dd_merged = self._makeD2KSPi0h("DD","Merged")
         self.kspi0h_dd_resolved = self._makeD2KSPi0h("DD","Resolved")
 
-        self.kspi0hh_ll_merged = self._makeD2KSPi0hh("LL","Merged")
+        self.kspi0hh_ll_merged   = self._makeD2KSPi0hh("LL","Merged")
         self.kspi0hh_ll_resolved = self._makeD2KSPi0hh("LL","Resolved")
-        self.kspi0hh_dd_merged = self._makeD2KSPi0hh("DD","Merged")
+        self.kspi0hh_dd_merged   = self._makeD2KSPi0hh("DD","Merged")
         self.kspi0hh_dd_resolved = self._makeD2KSPi0hh("DD","Resolved")
+
+        self.kspi0hh_ll_merged_pid   = [filterPID('D2KsLLMergedPi0HHPID',self.kspi0hh_ll_merged,config_pid)]
+        self.kspi0hh_ll_resolved_pid = [filterPID('D2KsLLResolvedPi0HHPID',self.kspi0hh_ll_resolved,config_pid)]
+        self.kspi0hh_dd_merged_pid   = [filterPID('D2KsDDMergedPi0HHPID',self.kspi0hh_dd_merged,config_pid)]
+        self.kspi0hh_dd_resolved_pid = [filterPID('D2KsDDResolvedPi0HHPID',self.kspi0hh_dd_resolved,config_pid)]
+
+        self.kstarhh = self._makeD2Kstarhh()
+        self.kstarkstar0 = self._makeD2KstarKstar0()
+        self.kstarks_ll = self._makeD2KstarKs("LL")
+        self.kstarks_dd = self._makeD2KstarKs("DD")
         
         # UP tracks in D
         self.hh_up = self._makeD2hh(True)
@@ -114,7 +128,25 @@ class DBuilder(object):
         self.hhh_pid = [filterPID('D2HHHPID',self.hhh,config_pid)]
         self.hhh_pid_tight = [filterPID('D2HHHPIDTIGHT',self.hhh_pid,
                                         config_pid['TIGHT'])]
+        self.hhhh_pid = [filterPID('D2HHHHPID',self.hhhh,config_pid)]
+        self.hhhh_pid_tight = [filterPID('D2HHHHPIDTIGHT',self.hhhh_pid,
+                                         config_pid['TIGHT'])]
         self.hh_pid_tight_up = [filterPID('D2HHPIDTIGHTUP',self.hh_up,config_pid['TIGHT'])]
+        
+        self.ksh_ll_pid    = [filterPID('D2KsHLLPID',self.ksh_ll,config_pid)]
+        self.ksh_dd_pid    = [filterPID('D2KsHDDPID',self.ksh_dd,config_pid)]
+        self.kshh_ll_pid   = [filterPID('D2KsHHLLPID',self.kshh_ll,config_pid)]
+        self.kshh_dd_pid   = [filterPID('D2KsHHDDPID',self.kshh_dd,config_pid)]
+        self.kshhh_ll_pid  = [filterPID('D2KsHHHLLPID',self.kshhh_ll,config_pid)]
+        self.kshhh_dd_pid  = [filterPID('D2KsHHHDDPID',self.kshhh_dd,config_pid)]
+
+        self.pi0hh_merged_pid     = [filterPID('D2MergedPi0HHPID',self.pi0hh_merged,config_pid)]
+        self.pi0hh_resolved_pid   = [filterPID('D2ResolvedPi0HHPID',self.pi0hh_resolved,config_pid)]
+        self.pi0hhh_merged_pid    = [filterPID('D2MergedPi0HHHPID',self.pi0hhh_merged,config_pid)]
+        self.pi0hhh_resolved_pid  = [filterPID('D2ResolvedPi0HHHPID',self.pi0hhh_resolved,config_pid)]
+        self.pi0hhhh_merged_pid   = [filterPID('D2MergedPi0HHHHPID',self.pi0hhhh_merged,config_pid)]
+        self.pi0hhhh_resolved_pid = [filterPID('D2ResolvedPi0HHHHPID',self.pi0hhhh_resolved,config_pid)]
+
         # subset decays
         oneK = "NINTREE(ABSID=='K+') == 1"
         self.kpi = [filterSelection('D2KPi',oneK,self.hh)]
@@ -439,7 +471,83 @@ class DBuilder(object):
         msels = subPIDSels(getCCs(decays),'D-2KsH'+tag,which,min,max,[protoDm2Ksh])
         return [MergedSelection('D2KsHBeauty2Charm_%s%s'%(which,tag),
                                 RequiredSelections=[psels,msels])]
-   
+
+    def _makeD2KstarKs(self,which):
+        min,max = self._massWindow('D+')
+        decaysp = [["K*(892)+","KS0"]]
+        wmp = awmFunctor(decaysp,min,max)
+        decaysm = [["K*(892)-","KS0"]]
+        wmm = awmFunctor(decaysm,min,max)
+        config = deepcopy(self.config)
+        config.pop('ADOCA12_MAX')
+        inputs = self.hhBuilder.kspi + self.hhBuilder.kstarpm + self.ks[which]
+        comboCutsp = [LoKiCuts(['ASUMPT'],config).code(),wmp]
+        comboCutsp = LoKiCuts.combine(comboCutsp)
+        comboCutsm = [LoKiCuts(['ASUMPT'],config).code(),wmm]
+        comboCutsm = LoKiCuts.combine(comboCutsm)
+        momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
+        cpp = CombineParticles(CombinationCut=comboCutsp,MotherCut=momCuts,
+                               DecayDescriptors=['D+ -> K*(892)+ KS0'])
+        cpm = CombineParticles(CombinationCut=comboCutsm,MotherCut=momCuts,
+                               DecayDescriptors=['D- -> K*(892)- KS0'])
+        selp = Selection('ProtoD+2KstKs'+which+'Beauty2Charm',Algorithm=cpp,RequiredSelections=inputs)
+        selm = Selection('ProtoD-2KstKs'+which+'Beauty2Charm',Algorithm=cpm,RequiredSelections=inputs)
+        return [ MergedSelection('D2KstKs'+which+'Beauty2Charm',RequiredSelections=[selp,selm]) ]
+
+    def _makeD2KstarKstar0(self):
+        min,max = self._massWindow('D+')
+        decaysp = [["K*(892)+","K*(892)~0"]]
+        wmp = awmFunctor(decaysp,min,max)
+        decaysm = [["K*(892)-","K*(892)0"]]
+        wmm = awmFunctor(decaysm,min,max)
+        config = deepcopy(self.config)
+        config.pop('ADOCA12_MAX')
+        inputs = self.hhBuilder.kspi + self.hhBuilder.kstarpm + self.hhBuilder.kstar0
+        comboCutsp = [LoKiCuts(['ASUMPT'],config).code(),wmp]
+        comboCutsp = LoKiCuts.combine(comboCutsp)
+        comboCutsm = [LoKiCuts(['ASUMPT'],config).code(),wmm]
+        comboCutsm = LoKiCuts.combine(comboCutsm)
+        momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
+        #dauCuts = { "K*(892)+"  : hasTopoChild(),
+        #            "K*(892)-"  : hasTopoChild(),
+        #            "K*(892)~0" : hasTopoChild(),
+        #            "K*(892)0"  : hasTopoChild() }
+        cpp = CombineParticles(CombinationCut=comboCutsp,MotherCut=momCuts,
+                               #DaughtersCuts=dauCuts,
+                               DecayDescriptors=['D+ -> K*(892)+ K*(892)~0'])
+        cpm = CombineParticles(CombinationCut=comboCutsm,MotherCut=momCuts,
+                               #DaughtersCuts=dauCuts,
+                               DecayDescriptors=['D- -> K*(892)- K*(892)0'])
+        selp = Selection('ProtoD+2KstKst0Beauty2Charm',Algorithm=cpp,RequiredSelections=inputs)
+        selm = Selection('ProtoD-2KstKst0Beauty2Charm',Algorithm=cpm,RequiredSelections=inputs)
+        return [ MergedSelection('D2KstKst0Beauty2Charm',RequiredSelections=[selp,selm]) ]
+        
+
+    def _makeD2Kstarhh(self,up=False):
+        '''Makes D-> K*+(->Ksh,Kpi0) hh'''
+        tag = ''
+        if up: tag = 'UP'  
+        min,max = self._massWindow('D+')
+        decaysp = [['pi+','pi-','K*(892)+'],['pi+','K-','K*(892)+'],
+                  ['K+','pi-','K*(892)+'],['K+','K-','K*(892)+']]
+        wmp = awmFunctor(decaysp,min,max)
+        decaysm = [['pi+','pi-','K*(892)-'],['pi+','K-','K*(892)-'],
+                   ['K+','pi-','K*(892)-'],['K+','K-','K*(892)-']]
+        wmm = awmFunctor(decaysm,min,max)
+        config = deepcopy(self.config)    
+        config.pop('ADOCA13_MAX')
+        config.pop('ADOCA23_MAX')   
+        if up : extrainputs = self.hhBuilder.kspi + self.hhBuilder.kstarpm + [self.uppions]
+        else:   extrainputs = self.hhBuilder.kspi + self.hhBuilder.kstarpm
+        protoDp2Ksthh = self._makeD2ThreeBody('D+2KstHH',['D+ -> pi+ pi- K*(892)+'],
+                                              wmp,up,config,extrainputs)
+        psels = subPIDSels(decaysp,'D+2KstHH',tag,min,max,[protoDp2Ksthh])
+        protoDm2Ksthh = self._makeD2ThreeBody('D-2KstHH',['D- -> pi+ pi- K*(892)-'],
+                                              wmm,up,config,extrainputs)
+        msels = subPIDSels(decaysm,'D-2KstHH',tag,min,max,[protoDm2Ksthh])
+        return [MergedSelection('D2KstHHBeauty2Charm_%s'%tag,
+                                RequiredSelections=[psels,msels])]
+    
     def _makeD2KShh(self,which,up=False):
         '''Makes D->Kshh'''
         min,max = self._massWindow('D0')
@@ -452,7 +560,7 @@ class DBuilder(object):
         if up : extrainputs = self.ks[which] +  [self.uppions]
         else: extrainputs = self.ks[which]
         protoD2Kshh = self._makeD2ThreeBody('D2KSHH'+which,['D0 -> pi+ pi- KS0'],
-                                    wm,up,config,extrainputs)
+                                            wm,up,config,extrainputs)
         name = 'D2KsHH'
         if up: name += 'UP'
         return [subPIDSels(decays,name,which,min,max,[protoD2Kshh])]
@@ -711,17 +819,27 @@ class DstarBuilder(object):
         self.photons        = photons
         self.config         = config
         self.d0pi           = self._makeDstar2D0pi('',self.d.hh)
+        self.d0pi           = self._makeDstar2D0pi('D2HHPID',self.d.hh_pid)
         self.d0pi_k3pi      = self._makeDstar2D0pi('D2K3Pi',self.d.k3pi)
         self.d0pi_hhhh      = self._makeDstar2D0pi('D2HHHH',self.d.hhhh)
+        self.d0pi_hhhh_pid  = self._makeDstar2D0pi('D2HHHHPID',self.d.hhhh_pid)
         self.d0pi_hhhh_ws   = self._makeDstar2D0pi('D2HHHHWS',self.d.hhhh_ws)
         self.d0pi_kshh_ll   = self._makeDstar2D0pi('D2KSHHLL',self.d.kshh_ll)
         self.d0pi_kshh_dd   = self._makeDstar2D0pi('D2KSHHDD',self.d.kshh_dd)
+        self.d0pi_kshh_ll_pid  = self._makeDstar2D0pi('D2KSHHLLPID',self.d.kshh_ll_pid)
+        self.d0pi_kshh_dd_pid  = self._makeDstar2D0pi('D2KSHHDDPID',self.d.kshh_dd_pid)
         self.d0pi_pid       = [filterPID('Dstar2D0PiPID',self.d0pi,config_pid,2)]
 
         self.d0pi_kspi0hh_ll_merged = self._makeDstar2D0pi('D2KSLLPI0MERGEDHH',self.d.kspi0hh_ll_merged)
         self.d0pi_kspi0hh_dd_merged = self._makeDstar2D0pi('D2KSDDPI0MERGEDHH',self.d.kspi0hh_dd_merged)
         self.d0pi_kspi0hh_ll_resolved = self._makeDstar2D0pi('D2KSLLPI0RESOLVEDHH',self.d.kspi0hh_ll_resolved)
         self.d0pi_kspi0hh_dd_resolved = self._makeDstar2D0pi('D2KSDDPI0RESOLVEDHH',self.d.kspi0hh_dd_resolved)
+
+        self.d0pi_kspi0hh_ll_merged_pid = self._makeDstar2D0pi('D2KSLLPI0MERGEDHHPID',self.d.kspi0hh_ll_merged_pid)
+        self.d0pi_kspi0hh_dd_merged_pid = self._makeDstar2D0pi('D2KSDDPI0MERGEDHHPID',self.d.kspi0hh_dd_merged_pid)
+        self.d0pi_kspi0hh_ll_resolved_pid = self._makeDstar2D0pi('D2KSLLPI0RESOLVEDHHPID',self.d.kspi0hh_ll_resolved_pid)
+        self.d0pi_kspi0hh_dd_resolved_pid = self._makeDstar2D0pi('D2KSDDPI0RESOLVEDHHPID',self.d.kspi0hh_dd_resolved_pid)
+
         # With Upstream D's
         self.d0pi_kspi0hh_ll_merged_dup = self._makeDstar2D0pi('UPD2KSLLPI0MERGEDHH',self.d.kspi0hh_ll_merged_up)
         self.d0pi_kspi0hh_dd_merged_dup = self._makeDstar2D0pi('UPD2KSDDPI0MERGEDHH',self.d.kspi0hh_dd_merged_up)
@@ -735,8 +853,12 @@ class DstarBuilder(object):
         
         self.d0pi0_merged        = self._makeDstar02D0Pi0( '', 'Merged'  , self.d.hh )
         self.d0pi0_resolved      = self._makeDstar02D0Pi0( '', 'Resolved', self.d.hh )
+        self.d0pi0_merged_pid    = self._makeDstar02D0Pi0( 'D2HHPID', 'Merged'  , self.d.hh_pid )
+        self.d0pi0_resolved_pid  = self._makeDstar02D0Pi0( 'D2HHPID', 'Resolved', self.d.hh_pid )
         self.d0pi0_hhhh_merged   = self._makeDstar02D0Pi0( 'D2HHHH', 'Merged'  , self.d.hhhh )
         self.d0pi0_hhhh_resolved = self._makeDstar02D0Pi0( 'D2HHHH', 'Resolved', self.d.hhhh )
+        self.d0pi0_hhhh_merged_pid   = self._makeDstar02D0Pi0( 'D2HHHHPID', 'Merged'  , self.d.hhhh_pid )
+        self.d0pi0_hhhh_resolved_pid = self._makeDstar02D0Pi0( 'D2HHHHPID', 'Resolved', self.d.hhhh_pid )
         # With Upstream D's
         self.d0pi0_merged_dup        = self._makeDstar02D0Pi0( 'UPD2HH', 'Merged'  , self.d.hh_up )
         self.d0pi0_resolved_dup      = self._makeDstar02D0Pi0( 'UPD2HH', 'Resolved', self.d.hh_up )
@@ -762,14 +884,20 @@ class DstarBuilder(object):
         # CRJ : Modes for Ds*+ -> Ds+ pi0
         self.dpi0_merged              = self._makeDstar2DPi0( '', 'Merged'  ,   self.d.hhh )
         self.dpi0_resolved            = self._makeDstar2DPi0( '', 'Resolved'  , self.d.hhh )
+        self.dpi0_merged_pid          = self._makeDstar2DPi0( 'D2HHHPID', 'Merged'  ,   self.d.hhh_pid )
+        self.dpi0_resolved_pid        = self._makeDstar2DPi0( 'D2HHHPID', 'Resolved'  , self.d.hhh_pid )
         self.dpi0_merged_ksh_ll       = self._makeDstar2DPi0( 'D2KSHLL', 'Merged', self.d.ksh_ll )
         self.dpi0_merged_ksh_dd       = self._makeDstar2DPi0( 'D2KSHDD', 'Merged', self.d.ksh_dd )
         self.dpi0_merged_kshhh_ll     = self._makeDstar2DPi0( 'D2KSHHHLL', 'Merged', self.d.kshhh_ll )
         self.dpi0_merged_kshhh_dd     = self._makeDstar2DPi0( 'D2KSHHHDD', 'Merged', self.d.kshhh_dd )
+        self.dpi0_merged_kshhh_ll_pid = self._makeDstar2DPi0( 'D2KSHHHLLPID', 'Merged', self.d.kshhh_ll_pid )
+        self.dpi0_merged_kshhh_dd_pid = self._makeDstar2DPi0( 'D2KSHHHDDPID', 'Merged', self.d.kshhh_dd_pid )
         self.dpi0_resolved_ksh_ll     = self._makeDstar2DPi0( 'D2KSHLL', 'Resolved', self.d.ksh_ll )
         self.dpi0_resolved_ksh_dd     = self._makeDstar2DPi0( 'D2KSHDD', 'Resolved', self.d.ksh_dd )
         self.dpi0_resolved_kshhh_ll   = self._makeDstar2DPi0( 'D2KSHHHLL', 'Resolved', self.d.kshhh_ll )
         self.dpi0_resolved_kshhh_dd   = self._makeDstar2DPi0( 'D2KSHHHDD', 'Resolved', self.d.kshhh_dd )
+        self.dpi0_resolved_kshhh_ll_pid = self._makeDstar2DPi0( 'D2KSHHHLLPID', 'Resolved', self.d.kshhh_ll_pid )
+        self.dpi0_resolved_kshhh_dd_pid = self._makeDstar2DPi0( 'D2KSHHHDDPID', 'Resolved', self.d.kshhh_dd_pid )
         self.dpi0_merged_kspi0h_ll    = self._makeDstar2DPi0( 'D2KSPI0HLL', 'Merged', self.d.kspi0h_ll_resolved+self.d.kspi0h_ll_merged )
         self.dpi0_merged_kspi0h_dd    = self._makeDstar2DPi0( 'D2KSPI0HDD', 'Merged', self.d.kspi0h_dd_resolved+self.d.kspi0h_dd_merged )
         self.dpi0_resolved_kspi0h_ll  = self._makeDstar2DPi0( 'D2KSPI0HLL', 'Resolved', self.d.kspi0h_ll_resolved+self.d.kspi0h_ll_merged )
@@ -793,10 +921,13 @@ class DstarBuilder(object):
         
         # CRJ : Modes for Ds*+ -> Ds+ gamma
         self.dgamma_hhh       = self._makeDstar2DGamma( 'D2HHH', self.d.hhh )
+        self.dgamma_hhh_pid   = self._makeDstar2DGamma( 'D2HHHPID', self.d.hhh_pid )
         self.dgamma_ksh_ll    = self._makeDstar2DGamma( 'D2KsHLL', self.d.ksh_ll )
         self.dgamma_ksh_dd    = self._makeDstar2DGamma( 'D2KsHDD', self.d.ksh_dd )
         self.dgamma_kshhh_ll  = self._makeDstar2DGamma( 'D2KsHHHLL', self.d.kshhh_ll )
         self.dgamma_kshhh_dd  = self._makeDstar2DGamma( 'D2KsHHHDD', self.d.kshhh_dd )
+        self.dgamma_kshhh_ll_pid  = self._makeDstar2DGamma( 'D2KsHHHLLPID', self.d.kshhh_ll_pid )
+        self.dgamma_kshhh_dd_pid  = self._makeDstar2DGamma( 'D2KsHHHDDPID', self.d.kshhh_dd_pid )
         self.dgamma_kspi0h_ll = self._makeDstar2DGamma( 'D2KsPI0HLL', self.d.kspi0h_ll_resolved+self.d.kspi0h_ll_merged )
         self.dgamma_kspi0h_dd = self._makeDstar2DGamma( 'D2KsPI0HDD', self.d.kspi0h_dd_resolved+self.d.kspi0h_dd_merged )
         # With Upstream D
@@ -811,6 +942,8 @@ class DstarBuilder(object):
         # Jordi: create the lists of selections for D*0 -> D0 pi0 with merged and resolved LL and DD Ks.
         self.d0pi0_kshh_ll     = self._makeDstar02D0Pi0( 'KsHHLL', 'all', self.d.kshh_ll )
         self.d0pi0_kshh_dd     = self._makeDstar02D0Pi0( 'KsHHDD', 'all', self.d.kshh_dd )
+        self.d0pi0_kshh_ll_pid = self._makeDstar02D0Pi0( 'KsHHLLPID', 'all', self.d.kshh_ll_pid )
+        self.d0pi0_kshh_dd_pid = self._makeDstar02D0Pi0( 'KsHHDDPID', 'all', self.d.kshh_dd_pid )
         # With Upstream D's
         self.d0pi0_kshh_ll_dup = self._makeDstar02D0Pi0( 'UPKsHHLL', 'all', self.d.kshh_ll_up )
         self.d0pi0_kshh_dd_dup = self._makeDstar02D0Pi0( 'UPKsHHDD', 'all', self.d.kshh_dd_up )
@@ -818,6 +951,8 @@ class DstarBuilder(object):
         # Jordi: create the lists of selections for D*0 -> D0 gamma for LL and DD Ks.
         self.d0gamma_kshh_ll = self._makeDstar02D0Gamma( 'KsHHLL', self.d.kshh_ll )
         self.d0gamma_kshh_dd = self._makeDstar02D0Gamma( 'KsHHDD', self.d.kshh_dd )
+        self.d0gamma_kshh_ll_pid = self._makeDstar02D0Gamma( 'KsHHLLPID', self.d.kshh_ll_pid )
+        self.d0gamma_kshh_dd_pid = self._makeDstar02D0Gamma( 'KsHHDDPID', self.d.kshh_dd_pid )
         # With Upstream D's
         self.d0gamma_kshh_ll_dup = self._makeDstar02D0Gamma( 'UPKsHHLL', self.d.kshh_ll_up )
         self.d0gamma_kshh_dd_dup = self._makeDstar02D0Gamma( 'UPKsHHDD', self.d.kshh_dd_up )

@@ -109,8 +109,8 @@ default_config ={
     'BPVIPCHI2_MAX' : 25,
     'BPVLTIME_MIN'  : '0.1*ps',
     'BPVDIRA_MIN'   : 0.999,
-    'AM_MIN'        : '6000*MeV', 
-    'AM_MAX'        : '7000*MeV',
+    'AM_MIN'        : '5800*MeV', 
+    'AM_MAX'        : '6800*MeV',
     'B2CBBDT_MIN'   : 0.05
     },
     "Dstar" : { # Cuts made on all D*'s used in all lines 
@@ -1211,6 +1211,26 @@ default_config ={
     'StrippingBc2DD0D2HHHD02HHPI0Beauty2CharmLine',
     'StrippingBc2DD0D2HHHD02KSHHPI0Beauty2CharmLine',
     'StrippingBc2DD0D2HHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstHHD02HHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstHHD02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KstHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KstHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstKst0D02HHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstKst0D02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstKst0D02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KstKst0D02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KstKst0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstKSD02HHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstKSD02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstKSD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KstKSD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KstKSD02KSHHBeauty2CharmLine',
+    'StrippingBc2DD0D2HHHPI0D02HHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2HHHPI0D02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2HHHPI0D02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2HHHPI0D02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2HHHPI0D02KSHHBeauty2CharmLine',
     
     # Bc+ -> D*+ D0
     'StrippingBc2DstD0Dst2DPI0D2HHHD02HHHHBeauty2CharmLine',
@@ -1268,6 +1288,12 @@ default_config ={
     'StrippingBc2DstD0Dst2DPI0D2KSHD02HHPI0Beauty2CharmLine',
     'StrippingBc2DstD0Dst2DPI0D2KSHD02KSHHPI0Beauty2CharmLine',
     'StrippingBc2DstD0Dst2DPI0D2KSHD02KSHHBeauty2CharmLine',
+    # High rate ?
+    ## 'StrippingBc2DstD0DStar2DGammaD2HHHD02HHHHBeauty2CharmLine',
+    ## 'StrippingBc2DstD0DStar2DGammaD2HHHD02HHBeauty2CharmLine',
+    ## 'StrippingBc2DstD0DStar2DGammaD2HHHD02HHPI0Beauty2CharmLine',
+    ## 'StrippingBc2DstD0DStar2DGammaD2HHHD02KSHHPI0Beauty2CharmLine',
+    ## 'StrippingBc2DstD0DStar2DGammaD2HHHD02KSHHBeauty2CharmLine',
 
     # Bc+ -> D*+ D*0
     'StrippingBc2DstDst0Dst2DPI0D2HHHDst02D0PI0D02HHHHBeauty2CharmLine',
@@ -1313,7 +1339,11 @@ default_config ={
     'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0PI0D02HHHHBeauty2CharmLine',
     'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0PI0D02KSHHBeauty2CharmLine',
     'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0GammaD02KSHHBeauty2CharmLine',
-    'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0PI0D02HHBeauty2CharmLine'
+    'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0DStar2DGammaD2HHHDst02D0PI0D02HHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0DStar2DGammaD2HHHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0DStar2DGammaD2HHHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0DStar2DGammaD2HHHDst02D0PI0D02HHBeauty2CharmLine'
 
     ]
   },
@@ -1371,16 +1401,16 @@ class Beauty2CharmConf(LineBuilder):
         topoKaons = topoInputs('K',[kaons])
         topoProtons = topoInputs('P',[protons])
 
-        # make D->X, etc. inputs
-        d = DBuilder(pions,kaons,ks,pi0,uppions,muons,config['D2X'],config['PID'])
-        dst = DstarBuilder(d,pions,uppions,pi0,photons,config['Dstar'],config['PID'])
-
         # X -> hh
         hh = HHBuilder(pions,kaons,protons,ks,pi0_fromB,config['HH'],
                        config['PID'])
 
         # X -> hhh
         hhh = HHHBuilder(pions,kaons,protons,config['HHH'], config['PID'])
+
+        # make D->X, etc. inputs
+        d = DBuilder(pions,kaons,ks,pi0,uppions,muons,hh,config['D2X'],config['PID'])
+        dst = DstarBuilder(d,pions,uppions,pi0,photons,config['Dstar'],config['PID'])
 
         # Lc -> X
         lc = LcBuilder(pions,kaons,protons,config['D2X'],config['PID'])
