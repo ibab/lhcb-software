@@ -938,7 +938,7 @@ void CheckpointSvc::checkForkFrequency()  {
       // DIM commands will still be handled though by the command, which will also
       // stop us if the flag m_restartChildren is going to false.
       MsgStream log(msgSvc(),name());
-      log << MSG::FATAL << "HLT_FUCKED: Forked the last " << m_forkQueLen 
+      log << MSG::FATAL << "HLT_FORK_FAILURE: Forked the last " << m_forkQueLen 
           << " children in only " << (end-start) << " seconds. THIS IS NOT NORMAL." << endmsg;
       log << MSG::FATAL << "Will stop forking until reset command." << endmsg;
       m_restartChildren = false;
