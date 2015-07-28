@@ -15,7 +15,7 @@
   <class name = "std::map<size_t, Al::OffDiagonalData>" />
   <class name = "Al::OTMonoLayerAlignData" />
   <class name = "Al::OTMonoLayerAlignModuleData" />
-  <class name = "std::array<Al::OTMonoLayerAlignModuleData,432>" />
+  <!-- class name = "std::array<Al::OTMonoLayerAlignModuleData,432>" /-->
   <class name = "ROOT::Math::SMatrix<double,6,1,ROOT::Math::MatRepStd<double,6,1> > "/>
   <class name = "ROOT::Math::MatRepStd<double,6,1>" />
 </lcgdict>
