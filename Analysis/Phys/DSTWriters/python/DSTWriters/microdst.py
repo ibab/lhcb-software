@@ -30,6 +30,7 @@ from microdstelements import ( CloneRecHeader,
                                CleanEmptyEventNodes,
                                PackTrackingClusters,
                                PrintTESContents,
+                               PrintDecayTrees,
                                FindDuplicates )
 
 def stripMicroDSTElements( pack              = True ,
@@ -53,6 +54,7 @@ def stripMicroDSTElements( pack              = True ,
         ClonePVs( RecVertexCloner = _rpv_cloner_ ,
                   ClonePVWeights  = False ),
         FindDuplicates(),
+        #PrintDecayTrees(), # For debugging
         CloneParticleTrees( isMC = isMC ),
         CloneBTaggingInfo( CloneTaggerParticles = False, isMC = isMC ),
         CloneRelatedInfo( ),
@@ -68,6 +70,7 @@ def stripMicroDSTElements( pack              = True ,
         elements += [ CloneParticleMCInfo(),
                       CloneSignalMCParticles(),
                       CloneBackCat() ]
+     
     if pack :
         elements += [ PackStrippingReports() ]
         if saveTrackClusters : elements += [ PackTrackingClusters() ]

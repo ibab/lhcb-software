@@ -30,7 +30,10 @@ __all__ = ( 'CloneRecHeader',
             'CloneRawBanks',
             'CloneLHCbIDs',
             'CloneTisTosInfo',
-            'MoveObjects' )
+            'MoveObjects',
+            'PrintTESContents',
+            'PrintDecayTrees',
+            'FindDuplicates')
 
 class CloneRecHeader(MicroDSTElement) :
 
@@ -700,6 +703,18 @@ class PrintTESContents(MicroDSTElement) :
                                 TestAccess    = True,
                                 ExploreRelations = True )
         return [sag]
+
+class PrintDecayTrees(MicroDSTElement) :
+    """
+    Debug element. Prints the Particle Trees
+    """
+    def __call__(self, sel):
+        from Configurables import PrintDecayTree
+        pdt = PrintDecayTree( name = self.personaliseName(sel,"PrintDecayTrees"),
+                              Inputs = self.dataLocations(sel,"Particles"),
+                              ForceFilterPassed = True,
+                              MaxDepth = 10 )
+        return [pdt]
 
 class FindDuplicates(MicroDSTElement) :
     """
