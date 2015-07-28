@@ -149,9 +149,11 @@ void Machine::handleIoc(const Event& event)   {
     break;
   case Slave::SLAVE_LIMBO:
     status = invokeMetaTransition(MACH_CHK_SLV,event.data);
+    m_meta.execute(this);
     break;
   case Slave::SLAVE_FINISHED:
     status = invokeMetaTransition(MACH_CHK_SLV,event.data);
+    m_meta.execute(this);
     break;
   case Slave::SLAVE_TRANSITION:   /// State change by slave. Handle the request.
     display(INFO,c_name(),"Machine got SLAVE_TRANSITION in state:%s/%s - evaluate WHENs. Idle:%s",
@@ -179,6 +181,7 @@ void Machine::handleIoc(const Event& event)   {
               currentMetaName(), isIdle() ? "Yes" : "No");
       evaluateWhens();
     }
+    m_meta.execute(this);
     break;
   case 0xFEEDBABE:
     display(WARNING,c_name(),"Machine ****TEST**** in meta state:%s - evaluate WHENs. Idle:%s",
