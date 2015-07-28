@@ -38,7 +38,7 @@ public:
     //
     m_printDecay->printTree ( parts.begin() , parts.end () , m_maxDepth ) ;
     //
-    setFilterPassed ( !parts.empty() ) ;
+    setFilterPassed ( m_forceFilterPassedTrue || !parts.empty() ) ;
     //
     return StatusCode::SUCCESS ;
   }
@@ -54,14 +54,17 @@ protected:
     : DaVinciAlgorithm ( name , pSvc ) 
     , m_printDecayName ( "PrintDecayTreeTool/PrintDecay" )
     , m_printDecay     ( NULL ) 
-    , m_maxDepth       ( 3 )  
+    , m_maxDepth       ( 6    )  
   {
     declareProperty 
       ( "PrintDecayTool" , m_printDecayName , 
         "The type/name of the IPrintDecay tool" ) ;
     declareProperty 
       ( "MaxDepth"       , m_maxDepth       , 
-        "The maximal depth (numbe rof levels)"  ) ;
+        "The maximal depth (number of levels)"  ) ;
+    declareProperty
+      ( "ForceFilterPassed", m_forceFilterPassedTrue = false,
+        "Flag to turn on the forcing of filter passed to true always" );
   }
   /// virtual & protected destructor 
   virtual ~PrintDecayTree () {}
@@ -73,7 +76,7 @@ private:
   /// the copy constructor is disabled 
   PrintDecayTree ( const PrintDecayTree& ) ; // no copy constructor 
   /// the assignement operator is disabled 
-  PrintDecayTree& operator=( const PrintDecayTree& ) ; // no assignement
+  PrintDecayTree& operator=( const PrintDecayTree& ) ; // no assignment
   // ==========================================================================
 private:
   // ==========================================================================
@@ -83,6 +86,8 @@ private:
   IPrintDecay* m_printDecay     ; // the IPrintDecay tool itself
   /// the maximal printout depth 
   int          m_maxDepth       ; // the maximal printout depth 
+  /// Force filter passed to true ?
+  bool         m_forceFilterPassedTrue;
   // ==========================================================================
 };
 // ============================================================================

@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2015-07-28 - Chris Jones
+ - Add a property to PrintDecayTree to force setFilterPassed to true always.
+
 !========================= DaVinciTools v24r2 2014-12-15 =========================
 
 ! 2014-11-30 Gerhard Raven
