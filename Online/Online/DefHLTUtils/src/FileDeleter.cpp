@@ -92,6 +92,7 @@ class CommandInfo : public DimUpdatedInfo
         std::string shcomm;
         for (i=0;i<splt2->size();i++)
         {
+          if (splt2->at(i).size() == 0) continue;
           shcomm = "sudo rm -rf /localdisk/hlt1/Run_*"+splt2->at(i)+"_*.mdf";
           printf("executing command %s\n",shcomm.c_str());
           int status = ::system(shcomm.c_str());
