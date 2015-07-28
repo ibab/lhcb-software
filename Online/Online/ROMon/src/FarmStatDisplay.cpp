@@ -55,7 +55,7 @@ namespace ROMon {
     /// Keyboard action
     static int key_action(unsigned int fac, void* param);
 
-public:
+  public:
     /// Standard constructor
     FarmStatDisplay(int argc, char** argv);
     /// Standard destructor
@@ -427,13 +427,13 @@ int FarmStatDisplay::handleKeyboard(int key)    {
     case 'E':
     case CTRL_E:
       delete this;
-      ::exit(0);
-      return WT_SUCCESS;
+    ::exit(0);
+    return WT_SUCCESS;
     case 'h':
     case 'H':
     case CTRL_H:
       IocSensor::instance().send(this,CMD_SHOWHELP,m_posCursor);
-      return WT_SUCCESS;
+    return WT_SUCCESS;
     case RETURN_KEY:
     case ENTER:
       IocSensor::instance().send(this,CMD_SHOWSUBFARM,m_posCursor);

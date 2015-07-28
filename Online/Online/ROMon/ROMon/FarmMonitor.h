@@ -206,7 +206,7 @@ namespace ROMon {
     void getTypeAlarms(AlarmsByType& alms, const AlarmsByType& alarms);
     void getSourceAlarms(AlarmsByType& alms, const AlarmsBySource& alarms);
 
-public:
+  public:
     /// Standard constructor
     FarmMonitor(int argc, char** argv);
 

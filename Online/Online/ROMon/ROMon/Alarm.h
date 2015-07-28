@@ -82,9 +82,9 @@ namespace ROMon {
     virtual ~AlarmTag() {}
     AlarmTag& operator=(const AlarmTag& a) {
       if ( &a != this ) {
-	code = a.code;
-	node = a.node;
-	subfarm = a.subfarm;
+        code = a.code;
+        node = a.node;
+        subfarm = a.subfarm;
       }
       return *this;
     }
@@ -116,10 +116,10 @@ namespace ROMon {
     
     Alarm& operator=(const Alarm& a) {
       if ( &a != this ) {
-	this->AlarmTag::operator=(a);
-	when = a.when;
-	description = a.description;
-	optional = a.optional;
+        this->AlarmTag::operator=(a);
+        when = a.when;
+        description = a.description;
+        optional = a.optional;
       }
       return *this;
     }

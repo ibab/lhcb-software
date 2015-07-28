@@ -56,20 +56,20 @@ PartitionListener::PartitionListener(Interactor* par, const string& nam, const s
       idx = sf_nam.find(".xml");
       if ( idx+4 == sf_nam.length() ) {
         if ( idx != string::npos && sf_nam.find("TaskInventory") == string::npos ) {
-	  sf_nam = sf_nam.substr(0,idx);
-	  for(size_t j=0; j<sf_nam.length(); ++j)
-	    sf_nam[j] = char(::tolower(sf_nam[j]));
-	  if ( m_match.empty() || m_match=="*" ) {
-	    //::lib_rtl_output(LIB_RTL_FATAL,"Use File: %s\n",sf_nam.c_str());
-	    f->push_back(sf_nam);
-	  }
-	  else if ( ::strcase_match_wild(sf_nam.c_str(),m_match.c_str()) ) {
-	    //::lib_rtl_output(LIB_RTL_FATAL,"Use File: %s\n",sf_nam.c_str());
-	    f->push_back(sf_nam);
-	  }
-	  else {
-	    //::lib_rtl_output(LIB_RTL_FATAL,"Skip File: %s\n",sf_nam.c_str());
-	  }
+          sf_nam = sf_nam.substr(0,idx);
+          for(size_t j=0; j<sf_nam.length(); ++j)
+            sf_nam[j] = char(::tolower(sf_nam[j]));
+          if ( m_match.empty() || m_match=="*" ) {
+            //::lib_rtl_output(LIB_RTL_FATAL,"Use File: %s\n",sf_nam.c_str());
+            f->push_back(sf_nam);
+          }
+          else if ( ::strcase_match_wild(sf_nam.c_str(),m_match.c_str()) ) {
+            //::lib_rtl_output(LIB_RTL_FATAL,"Use File: %s\n",sf_nam.c_str());
+            f->push_back(sf_nam);
+          }
+          else {
+            //::lib_rtl_output(LIB_RTL_FATAL,"Skip File: %s\n",sf_nam.c_str());
+          }
         }
       }
     }
@@ -103,10 +103,10 @@ void PartitionListener::dnsDataHandler(void* tag, void* address, int* size) {
       if ( idq == string::npos ) idq = svc.find("/mona");
       if ( idq == string::npos ) idq = svc.find("/store");
       if ( idx != string::npos && idq == 0 ) {
-	string f = svc.substr(1,idx-1);
-	if ( ::strcase_match_wild(f.c_str(),listener->m_match.c_str()) ) {
-	  IocSensor::instance().send(listener->parent(),CMD_ADD,new string(f));
-	}
+        string f = svc.substr(1,idx-1);
+        if ( ::strcase_match_wild(f.c_str(),listener->m_match.c_str()) ) {
+          IocSensor::instance().send(listener->parent(),CMD_ADD,new string(f));
+        }
       }
       break;
     case '-':
@@ -117,27 +117,27 @@ void PartitionListener::dnsDataHandler(void* tag, void* address, int* size) {
       break;
     default:
       if ( *(int*)msg != *(int*)"DEAD" )  {
-	char *at, *p = msg, *last = msg;
-	auto_ptr<vector<string> > farms(new vector<string>());
-	farms->push_back(listener->name());
-	while ( last != 0 && (at=strchr(p,'@')) != 0 )  {
-	  last = strchr(at,'|');
-	  if ( last ) *last = 0;
-	  getServiceNode(p,svc,node);
-	  idx = svc.find("/ROpublish");
-	  idq = svc.find("/hlt");
-	  if ( idq == string::npos ) idq = svc.find("/mona");
-	  if ( idq == string::npos ) idq = svc.find("/store");
-	  if ( idx != string::npos && idq == 0 ) {
-	    string f = svc.substr(1,idx-1);
-	    if ( ::strcase_match_wild(f.c_str(),listener->m_match.c_str()) ) {
-	      farms->push_back(f);
-	    }
-	  }
-	  p = last+1;
-	}
-	if ( !farms->empty() )
-	  IocSensor::instance().send(listener->parent(),CMD_CONNECT,farms.release());
+        char *at, *p = msg, *last = msg;
+        auto_ptr<vector<string> > farms(new vector<string>());
+        farms->push_back(listener->name());
+        while ( last != 0 && (at=strchr(p,'@')) != 0 )  {
+          last = strchr(at,'|');
+          if ( last ) *last = 0;
+          getServiceNode(p,svc,node);
+          idx = svc.find("/ROpublish");
+          idq = svc.find("/hlt");
+          if ( idq == string::npos ) idq = svc.find("/mona");
+          if ( idq == string::npos ) idq = svc.find("/store");
+          if ( idx != string::npos && idq == 0 ) {
+            string f = svc.substr(1,idx-1);
+            if ( ::strcase_match_wild(f.c_str(),listener->m_match.c_str()) ) {
+              farms->push_back(f);
+            }
+          }
+          p = last+1;
+        }
+        if ( !farms->empty() )
+          IocSensor::instance().send(listener->parent(),CMD_CONNECT,farms.release());
       }
       break;
     }

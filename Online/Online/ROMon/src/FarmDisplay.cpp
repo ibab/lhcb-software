@@ -53,10 +53,10 @@ static FarmDisplay* s_fd = 0;
 
 static void help() {
   cout << "  romon_farm -option [-option]" << endl
-            << "       -all                         Show all subfarms." << endl
-            << "       -p[artition]=<name>          Partition name providing monitoring information." << endl
-            << "       -an[chor]=+<x-pos>+<ypos>    Set anchor for sub displays" << endl
-            << endl;
+       << "       -all                         Show all subfarms." << endl
+       << "       -p[artition]=<name>          Partition name providing monitoring information." << endl
+       << "       -an[chor]=+<x-pos>+<ypos>    Set anchor for sub displays" << endl
+       << endl;
 }
 
 namespace ROMon {
@@ -519,11 +519,11 @@ void FarmDisplay::handle(const Event& ev) {
     case CMD_ADD: {
       StringV farms;
       for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k) {
-	if ( (*k).second->name() == *ev.iocPtr<string>() ) {
-	  delete ev.iocPtr<string>();
-	  return;
-	}
-	farms.push_back((*k).first);
+        if ( (*k).second->name() == *ev.iocPtr<string>() ) {
+          delete ev.iocPtr<string>();
+          return;
+        }
+        farms.push_back((*k).first);
       }
       farms.push_back(*ev.iocPtr<string>());
       connect(m_name,farms);

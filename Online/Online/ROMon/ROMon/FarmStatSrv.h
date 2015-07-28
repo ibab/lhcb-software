@@ -122,7 +122,7 @@ namespace ROMon {
     SubfarmMonitors                   m_farmMonitors;
     Farms                             m_farms;
 
-public:
+  public:
     /// Standard constructor
     FarmStatSrv(int argc, char** argv);
 

@@ -69,8 +69,8 @@ void HltSubfarmDisplay::init(int argc, char** argv)   {
   m_readAlways = true;
   setup_window();
   m_nodes      = createSubDisplay(Position(m_position.x-2,m_position.y-2+hdr_height), 
-				  Area(m_area.width,m_area.height-hdr_height),
-				  "HLT Deferred Processing Information on "+m_svcName);
+                                  Area(m_area.width,m_area.height-hdr_height),
+                                  "HLT Deferred Processing Information on "+m_svcName);
   end_update();
 }
 
@@ -93,12 +93,12 @@ void HltSubfarmDisplay::showNodes()  {
 
   disp->draw_line_normal("");
   disp->draw_line_bold(" Node       No.of No.of  %37s %15s %37s %9s  %s",
-		       "","Run statistics","","Runs not","Disk statistics [GB]");
+                       "","Run statistics","","Runs not","Disk statistics [GB]");
   disp->draw_line_bold(" Name       Runs  Files  %37s %15s %37s %9s  %s",
-	  // 123456789012345678901234567890     123456789012345678901234567890
-	    "<------------------------------------",  "   Run/Files   ",
-	    "------------------------------------>",
-		       "displayed","<-Free Total   Used-->");
+                       // 123456789012345678901234567890     123456789012345678901234567890
+                       "<------------------------------------",  "   Run/Files   ",
+                       "------------------------------------>",
+                       "displayed","<-Free Total   Used-->");
   int tot_files = 0, exc_runs = 0, exc_files = 0;
   map<int,int> tot_runs;
   for (_N::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
@@ -113,12 +113,12 @@ void HltSubfarmDisplay::showNodes()  {
       numFiles += files;
       tot_runs[run] += files;
       if ( val.length()+10 <= 92 ) {
-	::sprintf(text,"%7d/%-3d",run,files);
-	val += text;
+        ::sprintf(text,"%7d/%-3d",run,files);
+        val += text;
       }
       else {
-	++exc_runs;
-	exc_files += files;
+        ++exc_runs;
+        exc_files += files;
       }
     }
     tot_files += numFiles;
@@ -126,7 +126,7 @@ void HltSubfarmDisplay::showNodes()  {
     float fr  = gb*(disk.freeBlocks>0 ? disk.freeBlocks : 1);
     float tot = gb*disk.numBlocks;
     ::sprintf(text,"%7d/%-3d   %5.0f %5.0f  %5.1f %%", 
-	      exc_runs, exc_files, fr, tot,tot < 1e-10 ? 100. : 100.f*(1.f-fr/tot));
+              exc_runs, exc_files, fr, tot,tot < 1e-10 ? 100. : 100.f*(1.f-fr/tot));
     ::sprintf(txt,"%s/%c",(*n).name, char((*n).overflowState));
     disp->draw_line_normal(fmt, txt , runs.size(), numFiles, val.c_str(), text);
   }
@@ -182,9 +182,9 @@ string HltSubfarmDisplay::nodeName(size_t offset) {
     if ( offset > 0 )  {
       --offset;
       for (n=nodes->begin(), cnt=0; n!=nodes->end(); n=nodes->next(n), ++cnt)  {
-	if ( cnt == offset ) {
-	  return (*n).name;
-	}
+        if ( cnt == offset ) {
+          return (*n).name;
+        }
       }
     }
   }

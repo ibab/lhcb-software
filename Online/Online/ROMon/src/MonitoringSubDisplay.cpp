@@ -71,7 +71,7 @@ using namespace std;
 
 /// Initializing constructor
 MonitoringSubDisplay::MonitoringSubDisplay(InternalDisplay* parent, const string& title, int height, bool bad) 
-: InternalDisplay(parent, title)
+  : InternalDisplay(parent, title)
 {
   m_numUpdate = 0;
   m_evtRelay  = m_totRelay = 0;
@@ -199,13 +199,13 @@ void MonitoringSubDisplay::updateContent(const Nodeset& ns) {
           int ncl = (*ib).clients.size();
           numClients += ncl;
           ++numBuffs;
-	  tot_prod[idx] += ctrl.tot_produced;
-	  num_cl[idx]   += ncl;
-	  num_sl[idx]   += ctrl.p_emax - ctrl.i_events;
+          tot_prod[idx] += ctrl.tot_produced;
+          num_cl[idx]   += ncl;
+          num_sl[idx]   += ctrl.p_emax - ctrl.i_events;
 
           min_prod[idx] = min(min_prod[idx],ctrl.tot_produced);
-	  fsl = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
-	  fsp = float(ctrl.i_space)/float(ctrl.bm_size);
+          fsl = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
+          fsp = float(ctrl.i_space)/float(ctrl.bm_size);
           fspace[idx]   = min(fspace[idx],fsp);
           fslots[idx]   = min(fslots[idx],fsl);
           if ( fsl < SLOTS_MIN || fsp < SPACE_MIN ) {

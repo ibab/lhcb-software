@@ -68,8 +68,8 @@ void TorrentSubfarmDump::help() {
   ::lib_rtl_output(LIB_RTL_ALWAYS,"romon_syspublish -opt [-opt]\n"
                    "             -dns=<string>          DNS which offers the data service(s) \n"
                    "             -subfarm=<string>      Node which offers the data service(s)\n"
-		   "             -delay=<number>        Update time in milliseconds          \n"
-		   );
+                   "             -delay=<number>        Update time in milliseconds          \n"
+                   );
 }
 
 /// Update handler
@@ -90,16 +90,16 @@ void TorrentSubfarmDump::update(const SubfarmTorrentStatus& sf)  {
   for(Sessions::const_iterator i=sf.sessions.begin(); i!=sf.sessions.end(); i=sf.sessions.next(i)) {
     const SessionStatus& s = *i;
     ::fprintf(stdout,"%-16s Peers:%4d Blocks:%7d/%7d/%7d Rate:^%5.0f v%5.0f kB/sec Load:^%d v%d kB\n",
-	      s.name,s.num_peers,s.blocks_written,s.blocks_read,s.blocks_read_hit,
-	      float(s.upload_rate)/1024.f,float(s.download_rate)/1024.f,
-	      int(s.total_upload/1024), int(s.total_download/1024));
+              s.name,s.num_peers,s.blocks_written,s.blocks_read,s.blocks_read_hit,
+              float(s.upload_rate)/1024.f,float(s.download_rate)/1024.f,
+              int(s.total_upload/1024), int(s.total_download/1024));
     for(Torrents::const_iterator j=s.torrents.begin(); j!=s.torrents.end();j=s.torrents.next(j))   {
       const TorrentStatus& t = *j;
       ::fprintf(stdout, "\t-->%s\n", t.name);
       if ( t.msgLen>0 ) ::fprintf(stdout, "\t%s\n", t.message());
       ::fprintf(stdout, "\t   State:%-32s [%6.2f %%] Seeds:%-4d Peers:%-4d Pieces: %4d/%-4d kB:^%7d v%-7d Load:^%d v%d kB/sec\n",
-		states[t.state], 100.f*t.progress, t.num_seeds, t.num_peers, t.num_pieces_done, t.num_pieces_total,
-		int(t.total_done/1024),int(t.total_wanted/1024),int(t.total_upload/1024),int(t.total_download/1024));
+                states[t.state], 100.f*t.progress, t.num_seeds, t.num_peers, t.num_pieces_done, t.num_pieces_total,
+                int(t.total_done/1024),int(t.total_wanted/1024),int(t.total_upload/1024),int(t.total_download/1024));
     }
   }
   ::fprintf(stdout,"\n\n");

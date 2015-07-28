@@ -83,7 +83,7 @@ namespace ROMon {
     /// Keyboard action
     static int key_action(unsigned int fac, void* param);
 
-public:
+  public:
     /// Standard constructor
     BootDisplay(int argc, char** argv);
     /// Standard destructor
@@ -426,13 +426,13 @@ int BootDisplay::handleKeyboard(int key)    {
     case 'E':
     case CTRL_E:
       delete this;
-      ::exit(0);
-      return WT_SUCCESS;
+    ::exit(0);
+    return WT_SUCCESS;
     case 'h':
     case 'H':
     case CTRL_H:
       IocSensor::instance().send(this,CMD_SHOWHELP,m_posCursor);
-      return WT_SUCCESS;
+    return WT_SUCCESS;
     case RETURN_KEY:
     case ENTER:
       IocSensor::instance().send(this,CMD_SHOWSUBFARM,m_posCursor);
@@ -535,7 +535,7 @@ void BootDisplay::update(const void* address) {
       }
     }
     ::snprintf(txt,sizeof(txt),"Total number of boot clusters:%d %50s",
-              int(m_clusters.size()),"<CTRL-H for Help>, <CTRL-E to exit>");
+               int(m_clusters.size()),"<CTRL-H for Help>, <CTRL-E to exit>");
     ::scrc_put_chars(m_display,txt,NORMAL,1,BOOTLINE_START,1);
   }
 }

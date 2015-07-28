@@ -94,7 +94,7 @@ namespace {
 }
 
 TorrentClusterLine::TorrentClusterLine(FarmLineDisplay* p, const string& partition, const std::string& n)
-: ClusterLine(p,partition,n)
+  : ClusterLine(p,partition,n)
 {
   string info = "/"+strupper(m_name)+"/TorrentInfo";
   m_lastUpdate = time(0);
@@ -118,8 +118,8 @@ void TorrentClusterLine::excludedHandler(void* tag, void* address, int* size) {
     if ( address && *size > 0 ) {
       char *p = (char*)address, *end = p+*size;
       while(p<end) {
-	nodes.insert(strlower(p));
-	p += (::strlen(p)+1);
+        nodes.insert(strlower(p));
+        p += (::strlen(p)+1);
       }
     }
     IocSensor::instance().send(l,CMD_EXCLUDE,new set<string>(nodes));
@@ -150,8 +150,8 @@ void TorrentClusterLine::initialDisplay() {
   begin_update();
   ::scrc_put_chars(dis," --------------------------------------------------------------------",BOLD,position(),12,0);
   ::scrc_put_chars(dis,("---- No torrent information availible:"+info+
-			" ------------------------------------------------------------------------").c_str(),
-		   RED|BOLD,position(),85+CLUSTERLINE_START,1);
+                        " ------------------------------------------------------------------------").c_str(),
+                   RED|BOLD,position(),85+CLUSTERLINE_START,1);
   end_update();
 }
 
@@ -204,22 +204,22 @@ void TorrentClusterLine::display() {
       const TorrentStatus& t = *j;
       switch(t.state) {
       case TorrentStatus::queued_for_checking:
-	col = COL_WARNING;
-	break;
+        col = COL_WARNING;
+        break;
       case TorrentStatus::allocating:
       case TorrentStatus::checking_resume_data:
       case TorrentStatus::checking_files:
       case TorrentStatus::downloading_metadata:
       case TorrentStatus::downloading:
-	if ( col != COL_WARNING ) col = COL_ACTING;
-	break;
+        if ( col != COL_WARNING ) col = COL_ACTING;
+        break;
       case TorrentStatus::finished:
       case TorrentStatus::seeding:
-	if ( col != COL_WARNING && col != COL_ACTING ) col = GREEN|INVERSE;
-	break;
+        if ( col != COL_WARNING && col != COL_ACTING ) col = GREEN|INVERSE;
+        break;
       default:
-	col = COL_ALARM;
-	goto Sum_up;
+        col = COL_ALARM;
+        goto Sum_up;
       }
     }
   Sum_up:

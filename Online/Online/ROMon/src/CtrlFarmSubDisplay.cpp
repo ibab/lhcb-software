@@ -75,7 +75,7 @@ namespace ROMon {
 
 /// Initializing constructor
 CtrlFarmSubDisplay::CtrlFarmSubDisplay(InternalDisplay* parent, const string& title, int height, bool bad)
-: InternalDisplay(parent, title)
+  : InternalDisplay(parent, title)
 {
   m_height = height;
   m_lastUpdate = time(0);
@@ -177,11 +177,11 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
   ::scrc_put_chars(m_display,txt,col,1,1,1);
   nchar  = ::sprintf(txt,"%2d Nodes ",int(c.nodes.size()));
   nchar += ::sprintf(txt+nchar,"%3d %sTasks ",
-		     int(missTaskCount>0 ? missTaskCount : taskCount),
-		     missTaskCount>0 ? "BAD " : "");
+                     int(missTaskCount>0 ? missTaskCount : taskCount),
+                     missTaskCount>0 ? "BAD " : "");
   nchar += ::sprintf(txt+nchar,"%3d %sConnections ",
-		     int(missConnCount>0 ? missConnCount : connCount),
-		     missConnCount>0 ? "BAD " : "");
+                     int(missConnCount>0 ? missConnCount : connCount),
+                     missConnCount>0 ? "BAD " : "");
   ::scrc_put_chars(m_display,txt,col&~BOLD,1,13,1);
 
   ::sprintf(txt," - %s",c.time.c_str());

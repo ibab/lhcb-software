@@ -47,7 +47,7 @@ namespace ROMon {
 
 /// Initializing constructor
 CtrlSubfarmMonitor::CtrlSubfarmMonitor(FarmMonitor* parent, const string& title)
-: InternalMonitor(parent, title)
+  : InternalMonitor(parent, title)
 {
   m_lastUpdate = time(0);
   string svc = svcPrefix()+strupper(title)+"/TaskSupervisor/Status";

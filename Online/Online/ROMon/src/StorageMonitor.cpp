@@ -199,14 +199,14 @@ void StorageMonitor::extractData(const Nodeset& ns) {
       ++m.buffers;
       //switch(b) {
       //case EVT_BUFFER:
-        m.inUse  = 1;
-        m.evtIN  = ctrl.tot_produced;
-        m.space = float(ctrl.i_space)/float(ctrl.bm_size);
-        m.slots = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
-	//  break;
-	//default:
-	//  continue;
-	//}
+      m.inUse  = 1;
+      m.evtIN  = ctrl.tot_produced;
+      m.space = float(ctrl.i_space)/float(ctrl.bm_size);
+      m.slots = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
+      //  break;
+      //default:
+      //  continue;
+      //}
       m.minIN = numeric_limits<int>::max();
       m.maxIN = numeric_limits<int>::min();
       for (MBMBuffer::Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
@@ -224,7 +224,7 @@ void StorageMonitor::extractData(const Nodeset& ns) {
             m.senders[nam] = nevt;
             m.evtOUT      += nevt;
           }
-	  break;
+          break;
         case 'S':
           // Senders to streaming layer  SNDxxxx
           if ( p[1]=='N' && p[2]=='D' )  {
@@ -293,7 +293,7 @@ void StorageMonitor::analyzeData() {
           ih = h.receivers.find(*im);
           // In a steady system there is no activity!
           if ( !running && ih != h.senders.end() && nevt == (*ih).second && m_sum.evtIN == m_sumHist.evtIN )
-            {}
+          {}
           // RECEIVER stuck while running
           else if ( nevt == 0 && m_sum.evtIN > m_sumHist.evtIN )
             setAlarm(alarms->second,node,ERR_RECEIVER_STUCK,when,nam);
@@ -312,7 +312,7 @@ void StorageMonitor::analyzeData() {
           
           // In a steady system there is no activity!
           if ( !running && ih != h.senders.end() && nevt == (*ih).second && m_sum.evtOUT == m_sumHist.evtOUT )
-            {}
+          {}
           // SENDER stuck while running
           else if ( nevt == 0 && m_sum.evtOUT > m_sumHist.evtOUT )
             setAlarm(alarms->second,node,ERR_SENDER_STUCK,when,nam);

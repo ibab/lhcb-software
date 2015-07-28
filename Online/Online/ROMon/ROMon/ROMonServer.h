@@ -32,7 +32,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
- class ROMonServer  {
+  class ROMonServer  {
   protected:
     /// Time sleep in milliseconds between updates
     int m_delay;

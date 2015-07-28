@@ -140,7 +140,7 @@ int ROMon::readStat(CPUset& info, size_t max_len, size_t num_cores) {
               break;
             }
           }
-        break;
+          break;
         case 't':   // CTXT
           sscanf(desc+5,"%ld",&li[0]);
           info.ctxtRate = (float)li[0];
@@ -231,8 +231,8 @@ int ROMon::read(Procset& procset, size_t max_len) {
                 Process& p = (*pr);
                 utgid.utgid = "";
                 try {
-		  RTL::read(utgid,pid);
-                 }
+                  RTL::read(utgid,pid);
+                }
                 catch(...) {
                   utgid.utgid = "";
                 }

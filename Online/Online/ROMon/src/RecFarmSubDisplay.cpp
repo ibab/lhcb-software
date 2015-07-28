@@ -74,7 +74,7 @@ static const float FLT_max = numeric_limits<float>::max();
 
 /// Initializing constructor
 RecFarmSubDisplay::RecFarmSubDisplay(InternalDisplay* parent, const string& title, int height, bool bad) 
-: InternalDisplay(parent, title)
+  : InternalDisplay(parent, title)
 {
   m_evtSent = m_totSent = 0;
   m_evtReco = m_totReco = 0;

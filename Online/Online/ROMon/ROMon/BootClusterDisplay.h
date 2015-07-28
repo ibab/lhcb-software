@@ -38,7 +38,7 @@ namespace ROMon {
     std::string  m_name;
   private:
     /// Private copy constructor
-  BootClusterDisplay(const BootClusterDisplay&) : InternalDisplay() {}
+    BootClusterDisplay(const BootClusterDisplay&) : InternalDisplay() {}
     /// Private assignment operator
     BootClusterDisplay& operator=(const BootClusterDisplay&)  { return *this; }
   public:

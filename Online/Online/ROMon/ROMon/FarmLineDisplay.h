@@ -52,7 +52,7 @@ namespace ROMon {
     /// Keyboard action
     static int key_action(unsigned int fac, void* param);
 
-public:
+  public:
     /// Standard constructor
     FarmLineDisplay(int argc, char** argv);
 

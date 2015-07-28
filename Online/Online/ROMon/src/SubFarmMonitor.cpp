@@ -22,9 +22,9 @@ namespace ROMon {
         Task() : input(0), output(0), pid(-1), state(TASK_FSM_STATE_DEAD) {}
         Task(const Task& t) : input(t.input), output(t.output), pid(t.pid), state(t.state) {}
         Task& operator=(const Task& t) {
-	  if ( this == &t ) return *this;
+          if ( this == &t ) return *this;
           input = t.input; output=t.output; pid=t.pid; state = t.state;
-	  return *this; 
+          return *this; 
         }
       };
       typedef std::map<std::string,Task> Clients;
@@ -149,7 +149,7 @@ void SubfarmMonitor::NodeMon::reset() {
 
 /// Initializing constructor
 SubfarmMonitor::SubfarmMonitor(FarmMonitor* parent, const string& title) 
-: InternalMonitor(parent,title)
+  : InternalMonitor(parent,title)
 {
   string svc = svcPrefix()+strlower(title)+"/ROpublish";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);

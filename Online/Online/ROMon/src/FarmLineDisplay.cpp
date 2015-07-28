@@ -42,10 +42,10 @@ static FarmLineDisplay* s_fd = 0;
 
 static void help() {
   cout << "  romon_farm -option [-option]" << endl
-            << "       -all                         Show all subfarms." << endl
-            << "       -p[artition]=<name>          Partition name providing monitoring information." << endl
-            << "       -an[chor]=+<x-pos>+<ypos>    Set anchor for sub displays" << endl
-            << endl;
+       << "       -all                         Show all subfarms." << endl
+       << "       -p[artition]=<name>          Partition name providing monitoring information." << endl
+       << "       -an[chor]=+<x-pos>+<ypos>    Set anchor for sub displays" << endl
+       << endl;
 }
 
 namespace {
@@ -161,11 +161,11 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
     ::scrc_put_chars(m_display,"nn",MAGENTA|INVERSE,1,130,0);
     ::scrc_put_chars(m_display,": Not OK/Excluded",NORMAL,1,132,1);
     ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s    %s",
-	      "","Last","No.of","No.of","No.of","< -------- Subfarm Information ------- >");
+              "","Last","No.of","No.of","No.of","< -------- Subfarm Information ------- >");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-2,1,1);
     ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s   %7s %5s  %-19s           %s",
-	      "","Update","Nodes", "Tasks","Conn.","Status","PVSS","Summary",
-	      "Controls PC and worker node status");
+              "","Update","Nodes", "Tasks","Conn.","Status","PVSS","Summary",
+              "Controls PC and worker node status");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
   }
   else if ( m_mode == HLTDEFER_MODE ) {
@@ -189,11 +189,11 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
     ::scrc_put_chars(m_display,": Files present / overflow ON",NORMAL,2,162,0);
 
     ::sprintf(txt," %-10s %-8s %6s %6s %6s         %s",
-	      "","Last","No.of","No.of","No.of","Subfarm");
+              "","Last","No.of","No.of","No.of","Subfarm");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-2,1,1);
     ::sprintf(txt," %-10s %-8s %6s %6s %6s        %7s   %-15s  %s",
-	      "","Update","Nodes", "Runs","Files","Status","",
-	      "<----------------------- Individual worker node status ----------------------->");
+              "","Update","Nodes", "Runs","Files","Status","",
+              "<----------------------- Individual worker node status ----------------------->");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
   }
   else if ( m_mode == TORRENT_MODE ) {
@@ -210,26 +210,26 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
     ::scrc_put_chars(m_display,"    ",MAGENTA|INVERSE|BOLD,2,138,0);
     ::scrc_put_chars(m_display,": No information",NORMAL,2,142,0);
     ::sprintf(txt," %-10s %8s %6s %6s %6s %6s     %-9s %8s %8s      %s",
-	      "","Last","No.of","Pro","No.of","No.of","Pieces","Download","Upload",
-	      "< -------- Subfarm Information ------- >");
+              "","Last","No.of","Pro","No.of","No.of","Pieces","Download","Upload",
+              "< -------- Subfarm Information ------- >");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-2,1,1);
     ::sprintf(txt," %-10s %8s %6s %6s %6s %5s %6s/%-6s %8s %8s      %s",
-	      "","Update","Session","gress","Torr.","Peers","Done","Total","[MB]  ","[MB]  ",
-	      "Controls PC and worker torrent status summary");
+              "","Update","Session","gress","Torr.","Peers","Done","Total","[MB]  ","[MB]  ",
+              "Controls PC and worker torrent status summary");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
   }
   else {
     ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s  %35s %-27s  %-27s  %-27s  %-27s",
-	      "","Last","No.of","No.of","Num.of","<<------------------------------>>",
-	      "<<----------------------->>",
-	      "<<----------------------->>",
-	      "<<----------------------->>",
-	      "<<----------------------->>");
+              "","Last","No.of","No.of","Num.of","<<------------------------------>>",
+              "<<----------------------->>",
+              "<<----------------------->>",
+              "<<----------------------->>",
+              "<<----------------------->>");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-2,1,1);
     ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s  %-33s   %-11s%10s%6s  %-11s%10s%6s  %-11s%10s%6s  %-11s%10s%6s",
-	      "Subfarm","Update","Nodes", "Buffer","Client","          Subfarm status         ",
-	      "Buffer Name","Events","Slots","Buffer Name","Events","Slots",
-	      "Buffer Name","Events","Slots","Buffer Name","Events","Slots");
+              "Subfarm","Update","Nodes", "Buffer","Client","          Subfarm status         ",
+              "Buffer Name","Events","Slots","Buffer Name","Events","Slots",
+              "Buffer Name","Events","Slots","Buffer Name","Events","Slots");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
   }
 
@@ -362,8 +362,8 @@ void FarmLineDisplay::set_cursor() {
     if ( disp ) {
       int pos = m_subPosCursor+8; // 8 is offset in child window to select nodes
       if ( m_nodeSelector )  {
-	disp = m_nodeSelector->display();
-	pos = m_subPosCursor + 2 + 1;  // Border + offset
+        disp = m_nodeSelector->display();
+        pos = m_subPosCursor + 2 + 1;  // Border + offset
       }
       ::scrc_set_cursor(disp, pos, 2);
     }
@@ -426,7 +426,7 @@ int FarmLineDisplay::handleKeyboard(int key)    {
     switch (key)    {
     case MOVE_UP:
       if ( int(m_posCursor) < 0 || m_posCursor>=m_lines.size() )  
-	m_posCursor = 0;
+        m_posCursor = 0;
       if ( int(m_subPosCursor) < 0 || m_subPosCursor>=selectedClusterSize() )  
         m_subPosCursor = 0;
       if( 0 == m_nodeSelector && m_posCursor > 0 )
@@ -436,7 +436,7 @@ int FarmLineDisplay::handleKeyboard(int key)    {
       break;
     case MOVE_DOWN:
       if ( int(m_posCursor) < 0 || m_posCursor>=m_lines.size() )  
-	m_posCursor = 0;
+        m_posCursor = 0;
       if ( int(m_subPosCursor) < 0 || m_subPosCursor>=selectedClusterSize() )  
         m_subPosCursor = 0;
       if( 0 == m_nodeSelector && m_posCursor < m_lines.size()-1 )
@@ -565,24 +565,24 @@ void FarmLineDisplay::handle(const Event& ev) {
       char text[132];
       ClusterLine::Summary summary;
       for(k=m_lines.begin(); k != m_lines.end(); ++k, ++cnt)
-	(*k).second->collect(summary);
+        (*k).second->collect(summary);
       if ( summary.size() > 0 ) {
-	DisplayUpdate update(this,false);
-	if ( m_mode == HLTDEFER_MODE ) {
-	  ::sprintf(text," Total:%13s %6ld %6ld %6ld ","",summary[0].second,summary[1].second,summary[2].second);
-	  ::scrc_put_chars(m_display,text,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS+int(m_lines.size())+1,1,1);
-	}
+        DisplayUpdate update(this,false);
+        if ( m_mode == HLTDEFER_MODE ) {
+          ::sprintf(text," Total:%13s %6ld %6ld %6ld ","",summary[0].second,summary[1].second,summary[2].second);
+          ::scrc_put_chars(m_display,text,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS+int(m_lines.size())+1,1,1);
+        }
       }
       break;
     }
     case CMD_ADD: {
       StringV farms;
       for(k=m_lines.begin(); k != m_lines.end(); ++k) {
-	if ( (*k).second->name() == *ev.iocPtr<string>() ) {
-	  delete ev.iocPtr<string>();
-	  return;
-	}
-	farms.push_back((*k).first);
+        if ( (*k).second->name() == *ev.iocPtr<string>() ) {
+          delete ev.iocPtr<string>();
+          return;
+        }
+        farms.push_back((*k).first);
       }
       farms.push_back(*ev.iocPtr<string>());
       connect(m_name,farms);
@@ -637,19 +637,19 @@ void FarmLineDisplay::connect(const string& section, const vector<string>& vfarm
     k = m_lines.find(nam);
     if ( k == m_lines.end() ) {
       if ( m_mode == RECO_MODE )
-	copy.insert(make_pair(nam,createClusterLine("RecFarm",this,section,*i)));
+        copy.insert(make_pair(nam,createClusterLine("RecFarm",this,section,*i)));
       else if ( m_mode == CTRL_MODE )
-	copy.insert(make_pair(nam,createClusterLine("CtrlFarm",this,section,*i)));
+        copy.insert(make_pair(nam,createClusterLine("CtrlFarm",this,section,*i)));
       else if ( m_mode == HLTDEFER_MODE )
-	copy.insert(make_pair(nam,createClusterLine("HLT",this,section,*i)));
+        copy.insert(make_pair(nam,createClusterLine("HLT",this,section,*i)));
       else if ( m_mode == TORRENT_MODE )
-	copy.insert(make_pair(nam,createClusterLine("TorrentFarm",this,section,*i)));
+        copy.insert(make_pair(nam,createClusterLine("TorrentFarm",this,section,*i)));
       else if ( ::strncasecmp((*i).c_str(),"mona0",5)==0 )
-	copy.insert(make_pair(nam,createClusterLine("Monitoring",this,section,*i)));
+        copy.insert(make_pair(nam,createClusterLine("Monitoring",this,section,*i)));
       else if ( ::strncasecmp((*i).c_str(),"storectl",8)==0 )
-	copy.insert(make_pair(nam,createClusterLine("Storage",this,section,*i)));
+        copy.insert(make_pair(nam,createClusterLine("Storage",this,section,*i)));
       else
-	copy.insert(make_pair(nam,createClusterLine("Farm",this,section,*i)));
+        copy.insert(make_pair(nam,createClusterLine("Farm",this,section,*i)));
     }
     else  {
       copy.insert(*k);

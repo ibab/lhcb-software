@@ -35,7 +35,7 @@ namespace ROMon {
   class HelpDisplay : public InternalDisplay {
   private:
     /// Private copy constructor
-  HelpDisplay(const HelpDisplay&) : InternalDisplay() {}
+    HelpDisplay(const HelpDisplay&) : InternalDisplay() {}
     /// Private assignment operator
     HelpDisplay& operator=(const HelpDisplay&) { return *this; }
   public:

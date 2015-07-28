@@ -145,10 +145,10 @@ namespace ROMon {
 
   /** class OutputLogger
 
-  Small helper class to catch output of a task
+      Small helper class to catch output of a task
 
-  @author M.Frank
-  @version 1.0
+      @author M.Frank
+      @version 1.0
 
   */
   class OutputLogger : public std::streambuf     { 
@@ -207,7 +207,7 @@ int OutputLogger::overflow (int c)    {
       if ( m_level > 6 ) break;
     default:
       ::puts(_buf.c_str());
-    break;
+      break;
     }
     _buf="";
   } 
@@ -224,7 +224,7 @@ int OutputLogger::underflow ()  {
 
 
 InternalMonitor::InternalMonitor(FarmMonitor* parent, const string& title) 
-: m_parent(parent), m_name(title)
+  : m_parent(parent), m_name(title)
 {
   m_svc = 0;
   m_steer = ~0x0;
@@ -849,12 +849,12 @@ void FarmMonitor::handle(const Event& ev) {
     case CMD_RUNSTATE: {
       m_runState = ev.iocData<long>();
       /*
-      if ( m_runState == 0 || m_runState == 1 ) {
+        if ( m_runState == 0 || m_runState == 1 ) {
         AlarmInfo alms;
         updateAlarms(alms.first, alms.second);
         IocSensor::instance().send(this,int(CMD_UPDATE),this);
         publish("CLEARALL",Alarm(ERR_NO_ERROR,time(0),"",""));
-      }
+        }
       */
       log("INFO") << "Run State:" << m_runState << endl;
       break;

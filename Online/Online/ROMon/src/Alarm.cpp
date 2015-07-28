@@ -66,13 +66,13 @@ void Alarm::fromString(const string& str) {
           if ( (p5=::strchr(p4+1,'#')) ) {
             *p5 = 0;
             if ( (p6=::strchr(p5+1,'#')) ) {
-	      unsigned long tmp;
+              unsigned long tmp;
               *p6 = 0;
               tag = s;
               ::sscanf(p1+1,"%08lx",&tmp);
-	      when = time_t(tmp);
+              when = time_t(tmp);
               ::sscanf(p2+1,"%08lx",&tmp);
-	      code = tmp;
+              code = tmp;
               subfarm = p3+1;
               node = p4+1;
               description = p5+1;

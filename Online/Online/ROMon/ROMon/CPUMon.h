@@ -41,12 +41,12 @@ namespace ROMon {
    */
   PACK_DATA(class) Diskspace {
   public:
-  /**@class Diskspace CPUMon.h ROMon/CPUMon.h
-   *
-   * Class which represents a CPU core in a single node
-   *
-   * @author M.Frank
-   */
+    /**@class Diskspace CPUMon.h ROMon/CPUMon.h
+     *
+     * Class which represents a CPU core in a single node
+     *
+     * @author M.Frank
+     */
     long    blockSize;
     long    numBlocks;
     long    freeBlocks;

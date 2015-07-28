@@ -185,10 +185,10 @@ void InternalDisplay::handle(const Event& ev)    {
       if ( pb ) ::scrc_cursor_on(pb);
 
       if ( parent() )   {
-	IocSensor::instance().send(parent(),CMD_NOTIFY,ptr);
+        IocSensor::instance().send(parent(),CMD_NOTIFY,ptr);
       }
       else {
-	delete [] ptr;
+        delete [] ptr;
       }
       break;
     }

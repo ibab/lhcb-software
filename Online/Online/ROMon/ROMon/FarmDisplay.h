@@ -118,7 +118,7 @@ namespace ROMon {
     /// Keyboard action
     static int key_action(unsigned int fac, void* param);
 
-public:
+  public:
     /// Standard constructor
     FarmDisplay(int argc, char** argv);
 

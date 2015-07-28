@@ -67,7 +67,7 @@ ClusterDisplay* ROMon::createRecSubfarmDisplay(int width, int height, int posx, 
 
 /// Standard constructor
 RecSubfarmDisplay::RecSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv)
-: ClusterDisplay(width, height)
+  : ClusterDisplay(width, height)
 {
   m_position = Position(posx,posy);
   init(argc, argv);

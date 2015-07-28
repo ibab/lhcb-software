@@ -35,7 +35,7 @@ using namespace std;
 
 // Initializing constructor with default file
 HltSummaryDisplay::HltSummaryDisplay(InternalDisplay* parent) 
-: InternalDisplay(parent,"Deferred HLT Runs")
+  : InternalDisplay(parent,"Deferred HLT Runs")
 {
   string head("Deferred HLT run summary");
   ::scrc_create_display(&m_display,60,132,INVERSE,ON,head.c_str());
@@ -85,7 +85,7 @@ void HltSummaryDisplay::update(const void* ptr) {
 
   ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
   ::sprintf(text," Deferred HLT summary monitor for all nodes  [%s] %30s %d updates",
-	    ::lib_rtl_timestr(), "", ++count);
+            ::lib_rtl_timestr(), "", ++count);
   ::scrc_put_chars(m_display,"",BOLD|BLUE,++line,2,1);
   ::scrc_put_chars(m_display,text,BOLD|BLUE,++line,2,1);
   ::scrc_put_chars(m_display,"",BOLD|BLUE,++line,2,1);
@@ -101,30 +101,30 @@ void HltSummaryDisplay::update(const void* ptr) {
       const ClusterLine* l = (*i).second;
       const _S* s = l->data<_S>();
       if ( s )  {
-	const _R& runs  = s->runs;
-	const _N* nodes = s->nodes();
-	for (ri=runs.begin(); ri!=runs.end(); ri=runs.next(ri))  {
-	  int run = (*ri).first;
-	  int files = (*ri).second;
-	  run_files[run] += files;
-	  map<int,set<string> >::iterator i = run_nodes.find(run);
-	  if ( i == run_nodes.end() ) {
-	    run_nodes[run] = set<string>();
-	  }
-	}
-	if ( nodes->size() > 0 ) {
-	  for (_N::const_iterator ni=nodes->begin(); ni!=nodes->end(); ni=nodes->next(ni))  {
-	    const DeferredHLTStats& n = *ni;
-	    string nn = n.name;
-	    if ( n.length()>0 && nn != s->name ) {
-	      const _R& nr = n.runs;
-	      for (ri=nr.begin(); ri!=nr.end(); ri=nr.next(ri))  {
-		int run = (*ri).first;
-		run_nodes[run].insert(nn);
-	      }
-	    }
-	  }
-	}
+        const _R& runs  = s->runs;
+        const _N* nodes = s->nodes();
+        for (ri=runs.begin(); ri!=runs.end(); ri=runs.next(ri))  {
+          int run = (*ri).first;
+          int files = (*ri).second;
+          run_files[run] += files;
+          map<int,set<string> >::iterator i = run_nodes.find(run);
+          if ( i == run_nodes.end() ) {
+            run_nodes[run] = set<string>();
+          }
+        }
+        if ( nodes->size() > 0 ) {
+          for (_N::const_iterator ni=nodes->begin(); ni!=nodes->end(); ni=nodes->next(ni))  {
+            const DeferredHLTStats& n = *ni;
+            string nn = n.name;
+            if ( n.length()>0 && nn != s->name ) {
+              const _R& nr = n.runs;
+              for (ri=nr.begin(); ri!=nr.end(); ri=nr.next(ri))  {
+                int run = (*ri).first;
+                run_nodes[run].insert(nn);
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -155,9 +155,9 @@ void HltSummaryDisplay::update(const void* ptr) {
       int exc_nodes=0;
       num_nodes = (*j).second.size();
       for(set<string>::const_iterator k=(*j).second.begin(); k!=(*j).second.end();++k) {
-	if ( nodes.length()<80 ) nodes += (*k)+" ";
-	else ++exc_nodes;
-	tot_nodes.insert(*k);
+        if ( nodes.length()<80 ) nodes += (*k)+" ";
+        else ++exc_nodes;
+        tot_nodes.insert(*k);
       }
       ::sprintf(text,"%6d %5d %-90s %3d",num_files,num_nodes,nodes.c_str(),exc_nodes);
     }
@@ -170,7 +170,7 @@ void HltSummaryDisplay::update(const void* ptr) {
   }
   ::scrc_put_chars(m_display,"",NORMAL,++line,2,1);
   ::sprintf(text,"  Grand Total Statistics:  %8d runs with %6d files on %5ld nodes still to be processed",
-	    tot_runs,tot_files,long(tot_nodes.size()));
+            tot_runs,tot_files,long(tot_nodes.size()));
   col = tot_files>0 ? RED : BOLD|GREEN;
   ::scrc_put_chars(m_display,"",col,++line,2,1);
   ::scrc_put_chars(m_display,text,col,++line,2,1);    

@@ -53,12 +53,12 @@ namespace {
 #ifndef __INTEL_COMPILER
     ClientStat& operator=(const ClientStat& c) {
       if ( this != &c )  {
-	timesqr = c.timesqr; 
-	time    = c.time; 
-	nevt    = c.nevt; 
-	last    = c.last;
-	tm[0]   = c.tm[0]; 
-	tm[1]   = c.tm[1];
+        timesqr = c.timesqr; 
+        time    = c.time; 
+        nevt    = c.nevt; 
+        last    = c.last;
+        tm[0]   = c.tm[0]; 
+        tm[1]   = c.tm[1];
       }
       return *this;
     }
@@ -163,7 +163,7 @@ void BenchmarkDisplay::update(const void* data) {
     }
     if ( line > 1 ) {
       while (line+3 < m_display->height ) 
-	::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
+        ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
     }
   }
 }
@@ -185,37 +185,37 @@ void BenchmarkDisplay::updateStats(const Nodeset& ns) {
       const Clients& clients = (*ib).clients;
       const char*    bnam    = (*ib).name;
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	const char*         cnam   = (*ic).name;
-	if ( ::str_ncasecmp(cnam,nnam,nnam_len)==0 )  {
-	  cnam += nnam_len+1;
-	}
-	if ( ::strstr(cnam,"GauchoJob") && ::strstr(bnam,"Send") )  {
-	  continue;
-	}
-	if ( ::strstr(cnam,"EvtHolder") )  {
-	  continue;
-	}
-	BufferStats&  cbstat = nstat[bnam];
-	ClientStat&   cstat  = cbstat[cnam];
-	int dt  = n.time-cstat.tm[0];
-	int dtm = int(n.millitm)-cstat.tm[1];
-	if ( dtm<0 ) { ++dt; dtm=1000-dtm; }
-	dtm += dt*1000;
-	if ( cstat.last != 0 ) {
-	  long long int d = (*ic).events - cstat.last;
-	  if ( d > 0 ) {
-	    double t = double(dtm);
-	    cstat.time    += t;
-	    cstat.timesqr += t*t/d;
-	    cstat.nevt    += d;
-	  }
-	  else {
-	    continue;
-	  }
-	}
-	cstat.tm[0] = n.time;
-	cstat.tm[1] = n.millitm;
-	cstat.last  = (*ic).events;
+        const char*         cnam   = (*ic).name;
+        if ( ::str_ncasecmp(cnam,nnam,nnam_len)==0 )  {
+          cnam += nnam_len+1;
+        }
+        if ( ::strstr(cnam,"GauchoJob") && ::strstr(bnam,"Send") )  {
+          continue;
+        }
+        if ( ::strstr(cnam,"EvtHolder") )  {
+          continue;
+        }
+        BufferStats&  cbstat = nstat[bnam];
+        ClientStat&   cstat  = cbstat[cnam];
+        int dt  = n.time-cstat.tm[0];
+        int dtm = int(n.millitm)-cstat.tm[1];
+        if ( dtm<0 ) { ++dt; dtm=1000-dtm; }
+        dtm += dt*1000;
+        if ( cstat.last != 0 ) {
+          long long int d = (*ic).events - cstat.last;
+          if ( d > 0 ) {
+            double t = double(dtm);
+            cstat.time    += t;
+            cstat.timesqr += t*t/d;
+            cstat.nevt    += d;
+          }
+          else {
+            continue;
+          }
+        }
+        cstat.tm[0] = n.time;
+        cstat.tm[1] = n.millitm;
+        cstat.last  = (*ic).events;
       }
     }
   }
@@ -244,92 +244,92 @@ int BenchmarkDisplay::updateNode(const Nodeset& ns) {
     ::scrc_put_chars(m_display,"",BOLD|BLUE,++line,3,1);
 
     ::snprintf(txt,sizeof(txt),"%-32s%25s%25s%25s",
-	      //           0123456789012345678901   0123456789012345678901   01234567890123456789012
-	      "Task name","---- Events Buffer ---","----- Send Buffer ----"," -- Overflow Buffer ---");
+               //           0123456789012345678901   0123456789012345678901   01234567890123456789012
+               "Task name","---- Events Buffer ---","----- Send Buffer ----"," -- Overflow Buffer ---");
     ::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
     ::snprintf(txt,sizeof(txt),"%-32s  %10s %5s %6s  %10s %5s %6s  %10s %5s %6s ",
-	      "[UTGID]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]");
+               "[UTGID]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]");
     ::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
 
     for(SubfarmStats::const_iterator i=sfstat.begin();i!=sfstat.end();++i) {
       const string& nnam = (*i).first;
       const NodeStats& nstat = (*i).second;
       if ( ::str_casecmp(nnam.c_str(),m_name.c_str())==0 ) {
-	NodeStats ns_rel, ns_tot;
-	NodeStats::const_iterator j;
-	for(j=nstat.begin(); j!=nstat.end();++j)   {
-	  const BufferStats& bstat = (*j).second;
-	  const char* bnam = (*j).first.c_str();
-	  for(BufferStats::const_iterator k=bstat.begin(); k!=bstat.end();++k) {
-	    const ClientStat& cs = (*k).second;
-	    string cnam = (*k).first;
-	    size_t idx  = cnam.find('_');
-	    ClientStat& cstat_rel = ns_rel[cnam][bnam];
-	    cstat_rel.nevt    += cs.nevt;
-	    cstat_rel.time    += cs.time;
-	    cstat_rel.timesqr += cs.timesqr;
+        NodeStats ns_rel, ns_tot;
+        NodeStats::const_iterator j;
+        for(j=nstat.begin(); j!=nstat.end();++j)   {
+          const BufferStats& bstat = (*j).second;
+          const char* bnam = (*j).first.c_str();
+          for(BufferStats::const_iterator k=bstat.begin(); k!=bstat.end();++k) {
+            const ClientStat& cs = (*k).second;
+            string cnam = (*k).first;
+            size_t idx  = cnam.find('_');
+            ClientStat& cstat_rel = ns_rel[cnam][bnam];
+            cstat_rel.nevt    += cs.nevt;
+            cstat_rel.time    += cs.time;
+            cstat_rel.timesqr += cs.timesqr;
 
-	    if ( idx != string::npos ) cnam = cnam.substr(0,idx);
-	    else if ( cnam.substr(0,5)=="MEPRx" ) cnam = "MEPRx";
-	    ClientStat& cstat_tot = ns_tot[cnam][bnam];
-	    cstat_tot.nevt    += cs.nevt;
-	    cstat_tot.time    += cs.time;
-	    cstat_tot.timesqr += cs.timesqr;
-	  }
-	}
-	for(j=ns_rel.begin(); j!=ns_rel.end();++j)   {
-	  const BufferStats& bstat = (*j).second;
-	  const char* cnam = (*j).first.c_str();
-	  char* p = txt;
-	  ::memset(txt,' ',sizeof(txt));
-	  txt[sizeof(txt)-1]=0;
-	  for(BufferStats::const_iterator k=bstat.begin(); k!=bstat.end();++k) {
-	    const string& bnam = (*k).first;
-	    const ClientStat& cs = (*k).second;
-	    p = txt + 32;
-	    if      ( bnam == "Events"   ) ;
-	    else if ( bnam == "Send"     ) p += 25;
-	    else if ( bnam == "Overflow" ) p += 25+25;
-	    len = ::snprintf(txt,sizeof(txt),"%s",cnam);
-	    txt[len]=' ';
-	    len = append(p, &cs);
-	    p[len]=' ';
-	  }
-	  ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);	
-	}
-	::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
-	::scrc_put_chars(m_display,"",BOLD|BLUE,++line,3,1);
-	::scrc_put_chars(m_display,"   Summary Overview:",BOLD|BLUE,++line,3,1);
-	::scrc_put_chars(m_display,"",BOLD|BLUE,++line,3,1);
-	::snprintf(txt,sizeof(txt),"%-32s%25s%25s%25s",
-		  //           0123456789012345678901   0123456789012345678901   01234567890123456789012
-		  "Task name","---- Events Buffer ---","----- Send Buffer ----"," -- Overflow Buffer ---");
-	::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
-	::snprintf(txt,sizeof(txt),"%-32s  %10s %5s %6s  %10s %5s %6s  %10s %5s %6s ",
-		  "[UTGID]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]");
-	::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
-	for(j=ns_tot.begin(); j!=ns_tot.end();++j)   {
-	  const BufferStats& bstat = (*j).second;
-	  const char* cnam = (*j).first.c_str();
-	  char* p = txt;
-	  ::memset(txt,' ',sizeof(txt));
-	  txt[sizeof(txt)-1]=0;
-	  for(BufferStats::const_iterator k=bstat.begin(); k!=bstat.end();++k) {
-	    const string& bnam = (*k).first;
-	    const ClientStat& cs = (*k).second;
-	    p = txt + 32;
-	    if      ( bnam == "Events"   ) ;
-	    else if ( bnam == "Send"     ) p += 25;
-	    else if ( bnam == "Overflow" ) p += 25+25;
-	    len = ::snprintf(txt,sizeof(txt),"%s",cnam);
-	    txt[len]=' ';
-	    len = append(p, &cs);
-	    p[len]=' ';
-	  }
-	  ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);	
-	}
+            if ( idx != string::npos ) cnam = cnam.substr(0,idx);
+            else if ( cnam.substr(0,5)=="MEPRx" ) cnam = "MEPRx";
+            ClientStat& cstat_tot = ns_tot[cnam][bnam];
+            cstat_tot.nevt    += cs.nevt;
+            cstat_tot.time    += cs.time;
+            cstat_tot.timesqr += cs.timesqr;
+          }
+        }
+        for(j=ns_rel.begin(); j!=ns_rel.end();++j)   {
+          const BufferStats& bstat = (*j).second;
+          const char* cnam = (*j).first.c_str();
+          char* p = txt;
+          ::memset(txt,' ',sizeof(txt));
+          txt[sizeof(txt)-1]=0;
+          for(BufferStats::const_iterator k=bstat.begin(); k!=bstat.end();++k) {
+            const string& bnam = (*k).first;
+            const ClientStat& cs = (*k).second;
+            p = txt + 32;
+            if      ( bnam == "Events"   ) ;
+            else if ( bnam == "Send"     ) p += 25;
+            else if ( bnam == "Overflow" ) p += 25+25;
+            len = ::snprintf(txt,sizeof(txt),"%s",cnam);
+            txt[len]=' ';
+            len = append(p, &cs);
+            p[len]=' ';
+          }
+          ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);	
+        }
+        ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
+        ::scrc_put_chars(m_display,"",BOLD|BLUE,++line,3,1);
+        ::scrc_put_chars(m_display,"   Summary Overview:",BOLD|BLUE,++line,3,1);
+        ::scrc_put_chars(m_display,"",BOLD|BLUE,++line,3,1);
+        ::snprintf(txt,sizeof(txt),"%-32s%25s%25s%25s",
+                   //           0123456789012345678901   0123456789012345678901   01234567890123456789012
+                   "Task name","---- Events Buffer ---","----- Send Buffer ----"," -- Overflow Buffer ---");
+        ::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
+        ::snprintf(txt,sizeof(txt),"%-32s  %10s %5s %6s  %10s %5s %6s  %10s %5s %6s ",
+                   "[UTGID]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]");
+        ::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
+        for(j=ns_tot.begin(); j!=ns_tot.end();++j)   {
+          const BufferStats& bstat = (*j).second;
+          const char* cnam = (*j).first.c_str();
+          char* p = txt;
+          ::memset(txt,' ',sizeof(txt));
+          txt[sizeof(txt)-1]=0;
+          for(BufferStats::const_iterator k=bstat.begin(); k!=bstat.end();++k) {
+            const string& bnam = (*k).first;
+            const ClientStat& cs = (*k).second;
+            p = txt + 32;
+            if      ( bnam == "Events"   ) ;
+            else if ( bnam == "Send"     ) p += 25;
+            else if ( bnam == "Overflow" ) p += 25+25;
+            len = ::snprintf(txt,sizeof(txt),"%s",cnam);
+            txt[len]=' ';
+            len = append(p, &cs);
+            p[len]=' ';
+          }
+          ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);	
+        }
 
-	break;
+        break;
       }
     }
     ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
@@ -381,25 +381,25 @@ int BenchmarkDisplay::updateSubfarm(const Nodeset& ns) {
       const NodeStats& nstat = (*i).second;
       ns_rel.clear();
       for(NodeStats::const_iterator j=nstat.begin(); j!=nstat.end();++j) {
-	const BufferStats& bstat = (*j).second;
-	const char* bnam = (*j).first.c_str();
-	BufferStats& bs     = ns_rel[bnam];
-	BufferStats& bs_tot = ns_tot[bnam];
-	for(BufferStats::const_iterator k=bstat.begin(); k!=bstat.end();++k) {
-	  const ClientStat& cs = (*k).second;
-	  string cnam = (*k).first;
-	  size_t idx  = cnam.find('_');
-	  if ( idx != string::npos ) cnam=cnam.substr(0,idx);
-	  else if ( cnam.substr(0,5)=="MEPRx" ) cnam = "MEPRx";
-	  ClientStat& cstat_tot = bs_tot[cnam];
-	  cstat_tot.nevt    += cs.nevt;
-	  cstat_tot.time    += cs.time;
-	  cstat_tot.timesqr += cs.timesqr;
-	  ClientStat& cstat = bs[cnam];
-	  cstat.nevt    += cs.nevt;
-	  cstat.time    += cs.time;
-	  cstat.timesqr += cs.timesqr;
-	}
+        const BufferStats& bstat = (*j).second;
+        const char* bnam = (*j).first.c_str();
+        BufferStats& bs     = ns_rel[bnam];
+        BufferStats& bs_tot = ns_tot[bnam];
+        for(BufferStats::const_iterator k=bstat.begin(); k!=bstat.end();++k) {
+          const ClientStat& cs = (*k).second;
+          string cnam = (*k).first;
+          size_t idx  = cnam.find('_');
+          if ( idx != string::npos ) cnam=cnam.substr(0,idx);
+          else if ( cnam.substr(0,5)=="MEPRx" ) cnam = "MEPRx";
+          ClientStat& cstat_tot = bs_tot[cnam];
+          cstat_tot.nevt    += cs.nevt;
+          cstat_tot.time    += cs.time;
+          cstat_tot.timesqr += cs.timesqr;
+          ClientStat& cstat = bs[cnam];
+          cstat.nevt    += cs.nevt;
+          cstat.time    += cs.time;
+          cstat.timesqr += cs.timesqr;
+        }
       }
       makeNodeStatLine(txt, (*i).first.c_str(), ns_rel);
       ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
@@ -457,25 +457,25 @@ int BenchmarkDisplay::updateFarm(const Nodeset& ns) {
     for(SubfarmStats::const_iterator i=sfstat.begin();i!=sfstat.end();++i) {
       const NodeStats& nstat = (*i).second;
       for(NodeStats::const_iterator j=nstat.begin(); j!=nstat.end();++j) {
-	const BufferStats& bstat = (*j).second;
-	const char* bnam = (*j).first.c_str();
-	BufferStats& bs     = ns_rel[bnam];
-	BufferStats& bs_tot = ns_tot[bnam];
-	for(BufferStats::const_iterator k=bstat.begin(); k!=bstat.end();++k) {
-	  const ClientStat& cs = (*k).second;
-	  string cnam = (*k).first;
-	  size_t idx  = cnam.find('_');
-	  if ( idx != string::npos ) cnam=cnam.substr(0,idx);
-	  else if ( cnam.substr(0,5)=="MEPRx" ) cnam = "MEPRx";
-	  ClientStat& cstat_tot = bs_tot[cnam];
-	  cstat_tot.nevt    += cs.nevt;
-	  cstat_tot.time    += cs.time;
-	  cstat_tot.timesqr += cs.timesqr;
-	  ClientStat& cstat = bs[cnam];
-	  cstat.nevt    += cs.nevt;
-	  cstat.time    += cs.time;
-	  cstat.timesqr += cs.timesqr;
-	}
+        const BufferStats& bstat = (*j).second;
+        const char* bnam = (*j).first.c_str();
+        BufferStats& bs     = ns_rel[bnam];
+        BufferStats& bs_tot = ns_tot[bnam];
+        for(BufferStats::const_iterator k=bstat.begin(); k!=bstat.end();++k) {
+          const ClientStat& cs = (*k).second;
+          string cnam = (*k).first;
+          size_t idx  = cnam.find('_');
+          if ( idx != string::npos ) cnam=cnam.substr(0,idx);
+          else if ( cnam.substr(0,5)=="MEPRx" ) cnam = "MEPRx";
+          ClientStat& cstat_tot = bs_tot[cnam];
+          cstat_tot.nevt    += cs.nevt;
+          cstat_tot.time    += cs.time;
+          cstat_tot.timesqr += cs.timesqr;
+          ClientStat& cstat = bs[cnam];
+          cstat.nevt    += cs.nevt;
+          cstat.time    += cs.time;
+          cstat.timesqr += cs.timesqr;
+        }
       }
     }
     makeNodeStatLine(txt, (*h).first.c_str(), ns_rel);

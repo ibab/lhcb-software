@@ -26,8 +26,8 @@
 #include <map>
 
 /*
-*   ROMon namespace declaration
-*/
+ *   ROMon namespace declaration
+ */
 namespace ROMon {
 
   // Forward declarations
@@ -35,11 +35,11 @@ namespace ROMon {
   class SubfarmBootStatus;
 
   /**@class SubfarmBootStatus BootMon.h ROMon/BootMon.h
-  *
-  * Class which represents the boot status of a subfarm
-  *
-  * @author M.Frank
-  */
+   *
+   * Class which represents the boot status of a subfarm
+   *
+   * @author M.Frank
+   */
   class SubfarmBootStatus {
   public:
     typedef std::map<std::string,BootNodeStatus*> Nodes;
@@ -86,11 +86,11 @@ namespace ROMon {
   };
 
   /**@class BootMonitor BootMon.h ROMon/BootMon.h
-  *
-  * Class which represents the boot status of all subfarms
-  *
-  * @author M.Frank
-  */
+   *
+   * Class which represents the boot status of all subfarms
+   *
+   * @author M.Frank
+   */
   class BootMonitor : public Interactor {
   public:
     typedef std::map<std::string,SubfarmBootStatus*> Clusters;
@@ -248,7 +248,7 @@ struct BootDataProcessor : public DataFile::DataProcessor {
     if ( boot )   {
       if ( 0 == (boot->status&flag) ) {
         ::lib_rtl_output(LIB_RTL_DEBUG,"%s> Set flag %s [%08X] -> %08X",
-          boot->name,BootNodeStatus::flagName(flag).c_str(),flag,boot->status);
+                         boot->name,BootNodeStatus::flagName(flag).c_str(),flag,boot->status);
         boot->status |= flag;
       }
     }
@@ -293,11 +293,11 @@ struct BootDataProcessor : public DataFile::DataProcessor {
         (*i).second->status = BootNodeStatus::DHCP_REQUESTED;
         (*i).second->dhcpReq = (int)line.time();
         ::lib_rtl_output(LIB_RTL_DEBUG,"%s> %s Found DHCP request for node:%s",
-          status.name().c_str(),::lib_rtl_timestr(),host);
+                         status.name().c_str(),::lib_rtl_timestr(),host);
       }
       else {
         ::lib_rtl_output(LIB_RTL_DEBUG,"%s> %s Unknown DHCP request for node:%s",
-          status.name().c_str(),::lib_rtl_timestr(),host);
+                         status.name().c_str(),::lib_rtl_timestr(),host);
       }
     }
     if ( boot ) boot = 0;
@@ -409,27 +409,27 @@ void SubfarmBootStatus::summaryHandler(void* tag, void* buf, int* size) {
         //if ( (*ni).status == NodeSummary::OK && (*ni).state == NodeSummary::ALIVE ) {
         if ( (*ni).status == NodeSummary::OK && (*ni).state == NodeSummary::ALIVE ) {
           n->status = (BootNodeStatus::FMC_STARTED+
-            BootNodeStatus::TASKMAN_OK+
-            BootNodeStatus::TCP_STARTED+
-            BootNodeStatus::ETH1_STARTED+
-            BootNodeStatus::ETH0_STARTED+
-            BootNodeStatus::PCI_STARTED+
-            BootNodeStatus::CPU_STARTED+
-            BootNodeStatus::MOUNT_REQUESTED+
-            BootNodeStatus::DHCP_REQUESTED);
+                       BootNodeStatus::TASKMAN_OK+
+                       BootNodeStatus::TCP_STARTED+
+                       BootNodeStatus::ETH1_STARTED+
+                       BootNodeStatus::ETH0_STARTED+
+                       BootNodeStatus::PCI_STARTED+
+                       BootNodeStatus::CPU_STARTED+
+                       BootNodeStatus::MOUNT_REQUESTED+
+                       BootNodeStatus::DHCP_REQUESTED);
           if ( n->dhcpReq  <= 0 ) n->dhcpReq  = long(now);
           if ( n->mountReq <= 0 ) n->mountReq = long(now);
           if ( n->fmcStart <= 0 ) n->fmcStart = long(now);
         }
         else if ( (*ni).state == NodeSummary::ALIVE ) {
           n->status = (BootNodeStatus::FMC_STARTED+
-            BootNodeStatus::TCP_STARTED+
-            BootNodeStatus::ETH1_STARTED+
-            BootNodeStatus::ETH0_STARTED+
-            BootNodeStatus::PCI_STARTED+
-            BootNodeStatus::CPU_STARTED+
-            BootNodeStatus::MOUNT_REQUESTED+
-            BootNodeStatus::DHCP_REQUESTED);
+                       BootNodeStatus::TCP_STARTED+
+                       BootNodeStatus::ETH1_STARTED+
+                       BootNodeStatus::ETH0_STARTED+
+                       BootNodeStatus::PCI_STARTED+
+                       BootNodeStatus::CPU_STARTED+
+                       BootNodeStatus::MOUNT_REQUESTED+
+                       BootNodeStatus::DHCP_REQUESTED);
           if ( n->dhcpReq  <= 0 ) n->dhcpReq  = long(now);
           if ( n->mountReq <= 0 ) n->mountReq = long(now);
           if ( n->fmcStart <= 0 ) n->fmcStart = long(now);
@@ -622,16 +622,16 @@ void BootMonitor::handle(const Event& ev) {
       }
       break;
     case IocEvent:
-    switch(ev.type) {
-    case CMD_CHECK:
-      ::lib_rtl_output(LIB_RTL_INFO,"BootMonitor> %s Checking %d clusters for boot information.",
-                       ::lib_rtl_timestr(),int(m_clusters.size()));
-      scan();
+      switch(ev.type) {
+      case CMD_CHECK:
+        ::lib_rtl_output(LIB_RTL_INFO,"BootMonitor> %s Checking %d clusters for boot information.",
+                         ::lib_rtl_timestr(),int(m_clusters.size()));
+        scan();
+        break;
+      default:
+        break;
+      }
       break;
-    default:
-      break;
-    }
-    break;
     default:
       break;
     }

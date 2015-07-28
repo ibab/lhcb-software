@@ -156,7 +156,7 @@ void SubfarmStatCollector::updateMBM(const Nodeset& ns) {
       ::sprintf(text,"{%s:%d#%d#%ld#%ld#%ld#%ld}",(*ib).name,
                 int((ctrl.bm_size*ctrl.bytes_p_Bit)/1024),int((ctrl.i_space*ctrl.bytes_p_Bit)/1024),
                 long(ctrl.p_emax),long(ctrl.i_events),
-		long(ctrl.p_umax),long(ctrl.i_users));
+                long(ctrl.p_umax),long(ctrl.i_users));
       result += text;
     }
     result += "]";

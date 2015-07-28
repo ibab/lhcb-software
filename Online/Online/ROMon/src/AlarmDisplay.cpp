@@ -88,8 +88,8 @@ void MessageWindow::update(const void* data) {
             const Alarm* al = s.nodes[k];
             color = al->color();
             ::snprintf(text,sizeof(text),
-		       "%-13s %-12s %s %s",al->node.c_str(),al->time().c_str(),
-		       al->message(),al->description.c_str());
+                       "%-13s %-12s %s %s",al->node.c_str(),al->time().c_str(),
+                       al->message(),al->description.c_str());
             ::scrc_put_chars(m_display,text,color,++line,1,1);
           }
         }
@@ -97,7 +97,7 @@ void MessageWindow::update(const void* data) {
           const Alarm* al = s.nodes[0];
           color = al->color();
           ::snprintf(text,sizeof(text),"%-4d %-8s %-12s %s",int(s.nodes.size()),"alarms",
-                    al->time().c_str(),al->message());
+                     al->time().c_str(),al->message());
           set<string> opts;
           for(size_t k=0; k<s.nodes.size(); ++k) {
             const string& item = s.nodes[k]->node;
@@ -267,8 +267,8 @@ int AlarmDisplay::handleKeyboard(int key)    {
     case 'E':
     case CTRL_E:
       delete this;
-      ::exit(0);
-      return WT_SUCCESS;
+    ::exit(0);
+    return WT_SUCCESS;
     case 'h':
     case 'H':
     case CTRL_H:
@@ -313,7 +313,7 @@ void AlarmDisplay::handle(const Event& ev) {
     switch(ev.type) {
     case CMD_UPDATE:
       ::scrc_fflush(m_pasteboard);
-    //::scrc_repaint_screen(m_pasteboard);
+      //::scrc_repaint_screen(m_pasteboard);
       break;
     case CMD_SETCURSOR:
       set_cursor(ev.iocPtr<InternalDisplay>());

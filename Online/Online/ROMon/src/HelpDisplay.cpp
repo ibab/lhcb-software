@@ -30,7 +30,7 @@ using namespace std;
 
 // Initializing constructor with default file
 HelpDisplay::HelpDisplay(InternalDisplay* parent, const string& title, const string& tag) 
-: InternalDisplay(parent,title)
+  : InternalDisplay(parent,title)
 {
   string input = ::getenv("ROMONROOT") != 0 ? ::getenv("ROMONROOT") : "..";
   string fin = input+"/doc/farmMon.hlp";
@@ -39,7 +39,7 @@ HelpDisplay::HelpDisplay(InternalDisplay* parent, const string& title, const str
 
 // Initializing constructor with file name
 HelpDisplay::HelpDisplay(InternalDisplay* parent, const string& title, const string& tag, const std::string& fin) 
-: InternalDisplay(parent,title)
+  : InternalDisplay(parent,title)
 {
   _init(tag,fin);
 }

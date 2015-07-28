@@ -19,7 +19,7 @@ using namespace ROMon;
 
 /// Standard constructor
 RODimListener::RODimListener(bool verb) 
-: m_dns(0), m_verbose(verb), m_handler(0)  {
+  : m_dns(0), m_verbose(verb), m_handler(0)  {
 }
 
 /// Standard constructor

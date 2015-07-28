@@ -43,7 +43,7 @@ namespace ROMon {
 
   private:
     /// Private copy constructor
-  MessageWindow(const MessageWindow&) : InternalDisplay() {}
+    MessageWindow(const MessageWindow&) : InternalDisplay() {}
     /// Private assignment operator
     MessageWindow& operator=(const MessageWindow&) { return *this; }
   public:
@@ -113,7 +113,7 @@ namespace ROMon {
     /// Keyboard action
     static int key_action(unsigned int fac, void* param);
 
-public:
+  public:
     /// Standard constructor
     AlarmDisplay(int argc, char** argv);
     /// Standard destructor

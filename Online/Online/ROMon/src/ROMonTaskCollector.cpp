@@ -28,7 +28,7 @@ using namespace std;
 
 /// Standard constructor
 ROMonTaskCollector::ROMonTaskCollector(int argc, char** argv) 
-: ROMonGblBuffer(argc,argv,ROMonTaskCollector::help), m_mbmInfo(0), m_fsmInfo()
+  : ROMonGblBuffer(argc,argv,ROMonTaskCollector::help), m_mbmInfo(0), m_fsmInfo()
 {
   m_fsmInfo.setVerbose(m_verbose);
   m_fsmInfo.start();

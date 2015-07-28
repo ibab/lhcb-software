@@ -67,7 +67,7 @@ ClusterDisplay* ROMon::createMonitoringDisplay(int width, int height, int posx, 
 
 /// Initializing constructor for using display as sub-display
 MonitoringDisplay::MonitoringDisplay(int width, int height, int posx, int posy, int argc, char** argv)
-: ClusterDisplay(width,height+15)
+  : ClusterDisplay(width,height+15)
 {
   m_position = Position(posx,posy);
   init(1, argc, argv);
@@ -106,7 +106,7 @@ void MonitoringDisplay::init(int flag, int argc, char** argv)   {
   m_relay = createSubDisplay(Position(right,posy+hdr_height), Area(width,relay_height),"Relay Information");
   m_nodes = createSubDisplay(Position(right,m_relay->bottom()-1),Area(width,node_height),"Monitoring Nodes");
   m_tasks = createSubDisplay(Position(right,m_nodes->bottom()-1),Area(width,m_area.height-m_nodes->bottom()+1),
-                               "Monitoring Tasks");
+                             "Monitoring Tasks");
   end_update();
 }
 
@@ -335,7 +335,7 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
   }
   if ( nStr > 0 ) disp->draw_line_normal("%-50s%-50s",txt[0],txt[1]);
   disp->draw_line_bold(" %-26s%11d   Distributed:%10d to %ld Nodes",
-                  "Total events received:",received,sent,to_nodes.size());
+                       "Total events received:",received,sent,to_nodes.size());
 }
 
 /// Update header information

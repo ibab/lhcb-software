@@ -81,13 +81,13 @@ namespace {
   void ErrHandler::error(const SAXParseException& e)  {
     string m(_toString(e.getMessage()));
     if (m.find("The values for attribute 'name' must be names or name tokens")!=string::npos ||
-      m.find("The values for attribute 'ID' must be names or name tokens")!=string::npos   ||
-      m.find("for attribute 'name' must be Name or Nmtoken")!=string::npos                 ||
-      m.find("for attribute 'ID' must be Name or Nmtoken")!=string::npos      )
+        m.find("The values for attribute 'ID' must be names or name tokens")!=string::npos   ||
+        m.find("for attribute 'name' must be Name or Nmtoken")!=string::npos                 ||
+        m.find("for attribute 'ID' must be Name or Nmtoken")!=string::npos      )
       return;
     string sys(_toString(e.getSystemId()));
     ::lib_rtl_output(LIB_RTL_WARNING,"Error at file \"%s\", line %d, column %d Message:%s",
-                   sys.c_str(),e.getLineNumber(),e.getColumnNumber(),m.c_str());
+                     sys.c_str(),e.getLineNumber(),e.getColumnNumber(),m.c_str());
   }
   void ErrHandler::fatalError(const SAXParseException& e)  {
     string m(_toString(e.getMessage()));
@@ -98,9 +98,9 @@ namespace {
   }
 
   const XMLTag EmptyCatalog("<!-- Edited By POOL -->\n"
-                              "<!DOCTYPE TASKMONITOR SYSTEM \"InMemory\">\n"
-                              "<Cluster>\n"
-                              "</Cluster>\n");
+                            "<!DOCTYPE TASKMONITOR SYSTEM \"InMemory\">\n"
+                            "<Cluster>\n"
+                            "</Cluster>\n");
 }
 
 XML_Init::XML_Init() { __Init in;in.verify(); }
@@ -136,14 +136,14 @@ int XMLDocument::parse(const string& tag,InputSource& input)   {
     m_parser->setErrorHandler(m_errHdlr);
     m_parser->parse(input);
     /*
-    if ( !tag.empty() )  {
+      if ( !tag.empty() )  {
       //m_parser->parse(tag.c_str());
-    }
-    else  {
+      }
+      else  {
       const string& s = EmptyCatalog;
       MemBufInputSource src((const XMLByte*)s.c_str(),s.length(),"MemCatalog");
       m_parser->parse(src);
-    }
+      }
     */
     m_doc = m_parser->getDocument();
     return 1;

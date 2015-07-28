@@ -66,8 +66,8 @@ namespace ROMon {
 #include <stdexcept>
 #include <cstring>
 extern "C" {
-  #include "dis.h"
-  #include "dic.h"
+#include "dis.h"
+#include "dic.h"
 }
 
 using namespace std;

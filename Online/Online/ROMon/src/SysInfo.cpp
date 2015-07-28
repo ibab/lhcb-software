@@ -28,7 +28,7 @@
 #include <fcntl.h>
 
 extern "C" {
-  #include "dis.h"
+#include "dis.h"
 }
 
 using namespace std;
@@ -38,7 +38,7 @@ using namespace ROMon;
 
 /// Default constructor
 SysInfo::SysInfo(NodeStats* buff, size_t len, int nbuffs)
-: m_buffer(buff), m_buffLen(len), m_idx(1), m_readings(0), m_nBuffs(nbuffs)
+  : m_buffer(buff), m_buffLen(len), m_idx(1), m_readings(0), m_nBuffs(nbuffs)
 {
   int j;
   string match, n = strupper(RTL::nodeNameShort());

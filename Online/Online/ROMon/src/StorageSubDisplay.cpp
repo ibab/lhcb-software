@@ -71,7 +71,7 @@ using namespace std;
 
 /// Initializing constructor
 StorageSubDisplay::StorageSubDisplay(InternalDisplay* parent, const string& title, int height, bool bad) 
-: InternalDisplay(parent, title)
+  : InternalDisplay(parent, title)
 {
   m_numUpdate = 0;
   m_height  = height;
@@ -194,8 +194,8 @@ void StorageSubDisplay::updateContent(const Nodeset& ns) {
           num_cl[idx]   += (*ib).clients.size();
           num_sl[idx]   += ctrl.p_emax - ctrl.i_events;
           min_prod[idx]  = min(min_prod[idx],ctrl.tot_produced);
-	  fsp = float(ctrl.i_space)/float(ctrl.bm_size);
-	  fsl = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
+          fsp = float(ctrl.i_space)/float(ctrl.bm_size);
+          fsl = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
           fspace[idx]    = min(fspace[idx],fsp);
           fslots[idx]    = min(fslots[idx],fsl);
           if ( fsl < SLOTS_MIN || fsp < SPACE_MIN ) bad_nodes.insert((*n).name);

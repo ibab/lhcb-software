@@ -56,16 +56,16 @@ namespace ROMon {
       int sent, written, received;
       Stream() : sent(0), written(0), received(0) {}
       Stream(const Stream& s) 
-	: node(s.node), source(s.source), sent(s.sent), written(s.written), received(s.received) {}
+        : node(s.node), source(s.source), sent(s.sent), written(s.written), received(s.received) {}
       Stream& operator=(const Stream& s) { 
-	node     = s.node; 
-	source   = s.source;
-	sent     = s.sent;
-	written  = s.written;
-	received = s.received;
-	return *this;
+        node     = s.node; 
+        source   = s.source;
+        sent     = s.sent;
+        written  = s.written;
+        received = s.received;
+        return *this;
       }
-  };
+    };
 
   public:
     /// Standard constructor

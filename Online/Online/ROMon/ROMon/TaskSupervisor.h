@@ -38,17 +38,17 @@ namespace ROMon {
       bool   devHdlr;
       PVSSProject() : eventMgr(false), dataMgr(false), distMgr(false), fsmSrv(false), devHdlr(false) {}
       PVSSProject(const PVSSProject& c) : name(c.name), eventMgr(c.eventMgr),
-           dataMgr(c.dataMgr), distMgr(c.distMgr), fsmSrv(c.fsmSrv), devHdlr(c.devHdlr) {}
+                                          dataMgr(c.dataMgr), distMgr(c.distMgr), fsmSrv(c.fsmSrv), devHdlr(c.devHdlr) {}
       PVSSProject& operator=(const PVSSProject& c)   { 
-	if ( this != &c )  {
-	  name=c.name; 
-	  eventMgr=c.eventMgr; 
-	  dataMgr=c.dataMgr;
-	  distMgr=c.distMgr;
-	  fsmSrv=c.fsmSrv;
-	  devHdlr=c.devHdlr;
-	}
-	return *this;
+        if ( this != &c )  {
+          name=c.name; 
+          eventMgr=c.eventMgr; 
+          dataMgr=c.dataMgr;
+          distMgr=c.distMgr;
+          fsmSrv=c.fsmSrv;
+          devHdlr=c.devHdlr;
+        }
+        return *this;
       }	
       bool operator==(const PVSSProject& c) const
       { return name==c.name && eventMgr==c.eventMgr && dataMgr==c.dataMgr && distMgr==c.distMgr && fsmSrv==c.fsmSrv && devHdlr==c.devHdlr; }
@@ -104,9 +104,9 @@ namespace ROMon {
         blk_availible = n.blk_availible;
       }
       Node() : perc_cpu(0.), perc_mem(0.), vsize(0), rss(0), data(0), stack(0),
-	       taskCount(0), missTaskCount(0), totalTaskCount(0),
-	       connCount(0), missConnCount(0), totalConnCount(0),
-	       blk_size(0), blk_total(0), blk_availible(0)
+               taskCount(0), missTaskCount(0), totalTaskCount(0),
+               connCount(0), missConnCount(0), totalConnCount(0),
+               blk_size(0), blk_total(0), blk_availible(0)
       {}
       Node(const std::string& n,const std::string&s) : name(n), status(s) {}
       Node(const Node& n)  { _cpy(n); }
@@ -125,9 +125,9 @@ namespace ROMon {
     Cluster(const Cluster& n) : name(n.name), status(n.status), nodes(n.nodes) {}
     Cluster& operator=(const Cluster& c)  {
       if ( this != &c )  {
-	name   = c.name;
-	status = c.status;
-	nodes  = c.nodes;
+        name   = c.name;
+        status = c.status;
+        nodes  = c.nodes;
       }
       return *this;
     }

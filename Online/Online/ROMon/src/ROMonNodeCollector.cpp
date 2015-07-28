@@ -30,7 +30,7 @@ using namespace ROMon;
 
 /// Standard constructor
 ROMonNodeCollector::ROMonNodeCollector(int argc, char** argv) 
-: ROMonGblBuffer(argc,argv,ROMonNodeCollector::help)
+  : ROMonGblBuffer(argc,argv,ROMonNodeCollector::help)
 {
   std::string match = "*";
   RTL::CLI cli(argc, argv, ROMonNodeCollector::help);

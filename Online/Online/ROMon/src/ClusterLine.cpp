@@ -40,9 +40,9 @@ namespace {
 
 /// Factory method: create a cluster line according to a given type
 ClusterLine* ROMon::createClusterLine(const std::string& type, 
-				      FarmLineDisplay* parent, 
-				      const std::string& partition, 
-				      const std::string& title) 
+                                      FarmLineDisplay* parent, 
+                                      const std::string& partition, 
+                                      const std::string& title) 
 {
   map<string,ClusterLineCreator_t>::const_iterator i=creators().find(type);
   if ( i != creators().end() )  {
@@ -76,7 +76,7 @@ void ClusterLine::check(time_t /* now */) {
 void ClusterLine::set_cursor()  {
   string val = (" "+strlower(m_name)+"   ").substr(0,10);
   ::scrc_put_chars(m_parent->display(),val.c_str(),
-		   (this==m_parent->currentDisplay()?BLUE|INVERSE:NORMAL)|BOLD,position(),1,0);
+                   (this==m_parent->currentDisplay()?BLUE|INVERSE:NORMAL)|BOLD,position(),1,0);
 }
 
 /// Connect to data service

@@ -104,18 +104,18 @@ int DimFilePublish::readFile(void** pptr, int* size)    {
       m_datalen = buf.st_size;
       int fid = ::open(m_file.c_str(),O_RDONLY);
       if ( fid != -1 )  {
-	if ( m_datalen > m_len ) {
-	  m_len = m_datalen+1;
-	  m_buff = ::realloc(m_buff,m_len);
-	}
-	sc = ::read(fid,m_buff,m_datalen);
-	//cout << "Read data from file:" << m_datalen << " bytes. " << buf.st_mtime << " " << m_modified << " " << sc << endl;
-	*((char*)m_buff+m_datalen) = 0;
-	m_modified = buf.st_mtime;
-	*size = m_datalen+1;
-	*pptr = m_buff;
-	::close(fid);
-	return 1;
+        if ( m_datalen > m_len ) {
+          m_len = m_datalen+1;
+          m_buff = ::realloc(m_buff,m_len);
+        }
+        sc = ::read(fid,m_buff,m_datalen);
+        //cout << "Read data from file:" << m_datalen << " bytes. " << buf.st_mtime << " " << m_modified << " " << sc << endl;
+        *((char*)m_buff+m_datalen) = 0;
+        m_modified = buf.st_mtime;
+        *size = m_datalen+1;
+        *pptr = m_buff;
+        ::close(fid);
+        return 1;
       }
       m_datalen = 0;
     }

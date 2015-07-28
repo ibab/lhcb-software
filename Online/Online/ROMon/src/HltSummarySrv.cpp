@@ -228,35 +228,35 @@ void HltSummarySrv::collectData() {
       _I* it = (*ic).second;
       DSC* d = it->data<DSC>();
       if ( d->data ) {
-	const _S* stats = (_S*)d->data;
-	const _N& nodes = *(stats->nodes());
-	// Explicitly ignore "HLTA" subfarms
-	///if ( strncmp(stats->name,"hlta",4) == 0 ) continue;
-	for (_N::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
-	  const _R& runs = (*n).runs;
-	  const Diskspace& disk = (*n).localdisk;
-	  for (_R::const_iterator ri=runs.begin(); ri!=runs.end(); ri=runs.next(ri))  {
-	    int run = (*ri).first;
-	    int files = (*ri).second;
-	    tot_runs[run] += files;
-	    tot_files += files;
-	  }
-	  long tot = disk.numBlocks;
-	  long fr  = disk.freeBlocks;
-	  if ( (tot-fr) < 1 ) fr = tot;
-	  tot_bytes += tot*disk.blockSize;
-	  free_bytes += fr*disk.blockSize;
-	  ++tot_nodes;
-	  //::lib_rtl_output(LIB_RTL_DEBUG,"Node:%s Total bytes:%lld Free:%lld  %7.2f %%",
-	  //		   (*n).name,tot,fr,100.f*float(fr)/float(tot));
-	}
+        const _S* stats = (_S*)d->data;
+        const _N& nodes = *(stats->nodes());
+        // Explicitly ignore "HLTA" subfarms
+        ///if ( strncmp(stats->name,"hlta",4) == 0 ) continue;
+        for (_N::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
+          const _R& runs = (*n).runs;
+          const Diskspace& disk = (*n).localdisk;
+          for (_R::const_iterator ri=runs.begin(); ri!=runs.end(); ri=runs.next(ri))  {
+            int run = (*ri).first;
+            int files = (*ri).second;
+            tot_runs[run] += files;
+            tot_files += files;
+          }
+          long tot = disk.numBlocks;
+          long fr  = disk.freeBlocks;
+          if ( (tot-fr) < 1 ) fr = tot;
+          tot_bytes += tot*disk.blockSize;
+          free_bytes += fr*disk.blockSize;
+          ++tot_nodes;
+          //::lib_rtl_output(LIB_RTL_DEBUG,"Node:%s Total bytes:%lld Free:%lld  %7.2f %%",
+          //		   (*n).name,tot,fr,100.f*float(fr)/float(tot));
+        }
       }
     }
   }
   if ( tot_bytes <= 0 ) tot_bytes = 1;
   ::lib_rtl_output(LIB_RTL_DEBUG,"Nodes:%ld Runs:%ld Files:%ld Total bytes:%lld Free:%lld  %7.2f %%",
-		   tot_nodes, tot_runs.size(),tot_files,tot_bytes,free_bytes,
-		   100.f*float(free_bytes)/float(tot_bytes));
+                   tot_nodes, tot_runs.size(),tot_files,tot_bytes,free_bytes,
+                   100.f*float(free_bytes)/float(tot_bytes));
 
   m_run_result = "";
   for(map<int,int>::const_iterator j=tot_runs.begin();j!=tot_runs.end();++j) {
@@ -265,7 +265,7 @@ void HltSummarySrv::collectData() {
   }
   if ( tot_runs.size()>0 ) m_run_result = m_run_result.substr(0,m_run_result.length()-1);
   ::sprintf(txt,"%ld|%ld|%ld|%lld|%lld",tot_nodes,long(tot_runs.size()),
-	    tot_files,tot_bytes/GIGA_BYTE,free_bytes/GIGA_BYTE);
+            tot_files,tot_bytes/GIGA_BYTE,free_bytes/GIGA_BYTE);
   m_summary_result = txt;
 }
 

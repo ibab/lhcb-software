@@ -25,16 +25,16 @@
 #include <ctime>
 
 /*
-*   ROMon namespace declaration
-*/
+ *   ROMon namespace declaration
+ */
 namespace ROMon {
 
   /**@class AMQWatch AMQMon.h ROMon/AMQMon.h
-  *
-  * Class which represents the boot status of all subfarms
-  *
-  * @author M.Frank
-  */
+   *
+   * Class which represents the boot status of all subfarms
+   *
+   * @author M.Frank
+   */
   class AMQWatch : public Interactor {
     struct ErrCount {
       time_t     stamp;

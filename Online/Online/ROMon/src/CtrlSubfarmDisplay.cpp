@@ -30,10 +30,10 @@ using namespace std;
 
 static void help() {
   cout <<"  romon_storage -option [-option]" << endl
-            <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << endl
-            <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << endl
-            <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << endl
-            << endl;
+       <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << endl
+       <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << endl
+       <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << endl
+       << endl;
 }
 
 
@@ -44,7 +44,7 @@ ClusterDisplay* ROMon::createCtrlSubfarmDisplay(int width, int height, int posx,
 
 /// Standard constructor
 CtrlSubfarmDisplay::CtrlSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv)
-: ClusterDisplay(width,height)
+  : ClusterDisplay(width,height)
 {
   m_position = Position(posx,posy);
   init(argc, argv);
@@ -119,9 +119,9 @@ void CtrlSubfarmDisplay::showNodes()  {
                              n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,
                              int(n.rss/1024),int(n.stack/1024),int(n.vsize/1024),
                              n.perc_cpu, n.perc_mem, n.boot.c_str(),
-			     float(n.blk_availible)*blk_size,float(n.blk_total)*blk_size,
-			     n.time.length()>10 ? n.time.c_str()+10 : n.time.c_str()
-			     );
+                             float(n.blk_availible)*blk_size,float(n.blk_total)*blk_size,
+                             n.time.length()>10 ? n.time.c_str()+10 : n.time.c_str()
+                             );
       //                             n.perc_cpu, n.perc_mem, n.boot.substr(4,12).c_str(),n.time.c_str());
     }
   }

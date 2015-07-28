@@ -15,8 +15,8 @@
 #include <cerrno>
 #include "rpc/PyRPC.h"
 extern "C" {
-  #include "dis.h"
-  #include "dic.h"
+#include "dis.h"
+#include "dic.h"
 }
 
 using namespace std;
@@ -624,16 +624,16 @@ int SubfarmTaskMon::publish() {
           (*ni).numBadTasks = n->numBadTasks();
           (*ni).numBadConnections = n->numBadConnections();
           (*ni).status = n->numBadTasks()>0 || n->numBadConnections()>0 ? NodeSummary::BAD : NodeSummary::OK;
-	  (*ni).diskSize = n->diskSize();
-	  (*ni).diskAvailible = n->diskAvailible();
+          (*ni).diskSize = n->diskSize();
+          (*ni).diskAvailible = n->diskAvailible();
         }
         else {
           (*ni).state = NodeSummary::DEAD;
           (*ni).status = NodeSummary::BAD;
           (*ni).numBadTasks = 1;
           (*ni).numBadConnections = 1;
-	  (*ni).diskSize = 0;
-	  (*ni).diskAvailible = 0;
+          (*ni).diskSize = 0;
+          (*ni).diskAvailible = 0;
         }
         (*ni).time = (int)n->taskUpdate();
         xml << "\t</Node>\n";

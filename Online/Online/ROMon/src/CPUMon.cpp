@@ -11,14 +11,14 @@ using namespace std;
 ostream& ROMon::operator<<(ostream& os, const ROMon::Memory& m) {
   char text[132];
   ::snprintf(text,sizeof(text),"Memory:%d Free:%d Cache:%5d Active:%d Inactive:%d",
-	     m.memTotal,m.memFree,m.cached,m.active,m.inactive);
+             m.memTotal,m.memFree,m.cached,m.active,m.inactive);
   return os << text;
 }
 
 ostream& ROMon::operator<<(ostream& os, const ROMon::CPU::Stat& s) {
   char text[132];
   ::snprintf(text,sizeof(text),"User:%4.1f%% Sys:%4.1f%% IO:%4.1f%% irq:%4.1f%% sirq:%4.1f%%",
-	     s.user,s.system,s.iowait,s.IRQ,s.softIRQ);
+             s.user,s.system,s.iowait,s.IRQ,s.softIRQ);
   return os << text;
 }
 ostream& ROMon::operator<<(ostream& os, const ROMon::CPU& c) {
@@ -49,10 +49,10 @@ ostream& ROMon::operator<<(ostream& os, const ROMon::Process& p) {
   const char *opt = noutgid ? p.cmd : "", *utgid = noutgid ? "N/A: " : p.utgid;
   if ( p.cpu > 99.9 )
     ::snprintf(text,sizeof(text),"    %5d %5d %4.0f %4.1f %6.0f %6.0f %4d %-16s %s%s",
-            p.pid,p.ppid,p.cpu,p.mem,p.vsize,p.rss,p.threads,p.owner,utgid,opt);
+               p.pid,p.ppid,p.cpu,p.mem,p.vsize,p.rss,p.threads,p.owner,utgid,opt);
   else
     ::snprintf(text,sizeof(text),"    %5d %5d %4.1f %4.1f %6.0f %6.0f %4d %-16s %s%s",
-            p.pid,p.ppid,p.cpu,p.mem,p.vsize,p.rss,p.threads,p.owner,utgid,opt);
+               p.pid,p.ppid,p.cpu,p.mem,p.vsize,p.rss,p.threads,p.owner,utgid,opt);
   return os << text;
 }
 

@@ -151,7 +151,7 @@ void ProcessDisplay::updateContent(const ProcFarm& pf) {
       ::scrc_put_chars(m_display,"Type 'P' or Mouse-Left-Double-Click to close the window",NORMAL,++line,10,1);
 
       ::sprintf(txt,"      %-32s %-6s %-5s %5s %5s %6s %6s %7s %7s %6s %3s %s",
-                    "UTGID","Owner","State","PID","PPID","Mem[%]","VM[MB]","RSS[MB]","Stk[kB]","CPU[%]","Thr","Started");
+                "UTGID","Owner","State","PID","PPID","Mem[%]","VM[MB]","RSS[MB]","Stk[kB]","CPU[%]","Thr","Started");
       ::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
       for(_P::const_iterator ip=procs.begin(); ip!=procs.end(); ip=procs.next(ip)) {
         const Process& p = *ip;

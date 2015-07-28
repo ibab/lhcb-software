@@ -84,14 +84,14 @@ namespace ROMon {
   };
 
   typedef ClusterLine* (*ClusterLineCreator_t)(FarmLineDisplay* parent, 
-					       const std::string& partition, 
-					       const std::string& title);
+                                               const std::string& partition, 
+                                               const std::string& title);
 
   /// Factory method: create a cluster line according to a given type
   ClusterLine* createClusterLine(const std::string& type, 
-				 FarmLineDisplay* parent, 
-				 const std::string& partition,
-				 const std::string& title);
+                                 FarmLineDisplay* parent, 
+                                 const std::string& partition,
+                                 const std::string& title);
 
   /// Registry function
   void _registerCreator(const char* name,ClusterLineCreator_t func);
@@ -99,9 +99,9 @@ namespace ROMon {
   template<class T> class ClusterLineFactory  {
   public:
     static ClusterLine* create(FarmLineDisplay* parent, const std::string& partition, const std::string& title)
-      { return new T(parent,partition,title);            }
+    { return new T(parent,partition,title);            }
     ClusterLineFactory(const char* name) 
-      { _registerCreator(name,create);                   }
+    { _registerCreator(name,create);                   }
   };
 
 

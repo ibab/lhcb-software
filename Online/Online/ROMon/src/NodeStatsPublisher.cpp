@@ -189,12 +189,12 @@ namespace {
     for(ic = cl.begin(); ic != cl.end(); ++ic) {
       DeferredHLTStats* stats = (DeferredHLTStats*)(*ic).second->data<DSC>()->data;
       if ( stats ) {
-	DeferredHLTStats::Runs& rs = stats->runs;
-	for(ir = rs.begin(); ir != rs.end(); ir=rs.next(ir) ) {
-	  i = files.find((*ir).first);
-	  if ( i==files.end() ) files[(*ir).first] = (*ir).second;
-	  else (*i).second += (*ir).second;
-	}
+        DeferredHLTStats::Runs& rs = stats->runs;
+        for(ir = rs.begin(); ir != rs.end(); ir=rs.next(ir) ) {
+          i = files.find((*ir).first);
+          if ( i==files.end() ) files[(*ir).first] = (*ir).second;
+          else (*i).second += (*ir).second;
+        }
       }
     }
     for(i=files.begin(), ir=runs.reset(); i!=files.end(); ++i) {
@@ -219,7 +219,7 @@ namespace {
 
 /// Standard constructor
 NodeStatsPublisher::NodeStatsPublisher(int argc, char** argv) 
-: m_needUpdate(true)
+  : m_needUpdate(true)
 {
   string match = "*", svc, nam, from=RTL::nodeNameShort(), to=PUBLISHING_NODE;
   RTL::CLI cli(argc, argv, NodeStatsPublisher::help);

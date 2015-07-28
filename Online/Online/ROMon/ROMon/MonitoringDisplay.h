@@ -58,7 +58,7 @@ namespace ROMon {
 
   private:
     /// Private copy constructor
-  MonitoringDisplay(const MonitoringDisplay&) : ClusterDisplay(0,0) {}
+    MonitoringDisplay(const MonitoringDisplay&) : ClusterDisplay(0,0) {}
     /// Private assignment operator
     MonitoringDisplay& operator=(const MonitoringDisplay&) { return *this; }
 
