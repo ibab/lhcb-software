@@ -6,7 +6,7 @@ gaudi_subdir(GauchoAppl v1r26)
 gaudi_depends_on_subdirs(Online/Gaucho
                          Online/GaudiOnline)
 
-find_package(ROOT COMPONENTS Minuit Thread)
+find_package( ROOT COMPONENTS Core Cling Thread Minuit )
 
 gaudi_add_library(GauchoApplLib src/*.cpp
                   PUBLIC_HEADERS GauchoAppl
