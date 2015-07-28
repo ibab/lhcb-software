@@ -1,7 +1,7 @@
 ################################################################################
 # Package: OnlineBase
 ################################################################################
-gaudi_subdir(OnlineBase v1r35)
+gaudi_subdir(OnlineBase v1r36)
 
 gaudi_add_library(OnlineBase
                     src/AMS/*.cpp
