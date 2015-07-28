@@ -19,8 +19,10 @@
      GauchoAppl          v1r26    Online
      GaudiCheckpointing  v0r24    Online
      GaudiOnline         v2r84    Online
+     Hlt2Monitoring      v1r1     Online
      OnlineBase          v1r36    Online
      ROMon               v1r56    Online
+     ZeroMQ              v4r1p3   Online
 </PRE>
 
 <H1><A NAME=v5r22>2015-07-01 OnlineSys v5r22</A></H1>
