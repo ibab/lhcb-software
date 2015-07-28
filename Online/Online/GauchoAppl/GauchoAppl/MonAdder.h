@@ -150,6 +150,7 @@ class MonAdder
 {
 public:
   long long m_rectmo;
+  std::string m_firstSource;
   AddTimer *m_timer;
   TskServiceMap m_TaskMap;
   int m_type;

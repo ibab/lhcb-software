@@ -552,6 +552,7 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
   {
 //    printf("First fragment received from %s... starting timer...\n",h->m_TargetService.c_str());
     m_timeout = false;
+    m_firstSource = isvcd->m_serviceName;
     if(this->m_rectmo >0) this->m_timer->Start();
 //    if ((m_reference != -1) && !m_updated)
 //    {

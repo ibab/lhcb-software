@@ -153,9 +153,14 @@ void SaveTimer::SavetoFile(void *buff)
   MonHist h;
   Bool_t dirstat = TH1::AddDirectoryStatus();
   TH1::AddDirectory(kFALSE);
+  DimBuffBase *prevb = 0;
   while (buff <bend)
   {
     DimBuffBase *b = (DimBuffBase*)buff;
+    if (b->reclen == 0)
+    {
+      printf("Bad Record. Record Length 0!!! Previous record %0X! \n",prevb);
+    }
     switch (b->type)
     {
       case H_1DIM:
@@ -163,6 +168,7 @@ void SaveTimer::SavetoFile(void *buff)
       case H_3DIM:
       case H_PROFILE:
       case H_RATE:
+      case H_2DPROFILE:
       {
         dyn_string *hname;
         m_Adder->Lock();
@@ -189,6 +195,7 @@ void SaveTimer::SavetoFile(void *buff)
           case H_2DIM:
           case H_3DIM:
           case H_PROFILE:
+          case H_2DPROFILE:
           case H_RATE:
           {
             m_Adder->Lock();
@@ -202,6 +209,7 @@ void SaveTimer::SavetoFile(void *buff)
         h.FreeDeser();
         m_Adder->UnLock();
 //        r->Write(ptok);
+        prevb = b;
         buff = AddPtr(buff,b->reclen);
         continue;
       }

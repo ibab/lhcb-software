@@ -118,6 +118,12 @@ void HistAdder::addBuffer(void *buff, int siz,MonInfo *HTsk)
           ndble = 4*(srch->nxbin+2);
           break;
         }
+      case H_2DPROFILE:
+        {
+          DimHistbuff3 *s = (DimHistbuff3*)srch;
+          ndble = 4*(s->nxbin+2)*(s->nybin+2);
+          break;
+        }
       default:
         {
           ndble = 0;
@@ -154,7 +160,8 @@ void HistAdder::addBuffer(void *buff, int siz,MonInfo *HTsk)
     }
     else
     {
-      printf("[WARNING]New Histogram..'%s' from '%s'. re-allocating...\n",i->first.c_str(),HTsk->getName());
+      printf("[WARNING] New Histogram..'%s' from '%s reference set %s'. re-allocating...\n",
+          i->first.c_str(),HTsk->getName(),m_firstSource.c_str());
       int csiz = m_usedSize;
       int hsiz;
       DimHistbuff1 *srch = (DimHistbuff1*)(i->second);
@@ -169,6 +176,10 @@ void HistAdder::addBuffer(void *buff, int siz,MonInfo *HTsk)
         Memcpy(p,srch,hsiz);
         m_usedSize += hsiz;
         char *nam = (char*)AddPtr(srch,srch->nameoff);
+        if (strcmp(nam,i->first.c_str()) != 0)
+        {
+          printf("[ERROR] Name Mismatch in new histogram (%s)and Map (%s)\n",nam,i->first.c_str());
+        }
         m_hmap.insert(HistPair(std::string(nam),p));
       }
       //printf("HistAdder UNLocking MAP\n");
