@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           EventBuilder
-version           v0r12
+version           v0r13
 #============================================================================
 branches          cmt doc src
 # dependency list
