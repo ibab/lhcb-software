@@ -1,8 +1,8 @@
 ################################################################################
-# Package: DIM
+# Package: ZeroMQ
 ################################################################################
 
-gaudi_subdir(ZeroMQ v4r1p2)
+gaudi_subdir(ZeroMQ v4r1p3)
 
 add_definitions(-D_REENTRANT -D_THREAD_SAFE -DZMQ_USE_POLL)
 gaudi_add_library(zmq src/*.cpp
