@@ -3,6 +3,8 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+!========================= TAlignment v6r5 2015-07-29 =========================
+
 ! 2015-07-25 - Maurizio Martinelli
  - Removed a redundant include statement that caused the compilation to fail
 
