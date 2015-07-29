@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-29 - Carlos Vazquez Sierra
+ - Updated some prescales for B2CC lines.
+
 ! 2015-07-29 - Andrea Contu
  - Updated dictionaries for StrippingB2ppipiSigmacmm_Lcpi.py and StrippingDstarD02xx.py
 
