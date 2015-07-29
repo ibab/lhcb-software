@@ -6,14 +6,10 @@ branches doc cmt tests
 # Don't forget the applications
 #=======================================================
 
-use  MooreScripts      v1r11p1
-use  MooreOnlineConf   v1r9p1
+use  MooreScripts      v1r12
+use  MooreOnlineConf   v1r10
 use  IndependenceTests v1r11    Hlt
-use  HltMonitoring     v1r0p1   Hlt
-
-## Temporary packages.
-use  ZeroMQ            v4r1p2   Online
-use  Hlt2Monitoring    v1r0     Online
+use  HltMonitoring     v1r1     Hlt
 
 # Declare this as a container package
 apply_pattern container_package
