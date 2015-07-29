@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VeloAlignment
 ################################################################################
-gaudi_subdir(VeloAlignment v4r12)
+gaudi_subdir(VeloAlignment v4r13)
 
 gaudi_depends_on_subdirs(Alignment/AlignTrTools
                          Alignment/AlignmentInterfaces

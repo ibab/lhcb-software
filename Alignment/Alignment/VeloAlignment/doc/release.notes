@@ -2,6 +2,7 @@
 ! Responsible : Silvia Borghi, Marco Gersabeck
 !=============================================================================
 
+!========================= VeloAlignment v4r13 2015-07-29 =========================
 ! 2015-07-27 - Maurizio Martinelli
  - Solved some compilation errors due to less permissive configuration.
 
@@ -289,6 +290,5 @@
 
   Environment requested to compile: LHCb   v19r3
                                     Brunel v28r2
-
 
 
