@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-29 - Simone Stracka 
+ - Updated Hlt2 filters and prescales for StrippingD2PiPi0.py
+
 ! 2015-07-29 - Chris Jones
  - Fix an inconsistency in a few lines names in B2OC Bc2DD module (DStar -> Dst).
 
