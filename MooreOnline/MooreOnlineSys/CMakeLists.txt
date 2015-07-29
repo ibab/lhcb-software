@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MooreOnlineSys
 ################################################################################
-gaudi_subdir(MooreOnlineSys v23r7p5)
+gaudi_subdir(MooreOnlineSys v24r0)
 
 gaudi_depends_on_subdirs(MooreScripts
                          MooreOnlineConf
