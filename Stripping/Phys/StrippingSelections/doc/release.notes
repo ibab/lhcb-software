@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-29 - Carlos Vazquez Sierra
+ - tests/liaisons/B2CC reorganised.
+
 ! 2015-07-29 - Ricardo Vazquez Gomez
  - Add more DSTs to the Reco15 test sample
 
