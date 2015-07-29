@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-29 - Chitsanu Khurewathanakul
+ - Renamed StrippingH24MuLines.py to StrippingH24Mu.py for consistency.
+ - S23 Tuning on StrippingDitau lines.
+
 ! 2015-07-29 - Carlos Vazquez Sierra
  - Updated some prescales for B2CC lines.
 

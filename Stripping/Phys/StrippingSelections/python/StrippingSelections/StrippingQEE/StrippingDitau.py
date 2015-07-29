@@ -70,12 +70,22 @@ The functor should be standard one, or otherwise put it in the preambulo section
 Version history
 ---------------
 
+## 2.1 -- 150729 (S23 Tuning period summer 2015)
+- Properly expand SS lines (*explicit is better than implicit*)
+- Fixed duplication in decay descriptor of same particle 
+- Separate prescale between os/ss lines
+- support for float/boolean value for autocut.
+- Option for TES source of particle
+- Option for extra preambulo
+- Option for CombineParticles.ParticleCombiners
+- Option for CombineParticles.Daughtercuts in ditau dict.
+
 ## 2.0
 - Optimized for Run-II Stripping 23.
 - Extends the code into 3 lines: EX, MX, HH. This covers all 10 possibilities of 
   ditau's decay modes.
-> Generate SS lines automatically
-> Generate cuts automatically + extra preambulo
+- Generate SS lines automatically
+- Generate cuts automatically + extra preambulo
 
 ## 1.2
 - Start working on new Mu3Pi. A lot of non-backward structural changes
@@ -98,7 +108,7 @@ Derived from works of S.Farry & P. Ilten
 """
 
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
-from PhysSelPython.Wrappers import Selection, SimpleSelection, MergedSelection
+from PhysSelPython.Wrappers import Selection, SimpleSelection, MergedSelection, AutomaticData
 from StrippingUtils.Utils import LineBuilder
 from StrippingConf.StrippingLine import StrippingLine
 from StandardParticles import PFParticles
@@ -106,9 +116,9 @@ from Configurables import CombineParticles, FilterDesktop
 
 
 __author__  = 'chitsanu.khurewathanakul@cern.ch'
-__date__    = '2015-05-15'
-__version__ = 2.0
-__all__     = ( 'DitauConf', 'default_config' )
+__date__    = '2015-07-29'
+__version__ = 2.1
+__all__     = [ 'DitauConf', 'default_config' ]
 
 
 #-----#
@@ -116,60 +126,73 @@ __all__     = ( 'DitauConf', 'default_config' )
 #-----#
 
 config_tau_e = {
-  'min_PT'        : 2. * GeV,
+  'ISMUONLOOSE'   : False,
+  'ABSID'         : 11,
+  'min_PT'        : 4. * GeV,
   'min_TRPCHI2'   : 0.01,
   'min_ETA'       : 2,
   'max_ETA'       : 4.5,
-  'min_BPVDLS'    : -100,
-  'max_BPVDLS'    : 100,
-  'max_BPVIP'     : 1.*mm,
-  'min_PTFrac05C' : 0.5,
+  # 'max_BPVIP'     : 1. * mm,
+  'min_PTFrac05C' : 0.7,
   # 'min_PTFrac05A' : -1,  # DON'T USE ME!
-  'max_ECone05C'  : 400 * GeV,
-  'max_HCALFrac'  : 0.5,
-  # 'min_ECALFrac'  : 0.2,  # Not good for e-conversion
+  #
+  # 'min_ECALFrac'  : 0.1,  # Not good for e-conversion
+  'max_HCALFrac'  : 0.10,
+  'min_CaloPrsE'  : 50 * MeV,
+  #
   'extracut'      : 'ALL'
 }
 
-config_tau_h1 = {
-  'min_PT'          : 2. * GeV,
-  'min_TRPCHI2'     : 0.01,
-  'min_ETA'         : 2.0,
-  'max_ETA'         : 4.5,
-  'min_BPVDLS'      : -40,
-  'max_BPVDLS'      : 40,
-  'max_BPVIP'       : 1.*mm, 
-  'max_ECone05C'    : 400 * GeV,
-  'min_ECone02PN'   : 20 * GeV,
-  'min_EFrac02PN05N': 0.4,
-  'min_EFrac02PN05A': 0.6,
-  'min_PTFrac05C'   : -1,   # no good
-  'min_PTFrac05A'   : -1,   # no good
-  'min_HCALFrac'    : -1,   # no good, many pion doesn't have HcalE
-  'max_TRGHOSTPROB' : 0.1,
-  'extracut'        : 'ALL'  
-}
 
 config_tau_mu = {
-  'min_PT'        : 2. * GeV,
+  'ISMUON'        : True,
+  'ABSID'         : 13,
+  'min_PT'        : 4. * GeV,
   'min_TRPCHI2'   : 0.01,
   'min_ETA'       : 2.0,
   'max_ETA'       : 4.5,
-  'min_BPVDLS'    : -50,
-  'max_BPVDLS'    : 50,
-  'max_BPVIP'     : 0.3 * mm, 
-  'min_PTFrac05C' : 0.6,
-  'max_ECone02A'  : 100 * GeV,
-  'max_PTCone05C' : 4 * GeV,
+  # 'max_BPVIP'     : 1. * mm, 
+  'min_PTFrac05C' : 0.8,
+  # 'max_ECone02A'  : 100 * GeV,
+  # 'max_PTCone05C' : 4 * GeV,
   # 'max_HCALFrac'  : 0.20,  # Not effective
   'extracut'      : 'ALL',  
 }
 
+
+config_tau_h1 = {
+  'ISMUONLOOSE'     : False,
+  'ISPIONORKAON'    : True,
+  'min_PT'          : 4. * GeV,
+  'min_TRPCHI2'     : 0.01,
+  'min_ETA'         : 2.25,
+  'max_ETA'         : 3.75,
+  # 'min_BPVDLS'      : -40,
+  # 'max_BPVDLS'      : 40,
+  # 'max_BPVIP'       : 1. * mm, 
+  # 'max_ECone05C'    : 400 * GeV,
+  # 'min_ECone02PN'   : 20 * GeV,
+  # 'min_EFrac02PN05N': 0.7,
+  # 'min_EFrac02PN05A': 0.7,
+  'min_PTFrac05C'   : 0.8,
+  'min_HCALFrac'    : 0.05,   
+  # 'max_TRGHOSTPROB' : 0.1,
+  'extracut'        : 'ALL'  
+}
+
+
+
 config_tau_h3 = {
   'dcuts': {
-    'min_PT'      : 500 * MeV,
-    'min_TRPCHI2' : 0.01,
-    # 'min_HCALFrac': 0.05,  # HCal not well defined
+    'ISMUONLOOSE'     : False,
+    'ISPIONORKAON'    : True,
+    'min_PT'          : 500 * MeV,
+    'min_TRPCHI2'     : 0.01,
+    'min_ETA'         : 2.25, # 2.0,
+    'max_ETA'         : 3.75, # 4.5,
+    'min_HCALFrac'    : 0.05,
+    # 'max_TRGHOSTPROB' : 0.1,
+    'extracut'        : 'ALL',
   },
   'ccuts': {
     # 'max_ABPVIPMAX' : 2,  # suboptimal
@@ -177,29 +200,26 @@ config_tau_h3 = {
     'max_AM'        : 1600. * MeV,
   },
   'mcuts': {
-    'min_ETA'       : 2.0,
-    'max_ETA'       : 4.5,
-    'min_MT'        : 4 * GeV,
-    'max_BPVCORRM'  : 6 * GeV,
+    # 'min_ETA'       : 2.25,
+    # 'max_ETA'       : 3.75,
+    # 'min_MT'        : 4 * GeV,
+    # 'max_BPVCORRM'  : 6 * GeV,
     # 'min_ABSBPVDIRA': 0.9999,  # suboptimal
     # 'min_BPVDLS'    : 0,  # suboptimal
-    'max_BPVIP'     : 0.5,
-    'min_BPVVDZ'    : 0.1,
+    # 'max_BPVIP'     : 1. * mm,
+    # 'min_BPVVDZ'    : 0.1,
     #
-    # 'max_ECone05C'  : 200 * GeV,  # suboptimal
-    # 'max_ECone05A'  : 400 * GeV,  # suboptimal
-    # 'max_PTCone05C' : 5 * GeV,  # suboptimal
-    'min_PTFrac05C' : 0.7,
-    'min_EFrac05C'  : 0.5,
+    # 'max_ECone05C'  : 30 * GeV,
+    'min_PTFrac05C' : 0.8,
     #
-    'max_DRTRIOMAX' : 0.5,
-    'max_DRTRIOMID' : 0.4,
-    'max_DRTRIOMIN' : 0.3,
-    'min_PTTRIOMIN' : 500 * MeV,
+    'max_DRTRIOMAX' : 0.4,
+    'max_DRTRIOMID' : 0.3,
+    'max_DRTRIOMIN' : 0.2,
+    'min_PTTRIOMIN' :  500 * MeV,
     'min_PTTRIOMID' : 1000 * MeV,
     'min_PTTRIOMAX' : 2000 * MeV,
     #
-    'max_VCHI2'     : 50.,
+    'max_VCHI2PDOF' : 20.,
   }
 }
 
@@ -207,194 +227,149 @@ config_tau_h3 = {
 # DITAU #
 #-------#
 
+# Blank default fallback. Remember the Zen: *Explicit is better than Implicit*
+pcuts0 = {'extracut': 'ALL'} 
+ccuts0 = {'extracut': 'ATRUE'}
+
+
 config_ditau_e_e = {
+  'dcuts': { 'e':pcuts0 },
   'ccuts': {
-    'extracut': 'ATRUE',  
+    'min_APTMAX':  9 * GeV,
+    'min_AM'    : 12 * GeV,
   },
-  'mcuts': {
-    'extracut': 'ALL',  
-  }  
+  'mcuts': pcuts0,
 }
 
+
 config_ditau_e_h1 = {
+  'dcuts': { 'e' : pcuts0, 'pi': pcuts0 },
   'ccuts': {
-    'min_AM'              : 2. * GeV,
-    'max_ADOCAMAX'        : 1  * mm,
-    'max_AECone05CMAX'    : 200 * GeV,
-    'max_APTCone05CMAX'   : 10 * GeV,
-    'min_AEFrac02PN05AMAX': 0.6,
-    'min_AEFrac05AMIN'    : 0.1,
-    'min_AEFrac05CMIN'    : 0.4,
-    'min_AEFrac05CMIN'    : 0.4,
+    'min_APTMAX'          :   9 * GeV,
+    'min_AM'              :  12 * GeV,
+    # 'max_ADOCAMAX'        :   1 * mm,
+    # 'max_AECone05CMAX'    : 200 * GeV,
+    # 'max_APTCone05CMAX'   :  10 * GeV,
+    # 'min_AEFrac02PN05AMAX': 0.6,
+    # 'min_AEFrac05AMIN'    : 0.1,
+    # 'min_AEFrac05CMIN'    : 0.4,
+    # 'min_AEFrac05CMIN'    : 0.4,
     'extracut'            : 'ATRUE',  
   },
-  'mcuts': {
-    'min_MT'  : 6 * GeV,
-    'extracut': 'ALL',  
-  }
+  'mcuts': pcuts0,
 }
 
 config_ditau_e_h3 = {
+  'dcuts': { 'e' : pcuts0, 'tau': pcuts0 },
   'ccuts': {
-    'min_AM'            : 4. * GeV,
-    'max_ADOCAMAX'      : 1  * mm,
-    'min_APTMAX'        : 5 * GeV,
-    'max_ABPVCORRMMAX'  : 4 * GeV,
-    'max_AECone05CMIN'  : 40000,
-    'max_AECone05CMAX'  : 100000,
-    'max_APTCone05CMAX' : 5000,
-    'min_AEFrac05AMAX'  : 0.5,
-    'min_AEFrac05CMAX'  : 0.7,
-    'extracut'          : 'ATRUE',  
+    'min_APTMAX':  9 * GeV,
+    'min_AM'    : 12 * GeV,
+    # 'min_AM'    : 8 * GeV,
   },
-  'mcuts': {
-    'min_MT'  : 8 * GeV,
-    'extracut': 'ALL',  
-  }
+  'mcuts': pcuts0,
 }
 
 config_ditau_e_mu = {
+  'dcuts': { 'e' : pcuts0, 'mu': pcuts0 },
   'ccuts': {
-    'extracut'          : 'ATRUE',  
+    'min_APTMAX':  9 * GeV,
+    'min_AM'    : 12 * GeV,
   },
-  'mcuts': {
-    'extracut': 'ALL',  
-  }  
+  'mcuts': pcuts0,
 }
 
 config_ditau_h1_h1 = {
+  'dcuts': { 'pi' : pcuts0 },
   'ccuts': {
-    'min_AM'              : 3 * GeV,
-    'max_ADOCAMAX'        : 1 * mm,
-    'min_APTMAX'          : 3 * GeV,
-    #
-    'max_AECone02CMIN'    : 60  * GeV, # i.e., don't expected any other charged particle
-    'max_AECone02CMAX'    : 200 * GeV, 
-    'max_AECone05CMIN'    : 100 * GeV,
-    'max_AECone05CMAX'    : 300 * GeV,
-    'max_APTCone05CMIN'   : 4   * GeV,
-    'max_APTCone05CMAX'   : 20  * GeV,
-    #
-    'min_AEFrac05CMIN'   : 0.4,
-    'min_AEFrac05CMAX'   : 0.7,
-    'min_APTFrac05CMIN'  : 0.4,
-    'min_APTFrac05CMAX'  : 0.7,
-    #
-    # 'min_AEFrac02PN05AMAX'  : 0.7,  # suboptimal
-    'extracut'              : 'ATRUE',
+    'min_APTMAX' : 9 * GeV,
+    'min_AM'     : 12 * GeV,
   },
-  'mcuts': {
-    'min_MT'    : 6 * GeV,
-    'extracut'  : 'ALL',  
-  }
+  'mcuts': pcuts0,
 }
 
 config_ditau_h1_h3 = {
+  'dcuts': { 'pi' : pcuts0, 'tau': pcuts0 },
   'ccuts': {
-    'min_AM'            : 6. * GeV,
-    'max_ADOCAMAX'      : 1  * mm,
-    'max_ABPVCORRMMAX'  : 5 * GeV,
-    #
-    'max_AECone05CMAX'  : 300* GeV,
-    'max_APTCone05CMAX' : 20 * GeV,
-    #
-    'min_AEFrac05AMAX'  : 0.4,
-    'min_AEFrac05CMIN'  : 0.6,
-    'min_AEFrac05CMAX'  : 0.8,
-    'min_APTFrac05CMIN' : 0.6,
-    'min_APTFrac05CMAX' : 0.8,
-    'extracut'          : 'ATRUE',
+    'min_APTMAX': 9 * GeV,
+    'min_AM'    : 12 * GeV,
   },
-  'mcuts': {
-    'min_MT'    : 10 * GeV,
-    'extracut'  : 'ALL',  
-  }
+  'mcuts': pcuts0,
 }
 
 config_ditau_h1_mu = {
+  'dcuts': { 'pi' : pcuts0, 'mu': pcuts0 },
   'ccuts': {
-    'min_AM'            : 3. * GeV,
-    'max_ADOCAMAX'      : 1 * mm,
-    #
-    'max_AECone05CMAX'  : 400* GeV,
-    'max_APTCone05CMAX' : 20 * GeV,
-    #
-    'min_AEFrac05CMIN'  : 0.4,
-    'min_APTFrac05CMIN' : 0.6,
-    'extracut'          : 'ATRUE',
+    # 'min_APTMAX':  9 * GeV,
+    'min_AM'    : 8 * GeV,
   },
-  'mcuts': {
-    'min_MT'    : 4 * GeV,
-    'extracut'  : 'ALL',  
-  }
+  'mcuts': pcuts0,
 }
 
 config_ditau_h3_h3 = {
+  'dcuts': { 'tau' : pcuts0 },
   'ccuts': {
-    'min_AM'            : 10. * GeV,
-    'max_ADOCAMAX'      : 0.5  * mm,
-    'max_ABPVCORRMMAX'  : 5 * GeV,
-    'min_ABPVDIRAMAX'   : 0.9999,
-    'min_APTFrac05CMAX' : 0.8,
-    'min_AEFrac05AMIN'  : 0.3,
-    'min_AEFrac05AMAX'  : 0.6,
-    'min_AEFrac05CMIN'  : 0.6,
-    'min_AEFrac05CMAX'  : 0.8,
-    'extracut'          : 'ATRUE',
+    # 'min_APTMAX':  9 * GeV,
+    # 'min_AM'    : 12 * GeV,
+    'min_AM'    :  8 * GeV,
   },
-  'mcuts': {
-    'extracut': 'ALL',  
-  }
+  'mcuts': pcuts0,
 }
 
 config_ditau_h3_mu = {
+  'dcuts': { 'tau' : pcuts0, 'mu': pcuts0 },
   'ccuts': {
-    'min_AM'            : 5. * GeV,
-    'max_ADOCAMAX'      : 1  * mm,
-    'max_ABPVCORRMMAX'  : 5 * GeV,
-    'min_APTFrac05CMAX' : 0.8,
-    'min_AEFrac05AMIN'  : 0.3,
-    'min_AEFrac05AMAX'  : 0.5,
-    'min_AEFrac05CMAX'  : 0.6,
-    'extracut'          : 'ATRUE',  
+    # 'min_APTMAX' :  9 * GeV,
+    # 'min_AM'     : 12 * GeV,
+    'min_AM'     :  8 * GeV,
   },
-  'mcuts': {
-    'min_MT'    : 8 * GeV,
-    'extracut'  : 'ALL',  
-  }
+  'mcuts': pcuts0,
 }
 
 config_ditau_mu_mu = {
+  'dcuts': { 'mu': pcuts0 },
   'ccuts': {
-    'min_AM'            : 4. * GeV,
-    'max_ADOCAMAX'      : 1  * mm,    
-    'min_APTFrac05CMAX' : 0.8,
-    'min_AEFrac05AMAX'  : 0.5,
-    'extracut'          : 'ATRUE',  
+    # 'min_APTMAX'  :  9 * GeV,
+    'min_AM'      :  8 * GeV,
   },
-  'mcuts': {
-    'min_MT'    : 6 * GeV,
-    'extracut'  : 'ALL',  
-  }  
+  'mcuts': pcuts0,
 }
 
+## Specify how the decay is groupped into each line
 lines_decays = {
-  'ee'   : '[ Z0 ->  e-    e+   ]cc',
-  'eh1'  : '[ Z0 ->  e-    pi+  ]cc',
-  'eh3'  : '[ Z0 ->  e-    tau+ ]cc',
-  'emu'  : '[ Z0 ->  e-    mu+  ]cc',
-  'h1h1' : '[ Z0 ->  pi-   pi+  ]cc',
-  'h1h3' : '[ Z0 ->  pi-   tau+ ]cc',
-  'h1mu' : '[ Z0 ->  pi-   mu+  ]cc',
-  'h3h3' : '[ Z0 ->  tau-  tau+ ]cc',
-  'h3mu' : '[ Z0 ->  tau-  mu+  ]cc',
-  'mumu' : '[ Z0 ->  mu-   mu+  ]cc',
-}
-
-lines_merge = {
-  'EX'  : ( 'ee'    , 'eh1'   , 'eh3'   , 'emu' ),
-  'MX'  : ( 'emu'   , 'h1mu'  , 'h3mu'  , 'mumu'),
-  'HH'  : ( 'h1h1'  , 'h1h3'  , 'h3h3'  ),
+  'EX': {
+    'ee_os' : '  Z0 ->  e-    e+   ',
+    'eh1_os': '[ Z0 ->  e-    pi+  ]cc',
+    'eh3_os': '[ Z0 ->  e-    tau+ ]cc',
+    'emu_os': '[ Z0 ->  e-    mu+  ]cc',
+  },
+  'EXss': {
+    'ee_ss' : '[ Z0 ->  e-    e-   ]cc',
+    'eh1_ss': '[ Z0 ->  e-    pi-  ]cc',
+    'eh3_ss': '[ Z0 ->  e-    tau- ]cc',
+    'emu_ss': '[ Z0 ->  e-    mu-  ]cc',  
+  },
+  'MX': {
+    'emu_os'  : '[ Z0 ->  e-    mu+  ]cc',
+    'h1mu_os' : '[ Z0 ->  pi-   mu+  ]cc',
+    'h3mu_os' : '[ Z0 ->  tau-  mu+  ]cc',
+    'mumu_os' : '  Z0 ->  mu-   mu+     ',
+  },
+  'MXss': {
+    'emu_ss'  : '[ Z0 ->  e-    mu-  ]cc',
+    'h1mu_ss' : '[ Z0 ->  pi-   mu-  ]cc',
+    'h3mu_ss' : '[ Z0 ->  tau-  mu-  ]cc',
+    'mumu_ss' : '[ Z0 ->  mu-   mu-  ]cc',
+  },
+  'HH': {
+    'h1h1_os' : '  Z0 ->  pi-   pi+     ',
+    'h1h3_os' : '[ Z0 ->  pi-   tau+ ]cc',
+    'h3h3_os' : '  Z0 ->  tau-  tau+    ',
+  },
+  'HHss': {
+    'h1h1_ss' : '[ Z0 ->  pi-   pi-  ]cc',
+    'h1h3_ss' : '[ Z0 ->  pi-   tau- ]cc',
+    'h3h3_ss' : '[ Z0 ->  tau-  tau- ]cc',
+  },
 }
 
 default_config = {
@@ -403,7 +378,13 @@ default_config = {
   'STREAMS'     : [ 'EW'  ],
   'WGs'         : [ 'QEE' ],
   'CONFIG'      : {
-    # All subconfig have to be nested inside 'CONFIG'
+
+    ## Particle identification, full path to ./Particles please
+    # 'TES_e' : 'Phys/PFParticles/Particles',
+    # 'TES_e' : 'Phys/StdAllLooseElectrons/Particles',
+    'TES_e' : 'Phys/StdAllNoPIDsElectrons/Particles',
+    'TES_mu': 'Phys/StdAllLooseMuons/Particles', 
+    'TES_pi': 'Phys/StdAllNoPIDsPions/Particles',
 
     ## Individual tau
     'tau_e'   : config_tau_e,
@@ -423,14 +404,26 @@ default_config = {
     'ditau_h3mu' : config_ditau_h3_mu,
     'ditau_mumu' : config_ditau_mu_mu,
 
-    # ## Ditau ~ Lines
-    'EX_prescale'  : 1.,
-    'EX_postscale' : 1.,
-    'MX_prescale'  : 1.,
-    'MX_postscale' : 1.,
-    'HH_prescale'  : 1.,
-    'HH_postscale' : 1.,
-    # 'preambulo': '',
+    ## Prescale/Postscale
+    'EX_prescale'     : 1.,
+    'EX_postscale'    : 1.,
+    'EXss_prescale'   : 1.,
+    'EXss_postscale'  : 1.,
+    'MX_prescale'     : 1.,
+    'MX_postscale'    : 1.,
+    'MXss_prescale'   : 1.,
+    'MXss_postscale'  : 1.,
+    'HH_prescale'     : 1.,
+    'HH_postscale'    : 1.,
+    'HHss_prescale'   : 1.,
+    'HHss_postscale'  : 0.5,
+
+    ## For advance usage
+    # Extra preambulo, give me barestring with proper linebreak.
+    'preambulo'   : '\n', 
+    # Choice of ParticleCombiner for ditau
+    'ditau_pcomb' : {'': 'MomentumCombiner'},
+    # 'ditau_pcomb' : {},
   }
 }
 
@@ -438,7 +431,9 @@ default_config = {
 
 #==============================================================================
 
-preambulo = """
+## Default preambulo
+
+preambulo0 = """
 
 def _MakeTrio(f1, f2, f3):
   #Helper method to generate trio-functors for p with 3 children.
@@ -494,6 +489,7 @@ PTFrac05A   = PT / ( PT + PTCone05A )  # core -- all
 ## Calo
 HCALFrac = PPFUN(PP_CaloHcalE)/P
 ECALFrac = PPFUN(PP_CaloEcalE)/P
+CaloPrsE = PPFUN(PP_CaloPrsE)
 
 ## Combinations
 ABPVCORRMMAX  = AMAXCHILD(BPVCORRM)
@@ -521,6 +517,8 @@ APTFrac05AMAX     = AMAXCHILD(PTFrac05A)
 ## instantiated
 _VCHI2      = VCHI2
 VCHI2       = VFASPF(_VCHI2)
+_VCHI2PDOF  = VCHI2PDOF
+VCHI2PDOF   = VFASPF(_VCHI2PDOF)
 _ADOCAMAX   = ADOCAMAX
 ADOCAMAX    = _ADOCAMAX('')
 _BPVIP      = BPVIP
@@ -529,132 +527,165 @@ _BPVIPCHI2  = BPVIPCHI2
 BPVIPCHI2   = _BPVIPCHI2()
 ABSBPVDIRA  = abs(BPVDIRA)
 
+ISPIONORKAON = (ABSID==211) | (ABSID==321)
+
 """.split('\n')
 
-def flip_samesign(s):
-  """
-  Given a decay descriptor in format X -> Y- Z+, flip sign to yield same-sign.
-  Note: No regex check. I'll be nice to have for safety.
-  """
-  return s.replace('+', '-')
 
-def gen_single_cut(key):
-  ## Auto-generate the cut string from dict key. Lite for on-demand cut.
-  ## 'max_PTCone05A' --> 'PTCone05A < {max_PTCone05A}'
+def parse_single_cut( key, val ):
+  """
+  Auto-generate the cut string from config key-val. 
+  Designed for on-demand cut.
+  
+  >>> parse_single_cut( 'min_PT', 500 )
+  'PT > 500'
+  >>> parse_single_cut( 'ISMUON', False )  # Boolean
+  '~ISMUON'
+  >>> parse_single_cut( 'ABSID', 13 )  # Float
+  'ABSID == 13'
+  >>> parse_single_cut( 'extracut', 'ISPINKELEPHANT' )
+  'ISPINKELEPHANT'
+
+  """
   key = key.strip()
+  if key == 'extracut':
+    return val
   if key.startswith('max_'):
     var = key.replace('max_', '')
-    return '%s < {%s}' % (var,key)
-  elif key.startswith('min_'):
+    return '%s < %s' % (var,val)
+  if key.startswith('min_'):
     var = key.replace('min_', '')
-    return '%s > {%s}' % (var,key)
-  elif key == 'extracut':
-    return '{extracut}'
-  else:
-    return None  # Fail to parse.
+    return '%s > %s' % (var,val)
+  if isinstance(val, bool):
+    return '%s%s' % ( '' if val else '~', key )
+  # finally... last fallback, bare equality
+  return '%s == %s' % (key,val)
 
-def parse_cuts_manual(config, *cuts):
-  """Given the list of string & config, parse them into loki-ready string."""
-  return ("("+") & (".join(cuts)+")").format(**config)
-
-def parse_cuts_auto(config, *cuts):
+def join(cuts):
   """
-  Like above, but the loki cuts is generated on-the-fly for each key in 
-  conf which supported my convention (see gen_single_cut).
-  Generate only if the key doesn't already existed in the explicit cuts.
+  Join each predicate in cuts with '&' with bracket.
+  - Ignore None
   """
-  cuts = list(cuts) + [ gen_single_cut(key) for key in config if not any('{'+key+'}' in cut for cut in cuts) ]
-  cuts = [ s for s in cuts if s ]  # Clean after
-  return parse_cuts_manual(config, *cuts)
+  cuts = [ c for c in cuts if c is not None ]
+  return "("+") & (".join(cuts)+")"
 
-def get_tau_h3_dcut(config):
-  dcut = parse_cuts_auto( config['dcuts'],
-    '(ABSID==211) | (ABSID==321)'
-  ) 
-  return { 'pi+':dcut, 'pi-':dcut }
 
+def parse_cuts_auto(config):
+  """
+  Given the custom-formatted config-dict, return LoKi-ready string cut generated 
+  on-the-fly for each key-val in config (see `parse_single_cut`).
+
+  Note: Since the content inside config may vary, the optional argument
+  *cuts should therefore be provided with at least one AND-nullpotent cut,
+  such as ALL (for single particle cut), or ATRUE (for combination cut).
+  Just to be safe...
+  """
+  return join([ parse_single_cut(key,val) for key,val in config.iteritems() ])
+
+def doubling_sign_dict(d):
+  """
+  Given a dict of unsigned-partice, return new dict with both sign.
+  Useful for symmetric dict in CombineParticles.DaughtersCuts
+
+  >>> doubling_sign_dict({'pi': 'PT>500'})
+  {'pi-': 'PT>500', 'pi+': 'PT>500' }
+  """
+  return { key+sign:val for key,val in d.iteritems() for sign in ('+','-') }
 
 #------------------------------------------------------------------------------
 # SELECTION
 #------------------------------------------------------------------------------
 
-tau_preselections = {
-  'h1'  : lambda conf: parse_cuts_auto( conf, '(ABSID==211) | (ABSID==321)' ),
-  'e'   : lambda conf: parse_cuts_auto( conf, 'ABSID==11' ),
-  'mu'  : lambda conf: parse_cuts_auto( conf, 'ABSID==13' ),
-}
-
-def selection_tau_PF( config , ttype ):
-  return SimpleSelection( 'FiltTauCand_'+ttype, FilterDesktop, [PFParticles], 
+def selection_tau_single( config , preambulo, inputs, ttype ):
+  return SimpleSelection( 'FiltTauCand_'+ttype, FilterDesktop, inputs, 
     'LooseTauCand_'+ttype,
-    Preambulo = preambulo,
-    Code      = tau_preselections[ttype](config),
+    Preambulo = preambulo0 + preambulo.split('\n'),
+    Code      = parse_cuts_auto(config),
   )
 
-def selection_tau_h3( config ):
-  return SimpleSelection( 'FiltTauCand_h3', CombineParticles, [PFParticles],
+def selection_tau_h3( config, preambulo, inputs ):
+  dcut = parse_cuts_auto(config['dcuts'])
+  return SimpleSelection( 'FiltTauCand_h3', CombineParticles, inputs,
     'CombTauCand_h3',
     DecayDescriptor   = '[ tau- -> pi- pi- pi+ ]cc',
-    Preambulo         = preambulo,
-    DaughtersCuts     = get_tau_h3_dcut( config ),
-    CombinationCut    = parse_cuts_auto(config['ccuts'], 'ATRUE'),
-    MotherCut         = parse_cuts_auto(config['mcuts'], 'ALL'),
+    Preambulo         = preambulo0 + preambulo.split('\n'),
+    DaughtersCuts     = {'pi-':dcut, 'pi+':dcut},
+    CombinationCut    = parse_cuts_auto( config['ccuts'] ),
+    MotherCut         = parse_cuts_auto( config['mcuts'] ),
   )
 
-def selection_ditau( config , dtype , decay , inputs ):
-  return SimpleSelection( 'SelDitauCand_'+dtype, CombineParticles, inputs,
-    'CombDitauCand_'+dtype,
-    Preambulo         = preambulo,
+def selection_ditau( config, preambulo, pcomb, dcname, decay , inputs ):
+  # dcuts quite complicate since it's a-priori nested dict index by particle-name.
+  dcuts = { key:parse_cuts_auto(val) for key,val in doubling_sign_dict(config['dcuts']).iteritems() }
+  return SimpleSelection( 'SelDitauCand_'+dcname, CombineParticles, inputs,
+    'CombDitauCand_'+dcname,
+    Preambulo         = preambulo0 + preambulo.split('\n'),
     DecayDescriptor   = decay,
-    CombinationCut    = parse_cuts_auto(config['ccuts'], 'ATRUE'),
-    MotherCut         = parse_cuts_auto(config['mcuts'], 'ALL'),
-    # ParticleCombiners = {'':'MomentumCombiner'},
-    # CombinationCut  = 'AALLSAMEBPV',  # Too strong even for signal?
+    DaughtersCuts     = dcuts,
+    CombinationCut    = parse_cuts_auto(config['ccuts']),
+    MotherCut         = parse_cuts_auto(config['mcuts']),
+    ParticleCombiners = pcomb,
+    # CombinationCut  = 'AALLSAMEBPV',  # BUGGY, don't use me!
   )
 
 #==============================================================================
+
+## Nomenclatures on name, just to not get myself confused...
+# NAME    : Formal name of stripping line, by default, 'Ditau'
+# dtype   : Decay type of ditau (no sign), e.g., eh1, mumu
+# dcname  : Decay name of ditau (with sign), e.g., eh1_ss, mumu_os
+# linename: Short line name, e.g., EX, MXss 
+#           (note that opposite-sign os is dropped)
+
 
 class DitauConf(LineBuilder):
 
   __configuration_keys__ = default_config['CONFIG']  # Legacy field
 
   # Note: To be instantiated by LineBuilder( default_config['NAME'], default_config['CONFIG'] )
-  def __init__(self, stripname, subconfigs):
+  def __init__(self, NAME, CONFIG):
 
     # Required the explicit name/dconfig, no default allow
-    LineBuilder.__init__(self, stripname, subconfigs)
+    LineBuilder.__init__(self, NAME, CONFIG)
+    preambulo   = CONFIG['preambulo']
+    ditau_pcomb = CONFIG['ditau_pcomb']
+    input_e     = [ AutomaticData(Location=CONFIG['TES_e'])  ]
+    input_mu    = [ AutomaticData(Location=CONFIG['TES_mu']) ]
+    input_pi    = [ AutomaticData(Location=CONFIG['TES_pi']) ]
 
     ## Make 4 selections of tau candidates first
-    self.tau_cands = MergedSelection('SelTauCand', [
-      selection_tau_PF( subconfigs['tau_e']  , 'e' ),
-      selection_tau_PF( subconfigs['tau_h1'] , 'h1' ),
-      selection_tau_PF( subconfigs['tau_mu'] , 'mu' ),
-      selection_tau_h3( subconfigs['tau_h3'] ),
-    ])
+    tau_cands = MergedSelection('SelTauCand', [
+    # tau_cands = [
+      selection_tau_single( CONFIG['tau_e']  , preambulo, input_e , 'e'  ),
+      selection_tau_single( CONFIG['tau_mu'] , preambulo, input_mu, 'mu' ),
+      selection_tau_single( CONFIG['tau_h1'] , preambulo, input_pi, 'h1' ),
+      selection_tau_h3    ( CONFIG['tau_h3'] , preambulo, input_pi       ),
+    ])  # Need merge so that the selection is parallel, not sequential
 
-    ## Make 10 selections of ditau cands
-    self.ditau_cands = {}
-    for dtype, decay in lines_decays.iteritems():
-      config  = subconfigs['ditau_'+dtype]
-      sel     = selection_ditau( config, dtype     , decay               , [self.tau_cands])
-      sel_ss  = selection_ditau( config, dtype+'ss', flip_samesign(decay), [self.tau_cands])
-      self.ditau_cands[dtype]      = sel
-      self.ditau_cands[dtype+'ss'] = sel_ss
+    sels_ditau = {}  # Selections, indexed by dcname (for emu sharing)
 
-    ## Finally group the sels into single line
-    for linename, dtypes in lines_merge.iteritems():
-      for signmode in ('', 'ss'):
-        whitelist   = [ dtype+signmode for dtype in dtypes ]
-        sels_ditau  = [ sel for dtype,sel in self.ditau_cands.iteritems() if dtype in whitelist ]
+    ## Loop over all lines, make groupping
+    for linename, dcdict in lines_decays.iteritems():
 
-        ## Make a line from merged sel, then register
-        sname = stripname + linename + signmode  # e.g., DitauMXss
-        self.registerLine(StrippingLine( sname + 'Line',
-          prescale    = subconfigs[linename+'_prescale'],
-          postscale   = subconfigs[linename+'_postscale'],
-          selection   = MergedSelection( sname, sels_ditau ),
-          checkPV     = True,
-        ))
+      ## Make list of selections in single line
+      sels = []
+      for dcname, decay in dcdict.iteritems():
+        if dcname in sels_ditau:  # for emu case
+          sel = sels_ditau[dcname]
+        else:
+          dtype   = dcname.split('_')[0]   # eh1_ss --> eh1
+          config  = CONFIG['ditau_'+dtype]
+          sel     = selection_ditau( config, preambulo, ditau_pcomb, dcname, decay, [tau_cands] )
+          sels_ditau[dcname] = sel
+        sels.append(sel)
+
+      ## Finally, compose a stripping line, register
+      self.registerLine(StrippingLine( NAME + linename + 'Line', # e.g., 'Ditau' + 'EXss' + 'Line'
+        prescale    = CONFIG[linename+'_prescale'],
+        postscale   = CONFIG[linename+'_postscale'],
+        selection   = MergedSelection( 'Sel'+linename, sels ),
+        checkPV     = True,
+      ))
 
 
 #-------------------------------------------------------------------
@@ -667,12 +698,12 @@ class DitauConf(LineBuilder):
 # if __name__ == '__main__':
 #   line_builder_test()
 
-      # # Workaround the LineBuilderTest
-      # # Exception: test_configuration_not_dictlike_raises
-      # if not isinstance(subconfigs, dict):
-      #   raise AttributeError
-      # # Exception: test_bad_configuration_raises
-      # if 'BAD_KEY' in subconfigs:
-      #   raise KeyError
+# # Workaround the LineBuilderTest
+# # Exception: test_configuration_not_dictlike_raises
+# if not isinstance(subconfigs, dict):
+#   raise AttributeError
+# # Exception: test_bad_configuration_raises
+# if 'BAD_KEY' in subconfigs:
+#   raise KeyError
 
 # 

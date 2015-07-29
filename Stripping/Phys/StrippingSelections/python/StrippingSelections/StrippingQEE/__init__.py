@@ -8,7 +8,7 @@ _selections = (
   ## These line has explicit request from users for Run-II measurement.
   'StrippingDitau', 
   'StrippingDisplVertices',    
-  'StrippingH24MuLines',       
+  'StrippingH24Mu',
   'StrippingInclbJets',
   'StrippingLowMultINC',       
   'StrippingMuMuSS',           
