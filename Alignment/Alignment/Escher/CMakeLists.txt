@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Escher
 ################################################################################
-gaudi_subdir(Escher v5r5)
+gaudi_subdir(Escher v5r6)
 
 gaudi_depends_on_subdirs(Alignment/AlignEvent
                          Alignment/AlignKernel

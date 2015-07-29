@@ -1,5 +1,5 @@
 package Escher
-version           v5r5
+version           v5r6
 
 branches doc cmt job options tests
 
