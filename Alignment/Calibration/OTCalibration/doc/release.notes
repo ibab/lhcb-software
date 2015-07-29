@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+!========================= OTCalibration v1r11 2015-07-29 =========================
 !2015-06-09 - Lucia Grillo
 - OTIS calibration implemented in clbr_new.cpp
 
