@@ -3,6 +3,7 @@
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
 
+!========================= AlignKernel v3r8 2015-07-29 =========================
 ! 2015-07-28 - Maurizio Martinelli
  - Commented the definition of array of OTMonoLayerAlignData in python 
    dictionary due to compilation error
@@ -104,4 +105,3 @@
 
 ! 2007-05-10 - Adlene Hicheur
  - SolvKernel package creation, copy matrix and algebra classes from AlignSolvTools
-
