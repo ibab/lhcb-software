@@ -8,7 +8,7 @@ branches doc cmt tests
 
 use  MooreScripts      v1r12
 use  MooreOnlineConf   v1r10
-use  IndependenceTests v1r11    Hlt
+use  IndependenceTests v1r12    Hlt
 use  HltMonitoring     v1r1     Hlt
 
 # Declare this as a container package
