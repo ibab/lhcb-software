@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-07-29 - Mika Vesterinen
+ - Add settings for RichCalib Hlt1 lines and prescale the Hlt1NoPVPassThrough line
+
 !========================= HltSettings v7r0 2015-07-26 =========================
 
 ! 2015-07028  - Mike Sokoloff

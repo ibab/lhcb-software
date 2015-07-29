@@ -76,7 +76,8 @@ class Physics_25ns_August2015( object ):
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt1Lines.Hlt1MVALines            import Hlt1MVALinesConf
         from Hlt1Lines.Hlt1CalibTrackingLines  import Hlt1CalibTrackingLinesConf
-
+        from Hlt1Lines.Hlt1CalibRICHMirrorLines     import Hlt1CalibRICHMirrorLinesConf
+        
         thresholds = { Hlt1TrackLinesConf :   {  'AllL0_Velo_NHits'  : 9
                                                , 'AllL0_Velo_Qcut'   : 3
                                                , 'AllL0_TrNTHits'    : 16
@@ -186,7 +187,8 @@ class Physics_25ns_August2015( object ):
                                                                               'DiMuonNoL0'       : None,
                                                                               'MultiMuonNoL0'    : None
                                                                              }
-                                               , 'Prescale'                 : { 'Hlt1SingleMuonNoIP' : 0.1,
+                                               , 'Prescale'                 : { 'Hlt1NoPVPassThrough': 0.01,
+                                                                                'Hlt1SingleMuonNoIP' : 0.1,
                                                                                 'Hlt1DiMuonNoL0'  : 0.01,
                                                                                 'Hlt1MultiMuonNoL0'  : 0.01
                                                                                 }
@@ -257,8 +259,36 @@ class Physics_25ns_August2015( object ):
                                                               , 'Hlt1MBMicroBiasTStationRateLimited' : 0 }
                                                , 'MaxNoBiasRate' : 1000000.
                                                }
+                       , Hlt1CalibRICHMirrorLinesConf : { 'Prescale' : { 'Hlt1CalibHighPTLowMultTrks'     : 0.0001,
+                                                                         'Hlt1CalibRICHMirrorRICH1'       : 0.05,
+                                                                         'Hlt1CalibRICHMirrorRICH2'       : 0.143}
+                                                          , 'DoTiming' : False
+                                                          , 'R2L_PT'       : 500. * MeV
+                                                          , 'R2L_P'        : 40000. * MeV
+                                                          , 'R2L_MinETA'   : 2.59
+                                                          , 'R2L_MaxETA'   : 2.97
+                                                          , 'R2L_Phis'     : [(-2.69, -2.29 ), (-0.85, -0.45), (0.45, 0.85), (2.29, 2.69)]
+                                                          , 'R2L_TrChi2'   : 2.
+                                                          , 'R2L_MinTr'    : 0.5
+                                                          , 'R2L_GEC'      : 'Loose'
+                                                          , 'R1L_PT'       : 500. * MeV
+                                                          , 'R1L_P'        : 10000. * MeV
+                                                          , 'R1L_MinETA'   : 1.6
+                                                          , 'R1L_MaxETA'   : 2.04
+                                                          , 'R1L_Phis'     : [(-2.65, -2.30 ), (-0.80, -0.50), (0.50, 0.80), (2.30, 2.65)]
+                                                          , 'R1L_TrChi2'   : 2.
+                                                          , 'R1L_MinTr'    : 0.5
+                                                          , 'R1L_GEC'      : 'Loose'
+                                                          , 'LM_PT'    : 500. * MeV
+                                                          , 'LM_P'     : 1000. * MeV
+                                                          , 'LM_TrChi2': 2.
+                                                          , 'LM_MinTr' : 1
+                                                          , 'LM_MaxTr' : 40
+                                                          , 'LM_GEC'   : 'Loose'
+                                                          }
+                       
                        }
-
+        
         for subdir in self.SubDirs():
             conf = __get_conf__(subdir, "_25ns_August2015")
             __update_conf__(thresholds, conf.Thresholds())
