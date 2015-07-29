@@ -175,7 +175,7 @@ def useDBTagsFromData (
             from Configurables import CondDB  
             db = CondDB()
             db.LocalTags['CONDDB'] = tags['SIMCOND']
-            logger.info ( " CondDB/LocalTags['SIMCOND'] : %s " % db.LocalTags['SIMCOND'] )
+            logger.info ( " CondDB/LocalTags['CONDDB'/'SIMCOND'] : %s " % db.LocalTags['CONDDB'] )
         
         logger.info ( ' DaVinci/CondDBtag : %s ' % daVinci.CondDBtag  )
 
