@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-07-29 - Roel Aaij
+ - Updated technical HLT1 lines and included them in Physics_25ns_August2015.
+
 ! 2015-07-29 - Mika Vesterinen
  - Add settings for RichCalib Hlt1 lines and prescale the Hlt1NoPVPassThrough line
 
@@ -18,7 +21,7 @@
   -  following request from Vava
 
 ! 2015-07-24 and 2015-07-25  - Mike Sokoloff
-  -  added CharmHad and RareCharm  subdirectories 
+  -  added CharmHad and RareCharm  subdirectories
   -   CharmHad_25ns_August2015.py and RareCharm_25ns_August2015.py
   -   have been reviewed (at least in part) by WG and some problems
   -   have been fixed
@@ -46,7 +49,7 @@
  - Added Physics_25ns_August2015.py, which uses settings and lines from all
    subdirectories defined so far.
  - Remove two non-existent lines from LowMult/LowMult_25ns_August2015.py.
- 
+
 ! 2015-07-22 - Karlis Dreimanis
  - Add LowMult/LowMult_25ns_August2015.py
 
@@ -63,7 +66,7 @@
  - Added DisplVertices/DisplVertices_25ns_August25.py
 
 ! 2015-07-20 - Simone Stracka
- - Edited DPS/DPS_25ns_August2015.py 
+ - Edited DPS/DPS_25ns_August2015.py
 
 ! 2015-07-19 - Simone Stracka
  - Added draft DPS, Bc2JpsiX and CcDiHadron folders and 25 ns settings.
@@ -72,25 +75,25 @@
  - Update AllHlt2Lines for new PID lines and changed names of existing ones.
 
 ! 2015-07-19 - Francesco Dettori
- - Adding DiMuon/DiMuon_25ns_August2015.py 
- - Adding SingleMuon/SingleMuon_25ns_August2015.py 
+ - Adding DiMuon/DiMuon_25ns_August2015.py
+ - Adding SingleMuon/SingleMuon_25ns_August2015.py
 
 ! 2015-07-17 - Sascha Stahl
  - Removed Commissioning_Physics_25ns_2015.py, use Commissioning_Physics_2015.py.
 
 ! 2015-07-11 - Francesco Dettori
  - Adding Hlt2DiMuonSoft in HltSettings/Muons_March2015.py
- - Fixing the tuning of Hlt1 muon lines 
+ - Fixing the tuning of Hlt1 muon lines
 
 ! 2015-07-09 - Sascha Stahl
- - Update Commissioning_AllHlt2Lines_2015.py and merge Commissioning_Physics_2015 
+ - Update Commissioning_AllHlt2Lines_2015.py and merge Commissioning_Physics_2015
    with Commissioning_Physics_25ns_2015.
 
 ! 2015-07-04 - Christian Linn
  - Corrected cuts of D02KPi PID line in PID_EM2015
 
 ! 2015-07-04 - Francesco Dettori
- - Adding 0.01 prescale to Hlt1DiMuonNoL0 and Hlt1MultiMuonNoL0 in settings for 25 ns running. 
+ - Adding 0.01 prescale to Hlt1DiMuonNoL0 and Hlt1MultiMuonNoL0 in settings for 25 ns running.
 
 !========================= HltSettings v6r16p1 2015-07-01 =========================
 

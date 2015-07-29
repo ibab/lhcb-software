@@ -77,7 +77,7 @@ class Physics_25ns_August2015( object ):
         from Hlt1Lines.Hlt1MVALines            import Hlt1MVALinesConf
         from Hlt1Lines.Hlt1CalibTrackingLines  import Hlt1CalibTrackingLinesConf
         from Hlt1Lines.Hlt1CalibRICHMirrorLines     import Hlt1CalibRICHMirrorLinesConf
-        
+
         thresholds = { Hlt1TrackLinesConf :   {  'AllL0_Velo_NHits'  : 9
                                                , 'AllL0_Velo_Qcut'   : 3
                                                , 'AllL0_TrNTHits'    : 16
@@ -286,9 +286,9 @@ class Physics_25ns_August2015( object ):
                                                           , 'LM_MaxTr' : 40
                                                           , 'LM_GEC'   : 'Loose'
                                                           }
-                       
+
                        }
-        
+
         for subdir in self.SubDirs():
             conf = __get_conf__(subdir, "_25ns_August2015")
             __update_conf__(thresholds, conf.Thresholds())
@@ -320,7 +320,7 @@ class Physics_25ns_August2015( object ):
                    , 'Hlt1SingleElectronNoIP'
                    , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA'
                    , 'Hlt1CalibTrackingKPi' , 'Hlt1CalibTrackingKK' , 'Hlt1CalibTrackingPiPi'
-                   , 'Hlt1CalibTrackingKPiDetached'
+                   , 'Hlt1CalibHighPTLowMultTrks', 'Hlt1CalibTrackingKPiDetached'
                    , 'Hlt1CalibMuonAlignJpsi'
                    , 'Hlt1B2HH_LTUNB_KPi' , 'Hlt1B2HH_LTUNB_KK' , 'Hlt1B2HH_LTUNB_PiPi'
                    , 'Hlt1IncPhi'
@@ -331,11 +331,9 @@ class Physics_25ns_August2015( object ):
                    , 'Hlt1DiProtonLowMult'
                    , 'Hlt1CEP'
                    , 'Hlt1CEPVeloCut'
-                   , 'Hlt1NoPVPassThrough'
                    , 'Hlt1NoBiasNonBeamBeam']
 
-
-        ## from Hlt1TechnicalLines import Hlt1TechnicalLines
-        ## lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )
+        from Hlt1TechnicalLines import Hlt1TechnicalLines
+        lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )
 
         return lines
