@@ -427,6 +427,7 @@ class HltConf(LHCbConfigurableUser):
             ids = getattr(HltANNSvc(), '%sSelectionID' % stage)
             missing  = [ i for i in sorted(set(selections['Output']) - set(ids.keys())) if not i.startswith('TES:') ]
             missing += [ i for i in sorted(set(decisions) - set(ids.keys())) ]
+            missing = sorted(list(set(missing)))
             missingDecisions  = [ i for i in missing if i.endswith('Decision') ]
             updateDict( ids, decStart, missingDecisions )
             missingSelections = [ i for i in missing if not i.endswith('Decision') ]

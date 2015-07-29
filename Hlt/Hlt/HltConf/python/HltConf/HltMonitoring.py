@@ -121,9 +121,9 @@ class HltMonitoringConf(LHCbConfigurableUser):
         ## Mass monitor
         from Configurables import HltMassMonitor
         from DAQSys.Decoders import DecoderDB
-        decRepLoc = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]
         massMon = HltMassMonitor("Hlt1MassMonitor")
-        massMon.DecReportsLocation = decRepLoc
+        massMon.DecReportsLocation = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]
+        massMon.SelReportsLocation = DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].listOutputs()[0]
         massMon.Decisions  = {"Jpsi"     : "Hlt1DiMuonHighMassDecision",
                               "D0->Kpi"  : 'Hlt1CalibTrackingKPiDetachedDecision',
                               "D0->KK"   : 'Hlt1CalibTrackingKKDecision',
@@ -187,6 +187,9 @@ class HltMonitoringConf(LHCbConfigurableUser):
 
         from Configurables import HltMassMonitor
         massMon = HltMassMonitor("Hlt2MassMonitor")
+        from DAQSys.Decoders import DecoderDB
+        massMon.DecReportsLocation = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
+        massMon.SelReportsLocation = DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
         massMon.Decisions  = {"Jpsi"       : "Hlt1DiMuonJPsiDecision",
                               "JpsiRefit"  : "Hlt2JPsiReFitPVsTurboDecision",
                               "Psi2S"      : "Hlt2DiMuonPsi2STurboDecision",
@@ -195,8 +198,8 @@ class HltMonitoringConf(LHCbConfigurableUser):
         massMon.Histograms = {"Jpsi"       : [3005, 3186, 50],
                               "JpsiRefit"  : [3005, 3186, 50],
                               "Psi2S"      : [3600, 3770, 50],
-                              "D0->Kpi"    : [1790, 1940, 50],
-                              "Dpm->Kpipi" : [1795, 1945, 50]}
+                              "D0->Kpi"    : [1790, 1940, 75],
+                              "Dpm->Kpipi" : [1795, 1945, 75]}
 
         monSeq = Sequence("Hlt2MonitorSequence", IgnoreFilterPassed = True,
                           Members = l0Mon + [globalMon, massMon])
