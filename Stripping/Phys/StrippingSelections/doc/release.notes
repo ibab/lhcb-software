@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-29 - Chris Jones
+ - Fix an inconsistency in a few lines names in B2OC Bc2DD module (DStar -> Dst).
+
 ! 2015-07-29 - Chitsanu Khurewathanakul
  - Renamed StrippingH24MuLines.py to StrippingH24Mu.py for consistency.
  - S23 Tuning on StrippingDitau lines.
@@ -50,7 +53,8 @@
  - Added default settings for LoKi::PVRrefitter in test scripts
 
 ! 2015-07-21 - Federico Redi
- - In StrippingRD/StrippingB2Lambda0MuLines.py added DD candidates, Rate: 0.055 %; Timing: 0.045 ms/evt.
+ - In StrippingRD/StrippingB2Lambda0MuLines.py added DD candidates, 
+   Rate: 0.055 %; Timing: 0.045 ms/evt.
 
 ! 2015-07-21 - Michael Kolpin
  - Updated ConfiguredMuonIDs definition in StrippingTrackEffDownMuon

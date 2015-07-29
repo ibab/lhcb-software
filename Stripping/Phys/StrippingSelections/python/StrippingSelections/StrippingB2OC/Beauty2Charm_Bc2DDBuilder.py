@@ -269,7 +269,7 @@ class Bc2DDBuilder(object):
         ## self._buildSel(dmodes,name,self.dstarpmodes)
 
         # Ds*+ gamma modes ( Ds+ -> Khh )
-        name = "DStar2DGammaD2KHH"
+        name = "Dst2DGammaD2KHH"
         dmodes = self.dst.dgamma_khh_pid
         self._buildSel(dmodes,name,self.dstarpmodes)
 

@@ -1340,10 +1340,10 @@ default_config ={
     'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0PI0D02KSHHBeauty2CharmLine',
     'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0GammaD02KSHHBeauty2CharmLine',
     'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0PI0D02HHBeauty2CharmLine',
-    'StrippingBc2DstDst0DStar2DGammaD2KHHDst02D0PI0D02KHHHBeauty2CharmLine',
-    'StrippingBc2DstDst0DStar2DGammaD2KHHDst02D0PI0D02KSHHBeauty2CharmLine',
-    'StrippingBc2DstDst0DStar2DGammaD2KHHDst02D0GammaD02KSHHBeauty2CharmLine',
-    'StrippingBc2DstDst0DStar2DGammaD2KHHDst02D0PI0D02HHBeauty2CharmLine'
+    'StrippingBc2DstDst0Dst2DGammaD2KHHDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KHHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KHHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KHHDst02D0PI0D02HHBeauty2CharmLine'
 
     ]
   },
