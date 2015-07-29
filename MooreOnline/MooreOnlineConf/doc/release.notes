@@ -4,6 +4,8 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+!========================= MooreOnlineConf v1r10 2015-07-29 =========================
+
 ! 2015-07-24 - Roel Aaij
  - Remove obsolete RunMonitoringFarm option.
  - Silence LoKiSvc.REPORT.
