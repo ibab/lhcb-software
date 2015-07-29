@@ -33,7 +33,7 @@ BetaS = {
                     , 'DaughterPT'           :       1000
                     , 'VCHI2PDOF'            :       10
                     , 'HLTCuts'              :       "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')"
-                    , 'Jpsi2MuMuPrescale'    :       0.15
+                    , 'Jpsi2MuMuPrescale'    :       0.3
                     , 'Bd2JpsiKstarPrescale' :       1.0
                     , 'Bd2JpsiKsPrescale'    :       1.0
                     , 'Bs2JpsiPhiPrescale'   :       1.0

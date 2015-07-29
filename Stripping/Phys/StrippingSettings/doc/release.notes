@@ -6,6 +6,9 @@
 
 !========================= StrippingSettings v2r38 2015-07-24 =========================
 
+! 2015-07-29 - Carlos Vazquez Sierra
+ - updated B2CC dictionaries, tuning a prescale
+
 ! 2015-07-29 - Jinlin Fu
  - update Charm dict s23, remove ForXSec 
 
