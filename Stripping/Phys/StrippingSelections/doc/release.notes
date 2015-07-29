@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-29 - Ricardo Vazquez Gomez
+ - Add more DSTs to the Reco15 test sample
+
 ! 2015-07-28 - Chris Jones
  - Add some additional K*+ K*0 lines to the Bc->DD builder in the B2OC module.
  - Enable by default loose PID preselection in the B2OC Bc->DD builder.
