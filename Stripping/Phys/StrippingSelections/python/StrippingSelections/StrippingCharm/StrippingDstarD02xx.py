@@ -38,14 +38,14 @@ default_config = {'NAME': 'DstarD02xx',
                   , 'PrescaleepiBox'    : 1.
                   , 'PrescalepimuBox'    : 1.
                   , 'PrescaleKmuBox'    : 1.
-                  , 'Prescalepipi_untagged_Box'     : 0.2
-                  , 'Prescalemumu_untagged_Box'     : 1.
-                  , 'PrescaleKpi_untagged_Box'    : 0.2
-                  , 'Prescalepimu_untagged_Box'    : 1.
-                  , 'PrescaleKmu_untagged_Box'    : 0.2
-                  , 'PrescaleKpi_untagged_BoxMB' : 1.
-                  , 'Prescalepipi_untagged_BoxMB':1.
-                  , 'PrescaleKpi_untagged_BoxMBTrEff' : 1.
+                  , 'Prescalepipi_untagged_Box'     : 1.0
+                  , 'Prescalemumu_untagged_Box'     : 1.0
+                  , 'PrescaleKpi_untagged_Box'    : 1.0
+                  , 'Prescalepimu_untagged_Box'    : 1.0
+                  , 'PrescaleKmu_untagged_Box'    : 0.5
+                  , 'PrescaleKpi_untagged_BoxMB' : 0.
+                  , 'Prescalepipi_untagged_BoxMB':0.
+                  , 'PrescaleKpi_untagged_BoxMBTrEff' : 0.
                   ,'DMassWin'           : 70.       # MeV
                   ,'DMassWinMuMuLow'    : -150.       #MeV
                   ,'DMassWinMuMuHigh'   : 300       #MeV
@@ -70,7 +70,7 @@ default_config = {'NAME': 'DstarD02xx',
                   ,'DstD0DMWin'         : 10.        # MeV
                   ,'DstD0DMWinMuMu'      : 30.        # MeV  
                   ,'RequireHlt'         : 1
-                  ,'HLT2String'          :  "Hlt2Dst2PiD02LAB1LAB2*Decision"
+                  ,'HLT2String'          :  "Hlt2RareCharmD02LAB1LAB2*Decision"
                   ,'HLT1MB'             : "HLT_PASS_RE('Hlt1(MB|L0).*Decision')"
                   ,'HLT2MB'             : "HLT_PASS_RE('Hlt2CharmHadMinBiasD02KPiDecision')"
                   #hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"

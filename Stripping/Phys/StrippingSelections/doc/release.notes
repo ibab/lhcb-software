@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-29 - Andrea Contu
+ - Updated dictionaries for StrippingB2ppipiSigmacmm_Lcpi.py and StrippingDstarD02xx.py
+
 ! 2015-07-29 - Chris Jones
  - Update BcDD builder in B2OC
   - Use KHHH and KHH final states instead of HHHH and HHH (i.e. demand at least 

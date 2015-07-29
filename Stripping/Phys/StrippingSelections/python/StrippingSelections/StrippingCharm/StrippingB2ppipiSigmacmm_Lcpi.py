@@ -89,14 +89,14 @@ default_config = {
   ,'threepartPT':1.0*GeV
   ,'fourpartPT':1.0*GeV
   ,'BFDChi2':64.0
-  ,'SigmaFDChi2':36.0
-  ,'SigmaVtxChi2DOF':10.0
+  ,'SigmaFDChi2':64.0
+  ,'SigmaVtxChi2DOF':5.0
   ,'SigmaLcDeltaMlow':0.0*MeV
   ,'SigmaLcDeltaMhigh':1.0*GeV
-  ,'SigmaPT':0.0*GeV
-  ,'LcFDChi2':36.0
+  ,'SigmaPT':0.15*GeV
+  ,'LcFDChi2':64.0
   ,'LcVtxChi2DOF':5.0
-  ,'BDIRA':0.998
+  ,'BDIRA':0.9995
   ,'TrackChi2DOF':3.0
   ,'ApplyPionPIDK':True
   ,'PionPIDK':0.0
@@ -104,7 +104,7 @@ default_config = {
   ,'ApplyGECs':False
   ,'MaxLongTracks':200
   ,'ApplyGhostProbCut' :True
-  ,'GhostProbCut':0.3
+  ,'GhostProbCut':0.5
   ,'UseTOS': True
   ,'Hlt2TOS': { "Hlt2.*Decision%TOS" : 0 }
   ,'Prescalefourpart':1.0
