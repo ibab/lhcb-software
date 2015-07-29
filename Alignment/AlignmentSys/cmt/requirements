@@ -1,5 +1,5 @@
 package AlignmentSys
-version v10r4
+version v10r5
 
 branches cmt doc
  
@@ -9,31 +9,24 @@ branches cmt doc
 
 # General purpose components
 
-use AlignmentDBVisualisationTool	v1r4	Alignment # Pieter David
+use AlignmentDBVisualisationTool	v1r5	Alignment # Pieter David
 use AlignmentInterfaces			v3r6	Alignment # Johan Blouw
 use AlignmentTools      		v3r4    Alignment # Sebastien Viret
 use AlignEvent				v1r2    Alignment # Wouter Hulsbergen
-use AlignKernel				v3r7    Alignment # Adlene Hicheur, Wouter Hulsbergen
+use AlignKernel				v3r8    Alignment # Adlene Hicheur, Wouter Hulsbergen
 use AlignSolvTools			v3r5    Alignment # A. Hicheur, W. Hulsbergen
-use AlignTrTools			v4r16	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
-use TAlignment				v6r4	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
-#AlignT2Velo Removed, 03.03.2010
-#use AlignT2Velo			v1r1    Alignment # Steve Blusk
-use VeloAlignment			v4r12	Alignment # Marco Gersabeck
+use AlignTrTools			v4r17	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
+use TAlignment				v6r5	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
+use VeloAlignment			v4r13	Alignment # Silvia Borghi, Marco Gersabeck
 use MisAligner				v2r2	Alignment # Johan Blouw, Manuel Schiller
-use Escher				v5r5	Alignment # Johan Blouw
-use CommonParticles     		v8r20    Phys
+use Escher				v5r6	Alignment # Maurizio Martinelli
+use CommonParticles     		v8r20   Phys
 
 #=======================================================
 # LHCb Calibration packages
 #=======================================================
 
-use OTCalibration			v1r10   Calibration # Wouter Hulsbergen
-
-#temporary segfault fix, from LHCb
-#use OTDet v8r16 Det # Needed until release of LHCb v38r6 - MM, 1/4/2015
-#use LHCbMath v3r55 Kernel # Needed until release of LHCb v38r6 - MM, 1/4/2015
-#use TrackUtils v1r59 Tr # Needed until release of Rec v17r6 - MM, 2/4/2015
+use OTCalibration			v1r11   Calibration # Wouter Hulsbergen
 
 # Declare this as a container package
 apply_pattern container_package
