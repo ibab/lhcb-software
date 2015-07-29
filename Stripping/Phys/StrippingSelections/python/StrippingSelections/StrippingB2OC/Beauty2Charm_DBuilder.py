@@ -156,6 +156,20 @@ class DBuilder(object):
         self.kpi_pid = [filterSelection('D2KPIPID',oneK,self.hh_pid)]
         self.kpi_pid_tight = [filterSelection('D2KPITIGHTPID',oneK,self.hh_pid_tight)]
         self.kpi_pid_tighter1 = [filterPID('D2KPITIGHTER1PID',self.kpi_pid,config_pid['TIGHTER1'])]
+
+        atLeastOneK = "NINTREE(ABSID=='K+') > 0"
+        self.k2h = [filterSelection('D2K2H',atLeastOneK,self.hhh)]
+        self.k3h = [filterSelection('D2K3H',atLeastOneK,self.hhhh)]
+        self.k2h_pid = [filterPID('D2K2HPID',self.k2h,config_pid)]
+        self.k3h_pid = [filterPID('D2K3HPID',self.k3h,config_pid)]
+        self.kskhh_ll = [filterSelection('D2KsKHHLL',atLeastOneK,self.kshhh_ll)]
+        self.kskhh_dd = [filterSelection('D2KsKHHDD',atLeastOneK,self.kshhh_dd)]
+        self.kskhh_ll_pid = [filterPID('D2KsKHHLLPID',self.kskhh_ll,config_pid)]
+        self.kskhh_dd_pid = [filterPID('D2KsKHHDDPID',self.kskhh_dd,config_pid)]
+        self.pi0khh_merged   = [filterSelection('D2MergedPi0KHH',atLeastOneK,self.pi0hhh_merged)]
+        self.pi0khh_resolved = [filterSelection('D2ResolvedPi0KHH',atLeastOneK,self.pi0hhh_resolved)]
+        self.pi0khh_merged_pid   = [filterPID('D2MergedPi0KHHPID',self.pi0khh_merged,config_pid)]
+        self.pi0khh_resolved_pid = [filterPID('D2ResolvedPi0KHHPID',self.pi0khh_resolved,config_pid)]
         
         #d0 narrow mass window +-40MeV
         d0_narrow_min,d0_narrow_max = self._massWindow('D0narrow')
@@ -823,6 +837,8 @@ class DstarBuilder(object):
         self.d0pi_k3pi      = self._makeDstar2D0pi('D2K3Pi',self.d.k3pi)
         self.d0pi_hhhh      = self._makeDstar2D0pi('D2HHHH',self.d.hhhh)
         self.d0pi_hhhh_pid  = self._makeDstar2D0pi('D2HHHHPID',self.d.hhhh_pid)
+        self.d0pi_k3h       = self._makeDstar2D0pi('D2K3H',self.d.k3h)
+        self.d0pi_k3h_pid   = self._makeDstar2D0pi('D2K3HPID',self.d.k3h_pid)
         self.d0pi_hhhh_ws   = self._makeDstar2D0pi('D2HHHHWS',self.d.hhhh_ws)
         self.d0pi_kshh_ll   = self._makeDstar2D0pi('D2KSHHLL',self.d.kshh_ll)
         self.d0pi_kshh_dd   = self._makeDstar2D0pi('D2KSHHDD',self.d.kshh_dd)
@@ -859,6 +875,12 @@ class DstarBuilder(object):
         self.d0pi0_hhhh_resolved = self._makeDstar02D0Pi0( 'D2HHHH', 'Resolved', self.d.hhhh )
         self.d0pi0_hhhh_merged_pid   = self._makeDstar02D0Pi0( 'D2HHHHPID', 'Merged'  , self.d.hhhh_pid )
         self.d0pi0_hhhh_resolved_pid = self._makeDstar02D0Pi0( 'D2HHHHPID', 'Resolved', self.d.hhhh_pid )
+
+        self.d0pi0_k3h_merged   = self._makeDstar02D0Pi0( 'D2K3H', 'Merged'  , self.d.k3h )
+        self.d0pi0_k3h_resolved = self._makeDstar02D0Pi0( 'D2K3H', 'Resolved', self.d.k3h )
+        self.d0pi0_k3h_merged_pid   = self._makeDstar02D0Pi0( 'D2K3HPID', 'Merged'  , self.d.k3h_pid )
+        self.d0pi0_k3h_resolved_pid = self._makeDstar02D0Pi0( 'D2K3HPID', 'Resolved', self.d.k3h_pid )
+        
         # With Upstream D's
         self.d0pi0_merged_dup        = self._makeDstar02D0Pi0( 'UPD2HH', 'Merged'  , self.d.hh_up )
         self.d0pi0_resolved_dup      = self._makeDstar02D0Pi0( 'UPD2HH', 'Resolved', self.d.hh_up )
@@ -886,18 +908,30 @@ class DstarBuilder(object):
         self.dpi0_resolved            = self._makeDstar2DPi0( '', 'Resolved'  , self.d.hhh )
         self.dpi0_merged_pid          = self._makeDstar2DPi0( 'D2HHHPID', 'Merged'  ,   self.d.hhh_pid )
         self.dpi0_resolved_pid        = self._makeDstar2DPi0( 'D2HHHPID', 'Resolved'  , self.d.hhh_pid )
+        self.dpi0_khh_merged          = self._makeDstar2DPi0( 'D2KHH', 'Merged'  ,   self.d.k2h )
+        self.dpi0_khh_resolved        = self._makeDstar2DPi0( 'D2KHH', 'Resolved'  , self.d.k2h )
+        self.dpi0_khh_merged_pid      = self._makeDstar2DPi0( 'D2KHHPID', 'Merged'  ,   self.d.k2h_pid )
+        self.dpi0_khh_resolved_pid    = self._makeDstar2DPi0( 'D2KHHPID', 'Resolved'  , self.d.k2h_pid )
         self.dpi0_merged_ksh_ll       = self._makeDstar2DPi0( 'D2KSHLL', 'Merged', self.d.ksh_ll )
         self.dpi0_merged_ksh_dd       = self._makeDstar2DPi0( 'D2KSHDD', 'Merged', self.d.ksh_dd )
         self.dpi0_merged_kshhh_ll     = self._makeDstar2DPi0( 'D2KSHHHLL', 'Merged', self.d.kshhh_ll )
         self.dpi0_merged_kshhh_dd     = self._makeDstar2DPi0( 'D2KSHHHDD', 'Merged', self.d.kshhh_dd )
         self.dpi0_merged_kshhh_ll_pid = self._makeDstar2DPi0( 'D2KSHHHLLPID', 'Merged', self.d.kshhh_ll_pid )
         self.dpi0_merged_kshhh_dd_pid = self._makeDstar2DPi0( 'D2KSHHHDDPID', 'Merged', self.d.kshhh_dd_pid )
+        self.dpi0_merged_kskhh_ll     = self._makeDstar2DPi0( 'D2KSKHHLL', 'Merged', self.d.kskhh_ll )
+        self.dpi0_merged_kskhh_dd     = self._makeDstar2DPi0( 'D2KSKHHDD', 'Merged', self.d.kskhh_dd )
+        self.dpi0_merged_kskhh_ll_pid = self._makeDstar2DPi0( 'D2KSKHHLLPID', 'Merged', self.d.kskhh_ll_pid )
+        self.dpi0_merged_kskhh_dd_pid = self._makeDstar2DPi0( 'D2KSKHHDDPID', 'Merged', self.d.kskhh_dd_pid )
         self.dpi0_resolved_ksh_ll     = self._makeDstar2DPi0( 'D2KSHLL', 'Resolved', self.d.ksh_ll )
         self.dpi0_resolved_ksh_dd     = self._makeDstar2DPi0( 'D2KSHDD', 'Resolved', self.d.ksh_dd )
         self.dpi0_resolved_kshhh_ll   = self._makeDstar2DPi0( 'D2KSHHHLL', 'Resolved', self.d.kshhh_ll )
         self.dpi0_resolved_kshhh_dd   = self._makeDstar2DPi0( 'D2KSHHHDD', 'Resolved', self.d.kshhh_dd )
         self.dpi0_resolved_kshhh_ll_pid = self._makeDstar2DPi0( 'D2KSHHHLLPID', 'Resolved', self.d.kshhh_ll_pid )
         self.dpi0_resolved_kshhh_dd_pid = self._makeDstar2DPi0( 'D2KSHHHDDPID', 'Resolved', self.d.kshhh_dd_pid )
+        self.dpi0_resolved_kskhh_ll     = self._makeDstar2DPi0( 'D2KSKHHLL', 'Resolved', self.d.kskhh_ll )
+        self.dpi0_resolved_kskhh_dd     = self._makeDstar2DPi0( 'D2KSKHHDD', 'Resolved', self.d.kskhh_dd )
+        self.dpi0_resolved_kskhh_ll_pid = self._makeDstar2DPi0( 'D2KSKHHLLPID', 'Resolved', self.d.kskhh_ll_pid )
+        self.dpi0_resolved_kskhh_dd_pid = self._makeDstar2DPi0( 'D2KSKHHDDPID', 'Resolved', self.d.kskhh_dd_pid )
         self.dpi0_merged_kspi0h_ll    = self._makeDstar2DPi0( 'D2KSPI0HLL', 'Merged', self.d.kspi0h_ll_resolved+self.d.kspi0h_ll_merged )
         self.dpi0_merged_kspi0h_dd    = self._makeDstar2DPi0( 'D2KSPI0HDD', 'Merged', self.d.kspi0h_dd_resolved+self.d.kspi0h_dd_merged )
         self.dpi0_resolved_kspi0h_ll  = self._makeDstar2DPi0( 'D2KSPI0HLL', 'Resolved', self.d.kspi0h_ll_resolved+self.d.kspi0h_ll_merged )
@@ -922,12 +956,18 @@ class DstarBuilder(object):
         # CRJ : Modes for Ds*+ -> Ds+ gamma
         self.dgamma_hhh       = self._makeDstar2DGamma( 'D2HHH', self.d.hhh )
         self.dgamma_hhh_pid   = self._makeDstar2DGamma( 'D2HHHPID', self.d.hhh_pid )
+        self.dgamma_khh       = self._makeDstar2DGamma( 'D2KHH', self.d.k2h )
+        self.dgamma_khh_pid   = self._makeDstar2DGamma( 'D2KHHPID', self.d.k2h_pid )
         self.dgamma_ksh_ll    = self._makeDstar2DGamma( 'D2KsHLL', self.d.ksh_ll )
         self.dgamma_ksh_dd    = self._makeDstar2DGamma( 'D2KsHDD', self.d.ksh_dd )
         self.dgamma_kshhh_ll  = self._makeDstar2DGamma( 'D2KsHHHLL', self.d.kshhh_ll )
         self.dgamma_kshhh_dd  = self._makeDstar2DGamma( 'D2KsHHHDD', self.d.kshhh_dd )
         self.dgamma_kshhh_ll_pid  = self._makeDstar2DGamma( 'D2KsHHHLLPID', self.d.kshhh_ll_pid )
         self.dgamma_kshhh_dd_pid  = self._makeDstar2DGamma( 'D2KsHHHDDPID', self.d.kshhh_dd_pid )
+        self.dgamma_kskhh_ll  = self._makeDstar2DGamma( 'D2KsKHHLL', self.d.kskhh_ll )
+        self.dgamma_kskhh_dd  = self._makeDstar2DGamma( 'D2KsKHHDD', self.d.kskhh_dd )
+        self.dgamma_kskhh_ll_pid  = self._makeDstar2DGamma( 'D2KsKHHLLPID', self.d.kskhh_ll_pid )
+        self.dgamma_kskhh_dd_pid  = self._makeDstar2DGamma( 'D2KsKHHDDPID', self.d.kskhh_dd_pid )
         self.dgamma_kspi0h_ll = self._makeDstar2DGamma( 'D2KsPI0HLL', self.d.kspi0h_ll_resolved+self.d.kspi0h_ll_merged )
         self.dgamma_kspi0h_dd = self._makeDstar2DGamma( 'D2KsPI0HDD', self.d.kspi0h_dd_resolved+self.d.kspi0h_dd_merged )
         # With Upstream D

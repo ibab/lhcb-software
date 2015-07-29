@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-29 - Chris Jones
+ - Update BcDD builder in B2OC
+  - Use KHHH and KHH final states instead of HHHH and HHH (i.e. demand at least 
+    one kaon) to help with retention and timing.
+  - Do not use a MergedSelection when the selection list one has one entry...
+
 ! 2015-07-29 - Carlos Vazquez Sierra
  - tests/liaisons/B2CC reorganised.
 

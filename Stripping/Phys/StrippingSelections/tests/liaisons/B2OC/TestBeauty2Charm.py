@@ -31,32 +31,173 @@ from StrippingSelections import buildersConf
 confs = buildersConf()
 from StrippingSelections.Utils import lineBuilder, buildStreamsFromBuilder
 streamall = buildStreamsFromBuilder(confs,confname)
+
 MyLines = [
-'StrippingB02DstarMuNuDst2D0Pi_D2HHHHBeauty2CharmLine',
-    'StrippingB02DstarMuNuWSDst2D0Pi_D2HHHHBeauty2CharmLine',
-    'StrippingB02DstarMuNuDst2D0Pi_D2HHHHWSBeauty2CharmLine',
-    'StrippingB02DstarMuNuWSDst2D0Pi_D2HHHHWSBeauty2CharmLine',
-    'StrippingB2D0KPi0MergedD2HHHHBeauty2CharmLine', 
-    'StrippingB2D0PiPi0MergedD2HHHHBeauty2CharmLine',
-    'StrippingB2D0KsPiDDD2HHHHBeauty2CharmLine',   
-    'StrippingB2D0KPi0ResolvedD2HHHHBeauty2CharmLine',
-    'StrippingB2D0KsPiLLD2HHHHBeauty2CharmLine',
-    'StrippingB2D0PiPi0ResolvedD2HHHHBeauty2CharmLine',  
-    'StrippingB2D0KPi0MergedD2HHHHWSBeauty2CharmLine',  
-    'StrippingB2D0PiPi0MergedD2HHHHWSBeauty2CharmLine',
-    'StrippingB2D0KsPiDDD2HHHHWSBeauty2CharmLine',  
-    'StrippingB2D0KPi0ResolvedD2HHHHWSBeauty2CharmLine',  
-    'StrippingB2D0KsPiLLD2HHHHWSBeauty2CharmLine',
-    'StrippingB2D0PiPi0ResolvedD2HHHHWSBeauty2CharmLine'   
+
+    # Bc+ -> D+ D0
+    'StrippingBc2DD0D2KSHPI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHPI0D02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHPI0D02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KSHPI0D02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KSHPI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHHHD02KHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHHHD02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KSHHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KSHHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHD02KHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHD02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2KSHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KSHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KSHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KHHD02KHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KHHD02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2KHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstHHD02KHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstHHD02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KstHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KstHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstKst0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstKst0D02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstKst0D02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KstKst0D02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KstKst0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstKSD02KHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstKSD02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2KstKSD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KstKSD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KstKSD02KSHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KHHPI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DD0D2KHHPI0D02HHBeauty2CharmLine',
+    'StrippingBc2DD0D2KHHPI0D02HHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KHHPI0D02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DD0D2KHHPI0D02KSHHBeauty2CharmLine',
+    
+    # Bc+ -> D*+ D0
+    'StrippingBc2DstD0Dst2DPI0D2KHHD02KHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KHHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSPI0HD02KHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSPI0HD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSPI0HD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSPI0HD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSPI0HD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSPI0HD02KHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSPI0HD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSPI0HD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSPI0HD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSPI0HD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHHHD02KHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHHHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KHHHD02KHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KHHHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KHHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KHHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KHHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02HHD02KHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02HHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02HHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02HHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02HHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHHHD02KHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHHHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHD02KHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DGammaD2KSHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSHHD02KHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSHHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSHHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSHHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSHHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSPI0HHD02KHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSPI0HHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSPI0HHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSPI0HHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2D0PID02KSPI0HHD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHD02KHHHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHD02HHBeauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHD02HHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHD02KSHHPI0Beauty2CharmLine',
+    'StrippingBc2DstD0Dst2DPI0D2KSHD02KSHHBeauty2CharmLine',
+    # High rate ?
+    ## 'StrippingBc2DstD0DStar2DGammaD2KHHD02KHHHBeauty2CharmLine',
+    ## 'StrippingBc2DstD0DStar2DGammaD2KHHD02HHBeauty2CharmLine',
+    ## 'StrippingBc2DstD0DStar2DGammaD2KHHD02HHPI0Beauty2CharmLine',
+    ## 'StrippingBc2DstD0DStar2DGammaD2KHHD02KSHHPI0Beauty2CharmLine',
+    ## 'StrippingBc2DstD0DStar2DGammaD2KHHD02KSHHBeauty2CharmLine',
+
+    # Bc+ -> D*+ D*0
+    'StrippingBc2DstDst0Dst2DPI0D2KHHDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KHHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KHHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KHHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSPI0HDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSPI0HDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSPI0HDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSPI0HDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSPI0HDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSPI0HDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSPI0HDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSPI0HDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHHHDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHHHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHHHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHHHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KHHHDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KHHHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KHHHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KHHHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02HHDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02HHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02HHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02HHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHHHDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHHHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHHHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHHHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DGammaD2KSHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSHHDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSHHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSHHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSHHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSPI0HHDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSPI0HHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSPI0HHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2D0PID02KSPI0HHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0PI0D02HHBeauty2CharmLine',
+    'StrippingBc2DstDst0DStar2DGammaD2KHHDst02D0PI0D02KHHHBeauty2CharmLine',
+    'StrippingBc2DstDst0DStar2DGammaD2KHHDst02D0PI0D02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0DStar2DGammaD2KHHDst02D0GammaD02KSHHBeauty2CharmLine',
+    'StrippingBc2DstDst0DStar2DGammaD2KHHDst02D0PI0D02HHBeauty2CharmLine'
+
 ]
-streamsel = StrippingStream("Bhadron")
-for stream in streamall:
-    for line in stream.lines:
-         if line.name() in MyLines:
-            streamsel.appendLines([line])
-streams = [streamsel]
+## streamsel = StrippingStream("Bhadron")
+## for stream in streamall:
+##     for line in stream.lines:
+##          if line.name() in MyLines:
+##             streamsel.appendLines([line])
+## streams = [streamsel]
 
-
+streams = streamall
 
 leptonicMicroDSTname   = 'Leptonic'
 charmMicroDSTname      = 'Charm'
@@ -189,20 +330,23 @@ TimingAuditor().TIMER.NameSize = 60
 from Configurables import AuditorSvc, ChronoAuditor
 AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
 
+pFreq = 1000
+DaVinci().EvtMax = 10000
+DaVinci().PrintFreq = pFreq
+
 from Configurables import StrippingReport
-sr = StrippingReport(Selections = sc.selections())
+sr = StrippingReport(Selections = sc.selections(),
+                     ReportFrequency = pFreq)
 
 from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 10000
-DaVinci().PrintFreq = 2000
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
-DaVinci().appendToMainSequence( [ ac ] )
+#DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
-if(len(mdstDstLines)>0): DaVinci().appendToMainSequence( [ mdstDstSeq ] )
+#if(len(mdstDstLines)>0): DaVinci().appendToMainSequence( [ mdstDstSeq ] )
 DaVinci().ProductionType = "Stripping"
 DaVinci().DataType  = "2012"
 DaVinci().InputType = "DST"

@@ -30,6 +30,7 @@ ConfigCDBAccessSvc().File = '$STRIPPINGSELECTIONSROOT/tests/data/config.cdb'
 
 # Specify the name of your configuration
 confname='B2JpsiXforEM' #FOR USERS
+confname='Beauty2Charm'
 
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 
