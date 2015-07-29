@@ -3,14 +3,14 @@ import importlib
 
 from Utilities import *
 
-def configurePublisher(app, alg_name, initial_file) 
+def configurePublisher(app, alg_name, initial_file):
     OnlineEnv = importOnline()
 
     ## The publisher svc
     from Configurables import Hlt2HistPublishSvc
     publishSvc = Hlt2HistPublishSvc(alg_name)
     publishSvc.DataConnection = connections['Hlt2RootPublishSvc']['back']
-    publishSvc.OutputLevel = 2
+    publishSvc.OutputLevel = 3
     publishSvc.PartitionName = OnlineEnv.PartitionName
     publishSvc.InitialFile = initial_file
     publishSvc.HistogramDirectory = alg_name
@@ -18,7 +18,7 @@ def configurePublisher(app, alg_name, initial_file)
     ## Add to ExtSvc
     app.ExtSvc += ["Hlt2HistPublishSvc/" + alg_name]
 
-    
+
 def configure(host_type = None):
     OnlineEnv = importOnline()
 
@@ -29,7 +29,7 @@ def configure(host_type = None):
 
     # from Gaudi.Configuration import importOptions
     # importOptions("$HLT2MONITORINGROOT/options/Hlt2Publisher.opts")
-    
+
     from Utilities import host_regex
     hostname = socket.gethostname()
     host_re = re.compile(host_regex)
@@ -38,7 +38,7 @@ def configure(host_type = None):
     if host_type and host_type in ('top', 'node', 'subfarm'):
         ht = host_type
     elif r:
-        if r.group(1) == '01':
+        if r.group(1) in ('01', '02'):
             ht = 'top'
         elif r.group('subfarm') and not r.group('node'):
             ht = 'subfarm'

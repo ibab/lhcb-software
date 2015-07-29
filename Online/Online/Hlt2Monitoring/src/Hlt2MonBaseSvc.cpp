@@ -37,7 +37,7 @@ Hlt2MonBaseSvc::Hlt2MonBaseSvc(const string& name, ISvcLocator* loc, bool bindCo
    declareProperty("OutPort", m_outPort = 31338);
    declareProperty("FrontConnection", m_frontCon);
    declareProperty("BackConnection", m_backCon);
-   declareProperty("ControlConnection", m_ctrlCon = string{"inproc://"} + name + "Control");
+   declareProperty("ControlConnection", m_ctrlCon = string{"ipc:///tmp/"} + name + "Control");
    declareProperty("ForceTop", m_forceTop = false);
    declareProperty("PartitionName", m_partition);
    declareProperty("RunInPartitions", m_partitions = {"LHCb2"});

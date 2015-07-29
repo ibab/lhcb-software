@@ -52,7 +52,7 @@ StatusCode Hlt2HistPublishSvc::initialize()
       return sc;
    }
    m_monitorSvc = monSvc;
-   
+
    // HistogramSvc
 
    IHistogramSvc* histoSvc;
@@ -62,7 +62,7 @@ StatusCode Hlt2HistPublishSvc::initialize()
       return sc;
    }
    m_histoSvc = histoSvc;
-   
+
    Monitoring::histos_t histos;
    if (!m_initialFile.empty()) {
       fs::path file{m_initialFile};
@@ -83,7 +83,7 @@ StatusCode Hlt2HistPublishSvc::initialize()
          declareHisto(entry.dir, entry.histo.get());
       }
    }
-      
+
    if (m_dataCon.empty()) {
       warning() << "Connections not correctly configured, "
                 << "updates to Hlt2 histogram publisher disabled." << endmsg;
@@ -104,7 +104,7 @@ void Hlt2HistPublishSvc::declareHisto(string, TH1D* histo) {
    // Book IHistogram1D
    auto axis = histo->GetXaxis();
 
-   debug() << "declareHisto " << histoPath << " " << histo->GetTitle()
+   info() << "Publish " << histoPath << " " << histo->GetTitle()
            << " " << histo->GetNbinsX() << " " << axis->GetXmin()
            << " " << axis->GetXmax() << endmsg;
    auto gaudiHisto = m_histoSvc->book(histoPath, histo->GetName(),

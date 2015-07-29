@@ -18,6 +18,7 @@ def configureTop(appMgr, node_info):
     infoRelay = Hlt2MonRelaySvc("InfoRelay")
     infoRelay.FrontConnection = "tcp://*:%d" % __ports['InfoRelay']['in']
     infoRelay.BackConnection  = "ipc:///tmp/hlt2MonInfo_0"
+    infoRelay.Capture = True
     infoRelay.OutputLevel = 3
 
     ## The top histo relay ports
@@ -25,6 +26,7 @@ def configureTop(appMgr, node_info):
     histoRelay = Hlt2MonRelaySvc("HistoRelay")
     histoRelay.FrontConnection = "tcp://*:%d" % __ports['HistoRelay']['in']
     histoRelay.BackConnection  = "ipc:///tmp/hlt2MonData_0"
+    histoRelay.Capture = True
     histoRelay.OutputLevel = 3
 
     ## The histogram adder service
@@ -63,13 +65,11 @@ def configureSubfarm(appMgr, node_info):
     from Configurables import Hlt2MonRelaySvc
     infoRelay = Hlt2MonRelaySvc("InfoRelay")
     infoRelay.InPort  = __ports['InfoRelay']['in']
-    infoRelay.ControlConnection = "ipc:///tmp/hlt2InfoControl"
 
     ## The histo relay ports are the same, but on different nodes
     from Configurables import Hlt2MonRelaySvc
     histoRelay = Hlt2MonRelaySvc("HistoRelay")
     histoRelay.InPort  = __ports['HistoRelay']['in']
-    histoRelay.ControlConnection = "ipc:///tmp/hlt2HistoControl"
 
     return (infoRelay, histoRelay)
 
@@ -77,14 +77,12 @@ def configureNode(appMgr, node_info):
     ## The info relay svc needs to be explicitly configured
     from Configurables import Hlt2MonRelaySvc
     infoRelay = Hlt2MonRelaySvc("InfoRelay")
-    infoRelay.ControlConnection = "ipc:///tmp/hlt2InfoControl"
     infoRelay.FrontConnection = "ipc:///tmp/hlt2MonInfo_0"
     infoRelay.BackConnection  = 'tcp://hlt%s:%d' % (node_info['subfarm'], __ports['InfoRelay']['in'])
 
     ## The histo relay port to connect to on the subfarm relay
     from Configurables import Hlt2MonRelaySvc
     histoRelay = Hlt2MonRelaySvc("HistoRelay")
-    histoRelay.ControlConnection = "ipc:///tmp/hlt2HistoControl"
     histoRelay.InPort = __ports['HistoRelay']['in']
 
     return (infoRelay, histoRelay)
@@ -101,7 +99,7 @@ def configure(host_type = None):
     if host_type and host_type in services:
         ht = host_type
     elif r:
-        if r.group(1) == '01':
+        if r.group(1) in ('01', '02'):
             ht = 'top'
         elif r.group('subfarm') and not r.group('node'):
             ht = 'subfarm'

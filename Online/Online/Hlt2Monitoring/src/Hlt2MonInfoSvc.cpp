@@ -87,7 +87,7 @@ StatusCode Hlt2MonInfoSvc::initialize()
       } else if (matches.str("node").empty()) {
          // subfarm relay
          m_frontCon = string("tcp://*:") + to_string(m_inPort);
-         m_backCon  = string("tcp://hlt01:") + to_string(m_inPort);
+         m_backCon  = string("tcp://hlt02:") + to_string(m_inPort);
       } else {
          // node relay
          m_frontCon = string("ipc:///tmp/hlt2MonInfo_0");

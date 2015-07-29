@@ -101,7 +101,7 @@ StatusCode Hlt2SaverSvc::initialize()
    if (m_runFileName.empty()) {
       m_runFileName = "Moore2Saver-run%d.root";
    }
-   
+
    if (m_dataCon.empty()) {
       warning() << "Connections not correctly configured, "
                 << "Hlt2 saver disabled" << endmsg;
@@ -318,10 +318,6 @@ void Hlt2SaverSvc::saveHistograms() const
       if (skip.count(run)) {
          continue;
       }
-      bool exists{false};
-      fs::path file;
-      std::tie(file, exists) = filename(run, false);
-
       auto outPath = fs::unique_path("/tmp/HltSaver-%%%%-%%%%-%%%%-%%%%.root");
       TFile outFile(outPath.string().c_str(), "new");
 
@@ -357,7 +353,7 @@ void Hlt2SaverSvc::saveHistograms() const
          }
          if (!outDir) {
             warning() << "Could not create directory in SaveSet file "
-                      << file.string() << " " << dir << endmsg;
+                      << outPath.string() << " " << dir << endmsg;
             continue;
          }
 
@@ -385,22 +381,48 @@ void Hlt2SaverSvc::saveHistograms() const
 
       outFile.Close();
 
-      // Rename temporary file to output file
-      debug() << "Replacing " << file.string() << " with " << outPath.string() << endmsg;
-      fs::remove(file);
-      fs::copy_file(outPath, file);
+      // Lambda to replace previous file with new file
+      auto replace = [outPath, run, this](bool byRun) {
+         // Does the source file exist?
+         bool exists{false};
+         fs::path file;
+         std::tie(file, exists) = filename(run, byRun);
 
-      // Also save the by run saveset
-      auto byRunFile = filename(run, true);
-      if (!byRunFile.second) {
-         warning() << "Could not create by run saveset directory "
-                   << byRunFile.first << endmsg;
-      } else {
-         fs::copy_file(outPath, byRunFile.first);
-      }
+         // filesystem error code
+         boost::system::error_code ec;
+
+         // Rename temporary file to output file
+         if (exists) {
+            bool success = fs::remove(file, ec);
+            success &= !ec;
+            if (!success) {
+               warning() << "Could not remove file " << file.string() << endmsg;
+            }
+         }
+
+         // Copy to the saveset
+         fs::copy_file(outPath, file, ec);
+         if (ec) {
+            warning() << "Could not copy file " << outPath << " to "
+                      << file.string() << endmsg;
+         } else {
+            this->info() << "Saved histograms for run " << run << " to " << file.string()
+                         << "."  << endmsg;
+         }
+      };
+
+      // Replace regular file
+      replace(false);
+      // Replace by run file
+      replace(true);
 
       // Copying done, remove temporary file
-      fs::remove(outPath);
+      boost::system::error_code ec;
+      bool success = fs::remove(outPath, ec);
+      success &= !ec;
+      if (!success) {
+         warning() << "Could not remove file " << outPath.string() << endmsg;
+      }
 
       // All other histograms for this run are saved, reset the normalization histogram.
       if (norm) {
@@ -490,9 +512,11 @@ std::pair<fs::path, bool> Hlt2SaverSvc::filename(Monitoring::RunNumber run, bool
       }
    }
    if (!fs::exists(directory)) {
-      if (!fs::create_directories(directory)) {
-         warning() << "Failed to create directory " << directory
-                   << ". Skipping run " << run << "." << endmsg;
+      boost::system::error_code ec;
+      bool success = fs::create_directories(directory, ec);
+      success &= !ec;
+      if (!success) {
+         warning() << "Failed to create directory " << directory << endmsg;
          return make_pair(directory, false);
       }
    }
@@ -505,10 +529,9 @@ std::pair<fs::path, bool> Hlt2SaverSvc::filename(Monitoring::RunNumber run, bool
    auto file = fs::path(directory) / fs::path(fn.str());
 
    bool good = true;
-   if (!byRun) {
-      boost::system::error_code ec;
-      good = fs::exists(file, ec);
-      good &= !ec;
-   }
+   boost::system::error_code ec;
+   good = fs::exists(file, ec);
+   good &= !ec;
+
    return make_pair(file, good);
 }
