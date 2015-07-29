@@ -3,6 +3,7 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+ !========================= AlignmentDBVisualisationTool v1r5 2015-07-29 =========================
 ! 2015-07-07 - Maurizio Martinelli
  - added example to make plots of local delta chi2 per iteration
 

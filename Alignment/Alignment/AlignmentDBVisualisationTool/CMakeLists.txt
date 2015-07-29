@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AlignmentDBVisualisationTool
 ################################################################################
-gaudi_subdir(AlignmentDBVisualisationTool v1r4)
+gaudi_subdir(AlignmentDBVisualisationTool v1r5)
 
 gaudi_depends_on_subdirs(Gaudi)
 
