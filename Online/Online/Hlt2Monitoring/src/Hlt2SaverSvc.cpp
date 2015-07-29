@@ -38,6 +38,7 @@
 
 // local
 #include "Hlt2SaverSvc.h"
+#include "Utilities.h"
 
 namespace {
    using std::string;
@@ -49,6 +50,11 @@ namespace {
 
    using Monitoring::Chunk;
    using Monitoring::Histogram;
+   using Monitoring::entry_t;
+   using Monitoring::histos_t;
+   using Monitoring::byName;
+   using Monitoring::byRun;
+
    using boost::lexical_cast;
    namespace ba = boost::algorithm;
    namespace fs = boost::filesystem;
@@ -89,9 +95,13 @@ StatusCode Hlt2SaverSvc::initialize()
    if (!sc.isSuccess()) return sc;
 
    if (m_fileName.empty()) {
-      m_fileName = "Hlt2Saver-%d-%s%s%sT%s%s%s.root";
+      m_fileName = "Moore2Saver-%d-%s%s%sT%s%s%s.root";
    }
 
+   if (m_runFileName.empty()) {
+      m_runFileName = "Moore2Saver-run%d.root";
+   }
+   
    if (m_dataCon.empty()) {
       warning() << "Connections not correctly configured, "
                 << "Hlt2 saver disabled" << endmsg;
@@ -276,8 +286,15 @@ void Hlt2SaverSvc::saveHistograms() const
    std::set<Monitoring::RunNumber> skip;
    for (auto run : runs) {
       auto info = runInfo(run);
+
+
       if (info) {
-         loadSavedHistograms(run);
+         bool exists{false};
+         fs::path file;
+         std::tie(file, exists) = filename(run, false);
+         if (exists) {
+            Monitoring::loadSavedHistograms(m_histos, file, run, "_Rate");
+         }
       } else {
          warning() << "No run info for run " << run << " not saving its histograms."
                    << endmsg;
@@ -303,7 +320,7 @@ void Hlt2SaverSvc::saveHistograms() const
       }
       bool exists{false};
       fs::path file;
-      std::tie(file, exists) = filename(run);
+      std::tie(file, exists) = filename(run, false);
 
       auto outPath = fs::unique_path("/tmp/HltSaver-%%%%-%%%%-%%%%-%%%%.root");
       TFile outFile(outPath.string().c_str(), "new");
@@ -372,6 +389,17 @@ void Hlt2SaverSvc::saveHistograms() const
       debug() << "Replacing " << file.string() << " with " << outPath.string() << endmsg;
       fs::remove(file);
       fs::copy_file(outPath, file);
+
+      // Also save the by run saveset
+      auto byRunFile = filename(run, true);
+      if (!byRunFile.second) {
+         warning() << "Could not create by run saveset directory "
+                   << byRunFile.first << endmsg;
+      } else {
+         fs::copy_file(outPath, byRunFile.first);
+      }
+
+      // Copying done, remove temporary file
       fs::remove(outPath);
 
       // All other histograms for this run are saved, reset the normalization histogram.
@@ -442,72 +470,24 @@ Hlt2SaverSvc::runInfo(Monitoring::RunNumber run) const
 }
 
 //===============================================================================
-void Hlt2SaverSvc::loadSavedHistograms(Monitoring::RunNumber run) const
-{
-   bool exists{false};
-   fs::path file;
-   std::tie(file, exists) = filename(run);
-   if (!exists) {
-      return;
-   }
-
-   debug() << "Loading saved histograms for run " << run << " from "
-           << file.string() << endmsg;
-
-   std::function<void(TDirectory* dir, std::string path)> load
-      = [this, run, &load](TDirectory* dir, std::string path)->void {
-
-      // Loop over keys in directory
-      auto keys = dir->GetListOfKeys();
-      TIter it{keys->MakeIterator()};
-      while (TKey* key = static_cast<TKey*>(it.Next())) {
-         if (!std::strncmp(key->GetClassName(), "TDirectory", 10)) {
-            // If it's a directory, recurse
-            auto dirPath = path;
-            if (!dirPath.empty()) {
-               dirPath += string{"/"};
-            }
-            dirPath += key->GetName();
-            debug() << "Recursing into directory: " << dirPath << endmsg;
-            load(static_cast<TDirectory*>(dir->Get(key->GetName())), dirPath);
-         } else if (!std::strcmp(key->GetClassName(), "TH1D")
-                    && strlen(key->GetName()) > 5
-                    && std::strncmp(key->GetName() + strlen(key->GetName()) - 5, "_Rate", 5) != 0) {
-            // Else store the saved histograms in our memory storage.
-            std::unique_ptr<TH1D> savedHisto{static_cast<TH1D*>(key->ReadObj())};
-            debug() << "Loaded saved histogram: " << path << " " << savedHisto->GetName() << endmsg;
-            savedHisto->SetDirectory(nullptr);
-            const auto& hbn = m_histos.get<byName>();
-            auto range = boost::make_iterator_range(hbn.equal_range(path + "/" + savedHisto->GetName()));
-            auto it = std::find_if(begin(range), end(range), [run](const entry_t& entry) {
-                  return entry.run == run;
-               });
-            if (it == end(range)) {
-               // The type (rate or regular histo) comes from the title... ugly,
-               // but least problematic alternative...
-               std::string dir = savedHisto->GetTitle();
-               m_histos.insert({run, dir, path, savedHisto.release()});
-            } else {
-               it->histo->Add(savedHisto.get());
-            }
-         }
-      }
-   };
-
-   std::unique_ptr<TFile> inFile{new TFile(file.string().c_str(), "read")};
-   string dir;
-   load(inFile.get(), dir);
-}
-
-//===============================================================================
-std::pair<fs::path, bool> Hlt2SaverSvc::filename(Monitoring::RunNumber run) const
+std::pair<fs::path, bool> Hlt2SaverSvc::filename(Monitoring::RunNumber run, bool byRun) const
 {
    auto ti = timeInfo(run);
    fs::path directory;
    if (m_directory.empty()) {
-      directory = fs::path{s_directory} / ti[0] / m_partition / "Moore2Saver" / ti[1] / ti[2];
+      if (byRun) {
+         string first = to_string((run / 10000) * 10000);
+         string second = to_string((run / 1000) * 1000);
+         directory = fs::path{s_directory} / "ByRun" / "Moore2Saver" / first / second;
+      } else {
+         directory = fs::path{s_directory} / ti[0] / m_partition / "Moore2Saver" / ti[1] / ti[2];
+      }
    } else {
-      directory = fs::path{m_directory};
+      if (byRun) {
+         directory = fs::path{m_directory} / "ByRun";
+      } else {
+         directory = fs::path{m_directory};
+      }
    }
    if (!fs::exists(directory)) {
       if (!fs::create_directories(directory)) {
@@ -516,10 +496,19 @@ std::pair<fs::path, bool> Hlt2SaverSvc::filename(Monitoring::RunNumber run) cons
          return make_pair(directory, false);
       }
    }
-   auto filename = boost::format(m_fileName) % run % ti[0] % ti[1] % ti[2] % ti[3] % ti[4] % ti[5];
-   auto file = fs::path(directory) / fs::path(filename.str());
-   boost::system::error_code ec;
-   bool good = fs::exists(file, ec);
-   good &= !ec;
+   boost::format fn;
+   if (byRun) {
+      fn = boost::format(m_runFileName) % run;
+   } else {
+      fn = boost::format(m_fileName) % run % ti[0] % ti[1] % ti[2] % ti[3] % ti[4] % ti[5];
+   }
+   auto file = fs::path(directory) / fs::path(fn.str());
+
+   bool good = true;
+   if (!byRun) {
+      boost::system::error_code ec;
+      good = fs::exists(file, ec);
+      good &= !ec;
+   }
    return make_pair(file, good);
 }

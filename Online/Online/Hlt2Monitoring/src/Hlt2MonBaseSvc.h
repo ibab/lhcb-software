@@ -2,8 +2,9 @@
 #define HLT2MONBASESVC_H
 
 // STD & STL
-#include <string>
 #include <functional>
+#include <string>
+#include <thread>
 #include <map>
 #include <set>
 
@@ -78,7 +79,7 @@ protected:
    bool enabled() const { return m_enabled; }
    void disable() { m_enabled = false; }
    void enable()  { m_enabled = true; }
-   
+
    // properties
    bool m_top;
    bool m_forceTop;
@@ -90,7 +91,7 @@ protected:
    unsigned int m_inPort;
    unsigned int m_outPort;
 
-   
+
 private:
 
    // data members

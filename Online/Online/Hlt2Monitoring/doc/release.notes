@@ -4,6 +4,14 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-07-29 - Roel Aaij
+ - Add Hlt2HistPublishSvc to publish histograms to the MonitorSvc.
+ - Make loadSavedHistograms a free function so it can be used by the SaverSvc
+   and the HistPublishSvc.
+ - Add configuration for the Hlt2HistPublishSvc.
+
+!========================= Hlt2Monitoring v1r1 2015-07-28 ====================
+
 ! 2015-07-27 - Roel Aaij
  - Use ipc for relay control connections.
  - Prepare for the appearance of hlt02.
