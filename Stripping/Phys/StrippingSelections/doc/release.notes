@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-30 - Stefano Perazzini
+ - Updated StrippingB2HHBDT.py
+
 ! 2015-07-29 - Simone Stracka 
  - Updated Hlt2 filters and prescales for StrippingD2PiPi0.py
 

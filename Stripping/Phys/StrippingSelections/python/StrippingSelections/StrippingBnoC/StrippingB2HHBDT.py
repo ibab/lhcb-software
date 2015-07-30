@@ -16,6 +16,8 @@ __all__ = ('B2HHBDTLines',
 
 from Gaudi.Configuration import *
 
+from GaudiKernel.SystemOfUnits import *
+
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from StandardParticles                     import StdNoPIDsPions
 
@@ -29,20 +31,22 @@ default_config = {
     'WGs'         : ['BnoC'],
     'BUILDERTYPE' : 'B2HHBDTLines',
     'CONFIG'      : { 'PrescaleB2HHBDT' : 1.,
-                      'MinPT'           : 1000,
-                      'MinIP'           : 0.12,
                       'TrChi2'          : 3,
-                      'TrGhostProb'     : 0.5,
-                      'CombMassLow'     : 4600,
-                      'CombMassHigh'    : 6400,
-                      'DOCA'            : 0.1,
+                      'TrGhostProb'     : 3,
+                      'PionPT'          : 1000,
+                      'SumPT'           : 4500,
+                      'DOCACHI2'        : 9,
+                      'BIPCHI2'         : 9,
+                      'BDIRA'           : 0.99,
                       'BPT'             : 1200,
-                      'BIP'             : 0.12,
-                      'BTAU'            : 0.0006,
-                      'MassLow'         : 4800,
-                      'MassHigh'        : 6200,
+                      'BMassWinLow'     : 4700,
+                      'BMassWinHigh'    : 6200,
+                      'BMassLow'        : 4800,
+                      'BMassHigh'       : 6200,
+                      'PionIPCHI2'      : 16,
+                      'BFDCHI2'         : 100,
                       'BDTCut'          : -0.3,
-                      'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HH_BDT_v1r4.xml"
+                      'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HH_BDT_v1r5.xml"
                     },
     'STREAMS'     : ['Bhadron']
     }
@@ -55,70 +59,93 @@ default_config = {
 class B2HHBDTLines( LineBuilder ) :
     """Class defining the Hb -> hh stripping lines"""
 
-    __configuration_keys__ = ( 'PrescaleB2HHBDT',
-                               'MinPT',
-                               'MinIP',
-                               'TrChi2',
-                               'TrGhostProb',
-                               'CombMassLow',
-                               'CombMassHigh',
-                               'DOCA',
-                               'BPT',
-                               'BIP',
-                               'BTAU',
-                               'MassLow',
-                               'MassHigh',
-                               'BDTCut',
-                               'BDTWeightsFile'
+    __configuration_keys__ = ('PrescaleB2HHBDT',
+                              'TrChi2',
+                              'TrGhostProb',
+                              'PionPT',
+                              'SumPT',
+                              'DOCACHI2',
+                              'BIPCHI2',
+                              'BDIRA', 
+                              'BPT',  
+                              'BMassWinLow', 
+                              'BMassWinHigh',
+                              'BMassLow',
+                              'BMassHigh',
+                              'PionIPCHI2',
+                              'BFDCHI2',
+                              'BDTCut', 
+                              'BDTWeightsFile' 
                                )
 
     def __init__( self,name,config ) :
 
         LineBuilder.__init__(self, name, config)
 
-        B2HHBDTName   = "B2HHBDT"
+        B2HHBDTName   = "B2HH"
 
         # make the various stripping selections
         self.B2HHBDT = makeB2HHBDT( B2HHBDTName,
                                     config['TrChi2'],
                                     config['TrGhostProb'],
-                                    config['MinPT'],
-                                    config['MinIP'],
-                                    config['CombMassLow'],
-                                    config['CombMassHigh'],
-                                    config['DOCA'],
-                                    config['BPT'],
-                                    config['BIP'],
-                                    config['BTAU'],
-                                    config['MassLow'],
-                                    config['MassHigh']
+                                    config['PionPT'],
+                                    config['SumPT'],
+                                    config['DOCACHI2'],      
+                                    config['BIPCHI2'],       
+                                    config['BDIRA'],         
+                                    config['BPT'],           
+                                    config['BMassWinLow'],   
+                                    config['BMassWinHigh'],  
+                                    config['PionIPCHI2'],    
+                                    config['BFDCHI2'],
+                                    config['BMassLow'],
+                                    config['BMassHigh']       
                                   )
 
+        self.lineB2HHBkg = StrippingLine( B2HHBDTName+"BkgLine",
+                                          prescale  = config['PrescaleB2HHBDT'],
+                                          selection = self.B2HHBDT,
+                                          EnableFlavourTagging = True,
+                                          MDSTFlag = True )
+
+        _bdtVars = { "minPT"      : "MINTREE(ABSID=='pi+',PT) / GeV",
+                     "minIPCHI2"  : "MINTREE(ABSID=='pi+',MIPCHI2DV(PRIMARY))",
+                     "maxPT"      : "MAXTREE(ABSID=='pi+',PT) / GeV",
+                     "maxIP"      : "MAXTREE(ABSID=='pi+',MIPCHI2DV(PRIMARY))",
+                     "doca"       : "PFUNA ( ADOCA ( 1 , 2 ) )",
+                     "vertexCHI2" : "VFASPF(VCHI2/VDOF)",
+                     "bPT"        : "PT / GeV",
+                     "bIPCHI2"    : "BPVIPCHI2()",
+                     "bFDCHI2"    : "BPVVDCHI2" }
+
         self.CutBDT  = applyBDT( "CutBDT_" + B2HHBDTName,
-                                 LineName       = B2HHBDTName + "Line",
                                  SelB2HHBDT     = self.B2HHBDT,
+                                 BDTVars        = _bdtVars,
                                  BDTCutValue    = config['BDTCut'],
                                  BDTWeightsFile = config['BDTWeightsFile']
                                )
 
-        self.lineB2HHBDT = StrippingLine( B2HHBDTName+"Line",
+
+        self.lineB2HHBDT = StrippingLine( B2HHBDTName+"BDTLine",
                                           prescale  = config['PrescaleB2HHBDT'],
                                           selection = self.CutBDT,
                                           EnableFlavourTagging = True,
                                           MDSTFlag = True )
 
         self.registerLine(self.lineB2HHBDT)
+        self.registerLine(self.lineB2HHBkg)
 
 def makeB2HHBDT( name,
-                 trChi2,trGhostProb,minPT,minIP,
-                 combMassLow,combMassHigh,doca,
-                 bPT,bIP,bTAU,massLow,massHigh ) :
+                 trChi2,trGhostProb,minPT,sumPT,docachi2,
+                 bipchi2,bdira,bpt,massWinLow,massWinHigh,pionipchi2,bfdchi2,
+                 massLow,massHigh) :
 
-    _daughters_cuts = "(TRGHOSTPROB < %(trGhostProb)s) & (TRCHI2DOF < %(trChi2)s) & (PT > %(minPT)s * MeV) & ( MIPDV(PRIMARY) > %(minIP)s )" %locals()
+    _daughters_cuts = "(TRGHOSTPROB < %(trGhostProb)s) & (TRCHI2DOF < %(trChi2)s) & (PT > %(minPT)s * MeV) & (MIPCHI2DV(PRIMARY) > %(pionipchi2)s )" %locals()
 
-    _combination_cuts = "( AMAXDOCA('') < %(doca)s ) & ( AM > %(combMassLow)s * MeV ) & ( AM < %(combMassHigh)s * MeV )" %locals()
+    _combination_cuts = "( (APT1 + APT2) > %(sumPT)s ) & ( AM > %(massWinLow)s ) & ( AM < %(massWinHigh)s ) & ( ACUTDOCACHI2( %(docachi2)s, '' ) )" %locals()
 
-    _mother_cuts = "( PT > %(bPT)s * MeV ) & ( M > %(massLow)s * MeV ) & ( M < %(massHigh)s * MeV ) & ( BPVIP() < %(bIP)s ) & ( BPVLTIME() > %(bTAU)s )" %locals()
+    _mother_cuts = "( PT > %(bpt)s ) & ( BPVDIRA > %(bdira)s ) & ( BPVIPCHI2() < %(bipchi2)s ) & ( BPVVDCHI2 > %(bfdchi2)s ) & ( M > %(massLow)s * MeV ) & ( M < %(massHigh)s * MeV )" %locals()
+
 
     CombineB2HHBDT = CombineParticles( DecayDescriptor = 'B0 -> pi+ pi-',
                                        DaughtersCuts = { "pi+" : _daughters_cuts },
@@ -132,28 +159,25 @@ def makeB2HHBDT( name,
 
 
 def applyBDT( name,
-              LineName,
               SelB2HHBDT,
+              BDTVars,
               BDTCutValue,
               BDTWeightsFile ):
 
-    _FilterB2HH = FilterDesktop( Code = "FILTER('B2hhBDTSelection/B2hhBDT')" )
+    from MVADictHelpers import addTMVAclassifierValue
+    from Configurables import FilterDesktop as MVAFilterDesktop
 
-    BDTSel = Selection( name,
-                        Algorithm = _FilterB2HH,
-                        RequiredSelections = [ SelB2HHBDT ]
-                        )
+    _FilterB = MVAFilterDesktop( name + "Filter",
+                                 Code = "VALUE('LoKi::Hybrid::DictValue/" + name + "')>" + str(BDTCutValue)  )
 
-    """
-    Name is special here, since this is the last algorithm,
-    whose name seems to be the one of the stripping line....
-    """
-    from Configurables import B2hhBDTSelection
-    MyBDT = B2hhBDTSelection( LineName + '.B2hhBDT' )
-    MyBDT.BDTCut = BDTCutValue
-    MyBDT.BDTWeightsFile = BDTWeightsFile
+    addTMVAclassifierValue( Component = _FilterB,
+                            XMLFile   = BDTWeightsFile,
+                            Variables = BDTVars,
+                            ToolName  = name )
 
-    return BDTSel
+    return Selection( name,
+                      Algorithm =  _FilterB,
+                      RequiredSelections = [ SelB2HHBDT ] )
 
 
 ########################################################################
