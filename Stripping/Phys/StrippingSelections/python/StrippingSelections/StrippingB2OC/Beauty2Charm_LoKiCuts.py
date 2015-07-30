@@ -70,7 +70,8 @@ class LoKiCuts(object):
                 'PROBNNpi'  : 'PROBNNpi',
                 'PIDmu'     : 'PIDmu',
                 'HASVERTEX' : 'HASVERTEX',
-                'BPVCORRM'  : 'BPVCORRM', 
+                'BPVCORRM'  : 'BPVCORRM',
+                'ISNOTE'    : 'PPINFO(LHCb.ProtoParticle.IsNotE,-1)'
                 }
     
     def __init__(self,cuts,config):

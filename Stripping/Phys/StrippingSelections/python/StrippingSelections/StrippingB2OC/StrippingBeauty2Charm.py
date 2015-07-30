@@ -74,8 +74,9 @@ default_config ={
     'FROM_B_P_MIN'  : '2000*MeV'
     },
     "gamma" : { # Cuts made on all photons
-    'PT_MIN'  : '400*MeV',
-    'CL_MIN'  : 0.25
+    'PT_MIN'     : '1600*MeV',
+    'CL_MIN'     : 0.25,
+    'ISNOTE_MIN' : -999
     },
     "D2X" : { # Cuts made on all D's and Lc's used in all lines 
     'ASUMPT_MIN'    : '1800*MeV',
@@ -1349,7 +1350,7 @@ class Beauty2CharmConf(LineBuilder):
         muons = filterInputs('MU',[StdLooseMuons],config['ALL']) # make muons (for D -> phi mu nu)
 
         # Jordi: photon selection.
-        gammacut = '(PT > %(PT_MIN)s) & (CL > %(CL_MIN)f)' % config[ 'gamma' ]
+        gammacut = '(PT > %(PT_MIN)s) & (CL > %(CL_MIN)f) & (PPINFO(LHCb.ProtoParticle.IsNotE,-1) > %(ISNOTE_MIN)f)' % config['gamma']
         photons = filterSelection( 'Gamma', gammacut, [ StdLooseAllPhotons ] )
 
         # pre-filter hard inputs (these could have been used in HLT2)
