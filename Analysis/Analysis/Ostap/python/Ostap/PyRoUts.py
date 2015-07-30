@@ -5528,6 +5528,7 @@ import Ostap.RooFitDeco
 import Ostap.HTextDeco
 import Ostap.HParamDeco
 import Ostap.HCmpDeco
+import Ostap.TFileDeco
 import Ostap.MiscDeco
 import Ostap.Models 
 

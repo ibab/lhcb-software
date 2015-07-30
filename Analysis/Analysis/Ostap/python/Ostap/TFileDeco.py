@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id$
+# $Id:$
 # =============================================================================
 ## @file
-#  Module with decoration of Canvas and other objects for efficient use in python
+#  Module with decoration of TFile objects for efficient use in python
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 #  
-#                    $Revision$
-#  Last modification $Date$
-#  by                $Author$
+#                    $Revision: 185196 $
+#  Last modification $Date: 2015-03-10 12:30:58 +0100 (Tue, 10 Mar 2015) $
+#  by                $Author: ibelyaev $
 # =============================================================================
-"""Decoration of Canvas and other  objects for efficient use in python """
+"""Decoration of TFile objects for efficient use in python """
 # =============================================================================
-__version__ = "$Revision$"
+__version__ = "$Revision: 185196 $"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = () 
@@ -28,49 +28,76 @@ VE  = cpp.Gaudi.Math.ValueWithError
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger 
-if '__main__' ==  __name__ : logger = getLogger( 'Ostap.MiscDeco' )
+if '__main__' ==  __name__ : logger = getLogger( 'Ostap.TFileDeco' )
 else                       : logger = getLogger( __name__ )
 # =============================================================================
-logger.debug ( 'Some useful decorations for Canvas and other objects')
+logger.debug ( 'Some useful decorations for TFile objects')
 # ==============================================================================
-
-
-# =============================================================================
-## define simplified print for TCanvas 
-def _cnv_print_ ( cnv , fname , exts = [ 'pdf' , 'gif' , 'eps', 'C' ] ) :
+## print ROOT file (actually a combination of ls&Print)
+#  @code
+#
+#  >>> f = ROOT.TFile(... )
+#  >>> print f
+#
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-07-06
+def _rf_print_ ( rfile , opts = '') :
     """
-    A bit simplified version for TCanvas print
+    Print ROOT file (actually a combination of ls&Print)
     
-    >>> canvas.print ( 'fig' )    
+    >>> f = ROOT.TFile(... )
+    >>> print f
     """
     #
-    p = fname.rfind ('.')
+    rfile.ls    ( opts  )
     #
-    if 0 < p :
-        if p+4 == len ( fname ) or fname[p:] in ( '.C', '.ps', '.jpeg', '.JPEG') :
-            cnv.Print( fname )
-            return cnv 
-        
-    for e in exts :
-        cnv.Print ( fname + '.' + e )
-            
-    return cnv 
-
-# =============================================================================
-## define streamer for canvas 
-def _cnv_rshift_ ( cnv , fname ) :
-    """
-    very simple print for canvas:
+    rfile.Print ( 'v'   )
+    #
+    return rfile.GetName()
     
-    >>> canvas >> 'a'
+## write the object to ROOT-file 
+def _rf_setitem_ ( rfile , name , tobj ) :
+    """
+    Write the object to ROOT-file
+
+    >>> f['myhisto'] = h1
     
     """
-    return _cnv_print_ ( cnv , fname )
-
-ROOT.TCanvas.print_     = _cnv_print_
-ROOT.TCanvas.__rshift__ = _cnv_rshift_
+    return rfile.WriteTObject( tobj , name , 'WriteDelete' )
 
 
+## use ROOT-file with context-manager 
+def _rf_enter_ ( self      ) :
+    """
+    Use ROOT-file with the context manager
+    
+    >>> with ROOT.TFile('ququ') as f : f.ls() 
+    """ 
+    return self
+
+## use ROOT-file with context-manager 
+def _rf_exit_  ( self , *_ ) :
+    """
+    Use ROOT-file with the context manager
+    
+    >>> with ROOT.TFile('ququ') as f : f.ls()
+    """
+    try :
+        self.Close()
+    except: pass
+    
+ROOT.TFile.__repr__    = _rf_print_
+ROOT.TFile.  name      = ROOT.TFile.GetName
+ROOT.TFile.__getitem__ = ROOT.TFile.Get 
+ROOT.TFile.__getattr__ = ROOT.TFile.Get 
+ROOT.TFile.__setitem__ = _rf_setitem_ 
+
+if hasattr ( ROOT.TFile , '__enter__' ) and hasattr ( ROOT.TFile , '__exit__' ) : pass
+else :
+    ROOT.TFile.__enter__ = _rf_enter_
+    ROOT.TFile.__exit__  = _rf_exit_
+    
 
 # =============================================================================
 if '__main__' == __name__ :
