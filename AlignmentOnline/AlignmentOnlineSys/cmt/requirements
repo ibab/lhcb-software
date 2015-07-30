@@ -1,5 +1,5 @@
 package AlignmentOnlineSys
-version v10r4p1
+version v10r5
 
 branches cmt doc tests
  
@@ -7,7 +7,7 @@ branches cmt doc tests
 # LHCb Alignment Online packages
 #=======================================================
 
-use AlignOnline v1r4 AlignmentOnline
+use AlignOnline v1r5 AlignmentOnline
 
 # Declare this as a container package
 apply_pattern container_package
