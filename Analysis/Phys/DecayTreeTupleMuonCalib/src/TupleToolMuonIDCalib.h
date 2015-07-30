@@ -49,8 +49,8 @@ private:
   StatusCode fillCoordVectors();
   double foiX(const int &station, const int &region, const double &p, const double &dx);
   double foiY(const int &station, const int &region, const double &p, const double &dy);
-  bool linFit();
-  bool calculatePt();
+  bool linFit(int &FromM1);
+  bool calculatePt(int &FromM1);
   bool estrapola();
 
 private:
@@ -134,13 +134,19 @@ private:
   double m_Constant;
   IBIntegrator* m_bIntegrator; // magnetic field tool
 
-  double m_qOverP;
-  double m_sigmaQOverP2;
-  double m_pZM1;
-  double m_pXPvtx;
-  double m_pYPvtx;
-  double m_pZPvtx;
-  
+  double m_4qOverP;
+  double m_4sigmaQOverP2;
+  double m_4pZM1;
+  double m_4pXPvtx;
+  double m_4pYPvtx;
+  double m_4pZPvtx;
+
+  double m_5qOverP;
+  double m_5sigmaQOverP2;
+  double m_5pZM1;
+  double m_5pXPvtx;
+  double m_5pYPvtx;
+  double m_5pZPvtx;  
 
   std::vector<float> m_hitInFOIx;
   std::vector<float> m_hitInFOIdx;

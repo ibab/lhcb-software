@@ -4,6 +4,9 @@
 ! Purpose     : tuple tools for Muon PID calibration
 !-----------------------------------------------------------------------------
 
+! 2015-07-30 - Ricardo Vazquez Gomez
+ - Added momentum estimate with and without M1 to TupleToolMuonIDCalib.cpp
+
 !========================= DecayTreeTupleMuonCalib v1r4 2015-06-02 =========================
 
 ! 2015-05-26 - Ricardo Vazquez Gomez

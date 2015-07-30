@@ -539,22 +539,42 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
   }
 
   // estimate the momentum of the muon-track assuming it cames from the primary vertex
-  // first --> do a linear fit with the closest hits in FOI, starting from M2 to M5,
+  // first --> do a linear fit with the closest hits in FOI, starting from M1 to M5,
   //           if successful call the tool to estimate the momentum
   //
-  bool fcode = linFit();
+  int FromM1 = 1;
+  bool fcode = linFit(FromM1);
   if ( !fcode ) {
     debug() << "linFit: linear fit closest hits in FOI failed " << endmsg;
   } else {
-    bool pcode = calculatePt();
+    bool pcode = calculatePt(FromM1);
     if ( !pcode ) debug() << "calculatePt: calculation momentum of muon track failed " << endmsg;
   }
-  test &= tuple->column(prefix+"pZM1", m_pZM1);  
-  test &= tuple->column(prefix+"qOverP", m_qOverP); 
-  test &= tuple->column(prefix+"sigmaQOverP2", m_sigmaQOverP2); 
-  test &= tuple->column(prefix+"pXPvtx", m_pXPvtx); 
-  test &= tuple->column(prefix+"pYPvtx", m_pYPvtx);
-  test &= tuple->column(prefix+"pZPvtx", m_pZPvtx);
+  test &= tuple->column(prefix+"_5pZM1", m_5pZM1);  
+  test &= tuple->column(prefix+"_5qOverP", m_5qOverP); 
+  test &= tuple->column(prefix+"_5sigmaQOverP2", m_5sigmaQOverP2); 
+  test &= tuple->column(prefix+"_5pXvtx", m_5pXPvtx); 
+  test &= tuple->column(prefix+"_5pYvtx", m_5pYPvtx);
+  test &= tuple->column(prefix+"_5pZvtx", m_5pZPvtx);
+
+  // estimate the momentum of the muon-track assuming it cames from the primary vertex
+  // first --> do a linear fit with the closest hits in FOI, starting from M2 to M5,
+  //           if successful call the tool to estimate the momentum
+  //
+  FromM1 = 0;
+  fcode = linFit(FromM1);
+  if ( !fcode ) {
+    debug() << "linFit: linear fit closest hits in FOI failed " << endmsg;
+  } else {
+    bool pcode = calculatePt(FromM1);
+    if ( !pcode ) debug() << "calculatePt: calculation momentum of muon track failed " << endmsg;
+  }
+  test &= tuple->column(prefix+"_4pZM1", m_4pZM1);  
+  test &= tuple->column(prefix+"_4qOverP", m_4qOverP); 
+  test &= tuple->column(prefix+"_4sigmaQOverP2", m_4sigmaQOverP2); 
+  test &= tuple->column(prefix+"_4pXvtx", m_4pXPvtx); 
+  test &= tuple->column(prefix+"_4pYvtx", m_4pYPvtx);
+  test &= tuple->column(prefix+"_4pZvtx", m_4pZPvtx);
 
   if (nHits>0)
   {
@@ -571,12 +591,21 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
 } // fillVars
 
 
-/// track fitting with linear Chi^2 from M2 to M5
-bool TupleToolMuonIDCalib::linFit()
+/// track fitting with linear Chi^2 from M1/M2 to M5
+bool TupleToolMuonIDCalib::linFit(int &FromM1)
 {
 
+  m_sx = m_sy = 0.;
+  m_bx = m_by = 0.;
+  m_errbx = m_errsx = m_covbsx = 0.;
+  m_errby = m_errsy = m_covbsy = 0.;
+  m_chi2x = m_chi2y = 0.;
+
+  int StartI = 0;              // fit from M1 to M5 
+  if (FromM1==0) StartI = 1;   // fit from M2 to M5
+  
   int nPunti = 0;
-  for ( int i = 1; i < m_NStation; ++i ) {
+  for ( int i = StartI; i < m_NStation; ++i ) {
     if (m_smalldist_X[i]==10000000.) continue;
     nPunti++;
   }
@@ -591,7 +620,7 @@ bool TupleToolMuonIDCalib::linFit()
   double xdet,ydet;
   double xerr,yerr;
   
-  for ( int i = 1; i < m_NStation; ++i ) {
+  for ( int i = StartI; i < m_NStation; ++i ) {
 
     if (m_smalldist_X[i]==10000000.) continue;
     double x,dx,y,dy,z; //dz;
@@ -647,7 +676,7 @@ bool TupleToolMuonIDCalib::linFit()
 }
 
 /// estimate the momentum of the muon-track assuming it cames from the primary vertex 
-bool TupleToolMuonIDCalib::calculatePt()
+bool TupleToolMuonIDCalib::calculatePt(int &FromM1)
 {
   double Zfirst = m_stationZ[0];
         
@@ -731,20 +760,46 @@ bool TupleToolMuonIDCalib::calculatePt()
     return false;
   }
 
-  m_pZM1 = p;
-  m_qOverP = q / p;  
+  double pZM1   = 0.;
+  double qOverP = 0.;
+  double sigmaQOverP2 = 0.;
+  double pXPvtx = 0.;
+  double pYPvtx = 0.;
+  double pZPvtx = 0.;
+
+  pZM1 = p;
+  qOverP = q / p;  
   const double err2 = gsl_pow_2(m_resParams[0]) + gsl_pow_2(m_resParams[1]/p) ;
-  m_sigmaQOverP2 = err2*gsl_pow_2(1.0/p);
+  sigmaQOverP2 = err2*gsl_pow_2(1.0/p);
   
    // set MuonTrack momentum variables (momentum at primary vertex)
   double pz_vtx =  state.p() * sqrt(1- tx_vtx*tx_vtx - state.ty()*state.ty() );
   Gaudi::XYZVector momentum_vtx( tx_vtx * pz_vtx,
                                  state.ty()* pz_vtx,
                                  pz_vtx);
-  m_pXPvtx = momentum_vtx.X();
-  m_pYPvtx = momentum_vtx.Y();
-  m_pZPvtx = momentum_vtx.Z();
+  pXPvtx = momentum_vtx.X();
+  pYPvtx = momentum_vtx.Y();
+  pZPvtx = momentum_vtx.Z();
   
+  if (FromM1==1) 
+  {
+    m_5pZM1 = pZM1;
+    m_5qOverP = qOverP;
+    m_5sigmaQOverP2 = sigmaQOverP2;
+    m_5pXPvtx = pXPvtx;
+    m_5pYPvtx = pYPvtx;
+    m_5pZPvtx = pZPvtx; 
+  }
+  else if (FromM1==0) 
+  {
+    m_4pZM1 = pZM1;
+    m_4qOverP = qOverP;
+    m_4sigmaQOverP2 = sigmaQOverP2;
+    m_4pXPvtx = pXPvtx;
+    m_4pYPvtx = pYPvtx;
+    m_4pZPvtx = pZPvtx; 
+  }
+
   return true;
   
 }
