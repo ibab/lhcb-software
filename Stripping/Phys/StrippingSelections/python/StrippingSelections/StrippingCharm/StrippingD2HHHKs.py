@@ -38,14 +38,20 @@ default_config = {
                       'PrescaleD2KPiPiKsLL'     : 1,
                       'PrescaleD2KKPiKsLL'      : 1,
                       # KS (DD)
-                      'MinDz_DD'                : 0 * mm,
+                      'MinKsPT_DD'              : 300 * MeV,
+                      'MaxKsVCHI2NDOF_DD'       : 20.0,
+                      'MinDz_DD'                : 250. * mm,
                       'MaxDz_DD'                : 9999 * mm,
+                      'MinKsIpChi2_DD'          : 3,
                       'KSCutDIRA_DD'            : 0.999,
                       'KSCutMass_DD'            : 50 * MeV,
                       'KSCutFDChi2_DD'          : 5,
                       # KS (LL)
+                      'MinKsPT_LL'              : 300 * MeV,
+                      'MaxKsVCHI2NDOF_LL'       : 20.0,
                       'MinDz_LL'                : 0 * mm,
                       'MaxDz_LL'                : 9999 * mm,
+                      'MinKsIpChi2_LL'          : 3,
                       'KSCutDIRA_LL'            : 0.999,
                       'KSCutMass_LL'            : 35 * MeV,
                       'KSCutFDChi2_LL'          : 5,
@@ -57,9 +63,9 @@ default_config = {
                       'HighPIDK'                : 0,
                       'LowPIDK'                 : 0,
                       'MaxADOCACHI2'            : 10.0,
-                      'CombMassLow'             : 1700 * MeV,
-                      'CombMassHigh'            : 2140 * MeV,
-                      'MinCombPT'               : 0.0,
+                      'CombMassLow'             : 1750 * MeV,
+                      'CombMassHigh'            : 2100 * MeV,
+                      'MinCombPT'               : 1.5,
                       'MaxVCHI2NDOF'            : 12.0,
                       'MinBPVDIRA'              : 0.9998,
                       'MinBPVTAU'               : 0.1 * picosecond,
@@ -89,15 +95,21 @@ class D2HHHKsLines( LineBuilder ) :
                      }
 
         KS = {'DD': self.makeKS('KSDDFor'+name,
+                                config['MinKsPT_DD'],
+                                config['MaxKsVCHI2NDOF_DD'],
                                 config['MinDz_DD'],
                                 config['MaxDz_DD'],
+                                config['MinKsIpChi2_DD'],
                                 config['KSCutDIRA_DD'],
                                 config['KSCutMass_DD'],
                                 config['KSCutFDChi2_DD'],
                                 [StdLooseKsDD]),
               'LL': self.makeKS('KSLLFor'+name,
+                                config['MinKsPT_LL'],
+                                config['MaxKsVCHI2NDOF_LL'],
                                 config['MinDz_LL'],
                                 config['MaxDz_LL'],
+                                config['MinKsIpChi2_LL'],
                                 config['KSCutDIRA_LL'],
                                 config['KSCutMass_LL'],
                                 config['KSCutFDChi2_LL'],
@@ -150,16 +162,20 @@ class D2HHHKsLines( LineBuilder ) :
         # end loop on decay modes
 
     def makeKS(self, name,
-               minDz, maxDz,
+               KSPT, KSVtxChi2,
+               minDz, maxDz, minIPChi2,
                KSCutDIRA, KSCutMass, KSCutFDChi2,
                inputSel) :
         """
             Given a set of input candidates, refine the list to create good KS candidates
             Used for both long and downstream tracks.
         """
-        _code = " (BPVVDZ > %(minDz)s ) " \
+        _code = " (PT > %(KSPT)s)" \
+                "&(VFASPF(VCHI2PDOF) < %(KSVtxChi2)s)" \
+                "&(BPVVDZ > %(minDz)s ) " \
                 "&(BPVVDZ < %(maxDz)s ) " \
                 "&(BPVDIRA > %(KSCutDIRA)s ) " \
+                "&(MIPCHI2DV(PRIMARY) > %(minIPChi2)s) "\
                 "&(ADMASS('KS0') < %(KSCutMass)s ) " \
                 "&(BPVVDCHI2> %(KSCutFDChi2)s )" % locals()
         _KsFilter = FilterDesktop(name = 'KSFilter_'+name,

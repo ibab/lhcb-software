@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-30 - Maurizio Martinelli
+ - Updated dictionary in 
+   . StrippingCharm/StrippingD2HHHKs.py
+   . StrippingCharm/StrippingDstarD2XGamma.py
+   . StrippingCharm/StrippingD2HHHPi0.py
+
 ! 2015-07-30 - Erica Polycarpo 
  - Updated dictionary in StrippingCharm/StrippingD2hhh_conf.py 
 
