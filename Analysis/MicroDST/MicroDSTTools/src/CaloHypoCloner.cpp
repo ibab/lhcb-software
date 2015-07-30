@@ -192,7 +192,6 @@ void CaloHypoCloner::cloneMCLinks( const LHCb::CaloHypo* hypo,
   typedef LinkerWithKey<LHCb::MCParticle,LHCb::CaloHypo>  Linker;
   typedef LinkerTool<LHCb::CaloHypo,LHCb::MCParticle>     Asct;
   typedef Asct::DirectType                                Table;
-  typedef Asct::DirectType::Range                         Range;
 
   // has this clone already been done
   if ( std::find( clonedHypoList().begin(),

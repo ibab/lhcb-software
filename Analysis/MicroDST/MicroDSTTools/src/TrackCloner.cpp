@@ -116,7 +116,6 @@ void TrackCloner::cloneMCLinks( const LHCb::Track* track,
   typedef LinkerWithKey<LHCb::MCParticle,LHCb::Track>  Linker;
   typedef LinkerTool<LHCb::Track,LHCb::MCParticle>     Asct;
   typedef Asct::DirectType                             Table;
-  typedef Asct::DirectType::Range                      Range;
 
   // has this clone already been done
   if ( std::find( clonedTrackList().begin(),

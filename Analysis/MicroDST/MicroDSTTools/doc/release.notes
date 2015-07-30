@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
 
+! 2015-07-30 - Chris Jones
+ - Remove some unused typedefs to silence gcc 4.9 warnings.
+
 !====================== MicroDSTTools v2r12 2015-04-22 =======================
 
 ! 2015-03-25 - Chris Jones
