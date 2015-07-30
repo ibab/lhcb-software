@@ -24,8 +24,8 @@ gaudi_add_library(AlignOnlinelib
                  LINK_LIBRARIES AlignKernel DetDescLib OnlineKernel GaudiAlgLib)
 
 gaudi_install_python_modules()
-macro(ga_test name)
-  gaudi_add_executable(${name} ${ARGN}
-                       LINK_LIBRARIES AlignOnlinelib)
-endmacro()
-ga_test(ASDAnalyzer src/Tests/ASDAnalyzer.cpp)
+#macro(ga_test name)
+#  gaudi_add_executable(${name} ${ARGN}
+#                       LINK_LIBRARIES AlignOnlinelib)
+#endmacro()
+#ga_test(ASDAnalyzer src/Tests/ASDAnalyzer.cpp) # removed test not committed

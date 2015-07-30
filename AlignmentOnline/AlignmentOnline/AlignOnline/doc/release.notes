@@ -3,6 +3,9 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-07-30 - Maurizio Martinelli
+ - Commented a compilation requirement needing not committed code
+
 ! 2015-07-28 - Maurizio Martinelli
  - Python does not like precision as 6u, set as 6
 
