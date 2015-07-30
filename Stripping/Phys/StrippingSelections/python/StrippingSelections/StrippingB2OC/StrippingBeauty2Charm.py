@@ -76,7 +76,7 @@ default_config ={
     "gamma" : { # Cuts made on all photons
     'PT_MIN'     : '1600*MeV',
     'CL_MIN'     : 0.25,
-    'ISNOTE_MIN' : -999
+    'ISNOTE_MIN' : -999.0
     },
     "D2X" : { # Cuts made on all D's and Lc's used in all lines 
     'ASUMPT_MIN'    : '1800*MeV',
