@@ -4,6 +4,8 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections
 !-----------------------------------------------------------------------------
 
+! 2015-07-30 - Stefano Perazzini
+ - Added data/B2HH_BDT_v1r5.xml for Stripping23
 
 !========================= TMVAWeights v1r5 2015-05-28 =========================
 
