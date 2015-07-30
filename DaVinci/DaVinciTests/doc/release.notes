@@ -4,6 +4,13 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-07-30 - Julian Wishahi
+ - Removed the SS BDT taggers performance from the reference in 
+   test_tag_mc12.qmt. 
+ - These need to be reincluded once the CheatedSelection of the 
+   FlavourTaggingChecker has been fixed and can be used together with the LoKi 
+   fitters.
+
 !======================= DaVinciTests v2r35 2015-07-27 =======================
 
 ! 2015-07-23 - Eduardo Rodrigues
