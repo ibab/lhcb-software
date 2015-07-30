@@ -224,7 +224,7 @@ class Bc2DDBuilder(object):
         ## #dmodes += self.dst.dpi0_merged_dup + self.dst.dpi0_resolved_dup
         ## self._buildSel(dmodes,name,self.dstarpmodes)
 
-        # Ds*+ pi0 modes ( Ds+ -> hhh )
+        # Ds*+ pi0 modes ( Ds+ -> khh )
         name = "Dst2DPI0D2KHH"
         dmodes = self.dst.dpi0_khh_merged_pid + self.dst.dpi0_khh_resolved_pid
         self._buildSel(dmodes,name,self.dstarpmodes)
@@ -293,7 +293,6 @@ class Bc2DDBuilder(object):
         ## #dmodes += self.dst.dgamma_kspi0h_ll_dup + self.dst.dgamma_kspi0h_dd_dup
         ## self._buildSel(dmodes,name,self.dstarpmodes)
 
-
     def _createDstar0Modes(self):
 
         # D0* pi0 ( D0 -> hh )
@@ -322,7 +321,17 @@ class Bc2DDBuilder(object):
         #dmodes += self.dst.d0pi0_kshh_ll_dup + self.dst.d0pi0_kshh_dd_dup
         self._buildSel(dmodes,name,self.dstar0modes)
 
-         # D0* pi0 ( D0 -> Kshh )
+        # D0* gamma ( D0 -> hh )
+        name = "Dst02D0GammaD02HH"
+        dmodes  = self.dst.d0gamma_hh_pid
+        self._buildSel(dmodes,name,self.dstar0modes)
+
+        # D0* gamma ( D0 -> khhh )
+        name = "Dst02D0GammaD02KHHH"
+        dmodes  = self.dst.d0gamma_k3h_pid
+        self._buildSel(dmodes,name,self.dstar0modes)
+
+        # D0* gamma ( D0 -> Kshh )
         name = "Dst02D0GammaD02KSHH"
         #dmodes = self.dst.d0gamma_kshh_ll   + self.dst.d0gamma_kshh_dd
         dmodes = self.dst.d0gamma_kshh_ll_pid   + self.dst.d0gamma_kshh_dd_pid

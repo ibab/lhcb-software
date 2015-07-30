@@ -1020,6 +1020,11 @@ class DstarBuilder(object):
         self.d0gamma_kshh_ll_dup = self._makeDstar02D0Gamma( 'UPKsHHLL', self.d.kshh_ll_up )
         self.d0gamma_kshh_dd_dup = self._makeDstar02D0Gamma( 'UPKsHHDD', self.d.kshh_dd_up )
 
+        self.d0gamma_hh      = self._makeDstar02D0Gamma( 'HH', self.d.hh )
+        self.d0gamma_k3h     = self._makeDstar02D0Gamma( 'K3H', self.d.k3h )
+        self.d0gamma_hh_pid  = self._makeDstar02D0Gamma( 'HHPID', self.d.hh_pid )
+        self.d0gamma_k3h_pid = self._makeDstar02D0Gamma( 'K3HPID', self.d.k3h_pid )
+
         d0pi_2460 = self._makeDstar24602D0pi()
         self.d0pi_2460_pid = [filterPID('Dstar24602D0PiPID',d0pi_2460,
                                         config_pid,2)]
@@ -1099,25 +1104,6 @@ class DstarBuilder(object):
         return [ self._makeDstar02D0X0( name + 'Pi0' + pi0type, decays, d2x + self.pi0[ pi0type ] ) ]
 
     # Jordi: make the list of selections of D*0 -> D0 gamma with given selection of D.
-    def _makeDstar02D0Gamma( self, name, d2x ):
-        decays = [ "D*(2007)0 -> D0 gamma" ]
-        # return [ self._makeDstar02D0X0( name + 'Gamma', decays, d2x + [ self.photons ] ) ]
-
-        combinationCuts = "(AALL)"
-        motherCuts      = "(M-MAXTREE(ABSID=='D0',M)<200*MeV)"
-
-        cp = CombineParticles( CombinationCut   = combinationCuts,
-                               MotherCut        = motherCuts     ,
-                               DecayDescriptors = decays          )
-
-        cp = cp.configurable( name + 'Beauty2CharmCombiner' )
-        #cp.ParticleCombiners.update( { '' : 'MomentumCombiner' } )
-
-        return [ Selection( 'Dstar02D0' + name + 'Beauty2Charm'        ,
-                            Algorithm          = cp                    ,
-                            RequiredSelections = d2x + [ self.photons ] ) ]
-
-        # Jordi: make the list of selections of D*0 -> D0 gamma with given selection of D.
     def _makeDstar02D0Gamma( self, name, d2x ):
         decays = [ "D*(2007)0 -> D0 gamma" ]
         # return [ self._makeDstar02D0X0( name + 'Gamma', decays, d2x + [ self.photons ] ) ]
