@@ -81,8 +81,8 @@ FitDecayTrees::FitDecayTrees                       // standard contructor
   StatusCode sc = setProperty ( "CloneFilteredParticles" , true ) ;
   Assert ( sc.isSuccess() , "Unable to set 'CloneFilteresParticles'" ) ;
   {
-    Property* p = Gaudi::Utils::getProperty ( this , "CloneFilteredParticles" ) ;
-    if ( 0 != p && 0 == p->updateCallBack() )
+    auto p = Gaudi::Utils::getProperty ( this , "CloneFilteredParticles" ) ;
+    if ( p && ! p->updateCallBack() )
     { p -> declareUpdateHandler ( &FitDecayTrees::updateCloneProp , this ) ; }
   }
 }

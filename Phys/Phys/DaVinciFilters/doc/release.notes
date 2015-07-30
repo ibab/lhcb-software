@@ -3,6 +3,9 @@
 ! Responsible : DV Maintainer
 ! Purpose     : DV Filtering tools
 !-----------------------------------------------------------------------------
+! 2015-06-30 - Gerhard Raven
+ - slighlty rewrite how check for updateCallBack handler to make it compatible
+   with future Gaudi versions.
 
 !========================= DaVinciFilters v1r1 2015-02-24 =========================
 ! 2015-02-04 - Vanya Belyaev  
