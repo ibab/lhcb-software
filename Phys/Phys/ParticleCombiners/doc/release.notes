@@ -4,6 +4,10 @@
 ! Purpose     : Particle Combining components.
 !-----------------------------------------------------------------------------
 
+! 2015-06-30 - Gerhard Raven
+ - slighlty rewrite check for updateCallBack handler to make it compatible 
+   with future Gaudi versions
+
 !===================== ParticleCombiners v1r2 2015-04-22 =====================
 
 ! 2015-04-21 - Olli Lupton

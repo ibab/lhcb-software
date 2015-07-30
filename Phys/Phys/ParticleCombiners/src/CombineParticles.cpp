@@ -186,8 +186,8 @@ CombineParticles::CombineParticles
       "The list of (simple) decays to be recontructed/selected"   )
     -> declareUpdateHandler ( &CombineParticles::propertyHandler1 , this ) ;
   {
-    Property* p = Gaudi::Utils::getProperty ( this , "DecayDescriptor" ) ;
-    if ( 0 != p && 0 == p->updateCallBack() )
+    auto p = Gaudi::Utils::getProperty ( this , "DecayDescriptor" ) ;
+    if ( p && ! p->updateCallBack() )
     { p -> declareUpdateHandler ( &CombineParticles::propertyHandler1 , this ) ; }
   }
   //
