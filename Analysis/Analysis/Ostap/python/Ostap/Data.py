@@ -77,6 +77,7 @@ else                       : logger = getLogger ( __name__     )
 # =============================================================================
 if not hasattr ( ROOT.TTree , '__len__' ) :  
     ROOT.TTree. __len__ = lambda s : s.GetEntries()
+        
 # =============================================================================
 ## @class Files
 #  Simple utility to pickup the list of files 
@@ -113,7 +114,6 @@ class Files(object):
                 logger.warning ('Maxfiles limit is reached %s ' % self.maxfiles )
                 break
                 
-                    
     ## the specific action for each file 
     def treatFile ( self, the_file ) :
         self.files.append ( the_file )
@@ -160,15 +160,18 @@ class Data(Files):
         """
         Files.treatFile ( self , the_file )
         
-        tmp = ROOT.TChain ( self.chain.GetName() )
-        tmp.Add ( the_file )
+        ## suppress Warning/Error messages from ROOT 
+        from Ostap.Utils import rootError
+        with rootError() :
+            
+            tmp = ROOT.TChain ( self.chain.GetName() )
+            tmp.Add ( the_file )
         
-        if tmp.GetEntries() and 0 < tmp.GetEntry(0) : self.chain.Add ( the_file ) 
-        else                  :
-            logger.warning("No/empty chain '%s' in file '%s'" % ( self.chain.GetName() , the_file ) ) 
-            self.e_list1.add ( the_file ) 
-            
-            
+            if tmp.GetEntries() and 0 < tmp.GetEntry(0) : self.chain.Add ( the_file ) 
+            else                  :
+                logger.warning("No/empty chain '%s' in file '%s'" % ( self.chain.GetName() , the_file ) ) 
+                self.e_list1.add ( the_file ) 
+                
     ## printout 
     def __str__(self):
         return  "<#files: {}; Entries: {}>".format ( len ( self.files ) ,
@@ -208,13 +211,17 @@ class Data2(Data):
         """
         Data.treatFile ( self , the_file )
 
-        tmp = ROOT.TChain ( self.chain2.GetName() )
-        tmp.Add ( the_file )
+        ## suppress Warning/Error messages from ROOT 
+        from Ostap.Utils import rootError
+        with rootError() :
+            
+            tmp = ROOT.TChain ( self.chain2.GetName() )
+            tmp.Add ( the_file )
         
-        if tmp.GetEntries() and 0 < tmp.GetEntry(0) : self.chain2.Add ( the_file ) 
-        else                  :
-            logger.warning("No/empty chain '%s' in file '%s'" % ( self.chain2.GetName() , the_file ) ) 
-            self.e_list2.add ( the_file ) 
+            if tmp.GetEntries() and 0 < tmp.GetEntry(0) : self.chain2.Add ( the_file ) 
+            else                  :
+                logger.warning("No/empty chain '%s' in file '%s'" % ( self.chain2.GetName() , the_file ) ) 
+                self.e_list2.add ( the_file ) 
         
     ## printout 
     def __str__(self):    
@@ -256,7 +263,7 @@ class DataAndLumi(Data2):
         Get the luminosity
         """
         from   Ostap.GetLumi import getLumi
-        return getLumi( self.lumi)
+        return getLumi ( self.lumi )
 
     ## printout 
     def __str__(self):

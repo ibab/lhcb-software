@@ -39,8 +39,11 @@ __all__     = (
     'mute'           , ## context manager to suppress stdout/strerr printout 
     'silence'        , ## ditto 
     'rooSilent'      , ## control RooFit verbosity
+    'rootError'      , ## control ROOT verbosity 
+    'rootWarning'    , ## control ROOT verbosity 
     'NoContext'      , ## empty context manager
     'RooSilent'      , ## control RooFit verbosity
+    'ROOTIgnore'     , ## control ROOT verbosity, suppress ROOT errors 
     #
     'takeIt'         , ## take and later delete ...
     )
@@ -650,8 +653,49 @@ class RooSilent(object) :
             
         self._svc.setSilentMode      ( self._prev_silent )
         self._svc.setGlobalKillBelow ( self._prev_level  )
-        
 
+
+# =============================================================================
+## very simple context manager to suppress ROOT printout
+#  @code
+#  >>> with ROOTIgnore( ROOT.kError + 1 ) : some_ROOT_code_here()
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-30
+class ROOTIgnore( object ) :
+    """
+    very simple context manager to suppress ROOT printout
+    #  >>> with ROOTIgnore ( ROOT.kError +! ) : some_ROOT_code_here()
+    """
+    ## constructor
+    #  @param level  (INPUT) print level 
+    #  @param silent (print level 
+    # 
+    def __init__ ( self , level ) :
+        """
+        Constructor:
+        
+        >>> with rootError   () : some_ROOT_code_here()
+        >>> with rootWarning () : some_ROOT_code_here()
+        """
+        #
+        self._level = int( level )
+        
+    ## context manager: ENTER 
+    def __enter__ ( self ) :
+        "The actual context manager: ENTER" 
+        self._old = int ( ROOT.gErrorIgnoreLevel ) 
+        if self._old != self._level : 
+            ROOT.gROOT.ProcessLine("gErrorIgnoreLevel= %s ; " % self._level ) 
+            
+        return self
+    
+    ## context manager: EXIT 
+    def __exit__ ( self , *_ ) : 
+        "The actual context manager: EXIT"             
+        if self._old != int ( ROOT.gErrorIgnoreLevel )  : 
+            ROOT.gROOT.ProcessLine("gErrorIgnoreLevel= %s ; " % self._old ) 
+            
 # =============================================================================
 ## @class NoContext
 #  Fake empty context manager to be used as empty placeholder
@@ -685,12 +729,16 @@ class TakeIt(object):
     def __init__  ( self , other ) :
         self.other = other
         
-    def __enter__ ( self ) : return self.other
+    def __enter__ ( self ) :
+        ROOT.SetOwnership ( self.other , True )
+        return self.other
+    
     def __exit__  ( self , *args ) :
-        
+
+
         o = self.other
-        
-        self.other = None 
+
+        ## delete it! 
         del self.other
         
         if o and hasattr ( o , 'reset'  ) : o.reset  ()
@@ -722,30 +770,28 @@ def tee_py ( filename ) :
     return TeePy ( filename ) 
     
 # =============================================================================
-## very simple context manager to duplicate C++-printout into file ("tee")
+## very simple context manager to duplicate C++-printout into file ('tee')
 #  into separate file
 #  @code
-#  >>> with tee_cpp ('tee.txt') :
-#  ...         print 'ququ!'
+#  >>> with tee_cpp ('tee.txt') : some_cpp_code() 
 #  @endcode
 #  @attention: only C/C++ printouts are grabbed 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  date 2012-07-06
 def tee_cpp ( filename ) :
     """
-    very simple context manager to duplicate C++-printout into file ("tee")
+    very simple context manager to duplicate C++-printout into file ('tee')
     into separate file
     
-    >>> with tee_cpp('tee.txt') :
-    ...        print 'ququ!'
-
-    Unfortunately only Python printouts are grabbed 
+    >>> with tee_cpp('tee.txt') : some_cpp_code()
+    
+    Unfortunately only C/C++ printouts are grabbed 
     """
     return TeeCpp ( filename ) 
 
 
 # =============================================================================
-## simple context manager to redirect all (C/C++/Python) printotu
+## simple context manager to redirect all (C/C++/Python) printout 
 #  into separate file
 #  @code
 #  >>> with output ('output.txt') :
@@ -827,7 +873,35 @@ def rooSilent ( level = ROOT_RooFit_ERROR , silent = True ) :
     return RooSilent ( level , silent ) 
 
 
+# =============================================================================
+## very simple context manager to suppress ROOT printout
+#  @code
+#  >>> with rootError () : some_ROOT_code_here()
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-30
+def rootError   ( level = 1 ) :
+    """
+    Very simple context manager to suppress ROOT printout
+    >>> with rootError () : some_ROOT_code_here()
+    """
+    return ROOTIgnore ( ROOT.kError   + level )
 
+# =============================================================================
+## very simple context manager to suppress ROOT printout
+#  @code
+#  >>> with rootError () : some_ROOT_code_here()
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-07-30
+def rootWarning ( level = 1 ) :
+    """
+    Very simple context manager to suppress ROOT printout
+    >>> with rootWarning () : some_ROOT_code_here()
+    """
+    return ROOTIgnore ( ROOT.kWarning + level )
+
+    
 # =============================================================================
 ## Take some object, keep it and delete at the exit
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru

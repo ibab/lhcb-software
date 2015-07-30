@@ -8,6 +8,18 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-07-30 - Vanya Belyaev
+ - Utils.py:
+
+   add context manager to suppress ROOT error/warning messages: 
+
+   # >>> with rootError () : some_ROOT_code_here()
+	 # >>> with rootWarning () : some_ROOT_code_here()
+
+- Data.py
+  make use of contex manager to suppress printed errors on corrupted file 
+
+
 ! 2015-07-27 - Vanya Belyaev
  - update 
 
