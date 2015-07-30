@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-30 - Michael Kolpin
+ - Fixed bug in StrippingTrackEffDownMuon, which affected all best tracks for events in the same stream
+
 ! 2015-07-30 - Jon Harrison
  - Updated StrippingRD/StrippingPhiToKSKS.py for S23 tuning.
 
