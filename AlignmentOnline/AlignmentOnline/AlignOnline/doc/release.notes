@@ -5,6 +5,7 @@ Purpose: Code for running and testing Alignment in the online environment
 
 ! 2015-07-30 - Maurizio Martinelli
  - Commented a compilation requirement needing not committed code
+ - Removed an obsolete requirement 
 
 ! 2015-07-28 - Maurizio Martinelli
  - Python does not like precision as 6u, set as 6
