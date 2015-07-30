@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-30 - Nicola Skidmore
+ - In StrippingBeauty2Charm.py
+   -Changed B2DXBuilder in to implement option of looser pion cut
+   -Moved 2 WS lines to DST
+ - In Beauty2Charm_B2DXBuilder.py assigned looser pion cuts to StrippingB2D0KsPiDDD2HHBeauty2CharmLine,
+   StrippingB2D0KsPiLLD2HHBeauty2CharmLine lines
+ - In Beauty2Charm_Utils.py defined the looser cuts above
+
 ! 2015-07-30 - Stefano Perazzini
  - Updated StrippingB2HHBDT.py
 

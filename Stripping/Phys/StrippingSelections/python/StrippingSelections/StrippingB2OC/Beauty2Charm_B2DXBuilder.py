@@ -13,9 +13,10 @@ from Configurables import SubstitutePID
 class B2DXBuilder(object):
     '''Makes all B->DX decays for the Beauty2Charm module.'''
 
-    def __init__(self,d,dst,topoPions,topoKaons,muons,ks,pi0,hh,hhh,config):
+    def __init__(self,d,dst,topoPions,topoPionsLoose,topoKaons,muons,ks,pi0,hh,hhh,config):
         self.config = config
         self.topoPions = [topoPions]
+        self.topoPionsLoose = [topoPionsLoose]
         self.topoKaons = [topoKaons]
         self.muons = muons
         self.d = d
@@ -273,8 +274,8 @@ class B2DXBuilder(object):
                   'B2D0KPi0Resolved' : ["B+ -> D0 K+ pi0","B- -> D0 K- pi0"]}
         inputs = {'B2D0PiPi0Merged': d2x+self.topoPions+self.pi0['Merged'],
                   'B2D0PiPi0Resolved': d2x+self.topoPions+self.pi0['Resolved'],
-                  'B2D0KsPiDD' : d2x+self.topoPions+self.ks['DD'],
-                  'B2D0KsPiLL' : d2x+self.topoPions+self.ks['LL'],
+                  'B2D0KsPiDD' : d2x+self.topoPionsLoose+self.ks['DD'],
+                  'B2D0KsPiLL' : d2x+self.topoPionsLoose+self.ks['LL'],
                   'B2D0KPi0Merged' : d2x+self.topoKaons+self.pi0['Merged'],
                   'B2D0KPi0Resolved' : d2x+self.topoKaons+self.pi0['Resolved']}
         b2d0hh = makeB2XSels(decays,dname,inputs,config)

@@ -49,12 +49,21 @@ def filterPi0s(which,inputs,config):
 def topoInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
     return "HASTRACK & (TRCHI2DOF<2.5) & (PT > 500*MeV) & (P > 5000*MeV)"
 
+def topoInputsLooseCuts():
+    return "HASTRACK & (TRCHI2DOF<2.5) & (PT > 250*MeV) & (P > 2500*MeV)"
+
+
 def topoKSInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
     return "(PT > 500*MeV) & (P > 5000*MeV) & (BPVVDCHI2 > 1000)"
 
 def topoInputs(tag,inputs):
     '''Selects tracks that could have been used by the Topo.'''
     return filterSelection(tag+'TopoInputs',topoInputsCuts(),inputs)
+
+def topoInputsLoose(tag,inputs):
+    '''Selects tracks that could have been used by the Topo.'''
+    return filterSelection(tag+'TopoInputsLoose',topoInputsLooseCuts(),inputs)
+
 
 def hasTopoChild():
     return "AHASCHILD((ISBASIC & "+topoInputsCuts()+")|((ABSID=='KS0') & "\

@@ -481,8 +481,14 @@ default_config ={
     'StrippingB2D0PiPiPiD2HHTIGHTBeauty2CharmLine',
     'StrippingB2D0PiD2HHHHTIGHTBeauty2CharmLine',
     'StrippingB2D0D0KD02HHD02HHBeauty2CharmLine',
+
+    'StrippingB02DKWSD2HHHBeauty2CharmLine', ##Potentially DST move back to Bhadron if not
+    'StrippingB02DPiWSD2HHHBeauty2CharmLine', ##Potentially DST 
+    
     ],  
     'Bhadron' : [
+    
+    
     'StrippingB2D0KD2HHWSBeauty2CharmLine', 
     'StrippingB2D0PiD2HHWSBeauty2CharmLine', 
     'StrippingB2D0KD2HHUPBeauty2CharmLine', 
@@ -539,8 +545,7 @@ default_config ={
     'StrippingB02DPiD2PhiMuNuBeauty2CharmLine', 
     'StrippingB02DKWSD2PhiMuNuBeauty2CharmLine', 
     'StrippingB02DPiWSD2PhiMuNuBeauty2CharmLine', 
-    'StrippingB02DKWSD2HHHBeauty2CharmLine', 
-    'StrippingB02DPiWSD2HHHBeauty2CharmLine', 
+   
     'StrippingB02DKD2HHHUPBeauty2CharmLine', 
     'StrippingB02DPiD2HHHUPBeauty2CharmLine', 
     'StrippingB02DKWSD2HHHUPBeauty2CharmLine', 
@@ -1398,6 +1403,7 @@ class Beauty2CharmConf(LineBuilder):
 
         # pre-filter hard inputs (these could have been used in HLT2)
         topoPions = topoInputs('Pi',[pions])
+        topoPionsLoose = topoInputsLoose('PiLoose',[pions])
         topoKaons = topoInputs('K',[kaons])
         topoProtons = topoInputs('P',[protons])
 
@@ -1417,9 +1423,10 @@ class Beauty2CharmConf(LineBuilder):
         xicc = XiccBuilder(lc,pions,config['D2X'])
 
         # make B->DX
-        b2dx = B2DXBuilder(d,dst,topoPions,topoKaons,muons,ks,pi0_fromB,hh,hhh,
+        b2dx = B2DXBuilder(d,dst,topoPions,topoPionsLoose,topoKaons,muons,ks,pi0_fromB,hh,hhh,
                            config['B2X'])
         self._makeLines(b2dx.lines,config)
+
 
         # Bc -> DD lines
         bc2dd = Bc2DDBuilder( d, dst, config['Bc2DD'] )
