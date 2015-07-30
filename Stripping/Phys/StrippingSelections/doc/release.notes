@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-30 - Jon Harrison
+ - Updated StrippingRD/StrippingPhiToKSKS.py for S23 tuning.
+
 ! 2015-07-30 - Chris Jones
  - Increase min Pt cut for gammas in B2OC module from 400 to 1600 MeV. 
    (400MeV was in fact a bug, only intended for testing but left in by mistake)

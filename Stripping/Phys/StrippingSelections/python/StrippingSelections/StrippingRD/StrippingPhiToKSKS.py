@@ -24,9 +24,9 @@ confdict = {
     "prescale_PhiToKK" : 0.001,
     "prescale_PhiToKsKs" : 1.0,
     "prescale_PhiToMuMu" : 0.01,
-    "prescale_JPsiToKK" : 0.01,
+    "prescale_JPsiToKK" : 0.002,
     "prescale_JPsiToKsKs" : 1.0,
-    "prescale_D0ToKsKs" : 1.0,
+    "prescale_D0ToKsKs" : 0.25,
     "prescale_EtaCToLL" : 1.0,
     
     "GEC_nLongTrk" : 250,
@@ -41,21 +41,21 @@ confdict = {
     "Mu_PIDmu_MIN" : 0, #adimensional
     "Mu_IPCHI2_MAX" : 9, #adimensional
     
-    "KS_LL_PTMIN" : 200, #MeV
-    "KS_LL_MASS_WINDOW" : 50, #MeV
+    "KS_LL_PTMIN" : 400, #MeV
+    "KS_LL_MASS_WINDOW" : 20, #MeV
     "KS_LL_FD_MIN" : 10.0, #mm
     "KS_LL_FDCHI2_MIN" : 100, #adimensional
     "KS_LL_VCHI2NDOF_MAX" : 4,#adimensional
     "KS_LL_DIRA_MIN" : 0.9999, #adimensional
     
-    "KS_DD_PTMIN" : 200, #MeV
-    "KS_DD_MASS_WINDOW" : 50, #MeV
+    "KS_DD_PTMIN" : 400, #MeV
+    "KS_DD_MASS_WINDOW" : 20, #MeV
     "KS_DD_FD_MIN" : 10.0, #mm
     "KS_DD_FDCHI2_MIN" : 100, #adimensional
     "KS_DD_VCHI2NDOF_MAX" : 4,#adimensional
     "KS_DD_DIRA_MIN" : 0.999, #adimensional
     
-    "Lambda_PTMIN" : 200, #MeV
+    "Lambda_PTMIN" : 400, #MeV
     "Lambda_MASS_WINDOW" : 50, #MeV
     "Lambda_FD_MIN" : 10.0, #mm
     "Lambda_FDCHI2_MIN" : 100, #adimensional
@@ -63,13 +63,13 @@ confdict = {
     "Lambda_DIRA_MIN" : 0.999, #adimensional
     
     "Phi_MASS_MAX" : 1100, # MeV
-    "Phi_PT_MIN" : 400, # MeV
+    "Phi_PT_MIN" : 800, # MeV
     "Phi_DOCACHI2_MAX" : 20, #adimensional
     "Phi_VCHI2NDOF_MAX" : 6, #adimensional
     "Phi_IPCHI2_MAX" : 9, #adimensional
 
-    "D0_MASS_WIN" : 80, # MeV
-    "D0_PT_MIN" : 400, # MeV
+    "D0_MASS_WIN" : 40, # MeV
+    "D0_PT_MIN" : 800, # MeV
     "D0_DOCACHI2_MAX" : 20, #adimensional
     "D0_VCHI2NDOF_MAX" : 6, #adimensional
     "D0_IPCHI2_MAX" : 9, #adimensional
