@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AlignOnline
 ################################################################################
-gaudi_subdir(AlignOnline v1r4)
+gaudi_subdir(AlignOnline v1r5)
 
 gaudi_depends_on_subdirs(Alignment/AlignKernel
                          Det/DetDesc
