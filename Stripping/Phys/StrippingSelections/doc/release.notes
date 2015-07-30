@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-30 - Chris Jones
+ - Turn off for the moment in the B2OC BcDD builder the modes which D0/D+ final
+   states involving pi0 candidates, as these have high combinatorics and require
+   further study. Will, potentially, be reinstated for a future stripping.
+
 ! 2015-07-30 - Nicola Skidmore
  - In StrippingBeauty2Charm.py
    -Changed B2DXBuilder in to implement option of looser pion cut
