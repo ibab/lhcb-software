@@ -6,7 +6,8 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-07-31 - Vanya Belyaev
- - add a property to switch of special treatment of jets....
+ - ParticleClassifier:
+   add a property to switch of special treatment of jets....
 
 ! 2015-07-31 - Sascha Stahl
  - PVReFitter: Silence warning about too few tracks after refit.
