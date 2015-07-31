@@ -426,10 +426,14 @@ def trackingDownPreFilter(name, prefilter, seedcut):
     #Add seed tracking
     DownSeeding = PatSeeding(name+"_DownSeeding")
     DownSeeding.OutputTracksName = "Rec/"+name+"_DownSeeding/Tracks" 
-    PatAlgConf.SeedingConf().configureAlg()
-    DownSeeding.addTool(PatSeedingTool, name=name+"_PatSeedingTool")
+    PatAlgConf.SeedingConf().configureAlg( SeedAlg = DownSeeding )
+    #DownSeeding.addTool(PatSeedingTool, name=name+"_PatSeedingTool")
     #DownSeeding.addTool(PatSeedingTool)
-    PatSeedingTool(name+"_PatSeedingTool").MinMomentum = seedcut
+    #PatSeedingTool(name+"_PatSeedingTool").MinMomentum = seedcut
+    seedtoolname = name+"_PatSeedingTool"
+    DownSeeding.addTool(PatSeedingTool, name=seedtoolname)
+    seedtool = getattr(DownSeeding, seedtoolname)
+    seedtool.MinMomentum = seedcut
 
     jpsidotracking.Members += [DownSeeding]
     #Add Seed Fit
@@ -440,8 +444,9 @@ def trackingDownPreFilter(name, prefilter, seedcut):
     downstreamTracking.OutputLocation = 'Rec/'+name+'_Downstream/Tracks'
     jpsidotracking.Members += [ downstreamTracking ];
     #AddDownstreamFitSeq
-    jpsidotracking.Members += [TrackStateInitAlg(name+"_InitSeedDownstream")]
-    TrackStateInitAlg(name+"_InitSeedDownstream").TrackLocation = "Rec/"+name+"_Downstream/Tracks"
+    DownInitAlg = TrackStateInitAlg(name+"_InitSeedDownstream")
+    jpsidotracking.Members += [DownInitAlg]
+    DownInitAlg.TrackLocation = "Rec/"+name+"_Downstream/Tracks"
     downstreamFit = ConfiguredFitDownstream(name+"_FitDownstream")
     downstreamFit.TracksInContainer = 'Rec/'+name+'_Downstream/Tracks'
     downstreamFit.TracksOutContainer = 'Rec/'+name+'_Downstream/FittedTracks'

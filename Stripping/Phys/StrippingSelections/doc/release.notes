@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-31 - Michael Kolpin
+ - Additional updates to TrackEffDownMuon
+
 ! 2015-07-31 - Greg Ciezarek
  - Updates to: 
    -StrippingB2XTauNu.py
