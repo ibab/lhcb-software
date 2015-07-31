@@ -12,7 +12,13 @@
 
 !========================= HltSettings v7r0 2015-07-26 =========================
 
-! 2015-07028  - Mike Sokoloff
+! 2015-07-31  - Mike Sokoloff
+   -  added Hlt2CharmHadDspToKmKpPip to CharmHad_25ns_August2015.py;
+   -  this channel should go to both Full (as indicated above) and
+   -  to Turbo (already specified in Settings file) 
+   -  The lines are clones.
+
+! 2015-07-28  - Mike Sokoloff
   -  added four lines to RareCharm_25ns_August2015.py;
   -  they were previously left out by mistake
 
