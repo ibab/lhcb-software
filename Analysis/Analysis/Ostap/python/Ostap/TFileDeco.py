@@ -531,6 +531,9 @@ ROOT.TDirectory.itervalues   = _rd_itervalues_
 
 ROOT.TDirectory.rm           = _rd_rm_
 
+if not hasattr ( ROOT.TFile , 'close' ) :
+    ROOT.TFile.close = ROOT.TFile.Close 
+
 if hasattr ( ROOT.TFile , '__enter__' ) and hasattr ( ROOT.TFile , '__exit__' ) : pass
 else :
     ROOT.TFile.__enter__ = _rf_enter_

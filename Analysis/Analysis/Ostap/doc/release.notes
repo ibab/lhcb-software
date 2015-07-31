@@ -8,6 +8,14 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-07-31 - Vanya Belyaev
+ - add RooShelve
+   generic ROOT-based shelve-like database 
+ - update test for databases  
+
+! 2015-07-31 - Vanya Belyaev
+ - more decorations for TFile 
+
 ! 2015-07-30 - Vanya Belyaev
  - Utils.py:
 
