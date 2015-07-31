@@ -2,6 +2,9 @@
 ! package DetDesc
 ! package manager : Marco Clemencic
 ! =====================================================================
+! 2015-07-31 - Gerhard Raven
+ - add #include <iterator> directly instead of relying on something else
+   to include it and declare std::ostream_iterator...
 
 !========================= DetDesc v18r37 2015-04-20 =========================
 ! 2015-03-02 - Manuel Tobias Schiller

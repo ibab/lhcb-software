@@ -15,6 +15,7 @@
 #include "DetDesc/AlignmentCondition.h"
 // STD and STL
 #include <numeric>
+#include <iterator>
 
 #include "DetDesc/GeometryInfoPlus.h"
 
