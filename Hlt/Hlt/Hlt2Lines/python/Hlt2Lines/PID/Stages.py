@@ -16,6 +16,7 @@ class TagFilter(Hlt2ParticleFilter):
         cut = (charge_cut + extracut + 
                " & (TRCHI2DOF <%(TagTrChi2)s )" +
                " & (ISLONG)" +
+               " & (TRGHOSTPROB < %(TagMaxGhostProb)s )" + 
                " & (P >%(TagP)s )" +
                " & (PT >%(TagPt)s )" +
                " & (MIPCHI2DV(PRIMARY)>%(TagMinIPChi2)s )")

@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-07-31 - Olli Lupton
+  - Add extra slot to PID lines' tag particle filter, to allow a tighter
+    GhostProb cut.
+
 !========================= Hlt2Lines v10r0 2015-07-26 =========================
 
 ! 2015-07-23 - Mika Vesterinen

@@ -52,6 +52,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'D02KPiTag'             : 1.0
                                 }.iteritems()},
                   'Common'   : {'TagTrChi2'     : 3.0,
+                                'TagMaxGhostProb': 0.5,
                                 'TagP'          : 3 * GeV, # 6GeV in old stripping
                                 'ProbeTrChi2'   : 5.0, # no cut for ee in old stripping, 3 for detached mumu
                                 'ProbeP'        : 3 * GeV, # 3 GeV for all but B -> (J/psi->mumu)K where it's zero in old stripping
