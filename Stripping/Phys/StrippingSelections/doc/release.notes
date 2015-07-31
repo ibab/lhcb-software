@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-31 - Simone Stracka
+ - StrippingCharm/StrippingD2PiPi0.py : updated default config
+
 ! 2015-07-31 - Roberta Cardinale
  - Updated default config for StrippingBnoC/StrippingB2pphh.py for S23 tuning
 

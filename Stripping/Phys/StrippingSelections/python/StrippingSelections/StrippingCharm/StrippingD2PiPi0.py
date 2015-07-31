@@ -103,7 +103,7 @@ default_config = {
                 'Dstar_VCHI2VDOF_MAX': 100.,
                 # HLT filters, only process events firing triggers matching the RegEx
                 'Hlt1Filter'      : None,
-                'Hlt2Filter'      : "(HLT_PASS_RE('Hlt2CharmHadDp2.*EmEp.*Decision') | HLT_PASS_RE('Hlt2CharmHadDstp2.*EmEp.*Decision'))",
+                'Hlt2Filter'      : "(HLT_PASS_RE('Hlt2CharmHadD.*EmEp.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision'))",
                 # prescale and postscale
                 'PrescaleD2PiPi0EEG' : 1,
                 'PrescaleD2KPi0EEG'  : 1,
@@ -214,8 +214,7 @@ default_config = {
                 'Dstar_VCHI2VDOF_MAX': 9.,
                 # HLT filters, only process events firing triggers matching the RegEx
                 'Hlt1Filter'         : None,
-                #'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadDstp2D0Pip_D02GG_G2EmEp.*Decision')",
-                'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadDstp2.*EmEp.*Decision')",
+                'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadDstp2.*EmEp.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision')",
                  # prescale and postscale
                 'PrescaleDst2PiD0EEG' : 1,
                 'PostscaleDst2PiD0EEG' : 1                
@@ -277,12 +276,12 @@ default_config = {
                 # minimum flight time
                 'D_BPVLTIME_MIN'       : 0.25*picosecond,
                 # max chi^2 per DOF of DTF fit
-                'DTF_CHI2NDOF_MAX'   : 5,    # non usato
+                'DTF_CHI2NDOF_MAX'   : 5,    # not used
                 # HLT filters, only process events firing triggers matching the RegEx
                 'Hlt1Filter'         : None,
                 #'Hlt2Filter'         : None,
                 #'Hlt2Filter'      : "(HLT_PASS_RE('Hlt2CharmHadDp2EtaPip_.*Decision') | HLT_PASS_RE('Hlt2CharmHadDp2EtaKp_.*Decision'))",
-                'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadDp2Eta.*Decision')",
+                'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadDp2Eta.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision')",
                 # prescale and postscale
                 'PrescaleD2PiEtaPPG' : 1,
                 'PrescaleD2PiEta3HM' : 1,
@@ -357,9 +356,8 @@ default_config = {
                 'DTF_CHI2NDOF_MAX'   : 5,
                 # HLT filters, only process events firing triggers matching the RegEx
                 'Hlt1Filter'         : None,
-                #'Hlt2Filter'         : None,
-                #'Hlt2Filter'      : "(HLT_PASS_RE('Hlt2CharmHadDp2EtapPip_.*Decision') | HLT_PASS_RE('Hlt2CharmHadDp2EtapKp_.*Decision'))",
-                'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadDp2Eta.*Decision')",
+                #'Hlt2Filter'         : None, 
+                'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadDp2Etap.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision')",
                 # prescale and postscale
                 'PrescaleD2PiEtaPrimePPG' : 1,
                 'PrescaleD2PiEtaPrime3HR' : 1,
@@ -430,8 +428,6 @@ default_config = {
                 'DTF_CHI2NDOF_MAX'   : 5,
                 # HLT filters, only process events firing triggers matching the RegEx
                 'Hlt1Filter'         : None,
-                #'Hlt2Filter'      : "(HLT_PASS_RE('Hlt2CharmHadDp2Eta.*Decision') | HLT_PASS_RE('Hlt2CharmHadDp2Eta.*Decision'))",
-                #'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadDp2Eta.*Decision')",
                 'Hlt2Filter'      : None,
                 # prescale and postscale
                 'PrescaleD2PiPhi3HM' : 1,
