@@ -3,6 +3,9 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     :
 ! -----------------------------------------------------------------------------
+! 2015-07-31 - Gerhard Raven
+ - tweak code so it is independent of whether IFileAccess returns std::auto_ptr
+   or std::unique_ptr
 
 !========================= PartProp v1r19 2014-10-14 =========================
 ! 2014-09-16 - Vanya Belyaev

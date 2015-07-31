@@ -636,8 +636,8 @@ StatusCode LHCb::ParticlePropertySvc::parse( const std::string& file )
     return StatusCode::FAILURE ;                                      // RETURN 
   }
   // "open" the file
-  std::auto_ptr<std::istream> infile = fileAccess->open ( file ) ;
-  if (  0 == infile.get()  )
+  auto infile = fileAccess->open ( file ) ;
+  if (  nullptr == infile.get()  )
   {
     log << MSG::ERROR << "Unable to open file '" << file << "'" << endmsg ;
     return StatusCode::FAILURE ;                                      // RETURN 
