@@ -36,10 +36,12 @@ void *ObjSerializer::SerializeObj(void *&ptr, int &siz, bool clear)
   void *p1;
   int bs=siz;
   int numh=0;
+//  printf("Object Serializer: Dump of Map...\n");
   for (i =m_objmap->begin();i!=m_objmap->end();i++)
   {
     int inc;
-    MonObj *h = (MonObj *)i->second;
+//    printf("Object Serializer: Object Name: %s\n",i->first.c_str());
+      MonObj *h = (MonObj *)i->second;
     inc = h->xmitbuffersize();
     //printf ("%s lendgth %d\n",h->m_name,inc);
     bs += inc;
