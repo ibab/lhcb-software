@@ -165,7 +165,7 @@ default_config = {
         #Slow pion ghost prob
         'TRGHP_slowPi'      : 0.6,
         #HLT1 trigger
-        'TisTosSpecs'       : { 'Hlt1TrackAllL0Decision%TOS' : 0 }    
+        'TisTosSpecs'       : { 'Hlt1.*Decision%TOS' : 0 }    
         },
     'STREAMS' : ['BhadronCompleteEvent']
     }

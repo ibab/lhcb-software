@@ -24,20 +24,20 @@ default_config = {
 	'BUILDERTYPE' : 'B2DMuForTauMuconf',
         'CONFIG'      : {
  
-	 "MINIPCHI2"     : 45.0    # adimensiional 
+	 "MINIPCHI2"     : 9.0    # adimensiional 
 	,"GhostProb"     : 0.5     # adimensional  
 	,"KaonPIDK"      : 4.0    # adimensiional
 	,"PionPIDKTight" : 2.0    # adimensiional
-	,"MuonIPCHI2"    : 45.00   # adimensiional
+	,"MuonIPCHI2"    : 16.00   # adimensiional
 	,"KPiPT"         : 300.0  # MeV
-	,"DSumPT"        : 1400.0 # MeV
-	,"DsDIRA"        : 0.9998   # adimensiional
-	,"DsFDCHI2"      : 250.0  # adimensiional
+	,"DSumPT"        : 2500.0 # MeV
+	,"DsDIRA"        : 0.999   # adimensiional
+	,"DsFDCHI2"      : 25.0  # adimensiional
 	,"DsMassWin"     : 80.0   # MeV
 	,"DsAMassWin"    : 100.0  # MeV
 	,"DsVCHI2DOF"    : 4.0    # adimensiional
 	,"PIDmu"         : 2.0   # adimensiional
-	,"BDIRA"         : 0.9995  #adimensiional
+	,"BDIRA"         : 0.999  #adimensiional
 	,"BVCHI2DOF"     : 6.0    # adimensiional
 	,"SPDmax"        : 600    # adimensiional
 	  },
