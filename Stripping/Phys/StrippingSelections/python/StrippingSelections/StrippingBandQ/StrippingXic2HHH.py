@@ -2,7 +2,7 @@ all
 ''' Xic+ and Theta+ lines Designed by Yury Shcheglov, Alexey Dzyuba, Nelya Sagidova to study Xic+ and Theta+ particles '''
 
 __author__ = ['Yury Shcheglov']
-__date__ = '2014/01/09'
+__date__ = '2015/30/07'
 __version__ = '$Revision: 2.0 $'
 
 __all__ = ( 'StrippingXic2HHHConf',
@@ -145,31 +145,13 @@ class StrippingXic2HHHConf(LineBuilder):
 
 
  ###############################################################
-
-        self.selXic2PKPi = makeXic2PKPi( name = xic_PKPi_name 
+        self.selXic2PKPi = makeXic2PKPi( name = xic_PKPi_name
                , inputSel = [ self.inProtons, self.inKaons, self.inPions]
                , Daug_All_PT_MIN = config['Daug_All_PT_MIN']
                , Daug_P_MIN = config['Daug_P_MIN']
                , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , Comb_MASS_MIN  = 2190. * MeV 
-               , Comb_MASS_MAX  = 2570. * MeV  
-               , Comb_ADOCAMAX_MAX = config['Comb_ADOCAMAX_MAX']
-               , Xic_PT_MIN = config['Xic_PT_MIN']
-               , Xic_VCHI2VDOF_MAX = config['Xic_VCHI2VDOF_MAX']
-               , Xic_BPVVDCHI2_MIN = config['Xic_BPVVDCHI2_MIN']
-               , Xic_BPVDIRA_MIN = config['Xic_BPVDIRA_MIN']
-               , Xic_BPVIPCHI2_MAX = config['Xic_BPVIPCHI2_MAX']
-               , Xic_BPVLTIME_MAX = config['Xic_BPVLTIME_MAX']
-               , Xic_BPVLTIME_MIN = config['Xic_BPVLTIME_MIN']
-             )
-
-        self.selXic2PKK = makeXic2PKPi( name = xic_pKK_name 
-               , inputSel = [self.inKaons, self.inProtons]
-               , Daug_All_PT_MIN = config['Daug_All_PT_MIN']
-               , Daug_P_MIN = config['Daug_P_MIN']
-               , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , Comb_MASS_MIN  = config['Comb_MASS_MIN']
-               , Comb_MASS_MAX  = 2800. * MeV  
+               , Comb_MASS_MIN  = 2190. * MeV
+               , Comb_MASS_MAX  = 2570. * MeV
                , Comb_ADOCAMAX_MAX = config['Comb_ADOCAMAX_MAX']
                , Xic_PT_MIN = config['Xic_PT_MIN']
                , Xic_VCHI2VDOF_MAX = config['Xic_VCHI2VDOF_MAX']
@@ -178,23 +160,40 @@ class StrippingXic2HHHConf(LineBuilder):
                , Xic_BPVIPCHI2_MAX = config['Xic_BPVIPCHI2_MAX'] 
                , Xic_BPVLTIME_MAX = config['Xic_BPVLTIME_MAX']
                , Xic_BPVLTIME_MIN = config['Xic_BPVLTIME_MIN']
+             )
+                                      
+        self.selXic2PKK = makeXic2PKPi( name = xic_pKK_name
+               , inputSel = [self.inKaons, self.inProtons]
+               , Daug_All_PT_MIN = config['Daug_All_PT_MIN']
+               , Daug_P_MIN = config['Daug_P_MIN']
+               , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
+               , Comb_MASS_MIN  = config['Comb_MASS_MIN']
+               , Comb_MASS_MAX  = 2800. * MeV
+               , Comb_ADOCAMAX_MAX = config['Comb_ADOCAMAX_MAX']
+               , Xic_PT_MIN = config['Xic_PT_MIN']
+               , Xic_VCHI2VDOF_MAX = config['Xic_VCHI2VDOF_MAX']  
+               , Xic_BPVVDCHI2_MIN = config['Xic_BPVVDCHI2_MIN']
+               , Xic_BPVDIRA_MIN = config['Xic_BPVDIRA_MIN']
+               , Xic_BPVIPCHI2_MAX = config['Xic_BPVIPCHI2_MAX']
+               , Xic_BPVLTIME_MAX = config['Xic_BPVLTIME_MAX']
+               , Xic_BPVLTIME_MIN = config['Xic_BPVLTIME_MIN']  
                , decDescriptors = [ "[Lambda_c+ -> p+ K- K+]cc" ]
              )
 
         self.selTheta2PKS0 = makeTheta2PKS0 ( name = theta_pks_name
-               , inputSel = [ self.KS0,  self.inProtons ]
+               , inputSel = [ self.inProtons, self.KS0, self.inPions ]
                , Daug_All_PT_MIN =  config['Daug_All_PT_MIN']
                , Daug_P_MIN = config['Daug_P_MIN']
                , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , Comb_MASS_MIN  = 1440. * MeV            
-               , Comb_MASS_MAX  = 1800. * MeV            
+               , Comb_MASS_MIN  = 2258. * MeV            
+               , Comb_MASS_MAX  = 2318. * MeV            
                , Comb_ADOCAMAX_MAX = 1.0 * mm
                , Xic_PT_MIN = 2000. * MeV
                , Xic_BPVDIRA_MIN = -100.
                , Xic_BPVIPCHI2_MAX = config['Xic_BPVIPCHI2_MAX']
                , Xic_BPVLTIME_MAX = config['Xic_BPVLTIME_MAX']
                , Xic_BPVLTIME_MIN = config['Xic_BPVLTIME_MIN']
-               , decDescriptors = [ "[Lambda_c+ -> p+ KS0]cc" ]
+               , decDescriptors = [ "[Lambda_c+ -> p+ KS0 pi+ pi-]cc" ]
              )
 
         self.selXic2KLam = makeXic2KLam ( name = xic_klam_name
@@ -245,14 +244,14 @@ class StrippingXic2HHHConf(LineBuilder):
                                        )
 
     def _protonFilter( self ):
-          _code = "(PROBNNp > 0.3) &(TRGHP < 0.4) & (P> 1200.0*MeV) & (TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__
+          _code = "(PROBNNp > 0.4) &(TRGHP < 0.4) & (P> 1200.0*MeV) & (TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__
           _proton = FilterDesktop( Code = _code )
           return _proton
 
 
 
     def _pionFilter( self ):
-          _code = "(PROBNNpi > 0.1) &(TRGHP < 0.4) & (MIPCHI2DV(PRIMARY) > %(pion_IPCHI2_MIN)s) &(P>1200*MeV)& (PT>300*MeV)&(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s) " % self.__confdict__
+          _code = "(PROBNNpi > 0.15) &(TRGHP < 0.4) & (MIPCHI2DV(PRIMARY) > %(pion_IPCHI2_MIN)s) &(P>1200*MeV)& (PT>300*MeV)&(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s) " % self.__confdict__
           _pion = FilterDesktop( Code = _code )
           return _pion
 
@@ -289,7 +288,7 @@ def makeXic2PKPi( name
                , Xic_BPVIPCHI2_MAX 
                , Xic_BPVLTIME_MAX
                , Xic_BPVLTIME_MIN
-               , decDescriptors = [ "[Lambda_c+ -> p+ K- pi+]cc" ]
+               , decDescriptors = [ "[Lambda_c -> p+ K- pi+]cc" ]
              ) : 
 
 
@@ -334,7 +333,7 @@ def makeTheta2PKS0( name
                , Xic_BPVIPCHI2_MAX
                , Xic_BPVLTIME_MAX
                , Xic_BPVLTIME_MIN
-               , decDescriptors = [ "[Lambda_c+ -> p+ KS0]cc" ]
+               , decDescriptors = [ "[Lambda_c+ -> p+ KS0 pi+ pi-]cc" ]
              ) :
 
     combCuts = "(AM > %(Comb_MASS_MIN)s)" \
@@ -399,8 +398,8 @@ default_config = {
     'CONFIG'      : {'Daug_All_PT_MIN'         : 300.0 * MeV
                      , 'Daug_P_MIN'              : 3000.0 * MeV
                      , 'Daug_TRCHI2DOF_MAX'      : 4.0
-                     , 'K_IPCHI2_MIN'            : 3.0 
-                     , 'pion_IPCHI2_MIN'         : 3.0
+                     , 'K_IPCHI2_MIN'            : 9.0 
+                     , 'pion_IPCHI2_MIN'         : 9.0
                      , 'Comb_MASS_MIN'           : 2250.0 * MeV 
                      , 'Comb_MASS_MAX'           : 2800.0 * MeV 
                      , 'Comb_ADOCAMAX_MAX'       : 0.3 * mm   

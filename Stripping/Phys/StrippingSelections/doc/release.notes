@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-31 - Roberta Cardinale
+ - Updated StrippingBandQ/StrippingXic2HHH.py
+
 ! 2015-07-30 - Maurizio Martinelli
  - Updated dictionary in 
    . StrippingCharm/StrippingD2HHHKs.py
