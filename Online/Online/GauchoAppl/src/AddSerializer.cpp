@@ -30,8 +30,10 @@ void *AddSerializer::SerializeObj(void *&ptr, int &siz, bool )
   SysIter i;
   void *pp =0;
   int bs=siz;
+  printf("AddSerializer: Dump of Object Map\n");
   for (i =m_objmap->begin();i!=m_objmap->end();i++)
   {
+    printf("AddSerializer:Histogram %s\n",i->first.c_str());
     SerHist *h = (SerHist*)i->second;
     bs += h->reclen;
     if (pp>h)

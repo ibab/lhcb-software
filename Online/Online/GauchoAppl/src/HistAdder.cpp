@@ -11,8 +11,28 @@
 #include "string.h"
 #include "Gaucho/Utilities.h"
 #include "GauchoAppl/AdderSys.h"
+#include "stdio.h"
 typedef std::pair<std::string, void*> HistPair;
-
+extern "C"
+{
+  int TransportBuffer_find(void *buff, int bsiz,std::string srch)
+  {
+    void *bend = AddPtr(buff,bsiz);
+    void *hstart = AddPtr(buff,sizeof(SerialHeader));
+    DimHistbuff1 *pp = (DimHistbuff1*)hstart;
+    while (pp<bend)
+    {
+      if (pp->reclen == 0) break;
+      char *nam = (char*)AddPtr(pp,pp->nameoff);
+      if (::strstr(nam,srch.c_str()) == 0)
+      {
+        return 1;
+      }
+      pp=(DimHistbuff1*)AddPtr(pp,pp->reclen);
+    }
+    return 0;
+  }
+}
 HistAdder::HistAdder(char *myName, char *serviceName)
 {
   m_serviceName = std::string("/Histos/") + serviceName;
@@ -21,6 +41,11 @@ HistAdder::HistAdder(char *myName, char *serviceName)
   m_oldProf     = 0;
   m_updated = false;
   AdderSys::Instance().gg_AdderList.push_back(this);
+//  std::string fn;
+//  fn = "/group/online/dataflow/logs/Adders/";
+//  fn+= myName;
+//  fn = fn+"_Adder.log";
+//  logFile =fopen(fn.c_str(),"w");
 }
 
 HistAdder::~HistAdder()
@@ -160,8 +185,8 @@ void HistAdder::addBuffer(void *buff, int siz,MonInfo *HTsk)
     }
     else
     {
-      printf("[WARNING] New Histogram..'%s' from '%s reference set %s'. re-allocating...\n",
-          i->first.c_str(),HTsk->getName(),m_firstSource.c_str());
+//      fprintf(logFile,"[WARNING] New Histogram..'%s' from '%s reference set %s'. re-allocating...\n",
+//          i->first.c_str(),HTsk->getName(),m_firstSource.c_str());
       int csiz = m_usedSize;
       int hsiz;
       DimHistbuff1 *srch = (DimHistbuff1*)(i->second);
@@ -182,8 +207,26 @@ void HistAdder::addBuffer(void *buff, int siz,MonInfo *HTsk)
         }
         m_hmap.insert(HistPair(std::string(nam),p));
       }
+      if (m_isSaver)
+      {
+//        fprintf(logFile,"Histogram Map after Re-Allocating\n");
+//        m_hmap.dumpKeys(logFile);
+//        fprintf(logFile,"Histograms in Serialize Buffer after Re-Allocating\n");
+//        void *bend = AddPtr(m_buffer,m_usedSize);
+//        void *hstart = AddPtr(m_buffer,sizeof(SerialHeader));
+//        DimHistbuff1 *pp = (DimHistbuff1*)hstart;
+//        while (pp<bend)
+//        {
+//          if (pp->reclen == 0) break;
+//          char *nam = (char*)AddPtr(pp,pp->nameoff);
+//          fprintf(logFile,"Buffer Histogram: %s\n",nam);
+//          pp=(DimHistbuff1*)AddPtr(pp,pp->reclen);
+//        }
+
+      }
       //printf("HistAdder UNLocking MAP\n");
       UnLockMap();
+//      fflush(logFile);
     }
   }
   m_received++;
@@ -205,9 +248,11 @@ void HistAdder::Update()
   ////printf(" %d %d\n", m_received,m_m_expected);
   if (m_outservice != 0)
   {
+//    fprintf(logFile,"Histogram Map at Update\n");
+//    m_hmap.dumpKeys(logFile);
     m_outservice->Serialize();
     m_outservice->Update();
     m_updated = true;
   }
-  fflush(stdout);
+//  fflush(logFile);
 }

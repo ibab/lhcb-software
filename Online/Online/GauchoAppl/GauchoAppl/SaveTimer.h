@@ -2,6 +2,7 @@
 #define SAVETIMER_H
 #include "Gaucho/GenTimer.h"
 #include "GauchoAppl/MonAdder.h"
+#include "GauchoAppl/HistAdder.h"
 class MonSubSys;
 class DimService;
 class SaveTimer : public GenTimer

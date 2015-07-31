@@ -161,8 +161,8 @@ void *MonAdder::ReAllocate(int incsiz)
     newbuffer = realloc(m_buffer,newsiz);
     if (newbuffer != 0)
     {
-      if (newbuffer != m_buffer)
-      {
+//      if (newbuffer != m_buffer)
+//      {
         m_hmap.clear();
         void *bend = AddPtr(newbuffer,m_usedSize);
         void *hstart = AddPtr(newbuffer,sizeof(SerialHeader));
@@ -181,8 +181,10 @@ void *MonAdder::ReAllocate(int incsiz)
           pp=(DimBuffBase*)AddPtr(pp,pp->reclen);
         }
         m_buffer = newbuffer;
-      }
+//      }
       m_buffersize = newsiz;
+      SerialHeader *hd = (SerialHeader*)m_buffer;
+      hd->buffersize = newsiz;
     }
     else
     {
@@ -485,7 +487,18 @@ void MonAdder::i_update()
     m_reference = 0;
     if (CycleFn != 0)
     {
-      (*CycleFn)(CycleCBarg, m_buffer, m_buffersize, &m_hmap, this);
+//      fprintf(logFile,"Histograms in Serialize Buffer before Saving to File\n");
+//      void *bend = AddPtr(m_buffer,m_usedSize);
+//      void *hstart = AddPtr(m_buffer,sizeof(SerialHeader));
+//      DimHistbuff1 *pp = (DimHistbuff1*)hstart;
+//      while (pp<bend)
+//      {
+//        if (pp->reclen == 0) break;
+//        char *nam = (char*)AddPtr(pp,pp->nameoff);
+//        fprintf(logFile,"Buffer Histogram: %s\n",nam);
+//        pp=(DimHistbuff1*)AddPtr(pp,pp->reclen);
+//      }
+      (*CycleFn)(CycleCBarg, m_buffer, m_usedSize, &m_hmap, this);
     }
     if (m_doPause)
     {

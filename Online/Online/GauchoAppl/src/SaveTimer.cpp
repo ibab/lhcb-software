@@ -177,6 +177,7 @@ void SaveTimer::SavetoFile(void *buff)
         char hnam[4096];
         hname = Strsplit(r->GetName(),"/");
         strcpy(hnam,r->GetName());
+//        fprintf(((HistAdder*)m_Adder)->logFile,"==========>[Error] Saving histogram with name '%s'\n",hnam);
         gDirectory->Cd("/");
         for (unsigned int i=0;i<hname->size()-1;i++)
         {
@@ -225,6 +226,7 @@ void SaveTimer::SavetoFile(void *buff)
       }
     }
   }
+//  fflush(((HistAdder*)m_Adder)->logFile);
   TH1::AddDirectory(dirstat);
   m_Adder->Lock();
   f->Close();

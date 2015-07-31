@@ -11,7 +11,7 @@
 #include "RTL/rtl.h"
 #include "Gaucho/Utilities.h"
 #include "GauchoAppl/AddTimer.h"
-#include"Gaucho/BRTL_Lock.h"
+#include "Gaucho/BRTL_Lock.h"
 #include "dim/dis.hxx"
 #define ADD_HISTO 1
 #define ADD_COUNTER 2
@@ -21,9 +21,29 @@
 
 #define offsetinBounds(base,recl,offs) !((AddPtr(base,offs)>AddPtr(base,recl))||(AddPtr(base,offs)<base)||(offs<0))
 
-typedef std::map<std::string, void*> MonMap;
-typedef MonMap::iterator MonIter;
+//typedef std::map<std::string, void*> MonMap;
+class MonMap : public std::map<std::string, void*>
+{
+  public:
+    void dumpKeys()
+    {
+      printf("Dump of MonMap...\n");
+      for (auto it=begin();it!=end();it++)
+      {
+        printf("Histogram: '%s at %p'\n",it->first.c_str(),it->second);
+      }
+    };
+    void dumpKeys(FILE *logFile)
+    {
+      fprintf(logFile,"Dump of MonMap...\n");
+      for (auto it=begin();it!=end();it++)
+      {
+        fprintf(logFile,"Histogram: '%s at %p'\n",it->first.c_str(),it->second);
+      }
+    };
+};
 
+typedef MonMap::iterator MonIter;
 class ObjService;
 class HistServer;
 class ObjRPC;
@@ -165,6 +185,7 @@ public:
   void *m_buffer;
   int m_buffersize;
   int m_usedSize;
+//  FILE *logFile;
   std::string m_MyName;
   std::string m_NamePrefix;
   std::string m_outsvcname;

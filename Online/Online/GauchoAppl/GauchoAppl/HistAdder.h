@@ -7,6 +7,8 @@
 #include <string>
 #include "GauchoAppl/AddSerializer.h"
 #include "GauchoAppl/MonAdder.h"
+#include "stdlib.h"
+#include "stdio.h"
 
 class ObjService;
 class MonServer;
