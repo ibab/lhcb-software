@@ -93,11 +93,42 @@ class Tesla(LHCbConfigurableUser):
         assoctr.TracksInContainer = trackcont
         assocpp.TrackLocations += [ trackcont ]
         assocpp.InputData += [ protocont ]
-        # Add it to a selection sequence
+        # Add it to a sequence
         seq = GaudiSequencer(line+'TurboSeqT2MC')
         seq.Members += [assoctr]
         return seq
+    
+    def _configureDigitsTruth(self,inputLoc) :
+        from Configurables import CaloDigit2MCLinks2Table
+        assocdigits = CaloDigit2MCLinks2Table("TurboDigitAssoc")
+        #assocdigits.Inputs += [inputLoc]
+        return 
 
+    def _configureClustersAndProtosTruth(self,line,digits) :
+        retSeq = GaudiSequencer(line + "NeutralTruth")
+        tesROOT="/Event/"+self.base
+        clusterTabLoc = tesROOT + self.base + line + "/Relations/CaloClusters"
+        clustLoc = tesROOT + line + "/CaloClusters"
+        inputLoc = tesROOT + line + "/Protos"
+
+        from Configurables import CaloClusterMCTruth
+        assoccluster = CaloClusterMCTruth(line+"TurboClusterAssoc")
+        assoccluster.OutputLevel = self.getProp('OutputLevel')
+        assoccluster.Input = digits
+        assoccluster.Output = clusterTabLoc
+        assoccluster.Clusters+=[clustLoc]
+        
+        from Configurables import NeutralPP2MC
+        protoTabLoc=tesROOT + line + "/Relations/Turbo/NeutralPP2MC"
+        assocneutral = NeutralPP2MC(line+"TurboNeutralPP2MC")
+        assocneutral.InputData += [ inputLoc ]
+        assocneutral.OutputLevel = self.getProp('OutputLevel')
+        assocneutral.OutputTable = protoTabLoc
+        assocneutral.MCCaloTable = clusterTabLoc
+        
+        retSeq.Members += [assoccluster,assocneutral]
+        return protoTabLoc, retSeq
+    
     def _unpackMC(self):
         DataOnDemandSvc().NodeMap['/Event/MC']   = 'DataObject'
         DataOnDemandSvc().AlgMap["MC/Particles"] = "UnpackMCParticle"
@@ -196,6 +227,9 @@ class Tesla(LHCbConfigurableUser):
                         , self.base + l + "/Tracks#99"
                         , self.base + l + "/RichPIDs#99"
                         , self.base + l + "/MuonPIDs#99"
+                        , self.base + l + "/Digits#99"
+                        , self.base + l + "/CaloHypos#99"
+                        , self.base + l + "/CaloClusters#99"
                         ]
         
         inputType = self.getProp('InputType')
@@ -213,9 +247,36 @@ class Tesla(LHCbConfigurableUser):
                 seq.Members += [ truthSeq ]
                 if not self.getProp('Pack'):
                     writer.OptItemList+=[
-                            outputPPLoc + l + '/Protos' '#99'
+                            outputPPLoc + l + '/Protos' + '#99'
                             ]
             seq.Members+=[assocpp]
+            
+            NeutralProtoSeq = GaudiSequencer("NeutralTruthSequencer")
+            
+            ## Add the digits associator
+            outputDigiLoc = tesROOT + "Digi2MCP"
+            from Configurables import CaloDigit2MCLinks2Table
+            assocdigits = CaloDigit2MCLinks2Table("TurboDigitAssoc")
+            assocdigits.OutputLevel = self.getProp('OutputLevel')
+            outputiDigiLoc = tesROOT + "Relations/CaloDigits"
+            assocdigits.Output = outputDigiLoc
+            
+            ## Add the cluster associator
+            ## Finally configure the neutral PP2MC associator
+            NeutralProtoSeq.Members+=[assocdigits]
+            for l in lines:
+                if "gamma" in l.lower() or "pi0" in l.lower():
+                    digitLoc = self.base + l + "/Digits"
+                    clustLoc = self.base + l + "/CaloClusters"
+                    protoLoc = self.base + l + "/Protos"
+                    self._configureDigitsTruth(digitLoc)
+                    protoneutral, retSeq = self._configureClustersAndProtosTruth(l,outputDigiLoc)
+                    NeutralProtoSeq.Members+=[retSeq]
+                    if not self.getProp('Pack'):
+                        writer.OptItemList+=[
+                                protoneutral + '#99'
+                                ]
+            seq.Members+=[NeutralProtoSeq]
         
         # Add shared places to writer
         if not self.getProp('Pack'):
