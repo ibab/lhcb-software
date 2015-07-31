@@ -4,7 +4,6 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/xtoa.h"
 
 #include "DetDesc/LogVolBase.h"
 #include "DetDesc/LVolume.h"
@@ -267,7 +266,6 @@ std::string XmlLVolumeCnv::locateElement (xercesc::DOMElement* element) {
   // if one was found, builds the result from it
   std::string result("");
   if (hasName) {
-    char buffer[32];
     parentNode = element;
     xercesc::DOMNode* grandParent = element->getParentNode();
     while (parentNode != parentElement) {
@@ -280,7 +278,7 @@ std::string XmlLVolumeCnv::locateElement (xercesc::DOMElement* element) {
       }
 
       result = "child number ";
-      result += _itoa(i+1, buffer, 10);
+      result += std::to_string(i+1);
       result += " (";
       result += dom2Std (parentNode->getNodeName());
       result += ") of ";

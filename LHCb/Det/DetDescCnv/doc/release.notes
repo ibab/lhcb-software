@@ -3,6 +3,8 @@
 ! Responsible : Marco Clemencic, Juan Palacios
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
+! 2015-07-31 - Gerhard Raven
+ - replace use of _itoa from GaudiKernel/xtoa.h with std::to_string
 
 !========================= DetDescCnv v4r18 2013-04-29 =========================
 ! 2013-04-26 - Marco Cattaneo
