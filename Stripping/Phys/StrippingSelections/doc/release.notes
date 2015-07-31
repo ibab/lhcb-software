@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-31 - Wenbin Qian
+  Update HHHH, HHHPi0, HHPi0, KsPi0HH lines without subPID
+
 ! 2015-07-31 - Pablo Ruiz Valls
  - Modified StrippingBeauty2XGamma to allow changes in trigger line names in the dictionaries
 
