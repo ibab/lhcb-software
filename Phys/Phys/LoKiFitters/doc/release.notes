@@ -5,6 +5,9 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2015-07-31 - Sascha Stahl
+ - PVReFitter: Silence warning about too few tracks after refit.
+
 !====================== Phys/LoKiFitters v4r15 2015-07-23 =====================
 
 ! 2015-07-17 - Vanya Belyaev

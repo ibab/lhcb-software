@@ -607,7 +607,7 @@ StatusCode LoKi::PVReFitter::_remove_
   // - too many tracks to remove 
   if ( removed.size () +  m_minTracksInPV  > pv.tracks().size() ) 
   {return _Warning( "Less than "+m_minTS+" tracks in vertex remain",
-                     StatusCode::FAILURE, 3 ) ; }
+                     StatusCode::FAILURE, 0 ) ; }
   // 
   // - too many tracks to remove
   if ( removed.size () + 10  > pv.tracks().size() ) 
