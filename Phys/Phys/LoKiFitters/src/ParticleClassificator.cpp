@@ -89,6 +89,10 @@ LoKi::ParticleClassificator::ParticleClassificator
     ( "DiGammaDecays"     ,
       m_dd_digamma        ,
       "The di-gamma-decays"       ) ;
+  declareProperty
+    ( "Jets"              ,
+      m_dd_jets           ,
+      "Particles to be considered as jets" ) ;
   // ==========================================================================
 }
 // ============================================================================
