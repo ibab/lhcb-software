@@ -45,7 +45,7 @@ import Ostap.ZipShelve    as ZipShelve
 import Ostap.SQLiteShelve as SQLiteShelve
 import Ostap.RootShelve   as RootShelve
 #
-bins   = 1000
+bins    = 1000
 data    = {}
 h1      = ROOT.TH1D('h1','1D-histogram',bins,-5,5) ; h1.Sumw2() 
 m1      = VE(1,2)
