@@ -65,6 +65,7 @@ class CharmHad_25ns_August2015 :
                  'Hlt2CharmHadSpec_DpPiTurbo',
                  'Hlt2CharmHadXic0ToPpKmKmPipTurbo',
                  'Hlt2CharmHadDspToKmKpPipTurbo',
+                 'Hlt2CharmHadDspToKmKpPip',   ## meant to be in Turbo & Full
                  'Hlt2CharmHadDstp2D0Pip_D02KpPimPimPipTurbo',
                  'Hlt2CharmHadOmm2LamKm_DDL',
                  'Hlt2CharmHadDstp2D0Pip_D02KS0KmPip_KS0DD',
