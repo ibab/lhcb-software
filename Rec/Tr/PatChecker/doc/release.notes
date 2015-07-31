@@ -4,6 +4,9 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2015-07-31 - Michel De Cian
+ - Add some more debug and verbose statements in PatLHCbID2MCParticle
+
 !========================= PatChecker v3r15 2014-02-19 ========================
 ! 2014-01-23 - Michel De Cian
  - Fix behaviour of flag 'fromB' in PatChecker and PatKShortChecker to only include B baryons and mesons, and not particles from string fragmentation of b quarks (now consistent with PrChecker)

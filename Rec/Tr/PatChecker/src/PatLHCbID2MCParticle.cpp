@@ -64,25 +64,24 @@ StatusCode PatLHCbID2MCParticle::initialize() {
 //=============================================================================
 StatusCode PatLHCbID2MCParticle::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if( msgLevel( MSG::DEBUG ) ) debug() << "==> Execute" << endmsg;
   bool isVerbose = msgLevel( MSG::VERBOSE );
 
-  LinkerWithKey<LHCb::MCParticle>
-    lhcbLink( evtSvc(), msgSvc(), m_targetName );
-
-  LHCb::MCParticle* part;
-
+  LinkerWithKey<LHCb::MCParticle> lhcbLink( evtSvc(), msgSvc(), m_targetName );
+  
+  LHCb::MCParticle* part = nullptr;
+  
   // link velo, if requested
   if (m_linkVELO) {
 
     LinkedTo<LHCb::MCParticle,LHCb::VeloCluster> 
       veloLink( evtSvc(), msgSvc(), LHCb::VeloClusterLocation::Default );
-
+    
     LHCb::VeloClusters* clusters = get<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
-
+    
     if (clusters){
       LHCb::VeloClusters::const_iterator iClus;
-
+      
       for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
         m_partList.clear();
         int id   = LHCb::LHCbID( (*iClus)->channelID()).veloID();
@@ -99,19 +98,18 @@ StatusCode PatLHCbID2MCParticle::execute() {
           id++;
         }
         for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = 
-            m_partList.begin(); m_partList.end() != itP; ++itP ) {
+                m_partList.begin(); m_partList.end() != itP; ++itP ) {
           LHCb::LHCbID temp = (*iClus)->channelID();
           lhcbLink.link( temp.lhcbID(), *itP ); // same without cluster size
         }
       }
-    }
-    else {
+    } else {
       LHCb::VeloLiteCluster::FastContainer * liteClusters =
         get<LHCb::VeloLiteCluster::FastContainer>(LHCb::VeloLiteClusterLocation::Default);
-
+      
       if (liteClusters){
         LHCb::VeloLiteCluster::FastContainer::const_iterator iClus;
-
+        
         for(iClus = liteClusters->begin(); iClus != liteClusters->end(); ++iClus) {
           m_partList.clear();
           int id   = LHCb::LHCbID( (*iClus).channelID()).veloID();
@@ -128,7 +126,7 @@ StatusCode PatLHCbID2MCParticle::execute() {
             id++;
           }
           for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = 
-              m_partList.begin(); m_partList.end() != itP; ++itP ) {
+                  m_partList.begin(); m_partList.end() != itP; ++itP ) {
             LHCb::LHCbID temp = (*iClus).channelID();
             lhcbLink.link( temp.lhcbID(), *itP ); // same without cluster size
           }
@@ -136,80 +134,90 @@ StatusCode PatLHCbID2MCParticle::execute() {
       }
     }
   }
-
+  
   //== TT (UT)
   if (m_linkTT) {
     LinkedTo<LHCb::MCParticle,LHCb::STCluster> 
       ttLink( evtSvc(), msgSvc(), (m_useUT ? LHCb::STClusterLocation::UTClusters : LHCb::STClusterLocation::TTClusters) );
-
+    
     const LHCb::STCluster::Container* cont = 
       get<LHCb::STCluster::Container>(m_useUT ? LHCb::STClusterLocation::UTClusters : LHCb::STClusterLocation::TTClusters);
- 
-
+    
+    
     for(  LHCb::STCluster::Container::const_iterator iclus = cont->begin();
-	  iclus != cont->end(); ++iclus) {
+          iclus != cont->end(); ++iclus) {
       
       m_partList.clear();
       LHCb::LHCbID lId = LHCb::LHCbID((*iclus)->channelID());
       int size   = (*iclus)->size();
       int id = lId.stID();
-
-      for ( int nn = 0; size > nn; ++nn ) {
-	part = ttLink.first( id );
-	while ( 0 != part ) {
-	    addToList( part );
-	    part = ttLink.next( );
-	}
-	id++;
-      }
-       for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = m_partList.begin();
-	     m_partList.end() != itP; ++itP ) {
-	 lhcbLink.link( lId.lhcbID(), *itP );
-       }
-    }
-  }
-
-  //== IT coordinates
-  if (m_linkIT) {
-    LinkedTo<LHCb::MCParticle,LHCb::STCluster> 
-      itLink( evtSvc(), msgSvc(),LHCb::STClusterLocation::ITClusters );
- 
-    const LHCb::STCluster::Container* cont = 
-      get<LHCb::STCluster::Container>(LHCb::STClusterLocation::ITClusters);
- 
-    for(  LHCb::STCluster::Container::const_iterator iclus = cont->begin();
-	  iclus != cont->end(); ++iclus) {
-
-      m_partList.clear();
-      LHCb::LHCbID lId = LHCb::LHCbID((*iclus)->channelID());
-      int size   = (*iclus)->size();
       
-      int id = lId.stID();
       
       for ( int nn = 0; size > nn; ++nn ) {
-	part = itLink.first( id );
+        if ( isVerbose )  verbose() << format( "   TTChannelID %8x ",  id );
+        part = ttLink.first( id );
         while ( 0 != part ) {
-	    addToList( part );
-          part = itLink.next();
+          if ( isVerbose ) verbose() << " " << part->key();
+          addToList( part );
+          part = ttLink.next( );
         }
-	id++;
+        if ( isVerbose ) verbose() << endmsg;
+        id++;
       }
-      for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = 
-	      m_partList.begin();m_partList.end() != itP; ++itP ) {
+      
+      for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = m_partList.begin();
+            m_partList.end() != itP; ++itP ) {
         lhcbLink.link( lId.lhcbID(), *itP );
       }
     }
   }
+  
+  //== IT coordinates
+  if (m_linkIT) {
+    LinkedTo<LHCb::MCParticle,LHCb::STCluster> 
+      itLink( evtSvc(), msgSvc(),LHCb::STClusterLocation::ITClusters );
+    
+    const LHCb::STCluster::Container* cont = 
+      get<LHCb::STCluster::Container>(LHCb::STClusterLocation::ITClusters);
+    
+    for(  LHCb::STCluster::Container::const_iterator iclus = cont->begin();
+          iclus != cont->end(); ++iclus) {
 
+      m_partList.clear();
+      LHCb::LHCbID lId = LHCb::LHCbID((*iclus)->channelID());
+      int size   = (*iclus)->size();
+      
+      int id = lId.stID();
+     
+      
+      for ( int nn = 0; size > nn; ++nn ) {
+        if ( isVerbose )  verbose() << format( "   ITChannelID %8x ",  id );
+        part = itLink.first( id );
+        while ( 0 != part ) {
+          if ( isVerbose ) verbose() << " " << part->key();
+          addToList( part );
+          part = itLink.next();
+        }
+        if ( isVerbose ) verbose() << endmsg;
+        id++;
+      }
+      if ( isVerbose ) verbose() << endmsg;
+      for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = 
+              m_partList.begin();m_partList.end() != itP; ++itP ) {
+        lhcbLink.link( lId.lhcbID(), *itP );
+      }
+    }
+  }
+  
   //== OT coordinates
   if (m_linkOT) {
     LinkedTo<LHCb::MCParticle> 
       otLink( evtSvc(), msgSvc(),LHCb::OTTimeLocation::Default );
-
+    
     OTHitRange othits = m_otHitCreator->hits();
-
+    
     for (OTHitRange::const_iterator otSTH = othits.begin();
-        otSTH < othits.end();otSTH++){ 
+         otSTH < othits.end();otSTH++){ 
       m_partList.clear();
       LHCb::LHCbID lId = (*otSTH)->lhcbID();
       int id = lId.otID();
@@ -222,11 +230,13 @@ StatusCode PatLHCbID2MCParticle::execute() {
       }
       if ( isVerbose ) verbose() << endmsg;
       for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = 
-          m_partList.begin();m_partList.end() != itP; ++itP ) {
+              m_partList.begin();m_partList.end() != itP; ++itP ) {
         lhcbLink.link( lId.lhcbID(), *itP ); 
       }
     }
   }
+  
+  if( msgLevel( MSG::DEBUG ) ) debug() << "==> End of execute" << endmsg;
 
   return StatusCode::SUCCESS;
 }
