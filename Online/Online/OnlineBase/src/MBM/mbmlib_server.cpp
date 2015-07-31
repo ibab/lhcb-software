@@ -37,9 +37,9 @@ static inline int mbm_error(const char* fn, int line)  {
 
 #define MBM_MAX_BUFF  32
 #define MBM_USER_MAGIC 0xFEEDBABE
-#define CHECKED_CONSUMER(u)  (u); if ( !(u) || (u)->magic != MBM_USER_MAGIC || (u)->uid == -1 ) return MBM_ILL_CONS;
-#define CHECKED_CLIENT(u)    (u); if ( !(u) || (u)->magic != MBM_USER_MAGIC || (u)->uid == -1 ) return MBM_ERROR;
-#define CHECK_BMID(bm)       (bm); if ( !(bm) || 0 == (bm)->lockid ) return MBM_ERROR;
+#define CHECKED_CONSUMER(u)  (u); if ( !(u) || (u)->magic != MBM_USER_MAGIC || (u)->uid == -1   ) return MBM_ILL_CONS;
+#define CHECKED_CLIENT(u)    (u); if ( !(u) || (u)->magic != MBM_USER_MAGIC || (u)->uid == -1   ) return MBM_ERROR;
+#define CHECK_BMID(b)        (b); if ( !(b) || (b)->magic != MBM_USER_MAGIC || 0 == (b)->lockid ) return MBM_ERROR;
 #define  MBM_ERROR_CODE mbm_error_code()
 #undef   MBM_ERROR
 #define  MBM_ERROR  mbm_error(__FILE__,__LINE__);
@@ -401,6 +401,14 @@ USER* _mbmsrv_ualloc(ServerBMID bm)  {
   for (int i = 0; i < c->p_umax; ++i, ++u)  {
     u = bm->user + i;
     if (u->busy == 0)    {
+      // Reset queue entries
+      u->wsnext.next  = 0;
+      u->wsnext.prev  = 0;
+      u->wesnext.next = 0;
+      u->wesnext.prev = 0;
+      u->wenext.next  = 0;
+      u->wenext.prev  = 0;
+      // Reset basic data
       u->busy     =  1;
       u->uid      =  i;
       u->pid      = -1;
@@ -425,6 +433,9 @@ USER* _mbmsrv_ualloc(ServerBMID bm)  {
 int _mbmsrv_del_wev (USER* u) {
   if ( u->state != S_wevent )  {
     ::lib_rtl_output(LIB_RTL_ERROR,"INCONSISTENCY: Delete user from WEV queue without state S_wevent\n");
+  }
+  if ( u->wenext.next == 0 && u->wenext.prev != 0 )   {
+    ::lib_rtl_output(LIB_RTL_ERROR,"INCONSISTENCY: Remove user from WEV queue without valid QUE entry\n");
   }
   ::remqent(&u->wenext);
   return MBM_NORMAL;
@@ -509,11 +520,17 @@ int _mbmsrv_free_reqone_id(ServerBMID bm,int user_type,int user_type_one) {
 /// Free user slot
 int _mbmsrv_ufree(USER* u)  {
   if ( u->busy == 1 )  {
-    u->space_size = 0;
-    u->space_add  = 0;
-    u->busy       = 0;
-    u->uid        = 0;
-    u->fifo       = 0;
+    u->space_size   =  0;
+    u->space_add    =  0;
+    u->busy         =  0;
+    u->uid          =  0;
+    u->fifo         = -1;
+    u->wsnext.next  =  0;
+    u->wsnext.prev  =  0;
+    u->wesnext.next =  0;
+    u->wesnext.prev =  0;
+    u->wenext.next  =  0;
+    u->wenext.prev  =  0;
     ::remqent(u);
     return MBM_NORMAL;
   }
@@ -652,7 +669,6 @@ int _mbmsrv_efree (ServerBMID bm, USER* u, EVENT* e)  {
     (*bm->free_event)(pars);
   }
   e->busy = 0;
-  u->ev_freed++;
   ::remqent(e);
   c->i_events--;
   /// Check wait event slot queue
@@ -969,7 +985,7 @@ int mbmsrv_include (ServerBMID bm, MSG& msg) {
   const char* name    = inc.name;              // client name
   LOCK lock(bm->lockid);
 
-  USER*       u       = _mbmsrv_ualloc(bm);     // find free user slot
+  USER* u = _mbmsrv_ualloc(bm);                // find free user slot
   if (u == 0)  {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to allocate user slot of %s for %s.\n",bm_name,name);
     return mbmsrv_send_include_error(bm,msg,MBM_NO_FREE_US); // Typical use case: Too many users
@@ -1009,7 +1025,7 @@ int mbmsrv_include (ServerBMID bm, MSG& msg) {
   struct epoll_event epoll;
   epoll.events = EPOLLERR | EPOLLHUP;
   epoll.data.fd = u->fifo;
-  if ( 0 > ::epoll_ctl(bm->clientfd, EPOLL_CTL_ADD,u->fifo,&epoll) ) {
+  if ( 0 > ::epoll_ctl(bm->clientfd, EPOLL_CTL_ADD, u->fifo,&epoll) ) {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to client fifo %s to epoll descriptor.\n",u->fifoName);
     return mbmsrv_send_include_error(bm,msg,MBM_INTERNAL);
   }
@@ -1026,6 +1042,7 @@ int mbmsrv_exclude (ServerBMID bm, MSG& msg)  {
   }
   _mbmsrv_reply(bm,msg,u->fifo);
   ::close(u->fifo);
+  u->fifo = -1;
   _mbmsrv_uclean(bm, u);
   return MBM_NO_REPLY;
 }
@@ -1546,6 +1563,7 @@ int mbmsrv_disconnect(ServerBMID bm)    {
       if ( u->fifo > 0 ) ::close(u->fifo);
       if ( u->fifoName[0] ) ::unlink(u->fifoName);
       u->fifoName[0] = 0;
+      u->fifo = -1;
       _mbmsrv_uclean(bm,u);
     }
   }
@@ -1572,19 +1590,24 @@ static int _mbmsrv_client_watch(void* param) {
   ServerBMID bm = (ServerBMID)param;
   try {
     while ( !bm->stop )   {
-      //::lib_rtl_sleep(10000);
+      ::lib_rtl_sleep(10);
+#if 0
       struct epoll_event epoll;
-      int nclients = ::epoll_wait(bm->clientfd, &epoll, 1, 1500);
+      int nclients = ::epoll_wait(bm->clientfd, &epoll, 1, 1000);
       if ( bm->stop ) return 0x1;
-      if ( nclients < 0 && errno == EINTR ) continue;
-      {	/// Check consumer if (some) clients are waiting for events
+      else if ( nclients < 0 && errno == EINTR ) continue;
+      else if ( nclients > 0 && epoll.events&(EPOLLERR|EPOLLHUP) ) {
+	/*
+	/// Check consumer if (some) clients are waiting for events
         LOCK lock(bm->lockid);
         MBMScanner<EVENT> que(bm->evDesc, -EVENT_next_off);
         for(EVENT* e=que.get(); e; e=que.get() )  {
           _mbmsrv_check_wev(bm,e);  // check wev queue
         }
+	*/
       }
-      if ( nclients > 0 ) {
+      else if ( nclients > 0 ) {
+	/*
         if( epoll.events&(EPOLLERR|EPOLLHUP) ) {
           if ( 0 > ::epoll_ctl(bm->clientfd, EPOLL_CTL_DEL,epoll.data.fd,&epoll) ) {
             ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to remove client fifo %d.\n",epoll.data.fd);
@@ -1599,7 +1622,9 @@ static int _mbmsrv_client_watch(void* param) {
             }
           }
         }
+	*/
       }
+#endif
     }
     return 0x1;
   }
@@ -1637,13 +1662,15 @@ int _mbmsrv_watch_clients(ServerBMID bm)   {
  */ 
 int mbmsrv_dispatch_call(ServerBMID bm, int which)  {
   ServerBMID_t::Server& s = bm->server[which];
-  struct epoll_event epoll;
+  struct epoll_event epoll, epoll_null;
   MSG msg(0);
 
+  ::memset(&epoll_null,0,sizeof(epoll_null));
   while ( !bm->stop )   {
     if ( bm->stop )  {
       break;
     }
+    epoll = epoll_null;
     int nclients = ::epoll_wait(s.poll, &epoll, 1, 100);
     if ( bm->stop )
       break;
@@ -1651,7 +1678,30 @@ int mbmsrv_dispatch_call(ServerBMID bm, int which)  {
       continue;
     else if ( nclients < 1 )
       continue;
-    if ( epoll.events&EPOLLIN ) {
+    else if( epoll.events&(EPOLLERR|EPOLLHUP) ) {
+      if ( 0 > ::epoll_ctl(bm->clientfd, EPOLL_CTL_DEL,epoll.data.fd,&epoll) ) {
+	::lib_rtl_signal_message(LIB_RTL_OS,"Failed to remove client fifo %d.\n",epoll.data.fd);
+      }
+      else   {
+	::close(epoll.data.fd);
+	LOCK lock(bm->lockid);
+	for (USER* u=bm->user, *last=u+bm->ctrl->p_umax; u != last; ++u)    {
+	  if ( u->fifo>0 && u->fifo == epoll.data.fd && u->fifo > 0 && u->uid > 0 ) {
+	    ::lib_rtl_output(LIB_RTL_WARNING,"MBM server removing dead client '%s'.pid:%d\n",
+			     u->name,u->pid);
+	    u->fifo = -1;
+	    _mbmsrv_uclean(bm,u);
+	    break;
+	  }
+	}
+      }
+      /// Check consumer if (some) clients are waiting for events
+      MBMScanner<EVENT> que(bm->evDesc, -EVENT_next_off);
+      for(EVENT* e=que.get(); e; e=que.get() )  {
+	_mbmsrv_check_wev(bm,e);  // check wev queue
+      }
+    }
+    else if ( epoll.events&EPOLLIN ) {
       if ( MBM_NORMAL != msg.read(epoll.data.fd) ) {
         ::perror("error while reading : message is lost");
       }

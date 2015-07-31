@@ -21,36 +21,30 @@
 namespace MBM {
 
   struct DisplayDescriptor;
-  class USSTAT
-  {
+  class USSTAT  {
   public:
     std::string Name;
-    unsigned long long evprod,evseen,evfreed;
+    unsigned long long evprod,evseen;
     CONTROL *ctrl;
-    USSTAT():
-      Name(""),evprod(0),evseen(0),evfreed(0),ctrl(0)
-    {
-    }
+    USSTAT(): Name(""),evprod(0),evseen(0),ctrl(0) {    }
   };
   typedef std::map<std::string,USSTAT*> UMap_t;
-  typedef struct
-  {
+  typedef struct  {
     UMap_t UserMap;
     unsigned long long evprod,evactual,evcons;
-  }BMSTAT;
-  typedef struct ShadowBMs
-  {
+  } BMSTAT;
+  typedef struct ShadowBMs  {
     int nusers;
     USER *us;
     CONTROL *ctrl;
-  }ShadowBMs_t;
+  } ShadowBMs_t;
   typedef std::map<std::string,BMSTAT*> BMMap_t;
   class Monitor : public Interactor  {
   protected:
     DisplayDescriptor*  m_bms;
     int                 m_numBM;
     char                m_buffID[32];
-    char*               m_bmid;
+    char                m_partID[32];
     lib_rtl_gbl_t       m_bm_all;
     BUFFERS*            m_buffers;
     MonitorDisplay*     m_display;

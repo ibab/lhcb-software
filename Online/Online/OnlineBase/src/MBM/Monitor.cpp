@@ -28,51 +28,39 @@
 #define vsnprintf _vsnprintf
 #endif
 #include <utility>
+
 using namespace MBM;
 using namespace std;
-namespace
-{
-  static const char *sstat[17] =
-    { " nl", "   ", "*SL", "*EV", "*SP", "WSL", "WEV", "WSP", "wsl", "wev", "wsp",
-      " ps", " ac", "SPR", "WER", "   " };
 
+namespace   {
+  static const char *sstat[17] =  {
+    " nl", "   ", "*SL", "*EV", "*SP", "WSL", "WEV", "WSP", "wsl", "wev", "wsp",
+    " ps", " ac", "SPR", "WER", "   " 
+  };
   static int cont = 1;
 }
 
-namespace MBM
-{
-  struct ManagerImp: public Manager
-  {
-    virtual int optparse(const char*)
-    {
+namespace MBM  {
+  struct ManagerImp: public Manager  {
+    virtual int optparse(const char*)    {
       return 1;
     }
-    ManagerImp()
-    {
-    }
-    virtual ~ManagerImp()
-    {
-    }
+    ManagerImp()    {    }
+    virtual ~ManagerImp()    {    }
   };
 
-  struct DisplayDescriptor
-  {
+  struct DisplayDescriptor  {
     ManagerImp m_mgr;
     BUFFERS::BUFF* m_buff;
-    DisplayDescriptor() :
-      m_buff(0)
-    {
-    }
-    ~DisplayDescriptor()
-    {
-    }
+    DisplayDescriptor() : m_buff(0)  {  }
+    ~DisplayDescriptor()    {    }
   };
 }
 
-Monitor::Monitor(int argc, char** argv, MonitorDisplay* disp) :
-  m_bms(0), m_bmid(0), m_bm_all(0), m_buffers(0), m_display(disp), m_updating(false)
-
+Monitor::Monitor(int argc, char** argv, MonitorDisplay* disp) 
+  : m_bms(0), m_bm_all(0), m_buffers(0), m_display(disp), m_updating(false)
 {
+  m_buffID[0] = m_partID[0] = 0;
   m_display->setClient(this);
   rateMode = false;
   LastTime = 0;
@@ -80,8 +68,7 @@ Monitor::Monitor(int argc, char** argv, MonitorDisplay* disp) :
   m_BMMap.clear();
 }
 
-Monitor::~Monitor()
-{
+Monitor::~Monitor() {
   TimeSensor::instance().remove(this);
   for(int i=0; i<20 && m_updating; ++i)
     ::lib_rtl_sleep(10);
@@ -89,8 +76,7 @@ Monitor::~Monitor()
     delete m_display;
 }
 
-size_t Monitor::print(void* ctxt, int, const char* format, va_list args)
-{
+size_t Monitor::print(void* ctxt, int, const char* format, va_list args)  {
   char buffer[1024];
   Monitor* m = (Monitor*) ctxt;
   size_t res = ::vsnprintf(buffer, sizeof(buffer), format, args);
@@ -98,42 +84,34 @@ size_t Monitor::print(void* ctxt, int, const char* format, va_list args)
   return res;
 }
 
-void Monitor::getOptions(int argc, char** argv)
-{
-  while (--argc > 0)
-  { /* process options  */
+void Monitor::getOptions(int argc, char** argv)   {
+  while (--argc > 0)  { /* process options  */
     const char* cptr = *++argv;
     if (*cptr == '-' || *cptr == '/')
       optparse(cptr + 1);
   }
 }
 
-int Monitor::monitor()
-{
+int Monitor::monitor()  {
   int status = initMonitor();
-  if (!lib_rtl_is_success(status))
-  {
+  if (!lib_rtl_is_success(status))  {
     exit(status);
   }
   display()->setup_window();
-  if (cont)
-  {
+  if (cont)  {
     updateDisplay();
     TimeSensor::instance().add(this, 1, 0);
     TimeSensor::instance().run();
   }
-  else
-  {
+  else  {
     show_information();
   }
   display()->reset_window();
   return 1;
 }
 
-void Monitor::handle(const Event& ev)
-{
-  switch (ev.eventtype)
-  {
+void Monitor::handle(const Event& ev)   {
+  switch (ev.eventtype)  {
   case TimeEvent:
     updateDisplay();
     TimeSensor::instance().add(this, 2, 0);
@@ -145,13 +123,11 @@ void Monitor::handle(const Event& ev)
   }
 }
 
-int Monitor::initMonitor()
-{
+int Monitor::initMonitor()   {
   //signal (SIGINT,handler);
   //signal (SIGABRT,handler);
   int status = ::mbmsrv_map_global_buffer_info(&m_bm_all);
-  if (!lib_rtl_is_success(status))
-  {
+  if (!lib_rtl_is_success(status))  {
     ::printf("Cannot map global buffer information....\n");
     return status;
   }
@@ -160,11 +136,9 @@ int Monitor::initMonitor()
   return 1;
 }
 
-int Monitor::updateDisplay()
-{
+int Monitor::updateDisplay()   {
   m_updating = true;
-  try
-  {
+  try  {
     if (LastTime == 0)      {
       LastTime = this->myGetTime();
       get_bm_list();
@@ -182,8 +156,7 @@ int Monitor::updateDisplay()
     CopyData();
     drop_bm_list();
   }
-  catch (...)
-  {
+  catch (...)  {
     display()->draw_line_normal(" Exception during buffer monitoring.");
   }
   MonitorDisplay* m_disp = display();
@@ -192,8 +165,7 @@ int Monitor::updateDisplay()
   return 1;
 }
 
-size_t Monitor::draw_buffer(const char* name, CONTROL* ctr)
-{
+size_t Monitor::draw_buffer(const char* name, CONTROL* ctr)   {
   char txt[256], rate1[64], rate2[64], rate3[64];
   ::snprintf(txt, sizeof(txt), " Buffer \"%s\"", name);
   ::snprintf(rate1, sizeof(rate1), "----");
@@ -208,16 +180,16 @@ size_t Monitor::draw_buffer(const char* name, CONTROL* ctr)
     ::snprintf(rate3, sizeof(rate3), "%.3f", double(ctr->tot_seen-st->evcons)/deltaTime*1000.0);
   }
   display()->draw_line_normal(
-                              "%-26s  Events: Produced:%d (%s kHz) Actual:%d (%s kHz) Seen:%d (%s kHz) Pending:%d Max:%d",
+                              "%-26s  Events: Produced:%d (%s kHz) Actual:%d (%s kHz) Seen:%d (%s kHz)",
                               txt,
                               ctr->tot_produced,rate1,
                               ctr->tot_actual,  rate2,
-                              ctr->tot_seen,    rate3,
-                              ctr->i_events, ctr->p_emax);
+                              ctr->tot_seen,    rate3);
   display()->draw_line_normal(
-                              "%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]", "",
+                              "%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d] Pending:%d Max:%d", "",
                               (ctr->bm_size * ctr->bytes_p_Bit) / 1024,
-                              (ctr->i_space * ctr->bytes_p_Bit) / 1024, ctr->i_users, ctr->p_umax);
+                              (ctr->i_space * ctr->bytes_p_Bit) / 1024, ctr->i_users, ctr->p_umax,
+			      ctr->i_events, ctr->p_emax);
 
   display()->draw_line_normal(" Occupancy [Events]:");
   display()->draw_bar(30, display()->currLine() - 1,
@@ -236,19 +208,17 @@ int Monitor::show_information()
   static const char* fmt_prod;
   static const char* fmt_cons;
   static const char* head;
-  if (rateMode)
-  {
-    fmt_def =  " %1d/%-34s%5x%7d%5s          %40s%5s %7s";
-    fmt_prod = " %1d/%-34s%5x%7d%5s%6s    %7.3f   %3.0f%32s %7s";
-    fmt_cons = " %1d/%-34s%5x%7d%5s%6s                    %7.3f    %7.3f   %3.0f%5s %7s";
-    head =    " Srv/Name                        Partition    Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
+  if (rateMode)  {
+    fmt_def =  " %1d/%-38s%5x%7d%5s          %30s%5s %7s";
+    fmt_prod = " %1d/%-38s%5x%7d%5s%6s    %7.3f   %3.0f%22s %7s";
+    fmt_cons = " %1d/%-38s%5x%7d%5s%6s                    %7.3f    %3.0f%5s %7s";
+    head =    " Srv/Name                            Partition    Pid Type State   Produced %%prod     #seen  %%seen Reqs Buffer";
   }
-  else
-  {
-    fmt_def =  " %1d/%-34s%5x%7d%5s          %40s%5s %7s";
-    fmt_prod = " %1d/%-34s%5x%7d%5s%6s%11d   %3.0f%32s %7s";
-    fmt_cons = " %1d/%-34s%5x%7d%5s%6s               %12d%11d   %3.0f%5s %7s";
-    head =     " Srv/Name                        Partition    Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
+  else  {
+    fmt_def =  " %1d/%-38s%5x%7d%5s          %30s%5s %7s";
+    fmt_prod = " %1d/%-38s%5x%7d%5s%6s%11d   %3.0f%22s %7s";
+    fmt_cons = " %1d/%-38s%5x%7d%5s%6s               %12d    %3.0f%5s %7s";
+    head =     " Srv/Name                            Partition    Pid Type State   Produced %%prod     #seen  %%seen Reqs Buffer";
   }
   char line[256];
   display()->draw_line_normal("");
@@ -257,27 +227,22 @@ int Monitor::show_information()
                                ::lib_rtl_timestr("%a %d %b %Y  %H:%M:%S", 0), lib_rtl_pid(),
                                RTL::nodeName().c_str());
   display()->draw_line_normal("");
-  for (i = 0; m_numBM > 0 && i < m_buffers->p_bmax; i++)
-  {
-    if (m_bms[i].m_buff != 0)
-    {
+  for (i = 0; m_numBM > 0 && i < m_buffers->p_bmax; i++)  {
+    if (m_bms[i].m_buff != 0)  {
       BufferMemory* dsc = m_bms[i].m_mgr.m_bm;
       draw_buffer(dsc->bm_name, dsc->ctrl);
       display()->draw_line_normal("");
     }
   }
   display()->draw_line_reverse(m_numBM <= 0 ? "               No active buffers present" : head);
-  for (i = 0; m_numBM > 0 && i < m_buffers->p_bmax; i++)
-  {
-    if (m_bms[i].m_buff != 0)
-    {
+  for (i = 0; m_numBM > 0 && i < m_buffers->p_bmax; i++)  {
+    if (m_bms[i].m_buff != 0)    {
       USER *us, *utst = (USER*) ~0x0;
       BufferMemory* dsc = m_bms[i].m_mgr.m_bm;
       CONTROL* ctr = dsc->ctrl;
       BMMap_t::iterator it = m_BMMap.find(dsc->bm_name);
       BMSTAT *st = (it != m_BMMap.end()) ? (*it).second : 0;
-      for (j = 0, us = dsc->user; j < ctr->p_umax; j++, us++)
-      {
+      for (j = 0, us = dsc->user; j < ctr->p_umax; j++, us++)   {
         if (us == utst || us == 0)
           break;
         if (us->block_id != BID_USER)
@@ -290,8 +255,7 @@ int Monitor::show_information()
           ust = (uit == st->UserMap.end()) ? 0 : (*uit).second;
         }
         char spy_val[5] = { ' ', ' ', ' ', ' ', 0 };
-        for (k = 0; k < us->n_req; ++k)
-        {
+        for (k = 0; k < us->n_req; ++k)   {
           if (us->req[k].user_type == BM_REQ_USER)
             spy_val[2] = 'U';
           else if (us->req[k].user_type == BM_REQ_ALL)
@@ -301,47 +265,39 @@ int Monitor::show_information()
           if (us->req[k].freq < 100.0)
             spy_val[0] = 'F';
         }
-        if (us->ev_produced > 0 || us->get_sp_calls > 0)
-        {
+        if (us->ev_produced > 0 || us->get_sp_calls > 0)  {
           float perc = 0;
           if (ctr->tot_produced > 0)
             perc = ((float) us->ev_produced / (float) ctr->tot_produced) * 100;
-          if (!rateMode)
-          {
+          if (!rateMode)  {
             ::snprintf(line, sizeof(line), fmt_prod, us->serverid, us->name,
                        us->partid, us->pid, "P", sstat[us->state + 1], us->ev_produced,
                        perc + 0.1, spy_val, dsc->bm_name);
           }
-          else
-          {
+          else  {
             ::snprintf(line, sizeof(line), fmt_prod, us->serverid, us->name,
                        us->partid, us->pid, "P", sstat[us->state + 1], 
                        ust ? double(us->ev_produced-ust->evprod)/deltaTime*1000 : 0.0,
                        perc + 0.1, spy_val, dsc->bm_name);
           }
         }
-        else if (us->ev_actual > 0 || us->get_ev_calls > 0 || us->n_req > 0)
-        {
+        else if (us->ev_actual > 0 || us->get_ev_calls > 0 || us->n_req > 0)  {
           float perc = 0;
           if (ctr->tot_produced > 0)
             perc = ((float) us->ev_seen / (float) ctr->tot_produced) * 100;
-          if (!rateMode)
-          {
+          if (!rateMode)  {
             ::snprintf(line, sizeof(line), fmt_cons, us->serverid, us->name,
                        us->partid, us->pid, "C", sstat[us->state + 1], us->ev_seen,
-                       us->ev_freed, perc + 0.1, spy_val, dsc->bm_name);
+                       perc + 0.1, spy_val, dsc->bm_name);
           }
-          else
-          {
+          else  {
             ::snprintf(line, sizeof(line), fmt_cons, us->serverid, us->name,
                        us->partid, us->pid, "C", sstat[us->state + 1], 
                        ust ? double(us->ev_seen-ust->evseen)/deltaTime*1000 : 0.0,
-                       ust ? double(us->ev_freed - ust->evfreed)/deltaTime*1000 : 0.0, 
                        perc + 0.1, spy_val, dsc->bm_name);
           }
         }
-        else
-        {
+        else  {
           ::snprintf(line, sizeof(line), fmt_def, us->serverid, us->name,
                      us->partid, us->pid, "?", "", spy_val, dsc->bm_name);
         }
@@ -352,46 +308,54 @@ int Monitor::show_information()
   return 1;
 }
 
-int Monitor::optparse(const char* c)
-{
+int Monitor::optparse(const char* c)  {
   int iret;
-  switch (*c | 0x20)
-  {
-  case 's': /*      Single Update*/
+  switch (*c | 0x20)    {
+  case 's':   /*      Single Update*/
     cont = 0;
     break;
-  case 'i': /*      buffer_id        */
-    iret = ::sscanf(c + 1, "=%s", m_buffID);
-    if (iret != 1)
-    {
-      ::lib_rtl_output(LIB_RTL_ERROR,
-                       "Error reading Buffer identifier parameter.\n");
+  case 'p':   /*      partition_id     */
+    m_partID[0]='_';
+    m_partID[1]=0;
+    iret = ::sscanf(c + 1, "=%s", m_partID+1);
+    if (iret != 1)    {
+      ::lib_rtl_output(LIB_RTL_ERROR,"Error reading Partition identifier from input options.\n");
+      ::lib_rtl_sleep(3000);
       ::exit(0);
     }
-    m_bmid = m_buffID;
     break;
-  case 'r':
+  case 'i': { /*      buffer_id        */
+    iret = ::sscanf(c + 1, "=%s", m_buffID);
+    if (iret != 1)    {
+      ::lib_rtl_output(LIB_RTL_ERROR,"Error reading Buffer identifier from input options.\n");
+      ::lib_rtl_sleep(3000);
+      ::exit(0);
+    }
+    break;
+  }
+  case 'r':  {
     rateMode = true;
     break;
+  }
   case '?':
   case 'h':
-  default:
+  default: {
     ::lib_rtl_output(LIB_RTL_ALWAYS, "mbm_mon - Buffer Manager Monitor\n");
-  ::lib_rtl_output(LIB_RTL_ALWAYS, "Options:\n");
-  ::lib_rtl_output(LIB_RTL_ALWAYS,
-                   "    -i=<bm_name>   Select Buffer Identifier\n");
-  ::lib_rtl_output(LIB_RTL_ALWAYS, "    -s             Single update \n");
-  exit(0);
+    ::lib_rtl_output(LIB_RTL_ALWAYS, "Options:\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS, "    -i=<bm_name>   Select Buffer Identifier\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS, "    -p=<part_name> Select Partition Identifier\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS, "    -s             Single update \n");
+    exit(0);
+  }
   }
   return 1;
 }
-void Monitor::CopyData()
-{
+
+void Monitor::CopyData()  {
   BMMap_t::iterator it;
   BMSTAT *st;
   int j;
-  for (int i = 0; i < m_buffers->p_bmax; ++i)
-  {
+  for (int i = 0; i < m_buffers->p_bmax; ++i)  {
     if ( !m_bms[i].m_buff ) continue;
     if (m_buffers->buffers[i].used == 1)    {
       it = m_BMMap.find(string(m_buffers->buffers[i].name));
@@ -406,13 +370,11 @@ void Monitor::CopyData()
       st->evcons = m_bms[i].m_mgr.m_bm->ctrl->tot_seen;
       st->evprod = m_bms[i].m_mgr.m_bm->ctrl->tot_produced;
     }
-    if (st != 0 && m_bms[i].m_buff != 0)
-    {
+    if (st != 0 && m_bms[i].m_buff != 0)  {
       USER *us, *utst = (USER*) ~0x0;
       BufferMemory* dsc = m_bms[i].m_mgr.m_bm;
       CONTROL* ctr = dsc->ctrl;
-      for (j = 0, us = dsc->user; j < ctr->p_umax; j++, us++)
-      {
+      for (j = 0, us = dsc->user; j < ctr->p_umax; j++, us++)  {
         if (us == utst || us == 0)
           break;
         if (us->block_id != BID_USER)
@@ -422,33 +384,27 @@ void Monitor::CopyData()
         UMap_t::iterator uit;
         USSTAT *ust;
         uit = st->UserMap.find(string(us->name));
-        if (uit == st->UserMap.end())
-        {
+        if (uit == st->UserMap.end())   {
           ust = new USSTAT;
           st->UserMap.insert(make_pair(string(us->name),ust));
         }
-        else
-        {
+        else   {
           ust = (*uit).second;
         }
-        if (string(us->name) != ust->Name)
-        {
+        if (string(us->name) != ust->Name)  {
           ust->Name = us->name;
         }
         ust->evprod = us->ev_produced;
         ust->evseen = us->ev_seen;
-        ust->evfreed = us->ev_freed;
       }
     }
   }
 }
 
-int Monitor::get_bm_list()
-{
+int Monitor::get_bm_list()   {
   m_numBM = 0;
   int status = ::mbmsrv_map_global_buffer_info(&m_bm_all, false);
-  if (!lib_rtl_is_success(status))
-  {
+  if (!lib_rtl_is_success(status))  {
     //::lib_rtl_output(LIB_RTL_ERROR,"Cannot map global buffer information....\n");
     m_bm_all = 0;
     m_buffers = 0;
@@ -457,16 +413,17 @@ int Monitor::get_bm_list()
   }
   m_buffers = (BUFFERS*) m_bm_all->address;
   m_bms = new DisplayDescriptor[m_buffers->p_bmax];
-  for (int i = 0; i < m_buffers->p_bmax; ++i)
-  {
-    if (m_buffers->buffers[i].used == 1)
-    {
-      if (m_bmid != 0 && strcmp(m_bmid, m_buffers->buffers[i].name) != 0)
-      {
+  for (int i = 0; i < m_buffers->p_bmax; ++i)  {
+    if (m_buffers->buffers[i].used == 1) {
+      size_t l1 = ::strlen(m_buffers->buffers[i].name);
+      size_t l2 = m_partID[0] != 0 ? ::strlen(m_partID) : 0;
+      if (m_buffID[0] != 0 && ::strcmp(m_buffID, m_buffers->buffers[i].name) != 0)  {
         continue;
       }
-      if (m_bms[i].m_buff == 0)
-      {
+      if (l2 > 0 && l1>l2 && ::strcmp(m_partID, m_buffers->buffers[i].name+l1-l2) != 0)  {
+        continue;
+      }
+      if (m_bms[i].m_buff == 0)      {
         m_bms[i].m_mgr.setup(m_buffers->buffers[i].name);
         int sc = m_bms[i].m_mgr.mapMonitorSections();
         if (!lib_rtl_is_success(sc))
@@ -475,8 +432,7 @@ int Monitor::get_bm_list()
       }
       m_numBM++;
     }
-    else if (m_bms[i].m_buff != 0)
-    {
+    else if (m_bms[i].m_buff != 0)    {
       m_bms[i].m_mgr.unmapSections();
       m_bms[i].m_buff = 0;
     }
@@ -484,22 +440,17 @@ int Monitor::get_bm_list()
   return 1;
 }
 
-int Monitor::drop_bm_list()
-{
-  if (m_numBM > 0)
-  {
-    for (int i = 0; i < m_buffers->p_bmax; ++i)
-    {
-      if (m_bms[i].m_buff != 0)
-      {
+int Monitor::drop_bm_list()  {
+  if (m_numBM > 0)  {
+    for (int i = 0; i < m_buffers->p_bmax; ++i)    {
+      if (m_bms[i].m_buff != 0)  {
         m_bms[i].m_mgr.unmapSections();
         m_bms[i].m_buff = 0;
       }
     }
   }
   m_numBM = 0;
-  if (m_bm_all)
-  {
+  if (m_bm_all)  {
     ::mbmsrv_unmap_global_buffer_info(m_bm_all, false);
     m_bm_all = 0;
   }
@@ -509,8 +460,8 @@ int Monitor::drop_bm_list()
   m_bms = 0;
   return 1;
 }
-unsigned long long Monitor::myGetTime()
-{
+
+unsigned long long Monitor::myGetTime()  {
   struct timeval tv;
   unsigned long long v;
   gettimeofday(&tv, 0);
