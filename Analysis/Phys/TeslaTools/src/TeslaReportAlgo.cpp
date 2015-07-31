@@ -177,6 +177,15 @@ StatusCode TeslaReportAlgo::execute()
   std::stringstream ss_MPIDLoc;
   ss_MPIDLoc << m_OutputPref << m_inputName << "/MuonPIDs"; // NOT STORED BY ORIGINAL SELREPORTS
   //
+  std::stringstream ss_CaloHyposLoc;
+  ss_CaloHyposLoc << m_OutputPref << m_inputName << "/CaloHypos";
+  //
+  std::stringstream ss_CaloClustLoc;
+  ss_CaloClustLoc << m_OutputPref << m_inputName << "/CaloClusters";
+  //
+  std::stringstream ss_DigitLoc;
+  ss_DigitLoc << m_OutputPref << m_inputName << "/Digits";
+  //
   std::stringstream ss_P2PVLoc;
   ss_P2PVLoc << m_OutputPref << m_inputName << "/Particle2VertexRelations";
   //
@@ -197,6 +206,15 @@ StatusCode TeslaReportAlgo::execute()
   //
   LHCb::MuonPID::Container* cont_MPID = new LHCb::MuonPID::Container() ;
   put( cont_MPID , ss_MPIDLoc.str().c_str() );
+  //
+  LHCb::CaloHypo::Container* cont_CaloHypo = new LHCb::CaloHypo::Container() ;
+  put( cont_CaloHypo , ss_CaloHyposLoc.str().c_str() );
+  //
+  LHCb::CaloCluster::Container* cont_CaloClust = new LHCb::CaloCluster::Container() ;
+  put( cont_CaloClust , ss_CaloClustLoc.str().c_str() );
+  //
+  LHCb::CaloDigit::Container* cont_CaloDigit = new LHCb::CaloDigit::Container() ;
+  put( cont_CaloDigit , ss_DigitLoc.str().c_str() );
   //
   // PV situation:
   // Need to detect if a refitted PV has been stored.
@@ -323,6 +341,7 @@ StatusCode TeslaReportAlgo::execute()
       std::vector<ContainedObject*> newObjects_mother;
       LHCb::Particle* Part = new LHCb::Particle();
       newObjects_mother.push_back(Part);
+      std::vector<ContainedObject*> calo_mother;
       //
       if( motherBasic == true ){
         //
@@ -341,12 +360,17 @@ StatusCode TeslaReportAlgo::execute()
         LHCb::MuonPID* muon = new LHCb::MuonPID();
         newObjects_mother.push_back(muon);
         cont_MPID->insert( muon );
-        //  
+        //
       } 
       
-      fillParticleInfo( newObjects_mother , Obj , motherBasic, cont_Track );
+      fillParticleInfo( newObjects_mother , Obj , motherBasic, cont_Track, &calo_mother );
       cont_Part->insert( Part );
-     
+      for( auto calo : calo_mother ){
+        if( calo->clID() == LHCb::CLID_CaloHypo ) cont_CaloHypo->insert( dynamic_cast<LHCb::CaloHypo*>( calo ) );
+        if( calo->clID() == LHCb::CLID_CaloCluster ) cont_CaloClust->insert( dynamic_cast<LHCb::CaloCluster*>( calo ) );
+        if( calo->clID() == LHCb::CLID_CaloDigit ) cont_CaloDigit->insert( dynamic_cast<LHCb::CaloDigit*>( calo ) );
+      }
+
       // Which PV is best for the mother???
       double min_var = -1.0;
       int key = 0;
@@ -373,7 +397,7 @@ StatusCode TeslaReportAlgo::execute()
       if( m_PV3D || m_refitted ) cont_P2PV->relate( Part , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
 
       if( motherBasic == false ) ProcessObject( 0, key, Part, Obj, cont_PV, cont_Vert, cont_Part,
-                    cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_P2PV);
+                    cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_CaloHypo, cont_CaloClust, cont_CaloDigit, cont_P2PV);
     } // candidate (loop)
   } // report exists (if)
 	
@@ -390,6 +414,9 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, int key, LHCb::Particle* Part, 
     ,LHCb::RichPID::Container* cont_RPID
     ,LHCb::MuonPID::Container* cont_MPID
     ,LHCb::Track::Container* cont_Track
+    ,LHCb::CaloHypo::Container* cont_CaloHypo
+    ,LHCb::CaloCluster::Container* cont_CaloClust
+    ,LHCb::CaloDigit::Container* cont_CaloDigit
     ,Particle2Vertex::Table* cont_P2PV
     ){
 
@@ -429,6 +456,7 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, int key, LHCb::Particle* Part, 
 
     // make the objects to be stored
     std::vector<ContainedObject*> newObjects_d;
+    std::vector<ContainedObject*> calo_daughter;
 
     LHCb::Particle* Part_d = new LHCb::Particle();
     newObjects_d.push_back(Part_d);
@@ -454,21 +482,29 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, int key, LHCb::Particle* Part, 
       LHCb::MuonPID* muon_d = new LHCb::MuonPID();
       newObjects_d.push_back(muon_d);
       cont_MPID->insert( muon_d );
-      //  
+      //
       vert_mother->addToOutgoingParticles( Part_d );
-      fillParticleInfo( newObjects_d , Obj_d , d_Basic, cont_Track );
+      fillParticleInfo( newObjects_d , Obj_d , d_Basic, cont_Track, &calo_daughter);
+      for( auto calo : calo_daughter ){
+        if( calo->clID() == LHCb::CLID_CaloHypo ) cont_CaloHypo->insert( dynamic_cast<LHCb::CaloHypo*>( calo ) );
+        if( calo->clID() == LHCb::CLID_CaloCluster ) cont_CaloClust->insert( dynamic_cast<LHCb::CaloCluster*>( calo ) );
+        if( calo->clID() == LHCb::CLID_CaloDigit ) cont_CaloDigit->insert( dynamic_cast<LHCb::CaloDigit*>( calo ) );
+      }
     }
     else {
       vert_mother->addToOutgoingParticles( Part_d );
-      fillParticleInfo( newObjects_d , Obj_d , d_Basic , cont_Track );
+      fillParticleInfo( newObjects_d , Obj_d , d_Basic , cont_Track , &calo_daughter);
       ProcessObject( n, key, Part_d, Obj_d, cont_PV, cont_Vert, cont_Part,
-          cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_P2PV);
+          cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_CaloHypo, cont_CaloClust, cont_CaloDigit, cont_P2PV);
     }
   }
   return StatusCode::SUCCESS;
 }
 
-void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, const LHCb::HltObjectSummary* obj, bool isBasic, LHCb::Track::Container* cont_Track){
+void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, 
+    const LHCb::HltObjectSummary* obj, 
+    bool isBasic, LHCb::Track::Container* cont_Track, 
+    std::vector<ContainedObject*>* calo_vector){
 /*
  * vector Key:
  * For basic particle:
@@ -631,6 +667,38 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
             debug() << "MuonPID details added" << endmsg; 
             break;
           }
+        
+        case LHCb::CLID_CaloCluster:
+          {
+            // Need to make new CaloCluster and seed Digit
+            LHCb::CaloCluster* calo = new LHCb::CaloCluster();
+            
+            // reports save seed LHCbID so only need the first one
+            std::vector<LHCb::LHCbID> ids = ObjBasic->lhcbIDs();
+            LHCb::CaloCellID cellID = (*(ids.begin())).caloID();
+            LHCb::CaloDigit* digit = DigitSearchRaw(cellID);
+            if( !digit->parent() ) {
+              digit->setCellID(cellID);
+              calo_vector->push_back(digit);
+            }
+            
+            const LHCb::HltObjectSummary::Info Calo_info = ObjBasic->numericalInfo();
+            // What keys are present:
+            std::vector<std::string> vec_keys_calo = ObjBasic->numericalInfoKeys();
+            if ( msgLevel(MSG::DEBUG) ) {
+              debug() << "Available information (calo)" << endmsg;
+              for(std::vector<std::string>::iterator it = vec_keys_calo.begin(); it!=vec_keys_calo.end(); it++) debug() << *it << " = " << Calo_info[(*it)] << endmsg;
+            }
+            m_conv->CaloClusterObjectFromSummary(&Calo_info,calo,turbo);
+            calo->setSeed(cellID);
+            LHCb::CaloClusterEntry entry;
+            entry.setStatus( LHCb::CaloDigitStatus::UseForEnergy );
+            entry.setDigit(digit);
+            calo->setEntries(std::vector<LHCb::CaloClusterEntry> { {entry} });
+            calo_vector->push_back(calo);
+            
+            break;
+          }
       }
     }
     // tie our pieces together and set cross class information
@@ -678,6 +746,29 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
       if(muon->InAcceptance()==true) proto->addInfo(LHCb::ProtoParticle::InAccMuon,1.0);
       else proto->addInfo(LHCb::ProtoParticle::InAccMuon,0.0);
     }
+
+    // add calorimeter hypos
+    if( calo_vector->size()>0 ){
+      LHCb::CaloHypo* hypo = new LHCb::CaloHypo();
+      for( auto calo : *calo_vector ){
+        if( calo->clID() == LHCb::CLID_CaloCluster ) {
+          LHCb::CaloCluster* calo_clust = dynamic_cast<LHCb::CaloCluster*>( calo );
+          hypo->addToClusters( calo_clust );
+          if( calo_clust->entries().size()>0 ) hypo->addToDigits( calo_clust->entries().front().digit() );
+        }
+      }
+      calo_vector->push_back( hypo );
+    }
+    for( auto calo : *calo_vector ){
+      if( calo->clID() == LHCb::CLID_CaloHypo ) proto->addToCalo( dynamic_cast<LHCb::CaloHypo*>( calo ) );
+    }
+
+    if ( msgLevel(MSG::DEBUG) ){
+      debug() << "Proto has " << proto->calo().size() << " calo hypotheses" << endmsg;
+      debug() << "First hypo has " << proto->calo().front()->clusters().size() << " clusters and "
+        << proto->calo().front()->digits().size() << " digits" << endmsg;
+      debug() << "First CaloCluster has " << proto->calo().front()->clusters().front()->entries().size() << " entries" << endmsg;
+    }
   }
 }
 
@@ -695,4 +786,26 @@ void TeslaReportAlgo::fillVertexInfo(LHCb::Vertex* vert, const LHCb::HltObjectSu
   if ( msgLevel(MSG::DEBUG) ) debug() << "Decay vertex chi2 = " << vert->chi2() << endmsg;
 
   return;
+}
+
+LHCb::CaloDigit* TeslaReportAlgo::DigitSearchRaw(LHCb::CaloCellID id){
+  LHCb::CaloDigits * caloDigits = getIfExists<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Ecal );
+  if( caloDigits ){
+    for( auto calo : *caloDigits ){
+      if( calo->cellID() == id ) {
+        if ( msgLevel(MSG::DEBUG) ) debug() << "Digit match found, energy = " << calo->e() << endmsg;
+        return calo;
+      }
+    }
+  }
+  if( !caloDigits ){
+    LHCb::CaloDigits * caloDigitsH = getIfExists<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Default );
+    for( auto calo : *caloDigitsH ){
+      if( calo->cellID() == id ) {
+        if ( msgLevel(MSG::DEBUG) ) debug() << "Digit match found, energy = " << calo->e() << endmsg;
+        return calo;
+      }
+    }
+  }
+  return ( new LHCb::CaloDigit() );
 }

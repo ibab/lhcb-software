@@ -56,8 +56,11 @@ public:
             ,LHCb::RichPID::Container*
             ,LHCb::MuonPID::Container*
             ,LHCb::Track::Container*
+            ,LHCb::CaloHypo::Container*
+            ,LHCb::CaloCluster::Container*
+            ,LHCb::CaloDigit::Container*
             ,Particle2Vertex::Table*);
-        void fillParticleInfo(std::vector<ContainedObject*>,const LHCb::HltObjectSummary*,bool, LHCb::Track::Container*);
+        void fillParticleInfo(std::vector<ContainedObject*>,const LHCb::HltObjectSummary*,bool, LHCb::Track::Container*,std::vector<ContainedObject*>*);
         void fillVertexInfo(LHCb::Vertex*,const LHCb::HltObjectSummary*);
 
         template <typename Iter, typename Cont>
@@ -66,6 +69,7 @@ public:
           return (iter != cont.end()) && (next(iter) == cont.end());
         }
 
+        LHCb::CaloDigit* DigitSearchRaw(LHCb::CaloCellID);
 protected:
 
 private:

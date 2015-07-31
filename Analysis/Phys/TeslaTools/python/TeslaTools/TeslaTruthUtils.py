@@ -15,6 +15,9 @@ def getRelLoc(prefix):
     relloc = "/Event/Turbo/Relations/Turbo/" + protos
     return relloc
 
+def getNeutralRelLoc(line):
+    return "/Event/Turbo/" + line + "/Relations/Turbo/NeutralPP2MC"
+
 def associateSequence(prefix,debug):
     from Gaudi.Configuration import GaudiSequencer 
     from Configurables import TrackAssociator, ChargedPP2MC
