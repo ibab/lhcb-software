@@ -624,6 +624,34 @@ class DBuilder(object):
         return [MergedSelection('D2KsHHWSBeauty2Charm_%s%s'%(which,tag),
                                 RequiredSelections=[psels,msels])]
 
+    # CRJ : To be improved. Will have hideous combinatorics if used ...
+    def _makeD2Pi0hhhh(self,which,up=False):
+        '''Makes D->Pi0hhhh'''
+        min,max = self._massWindow('D0wide')
+        decays = [
+            ['pi+','pi-','pi+','pi-','pi0'],
+            ['pi+','pi-','pi+','K-','pi0'],['pi+','pi-','K+','pi-','pi0'],
+            ['pi+','K-','pi+','pi-','pi0'],['K+','pi-','pi+','pi-','pi0'],
+            ['pi+','pi-','K+','K-','pi0'],['pi+','K-','pi+','K-','pi0'],
+            ['K+','pi-','pi+','K-','pi0'],
+            ['pi+','K-','K+','K-','pi0'],['K+','pi-','K+','K-','pi0'],
+            ['K+','K-','K+','pi-','pi0'],
+            ['K+','K-','K+','K-','pi0']
+            ]
+        wm = awmFunctor(decays,min,max)
+        config = deepcopy(self.config)    
+        config.pop('ADOCA15_MAX')
+        config.pop('ADOCA25_MAX')
+        config.pop('ADOCA35_MAX')
+        config.pop('ADOCA45_MAX')
+        if up : extrainputs = self.pi0[which]+ [self.uppions]
+        else : extrainputs = self.pi0[which]  
+        protoD2pi0hh = self._makeD2FiveBody('D2Pi0HHHH_'+which,['D0 -> pi+ pi- pi+ pi- pi0'],
+                                            wm,up,config,extrainputs)
+        name = 'D2Pi0HHHH'
+        if up: name += 'UP'
+        return [subPIDSels(decays,name,which,min,max,[protoD2pi0hh])]
+
     def _makeD2Pi0hhh(self,which,up=False):
         '''Makes D->Pi0hhh'''
         tag = ''
@@ -674,7 +702,7 @@ class DBuilder(object):
         return [MergedSelection('D2Pi0HHHBeauty2Charm_%s%s'%(which,tag),
                                 RequiredSelections=[pselspi,mselspi,pselsk,mselsk])]
 
-    ## # Proposed new version, avoid SubPID 
+    ## Proposed new version, avoid SubPID 
     ## def _makeD2Pi0hhh(self,which,up=False):
     ##     '''Makes D->Pi0hhh'''
     ##     tag = ''
@@ -720,34 +748,40 @@ class DBuilder(object):
         
     ##     return [MergedSelection('D2Pi0HHHBeauty2Charm_%s%s'%(which,tag),RequiredSelections=sels)]
 
-    # CRJ : To be improved. Will have hideous combinatorics if used ...
-    def _makeD2Pi0hhhh(self,which,up=False):
-        '''Makes D->Pi0hhhh'''
-        min,max = self._massWindow('D0wide')
-        decays = [
-            ['pi+','pi-','pi+','pi-','pi0'],
-            ['pi+','pi-','pi+','K-','pi0'],['pi+','pi-','K+','pi-','pi0'],
-            ['pi+','K-','pi+','pi-','pi0'],['K+','pi-','pi+','pi-','pi0'],
-            ['pi+','pi-','K+','K-','pi0'],['pi+','K-','pi+','K-','pi0'],
-            ['K+','pi-','pi+','K-','pi0'],
-            ['pi+','K-','K+','K-','pi0'],['K+','pi-','K+','K-','pi0'],
-            ['K+','K-','K+','pi-','pi0'],
-            ['K+','K-','K+','K-','pi0']
-            ]
-        wm = awmFunctor(decays,min,max)
-        config = deepcopy(self.config)    
-        config.pop('ADOCA15_MAX')
-        config.pop('ADOCA25_MAX')
-        config.pop('ADOCA35_MAX')
-        config.pop('ADOCA45_MAX')
-        if up : extrainputs = self.pi0[which]+ [self.uppions]
-        else : extrainputs = self.pi0[which]  
-        protoD2pi0hh = self._makeD2FiveBody('D2Pi0HHHH_'+which,['D0 -> pi+ pi- pi+ pi- pi0'],
-                                            wm,up,config,extrainputs)
-        name = 'D2Pi0HHHH'
-        if up: name += 'UP'
-        return [subPIDSels(decays,name,which,min,max,[protoD2pi0hh])]
-    
+    ## ## Proposed new version, avoid SubPID 
+    ## def _makeD2Pi0hh(self,which,up=False):
+    ##     '''Makes D->Pi0hh'''
+        
+    ##     min,max = self._massWindow('D0wide')
+
+    ##     tag = ''
+    ##     if up: tag = 'UP'
+        
+    ##     config = deepcopy(self.config)    
+    ##     config.pop('ADOCA13_MAX')
+    ##     config.pop('ADOCA23_MAX')
+        
+    ##     if up : extrainputs = self.pi0[which] + [self.kaons] + [self.uppions]
+    ##     else  : extrainputs = self.pi0[which] + [self.kaons]
+
+    ##     sels = [ ]
+
+    ##     sels += [ self._makeD2ThreeBody( 'D2PiPiPi0_'+which, ['D0 -> pi+ pi- pi0'],
+    ##                                      awmFunctor([['pi+','pi+','pi0']],min,max),
+    ##                                      up,config,extrainputs ) ]
+    ##     sels += [ self._makeD2ThreeBody( 'D2KPiPi0_'+which,  ['D0 -> K+ pi- pi0'],
+    ##                                      awmFunctor([['K+','pi+','pi0']],min,max),
+    ##                                      up,config,extrainputs ) ]
+    ##     sels += [ self._makeD2ThreeBody( 'D2PiKPi0_'+which,  ['D0 -> pi+ K- pi0'],
+    ##                                      awmFunctor([['pi+','K+','pi0']],min,max),
+    ##                                      up,config,extrainputs ) ]
+    ##     sels += [ self._makeD2ThreeBody( 'D2KKPi0_'+which,   ['D0 -> K+ K- pi0'],
+    ##                                      awmFunctor([['K+','K+','pi0']],min,max),
+    ##                                      up,config,extrainputs ) ]
+
+    ##     return [MergedSelection('D2Pi0HHBeauty2Charm_%s%s'%(which,tag),RequiredSelections=sels)]
+
+
     def _makeD2Pi0hh(self,which,up=False):
         '''Makes D->Pi0hh'''
         min,max = self._massWindow('D0wide')
