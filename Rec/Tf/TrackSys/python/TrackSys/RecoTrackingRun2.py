@@ -372,6 +372,10 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    bestTrackCreator.DoNotRefit = True
    bestTrackCreator.addTool( TrackStateInitTool, name = "StateInitTool")
    bestTrackCreator.StateInitTool.UseFastMomentumEstimate = True
+   # cut on ghost prob
+   bestTrackCreator.AddGhostProb = True
+   bestTrackCreator.GhostIdTool = "Run2GhostId"
+   bestTrackCreator.MaxGhostProb = 0.5
    # configure its fitter and stateinittool
    ConfiguredMasterFitter( getattr(bestTrackCreator, "Fitter"), SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit, MSRossiAndGreisen = True )
    if "FastVelo" in trackAlgs :

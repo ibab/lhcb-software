@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-07-31 - Michel De Cian
+ - Switch on ghost probability in TrackBestTrackCreator and set it to 0.5 for Run II tracking.
+
 !========================= TrackSys v9r9 2015-07-20 =========================
 ! 2015-07-20 - Michel De Cian
  - Switch on new multiple scattering treatment for public tools like TrackExtrapolator, TrackInterpolator and TrackStateProvider
