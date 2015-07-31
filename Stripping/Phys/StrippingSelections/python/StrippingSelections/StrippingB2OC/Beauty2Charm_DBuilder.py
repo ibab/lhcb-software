@@ -702,7 +702,7 @@ class DBuilder(object):
         return [MergedSelection('D2Pi0HHHBeauty2Charm_%s%s'%(which,tag),
                                 RequiredSelections=[pselspi,mselspi,pselsk,mselsk])]
 
-    ## Proposed new version, avoid SubPID 
+    ## ## Proposed new version, avoid SubPID 
     ## def _makeD2Pi0hhh(self,which,up=False):
     ##     '''Makes D->Pi0hhh'''
     ##     tag = ''
@@ -862,6 +862,40 @@ class DBuilder(object):
         name = 'D2KsPi0HH'
         if up: name += 'UP'
         return [subPIDSels(decays,name,whichKs+'_'+whichPi0,min,max,[protoD2Kspi0hh])]
+
+    ## ## Proposed new SubPID free implementation
+    ## def _makeD2KSPi0hh(self,whichKs,whichPi0,up=False):
+    ##     '''Makes D->KsPi0hh'''
+        
+    ##     min,max = self._massWindow('D0wide')
+
+    ##     tag = ''
+    ##     if up: tag = 'UP'
+
+    ##     which = whichKs+'_'+whichPi0
+        
+    ##     config = deepcopy(self.config)
+    ##     config.pop('ADOCA13_MAX')
+    ##     config.pop('ADOCA23_MAX')
+    ##     config.pop('ADOCA14_MAX')
+    ##     config.pop('ADOCA24_MAX')
+    ##     config.pop('ADOCA34_MAX')
+        
+    ##     if up : extrainputs = [self.kaons] + self.pi0[whichPi0] + self.ks[whichKs] + [self.uppions]
+    ##     else  : extrainputs = [self.kaons] + self.pi0[whichPi0] + self.ks[whichKs]
+
+    ##     sels = [ ]
+
+    ##     sels += [ self._makeD2FourBody('D2PiPiKsPi0_'+which,['D0 -> pi+ pi- KS0 pi0'],
+    ##                                    awmFunctor([['pi+','pi-','KS0','pi0']],min,max),up,config,extrainputs) ]
+    ##     sels += [ self._makeD2FourBody('D2KPiKsPi0_'+which,['D0 -> K+ pi- KS0 pi0'],
+    ##                                    awmFunctor([['K+','pi-','KS0','pi0']],min,max),up,config,extrainputs) ]
+    ##     sels += [ self._makeD2FourBody('D2PiKKsPi0_'+which,['D0 -> pi+ K- KS0 pi0'],
+    ##                                    awmFunctor([['pi+','K-','KS0','pi0']],min,max),up,config,extrainputs) ]
+    ##     sels += [ self._makeD2FourBody('D2KKKsPi0_'+which,['D0 -> K+ K- KS0 pi0'],
+    ##                                    awmFunctor([['K+','K-','KS0','pi0']],min,max),up,config,extrainputs) ]
+
+    ##     return [ MergedSelection( 'D2HHKSPi0'+whichPi0+whichKs+tag, RequiredSelections=sels ) ]
 
     def _makeD2hhhh(self,up=False):
         '''Makes D->hhhh'''
