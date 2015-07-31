@@ -279,19 +279,19 @@ class Bu2hhhBuilder(LineBuilder) :
                                                    self.selKKK : 'ConeIso15B', 
                                                    'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso15K1", "ConeIso15K2", "ConeIso15K3"],
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKKK : 'NConeIso05B', 
                                                    'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso05K1", "NConeIso05K2", "NConeIso05K3"],
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKKK : 'NConeIso10B', 
                                                    'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso10K1", "NConeIso10K2", "NConeIso10K3"],
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKKK : 'NConeIso15B', 
@@ -324,19 +324,19 @@ class Bu2hhhBuilder(LineBuilder) :
                                                    self.selKKK : 'ConeIso15B', 
                                                    'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso15K1", "ConeIso15K2", "ConeIso15K3"],
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKKK : 'NConeIso05B', 
                                                    'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso05K1", "NConeIso05K2", "NConeIso05K3"],
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKKK : 'NConeIso10B', 
                                                    'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso10K1", "NConeIso10K2", "NConeIso10K3"],
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKKK : 'NConeIso15B', 
@@ -372,21 +372,21 @@ class Bu2hhhBuilder(LineBuilder) :
                                                    'Phys/StdAllLooseProtons'   :                                                     ["ConeIso15p1", "ConeIso15p2"],
                                                    'Phys/StdAllNoPIDsKaons'   : 'ConeIso15K'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selpph : 'NConeIso05B', 
                                                    'Phys/StdAllLooseProtons'   :                                                     ["NConeIso05p1", "NConeIso05p2"],
                                                    'Phys/StdAllNoPIDsKaons'   : 'NConeIso05K'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selpph : 'NConeIso10B', 
                                                    'Phys/StdAllLooseProtons'   :                                                     ["NConeIso10p1", "NConeIso10p2"],
                                                    'Phys/StdAllNoPIDsKaons'   : 'NConeIso10K'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selpph : 'NConeIso15B', 

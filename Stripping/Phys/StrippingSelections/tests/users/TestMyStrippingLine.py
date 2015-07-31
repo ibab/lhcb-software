@@ -31,6 +31,7 @@ ConfigCDBAccessSvc().File = '$STRIPPINGSELECTIONSROOT/tests/data/config.cdb'
 # Specify the name of your configuration
 confname='B2JpsiXforEM' #FOR USERS
 confname='Beauty2Charm'
+confname='Bc2hhh'
 
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 
@@ -157,7 +158,7 @@ unpackIt.InputName = "pRec/Track/FittedHLT1VeloTracks"
 unpackIt.OutputName = "Rec/Track/FittedHLT1VeloTracks"
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 1000
+DaVinci().EvtMax = 10000
 DaVinci().PrintFreq = 2000
 DaVinci().appendToMainSequence( [unpackIt] )
 DaVinci().appendToMainSequence( [ sc.sequence() ] )

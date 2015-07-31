@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-31 - Adlene Hicheur
+ - Added a couple of more neutral cone variables to StrippingBnoC/StrippingBu2hhh and StrippingBc2hhh_BnoC
+ - Retuned StrippingBc2hhh_BnoC to accept more 2+1 configurations
+
 ! 2015-07-31 - Michael Kolpin
  - Additional updates to TrackEffDownMuon
 
@@ -12,7 +16,6 @@
    -StrippingB2XTauNu.py
    -StrippingB2DMuForTauMu.py
    -StrippingLb2pMuNuVub.py
-
 
 ! 2015-07-31 - Ricardo Vazquez Gomez
  - Align few cuts with offline selection of the DarkBoson lines to reduce the rate.

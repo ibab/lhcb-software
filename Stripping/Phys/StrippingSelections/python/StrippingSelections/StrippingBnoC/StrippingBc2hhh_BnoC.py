@@ -1,4 +1,4 @@
- # $Id: StrippingBc2hhh_BnoC.py,v 1.4 2015-05-13$
+ # $Id: StrippingBc2hhh_BnoC.py,v 1.5 2015-07-31$
 '''
 Module for construction of Bc->hhh from:   
      Exclusive lines to reconstruct the pipipi, Kpipi, KKpi, KKK, pppi and ppK decay modes.
@@ -15,7 +15,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Alvaro Gomes', 'Adlene Hicheur']
 __date__ = '31/08/2014'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.5 $'
 
 __all__ = ('Bc2hhhBuilder',
            'makepipipi_excl', 
@@ -29,17 +29,17 @@ __all__ = ('Bc2hhhBuilder',
 
 config_params = {
     'MaxTrSIZE'             : 200,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
-    '_h_PT'                 : 250.,     ## tracks min PT
+    '_h_PT'                 : 300.,     ## tracks min PT
     '_h_P'                  : 2500.,    ## tracks min P  
     '_h_IPCHI2'             : 1.,       ## min tracks IP wrt OWNPV
     '_h_TRCHI2DOF'          : 3.0,      ## max tracks CHI2DOF
-    '_h_TRGHP'              : .5,        ## Track PROBNNghost     
+    '_h_TRGHP'              : .5,        ## Track Ghost Probability     
     '_3h_DOCA'              : .2,       ## max DOCA between h and 2h 
     '_3h_PTmax'             : 1500,     ## min PT of the 3h highest PT track
     '_3h_DIRA'              : .9999,   ## min cos angle between 3h momentum and PV decay direction   
     '_3h_FDCHI2'            : 150.,     ## min 3h FDCHI2 wrt best 3h PV  
     '_3h_SVPV'              : 1.5,      ## Distance between sv and pv
-    '_3h_CHI2'              : 20.0,     ## max 3h vertex CHI2 
+    '_3h_CHI2'              : 40.0,     ## max 3h vertex CHI2 
     '_3h_IPCHI2'            : 10.,      ## max 3h IP CHI2 wrt best 3h PV
     '_3h_PT'                : 1000.,    ## min 3h PT   
     '_3h_PTsum'             : 4500.,    ## min of 3h tracks PT sum 
@@ -102,17 +102,17 @@ default_config = {
     'WGs'         : ['BnoC'],
     'BUILDERTYPE' : 'Bc2hhhBuilder',
     'CONFIG'      : { 'MaxTrSIZE'             : 200,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
-                      '_h_PT'                 : 250.,     ## tracks min PT
+                      '_h_PT'                 : 300.,     ## tracks min PT
                       '_h_P'                  : 2500.,    ## tracks min P  
                       '_h_IPCHI2'             : 1.,       ## min tracks IP wrt OWNPV
                       '_h_TRCHI2DOF'          : 3.0,      ## max tracks CHI2DOF
-                      '_h_TRGHP'              : .5,        ## Track PROBNNghost     
+                      '_h_TRGHP'              : .5,        ## Track Ghost Probability     
                       '_3h_DOCA'              : .2,       ## max DOCA between h and 2h 
                       '_3h_PTmax'             : 1500,     ## min PT of the 3h highest PT track
                       '_3h_DIRA'              : .9999,   ## min cos angle between 3h momentum and PV decay direction   
                       '_3h_FDCHI2'            : 150.,     ## min 3h FDCHI2 wrt best 3h PV  
                       '_3h_SVPV'              : 1.5,      ## Distance between sv and pv
-                      '_3h_CHI2'              : 20.0,     ## max 3h vertex CHI2 
+                      '_3h_CHI2'              : 40.0,     ## max 3h vertex CHI2 
                       '_3h_IPCHI2'            : 10.,      ## max 3h IP CHI2 wrt best 3h PV
                       '_3h_PT'                : 1000.,    ## min 3h PT   
                       '_3h_PTsum'             : 4500.,    ## min of 3h tracks PT sum 
@@ -393,19 +393,19 @@ class Bc2hhhBuilder(LineBuilder) :
                                                    self.selpipipi : 'ConeIso15B', 
                                                    'Phys/StdAllNoPIDsPions'   :                                                     ["ConeIso15pi1", "ConeIso15pi2", "ConeIso15pi3"],
                                                }                                                                           },
-                                           { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONENMULT'],
+                                           { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selpipipi : 'NConeIso05B', 
                                                    'Phys/StdAllNoPIDsPions'   :                                                     ["NConeIso05pi1", "NConeIso05pi2", "NConeIso05pi3"],
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selpipipi : 'NConeIso10B', 
                                                    'Phys/StdAllNoPIDsPions'   :                                                     ["NConeIso10pi1", "NConeIso10pi2", "NConeIso10pi3"],
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selpipipi : 'NConeIso15B', 
@@ -442,21 +442,21 @@ class Bc2hhhBuilder(LineBuilder) :
                                                    'Phys/StdAllNoPIDsPions'   :                                                     ["ConeIso15pi1", "ConeIso15pi2"],
                                                    'Phys/StdAllNoPIDsKaons'   : 'ConeIso15K'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKpipi : 'NConeIso05B', 
                                                    'Phys/StdAllNoPIDsPions'   :                                                     ["NConeIso05pi1", "NConeIso05pi2"],
                                                    'Phys/StdAllNoPIDsKaons'   : 'NConeIso05K'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKpipi : 'NConeIso10B', 
                                                    'Phys/StdAllNoPIDsPions'   :                                                     ["NConeIso10pi1", "NConeIso10pi2"],
                                                    'Phys/StdAllNoPIDsKaons'   : 'NConeIso10K'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKpipi : 'NConeIso15B', 
@@ -493,21 +493,21 @@ class Bc2hhhBuilder(LineBuilder) :
                                                    'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso15K1", "ConeIso15K2"],
                                                    'Phys/StdAllNoPIDsPions'   : 'ConeIso15pi'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKKpi : 'NConeIso05B', 
                                                    'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso05K1", "NConeIso05K2"],
                                                    'Phys/StdAllNoPIDsPions'   : 'NConeIso05pi'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKKpi : 'NConeIso10B', 
                                                    'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso10K1", "NConeIso10K2"],
                                                    'Phys/StdAllNoPIDsPions'   : 'NConeIso10pi'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKKpi : 'NConeIso15B', 
@@ -541,19 +541,19 @@ class Bc2hhhBuilder(LineBuilder) :
                                                    self.selKKK : 'ConeIso15B', 
                                                    'Phys/StdAllNoPIDsKaons'   :                                                     ["ConeIso15K1", "ConeIso15K2", "ConeIso15K3"],
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKKK : 'NConeIso05B', 
                                                    'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso05K1", "NConeIso05K2", "NConeIso05K3"],
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKKK : 'NConeIso10B', 
                                                    'Phys/StdAllNoPIDsKaons'   :                                                     ["NConeIso10K1", "NConeIso10K2", "NConeIso10K3"],
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selKKK : 'NConeIso15B', 
@@ -589,21 +589,21 @@ class Bc2hhhBuilder(LineBuilder) :
                                                    'Phys/StdAllLooseProtons'   :                                                     ["ConeIso15p1", "ConeIso15p2"],
                                                    'Phys/StdAllNoPIDsPions'   : 'ConeIso15pi'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selpppi : 'NConeIso05B', 
                                                    'Phys/StdAllLooseProtons'   :                                                     ["NConeIso05p1", "NConeIso05p2"],
                                                    'Phys/StdAllNoPIDsPions'   : 'NConeIso05pi'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selpppi : 'NConeIso10B', 
                                                    'Phys/StdAllLooseProtons'   :                                                     ["NConeIso10p1", "NConeIso10p2"],
                                                    'Phys/StdAllNoPIDsPions'   : 'NConeIso10pi'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selpppi : 'NConeIso15B', 
@@ -641,21 +641,21 @@ class Bc2hhhBuilder(LineBuilder) :
                                                    'Phys/StdAllLooseProtons'   :                                                     ["ConeIso15p1", "ConeIso15p2"],
                                                    'Phys/StdAllNoPIDsKaons'   : 'ConeIso15K'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 0.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selppK : 'NConeIso05B', 
                                                    'Phys/StdAllLooseProtons'   :                                                     ["NConeIso05p1", "NConeIso05p2"],
                                                    'Phys/StdAllNoPIDsKaons'   : 'NConeIso05K'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.0, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selppK : 'NConeIso10B', 
                                                    'Phys/StdAllLooseProtons'   :                                                     ["NConeIso10p1", "NConeIso10p2"],
                                                    'Phys/StdAllNoPIDsKaons'   : 'NConeIso10K'
                                                }                                                                           },
-                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONENMULT'],
+                                          { 'Type' : 'RelInfoConeVariablesForEW', 'ConeAngle' : 1.5, 'Variables' : ['EWCONEANGLE','EWCONENPX','EWCONENPY','EWCONENPZ','EWCONENMULT'],
                                             'RecursionLevel' : 1,
                                             'Locations' : {
                                                    self.selppK : 'NConeIso15B', 
@@ -699,7 +699,7 @@ def makepipipi_excl(name,
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
-                             & (PROBNNghost < %(_h_TRGHP)s)" % locals()}
+                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
     _combinationCut = "(((AM < %(_3h_Mmax)s*MeV) & (AM > %(_3h_Mmin)s*MeV)) | ((AM < %(_bu3h_Mmax)s*MeV) & (AM > %(_bu3h_Mmin)s*MeV))) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
     _motherCut = "(MAXTREE(((ABSID=='pi+') | (ABSID=='pi-')),PT) > %(_3h_PTmax)s*MeV) \
@@ -753,12 +753,12 @@ def makeKpipi_excl(name,
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNk > %(_probnnk)s) \
-                             & (PROBNNghost < %(_h_TRGHP)s)" % locals(),
+                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals(),
                       "pi+": "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
-                             & (PROBNNghost < %(_h_TRGHP)s)" % locals()}
+                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
     _combinationCut = "(((AM < %(_3h_Mmax)s*MeV) & (AM > %(_3h_Mmin)s*MeV)) | ((AM < %(_bu3h_Mmax)s*MeV) & (AM > %(_bu3h_Mmin)s*MeV))) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
     _motherCut = "(MAXTREE(((ABSID=='K+') | (ABSID=='K-') | ('pi+'==ABSID) | ('pi-'==ABSID)),PT) > %(_3h_PTmax)s*MeV) \
@@ -813,13 +813,13 @@ def makeKKpi_excl(name,
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNk > %(_probnnk)s) \
-                             & (PROBNNghost < %(_h_TRGHP)s)" % locals(),
+                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals(),
                       "pi+" : "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNpi > %(_probnnpi)s) \
-                             & (PROBNNghost < %(_h_TRGHP)s)" % locals()}
+                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
     _combinationCut = "(((AM < %(_3h_Mmax)s*MeV) & (AM > %(_3h_Mmin)s*MeV)) | ((AM < %(_bu3h_Mmax)s*MeV) & (AM > %(_bu3h_Mmin)s*MeV))) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
     _motherCut = "(MAXTREE(((ABSID=='K+') | (ABSID=='K-') | ('pi+'==ABSID) | ('pi-'==ABSID)),PT) > %(_3h_PTmax)s*MeV) \
@@ -873,7 +873,7 @@ def makeKKK_excl(name,
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNk > %(_probnnk)s) \
-                             & (PROBNNghost < %(_h_TRGHP)s)" % locals()}
+                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
     _combinationCut = "(((AM < %(_3h_Mmax)s*MeV) & (AM > %(_3h_Mmin)s*MeV)) | ((AM < %(_bu3h_Mmax)s*MeV) & (AM > %(_bu3h_Mmin)s*MeV))) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
     _motherCut = "(MAXTREE(((ABSID=='K+') | (ABSID=='K-')),PT) > %(_3h_PTmax)s*MeV) \
@@ -928,13 +928,13 @@ def makepppi_excl(name,
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNp > %(_probnnp)s) \
-                             & (PROBNNghost < %(_h_TRGHP)s)" % locals(),
+                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals(),
 		      "pi+" :  "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNpi > %(_probnnpi)s) \
-                             & (PROBNNghost < %(_h_TRGHP)s)" % locals()}
+                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
     _combinationCut = "(((AM < %(_3h_Mmax)s*MeV) & (AM > %(_3h_Mmin)s*MeV)) | ((AM < %(_bu3h_Mmax)s*MeV) & (AM > %(_bu3h_Mmin)s*MeV))) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
     _motherCut = "(MAXTREE(((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='pi+') | (ABSID=='pi-')),PT) > %(_3h_PTmax)s*MeV) \
@@ -989,13 +989,13 @@ def makeppK_excl(name,
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNp > %(_probnnp)s) \
-                             & (PROBNNghost < %(_h_TRGHP)s)" % locals(),
+                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals(),
 		      "K+" :  "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNk > %(_probnnk)s) \
-                             & (PROBNNghost < %(_h_TRGHP)s)" % locals()}
+                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
     _combinationCut = "(((AM < %(_3h_Mmax)s*MeV) & (AM > %(_3h_Mmin)s*MeV)) | ((AM < %(_bu3h_Mmax)s*MeV) & (AM > %(_bu3h_Mmin)s*MeV))) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
     _motherCut = "(MAXTREE(((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),PT) > %(_3h_PTmax)s*MeV) \
