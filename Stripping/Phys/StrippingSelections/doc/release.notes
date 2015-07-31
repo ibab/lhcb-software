@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-31 - Pablo Ruiz Valls
+ - Modified StrippingBeauty2XGamma to allow changes in trigger line names in the dictionaries
+
 ! 2015-07-31 - Adlene Hicheur
  - Added a couple of more neutral cone variables to StrippingBnoC/StrippingBu2hhh and StrippingBc2hhh_BnoC
  - Retuned StrippingBc2hhh_BnoC to accept more 2+1 configurations

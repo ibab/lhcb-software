@@ -116,6 +116,20 @@ default_config = {
           'B2XGBMaxCorrM'    : 73000., # NOT USED
           'B2XGBVtxChi2DOF'  : 9.,
           'B2XGBVtxMaxIPChi2': 9., # was 25
+
+          'TISTOSLinesDict': {'Hlt2Topo(2|3|4)Body.*Decision%TOS':0,
+                              'Hlt2Topo(2|3|4)Body.*Decision%TIS':0,
+                              'Hlt2IncPhi.*Decision%TOS':0,
+                              'Hlt2IncPhi.*Decision%TIS':0,
+                              'Hlt2RadiativeTopo.*Decision%TOS':0, ## Cut based raditive topological
+                              'Hlt2RadiativeTopo.*Decision%TIS':0, ## Cut based raditive topological
+                              'Hlt2TopoRad.*Decision%TOS':0, ## BBDT based radiative topological
+                              'Hlt2TopoRad.*Decision%TIS':0, ## BBDT based radiative topological
+                              'Hlt2Bs2PhiGamma.*Decision%TOS':0,
+                              'Hlt2Bs2PhiGamma.*Decision%TIS':0,
+                              'Hlt2Bd2KstGamma.*Decision%TOS':0,
+                              'Hlt2Bd2KstGamma.*Decision%TIS':0
+                              }
           },
     'STREAMS' : ['Leptonic'],
 }
@@ -220,7 +234,8 @@ class Beauty2XGammaConf(LineBuilder) :
                                'B2XGBMinBPVDIRA',
                                'B2XGBMaxCorrM',
                                'B2XGBVtxChi2DOF',
-                               'B2XGBVtxMaxIPChi2')
+                               'B2XGBVtxMaxIPChi2',
+                               'TISTOSLinesDict')
 
     __confdict__={}
 
@@ -544,7 +559,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XG2piLine = StrippingLine( B2XG2piName+"Line",
                                           prescale = config['B2XG2piPrescale'],
-                                          selection = tisTosSelection(self.RadiativeB2XG2pi),
+                                          selection = tisTosSelection(self.RadiativeB2XG2pi,config['TISTOSLinesDict']),
                                           EnableFlavourTagging = True,
                                           RequiredRawEvents = ["Calo"],
                                           MDSTFlag = True,
@@ -565,7 +580,7 @@ class Beauty2XGammaConf(LineBuilder) :
         
         self.B2XG2piCNVLLLine = StrippingLine( B2XG2piCNVLLName+"Line",
                                                prescale = config['B2XG2piCNVLLPrescale'],
-                                               selection = tisTosSelection(self.RadiativeB2XG2piCNVLL),
+                                               selection = tisTosSelection(self.RadiativeB2XG2piCNVLL,config['TISTOSLinesDict']),
                                                EnableFlavourTagging = True,
                                                RequiredRawEvents = ["Calo"],
                                                MDSTFlag = True,
@@ -586,7 +601,7 @@ class Beauty2XGammaConf(LineBuilder) :
         
         self.B2XG2piCNVDDLine = StrippingLine( B2XG2piCNVDDName+"Line",
                                                prescale = config['B2XG2piCNVDDPrescale'],
-                                               selection = tisTosSelection(self.RadiativeB2XG2piCNVDD),
+                                               selection = tisTosSelection(self.RadiativeB2XG2piCNVDD,config['TISTOSLinesDict']),
                                                EnableFlavourTagging = True,
                                                RequiredRawEvents = ["Calo"],
                                                MDSTFlag = True,
@@ -608,7 +623,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XGpiKsLine = StrippingLine( B2XGpiKsName+"Line",
                                            prescale = config['B2XGpiKsPrescale'],
-                                           selection = tisTosSelection(self.RadiativeB2XGpiKs),
+                                           selection = tisTosSelection(self.RadiativeB2XGpiKs,config['TISTOSLinesDict']),
                                            EnableFlavourTagging = True,
                                            RequiredRawEvents = ["Calo"],
                                            MDSTFlag = True,
@@ -629,7 +644,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XG3piLine = StrippingLine( B2XG3piName+"Line",
                                           prescale = config['B2XG3piPrescale'],
-                                          selection = tisTosSelection(self.RadiativeB2XG3pi),
+                                          selection = tisTosSelection(self.RadiativeB2XG3pi,config['TISTOSLinesDict']),
                                           EnableFlavourTagging = True,
                                           RequiredRawEvents = ["Calo"],
                                           MDSTFlag = True,
@@ -650,7 +665,7 @@ class Beauty2XGammaConf(LineBuilder) :
         
         self.B2XG3pi_VanyaLine = StrippingLine( B2XG3pi_VanyaName+"Line",
                                                 prescale = config['B2XG3piPrescale'],
-                                                selection = tisTosSelection(self.RadiativeB2XG3pi_Vanya),
+                                                selection = tisTosSelection(self.RadiativeB2XG3pi_Vanya,config['TISTOSLinesDict']),
                                                 EnableFlavourTagging = True,
                                                 RequiredRawEvents = ["Calo"],
                                                 MDSTFlag = True,
@@ -671,7 +686,7 @@ class Beauty2XGammaConf(LineBuilder) :
         
         self.B2XG3pi_altLine = StrippingLine( B2XG3pi_altName+"Line",
                                               prescale = config['B2XG3piPrescale'],
-                                              selection = tisTosSelection(self.RadiativeB2XG3pi_alt),
+                                              selection = tisTosSelection(self.RadiativeB2XG3pi_alt,config['TISTOSLinesDict']),
                                               EnableFlavourTagging = True,
                                               RequiredRawEvents = ["Calo"],
                                               MDSTFlag = True,
@@ -693,7 +708,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XG3piCNVLLLine = StrippingLine( B2XG3piCNVLLName+"Line",
                                                prescale = config['B2XG3piCNVLLPrescale'],
-                                               selection = tisTosSelection(self.RadiativeB2XG3piCNVLL),
+                                               selection = tisTosSelection(self.RadiativeB2XG3piCNVLL,config['TISTOSLinesDict']),
                                                EnableFlavourTagging = True,
                                                RequiredRawEvents = ["Calo"],
                                                MDSTFlag = True,
@@ -714,7 +729,7 @@ class Beauty2XGammaConf(LineBuilder) :
         
         self.B2XG3piCNVDDLine = StrippingLine( B2XG3piCNVDDName+"Line",
                                                prescale = config['B2XG3piCNVDDPrescale'],
-                                               selection = tisTosSelection(self.RadiativeB2XG3piCNVDD),
+                                               selection = tisTosSelection(self.RadiativeB2XG3piCNVDD,config['TISTOSLinesDict']),
                                                EnableFlavourTagging = True,
                                                RequiredRawEvents = ["Calo"],
                                                MDSTFlag = True,
@@ -735,7 +750,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XG2piKsLine = StrippingLine( B2XG2piKsName+"Line",
                                             prescale = config['B2XG2piKsPrescale'],
-                                            selection = tisTosSelection(self.RadiativeB2XG2piKs),
+                                            selection = tisTosSelection(self.RadiativeB2XG2piKs,config['TISTOSLinesDict']),
                                             EnableFlavourTagging = True,
                                             RequiredRawEvents = ["Calo"],
                                             MDSTFlag = True,
@@ -756,7 +771,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XG2pipi0MLine = StrippingLine( B2XG2pipi0MName+"Line",
                                               prescale = config['B2XG2pipi0MPrescale'],
-                                              selection = tisTosSelection(self.RadiativeB2XG2pipi0M),
+                                              selection = tisTosSelection(self.RadiativeB2XG2pipi0M,config['TISTOSLinesDict']),
                                               EnableFlavourTagging = True,
                                               RequiredRawEvents = ["Calo"],
                                               MDSTFlag = True,
@@ -777,7 +792,7 @@ class Beauty2XGammaConf(LineBuilder) :
         
         self.B2PhiOmega2pipipi0MLine = StrippingLine( B2PhiOmega2pipipi0MName+"Line",
                                                         prescale = config['B2PhiOmega2pipipi0MPrescale'],
-                                                        selection = tisTosSelection(self.RadiativeB2PhiOmega2pipipi0M),
+                                                        selection = tisTosSelection(self.RadiativeB2PhiOmega2pipipi0M,config['TISTOSLinesDict']),
                                                         EnableFlavourTagging = True,
                                                         RequiredRawEvents = ["Calo"],
                                                         MDSTFlag = True,
@@ -800,7 +815,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XG2pipi0RLine = StrippingLine( B2XG2pipi0RName+"Line",
                                               prescale = config['B2XG2pipi0RPrescale'],
-                                              selection = tisTosSelection(self.RadiativeB2XG2pipi0R),
+                                              selection = tisTosSelection(self.RadiativeB2XG2pipi0R,config['TISTOSLinesDict']),
                                               RequiredRawEvents = ["Calo"],
                                               MDSTFlag = True,
                                               RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])#,
@@ -821,7 +836,7 @@ class Beauty2XGammaConf(LineBuilder) :
         
         self.B2PhiOmega2pipipi0RLine = StrippingLine( B2PhiOmega2pipipi0RName+"Line",
                                                         prescale = config['B2PhiOmega2pipipi0RPrescale'],
-                                                        selection = tisTosSelection(self.RadiativeB2PhiOmega2pipipi0R),
+                                                        selection = tisTosSelection(self.RadiativeB2PhiOmega2pipipi0R,config['TISTOSLinesDict']),
                                                         # EnableFlavourTagging = True,
                                                         RequiredRawEvents = ["Calo"],
                                                         MDSTFlag = True,
@@ -843,7 +858,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XG4piLine = StrippingLine( B2XG4piName+"Line",
                                           prescale = config['B2XG4piPrescale'],
-                                          selection = tisTosSelection(self.RadiativeB2XG4pi),
+                                          selection = tisTosSelection(self.RadiativeB2XG4pi,config['TISTOSLinesDict']),
                                           EnableFlavourTagging = True,
                                           RequiredRawEvents = ["Calo"],
                                           MDSTFlag = True,
@@ -864,7 +879,7 @@ class Beauty2XGammaConf(LineBuilder) :
         
         self.B2XG4piVanyaLine = StrippingLine( B2XG4piVanyaName+"Line",
                                                prescale = config['B2XG4piPrescale'],
-                                               selection = tisTosSelection(self.RadiativeB2XG4piVanya),
+                                               selection = tisTosSelection(self.RadiativeB2XG4piVanya,config['TISTOSLinesDict']),
                                                EnableFlavourTagging = True,
                                                RequiredRawEvents = ["Calo"],
                                                MDSTFlag = True,
@@ -886,7 +901,7 @@ class Beauty2XGammaConf(LineBuilder) :
         
         self.B2XG4pi_2rhoLine = StrippingLine( B2XG4pi_2rhoName+"Line",
                                                prescale = config['B2XG4piPrescale'],
-                                                selection = tisTosSelection(self.RadiativeB2XG4pi_2rho),
+                                                selection = tisTosSelection(self.RadiativeB2XG4pi_2rho,config['TISTOSLinesDict']),
                                                 EnableFlavourTagging = True,
                                                 RequiredRawEvents = ["Calo"],
                                                 MDSTFlag = True,
@@ -907,7 +922,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XG3piKsLine = StrippingLine( B2XG3piKsName+"Line",
                                             prescale = config['B2XG3piKsPrescale'],
-                                            selection = tisTosSelection(self.RadiativeB2XG3piKs),
+                                            selection = tisTosSelection(self.RadiativeB2XG3piKs,config['TISTOSLinesDict']),
                                             EnableFlavourTagging = True,
                                             RequiredRawEvents = ["Calo"],
                                             MDSTFlag = True,
@@ -929,7 +944,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XG2pi2KsLine = StrippingLine( B2XG2pi2KsName+"Line",
                                              prescale = config['B2XG2pi2KsPrescale'],
-                                             selection = tisTosSelection(self.RadiativeB2XG2pi2Ks),
+                                             selection = tisTosSelection(self.RadiativeB2XG2pi2Ks,config['TISTOSLinesDict']),
                                              EnableFlavourTagging = True,
                                              RequiredRawEvents = ["Calo"],
                                              MDSTFlag = True,
@@ -950,7 +965,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XG3pipi0MLine = StrippingLine( B2XG3pipi0MName+"Line",
                                               prescale = config['B2XG3pipi0MPrescale'],
-                                              selection = tisTosSelection(self.RadiativeB2XG3pipi0M),
+                                              selection = tisTosSelection(self.RadiativeB2XG3pipi0M,config['TISTOSLinesDict']),
                                               EnableFlavourTagging = True,
                                               RequiredRawEvents = ["Calo"],
                                               MDSTFlag = True,
@@ -971,7 +986,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XG3pipi0RLine = StrippingLine( B2XG3pipi0RName+"Line",
                                               prescale = config['B2XG3pipi0RPrescale'],
-                                              selection = tisTosSelection(self.RadiativeB2XG3pipi0R),
+                                              selection = tisTosSelection(self.RadiativeB2XG3pipi0R,config['TISTOSLinesDict']),
                                               RequiredRawEvents = ["Calo"],
                                               MDSTFlag = True,
                                               RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])#,
@@ -993,7 +1008,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XGLambdapiLine = StrippingLine( B2XGLambdapiName+"Line",
                                                prescale = config['B2XGLambdapiPrescale'],
-                                               selection = tisTosSelection(self.RadiativeB2XGLambdapi),
+                                               selection = tisTosSelection(self.RadiativeB2XGLambdapi,config['TISTOSLinesDict']),
                                                EnableFlavourTagging = True,
                                                RequiredRawEvents = ["Calo"],
                                                MDSTFlag = True,
@@ -1015,7 +1030,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XGLambda2piLine = StrippingLine( B2XGLambda2piName+"Line",
                                                 prescale = config['B2XGLambda2piPrescale'],
-                                                selection = tisTosSelection(self.RadiativeB2XGLambda2pi) ,
+                                                selection = tisTosSelection(self.RadiativeB2XGLambda2pi,config['TISTOSLinesDict']),
                                                 EnableFlavourTagging = True,
                                                 RequiredRawEvents = ["Calo"],
                                                 MDSTFlag = True,
@@ -1037,7 +1052,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XGLambda3piLine = StrippingLine( B2XGLambda3piName+"Line",
                                                 prescale = config['B2XGLambda3piPrescale'],
-                                                selection = tisTosSelection(self.RadiativeB2XGLambda3pi),
+                                                selection = tisTosSelection(self.RadiativeB2XGLambda3pi,config['TISTOSLinesDict']),
                                                 EnableFlavourTagging = True,
                                                 RequiredRawEvents = ["Calo"],
                                                 MDSTFlag = True,
@@ -1058,7 +1073,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         self.B2XGLbLambdaLine = StrippingLine( B2XGLbLambdaName+"Line",
                                                prescale = config['B2XGLbLambdaPrescale'],
-                                               selection = tisTosSelection(self.RadiativeB2XGLbLambda),
+                                               selection = tisTosSelection(self.RadiativeB2XGLbLambda,config['TISTOSLinesDict']),
                                                EnableFlavourTagging = True,
                                                RequiredRawEvents = ["Calo"],
                                                MDSTFlag = True,
@@ -1949,19 +1964,8 @@ def makeB2B2XGLbLambdaGamma( name,
                      Algorithm = _combineB2Lb2XGLambda,
                      RequiredSelections = [ lambdas, photons ] )
 
-def makeTISTOSFilter(name):
-    specs = {'Hlt2Topo(2|3|4)Body.*Decision%TOS':0,
-             'Hlt2Topo(2|3|4)Body.*Decision%TIS':0,
-             'Hlt2IncPhi.*Decision%TOS':0,
-             'Hlt2IncPhi.*Decision%TIS':0,
-             'Hlt2RadiativeTopo.*Decision%TOS':0, ## Cut based raditive topological
-             'Hlt2RadiativeTopo.*Decision%TIS':0, ## Cut based raditive topological
-             'Hlt2TopoRad.*Decision%TOS':0, ## BBDT based radiative topological
-             'Hlt2TopoRad.*Decision%TIS':0, ## BBDT based radiative topological
-             'Hlt2Bs2PhiGamma.*Decision%TOS':0,
-             'Hlt2Bs2PhiGamma.*Decision%TIS':0,
-             'Hlt2Bd2KstGamma.*Decision%TOS':0,
-             'Hlt2Bd2KstGamma.*Decision%TIS':0}
+def makeTISTOSFilter(name,dict_TISTOS):
+    specs = dict_TISTOS
     from Configurables import TisTosParticleTagger
     tisTosFilter = TisTosParticleTagger(name+'TISTOSFilter')
     tisTosFilter.TisTosSpecs = specs
@@ -1971,9 +1975,9 @@ def makeTISTOSFilter(name):
     #    tisTosFilter.TOSFrac = {4:0.0, 5:0.0}
     return tisTosFilter
 
-def tisTosSelection(sel):
+def tisTosSelection(sel,TISTOSdict):
     '''Filters Selection sel to be TOS OR TIS.'''
-    tisTosFilter = makeTISTOSFilter(sel.name())
+    tisTosFilter = makeTISTOSFilter(sel.name(),TISTOSdict)
 #    tisTosFilter = FilterDesktop(Code = "ALL")
     return Selection(sel.name()+'TISTOS', Algorithm=tisTosFilter, RequiredSelections=[sel])
 
