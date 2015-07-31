@@ -1,4 +1,4 @@
-#include "$INFO_OPTIONS"
+0;95;c#include "$INFO_OPTIONS"
 #include "$MBM_SETUP_OPTIONS"
 #include "$STATIC_OPTS/Monitoring.opts"
 
@@ -76,7 +76,7 @@ AlignDataWriter_Velo.DIMSteering = 1;
 //
 AlignDataWriter_Velo.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x00000008,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
-,"EvType=2;TriggerMask=0x0,0x00004000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=0.6"
+,"EvType=2;TriggerMask=0x0,0x00004000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=0.1"
 };
 //
 // Requirements for TED and other stuff

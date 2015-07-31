@@ -11,27 +11,27 @@
 #
 act=${RUN_TYPE}
 if [ "$act" = "Alignment|Muon" ]; then
-  . /group/online/dataflow/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-dbg.vars
+  . /group/online/dataflow/cmtuser/AlignmentRelease/setup.x86_64-slc6-gcc48-dbg.vars
   export PYTHONPATH=${ALIGNONLINEROOT}/python:$PYTHONPATH
   cd ${FARMCONFIGROOT}/job
   exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; from TrAligIterator import doIt; doIt('MuonAlignment');"
 elif [ "$act" = "Alignment|Tracker" ]; then
-  . /group/online/dataflow/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-dbg.vars
+  . /group/online/dataflow/cmtuser/AlignmentRelease/setup.x86_64-slc6-gcc48-dbg.vars
   export PYTHONPATH=${ALIGNONLINEROOT}/python:$PYTHONPATH
   cd ${FARMCONFIGROOT}/job
   exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; from TrAligIterator import doIt; doIt('TrackerAlignment');"
 elif [ "$act" = "Alignment|Velo" ]; then
-  . /group/online/dataflow/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-dbg.vars
+  . /group/online/dataflow/cmtuser/AlignmentRelease/setup.x86_64-slc6-gcc48-dbg.vars
   export PYTHONPATH=${ALIGNONLINEROOT}/python:$PYTHONPATH
   cd ${FARMCONFIGROOT}/job
   exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; from TrAligIterator import doIt; doIt('VeloAlignment');"
 elif [ "$act" = "Alignment|VeloHalf" ]; then
-  . /group/online/dataflow/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-dbg.vars
+  . /group/online/dataflow/cmtuser/AlignmentRelease/setup.x86_64-slc6-gcc48-dbg.vars
   export PYTHONPATH=${ALIGNONLINEROOT}/python:$PYTHONPATH
   cd ${FARMCONFIGROOT}/job
   exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; from TrAligIterator import doIt; doIt('VeloHalfAlignment');"
 elif [ "$act" = "Alignment|TED" ]; then
-  . /group/online/dataflow/cmtuser/AlignmentOnlineDev_v10r4/setup.x86_64-slc6-gcc48-dbg.vars
+  . /group/online/dataflow/cmtuser/AlignmentRelease/setup.x86_64-slc6-gcc48-dbg.vars
   export PYTHONPATH=${ALIGNONLINEROOT}/python:$PYTHONPATH
   cd ${FARMCONFIGROOT}/job
   exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; from TrAligIterator import doIt; doIt('TEDAlignment');"

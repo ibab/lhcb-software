@@ -80,8 +80,7 @@ class Checkpoint:
     if self.config_task_family == 'REC' and self.config_task_type:
       Mapping = os.path.basename(ri.ConditionsMapping)
       checkpoint_reloc = sep+self.task_type+sep+ri.OnlineBrunelVersion+sep+\
-          ri.HLTType+sep+ri.CondDBTag+sep+ri.DDDBTag+sep+Mapping+\
-          '' #sep+self.task_type
+          ri.CondDBTag+sep+ri.DDDBTag+sep+Mapping
     elif ri.MooreOnlineVersion == "" or ri.MooreOnlineVersion == "DEFAULT":
       checkpoint_reloc = sep+ri.HltArchitecture+sep+ri.OnlineVersion+sep+ri.HLTType
     else:
@@ -166,6 +165,7 @@ class Checkpoint:
 
     self.output('if test -n "${need_extract}"; then')\
         .output('  echo "[INFO] Need to expand libraries from checkpoint before start [Check-sum].";') \
+        .output('  mkdir -p '+self.lib_dir+';') \
         .output('  rm -f '+self.lib_dir+'/*;') \
         .output(   self.restore + ' -p 4 -x -C -i '+self.target_path+' -l '+self.lib_dir+'/;') \
         .output('  cd '+self.lib_dir+'; md5sum `ls -S -1 . | grep -v passwd` > '+lib_md5+'; cd -;') \
@@ -375,25 +375,29 @@ def configureForCheckpoint(runinfo):
 
 #=========================================================================================
 def configureForTest(runinfo):
-  print 'echo "[ERROR] Running in checkpoint TESTING mode....";'
+  print 'echo "[ALWAYS] Running in checkpoint TESTING mode....";'
   print 'export APP_STARTUP_OPTS=-restore;'
   print 'export CHECKPOINT_DIR; export CHECKPOINT_FILE;'
   print 'export PYTHONPATH=${CHECKPOINT_DIR}:${PYTHONPATH};'
-  print 'mkdir -p /dev/shm/checkpoint;'
-  print 'RESTORE_CMD="exec -a ${UTGID} restore.exe -p 4 -e -l /dev/shm/checkpoint -i ${CHECKPOINT_FILE}";'
-  print 'echo "'+line+'";'
-  print 'echo "== File:  ${CHECKPOINT_FILE} MBM setup:${MBM_SETUP_OPTIONS}";'
-  print 'echo "== Command ${RESTORE_CMD}";'
-  print 'echo "== Testing CHECKPOINT file......Please be patient. RunInfo:'+runinfo+'";'
+  print 'export CHECKPOINT_EXPANSION_DIR=/dev/shm/checkpoint;'
+  print 'export CHECKPOINT_EXPANSION_DIR=/localdisk/checkpoints/test;'
+  print 'rm -rf ${CHECKPOINT_EXPANSION_DIR}/*;'
+  print 'mkdir -p ${CHECKPOINT_EXPANSION_DIR};'
+  print 'RESTORE_CMD="exec -a ${UTGID} restore.exe -p 4 -e -l ${CHECKPOINT_EXPANSION_DIR} -i ${CHECKPOINT_FILE}";'
+  print 'echo "[ALWAYS] '+line+'";'
+  print 'echo "[ALWAYS] == File:  ${CHECKPOINT_FILE} MBM setup:${MBM_SETUP_OPTIONS}";'
+  print 'echo "[ALWAYS] == Command ${RESTORE_CMD}";'
+  print 'echo "[ALWAYS] == Testing CHECKPOINT file......Please be patient. RunInfo:'+runinfo+'";'
   print 'echo "'+line+'";'
   print 'if test ! -f "${CHECKPOINT_FILE}";then'
   print '  echo "[FATAL] '+line+'";'
   print '  echo "[FATAL] == CHECKPOINT FILE ${CHECKPOINT_FILE} DOES NOT EXIST!";'
   print '  echo "[FATAL] '+line+'";'
-  print '  exit 1;'
+  print '  exit 2;'
   print 'fi;'
-  print 'cd /dev/shm/checkpoint; md5sum `ls -S . | grep -v passwd` > ${CHECKPOINT_FILE}.libs.md5; cd -;'
-  
+  print 'restore.exe -p 4 -x -C -l ${CHECKPOINT_EXPANSION_DIR} -i ${CHECKPOINT_FILE};'
+  print 'CURR=`pwd`;cd ${CHECKPOINT_EXPANSION_DIR}; md5sum `ls -S . | grep -v passwd` > ${CHECKPOINT_FILE}.libs.md5; cd ${CURR};'
+
 #=========================================================================================
 def doIt():
   import optparse

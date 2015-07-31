@@ -106,7 +106,7 @@ BusyAdderCountAdder.PartitionName         = @OnlineEnv.PartitionName;
 BusyAdderCountAdder.TaskPattern           = "<part>_<node>[0-9][0-9]_NodeAdder_0";
 BusyAdderCountAdder.ServicePattern        = "MON_<part>_<node>[0-9][0-9]_NodeAdder_0/Counter/";
 BusyAdderCountAdder.AdderClass            = "Counter";
-BusyAdderCountAdder.ReceiveTimeout          = 3;
+BusyAdderCountAdder.ReceiveTimeout          = 6;
 """)
         f.write("BusyAdderCountAdder.InDns     = "+InDns+";\n")
         f.write("BusyAdderCountAdder.OutDns     = "+OutDns+";\n")
@@ -163,7 +163,7 @@ BusyAdderCountAdder.PartitionName         = @OnlineEnv.PartitionName;
 BusyAdderCountAdder.TaskPattern           = "<part>_hlt[a-z][0-9][0-9]_SubFarmAdder_0";
 BusyAdderCountAdder.ServicePattern        = "MON_<part>_hlt[a-z][0-9][0-9]_BusySvc/Counter/";
 BusyAdderCountAdder.AdderClass            = "Counter";
-BusyAdderCountAdder.ReceiveTimeout          = 6;
+BusyAdderCountAdder.ReceiveTimeout          = 8;
 """)
         f.write("BusyAdderCountAdder.InDns     = "+InDns+";\n")
         f.write("BusyAdderCountAdder.OutDns     = "+OutDns+";\n")
@@ -184,7 +184,7 @@ BusyAdderCountAdder.ReceiveTimeout          = 6;
         for s in histsvc:
             svc = s+"HistAdder"
             f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
-            f.write(svc+".MyName  = \"<part>_<node>_"+s+"_00\";\n")
+            f.write(svc+".MyName  = \"<part>_hlt01_"+s+"_00\";\n")
             f.write(svc+".TaskPattern = \"<part>_HLT[a-z][0-9][0-9]_SubFarmAdder_(.*)\";\n")
             f.write(svc+".ServicePattern  = \"MON_<part>_hlt[a-z][0-9][0-9]_"+s+"/Histos/\";\n")
             f.write(svc+".AdderClass  = \"hists\";\n")
