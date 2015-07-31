@@ -674,6 +674,52 @@ class DBuilder(object):
         return [MergedSelection('D2Pi0HHHBeauty2Charm_%s%s'%(which,tag),
                                 RequiredSelections=[pselspi,mselspi,pselsk,mselsk])]
 
+    ## # Proposed new version, avoid SubPID 
+    ## def _makeD2Pi0hhh(self,which,up=False):
+    ##     '''Makes D->Pi0hhh'''
+    ##     tag = ''
+    ##     if up: tag = 'UP'
+
+    ##     min,max = self._massWindow('D+')
+
+    ##     config = deepcopy(self.config)    
+    ##     config.pop('ADOCA14_MAX')
+    ##     config.pop('ADOCA24_MAX')
+    ##     config.pop('ADOCA34_MAX')
+        
+    ##     if up : extrainputs = self.pi0[which] + [self.kaons] + [self.uppions]
+    ##     else  : extrainputs = self.pi0[which] + [self.kaons]
+
+    ##     sels = [ ]
+
+    ##     sels += [ self._makeD2FourBody( 'D+2PiPiPiPi0_'+which, ['D+ -> pi+ pi+ pi- pi0'],
+    ##                                     awmFunctor([['pi+','pi+','pi-','pi0']],min,max),
+    ##                                     up,config,extrainputs ) ]
+    ##     sels += [ self._makeD2FourBody( 'D+2PiPiKPi0_'+which, ['D+ -> pi+ pi+ K- pi0'],
+    ##                                     awmFunctor([['pi+','pi+','K-','pi0']],min,max),
+    ##                                     up,config,extrainputs ) ]
+    ##     sels += [ self._makeD2FourBody( 'D+2PiKKPi0_'+which, ['D+ -> pi+ K+ K- pi0'],
+    ##                                     awmFunctor([['pi+','K+','K-','pi0']],min,max),
+    ##                                     up,config,extrainputs ) ]
+    ##     sels += [ self._makeD2FourBody( 'D+2KKKPi0_'+which, ['D+ -> K+ K+ K- pi0'],
+    ##                                     awmFunctor([['K+','K+','K-','pi0']],min,max),
+    ##                                     up,config,extrainputs ) ]
+
+    ##     sels += [ self._makeD2FourBody( 'D-2PiPiPiPi0_'+which, ['D- -> pi- pi- pi+ pi0'],
+    ##                                     awmFunctor([['pi-','pi-','pi+','pi0']],min,max),
+    ##                                     up,config,extrainputs ) ]
+    ##     sels += [ self._makeD2FourBody( 'D-2PiPiKPi0_'+which, ['D- -> pi- pi- K+ pi0'],
+    ##                                     awmFunctor([['pi-','pi-','K+','pi0']],min,max),
+    ##                                     up,config,extrainputs ) ]
+    ##     sels += [ self._makeD2FourBody( 'D-2PiKKPi0_'+which, ['D- -> pi- K- K+ pi0'],
+    ##                                     awmFunctor([['pi-','K-','K+','pi0']],min,max),
+    ##                                     up,config,extrainputs ) ]
+    ##     sels += [ self._makeD2FourBody( 'D-2KKKPi0_'+which, ['D- -> K- K- K+ pi0'],
+    ##                                     awmFunctor([['K-','K-','K+','pi0']],min,max),
+    ##                                     up,config,extrainputs ) ]
+        
+    ##     return [MergedSelection('D2Pi0HHHBeauty2Charm_%s%s'%(which,tag),RequiredSelections=sels)]
+
     # CRJ : To be improved. Will have hideous combinatorics if used ...
     def _makeD2Pi0hhhh(self,which,up=False):
         '''Makes D->Pi0hhhh'''
