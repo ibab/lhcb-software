@@ -354,6 +354,7 @@ void MessagePresenter::getwarnings(const char * fname)
         const std::string sstr = cstr;
         addwarning(sstr,0);
       }
+      fclose(F);
     }
     lastleft = -1;
     lastright = -1;
@@ -453,8 +454,8 @@ void MessagePresenter::addwarning(const std::string & msg,const int ref)
 int MessagePresenter::GetXtra(const std::string & str, 
                               std::string & cachedfile)
 {
-  cout << "In MessagePresenter::GetXtra " << str << " " 
-       << cachedfile << endl;
+  //cout << "In MessagePresenter::GetXtra " << str << " " 
+  //     << cachedfile << endl;
 
   std::string::size_type position1 = str.find("/");
 
@@ -520,15 +521,16 @@ int MessagePresenter::GetXtra(const std::string & str,
         fwrite(buf,1,r,F);
       }
     }
-    fclose(F);
     cachedfile = to;
   }
   else
   {
     std::cerr << "Error Connecting to client" << std::endl;
+    fclose(F);
     return -1;
   }
 
+  fclose(F);
   return 1;
 }
 
@@ -857,7 +859,8 @@ void MessagePresenter::selectright()
 {
 
   Int_t i = fListBox863->GetSelected();
-  cout << "In MessagePresenter::selectright " << i << endl;
+  
+  //cout << "In MessagePresenter::selectright " << i << endl;
 
   if ( extradata[i] == "" ) { 
     cerr << " -> extradata is empty" << endl;
@@ -1100,9 +1103,9 @@ void MessagePresenter::messageloop( const char * host, const char * file )
     TGString savestat = (TGString)"";
 
     cachefileName  = getCacheFilename();
-    cout << "cache file " << cachefileName << endl;
+    //cout << "cache file " << cachefileName << endl;
     xcachefileName = getXCacheFilename();
-    cout << "xcache file " << xcachefileName << endl;
+    //cout << "xcache file " << xcachefileName << endl;
     checkCacheFileLength();
     readCacheFile();
 
@@ -1267,7 +1270,7 @@ void MessagePresenter::checkCacheFileLength()
   FILE *F = fopen(cachefileName.c_str(),"r");
   if (!F)
   {
-    cout << "Cannot open " << cachefileName << endl;
+    cerr << "Cannot open " << cachefileName << endl;
   }
   else
   {
@@ -1294,6 +1297,7 @@ void MessagePresenter::checkCacheFileLength()
       writeCacheFile(true);
     }
     cachedWarnings.clear();
+    fclose(F);
   }
 
 }

@@ -31,7 +31,7 @@ InfoWindow::~InfoWindow()
 
 void InfoWindow::ShowCont(const std::string& ins)
 {
-  std::cout << "in ShowCont " << ins << std::endl;
+  //std::cout << "in ShowCont " << ins << std::endl;
 
   SetBit(kDontCallClose);
   const std::string& cfile = ins;

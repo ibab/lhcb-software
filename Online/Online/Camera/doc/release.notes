@@ -4,6 +4,9 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2015-07-31 - jonesc
+ - Fix a bug in the presenter that caused files to be opened but never closed..
+
 ! 2015-06-23 - Marco Clemencic
  - Minor change in CMake configuration to avoid double calls to rootcling in
    parallel builds.
