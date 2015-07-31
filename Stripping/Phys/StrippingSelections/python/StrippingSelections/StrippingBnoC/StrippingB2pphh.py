@@ -29,7 +29,7 @@ default_config = {
     'NAME' : 'B2pphh',
     'WGs'  : ['BnoC'],
     'BUILDERTYPE' : 'B2pphhConf',
-    'CONFIG' : { 'MaxTrSIZE'             : 200 ,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
+    'CONFIG' : { 'MaxTrSIZE'             : 350 ,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
     'CombMass12Max_kk'         : 4700.0,
     'CombMass12Max_kpi'         : 5000.0,
     'CombMass12Max_pipi'         : 5350.0,
@@ -43,7 +43,7 @@ default_config = {
     'p_PSUM'               : 7000.0,
     'p_PTMIN'              : 400.0,
     'p_PMIN'              : 4.0,
-    'p_PROBNNpPROD'        : 0.01,
+    'p_PROBNNpPROD'        : 0.04,
     'CombMass123Max'         : 5600.0,
     'CombMassMax'         : 5.60,
     'CombMassMin'         : 5.00,
@@ -55,9 +55,9 @@ default_config = {
     'B_CHI2'              : 30.0 ,    
     'B_PT'                 : 1000.,
     'B_MIPDV'              : 0.2,
-    'PionCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 6.0) & (TRGHOSTPROB < 0.35) & (PROBNNpi > 0.05)",
-    'KaonCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRGHOSTPROB < 0.35) & (PROBNNk > 0.05)",
-    'ProtonCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 2.0) & (TRGHOSTPROB < 0.35) & (PROBNNp > 0.05)",
+    'PionCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 7.0) & (TRGHOSTPROB < 0.5) & (PROBNNpi > 0.10)",
+    'KaonCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRGHOSTPROB < 0.5) & (PROBNNk > 0.08)",
+    'ProtonCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 2.0) & (TRGHOSTPROB < 0.5) & (PROBNNp > 0.05)",
     'Prescaleppkk'  : 1.0,
     'Prescalepppipi'  : 1.0,
     'Prescaleppkpi'  : 1.0
