@@ -96,7 +96,8 @@ default_config =  {
   'B2TauMu_SameSign_TOSLinePostscale'      : 1,
   'B2DPi_SameSign_LinePrescale'            : 0.5,
   'B2DPi_SameSign_LinePostscale'           : 1,
-  'HLT_DECISIONS_HAD'    : {'Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision%TOS' : 0},
+  'HLT_DECISIONS_HAD'    : {'Hlt2Topo(2|3|4)Body.*Decision%TOS' : 0},
+#  'HLT_DECISIONS_HAD'    : {'Hlt2(Topo2Body|Topo3Body|Topo4Body).*Decision%TOS' : 0},
   'HLT_DECISIONS_MUON'  : {"Hlt2(TopoMu|SingleMuon).*Decision%TOS": 0},
   'RelatedInfoTools'      : [
   #1
@@ -169,7 +170,7 @@ from StandardParticles import StdLooseKaons
 from copy import deepcopy
 
 default_name = "B2XTau"
-HLT_DECISIONS_HAD   = "Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision"
+HLT_DECISIONS_HAD   = "Hlt2Topo(2|3|4)Body.*Decision"
 HLT_DECISIONS_MUON  = "Hlt2(TopoMu|SingleMuon).*Decision"
 
 class B2XTauConf(LineBuilder) :
@@ -948,6 +949,7 @@ class B2XTauConf(LineBuilder) :
     tisTosFilter.CaloClustForCharged = False
     tisTosFilter.CaloClustForNeutral = False
     tisTosFilter.TOSFrac = {4:0.0, 5:0.0}
+    # tisTosFilter = True
     return tisTosFilter
   
   def _makeTOS(self, name, sel, config):
