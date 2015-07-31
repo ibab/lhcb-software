@@ -173,7 +173,7 @@ default_config = {
     'PT_MIN'        : '250*MeV'
     },
     "XDD" : { # making X for DD
-    'VCHI2DOF_MAX'  : 25,
+    'VCHI2DOF_MAX'  : 15,
     'BPVVDCHI2_MIN' : 25,
     'PT_MIN'        : '0*MeV'
     },
@@ -183,8 +183,8 @@ default_config = {
     },
     "B2KX" : { # B -> K X
     'SUMPT_MIN'     : '0*MeV',
-    'VCHI2DOF_MAX'  : 25,
-    'BPVIPCHI2_MAX' : 50,
+    'VCHI2DOF_MAX'  : 15,
+    'BPVIPCHI2_MAX' : 10,
     'BPVLTIME_MIN'  : '0.2*ps',
     'AM_MIN'        : '4800*MeV', 
     'AM_MAX'        : '5800*MeV',
@@ -193,8 +193,8 @@ default_config = {
     },
     "B2HHX" : { # B -> Kpi X, KK X
     'SUMPT_MIN'     : '0*MeV',
-    'VCHI2DOF_MAX'  : 25,
-    'BPVIPCHI2_MAX' : 50,
+    'VCHI2DOF_MAX'  : 15,
+    'BPVIPCHI2_MAX' : 10,
     'BPVLTIME_MIN'  : '0.2*ps',
     'AM_MIN'        : '4800*MeV', 
     'AM_MAX'        : '5800*MeV',

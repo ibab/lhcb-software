@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-31 - Ricardo Vazquez Gomez
+ - Align few cuts with offline selection of the DarkBoson lines to reduce the rate.
+
 ! 2015-07-31 - Chris Jones
  - In B2OC module :
    - Lower gamma Pt cut from 1600MeV to 1200MeV
