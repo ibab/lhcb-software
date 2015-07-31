@@ -947,8 +947,7 @@ void ReportConvertTool::CaloClusterObjectFromSummary( const HltObjectSummary::In
   if(turbo==true) used_map = m_calo_unordered_map2_Turbo;
   else used_map = m_calo_unordered_map2;
  
-  Gaudi::Vector3 & exy = *(const_cast<Gaudi::Vector3*>(&object->position().parameters()));
-  Gaudi::Vector3 & xy = *(const_cast<Gaudi::Vector3*>(&object->position().parameters()));
+  Gaudi::Vector3 & xye = *(const_cast<Gaudi::Vector3*>(&object->position().parameters()));
   //
   double e=0;
   double x=0;
@@ -963,9 +962,9 @@ void ReportConvertTool::CaloClusterObjectFromSummary( const HltObjectSummary::In
       case 3: object->position().setZ( (*info)[ calo_it->first ] ); break;
     }
   }
-  exy(0) = e;
-  exy(1) = x; xy(0) = x;
-  exy(2) = y; xy(1) = y;
+  xye(0) = x; 
+  xye(1) = y; 
+  xye(2) = e;
 
 }
 
