@@ -652,152 +652,167 @@ class DBuilder(object):
         if up: name += 'UP'
         return [subPIDSels(decays,name,which,min,max,[protoD2pi0hh])]
 
+#    replaced by CRJ's lines to avoid maximum combinations in container
+#    def _makeD2Pi0hhh(self,which,up=False):
+#        '''Makes D->Pi0hhh'''
+#        tag = ''
+#        if up: tag = 'UP'
+
+#        min,max = self._massWindow('D+')
+#
+#        decayspi = [['pi+','pi+','pi-','pi0'],['K+', 'pi+','pi-','pi0'],
+#                    ['pi+','K+', 'pi-','pi0'],['K+', 'K+', 'pi-','pi0']]
+#        decaysk  = [['K+', 'pi+','K-', 'pi0'],['pi+','pi+','K-', 'pi0'],
+#                    ['K+', 'K+', 'K-', 'pi0'],['pi+','K+', 'K-', 'pi0']]
+#
+#        wmpi = awmFunctor(decayspi,min,max)
+#        wmk  = awmFunctor(decaysk,min,max)
+#
+#        config = deepcopy(self.config)    
+#        config.pop('ADOCA14_MAX')
+#        config.pop('ADOCA24_MAX')
+#        config.pop('ADOCA34_MAX')
+#        
+#        if up : extrainputs = self.pi0[which] + [self.uppions]
+#        else : extrainputs = self.pi0[which]
+#
+#        name = 'D+2Pi0PiHH'
+#        pselspi = subPIDSels(decayspi,name+tag,which,min,max,
+#                             [self._makeD2FourBody(name+'_'+which,
+#                                                   ['D+ -> pi+ pi+ pi- pi0'],
+#                                                   wmpi,up,config,extrainputs)])
+#
+#        name = 'D-2Pi0PiHH'
+#        mselspi = subPIDSels(getCCs(decayspi),name+tag,which,min,max,
+#                             [self._makeD2FourBody(name+'_'+which,
+#                                                   ['D- -> pi- pi- pi+ pi0'],
+#                                                   wmpi,up,config,extrainputs)])
+#
+#        name = 'D+2Pi0KHH'
+#        pselsk = subPIDSels(decaysk,name+tag,which,min,max,
+#                            [self._makeD2FourBody(name+'_'+which,
+#                                                  ['D+ -> pi+ pi+ K- pi0'],
+#                                                  wmk,up,config,extrainputs+[self.kaons])])
+#        
+#        name = 'D-2Pi0KHH'
+#        mselsk = subPIDSels(getCCs(decaysk),name+tag,which,min,max,
+#                            [self._makeD2FourBody(name+'_'+which,
+#                                                  ['D- -> pi- pi- K+ pi0'],
+#                                                  wmk,up,config,extrainputs+[self.kaons])])
+#        
+#        return [MergedSelection('D2Pi0HHHBeauty2Charm_%s%s'%(which,tag),
+#                                RequiredSelections=[pselspi,mselspi,pselsk,mselsk])]
+
+    ## Proposed new version, avoid SubPID 
     def _makeD2Pi0hhh(self,which,up=False):
-        '''Makes D->Pi0hhh'''
-        tag = ''
-        if up: tag = 'UP'
+         '''Makes D->Pi0hhh'''
+         tag = ''
+         if up: tag = 'UP'
 
-        min,max = self._massWindow('D+')
+         min,max = self._massWindow('D+')
 
-        decayspi = [['pi+','pi+','pi-','pi0'],['K+', 'pi+','pi-','pi0'],
-                    ['pi+','K+', 'pi-','pi0'],['K+', 'K+', 'pi-','pi0']]
-        decaysk  = [['K+', 'pi+','K-', 'pi0'],['pi+','pi+','K-', 'pi0'],
-                    ['K+', 'K+', 'K-', 'pi0'],['pi+','K+', 'K-', 'pi0']]
-
-        wmpi = awmFunctor(decayspi,min,max)
-        wmk  = awmFunctor(decaysk,min,max)
-
-        config = deepcopy(self.config)    
-        config.pop('ADOCA14_MAX')
-        config.pop('ADOCA24_MAX')
-        config.pop('ADOCA34_MAX')
+         config = deepcopy(self.config)    
+         config.pop('ADOCA14_MAX')
+         config.pop('ADOCA24_MAX')
+         config.pop('ADOCA34_MAX')
         
-        if up : extrainputs = self.pi0[which] + [self.uppions]
-        else : extrainputs = self.pi0[which]
+         if up : extrainputs = self.pi0[which] + [self.kaons] + [self.uppions]
+         else  : extrainputs = self.pi0[which] + [self.kaons]
 
-        name = 'D+2Pi0PiHH'
-        pselspi = subPIDSels(decayspi,name+tag,which,min,max,
-                             [self._makeD2FourBody(name+'_'+which,
-                                                   ['D+ -> pi+ pi+ pi- pi0'],
-                                                   wmpi,up,config,extrainputs)])
+         sels = [ ]
 
-        name = 'D-2Pi0PiHH'
-        mselspi = subPIDSels(getCCs(decayspi),name+tag,which,min,max,
-                             [self._makeD2FourBody(name+'_'+which,
-                                                   ['D- -> pi- pi- pi+ pi0'],
-                                                   wmpi,up,config,extrainputs)])
+         sels += [ self._makeD2FourBody( 'D+2PiPiPiPi0_'+which, ['D+ -> pi+ pi+ pi- pi0'],
+                                         awmFunctor([['pi+','pi+','pi-','pi0']],min,max),
+                                         up,config,extrainputs ) ]
+         sels += [ self._makeD2FourBody( 'D+2PiPiKPi0_'+which, ['D+ -> pi+ pi+ K- pi0'],
+                                         awmFunctor([['pi+','pi+','K-','pi0']],min,max),
+                                         up,config,extrainputs ) ]
+         sels += [ self._makeD2FourBody( 'D+2PiKKPi0_'+which, ['D+ -> pi+ K+ K- pi0'],
+                                         awmFunctor([['pi+','K+','K-','pi0']],min,max),
+                                         up,config,extrainputs ) ]
+         sels += [ self._makeD2FourBody( 'D+2KKKPi0_'+which, ['D+ -> K+ K+ K- pi0'],
+                                         awmFunctor([['K+','K+','K-','pi0']],min,max),
+                                         up,config,extrainputs ) ]
 
-        name = 'D+2Pi0KHH'
-        pselsk = subPIDSels(decaysk,name+tag,which,min,max,
-                            [self._makeD2FourBody(name+'_'+which,
-                                                  ['D+ -> pi+ pi+ K- pi0'],
-                                                  wmk,up,config,extrainputs+[self.kaons])])
+         sels += [ self._makeD2FourBody( 'D+2KPiPiPi0_'+which, ['D+ -> K+ pi+ pi- pi0'],
+                                         awmFunctor([['K+','pi+','pi-','pi0']],min,max),
+                                         up,config,extrainputs ) ]
+         sels += [ self._makeD2FourBody( 'D+2KKPiPi0_'+which, ['D+ -> K+ K+ pi- pi0'],
+                                         awmFunctor([['K+','K+','pi-','pi0']],min,max),
+                                         up,config,extrainputs ) ]
+
+         sels += [ self._makeD2FourBody( 'D-2PiPiPiPi0_'+which, ['D- -> pi- pi- pi+ pi0'],
+                                         awmFunctor([['pi-','pi-','pi+','pi0']],min,max),
+                                         up,config,extrainputs ) ]
+         sels += [ self._makeD2FourBody( 'D-2PiPiKPi0_'+which, ['D- -> pi- pi- K+ pi0'],
+                                         awmFunctor([['pi-','pi-','K+','pi0']],min,max),
+                                         up,config,extrainputs ) ]
+         sels += [ self._makeD2FourBody( 'D-2PiKKPi0_'+which, ['D- -> pi- K- K+ pi0'],
+                                         awmFunctor([['pi-','K-','K+','pi0']],min,max),
+                                         up,config,extrainputs ) ]
+         sels += [ self._makeD2FourBody( 'D-2KKKPi0_'+which, ['D- -> K- K- K+ pi0'],
+                                         awmFunctor([['K-','K-','K+','pi0']],min,max),
+                                         up,config,extrainputs ) ]
+
+         sels += [ self._makeD2FourBody( 'D-2KPiPiPi0_'+which, ['D- -> K- pi- pi+ pi0'],
+                                         awmFunctor([['K-','pi-','pi+','pi0']],min,max),
+                                         up,config,extrainputs ) ]
+         sels += [ self._makeD2FourBody( 'D-2KKPiPi0_'+which, ['D- -> K- K- pi+ pi0'],
+                                         awmFunctor([['K-','K-','pi+','pi0']],min,max),
+                                         up,config,extrainputs ) ]
         
-        name = 'D-2Pi0KHH'
-        mselsk = subPIDSels(getCCs(decaysk),name+tag,which,min,max,
-                            [self._makeD2FourBody(name+'_'+which,
-                                                  ['D- -> pi- pi- K+ pi0'],
-                                                  wmk,up,config,extrainputs+[self.kaons])])
-        
-        return [MergedSelection('D2Pi0HHHBeauty2Charm_%s%s'%(which,tag),
-                                RequiredSelections=[pselspi,mselspi,pselsk,mselsk])]
+         return [MergedSelection('D2Pi0HHHBeauty2Charm_%s%s'%(which,tag),RequiredSelections=sels)]
 
-    ## ## Proposed new version, avoid SubPID 
-    ## def _makeD2Pi0hhh(self,which,up=False):
-    ##     '''Makes D->Pi0hhh'''
-    ##     tag = ''
-    ##     if up: tag = 'UP'
-
-    ##     min,max = self._massWindow('D+')
-
-    ##     config = deepcopy(self.config)    
-    ##     config.pop('ADOCA14_MAX')
-    ##     config.pop('ADOCA24_MAX')
-    ##     config.pop('ADOCA34_MAX')
-        
-    ##     if up : extrainputs = self.pi0[which] + [self.kaons] + [self.uppions]
-    ##     else  : extrainputs = self.pi0[which] + [self.kaons]
-
-    ##     sels = [ ]
-
-    ##     sels += [ self._makeD2FourBody( 'D+2PiPiPiPi0_'+which, ['D+ -> pi+ pi+ pi- pi0'],
-    ##                                     awmFunctor([['pi+','pi+','pi-','pi0']],min,max),
-    ##                                     up,config,extrainputs ) ]
-    ##     sels += [ self._makeD2FourBody( 'D+2PiPiKPi0_'+which, ['D+ -> pi+ pi+ K- pi0'],
-    ##                                     awmFunctor([['pi+','pi+','K-','pi0']],min,max),
-    ##                                     up,config,extrainputs ) ]
-    ##     sels += [ self._makeD2FourBody( 'D+2PiKKPi0_'+which, ['D+ -> pi+ K+ K- pi0'],
-    ##                                     awmFunctor([['pi+','K+','K-','pi0']],min,max),
-    ##                                     up,config,extrainputs ) ]
-    ##     sels += [ self._makeD2FourBody( 'D+2KKKPi0_'+which, ['D+ -> K+ K+ K- pi0'],
-    ##                                     awmFunctor([['K+','K+','K-','pi0']],min,max),
-    ##                                     up,config,extrainputs ) ]
-
-    ##     sels += [ self._makeD2FourBody( 'D-2PiPiPiPi0_'+which, ['D- -> pi- pi- pi+ pi0'],
-    ##                                     awmFunctor([['pi-','pi-','pi+','pi0']],min,max),
-    ##                                     up,config,extrainputs ) ]
-    ##     sels += [ self._makeD2FourBody( 'D-2PiPiKPi0_'+which, ['D- -> pi- pi- K+ pi0'],
-    ##                                     awmFunctor([['pi-','pi-','K+','pi0']],min,max),
-    ##                                     up,config,extrainputs ) ]
-    ##     sels += [ self._makeD2FourBody( 'D-2PiKKPi0_'+which, ['D- -> pi- K- K+ pi0'],
-    ##                                     awmFunctor([['pi-','K-','K+','pi0']],min,max),
-    ##                                     up,config,extrainputs ) ]
-    ##     sels += [ self._makeD2FourBody( 'D-2KKKPi0_'+which, ['D- -> K- K- K+ pi0'],
-    ##                                     awmFunctor([['K-','K-','K+','pi0']],min,max),
-    ##                                     up,config,extrainputs ) ]
-        
-    ##     return [MergedSelection('D2Pi0HHHBeauty2Charm_%s%s'%(which,tag),RequiredSelections=sels)]
-
-    ## ## Proposed new version, avoid SubPID 
-    ## def _makeD2Pi0hh(self,which,up=False):
-    ##     '''Makes D->Pi0hh'''
-        
-    ##     min,max = self._massWindow('D0wide')
-
-    ##     tag = ''
-    ##     if up: tag = 'UP'
-        
-    ##     config = deepcopy(self.config)    
-    ##     config.pop('ADOCA13_MAX')
-    ##     config.pop('ADOCA23_MAX')
-        
-    ##     if up : extrainputs = self.pi0[which] + [self.kaons] + [self.uppions]
-    ##     else  : extrainputs = self.pi0[which] + [self.kaons]
-
-    ##     sels = [ ]
-
-    ##     sels += [ self._makeD2ThreeBody( 'D2PiPiPi0_'+which, ['D0 -> pi+ pi- pi0'],
-    ##                                      awmFunctor([['pi+','pi+','pi0']],min,max),
-    ##                                      up,config,extrainputs ) ]
-    ##     sels += [ self._makeD2ThreeBody( 'D2KPiPi0_'+which,  ['D0 -> K+ pi- pi0'],
-    ##                                      awmFunctor([['K+','pi+','pi0']],min,max),
-    ##                                      up,config,extrainputs ) ]
-    ##     sels += [ self._makeD2ThreeBody( 'D2PiKPi0_'+which,  ['D0 -> pi+ K- pi0'],
-    ##                                      awmFunctor([['pi+','K+','pi0']],min,max),
-    ##                                      up,config,extrainputs ) ]
-    ##     sels += [ self._makeD2ThreeBody( 'D2KKPi0_'+which,   ['D0 -> K+ K- pi0'],
-    ##                                      awmFunctor([['K+','K+','pi0']],min,max),
-    ##                                      up,config,extrainputs ) ]
-
-    ##     return [MergedSelection('D2Pi0HHBeauty2Charm_%s%s'%(which,tag),RequiredSelections=sels)]
-
-
+    ## Proposed new version, avoid SubPID 
     def _makeD2Pi0hh(self,which,up=False):
         '''Makes D->Pi0hh'''
+        
         min,max = self._massWindow('D0wide')
-        decays = [['pi+','pi-','pi0'],['pi+','K-','pi0'],
-                  ['K+','pi-','pi0'],['K+','K-','pi0']]
-        wm = awmFunctor(decays,min,max)
+
+        tag = ''
+        if up: tag = 'UP'
+        
         config = deepcopy(self.config)    
         config.pop('ADOCA13_MAX')
-        config.pop('ADOCA23_MAX')        
-        if up : extrainputs = self.pi0[which]+ [self.uppions]
-        else : extrainputs = self.pi0[which]  
-        protoD2pi0hh = self._makeD2ThreeBody('D2Pi0HH_'+which,['D0 -> pi+ pi- pi0'],
-                                             wm,up,config,extrainputs)
-        name = 'D2Pi0HH'
-        if up: name += 'UP'
-        return [subPIDSels(decays,name,which,min,max,[protoD2pi0hh])]
+        config.pop('ADOCA23_MAX')
+        
+        if up : extrainputs = self.pi0[which] + [self.kaons] + [self.uppions]
+        else  : extrainputs = self.pi0[which] + [self.kaons]
+
+        sels = [ ]
+
+        sels += [ self._makeD2ThreeBody( 'D2PiPiPi0_'+which, ['D0 -> pi+ pi- pi0'],
+                                         awmFunctor([['pi+','pi+','pi0']],min,max),
+                                         up,config,extrainputs ) ]
+        sels += [ self._makeD2ThreeBody( 'D2KPiPi0_'+which,  ['D0 -> K+ pi- pi0'],
+                                         awmFunctor([['K+','pi+','pi0']],min,max),
+                                         up,config,extrainputs ) ]
+        sels += [ self._makeD2ThreeBody( 'D2PiKPi0_'+which,  ['D0 -> pi+ K- pi0'],
+                                         awmFunctor([['pi+','K+','pi0']],min,max),
+                                         up,config,extrainputs ) ]
+        sels += [ self._makeD2ThreeBody( 'D2KKPi0_'+which,   ['D0 -> K+ K- pi0'],
+                                         awmFunctor([['K+','K+','pi0']],min,max),
+                                         up,config,extrainputs ) ]
+
+        return [MergedSelection('D2Pi0HHBeauty2Charm_%s%s'%(which,tag),RequiredSelections=sels)]
+
+#    replace by CRJ's line to avoid maximum number of combinations
+#    def _makeD2Pi0hh(self,which,up=False):
+#        '''Makes D->Pi0hh'''
+#        min,max = self._massWindow('D0wide')
+#        decays = [['pi+','pi-','pi0'],['pi+','K-','pi0'],
+#                  ['K+','pi-','pi0'],['K+','K-','pi0']]
+#        wm = awmFunctor(decays,min,max)
+#        config = deepcopy(self.config)    
+#        config.pop('ADOCA13_MAX')
+#        config.pop('ADOCA23_MAX')        
+#        if up : extrainputs = self.pi0[which]+ [self.uppions]
+#        else : extrainputs = self.pi0[which]  
+#        protoD2pi0hh = self._makeD2ThreeBody('D2Pi0HH_'+which,['D0 -> pi+ pi- pi0'],
+#                                             wm,up,config,extrainputs)
+#        name = 'D2Pi0HH'
+#        if up: name += 'UP'
+#        return [subPIDSels(decays,name,which,min,max,[protoD2pi0hh])]
 
     def _makeD2Pi0hhWS(self,which,up=False):
         '''Makes D->Pi0hh WS'''
@@ -843,74 +858,109 @@ class DBuilder(object):
         msel = subPIDSels(getCCs(decays),'D-2KSPi0H'+tag,which,min,max,[protoDm2Kspi0h])
         return [MergedSelection('D2KSPi0HBeauty2Charm_'+which+tag,RequiredSelections=[psel,msel])]
 
+#    replace by CRJ's lines to avoid maximum combinations
+#    def _makeD2KSPi0hh(self,whichKs,whichPi0,up=False):
+#        '''Makes D->KsPi0hh'''
+#        min,max = self._massWindow('D0wide')
+#        decays = [['pi+','pi-','KS0','pi0'],['pi+','K-','KS0','pi0'],
+#                  ['K+','pi-','KS0','pi0'],['K+','K-','KS0','pi0']]
+#        wm = awmFunctor(decays,min,max)
+#        config = deepcopy(self.config)    
+#        config.pop('ADOCA13_MAX')
+#        config.pop('ADOCA23_MAX')
+#        config.pop('ADOCA14_MAX')
+#        config.pop('ADOCA24_MAX')
+#        config.pop('ADOCA34_MAX')
+#        if up : extrainputs = self.pi0[whichPi0]+self.ks[whichKs] + [self.uppions]
+#        else : extrainputs = self.pi0[whichPi0]+self.ks[whichKs]
+#        protoD2Kspi0hh = self._makeD2FourBody('D2KSPi0HH_'+whichKs+'_'+whichPi0,['D0 -> pi+ pi- KS0 pi0'],
+#                                       wm,up,config,extrainputs)
+#        name = 'D2KsPi0HH'
+#        if up: name += 'UP'
+#        return [subPIDSels(decays,name,whichKs+'_'+whichPi0,min,max,[protoD2Kspi0hh])]
+
+    ## Proposed new SubPID free implementation
     def _makeD2KSPi0hh(self,whichKs,whichPi0,up=False):
         '''Makes D->KsPi0hh'''
+        
         min,max = self._massWindow('D0wide')
-        decays = [['pi+','pi-','KS0','pi0'],['pi+','K-','KS0','pi0'],
-                  ['K+','pi-','KS0','pi0'],['K+','K-','KS0','pi0']]
-        wm = awmFunctor(decays,min,max)
-        config = deepcopy(self.config)    
+
+        tag = ''
+        if up: tag = 'UP'
+
+        which = whichKs+'_'+whichPi0
+        
+        config = deepcopy(self.config)
         config.pop('ADOCA13_MAX')
         config.pop('ADOCA23_MAX')
         config.pop('ADOCA14_MAX')
         config.pop('ADOCA24_MAX')
         config.pop('ADOCA34_MAX')
-        if up : extrainputs = self.pi0[whichPi0]+self.ks[whichKs] + [self.uppions]
-        else : extrainputs = self.pi0[whichPi0]+self.ks[whichKs]
-        protoD2Kspi0hh = self._makeD2FourBody('D2KSPi0HH_'+whichKs+'_'+whichPi0,['D0 -> pi+ pi- KS0 pi0'],
-                                       wm,up,config,extrainputs)
-        name = 'D2KsPi0HH'
-        if up: name += 'UP'
-        return [subPIDSels(decays,name,whichKs+'_'+whichPi0,min,max,[protoD2Kspi0hh])]
-
-    ## ## Proposed new SubPID free implementation
-    ## def _makeD2KSPi0hh(self,whichKs,whichPi0,up=False):
-    ##     '''Makes D->KsPi0hh'''
         
-    ##     min,max = self._massWindow('D0wide')
+        if up : extrainputs = [self.kaons] + self.pi0[whichPi0] + self.ks[whichKs] + [self.uppions]
+        else  : extrainputs = [self.kaons] + self.pi0[whichPi0] + self.ks[whichKs]
 
-    ##     tag = ''
-    ##     if up: tag = 'UP'
+        sels = [ ]
 
-    ##     which = whichKs+'_'+whichPi0
-        
-    ##     config = deepcopy(self.config)
-    ##     config.pop('ADOCA13_MAX')
-    ##     config.pop('ADOCA23_MAX')
-    ##     config.pop('ADOCA14_MAX')
-    ##     config.pop('ADOCA24_MAX')
-    ##     config.pop('ADOCA34_MAX')
-        
-    ##     if up : extrainputs = [self.kaons] + self.pi0[whichPi0] + self.ks[whichKs] + [self.uppions]
-    ##     else  : extrainputs = [self.kaons] + self.pi0[whichPi0] + self.ks[whichKs]
+        sels += [ self._makeD2FourBody('D2PiPiKsPi0_'+which,['D0 -> pi+ pi- KS0 pi0'],
+                                       awmFunctor([['pi+','pi-','KS0','pi0']],min,max),up,config,extrainputs) ]
+        sels += [ self._makeD2FourBody('D2KPiKsPi0_'+which,['D0 -> K+ pi- KS0 pi0'],
+                                       awmFunctor([['K+','pi-','KS0','pi0']],min,max),up,config,extrainputs) ]
+        sels += [ self._makeD2FourBody('D2PiKKsPi0_'+which,['D0 -> pi+ K- KS0 pi0'],
+                                       awmFunctor([['pi+','K-','KS0','pi0']],min,max),up,config,extrainputs) ]
+        sels += [ self._makeD2FourBody('D2KKKsPi0_'+which,['D0 -> K+ K- KS0 pi0'],
+                                       awmFunctor([['K+','K-','KS0','pi0']],min,max),up,config,extrainputs) ]
 
-    ##     sels = [ ]
+        return [ MergedSelection( 'D2KSPi0HH'+whichPi0+whichKs+tag, RequiredSelections=sels ) ]
 
-    ##     sels += [ self._makeD2FourBody('D2PiPiKsPi0_'+which,['D0 -> pi+ pi- KS0 pi0'],
-    ##                                    awmFunctor([['pi+','pi-','KS0','pi0']],min,max),up,config,extrainputs) ]
-    ##     sels += [ self._makeD2FourBody('D2KPiKsPi0_'+which,['D0 -> K+ pi- KS0 pi0'],
-    ##                                    awmFunctor([['K+','pi-','KS0','pi0']],min,max),up,config,extrainputs) ]
-    ##     sels += [ self._makeD2FourBody('D2PiKKsPi0_'+which,['D0 -> pi+ K- KS0 pi0'],
-    ##                                    awmFunctor([['pi+','K-','KS0','pi0']],min,max),up,config,extrainputs) ]
-    ##     sels += [ self._makeD2FourBody('D2KKKsPi0_'+which,['D0 -> K+ K- KS0 pi0'],
-    ##                                    awmFunctor([['K+','K-','KS0','pi0']],min,max),up,config,extrainputs) ]
-
-    ##     return [ MergedSelection( 'D2HHKSPi0'+whichPi0+whichKs+tag, RequiredSelections=sels ) ]
+#   replace by CRJ's line to avoid maximum combinations
+#    def _makeD2hhhh(self,up=False):
+#        '''Makes D->hhhh'''
+#        min,max = self._massWindow('D0')
+#        decays = [['pi+','pi+','pi-','pi-'],
+#                  ['pi+','pi+','K-','pi-'],['pi+','pi+','pi-','K-'],
+#                  ['K+','pi+','pi-','pi-'],['pi+','K+','pi-','pi-'],
+#                  ['K+','pi+','K-','pi-'],['K+','pi+','pi-','K-'],
+#                  ['pi+','K+','K-','pi-'],['pi+','K+','pi-','K-']]
+#        wm = awmFunctor(decays,min,max)
+#        protoD2hhhh = self._makeD2FourBody('D2HHHH',['D0 -> pi+ pi+ pi- pi-'],wm,
+#                                    up,self.config,[self.uppions] if up else [])
+#        name = 'D2HHHH'
+#        if up: name += 'UP'
+#        return [subPIDSels(decays,name,'',min,max,[protoD2hhhh])]
 
     def _makeD2hhhh(self,up=False):
         '''Makes D->hhhh'''
+        tag = ''
+        if up: tag = 'UP'
         min,max = self._massWindow('D0')
-        decays = [['pi+','pi+','pi-','pi-'],
-                  ['pi+','pi+','K-','pi-'],['pi+','pi+','pi-','K-'],
-                  ['K+','pi+','pi-','pi-'],['pi+','K+','pi-','pi-'],
-                  ['K+','pi+','K-','pi-'],['K+','pi+','pi-','K-'],
-                  ['pi+','K+','K-','pi-'],['pi+','K+','pi-','K-']]
-        wm = awmFunctor(decays,min,max)
-        protoD2hhhh = self._makeD2FourBody('D2HHHH',['D0 -> pi+ pi+ pi- pi-'],wm,
-                                    up,self.config,[self.uppions] if up else [])
-        name = 'D2HHHH'
-        if up: name += 'UP'
-        return [subPIDSels(decays,name,'',min,max,[protoD2hhhh])]
+        if up : extrainputs = [self.uppions] + [self.kaons]
+        else  : extrainputs = [self.kaons]
+     
+        sels = []
+        
+        sels += [ self._makeD2FourBody('D2PiPiPiPi',['D0 -> pi+ pi+ pi- pi-'],awmFunctor([['pi+','pi+','pi-','pi-']],min,max),
+                                    up,self.config,extrainputs) ]
+        sels += [ self._makeD2FourBody('D2KPiPiPi',['D0 -> K+ pi+ pi- pi-'],awmFunctor([['K+','pi+','pi-','pi-']],min,max),
+                                    up,self.config,extrainputs) ]  
+        sels += [ self._makeD2FourBody('D2PiPiPiK',['D0 -> pi+ pi+ pi- K-'],awmFunctor([['pi+','pi+','pi-','K-']],min,max),
+                                    up,self.config,extrainputs) ]  
+        sels += [ self._makeD2FourBody('D2KKPiPi',['D0 -> K+ K+ pi- pi-'],awmFunctor([['K+','K+','pi-','pi-']],min,max),
+                                    up,self.config,extrainputs) ]  
+        sels += [ self._makeD2FourBody('D2PiPiKK',['D0 -> pi+ pi+ K- K-'],awmFunctor([['pi+','pi+','K-','K-']],min,max),
+                                    up,self.config,extrainputs) ]  
+        sels += [ self._makeD2FourBody('D2KPiPiK',['D0 -> K+ pi+ pi- K-'],awmFunctor([['K+','pi+','pi-','K-']],min,max),
+                                    up,self.config,extrainputs) ]  
+        sels += [ self._makeD2FourBody('D2KKKPi',['D0 -> K+ K+ K- pi-'],awmFunctor([['K+','K+','K-','pi-']],min,max),
+                                    up,self.config,extrainputs) ]  
+        sels += [ self._makeD2FourBody('D2PiKKK',['D0 -> pi+ K+ K- K-'],awmFunctor([['pi+','K+','K-','K-']],min,max),
+                                    up,self.config,extrainputs) ]  
+        sels += [ self._makeD2FourBody('D2KKKK',['D0 -> K+ K+ K- K-'],awmFunctor([['K+','K+','K-','K-']],min,max),
+                                    up,self.config,extrainputs) ]  
+  
+        return [ MergedSelection( 'D2HHHH'+tag, RequiredSelections = sels)]
+
+
 
     def _makeD2hhhhWS(self,up=False):
         '''Makes D->hhhh WS'''
