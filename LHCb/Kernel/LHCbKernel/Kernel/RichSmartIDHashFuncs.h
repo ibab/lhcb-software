@@ -18,7 +18,23 @@
 // Kernel
 #include "Kernel/RichSmartID.h"
 
+// std::hash specializations
+#include <functional>
+namespace std
+{
+  template <> struct hash<LHCb::RichSmartID>
+  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
+  template <> struct hash<const LHCb::RichSmartID>
+  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
+  template <> struct hash<LHCb::RichSmartID&>
+  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
+  template <> struct hash<const LHCb::RichSmartID&>
+  { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
+}
+
+
 #ifdef __GNUC__
+#include <ext/hash_map>
 
 // GNU hash funcs
 namespace __gnu_cxx

@@ -3,6 +3,10 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
+! 2015-07-31 - Gerhard Raven
+ - add specialization of std::hash for RichSmartID, and explicitly include
+   ext/hash_map prior to the existing specializations in the __gnu_cxx 
+   namespace.
 
 !========================= LHCbKernel v15r11 2015-07-20 =========================
 ! 2015-06-12 - Heinrich Schindler
