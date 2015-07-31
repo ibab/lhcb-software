@@ -5,7 +5,12 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-07-31 - Stefano Perazzini
- - Added two tests for BnoC WG tests/liaisons/BnoC/TestBnoCfromSelections.py tests/liaisons/BnoC/TestBnoCfromSettings.py
+ - Modified default_config for StrippingB2KShh.py and StrippingLb2V0hh.py 
+   in BnoC directory to cope with new names of HltLines.
+
+! 2015-07-31 - Stefano Perazzini
+ - Added two tests for BnoC WG tests/liaisons/BnoC/TestBnoCfromSelections.py 
+   tests/liaisons/BnoC/TestBnoCfromSettings.py
 
 ! 2015-07-31 - Roberta Cardinale
  - Updated StrippingBandQ/StrippingXic2HHH.py

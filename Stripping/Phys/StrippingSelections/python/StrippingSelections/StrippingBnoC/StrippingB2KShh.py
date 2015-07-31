@@ -68,11 +68,11 @@ default_config = {
                      'GEC_MaxTracks'           : 250,
                      'ConeAngle'               : 1.5, 
                      # 2012 Triggers
-                     'HLT1Dec'                 : 'Hlt1TrackAllL0Decision',
-                     'HLT2Dec'                 : 'Hlt2Topo[234]Body.*Decision',
+                     #'HLT1Dec'                 : 'Hlt1TrackAllL0Decision',
+                     #'HLT2Dec'                 : 'Hlt2Topo[234]Body.*Decision',
                      # 2015 Triggers
-                     #'HLT1Dec'                 : 'Hlt1(Two)?TrackMVADecision',
-                     #'HLT2Dec'                 : 'Hlt2Topo[234]BodyDecision',
+                     'HLT1Dec'                 : 'Hlt1(Two)?TrackMVADecision',
+                     'HLT2Dec'                 : 'Hlt2Topo[234]BodyDecision',
                      'Prescale'                : 1.0,
                      'Prescale_SameSign'       : 1.0,
                      'Postscale'               : 1.0
