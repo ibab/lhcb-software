@@ -188,21 +188,21 @@ B2pphh = {
     }
 
 ## StrippingBc2hhh_BnoC.py
-Bc2hhh =  {
+Bc2hhh = {
     'WGs'         : ['BnoC'],
     'BUILDERTYPE' : 'Bc2hhhBuilder',
     'CONFIG'      : { 'MaxTrSIZE'             : 200,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
-                      '_h_PT'                 : 250.,     ## tracks min PT
+                      '_h_PT'                 : 300.,     ## tracks min PT
                       '_h_P'                  : 2500.,    ## tracks min P  
                       '_h_IPCHI2'             : 1.,       ## min tracks IP wrt OWNPV
                       '_h_TRCHI2DOF'          : 3.0,      ## max tracks CHI2DOF
-                      '_h_TRGHP'              : .5,        ## Track PROBNNghost     
+                      '_h_TRGHP'              : .5,        ## Track Ghost Probability     
                       '_3h_DOCA'              : .2,       ## max DOCA between h and 2h 
                       '_3h_PTmax'             : 1500,     ## min PT of the 3h highest PT track
                       '_3h_DIRA'              : .9999,   ## min cos angle between 3h momentum and PV decay direction   
                       '_3h_FDCHI2'            : 150.,     ## min 3h FDCHI2 wrt best 3h PV  
                       '_3h_SVPV'              : 1.5,      ## Distance between sv and pv
-                      '_3h_CHI2'              : 20.0,     ## max 3h vertex CHI2 
+                      '_3h_CHI2'              : 40.0,     ## max 3h vertex CHI2 
                       '_3h_IPCHI2'            : 10.,      ## max 3h IP CHI2 wrt best 3h PV
                       '_3h_PT'                : 1000.,    ## min 3h PT   
                       '_3h_PTsum'             : 4500.,    ## min of 3h tracks PT sum 
