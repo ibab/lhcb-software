@@ -74,7 +74,7 @@ default_config ={
     'FROM_B_P_MIN'  : '2000*MeV'
     },
     "gamma" : { # Cuts made on all photons
-    'PT_MIN'     : '1600*MeV',
+    'PT_MIN'     : '1200*MeV',
     'CL_MIN'     : 0.25,
     'ISNOTE_MIN' : -999.0
     },
@@ -109,11 +109,11 @@ default_config ={
     'SUMPT_MIN'     : '5000*MeV',
     'VCHI2DOF_MAX'  : 10,
     'BPVIPCHI2_MAX' : 25,
-    'BPVLTIME_MIN'  : '0.1*ps',
+    'BPVLTIME_MIN'  : '0.05*ps',
     'BPVDIRA_MIN'   : 0.999,
     'AM_MIN'        : '5800*MeV', 
     'AM_MAX'        : '6800*MeV',
-    'B2CBBDT_MIN'   : 0.05
+    'B2CBBDT_MIN'   : -999.9
     },
     "Dstar" : { # Cuts made on all D*'s used in all lines 
     'ADOCA12_MAX'  : '0.5*mm',

@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-31 - Chris Jones
+ - In B2OC module :
+   - Lower gamma Pt cut from 1600MeV to 1200MeV
+   - Turn off BBDT cut for Bc2DD lines
+   - Lower lifetime cut from 0.1ps to 0.05ps for Bc2DD lines
+
 ! 2015-07-31 - Simone Stracka
  - StrippingCharm/StrippingD2PiPi0.py : updated default config
 
@@ -31,7 +37,8 @@
  - Updated dictionary in StrippingCharm/StrippingD2hhh_conf.py 
 
 ! 2015-07-30 - Michael Kolpin
- - Fixed bug in StrippingTrackEffDownMuon, which affected all best tracks for events in the same stream
+ - Fixed bug in StrippingTrackEffDownMuon, which affected all best tracks for events
+   in the same stream
 
 ! 2015-07-30 - Jon Harrison
  - Updated StrippingRD/StrippingPhiToKSKS.py for S23 tuning.
