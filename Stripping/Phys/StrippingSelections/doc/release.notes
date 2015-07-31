@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-07-31 - Greg Ciezarek
+ - Updates to: 
+   -StrippingB2XTauNu.py
+   -StrippingB2DMuForTauMu.py
+   -StrippingLb2pMuNuVub.py
+
+
 ! 2015-07-31 - Ricardo Vazquez Gomez
  - Align few cuts with offline selection of the DarkBoson lines to reduce the rate.
 
