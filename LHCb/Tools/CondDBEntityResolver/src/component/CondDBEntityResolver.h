@@ -2,6 +2,7 @@
 #define CONDDBENTITYRESOLVERTOOL_H_
 
 // Include files
+#include <type_traits>
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/IFileAccess.h"
 #include "XmlTools/IXmlEntityResolver.h"
@@ -64,7 +65,8 @@ public:
   /// Find the URL and returns an auto_ptr to an input stream interface of an
   /// object that can be used to read from the file the URL is pointing to.
   /// Returns an empty pointer if the URL cannot be resolved.
-  virtual std::auto_ptr<std::istream> open(const std::string &url);
+  using open_result_t = typename std::result_of<decltype(&IFileAccess::open)(IFileAccess&,std::string)>::type;
+  open_result_t open(const std::string &url) override;
 
   /// @see IFileAccess::protocols
   virtual const std::vector<std::string> &protocols() const;

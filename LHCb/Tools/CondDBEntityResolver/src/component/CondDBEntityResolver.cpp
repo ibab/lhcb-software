@@ -226,7 +226,7 @@ StatusCode CondDBEntityResolver::i_getData(const std::string &url,
 //=========================================================================
 //  Returns an input stream to read from the opened file.
 //=========================================================================
-std::auto_ptr<std::istream> CondDBEntityResolver::open(const std::string &url) {
+CondDBEntityResolver::open_result_t CondDBEntityResolver::open(const std::string &url) {
   MsgStream log(msgSvc(), name());
 
   Gaudi::Time since, until;
@@ -235,7 +235,7 @@ std::auto_ptr<std::istream> CondDBEntityResolver::open(const std::string &url) {
   if (sc.isFailure()){
     throw GaudiException("Cannot open URL " + url, name(), StatusCode::FAILURE);
   }
-  return std::auto_ptr<std::istream>(new std::istringstream(str));
+  return open_result_t(new std::istringstream(str));
 }
 //=========================================================================
 //  Returns the list of supported protocols.

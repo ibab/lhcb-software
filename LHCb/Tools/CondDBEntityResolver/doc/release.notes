@@ -4,6 +4,11 @@
 ! Purpose     : Implement the IXmlEntityResolver interface to be able to use
 !               CondDB URLs into XML documents
 !-----------------------------------------------------------------------------
+! 2015-08-01 - Gerhard Raven
+ - adapt CondDBEntityResolver::open such that it is invariant under whether
+   IFileAcces::open wants to return std::auto_ptr  or std::unique_ptr.
+   Admittedly obfuscated, and once IFileAccess is migrated should remove
+   open_result_t, and just use std::unique_ptr directly.
 
 !========================= CondDBEntityResolver v5r8 2014-06-10 ==================
 ! 2014-05-16 - Marco Clemencic
