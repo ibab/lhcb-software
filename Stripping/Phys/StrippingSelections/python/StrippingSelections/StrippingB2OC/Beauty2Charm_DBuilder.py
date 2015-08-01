@@ -612,26 +612,43 @@ class DBuilder(object):
 
     def _makeD2KShhh(self,which,up=False):
         '''Makes D->Kshhh'''
+        
         tag = ''
-        if up: tag = 'UP'        
+        if up: tag = 'UP'
+        
         min,max  = self._massWindow('D+')
-        decays = [['pi+','pi-','pi+','KS0'],
-                  ['pi+','K-','pi+','KS0'], ['K+','pi-','pi+','KS0'],['K+','pi-','pi+','KS0'],
-                  ['K+','K-','pi+','KS0'],['K+','pi-','K+','KS0'],['pi+','K-','K+','KS0'],
-                  ['K+','K-','K+','KS0']]
-        wm = awmFunctor(decays,min,max)
+        
+        decaysp = [['pi+','pi-','pi+','KS0'],
+                   ['K+', 'pi-','pi+','KS0'],['pi+','K-', 'pi+','KS0'],['pi+','pi-','K+','KS0'],
+                   ['K+', 'K-', 'pi+','KS0'],['K+', 'pi-','K+', 'KS0'],['pi+','K-', 'K+','KS0'],
+                   ['K+', 'K-', 'K+', 'KS0']]
+        decaysm = getCCs(decaysp)
+
         config = deepcopy(self.config)    
         config.pop('ADOCA14_MAX')
         config.pop('ADOCA24_MAX')
         config.pop('ADOCA34_MAX')
+        
         if up : extrainputs = self.ks[which] + [self.uppions]
-        else: extrainputs = self.ks[which]
-        protoDp2Kshhh = self._makeD2FourBody('D+2KsHHH_'+which,['D+ -> pi+ pi- pi+ KS0'],wm,up,config,extrainputs)
-        psels = subPIDSels(decays,'D+2KsHHH'+tag,which,min,max,[protoDp2Kshhh])
-        protoDm2Kshhh = self._makeD2FourBody('D-2KsHHH_'+which,['D- -> pi- pi+ pi- KS0'],wm,up,config,extrainputs)
-        msels = subPIDSels(getCCs(decays),'D-2KsHHH'+tag,which,min,max,[protoDm2Kshhh])
-        return [MergedSelection('D2KsHHHBeauty2Charm_%s%s'%(which,tag),
-                                RequiredSelections=[psels,msels])]
+        else:   extrainputs = self.ks[which]
+
+        sp = self._makeD2FourBody('D+2KsHHH_'+which,['D+ -> pi+ pi- pi+ KS0'],
+                                  awmFunctor(decaysp,min,max),
+                                  up,config,extrainputs)
+        sm = self._makeD2FourBody('D-2KsHHH_'+which,['D- -> pi- pi+ pi- KS0'],
+                                  awmFunctor(decaysm,min,max),
+                                  up,config,extrainputs)
+
+        sels = []
+
+        for dec in decaysp :
+             name = 'D+2'+dec[0]+dec[1]+dec[2]+dec[3]+tag
+             sels += [ subPIDSels([dec],name,which,min,max,[sp]) ]
+        for dec in decaysm :
+             name = 'D-2'+dec[0]+dec[1]+dec[2]+dec[3]+tag
+             sels += [ subPIDSels([dec],name,which,min,max,[sm]) ]
+
+        return [MergedSelection('D2KsHHHBeauty2Charm_%s%s'%(which,tag),RequiredSelections=sels)]
 
     def _makeD2KShhWS(self,which,up=False):
         '''Makes D->Kshh WS'''
@@ -803,10 +820,9 @@ class DBuilder(object):
 
         sels = [ ]
 
-        sels += [ subPIDSels([decays[0]],'D2PiPiPi0_'+which,tag,min,max,[s]) ]
-        sels += [ subPIDSels([decays[1]],'D2PiKPi0_'+which, tag,min,max,[s]) ]
-        sels += [ subPIDSels([decays[2]],'D2KPiPi0_'+which, tag,min,max,[s]) ]
-        sels += [ subPIDSels([decays[3]],'D2KKPi0_'+which,  tag,min,max,[s]) ]
+        for dec in decays :
+             name = 'D2'+dec[0]+dec[1]+dec[2]+tag
+             sels += [ subPIDSels([dec],name,which,min,max,[s]) ]
 
         return [MergedSelection('D2Pi0HHBeauty2Charm_%s%s'%(which,tag),RequiredSelections=sels)]
 
@@ -920,10 +936,11 @@ class DBuilder(object):
         s = self._makeD2FourBody('D2HHKsPi0_'+which,['D0 -> pi+ pi- KS0 pi0'],
                                  awmFunctor(decays,min,max),up,config,extrainputs)
 
-        sels  = [ subPIDSels([decays[0]],'D2PiPiKsPi0_'+which,tag,min,max,[s]) ]
-        sels += [ subPIDSels([decays[1]],'D2PiKKsPi0_'+which, tag,min,max,[s]) ]
-        sels += [ subPIDSels([decays[2]],'D2KPiKsPi0_'+which, tag,min,max,[s]) ]
-        sels += [ subPIDSels([decays[3]],'D2KKKsPi0_'+which,  tag,min,max,[s]) ]
+        sels = [ ]
+
+        for dec in decays :
+             name = 'D2'+dec[0]+dec[1]+dec[2]+dec[3]+tag
+             sels += [ subPIDSels([dec],name,which,min,max,[s]) ]
 
         return [ MergedSelection( 'D2KSPi0HH'+whichPi0+whichKs+tag, RequiredSelections=sels ) ]
 

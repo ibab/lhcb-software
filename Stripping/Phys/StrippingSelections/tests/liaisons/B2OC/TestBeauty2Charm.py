@@ -280,8 +280,8 @@ TimingAuditor().TIMER.NameSize = 60
 from Configurables import AuditorSvc, ChronoAuditor
 AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
 
-pFreq = 1000
-DaVinci().EvtMax = 10000
+pFreq = 5000
+DaVinci().EvtMax = 50000
 DaVinci().PrintFreq = pFreq
 
 from Configurables import StrippingReport
