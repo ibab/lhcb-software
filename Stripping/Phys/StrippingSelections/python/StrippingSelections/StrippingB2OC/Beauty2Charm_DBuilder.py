@@ -183,7 +183,7 @@ class DBuilder(object):
         self.k3pi_pid_tighter1 = [filterPID('D2K3PIPIDTIGHTER1',self.k3pi,config_pid['TIGHTER1'])]
         self.k3pi_pid_tighter1_narrow = [filterSelection('D2K3PIPIDTIGHTER1NARROWMW','in_range(%s,MM,%s)'%(d0_narrow_min,d0_narrow_max),self.k3pi_pid_tighter1)]
         self.k3pi_pid_tight_up = [filterPID('D2K3PIPIDTIGHTUP',self.k3pi_up,config_pid['TIGHT'])]
-        self.d0_cf_pid = [MergedSelection('D0CFPID',
+        self.d0_cf_pid = [MergedSelection('D0CFPIDBeauty2Charm',
                                           RequiredSelections=self.kpi_pid+self.k3pi_pid)]
         self.pi0kpi_merged = [filterSelection('D2Pi0KPi_Merged',oneK,
                                               self.pi0hh_merged)]
@@ -283,12 +283,12 @@ class DBuilder(object):
         self.ds_kpipi_pid_special = [filterSelection('Ds2KPiPiPIDSPECIAL',ds_kpipi,self.hhh_pid_special)]
         
         
-        self.ds_hhh_pid_custom = [MergedSelection('Ds2HHHPIDCUSTOM',
+        self.ds_hhh_pid_custom = [MergedSelection('Ds2HHHPIDCUSTOMBeauty2Charm',
                                                   RequiredSelections=self.ds_pipipi_pid_tightpi+self.ds_kpipi_pid_special+self.ds_hhh_cf_custom)]
 
         #this spans the whole mass range covered by D+ and Ds (comes from self.hhh)
         #either d(s) --> pipipi kpipi or kkpi
-        self.hhh_pid_custom = [MergedSelection('D2HHHPIDCUSTOM',
+        self.hhh_pid_custom = [MergedSelection('D2HHHPIDCUSTOMBeauty2Charm',
                                                RequiredSelections=self.ds_pipipi_pid_tightpi+self.ds_kpipi_pid_special+self.kkpi_custom)]
         
         #for use with the FULL DST B --> DD line
@@ -299,7 +299,7 @@ class DBuilder(object):
 
         #d_kkpi_custom = [filterSelection('Dplus2KKPiCUSTOM',"in_range(%s,MM,%s)"%(d_min,d_max),self.kkpi_custom)]
         self.d_cf_hhh_pid_tightpi = [filterSelection('Dplus2HHHCF',d_cf,self.hhh_pid_tightpi)]
-        #self.d_hhh_custom = [MergedSelection('Dplus2HHHCUSTOM',RequiredSelections=d_kkpi_custom+self.d_cf_hhh_pid_tightpi)]
+        #self.d_hhh_custom = [MergedSelection('Dplus2HHHCUSTOMBeauty2Charm',RequiredSelections=d_kkpi_custom+self.d_cf_hhh_pid_tightpi)]
         self.d_cf_hhh_pid_tightpi_up = [filterSelection('Dplus2HHHCFUP',d_cf,self.hhh_pid_tightpi_up)]
         #self.d_hhh_4_B2DD_custom = [MergedSelection('D2HHH_4_B2DD_CUSTOM_Beauty2Charm',
         #                                            RequiredSelections=self.ds_hhh_pid_custom+self.d_hhh_custom)]
@@ -308,7 +308,7 @@ class DBuilder(object):
         #for use with FULL DST D0D0 line
         self.d0_cf_pid_tight = [filterPID('D0CFPIDTIGHT',
                                           self.d0_cf_pid,config_pid['TIGHT'])]
-        self.d0_cf_pid_tight_up = [MergedSelection('D0CFPIDTIGHTUP',
+        self.d0_cf_pid_tight_up = [MergedSelection('D0CFPIDTIGHTUPBeauty2Charm',
                                                    RequiredSelections=self.kpi_pid_tight_up+self.k3pi_pid_tight_up)]
                 
     def _makeD2TwoBody(self,name,decays,wm,up,config,extrainputs):
@@ -522,7 +522,7 @@ class DBuilder(object):
                                DecayDescriptors=['D- -> K*(892)- KS0'])
         selp = Selection('ProtoD+2KstKs'+which+'Beauty2Charm',Algorithm=cpp,RequiredSelections=inputs)
         selm = Selection('ProtoD-2KstKs'+which+'Beauty2Charm',Algorithm=cpm,RequiredSelections=inputs)
-        return [ MergedSelection('D2KstKs'+which+'Beauty2Charm',RequiredSelections=[selp,selm]) ]
+        return [ MergedSelection('D2KstKsBeauty2Charm'+which,RequiredSelections=[selp,selm]) ]
 
     def _makeD2KstarKstar0(self):
         min,max = self._massWindow('D+')
@@ -942,7 +942,8 @@ class DBuilder(object):
              name = 'D2'+dec[0]+dec[1]+dec[2]+dec[3]+tag
              sels += [ subPIDSels([dec],name,which,min,max,[s]) ]
 
-        return [ MergedSelection( 'D2KSPi0HH'+whichPi0+whichKs+tag, RequiredSelections=sels ) ]
+        return [ MergedSelection( 'D2KSPi0HHBeauty2Charm'+whichPi0+whichKs+tag,
+                                  RequiredSelections=sels ) ]
 
 #   replace by CRJ's line to avoid maximum combinations
 #    def _makeD2hhhh(self,up=False):
@@ -997,7 +998,7 @@ class DBuilder(object):
              name = 'D2'+dec[0]+dec[1]+dec[2]+dec[3]
              sels += [ subPIDSels([dec],name,tag,min,max,[s]) ]
   
-        return [ MergedSelection( 'D2HHHH'+tag, RequiredSelections = sels)]
+        return [ MergedSelection( 'D2HHHH'+tag+'Beauty2Charm', RequiredSelections = sels)]
 
 
     def _makeD2hhhhWS(self,up=False):
@@ -1038,7 +1039,7 @@ class DBuilder(object):
              name = 'D2'+dec[0]+dec[1]+dec[2]+dec[3]+'WSMinus'
              sels += [ subPIDSels([dec],name,tag,min,max,[sm]) ]
         
-        return [MergedSelection('D2HHHHWSBeauty2Charm'+tag,RequiredSelections=sels)]
+        return [MergedSelection('D2HHHH'+tag+'WSBeauty2Charm',RequiredSelections=sels)]
 
     def _makeD2PhiMuNu(self,up=False):
         '''makes Ds->phi mu nu'''
