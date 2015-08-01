@@ -4,6 +4,10 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2015-07-01 - Patrick Robbe
+ - Add new tool: DaughtersInLHCbKeepOnlySignal to implement event embedding:
+   The tool keeps only the signal particle and removes the rest of the event
+
 !========================= GenCuts v3r11p1 2015-05-27 ========================
 ! 2015-05-22 - Xabier Cid Vidal
  - Fixed tiny bug in InvariantMassQQMCJets.cpp that was causing core dump
