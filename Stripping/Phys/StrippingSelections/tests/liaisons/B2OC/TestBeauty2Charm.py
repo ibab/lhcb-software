@@ -140,14 +140,14 @@ MyLines = [
     'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0GammaD02HHBeauty2CharmLine'
 
 ]
-streamsel = StrippingStream("Bhadron")
-for stream in streamall:
-    for line in stream.lines:
-         if line.name() in MyLines:
-            streamsel.appendLines([line])
-streams = [streamsel]
+## streamsel = StrippingStream("Bhadron")
+## for stream in streamall:
+##     for line in stream.lines:
+##          if line.name() in MyLines:
+##             streamsel.appendLines([line])
+## streams = [streamsel]
 
-#streams = streamall
+streams = streamall
 
 leptonicMicroDSTname   = 'Leptonic'
 charmMicroDSTname      = 'Charm'
@@ -280,8 +280,8 @@ TimingAuditor().TIMER.NameSize = 60
 from Configurables import AuditorSvc, ChronoAuditor
 AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
 
-pFreq = 5000
-DaVinci().EvtMax = 100000
+pFreq = 1000
+DaVinci().EvtMax = 10000
 DaVinci().PrintFreq = pFreq
 
 from Configurables import StrippingReport

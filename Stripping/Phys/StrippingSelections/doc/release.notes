@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-01 - Chris Jones
+ - Improve the new implementations for HHH, HHHH, HHHPi0, HHPi0, KsPi0HH such 
+   that SubPID is still used, for speed, but mulitple SubPID instances are used
+   to avoid max combination limits.
+
 ! 2015-07-31 - Wenbin Qian
   Update HHHH, HHHPi0, HHPi0, KsPi0HH lines without subPID
 
