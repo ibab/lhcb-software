@@ -80,6 +80,8 @@ Generation::Generation( const std::string& name,
     // Tool name to cut on full event
     declareProperty( "FullGenEventCutTool" , 
                      m_fullGenEventCutToolName = "" ) ;
+    // Flag to attach all pile up events to the same PV
+    declareProperty( "CommonVertex" , m_commonVertex = false ) ;
 
     // Reset counters
     m_intC.assign( 0 ) ;
@@ -204,7 +206,7 @@ StatusCode Generation::execute() {
     else 
       // default set to 1 pile and 2.10^32 luminosity
       nPileUp = 1 ;
-    
+
     // generate a set of Pile up interactions according to the requested type
     // of event
     if ( 0 < nPileUp ) 
@@ -214,7 +216,7 @@ StatusCode Generation::execute() {
       goodEvent = true ;
       setFilterPassed( false ) ;
     }
-
+    
     // increase event and interactions counters
     ++m_nEvents ;    m_nInteractions += nPileUp ;
 
@@ -236,11 +238,30 @@ StatusCode Generation::execute() {
             if ( ! sc.isSuccess() ) goodEvent = false ;
           }
           (*itEvents) -> pGenEvt() -> set_event_number( ++iPile ) ;
-          
-          sc = m_vertexSmearingTool -> smearVertex( *itEvents ) ;
+          if ( ( ! ( m_commonVertex ) ) || ( 1 == iPile ) )
+            sc = m_vertexSmearingTool -> smearVertex( *itEvents ) ;
           if ( ! sc.isSuccess() ) return sc ;
         }
       }
+
+      if ( ( m_commonVertex ) && ( 1 < nPileUp ) ) {
+        HepMC::FourVector commonV = 
+          ((*(theEvents->begin())) ->pGenEvt() -> beam_particles().first) -> end_vertex() -> position() ;
+        for ( itEvents = (theEvents->begin()+1) ; itEvents != theEvents -> end() ;
+              ++itEvents ) {
+          HepMC::GenEvent::vertex_iterator vit ;
+          HepMC::GenEvent * pEvt = (*itEvents) -> pGenEvt() ;
+          for ( vit = pEvt -> vertices_begin() ; vit != pEvt -> vertices_end() ; 
+                ++vit ) {
+            HepMC::FourVector pos = (*vit) -> position() ;
+            (*vit) -> set_position( HepMC::FourVector( pos.x() + commonV.x() , 
+                                                       pos.y() + commonV.y() , 
+                                                       pos.z() + commonV.z() , 
+                                                       pos.t() + commonV.t() ) ) ;
+          }
+        } 
+      }
+      
 
       // Apply generator level cut on full event
       if ( m_fullGenEventCutTool ) {
@@ -281,7 +302,7 @@ StatusCode Generation::execute() {
   itEvents = theEvents->begin();
   if ( 0 < nPileUp ) {
     for( LHCb::GenCollisions::const_iterator it = theCollisions->begin();
-	 theCollisions->end() != it; ++it ) {
+         theCollisions->end() != it; ++it ) {
       
       // HepMCEvent
       LHCb::HepMCEvent* theHepMCEvent = new LHCb::HepMCEvent();
@@ -314,7 +335,7 @@ StatusCode Generation::execute() {
   theCollisions->clear();
   delete(theEvents);
   delete(theCollisions);
-  
+
   return sc ;
 }
 

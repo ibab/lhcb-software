@@ -109,6 +109,9 @@ private:
   /// Name of the IFullGenEventCutTool (set by options)
   std::string m_fullGenEventCutToolName  ;
 
+  /// Flag to generate all pile up events at the same PV (set by options)
+  bool m_commonVertex ;
+
   unsigned int m_nEvents ; ///< Number of generated events
 
   unsigned int m_nAcceptedEvents ; ///< Number of accepted events
