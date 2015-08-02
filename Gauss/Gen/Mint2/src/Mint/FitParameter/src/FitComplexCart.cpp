@@ -30,7 +30,7 @@ FitComplexCart::FitComplexCart(const std::string& varName
   , _real(makeRealName(varName), fname, pset, fow, vb)
   , _imag(makeImagName(varName), fname, pset, fow, vb)
 {
-  cout << "pset pointer in FitComplexCart " << pset << endl;
+  // cout << "pset pointer in FitComplexCart " << pset << endl;
 }
 FitComplexCart::FitComplexCart(const std::string& varName
 			       , MinuitParameterSet* pset

@@ -181,7 +181,7 @@ bool FitAmpList::createAllAmps(const DalitzEventPattern& thePattern
 			      , const std::string& prefix){
   bool dbThis=false;
 
-  cout << "pset pointer in FitAmpList::createAllAmps " << getMPS() << endl;
+  //  cout << "pset pointer in FitAmpList::createAllAmps " << getMPS() << endl;
 
   const NamedDecayTreeList* ndl = NamedDecayTreeList::getMe();
 

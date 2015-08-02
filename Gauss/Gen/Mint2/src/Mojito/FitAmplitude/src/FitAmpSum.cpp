@@ -39,7 +39,7 @@ FitAmpSum::FitAmpSum(const DalitzEventPattern& pat
   : FitAmpList(pat, pset, prefix, opt)
 {
 
-  cout << "pset pointer in FitAmpSum::FitAmpSum " << pset << " = " << getMPS() << endl;
+  // cout << "pset pointer in FitAmpSum::FitAmpSum " << pset << " = " << getMPS() << endl;
 
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;

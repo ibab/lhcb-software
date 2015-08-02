@@ -105,7 +105,7 @@ FitAmplitude::FitAmplitude(const std::string& yourOwnName
   if(useStringAs == FitAmplitude::PREFIX){
     _name += treeWithOpts.uniqueName();
   }
-  cout << "pset pointer in FitAmplitude " << pset << endl;
+  //cout << "pset pointer in FitAmplitude " << pset << endl;
 }
 
 FitAmplitude::FitAmplitude(const std::string& yourOwnName

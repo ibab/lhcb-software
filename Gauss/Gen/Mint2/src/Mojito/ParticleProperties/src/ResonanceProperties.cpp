@@ -79,7 +79,7 @@ ResonanceProperties::ResonanceProperties(const std::string& name, MinuitParamete
   , _fitWidth("width_"   + nameFromPid(_pid), 1, widthInit(_pid) , 0, 0, 0, mps,  NamedParameterBase::QUIET)
   , _fitRadius("radius_" + nameFromPid(_pid), 1, radiusInit(_pid), 0, 0, 0, mps,  NamedParameterBase::QUIET)
   , _fitAlpha("alpha_"   + nameFromPid(_pid), 1, 1.0             , 0, 0, 0, mps,  NamedParameterBase::QUIET)
-  , _fitFermiLambda("Fermi_lambda_"   + nameFromPid(_pid), 1, 1.0  , 0, 0, 0, msp,  NamedParameterBase::QUIET)
+  , _fitFermiLambda("Fermi_lambda_"   + nameFromPid(_pid), 1, 1.0  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
   , _fitFermiS0("Fermi_s0_"   + nameFromPid(_pid), 1, 1.0          , 0, 0, 0, mps,  NamedParameterBase::QUIET)
 { 
 }

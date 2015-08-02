@@ -157,7 +157,7 @@ DalitzPdfBaseFlexiFastInteg::DalitzPdfBaseFlexiFastInteg(const DalitzEventPatter
   , _commaSepList_of_SavedIntegrators("")
 {
   setup();
-  cout << "pset pointer in DalitzPdfBaseFlexiFastInteg " << _mps << " = " << getMPS() << endl;
+  //cout << "pset pointer in DalitzPdfBaseFlexiFastInteg " << _mps << " = " << getMPS() << endl;
 }
 
 DalitzPdfBaseFlexiFastInteg::DalitzPdfBaseFlexiFastInteg(const DalitzPdfBaseFlexiFastInteg& other)
