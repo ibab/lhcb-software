@@ -44,8 +44,7 @@ BcDaughtersInLHCb::BcDaughtersInLHCb( const std::string& type,
   declareProperty( "NeutralThetaMin" , m_neutralThetaMin = 5 * Gaudi::Units::mrad ) ;
   declareProperty( "NeutralThetaMax" , m_neutralThetaMax = 400 * Gaudi::Units::mrad ) ;
   declareProperty( "DecayTool" ,       m_decayToolName = "EvtGenDecay") ;
-  m_sigBcPID = 541 ;
-
+  declareProperty( "BcPdgId" ,         m_sigBcPID = 541);
 }
 
 //=============================================================================
