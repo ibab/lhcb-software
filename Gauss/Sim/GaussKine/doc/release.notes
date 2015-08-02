@@ -4,6 +4,13 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2015-08-02 - Gloria Corti
+ - Retrive information about signal particle from HepMC status code and 
+   propagate it to G4PrimaryParticle or to MCParticles. When SkipG4 set also
+   fromSignal flag to decay products 
+ - Retrieve information about signal particle from G4 tables and propagate it
+   to MCParticles and set fromSignal flag to decay products
+
 !========================= GaussKine v6r5 2015-03-18 =========================
 ! 2015-02-11 - Heinrich Schindler
  - Add algorithm MaskParticles to set the status of high energy and rapidity

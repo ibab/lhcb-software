@@ -3,6 +3,7 @@
 
 // local 
 #include "SimulationToMCTruth.h"
+#include "MCInterfaces/IFlagSignalChain.h"
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
@@ -56,6 +57,7 @@ SimulationToMCTruth::SimulationToMCTruth(const std::string& name,
   , m_vertexContainer  ( 0 )
   , m_mcHeader         ( 0 )  
   , m_ppSvc            ( 0 )
+  , m_setSignalFlagTool( 0 )
   , m_intermediatePDG  ( 0 )
 { 
   declareProperty( "Particles", 
@@ -90,6 +92,9 @@ StatusCode SimulationToMCTruth::initialize() {
 
   // get kineCnv service that hold the MCParticle/Geant4 table list
   m_gigaKineCnvSvc = svc<IGiGaKineCnvSvc>( m_kineSvcName );
+
+  // get tool to set signal flag
+  m_setSignalFlagTool = tool< IFlagSignalChain >( "FlagSignalChain" );
 
   return sc; 
 }
@@ -203,7 +208,15 @@ StatusCode SimulationToMCTruth::execute() {
       }
     }
   }
-  
+
+  // Look for signal in G4 and propagate the information to its MCParticle
+  std::vector< int > sigBar = mcmanager -> GetSignalBarcodes();
+  for ( std::vector< int >::const_iterator isig = sigBar.begin();
+        sigBar.end() != isig; ++isig ) {
+    LHCb::MCParticle* mcp = table[ *isig ].particle();
+    mcp->setFromSignal( true );
+  } 
+ 
   // Now eliminates all decay trees which have no production vertices
   // They have been eliminated by Geant4 (for example a Lambda0 has
   // interacted then the decay products don't exist anymore)
@@ -212,7 +225,17 @@ StatusCode SimulationToMCTruth::execute() {
        ++ipart ) {
     if ( 0 == (*ipart) -> originVertex() ) deleteParticle( (*ipart) ) ;
   }
-  
+
+  // Now propagate the signal information to all MCParticles in decay tree. 
+  // Need to loop over MCParticles for cases where signal is not passed to 
+  // Geant4 and so cannot have flag. Here so that it is in final container
+  for ( ip = m_particleContainer->begin(); 
+        ip != m_particleContainer->end(); ip++ ) {
+    if ( (*ip)->fromSignal() ) {
+      m_setSignalFlagTool->setFromSignalFlag( *ip );
+    }
+  }
+
   debug() << "Conversion G4 -> MCTruth is finished" << endmsg ;  
   return StatusCode::SUCCESS;
 }
@@ -326,7 +349,7 @@ void SimulationToMCTruth::convert( const HepMC::GenParticle * part ,
     // reasonably neat solution
     mcpart = const_cast< LHCb::MCParticle* >( prodvertex -> mother() );
   }
-  
+
   HepMC::GenVertex * genendvtx = part -> end_vertex();
 
   if ( ! isEndOfWorldVertex( genendvtx ) ) {
@@ -344,7 +367,7 @@ void SimulationToMCTruth::convert( const HepMC::GenParticle * part ,
       mcendvtx -> setType( vType ) ;
     } else {
       mcendvtx -> 
-	setType( vertexType( LHCb::MCVertex::KinematicLimit ) ) ;
+        setType( vertexType( LHCb::MCVertex::KinematicLimit ) ) ;
     }
     
     mcpart -> addToEndVertices( mcendvtx ) ;
@@ -414,3 +437,4 @@ LHCb::MCVertex * SimulationToMCTruth::findPrimaryVertex( const Gaudi::XYZPoint &
   }
   return 0 ;
 }
+

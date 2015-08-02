@@ -12,6 +12,7 @@
 // Forward declarations
 class IGiGaSvc ;
 class IGiGaKineCnvSvc ;
+class IFlagSignalChain;
 namespace HepMC {
   class GenParticle ;
   class GenVertex ;
@@ -58,6 +59,7 @@ private:
   /// Find the primary vertex
   LHCb::MCVertex * findPrimaryVertex( const Gaudi::XYZPoint & vertex ) const ; 
 
+  // Data members
   std::string        m_gigaSvcName;      ///< Name of GiGa Service
   std::string        m_kineSvcName;      ///< Name of GiGaCnv Service
   bool               m_checkUnknown;     ///< Check for unknown PDG Ids
@@ -74,6 +76,9 @@ private:
 
   /// Reference to the particle property service
   LHCb::IParticlePropertySvc * m_ppSvc;
+
+  /// Reference to tool to propagate fromSignal flag
+  IFlagSignalChain* m_setSignalFlagTool ;
 
   /// Set to hold keys of treated MCParticles when rebuilding decay tree
   std::set< LHCb::MCParticle::key_type >  m_treatedParticles ;

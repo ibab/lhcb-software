@@ -1,5 +1,6 @@
 // Local.
 #include "GenerationToSimulation.h"
+#include "MCInterfaces/IFlagSignalChain.h"
 
 // Gaudi.
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -128,6 +129,9 @@ StatusCode GenerationToSimulation::initialize() {
       always() << "Error from KeepCode = '" + m_keepCode + "'" << endmsg;
   }
 
+  // get tool to set signal flag
+  m_setSignalFlagTool = tool< IFlagSignalChain >( "FlagSignalChain" );
+
   return StatusCode::SUCCESS;
 }
 
@@ -229,6 +233,18 @@ StatusCode GenerationToSimulation::execute() {
       }
     }
     if (!m_skipGeant4) *gigaSvc() << origVertex;
+  }
+
+  // This needs to be done only if Geant4 is not called since in that case
+  // the setting of the flags for the daughters is taken care of by 
+  // SimulationToMCTruth
+  if ( m_skipGeant4 ) {
+    LHCb::MCParticles::const_iterator ip;
+    for ( ip = m_particleContainer->begin(); ip != m_particleContainer->end(); ip++ ) {
+      if ( (*ip)->fromSignal() ) {
+        m_setSignalFlagTool->setFromSignalFlag( *ip );
+      }
+    }
   }
 
   return StatusCode::SUCCESS;
@@ -522,6 +538,12 @@ LHCb::MCParticle* GenerationToSimulation::makeMCParticle
       endVertex -> setType( LHCb::MCVertex::DecayVertex);
     mcp -> addToEndVertices(endVertex);
   }
+
+  //  Set the fromSignal flag
+  if ( LHCb::HepMCEvent::SignalInLabFrame == (particle->status()) ) {
+    mcp -> setFromSignal(true);
+  }
+
   return mcp;
 }
 

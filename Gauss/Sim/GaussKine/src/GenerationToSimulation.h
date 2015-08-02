@@ -19,6 +19,7 @@
 class IGiGaSvc;
 class G4PrimaryVertex ;
 class G4PrimaryParticle ;
+class IFlagSignalChain ;
 namespace HepMC {
   class GenEvent ;
   class GenParticle ;
@@ -108,5 +109,9 @@ private:
 
   std::string          m_keepCode; ///< Code to keep additional particles.
   LoKi::GenTypes::GCut m_keepCuts; ///< Cuts to keep additional particles.
+
+  /// Reference to tool to propagate fromSignal flag
+  IFlagSignalChain* m_setSignalFlagTool;
+
 };
 #endif // GENERATIONTOSIMULATION_H
