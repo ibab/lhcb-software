@@ -19,6 +19,9 @@ _locations = {}
 from CommonParticles.StdAllNoPIDsKaons import *
 _locations.update ( locations )
 
+from CommonParticles.StdNoPIDsUpKaons import *
+_locations.update ( locations )
+
 from CommonParticles.StdNoPIDsKaons import *
 _locations.update ( locations )
 
