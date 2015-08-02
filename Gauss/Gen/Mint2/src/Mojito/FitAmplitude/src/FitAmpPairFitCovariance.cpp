@@ -188,15 +188,15 @@ bool FitAmpPairFitCovariance::make_dFitAmpPair_by_dFitParameters(){
   }
   for(unsigned int i=0; i < _myList->size(); i++){
     complex<double> p  =  (*_myList)[i].complexVal();
-    complex<double> z1 =  (*_myList)[i].amp1()->FitAmpPhase();
-    complex<double> z2 =  (*_myList)[i].amp2()->FitAmpPhase();
+    complex<double> z1 =  (*_myList)[i].fitAmp1().FitAmpPhase();
+    complex<double> z2 =  (*_myList)[i].fitAmp2().FitAmpPhase();
     complex<double> z2star(conj(z2));
     complex<double> number_i(0, 1);
 
-    FitComplex::TYPE t1 = (*_myList)[i].amp1()->FitAmpPhase().type();
+    FitComplex::TYPE t1 = (*_myList)[i].fitAmp1().FitAmpPhase().type();
 
-    int index_1a = (*_myList)[i].amp1()->FitAmpPhase().p1().parSetIndex();
-    int index_1b = (*_myList)[i].amp1()->FitAmpPhase().p2().parSetIndex();
+    int index_1a = (*_myList)[i].fitAmp1().FitAmpPhase().p1().parSetIndex();
+    int index_1b = (*_myList)[i].fitAmp1().FitAmpPhase().p2().parSetIndex();
 
     if(FitComplex::CARTESIAN == t1){
       complex<double> dpdx1 = p/z1;
@@ -207,7 +207,7 @@ bool FitAmpPairFitCovariance::make_dFitAmpPair_by_dFitParameters(){
     }else if(FitComplex::POLAR == t1){
 
       double degFac = 
-	((const FitComplexPolar&) ((*_myList)[i].amp1()->FitAmpPhase()) 
+	((const FitComplexPolar&) ((*_myList)[i].fitAmp1().FitAmpPhase()) 
 	 ).degFac();
       
       complex<double> r1   = abs(z1);
@@ -220,14 +220,14 @@ bool FitAmpPairFitCovariance::make_dFitAmpPair_by_dFitParameters(){
       cout << "ERROR in FitAmpPairFitCovariance::"
 	   << "make_dFitAmpPair_by_dFitParameters()"
 	   << " don't know type of FitComplex in " 
-	   << (*_myList)[i].amp1()
+	   << (*_myList)[i].fitAmp1()
 	   << endl;
       throw "shouldn't be possible";
     }
-    FitComplex::TYPE t2 = (*_myList)[i].amp2()->FitAmpPhase().type();
+    FitComplex::TYPE t2 = (*_myList)[i].fitAmp2().FitAmpPhase().type();
 
-    int index_2a = (*_myList)[i].amp2()->FitAmpPhase().p1().parSetIndex();
-    int index_2b = (*_myList)[i].amp2()->FitAmpPhase().p2().parSetIndex();
+    int index_2a = (*_myList)[i].fitAmp2().FitAmpPhase().p1().parSetIndex();
+    int index_2b = (*_myList)[i].fitAmp2().FitAmpPhase().p2().parSetIndex();
 
     /*    
 	  dp/d(x2)   = z1  a                   =   p/z2*
@@ -244,7 +244,7 @@ bool FitAmpPairFitCovariance::make_dFitAmpPair_by_dFitParameters(){
       _dFitAmpPair_by_dFitParameters(i, index_2b) += dpdy2.real();
     }else if(FitComplex::POLAR == t2){
       double degFac = 
-	((const FitComplexPolar&) ((*_myList)[i].amp1()->FitAmpPhase())
+	((const FitComplexPolar&) ((*_myList)[i].fitAmp1().FitAmpPhase())
 	 ).degFac();
 
       complex<double> r2   = abs(z2);
@@ -256,7 +256,7 @@ bool FitAmpPairFitCovariance::make_dFitAmpPair_by_dFitParameters(){
     }else{
       cout << "ERROR in FitAmpPairFitCovariance::"
 	   << "make_dFitAmpPair_by_dFitParameters()"
-	   << " don't know type of FitComplex in " << (*_myList)[i].amp2()
+	   << " don't know type of FitComplex in " << (*_myList)[i].fitAmp2()
 	   << endl;
       throw "shouldn't be possible";
     }

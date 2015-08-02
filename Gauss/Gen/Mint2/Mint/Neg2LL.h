@@ -18,7 +18,7 @@
 
   in a way that its constructor
 
-  Neg2LL( pdf, eventlist, MinuitParameterSet mps=0)
+  Neg2LL( pdf, eventlist, MinuitParameterSet* mps=0)
 
   swallows any type of pdf or eventlist as long as:
 

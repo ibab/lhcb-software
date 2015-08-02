@@ -55,7 +55,9 @@ FitParDependent::FitParDependent(IFitParRegister* daddy) : _daddy(daddy){}
 
 
 FitParDependent::FitParDependent(const FitParDependent& other, IFitParRegister* newDaddy)
-  : std::vector<FitParRef>(other), _daddy(newDaddy){}
+  : std::vector<FitParRef>(other){
+  if(0 != newDaddy) _daddy = newDaddy;
+}
 
 void FitParDependent::listFitParDependencies(ostream& os) const{
   for(unsigned int i=0; i < this->size(); i++){
@@ -67,3 +69,5 @@ void FitParDependent::listFitParDependencies(ostream& os) const{
        << changedSinceLastCall() << endl;
   }
 }
+
+//

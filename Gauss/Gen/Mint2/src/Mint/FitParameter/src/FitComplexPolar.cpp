@@ -41,21 +41,23 @@ std::string FitComplexPolar::makePhaseName(const std::string& varName){
 FitComplexPolar::FitComplexPolar(const std::string& varName
 				 , const char* fname
 				 , MinuitParameterSet* pset
+				 , IFitParRegister* daddy
 				 , FitParameter::FIX_OR_WHAT fow
 				 , FitParameter::VERBOSITY vb
 
 				 )
-  : FitComplex()
+  : FitComplex(daddy)
   , _amp  (makeAmpName(  varName), fname, pset, fow, vb)
   , _phase(makePhaseName(varName), fname, pset, fow, vb)
 {
 }
 FitComplexPolar::FitComplexPolar(const std::string& varName
 				 , MinuitParameterSet* pset
+				 , IFitParRegister* daddy
 				 , FitParameter::FIX_OR_WHAT fow
 				 , FitParameter::VERBOSITY vb
 				 )
-  : FitComplex()
+  : FitComplex(daddy)
   , _amp  (makeAmpName(  varName), pset, fow, vb)
   , _phase(makePhaseName(varName), pset, fow, vb)
 {

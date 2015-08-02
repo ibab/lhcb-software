@@ -5,38 +5,49 @@
 using namespace std;
 using namespace MINT;
 
-ComplexProduct::ComplexProduct()
-  : _facVec(), _fixedDoubleVec(), _fixedComplexVec()
+ComplexProduct::ComplexProduct(IFitParRegister* daddy)
+  : FitParDependent(daddy), _facVec(), _fixedDoubleVec(), _fixedComplexVec()
 {
 }
-ComplexProduct::ComplexProduct(double initVal)
-  : _facVec(), _fixedDoubleVec(), _fixedComplexVec()
+ComplexProduct::ComplexProduct(double initVal, IFitParRegister* daddy)
+  :  FitParDependent(daddy), _facVec(), _fixedDoubleVec(), _fixedComplexVec()
 {
   addTerm(initVal);
 }
 
-ComplexProduct::ComplexProduct(const std::complex<double>& z)
-  : _facVec(), _fixedDoubleVec(), _fixedComplexVec()
+ComplexProduct::ComplexProduct(const std::complex<double>& z, IFitParRegister* daddy)
+  :  FitParDependent(daddy), _facVec(), _fixedDoubleVec(), _fixedComplexVec()
 {
   addTerm(z);
 }
 
-ComplexProduct::ComplexProduct(const ComplexProduct& other)
-  : _facVec(), _fixedDoubleVec(), _fixedComplexVec()
+ComplexProduct::ComplexProduct(const ComplexProduct& other, IFitParRegister* newDaddy)
+  :  FitParDependent(other, newDaddy)
+  , _facVec(other._facVec)
+  , _fixedDoubleVec(other._fixedDoubleVec)
+  , _fixedComplexVec(other._fixedComplexVec)
 {
-  multiply(other);
 }
 
-void ComplexProduct::multiply(const ComplexProduct& other)
+void ComplexProduct::setToUnity(){
+  _facVec.clear();
+  _fixedDoubleVec.clear();
+  _fixedComplexVec.clear();
+  removeAllFitParDependencies();
+}
+
+
+void ComplexProduct::multiply(const ComplexProduct& multiplyWith)
 {
-  for(unsigned int i=0; i< other._facVec.size(); i++){
-    addTerm(other._facVec[i]);
+  registerFitParDependence(multiplyWith);
+  for(unsigned int i=0; i< multiplyWith._facVec.size(); i++){
+    addTerm(multiplyWith._facVec[i]);
   }
-  for(unsigned int i=0; i< other._fixedDoubleVec.size(); i++){
-    addTerm(other._fixedDoubleVec[i]);
+  for(unsigned int i=0; i< multiplyWith._fixedDoubleVec.size(); i++){
+    addTerm(multiplyWith._fixedDoubleVec[i]);
   }
-  for(unsigned int i=0; i< other._fixedComplexVec.size(); i++){
-    addTerm(other._fixedComplexVec[i]);
+  for(unsigned int i=0; i< multiplyWith._fixedComplexVec.size(); i++){
+    addTerm(multiplyWith._fixedComplexVec[i]);
   }
 }
 
@@ -51,6 +62,17 @@ void ComplexProduct::addTerm(const std::complex<double>& z){
   _fixedComplexVec.push_back(z);
 }
 
+void ComplexProduct::addTerm(const counted_ptr<IComplexFitParDependent>& irc){
+  bool dbThis=false;
+  registerFitParDependence(*irc);
+  _facVec.push_back(irc);
+  if(dbThis){
+    cout << "ComplexProduct::addTerm as pointer"
+	 << " just got: " << irc->ComplexVal()
+	 << " taking me to prod = " << ComplexVal()
+	 << endl;
+  }
+}
 void ComplexProduct::addTerm(const counted_ptr<IReturnComplex>& irc){
   bool dbThis=false;
   _facVec.push_back(irc);

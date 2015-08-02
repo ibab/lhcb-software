@@ -475,7 +475,7 @@ int DalitzBWBoxSet::justThrowAwayData(double maxValue
     
     unsigned int printEvery = size()/10;
     if(printEvery <=0) printEvery = 5;
-    if(counter <= 2) printEvery=1;
+    //    if(counter <= 2) printEvery=1;
     else if(counter <= 200) printEvery=100;
     
     if(counter < 5 || 0 == counter%(printEvery)){

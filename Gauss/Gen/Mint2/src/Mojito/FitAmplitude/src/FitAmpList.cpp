@@ -19,10 +19,10 @@ FitAmpList::FitAmpList(const DalitzEventPattern& pat
 		       , const std::string& prefix
 		       , const std::string& opt
 		     )
-  : _minuitParaSet(pset)
+  : _pat(pat)
+  ,  _minuitParaSet(pset)
   , _efficiency(0)
   , _opt(opt)
-  , _pat(pat)
 {
   if(0 != fname){
     _paraFName = fname;
@@ -38,10 +38,12 @@ FitAmpList::FitAmpList(const DalitzEventPattern& pat
 		       , const std::string& prefix
 		       , const std::string& opt
 		     )
-  : _minuitParaSet(pset)
+  : _pat(pat)
+  , _minuitParaSet(pset)
   , _opt(opt)
-  , _pat(pat)
 {
+
+  cout << "pset pointer in FitAmpList::FitAmpList " << getMPS() << endl;
   
   _paraFName.clear();
   
@@ -51,10 +53,10 @@ FitAmpList::FitAmpList(const DalitzEventPattern& pat
 		       , const std::string& prefix
 		       , const std::string& opt
 		       )
-  : _minuitParaSet(0)
+  : _pat(pat)
+  , _minuitParaSet(0)
   , _efficiency(0)
   , _opt(opt)
-  , _pat(pat)
 {
   
   _paraFName.clear();
@@ -63,11 +65,11 @@ FitAmpList::FitAmpList(const DalitzEventPattern& pat
 }
 
 FitAmpList::FitAmpList(const FitAmpList& other)
-  : _paraFName(other._paraFName)
+  : _pat(other._pat)
+  , _paraFName(other._paraFName)
   , _minuitParaSet(other._minuitParaSet)
   , _efficiency(other._efficiency)
   , _opt(other._opt)
-  , _pat(other._pat)
 {
   bool dbThis=false;
   this->deleteAll();
@@ -87,11 +89,11 @@ FitAmpList::FitAmpList(const FitAmpList& other)
 FitAmpList& FitAmpList::operator=(const FitAmpList& other){
   if(&other == this) return *this;
 
+  _pat           = other._pat;
   _paraFName     = other._paraFName;
   _minuitParaSet = other._minuitParaSet;
   _efficiency    = other._efficiency;
   _opt           = other._opt;
-  _pat           = other._pat;
   deleteAll();
   
   addCopyWithSameFitParameters(other);
@@ -109,6 +111,12 @@ int FitAmpList::addCopyWithSameFitParameters(const FitAmpList& other
     _fitAmps.push_back(newFa);
   }
   return this->size();
+}
+
+
+MINT::MinuitParameterSet* FitAmpList::getMPS(){
+  if(0 == _minuitParaSet) _minuitParaSet = MinuitParameterSet::getDefaultSet();
+  return _minuitParaSet;
 }
 
 unsigned int FitAmpList::size() const{
@@ -173,6 +181,8 @@ bool FitAmpList::createAllAmps(const DalitzEventPattern& thePattern
 			      , const std::string& prefix){
   bool dbThis=false;
 
+  cout << "pset pointer in FitAmpList::createAllAmps " << getMPS() << endl;
+
   const NamedDecayTreeList* ndl = NamedDecayTreeList::getMe();
 
   if(! ndl){
@@ -205,7 +215,7 @@ bool FitAmpList::createAllAmps(const DalitzEventPattern& thePattern
       new FitAmplitude(prefix + it->first
 		       , it->second
 		       , fnamePtr
-		       , _minuitParaSet
+		       , getMPS()
 		      );
     if(0 == fa){
       cout << "ERROR in FitAmpList::createAllAmps!"

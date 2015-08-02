@@ -110,7 +110,7 @@ bool Neg2LLSum::addConstraints(){
     cout << "addConstraints for " << getParSet()->size() << " paramaters" <<  endl;
 
     
-    for(int i=0;i< getParSet()->size();i++){
+    for(unsigned int i=0;i< getParSet()->size();i++){
         string name_i= getParSet()->getParPtr(i)->name();
         cout << "paramater " << i << " : " <<  name_i << endl;
         NamedParameter<double> constrain(("Constrain_"+name_i).c_str(),-1,-1,NamedParameterBase::QUIET);

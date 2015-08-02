@@ -69,7 +69,10 @@ class FitAmpList
 					   , double factor=1);
   virtual int add(const FitAmpList& other, double factor=1);
 
+  virtual MINT::MinuitParameterSet* getMPS();
+
   virtual unsigned int size() const;
+
   virtual FitAmplitude* getAmpPtr(int i);
   const FitAmplitude* getAmpPtr(int i) const;
  

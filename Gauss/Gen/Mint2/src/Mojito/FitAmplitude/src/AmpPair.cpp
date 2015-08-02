@@ -1,7 +1,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:03 GMT
-#include "Mint/FitAmpPair.h"
-#include "Mint/FitAmplitude.h"
+#include "Mint/AmpPair.h"
+#include "Mint/Amplitude.h"
 #include "Mint/IDalitzEvent.h"
 #include "Mint/NamedParameter.h"
 
@@ -21,51 +21,34 @@
 using namespace std;
 using namespace MINT;
 
-FitAmpPair::FitAmpPair()
-  : _fitA1(0)
-  , _fitA2(0)
-  , _beingIntegrated(true)
-  , _eventDependentParameters(this)
+AmpPair::AmpPair(Amplitude* a1, Amplitude* a2)
+  : _a1(a1)
+  , _a2(a2)
   , _sum(0)
-  , _sumName("FitAmpPair._sum")
+  , _sumName("AmpPair._sum")
   , _sumsq(0)
-  , _sumSqName("FitAmpPair._sumSq")
+  , _sumSqName("AmpPair._sumSq")
   , _Nevents(0)
-  , _NName("FitAmpPair._N")
+  , _NName("AmpPair._N")
   , _weightSum(0)
-  , _weightSumName("FitAmpPair._weightSum")
+  , _weightSumName("AmpPair._weightSum")
   , _hsRe()
   , _hsIm()
   , _name("")
   , _dirName("")
   , _lastEntry(0)
 {
+  if(0 == _a1 || 0 == _a2){
+    cout << "ERROR in AmpPair::AmpPair !"
+	 << "\n\t One of the amplitude pointers is zero:"
+	 << "\n\t _a1 = " << _a1 << ", _a2 = " << _a2
+	 << "\n\t ... will crash now" << endl;
+    throw "zero amp pointer in AmpPair constructor";
+  }
 
-}
-
-FitAmpPair::FitAmpPair(FitAmplitude& a1, FitAmplitude& a2)
-  : _fitA1(&a1)
-  , _fitA2(&a2)
-  , _beingIntegrated(true)
-  , _eventDependentParameters(this)
-  , _sum(0)
-  , _sumName("FitAmpPair._sum")
-  , _sumsq(0)
-  , _sumSqName("FitAmpPair._sumSq")
-  , _Nevents(0)
-  , _NName("FitAmpPair._N")
-  , _weightSum(0)
-  , _weightSumName("FitAmpPair._weightSum")
-  , _hsRe()
-  , _hsIm()
-  , _name("")
-  , _dirName("")
-  , _lastEntry(0)
-{
-
-  std::string name_1 = _fitA1->name();
-  std::string name_2 = _fitA2->name();
-  if(name_1 > name_2) std::swap(_fitA1, _fitA2);
+  std::string name_1 = _a1->name();
+  std::string name_2 = _a2->name();
+  if(name_1 > name_2) std::swap(_a1, _a2);
   // this ensures that the amplitudes are always stored in 
   // a well-defined order. Determines sign of imagninary part.
   // Since we want Re(A1 A2*), this doesn't matter, however
@@ -74,16 +57,12 @@ FitAmpPair::FitAmpPair(FitAmplitude& a1, FitAmplitude& a2)
   makeName();
   makeDirName();
 
-  _eventDependentParameters.registerFitParDependence(rawAmp1());
-  _eventDependentParameters.registerFitParDependence(rawAmp2());
-  _eventDependentParameters.registerFitParDependence(fitAmp1().eventDependentPrefactors());
-  _eventDependentParameters.registerFitParDependence(fitAmp2().eventDependentPrefactors());
+  registerFitParDependence(*_a1);
+  if(_a1 != _a2)  registerFitParDependence(*_a2);
 }
-FitAmpPair::FitAmpPair(const FitAmpPair& other)
-  : _fitA1(other._fitA1)
-  , _fitA2(other._fitA2)
-  , _beingIntegrated(other._beingIntegrated)
-  , _eventDependentParameters(other._eventDependentParameters)
+AmpPair::AmpPair(const AmpPair& other)
+  : _a1(other._a1)
+  , _a2(other._a2)
   , _sum(other._sum)
   , _sumName(other._sumName)
   , _sumsq(other._sumsq)
@@ -98,16 +77,20 @@ FitAmpPair::FitAmpPair(const FitAmpPair& other)
   , _dirName(other._dirName)
   , _lastEntry(other._lastEntry)
 {
+
+  removeAllFitParDependencies();
+  registerFitParDependence(*_a1);
+  if(_a1 != _a2)  registerFitParDependence(*_a2);
 }
 
-bool FitAmpPair::isCompatibleWith(const FitAmpPair& other) const{
-  return (fitAmp1().name() == other.fitAmp1().name() && 
-	  fitAmp2().name() == other.fitAmp2().name());
+bool AmpPair::isCompatibleWith(const AmpPair& other) const{
+  return (amp1()->name() == other.amp1()->name() && 
+	  amp2()->name() == other.amp2()->name());
 }
-bool FitAmpPair::add(const FitAmpPair& other){
+bool AmpPair::add(const AmpPair& other){
   if(! isCompatibleWith(other)){
-    cout << "ERROR in FitAmpPair::add "
-	 << "trying to add two incompatible FitAmpPairs: "
+    cout << "ERROR in AmpPair::add "
+	 << "trying to add two incompatible AmpPairs: "
 	 << "\n " << this->name() << " + " << other.name() 
 	 << endl;
     return false;
@@ -123,18 +106,25 @@ bool FitAmpPair::add(const FitAmpPair& other){
 
   return true;
 }
-void FitAmpPair::addToHistograms(IDalitzEvent* evtPtr
+void AmpPair::addToHistograms(IDalitzEvent* evtPtr
 				 , const std::complex<double>& c){
   _hsRe.addEvent(*evtPtr, c.real());
   _hsIm.addEvent(*evtPtr, c.imag());
 }
 
-const std::string& FitAmpPair::makeName(){
-  _name = "A(" + fitAmp1().name() + ")_x_fitA(" + fitAmp2().name() + ")*";
+const std::string& AmpPair::makeName(){
+  if(0 == amp1() || 0 == amp2()){
+    cout << "ERROR in AmpPair::makeName():"
+	 << " At least one of the amplitude pointers is 0:"
+	 << " _a1 = " << _a1 << ", _a2 = " << _a2 << endl;
+    cout << "I'll crash. " << endl;
+    throw "zero amplitude pointers";
+  }
+  _name = "A(" + amp1()->name() + ")_x_A(" + amp2()->name() + ")*";
   return _name;
 }
 
-const std::string& FitAmpPair::makeDirName(){
+const std::string& AmpPair::makeDirName(){
   _dirName="";
   if("" == _name) makeName();
 
@@ -165,7 +155,7 @@ const std::string& FitAmpPair::makeDirName(){
   return _dirName;
 }
 
-bool FitAmpPair::makeDirectory(const std::string& asSubdirOf)const{
+bool AmpPair::makeDirectory(const std::string& asSubdirOf)const{
   /*
     A mode is created from or'd permission bit masks defined
      in <sys/stat.h>:
@@ -200,7 +190,7 @@ bool FitAmpPair::makeDirectory(const std::string& asSubdirOf)const{
   return (0 == zeroForSuccess);
 }
 
-bool FitAmpPair::save(const std::string& asSubdirOf) const{
+bool AmpPair::save(const std::string& asSubdirOf) const{
   bool success=true;
   makeDirectory(asSubdirOf); // ignore error codes from mkdir, they could
 			  // be because directory already exists - if
@@ -212,7 +202,7 @@ bool FitAmpPair::save(const std::string& asSubdirOf) const{
 
   return success;
 }
-bool FitAmpPair::retrieve(const std::string& asSubdirOf){
+bool AmpPair::retrieve(const std::string& asSubdirOf){
   bool dbThis=false;
   bool success=true;
 
@@ -220,7 +210,7 @@ bool FitAmpPair::retrieve(const std::string& asSubdirOf){
   success &= retrieveHistos(asSubdirOf);
 
   if(dbThis){
-    cout << "after FitAmpPair::retrieve: pat = "
+    cout << "after AmpPair::retrieve: pat = "
 	 << histosRe().begin()->second.pattern() << ", "
 	 << histosIm().begin()->second.pattern() << endl;
   }
@@ -228,30 +218,30 @@ bool FitAmpPair::retrieve(const std::string& asSubdirOf){
 }
 
 
-std::string FitAmpPair::valueFileName(const std::string& asSubdirOf)const{
+std::string AmpPair::valueFileName(const std::string& asSubdirOf)const{
   return asSubdirOf + "/" + dirName() + "/value.txt";
 }
-std::string FitAmpPair::histoReFileName(const std::string& asSubdirOf)const{
+std::string AmpPair::histoReFileName(const std::string& asSubdirOf)const{
   return asSubdirOf + "/" + dirName() + "/histoRe";
 }
-std::string FitAmpPair::histoImFileName(const std::string& asSubdirOf)const{
+std::string AmpPair::histoImFileName(const std::string& asSubdirOf)const{
   return asSubdirOf + "/" + dirName() + "/histoIm";
 }
 
-bool FitAmpPair::saveHistos(const std::string& asSubdirOf) const{
+bool AmpPair::saveHistos(const std::string& asSubdirOf) const{
   bool sc = true;
   sc |= histosRe().saveAsDir(histoReFileName(asSubdirOf));
   sc |= histosIm().saveAsDir(histoImFileName(asSubdirOf));
   return sc;
 }
-bool FitAmpPair::retrieveHistos(const std::string& asSubdirOf){
+bool AmpPair::retrieveHistos(const std::string& asSubdirOf){
   bool sc = true;
   sc |= histosRe().retrieveFromDir(histoReFileName(asSubdirOf));
   sc |= histosIm().retrieveFromDir(histoImFileName(asSubdirOf));
   return sc;
 }
 
-bool FitAmpPair::saveValues(const std::string& asSubdirOf) const{
+bool AmpPair::saveValues(const std::string& asSubdirOf) const{
 
   NamedParameter<double> n_sumRe(_sumName + ".real()"
 				 , NamedParameterBase::QUIET);
@@ -276,7 +266,7 @@ bool FitAmpPair::saveValues(const std::string& asSubdirOf) const{
   std::string fname = valueFileName(asSubdirOf);
   ofstream os(fname.c_str());
   if(os.bad()){
-    cout << "ERROR in FitAmpPair::saveValues of \n\t" << name()
+    cout << "ERROR in AmpPair::saveValues of \n\t" << name()
 	 << "\n\t unable to create file: "
 	 << "\n\t" << fname << endl;
     return false;
@@ -293,7 +283,7 @@ bool FitAmpPair::saveValues(const std::string& asSubdirOf) const{
   os.close();
   return true;
 }
-bool FitAmpPair::retrieveValues(const std::string& fromDirectory){
+bool AmpPair::retrieveValues(const std::string& fromDirectory){
   bool dbThis=false;
   std::string fname = valueFileName(fromDirectory);
   if(dbThis)cout << "trying to retreive values from: " << fname << endl;
@@ -326,24 +316,22 @@ bool FitAmpPair::retrieveValues(const std::string& fromDirectory){
   return true;
 }
 
-//bool FitAmpPair::saveHistograms(const std::string& asSubdirOf) const;
+//bool AmpPair::saveHistograms(const std::string& asSubdirOf) const;
 //}
 
-double FitAmpPair::add(IDalitzEvent* evtPtr
+std::complex<double> AmpPair::add(IDalitzEvent* evtPtr
 		       , double weight
 		       , double efficiency
 		       ){
   bool dbThis=false;
   
-  //  if(! acceptEvents()) return 0;
-
   _Nevents++;
   if(0 == evtPtr) return 0;
   
   double ps = evtPtr->phaseSpace();
   if(ps <= 0.0000){
 	  if(!(_Nevents%100000)){
-    cout << "WARNING in FitAmpPair::addToHistograms"
+    cout << "WARNING in AmpPair::addToHistograms"
 	 << " event with phase space = " << ps << endl;
 	  }
     return 0; // should not happen.
@@ -356,8 +344,8 @@ double FitAmpPair::add(IDalitzEvent* evtPtr
   _weightSum += w;// / ps;
   
   if(dbThis){
-    cout << " FitAmpPair::add, for pair "
-	 << fitAmp1().name() << " / " << fitAmp2().name()
+    cout << " AmpPair::add, for pair "
+	 << _a1->name() << " / " << _a2->name()
 	 << endl;
   }
 
@@ -374,23 +362,24 @@ double FitAmpPair::add(IDalitzEvent* evtPtr
   complex<double> csq(c.real()*c.real(), c.imag()*c.imag());
   _sumsq += csq;
 
-  return (c * fitParValue()).real();
+  return c;
 }
 
-double FitAmpPair::add(counted_ptr<IDalitzEvent> evtPtr
+std::complex<double> AmpPair::add(counted_ptr<IDalitzEvent> evtPtr
 		       , double weight
 		       , double efficiency
 		       ){
   return add(evtPtr.get(), weight, efficiency);
 }
-complex<double> FitAmpPair::lastEntry() const{
+complex<double> AmpPair::lastEntry() const{
   return _lastEntry;
 }
-complex<double> FitAmpPair::ampValue(IDalitzEvent* evtPtr){
-  if(0 == evtPtr) return 0;
+complex<double> AmpPair::ampValue(IDalitzEvent* evtPtr){
+  if(0 == _a1 || 0 == _a2 || 0 == evtPtr) return 0;
 
-  complex<double> c1 = rawAmp1().getVal(*evtPtr);
-  complex<double> c2 = rawAmp2().getVal(*evtPtr);
+
+  complex<double> c1 = _a1->getVal(*evtPtr);
+  complex<double> c2 = _a2->getVal(*evtPtr);
   complex<double> c2star = conj(c2);
   
   complex<double> val = (c1 * c2star);
@@ -398,29 +387,16 @@ complex<double> FitAmpPair::ampValue(IDalitzEvent* evtPtr){
   return val;
 }
 
-complex<double> FitAmpPair::fitParValue()const{
-  
-  complex<double> c1 = fitAmp1().AmpPhase();
-  complex<double> c2 = fitAmp2().AmpPhase();
-  complex<double> c2star = conj(c2);
-
-  return c1*c2star;
-}
-
-int FitAmpPair::oneOrTwo()const{
+int AmpPair::oneOrTwo()const{
   if(isSingleAmp()) return 1;
   else return 2;
 }
 
-std::complex<double> FitAmpPair::complexVal() const{
-  return valNoFitPars() * fitParValue();
-}
-
-std::complex<double> FitAmpPair::valNoFitPars() const{
+std::complex<double> AmpPair::integral() const{
   bool dbThis=false;
   if(dbThis){
-    cout << " FitAmpPair::sumWithoutFitPars for pair "
-	 << fitAmp1().name() << " / " << fitAmp2().name()
+    cout << " AmpPair::sumWithoutFitPars for pair "
+	 << _a1->name() << " / " << _a2->name()
 	 << endl;
   }
   double dN = (double) _Nevents;
@@ -443,77 +419,17 @@ std::complex<double> FitAmpPair::valNoFitPars() const{
   }  
   return returnVal;
 }
-double FitAmpPair::integral() const{
 
-  return complexVal().real();
-}
-double FitAmpPair::weightSum() const{
+double AmpPair::weightSum() const{
   if(_weightSum > 0) return _weightSum;
   else return (double) _Nevents;
 }
 
-long int FitAmpPair::N() const{
+long int AmpPair::N() const{
   return _Nevents;
 }
 
-void FitAmpPair::reset(){
-  _beingIntegrated = true;
-  _sum = 0;
-  _sumsq = 0;
-  _Nevents = 0;
-  _weightSum = 0;
-  _hsRe.clearAllHistos();
-  _hsIm.clearAllHistos();
-  _lastEntry = 0;
-}
-
-bool FitAmpPair::needToReIntegrate() const{
-  return _eventDependentParameters.changedSinceLastCall();
-}
-void FitAmpPair::rememberEventDependentParameters(){
-  _eventDependentParameters.rememberFitParValues();
-}
-
-void FitAmpPair::startReIntegration(){
-  reset();
-  _beingIntegrated=true;
-}
-void FitAmpPair::startIntegration(){
-  _beingIntegrated=true;
-}
-
-void FitAmpPair::endIntegration(){
-  _beingIntegrated=false;
-  rememberEventDependentParameters();
-}
-
-bool FitAmpPair::acceptEvents() const{
-  return _beingIntegrated;
-}
-DalitzHistoSet FitAmpPair::histoSet() const{
-  bool dbThis=false;
-  if(dbThis){
-    cout << " FitAmpPair::histograms, for pair "
-	 << fitAmp1().name() << " / " << fitAmp2().name()
-	 << endl;
-    cout << " r " << fitParValue().real() << ", " 
-	 << histosRe().begin()->second.histo()->Integral()
-	 << " i " << fitParValue().imag() << ", " 
-	 << histosIm().begin()->second.histo()->Integral()
-	 << endl;
-  }
-
-  
-  return ( // this calculates a DalitzHistoSet:
-	  oneOrTwo() * 
-	  (fitParValue().real() * histosRe() 
-	   - fitParValue().imag() * histosIm())
-	   )/_weightSum;// / ((double)_Nevents);
-
-  //  total /= (double)_Nevents;
-}
-
-double FitAmpPair::variance() const{
+std::complex<double> AmpPair::variance() const{
   if(_Nevents <=0) return 0;
   double dN = (double) _Nevents;
   complex<double> mean   = _sum/dN;
@@ -526,41 +442,41 @@ double FitAmpPair::variance() const{
 
   if(_weightSum > 0) var *= dN*dN/(_weightSum*_weightSum);
 
-  return oneOrTwo() * (fitParValue() * var).real();
+  return ((double) oneOrTwo()) * var;
 }
 
-bool FitAmpPair::isSingleAmp() const{
-  return _fitA1 == _fitA2;
+bool AmpPair::isSingleAmp() const{
+  return _a1 == _a2;
 }
 
-const std::string& FitAmpPair::name(){
+const std::string& AmpPair::name(){
   if("" == _name) makeName();
   return _name;
-  //  if(isSingleAmp()) return "| " + _fitA1->name() + " |^2";
-  //  else return "(" + _fitA1->name() +") * (" + _fitA2->name() + ")*";
+  //  if(isSingleAmp()) return "| " + _a1->name() + " |^2";
+  //  else return "(" + _a1->name() +") * (" + _a2->name() + ")*";
 }
-const std::string& FitAmpPair::name() const{
+const std::string& AmpPair::name() const{
   return _name;
 }
 
-const std::string& FitAmpPair::dirName(){
+const std::string& AmpPair::dirName(){
   if("" == _dirName) makeDirName();
   return _dirName;
 }
-const std::string& FitAmpPair::dirName() const{
+const std::string& AmpPair::dirName() const{
   return _dirName;
 }
 
 /*
 // the following routines are needed to 
 // calculate the variance
-double FitAmpPair::ReSquared() const{
+double AmpPair::ReSquared() const{
   return pow(oneOrTwo() * fitParValue().real(), 2)*_sumsq.real();
 }
-double FitAmpPair::ImSquared() const{
+double AmpPair::ImSquared() const{
   return pow(oneOrTwo() * fitParValue().imag(), 2)*_sumsq.imag();
 }
-double FitAmpPair::ImRe() const{
+double AmpPair::ImRe() const{
   return oneOrTwo() * oneOrTwo() 
     * fitParValue().real()*_sum.real() 
     * fitParValue().imag()*_sum.imag();
@@ -568,45 +484,45 @@ double FitAmpPair::ImRe() const{
 }
 */
 
-void FitAmpPair::print(std::ostream& os) const{
-  os << "FitAmpPair " << name()
+void AmpPair::print(std::ostream& os) const{
+  os << "AmpPair " << name()
      << ": N=" << N() << ", integral=" << integral();
 }
-bool lessByFitAmpPairIntegral::operator()(const FitAmpPair& a
-					  , const FitAmpPair& b) const{
-  return a.integral() < b.integral();
+bool lessByAmpPairIntegral::operator()(const AmpPair& a
+					  , const AmpPair& b) const{
+  return abs(a.integral()) < abs(b.integral());
 }
 
-bool lessByFitAmpPairIntegral_ptr::operator()(const FitAmpPair* a, const FitAmpPair* b) const{
+bool lessByAmpPairIntegral_ptr::operator()(const AmpPair* a, const AmpPair* b) const{
 
   if(0 == a && 0==b) return false;
   if(0 == a && 0!=b) return true;
   if(0 !=a  && 0==b) return false;
-  return a->integral() < b->integral();
+  return abs(a->integral()) < abs(b->integral());
 }
-bool lessByFitAmpPairIntegral_ptr_int_pair::operator()(const std::pair<FitAmpPair*, int>& apair
-						       , const std::pair<FitAmpPair*, int>& bpair) const{
-  const FitAmpPair* a = apair.first;
-  const FitAmpPair* b = bpair.first;
+bool lessByAmpPairIntegral_ptr_int_pair::operator()(const std::pair<AmpPair*, int>& apair
+						       , const std::pair<AmpPair*, int>& bpair) const{
+  const AmpPair* a = apair.first;
+  const AmpPair* b = bpair.first;
 
   if(0 == a && 0==b) return false;
   if(0 == a && 0!=b) return true;
   if(0 !=a  && 0==b) return false;
-  return a->integral() < b->integral();
+  return abs(a->integral()) < abs(b->integral());
 }
 
 
-FitAmpPair& FitAmpPair::operator+=(const FitAmpPair& other){
+AmpPair& AmpPair::operator+=(const AmpPair& other){
   this->add(other);
   return *this;
 }
-FitAmpPair FitAmpPair::operator+(const FitAmpPair& other) const{
-  FitAmpPair returnVal(*this);
+AmpPair AmpPair::operator+(const AmpPair& other) const{
+  AmpPair returnVal(*this);
   returnVal += other;
   return returnVal;
 }
 
-std::ostream& operator<<(std::ostream& os, const FitAmpPair& fap){
+std::ostream& operator<<(std::ostream& os, const AmpPair& fap){
   fap.print(os);
   return os;
 }

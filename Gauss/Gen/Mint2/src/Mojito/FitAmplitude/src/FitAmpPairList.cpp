@@ -53,9 +53,18 @@ FitAmpPairList::clone_IIntegrationCalculator() const{
 }
 
 void FitAmpPairList::addAmps(FitAmplitude* a1, FitAmplitude* a2){
+  if(0 == a1 || 0 == a2){
+    cout << "Error in FitAmpPairList::addAmps: " << a1 << ", " << a2 << endl;
+    throw "zero pointer";
+  }
+  FitAmpPair amps(*a1, *a2);
+  this->push_back(amps);
+}
+void FitAmpPairList::addAmps(FitAmplitude& a1, FitAmplitude& a2){
   FitAmpPair amps(a1, a2);
   this->push_back(amps);
 }
+
 void FitAmpPairList::addEvent(IDalitzEvent* evtPtr, double weight){
   bool dbThis=false;
   static unsigned int nZeroPs=0;
@@ -94,6 +103,26 @@ void FitAmpPairList::addEvent(IDalitzEvent* evtPtr, double weight){
 }
 void FitAmpPairList::addEvent(counted_ptr<IDalitzEvent> evtPtr, double weight){
   return addEvent(evtPtr.get(), weight);
+}
+
+void FitAmpPairList::reAddEvent(IDalitzEvent* evtPtr, double weight){
+  if(0 == evtPtr) return;
+  double ps = evtPtr->phaseSpace();
+
+  if(ps <= 0.0) return;
+
+  for(unsigned int i=0; i< this->size(); i++){
+    if( (*this)[i].acceptEvents()){
+      (*this)[i].add(evtPtr, weight, efficiency(evtPtr));
+    }
+  }
+
+  _cov.addLastEventFromList();
+
+  return;
+}
+void FitAmpPairList::reAddEvent(counted_ptr<IDalitzEvent> evtPtr, double weight){
+  return reAddEvent(evtPtr.get(), weight);
 }
 
 bool FitAmpPairList::isCompatibleWith(const FitAmpPairList& otherList) const{
@@ -308,7 +337,7 @@ void FitAmpPairList::saveEachAmpsHistograms(const std::string& prefix) const{
       counter++;
       std::string name = prefix + "_" + anythingToString(counter) + ".root";
       DalitzHistoSet hs((*this)[i].histoSet());
-      std::string title = (*this)[i].amp1()->name();
+      std::string title = (*this)[i].fitAmp1().name();
       hs.setTitle(title);
       cout << "FitAmpPairList::saveEachAmpsHistograms: "
 	   << "saving " << title << " as " << name << endl;
@@ -328,7 +357,7 @@ std::vector<DalitzHistoSet> FitAmpPairList::GetEachAmpsHistograms(){
 	      std::string name =  anythingToString(counter) + ".root";
               double frac = (*this)[i].integral()/integral();  
 	      DalitzHistoSet hs((*this)[i].histoSet());
-	      std::string title = (*this)[i].amp1()->name();
+	      std::string title = (*this)[i].fitAmp1().name();
 	      hs.setTitle(title);
 	      cout << "FitAmpPairList::saveEachAmpsHistograms: "
 		   << "saving " << title << " as " << name << endl;
@@ -408,7 +437,7 @@ bool FitAmpPairList::makeAndStoreFractions(const std::string& fname
   if(this->empty()) return 0;
   counted_ptr<FitAmpPairFitCovariance> fcov(0);
   if(0 != mini){
-    if(mini->parSet() != (*this)[0].amp1()->FitAmpPhase().p1().parSet()){
+    if(mini->parSet() != (*this)[0].fitAmp1().FitAmpPhase().p1().parSet()){
       cout << "ERROR in FitAmpPairList::makeAndStoreFractions"
 	   << "\n Minuit parameter set and fit parameters incompatible"
 	   << endl;
@@ -439,7 +468,7 @@ bool FitAmpPairList::makeAndStoreFractions(const std::string& fname
     double frac = (*this)[i].integral()/norm;
     string name;
     if((*this)[i].isSingleAmp()){
-      name = (*this)[i].amp1()->name();
+      name = (*this)[i].fitAmp1().name();
     }else{
       name = (*this)[i].name();
     }
@@ -452,7 +481,7 @@ bool FitAmpPairList::makeAndStoreFractions(const std::string& fname
     }
 
     if((*this)[i].isSingleAmp()){
-      (*this)[i].amp1()->setFraction(frac);
+      (*this)[i].fitAmp1().setFraction(frac);
       _singleAmpFractions.add(f);
     }else{
       _interferenceFractions.add(f);
@@ -521,7 +550,7 @@ double FitAmpPairList::getFractionChi2() const{
     if((*this)[i].isSingleAmp()){
       counter++;
       double frac = (*this)[i].integral()/norm;
-      double target_f = (*this)[i].amp1()->getFraction();
+      double target_f = (*this)[i].fitAmp1().getFraction();
       if(i < 10){
 	cout << "(" << frac << " - " << target_f << ")" << endl;
       }
@@ -628,6 +657,28 @@ void FitAmpPairList::print(std::ostream& os) const{
   os << "FitAmpPairList with " << this->size() << " FitAmpPairs:";
   for(unsigned int i=0; i < this->size(); i++){
     os << "\n\t" << i << ") " << (*this)[i];
+  }
+}
+
+bool FitAmpPairList::needToReIntegrate() const{
+  for(unsigned int i=0; i < this->size(); i++){    
+    if ((*this)[i].needToReIntegrate() ) return true;
+  }
+  return false;
+}
+void FitAmpPairList::startIntegration(){
+  for(unsigned int i=0; i < this->size(); i++){    
+    (*this)[i].startIntegration();
+  }
+}
+void FitAmpPairList::startReIntegration(){
+  for(unsigned int i=0; i < this->size(); i++){    
+    if( (*this)[i].needToReIntegrate() ) (*this)[i].startReIntegration();
+  }
+}
+void FitAmpPairList::endIntegration(){
+  for(unsigned int i=0; i < this->size(); i++){    
+    (*this)[i].endIntegration();
   }
 }
 

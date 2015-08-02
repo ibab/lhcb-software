@@ -1,5 +1,5 @@
-#ifndef DALITZ_PDF_BASE_FAST_INTEG_HH
-#define DALITZ_PDF_BASE_FAST_INTEG_HH
+#ifndef DALITZ_PDF_BASE_FLEXIFAST_INTEG_HH
+#define DALITZ_PDF_BASE_FLEXIFAST_INTEG_HH
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:01 GMT
 
@@ -14,7 +14,7 @@
 #include "Mint/MinuitParameterSet.h"
 #include "Mint/DalitzHistoSet.h"
 
-#include "Mint/FastAmplitudeIntegrator.h"
+#include "Mint/FlexiFastAmplitudeIntegrator.h"
 
 #include "Mint/counted_ptr.h"
 
@@ -49,7 +49,7 @@ namespace MINT{
   class Minimiser;
 }
 
-class DalitzPdfBaseFastInteg 
+class DalitzPdfBaseFlexiFastInteg 
 : public MINT::PdfBase<IDalitzEvent>
 , virtual public IDalitzPdf
 {
@@ -61,7 +61,7 @@ class DalitzPdfBaseFastInteg
 #ifdef CHECK_INTEGRATOR
   DalitzMCIntegrator _mcint;
 #endif
-  FastAmplitudeIntegrator _faint;
+  FlexiFastAmplitudeIntegrator _faint;
   IFastAmplitudeIntegrable* _amps;
   MINT::counted_ptr<IFastAmplitudeIntegrable> _countedAmps;
 
@@ -92,22 +92,22 @@ class DalitzPdfBaseFastInteg
   MINT::IEventGenerator<IDalitzEvent>* makeDefaultGenerator();
 
  public:
-  DalitzPdfBaseFastInteg(const DalitzEventPattern& pat
+  DalitzPdfBaseFlexiFastInteg(const DalitzEventPattern& pat
 			 , MINT::IEventGenerator<IDalitzEvent>* generator
 			 , IFastAmplitudeIntegrable* amps
 			 , double precision = 1.e-3
 			 );
 
-  DalitzPdfBaseFastInteg( const DalitzEventPattern& pat
+  DalitzPdfBaseFlexiFastInteg( const DalitzEventPattern& pat
 			  , MINT::IEventGenerator<IDalitzEvent>* generator=0
 			  //, MINT::counted_ptr<IGetDalitzEvent> eff=0
 			  , MINT::MinuitParameterSet* mps=0
 			  , double precision = 1.e-3
 			 );
 
-  DalitzPdfBaseFastInteg(const  DalitzPdfBaseFastInteg& other);
+  DalitzPdfBaseFlexiFastInteg(const  DalitzPdfBaseFlexiFastInteg& other);
 
-  virtual ~DalitzPdfBaseFastInteg();
+  virtual ~DalitzPdfBaseFlexiFastInteg();
 
   void setIntegrationPrecision(double prec);
   void setEventGenerator(MINT::IEventGenerator<IDalitzEvent>* g){_generator=g;}
@@ -168,7 +168,6 @@ class DalitzPdfBaseFastInteg
   //double efficiency(){return _efficiency->RealVal();}
   virtual void endFit();
 
-  void setIntegratorFileName(const std::string& commaSeparatedList);
 
   double getIntegralValue() const{
     return _norm;

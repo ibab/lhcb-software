@@ -174,6 +174,8 @@ std::string FitAmpPairCovariance::imagName(int listPosition) const{
 bool FitAmpPairCovariance::addLastEventFromList(){
   bool dbThis=false;
   if(size() != _myList->size()) {
+    if(dbThis) cout << "FitAmpPairCovariance::addLastEventFromList() size() " 
+		    << size() << " == " <<  _myList->size() << endl;
     if(! resize()) return false;
   }
   _needToRecalculate = true;

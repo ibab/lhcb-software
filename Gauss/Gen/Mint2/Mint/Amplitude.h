@@ -32,12 +32,14 @@
 #include "Mint/counted_ptr.h"
 
 #include "Mint/FitParDependent.h"
+#include "Mint/IFitParRegister.h"
 #include "Mint/CachedByEvent.h"
 
+class FitAmplitude;
 
 class Amplitude 
-: virtual public MINT::IReturnRealForEvent<IDalitzEvent>
-, virtual public MINT::IReturnComplexForEvent<IDalitzEvent>
+//: virtual public MINT::IReturnRealForEvent<IDalitzEvent>
+: virtual public MINT::IReturnComplexForEvent<IDalitzEvent>
 , public CachedByEvent<std::complex<double> >
 , public MINT::FitParDependent
 {
@@ -88,12 +90,16 @@ class Amplitude
   Amplitude( const DecayTree& decay
 	     , char SPD_Wave='?'
 	     , const std::string& opt=""
+	     , IFitParRegister* daddy=0
 	     );
 
   Amplitude( const AmpInitialiser& ampInit
+	     , IFitParRegister* daddy=0
 	     );
 
-  Amplitude( const Amplitude& other);
+  Amplitude( const Amplitude& other
+	     , IFitParRegister* newDaddy=0
+	     );
 
   bool resetTree(const DecayTree& dt);
   bool CPConjugate();
@@ -116,7 +122,7 @@ class Amplitude
 
  //  virtual double gaussProb();
 
-  virtual double RealVal(IDalitzEvent& evt){return Prob(evt);}
+  //  virtual double RealVal(IDalitzEvent& evt){return Prob(evt);}
   virtual std::complex<double> ComplexVal(IDalitzEvent& evt){return getVal(evt);}
 
   const AssociatedDecayTree& theDecay(const DalitzEventPattern& pat){
@@ -163,6 +169,7 @@ class Amplitude
 
   virtual ~Amplitude();
 
+  friend class FitAmplitude;
 };
 
 std::ostream& operator<<(std::ostream& out, const Amplitude& amp);

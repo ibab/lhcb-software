@@ -14,10 +14,12 @@
 #include "Mint/Phase.h"
 
 #include "Mint/FitComplex.h"
+#include "Mint/FitParDependent.h"
+#include "Mint/IFitParRegister.h"
 
 namespace MINT{
 
-class FitComplexPolar : public FitComplex{
+  class FitComplexPolar : public FitComplex{
   //  FitComplexPolar(const FitComplexPolar& ){};
   // no copying for now.
   // dangerous because for each
@@ -59,11 +61,13 @@ class FitComplexPolar : public FitComplex{
   FitComplexPolar(const std::string& varName
 		  , const char* fname=0
 		  , MinuitParameterSet* pset=0
+		  , MINT::IFitParRegister* daddy=0
 		  , FitParameter::FIX_OR_WHAT fow=FitParameter::FIX
 		  , NamedParameterBase::VERBOSITY vb=NamedParameterBase::VERBOSE
 		  );
   FitComplexPolar(const std::string& varName
 		  , MinuitParameterSet* pset
+		  , MINT::IFitParRegister* daddy=0
 		  , FitParameter::FIX_OR_WHAT fow=FitParameter::FIX
 		  , NamedParameterBase::VERBOSITY vb=NamedParameterBase::VERBOSE
 		  );

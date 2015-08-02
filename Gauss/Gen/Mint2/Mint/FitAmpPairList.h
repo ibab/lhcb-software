@@ -53,9 +53,13 @@ class FitAmpPairList
   MINT::counted_ptr<IIntegrationCalculator> 
     clone_IIntegrationCalculator() const;
 
-  virtual void addAmps(FitAmplitude* a1, FitAmplitude* a2);
+  virtual void addAmps(FitAmplitude* a1, FitAmplitude* a2); // for backwards compatibility, will be removed
+  virtual void addAmps(FitAmplitude& a1, FitAmplitude& a2);
   virtual void addEvent(IDalitzEvent* evtPtr, double weight=1);
   virtual void addEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
+			, double weight=1);
+  virtual void reAddEvent(IDalitzEvent* evtPtr, double weight=1);
+  virtual void reAddEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
 			, double weight=1);
 
   bool isCompatibleWith(const FitAmpPairList& other) const;
@@ -102,9 +106,14 @@ class FitAmpPairList
 
   virtual void print(std::ostream& os=std::cout) const;
 
+  bool needToReIntegrate() const;
+  void startIntegration();
+  void startReIntegration();
+  void endIntegration();
+
+
   FitAmpPairList& operator+=(const FitAmpPairList& other);
   FitAmpPairList operator+(const FitAmpPairList& other) const;
-
 };
 
 std::ostream& operator<<(std::ostream& os, const FitAmpPairList& fap);

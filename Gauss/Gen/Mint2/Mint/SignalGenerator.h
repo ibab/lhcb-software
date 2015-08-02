@@ -28,19 +28,31 @@ class SignalGenerator
  protected:
   DalitzEventPattern _pat;
   MINT::MinuitParameterSet _myOwnPSet;
+  // has its own parameter set, i.e. its own copy of fitparamerters
+  // which ensures they don't change outside SignalGenerator's control
+
   MINT::counted_ptr<IFastAmplitudeIntegrable> _counted_amps;
   IFastAmplitudeIntegrable* _amps;
   MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> >  _boxes;
 
   bool makeBoxes();
+
+  MINT::MinuitParameterSet* myMPS();
+
  public:
-  SignalGenerator(const DalitzEventPattern& pat, TRandom* rnd=gRandom);
   SignalGenerator(const DalitzEventPattern& pat
-		  , IFastAmplitudeIntegrable* amps, TRandom* rnd=gRandom);
+		  , TRandom* rnd=gRandom
+		  );
+  SignalGenerator(const DalitzEventPattern& pat
+		  , IFastAmplitudeIntegrable* amps
+		  , TRandom* rnd=gRandom
+		  );
   SignalGenerator(const DalitzEventPattern& pat
 		  , double rB
 		  , double phase
-		  , TRandom* rnd=gRandom);
+		  , TRandom* rnd=gRandom
+		  );
+
   virtual MINT::counted_ptr<IDalitzEvent> tryDalitzEvent();
   virtual MINT::counted_ptr<IDalitzEvent> newDalitzEvent();
 

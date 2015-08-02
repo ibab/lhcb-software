@@ -67,6 +67,16 @@ void IntegCalculator::addEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
   withEff().addEvent(evtPtr, weight);
   noEff().addEvent(evtPtr, weight);
 }
+void IntegCalculator::reAddEvent(IDalitzEvent* evtPtr, double weight){
+  withEff().reAddEvent(evtPtr, weight);
+  noEff().reAddEvent(evtPtr, weight);
+}
+void IntegCalculator::reAddEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
+			       , double weight){
+  withEff().reAddEvent(evtPtr, weight);
+  noEff().reAddEvent(evtPtr, weight);
+}
+
 bool IntegCalculator::add(const IntegCalculator& other){
   bool sc=true;
   sc |= withEff().add(other.withEff());
@@ -241,3 +251,20 @@ void IntegCalculator::print(ostream& os) const{
      << "my FitAmpPairList with eff:\n" << withEff()
      << "\n the integral: " << integral();
 }
+
+bool IntegCalculator::needToReIntegrate() const{
+  return (withEff().needToReIntegrate() || noEff().needToReIntegrate());
+}
+void IntegCalculator::startIntegration(){
+  withEff().startIntegration();
+  noEff().startIntegration();
+}
+void IntegCalculator::startReIntegration(){
+  withEff().startReIntegration();
+  noEff().startReIntegration();
+}
+void IntegCalculator::endIntegration(){
+  withEff().endIntegration();
+  noEff().endIntegration();
+}
+//

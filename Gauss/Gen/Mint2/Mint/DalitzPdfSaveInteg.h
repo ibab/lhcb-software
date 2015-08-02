@@ -30,7 +30,7 @@ protected:
   std::string _integratorOutputFile; // be default same as input
 public:
   double un_normalised_noPs(IDalitzEvent& evt){
-    double ampSq =  _amps->RealVal(evt);
+    double ampSq =  getAmps()->RealVal(evt);
     return ampSq;
   }
 
@@ -54,7 +54,7 @@ public:
 		     // default: integratorOutputFile = integratorInputFile
 		     // (set in constructor)
 		     );
-  IFastAmplitudeIntegrable* getAmpSum();
+  //  IFastAmplitudeIntegrable* getAmpSum();
 
   ~DalitzPdfSaveInteg();
 

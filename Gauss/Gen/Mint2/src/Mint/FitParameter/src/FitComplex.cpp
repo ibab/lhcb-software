@@ -8,6 +8,8 @@
 #include "Mint/FitComplex.h"
 #include "Mint/FitComplexPolar.h"
 #include "Mint/FitComplexCart.h"
+#include "Mint/FitParDependent.h"
+#include "Mint/IFitParRegister.h"
 
 using namespace std;
 using namespace MINT;
@@ -15,16 +17,17 @@ using namespace MINT;
 counted_ptr<FitComplex> MINT::FitComplexMaker(const std::string& name
 					      , const char* fname
 					      , MinuitParameterSet* pset
+					      , IFitParRegister* daddy
 					      , FitParameter::FIX_OR_WHAT fow
 					      , NamedParameterBase::VERBOSITY vb
 					      ){
   bool dbThis=false;
   bool verbose=false;
   counted_ptr<FitComplex> 
-    ptr_polar(new FitComplexPolar(name, fname, pset, fow, vb));
+    ptr_polar(new FitComplexPolar(name, fname, pset, daddy, fow, vb));
 
   counted_ptr<FitComplex> 
-    ptr_euclid(new FitComplexCart(name, fname, pset, fow, vb));
+    ptr_euclid(new FitComplexCart(name, fname, pset, daddy, fow, vb));
 
   int count=0;
   counted_ptr<FitComplex> return_ptr(0);
@@ -60,7 +63,7 @@ counted_ptr<FitComplex> MINT::FitComplexMaker(const std::string& name
   return return_ptr;
 }
 
-FitComplex::FitComplex(){}
+FitComplex::FitComplex(IFitParRegister* daddy) : FitParDependent(daddy){}
 
 bool FitComplex::isConstant() const{
   return p1().iFixInit() && p2().iFixInit();

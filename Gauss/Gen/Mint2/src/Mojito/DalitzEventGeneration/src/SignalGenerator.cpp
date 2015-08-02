@@ -8,11 +8,13 @@
 using namespace std;
 using namespace MINT;
 
-SignalGenerator::SignalGenerator(const DalitzEventPattern& pat, TRandom* rnd)
+SignalGenerator::SignalGenerator(const DalitzEventPattern& pat
+				 , TRandom* rnd
+				 )
   : BaseGenerator(rnd)
   , _pat(pat)
   , _myOwnPSet()
-  , _counted_amps(new FitAmpSum(pat, &_myOwnPSet))
+  , _counted_amps(new FitAmpSum(pat, myMPS()))
   , _amps(_counted_amps.get())
   , _boxes(_amps->makeEventGenerator(pat))
 {
@@ -21,7 +23,8 @@ SignalGenerator::SignalGenerator(const DalitzEventPattern& pat, TRandom* rnd)
 SignalGenerator::SignalGenerator(const DalitzEventPattern& pat
 				 , double rB
 				 , double phase
-				 , TRandom* rnd)
+				 , TRandom* rnd
+				 )
   : BaseGenerator(rnd)
   , _pat(pat)
   , _myOwnPSet()
@@ -32,8 +35,8 @@ SignalGenerator::SignalGenerator(const DalitzEventPattern& pat
   DalitzEventPattern cpPat(pat);
   cpPat[0].antiThis();
 
-  counted_ptr<FitAmpSum> fs(new FitAmpSum(pat, &_myOwnPSet));
-  FitAmpSum cpAmps(pat, &_myOwnPSet);
+  counted_ptr<FitAmpSum> fs(new FitAmpSum(pat, myMPS()));
+  FitAmpSum cpAmps(pat, myMPS());
   cpAmps *= polar(rB, phase);
   fs->add(cpAmps);
   _counted_amps = (counted_ptr<IFastAmplitudeIntegrable>) fs;
@@ -60,6 +63,15 @@ SignalGenerator::SignalGenerator(const DalitzEventPattern& pat
 {
   _boxes->setRnd(_rnd);
 }
+
+MINT::MinuitParameterSet* SignalGenerator::myMPS(){
+  // seems like an unnecessary complication
+  // but it's a "hook" to add the option to pass
+  // other MinuitParameterSets to SignalGenerator
+  // should this become necessary.
+  return & _myOwnPSet;
+}
+
 
 bool SignalGenerator::makeBoxes(){
   if(0 == _amps) return 0;

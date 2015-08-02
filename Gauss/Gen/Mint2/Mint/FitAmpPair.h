@@ -11,14 +11,20 @@
 
 #include "Mint/DalitzHistoSet.h"
 #include "Mint/FitAmplitude.h"
+#include "Mint/FitParDependent.h"
+#include "Mint/IFitParDependent.h"
+#include "Mint/AmpPair.h"
 
 //class FitAmplitude;
 class IDalitzEvent;
 
-class FitAmpPair{
+class FitAmpPair : public MINT::FitParDependent{
 
-  FitAmplitude* _a1;
-  FitAmplitude* _a2;
+  FitAmplitude* _fitA1;
+  FitAmplitude* _fitA2;
+
+  bool _beingIntegrated;
+  MINT::FitParDependent _eventDependentParameters;
 
   std::complex<double> _sum;
   std::string _sumName;
@@ -68,8 +74,11 @@ class FitAmpPair{
   bool retrieveHistos(const std::string& asSubdirOf = ".");
 
   bool isCompatibleWith(const FitAmpPair& other) const;
+
+  void rememberEventDependentParameters();
  public:
-  FitAmpPair(FitAmplitude* a1=0, FitAmplitude* a2=0);
+  FitAmpPair();// required by some STL containers
+  FitAmpPair(FitAmplitude& a1, FitAmplitude& a2);
   FitAmpPair(const FitAmpPair& other);
 
   bool add(const FitAmpPair& other);
@@ -98,15 +107,41 @@ class FitAmpPair{
   double variance() const;
   double weightSum() const;
   long int N() const;
+
+  void reset();
+  bool needToReIntegrate() const;
+  void startReIntegration();
+  void startIntegration();
+  void endIntegration();
+  bool acceptEvents() const;
+
   std::complex<double> lastEntry() const;
 
   DalitzHistoSet histoSet() const;
 
-  FitAmplitude* amp1(){return _a1;}
-  FitAmplitude* amp2(){return _a2;}
-  const FitAmplitude* amp1() const{return _a1;}
-  const FitAmplitude* amp2() const{return _a2;}
+  FitAmplitude& fitAmp1(){
+    if(0 == _fitA1){
+      std::cout << "ERROR in FitAmpPair::fitAmp1: zero pointer " << std::endl;
+      throw "zero ptr";
+    }
+    return *_fitA1;
+  }
+  FitAmplitude& fitAmp2(){
+    if(0 == _fitA2){
+      std::cout << "ERROR in FitAmpPair::fitAmp2: zero pointer " << std::endl;
+      throw "zero ptr";
+    }
+    return *_fitA2;
+  }
+  const FitAmplitude& fitAmp1() const{return *_fitA1;}
+  const FitAmplitude& fitAmp2() const{return *_fitA2;}
   
+  Amplitude& rawAmp1(){return fitAmp1().amp();}
+  Amplitude& rawAmp2(){return fitAmp2().amp();}
+  const Amplitude& rawAmp1() const{return fitAmp1().amp();}
+  const Amplitude& rawAmp2() const{return fitAmp2().amp();}
+  
+
   virtual void print(std::ostream& os=std::cout) const;
   
   virtual ~FitAmpPair(){}

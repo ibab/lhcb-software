@@ -15,8 +15,10 @@ using namespace MINT;
 Amplitude::Amplitude( const DecayTree& decay
 		      , char SPD_Wave
 		      , const std::string& lopt
+		      , IFitParRegister* daddy
 		      ) 
-  : _associatingDecayTree(decay)
+  : FitParDependent(daddy)
+  , _associatingDecayTree(decay)
   , _spinFactor(0)
   , _spd(SPD_Wave)
   , _lopt(lopt)
@@ -27,8 +29,10 @@ Amplitude::Amplitude( const DecayTree& decay
 }
 
 Amplitude::Amplitude( const AmpInitialiser& ampInit
+		      , IFitParRegister* daddy
 		      )
-  : _associatingDecayTree(ampInit.tree())
+  : FitParDependent(daddy)
+  , _associatingDecayTree(ampInit.tree())
   , _spinFactor(0)
   , _spd(ampInit.SPD())
   , _lopt(ampInit.lopt())
@@ -38,8 +42,10 @@ Amplitude::Amplitude( const AmpInitialiser& ampInit
   //createDependants();
 }
 
-Amplitude::Amplitude( const Amplitude& other)
-  : IReturnRealForEvent<IDalitzEvent>()
+Amplitude::Amplitude( const Amplitude& other
+		      , IFitParRegister* newDaddy)
+//: IReturnRealForEvent<IDalitzEvent>()
+  : FitParDependent(other, newDaddy)
   , IReturnComplexForEvent<IDalitzEvent>()
   , _associatingDecayTree(other._associatingDecayTree)
   , _spinFactor(0)

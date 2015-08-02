@@ -11,7 +11,7 @@
 namespace MINT{
   class FitParDependent 
     : virtual public IFitParRegister
-    , std::vector<FitParRef>
+    , public std::vector<FitParRef>
     {
       IFitParRegister* _daddy;
 

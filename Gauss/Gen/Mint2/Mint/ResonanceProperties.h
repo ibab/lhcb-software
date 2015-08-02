@@ -29,8 +29,8 @@ class ResonanceProperties{
   static std::string nameFromPid(int pdg_id);
   static int pidFromName(const std::string& name);
   static std::string nameFromName(const std::string& name);
-  ResonanceProperties(int pid);
-  ResonanceProperties(const std::string& name);
+  ResonanceProperties(int pid, MinuitParameterSet* mps=0);
+  ResonanceProperties(const std::string& name, MinuitParameterSet* mps=0);
   double mass() const{return _fitMass;}
   double width() const{return _fitWidth;}
   double radius() const{return _fitRadius;}

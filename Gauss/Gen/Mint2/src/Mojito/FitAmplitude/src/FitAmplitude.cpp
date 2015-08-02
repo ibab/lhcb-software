@@ -92,8 +92,8 @@ FitAmplitude::FitAmplitude(const std::string& yourOwnName
 			   , MinuitParameterSet* pset
 			   , STRING_USAGE useStringAs
 			   )
-  : Amplitude(treeWithOpts)
-  , _FitAmpPhase(FitComplexMaker(yourOwnName, fname, pset
+  : _amp(treeWithOpts, this)
+  , _FitAmpPhase(FitComplexMaker(yourOwnName, fname, pset, this
 			      , FitParameter::HIDE
 			      , NamedParameterBase::QUIET
 			      ))
@@ -105,6 +105,7 @@ FitAmplitude::FitAmplitude(const std::string& yourOwnName
   if(useStringAs == FitAmplitude::PREFIX){
     _name += treeWithOpts.uniqueName();
   }
+  cout << "pset pointer in FitAmplitude " << pset << endl;
 }
 
 FitAmplitude::FitAmplitude(const std::string& yourOwnName
@@ -112,8 +113,8 @@ FitAmplitude::FitAmplitude(const std::string& yourOwnName
 			   , MinuitParameterSet* pset
 			   , STRING_USAGE useStringAs
 			   )
-  : Amplitude(treeWithOpts)
-  , _FitAmpPhase(FitComplexMaker(yourOwnName, (char*) 0, pset
+  : _amp(treeWithOpts, this)
+  , _FitAmpPhase(FitComplexMaker(yourOwnName, (char*) 0, pset, this
 			      , FitParameter::HIDE
 			      , NamedParameterBase::QUIET
 			      ))
@@ -131,8 +132,8 @@ FitAmplitude::FitAmplitude(const AmpInitialiser& treeWithOpts
 			   , const char* fname
 			   , MinuitParameterSet* pset
 			   )
-  : Amplitude(treeWithOpts)
-  , _FitAmpPhase(FitComplexMaker(treeWithOpts.uniqueName(), fname, pset
+  : _amp(treeWithOpts, this)
+  , _FitAmpPhase(FitComplexMaker(treeWithOpts.uniqueName(), fname, pset, this
 				 , FitParameter::HIDE
 				 , NamedParameterBase::QUIET
 				 ))
@@ -146,8 +147,8 @@ FitAmplitude::FitAmplitude(const AmpInitialiser& treeWithOpts
 FitAmplitude::FitAmplitude(const AmpInitialiser& treeWithOpts
 			   , MinuitParameterSet* pset
 			   )
-  : Amplitude(treeWithOpts)
-  ,_FitAmpPhase(FitComplexMaker(treeWithOpts.uniqueName(), (char*) 0, pset
+  : _amp(treeWithOpts, this)
+  ,_FitAmpPhase(FitComplexMaker(treeWithOpts.uniqueName(), (char*) 0, pset, this
 			     , FitParameter::HIDE
 			     , NamedParameterBase::QUIET
 			     ))
@@ -162,8 +163,8 @@ FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
 			   , const char* fname
 			   , MinuitParameterSet* pset
 			   )
-  : Amplitude(AmpInitialiser(StandardisedDecayTreeName))
-  , _FitAmpPhase(FitComplexMaker(StandardisedDecayTreeName, fname, pset
+  : _amp(AmpInitialiser(StandardisedDecayTreeName), this)
+  , _FitAmpPhase(FitComplexMaker(StandardisedDecayTreeName, fname, pset, this
 			      , FitParameter::HIDE
 			      , NamedParameterBase::QUIET
 			      ))
@@ -178,8 +179,8 @@ FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
 FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
 			   , MinuitParameterSet* pset
 			   )
-  : Amplitude(AmpInitialiser(StandardisedDecayTreeName))
-  , _FitAmpPhase(FitComplexMaker(StandardisedDecayTreeName, (char*) 0, pset
+  : _amp(AmpInitialiser(StandardisedDecayTreeName), this)
+  , _FitAmpPhase(FitComplexMaker(StandardisedDecayTreeName, (char*) 0, pset, this
 			      , FitParameter::HIDE
 			      , NamedParameterBase::QUIET
 			      ))
@@ -190,10 +191,11 @@ FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
 {
   
 }
-FitAmplitude::FitAmplitude(const FitAmplitude& other)
-  : IReturnRealForEvent<IDalitzEvent>()
+FitAmplitude::FitAmplitude(const FitAmplitude& other, IFitParRegister* newDaddy)
+  : FitParDependent(other, newDaddy)
+  , IReturnRealForEvent<IDalitzEvent>()
   , IReturnComplexForEvent<IDalitzEvent>()
-  , Amplitude(other)
+  , _amp(other._amp, this)
   , _FitAmpPhase(other._FitAmpPhase)
   , _fitFraction(other._fitFraction)
   , _preFactors(other._preFactors)
@@ -231,7 +233,7 @@ bool FitAmplitude::canBeIgnored() const{
 }
 bool FitAmplitude::CPConjugateSameFitParameters(){
   _name += "_CPcon";
-  return Amplitude::CPConjugate();
+  return amp().CPConjugate();
 }
 
 FitAmplitude FitAmplitude::GetCPConjugateSameFitParameters() const{
@@ -269,8 +271,14 @@ void FitAmplitude::multiply(double r){ // by value
 void FitAmplitude::multiply(const std::complex<double>& z){ // by value
   _preFactors.addTerm(z);
 }
+void FitAmplitude::multiply(const counted_ptr<IComplexFitParDependent>& irc){ // by ref
+  _preFactors.addTerm(irc);
+}
 void FitAmplitude::multiply(const counted_ptr<IReturnComplex>& irc){ // by ref
   _preFactors.addTerm(irc);
+}
+void FitAmplitude::multiply(const counted_ptr<IComplexForEventFitParDependent<IDalitzEvent> >& irce){ // by ref
+  _evt_dep_preFactors.addTerm(irce);
 }
 void FitAmplitude::multiply(const counted_ptr<IReturnComplexForEvent<IDalitzEvent> >& irce){ // by ref
   _evt_dep_preFactors.addTerm(irce);
@@ -290,8 +298,16 @@ FitAmplitude& FitAmplitude::operator*=(const complex<double>& z){
   multiply(z);
   return *this;
 }
+FitAmplitude& FitAmplitude::operator*=(const counted_ptr<IComplexFitParDependent>& irc){
+  multiply(irc);
+  return *this;
+}
 FitAmplitude& FitAmplitude::operator*=(const counted_ptr<IReturnComplex>& irc){
   multiply(irc);
+  return *this;
+}
+FitAmplitude& FitAmplitude::operator*=(const counted_ptr<IComplexForEventFitParDependent<IDalitzEvent> >& irce){
+  multiply(irce);
   return *this;
 }
 FitAmplitude& FitAmplitude::operator*=(const counted_ptr<IReturnComplexForEvent<IDalitzEvent> >& irce){

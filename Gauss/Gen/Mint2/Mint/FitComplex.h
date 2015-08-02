@@ -16,10 +16,15 @@
 #include "Mint/FitParameter.h"
 #include "Mint/IReturnComplex.h"
 
+#include "Mint/FitParDependent.h"
+
 #include "Mint/Phase.h"
 
 namespace MINT{
-  class FitComplex : virtual public IReturnComplex{
+  class FitComplex 
+    : virtual public IReturnComplex
+    , public FitParDependent
+  {
     //  FitComplex(const FitComplex& ){};
     // no copying for now.
     // dangerous because for each
@@ -72,7 +77,7 @@ namespace MINT{
     }
     
 
-    FitComplex();
+    FitComplex(IFitParRegister* daddy=0);
     virtual ~FitComplex(){}
     void setParameterSet(MinuitParameterSet* pset);
     
@@ -83,6 +88,7 @@ namespace MINT{
   counted_ptr<FitComplex> FitComplexMaker(const std::string& name
 					  , const char* fname=0
 					  , MinuitParameterSet* pset=0
+					  , MINT::IFitParRegister* daddy=0
 					  , FitParameter::FIX_OR_WHAT 
 					  fow=FitParameter::FIX
 					  , NamedParameterBase::VERBOSITY 

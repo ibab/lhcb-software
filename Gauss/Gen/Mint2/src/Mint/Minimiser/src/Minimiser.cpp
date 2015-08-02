@@ -83,7 +83,7 @@ bool Minimiser::MakeSpace(int needSpace){
   return true;
 }
 bool Minimiser::init(){
-  bool dbThis=false;
+  bool dbThis=true;
   if(dbThis) cout << "Minimiser::init(): you called me" << endl;
   if(0 == theFunction()){
     std::cout << "ERROR IN Minimiser::init():"

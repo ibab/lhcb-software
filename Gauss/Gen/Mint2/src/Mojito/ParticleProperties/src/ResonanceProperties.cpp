@@ -54,14 +54,14 @@ double ResonanceProperties::radiusInit(int pdg_id){
 }
 
 
-ResonanceProperties::ResonanceProperties(int pdg_id)
+ResonanceProperties::ResonanceProperties(int pdg_id, MinuitParameterSet* mps)
   : _pid(abs(pdg_id))
-  , _fitMass("mass_"     + nameFromPid(abs(pdg_id)), 1, massInit(pdg_id)  , 0, 0, 0, 0,  NamedParameterBase::QUIET)
-  , _fitWidth("width_"   + nameFromPid(abs(pdg_id)), 1, widthInit(pdg_id) , 0, 0, 0, 0,  NamedParameterBase::QUIET)
-  , _fitRadius("radius_" + nameFromPid(abs(pdg_id)), 1, radiusInit(pdg_id), 0, 0, 0, 0,  NamedParameterBase::QUIET)
-  , _fitAlpha("alpha_"   + nameFromPid(abs(pdg_id)), 1, 1.0               , 0, 0, 0, 0,  NamedParameterBase::QUIET)
-  , _fitFermiLambda("Fermi_lambda_"   + nameFromPid(abs(pdg_id)), 1, 1.0  , 0, 0, 0, 0,  NamedParameterBase::QUIET)
-  , _fitFermiS0("Fermi_s0_"   + nameFromPid(abs(pdg_id)), 1, 1.0          , 0, 0, 0, 0,  NamedParameterBase::QUIET)
+  , _fitMass("mass_"     + nameFromPid(abs(pdg_id)), 1, massInit(pdg_id)  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitWidth("width_"   + nameFromPid(abs(pdg_id)), 1, widthInit(pdg_id) , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitRadius("radius_" + nameFromPid(abs(pdg_id)), 1, radiusInit(pdg_id), 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitAlpha("alpha_"   + nameFromPid(abs(pdg_id)), 1, 1.0               , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitFermiLambda("Fermi_lambda_"   + nameFromPid(abs(pdg_id)), 1, 1.0  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitFermiS0("Fermi_s0_"   + nameFromPid(abs(pdg_id)), 1, 1.0          , 0, 0, 0, mps,  NamedParameterBase::QUIET)
 { 
 
         //fix to PDG value if not explicitly initiallised 
@@ -73,14 +73,14 @@ ResonanceProperties::ResonanceProperties(int pdg_id)
         //std:: cout << _fitWidth << endl;
 }
 
-ResonanceProperties::ResonanceProperties(const std::string& name): 
+ResonanceProperties::ResonanceProperties(const std::string& name, MinuitParameterSet* mps): 
   _pid(abs(pidFromName(name)))
-  , _fitMass("mass_"     + nameFromPid(_pid), 1, massInit(_pid)  , 0, 0, 0, 0,  NamedParameterBase::QUIET)
-  , _fitWidth("width_"   + nameFromPid(_pid), 1, widthInit(_pid) , 0, 0, 0, 0,  NamedParameterBase::QUIET)
-  , _fitRadius("radius_" + nameFromPid(_pid), 1, radiusInit(_pid), 0, 0, 0, 0,  NamedParameterBase::QUIET)
-  , _fitAlpha("alpha_"   + nameFromPid(_pid), 1, 1.0             , 0, 0, 0, 0,  NamedParameterBase::QUIET)
-  , _fitFermiLambda("Fermi_lambda_"   + nameFromPid(_pid), 1, 1.0  , 0, 0, 0, 0,  NamedParameterBase::QUIET)
-  , _fitFermiS0("Fermi_s0_"   + nameFromPid(_pid), 1, 1.0          , 0, 0, 0, 0,  NamedParameterBase::QUIET)
+  , _fitMass("mass_"     + nameFromPid(_pid), 1, massInit(_pid)  , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitWidth("width_"   + nameFromPid(_pid), 1, widthInit(_pid) , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitRadius("radius_" + nameFromPid(_pid), 1, radiusInit(_pid), 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitAlpha("alpha_"   + nameFromPid(_pid), 1, 1.0             , 0, 0, 0, mps,  NamedParameterBase::QUIET)
+  , _fitFermiLambda("Fermi_lambda_"   + nameFromPid(_pid), 1, 1.0  , 0, 0, 0, msp,  NamedParameterBase::QUIET)
+  , _fitFermiS0("Fermi_s0_"   + nameFromPid(_pid), 1, 1.0          , 0, 0, 0, mps,  NamedParameterBase::QUIET)
 { 
 }
 

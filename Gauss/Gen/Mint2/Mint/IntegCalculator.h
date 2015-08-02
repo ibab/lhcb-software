@@ -43,6 +43,10 @@ class IntegCalculator : public virtual IIntegrationCalculator{
   virtual void addEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
 			, double weight=1);
 
+  virtual void reAddEvent(IDalitzEvent* evtPtr, double weight=1);
+  virtual void reAddEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
+			  , double weight=1);
+
   virtual bool add(const IntegCalculator& other);
   virtual bool add(const IntegCalculator* other);
   virtual bool add(const MINT::const_counted_ptr<IntegCalculator>& other);
@@ -84,6 +88,11 @@ class IntegCalculator : public virtual IIntegrationCalculator{
 
   virtual void print(std::ostream& os=std::cout) const;
 
+  bool needToReIntegrate() const;
+  void startIntegration();
+  void startReIntegration();
+  void endIntegration();
+ 
   virtual ~IntegCalculator(){}
 
 };

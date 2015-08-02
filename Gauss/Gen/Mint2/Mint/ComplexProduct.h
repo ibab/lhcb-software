@@ -3,14 +3,15 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:55 GMT
 
-#include "Mint/IReturnComplex.h"
+#include "Mint/IComplexFitParDependent.h"
 #include "Mint/BasicComplex.h"
 #include <vector>
 #include <complex>
 #include "Mint/counted_ptr.h"
+#include "Mint/FitParDependent.h"
 
 namespace MINT{
-  class ComplexProduct : public IReturnComplex{
+  class ComplexProduct : virtual public IComplexFitParDependent, public FitParDependent{
   protected:
     std::vector< counted_ptr<IReturnComplex> > _facVec; 
     std::vector< double > _fixedDoubleVec; 
@@ -39,25 +40,29 @@ namespace MINT{
       return prod;
     }
      
-  public:
-    ComplexProduct();
-    ComplexProduct(double initVal);
-    ComplexProduct(const std::complex<double>& z);
-    ComplexProduct(const ComplexProduct& other);
+    void setToUnity();
 
-    void multiply(const ComplexProduct& other);
+  public:
+    ComplexProduct(IFitParRegister* daddy=0);
+    ComplexProduct(double initVal, IFitParRegister* daddy=0);
+    ComplexProduct(const std::complex<double>& z, IFitParRegister* daddy=0);
+    ComplexProduct(const ComplexProduct& other, IFitParRegister* newDaddy=0);
+
+    void multiply(const ComplexProduct& multiplyWith);
 
     void addTerm(double val); // by value
     void addTerm(const std::complex<double>& z); // by value
     void addTerm(const counted_ptr<IReturnComplex>& irc); // by reference
+    void addTerm(const counted_ptr<IComplexFitParDependent>& irc); // by reference
 
     ComplexProduct& operator*=(double val);
     ComplexProduct& operator*=(const std::complex<double>& z);
+    ComplexProduct& operator*=(const counted_ptr<IComplexFitParDependent>& irc);
     ComplexProduct& operator*=(const counted_ptr<IReturnComplex>& irc);
     ComplexProduct& operator*=(const ComplexProduct& cp);
 
    inline std::complex<double> ComplexVal(){
-     return  complexProduct() *  fixedComplexProduct() * fixedRealProduct();
+     return complexProduct() *  fixedComplexProduct() * fixedRealProduct();
    }
     
   };

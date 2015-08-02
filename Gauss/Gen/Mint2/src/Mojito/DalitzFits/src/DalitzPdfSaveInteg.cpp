@@ -29,6 +29,9 @@ DalitzPdfSaveInteg::DalitzPdfSaveInteg(const DalitzEventPattern& pat
  {
    //   _pat = pat;
    setIntegratorFileName(integInputFiles);
+
+   cout << "pset pointer in DalitzPdfSaveInteg " << mps << endl;
+   cout << "amps pointer in DalitzPdfSaveInteg " << _amps << endl;
    
    if("" == integOutputFile) _integratorOutputFile=integInputFiles;
    
@@ -101,7 +104,7 @@ DalitzPdfSaveInteg::DalitzPdfSaveInteg( const DalitzEventPattern& pat
     this->setEventGenerator(_fileGen);
   }
 
-IFastAmplitudeIntegrable* DalitzPdfSaveInteg::getAmpSum(){ return _amps;}
+//IFastAmplitudeIntegrable* DalitzPdfSaveInteg::getAmpSum(){ return _amps;}
 
 DalitzPdfSaveInteg::~DalitzPdfSaveInteg(){
   saveIntegrator(_integratorOutputFile);

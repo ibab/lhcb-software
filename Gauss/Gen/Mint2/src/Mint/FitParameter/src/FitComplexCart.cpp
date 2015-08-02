@@ -6,6 +6,7 @@
 #include "Mint/CLHEPPhysicalConstants.h"
 
 #include "Mint/FitComplexCart.h"
+#include "Mint/IFitParRegister.h"
 
 
 using namespace std;
@@ -21,20 +22,23 @@ std::string FitComplexCart::makeImagName(const std::string& varName){
 FitComplexCart::FitComplexCart(const std::string& varName
 			       , const char* fname
 			       , MinuitParameterSet* pset
+			       , MINT::IFitParRegister* daddy
 			       , FitParameter::FIX_OR_WHAT fow
 			       , NamedParameterBase::VERBOSITY vb
 			       )
-  : FitComplex()
+  : FitComplex(daddy)
   , _real(makeRealName(varName), fname, pset, fow, vb)
   , _imag(makeImagName(varName), fname, pset, fow, vb)
 {
+  cout << "pset pointer in FitComplexCart " << pset << endl;
 }
 FitComplexCart::FitComplexCart(const std::string& varName
 			       , MinuitParameterSet* pset
+			       , MINT::IFitParRegister* daddy
 			       , FitParameter::FIX_OR_WHAT fow
 			       , NamedParameterBase::VERBOSITY vb
 			       )
-  : FitComplex()
+  : FitComplex(daddy)
   , _real(makeRealName(varName), pset, fow, vb)
   , _imag(makeImagName(varName), pset, fow, vb)
 {
