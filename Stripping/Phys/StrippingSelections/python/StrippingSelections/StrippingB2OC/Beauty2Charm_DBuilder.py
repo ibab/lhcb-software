@@ -486,7 +486,42 @@ class DBuilder(object):
      ##     msels = subPIDSels(getCCs(decays),'D-2HHH'+tag,'',min,max,[protoDm2hhh])
      ##     return [MergedSelection('D2HHHBeauty2Charm'+tag,RequiredSelections=[psels,msels])]
 
-     # Implementation using one instance of SubPID per substitution
+     ## # Implementation using one instance of SubPID per substitution
+     ## def _makeD2hhh(self,up=False):
+     ##      '''Makes D->hhh'''
+
+     ##      tag = ''
+     ##      if up: tag = 'UP'
+
+     ##      min,max = self._massWindow('D+')
+
+     ##      extrainputs = [self.uppions] if up else []
+
+     ##      decaysp = [['pi+','pi+','pi-'],['pi+','pi+','K-'],
+     ##                 ['K+', 'pi+','pi-'],['K+', 'pi+','K-'],
+     ##                 ['pi+','K+', 'pi-'],['pi+','K+', 'K-'],
+     ##                 ['K+', 'K+', 'pi-'],['K+', 'K+', 'K-']]
+     ##      decaysm = getCCs(decaysp)
+
+     ##      sp = self._makeD2ThreeBody('D+2HHH',['D+ -> pi+ pi+ pi-'],
+     ##                                 awmFunctor(decaysp,min,max),
+     ##                                 up, self.config, extrainputs)
+     ##      sm = self._makeD2ThreeBody('D-2HHH',['D- -> pi- pi- pi+'],
+     ##                                 awmFunctor(decaysm,min,max),
+     ##                                 up, self.config, extrainputs)
+
+     ##      sels = []
+
+     ##      for dec in decaysp :
+     ##           name = makeSelName('D+',dec)
+     ##           sels += [ subPIDSels([dec],name,tag,min,max,[sp]) ]
+     ##      for dec in decaysm :
+     ##           name = makeSelName('D-',dec)
+     ##           sels += [ subPIDSels([dec],name,tag,min,max,[sm]) ]
+
+     ##      return [MergedSelection('D2HHHBeauty2Charm'+tag,RequiredSelections=sels)]
+
+     # Implementation not using SubPID at all
      def _makeD2hhh(self,up=False):
           '''Makes D->hhh'''
 
@@ -495,31 +530,31 @@ class DBuilder(object):
 
           min,max = self._massWindow('D+')
 
-          extrainputs = [self.uppions] if up else []
+          if up : extrainputs = [self.kaons] + [self.uppions] + [self.upkaons]
+          else  : extrainputs = [self.kaons]
 
-          decaysp = [['pi+','pi+','pi-'],['pi+','pi+','K-'],
-                     ['K+', 'pi+','pi-'],['K+', 'pi+','K-'],
-                     ['pi+','K+', 'pi-'],['pi+','K+', 'K-'],
-                     ['K+', 'K+', 'pi-'],['K+', 'K+', 'K-']]
+          decaysp = [
+               ['pi+','pi+','pi-'],
+               ['pi+','pi+','K-'],['K+', 'pi+','pi-'],
+               ['K+', 'pi+','K-'],['K+', 'K+', 'pi-'],
+               ['K+', 'K+', 'K-']
+               ]
           decaysm = getCCs(decaysp)
-
-          sp = self._makeD2ThreeBody('D+2HHH',['D+ -> pi+ pi+ pi-'],
-                                     awmFunctor(decaysp,min,max),
-                                     up, self.config, extrainputs)
-          sm = self._makeD2ThreeBody('D-2HHH',['D- -> pi- pi- pi+'],
-                                     awmFunctor(decaysm,min,max),
-                                     up, self.config, extrainputs)
 
           sels = []
 
           for dec in decaysp :
-               name = makeSelName('D+',dec)
-               sels += [ subPIDSels([dec],name,tag,min,max,[sp]) ]
+               name = makeSelName('D+',dec,tag)
+               sel  = makeSel('D+',dec)
+               sels += [ self._makeD2ThreeBody(name,[sel],awmFunctor([dec],min,max),
+                                               up,self.config,extrainputs) ]
           for dec in decaysm :
-               name = makeSelName('D-',dec)
-               sels += [ subPIDSels([dec],name,tag,min,max,[sm]) ]
+               name = makeSelName('D-',dec,tag)
+               sel  = makeSel('D-',dec)
+               sels += [ self._makeD2ThreeBody(name,[sel],awmFunctor([dec],min,max),
+                                               up,self.config,extrainputs) ]
 
-          return [MergedSelection('D2HHHBeauty2Charm'+tag,RequiredSelections=sels)]
+          return [ MergedSelection( 'D2HHH'+tag+'Beauty2Charm', RequiredSelections = sels ) ]
 
      def _makeD2KSh(self,which,up=False):
           '''Makes D->Ksh'''
@@ -1223,8 +1258,6 @@ class DBuilder(object):
                # 4K
                ['K+','K+','K-','K-']
                ]
-
-          extrainputs = [self.uppions] if up else []
 
           if up : extrainputs = [self.kaons] + [self.uppions] + [self.upkaons]
           else  : extrainputs = [self.kaons]
