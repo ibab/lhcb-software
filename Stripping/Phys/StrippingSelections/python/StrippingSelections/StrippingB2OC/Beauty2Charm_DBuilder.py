@@ -650,7 +650,49 @@ class DBuilder(object):
      ##      return [MergedSelection('D2KstHHBeauty2Charm_%s'%tag,
      ##                              RequiredSelections=[psels,msels])]
 
-     # Implementation using one instance of SubPID per substitution
+     ## # Implementation using one instance of SubPID per substitution
+     ## def _makeD2Kstarhh(self,up=False):
+     ##      '''Makes D-> K*+(->Ksh,Kpi0) hh'''
+
+     ##      tag = ''
+     ##      if up: tag = 'UP'
+
+     ##      min,max = self._massWindow('D+')
+
+     ##      config = deepcopy(self.config)
+     ##      config.pop('ADOCA13_MAX')
+     ##      config.pop('ADOCA23_MAX')
+
+     ##      if up : extrainputs = self.hhBuilder.kspi + self.hhBuilder.kstarpm + [self.uppions]
+     ##      else:   extrainputs = self.hhBuilder.kspi + self.hhBuilder.kstarpm
+
+     ##      decaysp = [['pi+','pi-','K*(892)+'],['pi+','K-','K*(892)+'],
+     ##                 ['K+', 'pi-','K*(892)+'],['K+', 'K-','K*(892)+']]
+
+     ##      decaysm = [['pi+','pi-','K*(892)-'],['pi+','K-','K*(892)-'],
+     ##                 ['K+', 'pi-','K*(892)-'],['K+', 'K-','K*(892)-']]
+
+     ##      ps = self._makeD2ThreeBody('D+2HHKst',['D+ -> pi+ pi- K*(892)+'],
+     ##                                 awmFunctor(decaysp,min,max),
+     ##                                 up,config,extrainputs)
+
+     ##      ms = self._makeD2ThreeBody('D-2HHKst',['D- -> pi+ pi- K*(892)-'],
+     ##                                 awmFunctor(decaysm,min,max),
+     ##                                 up,config,extrainputs)
+
+     ##      sels = [ ]
+
+     ##      for dec in decaysp :
+     ##           name = makeSelName('D+',dec)
+     ##           sels += [ subPIDSels([dec],name,tag,min,max,[ps]) ]
+
+     ##      for dec in decaysm :
+     ##           name = makeSelName('D-',dec)
+     ##           sels += [ subPIDSels([dec],name,tag,min,max,[ms]) ]
+
+     ##      return [MergedSelection('D2KstHHBeauty2Charm_%s'%tag,RequiredSelections=sels)]
+
+     # Implementation not using SubPID at all
      def _makeD2Kstarhh(self,up=False):
           '''Makes D-> K*+(->Ksh,Kpi0) hh'''
 
@@ -663,7 +705,7 @@ class DBuilder(object):
           config.pop('ADOCA13_MAX')
           config.pop('ADOCA23_MAX')
 
-          if up : extrainputs = self.hhBuilder.kspi + self.hhBuilder.kstarpm + [self.uppions]
+          if up : extrainputs = self.hhBuilder.kspi + self.hhBuilder.kstarpm + [self.uppions] + [self.upkaons]
           else:   extrainputs = self.hhBuilder.kspi + self.hhBuilder.kstarpm
 
           decaysp = [['pi+','pi-','K*(892)+'],['pi+','K-','K*(892)+'],
@@ -672,23 +714,19 @@ class DBuilder(object):
           decaysm = [['pi+','pi-','K*(892)-'],['pi+','K-','K*(892)-'],
                      ['K+', 'pi-','K*(892)-'],['K+', 'K-','K*(892)-']]
 
-          ps = self._makeD2ThreeBody('D+2HHKst',['D+ -> pi+ pi- K*(892)+'],
-                                     awmFunctor(decaysp,min,max),
-                                     up,config,extrainputs)
-
-          ms = self._makeD2ThreeBody('D-2HHKst',['D- -> pi+ pi- K*(892)-'],
-                                     awmFunctor(decaysm,min,max),
-                                     up,config,extrainputs)
-
           sels = [ ]
 
           for dec in decaysp :
                name = makeSelName('D+',dec)
-               sels += [ subPIDSels([dec],name,tag,min,max,[ps]) ]
+               sel  = makeSel('D+',dec)
+               sels += [ self._makeD2ThreeBody(name,[sel],awmFunctor(decaysp,min,max),
+                                               up,config,extrainputs) ]
 
           for dec in decaysm :
                name = makeSelName('D-',dec)
-               sels += [ subPIDSels([dec],name,tag,min,max,[ms]) ]
+               sel  = makeSel('D-',dec)
+               sels += [ self._makeD2ThreeBody(name,[sel],awmFunctor(decaysm,min,max),
+                                               up,config,extrainputs) ]
 
           return [MergedSelection('D2KstHHBeauty2Charm_%s'%tag,RequiredSelections=sels)]
 
