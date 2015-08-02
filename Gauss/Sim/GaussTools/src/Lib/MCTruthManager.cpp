@@ -20,6 +20,7 @@ MCTruthManager::MCTruthManager(  ): event(0)
   primarybarcodes.clear();
   creators.clear();
   oscillated.clear();
+  signal.clear();
   segmentations.clear();
   m_mcparticles.clear() ;
 }
@@ -56,6 +57,9 @@ void MCTruthManager::NewEvent()
   // clear the vector of oscillated particles
   oscillated.clear();
 
+  // clear the vector of signal particles
+  signal.clear();
+
   // clear the map of segmentation of tracks
   segmentations.clear();
   
@@ -86,6 +90,14 @@ const std::vector<int>& MCTruthManager::GetOscillatedBarcodes()
 }
 
 //-----------------------------------------------------------------------------
+// Get list of signal bar codes
+//-----------------------------------------------------------------------------
+const std::vector<int>& MCTruthManager::GetSignalBarcodes()
+{
+  return signal;
+}
+
+//-----------------------------------------------------------------------------
 // Get creatorID for a vertex provided its barcode
 //-----------------------------------------------------------------------------
 int MCTruthManager::GetCreatorID(int barcode)
@@ -105,7 +117,7 @@ void MCTruthManager::AddParticle(HepMC::FourVector& momentum,
                                  int pdg_id, int partID, int motherID,
                                  bool directParent, int creatorID,
                                  LHCb::MCParticle * motherMCP ,
-                                 bool hasOscillated)
+                                 bool hasOscillated, bool isSignal)
 {
   // we create a new particle with barcode = partID
   HepMC::GenParticle* particle = new HepMC::GenParticle(momentum, pdg_id);
@@ -121,6 +133,11 @@ void MCTruthManager::AddParticle(HepMC::FourVector& momentum,
   if( hasOscillated ) {
     oscillated.push_back(partID);
   }
+
+  // if it is the signal put it in the signal list
+  if( isSignal ) {
+    signal.push_back(partID);
+  }  
   
   // we create the GenVertex corresponding to the end point of the track
   HepMC::GenVertex* endvertex = new HepMC::GenVertex(endpos);

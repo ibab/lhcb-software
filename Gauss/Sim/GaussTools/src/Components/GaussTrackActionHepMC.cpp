@@ -226,9 +226,10 @@ void GaussTrackActionHepMC::PostUserTrackingAction  ( const G4Track* track )
     int creatorID = processID( track->GetCreatorProcess() );
 
     // Get User information from primary particle to set Vertex type 
-    // OscillatedAndDecay
+    // OscillatedAndDecay and to set SignalFlag
     bool hasOscillated = false;
     LHCb::MCParticle * mcp = 0 ;
+    bool isSignal = false;
     if( NULL != track->GetDynamicParticle() ) {
       if( NULL != track->GetDynamicParticle()->GetPrimaryParticle() ) {
         G4VUserPrimaryParticleInformation* g4uInf = 
@@ -238,13 +239,15 @@ void GaussTrackActionHepMC::PostUserTrackingAction  ( const G4Track* track )
             (GiGaPrimaryParticleInformation*) g4uInf;
           hasOscillated = uInf->hasOscillated();
           mcp = uInf -> motherMCParticle() ;
+          isSignal = uInf -> isSignal();
         }
       }
     }
 
     m_mcMgr->AddParticle( fourmomentum, prodpos, endpos,
                           pdgID, track->GetTrackID(), track->GetParentID(), 
-                          ginf->directParent(), creatorID, mcp , hasOscillated );
+                          ginf->directParent(), creatorID, mcp , hasOscillated,
+                          isSignal );
   }
 
   // For the moment the following is in GaussPostTrackAction

@@ -4,6 +4,11 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2015-08-02 - Gloria Corti
+ - Propagate the information if a particle is signal as given from generator
+   . MCTruthManager.{h,cpp}
+   . GaussTrackActionHepMC.cpp
+
 ! 2015-06-29 - Luca Pescatore
  - Introduced the possibility of having a origin vertex 
    different than (0,0,0) in the RadLengthColl tool.

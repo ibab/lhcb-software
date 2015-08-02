@@ -47,13 +47,16 @@ public:
                    HepMC::FourVector& prodPos, HepMC::FourVector& endPos, 
                    int pdg, int trID, int parentID, bool directParent,
                    int creatorID, LHCb::MCParticle * motherMCP , 
-                   bool oscillated = false );
+                   bool oscillated = false,
+                   bool signal = false );
  
   const std::vector<int>& GetPrimaryBarcodes();
 
   int GetCreatorID(int barcode);
 
   const std::vector<int>& GetOscillatedBarcodes();
+
+  const std::vector<int>& GetSignalBarcodes();
 
   /// returns the pre-filled MCParticle mother of the G4 particle
   LHCb::MCParticle * GetMotherMCParticle( const int barcode ) ;
@@ -73,6 +76,9 @@ private:
 
   // vector containing bar code of oscillated particles
   std::vector<int> oscillated;
+
+  // vector containing bar code of signal particles
+  std::vector<int> signal;
 
   // map containing number of 'segmentations' for each particle
   // (i.e. number of additional vertices introduced in order to attach secondary particles
