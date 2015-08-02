@@ -23,7 +23,7 @@ from Configurables import LoKi__VoidFilter
 #from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdNoPIDsProtons
 from StandardParticles import ( StdAllNoPIDsPions, StdAllNoPIDsKaons,
                                 StdAllNoPIDsProtons, StdNoPIDsUpPions,
-                                StdLooseMuons,
+                                StdLooseMuons, StdNoPIDsUpKaons,
                                 StdLooseResolvedPi0, StdLooseMergedPi0 )
 from StandardParticles import StdLooseAllPhotons
 from Beauty2Charm_DBuilder import *
@@ -1216,7 +1216,7 @@ default_config ={
     'StrippingBc2DD0D2KSHHHD02HHBeauty2CharmLine',
     'StrippingBc2DD0D2KSHHHD02KHHHBeauty2CharmLine',
     'StrippingBc2DD0D2KSHHHD02KSHHBeauty2CharmLine',
-    # Modes with D->pi0X
+    ## # Modes with D->pi0X
     ## 'StrippingBc2DD0D2KSHPI0D02KSHHPI0Beauty2CharmLine',
     ## 'StrippingBc2DD0D2KSHPI0D02HHBeauty2CharmLine',
     ## 'StrippingBc2DD0D2KSHPI0D02KHHHBeauty2CharmLine',
@@ -1268,7 +1268,7 @@ default_config ={
     'StrippingBc2DstD0Dst2DPI0D2KSHD02HHBeauty2CharmLine',
     'StrippingBc2DstD0Dst2DPI0D2KSHD02KHHHBeauty2CharmLine',
     'StrippingBc2DstD0Dst2DPI0D2KSHD02KSHHBeauty2CharmLine',
-    # Modes with D->pi0X
+    ## # Modes with D->pi0X
     ## 'StrippingBc2DstD0Dst2DGammaD2KSHHHD02KSHHPI0Beauty2CharmLine',
     ## 'StrippingBc2DstD0Dst2DGammaD2KSHHHD02HHPI0Beauty2CharmLine',
     ## 'StrippingBc2DstD0Dst2DGammaD2KSHD02KSHHPI0Beauty2CharmLine',
@@ -1357,8 +1357,8 @@ default_config ={
     'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0PI0D02HHBeauty2CharmLine',
     'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0PI0D02KHHHBeauty2CharmLine',
     'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0PI0D02KSHHBeauty2CharmLine',
-    'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0GammaD02HHBeauty2CharmLine',
-    # Modes with D->pi0X
+    'StrippingBc2DstDst0Dst2DPI0D2KSHDst02D0GammaD02HHBeauty2CharmLine'
+    ## # Modes with D->pi0X
     ## 'StrippingBc2DstDst0Dst2DPI0D2KSPI0HDst02D0GammaD02KSHHBeauty2CharmLine',
     ## 'StrippingBc2DstDst0Dst2DPI0D2KSPI0HDst02D0GammaD02KHHHBeauty2CharmLine',
     ## 'StrippingBc2DstDst0Dst2DPI0D2KSPI0HDst02D0PI0D02HHBeauty2CharmLine',
@@ -1395,19 +1395,20 @@ class Beauty2CharmConf(LineBuilder):
         LineBuilder.__init__(self, moduleName, config)
 
         # pre-filter inputs
-        uppions = filterInputs('PiUP',[StdNoPIDsUpPions],config['UPSTREAM'])
-        pions = filterInputs('Pi',[StdAllNoPIDsPions],config['ALL'])
-        kaons = filterInputs('K',[StdAllNoPIDsKaons],config['ALL'])
-        protons = filterInputs('P',[StdAllNoPIDsProtons],config['ALL'])
+        pions   = filterInputs('Pi',  [StdAllNoPIDsPions],config['ALL'])
+        uppions = filterInputs('PiUP',[StdNoPIDsUpPions], config['UPSTREAM'])
+        kaons   = filterInputs('K',   [StdAllNoPIDsKaons],config['ALL'])
+        upkaons = filterInputs('KaUP',[StdNoPIDsUpKaons], config['UPSTREAM'])
+        protons = filterInputs('P',   [StdAllNoPIDsProtons],config['ALL'])
         ks_dd = filterInputs('KS0_DD',[dataOnDemand("StdLooseKsDD")],
                                        config['KS0']) 
         ks_ll = filterInputs('KS0_LL',[dataOnDemand("StdLooseKsLL")],
                              config['KS0'])
         ks = {"DD":[ks_dd],"LL":[ks_ll]}
         lambda0_dd = filterInputs('Lambda0_DD',[dataOnDemand("StdLooseLambdaDD")],
-                                       config['Lambda0']) 
+                                  config['Lambda0']) 
         lambda0_ll = filterInputs('Lambda0_LL',[dataOnDemand("StdLooseLambdaLL")],
-                             config['Lambda0'])
+                                  config['Lambda0'])
         lambda0 = {"DD":[lambda0_dd],"LL":[lambda0_ll]}
         pi0_merged   = filterPi0s('Merged'  , [StdLooseMergedPi0]  , config['Pi0'])
         pi0_resolved = filterPi0s('Resolved', [StdLooseResolvedPi0], config['Pi0'])
@@ -1443,7 +1444,7 @@ class Beauty2CharmConf(LineBuilder):
         hhh = HHHBuilder(pions,kaons,protons,config['HHH'], config['PID'])
 
         # make D->X, etc. inputs
-        d = DBuilder(pions,kaons,ks,pi0,uppions,muons,hh,config['D2X'],config['PID'])
+        d = DBuilder(pions,kaons,ks,pi0,uppions,upkaons,muons,hh,config['D2X'],config['PID'])
         dst = DstarBuilder(d,pions,uppions,pi0,photons,config['Dstar'],config['PID'])
 
         # Lc -> X

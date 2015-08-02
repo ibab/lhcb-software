@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-02 - Chris Jones
+ - More update to the D builder in the B2OC module. Go back for some selections
+   to implementations not using SubPID, to avoid hitting max combination limits.
+
 ! 2015-08-01 - Chris Jones
  - Improve the new implementations for HHH, HHHH, HHHPi0, HHPi0, KsPi0HH such 
    that SubPID is still used, for speed, but mulitple SubPID instances are used
