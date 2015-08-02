@@ -322,24 +322,34 @@ void Pythia8Production::setStable(const LHCb::ParticleProperty* thePP) {
 void Pythia8Production::updateParticleProperties(const LHCb::ParticleProperty* 
 						 thePP) {
   
-  // Set the mass.
+  // Create the particle if needed.
   int id = pythia8Id(thePP);
-  if (id == 0) return;
-  m_pythia->particleData.m0(id, thePP->mass() / Gaudi::Units::GeV);
+  string name = thePP->name();
+  Pythia8::ParticleData &pd = m_pythia->particleData;
+  if (id == 0) {
+    const LHCb::ParticleID pid = thePP->pid();
+    id = pid.pid();
+    if (id < 0)
+      if (pd.isParticle(abs(id))) pd.names(abs(id), pd.name(abs(id)), name);
+      else pd.addParticle(id, "void", name, pid.sSpin(), -3 * thePP->charge());
+    else pd.addParticle(id, name, pid.sSpin(), 3 * thePP->charge());
+    id = pythia8Id(thePP);
+    if (id == 0) return;
+  }
+  if (pd.name(id) == "void") pd.name(id, name);
 
-  // Set the width and lifetime (only non-resonant).
+  // Set the mass, width and lifetime (only non-resonant).
+  pd.m0(id, thePP->mass() / Gaudi::Units::GeV);
   if (id == 6 || (id >= 23 || id <= 37)) return;
   double lifetime = thePP->lifetime()*Gaudi::Units::c_light;
   if (lifetime <= 1.e-4 * Gaudi::Units::mm || 
       lifetime >= 1.e16 * Gaudi::Units::mm) lifetime = 0;
   double width = lifetime == 0 ? 0 : Gaudi::Units::hbarc / lifetime;
-  if (width < 1.5e-6*Gaudi::Units::GeV)
-    {width = 0; m_pythia->particleData.mMin(id, 0);} 
-  else m_pythia->particleData.mMin(id, (thePP->mass() - thePP->maxWidth())
-				   / Gaudi::Units::GeV); 
-  m_pythia->particleData.mWidth(id, width / Gaudi::Units::GeV);
-  m_pythia->particleData.mMax(id, 0);
-  m_pythia->particleData.tau0(id, lifetime / Gaudi::Units::mm);
+  if (width < 1.5e-6*Gaudi::Units::GeV) {width = 0; pd.mMin(id, 0);} 
+  else pd.mMin(id, (thePP->mass() - thePP->maxWidth()) / Gaudi::Units::GeV); 
+  pd.mWidth(id, width / Gaudi::Units::GeV);
+  pd.mMax(id, 0);
+  pd.tau0(id, lifetime / Gaudi::Units::mm);
 }
 
 //=============================================================================
@@ -402,7 +412,7 @@ StatusCode Pythia8Production::setupForcedFragmentation(const int /*thePdgId*/) {
 // Return the Pythia 8 ID.
 //=============================================================================
 int Pythia8Production::pythia8Id(const LHCb::ParticleProperty* thePP) {
-  int id(thePP -> pid().pid());
+  int id(thePP->pid().pid());
   if (abs(id) == 30221) return id > 0 ? 10221 : -10221;
   if (abs(id) == 104124) return id > 0 ? 4124 : -4124;
   if (m_pythia->particleData.isParticle(id)) return id;
