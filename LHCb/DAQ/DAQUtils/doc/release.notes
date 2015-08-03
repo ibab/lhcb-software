@@ -3,6 +3,8 @@
 ! Responsible : Marco Cattaneo
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= DAQUtils v1r13p1 2015-07-20 =========================
 ! 2015-06-18 - Marco Cattaneo

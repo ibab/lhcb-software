@@ -1,9 +1,6 @@
 // $Id: RawEventSimpleCombiner.cpp,v 1.1 2009/06/22 15:12:04 tskwarni Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "Event/RawEvent.h"
 #include "RawEventSimpleCombiner.h"

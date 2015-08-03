@@ -1,5 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
 // local
 #include "bankKiller.h"
 

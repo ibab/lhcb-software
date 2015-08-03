@@ -1,9 +1,6 @@
 // Include files 
 #include <iostream>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // local
 #include "ByteStreamTests.h"
 #include "Event/SmartBank.h"
