@@ -3,6 +3,8 @@
 ! Responsible : Heinrich Schindler
 ! Purpose     : Detector element for upgraded VELO
 !-----------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= VPDet v3r2 2014-05-12 =========================
 ! 2014-05-03 - Heinrich Schindler

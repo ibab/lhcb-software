@@ -1,4 +1,3 @@
-#include "GaudiKernel/CnvFactory.h"
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 #include "VPDet/DeVPSensor.h"
 
