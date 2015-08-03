@@ -104,6 +104,7 @@ public:
 	      );
   DalitzEvent(TNtupleD* ntp);
 
+  DalitzEvent(const IDalitzEvent& ievt);
   DalitzEvent(const IDalitzEvent* ievt);
   DalitzEvent(const DalitzEvent* other);
   DalitzEvent(const DalitzEvent& other);

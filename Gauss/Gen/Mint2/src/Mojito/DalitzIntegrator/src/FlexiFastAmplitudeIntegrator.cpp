@@ -26,14 +26,14 @@ FlexiFastAmplitudeIntegrator
 				, double precision
 				, const std::string& fastFlexiEventFileName
 			   )
-  : _db(false)
-  , _fastFlexiEventList(fastFlexiEventFileName, "RECREATE")
+  : _Ncalls(0), _NReEvaluations(0), _db(false)
+    //  , _fastFlexiEventList(fastFlexiEventFileName, "RECREATE")
 {
   initialise(pattern, amps, generator, rnd, precision);
 }
 
 FlexiFastAmplitudeIntegrator::FlexiFastAmplitudeIntegrator(const std::string& fastFlexiEventFileName)
-  : _initialised(0), _db(false), _fastFlexiEventList(fastFlexiEventFileName, "RECREATE")
+  : _initialised(0), _db(false)//, _fastFlexiEventList(fastFlexiEventFileName, "RECREATE")
 
 {
 }
@@ -62,6 +62,7 @@ bool FlexiFastAmplitudeIntegrator::add(const FlexiFastAmplitudeIntegrator& other
   }
   _numEvents = totalEvents;
   _Ncalls   += other._Ncalls;
+  _NReEvaluations   += other._NReEvaluations;
   if(0 != this->_integCalc){
     _integCalc->add(other._integCalc);
   }else{
@@ -138,6 +139,7 @@ bool FlexiFastAmplitudeIntegrator
     cout << "\t This will go wrong." << endl;
   }
   _Ncalls=0;
+  _NReEvaluations=0;
 
   _initialised = true;
   return _initialised;
@@ -171,7 +173,8 @@ int FlexiFastAmplitudeIntegrator::updateEventSet(long int Nevents){
 void FlexiFastAmplitudeIntegrator::reIntegrate(){
   _integCalc->startReIntegration();
   for(unsigned int i=0; i < _fastFlexiEventList.size(); i++){
-    reAddEvent(_fastFlexiEventList.getEvent(i));
+    //reAddEvent(_fastFlexiEventList.getEvent(i));
+    reAddEvent(_fastFlexiEventList[i]);
   }
   _integCalc->endIntegration();
 }
@@ -191,9 +194,10 @@ double FlexiFastAmplitudeIntegrator::weight(IDalitzEvent* ){
 
 void FlexiFastAmplitudeIntegrator::addEvent(IDalitzEvent& evt){
   _fastFlexiEventList.Add(evt);
-  _integCalc->addEvent(&evt, weight(&evt));
+  DalitzEvent& listEvent( _fastFlexiEventList[_fastFlexiEventList.size()-1] );
+  _integCalc->addEvent(&listEvent, weight(&listEvent));
 }
-void FlexiFastAmplitudeIntegrator::reAddEvent(DalitzEvent evt){
+void FlexiFastAmplitudeIntegrator::reAddEvent(DalitzEvent& evt){
   _integCalc->reAddEvent(&evt, weight(&evt));
 }
 
@@ -273,7 +277,7 @@ double FlexiFastAmplitudeIntegrator::variance() const{
 }
 double FlexiFastAmplitudeIntegrator::evaluateSum(){
   time_t tstart = time(0);
-  _Ncalls++;
+  //  _Ncalls++;
 
   _mean    = _integCalc->integral();
   double v = variance();
@@ -293,8 +297,8 @@ double FlexiFastAmplitudeIntegrator::evaluateSum(){
   if(printout || _db){
     cout << " FlexiFastAmplitudeIntegrator::evaluateSum() for "
 	 << _integCalc->numEvents() << " events, "
-	 << _Ncalls << " th call:"
-	 << "\n\t> getting: " << _mean << " +/- " << sigma
+	 << _Ncalls << " th call:";
+    cout << "\n\t> getting: " << _mean << " +/- " << sigma
 	 << "\n\t> precision: requested: " << _precision*100
 	 << "%, actual: " << actualPrecision*100 << "%"
 	 << "\n\t> This took " << delT << " s."
@@ -347,8 +351,24 @@ int FlexiFastAmplitudeIntegrator::generateEnoughEvents(){
 }
 
 double FlexiFastAmplitudeIntegrator::getVal(){
-  if( _integCalc->needToReIntegrate() ) reIntegrate();
+  _Ncalls++;
+  if( _integCalc->needToReIntegrate() ){
+    _NReEvaluations++;
+    reIntegrate();
+  }
   evaluateSum();
+  int                  printEvery =    100;
+  if(_Ncalls >   1000) printEvery =   1000;
+  if(_Ncalls >  10000) printEvery =  10000;
+  if(_Ncalls > 100000) printEvery = 100000;
+  bool printout = _Ncalls < 10 || (0 == _Ncalls%printEvery);
+
+  if(_Ncalls > 0 && printout){
+    cout << "FlexiFastAmplitudeIntegrator::getVal, " << _Ncalls << "th call: Returning " << _mean
+	 << ",  re-evaluation fraction = " << ((double) _NReEvaluations + 1)/((double) _Ncalls)
+	 << endl;
+  }
+
   return _mean;
 }
 

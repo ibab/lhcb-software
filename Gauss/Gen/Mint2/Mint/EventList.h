@@ -60,6 +60,12 @@ namespace MINT{
 	this->push_back(evt);
 	return true;
       }
+      virtual bool Add(const EventList<EVENT_TYPE> & addList){
+	for(unsigned int i = 0; i < addList.size(); i++){
+	  this->push_back(addList[i]);
+	}
+	return true;
+      }
 
   /*
   double getMax(IReturnReal<EVENT_TYPE>* amps){

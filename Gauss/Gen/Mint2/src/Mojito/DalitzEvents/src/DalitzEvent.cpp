@@ -194,6 +194,26 @@ DalitzEvent::DalitzEvent(const IDalitzEvent* other)
   _eventCounter++;
 }
 
+DalitzEvent::DalitzEvent(const IDalitzEvent& other)
+  : _pat(other.eventPattern())
+  , _rememberPhaseSpace(other.phaseSpace())
+  , _rememberComplexFast()
+  , _rememberDoubleFast()
+  , _aValue(other.getAValue())
+  , _weight(other.getWeight())
+  , _generatorPdfRelativeToPhaseSpace(other.getGeneratorPdfRelativeToPhaseSpace())
+  , _permutationIndex(0)
+  , _perm(other.eventPattern())
+{
+  int np = other.eventPattern().size();
+  _p.resize(np);
+  for(int i=0; i < np; i++) _p[i] = other.p(i);
+  resetST();
+  _eventCounter++;
+}
+
+
+
 DalitzEvent::DalitzEvent(const DalitzEvent* other)
   : IDalitzEvent() // the compiler wants it.
   , _pat(other->_pat)

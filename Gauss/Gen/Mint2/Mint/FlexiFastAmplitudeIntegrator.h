@@ -34,13 +34,15 @@ class FlexiFastAmplitudeIntegrator : virtual public IDalitzIntegrator{
   const static long int _minEvents=100;
   int _numEvents;
   int _Ncalls;
+  int _NReEvaluations;
 
   bool _initialised;
 
   bool _db;
  protected:
 
-  DiskResidentEventList _fastFlexiEventList;
+  //DiskResidentEventList _fastFlexiEventList;
+  DalitzEventList _fastFlexiEventList;
 
   DalitzEventPattern _pat;
   IFastAmplitudeIntegrable* _amps; // amplitudes
@@ -65,7 +67,8 @@ class FlexiFastAmplitudeIntegrator : virtual public IDalitzIntegrator{
   int generateEnoughEvents();
 
   void addEvent(IDalitzEvent& evt);
-  void reAddEvent(DalitzEvent evt);
+  //  void reAddEvent(DalitzEvent evt);
+  void reAddEvent(DalitzEvent& evt);
 
   int addEvents(long int Nevents);
 

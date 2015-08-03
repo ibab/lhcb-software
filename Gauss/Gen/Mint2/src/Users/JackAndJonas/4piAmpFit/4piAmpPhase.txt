@@ -11,13 +11,20 @@ RandomSeed   5
 "IntegMethod"           "efficient"
 
 IntegratorEventFile     "SignalIntegrationEvents4pi.root"
-IntegratorInputFile     "sgIntegrator4pi"
+**IntegratorInputFile     "sgIntegrator4pi"
+
+
 
 **InputFileName K3pi.root
 
 doScan			0
 
 ** name                                                               	Fix?	init	step	min	max
+*
+*
+"mass_a(1)(1260)+"                                              0       1230    20
+"width_a(1)(1260)+"                                             0        420    20
+*
 *
 *"D0->K(S)0,pi+,pi-_Frac"					0.5
 *"D0->K(S)0,pi+,pi-_Amp"						2       35.0   0.1     0.0     0.0
