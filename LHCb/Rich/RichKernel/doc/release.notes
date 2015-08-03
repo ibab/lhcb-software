@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= RichKernel v7r59 2015-04-20 =========================
 ! 2015-03-10 - Chris Jones
