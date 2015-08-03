@@ -31,10 +31,12 @@ void PrPixelTrack::fit() {
   auto ith = m_hits.cbegin();
   const auto end = m_hits.cend();
 
-  v0 = _mm_loadu_ps( (*ith)->p_x() ); // x,y,z,wx
+  v0 = _mm_loadu_ps( (*ith)->p_x() ); // x,y,z
+  const float wx = (*ith)->wx();  
   const float wy = (*ith)->wy();
   v1 = _mm_load_ss( &wy );
-  v_wxwy = _mm_shuffle_ps(v0, v1, _MM_SHUFFLE(0,0,3,3)); // wx,wx,wy,wy
+  v2 = _mm_load_ss( &wx );
+  v_wxwy = _mm_shuffle_ps(v2, v1, _MM_SHUFFLE(0,0,0,0)); // wx,wx,wy,wy  
   
   v1 = _mm_shuffle_ps(v0, v0, _MM_SHUFFLE(2,1,2,0)); // x,z,y,z
   v2 = _mm_shuffle_ps(v0, v0, _MM_SHUFFLE(2,2,2,2)); // z,z,z,z
@@ -48,11 +50,13 @@ void PrPixelTrack::fit() {
   ++ith;
   for (; ith != end; ++ith) {
     
-    v0 = _mm_loadu_ps( (*ith)->p_x() ); // x,y,z,wx
+    v0 = _mm_loadu_ps( (*ith)->p_x() ); // x,y,z  
 
+    const float wx = (*ith)->wx();  
     const float wy = (*ith)->wy();
     v1 = _mm_load_ss( &wy );
-    v_wxwy = _mm_shuffle_ps(v0, v1, _MM_SHUFFLE(0,0,3,3)); // wx,wx,wy,wy
+    v2 = _mm_load_ss( &wx );
+    v_wxwy = _mm_shuffle_ps(v2, v1, _MM_SHUFFLE(0,0,0,0)); // wx,wx,wy,wy  
     
     v1 = _mm_shuffle_ps(v0, v0, _MM_SHUFFLE(2,1,2,0)); // x,z,y,z
     v2 = _mm_shuffle_ps(v0, v0, _MM_SHUFFLE(2,2,2,2)); // z,z,z,z

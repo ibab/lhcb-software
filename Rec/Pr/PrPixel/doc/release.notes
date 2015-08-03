@@ -4,6 +4,15 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2015-08-03 - Manuel Tobias Schiller
+ - patch to PrPixelTrack on behalf of Daniel Cámpora <danielcampora@gmail.com>:
+   I added some vectorization code at some point, which broke when the hits
+   were changed to store wx and wy instead of wx^2 and wy^2 in the error
+   values of the hits. The vectorized code was relying on x,y,z,wx stored
+   consecutively in memory, but assumed wx to be wx^2.
+   Here is a fix for that then, preserving wx and wy in whatever form they
+   may be, and accessing their values by the method wx() and wy().
+
 !========================= PrPixel v1r12 2015-07-20 =========================
 ! 2015-06-24 - Heinrich Schindler
  - Inherit PrPixelHitManager from Decoder::ToolBase.
