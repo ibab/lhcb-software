@@ -105,7 +105,7 @@ class PID_25ns_August2015:
                                 'D02KPiPiPiTag'         : 0.1,
                                 'D02KPiTag'             : 1.0
                                 }.iteritems()},
-                  'Common'   : {'TagTrChi2'     : 3.0,
+                  'Common'   : {
                                 'TagP'          : 3 * GeV, # 6GeV in old stripping
                                 'ProbeTrChi2'   : 5.0, # no cut for ee in old stripping, 3 for detached mumu
                                 'ProbeP'        : 3 * GeV, # 3 GeV for all but B -> (J/psi->mumu)K where it's zero in old stripping
@@ -170,6 +170,8 @@ class PID_25ns_August2015:
                                   ],
                                 'TagPt'         : 1.2 * GeV,
                                 'TagMinIPChi2'  : 9.0,
+                                'TagTrChi2'     : 3.0,
+                                'TagMaxGhostProb': 0.2, # Try out the hard cut suggested by Lucio and Barbara
                                 'LLCombAMLow'   : (3096-210) * MeV,
                                 'LLCombAMHigh'  : (3096+210) * MeV,
                                 'LLCombMLow'    : (3096-200) * MeV,
@@ -195,6 +197,8 @@ class PID_25ns_August2015:
                                 'TagPt'         : 1.5 * GeV,
                                 'TagMinIPChi2'  : 25.0,
                                 'TagPIDp'       : 5.0,
+                                'TagTrChi2'     : 3.0,
+                                'TagMaxGhostProb': 0.2, # Try out the hard cut suggested by Lucio and Barbara
                                 'LLCombAMLow'   : (3096-220) * MeV,
                                 'LLCombAMHigh'  : (3096+220) * MeV,
                                 'LLCombMLow'    : (3096-200) * MeV,
@@ -224,6 +228,8 @@ class PID_25ns_August2015:
                                 'TagPIDe'       : 5.0,
                                 'TagP'          : 6.0 * GeV,
                                 'TagPt'         : 1.5 * GeV,
+                                'TagTrChi2'     : 5.0,
+                                'TagMaxGhostProb': 1.0, # Just take the global GP cut because electrons are ghosty.
                                 'BachPt'        : 1.0 * GeV,
                                 'LLCombAMLow'   : (3096-910) * MeV,
                                 'LLCombAMHigh'  : (3096+510) * MeV,
@@ -250,6 +256,8 @@ class PID_25ns_August2015:
                                 'LLCombMHigh'   : (1020+25) * MeV,
                                 'LLCombMaxDocaChi2': 9.0,
                                 'TagMinIPChi2'  : 25.0,
+                                'TagTrChi2'     : 3.0,
+                                'TagMaxGhostProb': 0.2, # Try out the hard cut suggested by Lucio and Barbara
                                 'ProbeMinIPChi2': 9.0,
                                 'ProbePt'       : 0 * MeV,
                                 'TagPt'         : 500 * MeV,
@@ -281,6 +289,8 @@ class PID_25ns_August2015:
                                 'TagP'          : 3.0 * GeV,
                                 'TagMinIPChi2'  : 16.0,
                                 'TagPIDK'       : 0.0,
+                                'TagTrChi2'     : 3.0,
+                                'TagMaxGhostProb': 0.2, # Try out the hard cut suggested by Lucio and Barbara
                                 'ProbePt'       : 0.0,
                                 'ProbeP'        : 3.0 * GeV,
                                 'ProbeMinIPChi2': 9.0,

@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-08-03 - Olli Lupton
+ - Add slots for tag GP cut, tweak track chi2 + GP cuts to reduce rate.
+
 ! 2015-08-03 - Albert Puig
  - Fix bug in functor in Radiative Lines.
 
