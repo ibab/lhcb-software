@@ -1,6 +1,5 @@
 // Include files 
 
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "DetDesc/IDetectorElement.h"

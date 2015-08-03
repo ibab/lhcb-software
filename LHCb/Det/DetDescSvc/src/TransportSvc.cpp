@@ -3,7 +3,6 @@
 // ============================================================================
 /// GaudiKernel 
 // ============================================================================
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IMessageSvc.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
