@@ -1,7 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 // local
 #include "Event/MuonCoord.h"
 #include "MuonPadTest.h"

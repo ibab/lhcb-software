@@ -1,8 +1,5 @@
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "MuonDet/MuonBasicGeometry.h"
 #include "MuonDet/MuonL1Board.h"

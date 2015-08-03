@@ -1,8 +1,6 @@
 // Include files 
 #include <cstdio>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/MuonCoord.h"
 
 // local
