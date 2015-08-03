@@ -357,7 +357,8 @@ double FlexiFastAmplitudeIntegrator::getVal(){
     reIntegrate();
   }
   evaluateSum();
-  int                  printEvery =    100;
+  int                  printEvery =     10;
+  if(_Ncalls >    100) printEvery =    100;
   if(_Ncalls >   1000) printEvery =   1000;
   if(_Ncalls >  10000) printEvery =  10000;
   if(_Ncalls > 100000) printEvery = 100000;
