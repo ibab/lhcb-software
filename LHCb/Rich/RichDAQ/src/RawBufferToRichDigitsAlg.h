@@ -11,9 +11,6 @@
 #ifndef RICHDAQ_RAWBUFFERTORICHDIGITSALG_H
 #define RICHDAQ_RAWBUFFERTORICHDIGITSALG_H 1
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // base class
 #include "RichKernel/RichAlgBase.h"
 
