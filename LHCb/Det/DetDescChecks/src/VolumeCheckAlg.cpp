@@ -8,7 +8,6 @@
 // ============================================================================
 /// from Gaudi
 // ============================================================================
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SystemOfUnits.h"
