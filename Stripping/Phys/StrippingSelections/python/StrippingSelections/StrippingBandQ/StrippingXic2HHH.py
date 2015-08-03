@@ -42,7 +42,6 @@ class StrippingXic2HHHConf(LineBuilder):
                                , 'Xic_BPVIPCHI2_MAX'
                                , 'Xic_BPVLTIME_MAX'
                                , 'Xic_BPVLTIME_MIN'
-                               , 'HltFilter'
                                , 'PrescaleXic2PKPi'
                                , 'PostscaleXic2PKPi'
                                , 'PrescaleXic2PKK'
@@ -64,7 +63,6 @@ class StrippingXic2HHHConf(LineBuilder):
                           prescale  = 1.0  ,   # prescale factor
                           ODIN      = None ,   # ODIN predicate
                           L0DU      = None ,   # L0DU predicate
-                          HLT       = None ,   # HltDecReports predicate
                           FILTER    = None ,   # 'VOID'-predicate, e.g. Global Event Cut
                           checkPV   = True ,   # Check PV before running algos
                           algos     = None ,   # the list of stripping members
@@ -81,7 +79,6 @@ class StrippingXic2HHHConf(LineBuilder):
                                   prescale        = prescale,
                                   ODIN            = ODIN,
                                   L0DU            = L0DU,
-                                  HLT             = HLT,
                                   FILTER          = FILTER,
                                   checkPV         = checkPV,
                                   algos           = algos,
@@ -185,8 +182,8 @@ class StrippingXic2HHHConf(LineBuilder):
                , Daug_All_PT_MIN =  config['Daug_All_PT_MIN']
                , Daug_P_MIN = config['Daug_P_MIN']
                , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , Comb_MASS_MIN  = 2258. * MeV            
-               , Comb_MASS_MAX  = 2318. * MeV            
+               , Comb_MASS_MIN  = 2200. * MeV            
+               , Comb_MASS_MAX  = 2380. * MeV            
                , Comb_ADOCAMAX_MAX = 1.0 * mm
                , Xic_PT_MIN = 2000. * MeV
                , Xic_BPVDIRA_MIN = -100.
@@ -215,7 +212,6 @@ class StrippingXic2HHHConf(LineBuilder):
 
 
         self.line_Xic2PKPi = self._strippingLine( name = xic_PKPi_name + 'Line',
-#                                         HLT = config['HltFilter'],
                                          prescale  = config['PrescaleXic2PKPi'],
                                          postscale = config['PostscaleXic2PKPi'],
                                          RelatedInfoTools = config['RelatedInfoTools'],
@@ -223,7 +219,6 @@ class StrippingXic2HHHConf(LineBuilder):
                                        )
 
         self.line_Xic2PKK = self._strippingLine( name = xic_pKK_name + 'Line',
-#                                         HLT = config['HltFilter'],
                                          prescale  = config['PrescaleXic2PKK'],
                                          postscale = config['PostscaleXic2PKK'],
                                          RelatedInfoTools = config['RelatedInfoTools'],
@@ -410,7 +405,6 @@ default_config = {
                      , 'Xic_BPVIPCHI2_MAX'       : 12.
                      , 'Xic_BPVLTIME_MAX'        : 0.005 * ns
                      , 'Xic_BPVLTIME_MIN'        : -0.005 * ns
-                     , 'HltFilter'               : "HLT_PASS('Hlt2*Decision')"
                      , 'PrescaleXic2PKPi'        : 0.0
                      , 'PostscaleXic2PKPi'       : 0.0
                      , 'PrescaleXic2PKK'         : 1.0

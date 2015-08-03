@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-03 - Roberta Cardinale
+ - removed HLT filters in StrippingBandQ/StrippingXic2HHH.py
+
 ! 2015-08-03 - Pieter David
  - DisplVertices: changed HLT filters for running with split HltDecReports
 
