@@ -13,9 +13,6 @@ default_config = {
     'BUILDERTYPE' : 'BadEventsConf',
     'CONFIG'      : { "GEC"       : "((TrSOURCE('/Event/Rec/Track/Best', TrLONG)"\
                                     " >> (sum(TrPT,TrP<1 * TeV))>1 * TeV))",
-                      "Preambulo" : ["from LoKiTracks.decorators import *" ,
-                                     "from LoKiCore.functions    import * ",
-                                     "from GaudiKernel.SystemOfUnits import *"],
                       "prescale": 1.0,
                       "postscale": 1.0 },
     'WGs'         : [ 'ALL' ],
@@ -42,7 +39,9 @@ class BadEventsConf(LineBuilder) :
     def __init__(self, name, config):
       LineBuilder.__init__(self, name, config)
       
-      _filter={'Code': config['GEC'], 'Preambulo' : config['Preambulo'] }
+      _filter={'Code': config['GEC'], 'Preambulo' : ["from LoKiTracks.decorators import *" ,
+                                                     "from LoKiCore.functions    import * ",
+                                                     "from GaudiKernel.SystemOfUnits import *"]}
                                       
       line = StrippingLine(name
                            ,FILTER = _filter

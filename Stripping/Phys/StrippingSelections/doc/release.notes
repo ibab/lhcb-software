@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-08-03 - Ricardo Vazquez Gomez
+ - Modified the default_config of StrippingBadEvents.py
+
+! 2015-08-03 - Ricardo Vazquez Gomez
  - Added MiniBias modules under StrippingMiniBias directory
 
 ! 2015-08-03 - Chris Jones
