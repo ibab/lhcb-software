@@ -310,8 +310,8 @@ def _rd_keys_ ( rdir , recursive = True ) :
         rdir.cd() 
         _lst = rdir.GetListOfKeys()
         for i in _lst :
-            inam = i.GetName() 
-            _res.append ( inam )    
+            inam = i.GetName()
+            _res.append ( inam )
             if recursive and i.IsFolder() :
                 idir  = rdir.GetDirectory( inam ) 
                 ikeys = _rd_keys_ ( idir , recursive )
@@ -339,12 +339,12 @@ def _rd_iteritems_ ( rdir , fun = lambda k,o : True , recursive = True ) :
     Iterate over the content of ROOT directory/file:
     >>> for key,obj  in rfile.iteritems()           : print key , obj
     >>> for key,hist in rfile.iteritems( ROOT.TH1 ) : print key , hist
-    >>> for key,obj  in rfile.iteritems( lambda k,o : k[0]=='M' ) : print key,obj
+    >>> for key,obj  in rfile.iteritems( lambda name,tkey,obj : name[0]=='M' ) : print key,obj
     """
     ##
     if isinstance ( fun , type ) and issubclass ( fun , ( ROOT.TObject, cpp.TObject) ) : 
         tobj = fun 
-        fun  = lambda k,o : isinstance ( o , tobj )
+        fun  = lambda k,t,o : isinstance ( o , tobj )
     ##
     with ROOTCWD() :
         ##
@@ -353,7 +353,7 @@ def _rd_iteritems_ ( rdir , fun = lambda k,o : True , recursive = True ) :
         for i in _lst :
             inam = i.GetName()
             obj  = rdir.Get ( inam )
-            if fun ( inam , obj ) : yield inam , obj
+            if fun ( inam , i , obj ) : yield inam , obj
             if recursive and i.IsFolder() :
                 idir  = rdir.GetDirectory( inam ) 
                 for k, o in _rd_iteritems_ ( idir , fun , recursive ) :
