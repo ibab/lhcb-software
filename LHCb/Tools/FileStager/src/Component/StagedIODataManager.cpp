@@ -9,7 +9,6 @@
 #include "GaudiKernel/Debugger.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/strcasecmp.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiUtils/IFileCatalog.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"

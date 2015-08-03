@@ -16,7 +16,6 @@
 #include <string>
 
 // Gaudi
-#include "GaudiKernel/SvcFactory.h"
 #include <GaudiUtils/IIODataManager.h>
 
 // STL

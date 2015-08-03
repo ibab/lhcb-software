@@ -12,7 +12,6 @@
 // from Gaudi
 #include <GaudiKernel/SmartIF.h>
 #include <GaudiKernel/ISvcLocator.h>
-#include <GaudiKernel/ToolFactory.h>
 #include <GaudiKernel/DataStreamTool.h>
 #include <GaudiKernel/EventSelectorDataStream.h>
 #include <GaudiUtils/IFileCatalog.h>
