@@ -15,14 +15,13 @@ import logging
 logger = logging.getLogger(__name__)
 
 from PhysSelPython.Wrappers import AutomaticData, Selection, PassThroughSelection, EventSelection
-from StrippingConf.StrippingLine import StrippingLine, bindMembers
+from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from GaudiConfUtils.ConfigurableGenerators import GaudiSequencer as GaudiSequenceroid
 from Configurables import GaudiSequencer
-from Configurables import LoKi__HDRFilter  as HltFilter
-from Configurables import LoKi__ODINFilter as ODINFilter
+from PhysConf.Filters import LoKi_Filters
 
 from .DisplVertices_Utils import SelectionPatPV3DWrapper
 
@@ -566,9 +565,8 @@ class DisplVerticesLinesConf(LineBuilder):
         revivedHlt2Candidates = "Phys/%sHlt2Cand/Particles" % self.name()
         hltCandReviver = GaudiSequenceroid(ModeOR = True, ShortCircuit = False,
             Members = [ GaudiSequencer( "%sHlt2CandFilterTCK%s-%s" % (self.name(), tckBegin, tckEnd),
-                                        Members = [ HltFilter("%sHlt2DecisionFilterTCK%s-%s" % (self.name(), tckBegin, tckEnd), Code="in_range( {begin}, HLT_TCK % 0x40000000 , {end} ) & ( {decisions} )".format(begin=tckBegin, end=tckEnd, decisions=" | ".join("HLT_PASS('%s')" % ln for ln in hltLines)))
-                                                  , HltVertexConverterS20p3("%sHltConverter%s-%s" % (self.name(), tckBegin, tckEnd), HltSelReports="Hlt2/SelReports", HltLines=hltLines, Recursive=True, Output=revivedHlt2Candidates, WriteP2PVRelations=False, ForceP2PVBuild=False)
-                                                  ] )
+                                        Members = ( LoKi_Filters(HLT2_Code="in_range( {begin}, HLT_TCK % 0x40000000 , {end} ) & ( {decisions} )".format(begin=tckBegin, end=tckEnd, decisions=" | ".join("HLT_PASS('%s')" % ln for ln in hltLines))).filters("%sHlt2DecisionFilterTCK%s-%s" % (self.name(), tckBegin, tckEnd))
+                                                  + [ HltVertexConverterS20p3("%sHltConverter%s-%s" % (self.name(), tckBegin, tckEnd), HltSelReports="Hlt2/SelReports", HltLines=hltLines, Recursive=True, Output=revivedHlt2Candidates, WriteP2PVRelations=False, ForceP2PVBuild=False) ] ) )
                         for (tckBegin, tckEnd), hltLines in self.configurationParameter("HLT")["SignalLines"]
                       ]
             )
@@ -646,7 +644,7 @@ class DisplVerticesLinesConf(LineBuilder):
                      , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
-                line.HLT = self.configurationParameter("HLT")[lShortName]
+                line.HLT2 = self.configurationParameter("HLT")[lShortName]
 
             self.registerLine(line)
 
@@ -711,7 +709,7 @@ class DisplVerticesLinesConf(LineBuilder):
                      , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
-                line.HLT = self.configurationParameter("HLT")[lShortName]
+                line.HLT2 = self.configurationParameter("HLT")[lShortName]
 
             self.registerLine(line)
 
@@ -758,7 +756,7 @@ class DisplVerticesLinesConf(LineBuilder):
                      , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
-                line.HLT = self.configurationParameter("HLT")[lShortName]
+                line.HLT2 = self.configurationParameter("HLT")[lShortName]
 
             self.registerLine(line)
 
@@ -796,7 +794,7 @@ class DisplVerticesLinesConf(LineBuilder):
                      , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
-                line.HLT = self.configurationParameter("HLT")[lShortName]
+                line.HLT2 = self.configurationParameter("HLT")[lShortName]
 
             self.registerLine(line)
 
@@ -810,14 +808,15 @@ class DisplVerticesLinesConf(LineBuilder):
             lShortName = "%sHLTPS" % lAcroName
             lLineName  = "%s%s" % (self.name(), lShortName) # DisplVerticesSingleMedium
 
-            hltSelAlg = GaudiSequenceroid(ModeOR = True, ShortCircuit = False,
-                Members = [ HltFilter("%sHlt2FilterTCK%s-%s" % (lLineName, tckBegin, tckEnd)
-                              , Code="in_range( {begin}, HLT_TCK % 0x40000000, {end} ) & ( {decisions} )".format(begin=tckBegin, end=tckEnd, decisions=hltFilter)
-                              ) for (tckBegin, tckEnd), hltFilter in self.validatedGetProps("HLT", [lShortName])[lShortName] ]
-                )
+            orFilters = []
+            for (tckBegin, tckEnd), hltFilter in self.validatedGetProps("HLT", [lShortName])[lShortName]:
+                filters = LoKi_Filters(HLT2_Code="in_range( {begin}, HLT_TCK % 0x40000000, {end} ) & ( {decisions} )".format(begin=tckBegin, end=tckEnd, decisions=hltFilter)).filters("%sHlt2FilterTCK%s-%s" % (lLineName, tckBegin, tckEnd))
+                assert len(filters) == 1
+                orFilters.append(filters[0])
+            assert len(orFilters) == len(self.validatedGetProps("HLT", [lShortName])[lShortName])
 
             hltSelection = EventSelection( "%sHltFilter" % lLineName
-                              , Algorithm = hltSelAlg
+                              , Algorithm = GaudiSequenceroid(ModeOR = True, ShortCircuit = False, Members=orFilters)
                               )
 
             line = StrippingLine(lLineName

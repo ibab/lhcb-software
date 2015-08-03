@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-03 - Pieter David
+ - DisplVertices: changed HLT filters for running with split HltDecReports
+
 ! 2015-08-03 - Chris Jones
  - Add some more SubPID free implementations in B2OC D builder...
 
