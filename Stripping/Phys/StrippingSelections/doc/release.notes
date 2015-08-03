@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-03 - Chris Jones
+ - Add some more SubPID free implementations in B2OC D builder...
+
 ! 2015-08-02 - Chris Jones
  - More update to the D builder in the B2OC module. Go back for some selections
    to implementations not using SubPID, to avoid hitting max combination limits.
