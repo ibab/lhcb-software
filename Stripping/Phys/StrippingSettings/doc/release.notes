@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-03 - Ricardo Vazquez Gomez
+ - Modify LineConfig for RD
+ - Add database for stripping23
+
 ! 2015-08-03 - Roberta Cardinale
  - Updated BandQ S23 dictionaries
 

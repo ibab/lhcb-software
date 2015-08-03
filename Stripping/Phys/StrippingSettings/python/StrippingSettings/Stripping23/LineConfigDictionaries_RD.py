@@ -105,7 +105,21 @@ Beauty2XGamma = {
     'B2XGBMaxCorrM'    : 73000., # NOT USED
     'B2XGBVtxChi2DOF'  : 9.,
     'B2XGBVtxMaxIPChi2': 9., # was 25
-              },
+   
+    'TISTOSLinesDict': {'Hlt2Topo(2|3|4)Body.*Decision%TOS':0,
+                              'Hlt2Topo(2|3|4)Body.*Decision%TIS':0,
+                              'Hlt2IncPhi.*Decision%TOS':0,
+                              'Hlt2IncPhi.*Decision%TIS':0,
+                              'Hlt2RadiativeTopo.*Decision%TOS':0, ## Cut based raditive topological
+                              'Hlt2RadiativeTopo.*Decision%TIS':0, ## Cut based raditive topological
+                              'Hlt2TopoRad.*Decision%TOS':0, ## BBDT based radiative topological
+                              'Hlt2TopoRad.*Decision%TIS':0, ## BBDT based radiative topological
+                              'Hlt2Bs2PhiGamma.*Decision%TOS':0,
+                              'Hlt2Bs2PhiGamma.*Decision%TIS':0,
+                              'Hlt2Bd2KstGamma.*Decision%TOS':0,
+                              'Hlt2Bd2KstGamma.*Decision%TIS':0
+                              } 
+   },
     'STREAMS' : ['Leptonic'],
     }
 
@@ -821,7 +835,7 @@ B2KstTauTau = {
 
     
 PhiToKSKS = {
-    'NAME'              : 'PhiToKSKS',
+#    'NAME'              : 'PhiToKSKS',
     'WGs'               : ['RD'],
     'BUILDERTYPE'       : 'PhiToKSKSAllLinesConf',
     'CONFIG'    : {
@@ -893,7 +907,7 @@ PhiToKSKS = {
     'STREAMS' : ['Charm'] }
 
 Bs2MuMuLines = {
-    'NAME' : 'Bs2MuMuLines',
+    #'NAME' : 'Bs2MuMuLines',
     'WGs'  : ['RD'],
     'BUILDERTYPE' : 'Bs2MuMuLinesConf',
     'CONFIG'   : {
@@ -914,46 +928,37 @@ Bs2MuMuLines = {
     'MuTrChi2_loose'        : 10,
     'BIPChi2_loose'         : 64,
     'BFDChi2_loose'         : 100,
-
     'BPVVDChi2'            : 121,
     'daughter_IPChi2'            : 9,
-
     'TrackGhostProb'          : 0.45,
-
     'DOCA'                   : 0.3,
     'DOCA_loose'             :0.5,
     'DOCA_LTUB'              :0.3,
-
     'VCHI2_VDOF'             :9,
     'VCHI2_VDOF_LTUB'             :9,
     'VCHI2_VDOF_loose'             :25,
-
     'daughter_TrChi2'                  :3,
     'daughter_TrChi2_LTUB'                    :3,
-
     'B_Pt'                           :350,
     'B_Pt_LTUB'                      :500,
-
     'B_BPVIPChi2'                     :25,
     'B_BPVIPChi2_LTUB'                :25,
-
     'B_minimum_decaytime_LTUB'           :0.6,
     'muon_PT_LTUB'                          :40
-
             },
     'STREAMS' : {
-    'Dimuon' : ['StrippingBs2MuMusNoMuIDLine',
-                'StrippingBs2MuMusWideMassLine',
-                'StrippingBs2MuMusBu2JPsiKLine'
+    'Dimuon' : ['StrippingBs2MuMuLinesNoMuIDLine',
+                'StrippingBs2MuMuLinesWideMassLine',
+                'StrippingBs2MuMuLinesBu2JPsiKLine'
                 ],
-    'Leptonic' : ['StrippingBs2MuMusWideMassLine',
-                  'StrippingBs2MuMusBs2JPsiPhiLine',
-                  'StrippingBs2MuMusBs2KKLTUBLine',
-                  'StrippingBs2MuMusNoMuIDLine',
-                  'StrippingBs2MuMusSSLine',
-                  'StrippingBs2MuMusBd2JPsiKstLine',
-                  'StrippingBs2MuMusLTUBLine',
-                  'StrippingBs2MuMusBu2JPsiKLine'
+    'Leptonic' : ['StrippingBs2MuMuLinesWideMassLine',
+                  'StrippingBs2MuMuLinesBs2JPsiPhiLine',
+                  'StrippingBs2MuMuLinesBs2KKLTUBLine',
+                  'StrippingBs2MuMuLinesNoMuIDLine',
+                  'StrippingBs2MuMuLinesSSLine',
+                  'StrippingBs2MuMuLinesBd2JPsiKstLine',
+                  'StrippingBs2MuMuLinesLTUBLine',
+                  'StrippingBs2MuMuLinesBu2JPsiKLine'
                   ]
     }
     }
