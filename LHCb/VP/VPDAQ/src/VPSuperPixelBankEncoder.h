@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <string>
 
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 #include "Event/RawEvent.h"
