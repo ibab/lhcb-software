@@ -225,7 +225,7 @@ def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
       fwdFitter.TracksInContainer = "Rec/Track/ForwardHLT1"
       fwdFitter.TracksOutContainer = "Rec/Track/FittedHLT1ForwardTracks"
       # Keep only good tracks, this cut should be aligned with the one in the TrackBestTrackCreator
-      fwdFitter.MaxChi2DoF = 3.
+      fwdFitter.MaxChi2DoF = 4.0
       fwdFitter.Fitter = "TrackInitFit/Fit"
       fwdFitter.addTool(TrackInitFit, "Fit")
       fwdFitter.Fit.Init = "TrackStateInitTool/FwdStateInit"
@@ -367,15 +367,21 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    # note the comment for the HLT1 forward fitter about configurations
    from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter  
    from Configurables import TrackBestTrackCreator, TrackMasterFitter, TrackStateInitTool
+
+   # add and cut on the GP in the TrackBestTrackCreator
+   # the variable is needed later
+   addGhostProbTBTC = True
+   
    bestTrackCreator = TrackBestTrackCreator( TracksInContainers = tracklists )
+   bestTrackCreator.MaxChi2DoF = 4.0
    bestTrackCreator.addTool( TrackMasterFitter, name = "Fitter" )
    bestTrackCreator.DoNotRefit = True
    bestTrackCreator.addTool( TrackStateInitTool, name = "StateInitTool")
    bestTrackCreator.StateInitTool.UseFastMomentumEstimate = True
    # cut on ghost prob
-   bestTrackCreator.AddGhostProb = True
+   bestTrackCreator.AddGhostProb = addGhostProbTBTC
    bestTrackCreator.GhostIdTool = "Run2GhostId"
-   bestTrackCreator.MaxGhostProb = 0.5
+   bestTrackCreator.MaxGhostProb = 0.4
    # configure its fitter and stateinittool
    ConfiguredMasterFitter( getattr(bestTrackCreator, "Fitter"), SimplifiedGeometry = simplifiedGeometryFit, LiteClusters = liteClustersFit, MSRossiAndGreisen = True )
    if "FastVelo" in trackAlgs :
@@ -412,8 +418,6 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    extraInfos = TrackSys().getProp("TrackExtraInfoAlgorithms")
    if len(extraInfos) > 0 :
       
-      
-      
       ## Clone finding and flagging
       if "CloneFlagging" in extraInfos :
 
@@ -444,7 +448,7 @@ def RecoTrackingHLT2(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
          GaudiSequencer("AddExtraInfoTrackLikelihoodSeq").Members += [ trackAddLikelihood ]
          
       ## ghost probability using a Neural Net
-      if "GhostProbability" in extraInfos :
+      if "GhostProbability" in extraInfos and addGhostProbTBTC is False:
 
          addExtraInfo.DetectorList += ["GhostProb"]
          

@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2015-08-03 - Michel De Cian
+ - Switch cuts in TrackBestTrackCreator to chi2=4 and ghost prob = 0.4 for Run II tracking.
+
 ! 2015-07-31 - Michel De Cian
  - Switch on ghost probability in TrackBestTrackCreator and set it to 0.5 for Run II tracking.
 
