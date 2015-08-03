@@ -3,6 +3,8 @@
 ! Responsible : Jaap Panman, Rob Lambert
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= FSRAlgs v1r8 2015-05-26 =========================
 ! 2015-05-12 - Marco Clemencic
