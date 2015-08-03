@@ -3,6 +3,8 @@
 ! Responsible : Julien Cogan
 ! Purpose     : Package containing base classes for L0 components
 !-----------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= L0Base v2r4 2014-02-17 =========================
 ! 2014-02-13 - Rob Lambert

@@ -1,9 +1,6 @@
 // $Id: L0AlgBase.cpp,v 1.4 2010-01-20 16:03:20 odescham Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // local
 #include "L0Base/L0AlgBase.h"
 
