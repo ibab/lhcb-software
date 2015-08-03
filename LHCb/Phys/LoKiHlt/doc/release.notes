@@ -3,6 +3,8 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= LoKiHlt v3r20 2015-04-20 =========================
 ! 2015-03-17 - Vanya Belyaev
