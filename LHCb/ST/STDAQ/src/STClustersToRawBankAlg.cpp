@@ -1,6 +1,3 @@
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // STDAQ
 #include "STClustersToRawBankAlg.h"
 #include "STBoardToBankMap.h"

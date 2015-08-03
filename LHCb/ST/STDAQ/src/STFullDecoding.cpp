@@ -1,8 +1,4 @@
 // Include files
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // Event data
 #include "Event/RawEvent.h"
 #include "Event/STTELL1Data.h"

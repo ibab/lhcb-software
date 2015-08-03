@@ -1,9 +1,5 @@
 // $Id: STReadoutTool.cpp,v 1.15 2009-10-30 12:54:19 mtobin Exp $
 
-// Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
-
 // STDAQ
 #include "STReadoutTool.h"
 

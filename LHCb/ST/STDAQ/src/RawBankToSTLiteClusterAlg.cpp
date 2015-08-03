@@ -1,9 +1,6 @@
 #include <algorithm>
 #include <vector>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "RawBankToSTLiteClusterAlg.h"
 #include "Kernel/ISTReadoutTool.h"

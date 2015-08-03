@@ -1,6 +1,3 @@
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // Event
 //#include "Event/RawBank.h"
 #include "Event/RawEvent.h"

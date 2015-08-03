@@ -1,8 +1,5 @@
 #include <algorithm>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "RawBankToSTClusterAlg.h"
 

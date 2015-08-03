@@ -1,6 +1,3 @@
-// Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // STDAQ
 #include "UTReadoutTool.h"
 #include "Kernel/STTell1Board.h"
