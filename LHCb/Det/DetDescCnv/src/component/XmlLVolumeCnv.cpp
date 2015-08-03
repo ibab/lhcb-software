@@ -1,6 +1,5 @@
 // $Id: XmlLVolumeCnv.cpp,v 1.16 2009-05-04 14:57:09 ocallot Exp $ 
 // Include files
-#include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/MsgStream.h"

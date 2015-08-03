@@ -5,7 +5,6 @@
 #include <vector>
 #include <algorithm>
 
-#include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"

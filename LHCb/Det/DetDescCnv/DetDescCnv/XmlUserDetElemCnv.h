@@ -8,7 +8,6 @@
 // These two includes are not needed here but are needed inside children
 // of this class. In order to avoid the user to forget to include them,
 // we put it here
-#include "GaudiKernel/CnvFactory.h"
 #include "XmlTools/IXmlSvc.h"
 
 

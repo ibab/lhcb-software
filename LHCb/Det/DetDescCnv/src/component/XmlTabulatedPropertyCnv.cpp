@@ -1,7 +1,6 @@
 // $Id: XmlTabulatedPropertyCnv.cpp,v 1.7 2009-04-17 12:25:18 cattanem Exp $
 
 // Include files
-#include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"

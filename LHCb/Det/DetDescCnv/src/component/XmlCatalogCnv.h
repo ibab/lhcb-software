@@ -5,7 +5,6 @@
 
 // Include files
 #include "GaudiKernel/ClassID.h"
-#include "GaudiKernel/CnvFactory.h"
 
 #include <xercesc/dom/DOMNode.hpp>
 

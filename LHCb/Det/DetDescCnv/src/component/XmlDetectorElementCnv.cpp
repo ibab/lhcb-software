@@ -1,7 +1,6 @@
 //  $ID: $
 
 // include files
-#include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "DetDesc/TabulatedProperty.h"
 

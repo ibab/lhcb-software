@@ -1,5 +1,4 @@
 // Include files
-#include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IConversionSvc.h"

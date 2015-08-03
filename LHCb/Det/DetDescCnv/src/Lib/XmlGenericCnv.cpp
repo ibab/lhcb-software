@@ -6,7 +6,6 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-#include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/DataObject.h"

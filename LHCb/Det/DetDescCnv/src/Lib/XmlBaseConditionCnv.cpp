@@ -1,5 +1,4 @@
 // include files
-#include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/MsgStream.h"
 
 #include "DetDesc/Condition.h"
