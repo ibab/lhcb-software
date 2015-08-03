@@ -1,7 +1,4 @@
 // Include files
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // From Detector Element
 #include "VeloDet/DeVelo.h"
 #include "VeloDet/DeVeloSensor.h"

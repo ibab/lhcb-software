@@ -1,5 +1,3 @@
-#include "GaudiKernel/AlgFactory.h"
-
 #include "Event/RawEvent.h"
 
 #include "VeloDet/DeVelo.h"

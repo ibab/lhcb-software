@@ -1,4 +1,3 @@
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/Incident.h"
 

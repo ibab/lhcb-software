@@ -1,7 +1,4 @@
 // Include files 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // data model
 #include "Event/RawBank.h"
 #include "Event/RawEvent.h" 
