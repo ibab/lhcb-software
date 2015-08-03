@@ -1,6 +1,5 @@
 // Include files
 // From Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
