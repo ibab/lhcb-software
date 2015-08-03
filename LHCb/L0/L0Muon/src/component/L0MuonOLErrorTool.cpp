@@ -1,8 +1,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 #include "Kernel/MuonLayout.h"
 #include "MuonKernel/MuonStationLayout.h"
 #include "Event/L0MuonError.h"

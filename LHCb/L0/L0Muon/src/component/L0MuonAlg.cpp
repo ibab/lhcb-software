@@ -8,9 +8,6 @@
 // Gaudi interfaces
 #include "GaudiKernel/IChronoStatSvc.h"
 
-// Gaudi factories for algorithms
-#include "GaudiKernel/AlgFactory.h"
-
 // from Event
 #include "Event/ODIN.h"
 #include "Event/MuonDigit.h"

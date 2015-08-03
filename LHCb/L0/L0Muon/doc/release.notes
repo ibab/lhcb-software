@@ -2,6 +2,8 @@
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= L0Muon v9r14 2015-02-23 =========================
 ! 2015-02-02 - Julien Cogan
