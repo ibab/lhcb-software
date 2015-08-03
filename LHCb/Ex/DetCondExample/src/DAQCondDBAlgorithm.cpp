@@ -2,7 +2,6 @@
 
 #include "DetCond/ICondDBEditor.h"
 
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Timing.h"
 #include "GaudiKernel/Time.h"

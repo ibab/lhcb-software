@@ -2,7 +2,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/DataObject.h" 
 
 #include "GaudiKernel/SmartIF.h"

@@ -4,7 +4,6 @@
 #include "DetDesc/Condition.h"
 #include "DetDesc/TabulatedProperty.h"
 #include "DetDesc/DetectorElement.h"
-#include "GaudiKernel/AlgFactory.h"
 
 /// Instantiation of a static factory to create instances of this algorithm
 DECLARE_ALGORITHM_FACTORY( XmlTestAlgorithm )

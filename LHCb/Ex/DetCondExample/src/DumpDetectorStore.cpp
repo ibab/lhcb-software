@@ -4,7 +4,6 @@
 #include "DumpDetectorStore.h"
 #include "DetDataAgent.h"
 
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"

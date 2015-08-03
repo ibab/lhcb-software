@@ -1,8 +1,6 @@
 // $Id: XmlDummyDECnv.cpp,v 1.3 2007-01-23 07:54:54 cattanem Exp $
 // Include files 
 
-#include "GaudiKernel/CnvFactory.h"
-
 #include <iostream>
 
 // local

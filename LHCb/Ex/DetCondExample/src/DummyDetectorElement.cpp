@@ -15,7 +15,6 @@
 //-----------------------------------------------------------------------------
 
 #include "DetDescCnv/XmlUserDetElemCnv.h"
-#include "GaudiKernel/CnvFactory.h"
 
 typedef  XmlUserDetElemCnv<DummyDetectorElement>  XmlDummyDetectorElementCnv;
 DECLARE_CONVERTER_FACTORY(XmlDummyDetectorElementCnv)
