@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2015-08-03 - Gloria Corti
+ - Fix mistyping in Kine-LT.py options for values (had extra ;)
+ - New options as an example to lower Production cuts, ProductionCuts-Low.py
 
 ! 2015-07-24 - Gloria Corti
  - Updated Gauss reference tests for current detector followign change in
