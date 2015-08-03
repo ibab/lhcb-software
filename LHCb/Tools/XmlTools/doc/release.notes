@@ -3,6 +3,8 @@
 ! Responsible : Marco Clemencic / Sebastien Ponce
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= XmlTools v6r8p1 2013-09-30 =========================
 ! 2013-09-17 - Marco Cattaneo

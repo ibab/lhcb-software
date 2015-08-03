@@ -8,7 +8,6 @@
 #include <xercesc/framework/MemBufInputSource.hpp>
 
 #include "GaudiKernel/IConverter.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IAlgTool.h"
