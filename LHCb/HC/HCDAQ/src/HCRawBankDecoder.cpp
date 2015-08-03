@@ -3,7 +3,6 @@
 #include "TAxis.h"
 
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiUtils/Aida2ROOT.h"
 #include "GaudiUtils/HistoLabels.h"
 
