@@ -56,6 +56,8 @@ __all__     = (
     "Mediane"       , ## calculate "mediane"  for functions/distribitions, etc (scipy)
     "Quantile"      , ## calculate "quantile" for functions/distribitions, etc (scipy)
     "Mode"          , ## calculate "mode"     for functions/distribitions, etc (scipy)
+    "CL_symm"       , ## calcualte symmetrical confidence intervals            (scipy)
+    "CL_asymm"      , ## calcualte asymmetrical confidence intervals           (scipy)
     ##
     ## stat-quantities   (based on generic SciPy-actions)
     "moment"        , ## calculate N-th moment of functions/distribitions, etc (scipy)
@@ -65,6 +67,11 @@ __all__     = (
     "mediane"       , ## calculate "mediane"  for functions/distribitions, etc (scipy)
     "quantile"      , ## calculate "quantile" for functions/distribitions, etc (scipy)
     "mode"          , ## calculate "mode"     for functions/distribitions, etc (scipy)
+    "cl_symm"       , ## calculate symmetrical confidence intervals            (scipy)
+    "cl_asymm"      , ## calculate asymmetrical confidence intervals           (scipy)
+    ##
+    "is_equal"      , ## equality of two floating point numbers  
+    "is_zero"       , ## is floaitng number close to zero? 
     ) 
 # =============================================================================
 from sys import float_info
@@ -76,12 +83,15 @@ if not 0.75 < _eps_ * 2**52 < 1.25 :
 from LHCbMath.Types import cpp 
 VE = cpp.Gaudi.Math.ValueWithError
 _mULPs_       = 1000 
-_is_zero_     = cpp.LHCb .Math.Zero('double')()
 _next_double_ = cpp.Gaudi.Math.next_double
 def _delta_ ( x , ulps = _mULPs_ ) :
     n1 = _next_double_ ( x ,  ulps )
     n2 = _next_double_ ( x , -ulps )
-    return max ( abs ( n1 - x ) , abs ( n2 - x ) ) 
+    return max ( abs ( n1 - x ) , abs ( n2 - x ) )
+## is floating point bumber close to zero ?
+is_zero        = cpp.LHCb.Math.Zero     ('double')()
+## are two floating point number close enough?
+is_equal       = cpp.LHCb.Math.Equal_To ('double')()
 
 # =============================================================================
 ## calculate 1st (and optionally 3rd)  derivative with the given step
@@ -268,16 +278,16 @@ def derivative ( fun , x , h = 0  , I = 2 , err = False ) :
     
     ## if the intial step is too small, choose another one 
     if abs ( h ) <  _numbers_[I][3] or abs ( h ) < delta :  
-        if _is_zero_( x )     : h    =             _numbers_[0][I]
-        else                  : h    = abs ( x ) * _numbers_[I][3] 
+        if is_zero( x ) : h    =             _numbers_[0][I]
+        else            : h    = abs ( x ) * _numbers_[I][3] 
         
     ## 1) find the estimate for first and "J"th the derivative with the given step 
     d1,dJ = _dfun_( func , x , h , True )
         
     ## find the optimal step 
-    if _is_zero_  ( dJ ) or  ( _is_zero_ ( f0 ) and _is_zero_ ( x * d1 ) ) :
-        if  _is_zero_ ( x )   : hopt =             _numbers_[0][I] 
-        else                  : hopt = abs ( x ) * _numbers_[I][3]
+    if is_zero  ( dJ ) or  ( is_zero ( f0 ) and is_zero ( x * d1 ) ) :
+        if  is_zero ( x )   : hopt =             _numbers_[0][I] 
+        else                : hopt = abs ( x ) * _numbers_[I][3]
     else : 
         hopt = _numbers_[I][2]*(  ( abs ( f0 ) + abs ( x * d1 ) ) / abs ( dJ ) )**( 1.0 / J )
 
@@ -390,10 +400,10 @@ class Integral(object) :
     ## Calculate the integral for the 1D-function using scipy
     def _integrate_ ( self , xmn , xmx , *args ) :
         args   = args if args else self._args
-        try :
-            return integral ( self._func , xmn , xmx , self._err , *args )
-        except :
-            print 'EXCEPT' , xmn, xmx , type(xmn), type(xmx)
+        ## try : 
+        return integral ( self._func , xmn , xmx , self._err , *args )
+        ##except :
+        ##    print 'EXCEPT' , xmn, xmx , type(xmn), type(xmx)
             
     ## Calculate the integral for the 1D-function using scipy
     def __call__ ( self , x , *args ) :
@@ -500,6 +510,7 @@ class Moment(object) :
         self._x0   = x0  
         self._err  = err
         self._args = args
+        self._moms = {} 
 
     ## make an integral 
     def _integral_ ( self , func , xmn , xmx , *args ) :
@@ -525,11 +536,21 @@ class Moment(object) :
     ## calculate the moment 
     def __call__ ( self , func , *args ) :
         ## 
+        args   = args if args else self._args
+        ##
         n0  = self._moment0_ (            func , *args ) 
         nN  = self._momentK_ ( self._N  , func , *args ) 
         ##
         return nN/n0
 
+    ## print it!
+    def __str__ ( self ) :
+        return "Moment(%d,%s,%s,%s,%s)" % ( self._N    ,
+                                            self._xmin ,
+                                            self._xmax ,
+                                            self._err  ,
+                                            self._x0   )                                            
+                                            
 # =============================================================================
 ## get the mean-value
 #  Calculate the mean-value for the distribution 
@@ -551,6 +572,11 @@ class Mean(Moment) :
     """
     def __init__ ( self , xmin , xmax , err = False ) :
         Moment.__init__ ( self , 1 , xmin , xmax , err )
+
+    def __str__ ( self ) :
+        return "Mean(%s,%s,%s)" % ( self._xmin ,
+                                    self._xmax ,
+                                    self._err  )                                            
 
 # =============================================================================
 ## get the variance
@@ -574,13 +600,19 @@ class Variance(Mean) :
     ## calculate the variance 
     def __call__ ( self , func , *args ) :
         ## 
+        args   = args if args else self._args
+        ##
         n0 = self._moment0_ (     func , *args ) 
         n1 = self._momentK_ ( 1 , func , *args ) 
         n2 = self._momentK_ ( 2 , func , *args ) 
         ##
         return ( n2 * n0 - n1 * n1 ) / ( n0 * n0 )
     
-
+    def __str__ ( self ) :
+        return "Variance(%s,%s,%s)" % ( self._xmin ,
+                                        self._xmax ,
+                                        self._err  )                                            
+    
 # =============================================================================
 ## get the RMS 
 #  Calculate the variance for the distribution or function  
@@ -606,10 +638,17 @@ class RMS(Variance) :
         """
         Calculate the RMS for the distribution or function          
         """
+        ##
+        args   = args if args else self._args
+        ##
         var2 = Variance.__call__ ( self , func , *args )
         import LHCbMath.math_ve as ME 
         return ME.sqrt ( var2 ) 
 
+    def __str__ ( self ) :
+        return "RMS(%s,%s,%s)" % ( self._xmin ,
+                                   self._xmax ,
+                                   self._err  )                                            
 
 # =============================================================================
 ## get the mediane
@@ -663,9 +702,12 @@ class Mediane(RMS) :
     def __call__ ( self , func , *args ) :
         return self._mediane_ ( func , self._xmin , self._xmax )
 
+    def __str__ ( self ) :
+        return "Mediane(%s,%s)" % ( self._xmin , self._xmax )
+    
 # =============================================================================
 ## get the quantile
-#  Calculate the mediane for the distribution or function  
+#  Calculate the quantile for the distribution or function  
 #  @code
 #  xmin,xmax = 0,math.pi 
 #  quantile  = Quantile ( 0.1 , xmin,xmax )  ## specify min/max
@@ -687,6 +729,9 @@ class Quantile(Mediane) :
         if Q > 1 : raise ArrtibuteError ( 'Quantile is invalid %s' % Q )
         self._Q = float( Q ) 
         
+    def __str__ ( self ) :
+        return "Quantile(%s,%s,%s)" % ( self._Q , self._xmin , self._xmax )
+
     ## calculate the mediane 
     def __call__ ( self , func , *args ) :
         ##
@@ -701,7 +746,6 @@ class Quantile(Mediane) :
         
         from scipy import optimize
         ifun   = lambda x : iint( x ) * quan - 1.0
-
 
         xmn = self._xmin
         xmx = self._xmax
@@ -754,7 +798,6 @@ class Mode(Mediane) :
     ## calculate the mode 
     def __call__ ( self , func , *args ) :
         ##
-        from scipy import optimize
         
         ## use mean    as intial aprpoximation for mode 
         m1     = Mean   .__call__ ( self , func , *args )
@@ -766,15 +809,238 @@ class Mode(Mediane) :
         ## m0     = 0.5 * ( m1 + m2 )
 
         m0 = m1 
+        from scipy import optimize
         result = optimize.minimize ( 
             lambda x : -1 * float (func ( x ) )   , 
             x0     = float ( m0 )                 ,
             bounds = [ (self._xmin , self._xmax)] ,
             args   = args )
         
-        return result.x[0] 
+        return result.x[0]
+    
+    def __str__ ( self ) :
+        return "Mode(%s,%s)" % ( self._xmin , self._xmax )
+
+# =============================================================================
+## @class CL_symm
+#  Calcualate symmetic confidence interval around x0
+#  for the given function on (xmin,xmax) interval
+#  function is assumed to be zero outside the interval
+#  @code
+#  fun = lambda x : exp( -0.5*x*x)
+#  reg = CL_symm ( 0.68 , -10 , 10 )
+#  print reg ( fun )
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-08-03
+class CL_symm(object) :
+    """
+    Calculate symmetic confidence interval around x0
+    for the given function on (xmin,xmax) interval
+    function is assumed to be zero outside the interval
+    >>> fun = lambda x : exp( -0.5*x*x)
+    >>> reg = CL_symm ( 0.68 , -10 , 10 )
+    >>> print reg ( fun )
+    """
+    def __init__ ( self , prob ,  xmin , xmax , x0 = None , *args ) :
+        
+        if not 0.0 < prob < 1.0 :
+            raise AttributeError ("Invalid value of prob/CL=%g" % prob)
+
+        self._prob = prob 
+        self._xmin = float ( xmin ) if isinstance ( xmin , ( int , long ) ) else xmin 
+        self._xmax = float ( xmax ) if isinstance ( xmax , ( int , long ) ) else xmax 
+        self._x0   = float ( x0   ) if isinstance ( x0   , ( int , long ) ) else x0  
+        self._args = args
+        
+    def __str__ ( self ) :
+        return "CL_sym(%s,%s,%s,%s)" % ( self._prob ,
+                                         self._xmin , self._xmax , self._x0   )
+
+    def __call__ ( self , func , *args ) :
+
+        ## additional arguments
+        args   = args if args else self._args
+        
+        #
+        ## define integration rules
+        #
+        if hasattr ( func , 'integral' ) :
+            _integral_ = lambda f , low , high : f.integral (      low , high , *args )
+        else                             :
+            _integral_ = lambda f , low , high :   integral ( f  , low , high , False , *args )
+
+        #
+        ## xmin/max
+        #
+        xmin,xmax = self._xmin, self._xmax
+        
+        #
+        ## calculate x0 as "mean"-value
+        #
+        x0 = self._x0 
+        if x0 is None :
+            if hasattr ( func , 'mean' ) : x0 = func.mean()
+            else                         :
+                m  = Mean ( xmin , xmax , False )
+                x0 = m    ( func , *args )  
+
+        #
+        ## check validity of x0
+        #
+        if not xmin <= x0 <= xmax :
+            raise AttributeError ("Invalid x0 value %s<=%s<=%s" % ( xmin , x0 , xmax ) )
+
+        #
+        ## get the normalization
+        #
+        norm  = _integral_ ( func , xmin , xmax )
+        if 0 >= norm :
+            raise AttributeError ("Normalization integral is not positive %s" % norm )
+
+        #
+        ## Equation:  ifun(x) \equiv \int_{x0-x}^{x0+x}f(t)dt - N*prob = 0   
+        #
+        yval  = self._prob * norm
+        def ifun ( x ) :
+            if 0 >= x : return -yval 
+            return _integral_ ( func , max ( xmin , x0 - x ) , min ( xmax , x0 + x )  ) - yval  
+        
+        ## use scipy to find solution 
+        from scipy import optimize        
+        s = optimize.brentq (  ifun , 0 , max ( xmax - x0 , x0 - xmin ) )
+        
+        return VE ( x0 , s * s )
 
 
+# =============================================================================
+## @class CL_asymm
+#  Calcualate asymmetic confidence interval (x1,x2) 
+#  for the given function on (xmin,xmax) interval,
+#  such as 
+#  \f$ \begin{array}{l} f(x_1)=f(x_2)            \\
+#  \int_{x_1}^{x_2}f(t)dr = p \int_{x_{min}}^{x_{max}}f(t)ft \end{array}\f$
+#  Assumtions on function
+#  - nonnegative
+#  - unimodal
+#  - positive integral between (xmin,xmax)
+#  - zero outside interval     (xmin,xmax)
+#  @code
+#  fun   = lambda x : exp( -0.5*x*x)
+#  reg   = CL_asymm ( 0.68 , -10 , 10 )
+#  print reg ( fun )
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-08-03
+class CL_asymm(object) :
+    """
+    Calculate asymmetic confidence interval around x0
+    for the given function on (xmin,xmax) interval
+    function is assumed to be zero outside the interval
+    >>> fun = lambda x : exp( -0.5*x*x)
+    >>> reg = CL_asymm ( 0.68 , -10 , 10 )
+    >>> print reg ( fun )
+    """
+    def __init__ ( self , prob ,  xmin , xmax , *args ) :
+        
+        if not 0.0 < prob < 1.0 :
+            raise AttributeError ("Invalid value of prob/CL=%g" % prob)
+
+        self._prob = prob 
+        self._xmin = float ( xmin ) if isinstance ( xmin , ( int , long ) ) else xmin 
+        self._xmax = float ( xmax ) if isinstance ( xmax , ( int , long ) ) else xmax 
+        self._args = args
+
+    def __str__ ( self ) :
+        return "CL_asymm(%s,%s,%s)" % ( self._prob , self._xmin , self._xmax )
+
+    ## solve equation f(x)=a 
+    def _solve_  ( self , func , fval , xmn , xmx , *args ) :
+
+        ifun = lambda x,*a : func(x,*a) - fval
+
+        ## use scipy to find solution 
+        from scipy import optimize        
+        return optimize.brentq (  ifun , xmn , xmx , args = args )
+
+                   
+    def __call__ ( self , func , *args ) :
+
+        ## additional arguments
+        args   = args if args else self._args
+        
+        #
+        ## define integration rules
+        #
+        if hasattr ( func , 'integral' ) :
+            _integral_ = lambda f , low , high : f.integral (      low , high , *args )
+        else                             :
+            _integral_ = lambda f , low , high :   integral ( f  , low , high , False , *args )
+
+        #
+        ## xmin/max
+        #
+        xmin,xmax = self._xmin, self._xmax
+        
+        #
+        # calculate mode
+        if hasattr ( func , 'mode' ) : xmode = func.mode()
+        else :
+            md    = Mode ( xmin , xmax )
+            xmode = md   ( func , *args )
+
+        if not xmin <= xmode <= xmax :
+            raise AttributeError ("Invalid mode value %s<=%s<=%s" % ( xmin , xmode , xmax ) )
+
+        #
+        ## get the normalization
+        #
+        norm  = _integral_ ( func , xmin , xmax )
+        if 0 >= norm :
+            raise AttributeError ("Normalization integral is not positive %s" % norm )
+
+        normL = _integral_ ( func , xmin  , xmode )
+        normR = _integral_ ( func , xmode , xmax  )
+
+        ## solve equation f(x)=a 
+        def _solve_  ( func , fval , xmn , xmx , *args ) :
+            ##
+            if is_equal (  xmn , xmx   )  : return xmn
+            ## 
+            ifun = lambda x,*a : func(x,*a) - fval
+            ## 
+            fmn = ifun  ( xmn )
+            if is_zero  ( ifun ( xmn ) )  : return xmn
+            fmx = ifun  ( xmx )
+            if is_zero  ( ifun ( xmx ) )  : return xmx 
+            ##
+            if 0 < fmx * fmn : ## more or less arbitrary choice 
+                return xmx if abs ( fmx ) <= abs ( fmn ) else xmn 
+            #
+            ## use scipy to find solution 
+            from scipy import optimize
+            return optimize.brentq (  ifun , xmn , xmx , args = args )
+
+        yval = self._prob * norm
+        fm   = func ( xmode ) 
+        def iifun ( f ) :
+
+            if   is_zero  ( f      ) : x1 , x2 = xmin,xmax
+            elif is_equal ( f , fm ) : return -yval 
+            else : 
+                x1 = _solve_ ( func ,  f , xmin  , xmode )
+                x2 = _solve_ ( func ,  f , xmode , xmax  )
+
+            return _integral_( func , x1 , x2 ) - yval 
+            
+        from scipy import optimize
+        l  = optimize.brentq (  iifun , 0 , func ( xmode ) )
+        x1 = _solve_ ( func ,  l , xmin  , xmode )
+        x2 = _solve_ ( func ,  l , xmode , xmax  )
+
+        return x1 , x2 
+
+ 
 # =============================================================================
 ## calculate some statistical quantities of variable,
 #  considering function to be PDF 
@@ -951,6 +1217,51 @@ def mode ( func , xmin = None , xmax = None ) :
     return sp_action ( func , Mode , xmin , xmax )
 
 # =============================================================================
+## get the symmetric confidence interval around x0 for (xmin,xmax) interval 
+#  @code 
+#  fun  = lambda x : exp( - 0.5 * x * x ) 
+#  x_1  = cl_symm ( fun , 0.68 , -10 , 10 )
+#  print x_1 
+#  x_2  = cl_symm ( fun , 0.68 ,   0 , 10 , x0 = 0 )
+#  print x_2 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-08-03
+def cl_symm ( func , prob , xmin = None , xmax = None , x0 = None ) :
+    """
+    >>> fun  = lambda x : exp( - 0.5 * x * x )
+    >>> x_1  = cl_symm ( fun , 0.68 , -10 , 10 )
+    >>> print x_1 
+    >>> x_2  = cl_symm ( fun , 0.68 ,   0 , 10 , x0 = 0 )
+    >>> print x_2 
+    """
+    ## get the functions
+    actor = lambda x1,x2 : CL_symm ( prob , x1 , x2 , x0 = x0 ) 
+    ## and use it! 
+    return sp_action ( func , actor , xmin , xmax )
+
+# =============================================================================
+## get the symmetric confidence interval around x0 for (xmin,xmax) interval 
+#  @code 
+#  fun  = lambda x : exp( - 0.5 * x * x ) 
+#  x_1,x_2  = cl_asymm ( fun , 0.68 , -10 , 10 )
+#  print x_1 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-08-03
+def cl_asymm ( func , prob , xmin = None , xmax = None ) :
+    """
+    >>> fun  = lambda x : exp( - 0.5 * x * x )
+    >>> x_1,x_2  = cl_asymm ( fun , 0.68 , -10 , 10 )
+    >>> print x_1,x_2 
+    """
+    ## get the functions
+    actor = lambda x1,x2 : CL_asymm ( prob , x1 , x2 ) 
+    ## and use it! 
+    return sp_action ( func , actor , xmin , xmax )
+
+
+# =============================================================================
 if '__main__' == __name__ :
     
     print 80*'*'
@@ -991,7 +1302,7 @@ if '__main__' == __name__ :
             res = derivative ( fun , x , 1.e-20 , i  , err = True )
             f1  = res 
             d   = der(x)  ## the exact value for derivative 
-            if _is_zero_ ( d ) : 
+            if is_zero ( d ) : 
                 print 'Rule=%2d' % ( 2*i+1 ) , f1 , d , (f1.value()-d)    
             else      :
                 print 'Rule=%2d' % ( 2*i+1 ) , f1 , d , (f1.value()-d)/d  
@@ -1024,8 +1335,8 @@ if '__main__' == __name__ :
     ## test mean/vars
     #
     import math
-    mean = Mean     (0, math.pi)
-    print 'sin@[0,pi]           mean: %s ' % mean (math.sin) 
+    mean_ = Mean     (0, math.pi)
+    print 'sin@[0,pi]           mean: %s ' % mean_ (math.sin) 
 
     var2 = Variance (0, math.pi)
     print 'sin@[0,pi]       variance: %s ' % var2 (math.sin) 
@@ -1033,11 +1344,11 @@ if '__main__' == __name__ :
     med  = Mediane  (0, math.pi)
     print 'sin@[0,pi]        mediane: %s ' % med  (math.sin) 
 
-    mode = Mode     (0, math.pi)
-    print 'sin@[0,pi]           mode: %s ' % mode (math.sin) 
+    mode_ = Mode     (0, math.pi)
+    print 'sin@[0,pi]           mode: %s ' % mode_ (math.sin) 
 
-    rms  = RMS     (0, math.pi)
-    print 'sin@[0,pi]            rms: %s ' % rms  (math.sin) 
+    rms_ = RMS     (0, math.pi)
+    print 'sin@[0,pi]            rms: %s ' % rms_  (math.sin) 
 
     mom5 = Moment  ( 5, 0, math.pi)
     print 'sin@[0,pi]           mom5: %s ' % mom5 (math.sin) 
@@ -1052,7 +1363,18 @@ if '__main__' == __name__ :
     print '1@[0,1]    0.201-quantile: %s ' % quantile ( lambda x : 1 , 0.201 , 0 , 1 ) 
     
     print 80*'*'
-            
+
+    from math import exp 
+    gau = lambda x : exp(-0.5*x*x)
+
+    print 'CL(gauss,0.68,-10,10)  %s ' % cl_symm ( gau , 0.68 , -10 , 10 )
+    print 'CL(gauss,0.68,0,10,0)  %s ' % cl_symm ( gau , 0.68 ,   0 , 10 , x0 = 0 )
+
+    gau1 = lambda x : exp(-0.5*x*x) if x > 0 else 0
+
+    print 'CLa(gauss,0.68,-10,10) (%.3f,%.3f) ' % cl_asymm ( gau  , 0.68 , -10 , 10 )
+    print 'CLa(aga  ,0.68,-10,10) (%.3f,%.3f) ' % cl_asymm ( gau1 , 0.68 , -10 , 10 )
+
 # =============================================================================
 # The END 
 # =============================================================================
