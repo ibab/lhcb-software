@@ -35,11 +35,11 @@ class HltRecoConf(LHCbConfigurableUser):
                  ,"Forward_LPT_MinP"            : 1000. * MeV # was 3000
                  ,"Forward_MaxOTHits"           : 15000
                  ,"MatchVeloMuon_MinP"          : 6000. * MeV
-                 ,"GoodTrCHI2PDOF"              : 3.0  # This TrCHI2PDOF is used in the sequence to mark hits of good tracks.
-                 ,"MaxTrCHI2PDOF"               : 3.0  # This TrCHI2PDOF is used in the making of fitted tracks.
+                 ,"GoodTrCHI2PDOF"              : 4.0  # This TrCHI2PDOF is used in the sequence to mark hits of good tracks.
+                 ,"MaxTrCHI2PDOF"               : 4.0  # This TrCHI2PDOF is used in the making of fitted tracks.
                  ,"ApplyGHOSTPROBCut"           : False  # Enable cut on ghost probability in the making of protoparticles.
                  ,"ApplyGHOSTPROBCutInTBTC"     : True  # Enable cut on ghost probability in the creation of fitted tracks.
-                 ,"MaxTrGHOSTPROB"              : 0.5  # Cut value of ghost probability for above options.
+                 ,"MaxTrGHOSTPROB"              : 0.4  # Cut value of ghost probability for above options.
                  ,"VeloSelectionCut"            : "(~TrBACKWARD) & ( TrNVELOMISS < 100 )"
                  ,"FitVelo"                     : True
                  ,"FastFitVelo"                 : True
