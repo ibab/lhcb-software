@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-08-03 - Albert Puig
+ - Fix bug in functor in Radiative Lines.
+
 ! 2015-07-29 - Roel Aaij
  - Updated technical HLT1 lines and included them in Physics_25ns_August2015.
 

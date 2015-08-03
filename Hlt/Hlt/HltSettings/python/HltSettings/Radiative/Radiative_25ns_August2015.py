@@ -135,7 +135,7 @@ class Radiative_25ns_August2015(object):
                                      'BDT_VARMAP': {'ipchi2'      : "log10(BPVIPCHI2())",
                                                     'ipchi2_sum'  : "SUMTREE(BPVIPCHI2(), ((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0')))",
                                                     'pt_min'      : "MINTREE(PT, ((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0')|(ABSID=='gamma')))/MeV",
-                                                    'chi2dof_max' : "MAXTREE(VFASPF(VCHI2), ISBASIC & HASTRACK & (ABSID=='K+'))",
+                                                    'chi2dof_max' : "MAXTREE(TRCHI2DOF, ISBASIC & HASTRACK & (ABSID=='K+'))",
                                                     'gamma_pt'    : "CHILD(2, PT)",
                                                     'm_corrected' : "BPVCORRM",
                                                     'vm_corrected': "CHILD(1, BPVCORRM)",
