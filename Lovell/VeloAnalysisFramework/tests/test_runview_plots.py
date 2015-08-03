@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import os
 import unittest
 import mock
@@ -32,6 +33,16 @@ def mocked_reference_run(plot, run):
         return REFERENCE_RUN
 
 
+mocked_run_view_config = OrderedDict([
+    ('page1', {
+        'title': 'Page One',
+        'plots': [
+            {'title': 'h', 'name': 'h'}
+        ]
+    })
+])
+
+
 @mock.patch('veloview.runview.utils.run_file_path', mocked_run_file_path)
 class TestRunViewPlots(unittest.TestCase):
     def setUp(self):
@@ -50,12 +61,16 @@ class TestRunViewPlots(unittest.TestCase):
         ref.Write()
         ref.Close()
 
+    # Need to patch the run view configuration so that the dummy plot 'h' has
+    # an entry in some page
+    @mock.patch('veloview.runview.plots.run_view_pages', mocked_run_view_config)
     def test_get_run_plot(self):
         """Should return plot from the correct run file."""
         plot = plots.get_run_plot('h', NOMINAL_RUN)
         self.assertEqual(plot['data']['title'], 'h_nom')
 
     @mock.patch('veloview.runview.utils.reference_run', mocked_reference_run)
+    @mock.patch('veloview.runview.plots.run_view_pages', mocked_run_view_config)
     def test_get_run_plot_reference(self):
         """Should return the reference plot if reference is True."""
         reference = plots.get_run_plot('h', NOMINAL_RUN, reference=True)
