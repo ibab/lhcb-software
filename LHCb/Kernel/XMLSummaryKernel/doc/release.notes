@@ -3,6 +3,8 @@
 ! Responsible : Rob Lambert
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= XMLSummaryKernel v1r13 2015-05-26 =======================
 ! 2015-05-06 - Marco Clemencic

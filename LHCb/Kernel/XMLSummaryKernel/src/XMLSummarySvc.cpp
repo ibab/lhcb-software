@@ -2,7 +2,6 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IAppMgrUI.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/AppReturnCode.h"

@@ -4,7 +4,6 @@
 
 #include "Python.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/StatEntity.h"
