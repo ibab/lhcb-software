@@ -1,7 +1,4 @@
 // $Id: XmlDeVeloCnv.cpp,v 1.3 2006-11-30 07:57:41 cattanem Exp $
-
-/// GaudiKernel
-#include "GaudiKernel/CnvFactory.h"
 /// DetDesc
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 /// VeloDet 
