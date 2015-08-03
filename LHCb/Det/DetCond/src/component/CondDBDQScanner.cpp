@@ -1,7 +1,6 @@
 // Include files
 
 // From Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/IAddressCreator.h"
 #include "GaudiKernel/IOpaqueAddress.h"

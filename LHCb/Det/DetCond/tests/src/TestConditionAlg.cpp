@@ -1,7 +1,6 @@
 // Include files
 #include "GaudiKernel/Map.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDetDataSvc.h"
 #include "DetDesc/Condition.h"
 

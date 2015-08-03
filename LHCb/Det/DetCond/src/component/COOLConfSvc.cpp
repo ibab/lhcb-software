@@ -12,8 +12,6 @@
 #include "CoolApplication/Application.h"
 #include "CoolApplication/DatabaseSvcFactory.h"
 
-#include "GaudiKernel/SvcFactory.h"
-
 #include "COOLConfSvc.h"
 
 #ifdef WIN32

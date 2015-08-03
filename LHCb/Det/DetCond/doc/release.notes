@@ -3,6 +3,8 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= DetCond v12r43 2015-07-20 =========================
 ! 2015-06-30 - Marco Clemencic

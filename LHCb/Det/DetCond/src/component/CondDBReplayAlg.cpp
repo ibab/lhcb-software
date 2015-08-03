@@ -1,10 +1,9 @@
 // Include files
 
+// from Gaudi
 // needed to sleep between two operations
 #include "GaudiKernel/Sleep.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "DetCond/ICondDBReader.h"
 #include <fstream>
 

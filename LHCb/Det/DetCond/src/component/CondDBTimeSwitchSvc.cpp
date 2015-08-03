@@ -5,7 +5,6 @@
 #define max max
 #endif
 
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ClassID.h"
 #include "GaudiKernel/Time.h"

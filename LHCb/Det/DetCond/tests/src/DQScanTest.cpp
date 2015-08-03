@@ -12,9 +12,6 @@ namespace Gaudi {
 
 // Include files
 
-// From Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 #include "DetCond/ICondDBReader.h"
 
 // local

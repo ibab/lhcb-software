@@ -7,7 +7,6 @@
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SvcFactory.h"
 
 /// Instantiation of a static factory to create instances of this service
 DECLARE_SERVICE_FACTORY(CondDBCnvSvc)

@@ -8,7 +8,6 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/Time.h"
-#include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 
 #include "DetDesc/ValidDataObject.h"

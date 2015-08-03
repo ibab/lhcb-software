@@ -1,5 +1,4 @@
 // Include files
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
