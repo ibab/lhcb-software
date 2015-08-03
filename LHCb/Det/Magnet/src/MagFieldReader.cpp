@@ -1,6 +1,5 @@
 // Include files 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/RndmGenerators.h"

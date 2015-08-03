@@ -1,5 +1,4 @@
 // Include files
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 
 // Units

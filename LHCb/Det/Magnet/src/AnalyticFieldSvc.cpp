@@ -6,7 +6,6 @@
  */
 // Include files
 #include "Riostream.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SystemOfUnits.h"
