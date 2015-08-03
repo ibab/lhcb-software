@@ -11,8 +11,6 @@
 //
 // ============================================================================
 // include 
-// GaudiKernel
-#include "GaudiKernel/CnvFactory.h"
 // DetDesc
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 // CaloDet 

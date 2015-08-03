@@ -2,6 +2,8 @@
 ! Package     : CaloDetXmlCnv
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= CaloDetXmlCnv v3r3 2012-11-26 =========================
 ! 2012-11-26 - Marco Cattaneo

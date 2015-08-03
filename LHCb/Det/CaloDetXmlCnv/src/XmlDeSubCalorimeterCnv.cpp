@@ -10,8 +10,6 @@
 // Det/CaloDetXmlCnv: new package
 //
 // ============================================================================
-// GaudiKernel
-#include  "GaudiKernel/CnvFactory.h"
 // DetDesc 
 #include  "DetDescCnv/XmlUserDetElemCnv.h"
 // CaloDet 
