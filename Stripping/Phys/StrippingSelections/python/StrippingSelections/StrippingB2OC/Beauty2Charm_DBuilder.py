@@ -1459,7 +1459,48 @@ class DBuilder(object):
 
           return [ MergedSelection( 'D2HHHH'+tag+'Beauty2Charm', RequiredSelections = sels ) ]
 
-     # Implementation using one instance of SubPID per substitution
+     ## # Implementation using one instance of SubPID per substitution
+     ## def _makeD2hhhhWS(self,up=False):
+     ##      '''Makes D->hhhh WS'''
+
+     ##      tag = ''
+     ##      if up: tag = 'UP'
+
+     ##      min,max = self._massWindow('D0')
+
+     ##      decaysp = [['pi+','pi+','pi+','pi+'],
+     ##                 ['pi+','pi+','K+', 'pi+'],['pi+','pi+','pi+','K+'],
+     ##                 ['K+', 'pi+','pi+','pi+'],['pi+','K+', 'pi+','pi+'],
+     ##                 ['K+', 'pi+','K+', 'pi+'],['K+', 'pi+','pi+','K+'],
+     ##                 ['pi+','K+', 'K+', 'pi+'],['pi+','K+', 'pi+','K+'],
+     ##                 ['K+', 'K+', 'pi+','pi+'],['pi+','pi+','K+', 'K+'],
+     ##                 ['pi+','K+', 'K+', 'K+'], ['K+', 'pi+','K+', 'K+'],
+     ##                 ['K+', 'K+', 'pi+','K+'], ['K+', 'K+', 'K+', 'pi+'],
+     ##                 ['K+', 'K+', 'K+', 'K+']
+     ##                 ]
+     ##      decaysm = getCCs(decaysp)
+
+     ##      extrainputs = [self.uppions] if up else []
+
+     ##      sp = self._makeD2FourBody('D2HHHHWSPlus',['D0 -> pi+ pi+ pi+ pi+'],
+     ##                                awmFunctor(decaysp,min,max),
+     ##                                up,self.config,extrainputs)
+     ##      sm = self._makeD2FourBody('D2HHHHWSMinus',['D0 -> pi- pi- pi- pi-'],
+     ##                                awmFunctor(decaysm,min,max),
+     ##                                up,self.config,extrainputs)
+
+     ##      sels = []
+
+     ##      for dec in decaysp :
+     ##           name = makeSelName('D',dec,'WSPlus')
+     ##           sels += [ subPIDSels([dec],name,tag,min,max,[sp]) ]
+     ##      for dec in decaysm :
+     ##           name = makeSelName('D',dec,'WSMinus')
+     ##           sels += [ subPIDSels([dec],name,tag,min,max,[sm]) ]
+
+     ##      return [MergedSelection('D2HHHH'+tag+'WSBeauty2Charm',RequiredSelections=sels)]
+
+     # Implementation not using SubPID at all
      def _makeD2hhhhWS(self,up=False):
           '''Makes D->hhhh WS'''
 
@@ -1469,18 +1510,14 @@ class DBuilder(object):
           min,max = self._massWindow('D0')
 
           decaysp = [['pi+','pi+','pi+','pi+'],
-                     ['pi+','pi+','K+', 'pi+'],['pi+','pi+','pi+','K+'],
-                     ['K+', 'pi+','pi+','pi+'],['pi+','K+', 'pi+','pi+'],
-                     ['K+', 'pi+','K+', 'pi+'],['K+', 'pi+','pi+','K+'],
-                     ['pi+','K+', 'K+', 'pi+'],['pi+','K+', 'pi+','K+'],
-                     ['K+', 'K+', 'pi+','pi+'],['pi+','pi+','K+', 'K+'],
-                     ['pi+','K+', 'K+', 'K+'], ['K+', 'pi+','K+', 'K+'],
-                     ['K+', 'K+', 'pi+','K+'], ['K+', 'K+', 'K+', 'pi+'],
-                     ['K+', 'K+', 'K+', 'K+']
-                     ]
+                     ['K+', 'pi+','pi+','pi+'],
+                     ['K+', 'K+', 'pi+','pi+'],
+                     ['K+', 'K+', 'K+', 'pi+'],
+                     ['K+', 'K+', 'K+', 'K+' ]]
           decaysm = getCCs(decaysp)
 
-          extrainputs = [self.uppions] if up else []
+          if up : extrainputs = [self.kaons] + [self.uppions] + [self.upkaons]
+          else  : extrainputs = [self.kaons]
 
           sp = self._makeD2FourBody('D2HHHHWSPlus',['D0 -> pi+ pi+ pi+ pi+'],
                                     awmFunctor(decaysp,min,max),
@@ -1488,18 +1525,22 @@ class DBuilder(object):
           sm = self._makeD2FourBody('D2HHHHWSMinus',['D0 -> pi- pi- pi- pi-'],
                                     awmFunctor(decaysm,min,max),
                                     up,self.config,extrainputs)
-
+          
           sels = []
 
           for dec in decaysp :
                name = makeSelName('D',dec,'WSPlus')
-               sels += [ subPIDSels([dec],name,tag,min,max,[sp]) ]
+               sel  = makeSel('D0',dec)
+               sels += [ self._makeD2FourBody(name,[sel],awmFunctor([dec],min,max),
+                                              up,self.config,extrainputs) ]
+               
           for dec in decaysm :
                name = makeSelName('D',dec,'WSMinus')
-               sels += [ subPIDSels([dec],name,tag,min,max,[sm]) ]
+               sel  = makeSel('D0',dec)
+               sels += [ self._makeD2FourBody(name,[sel],awmFunctor([dec],min,max),
+                                              up,self.config,extrainputs) ]
 
           return [MergedSelection('D2HHHH'+tag+'WSBeauty2Charm',RequiredSelections=sels)]
-
 
      def _makeD2PhiMuNu(self,up=False):
           '''makes Ds->phi mu nu'''

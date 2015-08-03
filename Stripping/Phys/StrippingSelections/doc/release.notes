@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-03 - Chris Jones
+ - Added SubPID free implementation of D2HHHH WS
+
 ! 2015-08-03 - Roberta Cardinale
  - removed HLT filters in StrippingBandQ/StrippingXic2HHH.py
 
