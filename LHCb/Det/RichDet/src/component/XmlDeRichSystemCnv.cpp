@@ -2,10 +2,6 @@
 #define XMLDERICHSYSTEMCNV_H 1
 
 // Include files
-
-/// GaudiKernel
-#include "GaudiKernel/CnvFactory.h"
-
 #include "RichDet/DeRichSystem.h"
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 

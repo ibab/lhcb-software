@@ -2,9 +2,6 @@
 #define XMLDEHORIZRICHCNV_H 1
 
 // Include files
-/// GaudiKernel
-#include "GaudiKernel/CnvFactory.h"
-
 #include "RichDet/DeHorizRich.h"
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 

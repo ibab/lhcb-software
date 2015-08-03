@@ -2,8 +2,6 @@
 #define XMLDERICHSINGLESOLIDRADIATORCNV_CPP 1
 
 // Include files
-#include "GaudiKernel/CnvFactory.h"
-
 #include "RichDet/DeRichSingleSolidRadiator.h"
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 

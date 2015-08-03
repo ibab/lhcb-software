@@ -2,8 +2,6 @@
 #define XMLDERICHHPDPANELCNV_CPP 1
 
 // Include files
-#include "GaudiKernel/CnvFactory.h"
-
 #include "RichDet/DeRichHPDPanel.h"
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 

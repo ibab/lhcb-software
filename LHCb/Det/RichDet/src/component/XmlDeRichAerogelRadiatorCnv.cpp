@@ -2,8 +2,6 @@
 #define XMLDERICHAEROGELRADIATORCNV_H 1
 
 // Include files
-#include "GaudiKernel/CnvFactory.h"
-
 #include "RichDet/DeRichAerogelRadiator.h"
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 

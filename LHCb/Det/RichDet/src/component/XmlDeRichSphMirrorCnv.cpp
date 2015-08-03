@@ -2,8 +2,6 @@
 #define XMLDERICHSPHMIRRORCNV_H 1
 
 // Include files
-#include "GaudiKernel/CnvFactory.h"
-
 #include "RichDet/DeRichSphMirror.h"
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 

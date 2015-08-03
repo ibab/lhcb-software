@@ -3,9 +3,6 @@
 
 // Include files
 
-// GaudiKernel
-#include "GaudiKernel/CnvFactory.h"
-
 #include "RichDet/DeRichHPD.h"
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 

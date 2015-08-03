@@ -2,10 +2,6 @@
 #define XMLDERICHPMTCNV_H 1
 
 // Include files
-
-// GaudiKernel
-#include "GaudiKernel/CnvFactory.h"
-
 #include "RichDet/DeRichPMT.h"
 #include "DetDescCnv/XmlUserDetElemCnv.h"
 
