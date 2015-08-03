@@ -8,6 +8,9 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2015-08-05 - Wouter Hulsbergen
+ - Removed unused function in ConvertedPhoton
+
 !================== Phys/DecayTreeFitter v1r20 2015-05-27 ====================
 
 ! 2015-05-14 - Marco Clemencic

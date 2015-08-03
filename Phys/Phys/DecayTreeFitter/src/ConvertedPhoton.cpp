@@ -24,28 +24,28 @@ namespace DecayTreeFitter
       return z ;
     }
 
-    bool computeZ( const LHCb::Track& track,
-		   double& zmin, double& zmax )
-    {
-      // return true if succesful
-      bool rc = false ;
-      zmin = zmax = 0 ;
-      const LHCb::State* s1 = track.stateAt( LHCb::State::ClosestToBeam ) ;
-      const LHCb::State* s2 = track.stateAt( LHCb::State::FirstMeasurement ) ;
-      if( s1 && s2 ) {
-	// probably a 'Long' track
-	zmin = s1->z() ;
-	zmax = s2->z() ;
-	if(zmin > zmax) zmin = zmax ;
-	rc = true ;
-      } else if( s2 ) {
-	// probably a 'Downstream' track
-	zmin = 0 ;
-	zmax =  s2->z() ; s2->z() ;
-	rc = true ;
-      }
-      return rc ;
-    }
+    // bool computeZ( const LHCb::Track& track,
+    // 		   double& zmin, double& zmax )
+    // {
+    //   // return true if succesful
+    //   bool rc = false ;
+    //   zmin = zmax = 0 ;
+    //   const LHCb::State* s1 = track.stateAt( LHCb::State::ClosestToBeam ) ;
+    //   const LHCb::State* s2 = track.stateAt( LHCb::State::FirstMeasurement ) ;
+    //   if( s1 && s2 ) {
+    // 	// probably a 'Long' track
+    // 	zmin = s1->z() ;
+    // 	zmax = s2->z() ;
+    // 	if(zmin > zmax) zmin = zmax ;
+    // 	rc = true ;
+    //   } else if( s2 ) {
+    // 	// probably a 'Downstream' track
+    // 	zmin = 0 ;
+    // 	zmax =  s2->z() ; s2->z() ;
+    // 	rc = true ;
+    //   }
+    //   return rc ;
+    // }
   }
  
 
