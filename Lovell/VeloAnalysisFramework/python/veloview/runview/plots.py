@@ -3,6 +3,7 @@ import glob
 
 import ROOT
 
+from veloview.config.run_view import run_view_pages
 from veloview.core import io
 from veloview.runview import utils
 from veloview.runview.response_formatters import dictionary_formatter
@@ -49,13 +50,12 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter):
     clone = obj.Clone(obj.GetName())
     f.Close()
 
-    # normalise histogram if required
+    # Normalise histogram if required
     plot_dict = get_plot_dictionary(name)
-    if plot_dict.has_key['normalised'] and plot_dict['normalised']:
-      print 'normalising', name
+    if plot_dict.get('normalised', False):
       integral = clone.Integral()
-      if 0 < integral:
-        clone.Scale(1./integral)
+      if integral > 0:
+        clone.Scale(1.0/integral)
 
     return formatter(clone)
 
@@ -83,12 +83,13 @@ def get_run_plot_with_reference(name, run, formatter=dictionary_formatter):
 
 
 def get_plot_dictionary(name):
-  from veloview.config.run_view import run_view_pages
-  for key in run_view_pages.keys():
-    if not run_view_pages[key].has_key('plots'): continue
-    for plot in run_view_pages[key]['plots']:
-      if name == plot['name']:
+  for page in run_view_pages.itervalues():
+    if 'plots' not in page:
+        continue
+    for plot in page['plots']:
+      if plot['name'] == name:
         return plot
+
 
 def get_trending_plot(name, runRange, formatter = dictionary_formatter):
     """

@@ -38,6 +38,7 @@ For each plot dictionary, the following keys can be defined:
                       for the sensor number (boolean)
     short: A shorter title to display, useful if `title` is very long and might
            look unwieldy in a GUI tab (string)
+    normalise: Normalise the plot to have unit area (boolean)
     options: Dictionary of options defining purely cosmetic attributes
              (dictionary)
 
@@ -140,7 +141,7 @@ run_view_pages = OrderedDict([
                 'options': {
                     'showUncertainties': True
                 },
-                'normalised': True
+                'normalise': True
             },
             {
                 'title': 'Active chip links versus sensor',

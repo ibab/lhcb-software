@@ -27,6 +27,7 @@ PLOT_VALUE_TYPES = {
     'name': str,
     'short': str,
     'sensor_dependent': bool,
+    'normalise': bool,
     OPTIONS_KEY: dict
 }
 
