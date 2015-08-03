@@ -5,7 +5,6 @@
 #include <limits>
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
 

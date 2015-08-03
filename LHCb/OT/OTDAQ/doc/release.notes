@@ -2,6 +2,8 @@
 ! Package         : OTDAQ
 ! Package manager : A.Kozlinskiy
 !------------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= OTDAQ v7r20 2015-07-20 =========================
 ! 2015-06-02 - Rose Koopman and Manuel Tobias Schiller

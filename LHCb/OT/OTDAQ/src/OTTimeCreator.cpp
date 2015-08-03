@@ -2,9 +2,6 @@
 // from STD
 #include <sstream>
 
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // from Detector
 #include "OTDet/DeOTDetector.h"
 #include "OTDet/DeOTModule.h"

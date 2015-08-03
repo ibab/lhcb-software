@@ -3,9 +3,6 @@
 #include <algorithm>
 #include <cstring> // for memcpy with gcc 4.3
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // from LHCbMath
 // #include "LHCbMath/Bit.h"
 

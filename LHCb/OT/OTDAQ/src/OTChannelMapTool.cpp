@@ -3,7 +3,6 @@
 #include <sstream>
 
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/ToolFactory.h"
 #include "OTDAQ/IOTChannelMapTool.h"
 
 #include "OTDet/DeOTModule.h"

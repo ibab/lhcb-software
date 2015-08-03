@@ -1,5 +1,4 @@
 // Gaudi files
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 // local
