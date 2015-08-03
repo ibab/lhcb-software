@@ -1518,13 +1518,6 @@ class DBuilder(object):
 
           if up : extrainputs = [self.kaons] + [self.uppions] + [self.upkaons]
           else  : extrainputs = [self.kaons]
-
-          sp = self._makeD2FourBody('D2HHHHWSPlus',['D0 -> pi+ pi+ pi+ pi+'],
-                                    awmFunctor(decaysp,min,max),
-                                    up,self.config,extrainputs)
-          sm = self._makeD2FourBody('D2HHHHWSMinus',['D0 -> pi- pi- pi- pi-'],
-                                    awmFunctor(decaysm,min,max),
-                                    up,self.config,extrainputs)
           
           sels = []
 

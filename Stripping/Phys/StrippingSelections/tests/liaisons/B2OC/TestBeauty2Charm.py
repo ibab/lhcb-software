@@ -281,7 +281,7 @@ from Configurables import AuditorSvc, ChronoAuditor
 AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
 
 pFreq = 5000
-DaVinci().EvtMax = 50000
+DaVinci().EvtMax = 100000
 DaVinci().PrintFreq = pFreq
 
 from Configurables import StrippingReport
