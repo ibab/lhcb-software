@@ -1,9 +1,6 @@
 /// local
 #include "LLTCaloAlg.h"
 
-/// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // From Event
 #include "Event/L0CaloCandidate.h"
 #include "Event/L0CaloAdc.h"

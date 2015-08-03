@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // From Calo
 #include "CaloDAQ/ICaloDataProvider.h"
 

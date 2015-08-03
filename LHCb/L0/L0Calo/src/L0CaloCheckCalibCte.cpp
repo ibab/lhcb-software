@@ -3,9 +3,6 @@
 // local
 #include "L0CaloCheckCalibCte.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // From CaloDet
 #include "CaloDet/DeCalorimeter.h"
 #include "CaloDAQ/ICaloDataProvider.h"

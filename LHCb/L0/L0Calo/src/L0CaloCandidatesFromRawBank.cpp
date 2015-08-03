@@ -2,9 +2,6 @@
 // local
 #include "L0CaloCandidatesFromRawBank.h"
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // from Event
 #include "Event/L0DUBase.h"
 #include "Event/RawBankReadoutStatus.h"

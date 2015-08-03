@@ -1,8 +1,5 @@
 #include <fstream>
 
-// Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
-
 // Event/L0Event
 #include "Event/RawEvent.h"
 #include "Event/ODIN.h"

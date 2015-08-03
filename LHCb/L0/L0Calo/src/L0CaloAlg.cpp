@@ -5,9 +5,6 @@
 #include <fstream>
 #include <numeric>
 
-/// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // From Event
 #include "Event/L0CaloCandidate.h"
 #include "Event/L0CaloAdc.h"

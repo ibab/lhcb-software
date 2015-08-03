@@ -1,9 +1,6 @@
 // local
 #include "L0CaloMonit.h"
 
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // AIDA
 #include "AIDA/IAxis.h"
 

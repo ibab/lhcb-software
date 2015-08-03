@@ -1,8 +1,6 @@
 // local
 #include "L0CaloCompare.h"
 
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 // Event

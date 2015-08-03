@@ -1,9 +1,6 @@
 // local
 #include "L0CaloPRSResetMonitor.h"
 
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Calo
 #include "CaloDet/DeCalorimeter.h"
 
