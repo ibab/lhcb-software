@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-08-03 - Ricardo Vazquez Gomez
+ - Modify Line config of BadEvents
+
+! 2015-08-03 - Ricardo Vazquez Gomez
  - Modify LineConfig for RD
  - Add database for stripping23
 
