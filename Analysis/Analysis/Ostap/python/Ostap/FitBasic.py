@@ -358,75 +358,117 @@ class PDF (object) :
             return result, None 
         
         return result, self.draw ( dataset , nbins = nbins , silent = silent )
-    
+
+    # ================================================================================
     ## draw fit results
     #  @code
     #  r,f = model.fitTo ( dataset )
     #  model.draw ( datatset , nbins = 100 ) 
-    #  @endcode 
-    def draw ( self , dataset = None , nbins = 100 , silent = False ) :
+    #  @endcode
+    #  @param dataset  dataset to be drawn 
+    #  @param nbins    binning scheme for frame/RooPlot 
+    #  @param silent   silent mode ?
+    #  @param data_options          drawing options for dataset
+    #  @param signal_options        drawing options for `signal'     components    
+    #  @param background_options    drawing options for `background' components 
+    #  @param component_options     drawing options for 'other'      components 
+    #  @param fit_options           drawing options for fit curve    
+    #  @param base_signal_color     base color for signal components 
+    #  @param base_background_color base color for background components
+    #  @param base_component_color  base color for other components 
+    #  @param data_overlay          draw points atop of fitting curves?  
+    def draw ( self ,
+               dataset               = None  ,
+               nbins                 = 100   ,   ## Frame binning
+               silent                = False ,   ## silent mode ?
+               data_options          = None  ,   ## drawing options for data set
+               signal_options        = None  ,   ## drawing options for signal components    
+               background_options    = None  ,   ## drawing options for background components 
+               component_options     = None  ,   ## drawing options for 'other' components 
+               fit_options           = None  ,   ## drawing options for fit curve    
+               base_signal_color     = None  ,   ## base color for signal components 
+               base_background_color = None  ,   ## base color for background components
+               base_component_color  = None  ,   ## base color for other components 
+               data_overlay          = False ) : ## draw points atop of fitting curves?  
         """    
         Visualize the fits results
-        
         >>> r,f = model.draw ( dataset )
         >>> model.draw ( datatset , nbins = 100 )
-        
+        >>> model.draw ( datatset , nbins = 100 , data_overlay = True )
+        >>> model.draw ( datatset , base_signal_color  = ROOT.kGreen+2 )
+        >>> model.draw ( datatset , data_options = (ROOT.RooFit.DrawOptions('zp'),) )        
         """
+        #
+        if          data_options is None : from Ostap.FitDraw import          data_options
+        if    background_options is None : from Ostap.FitDraw import    background_options 
+        if        signal_options is None : from Ostap.FitDraw import        signal_options
+        if     component_options is None : from Ostap.FitDraw import     component_options
+        if           fit_options is None : from Ostap.FitDraw import           fit_options
+        if     base_signal_color is None : from Ostap.FitDraw import     base_signal_color 
+        if base_background_color is None : from Ostap.FitDraw import base_background_color 
+        if  base_component_color is None : from Ostap.FitDraw import  base_component_color 
         #
         ## again the context
         # 
-        with RooSilent() if silent else NoContext() :
+        if silent : from Ostap.Utils import RooSilent as Context
+        else      : from Ostap.Utils import NoContext as Context
+        #
+        context = Context () 
+        with context :
 
-            if nbins : frame = self.mass.frame( nbins )
-            else     : frame = self.mass.frame( )
-            
-            if dataset : dataset  .plotOn ( frame ) 
+            frame = self.mass.frame( nbins )
             #
+            if   dataset and not data_overlay :
+                dataset  .plotOn ( frame , *data_options )
+            elif dataset and     data_overlay :
+                dataset  .plotOn ( frame , ROOT.RooFit.Invisible() , *data_options )
+            
             iB = 0 
             for i in self.backgrounds() :
                 cmp = ROOT.RooArgSet( i ) 
                 self.pdf .plotOn (
-                    frame   ,
-                    ROOT.RooFit.Components ( cmp                    ) ,
-                    ROOT.RooFit.LineWidth  ( 2                      ) ,
-                    ROOT.RooFit.LineStyle  ( ROOT.kDashed           ) ,
-                    ROOT.RooFit.LineColor  ( ROOT.kBlue     + iB    ) )
+                    frame ,
+                    ROOT.RooFit.Components ( cmp                        ) ,
+                    ROOT.RooFit.LineColor  ( base_background_color + iB ) , *background_options ) 
                 iB += 1
 
             iS = 0 
             for i in self.signals  () :
                 cmp = ROOT.RooArgSet( i )         
                 self.pdf .plotOn (
-                    frame   ,
-                    ROOT.RooFit.Components ( cmp                    ) , 
-                    ROOT.RooFit.LineWidth  ( 2                      ) ,
-                    ROOT.RooFit.LineStyle  ( ROOT.kDotted           ) ,
-                    ROOT.RooFit.LineColor  ( ROOT.kMagenta   + iS   ) )
+                    frame ,
+                    ROOT.RooFit.Components ( cmp                       ) , 
+                    ROOT.RooFit.LineColor  ( base_signal_color  + iS   ) , *signal_options )
                 iS += 1
 
             iC = 0 
             for i in self.components  () :
                 cmp = ROOT.RooArgSet( i )         
                 self.pdf .plotOn (
-                    frame   ,
-                    ROOT.RooFit.Components ( cmp                    ) , 
-                    ROOT.RooFit.LineWidth  ( 2                      ) ,
-                    ROOT.RooFit.LineStyle  ( ROOT.kDashDotted       ) ,
-                    ROOT.RooFit.LineColor  ( ROOT.kOrange     + iC  ) )
+                    frame ,
+                    ROOT.RooFit.Components ( cmp                       ) ,  
+                    ROOT.RooFit.LineColor  ( base_component_color + iC ) , *cmp_options )
                 iC+= 1
                 
             #
             ## the total fit curve
-            # 
-            self.pdf .plotOn ( frame , ROOT.RooFit.LineColor  ( ROOT.kRed ) )
-            
-            
-            frame.SetXTitle('')
-            frame.SetYTitle('')
-            frame.SetZTitle('')
+            #
+            self.pdf .plotOn ( frame , *fit_options )
 
-            if not ROOT.gROOT.IsBatch() : 
-                frame.Draw()
+            #
+            ## draw data once more
+            #
+            if dataset and data_overlay :
+                dataset  .plotOn ( frame , *data_options )            
+
+
+            ## suppress ugly axis labels 
+            frame.SetXTitle ( '' )
+            frame.SetYTitle ( '' )
+            frame.SetZTitle ( '' )
+
+            ## Draw the frame! 
+            frame.Draw()
             
             return frame 
         

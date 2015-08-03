@@ -375,7 +375,7 @@ ROOT.TGraphAsymmErrors.__iter__      = _gr_iter_
 ## set color attributes  
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-01-21 
-def _color_ ( self , color = 2 , marker = 20 ) :
+def _color_ ( self , color = 2 , marker = 20 , size = -1 ) :
     """
     Set color attributes
 
@@ -386,15 +386,14 @@ def _color_ ( self , color = 2 , marker = 20 ) :
     if hasattr ( self , 'SetMarkerColor' ) : self.SetMarkerColor ( color  )
     if hasattr ( self , 'SetMarkerStyle' ) : self.SetMarkerStyle ( marker )
     ##
-    if hasattr ( self , 'GetMarkerSize' ) and not marker in ( 1 , 6 , 7 ) :
-        ms = self.GetMarkerSize()
-        if hasattr ( self , 'SetMarkerSize' ) :
-            ## small filled objects
-            if   marker in ( 22 , 23 , 29 , 33 ) : self.SetMarkerSize ( 1.7 * ms )
-            ## large open objects  
-            elif marker in ( 24 , 25 , 28 , 4  ) : self.SetMarkerSize ( 1.3 * ms )
-            ## small open objects
-            elif marker in ( 26 , 27 , 30 , 32 ) : self.SetMarkerSize ( 2.0 * ms )
+    if 0 > size and hasattr ( self , 'GetMarkerSize' ) and not marker in ( 1 , 6 , 7 ) :
+        size = self.GetMarkerSize()
+        if   marker in ( 22 , 23 , 29 , 33 ) : size *= 2.0 ## small filled objects
+        elif marker in ( 24 , 25 , 28 , 4  ) : size *= 1.5 ## large open objects  
+        elif marker in ( 26 , 27 , 30 , 32 ) : size *= 2.2 ## small open objects
+    ##
+    if 0 < size and hasattr ( self , 'SetMarkerSize' ) :
+        self.SetMarkerSize ( size )
     #
     return self
 # =============================================================================

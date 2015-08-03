@@ -656,7 +656,7 @@ class RooSilent(object) :
 
 
 # =============================================================================
-## very simple context manager to suppress ROOT printout
+## Very simple context manager to suppress ROOT printout
 #  @code
 #  >>> with ROOTIgnore( ROOT.kError + 1 ) : some_ROOT_code_here()
 #  @endcode
@@ -664,7 +664,7 @@ class RooSilent(object) :
 #  @date   2015-07-30
 class ROOTIgnore( object ) :
     """
-    very simple context manager to suppress ROOT printout
+    Very simple context manager to suppress ROOT printout
     #  >>> with ROOTIgnore ( ROOT.kError +! ) : some_ROOT_code_here()
     """
     ## constructor
@@ -686,7 +686,7 @@ class ROOTIgnore( object ) :
         "The actual context manager: ENTER" 
         self._old = int ( ROOT.gErrorIgnoreLevel ) 
         if self._old != self._level : 
-            ROOT.gROOT.ProcessLine("gErrorIgnoreLevel= %s ; " % self._level ) 
+            ROOT.gROOT.ProcessLine("gErrorIgnoreLevel= %d ; " % self._level ) 
             
         return self
     
@@ -694,7 +694,7 @@ class ROOTIgnore( object ) :
     def __exit__ ( self , *_ ) : 
         "The actual context manager: EXIT"             
         if self._old != int ( ROOT.gErrorIgnoreLevel )  : 
-            ROOT.gROOT.ProcessLine("gErrorIgnoreLevel= %s ; " % self._old ) 
+            ROOT.gROOT.ProcessLine("gErrorIgnoreLevel= %d ; " % self._old ) 
             
 # =============================================================================
 ## @class NoContext
