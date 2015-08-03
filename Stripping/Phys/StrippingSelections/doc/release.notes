@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-03 - Ricardo Vazquez Gomez
+ - Added MiniBias modules under StrippingMiniBias directory
+
 ! 2015-08-03 - Chris Jones
  - Added SubPID free implementation of D2HHHH WS
 
