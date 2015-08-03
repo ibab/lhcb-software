@@ -5,7 +5,6 @@
 
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRegistry.h"
 
 // local

@@ -1,7 +1,4 @@
 // Include files
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 // local
 #include "CaloL0DataProvider.h"
 

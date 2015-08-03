@@ -1,7 +1,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "CaloDet/DeCalorimeter.h"
 // local
 #include "CaloDigitFilterAlg.h"

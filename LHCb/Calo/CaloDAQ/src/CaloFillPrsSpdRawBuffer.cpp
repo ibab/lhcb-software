@@ -2,7 +2,6 @@
 #include "Event/RawEvent.h"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/CaloAdc.h"
 #include "Event/L0PrsSpdHit.h"
 

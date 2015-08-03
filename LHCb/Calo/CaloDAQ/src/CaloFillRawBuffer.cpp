@@ -1,6 +1,4 @@
 // Include files
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 #include "Event/CaloAdc.h"
 #include "Event/L0CaloAdc.h"
