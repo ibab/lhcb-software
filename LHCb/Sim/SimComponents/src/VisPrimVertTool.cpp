@@ -3,9 +3,6 @@
 // local
 #include "VisPrimVertTool.h"
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // from Event
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"

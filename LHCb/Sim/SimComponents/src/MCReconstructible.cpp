@@ -8,9 +8,6 @@
  */
 //-----------------------------------------------------------------------------
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "MCReconstructible.h"
 

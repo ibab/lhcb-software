@@ -1,5 +1,4 @@
 #include "ForcedBDecayTool.h"
-#include "GaudiKernel/ToolFactory.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ForcedBDecayTool v1.0

@@ -1,9 +1,6 @@
 // $Id: CheckMCEventTool.cpp,v 1.3 2007-01-12 10:10:51 cattanem Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // Event model
 #include "Event/MCHeader.h"
 #include "Event/MCParticle.h"

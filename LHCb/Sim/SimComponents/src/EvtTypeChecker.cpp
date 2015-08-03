@@ -1,8 +1,5 @@
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // from Event
 #include "Event/HepMCEvent.h"
 #include "Event/GenCollision.h"

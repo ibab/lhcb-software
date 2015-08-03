@@ -1,7 +1,6 @@
 #include "Event/MCParticle.h"
 
 // Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "MCParticleSelector.h"
 #include "Event/MCFun.h"
 

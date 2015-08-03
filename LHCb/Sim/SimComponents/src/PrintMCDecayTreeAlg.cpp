@@ -1,9 +1,6 @@
 // Include files 
 #include <stdlib.h>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // from Event
 #include "Event/MCParticle.h"
 

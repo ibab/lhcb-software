@@ -1,9 +1,6 @@
 // ============================================================================
 // Include files
 // ============================================================================
-// GaudiKernel
-#include "GaudiKernel/AlgFactory.h" 
-
 // HepMC 
 #include "HepMC/GenParticle.h"
 #include "HepMC/GenVertex.h"

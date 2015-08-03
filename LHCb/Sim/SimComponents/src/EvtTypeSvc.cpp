@@ -1,7 +1,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 

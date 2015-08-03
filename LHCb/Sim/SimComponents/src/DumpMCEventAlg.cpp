@@ -1,9 +1,5 @@
 // $Id: DumpMCEventAlg.cpp,v 1.2 2007-01-12 10:01:00 cattanem Exp $
 // Include files 
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // Tools
 #include "Kernel/ICheckTool.h"
 

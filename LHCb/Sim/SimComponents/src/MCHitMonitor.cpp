@@ -8,12 +8,6 @@
 // Standard C++ Library
 #include <string>
 
-// BOOST
-#include "boost/lexical_cast.hpp"
-
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Histogramming
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
@@ -33,7 +27,6 @@
 #include "LHCbMath/ModeFunctions.h"
 
 // Needed for the creation of MCHitMonitor objects.
-#include "GaudiKernel/AlgFactory.h"
 DECLARE_ALGORITHM_FACTORY( MCHitMonitor )
 
 //_________________________________________________
@@ -100,20 +93,20 @@ void MCHitMonitor::initHistograms()
  for (int iStation = 0 ;iStation<nStation; ++iStation){
 
    aHisto1D = book(100+iStation,
-                   "time of Flight"+boost::lexical_cast<std::string>(100+iStation),
+                   "time of Flight"+std::to_string(100+iStation),
                    m_TMin,m_TMax, 200);
    m_timeOfFlightHistos.push_back(aHisto1D);
 
 
    // x vs y plots
    aHisto2D = histoSvc()->book(
-                          tPath+boost::lexical_cast<std::string>(200+iStation),
-                       "x vs y"+boost::lexical_cast<std::string>(200+iStation),
+                          tPath+std::to_string(200+iStation),
+                       "x vs y"+std::to_string(200+iStation),
                           200, -m_Xmax/Gaudi::Units::cm,m_Xmax/Gaudi::Units::cm,
                           200, -m_Ymax/Gaudi::Units::cm,m_Ymax/Gaudi::Units::cm);
    m_XvsYHistos.push_back(aHisto2D);
 
-   aHisto1D  = book(300+iStation,"lossHisto"+boost::lexical_cast<std::string>(300+iStation),
+   aHisto1D  = book(300+iStation,"lossHisto"+std::to_string(300+iStation),
                     0., m_EMax,250);
 
    m_EnergyLossHistos.push_back(aHisto1D);   

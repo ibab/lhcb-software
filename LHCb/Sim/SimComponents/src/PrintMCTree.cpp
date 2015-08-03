@@ -1,8 +1,5 @@
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // from PartProp
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"

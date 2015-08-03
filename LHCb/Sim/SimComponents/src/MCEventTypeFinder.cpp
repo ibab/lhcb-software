@@ -3,7 +3,6 @@
 #include <math.h>
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
