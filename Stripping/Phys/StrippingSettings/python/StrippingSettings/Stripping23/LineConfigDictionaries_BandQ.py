@@ -547,7 +547,6 @@ XicHHH = {
                      , 'Xic_BPVIPCHI2_MAX'       : 12.
                      , 'Xic_BPVLTIME_MAX'        : 0.005 * ns
                      , 'Xic_BPVLTIME_MIN'        : -0.005 * ns
-                     , 'HltFilter'               : "HLT_PASS('Hlt2*Decision')"
                      , 'PrescaleXic2PKPi'        : 0.0
                      , 'PostscaleXic2PKPi'       : 0.0
                      , 'PrescaleXic2PKK'         : 1.0
