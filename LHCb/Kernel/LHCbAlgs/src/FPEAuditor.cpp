@@ -3,7 +3,6 @@
 #include <string>
 #include <utility>
 #include <memory>
-#include "GaudiKernel/AudFactory.h"
 #include "GaudiKernel/Auditor.h"
 #include "GaudiKernel/IAuditorSvc.h"
 #include "GaudiKernel/GaudiException.h"

@@ -1,9 +1,6 @@
 // Include files
 #include <algorithm>
 
-// From Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "ServiceStarter.h"
 

@@ -1,9 +1,6 @@
 // $Id: ApplicationVersionFilter.cpp,v 1.3 2009-11-10 09:27:51 jonrob Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "ApplicationVersionFilter.h"
 

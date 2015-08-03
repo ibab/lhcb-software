@@ -3,7 +3,6 @@
 // from Gaudi
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/ToolFactory.h"
 
 // detector description
 #include "DetDesc/RunChangeIncident.h"

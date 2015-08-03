@@ -1,9 +1,6 @@
 // $Id: FilterByBankType.cpp,v 1.1 2009-03-09 21:18:07 jvantilb Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // From DAQEvent
 #include "Event/RawBank.h"
 #include "Event/RawEvent.h"

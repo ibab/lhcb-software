@@ -3,7 +3,6 @@
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
-#include "GaudiKernel/SvcFactory.h"
 
 DECLARE_SERVICE_FACTORY(DQFilterSvc)
 

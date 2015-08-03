@@ -2,7 +2,6 @@
 // Include files 
 #include "Kernel/LbAppInit.h"
 #include "GaudiKernel/LoadFactoryEntries.h"
-#include "GaudiKernel/AlgFactory.h"
 
 // Put LbAppInit base class factory in this library, to avoid having it in
 // LHCbKernel component library. 

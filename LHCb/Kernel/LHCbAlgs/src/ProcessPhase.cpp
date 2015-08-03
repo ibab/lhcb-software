@@ -2,7 +2,6 @@
 
 // Include files
 #include "ProcessPhase.h"
-#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IJobOptionsSvc.h"
 
 //------------------------------------------------------------------------------

@@ -87,5 +87,4 @@ void DQFilter::handle(const Incident&) {
   }
 }
 
-#include "GaudiKernel/AlgFactory.h"
 DECLARE_ALGORITHM_FACTORY( DQFilter )

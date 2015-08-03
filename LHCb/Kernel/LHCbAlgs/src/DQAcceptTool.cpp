@@ -1,7 +1,6 @@
 // Include files
 
 // From Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 #include "DetDesc/Condition.h"
 

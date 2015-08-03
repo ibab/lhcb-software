@@ -1,10 +1,7 @@
 // $Id: AlgorithmCorrelations.cpp,v 1.6 2009-04-15 09:48:14 pkoppenb Exp $
 // Include files 
 #include <boost/format.hpp>
-#include <boost/lexical_cast.hpp>
 #include <math.h>
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "AlgorithmCorrelations.h"
@@ -305,11 +302,11 @@ StatusCode AlgorithmCorrelations::printTable(void) {
   const std::string crosses = std::string("  ")+std::string(4+decimals, '*') ;
   const std::string hashes = std::string("  ")+std::string(4+decimals, '#') ;
 
-  std::string mdec = boost::lexical_cast<std::string>(decimals);
-  std::string mdec2 = boost::lexical_cast<std::string>(4+decimals);
-  std::string mdec3 = boost::lexical_cast<std::string>(5+decimals);
+  std::string mdec = std::to_string(decimals);
+  std::string mdec2 = std::to_string(4+decimals);
+  std::string mdec3 = std::to_string(5+decimals);
   boost::format percent(" %1$"+mdec2+"."+mdec+"f");
-  std::string mln = boost::lexical_cast<std::string>(m_longestName);
+  std::string mln = std::to_string(m_longestName);
   boost::format algo("%1$-"+mln+"S ");         // longest name left aligned
   boost::format number("  %1$="+mdec2+"d");    // number of decimals+4 length
   boost::format smallnumber(" %1$2i ");        // number of 2 positions

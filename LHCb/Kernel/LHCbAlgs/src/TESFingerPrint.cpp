@@ -1,7 +1,6 @@
 // $Id: $
 // Include files
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataStoreLeaves.h"
 #include "GaudiKernel/ObjectContainerBase.h"
 // local

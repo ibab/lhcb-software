@@ -2,9 +2,6 @@
 
 #include <math.h>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // from LHCb core
 #include "Event/RecHeader.h"
 

@@ -1,9 +1,6 @@
 // $Id: TrajPoca.cpp,v 1.11 2009-12-28 21:27:49 wouter Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 #include "Math/CholeskyDecomp.h"
 
 // Math Definitions

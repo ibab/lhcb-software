@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // local
 #include "RateFromCondDB.h"
 #include "GaudiKernel/SystemOfUnits.h"

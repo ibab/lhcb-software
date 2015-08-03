@@ -7,10 +7,6 @@
 #include "boost/integer_traits.hpp"
 using boost::uint32_t;
 using boost::uint64_t;
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // from LHCb core
 #include "Event/ODIN.h"
 

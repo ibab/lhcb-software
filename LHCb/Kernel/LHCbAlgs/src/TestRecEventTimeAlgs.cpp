@@ -72,5 +72,4 @@ private:
 
 }
 
-#include "GaudiKernel/SvcFactory.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY( LHCbAlgsTest, CreateFakeRecHeader )

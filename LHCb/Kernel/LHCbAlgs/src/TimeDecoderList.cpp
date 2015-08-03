@@ -40,5 +40,4 @@ Gaudi::Time TimeDecoderList::getTime() const
   return Gaudi::Time::epoch();
 }
 
-#include "GaudiKernel/ToolFactory.h"
 DECLARE_TOOL_FACTORY(TimeDecoderList)

@@ -2,7 +2,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/RndmGenerators.h" 
 
 // local

@@ -1,7 +1,6 @@
 // Include files
 
 // From Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IEventTimeDecoder.h"
 
 // From LHCb

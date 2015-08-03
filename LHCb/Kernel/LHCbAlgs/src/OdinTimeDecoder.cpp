@@ -3,7 +3,6 @@
 // from Gaudi
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/ToolFactory.h"
 
 // data model
 #include "Event/RawEvent.h"

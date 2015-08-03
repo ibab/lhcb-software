@@ -1,8 +1,5 @@
 // Include files
 
-// From Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "BasicDQFilter.h"
 

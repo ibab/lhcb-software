@@ -1,6 +1,4 @@
 // Include files
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include <iomanip>
 
 // local
