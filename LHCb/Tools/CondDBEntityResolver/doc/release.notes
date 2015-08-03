@@ -4,6 +4,9 @@
 ! Purpose     : Implement the IXmlEntityResolver interface to be able to use
 !               CondDB URLs into XML documents
 !-----------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
+
 ! 2015-08-01 - Gerhard Raven
  - adapt CondDBEntityResolver::open such that it is invariant under whether
    IFileAcces::open wants to return std::auto_ptr  or std::unique_ptr.

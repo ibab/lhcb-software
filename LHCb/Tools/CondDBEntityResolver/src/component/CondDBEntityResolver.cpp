@@ -3,8 +3,6 @@
 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/ToolFactory.h"
-
 #include "GaudiKernel/Time.h"
 #include "GaudiKernel/GaudiException.h"
 
