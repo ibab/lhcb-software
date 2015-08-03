@@ -1,7 +1,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IProfile2D.h"
