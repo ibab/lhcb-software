@@ -9,7 +9,6 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/Service.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IToolSvc.h"
