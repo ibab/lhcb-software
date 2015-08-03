@@ -16,7 +16,6 @@ private:
     bool              m_allowUndefined;
 };
 
-#include "GaudiKernel/SvcFactory.h"
 DECLARE_SERVICE_FACTORY( HltANNSvc )
 
 boost::optional<IANNSvc::minor_value_type> 

@@ -1,6 +1,5 @@
 #include "ConfigTarFileAccessSvc.h"
 
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/System.h"
 #include "tar.h"
 

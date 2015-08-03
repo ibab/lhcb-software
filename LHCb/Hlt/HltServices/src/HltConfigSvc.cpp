@@ -7,7 +7,6 @@
 
 // from Gaudi
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GaudiException.h"
 

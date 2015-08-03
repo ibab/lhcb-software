@@ -77,7 +77,6 @@ private:
   mutable std::map<TCK,const PropertyConfig*> m_cache; // TODO: flush cache if m_instanceName changes
 };
 
-#include "GaudiKernel/SvcFactory.h"
 DECLARE_SERVICE_FACTORY( TCKANNSvc )
 
 //=============================================================================

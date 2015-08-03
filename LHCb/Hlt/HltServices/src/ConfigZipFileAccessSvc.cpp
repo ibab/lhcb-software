@@ -6,7 +6,6 @@
 #include <string>
 
 
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/System.h"
 
 #include "zip.h"

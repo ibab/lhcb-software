@@ -1,5 +1,4 @@
 #include "ConfigStackAccessSvc.h"
-#include "GaudiKernel/SvcFactory.h"
 
 
 // Factory implementation

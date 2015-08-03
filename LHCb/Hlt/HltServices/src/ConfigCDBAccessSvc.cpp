@@ -28,7 +28,6 @@ using boost::uint16_t;
 using boost::uint32_t;
 using boost::uint64_t;
 
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/StringKey.h"
 

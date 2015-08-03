@@ -27,7 +27,6 @@ StatusCode parse(std::map<std::string, std::map<std::string,
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IAuditor.h"
 #include "GaudiKernel/IAlgTool.h"
 

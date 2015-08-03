@@ -71,7 +71,6 @@ private:
   mutable PropertyConfig::digest_type m_currentDigest;
 };
 
-#include "GaudiKernel/SvcFactory.h"
 DECLARE_SERVICE_FACTORY( ANNDispatchSvc )
 
 //=============================================================================

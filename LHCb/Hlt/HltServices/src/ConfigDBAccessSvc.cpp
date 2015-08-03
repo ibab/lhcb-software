@@ -5,7 +5,6 @@
 #include <utility>
 
 
-#include "GaudiKernel/SvcFactory.h"
 
 #include "RelationalAccess/IConnectionService.h"
 #include "RelationalAccess/ISessionProxy.h"

@@ -8,7 +8,6 @@
 namespace fs = boost::filesystem;
 
 
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/System.h"
 
 // Factory implementation
