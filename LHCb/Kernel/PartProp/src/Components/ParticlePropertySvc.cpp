@@ -11,7 +11,6 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
