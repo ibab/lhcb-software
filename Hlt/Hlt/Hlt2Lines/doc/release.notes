@@ -8,6 +8,14 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-08-03 - Patrick Spradlin
+  - Moved implementation of the inclusive lines into Lines.py so that
+    configurations are updated properly.  There was a problem propagating
+    configuration changes to the private tools for the BDT filter.  This is
+    one way to fix it.
+    D  python/Hlt2Lines/CharmHad/Dst2PiD02HHXBDTLines.py
+    M  python/Hlt2Lines/CharmHad/Lines.py
+
 ! 2015-07-31 - Olli Lupton
   - Add extra slot to PID lines' tag particle filter, to allow a tighter
     GhostProb cut.

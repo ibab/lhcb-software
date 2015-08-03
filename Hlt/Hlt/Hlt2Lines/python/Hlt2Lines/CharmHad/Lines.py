@@ -11,7 +11,6 @@ from D2HHHPi0Lines import CharmHadD2HHHPi0Lines
 from D2HHLines import CharmHadD2HHLines
 from D2HHKsLines import CharmHadD2HHKshLines
 from CharmSpectroscopyLines import CharmSpectroscopyLines
-from Dst2PiD02HHXBDTLines import CharmHadDst2PiD02HHXBDTLines
 from ChargedHyperonLines import ChargedHyperonLines
 from D2HHHHHLines import CharmHadD2HHHHHLines
 
@@ -33,7 +32,6 @@ D2HHHPi0Lines = CharmHadD2HHHPi0Lines()
 D2HHLines = CharmHadD2HHLines()
 D2HHKsLines = CharmHadD2HHKshLines()
 CharmSpectroscopyLines = CharmSpectroscopyLines()
-Dst2PiD02HHXBDTLines = CharmHadDst2PiD02HHXBDTLines()
 HyperonLines = ChargedHyperonLines()
 D2HHHHHLines = CharmHadD2HHHHHLines()
 
@@ -217,6 +215,65 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KmKpTurbo'               : 0.1,
                                  'Neut_ALL_PT_MIN'           : 200.0 * MeV,
                                  'Neut_ALL_ADMASS_MAX'       :  105.0,
                                           },
+
+                ## Configuration for two-body seeds shared by inclusive lines
+                'InclHc2HHX'         : {
+                                  'Trk_TRCHI2DOF_MAX'         : 2.0
+                                , 'Trk_PT_MIN'                : 200.0 * MeV
+                                , 'Trk_MIPCHI2DV_MIN'         : 7.0
+                                , 'D0_VCHI2PDOF_MAX'          : 50
+                                , 'D0_BPVVDCHI2_MIN'          : 20
+                                , 'D0_BPVCORRM_MAX'           : 2400.0 * MeV
+                                , 'D0_comb_PT_MIN'             : 1900 * MeV
+                                , 'TisTosSpec': { "Hlt1Track.*Decision%TOS":0 }
+                },
+                ## Configuration for Hc + pion combinatorics shared by lines
+                'InclHcst2PiHc2HHX'  : {
+                                  'Spi_TRCHI2DOF_MAX'         : 3.0       
+                                , 'Spi_PT_MIN'                : 150.0 * MeV   
+                                , 'Dst_VCHI2PDOF_MAX'         : 50.0
+                                , 'Dst_PT_MIN'                : 2.0 * GeV
+                                , 'Dst_M_MAX'                 : 2700.0 * MeV
+                                , 'Dst_D0_DeltaM_MAX'         : 500.0 * MeV
+                },
+                ## Configuration for D*+ specific filtering
+                'InclDst2PiD02HHX'   : {
+                                  'D0_BPVVDCHI2_MIN'          : 20
+                                , 'D0_BPVCORRM_MAX'           : 2100.0 * MeV
+                                , 'Dst_M_MAX'                 : 2300.0 * MeV
+                                , 'Dst_D0_DeltaM_MAX'         : 350.0 * MeV
+                                , 'BDT_Lookup_Filename'       : "Hlt2Dst2PiD02HHX_BDTParams_v1r0.txt"
+                                , 'BDT_Threshold'             : 1.33
+
+                                , 'BDT_Lookup_VarMap' : {
+                                        "D0FD"          : "CHILDFUN(BPVVD, 1)"
+                                        , "SLPCOSTHETA" : "LV02"
+                                        , "TRSUMPT"     : "CHILDFUN(CHILDFUN(PT, 1) + CHILDFUN(PT, 2), 1)"
+                                        , "DSTFD"       : "BPVVD"
+                                        , "SLPPT"       : "CHILDFUN(PT, 2)"
+                                        , "D0CHI2"      : "CHILDFUN(VFASPF(VCHI2), 1)"
+                                        , "DSTDOCA"     : "DOCAMAX"
+                              }
+                },
+                ## Configuration for Sigc specific filtering
+                'InclSigc2PiLc2HHX'  : {
+                                  'D0_BPVVDCHI2_MIN'          : 20
+                                , 'D0_BPVCORRM_MAX'           : 2400.0 * MeV
+                                , 'Dst_M_MAX'                 : 2700.0 * MeV
+                                , 'Dst_D0_DeltaM_MAX'         : 500.0 * MeV
+                                , 'BDT_Lookup_Filename'       : "Hlt2Sigc2PiLc2HHX_BDTParams_v1r0.txt"
+                                , 'BDT_Threshold'             : 1.345
+
+                                , 'BDT_Lookup_VarMap' : {
+                                        "D0FD"          : "CHILDFUN(BPVVD, 1)"
+                                        , "SLPCOSTHETA" : "LV02"
+                                        , "TRSUMPT"     : "CHILDFUN(CHILDFUN(PT, 1) + CHILDFUN(PT, 2), 1)"
+                                        , "DSTFD"       : "BPVVD"
+                                        , "SLPPT"       : "CHILDFUN(PT, 2)"
+                                        , "D0CHI2"      : "CHILDFUN(VFASPF(VCHI2), 1)"
+                                        , "DSTDOCA"     : "DOCAMAX"
+                              }
+                  }
                 }
 
 theseslots.update(D2HHHLines.localcuts())
@@ -232,13 +289,42 @@ theseslots.update(D2HHHPi0Lines.localcuts())
 theseslots.update(D2HHLines.localcuts())
 theseslots.update(D2HHKsLines.localcuts())
 theseslots.update(CharmSpectroscopyLines.localcuts())
-theseslots.update(Dst2PiD02HHXBDTLines.slots())
 theseslots.update(HyperonLines.localcuts())
 theseslots.update(D2HHHHHLines.localcuts())
 
 class CharmHadLines(Hlt2LinesConfigurableUser):
-    __slots__ = theseslots
+    from copy import deepcopy
+    __slots__ = deepcopy(theseslots)
     __lines__ = {}
+
+
+    ## To avoid problems with propogating configuration changes for private
+    ## tools back to CharmHadDst2PiD02HHXBDTLines, the line definitions for
+    ## the inclusive lines are made here instead of in a sub-file.
+    def __inclHHXStages(self) : # {
+        from Stages import InclHcst2PiHc2HHX
+        from Stages import InclHcst2PiHc2HHXFilter
+
+        ## Final kinematic filtering
+        InclDst2PiD02HHX = InclHcst2PiHc2HHXFilter( 'Dst2PiD0'
+                , inputs = [ InclHcst2PiHc2HHX ]
+                , nickname = 'InclDst2PiD02HHX' )
+
+        InclSigc2PiLc2HHX = InclHcst2PiHc2HHXFilter( 'Sigc2PiLc'
+                , inputs = [ InclHcst2PiHc2HHX ]
+                , nickname = 'InclSigc2PiLc2HHX' )
+
+
+        from Stages import BDTFilter
+        Dstp2D0PiInclFilt = BDTFilter( 'FiltBDT', [ InclDst2PiD02HHX ], self.getProps()['InclDst2PiD02HHX'] )
+        Sigc2LcPiInclFilt = BDTFilter( 'FiltBDT', [ InclSigc2PiLc2HHX ], self.getProps()['InclSigc2PiLc2HHX'] )
+
+        inclStages = {   'InclDst2PiD02HHXBDT'   :  [ Dstp2D0PiInclFilt ]
+                       , 'InclSigc2PiLc2HHXBDT'  :  [ Sigc2LcPiInclFilt ]  }
+
+        return inclStages
+    # }
+
 
     def stages ( self , nickname = '' ) :
 
@@ -256,7 +342,6 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self.__lines__.update(D2HHLines.locallines())
             self.__lines__.update(D2HHKsLines.locallines())
             self.__lines__.update(CharmSpectroscopyLines.locallines())
-            self.__lines__.update(Dst2PiD02HHXBDTLines.stages())
             self.__lines__.update(HyperonLines.locallines())
             self.__lines__.update(D2HHHHHLines.locallines())
             
@@ -265,6 +350,18 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
     def __apply_configuration__(self):
         
         _stages = self.stages()
+
+        ## Other line Hlt2LinesConfigurableUser, like that for the DPS lines,
+        ## can call self.stages().  This can (but probably won't) happen
+        ## before __slots__ is updated with the configuration.  In order to
+        ## guarantee that the __slots__ are updated prior to the definition of
+        ## the inclusive lines, either the dependence of this configurable and
+        ## all others that call its stages() must be explicitly defined, or,
+        ## as is done here, the inclusive lines are defined first and only
+        ## here in __apply_configuration__ and not in stages().
+        _stages.update(self.__inclHHXStages())
+
+
         from HltLine.HltLine import Hlt2Line
         for nickname, algos in self.algorithms( _stages ).iteritems():
             doturbo = True if (nickname.find('Turbo') > -1) else False
@@ -272,3 +369,7 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
                      algos = algos, postscale = self.postscale, Turbo = doturbo)
             if "Dst_2D0Pi0_D02KPi_XSec" in nickname:
                 HltANNSvc().Hlt2SelectionID.update( { "Hlt2CharmHadDst_2D0Pi0_D02KPi_XSecTurboDecision":  57222 } )
+
+
+
+
