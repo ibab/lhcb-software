@@ -1,8 +1,5 @@
 // $Id: $
 
-// Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // FTDet
 #include "FTDet/DeFTDetector.h" 
 

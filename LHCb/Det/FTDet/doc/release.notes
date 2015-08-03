@@ -3,6 +3,8 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= FTDet v2r9 2015-02-23 =========================
 ! 2015-02-18 - Luigi Del Buono

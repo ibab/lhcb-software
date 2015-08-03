@@ -3,8 +3,6 @@
 
 // DetDesc
 #include "DetDescCnv/XmlUserDetElemCnv.h"
-// Gaudi
-#include "GaudiKernel/CnvFactory.h"
 // FTDet
 #include "FTDet/DeFTBiLayer.h"
 
