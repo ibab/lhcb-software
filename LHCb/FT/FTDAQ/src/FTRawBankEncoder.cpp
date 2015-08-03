@@ -1,8 +1,5 @@
 // $Id: $
 // Include files 
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "Event/FTCluster.h"
 #include "Event/RawEvent.h"
 

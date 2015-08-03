@@ -3,6 +3,8 @@
 ! Responsible : 
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= FTDAQ v1r7 2014-12-11 =========================
 ! 2014-01-12 - Renato Quagliani
