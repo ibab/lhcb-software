@@ -3,9 +3,6 @@
 // from Boost
 #include "boost/numeric/conversion/bounds.hpp"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 #include "Event/MCVertex.h"
 // local
 #include "CompareMCVertex.h"

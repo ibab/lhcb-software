@@ -1,7 +1,4 @@
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 #include "Event/MCParticle.h"
 #include "Event/StandardPacker.h"
 #include "Event/PackedMCParticle.h"

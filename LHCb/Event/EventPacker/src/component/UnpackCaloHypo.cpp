@@ -1,8 +1,5 @@
 // $Id: UnpackCaloHypo.cpp,v 1.4 2009-11-07 12:20:39 jonrob Exp $
 // Include files 
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "Event/StandardPacker.h"
 #include "Event/PackedCaloHypo.h"
 #include "Event/CaloHypo.h"

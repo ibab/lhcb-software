@@ -16,7 +16,6 @@ namespace Gaudi
 // Include files
 #include <iterator>
 // From Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 // local
 #include "ConversionDODMapper.h"

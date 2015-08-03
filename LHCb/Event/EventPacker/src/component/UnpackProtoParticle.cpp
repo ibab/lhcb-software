@@ -1,9 +1,6 @@
 // $Id: UnpackProtoParticle.cpp,v 1.6 2009-11-10 10:25:07 jonrob Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "UnpackProtoParticle.h"
 

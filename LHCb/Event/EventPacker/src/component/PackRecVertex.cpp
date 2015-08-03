@@ -1,7 +1,5 @@
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/RecVertex.h"
 #include "Event/PackedRecVertex.h"
 #include "Event/StandardPacker.h"

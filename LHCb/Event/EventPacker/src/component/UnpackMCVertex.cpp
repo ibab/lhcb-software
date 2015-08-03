@@ -1,9 +1,6 @@
 // $Id: UnpackMCVertex.cpp,v 1.5 2009-11-07 12:20:39 jonrob Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 #include "Event/MCVertex.h"
 #include "Event/StandardPacker.h"
 #include "Event/PackedMCVertex.h"

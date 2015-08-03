@@ -1,7 +1,3 @@
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Local
 #include "PackerBaseAlg.h"
 

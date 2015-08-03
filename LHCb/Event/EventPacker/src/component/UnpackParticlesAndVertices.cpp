@@ -1,7 +1,4 @@
 // Include files
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/RecVertex.h"
 // local
 #include "UnpackParticlesAndVertices.h"

@@ -1,9 +1,6 @@
 // $Id: CompareCaloHypo.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "CompareCaloHypo.h"
 

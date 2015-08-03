@@ -1,9 +1,6 @@
 // $Id: DumpTracks.cpp,v 1.1 2009-07-10 06:15:55 cattanem Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Event Model
 #include "Event/Track.h"
 

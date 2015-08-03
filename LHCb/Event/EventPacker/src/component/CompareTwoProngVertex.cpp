@@ -1,8 +1,6 @@
 // $Id: CompareTwoProngVertex.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "Event/TwoProngVertex.h"
 // local
 #include "CompareTwoProngVertex.h"

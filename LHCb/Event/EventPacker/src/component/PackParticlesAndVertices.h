@@ -3,7 +3,6 @@
 #define PACKPARTICLESANDVERTICES_H 1
 
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/SmartIF.h"
 

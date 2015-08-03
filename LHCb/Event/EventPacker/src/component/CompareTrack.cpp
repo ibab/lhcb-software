@@ -1,9 +1,6 @@
 // $Id: CompareTrack.cpp,v 1.12 2009-11-12 07:27:01 ocallot Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // local
 #include "CompareTrack.h"
 

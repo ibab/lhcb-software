@@ -2,9 +2,6 @@
 // STL
 //#include <random> // For flags tests. To be removed.
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Event model
 #include "Event/MCParticle.h"
 #include "Event/StandardPacker.h"

@@ -1,8 +1,6 @@
 
 // Include files
 #include <iterator>
-// From Gaudi
-#include "GaudiKernel/ToolFactory.h"
 // local
 #include "TrackClustersMapper.h"
 

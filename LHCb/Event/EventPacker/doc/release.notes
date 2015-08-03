@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !======================== EventPacker v5r4 2015-07-07 ========================
 

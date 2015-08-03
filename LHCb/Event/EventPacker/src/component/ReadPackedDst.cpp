@@ -2,7 +2,6 @@
 
 // from Gaudi
 #include "GaudiKernel/SmartIF.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 
 // Kernel
