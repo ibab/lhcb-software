@@ -1,7 +1,6 @@
 // $Id$
 // Include files 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "Event/HltDecReport.h"
 #include "Event/HltDecReports.h"
 

@@ -3,6 +3,8 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 ! 2015-07-31 - Sean Benson
  - Fix reconstitution of CaloCluster (in preparation for introduction).

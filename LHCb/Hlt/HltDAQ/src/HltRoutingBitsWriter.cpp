@@ -4,7 +4,6 @@
 #include "boost/algorithm/string/join.hpp"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "AIDA/IHistogram1D.h"
 

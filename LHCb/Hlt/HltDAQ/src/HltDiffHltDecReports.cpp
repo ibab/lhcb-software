@@ -1,7 +1,6 @@
 // $Id: HltDiffHltDecReports.cpp,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
 // Include files 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/HltDecReports.h"
 #include <iterator>

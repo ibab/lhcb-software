@@ -3,7 +3,6 @@
 #include <vector>
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiAlg/GaudiAlgorithm.h" 
 #include "Event/RawEvent.h" 
 #include "Event/RawBank.h" 

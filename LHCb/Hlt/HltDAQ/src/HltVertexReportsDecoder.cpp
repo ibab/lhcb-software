@@ -1,9 +1,6 @@
 // $Id: HltVertexReportsDecoder.cpp,v 1.5 2010-06-14 13:38:00 tskwarni Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 #include "Event/HltVertexReports.h"
 #include "Event/RawEvent.h"
 

@@ -2,9 +2,6 @@
 #include "boost/format.hpp"
 #include <algorithm>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 #include "Event/RawEvent.h"
 
 // local

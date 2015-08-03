@@ -1,8 +1,5 @@
 // $Id: HltLumiWriter.cpp,v 1.4 2010-04-07 16:59:08 jpalac Exp $
 // Include files
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "Event/HltLumiSummary.h"
 #include "Event/LumiCounters.h"

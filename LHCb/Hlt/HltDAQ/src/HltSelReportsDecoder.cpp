@@ -1,9 +1,6 @@
 // Include files 
 #include "boost/format.hpp"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 #include "Event/HltSelReports.h"
 #include "Event/HltDecReports.h"
 #include "Event/HltObjectSummary.h"

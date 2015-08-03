@@ -1,7 +1,5 @@
 #include <memory>
 #include <cctype>
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 #include "Event/HltSelReports.h"
 #include "Event/HltObjectSummary.h"
