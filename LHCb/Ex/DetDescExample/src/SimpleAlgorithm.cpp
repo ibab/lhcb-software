@@ -3,9 +3,6 @@
 /// Include files
 #include <vector>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 /// Gaudi interfaces
 #include "GaudiKernel/IDataManagerSvc.h"
 

@@ -3,6 +3,8 @@
 !Purpose: Demonstrate how to access detector elements, their geometry
 !         parameters and materials from detector description XML database.
 !------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= DetDescExample v7r8 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
