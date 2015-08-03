@@ -1,7 +1,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 #include "Event/L0DUReport.h"
 // local
 #include "L0DUFromRawTool.h"

@@ -1,9 +1,6 @@
 // $Id: FastL0DUFilter.cpp,v 1.3 2010-01-27 23:35:23 odescham Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // local
 #include "FastL0DUFilter.h"
 

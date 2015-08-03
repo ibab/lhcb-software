@@ -1,7 +1,5 @@
 // ============================================================================
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 // Detector Element
 // local
 #include "L0ProcessorDataDecoder.h"

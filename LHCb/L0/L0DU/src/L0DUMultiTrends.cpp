@@ -1,7 +1,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "AIDA/IHistogram1D.h"
 #include "GaudiUtils/Aida2ROOT.h"
 #include "GaudiKernel/IEventTimeDecoder.h"

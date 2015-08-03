@@ -1,7 +1,6 @@
 // Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiUtils/Aida2ROOT.h"
 // from lhcb
 #include "Event/ODIN.h"

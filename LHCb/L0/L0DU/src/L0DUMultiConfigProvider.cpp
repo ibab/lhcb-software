@@ -3,8 +3,6 @@
 #include<iostream>
 #include<string>
 #include<sstream>
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "L0DUMultiConfigProvider.h"

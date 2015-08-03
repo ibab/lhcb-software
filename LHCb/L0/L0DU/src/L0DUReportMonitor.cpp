@@ -1,7 +1,6 @@
 // Include files 
 #include <cmath>
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IHistogram1D.h"
 #include "GaudiUtils/Aida2ROOT.h"

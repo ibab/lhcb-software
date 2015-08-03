@@ -1,8 +1,3 @@
-// Include files 
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // local
 #include "Event/L0DUReport.h"
 #include "L0TCKfilter.h"

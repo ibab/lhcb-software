@@ -1,7 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 // DAQEvent
 #include "Event/RawEvent.h"
 // L0Event

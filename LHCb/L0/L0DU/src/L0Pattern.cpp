@@ -1,7 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 // L0Event
 #include "Event/L0DUReport.h"
 // local

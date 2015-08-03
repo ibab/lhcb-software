@@ -1,7 +1,6 @@
 #include "boost/assign/list_of.hpp"
 // from Gaudi
 #include "GaudiKernel/StateMachine.h" 
-#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/SystemOfUnits.h"
 
 // local

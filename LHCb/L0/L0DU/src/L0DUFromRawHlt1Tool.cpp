@@ -1,7 +1,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 #include "L0Interfaces/IL0CondDBProvider.h"
 
 // local

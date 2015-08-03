@@ -2,6 +2,8 @@
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= L0DU v10r33 2015-07-20 =========================
 ! 2015-06-02 - Olivier Deschamps
