@@ -109,5 +109,4 @@ namespace LHCb  {
   };
 }
 
-#include "GaudiKernel/AlgFactory.h"
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MEPTester)

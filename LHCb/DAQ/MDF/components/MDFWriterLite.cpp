@@ -6,7 +6,6 @@
 //  Author    : Sai Suman & Niko Neufeld 
 //
 //  ====================================================================
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiUtils/IIODataManager.h"
 #include "MDF/RawDataConnection.h"

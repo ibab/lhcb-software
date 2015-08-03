@@ -1,7 +1,3 @@
-
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SvcFactory.h"
-
 #include "MDF/MDFWriter.h"
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFWriter)
 

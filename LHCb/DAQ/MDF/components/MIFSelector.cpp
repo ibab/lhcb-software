@@ -199,5 +199,4 @@ StatusCode MIFContext::skipEvents(IMessageSvc* /* msg */,int numEvt)  {
   return StatusCode::FAILURE;
 }
 
-#include "GaudiKernel/SvcFactory.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MIFSelector)

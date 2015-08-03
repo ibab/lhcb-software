@@ -90,5 +90,4 @@ namespace LHCb  {
 }
 
 // Declaration of the Algorithm Factory
-#include "GaudiKernel/AlgFactory.h"
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MEPDump)

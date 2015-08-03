@@ -5,7 +5,8 @@
 !               Contains also the data structures to control MEPs and
 !               MEP fragments
 !-----------------------------------------------------------------------------
-
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= MDF v3r41 2015-05-21 =========================
 ! 2015-05-21 - Markus Frank
