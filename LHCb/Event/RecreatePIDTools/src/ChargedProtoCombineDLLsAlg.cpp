@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 /** @file ChargedProtoCombineDLLsAlg.cpp
  *
@@ -9,8 +8,6 @@
  */
 //-----------------------------------------------------------------------------
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 // local
 #include "ChargedProtoCombineDLLsAlg.h"
 

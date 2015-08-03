@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : Components to fully rebuild PIDs from packed DST
 !-----------------------------------------------------------------------------
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= RecreatePIDTools v1r7 2013-02-04 =========================
 ! 2012-12-10 - Marco Cattaneo

@@ -9,9 +9,6 @@
  */
 //-----------------------------------------------------------------------------
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "ChargedProtoParticleAddRichInfo.h"
 
