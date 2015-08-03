@@ -2,6 +2,7 @@
 #include "MBM/bmmessage.h"
 #include <cerrno>
 #include <poll.h>
+#include <fcntl.h>
 
 namespace {
 #define CHECK(x) case MBMMessage::x : return #x ;
@@ -116,7 +117,11 @@ int MBMMessage::write(int fd, void* ptr, size_t len) const {
   while ( tmp>0 )  {
     int sc = ::write(fd,p+len-tmp,tmp);
     if ( sc > 0 ) tmp -= sc;
-    else if ( sc == 0 && errno == EINTR ) continue;
+    else if ( sc <= 0 && errno == EINTR ) continue;
+    else if ( sc <= 0 && errno == EAGAIN ) continue;
+    else if ( sc <= 0 && ( errno == EPIPE || errno == EIO ) )  {
+      ::lib_rtl_output(LIB_RTL_ALWAYS,"MBwrite M message %-16s --> %-16s errno=%d [%s]\n",__msg_user(user),__msg_type(type),errno,strerror(errno));
+    }
     else return MBM_ERROR;
   }
   return MBM_NORMAL;
@@ -126,6 +131,8 @@ int MBMMessage::write(int fd, void* ptr, size_t len) const {
 int MBMMessage::clearFifo(int fd) {
   //struct pollfd fds;
   char buff[sizeof(MBMMessage)];
+  //int flags = ::fcntl(fd,F_GETFL);
+  //::fcntl(fd,F_SETFL,flags|O_NONBLOCK);
   while (1)  {
     //fds.events  = POLLIN;
     //fds.revents = POLLIN;
@@ -140,8 +147,9 @@ int MBMMessage::clearFifo(int fd) {
       continue;
     }
     //::lib_rtl_output(LIB_RTL_ALWAYS,"Request fifo cleaned up.....\n");
-    return MBM_NORMAL;
+    break;
   }
+  //::fcntl(fd,F_SETFL,flags);
   return MBM_NORMAL;
 }
 

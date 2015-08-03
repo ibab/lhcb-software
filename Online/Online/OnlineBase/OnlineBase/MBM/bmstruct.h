@@ -263,6 +263,7 @@ struct ServerBMID_t : public BufferMemory {
     char     name[BM_USER_NAME_LEN];     // user name match
     int      count;
   } cons_req[BM_MAX_REQS];
+
   ServerBMID_t();
   ~ServerBMID_t();
 };
