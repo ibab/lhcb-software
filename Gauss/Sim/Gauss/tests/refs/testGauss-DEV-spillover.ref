@@ -1,15 +1,15 @@
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/Gauss-DEV.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/Gauss-DEV.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/Gauss-DEV.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/Gauss-DEV.py'
 # --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v27r50/options/30000000.py'
 # <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v27r50/options/30000000.py'
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.py'
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/Gauss-Job.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/Gauss-Job.py'
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/SpillOver-50ns.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/SpillOver-50ns.py'
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/tests/options/testGauss-QMTests.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/tests/options/testGauss-QMTests.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/GAUSS/GAUSS_HEAD/Gen/LbPythia/options/Pythia.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/Gauss-Job.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/Gauss-Job.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/SpillOver-50ns.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/GAUSS/GAUSS_HEAD/Sim/Gauss/options/SpillOver-50ns.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/GAUSS/GAUSS_HEAD/Sim/Gauss/tests/options/testGauss-QMTests.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/GAUSS/GAUSS_HEAD/Sim/Gauss/tests/options/testGauss-QMTests.py'
 # applying configuration of Gauss
 veloMisAlignGeometry: 2
 Ecut value = 5.0
@@ -65,7 +65,7 @@ Ecut value = 5.0
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Gauss version v48r2
-                                          running on lbbuild02.cern.ch on Sun Aug  2 04:57:22 2015
+                                          running on lbbuild02.cern.ch on Mon Aug  3 05:05:41 2015
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc     INFO Added successfully Conversion service:XmlCnvSvc
@@ -79,7 +79,7 @@ ChronoStatSvc              INFO  Number of skipped events for MemStat-1
                             WWW : http://cern.ch/geant4
 *************************************************************
 
-SimulationSvc              INFO Loading simulation attributes file "/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_HEAD/Sim/Gauss/xml/Simulation.xml" ...
+SimulationSvc              INFO Loading simulation attributes file "/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/GAUSS/GAUSS_HEAD/Sim/Gauss/xml/Simulation.xml" ...
 GiGa.ModularPL             INFO GiGaPhysListModular initializing
 GiGa.ModularPL             INFO Registered GiGa.ModularPL.EmOpt1NoCutsPhysics
 GiGa.ModularPL             INFO Registered GiGa.ModularPL.DecayPhysics
@@ -149,7 +149,7 @@ SIMCOND                    INFO Using TAG "sim-20150522-2-vc-md100"
 RichG4TrackActionPhotOpt   INFO  Rich HPD Max QE from DB and UsedInThisRun are  0.45    0.45
 GiGa                       INFO Used Tracking Action Object is GiGaTrackActionSequence/GiGa.TrackSeq
 GiGa                       INFO Used  Stepping Action Object is GiGaStepActionSequence/GiGa.StepSeq
-RootHistSvc                INFO Writing ROOT histograms to: Gauss-30000000-5ev-20150802-histos.root
+RootHistSvc                INFO Writing ROOT histograms to: Gauss-30000000-5ev-20150803-histos.root
 HistogramPersistencySvc    INFO Added successfully Conversion service:RootHistSvc
 HistogramDataSvc           INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/data/gausscalo.root as GaussCalo
 GiGa                       INFO Used  Event Action Object is GiGaEventActionSequence/GiGa.EventSeq
@@ -160,9 +160,9 @@ RndmGenSvc.Engine          INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
 RndmGenSvc.Engine          INFO This is the GEANT4 engine!
 RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER        INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   1.31 times the speed of a 2.8 GHz Xeon.
 GaussSequencer             INFO Member list: GaudiSequencer/Generator, GaudiSequencer/Simulation
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.10 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.29 times the speed of a 2.8 GHz Xeon.
 Generator                  INFO Member list: GaudiSequencer/GeneratorSlotMainSeq, GaudiSequencer/GeneratorSlotPrevPrevSeq, GaudiSequencer/GeneratorSlotNextNextSeq
 GeneratorSlotMainSeq       INFO Member list: GenInit/GaussGen, Generation, GaudiSequencer/GenMonitor
 GaussGen                SUCCESS ==================================================================
@@ -232,7 +232,7 @@ MODOP=5 -- corrects Energy from mass+flow
  |  |   P  P   Y Y     T    H   H   I    A A     This is PYTHIA version 8.186      |  |
  |  |   PPP     Y      T    HHHHH   I   AAAAA    Last date of change:  8 Jul 2014  |  |
  |  |   P       Y      T    H   H   I   A   A                                      |  |
- |  |   P       Y      T    H   H  III  A   A    Now is 02 Aug 2015 at 04:58:42    |  |
+ |  |   P       Y      T    H   H  III  A   A    Now is 03 Aug 2015 at 05:06:52    |  |
  |  |                                                                              |  |
  |  |   Torbjorn Sjostrand;  Department of Astronomy and Theoretical Physics,      |  |
  |  |      Lund University, Solvegatan 14A, SE-223 62 Lund, Sweden;                |  |
@@ -290,7 +290,7 @@ MODOP=5 -- corrects Energy from mass+flow
  |  |   P  P   Y Y     T    H   H   I    A A     This is PYTHIA version 8.186      |  |
  |  |   PPP     Y      T    HHHHH   I   AAAAA    Last date of change:  8 Jul 2014  |  |
  |  |   P       Y      T    H   H   I   A   A                                      |  |
- |  |   P       Y      T    H   H  III  A   A    Now is 02 Aug 2015 at 04:58:42    |  |
+ |  |   P       Y      T    H   H  III  A   A    Now is 03 Aug 2015 at 05:06:53    |  |
  |  |                                                                              |  |
  |  |   Torbjorn Sjostrand;  Department of Astronomy and Theoretical Physics,      |  |
  |  |      Lund University, Solvegatan 14A, SE-223 62 Lund, Sweden;                |  |
@@ -539,9 +539,9 @@ OTHitMonitorNextNext....   INFO            Beta * gamma cut : 0 < beta*gamma
 OTHitMonitorNextNext....   INFO            Eta cut          : -1.79769e+308 < P < 1.79769e+308
 DataUnpackTestNextNext     INFO Member list: UnpackMCVertex/UnpackMCVertexNextNext, UnpackMCParticle/UnpackMCParticleNextNext, CompareMCVertex/CompareMCVertexNextNext, CompareMCParticle/CompareMCParticleNextNext, DataPacking::Unpack<LHCb::MCPuVetoHitPacker>/UnpackPuVetoHitsNextNext, DataPacking::Check<LHCb::MCPuVetoHitPacker>/CheckPuVetoHitsNextNext, DataPacking::Unpack<LHCb::MCVeloHitPacker>/UnpackVeloHitsNextNext, DataPacking::Check<LHCb::MCVeloHitPacker>/CheckVeloHitsNextNext, DataPacking::Unpack<LHCb::MCTTHitPacker>/UnpackTTHitsNextNext, DataPacking::Check<LHCb::MCTTHitPacker>/CheckTTHitsNextNext, DataPacking::Unpack<LHCb::MCITHitPacker>/UnpackITHitsNextNext, DataPacking::Check<LHCb::MCITHitPacker>/CheckITHitsNextNext, DataPacking::Unpack<LHCb::MCOTHitPacker>/UnpackOTHitsNextNext, DataPacking::Check<LHCb::MCOTHitPacker>/CheckOTHitsNextNext, DataPacking::Unpack<LHCb::MCRichHitPacker>/UnpackRichHitsNextNext, DataPacking::Unpack<LHCb::MCRichOpticalPhotonPacker>/UnpackRichOpPhotNextNext, DataPacking::Unpack<LHCb::MCRichSegmentPacker>/UnpackRichSegmentsNextNext, DataPacking::Unpack<LHCb::MCRichTrackPacker>/UnpackRichTracksNextNext, DataPacking::Check<LHCb::MCRichHitPacker>/CheckRichHitsNextNext, DataPacking::Check<LHCb::MCRichOpticalPhotonPacker>/CheckRichOpPhotNextNext, DataPacking::Check<LHCb::MCRichSegmentPacker>/CheckRichSegmentsNextNext, DataPacking::Check<LHCb::MCRichTrackPacker>/CheckRichTracksNextNext, DataPacking::Unpack<LHCb::MCSpdHitPacker>/UnpackSpdHitsNextNext, DataPacking::Check<LHCb::MCSpdHitPacker>/CheckSpdHitsNextNext, DataPacking::Unpack<LHCb::MCPrsHitPacker>/UnpackPrsHitsNextNext, DataPacking::Check<LHCb::MCPrsHitPacker>/CheckPrsHitsNextNext, DataPacking::Unpack<LHCb::MCEcalHitPacker>/UnpackEcalHitsNextNext, DataPacking::Check<LHCb::MCEcalHitPacker>/CheckEcalHitsNextNext, DataPacking::Unpack<LHCb::MCHcalHitPacker>/UnpackHcalHitsNextNext, DataPacking::Check<LHCb::MCHcalHitPacker>/CheckHcalHitsNextNext, DataPacking::Unpack<LHCb::MCMuonHitPacker>/UnpackMuonHitsNextNext, DataPacking::Check<LHCb::MCMuonHitPacker>/CheckMuonHitsNextNext, with rootInTES 'NextNext/'
 EventPersistencySvc        INFO Added successfully Conversion service:RootCnvSvc
-GaussTape                  INFO Data source: EventDataSvc output: DATAFILE='Gauss-30000000-5ev-20150802.sim' SVC='RootCnvSvc' OPT='REC'
+GaussTape                  INFO Data source: EventDataSvc output: DATAFILE='Gauss-30000000-5ev-20150803.sim' SVC='RootCnvSvc' OPT='REC'
 FileRecordPersistencySvc   INFO Added successfully Conversion service:FileRecordCnvSvc
-FSROutputStreamGaussTape   INFO Data source: FileRecordDataSvc output: DATAFILE='Gauss-30000000-5ev-20150802.sim' SVC='FileRecordCnvSvc' OPT='REC'
+FSROutputStreamGaussTape   INFO Data source: FileRecordDataSvc output: DATAFILE='Gauss-30000000-5ev-20150803.sim' SVC='FileRecordCnvSvc' OPT='REC'
 EventLoopMgr            WARNING Unable to locate service "EventSelector"
 EventLoopMgr            WARNING No events will be processed from external input.
 ApplicationMgr             INFO Application Manager Initialized successfully
@@ -778,13 +778,13 @@ AntiNeutronInelastic  Crs sctns:              AntiAGlauber: Emin(GeV)=    0  Ema
 
 ============================================================================================
 RichG4HistoSet2            INFO Now Booking Rich G4 Histo Set2
-DDDB_0.TimeOutChecker      INFO Disconnect from database after being idle for 120s (will reconnect if needed)
-DDDB.TimeOutChecker        INFO Disconnect from database after being idle for 120s (will reconnect if needed)
-CALIBOFF.TimeOutChecker    INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 G4Fragment::CalculateExcitationEnergy(): WARNING
 Fragment: A =   1, Z =   1, U = -3.700e-05 MeV  IsStable= 1
           P = (-1.102e+02,-1.730e+02,1.518e+02) MeV   E = 9.724e+02 MeV
 
+DDDB_0.TimeOutChecker      INFO Disconnect from database after being idle for 120s (will reconnect if needed)
+DDDB.TimeOutChecker        INFO Disconnect from database after being idle for 120s (will reconnect if needed)
+CALIBOFF.TimeOutChecker    INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 GiGa.TrackSeq.HepMCTrackWARNING GaussTrackActionHepMC:: The process is known 'Electromagnetic/muPairProd', but vertex type is still 'Unknown'
 GiGaGetMainEvent           INFO Number of extracted MCParticles 'MC/Particles' 	1085
 GiGaGetMainEvent           INFO Number of extracted MCVertices  'MC/Vertices'  	1169
@@ -2462,353 +2462,356 @@ FSROutputStreamGaussTape   INFO Set up File Summary Record
 FSROutputStreamGaussTape   INFO Events output: 1
 EventLoopMgr               INFO Histograms converted successfully according to request.
 ToolSvc                    INFO Removing all tools created by ToolSvc
+NextNextEventGaussSim...WARNING MemoryTool:: Mean 'delta-memory' exceeds 3*sigma
 NextNextEventGaussSim...SUCCESS Booked 4 Histogram(s) : 1D=4
 NextNextEventGaussSim...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |         4 |     66.076 |     16.519 |     11.529 |      4.6880 |      34.572 |
- | "Total Memory/MB"                               |         5 |    8197.98 |     1639.6 |     21.641 |      1602.0 |      1668.1 |
+ | "Delta Memory/MB"                               |         4 |      66.06 |     16.515 |     10.894 |      5.6600 |      33.580 |
+ | "Total Memory/MB"                               |         5 |   8197.172 |     1639.4 |     21.665 |      1602.1 |      1668.2 |
+NextNextEventGaussSim...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
+NextNextEventGaussSim...SUCCESS  #WARNINGS   = 1        Message = 'Mean 'delta-memory' exceeds 3*sigma'
 PrevPrevEventGaussSim...SUCCESS Booked 4 Histogram(s) : 1D=4
 PrevPrevEventGaussSim...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |         4 |    104.908 |     26.227 |     27.680 |      4.6880 |      73.404 |
- | "Total Memory/MB"                               |         5 |   8159.148 |     1631.8 |     35.957 |      1563.2 |      1668.1 |
+ | "Delta Memory/MB"                               |         4 |     100.52 |     25.130 |     25.207 |      5.6600 |      68.040 |
+ | "Total Memory/MB"                               |         5 |   8162.712 |     1632.5 |     34.265 |      1567.6 |      1668.2 |
 MainEventGaussSim.Mai...SUCCESS Booked 4 Histogram(s) : 1D=4
 MainEventGaussSim.Mai...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |         4 |    563.712 |     140.93 |     225.96 |      4.6880 |      532.21 |
- | "Total Memory/MB"                               |         5 |   7700.344 |     1540.1 |     218.10 |      1104.4 |      1668.1 |
+ | "Delta Memory/MB"                               |         4 |    563.828 |     140.96 |     225.44 |      5.6600 |      531.35 |
+ | "Total Memory/MB"                               |         5 |   7699.404 |     1539.9 |     218.06 |      1104.3 |      1668.2 |
 GaussGenNextNext.Gaus...SUCCESS Booked 4 Histogram(s) : 1D=4
 GaussGenNextNext.Gaus...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |         4 |     650.92 |     162.73 |     263.71 |      4.6880 |      619.42 |
- | "Total Memory/MB"                               |         5 |   7613.136 |     1522.6 |     252.94 |      1017.2 |      1668.1 |
+ | "Delta Memory/MB"                               |         4 |    650.912 |     162.73 |     263.14 |      5.6600 |      618.43 |
+ | "Total Memory/MB"                               |         5 |    7612.32 |     1522.5 |     252.85 |      1017.2 |      1668.2 |
 GaussGenPrevPrev.Gaus...SUCCESS Booked 4 Histogram(s) : 1D=4
 GaussGenPrevPrev.Gaus...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |         4 |    651.448 |     162.86 |     263.94 |      4.6880 |      619.94 |
- | "Total Memory/MB"                               |         5 |   7612.608 |     1522.5 |     253.15 |      1016.7 |      1668.1 |
+ | "Delta Memory/MB"                               |         4 |     651.44 |     162.86 |     263.37 |      5.6600 |      618.96 |
+ | "Total Memory/MB"                               |         5 |   7611.792 |     1522.4 |     253.06 |      1016.7 |      1668.2 |
 GaussGen.GaussGenMemory SUCCESS Booked 4 Histogram(s) : 1D=4
 GaussGen.GaussGenMemory SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |         4 |      652.7 |     163.17 |     264.48 |      4.6880 |      621.20 |
- | "Total Memory/MB"                               |         5 |   7611.356 |     1522.3 |     253.65 |      1015.4 |      1668.1 |
+ | "Delta Memory/MB"                               |         4 |    652.688 |     163.17 |     263.91 |      5.6600 |      620.21 |
+ | "Total Memory/MB"                               |         5 |   7610.544 |     1522.1 |     253.56 |      1015.5 |      1668.2 |
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.10 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.29 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   1.31 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO EVENT LOOP                    | 197756.336 | 258104.717 | 75415.900  590474.9 |       5 |  1290.524 |
-TimingAuditor.TIMER        INFO  GaussSequencer               | 192771.495 | 251472.357 | 72407.599  575442.9 |       5 |  1257.362 |
-TimingAuditor.TIMER        INFO   Generator                   |   375.143 |   493.528 |   27.859    2220.2 |       5 |     2.468 |
-TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |   341.948 |   458.993 |    1.838    2170.1 |       5 |     2.295 |
-TimingAuditor.TIMER        INFO     GaussGen                  |     1.000 |     0.635 |    0.000       2.4 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO     Generation                |   340.549 |   458.048 |    1.465    2166.9 |       5 |     2.290 |
-TimingAuditor.TIMER        INFO     GenMonitor                |     0.400 |     0.293 |    0.043       0.8 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.200 |     0.287 |    0.038       0.8 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO    GeneratorSlotPrevPrevSeq   |    26.995 |    27.104 |    0.498      49.0 |       5 |     0.136 |
-TimingAuditor.TIMER        INFO     GaussGenPrevPrev          |     0.999 |     0.552 |    0.167       0.9 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO     GenerationPrevPrev        |    25.196 |    26.132 |    0.282      47.6 |       5 |     0.131 |
-TimingAuditor.TIMER        INFO     GenMonitorPrevPrev        |     0.800 |     0.407 |    0.033       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO      GenMonitorAlgPrevPrev    |     0.800 |     0.403 |    0.032       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO    GeneratorSlotNextNextSeq   |     6.199 |     7.424 |    0.000      25.5 |       5 |     0.037 |
-TimingAuditor.TIMER        INFO     GaussGenNextNext          |     0.400 |     0.335 |    0.000       0.8 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO     GenerationNextNext        |     5.799 |     7.028 |    0.000      25.0 |       5 |     0.035 |
-TimingAuditor.TIMER        INFO     GenMonitorNextNext        |     0.000 |     0.089 |    0.057       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO      GenMonitorAlgNextNext    |     0.000 |     0.086 |    0.051       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO   Simulation                  | 192396.352 | 250978.823 | 72379.731  573222.6 |       5 |  1254.894 |
-TimingAuditor.TIMER        INFO    GiGaStore                  |     0.000 |     0.007 |    0.000       0.0 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO    Geo                        | 19599.620 | 24978.307 |    0.000  124891.5 |       5 |   124.892 |
-TimingAuditor.TIMER        INFO    MainEventSeq               | 76239.810 | 103206.271 |   61.457  204775.0 |       5 |   516.031 |
-TimingAuditor.TIMER        INFO     MainEventGaussSim         |     0.400 |     0.328 |    0.056       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO     MainSimulation            | 76239.410 | 103205.937 |   61.220  204774.0 |       5 |   516.030 |
-TimingAuditor.TIMER        INFO      MakeMainSim              | 76060.837 | 102935.940 |   60.129  204258.7 |       5 |   514.680 |
-TimingAuditor.TIMER        INFO       GenToSim                | 17092.202 | 23843.854 |    1.196  119189.1 |       5 |   119.219 |
-TimingAuditor.TIMER        INFO       GiGaFlush               | 58919.443 | 79016.831 |   52.441  143351.9 |       5 |   395.084 |
-TimingAuditor.TIMER        INFO       GiGaCheckEvent          |     0.000 |     0.011 |    0.000       0.0 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO       SimToMCTruth            |     3.199 |     5.897 |    0.253      17.5 |       5 |     0.029 |
-TimingAuditor.TIMER        INFO       DetectorsHits           |    39.394 |    58.620 |    1.755     122.6 |       5 |     0.293 |
-TimingAuditor.TIMER        INFO        GetPuVetoHits          |     0.200 |     0.544 |    0.053       1.4 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO        GetVeloHits            |     1.800 |     1.673 |    0.024       3.3 |       5 |     0.008 |
-TimingAuditor.TIMER        INFO        GetTTHits              |     1.400 |     1.333 |    0.023       2.7 |       5 |     0.007 |
-TimingAuditor.TIMER        INFO        GetITHits              |     0.600 |     0.776 |    0.021       1.3 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO        GetOTHits              |     2.599 |     2.228 |    0.021       3.6 |       5 |     0.011 |
-TimingAuditor.TIMER        INFO        RichHits               |    26.796 |    40.027 |    1.530      83.9 |       5 |     0.200 |
-TimingAuditor.TIMER        INFO         GetRichHits           |    11.198 |    14.183 |    1.526      25.0 |       5 |     0.071 |
-TimingAuditor.TIMER        INFO         GetRichPhotons        |     5.199 |    11.267 |    0.000      30.4 |       5 |     0.056 |
-TimingAuditor.TIMER        INFO         GetRichSegments       |     5.799 |     9.815 |    0.000      20.3 |       5 |     0.049 |
-TimingAuditor.TIMER        INFO         GetRichTracks         |     0.600 |     0.598 |    0.000       1.7 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO         MCPartToMCRichTrack   |     0.200 |     0.183 |    0.000       0.7 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO         MCRichHitToMCRichOpPho|     3.799 |     3.948 |    0.000       7.6 |       5 |     0.020 |
-TimingAuditor.TIMER        INFO        GetSpdHits             |     0.600 |     4.640 |    0.000      20.9 |       5 |     0.023 |
-TimingAuditor.TIMER        INFO        GetPrsHits             |     0.800 |     2.592 |    0.000      10.4 |       5 |     0.013 |
-TimingAuditor.TIMER        INFO        GetEcalHits            |     2.200 |     2.281 |    0.013       4.1 |       5 |     0.011 |
-TimingAuditor.TIMER        INFO        GetHcalHits            |     0.200 |     0.294 |    0.000       0.6 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        GetMuonHits            |     2.200 |     2.204 |    0.033       4.1 |       5 |     0.011 |
-TimingAuditor.TIMER        INFO       MainEventDataPacking    |     6.599 |    10.688 |    0.461      22.0 |       5 |     0.053 |
-TimingAuditor.TIMER        INFO        PackMCParticle         |     0.200 |     0.514 |    0.000       1.2 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO        PackMCVertex           |     0.600 |     0.222 |    0.000       0.8 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        MCVeloHitPacker        |     0.000 |     0.341 |    0.000       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        MCPuVetoHitPacker      |     0.200 |     1.841 |    0.000       9.1 |       5 |     0.009 |
-TimingAuditor.TIMER        INFO        MCTTHitPacker          |     0.000 |     0.032 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        MCITHitPacker          |     0.000 |     0.021 |    0.000       0.0 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        MCOTHitPacker          |     0.400 |     0.241 |    0.000       1.0 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        MCMuonHitPacker        |     0.200 |     2.174 |    0.000      10.7 |       5 |     0.011 |
-TimingAuditor.TIMER        INFO        MCPrsHitPacker         |     0.000 |     0.115 |    0.000       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        MCSpdHitPacker         |     0.000 |     0.044 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        MCEcalHitPacker        |     0.000 |     0.071 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        MCHcalHitPacker        |     0.200 |     0.034 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        MCRichHitPacker        |     0.000 |     0.180 |    0.000       0.5 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        MCRichOpPhotPacker     |     4.400 |     4.270 |    0.026       7.6 |       5 |     0.021 |
-TimingAuditor.TIMER        INFO        MCRichSegmentPacker    |     0.400 |     0.460 |    0.000       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        MCRichTrackPacker      |     0.000 |     0.098 |    0.000       0.4 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO      SimMonitor               |   178.573 |   269.989 |    1.085     515.3 |       5 |     1.350 |
-TimingAuditor.TIMER        INFO       GiGaGetMainEvent        |     0.400 |     0.084 |    0.000       0.2 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO       MainMCTruthMonitor      |     0.400 |     0.700 |    0.335       1.0 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO       GiGaGetHitsAlg          |     0.600 |     2.342 |    0.000      10.8 |       5 |     0.012 |
-TimingAuditor.TIMER        INFO       DetectorsMonitor        |    14.998 |    25.654 |    0.027      74.7 |       5 |     0.128 |
-TimingAuditor.TIMER        INFO        VeloGaussMoni          |     5.799 |     8.332 |    0.000      22.6 |       5 |     0.042 |
-TimingAuditor.TIMER        INFO        TTHitMonitor           |     0.800 |     2.668 |    0.000      11.9 |       5 |     0.013 |
-TimingAuditor.TIMER        INFO        ITHitMonitor           |     0.400 |     2.274 |    0.000      10.7 |       5 |     0.011 |
-TimingAuditor.TIMER        INFO        OTHitMonitor           |     1.400 |     3.760 |    0.000      12.7 |       5 |     0.019 |
-TimingAuditor.TIMER        INFO        SpdMonitor             |     0.600 |     0.666 |    0.000       1.6 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO        PrsMonitor             |     1.400 |     1.142 |    0.000       2.3 |       5 |     0.006 |
-TimingAuditor.TIMER        INFO        EcalMonitor            |     1.400 |     1.507 |    0.000       2.2 |       5 |     0.008 |
-TimingAuditor.TIMER        INFO        HcalMonitor            |     0.600 |     0.307 |    0.000       0.9 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        MuonHitChecker         |     0.600 |     0.771 |    0.000       2.3 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO        MuonMultipleScatteringC|     2.000 |     4.007 |    0.013      18.3 |       5 |     0.020 |
-TimingAuditor.TIMER        INFO       DataUnpackTest          |   162.175 |   241.194 |    0.595     439.0 |       5 |     1.206 |
-TimingAuditor.TIMER        INFO        UnpackMCVertex         |     0.600 |     0.698 |    0.041       1.7 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO        UnpackMCParticle       |     1.000 |     2.688 |    0.025      11.4 |       5 |     0.013 |
-TimingAuditor.TIMER        INFO        CompareMCVertex        |     0.400 |     0.638 |    0.018       1.0 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO        CompareMCParticle      |     0.600 |     0.577 |    0.013       1.0 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO        UnpackPuVetoHits       |     0.200 |     0.169 |    0.000       0.7 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        CheckPuVetoHits        |     0.400 |     0.624 |    0.008       1.3 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO        UnpackVeloHits         |     0.600 |     0.177 |    0.000       0.5 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        CheckVeloHits          |    10.398 |    17.343 |    0.005      44.0 |       5 |     0.087 |
-TimingAuditor.TIMER        INFO        UnpackTTHits           |     0.000 |     0.058 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckTTHits            |     3.400 |     5.342 |    0.006      15.3 |       5 |     0.027 |
-TimingAuditor.TIMER        INFO        UnpackITHits           |     0.000 |     0.053 |    0.021       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckITHits            |     2.199 |     1.917 |    0.006       4.6 |       5 |     0.010 |
-TimingAuditor.TIMER        INFO        UnpackOTHits           |     0.200 |     0.191 |    0.021       0.5 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        CheckOTHits            |     7.599 |    13.561 |    0.006      33.2 |       5 |     0.068 |
-TimingAuditor.TIMER        INFO        UnpackRichHits         |     0.400 |     0.394 |    0.025       1.1 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        UnpackRichOpPhot       |     1.000 |     0.952 |    0.030       1.8 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO        UnpackRichSegments     |     0.200 |     0.578 |    0.028       1.3 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO        UnpackRichTracks       |     0.400 |     0.139 |    0.028       0.4 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        CheckRichHits          |    15.598 |    25.816 |    0.007      55.3 |       5 |     0.129 |
-TimingAuditor.TIMER        INFO        CheckRichOpPhot        |    93.386 |   139.667 |    0.007     276.4 |       5 |     0.698 |
-TimingAuditor.TIMER        INFO        CheckRichSegments      |     8.799 |    10.902 |    0.007      21.6 |       5 |     0.055 |
-TimingAuditor.TIMER        INFO        CheckRichTracks        |     0.200 |     0.118 |    0.000       0.5 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        UnpackSpdHits          |     0.200 |     0.163 |    0.000       0.5 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        CheckSpdHits           |     1.800 |     1.814 |    0.006       3.0 |       5 |     0.009 |
-TimingAuditor.TIMER        INFO        UnpackPrsHits          |     0.000 |     0.333 |    0.000       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        CheckPrsHits           |     3.600 |     3.258 |    0.005       6.0 |       5 |     0.016 |
-TimingAuditor.TIMER        INFO        UnpackEcalHits         |     0.000 |     0.290 |    0.022       1.0 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        CheckEcalHits          |     4.799 |     8.621 |    0.006      25.0 |       5 |     0.043 |
-TimingAuditor.TIMER        INFO        UnpackHcalHits         |     0.000 |     0.072 |    0.000       0.2 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckHcalHits          |     0.800 |     0.886 |    0.006       2.0 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO        UnpackMuonHits         |     0.000 |     0.061 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckMuonHits          |     3.199 |     2.989 |    0.001       4.9 |       5 |     0.015 |
-TimingAuditor.TIMER        INFO    PrevPrevEventSeq           | 78338.891 | 104414.964 |   19.374  243487.0 |       5 |   522.075 |
-TimingAuditor.TIMER        INFO     PrevPrevEventGaussSim     |     1.000 |     0.335 |    0.000       0.8 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO     PrevPrevSimulation        | 78337.891 | 104414.619 |   19.000  243486.2 |       5 |   522.073 |
-TimingAuditor.TIMER        INFO      MakePrevPrevSim          | 78132.122 | 104190.838 |   18.001  243066.2 |       5 |   520.954 |
-TimingAuditor.TIMER        INFO       GenToSimPrevPrev        |     8.799 |    24.235 |    0.089      63.6 |       5 |     0.121 |
-TimingAuditor.TIMER        INFO       GiGaFlushPrevPrev       | 78064.133 | 104105.163 |   16.907  242912.0 |       5 |   520.526 |
-TimingAuditor.TIMER        INFO       GiGaCheckEventPrevPrev  |     0.000 |     0.003 |    0.000       0.0 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO       SimToMCTruthPrevPrev    |     4.399 |     4.200 |    0.000      10.0 |       5 |     0.021 |
-TimingAuditor.TIMER        INFO       DetectorsHitsPrevPrev   |    46.793 |    47.798 |    0.422      96.0 |       5 |     0.239 |
-TimingAuditor.TIMER        INFO        GetPuVetoHitsPrevPrev  |     0.000 |     0.075 |    0.000       0.2 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        GetVeloHitsPrevPrev    |     2.399 |     2.150 |    0.000       6.0 |       5 |     0.011 |
-TimingAuditor.TIMER        INFO        GetTTHitsPrevPrev      |     1.000 |     1.233 |    0.004       2.0 |       5 |     0.006 |
-TimingAuditor.TIMER        INFO        GetITHitsPrevPrev      |     1.200 |     1.006 |    0.023       2.0 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO        GetOTHitsPrevPrev      |     3.199 |     3.437 |    0.059       7.0 |       5 |     0.017 |
-TimingAuditor.TIMER        INFO        RichHitsPrevPrev       |    31.395 |    32.053 |    0.219      61.0 |       5 |     0.160 |
-TimingAuditor.TIMER        INFO         GetRichHitsPrevPrev   |    12.198 |    12.198 |    0.047      23.0 |       5 |     0.061 |
-TimingAuditor.TIMER        INFO         GetRichPhotonsPrevPrev|     5.599 |     5.657 |    0.030      11.0 |       5 |     0.028 |
-TimingAuditor.TIMER        INFO         GetRichSegmentsPrevPre|     6.999 |     7.837 |    0.028      14.0 |       5 |     0.039 |
-TimingAuditor.TIMER        INFO         GetRichTracksPrevPrev |     1.000 |     0.873 |    0.023       2.0 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO         MCPartToMCRichTrackPre|     0.000 |     0.074 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO         MCRichHitToMCRichOpPho|     5.399 |     5.389 |    0.024      11.0 |       5 |     0.027 |
-TimingAuditor.TIMER        INFO        GetSpdHitsPrevPrev     |     0.400 |     0.458 |    0.021       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        GetPrsHitsPrevPrev     |     1.000 |     0.918 |    0.019       2.0 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO        GetEcalHitsPrevPrev    |     3.200 |     3.242 |    0.019       8.0 |       5 |     0.016 |
-TimingAuditor.TIMER        INFO        GetHcalHitsPrevPrev    |     0.400 |     0.482 |    0.018       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        GetMuonHitsPrevPrev    |     2.600 |     2.724 |    0.025       6.0 |       5 |     0.014 |
-TimingAuditor.TIMER        INFO       PrevPrevEventDataPacking|     7.999 |     9.412 |    0.578      16.0 |       5 |     0.047 |
-TimingAuditor.TIMER        INFO        PackMCParticlePrevPrev |     0.800 |     0.571 |    0.034       1.0 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO        PackMCVertexPrevPrev   |     0.400 |     0.368 |    0.028       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        MCVeloHitPackerPrevPrev|     0.000 |     0.070 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        MCPuVetoHitPackerPrevPr|     0.000 |     0.027 |    0.000       0.0 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        MCTTHitPackerPrevPrev  |     0.200 |     0.093 |    0.005       0.3 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        MCITHitPackerPrevPrev  |     0.000 |     0.025 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        MCOTHitPackerPrevPrev  |     0.000 |     0.074 |    0.000       0.2 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        MCMuonHitPackerPrevPrev|     0.000 |     0.023 |    0.000       0.0 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        MCPrsHitPackerPrevPrev |     0.200 |     1.653 |    0.000       7.9 |       5 |     0.008 |
-TimingAuditor.TIMER        INFO        MCSpdHitPackerPrevPrev |     0.200 |     0.234 |    0.000       1.0 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        MCEcalHitPackerPrevPrev|     0.200 |     0.060 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        MCHcalHitPackerPrevPrev|     0.400 |     0.033 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        MCRichHitPackerPrevPrev|     0.200 |     0.292 |    0.000       1.0 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO        MCRichOpPhotPackerPrevP|     4.999 |     5.189 |    0.000      10.0 |       5 |     0.026 |
-TimingAuditor.TIMER        INFO        MCRichSegmentPackerPrev|     0.400 |     0.450 |    0.000       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        MCRichTrackPackerPrevPr|     0.000 |     0.021 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO      SimMonitorPrevPrev       |   205.769 |   223.777 |    0.999     420.0 |       5 |     1.119 |
-TimingAuditor.TIMER        INFO       GiGaGetPrevPrevEvent    |     0.800 |     0.273 |    0.000       1.0 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO       PrevPrevMCTruthMonitor  |     0.400 |     0.607 |    0.022       1.0 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO       GiGaGetHitsAlgPrevPrev  |     0.000 |     0.111 |    0.000       0.2 |       5 |     0.001 |
-TimingAuditor.TIMER        INFO       DetectorsMonitorPrevPrev|    18.397 |    18.477 |    0.155      52.0 |       5 |     0.092 |
-TimingAuditor.TIMER        INFO        VeloGaussMoniPrevPrev  |     6.999 |     7.482 |    0.019      21.0 |       5 |     0.037 |
-TimingAuditor.TIMER        INFO        TTHitMonitorPrevPrev   |     0.800 |     0.554 |    0.012       1.0 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO        ITHitMonitorPrevPrev   |     0.600 |     0.789 |    0.008       2.0 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO        OTHitMonitorPrevPrev   |     2.000 |     1.808 |    0.009       4.0 |       5 |     0.009 |
-TimingAuditor.TIMER        INFO        SpdMonitorPrevPrev     |     0.800 |     0.849 |    0.015       2.0 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO        PrsMonitorPrevPrev     |     1.600 |     1.620 |    0.011       4.0 |       5 |     0.008 |
-TimingAuditor.TIMER        INFO        EcalMonitorPrevPrev    |     2.000 |     2.240 |    0.012       6.0 |       5 |     0.011 |
-TimingAuditor.TIMER        INFO        HcalMonitorPrevPrev    |     0.400 |     0.346 |    0.012       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        MuonHitCheckerPrevPrev |     0.800 |     0.802 |    0.020       2.0 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO        MuonMultipleScatteringC|     2.200 |     1.966 |    0.013       9.0 |       5 |     0.010 |
-TimingAuditor.TIMER        INFO       DataUnpackTestPrevPrev  |   186.172 |   204.297 |    0.754     366.0 |       5 |     1.021 |
-TimingAuditor.TIMER        INFO        UnpackMCVertexPrevPrev |     0.800 |     0.822 |    0.029       2.0 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO        UnpackMCParticlePrevPre|     0.600 |     0.614 |    0.025       1.0 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO        CompareMCVertexPrevPrev|     0.800 |     0.814 |    0.015       2.0 |       5 |     0.004 |
-TimingAuditor.TIMER        INFO        CompareMCParticlePrevPr|     1.000 |     0.991 |    0.013       2.0 |       5 |     0.005 |
-TimingAuditor.TIMER        INFO        UnpackPuVetoHitsPrevPre|     0.000 |     0.063 |    0.000       0.2 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckPuVetoHitsPrevPrev|     0.600 |     0.552 |    0.007       1.0 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO        UnpackVeloHitsPrevPrev |     0.400 |     0.484 |    0.026       2.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        CheckVeloHitsPrevPrev  |    12.998 |    12.898 |    0.006      29.0 |       5 |     0.064 |
-TimingAuditor.TIMER        INFO        UnpackTTHitsPrevPrev   |     0.000 |     0.052 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckTTHitsPrevPrev    |     4.200 |     4.334 |    0.007      10.0 |       5 |     0.022 |
-TimingAuditor.TIMER        INFO        UnpackITHitsPrevPrev   |     0.200 |     0.035 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckITHitsPrevPrev    |     4.599 |     4.542 |    0.007      10.0 |       5 |     0.023 |
-TimingAuditor.TIMER        INFO        UnpackOTHitsPrevPrev   |     0.000 |     0.100 |    0.000       0.2 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckOTHitsPrevPrev    |    12.798 |    13.417 |    0.000      27.0 |       5 |     0.067 |
-TimingAuditor.TIMER        INFO        UnpackRichHitsPrevPrev |     0.600 |     0.388 |    0.020       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        UnpackRichOpPhotPrevPre|     1.400 |     1.248 |    0.029       4.0 |       5 |     0.006 |
-TimingAuditor.TIMER        INFO        UnpackRichSegmentsPrevP|     0.600 |     0.563 |    0.032       1.0 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO        UnpackRichTracksPrevPre|     0.200 |     0.061 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckRichHitsPrevPrev  |    16.597 |    16.867 |    0.007      30.0 |       5 |     0.084 |
-TimingAuditor.TIMER        INFO        CheckRichOpPhotPrevPrev|    97.385 |   107.143 |    0.008     175.0 |       5 |     0.536 |
-TimingAuditor.TIMER        INFO        CheckRichSegmentsPrevPr|    10.798 |    13.081 |    0.019      25.0 |       5 |     0.065 |
-TimingAuditor.TIMER        INFO        CheckRichTracksPrevPrev|     0.000 |     0.059 |    0.000       0.3 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackSpdHitsPrevPrev  |     0.400 |     0.692 |    0.093       2.0 |       5 |     0.003 |
-TimingAuditor.TIMER        INFO        CheckSpdHitsPrevPrev   |     2.799 |     2.456 |    0.000       5.0 |       5 |     0.012 |
-TimingAuditor.TIMER        INFO        UnpackPrsHitsPrevPrev  |     0.000 |     0.328 |    0.000       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        CheckPrsHitsPrevPrev   |     4.799 |     6.519 |    0.000      14.3 |       5 |     0.033 |
-TimingAuditor.TIMER        INFO        UnpackEcalHitsPrevPrev |     0.400 |     0.359 |    0.000       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO        CheckEcalHitsPrevPrev  |     5.799 |     6.061 |    0.000      15.0 |       5 |     0.030 |
-TimingAuditor.TIMER        INFO        UnpackHcalHitsPrevPrev |     0.200 |     0.060 |    0.000       0.2 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckHcalHitsPrevPrev  |     1.000 |     2.936 |    0.000      11.1 |       5 |     0.015 |
-TimingAuditor.TIMER        INFO        UnpackMuonHitsPrevPrev |     0.000 |     0.052 |    0.000       0.1 |       5 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckMuonHitsPrevPrev  |     4.200 |     5.628 |    0.000      13.6 |       5 |     0.028 |
-TimingAuditor.TIMER        INFO    NextNextEventSeq           | 18218.031 | 18379.267 |    0.307   72298.9 |       5 |    91.896 |
-TimingAuditor.TIMER        INFO     NextNextEventGaussSim     |     0.600 |     0.391 |    0.093       1.0 |       5 |     0.002 |
-TimingAuditor.TIMER        INFO     NextNextSimulation        | 30362.384 | 30631.445 |   68.006   72298.8 |       3 |    91.894 |
-TimingAuditor.TIMER        INFO      MakeNextNextSim          | 30285.729 | 30551.792 |   54.003   72114.8 |       3 |    91.655 |
-TimingAuditor.TIMER        INFO       GenToSimNextNext        |    11.665 |    11.962 |    1.154      21.0 |       3 |     0.036 |
-TimingAuditor.TIMER        INFO       GiGaFlushNextNext       | 30258.733 | 30524.080 |   29.004   72079.2 |       3 |    91.572 |
-TimingAuditor.TIMER        INFO       GiGaCheckEventNextNext  |     0.000 |     0.002 |    0.000       0.0 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO       SimToMCTruthNextNext    |     1.667 |     1.917 |    1.000       3.0 |       3 |     0.006 |
-TimingAuditor.TIMER        INFO       DetectorsHitsNextNext   |    11.665 |    11.810 |    1.998      27.4 |       3 |     0.035 |
-TimingAuditor.TIMER        INFO        GetPuVetoHitsNextNext  |     0.000 |     0.035 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        GetVeloHitsNextNext    |     0.667 |     0.564 |    0.000       1.7 |       3 |     0.002 |
-TimingAuditor.TIMER        INFO        GetTTHitsNextNext      |     0.666 |     0.740 |    0.000       1.2 |       3 |     0.002 |
-TimingAuditor.TIMER        INFO        GetITHitsNextNext      |     0.333 |     0.299 |    0.000       0.9 |       3 |     0.001 |
-TimingAuditor.TIMER        INFO        GetOTHitsNextNext      |     1.000 |     1.236 |    0.000       2.7 |       3 |     0.004 |
-TimingAuditor.TIMER        INFO        RichHitsNextNext       |     5.666 |     5.757 |    1.998      13.3 |       3 |     0.017 |
-TimingAuditor.TIMER        INFO         GetRichHitsNextNext   |     2.666 |     2.756 |    1.002       5.3 |       3 |     0.008 |
-TimingAuditor.TIMER        INFO         GetRichPhotonsNextNext|     0.667 |     0.698 |    0.000       2.1 |       3 |     0.002 |
-TimingAuditor.TIMER        INFO         GetRichSegmentsNextNex|     1.333 |     1.086 |    0.000       3.3 |       3 |     0.003 |
-TimingAuditor.TIMER        INFO         GetRichTracksNextNext |     0.333 |     0.567 |    0.000       1.0 |       3 |     0.002 |
-TimingAuditor.TIMER        INFO         MCPartToMCRichTrackNex|     0.000 |     0.035 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO         MCRichHitToMCRichOpPho|     0.667 |     0.606 |    0.000       1.8 |       3 |     0.002 |
-TimingAuditor.TIMER        INFO        GetSpdHitsNextNext     |     0.333 |     0.163 |    0.000       0.5 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        GetPrsHitsNextNext     |     0.000 |     0.244 |    0.000       0.7 |       3 |     0.001 |
-TimingAuditor.TIMER        INFO        GetEcalHitsNextNext    |     1.666 |     1.413 |    0.000       3.2 |       3 |     0.004 |
-TimingAuditor.TIMER        INFO        GetHcalHitsNextNext    |     0.000 |     0.143 |    0.000       0.4 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        GetMuonHitsNextNext    |     1.333 |     1.196 |    0.000       2.6 |       3 |     0.004 |
-TimingAuditor.TIMER        INFO       NextNextEventDataPacking|     1.999 |     2.007 |    0.999       4.0 |       3 |     0.006 |
-TimingAuditor.TIMER        INFO        PackMCParticleNextNext |     0.000 |     0.164 |    0.000       0.5 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        PackMCVertexNextNext   |     0.333 |     0.118 |    0.000       0.4 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        MCVeloHitPackerNextNext|     0.000 |     0.038 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        MCPuVetoHitPackerNextNe|     0.000 |     0.009 |    0.000       0.0 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        MCTTHitPackerNextNext  |     0.000 |     0.018 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        MCITHitPackerNextNext  |     0.000 |     0.017 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        MCOTHitPackerNextNext  |     0.000 |     0.028 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        MCMuonHitPackerNextNext|     0.000 |     0.017 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        MCPrsHitPackerNextNext |     0.000 |     0.359 |    0.000       1.0 |       3 |     0.001 |
-TimingAuditor.TIMER        INFO        MCSpdHitPackerNextNext |     0.333 |     0.023 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        MCEcalHitPackerNextNext|     0.000 |     0.033 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        MCHcalHitPackerNextNext|     0.000 |     0.013 |    0.000       0.0 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        MCRichHitPackerNextNext|     0.333 |     0.122 |    0.000       0.3 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        MCRichOpPhotPackerNextN|     0.666 |     0.903 |    0.000       2.0 |       3 |     0.003 |
-TimingAuditor.TIMER        INFO        MCRichSegmentPackerNext|     0.333 |     0.109 |    0.000       0.3 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        MCRichTrackPackerNextNe|     0.000 |     0.016 |    0.000       0.0 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO      SimMonitorNextNext       |    76.655 |    79.652 |   14.003     183.9 |       3 |     0.239 |
-TimingAuditor.TIMER        INFO       GiGaGetNextNextEvent    |     0.333 |     0.032 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO       NextNextMCTruthMonitor  |     0.000 |     0.156 |    0.000       0.5 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO       GiGaGetHitsAlgNextNext  |     0.000 |     0.044 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO       DetectorsMonitorNextNext|    11.998 |    12.181 |    4.001      19.5 |       3 |     0.037 |
-TimingAuditor.TIMER        INFO        VeloGaussMoniNextNext  |     3.333 |     3.633 |    0.000       9.9 |       3 |     0.011 |
-TimingAuditor.TIMER        INFO        TTHitMonitorNextNext   |     0.333 |     0.567 |    0.000       1.0 |       3 |     0.002 |
-TimingAuditor.TIMER        INFO        ITHitMonitorNextNext   |     0.667 |     0.206 |    0.000       0.6 |       3 |     0.001 |
-TimingAuditor.TIMER        INFO        OTHitMonitorNextNext   |     0.333 |     0.600 |    0.000       1.6 |       3 |     0.002 |
-TimingAuditor.TIMER        INFO        SpdMonitorNextNext     |     1.000 |     0.702 |    0.000       1.4 |       3 |     0.002 |
-TimingAuditor.TIMER        INFO        PrsMonitorNextNext     |     0.667 |     0.975 |    0.000       1.9 |       3 |     0.003 |
-TimingAuditor.TIMER        INFO        EcalMonitorNextNext    |     1.000 |     0.970 |    0.000       2.7 |       3 |     0.003 |
-TimingAuditor.TIMER        INFO        HcalMonitorNextNext    |     0.666 |     0.493 |    0.000       0.8 |       3 |     0.001 |
-TimingAuditor.TIMER        INFO        MuonHitCheckerNextNext |     1.000 |     1.014 |    0.039       2.0 |       3 |     0.003 |
-TimingAuditor.TIMER        INFO        MuonMultipleScatteringC|     2.999 |     3.006 |    0.000       9.0 |       3 |     0.009 |
-TimingAuditor.TIMER        INFO       DataUnpackTestNextNext  |    64.324 |    67.234 |    1.000     163.7 |       3 |     0.202 |
-TimingAuditor.TIMER        INFO        UnpackMCVertexNextNext |     0.333 |     0.217 |    0.000       0.7 |       3 |     0.001 |
-TimingAuditor.TIMER        INFO        UnpackMCParticleNextNex|     0.000 |     0.236 |    0.000       0.7 |       3 |     0.001 |
-TimingAuditor.TIMER        INFO        CompareMCVertexNextNext|     0.667 |     0.551 |    0.000       1.0 |       3 |     0.002 |
-TimingAuditor.TIMER        INFO        CompareMCParticleNextNe|     0.667 |     0.283 |    0.000       0.8 |       3 |     0.001 |
-TimingAuditor.TIMER        INFO        UnpackPuVetoHitsNextNex|     0.000 |     0.020 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckPuVetoHitsNextNext|     0.000 |     0.182 |    0.000       0.5 |       3 |     0.001 |
-TimingAuditor.TIMER        INFO        UnpackVeloHitsNextNext |     0.000 |     0.106 |    0.000       0.3 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckVeloHitsNextNext  |     3.999 |     4.171 |    0.000      11.5 |       3 |     0.013 |
-TimingAuditor.TIMER        INFO        UnpackTTHitsNextNext   |     0.000 |     0.025 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckTTHitsNextNext    |     1.333 |     1.267 |    0.000       3.8 |       3 |     0.004 |
-TimingAuditor.TIMER        INFO        UnpackITHitsNextNext   |     0.000 |     0.024 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckITHitsNextNext    |     1.666 |     1.577 |    0.000       3.7 |       3 |     0.005 |
-TimingAuditor.TIMER        INFO        UnpackOTHitsNextNext   |     0.000 |     0.052 |    0.000       0.2 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckOTHitsNextNext    |     4.666 |     4.582 |    0.000      10.7 |       3 |     0.014 |
-TimingAuditor.TIMER        INFO        UnpackRichHitsNextNext |     0.333 |     0.408 |    0.000       1.0 |       3 |     0.001 |
-TimingAuditor.TIMER        INFO        UnpackRichOpPhotNextNex|     0.333 |     0.131 |    0.000       0.4 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackRichSegmentsNextN|     0.000 |     0.183 |    0.000       0.6 |       3 |     0.001 |
-TimingAuditor.TIMER        INFO        UnpackRichTracksNextNex|     0.000 |     0.029 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckRichHitsNextNext  |     5.666 |     5.579 |    0.000      12.7 |       3 |     0.017 |
-TimingAuditor.TIMER        INFO        CheckRichOpPhotNextNext|    32.995 |    35.963 |    0.000      86.9 |       3 |     0.108 |
-TimingAuditor.TIMER        INFO        CheckRichSegmentsNextNe|     3.666 |     3.666 |    0.000       9.0 |       3 |     0.011 |
-TimingAuditor.TIMER        INFO        CheckRichTracksNextNext|     0.000 |     0.018 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackSpdHitsNextNext  |     0.000 |     0.245 |    0.000       0.7 |       3 |     0.001 |
-TimingAuditor.TIMER        INFO        CheckSpdHitsNextNext   |     1.333 |     1.003 |    0.000       2.0 |       3 |     0.003 |
-TimingAuditor.TIMER        INFO        UnpackPrsHitsNextNext  |     0.000 |     0.057 |    0.000       0.2 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckPrsHitsNextNext   |     2.000 |     1.938 |    0.000       4.8 |       3 |     0.006 |
-TimingAuditor.TIMER        INFO        UnpackEcalHitsNextNext |     0.000 |     0.000 |    0.000       0.0 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckEcalHitsNextNext  |     2.666 |     2.539 |    0.000       6.6 |       3 |     0.008 |
-TimingAuditor.TIMER        INFO        UnpackHcalHitsNextNext |     0.000 |     0.000 |    0.000       0.0 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckHcalHitsNextNext  |     0.000 |     0.170 |    0.000       0.5 |       3 |     0.001 |
-TimingAuditor.TIMER        INFO        UnpackMuonHitsNextNext |     0.000 |     0.031 |    0.000       0.1 |       3 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckMuonHitsNextNext  |     2.000 |     1.929 |    0.000       4.8 |       3 |     0.006 |
-TimingAuditor.TIMER        INFO  GaussTape                    |  4984.642 |  6631.874 | 2124.153   15031.5 |       5 |    33.159 |
-TimingAuditor.TIMER        INFO  FSROutputStreamGaussTape     |     0.000 |     0.001 |    0.000       0.0 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO EVENT LOOP                    | 156484.011 | 187911.286 | 40773.817  521267.7 |       5 |   939.556 |
+TimingAuditor.TIMER        INFO  GaussSequencer               | 153313.693 | 184293.785 | 39594.274  513219.5 |       5 |   921.469 |
+TimingAuditor.TIMER        INFO   Generator                   |   359.146 |   366.563 |   23.350    1594.8 |       5 |     1.833 |
+TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |   329.550 |   331.699 |    1.694    1550.1 |       5 |     1.658 |
+TimingAuditor.TIMER        INFO     GaussGen                  |     1.000 |     0.734 |    0.252       2.2 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO     Generation                |   328.150 |   330.538 |    1.371    1547.3 |       5 |     1.653 |
+TimingAuditor.TIMER        INFO     GenMonitor                |     0.200 |     0.409 |    0.040       0.8 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO      GenMonitorAlg            |     0.200 |     0.400 |    0.038       0.8 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO    GeneratorSlotPrevPrevSeq   |    24.397 |    28.882 |    0.379      43.2 |       5 |     0.144 |
+TimingAuditor.TIMER        INFO     GaussGenPrevPrev          |     0.800 |     0.176 |    0.000       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO     GenerationPrevPrev        |    23.197 |    28.562 |    0.212      42.8 |       5 |     0.143 |
+TimingAuditor.TIMER        INFO     GenMonitorPrevPrev        |     0.400 |     0.135 |    0.025       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      GenMonitorAlgPrevPrev    |     0.400 |     0.131 |    0.021       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO    GeneratorSlotNextNextSeq   |     5.199 |     5.973 |    0.467      21.3 |       5 |     0.030 |
+TimingAuditor.TIMER        INFO     GaussGenNextNext          |     0.800 |     1.031 |    0.108       3.4 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO     GenerationNextNext        |     4.399 |     4.862 |    0.123      20.9 |       5 |     0.024 |
+TimingAuditor.TIMER        INFO     GenMonitorNextNext        |     0.000 |     0.118 |    0.043       0.3 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO      GenMonitorAlgNextNext    |     0.000 |     0.113 |    0.035       0.3 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO   Simulation                  | 152954.347 | 183927.211 | 39570.917  511624.7 |       5 |   919.636 |
+TimingAuditor.TIMER        INFO    GiGaStore                  |     0.000 |     0.009 |    0.007       0.0 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO    Geo                        | 20519.681 | 25807.905 |    0.003  129039.5 |       5 |   129.040 |
+TimingAuditor.TIMER        INFO    MainEventSeq               | 57437.068 | 58789.815 |   58.178  142909.8 |       5 |   293.949 |
+TimingAuditor.TIMER        INFO     MainEventGaussSim         |     0.400 |     0.331 |    0.004       1.2 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO     MainSimulation            | 57436.668 | 58789.375 |   57.995  142908.6 |       5 |   293.947 |
+TimingAuditor.TIMER        INFO      MakeMainSim              | 57231.499 | 58583.988 |   56.892  142627.6 |       5 |   292.920 |
+TimingAuditor.TIMER        INFO       GenToSim                | 16139.947 | 16194.076 |    1.211   80933.7 |       5 |    80.970 |
+TimingAuditor.TIMER        INFO       GiGaFlush               | 41040.360 | 42338.933 |   49.446   61610.9 |       5 |   211.695 |
+TimingAuditor.TIMER        INFO       GiGaCheckEvent          |     0.000 |     0.006 |    0.000       0.0 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO       SimToMCTruth            |     3.800 |     3.683 |    0.225       8.0 |       5 |     0.018 |
+TimingAuditor.TIMER        INFO       DetectorsHits           |    40.194 |    40.229 |    1.598      63.0 |       5 |     0.201 |
+TimingAuditor.TIMER        INFO        GetPuVetoHits          |     0.600 |     0.339 |    0.039       1.3 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        GetVeloHits            |     1.400 |     1.749 |    0.023       2.8 |       5 |     0.009 |
+TimingAuditor.TIMER        INFO        GetTTHits              |     1.600 |     1.556 |    0.021       3.8 |       5 |     0.008 |
+TimingAuditor.TIMER        INFO        GetITHits              |     0.800 |     0.628 |    0.021       1.3 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        GetOTHits              |     2.200 |     2.449 |    0.021       5.0 |       5 |     0.012 |
+TimingAuditor.TIMER        INFO        RichHits               |    27.396 |    27.154 |    1.357      45.8 |       5 |     0.136 |
+TimingAuditor.TIMER        INFO         GetRichHits           |    11.199 |    10.788 |    1.184      17.7 |       5 |     0.054 |
+TimingAuditor.TIMER        INFO         GetRichPhotons        |     4.599 |     4.733 |    0.028       8.9 |       5 |     0.024 |
+TimingAuditor.TIMER        INFO         GetRichSegments       |     6.199 |     6.101 |    0.026      10.4 |       5 |     0.031 |
+TimingAuditor.TIMER        INFO         GetRichTracks         |     1.000 |     0.973 |    0.021       2.6 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO         MCPartToMCRichTrack   |     0.200 |     0.268 |    0.046       1.0 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO         MCRichHitToMCRichOpPho|     4.199 |     4.125 |    0.033       7.7 |       5 |     0.021 |
+TimingAuditor.TIMER        INFO        GetSpdHits             |     0.400 |     0.482 |    0.019       1.0 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        GetPrsHits             |     0.600 |     0.655 |    0.016       1.1 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        GetEcalHits            |     2.200 |     2.210 |    0.017       4.3 |       5 |     0.011 |
+TimingAuditor.TIMER        INFO        GetHcalHits            |     0.600 |     0.464 |    0.016       0.8 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        GetMuonHits            |     2.400 |     2.496 |    0.023       6.0 |       5 |     0.012 |
+TimingAuditor.TIMER        INFO       MainEventDataPacking    |     7.199 |     7.033 |    0.462      12.0 |       5 |     0.035 |
+TimingAuditor.TIMER        INFO        PackMCParticle         |     0.600 |     0.538 |    0.037       1.1 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        PackMCVertex           |     0.400 |     0.449 |    0.029       1.1 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        MCVeloHitPacker        |     0.400 |     0.238 |    0.029       0.9 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        MCPuVetoHitPacker      |     0.000 |     0.024 |    0.000       0.0 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCTTHitPacker          |     0.000 |     0.059 |    0.024       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCITHitPacker          |     0.000 |     0.035 |    0.023       0.0 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCOTHitPacker          |     0.200 |     0.081 |    0.023       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCMuonHitPacker        |     0.000 |     0.180 |    0.035       0.7 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        MCPrsHitPacker         |     0.000 |     0.061 |    0.000       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCSpdHitPacker         |     0.000 |     0.041 |    0.000       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCEcalHitPacker        |     0.000 |     0.066 |    0.000       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCHcalHitPacker        |     0.200 |     0.048 |    0.024       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCRichHitPacker        |     0.400 |     0.304 |    0.026       0.9 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        MCRichOpPhotPacker     |     3.999 |     4.193 |    0.025       7.8 |       5 |     0.021 |
+TimingAuditor.TIMER        INFO        MCRichSegmentPacker    |     1.000 |     0.478 |    0.024       1.3 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        MCRichTrackPacker      |     0.000 |     0.190 |    0.028       0.7 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO      SimMonitor               |   205.169 |   205.381 |    1.098     320.1 |       5 |     1.027 |
+TimingAuditor.TIMER        INFO       GiGaGetMainEvent        |     0.600 |     0.126 |    0.079       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO       MainMCTruthMonitor      |     0.200 |     0.546 |    0.026       1.0 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO       GiGaGetHitsAlg          |     0.400 |     0.404 |    0.197       1.0 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO       DetectorsMonitor        |    16.397 |    16.506 |    0.168      37.7 |       5 |     0.083 |
+TimingAuditor.TIMER        INFO        VeloGaussMoni          |     6.399 |     6.639 |    0.022      13.7 |       5 |     0.033 |
+TimingAuditor.TIMER        INFO        TTHitMonitor           |     0.800 |     0.772 |    0.014       2.0 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO        ITHitMonitor           |     0.600 |     0.449 |    0.009       1.0 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        OTHitMonitor           |     1.200 |     1.353 |    0.009       2.0 |       5 |     0.007 |
+TimingAuditor.TIMER        INFO        SpdMonitor             |     1.000 |     0.930 |    0.018       2.0 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO        PrsMonitor             |     1.400 |     1.454 |    0.014       3.0 |       5 |     0.007 |
+TimingAuditor.TIMER        INFO        EcalMonitor            |     2.200 |     1.922 |    0.013       3.2 |       5 |     0.010 |
+TimingAuditor.TIMER        INFO        HcalMonitor            |     0.400 |     0.569 |    0.013       1.8 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        MuonHitChecker         |     1.000 |     1.197 |    0.022       4.0 |       5 |     0.006 |
+TimingAuditor.TIMER        INFO        MuonMultipleScatteringC|     1.400 |     1.188 |    0.013       5.0 |       5 |     0.006 |
+TimingAuditor.TIMER        INFO       DataUnpackTest          |   187.572 |   187.783 |    0.583     299.2 |       5 |     0.939 |
+TimingAuditor.TIMER        INFO        UnpackMCVertex         |     0.600 |     0.732 |    0.030       2.0 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO        UnpackMCParticle       |     0.800 |     0.750 |    0.024       2.0 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO        CompareMCVertex        |     0.600 |     0.565 |    0.016       1.0 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        CompareMCParticle      |     0.800 |     0.714 |    0.013       1.2 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO        UnpackPuVetoHits       |     0.000 |     0.189 |    0.028       0.8 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckPuVetoHits        |     1.000 |     0.791 |    0.006       2.0 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO        UnpackVeloHits         |     0.200 |     0.185 |    0.021       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckVeloHits          |    12.798 |    12.947 |    0.005      21.4 |       5 |     0.065 |
+TimingAuditor.TIMER        INFO        UnpackTTHits           |     0.200 |     0.253 |    0.023       1.0 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckTTHits            |     3.999 |     3.908 |    0.005       5.9 |       5 |     0.020 |
+TimingAuditor.TIMER        INFO        UnpackITHits           |     0.200 |     0.049 |    0.021       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckITHits            |     2.000 |     2.277 |    0.006       5.4 |       5 |     0.011 |
+TimingAuditor.TIMER        INFO        UnpackOTHits           |     0.200 |     0.142 |    0.033       0.2 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckOTHits            |     9.198 |     9.287 |    0.006      17.0 |       5 |     0.046 |
+TimingAuditor.TIMER        INFO        UnpackRichHits         |     0.600 |     0.399 |    0.025       1.0 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        UnpackRichOpPhot       |     0.600 |     0.690 |    0.029       1.1 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        UnpackRichSegments     |     0.400 |     0.569 |    0.028       1.0 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        UnpackRichTracks       |     0.200 |     0.116 |    0.027       0.4 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckRichHits          |    17.397 |    17.533 |    0.007      27.1 |       5 |     0.088 |
+TimingAuditor.TIMER        INFO        CheckRichOpPhot        |   111.983 |   111.850 |    0.007     171.9 |       5 |     0.559 |
+TimingAuditor.TIMER        INFO        CheckRichSegments      |     9.199 |     9.358 |    0.007      15.6 |       5 |     0.047 |
+TimingAuditor.TIMER        INFO        CheckRichTracks        |     0.000 |     0.176 |    0.006       0.8 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        UnpackSpdHits          |     0.200 |     0.145 |    0.025       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckSpdHits           |     1.800 |     1.888 |    0.007       3.7 |       5 |     0.009 |
+TimingAuditor.TIMER        INFO        UnpackPrsHits          |     0.200 |     0.243 |    0.022       0.7 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckPrsHits           |     3.599 |     3.428 |    0.001       7.6 |       5 |     0.017 |
+TimingAuditor.TIMER        INFO        UnpackEcalHits         |     0.000 |     0.133 |    0.000       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckEcalHits          |     4.399 |     4.273 |    0.006       8.9 |       5 |     0.021 |
+TimingAuditor.TIMER        INFO        UnpackHcalHits         |     0.000 |     0.052 |    0.023       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckHcalHits          |     0.600 |     0.724 |    0.006       1.3 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO        UnpackMuonHits         |     0.400 |     0.051 |    0.013       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckMuonHits          |     2.999 |     3.285 |    0.005       5.3 |       5 |     0.016 |
+TimingAuditor.TIMER        INFO    PrevPrevEventSeq           | 65381.260 | 89403.673 |   18.440  239609.7 |       5 |   447.018 |
+TimingAuditor.TIMER        INFO     PrevPrevEventGaussSim     |     1.200 |     0.412 |    0.240       1.0 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO     PrevPrevSimulation        | 65380.061 | 89403.252 |   18.191  239608.7 |       5 |   447.016 |
+TimingAuditor.TIMER        INFO      MakePrevPrevSim          | 65187.890 | 89191.594 |   17.243  239238.4 |       5 |   445.958 |
+TimingAuditor.TIMER        INFO       GenToSimPrevPrev        |     7.599 |     8.265 |    0.087      14.9 |       5 |     0.041 |
+TimingAuditor.TIMER        INFO       GiGaFlushPrevPrev       | 65125.499 | 89128.013 |   16.095  239118.2 |       5 |   445.640 |
+TimingAuditor.TIMER        INFO       GiGaCheckEventPrevPrev  |     0.000 |     0.002 |    0.000       0.0 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO       SimToMCTruthPrevPrev    |     3.599 |     3.617 |    0.051       8.7 |       5 |     0.018 |
+TimingAuditor.TIMER        INFO       DetectorsHitsPrevPrev   |    43.394 |    43.759 |    0.481      86.0 |       5 |     0.219 |
+TimingAuditor.TIMER        INFO        GetPuVetoHitsPrevPrev  |     0.200 |     0.109 |    0.032       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        GetVeloHitsPrevPrev    |     2.000 |     1.906 |    0.025       5.0 |       5 |     0.010 |
+TimingAuditor.TIMER        INFO        GetTTHitsPrevPrev      |     1.000 |     1.229 |    0.024       2.7 |       5 |     0.006 |
+TimingAuditor.TIMER        INFO        GetITHitsPrevPrev      |     1.000 |     0.926 |    0.023       1.9 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO        GetOTHitsPrevPrev      |     2.600 |     2.590 |    0.024       5.7 |       5 |     0.013 |
+TimingAuditor.TIMER        INFO        RichHitsPrevPrev       |    29.395 |    29.740 |    0.226      54.8 |       5 |     0.149 |
+TimingAuditor.TIMER        INFO         GetRichHitsPrevPrev   |    11.398 |    11.785 |    0.061      21.9 |       5 |     0.059 |
+TimingAuditor.TIMER        INFO         GetRichPhotonsPrevPrev|     5.599 |     5.379 |    0.028      10.2 |       5 |     0.027 |
+TimingAuditor.TIMER        INFO         GetRichSegmentsPrevPre|     6.599 |     6.780 |    0.026      12.8 |       5 |     0.034 |
+TimingAuditor.TIMER        INFO         GetRichTracksPrevPrev |     0.600 |     0.746 |    0.023       1.5 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO         MCPartToMCRichTrackPre|     0.000 |     0.064 |    0.000       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO         MCRichHitToMCRichOpPho|     4.999 |     4.963 |    0.034       9.6 |       5 |     0.025 |
+TimingAuditor.TIMER        INFO        GetSpdHitsPrevPrev     |     0.600 |     0.496 |    0.026       1.0 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        GetPrsHitsPrevPrev     |     1.000 |     0.945 |    0.016       2.3 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO        GetEcalHitsPrevPrev    |     2.600 |     2.897 |    0.019       6.2 |       5 |     0.014 |
+TimingAuditor.TIMER        INFO        GetHcalHitsPrevPrev    |     0.800 |     0.357 |    0.020       1.0 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        GetMuonHitsPrevPrev    |     2.200 |     2.544 |    0.024       5.4 |       5 |     0.013 |
+TimingAuditor.TIMER        INFO       PrevPrevEventDataPacking|     7.799 |     7.915 |    0.507      14.6 |       5 |     0.040 |
+TimingAuditor.TIMER        INFO        PackMCParticlePrevPrev |     0.600 |     0.511 |    0.053       1.0 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        PackMCVertexPrevPrev   |     0.400 |     0.376 |    0.028       0.9 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        MCVeloHitPackerPrevPrev|     0.000 |     0.083 |    0.020       0.2 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCPuVetoHitPackerPrevPr|     0.000 |     0.032 |    0.003       0.0 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCTTHitPackerPrevPrev  |     0.000 |     0.075 |    0.015       0.2 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCITHitPackerPrevPrev  |     0.000 |     0.037 |    0.000       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCOTHitPackerPrevPrev  |     0.000 |     0.137 |    0.000       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        MCMuonHitPackerPrevPrev|     0.000 |     0.067 |    0.000       0.3 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCPrsHitPackerPrevPrev |     0.200 |     0.039 |    0.000       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCSpdHitPackerPrevPrev |     0.200 |     0.055 |    0.000       0.2 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCEcalHitPackerPrevPrev|     0.200 |     0.209 |    0.029       0.5 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        MCHcalHitPackerPrevPrev|     0.200 |     0.042 |    0.000       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        MCRichHitPackerPrevPrev|     0.000 |     0.137 |    0.000       0.4 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        MCRichOpPhotPackerPrevP|     4.999 |     5.685 |    0.028       9.9 |       5 |     0.028 |
+TimingAuditor.TIMER        INFO        MCRichSegmentPackerPrev|     0.600 |     0.238 |    0.027       0.5 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        MCRichTrackPackerPrevPr|     0.000 |     0.058 |    0.000       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO      SimMonitorPrevPrev       |   192.170 |   211.653 |    0.941     370.3 |       5 |     1.058 |
+TimingAuditor.TIMER        INFO       GiGaGetPrevPrevEvent    |     0.400 |     0.102 |    0.000       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO       PrevPrevMCTruthMonitor  |     0.400 |     0.700 |    0.020       1.1 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO       GiGaGetHitsAlgPrevPrev  |     0.400 |     0.139 |    0.000       0.3 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO       DetectorsMonitorPrevPrev|    15.798 |    16.390 |    0.160      44.9 |       5 |     0.082 |
+TimingAuditor.TIMER        INFO        VeloGaussMoniPrevPrev  |     6.199 |     6.451 |    0.030      17.3 |       5 |     0.032 |
+TimingAuditor.TIMER        INFO        TTHitMonitorPrevPrev   |     0.400 |     0.502 |    0.012       1.4 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        ITHitMonitorPrevPrev   |     0.600 |     0.682 |    0.009       1.4 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        OTHitMonitorPrevPrev   |     1.600 |     1.659 |    0.009       3.4 |       5 |     0.008 |
+TimingAuditor.TIMER        INFO        SpdMonitorPrevPrev     |     1.000 |     0.971 |    0.014       2.3 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO        PrsMonitorPrevPrev     |     1.400 |     1.309 |    0.011       3.3 |       5 |     0.007 |
+TimingAuditor.TIMER        INFO        EcalMonitorPrevPrev    |     1.600 |     1.863 |    0.012       4.6 |       5 |     0.009 |
+TimingAuditor.TIMER        INFO        HcalMonitorPrevPrev    |     0.400 |     0.407 |    0.012       1.4 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        MuonHitCheckerPrevPrev |     0.600 |     0.639 |    0.018       1.6 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        MuonMultipleScatteringC|     2.000 |     1.887 |    0.012       8.2 |       5 |     0.009 |
+TimingAuditor.TIMER        INFO       DataUnpackTestPrevPrev  |   175.173 |   194.311 |    0.637     323.7 |       5 |     0.972 |
+TimingAuditor.TIMER        INFO        UnpackMCVertexPrevPrev |     0.600 |     0.571 |    0.027       1.4 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        UnpackMCParticlePrevPre|     0.600 |     0.693 |    0.023       1.4 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        CompareMCVertexPrevPrev|     0.800 |     0.587 |    0.013       1.4 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        CompareMCParticlePrevPr|     0.800 |     0.807 |    0.012       1.8 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO        UnpackPuVetoHitsPrevPre|     0.200 |     0.208 |    0.030       0.8 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckPuVetoHitsPrevPrev|     0.600 |     0.550 |    0.008       1.2 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        UnpackVeloHitsPrevPrev |     0.200 |     0.473 |    0.026       1.6 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        CheckVeloHitsPrevPrev  |    12.398 |    12.220 |    0.007      25.5 |       5 |     0.061 |
+TimingAuditor.TIMER        INFO        UnpackTTHitsPrevPrev   |     0.000 |     0.045 |    0.000       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckTTHitsPrevPrev    |     3.799 |     4.033 |    0.006       8.4 |       5 |     0.020 |
+TimingAuditor.TIMER        INFO        UnpackITHitsPrevPrev   |     0.200 |     0.064 |    0.000       0.2 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckITHitsPrevPrev    |     4.200 |     4.345 |    0.007       8.8 |       5 |     0.022 |
+TimingAuditor.TIMER        INFO        UnpackOTHitsPrevPrev   |     0.200 |     0.096 |    0.000       0.3 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckOTHitsPrevPrev    |    12.398 |    12.430 |    0.007      24.0 |       5 |     0.062 |
+TimingAuditor.TIMER        INFO        UnpackRichHitsPrevPrev |     0.400 |     0.435 |    0.027       1.3 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        UnpackRichOpPhotPrevPre|     0.800 |     0.899 |    0.033       3.0 |       5 |     0.004 |
+TimingAuditor.TIMER        INFO        UnpackRichSegmentsPrevP|     0.400 |     0.556 |    0.031       1.4 |       5 |     0.003 |
+TimingAuditor.TIMER        INFO        UnpackRichTracksPrevPre|     0.200 |     0.073 |    0.015       0.2 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckRichHitsPrevPrev  |    15.797 |    15.884 |    0.008      27.1 |       5 |     0.079 |
+TimingAuditor.TIMER        INFO        CheckRichOpPhotPrevPrev|    91.986 |   103.085 |    0.008     173.0 |       5 |     0.515 |
+TimingAuditor.TIMER        INFO        CheckRichSegmentsPrevPr|    10.199 |    17.709 |    0.007      50.1 |       5 |     0.089 |
+TimingAuditor.TIMER        INFO        CheckRichTracksPrevPrev|     0.000 |     0.053 |    0.007       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        UnpackSpdHitsPrevPrev  |     0.400 |     0.432 |    0.027       1.7 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO        CheckSpdHitsPrevPrev   |     2.399 |     2.473 |    0.008       5.0 |       5 |     0.012 |
+TimingAuditor.TIMER        INFO        UnpackPrsHitsPrevPrev  |     0.400 |     0.192 |    0.025       0.4 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckPrsHitsPrevPrev   |     4.399 |     4.528 |    0.007       8.9 |       5 |     0.023 |
+TimingAuditor.TIMER        INFO        UnpackEcalHitsPrevPrev |     0.400 |     0.246 |    0.026       0.6 |       5 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckEcalHitsPrevPrev  |     5.199 |     5.439 |    0.007      12.0 |       5 |     0.027 |
+TimingAuditor.TIMER        INFO        UnpackHcalHitsPrevPrev |     0.400 |     0.096 |    0.026       0.3 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckHcalHitsPrevPrev  |     0.800 |     0.907 |    0.007       2.0 |       5 |     0.005 |
+TimingAuditor.TIMER        INFO        UnpackMuonHitsPrevPrev |     0.000 |     0.061 |    0.026       0.1 |       5 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckMuonHitsPrevPrev  |     3.999 |     4.051 |    0.007       8.5 |       5 |     0.020 |
+TimingAuditor.TIMER        INFO    NextNextEventSeq           |  9616.338 |  9925.793 |    0.287   39494.3 |       5 |    49.629 |
+TimingAuditor.TIMER        INFO     NextNextEventGaussSim     |     1.000 |     0.345 |    0.154       0.6 |       5 |     0.002 |
+TimingAuditor.TIMER        INFO     NextNextSimulation        | 16025.564 | 16542.398 |   64.929   39494.1 |       3 |    49.627 |
+TimingAuditor.TIMER        INFO      MakeNextNextSim          | 15957.907 | 16475.006 |   50.544   39342.4 |       3 |    49.425 |
+TimingAuditor.TIMER        INFO       GenToSimNextNext        |     9.332 |    10.127 |    1.125      19.0 |       3 |     0.030 |
+TimingAuditor.TIMER        INFO       GiGaFlushNextNext       | 15934.577 | 16450.301 |   26.436   39309.5 |       3 |    49.351 |
+TimingAuditor.TIMER        INFO       GiGaCheckEventNextNext  |     0.333 |     0.152 |    0.007       0.4 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO       SimToMCTruthNextNext    |     0.667 |     1.377 |    0.755       2.5 |       3 |     0.004 |
+TimingAuditor.TIMER        INFO       DetectorsHitsNextNext   |    10.665 |    10.987 |    2.804      25.2 |       3 |     0.033 |
+TimingAuditor.TIMER        INFO        GetPuVetoHitsNextNext  |     0.333 |     0.136 |    0.077       0.2 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        GetVeloHitsNextNext    |     0.667 |     0.525 |    0.000       1.4 |       3 |     0.002 |
+TimingAuditor.TIMER        INFO        GetTTHitsNextNext      |     0.333 |     0.446 |    0.023       1.1 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        GetITHitsNextNext      |     0.333 |     0.330 |    0.052       0.7 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        GetOTHitsNextNext      |     0.666 |     0.880 |    0.082       1.9 |       3 |     0.003 |
+TimingAuditor.TIMER        INFO        RichHitsNextNext       |     5.666 |     5.615 |    1.880      13.0 |       3 |     0.017 |
+TimingAuditor.TIMER        INFO         GetRichHitsNextNext   |     2.666 |     2.554 |    0.722       5.4 |       3 |     0.008 |
+TimingAuditor.TIMER        INFO         GetRichPhotonsNextNext|     1.000 |     0.854 |    0.245       2.1 |       3 |     0.003 |
+TimingAuditor.TIMER        INFO         GetRichSegmentsNextNex|     1.000 |     1.203 |    0.000       3.0 |       3 |     0.004 |
+TimingAuditor.TIMER        INFO         GetRichTracksNextNext |     0.333 |     0.221 |    0.000       0.6 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO         MCPartToMCRichTrackNex|     0.333 |     0.084 |    0.058       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO         MCRichHitToMCRichOpPho|     0.333 |     0.683 |    0.069       1.8 |       3 |     0.002 |
+TimingAuditor.TIMER        INFO        GetSpdHitsNextNext     |     0.333 |     0.236 |    0.053       0.5 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        GetPrsHitsNextNext     |     0.333 |     0.301 |    0.044       0.7 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        GetEcalHitsNextNext    |     1.333 |     1.301 |    0.319       3.0 |       3 |     0.004 |
+TimingAuditor.TIMER        INFO        GetHcalHitsNextNext    |     0.000 |     0.161 |    0.000       0.4 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        GetMuonHitsNextNext    |     0.666 |     1.033 |    0.000       2.4 |       3 |     0.003 |
+TimingAuditor.TIMER        INFO       NextNextEventDataPacking|     2.000 |     1.989 |    1.000       4.0 |       3 |     0.006 |
+TimingAuditor.TIMER        INFO        PackMCParticleNextNext |     0.667 |     0.226 |    0.084       0.5 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        PackMCVertexNextNext   |     0.000 |     0.141 |    0.000       0.3 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        MCVeloHitPackerNextNext|     0.000 |     0.052 |    0.000       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        MCPuVetoHitPackerNextNe|     0.000 |     0.031 |    0.002       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        MCTTHitPackerNextNext  |     0.000 |     0.040 |    0.025       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        MCITHitPackerNextNext  |     0.667 |     0.117 |    0.033       0.2 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        MCOTHitPackerNextNext  |     0.000 |     0.041 |    0.000       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        MCMuonHitPackerNextNext|     0.000 |     0.030 |    0.000       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        MCPrsHitPackerNextNext |     0.000 |     0.049 |    0.024       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        MCSpdHitPackerNextNext |     0.000 |     0.050 |    0.037       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        MCEcalHitPackerNextNext|     0.000 |     0.064 |    0.040       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        MCHcalHitPackerNextNext|     0.000 |     0.043 |    0.033       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        MCRichHitPackerNextNext|     0.000 |     0.169 |    0.050       0.3 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        MCRichOpPhotPackerNextN|     0.667 |     0.788 |    0.000       2.0 |       3 |     0.002 |
+TimingAuditor.TIMER        INFO        MCRichSegmentPackerNext|     0.000 |     0.096 |    0.000       0.3 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        MCRichTrackPackerNextNe|     0.000 |     0.022 |    0.000       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO      SimMonitorNextNext       |    67.657 |    67.386 |   14.375     151.8 |       3 |     0.202 |
+TimingAuditor.TIMER        INFO       GiGaGetNextNextEvent    |     1.333 |     0.079 |    0.000       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO       NextNextMCTruthMonitor  |     0.000 |     0.188 |    0.003       0.4 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO       GiGaGetHitsAlgNextNext  |     0.333 |     0.179 |    0.078       0.3 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO       DetectorsMonitorNextNext|    10.665 |    11.251 |    3.054      17.7 |       3 |     0.034 |
+TimingAuditor.TIMER        INFO        VeloGaussMoniNextNext  |     3.000 |     3.278 |    0.356       8.9 |       3 |     0.010 |
+TimingAuditor.TIMER        INFO        TTHitMonitorNextNext   |     0.000 |     0.273 |    0.075       0.6 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        ITHitMonitorNextNext   |     0.000 |     0.255 |    0.000       0.5 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        OTHitMonitorNextNext   |     1.000 |     0.567 |    0.000       1.5 |       3 |     0.002 |
+TimingAuditor.TIMER        INFO        SpdMonitorNextNext     |     0.000 |     0.648 |    0.152       1.2 |       3 |     0.002 |
+TimingAuditor.TIMER        INFO        PrsMonitorNextNext     |     1.000 |     0.946 |    0.257       1.8 |       3 |     0.003 |
+TimingAuditor.TIMER        INFO        EcalMonitorNextNext    |     0.666 |     1.083 |    0.359       2.3 |       3 |     0.003 |
+TimingAuditor.TIMER        INFO        HcalMonitorNextNext    |     0.667 |     0.374 |    0.020       0.7 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        MuonHitCheckerNextNext |     1.333 |     1.198 |    0.036       2.6 |       3 |     0.004 |
+TimingAuditor.TIMER        INFO        MuonMultipleScatteringC|     3.000 |     2.604 |    0.015       7.4 |       3 |     0.008 |
+TimingAuditor.TIMER        INFO       DataUnpackTestNextNext  |    55.325 |    55.679 |    1.058     133.3 |       3 |     0.167 |
+TimingAuditor.TIMER        INFO        UnpackMCVertexNextNext |     0.000 |     0.260 |    0.040       0.6 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        UnpackMCParticleNextNex|     0.667 |     0.268 |    0.041       0.6 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        CompareMCVertexNextNext|     0.000 |     0.307 |    0.029       0.7 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        CompareMCParticleNextNe|     0.000 |     0.271 |    0.023       0.7 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        UnpackPuVetoHitsNextNex|     0.333 |     0.046 |    0.000       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckPuVetoHitsNextNext|     0.000 |     0.190 |    0.018       0.5 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        UnpackVeloHitsNextNext |     0.333 |     0.183 |    0.054       0.3 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckVeloHitsNextNext  |     3.666 |     4.004 |    0.000      11.1 |       3 |     0.012 |
+TimingAuditor.TIMER        INFO        UnpackTTHitsNextNext   |     0.333 |     0.015 |    0.000       0.0 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckTTHitsNextNext    |     1.333 |     1.250 |    0.000       3.5 |       3 |     0.004 |
+TimingAuditor.TIMER        INFO        UnpackITHitsNextNext   |     0.000 |     0.035 |    0.000       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckITHitsNextNext    |     1.333 |     1.370 |    0.000       3.3 |       3 |     0.004 |
+TimingAuditor.TIMER        INFO        UnpackOTHitsNextNext   |     0.000 |     0.107 |    0.054       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckOTHitsNextNext    |     4.000 |     4.166 |    0.000      10.0 |       3 |     0.012 |
+TimingAuditor.TIMER        INFO        UnpackRichHitsNextNext |     0.333 |     0.100 |    0.000       0.2 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        UnpackRichOpPhotNextNex|     0.000 |     0.210 |    0.000       0.4 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        UnpackRichSegmentsNextN|     0.000 |     0.164 |    0.000       0.5 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        UnpackRichTracksNextNex|     0.333 |     0.051 |    0.000       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckRichHitsNextNext  |     4.666 |     5.004 |    0.062      11.7 |       3 |     0.015 |
+TimingAuditor.TIMER        INFO        CheckRichOpPhotNextNext|    27.329 |    27.160 |    0.009      63.6 |       3 |     0.081 |
+TimingAuditor.TIMER        INFO        CheckRichSegmentsNextNe|     3.333 |     3.384 |    0.000       8.1 |       3 |     0.010 |
+TimingAuditor.TIMER        INFO        CheckRichTracksNextNext|     0.000 |     0.019 |    0.000       0.0 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        UnpackSpdHitsNextNext  |     0.333 |     0.142 |    0.057       0.2 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckSpdHitsNextNext   |     0.666 |     0.902 |    0.000       2.2 |       3 |     0.003 |
+TimingAuditor.TIMER        INFO        UnpackPrsHitsNextNext  |     0.333 |     0.089 |    0.000       0.2 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckPrsHitsNextNext   |     1.333 |     1.562 |    0.000       3.8 |       3 |     0.005 |
+TimingAuditor.TIMER        INFO        UnpackEcalHitsNextNext |     0.333 |     0.106 |    0.000       0.3 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckEcalHitsNextNext  |     2.000 |     2.141 |    0.000       5.4 |       3 |     0.006 |
+TimingAuditor.TIMER        INFO        UnpackHcalHitsNextNext |     0.000 |     0.041 |    0.032       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckHcalHitsNextNext  |     0.333 |     0.348 |    0.000       0.8 |       3 |     0.001 |
+TimingAuditor.TIMER        INFO        UnpackMuonHitsNextNext |     0.000 |     0.029 |    0.000       0.1 |       3 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckMuonHitsNextNext  |     1.666 |     1.706 |    0.014       4.1 |       3 |     0.005 |
+TimingAuditor.TIMER        INFO  GaussTape                    |  3170.118 |  3617.056 | 1179.367    8047.9 |       5 |    18.085 |
+TimingAuditor.TIMER        INFO  FSROutputStreamGaussTape     |     0.000 |     0.003 |    0.002       0.0 |       5 |     0.000 |
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
 GiGa.TrackSeq.HepMCTrackSUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 GiGa.TrackSeq.HepMCTrackSUCCESS  #WARNINGS   = 1        Message = 'The process is known 'Electromagnetic/muPairProd', but vertex type is still 'Unknown''
 GiGa.TrackSeq.PostTrack SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 GiGa.TrackSeq.PostTrack SUCCESS  #WARNINGS   = 27031    Message = 'RichHpd/Pmt/Mcp PhotoelectricProcess  RichHpd/Pmt/Mcp SiEnergyLossProcess particles not kept'
 GiGa.GiGaMgr               INFO GiGaRunManager:: GiGaRunManager Finalization
-RootCnvSvc                 INFO Disconnected data IO:7ACF200F-C138-E511-8413-02163E00CCAE [Gauss-30000000-5ev-20150802.sim]
+RootCnvSvc                 INFO Disconnected data IO:60504185-8B39-E511-A1EE-02163E00CCAE [Gauss-30000000-5ev-20150803.sim]
 *****Chrono*****           INFO ****************************************************************************************************
 *****Chrono*****           INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****           INFO ****************************************************************************************************
-GiGa.GiGaMgr::process...   INFO Time User   : Tot= 12.9[min] Ave/Min/Max= 59.6(+- 47.2)/0.015/  163  [s] #= 13
-ChronoStatSvc              INFO Time User   : Tot= 18.7[min]                                             #=  1
+GiGa.GiGaMgr::process...   INFO Time User   : Tot= 9.64[min] Ave/Min/Max= 44.5(+- 43.6)/0.016/  163  [s] #= 13
+ChronoStatSvc              INFO Time User   : Tot= 15.4[min]                                             #=  1
 *****Chrono*****           INFO ****************************************************************************************************
 ******Stat******           INFO ****************************************************************************************************
 ******Stat******           INFO  The Final stat Table (not ordered)
