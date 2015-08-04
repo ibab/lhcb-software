@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
+! 2015-08-04 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers        
 
 !========================= RichMCTools v3r18 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
