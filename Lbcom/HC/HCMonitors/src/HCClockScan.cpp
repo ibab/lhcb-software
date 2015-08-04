@@ -1,5 +1,4 @@
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiUtils/HistoLabels.h"
 #include "GaudiUtils/Aida2ROOT.h"
 

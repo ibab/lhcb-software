@@ -1,6 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // LHCb
 #include "Event/ODIN.h"
 #include "Event/HCDigit.h"

@@ -2,7 +2,6 @@
 #include "TH1.h"
 
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiUtils/Aida2ROOT.h"
 
 // Local
