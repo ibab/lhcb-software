@@ -35,7 +35,7 @@ Quote:
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2015-07-15"
-__version__ = "Revision:"
+__version__ = "$Revision$"
 __all__ = (
     'frexp10'     , ## similar to math.frexp but with radix=10
     'round_N'     , ## round floaing value to N-significant digits
