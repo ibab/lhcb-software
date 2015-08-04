@@ -1,8 +1,5 @@
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 #include <TH1.h>
 #include "GaudiUtils/Aida2ROOT.h"
 #include "Event/ODIN.h"

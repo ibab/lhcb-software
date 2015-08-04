@@ -1,8 +1,5 @@
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "RawBankSizeMonitor.h"
 #include "AIDA/IHistogram1D.h"

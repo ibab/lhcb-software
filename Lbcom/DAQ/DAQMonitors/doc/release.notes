@@ -3,6 +3,8 @@
 ! Responsible : Marco Cattaneo
 ! Purpose     : Monitors for DAQ event objects
 !-----------------------------------------------------------------------------
+! 2015-08-04 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers        
 
 !========================= DAQMonitors v1r9 2013-02-14 =========================
 ! 2012-12-19 - Marco Cattaneo
