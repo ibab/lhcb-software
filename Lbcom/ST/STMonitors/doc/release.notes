@@ -3,6 +3,8 @@
 ! Responsible : Mark Tobin, Mathias Knecht, Jeroen van Tilburg, Nicola Chiapolini
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
+! 2015-08-04 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers        
 
 !========================= STMonitors v4r3 2015-07-20 =========================
 ! 2015-06-06

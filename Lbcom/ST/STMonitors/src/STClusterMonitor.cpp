@@ -3,9 +3,6 @@
 #include <string>
 #include <limits>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // local
 #include "STClusterMonitor.h"
 #include "Kernel/STDetSwitch.h"

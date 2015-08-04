@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // from ST
 #include "Event/STTELL1Data.h"
 #include "Kernel/STDAQDefinitions.h"

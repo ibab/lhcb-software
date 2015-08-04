@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // STKernel
 #include "Kernel/STDetSwitch.h"
 #include "Kernel/ISTReadoutTool.h"

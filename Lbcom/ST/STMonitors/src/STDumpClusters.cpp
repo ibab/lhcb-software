@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 #include "Event/STCluster.h"
 #include "Event/ODIN.h"
 #include "Kernel/ISTReadoutTool.h"

@@ -1,6 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // DigiEvent
 #include "Event/STCluster.h"
 #include "Event/STSummary.h"

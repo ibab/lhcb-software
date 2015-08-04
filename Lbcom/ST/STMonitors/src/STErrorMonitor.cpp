@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // from STTELL1Event
 #include "Event/STTELL1BoardErrorBank.h"
 

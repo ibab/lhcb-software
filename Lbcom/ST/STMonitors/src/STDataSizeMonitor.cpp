@@ -6,9 +6,6 @@
 //   Author: M. Needham
 //   Created: 19-09-2000
 
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 #include "STDataSizeMonitor.h"
 
 //Event

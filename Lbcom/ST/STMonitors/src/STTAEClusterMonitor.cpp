@@ -1,8 +1,3 @@
-// Include files 
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // local
 #include "STTAEClusterMonitor.h"
 #include "Event/STCluster.h"

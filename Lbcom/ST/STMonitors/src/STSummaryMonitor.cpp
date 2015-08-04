@@ -1,6 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // LHCbKernel
 #include "Kernel/STDetSwitch.h"
 #include "Kernel/STDAQDefinitions.h"
