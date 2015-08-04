@@ -1,6 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Event/LinkerEvent
 #include "Linker/LinkedTo.h"
 // Event/MCEvent

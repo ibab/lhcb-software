@@ -2,6 +2,8 @@
 ! Package     : VP/VPCheckers
 ! Responsible : Mark Williams
 !--------------------------------------------------------------------------
+! 2015-08-04 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers        
 
 !========================= VPCheckers v1r0 2015-05-26 =========================
 ! 2015-04-24 - Heinrich Schindler
