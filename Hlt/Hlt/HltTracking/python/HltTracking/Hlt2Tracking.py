@@ -22,7 +22,9 @@ from HltTrackNames import Hlt2TrackingRecognizedFitTypes
 from HltTrackNames import _baseTrackLocation, _baseProtoPLocation
 from HltTrackNames import HltMuonTracksName, HltAllMuonTracksName
 from HltTrackNames import HltMuonIDSuffix, HltRICHIDSuffix, HltCALOIDSuffix, HltSharedPIDPrefix
-from HltTrackNames import HltNoPIDSuffix, HltAllPIDsSuffix, HltCaloProtosSuffix, HltMuonProtosSuffix, HltRichProtosSuffix, HltAllPIDsProtosSuffix
+from HltTrackNames import (HltNoPIDSuffix, HltAllPIDsSuffix, HltCaloProtosSuffix, HltMuonProtosSuffix,
+                           HltRichProtosSuffix, HltAllPIDsProtosSuffix, HltCaloAndMuonProtosSuffix )
+
 from HltTrackNames import HltDefaultFitSuffix
 from HltTrackNames import HltGlobalTrackLocation
 from HltTrackNames import Hlt2ChargedProtoParticleSuffix, Hlt2NeutralProtoParticleSuffix
@@ -636,8 +638,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
 
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
 
-
-
     #########################################################################################
     #
     # Muons with CALO ID added, these seem to be obsolete and probably don't work
@@ -646,37 +646,70 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         Muons which have the CALO PID information filled for them
         """
-        # Fill the CALO sequence first, this will make the charged protoparticles
-        # and add the CALO ID to them
-        myCALOProcessorChargedSeq       = self.__getCALOSeq("Charged")
+        #
+        # The charged protoparticles and their output location
+        #
+        allTracks                   = self.__hlt2Tracking()
+        tracks                      = self.__hlt2StagedFastFit()
+        chargedProtos               = self.__hlt2ChargedProtos(HltCaloAndMuonProtosSuffix)
+        chargedProtosOutputLocation = chargedProtos.outputSelection()
+        doCaloReco              = self.__hlt2CALOID()
 
+        #
+        # Add the Calo info to the DLL 
+        # TODO: This is now used several times, create an own function
+        from Configurables import ( ChargedProtoParticleAddEcalInfo,
+                                    ChargedProtoParticleAddBremInfo,
+                                    ChargedProtoParticleAddHcalInfo,
+                                    ChargedProtoParticleAddPrsInfo,
+                                    ChargedProtoParticleAddSpdInfo
+                                    )
+        from Configurables import GaudiSequencer
+        addCaloInfo = GaudiSequencer( self.__pidAlgosAndToolsPrefix() + HltCaloAndMuonProtosSuffix + "Sequence")
+        caloPidLocation = self.__caloIDLocation()
+        prefix = self.__pidAlgosAndToolsPrefix()
+        suffix =   HltCaloAndMuonProtosSuffix
+        ecal = ChargedProtoParticleAddEcalInfo(prefix+"ChargedProtoPAddEcal"+suffix)
+        brem = ChargedProtoParticleAddBremInfo(prefix+"ChargedProtoPAddBrem"+suffix)
+        hcal = ChargedProtoParticleAddHcalInfo(prefix+"ChargedProtoPAddHcal"+suffix)
+        prs  = ChargedProtoParticleAddPrsInfo (prefix+"ChargedProtoPAddPrs"+suffix )
+        spd  = ChargedProtoParticleAddSpdInfo (prefix+"ChargedProtoPAddSpd"+suffix )
+        for alg in (ecal,brem,hcal,prs,spd):
+            alg.setProp("ProtoParticleLocation",chargedProtosOutputLocation)
+            alg.setProp("Context",caloPidLocation)
+            addCaloInfo.Members += [ alg  ]
+        
         from Configurables import ChargedProtoParticleAddMuonInfo
 
         # Now add the muon information
-        # TODO : can I do this without overwriting?
-        chargedProtosOutputLocation = myCALOProcessorChargedSeq.outputSelection()
-
-        muon_name                       = self.__pidAlgosAndToolsPrefix()+"MwCDLL"
-        muon                            = ChargedProtoParticleAddMuonInfo(muon_name)
-        muon.ProtoParticleLocation      = chargedProtosOutputLocation
-
         # The muon ID
         muonID                          = self.__hlt2MuonID()
+        muon_name                       = self.__pidAlgosAndToolsPrefix()+HltCaloAndMuonProtosSuffix
+        muon                            = ChargedProtoParticleAddMuonInfo(muon_name)
+        muon.ProtoParticleLocation      = chargedProtosOutputLocation
         muon.InputMuonPIDLocation       = muonID.outputSelection()
-
+        
+        
         # For the charged we need a combined DLL
         from Configurables import ChargedProtoCombineDLLsAlg
-        combine_name                    = self.__pidAlgosAndToolsPrefix()+"MwCCombDLLs"
+        combine_name                    = self.__pidAlgosAndToolsPrefix()+HltCaloAndMuonProtosSuffix+ "CombDLLs"
         combine                         = ChargedProtoCombineDLLsAlg(combine_name)
         combine.ProtoParticleLocation   = chargedProtosOutputLocation
 
+        sequenceToReturn  = [ allTracks, tracks, chargedProtos]
+        sequenceToReturn += [ doCaloReco, addCaloInfo]
+        sequenceToReturn += [ muonID, muon ]
+        sequenceToReturn += [ combine ]
+        
         from HltLine.HltLine import bindMembers
+
         # Build the bindMembers
         bm_name         = self.__pidAlgosAndToolsPrefix()+"MwCSeq"
-        bm_members      = [ myCALOProcessorChargedSeq, muonID, muon, combine ]
+        bm_members      = sequenceToReturn
         bm_output       = chargedProtosOutputLocation
 
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
+
 
     #########################################################################################
     #
@@ -979,7 +1012,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
 
         # Configure moun ID tools explicitly, would be better if the ConfiguredMuonIDs class
         # provided a comprehensive method. All tools are public, but should configure
-                # everywhere, where they are used to be safe.
+        # everywhere, where they are used to be safe.
         import Configurables
         for tool, fun in (("CommonMuonTool" ,"IsMuonTool"),
                      ("DLLMuonTool", "DLLMuonTool"),

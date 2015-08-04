@@ -158,6 +158,7 @@ HltCALOIDSuffix				= "CALO"
 HltAllPIDsProtosSuffix                  = "WithAllPIDs"
 HltCaloProtosSuffix			= "WithCaloID"
 HltMuonProtosSuffix			= "WithMuonID"
+HltCaloAndMuonProtosSuffix		= "WithCaloAndMuonID"
 HltRichProtosSuffix			= "WithRichID"
 
 from HltTracking.Hlt1TrackNames import Hlt1TracksPrefix, Hlt1TrackRoot
@@ -218,8 +219,9 @@ __all__ = (
 		#HltRichDefaultRadiators,
 		#
                 HltAllPIDsProtosSuffix,
-		HltCaloProtosSuffix,               
+		HltCaloProtosSuffix,
 		HltMuonProtosSuffix,                     
+                HltCaloAndMuonProtosSuffix,
 		HltRichProtosSuffix,                   
 		#
 		# The functions

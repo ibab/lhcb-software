@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-08-04 - Sascha Stahl
+ - Hlt2Tracking: Fix function to create protoparticles with calo and muon id. 
+   This might be useful for Downstream tracks.
+
 ! 2015-08-03 - Sascha Stahl
  - HltRecoConf: Update upfront track chi2 (3 -> 4 ) and ghost probability cut (0.5 -> 0.4).
 
