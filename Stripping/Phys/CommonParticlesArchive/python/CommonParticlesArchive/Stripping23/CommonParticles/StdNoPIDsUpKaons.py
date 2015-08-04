@@ -1,32 +1,29 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StdNoPIDsUpPions.py,v 1.1 2009-10-08 12:37:06 pkoppenb Exp $ 
-# =============================================================================
-## @file  CommonParticles/StdNoPIDsUpPions.py
-#  configuration file for 'Standard NoPIDs Upstream Pions' 
-#  @author Patrick Koppenburg patrick.koppenburg@cern.ch
-#  @date 2009-01-14
+## @file  CommonParticles/StdNoPIDsUpKaons.py
+#  configuration file for No PID Upstream Kaons
+#  @author Chris Jones christopher.rob.jones@cern.ch
+#  @date 20/01/2012
 # =============================================================================
 """
-Configuration file for 'Standard NoPIDs Upstream Pions'
+Configuration file for No PID Upstream Kaons
 """
-__author__  = "Patrick Koppenburg patrick.koppenburg@cern.ch"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__author__  = "Chris Jones christopher.rob.jones@cern.ch"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 __all__ = (
-    'StdNoPIDsUpPions' ,
+    'StdNoPIDsUpKaons' ,
     'locations'
     )
 # =============================================================================
 from Gaudi.Configuration   import *
 from Configurables         import NoPIDsParticleMaker 
-
 from CommonParticles.Utils import *
 
 ## create the algorithm 
-algorithm = NoPIDsParticleMaker ( 'StdNoPIDsUpPions'          ,
-                                  DecayDescriptor = 'Pion' ,
-                                  Particle = 'pion' )
+algorithm = NoPIDsParticleMaker ( 'StdNoPIDsUpKaons',
+                                  DecayDescriptor = 'Kaon' ,
+                                  Particle = 'kaon' )
 
 # configure the track selector
 selector = trackSelector ( algorithm, trackTypes = ['Upstream'] )
@@ -35,7 +32,7 @@ selector = trackSelector ( algorithm, trackTypes = ['Upstream'] )
 locations = updateDoD ( algorithm )
 
 ## finally: define the symbol 
-StdNoPIDsUpPions = algorithm 
+StdNoPIDsUpKaons = algorithm 
 
 ## ============================================================================
 if '__main__' == __name__ :
