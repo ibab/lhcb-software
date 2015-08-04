@@ -62,7 +62,7 @@ default_config = {
     , 'BUILDERTYPE' : 'XiccBuilder'
     , 'CONFIG' : { 'LongTrackGEC' : 150
                    , 'controlPrescaleLc'       : 0.05
-                   , 'controlPrescaleXic'      : 1.0
+                   , 'controlPrescaleXic'      : 0.05
                    , 'controlPrescaleDp'       : 0.01
                    , 'controlPrescaleD0'       : 0.01
                    , 'controlPrescaleDsp'      : 0.01
@@ -76,10 +76,10 @@ default_config = {
                    , 'signalPrescaleViaD0'     : 1.0
                    , 'signalPrescaleViaD0WC'   : 1.0
                    , 'signalPrescaleViaD0DCS'  : 1.0
-                   , 'LcHlt2TisTosSpec' : { }
-                   , 'DzHlt2TisTosSpec' : { }
-                   , 'DpHlt2TisTosSpec' : { }
-                   , 'XiHlt2TisTosSpec' : { }
+                   , 'LcHlt2TisTosSpec' : { 'Hlt2CharmHadLcpToPpKmPip.*Decision%TOS' : 0, 'Hlt2Global%TIS' : 0 }
+                   , 'DzHlt2TisTosSpec' : { 'Hlt2CharmHad.*Decision%TOS' : 0, 'Hlt2Global.*%TIS' : 0 }
+                   , 'DpHlt2TisTosSpec' : { 'Hlt2CharmHadDpToKmPipPip.*Decision%TOS' : 0, 'Hlt2Global%TIS' : 0 }
+                   , 'XiHlt2TisTosSpec' : { 'Hlt2CharmHadXim2LamPim.*Decision%TOS' : 0, 'Hlt2Global%TIS' : 0 }
                  }
     , 'STREAMS' : [ 'Charm' ]
 }
