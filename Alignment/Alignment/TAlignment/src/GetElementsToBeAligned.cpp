@@ -350,8 +350,7 @@ const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::Node& no
 	const DeTTSector* ladder = dynamic_cast<const DeTTSector*>(detelem) ;
 	if( ladder ) {
 	  // the following does not always work as it relies on 'isinside':
-	  //detelem = ladder->findSensor( node.state().position() ) ; // test for solving alupdate errors
-	  ///* comment this block and uncomment previous line if error
+	  //    detelem = ladder->findSensor( node.state().position() ) ;
 	  // so, we'll use the trajectory, gambling a bit. I checked
 	  // that 99% of the time it returns the same as the call
 	  // above.
@@ -361,7 +360,6 @@ const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::Node& no
 	  int i = int(N*(mu - traj.beginRange()) / (traj.endRange() - traj.beginRange())) ;
 	  unsigned int index = i<=0 ? 0 : (i>=int(N) ? N-1 : i ) ;
 	  detelem = ladder->sensors()[index] ;
-	  //*/
 	}
       }
       elem = findElement( *detelem ) ;
