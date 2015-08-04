@@ -1,7 +1,6 @@
 // ============================================================================
 // Include files 
 #include "Relations/RelationWeighted1D.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/CaloHypo.h"
 #include "Event/MCParticle.h"
