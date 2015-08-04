@@ -11,7 +11,6 @@
  */
 
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/STCluster.h"
 #include "Event/STLiteCluster.h"
 #include "Kernel/STAlgBase.h"

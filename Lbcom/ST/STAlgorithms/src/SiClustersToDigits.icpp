@@ -1,8 +1,5 @@
 // $Id: SiClustersToDigits.icpp,v 1.1 2009-03-14 09:18:49 mneedham Exp $
 
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 #include "SiClustersToDigits.h"
 #include "SiClusterTraits.h"
 

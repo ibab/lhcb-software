@@ -1,8 +1,3 @@
-// $Id: SiClustersToLite.icpp,v 1.2 2009-02-20 10:46:08 mneedham Exp $
-
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 #include "SiClustersToLite.h"
 #include "SiClusterTraits.h"
 

@@ -11,7 +11,6 @@
  */
 
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/VeloCluster.h"
 #include "Event/VeloLiteCluster.h"
 #include "GaudiAlg/GaudiAlgorithm.h"

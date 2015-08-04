@@ -1,7 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
-
 // LHCbKernel includes
 #include "Kernel/STChannelID.h"
 #include "STLiteClusterKiller.h"

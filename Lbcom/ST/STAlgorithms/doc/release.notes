@@ -1,6 +1,8 @@
 ! Package         : ST/STAlgorithms
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
+! 2015-08-04 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers        
 
 !========================= STAlgorithms v4r7 2013-07-18 =========================
 ! 2013-06-05 - Marco Cattaneo
