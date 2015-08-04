@@ -1,6 +1,8 @@
 Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
+! 2015-08-04 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers        
 
 !========================= SiTools v1r9 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic

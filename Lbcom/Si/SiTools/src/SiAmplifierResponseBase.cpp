@@ -1,7 +1,4 @@
-// $Id: SiAmplifierResponseBase.cpp,v 1.2 2009-03-19 08:19:42 mneedham Exp $
-
 // Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 // local
