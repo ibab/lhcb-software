@@ -1,0 +1,130 @@
+#!/usr/bin/env ipython 
+# -*- coding: utf-8 -*-
+# =============================================================================
+# $Id:$ 
+# =============================================================================
+## @file ostap
+#  
+#     .oooooo.                .                        
+#    d8P'  `Y8b             .o8                        
+#   888      888  .oooo.o .o888oo  .oooo.   oo.ooooo.  
+#   888      888 d88(  "8   888   `P  )88b   888' `88b 
+#   888      888 `"Y88b.    888    .oP"888   888   888 
+#   `88b    d88' o.  )88b   888 . d8(  888   888   888 
+#    `Y8bood8P'  8""888P'   "888" `Y888""8o  888bod8P' 
+#                                            888       
+#                                           o888o      
+#                                                    
+#  Simple interactive PyRoot-based analysis environment to provide access
+#  to zillions useful decorators for ROOT (and not only ROOT!) objects&classes  
+# 
+#  This file is a part of 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
+#  <b>``Python-based Interactive Environment for Smart and Friendly Physics Analysis''</b>
+#
+#  The package has been designed with the kind help from
+#  Pere MATO and Andrey TSAREGORODTSEV. 
+#  And it is based on the 
+#  <a href="http://cern.ch/lhcb-comp/Analysis/LoKi/index.html">LoKi project:</a>
+#  <b>``C++ ToolKit for Smart and Friendly Physics Analysis''</b>
+#
+#  By usage of this code one clearly states the disagreement 
+#  with the smear campaign of Dr.O.Callot et al.: 
+#  ``No Vanya's lines are allowed in LHCb/Gaudi software''
+#
+#  @date   2012-02-15
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#
+#                    $Revision:$
+#  Last modification $Date:$
+#                 by $Author:$
+# =============================================================================
+""" Simple interactive PyRoot-based analysis environment to provide access to zillion
+    useful decorators for ROOT (and not only ROOT!) objects&classes  
+"""
+# =============================================================================
+__author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
+__date__    = "2012-09-10"
+__version__ = '$Revision: 135439 $'
+# =============================================================================
+import ROOT
+# =============================================================================
+# logging 
+# =============================================================================
+from AnalysisPython.Logger import getLogger 
+_my_name_ = __name__
+if _my_name_ in ( '__main__' , '__builtins__' ) : _my_name_ = 'run_ostap'
+# =============================================================================
+logger = getLogger( _my_name_ )
+# =============================================================================
+# import everything from Ostap
+from   Ostap.OstapBender import * 
+# =============================================================================
+## execute the files, defined as arguments
+import sys,os, glob 
+if sys.argv[1:] : 
+    from   copy import deepcopy
+    _myself    = sys.modules[ __name__ ] 
+    _mykeys    = deepcopy ( dir( _myself ) ) 
+    ##_mykeys  = deepcopy ( globals().keys() ) 
+    _copied    = set() 
+    _skept     = set()
+    
+    root_files = []
+    py_files   = []
+    
+    for a in sys.argv[1:] :
+
+        p1     = a.find('.root')
+        if 0 < p1 and len ( a ) == p1 + 5 :
+            try : 
+                f = ROOT.TFile.Open ( a , 'READ')
+                root_files.append ( f )
+                logger.info ("Open ROOT file '%s'" % a )
+                f.ls()
+                continue 
+            except :
+                logger.info ("Unable to open ROT file '%s'" % a )
+                
+                
+        p2     = a.find( '.py' )
+        if p2 <= 0 or len(a) != p2 + 3 : continue
+        
+        logger.info  ('Try    to execute "%s"' % a )
+        
+        myvars =  {} 
+        execfile ( a , myvars )
+        for k,val in myvars.iteritems() : 
+            ## do not redefine already defined symbols!  
+            if k in _mykeys : 
+                # do not redefine local symbols [ needed? ] 
+                _skept.add ( k )
+                continue
+            ## copy symbol into the local namespace  
+            setattr ( _myself , k , val ) 
+            _copied.add ( k )
+        #
+        py_files.append ( a ) 
+            
+    if _copied    : logger.info ( 'Copied   %d symbols'      % len ( _copied    ) )  
+    if _skept     : logger.info ( 'Skept    %d symbols'      % len ( _skept     ) )  
+    if py_files   : logger.info ( 'Executed %d files'        % len ( py_files   ) )
+    if root_files : logger.info ( 'Opened   %d ROOT files'   % len ( root_files ) )
+    ## do not polllute namespace 
+    del _copied
+    del _skept
+    del _mykeys 
+    del _myself 
+
+
+
+#
+## here we need interactive prompt
+#
+#import IPython
+#IPython.embed()
+#exit() 
+# =============================================================================
+# The END 
+# =============================================================================
+

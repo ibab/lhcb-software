@@ -4,7 +4,12 @@
 # $Id$
 # =============================================================================
 ## @file
-#  Module with decoration of some RooFit objects for efficient use in python
+#  Module with decoration of asome RooFit objects for efficient use in python
+#  - iterators  for RooArgList
+#  - iterators  for RooArgSet
+#  - iterators  for RooAbsData
+#  - decorators for RooFitResult
+#  - decorators for RooRealVar
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
@@ -20,7 +25,9 @@ __version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = (
-    'setStorage' , 
+    'setStorage' , ## define the defautl storage for  RooDataStore 
+    'PDF_fun'    , ## wrapper of PDF to ``simple'' function 
+    'SETVAR'     , ## context manager to preserev the current value for RooRealVar
     ) 
 # =============================================================================
 import ROOT, cppyy              ## attention here!!
@@ -976,18 +983,36 @@ def _ds_stat_var_ ( dataset , what , *cuts ) :
     >>> stat2 = dataset.statVar( 'S_sw/effic' ,'pt>1000')
     
     """
-    store = dataset.store()
-    if store :
-        tree = store.tree()
-        if tree : return tree.statVar( what , *cuts )
-        
-    raise AttributeError( "Can't ``statVar'' data set , probably wrong StorageType" )
+    return cpp.Analysis.StatVar.statVar ( tree , expression , *cuts )
+    ## store = dataset.store()
+    ## if store :
+    ##     tree = store.tree()
+    ##    if tree : return tree.statVar( what , *cuts )
+    ##    
+    ## raise AttributeError( "Can't ``statVar'' data set , probably wrong StorageType" )
+
+
+# =============================================================================
+## get the statistic for certain expression in Tree/Dataset
+#  @code
+#  dataset  = ... 
+#  sum1 = dataset.sumVar( 'S_sw/effic' )
+#  sum2 = dataset.sumVar( 'S_sw/effic' ,'pt>1000')
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-09-15
+def _ds_sum_var_ ( dataset , what , *cuts ) :
+    """
+    """
+    res = _ds_stat_var_ ( dataset , what , *cuts )
+    return VE ( res.sum() , res.sumw2() )
 
 
 ROOT.RooDataSet . statVar = _ds_stat_var_
+ROOT.RooDataSet .  sumVar = _ds_sum_var_
 
 # =============================================================================
-## print method for RooDatSet
+## print method for RooDataSet
 #  @code
 #
 #   >>> print dataset
@@ -1110,6 +1135,87 @@ def setStorage ( new_type = RAD.Tree ) :
     else : logger.debug ( 'RooAbsData: Default storage type is %s' % the_type  )
 
 
+
+# =============================================================================
+## @class SETVAR
+#  Simple context manager to preserve current value for RooAbsVar
+#  @code
+#  var = ...
+#  var.setVal(1) 
+#  print '1) value %s ' % var.getVal() 
+#  with SETVAR(var) :
+#        print '2) value %s ' % var.getVal() 
+#        var.setVal(10)
+#        print '3) value %s ' % var.getVal() 
+#  print '4) value %s ' % var.getVal() 
+#  @endcode
+class SETVAR(object):
+    """
+    Simple context manager to preserve current value for RooAbsVar
+    >>> var = ...
+    >>> var.setVal(1) 
+    >>> print '1) value %s ' % var.getVal() 
+    >>> with SETVAR(var) :
+    ...    print '2) value %s ' % var.getVal() 
+    ...    var.setVal(10)
+    ...    print '3) value %s ' % var.getVal() 
+    >>> print '4) value %s ' % var.getVal() 
+    """
+    def __init__  ( self , xvar ) :
+        self.xvar = xvar
+    def __enter__ ( self        ) :
+        self._old = float ( self.xvar.getVal() ) 
+        return self 
+    def __exit__  ( self , *_   ) :
+        self.xvar.setVal  ( self._old ) 
+
+# =============================================================================
+## @class PDF_fun
+#  Helper class to wrap PDF as 'function'
+#  can be helpful for some pure math-operations
+#  @code
+#  pdf,var = ....
+#  fun     = PDF( fun , var , xmin=0 , xmax=1 )
+#  from LHCbMath.deriv import mean, mode, mediane, CL   
+#  print 'MEAN    : %s' % mean    ( fun , 0 , 1 )
+#  print 'MODE    : %s' % mode    ( fun , 0 , 1 )
+#  print 'MEDIANE : %s' % mediane ( fun , 0 , 1 )
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-03-29
+class PDF_fun(object):
+    """
+    Helper class to wrap PDF as 'function'
+    >>> pdf,var = ....
+    >>> fun     = PDF( fun , var , xmin=0 , xmax=1 )
+    >>> from LHCbMath.deriv import mean, mode, mediane  
+    >>> print 'MEAN    : %s' % mean    ( fun , 0 , 1 )
+    >>> print 'MODE    : %s' % mode    ( fun , 0 , 1 )
+    >>> print 'MEDIANE : %s' % mediane ( fun , 0 , 1 )
+    """
+    def __init__ ( self , pdf , xvar , xmin , xmax ) :
+        self.pdf     = pdf
+        self.xvar    = xvar
+        self._xmin    = min(xmin,xmax)
+        self._xmax    = max(xmin,xmax)
+        
+    def xmin     ( self ) : return self._xmin
+    def xmax     ( self ) : return self._xmax
+    
+    ## the main method 
+    def __call__ ( self , x , pars = [] ) :
+
+        ## for ROOT.TF1
+        if not len(x) : x = x[0]
+
+        ## try to be efficient 
+        if not self._xmin <= x <= self._xmax : return 0 
+        
+        with SETVAR( self.xvar ) :
+            xvar.setVal ( x )
+            return self.pdf.getVal()
+
+    
 # =============================================================================
 if '__main__' == __name__ :
     

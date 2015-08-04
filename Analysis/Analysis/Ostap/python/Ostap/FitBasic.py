@@ -1861,7 +1861,7 @@ class Generic2D_pdf(PDF) :
         PDF2  . __init__ ( self , name , varx , vary )
         self.pdf = pdf
 
-
+        
 # =============================================================================
 if '__main__' == __name__ :
     
