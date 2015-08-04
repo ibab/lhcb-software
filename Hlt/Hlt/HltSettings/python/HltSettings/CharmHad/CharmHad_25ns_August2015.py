@@ -105,6 +105,7 @@ class CharmHad_25ns_August2015 :
                  'Hlt2CharmHadDspToPimPipPipTurbo',
                  'Hlt2CharmHadDsp2KS0KmKpPip_KS0LLTurbo',
                  'Hlt2CharmHadDpToKmPipPip_LTUNBTurbo',
+                 'Hlt2CharmHadDpToKmPipPip_ForKPiAsym',
                  'Hlt2CharmHadDspToKmKpPip_LTUNBTurbo',
                  'Hlt2CharmHadSpec_LcPrTurbo',
                  'Hlt2CharmHadSpec_DsPrTurbo',
@@ -177,6 +178,20 @@ class CharmHad_25ns_August2015 :
                  'Hlt2CharmHadDp2EtaKp_Eta2PimPipPi0_Pi0M',
                  'Hlt2CharmHadDp2EtapPip_Etap2EtaPimPip_EtaR',
                  'Hlt2CharmHadDp2EtapKp_Etap2EtaPimPip_EtaR',
+                 'Hlt2CharmHadDstp2D0Pip_D02PimPipPi0_Pi0R',
+                 'Hlt2CharmHadDstp2D0Pip_D02PimPipPi0_Pi0M',
+                 'Hlt2CharmHadDstp2D0Pip_D02KmKpPi0_Pi0R',
+                 'Hlt2CharmHadDstp2D0Pip_D02KmKpPi0_Pi0M',
+                 'Hlt2CharmHadDstp2D0Pip_D02KmPipPi0_Pi0R',
+                 'Hlt2CharmHadDstp2D0Pip_D02KpPimPi0_Pi0R',
+                 'Hlt2CharmHadDstp2D0Pip_D02KmPipPi0_Pi0M',
+                 'Hlt2CharmHadDstp2D0Pip_D02KpPimPi0_Pi0M',
+                 'Hlt2CharmHadDpDsp2PimPipPipPi0',
+                 'Hlt2CharmHadDpDsp2KmPipPipPi0',
+                 'Hlt2CharmHadDpDsp2KpPimPipPi0',
+                 'Hlt2CharmHadDpDsp2KmKpPipPi0',
+                 'Hlt2CharmHadDpDsp2KpKpPimPi0',
+                 'Hlt2CharmHadDpDsp2KmKpKpPi0',
                  ]
 
         return lines
