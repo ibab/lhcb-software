@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-08-04 - Mike Sokoloff
+  -  added lines from D2HHPi0Lines.py & D2HHHPi0Lines.py 
+  -    to CharmHad_25ns_August2015
+  -  also added Hlt2CharmHadDpToKmPipPip_ForKPiAsym
+
 ! 2015-08-03 - Olli Lupton
  - Add slots for tag GP cut, tweak track chi2 + GP cuts to reduce rate.
 
