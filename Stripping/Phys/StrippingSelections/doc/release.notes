@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-04 - Patrick Spradlin
+ - Updated default_config in StrippingXicc, which was somehow necessary for
+   perverse reasons.
+   M python/StrippingSelections/StrippingCharm/StrippingXicc.py
+
 ! 2015-08-04 - Markward Britsch
  - Now using default decay time fit in D02KSKS.
 
