@@ -15,9 +15,9 @@
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # @date 2015-07-20
 #
-# Version           $Revision:$
-# Last modification $Date:$
-#                by $Author:$
+# Version           $Revision$
+# Last modification $Date$
+#                by $Author$
 # 
 # =============================================================================
 """ Set of utilities for rounding according to PDG prescription
