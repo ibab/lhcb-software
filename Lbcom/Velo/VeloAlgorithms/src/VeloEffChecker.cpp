@@ -4,7 +4,6 @@
 //
 
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "VeloEffChecker.h"
 #include "GaudiKernel/SystemOfUnits.h"
 

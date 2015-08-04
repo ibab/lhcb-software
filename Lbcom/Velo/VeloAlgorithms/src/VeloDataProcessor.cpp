@@ -5,7 +5,6 @@
 //-------------------------------------------------------------------------
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "Kernel/VeloChannelID.h"
 #include "Kernel/VeloEventFunctor.h"
 #include "LHCbMath/LHCbMath.h"

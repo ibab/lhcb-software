@@ -2,9 +2,6 @@
 
 // Include files 
 // -------------
-// From Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // Kernel/LHCbKernel
 #include "Kernel/IVeloClusterSelector.h"
 

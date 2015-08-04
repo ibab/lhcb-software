@@ -3,9 +3,6 @@
 #include <vector>
 #include <algorithm>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // local
 #include "VeloTell1DataProcessor.h"
 
