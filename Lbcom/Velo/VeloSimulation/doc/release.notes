@@ -3,6 +3,8 @@
 ! Responsible : Tomasz Szumlak
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2015-08-04 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers        
 
 !========================= VeloSimulation v3r15 2014-03-18 ======================
 ! 2013-03-03 David Hutchcroft

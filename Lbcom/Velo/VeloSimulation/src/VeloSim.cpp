@@ -8,7 +8,6 @@
 #include "GaudiKernel/Vector3DTypes.h"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SystemOfUnits.h"
 

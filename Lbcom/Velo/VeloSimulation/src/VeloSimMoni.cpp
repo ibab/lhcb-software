@@ -1,7 +1,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiAlg/Tuples.h"
 #include "GaudiKernel/SmartRefVector.h"
 #include "Kernel/VeloChannelID.h"

@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // from MCEvent
 #include "Event/MCHit.h"
 
