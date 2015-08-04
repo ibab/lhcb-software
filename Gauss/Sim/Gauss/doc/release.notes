@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2015-08-04 - Gloria Corti
+ - Update options for supported data types (2011, 2012, 2015) with latest dbase
+   tags. Introduce reference options for 2010.
+ - Use DecFiles v28r* to use latest decay files and chnaged in options 
+   for BcVegPy, J/Psi etc.
+
 ! 2015-08-03 - Gloria Corti
  - Fix mistyping in Kine-LT.py options for values (had extra ;)
  - New options as an example to lower Production cuts, ProductionCuts-Low.py
