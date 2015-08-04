@@ -1,6 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // LHCbKernel
 #include "Kernel/STTell1ID.h"
 #include "Kernel/ISTReadoutTool.h"

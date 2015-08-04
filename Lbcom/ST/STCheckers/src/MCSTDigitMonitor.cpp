@@ -1,6 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Event
 #include "Event/MCSTDigit.h"
 

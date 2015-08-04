@@ -2,7 +2,6 @@
 #define TTClusterOccypancy_H !
 
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "TTOccupancy.h"
 #include "TTOccupancy.icpp"
 #include "Event/STCluster.h"

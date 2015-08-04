@@ -1,6 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Histogramming
 #include "AIDA/IHistogram1D.h"
 

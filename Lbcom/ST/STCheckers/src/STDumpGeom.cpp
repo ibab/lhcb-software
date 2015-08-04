@@ -1,6 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // xml geometry
 #include "STDet/DeSTDetector.h"
 

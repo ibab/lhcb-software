@@ -1,6 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 #include "GaudiKernel/SystemOfUnits.h"
 // Event
 #include "Event/STCluster.h"

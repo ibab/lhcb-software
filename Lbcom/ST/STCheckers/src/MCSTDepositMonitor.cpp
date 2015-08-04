@@ -1,6 +1,3 @@
-// GaudiKernel
-#include "GaudiKernel/AlgFactory.h"
-
 // Event
 #include "Event/MCSTDeposit.h"
 #include "Event/MCHit.h"

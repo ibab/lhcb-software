@@ -1,6 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // BOOST
 #include "Kernel/STLexicalCaster.h"
 

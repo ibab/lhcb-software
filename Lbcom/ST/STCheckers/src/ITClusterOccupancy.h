@@ -1,8 +1,6 @@
 #ifndef ITClusterOccupancy_H 
 #define ITClusterOccypancy_H !
 
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "ITOccupancy.h"
 #include "ITOccupancy.icpp"
 #include "Event/STCluster.h"

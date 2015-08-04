@@ -1,8 +1,6 @@
 #ifndef ITDigitOccupancy_H 
 #define ITDigitOccypancy_H !
 
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "ITOccupancy.h"
 #include "ITOccupancy.icpp"
 #include "Event/STDigit.h"
