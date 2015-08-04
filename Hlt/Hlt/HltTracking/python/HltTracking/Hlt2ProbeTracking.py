@@ -281,7 +281,9 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         Hlt2VeloMuonBuild.OutputLocation = VeloMuonTracksOutputLocation
         Hlt2VeloMuonBuild.addTool( TrackMasterFitter )
         from TrackFitter.ConfiguredFitters import ConfiguredHltFitter, ConfiguredMasterFitter
-        ConfiguredMasterFitter( Hlt2VeloMuonBuild.TrackMasterFitter , SimplifiedGeometry = True, LiteClusters = True) #on par with Hlt track fits
+        from Configurables import HltRecoConf
+        ConfiguredMasterFitter( Hlt2VeloMuonBuild.TrackMasterFitter , SimplifiedGeometry = True, LiteClusters = True,
+                                MSRossiAndGreisen = HltRecoConf().getProp("NewMSinFit")) #on par with Hlt track fits
         Hlt2VeloMuonBuild.TrackMasterFitter.OutputLevel = 5
 
         # Build the bindMembers
@@ -301,7 +303,7 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         """
         from Configurables      import Hlt2Conf
         from Configurables      import MuonTTTrack, TrackMasterFitter, PatAddTTCoord, MuonCombRec, MuonHitDecode, TrackMasterExtrapolator
-        from Configurables  	import MeasurementProviderT_MeasurementProviderTypes__TTLite_
+        from Configurables  	import MeasurementProviderT_MeasurementProviderTypes__TTLite_,StateThickMSCorrectionTool
         from HltLine.HltLine    import bindMembers
         from Configurables      import HltRecoConf
         from HltRecoConf import CommonForwardTrackingOptions, MuonTTOptions
@@ -335,11 +337,21 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         Hlt2MuonTTTrack.PatAddTTCoord.MinAxProj  = MuonTTOptions["MinAxProj"]
         Hlt2MuonTTTrack.PatAddTTCoord.MajAxProj  = MuonTTOptions["MaxAxProj"]
         Hlt2MuonTTTrack.addTool( TrackMasterFitter )
+        
         from TrackFitter.ConfiguredFitters import ConfiguredHltFitter, ConfiguredMasterFitter
-        ConfiguredMasterFitter( Hlt2MuonTTTrack.TrackMasterFitter , SimplifiedGeometry = True, LiteClusters = True) #on par with Hlt track fits
+        from Configurables import HltRecoConf,SimplifiedMaterialLocator
+        ConfiguredMasterFitter( Hlt2MuonTTTrack.TrackMasterFitter , SimplifiedGeometry = True, LiteClusters = True,
+                                MSRossiAndGreisen = HltRecoConf().getProp("NewMSinFit")) #on par with Hlt track fits
         Hlt2MuonTTTrack.TrackMasterFitter.OutputLevel = 5
         Hlt2MuonTTTrack.addTool( TrackMasterExtrapolator )
         Hlt2MuonTTTrack.TrackMasterExtrapolator.MaterialLocator = "SimplifiedMaterialLocator"
+        Hlt2MuonTTTrack.addTool( TrackMasterExtrapolator )
+        Hlt2MuonTTTrack.TrackMasterExtrapolator.addTool(SimplifiedMaterialLocator,name="MaterialLocator")
+
+        materialLocator =  Hlt2MuonTTTrack.TrackMasterExtrapolator.MaterialLocator
+        materialLocator.addTool( StateThickMSCorrectionTool, name= "StateMSCorrectionTool")
+        materialLocator.StateMSCorrectionTool.UseRossiAndGreisen =  HltRecoConf().getProp("NewMSinFit")
+        
         Hlt2MuonTTTrack.Output = Hlt2TrackEffLoc["MuonTT"]
 
 
@@ -368,7 +380,9 @@ class Hlt2ProbeTracking(LHCbConfigurableUser):
         DownstreamFit.addTool(TrackMasterFitter, name = 'Fitter')
         from TrackFitter.ConfiguredFitters import ConfiguredHltFitter, ConfiguredMasterFitter
         DownstreamFitter = getattr(DownstreamFit,'Fitter')
-        ConfiguredMasterFitter(DownstreamFitter, SimplifiedGeometry = True, LiteClusters = True) #on par with Hlt track fits
+        from Configurables import HltRecoConf
+        ConfiguredMasterFitter(DownstreamFitter, SimplifiedGeometry = True, LiteClusters = True,
+                               MSRossiAndGreisen = HltRecoConf().getProp("NewMSinFit")) #on par with Hlt track fits
         DownstreamFitter.OutputLevel = 5
 
         # Build the bindMembers
