@@ -1,7 +1,5 @@
 // STL
 #include <map>
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
 // LHCb
 // Event/LinkerEvent
 #include "Linker/LinkerWithKey.h"

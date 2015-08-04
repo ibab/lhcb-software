@@ -2,6 +2,8 @@
 ! Package     : VP/VPAssociators
 ! Responsible : Heinrich Schindler
 !--------------------------------------------------------------------------
+! 2015-08-04 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers        
 
 !========================= VPAssociators v2r6 2014-05-13 =======================
 ! 2014-05-08 - Heinrich Schindler
