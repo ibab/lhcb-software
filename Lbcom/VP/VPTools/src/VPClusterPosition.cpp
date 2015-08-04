@@ -1,7 +1,6 @@
 #include <cmath>
 
 // Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/Point3DTypes.h"
 

@@ -3,6 +3,8 @@
 ! Responsible : Heinrich Schindler
 ! Purpose     : Tools used in VP reconstruction
 !--------------------------------------------------------------------------
+! 2015-08-04 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers        
 
 !========================= VPTools v2r5 2015-02-23 =========================
 ! 2015-02-01 - Heinrich Schindler
