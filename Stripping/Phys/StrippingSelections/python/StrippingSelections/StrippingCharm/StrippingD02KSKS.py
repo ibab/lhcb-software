@@ -386,7 +386,7 @@ class D02KSKSConf(LineBuilder) :
         #_doca_cut = "(DOCAMAX < %s*mm)" % config['KS_LL_DOCA']
         #_mass_cut = "(ADMASS('KS0')<%s*MeV)" % config['KS_LL_MASS']
         _nu2prime_cut = "(log((CHILD(BPVIPCHI2(),1)*CHILD(BPVIPCHI2(),2))/(BPVIPCHI2()*BPVIPCHI2() + DOCAMAX*DOCAMAX)) > %s)" % config['KS_LL_nu2prime'] # 0
-        _signedFLchi2_cut = "(BPVLTSIGNCHI2('PropertimeFitter/properTime:PUBLIC') > %s)" % config['KS_LL_signedFLchi2'] # 50
+        _signedFLchi2_cut = "(BPVLTSIGNCHI2() > %s)" % config['KS_LL_signedFLchi2'] # 50
         _trghost_cut1 = "(CHILD(TRGHOSTPROB, 1) <=%s )" % config['KS_LL_TRGHOSTPROB']
         _trghost_cut2 = "(CHILD(TRGHOSTPROB, 2) <=%s )" % config['KS_LL_TRGHOSTPROB']
 	
@@ -439,7 +439,7 @@ class D02KSKSConf(LineBuilder) :
 #        _mass_cut = "(ADMASS('KS0')<%s*MeV)" % config['KS_DD_MASS']
 #        _allCuts = _doca_cut + "&" + _mass_cut
         _nu2prime_cut = "(log((CHILD(BPVIPCHI2(),1)*CHILD(BPVIPCHI2(),2))/(BPVIPCHI2()*BPVIPCHI2() + DOCAMAX*DOCAMAX)) > %s)" % config['KS_DD_nu2prime'] # 0
-        _signedFLchi2_cut = "(BPVLTSIGNCHI2('PropertimeFitter/properTime:PUBLIC') > %s)" % config['KS_DD_signedFLchi2'] # 50
+        _signedFLchi2_cut = "(BPVLTSIGNCHI2() > %s)" % config['KS_DD_signedFLchi2'] # 50
         _trghost_cut1 = "(CHILD(TRGHOSTPROB, 1) <=%s )" % config['KS_DD_TRGHOSTPROB']
         _trghost_cut2 = "(CHILD(TRGHOSTPROB, 2) <=%s )" % config['KS_DD_TRGHOSTPROB']
 	
@@ -503,7 +503,7 @@ class D02KSKSConf(LineBuilder) :
         
         KsKsLD_mother_cut = "INTREE((ABSID=='pi+') & (ISLONG)) & INTREE((ABSID=='pi+') & (ISDOWN))"
 
-        _daughterCuts = "(INTREE((ABSID=='pi+') & (ISDOWN)) | (BPVLTSIGNCHI2('PropertimeFitter/properTime:PUBLIC') > %s))" % config['D0_KSLL_signedFLchi2_LD'] # 500, signed flight length of the KsLL
+        _daughterCuts = "(INTREE((ABSID=='pi+') & (ISDOWN)) | (BPVLTSIGNCHI2() > %s))" % config['D0_KSLL_signedFLchi2_LD'] # 500, signed flight length of the KsLL
         
         # before D vertex fit 
         _doca_cut = "(ACUTDOCA(%s*mm,''))" % config['D0_DOCA_DD']
@@ -513,7 +513,7 @@ class D02KSKSConf(LineBuilder) :
         
         _vertexChi2_cut = "(VFASPF(VCHI2/VDOF) < %s)" % config['D0_vertexChi2_LD'] # 20
         _IPchi2_cut = "(BPVIPCHI2() < %s)" % config['D0_IPchi2_LD'] # 10
-        _signedFLchi2_cut = "(BPVLTSIGNCHI2('PropertimeFitter/properTime:PUBLIC') > %s)" % config['D0_signedFLchi2_LD'] # 1.0
+        _signedFLchi2_cut = "(BPVLTSIGNCHI2() > %s)" % config['D0_signedFLchi2_LD'] # 1.0
         _mass_cut = "(ADMASS('D0') < %s*MeV)" % config['D0_MassWindow'] # 100
 
         _motherCuts = KsKsLD_mother_cut + " & " + _vertexChi2_cut + " & " + _IPchi2_cut + " & " + _signedFLchi2_cut + " & " + _mass_cut
@@ -543,7 +543,7 @@ class D02KSKSConf(LineBuilder) :
         """
 
         
-        _daughterCuts = "(BPVLTSIGNCHI2('PropertimeFitter/properTime:PUBLIC') > %s)" % config['D0_KS_signedFLchi2_LL'] # 200, signed flight length of the Ks
+        _daughterCuts = "(BPVLTSIGNCHI2() > %s)" % config['D0_KS_signedFLchi2_LL'] # 200, signed flight length of the Ks
         
         # before D vertex fit
         _doca_cut = "(ACUTDOCA(%s*mm,''))" % config['D0_DOCA_LL']
@@ -553,7 +553,7 @@ class D02KSKSConf(LineBuilder) :
         
         _vertexChi2_cut = "(VFASPF(VCHI2/VDOF) < %s)" % config['D0_vertexChi2_LL'] # 20
         _IPchi2_cut = "(BPVIPCHI2() < %s)" % config['D0_IPchi2_LL'] # 50
-        _signedFLchi2_cut = "(BPVLTSIGNCHI2('PropertimeFitter/properTime:PUBLIC') > %s)" % config['D0_signedFLchi2_LL'] # -1.0
+        _signedFLchi2_cut = "(BPVLTSIGNCHI2() > %s)" % config['D0_signedFLchi2_LL'] # -1.0
         _mass_cut = "(ADMASS('D0') < %s*MeV)" % config['D0_MassWindow'] # 100
 
         _motherCuts =  _vertexChi2_cut + " & " + _IPchi2_cut + " & " + _signedFLchi2_cut  + " & " + _mass_cut # _cut_prob_BCu

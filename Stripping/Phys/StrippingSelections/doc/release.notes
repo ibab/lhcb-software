@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-04 - Markward Britsch
+ - Now using default decay time fit in D02KSKS.
+
 ! 2015-08-04 - Chris Jones
  - Add SubPID free implements of D2Pi0hhWS, D2KShhWS and D2hhWS in B2OC.
 
