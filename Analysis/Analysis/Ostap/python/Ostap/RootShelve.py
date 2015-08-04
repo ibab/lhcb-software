@@ -95,7 +95,8 @@ __date__    = "2015-07-31"
 __version__ = "$Revision$" 
 # =============================================================================
 __all__ = (
-    'RootShelf' , ## The DB-itself
+    'RootShelf'     , ## The DB-itself
+    'RootOnlyShelf' , ## "data base" for ROOT-only objects
     'open'        ## helper function to hide the actual DB
     )
 # =============================================================================
@@ -107,14 +108,14 @@ logger.debug ( "Simple generic ROOT-based shelve-like-database" )
 # =============================================================================
 import ROOT, shelve
 # =============================================================================
-## @class RootShelfBase
+## @class RootOnlyShelf
 #  Plain vanilla DBASE for ROOT-object (only)
 #  essentially it is nothing more than just shelve-like interface for ROOT-files
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2015-07-31
 #  @attention it depends on proper TFile-decorations in Ostap.TFileDeco module
 #  @see Ostap.TFileDeco
-class RootShelfBase(shelve.Shelf):
+class RootOnlyShelf(shelve.Shelf):
     """
     Plain vanilla DBASE for ROOT-object (only)
     Essentially it is nothing more than just shelve-like
@@ -180,8 +181,8 @@ def _root_setitem_ ( self , key , value ) :
     self.dict[key] = value 
 
 
-RootShelfBase.__getitem__ = _root_getitem_
-RootShelfBase.__setitem__ = _root_setitem_
+RootOnlyShelf.__getitem__ = _root_getitem_
+RootOnlyShelf.__setitem__ = _root_setitem_
 
 # =============================================================================
 ## @class RootShelf
@@ -196,7 +197,7 @@ RootShelfBase.__setitem__ = _root_setitem_
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2015-07-31 
-class RootShelf(RootShelfBase):
+class RootShelf(RootOnlyShelf):
     """
     The actual class for ROOT-based shelve-like data base
     it implement shelve-intergase with underlyinog ROOT-fiel storage
@@ -208,7 +209,7 @@ class RootShelf(RootShelfBase):
     >>> db['tuple'] = ('a',1,h1)
     """
     def __init__( self, filename , mode , writeback=False , *args ):
-        RootShelfBase.__init__ ( self , filename , mode , writeback , *args )
+        RootOnlyShelf.__init__ ( self , filename , mode , writeback , *args )
         
 
 # =============================================================================

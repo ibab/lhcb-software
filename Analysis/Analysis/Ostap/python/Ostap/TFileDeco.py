@@ -246,12 +246,12 @@ def _rd_contains_ ( rdir , name ) :
         while sep :
             rdir.cd()
             subdir = rdir.GetDirectory(dirname)
-            if not subdir : return False
+            if not subdir : return False                      ## RETURN 
             rdir = subdir
             dirname, sep , fname = fname.partition ('/') 
 
         rdir.cd()
-        return rdir.FindKey  ( dirname ) 
+        return rdir.FindKey  ( dirname )                       ## RETURN 
 
 # =============================================================================
 ## delete object from ROOT file/directory
@@ -294,10 +294,12 @@ def _rd_delitem_ ( rdir , name , cycle=';*') :
 ## get all keys from ROOT file/directory
 #  @code
 #  keys = rfile.keys()
+#  keys = rfile.keys( recursive = False )
+#  keys = rfile.keys( no_dir    = False )
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
 #  @date 2015-07-30
-def _rd_keys_ ( rdir , recursive = True ) :
+def _rd_keys_ ( rdir , recursive = True , no_dir = True ) :
     """
     Get all keys from ROOT file/directory
     >>> keys = rfile.keys() 
@@ -310,11 +312,12 @@ def _rd_keys_ ( rdir , recursive = True ) :
         rdir.cd() 
         _lst = rdir.GetListOfKeys()
         for i in _lst :
-            inam = i.GetName()
-            _res.append ( inam )
-            if recursive and i.IsFolder() :
+            inam   = i.GetName()
+            folder = i.IsFolder()
+            if not folder or not no_dir : _res.append ( inam )
+            if recursive and folder :
                 idir  = rdir.GetDirectory( inam ) 
-                ikeys = _rd_keys_ ( idir , recursive )
+                ikeys = _rd_keys_ ( idir , recursive , no_dir )
                 for k in ikeys : _res.append ( inam + '/' + k )
                 
         return _res
@@ -324,7 +327,7 @@ def _rd_keys_ ( rdir , recursive = True ) :
 #  @code
 #  for key,obj in rfile.iteritems() : print key,obj
 #  @endcode
-#  The scan can be limited only by objcets of certain type, e.g. histograms: 
+#  The scan can be limited only by objects of certain type, e.g. histograms: 
 #  @code
 #  for key,hist in rfile.iteritems( ROOT.TH1 ) : print key,hist
 #  @endcode
@@ -334,7 +337,7 @@ def _rd_keys_ ( rdir , recursive = True ) :
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
 #  @date 2015-07-30
-def _rd_iteritems_ ( rdir , fun = lambda k,o : True , recursive = True ) :
+def _rd_iteritems_ ( rdir , fun = lambda k,o : True , recursive = True , no_dir = True  ) :
     """
     Iterate over the content of ROOT directory/file:
     >>> for key,obj  in rfile.iteritems()           : print key , obj
@@ -351,12 +354,14 @@ def _rd_iteritems_ ( rdir , fun = lambda k,o : True , recursive = True ) :
         rdir.cd() 
         _lst = rdir.GetListOfKeys()
         for i in _lst :
-            inam = i.GetName()
-            obj  = rdir.Get ( inam )
-            if fun ( inam , i , obj ) : yield inam , obj
-            if recursive and i.IsFolder() :
+            inam   = i.GetName()
+            obj    = rdir.Get ( inam )
+            folder = i.IsFolder()
+            if not folder or not no_dir : 
+                if fun ( inam , i , obj ) : yield inam , obj
+            if recursive and folder :
                 idir  = rdir.GetDirectory( inam ) 
-                for k, o in _rd_iteritems_ ( idir , fun , recursive ) :
+                for k, o in _rd_iteritems_ ( idir , fun , recursive , no_dir ) :
                     yield k,o
 
 # =============================================================================a
@@ -370,7 +375,7 @@ def _rd_iteritems_ ( rdir , fun = lambda k,o : True , recursive = True ) :
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
 #  @date 2015-07-30
-def _rd_iterkeys_ ( rdir , typ = None , recursive = True ) :
+def _rd_iterkeys_ ( rdir , typ = None , recursive = True , no_dir = True ) :
     """
     Iterate over the keys in ROOT file/directory 
     >>> for key,obj  in rfile.iteritems()           : print key , obj
@@ -382,11 +387,13 @@ def _rd_iterkeys_ ( rdir , typ = None , recursive = True ) :
         rdir.cd() 
         _lst = rdir.GetListOfKeys()
         for i in _lst :
-            inam = i.GetName()
-            if typ is None  or isinstance ( rdir.Get ( inam ) , typ ) : yield inam 
-            if recursive and i.IsFolder() :
+            inam   = i.GetName()
+            folder = i.IsFolder()
+            if not folder or not no_dir : 
+                if typ is None  or isinstance ( rdir.Get ( inam ) , typ ) : yield inam 
+            if recursive and fodler  :
                 idir  = rdir.GetDirectory( inam ) 
-                for k in _rd_iterkeys_ ( idir , typ , recursive ) :
+                for k in _rd_iterkeys_ ( idir , typ , recursive , no_dir ) :
                     yield k
 
 # =============================================================================a
@@ -404,7 +411,7 @@ def _rd_iterkeys_ ( rdir , typ = None , recursive = True ) :
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
 #  @date 2015-07-30
-def _rd_itervalues_ ( rdir , fun = lambda k,o : True , recursive = True ) :
+def _rd_itervalues_ ( rdir , fun = lambda k,o : True , recursive = True , no_dir = True ) :
     """
     Iterate over the content of ROOT directory/file:
     >>> for obj  in rfile.itervalues ()           : print obj
@@ -415,7 +422,7 @@ def _rd_itervalues_ ( rdir , fun = lambda k,o : True , recursive = True ) :
     with ROOTCWD() :
         ##
         rdir.cd()
-        for key , obj in _rd_iteritems_ ( rdir , fun , recursive ) :
+        for key , obj in _rd_iteritems_ ( rdir , fun , recursive , no_dir ) :
             yield obj 
 
 # =============================================================================a
