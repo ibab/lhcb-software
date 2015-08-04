@@ -1,6 +1,3 @@
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Linker
 #include "Linker/LinkerWithKey.h"
 

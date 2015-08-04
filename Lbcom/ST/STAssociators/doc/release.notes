@@ -1,6 +1,8 @@
 ! Package         : ST/STAssociators
 ! Package manager : J. van Tilburg
 !------------------------------------------------------------------------------
+! 2015-08-04 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers        
 
 !========================= STAssociators v1r8 2015-07-20 =========================
 ! 2015-06-05 - Vincenzo Battista
