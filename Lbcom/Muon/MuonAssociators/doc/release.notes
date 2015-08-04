@@ -1,6 +1,8 @@
 ! Package     : MuonAssociators
 ! Responsible : Alessia Satta
 !---------------------------------------------------------------------------
+! 2015-08-04 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers        
 
 !========================= MuonAssociators v3r5 2013-02-14 =========================
 ! 2012-12-19 - Marco Cattaneo

@@ -1,8 +1,5 @@
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 #include "Event/IntLink.h"
 #include "Event/MuonDigit.h"
 #include "Event/MCMuonDigit.h"

@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 #include "Event/MCHit.h"
 #include "Event/MCMuonDigit.h"
 #include "Linker/LinkerWithKey.h"
