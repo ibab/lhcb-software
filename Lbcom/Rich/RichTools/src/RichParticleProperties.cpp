@@ -17,7 +17,6 @@
 #include "Kernel/ParticleProperty.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 //-----------------------------------------------------------------------------

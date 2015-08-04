@@ -15,9 +15,6 @@
 // STL
 #include <vector>
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // Base class and interface
 #include "RichKernel/RichHistoToolBase.h"
 #include "RichKernel/IRichRayTracing.h"

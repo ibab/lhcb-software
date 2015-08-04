@@ -10,8 +10,6 @@
  */
 //-----------------------------------------------------------------------------
 
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "RichSnellsLawRefraction.h"
 

@@ -9,8 +9,6 @@
  */
 //-----------------------------------------------------------------------------
 
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "RichHPDPixelClusterSuppressionTool.h"
 
