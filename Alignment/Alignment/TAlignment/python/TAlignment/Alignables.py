@@ -234,7 +234,7 @@ class Alignables( list ):
 
     def TTHalfModules( self, dofs = "" ) :
         self.__append( self.m_tt + "/TT./.{4}Layer/.{2}Module.{2}", dofs )
-    ''' defined by Wouter, check whether is causing the error
+
     def TTSensors( self, dofs = "" ) :
         self.__append( self.m_tt + "/TT./.{4}Layer/.{2}Module.{2}/Ladder./Sensor.{2}", dofs )
 
@@ -249,7 +249,6 @@ class Alignables( list ):
             for i in [1,3]:
                 elements.append( layer + "R2Module" + str(i) + " : " + self.m_tt + "/TTa/"+layer+"/R2Module"+str(i)+"." )
         for layer in ['TTbVLayer','TTbXLayer']:
-            elements = []
             # first R1 and R3
             for i in range(1,7):
                 elements.append( layer + "R1Module" + str(i) + " : " + self.m_tt + "/TTb/"+layer+"/R1Module"+str(i)+"." )
@@ -268,37 +267,11 @@ class Alignables( list ):
             elements.append( layer + "R2Module3T" + " : " + self.m_tt + "/TTb/"+layer+"/R2Module3T")
             elements.append( layer + "R2Module3B" + " : " + self.m_tt + "/TTb/"+layer+"/R2Module3B")
         self.__append( sorted(elements), dofs )
-    
+            
     def TTModules( self, dofs = "" ) :
         self.TTLongModules( dofs )
         self.TTShortModules( dofs )
-    '''
-    def TTModules( self, dofs = "" ) :
-        for layer in ['TTaXLayer','TTaULayer']:
-            elements = []
-            # first R1 and R3
-            for i in range(1,7):
-                elements.append( layer + "R1Module" + str(i) + " : " + self.m_tt + "/TTa/"+layer+"/R1Module"+str(i)+"." )
-                elements.append( layer + "R3Module" + str(i) + " : " + self.m_tt + "/TTa/"+layer+"/R3Module"+str(i)+"." )
-            # now R2
-            for i in [1,3]:
-                elements.append( layer + "R2Module" + str(i) + " : " + self.m_tt + "/TTa/"+layer+"/R2Module"+str(i)+"." )
-            elements.append( layer + "R2Module2T" + " : " + self.m_tt + "/TTa/"+layer+"/R2Module2T")
-            elements.append( layer + "R2Module2B" + " : " + self.m_tt + "/TTa/"+layer+"/R2Module2B")
-            self.__append( sorted(elements), dofs )
-        for layer in ['TTbVLayer','TTbXLayer']:
-            elements = []
-            # first R1 and R3
-            for i in range(1,7):
-                elements.append( layer + "R1Module" + str(i) + " : " + self.m_tt + "/TTb/"+layer+"/R1Module"+str(i)+"." )
-                elements.append( layer + "R3Module" + str(i) + " : " + self.m_tt + "/TTb/"+layer+"/R3Module"+str(i)+"." )
-            # now R2 
-            for i in [1,2,4,5]:
-                elements.append( layer + "R2Module" + str(i) + " : " + self.m_tt + "/TTb/"+layer+"/R2Module"+str(i)+"." )
-            elements.append( layer + "R2Module3T" + " : " + self.m_tt + "/TTb/"+layer+"/R2Module3T")
-            elements.append( layer + "R2Module3B" + " : " + self.m_tt + "/TTb/"+layer+"/R2Module3B")
-            self.__append( sorted(elements), dofs )
-
+                    
     ## IT #################################################################################
     def IT( self, dofs = "" ) :
         self.__append( self.m_it, dofs )
