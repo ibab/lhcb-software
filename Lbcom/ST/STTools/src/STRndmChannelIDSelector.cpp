@@ -1,6 +1,3 @@
-// Kernel
-#include "GaudiKernel/ToolFactory.h"
- 
 // Event
 #include "Kernel/STChannelID.h"
 

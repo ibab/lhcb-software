@@ -1,6 +1,3 @@
-// Kernel
-#include "GaudiKernel/ToolFactory.h"
- 
 #include "STSelectChannelIDByBoard.h"
 
 #include <vector>

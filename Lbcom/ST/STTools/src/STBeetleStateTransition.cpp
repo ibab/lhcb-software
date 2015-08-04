@@ -1,6 +1,3 @@
-// Kernel
-#include "GaudiKernel/ToolFactory.h"
- 
 #include "STBeetleStateTransition.h"
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"

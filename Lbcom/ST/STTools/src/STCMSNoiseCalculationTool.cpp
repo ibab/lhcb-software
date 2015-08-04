@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // STTELL1Event
 #include "Event/STTELL1Data.h"
 

@@ -1,5 +1,4 @@
 // GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
  
 // Event

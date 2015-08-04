@@ -1,6 +1,3 @@
-// Kernel
-#include "GaudiKernel/ToolFactory.h"
- 
 // Event
 #include "Event/STCluster.h"
 

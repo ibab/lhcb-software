@@ -1,6 +1,3 @@
-// Kernel
-#include "GaudiKernel/ToolFactory.h"
- 
 #include "STSelectChannelIDByTruth.h"
 
 #include <boost/assign/list_of.hpp>

@@ -1,5 +1,4 @@
 // Kernel
-#include "GaudiKernel/ToolFactory.h"
 #include "LHCbMath/LHCbMath.h"
 
 // Boost
