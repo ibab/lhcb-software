@@ -1,6 +1,8 @@
 ! Package     : Associators
 ! Responsible : Matt Needham
 !---------------------------------------------------------------------------
+! 2015-08-04 - Gerhard Raven 
+ - remove #include of obsolete Gaudi headers 
 
 !========================= Associators v3r9 2015-02-23 =========================
 ! 2015-01-27 - Michel De Cian

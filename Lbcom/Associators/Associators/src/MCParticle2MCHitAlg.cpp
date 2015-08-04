@@ -6,9 +6,6 @@
 //   Authors: Rutger van der Eijk
 //   Created: 3-7-2002
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // from Event/MCEvent
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
