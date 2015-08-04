@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // from DAQEvent
 #include "Event/RawEvent.h"
 // from VeloEvent
