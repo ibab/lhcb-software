@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 #include "Event/RecHeader.h"
 #include "Event/ODIN.h"
 

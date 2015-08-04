@@ -1,7 +1,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "Event/ODIN.h"
 #include "Event/L0MuonCandidate.h"
 

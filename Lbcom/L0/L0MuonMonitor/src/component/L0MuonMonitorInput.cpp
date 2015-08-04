@@ -1,8 +1,6 @@
 // Include files 
 #include <fstream>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "Event/ODIN.h"
 #include "Event/RawBankReadoutStatus.h"
 #include "MuonDet/MuonDAQHelper.h"

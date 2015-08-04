@@ -2,9 +2,6 @@
 
 #include "boost/format.hpp"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // from Event
 #include "Event/RawEvent.h"
 #include "Event/L0MuonData.h"

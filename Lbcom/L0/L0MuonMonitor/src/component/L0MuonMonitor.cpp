@@ -2,9 +2,6 @@
 
 #include <math.h>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 #if _USE_MUONMONREC_TOOL_
 #include "MuonMonKernel/IMuonMonRec.h"
 #include "MuonMonKernel/MuonMonHit.h"

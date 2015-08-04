@@ -2,7 +2,6 @@
 #include <sstream>
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "Kernel/MuonTileID.h"
 #include "Kernel/MuonLayout.h"
 #include "Event/ODIN.h"
