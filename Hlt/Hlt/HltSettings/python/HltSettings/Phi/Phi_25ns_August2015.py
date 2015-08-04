@@ -33,11 +33,11 @@ class Phi_25ns_August2015:
         d.update( 
             { PhiLines : {
                'IncPhi' : {'TisTosSpec' : "Hlt1IncPhi.*Decision%TOS" ,
-                           'KaonPT'     : 800 * MeV ,
-                           'KaonIPS'    : 6 ,
+                           'KaonPT'     : 1000 * MeV ,
+                           'KaonIPS'    : 9 ,
                            'KaonPID'    : 0 ,
                            'TrChi2DOF'  : 5,
-                           'PhiPT'      : 1800 * MeV,
+                           'PhiPT'      : 2000 * MeV,
                            'PhiVCHI2'   : 20 ,
                            'PhiMassWin' : 20 * MeV},
                'Bs2PhiPhi': {'TisTosSpec' : "Hlt1B2PhiPhi_LTUNB.*Decision%TOS" ,

@@ -203,7 +203,10 @@ class CharmHad_25ns_August2015 :
 
         from Hlt2Lines.CharmHad.Lines import CharmHadLines
         d.update( { CharmHadLines : {
- 'ChargedSpectroscopyBachelors': {'IPCHI2_MAX': 15},
+                    'Prescale': {'Hlt2CharmHadXim2LamPim_DDL':0.5,
+                                 'Hlt2CharmHadXim2LamPim_DDD':0.5,
+                                 'Hlt2CharmHadXim2LamPim_LLL':0.5},
+                    'ChargedSpectroscopyBachelors': {'IPCHI2_MAX': 15},
  'CharmHadSharedDetachedD0ToHHChildK': {'PID_LIM': 5.0,
                                         'Trk_ALL_MIPCHI2DV_MIN': 2.0,
                                         'Trk_ALL_PT_MIN': 800.0 * MeV,

@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-08-04 - Mika Vesterinen
+  - Prescale the 3 Hlt2CharmHadXim2LamPim_* lines by a factor of 2, and tighten the inclusive phi line.
+
 ! 2015-08-04 - Simone Stracka
 	- Bc2JpsiX/Bc2JpsiX_25ns_August2015.py: commented out Hlt2Bc2JpsiH line from 
     the list of active lines
