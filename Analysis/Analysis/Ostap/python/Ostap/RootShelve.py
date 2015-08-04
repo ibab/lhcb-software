@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 # @file RootShelve.py
 # 
@@ -54,9 +54,9 @@
 # @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 # @date   2015-07-31
 # 
-#                    $Revision:$
-#  Last Modification $Date:$
-#                 by $Author:$
+#                    $Revision$
+#  Last Modification $Date$
+#                 by $Author$
 # =============================================================================
 """ This is ROOT-based version of shelve database.
 
@@ -92,7 +92,7 @@
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2015-07-31"
-__version__ = "$Revision:$" 
+__version__ = "$Revision$" 
 # =============================================================================
 __all__ = (
     'RootShelf' , ## The DB-itself

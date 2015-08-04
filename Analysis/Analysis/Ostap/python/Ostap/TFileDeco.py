@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file
 #  Module with decoration of TFile objects for efficient use in python
@@ -33,9 +33,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 #  
-#                    $Revision: 185196 $
-#  Last modification $Date: 2015-03-10 12:30:58 +0100 (Tue, 10 Mar 2015) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """Decoration of TFile objects for efficient use in python
 
@@ -64,7 +64,7 @@ It provides TFile (well, actually any TDirectory) with python-like protocol
 >>> with ROOT.TFile('aa.root') as rfile : rfile.ls() ## context manager protocol
 """
 # =============================================================================
-__version__ = "$Revision: 185196 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = (

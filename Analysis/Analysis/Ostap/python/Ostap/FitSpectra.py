@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file FitSpectraModels.py
 #
@@ -11,9 +11,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-07-11
 # 
-#                    $Revision:$
-#  Last modification $Date:$
-#                 by $Author:$
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """A set of predefined ready-to-use shapes and PDFs
 for fitting pT-spectra"""
