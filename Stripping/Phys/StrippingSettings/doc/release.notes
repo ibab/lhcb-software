@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-04 - Ricardo Vazquez Gomez
+ - Update the stripping23 database
+
 ! 2015-08-04 - Roberta Cardinale
  - modified S23 LineConfig for BandQ
 
