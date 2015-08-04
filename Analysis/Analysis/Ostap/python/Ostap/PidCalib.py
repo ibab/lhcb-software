@@ -135,6 +135,7 @@ def makeParser ( ) :
     
     return parser 
 
+# =============================================================================
 ## a bit modified version of DataFuncs.GetDataSet from Urania/PIDCalib/PIDPerfScripts
 def getDataSet ( particle          ,
                  stripping         ,
@@ -157,7 +158,7 @@ def getDataSet ( particle          ,
     #        - MagDown run limits ['DownRuns']
     #======================================================================
     from PIDPerfScripts.DataFuncs import GetRunDictionary
-    DataDict = GetRunDictionary ( stripping , particle )
+    DataDict = GetRunDictionary ( stripping , particle , verbose = verbose )
 
     #======================================================================
     # Determine Mother and Workspace names
