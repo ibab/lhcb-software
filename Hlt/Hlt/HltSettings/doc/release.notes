@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-08-04 - Simone Stracka
+	- Bc2JpsiX/Bc2JpsiX_25ns_August2015.py: commented out Hlt2Bc2JpsiH line from 
+    the list of active lines
+    
 ! 2015-08-04 - Mike Sokoloff
   -  added lines from D2HHPi0Lines.py & D2HHHPi0Lines.py 
   -    to CharmHad_25ns_August2015
