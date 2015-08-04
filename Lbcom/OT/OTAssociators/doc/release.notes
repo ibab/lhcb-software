@@ -2,6 +2,8 @@
 ! Package     : OTAssociators
 ! Responsible : OT software group
 !-------------------------------------------------------------------------
+! 2015-08-04 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers        
 
 !========================= OTAssociators v4r6 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic

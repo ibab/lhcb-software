@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // from Kernel
 #include "Kernel/OTChannelID.h"
 
