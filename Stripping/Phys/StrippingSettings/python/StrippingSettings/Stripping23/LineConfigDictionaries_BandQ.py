@@ -138,7 +138,8 @@ Bc3h = {
     'FILTER'    : None ,   ## VOID filter 
     'ODIN'      : None ,   ## ODIN filter 
     'L0DU'      : None ,   ## L0   filter 
-    'HLT'       : None ,   ## HLT  filter
+    'HLT1'       : None ,   ## HLT  filter
+    'HLT2'       : None ,   ## HLT  filter
     #
     ## c*tau cut for B-hadrons 
     #

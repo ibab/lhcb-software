@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-04 - Roberta Cardinale
+ - modified S23 LineConfig for BandQ
+
 ! 2015-08-03 - Jinlin Fu
  - update Charm dict s23
 
