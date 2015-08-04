@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // event model
 #include "Event/VeloCluster.h"
 #include "Event/MCVeloFE.h"
