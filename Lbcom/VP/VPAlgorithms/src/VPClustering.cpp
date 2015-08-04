@@ -1,6 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // LHCb
 // Kernel/LHCbKernel
 #include "Kernel/VPDataFunctor.h"

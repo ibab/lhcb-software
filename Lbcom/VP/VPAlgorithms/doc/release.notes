@@ -2,6 +2,8 @@
 ! Package     : VP/VPAlgorithms
 ! Responsible : Daniel Hynds
 !--------------------------------------------------------------------------
+! 2015-08-04 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers        
 
 !========================= VPAlgorithms v4r4 2014-05-13 ========================
 ! 2014-05-03 - Heinrich Schindler
