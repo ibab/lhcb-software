@@ -1323,11 +1323,23 @@ Lambdac2V0H = {
 Xicc = {
     "BUILDERTYPE": "XiccBuilder", 
     "CONFIG": {
-        "DpHlt2TisTosSpec": { 'Hlt2CharmHadDpToKmPipPip.*Decision%TOS' : 0, 'Hlt2Global.*%TIS' : 0}, 
-        "DzHlt2TisTosSpec": {'Hlt2CharmHad.*Decision%TOS' : 0, 'Hlt2Global.*%TIS' : 0}, 
-        "LcHlt2TisTosSpec": {'Hlt2CharmHadLcpToPpKmPip.*Decision%TOS' : 0, 'Hlt2Global.*%TIS' : 0}, 
+        "DpHlt2TisTosSpec": {
+            "Hlt2CharmHadDpToKmPipPip.*Decision%TOS": 0, 
+            "Hlt2Global%TIS": 0
+        }, 
+        "DzHlt2TisTosSpec": {
+            "Hlt2CharmHad.*Decision%TOS": 0, 
+            "Hlt2Global.*%TIS": 0
+        }, 
+        "LcHlt2TisTosSpec": {
+            "Hlt2CharmHadLcpToPpKmPip.*Decision%TOS": 0, 
+            "Hlt2Global%TIS": 0
+        }, 
         "LongTrackGEC": 150, 
-        "XiHlt2TisTosSpec": {'Hlt2CharmHadXim2LamPim.*Decision%TOS' : 0, 'Hlt2Global.*%TIS' : 0}, 
+        "XiHlt2TisTosSpec": {
+            "Hlt2CharmHadXim2LamPim.*Decision%TOS": 0, 
+            "Hlt2Global%TIS": 0
+        }, 
         "controlPrescaleD0": 0.01, 
         "controlPrescaleDp": 0.01, 
         "controlPrescaleDsp": 0.01, 
