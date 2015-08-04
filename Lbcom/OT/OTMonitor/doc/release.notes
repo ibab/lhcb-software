@@ -2,6 +2,8 @@
 ! Package         : OTMonitor
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
+! 2015-08-04 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers        
 
 !========================= OTMonitor v3r8 2014-02-19 =========================
 ! 2014-02-19 - Marco Cattaneo

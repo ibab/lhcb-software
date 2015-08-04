@@ -3,7 +3,6 @@
 #include "OTTimeClassification.h"
 
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/SystemOfUnits.h"
 

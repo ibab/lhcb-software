@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // from MCEvent
 #include "Event/MCOTDeposit.h"
 #include "Event/MCOTTime.h"
