@@ -2,8 +2,6 @@
 
 #include <time.h>
 
-#include "GaudiKernel/ToolFactory.h" 
-
 #include "TimeStamps.h"
 
 //-----------------------------------------------------------------------------

@@ -5,7 +5,6 @@
 #ifndef WIN32
 #include <unistd.h>
 #endif // !WIN32
-#include "GaudiKernel/ToolFactory.h" 
 
 #include "VeloDet/DeVelo.h"
 

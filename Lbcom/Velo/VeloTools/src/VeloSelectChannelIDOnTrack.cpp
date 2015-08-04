@@ -2,7 +2,6 @@
 // Include files 
 // -------------
 // From Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 
 // From Boost

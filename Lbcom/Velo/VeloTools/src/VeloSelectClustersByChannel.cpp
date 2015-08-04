@@ -1,8 +1,5 @@
 // Include files 
 // -------------
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // Event/DigiEvent
 #include "Event/VeloCluster.h"
 
