@@ -16,5 +16,5 @@ importOptions("$APPCONFIGOPTS/Gauss/RICHRandomHits.py")
 
 #--Set database tags using those for Sim08
 from Configurables import LHCbApp
-LHCbApp().DDDBtag   = "dddb-20140729"
-LHCbApp().CondDBtag = "sim-20140730-vc-md100"
+LHCbApp().DDDBtag   = "dddb-20150724"
+LHCbApp().CondDBtag = "sim-20150703-vc-md100"

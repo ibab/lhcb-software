@@ -11,8 +11,8 @@ theApp = Gauss()
 #--Use latest database tags 
 from Configurables import DDDBConf, CondDB, LHCbApp
 
-LHCbApp().DDDBtag   = "head-20130312-1"   # Must be set for selecting VELO
-                                          # geometry list in Gauss()
+LHCbApp().DDDBtag   = "dddb-20150724"   # Must be set for selecting VELO
+                                        # geometry list in Gauss()
 
-DDDBConf(DataType = "2012")
-CondDB().UseLatestTags = ["2012"]
+DDDBConf(DataType = "2015")
+CondDB().UseLatestTags = ["2015"]
