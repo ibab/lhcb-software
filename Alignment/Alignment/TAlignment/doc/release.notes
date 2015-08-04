@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2015-08-04 - Wouter Hulsbergen
+ - fixed bug in commit of Alignables.py on 07-02, then restored things undone on 07-04
+
 !========================= TAlignment v6r5 2015-07-29 =========================
 
 ! 2015-07-25 - Maurizio Martinelli
