@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v7r1 2015-08-05 =========================
+
 ! 2015-08-05 - Sean Benson
  - Change L0 TCK in August 25ns file to 0x0051.
 
