@@ -1,5 +1,5 @@
 package GaussSys
-version v48r2
+version v48r3
 
 branches cmt doc
 
@@ -7,37 +7,35 @@ branches cmt doc
 # Gauss packages
 #==================================================================
 
-# Temporarily to pick up fix in GaudiConf
-use GaudiConf           v19r9
 # Temporarily to pick up new tool with its interface
-use MCInterfaces        v1r18   Kernel
-use SimComponents       v2r25   Sim
+use MCInterfaces        v1r19   Kernel
+use SimComponents       v3r0    Sim
 
 # Gauss application: the application is not built on Win32
-use Gauss               v48r2   Sim
+use Gauss               v48r3   Sim
 
 # LCG interfaces to generators, until available in LCGCMT
-use LCG_Settings        v74r0p1 
-use lhapdf              v74r0p1 LCG_GeneratorsInterfaces
-use photospp            v74r0p2 LCG_GeneratorsInterfaces
-use tauolapp            v74r0p1 LCG_GeneratorsInterfaces
-use pythia6             v74r0p1 LCG_GeneratorsInterfaces
-use pythia8             v74r0p1 LCG_GeneratorsInterfaces
-use thepeg              v74r0p1 LCG_GeneratorsInterfaces
-use herwigpp            v74r0p2 LCG_GeneratorsInterfaces
-use rivet               v74r0p1 LCG_GeneratorsInterfaces
-use alpgen              v74r0p1 LCG_GeneratorsInterfaces
-use hijing              v74r0p1 LCG_GeneratorsInterfaces
-use powhegbox           v74r0p1 LCG_GeneratorsInterfaces
+use LCG_Settings        v76r0p1 
+use lhapdf              v76r0p1 LCG_GeneratorsInterfaces
+use photospp            v76r0p2 LCG_GeneratorsInterfaces
+use tauolapp            v76r0p1 LCG_GeneratorsInterfaces
+use pythia6             v76r0p1 LCG_GeneratorsInterfaces
+use pythia8             v76r0p1 LCG_GeneratorsInterfaces
+use thepeg              v76r0p1 LCG_GeneratorsInterfaces
+use herwigpp            v76r0p2 LCG_GeneratorsInterfaces
+use rivet               v76r0p1 LCG_GeneratorsInterfaces
+use alpgen              v76r0p1 LCG_GeneratorsInterfaces
+use hijing              v76r0p1 LCG_GeneratorsInterfaces
+use powhegbox           v76r0p1 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
-use GenCuts             v3r11p1 Gen
-use GENSER              v16r0p2 Gen
-use EvtGen              v14r1   Gen
+use GenCuts             v3r12   Gen
+use GENSER              v16r0p3 Gen
+use EvtGen              v14r2   Gen
 use Mint                v3r3    Gen
 use EvtGenExtras        v3r11   Gen
-use Generators          v14r8   Gen
-use LbPythia8           v11r0   Gen
+use Generators          v15r0   Gen
+use LbPythia8           v11r1   Gen
 
 # Generators packages: alternative to Pythia8 for pp collisions
 use LbPythia            v15r0   Gen
@@ -45,11 +43,11 @@ use LbHerwigpp          v3r1    Gen
 
 # Generators packages: extensions to Pythia6 .or. Pythia8
 use LbHard              v1r0    Gen
-use LbAlpGen            v6r0    Gen 
+use LbAlpGen            v6r1    Gen 
 use BcVegPy             v4r0    Gen
 use GenXicc             v2r1p1  Gen
 use LbBcVegPy           v6r0    Gen
-use LbGenXicc           v5r0    Gen
+use LbGenXicc           v5r0p1  Gen
 use LbHidValley         v4r0p1  Gen
 use LbOniaPairs         v2r1p1  Gen
 use LbPowheg            v3r0    Gen
@@ -63,6 +61,10 @@ use LbMIB               v7r0p2  Gen
 # Generators packages: LHCb particle gun generator
 use LbPGuns             v6r0p1  Gen
 
+# Generators packages: for CEP
+use SuperChic           v1r0    Gen
+use LbSuperChic         v1r0    Gen
+
 # Simulation basic packages
 use GiGa        	v21r0p1   Sim     
 use GiGaCnv     	v21r0p1   Sim
@@ -72,9 +74,9 @@ use VisSvc              v5r7p1    Vis
 use ClhepTools          v2r1p3    Tools
 
 # Simulation specialized packages
-use GaussKine           v6r5      Sim
+use GaussKine           v7r0      Sim
 use GaussAlgs		v8r1      Sim
-use GaussTools          v19r2p2   Sim
+use GaussTools          v20r0     Sim
 use GaussRICH		v14r2p2   Sim
 use GaussTracker	v7r0p1    Sim
 use GaussCalo		v10r0p1   Sim
@@ -102,7 +104,7 @@ use XmlVis              v1r20     Vis
 
 # Test packages for new releases or installations on new platforms
 use GenTests            v1r6p2    Gen
-use SimChecks           v1r5      Sim
+use SimChecks           v1r6      Sim
 
 # Allow to run the QMTests  
 apply_pattern QMTest
