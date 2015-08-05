@@ -45,6 +45,14 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'Muon_IPChi2'       : 7.4
                     ,   'Muon_TrChi2'       : 3.
                     ,   'Muon_GEC'          : 'Loose'
+                    ,   'MuonNoSPD_TrNTHits'     : 0 #OFF
+                    ,   'MuonNoSPD_Velo_NHits'   : 0 #OFF
+                    ,   'MuonNoSPD_Velo_Qcut'    : 999 #OFF
+                    ,   'MuonNoSPD_PT'           : 600.
+                    ,   'MuonNoSPD_P'            : 6000.
+                    ,   'MuonNoSPD_IPChi2'       : 7.4
+                    ,   'MuonNoSPD_TrChi2'       : 3.
+                    ,   'MuonNoSPD_GEC'          : 'Loose'
                     ,   'Photon_Velo_NHits' : 0
                     ,   'Photon_Velo_Qcut'  : 999
                     ,   'Photon_TrNTHits'   : 0
@@ -213,5 +221,5 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             priority  = priorities[ 'MuonNoSPD' ] if 'MuonNoSPD' in priorities else None,
             L0DU = self.__l0du('MuonNoSPD'),
             algos = [ self.do_timing( unit ) if doTiming else unit for unit in \
-                      self.hlt1TrackMuon_Streamer( 'TrackMuonNoSPD', self.localise_props( 'Muon' ) ) ]
+                      self.hlt1TrackMuon_Streamer( 'TrackMuonNoSPD', self.localise_props( 'MuonNoSPD' ) ) ]
             )
