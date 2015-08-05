@@ -86,6 +86,7 @@ class FitAmpIncoherentSum
 
   virtual MINT::counted_ptr<IIntegrationCalculator> makeIntegrationCalculator();
   virtual MINT::counted_ptr<IntegCalculator> makeIntegCalculator();
+  virtual MINT::counted_ptr<FitAmpPairList> makeFitAmpPairList();
 
   virtual double Prob(IDalitzEvent& evt){
     return getVal(evt);

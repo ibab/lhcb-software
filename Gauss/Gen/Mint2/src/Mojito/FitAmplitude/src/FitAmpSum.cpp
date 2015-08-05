@@ -267,6 +267,28 @@ counted_ptr<IntegCalculator> FitAmpSum::makeIntegCalculator(){
   return l;
 }
 
+counted_ptr<FitAmpPairList> FitAmpSum::makeFitAmpPairList(){
+  counted_ptr<FitAmpPairList> l(new FitAmpPairList);
+  for(unsigned int i=0; i < _fitAmps.size(); i++){
+    if(_fitAmps[i]->canBeIgnored()) continue;
+    for(unsigned int j=i; j < _fitAmps.size(); j++){
+      if(_fitAmps[j]->canBeIgnored()) continue;
+      l->addAmps( (_fitAmps[i]),  (_fitAmps[j]));
+    }
+  }
+
+  cout << "FitAmpSum: setting efficiency POINTER "
+       << " in integCalculator to " 
+       << _efficiency.get();
+  if(0 == _efficiency.get()){
+    cout << " (0 means no pointer, 100% efficiency).";
+  }
+  cout << endl;
+
+  l->setEfficiency(_efficiency);
+  return l;
+}
+
 FitAmpSum::~FitAmpSum(){
   deleteAll();
 }

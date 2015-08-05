@@ -32,7 +32,7 @@ MINT::NamedParameter<std::string>::operator*=(const std::string& rhs){
 }
 
 template<>
-NamedParameter<std::string>& 
+MINT::NamedParameter<std::string>& 
 MINT::NamedParameter<std::string>::operator/=(const std::string& rhs){
   std::cout << "WARNING in MINT::NamedParameter<std::string>::operator-=:"
 	    << "\n\t OPERATOR \"/=\" undefined for strings" 
@@ -44,7 +44,7 @@ MINT::NamedParameter<std::string>::operator/=(const std::string& rhs){
 
 
 template<>
-bool NamedParameter<std::string>::setFromParsedLine(const ParsedParameterLine& line){
+bool MINT::NamedParameter<std::string>::setFromParsedLine(const ParsedParameterLine& line){
   const std::vector<std::string>& vsl = line.parsedStrings();
   if(vsl.size() < 2) return false; // first element is parameter name
   if(vsl[0] != _name){
@@ -61,7 +61,7 @@ bool NamedParameter<std::string>::setFromParsedLine(const ParsedParameterLine& l
 }
 
 template<>
-void NamedParameter<std::string>::print(std::ostream& os) const{
+void MINT::NamedParameter<std::string>::print(std::ostream& os) const{
   os << "\"" << name() << "\" ";
   if(size()==0){
     return;
@@ -73,5 +73,5 @@ void NamedParameter<std::string>::print(std::ostream& os) const{
   }
 };
 
-template class NamedParameter<std::string>;
+template class MINT::NamedParameter<std::string>;
 //

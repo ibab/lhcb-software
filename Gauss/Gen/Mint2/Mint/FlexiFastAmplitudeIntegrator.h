@@ -36,6 +36,7 @@ class FlexiFastAmplitudeIntegrator : virtual public IDalitzIntegrator{
   int _Ncalls;
   int _NReEvaluations;
 
+  double _sumT, _sumTRe, _sumTfast;
   bool _initialised;
 
   bool _db;
@@ -50,8 +51,10 @@ class FlexiFastAmplitudeIntegrator : virtual public IDalitzIntegrator{
   //  FitAmpPairList _ampList;
   //MINT::counted_ptr<IIntegrationCalculator> _integCalc;
   //MINT::counted_ptr<IIntegrationCalculator> _integCalc_copyForDebug;
-  MINT::counted_ptr<IntegCalculator> _integCalc;
-  MINT::counted_ptr<IntegCalculator> _integCalc_copyForDebug;
+  //  MINT::counted_ptr<IntegCalculator> _integCalc;
+  MINT::counted_ptr<FitAmpPairList> _integCalc;
+  //  MINT::counted_ptr<IntegCalculator> _integCalc_copyForDebug;
+  MINT::counted_ptr<FitAmpPairList> _integCalc_copyForDebug;
 
   TRandom* _rnd;
   MINT::counted_ptr<TRandom> _localRnd;

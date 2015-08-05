@@ -23,7 +23,9 @@ DalitzMCIntegrator::DalitzMCIntegrator( const DalitzEventPattern& pattern
 					, TRandom* rnd
 					, double precision
 					)
-  : _mean(0)
+  : _Ncalls(0)
+  , _sumT(0)
+  , _mean(0)
   , _variance(0)
   , _numEvents(0)
   , _weightSum(0)
@@ -33,7 +35,9 @@ DalitzMCIntegrator::DalitzMCIntegrator( const DalitzEventPattern& pattern
   initialise(pattern, weightFunction, generator, rnd, precision);
 }
 DalitzMCIntegrator::DalitzMCIntegrator()
-  : _mean(0)
+  : _Ncalls(0)
+  , _sumT(0)
+  , _mean(0)
   , _variance(0)
   , _numEvents(0)
   , _weightSum(0)
@@ -48,9 +52,11 @@ bool DalitzMCIntegrator::initialise(const DalitzEventPattern& pattern
 				    , TRandom* rnd
 				    , double precision
 				    ){
-  _pat = pattern;
-  _w   = weightFunction;
-  _rnd = rnd;
+  _Ncalls = 0;
+  _sumT   = 0.0;
+  _pat    = pattern;
+  _w      = weightFunction;
+  _rnd    = rnd;
   _precision = precision;
   
   _generator = generator;
@@ -229,7 +235,29 @@ int DalitzMCIntegrator::generateEnoughEvents(){
 }
 
 double DalitzMCIntegrator::getVal(){
+  _Ncalls++;
+
+  int                  printEvery =     10;
+  if(_Ncalls >    100) printEvery =    100;
+  if(_Ncalls >   1000) printEvery =   1000;
+  if(_Ncalls >  10000) printEvery =  10000;
+  if(_Ncalls > 100000) printEvery = 100000;
+  bool printout = _Ncalls < 10 || (0 == _Ncalls%printEvery);
+
+  time_t tstart = time(0);
   evaluateSum();
+  double delT = difftime(time(0), tstart);
+
+  _sumT += delT;
+
+  if(_Ncalls > 0 && printout){
+    cout << "DalitzMCIntegrator::getVal, " << _Ncalls << "th call: Returning " << _mean
+	 << " this call took " << delT << " s,"
+	 << " average call " << _sumT/_Ncalls << " s, "
+	 << " for " << _events.size() << " events."
+	 << endl;
+  }
+
   return _mean;
 }
 

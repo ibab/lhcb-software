@@ -89,6 +89,7 @@ class FitAmpSum
 
   virtual MINT::counted_ptr<IIntegrationCalculator> makeIntegrationCalculator();
   virtual MINT::counted_ptr<IntegCalculator> makeIntegCalculator();
+  virtual MINT::counted_ptr<FitAmpPairList> makeFitAmpPairList();
 
   virtual double Prob(IDalitzEvent& evt){
     std::complex<double> res = getVal(evt);

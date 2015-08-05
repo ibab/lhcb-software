@@ -34,6 +34,8 @@ class FitAmpPairList
   double _psSum;
   double _psSumSq;
 
+  bool _slow;
+
   mutable FitAmpPairCovariance _cov;
 
   MINT::counted_ptr<MINT::IReturnRealForEvent<IDalitzEvent> > _efficiency;
@@ -56,11 +58,12 @@ class FitAmpPairList
   virtual void addAmps(FitAmplitude* a1, FitAmplitude* a2); // for backwards compatibility, will be removed
   virtual void addAmps(FitAmplitude& a1, FitAmplitude& a2);
   virtual void addEvent(IDalitzEvent* evtPtr, double weight=1);
+  virtual void addEvent(IDalitzEvent& evt, double weight=1);
   virtual void addEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
 			, double weight=1);
-  virtual void reAddEvent(IDalitzEvent* evtPtr, double weight=1);
-  virtual void reAddEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
-			, double weight=1);
+  virtual void reAddEvent(IDalitzEvent& evt, double weight=1);
+  //  virtual void reAddEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
+  //			, double weight=1);
 
   bool isCompatibleWith(const FitAmpPairList& other) const;
   virtual bool add(const FitAmpPairList& otherList);
@@ -114,6 +117,12 @@ class FitAmpPairList
   void startReIntegration();
   void endIntegration();
 
+
+  void setSlow();
+  void setFast();
+
+  bool slow() const{return _slow;}
+  bool fast() const{return !_slow;}
 
   FitAmpPairList& operator+=(const FitAmpPairList& other);
   FitAmpPairList operator+(const FitAmpPairList& other) const;

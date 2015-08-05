@@ -64,6 +64,7 @@ class CachedByEvent : virtual public MINT::IFitParDependent{
       _configNumber++;
       return recalculate(evt);
     }
+
     T result;
     if(! evt.retrieveValue(rememberNumber(), result, configNumber())){
       return recalculate(evt);

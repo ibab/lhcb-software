@@ -24,6 +24,7 @@ using namespace MINT;
 FitAmpPair::FitAmpPair()
   : _fitA1(0)
   , _fitA2(0)
+  , _slow(true)
   , _beingIntegrated(true)
   , _eventDependentParameters(this)
   , _sum(0)
@@ -46,6 +47,7 @@ FitAmpPair::FitAmpPair()
 FitAmpPair::FitAmpPair(FitAmplitude& a1, FitAmplitude& a2)
   : _fitA1(&a1)
   , _fitA2(&a2)
+  , _slow(true)
   , _beingIntegrated(true)
   , _eventDependentParameters(this)
   , _sum(0)
@@ -329,28 +331,33 @@ bool FitAmpPair::retrieveValues(const std::string& fromDirectory){
 //bool FitAmpPair::saveHistograms(const std::string& asSubdirOf) const;
 //}
 
+
 double FitAmpPair::add(IDalitzEvent* evtPtr
+		       , double weight
+		       , double efficiency
+		       ){
+  if(0 == evtPtr) return 0;
+  return add(*evtPtr, weight, efficiency);
+}
+double FitAmpPair::add(IDalitzEvent& evt
 		       , double weight
 		       , double efficiency
 		       ){
   bool dbThis=false;
   
-  //  if(! acceptEvents()) return 0;
-
   _Nevents++;
-  if(0 == evtPtr) return 0;
   
-  double ps = evtPtr->phaseSpace();
+  double ps = evt.phaseSpace();
   if(ps <= 0.0000){
-	  if(!(_Nevents%100000)){
-    cout << "WARNING in FitAmpPair::addToHistograms"
-	 << " event with phase space = " << ps << endl;
-	  }
+    if(!(_Nevents%100000)){
+      cout << "WARNING in FitAmpPair::addToHistograms"
+	   << " event with phase space = " << ps << endl;
+    }
     return 0; // should not happen.
   }
 
-  double w = evtPtr->getWeight()
-    /evtPtr->getGeneratorPdfRelativeToPhaseSpace();
+  double w = evt.getWeight()
+    /evt.getGeneratorPdfRelativeToPhaseSpace();
   w *= weight;
   
   _weightSum += w;// / ps;
@@ -361,10 +368,11 @@ double FitAmpPair::add(IDalitzEvent* evtPtr
 	 << endl;
   }
 
-  complex<double> c=ampValue(evtPtr) * efficiency * w;
+  complex<double> c=ampValue(evt) * efficiency * w;
   _lastEntry = c;
   _sum   += c;
-  this->addToHistograms(evtPtr, c);
+
+  if(slow()) this->addToHistograms(&evt, c);
 
   if(dbThis){
     cout << "\t c = " << c
@@ -377,6 +385,54 @@ double FitAmpPair::add(IDalitzEvent* evtPtr
   return (c * fitParValue()).real();
 }
 
+double FitAmpPair::reAdd(IDalitzEvent& evt
+		       , double weight
+		       , double efficiency
+		       ){
+  bool dbThis=false;
+  
+
+  _Nevents++;
+  
+  double ps = evt.phaseSpace();
+  if(ps <= 0.0000){
+    if(!(_Nevents%100000)){
+      cout << "WARNING in FitAmpPair::addToHistograms"
+	   << " event with phase space = " << ps << endl;
+    }
+    return 0; // should not happen.
+  }
+
+  double w = evt.getWeight()
+    /evt.getGeneratorPdfRelativeToPhaseSpace();
+  w *= weight;
+  
+  _weightSum += w;// / ps;
+  
+  if(dbThis){
+    cout << " FitAmpPair::add, for pair "
+	 << fitAmp1().name() << " / " << fitAmp2().name()
+	 << endl;
+  }
+
+  complex<double> c= ampValue(evt) * efficiency * w;
+  _lastEntry = c;
+  _sum   += c;
+
+  if(slow()) this->addToHistograms(&evt, c);
+
+  if(dbThis){
+    cout << "\t c = " << c
+	 << " _sum " << _sum
+	 << endl;
+  }
+  complex<double> csq(c.real()*c.real(), c.imag()*c.imag());
+  _sumsq += csq;
+
+  return (c * fitParValue()).real();
+}
+
+
 double FitAmpPair::add(counted_ptr<IDalitzEvent> evtPtr
 		       , double weight
 		       , double efficiency
@@ -386,16 +442,10 @@ double FitAmpPair::add(counted_ptr<IDalitzEvent> evtPtr
 complex<double> FitAmpPair::lastEntry() const{
   return _lastEntry;
 }
-complex<double> FitAmpPair::ampValue(IDalitzEvent* evtPtr){
-  if(0 == evtPtr) return 0;
-
-  complex<double> c1 = rawAmp1().getVal(*evtPtr);
-  complex<double> c2 = rawAmp2().getVal(*evtPtr);
-  complex<double> c2star = conj(c2);
-  
-  complex<double> val = (c1 * c2star);
-
-  return val;
+complex<double> FitAmpPair::ampValue(IDalitzEvent& evtPtr){
+  complex<double> c1 = rawAmp1().getVal(evtPtr);
+  complex<double> c2 = rawAmp2().getVal(evtPtr);
+  return (c1 * conj(c2));  // c1 x c2*
 }
 
 complex<double> FitAmpPair::fitParValue()const{
@@ -462,8 +512,8 @@ void FitAmpPair::reset(){
   _sumsq = 0;
   _Nevents = 0;
   _weightSum = 0;
-  _hsRe.clearAllHistos();
-  _hsIm.clearAllHistos();
+  if(slow()) _hsRe.clearAllHistos();
+  if(slow()) _hsIm.clearAllHistos();
   _lastEntry = 0;
 }
 

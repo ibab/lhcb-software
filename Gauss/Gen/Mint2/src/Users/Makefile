@@ -8,9 +8,13 @@ MintDir = $(PWD)/../../../Mint
 MojitoDir = $(PWD)/../../../Mojito
 
 MOREINCS := $(wildcard $(PWD)/../../*/src)
+MOREINCS += $(PWD)/../../../../Mint
+MOREINCS += $(PWD)/../../../..
 MOREINCS += $(wildcard $(MintDir)/*/src)
 MOREINCS += $(wildcard $(MojitoDir)/*/src)
 MOREINCS += $(wildcard $(MintDir)/../..)
+MOREINCS += $(wildcard $(MintDir)/../*)
+MOREINCS += $(wildcard $(MintDir)/*/*)
 MOREINCSFLAGS := $(patsubst %,-I%,$(MOREINCS))
 CXXFLAGS += $(MOREINCSFLAGS)
 #CXXFLAGS += -pg
@@ -67,7 +71,7 @@ $(PROG): $(OBJS)
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $(PROG)
 	@echo ""; echo " =============== linking done ==============="; echo ""
 
-#include .depend
+include .depend
 
 %.(ObjSuf): %.$(SrcSuf)
 	$(CXX) $(CXXFLAGS) -c $<

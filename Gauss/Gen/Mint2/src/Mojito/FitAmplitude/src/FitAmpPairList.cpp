@@ -30,6 +30,7 @@ FitAmpPairList::FitAmpPairList()
   , _sumsq(0)
   , _psSum(0)
   , _psSumSq(0)
+  , _slow(true)
   , _cov(this)
   , _efficiency(0)
 {
@@ -66,13 +67,16 @@ void FitAmpPairList::addAmps(FitAmplitude& a1, FitAmplitude& a2){
 }
 
 void FitAmpPairList::addEvent(IDalitzEvent* evtPtr, double weight){
+  if(0 == evtPtr) return;
+  addEvent(*evtPtr, weight);
+}
+
+void FitAmpPairList::addEvent(IDalitzEvent& evt, double weight){
   bool dbThis=false;
   static unsigned int nZeroPs=0;
   _Nevents++;
   double x=0;
-  if(0 == evtPtr) return;
-  double ps = evtPtr->phaseSpace();
-
+  double ps = evt.phaseSpace();
   if(ps <= 0.0){
 	  if (!(nZeroPs%1000))
 	  {
@@ -85,7 +89,7 @@ void FitAmpPairList::addEvent(IDalitzEvent* evtPtr, double weight){
 
   for(unsigned int i=0; i< this->size(); i++){
     //    x += (*this)[i].add(evtPtr, weight*efficiency(evtPtr));
-    x += (*this)[i].add(evtPtr, weight, efficiency(evtPtr));
+    x += (*this)[i].add(evt, weight, efficiency(&evt));
   }
   if(dbThis) cout << "FitAmpPairList::addEvent(): adding event" << endl;
   //if(_cov.isValid()) 
@@ -105,25 +109,22 @@ void FitAmpPairList::addEvent(counted_ptr<IDalitzEvent> evtPtr, double weight){
   return addEvent(evtPtr.get(), weight);
 }
 
-void FitAmpPairList::reAddEvent(IDalitzEvent* evtPtr, double weight){
-  if(0 == evtPtr) return;
-  double ps = evtPtr->phaseSpace();
-
-  if(ps <= 0.0) return;
+void FitAmpPairList::reAddEvent(IDalitzEvent& evt, double weight){
+  if(evt.phaseSpace() < 0) return;
 
   for(unsigned int i=0; i< this->size(); i++){
     if( (*this)[i].acceptEvents()){
-      (*this)[i].add(evtPtr, weight, efficiency(evtPtr));
+      (*this)[i].reAdd(evt, weight, efficiency(&evt));
     }
   }
 
-  _cov.addLastEventFromList();
+  //  _cov.addLastEventFromList(); (need to do something about it)
 
   return;
 }
-void FitAmpPairList::reAddEvent(counted_ptr<IDalitzEvent> evtPtr, double weight){
-  return reAddEvent(evtPtr.get(), weight);
-}
+//void FitAmpPairList::reAddEvent(counted_ptr<IDalitzEvent> evtPtr, double weight){
+//  return reAddEvent(evtPtr.get(), weight);
+//}
 
 bool FitAmpPairList::isCompatibleWith(const FitAmpPairList& otherList) const{
   if(this->size() != otherList.size()) return false;
@@ -776,6 +777,19 @@ void FitAmpPairList::startReIntegration(){
 void FitAmpPairList::endIntegration(){
   for(unsigned int i=0; i < this->size(); i++){    
     (*this)[i].endIntegration();
+  }
+}
+
+void FitAmpPairList::setSlow(){
+  _slow=true;
+  for(unsigned int i=0; i < this->size(); i++){    
+    (*this)[i].setSlow();
+  }
+}
+void FitAmpPairList::setFast(){
+  _slow=false;
+  for(unsigned int i=0; i < this->size(); i++){    
+    (*this)[i].setFast();
   }
 }
 

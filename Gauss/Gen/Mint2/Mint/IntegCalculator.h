@@ -39,11 +39,13 @@ class IntegCalculator : public virtual IIntegrationCalculator{
   double efficiency(IDalitzEvent* evtPtr);
   
   virtual void addAmps(FitAmplitude* a1, FitAmplitude* a2);
-  virtual void addEvent(IDalitzEvent* evtPtr, double weight=1);
+  virtual void addEvent(IDalitzEvent* evtPtr, double weight=1); // << for compatibility
+  virtual void addEvent(IDalitzEvent& evt, double weight=1); // << default
   virtual void addEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
 			, double weight=1);
 
   virtual void reAddEvent(IDalitzEvent* evtPtr, double weight=1);
+  virtual void reAddEvent(IDalitzEvent& evt, double weight=1); // <<< default
   virtual void reAddEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
 			  , double weight=1);
 

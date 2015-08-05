@@ -211,6 +211,26 @@ FitAmpIncoherentSum::makeIntegCalculator(){
   return l;
 }
 
+counted_ptr<FitAmpPairList> 
+FitAmpIncoherentSum::makeFitAmpPairList(){
+  counted_ptr<FitAmpPairList> l(new FitAmpPairList);
+  for(unsigned int i=0; i < _fitAmps.size(); i++){
+    if(_fitAmps[i]->canBeIgnored()) continue;
+    l->addAmps( (_fitAmps[i]),  (_fitAmps[i]));
+  }
+
+  cout << "FitAmpIncoherentSum: setting efficiency POINTER "
+       << " in integCalculator to " 
+       << _efficiency.get();
+  if(0 == _efficiency.get()){
+    cout << " (0 means no pointer, 100% efficiency).";
+  }
+  cout << endl;
+
+  l->setEfficiency(_efficiency);
+  return l;
+}
+
 void FitAmpIncoherentSum::print(std::ostream& os) const{
    os << "FitAmpIncoherentSum::print\n====================";
 

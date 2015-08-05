@@ -26,14 +26,14 @@ FlexiFastAmplitudeIntegrator
 				, double precision
 				, const std::string& fastFlexiEventFileName
 			   )
-  : _Ncalls(0), _NReEvaluations(0), _db(false)
+  : _Ncalls(0), _NReEvaluations(0), _sumT(0.0), _sumTRe(0.0), _sumTfast(0.0), _db(false)
     //  , _fastFlexiEventList(fastFlexiEventFileName, "RECREATE")
 {
   initialise(pattern, amps, generator, rnd, precision);
 }
 
 FlexiFastAmplitudeIntegrator::FlexiFastAmplitudeIntegrator(const std::string& fastFlexiEventFileName)
-  : _initialised(0), _db(false)//, _fastFlexiEventList(fastFlexiEventFileName, "RECREATE")
+  : _initialised(0), _sumT(0.0), _sumTRe(0.0), _sumTfast(0.0), _db(false)//, _fastFlexiEventList(fastFlexiEventFileName, "RECREATE")
 
 {
 }
@@ -63,6 +63,9 @@ bool FlexiFastAmplitudeIntegrator::add(const FlexiFastAmplitudeIntegrator& other
   _numEvents = totalEvents;
   _Ncalls   += other._Ncalls;
   _NReEvaluations   += other._NReEvaluations;
+  _sumT     += other._sumT;
+  _sumTRe   += other._sumTRe;
+  _sumTfast += other._sumTfast;
   if(0 != this->_integCalc){
     _integCalc->add(other._integCalc);
   }else{
@@ -128,9 +131,11 @@ bool FlexiFastAmplitudeIntegrator
   
   _generator = generator;
 
-  _integCalc = amps->makeIntegCalculator();
+  //  _integCalc = amps->makeIntegCalculator();
+  _integCalc = amps->makeFitAmpPairList();
+  _integCalc->setFast();
 
-  if(_db) _integCalc_copyForDebug = amps->makeIntegCalculator();
+  if(_db) _integCalc_copyForDebug = amps->makeFitAmpPairList();
 
   if(0 == _integCalc){
     cout << "ERROR in FlexiFastAmplitudeIntegrator::initialise"
@@ -140,6 +145,9 @@ bool FlexiFastAmplitudeIntegrator
   }
   _Ncalls=0;
   _NReEvaluations=0;
+  _sumT     = 0.0;
+  _sumTRe   = 0.0;
+  _sumTfast = 0.0;
 
   _initialised = true;
   return _initialised;
@@ -173,9 +181,8 @@ int FlexiFastAmplitudeIntegrator::updateEventSet(long int Nevents){
 void FlexiFastAmplitudeIntegrator::reIntegrate(){
   _integCalc->startReIntegration();
   for(unsigned int i=0; i < _fastFlexiEventList.size(); i++){
-    //reAddEvent(_fastFlexiEventList.getEvent(i));
-    reAddEvent(_fastFlexiEventList[i]);
-  }
+     reAddEvent(_fastFlexiEventList[i]);
+   }
   _integCalc->endIntegration();
 }
 
@@ -195,10 +202,10 @@ double FlexiFastAmplitudeIntegrator::weight(IDalitzEvent* ){
 void FlexiFastAmplitudeIntegrator::addEvent(IDalitzEvent& evt){
   _fastFlexiEventList.Add(evt);
   DalitzEvent& listEvent( _fastFlexiEventList[_fastFlexiEventList.size()-1] );
-  _integCalc->addEvent(&listEvent, weight(&listEvent));
+  _integCalc->addEvent(listEvent, weight(&listEvent));
 }
 void FlexiFastAmplitudeIntegrator::reAddEvent(DalitzEvent& evt){
-  _integCalc->reAddEvent(&evt, weight(&evt));
+  _integCalc->reAddEvent(evt, weight(&evt));
 }
 
 int FlexiFastAmplitudeIntegrator::addEvents(long int Nevents){
@@ -352,11 +359,20 @@ int FlexiFastAmplitudeIntegrator::generateEnoughEvents(){
 
 double FlexiFastAmplitudeIntegrator::getVal(){
   _Ncalls++;
+  time_t tstart = time(0);
+  double delT_slow, delT_fast, delT_total;
   if( _integCalc->needToReIntegrate() ){
     _NReEvaluations++;
     reIntegrate();
+    delT_slow = difftime(time(0), tstart);
+    _sumTRe += delT_slow;
   }
+  time_t tstart_2 = time(0);
   evaluateSum();
+  delT_total = difftime(time(0), tstart);
+  delT_fast = difftime(time(0), tstart_2);
+  _sumTfast += delT_fast;
+    
   int                  printEvery =     10;
   if(_Ncalls >    100) printEvery =    100;
   if(_Ncalls >   1000) printEvery =   1000;
@@ -366,8 +382,15 @@ double FlexiFastAmplitudeIntegrator::getVal(){
 
   if(_Ncalls > 0 && printout){
     cout << "FlexiFastAmplitudeIntegrator::getVal, " << _Ncalls << "th call: Returning " << _mean
-	 << ",  re-evaluation fraction = " << ((double) _NReEvaluations + 1)/((double) _Ncalls)
-	 << endl;
+	 << ",  re-evaluation fraction = " << ((double) _NReEvaluations)/((double) _Ncalls)
+	 << "\n\t this call took " << delT_total << " s,"
+	 << "\n\t average call " << _sumT / _Ncalls;
+    if(_NReEvaluations > 0) cout << ", average re-integration " << _sumTRe / _NReEvaluations;
+    int delN = _Ncalls - _NReEvaluations;
+    if(delN > 0){
+      cout << ", average call w/o re-integration " << _sumTfast / delN;
+    }
+    cout << " ."  << endl;
   }
 
   return _mean;

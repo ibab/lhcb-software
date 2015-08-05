@@ -23,6 +23,7 @@ class FitAmpPair : public MINT::FitParDependent{
   FitAmplitude* _fitA1;
   FitAmplitude* _fitA2;
 
+  bool _slow;
   bool _beingIntegrated;
   MINT::FitParDependent _eventDependentParameters;
 
@@ -46,7 +47,7 @@ class FitAmpPair : public MINT::FitParDependent{
 
   std::complex<double> _lastEntry;
 
-  std::complex<double> ampValue(IDalitzEvent* evtPtr);
+  std::complex<double> ampValue(IDalitzEvent& evt);
   int oneOrTwo() const;
 
   const DalitzHistoSet& histosRe() const{return _hsRe;}
@@ -93,6 +94,8 @@ class FitAmpPair : public MINT::FitParDependent{
 
   bool isSingleAmp() const;
 
+  double reAdd(IDalitzEvent& evt, double weight=1, double efficiency=1);
+  double add(IDalitzEvent& evt, double weight=1, double efficiency=1);
   double add(IDalitzEvent* evt, double weight=1, double efficiency=1);
   double add(MINT::counted_ptr<IDalitzEvent> evt, double weight=1, double efficiency=1);
 
@@ -141,6 +144,12 @@ class FitAmpPair : public MINT::FitParDependent{
   const Amplitude& rawAmp1() const{return fitAmp1().amp();}
   const Amplitude& rawAmp2() const{return fitAmp2().amp();}
   
+
+  void setSlow(){_slow = true;}
+  void setFast(){_slow = false;}
+
+  bool slow() const{return _slow;}
+  bool fast() const{return !_slow;}
 
   virtual void print(std::ostream& os=std::cout) const;
   

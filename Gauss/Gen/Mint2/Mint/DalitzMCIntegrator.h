@@ -36,6 +36,9 @@ class DalitzMCIntegrator : virtual public IDalitzIntegrator{
     double RealVal(IDalitzEvent& evt);
   };
   
+  long int _Ncalls;
+  double _sumT;
+
   mutable double _mean, _variance;
   const static int _minEvents=1000;
   int _numEvents;

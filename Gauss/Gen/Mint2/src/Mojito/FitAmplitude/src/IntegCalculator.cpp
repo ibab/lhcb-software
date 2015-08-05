@@ -59,22 +59,30 @@ void IntegCalculator::addAmps(FitAmplitude* a1, FitAmplitude* a2){
   noEff().addAmps(a1, a2);
 }
 void IntegCalculator::addEvent(IDalitzEvent* evtPtr, double weight){
-  withEff().addEvent(evtPtr, weight);
-  noEff().addEvent(evtPtr, weight);
+  if(0 == evtPtr) return;
+  addEvent(*evtPtr, weight);
+}
+void IntegCalculator::addEvent(IDalitzEvent& evt, double weight){
+  withEff().addEvent(evt, weight);
+  noEff().addEvent(evt, weight);
 }
 void IntegCalculator::addEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
 			       , double weight){
-  withEff().addEvent(evtPtr, weight);
-  noEff().addEvent(evtPtr, weight);
+  if(0 == evtPtr) return;
+  addEvent(*evtPtr, weight);
 }
 void IntegCalculator::reAddEvent(IDalitzEvent* evtPtr, double weight){
-  withEff().reAddEvent(evtPtr, weight);
-  noEff().reAddEvent(evtPtr, weight);
+  if(0 == evtPtr) return;
+  reAddEvent(*evtPtr, weight);
+}
+void IntegCalculator::reAddEvent(IDalitzEvent& evt, double weight){
+  withEff().reAddEvent(evt, weight);
+  noEff().reAddEvent(evt, weight);
 }
 void IntegCalculator::reAddEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
 			       , double weight){
-  withEff().reAddEvent(evtPtr, weight);
-  noEff().reAddEvent(evtPtr, weight);
+  if(0 == evtPtr) return;
+  reAddEvent(*evtPtr, weight);
 }
 
 bool IntegCalculator::add(const IntegCalculator& other){

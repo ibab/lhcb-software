@@ -22,6 +22,7 @@ class IFastAmplitudeIntegrable
  public:
   virtual MINT::counted_ptr<IIntegrationCalculator> makeIntegrationCalculator()=0;
   virtual MINT::counted_ptr<IntegCalculator> makeIntegCalculator()=0;
+  virtual MINT::counted_ptr<FitAmpPairList> makeFitAmpPairList()=0;
 
   virtual MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 
     makeEventGenerator(const DalitzEventPattern& pat
