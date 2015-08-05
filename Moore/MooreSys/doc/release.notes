@@ -3,6 +3,19 @@ Package             : MooreSys
 Package Coordinator : R. Aaij
 Purpose             : LHCb HLT application
 
+</PRE><H1><A NAME=v24r0p1>2015-08-05 MooreSys v24r0p1</A></H1><PRE>
+
+As v24r0, but with minor updates/fixes to the python configuration in:
+Hlt1Lines
+Hlt2Lines
+HltSettings
+HltTracking
+
+Also picks up the following Rec packages:
+Pr/PrPixel v1r13
+Tf/TrackSys v9r10
+Tr/PatChecker v3r16
+
 </PRE><H1><A NAME=v24r0>2015-07-26 MooreSys v24r0</A></H1><PRE>
 
 Release as part of stack based on LHCb v39r0 and Gaudi v26r3.
