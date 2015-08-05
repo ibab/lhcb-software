@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2015-08-05 - Gloria Corti
+ - New tests to check fromSignal falg is set in full simulation and when
+   fillinf MCPArticles from generator.
+ - New test to check 2015 configuration
+
 ! 2015-08-04 - Gloria Corti
  - Update options for supported data types (2011, 2012, 2015) with latest dbase
    tags. Introduce reference options for 2010.
