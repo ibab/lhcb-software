@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-08-05 - Mika Vesterinen
+ - Tune of the inclusive D*/Sigc BDT cuts from Emanuele
+ - And remove prescale on Hlt1NoPVPassThrough line
+ - And prescale the Hlt2LowMultR2HH line
+
 ! 2015-08-05 - Francesco Dettori
  - Adding thresholds for Hlt1TrackMuonNoSPD and Hlt2SingleMuonNoSPD
 

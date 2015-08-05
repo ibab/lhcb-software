@@ -187,7 +187,7 @@ class Physics_25ns_August2015( object ):
                                                                               'DiMuonNoL0'       : None,
                                                                               'MultiMuonNoL0'    : None
                                                                              }
-                                               , 'Prescale'                 : { 'Hlt1NoPVPassThrough': 0.01,
+                                               , 'Prescale'                 : { 'Hlt1NoPVPassThrough': 1.0,
                                                                                 'Hlt1SingleMuonNoIP' : 0.1,
                                                                                 'Hlt1DiMuonNoL0'  : 0.01,
                                                                                 'Hlt1MultiMuonNoL0'  : 0.01

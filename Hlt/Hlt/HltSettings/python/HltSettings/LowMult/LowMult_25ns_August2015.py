@@ -86,7 +86,7 @@ class LowMult_25ns_August2015 :
                                  , 'Hlt2LowMultChiC2HHHHWS' : 0.2
                                  , 'Hlt2LowMultChiC2PP'     : 1.0
                                  , 'Hlt2LowMultChiC2PPWS'   : 0.2
-                                 , 'Hlt2LowMultLMR2HH'      : 1.0
+                                 , 'Hlt2LowMultLMR2HH'      : 0.5
                                  , 'Hlt2LowMultLMR2HHWS'    : 0.2
                                  , 'Hlt2LowMultLMR2HHHH'    : 1.0
                                  , 'Hlt2LowMultLMR2HHHHWS'  : 0.2

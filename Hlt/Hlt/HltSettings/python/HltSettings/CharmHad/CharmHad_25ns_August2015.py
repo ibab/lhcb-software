@@ -998,7 +998,7 @@ class CharmHad_25ns_August2015 :
                                             'SLPCOSTHETA': 'LV02',
                                             'SLPPT': 'CHILDFUN(PT, 2)',
                                             'TRSUMPT': 'CHILDFUN(CHILDFUN(PT, 1) + CHILDFUN(PT, 2), 1)'},
-                      'BDT_Threshold': 1.435,
+                      'BDT_Threshold': 1.4,
                       'D0_BPVCORRM_MAX': 2100.0 * MeV,
                       'D0_BPVVDCHI2_MIN': 20,
                       'Dst_D0_DeltaM_MAX': 350.0 * MeV,
