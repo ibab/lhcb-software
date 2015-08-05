@@ -141,7 +141,7 @@ class Radiative_25ns_August2015(object):
                                                     'vm_corrected': "CHILD(1, BPVCORRM)",
                                                     'fdchi2'      : "log10(BPVVDCHI2)",
                                                     'vtx_chi2'    : "log10(VFASPF(VCHI2))"},
-                                     'BDT_MIN': 1.007,
+                                     'BDT_MIN': 1.010,
                                      'CMB_VRT_MCOR_MIN': 1000*MeV,
                                      'CMB_VRT_MCOR_MAX': 11000*MeV},
                      'HHGammaComboEE': comb_cuts,

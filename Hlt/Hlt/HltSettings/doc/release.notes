@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-08-05 - Albert Puig
+  - Updated thresholds to adjust to bug fix.
+
 ! 2015-08-04 - Mika Vesterinen
   - Prescale the 3 Hlt2CharmHadXim2LamPim_* lines by a factor of 2, and tighten the inclusive phi line.
 
