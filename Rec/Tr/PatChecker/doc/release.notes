@@ -4,6 +4,7 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================= PatChecker v3r16 2015-08-05 =========================
 ! 2015-07-31 - Michel De Cian
  - Add some more debug and verbose statements in PatLHCbID2MCParticle
 
