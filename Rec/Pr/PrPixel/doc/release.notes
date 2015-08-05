@@ -4,6 +4,7 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+!========================= PrPixel v1r13 2015-08-05 =========================
 ! 2015-08-03 - Manuel Tobias Schiller
  - patch to PrPixelTrack on behalf of Daniel Cámpora <danielcampora@gmail.com>:
    I added some vectorization code at some point, which broke when the hits
