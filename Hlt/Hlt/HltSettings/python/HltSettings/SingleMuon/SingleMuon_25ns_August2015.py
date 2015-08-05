@@ -20,6 +20,7 @@ class SingleMuon_25ns_August2015(object) :
 
         lines = [
             'Hlt2SingleMuon',
+            'Hlt2SingleMuonNoSPD',
             'Hlt2SingleMuonHighPT',
             'Hlt2SingleMuonVHighPT',
             'Hlt2SingleMuonLowPT',
@@ -40,7 +41,8 @@ class SingleMuon_25ns_August2015(object) :
 
         from Hlt2Lines.SingleMuon.Lines import SingleMuonLines
         d.update({SingleMuonLines : {
-            'HltReq'  : {"SingleMuon" :  "HLT_PASS_RE('Hlt1TrackMuonDecision')"
+            'HltReq'  : {"SingleMuon" :  "HLT_PASS_RE('Hlt1TrackMuonDecision')",
+                         "NoSPD" :  "HLT_PASS_RE('Hlt1TrackMuonNoSPDDecision')"
                          },
             'Common' :        {'TrChi2'     :   5,    # Adimensional
                                'Pt':            1000 * MeV },
@@ -48,7 +50,9 @@ class SingleMuon_25ns_August2015(object) :
             'SingleMuon' :    {'IP'     : 0.25 * mm,
                                'IPChi2' : 100, # Adimensional
                                },
-            
+            'NoSPD' :  {'IP'     : 0.25 * mm,
+                                    'IPChi2' : 100, # Adimensional
+                                   },
             'HighPT':         { 'HighPt' : 10000 *MeV },
             
             'VHighPT':        { 'HighPt' : 15000 *MeV },
@@ -62,7 +66,8 @@ class SingleMuon_25ns_August2015(object) :
                                 'RarePMax'  : 500 * GeV,
                                 'muID'  : 1
                                 },
-            'Prescale'   : { 'Hlt2SingleMuon'      : 0.5
+            'Prescale'   : { 'Hlt2SingleMuon'      : 0.5,
+                             'Hlt2SingleMuonNoSPD'      : 1.0
                              , 'Hlt2SingleMuonHighPT'    : 1.0
                              , 'Hlt2SingleMuonLowPT' : 0.002}
             }

@@ -81,6 +81,14 @@ class Commissioning_Physics_2015( object ):
                                                , 'Muon_IPChi2'       : 10.
                                                , 'Muon_TrChi2'       : 3.
                                                , 'Muon_GEC'          : 'Loose'
+                                               , 'MuonNoSPD_TrNTHits'     : 0 #OFF
+                                               , 'MuonNoSPD_Velo_NHits'   : 0 #OFF
+                                               , 'MuonNoSPD_Velo_Qcut'    : 999 #OFF
+                                               , 'MuonNoSPD_PT'           : 910.
+                                               , 'MuonNoSPD_P'            : 6000.
+                                               , 'MuonNoSPD_IPChi2'       : 10.
+                                               , 'MuonNoSPD_TrChi2'       : 3.
+                                               , 'MuonNoSPD_GEC'          : 'Loose'
                                                , 'Photon_PT'         : 1200.
                                                , 'Photon_P'          : 6000.
                                                , 'Photon_IPChi2'     : 13.
@@ -88,6 +96,7 @@ class Commissioning_Physics_2015( object ):
                                                , 'Photon_GEC'        : 'Loose'
                                                , 'L0Channels'        : {'AllL0'  : 'L0_DECISION_PHYSICS',
                                                                         'Muon'   : ('Muon', 'DiMuon'),
+                                                                        'MuonNoSPD'   : ['MuonNoSPD' ],
                                                                         'Photon' : ("Photon", "Electron")}
                                                }
                      , Hlt1MVALinesConf :     {'DoTiming'                     : False,
@@ -288,7 +297,9 @@ class Commissioning_Physics_2015( object ):
         """
         Returns a list of active lines
         """
-        lines =  [ 'Hlt1TrackMuon', 'Hlt1SingleMuonHighPT'
+        lines =  [ 'Hlt1TrackMuon',
+                   'Hlt1TrackMuonNoSPD',
+                   'Hlt1SingleMuonHighPT'
                    , 'Hlt1SingleMuonNoIP', 'Hlt1DiMuonNoL0'
                    , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
                    , 'Hlt1MultiMuonNoL0'

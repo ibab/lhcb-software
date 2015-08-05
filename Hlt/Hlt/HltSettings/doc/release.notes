@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-08-05 - Francesco Dettori
+ - Adding thresholds for Hlt1TrackMuonNoSPD and Hlt2SingleMuonNoSPD
+
 ! 2015-08-05 - Albert Puig
   - Updated thresholds to adjust to bug fix.
 
