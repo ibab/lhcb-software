@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== SimChecks v1r6 2015-08-05 ========================
 ! 2015-06-29 - Luca Pescatore
  - Added rad_length_scan_velo_z.py to perform scans of radiation length
    in the velo using a range of different initial positions.
