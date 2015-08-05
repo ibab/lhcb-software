@@ -5,6 +5,8 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v7r15 2015-08-05 =========================
+
 ! 2015-08-05 - Francesco Dettori
  - Adding Hlt1TrackMuonNoSPD line to filter on corresponding L0. 
 
