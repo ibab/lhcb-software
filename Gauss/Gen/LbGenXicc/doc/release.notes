@@ -2,6 +2,10 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
+!======================== LbGenXicc v5r0p1 2015-08-05 ========================
+! 2015-06-23 - Philip Ilten
+ - Fixed typos in configuration
+
 !========================= LbGenXicc v5r0 2015-06-02 =========================
 ! 2015-05-12 - Philip Ilten
  - Removed deprecated configurable options
