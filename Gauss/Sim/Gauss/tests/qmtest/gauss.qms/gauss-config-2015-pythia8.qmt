@@ -1,0 +1,101 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension
+  PUBLIC '-//QM/2.4.1/Extension//EN'
+  'http://www.codesourcery.com/qm/dtds/2.4.1/-//qm/2.4.1/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program">
+	<text>gaudirun.py</text>
+</argument>
+<argument name="target_group">
+	<text>.*</text>
+</argument>
+<argument name="timeout">
+	<integer>1800</integer>
+</argument>
+<argument name="reference">
+	<text>$GAUSSROOT/tests/refs/testGauss-config-2015-pythia8.ref</text>
+</argument>
+<argument name="error_reference">
+	<text>$GAUSSROOT/tests/refs/testGauss-err.ref</text>
+</argument>
+<argument name="stdout">
+	<text/>
+</argument>
+<argument name="prerequisites">
+	<set/>
+</argument>
+<argument name="args">
+	<set>
+		<text>$GAUSSOPTS/Gauss-2015.py</text>
+		<text>$DECFILESROOT/options/30000000.py</text>
+		<text>$LBPYTHIA8ROOT/options/Pythia8.py</text>
+		<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
+		<text>$GAUSSROOT/tests/options/testGauss-config-defaults.py</text>
+                <text>$GAUSSROOT/tests/options/testGauss-QMTests.py</text>
+	</set>
+</argument>
+<argument name="exit_code">
+	<integer>0</integer>
+</argument>
+<argument name="use_temp_dir">
+	<enumeral>false</enumeral>
+</argument>
+<argument name="environment">
+	<set>
+	  <text>GFORTRAN_UNBUFFERED_PRECONNECTED=y</text>
+	</set>
+</argument>
+<argument name="unsupported_platforms">
+	<set/>
+</argument>
+<argument name="workdir">
+	<text/>
+</argument>
+<argument name="stderr">
+	<text/>
+</argument>
+<argument name="options">
+	<text/>
+</argument>
+<argument name="validator"><text>
+def replacenumbers(m):
+  res = m.groups()[0]
+  for i in m.groups()[1].lstrip().split():
+    res = res + " {0:f}".format( float( i ) )
+  return res
+
+preprocessor = (normalizeExamples + 
+     RegexpReplacer(when = "Connected to database",
+         orig = r"(\"sqlite_file:)(.*/)([\w.]+/[0-9A-Z_]{1,8}\")",
+         repl = r"\1\3") + 
+     RegexpReplacer(when = "RFileCnv                   INFO opening Root file",
+         orig = r"(opening Root file \")(.*/)([\w]+/[a-z.]{1,14}\")",
+         repl = r"\1\3") + 
+     RegexpReplacer(when = "HistogramDataSvc           INFO Added stream file",
+         orig = r"(Added stream file:)(.*/)([\w.]+/[a-z]{1,10})(.root)",
+         repl = r"\1\3") + 
+     RegexpReplacer(when = "MagneticFieldSvc           INFO Opened magnetic field file",
+         orig = r"(Opened magnetic field file : )(.*/)([\w.]+/[0-9a-z_]{1,14})(.cdf)",
+         repl = r"\1\3\4") + 
+     RegexpReplacer(when = "  KORB:" ,
+         orig = r"(  KORB: [a-zA-Z0-9*]+\s*=|  KORB: [A-Z0-9- ]+:)([0-9. \t-E]+)\n",
+         repl = replacenumbers ) +
+     LineSkipper(["TimingAuditor.TIMER", "ToolSvc.SequencerTime..."]) + 
+     LineSkipper(["INFO Disconnect from database after being idle"]) +
+     LineSkipper(["G4Transportation constructor> set fShortStepOptimisation to false"]) +
+     LineSkipper(regexps=[r"MainEventGaussSim\s*DEBUG event 1 memory.*",
+                          r"GaussGen\s*DEBUG event 1 memory.*"]) + 
+     RegexpReplacer(when = "Loading simulation attributes",
+         orig = r"(\")(.*/)([\w.]+\")",
+         repl = r"\1.../\3"))
+
+validateWithReference(preproc = preprocessor)
+
+</text></argument>
+<argument name="resources">
+	<set/>
+</argument>
+<argument name="stdin">
+	<text/>
+</argument>
+</extension>
