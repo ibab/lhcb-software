@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-08-05 - Eduardo Rodrigues
+ - Fixed bug with possible call from a NULL pointer in TeslaReportAlgo.cpp.
+
 ! 2015-8-05 - Sean Benson
  - Add some protection for case when we want debug printout but there is no CALO vector.
 

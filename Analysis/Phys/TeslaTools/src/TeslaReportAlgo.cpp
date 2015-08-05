@@ -766,9 +766,12 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
     if( calo_vector->size()>0 ){
       if ( msgLevel(MSG::DEBUG) ){
         debug() << "Proto has " << proto->calo().size() << " calo hypotheses" << endmsg;
-        debug() << "First hypo has " << proto->calo().front()->clusters().size() << " clusters and "
-          << proto->calo().front()->digits().size() << " digits" << endmsg;
-        debug() << "First CaloCluster has " << proto->calo().front()->clusters().front()->entries().size() << " entries" << endmsg;
+        if ( proto->calo().size() > 0 ) {
+          debug() << "First hypo has " << proto->calo().front()->clusters().size() << " clusters and "
+                  << proto->calo().front()->digits().size() << " digits" << endmsg;
+          debug() << "First CaloCluster has "
+                  << proto->calo().front()->clusters().front()->entries().size() << " entries" << endmsg;
+        }
       }
     }
   }
