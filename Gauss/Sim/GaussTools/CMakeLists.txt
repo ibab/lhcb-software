@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaussTools
 ################################################################################
-gaudi_subdir(GaussTools v19r2p2)
+gaudi_subdir(GaussTools v20r0)
 
 gaudi_depends_on_subdirs(Sim/GiGaCnv
                          Sim/SimSvc)

@@ -3,7 +3,7 @@
 # Maintainer : Gloria CORTI
 #============================================================================
 package GaussTools
-version v19r2p2
+version v20r0
 
 # Structure, i.e. directories to process. 
 #============================================================================

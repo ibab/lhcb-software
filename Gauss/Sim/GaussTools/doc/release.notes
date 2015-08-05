@@ -4,6 +4,7 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v20r0 2015-08-05 ========================
 ! 2015-08-02 - Gloria Corti
  - Propagate the information if a particle is signal as given from generator
    . MCTruthManager.{h,cpp}
