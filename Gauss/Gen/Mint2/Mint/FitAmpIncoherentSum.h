@@ -27,6 +27,7 @@ class FitAmpIncoherentSum
 , public FitAmpList
 {
  protected:
+  MINT::NamedParameter<int> _useAnalyticGradient;     
   static std::string IncPrefix();
  public:
   FitAmpIncoherentSum(const DalitzEventPattern& pat
@@ -74,7 +75,10 @@ class FitAmpIncoherentSum
     if(0 == evtPtr) return 0;
     return getVal(*evtPtr);
   }
-
+  
+  virtual void Gradient(IDalitzEvent& evt,Double_t* grad, MINT::MinuitParameterSet* mps);
+  virtual bool useAnalyticGradient() {return _useAnalyticGradient;}
+  
   /*
   double getSmootherLargerVal();
   double getSmootherLargerVal(IDalitzEvent* evt);

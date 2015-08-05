@@ -4,6 +4,8 @@
 // status:  Mon 9 Feb 2009 19:17:56 GMT
 
 #include "Mint/IReturnRealForEvent.h"
+#include "Mint/MinuitParameterSet.h"
+#include <iostream>
 
 namespace MINT{
 
@@ -17,6 +19,11 @@ class IPdf : virtual public IReturnRealForEvent<EVENT>{
   virtual void parametersChanged()=0;
   virtual void endFit()=0;
 
+  virtual void Gradient(EVENT & evt, Double_t* grad, MINT::MinuitParameterSet* mps){        
+        std::cout << "Gradient of pdf is not implemented. Please implement me or set useAnalyticGradient to 0 in your options file. I'll crash now. " << std::endl;
+        throw "crash";
+  }
+  virtual bool useAnalyticGradient() {return false;}
   //  virtual IPdf<EVENT>* Clone() const=0;
 
 };

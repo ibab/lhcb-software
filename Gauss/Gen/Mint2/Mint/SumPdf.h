@@ -70,6 +70,28 @@ class SumPdf : public PdfBase<EVENT_TYPE>{
     _pdf_1.endFit();
     _pdf_2.endFit();
   }
+    
+  virtual void Gradient(EVENT_TYPE & evt, Double_t* grad, MINT::MinuitParameterSet* mps){
+      Double_t grad_1[mps->size()]; 
+      Double_t grad_2[mps->size()];  
+
+      for(unsigned int j=0; j < mps->size(); j++){
+          grad_1[j]= 0.;   
+          grad_2[j]= 0.;
+      }
+      
+      _pdf_1.Gradient(evt, grad_1,mps);
+      _pdf_2.Gradient(evt, grad_2,mps);
+      
+      for(unsigned int j=0; j < mps->size(); j++){
+          grad[j]= _f1 * grad_1[j] + (1.0 - _f1) * grad_2[j];   
+      }
+
+  }
+    
+  virtual bool useAnalyticGradient(){
+      return _pdf_1.useAnalyticGradient() && _pdf_2.useAnalyticGradient();
+  }
 
   virtual ~SumPdf(){}
 };

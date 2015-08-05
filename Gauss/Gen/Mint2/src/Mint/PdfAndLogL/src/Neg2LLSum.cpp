@@ -130,4 +130,46 @@ bool Neg2LLSum::addConstraints(){
     return true;
 }
 
+void Neg2LLSum::Gradient(Double_t* grad){  
+    
+    std::vector<std::vector<double> > gradVec;
+    
+    for(unsigned int i=0; i < _likList.size(); i++){
+       
+        Double_t grad_tmp[this->getParSet()->size()];  
+        for(unsigned int j=0; j < this->getParSet()->size(); j++) grad_tmp[j]= 0.;
+        
+        _likList[i]->Gradient(grad_tmp);
+    
+        std:vector<double> tmp;
+
+        for(unsigned int j=0; j < this->getParSet()->size(); j++){
+            tmp.push_back(grad_tmp[j]);
+        }
+        
+        gradVec.push_back(tmp);
+    }
+    
+    for(unsigned int i=0;i< this->getParSet()->size();i++){
+        grad[i]=0.;
+        for(unsigned int j=0; j < _likList.size(); j++){
+            grad[i] += gradVec[j][i];
+        }
+    }
+}
+
+bool Neg2LLSum::useAnalyticGradient() {
+    bool b= true;
+    for(unsigned int i=0; i < _likList.size(); i++){
+        b = b && _likList[i]->useAnalyticGradient();
+    }
+    return b;
+}
+
+void Neg2LLSum::setUseAnalyticGradient(bool useAnalyticGradient) {
+    for(unsigned int j=0; j < _likList.size(); j++){
+        _likList[j]->setUseAnalyticGradient(useAnalyticGradient);
+    }
+}
+
 //

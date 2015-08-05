@@ -9,15 +9,13 @@
 #include "Mint/DalitzBoxSet.h"
 #include "Mint/DalitzBWBoxSet.h"
 #include "Mint/IntegCalculator.h"
-
 #include "Mint/IReturnRealForEvent.h"
 #include "Mint/IReturnComplexForEvent.h"
 #include "Mint/IFastAmplitudeIntegrable.h"
 #include "Mint/IUnweightedEventGenerator.h"
 #include "Mint/IIntegrationCalculator.h"
-
+#include "Mint/NamedParameter.h"
 #include "Mint/ILookLikeFitAmpSum.h"
-
 #include "Mint/FitAmpList.h"
 
 // note - this inherits now from FitAmpList, many
@@ -31,6 +29,7 @@ class FitAmpSum
 , public FitAmpList
 {
  protected:
+ MINT::NamedParameter<int> _useAnalyticGradient;     
  public:
   FitAmpSum(const DalitzEventPattern& pat
 	    , const char* fname=0
@@ -80,6 +79,8 @@ class FitAmpSum
 
   virtual std::complex<double> getVal(IDalitzEvent& evt);
   virtual std::complex<double> getVal(IDalitzEvent* evt);// for backward compatibility
+  virtual void Gradient(IDalitzEvent& evt,Double_t* grad, MINT::MinuitParameterSet* mps);
+  virtual bool useAnalyticGradient() {return _useAnalyticGradient;}
 
   /*
   virtual std::complex<double> getSmootherLargerVal();

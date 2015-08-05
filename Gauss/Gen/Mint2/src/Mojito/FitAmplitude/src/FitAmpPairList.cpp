@@ -209,6 +209,103 @@ double FitAmpPairList::integral() const{
   return sum;
 }
 
+void FitAmpPairList::Gradient(MinuitParameterSet* mps, Double_t* grad){
+    
+    for (unsigned int i=0; i<mps->size(); i++) {
+        if(mps->getParPtr(i)->hidden())continue;
+
+        grad[i]=0;
+        string name_i= mps->getParPtr(i)->name();
+        if(name_i.find("_Re")!=std::string::npos){
+            if(mps->getParPtr(i)->iFixInit() && mps->getParPtr(i+1)->iFixInit()){
+                i++;
+                continue;
+            }
+            name_i.replace(name_i.find("_Re"),3,"");
+            complex<double> sum(0);
+            for(unsigned int j=0; j< this->size(); j++){
+                if(!A_is_in_B(name_i,(*this)[j].name())) continue;
+                double singleAmpCorrection= 1.;
+                if((*this)[j].isSingleAmp()) singleAmpCorrection = 2.;
+                // 2 a_j^* A_i A_j^*
+                if(A_is_in_B(name_i,(*this)[j].fitAmp1().name())){
+                    sum += singleAmpCorrection* (*this)[j].valNoFitPars()* conj((*this)[j].fitAmp2().AmpPhase());
+                }
+                else {
+                    sum += singleAmpCorrection* conj( (*this)[j].valNoFitPars()* (*this)[j].fitAmp1().AmpPhase() );
+                }
+                
+            }
+            grad[i]= sum.real();
+            grad[i+1]= -sum.imag();
+            i++;
+        } 
+        // Doesn't work. Don't use! 
+        /* 
+        else if(name_i.find("_Amp")!=std::string::npos){
+            name_i.replace(name_i.find("_Amp"),4,""); 
+            complex<double> sumAmp(0);
+            complex<double> sumPhase(0);
+
+            for(unsigned int j=0; j< this->size(); j++){
+                if(!A_is_in_B(name_i,(*this)[j].name())) continue;
+                double singleAmpCorrection= 1.;
+                if((*this)[j].isSingleAmp()) singleAmpCorrection = 2.;
+                // 2 a_j^* A_i A_j^*
+                if(A_is_in_B(name_i,(*this)[j].fitAmp1().name())){
+                    sumAmp += singleAmpCorrection*(*this)[j].complexVal()/std::abs((*this)[j].fitAmp1().AmpPhase());
+                    if(!(*this)[j].isSingleAmp())sumPhase += (*this)[j].complexVal()*std::arg((*this)[j].fitAmp1().AmpPhase());
+                }
+                else {
+                    sumAmp += singleAmpCorrection*conj((*this)[j].complexVal())/std::abs((*this)[j].fitAmp2().AmpPhase());
+                    if(!(*this)[j].isSingleAmp())sumPhase += conj((*this)[j].complexVal())*std::arg((*this)[j].fitAmp2().AmpPhase());
+                }
+                
+            }
+            grad[i]= sumAmp.real();
+            grad[i+1]= -sumPhase.imag();
+            i++;
+        }
+        */
+        else if(mps->getParPtr(i)->iFixInit())continue;
+        else {
+            std::cout << "FitAmpPairList::Gradient() called. Sorry, I don't know how to calculate the derivative with respect to the fit parameter " << mps->getParPtr(i)->name() << " ! Please implement me or set useAnalytic Gradient to 0 in your options file. I'll crash now. " << std::endl;
+            throw "crash";
+        }
+    }
+    
+}
+
+void FitAmpPairList::GradientForLasso(MinuitParameterSet* mps, Double_t* grad){
+    
+    for (unsigned int i=0; i<mps->size(); i++) {
+        if(mps->getParPtr(i)->hidden())continue;
+        grad[i]=0;
+        string name_i= mps->getParPtr(i)->name();
+        if(name_i.find("_Re")!=std::string::npos){
+            if(mps->getParPtr(i)->iFixInit() && mps->getParPtr(i+1)->iFixInit())continue;
+            name_i.replace(name_i.find("_Re"),3,"");
+            for(unsigned int j=0; j< this->size(); j++){
+                if(!A_is_in_B(name_i,(*this)[j].name())) continue;
+                if(!(*this)[j].isSingleAmp()) continue;
+                double integral = (*this)[j].valNoFitPars().real()/sqrt((*this)[j].integral());
+                // Re(a_j) A_j A_j^* dphi
+                grad[i]= integral * (*this)[j].fitAmp1().AmpPhase().real();
+                // Im(a_j) A_j A_j^* dphi
+                grad[i+1]= integral * (*this)[j].fitAmp1().AmpPhase().imag();
+                i++;
+                break;
+            }
+        }
+        else if(mps->getParPtr(i)->iFixInit())continue;
+        else {
+            std::cout << "Sorry, I don't know how to calculate the derivative with respect to the fit parameter " << mps->getParPtr(i)->name() << " ! Please implement me or set useAnalytic Gradient to 0 in your options file. I'll crash now. " << std::endl;
+            throw "crash";
+        }
+    }
+    
+}
+
 double FitAmpPairList::sumOfSqrtFitFractions() {
     double sum = 0;
     for(unsigned int i=0; i< this->size(); i++){

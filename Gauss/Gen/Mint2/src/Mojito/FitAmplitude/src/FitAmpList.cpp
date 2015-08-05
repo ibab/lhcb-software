@@ -413,6 +413,22 @@ double FitAmpList::efficiency(IDalitzEvent& evt){
   return eff;
 }
 
+void FitAmpList::normalizeAmps(DalitzEventList evtList){
+    
+    for(unsigned int i=0; i<_fitAmps.size(); i++){
+        if(0 == (_fitAmps[i]))continue;
+        double integral=0.;
+        double weight_sum=0.;
+        for (unsigned int j=0; j<evtList.size(); j++) {
+            double weight = evtList[j].getWeight()/evtList[j].getGeneratorPdfRelativeToPhaseSpace();
+            weight_sum += weight;
+            integral += weight * std::norm((_fitAmps[i])->getValWithoutFitParameters(evtList[j]));
+        }
+        if(weight_sum==0)weight_sum = evtList.size(); 
+        if(integral>0)(_fitAmps[i])->multiply(sqrt(weight_sum/integral));
+    }
+}
+
 FitAmpList::~FitAmpList(){
   deleteAll();
 }

@@ -1,7 +1,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:03 GMT
 #include "Mint/FitAmpSum.h"
-
+#include "Mint/NamedParameter.h"
 #include "Mint/FitAmplitude.h"
 #include "Mint/MinuitParameterSet.h"
 #include "Mint/NamedDecayTreeList.h"
@@ -23,7 +23,8 @@ FitAmpSum::FitAmpSum(const DalitzEventPattern& pat
 		     , const std::string& prefix
 		     , const std::string& opt
 		     )
-  : FitAmpList(pat, fname, pset, prefix, opt)
+: FitAmpList(pat, fname, pset, prefix, opt), _useAnalyticGradient("useAnalyticGradient",0)  
+
 {
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
@@ -36,7 +37,8 @@ FitAmpSum::FitAmpSum(const DalitzEventPattern& pat
 		     , const std::string& prefix
 		     , const std::string& opt
 		     )
-  : FitAmpList(pat, pset, prefix, opt)
+: FitAmpList(pat, pset, prefix, opt), _useAnalyticGradient("useAnalyticGradient",0)  
+
 {
 
   // cout << "pset pointer in FitAmpSum::FitAmpSum " << pset << " = " << getMPS() << endl;
@@ -50,7 +52,7 @@ FitAmpSum::FitAmpSum(const DalitzEventPattern& pat
 		     , const std::string& prefix
 		     , const std::string& opt
 		     )
-  : FitAmpList(pat, prefix, opt)
+  : FitAmpList(pat, prefix, opt), _useAnalyticGradient("useAnalyticGradient",0)
 {
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
@@ -63,7 +65,7 @@ FitAmpSum::FitAmpSum(const FitAmpSum& other)
   , IReturnComplexForEvent<IDalitzEvent>()
   , IFastAmplitudeIntegrable()
   , ILookLikeFitAmpSum()
-  , FitAmpList(other)
+  , FitAmpList(other), _useAnalyticGradient("useAnalyticGradient",0)
 {
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
@@ -76,7 +78,7 @@ FitAmpSum::FitAmpSum(const FitAmpList& other)
   , IReturnComplexForEvent<IDalitzEvent>()
   , IFastAmplitudeIntegrable()
   , ILookLikeFitAmpSum()
-  , FitAmpList(other)
+  , FitAmpList(other), _useAnalyticGradient("useAnalyticGradient",0)
 {    
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
@@ -156,6 +158,59 @@ std::complex<double> FitAmpSum::getVal(IDalitzEvent& evt){
    */
   return result;
 }
+
+void FitAmpSum::Gradient(IDalitzEvent& evt,Double_t* grad,MinuitParameterSet* mps){
+    
+    std::complex<double> val = getVal(evt);
+    std::complex<double> valConj= conj(val);
+        
+    for (unsigned int i=0; i<mps->size(); i++) {
+        if(mps->getParPtr(i)->hidden())continue;
+
+        string name_i= mps->getParPtr(i)->name();
+        if(name_i.find("Inco")!=std::string::npos)continue;
+
+        if(name_i.find("_Re")!=std::string::npos){
+            if(mps->getParPtr(i)->iFixInit() && mps->getParPtr(i+1)->iFixInit()){
+                i++;
+                continue;
+            }
+            name_i.replace(name_i.find("_Re"),3,"");
+            for(unsigned int j=0; j<_fitAmps.size(); j++){
+                if(A_is_in_B(name_i, _fitAmps[j]->name())){
+                    std::complex<double> tmp = 2.*valConj*(_fitAmps[j])->getValWithoutFitParameters(evt);
+                    grad[i]= tmp.real();
+                    grad[i+1]= -tmp.imag();
+                    i++;
+                    break;
+                }
+            }
+        }
+        // Doesn't work. Don't use! 
+        /* 
+        else if(name_i.find("_Amp")!=std::string::npos){
+            name_i.replace(name_i.find("_Amp"),4,"");
+            
+            for(unsigned int j=0; j<_fitAmps.size(); j++){
+                if(A_is_in_B(name_i, _fitAmps[j]->name())){
+                    std::complex<double> tmp = (_fitAmps[j])->getValWithoutFitParameters(evt);
+                    grad[i]= 2.*(tmp*valConj).real()/std::abs((_fitAmps[j])->AmpPhase());
+                    grad[i+1]= -2.*std::arg((_fitAmps[j])->AmpPhase())*(tmp*(valConj-conj((_fitAmps[j])->getVal(evt)))).imag();
+                    i++;
+                    break;
+                }
+            }
+        }
+        */
+        else if(mps->getParPtr(i)->iFixInit())continue;
+        else {
+            std::cout << "FitAmpSum::Gradient() called. Sorry, I don't know how to calculate the derivative with respect to the fit parameter " << mps->getParPtr(i)->name() << " ! Please implement me or set useAnalytic Gradient to 0 in your options file. I'll crash now. " << std::endl;
+            throw "crash";
+        }
+        
+    }
+    
+} 
 
 void FitAmpSum::print(std::ostream& os) const{
    os << "FitAmpSum::print\n====================";

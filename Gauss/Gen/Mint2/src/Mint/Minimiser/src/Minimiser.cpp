@@ -29,6 +29,7 @@ Minimiser::Minimiser(IMinimisable* fitFunction)
   , _theFunction(fitFunction)
   , _maxCalls(_defaultMaxCalls)
   , _printLevel(3)
+  , _useAnalyticGradient(false)
 {
   if(0 != theFunction()){
     init();
@@ -45,11 +46,11 @@ int Minimiser::getMaxCalls() const{
   return _maxCalls;
 }
 
-Int_t Minimiser::Eval(Int_t        //npar
-		      , Double_t*  //grad
+Int_t Minimiser::Eval(Int_t  npar
+		      , Double_t*  grad
 		      , Double_t& fval
 		      , Double_t* par
-		      , Int_t     //flag
+		      , Int_t     flag
 		      ){
   bool dbThis=false;
   if(dbThis) cout << "Eval got called " << endl;
@@ -61,6 +62,12 @@ Int_t Minimiser::Eval(Int_t        //npar
   }
   this->updateFitParameters(par);
   fval = this->getFCNVal();
+  if (flag == 4) {
+        if(_useAnalyticGradient){
+            //calculate GRAD, the first derivatives of FVAL
+            this->FCNGradient(grad);
+        }
+  }
   return -1;
 }
 
@@ -110,6 +117,8 @@ bool Minimiser::init(){
   initialiseVariables();
   if(dbThis) cout << " initialised variables." << endl;
 
+  _useAnalyticGradient = theFunction()->useAnalyticGradient();  
+    
   if(dbThis) cout << "Minimiser::init(): returning true" << endl;
   return true;
 }
@@ -253,6 +262,14 @@ double Minimiser::getFCNVal(){
   return theFunction()->getVal();
 }
 
+void Minimiser::FCNGradient(Double_t* grad){
+    if(! this->OK()){
+        cout << "ERROR IN Minimiser::FCNGradient()"
+        << " I'm not OK!!" << endl;
+    }
+    return theFunction()->Gradient(grad);
+}
+
 bool Minimiser::setPrintLevel(int level){
   if(level >=0 )_printLevel=level;
   arglist[0] = _printLevel;
@@ -276,6 +293,8 @@ bool Minimiser::SetSomeMinuitOptions(){
   arglist[0] = 1;
   TMinuit::mnexcm("SET STRATEGY", arglist , 1, ierflg);
   success &= (! ierflg);
+  if(_useAnalyticGradient)TMinuit::mnexcm("SET GRADIENT", arglist , 1, ierflg);
+  else TMinuit::mnexcm("SET NOGRADIENT", arglist , 1, ierflg);
   return success;
 }
 
@@ -304,33 +323,42 @@ bool Minimiser::CallMinos(){
 bool Minimiser::CallSimplex(int maxCalls, double tolerance ){
     bool dbThis=true;
     bool success=true;
+    bool useAnalyticGradient = _useAnalyticGradient;
+    _useAnalyticGradient = false;
     arglist[0] = maxCalls; arglist[1] = tolerance;
     if(dbThis) cout << "calling SIMPLEX" << endl;
     TMinuit::mnexcm("SIMPLEX", arglist ,2,ierflg);
     if(dbThis) cout << "did that. How did I do? ierflg=" << ierflg << endl;
     success &= (! ierflg);
+    _useAnalyticGradient = useAnalyticGradient;
     return success;
 }
 
 bool Minimiser::CallSeek(int maxCalls, int devs){
     bool dbThis=true;
     bool success=true;
+    bool useAnalyticGradient = _useAnalyticGradient;
+    _useAnalyticGradient = false;
     arglist[0] = maxCalls; arglist[1] = devs; 
     if(dbThis) cout << "calling SEEK" << endl;
     TMinuit::mnexcm("SEEK", arglist ,2,ierflg);
     if(dbThis) cout << "did that. How did I do? ierflg=" << ierflg << endl;
     success &= (! ierflg);
+    _useAnalyticGradient = useAnalyticGradient;
     return success;
 }
 
 bool Minimiser::CallImprove(int maxCalls, int searches ){
     bool dbThis=true;
     bool success=true;
+    bool useAnalyticGradient = _useAnalyticGradient;
+    _useAnalyticGradient = false;
     arglist[0] = maxCalls; arglist[1] = searches;
     if(dbThis) cout << "calling IMPROVE" << endl;
     TMinuit::mnexcm("IMPROVE", arglist ,2,ierflg);
     if(dbThis) cout << "did that. How did I do? ierflg=" << ierflg << endl;
     success &= (! ierflg);
+    _useAnalyticGradient = useAnalyticGradient;
     return success;
 }
 

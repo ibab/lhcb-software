@@ -2,7 +2,7 @@
 #define IMINIMISABLE_HH
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:55 GMT
-
+#include <iostream>
 #include "Mint/MinuitParameterSet.h"
 namespace MINT{
 class IMinimisable{
@@ -15,6 +15,13 @@ class IMinimisable{
 
   virtual double getVal()=0;
   virtual double getNewVal()=0;
+  virtual void Gradient(Double_t* grad){        
+        std::cout << "Gradient of pdf is not implemented. Please implement me or set useAnalyticGradient to 0 in your options file. I'll crash now. " << std::endl;
+        throw "crash";
+  }
+  virtual bool useAnalyticGradient() {return false;}
+  virtual void setUseAnalyticGradient(bool useAnalyticGradient){};  
+  
   virtual ~IMinimisable(){}
 };
 }//namespace MINT

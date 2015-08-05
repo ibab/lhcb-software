@@ -123,7 +123,13 @@ class FastAmplitudeIntegrator : virtual public IDalitzIntegrator{
   }
 
   double getVal();
-
+  void Gradient(MINT::MinuitParameterSet* mps, Double_t* grad){
+        _integCalc->Gradient(mps,grad);
+  }
+  void GradientForLasso(MINT::MinuitParameterSet* mps, Double_t* grad){
+        _integCalc->GradientForLasso(mps,grad);
+  }  
+    
   double RealVal(){
     return getVal();
   }

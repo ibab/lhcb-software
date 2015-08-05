@@ -133,6 +133,7 @@ class FitAmpList
   FitAmpList operator*(const std::complex<double>& z) const;
   FitAmpList operator*(const MINT::counted_ptr<MINT::IReturnComplex>& irc) const;
 
+  void normalizeAmps(DalitzEventList evtList);    
 
   friend class FitAmplitude;
 

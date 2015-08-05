@@ -58,7 +58,13 @@ class IntegCalculator : public virtual IIntegrationCalculator{
   virtual int numEvents()   const;
   virtual double integral() const;
   virtual double variance() const;
-
+  virtual void Gradient(MINT::MinuitParameterSet* mps, Double_t* grad){
+        withEff().Gradient(mps,grad);
+  }
+  virtual void GradientForLasso(MINT::MinuitParameterSet* mps, Double_t* grad){
+        withEff().GradientForLasso(mps,grad);
+  }  
+    
   double sumOfSqrtFitFractions() {
         return withEff().sumOfSqrtFitFractions();
   }     

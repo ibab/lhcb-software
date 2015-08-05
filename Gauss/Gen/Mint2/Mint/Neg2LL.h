@@ -8,6 +8,7 @@
 #include "Mint/IEventList.h"
 #include "Mint/IWeightedEvent.h"
 #include "Mint/counted_ptr.h"
+#include "Mint/NamedParameter.h"
 
 #include <iostream>
 
@@ -54,7 +55,9 @@ namespace MINT{
     //IEventList<EVENT_TYPE>* _eventList;
     PDF_TYPE       & _pdf;
     EVENTLIST_TYPE & _eventList;
-    
+    bool _useAnalyticGradient;  
+    Double_t* _grad;   
+
     // Putting the constructors into "protected" means that nobody can 
     // use this class except for Neg2LL. That's the idea. Use Neg2LL,
     // not this, this is just a helper class.
@@ -67,6 +70,8 @@ namespace MINT{
       , _NCalls(0)
       , _pdf(pdf)
       , _eventList(erptr)
+      , _useAnalyticGradient(pdf.useAnalyticGradient())
+      , _grad(0)
     { 
       init();
     }
@@ -75,8 +80,10 @@ namespace MINT{
       , _NCalls(other._NCalls)
       , _pdf(other._pdf)
       , _eventList(other.erptr)
+      , _useAnalyticGradient(other._pdf.useAnalyticGradient())
+      , _grad(0)
       {
-	init();
+          init();
       }
     
   public:
@@ -108,15 +115,18 @@ namespace MINT{
       // just a place holder
       bool dbThis=true;
       if(dbThis){
-	std::cout << "Neg2LLClass: I got initialised with an event list with "
+          std::cout << "Neg2LLClass: I got initialised with an event list with "
 		  << _eventList.size() << " events." << std::endl;
-	std::cout << "Neg2LLClass: with pointer: " << &_eventList << std::endl;
-	//if(_eventList.size() > 0){
-	// std::cout << "The first one is:\n"
-	//	    << _eventList[0]
-	//	    << std::endl;
-	//}
+          std::cout << "Neg2LLClass: with pointer: " << &_eventList << std::endl;
+          //if(_eventList.size() > 0){
+          // std::cout << "The first one is:\n"
+          //	    << _eventList[0]
+          //	    << std::endl;
+          //}
+          
       }
+      _grad= new Double_t[this->getParSet()->size()];  
+      for(unsigned int i=0; i < this->getParSet()->size(); i++) _grad[i]= 0.;
       return true;
     }
     
@@ -131,11 +141,11 @@ namespace MINT{
       if(dbThis) std::cout << " that worked! the value is " 
 			   << valPdf << std::endl;
       if(valPdf <= 0){
-	if(dbThis) std::cout << "ERROR in Neg2LLClass::logPdf()"
+          if(dbThis) std::cout << "ERROR in Neg2LLClass::logPdf()"
 			     << " the pdf is " << valPdf
 			     << " which is <= 0." 
 			     << std::endl;
-	return -9999.e20 * (1.0 + fabs(valPdf));
+          return -9999.e20 * (1.0 + fabs(valPdf));
       }
       return log(valPdf);
     }
@@ -164,22 +174,36 @@ namespace MINT{
       double sum=0;
       
       if(verbose && printout){
-	std::cout << "Neg2LLClass::getVal after " << _NCalls << " calls."
+          std::cout << "Neg2LLClass::getVal after " << _NCalls << " calls."
 		  << " pdf ptr is non zero - that's a start." 
 		  << std::endl;
       }
       unsigned int counter=0;
       double sumweights=0.0;
       double sumsquareweights=0.0;
-      
+        
+      Double_t gradPDF[this->getParSet()->size()];
+      for(unsigned int i=0; i < this->getParSet()->size(); i++) _grad[i]= 0.;
+        
       for(counter=0; counter < _eventList.size(); ++counter){
-	//EVENT_TYPE & evt( (*_eventList)[counter] );
-	// sum += logPdf((*_eventList)[counter]);
-	double weight     = eventWeight(counter);
-	sum              += weight*logPdf(counter);
-	sumweights       += weight;
-	sumsquareweights += weight*weight;
+          //EVENT_TYPE & evt( (*_eventList)[counter] );
+          // sum += logPdf((*_eventList)[counter]);
+          double weight     = eventWeight(counter);
+          double logPdfVal  = logPdf(counter);
+          sum              += weight*logPdfVal;
+          sumweights       += weight;
+          sumsquareweights += weight*weight;
+          if(_useAnalyticGradient){
+              _pdf.Gradient(_eventList[counter],gradPDF,this->getParSet());
+              double pdfVal = exp(logPdfVal);
+              for(unsigned int i=0; i < this->getParSet()->size(); i++){
+                  _grad[i]+= weight*gradPDF[i]/pdfVal;
+              }
+          }
       }
+        
+      for(unsigned int i=0; i < this->getParSet()->size(); i++) _grad[i]=-2. * _grad[i] * fabs(sumweights/sumsquareweights);
+      
       
       if(printout){
           std::cout << "Neg2LLClass::getVal after " << _NCalls << " calls."
@@ -190,12 +214,21 @@ namespace MINT{
       }
       return -2.* sum*fabs(sumweights/sumsquareweights);
     }
-    
+        
+    virtual void Gradient(Double_t* grad){
+            for(unsigned int i=0; i < this->getParSet()->size(); i++) grad[i]=_grad[i];
+    }    
+        
+    virtual bool useAnalyticGradient() {return _useAnalyticGradient;}
+    virtual void setUseAnalyticGradient(bool useAnalyticGradient) { _useAnalyticGradient = useAnalyticGradient;}  
+
     virtual double getNewVal(){
       // forces re-calculation after parameter change
       parametersChanged();
       return getVal();
     }
+        
+    virtual ~Neg2LLClass(){delete[] _grad;}
     
   };
 
@@ -225,6 +258,11 @@ namespace MINT{
     
     virtual double getVal(){return _imini->getVal();}
     virtual double getNewVal(){return _imini->getNewVal();}
+    
+    virtual void Gradient(Double_t* grad){_imini->Gradient(grad);}
+    virtual bool useAnalyticGradient() {return _imini->useAnalyticGradient();}
+    virtual void setUseAnalyticGradient(bool useAnalyticGradient) { _imini->setUseAnalyticGradient(useAnalyticGradient); }  
+
     virtual ~Neg2LL(){}
 
   };

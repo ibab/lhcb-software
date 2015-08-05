@@ -5,7 +5,7 @@
 
 #include "TMinuit.h"
 #include "TMatrixTSym.h"
-
+#include "Mint/NamedParameter.h"
 #include "Mint/IMinimisable.h"
 
 #include <iostream>
@@ -19,6 +19,7 @@ class Minimiser : public TMinuit{
   mutable Double_t arglist[10];
   mutable Int_t ierflg;
  protected:
+  bool  _useAnalyticGradient;  
   static Minimiser* _defaultMinimiser;
   static int _defaultMaxCalls;
 
@@ -66,6 +67,7 @@ class Minimiser : public TMinuit{
   bool fcnOK() const;
 
   double getFCNVal();
+  void FCNGradient(Double_t* grad);
 
   bool initialiseVariables();
 

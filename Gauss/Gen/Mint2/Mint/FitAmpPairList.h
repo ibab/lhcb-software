@@ -75,6 +75,9 @@ class FitAmpPairList
   virtual double integral() const;
   virtual double variance() const;
   virtual double sumOfVariances() const;
+  virtual void Gradient(MINT::MinuitParameterSet* mps, Double_t* grad);
+  virtual void GradientForLasso(MINT::MinuitParameterSet* mps, Double_t* grad);
+    
   double sumOfSqrtFitFractions();
   int numberOfFitFractionsLargerThanThreshold(double threshold);
     

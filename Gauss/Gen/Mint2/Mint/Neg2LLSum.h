@@ -58,6 +58,10 @@ class Neg2LLSum : public Minimisable{
   double getVal();
     
   bool addConstraints();
+    
+  virtual void Gradient(Double_t* grad);
+  virtual bool useAnalyticGradient();
+  virtual void setUseAnalyticGradient(bool useAnalyticGradient);
 
 };
 }// namespace MINT

@@ -13,7 +13,6 @@
 #include "Mint/DalitzEvent.h"
 #include "Mint/MinuitParameterSet.h"
 #include "Mint/DalitzHistoSet.h"
-
 #include "Mint/FastAmplitudeIntegrator.h"
 
 #include "Mint/counted_ptr.h"
@@ -64,7 +63,9 @@ class DalitzPdfBaseFastInteg
   FastAmplitudeIntegrator _faint;
   IFastAmplitudeIntegrable* _amps;
   MINT::counted_ptr<IFastAmplitudeIntegrable> _countedAmps;
-
+  double _val;  
+  Double_t* _gradNorm; 
+  bool _redoGradNorm;  
   //  MINT::counted_ptr<IGetDalitzEvent> _efficiency;
 
   MINT::IEventGenerator<IDalitzEvent>* _generator;
@@ -142,6 +143,10 @@ class DalitzPdfBaseFastInteg
     if(0 == evt) return 0;
     return getNewVal(*evt);
   }
+    
+  virtual void Gradient(IDalitzEvent& evt,Double_t* grad, MINT::MinuitParameterSet* mps); 
+  virtual void GradientForLasso(Double_t* grad);  
+  bool useAnalyticGradient() {return getAmps()->useAnalyticGradient();}
 
   virtual double RealVal(IDalitzEvent& evt){return getVal(evt);}
   // w/o phase space - more robust if your events leak out of

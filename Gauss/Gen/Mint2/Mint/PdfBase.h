@@ -35,7 +35,7 @@ namespace MINT{
       parametersChanged();
       return getVal(evt);
     }
-    
+
     virtual ~PdfBase(){};
   };
   

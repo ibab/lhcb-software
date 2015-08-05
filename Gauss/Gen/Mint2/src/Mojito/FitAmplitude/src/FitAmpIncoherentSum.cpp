@@ -24,7 +24,7 @@ FitAmpIncoherentSum::FitAmpIncoherentSum(const DalitzEventPattern& pat
 		     , const std::string& prefix
 		     , const std::string& opt
 		     )
-  : FitAmpList(pat, fname, pset, FitAmpIncoherentSum::IncPrefix()+ prefix, opt)
+  : FitAmpList(pat, fname, pset, FitAmpIncoherentSum::IncPrefix()+ prefix, opt), _useAnalyticGradient("useAnalyticGradient",0)
 {
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
@@ -37,7 +37,7 @@ FitAmpIncoherentSum::FitAmpIncoherentSum(const DalitzEventPattern& pat
 		     , const std::string& prefix
 		     , const std::string& opt
 		     )
-  : FitAmpList(pat, pset, FitAmpIncoherentSum::IncPrefix() + prefix, opt)
+  : FitAmpList(pat, pset, FitAmpIncoherentSum::IncPrefix() + prefix, opt), _useAnalyticGradient("useAnalyticGradient",0)
 {
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
@@ -48,7 +48,7 @@ FitAmpIncoherentSum::FitAmpIncoherentSum(const DalitzEventPattern& pat
 		     , const std::string& prefix
 		     , const std::string& opt
 		     )
-  : FitAmpList(pat, FitAmpIncoherentSum::IncPrefix() + prefix, opt)
+  : FitAmpList(pat, FitAmpIncoherentSum::IncPrefix() + prefix, opt), _useAnalyticGradient("useAnalyticGradient",0)
 {
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
@@ -60,7 +60,7 @@ FitAmpIncoherentSum::FitAmpIncoherentSum(const FitAmpIncoherentSum& other)
   : IReturnRealForEvent<IDalitzEvent>()
   , IFastAmplitudeIntegrable()
   , ILookLikeFitAmpSum()
-  , FitAmpList(other)
+  , FitAmpList(other), _useAnalyticGradient("useAnalyticGradient",0)
 {
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
@@ -72,7 +72,7 @@ FitAmpIncoherentSum::FitAmpIncoherentSum(const FitAmpList& other)
   : IReturnRealForEvent<IDalitzEvent>()
   , IFastAmplitudeIntegrable()
   , ILookLikeFitAmpSum()
-  , FitAmpList(other)
+  , FitAmpList(other), _useAnalyticGradient("useAnalyticGradient",0)
 {
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
@@ -153,6 +153,39 @@ double FitAmpIncoherentSum::getVal(IDalitzEvent& evt){
   return efficiency(evt)*sum;
 
 }
+
+void FitAmpIncoherentSum::Gradient(IDalitzEvent& evt,Double_t* grad,MinuitParameterSet* mps){
+    
+    for (unsigned int i=0; i<mps->size(); i++) {
+        if(mps->getParPtr(i)->hidden())continue;
+        string name_i= mps->getParPtr(i)->name();
+        if(name_i.find("Inco")==std::string::npos)continue;
+        if(name_i.find("_Re")!=std::string::npos){
+            if(mps->getParPtr(i)->iFixInit() && mps->getParPtr(i+1)->iFixInit()){
+                i++;
+                continue;
+            }
+            //name_i.replace(name_i.find("Inco_"),5,"");
+            name_i.replace(name_i.find("_Re"),3,"");
+            for(unsigned int j=0; j<_fitAmps.size(); j++){
+                if(A_is_in_B(name_i, _fitAmps[j]->name())){
+                    double tmp = 2.*std::norm((_fitAmps[j])->getValWithoutFitParameters(evt));
+                    grad[i]= tmp * _fitAmps[j]->AmpPhase().real();
+                    grad[i+1]= tmp * _fitAmps[j]->AmpPhase().imag();
+                    i++;
+                    break;
+                }
+            }
+        }
+        else if(mps->getParPtr(i)->iFixInit())continue;
+        else {
+            std::cout << "FitAmpIncoherentSum::Gradient() called. Sorry, I don't know how to calculate the derivative with respect to the fit parameter " << mps->getParPtr(i)->name() << " ! Please implement me or set useAnalytic Gradient to 0 in your options file. I'll crash now. " << std::endl;
+            throw "crash";
+        }
+        
+    }
+    
+} 
 
 counted_ptr<IIntegrationCalculator> 
 FitAmpIncoherentSum::makeIntegrationCalculator(){
