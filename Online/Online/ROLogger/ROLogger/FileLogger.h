@@ -56,11 +56,16 @@ namespace ROLogger {
     UPI::ReallyClose*  m_quit;
     /// Flag to dump messages to UPI
     bool               m_connected;
+    /// Use RFC3339 https://www.ietf.org/rfc/rfc3339.txt for time-format
+    bool               m_timerfc3339;
     /// Open new output file
     FILE* openOutput();
     /// Print single message retrieved from error logger
     virtual void printMessage(const char* msg, bool crlf=true);
-
+    // Format message according to RFC 3339 
+    // returns a pointer to a string with the re-formatted message
+    // ownership is passed, this string must be free-ed by the caller
+    char* formatTimeRFC3339(const char* msg);
   public:
     /// Standard constructor with object setup through parameters
     FileLogger(int argc, char** argv);
@@ -68,6 +73,8 @@ namespace ROLogger {
     virtual ~FileLogger();
     /// Interactor callback handler
     virtual void handle(const Event& ev);
+    //
+    int m_thisYear;
   };
 }
 #endif /* ROLOGGER_FILELOGGER_H */

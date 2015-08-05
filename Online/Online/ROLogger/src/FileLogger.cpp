@@ -64,6 +64,7 @@ FileLogger::FileLogger(int argc, char** argv)
   cli.getopt("facility",1,facility);
   cli.getopt("logdir",1,m_outdir);
   cli.getopt("severity",1,m_severity);
+  m_timerfc3339 = cli.getopt("timeformatrfc3339",1) != 0; 
   not_use_time = cli.getopt("notime",1) != 0;
   if ( not_use_time ) m_useTimeForName = false;
   if ( partition.empty() ) {
@@ -111,6 +112,9 @@ FileLogger::FileLogger(int argc, char** argv)
   m_quit = new UPI::ReallyClose(m_id,CMD_CLOSE);
   ::upic_set_cursor(m_id,CMD_SHOW,0);
   m_printRunNo = 1;
+  time_t secs = ::time(NULL);
+  struct tm *now = ::localtime(&secs);
+  m_thisYear = now->tm_year;
 }
 
 /// Standard destructor
@@ -153,8 +157,26 @@ void FileLogger::printMessage(const char* msg, bool crlf) {
   if ( m_date != now->tm_wday ) {
     m_output = openOutput();
   }
-  MessageLogger::printMessage(msg,crlf);
+  if ( m_timerfc3339 ) {
+    char *refmsg = formatTimeRFC3339(msg);
+    MessageLogger::printMessage(refmsg, crlf);
+    ::free(refmsg);
+  } else {
+    MessageLogger::printMessage(msg,crlf);
+  }
   if ( m_connected ) ::upic_write_message(msg+12,"");  
+}
+
+char * FileLogger::formatTimeRFC3339(const char * msg) {
+  char *refmsg = ::strdup(msg);
+  if (strlen(msg) < 12) return refmsg;
+  struct tm logtime;
+  if (!::strptime(msg, "%B%d-%H%M%S", &logtime)) return refmsg;
+  logtime.tm_year = m_thisYear;
+  refmsg = (char*) realloc(refmsg, strlen(refmsg) + 999999999);
+  strftime(refmsg, 21, "%Y-%b-%0d %0H:%0M:%0S", &logtime);
+  strcpy(refmsg + 20, msg + 12);
+  return refmsg;
 }
 
 /// Display callback handler
