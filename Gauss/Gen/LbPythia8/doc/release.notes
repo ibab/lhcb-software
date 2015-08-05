@@ -4,6 +4,11 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+!======================== LbPythia8 v11r1 2015-08-05 =========================
+! 2015-08-02 - Philip Ilten
+ - Create new particles in Pythia if they don't exist in the database during 
+   updateParticleProperties
+
 ! 2015-07-07 - Gloria Corti
  - Removed obsolete and now wrong Pythia8.opts in old format
 

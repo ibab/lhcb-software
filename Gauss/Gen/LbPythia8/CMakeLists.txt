@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LbPythia8
 ################################################################################
-gaudi_subdir(LbPythia8 v11r0)
+gaudi_subdir(LbPythia8 v11r1)
 
 gaudi_depends_on_subdirs(Gen/Generators)
 
