@@ -1,5 +1,5 @@
 package RecSys
-version           v18r0
+version           v18r1
 
 branches cmt doc tests
 
