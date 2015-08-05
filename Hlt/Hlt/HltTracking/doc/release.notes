@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2015-08-05 - Sascha Stahl
+	- HltRecoConf: Fix RICH track chi2 cut which had an old setting.
+
 ! 2015-08-04 - Sascha Stahl
  - Hlt2ProbeTracking: Configure probe tracking to use new multiple scattering description.
 
