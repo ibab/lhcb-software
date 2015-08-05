@@ -88,7 +88,7 @@ logger.debug ( "Create the default canvas" )
 canvas    = Ostap.Canvas.getCanvas ()
     
 ## load zillions of decorations for ROOT-objects 
-import Ostap.PyRoUts   as PyRoUts     ## NB: the most important line!
+import Ostap.PyRoUts            ## NB: the most important line!
 import Ostap.ZipShelve as DBASE        
 # =============================================================================
 if ROOT.gROOT.IsBatch() :
@@ -97,7 +97,7 @@ if ROOT.gROOT.IsBatch() :
 
 # =============================================================================
 ## minor decoration for default shelve module 
-from Ostap.shelve_ext import shelve 
+import Ostap.shelve_ext
 
 # =============================================================================
 ## import useful context managers
@@ -110,8 +110,8 @@ if '.' not in sys.path :
     sys.path = ['.'] + sys.path 
 
 # =============================================================================
-cpp = PyRoUts.cpp
-VE  = PyRoUts.VE
+cpp = Ostap.PyRoUts.cpp
+VE  = Ostap.PyRoUts.VE
 # =============================================================================
 if '__main__' == __name__ :
     

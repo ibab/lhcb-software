@@ -69,7 +69,7 @@ __all__     = (
     #
     )
 # =============================================================================
-import ROOT, cppyy  ## attention here!!
+import ROOT,cppyy, math, sys  ## attention here!!
 #
 iLevel = int( ROOT.gErrorIgnoreLevel ) 
 ROOT.gROOT.ProcessLine("gErrorIgnoreLevel = 2001; " ) 
@@ -91,8 +91,6 @@ agrestiCoullEff = Gaudi.Math.agrestiCoullEff
 iszero          = cpp.LHCb.Math.Zero     ('double')()
 isequal         = cpp.LHCb.Math.Equal_To ('double')()
 #
-##
-import math, sys
 # =============================================================================
 # logging 
 # =============================================================================
@@ -406,11 +404,14 @@ def _axis_iter_reversed_ ( a ) :
     """
     s = a.GetNbins()
     i = long( s )
-    while i <= 1 :
+    while 1 <= i :
         yield i
         i-=1
-        
+
+
 ROOT.TAxis . __reversed__ = _axis_iter_reversed_
+
+ROOT.TAxis . __contains__ = lambda s , i : 1 <= i <= s.GetNbins()
 
 # =============================================================================
 ## get item for the 1-D histogram 
@@ -424,8 +425,8 @@ def _h1_get_item_ ( h1 , ibin ) :
     >>> ve    = histo[ibin]
     
     """
-    #
-    if not ibin in h1.GetXaxis() : raise IndexError 
+    if 0 == ibin  or h1.GetXaxis().GetBin
+    if not ibin in h1.GetXaxis()    : pass
     #
     val = h1.GetBinContent ( ibin ) 
     err = h1.GetBinError   ( ibin )
@@ -889,7 +890,6 @@ ROOT.TH3F  . __contains__ = _h3_contains_
 ROOT.TH3D  . __contains__ = _h3_contains_
 
 
-ROOT.TAxis . __contains__ = lambda s , i : 1 <= i <= s.GetNbins()
 
 
 # =============================================================================

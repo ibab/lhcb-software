@@ -9,15 +9,17 @@
 #  One needs to specify a function with the interface required nby PIDCalib (see ex_fun).
 #
 #  And user scrips looks as:
+#
 #  @code
+#  def PION ( particle        ,   ## INPUT 
+#             daatset         ,   ## INPUT 
+#             plots   =  None ,   ## UPDATE 
+#             verbose = False ) :
+#      ...
+#      return plots
 #
-#  def my_func ( .... ) : .....
-#
-#  from Ostap.PidCalib import * 
-#  parser = makeParser ( )
-#  config = parser.parse_args()
-#  histos = runPidCalib ( my_func , config)
-#  saveHistos ( histos , '' , config ) ## optionally
+#  from Ostap.PidCalib import run_pid_calib 
+#  run_pid_calib ( PION , 'PIDCALIB.db')
 #
 #  @endcode
 # 
@@ -32,15 +34,19 @@
 # =============================================================================
 """ Oversimplified module to run PIDCalib machinery form Urania project
 
-One needs to specify a function with interface rewuired by PIDClba (see ex_func).
+One needs to specify a function with interface required by PIDCalib (see ex_func).
 
 And user scrips looks as:
 
-from Ostap.PidCalib import * 
-parser = makeParser ( )
-config = parser.parse_args()
-histos = runPidCalib ( my_func , config  )
-saveHistos ( histos , '' , config ) ## optionally
+#  def PION ( particle        , ## INPUT 
+#             daatset         , ## INPUT 
+#             plots   =  None , ## UPDATE 
+#             verbose = False ) :
+#      ...
+#      return plots
+#
+#  from Ostap.PidCalib import run_pid_calib 
+#  run_pid_calib ( PION , 'PIDCALIB.db')  
 
 """
 # =============================================================================
@@ -55,11 +61,13 @@ __all__     = (
     'ex_func2'    , ## another example of end-user function 
     )
 # =============================================================================
-import os 
+import ROOT,cppyy, os
+import Ostap.PyRoUts 
 from   AnalysisPython.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'Ostap.PidCalib' )
 else                      : logger = getLogger ( __name__         )
 # =============================================================================
+
 ## prepare the parser
 #  oversimplified version of parser from MakePerfHistsRunRange.py script 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -80,9 +88,9 @@ def makeParser ( ) :
         formatter_class = argparse.RawDescriptionHelpFormatter,
         prog            = os.path.basename(sys.argv[0]),
         description     = """Make performance histograms for a given:
-        a) stripping version <stripVersion> (e.g. \"20\")
-        b) magnet polarity   <magPol>       (\"MagUp\" or \"MagDown\")
-        c) particle type <partName>         (\"K\", \"P\", \"Pi\", \"e\" or \"Mu\")
+        a) stripping version <stripVersion> (e.g. '20' )
+        b) magnet polarity   <magPol>       ( 'MagUp' or 'MagDown' or 'Both' )
+        c) particle type <partName>         ( 'K', 'P' , 'Pi' , 'e' , 'Mu'   )  
         """ , 
         epilog =
         """To use the 'MuonUnBiased' hadron samples for muon misID studies, one of the
@@ -92,12 +100,12 @@ def makeParser ( ) :
     
     ## add the positional arguments
     parser.add_argument ( 'particle'    ,
-                          metavar = '<PARTICLE>'    , type=str   ,
-                          choices = ("K", "Pi", "P", "e", "Mu")  , 
+                          metavar = '<PARTICLE>'    , type=str    ,
+                          choices = ('K', 'Pi', 'P' , 'e', 'Mu'  ) , 
                           help    = "Sets the particle type"     )
     
     parser.add_argument ( '-s' , '--stripping'       , nargs = '+' , 
-                          metavar = '<STRIPPING>'   , ## type=str ,                           
+                          metavar = '<STRIPPING>'    , ## type=str ,                           
                           help    = "Sets the stripping version"  )
     
     ## add the optional arguments
@@ -116,13 +124,10 @@ def makeParser ( ) :
                           dest="MaxFiles" , metavar="NUM", type=int, default=-1 , 
                           help="Sets the maximum number of calibration files to run over")
     parser.add_argument ( '-c', '--cuts', dest='cuts', metavar='CUTS', default='',
-                          help=("Sets the list of cuts to apply to the calibration "
-                                "sample(s) prior to determine the PID efficiencies "
-                                "(default: (default)s). "
-                                "NB. It is up to the user to ensure that their reference "
-                                "sample has the same cuts applied."
-                                ))
-    
+                          help="""List of cuts to apply to the calibration sample
+                          prior to determine the PID efficiencies, 
+                          e.g. fiducuial volume,  HASRICH, etc... 
+                          """)
     parser.add_argument ( "-o", "--outputDir", dest="outputDir", metavar="DIR",
                           type=str , default = '.' , 
                           help="Save the performance histograms to directory DIR "
@@ -318,7 +323,7 @@ def makePlots ( the_func        ,
 
         bar.update_amount ( index )
         if not verbose : bar.show() 
-
+        
         manager = memory() if verbose else NoContext()
         
         with manager :
@@ -387,15 +392,15 @@ def runPidCalib ( the_func    ,
     #
     ## finally call the standard PIDCalib machinery with user-specified function
     #
-    histopair =  makePlots ( the_func        ,
-                             particle        ,  
-                             stripping       ,
-                             polarity        ,
-                             trackcuts       ,
-                             runMin          ,
-                             runMax          ,
-                             verbose         ,
-                             maxFiles        )
+    histos =  makePlots ( the_func    ,
+                          particle    ,  
+                          stripping   ,
+                          polarity    ,
+                          trackcuts   ,
+                          runMin      ,
+                          runMax      ,
+                          verbose     ,
+                          maxFiles    )
     
     if config.get('dbname',None) :
 
@@ -407,14 +412,14 @@ def runPidCalib ( the_func    ,
                 key = 'PIDCalib(%s)@Stripping%s/%s' % ( particle  ,
                                                         stripping ,
                                                         polarity  )
-                db [ key         ] = histopair
+                db [ key         ] = histos
                 db [ key + 'Cuts'] = trackcuts 
                 if verbose : db.ls()
                 
         except :
             logger.error('Unable to save data in DB')
             
-    return histopair 
+    return histos
 
 # =============================================================================
 ## save histograms into the output file
@@ -440,7 +445,7 @@ def saveHistos  (  histos     ,
     logger.info ( "Saving performance histograms to %s" %fname )
 
     import ROOT 
-    import Ostap.PyRoUts
+    import Ostap.PyRoUts  ## to be replaces with Ostap.TFileDeco
     
     with ROOT.TFile.Open ( fname, "RECREATE") as outfile :
 
@@ -520,7 +525,7 @@ def  ex_func ( particle          ,
         hA.SetName ( hA.GetTitle() )
         hR.SetName ( hR.GetTitle() )
         
-        plots     = [ hA , hR ] ## "Accepted" & "Rejected" historgams 
+        plots     = [ hA , hR ] ## "Accepted" & "Rejected" histograms 
 
     else         :
         
@@ -565,39 +570,44 @@ def  ex_func2 ( particle         ,
     import ROOT
     from Ostap.PyRoUts import hID, h3_axes  
 
+    ## the main:
+    accepted = 'K_ProbNNK>0.1'    ## ACCEPTED sample 
+    rejected = 'K_ProbNNK<0.1'    ## REJECTED sample 
+
+    ## variables for the historgrams 
     vlst = ROOT.RooArgList ()
     vlst.add ( dataset.K_P   )
-    
-    accepted = 'K_ProbNNK>0.1'
-    rejected = 'K_ProbNNK<0.1'
-    
+    vlst.add ( dataset.K_Eta )
+    vlst.add ( dataset.nTracks )
+
+    ## binning    
     pbins    = [ 3.2  , 6  , 9  ,  15 , 20  , 30  , 40 , 50 , 60 , 80 , 100 , 120 , 150 ]
     pbins    = [ p*1000 for p in pbins ]
     
-    vlst.add ( dataset.K_Eta )
     hbins    = [ 2.0 , 2.5 , 3.0 , 3.5 , 4.0 , 4.5 , 4.9 ]
-    #ha = h2_axes ( pbins , hbins , title = 'Accepted(%s)' % accepted )
-    #hr = h2_axes ( pbins , hbins , title = 'Rejected(%s)' % rejected )
-    
-    vlst.add ( dataset.nTracks )
     tbins    = [0, 150 , 250 , 400 , 1000]
+
+    ## book histogams
+    
     ha       = h3_axes ( pbins , hbins , tbins , title = 'Accepted(%s)' % accepted ) 
     hr       = h3_axes ( pbins , hbins , tbins , title = 'Rejected(%s)' % rejected )
+
+    ## fill them
     
     ha = dataset.fillHistogram ( ha , vlst , accepted )
     hr = dataset.fillHistogram ( hr , vlst , rejected )
-    
+
     if not plots :
         
         ha.SetName ( ha.GetTitle() )
         hr.SetName ( hr.GetTitle() )
         
-        plots = [ ha , hr ]
+        plots = [ ha , hr ]           ## create plots 
         
     else         :
 
-        plots [0] += ha
-        plots [1] += hr
+        plots [0] += ha               ## update plots 
+        plots [1] += hr               ## update plots 
         
         ha.Delete ()
         hr.Delete ()
@@ -605,6 +615,73 @@ def  ex_func2 ( particle         ,
         if hr : del hr
         
     return plots
+
+# =============================================================================
+## run pid-calib procedure
+def run_pid_calib ( FUNC , db_name = 'PID_eff.db' ) :
+    """
+    Run PID-calib procedure 
+    """
+
+    import Ostap.Line 
+    logger.info ( __file__  + '\n' + Ostap.Line.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*'   )
+    
+    ## from Ostap.PidCalib import makeParser, runPidCalib, saveHistos
+
+    ## needed ? probably not, to be removed... 
+    import ROOT 
+    RAD = ROOT.RooAbsData
+    if RAD.Tree != RAD.getDefaultStorageType() :
+        logger.info ( 'DEFINE default storage type to be TTree! ') 
+        RAD.setDefaultStorageType ( RAD.Tree )
+        
+    parser  = makeParser        ()
+    config  = parser.parse_args ()
+
+    polarity  =  config.polarity
+    if 'Both' == polarity  : polarity  = [ 'MagUp' , 'MagDown' ]
+    else                   : polarity  = [ polarity ]
+
+    stripping =  config.stripping
+    if not stripping : stripping = [ '20' , '20r1' ]
+    
+    ## 
+    particle  = config.particle
+    
+    logger.info ( 'Stripping versions:  %s' % stripping )  
+    logger.info ( 'Magnet polarities :  %s' % polarity  )  
+
+    hfiles = []
+    ## loop over the magnet polarities 
+    for m in polarity :
+        
+        ## loop over stripping versions 
+        for s in stripping :
+            
+            histos = runPidCalib ( FUNC        ,
+                                   particle    ,
+                                   s           ,
+                                   m           ,
+                                   config.cuts , 
+                                   RunMin   = config.RunMin      ,
+                                   RunMax   = config.RunMax      ,
+                                   MaxFiles = config.MaxFiles    ,
+                                   Verbose  = config.verbose     ,
+                                   dbname   = db_name            )
+                                
+            hfile = saveHistos  ( histos               ,
+                                  particle  = particle ,
+                                  stripping = s        ,
+                                  polarity  = m        ) 
+            
+            hfiles.append ( hfile )
+
+
+    logger.info('Produced files: ')
+    for i in hfiles : logger.info ( i )  
 
 # =============================================================================
 if '__main__' == __name__ :

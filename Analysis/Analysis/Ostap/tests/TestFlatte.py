@@ -26,7 +26,7 @@ else                      : logger = getLogger( __name__  )
 logger.info('Compare Breit and Flatte')
 # ==========================================================================================
 import Ostap.FitModels as Models
-
+from   Ostap.Utils     import rootWarning
 m_X    = 3.87156
 g_X    = 0.001 
 m_Jpsi = 3.0960
@@ -75,14 +75,16 @@ if not ROOT.gROOT.IsBatch() :
     from Ostap.Canvas import getCanvas
     c = getCanvas()
 
-br  = breit  .draw () # nbins = 500 )
-fl  = flatte .draw () # nbins = 500 )
+with rootWarning() : 
+    br  = breit  .draw () # nbins = 500 )
+    fl  = flatte .draw () # nbins = 500 )
 
 ##fl2 = flatte2.draw ( nbins = 1000 )
 
-if not ROOT.gROOT.IsBatch() : 
-    br .Draw()
-    fl .Draw('same')
+if not ROOT.gROOT.IsBatch() :
+    with rootWarning() : 
+        br .Draw()
+        fl .Draw('same')
     
 ## fl2.Draw('same')
 
