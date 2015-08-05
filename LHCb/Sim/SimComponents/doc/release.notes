@@ -4,6 +4,9 @@
 ! Purpose     : Holds general purpose components that can be run at any
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
+
+
+!========================= SimComponents v3r0 2015-08-05 =========================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
