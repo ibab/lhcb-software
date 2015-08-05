@@ -4,8 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== Gauss v48r3 2015-08-05 ===========================
 ! 2015-08-05 - Gloria Corti
- - New tests to check fromSignal falg is set in full simulation and when
+ - New tests to check fromSignal flag is set in full simulation and when
    fillinf MCPArticles from generator.
  - New test to check 2015 configuration
 
