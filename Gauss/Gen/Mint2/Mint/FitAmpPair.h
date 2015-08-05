@@ -47,8 +47,25 @@ class FitAmpPair : public MINT::FitParDependent{
 
   std::complex<double> _lastEntry;
 
-  std::complex<double> ampValue(IDalitzEvent& evt);
-  int oneOrTwo() const;
+  inline std::complex<double> ampValue(IDalitzEvent& evtPtr){
+    std::complex<double> c1 = rawAmp1().getVal(evtPtr);
+    std::complex<double> c2 = rawAmp2().getVal(evtPtr);
+    return (c1 * conj(c2));  // c1 x c2*
+  }
+  
+  inline std::complex<double> fitParValue()const{
+    std::complex<double> c1 = fitAmp1().AmpPhase();
+    std::complex<double> c2 = fitAmp2().AmpPhase();
+    return c1* conj(c2); // c1 x c2*
+  }
+  
+  inline int oneOrTwo()const{
+    if(isSingleAmp()) return 1;
+    else return 2;
+  }  
+  
+  //  std::complex<double> ampValue(IDalitzEvent& evt);
+  //  int oneOrTwo() const;
 
   const DalitzHistoSet& histosRe() const{return _hsRe;}
   const DalitzHistoSet& histosIm() const{return _hsIm;}
@@ -101,10 +118,15 @@ class FitAmpPair : public MINT::FitParDependent{
 
   // integral of things that depend on position in Dalitz space:
   std::complex<double> valNoFitPars() const;
+
+  inline std::complex<double> complexVal() const{
+    return valNoFitPars() * fitParValue();
+  }
+
   // factors that that don't
-  std::complex<double> fitParValue() const;
+  //std::complex<double> fitParValue() const;
   // product of the above
-  std::complex<double> complexVal() const;
+  //  std::complex<double> complexVal() const;
   // real part of the above.
   double integral() const;
   double variance() const;

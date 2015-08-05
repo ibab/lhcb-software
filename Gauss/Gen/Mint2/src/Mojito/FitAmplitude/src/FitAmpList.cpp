@@ -413,7 +413,7 @@ double FitAmpList::efficiency(IDalitzEvent& evt){
   return eff;
 }
 
-void FitAmpList::normalizeAmps(DalitzEventList evtList){
+void FitAmpList::normalizeAmps(DalitzEventList& evtList){
     
     for(unsigned int i=0; i<_fitAmps.size(); i++){
         if(0 == (_fitAmps[i]))continue;

@@ -415,7 +415,7 @@ double FitAmpPair::reAdd(IDalitzEvent& evt
 	 << endl;
   }
 
-  complex<double> c= ampValue(evt) * efficiency * w;
+  complex<double> c=ampValue(evt) * efficiency * w;
   _lastEntry = c;
   _sum   += c;
 
@@ -441,29 +441,6 @@ double FitAmpPair::add(counted_ptr<IDalitzEvent> evtPtr
 }
 complex<double> FitAmpPair::lastEntry() const{
   return _lastEntry;
-}
-complex<double> FitAmpPair::ampValue(IDalitzEvent& evtPtr){
-  complex<double> c1 = rawAmp1().getVal(evtPtr);
-  complex<double> c2 = rawAmp2().getVal(evtPtr);
-  return (c1 * conj(c2));  // c1 x c2*
-}
-
-complex<double> FitAmpPair::fitParValue()const{
-  
-  complex<double> c1 = fitAmp1().AmpPhase();
-  complex<double> c2 = fitAmp2().AmpPhase();
-  complex<double> c2star = conj(c2);
-
-  return c1*c2star;
-}
-
-int FitAmpPair::oneOrTwo()const{
-  if(isSingleAmp()) return 1;
-  else return 2;
-}
-
-std::complex<double> FitAmpPair::complexVal() const{
-  return valNoFitPars() * fitParValue();
 }
 
 std::complex<double> FitAmpPair::valNoFitPars() const{

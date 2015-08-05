@@ -28,13 +28,13 @@ class CachedByEvent : virtual public MINT::IFitParDependent{
   }
     
   long int rememberNumberPermutation(IDalitzEvent& evt) {
-        if(_rememberNumberPermutation.size() < evt.numPermutations()){
-            _rememberNumberPermutation.resize(evt.numPermutations());
-            for(unsigned int i=0; i < evt.numPermutations(); i++)
-                _rememberNumberPermutation[i] = DalitzEvent::assignUniqueRememberNumber();
-             
-        }
-        return _rememberNumberPermutation[evt.permutationIndex()];
+    if(_rememberNumberPermutation.size() < evt.numPermutations()){
+      _rememberNumberPermutation.resize(evt.numPermutations());
+      for(unsigned int i=0; i < evt.numPermutations(); i++)
+	_rememberNumberPermutation[i] = DalitzEvent::assignUniqueRememberNumber();
+      
+    }
+    return _rememberNumberPermutation[evt.permutationIndex()];
   }
   
   long int configNumber(){ 
