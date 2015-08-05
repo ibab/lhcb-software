@@ -4,6 +4,8 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================= HltTracking v13r11 2015-08-05 =========================
+
 ! 2015-08-05 - Sascha Stahl
 	- HltRecoConf: Fix RICH track chi2 cut which had an old setting.
 
