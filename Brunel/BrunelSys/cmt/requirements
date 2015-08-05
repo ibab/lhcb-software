@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v48r0 Rec
+use Brunel v48r1 Rec
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
@@ -20,3 +20,4 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
+use DDDB v1r79 Det
