@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-08-05 - Francesco Dettori
+ - Adding Hlt2SingleMuonNoSPD to match correspondent Hlt1 line. 
+
 ! 2015-08-03 - Patrick Spradlin
   - Moved implementation of the inclusive lines into Lines.py so that
     configurations are updated properly.  There was a problem propagating

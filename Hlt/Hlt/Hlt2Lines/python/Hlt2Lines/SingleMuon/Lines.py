@@ -12,7 +12,8 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 class SingleMuonLines(Hlt2LinesConfigurableUser) :
     __slots__ = {'_stages' : {},
                  'Prescale' : {},
-                 'HltReq'  : {"SingleMuon" :  "HLT_PASS_RE('Hlt1TrackMuonDecision')"
+                 'HltReq'  : {"SingleMuon" :  "HLT_PASS_RE('Hlt1TrackMuonDecision')",
+                              "NoSPD" :  "HLT_PASS_RE('Hlt1TrackMuonNoSPDDecision')"
                               },
                  'Common' :        {'TrChi2'     :   5,    # Adimensional
                                     'Pt':            1000 * MeV },
@@ -20,6 +21,11 @@ class SingleMuonLines(Hlt2LinesConfigurableUser) :
                  'SingleMuon' :    {'IP'     : 0.25 * mm,
                                     'IPChi2' : 100, # Adimensional
                                    },
+
+                 'NoSPD' :    {'IP'     : 0.25 * mm,
+                                    'IPChi2' : 100, # Adimensional
+                                   },
+
 
                  'HighPT':         { 'HighPt' : 10000 *MeV },
                  
@@ -48,6 +54,7 @@ class SingleMuonLines(Hlt2LinesConfigurableUser) :
 
         self._stages = {
                         'SingleMuon'       : [DetachedSingleMuonFilter('SingleMuon')],
+                        'NoSPD'            : [DetachedSingleMuonFilter('NoSPD')],
                         'HighPT'           : [SingleMuonHighPTFilter('HighPT')],
                         'VHighPT'          : [SingleMuonHighPTFilter('VHighPT')],
                         'LowPT'            : [SingleMuonHighPTFilter('LowPT')],
