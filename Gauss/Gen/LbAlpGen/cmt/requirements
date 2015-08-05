@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           LbAlpGen
-version           v6r0
+version           v6r1
 
 # =============== structure ===================================================
 branches          cmt doc src options scripts
