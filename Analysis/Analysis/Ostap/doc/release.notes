@@ -8,6 +8,10 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-08-05 - Eduardo Rodrigues
+ - Suppressing a ROOT message that is mistakenly interpreted as source of failure
+   in test ostap_flatte.
+
 ! 2015-08-05 - Vanya Belyaev
  - resurrect PIDCalib-related functionality 
 
