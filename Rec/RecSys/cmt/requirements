@@ -30,7 +30,7 @@ use PrAlgorithms         v1r16   Pr   # Yasmine Amhis, Manuel Schiller
 use PrFitParams          v2r0    Pr   # Yasmine Amhis
 use PrKernel             v1r9    Pr   # Manuel Schiller
 use PrMCTools            v2r10   Pr   # Manuel Schiller
-use PrPixel              v1r12   Pr   # Tim Head, Heinrich Schindler
+use PrPixel              v1r13   Pr   # Tim Head, Heinrich Schindler
 use PrUtils              v2r0    Pr   # Thomas Nikodem
 use PrVeloUT             v2r2    Pr   # Jianchun Wang
 
@@ -71,12 +71,12 @@ use PatVelo              v3r32   Tf   # David Hutchcroft
 use PatVeloTT            v4r7    Tf   # Mariusz Witek
 use TfKernel             v2r33   Tf   # Michel De Cian
 use TfTools              v1r20   Tf   # Michel De Cian
-use TrackSys             v9r9    Tf   # Michel De Cian
+use TrackSys             v9r10   Tf   # Michel De Cian
 use TsaAlgorithms        v3r29   Tf   # Matt Needham
 use TsaKernel            v3r8    Tf   # Matt Needham
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
-use PatChecker           v3r15   Tr   # David Hutchcroft
+use PatChecker           v3r16   Tr   # David Hutchcroft
 use PatFitParams         v4r3    Tr   # Michel De Cian
 use TrackAssociators     v2r12   Tr   # Eduardo Rodrigues, Edwin Bos
 use TrackCheckers        v4r22   Tr   # Eduardo Rodrigues

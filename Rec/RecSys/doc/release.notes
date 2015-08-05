@@ -5,6 +5,24 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v18r1>2015-08-06 RecSys v18r1</A></H1><PRE>
+This version uses Gaudi v26r3, LHCb v39r0 and Lbcom v17r0 (and ROOT 6.04.02)
+
+- Packages modified: Pr/PrPixel v1r13, Tf/TrackSys v9r10, Tr/PatChecker v3r16
+
+- In Pr/PrPixel v1r13
+  . PrPixelTrack: fix outdated assumption about internal memory layout of hit
+                  classes
+
+- In Tf/TrackSys v9r10
+  . Switch on ghost probability in TrackBestTrackCreator for Run II tracking
+  . Switch cuts in TrackBestTrackCreator to chi2=4 and ghost prob = 0.4 for
+    Run II tracking.
+
+- In Tr/PatChecker v3r16
+  . Add some more debug and verbose statements in PatLHCbID2MCParticle
+
+
 </PRE><H1><A NAME=v18r0>2015-07-21 RecSys v18r0</A></H1><PRE>
 This version uses Gaudi v26r3, LHCb v39r0 and Lbcom v17r0 (and ROOT 6.04.02)
 
