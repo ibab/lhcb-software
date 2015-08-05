@@ -174,6 +174,7 @@ cdb.UseDBSnapshot = True
 cdb.Tags = { "DDDB" : RunOption.DDDBTag,
                 "LHCBCOND" : RunOption.CondDbTag,
                 "ONLINE" : 'fake'}
+cdb.EnableRunStampCheck=False
 cdb.IgnoreHeartBeat = True
 dbxalg = DBXferAlg()
 dbxalg.RunNumber = RunOption.RunNumber
