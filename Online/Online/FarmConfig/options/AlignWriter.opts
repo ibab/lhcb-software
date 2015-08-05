@@ -1,4 +1,4 @@
-0;95;c#include "$INFO_OPTIONS"
+#include "$INFO_OPTIONS"
 #include "$MBM_SETUP_OPTIONS"
 #include "$STATIC_OPTS/Monitoring.opts"
 
@@ -35,12 +35,6 @@ AlignDataWriter_Tracker.PrintFreq                 = 1.0;
 AlignDataWriter_Tracker.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x00200000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-//
-// Requirements for TED and other stuff
-//
-//AlignDataWriter_Tracker.Requirements         = {
-//"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
-//};
 AlignDataWriter_Tracker.MEPFilePrefix          = "/localdisk/Alignment/Tracker/Run_";
 AlignDataWriter_Tracker.EvtFilePrefix          = "/localdisk/Alignment/Tracker/Run_";
 AlignDataWriter_Tracker.MaxEvents              = 1000;
@@ -57,12 +51,6 @@ AlignDataWriter_Rich.DIMSteering = 1;
 AlignDataWriter_Rich.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x00400000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-//
-// Requirements for TED and other stuff
-//
-//AlignDataWriter_Rich.Requirements         = {
-//"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
-//};
 AlignDataWriter_Rich.MEPFilePrefix        = "/localdisk/Alignment/Rich/Run_";
 AlignDataWriter_Rich.EvtFilePrefix        = "/localdisk/Alignment/Rich/Run_";
 AlignDataWriter_Rich.MaxEvents            = 1000;
@@ -78,12 +66,6 @@ AlignDataWriter_Velo.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x00000008,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 ,"EvType=2;TriggerMask=0x0,0x00004000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=0.1"
 };
-//
-// Requirements for TED and other stuff
-//
-//AlignDataWriter_Velo.Requirements         = {
-//"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
-//};
 AlignDataWriter_Velo.MEPFilePrefix        = "/localdisk/Alignment/Velo/Run_";
 AlignDataWriter_Velo.EvtFilePrefix        = "/localdisk/Alignment/Velo/Run_";
 AlignDataWriter_Velo.MaxEvents            = 1000;
@@ -98,12 +80,6 @@ AlignDataWriter_Muon.PartitionName             = @OnlineEnv.PartitionName;
 AlignDataWriter_Muon.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x01000000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-//
-// Requirements for TED and other stuff
-//
-//AlignDataWriter_Muon.Requirements         = {
-//"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
-//};
 AlignDataWriter_Muon.MEPFilePrefix        = "/localdisk/Alignment/Muon/Run_";
 AlignDataWriter_Muon.EvtFilePrefix        = "/localdisk/Alignment/Muon/Run_";
 AlignDataWriter_Muon.MaxEvents            = 1000;
@@ -120,12 +96,6 @@ AlignDataWriter_Calo.PartitionName             = @OnlineEnv.PartitionName;
 AlignDataWriter_Calo.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x18000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-//
-// Requirements for TED and other stuff
-//
-//AlignDataWriter_Calo.Requirements         = {
-//"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
-//};
 AlignDataWriter_Calo.MEPFilePrefix        = "/localdisk/Alignment/Calo/Run_";
 AlignDataWriter_Calo.EvtFilePrefix        = "/localdisk/Alignment/Calo/Run_";
 AlignDataWriter_Calo.MaxEvents            = 1000;
@@ -142,12 +112,6 @@ AlignDataWriter_BWDivision.PartitionName             = @OnlineEnv.PartitionName;
 AlignDataWriter_BWDivision.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x800000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-//
-// Requirements for TED and other stuff
-//
-//AlignDataWriter_BWDivision.Requirements         = {
-//"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
-//};
 AlignDataWriter_BWDivision.MEPFilePrefix        = "/localdisk/Alignment/BWDivision/Run_";
 AlignDataWriter_BWDivision.EvtFilePrefix        = "/localdisk/Alignment/BWDivision/Run_";
 AlignDataWriter_BWDivision.MaxEvents            = 1000;
