@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v14r2 2015-08-05 ==========================
+
+! 2015-06-29 - Jordi Tico 
+  - Cleanup of EvtD0mixDalitz code and fix bug with y parameter in
+    EvtD0mixDalitz.
+ 
 ! 2015-05-01 - Michal Kreps
   - Remove unnecessary includes from EvtXPsiGamma model.
 
