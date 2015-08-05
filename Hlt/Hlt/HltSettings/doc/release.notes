@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-08-05 - Sean Benson
+ - Change L0 TCK in August 25ns file to 0x0051.
+
 ! 2015-08-05 - Mika Vesterinen
  - Tune of the inclusive D*/Sigc BDT cuts from Emanuele
  - And remove prescale on Hlt1NoPVPassThrough line
