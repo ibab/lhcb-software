@@ -106,7 +106,6 @@ StatusCode HCClockScan::initialize() {
   }
 
   m_stepCounter = m_minStep;
-  m_stepEvtCounter = 0;
 
   return StatusCode::SUCCESS;
 }
@@ -129,11 +128,8 @@ StatusCode HCClockScan::execute() {
   if (step < m_minStep || step > m_maxStep) return StatusCode::SUCCESS;
   if (step != m_stepCounter) {
     m_stepCounter = step;
-    m_stepEvtCounter = 0;
     info() << "Step number " << step << endmsg;
   }
-  // if (m_stepEvtCounter > m_maxEvtPerStep) return StatusCode::SUCCESS;
-  ++m_stepEvtCounter;
 
   const unsigned int nLocations = m_digitLocations.size();
   for (unsigned int i = 0; i < nLocations; ++i) {

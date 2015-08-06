@@ -54,7 +54,6 @@ class HCClockScan : public HCMonitorBase {
   std::vector<AIDA::IHistogram2D*> m_resultsStation;
 
   int m_stepCounter;
-  int m_stepEvtCounter;
   /// Flag for optimisation scheme
   bool m_relativeMax;
 };
