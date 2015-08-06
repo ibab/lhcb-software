@@ -315,7 +315,7 @@ namespace
     std::vector<Gaudi::Vector2>  _vct_2 ;
     std::vector<Gaudi::Vector3>  _vct_3 ;
     std::vector<Gaudi::Vector3>  _vct_4 ;
-
+    //
     Gaudi::Math::Chi2Solution<4,2>          __cs11 ;
     Gaudi::Math::Chi2Solution<4,2>::DATA    __cs21 ;
     Gaudi::Math::Chi2Solution<4,2>::COV2    __cs31 ;
@@ -333,13 +333,17 @@ namespace
     Gaudi::Math::Splines::DATA    _sd_1 ;
     Gaudi::Math::Splines::PAIR    _sd_2 ;
     Gaudi::Math::Splines::DATAERR _sd_3 ;
-
+    //
     LHCb::Math::Equal_To<double>               __eq_1 ;
     LHCb::Math::Equal_To<std::vector<double> > __eq_2 ;
     LHCb::Math::Zero<double>                   __eq_3 ;
     LHCb::Math::Zero<std::vector<double> >     __eq_4 ;
     LHCb::Math::NotZero<double>                __eq_5 ;
     LHCb::Math::NotZero<std::vector<double> >  __eq_6 ;
+    //
+    LHCb::Math::LessOrEqual<double>     __eq_7 ;
+    LHCb::Math::GreaterOrEqual<double>  __eq_8 ;
+    //
   };
 }
 

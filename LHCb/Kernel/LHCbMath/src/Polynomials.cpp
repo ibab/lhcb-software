@@ -22,6 +22,7 @@
 #include "LHCbMath/Choose.h"
 #include "LHCbMath/Bernstein.h"
 #include "LHCbMath/MoreFunctions.h"
+#include "LHCbMath/Clenshaw.h"
 // ============================================================================
 /** @file Implementation file for classes from file LHcbMath/Polynomials.h
  *  @see LHCbMath/Polynomials.h
@@ -31,6 +32,7 @@
 // ============================================================================
 namespace 
 {
+  // ==========================================================================
   static_assert ( std::numeric_limits<double>::is_specialized           , 
                   "mumeric_limits are not specialized for doubles"      ) ;
   // ==========================================================================
@@ -431,79 +433,6 @@ Gaudi::Math::PolySum::operator/=( const double a )
   return *this ;
 }
 // ============================================================================
-namespace 
-{
-  // ==========================================================================
-  /// Clenshaw algorithm for summation of Chebyshev polynomials 
-  inline double _clenshaw_chebyshev_ 
-  ( const std::vector<double>& pars , 
-    const long double          x    ) 
-  {
-    if ( pars.empty() ) { return 0 ; }
-    //
-    long double b2 = 0 ;
-    long double b1 = 0 ;
-    long double b0 = 0 ;
-    for ( std::vector<double>::const_reverse_iterator ia = 
-            pars.rbegin() ; pars.rend() != ia ; ++ia ) 
-    {
-      b2 = b1 ;
-      b1 = b0 ;
-      // b0 = (*ia) + 2 * x * b1 - b2 ;
-      b0 = std::fma ( 2 * x , b1 , (*ia) - b2 ) ;
-    }
-    //
-    b0 += pars[0] ;
-    //
-    return 0.5 * ( b0 - b2) ;
-  }
-  // ==========================================================================
-  /// clenshaw algorithm for summation of Legendre series 
-  inline double _clenshaw_legendre_  
-  ( const std::vector<double>& pars , 
-    const long double          x    ) 
-  {
-    if ( pars.empty() ) { return 0 ; }
-    //
-    long double b2 = 0 ;
-    long double b1 = 0 ;
-    long double b0 = 0 ;
-    for ( int j = pars.size() - 1 ; 0 <= j ; --j ) 
-    {
-      b2 = b1 ;
-      b1 = b0 ;
-      b0 = pars[j] + ( 2 * j + 1 ) * x * b1 / ( j + 1 ) - ( j + 1 ) *  b2 / ( j + 2 ) ;
-    }
-    //
-    return b0 ;
-  }
-  // ==========================================================================  
-  /// clenshaw algorithm for summation of monomial series 
-  template <class ITERATOR>
-  inline std::pair<double,double>
-  _clenshaw_monomial_( ITERATOR     first , 
-                       ITERATOR     last  , 
-                       const double x     ) 
-  {
-    if ( first == last ) { return std::make_pair(0.,0.0) ; }
-    //
-    long double p = *first ;
-    long double q = 0      ;
-    while ( ++first != last ) 
-    {
-      q = std::fma ( x , q ,  p     ) ; // x * q + p       ;
-      p = std::fma ( x , p , *first ) ; // x * p + *first  ;
-    }
-    //
-    return std::make_pair ( p , q ) ;
-  }
-  // Step 1: Set p = a[n] and q = 0
-  // Step 2: Do steps 3 and 4 for i from n-1 to 0, decreasing by 1
-  // Step 3: set q = p + x0 * q
-  // Step 4: set p = a[i] + x0 * p
-  // Step 5: The value of P(x_0) is p and the value of P'(x_0) is q
-}
-// ============================================================================
 /* Clenshaw algorithm for summation of Chebyshev polynomials 
  *  \f$ f(x) = \sum_i p_i T_i(x)\f$
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -513,7 +442,7 @@ namespace
 double Gaudi::Math::clenshaw_chebyshev 
 ( const std::vector<double>& pars , 
   const double               x    ) 
-{ return _clenshaw_chebyshev_ ( pars , x ) ; }
+{ return Gaudi::Math::Clenshaw::chebyshev_sum ( pars.begin() , pars.end() , x ) ; }
 // ============================================================================
 /*  Clenshaw algorithm for summation of Legendre polynomials 
  *  \f$ f(x) = \sum_i p_i P_i(x) \f$
@@ -524,7 +453,7 @@ double Gaudi::Math::clenshaw_chebyshev
 double Gaudi::Math::clenshaw_legendre
 ( const std::vector<double>& pars , 
   const double               x    ) 
-{ return _clenshaw_legendre_ ( pars , x ) ; }
+{ return Gaudi::Math::Clenshaw::legendre_sum( pars.begin() , pars.end () , x ) ; }
 // ============================================================================
 /*  Clenshaw algorithm for summation of monomial series 
  *  (aka Horner rule) 
@@ -536,7 +465,7 @@ double Gaudi::Math::clenshaw_legendre
 double Gaudi::Math::clenshaw_polynom
 ( const std::vector<double>& pars , 
   const double               x    ) 
-{ return _clenshaw_monomial_ ( pars.rbegin() , pars.rend() , x ).first ; }
+{ return Gaudi::Math::Clenshaw::monomial_sum ( pars.rbegin() , pars.rend() , x ).first ; }
 // ============================================================================
 /*  Clenshaw algorithm for summation of monomial series (aka Horner rule) 
  *  \f$ f(x) = \sum_i p_i x^i \f$
@@ -547,7 +476,7 @@ double Gaudi::Math::clenshaw_polynom
 double Gaudi::Math::horner_a0 
 ( const std::vector<double>& pars , 
   const double               x    ) 
-{ return _clenshaw_monomial_ ( pars.rbegin() , pars.rend() , x ).first ; }
+{ return Gaudi::Math::Clenshaw::monomial_sum ( pars.rbegin() , pars.rend() , x ).first ; }
 // ============================================================================
 /*  Clenshaw algorithm for summation of monomial series (aka Horner rule) 
  *  \f$ f(x) = \sum_i p_i x^{n-i} \f$
@@ -558,7 +487,7 @@ double Gaudi::Math::horner_a0
 double Gaudi::Math::horner_aN 
 ( const std::vector<double>& pars , 
   const double               x    ) 
-{ return _clenshaw_monomial_ ( pars.begin() , pars.end() , x ).first ; }
+{ return Gaudi::Math::Clenshaw::monomial_sum ( pars.begin() , pars.end() , x ).first ; }
 // ============================================================================
 namespace 
 {
@@ -648,7 +577,7 @@ namespace
    */
   inline long double _monomial_der_
   ( const unsigned int N ,
-    const double       x )  
+    const long double  x )  
   {
     //
     if      ( 0 == N       ) { return 0   ; }
@@ -840,7 +769,7 @@ double Gaudi::Math::ChebyshevSum::operator () ( const double x ) const
   // 1) transform argument:
   const double tx = t ( x ) ;  
   // 2) use Clenshaw's algorithm 
-  return _clenshaw_chebyshev_   ( m_pars , tx ) ;              // RETURN 
+  return Gaudi::Math::Clenshaw::chebyshev_sum ( m_pars.begin() , m_pars.end()  , tx ) ;        
 }
 // ============================================================================
 // get the integral between xmin and xmax
@@ -865,15 +794,6 @@ double Gaudi::Math::ChebyshevSum::integral
   const double xl = t ( low  ) ;
   const double xh = t ( high ) ;
   //
-  // // Trvial sum to be replaced with Clenshaw 
-  // double result = 0 ;
-  // for ( std::vector<double>::const_iterator ip = m_pars.begin() ; m_pars.end() != ip ; ++ip ) 
-  // { 
-  //   const double p = *ip ;
-  //   if ( s_zero ( p ) ) { continue ; } // SKIP IT! 
-  //   result += p * _chebyshev_int_ ( ip - m_pars.begin() , xl , xh  ) ;
-  // }
-  //
   const double dx = 0.5 * ( m_xmax - m_xmin ) ;
   std::vector<double> npars ( m_pars.size() + 1 , 0 ) ;
   for ( unsigned short i = 0 ; i < m_pars.size() ; ++i ) 
@@ -890,8 +810,8 @@ double Gaudi::Math::ChebyshevSum::integral
   }
   //
   const double result = 
-    _clenshaw_chebyshev_   ( npars , xh ) - 
-    _clenshaw_chebyshev_   ( npars , xl ) ;
+    Gaudi::Math::Clenshaw::chebyshev_sum   ( npars.begin() , npars.end()  , xh ) - 
+    Gaudi::Math::Clenshaw::chebyshev_sum   ( npars.begin() , npars.end()  , xl ) ;
   //
   return result ;
 }
@@ -958,9 +878,10 @@ double Gaudi::Math::ChebyshevSum::derivative ( const double x     ) const
     }
   }
   //
-  const double result = _clenshaw_chebyshev_   ( npars , tx ) ;
+  const long double result = 
+    Gaudi::Math::Clenshaw::chebyshev_sum  ( npars.begin() , npars.end()  , tx ) ;
   //
-  const double dx = 2 / ( m_xmax - m_xmin ) ;
+  const long double dx = 2.0L / ( m_xmax - m_xmin ) ;
   return result * dx ;  
 }
 // ============================================================================
@@ -1046,7 +967,7 @@ double Gaudi::Math::LegendreSum::operator () ( const double x ) const
   // transform argument:
   const double tx = t ( x ) ;  
   // use Clenshaw's algorithm 
-  return _clenshaw_legendre_ ( m_pars , tx ) ;
+  return Gaudi::Math::Clenshaw::legendre_sum ( m_pars.begin() , m_pars.end()  , tx ) ;
 }
 // ============================================================================
 // get the integral between xmin and xmax
@@ -1094,8 +1015,8 @@ double Gaudi::Math::LegendreSum::integral
   }
   //
   const double result = 
-    clenshaw_legendre ( npars , xh ) -
-    clenshaw_legendre ( npars , xl ) ;     
+    Gaudi::Math::Clenshaw::legendre_sum ( npars.begin() , npars.end() , xh ) -
+    Gaudi::Math::Clenshaw::legendre_sum ( npars.begin() , npars.end() , xl ) ;
   //
   const double dx = 0.5 *  ( m_xmax - m_xmin ) ;
   return result * dx ;
@@ -1129,14 +1050,6 @@ double Gaudi::Math::LegendreSum::derivative ( const double x     ) const
   //
   const double tx = t ( x  ) ;
   //
-  // // Trvial sum to be replaced with Clenshaw 
-  // double result = 0 ;
-  // for ( std::vector<double>::const_iterator ip = m_pars.begin() ; m_pars.end() != ip ; ++ip ) 
-  // {
-  //   const double p = *ip ;
-  //   if ( s_zero ( p ) ) { continue ; } // SKIP IT! 
-  //   result += p * _legendre_der_ ( ip - m_pars.begin() , tx ) ; 
-  //
   std::vector<double> npars ( m_pars.size() - 1 , 0 ) ;
   for ( unsigned short i = 1 ; i < m_pars.size() ; ++i )
   { 
@@ -1147,7 +1060,7 @@ double Gaudi::Math::LegendreSum::derivative ( const double x     ) const
   }
   //
   const double dx = 2 / ( m_xmax - m_xmin ) ;
-  return clenshaw_legendre ( npars , tx ) * dx ;  
+  return Gaudi::Math::Clenshaw::legendre_sum ( npars.begin() , npars.end() , tx ) * dx ;  
 }
 // ============================================================================
 // get the derivative 

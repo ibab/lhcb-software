@@ -156,9 +156,11 @@
   <class name    = "std::vector<ROOT::Math::SVector<double,4> >" />
   <class name    = "std::vector<ROOT::Math::SVector<double,6> >" />
   
-  <class pattern = "LHCb::Math::Equal_To<*>"  />
-  <class pattern = "LHCb::Math::Zero<*>"      />
-  <class pattern = "LHCb::Math::NotZero<*>"   />
+  <class pattern = "LHCb::Math::Equal_To<*>"       />
+  <class pattern = "LHCb::Math::Zero<*>"           />
+  <class pattern = "LHCb::Math::NotZero<*>"        />
+  <class pattern = "LHCb::Math::LessOrEqual<*>"    />
+  <class pattern = "LHCb::Math::GreaterOrEqual<*>" />
   
   <function name = "Gaudi::Math::blind"           />
   <function name = "Gaudi::Math::pow"             />

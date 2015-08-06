@@ -495,7 +495,46 @@ using namespace std;
       // ======================================================================
     } ;
     // ========================================================================
+    /** @struct LessOrEqual
+     *  check if two values ar less or equal (numerically)
+     *  @see Gaudi::Math::Equal_To
+     */
+    template <class TYPE>
+    struct LessOrEqual : public std::binary_function<TYPE,TYPE,bool>
+    {
+      // ====================================================================== 
+      /// the only one method:  o1 <= o2 or o1 \approx p2 
+      inline bool operator () ( const TYPE& o1 , const TYPE& o2 ) const 
+      { return m_leq ( o1 , o2 ) || m_equal ( o1 , o2 ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      std::less_equal<TYPE>      m_leq   ; // ordering criteria 
+      LHCb::Math::Equal_To<TYPE> m_equal ; // equality criteria 
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @struct GreaterOrEqual
+     *  check if two values are greater or equal (numerically)
+     *  @see Gaudi::Math::Equal_To
+     */
+    template <class TYPE>
+    struct GreaterOrEqual : public std::binary_function<TYPE,TYPE,bool>
+    {
+      // ====================================================================== 
+      /// the only one method:  o1 >= o2 or o1 \approx = o2 
+      inline bool operator () ( const TYPE& o1 , const TYPE& o2 ) const 
+      { return m_geq ( o1 , o2 ) || m_equal ( o1 , o2 ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      std::greater_equal<TYPE>   m_geq   ; // ordering criteria 
+      LHCb::Math::Equal_To<TYPE> m_equal ; // equality criteria 
+      // ======================================================================
+    } ;  
+    // ========================================================================
     /** @struct  NumLess 
+     *  "Numerically less"
      *  useful structure for sorting  
      *  @see Gaudi::Math::Equal_To
      */

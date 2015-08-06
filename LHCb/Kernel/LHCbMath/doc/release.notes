@@ -7,6 +7,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-08-06 - Vanya Belyaev
+ - reshuffle a bit the code to reduce duplication 
+
+! 2015-08-06 - Vanya Belyaev
  - ValueWithError: more functions 
 
 ! 2015-08-03 - Vanya Belyaev

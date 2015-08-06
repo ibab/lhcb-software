@@ -122,7 +122,9 @@ namespace Gaudi
       const unsigned short b , 
       const double         x ) ;
     // ========================================================================
-    // summation algorithms 
+    
+    // ========================================================================
+    // clenshaw summation algorithms 
     // ========================================================================
     
     // ========================================================================
@@ -164,7 +166,7 @@ namespace Gaudi
       const double               x    ) ;
     // ========================================================================
     /** Clenshaw algorithm for summation of monomial series (aka Horner rule) 
-     *  \f$ f(x) = \sum_i a_i x^i \f$, such as \f$f(0)= a_n\f$
+     *  \f$ f(x) = \sum_i a_i x^{n-i} \f$, such as \f$f(0)= a_n\f$
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2015-02-10
      */

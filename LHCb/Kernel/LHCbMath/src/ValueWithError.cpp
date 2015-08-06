@@ -23,6 +23,7 @@
 #include "LHCbMath/ValueWithError.h"
 #include "LHCbMath/Power.h"
 #include "LHCbMath/LHCbMath.h"
+#include "LHCbMath/Clenshaw.h"
 // ============================================================================
 // Boost
 // ============================================================================
@@ -1906,38 +1907,6 @@ Gaudi::Math::abssum
   //
 }
 // ============================================================================
-// Horner's rule 
-// ============================================================================
-namespace 
-{
-  // null-pair 
-  const std::pair<double,double> s_pnull(0,0) ;
-  // 
-  template <class ITERATOR>
-  inline std::pair<double,double>
-  _horner_( ITERATOR     first , 
-            ITERATOR     last  , 
-            const double x     ) 
-  {
-    if ( first == last ) { return s_pnull ; }
-    //
-    double p = *first ;
-    double q = 0      ;
-    while ( ++first != last ) 
-    {
-      q = std::fma ( x , q ,  p     ) ; // x * q + p       ;
-      p = std::fma ( x , p , *first ) ; // x * p + *first  ;
-    }
-    //
-    return std::make_pair ( p , q ) ;
-  }
-  // Step 1: Set p = a[n] and q = 0
-  // Step 2: Do steps 3 and 4 for i from n-1 to 0, decreasing by 1
-  // Step 3: set q = p + x0 * q
-  // Step 4: set p = a[i] + x0 * p
-  // Step 5: The value of P(x_0) is p and the value of P'(x_0) is q
-}
-// ============================================================================
 /*  evaluate polynomial
  *  \f$f(x) = a_0 + a_1x + a_2x^2 + ... + a_{n-1}x^{n-1} + a_nx^n\f$
  *  such as \f$f(0) = a_0 \f$      
@@ -1955,8 +1924,9 @@ Gaudi::Math::horner_a0
 {
   if ( poly.empty() ) { return Gaudi::Math::ValueWithError(0,0) ; }
   //
-  const std::pair<double,double> r = 
-    _horner_ ( poly.rbegin() , poly.rend() , x.value() ) ;
+  const std::pair<long double,long double> r = 
+    Gaudi::Math::Clenshaw::monomial_sum 
+    ( poly.rbegin() , poly.rend() , x.value() ) ;
   //
   if ( 0 >= x.cov2() || _zero( x.cov2() ) ) { return r.first  ; }
   //
@@ -1981,7 +1951,8 @@ Gaudi::Math::horner_aN
   if ( poly.empty() ) { return Gaudi::Math::ValueWithError(0,0) ; }
   //
   const std::pair<double,double> r = 
-    _horner_ ( poly.begin() , poly.end() , x.value() ) ;
+    Gaudi::Math::Clenshaw::monomial_sum 
+    ( poly.begin() , poly.end() , x.value() ) ;
   //
   if ( 0 >= x.cov2() || _zero( x.cov2() ) ) { return r.first  ; }
   return Gaudi::Math::ValueWithError( r.first , r.second * r.second * x.cov2() ) ;

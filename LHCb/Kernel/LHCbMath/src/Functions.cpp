@@ -11,6 +11,7 @@
 #include <complex>
 #include <algorithm>
 #include <numeric>
+#include <array>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -23,6 +24,7 @@
 #include "LHCbMath/Power.h"
 #include "LHCbMath/Polynomials.h"
 #include "LHCbMath/Bernstein.h"
+#include "LHCbMath/Clenshaw.h"
 // ============================================================================
 // GSL
 // ============================================================================
@@ -4420,8 +4422,22 @@ double Gaudi::Math::FormFactors::Jackson::operator()
 { 
   return nullptr == m_rho ? 1.0 : (*m_rho)( m , m0 , m1 , m2 ) ; 
 }
-
-
+// ============================================================================
+// Blatt-Weisskopf formfactors 
+// ============================================================================
+namespace
+{
+  // ==========================================================================
+  // Coefficients for Blatt-Weisskopf formfactors 
+  // ==========================================================================
+  const std::array<int,1> s_BW_0 { {                               1 } } ;
+  const std::array<int,2> s_BW_1 { {                            1, 1 } } ;
+  const std::array<int,3> s_BW_2 { {                        9,  3, 1 } } ;
+  const std::array<int,4> s_BW_3 { {                 225,  45,  6, 1 } } ;
+  const std::array<int,5> s_BW_4 { {         11025, 1575, 135, 10, 1 } } ;
+  const std::array<int,6> s_BW_5 { { 893025, 99225, 6300, 315, 15, 1 } } ;  
+  // ==========================================================================
+}    
 // ============================================================================
 // constructor
 // ============================================================================
@@ -4434,9 +4450,12 @@ Gaudi::Math::FormFactors::BlattWeisskopf::BlattWeisskopf
 {
   switch ( L ) 
   {
-  case Zero : break ;
-  case One  : break ;
-  case Two  : break ;
+  case Zero  : break ;
+  case One   : break ;
+  case Two   : break ;
+  case Three : break ;
+  case Four  : break ;
+  case Five  : break ;
   default:   
     throw GaudiException( "Illegal Blatt-Weisskopf form factor" , 
                           "LHCbMath" , StatusCode::FAILURE      ) ;
@@ -4459,12 +4478,31 @@ double Gaudi::Math::FormFactors::BlattWeisskopf::b
 ( const double z   , 
   const double z0  ) const 
 {
-  if     ( Zero == m_L ) { return 1 ; }
+  if ( Zero == m_L || s_equal ( z , z0 ) ) { return 1 ; }
   //
-  return 
-    One == m_L ? std::sqrt (   ( 1 + z0 ) / ( 1  + z ) ) : 
-    Two == m_L ? std::sqrt ( ( ( z0 - 3 ) * ( z0 - 3 ) + 9 * z0 ) / 
-                             ( ( z  - 3 ) * ( z  - 3 ) + 9 * z  ) ) : 1.0 ;  
+  const long double r2 =
+    //
+    One   == m_L ? ( 1 + z0 ) / ( 1  + z )  :
+    //
+    Two   == m_L ? 
+    Gaudi::Math::Clenshaw::monomial_sum ( s_BW_2.rbegin() , s_BW_2.rend  () , z0 ).first /
+    Gaudi::Math::Clenshaw::monomial_sum ( s_BW_2.rbegin() , s_BW_2.rend  () , z  ).first :
+    //
+    Three == m_L ? 
+    Gaudi::Math::Clenshaw::monomial_sum ( s_BW_3.rbegin() , s_BW_3.rend  () , z0 ).first /
+    Gaudi::Math::Clenshaw::monomial_sum ( s_BW_3.rbegin() , s_BW_3.rend  () , z  ).first :
+    //
+    Four == m_L ? 
+    Gaudi::Math::Clenshaw::monomial_sum ( s_BW_4.rbegin() , s_BW_4.rend  () , z0 ).first /
+    Gaudi::Math::Clenshaw::monomial_sum ( s_BW_4.rbegin() , s_BW_4.rend  () , z  ).first :
+    //
+    Five == m_L ? 
+    Gaudi::Math::Clenshaw::monomial_sum ( s_BW_5.rbegin() , s_BW_5.rend  () , z0 ).first /
+    Gaudi::Math::Clenshaw::monomial_sum ( s_BW_5.rbegin() , s_BW_5.rend  () , z  ).first : 
+    //
+    1.0L ;
+  //
+  return std::sqrt ( r2 ) ;
 }
 // ============================================================================
 // the only important method 
