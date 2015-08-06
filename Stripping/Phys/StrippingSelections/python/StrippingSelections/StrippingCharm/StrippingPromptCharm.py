@@ -320,7 +320,7 @@ default_config = {
                                      'StrippingDsForPromptCharm'                  ,
                                      'StrippingLambdaCForPromptCharm'             ,
                                      'StrippingXiC0ForPromptCharm'                ,
-                                     'StrippingOmegaC0ForPromptCharm'             ,
+#                                     'StrippingOmegaC0ForPromptCharm'             ,
                                      'StrippingLambdaC2pKKForPromptCharm'         ,
                                      'StrippingSigmaCForPromptCharm'              ,
                                      'StrippingLambdaCstarForPromptCharm'         ,
@@ -340,7 +340,8 @@ default_config = {
                                      'StrippingD02KKForPromptCharm'               ,   ## prescale ?
                                      'StrippingD02pipiForPromptCharm'             ,   ## prescale ?
                                      'StrippingDstarCPForPromptCharm'           ] , 
-                      ## 
+                      ##
+                      'CharmCompleteEvent' : [ 'StrippingOmegaC0ForPromptCharm'],
                       'Leptonic' : [ 'StrippingDoubleDiMuonForPromptCharm'   , ## Full DST ?
                                      'StrippingDiMuonAndWForPromptCharm'     , ## Full DST ? 
                                      'StrippingChiAndWForPromptCharm'        ] }
