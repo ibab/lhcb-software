@@ -1444,7 +1444,7 @@ def _h1_pdf_convex_increasing_ ( h1 , degree , *args , **kwargs ) :
     >>> pdf = results[1] ## get PDF 
     >>> print results[2] ## underlying parameterization 
     """
-    return _h1_convex_ ( h1 , degree , True , *args , **kwargs )
+    return _h1_pdf_convex_ ( h1 , degree , True , *args , **kwargs )
 
 # =============================================================================
 ## parameterize/fit histogram with the convex decreasing polynomial
@@ -1468,7 +1468,7 @@ def _h1_pdf_convex_decreasing_ ( h1 , degree , *args , **kwargs ) :
     >>> pdf = results[1] ## get PDF 
     >>> print results[2] ## underlying parameterization 
     """
-    return _h1_convex_ ( h1 , degree , False , *args , **kwargs )
+    return _h1_pdf_convex_ ( h1 , degree , False , *args , **kwargs )
 
 # =============================================================================
 ## parameterize/fit histogram with the concave polynomial
@@ -1517,7 +1517,7 @@ def _h1_pdf_concave_increasing_ ( h1 , degree , *args , **kwargs ) :
     >>> pdf = results[1] ## get PDF 
     >>> print results[2] ## underlying parameterization 
     """
-    return _h1_concave_ ( h1 , degree , True , *args , **kwargs )
+    return _h1_pdf_concave_ ( h1 , degree , True , *args , **kwargs )
 
 # =============================================================================
 ## parameterize/fit histogram with the concave decreasing polynomial
@@ -1541,7 +1541,7 @@ def _h1_pdf_concave_decreasing_ ( h1 , degree , *args , **kwargs ) :
     >>> pdf = results[1] ## get PDF 
     >>> print results[2] ## underlying parameterization 
     """
-    return _h1_concave_ ( h1 , degree , False , *args , **kwargs )
+    return _h1_pdf_concave_ ( h1 , degree , False , *args , **kwargs )
 
 # =============================================================================
 

@@ -8,6 +8,12 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-08-06 - Vanya Belyaev
+ - minor fix 
+
+! 2015-08-06 - Vanya Belyaev
+ - fix typos and imporve a bit 
+
 ! 2015-08-05 - Eduardo Rodrigues
  - Suppressing a ROOT message that is mistakenly interpreted as source of failure
    in test ostap_flatte.

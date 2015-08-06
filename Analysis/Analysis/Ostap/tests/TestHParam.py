@@ -121,11 +121,23 @@ with timing ( 'Monothonic' ) :
     rm3 = h3.monothonic ( 3 , increasing = True  )
     rm4 = h4.monothonic ( 3 , increasing = False )
 
-with timing ( 'Concave' ) :
+with timing ( 'Monothonic-PDF' ) :
+    rm1 = h1.pdf_decreasing ( 3 , silent = True )
+    rm2 = h2.pdf_increasing ( 3 , silent = True )
+    rm3 = h3.pdf_increasing ( 3 , silent = True )
+    rm4 = h4.pdf_decreasing ( 3 , silent = True )
+
+with timing ( 'Convex' ) :
     rZ1 = h1.convex ( 3 , increasing = False , convex = True  )
     rZ2 = h2.convex ( 3 , increasing = True  , convex = True  )
     rZ3 = h3.convex ( 3 , increasing = True  , convex = False )
     rZ4 = h4.convex ( 3 , increasing = False , convex = False )
+
+with timing ( 'Convex-PDF' ) :
+    rZ1 = h1.pdf_convex_decreasing  ( 3 , silent = True )
+    rZ2 = h2.pdf_convex_increasing  ( 3 , silent = True )
+    rZ3 = h3.pdf_concave_increasing ( 3 , silent = True )
+    rZ4 = h4.pdf_concave_decreasing ( 3 , silent = True )
 
 with timing ( 'Spline' ) :
     rS1 = h1.bSpline  ( 2 , 1  )

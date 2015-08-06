@@ -91,6 +91,7 @@ agrestiCoullEff = Gaudi.Math.agrestiCoullEff
 iszero          = cpp.LHCb.Math.Zero     ('double')()
 isequal         = cpp.LHCb.Math.Equal_To ('double')()
 #
+
 # =============================================================================
 # logging 
 # =============================================================================
@@ -136,6 +137,26 @@ def hID     () : return histoID ( )
 ## global ROOT identified for dataset objects 
 def dsID    () : return rootID  ( 'ds_' )
 
+try :
+    natural_number = Gaudi.Math.natural_number
+    logger.info     ( 'TMP: natural_number is loaded from C++, skip guard..' )
+except AttributeError :
+    logger.warning  ( 'TMP: Python version of natural_number is used, keep guard..' )
+    def natural_number ( ve ) :
+        return 0 <= v.value () and \
+               0 <= v.cov2  () and \
+               (  iszero ( v.cov2() ) or isequal (  v.value() , v.cov2() ) )
+    
+try :
+    natural_entry = Gaudi.Math.natural_entry
+    logger.info     ( 'TMP: natural_entry is loaded from C++, skip guard..' )
+except AttributeError :
+    logger.warning  ( 'TMP: Python version of natural_entry is used, keep guard..' )
+    def natural_entry ( ve ) :
+        return 0 <= v.value () and \
+               0 <= v.cov2  () and \
+               ( isequal (  v.value() , v.cov2() ) or
+                 ( iszero ( v.value() ) and isequal ( 1.0 , v.cov2() ) ) )
 
 # =============================================================================
 ## FIX
@@ -204,7 +225,7 @@ def _int ( ve , precision = 1.e-5 ) :
     return True 
 
 # =============================================================================
-## check if  historgam is "natural" one, that represent event count
+## check if  histogram is "natural" one, that represent event count
 #  @see Gaudi::Math::round 
 #  @see Gaudi::Math::islong
 #  @see Gaudi::Math::isint
@@ -215,7 +236,7 @@ def _natural_ ( histo ) :
     Check is the histogram is the ``natural'' one:
     - entries are non-negative integers
     - errors  are sqrt(entry)
-    [ for null entries, the errors of  0 or 1 ar ebnoth allowed] 
+    [ for null entries, the errors of  0 or 1 are both allowed] 
     
     >>> histo = ...
     >>> print 'natural? ', histo.natural()
@@ -228,7 +249,7 @@ def _natural_ ( histo ) :
         
         v  = histo [ i ]
         vv = v.value ()
-        if not _islong ( vv )             : return False  ## ingeger
+        if not _islong ( vv )             : return False  ## integer
         vl = _round ( vv )
         if 0 > vl                         : return False  ## non-negative 
         #
@@ -425,8 +446,7 @@ def _h1_get_item_ ( h1 , ibin ) :
     >>> ve    = histo[ibin]
     
     """
-    if 0 == ibin  or h1.GetXaxis().GetBin
-    if not ibin in h1.GetXaxis()    : pass
+    if not ibin in h1.GetXaxis()    : raise IndexErorr
     #
     val = h1.GetBinContent ( ibin ) 
     err = h1.GetBinError   ( ibin )
@@ -1657,28 +1677,54 @@ def useLL ( histo         ,
 ROOT.TH1.useLL = useLL
 
 # =============================================================================
-## Natural histogram with all integer entries ?
+## Natural histogram with all integer entries ? (generic version)
+#  @code
+#  h = ...
+#  if h.natural() : print 'OK!'
+#  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def allInts ( histo         ,
               diff  = 1.e-4 ) :
     """
     Natural histogram with all integer entries ?
+    >>> h = ...
+    >>> if h.natural() : print 'OK!'
     """
     
-    diff = abs ( diff )
-    
     for ibin in histo : 
-        
         v = histo [ ibin ]
-        
-        if       0 >  v.value()  : return False
-        if not _int ( v , diff ) : return False
+        if not natural_entry ( v ) : return False   ## RETURN 
         
     return True
 
 ROOT.TH1.allInts = allInts
+ROOT.TH1.natural = allInts
 
+# =============================================================================
+## Natural histogram with all integer entries ? (a bit faster vection for TH1)
+#  @code
+#  h1 = ...
+#  if h1.natural() : print 'OK!'
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _h1_allInts ( h1            ,
+                  diff  = 1.e-4 ) :
+    """
+    Natural histogram with all integer entries ?
+    >>> h1 = ...
+    >>> if h1.natural() : print 'OK!'
+    """
+    
+    for i,v in histo.iteritems() :  
+        if not natural_entry ( v ) : return False   ## RETURN 
+        
+    return True
+
+for t in ( ROOT.TH1F , ROOT.TH1D ) : 
+    t.allInts = _h1_allInts
+    t.natural = _h1_allInts
 
 
 # =============================================================================
@@ -2096,7 +2142,7 @@ def _h1_ioper_ ( h1 , h2 , oper ) :
     ##
     for i1,x1,y1 in h1.iteritems() :
         #
-        y2 = h2 ( x1.value() ) 
+        y2 = f2 ( x1.value() ) 
         #
         v  = VE ( oper ( y1 , y2 ) ) 
         #
