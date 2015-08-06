@@ -3,6 +3,36 @@ Package             : AnalysisSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb analysis packages
 
+</PRE><H1><A NAME=v14r1>2015-08-06 Analysis v14r1</A></H1><PRE>
+
+Development release for the 2015 25ns data taking, based on Gaudi v26r3, LHCb v39r0, Rec v18r1 and Phys v20r1.
+Uses LCG_79 with ROOT 6.04.02.
+
+- Packages added :
+  Phys/DecayTreeTupleHerschel v1r0.
+  
+- Packages updated :
+  Phys/DSTWriters v4r21, Phys/DecayTreeTuple v5r2, MicroDST/MicroDSTTools v2r13, Phys/TeslaTools v1r11.
+
+- In Phys/DSTWriters v4r21 :
+  . Added a new stream element to print the candidates selected in a given stream.
+    Disabled by default, useful for debugging.
+  . Turned off by default the option in the DST writer configuration that forced *all* instances of filters
+    to perform a full cloning, instead of creating range objects. A flag is provided to go back to the old behaviour.
+
+- In Phys/DecayTreeTuple v5r2 :
+  . Bug fix in TupleToolNeutrinoReco.
+
+- In Phys/DecayTreeTupleHerschel v1r0 :
+  . First import of the new package and tool:
+    Tuple tool to convey Herschel ADC counts taken from Herschel raw bank after decoding with HCRawBankDecoder.
+
+- In MicroDST/MicroDSTTools v2r13, :
+  . Removed some unused typedefs to silence gcc 4.9 warnings.
+
+- In Phys/TeslaTools v1r11 :
+  . Facilitate neutral PP2MC matching.
+  . Added some protection for case when we want debug printout but there is no CALO vector.
 
 ! 2015-08-06 - Eduardo Rodrigues
  - Added new package Phys/DecayTreeTupleHerschel to the project.

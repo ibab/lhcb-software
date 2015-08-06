@@ -6,7 +6,7 @@ branches doc cmt
 ####################################################################
 
 use  AnalysisConf               v2r4     Phys   # Patrick Koppenburg
-use  DSTWriters                 v4r20    Phys   # Chris Jones
+use  DSTWriters                 v4r21    Phys   # Chris Jones
 use  DSTWriterTests             v2r5     Phys   # Chris Jones
 use  DaVinciMonitors            v1r23    Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r9     Rich   # Chris Jones
@@ -30,17 +30,17 @@ use  DaVinciAngleCalculators    v1r0     Phys   # ?
 
 ####################################################################
 
-use  DecayTreeTupleBase          v1r4     Phys
-use  DecayTreeTupleReco          v1r5     Phys   
-use  DecayTreeTupleDalitz        v1r3     Phys
-use  DecayTreeTupleJets          v1r3     Phys
-use  DecayTreeTupleMC            v1r6     Phys
-use  DecayTreeTupleTrigger       v1r8     Phys
-use  DecayTreeTupleMuonCalib     v1r4     Phys
-use  DecayTreeTupleTracking      v1r2     Phys
-use  DecayTreeTupleANNPID        v1r2     Phys
-use  Phys/DecayTreeTupleHerschel v1r0     Phys
-use  DecayTreeTuple              v5r1     Phys 
+use  DecayTreeTupleBase         v1r4     Phys
+use  DecayTreeTupleReco         v1r5     Phys   
+use  DecayTreeTupleDalitz       v1r3     Phys
+use  DecayTreeTupleJets         v1r3     Phys
+use  DecayTreeTupleMC           v1r6     Phys
+use  DecayTreeTupleTrigger      v1r8     Phys
+use  DecayTreeTupleMuonCalib    v1r4     Phys
+use  DecayTreeTupleTracking     v1r2     Phys
+use  DecayTreeTupleANNPID       v1r2     Phys
+use  DecayTreeTupleHerschel     v1r0     Phys
+use  DecayTreeTuple             v5r2     Phys 
 
 ####################################################################
 
@@ -56,7 +56,7 @@ use  Ostap                      v1r9     Analysis # Vanya Belyaev
 
 use  MicroDSTBase        	v3r5     MicroDST # Chris Jones
 use  MicroDSTInterfaces  	v1r7p2   MicroDST # Chris Jones
-use  MicroDSTTools      	v2r12    MicroDST # Chris Jones
+use  MicroDSTTools      	v2r13    MicroDST # Chris Jones
 use  MicroDSTAlgorithm   	v5r10    MicroDST # Chris Jones
 use  MicroDSTConf               v2r12    MicroDST # Chris Jones
 
@@ -74,7 +74,7 @@ use  DaVinciTrackScaling        v1r4    Phys   # Vanya Belyaev
 
 ####################################################################
 
-use  TeslaTools                 v1r10p1 Phys   # Sean Benson
+use  TeslaTools                 v1r11   Phys   # Sean Benson
 
 ####################################################################
 
