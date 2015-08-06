@@ -4,6 +4,190 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v48r3">2015-08-06 - GaussSys v48r3</A></H1><PRE>
+<H2><A NAME="Note"Prerelease of Sim09 for production tests. 
+   Based on LCG_77root6.
+   Patches for EM and Kaon cross sections to Geant4 9.6.p04
+</A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v38r7 (and Gaudi v26r2)</b>
+   AppConfig v3r*,
+   <b>DecFiles v28r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   PGunsData v1r*
+   pythia8 186, lhapdf 6.1.4, 
+   photos++ 3.56 and tauola++ 1.1.4, 
+   pythia 6.428.2 (via LCG_GeneratorsInterfaces),
+   HepMC 2.06.08 (via LCG_Interfaces),
+   LHAPDFSets v2r* (private LHCb version)
+   <b>Geant4 v96r4p2</b> (based on geant4.9.6.p04 + patches for LHCb) and 
+   Geant4Files v96r0, 
+   XmlVis v1r19,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 and powhegbox r2092 (via LCG_GeneratorsInterfaces),
+   herwig++ 2.7.1 and thepeg 1.9.2p1 (via LCG_GeneratorsInterfaces),
+   rivet 1.9.0 (via LCG_GeneratorsInterfaces),
+   <b>EvtGen v14r2</b>, EvtGenExtras v3r11 and Mint v3r3
+   (private LHCb version),
+   BcVegPy v4r0 + BcVegPyData v2r*, GenXicc v2r1p1 + GenXiccData v3r* and 
+   HidValley v4r0p1 (private LHCb versions)
+</A></H3>
+
+! 2015-08-06 - Gloria Corti
+ - Use new tags of LCG_Settings and LCG_GeneratorsInterfaces although the 
+   content is the same to indicate their compatibility with LCG 74root6
+ - Remove use of GaudiConf
+ - Temporarily use Kernel/MCInterfaces and Sim/SimComponents (until moving to
+   LHCb v39r1) to pick up needed feature to support MCmicroDST in DaVinci to
+   be able to write MC truth for all events.
+
+!========================= MCInterfaces v1r19 2015-07-25 =========================
+! 2015-07-24 - Gloria Corti
+ - New interface for setting fromSignal flag in MCParticles
+
+!========================= SimComponents v3r0 2015-08-05 =========================
+! 2015-08-03 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
+
+! 2015-07-24 - Gloria Corti
+ - New tool to flag children from a signal particle propagating the relevant
+   flag
+ 
+!========================== Gauss v48r3 2015-08-05 ===========================
+! 2015-08-05 - Gloria Corti
+ - New tests to check fromSignal flag is set in full simulation and when
+   fillinf MCPArticles from generator.
+ - New test to check 2015 configuration
+
+! 2015-08-04 - Gloria Corti
+ - Update options for supported data types (2011, 2012, 2015) with latest dbase
+   tags. Introduce reference options for 2010.
+ - Use DecFiles v28r* to use latest decay files and chnaged in options 
+   for BcVegPy, J/Psi etc.
+
+! 2015-08-03 - Gloria Corti
+ - Fix mistyping in Kine-LT.py options for values (had extra ;)
+ - New options as an example to lower Production cuts, ProductionCuts-Low.py
+
+! 2015-07-24 - Gloria Corti
+ - Updated Gauss reference tests for current detector followign change in
+   default random numbers generator
+
+! 2015-07-23 - Gloria Corti
+ - Provide options to Gauss() to choose between Ranlux and MTwist as random
+   number engine. Set the default to Ranlux since MTwist does not re-initialize
+   correctly for each event: while changing the seed at the start generates
+   different samples and keeping the same causes the same set to be made, 
+   successive events requires the previous one to be made to be reproduced.
+
+! 2015-07-20 - Gloria Corti
+ - Updated Gauss reference tests for current detector
+
+! 2015-MM-DD - Phil Ilten
+ - Removed configuration of powheg no longer necessary
+
+!========================== GenCuts v3r12 2015-08-05 =========================
+! 2015-08-02 - Philip Ilten
+ - Updated BcDaughtersInLHCb to handle excited states with configurable 
+   meson ID
+
+! 2015-08-01 - Patrick Robbe
+ - Add new tool: DaughtersInLHCbKeepOnlySignal to implement event embedding:
+   The tool keeps only the signal particle and removes the rest of the event
+
+!========================= GENSER v16r0p3 2015-08-05 =========================
+! 2015-08-05 - Gloria Corti
+ - Dummy release for building distribution with LCG_74root6
+
+!======================= Generators v15r0 2015-08-05 =========================
+! 2015-08-01 - Patrick Robbe 
+ - Generation.cpp: add the possibility to generate all interactions at the
+   same PV -- used for signal embeding between different generators. The signal
+   is seen as a separate interaction.
+
+!======================= Generators v15r0 2015-08-05 =========================
+! 2015-08-01 - Patrick Robbe 
+ - Generation.cpp: add the possibility to generate all interactions at the
+   same PV -- used for signal embeding between different generators. The signal
+   is seen as a separate interaction.
+
+!======================== LbPythia8 v11r1 2015-08-05 =========================
+! 2015-08-02 - Philip Ilten
+ - Create new particles in Pythia if they don't exist in the database during 
+   updateParticleProperties
+
+! 2015-07-07 - Gloria Corti
+ - Removed obsolete and now wrong Pythia8.opts in old format
+
+! 2015-06-22 - Philip Ilten
+ - Fixed initialization and memory handling of the beam shape tool
+
+!========================== LbAlpGen v6r1 2015-08-05 ==========================
+! 2015-08-05 - Gloria Corti
+ - Really add the AlpGen.py options that had not bee added.
+
+!======================== LbGenXicc v5r0p1 2015-08-05 ========================
+! 2015-06-23 - Philip Ilten
+ - Fixed typos in configuration
+
+!========================== SuperChic v1r0 2015-08-05 ========================
+! 2015-08-05 - Gloria Corti
+ - Add CMakeList.txt as I think it should be
+
+! 2015-06-12 - Philip Ilten
+ - Initial version created
+
+!========================== SuperChic v1r0 2015-08-05 ========================
+! 2015-08-05 - Gloria Corti
+ - Add CMakeList.txt as I think it should be
+
+! 2015-06-12 - Philip Ilten
+ - Initial version created
+
+!========================= GaussKine v7r0 2015-08-05 =========================
+! 2015-08-02 - Gloria Corti
+ - Retrive information about signal particle from HepMC status code and 
+   propagate it to G4PrimaryParticle or to MCParticles. When SkipG4 set also
+   fromSignal flag to decay products 
+ - Retrieve information about signal particle from G4 tables and propagate it
+   to MCParticles and set fromSignal flag to decay products
+
+!======================== GaussTools v20r0 2015-08-05 ========================
+! 2015-08-02 - Gloria Corti
+ - Propagate the information if a particle is signal as given from generator
+   . MCTruthManager.{h,cpp}
+   . GaussTrackActionHepMC.cpp
+
+! 2015-06-29 - Luca Pescatore
+ - Introduced the possibility of having a origin vertex 
+   different than (0,0,0) in the RadLengthColl tool.
+   Vertex information is also saved in the output tuple.
+
+!========================== SimChecks v1r6 2015-08-05 ========================
+! 2015-06-29 - Luca Pescatore
+ - Added rad_length_scan_velo_z.py to perform scans of radiation length
+   in the velo using a range of different initial positions.
+
+! 2015-06-17 - Luca Pescatore
+ - Forgot to add TargetSetup.py in svn. And added python/Target folder. 
+
+! 2015-06-16 - Luca Pescatore
+ - Modified RadLenght and Target tools to make better
+   use of python and cmt structure. In particular template options
+   for Target are converted to python nmodules.
+
+! 2015-06-02 - Luca Pescatore
+ - Modified structure of RadLenght and Target tools to allow
+   installation of python modules via cmt and introduce
+   the possibility of running non locally.
+
+! 2015-06-01 - Luca Pescatore
+ - Simplified structure of Targets Tool removing SingleTarget
+
+
+!=============================================================================
 </PRE><H1><A NAME="v48r2">2015-06-08 - GaussSys v48r2</A></H1><PRE>
 <H2><A NAME="Note"For development and Upgrade studies. Based on LCG_74root6.
    Patches for EM and Kaon cross sections to Geant4 9.6.p04
