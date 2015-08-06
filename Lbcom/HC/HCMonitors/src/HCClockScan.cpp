@@ -180,12 +180,12 @@ StatusCode HCClockScan::finalize() {
       for (unsigned int bin = 0; bin < nBins; ++bin) {
         const unsigned int step = m_minStep + bin;
         const int vfe = step % (32 / m_VFEClkPitch);
-        const int adc = step / (32 / m_ADCClkPitch);
+        const int adc = int(step / 32) * m_ADCClkPitch;
         double adcMax = -1.;
         double adcSecondMax = -1.;
         int bestslot = -2;
         for (unsigned int j = 0; j < 3; ++j) {
-          double val = m_adcs[j][i][k]->binMean(bin);
+          double val = m_adcs[j][i][k]->binHeight(bin);
           if (val > adcMax) {
             adcSecondMax = adcMax;
             adcMax = val;
