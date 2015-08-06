@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!======================= DecayTreeTuple v5r2 2015-08-06 =====================
+
+! 2015-07-27 - Marco Pappagallo
+ - Bug fix in TupleToolNeutrinoReco.
+
 !======================= DecayTreeTuple v5r1 2015-07-24 =====================
 
 ! 2015-06-15 - Ricardo Vazquez Gomez
