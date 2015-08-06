@@ -26,14 +26,19 @@
 </argument>
 <argument name="args">
 	<set>
-		<text>$APPCONFIGOPTS/Gauss/Beam7000GeV-md100-nu3.8-HorExtAngle.py</text>
+		<text>$APPCONFIGOPTS/Gauss/Beam7000GeV-md100-nu7.6-HorExtAngle.py</text>
 		<text>$DECFILESROOT/options/10000000.py</text>
-		<text>$LBPYTHIAROOT/options/Pythia.py</text>
-		<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
+		<text>$LBPYTHIA8ROOT/options/Pythia8.py</text>
+		<text>$APPCONFIGOPTS/Gauss/G4PL_FTFP_BERT_EmNoCuts.py</text>
+		<text>$APPCONFIGOPTS/Gauss/Gauss-Upgrade-Baseline-20150522.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-Upgrade-DBTags.py</text>
-		<text>$APPCONFIGOPTS/Gauss/Gauss-Upgrade-Baseline-20131029.py</text>
+		<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
 		<text>$APPCONFIGOPTS/Gauss/EnableSpillover-25ns.py</text>
+		<text>$APPCONFIGOPTS/Conditions/IgnoreCaliboffDB_LHCBv38r7.py</text>
 	</set>
+</argument>
+<argument name="options">
+	<text>from Configurables import LHCbApp; LHCbApp().EvtMax=1</text>
 </argument>
 <argument name="exit_code">
 	<integer>0</integer>
@@ -53,10 +58,8 @@
 <argument name="stderr">
 	<text/>
 </argument>
-<argument name="options">
-	<text/>
-</argument>
-<argument name="validator"><text>
+<argument name="validator">
+<text>
 def replacenumbers(m):
   res = m.groups()[0]
   for i in m.groups()[1].lstrip().split():
@@ -89,8 +92,8 @@ preprocessor = (normalizeExamples +
          repl = r"\1.../\3"))
 
 validateWithReference(preproc = preprocessor)
-
-</text></argument>
+</text>
+</argument>
 <argument name="resources">
 	<set/>
 </argument>
