@@ -56,6 +56,9 @@ class HCClockScan : public HCMonitorBase {
   int m_stepCounter;
   /// Flag for optimisation scheme
   bool m_relativeMax;
+  /// Flag to analyse noise (instead of signal)
+  bool m_noise;
+
 };
 
 #endif

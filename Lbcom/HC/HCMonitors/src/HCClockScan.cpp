@@ -1,7 +1,3 @@
-// ROOT (needed?)
-#include "TH2D.h"
-#include "TProfile.h"
-
 // Gaudi
 #include "GaudiUtils/HistoLabels.h"
 #include "GaudiUtils/Aida2ROOT.h"
@@ -30,6 +26,7 @@ HCClockScan::HCClockScan(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("VFEClkPitch", m_VFEClkPitch = 1);
   declareProperty("ADCClkPitch", m_ADCClkPitch = 2);
   declareProperty("RelativeMax", m_relativeMax = true);
+  declareProperty("Noise", m_noise = false);
 
 }
 
@@ -181,31 +178,37 @@ StatusCode HCClockScan::finalize() {
         const unsigned int step = m_minStep + bin;
         const int vfe = step % (32 / m_VFEClkPitch);
         const int adc = int(step / 32) * m_ADCClkPitch;
-        double adcMax = -1.;
-        double adcSecondMax = -1.;
-        int bestslot = -2;
+        double bestValue = -1.;
+        double secondBestValue = -1.;
+        int bestSlot = -2;
         for (unsigned int j = 0; j < 3; ++j) {
-          double val = m_adcs[j][i][k]->binHeight(bin);
-          if (val > adcMax) {
-            adcSecondMax = adcMax;
-            adcMax = val;
-            bestslot = j - 1;
-          } else if (val > adcSecondMax) {
-            adcSecondMax = val;
+          if (m_noise) {
+            const double rms = m_adcs[j][i][k]->binError(bin);
+            if (bestValue < 0. || rms < bestValue) {
+              bestValue = rms; 
+            }
+          }
+          const double avg = m_adcs[j][i][k]->binHeight(bin);
+          if (avg > bestValue) {
+            secondBestValue = bestValue;
+            bestValue = avg;
+            bestSlot = j - 1;
+          } else if (avg > secondBestValue) {
+            secondBestValue = avg;
           }
         }
-        if (m_relativeMax) {
-          if (adcMax <= 0. && adcSecondMax <= 0.) {
-            adcMax = 0.;
-          } else if (adcSecondMax <= 0.) {
-            adcMax = 1.;
+        if (m_relativeMax && !m_noise) {
+          if (bestValue <= 0. && secondBestValue <= 0.) {
+            bestValue = 0.;
+          } else if (secondBestValue <= 0.) {
+            bestValue = 1.;
           } else {
-            adcMax = adcMax / adcSecondMax;
+            bestValue = bestValue / secondBestValue;
           }
         }
-        m_results[i][k]->fill(vfe, adc, adcMax);
-        m_offsets[i][k]->fill(vfe, adc, bestslot);
-        m_resultsStation[i]->fill(vfe, adc, adcMax);
+        m_results[i][k]->fill(vfe, adc, bestValue);
+        m_offsets[i][k]->fill(vfe, adc, bestSlot);
+        m_resultsStation[i]->fill(vfe, adc, bestValue);
       }
     }
   }
