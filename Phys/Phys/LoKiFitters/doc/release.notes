@@ -5,6 +5,8 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+!====================== Phys/LoKiFitters v4r16 2015-08-06 =====================
+
 ! 2015-07-31 - Vanya Belyaev
  - ParticleClassifier:
    add a property to switch of special treatment of jets....
