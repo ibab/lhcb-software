@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DecayTreeTupleHerschel
 ################################################################################
-gaudi_subdir(DecayTreeTupleHerschel v1r2)
+gaudi_subdir(DecayTreeTupleHerschel v1r0)
  
 gaudi_depends_on_subdirs(Phys/DecayTreeTupleBase)
  
