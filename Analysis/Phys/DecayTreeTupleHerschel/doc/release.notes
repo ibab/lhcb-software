@@ -1,5 +1,12 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DecayTreeTupleHerschel
+! Responsible : Dan Johnson
+! Purpose     : Tools for Herschel
+!-----------------------------------------------------------------------------
 
-===============
-6th August 2015
-D. Johnson
-Tuple tool to convey Herschel ADC counts taken from Herschel raw banks after decoding with HCRawBankDecoder.
+!================= DecayTreeTupleHerschel v1r0 2015-08-06 ====================
+
+! 2015-08-06 - Dan Johnson
+ - First import of the new package and tool:
+   Tuple tool to convey Herschel ADC counts taken from Herschel raw bank
+   after decoding with HCRawBankDecoder.
