@@ -198,6 +198,8 @@
   <function name = "Gaudi::Math::divide"          />
   <function name = "Gaudi::Math::sumabs"          />
   <function name = "Gaudi::Math::abssum"          />
+  <function name = "Gaudi::Math::natural_number"  />
+  <function name = "Gaudi::Math::natural_entry"   />
   <function name = "Gaudi::Math::horner_aN"       />
   <function name = "Gaudi::Math::continued_fraction"       />
   <function name = "Gaudi::Math::continued_fraction_simple"/>

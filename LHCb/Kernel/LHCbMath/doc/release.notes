@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-08-06 - Vanya Belyaev
+ - ValueWithError: more functions 
+
 ! 2015-08-03 - Vanya Belyaev
  - add few more functions for easy operations with scipy  
 

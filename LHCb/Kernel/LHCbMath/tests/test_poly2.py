@@ -24,6 +24,7 @@ import ROOT, random, math
 from LHCbMath.Types import cpp
 from LHCbMath.deriv import Integral
 # =============================================================================    
+ostap = False 
 try :
     ## just as a sugar, not really needed for the test  
     from   Ostap.PyRoUts import *
@@ -33,6 +34,8 @@ except:
     ostap = False
     pass
 # =============================================================================    
+
+ostap = False 
 
 xmin      =   -1
 xmax      =    4

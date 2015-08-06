@@ -22,6 +22,7 @@
 // ============================================================================
 #include "LHCbMath/ValueWithError.h"
 #include "LHCbMath/Power.h"
+#include "LHCbMath/LHCbMath.h"
 // ============================================================================
 // Boost
 // ============================================================================
@@ -74,6 +75,9 @@ namespace
       Gaudi::Math::pow ( v , (unsigned long) n ) :
       std::pow         ( v , n                 ) ;
   }
+  // ==========================================================================
+  inline bool _is_long ( const double value ) 
+  { return LHCb::Math::islong ( value ) ; }
   // ==========================================================================
 }
 // ============================================================================
@@ -768,6 +772,35 @@ Gaudi::Math::ValueWithError::__lgamma__ () const { return lgamma ( *this ) ; }
 // ============================================================================
 
 
+// ============================================================================
+/* Does this object represent natual number?
+ *  - non-negative integer value 
+ *  - cov2 == value  or cov2 == 0 
+ */
+// =============================================================================
+bool Gaudi::Math::natural_number
+( const Gaudi::Math::ValueWithError& v ) 
+{
+  return 
+    0 <= v.value() && 0<= v.cov2() 
+    && _is_long ( v.value() ) 
+    && ( _zero ( v.cov2 () ) || _equal ( v.value() , v.cov2() ) ) ;
+}
+// ============================================================================
+/** Does this object represent natual entry in histogram
+ *  - non-negative integer value 
+ *  - cov2 == value  or ( 0 == value && 1 == cov2 )
+ */
+// =============================================================================
+bool Gaudi::Math::natural_entry 
+( const Gaudi::Math::ValueWithError& v ) 
+{
+  return 
+    0 <= v.value() && 0<= v.cov2() 
+    && _is_long ( v.value() ) 
+    && ( _equal ( v.value() , v.cov2() ) ||
+         ( _zero ( v.value() ) && _equal ( 1 , v.cov2() ) ) ) ;
+}
 // ============================================================================
 /*  evaluate abs(a)
  *  @param a (INPUT) the value

@@ -780,6 +780,20 @@ namespace Gaudi
     /// check for goodness 
     inline bool good     ( const ValueWithError& v ) { return v.good     () ; }    
     // ========================================================================    
+    /** Does this object represent natual number?
+     *  - non-negative integer value 
+     *  - cov2 == value  or cov2 == 0 
+     */
+    GAUDI_API 
+    bool natural_number ( const ValueWithError& value ) ;
+    // ========================================================================
+    /** Does this object represent natual entry in histogram
+     *  - non-negative integer value 
+     *  - cov2 == value or ( 0 == value && 1 == cov2 ) 
+     */
+    GAUDI_API 
+    bool natural_entry  ( const ValueWithError& value ) ;
+    // ========================================================================
     /** make a sum two elements taking into account the 
      *  correlation coefficient  
      *  @param a  (input) the first value 
@@ -896,7 +910,7 @@ namespace Gaudi
       const ValueWithError& v01 , 
       const ValueWithError& v10 , 
       const ValueWithError& v11 ) ;
-    // ========================================================================    
+    // ========================================================================
     /** get the sum of the vector 
      *  @param vct the vecor
      *  @param ini the intial value 
@@ -943,6 +957,7 @@ namespace Gaudi
      *  @return value of polynomial
      *  @warning invalid and small covariances are ignored 
      */
+    GAUDI_API 
     ValueWithError horner_a0 ( const std::vector<double>& poly ,
                                const ValueWithError&      x    ) ;
     // ======================================================================
@@ -955,6 +970,7 @@ namespace Gaudi
      *  @return value of polynomial
      *  @warning invalid and small covariances are ignored 
      */
+    GAUDI_API 
     ValueWithError horner_aN ( const std::vector<double>& poly ,
                                const ValueWithError&      x    ) ;
     // ========================================================================    
