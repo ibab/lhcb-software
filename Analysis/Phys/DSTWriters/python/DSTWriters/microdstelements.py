@@ -91,10 +91,12 @@ class CloneParticleTrees(MicroDSTElement) :
     def __init__( self,
                   branch = '',
                   TESVetoList = [ ],
-                  isMC = False ) :
+                  isMC = False,
+                  fullFilterCloning = False ) :
         MicroDSTElement.__init__(self, branch)
-        self.tesVetoList = TESVetoList
-        self.isMC        = isMC
+        self.tesVetoList       = TESVetoList
+        self.isMC              = isMC
+        self.fullFilterCloning = fullFilterCloning
 
     def __call__(self, sel) :
         
@@ -105,9 +107,12 @@ class CloneParticleTrees(MicroDSTElement) :
                                     TrackCloner,
                                     CaloHypoCloner,
                                     CaloClusterCloner )
+
+        # Particle locations for this stream
+        partLocs = self.dataLocations(sel,"Particles")
         
         cloner = CopyParticles( name = self.personaliseName(sel,'CopyParticles'),
-                                InputLocations = self.dataLocations(sel,"Particles") )
+                                InputLocations = partLocs )
         
         cloner.addTool(ParticleCloner, name="ParticleCloner")
         cloner.ParticleCloner.TESVetoList = self.tesVetoList
@@ -129,8 +134,23 @@ class CloneParticleTrees(MicroDSTElement) :
         
         self.setOutputPrefix(cloner)
 
-        confList = ConfigurableList(sel)
-        setCloneFilteredParticlesToTrue( confList.flatList() )
+        #cloner.OutputLevel = 1
+
+        # Turn on cloning for all Filter instances
+        if self.fullFilterCloning :
+
+            setCloneFilteredParticlesToTrue( ConfigurableList(sel).flatList() )
+
+        else :
+
+            # Only turn on cloning for main line Filters
+            filteredlist = [ ]
+            for alg in ConfigurableList(sel).flatList() :
+                try :
+                    if alg.Output in partLocs : filteredlist += [alg]
+                except :
+                    pass
+            setCloneFilteredParticlesToTrue( filteredlist )
         
         return [cloner]
 

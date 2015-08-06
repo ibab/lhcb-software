@@ -36,6 +36,7 @@ def setCloneFilteredParticlesToTrue(algs) :
     for alg in algs :
         try :
             alg.CloneFilteredParticles = True
+            #print "Setting", alg.name()+".CloneFilteredParticles = True"
         except :
             try :
                 setCloneFilteredParticlesToTrue(alg.Members)
@@ -71,10 +72,10 @@ class ConfigurableList(object) :
     Return a list of plain configurables from a SelectionSequence style object.
     Intended to deal with difference in interfaces of SelectionSequence, StrippingStream, etc.
     '''
-    _algos = { 'DEFAULT' :lambda x : x.algorithms(),
+    _algos = { 'DEFAULT'         : lambda x : x.algorithms(),
                'StrippingStream' : lambda x : x.filterMembers(),
-               'StrippingLine' : lambda x : x.filterMembers(),
-               'StrippingConf' : lambda x : x.filterMembers()
+               'StrippingLine'   : lambda x : x.filterMembers(),
+               'StrippingConf'   : lambda x : x.filterMembers()
                }
     def __init__(self, selection) :
         self._sel = selection

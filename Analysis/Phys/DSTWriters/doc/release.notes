@@ -4,6 +4,11 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2015-08-06 - Chris Jones
+ - Turn off by default the option in the DST writer configuration that forced
+   *all* instances of filters to perform a full cloning, instead of creating
+   range objects. A flag is provided to go back to the old behviour.
+
 ! 2015-07-28 - Chris Jones
  - Add a new stream element to print the candidates selected in a given stream.
    Disabled by default, useful for debugging.
