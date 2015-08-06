@@ -3,6 +3,10 @@ Package             : AnalysisSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb analysis packages
 
+
+! 2015-08-06 - Eduardo Rodrigues
+ - Added new package Phys/DecayTreeTupleHerschel to the project.
+
 </PRE><H1><A NAME=v14r0>2015-07-24 Analysis v14r0</A></H1><PRE>
 
 Development release for the 2015 25ns data taking, based on Gaudi v26r3, LHCb v39r0, Rec v18r0 and Phys v20r0.

@@ -30,16 +30,17 @@ use  DaVinciAngleCalculators    v1r0     Phys   # ?
 
 ####################################################################
 
-use  DecayTreeTupleBase         v1r4     Phys
-use  DecayTreeTupleReco         v1r5     Phys   
-use  DecayTreeTupleDalitz       v1r3     Phys
-use  DecayTreeTupleJets         v1r3     Phys
-use  DecayTreeTupleMC           v1r6     Phys
-use  DecayTreeTupleTrigger      v1r8     Phys
-use  DecayTreeTupleMuonCalib    v1r4     Phys
-use  DecayTreeTupleTracking     v1r2     Phys
-use  DecayTreeTupleANNPID       v1r2     Phys 
-use  DecayTreeTuple             v5r1     Phys 
+use  DecayTreeTupleBase          v1r4     Phys
+use  DecayTreeTupleReco          v1r5     Phys   
+use  DecayTreeTupleDalitz        v1r3     Phys
+use  DecayTreeTupleJets          v1r3     Phys
+use  DecayTreeTupleMC            v1r6     Phys
+use  DecayTreeTupleTrigger       v1r8     Phys
+use  DecayTreeTupleMuonCalib     v1r4     Phys
+use  DecayTreeTupleTracking      v1r2     Phys
+use  DecayTreeTupleANNPID        v1r2     Phys
+use  Phys/DecayTreeTupleHerschel v1r0     Phys
+use  DecayTreeTuple              v5r1     Phys 
 
 ####################################################################
 
