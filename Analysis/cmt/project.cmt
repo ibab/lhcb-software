@@ -1,6 +1,6 @@
 project ANALYSIS
 
-use PHYS PHYS_v20r0
+use PHYS PHYS_v20r1
 
 build_strategy	with_installarea
 setup_strategy	root
