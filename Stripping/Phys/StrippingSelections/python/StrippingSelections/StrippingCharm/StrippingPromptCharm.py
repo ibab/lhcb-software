@@ -875,10 +875,10 @@ class StrippingPromptCharmConf(LineBuilder) :
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
         #
         if self['NOPIDHADRONS'] :
-            from StandardParticles import   StdNoPIDsKaons as inpts
+            from StandardParticles import   StdAllNoPIDsKaons as inpts
             kaoncut = self['PromptKaonCut']
         else                    :
-            from StandardParticles import StdLooseANNKaons as inpts 
+            from StandardParticles import StdAllLooseANNKaons as inpts 
             kaoncut = "(%s)&(%s)" % ( self['PromptKaonCut'] , self['KaonPIDCut'] ) 
             #
         return self.make_selection (
