@@ -1,5 +1,5 @@
 package PhysSys
-version v20r0
+version v20r1
 
 branches doc cmt
 
@@ -20,20 +20,20 @@ use  ProtoParticleFilter        v1r7p2   Phys    # Current DV Maintainer
 use  DaVinciTransporter 	v3r12    Phys    # Current DV Maintainer
 use  ParticleMaker      	v6r15    Phys    # Current DV Maintainer
 use  VertexFit			v6r21    Phys    # Yuehong Xie
-use  LoKiFitters                v4r15    Phys    # Vanya Belyaev
-use  DecayTreeFitter            v1r20    Phys    # Wouter Hulsbergen
+use  LoKiFitters                v4r16    Phys    # Vanya Belyaev
+use  DecayTreeFitter            v1r21    Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2p4   Phys    # Current DV Maintainer
 use  HighPtJets                 v1r8p1   Phys    # Marcin Kucharczyk
 use  BBDecTreeTool              v1r7     Phys    # Mike Williams
 
 #===================================================================
 
-use  DaVinciTools       	v24r2    Phys    # ?
+use  DaVinciTools       	v24r3    Phys    # ?
 use  RelatedInfoTools           v1r1     Phys    # Anton Poluektov
 use  ExtraInfoTools             v1r0     Phys    # Anton Poluektov
-use  ParticleCombiners          v1r2     Phys    # ?
+use  ParticleCombiners          v1r3     Phys    # ?
 use  DaVinciPVTools             v1r1     Phys    # ?
-use  DaVinciFilters             v1r1     Phys    # ?
+use  DaVinciFilters             v1r2     Phys    # ?
 use  DaVinciDecayFinder         v1r0     Phys    # ?
 use  TopologicalTools           v1r0     Phys    # Mike Williams et. al.
 use  DaVinciOverlapsAndClones   v1r0     Phys    # ?

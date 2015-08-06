@@ -3,6 +3,32 @@ Package             : PhysSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v20r1>2015-08-06 Phys v20r1</A></H1><PRE>
+Development release for the 2015 25ns data taking, based on Gaudi v26r3, LHCb v39r0 and Rec v18r1.
+Uses LCG_79 with ROOT 6.04.02.
+
+- Packages updated :
+  Phys/DaVinciFilters v1r2, Phys/DaVinciTools  v24r3, Phys/DecayTreeFitter v1r21,
+  Phys/LoKiFitters v4r16, Phys/ParticleCombiners  v1r3.
+
+- In Phys/DaVinciFilters v1r2 :
+  . Slighlty rewrote how check for updateCallBack handler to make it compatible
+    with future Gaudi versions.
+
+- In Phys/DaVinciTools  v24r3 :
+  . Property added to PrintDecayTree to force setFilterPassed to true always.
+
+- In Phys/DecayTreeFitter v1r21 :
+  . Removed unused function in ConvertedPhoton.
+
+- In Phys/LoKiFitters v4r16 :
+  . ParticleClassifier: property added to switch of special treatment of jets.
+  . PVReFitter: Silence warning about too few tracks after refit.
+
+- In Phys/ParticleCombiners  v1r3 :
+  . Slighlty rewrote how check for updateCallBack handler to make it compatible
+    with future Gaudi versions.
+
 </PRE><H1><A NAME=v20r0>2015-07-23 Phys v20r0</A></H1><PRE>
 Development release for the 2015 25ns data taking, based on Gaudi v26r3, LHCb v39r0 and Rec v18r0.
 Uses LCG_79 with ROOT 6.04.02.
