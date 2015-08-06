@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-08-06 - Roberta Cardinale
+ - updated S23 LineConfig for BandQ (StrippingOmegaC0 in FullDST)
+
+! 2015-08-06 - Roberta Cardinale
  - updated S23 LineConfig for BandQ (StrippingPromptCharm.py)
 
 ! 2015-08-05 - Michael Kolpin

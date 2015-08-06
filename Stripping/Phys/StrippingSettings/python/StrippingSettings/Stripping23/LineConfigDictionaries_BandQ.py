@@ -1147,7 +1147,7 @@ PromptCharm = {
                                      'StrippingDsForPromptCharm'                  ,
                                      'StrippingLambdaCForPromptCharm'             ,
                                      'StrippingXiC0ForPromptCharm'                ,
-                                     'StrippingOmegaC0ForPromptCharm'             ,
+                                     #'StrippingOmegaC0ForPromptCharm'             ,
                                      'StrippingLambdaC2pKKForPromptCharm'         ,
                                      'StrippingSigmaCForPromptCharm'              ,
                                      'StrippingLambdaCstarForPromptCharm'         ,
@@ -1166,7 +1166,8 @@ PromptCharm = {
                                      ## for Eva
                                      'StrippingD02KKForPromptCharm'               ,   ## prescale ?
                                      'StrippingD02pipiForPromptCharm'             ,   ## prescale ?
-                                     'StrippingDstarCPForPromptCharm'           ] , 
+                                     'StrippingDstarCPForPromptCharm'           ] ,
+                      'CharmCompleteEvent' : [ 'StrippingOmegaC0ForPromptCharm'],
                       ## 
                       'Leptonic' : [ 'StrippingDoubleDiMuonForPromptCharm'   , ## Full DST ?
                                      'StrippingDiMuonAndWForPromptCharm'     , ## Full DST ? 
