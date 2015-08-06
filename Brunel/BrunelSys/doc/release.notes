@@ -15,9 +15,9 @@ Patch release for 2015 25ns reconstruction
     Cuts set to chi2=4 and ghost prob = 0.4 (TrackSys v9r10)
 
 - New physics tuning
-  . Update default database tags to the latest ones (DDDB v1r79):
+  . Update default database tags to the latest ones (DDDB v1r79, v1r80):
     o DDDB,     2015: dddb-20150724
-    o LHCBCOND, 2015: cond-20150724
+    o LHCBCOND, 2015: cond-20150805
 
 - Bug fixes
   . Fix to PrPixelTrack concerning memory layout of hit classes (PrPixel v1r13)

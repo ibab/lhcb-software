@@ -20,4 +20,4 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use DDDB v1r79 Det
+use DDDB v1r80 Det
