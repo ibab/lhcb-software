@@ -17,12 +17,12 @@ use Gauss               v48r3   Sim
 # LCG interfaces to generators, until available in LCGCMT
 use LCG_Settings        v76r0p1 
 use lhapdf              v76r0p1 LCG_GeneratorsInterfaces
-use photospp            v76r0p2 LCG_GeneratorsInterfaces
+use photospp            v76r0p1 LCG_GeneratorsInterfaces
 use tauolapp            v76r0p1 LCG_GeneratorsInterfaces
 use pythia6             v76r0p1 LCG_GeneratorsInterfaces
 use pythia8             v76r0p1 LCG_GeneratorsInterfaces
 use thepeg              v76r0p1 LCG_GeneratorsInterfaces
-use herwigpp            v76r0p2 LCG_GeneratorsInterfaces
+use herwigpp            v76r0p1 LCG_GeneratorsInterfaces
 use rivet               v76r0p1 LCG_GeneratorsInterfaces
 use alpgen              v76r0p1 LCG_GeneratorsInterfaces
 use hijing              v76r0p1 LCG_GeneratorsInterfaces
