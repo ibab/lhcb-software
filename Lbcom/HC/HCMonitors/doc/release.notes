@@ -3,6 +3,10 @@
 ! Responsible : 
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
+
+! 2015-08-06 - Heinrich Schindler
+ - Add finalize method in HCClockScan.
+
 ! 2015-08-04 - Gerhard Raven
  - remove #include of obsolete Gaudi headers        
 

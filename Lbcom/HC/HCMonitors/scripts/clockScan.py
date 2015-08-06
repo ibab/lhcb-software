@@ -1,19 +1,13 @@
 #!/usr/bin/env python
 import sys 
-from ROOT import *
-from Gaudi.Configuration import *
-from Configurables import LHCbApp
-from array import array
+
+#from array import array
+
+# Parse the command line options.
 from optparse import OptionParser
-lhcbApp = LHCbApp()
-
-
-print 'enter brunel'
-# Checking out the configuration
-
 parser = OptionParser()
 parser.add_option("-a", "--analysisType", type="string",
-                  help="type of analyses (DelayScan, Pedestals)",
+                  help="Type of analysis (DelayScan, Pedestals)",
                   dest="analysisType")
 
 parser.add_option("-r", "--runNumber", type="string",
@@ -25,11 +19,11 @@ parser.add_option("-n", "--NumberOfEvents", type="int",
                   dest="NumberOfEvents" , default = -1)
 
 parser.add_option( "--minBx", type="int",
-                  help="minimum bxID to consider",
+                  help="Minimum bxID to consider",
                   dest="minBx" , default = 0)
 
 parser.add_option( "--maxBx", type="int",
-                  help="maximum bxID to consider",
+                  help="Maximum bxID to consider",
                   dest="maxBx" , default = 10000)
 
 parser.add_option("-d", "--DataDirectory", type="string",
@@ -48,9 +42,9 @@ parser.add_option("-t", "--TAE", type="int",
                   help="TAE mode, number of prev and next",
                   dest="TAE", default = -1 )
 
-
 options, arguments = parser.parse_args()
 
+# Get the input file names.
 listOfFiles = []
 for runNumber in  options.runNumber.split(','):
   dirname =options.DataDirectory+'/'+runNumber
@@ -65,14 +59,20 @@ for runNumber in  options.runNumber.split(','):
 if len(options.runNumber.split(','))>1:
    options.runNumber = options.runNumber.split(',')[0]+'_'+options.runNumber.split(',')[-1]
 
+from Gaudi.Configuration import *
+
+from Configurables import LHCbApp
+lhcbApp = LHCbApp()
+
 EventSelector().PrintFreq = 100000
 EventSelector().Input = listOfFiles
 
+# Set up the raw bank decoder(s)
 from DAQSys.DecoderClass import Decoder
 DecoderDB = {}
 
 if options.TAE > 0:
-  for k in ['Prev','Next']:
+  for k in ['Prev', 'Next']:
     for i in range(options.TAE):
       location = k + repr(options.TAE - i)
       decoderName = "HCRawBankDecoder/HCRawBankDecoder" + location
@@ -86,7 +86,6 @@ if options.TAE > 0:
               conf = DecoderDB)
       conf = dec.setup()
 
-
 decoderName = "HCRawBankDecoder/HCRawBankDecoder"
 dec = Decoder(decoderName,
               active = True, banks = ["HC"],
@@ -98,23 +97,23 @@ dec = Decoder(decoderName,
               conf = DecoderDB)
 conf = dec.setup()
 
-
 from GaudiPython.Bindings import AppMgr
 appMgr = AppMgr()
+
+# Set the output histogram and tuple files. 
 appMgr.HistogramPersistency = "ROOT"
 hpSvc = appMgr.service('HistogramPersistencySvc')
 hpSvc.OutputFile = 'scan_'+options.runNumber+'.root'
 
 ntSvc = appMgr.ntupleSvc()
-ntSvc.Output     = [ "FILE1 DATAFILE='"+options.OutputDirectory+'/'+options.runNumber+"/HC_Digits_run"+options.runNumber+".root'  TYP='ROOT'  OPT='NEW'" ]
-
+ntSvc.Output = ["FILE1 DATAFILE='" + options.OutputDirectory + '/' + options.runNumber + "/HC_Digits_run" + options.runNumber + ".root'  TYP='ROOT' OPT='NEW'"]
 
 eventTimeDecoder = appMgr.toolsvc().create("OdinTimeDecoder", interface = "IEventTimeDecoder")
 
+# Add the required algorithms to the sequence.
 appMgr.addAlgorithm('LbAppInit')
 
 from Configurables import HCRawBankDecoder
-
 if options.TAE > 0:
   for k in ['Prev','Next']:
     for i in range(options.TAE):
@@ -123,9 +122,6 @@ if options.TAE > 0:
       appMgr.addAlgorithm(decoderName)
 
 appMgr.addAlgorithm("HCRawBankDecoder/HCRawBankDecoder")
-
-
-
 
 if options.analysisType == 'DelayScan':
   from Configurables import HCClockScan
@@ -143,10 +139,9 @@ if options.analysisType == 'DelayScan':
   appMgr.algorithm('HCClockScan').ADCClkPitch = 2
   appMgr.algorithm('HCClockScan').DigitLocation = ["Raw/HC/Digits","Prev1/Raw/HC/Digits","Next1/Raw/HC/Digits"]
   appMgr.algorithm('HCClockScan').CentralThreshold = 0
-  appMgr.algorithm('HCClockScan').BxRange = [options.minBx,options.maxBx]
+  appMgr.algorithm('HCClockScan').BxRange = [options.minBx, options.maxBx]
 
 elif  options.analysisType == 'Pedestals':
-  print '############################################# P'
   from Configurables import HCDigitMonitor
   appMgr.addAlgorithm("HCDigitMonitor")
   appMgr.algorithm('HCDigitMonitor').CrateB = 0
@@ -157,7 +152,8 @@ elif  options.analysisType == 'Pedestals':
   appMgr.algorithm('HCDigitMonitor').ChannelsF2 = [47, 46, 45, 44]
   appMgr.algorithm('HCDigitMonitor').ChannelsF1 = [27, 26, 25, 24]
   appMgr.algorithm('HCDigitMonitor').MinBx = options.minBx
-  appMgr.algorithm('HCDigitMonitor').MaxBx =  options.maxBx
+  appMgr.algorithm('HCDigitMonitor').MaxBx = options.maxBx
 
+# Go!
 appMgr.run(options.NumberOfEvents)
 

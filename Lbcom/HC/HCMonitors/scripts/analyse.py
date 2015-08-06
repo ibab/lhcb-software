@@ -40,10 +40,9 @@ parser.add_option( "--PedestalOffset", type="int",
                   help="Offset to apply to the pedestals",
                   dest="PedestalOffset" , default = 0)
 
-
 parser.add_option( "--BrunelScriptName", type="string",
                   help="Name of the Brunel script", 
-                  dest="BrunelScriptName",default =  'clockScan.py')
+                  dest="BrunelScriptName", default = 'clockScan.py')
 parser.add_option( "--Directory", type="string",
                   help="Reference directory for analysed runs", 
                   dest="Directory",default = '/home/herschel/AnalysedRuns')
@@ -52,8 +51,6 @@ parser.add_option( "--DataDirectory", type="string",
                   dest="DataDirectory", default = "/daqarea/lhcb/data/2015/RAW/FULL/HRC/TEST")
 
 Results = {}
-
-
 
 stations = ['B0','B1','B2','F1','F2']
 for s in stations:
@@ -256,7 +253,7 @@ if options.analysisType == 'DelayScan':
 
     ftex.write("""   
         \\frame{
-        \\frametitle{For reciepe .conf file}
+        \\frametitle{For recipe .conf file}
        \\begin{itemize}
        \\item B side \\\\
        Delay\\_Chip\\_0 """+ str(int(Results['B0']['VFEClock']+ Results['B2']['VFEClock'])/2)+""" """+str(Results['B1']['VFEClock'])+""" 11 17 \\\\

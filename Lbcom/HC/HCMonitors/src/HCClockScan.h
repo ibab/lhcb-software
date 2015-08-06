@@ -6,9 +6,6 @@
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IProfile1D.h"
 
-#include "TH2D.h"
-#include "TProfile.h"
-
 // Local
 #include "HCMonitorBase.h"
 
@@ -20,6 +17,12 @@
 
 class HCClockScan : public HCMonitorBase {
  public:
+  /// Optimisation schemes
+  enum Scheme {
+    AbsoluteMax, ///< Use max. ADC value
+    RelativeMax  ///< Use ratio between max. and second max. ADC value
+  };
+
   /// Standard constructor
   HCClockScan(const std::string& name, ISvcLocator* pSvcLocator);
   /// Destructor
@@ -43,15 +46,17 @@ class HCClockScan : public HCMonitorBase {
   std::vector<std::string> m_quadrants;
   std::vector<std::string> m_slots;
 
-  /// Quadrants ADCs per channels and tae slot
-  std::vector<std::vector<std::vector<TProfile*>>> m_adcs;
-  std::vector<std::vector<std::vector<std::vector<TH1D*>>>> m_adcsPerStep;
-  std::vector<std::vector<TH2D*>> m_scanResults;
-  std::vector<std::vector<TH2D*>> m_scanOffset;
+  /// Quadrants ADCs per channel and TAE slot
+  std::vector<std::vector<std::vector<AIDA::IProfile1D*> > > m_adcs;
+  std::vector<std::vector<std::vector<std::vector<AIDA::IHistogram1D*> > > > m_adcsPerStep;
+  std::vector<std::vector<AIDA::IHistogram2D*> > m_results;
+  std::vector<std::vector<AIDA::IHistogram2D*> > m_offsets;
+  std::vector<AIDA::IHistogram2D*> m_resultsStation;
 
   int m_stepCounter;
   int m_stepEvtCounter;
-  float m_centralThreshold;
+  /// Flag for optimisation scheme
+  bool m_relativeMax;
 };
 
 #endif

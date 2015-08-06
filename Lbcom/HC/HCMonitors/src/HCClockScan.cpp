@@ -1,3 +1,7 @@
+// ROOT (needed?)
+#include "TH2D.h"
+#include "TProfile.h"
+
 // Gaudi
 #include "GaudiUtils/HistoLabels.h"
 #include "GaudiUtils/Aida2ROOT.h"
@@ -23,9 +27,10 @@ HCClockScan::HCClockScan(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("DigitLocations", m_digitLocations);
   declareProperty("MinimumStepNr", m_minStep = 0);
   declareProperty("MaximumStepNr", m_maxStep);
-  declareProperty("VFEClkPitch", m_VFEClkPitch);
-  declareProperty("ADCClkPitch", m_ADCClkPitch);
-  declareProperty("CentralThreshold", m_centralThreshold);
+  declareProperty("VFEClkPitch", m_VFEClkPitch = 1);
+  declareProperty("ADCClkPitch", m_ADCClkPitch = 2);
+  declareProperty("RelativeMax", m_relativeMax = true);
+
 }
 
 //=============================================================================
@@ -43,60 +48,60 @@ StatusCode HCClockScan::initialize() {
   if (sc.isFailure()) return sc;
 
   // Setup the histograms.
-  std::vector<std::string> m_stations = {"B0", "B1", "B2", "F1", "F2"};
-  std::vector<std::string> m_slots = {"Central", "Previous", "Next"};
-  std::vector<std::string> m_quadrants = {"0", "1", "2", "3"};
+  m_stations = {"B0", "B1", "B2", "F1", "F2"};
+  m_slots = {"Central", "Previous", "Next"};
+  m_quadrants = {"0", "1", "2", "3"};
   const unsigned int nStations = m_stations.size();
   const unsigned int nQuadrants = m_quadrants.size();
-  for (unsigned int j = 0; j < 3; ++j) {
-    std::vector<std::vector<TProfile*>> myAdcsSt;
-    std::vector<std::vector<std::vector<TH1D*>>> myAdcsSt_step;
+  const unsigned int nSlots = m_slots.size();
+  m_adcs.resize(nSlots);
+  m_adcsPerStep.resize(nSlots);
+  for (unsigned int j = 0; j < nSlots; ++j) {
+    m_adcs[j].resize(nStations);
+    m_adcsPerStep[j].resize(nStations);
     for (unsigned int i = 0; i < nStations; ++i) {
-      std::vector<TProfile*> myAdcs;
-      std::vector<std::vector<TH1D*>> myAdcs_step;
+      m_adcs[j][i].resize(nQuadrants);
+      m_adcsPerStep[j][i].resize(nQuadrants);
       for (unsigned int k = 0; k < nQuadrants; ++k) {
-        // Book histograms for ADC sum distributions for each station.
         const std::string quad = m_quadrants[k];
         const std::string st = m_stations[i];
         const std::string sl = m_slots[j];
         std::string name = "ADC/" + sl + "/" + st + "/" + quad;
-        myAdcs.push_back(Gaudi::Utils::Aida2ROOT::aida2root(
-            bookProfile1D(name, name, m_minStep - 0.5, m_maxStep + 0.5,
-                          m_maxStep - m_minStep + 1)));
-        std::vector<TH1D*> perstep;
+        const double low = m_minStep - 0.5;
+        const double high = m_maxStep + 0.5;
+        const unsigned int bins = m_maxStep - m_minStep + 1;
+        m_adcs[j][i][k] = bookProfile1D(name, name, low, high, bins); 
+        setAxisLabels(m_adcs[j][i][k], "Step Number", "ADC Mean");
         for (int kk = m_minStep; kk < m_maxStep; kk++) {
-          std::string u = std::to_string(kk);
-          std::string name = "ADC/" + u + "/" + st + "/" + quad + "/" + sl;
-          perstep.push_back(Gaudi::Utils::Aida2ROOT::aida2root(
-              book1D(name, name, -0.5, 1023 + 0.5, 1024)));
+          std::string name = "ADC/" + std::to_string(kk) + "/" + st + "/" + quad + "/" + sl;
+          m_adcsPerStep[j][i][k].push_back(book1D(name, name, -0.5, 1023.5, 1024));
         }
-        myAdcs_step.push_back(perstep);
-        // setAxisLabels(myAdcs[i], "Step Number", "ADC Mean");
       }
-      myAdcsSt.push_back(myAdcs);
-      myAdcsSt_step.push_back(myAdcs_step);
     }
-    m_adcs.push_back(myAdcsSt);
-    m_adcsPerStep.push_back(myAdcsSt_step);
   }
+  m_results.resize(nStations);
+  m_offsets.resize(nStations);
+  m_resultsStation.resize(nStations);
   for (unsigned int i = 0; i < nStations; ++i) {
-    std::vector<TH2D*> myScan;
-    std::vector<TH2D*> myScanOff;
+    const std::string st = m_stations[i];
+    const double low = -0.5;
+    const double high = 31.5;
+    const unsigned int bins = 32; 
+    std::string name = "SCAN/" + st;
+    m_resultsStation[i] = book2D(name, name, low, high, bins, low, high, bins);
+    m_results[i].resize(nQuadrants);
+    m_offsets[i].resize(nQuadrants);
     for (unsigned int k = 0; k < nQuadrants; ++k) {
-      // Book histograms for ADC sum distributions for each station.
       const std::string quad = m_quadrants[k];
-      const std::string st = m_stations[i];
-      const std::string name = "SCAN/" + st + quad;
-      myScan.push_back(Gaudi::Utils::Aida2ROOT::aida2root(
-          book2D(name, name, -0.5, 31.5, 32, -0.5, 31.5, 32)));
-      const std::string nameO = "OFFSET/" + st + quad;
-      myScanOff.push_back(Gaudi::Utils::Aida2ROOT::aida2root(
-          book2D(nameO, nameO, -0.5, 31.5, 32, -0.5, 31.5, 32)));
-      // setAxisLabels(myScan[i], "VFE Clock delay", "ADC Clock delay", "Average");
-      // setAxisLabels(myScanOff[i], "VFE Clock delay", "ADC Clock delay","L0 Latency offset");
+      std::string name = "SCAN/" + st + quad;
+      m_results[i][k] = book2D(name, name, low, high, bins, low, high, bins);
+      name = "OFFSET/" + st + quad;
+      m_offsets[i][k] = book2D(name, name, low, high, bins, low, high, bins);
+      const std::string titlex = "VFE clock delay";
+      const std::string titley = "ADC clock delay";
+      setAxisLabels(m_results[i][k], titlex, titley);
+      setAxisLabels(m_offsets[i][k], titlex, titley);
     }
-    m_scanResults.push_back(myScan);
-    m_scanOffset.push_back(myScanOff);
   }
 
   m_stepCounter = m_minStep;
@@ -131,8 +136,6 @@ StatusCode HCClockScan::execute() {
   ++m_stepEvtCounter;
   */
 
-  // std::vector<bool> hasAboveThresholdCentralB(64, true);
-  // std::vector<bool> hasAboveThresholdCentralF(64, true);
   const unsigned int nLocations = m_digitLocations.size();
   for (unsigned int i = 0; i < nLocations; ++i) {
     const std::string location = m_digitLocations[i];
@@ -149,34 +152,21 @@ StatusCode HCClockScan::execute() {
       unsigned int quadrant = 0;
       unsigned int offset = 0;
       if (crate == m_crateB) {
-        // if (m_digitLocations[i].compare("Raw/HC/Digits") == 0 &&
-        //     adc < 400) {
-        //   hasAboveThresholdCentralB[channel] = false;
-        // }
         if (!m_mappedB[channel]) continue;
-        // if (!hasAboveThresholdCentralB[channel]) continue;
         station = m_stationB[channel];
         quadrant = m_quadrantB[channel];
       } else if (crate == m_crateF) {
-        // if (m_digitLocations[i].compare("Raw/HC/Digits") == 0 &&
-        //     adc < 400) {
-        //   hasAboveThresholdCentralF[channel] = false;
-        // }
         if (!m_mappedF[channel]) continue;
-        // if (!hasAboveThresholdCentralF[channel]) continue;
         station = m_stationF[channel];
         quadrant = m_quadrantF[channel];
         offset = 2;
       } else {
         warning() << "Unexpected crate number (" << crate << ")" << endmsg;
       }
-      // if (station == 0 && quadrant == 0 && offset == 0)
-      //   always() << m_digitLocations[i] << " "
-      //            << m_adcs[i][station + offset][quadrant] << " " << adc
-      //            << endmsg;
       const unsigned int index = station + offset;
-      m_adcs[i][index][quadrant]->Fill(step, fadc(adc));
-      m_adcsPerStep[i][index][quadrant][step - m_minStep]->Fill(fadc(adc));
+      const double value = fadc(adc);
+      m_adcs[i][index][quadrant]->fill(step, value);
+      m_adcsPerStep[i][index][quadrant][step - m_minStep]->fill(value);
     }
   }
   return StatusCode::SUCCESS;
@@ -186,29 +176,43 @@ StatusCode HCClockScan::execute() {
 // Main execution
 //=============================================================================
 StatusCode HCClockScan::finalize() {
-  /*
-  for (unsigned int i = 0; i < m_stations.size(); ++i) {
-    for (unsigned int k = 0; k < m_quadrants.size(); ++k) {
-      for (int ix = 0; ix < m_adcs[0][i][k]->GetNbinsX() + 1; ++ix) {
-        int step = (int)m_adcs[0][i][k]->GetXaxis()->GetBinCenter(ix);
-        int vfeclk = (step + m_minStep) % (32 / m_VFEClkPitch);
-        int adcclk = (step + m_minStep) / (32 / m_ADCClkPitch);
-        double adcmax = -1.;
+
+  const unsigned int nStations = m_stations.size();
+  const unsigned int nQuadrants = m_quadrants.size();
+  const unsigned int nBins = m_maxStep - m_minStep + 1;
+  for (unsigned int i = 0; i < nStations; ++i) {
+    for (unsigned int k = 0; k < nQuadrants; ++k) {
+      for (unsigned int bin = 0; bin < nBins; ++bin) {
+        const unsigned int step = m_minStep + bin;
+        const int vfe = step % (32 / m_VFEClkPitch);
+        const int adc = step / (32 / m_ADCClkPitch);
+        double adcMax = -1.;
+        double adcSecondMax = -1.;
         int bestslot = -2;
         for (unsigned int j = 0; j < 3; ++j) {
-          double val = m_adcs[j][i][k]->GetBinContent(
-              m_adcs[j][i][k]->GetXaxis()->FindBin(step));
-          if (val > adcmax) {
-            adcmax = val;
+          double val = m_adcs[j][i][k]->binMean(bin);
+          if (val > adcMax) {
+            adcSecondMax = adcMax;
+            adcMax = val;
             bestslot = j - 1;
+          } else if (val > adcSecondMax) {
+            adcSecondMax = val;
           }
-          m_scanResults[i][k]->Fill(vfeclk, adcclk, adcmax);
-          m_scanOffset[i][k]->Fill(vfeclk, adcclk, bestslot);
         }
+        if (m_relativeMax) {
+          if (adcMax <= 0. && adcSecondMax <= 0.) {
+            adcMax = 0.;
+          } else if (adcSecondMax <= 0.) {
+            adcMax = 1.;
+          } else {
+            adcMax = adcMax / adcSecondMax;
+          }
+        }
+        m_results[i][k]->fill(vfe, adc, adcMax);
+        m_offsets[i][k]->fill(vfe, adc, bestslot);
+        m_resultsStation[i]->fill(vfe, adc, adcMax);
       }
     }
   }
-  */
-
   return HCMonitorBase::finalize();
 }
