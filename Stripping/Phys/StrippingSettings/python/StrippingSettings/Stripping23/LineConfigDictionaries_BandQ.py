@@ -983,12 +983,162 @@ PromptCharm = {
     'WGs'           : ['BandQ'],
     'BUILDERTYPE'   : 'StrippingPromptCharmConf',
     'CONFIG'        : {
+    #
+    # use for simulation:
+    'NOPIDHADRONS'   : False   , 
+    #
+    ## PT-cuts
+    ## attention: with 1GeV pt-cut prescale is needed for D0,D+,D*+ and Ds
+    #
+    'pT(D0)'     :  1.0 * GeV ,    ## pt-cut for  prompt   D0
+    'pT(D+)'     :  1.0 * GeV ,    ## pt-cut for  prompt   D+
+    'pT(Ds+)'    :  1.0 * GeV ,    ## pt-cut for  prompt   Ds+
+    'pT(Lc+)'    :  1.0 * GeV ,    ## pt-cut for  prompt   Lc+
+    'pT(Xic0)'   :  1.0 * GeV ,    ## pt-cut for  prompt   Xic0/Omegac0
+    'pT(Omgcc)'  :  2.0 * GeV ,    ## pt-cut for  prompt   Omegacc
+    #
+    'pT(D0->HH)' :  1.0 * GeV ,    ## pt-cut for  prompt   D0->KK,pipi models 
+    #
+    # Selection of basic particles
+    #
+    'TrackCut' : """
+    ( CLONEDIST   > 5000      ) &
+    ( TRGHOSTPROB < 0.5       ) &
+    in_range ( 2  , ETA , 4.9 ) &
+    HASRICH
+    """ ,
+    # 
+    'PionCut'   : """
+    ( PT          > 250 * MeV ) & 
+    ( CLONEDIST   > 5000      ) & 
+    ( TRGHOSTPROB < 0.5       ) &
+    in_range ( 2          , ETA , 4.9       ) &
+    in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
+    HASRICH                     &
+    ( MIPCHI2DV()  > 9        )
+    """ ,
+    #
+    'KaonCut'   : """
+    ( PT          > 250 * MeV ) & 
+    ( CLONEDIST   > 5000      ) & 
+    ( TRGHOSTPROB < 0.5       ) &
+    in_range ( 2          , ETA , 4.9       ) &
+    in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
+    HASRICH                     &
+    ( MIPCHI2DV()  > 9        )
+    """ ,
+    #
+    'ProtonCut'   : """
+    ( PT           > 250 * MeV ) & 
+    ( CLONEDIST    > 5000      ) & 
+    ( TRGHOSTPROB  < 0.5       ) & 
+    in_range ( 2         , ETA , 4.9       ) &
+    in_range ( 10 * GeV  , P   , 150 * GeV ) &
+    HASRICH                      &
+    ( MIPCHI2DV()  > 9         ) 
+    """ ,
+    ##
+    'MuonCut'   : """
+    ISMUON &
+    in_range ( 2 , ETA , 4.9     ) &
+    ( PT            >  550 * MeV ) &
+    ( PIDmu - PIDpi >    0       ) &
+    ( CLONEDIST     > 5000       )     
+    """ ,
+    ## cust for prompt kaon
+    'PromptKaonCut'   : """
+    ( CLONEDIST   > 5000         ) & 
+    ( TRGHOSTPROB < 0.5          ) &
+    in_range ( 2          , ETA , 4.9       ) &
+    in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
+    HASRICH                     
+    """ ,
+    #
+    ## PID-cuts for hadrons 
+    #
+    'PionPIDCut'   : " PROBNNpi > 0.1 " ,
+    'KaonPIDCut'   : " PROBNNk  > 0.1 " ,
+    'ProtonPIDCut' : " PROBNNp  > 0.1 " ,
+    'PhotonCLCut'  : 0.05,
+    ##
+    #
+    ## photons from chi_(c,b)
+    #
+    'GammaChi'        : " ( PT > 400 * MeV ) & ( CL > 0.05 ) " ,
+    #
+    ## W+- selection
+    #
+    'WCuts'           : " ( 'mu+'== ABSID ) & ( PT > 15 * GeV )" ,
+    #
+    # Global Event cuts
+    #
+    'CheckPV'         : True ,
+    #
+    # Technicalities:
+    #
+    'Preambulo'       : [
+    # the D0 decay channels
+    "pipi   = DECTREE ('[D0]cc -> pi- pi+   ') " ,
+    "kk     = DECTREE ('[D0]cc -> K-  K+    ') " ,
+    "kpi    = DECTREE ('[D0    -> K-  pi+]CC') " ,
+    # number of kaons in final state (as CombinationCuts)
+    "ak2    = 2 == ANUM( 'K+' == ABSID ) "       ,
+    # shortcut for chi2 of vertex fit
+    'chi2vx = VFASPF(VCHI2) '                    ,
+    # shortcut for the c*tau
+    "from GaudiKernel.PhysicalConstants import c_light" ,
+    "ctau     = BPVLTIME (   9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
+    "ctau_9   = BPVLTIME (   9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
+    "ctau_16  = BPVLTIME (  16 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<16
+    "ctau_25  = BPVLTIME (  25 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<25
+    "ctau_100 = BPVLTIME ( 100 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<100
+    "ctau_no  = BPVLTIME (     ) * c_light "  , ## no embedded cut for chi2(lifetimeFit)
+    # dimuons:
+    "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV"  ,
+    "psi_prime     =   ADAMASS (  'psi(2S)') < 150 * MeV"  ,
+    ] ,
+    # Q Values:
+    'QvalueXiCK'     :  500 * MeV ,
+    'QvalueXiCprime' :  250 * MeV ,
+    'QvalueXiCstar'  :  150 * MeV ,
+    'QvalueXiCPiK'   :  500 * MeV ,
+    'QvalueXiCprimeK':  500 * MeV ,
+    'QvalueOmegaCC'  : 4100 * MeV ,
+    ## monitoring ?
+    'Monitor'     : False ,
+    ## pescales
     'D0Prescale'             : 0.1,#0.05 ,
     'D+Prescale'             : 0.2,#0.05 ,
     'D*Prescale'             : 0.3,#0.1 ,
     'DsPrescale'             : 0.5 ,#0.5
+    'LambdaCPrescale'          : 1.0 ,
+    'XiC0Prescale'             : 1.0 ,
+    'OmegaC0Prescale'          : 1.0 ,
+    'LambdaCpKKPrescale'       : 1.0 ,
+    'LambdaC*Prescale'         : 1.0 ,
+    'OmegaC*Prescale'          : 1.0 ,
+    'XiCprimePrescale'         : 1.0 ,
+    'XiC*Prescale'             : 1.0 ,
+    'OmegaC*2XiCPiKPrescale'   : 1.0 ,
+    'OmegaC*2XiCprimeKPrescale': 1.0 ,
+    'OmegaCCPrescale'          : 1.0 ,
+    'SigmaCPrescale'           : 1.0 ,
+    'Xic02LcPiPrescale'        : 1.0 ,
+    #
+    'OmegaCCKpiPrescale'       : 1.0 ,
+    'OmegaCCKKPrescale'        : 1.0 ,
+    ##
     'D02KKPrescale'          : 1.0 ,#0.1
-    'D02pipiPrescale'        : 1.0 #0.1
+    'D02pipiPrescale'        : 1.0, #0.1
+    'D*CPPrescale'             : 1.0 ,
+    ##
+    'DiCharmPrescale'          : 1.0 ,
+    'DiMu&CharmPrescale'       : 1.0 ,
+    'DoubleDiMuPrescale'       : 1.0 ,
+    'Chi&CharmPrescale'        : 1.0 ,
+    'Charm&WPrescale'          : 1.0 ,
+    'DiMuon&WPrescale'         : 1.0 ,
+    'Chi&WPrescale'            : 1.0 ,
     ## ========================================================================
     },
     'STREAMS'     : { 'Charm'    : [ 'StrippingD02KpiForPromptCharm'              , 
