@@ -226,6 +226,7 @@ void FitAmpPairList::Gradient(MinuitParameterSet* mps, Double_t* grad){
             complex<double> sum(0);
             for(unsigned int j=0; j< this->size(); j++){
                 if(!A_is_in_B(name_i,(*this)[j].name())) continue;
+                if(A_is_in_B("Inco", name_i) != A_is_in_B("Inco",(*this)[j].name()) ) continue;
                 double singleAmpCorrection= 1.;
                 if((*this)[j].isSingleAmp()) singleAmpCorrection = 2.;
                 // 2 a_j^* A_i A_j^*
