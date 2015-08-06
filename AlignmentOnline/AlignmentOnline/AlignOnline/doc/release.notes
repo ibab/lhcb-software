@@ -3,6 +3,11 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-08-06 - Giulio Dujany
+ - ADSCollector delete Escher output after reading it
+ - disable run check handler
+ - set to -1 the number of events to run over to avoid 1 message per analyser
+
 </PRE><H1><A NAME=v1r5>2015-07-30 AlignOnline v1r5</A></H1><PRE>
 
 ! 2015-07-30 - Maurizio Martinelli

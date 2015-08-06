@@ -121,7 +121,7 @@ def setupOnline(directory, prefix, filename):
   sel.PauseSleep = 5000
   sel.AllowedRuns = Online.DeferredRuns if hasattr(Online, "DeferredRuns") else []
   app.EvtSel  = sel
-  app.EvtMax = 400
+  app.EvtMax = -1
   Online.rawPersistencySvc()
   evtloop = Configs.EventLoopMgr('EventLoopMgr')
   evtloop.Warnings = False
@@ -139,6 +139,10 @@ def setupOnline(directory, prefix, filename):
   mon = __MonAdd()
   Gaudi.appendPostConfigAction(mon.addMonitors)
   app.OutputLevel = MSG_INFO
+
+  # Disable run check handler otherwise complain that database not up to date
+  cdb = CondDB()
+  cdb.EnableRunStampCheck = False
   # print sel
 
 #============================================================================================================
