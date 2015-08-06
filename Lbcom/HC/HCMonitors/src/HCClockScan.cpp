@@ -72,7 +72,7 @@ StatusCode HCClockScan::initialize() {
         const unsigned int bins = m_maxStep - m_minStep + 1;
         m_adcs[j][i][k] = bookProfile1D(name, name, low, high, bins); 
         setAxisLabels(m_adcs[j][i][k], "Step Number", "ADC Mean");
-        for (int kk = m_minStep; kk < m_maxStep; kk++) {
+        for (int kk = m_minStep; kk <= m_maxStep; ++kk) {
           std::string name = "ADC/" + std::to_string(kk) + "/" + st + "/" + quad + "/" + sl;
           m_adcsPerStep[j][i][k].push_back(book1D(name, name, -0.5, 1023.5, 1024));
         }
@@ -86,17 +86,18 @@ StatusCode HCClockScan::initialize() {
     const std::string st = m_stations[i];
     const double low = -0.5;
     const double high = 31.5;
-    const unsigned int bins = 32; 
+    const unsigned int binsx = int(32 / m_VFEClkPitch); 
+    const unsigned int binsy = int(32 / m_ADCClkPitch); 
     std::string name = "SCAN/" + st;
-    m_resultsStation[i] = book2D(name, name, low, high, bins, low, high, bins);
+    m_resultsStation[i] = book2D(name, name, low, high, binsx, low, high, binsy);
     m_results[i].resize(nQuadrants);
     m_offsets[i].resize(nQuadrants);
     for (unsigned int k = 0; k < nQuadrants; ++k) {
       const std::string quad = m_quadrants[k];
       std::string name = "SCAN/" + st + quad;
-      m_results[i][k] = book2D(name, name, low, high, bins, low, high, bins);
+      m_results[i][k] = book2D(name, name, low, high, binsx, low, high, binsy);
       name = "OFFSET/" + st + quad;
-      m_offsets[i][k] = book2D(name, name, low, high, bins, low, high, bins);
+      m_offsets[i][k] = book2D(name, name, low, high, binsx, low, high, binsy);
       const std::string titlex = "VFE clock delay";
       const std::string titley = "ADC clock delay";
       setAxisLabels(m_results[i][k], titlex, titley);
@@ -126,15 +127,13 @@ StatusCode HCClockScan::execute() {
   const int step = odin->calibrationStep();
 
   if (step < m_minStep || step > m_maxStep) return StatusCode::SUCCESS;
-  /*
   if (step != m_stepCounter) {
     m_stepCounter = step;
     m_stepEvtCounter = 0;
     info() << "Step number " << step << endmsg;
   }
-  if (m_stepEvtCounter > m_maxEvtPerStep) return StatusCode::SUCCESS;
+  // if (m_stepEvtCounter > m_maxEvtPerStep) return StatusCode::SUCCESS;
   ++m_stepEvtCounter;
-  */
 
   const unsigned int nLocations = m_digitLocations.size();
   for (unsigned int i = 0; i < nLocations; ++i) {
