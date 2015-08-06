@@ -80,6 +80,8 @@ StatusCode HCClockScan::initialize() {
   m_offsets.resize(nStations);
   m_resultsStation.resize(nStations);
   for (unsigned int i = 0; i < nStations; ++i) {
+    const std::string titlex = "VFE clock delay";
+    const std::string titley = "ADC clock delay";
     const std::string st = m_stations[i];
     const double low = -0.5;
     const double high = 31.5;
@@ -87,6 +89,7 @@ StatusCode HCClockScan::initialize() {
     const unsigned int binsy = int(32 / m_ADCClkPitch); 
     std::string name = "SCAN/" + st;
     m_resultsStation[i] = book2D(name, name, low, high, binsx, low, high, binsy);
+    setAxisLabels(m_resultsStation[i], titlex, titley);
     m_results[i].resize(nQuadrants);
     m_offsets[i].resize(nQuadrants);
     for (unsigned int k = 0; k < nQuadrants; ++k) {
@@ -95,8 +98,6 @@ StatusCode HCClockScan::initialize() {
       m_results[i][k] = book2D(name, name, low, high, binsx, low, high, binsy);
       name = "OFFSET/" + st + quad;
       m_offsets[i][k] = book2D(name, name, low, high, binsx, low, high, binsy);
-      const std::string titlex = "VFE clock delay";
-      const std::string titley = "ADC clock delay";
       setAxisLabels(m_results[i][k], titlex, titley);
       setAxisLabels(m_offsets[i][k], titlex, titley);
     }
@@ -125,7 +126,7 @@ StatusCode HCClockScan::execute() {
   if (step < m_minStep || step > m_maxStep) return StatusCode::SUCCESS;
   if (step != m_stepCounter) {
     m_stepCounter = step;
-    info() << "Step number " << step << endmsg;
+    if (msgLevel(MSG::DEBUG)) debug() << "Step number " << step << endmsg;
   }
 
   const unsigned int nLocations = m_digitLocations.size();
