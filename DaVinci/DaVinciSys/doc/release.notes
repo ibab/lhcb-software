@@ -3,6 +3,12 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v37r1p1>2015-08-07 DaVinci v37r1p1</A></H1><PRE>
+
+Patch release identical to v37r1 except that it depends on Stripping v9r9p1
+rather than v9r9 on which v37r1 depends (needed to avoid an inconsistency in the
+dependencies on the Phys project).
+
 </PRE><H1><A NAME=v37r1>2015-08-07 DaVinci v37r1</A></H1><PRE>
 
 Development release for the 2015 25ns data taking, based on Gaudi v26r3, LHCb v39r0, Lbcom v17r0, Rec v18r1,
