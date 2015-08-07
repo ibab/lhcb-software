@@ -27,6 +27,7 @@ HCClockScan::HCClockScan(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("ADCClkPitch", m_ADCClkPitch = 2);
   declareProperty("RelativeMax", m_relativeMax = true);
   declareProperty("Noise", m_noise = false);
+  declareProperty("SplitEvenOdd", m_splitEvenOdd = false);
 
 }
 
@@ -52,12 +53,24 @@ StatusCode HCClockScan::initialize() {
   const unsigned int nQuadrants = m_quadrants.size();
   const unsigned int nSlots = m_slots.size();
   m_adcs.resize(nSlots);
+  if (m_splitEvenOdd) {
+    m_adcsEven.resize(nSlots);
+    m_adcsOdd.resize(nSlots);
+  }
   m_adcsPerStep.resize(nSlots);
   for (unsigned int j = 0; j < nSlots; ++j) {
     m_adcs[j].resize(nStations);
+    if (m_splitEvenOdd) {
+      m_adcsEven[j].resize(nStations);
+      m_adcsOdd[j].resize(nStations);
+    }
     m_adcsPerStep[j].resize(nStations);
     for (unsigned int i = 0; i < nStations; ++i) {
       m_adcs[j][i].resize(nQuadrants);
+      if (m_splitEvenOdd) {
+        m_adcsEven[j][i].resize(nQuadrants);
+        m_adcsEven[j][i].resize(nQuadrants);
+      } 
       m_adcsPerStep[j][i].resize(nQuadrants);
       for (unsigned int k = 0; k < nQuadrants; ++k) {
         const std::string quad = m_quadrants[k];
@@ -69,8 +82,16 @@ StatusCode HCClockScan::initialize() {
         const unsigned int bins = m_maxStep - m_minStep + 1;
         m_adcs[j][i][k] = bookProfile1D(name, name, low, high, bins); 
         setAxisLabels(m_adcs[j][i][k], "Step Number", "ADC Mean");
+        if (m_splitEvenOdd) {
+          name = "ADC/EVEN/" + sl + "/" + st + "/" + quad;
+          m_adcsEven[j][i][k] = bookProfile1D(name, name, low, high, bins);
+          name = "ADC/ODD/" + sl + "/" + st + "/" + quad;
+          m_adcsOdd[j][i][k] = bookProfile1D(name, name, low, high, bins);
+          setAxisLabels(m_adcsEven[j][i][k], "Step Number", "ADC Mean");
+          setAxisLabels(m_adcsOdd[j][i][k], "Step Number", "ADC Mean");
+        } 
         for (int kk = m_minStep; kk <= m_maxStep; ++kk) {
-          std::string name = "ADC/" + std::to_string(kk) + "/" + st + "/" + quad + "/" + sl;
+          name = "ADC/" + std::to_string(kk) + "/" + st + "/" + quad + "/" + sl;
           m_adcsPerStep[j][i][k].push_back(book1D(name, name, -0.5, 1023.5, 1024));
         }
       }
@@ -79,6 +100,14 @@ StatusCode HCClockScan::initialize() {
   m_results.resize(nStations);
   m_offsets.resize(nStations);
   m_resultsStation.resize(nStations);
+  if (m_splitEvenOdd) {
+    m_resultsEven.resize(nStations);
+    m_offsetsEven.resize(nStations);
+    m_resultsStationEven.resize(nStations);
+    m_resultsOdd.resize(nStations);
+    m_offsetsOdd.resize(nStations);
+    m_resultsStationOdd.resize(nStations);
+  }
   for (unsigned int i = 0; i < nStations; ++i) {
     const std::string titlex = "VFE clock delay";
     const std::string titley = "ADC clock delay";
@@ -92,14 +121,35 @@ StatusCode HCClockScan::initialize() {
     setAxisLabels(m_resultsStation[i], titlex, titley);
     m_results[i].resize(nQuadrants);
     m_offsets[i].resize(nQuadrants);
+    if (m_splitEvenOdd) {
+      name = "SCAN/EVEN/" + st;
+      m_resultsStationEven[i] = book2D(name, name, low, high, binsx, low, high, binsy);
+      setAxisLabels(m_resultsStationEven[i], titlex, titley);
+      name = "SCAN/ODD/" + st;
+      m_resultsStationOdd[i] = book2D(name, name, low, high, binsx, low, high, binsy);
+      setAxisLabels(m_resultsStationOdd[i], titlex, titley);
+    }
     for (unsigned int k = 0; k < nQuadrants; ++k) {
       const std::string quad = m_quadrants[k];
-      std::string name = "SCAN/" + st + quad;
+      name = "SCAN/" + st + quad;
       m_results[i][k] = book2D(name, name, low, high, binsx, low, high, binsy);
       name = "OFFSET/" + st + quad;
       m_offsets[i][k] = book2D(name, name, low, high, binsx, low, high, binsy);
       setAxisLabels(m_results[i][k], titlex, titley);
       setAxisLabels(m_offsets[i][k], titlex, titley);
+      if (!m_splitEvenOdd) continue;
+      name = "SCAN/EVEN/" + st + quad;
+      m_resultsEven[i][k] = book2D(name, name, low, high, binsx, low, high, binsy);
+      name = "OFFSET/EVEN/" + st + quad;
+      m_offsetsEven[i][k] = book2D(name, name, low, high, binsx, low, high, binsy);
+      setAxisLabels(m_resultsEven[i][k], titlex, titley);
+      setAxisLabels(m_offsetsEven[i][k], titlex, titley);
+      name = "SCAN/ODD/" + st + quad;
+      m_resultsOdd[i][k] = book2D(name, name, low, high, binsx, low, high, binsy);
+      name = "OFFSET/ODD/" + st + quad;
+      m_offsetsOdd[i][k] = book2D(name, name, low, high, binsx, low, high, binsy);
+      setAxisLabels(m_resultsOdd[i][k], titlex, titley);
+      setAxisLabels(m_offsetsOdd[i][k], titlex, titley);
     }
   }
 
@@ -121,6 +171,7 @@ StatusCode HCClockScan::execute() {
   }
   const unsigned int bxid = odin->bunchId();
   if (bxid < m_bxMin || bxid > m_bxMax) return StatusCode::SUCCESS;
+  const bool even = (bxid % 2 == 0);
   const int step = odin->calibrationStep();
 
   if (step < m_minStep || step > m_maxStep) return StatusCode::SUCCESS;
@@ -160,13 +211,19 @@ StatusCode HCClockScan::execute() {
       const double value = fadc(adc);
       m_adcs[i][index][quadrant]->fill(step, value);
       m_adcsPerStep[i][index][quadrant][step - m_minStep]->fill(value);
+      if (!m_splitEvenOdd) continue;
+      if (even) {
+        m_adcsEven[i][index][quadrant]->fill(step, value);
+      } else {
+        m_adcsOdd[i][index][quadrant]->fill(step, value);
+      }
     }
   }
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
-// Main execution
+// Finalization
 //=============================================================================
 StatusCode HCClockScan::finalize() {
 
@@ -180,39 +237,60 @@ StatusCode HCClockScan::finalize() {
         const int vfe = step % (32 / m_VFEClkPitch);
         const int adc = int(step / 32) * m_ADCClkPitch;
         double bestValue = -1.;
-        double secondBestValue = -1.;
         int bestSlot = -2;
-        for (unsigned int j = 0; j < 3; ++j) {
-          if (m_noise) {
-            const double rms = m_adcs[j][i][k]->binError(bin);
-            if (bestValue < 0. || rms < bestValue) {
-              bestValue = rms; 
-            }
-            continue;
-          }
-          const double avg = m_adcs[j][i][k]->binHeight(bin);
-          if (avg > bestValue) {
-            secondBestValue = bestValue;
-            bestValue = avg;
-            bestSlot = j - 1;
-          } else if (avg > secondBestValue) {
-            secondBestValue = avg;
-          }
-        }
-        if (m_relativeMax && !m_noise) {
-          if (bestValue <= 0. && secondBestValue <= 0.) {
-            bestValue = 0.;
-          } else if (secondBestValue <= 0.) {
-            bestValue = 1.;
-          } else {
-            bestValue = bestValue / secondBestValue;
-          }
-        }
+        findBest(m_adcs, i, k, bin, bestValue, bestSlot);
         m_results[i][k]->fill(vfe, adc, bestValue);
         m_offsets[i][k]->fill(vfe, adc, bestSlot);
         m_resultsStation[i]->fill(vfe, adc, bestValue);
+
+        if (!m_splitEvenOdd) continue;
+        findBest(m_adcsEven, i, k, bin, bestValue, bestSlot);
+        m_resultsEven[i][k]->fill(vfe, adc, bestValue);
+        m_offsetsEven[i][k]->fill(vfe, adc, bestSlot);
+        m_resultsStationEven[i]->fill(vfe, adc, bestValue);
+        findBest(m_adcsOdd, i, k, bin, bestValue, bestSlot);
+        m_resultsOdd[i][k]->fill(vfe, adc, bestValue);
+        m_offsetsOdd[i][k]->fill(vfe, adc, bestSlot);
+        m_resultsStationOdd[i]->fill(vfe, adc, bestValue);
       }
     }
   }
   return HCMonitorBase::finalize();
+}
+
+void HCClockScan::findBest(const std::vector<std::vector<std::vector<AIDA::IProfile1D*> > >& adcs,
+                           const unsigned int station, const unsigned int quadrant,
+                           const unsigned int bin,
+                           double& bestValue, int& bestSlot) {
+
+  bestValue = -1.;
+  double secondBestValue = -1.;
+  bestSlot = -2;
+  for (unsigned int j = 0; j < 3; ++j) {
+    if (m_noise) {
+      const double rms = adcs[j][station][quadrant]->binError(bin);
+      if (bestValue < 0. || rms < bestValue) {
+        bestValue = rms; 
+      }
+      continue;
+    }
+    const double avg = adcs[j][station][quadrant]->binHeight(bin);
+    if (avg > bestValue) {
+      secondBestValue = bestValue;
+      bestValue = avg;
+      bestSlot = j - 1;
+    } else if (avg > secondBestValue) {
+      secondBestValue = avg;
+    }
+  }
+  if (m_relativeMax && !m_noise) {
+    if (bestValue <= 0. && secondBestValue <= 0.) {
+      bestValue = 0.;
+    } else if (secondBestValue <= 0.) {
+      bestValue = 1.;
+    } else {
+      bestValue = bestValue / secondBestValue;
+    }
+  }
+
 }

@@ -48,16 +48,31 @@ class HCClockScan : public HCMonitorBase {
 
   /// Quadrants ADCs per channel and TAE slot
   std::vector<std::vector<std::vector<AIDA::IProfile1D*> > > m_adcs;
+  std::vector<std::vector<std::vector<AIDA::IProfile1D*> > > m_adcsEven;
+  std::vector<std::vector<std::vector<AIDA::IProfile1D*> > > m_adcsOdd;
   std::vector<std::vector<std::vector<std::vector<AIDA::IHistogram1D*> > > > m_adcsPerStep;
   std::vector<std::vector<AIDA::IHistogram2D*> > m_results;
   std::vector<std::vector<AIDA::IHistogram2D*> > m_offsets;
   std::vector<AIDA::IHistogram2D*> m_resultsStation;
+  std::vector<std::vector<AIDA::IHistogram2D*> > m_resultsEven;
+  std::vector<std::vector<AIDA::IHistogram2D*> > m_offsetsEven;
+  std::vector<AIDA::IHistogram2D*> m_resultsStationEven;
+  std::vector<std::vector<AIDA::IHistogram2D*> > m_resultsOdd;
+  std::vector<std::vector<AIDA::IHistogram2D*> > m_offsetsOdd;
+  std::vector<AIDA::IHistogram2D*> m_resultsStationOdd;
 
   int m_stepCounter;
   /// Flag for optimisation scheme
   bool m_relativeMax;
   /// Flag to analyse noise (instead of signal)
   bool m_noise;
+  /// Flag to create separate profile histograms for even and odd BX-Ids.
+  bool m_splitEvenOdd; 
+
+  void findBest(const std::vector<std::vector<std::vector<AIDA::IProfile1D*> > >& adcs,
+                const unsigned int station, const unsigned int quadrant, 
+                const unsigned int bin,
+                double& bestValue, int& bestSlot);
 
 };
 
