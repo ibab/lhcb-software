@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-08-07 - Vanya Belyaev
+ - rewrite main ostap script, add proper argument parsing  
+
 ! 2015-08-06 - Vanya Belyaev
  - minor fix 
 

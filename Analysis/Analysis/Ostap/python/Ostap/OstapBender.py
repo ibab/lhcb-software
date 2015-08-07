@@ -62,38 +62,22 @@ __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-09-10"
 __version__ = '$Revision$'
 # =============================================================================
-import ROOT, os, sys
+import ROOT, sys
 # =============================================================================
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger
-logger = getLogger ( 'Ostap Bender' )
-# =============================================================================
-import Ostap.Line
-logger.info ( "Welcome to Ostap\n" + Ostap.Line.line )
-logger.info ( __doc__ )
+__logger = getLogger ( 'OstapBender' )
 # =============================================================================
 ## 1) load LHCb-style file
 # =============================================================================
 import Ostap.LHCbStyle 
 # =============================================================================
-if ROOT.gROOT.IsBatch() :
-    ROOT.gROOT.SetBatch ( False )
-    logger.info ( "Set 'IsBatch' to be %s " % ROOT.gROOT.IsBatch () )
-# =============================================================================
 # The Heart 
 # =============================================================================
-import Ostap.Canvas 
-logger.debug ( "Create the default canvas" )
-canvas    = Ostap.Canvas.getCanvas ()
-    
 ## load zillions of decorations for ROOT-objects 
-import Ostap.PyRoUts            ## NB: the most important line!
-import Ostap.ZipShelve as DBASE        
-# =============================================================================
-if ROOT.gROOT.IsBatch() :
-    ROOT.gROOT.SetBatch ( False )
-    logger.info("Set 'IsBatch' to be %s " % ROOT.gROOT.IsBatch () )
+import Ostap.PyRoUts             ## NB: the most important line!
+import Ostap.ZipShelve as DBASE
 
 # =============================================================================
 ## minor decoration for default shelve module 
@@ -102,19 +86,25 @@ import Ostap.shelve_ext
 # =============================================================================
 ## import useful context managers
 from Ostap.Utils import *
-
 # ============================================================================= 
 ## prepend the path 
 if '.' not in sys.path :
-    logger.debug('Prepend sys.path with $PWD')
+    __logger.debug('Prepend sys.path with $PWD')
     sys.path = ['.'] + sys.path 
-
+    
 # =============================================================================
 cpp = Ostap.PyRoUts.cpp
 VE  = Ostap.PyRoUts.VE
+hID = Ostap.PyRoUts.hID 
 # =============================================================================
 if '__main__' == __name__ :
+
+    logger = __logger
     
+    logger.info ( 80*'*' ) 
+    import Ostap.Line
+    logger.info ( "Welcome to Ostap\n" + Ostap.Line.line )
+    logger.info ( __doc__ )
     logger.info ( 80*'*' ) 
     logger.info ( ' Author  : %s' %  __author__  ) 
     logger.info ( ' Version : %s' %  __version__ ) 
