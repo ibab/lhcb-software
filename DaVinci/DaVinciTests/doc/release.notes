@@ -4,6 +4,8 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!======================= DaVinciTests v2r36 2015-08-06 =======================
+
 ! 2015-07-30 - Julian Wishahi
  - Removed the SS BDT taggers performance from the reference in 
    test_tag_mc12.qmt. 
