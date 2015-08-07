@@ -235,8 +235,126 @@ void VPlot::addColzPlot(VCustomPlot * vcp, VPlottable * plottable) {
   }
   colorMap->setColorScale(m_colorScale);
   if (!plottable->m_isRef && !plottable->m_isRefDiff) colorMap->rescaleDataRange(true);
-  colorMap->setGradient(QCPColorGradient::gpJet);
-  //Set the color gradient of the color map to one of the presets:
+
+
+
+  //Viridis time!
+	QCPColorGradient * grad = new QCPColorGradient();
+	grad->clearColorStops();
+	grad->setColorInterpolation(QCPColorGradient::ciRGB);
+//	std::string buff;
+//	std::ifstream infile;
+//	std::vector< std::vector<double> > colMap;
+//	infile.open(":/viridis.txt");
+//	while (!infile.eof()) {
+//		getline(infile, buff);
+//		std::istringstream ss(buff);
+//		std::istream_iterator<std::string> begin(ss), end;
+//		std::vector<std::string> arrayTokens(begin, end);
+//
+//		std::vector<double> ithColMap;
+//		for (uint i=0; i<arrayTokens.size(); i++) {
+//				ithColMap.push_back(std::stof(arrayTokens[i]));
+//		}
+//		colMap.push_back(ithColMap);
+//		if (colMap.size() > 255) break;
+//	}
+//
+//	double step = 1./(1.*colMap.size());
+//	for (uint i=0; i<colMap.size()-1; i++) {
+//		grad->setColorStopAt(i*step, QColor(255*colMap[i][0], 255*colMap[i][1], 255*colMap[i][2]));
+//	}
+//	std::cout<<"colMap size: "<<colMap.size()<<std::endl;
+
+	grad->setColorStopAt(0.0, QColor(68.08602255, 1.24295415, 84.00087345));
+	grad->setColorStopAt(0.01171875, QColor(69.18274695, 5.0851743, 88.5534981));
+	grad->setColorStopAt(0.0234375, QColor(70.1128671, 9.62671155, 92.95852365));
+	grad->setColorStopAt(0.03515625, QColor(70.87506465, 14.3627322, 97.2036387));
+	grad->setColorStopAt(0.046875, QColor(71.4679779, 18.7213962, 101.27668995));
+	grad->setColorStopAt(0.05859375, QColor(71.8905129, 22.8648861, 105.16587855));
+	grad->setColorStopAt(0.0703125, QColor(72.14217495, 26.87532975, 108.8600151));
+	grad->setColorStopAt(0.08203125, QColor(72.2233491, 30.79813755, 112.3489302));
+	grad->setColorStopAt(0.09375, QColor(72.13539195, 34.65961275, 115.6239717));
+	grad->setColorStopAt(0.10546875, QColor(71.8811238, 38.47477485, 118.6782087));
+	grad->setColorStopAt(0.1171875, QColor(71.4649434, 42.2516436, 121.5068931));
+	grad->setColorStopAt(0.12890625, QColor(70.8931518, 45.9935442, 124.1077401));
+	grad->setColorStopAt(0.140625, QColor(70.1737458, 49.700877, 126.4812444));
+	grad->setColorStopAt(0.15234375, QColor(69.3161706, 53.3722803, 128.63070315));
+	grad->setColorStopAt(0.1640625, QColor(68.3319573, 57.00502305, 130.562142));
+	grad->setColorStopAt(0.17578125, QColor(67.234116, 60.5958489, 132.28421565));
+	grad->setColorStopAt(0.1875, QColor(66.03595005, 64.14189675, 133.80770295));
+	grad->setColorStopAt(0.19921875, QColor(64.7534199, 67.6397292, 135.14559615));
+	grad->setColorStopAt(0.2109375, QColor(63.40039245, 71.08764795, 136.31168055));
+	grad->setColorStopAt(0.22265625, QColor(61.9938762, 74.4833427, 137.32148055));
+	grad->setColorStopAt(0.234375, QColor(60.5475519, 77.8265661, 138.189957));
+	grad->setColorStopAt(0.24609375, QColor(59.0767425, 81.116979, 138.9327822));
+	grad->setColorStopAt(0.2578125, QColor(57.5951415, 84.35531325, 139.56495015));
+	grad->setColorStopAt(0.26953125, QColor(56.11451205, 87.5432544, 140.1003252));
+	grad->setColorStopAt(0.28125, QColor(54.64588035, 90.68286285, 140.552022));
+	grad->setColorStopAt(0.29296875, QColor(53.1989721, 93.77663505, 140.9320893));
+	grad->setColorStopAt(0.3046875, QColor(51.78108795, 96.8276922, 141.25088775));
+	grad->setColorStopAt(0.31640625, QColor(50.3973075, 99.8395431, 141.51710775));
+	grad->setColorStopAt(0.328125, QColor(49.05108345, 102.8158317, 141.73807545));
+	grad->setColorStopAt(0.33984375, QColor(47.74386165, 105.76034475, 141.91952835));
+	grad->setColorStopAt(0.3515625, QColor(46.47518055, 108.67693275, 142.0656255));
+	grad->setColorStopAt(0.36328125, QColor(45.2428599, 111.569436, 142.1789883));
+	grad->setColorStopAt(0.375, QColor(44.0432838, 114.441603, 142.2607566));
+	grad->setColorStopAt(0.38671875, QColor(42.87223455, 117.2969451, 142.31090745));
+	grad->setColorStopAt(0.3984375, QColor(41.72448465, 120.1388589, 142.3278471));
+	grad->setColorStopAt(0.41015625, QColor(40.59450315, 122.970537, 142.308564));
+	grad->setColorStopAt(0.421875, QColor(39.4777944, 125.79479715, 142.24911585));
+	grad->setColorStopAt(0.43359375, QColor(38.37139275, 128.6141052, 142.1445684));
+	grad->setColorStopAt(0.4453125, QColor(37.2759663, 131.4303558, 141.98979105));
+	grad->setColorStopAt(0.45703125, QColor(36.19349385, 134.2453977, 141.77769735));
+	grad->setColorStopAt(0.46875, QColor(35.1314724, 137.06049315, 141.50109375));
+	grad->setColorStopAt(0.48046875, QColor(34.10446245, 139.8763179, 141.1529754));
+	grad->setColorStopAt(0.4921875, QColor(33.1328385, 142.6933131, 140.7252027));
+	grad->setColorStopAt(0.50390625, QColor(32.2456119, 145.5114558, 140.2094805));
+	grad->setColorStopAt(0.515625, QColor(31.48301655, 148.33008555, 139.5984699));
+	grad->setColorStopAt(0.52734375, QColor(30.89275785, 151.14841695, 138.8834907));
+	grad->setColorStopAt(0.5390625, QColor(30.5330778, 153.96507045, 138.05699745));
+	grad->setColorStopAt(0.55078125, QColor(30.46805025, 156.7783401, 137.11150845));
+	grad->setColorStopAt(0.5625, QColor(30.7627512, 159.58622415, 136.0395267));
+	grad->setColorStopAt(0.57421875, QColor(31.4781129, 162.38629245, 134.83467465));
+	grad->setColorStopAt(0.5859375, QColor(32.66219265, 165.17594655, 133.4901846));
+	grad->setColorStopAt(0.59765625, QColor(34.34641665, 167.95222845, 132.000444));
+	grad->setColorStopAt(0.609375, QColor(36.54224205, 170.71199655, 130.35994995));
+	grad->setColorStopAt(0.62109375, QColor(39.24298275, 173.45187465, 128.56390335));
+	grad->setColorStopAt(0.6328125, QColor(42.427716, 176.16830805, 126.60791565));
+	grad->setColorStopAt(0.64453125, QColor(46.0665507, 178.8575661, 124.4882919));
+	grad->setColorStopAt(0.65625, QColor(50.12551065, 181.5158034, 122.2013754));
+	grad->setColorStopAt(0.66796875, QColor(54.57003825, 184.13899605, 119.7448737));
+	grad->setColorStopAt(0.6796875, QColor(59.3678199, 186.72307425, 117.11557125));
+	grad->setColorStopAt(0.69140625, QColor(64.48912005, 189.2638152, 114.31230525));
+	grad->setColorStopAt(0.703125, QColor(69.9080511, 191.75695785, 111.3332295));
+	grad->setColorStopAt(0.71484375, QColor(75.60214245, 194.1981621, 108.17696955));
+	grad->setColorStopAt(0.7265625, QColor(81.551193, 196.58307765, 104.84379825));
+	grad->setColorStopAt(0.73828125, QColor(87.73889805, 198.90728025, 101.33216265));
+	grad->setColorStopAt(0.75, QColor(94.149621, 201.16642215, 97.6431669));
+	grad->setColorStopAt(0.76171875, QColor(100.7693904, 203.35622955, 93.7781013));
+	grad->setColorStopAt(0.7734375, QColor(107.58657315, 205.4724006, 89.73707295));
+	grad->setColorStopAt(0.78515625, QColor(114.58874565, 207.51092925, 85.5229863));
+	grad->setColorStopAt(0.796875, QColor(121.7636373, 209.46809505, 81.13979895));
+	grad->setColorStopAt(0.80859375, QColor(129.0991815, 211.34048355, 76.59233805));
+	grad->setColorStopAt(0.8203125, QColor(136.5833805, 213.1250526, 71.8866216));
+	grad->setColorStopAt(0.83203125, QColor(144.201888, 214.8196245, 67.03359165));
+	grad->setColorStopAt(0.84375, QColor(151.9390317, 216.4228911, 62.0488389));
+	grad->setColorStopAt(0.85546875, QColor(159.77770365, 217.93458465, 56.9549079));
+	grad->setColorStopAt(0.8671875, QColor(167.69870235, 219.3557889, 51.78598395));
+	grad->setColorStopAt(0.87890625, QColor(175.68059505, 220.68918645, 46.59476025));
+	grad->setColorStopAt(0.890625, QColor(183.69974325, 221.93928825, 41.46369615));
+	grad->setColorStopAt(0.90234375, QColor(191.7304557, 223.11261465, 36.5232114));
+	grad->setColorStopAt(0.9140625, QColor(199.74541425, 224.21778975, 31.9783719));
+	grad->setColorStopAt(0.92578125, QColor(207.7169667, 225.26528895, 28.1384289));
+	grad->setColorStopAt(0.9375, QColor(215.6179428, 226.26721965, 25.42405845));
+	grad->setColorStopAt(0.94921875, QColor(223.4229012, 227.23684185, 24.2888673));
+	grad->setColorStopAt(0.9609375, QColor(231.10935855, 228.18794085, 25.0218648));
+	grad->setColorStopAt(0.97265625, QColor(238.6556322, 229.135452, 27.5733897));
+	grad->setColorStopAt(0.984375, QColor(246.04785015, 230.09239305, 31.60483005));
+	grad->setColorStopAt(0.99609375, QColor(253.27821195, 231.06992535, 36.703731));
+
+	colorMap->setGradient(*grad);
+
 
   //Rescale all axes.
   vcp->m_qcp->xAxis->rescale();
