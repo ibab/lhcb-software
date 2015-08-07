@@ -9919,7 +9919,7 @@ Gaudi::Math::FourierSum::deconvolve
     //  
     long double f  = std::exp ( 0.5L * k * k * sigma2 ) ;
     //
-    if ( !s_zero ( delta ) ) 
+    if ( !s_zero ( delta ) && 0 < delta ) 
     { const long double fd = f * delta ; f /= ( 1 + fd * fd ) ; }
     //
     const long double   v1 = f * m_pars [ 2 * k    ] ;
@@ -9945,11 +9945,11 @@ double Gaudi::Math::FourierSum::regularization
 ( const double sigma , 
   const double delta ) const 
 {
-  if ( s_zero ( delta ) || s_zero ( sigma ) ) { return s_UL_max ; } // return
+  if      ( 0 > delta || s_zero ( delta ) || s_zero ( sigma ) ) 
+  { return s_UL_max ; } // return
+  else if ( 1<= delta ) { return 1 ; }
   //
-  const long double d = delta ;
-  return 
-    std::sqrt ( 2 * std::log ( std::abs ( d ) ) ) * m_scale / std::abs ( sigma ) ;
+  return std::sqrt ( -2 * std::log ( delta ) ) * m_scale / std::abs ( sigma ) ;
 }
 // ============================================================================
 // simple  manipulations with polynoms: scale it! 
@@ -10153,7 +10153,7 @@ Gaudi::Math::CosineSum::deconvolve
     //  
     long double f  = std::exp ( 0.5L * k * k * sigma2 ) ;
     //
-    if ( !s_zero ( delta ) ) 
+    if ( !s_zero ( delta ) && 0 < delta ) 
     { const long double fd = f * delta ; f /= ( 1 + fd * fd ) ; }
     //
     const long double   v1 = f * m_pars [ k ] ;
@@ -10176,11 +10176,10 @@ double Gaudi::Math::CosineSum::regularization
 ( const double sigma , 
   const double delta ) const 
 {
-  if ( s_zero ( delta ) || s_zero ( sigma ) ) { return s_UL_max ; } // return
+  if      ( 0 > delta || s_zero ( delta ) || s_zero ( sigma ) ) { return s_UL_max ; } 
+  else if ( 1<= delta ) { return 1 ; }
   //
-  const long double d = delta ;
-  return 
-    std::sqrt ( 2 * std::log ( std::abs ( d ) ) ) * m_scale / std::abs ( sigma ) ;
+  return std::sqrt ( -2 * std::log ( delta ) ) * m_scale / std::abs ( sigma ) ;
 }
 // ============================================================================
 // simple  manipulations with polynoms: scale it! 
