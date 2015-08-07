@@ -6,6 +6,11 @@
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
+! 2015-08-07 - Chris Jones
+ - Add some protection to ProtoParticlePacker::check to prevent potential out 
+   of range loop access in cases where the data containers in the two objects 
+   have different sizes.
+
 !======================== EventPacker v5r4 2015-07-07 ========================
 
 ! 2015-07-07 - Marco Clemencic

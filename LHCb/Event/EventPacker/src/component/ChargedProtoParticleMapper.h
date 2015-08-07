@@ -11,9 +11,6 @@
 // Event model
 #include "Event/PackedProtoParticle.h"
 
-// Boost
-#include <boost/assign/list_of.hpp>
-
 class IJobOptionsSvc;
 
 /** @class ChargedProtoParticleMapper ChargedProtoParticleMapper.h

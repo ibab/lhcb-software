@@ -289,66 +289,67 @@ StatusCode ProtoParticlePacker::check( const Data & dataA,
 
   bool isOK = true;
 
-  const LHCb::Track* oTrack = dataA.track();   // resolve to a pointer...
-  const LHCb::Track* tTrack = dataB.track();
-  if ( oTrack != tTrack ) isOK = false;
+  // check referenced objects
+  if ( dataA.track()   != dataB.track()   ) isOK = false;
+  if ( dataA.richPID() != dataB.richPID() ) isOK = false;
+  if ( dataA.muonPID() != dataB.muonPID() ) isOK = false;
 
-  const LHCb::RichPID* oRichPID = dataA.richPID();   // resolve to a pointer...
-  const LHCb::RichPID* tRichPID = dataB.richPID();
-  if ( oRichPID != tRichPID ) isOK = false;
-
-  const LHCb::MuonPID* oMuonPID = dataA.muonPID();   // resolve to a pointer...
-  const LHCb::MuonPID* tMuonPID = dataB.muonPID();
-  if ( oMuonPID != tMuonPID ) isOK = false;
-
-  unsigned int kk;
-  std::vector<const LHCb::CaloHypo*> oHypo, tHypo;
-  SmartRefVector<LHCb::CaloHypo>::const_iterator itH;
-  for ( itH = dataA.calo().begin(); dataA.calo().end() != itH; ++itH ) {
-    const LHCb::CaloHypo* z = *itH;
-    oHypo.push_back( z );
-  }
-  for ( itH = dataB.calo().begin(); dataB.calo().end() != itH; ++itH ) {
-    const LHCb::CaloHypo* z = *itH;
-    tHypo.push_back( z );
-  }
-  if ( oHypo.size() != tHypo.size() ) isOK = false;
-  for ( kk = 0; oHypo.size() > kk ; ++kk ) {
-    if ( oHypo[kk] != tHypo[kk] ) isOK = false;
+  // calo hypos
+  if ( dataA.calo().size() != dataB.calo().size() ) isOK = false;
+  if ( isOK )
+  {
+    for ( auto iC = std::make_pair(dataA.calo().begin(),dataB.calo().begin());
+          iC.first != dataA.calo().end() && iC.second != dataB.calo().end();
+          ++iC.first, ++iC.second )
+    {
+      if ( iC.first != iC.second ) isOK = false;
+    }
   }
 
-  LHCb::ProtoParticle::ExtraInfo oExtra = dataA.extraInfo();
-  LHCb::ProtoParticle::ExtraInfo tExtra = dataB.extraInfo();
-  if ( oExtra.size() != tExtra.size() ) isOK = false;
-  LHCb::ProtoParticle::ExtraInfo::const_iterator oIt = oExtra.begin();
-  LHCb::ProtoParticle::ExtraInfo::const_iterator tIt = tExtra.begin();
-  for ( kk = 0; tExtra.size() > kk; ++kk, ++oIt, ++tIt ) {
-    if ( (*oIt).first != (*tIt).first ) isOK = false;
-    if ( ( (*tIt).second == 0 && (*tIt).second != (*oIt).second ) ||
-         ( (*tIt).second != 0 && 1.e-7 < fabs( ((*tIt).second - (*oIt).second ) / (*tIt).second ) ) ) isOK = false;
+  // extra info
+  if ( dataA.extraInfo().size() != dataB.extraInfo().size() ) isOK = false;
+  if ( isOK )
+  {
+    for ( auto iE = std::make_pair(dataA.extraInfo().begin(),dataB.extraInfo().begin());
+          iE.first != dataA.extraInfo().end() && iE.second != dataA.extraInfo().end();
+          ++iE.first, ++iE.second )
+    {
+      if ( iE.first->first != iE.second->first ) isOK = false;
+      if ( isOK )
+      {
+        if ( ( iE.second->second == 0 && iE.second->second != iE.first->second ) ||
+             ( iE.second->second != 0 && 
+               1.e-7 < fabs( ( iE.second->second - iE.first->second ) / iE.second->second ) ) ) isOK = false;
+      }
+    }
   }
 
   if ( !isOK || MSG::DEBUG >= parent().msgLevel() )
   {
     parent().info() << "===== ProtoParticle key " << dataA.key() << endmsg;
     parent().info() << format( "Old   track %8x  richPID %8X  muonPID%8x  nCaloHypo%4d nExtra%4d",
-                               oTrack, oRichPID, oMuonPID, oHypo.size(), oExtra.size() )
+                               dataA.track(), dataA.richPID(), dataA.muonPID(), 
+                               dataA.calo().size(), dataA.extraInfo().size() )
                     << endmsg;
     parent().info() << format( "Test  track %8x  richPID %8X  muonPID%8x  nCaloHypo%4d nExtra%4d",
-                               tTrack, tRichPID, tMuonPID, tHypo.size(), tExtra.size() )
+                               dataB.track(), dataB.richPID(), dataB.muonPID(), 
+                               dataB.calo().size(), dataA.extraInfo().size() )
                     << endmsg;
-    for ( kk = 0 ; oHypo.size() != kk ; ++kk )
+    for ( auto iC = std::make_pair(dataA.calo().begin(),dataB.calo().begin());
+          iC.first != dataA.calo().end() && iC.second != dataB.calo().end();
+          ++iC.first, ++iC.second )
     {
-      parent().info() << format( "   old CaloHypo %8x   new %8x", oHypo[kk], tHypo[kk] )  << endmsg;
+      parent().info() << format( "   old CaloHypo %8x   new %8x", iC.first, iC.second )  << endmsg;
     }
-    oIt = oExtra.begin();
-    tIt = tExtra.begin();
-    for ( kk = 0 ; oExtra.size() != kk ; ++kk, ++oIt, ++tIt )
+    for ( auto iE = std::make_pair(dataA.extraInfo().begin(),dataB.extraInfo().begin());
+          iE.first != dataA.extraInfo().end() && iE.second != dataA.extraInfo().end();
+          ++iE.first, ++iE.second )
     {
       parent().info() << format( "   old Extra %5d %12.4f     new %5d %12.4f",
-                                 (*oIt).first, (*oIt).second, (*tIt).first, (*tIt).second )
+                                 iE.first->first, iE.first->second, iE.second->first, iE.second->second )
                       << endmsg;
     }
+   
   }
 
   return ( isOK ? StatusCode::SUCCESS : StatusCode::FAILURE );

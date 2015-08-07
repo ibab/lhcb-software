@@ -42,10 +42,7 @@ StatusCode MapperToolBase::finalize()
 
 SmartIF<IJobOptionsSvc>& MapperToolBase::joSvc() const
 {
-  if ( !m_jos )
-  {
-    m_jos = svc<IJobOptionsSvc>( "JobOptionsSvc" );
-  }
+  if ( !m_jos ) { m_jos = svc<IJobOptionsSvc>("JobOptionsSvc"); }
   return m_jos;
 }
 

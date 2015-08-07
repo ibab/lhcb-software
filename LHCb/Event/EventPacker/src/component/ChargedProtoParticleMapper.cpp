@@ -19,16 +19,9 @@ ChargedProtoParticleMapper::ChargedProtoParticleMapper( const std::string& type,
   : MapperToolBase( type, name, parent )
 {
   declareProperty( "UnpackerOutputLevel", m_unpackersOutputLevel = -1 );
-  {
-    const std::vector<std::string> tks = 
-      boost::assign::list_of("Long")("Downstream")("Upstream");
-    declareProperty( "TrackTypes", m_tkTypes = tks );
-  }
-  { 
-    const std::vector<std::string> pids =
-      boost::assign::list_of("Electron")("Muon")("Pion")("Kaon")("Proton")("Ghost");
-    declareProperty( "PIDTypes", m_pidTypes = pids );
-  }
+  declareProperty( "TrackTypes", m_tkTypes = {"Long","Downstream","Upstream"} );
+  declareProperty( "PIDTypes", m_pidTypes = { "Electron", "Muon", "Pion", 
+                                              "Kaon", "Proton", "Ghost" } );
   declareProperty( "ANNPIDTune", m_pidTune = "" );
   declareProperty( "VersionRegex", m_regex = "" );
 }
