@@ -333,7 +333,7 @@ StatusCode ProtoParticlePacker::check( const Data & dataA,
                     << endmsg;
     parent().info() << format( "Test  track %8x  richPID %8X  muonPID%8x  nCaloHypo%4d nExtra%4d",
                                dataB.track(), dataB.richPID(), dataB.muonPID(), 
-                               dataB.calo().size(), dataA.extraInfo().size() )
+                               dataB.calo().size(), dataB.extraInfo().size() )
                     << endmsg;
     for ( auto iC = std::make_pair(dataA.calo().begin(),dataB.calo().begin());
           iC.first != dataA.calo().end() && iC.second != dataB.calo().end();
