@@ -3,6 +3,39 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v37r1>2015-08-07 DaVinci v37r1</A></H1><PRE>
+
+Development release for the 2015 25ns data taking, based on Gaudi v26r3, LHCb v39r0, Lbcom v17r0, Rec v18r1,
+Phys v20r1, Analysis v14r1 and Stripping v9r9. Uses LCG_79 with ROOT 6.04.02.
+
+- Refer to the release notes of Phys, Analysis and Stripping for details
+  on updates to these dependency projects.
+
+- Packages patched :
+  Det/DDDB v1r80.
+
+- Packages updated :
+  DaVinciTests v2r36, Phys/DaVinci v37r1, Phys/KaliCalo v4r18, Phys/Tesla v1r10.
+
+- In Det/DDDB v1r80 :
+  . Updated default database tags to the latest ones:
+    LHCBCOND, 2015: cond-20150805
+    DDDB,     2015: dddb-20150724
+
+- In DaVinciTests v2r35 :
+  . Removed the SS BDT taggers performance from the reference in test_tag_mc12.qmt. 
+ - These need to be reincluded once the CheatedSelection of the FlavourTaggingChecker
+   has been fixed and can be used together with the LoKi fitters.
+
+- In Phys/DaVinci v37r1 :
+  . New stack release.
+
+- In Phys/KaliCalo v4r18 :
+  . Corrected a typo in python/KaliCalo/Kali/FillTaskBase.py (to import the sets module)
+
+- In Phys/Tesla v1r10 :
+  . Facilitate neutral PP2MC matching.
+
 </PRE><H1><A NAME=v37r0>2015-07-27 DaVinci v37r0</A></H1><PRE>
 
 Development release for the 2015 25ns data taking, based on Gaudi v26r3, LHCb v39r0, Lbcom v17r0, Rec v18r0,
