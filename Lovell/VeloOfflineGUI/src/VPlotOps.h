@@ -10,6 +10,7 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QTextBrowser>
 #include <QtGui/QScrollBar>
+#include <QtGui/QMessageBox>
 
 class VPlot;
 
@@ -27,6 +28,7 @@ public:
   QCheckBox * b_toggleRefRatio;
   QPushButton * b_popout;
   QPushButton * b_ref;
+  QPushButton * b_tip;
   bool m_firstTime;
   QWidget * m_statsBox;
   QComboBox * b_moduleSelector1;
@@ -54,6 +56,9 @@ public:
             b_moduleSelector2->currentIndex();
     return val;
   }
+
+private slots:
+	void showTip();
 };
 
 

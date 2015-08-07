@@ -59,10 +59,21 @@ VPlotOps::VPlotOps(QGroupBox * opsHolder, std::string * dataDir) {
   l->addWidget(b_ref, 5,1,1,1);
   b_ref->setStyleSheet("background: lightGrey");
 
+  b_tip = new QPushButton("?");
+  l->addWidget(b_tip, 5,2,1,1);
+  b_tip->setStyleSheet("background: lightGrey");
+  connect(b_tip, SIGNAL(clicked()), this, SLOT(showTip()));
+
   l->setAlignment(Qt::AlignCenter);
   m_layout->addWidget(buttonBox, m_layout->rowCount(), 0, 1, 1);
 }
 
+
+void VPlotOps::showTip() {
+	std::cout<<m_selPlot->m_tip<<std::endl;
+	QMessageBox tip(QMessageBox::Information, "Tip", QString(m_selPlot->m_tip.c_str()));
+	tip.exec();
+}
 
 //_____________________________________________________________________________
 

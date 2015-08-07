@@ -628,6 +628,9 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
           plotInfo.push_back("0.0");
         }
         
+        if (plot.HasMember("tip")) plotInfo.push_back(plot["tip"].GetString());
+        else plotInfo.push_back("No tip provided.");
+
     	  ops->push_back(plotInfo);
     	}
     }
@@ -685,6 +688,8 @@ void VContentGetter::findPlots(std::vector<VTabContent*> * allTabs,
           plot->m_yLow = atof((*iop)[7].c_str());
           plot->m_yUp = atof((*iop)[8].c_str());
         }
+
+        plot->m_tip = (*iop)[9];
 
         if (showingRefs) {
 					jsonPlottable * plottableRef = new jsonPlottable(plot, 0);

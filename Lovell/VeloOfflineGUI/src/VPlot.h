@@ -43,6 +43,7 @@ public:
   double m_yLow;
   double m_yUp;
   QCPColorScale * m_colorScale;
+  std::string m_tip;
 
 
   // Methods __________________________________________________________________

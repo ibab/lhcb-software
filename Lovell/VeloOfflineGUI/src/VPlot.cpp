@@ -13,7 +13,8 @@ VPlot::VPlot() :
   m_multipleModules(false),
 	m_yRangeSpecified(false),
 	m_yLow(0),
-	m_yUp(1) {}
+	m_yUp(1),
+	m_tip("Default help text"){}
 
 
 //_____________________________________________________________________________
@@ -31,7 +32,8 @@ VPlot::VPlot(std::string title,
   m_moduleNum(0),
 	m_yRangeSpecified(false),
 	m_yLow(0),
-	m_yUp(1)
+	m_yUp(1),
+	m_tip("Default help text")
 {
   m_title = title;
   m_tab = tab;
