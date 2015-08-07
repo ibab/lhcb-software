@@ -62,7 +62,7 @@ __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-09-10"
 __version__ = '$Revision$'
 # =============================================================================
-import ROOT, sys 
+import ROOT, sys, os  
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
 # logging 
@@ -161,12 +161,13 @@ if arguments.modules :
     for m in arguments.modules :
         mod = importlib.import_module ( m )
         logger.info ("Imported module '%s' from '%s' " % ( mod.__name__ , mod.__file__ ) )
-
+    del importlib, mod
+    
 # =============================================================================
 ## execute the files, defined as arguments
 # =============================================================================
 if arguments.files:
-    import sys,os, glob 
+    import glob 
     from   copy import deepcopy
     _myself    = sys.modules[ __name__ ] 
     _mykeys    = deepcopy ( dir( _myself ) ) 
@@ -225,9 +226,10 @@ if arguments.files:
     del _skept
     del _mykeys 
     del _myself 
-
+    del glob, deepcopy, pattern, a 
+    
 # =============================================================================
-del with_ipython, mod, m, importlib, pattern , glob, parse_args, getLogger, deepcopy  
+del with_ipython, parse_args, getLogger
 
 
 ## exit it! 
