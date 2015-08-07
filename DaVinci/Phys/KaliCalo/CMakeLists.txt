@@ -1,7 +1,7 @@
 ################################################################################
 # Package: KaliCalo
 ################################################################################
-gaudi_subdir(KaliCalo v4r17)
+gaudi_subdir(KaliCalo v4r18)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          GaudiPython

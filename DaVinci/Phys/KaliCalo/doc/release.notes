@@ -4,11 +4,14 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+!========================= KaliCalo v4r18 2015-08-06 =========================
+
 ! 2015-07-27 - Daria Savrina
  - corrected a typo in python/KaliCalo/Kali/FillTaskBase.py (to import the sets
    module)
 
 !========================= KaliCalo v4r17 2015-02-26 =========================
+
 ! 2015-02-26 - Eduardo Rodrigues
  - Package responsible updated.
 
