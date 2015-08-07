@@ -1,5 +1,5 @@
 package  StrippingSys
-version  v9r9
+version  v9r9p1
 
 branches doc cmt tests
 
@@ -24,8 +24,7 @@ use  StrippingNeuroBayes         v1r9     Phys   # Ulrich Kerzel
 use  StrippingSelections         v4r4     Phys   # Stripping coordinators
 use  StrippingSettings           v2r38    Phys   # Stripping coordinators
 use  StrippingTCK                v1r4     Phys   # Anton Poluektov
-use  StrippingUtils              v1r11    Phys   # Juan Palacios
-use  StrippingCache              v1r0     Phys   # Stripping Coordinators
+use  StrippingUtils              v1r11    Phys   # Stripping Coordinators
 
 ####################################################################
 
