@@ -22,6 +22,9 @@ public:
   QCheckBox * b_logx;
   QCheckBox * b_logy;
   QCheckBox * b_logz;
+  QCheckBox * b_toggleRef;
+  QCheckBox * b_toggleRefDiff;
+  QCheckBox * b_toggleRefRatio;
   QPushButton * b_popout;
   QPushButton * b_ref;
   bool m_firstTime;
@@ -29,11 +32,13 @@ public:
   QComboBox * b_moduleSelector1;
   QComboBox * b_moduleSelector2;
   QComboBox * b_veloRunNumber;
+  QComboBox * b_veloRunNumberRef;
   QGroupBox * m_moduleSelector;
   std::string * m_dataDir;
   QTextBrowser * m_textBrowser;
   void notify(std::string);
   bool m_waitSwitch;
+  QCheckBox * b_showAllRefs;
 
   VPlotOps(QGroupBox*, std::string *);
   void newSelection(VPlot*, bool);

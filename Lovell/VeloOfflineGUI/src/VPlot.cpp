@@ -104,7 +104,9 @@ void VPlot::setupPlottables(VCustomPlot * vcp) {
        iplottable != m_plottables.end(); iplottable++) {
     (*iplottable)->getData();
     if ((*iplottable)->m_plottableDimension == 1) add1dPlot(vcp, (*iplottable));
-    else if ((*iplottable)->m_plottableDimension == 2) addColzPlot(vcp, (*iplottable));
+    else if ((*iplottable)->m_plottableDimension == 2 && !(*iplottable)->m_isRef) addColzPlot(vcp, (*iplottable));
+    if ((*iplottable)->m_isRefDiff && vcp->m_qcp->plottableCount() > 0) vcp->m_qcp->plottable()->setVisible(false);
+    vcp->m_qcp->rescaleAxes(true);
   }
 }
 
@@ -128,6 +130,7 @@ void VPlot::addStatsBox(VCustomPlot * vcp, bool isPopUp) {
     int irow = 0;
     for (std::vector<VPlottable*>::iterator iplottable = m_plottables.begin();
        iplottable!= m_plottables.end(); iplottable++) {
+    	 if ((*iplottable)->m_isRef || (*iplottable)->m_isRefDiff) continue;
        lab = new QLabel((*iplottable)->m_name.c_str());
        lab->setFont(f);
        lay->addWidget(lab, irow, 1, 1, 1);
@@ -169,7 +172,8 @@ QWidget * VPlot::exportStatsBox() {
   int irow = 0;
   for (std::vector<VPlottable*>::iterator iplottable = m_plottables.begin();
      iplottable!= m_plottables.begin() + 1; iplottable++) {
-    lab = new QLabel(" ");
+  	if ((*iplottable)->m_isRef || (*iplottable)->m_isRefDiff) continue;
+    lab = new QLabel((*iplottable)->m_name.c_str());
     lab->setFont(f);
     lab->setWordWrap(true);
     lay->addWidget(lab, lay->rowCount(), 0, 2, 2);
@@ -196,46 +200,46 @@ void VPlot::addColzPlot(VCustomPlot * vcp, VPlottable * plottable) {
   int nbinsy = plottable->m_ys.size();
 
   //Make a QCPColorMap:
-  vcp->m_colormap = new QCPColorMap(vcp->m_qcp->xAxis, vcp->m_qcp->yAxis);
-  vcp->m_qcp->addPlottable(vcp->m_colormap);
+  QCPColorMap * colorMap = new QCPColorMap(vcp->m_qcp->xAxis, vcp->m_qcp->yAxis);
+  vcp->m_colormaps.push_back(colorMap);
+  vcp->m_qcp->addPlottable(colorMap);
   vcp->m_qcp->plottable(vcp->m_qcp->plottableCount()-1)->setName(plottable->m_name.c_str());
-  vcp->m_colormap->data()->setSize(nbinsx, nbinsy);
-  vcp->m_colormap->data()->setRange(QCPRange(plottable->m_xs[0], plottable->m_xs[nbinsx-1]),
+  colorMap->data()->setSize(nbinsx, nbinsy);
+  colorMap->data()->setRange(QCPRange(plottable->m_xs[0], plottable->m_xs[nbinsx-1]),
                                     QCPRange(plottable->m_ys[0], plottable->m_ys[nbinsy-1]));
   for (int ix=0; ix<nbinsx; ++ix){
     for (int iy=0; iy<nbinsy; ++iy){
       /* double x = plottable->m_xs[ix]; */
       /* double y = plottable->m_ys[iy]; */
-      vcp->m_colormap->data()->setCell(ix, iy, plottable->m_zs[ix][iy]);
+      colorMap->data()->setCell(ix, iy, plottable->m_zs[ix][iy]);
     }
   }
 
-  //Add a color scale:
-  QCPColorScale * colorScale = new QCPColorScale(vcp->m_qcp);
-  int colorScaleRow = 1;
-  //if (vcp->m_isPopUp) colorScaleRow = 1; // Has a title.
+  if (!plottable->m_isRef && !plottable->m_isRefDiff) {
+		//Add a color scale:
+		m_colorScale = new QCPColorScale(vcp->m_qcp);
+		int colorScaleRow = 1;
+		m_colorScale->setBarWidth(25);
+		m_colorScale->axis()->setPadding(0);
+	  m_colorScale->axis()->setLabel(m_zAxisTitle.c_str());
+		m_colorScale->axis()->setLabelFont(vcp->m_qcp->xAxis->labelFont());
+		m_colorScale->axis()->setTickLabelFont(vcp->m_qcp->xAxis->tickLabelFont());
+		vcp->m_qcp->plotLayout()->addElement(colorScaleRow, 1, m_colorScale); // add it to the right of the main axis rect
 
-  vcp->m_qcp->plotLayout()->addElement(colorScaleRow, 1, colorScale); // add it to the right of the main axis rect
-  vcp->m_colormap->setColorScale(colorScale); // associate the color map with the color scale
-  colorScale->setBarWidth(20);
-  colorScale->axis()->setPadding(0);
-  colorScale->axis()->setLabel(m_zAxisTitle.c_str());
-  colorScale->axis()->setLabelFont(vcp->m_qcp->xAxis->labelFont());
-  colorScale->axis()->setTickLabelFont(vcp->m_qcp->xAxis->tickLabelFont());
-
+		//Make sure the axis rect and color scale synchronize their bottom and top margins (so they line up):
+		QCPMarginGroup * marginGroup = new QCPMarginGroup(vcp->m_qcp);
+		vcp->m_qcp->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+		m_colorScale->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+  }
+  colorMap->setColorScale(m_colorScale);
+  if (!plottable->m_isRef && !plottable->m_isRefDiff) colorMap->rescaleDataRange(true);
+  colorMap->setGradient(QCPColorGradient::gpJet);
   //Set the color gradient of the color map to one of the presets:
-  vcp->m_colormap->setGradient(QCPColorGradient::gpJet);
-
-  //Make sure the axis rect and color scale synchronize their bottom and top margins (so they line up):
-  QCPMarginGroup * marginGroup = new QCPMarginGroup(vcp->m_qcp);
-  vcp->m_qcp->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
-  colorScale->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
 
   //Rescale all axes.
-  vcp->m_colormap->rescaleDataRange();
   vcp->m_qcp->xAxis->rescale();
   vcp->m_qcp->yAxis->rescale();
-  vcp->m_colormap->setInterpolate(false);
+  colorMap->setInterpolate(false);
 }
 
 
@@ -243,7 +247,14 @@ void VPlot::addColzPlot(VCustomPlot * vcp, VPlottable * plottable) {
 
 void VPlot::add1dPlot(VCustomPlot * vcp, VPlottable* plottable) {
   vcp->m_qcp->addGraph();
-  vcp->m_qcp->graph()->setName(plottable->m_name.c_str());
+  if (plottable->m_isRef) vcp->m_qcp->graph()->setName("Ref");
+  else if (plottable->m_isRefDiff) {
+  	if (plottable->m_plottableStyle == 3) {
+  		vcp->m_qcp->graph()->setName("Data - Ref");
+  	}
+  	else vcp->m_qcp->graph()->setName("Data/Ref");
+  }
+  else vcp->m_qcp->graph()->setName("Data");
   vcp->m_qcp->graph()->setData(plottable->m_xs, plottable->m_ys);
   vcp->m_qcp->xAxis->rescale();
   vcp->m_qcp->yAxis->rescale();
@@ -251,7 +262,7 @@ void VPlot::add1dPlot(VCustomPlot * vcp, VPlottable* plottable) {
 
   if (plottable->m_plottableStyle == 0) {
     // Like a TGraph with scatter points (red line and discs).
-    QCPScatterStyle ss(QCPScatterStyle::ssDisc, Qt::red, 6);
+    QCPScatterStyle ss(QCPScatterStyle::ssCross, Qt::red, 6);
     vcp->m_qcp->graph()->setScatterStyle(ss);
     vcp->m_qcp->graph()->setPen(QPen(Qt::red));
   }
@@ -269,6 +280,23 @@ void VPlot::add1dPlot(VCustomPlot * vcp, VPlottable* plottable) {
     // of bins.
     vcp->m_qcp->graph()->setLineStyle(QCPGraph::lsStepCenter);
     vcp->m_qcp->graph()->setBrush(QBrush(QColor(0, 0, 255, 80)));
+    vcp->m_qcp->graph()->setPen(QPen(Qt::black));
+  }
+
+  if (plottable->m_plottableStyle == 3) {
+    // Like a TH1F (blue highlighted bins) - note, points should show center
+    // of bins.
+    vcp->m_qcp->graph()->setLineStyle(QCPGraph::lsStepCenter);
+    vcp->m_qcp->graph()->setBrush(QBrush(QColor(255, 0, 0, 80)));
+    vcp->m_qcp->graph()->setPen(QPen(Qt::black));
+  }
+
+  if (plottable->m_plottableStyle == 4) {
+    // Like a TH1F (blue highlighted bins) - note, points should show center
+    // of bins.
+    vcp->m_qcp->graph()->setLineStyle(QCPGraph::lsStepCenter);
+    vcp->m_qcp->graph()->setBrush(QBrush(QColor(0, 255, 0, 200)));
+    vcp->m_qcp->graph()->setPen(QPen(Qt::black));
   }
 
   if (m_plottables.size() > 1) vcp->m_qcp->legend->setVisible(true);

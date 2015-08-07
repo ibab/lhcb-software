@@ -42,6 +42,7 @@ public:
   bool m_yRangeSpecified;
   double m_yLow;
   double m_yUp;
+  QCPColorScale * m_colorScale;
 
 
   // Methods __________________________________________________________________

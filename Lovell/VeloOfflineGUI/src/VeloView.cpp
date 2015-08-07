@@ -66,7 +66,8 @@ veloview::veloview(int runMode, std::vector<std::string> * ops, QWidget *parent)
   m_plotOps(NULL),
   m_runProxy(NULL),
   m_verbose(false),
-  m_dataDir("/calib/velo/dqm/VeloView/VetraOutput")
+  m_dataDir("/calib/velo/dqm/VeloView/VetraOutput"),
+	m_runProxyRef(NULL)
 {
   m_ops = ops;
   setOps();
@@ -170,10 +171,52 @@ void veloview::setVeloOptionsWidg() {
   b_veloRunNumber->setCompleter(completer);
   connect(b_veloRunNumber, SIGNAL(editTextChanged(QString)), this, SLOT(filterWildcard(QString)));
   l->addWidget(b_veloRunNumber, l->rowCount(), 0, 1, 1);
+
+
+  b_showAllRefs = new QCheckBox("Load refs");
+  b_showAllRefs->setChecked(true);
+  l->addWidget(b_showAllRefs, l->rowCount(), 0, 1, 1);
+
+  // Run number selected.
+  l->addWidget(new QLabel("RunView ref #:"), l->rowCount(), 0, 1, 1);
+  QStringListModel * runBoxModel2 = new QStringListModel;
+  FILE * inRef;
+  char buffRef[512];
+  std::string commandRef;
+  std::cout<<"Retriving run list..."<<std::endl;
+  if (m_runMode == 0) commandRef = "" + m_VVinterfaceScript + " run_list --run-data-dir="
+  		+ m_dataDir;
+  else commandRef = "dummyDataGetter.py run_list";
+  std::cout<<"Proccessing..."<<std::endl;
+  inRef = popen(commandRef.c_str(), "r");
+  while(fgets(buffRef, sizeof(buffRef), inRef)!=NULL) {
+    std::string line(buffRef);
+    line.erase(std::remove(line.begin(), line.end(), '\n'), line.end());
+    std::cout<<"Available runs:\t"<<line<<std::endl;
+    runBoxModel2->insertRow(runBoxModel2->rowCount());
+    runBoxModel2->setData(runBoxModel2->index(runBoxModel2->rowCount() - 1, 0),
+                         QString(line.c_str()), Qt::DisplayRole);
+  }
+
+  b_veloRunNumberRef = new QComboBox;
+  if (m_runProxyRef != NULL) delete m_runProxyRef;
+  m_runProxyRef = new QSortFilterProxyModel;
+  m_runProxyRef->setSourceModel(runBoxModel2);
+  b_veloRunNumberRef->setModel(m_runProxyRef);
+  b_veloRunNumberRef->setEditable(true);
+  QCompleter * completerRef = new QCompleter(runBoxModel2, this);
+  completerRef->setCaseSensitivity(Qt::CaseInsensitive);
+  b_veloRunNumberRef->setCompleter(completerRef);
+  connect(b_veloRunNumberRef, SIGNAL(editTextChanged(QString)), this, SLOT(filterWildcardRef(QString)));
+  l->addWidget(b_veloRunNumberRef, l->rowCount(), 0, 1, 1);
 }
 
 void veloview::filterWildcard(QString s) {
 	m_runProxy->setFilterWildcard(s.left(s.size()-1));
+}
+
+void veloview::filterWildcardRef(QString s) {
+	m_runProxyRef->setFilterWildcard(s.left(s.size()-1));
 }
 
 
@@ -187,6 +230,8 @@ void veloview::setContent() {
     m_plotOps->b_moduleSelector1 = ui->b_selector1;
     m_plotOps->b_moduleSelector2 = ui->b_selector2;
     m_plotOps->b_veloRunNumber = b_veloRunNumber;
+    m_plotOps->b_veloRunNumberRef = b_veloRunNumberRef;
+    m_plotOps->b_showAllRefs = b_showAllRefs;
     m_plotOps->m_moduleSelector = ui->w_moduleSelector;
     m_plotOps->notify("Loading run " + b_veloRunNumber->currentText().toStdString() + "...");
     	qApp->processEvents();
@@ -197,6 +242,28 @@ void veloview::setContent() {
     qApp->processEvents();
     delete m_plotOps->m_statsBox;
   }
+
+  if (!b_showAllRefs->isChecked()) {
+		m_plotOps->b_toggleRef->setChecked(false);
+		m_plotOps->b_toggleRef->setEnabled(false);
+
+		m_plotOps->b_toggleRefDiff->setChecked(false);
+		m_plotOps->b_toggleRefDiff->setEnabled(false);
+
+		m_plotOps->b_toggleRefRatio->setChecked(false);
+		m_plotOps->b_toggleRefRatio->setEnabled(false);
+	}
+
+  else {
+		m_plotOps->b_toggleRef->setChecked(true);
+		m_plotOps->b_toggleRef->setEnabled(true);
+
+		m_plotOps->b_toggleRefDiff->setChecked(false);
+		m_plotOps->b_toggleRefDiff->setEnabled(true);
+
+		m_plotOps->b_toggleRefRatio->setChecked(false);
+		m_plotOps->b_toggleRefRatio->setEnabled(true);
+	}
 
 
   // Creates the contents instance, as outlined by the relevant function in

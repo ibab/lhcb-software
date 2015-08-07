@@ -21,7 +21,7 @@ public:
   QCustomPlot * m_qcp;
   QGridLayout * m_layout;
   bool m_isPopUp;
-  QCPColorMap * m_colormap;
+  std::vector<QCPColorMap*> m_colormaps;
   QGridLayout * m_buttonLayout;
   QWidget * m_buttonBox;
   QRubberBand * m_RubberBand;
@@ -31,6 +31,9 @@ public:
   bool m_xLogged;
   bool m_yLogged;
   bool m_zLogged;
+  bool m_refToggled; //true for on. Only supported for 1d histos.
+  bool m_refToggledDiff; //true for on. Only supported for 1d histos.
+  bool m_refToggledRatio;
 
   void addPlotButtons();
   void makeSelected();
@@ -48,6 +51,9 @@ private slots:
   void doLogX(int);
   void doLogY(int);
   void doLogZ(int);
+  void doToggleRef(int);
+  void doToggleRefDiff(int);
+  void doToggleRefRatio(int);
   void refreshClicked() {emit requestRefresh();}
   void popoutClicked() {emit requestPopUp();}
   void popoutRefreshClicked() {

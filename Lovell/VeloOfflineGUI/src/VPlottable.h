@@ -32,6 +32,8 @@ public:
   std::string m_retrivalCommand;
   int m_dataFileType;
   std::mutex m_mtx;
+  bool m_isRef;
+  bool m_isRefDiff;
 
 
   // Methods __________________________________________________________________

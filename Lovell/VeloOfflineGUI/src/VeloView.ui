@@ -117,7 +117,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>300</width>
+           <width>500</width>
            <height>100000</height>
           </size>
          </property>
@@ -214,7 +214,7 @@
      <widget class="QPushButton" name="b_load">
       <property name="maximumSize">
        <size>
-        <width>300</width>
+        <width>500</width>
         <height>16777215</height>
        </size>
       </property>
@@ -227,7 +227,7 @@
      <widget class="QPushButton" name="b_quit">
       <property name="maximumSize">
        <size>
-        <width>300</width>
+        <width>500</width>
         <height>16777215</height>
        </size>
       </property>

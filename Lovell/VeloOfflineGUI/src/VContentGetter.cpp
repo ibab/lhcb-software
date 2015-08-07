@@ -4,7 +4,58 @@
 #include "rapidjson/stringbuffer.h"
 //#include "PythonQt3.0/src/PythonQt.h"
 //#include "TPython.h"
+//#include <boost/python.hpp>
 #include <unistd.h>
+
+
+class refDiff : public VPlottable {
+public:
+	bool m_diffNotRatio;
+	refDiff(VPlot * plot, int style) :
+      VPlottable(plot, style) {
+		m_name = "refDiff:";
+	}
+
+	void getPlotData() {
+		if (m_diffNotRatio) m_plottableStyle = 3;
+		else m_plottableStyle = 4;
+		m_plottableDimension = m_plot->m_plottables[0]->m_plottableDimension;
+		// Loop over the first two plottables on the plot and take the difference/ratio.
+		// Copy over the xs from the first plottable. Do the same for ys too if a 2D plot.
+
+		for (int i=0; i<m_plot->m_plottables[0]->m_xs.size(); i++) m_xs.push_back(m_plot->m_plottables[0]->m_xs[i]);
+		if (m_plottableDimension == 2) {
+			if (m_plot->m_plottables[0]->m_xs.size() != m_plot->m_plottables[1]->m_xs.size()) return;
+			if (m_plot->m_plottables[0]->m_ys.size() != m_plot->m_plottables[1]->m_ys.size()) return;
+			for (int i=0; i<m_plot->m_plottables[0]->m_ys.size(); i++) m_ys.push_back(m_plot->m_plottables[0]->m_ys[i]);
+			for (int i=0; i<m_plot->m_plottables[0]->m_zs.size(); i++) {
+				QVector<double> rowZs;
+				for (int j=0; j<m_plot->m_plottables[0]->m_zs[i].size(); j++) {
+					double z;
+					if (m_diffNotRatio) z = m_plot->m_plottables[0]->m_zs[i][j] - m_plot->m_plottables[1]->m_zs[i][j];
+					else {
+						if (m_plot->m_plottables[1]->m_zs[i][j] == 0.) z = 0.;
+						else z = m_plot->m_plottables[0]->m_zs[i][j]/m_plot->m_plottables[1]->m_zs[i][j];
+					}
+					rowZs.push_back(z);
+				}
+				m_zs.push_back(rowZs);
+			}
+		}
+		else {
+			if (m_plot->m_plottables[0]->m_ys.size() != m_plot->m_plottables[1]->m_ys.size()) return;
+			for (int i=0; i<m_plot->m_plottables[0]->m_ys.size(); i++) {
+				double y;
+				if (m_diffNotRatio) y = m_plot->m_plottables[0]->m_ys[i] - m_plot->m_plottables[1]->m_ys[i];
+				else {
+					if (m_plot->m_plottables[1]->m_ys[i] == 0.) y = 0.;
+					else y = m_plot->m_plottables[0]->m_ys[i]/m_plot->m_plottables[1]->m_ys[i];
+				}
+				m_ys.push_back(y);
+			}
+		}
+	}
+};
 
 
 
@@ -23,9 +74,13 @@ public:
     FILE * in;
     char buff[5000];
 
-    std::string command = "retrieve_run_view_plot.py " +
-        m_plot->m_plotOps->b_veloRunNumber->currentText().toStdString() + " '" +
+    std::string command = "retrieve_run_view_plot.py ";
+    if (m_isRef) command += m_plot->m_plotOps->b_veloRunNumberRef->currentText().toStdString() + " '" +
         m_retrivalCommand + "' '" + m_plot->m_plotOps->currentModuleStr() + "'";
+
+    else command += m_plot->m_plotOps->b_veloRunNumber->currentText().toStdString() + " '" +
+        m_retrivalCommand + "' '" + m_plot->m_plotOps->currentModuleStr() + "'";
+
     std::string * dataDir = m_plot->m_plotOps->m_dataDir;
     command += " --run-data-dir=" + (*dataDir);
     command += " --no-reference";
@@ -616,9 +671,11 @@ void VContentGetter::findPlots(std::vector<VTabContent*> * allTabs,
     int iTab = 0;
     for (itab = allTabs->begin(); itab != allTabs->end(); itab++){
       if ((*iop)[2] == (*itab)->m_title) {
-      	bool hasRef = false; // SET ME.
+      	bool showingRefs = plotOps->b_showAllRefs->isChecked();
         VPlot * plot = new VPlot((*iop)[1], (*itab), true, plotOps);
         jsonPlottable * plottable = new jsonPlottable(plot, 1);
+        plottable->m_isRef = false;
+        plottable->m_isRefDiff = false;
         allPlottablesByTab[iTab].push_back(plottable);
         plottable->m_retrivalCommand = (*iop)[3];
         if ((*iop)[5] == "2") plottable->m_plottableStyle = 2;
@@ -629,10 +686,24 @@ void VContentGetter::findPlots(std::vector<VTabContent*> * allTabs,
           plot->m_yUp = atof((*iop)[8].c_str());
         }
 
-        if (hasRef) {
+        if (showingRefs) {
 					jsonPlottable * plottableRef = new jsonPlottable(plot, 0);
+					plottableRef->m_isRef = true;
+					plottableRef->m_isRefDiff = false;
 					allPlottablesByTab[iTab].push_back(plottableRef);
-					plottableRef->m_retrivalCommand = (*iop)[3]; // SET ME.
+					plottableRef->m_retrivalCommand = (*iop)[3];
+
+					refDiff * refDifference = new refDiff(plot, 0);
+					refDifference->m_isRefDiff = true;
+					refDifference->m_isRef = false;
+					refDifference->m_diffNotRatio = true;
+					allPlottablesByTab[iTab].push_back(refDifference);
+
+					refDiff * refDifference2 = new refDiff(plot, 0);
+					refDifference2->m_isRefDiff = true;
+					refDifference2->m_isRef = false;
+					refDifference2->m_diffNotRatio = false;
+					allPlottablesByTab[iTab].push_back(refDifference2);
       	}
 
         if ((*iop)[4] == "multipleModules") plot->m_multipleModules = true;
@@ -656,6 +727,7 @@ void VContentGetter::fillTabsThread(std::vector< std::vector< VPlottable*> > plo
 	unsigned int waiting = 8;
   for (unsigned int i=0; i<plottables.size(); i++) {
   	for (unsigned int j=0; j<plottables[i].size(); j++) {
+  		if (plottables[i][j]->m_isRefDiff) continue;
   		tabThreads.push_back(new std::thread(&VPlottable::getData, plottables[i][j]));
   		tabPlottabls.push_back(plottables[i][j]);
 

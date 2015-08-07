@@ -7,7 +7,9 @@ VCustomPlot::VCustomPlot(QWidget * parent, std::string title, bool isPopUp, VPlo
   m_xLogged = false;
   m_yLogged = false;
   m_zLogged = false;
-  m_colormap = NULL;
+  m_refToggled = true;
+  m_refToggledDiff = false;
+  m_refToggledRatio = false;
 
   setStyleSheet("background-color:white;");
   m_plotOps = plotOps;
@@ -161,6 +163,102 @@ void VCustomPlot::addPlotButtons() {
   }
 }
 
+//_____________________________________________________________________________
+
+void VCustomPlot::doToggleRefDiff(int toggle) {
+  if (toggle==2) {
+    m_refToggledDiff = true;
+    if (m_plot->m_plottables[0]->m_plottableDimension == 1) {
+			if (m_qcp->plottableCount() > 0) m_qcp->plottable(0)->setVisible(false);
+			if (m_qcp->plottableCount() > 1) m_qcp->plottable(1)->setVisible(false);
+			if (m_qcp->plottableCount() > 2) m_qcp->plottable(2)->setVisible(true);
+			if (m_qcp->plottableCount() > 3) m_qcp->plottable(3)->setVisible(false);
+    }
+    else {
+    	if (m_qcp->plottableCount() > 0) m_qcp->plottable(0)->setVisible(false);
+			if (m_qcp->plottableCount() > 1) m_qcp->plottable(1)->setVisible(true);
+			if (m_qcp->plottableCount() > 2) m_qcp->plottable(2)->setVisible(false);
+			m_colormaps[1]->rescaleDataRange(true);
+    }
+  }
+
+  else {
+    m_refToggledDiff = false;
+		if (m_qcp->plottableCount() > 0) m_qcp->plottable(0)->setVisible(true);
+		if (m_refToggled) {
+			if (m_qcp->plottableCount() > 1 && m_plot->m_plottables[0]->m_plottableDimension == 1)
+				m_qcp->plottable(1)->setVisible(true);
+		}
+
+		if (m_plot->m_plottables[0]->m_plottableDimension == 2) {
+			if (m_qcp->plottableCount() > 1) m_qcp->plottable(1)->setVisible(false);
+		}
+
+		if (m_qcp->plottableCount() > 2) m_qcp->plottable(2)->setVisible(false);
+		if (m_qcp->plottableCount() > 3) m_qcp->plottable(3)->setVisible(false);
+		if (m_plot->m_plottables[0]->m_plottableDimension == 2) m_colormaps[0]->rescaleDataRange(true);
+	}
+  m_qcp->rescaleAxes(true);
+  m_qcp->replot();
+}
+
+
+//_____________________________________________________________________________
+
+void VCustomPlot::doToggleRefRatio(int toggle) {
+  if (toggle==2) {
+    m_refToggledRatio = true;
+    if (m_plot->m_plottables[0]->m_plottableDimension == 1) {
+			if (m_qcp->plottableCount() > 0) m_qcp->plottable(0)->setVisible(false);
+			if (m_qcp->plottableCount() > 1) m_qcp->plottable(1)->setVisible(false);
+			if (m_qcp->plottableCount() > 2) m_qcp->plottable(2)->setVisible(false);
+			if (m_qcp->plottableCount() > 3) m_qcp->plottable(3)->setVisible(true);
+    }
+    else {
+    	if (m_qcp->plottableCount() > 0) m_qcp->plottable(0)->setVisible(false);
+			if (m_qcp->plottableCount() > 1) m_qcp->plottable(1)->setVisible(false);
+			if (m_qcp->plottableCount() > 2) m_qcp->plottable(2)->setVisible(true);
+			m_colormaps[2]->rescaleDataRange(true);
+    }
+  }
+
+  else {
+    m_refToggledRatio = false;
+		if (m_qcp->plottableCount() > 0) m_qcp->plottable(0)->setVisible(true);
+		if (m_refToggled) {
+			if (m_qcp->plottableCount() > 1 && m_plot->m_plottables[0]->m_plottableDimension == 1)
+				m_qcp->plottable(1)->setVisible(true);
+		}
+		if (m_qcp->plottableCount() > 2) m_qcp->plottable(2)->setVisible(false);
+		if (m_qcp->plottableCount() > 3) m_qcp->plottable(3)->setVisible(false);
+		if (m_plot->m_plottables[0]->m_plottableDimension == 2) m_colormaps[0]->rescaleDataRange(true);
+  }
+
+  m_qcp->rescaleAxes(true);
+  m_qcp->replot();
+}
+
+
+//_____________________________________________________________________________
+
+void VCustomPlot::doToggleRef(int toggle) {
+  if (toggle==2) {
+    m_refToggled = true;
+    if (m_plot->m_plottables[0]->m_plottableDimension == 1) {
+    	m_qcp->plottable(1)->setVisible(true);
+    }
+  }
+
+  else {
+    m_refToggled = false;
+    if (m_plot->m_plottables[0]->m_plottableDimension == 1) {
+    	m_qcp->plottable(1)->setVisible(false);
+    }
+  }
+
+  m_qcp->replot();
+}
+
 
 //_____________________________________________________________________________
 
@@ -178,8 +276,7 @@ void VCustomPlot::doLogX(int logOrNot) {
     m_xLogged = false;
   }
 
-  m_qcp->xAxis->rescale();
-  m_qcp->yAxis->rescale();
+  m_qcp->rescaleAxes(true);
   m_qcp->replot();
 }
 
@@ -187,15 +284,15 @@ void VCustomPlot::doLogX(int logOrNot) {
 //_____________________________________________________________________________
 
 void VCustomPlot::doLogZ(int logOrNot) {
-  if (m_colormap != NULL) {
+  if (m_colormaps.size() > 0) {
     if (logOrNot) {
-      m_colormap->colorScale()->setDataScaleType(QCPAxis::stLogarithmic);
-      m_colormap->colorScale()->axis()->setRangeLower(0.1);
+      m_colormaps[0]->colorScale()->setDataScaleType(QCPAxis::stLogarithmic);
+      m_colormaps[0]->colorScale()->axis()->setRangeLower(0.1);
       m_zLogged = true;
     }
 
     else {
-      m_colormap->colorScale()->setDataScaleType(QCPAxis::stLinear);
+      m_colormaps[0]->colorScale()->setDataScaleType(QCPAxis::stLinear);
       m_zLogged = false;
     }
   }
@@ -219,8 +316,7 @@ void VCustomPlot::doLogY(int logOrNot) {
     m_yLogged = false;
   }
 
-  m_qcp->xAxis->rescale();
-  m_qcp->yAxis->rescale();
+  m_qcp->rescaleAxes(true);
   m_qcp->replot();
 }
 

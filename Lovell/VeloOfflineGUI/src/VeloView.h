@@ -34,6 +34,7 @@ public:
   VPlotOps * m_plotOps;
   std::string m_VVinterfaceScript;
   QSortFilterProxyModel * m_runProxy;
+  QSortFilterProxyModel * m_runProxyRef;
   bool m_verbose;
   std::vector<std::string> * m_ops;
   std::string m_dataDir;
@@ -55,9 +56,11 @@ public:
 
   // Optional settings ________________________________________________________
   QComboBox * b_veloRunNumber;
+  QComboBox * b_veloRunNumberRef;
   QSpinBox * b_veloRunNumberLow;
   QSpinBox * b_veloRunNumberUp;
   std::vector<TFile*> m_rootFiles;
+  QCheckBox * b_showAllRefs;
 
 private slots:
   void setContent();
@@ -66,6 +69,7 @@ private slots:
   void on_b_selector3_clicked();
   void on_b_selector4_clicked();
   void filterWildcard(QString);
+  void filterWildcardRef(QString);
 };
 
 #endif // VELOVIEW_H

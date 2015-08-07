@@ -39,14 +39,25 @@ VPlotOps::VPlotOps(QGroupBox * opsHolder, std::string * dataDir) {
   b_logz->setChecked(false);
   l->addWidget(b_logz, 1, 2, 1, 1);
 
+  b_toggleRef = new QCheckBox("Toggle ref");
+  b_toggleRef->setChecked(true);
+  l->addWidget(b_toggleRef, 2, 0, 1, 3);
+
+  b_toggleRefDiff = new QCheckBox("Data - Ref");
+  b_toggleRefDiff->setChecked(false);
+  l->addWidget(b_toggleRefDiff, 3, 0, 1, 3);
+
+  b_toggleRefRatio = new QCheckBox("Data/Ref");
+  b_toggleRefRatio->setChecked(false);
+  l->addWidget(b_toggleRefRatio, 4, 0, 1, 3);
+
   b_popout = new QPushButton(QIcon(":/popoutIcon.png"), "");
-  l->addWidget(b_popout, 2,0,1,1);
+  l->addWidget(b_popout, 5,0,1,1);
   b_popout->setStyleSheet("background: lightGrey");
 
   b_ref = new QPushButton(QIcon(":/refreshIcon.png"), "");
-  l->addWidget(b_ref, 2,1,1,1);
+  l->addWidget(b_ref, 5,1,1,1);
   b_ref->setStyleSheet("background: lightGrey");
-
 
   l->setAlignment(Qt::AlignCenter);
   m_layout->addWidget(buttonBox, m_layout->rowCount(), 0, 1, 1);
@@ -63,6 +74,9 @@ void VPlotOps::newSelection(VPlot * selPlot, bool forceConnect) {
       disconnect(b_logx, SIGNAL(stateChanged(int)), m_selPlot->m_vcp, SLOT(doLogX(int)));
       disconnect(b_logy, SIGNAL(stateChanged(int)), m_selPlot->m_vcp, SLOT(doLogY(int)));
       disconnect(b_logz, SIGNAL(stateChanged(int)), m_selPlot->m_vcp, SLOT(doLogZ(int)));
+      disconnect(b_toggleRef, SIGNAL(stateChanged(int)), m_selPlot->m_vcp, SLOT(doToggleRef(int)));
+      disconnect(b_toggleRefDiff, SIGNAL(stateChanged(int)), m_selPlot->m_vcp, SLOT(doToggleRefDiff(int)));
+      disconnect(b_toggleRefRatio, SIGNAL(stateChanged(int)), m_selPlot->m_vcp, SLOT(doToggleRefRatio(int)));
       if (m_selPlot->m_multipleModules) {
 				disconnect(b_moduleSelector1, SIGNAL(currentIndexChanged(int)), m_selPlot, SLOT(moduleChanged()));
 				disconnect(b_moduleSelector2, SIGNAL(currentIndexChanged(int)), m_selPlot, SLOT(moduleChanged()));
@@ -74,6 +88,11 @@ void VPlotOps::newSelection(VPlot * selPlot, bool forceConnect) {
       delete m_statsBox;
     }
 
+    if (selPlot->m_plottables[0]->m_plottableDimension==2) b_toggleRef->setEnabled(false);
+    else {
+    	if (b_showAllRefs->isChecked()) b_toggleRef->setEnabled(true);
+    }
+
 
     m_firstTime = false;
     if (selPlot->m_vcp->m_xLogged) b_logx->setChecked(true);
@@ -82,6 +101,12 @@ void VPlotOps::newSelection(VPlot * selPlot, bool forceConnect) {
     else b_logy->setChecked(false);
     if (selPlot->m_vcp->m_zLogged) b_logz->setChecked(true);
     else b_logz->setChecked(false);
+    if (selPlot->m_vcp->m_refToggled) b_toggleRef->setChecked(true);
+    else b_toggleRef->setChecked(false);
+    if (selPlot->m_vcp->m_refToggledDiff) b_toggleRefDiff->setChecked(true);
+    else b_toggleRefDiff->setChecked(false);
+    if (selPlot->m_vcp->m_refToggledRatio) b_toggleRefRatio->setChecked(true);
+    else b_toggleRefRatio->setChecked(false);
 
 
 
@@ -91,8 +116,11 @@ void VPlotOps::newSelection(VPlot * selPlot, bool forceConnect) {
     connect(b_logx, SIGNAL(stateChanged(int)), selPlot->m_vcp, SLOT(doLogX(int)));
     connect(b_logy, SIGNAL(stateChanged(int)), selPlot->m_vcp, SLOT(doLogY(int)));
     connect(b_logz, SIGNAL(stateChanged(int)), selPlot->m_vcp, SLOT(doLogZ(int)));
+    connect(b_toggleRef, SIGNAL(stateChanged(int)), selPlot->m_vcp, SLOT(doToggleRef(int)));
+    connect(b_toggleRefDiff, SIGNAL(stateChanged(int)), selPlot->m_vcp, SLOT(doToggleRefDiff(int)));
     connect(b_popout, SIGNAL(clicked()), selPlot->m_vcp, SLOT(popoutClicked()));
     connect(b_ref, SIGNAL(clicked()), selPlot->m_vcp, SLOT(refreshClicked()));
+    connect(b_toggleRefRatio, SIGNAL(stateChanged(int)), m_selPlot->m_vcp, SLOT(doToggleRefRatio(int)));
     if (m_selPlot->m_multipleModules) {
       m_moduleSelector->setEnabled(true);
       b_moduleSelector1->setCurrentIndex(m_selPlot->m_moduleNum / b_moduleSelector2->count());
