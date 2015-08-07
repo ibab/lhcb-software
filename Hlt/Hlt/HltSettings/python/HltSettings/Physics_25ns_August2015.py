@@ -274,14 +274,14 @@ class Physics_25ns_August2015( object ):
                                                           , 'DoTiming' : False
                                                           , 'R2L_PT'       : 500. * MeV
                                                           , 'R2L_P'        : 40000. * MeV
-                                                          , 'R2L_MinETA'   : 2.59
-                                                          , 'R2L_MaxETA'   : 2.97
-                                                          , 'R2L_Phis'     : [(-2.69, -2.29 ), (-0.85, -0.45), (0.45, 0.85), (2.29, 2.69)]
+                                                          , 'R2L_MinETA'   : 2.65
+                                                          , 'R2L_MaxETA'   : 2.80
+                                                          , 'R2L_Phis'     : [(-2.59, -2.49), (-0.65, -0.55), (0.55, 0.65), (2.49, 2.59)]
                                                           , 'R2L_TrChi2'   : 2.
                                                           , 'R2L_MinTr'    : 0.5
                                                           , 'R2L_GEC'      : 'Loose'
                                                           , 'R1L_PT'       : 500. * MeV
-                                                          , 'R1L_P'        : 10000. * MeV
+                                                          , 'R1L_P'        : 20000. * MeV
                                                           , 'R1L_MinETA'   : 1.6
                                                           , 'R1L_MaxETA'   : 2.04
                                                           , 'R1L_Phis'     : [(-2.65, -2.30 ), (-0.80, -0.50), (0.50, 0.80), (2.30, 2.65)]
