@@ -42,10 +42,6 @@
 // ============================================================================
 #include "TMath.h"
 // ============================================================================
-// Boost
-// ============================================================================
-#include "boost/static_assert.hpp"
-// ============================================================================
 // Local
 // ============================================================================
 #include "GSL_sentry.h"
@@ -202,8 +198,10 @@ namespace
     return (gsl_integration_workspace*) _ws ;
   }
   // ==========================================================================
-  BOOST_STATIC_ASSERT( std::numeric_limits<float> ::is_specialized  ) ;
-  BOOST_STATIC_ASSERT( std::numeric_limits<double>::is_specialized  ) ;
+  static_assert ( std::numeric_limits<float> ::is_specialized      ,
+                  "std::numeric_limits<float>  is not specialized" ) ;
+  static_assert ( std::numeric_limits<double>::is_specialized      ,
+                  "std::numeric_limits<double> is not specialized" ) ;
   // ==========================================================================
   /** @var s_INFINITY
    *  representation of positive INFINITY
@@ -214,8 +212,13 @@ namespace
    *  representation of positive "small"
    */
   constexpr double s_SMALL     = 2.0 * std::numeric_limits<double>::min ()  ;
-  // ==========================================================================  
-  BOOST_STATIC_ASSERT ( 0 < s_SMALL ) ;
+  // ==========================================================================
+  static_assert ( 0 < s_SMALL  , "``s_SMALL'' is not positive" ) ;
+  // ==========================================================================
+  static_assert ( std::numeric_limits<unsigned int>::is_specialized , 
+                  "std::numeric_limits<usigned int> is not specialized" ) ;
+  constexpr unsigned long s_UL_max = std::numeric_limits<unsigned int>::max () - 1 ;
+  static_assert ( 1 < s_UL_max ,  "s_UL_max is not large enough!" ) ;
   // ==========================================================================
   /** @var s_INFINITY_LOG
    *  representation of positive INFINITY_LOG 
@@ -9846,10 +9849,10 @@ Gaudi::Math::FourierSum::integral ( const double c0 ) const
   FourierSum integ ( m_pars , m_xmin , m_xmax , m_fejer ) ;
   //
   integ.m_pars[0] = c0 ;
-  const unsigned long  N   = m_pars.size() ;
-  const double         a0  = m_pars[0]     ;
-  const bool           add = s_zero ( a0 ) ;
-  for ( unsigned short k   = 1 ; 2 * k < N ; ++k  ) 
+  const unsigned long  N   =  m_pars.size() ;
+  const double         a0  =  m_pars[0]     ;
+  const bool           add = !s_zero ( a0 ) ;
+  for ( unsigned short k   =  1 ; 2 * k < N ; ++k  ) 
   {
     integ.m_pars[ 2 * k     ] = -m_pars[ 2 * k - 1 ] / k * m_scale ;
     integ.m_pars[ 2 * k - 1 ] =  m_pars[ 2 * k     ] / k * m_scale ;
@@ -9860,6 +9863,93 @@ Gaudi::Math::FourierSum::integral ( const double c0 ) const
   }  
   //
   return integ ;
+}
+// ============================================================================
+
+// ============================================================================
+Gaudi::Math::FourierSum
+Gaudi::Math::FourierSum::convolve 
+( const double sigma ) const 
+{
+  //
+  // no convolution 
+  if ( s_zero ( sigma ) ) { return *this ; }
+  //
+  const long double ss      =  sigma / m_scale ;
+  const long double sigma2  =  ss*ss           ;
+  // create covolution obejct 
+  FourierSum conv( m_pars , m_xmin , m_xmax , m_fejer ) ;
+  /// fill it! 
+  conv.m_pars [0] = m_pars[0]  ;
+  const unsigned long  N = m_pars.size() ;
+  for ( unsigned short k = 1 ; 2 * k < N ; ++k  ) 
+  {
+    const long double s  = std::exp ( - 0.5L * k * k * sigma2 ) ;
+    //
+    const long double v1 = s * m_pars[ 2 * k    ] ;
+    if ( !s_zero ( v1 ) ) { conv.m_pars [ 2 * k    ] = v1 ; }
+    //
+    const long double v2 = s * m_pars[ 2 * k -1 ] ;
+    if ( !s_zero ( v2 ) ) { conv.m_pars [ 2 * k -1 ] = v2 ; }
+    //
+  }
+  //
+  return conv ;
+}
+// ============================================================================
+//  convolute Fourier sum with gaussian function 
+// ============================================================================
+Gaudi::Math::FourierSum 
+Gaudi::Math::FourierSum::deconvolve 
+( const double sigma , 
+  const double delta ) const 
+{
+  // no convolution 
+  if ( s_zero ( sigma ) ) { return *this ; }
+  //
+  const long double ss      =  sigma / m_scale ;
+  const long double sigma2  =  ss*ss           ;
+  // create covolution obejct 
+  FourierSum conv( m_pars , m_xmin , m_xmax , m_fejer ) ;
+  /// fill it! 
+  conv.m_pars [0] = m_pars[0]  ;
+  const unsigned long  N = m_pars.size() ;
+  for ( unsigned short k = 1 ; 2 * k < N ; ++k  ) 
+  {
+    //  
+    long double f  = std::exp ( 0.5L * k * k * sigma2 ) ;
+    //
+    if ( !s_zero ( delta ) ) 
+    { const long double fd = f * delta ; f /= ( 1 + fd * fd ) ; }
+    //
+    const long double   v1 = f * m_pars [ 2 * k    ] ;
+    if ( !s_zero ( v1 ) ) { conv.m_pars [ 2 * k    ] = v1 ; }
+    //
+    const long double   v2 = f * m_pars [ 2 * k -1 ] ;
+    if ( !s_zero ( v2 ) ) { conv.m_pars [ 2 * k -1 ] = v2 ; }
+    //
+  }
+  //
+  return conv ;
+}
+// ============================================================================
+/* get the effective cut-off (==number of effective harmonics) 
+ * of Tikhonov's regularization 
+ * \f$ n \equiv  \sqrt{2 \ln \delta} \frac{2\pi\sigma}{L} \f$
+ * @param sigma  gaussian resoltuion 
+ * @param delta  regularization parameter 
+ * @return number of effective harmonic 
+ */
+// ============================================================================
+double Gaudi::Math::FourierSum::regularization 
+( const double sigma , 
+  const double delta ) const 
+{
+  if ( s_zero ( delta ) || s_zero ( sigma ) ) { return s_UL_max ; } // return
+  //
+  const long double d = delta ;
+  return 
+    std::sqrt ( 2 * std::log ( std::abs ( d ) ) ) * m_scale / std::abs ( sigma ) ;
 }
 // ============================================================================
 // simple  manipulations with polynoms: scale it! 
@@ -9954,6 +10044,23 @@ Gaudi::Math::CosineSum::CosineSum
   { setPar ( i , sum.a(i) ) ; }
 }
 // ============================================================================
+// protected constructor from the parameters 
+// ============================================================================
+Gaudi::Math::CosineSum::CosineSum
+( const std::vector<double>& pars  , 
+  const double               xmin  , 
+  const double               xmax  , 
+  const double               fejer )
+  : std::unary_function<double,double>() 
+  , m_pars  ( pars )
+  , m_xmin  ( std::min ( xmin , xmax ) )
+  , m_xmax  ( std::max ( xmin , xmax ) )
+  , m_scale ( 1 ) 
+  , m_fejer ( fejer ) 
+{
+  m_scale = M_PI / ( m_xmax - m_xmin ) ;
+}
+// ============================================================================
 // all zero ?
 // ============================================================================
 bool Gaudi::Math::CosineSum::zero  () const { return s_vzero ( m_pars ) ; }
@@ -9996,6 +10103,84 @@ double Gaudi::Math::CosineSum::fejer_sum ( const double x ) const
   /// transform to "t"-representation 
   const long double tv = t(x) ;
   return _fejer_cosine_sum_ ( m_pars , tv ) ;
+}
+// ============================================================================
+Gaudi::Math::CosineSum
+Gaudi::Math::CosineSum::convolve 
+( const double sigma ) const 
+{
+  //
+  // no convolution 
+  if ( s_zero ( sigma ) ) { return *this ; }
+  //
+  const long double ss      =  sigma / m_scale ;
+  const long double sigma2  =  ss*ss           ;
+  // create covolution obejct 
+  CosineSum conv( m_pars , m_xmin , m_xmax , m_fejer ) ;
+  /// fill it! 
+  conv.m_pars [0] = m_pars[0]  ;
+  const unsigned long  N = m_pars.size() ;
+  for ( unsigned short k = 1 ; k < N ; ++k  ) 
+  {
+    const long double s  = std::exp ( - 0.5L * k * k * sigma2 ) ;
+    //
+    const long double v1 = s * m_pars   [ k ]      ;
+    if ( !s_zero ( v1 ) ) { conv.m_pars [ k ] = v1 ; }
+  }
+  //
+  return conv ;
+}
+// ============================================================================
+//  convolute Fourier sum with gaussian function 
+// ============================================================================
+Gaudi::Math::CosineSum 
+Gaudi::Math::CosineSum::deconvolve 
+( const double sigma , 
+  const double delta ) const 
+{
+  // no convolution 
+  if ( s_zero ( sigma ) ) { return *this ; }
+  //
+  const long double ss      =  sigma / m_scale ;
+  const long double sigma2  =  ss*ss           ;
+  // create covolution obejct 
+  CosineSum conv( m_pars , m_xmin , m_xmax , m_fejer ) ;
+  /// fill it! 
+  conv.m_pars [0] = m_pars[0]  ;
+  const unsigned long  N = m_pars.size() ;
+  for ( unsigned short k = 1 ; k < N ; ++k  ) 
+  {
+    //  
+    long double f  = std::exp ( 0.5L * k * k * sigma2 ) ;
+    //
+    if ( !s_zero ( delta ) ) 
+    { const long double fd = f * delta ; f /= ( 1 + fd * fd ) ; }
+    //
+    const long double   v1 = f * m_pars [ k ] ;
+    if ( !s_zero ( v1 ) ) { conv.m_pars [ k ] = v1 ; }
+    //
+  }
+  //
+  return conv ;
+}
+// ============================================================================
+/* Get the effective cut-off (==number of terms/harmonics) 
+ * of Tikhonov's regularization 
+ * \f$ n \equiv  \sqrt{2 \ln \delta} \frac{\pi\sigma}{L} \f$
+ * @param sigma  gaussian resoltuion 
+ * @param delta  regularization parameter 
+ * @return number of effective harmonic 
+ */
+// ============================================================================
+double Gaudi::Math::CosineSum::regularization 
+( const double sigma , 
+  const double delta ) const 
+{
+  if ( s_zero ( delta ) || s_zero ( sigma ) ) { return s_UL_max ; } // return
+  //
+  const long double d = delta ;
+  return 
+    std::sqrt ( 2 * std::log ( std::abs ( d ) ) ) * m_scale / std::abs ( sigma ) ;
 }
 // ============================================================================
 // simple  manipulations with polynoms: scale it! 

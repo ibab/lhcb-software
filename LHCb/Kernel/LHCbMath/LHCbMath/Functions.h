@@ -5370,6 +5370,31 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
+      /** convolute with gaussian
+       *  @param sigma resoltuion parameter for gaussian
+       *  @return convolution witgh gaussian
+       */
+      FourierSum   convolve     ( const double sigma     ) const ;
+      /** deconvolute with optional regularization 
+       *  @param sigma sigma of gaussian 
+       *  @param delta parameter of Tikhonov's regularization
+       *  for delta<=0, no regularization
+       *  @return regularised deconvolution
+       */
+      FourierSum deconvolve     ( const double sigma     , 
+                                  const double delta = 0 ) const ;
+      /**  get the effective cut-off (==number of effective harmonics) 
+       *   of Tikhonov's regularization 
+       *   \f$ n \equiv  \sqrt{2 \ln \delta} \frac{\pi\sigma}{L} \f$
+       *   @param sigma  gaussian resoltuion 
+       *   @param delta  regularization parameter 
+       *   @return number of effective harmonic 
+       */
+      double     regularization ( const double sigma     , 
+                                  const double delta     ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// simple  manipulations with polynoms: scale it! 
       FourierSum& operator *= ( const double a ) ;     // scale it! 
       /// simple  manipulations with polynoms: scale it! 
@@ -5416,6 +5441,14 @@ namespace Gaudi
                   const bool           fejer  = false ) ;  // use Fejer summation
       /// constructor from Fourier sum 
       CosineSum ( const FourierSum&    sum            ) ;
+      // ======================================================================
+    protected:  // protected constructor from parameters 
+      // ======================================================================
+      /// protected constructor from parameters 
+      CosineSum ( const std::vector<double>& pars  , 
+                  const double               xmin  , 
+                  const double               xmax  , 
+                  const double               fejer );
       // ======================================================================
     public:
       // ======================================================================
@@ -5466,7 +5499,7 @@ namespace Gaudi
       /** set k-parameter
        *  @param k index
        *  @param value new value 
-       *  @return true iof parameter is actually changed 
+       *  @return true if parameter is actually changed 
        */
       bool setParameter    ( const unsigned short k , const double value )
       { return setPar      ( k , value ) ; }
@@ -5482,6 +5515,31 @@ namespace Gaudi
       // set cosine terms 
       bool   setA ( const unsigned short k , const double value ) 
       { return setPar ( k , value ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** convolute with gaussian
+       *  @param sigma resoltuion parameter for gaussian
+       *  @return convolution witgh gaussian
+       */
+      CosineSum   convolve     ( const double sigma     ) const ;
+      /** deconvolute with optional regularization 
+       *  @param sigma sigma of gaussian 
+       *  @param delta parameter of Tikhonov's regularization
+       *  for delta<=0, no regularization
+       *  @return regularised deconvolution
+       */
+      CosineSum deconvolve     ( const double sigma     , 
+                                 const double delta = 0 ) const ;
+      /** get the effective cut-off (==number of terms/harmonics) 
+       *  of Tikhonov's regularization 
+       *  \f$ n \equiv  \sqrt{2 \ln \delta} \frac{\pi\sigma}{L} \f$
+       *  @param sigma  gaussian resoltuion 
+       *  @param delta  regularization parameter 
+       *  @return number of effective harmonic 
+       */
+      double    regularization ( const double sigma     , 
+                                 const double delta     ) const ;
       // ======================================================================
     public:
       // ======================================================================
