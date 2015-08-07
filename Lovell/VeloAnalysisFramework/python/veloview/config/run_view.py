@@ -39,6 +39,8 @@ For each plot dictionary, the following keys can be defined:
     short: A shorter title to display, useful if `title` is very long and might
            look unwieldy in a GUI tab (string)
     normalise: Normalise the plot to have unit area (boolean)
+    tip: Description of the plot, including expected observerations, known 
+         features and relevant contact details.
     options: Dictionary of options defining purely cosmetic attributes
              (dictionary)
 
@@ -83,7 +85,8 @@ run_view_pages = OrderedDict([
             {
                 'title': 'Pedestal bank',
                 'name': 'Vetra/VeloPedestalSubtractorMoni/TELL1_{0:03d}/Pedestal_Bank',
-                'sensor_dependent': True
+                'sensor_dependent': True,
+                'tip': 'Test of tipping - Hello world!'
             },
             {
                 'title': 'Subtracted ADC profile',
@@ -95,7 +98,8 @@ run_view_pages = OrderedDict([
                 'name': 'Vetra/VeloPedestalSubtractorMoni/TELL1_{0:03d}/Ped_Sub_ADCs_2D',
                 'sensor_dependent': True
             }
-        ]
+        ],
+        'layout': (1, 3)
     }),
     ('noise', {
         'title': 'Noise',
