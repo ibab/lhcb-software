@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-08-07 - Mika Vesterinen
+ - RICHCalib prescales from Paras, to give 135 Hz for each of R1 and R2
+
+! 2015-08-07 - Mika Vesterinen
  - RICHCalib updates from Paras
 
 !========================= HltSettings v7r1 2015-08-05 =========================

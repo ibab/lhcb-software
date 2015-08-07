@@ -269,8 +269,8 @@ class Physics_25ns_August2015( object ):
                                                , 'MaxNoBiasRate' : 1000000.
                                                }
                        , Hlt1CalibRICHMirrorLinesConf : { 'Prescale' : { 'Hlt1CalibHighPTLowMultTrks'     : 0.0001,
-                                                                         'Hlt1CalibRICHMirrorRICH1'       : 0.05,
-                                                                         'Hlt1CalibRICHMirrorRICH2'       : 0.143}
+                                                                         'Hlt1CalibRICHMirrorRICH1'       : 0.281,
+                                                                         'Hlt1CalibRICHMirrorRICH2'       : 1.0}
                                                           , 'DoTiming' : False
                                                           , 'R2L_PT'       : 500. * MeV
                                                           , 'R2L_P'        : 40000. * MeV
