@@ -188,6 +188,7 @@ StatusCode HCClockScan::finalize() {
             if (bestValue < 0. || rms < bestValue) {
               bestValue = rms; 
             }
+            continue;
           }
           const double avg = m_adcs[j][i][k]->binHeight(bin);
           if (avg > bestValue) {
