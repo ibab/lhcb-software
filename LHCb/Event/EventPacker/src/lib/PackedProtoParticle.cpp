@@ -368,15 +368,12 @@ ProtoParticlePacker::check( const DataVector & dataA,
                    << endmsg;
     return StatusCode::FAILURE;
   }
-
-  LHCb::ProtoParticles::const_iterator itOld  = dataA.begin();
-  LHCb::ProtoParticles::const_iterator itTest = dataB.begin();
-
-  while ( dataA.end() != itOld )
+  
+  for ( auto it = std::make_pair( dataA.begin(), dataB.begin() );
+        it.first != dataA.end() && it.second != dataB.end();
+        ++it.first, ++it.second )
   {
-    LHCb::ProtoParticle* oPart = (*itOld++);
-    LHCb::ProtoParticle* tPart = (*itTest++);
-    sc = sc && check( *oPart, *tPart );
+    sc = sc && check( **it.first, **it.second );
   }
 
   return sc;
