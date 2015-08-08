@@ -7,6 +7,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-08-08 - Vanya Belyaev
+ - fix 
+
+! 2015-08-08 - Vanya Belyaev
  - reshuffle a bit the code to reduce duplication 
 
 ! 2015-08-07 - Vanya Belyaev

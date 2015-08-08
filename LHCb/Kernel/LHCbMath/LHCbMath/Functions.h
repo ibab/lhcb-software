@@ -5291,7 +5291,7 @@ namespace Gaudi
     public:
       // ======================================================================
       /// calculate Fourier sum
-      double fourier_sum ( const double x ) const  
+      double fourier_sum ( const double x ) const ;
       /// calculate Fejer sum
       double fejer_sum   ( const double x ) const ;
       // ======================================================================
