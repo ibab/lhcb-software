@@ -52,7 +52,6 @@ StatusCode HCClockScan::initialize() {
   const unsigned int nStations = m_stations.size();
   const unsigned int nQuadrants = m_quadrants.size();
   const unsigned int nSlots = m_slots.size();
-  info() << "Booking ADC histograms" << endmsg;
   m_adcs.resize(nSlots);
   if (m_splitEvenOdd) {
     m_adcsEven.resize(nSlots);
@@ -60,7 +59,6 @@ StatusCode HCClockScan::initialize() {
   }
   m_adcsPerStep.resize(nSlots);
   for (unsigned int j = 0; j < nSlots; ++j) {
-    info() << "Slot " << j << endmsg;
     m_adcs[j].resize(nStations);
     if (m_splitEvenOdd) {
       m_adcsEven[j].resize(nStations);
@@ -68,7 +66,6 @@ StatusCode HCClockScan::initialize() {
     }
     m_adcsPerStep[j].resize(nStations);
     for (unsigned int i = 0; i < nStations; ++i) {
-      info() << "Station " << i << endmsg;
       m_adcs[j][i].resize(nQuadrants);
       if (m_splitEvenOdd) {
         m_adcsEven[j][i].resize(nQuadrants);
@@ -100,7 +97,6 @@ StatusCode HCClockScan::initialize() {
       }
     }
   }
-  info() << "Booking results histograms" << endmsg;
   m_results.resize(nStations);
   m_offsets.resize(nStations);
   m_resultsStation.resize(nStations);
@@ -113,7 +109,6 @@ StatusCode HCClockScan::initialize() {
     m_resultsStationOdd.resize(nStations);
   }
   for (unsigned int i = 0; i < nStations; ++i) {
-    info() << "Station " << i << endmsg;
     const std::string titlex = "VFE clock delay";
     const std::string titley = "ADC clock delay";
     const std::string st = m_stations[i];
@@ -139,7 +134,6 @@ StatusCode HCClockScan::initialize() {
       m_offsetsOdd[i].resize(nQuadrants);
     }
     for (unsigned int k = 0; k < nQuadrants; ++k) {
-      info() << "Quadrant " << k << endmsg;
       const std::string quad = m_quadrants[k];
       name = "SCAN/" + st + quad;
       m_results[i][k] = book2D(name, name, low, high, binsx, low, high, binsy);

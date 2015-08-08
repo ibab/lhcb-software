@@ -46,16 +46,26 @@ options, arguments = parser.parse_args()
 
 # Get the input file names.
 import os
+import commands
 listOfFiles = []
+if options.FileName != "":
+  listOfFiles.append(options.FileName)
 for runNumber in  options.runNumber.split(','):
-  dirname =options.DataDirectory+'/'+runNumber
-  listOfAllFiles = os.listdir(dirname)
-  if options.FileName != "":
-    listOfFiles.append(options.FileName)
-  else:
-    for f in listOfAllFiles:
-      if f.count('.raw')==1:
-        listOfFiles.append("DATAFILE='PFN:mdf:" + dirname+ '/'+f + "' SVC='LHCb::MDFSelector'")
+  dirname = options.DataDirectory+'/'+runNumber
+  listOfAllFiles = []
+  if "castor" in options.DataDirectory:
+    status, output = commands.getstatusoutput('nsls ' + dirname)
+    if status != 0:
+      print output
+      print "Cannot list content of directory ", dirname
+      exit()
+    listOfAllFiles = output.splitlines()
+    dirname = "root://castorlhcb.cern.ch//" + dirname
+  else:     
+    listOfAllFiles = os.listdir(dirname)
+  for f in listOfAllFiles:
+    if f.count('.raw') == 1:
+      listOfFiles.append("DATAFILE='PFN:mdf:" + dirname+ '/'+f + "' SVC='LHCb::MDFSelector'")
 
 if len(options.runNumber.split(','))>1:
    options.runNumber = options.runNumber.split(',')[0]+'_'+options.runNumber.split(',')[-1]
