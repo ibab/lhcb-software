@@ -161,7 +161,8 @@ if arguments.modules :
     for m in arguments.modules :
         mod = importlib.import_module ( m )
         logger.info ("Imported module '%s' from '%s' " % ( mod.__name__ , mod.__file__ ) )
-    del importlib, mod
+        locals()[m] = mod 
+    del importlib
     
 # =============================================================================
 ## execute the files, defined as arguments
