@@ -57,7 +57,7 @@ for s in stations:
     parser.add_option( "--step"+s, type = 'int',
                         help="force optimal step for "+s, 
                         dest="step"+s,default = -1)
-    Results[s]={'VFEclock':-1,'ADCclock':-1,'OddPedestals':{},'EvenPedestals':{},'OddPedestalsFit':{},'EvenPedestalsFit':{},'OddPedestalsRMS':{},'EvenPedestalsRMS':{}}
+    Results[s] ={'VFEclock':-1,'ADCclock':-1,'OddPedestals':{},'EvenPedestals':{},'OddPedestalsFit':{},'EvenPedestalsFit':{},'OddPedestalsRMS':{},'EvenPedestalsRMS':{}}
 
 options, arguments = parser.parse_args()
 
@@ -79,7 +79,6 @@ if options.RunBrunel:
 
 if len(options.runNumber.split(','))>1:
    options.runNumber = options.runNumber.split(',')[0]+'_'+options.runNumber.split(',')[-1]
-
 
 def fitHist(plot, name = 'gg' ):
     gau = TF1(name,"gaus",0.,500.)
@@ -111,116 +110,99 @@ if options.analysisType == 'DelayScan':
     \\frame{\\titlepage} 
     """
     )
-
-    f = TFile('scan_'+options.runNumber+'.root','READ')
+    onlyEven = False
+    onlyOdd = False
+    folderScan = "HCClockScan/SCAN/"
+    folderOffset = "HCClockScan/OFFSET/"
+    if onlyEven:
+      folderScan += "EVEN/"
+      folderOffset += "EVEN/"
+    elif onlyOdd:
+      folderScan += "ODD/" 
+      folderOffset += "ODD/" 
+    f = TFile('scan_' + options.runNumber + '.root', 'READ')
     gStyle.SetOptStat("")
-    slots = ['Previous','Central','Next']
-    quadrants = ['0','1','2','3']
-    slotColor = {'Previous':kBlue,'Central':kGreen,'Next':kRed}
+    slots = ['Previous', 'Central', 'Next']
+    quadrants = ['0', '1', '2', '3']
+    slotColor = {'Previous': kBlue, 'Central': kGreen, 'Next': kRed}
     Plots = {}
     Canvas = {}
     maxStation = {}
     for s in stations:
-        maxStation[s]=[-10.,-1]
-        Canvas[s+'Scan']=TCanvas(s+'Scan',s+'Scan',1200,1000)
-        Canvas[s+'Scan'].Divide(2,2)
-        Canvas[s+'ScanSummary']=TCanvas(s+'ScanSummary',s+'ScanSummary',1200,1000)
-        Canvas[s+'ScanHist']=TCanvas(s+'ScanHist',s+'ScanHist',1200,1000)
-        Canvas[s+'ScanHist'].Divide(2,2)
-        Plots[s+'_scan']=TH2D(s+'_scan',s+'_scan',32,-0.5,31.5,16,-1,31)
-        Plots[s+'_scan'].GetXaxis().SetTitle(s+' VFE clock delay')
-        Plots[s+'_scan'].GetYaxis().SetTitle(s+' ADC clock delay')
-        Canvas[s+'Offset']=TCanvas(s+'Offset',s+'Offset',1200,1000)
-        Canvas[s+'Offset'].Divide(2,2)
-        for ii,q in enumerate(quadrants):
-            histos = {}
-            Plots[s+q+'_scan']=TH2D(s+q+'_scan',s+q+'_scan',32,-0.5,31.5,16,-1,31)
-            Plots[s+q+'_scan'].GetXaxis().SetTitle(s+q+' VFE clock delay')
-            Plots[s+q+'_scan'].GetYaxis().SetTitle(s+q+' ADC clock delay')
-            Plots[s+q+'_offset']=TH2D(s+q+'_offset',s+q+'_offset',32,-0.5,31.5,16,-1,31)
-            Plots[s+q+'_offset'].GetXaxis().SetTitle(s+q+' VFE clock delay')
-            Plots[s+q+'_offset'].GetYaxis().SetTitle(s+q+' ADC clock delay')
-            for slot in slots:
-                histos[slot]=f.Get('HCClockScan/ADC/'+slot+'/'+s+'/'+q)
-            for ix in range(histos['Central'].GetNbinsX()+1):
-                step = histos['Central'].GetBinCenter(ix)
-                vfe = step % 32
-                adc = int( step / 32 ) * 2
-                maxAdc,bestSlot = -10,-10
-                secondMaxADC = -100
-                for kk,slot in enumerate(slots):
-                    if  histos[slot].GetBinContent(ix)>maxAdc:
-                        secondMaxADC = maxAdc
-                        maxAdc = histos[slot].GetBinContent(ix)
-                        bestSlot = kk -1
-                    elif histos[slot].GetBinContent(ix)>secondMaxADC and  histos[slot].GetBinContent(ix)<=maxAdc:
-                        secondMaxADC = histos[slot].GetBinContent(ix)
-                if options.scheme == 'absoluteMax':
-                    valMax = Plots[s+'_scan'].GetBinContent(Plots[s+q+'_scan'].GetXaxis().FindBin(vfe),Plots[s+q+'_scan'].GetYaxis().FindBin(adc))+maxAdc
-                    Plots[s+q+'_scan'].SetBinContent(Plots[s+q+'_scan'].GetXaxis().FindBin(vfe),Plots[s+q+'_scan'].GetYaxis().FindBin(adc),maxAdc)
-                    Plots[s+'_scan'].SetBinContent(Plots[s+q+'_scan'].GetXaxis().FindBin(vfe),Plots[s+q+'_scan'].GetYaxis().FindBin(adc),valMax)
-                    Plots[s+q+'_offset'].SetBinContent(Plots[s+q+'_offset'].GetXaxis().FindBin(vfe),Plots[s+q+'_offset'].GetYaxis().FindBin(adc),bestSlot)
-                    if valMax > maxStation[s][0]:
-                        maxStation[s][0]=valMax
-                        maxStation[s][1]=step
-                elif options.scheme == 'relativeMax':
-                    #print maxAdc,secondMaxADC
-                    if maxAdc == 0. and secondMaxADC ==0.: maxAdc = 0.
-                    elif secondMaxADC == 0.: maxAdc = 1.
-                    else: maxAdc = maxAdc/secondMaxADC
-                    valMax = Plots[s+'_scan'].GetBinContent(Plots[s+q+'_scan'].GetXaxis().FindBin(vfe),Plots[s+q+'_scan'].GetYaxis().FindBin(adc))+maxAdc
-                    Plots[s+q+'_scan'].SetBinContent(Plots[s+q+'_scan'].GetXaxis().FindBin(vfe),Plots[s+q+'_scan'].GetYaxis().FindBin(adc),maxAdc)
-                    Plots[s+'_scan'].SetBinContent(Plots[s+q+'_scan'].GetXaxis().FindBin(vfe),Plots[s+q+'_scan'].GetYaxis().FindBin(adc),valMax)
-                    Plots[s+q+'_offset'].SetBinContent(Plots[s+q+'_offset'].GetXaxis().FindBin(vfe),Plots[s+q+'_offset'].GetYaxis().FindBin(adc),bestSlot)
-                    if valMax > maxStation[s][0]:
-                        maxStation[s][0]=valMax
-                        maxStation[s][1]=step
+        hScan = f.Get(folderScan + s)
+        Plots[s + '_scan'] = hScan
+        binx = Long()
+        biny = Long()
+        binz = Long() 
+        noise = True
+        if noise:
+          bin = hScan.GetMinimumBin(binx, biny, binz)
+        else:
+          bin = hScan.GetMaximumBin(binx, biny, binz)
+        vfe = int(hScan.GetXaxis().GetBinCenter(binx))
+        adc = int(hScan.GetYaxis().GetBinCenter(biny))
+        step = 32 * (adc / 2) + vfe 
 
-        Plots[s+'Optimal']= TGraph()
-        Plots[s+'Optimal'].SetName(s+'Optimal')
-        Plots[s+'Optimal'].SetTitle(s+'Optimal')
-        stepForce = getattr(options,'step'+s)
-        vfe = stepForce % 32
-        adc = int( stepForce / 32 ) * 2
-        if stepForce >-0.5:
-            print 'Force setp',s, vfe,adc
-            maxStation[s][1]=stepForce
-            maxStation[s][0]=Plots[s+'_scan'].GetBinContent(Plots[s+'_scan'].GetXaxis().FindBin(vfe),Plots[s+'_scan'].GetYaxis().FindBin(adc))
-        Results[s]['VFEClock']=   int(maxStation[s][1]) % 32
-        Results[s]['ADCClock']=   int( int(maxStation[s][1]) / 32 ) * 2
-        Plots[s+'Optimal'].SetPoint(0,int(maxStation[s][1]) % 32,int( int(maxStation[s][1]) / 32 ) * 2)
-        Plots[s+'Optimal'].SetMarkerStyle(30)
-        Plots[s+'Optimal'].SetMarkerSize(3)
-        Canvas[s+'ScanSummary'].cd()
-        Plots[s+'_scan'].Draw('col4z')
-        Plots[s+'Optimal'].Draw('Psame')
-        for ii,q in enumerate(quadrants):
-            Canvas[s+'ScanHist'].cd(ii+1)
-            Canvas[s+'ScanHist'].cd(ii+1).SetLogy()
-            opt = ''
-            for slot in slots:
-                ##print str(int(maxStation[s][1])),s,slot
-                Plots[s+str(int(maxStation[s][1]))+q+slot]=f.Get('HCClockScan/ADC/'+str(int(maxStation[s][1]))+'/'+s+'/'+q+'/'+slot)
+        stepForce = getattr(options, 'step' + s)
+        if stepForce > -0.5:
+          step = stepForce
+          vfe = stepForce % 32
+          adc = int(stepForce / 32) * 2
+          print 'Force step', s, vfe, adc
 
-                if slot == 'Central':
-                    mean,rms,funct = fitHist(Plots[s+str(int(maxStation[s][1]))+q+slot])
-                    Results[s]['EvenPedestals'][q] = int(mean)
-                    Results[s]['EvenPedestalsRMS'][q] = round(rms,1)
-                elif slot == 'Previous':
-                    mean,rms,funct = fitHist(Plots[s+str(int(maxStation[s][1]))+q+slot])
-                    Results[s]['OddPedestals'][q] = int(mean)
-                    Results[s]['OddPedestalsRMS'][q] = round(rms,1)
+        Results[s]['VFEClock'] = vfe
+        Results[s]['ADCClock'] = adc
 
-                Plots[s+str(int(maxStation[s][1]))+q+slot].SetLineColor(slotColor[slot])
-                Plots[s+str(int(maxStation[s][1]))+q+slot].SetMarkerColor(slotColor[slot])
-                Plots[s+str(int(maxStation[s][1]))+q+slot].Draw(opt)
-                opt = 'same'
-            Canvas[s+'Scan'].cd(ii+1)
-            Plots[s+q+'_scan'].Draw('col4z') 
-            Plots[s+'Optimal'].Draw('Psame')  
-            Canvas[s+'Offset'].cd(ii+1)
-            Plots[s+q+'_offset'].Draw('col4z')
-            Plots[s+'Optimal'].Draw('Psame')
+        gOptimal = TGraph()
+        gOptimal.SetName(s + 'Optimal')
+        gOptimal.SetTitle(s + 'Optimal')
+        gOptimal.SetPoint(0, vfe, adc)
+        gOptimal.SetMarkerStyle(30)
+        gOptimal.SetMarkerSize(3)
+        Plots[s + 'Optimal'] = gOptimal
+
+        Canvas[s + 'ScanSummary'] = TCanvas(s + 'ScanSummary', s + 'ScanSummary', 1200, 1000)
+        Canvas[s + 'ScanSummary'].cd()
+        Plots[s + '_scan'].Draw('col4z')
+        gOptimal.Draw('Psame')
+
+        Canvas[s + 'Scan'] = TCanvas(s + 'Scan', s + 'Scan', 1200, 1000)
+        Canvas[s + 'Scan'].Divide(2, 2)
+        Canvas[s + 'ScanHist'] = TCanvas(s + 'ScanHist', s + 'ScanHist', 1200, 1000)
+        Canvas[s + 'ScanHist'].Divide(2, 2)
+        Canvas[s + 'Offset'] = TCanvas(s + 'Offset', s + 'Offset', 1200, 1000)
+        Canvas[s + 'Offset'].Divide(2, 2)
+        for ii, q in enumerate(quadrants):
+          Canvas[s + 'ScanHist'].cd(ii + 1)
+          Canvas[s + 'ScanHist'].cd(ii + 1).SetLogy()
+          opt = ''
+          for slot in slots:
+            title = s + str(step) + q + slot
+            Plots[title] = f.Get('HCClockScan/ADC/' + str(step) + '/' + s + '/' + q + '/' + slot)
+
+            if slot == 'Central':
+              mean, rms, funct = fitHist(Plots[title])
+              Results[s]['EvenPedestals'][q] = int(mean)
+              Results[s]['EvenPedestalsRMS'][q] = round(rms,1)
+            elif slot == 'Previous':
+              mean, rms, funct = fitHist(Plots[title])
+              Results[s]['OddPedestals'][q] = int(mean)
+              Results[s]['OddPedestalsRMS'][q] = round(rms,1)
+
+            Plots[title].SetLineColor(slotColor[slot])
+            Plots[title].SetMarkerColor(slotColor[slot])
+            Plots[title].Draw(opt)
+            opt = 'same'
+
+          Canvas[s + 'Scan'].cd(ii + 1)
+          Plots[s + q + '_scan'] = f.Get(folderScan + s + q)
+          Plots[s + q + '_scan'].Draw('col4z') 
+          Plots[s + 'Optimal'].Draw('Psame')  
+  
+          Canvas[s + 'Offset'].cd(ii + 1)
+          Plots[s + q + '_offset'] = f.Get(folderOffset + s + q)
+          Plots[s + q + '_offset'].Draw('col4z')
+          Plots[s + 'Optimal'].Draw('Psame')
 
     for s in stations:
         Canvas[s+'ScanSummary'].SaveAs('results/plots/'+options.runNumber+'_'+s+'_Summary.pdf')

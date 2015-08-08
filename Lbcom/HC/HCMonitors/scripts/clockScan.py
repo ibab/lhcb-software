@@ -45,6 +45,7 @@ parser.add_option("-t", "--TAE", type="int",
 options, arguments = parser.parse_args()
 
 # Get the input file names.
+import os
 listOfFiles = []
 for runNumber in  options.runNumber.split(','):
   dirname =options.DataDirectory+'/'+runNumber
@@ -137,9 +138,11 @@ if options.analysisType == 'DelayScan':
   appMgr.algorithm('HCClockScan').MaximumStepNr = 512
   appMgr.algorithm('HCClockScan').VFEClkPitch = 1
   appMgr.algorithm('HCClockScan').ADCClkPitch = 2
-  appMgr.algorithm('HCClockScan').DigitLocation = ["Raw/HC/Digits","Prev1/Raw/HC/Digits","Next1/Raw/HC/Digits"]
-  appMgr.algorithm('HCClockScan').CentralThreshold = 0
-  appMgr.algorithm('HCClockScan').BxRange = [options.minBx, options.maxBx]
+  #appMgr.algorithm('HCClockScan').Noise = True
+  appMgr.algorithm('HCClockScan').SplitEvenOdd = True
+  appMgr.algorithm('HCClockScan').DigitLocations = ["Raw/HC/Digits","Prev1/Raw/HC/Digits","Next1/Raw/HC/Digits"]
+  appMgr.algorithm('HCClockScan').MinBx = options.minBx
+  appMgr.algorithm('HCClockscan').MaxBx = options.maxBx
 
 elif  options.analysisType == 'Pedestals':
   from Configurables import HCDigitMonitor
