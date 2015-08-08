@@ -1,12 +1,17 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
-! Responsible : Chris Jones
+! Responsible : DaVinci coordinator
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 !
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!====================== DaVinci v37r1p2 2015-08-08 ===========================
+
+! 2015-08-08 - Eduardo Rodrigues
+ - New patch release.
 
 !====================== DaVinci v37r1p1 2015-08-07 ===========================
 
