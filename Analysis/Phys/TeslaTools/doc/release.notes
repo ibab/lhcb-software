@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-8-08 - Sean Benson
+ - Added protection for calo digits in multiple candidates.
+
 !======================= TeslaTools v1r11 2015-08-06 ========================
 
 ! 2015-08-05 - Eduardo Rodrigues

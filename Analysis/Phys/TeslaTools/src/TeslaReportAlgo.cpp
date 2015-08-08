@@ -680,6 +680,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
             if( !digit->parent() ) {
               digit->setCellID(cellID);
               calo_vector->push_back(digit);
+              if ( msgLevel(MSG::DEBUG) ) debug() << "Digit has no parent, create new one based on LHCbID in report" << endmsg;
             }
             
             const LHCb::HltObjectSummary::Info Calo_info = ObjBasic->numericalInfo();
@@ -803,8 +804,8 @@ LHCb::CaloDigit* TeslaReportAlgo::DigitSearchRaw(LHCb::CaloCellID id){
       }
     }
   }
-  if( !caloDigits ){
-    LHCb::CaloDigits * caloDigitsH = getIfExists<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Default );
+  LHCb::CaloDigits * caloDigitsH = getIfExists<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Default );
+  if( caloDigitsH ){
     for( auto calo : *caloDigitsH ){
       if( calo->cellID() == id ) {
         if ( msgLevel(MSG::DEBUG) ) debug() << "Digit match found, energy = " << calo->e() << endmsg;
@@ -812,5 +813,19 @@ LHCb::CaloDigit* TeslaReportAlgo::DigitSearchRaw(LHCb::CaloCellID id){
       }
     }
   }
-  return ( new LHCb::CaloDigit() );
+  //Final fallback to see if already inside
+  std::stringstream ss_DigitLoc;
+  ss_DigitLoc << m_OutputPref << m_inputName << "/Digits";
+  LHCb::CaloDigits * caloOurs = getIfExists<LHCb::CaloDigits>( ss_DigitLoc.str().c_str() );
+  if( caloOurs ){
+    for( auto calo : *caloOurs ){
+      if( calo->cellID() == id ) {
+        if ( msgLevel(MSG::DEBUG) ) debug() << "Digit match found, energy = " << calo->e() << endmsg;
+        return calo;
+      }
+    }
+  }
+  if ( msgLevel(MSG::DEBUG) ) debug() << "No match found in raw event" << endmsg;
+  std::unique_ptr<LHCb::CaloDigit> digit { new LHCb::CaloDigit() };
+  return digit.release();
 }
