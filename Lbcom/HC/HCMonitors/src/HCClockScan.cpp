@@ -52,6 +52,7 @@ StatusCode HCClockScan::initialize() {
   const unsigned int nStations = m_stations.size();
   const unsigned int nQuadrants = m_quadrants.size();
   const unsigned int nSlots = m_slots.size();
+  info() << "Booking ADC histograms" << endmsg;
   m_adcs.resize(nSlots);
   if (m_splitEvenOdd) {
     m_adcsEven.resize(nSlots);
@@ -59,6 +60,7 @@ StatusCode HCClockScan::initialize() {
   }
   m_adcsPerStep.resize(nSlots);
   for (unsigned int j = 0; j < nSlots; ++j) {
+    info() << "Slot " << j << endmsg;
     m_adcs[j].resize(nStations);
     if (m_splitEvenOdd) {
       m_adcsEven[j].resize(nStations);
@@ -66,10 +68,11 @@ StatusCode HCClockScan::initialize() {
     }
     m_adcsPerStep[j].resize(nStations);
     for (unsigned int i = 0; i < nStations; ++i) {
+      info() << "Station " << i << endmsg;
       m_adcs[j][i].resize(nQuadrants);
       if (m_splitEvenOdd) {
         m_adcsEven[j][i].resize(nQuadrants);
-        m_adcsEven[j][i].resize(nQuadrants);
+        m_adcsOdd[j][i].resize(nQuadrants);
       } 
       m_adcsPerStep[j][i].resize(nQuadrants);
       for (unsigned int k = 0; k < nQuadrants; ++k) {
@@ -90,13 +93,14 @@ StatusCode HCClockScan::initialize() {
           setAxisLabels(m_adcsEven[j][i][k], "Step Number", "ADC Mean");
           setAxisLabels(m_adcsOdd[j][i][k], "Step Number", "ADC Mean");
         } 
-        for (int kk = m_minStep; kk <= m_maxStep; ++kk) {
+        for (unsigned int kk = m_minStep; kk <= m_maxStep; ++kk) {
           name = "ADC/" + std::to_string(kk) + "/" + st + "/" + quad + "/" + sl;
           m_adcsPerStep[j][i][k].push_back(book1D(name, name, -0.5, 1023.5, 1024));
         }
       }
     }
   }
+  info() << "Booking results histograms" << endmsg;
   m_results.resize(nStations);
   m_offsets.resize(nStations);
   m_resultsStation.resize(nStations);
@@ -109,6 +113,7 @@ StatusCode HCClockScan::initialize() {
     m_resultsStationOdd.resize(nStations);
   }
   for (unsigned int i = 0; i < nStations; ++i) {
+    info() << "Station " << i << endmsg;
     const std::string titlex = "VFE clock delay";
     const std::string titley = "ADC clock delay";
     const std::string st = m_stations[i];
@@ -128,8 +133,13 @@ StatusCode HCClockScan::initialize() {
       name = "SCAN/ODD/" + st;
       m_resultsStationOdd[i] = book2D(name, name, low, high, binsx, low, high, binsy);
       setAxisLabels(m_resultsStationOdd[i], titlex, titley);
+      m_resultsEven[i].resize(nQuadrants);
+      m_offsetsEven[i].resize(nQuadrants);
+      m_resultsOdd[i].resize(nQuadrants);
+      m_offsetsOdd[i].resize(nQuadrants);
     }
     for (unsigned int k = 0; k < nQuadrants; ++k) {
+      info() << "Quadrant " << k << endmsg;
       const std::string quad = m_quadrants[k];
       name = "SCAN/" + st + quad;
       m_results[i][k] = book2D(name, name, low, high, binsx, low, high, binsy);
@@ -153,8 +163,7 @@ StatusCode HCClockScan::initialize() {
     }
   }
 
-  m_stepCounter = m_minStep;
-
+  m_step = m_minStep;
   return StatusCode::SUCCESS;
 }
 
@@ -172,12 +181,14 @@ StatusCode HCClockScan::execute() {
   const unsigned int bxid = odin->bunchId();
   if (bxid < m_bxMin || bxid > m_bxMax) return StatusCode::SUCCESS;
   const bool even = (bxid % 2 == 0);
-  const int step = odin->calibrationStep();
+  const unsigned int step = odin->calibrationStep();
 
   if (step < m_minStep || step > m_maxStep) return StatusCode::SUCCESS;
-  if (step != m_stepCounter) {
-    m_stepCounter = step;
-    if (msgLevel(MSG::DEBUG)) debug() << "Step number " << step << endmsg;
+  if (step != m_step) {
+    if (step % 10 == 0 || step < m_step) {
+      info() << "Step number " << step << endmsg;
+    }
+    m_step = step;
   }
 
   const unsigned int nLocations = m_digitLocations.size();
@@ -268,7 +279,7 @@ void HCClockScan::findBest(const std::vector<std::vector<std::vector<AIDA::IProf
   bestSlot = -2;
   for (unsigned int j = 0; j < 3; ++j) {
     if (m_noise) {
-      const double rms = adcs[j][station][quadrant]->binError(bin);
+      const double rms = adcs[j][station][quadrant]->binRms(bin);
       if (bestValue < 0. || rms < bestValue) {
         bestValue = rms; 
       }

@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-08-08 - Heinrich Schindler
+ - Separate clock scans for even/odd bxids.
+
 ! 2015-08-06 - Heinrich Schindler
  - Add finalize method in HCClockScan.
 

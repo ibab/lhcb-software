@@ -36,8 +36,13 @@ class HCClockScan : public HCMonitorBase {
   /// TES locations of digits.
   std::vector<std::string> m_digitLocations;
 
-  int m_minStep;
-  int m_maxStep;
+  /// Current step
+  unsigned int m_step;
+  /// First step in the scan
+  unsigned int m_minStep;
+  /// Last step in the scan
+  unsigned int m_maxStep;
+
   int m_VFEClkPitch;
   int m_ADCClkPitch;
 
@@ -61,7 +66,6 @@ class HCClockScan : public HCMonitorBase {
   std::vector<std::vector<AIDA::IHistogram2D*> > m_offsetsOdd;
   std::vector<AIDA::IHistogram2D*> m_resultsStationOdd;
 
-  int m_stepCounter;
   /// Flag for optimisation scheme
   bool m_relativeMax;
   /// Flag to analyse noise (instead of signal)
@@ -69,6 +73,7 @@ class HCClockScan : public HCMonitorBase {
   /// Flag to create separate profile histograms for even and odd BX-Ids.
   bool m_splitEvenOdd; 
 
+  /// Get the best ADC/RMS for a given bin and channel.
   void findBest(const std::vector<std::vector<std::vector<AIDA::IProfile1D*> > >& adcs,
                 const unsigned int station, const unsigned int quadrant, 
                 const unsigned int bin,
