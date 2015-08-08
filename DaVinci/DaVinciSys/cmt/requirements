@@ -1,15 +1,16 @@
 package DaVinciSys
-version v37r1p1
+version v37r1p2
 
 branches doc cmt
 
 ##############################
 # Patch just for this version
 use  DDDB           v1r80     Det
+use  TeslaTools     v1r12     Phys
 ##############################
 
 # Packages
-use  DaVinci         v37r1p1  Phys   # DaVinci coordinator
+use  DaVinci         v37r1p2  Phys   # DaVinci coordinator
 use  DaVinciTests    v2r36
 use  KaliCalo        v4r18    Phys   # Olivier Deschamps
 use  Tesla           v1r10    Phys   # Sean Benson

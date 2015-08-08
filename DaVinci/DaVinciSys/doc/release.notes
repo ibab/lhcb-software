@@ -3,6 +3,11 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v37r1p2>2015-08-08 DaVinci v37r1p2</A></H1><PRE>
+
+Patch release identical to v37r1p1 except for the inclusion of the patch of
+package Phys/TeslaTools v1r12 from the Analysis project.
+
 </PRE><H1><A NAME=v37r1p1>2015-08-07 DaVinci v37r1p1</A></H1><PRE>
 
 Patch release identical to v37r1 except that it depends on Stripping v9r9p1
