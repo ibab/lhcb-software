@@ -5270,7 +5270,9 @@ namespace Gaudi
                    const double         xmax   = 1     ,   // high edge
                    const bool           fejer  = false );  // use Fejer summation
       /// constructor from cosine serie
-      FourierSum ( const CosineSum& sum ) ;
+      FourierSum ( const CosineSum&  sum ) ;
+      /// constructor from Fourier series and fejer flag
+      FourierSum ( const FourierSum& sum  , const bool fejer ) ;
       // ======================================================================
     protected:  // protected constructor from parameters 
       // ======================================================================
@@ -5289,7 +5291,7 @@ namespace Gaudi
     public:
       // ======================================================================
       /// calculate Fourier sum
-      double fourier_sum ( const double x ) const ;
+      double fourier_sum ( const double x ) const  
       /// calculate Fejer sum
       double fejer_sum   ( const double x ) const ;
       // ======================================================================
@@ -5306,11 +5308,6 @@ namespace Gaudi
       // ======================================================================
       double x ( const double t ) const { return    t / m_scale   + m_delta ; }
       double t ( const double x ) const { return  ( x - m_delta ) * m_scale ; }
-      // ======================================================================
-    public:
-      // ====================================================================== 
-      /// define summation algorithm
-      bool setFejer ( const bool value ) ; // define summation algorithm
       // ======================================================================
     public:
       // ======================================================================
@@ -5344,20 +5341,33 @@ namespace Gaudi
       double a ( const unsigned short k ) const { return par ( 2 * k     ) ; }
       /// get k-th sin-parameter 
       double b ( const unsigned short k ) const 
-      { return 1 <= k ? par ( 2 * ( k - 1 ) + 1 ) : 0 ; }  
+      { return 1 <= k ? par   ( 2 * k - 1 ) : 0 ; }  
       // set cosine terms 
       bool setA ( const unsigned short k , const double value ) 
       { return setPar ( 2 * k , value ) ; }
       // set cosine terms 
       bool setB ( const unsigned short k , const double value ) 
       { return 1<= k ? setPar ( 2 * k - 1 , value ) : false ; }
+      /** get the magnitude of nth-harmonic
+       *  \f$m_k = \sqrt( a^2_k + b^2_k) \f$
+       */
+      double mag    ( const unsigned short k ) const ;
+      /// get the phase for n-th harmonic 
+      double phase  ( const unsigned short k ) const ;
+      // ======================================================================
+    public: 
+      // ======================================================================
+      /// get Fejer sum 
+      FourierSum fejer_sum   () const ;                       // get Fejer sum 
       // ======================================================================
     public:
       // ======================================================================
       /// get the derivative at point x 
-      double     derivative ( const double x ) const ;
+      double     derivative   ( const double x ) const ;
       /// get the derivative as function 
-      FourierSum derivative ( ) const ;
+      FourierSum derivative   ( ) const ;
+      /// get nth derivative as function 
+      FourierSum derivative_n ( const unsigned short n ) const ;
       // ======================================================================
     public:
       // ======================================================================      
@@ -5441,6 +5451,8 @@ namespace Gaudi
                   const bool           fejer  = false ) ;  // use Fejer summation
       /// constructor from Fourier sum 
       CosineSum ( const FourierSum&    sum            ) ;
+      /// constructor from Fourier series and fejer flag
+      CosineSum ( const CosineSum&     sum  , const bool fejer ) ;
       // ======================================================================
     protected:  // protected constructor from parameters 
       // ======================================================================
@@ -5478,11 +5490,6 @@ namespace Gaudi
       double t ( const double x ) const { return  ( x - m_xmin ) * m_scale ; }
       // ======================================================================
     public:
-      // ====================================================================== 
-      /// define summation algorithm
-      bool setFejer ( const bool value ) ; // define summation algorithm
-      // ======================================================================
-    public:
       // ======================================================================
       /// degree  of polynomial 
       unsigned short degree () const { return m_pars.size() - 1 ; }
@@ -5515,6 +5522,29 @@ namespace Gaudi
       // set cosine terms 
       bool   setA ( const unsigned short k , const double value ) 
       { return setPar ( k , value ) ; }
+      // ======================================================================
+    public: 
+      // ======================================================================
+      /// get Fejer sum 
+      CosineSum fejer_sum   () const ;                         // get Fejer sum 
+      // ====================================================================== 
+    public:
+      // ======================================================================
+      /// get the derivative at point x 
+      double     derivative ( const double x ) const ;
+      /// get the derivative as function 
+      FourierSum derivative ( ) const ;
+      /// get nth derivative as function 
+      FourierSum derivative_n ( const unsigned short n ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================      
+      // get integral between low and high 
+      double     integral   ( const double low , const double high ) const ;
+      /** get integral as function 
+       *  @param c0  integration constant
+       */
+      FourierSum integral   ( const double c0 = 0 ) const ;
       // ======================================================================
     public:
       // ======================================================================

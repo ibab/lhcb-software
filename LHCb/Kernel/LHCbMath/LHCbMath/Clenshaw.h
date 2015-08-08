@@ -162,6 +162,261 @@ namespace Gaudi
         return 0.5 * ( b0 - b2) ;
       }
       // ======================================================================      
+      /** Clenshaw algorithm for summation of cosine-series 
+       *  \f$ f(x) = \frac{a_0}{2} + \sum_{i=k}^{n} a_k \cos( k x) \f$
+       *  @see https://en.wikipedia.org/wiki/Clenshaw_algorithm
+       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+       *  @date 2015-02-10
+       */
+      template <class ITERATOR>
+      inline 
+      long double
+      cosine_sum 
+      ( ITERATOR           first , 
+        ITERATOR           last  ,
+        const long double  x     ) 
+      {
+        if ( first == last ) { return 0 ; }
+        //
+        long double b2 = 0 ;
+        long double b1 = 0 ;
+        long double b0 = 0 ;
+        //
+        const long double cosx = std::cos ( x ) ;
+        while ( first != last ) 
+        {
+          --last  ;
+          b2 = b1 ;
+          b1 = b0 ;
+          b0 = std::fma ( 2 * cosx  , b1 , *last - b2 ) ;
+        }
+        //
+        return std::fma ( cosx ,  b1 , 0.5L * (*first) - b2 ) ;
+      }
+      // ======================================================================      
+      /** Clenshaw algorithm for summation of sine-series 
+       *  \f$ f(x) = \sum_{i=k}^{n} a_k \sin( k x) \f$
+       *  @see https://en.wikipedia.org/wiki/Clenshaw_algorithm
+       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+       *  @date 2015-02-10
+       */
+      template <class ITERATOR>
+      inline 
+      long double
+      sine_sum 
+      ( ITERATOR           first , 
+        ITERATOR           last  ,
+        const long double  x     ) 
+      {
+        if ( first == last ) { return 0 ; }
+        //
+        long double b2   = 0 ;
+        long double b1   = 0 ;
+        long double b0   = 0 ;
+        //
+        long double sinx = std::sin ( x ) ;
+        long double cosx = std::cos ( x ) ;
+        //
+        while ( 1 < 2 )  
+        {
+          b2 = b1 ;
+          b1 = b0 ;
+          if ( first == last ) { break ; }  // BREAK 
+          --last  ;   // advace 
+          b0 = std::fma ( 2 * cosx  , b1 , *last - b2 ) ;
+        }
+        //
+        return b1 * sinx ;
+      }
+      // ======================================================================      
+      /** Clenshaw algorithm for summation of sine-series 
+       *  \f$ f(x) = \frac{a_0}{2} + \sum_{i=k}^{n} a_{2k-1}\sin(kx)+a_{2k}\cos(kx) \f$
+       *  @see https://en.wikipedia.org/wiki/Clenshaw_algorithm
+       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+       *  @date 2015-02-10
+       */
+      template <class ITERATOR>
+      inline 
+      long double
+      fourier_sum 
+      ( ITERATOR           first , 
+        ITERATOR           last  ,
+        const long double  x     ) 
+      {
+        if ( first == last ) { return 0 ; }
+        //
+        long double b2s  = 0 ;
+        long double b1s  = 0 ;
+        long double b0s  = 0 ;
+        long double b2c  = 0 ;
+        long double b1c  = 0 ;
+        long double b0c  = 0 ;
+        //
+        long double sinx = std::sin ( x ) ;
+        long double cosx = std::cos ( x ) ;
+        //
+        while ( first != last ) 
+        {
+          //
+          // cosine 
+          //
+          --last    ;   // advance 
+          b2c = b1c ;
+          b1c = b0c ;
+          b0c = std::fma ( 2 * cosx   , b1c , *last - b2c ) ;
+          //
+          // sine 
+          //
+          b2s = b1s ;
+          b1s = b0s ;
+          // 
+          if ( last == first )  { break ; }
+          //
+          --last    ;   // advance 
+          b0s = std::fma ( 2 * cosx   , b1s , *last - b2s ) ;
+          //
+        }
+        //
+        return std::fma ( cosx ,  b1c , 0.5 * (*first) - b2c + b1s * sinx ) ;
+      }
+      // ======================================================================      
+      /** Clenshaw algorithm for Fejer sums for cosine-series 
+       *  For the series of partial sums 
+       *  \f$ f_n(x) = \frac{a_0}{2} + \sum_{i=k}^{n} a_k \cos( k x) \f$
+       *  Fejer sums are defiend as 
+       *  \f$ F_n(s) \equiv \frac{1}{N+1}\sum_{i=0}^{N} f_i(x)\f$
+       *  @see https://en.wikipedia.org/wiki/Clenshaw_algorithm
+       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+       *  @date 2015-02-10
+       */
+      template <class ITERATOR>
+      inline 
+      long double
+      fejer_cosine_sum 
+      ( ITERATOR           first , 
+        ITERATOR           last  ,
+        const long double  x     ) 
+      {
+        if ( first == last ) { return 0 ; }
+        //
+        long double b2 = 0 ;
+        long double b1 = 0 ;
+        long double b0 = 0 ;
+        //
+        const long double cosx = std::cos ( x ) ;
+        //
+        const unsigned long N = std::distance ( first , last ) ;
+        const long double   d = 1.0L/N ;
+        unsigned long k = 0 ;
+        while ( first  != last ) 
+        {
+          ++k     ;
+          --last  ;
+          b2 = b1 ;
+          b1 = b0 ;
+          b0 = std::fma ( 2 * cosx  , b1 , ( *last ) * k * d  - b2 ) ;
+        }
+        //
+        return std::fma ( cosx ,  b1 , 0.5L * (*first) - b2 ) ;
+      }
+      // ======================================================================      
+      /** Clenshaw algorithm for Fejer sums for sine-series 
+       *  For the series of partial sums 
+       *  \f$ f_n(x) = \frac{a_0}{2} + \sum_{i=k}^{n} a_k \sin( k x) \f$
+       *  Fejer sums are defiend as 
+       *  \f$ F_n(s) \equiv \frac{1}{N+1}\sum_{i=0}^{N} f_i(x)\f$
+       *  @see https://en.wikipedia.org/wiki/Clenshaw_algorithm
+       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+       *  @date 2015-02-10
+       */
+      template <class ITERATOR>
+      inline 
+      long double
+      fejer_sine_sum 
+      ( ITERATOR           first , 
+        ITERATOR           last  ,
+        const long double  x     ) 
+      {
+        if ( first == last ) { return 0 ; }
+        //
+        long double b2   = 0 ;
+        long double b1   = 0 ;
+        long double b0   = 0 ;
+        //
+        long double sinx = std::sin ( x ) ;
+        long double cosx = std::cos ( x ) ;
+        //
+        const unsigned long N = std::distance ( first , last ) ;
+        const long double   d = 1.0L/N ;
+        unsigned long       k = 0 ;        
+        //
+        while ( first != last ) 
+        {
+          ++k     ;
+          --last  ;
+          b2 = b1 ;
+          b1 = b0 ;
+          b0 = std::fma ( 2 * cosx  , b1 , ( *last ) * k * d - b2 ) ;
+        }
+        //
+        return b1 * sinx ;
+      }
+      // ======================================================================      
+      /** Clenshaw algorithm for Fejer sums for Fourier-series 
+       *  \f$ f_n(x) = \frac{a_0}{2} + \sum_{i=k}^{n} a_{2k-1}\sin(kx)+a_{2k}\cos(kx) \f$
+       *  \f$ F_n(x) = \frac{1}{n}\sum_{k=0}{n} f_n(x)\f$ 
+       *  @see https://en.wikipedia.org/wiki/Clenshaw_algorithm
+       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+       *  @date 2015-02-10
+       */
+      template <class ITERATOR>
+      inline 
+      long double
+      fejer_sum 
+      ( ITERATOR           first , 
+        ITERATOR           last  ,
+        const long double  x     ) 
+      {
+        if ( first == last ) { return 0 ; }
+        //
+        long double b2s  = 0 ;
+        long double b1s  = 0 ;
+        long double b0s  = 0 ;
+        long double b2c  = 0 ;
+        long double b1c  = 0 ;
+        long double b0c  = 0 ;
+        //
+        long double sinx = std::sin ( x ) ;
+        long double cosx = std::cos ( x ) ;
+        //
+        const unsigned long N = std::distance ( first , last ) ;
+        const long double   d = 1.0L/( N + 1 ) ;
+        unsigned long   k     = 0 ;
+        while ( first != last ) 
+        {
+          ++k  ;
+          //
+          // cosine 
+          //
+          --last    ;   // advance 
+          b2c = b1c ;
+          b1c = b0c ;
+          b0c = std::fma ( 2 * cosx , b1c , ( *last ) * 2 * k * d  - b2c ) ;
+          //
+          // sine 
+          //
+          b2s = b1s ;
+          b1s = b0s ;
+          // 
+          if ( last == first )  { break ; }
+          //
+          --last    ;   // advance 
+          b0s = std::fma ( 2 * cosx , b1s ,  ( *last ) * 2 * k * d  - b2s ) ;
+          //
+        }
+        //
+        return std::fma ( cosx ,  b1c , 0.5 * (*first) - b2c + b1s * sinx ) ;
+      }
     } //                             The end of namespace Gaudi::Math::Clenshaw     
     // ========================================================================
   } //                                         The end of namespace Gaudi::Math

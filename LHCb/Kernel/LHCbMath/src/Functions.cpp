@@ -186,7 +186,7 @@ namespace
   /// zero for doubles  
   LHCb::Math::Zero<double>     s_zero  ;       // zero for doubles
   /// zero for vectors 
-  LHCb::Math::Zero< std::vector<double> > s_vzero ; // zero foro vectors
+  LHCb::Math::Zero< std::vector<double> > s_vzero ; // zero for vectors
   // ==========================================================================
   typedef Gaudi::Math::GSL::GSL_Error_Handler Sentry ;
   // ==========================================================================
@@ -9594,7 +9594,6 @@ Gaudi::Math::FourierSum::FourierSum
   m_scale = 2 * M_PI / ( m_xmax - m_xmin ) ;
   m_delta = 0.5      * ( m_xmax + m_xmin ) ;
 }
-
 // ============================================================================
 // constructor from cosine series 
 // ============================================================================
@@ -9624,6 +9623,20 @@ Gaudi::Math::FourierSum::FourierSum
   { setA ( i , sum.par(i) ) ; }
   //
 }
+// ============================================================================
+// constructor from Fourier series
+// ============================================================================
+Gaudi::Math::FourierSum::FourierSum 
+( const Gaudi::Math::FourierSum& sum   , 
+  const bool                     fejer )
+  : std::unary_function<double,double>() 
+  , m_pars  ( sum.m_pars  ) 
+  , m_xmin  ( sum.m_xmin  )
+  , m_xmax  ( sum.m_xmax  )
+  , m_scale ( sum.m_scale )
+  , m_delta ( sum.m_delta ) 
+  , m_fejer ( fejer   )
+{}
 // ============================================================================
 // protected constructor from the parameters 
 // ============================================================================
@@ -9660,94 +9673,27 @@ bool Gaudi::Math::FourierSum::setPar
   return true ;
 }
 // ============================================================================
-// define summation algorithm
+/* get the magnitude of nth-harmonic
+ * \f$m_k = \sqrt( a^2_k + b^2_k) \f$
+ */
 // ============================================================================
-bool Gaudi::Math::FourierSum::setFejer ( const bool value ) 
+double Gaudi::Math::FourierSum::mag    ( const unsigned short k ) const 
 {
-  if ( m_fejer == value ) { return false ; }
-  m_fejer = value ;
-  return true ;
+  if      ( k > degree() ) { return 0 ; }
+  else if ( 0 == k       ) { return std::abs ( m_pars[0] ) ; }
+  //
+  return std::hypot ( m_pars[ 2 * k - 1 ] , m_pars [ 2 * k ] ) ;
 }
 // ============================================================================
-// get the value
+// get the phase of nth-harmonic
 // ============================================================================
-namespace 
+double Gaudi::Math::FourierSum::phase ( const unsigned short k ) const 
 {
-  // ==========================================================================
-  /// Fourier sums 
-  template <class TYPE>
-  long double _fourier_sum_ ( const std::vector<TYPE>& pars , const long double x ) 
-  {
-    /// start summation
-    const unsigned long   N  = pars.size() ;
-    long double          sum = 0.5 * pars[0] ;
-    for ( unsigned short k   = 1 ; 2 * k < N ; ++k  ) 
-    {
-      sum += pars [ 2 * k - 1 ] * std::sin ( k * x ) ;
-      sum += pars [ 2 * k     ] * std::cos ( k * x ) ;
-    }
-    //
-    return sum ;
-  }
-  // ==========================================================================
-  /// Fejer sums 
-  template <class TYPE>
-  long double _fejer_sum_ ( const std::vector<TYPE>& pars , const long double x ) 
-  {
-    ///
-    const unsigned long N  = pars.size() ;
-    const double   long fd = 1.0L / ( N + 1 ) ;
-    /// start summation
-    long double sum        = 0.5 * pars[0] ;  
-    for ( unsigned short k   = 1 ; 2 * k < N ; ++k  ) 
-    {
-      const long double f = ( N + 1 - 2 * k )        * fd ;
-      sum += pars [ 2 * k - 1 ] * std::sin ( k * x ) * f  ;
-      sum += pars [ 2 * k     ] * std::cos ( k * x ) * f  ;
-    }
-    //
-    return sum ;
-  }
-  // ==========================================================================
-  /// Fourier sums 
-  template <class TYPE>
-  long double _fourier_cosine_sum_ ( const std::vector<TYPE>& pars , const long double x ) 
-  {
-    /// start summation
-    //
-    const unsigned long N  = pars.size() ;
-    if      ( 0 == N ) { return 0             ; }
-    else if ( 1 == N ) { return 0.5 * pars[0] ; }
-    //              
-    long double          sum = 0.5 * pars[0] ;
-    for ( unsigned short k   = 1 ; k < N ; ++k  ) 
-    { sum += pars [ k ] * std::cos ( k * x ) ; }
-    //
-    return sum ;
-  }
-  // ==========================================================================
-  /// Fejer sums 
-  template <class TYPE>
-  long double _fejer_cosine_sum_ ( const std::vector<TYPE>& pars , const long double x ) 
-  {
-    //
-    const unsigned long N  = pars.size() ;
-    if      ( 0 == N ) { return 0             ; }
-    else if ( 1 == N ) { return 0.5 * pars[0] ; }
-    //              
-    long double sum        = 0.5 * pars[0] ;  
-    const double   long fd = 1.0L / N  ;
-    /// start summation
-    for ( unsigned short k   = 1 ; k < N ; ++k  ) 
-    {
-      const long double f = ( N - k ) * fd ;
-      sum += pars [ k ] * std::cos ( k * x ) * f  ;
-    }
-    //
-    return sum ;
-  }
-  // ==========================================================================
-}
+  if      ( k > degree() ) { return 0 ; }
+  else if ( 0 == k       ) { return 0 <= m_pars[0] ? 0. : -M_PI ; }
+  //
+  return std::atan2 ( m_pars[ 2 * k - 1 ] , m_pars [ 2 * k ] ) ;
+} 
 // ============================================================================
 // calculate Fourier sum 
 // ============================================================================
@@ -9755,7 +9701,7 @@ double Gaudi::Math::FourierSum::fourier_sum ( const double x ) const
 {
   /// transform to "t"-representation 
   const long double tv = t(x) ;
-  return _fourier_sum_ ( m_pars , tv ) ;
+  return Gaudi::Math::Clenshaw::fourier_sum ( m_pars.begin() , m_pars.end () , tv ) ;
 }
 // ============================================================================
 // calculate Fejer sum 
@@ -9764,7 +9710,28 @@ double Gaudi::Math::FourierSum::fejer_sum ( const double x ) const
 {
   /// transform to "t"-representation 
   const long double tv = t(x) ;
-  return _fejer_sum_ ( m_pars , tv ) ;
+  return Gaudi::Math::Clenshaw::fejer_sum ( m_pars.begin() , m_pars.end ()  , tv ) ;
+}
+// ============================================================================
+// get Fejer sum 
+// ============================================================================
+Gaudi::Math::FourierSum 
+Gaudi::Math::FourierSum::fejer_sum   () const                  // get Fejer sum 
+{
+  // create fejer sum e obejct 
+  FourierSum fejer ( m_pars , m_xmin , m_xmax , false ) ;
+  // fill it! 
+  const unsigned long N  = m_pars.size() ;
+  const double   long fd = 1.0L / ( N + 1 ) ;
+  /// start scaling of harmonics 
+  for ( unsigned short k = 1 ; 2 * k < N ; ++k  ) 
+  {
+    const long double f  = ( N + 1 - 2 * k ) * fd ;
+    fejer.m_pars[ 2 * k - 1 ] *= f ;
+    fejer.m_pars[ 2 * k     ] *= f ;
+  }
+  //
+  return fejer ;
 }
 // ============================================================================
 //  get the derivative at point x 
@@ -9787,23 +9754,52 @@ double Gaudi::Math::FourierSum::derivative ( const double x ) const
   /// make evaluation of fourier serie
   return 
     m_fejer ? 
-    _fejer_sum_   ( deriv , tv ) :
-    _fourier_sum_ ( deriv , tv ) ;
+    Gaudi::Math::Clenshaw::fejer_sum   ( deriv.begin() , deriv.end () , tv ) :
+    Gaudi::Math::Clenshaw::fourier_sum ( deriv.begin() , deriv.end () , tv ) ;
 }
 // ============================================================================
-//  get the derivative at point x 
+//  get the derivative 
 // ============================================================================
 Gaudi::Math::FourierSum Gaudi::Math::FourierSum::derivative () const 
+{ return derivative_n ( 1 ) ; }
+// ============================================================================
+//  get the nth derivative 
+// ============================================================================
+Gaudi::Math::FourierSum 
+Gaudi::Math::FourierSum::derivative_n ( const unsigned short n ) const 
 {
+  //
+  if      ( 0 == n ) { return *this ; }
   // create derivate obejct 
   FourierSum deriv ( m_pars , m_xmin , m_xmax , m_fejer ) ;
   /// fill it! 
   deriv.m_pars [0] = 0.0 ;
   const unsigned long  N = m_pars.size() ;
+  //
+  const short ssin =   
+    1 == n % 4 ?  1 : 
+    2 == n % 4 ? -1 : 
+    3 == n % 4 ? -1 : 1 ;
+  //
+  const short scos =   
+    1 == n % 4 ? -1 : 
+    2 == n % 4 ? -1 : 
+    3 == n % 4 ?  1 : 1 ;
+  //
+  const bool           odd =  ( 1 == n % 2 ) ;
   for ( unsigned short k = 1 ; 2 * k < N ; ++k  ) 
   {
-    deriv.m_pars[ 2 * k     ] =  k * m_pars[ 2 * k - 1 ] / m_scale ;
-    deriv.m_pars[ 2 * k - 1 ] = -k * m_pars[ 2 * k     ] / m_scale ;
+    const double factor = Gaudi::Math::pow ( 1.0L * k / m_scale , n ) ;
+    if ( odd ) 
+    {
+      deriv.m_pars [ 2 * k     ] = m_pars [ 2 * k - 1 ] * factor * ssin ;
+      deriv.m_pars [ 2 * k - 1 ] = m_pars [ 2 * k     ] * factor * scos ;
+    }
+    else 
+    {
+      deriv.m_pars [ 2 * k     ] = m_pars [ 2 * k     ] * factor * scos ;
+      deriv.m_pars [ 2 * k - 1 ] = m_pars [ 2 * k - 1 ] * factor * ssin ;
+    }
     //
   }
   //
@@ -9834,10 +9830,12 @@ double Gaudi::Math::FourierSum::integral
   /// evaluate Fourier series
   return
     m_fejer ? 
-    _fejer_sum_   ( integ , th ) - 
-    _fejer_sum_   ( integ , tl ) + m_pars[0] * ( th - tl ) :
-    _fourier_sum_ ( integ , th ) - 
-    _fourier_sum_ ( integ , tl ) + m_pars[0] * ( th - tl ) ;
+    Gaudi::Math::Clenshaw::fejer_sum   ( integ.begin() , integ.end() , th ) - 
+    Gaudi::Math::Clenshaw::fejer_sum   ( integ.begin() , integ.end() , tl ) +
+    m_pars[0] * ( th - tl ) :
+    Gaudi::Math::Clenshaw::fourier_sum ( integ.begin() , integ.end() , th ) - 
+    Gaudi::Math::Clenshaw::fourier_sum ( integ.begin() , integ.end() , tl ) +
+    m_pars[0] * ( th - tl ) ;
 }
 // ============================================================================
 // get integral as object 
@@ -10044,6 +10042,19 @@ Gaudi::Math::CosineSum::CosineSum
   { setPar ( i , sum.a(i) ) ; }
 }
 // ============================================================================
+// constructor from Fourier series
+// ============================================================================
+Gaudi::Math::CosineSum::CosineSum 
+( const Gaudi::Math::CosineSum& sum   ,
+  const bool                    fejer )
+  : std::unary_function<double,double>() 
+  , m_pars  ( sum.m_pars  ) 
+  , m_xmin  ( sum.m_xmin  )
+  , m_xmax  ( sum.m_xmax  )
+  , m_scale ( sum.m_scale )
+  , m_fejer ( fejer   )
+{}
+// ============================================================================
 // protected constructor from the parameters 
 // ============================================================================
 Gaudi::Math::CosineSum::CosineSum
@@ -10078,22 +10089,13 @@ bool Gaudi::Math::CosineSum::setPar
   return true ;
 }
 // ============================================================================
-// define summation algorithm
-// ============================================================================
-bool Gaudi::Math::CosineSum::setFejer ( const bool value ) 
-{
-  if ( m_fejer == value ) { return false ; }
-  m_fejer = value ;
-  return true ;
-}
-// ============================================================================
 // calculate Fourier sum 
 // ============================================================================
 double Gaudi::Math::CosineSum::fourier_sum ( const double x ) const 
 {
   /// transform to "t"-representation 
   const long double tv = t(x) ;
-  return _fourier_cosine_sum_ ( m_pars , tv ) ;
+  return Gaudi::Math::Clenshaw::cosine_sum ( m_pars.begin() , m_pars.end ()  , tv ) ;
 }
 // ============================================================================
 // calculate Fejer sum 
@@ -10102,7 +10104,27 @@ double Gaudi::Math::CosineSum::fejer_sum ( const double x ) const
 {
   /// transform to "t"-representation 
   const long double tv = t(x) ;
-  return _fejer_cosine_sum_ ( m_pars , tv ) ;
+  return Gaudi::Math::Clenshaw::fejer_cosine_sum ( m_pars.begin() , m_pars.end ()  , tv ) ;
+}
+// ============================================================================
+// get Fejer sum 
+// ============================================================================
+Gaudi::Math::CosineSum 
+Gaudi::Math::CosineSum::fejer_sum   () const                  // get Fejer sum 
+{
+  // create fejer sum e obejct 
+  CosineSum fejer ( m_pars , m_xmin , m_xmax , false ) ;
+  // fill it! 
+  const unsigned long N  = m_pars.size() ;
+  const double   long fd = 1.0L / N  ;
+  /// start scaling of harmonics 
+  for ( unsigned short k = 0 ;  k < N ; ++k  ) 
+  {
+    const long double f  = ( N - k ) * fd ;
+    fejer.m_pars[  k  ] *= f ;
+  }
+  //
+  return fejer ;
 }
 // ============================================================================
 Gaudi::Math::CosineSum
@@ -10219,6 +10241,130 @@ Gaudi::Math::CosineSum::operator-=( const double a )
   m_pars[0] -= a ;
   return *this ;
 }
+
+// ============================================================================
+// get the derivative at point x 
+// ============================================================================
+double Gaudi::Math::CosineSum::derivative ( const double x ) const 
+{
+  //
+  std::vector<double> deriv ( m_pars.size() - 1 , 0.0 ) ; 
+  deriv[0] = 0.0 ;
+  //
+  for ( unsigned short k = 0 ; k < deriv.size()  ; ++k  )
+  { 
+    deriv[k]  =  -m_pars[k+1] * ( k + 1 ) / m_scale ; 
+    std::cout << " k:" << k 
+              << " d:" << deriv[k] << std::endl;
+  }
+  //
+    
+  /// transform to "t"-representation 
+  const long double tv = t(x) ;
+  /// make evaluation of fourier serie
+  return 
+    m_fejer ? 
+    Gaudi::Math::Clenshaw::fejer_sine_sum   ( deriv.begin() , deriv.end () , tv ) :
+    Gaudi::Math::Clenshaw::sine_sum         ( deriv.begin() , deriv.end () , tv ) ;
+}
+// ============================================================================
+//  get the derivative at point x 
+// ============================================================================
+Gaudi::Math::FourierSum Gaudi::Math::CosineSum::derivative () const 
+{ return derivative_n ( 1 ) ; }
+// ============================================================================
+//  get the nth derivative 
+// ============================================================================
+Gaudi::Math::FourierSum 
+Gaudi::Math::CosineSum::derivative_n ( const unsigned short n ) const 
+{
+  //
+  if      ( 0 == n ) { return *this ; }
+  // create derivate obejct 
+  FourierSum deriv ( *this ) ;
+  //
+  /// fill it! 
+  const unsigned long  N = m_pars.size() ;
+  //
+  const short scos =   
+    1 == n % 4 ? -1 : 
+    2 == n % 4 ? -1 : 
+    3 == n % 4 ?  1 : 1 ;
+  //
+  const bool         odd =  ( 1 == n % 2 ) ;
+  for ( unsigned short k = 1 ;  k < N ; ++k  ) 
+  {
+    const long double factor = Gaudi::Math::pow ( 1.0L * k / m_scale , n ) ;
+    if ( odd ) 
+    {
+      deriv.setPar (  2 * k - 1  , m_pars [ k ] * factor * scos ) ;
+      deriv.setPar (  2 * k      , 0                            ) ;
+    }
+    else       
+    { 
+      deriv.setPar ( 2 * k       , m_pars [ k ] * factor * scos ) ;
+      deriv.setPar ( 2 * k  - 1  , 0                            ) ;
+    }    
+    //
+  }
+  //
+  return deriv ;
+}
+// ============================================================================
+// get integral between low and high 
+// ============================================================================
+double Gaudi::Math::CosineSum::integral 
+( const double low , const double high ) const 
+{
+  if ( s_equal ( low , high ) ) { return 0 ; }
+  //
+  // optionally shrink interval for period. but not now..
+  //
+  std::vector<double> integ ( m_pars.size() - 1 , 0.0 ) ; 
+  //
+  for ( unsigned short k = 0 ; k < integ.size() ; ++k  ) 
+  { integ[k] = -m_pars[k+1] / k * m_scale ; }
+  /// transform to "t"-representation 
+  const long double tl = t ( low  ) ;
+  const long double th = t ( high ) ;
+  /// evaluate Fourier series
+  return
+    m_fejer ? 
+    Gaudi::Math::Clenshaw::fejer_sine_sum ( integ.begin() , integ.end() , th ) - 
+    Gaudi::Math::Clenshaw::fejer_sine_sum ( integ.begin() , integ.end() , tl ) +
+    m_pars[0] * ( th - tl ) :
+    Gaudi::Math::Clenshaw::sine_sum       ( integ.begin() , integ.end() , th ) - 
+    Gaudi::Math::Clenshaw::sine_sum       ( integ.begin() , integ.end() , tl ) +
+    m_pars[0] * ( th - tl ) ;
+}
+// ============================================================================
+// get integral as object 
+// ============================================================================
+Gaudi::Math::FourierSum
+Gaudi::Math::CosineSum::integral ( const double c0 ) const 
+{
+  //
+  FourierSum integ ( *this ) ;
+  //
+  integ.setPar ( 0 , c0 ) ;
+  const unsigned long  N   =  m_pars.size() ;
+  const double         a0  =  m_pars[0]     ;
+  const bool           add = !s_zero ( a0 ) ;
+  for ( unsigned short k   =  1 ; k < N ; ++k  ) 
+  {
+    integ.setPar ( 2 * k , 0 ) ;
+    if ( !add ) { integ.setPar ( 2 * k - 1  , -m_pars[k] / k * m_scale  ) ; }
+    else 
+    { integ.setPar ( 2 * k - 1  , -m_pars[k] / k * m_scale +
+                     ( 0 == k % 2  ? 1 : -1 ) * 2.0L * a0 / k * m_scale ) ; }
+  }  
+  //
+  return integ ;
+}
+// ============================================================================
+
+
+
 // ============================================================================
 // The END
 // ============================================================================
