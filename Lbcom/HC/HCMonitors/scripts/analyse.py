@@ -1,4 +1,5 @@
 from ROOT import *
+gROOT.SetBatch(1)
 from optparse import OptionParser
 import commands,os
 parser = OptionParser()
