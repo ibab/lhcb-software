@@ -229,7 +229,7 @@ namespace Gaudi
         return b1 * sinx ;
       }
       // ======================================================================      
-      /** Clenshaw algorithm for summation of sine-series 
+      /** Clenshaw algorithm for summation of Fourier-series 
        *  \f$ f(x) = \frac{a_0}{2} + \sum_{i=k}^{n} a_{2k-1}\sin(kx)+a_{2k}\cos(kx) \f$
        *  @see https://en.wikipedia.org/wiki/Clenshaw_algorithm
        *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -417,6 +417,7 @@ namespace Gaudi
         //
         return std::fma ( cosx ,  b1c , 0.5 * (*first) - b2c + b1s * sinx ) ;
       }
+      // ======================================================================
     } //                             The end of namespace Gaudi::Math::Clenshaw     
     // ========================================================================
   } //                                         The end of namespace Gaudi::Math

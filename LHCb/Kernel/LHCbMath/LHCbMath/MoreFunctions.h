@@ -174,7 +174,35 @@ namespace Gaudi
     ( const std::vector<double>& pars , 
       const double               x    ) ;
     // ========================================================================
-    
+    /** Clenshaw algorithm for summation of cosine-series 
+     *  \f$ f(x) = \frac{a_0}{2} + \sum_{i=k}^{n} a_k \cos( k x) \f$
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-02-10
+     */
+    GAUDI_API double clenshaw_cosine
+    ( const std::vector<double>& pars , 
+      const double               x    ) ;
+    // ========================================================================
+    /** Clenshaw algorithm for summation of sine-series 
+     *  \f$ f(x) = \sum_{i=k}^{n} a_k \sin( k x) \f$
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-02-10
+     */
+    GAUDI_API double clenshaw_sine
+    ( const std::vector<double>& pars , 
+      const double               x    ) ;
+    // ========================================================================
+    /** Clenshaw algorithm for summation of Fourier-series 
+     *  \f$ f(x) = \frac{a_0}{2} + \sum_{i=k}^{n} a_{2k-1}\sin(kx)+a_{2k}\cos(kx) \f$
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-02-10
+     */
+    GAUDI_API double clenshaw_fourier 
+    ( const std::vector<double>& pars , 
+      const double               x    ) ;
+    // ========================================================================
+
+
     // ========================================================================
     // continued fractions 
     // ========================================================================

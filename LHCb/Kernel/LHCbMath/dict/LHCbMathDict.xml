@@ -200,6 +200,7 @@
   <function name = "Gaudi::Math::abssum"          />
   <function name = "Gaudi::Math::natural_number"  />
   <function name = "Gaudi::Math::natural_entry"   />
+  <function name = "Gaudi::Math::horner_a0"       />
   <function name = "Gaudi::Math::horner_aN"       />
   <function name = "Gaudi::Math::continued_fraction"       />
   <function name = "Gaudi::Math::continued_fraction_simple"/>
@@ -223,6 +224,9 @@
   <function name = "Gaudi::Math::clenshaw_chebyshev" />
   <function name = "Gaudi::Math::clenshaw_legendre"  />
   <function name = "Gaudi::Math::clenshaw_polynom"   />
+  <function name = "Gaudi::Math::clenshaw_cosine"    />
+  <function name = "Gaudi::Math::clenshaw_sine"      />
+  <function name = "Gaudi::Math::clenshaw_fourier"   />
   
   <function name    = "LHCb::Math::round"                  />
   <function name    = "LHCb::Math::round_N"                />
