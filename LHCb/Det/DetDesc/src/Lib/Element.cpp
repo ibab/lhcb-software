@@ -1,12 +1,11 @@
 // $Id: Element.cpp,v 1.18 2009-04-17 08:54:24 cattanem Exp $
 /// STL and STD 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 /// DetDesc 
 #include "DetDesc/MaterialException.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Isotope.h"
-#include "GaudiKernel/cbrt.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -14,8 +13,8 @@ Element::Element( const std::string& name    ,
                   const std::string& symb    ,
                   const double       a       , 
                   const double       z       , 
-		  const double       i       ,
-		  const double       density ,                    
+                  const double       i       ,
+                  const double       density ,                    
                   const double       rl      , 
                   const double       al      ,
                   const double       temp    ,
@@ -197,7 +196,7 @@ std::ostream&     Element::fillStream ( std::ostream& s ) const
 }
 
 void Element::ComputeInteractionLength(){
-  double intLen = 35.0 * cbrt(N()) * (1./density()) * Gaudi::Units::g/Gaudi::Units::cm2;
+  double intLen = 35.0 * std::cbrt(N()) * (1./density()) * Gaudi::Units::g/Gaudi::Units::cm2;
   setAbsorptionLength(intLen);
 }
 

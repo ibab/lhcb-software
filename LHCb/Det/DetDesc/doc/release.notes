@@ -2,6 +2,9 @@
 ! package DetDesc
 ! package manager : Marco Clemencic
 ! =====================================================================
+! 2015-08-09 - Gerhard Raven
+ - replace Gaudi::Math::cbrt with std::cbrt
+
 ! 2015-07-31 - Gerhard Raven
  - add #include <iterator> directly instead of relying on something else
    to include it and declare std::ostream_iterator...
