@@ -201,7 +201,16 @@ namespace Gaudi
     ( const std::vector<double>& pars , 
       const double               x    ) ;
     // ========================================================================
-
+    /** Clenshaw algorithm for summation of Hermite polynomials 
+     *  \f$ f(x) = \sum_i p_i He_i(x) \f$
+     *  @attention here we consider "probabilistic" polynomials
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-02-10
+     */
+    GAUDI_API double clenshaw_hermite
+    ( const std::vector<double>& pars , 
+      const double               x    ) ;
+    // =========================================================================
 
     // ========================================================================
     // continued fractions 

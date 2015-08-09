@@ -455,6 +455,18 @@ double Gaudi::Math::clenshaw_legendre
   const double               x    ) 
 { return Gaudi::Math::Clenshaw::legendre_sum( pars.begin() , pars.end () , x ) ; }
 // ============================================================================
+/*  Clenshaw algorithm for summation of Hermite series 
+ *  \f$ f(x) = \sum_i p_i He_i(x) \f$
+ *  @attention here we consider "probabilistic" polynomials
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2015-02-10
+ */
+// ============================================================================
+double Gaudi::Math::clenshaw_hermite
+( const std::vector<double>& pars , 
+  const double               x    ) 
+{ return Gaudi::Math::Clenshaw::hermite_sum( pars.begin() , pars.end () , x ) ; }
+// ============================================================================
 /*  Clenshaw algorithm for summation of monomial series 
  *  (aka Horner rule) 
  *  \f$ f(x) = \sum_i p_i x^i \f$
@@ -1130,7 +1142,103 @@ Gaudi::Math::LegendreSum::operator-= ( const double a )
 { m_pars[0] -= a ; return *this ; }
 // ============================================================================
 
-
+// ============================================================================
+// constructor from the degree 
+// ============================================================================
+Gaudi::Math::HermiteSum::HermiteSum 
+( const unsigned short degree  ,
+  const double         xmin    , 
+  const double         xmax    )
+  : Gaudi::Math::PolySum ( degree )
+  , m_xmin  ( std::min ( xmin , xmax ) )
+  , m_xmax  ( std::max ( xmin , xmax ) )
+  , m_scale ( 1) 
+{
+  m_scale /= ( m_xmax - m_xmin );
+}
+// ============================================================================
+// get the value
+// ============================================================================
+double Gaudi::Math::HermiteSum:: operator () ( const double x ) const 
+{
+  const double tx = t ( x ) ;
+  return Gaudi::Math::Clenshaw::hermite_sum ( m_pars.begin() , m_pars.end() , tx ) ;
+}
+// ============================================================================
+// get the derivative at point "x" 
+// ============================================================================
+double  Gaudi::Math::HermiteSum::derivative ( const double x     ) const 
+{
+  const unsigned int d = degree() ;
+  if ( 0 == d ) { return 0 ; }
+  ///
+  std::vector<double> deriv ( d , 0.0 ) ;
+  for ( unsigned int k = 0 ; k < d ; ++k ) 
+  { deriv[k] = ( k + 1 ) * m_pars[k+1] * 2 * m_scale ; }
+  ///
+  const double tx = t ( x ) ;
+  return Gaudi::Math::Clenshaw::hermite_sum ( deriv.begin() , deriv.end() , tx ) ;  
+}
+// ============================================================================
+// get the derivative 
+// ============================================================================
+Gaudi::Math::HermiteSum
+Gaudi::Math::HermiteSum::derivative () const 
+{
+  const unsigned int d = degree() ;
+  if ( 0 == d ) { return HermiteSum ( 0 , m_xmin , m_xmax ) ; }
+  ///
+  HermiteSum deriv( d - 1 , m_xmin , m_xmax ) ;
+  for ( unsigned int k = 0 ; k < d ; ++k ) 
+  { deriv.m_pars[k] = ( k + 1 ) * m_pars[k+1] * 2 * m_scale ; }
+  ///
+  return deriv ;
+}
+// ============================================================================
+// get the integral between low and high 
+// ============================================================================
+double Gaudi::Math::HermiteSum::integral   
+( const double low , const double high ) const 
+{
+  std::vector<double> integr ( m_pars.size() + 1 , 0.0 ) ;
+  for ( unsigned int k = 0 ; k < m_pars.size() ; ++k ) 
+  { integr[ k + 1 ] = m_pars[k] / ( k + 1 ) * 0.5 / m_scale ; }
+  //
+  const double th = t ( high ) ;
+  const double tl = t ( low  ) ;
+  //
+  return 
+    Gaudi::Math::Clenshaw::hermite_sum ( integr.begin() , integr.end() , th ) -   
+    Gaudi::Math::Clenshaw::hermite_sum ( integr.begin() , integr.end() , tl ) ;
+}
+// ============================================================================
+// get the integral
+// ============================================================================
+Gaudi::Math::HermiteSum
+Gaudi::Math::HermiteSum::indefinite_integral ( const double c0 ) const 
+{
+  const unsigned int d = degree() ;
+  ///
+  HermiteSum integr ( d + 1 , m_xmin , m_xmax )  ;
+  integr.m_pars[0] = c0 ;
+  for ( unsigned int k = 0 ; k < m_pars.size() ; ++k ) 
+  { integr.m_pars [ k + 1 ] = m_pars[k] / ( k + 1 ) * 0.5 / m_scale ; }
+  ///
+  return integr ;
+}
+// ============================================================================
+// simple  manipulations with polynoms: shift it! 
+// ============================================================================
+Gaudi::Math::HermiteSum& 
+Gaudi::Math::HermiteSum::operator+= ( const double a ) 
+{ m_pars[0] += a ; return *this ; }
+// ============================================================================
+// simple  manipulations with polynoms: shift it! 
+// ============================================================================
+Gaudi::Math::HermiteSum& 
+Gaudi::Math::HermiteSum::operator-= ( const double a ) 
+{ m_pars[0] -= a ; return *this ; }
+// ============================================================================
 
 
 // ============================================================================

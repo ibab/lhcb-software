@@ -184,6 +184,9 @@ namespace Gaudi
     // ========================================================================
     /** @class Hermite_
      *  Efficienct evaluator of Hermite polynomial
+     *  These are "probabilistic" polinomials,
+     *  \f$He(x)\f$ 
+     *  such as coefficienst at maximar degree is always equal to 1 
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2011-04-19
      */
@@ -465,6 +468,7 @@ namespace Gaudi
     class Polynomial   ; // forward declarations 
     class LegendreSum  ; // forward declarations 
     class ChebyshevSum ; // forward declarations 
+    class HermiteSum   ; // forward declarations 
     // ========================================================================
     // Polynomial sums
     // ========================================================================
@@ -545,7 +549,7 @@ namespace Gaudi
       /// get the derivative
       Polynomial derivative          () const ;
       // ======================================================================
-    public:
+     public:
       // ======================================================================
       /// simple  manipulations with polynoms: shift it! 
       Polynomial& operator += ( const double a ) ; 
@@ -748,6 +752,72 @@ namespace Gaudi
       double              m_xmax ; // x-max
       // ======================================================================      
     } ;
+    // ========================================================================
+    /** @class HermiteSum 
+     *  Sum of Hermitepolinomials 
+     *  \f$ f(x) = \sum_i \p_i He_i(x)\f$
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-08-08
+     */
+    class GAUDI_API HermiteSum : public PolySum
+    {
+    public:
+      // =====================================================================
+      /// constructor from the degree 
+      HermiteSum ( const unsigned short       degree =   0  ,
+                   const double               xmin   =  -1  , 
+                   const double               xmax   =   1  ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value
+      double operator () ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get lower edge
+      double xmin () const { return m_xmin ; }
+      /// get upper edge
+      double xmax () const { return m_xmax ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      double x ( const double t ) const 
+      { return 0.5 * ( t / m_scale + m_xmin + m_xmax ) ; }
+      double t ( const double x ) const 
+      { return m_scale * ( 2 * x   - m_xmin - m_xmax ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral between low and high 
+      double integral   ( const double low , const double high ) const ;
+      /// get the derivative at point "x" 
+      double derivative ( const double x     ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get indefinte integral 
+      HermiteSum indefinite_integral ( const double C = 0 ) const ;
+      /// get the derivative 
+      HermiteSum derivative          () const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// simple  manipulations with polynoms: shift it! 
+      HermiteSum& operator += ( const double a ) ;
+      /// simple  manipulations with polynoms: shift it! 
+      HermiteSum& operator -= ( const double a ) ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// low  edge 
+      double m_xmin  ; // low  edge 
+      /// high edge 
+      double m_xmax  ; // high edge 
+      /// scale 
+      double m_scale ; // scale 
+      // ======================================================================      
+    } ;
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================
 } //                                                     end of namespace Gaudi
@@ -758,7 +828,7 @@ namespace Gaudi
   namespace Math 
   {
     // ========================================================================
-    // helper utilities for integrtation of product of polynomial and an exponent
+    // helper utilities for integration of product of polynomial and an exponent
     // ========================================================================
     /** get the integral between low and high for a product of Bernstein
      *  polynom and the exponential function with the exponent tau

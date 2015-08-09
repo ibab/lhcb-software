@@ -81,6 +81,7 @@
   <class name    = "Gaudi::Math::PolySum"          />
   <class name    = "Gaudi::Math::ChebyshevSum"     />
   <class name    = "Gaudi::Math::LegendreSum"      />
+  <class name    = "Gaudi::Math::HermiteSum"       />
   <class name    = "Gaudi::Math::Polynomial"       />
   <class name    = "Gaudi::Math::Bernstein"        />
   <class name    = "Gaudi::Math::Positive"         />
@@ -223,6 +224,7 @@
   <function name = "Gaudi::Math::casteljau"          />  
   <function name = "Gaudi::Math::clenshaw_chebyshev" />
   <function name = "Gaudi::Math::clenshaw_legendre"  />
+  <function name = "Gaudi::Math::clenshaw_hermite"   />
   <function name = "Gaudi::Math::clenshaw_polynom"   />
   <function name = "Gaudi::Math::clenshaw_cosine"    />
   <function name = "Gaudi::Math::clenshaw_sine"      />

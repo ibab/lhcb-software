@@ -161,6 +161,42 @@ namespace Gaudi
         //
         return 0.5 * ( b0 - b2) ;
       }
+      // ======================================================================
+      /** Clenshaw algorithm for summation of Hermite's series 
+       *  \f$ f(x) = \sum_{i=0}^{n} a_i He_i(x) \f$
+       *  @see https://en.wikipedia.org/wiki/Clenshaw_algorithm
+       *  @see Gaudi::Math::clenshaw_hermite
+       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+       *  @date 2015-02-10
+       */
+      template <class ITERATOR>
+      inline 
+      long double
+      hermite_sum 
+      ( ITERATOR           first , 
+        ITERATOR           last  ,
+        const long double  x     ) 
+      {
+        if ( first == last ) { return 0 ; }
+        //
+        long double b2 = 0 ;
+        long double b1 = 0 ;
+        long double b0 = 0 ;
+        //
+        unsigned long k = std::distance ( first , last ) ;
+        while ( first != last ) 
+        {
+          --last  ;
+          b2 = b1 ;
+          b1 = b0 ;
+          b0 = std::fma ( x , b1 , (*last) - k * b2 ) ;
+          --k     ;
+        }
+        //
+        return std::fma ( x , b1 , (*first) - b2  ) ;
+      }
+      // ======================================================================      
+      // Trigonometric sums 
       // ======================================================================      
       /** Clenshaw algorithm for summation of cosine-series 
        *  \f$ f(x) = \frac{a_0}{2} + \sum_{i=k}^{n} a_k \cos( k x) \f$
