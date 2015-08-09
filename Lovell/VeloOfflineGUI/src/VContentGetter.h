@@ -6,13 +6,18 @@
 #include "VPlot.h"
 #include "VPlottable.h"
 #include "VTable.h"
+#include "TFile.h"
+#include "TH1D.h"
+#include "TH2D.h"
 
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <thread>
-
+#include <QtCore/QDir>
+#include <QtCore/QStringList>
+#include "TObject.h"
 
 // Author: Daniel Saunders
 
@@ -23,7 +28,7 @@ public:
   // Methods __________________________________________________________________
   VContentGetter(){}
   /* static VTabContent * veloShortConfigs(VPlotOps*); */
-  static VTabContent * veloFileConfigs(VPlotOps*, std::string);
+  static VTabContent * veloFileConfigs(VPlotOps*, std::string, TFile*, TFile*);
   static void findChildren(VTabContent * parentTab,
     std::vector<VTabContent*> * allTabs,
     std::vector< std::vector< std::string > > * ops, int);

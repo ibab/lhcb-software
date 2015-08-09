@@ -38,6 +38,8 @@ public:
   bool m_verbose;
   std::vector<std::string> * m_ops;
   std::string m_dataDir;
+  TFile * f_in;
+  TFile * f_inReff;
 
   // Methods___________________________________________________________________
   explicit veloview(int, std::vector<std::string> *, QWidget *parent = 0);
@@ -53,6 +55,7 @@ public:
   void setVeloOptionsWidg();
   void addModuleSelector();
   void setOps();
+  void setupInFiles(bool ref);
 
   // Optional settings ________________________________________________________
   QComboBox * b_veloRunNumber;

@@ -296,6 +296,14 @@ void VCustomPlot::doLogZ(int logOrNot) {
       m_zLogged = false;
     }
   }
+
+//  if (m_qcp->plottable(0)->visible() == false) std::cout<<"Plot not visiable"<<std::endl;
+//  for (uint i=0; i<10; i++) {
+//  	for (uint j=0; j<10; j++) {
+//  		std::cout<<m_plot->m_plottables[0]->m_zs[i][j]<<"\t"<<m_plot->m_plottables[0]->m_xs[i]<<"\t"<<m_plot->m_plottables[0]->m_ys[j]<<std::endl;
+//  	}
+//  }
+
   m_qcp->replot();
 }
 

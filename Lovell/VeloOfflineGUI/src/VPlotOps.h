@@ -11,6 +11,7 @@
 #include <QtGui/QTextBrowser>
 #include <QtGui/QScrollBar>
 #include <QtGui/QMessageBox>
+#include "TFile.h"
 
 class VPlot;
 
@@ -41,6 +42,8 @@ public:
   void notify(std::string);
   bool m_waitSwitch;
   QCheckBox * b_showAllRefs;
+  TFile * f_in;
+  TFile * f_inReff;
 
   VPlotOps(QGroupBox*, std::string *);
   void newSelection(VPlot*, bool);

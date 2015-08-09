@@ -67,7 +67,9 @@ veloview::veloview(int runMode, std::vector<std::string> * ops, QWidget *parent)
   m_runProxy(NULL),
   m_verbose(false),
   m_dataDir("/calib/velo/dqm/VeloView/VetraOutput"),
-	m_runProxyRef(NULL)
+	m_runProxyRef(NULL),
+	f_in(NULL),
+	f_inReff(NULL)
 {
   m_ops = ops;
   setOps();
@@ -240,17 +242,24 @@ void veloview::setContent() {
   	m_plotOps->notify("\nLoading run " + b_veloRunNumber->currentText().toStdString() + "...");
     m_plotOps->m_firstTime = true;
     qApp->processEvents();
+    f_in->Close();
+    f_inReff->Close();
     delete m_plotOps->m_statsBox;
   }
 
+  setupInFiles(true);
+  setupInFiles(false);
+  m_plotOps->f_in = f_in;
+  m_plotOps->f_inReff = f_inReff;
+
   if (!b_showAllRefs->isChecked()) {
-		m_plotOps->b_toggleRef->setChecked(false);
+//		m_plotOps->b_toggleRef->setChecked(false);
 		m_plotOps->b_toggleRef->setEnabled(false);
 
-		m_plotOps->b_toggleRefDiff->setChecked(false);
+//		m_plotOps->b_toggleRefDiff->setChecked(false);
 		m_plotOps->b_toggleRefDiff->setEnabled(false);
 
-		m_plotOps->b_toggleRefRatio->setChecked(false);
+//		m_plotOps->b_toggleRefRatio->setChecked(false);
 		m_plotOps->b_toggleRefRatio->setEnabled(false);
 	}
 
@@ -278,11 +287,11 @@ void veloview::setContent() {
   }
 
   if (m_runMode == 0) {
-    m_content = VContentGetter::veloFileConfigs(m_plotOps, m_VVinterfaceScript);
+    m_content = VContentGetter::veloFileConfigs(m_plotOps, m_VVinterfaceScript, f_in, f_inReff);
     if (!m_ran) delete ui->m_logo;
   }
   else if (m_runMode == 3) {
-		m_content = VContentGetter::veloFileConfigs(m_plotOps, "dummyDataGetter.py");
+		m_content = VContentGetter::veloFileConfigs(m_plotOps, "dummyDataGetter.py", f_in, f_inReff);
   }
 
   else std::cout<<"Unknown run mode"<<std::endl;
@@ -308,8 +317,59 @@ void veloview::setContent() {
 
 //_____________________________________________________________________________
 
+void veloview::setupInFiles(bool isRef)
+{
+	std::string dirName = m_dataDir;
+	std::string runNum;
+	if (isRef) runNum = b_veloRunNumberRef->currentText().toStdString();
+	else runNum = b_veloRunNumber->currentText().toStdString();
+
+	for (uint i=0; i<runNum.size() - 2; i++) {
+		dirName += "/";
+		dirName += runNum.substr(0, i+1);
+		for (uint j=i; j != runNum.size()-1; j++) dirName += "0";
+		dirName += "s";
+	}
+	dirName += "/" + runNum;
+	std::cout<<"Looking for run directory: "<<dirName<<std::endl;
+	QDir dir(QString(dirName.c_str()));
+	if (!dir.exists()) std::cout<<"Could not find run directory: "<<dirName<<std::endl;
+	else std::cout<<"Successfuly found run directory: "<<dirName<<std::endl;
+
+	// Find the root files.
+	dir.setNameFilters(QStringList()<<"*.root");
+	QStringList fileList = dir.entryList();
+	dir.setSorting(QDir::Time);
+	// Take the most recent.
+	if (fileList.isEmpty()) {
+		std::cout<<"Could not find any ROOT files in that directory."<<std::endl;
+		exit(0);
+	}
+	std::string fileName = dirName + "/" + fileList.back().toStdString();
+	std::cout<<"Loading TFile: "<<fileName<<std::endl<<std::endl;
+	if (isRef) {
+		f_inReff = new TFile(fileName.c_str(), "READ");
+		if (f_inReff->IsZombie()) {
+			std::cout<<"ROOT reference file was made zombie, probably doesn't exist"<<std::endl;
+			exit(0);
+		}
+	}
+	else {
+		f_in = new TFile(fileName.c_str(), "READ");
+		if (f_in->IsZombie()) {
+			std::cout<<"ROOT reference file was made zombie, probably doesn't exist"<<std::endl;
+			exit(0);
+		}
+	}
+	std::cout<<"Success."<<std::endl;
+}
+
+
+//_____________________________________________________________________________
+
 void veloview::completeTabs(std::vector<VTabContent*> & tabsContents,
-  QWidget * tabsHolder, QGridLayout * topLay) {
+  QWidget * tabsHolder, QGridLayout * topLay)
+{
   // Completes a set of tabs (for one particular level) in the GUI for the
   // given contents (belonging in that level). Called recusively. By ensuring
   // the use of a dummy top level tab, this function is always safe.
@@ -335,7 +395,7 @@ void veloview::completeTabs(std::vector<VTabContent*> & tabsContents,
     tabPages->addTab((*itabPage), QString((*itabPage)->m_title.c_str()));
     (*itabPage)->m_qtab = tabPages;
     (*itabPage)->m_qtabID = tabPages->count()-1;
-    tabPages->setTabEnabled(tabPages->count()-1, false);
+//    tabPages->setTabEnabled(tabPages->count()-1, false);
     if ((*itabPage)->m_subContents.size() > 0) {
       completeTabs((*itabPage)->m_subContents, (*itabPage), lay);
     }

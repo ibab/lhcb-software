@@ -61,16 +61,93 @@ public:
 
 class jsonPlottable : public VPlottable {
 public:
+	bool m_direct;
   jsonPlottable(VPlot * plot, int style) :
       VPlottable(plot, style)
   {
     m_name = "jsonPlottable:";
+    m_direct = true;
   }
+
+
+  void directRetrival() {
+  	TObject * h;
+  	if (m_isRef) h = m_plot->m_plotOps->f_inReff->Get(m_retrivalCommand.c_str());
+  	else h = m_plot->m_plotOps->f_in->Get(m_retrivalCommand.c_str());
+  	if (h==NULL) {
+  		std::cout<<"Could not find plot in vetra output: "<<m_retrivalCommand<<std::endl;
+  		return;
+  	}
+  	if (std::string(h->ClassName()) == "TH1D" || std::string(h->ClassName()) == "TProfile") directTH1Decoder((TH1D*)h);
+  	else if (std::string(h->ClassName()) == "TH2D") directTH2Decoder((TH2D*)h);
+  	else std::cout<<"Unknown plot class for offline GUI: "<<h->ClassName()<<std::endl;
+  }
+
+  void directTH1Decoder(TH1D * h) {
+  	m_plottableDimension = 1;
+  	m_name = std::string(h->GetTitle());
+  	for (int i=1; i<h->GetXaxis()->GetNbins(); i++) {
+  		m_xs.push_back(h->GetBinCenter(i));
+  		m_ys.push_back(h->GetBinContent(i));
+  	}
+  	m_statsTitles.push_back("N:");
+    m_statsTitles.push_back("Mean:");
+    m_statsTitles.push_back("RMS:");
+    m_statsTitles.push_back("Underflow:");
+    m_statsTitles.push_back("Overflow:");
+
+    int entries = h->GetEntries();
+    std::stringstream ssN; ssN<<entries; m_statsValues.push_back(ssN.str());
+    double mean = h->GetMean();
+    std::stringstream ssMean; ssMean<<mean; m_statsValues.push_back(ssMean.str());
+    double rms = h->GetRMS();
+    std::stringstream ssRMS; ssRMS<<rms; m_statsValues.push_back(ssRMS.str());
+    double underflow = h->GetBinContent(0);
+    std::stringstream ssUnder; ssUnder<<underflow; m_statsValues.push_back(ssUnder.str());
+    double overflow = h->GetBinContent(h->GetXaxis()->GetNbins() + 1);
+    std::stringstream ssOver; ssOver<<overflow; m_statsValues.push_back(ssOver.str());
+
+    m_plot->m_xAxisTitle = std::string(h->GetXaxis()->GetTitle());
+    m_plot->m_yAxisTitle = std::string(h->GetYaxis()->GetTitle());
+    std::cout<<"Plot retrieval successful: "<<m_name<<std::endl;
+  }
+
+  void directTH2Decoder(TH2D * h) {
+  	m_name = std::string(h->GetTitle());
+  	m_plottableStyle = 0;
+    m_plottableDimension = 2;
+
+  	m_statsTitles.push_back("N:");
+  	double entries = h->GetEntries();
+    std::stringstream ssN; ssN<<entries; m_statsValues.push_back(ssN.str());
+
+    for (int i=1; i<h->GetXaxis()->GetNbins()+1; i++) {
+    	m_xs.push_back(h->GetXaxis()->GetBinCenter(i));
+    	QVector<double> rowZs;
+    	for (int j=1; j<h->GetYaxis()->GetNbins()+1; j++) {
+    		if (i==1) m_ys.push_back(h->GetYaxis()->GetBinCenter(j));
+    		rowZs.push_back(h->GetBinContent(i, j));
+    	}
+    	m_zs.push_back(rowZs);
+    }
+
+  	m_plot->m_xAxisTitle = std::string(h->GetXaxis()->GetTitle());
+    m_plot->m_yAxisTitle = std::string(h->GetYaxis()->GetTitle());
+    m_plot->m_zAxisTitle = "N";
+    std::cout<<"Plot retrieval successful: "<<m_name<<std::endl;
+  }
+
 
   //___________
   void getPlotData() {
   	if (m_gotData) return;
   	m_gotData = true;
+  	if (m_direct) {
+  		directRetrival();
+  		return;
+  	}
+
+
     FILE * in;
     char buff[5000];
 
@@ -81,9 +158,11 @@ public:
     else command += m_plot->m_plotOps->b_veloRunNumber->currentText().toStdString() + " '" +
         m_retrivalCommand + "' '" + m_plot->m_plotOps->currentModuleStr() + "'";
 
+    std::cout<<"Command: "<<std::endl;
     std::string * dataDir = m_plot->m_plotOps->m_dataDir;
     command += " --run-data-dir=" + (*dataDir);
     command += " --no-reference";
+    std::cout<<command<<std::endl;
 //    std::cout<<"Sending command: "<<std::endl;
 //    std::cout<<command<<std::endl;
     in = popen(command.c_str(), "r");
@@ -522,7 +601,8 @@ VTabContent * VContentGetter::veloShortConfigs(VPlotOps * plotOps){
 
 //_____________________________________________________________________________
 
-VTabContent * VContentGetter::veloFileConfigs(VPlotOps * plotOps, std::string interfaceScript)
+VTabContent * VContentGetter::veloFileConfigs(VPlotOps * plotOps, std::string interfaceScript,
+		TFile * f_in, TFile * f_inReff)
 {
   VTabContent * topDummyTab = new VTabContent("Top"); // Always needed.
   std::vector<VTabContent*> allTabs; // Useful to have container for all tabs.
@@ -717,8 +797,13 @@ void VContentGetter::findPlots(std::vector<VTabContent*> * allTabs,
     	iTab++;
     }
   }
-  std::thread t(&VContentGetter::fillTabsThread, allPlottablesByTab, plotOps);
-  t.detach();
+//  std::thread t(&VContentGetter::fillTabsThread, allPlottablesByTab, plotOps);
+//  t.detach();
+  for (uint i=0; i<allPlottablesByTab.size(); i++) {
+  	for (uint j=0; j<allPlottablesByTab[i].size(); j++) allPlottablesByTab[i][j]->getData();
+//  	if (allPlottablesByTab[i].size() > 0)
+//  		allPlottablesByTab[i][0]->m_plot->m_tab->m_qtab->setTabEnabled(allPlottablesByTab[i][0]->m_plot->m_tab->m_qtabID, true);
+  }
 }
 
 void VContentGetter::fillTabsThread(std::vector< std::vector< VPlottable*> > plottables, VPlotOps * plotOps) {
