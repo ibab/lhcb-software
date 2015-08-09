@@ -273,7 +273,8 @@ void HCClockScan::findBest(const std::vector<std::vector<std::vector<AIDA::IProf
   bestSlot = -2;
   for (unsigned int j = 0; j < 3; ++j) {
     if (m_noise) {
-      const double rms = adcs[j][station][quadrant]->binRms(bin);
+      double rms = adcs[j][station][quadrant]->binError(bin);
+      rms *= sqrt(adcs[j][station][quadrant]->binEntries(bin));
       if (bestValue < 0. || rms < bestValue) {
         bestValue = rms; 
       }
