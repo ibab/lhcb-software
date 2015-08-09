@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-08-09 - Vanya Belyaev
+ - add more functions 
+
 ! 2015-08-09 - Gerhard Raven
  - replace Gaudi::Math::cbrt with std::cbrt
 

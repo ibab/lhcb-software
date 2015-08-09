@@ -53,6 +53,7 @@ __all__     = (
     "Mean"          , ## calculate "mean"     for functions/distribitions, etc (scipy)
     "Variance"      , ## calculate "variance" for functions/distribitions, etc (scipy)
     "RMS"           , ## calculate "RMS"      for functions/distribitions, etc (scipy)
+    "Skewness"      , ## calculate "skewness" for functions/distribitions, etc (scipy)
     "Mediane"       , ## calculate "mediane"  for functions/distribitions, etc (scipy)
     "Quantile"      , ## calculate "quantile" for functions/distribitions, etc (scipy)
     "Mode"          , ## calculate "mode"     for functions/distribitions, etc (scipy)
@@ -64,6 +65,8 @@ __all__     = (
     "mean"          , ## calculate "mean"     for functions/distribitions, etc (scipy)
     "variance"      , ## calculate "variance" for functions/distribitions, etc (scipy)
     "rms"           , ## calculate "RMS"      for functions/distribitions, etc (scipy)
+    "skewness"      , ## calculate "skeness"  for functions/distribitions, etc (scipy)
+    "kurtosis"      , ## calculate "kurtosis" for functions/distribitions, etc (scipy)
     "mediane"       , ## calculate "mediane"  for functions/distribitions, etc (scipy)
     "quantile"      , ## calculate "quantile" for functions/distribitions, etc (scipy)
     "mode"          , ## calculate "mode"     for functions/distribitions, etc (scipy)
@@ -525,11 +528,11 @@ class Moment(object) :
         return self._integral_ ( func , self._xmin , self._xmax , *args )
     
     ## calculate un-normalized k-moment  
-    def _momentK_ ( self , k , func , *args ) :
+    def _momentK_ ( self , k , func , mu = None , *args ) :
         """
         Calculate unnormalized k-moment
         """
-        x0     = self._x0 
+        x0     = self._x0 if mu is None else mu 
         func_N = lambda x,*a : func( x , *a ) * ( ( x - x0 ) ** k  )
         return self._integral_ ( func_N , self._xmin , self._xmax , *args )
     
@@ -552,7 +555,7 @@ class Moment(object) :
                                             self._x0   )                                            
                                             
 # =============================================================================
-## get the mean-value
+## @class Mean
 #  Calculate the mean-value for the distribution 
 #  @code
 #   xmin,xmax = 0,math.pi 
@@ -579,7 +582,7 @@ class Mean(Moment) :
                                     self._err  )                                            
 
 # =============================================================================
-## get the variance
+## @class Variance
 #  Calculate the variance for the distribution or function  
 #  @code
 #   xmin,xmax = 0,math.pi 
@@ -602,19 +605,22 @@ class Variance(Mean) :
         ## 
         args   = args if args else self._args
         ##
-        n0 = self._moment0_ (     func , *args ) 
-        n1 = self._momentK_ ( 1 , func , *args ) 
-        n2 = self._momentK_ ( 2 , func , *args ) 
+        n0 = self._moment0_ (     func , *args ) ## moment-0
+        n1 = self._momentK_ ( 1 , func , *args ) ## moment-1 
         ##
-        return ( n2 * n0 - n1 * n1 ) / ( n0 * n0 )
+        mu = float(n1/n0)                        ## mean-value 
+        ## central moment 
+        m2 = self._momentK_ ( 2 , func , mu , *args ) 
+        ##
+        return m2/n0
     
     def __str__ ( self ) :
         return "Variance(%s,%s,%s)" % ( self._xmin ,
                                         self._xmax ,
                                         self._err  )                                            
-    
+
 # =============================================================================
-## get the RMS 
+## @class RMS
 #  Calculate the variance for the distribution or function  
 #  @code
 #   xmin,xmax = 0,math.pi 
@@ -651,7 +657,94 @@ class RMS(Variance) :
                                    self._err  )                                            
 
 # =============================================================================
-## get the mediane
+## @class Skewness
+#  Calculate the skewness for the distribution or function  
+# \f$ k = \frac{\mu_3}{\sigma^3} \f$
+#  @code
+#   xmin,xmax = 0,math.pi 
+#   skew     = Skewness ( xmin,xmax )  ## specify min/max
+#   value     = skew ( math.sin  )
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-08-09
+class Skewness(Variance) :
+    """
+    Calculate the variance for the distribution or function  
+    >>> xmin,xmax = 0,math.pi 
+    >>> skew      = Skewness ( xmin,xmax )  ## specify min/max
+    >>> value     = skew     ( math.sin  )
+    """
+    def __init__ ( self , xmin , xmax , err = False ) :
+        Variance.__init__ ( self , xmin , xmax , err )
+    ## calculate the variance 
+    def __call__ ( self , func , *args ) :
+        ## 
+        args   = args if args else self._args
+        ##
+        n0 = self._moment0_ (     func , *args ) ## norm
+        n1 = self._momentK_ ( 1 , func , *args ) ## m1
+        ## get mean-value 
+        mu = float(n1/n0) ## mean-value
+        ## 
+        m2 = self._momentK_ ( 2 , func , mu , *args ) ## mu2 
+        m3 = self._momentK_ ( 3 , func , mu , *args ) ## mu3 
+        ##
+        m2 /= n0 ## normalize 
+        m3 /= n0 ## normalize
+        ## 
+        return m3/(m2**(3.0/2))
+    
+    def __str__ ( self ) :
+        return "Skewness(%s,%s,%s)" % ( self._xmin ,
+                                        self._xmax ,
+                                        self._err  )                                            
+
+# =============================================================================
+## @class  Kurtosis
+#  Calculate the (excess) kurtosis for the distribution or function
+#  \f$ k = \frac{\mu_4}{\sigma_2}-3\f$
+#  @code
+#   xmin,xmax = 0,math.pi 
+#   kurt      = Kurtosis ( xmin,xmax )  ## specify min/max
+#   value     = kurt ( math.sin  )
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-08-09
+class Kurtosis(Skewness) :
+    """
+    Calculate the variance for the distribution or function  
+    >>> xmin,xmax = 0,math.pi 
+    >>> kurt      = Kurtosis ( xmin,xmax )  ## specify min/max
+    >>> value     = kurt     ( math.sin  )
+    """
+    def __init__ ( self , xmin , xmax , err = False ) :
+        Skewness.__init__ ( self , xmin , xmax , err )
+    ## calculate the variance 
+    def __call__ ( self , func , *args ) :
+        ## 
+        args   = args if args else self._args
+        ##
+        n0 = self._moment0_ (     func , *args ) ## norm
+        n1 = self._momentK_ ( 1 , func , *args ) ## m1
+        ## get mean-value 
+        mu = float(n1/n0) ## mean-value
+        ## 
+        m2 = self._momentK_ ( 2 , func , mu , *args ) ## mu2 
+        m4 = self._momentK_ ( 4 , func , mu , *args ) ## mu3 
+        ##
+        m2 /= n0 ## normalize 
+        m4 /= n0 ## normalize
+        ## 
+        return m4/(m2*m2)-3.0 
+    
+    def __str__ ( self ) :
+        return "Kurtosis(%s,%s,%s)" % ( self._xmin ,
+                                        self._xmax ,
+                                        self._err  )                                            
+
+
+# =============================================================================
+## @class Mediane 
 #  Calculate the mediane for the distribution or function  
 #  @code
 #  xmin,xmax = 0,math.pi 
@@ -776,7 +869,7 @@ class Quantile(Mediane) :
 
 
 # =============================================================================
-## get the mode 
+## @class Mode
 #  Calculate the mode for the distribution or function  
 #  @code
 #  xmin,xmax = 0,math.pi 
@@ -1075,17 +1168,15 @@ def sp_action ( func , actor , xmin = None , xmax = None ) :
 ## get the N-moment of variable, considering function to be PDF 
 # @code 
 # >>> fun  = ...
-# >>> mom5 = fun.moment( 5 )
-# >>> mom5 = fun.moment( 5 , xmin = 10 , xmax = 50 )
+# >>> m5   = moment( fun , 5 , xmin = 10 , xmax = 50 )
 # @endcode
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # @date 2015-07-11
 def moment ( func , N , xmin = None , xmax = None , err = False , x0 = 0 ) :
     """
     Get the mean-value for the distribution using scipy/numpy
-    >>> fun = ...
-    >>> mom5 = fun.moment ( 5 )
-    >>> mom5 = fun.moment ( 5 , xmin = 10 , xmax = 50 )
+    >>> fun  = ...
+    >>> mom5 = moment ( fun , 5 , xmin = 10 , xmax = 50 )
     """
     ## get the functions from LHCbMath.deriv 
     actor = lambda x1,x2 : Moment ( N , x1 , x2 , err , x0 ) 
@@ -1095,8 +1186,7 @@ def moment ( func , N , xmin = None , xmax = None , err = False , x0 = 0 ) :
 ## get the mean value of variable, considering function to be PDF 
 #  @code 
 #  >>> fun = ...
-#  >>> mean = fun.mean()
-#  >>> mean = fun.mean( xmin = 10 , xmax = 50 )
+#  >>> m   = mean( fun , xmin = 10 , xmax = 50 )
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-07-11
@@ -1104,8 +1194,7 @@ def mean ( func , xmin = None , xmax = None , err = False ) :
     """
     Get the mean-value for the distribution using scipy/numpy
     >>> fun = ...
-    >>> mean = fun.mean()
-    >>> mean = fun.mean( xmin = 10 , xmax = 50 )
+    >>> m   = mean( fun , xmin = 10 , xmax = 50 )
     """
     ## get the functions from LHCbMath.deriv 
     actor = lambda x1,x2 : Mean ( x1 , x2 , err ) 
@@ -1116,17 +1205,15 @@ def mean ( func , xmin = None , xmax = None , err = False ) :
 ## get the variance of the variable, considering function to be PDF 
 #  @code 
 #  >>> fun = ...
-#  >>> mean = fun.variance()
-#  >>> mean = fun.variance( xmin = 10 , xmax = 50 )
+#  >>> v   = variance( fun , xmin = 10 , xmax = 50 )
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-07-11
 def variance ( func , xmin = None , xmax = None , err = False ) :
     """
-    Get the mean-value for the distribution using scipy/numpy
+    Get the variance for the distribution using scipy/numpy
     >>> fun = ...
-    >>> v   = fun.variance()
-    >>> v   = fun.variance( xmin = 10 , xmax = 50 )
+    >>> v   = variance( fun , xmin = 10 , xmax = 50 )
     """
     ##
     ## get the functions from LHCbMath.deriv 
@@ -1138,8 +1225,7 @@ def variance ( func , xmin = None , xmax = None , err = False ) :
 ## get the rms of the variable, considering function to be PDF 
 #  @code 
 #  >>> fun = ...
-#  >>> mean = fun.rms()
-#  >>> mean = fun.rms( xmin = 10 , xmax = 50 )
+#  >>> v   = rms( fun , xmin = 10 , xmax = 50 )
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-07-11
@@ -1147,8 +1233,7 @@ def rms ( func , xmin = None , xmax = None , err = False ) :
     """
     Get RMS for the distribution using scipy/numpy
     >>> fun = ...
-    >>> v   = fun.rms()
-    >>> v   = fun.ems( xmin = 10 , xmax = 50 )
+    >>> v   = rms( fun , xmin = 10 , xmax = 50 )
     """
     ##
     ## get the functions from LHCbMath.deriv 
@@ -1156,13 +1241,53 @@ def rms ( func , xmin = None , xmax = None , err = False ) :
     ## use it! 
     return sp_action ( func , actor  , xmin , xmax )
 
+# =============================================================================
+## get the skewness of the variable, considering function to be PDF 
+#  @code 
+#  >>> fun  = ...
+#  >>> skew = skewness ( fun , xmin = -10 , xmax = 10 )
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-07-11
+def skewness ( func , xmin = None , xmax = None , err = False ) :
+    """
+    Get the skewness for the distribution using scipy/numpy
+    >>> fun = ...
+    >>> v   = skewness ( fun , xmin = -10 , xmax = 10 )
+    """
+    ##
+    ## get the functions from LHCbMath.deriv 
+    actor = lambda x1,x2 : Skewness ( x1 , x2 , err ) 
+    ## use it! 
+    return sp_action ( func , actor  , xmin , xmax )
+
+
+# =============================================================================
+## get the excessive kurtosis of the variable, considering function to be PDF
+#  \f$ k = \frac{\mu_4}{\sigma^4}-3\f$ 
+#  @code 
+#  >>> fun  = ...
+#  >>> kurt = kurtosis ( fun , xmin = -10 , xmax = 10 )
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2015-07-11
+def kurtosis ( func , xmin = None , xmax = None , err = False ) :
+    """
+    Get the (exessive) kurtosis for the distribution using scipy/numpy
+    >>> fun  = ...
+    >>> kurt = kurtosis ( fun , xmin = 10 , xmax = 50 )
+    """
+    ##
+    ## get the functions from LHCbMath.deriv 
+    actor = lambda x1,x2 : Kurtosis ( x1 , x2 , err ) 
+    ## use it! 
+    return sp_action ( func , actor  , xmin , xmax )
 
 # =============================================================================
 ## get the mediane the variable, considering function to be PDF 
 #  @code 
 #  >>> fun = ...
-#  >>> mean = fun.mediane()
-#  >>> mean = fun.mediane( xmin = 10 , xmax = 50 )
+#  >>> med = mediane( fun , xmin = 10 , xmax = 50 )
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-07-11
@@ -1170,27 +1295,26 @@ def mediane ( func , xmin = None , xmax = None ) :
     """
     Get the mediane for the distribution using scipy/numpy
     >>> fun = ...
-    >>> v   = fun.mediane()
-    >>> v   = fun.mediane( xmin = 10 , xmax = 50 )
+    >>> v   = mediane( fun , xmin = 10 , xmax = 50 )
     """
+    ## get the functions from LHCbMath.deriv 
+    actor = lambda x1,x2 : Mediane ( x1 , x2 ) 
     ##
-    return sp_action ( func , Mediane , xmin , xmax )
+    return sp_action ( func , actor , xmin , xmax )
 
 # =============================================================================
 ## get the quantile of variable, considering function to be PDF 
 #  @code 
 #  >>> fun  = ...
-#  >>> quan = fun.quantile( 0.1 )
-#  >>> quan = fun.quantile( 0.1 ) , xmin = 10 , xmax = 50 )
+#  >>> quan = quantile( fun , 0.1 , xmin = 10 , xmax = 50 )
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-07-11
 def quantile ( func , Q , xmin = None , xmax = None , err = False , x0 = 0 ) :
     """
-    Get the mean-value for the distribution using scipy/numpy
-    >>> fun   = ...
-    >>> quan = fun.quantile ( 0.1 )
-    >>> quan = fun.quantile ( 0.1 , xmin = 10 , xmax = 50 )
+    Get quantile for the distribution using scipy/numpy
+    >>> fun  = ...
+    >>> quan = quantile ( fun , 0.1 , xmin = 10 , xmax = 50 )
     """
     ## get the functions from LHCbMath.deriv 
     actor = lambda x1,x2 : Quantile ( Q , x1 , x2 ) 
@@ -1200,21 +1324,21 @@ def quantile ( func , Q , xmin = None , xmax = None , err = False , x0 = 0 ) :
 ## get the mode the variable, considering function to be PDF 
 #  @code 
 #  >>> fun = ...
-#  >>> mean = fun.mode()
-#  >>> mean = fun.mode( xmin = 10 , xmax = 50 )
+#  >>> m   = mode( fun ,  xmin = 10 , xmax = 50 )
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-07-11
 def mode ( func , xmin = None , xmax = None ) :
     """
-    Get the mediane for the distribution using scipy/numpy
+    Get the mode for the distribution using scipy/numpy
     >>> fun = ...
-    >>> v   = fun.mode()
-    >>> v   = fun.mode( xmin = 10 , xmax = 50 )
+    >>> v   = mode( fun ,  xmin = 10 , xmax = 50 )
     """
     ## get the functions from LHCbMath.deriv 
     ## use it! 
-    return sp_action ( func , Mode , xmin , xmax )
+    ## get the functions from LHCbMath.deriv 
+    actor = lambda x1,x2 : Mode  ( x1 , x2 ) 
+    return sp_action ( func , actor , xmin , xmax )
 
 # =============================================================================
 ## get the symmetric confidence interval around x0 for (xmin,xmax) interval 
@@ -1353,8 +1477,15 @@ if '__main__' == __name__ :
     mom5 = Moment  ( 5, 0, math.pi)
     print 'sin@[0,pi]           mom5: %s ' % mom5 (math.sin) 
 
+    s    = Skewness ( 0 , math.pi )
+    print 'sin@[0,pi]       skewness: %s ' % s    (math.sin)
+    
+    k    = Kurtosis ( 0 , math.pi )
+    print 'sin@[0,pi]       kurtosis: %s ' % k    (math.sin) 
+
     quan = Quantile ( 0.980 , 0, 10)
     print 'sin@[0,pi] 0.980-quantile: %s ' % quan (math.sin) 
+
 
     quan = Quantile ( 0.252 , 0, 10)
     print '1@[0,10]   0.252-quantile: %s ' % quan ( lambda x : 1 ) 
@@ -1375,6 +1506,12 @@ if '__main__' == __name__ :
     print 'CLa(gauss,0.68,-10,10) (%.3f,%.3f) ' % cl_asymm ( gau  , 0.68 , -10 , 10 )
     print 'CLa(aga  ,0.68,-10,10) (%.3f,%.3f) ' % cl_asymm ( gau1 , 0.68 , -10 , 10 )
 
+    print 'Skewness(gauss,-10,10) %s ' % skewness ( gau  , -10 , 10 )
+    print 'Kurtosis(gauss,-10,10) %s ' % kurtosis ( gau  , -10 , 10 )
+
+    print 'Skewness(agau ,-10,10) %s ' % skewness ( gau1 , -10 , 10 )
+    print 'Kurtosis(agau ,-10,10) %s ' % kurtosis ( gau1 , -10 , 10 )
+    
 # =============================================================================
 # The END 
 # =============================================================================
