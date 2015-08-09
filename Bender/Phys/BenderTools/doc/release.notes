@@ -5,6 +5,8 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/BenderTools v26r1   2015-08-08 ====================
+
 ! 2015-07-29 - Vanya Belyaev
  - GetDBTags.py
    fix a typo  
