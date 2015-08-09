@@ -16,7 +16,6 @@
 #include "GaudiKernel/Lomont.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/ToStream.h"
-#include "GaudiKernel/cbrt.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -1492,9 +1491,9 @@ Gaudi::Math::ValueWithError Gaudi::Math::cbrt
 ( const Gaudi::Math::ValueWithError& b )
 {
   if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
-  { return ::cbrt ( b.value() ) ; }
+  { return std::cbrt ( b.value() ) ; }
   //
-  const double v  = ::cbrt ( b.value() ) ;
+  const double v  = std::cbrt ( b.value() ) ;
   //
   const double e2 = b.cov2() / ( v * b.value() ) ;
   //

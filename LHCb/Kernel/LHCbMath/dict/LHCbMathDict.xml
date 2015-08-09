@@ -168,8 +168,6 @@
   <function name = "Gaudi::Math::log"             />
   <function name = "Gaudi::Math::log10"           />
   <function name = "Gaudi::Math::sqrt"            />
-  <function name = "Gaudi::Math::cbrt"            />
-  <function name = "Gaudi::Math::cbrt"            />
   <function name = "Gaudi::Math::sin"             />
   <function name = "Gaudi::Math::cos"             />
   <function name = "Gaudi::Math::tan"             />
