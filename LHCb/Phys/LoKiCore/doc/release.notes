@@ -12,6 +12,8 @@
 !   contributions and advices from G.Raven, J.van Tilburg,
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+! 2015-08-09 - Gerhard Raven
+ - replace Gaudi::Math::cbrt with std::cbrt
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

@@ -16,7 +16,6 @@
 #include "LoKi/Primitives.h"
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/Power.h"
-#include "GaudiKernel/cbrt.h"
 // ============================================================================
 /** @file
  *
@@ -125,7 +124,7 @@ namespace LoKi
   inline LoKi::ComposeFunction<TYPE,TYPE2>
   cbrt ( const LoKi::Functor<TYPE,TYPE2>& fun ) 
   { return LoKi::ComposeFunction<TYPE,TYPE2>
-      ( ::cbrt , fun , "cbrt" ) ; }
+      ( std::cbrt , fun , "cbrt" ) ; }
   // ==========================================================================
   /*  asine for LoKi function
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
