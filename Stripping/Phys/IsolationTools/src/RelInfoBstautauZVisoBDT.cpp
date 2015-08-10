@@ -76,7 +76,9 @@ RelInfoBstautauZVisoBDT::RelInfoBstautauZVisoBDT( const std::string& type,
                                                   const IInterface* parent)
 : GaudiTool ( type, name , parent )
 
-/* , m_par_zv_ipsall(1000)
+
+   , m_Geom( NULL )
+  /* , m_par_zv_ipsall(1000)
    , m_par_zv_ipall(1000)
    , m_par_zv_proba(1000)
    , m_par_zv_proba_close(1000)
@@ -169,23 +171,11 @@ StatusCode RelInfoBstautauZVisoBDT::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this ) ;
-  if ( !m_dva ) { return Error( "Couldn't get parent DVAlgorithm",
-                                StatusCode::FAILURE ); }
-
-  m_Geom = tool<IDistanceCalculator>("LoKi::DistanceCalculator", this);
+  m_Geom = tool<IDistanceCalculator>("LoKi::DistanceCalculator");
   if ( ! m_Geom ) {
     fatal() << "DistanceCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
   }
-
-
-  m_dist = m_dva->distanceCalculator ();
-  if( !m_dist ){
-    Error("Unable to retrieve the IDistanceCalculator tool");
-    return StatusCode::FAILURE;
-  }
-
 
   m_vertextool = tool<IVertexFunctionTool>("VertexFunctionTool", this );
   if(! m_vertextool) {
@@ -596,7 +586,10 @@ double RelInfoBstautauZVisoBDT::VfAlongTrack(double zB, const LHCb::Particle* Pa
 
 StatusCode RelInfoBstautauZVisoBDT::GMPiso(const LHCb::Particle *part)//, const std::string prefix, Tuples::Tuple& tuple )//
 {
-  const RecVertex* sIPSPVrefit =  dynamic_cast<const RecVertex*> (m_dva->bestVertex(part));//
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ;
+  if ( !dva ) { return Error("Could not get parent DVAlgorithm"); }
+
+  const RecVertex* sIPSPVrefit =  dynamic_cast<const RecVertex*> (dva->bestVertex(part));//
   Particle::ConstVector vdaugh = m_descend->descendants(part);
   //    cout<<"number of daughters "<<vdaugh.size()<<endl;
 

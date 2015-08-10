@@ -55,8 +55,6 @@ class RelInfoBstautauCDFIso : public GaudiTool, virtual public IRelatedInfoTool 
 
         virtual ~RelInfoBstautauCDFIso( ); ///< Destructor
 
-    protected:
-
     private:
 
         std::vector<std::string> m_variables;
@@ -64,11 +62,6 @@ class RelInfoBstautauCDFIso : public GaudiTool, virtual public IRelatedInfoTool 
         std::vector<short int> m_keys; 
 
         double m_bdt1;
-
-        //distance calculator
-        //
-        IDVAlgorithm* m_dva;
-        const IDistanceCalculator*  m_dist;
 
         std::string m_weightsName;
         /// TMVA transform

@@ -93,7 +93,6 @@ public:
   typedef std::vector<LHCb::RecVertex*> RecVertexVector;
   typedef std::vector<const LHCb::Track*> TrackVector;
 
-protected:
 private:
 
         /// Check if a pure CALO Particle
@@ -221,8 +220,6 @@ private:
 
   IVertexFunctionTool* m_vertextool;
   const IRelatedPVFinder* pFinder; 
-  IDVAlgorithm* m_dva;
-  const IDistanceCalculator* m_dist;
   IDistanceCalculator*  m_Geom;
   IParticleTransporter* m_transporter;
   IParticleDescendants* m_descend;

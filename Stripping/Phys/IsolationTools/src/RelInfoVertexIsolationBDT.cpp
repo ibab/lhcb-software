@@ -17,8 +17,6 @@ RelInfoVertexIsolationBDT::RelInfoVertexIsolationBDT( const std::string& type,
                                                       const std::string& name,
                                                       const IInterface* parent)
 : GaudiTool ( type, name , parent )
-  , m_dva(0)
-  , m_dist(0)
   , m_pVertexFit(0)
   , m_pPVReFitter(0)
 {
@@ -56,16 +54,10 @@ StatusCode RelInfoVertexIsolationBDT::initialize()
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // Get DVAlgo
-  m_dva = Gaudi::Utils::getIDVAlgorithm( contextSvc(), this ) ;
-  if ( !m_dva ) { return Error("Couldn't get parent DVAlgorithm"); }
-
-  // Get distance calculator
-  m_dist = m_dva->distanceCalculator();
-  if ( !m_dist ) { return Error("Unable to retrieve the IDistanceCalculator tool"); }
-
   // Get vertex fitter
-  m_pVertexFit= m_dva->vertexFitter() ;
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ; 
+  if ( !dva ) { return Error("Could not get parent DVAlgorithm"); }
+  m_pVertexFit= dva->vertexFitter() ;
   if ( !m_pVertexFit ) { return Error("Unable to retrieve the IVertexFit tool"); }
 
   //Get PV refitter? Is this the correct way?
@@ -203,7 +195,9 @@ StatusCode RelInfoVertexIsolationBDT::calculateRelatedInfo( const LHCb::Particle
             << partsToCheck.size() << endreq;
 
   //save PVs for minipchi2 calc
-  const LHCb::RecVertex::Range PVs = m_dva->primaryVertices();
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ; 
+  if ( !dva ) { return Error("Could not get parent DVAlgorithm"); }
+  const LHCb::RecVertex::Range PVs = dva->primaryVertices();
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "Primary vertices with size : " << PVs.size() << " and empty? " << PVs.empty() << endmsg ;
 
@@ -259,6 +253,8 @@ bool RelInfoVertexIsolationBDT::getIsolation( const LHCb::Particle *part
                                               , const LHCb::RecVertex::Range PVs
                                               )
 {
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ;
+  if ( !dva ) { return Error("Could not get parent DVAlgorithm"); } 
   //LHCb::Particle *bestParticle         = NULL ;
   //variables
   double newfdchi2(0), oldfdchi2(0), minipchi2(0), opening(0), ghostprob(0);
@@ -324,7 +320,7 @@ bool RelInfoVertexIsolationBDT::getIsolation( const LHCb::Particle *part
       if(newpart->proto()->track()->type() == 1) pt = newpart->proto()->track()->momentum().z();
       else pt = newpart->proto()->track()->pt();
       // 8 : Track IP chi2 ??
-      StatusCode distsc = m_dist->distance(newpart,v,ip,ipchi2);
+      StatusCode distsc = dva->distanceCalculator()->distance(newpart,v,ip,ipchi2);
       //debug() << ghostprob << '\t' << type << '\t' << opening << endmsg ;
       //assign
       m_var_type = type ;
@@ -415,17 +411,19 @@ void RelInfoVertexIsolationBDT::findDaughters2Vertex( const LHCb::Particle *top 
 //=============================================================================
 double RelInfoVertexIsolationBDT::getminipchi(const LHCb::Particle* track, const LHCb::RecVertex::Range PVs) const {
 
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ; 
+  if ( !dva ) { return Error("Could not get parent DVAlgorithm"); }
   double minchi2 = -1 ;
   if ( !PVs.empty() ){
     for ( LHCb::RecVertex::Range::const_iterator pv = PVs.begin() ; pv!=PVs.end() ; ++pv){
       double ip, chi2;
-      StatusCode test2 = m_dist->distance ( (const LHCb::Particle*)track, *pv, ip, chi2 );
+      StatusCode test2 = dva->distanceCalculator()->distance ( (const LHCb::Particle*)track, *pv, ip, chi2 );
       if ((chi2<minchi2) || (minchi2<0.))
       {
         LHCb::RecVertex newPV(**pv);
         StatusCode scfit = m_pPVReFitter->remove(track, &newPV);
         LHCb::RecVertex* newPVPtr = (LHCb::RecVertex*)&newPV;
-        test2 = m_dist->distance ((LHCb::Particle *)track, (LHCb::VertexBase*) newPVPtr, ip, chi2 );
+        test2 = dva->distanceCalculator()->distance ((LHCb::Particle *)track, (LHCb::VertexBase*) newPVPtr, ip, chi2 );
         minchi2 = chi2 ;
       }
     }
@@ -442,17 +440,19 @@ double RelInfoVertexIsolationBDT::getfdchi2(const LHCb::Track* track
                                             ) const
 {
 
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ;
+  if ( !dva ) { return Error("Could not get parent DVAlgorithm"); }
   double minchi2 = -1 ;
   double fdchi2 = -1;
   double fd;
   if ( !PVs.empty() ){
     for ( LHCb::RecVertex::Range::const_iterator pv = PVs.begin() ; pv!=PVs.end() ; ++pv){
       double ip, chi2;
-      StatusCode test2 = m_dist->distance ( (const LHCb::Track *)track, *pv, ip, chi2 );
+      StatusCode test2 = dva->distanceCalculator()->distance ( (const LHCb::Track *)track, *pv, ip, chi2 );
       if ((chi2<minchi2) || (minchi2<0.))
       {
         minchi2 = chi2 ;
-        StatusCode test2 = m_dist->distance ( *pv, &Vtx, fd, fdchi2 );
+        StatusCode test2 = dva->distanceCalculator()->distance ( *pv, &Vtx, fd, fdchi2 );
       }
     }
 

@@ -55,8 +55,6 @@ class RelInfoBstautauTrackIsolationBDT : public GaudiTool, virtual public IRelat
 
         virtual ~RelInfoBstautauTrackIsolationBDT( ); ///< Destructor
 
-    protected:
-
     private:
 
         std::vector<std::string> m_variables;
@@ -86,13 +84,6 @@ double   m_bdt3_TauM_piM1 ;
 double   m_bdt1_TauM_piM2 ;
 double   m_bdt2_TauM_piM2 ;
 double   m_bdt3_TauM_piM2 ;
-
-
-
-        //distance calculator
-        //
-        IDVAlgorithm* m_dva;
-        const IDistanceCalculator*  m_dist;
 
         std::string m_weightsName;
         /// TMVA transform

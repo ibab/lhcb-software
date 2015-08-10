@@ -95,8 +95,6 @@ class RelInfoVertexIsolationBDT : public GaudiTool, virtual public IRelatedInfoT
 
         // Config and vertexing
         std::vector<std::string>   m_inputParticles ;
-        IDVAlgorithm*              m_dva;
-        const IDistanceCalculator* m_dist;
         const IVertexFit*          m_pVertexFit;
         const IPVReFitter*         m_pPVReFitter;
         std::string m_weightsName; 

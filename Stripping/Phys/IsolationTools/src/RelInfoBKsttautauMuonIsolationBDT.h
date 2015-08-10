@@ -55,8 +55,6 @@ public:
   
   virtual ~RelInfoBKsttautauMuonIsolationBDT( ); ///< Destructor
   
-    protected:
-  
 private:
   
   std::vector<std::string> m_variables;
@@ -73,11 +71,6 @@ private:
   double m_bdt2_TauM_mu;
   double m_bdt3_TauM_mu;
   
-        //distance calculator
-        //
-  IDVAlgorithm* m_dva;
-        const IDistanceCalculator*  m_dist;
-
         std::string m_weightsName;
         /// TMVA transform
         //Reader
@@ -96,7 +89,6 @@ private:
         TMVATransform::optmap m_optmap ;
         IParticleDictTool::DICT m_varmap ; 
         IParticleDictTool::DICT m_out ; 
-
 
         //save the vertice
         std::string m_PVInputLocation ;

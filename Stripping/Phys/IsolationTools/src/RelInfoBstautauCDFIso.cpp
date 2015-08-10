@@ -77,16 +77,6 @@ StatusCode RelInfoBstautauCDFIso::initialize() {
   StatusCode sc = GaudiTool::initialize() ;
   if ( sc.isFailure() ) return sc ;
 
-  //get from DV algorithm
-  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
-                             StatusCode::FAILURE);
-  m_dist       = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
-  if( !m_dist ){
-    Error("Unable to retrieve the IDistanceCalculator tool");
-    return StatusCode::FAILURE;
-  }
-
   return sc;
 }
 
@@ -97,10 +87,8 @@ StatusCode RelInfoBstautauCDFIso::calculateRelatedInfo( const LHCb::Particle *to
                                                         const LHCb::Particle *part )
 {
 
-
   m_decayParticles.clear();
   m_bdt1 = 0.;
-
 
   if (  part->isBasicParticle() ) {
     if ( msgLevel(MSG::DEBUG) ) debug() << "Running tau isolation on non-final state particle, skipping" << endmsg;

@@ -69,20 +69,6 @@ StatusCode RelInfoBs2MuMuTrackIsolations::initialize() {
 
   StatusCode sc = GaudiTool::initialize() ;
   if ( sc.isFailure() ) return sc ;
-
-  //get from DV algorithm
-//  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
-//  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
-
-//  m_dist  = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
-//  if( !m_dist ){
-//    Error("Unable to retrieve the IDistanceCalculator tool");
-//    return StatusCode::FAILURE;
-//  }
- 
-  //m_combiner  = m_dva->particleCombiner();
-  //m_combiner = tool<IParticleCombiner>("LoKi::", this)
- 
   
   if ( msgLevel(MSG::DEBUG) ) debug()<<" ==> Initialize"<<endmsg;
 
@@ -670,8 +656,7 @@ StatusCode RelInfoBs2MuMuTrackIsolations::IsolationTwoBodyVariables(const LHCb::
   if ( msgLevel(MSG::DEBUG) ) debug()<< "[IsolationTwoBody] size of isoparts is "<< iso_parts_size<<endreq;
   
   StatusCode sc0 = StatusCode::SUCCESS;
-  const IParticleCombiner* combiner = dva->particleCombiner();
-  sc0  = combiner->combine(iso_parts,mother_tmp,vertex_tmp ) ;
+  sc0  = dva->particleCombiner()->combine(iso_parts,mother_tmp,vertex_tmp ) ;
   if(sc0==StatusCode::SUCCESS) {
     massiso = mother_tmp.measuredMass();
     chi2iso = mother_tmp.endVertex()->chi2();

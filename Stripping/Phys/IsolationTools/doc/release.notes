@@ -4,6 +4,9 @@
 !============================================================================
 
 ! 2015-08-10 - Ricardo Vazquez Gomez
+ - Propagate the changes by Chris in the 'getIDVAlgorithm' to all the IsolationTools
+
+! 2015-08-10 - Ricardo Vazquez Gomez
  - Propagate the 'getIDVAlgorithm' changes to other tools
 
 ! 2015-08-10 - Chris Jones

@@ -55,8 +55,6 @@ public:
   
   virtual ~RelInfoBstautauMuonIsolationBDT( ); ///< Destructor
   
-    protected:
-  
 private:
   
   std::vector<std::string> m_variables;
@@ -67,11 +65,6 @@ private:
   double m_bdt2;
   double m_bdt3;
   
-        //distance calculator
-        //
-  IDVAlgorithm* m_dva;
-        const IDistanceCalculator*  m_dist;
-
         std::string m_weightsName;
         /// TMVA transform
         //Reader
