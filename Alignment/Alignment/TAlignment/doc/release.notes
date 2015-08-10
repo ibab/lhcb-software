@@ -7,6 +7,7 @@ Purpose	: collection of alignment algorithms
  - Declassed alignment log message from INFO to DEBUG
  - Changed 'error' to 'uncertainty' when in INFO message
  - Declassed 'constraint removal due to non-zero derivatives' message from WARNING to INFO
+ - Initialisation of elements to be aligned message set to DEBUG
 
 ! 2015-08-04 - Wouter Hulsbergen
  - fixed bug in commit of Alignables.py on 07-02, then restored things undone on 07-04

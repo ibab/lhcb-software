@@ -468,7 +468,7 @@ StatusCode GetElementsToBeAligned::initAlignmentFrame( Gaudi::Time now )
 	    << m_initTime << " " << now << endreq ;
     sc = Warning("Severe ERROR: alignment frame already initialized", StatusCode::FAILURE) ;
   } else {
-    std::stringstream message ;
+    std::stringstream message, message_dbg ;
     message << std::left << std::setw(80u) << std::setfill('*') << std::endl ;
     IDetDataSvc* detDataSvc(0) ;
     sc = service("DetectorDataSvc",detDataSvc, false);
@@ -501,10 +501,11 @@ StatusCode GetElementsToBeAligned::initAlignmentFrame( Gaudi::Time now )
     
     // now print the positions, just for debugging  
     for( Elements::const_iterator i = m_elements.begin() ; i != m_elements.end(); ++i) 
-      message << **i  ;
-    
-    message << std::left << std::setw(80u) << std::setfill('*') << "" ;
+      message_dbg << **i  ;
+    message_dbg << std::left << std::setw(80u) << std::setfill('*') << "" ;
+
     info() << message.str() << endreq ;
+    debug() << message_dbg.str() << endreq;
   }
   return sc ;
 }
