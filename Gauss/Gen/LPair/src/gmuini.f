@@ -1,0 +1,2 @@
+      SUBROUTINE GMUINI
+      END

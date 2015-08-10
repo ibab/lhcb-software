@@ -1,0 +1,101 @@
+*CMZ :  2.00/00 08/05/92  18.54.06  by  O. Duenger
+*-- Author :    O. Duenger   07/05/92
+*********************************************************************
+*
+      SUBROUTINE PSF(Q2,MX2,SIGMAT,W1,W2)
+*
+*  PROTON STRUCTURE FUNCTION COMPUTED FROM BREASSE ET. AL.
+*
+*********************************************************************
+
+      IMPLICIT NONE
+      INTEGER NBIN,NCALL,NWRITE
+      REAL*8 Q2,MX,MX2,W1,W2,MP,MPI,NU2,PI,LOGQQ0,XBIN,DX,ALPHAF,GD2
+      REAL*8 ABRASS(56),BBRASS(56),CBRASS(56)
+      REAL*8 SIGLOW,SIGHIG,SIGMAT,MUBARN
+      PARAMETER(MP=0.9383D0,MPI=0.1350D0,PI=3.1416D0)
+      PARAMETER(MUBARN=1D0/389.39D0,ALPHAF=1D0/137.04D0)
+      DATA NCALL/0/NWRITE/1/
+      DATA  ABRASS/5.045D0,5.126D0,5.390D0,5.621D0,5.913D0,
+     1             5.955D0,6.139D0,6.178D0,6.125D0,5.999D0,
+     2             5.769D0,5.622D0,5.431D0,5.288D0,5.175D0,
+     3             5.131D0,5.003D0,5.065D0,5.045D0,5.078D0,
+     4             5.145D0,5.156D0,5.234D0,5.298D0,5.371D0,
+     5             5.457D0,5.543D0,5.519D0,5.465D0,5.384D0,
+     6             5.341D0,5.320D0,5.275D0,5.290D0,5.330D0,
+     7             5.375D0,5.428D0,5.478D0,5.443D0,5.390D0,
+     8             5.333D0,5.296D0,5.223D0,5.159D0,5.146D0,
+     9             5.143D0,5.125D0,5.158D0,5.159D0,5.178D0,
+     A             5.182D0,5.195D0,5.160D0,5.195D0,5.163D0,
+     B             5.172D0/
+      DATA  BBRASS/0.798D0,1.052D0,1.213D0,1.334D0,1.397D0,
+     1             1.727D0,1.750D0,1.878D0,1.887D0,1.927D0,
+     2             2.041D0,2.089D0,2.148D0,2.205D0,2.344D0,
+     3             2.324D0,2.535D0,2.464D0,2.564D0,2.610D0,
+     4             2.609D0,2.678D0,2.771D0,2.890D0,2.982D0,
+     5             3.157D0,3.183D0,3.315D0,3.375D0,3.450D0,
+     6             3.477D0,3.471D0,3.554D0,3.633D0,3.695D0,
+     7             3.804D0,3.900D0,4.047D0,4.290D0,4.519D0,
+     8             4.709D0,4.757D0,4.840D0,5.017D0,5.015D0,
+     9             5.129D0,5.285D0,5.322D0,5.545D0,5.623D0,
+     A             5.775D0,5.894D0,6.138D0,6.151D0,6.301D0,
+     B             6.452D0/
+      DATA  CBRASS/ 0.043D0, 0.024D0, 0.000D0,-0.013D0,-0.023D0,
+     1             -0.069D0,-0.060D0,-0.080D0,-0.065D0,-0.056D0,
+     2             -0.065D0,-0.056D0,-0.043D0,-0.034D0,-0.054D0,
+     3             -0.018D0,-0.046D0,-0.015D0,-0.029D0,-0.048D0,
+     4             -0.032D0,-0.045D0,-0.084D0,-0.115D0,-0.105D0,
+     5             -0.159D0,-0.164D0,-0.181D0,-0.203D0,-0.223D0,
+     6             -0.245D0,-0.254D0,-0.239D0,-0.302D0,-0.299D0,
+     7             -0.318D0,-0.383D0,-0.393D0,-0.466D0,-0.588D0,
+     8             -0.622D0,-0.568D0,-0.574D0,-0.727D0,-0.665D0,
+     9             -0.704D0,-0.856D0,-0.798D0,-1.048D0,-0.980D0,
+     A             -1.021D0,-1.092D0,-1.313D0,-1.341D0,-1.266D0,
+     B             -1.473D0/
+      MX=DSQRT(MX2)
+C
+      IF (MX .GE. MP+MPI .AND. MX .LT. 1.110D0) THEN
+        NBIN=0
+        XBIN=MX-MP-MPI
+        DX=1.110D0-MP-MPI
+      ELSEIF (MX .GE. 1.110D0 .AND. MX .LT. 1.770D0) THEN
+        NBIN=(MX-1.110D0)/0.015D0+1
+        XBIN=DMOD(MX-1.110D0,0.015D0)
+        DX=0.015D0
+      ELSEIF (MX .GE. 1.770D0 .AND. MX .LT. 1.990D0) THEN
+        NBIN=(MX-1.770D0)/0.020D0+45
+        XBIN=DMOD(MX-1.770D0,0.020D0)
+        DX=0.020D0
+      ELSE
+        SIGMAT=0D0
+        W1=0D0
+        W2=0D0
+        RETURN
+      ENDIF
+C
+      NU2=((MX2-Q2-MP*MP)/2D0/MP)**2
+      LOGQQ0=0.5D0*DLOG((NU2-Q2)/((MX2-MP*MP)/2D0/MP)**2)
+      GD2=1D0/(1-Q2/0.71D0)**4
+C
+      IF (NBIN .EQ. 0) THEN
+        SIGLOW=0D0
+      ELSE
+        SIGLOW=DEXP(ABRASS(NBIN)+
+     &              BBRASS(NBIN)*LOGQQ0+
+     &              CBRASS(NBIN)*DABS(LOGQQ0)**3)*GD2
+      ENDIF
+      SIGHIG=DEXP(ABRASS(NBIN+1)+
+     &            BBRASS(NBIN+1)*LOGQQ0+
+     &            CBRASS(NBIN+1)*DABS(LOGQQ0)**3)*GD2
+C
+      SIGMAT=SIGLOW+XBIN*(SIGHIG-SIGLOW)/DX
+      W1=(MX2-MP*MP)/(MP*8D0*PI*PI*ALPHAF)*MUBARN*SIGMAT
+      W2=W1*Q2/(Q2-NU2)
+C
+      NCALL = NCALL+1
+      IF (NCALL .GE. NWRITE) THEN
+        NWRITE=NWRITE*2
+        WRITE(6,*) 'PSF: NUMBER OF CALLS IS ',NCALL
+      ENDIF
+C
+      END

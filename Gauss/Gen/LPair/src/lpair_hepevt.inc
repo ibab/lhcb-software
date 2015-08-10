@@ -1,0 +1,20 @@
+c for PHOTOS202
+      integer NMXHEP
+      parameter (NMXHEP=4000)
+      real *8 PHEP,VHEP
+      integer NEVHEP,NHEP,ISTHEP,IDHEP,JMOHEP,JDAHEP
+      common/HEPEVT/NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
+     & JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),PHEP(5,NMXHEP),
+     & VHEP(4,NMXHEP)
+
+
+
+
+
+
+
+
+
+
+
+
