@@ -130,98 +130,103 @@ run_view_pages = OrderedDict([
         ],
         'layout': (2, 2)
     }),
-    ('clusters_1', {
-        'title': 'Clusters_1',
-        'plots': [ 
-            {
-                'title': 'Number of VELO clusters per event (Default)',
-                'short': 'Clusters per event',
-                'name': 'Velo/VeloPrivateClusterMonitor/# VELO clusters'
-            },
-            {
-                'title': 'Number of strips per cluster',
-                'short': 'Strips per cluster',
-                'name': 'Velo/VeloPrivateClusterMonitor/Cluster size',
-                'options': {
-                    'showUncertainties': True
-                },
-                'normalise': True
-            },
-            {
-                'title': 'Active chip links versus sensor',
-                'short': 'Active links per sensor',
-                'name': 'Velo/VeloPrivateClusterMonitor/Active chip links vs sensor'
-            },
-            {
-                'title': 'Number of strips per cluster versus sensor',
-                'short': 'Strips per cluster vs. sensor',
-                'name': 'Velo/VeloPrivateClusterMonitor/Cluster size vs sensor'
-            },
-        ],
-        'layout': (2, 2)
-    }),
-    ('clusters_2', {
-        'title': 'Clusters_2',
-        'plots': [ 
-            {
-                'title': 'Cluster ADC value',
-                'short': 'Cluster ADC value',
-                'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value'
-            },
-            {
-                'title': 'Cluster ADC values vs sensor',
-                'short': 'Cluster ADC values vs sensor',
-                'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC values vs sensor'
-            },
-            {
-                'title': 'Number of VELO clusters per event for each sensor',
-                'short': 'Clusters per event per sensor',
-                'name': 'Velo/VeloPrivateClusterMonitor/# clusters sensor {0}',
-                'sensor_dependent': True
-            },
-            {
-                'title': 'Cluster ADC values for each sensor',
-                'short': 'Cluster ADC values for each sensor',
-                'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value sensor {0}',
-                'sensor_dependent': True
-            },
-        ],
-        'layout': (2, 2)
-    }),
-    ('clusters_3', {
-        'title': 'Clusters_3',
-        'plots': [ 
-            {
-                'title': 'Rate vs DistToM2[um]',
-                'short': 'Rate vs DistToM2[um]',
-                'name': 'Velo/VeloTrackMonitor/Rate_DistToM2',
-                'options': {
-                    'yAxisMinimum': 0,
-                    'yAxisMaximum': 1
-                }
-            },
-            {
-                'title': 'Rate vs DistToOutStrip[um]',
-                'short': 'Rate vs DistToOutStrip[um]',
-                'name': 'Velo/VeloTrackMonitor/Rate_DistToOutStrip',
-                'options': {
-                    'yAxisMinimum': 0,
-                    'yAxisMaximum': 1
-                }
-            },
-            {
-                'title': 'Cluster ADC values fit parameter : MPV',
-                'short': 'Cluster ADC values fit parameter : MPV',
-                'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value MPV vs Sensor number'
-            },
-            {
-                'title': 'Cluster ADC values fit parameter : FWHM',
-                'short': 'Cluster ADC values fit parameter : FWHM',
-                'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value FWHM vs Sensor number'
-            }
-        ],
-        'layout': (2, 2)
-    }),
+     ('clusters', {
+          'title': 'Clusters',
+          'subpages': [
+              {
+                  'title': 'Clusters_1',
+                  'plots': [ 
+                      {
+                          'title': 'Number of VELO clusters per event (Default)',
+                          'short': 'Clusters per event',
+                          'name': 'Velo/VeloPrivateClusterMonitor/# VELO clusters'
+                      },
+                      {
+                          'title': 'Number of strips per cluster',
+                          'short': 'Strips per cluster',
+                          'name': 'Velo/VeloPrivateClusterMonitor/Cluster size',
+                          'options': {
+                              'showUncertainties': True
+                          },
+                          'normalise': True
+                      },
+                      {
+                          'title': 'Active chip links versus sensor',
+                          'short': 'Active links per sensor',
+                          'name': 'Velo/VeloPrivateClusterMonitor/Active chip links vs sensor'
+                      },
+                      {
+                          'title': 'Number of strips per cluster versus sensor',
+                          'short': 'Strips per cluster vs. sensor',
+                          'name': 'Velo/VeloPrivateClusterMonitor/Cluster size vs sensor'
+                      },
+                  ],
+                  'layout': (2, 2)
+               },
+               {
+                  'title': 'Clusters_2',
+                  'plots': [ 
+                      {
+                          'title': 'Cluster ADC value',
+                          'short': 'Cluster ADC value',
+                          'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value'
+                      },
+                      {
+                          'title': 'Cluster ADC values vs sensor',
+                          'short': 'Cluster ADC values vs sensor',
+                          'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC values vs sensor'
+                      },
+                      {
+                          'title': 'Number of VELO clusters per event for each sensor',
+                          'short': 'Clusters per event per sensor',
+                          'name': 'Velo/VeloPrivateClusterMonitor/# clusters sensor {0}',
+                          'sensor_dependent': True
+                      },
+                      {
+                          'title': 'Cluster ADC values for each sensor',
+                          'short': 'Cluster ADC values for each sensor',
+                          'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value sensor {0}',
+                          'sensor_dependent': True
+                      },
+                  ],
+                  'layout': (2, 2)
+              },
+              {
+                  'title': 'Clusters_3',
+                  'plots': [ 
+                      {
+                          'title': 'Rate vs DistToM2[um]',
+                          'short': 'Rate vs DistToM2[um]',
+                          'name': 'Velo/VeloTrackMonitor/Rate_DistToM2',
+                          'options': {
+                              'yAxisMinimum': 0,
+                              'yAxisMaximum': 1
+                          }
+                      },
+                      {
+                          'title': 'Rate vs DistToOutStrip[um]',
+                          'short': 'Rate vs DistToOutStrip[um]',
+                          'name': 'Velo/VeloTrackMonitor/Rate_DistToOutStrip',
+                          'options': {
+                              'yAxisMinimum': 0,
+                              'yAxisMaximum': 1
+                          }
+                      },
+                      {
+                          'title': 'Cluster ADC values fit parameter : MPV',
+                          'short': 'Cluster ADC values fit parameter : MPV',
+                          'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value MPV vs Sensor number'
+                      },
+                      {
+                          'title': 'Cluster ADC values fit parameter : FWHM',
+                          'short': 'Cluster ADC values fit parameter : FWHM',
+                          'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value FWHM vs Sensor number'
+                      }
+                  ],
+                  'layout': (2, 2)
+              }
+          ]
+     }),
     ('occupancy', {
         'title': 'Occupancy',
         'plots': [

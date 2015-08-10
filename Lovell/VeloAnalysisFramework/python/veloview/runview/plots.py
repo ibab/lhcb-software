@@ -37,6 +37,7 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter):
 
     # Try to open the file
     f = ROOT.TFile(path)
+    #print "Dan!", path
     if f.IsZombie():
         raise IOError("Run file not found for run {0}".format(run))
 
