@@ -66,8 +66,8 @@ copy(ver['CERNLIB'] + '/src/mclibs/jetset/jetset', '../src',
                 'lulogo.F', 'luname.F', 'plu.F'])
 
 # Copy the needed header folders.
-copy(ver['CERNLIB'] + '/src/packlib/kernlib/kerngen', '../src',
-     include = ['kerngen'])
+copy(ver['CERNLIB'] + '/src/packlib/kernlib/kerngen/kerngen', '../src/kerngen',
+     exclude = ['CVS', 'Imakefile'])
 
 # Use the Gaudi random number generator.
 rlu = file('../src/rlu.F', 'w')
