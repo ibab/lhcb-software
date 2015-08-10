@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-10 - Ricardo Vazquez Gomez
+ - Bug fix in TrackEffD0ToKPi line names
+
 ! 2015-08-06 - Roberta Cardinale
  - Moved StrippingCharm/StrippingOmegaC0ForPromptCharm line to FULLDST
 

@@ -94,9 +94,9 @@ class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
                                       RequiredSelections = [StdLooseKaons])
 
         ###### the velo tracking
-        self.VeloProtoOutputLocation = 'Rec/ProtoP/VeloProtosFor%s'%self.name
-        self.VeloTrackOutputLocation="Rec/Track/MyVeloFor%s"%self.name
-        self.FittedVeloTrackOutputLocation = "Rec/Track/PreparedVeloFor%s"%self.name
+        self.VeloProtoOutputLocation = 'Rec/ProtoP/VeloProtosFor%s'%self.name()
+        self.VeloTrackOutputLocation="Rec/Track/MyVeloFor%s"%self.name()
+        self.FittedVeloTrackOutputLocation = "Rec/Track/PreparedVeloFor%s"%self.name()
         
         self.VeloTracks = self.MakeVeloTracks([]) 
         self.VeloPions = self.MakeVeloParticles("VeloPions","pion",self.VeloTracks)
@@ -179,37 +179,37 @@ class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
         #VeloDecoding = GaudiSequencer("RecoDecodingSeq")
         #VeloDecoding.Members += [d.setup() for d in decs ]
         
-        MyFastVeloTracking = FastVeloTracking("For%sFastVelo"%self.name,OutputTracksName=self.VeloTrackOutputLocation)
+        MyFastVeloTracking = FastVeloTracking("For%sFastVelo"%self.name(),OutputTracksName=self.VeloTrackOutputLocation)
         MyFastVeloTracking.OnlyForward = True
         MyFastVeloTracking.ResetUsedFlags = True
         ### prepare for fitting
-        preve = TrackStateInitAlg("For%sInitSeedFit"%self.name,TrackLocation = self.VeloTrackOutputLocation)
+        preve = TrackStateInitAlg("For%sInitSeedFit"%self.name(),TrackLocation = self.VeloTrackOutputLocation)
         preve.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
-        copyVelo = TrackContainerCopy( "For%sCopyVelo"%self.name )
+        copyVelo = TrackContainerCopy( "For%sCopyVelo"%self.name() )
         copyVelo.inputLocations = [self.VeloTrackOutputLocation]
         copyVelo.outputLocation = self.FittedVeloTrackOutputLocation
         
         ### fitting
         if self.__confdict__["VeloFitter"] == "ForwardStraightLine":
-            MyVeloFit = ConfiguredForwardStraightLineEventFitter(Name="For%sVeloRefitterAlg"%self.name,
+            MyVeloFit = ConfiguredForwardStraightLineEventFitter(Name="For%sVeloRefitterAlg"%self.name(),
                                                                  TracksInContainer=self.FittedVeloTrackOutputLocation)
         elif self.__confdict__["VeloFitter"] == "SimplifiedGeometry":
-            MyVeloFit = ConfiguredEventFitter(Name="For%sVeloRefitterAlg"%self.name,
+            MyVeloFit = ConfiguredEventFitter(Name="For%sVeloRefitterAlg"%self.name(),
                                               TracksInContainer=self.FittedVeloTrackOutputLocation,
                                               SimplifiedGeometry = True)
         else:
-            MyVeloFit = ConfiguredEventFitter(Name="For%sVeloRefitterAlg"%self.name,
+            MyVeloFit = ConfiguredEventFitter(Name="For%sVeloRefitterAlg"%self.name(),
                                               TracksInContainer=self.FittedVeloTrackOutputLocation)
             
         #### making the proto particles
-        MakeVeloProtos = ChargedProtoParticleMaker('For%sVeloProtoMaker'%self.name)
+        MakeVeloProtos = ChargedProtoParticleMaker('For%sVeloProtoMaker'%self.name())
         MakeVeloProtos.Inputs=[self.FittedVeloTrackOutputLocation]
         MakeVeloProtos.Output = self.VeloProtoOutputLocation
         MakeVeloProtos.addTool( DelegatingTrackSelector, name="TrackSelector" )
         MakeVeloProtos.TrackSelector.TrackTypes = [ "Velo" ]
     
         #### the full sequence
-        makeparts = GaudiSequencer('For%sMakeVeloTracksGS'%self.name)
+        makeparts = GaudiSequencer('For%sMakeVeloTracksGS'%self.name())
         #makeparts.Members += [ VeloDecoding ] 
         makeparts.Members += [ MyFastVeloTracking ] 
         makeparts.Members += [ preve ] 
@@ -218,7 +218,7 @@ class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
         makeparts.Members += [ MakeVeloProtos ] 
     
         #### some python magic to maek this appear like a "Selection"
-        return GSWrapper(name="For%sWrappedVeloTrackingFor"%self.name,
+        return GSWrapper(name="For%sWrappedVeloTrackingFor"%self.name(),
                          sequencer=makeparts,
                          output=self.VeloProtoOutputLocation,
                          requiredSelections =  prefilter)
@@ -227,7 +227,7 @@ class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
                           particle, 
                           protoParticlesMaker):
         
-        particleMaker =  NoPIDsParticleMaker("For%sParticleMaker%s"%(self.name,name) , Particle = particle)
+        particleMaker =  NoPIDsParticleMaker("For%sParticleMaker%s"%(self.name(),name) , Particle = particle)
         particleMaker.Input = self.VeloProtoOutputLocation
         
         DataOnDemandSvc().AlgMap.update( {
@@ -235,13 +235,13 @@ class TrackEffD0ToKPiAllLinesConf(LineBuilder) :
                 "/Event/Phys/" + particleMaker.name() + '/Vertices'  : particleMaker.getFullName()
                 } )
         
-        AllVeloParticles = Selection("For%sSelAllVeloParts%s"%(self.name,name), 
+        AllVeloParticles = Selection("For%sSelAllVeloParts%s"%(self.name(),name), 
                                      Algorithm = particleMaker, 
                                      RequiredSelections = [protoParticlesMaker], InputDataSetter=None)
         
         ### filter on the IP of the velo tracks
-        return Selection("For%sSelVeloParts%s"%(self.name,name), 
-                         Algorithm = FilterDesktop(name+"For%sFilterVeloTrackIP%s"%(self.name,name), 
+        return Selection("For%sSelVeloParts%s"%(self.name(),name), 
+                         Algorithm = FilterDesktop(name+"For%sFilterVeloTrackIP%s"%(self.name(),name), 
                                                    Code="(MIPDV(PRIMARY) > %(VeloMINIP)s)" %self.__confdict__),
                          RequiredSelections = [AllVeloParticles])
 
