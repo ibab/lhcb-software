@@ -35,7 +35,7 @@
 // VELO clusters monitoring algorithm.
 // Produces a set of histograms from the clusters bank in the TES.
 //
-// 2015-07-13 : Shanzhen Chen
+// 2015-08-10 : Shanzhen Chen
 // 2008-08-18 : Eduardo Rodrigues
 // 2008-06-28 : Mark Tobin, Kazu Akiba
 // 2008-04-30 : Aras Papadelis, Thijs Versloot
@@ -195,16 +195,25 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
 
 
     char hname1[100];
+    char hname2[100];
     for ( int i = 0; i < 84; i++ ) {
       if (i<42){
 	sprintf( hname1, "Cluster ADC value sensor %d", i);
 	m_histCluADC_Sensor[ i ] =  Gaudi::Utils::Aida2ROOT::aida2root(book1D( hname1, hname1,
+	      -0.5, 128*4+0.5, 128*4+1 ));
+	sprintf( hname2, "Cluster ADC value fit function sensor %d", i);
+        m_histCluADC_Sensor_FitFunction[ i ] = Gaudi::Utils::Aida2ROOT::aida2root(
+	      book1D( hname2, hname2,
 	      -0.5, 128*4+0.5, 128*4+1 ));
 
       }
       else{
 	sprintf( hname1, "Cluster ADC value sensor %d", i+22);
 	m_histCluADC_Sensor[ i ] =  Gaudi::Utils::Aida2ROOT::aida2root(book1D( hname1, hname1,
+	      -0.5, 128*4+0.5, 128*4+1 ));
+	sprintf( hname2, "Cluster ADC value fit function sensor %d", i+22);
+        m_histCluADC_Sensor_FitFunction[ i ] = Gaudi::Utils::Aida2ROOT::aida2root(
+	      book1D( hname2, hname2,
 	      -0.5, 128*4+0.5, 128*4+1 ));
       }	
     }
@@ -618,7 +627,6 @@ StatusCode Velo::VeloClusterMonitor::finalize() {
     for (int i = 0; i < 84; i++){
       if (m_histCluADC_Sensor[i]->Integral("width")==0) ; 
       else{
-	if (i<42){
 	  func[i] = new TF1("func",langaufun,18,500,4);
 	  func[i]->SetParameters(5, 0.8*m_histCluADC_Sensor[i]->GetMean(), m_histCluADC_Sensor[i]->Integral("width"), m_histCluADC_Sensor[i]->GetRMS());
 	  func[i]->SetParLimits(0,  3., 100.);
@@ -628,6 +636,7 @@ StatusCode Velo::VeloClusterMonitor::finalize() {
 	  m_histCluADC_Sensor[i]->Fit("func","0Q");
 	  fit[i] = m_histCluADC_Sensor[i]->GetFunction("func");
 
+	if (i<42){
 
 	  m_histCluADC_Sensor_FitParLandauWidth->SetBinContent(i+1,fit[i]->GetParameter(0));
 	  m_histCluADC_Sensor_FitParMPV->SetBinContent(i+1,fit[i]->GetParameter(1));
@@ -636,15 +645,6 @@ StatusCode Velo::VeloClusterMonitor::finalize() {
 
 	}
 	else{
-	  func[i] = new TF1("func",langaufun,18,500,4);
-	  func[i]->SetParameters(5, 0.8*m_histCluADC_Sensor[i]->GetMean(), m_histCluADC_Sensor[i]->Integral("width"), m_histCluADC_Sensor[i]->GetRMS());
-	  func[i]->SetParLimits(0,  3., 100.);
-	  func[i]->SetParLimits(1,  0., m_histCluADC_Sensor[i]->GetMean()+3*m_histCluADC_Sensor[i]->GetRMS());
-	  func[i]->SetParLimits(2,  m_histCluADC_Sensor[i]->Integral("width")*0.95, m_histCluADC_Sensor[i]->Integral("width")*1.05);
-	  func[i]->SetParLimits(3,  0., 3*m_histCluADC_Sensor[i]->GetRMS());
-	  m_histCluADC_Sensor[i]->Fit("func","0Q");
-	  fit[i] = m_histCluADC_Sensor[i]->GetFunction("func");
-
 
 	  m_histCluADC_Sensor_FitParLandauWidth->SetBinContent(i+1+22,fit[i]->GetParameter(0));
 	  m_histCluADC_Sensor_FitParMPV->SetBinContent(i+1+22,fit[i]->GetParameter(1));
@@ -671,6 +671,14 @@ StatusCode Velo::VeloClusterMonitor::finalize() {
 	    m_histCluADC_Sensor_FWHM->SetBinContent(i+1+22,FWHM);
 	  }
 	}
+	
+	// Fill histograms according to the fit function
+	// ---------------------------------------------
+	for (int ibin = 1 ; ibin < 513 ; ibin++)
+	{
+	  m_histCluADC_Sensor_FitFunction[i]->SetBinContent(ibin, fit[i]->Eval(ibin, 0, 0, 0) );
+	}
+
       }
       //
     }

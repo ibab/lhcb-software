@@ -16,7 +16,7 @@
 /** @class VeloClusterMonitor VeloClusterMonitor.h
  *  
  *  @author Shanzhen Chen
- *  @date   2015-07-13
+ *  @date   2015-08-10
  *
  *  @author Eduardo Rodrigues
  *  @date   2008-08-18
@@ -96,6 +96,7 @@ namespace Velo
     TH1D* m_histCluADC_Sensor_FitParGSigma;
     TH1D* m_histCluADC_Sensor_MPV;
     TH1D* m_histCluADC_Sensor_FWHM;
+    TH1D* m_histCluADC_Sensor_FitFunction[84];
     TF1* func[84];
     TF1* func_all;
 
