@@ -1,0 +1,26 @@
+#============================================================================
+# Created    : 2015-08-10
+# Maintainer : Philip Ilten
+#============================================================================
+package       LbLPair
+version       v1r0
+
+# Structure, i.e. directories to process.
+#============================================================================
+branches      LbLPair doc cmt src
+
+# Local include directory (not exported to project).
+#============================================================================
+include_dirs  $(LBSUPERCHICROOT)
+
+# Used packages.
+#============================================================================
+use           LPair        v*    Gen
+
+# Component library building rules.
+#============================================================================
+library       LbLPair           component/*.cpp
+
+# Define component and linker library link options.
+#============================================================================
+apply_pattern component_library library=LbLPair
