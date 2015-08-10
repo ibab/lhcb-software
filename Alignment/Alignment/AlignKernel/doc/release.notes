@@ -3,6 +3,9 @@
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
 
+! 2015-08-10 - Maurizio Martinelli
+ - Typewritten messages from Al::Equations such that they appear as INFO
+
 !========================= AlignKernel v3r8 2015-07-29 =========================
 ! 2015-07-28 - Maurizio Martinelli
  - Commented the definition of array of OTMonoLayerAlignData in python 

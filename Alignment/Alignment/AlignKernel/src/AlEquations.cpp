@@ -181,7 +181,7 @@ namespace Al
   {
     std::ofstream file(filename,std::ios::out | std::ios::binary);
     writeToBuffer(file) ;
-    std::cout << "Equations::writeToFile wrote " << m_numEvents << " events in " <<  file.tellp() << " bytes to file" << std::endl ;
+    std::cout << "Al::Equations::writeToFile: INFO:: wrote " << m_numEvents << " events in " <<  file.tellp() << " bytes to file" << std::endl ;
     file.close() ;
   }
 
@@ -190,7 +190,7 @@ namespace Al
     std::ifstream file(filename,std::ios::in | std::ios::binary);
     if( file.is_open() ) {
       readFromBuffer(file) ;
-      std::cout << "Equations::readFromFile read " << m_numEvents << " events in " << file.tellg() << " bytes from file "<<filename << std::endl ;
+      std::cout << "Al::Equations::readFromFile: INFO:: read " << m_numEvents << " events in " << file.tellg() << " bytes from file "<<filename << std::endl ;
       file.close() ;
     } else {
       printf("Cannot open input file: \'%s\'",filename) ;
@@ -205,15 +205,15 @@ namespace Al
       m_initTime = rhs.m_initTime ;
     } else {
       if( m_elements.size() != rhs.m_elements.size() ) {
-  std::cout << "Al::Equations: adding up derivatives with different sizes: This:" <<
-      m_elements.size()<<" RHS:" << rhs.m_elements.size()<< std::endl ;
+	std::cout << "Al::Equations::add: INFO:: adding up derivatives with different sizes: This:"
+		  <<  m_elements.size() <<" RHS:" << rhs.m_elements.size()<< std::endl ;
 //	assert(0) ;
-  return;
+	return;
       }
       if( m_initTime != rhs.m_initTime )
-  std::cout << "Al::Equations::add: INFO:: adding up Equations with different initTime: "
-      << m_initTime << " and " << rhs.m_initTime << ". Make sure that you know what you are doing."
-      << std::endl ;
+	std::cout << "Al::Equations::add: INFO:: adding up Equations with different initTime: "
+		<< m_initTime << " and " << rhs.m_initTime << ". Make sure that you know what you are doing."
+		<< std::endl ;
 
       // this is a tricky one. if we add up derivatievs that were
       // actually computed around a different point, then we need to
@@ -223,11 +223,11 @@ namespace Al
       size_t index(0) ;
       for( ElementContainer::iterator rhsit = ncrhs.m_elements.begin() ;
           rhsit != ncrhs.m_elements.end(); ++rhsit, ++index) {
-        // compute dela-alpha (usign the 'old' rhs)
+        // compute delta-alpha (usign the 'old' rhs)
         Gaudi::Vector6 deltaalpha = rhs.m_elements[index].m_alpha - m_elements[index].m_alpha ;
   if( ROOT::Math::Dot(deltaalpha,deltaalpha) > 1e-12 )
-    std::cout << "**************** Correcting for shifted alignment: "
-        << deltaalpha << std::endl ;
+    std::cout << "Al::Equations::add: INFO:: Correcting for shifted alignment: "
+	      << deltaalpha << std::endl ;
   // first the diagonal
         rhsit->m_dChi2DAlpha += rhsit->m_d2Chi2DAlpha2 * deltaalpha ;
         // now all the correlated elements
