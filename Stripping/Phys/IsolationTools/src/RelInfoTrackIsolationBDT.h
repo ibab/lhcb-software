@@ -55,8 +55,6 @@ class RelInfoTrackIsolationBDT : public GaudiTool, virtual public IRelatedInfoTo
   
         virtual ~RelInfoTrackIsolationBDT( ); ///< Destructor
 
-    protected:
-
     private:
 
         int m_variables;
@@ -70,11 +68,6 @@ class RelInfoTrackIsolationBDT : public GaudiTool, virtual public IRelatedInfoTo
         double m_bdt1;
         double m_bdt2;
         double m_bdt3;
-
-        //distance calculator
-        //
-        IDVAlgorithm* m_dva;
-        const IDistanceCalculator*  m_dist;
 
         std::string m_weightsName;
         /// TMVA transform

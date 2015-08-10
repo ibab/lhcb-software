@@ -61,15 +61,15 @@ StatusCode RelInfoTrackIsolationBDT::initialize() {
     StatusCode sc = GaudiTool::initialize() ;
     if ( sc.isFailure() ) return sc ;
 
-    //get from DV algorithm
-    m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
-    if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
-            StatusCode::FAILURE);
-    m_dist       = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
-    if( !m_dist ){
-        Error("Unable to retrieve the IDistanceCalculator tool");
-        return StatusCode::FAILURE;
-    }
+//    //get from DV algorithm
+//    m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
+//    if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
+//            StatusCode::FAILURE);
+//    m_dist       = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
+//    if( !m_dist ){
+//        Error("Unable to retrieve the IDistanceCalculator tool");
+//        return StatusCode::FAILURE;
+//    }
 
     m_optmap["Name"] = m_transformName ;
     m_optmap["KeepVars"] = "0" ;
@@ -111,7 +111,9 @@ StatusCode RelInfoTrackIsolationBDT::calculateRelatedInfo( const LHCb::Particle 
 
     //set PV and SV of the mother
     //
-    const LHCb::VertexBase* PV = m_dva->bestVertex(top);
+    IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ;
+    if ( !dva ) { return Error("Could not get parent DVAlgorithm"); }
+    const LHCb::VertexBase* PV = dva->bestVertex(top);
     const LHCb::VertexBase *SV = top->endVertex();
 
     m_vertices = get<LHCb::RecVertex::Range>(m_PVInputLocation);
@@ -200,6 +202,9 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
     double trk_nnk = 0;//track ProbNN(K)
     //end MR
 
+    IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ; 
+    if ( !dva ) { return Error("Could not get parent DVAlgorithm"); } 
+
     LHCb::Particle::Range::const_iterator part_it, part_it_end( particles.end() ) ;
     for ( part_it = particles.begin() ; part_it != part_it_end ; ++part_it )
     {
@@ -244,14 +249,14 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
         fc = calcFC(  trackMomentum, partMomentum, vertex_mu_track, PV);
         if(fc==-1 && msgLevel(MSG::DEBUG) ) debug() << "FC calculation failed: fc_denom == 0!" << endmsg;
         // DOCA
-        StatusCode sc_doca  = m_dist->distance(track,part->proto()->track(),doca);
+        StatusCode sc_doca  = dva->distanceCalculator()->distance(track,part->proto()->track(),doca);
         if(!sc_doca)  return StatusCode(sc_doca);
         double pvDist,pvDistChi2 ;
-        StatusCode sc_pv    = m_dist->distance(PV, vertex_mu_track, pvDist, pvDistChi2);
+        StatusCode sc_pv    = dva->distanceCalculator()->distance(PV, vertex_mu_track, pvDist, pvDistChi2);
         pvDistGeometric     = calcVertexDist(vertex_mu_track, PV);
         //if(!sc_pv)  return StatusCode(sc_pv);
         double svDist, svDistChi2 ;
-        StatusCode sc_sv    = m_dist->distance(SV, vertex_mu_track, svDist, svDistChi2);
+        StatusCode sc_sv    = dva->distanceCalculator()->distance(SV, vertex_mu_track, svDist, svDistChi2);
         svDistGeometric     = calcVertexDist(vertex_mu_track, SV);
         //   if(!sc_sv)  return StatusCode(sc_sv);
         //var_ipchisqany = log(calcIPToAnyPV(track) );
@@ -351,8 +356,10 @@ double RelInfoTrackIsolationBDT::calcIPToAnyPV( const LHCb::Track * track )
     LHCb::RecVertex::Range::const_iterator iv;
     double ips(-1),imp(-1),impchi2(-1);
     ips = 6.0e5;
+    IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ; 
+    if ( !dva ) { return Error("Could not get parent DVAlgorithm"); } 
     for(iv = m_vertices.begin();iv!=m_vertices.end();iv++){
-        StatusCode sc_ips = m_dist->distance(track,(*iv),imp,impchi2);
+        StatusCode sc_ips = dva->distanceCalculator()->distance(track,(*iv),imp,impchi2);
         if(!sc_ips) return StatusCode(sc_ips);
         if(ips>impchi2) ips = impchi2;
     }

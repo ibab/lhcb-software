@@ -3,6 +3,9 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2015-08-10 - Ricardo Vazquez Gomez
+ - Propagate the 'getIDVAlgorithm' changes to other tools
+
 ! 2015-08-10 - Chris Jones
  - Update the way various tool use the 'getIDVAlgorithm' merthod to work as
    public tools.

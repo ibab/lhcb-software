@@ -64,16 +64,16 @@ StatusCode RelInfoBs2MuMuBIsolations::initialize() {
   if ( sc.isFailure() ) return sc ;
 
   //get from DV algorithm
-  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
+//  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
+//  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
 
-  m_dist  = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
-  if( !m_dist ){
-    Error("Unable to retrieve the IDistanceCalculator tool");
-    return StatusCode::FAILURE;
-  }
+//  m_dist  = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
+//  if( !m_dist ){
+//    Error("Unable to retrieve the IDistanceCalculator tool");
+//    return StatusCode::FAILURE;
+//  }
  
-  m_combiner  = m_dva->particleCombiner();
+//  m_combiner  = m_dva->particleCombiner();
   //m_combiner = tool<IParticleCombiner>("LoKi::", this)
  
   if ( msgLevel(MSG::DEBUG) ) debug() <<" ==> Initialize"<<endmsg;
@@ -229,7 +229,9 @@ bool RelInfoBs2MuMuBIsolations::isTrackInDecay(const LHCb::Track* track){
 StatusCode RelInfoBs2MuMuBIsolations::OtherB(const LHCb::Particle *top, 
 					     const LHCb::Particle *part){
 
-  const LHCb::VertexBase* goodPV = m_dva->bestVertex(top);
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ; 
+  if ( !dva ) { return Error("Could not get parent DVAlgorithm"); }
+  const LHCb::VertexBase* goodPV = dva->bestVertex(top);
   
   LHCb::Particles OTHERB_parts;
   
@@ -248,7 +250,7 @@ StatusCode RelInfoBs2MuMuBIsolations::OtherB(const LHCb::Particle *top,
     double ptrackmag = p_track.R();
     double imp = 0.;
     double ips = -1.;
-    m_dist->distance ( (*ipp), goodPV, imp, ips );
+    dva->distanceCalculator()->distance ( (*ipp), goodPV, imp, ips );
     ips = TMath::Sqrt(ips);
     
     

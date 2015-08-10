@@ -71,16 +71,16 @@ StatusCode RelInfoBs2MuMuTrackIsolations::initialize() {
   if ( sc.isFailure() ) return sc ;
 
   //get from DV algorithm
-  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
+//  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() ) ;
+//  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE);
 
-  m_dist  = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
-  if( !m_dist ){
-    Error("Unable to retrieve the IDistanceCalculator tool");
-    return StatusCode::FAILURE;
-  }
+//  m_dist  = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
+//  if( !m_dist ){
+//    Error("Unable to retrieve the IDistanceCalculator tool");
+//    return StatusCode::FAILURE;
+//  }
  
-  m_combiner  = m_dva->particleCombiner();
+  //m_combiner  = m_dva->particleCombiner();
   //m_combiner = tool<IParticleCombiner>("LoKi::", this)
  
   
@@ -254,7 +254,9 @@ StatusCode RelInfoBs2MuMuTrackIsolations::TrackIsolations(const LHCb::Particle *
   //double iso5 = getIso( part, isotype, false);
   //double iso2_new = getIso( part, 66132, true);
 
-  const LHCb::VertexBase *PV = m_dva->bestVertex(top);
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ; 
+  if ( !dva ) { return Error("Could not get parent DVAlgorithm"); }
+  const LHCb::VertexBase *PV = dva->bestVertex(top);
   /// Fatima, this will be the BPV of the jpsi in some cases!
   const LHCb::VertexBase *SV = top->endVertex();
 
@@ -332,7 +334,7 @@ StatusCode RelInfoBs2MuMuTrackIsolations::TrackIsolations(const LHCb::Particle *
       if ( msgLevel(MSG::DEBUG) )  debug() << "Could not find any vertices "<<endreq;
     }
     for ( iv = verts->begin(); iv != verts->end(); iv++) {
-      m_dist->distance(&(*cand),(*iv),imp,impchi2);
+      dva->distanceCalculator()->distance(&(*cand),(*iv),imp,impchi2);
       if (impchi2<ips) ips = impchi2;
     }
     ips=sqrt(ips);
@@ -553,7 +555,9 @@ StatusCode RelInfoBs2MuMuTrackIsolations::IsolationTwoBodyVariables(const LHCb::
   double massiso = 0.;
   double chi2iso = -100.;
   
-  const LHCb::VertexBase *PV = m_dva->bestVertex(top); 
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ; 
+  if ( !dva ) { return Error("Could not get parent DVAlgorithm"); }
+  const LHCb::VertexBase *PV = dva->bestVertex(top); 
   const LHCb::VertexBase *SV = top->endVertex();
   if ( msgLevel(MSG::DEBUG) )  debug()<<" got vertices "<<PV->position()<<" and "<<SV->position()<<endreq;
 
@@ -627,7 +631,7 @@ StatusCode RelInfoBs2MuMuTrackIsolations::IsolationTwoBodyVariables(const LHCb::
 	verts = get<LHCb::RecVertex::Container>(m_PVInputLocation);
       }
       for ( iv = verts->begin(); iv != verts->end(); iv++) {
-	m_dist->distance(&(*cand),(*iv),imp,impchi2);
+	dva->distanceCalculator()->distance(&(*cand),(*iv),imp,impchi2);
 	if (impchi2<ips) ips = impchi2;
       }
       ips=std::sqrt(ips);
@@ -666,7 +670,8 @@ StatusCode RelInfoBs2MuMuTrackIsolations::IsolationTwoBodyVariables(const LHCb::
   if ( msgLevel(MSG::DEBUG) ) debug()<< "[IsolationTwoBody] size of isoparts is "<< iso_parts_size<<endreq;
   
   StatusCode sc0 = StatusCode::SUCCESS;
-  sc0  = m_combiner->combine(iso_parts,mother_tmp,vertex_tmp ) ;
+  const IParticleCombiner* combiner = dva->particleCombiner();
+  sc0  = combiner->combine(iso_parts,mother_tmp,vertex_tmp ) ;
   if(sc0==StatusCode::SUCCESS) {
     massiso = mother_tmp.measuredMass();
     chi2iso = mother_tmp.endVertex()->chi2();

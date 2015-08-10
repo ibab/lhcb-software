@@ -43,13 +43,7 @@ class RelInfoBs2MuMuTrackIsolations : public GaudiTool, virtual public IRelatedI
 
   virtual ~RelInfoBs2MuMuTrackIsolations( ); ///< Destructor
 
-protected:
-
 private:
-
-  IDVAlgorithm* m_dva;
-  const IDistanceCalculator* m_dist;
-  const IParticleCombiner* m_combiner;
 
   bool isTrackInDecay(const LHCb::Track* track);
   void saveDecayParticles( const LHCb::Particle *top);
