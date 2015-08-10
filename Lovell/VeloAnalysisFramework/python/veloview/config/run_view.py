@@ -186,6 +186,7 @@ run_view_pages = OrderedDict([
                           'title': 'Cluster ADC values for each sensor',
                           'short': 'Cluster ADC values for each sensor',
                           'name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value sensor {0}',
+                          'fit_name': 'Velo/VeloPrivateClusterMonitor/Cluster ADC value fit function sensor {0}',
                           'sensor_dependent': True
                       },
                   ],
