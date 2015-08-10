@@ -613,6 +613,7 @@ VTabContent * VContentGetter::veloFileConfigs(VPlotOps * plotOps, std::string in
   char buff[5000];
 
   std::string command = "" + interfaceScript + " run_view_config";
+//  std::cout<<"Configs command: "<<command<<std::endl;
   in = popen(command.c_str(), "r");
   std::string allRawData;
   while(fgets(buff, sizeof(buff), in)!=NULL) {
@@ -636,10 +637,12 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
 	d.Parse(jsonOps->c_str());
 	for (rapidjson::Value::ConstMemberIterator itr = d.MemberBegin();
        itr != d.MemberEnd(); ++itr) {
+		std::vector<const rapidjson::Value*> jsonTabs;
 		std::vector<std::string> tabInfo;
 		tabInfo.push_back("Tab");
-		std::string tabName = itr->name.GetString();
+
     const rapidjson::Value &tab = itr->value;
+    jsonTabs.push_back(&tab);
     tabInfo.push_back(tab["title"].GetString());
     tabInfo.push_back("Top");
 
@@ -660,58 +663,87 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
     tabInfo.push_back(layoutY);
     ops->push_back(tabInfo);
 
-    if (tab.HasMember("plots")) {
-    	const rapidjson::Value &plots = tab["plots"];
-    	rapidjson::SizeType numPlots = plots.Size();
-    	for (rapidjson::SizeType i = 0; i < numPlots; ++i) {
-    		std::vector<std::string> plotInfo;
-    		const rapidjson::Value &plot = plots[i];
-        std::string parentTabName;
-        std::string layoutX, layoutY;
-        if (tab.HasMember("layout")) {
-        	parentTabName = tab["title"].GetString();
-        }
-        else {
-          parentTabName = plot["title"].GetString();
-          std::vector<std::string> tabInfo2;
-          tabInfo2.push_back("Tab");
-          tabInfo2.push_back(plot["title"].GetString());
-          tabInfo2.push_back(tab["title"].GetString());
-          tabInfo2.push_back("1");
-          tabInfo2.push_back("1");
-          ops->push_back(tabInfo2);
-        }
-    		plotInfo.push_back("Plot");
-    		plotInfo.push_back(plot["title"].GetString());
-    		plotInfo.push_back(parentTabName);
-    		plotInfo.push_back(plot["name"].GetString());
-    	  if (plot["sensor_dependent"].GetBool()) plotInfo.push_back("multipleModules");
-    	  else plotInfo.push_back("singleModule");
-        if (plot["options"]["asPoints"].GetBool()) plotInfo.push_back("2");
-        else plotInfo.push_back("1");
+    if (tab.HasMember("subpages")) {
+    	for (rapidjson::SizeType iSub = 0; iSub < tab["subpages"].Size(); ++iSub) {
+    		std::vector<std::string> tabInfo2;
+    		tabInfo2.push_back("Tab");
+    		const rapidjson::Value &tab2 = tab["subpages"][iSub];
+    		jsonTabs.push_back(&tab2);
+    		tabInfo2.push_back(tab2["title"].GetString());
+    		tabInfo2.push_back(tab["title"].GetString());
 
-
-        if (plot["options"].HasMember("yAxisMinimum") && plot["options"].HasMember("yAxisMaximum")) {
-          plotInfo.push_back("true");
-          std::stringstream ss1;
-          std::stringstream ss2;
-          ss1 << plot["options"]["yAxisMinimum"].GetDouble();
-          ss2 << plot["options"]["yAxisMaximum"].GetDouble();
-
-          plotInfo.push_back(ss1.str());
-          plotInfo.push_back(ss2.str());
-        }
-        else {
-          plotInfo.push_back("false");
-          plotInfo.push_back("0.0");
-          plotInfo.push_back("0.0");
-        }
-        
-        if (plot.HasMember("tip")) plotInfo.push_back(plot["tip"].GetString());
-        else plotInfo.push_back("No tip provided.");
-
-    	  ops->push_back(plotInfo);
+    		std::string layoutX, layoutY;
+				if (tab2.HasMember("layout")) {
+					std::stringstream ssX, ssY;
+					ssX << tab2["layout"][0].GetDouble();
+					ssY << tab2["layout"][1].GetDouble();
+					layoutX = ssX.str();
+					layoutY = ssY.str();
+				}
+				else {
+					layoutX = "1";
+					layoutY = "1";
+				}
+				tabInfo2.push_back(layoutX);
+				tabInfo2.push_back(layoutY);
+				ops->push_back(tabInfo2);
     	}
+    }
+
+    for (uint iTab=0; iTab<jsonTabs.size(); iTab++) {
+			if ((*jsonTabs[iTab]).HasMember("plots")) {
+				const rapidjson::Value &plots = (*jsonTabs[iTab])["plots"];
+				rapidjson::SizeType numPlots = plots.Size();
+				for (rapidjson::SizeType i = 0; i < numPlots; ++i) {
+					std::vector<std::string> plotInfo;
+					const rapidjson::Value &plot = plots[i];
+					std::string parentTabName;
+					std::string layoutX, layoutY;
+					if ((*jsonTabs[iTab]).HasMember("layout")) {
+						parentTabName = (*jsonTabs[iTab])["title"].GetString();
+					}
+					else {
+						parentTabName = plot["title"].GetString();
+						std::vector<std::string> tabInfo3;
+						tabInfo3.push_back("Tab");
+						tabInfo3.push_back(plot["title"].GetString());
+						tabInfo3.push_back((*jsonTabs[iTab])["title"].GetString());
+						tabInfo3.push_back("1");
+						tabInfo3.push_back("1");
+						ops->push_back(tabInfo3);
+					}
+					plotInfo.push_back("Plot");
+					plotInfo.push_back(plot["title"].GetString());
+					plotInfo.push_back(parentTabName);
+					plotInfo.push_back(plot["name"].GetString());
+					if (plot["sensor_dependent"].GetBool()) plotInfo.push_back("multipleModules");
+					else plotInfo.push_back("singleModule");
+					if (plot["options"]["asPoints"].GetBool()) plotInfo.push_back("2");
+					else plotInfo.push_back("1");
+
+
+					if (plot["options"].HasMember("yAxisMinimum") && plot["options"].HasMember("yAxisMaximum")) {
+						plotInfo.push_back("true");
+						std::stringstream ss1;
+						std::stringstream ss2;
+						ss1 << plot["options"]["yAxisMinimum"].GetDouble();
+						ss2 << plot["options"]["yAxisMaximum"].GetDouble();
+
+						plotInfo.push_back(ss1.str());
+						plotInfo.push_back(ss2.str());
+					}
+					else {
+						plotInfo.push_back("false");
+						plotInfo.push_back("0.0");
+						plotInfo.push_back("0.0");
+					}
+
+					if (plot.HasMember("tip")) plotInfo.push_back(plot["tip"].GetString());
+					else plotInfo.push_back("No tip provided.");
+
+					ops->push_back(plotInfo);
+				}
+			}
     }
 	}
 }
