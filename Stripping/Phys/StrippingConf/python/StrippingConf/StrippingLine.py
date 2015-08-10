@@ -612,8 +612,8 @@ class StrippingLine(object):
                 # Extract the remaining properties specific for the tool from the overall list
                 toolprops = { }
                 for property,value in itool.iteritems() :
-                    if property in ["Type", "Location", "Locations", "RecursionLevel", "TopSelection" ] : continue
-                    toolprops[property] = value
+                    if property not in ["Type", "Location", "Locations", "RecursionLevel", "TopSelection" ] :
+                        toolprops[property] = value
 
                 # make a hashable key from the properties dict
                 propkey = makePropKey(toolprops)
