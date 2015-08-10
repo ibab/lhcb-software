@@ -595,7 +595,7 @@ namespace Al
 			 << " gcc= " << delta.globalCorrelationCoefficient(iactive) << std::endl ;
 	    double contributionToCoordinateError = delta.measurementCoordinateSigma( elemdata.weightR() ) ;
 	    double coordinateError = std::sqrt(elemdata.numHits()/elemdata.weightV()) ;
-	    modmessage << "contribution to hit error (absolute/relative): "
+	    modmessage << "contribution to hit uncertainty (absolute/relative): "
 		       << contributionToCoordinateError << " " << contributionToCoordinateError/coordinateError << std::endl ;
 	    
 	    // compute another figure of merit for the change in
@@ -646,7 +646,7 @@ namespace Al
 	  const AlParameters* survey = m_chisqconstrainttool->surveyParameters( **it ) ;
 	  if( survey != 0 ) {
 	    modmessage << "survey pars:   " << survey->transformParameters() << std::endl ;
-	    modmessage << "survey errors: "<< survey->transformErrors() << std::endl ;
+	    modmessage << "survey uncertainties: "<< survey->transformErrors() << std::endl ;
 	  }
 	}
 	logmessage << "total local delta chi2 / dof: " << totalLocalDeltaChi2 << " / " << numParameters << std::endl ;
@@ -681,8 +681,8 @@ namespace Al
     }
     
     logmessage << "********************* END OF ALIGNMENT LOG ************************" ;
-    info() << logmessage.str() << endmsg ;
-    info() << "\n";
+    debug() << logmessage.str() << endmsg ;
+    debug() << "\n";
     m_logMessage << logmessage.str() ;
     
     if( iteration == 0 ) {

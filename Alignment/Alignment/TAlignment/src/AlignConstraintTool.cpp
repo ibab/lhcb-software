@@ -430,7 +430,7 @@ namespace Al
 	for (size_t jpar = 0; jpar <numAlignPars && !hasNonZero; ++jpar)
 	  hasNonZero = std::abs(constraints->derivatives()(ipar,jpar)) > LHCb::Math::lowTolerance ;
 	if( !hasNonZero ) {
-	  warning() << "removing constraint \'" <<  constraints->name(ipar) << "\' because it has no non-zero derivatives." << endreq ;
+	  info() << "removing constraint \'" <<  constraints->name(ipar) << "\' because it has no non-zero derivatives." << endreq ;
 	  constraints->setActive(ipar,false) ;
 	}
       }
