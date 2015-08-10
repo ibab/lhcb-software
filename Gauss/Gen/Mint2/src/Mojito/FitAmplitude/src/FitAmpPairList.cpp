@@ -289,6 +289,7 @@ void FitAmpPairList::GradientForLasso(MinuitParameterSet* mps, Double_t* grad){
             name_i.replace(name_i.find("_Re"),3,"");
             for(unsigned int j=0; j< this->size(); j++){
                 if(!A_is_in_B(name_i,(*this)[j].name())) continue;
+                if(A_is_in_B("Inco", name_i) != A_is_in_B("Inco",(*this)[j].name()) ) continue;
                 if(!(*this)[j].isSingleAmp()) continue;
                 double integral = (*this)[j].valNoFitPars().real()/sqrt((*this)[j].integral());
                 // Re(a_j) A_j A_j^* dphi
