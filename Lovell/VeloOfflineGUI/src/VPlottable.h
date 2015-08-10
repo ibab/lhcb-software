@@ -34,6 +34,7 @@ public:
   std::mutex m_mtx;
   bool m_isRef;
   bool m_isRefDiff;
+  bool m_isFit;
 
 
   // Methods __________________________________________________________________

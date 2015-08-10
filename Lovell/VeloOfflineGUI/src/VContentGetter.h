@@ -17,6 +17,7 @@
 #include <thread>
 #include <QtCore/QDir>
 #include <QtCore/QStringList>
+#include <QtCore/QString>
 #include "TObject.h"
 
 // Author: Daniel Saunders

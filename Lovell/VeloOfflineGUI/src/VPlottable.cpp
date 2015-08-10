@@ -37,7 +37,10 @@ VPlottable::VPlottable(VPlot * plot,
              m_qcpGraph(),
              m_xs(),
              m_ys(),
-             m_zs(){
+             m_zs(),
+						 m_isFit(false),
+						 m_isRef(false),
+						 m_isRefDiff(false){
                m_plot = plot;
                m_plot->m_plottables.push_back(this);
                m_plottableStyle = style;

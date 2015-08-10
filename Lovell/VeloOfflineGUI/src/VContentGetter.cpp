@@ -6,7 +6,7 @@
 //#include "TPython.h"
 //#include <boost/python.hpp>
 #include <unistd.h>
-
+#include <stdarg.h>
 
 class refDiff : public VPlottable {
 public:
@@ -70,12 +70,31 @@ public:
   }
 
 
+  void setSensorNumber(std::string * c) {
+  	// Find the placeholder.
+  	std::cout<<"hello world: "<<(*c)<<"\t"<<m_plot->m_plotOps->currentModuleStr()<<std::endl;
+  	QString cCor((*c).c_str());
+  	if (cCor.contains("{0}")) cCor.replace(QString("{0}"), QString(m_plot->m_plotOps->currentModuleStr().c_str()));
+  	else if (cCor.contains("{0:03d}")) {
+  		std::string r = m_plot->m_plotOps->currentModuleStr();
+  		while (r.size() < 3) r.insert(0, "0");
+  		cCor.replace(QString("{0:03d}"), QString(r.c_str()));
+  	}
+
+  	(*c) = cCor.toStdString();
+  	std::cout<<(*c)<<std::endl;
+  }
+
+
   void directRetrival() {
+  	if (m_isFit) m_plottableStyle = 5;
   	TObject * h;
-  	if (m_isRef) h = m_plot->m_plotOps->f_inReff->Get(m_retrivalCommand.c_str());
-  	else h = m_plot->m_plotOps->f_in->Get(m_retrivalCommand.c_str());
+  	std::string command = m_retrivalCommand;
+  	if (m_plot->m_multipleModules) setSensorNumber(&command);
+  	if (m_isRef) h = m_plot->m_plotOps->f_inReff->Get(command.c_str());
+  	else h = m_plot->m_plotOps->f_in->Get(command.c_str());
   	if (h==NULL) {
-  		std::cout<<"Could not find plot in vetra output: "<<m_retrivalCommand<<std::endl;
+  		std::cout<<"Could not find plot in vetra output: "<<command<<std::endl;
   		return;
   	}
   	if (std::string(h->ClassName()) == "TH1D" || std::string(h->ClassName()) == "TProfile") directTH1Decoder((TH1D*)h);
@@ -741,6 +760,9 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
 					if (plot.HasMember("tip")) plotInfo.push_back(plot["tip"].GetString());
 					else plotInfo.push_back("No tip provided.");
 
+					if (plot.HasMember("fit_name")) plotInfo.push_back(plot["fit_name"].GetString());
+					else plotInfo.push_back("No_fit");
+
 					ops->push_back(plotInfo);
 				}
 			}
@@ -824,6 +846,15 @@ void VContentGetter::findPlots(std::vector<VTabContent*> * allTabs,
 
         if ((*iop)[4] == "multipleModules") plot->m_multipleModules = true;
         else plot->m_multipleModules = false;
+
+        if ((*iop)[10] != "No_fit") {
+        	jsonPlottable * fit = new jsonPlottable(plot, 0);
+					fit->m_isFit = true;
+					fit->m_isRef = false;
+					fit->m_isRefDiff = false;
+					allPlottablesByTab[iTab].push_back(fit);
+					fit->m_retrivalCommand = (*iop)[10];
+        }
       }
     	iTab++;
     }

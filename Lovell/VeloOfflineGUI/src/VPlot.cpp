@@ -374,6 +374,7 @@ void VPlot::add1dPlot(VCustomPlot * vcp, VPlottable* plottable) {
   	}
   	else vcp->m_qcp->graph()->setName("Data/Ref");
   }
+  else if (plottable->m_isFit) vcp->m_qcp->graph()->setName("Fit");
   else vcp->m_qcp->graph()->setName("Data");
   vcp->m_qcp->graph()->setData(plottable->m_xs, plottable->m_ys);
   vcp->m_qcp->xAxis->rescale();
@@ -384,7 +385,9 @@ void VPlot::add1dPlot(VCustomPlot * vcp, VPlottable* plottable) {
     // Like a TGraph with scatter points (red line and discs).
     QCPScatterStyle ss(QCPScatterStyle::ssCross, Qt::red, 6);
     vcp->m_qcp->graph()->setScatterStyle(ss);
-    vcp->m_qcp->graph()->setPen(QPen(Qt::red));
+    QPen pen(Qt::red);
+    pen.setWidthF(1.5);
+    vcp->m_qcp->graph()->setPen(pen);
   }
 
   if (plottable->m_plottableStyle == 2) {
@@ -417,6 +420,14 @@ void VPlot::add1dPlot(VCustomPlot * vcp, VPlottable* plottable) {
     vcp->m_qcp->graph()->setLineStyle(QCPGraph::lsStepCenter);
     vcp->m_qcp->graph()->setBrush(QBrush(QColor(0, 255, 0, 200)));
     vcp->m_qcp->graph()->setPen(QPen(Qt::black));
+  }
+
+  if (plottable->m_plottableStyle == 5) {
+    // Like a TH1F (blue highlighted bins) - note, points should show center
+    // of bins.
+  	QPen pen("black");
+  	pen.setWidthF(2);
+    vcp->m_qcp->graph()->setPen(pen);
   }
 
   if (m_plottables.size() > 1) vcp->m_qcp->legend->setVisible(true);

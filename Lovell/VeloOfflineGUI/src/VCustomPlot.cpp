@@ -173,6 +173,7 @@ void VCustomPlot::doToggleRefDiff(int toggle) {
 			if (m_qcp->plottableCount() > 1) m_qcp->plottable(1)->setVisible(false);
 			if (m_qcp->plottableCount() > 2) m_qcp->plottable(2)->setVisible(true);
 			if (m_qcp->plottableCount() > 3) m_qcp->plottable(3)->setVisible(false);
+			if (m_qcp->plottableCount() > 4) m_qcp->plottable(4)->setVisible(false); // fit
     }
     else {
     	if (m_qcp->plottableCount() > 0) m_qcp->plottable(0)->setVisible(false);
@@ -196,6 +197,7 @@ void VCustomPlot::doToggleRefDiff(int toggle) {
 
 		if (m_qcp->plottableCount() > 2) m_qcp->plottable(2)->setVisible(false);
 		if (m_qcp->plottableCount() > 3) m_qcp->plottable(3)->setVisible(false);
+		if (m_qcp->plottableCount() > 4) m_qcp->plottable(4)->setVisible(true); // fit
 		if (m_plot->m_plottables[0]->m_plottableDimension == 2) m_colormaps[0]->rescaleDataRange(true);
 	}
   m_qcp->rescaleAxes(true);
@@ -213,6 +215,7 @@ void VCustomPlot::doToggleRefRatio(int toggle) {
 			if (m_qcp->plottableCount() > 1) m_qcp->plottable(1)->setVisible(false);
 			if (m_qcp->plottableCount() > 2) m_qcp->plottable(2)->setVisible(false);
 			if (m_qcp->plottableCount() > 3) m_qcp->plottable(3)->setVisible(true);
+			if (m_qcp->plottableCount() > 4) m_qcp->plottable(4)->setVisible(false); // fit
     }
     else {
     	if (m_qcp->plottableCount() > 0) m_qcp->plottable(0)->setVisible(false);
@@ -231,6 +234,7 @@ void VCustomPlot::doToggleRefRatio(int toggle) {
 		}
 		if (m_qcp->plottableCount() > 2) m_qcp->plottable(2)->setVisible(false);
 		if (m_qcp->plottableCount() > 3) m_qcp->plottable(3)->setVisible(false);
+		if (m_qcp->plottableCount() > 4) m_qcp->plottable(4)->setVisible(true); // fit
 		if (m_plot->m_plottables[0]->m_plottableDimension == 2) m_colormaps[0]->rescaleDataRange(true);
   }
 
