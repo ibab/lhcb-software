@@ -9,6 +9,12 @@ __all__ = (
 	    'strippingLines'
 	  )
 
+# cached related info information
+relatedInfoCache = { }
+
+def makePropKey(props):
+    return hash(repr(sorted(props.items())))
+
 import re
 from copy import deepcopy
 from Gaudi.Configuration import *
@@ -233,7 +239,7 @@ class StrippingLine(object):
                    ExtraInfoRecursionLevel = 1,  # Maximum depth in the decay tree to calculate ExtraInfo
                                                  # Only used is ExtraInfoDaughters are given, otherwise is 0
 
-                   RelatedInfoTools = None,      # Configuration of ExtraInfo tools, as a list of dictionaries (or None)
+                   RelatedInfoTools = None,      # Configuration of Related Info tools, as a list of dictionaries (or None)
                    RelatedInfoFilter = None,     # Optional filter which can use RelatedInfo, added to the line sequence
                                                  # after RelatedInfoTools
 
@@ -600,21 +606,63 @@ class StrippingLine(object):
                     relatedInfoAlg.InfoLocations = { relatedInfoAlg.Inputs[0] : [ itool['Location'] ] }
                 else :
                     raise Exception('\n "Location" or "Locations" is not defined in RelatedInfo dictionary')
+                
                 toolType = itool["Type"]
-                toolName = "Tool%d" % toolNum
-                module = __import__("Configurables", globals(), locals(), [ toolType ] )
-                toolClass = getattr( module, toolType )
-                relatedInfoAlg.addTool( toolClass, toolName )
-                toolInstance = getattr( relatedInfoAlg, toolName )
+
+                # Extract the remaining properties specific for the tool from the overall list
+                toolprops = { }
                 for property,value in itool.iteritems() :
                     if property in ["Type", "Location", "Locations", "RecursionLevel", "TopSelection" ] : continue
-                    setattr( toolInstance, property, value)
+                    toolprops[property] = value
 
-                relatedInfoAlg.Tool = toolType + '/' + toolName
+                # make a hashable key from the properties dict
+                propkey = makePropKey(toolprops)
 
+                # Get the entry in the cache map for thios type of tool
+                toolcache = globals()["relatedInfoCache"]
+                if toolType not in toolcache.keys() : toolcache[toolType] = { "ToolNum" : 1, "Tools" : { } }
+                configmap = toolcache[toolType]
+
+                # Does an instance with the exact configuration requested already exist ?
+                toolName = "UNDEFINED"
+                if propkey in configmap["Tools"].keys() :
+                    
+                    # Just reuse the existing tool
+                    toolName = configmap["Tools"][propkey]
+                    
+                else:
+                    # need to configure a new tool
+
+                    # Get instance class type
+                    module = __import__("Configurables", globals(), locals(), [ toolType ] )
+                    ToolClass = getattr( module, toolType )
+
+                    # Construct global name
+                    toolName = toolType+"_"+str(configmap["ToolNum"])
+                    
+                    # Increment count for next time
+                    configmap["ToolNum"] += 1
+
+                    # make an instance owned by tool svc, i.e. public
+                    toolInstance = ToolClass( "ToolSvc." + toolName )
+
+                    # set options
+                    for property,value in toolprops.iteritems() :
+                        setattr( toolInstance, property, value )
+
+                    # Save toolname in the cache map
+                    configmap["Tools"][propkey] = toolName
+
+                    # for debugging ...
+                    #toolInstance.OutputLevel = 1
+
+                # Add tool to algorithm, as a public tool
+                relatedInfoAlg.Tool = toolType + '/' + toolName + ":PUBLIC"
+
+                #print relatedInfoAlg.name(), relatedInfoAlg.Tool
+
+                # add algorithm to the members to run
                 self._members.append(relatedInfoAlg)
-
-
 
     def filterMembers( self ) :
         _members = GaudiSequencer( filterName ( self.subname(), 'Stripping' ) ).Members

@@ -4,6 +4,13 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2015-08-10 - Chris Jones
+ - Rework the way the RelatedInfo algorithms are configured, to use public 
+   rather than private tools, to avoid creating many otherwise identical 
+   instances in teh stripping, and thus use more memory than really required.
+   Tools are cached by type and configuration, and when the same tool, with the
+   same confgiuration is requested, a shared public instance is now uses.
+
 !========================= StrippingConf v4r17 2015-05-29 =========================
 
 ! 2015-05-15 - Andrea Contu
