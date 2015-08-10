@@ -16,8 +16,11 @@ typedef std::map <std::string,double> MapStringDouble;
  *  @author Xabier Cid Vidal
  *  @date   2014-06-30
  */
-class RelInfoPFVariables : public GaudiTool, virtual public IRelatedInfoTool {
+class RelInfoPFVariables : public GaudiTool, virtual public IRelatedInfoTool
+{
+
 public: 
+
   /// Standard constructor
   RelInfoPFVariables( const std::string& type, 
                const std::string& name,
@@ -34,8 +37,6 @@ public:
   
   
   virtual ~RelInfoPFVariables( ); ///< Destructor
-  
-protected:
 
 private:
   
@@ -45,7 +46,6 @@ private:
 
   MapStringDouble m_properties; // includes all the output properties values
   
-  IDVAlgorithm*              m_dva;
   LHCb::RelatedInfoMap m_map;
 
   double invariantMass(std::vector<Gaudi::LorentzVector> mypars);

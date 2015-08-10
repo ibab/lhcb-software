@@ -25,9 +25,7 @@ DECLARE_TOOL_FACTORY( RelInfoCylVariables )
 RelInfoCylVariables::RelInfoCylVariables( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent):
-GaudiTool ( type, name , parent ),
-  m_dva(0),
-  m_dist(0)
+GaudiTool ( type, name , parent )
 {
 
   declareInterface<IRelatedInfoTool>(this);
@@ -55,15 +53,6 @@ StatusCode RelInfoCylVariables::initialize() {
   // initialize the base class  (the first action)
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure()) return sc;
-
-  // Get DVAlgo
-  m_dva = Gaudi::Utils::getIDVAlgorithm( contextSvc(), this ) ;
-  if ( !m_dva ) { return Error("Couldn't get parent DVAlgorithm"); }
-
-  // Get distance calculator
-  m_dist = m_dva->distanceCalculator();
-  if ( !m_dist ) { return Error("Unable to retrieve the IDistanceCalculator tool"); }
-
 
   //initialize the tool keys
   m_keys.clear();
@@ -113,10 +102,14 @@ void RelInfoCylVariables::getBestPV(const LHCb::Track* track, LHCb::VertexBase* 
   LHCb::RecVertex::Container* verts = NULL;
   std::vector<PairDoubleVertex> myvector;
 
+  // Get DVAlgo
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ;
+  if ( !dva ) return;
+
   verts = get<LHCb::RecVertex::Container>(LHCb::RecVertexLocation::Primary);
   // create a list of pairs ipchi2/vertex
   for ( LHCb::RecVertex::Container::const_iterator iv = verts->begin(); iv != verts->end(); iv++) {
-    StatusCode sc = m_dist->distance(track,(*iv),ip,ipchi2);
+    StatusCode sc = dva->distanceCalculator()->distance(track,(*iv),ip,ipchi2);
     if (sc.isFailure()) {
       debug()<<"Failure obtaining IPchi2"<<endmsg;
       continue;
@@ -145,6 +138,11 @@ void RelInfoCylVariables::getBestPV(const LHCb::Track* track, LHCb::VertexBase* 
 //=============================================================================
 void RelInfoCylVariables::tracksInsideCyl(const LHCb::Track*& mytrack, const int mypvkey, MapTrackList& out_list)
 {
+
+  // Get DVAlgo
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ;
+  if ( !dva ) return;
+
   double doca,docachi2,ipchi2;
   LHCb::Tracks* all_tracks = get<LHCb::Tracks>(LHCb::TrackLocation::Default);
   // loop in all the tracks
@@ -212,11 +210,11 @@ void RelInfoCylVariables::tracksInsideCyl(const LHCb::Track*& mytrack, const int
 
 
     // cut in docachi2
-    StatusCode sc = m_dist->distance(mytrack,track,doca,docachi2);
+    StatusCode sc = dva->distanceCalculator()->distance(mytrack,track,doca,docachi2);
     if (sc.isFailure()) {
-        debug()<<"Could not find the docachi2 between both tracks"<<endmsg;
-        continue;
-      }
+      debug()<<"Could not find the docachi2 between both tracks"<<endmsg;
+      continue;
+    }
 
     if (docachi2 > m_cyl_size) {
       debug()<<"Track is outside the cylinder"<<endmsg;

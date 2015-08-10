@@ -18,8 +18,12 @@ typedef std::pair <double,LHCb::VertexBase*> PairDoubleVertex;
  *  @author Xabier Cid Vidal
  *  @date   2014-06-30
  */
-class RelInfoCylVariables : public GaudiTool, virtual public IRelatedInfoTool {
+
+class RelInfoCylVariables : public GaudiTool, virtual public IRelatedInfoTool 
+{
+
 public: 
+
   /// Standard constructor
   RelInfoCylVariables( const std::string& type, 
                  const std::string& name,
@@ -33,9 +37,7 @@ public:
 
   virtual LHCb::RelatedInfoMap* getInfo();  
 
-  virtual ~RelInfoCylVariables( ); ///< Destructor
-
-protected:
+  virtual ~RelInfoCylVariables( ); ///< Destructor]
 
 private:
   
@@ -63,9 +65,6 @@ private:
 
   MapStringDouble m_properties;
   LHCb::RelatedInfoMap m_map;
-  
-  IDVAlgorithm*              m_dva;
-  const IDistanceCalculator* m_dist; // for obtaining docas
   
   // maps for all the related info for the cyl
   std::map <std::string,double> m_cyl;

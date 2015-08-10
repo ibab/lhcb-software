@@ -22,19 +22,17 @@ DECLARE_TOOL_FACTORY( RelInfoPFVariables )
 // Standard constructor, initializes variables
 //=============================================================================
 RelInfoPFVariables::RelInfoPFVariables( const std::string& type,
-                          const std::string& name,
-                          const IInterface* parent):
-GaudiTool ( type, name , parent ),
-  m_dva(0)
+                                        const std::string& name,
+                                        const IInterface* parent):
+GaudiTool ( type, name , parent )
 {
-
-   declareInterface<IRelatedInfoTool>(this);
-   declareProperty( "Variables",
-                    m_variables,
-                    "List of variables to store (store all if empty)");
-   declareProperty( "PFOutputLocation",  m_PFLocation  =  "Phys/PFParticles/Particles"
-                    ,"Location of the PFParticles");
- }
+  declareInterface<IRelatedInfoTool>(this);
+  declareProperty( "Variables",
+                   m_variables,
+                   "List of variables to store (store all if empty)");
+  declareProperty( "PFOutputLocation",  m_PFLocation  =  "Phys/PFParticles/Particles"
+                   ,"Location of the PFParticles");
+}
 
 //=============================================================================
 // Destructor
@@ -50,11 +48,6 @@ StatusCode RelInfoPFVariables::initialize() {
   // initialize the base class  (the first action)
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure()) return sc;
-
-  // Get DVAlgo
-  m_dva = Gaudi::Utils::getIDVAlgorithm( contextSvc(), this ) ;
-  if ( !m_dva ) { return Error("Couldn't get parent DVAlgorithm"); }
-
 
   //initialize the tool keys
   m_keys.clear();
@@ -116,6 +109,10 @@ StatusCode RelInfoPFVariables::calculateRelatedInfo( const LHCb::Particle *top,
   fillMap();
   debug()<< "Filled empty dicts" << endmsg;
 
+  // Get DVAlgo
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ;
+  if ( !dva ) return Error( "Could not get DVAlgorithm" );
+
   // only fill infos for top particle!
   if (part!=top) return StatusCode::SUCCESS;
 
@@ -128,7 +125,7 @@ StatusCode RelInfoPFVariables::calculateRelatedInfo( const LHCb::Particle *top,
   // get bestPV of the top particle
   int mypvkey,pvkey;
   const LHCb::VertexBase* BPV;
-  BPV = m_dva->bestVertex(top);
+  BPV = dva->bestVertex(top);
   if (BPV) mypvkey  = BPV->key();
   else mypvkey  = -1;
 
@@ -142,7 +139,7 @@ StatusCode RelInfoPFVariables::calculateRelatedInfo( const LHCb::Particle *top,
     LHCb::Particle* pfpart = (*it1);
     // force running only in particles with a track whose PV is the same as the top particle
     if (pfpart->proto() && pfpart->proto()->track()) {
-      BPV = m_dva->bestVertex(pfpart);
+      BPV = dva->bestVertex(pfpart);
       if (BPV) pvkey  = BPV->key();
       else pvkey  = -1;
       if (pvkey==mypvkey) {

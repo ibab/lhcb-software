@@ -22,9 +22,6 @@ RelInfoVertexIsolation::RelInfoVertexIsolation( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent)
 : GaudiTool ( type, name , parent )
-  , m_dva(0)
-  , m_dist(0)
-  , m_pVertexFit(0)
 {
   declareInterface<IRelatedInfoTool>(this);
   declareProperty("InputParticles", m_inputParticles,
@@ -47,18 +44,6 @@ StatusCode RelInfoVertexIsolation::initialize()
 {
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
-
-  // Get DVAlgo
-  m_dva = Gaudi::Utils::getIDVAlgorithm( contextSvc(), this ) ;
-  if ( !m_dva ) { return Error("Couldn't get parent DVAlgorithm"); }
-
-  // Get distance calculator
-  m_dist = m_dva->distanceCalculator();
-  if ( !m_dist ) { return Error("Unable to retrieve the IDistanceCalculator tool"); }
-
-  // Get vertex fitter
-  m_pVertexFit= m_dva->vertexFitter() ;
-  if ( !m_pVertexFit ) { return Error("Unable to retrieve the IVertexFit tool"); }
 
   // If no input particle container is specified, put StdNoPIDsPions by default
   if ( m_inputParticles.empty() )
@@ -108,7 +93,8 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
   // Let's not allow the tool to be run on basic particles or photons
   if ( part->isBasicParticle() || isPureNeutralCalo(part) )
   {
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Trying to fill isolation for basic particle. Exiting..." << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << "Trying to fill isolation for basic particle. Exiting..." << endmsg;
     m_map.clear();
     return StatusCode::SUCCESS;
   }
@@ -271,48 +257,59 @@ RelInfoVertexIsolation::getIsolation( const double originalVtxChi2,
   double          smallestDeltaChi2    = -1 ;
   LHCb::Particle *bestParticle         = NULL ;
 
-  for ( const auto* extraPart : extraParticles )
+  IsolationResult res ;
+
+  // Get DVAlgo
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ;
+  if ( !dva ) { Error("Could not get parent DVAlgorithm").ignore(); }
+  else
   {
-    LHCb::Vertex vtxWithExtraTrack ;
-    // Temporarily add the extra track to the partcles to vertex vector
-    m_particlesToVertex.push_back(extraPart) ;
-    // Fit
-    const StatusCode sc = m_pVertexFit->fit(vtxWithExtraTrack, m_particlesToVertex) ;
-    // Remove the extra track
-    m_particlesToVertex.pop_back() ;
-    if ( !sc )
-    {
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Failed to fit vertex" << endmsg ;
-    }
-    else
-    {
-      // Compute the relevant variables
-      const double newChi2 = vtxWithExtraTrack.chi2() ;
-      const double deltaChi2 = newChi2 - originalVtxChi2 ;
 
-      // Here we found a reasonably compatible particle
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "Fitted vertex adding track has Delta chi2 = " << deltaChi2
-                  << " chi2 = " << newChi2 << endmsg ;
-      // A chi2 of -1 means that the fit was not good,
-      // so the particle was not compatible.
-      if ( newChi2 <= 0 ) continue;
-
-      // Get values of deltas, n particles, etc.
-      if ( (m_chi2 > 0.0) && (newChi2 < m_chi2) ) nCompatibleChi2++ ;
-      if ( (smallestChi2) < 0 || (smallestChi2 > newChi2) ) smallestChi2 = newChi2 ;
-      if ( (smallestDeltaChi2 < 0) || (smallestDeltaChi2 > deltaChi2) )
+    for ( const auto* extraPart : extraParticles )
+    {
+      LHCb::Vertex vtxWithExtraTrack ;
+      // Temporarily add the extra track to the partcles to vertex vector
+      m_particlesToVertex.push_back(extraPart) ;
+      // Fit
+      const StatusCode sc = dva->vertexFitter()->fit(vtxWithExtraTrack,m_particlesToVertex) ;
+      // Remove the extra track
+      m_particlesToVertex.pop_back() ;
+      if ( !sc )
       {
-        smallestDeltaChi2 = deltaChi2 ;
-        bestParticle = (LHCb::Particle*) (extraPart) ;
+        if ( msgLevel(MSG::DEBUG) ) debug() << "Failed to fit vertex" << endmsg ;
+      }
+      else
+      {
+        // Compute the relevant variables
+        const double newChi2 = vtxWithExtraTrack.chi2() ;
+        const double deltaChi2 = newChi2 - originalVtxChi2 ;
+
+        // Here we found a reasonably compatible particle
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << "Fitted vertex adding track has Delta chi2 = " << deltaChi2
+                    << " chi2 = " << newChi2 << endmsg ;
+        // A chi2 of -1 means that the fit was not good,
+        // so the particle was not compatible.
+        if ( newChi2 <= 0 ) continue;
+
+        // Get values of deltas, n particles, etc.
+        if ( (m_chi2 > 0.0) && (newChi2 < m_chi2) ) nCompatibleChi2++ ;
+        if ( (smallestChi2) < 0 || (smallestChi2 > newChi2) ) smallestChi2 = newChi2 ;
+        if ( (smallestDeltaChi2 < 0) || (smallestDeltaChi2 > deltaChi2) )
+        {
+          smallestDeltaChi2 = deltaChi2 ;
+          bestParticle = (LHCb::Particle*) (extraPart) ;
+        }
       }
     }
+
+    res.nCompatibleChi2      = nCompatibleChi2 ;
+    res.smallestChi2         = smallestChi2 ;
+    res.smallestDeltaChi2    = smallestDeltaChi2 ;
+    res.bestParticle         = bestParticle ;
+
   }
-  IsolationResult res ;
-  res.nCompatibleChi2      = nCompatibleChi2 ;
-  res.smallestChi2         = smallestChi2 ;
-  res.smallestDeltaChi2    = smallestDeltaChi2 ;
-  res.bestParticle         = bestParticle ;
+
   return res ;
 }
 

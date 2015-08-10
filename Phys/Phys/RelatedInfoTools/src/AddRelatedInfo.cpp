@@ -77,7 +77,8 @@ StatusCode AddRelatedInfo::execute()
     for ( const Particle * p : parts )
     {
       // Zero locations counter
-      for ( const auto& loc2 : m_infoLocations ) {
+      for ( const auto& loc2 : m_infoLocations ) 
+      {
         std::string tmpLoc2 = loc2.first;
         boost::erase_all( tmpLoc2, "/Event/" );
         tmpLoc2 = "/Event/" + tmpLoc2;
@@ -104,7 +105,8 @@ void AddRelatedInfo::fill( const Particle* top,
  
   bool isInLocations = false; 
 
-  if (m_maxLevel > 0) { 
+  if (m_maxLevel > 0) 
+  { 
     // check if the particle is in the list of info locations
     for ( const auto& infoLoc : m_infoLocations )
     {

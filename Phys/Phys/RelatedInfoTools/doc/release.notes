@@ -4,6 +4,10 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2015-08-10 - Chris Jones
+ - Update the way various tool use the 'getIDVAlgorithm' merthod to work as
+   public tools.
+
 !========================= RelatedInfoTools v1r1 2014-10-30 =========================
 
 ! 2014-10-26 - Albert Puig

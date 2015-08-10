@@ -93,8 +93,6 @@ private:
   // Config and vertexing
   std::vector<std::string>   m_inputParticles ;
   IDVAlgorithm*              m_dva;
-  const IDistanceCalculator* m_dist;
-  const IVertexFit*          m_pVertexFit;
   double                     m_chi2 ;
 
   LHCb::RelatedInfoMap       m_map;
