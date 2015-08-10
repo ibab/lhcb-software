@@ -20,7 +20,7 @@ apply_pattern install_more_includes more=LPair
 
 # Linker library building rules.
 #============================================================================
-library       LPair        *.f *.F *.c
+library       LPair        *.f *.F
 apply_pattern linker_library library=LPair
 apply_pattern library_stamps library=LPair
 macro_append libraryshr_linkopts "-lgfortran"
