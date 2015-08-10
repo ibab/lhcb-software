@@ -22,8 +22,11 @@ typedef std::pair<double,LHCb::Particle*> PtParticlePair;
  *  @author Xabier Cid Vidal
  *  @date   2014-06-30
  */
-class RelInfoJetsVariables : public GaudiTool, virtual public IRelatedInfoTool {
+class RelInfoJetsVariables : public GaudiTool, virtual public IRelatedInfoTool
+{
+
 public:
+
   /// Standard constructor
   RelInfoJetsVariables( const std::string& type,
                         const std::string& name,
@@ -40,8 +43,6 @@ public:
 
   virtual ~RelInfoJetsVariables( ); ///< Destructor
 
-protected:
-
 private:
 
   std::string m_loc_jetsnomu; //location of jets with no muons
@@ -53,10 +54,8 @@ private:
   bool m_onemu; // one muon only (for Bmunu)
   int m_ind_part; // pid of the individual particle (13 for Bmunu)
 
-  IDVAlgorithm *m_dva; // parent DVA Algorithm
-  const IDistanceCalculator* m_dist;  // for obtaining the best PV
   //IJetTagTool*  m_nnjettag; //Jet Tag NN
-    ITriggerTisTos* m_TriggerTisTosTool;
+  ITriggerTisTos* m_TriggerTisTosTool;
   // maps for all the extra info for all the jets
   std::map <std::string,double> m_JetNoMu1;
   std::map <std::string,double> m_JetNoMu2;
@@ -74,7 +73,7 @@ private:
   StatusCode getJetLHCbIDs(const LHCb::Particle* p,  std::vector< LHCb::LHCbID > & AllIDs) const;
   StatusCode getHltObjLHCbIDs(const LHCb::HltObjectSummary * sum, std::vector< LHCb::LHCbID > & AllIDs) const;
 
-      void pt_sorted_samePV(const LHCb::Particles & jets_list , const int pvkey, std::vector<LHCb::Particle*> & out_list);
+  void pt_sorted_samePV(const LHCb::Particles & jets_list , const int pvkey, std::vector<LHCb::Particle*> & out_list);
 
   StatusCode find_jet_b(const LHCb::Particles* list_of_jets,
                         LHCb::Particle& myjet);

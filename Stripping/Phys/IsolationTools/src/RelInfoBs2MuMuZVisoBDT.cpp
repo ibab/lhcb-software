@@ -48,8 +48,6 @@
 //#endif
 
 
-
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : RelInfoBs2MuMuZVisoBDT
 //
@@ -91,6 +89,7 @@ RelInfoBs2MuMuZVisoBDT::RelInfoBs2MuMuZVisoBDT( const std::string& type,
   , m_mup_zv_dist (1000)
   , m_mup_zv_ntrkvtx(1000)
 
+  , m_Geom ( NULL )
 
 {
   m_keys.clear();
@@ -139,10 +138,8 @@ RelInfoBs2MuMuZVisoBDT::RelInfoBs2MuMuZVisoBDT( const std::string& type,
   declareProperty( "Variables", m_variables,
                    "List of variables to store (store all if empty)");
 
-
-
-
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -151,26 +148,10 @@ RelInfoBs2MuMuZVisoBDT::~RelInfoBs2MuMuZVisoBDT() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode RelInfoBs2MuMuZVisoBDT::initialize() {
-
-
+StatusCode RelInfoBs2MuMuZVisoBDT::initialize() 
+{
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
-  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this ) ;
-  if ( !m_dva ) { return Error( "Couldn't get parent DVAlgorithm",
-                                StatusCode::FAILURE ); }
-
-  m_Geom = tool<IDistanceCalculator>("LoKi::DistanceCalculator", this);
-  if ( ! m_Geom ) {
-    fatal() << "DistanceCalculator could not be found" << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  m_dist = m_dva->distanceCalculator ();
-  if( !m_dist ){
-    Error("Unable to retrieve the IDistanceCalculator tool");
-    return StatusCode::FAILURE;
-  }
 
   m_vertextool = tool<IVertexFunctionTool>("VertexFunctionTool", this );
   if(! m_vertextool) {
@@ -184,7 +165,7 @@ StatusCode RelInfoBs2MuMuZVisoBDT::initialize() {
     return StatusCode::FAILURE;
   }
 
-  m_Geom = tool<IDistanceCalculator>("LoKi::DistanceCalculator", this);
+  m_Geom = tool<IDistanceCalculator>("LoKi::DistanceCalculator");
   if ( ! m_Geom ) {
     fatal() << "DistanceCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
@@ -516,7 +497,10 @@ double RelInfoBs2MuMuZVisoBDT::VfAlongTrack(double zB, const LHCb::Particle* Par
 
 StatusCode RelInfoBs2MuMuZVisoBDT::GMPiso(const LHCb::Particle *part)
 {
-  const RecVertex* sIPSPVrefit =  dynamic_cast<const RecVertex*> (m_dva->bestVertex(part));//
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ;
+  if ( !dva ) { return Error("Could not get parent DVAlgorithm"); }
+
+  const RecVertex* sIPSPVrefit =  dynamic_cast<const RecVertex*> (dva->bestVertex(part));//
   Particle::ConstVector vdaugh = m_descend->descendants(part);
   Particle::ConstVector::const_iterator ip_vdau;
   ip_vdau = vdaugh.begin();

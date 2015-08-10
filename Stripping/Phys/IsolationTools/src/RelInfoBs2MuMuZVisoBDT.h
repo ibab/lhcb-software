@@ -68,8 +68,6 @@ class RelInfoBs2MuMuZVisoBDT : public GaudiTool, virtual public IRelatedInfoTool
 public:
 
 
-
-
   typedef std::vector<LHCb::RecVertex*> RecVertexVector;
   typedef std::vector<const LHCb::Track*> TrackVector;
 
@@ -97,15 +95,11 @@ public:
   Gaudi::XYZPoint close_point(Gaudi::XYZPoint o, Gaudi::XYZPoint o_mu, Gaudi::XYZVector p_mu);//
   StatusCode ZViso(void/*const LHCb::Particle *part*/ );//
 
-
-
-
   virtual ~RelInfoBs2MuMuZVisoBDT( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode finalize ();
 
-protected:
 private:
 
   /// Check if a pure CALO Particle
@@ -114,6 +108,7 @@ private:
     LHCb::CaloParticle caloP(  (LHCb::Particle*) P );
     return caloP.isPureNeutralCalo();
   }  // Helpers
+
 private:
 
   //   std::vector<std::string> m_variables;
@@ -224,8 +219,6 @@ private:
 
   IVertexFunctionTool* m_vertextool;
   const IRelatedPVFinder* pFinder;
-  IDVAlgorithm* m_dva;
-  const IDistanceCalculator* m_dist;
   IDistanceCalculator*  m_Geom;
   IParticleTransporter* m_transporter;
   IParticleDescendants* m_descend;

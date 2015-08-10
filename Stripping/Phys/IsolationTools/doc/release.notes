@@ -3,6 +3,10 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2015-08-10 - Chris Jones
+ - Update the way various tool use the 'getIDVAlgorithm' merthod to work as
+   public tools.
+
 !========================= IsolationTools v1r4 2015-06-29 =========================
 
 ! 2015-06-09 - Ricardo Vazquez Gomez

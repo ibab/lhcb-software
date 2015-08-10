@@ -26,9 +26,7 @@ DECLARE_TOOL_FACTORY( RelInfoJetsVariables )
 RelInfoJetsVariables::RelInfoJetsVariables( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent):
-GaudiTool ( type, name , parent ),
-  m_dva(0),
-  m_dist(0)
+GaudiTool ( type, name , parent )
 {
 
   declareInterface<IRelatedInfoTool>(this);
@@ -84,21 +82,10 @@ StatusCode RelInfoJetsVariables::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure()) return sc;
 
-  //initialize the dva algo
-  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() , this) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
-                             StatusCode::FAILURE);
-
-
-  // Get distance calculator
-  m_dist = m_dva->distanceCalculator();
-  if ( !m_dist ) { return Error("Unable to retrieve the IDistanceCalculator tool",
-                                StatusCode::FAILURE); }
-
+  // tistos
   m_TriggerTisTosTool = tool<ITriggerTisTos>( "Hlt2TriggerTisTos","Hlt2TriggerTisTos",this );
-    if(m_TriggerTisTosTool == 0)
-        return Error("Couldn't get requested jet tag tool", StatusCode::SUCCESS);
-
+  if ( !m_TriggerTisTosTool )
+    return Error("Couldn't get requested jet tag tool");
 
   //initialize the nntag tool
   //m_nnjettag = tool<IJetTagTool>("LoKi::NNBTag",this);
@@ -183,38 +170,38 @@ StatusCode RelInfoJetsVariables::initialize() {
 double RelInfoJetsVariables::jetNNTag(const LHCb::Particle* jet)
 {
 
-    std::vector<const LHCb::HltObjectSummary*> hltObjs
-        = m_TriggerTisTosTool->hltObjectSummaries("Hlt2Topo.*Decision",2,2);
+  std::vector<const LHCb::HltObjectSummary*> hltObjs
+    = m_TriggerTisTosTool->hltObjectSummaries("Hlt2Topo.*Decision",2,2);
 
-    unsigned int num = hltObjs.size();
+  unsigned int num = hltObjs.size();
 
-    std::vector< LHCb::LHCbID > AllIDs;
-    AllIDs.clear();
-    getJetLHCbIDs(jet, AllIDs);
-    double maxRatio = 0.;
-    for(unsigned int i = 0; i < num; i++){
-        std::vector< LHCb::LHCbID > hltLHCbIDs;
-        hltLHCbIDs.clear();
-        getHltObjLHCbIDs((hltObjs[i]),hltLHCbIDs);
-        double TotN = (double) hltLHCbIDs.size();
-        double TotMatching = 0.0;
-        double ratio = 0.;
-        for(std::vector<LHCb::LHCbID>::iterator iID1 = hltLHCbIDs.begin(); iID1!= hltLHCbIDs.end(); iID1++){
-            for(std::vector<LHCb::LHCbID>::iterator iAllIDs = AllIDs.begin(); iAllIDs != AllIDs.end(); iAllIDs++){
-                if((*iID1).lhcbID() == (*iAllIDs).lhcbID()){
-                    TotMatching+=1.0;
-                    ratio = TotMatching/TotN;
-                }
-            }
+  std::vector< LHCb::LHCbID > AllIDs;
+  AllIDs.clear();
+  getJetLHCbIDs(jet, AllIDs);
+  double maxRatio = 0.;
+  for(unsigned int i = 0; i < num; i++){
+    std::vector< LHCb::LHCbID > hltLHCbIDs;
+    hltLHCbIDs.clear();
+    getHltObjLHCbIDs((hltObjs[i]),hltLHCbIDs);
+    double TotN = (double) hltLHCbIDs.size();
+    double TotMatching = 0.0;
+    double ratio = 0.;
+    for(std::vector<LHCb::LHCbID>::iterator iID1 = hltLHCbIDs.begin(); iID1!= hltLHCbIDs.end(); iID1++){
+      for(std::vector<LHCb::LHCbID>::iterator iAllIDs = AllIDs.begin(); iAllIDs != AllIDs.end(); iAllIDs++){
+        if((*iID1).lhcbID() == (*iAllIDs).lhcbID()){
+          TotMatching+=1.0;
+          ratio = TotMatching/TotN;
         }
-
-        if(ratio > maxRatio){
-            maxRatio = ratio;
-        }
-
+      }
     }
 
-    return maxRatio;
+    if(ratio > maxRatio){
+      maxRatio = ratio;
+    }
+
+  }
+
+  return maxRatio;
 }
 
 
@@ -224,24 +211,24 @@ double RelInfoJetsVariables::jetNNTag(const LHCb::Particle* jet)
 //Get the LHCbID of HLT obj
 //=========================================================================
 StatusCode RelInfoJetsVariables::getHltObjLHCbIDs(const LHCb::HltObjectSummary * sum, std::vector< LHCb::LHCbID > & AllIDs) const{
-    if (0==sum) return StatusCode::SUCCESS ;
-    if(sum->substructure().size()>0){
-        for ( SmartRefVector< LHCb::HltObjectSummary >::const_iterator s = sum->substructure().begin() ;
-                s != sum->substructure().end() ; ++s)
-            getHltObjLHCbIDs(*s,AllIDs);
+  if (0==sum) return StatusCode::SUCCESS ;
+  if(sum->substructure().size()>0){
+    for ( SmartRefVector< LHCb::HltObjectSummary >::const_iterator s = sum->substructure().begin() ;
+          s != sum->substructure().end() ; ++s)
+      getHltObjLHCbIDs(*s,AllIDs);
 
 
-        const std::vector< LHCb::LHCbID > lIDs = sum->lhcbIDsFlattened();
-        AllIDs.insert(AllIDs.end(), lIDs.begin(), lIDs.end());
+    const std::vector< LHCb::LHCbID > lIDs = sum->lhcbIDsFlattened();
+    AllIDs.insert(AllIDs.end(), lIDs.begin(), lIDs.end());
 
 
-    }else{
+  }else{
 
-        const std::vector< LHCb::LHCbID > lIDs = sum->lhcbIDsFlattened();
-        AllIDs.insert(AllIDs.end(), lIDs.begin(), lIDs.end());
-    }
+    const std::vector< LHCb::LHCbID > lIDs = sum->lhcbIDsFlattened();
+    AllIDs.insert(AllIDs.end(), lIDs.begin(), lIDs.end());
+  }
 
-    return StatusCode::SUCCESS ;
+  return StatusCode::SUCCESS ;
 
 }
 
@@ -252,49 +239,34 @@ StatusCode RelInfoJetsVariables::getHltObjLHCbIDs(const LHCb::HltObjectSummary *
 //Get daughters track the LHCbID of a jet.
 //=========================================================================
 StatusCode RelInfoJetsVariables::getJetLHCbIDs(const LHCb::Particle* p,
-        std::vector< LHCb::LHCbID > & AllIDs) const{
+                                               std::vector< LHCb::LHCbID > & AllIDs) const{
 
-    if(p->particleID().abspid() == 98 ){
-        LHCb::Particle::ConstVector daus = p->daughtersVector();
-        for(LHCb::Particle::ConstVector::iterator idaus = daus.begin(); idaus != daus.end(); idaus++)
-        {
-            getJetLHCbIDs( (*idaus), AllIDs );
-        }
-    }else{
-        const LHCb::ProtoParticle * proto = p->proto() ;
-        if ( proto )
-        {
-            if ( proto->track() ) {
-                    const std::vector< LHCb::LHCbID > lIDs = proto->track()->lhcbIDs();
-                    AllIDs.insert(AllIDs.end(), lIDs.begin(), lIDs.end());
-            }
-            else
-            {
-                for ( SmartRefVector<LHCb::Particle>::const_iterator iP = p->daughters().begin();
-                        iP != p->daughters().end(); ++iP )
-                {
-                    getJetLHCbIDs( *iP, AllIDs );
-                }
-            }
-        }
+  if(p->particleID().abspid() == 98 ){
+    LHCb::Particle::ConstVector daus = p->daughtersVector();
+    for(LHCb::Particle::ConstVector::iterator idaus = daus.begin(); idaus != daus.end(); idaus++)
+    {
+      getJetLHCbIDs( (*idaus), AllIDs );
     }
-    return StatusCode::SUCCESS ;
+  }else{
+    const LHCb::ProtoParticle * proto = p->proto() ;
+    if ( proto )
+    {
+      if ( proto->track() ) {
+        const std::vector< LHCb::LHCbID > lIDs = proto->track()->lhcbIDs();
+        AllIDs.insert(AllIDs.end(), lIDs.begin(), lIDs.end());
+      }
+      else
+      {
+        for ( SmartRefVector<LHCb::Particle>::const_iterator iP = p->daughters().begin();
+              iP != p->daughters().end(); ++iP )
+        {
+          getJetLHCbIDs( *iP, AllIDs );
+        }
+      }
+    }
+  }
+  return StatusCode::SUCCESS ;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //=============================================================================
@@ -303,6 +275,10 @@ StatusCode RelInfoJetsVariables::getJetLHCbIDs(const LHCb::Particle* p,
 void RelInfoJetsVariables::pt_sorted_samePV(const LHCb::Particles & jets_list,
                                             const int pvkey, std::vector<LHCb::Particle*> & out_list)
 {
+  // get DV algorithm
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ;
+  if ( !dva ) return;
+
   std::vector<PtParticlePair> myPtParticleVector;
   debug()<< jets_list.size()  <<" jets to be sorted" << endmsg;
   for( LHCb::Particles::const_iterator ijet = jets_list.begin() ;
@@ -310,7 +286,7 @@ void RelInfoJetsVariables::pt_sorted_samePV(const LHCb::Particles & jets_list,
 
     // if pvkey<0, we skip this check
     if (m_forcePV && pvkey>=0){
-      const LHCb::VertexBase* BPV = m_dva->bestVertex(*ijet);
+      const LHCb::VertexBase* BPV = dva->bestVertex(*ijet);
       // only add if the pv is the same as the one of the B
       if (BPV->key()!=pvkey) continue;
     }
@@ -530,9 +506,12 @@ StatusCode RelInfoJetsVariables::calculateRelatedInfo( const LHCb::Particle *top
   LHCb::Particle mu1;
   LHCb::Particle mu2;
 
-  // get bestPV of the top particle
-  const LHCb::VertexBase* BPV = m_dva->bestVertex(top);
+  // get DV algorithm
+  IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ;
+  if ( !dva ) return StatusCode::FAILURE;
 
+  // get bestPV of the top particle
+  const LHCb::VertexBase* BPV = dva->bestVertex(top);
 
   // now find the RecVertex that is closest to the refitted one
   double dist,distc2_tmp,distc2;
@@ -541,7 +520,7 @@ StatusCode RelInfoJetsVariables::calculateRelatedInfo( const LHCb::Particle *top
   LHCb::RecVertex::Container* verts = getIfExists<LHCb::RecVertex::Container>(LHCb::RecVertexLocation::Primary);
   // create a list of pairs ipchi2/vertex
   for ( LHCb::RecVertex::Container::const_iterator iv = verts->begin(); iv != verts->end(); iv++) {
-    StatusCode sc = m_dist->distance(BPV,(*iv),dist,distc2_tmp);
+    StatusCode sc = dva->distanceCalculator()->distance(BPV,(*iv),dist,distc2_tmp);
     if (sc.isFailure()) {
       debug()<<"Failure obtaining IPchi2"<<endmsg;
       continue;
