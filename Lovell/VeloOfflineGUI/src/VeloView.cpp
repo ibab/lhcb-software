@@ -65,9 +65,9 @@ veloview::veloview(int runMode, std::vector<std::string> * ops, QWidget *parent)
   m_logoText("Default GUI"),
   m_plotOps(NULL),
   m_runProxy(NULL),
-  m_verbose(false),
-  m_dataDir("/calib/velo/dqm/VeloView/VetraOutput"),
 	m_runProxyRef(NULL),
+	m_verbose(false),
+	m_dataDir("/calib/velo/dqm/VeloView/VetraOutput"),
 	f_in(NULL),
 	f_inReff(NULL)
 {
@@ -287,11 +287,11 @@ void veloview::setContent() {
   }
 
   if (m_runMode == 0) {
-    m_content = VContentGetter::veloFileConfigs(m_plotOps, m_VVinterfaceScript, f_in, f_inReff);
+    m_content = VContentGetter::veloFileConfigs(m_plotOps, m_VVinterfaceScript);
     if (!m_ran) delete ui->m_logo;
   }
   else if (m_runMode == 3) {
-		m_content = VContentGetter::veloFileConfigs(m_plotOps, "dummyDataGetter.py", f_in, f_inReff);
+		m_content = VContentGetter::veloFileConfigs(m_plotOps, "dummyDataGetter.py");
   }
 
   else std::cout<<"Unknown run mode"<<std::endl;

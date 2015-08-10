@@ -601,8 +601,7 @@ VTabContent * VContentGetter::veloShortConfigs(VPlotOps * plotOps){
 
 //_____________________________________________________________________________
 
-VTabContent * VContentGetter::veloFileConfigs(VPlotOps * plotOps, std::string interfaceScript,
-		TFile * f_in, TFile * f_inReff)
+VTabContent * VContentGetter::veloFileConfigs(VPlotOps * plotOps, std::string interfaceScript)
 {
   VTabContent * topDummyTab = new VTabContent("Top"); // Always needed.
   std::vector<VTabContent*> allTabs; // Useful to have container for all tabs.
