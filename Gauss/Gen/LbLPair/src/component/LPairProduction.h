@@ -57,6 +57,29 @@ class IBeamTool;
  * mxmn: mimimum mass limit for final hadronic system.
  * mxmx: maximum mass limit for final hadronic system.
  *
+ * The following options are taken from the modified ZLPAIR source.
+ *
+ * phts: option for photon emission.
+ *       1: radiate off muon lines.
+ *       2: radiate off proton lines.
+ *       3: radiate off both muon and proton lines.
+ * frmf: form factor option.
+ *       0: standard, Ge=Gm/mu=1/(1+q^2/0.71)^2.
+ *       1: Phys. Rev. C76 (2007) 035205 (considered optimal).
+ *       2: Phys. Rev. C65 (2002) 051001 (unreasonable at low Q^2).
+ *       3: Nucl. Phys. A596 (1996) 367.
+ *       4: Phys. Rev. C76 (2007) 035201 (best for low Q^2).
+ *       41, 51, 61, 71: spread gives uncertainty for (1).
+ *       14, 24, 34: spread gives uncertainty for (4).
+ *       60 - 80: dipole, Ge=Gm/mu=1/(1+q^2/(X/100.))^2 where X is frmf.
+ *       -99: dipole, Ge=Gm/mu=1/(1+q^2/0.71)^2.
+ *       -98: dipole of (99), Ge=1, Gm=0.
+ *       -97: dipole of (99), Ge=0, Gm=1.
+ *       -96: dipole of (99), Ge=1, Gm=1.
+ * vacp: vacuum polarization option.
+ *       0: no correction.
+ *       not 0: simplest correction provided by Berend's GG_MMGGEN.
+ *
  * @class  LPairProduction
  * @file   LPairProduction.h 
  * @author Philip Ilten
@@ -137,6 +160,7 @@ private:
   string        m_beamToolName;    ///< Name of beam tool.
   IBeamTool    *m_beamTool;        ///< The Gaudi beam tool.
   int           m_tries;           ///< Number of LPair tries.
+  int           m_photos;          ///< Photos radiation flag.
 };
 
 #endif // LBLPAIR_LPAIRPRODUCTION_H

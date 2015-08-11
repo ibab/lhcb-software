@@ -42,7 +42,7 @@ DECLARE_TOOL_FACTORY(LPairProduction)
 LPairProduction::LPairProduction(const string& type,
 					 const string& name,
 					 const IInterface* parent)
-: GaudiTool (type, name, parent), m_beamTool(0) {
+: GaudiTool (type, name, parent), m_beamTool(0), m_photos(3) {
   declareInterface<IProductionTool>(this);
   declareProperty("Commands", m_userSettings = CommandVector(),
 		  "List of commands to pass to LPair.");
@@ -74,6 +74,9 @@ LPairProduction::LPairProduction(const string& type,
   m_defaultSettings.push_back("q2mx 1E5");
   m_defaultSettings.push_back("mxmn 1.07");
   m_defaultSettings.push_back("mxmx 320.0");
+  m_defaultSettings.push_back("phts 3");
+  m_defaultSettings.push_back("frmf 1");
+  m_defaultSettings.push_back("vacp 1");
 }
 
 //=============================================================================
@@ -108,12 +111,16 @@ StatusCode LPairProduction::initialize() {
   if (sc.isFailure()) return Error("Failed to parse default settings.");
   sc = parseSettings(m_userSettings);
   if (sc.isFailure()) return Error("Failed to parse settings.");
+  float omegamin(0);
+  lpair_photos__(&m_photos, &omegamin);
+  ludat1_.mstu[22 - 1] = 1000000;
+  ludat1_.mstu[12 - 1] = 0;
 
   // Set the beam momenta.
   Gaudi::XYZVector pBeam1, pBeam2;
   m_beamTool->getMeanBeams(pBeam1, pBeam2);
-  beam_.pmod[0] = sqrt(pBeam1.Mag2()) / 1000.0;
-  beam_.emod[0] = sqrt(pBeam1.Mag2()) / 1000.0;
+  beam_.inpp[0] = sqrt(pBeam1.Mag2()) / 1000.0;
+  beam_.inpe[0] = sqrt(pBeam1.Mag2()) / 1000.0;
   return sc;
 }
 
@@ -221,30 +228,33 @@ StatusCode LPairProduction::parseSettings(const CommandVector &settings) {
     double dblval = setting.numpiece(2);
 
     // Apply the settings.
-    if      (entry == "ibeg") vegpar_.ibeg[0]   = intval;
-    else if (entry == "iend") vegpar_.iend[0]   = intval;
-    else if (entry == "ntrt") vegpar_.ntreat[0] = intval; 
-    else if (entry == "prvg") vegpar_.nprin[0]  = intval;
-    else if (entry == "ncvg") vegpar_.ncvg[0]   = intval;
-    else if (entry == "itvg") vegpar_.itmx[0]   = intval;
-    else if (entry == "ncsg") vegpar_.npoin[0]  = intval;
-    else if (entry == "inpp") beam_.inpp[0]     = dblval;
-    else if (entry == "pmod") beam_.pmod[0]     = intval;
-    else if (entry == "gpdf") beam_.gpdf[0]     = intval;
-    else if (entry == "spdf") beam_.spdf[0]     = intval;
-    else if (entry == "inpe") beam_.inpe[0]     = dblval;
-    else if (entry == "emod") beam_.emod[0]     = intval;
-    else if (entry == "pair") beam_.ipair[0]    = intval;
-    else if (entry == "qpdf") beam_.nquark[0]   = intval;
-    else if (entry == "mcut") cuts_.modcut[0]   = intval;
-    else if (entry == "thmx") cuts_.thmax[0]    = dblval;
-    else if (entry == "thmn") cuts_.thmin[0]    = dblval;
-    else if (entry == "ecut") cuts_.ecut[0]     = dblval;
-    else if (entry == "ptct") cuts_.ptcut[0]    = dblval;
-    else if (entry == "q2mn") cuts_.q2mn[0]     = dblval;
-    else if (entry == "q2mx") cuts_.q2mx[0]     = dblval;
-    else if (entry == "mxmn") cuts_.mxmn[0]     = dblval;
-    else if (entry == "mxmx") cuts_.mxmx[0]     = dblval;
+    if      (entry == "ibeg") vegpar_.ibeg[0]       = intval;
+    else if (entry == "iend") vegpar_.iend[0]       = intval;
+    else if (entry == "ntrt") vegpar_.ntreat[0]     = intval; 
+    else if (entry == "prvg") vegpar_.nprin[0]      = intval;
+    else if (entry == "ncvg") vegpar_.ncvg[0]       = intval;
+    else if (entry == "itvg") vegpar_.itmx[0]       = intval;
+    else if (entry == "ncsg") vegpar_.npoin[0]      = intval;
+    else if (entry == "inpp") beam_.inpp[0]         = dblval;
+    else if (entry == "pmod") beam_.pmod[0]         = intval;
+    else if (entry == "gpdf") beam_.gpdf[0]         = intval;
+    else if (entry == "spdf") beam_.spdf[0]         = intval;
+    else if (entry == "inpe") beam_.inpe[0]         = dblval;
+    else if (entry == "emod") beam_.emod[0]         = intval;
+    else if (entry == "pair") beam_.ipair[0]        = intval;
+    else if (entry == "qpdf") beam_.nquark[0]       = intval;
+    else if (entry == "mcut") cuts_.modcut[0]       = intval;
+    else if (entry == "thmx") cuts_.thmax[0]        = dblval;
+    else if (entry == "thmn") cuts_.thmin[0]        = dblval;
+    else if (entry == "ecut") cuts_.ecut[0]         = dblval;
+    else if (entry == "ptct") cuts_.ptcut[0]        = dblval;
+    else if (entry == "q2mn") cuts_.q2mn[0]         = dblval;
+    else if (entry == "q2mx") cuts_.q2mx[0]         = dblval;
+    else if (entry == "mxmn") cuts_.mxmn[0]         = dblval;
+    else if (entry == "mxmx") cuts_.mxmx[0]         = dblval;
+    else if (entry == "phts") m_photos              = intval;
+    else if (entry == "frmf") mgmge_.mff[0]         = intval;
+    else if (entry == "vacp") vacpol_cb__.mvacpol[0] = intval;
     else return Error("Unknown entry: " + entry);
   }
   return StatusCode::SUCCESS ;
