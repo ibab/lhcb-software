@@ -706,37 +706,70 @@ namespace LHCb
 
   public:
 
+//     // Implementation using a mutex for thread support
+// #ifndef GOD_NOALLOC
+
+//     /// operator new
+//     static void* operator new ( size_t size )
+//     {
+//       return ( sizeof(RichSmartID) == size ?
+//                boost::singleton_pool<RichSmartID, sizeof(RichSmartID)>::malloc() :
+//                ::operator new(size) );
+//     }
+
+//     /// placement operator new
+//     static void* operator new ( size_t size, void* pObj )
+//     {
+//       return ::operator new (size,pObj);
+//     }
+
+//     /// operator delete
+//     static void operator delete ( void* p )
+//     {
+//       boost::singleton_pool<RichSmartID, sizeof(RichSmartID)>::is_from(p) ?
+//         boost::singleton_pool<RichSmartID, sizeof(RichSmartID)>::free(p) :
+//         ::operator delete(p);
+//     }
+
+//     /// placement operator delete
+//     static void operator delete ( void* p, void* pObj )
+//     {
+//       ::operator delete (p, pObj);
+//     }
+
+// #endif
+
+    // Implementation without thread support
 #ifndef GOD_NOALLOC
 
     /// operator new
     static void* operator new ( size_t size )
     {
-      return ( sizeof(RichSmartID) == size ?
-               boost::singleton_pool<RichSmartID, sizeof(RichSmartID)>::malloc() :
-               ::operator new(size) );
+      using pool = boost::singleton_pool< RichSmartID, sizeof(RichSmartID),
+                                          boost::default_user_allocator_new_delete,
+                                          boost::details::pool::null_mutex, 128 >;
+      return ( sizeof(RichSmartID) == size ? pool::malloc() : ::operator new(size) );
     }
 
     /// placement operator new
-    /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
-    /// it is not needed in libstdc++ >= 3.4
     static void* operator new ( size_t size, void* pObj )
     {
-      return ::operator new (size,pObj);
+      return ::operator new ( size, pObj );
     }
 
     /// operator delete
     static void operator delete ( void* p )
     {
-      boost::singleton_pool<RichSmartID, sizeof(RichSmartID)>::is_from(p) ?
-        boost::singleton_pool<RichSmartID, sizeof(RichSmartID)>::free(p) :
-        ::operator delete(p);
+      using pool = boost::singleton_pool< RichSmartID, sizeof(RichSmartID),
+                                          boost::default_user_allocator_new_delete,
+                                          boost::details::pool::null_mutex, 128 >;
+      pool::is_from(p) ? pool::free(p) : ::operator delete(p);
     }
 
     /// placement operator delete
-    /// not sure if really needed, but it does not harm
     static void operator delete ( void* p, void* pObj )
     {
-      ::operator delete (p, pObj);
+      ::operator delete ( p, pObj );
     }
 
 #endif
