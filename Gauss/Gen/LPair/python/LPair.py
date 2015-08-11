@@ -59,7 +59,7 @@ copy(ver['CERNLIB'] + '/src/packlib/kernlib/kerngen/tcgen', '../src',
 copy(ver['CERNLIB'] + '/src/packlib/kernlib/kerngen/tcgens', '../src',
      include = ['iucomp.F', 'ucopy.F'])
 copy(ver['CERNLIB'] + '/src/mclibs/jetset/jetset', '../src',
-     include = ['ulmass.F', 'luexec.F', 'lujoin.F', 'lulist.F',
+     include = ['ulmass.F', 'ludata.F', 'luexec.F', 'lujoin.F', 'lulist.F',
                 'luchge.F', 'luprep.F', 'lucomp.F', 'lushow.F', 'luindf.F',
                 'ludecy.F', 'luerrm.F', 'luboei.F', 'lustrf.F', 'lurobo.F',
                 'lukfdi.F', 'ulangl.F', 'lutaud.F', 'luptdi.F', 'luzdis.F',
@@ -89,6 +89,14 @@ for i, l in enumerate(src):
     if i in idx: zdummy.write(l + '\n')
 zdummy.close()
 
+# Remove event printing.
+src = [l.rstrip('\n').lower() for l in file('../src/gmufil.f', 'r')]
+idx = [748]
+gmufil = file('../src/gmufil.f', 'w')
+for i, l in enumerate(src):
+    if i not in idx: gmufil.write(l + '\n')
+gmufil.close()
+
 # Generate the C-interface.
 cin = file('../LPair/LPair.h', 'w')
 cin.write('// Generated automatically with Gen/LPair/python/LPair.py.'
@@ -96,7 +104,17 @@ cin.write('// Generated automatically with Gen/LPair/python/LPair.py.'
 cin.write('extern "C" {\n\n')
 src = Fortran.Source('../src/zduevt.f')
 cin.write(src.procedures['zduevt'].cexpr() + '\n\n')
+src = Fortran.Source('../src/lpair_photos.f')
+cin.write(src.procedures['lpair_photos'].cexpr().
+          replace('photos_', 'photos__') + '\n\n')
 src = Fortran.Source('../src/zduini.f')
 cin.write(src.procedures['zduini'].cexpr() + '\n\n')
+for k, c in src.commons.iteritems(): cin.write(c.cexpr() + '\n\n')
+src = Fortran.Source('../src/lpair_ff.f')
+for k, c in src.commons.iteritems(): cin.write(c.cexpr() + '\n\n')
+src = Fortran.Source('../src/lpair_vacpol.f')
+for k, c in src.commons.iteritems():
+    cin.write(c.cexpr().replace('vacpol_cb_', 'vacpol_cb__') + '\n\n')
+src = Fortran.Source('../src/shamov_zmdiff.f')
 for k, c in src.commons.iteritems(): cin.write(c.cexpr() + '\n\n')
 cin.write('}\n')

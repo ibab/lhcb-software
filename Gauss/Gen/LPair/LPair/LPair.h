@@ -4,6 +4,8 @@ extern "C" {
 
   void zduevt_(int *iwant);
 
+  void lpair_photos__(int *flags, float *omegamin);
+
   void zduini_();
 
   extern struct {
@@ -24,5 +26,41 @@ extern "C" {
     int modcut[1];
     float mxmn[1], mxmx[1], q2mn[1], q2mx[1];
   } cuts_;
+
+  extern struct {
+    int mff[1];
+  } mgmge_;
+
+  extern struct {
+    int mvacpol[1];
+  } vacpol_cb__;
+
+  extern struct {
+    int mstu[200];
+    float paru[200];
+    int mstj[200];
+    float parj[200];
+  } ludat1_;
+
+  extern struct {
+    float dmmin[1];
+  } zmdiffcut_;
+
+  extern struct {
+    int mint[400];
+    float vint[400];
+  } pyint1_;
+
+  extern struct {
+    int mstp[200];
+    float parp[200];
+    int msti[200];
+    float pari[200];
+  } pypars_;
+
+  extern struct {
+    int n[1], k[4000][5];
+    float p[4000][5], v[4000][5];
+  } lujets_;
 
 }
