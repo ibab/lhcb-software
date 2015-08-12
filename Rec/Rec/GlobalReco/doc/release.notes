@@ -3,6 +3,8 @@
 ! Responsible : Global PID Group (C. Jones)
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= GlobalReco v6r53 2015-07-20 =========================
 ! 2015-06-13 - Chris Jones

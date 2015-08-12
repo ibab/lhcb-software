@@ -1,8 +1,5 @@
 // Include files 
 
- // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // local
 #include "NeutralProtoParticleAddNeutralID.h"
 #include "CaloUtils/CaloMomentum.h"

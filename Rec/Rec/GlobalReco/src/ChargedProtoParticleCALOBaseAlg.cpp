@@ -8,9 +8,6 @@
  */
 //-----------------------------------------------------------------------------
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "ChargedProtoParticleCALOBaseAlg.h"
 

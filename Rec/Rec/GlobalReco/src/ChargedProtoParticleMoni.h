@@ -18,8 +18,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/HashMap.h"
-#include "GaudiKernel/AlgFactory.h"
-
 // Event
 #include "Event/Track.h"
 #include "Event/ProtoParticle.h"
