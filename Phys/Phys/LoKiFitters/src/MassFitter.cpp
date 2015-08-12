@@ -8,7 +8,6 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/ParticleProperty.h" 
 #include "GaudiKernel/SystemOfUnits.h" 
 #include "GaudiKernel/Vector4DTypes.h" 
