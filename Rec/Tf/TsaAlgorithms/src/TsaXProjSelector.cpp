@@ -1,6 +1,3 @@
-// GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
-
 #include "TsaXProjSelector.h"
 
 #include <algorithm>

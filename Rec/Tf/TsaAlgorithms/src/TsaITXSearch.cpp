@@ -1,6 +1,3 @@
-// GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
-
 #ifdef __INTEL_COMPILER         // Disable ICC warning
   #pragma warning(disable:654)  // Tf::Tsa::ITsaSeedStep::execute only partially overridden
   #pragma warning(push)

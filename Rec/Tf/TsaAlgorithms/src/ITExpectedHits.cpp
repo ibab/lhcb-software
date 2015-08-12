@@ -1,8 +1,5 @@
 // $Id: ITExpectedHits.cpp,v 1.5 2010-04-21 09:35:40 mneedham Exp $
 
-// GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
-
 #include "ITExpectedHits.h"
 
 using namespace Tf::Tsa;

@@ -1,5 +1,4 @@
 // GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/Plane3DTypes.h"
 

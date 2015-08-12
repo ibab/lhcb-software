@@ -1,6 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 #include "TsaSeed.h"
 
 #include "Event/Track.h"

@@ -1,6 +1,4 @@
 
-#include "GaudiKernel/ToolFactory.h"
-
 #include "TsaKernel/TsaSeedingHit.h"
 
 #include "TfKernel/TTStationHitManager.h"

@@ -1,7 +1,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/SystemOfUnits.h"
 
 #include "Event/StateParameters.h"

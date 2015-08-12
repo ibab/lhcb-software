@@ -1,6 +1,3 @@
-// GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
-
 #include "TsaSeedSelector.h"
 #include "TsaKernel/SeedFunctor.h"
 #include "TsaKernel/SeedTrack.h"

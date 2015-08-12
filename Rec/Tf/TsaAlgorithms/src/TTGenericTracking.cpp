@@ -1,9 +1,6 @@
 // boost
 #include <boost/foreach.hpp>
 
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // from DigiEvent and TrackEvent
 #include "Event/STCluster.h"
 #include "Event/Track.h"

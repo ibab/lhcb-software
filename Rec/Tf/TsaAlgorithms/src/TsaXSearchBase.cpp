@@ -1,7 +1,4 @@
-// $Id: TsaXSearchBase.cpp,v 1.5 2010-04-21 09:35:41 mneedham Exp $
-
 // GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 #include "TsaXSearchBase.h"

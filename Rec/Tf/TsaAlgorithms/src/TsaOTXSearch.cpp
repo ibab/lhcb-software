@@ -1,5 +1,4 @@
 // GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 #ifdef __INTEL_COMPILER         // Disable ICC warning

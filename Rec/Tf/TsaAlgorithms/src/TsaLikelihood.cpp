@@ -1,6 +1,3 @@
-// GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
-
 // Tsa
 #include "TsaLikelihood.h"
 

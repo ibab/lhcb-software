@@ -5,9 +5,6 @@
 
 #include <algorithm>
 
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // DigiEvent
 #include "Event/STLiteCluster.h"
 
