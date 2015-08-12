@@ -15,7 +15,6 @@
 #include "Event/MuonPID.h"
 #include "Event/Track.h"
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/ToolFactory.h"
 #include "MuonDet/DeMuonDetector.h"
 #include "vdt/exp.h"
 

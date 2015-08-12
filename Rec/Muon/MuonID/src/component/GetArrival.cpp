@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // local
 #include "GetArrival.h"
 #include "Interpolator.h"

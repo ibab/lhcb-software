@@ -2,6 +2,8 @@
 ! Package     : MuonID
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= MuonID v9r16 2015-07-20 =========================
 ! 2015-07-16 - Ricardo Vazquez Gomez

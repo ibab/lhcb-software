@@ -10,7 +10,6 @@
 #include "Event/MuonCoord.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/boost_allocator.h"
 #include "MuonDet/DeMuonDetector.h"
 #include "MuonDet/IMuonFastPosTool.h"

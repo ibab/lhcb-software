@@ -4,7 +4,6 @@
 #include <vector>
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "DetDesc/Condition.h"
 
 #include "Event/RecHeader.h"
