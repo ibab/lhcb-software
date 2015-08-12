@@ -15,7 +15,6 @@
 #endif // !WIN32
 
 /// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiUtils/Aida2ROOT.h"
 
 // from VeloDet

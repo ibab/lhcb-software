@@ -1,6 +1,5 @@
 // Include files// from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
-#include "GaudiKernel/AlgFactory.h" 
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 // from Event model

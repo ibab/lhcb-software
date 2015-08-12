@@ -3,6 +3,8 @@
 ! Responsible : VELO monitoring group
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 ! 2015-08-10 - Shanzhen Chen
  - VeloClusterMonitor: Added histograms to represent ADC cluster fits functions  

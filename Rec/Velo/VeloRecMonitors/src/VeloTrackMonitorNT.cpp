@@ -32,7 +32,6 @@
 // gsl
 //#include "gsl/gsl_math.h"
 
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/ToStream.h"
 

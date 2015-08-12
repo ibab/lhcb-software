@@ -9,7 +9,6 @@
 #include <boost/format.hpp>
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiUtils/Aida2ROOT.h"
 
 // from LHCb

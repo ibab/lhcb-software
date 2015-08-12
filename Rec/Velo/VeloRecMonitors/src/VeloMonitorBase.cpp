@@ -1,7 +1,5 @@
 // Include files 
 // -------------
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 
 // VeloDet
 #include "VeloDet/DeVelo.h"
