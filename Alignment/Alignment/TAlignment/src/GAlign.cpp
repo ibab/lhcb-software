@@ -416,7 +416,7 @@ StatusCode GAlign::execute() {
 
       int Tparam = m_taConfig->NumTrPars();
       StatusCode zeroSC;
-      double locTr[Tparam];
+      std::vector<double> locTr(Tparam,0);
       double locMat[4][4];
       double locMatP[5][5];
       std::vector<double> trParV(Tparam,0.);
