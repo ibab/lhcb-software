@@ -3,6 +3,8 @@
 ! Responsible : Olivier Callot
 ! Purpose     : Fit parameters for the pattern
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= PrFitParams v2r0 2014-02-19 =========================
 ! 2014-01-13 - Marco Cattaneo
