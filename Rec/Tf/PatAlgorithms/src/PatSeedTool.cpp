@@ -4,7 +4,6 @@
 #include <array>
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/Kernel.h"
 
 

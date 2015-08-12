@@ -3,7 +3,6 @@
 #include <vector>
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "OTDet/DeOTDetector.h"
 // from TrackEvent
 #include "Event/StateParameters.h"

@@ -5,9 +5,6 @@
 #include <algorithm>
 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 #include "Event/StateParameters.h"
 
 #include "TrackInterfaces/IAddTTClusterTool.h"

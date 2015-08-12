@@ -1,6 +1,5 @@
 #include <array>
 
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "Event/Track.h"

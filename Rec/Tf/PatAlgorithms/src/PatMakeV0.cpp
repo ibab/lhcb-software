@@ -1,8 +1,5 @@
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 //Event
 #include "Event/RecVertex.h"      // Sean Modif
 #include "Event/TwoProngVertex.h"     // Sean Modif

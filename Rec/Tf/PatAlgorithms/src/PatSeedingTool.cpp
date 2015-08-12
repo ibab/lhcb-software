@@ -8,7 +8,6 @@
 #include <array>
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
