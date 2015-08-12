@@ -6,7 +6,6 @@
 #include <sstream>
 
 // Include files 
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/Property.h"
 
 #include "Kernel/IExtraInfoTool.h"

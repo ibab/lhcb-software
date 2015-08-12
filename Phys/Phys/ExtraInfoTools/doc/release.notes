@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Extra Info Tools
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= ExtraInfoTools v1r0 2014-09-30 =========================
 
