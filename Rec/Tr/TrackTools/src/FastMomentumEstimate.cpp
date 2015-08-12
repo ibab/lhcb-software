@@ -2,7 +2,6 @@
 #include <cmath>
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/SystemOfUnits.h" 
 
 // from TrackEvent

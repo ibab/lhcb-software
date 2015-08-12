@@ -9,7 +9,6 @@
  */
 //-----------------------------------------------------------------------------
 
-#include "GaudiKernel/ToolFactory.h"
 #include "TrackVelodEdxCharge.h"
 #include "Event/VeloCluster.h"
 #include "Kernel/SiChargeFun.h"

@@ -1,7 +1,6 @@
 // Include files
 // -------------
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/GenericVectorTypes.h"
 #include "GaudiKernel/SymmetricMatrixTypes.h"
 

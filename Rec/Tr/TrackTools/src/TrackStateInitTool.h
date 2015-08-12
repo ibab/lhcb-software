@@ -1,7 +1,6 @@
 #include <map>
 #include <boost/foreach.hpp>
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 // from TrackInterfaces
 #include "TrackInterfaces/IPatSeedFit.h"

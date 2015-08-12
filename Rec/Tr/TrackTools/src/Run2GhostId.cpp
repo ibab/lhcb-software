@@ -1,6 +1,4 @@
 // Include files
-#include "GaudiKernel/ToolFactory.h"
-
 #include "Kernel/HitPattern.h"
 #include "Event/Particle.h"
 #include "Event/Track.h"

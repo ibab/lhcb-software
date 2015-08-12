@@ -9,7 +9,6 @@
  */
 //-----------------------------------------------------------------------------
 #include "Kernel/ITNames.h"
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 #include "Kernel/STLexicalCaster.h"

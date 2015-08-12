@@ -2,8 +2,6 @@
 
 #include <algorithm>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "Event/RawEvent.h"
 
 #include "MuonDet/MuonBasicGeometry.h"

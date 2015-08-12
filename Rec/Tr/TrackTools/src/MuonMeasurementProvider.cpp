@@ -15,7 +15,6 @@
 #include "Event/MuonMeasurement.h"
 #include "Event/StateVector.h"
 #include "MuonDet/DeMuonDetector.h"
-#include "GaudiKernel/ToolFactory.h"
 #include "Event/TrackParameters.h"
 
 class MuonMeasurementProvider : public GaudiTool, virtual public IMeasurementProvider

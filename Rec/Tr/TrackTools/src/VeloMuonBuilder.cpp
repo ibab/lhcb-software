@@ -1,4 +1,3 @@
-#include "GaudiKernel/AlgFactory.h"
 #include "VeloMuonBuilder.h"
 
 #include "math.h"

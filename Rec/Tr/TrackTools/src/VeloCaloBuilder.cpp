@@ -1,6 +1,5 @@
 
 
-#include "GaudiKernel/AlgFactory.h"
 #include "VeloCaloBuilder.h"
 
 #include "math.h"

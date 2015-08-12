@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 #include "Event/State.h"
 #include "Event/Track.h"
 #include "GaudiKernel/SystemOfUnits.h"

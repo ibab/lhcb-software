@@ -6,7 +6,6 @@
 #include "Event/Track.h"
 #include "TrackKernel/TrackTraj.h"
 #include <boost/assign/list_of.hpp>
-#include "GaudiKernel/ToolFactory.h"
 #include "HltV0Upgrade.h"
 
 /** @file HltV0Upgrade.cpp

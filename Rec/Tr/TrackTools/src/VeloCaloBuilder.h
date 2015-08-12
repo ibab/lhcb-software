@@ -5,9 +5,6 @@
 
 #include "Event/Track.h"
 
-
-#include "GaudiKernel/AlgFactory.h"
-
 #include "CaloInterfaces/ICaloGetterTool.h"
 
 #include "Kernel/ILHCbMagnetSvc.h"

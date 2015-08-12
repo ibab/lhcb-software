@@ -16,7 +16,6 @@
 #include "Event/StateVector.h"
 #include "OTDet/DeOTDetector.h"
 #include "OTDAQ/IOTRawBankDecoder.h"
-#include "GaudiKernel/ToolFactory.h"
 #include "Event/TrackParameters.h"
 #include "TrackKernel/TrackTraj.h"
 

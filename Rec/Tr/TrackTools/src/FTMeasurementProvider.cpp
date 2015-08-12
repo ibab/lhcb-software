@@ -17,7 +17,6 @@
 #include "Event/FTMeasurement.h"
 #include "Event/StateVector.h"
 #include "FTDet/DeFTDetector.h"
-#include "GaudiKernel/ToolFactory.h"
 #include "Event/TrackParameters.h"
 #include "TrackKernel/TrackTraj.h"
 #include "Event/FTLiteCluster.h"

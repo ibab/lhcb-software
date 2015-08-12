@@ -6,7 +6,6 @@
 // from Gaudi
 #include "GaudiKernel/ToolHandle.h"
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/ToolFactory.h"
 // from LHCbKernel
 #include "Kernel/ParticleID.h"
 

@@ -1,5 +1,4 @@
 // from GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
 

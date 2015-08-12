@@ -5,9 +5,6 @@
 #include <limits>
 #include <algorithm>
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // from VDT
 #include "vdt/log.h"
 

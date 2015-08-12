@@ -1,4 +1,3 @@
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 
 #include "TrackInterfaces/ITrackSelector.h"

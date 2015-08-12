@@ -1,8 +1,5 @@
 // Include files 
 // -------------
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // Event model
 #include "TrackKernel/TrackTraj.h"
 #include "Event/Measurement.h"

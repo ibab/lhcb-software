@@ -62,7 +62,6 @@ private:
 
 // local
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/ToolFactory.h"
 #include "Event/StateVector.h"
 #include "Event/Measurement.h"
 #include "TrackKernel/ZTrajectory.h"
