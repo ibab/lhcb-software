@@ -1,5 +1,4 @@
 #include <boost/numeric/conversion/cast.hpp>
-#include <GaudiKernel/AlgFactory.h>
 #include <GaudiAlg/Tuple.h>
 #include <GaudiAlg/TupleObj.h>
 #include <Event/ODIN.h>

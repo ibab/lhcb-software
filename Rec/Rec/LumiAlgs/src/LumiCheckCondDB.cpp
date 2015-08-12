@@ -1,8 +1,5 @@
 // Include files 
  
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // CondDB
 #include "GaudiKernel/IDetDataSvc.h"
 

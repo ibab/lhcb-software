@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // event model
 #include "Event/LumiFSR.h"
 #include "Event/LumiIntegral.h"

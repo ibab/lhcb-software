@@ -3,6 +3,8 @@
 ! Responsible : Jaap Panman
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= LumiAlgs v9r9 2015-07-20 =========================
 ! 2015-06-18 - Marco Cattaneo

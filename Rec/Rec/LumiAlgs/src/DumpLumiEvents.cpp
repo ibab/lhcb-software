@@ -1,4 +1,3 @@
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/LumiCounters.h"
 
 #include "DumpLumiEvents.h"
