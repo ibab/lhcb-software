@@ -1,4 +1,3 @@
-#include "GaudiKernel/ToolFactory.h"
 #include "STDet/DeSTDetector.h"
 
 #include <boost/foreach.hpp>
