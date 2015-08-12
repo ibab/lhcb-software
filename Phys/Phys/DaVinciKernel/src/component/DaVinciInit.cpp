@@ -1,7 +1,6 @@
 
 // from Gaudi
 #include "GaudiKernel/GaudiException.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiAlg/IGenericTool.h"
 #include "GaudiKernel/Memory.h"

@@ -1,9 +1,6 @@
 // $Id: FilterParticlesBase.cpp,v 1.2 2008-03-31 09:23:42 pkoppenb Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // local
 #include "Kernel/FilterParticlesBase.h"
 

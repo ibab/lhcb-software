@@ -7,7 +7,6 @@
 // from Gaudi
 // ============================================================================
 #include "GaudiAlg/GaudiTupleAlg.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/VectorMap.h"
 #include "GaudiKernel/HashMap.h"
 // ============================================================================
