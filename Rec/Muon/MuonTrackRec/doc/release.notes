@@ -7,6 +7,8 @@
 !               implementation of MuonCombRac, combinatorial track 
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= MuonTrackRec v3r13 2015-05-26 =========================
 ! 2015-05-06 - Stefania Vecchi

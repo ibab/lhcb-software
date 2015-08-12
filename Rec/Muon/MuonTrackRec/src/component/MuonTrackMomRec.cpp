@@ -1,5 +1,4 @@
 // Include files 
-#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
 #include "GaudiKernel/PhysicalConstants.h" 
 #include "Kernel/IBIntegrator.h"

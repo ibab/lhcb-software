@@ -1,6 +1,5 @@
 #include <vector>
 
-#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
 #include "Kernel/MuonTileID.h"
 #include "MuonDet/DeMuonDetector.h"

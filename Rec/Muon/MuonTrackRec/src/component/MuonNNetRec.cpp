@@ -1,6 +1,5 @@
 #include <list>
 
-#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
 #include "GaudiAlg/ISequencerTimerTool.h"
 // from TrackEvent

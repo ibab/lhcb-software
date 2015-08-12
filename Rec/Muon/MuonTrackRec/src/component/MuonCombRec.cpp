@@ -6,7 +6,6 @@
 #endif
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
 #include "GaudiAlg/ISequencerTimerTool.h"
 

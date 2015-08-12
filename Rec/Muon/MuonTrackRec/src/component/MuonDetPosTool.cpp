@@ -1,4 +1,3 @@
-#include "GaudiKernel/ToolFactory.h" 
 #include "MuonDet/DeMuonDetector.h"
 #include "Kernel/MuonTileID.h"
 
