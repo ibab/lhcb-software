@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include <GaudiKernel/DeclareFactoryEntries.h>
-
 // Event
 #include <Event/VertexBase.h>
 

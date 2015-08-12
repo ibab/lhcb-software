@@ -2,7 +2,6 @@
 // Include files 
 
 // Gaudi
-#include <GaudiKernel/SvcFactory.h>
 #include <GaudiKernel/MsgStream.h>
 #include <GaudiKernel/Incident.h>
 #include <GaudiKernel/IIncidentSvc.h>

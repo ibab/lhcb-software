@@ -10,7 +10,6 @@
 // Event
 #include <Event/RecVertex.h>
 
-template <class TYPE> class SvcFactory;
 namespace LHCb {
    class Particle;
    class Track;
