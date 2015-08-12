@@ -2,7 +2,6 @@
 // $Id: ResolvedPi0Maker.cpp,v 1.11 2010-04-14 12:42:40 odescham Exp $
 // ============================================================================
 // Include files
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"

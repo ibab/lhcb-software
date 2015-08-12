@@ -2,6 +2,8 @@
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !======================= ParticleMaker v6r15 2015-07-23 =======================
 

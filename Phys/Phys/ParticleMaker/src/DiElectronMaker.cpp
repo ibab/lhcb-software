@@ -1,7 +1,6 @@
 // $Id: $
 // Include files
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "Kernel/IRelatedPVFinder.h"
 #include "Kernel/IParticleTransporter.h"
 // local

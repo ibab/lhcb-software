@@ -1,7 +1,6 @@
 // $Id: 
 // ============================================================================
 // Include files
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"

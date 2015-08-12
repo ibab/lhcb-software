@@ -1,9 +1,6 @@
 // $Id: NoPIDsParticleMaker.cpp,v 1.19 2010-08-03 07:23:59 pkoppenb Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
-
 // local
 #include "NoPIDsParticleMaker.h"
 using namespace Gaudi::Units;

@@ -10,7 +10,6 @@
 
 // from DaVinci
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/Particle.h"
 #include "Event/TwoProngVertex.h"
 #include <boost/foreach.hpp>

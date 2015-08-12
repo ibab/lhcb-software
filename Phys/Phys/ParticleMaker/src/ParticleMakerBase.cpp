@@ -1,8 +1,6 @@
 // $Id: ParticleMakerBase.cpp,v 1.8 2010-08-16 16:40:38 odescham Exp $
 // Include files
 
-#include "GaudiKernel/DeclareFactoryEntries.h"
-
 // from EventSys
 #include "Event/Particle.h"
 #include "Event/Vertex.h"

@@ -1,7 +1,5 @@
 // $Id: MergedPi0Maker.cpp,v 1.12 2010-09-01 14:54:00 odescham Exp $
 // ============================================================================
-#include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "Kernel/ParticleProperty.h"
 #include "CaloUtils/CaloParticle.h"

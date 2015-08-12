@@ -1,9 +1,6 @@
 // $Id: Particle2State.cpp,v 1.3 2009-09-11 17:14:21 jonrob Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
-
 // LHCb
 #include "GaudiKernel/GenericMatrixTypes.h"
 #include "LHCbMath/MatrixManip.h"

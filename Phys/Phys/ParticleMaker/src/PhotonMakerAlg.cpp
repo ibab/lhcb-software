@@ -2,7 +2,6 @@
 // $Id: PhotonMakerAlg.cpp,v 1.1 2009-04-21 19:15:41 pkoppenb Exp $
 // ============================================================================
 // Include files
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
