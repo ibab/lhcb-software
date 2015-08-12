@@ -1,8 +1,5 @@
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // from TrackFitEvent
 #include "Event/OTMeasurement.h"
 #include "Event/StateVector.h"

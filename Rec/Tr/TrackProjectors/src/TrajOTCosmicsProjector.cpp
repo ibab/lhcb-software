@@ -1,9 +1,6 @@
 
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 #include "Event/OTMeasurement.h"
 #include "Event/StateVector.h"
 #include "GaudiKernel/PhysicalConstants.h"

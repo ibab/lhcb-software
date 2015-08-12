@@ -1,5 +1,4 @@
 // Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "TrackInterfaces/ITrackManipulator.h"
 
