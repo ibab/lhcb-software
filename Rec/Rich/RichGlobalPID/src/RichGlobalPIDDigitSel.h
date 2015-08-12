@@ -21,9 +21,6 @@
 #include "RichGlobalPIDAlgBase.h"
 #include "RichRecBase/RichRecProcCode.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 namespace Rich
 {
   namespace Rec

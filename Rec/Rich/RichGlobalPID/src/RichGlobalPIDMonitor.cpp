@@ -8,7 +8,6 @@
  */
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 
 // local

@@ -15,9 +15,6 @@
 // Base class
 #include "RichGlobalPIDAlgBase.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // interfaces
 #include "IRichGlobalPIDTrackCreator.h"
 

@@ -27,9 +27,6 @@
 #include "RichRecBase/IRichPhotonSignal.h"
 #include "IRichGlobalPIDTrackCreator.h"
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // RichKernel
 #include "RichKernel/RichMap.h"
 

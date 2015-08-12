@@ -25,9 +25,6 @@
 #include "RichRecBase/IRichPixelBackgroundEsti.h"
 #include "IRichGlobalPIDTrackCreator.h"
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 namespace Rich
 {
   namespace Rec

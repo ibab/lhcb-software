@@ -13,7 +13,6 @@
 #include "RichGlobalPIDTrTrackSel.h"
 
 // From GaudiKernel
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 // namespaces

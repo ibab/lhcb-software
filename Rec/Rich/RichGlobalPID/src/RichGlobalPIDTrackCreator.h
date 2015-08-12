@@ -19,9 +19,6 @@
 // interfaces
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // Event
 #include "Event/RichRecTrack.h"
 #include "Event/RichGlobalPIDTrack.h"

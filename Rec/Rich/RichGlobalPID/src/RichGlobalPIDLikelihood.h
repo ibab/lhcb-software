@@ -18,9 +18,6 @@
 // base class
 #include "RichGlobalPIDAlgBase.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "IRichGlobalPID.h"
 
