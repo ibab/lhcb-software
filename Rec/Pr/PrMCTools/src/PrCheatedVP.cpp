@@ -1,5 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 // Event/MCEvent
 #include "Event/MCHit.h"
 #include "Event/MCTrackInfo.h"

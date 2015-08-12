@@ -3,6 +3,8 @@
 ! Responsible : Michel De Cian
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= PrMCTools v2r10 2015-06-08 =========================
 ! 2015-05-29 - Michel De Cian

@@ -1,6 +1,5 @@
 #ifndef PrVeloUTChecker_CPP
 #define PrVeloUTChecker_CPP
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "Event/STCluster.h"
 #include "Linker/AllLinks.h"

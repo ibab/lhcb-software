@@ -2,7 +2,6 @@
 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/SmartIF.h"
 

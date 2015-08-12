@@ -2,7 +2,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 #include "Linker/LinkedTo.h"
 #include "Kernel/LHCbID.h"
 #include "Event/OTTime.h"

@@ -1,5 +1,4 @@
 // Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 
 // LHCb
