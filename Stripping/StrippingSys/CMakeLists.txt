@@ -15,9 +15,9 @@ gaudi_depends_on_subdirs(Phys/CommonParticles
                          Phys/StrippingSelections
                          Phys/StrippingSettings
                          Phys/StrippingTCK
-                         Phys/StrippingCache
                          Phys/StrippingUtils
                          Phys/TMVASelections
                          Phys/IsolationTools)
+#                         Phys/StrippingCache
 
 gaudi_add_test(QMTest QMTEST)

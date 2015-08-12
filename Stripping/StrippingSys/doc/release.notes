@@ -3,6 +3,10 @@ Package     : StrippingSys
 Package Coordinator : Andrea.Contu@cern.ch, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+! 2015-08-12 - Chris Jones
+ - Temporarily remove StrippingCache. Moved to DaVinci for S23 release.
+   To be improved once Marco is back from vacation...
+
 !2015-08-07 - Eduardo Rodrigues
  - Re-added Phys/StrippingCache after previous tag.
 
