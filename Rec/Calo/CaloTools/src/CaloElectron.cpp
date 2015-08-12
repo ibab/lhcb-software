@@ -1,9 +1,6 @@
 // $Id: CaloElectron.cpp,v 1.2 2009-05-19 13:48:22 cattanem Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // LHCb
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"

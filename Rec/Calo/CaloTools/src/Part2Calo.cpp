@@ -1,9 +1,6 @@
 // $Id: Part2Calo.cpp,v 1.2 2009-05-19 13:48:22 cattanem Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // from LHCb
 #include "Event/Particle.h"
 

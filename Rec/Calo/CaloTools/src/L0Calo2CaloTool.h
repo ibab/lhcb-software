@@ -5,7 +5,6 @@
 #include <iostream>
 #include <string>
 #include <iostream>
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "CaloKernel/CaloVector.h"
 #include "CaloDet/DeCalorimeter.h"

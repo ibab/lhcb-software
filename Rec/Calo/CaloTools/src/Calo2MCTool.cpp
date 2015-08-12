@@ -1,7 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 // from LHCb
 #include "Relations/RelationWeighted1D.h"
 #include "CaloUtils/CaloParticle.h"

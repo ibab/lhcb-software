@@ -1,7 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 // from  LHCb
 #include "CaloUtils/CaloAlgUtils.h"
 #include "Event/CaloHypo.h"

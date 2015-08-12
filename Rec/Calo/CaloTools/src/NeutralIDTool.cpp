@@ -1,7 +1,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "CaloUtils/CaloMomentum.h"
 #include "CaloUtils/CaloAlgUtils.h"
 // from Event
