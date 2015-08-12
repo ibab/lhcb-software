@@ -13,9 +13,6 @@
  */
 //-----------------------------------------------------------------------------
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "RichRecBase/RichRecTupleAlgBase.h"
 

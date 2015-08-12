@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones   Christopher.Rob.Jones@cern.ch
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= RichRecBase v4r20 2015-04-21 =========================
 ! 2015-03-09 - Chris Jones
