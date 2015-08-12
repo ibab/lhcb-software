@@ -1,9 +1,6 @@
 // $Id: RichRingReconParam.cpp,v 1.6 2009-12-16 13:42:49 seaso Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // local
 #include "RichRingReconParam.h"
 

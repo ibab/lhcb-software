@@ -1,8 +1,4 @@
-// $Id: RichTargetDataConfigAlg.cpp,v 1.9 2010-01-28 16:08:09 seaso Exp $
 // Include files 
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "RichTargetDataConfigAlg.h"

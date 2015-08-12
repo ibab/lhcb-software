@@ -1,9 +1,6 @@
 // $Id: RichRingRecToolBase.cpp,v 1.2 2009-06-05 17:21:35 jonrob Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "RichRingRec/RichRingRecToolBase.h"
 

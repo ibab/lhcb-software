@@ -1,9 +1,6 @@
-// $Id: RichRingRecConstants.cpp,v 1.4 2010-01-28 16:08:09 seaso Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-#include<TMath.h>
+#include <TMath.h>
 
 // local
 #include "RichRingRecConstants.h"

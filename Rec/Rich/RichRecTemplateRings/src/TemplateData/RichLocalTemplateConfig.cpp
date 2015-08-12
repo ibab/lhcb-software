@@ -1,8 +1,4 @@
-// $Id: RichLocalTemplateConfig.cpp,v 1.3 2009-07-30 11:22:55 jonrob Exp $
 // Include files 
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "RichLocalTemplateConfig.h"

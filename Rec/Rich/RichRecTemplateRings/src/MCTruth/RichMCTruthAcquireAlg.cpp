@@ -2,7 +2,6 @@
 // Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/MCRichHit.h"
 #include "Event/MCRichOpticalPhoton.h"
 

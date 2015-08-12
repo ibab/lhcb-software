@@ -1,9 +1,6 @@
 // $Id: RichRingMCCompareNtup.cpp,v 1.4 2009-07-30 11:22:55 jonrob Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "RichRingMCCompareNtup.h"
 

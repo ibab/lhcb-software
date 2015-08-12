@@ -2,9 +2,6 @@
 // Include files 
 #include<TMath.h>
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // local
 #include "RichRingRecTransformTool.h"
 

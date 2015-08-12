@@ -1,8 +1,4 @@
-// $Id: RichRingRecResult.cpp,v 1.3 2009-06-15 09:08:28 seaso Exp $
 // Include files 
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "RichRingRecResult.h"

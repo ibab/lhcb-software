@@ -1,9 +1,6 @@
 // $Id: RichRingRecAlgBase.cpp,v 1.2 2009-06-05 17:21:35 jonrob Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "RichRingRec/RichRingRecAlgBase.h"
 

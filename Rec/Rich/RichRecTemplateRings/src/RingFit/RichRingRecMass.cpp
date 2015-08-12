@@ -1,9 +1,4 @@
-// $Id: RichRingRecMass.cpp,v 1.5 2009-12-16 13:42:49 seaso Exp $
 // Include files 
-
-// from Gaudi
-
-#include "GaudiKernel/ToolFactory.h"
 #include "Event/RichRecTrack.h"
 
 

@@ -5,7 +5,6 @@
 #include "TH2D.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/HistogramBase.h"
 

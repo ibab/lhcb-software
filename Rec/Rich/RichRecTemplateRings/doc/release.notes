@@ -3,6 +3,8 @@
 ! Responsible  : Sajan Easo
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= RichRecTemplateRings v1r7 2013-04-30 ======================
 ! 2013-04-22 - Chris Jones

@@ -1,10 +1,6 @@
 // $Id: RichFFPlan.cpp,v 1.3 2009-06-05 17:21:32 jonrob Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
-
 #include "fftw3.h"
 
 // #include <math.h>
