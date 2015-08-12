@@ -3,7 +3,6 @@
 #include <memory>
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/IRndmEngine.h"
 #include "GaudiKernel/RndmGenerators.h"

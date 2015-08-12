@@ -4,6 +4,9 @@
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
+
 
 !========================= DaVinciMCKernel v4r4 2013-08-01 =========================
 
