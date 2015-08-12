@@ -1,4 +1,3 @@
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IIncidentSvc.h"
 

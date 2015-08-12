@@ -1,6 +1,5 @@
 
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "FlagHitsForPatternReco.h"
 #include <algorithm>
 #include <cassert>

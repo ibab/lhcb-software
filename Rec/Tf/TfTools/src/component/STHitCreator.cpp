@@ -8,7 +8,6 @@
  */
 //-----------------------------------------------------------------------------
 
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "Kernel/STChannelID.h"
 #include "Kernel/STDataFunctor.h"
