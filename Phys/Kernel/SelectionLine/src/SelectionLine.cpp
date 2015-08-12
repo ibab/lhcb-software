@@ -25,12 +25,11 @@
 // ============================================================================
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IAlgManager.h"
-#include "GaudiKernel/ListItem.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/IAlgContextSvc.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/TypeNameString.h"
 
 // ============================================================================
 // GaudiAlg
@@ -501,7 +500,7 @@ void Selection::Line::handle( const Incident& )
 //=========================================================================
 Algorithm* Selection::Line::getSubAlgorithm(const std::string& algname) 
 {
-  ListItem name(algname);
+  Gaudi::Utils::TypeNameString name(algname);
   IAlgorithm* myIAlg{nullptr};
   Algorithm *myAlg{nullptr};
   //= Check wether the specified algorithm already exists. 

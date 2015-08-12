@@ -4,6 +4,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete gaudi headers
+ - replace ListItem with TypeNameString
 
 !======================= SelectionLine v1r5 2015-03-03 ========================
 
