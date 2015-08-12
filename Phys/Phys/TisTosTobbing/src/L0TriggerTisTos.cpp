@@ -1,9 +1,6 @@
 // $Id: L0TriggerTisTos.cpp,v 1.1 2010-06-23 22:39:24 tskwarni Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 #include "Event/HltDecReports.h"
 #include "Event/HltSelReports.h"
 

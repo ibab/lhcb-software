@@ -6,7 +6,6 @@
 
 // from Gaudi
 #include "GaudiKernel/StatusCode.h"
-#include "GaudiKernel/AlgFactory.h"
 
 #include "Event/HltDecReports.h"
 

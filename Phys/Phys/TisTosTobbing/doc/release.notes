@@ -2,6 +2,8 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !======================== TisTosTobbing v9r1 2015-07-23 =======================
 

@@ -1,9 +1,6 @@
 // $Id: TisTosParticleTagger.cpp,v 1.2 2010-08-09 14:17:47 tskwarni Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "TisTosParticleTagger.h"
 

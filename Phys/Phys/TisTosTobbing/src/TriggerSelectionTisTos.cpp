@@ -6,7 +6,6 @@
 #include "boost/algorithm/string/replace.hpp"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 
 #include "GaudiKernel/IRegistry.h"

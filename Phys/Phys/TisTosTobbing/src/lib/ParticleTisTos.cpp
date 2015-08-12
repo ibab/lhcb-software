@@ -6,7 +6,6 @@
 
 // from Gaudi
 #include "GaudiKernel/StatusCode.h"
-//#include "GaudiKernel/ToolFactory.h"
 
 #include "GaudiKernel/Plane3DTypes.h"
 

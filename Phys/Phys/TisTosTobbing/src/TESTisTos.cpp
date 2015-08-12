@@ -7,7 +7,6 @@
 // from Gaudi
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
-#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IOpaqueAddress.h"

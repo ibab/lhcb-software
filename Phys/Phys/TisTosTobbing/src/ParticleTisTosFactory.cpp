@@ -1,9 +1,6 @@
 // $Id: $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // local
 #include "TisTos/ParticleTisTos.h"
 

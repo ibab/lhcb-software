@@ -3,9 +3,6 @@
 #include <algorithm>
 #include <sstream>
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // local
 #include "TriggerTisTosSummary.h"
 

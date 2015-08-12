@@ -3,9 +3,6 @@
 #include <functional>
 #include <sstream>
 
-// from Gaudi
-// #include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "TisTos/TisTos.h"
 
