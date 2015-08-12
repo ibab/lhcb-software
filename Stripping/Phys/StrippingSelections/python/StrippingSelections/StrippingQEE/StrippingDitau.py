@@ -477,12 +477,12 @@ EFrac02PN05N  = ECone02PN / ( E + ECone05N )  # (self+neutral) / (self+neutral)
 EFrac02PN05A  = ECone02PN / ( E + ECone05A )  # (self+neutral) / (self+neutral+charged)
 
 ## PT-vectorial cone
-PX2Cone05A  = SUMCONE(0.5**2, PX**2 , 'Phys/PFParticles')
-PY2Cone05A  = SUMCONE(0.5**2, PY**2 , 'Phys/PFParticles')
-PX2Cone05C  = SUMCONE(0.5**2, PX**2 , 'Phys/PFParticles', Q!=0)
-PY2Cone05C  = SUMCONE(0.5**2, PY**2 , 'Phys/PFParticles', Q!=0)
-PTCone05A   = ( PX2Cone05A + PY2Cone05A )**0.5
-PTCone05C   = ( PX2Cone05C + PY2Cone05C )**0.5
+PXCone05A  = SUMCONE(0.5**2, PX, 'Phys/PFParticles')
+PYCone05A  = SUMCONE(0.5**2, PY, 'Phys/PFParticles')
+PXCone05C  = SUMCONE(0.5**2, PX, 'Phys/PFParticles', Q!=0)
+PYCone05C  = SUMCONE(0.5**2, PY, 'Phys/PFParticles', Q!=0)
+PTCone05A   = ( PXCone05A**2 + PYCone05A**2 )**0.5
+PTCone05C   = ( PXCone05C**2 + PYCone05C**2 )**0.5
 PTFrac05C   = PT / ( PT + PTCone05C )  # core -- charged
 PTFrac05A   = PT / ( PT + PTCone05A )  # core -- all
 
