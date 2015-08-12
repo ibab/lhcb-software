@@ -7,8 +7,6 @@
 #include <boost/foreach.hpp>
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 #include "Event/StateParameters.h"
 
 #include "TrackInterfaces/IPrAddUTHitsTool.h"

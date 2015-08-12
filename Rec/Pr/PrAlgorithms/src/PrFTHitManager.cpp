@@ -1,7 +1,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 #include "Event/FTLiteCluster.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 // local
