@@ -1,9 +1,6 @@
 // $Id$
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 #include "Event/ODIN.h" // event & run number
 #include "GaudiKernel/IRegistry.h" // IOpaqueAddress
 // local

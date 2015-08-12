@@ -4,6 +4,9 @@
 ! Purpose     : DV Filtering tools
 !-----------------------------------------------------------------------------
 
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
+
 !======================= DaVinciFilters v1r2 2015-08-06 ======================
 
 ! 2015-06-30 - Gerhard Raven

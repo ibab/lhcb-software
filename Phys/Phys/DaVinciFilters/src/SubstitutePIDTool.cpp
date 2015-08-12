@@ -5,7 +5,6 @@
 #include <math.h>
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/StatEntity.h"
 #include "GaudiKernel/IAlgContextSvc.h"
 
