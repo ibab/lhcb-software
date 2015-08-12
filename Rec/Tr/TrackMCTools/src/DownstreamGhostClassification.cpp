@@ -1,5 +1,3 @@
-#include "GaudiKernel/ToolFactory.h"
-
 #include "Kernel/VeloChannelID.h"
 
 #include "DownstreamGhostClassification.h"

@@ -1,7 +1,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IRegistry.h"
 
 #include "Linker/LinkedTo.h"

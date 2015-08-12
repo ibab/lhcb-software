@@ -1,6 +1,3 @@
-// GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
-
 // LHCbKernel
 #include "Kernel/VeloChannelID.h"
 

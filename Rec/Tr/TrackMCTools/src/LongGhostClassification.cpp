@@ -1,6 +1,3 @@
-// GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
-
 #include "Kernel/VeloChannelID.h"
 
 #include "LongGhostClassification.h"

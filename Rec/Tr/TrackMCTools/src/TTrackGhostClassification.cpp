@@ -1,6 +1,3 @@
-// GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
-
 #include "Kernel/STChannelID.h"
 #include "Kernel/OTChannelID.h"
 

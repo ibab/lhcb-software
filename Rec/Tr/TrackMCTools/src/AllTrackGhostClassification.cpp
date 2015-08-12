@@ -1,6 +1,3 @@
-// GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
-
 // Event model
 #include "Event/Track.h"
 

@@ -1,7 +1,3 @@
-// $Id: TrackGhostClassificationBase.cpp,v 1.9 2009-02-24 16:58:28 mneedham Exp $
-// GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
-
 #include "TrackGhostClassificationBase.h"
 #include "MCInterfaces/ILHCbIDsToMCParticles.h"
 
