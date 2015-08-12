@@ -11,9 +11,6 @@
 
 #include <fstream>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "RichPhotonRecoTestAlg.h"
 

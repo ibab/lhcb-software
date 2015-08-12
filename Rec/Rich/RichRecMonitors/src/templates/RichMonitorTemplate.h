@@ -16,9 +16,6 @@
 #include "RichRecBase/RichRecHistoAlgBase.h"
 #include "RichRecBase/RichTrackSelector.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Event
 #include "Event/MCRichOpticalPhoton.h"
 

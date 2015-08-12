@@ -1,8 +1,4 @@
-// $Id: RichRecPIDTupleAlg.cpp,v 1.2 2009-07-30 11:18:33 jonrob Exp $
 // Include files
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "RichRecPIDTupleAlg.h"

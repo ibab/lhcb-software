@@ -15,9 +15,6 @@
 // base class
 #include "RichRecBase/RichRecTupleAlgBase.h"
 
-// from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
-
 // Event
 #include "Event/RichRecTrack.h"
 

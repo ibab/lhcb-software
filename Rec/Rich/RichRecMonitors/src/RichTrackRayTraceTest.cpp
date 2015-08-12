@@ -12,9 +12,6 @@
 // local
 #include "RichTrackRayTraceTest.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // namespace
 using namespace Rich::Rec;
 

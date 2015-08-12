@@ -15,9 +15,6 @@
 // base class
 #include "RichRecBase/RichRecTupleAlgBase.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Event
 #include "Event/MCRichOpticalPhoton.h"
 

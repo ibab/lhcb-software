@@ -15,9 +15,6 @@
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
 
-// from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
-
 // histogramming numbers
 #include "RichRecBase/RichDetParams.h"
 

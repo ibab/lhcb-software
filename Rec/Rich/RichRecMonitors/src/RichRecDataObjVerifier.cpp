@@ -9,8 +9,6 @@
  */
 //-----------------------------------------------------------------------------
 
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "RichRecDataObjVerifier.h"
 
