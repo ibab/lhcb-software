@@ -2,7 +2,6 @@
 
 #include <math.h>
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "DetDesc/HistoParam.h"
 #include <GaudiUtils/Aida2ROOT.h>
 

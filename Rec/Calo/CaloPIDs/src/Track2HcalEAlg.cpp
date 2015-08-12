@@ -3,10 +3,6 @@
 // ============================================================================
 #include "CaloTrack2IDAlg.h"
 // ============================================================================
-// GaudiKernel
-// ============================================================================
-#include "GaudiKernel/AlgFactory.h"
-// ============================================================================
 /** @class Track2HcalEAlg Track2HcalEAlg.cpp
  *  preconfigured instance of class  CaloTrack2IDAlg
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
