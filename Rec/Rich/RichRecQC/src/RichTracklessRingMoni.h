@@ -23,9 +23,6 @@
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Event
 #include "Event/RichRecStatus.h"
 #include "Event/RichRecTrack.h"

@@ -21,9 +21,6 @@
 // Base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
 
-// gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Kernel
 #include "RichRecBase/FastRingFitter.h"
 

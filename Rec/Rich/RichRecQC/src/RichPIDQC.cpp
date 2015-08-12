@@ -9,9 +9,6 @@
  *  @date   2002-06-13
  */
 //-----------------------------------------------------------------------------
-
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "RichPIDQC.h"
 

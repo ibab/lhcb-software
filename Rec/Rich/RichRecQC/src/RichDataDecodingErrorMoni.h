@@ -15,9 +15,6 @@
 // STD
 #include <sstream>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // base class
 #include "RichKernel/RichHistoAlgBase.h"
 

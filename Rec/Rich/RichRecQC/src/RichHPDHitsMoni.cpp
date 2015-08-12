@@ -12,9 +12,6 @@
 // STD
 #include <sstream>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "RichHPDHitsMoni.h"
 
