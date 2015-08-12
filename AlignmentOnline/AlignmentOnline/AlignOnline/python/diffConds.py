@@ -64,8 +64,8 @@ def diffOnlineOffline(run, delCond = True):
 
     import time, shlex
     
-    fileNames = dict( offline = 'conditions_offline.txt',
-                      online = 'conditions_online.txt')
+    fileNames = dict( offline = '/group/online/AligWork/CheckConstants/conditions_offline.txt',
+                      online = '/group/online/AligWork/CheckConstants/conditions_online.txt')
 
     for fileName in fileNames.values():
         if os.path.exists(fileName):

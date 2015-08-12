@@ -98,6 +98,5 @@ if __name__ == '__main__':
         else:
             addAnalisedRun(run, bads_fileName)
             sendEmail(run, diff)
-
     unlock()
         

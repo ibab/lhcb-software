@@ -3,6 +3,9 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-08-12 - Giulio Dujany
+ - Absolute path for files used to compare online-offline conditions
+
 ! 2015-08-06 - Giulio Dujany
  - ADSCollector delete Escher output after reading it
  - disable run check handler
