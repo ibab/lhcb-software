@@ -5,7 +5,6 @@
 // GSL                   
 #include "gsl/gsl_math.h"
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 // from Event
 #include "Event/Track.h"

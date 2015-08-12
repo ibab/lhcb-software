@@ -5,12 +5,9 @@
 // GSL
 #include "gsl/gsl_math.h"
 //from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/GaudiException.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IAlgTool.h"
 // from Event
 #include "Event/Track.h"
