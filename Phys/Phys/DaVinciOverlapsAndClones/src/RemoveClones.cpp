@@ -2,9 +2,6 @@
 
 #include <algorithm>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // from DaVinci
 #include "Kernel/ICheckOverlap.h"
 

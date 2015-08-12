@@ -2,8 +2,6 @@
 
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "Event/Track.h"
 #include "Event/Measurement.h"
 // #include "Event/VeloClusterOnStoredTrack.h"

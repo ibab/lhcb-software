@@ -6,9 +6,6 @@
 
 #include <algorithm>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 #include "Kernel/LHCbID.h"
 #include "Kernel/HashIDs.h"
 

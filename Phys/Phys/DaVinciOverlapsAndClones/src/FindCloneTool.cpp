@@ -2,8 +2,6 @@
 
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 // from LHCb
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"

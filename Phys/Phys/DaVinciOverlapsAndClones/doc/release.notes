@@ -3,6 +3,8 @@
 ! Responsible : DV Maintainer
 ! Purpose     : Tools for dealing with overlaps and clones
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= DaVinciOverlapsAndClones v1r0 2014-09-30 =========================
 

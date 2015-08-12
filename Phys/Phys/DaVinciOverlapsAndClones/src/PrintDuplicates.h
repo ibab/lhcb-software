@@ -8,9 +8,6 @@
 #include <sstream>
 #include <set>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Kernel
 #include "Kernel/DaVinciAlgorithm.h"
 #include "Kernel/LHCbID.h"
