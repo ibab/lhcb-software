@@ -25,7 +25,7 @@ __all__     = (
 # =============================================================================
 import ROOT
 from   Ostap.PyRoUts   import cpp, VE,SE,iszero,hID   
-import Ostap.ZipShelve as     ZipShelve  ## needed to store the weights&histos 
+import Ostap.ZipShelve as     DBASE ## needed to store the weights&histos 
 # =============================================================================
 # logging 
 # =============================================================================
@@ -41,7 +41,47 @@ logger.info ( 'Set of utitilities for re-weigthing')
 #  @date   2014-05-10
 class Weight(object) :
     """
-    Helper class for semi-automatic reweighting of data 
+    Helper class for semi-automatic reweighting of data
+
+    It reads various ``weigth components'' from DBASE and calculates
+    the ``global'' event weight via smiple accumulation of weights
+    
+    Simplest case: calculate weights for one variable.
+    
+    factors = [ ( fun , name ) ] 
+    where ``fun'' is a function to get variabel from TTree/RooDataSet 
+    and   ``name'' is address in data base with reweighting information 
+    e.g.
+    
+    # factors = [ ( lambda s : s.pt  , 'pt-data' ) ]
+    
+    It assumes, that DATA base has an entry with name 'pt-data', such
+    that
+    
+    # funcs = database['pt-data']
+    
+    Here ``func'' will be function/callable or list of functions/calables
+    with weights:
+    
+    # pt = fun ( entry ) 
+    # w  = 1.0    
+    # w *= func ( pt )              ## for the single function/callable
+    # for f in funcs : w*= f ( pt ) ## for list of functions/callables  
+    
+    quantity ``w'' will be am event  weight
+    
+    if list ``factors'' constains more than one entry.,
+    to each entry weigth is calculated independently and total weight
+    is a product of individual weights..
+
+    For smiplistic case one can put some storable function or function object
+    # db['pt-data'] = math.exp
+    # db['pt-data'] = [ math.exp , math.cosh ] ## List of object also works:
+    
+    For realistic case the weights usually stored as (a list of) 1D or 2D historgams
+    # db['pt-data'] = [h1,h2,h3,...,hn]
+    where h1,...,hn are iteratively obtained histograms with corrections, such as
+    the total correction is calculated by the product of them
     """
     def __init__ ( self                   ,
                    dbase   = "weights.db" , ## the name of data base with the weights 
@@ -57,7 +97,7 @@ class Weight(object) :
         if not factors : return
 
         ## open database 
-        with ZipShelve.open ( dbase , 'r' ) as db : ## READONLY
+        with DBASE.open ( dbase , 'r' ) as db : ## READONLY
             
             for k in db :
                 e = db[k]
@@ -70,6 +110,10 @@ class Weight(object) :
                 funval  = f[0]  ## accessor to the variable 
                 funname = f[1]  ## address  in database 
 
+                if isinstance ( funval , str ) :
+                    varnam = funval 
+                    funval = lambda s : getattr ( s , varnam )
+                    
                 ## 
                 functions  = db.get ( funname , [] ) ## db[ funname ]
                 if not functions :
@@ -77,13 +121,16 @@ class Weight(object) :
 
                 merge = True
                 if 2 < len ( f ) : merge = f[2] 
-
-                ## merge list of functions into single function 
-                if merge and functions : 
                 
-                    single_func = functions[0]
+                if not instance (  functions , ( list , tuple ) ) :
+                    functions = [ functions ]
                     
-                    for fun in functions [ 1: ] :
+                ## merge list of functions into single function 
+                if merge and 1 < len ( functions)  : 
+                
+                    single_func = functions[0] * functions [1] 
+                    
+                    for fun in functions [2:] :
                         single_func *= fun
                             
                     functions  = [ single_func ]
@@ -155,8 +202,6 @@ def makeWeights  ( dataset                 ,
                    delta    = 0.001        ,    ## delta for weigth variance 
                    debug    = True         ) :  ## save intermediate information in DB 
 
-
-
     more = False 
     ## loop over plots 
     for r in plots  :
@@ -164,14 +209,13 @@ def makeWeights  ( dataset                 ,
         what    = r [0]         ## variable/function to plot/compare 
         how     = r [1]         ## weight or additional cuts 
         address = r [2]         ## address in database 
-        hdata0  = r [3]                          .Clone ( hID () ) ## original "DATA" histogram
-        hmc0    = r [4] if 4 < len(r) else hdata0.Clone ( hID () ) ## original "MC"   histogram 
+        hdata0  = r [3]                          .clone () ## original "DATA" histogram
+        hmc0    = r [4] if 4 < len(r) else hdata0.clone () ## original "MC"   histogram 
 
         #
         ## black magic to take into account the difference in bins and normalizations
         # 
         hdata = hdata0.rescale_bins ( 1.0   )
-        ## hdata . scale               ( 1.0   )
         
         hmean  = hdata.mean()             ## normalization point
         #
@@ -192,7 +236,6 @@ def makeWeights  ( dataset                 ,
         ## black magic to take into account the difference in bins and normalizations
         # 
         hmc = hmc0.rescale_bins ( 1.0 )
-        ## hmc.scale               ( 1.0 )
         
         #
         if isinstance ( hmc , ROOT.TH2 ) : hmc /= hmc ( *hmean )
@@ -202,19 +245,12 @@ def makeWeights  ( dataset                 ,
         ## calculate  the reweighting factor : a bit conservative (?)
         power = min ( 2.0 , len ( plots ) )                   ## NB!
         #  this is the only important line
-        #  try to explot finer bining if possible 
+        #  try to exploit finer bining if possible 
         if len ( hmc ) >= len( hdata )  : 
             w     = ( ( 1.0   / hmc ) * hdata ) ** ( 1.0 / power )  ## NB!
         else :
             w     = ( ( hdata / hmc )         ) ** ( 1.0 / power )  ## NB!
             
-        #
-        ## 
-        # 
-        save = True
-        # rcnt = w.is_constant ( 0.001 , 1000 , 0.95 , delta = 0.001  )
-        # if rcnt : save = False
-        
         #
         ## get the statistics of weights 
         #
@@ -225,14 +261,14 @@ def makeWeights  ( dataset                 ,
         #
         wvar = cnt.rms()/cnt.mean()
         logger.info ( 'Reweighting "%-.15s: Mean/minmax:%s/(%.4f,%.4f) Vars:%s[%%]' %
-                      ( address    ,
-                        cnt.mean() ,
+                      ( address         ,
+                        cnt.mean()      ,
                         cnt.minmax()[0] ,
                         cnt.minmax()[1] , wvar * 100 ) ) 
         #
         ## make decision based on variance of weights 
-        # 
-        if wvar.value() <= delta / len ( plots ) :
+        #
+        if wvar.value() <= delta / len ( plots ) : ## small variance? 
             save = False
             logger.info("No more reweighting for %s [%.3f%%]" %  ( address , wvar * 100 ) ) 
         else            :
@@ -244,10 +280,10 @@ def makeWeights  ( dataset                 ,
         if compare :
             compare ( hdata0 , hmc0 , address )
         
-        ## update dat abase 
+        ## update data base 
         if save and database and address :
-            with ZipShelve.open ( database ) as db :
-                
+            with DBASE.open ( database ) as db :
+
                 db[address] = db.get( address , [] ) + [ w ]
                 
                 if debug :
@@ -261,8 +297,6 @@ def makeWeights  ( dataset                 ,
         del hdata0, hmc0, hdata, hmc, w  
         
     return more
-
-## return (hdata0,hmc0),(hdata,hmc) 
 
 ## some simple comparsion 
 def hCompare ( data , mc , title = '' , spline = True ) :

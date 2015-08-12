@@ -25,7 +25,7 @@ __all__     = ()  ## nothing to be imported
 # =============================================================================
 import ROOT, random, math, os 
 from   Ostap.PyRoUts   import *
-import Ostap.ZipShelve as     ZipShelve
+import Ostap.ZipShelve as     DBASE
 # =============================================================================
 # logging 
 # =============================================================================
@@ -72,16 +72,15 @@ if not os.path.exists( testdatadb ) :
     
     ## store DATA in DBASE 
     logger.info ( 'Test data will be stored in DBASE "%s"' % testdatadb  )   
-    db = ZipShelve.open( testdatadb , 'c' )
-    db['DATAhistorgam'] = hdata 
-    db['MCtree']        = mctree
-    db.close() 
+    with DBASE.open( testdatadb , 'c' ) as db : 
+        db['DATAhistorgam'] = hdata 
+        db['MCtree']        = mctree
 
 #
 ## read data from DB
 #
 logger.info ( 'Test data will be fetched from DBASE "%s"' % testdatadb )   
-with ZipShelve.open ( testdatadb , 'r' ) as db :
+with DBASE.open ( testdatadb , 'r' ) as db :
     hdata  = db['DATAhistorgam']
     mctree = db['MCtree']        
 
@@ -96,7 +95,7 @@ dbname = 'reweighting.db'
 import os
 if not os.path.exists( dbname ) :
     logger.info('Create new weights DBASE') 
-    db = ZipShelve.open ( dbname , 'c' ) ##  create new empty db 
+    db = DBASE.open ( dbname , 'c' ) ##  create new empty db 
     db.close()
 else :
     logger.info('Existing weights DBASE will be used') 
