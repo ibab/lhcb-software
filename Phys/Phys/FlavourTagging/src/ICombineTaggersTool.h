@@ -3,7 +3,6 @@
 #define ICOMBINETAGGERSTOOL_H 1
 
 #include <string>
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IAlgTool.h"
 
 #include "Kernel/ITagger.h" 

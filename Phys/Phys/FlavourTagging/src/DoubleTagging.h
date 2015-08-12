@@ -3,8 +3,6 @@
 #define DOUBLETAGGING_H 1
 
 // Include files
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "Kernel/DaVinciAlgorithm.h"
 

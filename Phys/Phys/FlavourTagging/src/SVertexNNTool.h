@@ -5,7 +5,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
-#include "GaudiKernel/ToolFactory.h"
 #include "FlavourTagging/ITaggingUtils.h"
 
 #include "Kernel/IVertexFit.h"

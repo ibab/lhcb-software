@@ -6,6 +6,8 @@
 !                                               ---> Julian Wishahi (2015--now)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !====================== FlavourTagging v14r0 2015-07-23 ======================
 

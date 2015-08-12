@@ -1,5 +1,4 @@
 // Include files 
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/Property.h"
 // local
 #include "BTagging.h"

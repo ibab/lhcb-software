@@ -3,7 +3,6 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/ToolFactory.h"
 // from Event
 
 class IDistanceCalculator;

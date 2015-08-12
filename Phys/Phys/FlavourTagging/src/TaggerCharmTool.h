@@ -10,7 +10,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
-#include "GaudiKernel/ToolFactory.h"
 
 // from Event
 #include "Event/FlavourTag.h"

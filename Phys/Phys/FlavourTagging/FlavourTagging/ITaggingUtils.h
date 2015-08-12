@@ -2,7 +2,6 @@
 #define ITAGGINGUTILS_H 1
 
 #include <string>
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/Particle.h"
 #include "Event/RecVertex.h"

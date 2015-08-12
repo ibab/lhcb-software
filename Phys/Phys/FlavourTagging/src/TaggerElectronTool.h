@@ -5,7 +5,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
-#include "GaudiKernel/ToolFactory.h"
 // from Event
 #include "Kernel/ITagger.h"
 #include "CaloUtils/ICaloElectron.h"
