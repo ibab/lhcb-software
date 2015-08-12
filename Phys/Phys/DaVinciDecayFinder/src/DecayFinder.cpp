@@ -5,7 +5,6 @@
 #include <algorithm>
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/GaudiException.h"
 #include "Event/Particle.h"
 
