@@ -14,7 +14,6 @@
 
 // From Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
-#include "GaudiKernel/ToolFactory.h"
 
 // All code is in general Rich reconstruction namespace
 using namespace Rich::Rec::MC;

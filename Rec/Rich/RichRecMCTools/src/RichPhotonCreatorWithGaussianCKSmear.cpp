@@ -10,9 +10,6 @@
  */
 //-------------------------------------------------------------------------------
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "RichPhotonCreatorWithGaussianCKSmear.h"
 

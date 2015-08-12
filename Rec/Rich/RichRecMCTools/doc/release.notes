@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones   Christopher.Rob.Jones@cern.ch
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= RichRecMCTools v2r32 2015-04-21 =========================
 ! 2015-03-09 - Chris Jones
