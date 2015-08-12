@@ -1,9 +1,6 @@
 // $Id: PVReFitter.cpp,v 1.14 2009-10-09 10:12:32 xieyu Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
-
 #include "Event/VertexBase.h"
 #include "Event/RecVertex.h"
 #include "Event/ProtoParticle.h"

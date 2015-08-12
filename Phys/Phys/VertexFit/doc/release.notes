@@ -3,6 +3,8 @@
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !======================= VertexFit v6r21 2015-04-22 ========================
 

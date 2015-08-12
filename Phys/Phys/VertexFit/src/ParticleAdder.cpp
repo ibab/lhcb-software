@@ -1,7 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "Event/Vertex.h"
 #include "Event/Particle.h"

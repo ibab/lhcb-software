@@ -1,9 +1,6 @@
 // $Id: DirectionFitter.cpp,v 1.3 2007-01-12 14:17:53 ranjard Exp $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
-
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"

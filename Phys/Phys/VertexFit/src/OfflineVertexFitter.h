@@ -7,7 +7,7 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/IAlgorithm.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
 // Event model

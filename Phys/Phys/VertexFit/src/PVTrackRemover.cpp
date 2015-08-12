@@ -1,9 +1,6 @@
 // $Id: $
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 //
 #include "TrackInterfaces/IPVOfflineTool.h"
 #include "Event/Track.h"

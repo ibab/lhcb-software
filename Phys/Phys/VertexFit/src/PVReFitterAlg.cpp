@@ -1,7 +1,4 @@
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-//#include "GaudiKernel/ObjectVector.h"
 // LHCb
 #include <Event/RecVertex.h>
 #include <Event/Particle.h>

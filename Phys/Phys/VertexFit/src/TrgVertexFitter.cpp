@@ -1,12 +1,11 @@
 // $Id: TrgVertexFitter.cpp,v 1.30 2009-09-11 17:15:09 jonrob Exp $
 // Include files
+#include <cmath>
 #include "gsl/gsl_sys.h"
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "Event/Vertex.h"
 #include "Event/Particle.h"
-#include "GaudiAlg/CheckForNaN.h" // lfin
 
 #include "Kernel/IParticleStuffer.h"
 
@@ -332,7 +331,7 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX,
     return StatusCode::FAILURE;
   }
   const double invDet = 1./det ;
-  if ( !lfin(invDet) || lnan(invDet) )
+  if ( !std::isfinite(invDet) || std::isnan(invDet) )
   { // that's probably not needed anymore
     return Warning("Position covariance matrix determinant cannot be inverted",StatusCode::FAILURE,0);
   }

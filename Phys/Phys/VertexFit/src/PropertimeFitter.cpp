@@ -2,7 +2,6 @@
 // Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
 #include "Event/Vertex.h"
