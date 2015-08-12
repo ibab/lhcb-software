@@ -1,4 +1,3 @@
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "CaloUtils/CaloMomentum.h"
 #include "Event/CaloCluster.h"

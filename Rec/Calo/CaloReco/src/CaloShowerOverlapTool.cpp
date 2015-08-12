@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 #include "CaloUtils/CaloAlgUtils.h"
 #include "Event/CaloDataFunctor.h"
 #include "CaloDet/DeCalorimeter.h"

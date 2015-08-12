@@ -3,6 +3,8 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= CaloReco v5r25 2015-04-21 =========================
 ! 2015-04-15 - Olivier Deschamps

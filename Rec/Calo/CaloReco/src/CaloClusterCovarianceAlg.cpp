@@ -2,8 +2,6 @@
 #define CALORECO_CALOCLUSTERCOVARIANCEALG_CPP 1 
 /// ===========================================================================
 // Include files
-// from Gaudi
-#include  "GaudiKernel/AlgFactory.h"
 #include  "Event/CaloCluster.h"
 #include  "CaloInterfaces/ICaloClusterTool.h"
 #include  "SubClusterSelectorTool.h"

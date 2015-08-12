@@ -1,7 +1,5 @@
 // ============================================================================
 // Include files
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 // Event 
 #include "Event/CaloCluster.h"
 #include "Event/CaloDigit.h"

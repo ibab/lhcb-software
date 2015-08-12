@@ -1,6 +1,5 @@
 // ============================================================================
 // Include files
-#include "GaudiKernel/ToolFactory.h"
 #include "CaloDet/DeCalorimeter.h"
 #include "CaloUtils/CaloAlgUtils.h"
 #include "ClusterSpreadTool.h"

@@ -3,7 +3,6 @@
 #include <numeric>
 #include <algorithm>
 #include <cmath>
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/CaloDataFunctor.h"
 #include "CaloDet/DeCalorimeter.h"
 #include "Event/CellID.h"

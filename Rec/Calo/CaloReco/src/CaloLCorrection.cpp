@@ -1,6 +1,5 @@
 // ============================================================================
 // Include files
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "Event/CaloHypo.h"
 #include "CaloDet/DeCalorimeter.h"

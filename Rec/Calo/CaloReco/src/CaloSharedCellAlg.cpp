@@ -1,7 +1,6 @@
 // ===========================================================================
 // Include files
 // from GaudiKernel
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
 // CaloGen 
 #include "CaloKernel/CaloException.h"

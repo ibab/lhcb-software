@@ -4,7 +4,6 @@
 #include <numeric>
 #include <algorithm>
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h" 
 // CaloInterfaces 
 #include "CaloInterfaces/ICaloClusterTool.h"

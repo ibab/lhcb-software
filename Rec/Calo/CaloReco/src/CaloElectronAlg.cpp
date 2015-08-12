@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <functional>
 // ============================================================================
-#include "GaudiKernel/AlgFactory.h"
 #include "CaloUtils/CaloDataFunctor.h"
 #include "Event/CellID.h"
 #include "Event/CaloCluster.h"

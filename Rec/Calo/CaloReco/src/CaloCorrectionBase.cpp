@@ -1,6 +1,5 @@
 // Include files 
 
-#include "GaudiKernel/ToolFactory.h" 
 #include "Event/ProtoParticle.h"
 #include "CaloCorrectionBase.h"
 

@@ -1,4 +1,3 @@
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "CaloSelectClusterWithPrs.h"
 

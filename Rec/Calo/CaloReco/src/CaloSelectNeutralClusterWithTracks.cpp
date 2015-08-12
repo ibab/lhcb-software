@@ -1,6 +1,4 @@
 // ============================================================================
-// GaudiKernel
-#include "GaudiKernel/ToolFactory.h"
 //CaloUtils
 #include "CaloUtils/Calo2Track.h"
 #include "CaloUtils/CaloAlgUtils.h"

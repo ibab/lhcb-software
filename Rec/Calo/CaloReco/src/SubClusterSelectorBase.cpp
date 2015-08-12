@@ -1,8 +1,6 @@
 // ============================================================================
 // Include files 
 // ============================================================================
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 // CaloInterfaces
 #include "CaloInterfaces/ICaloClusterTool.h"
 // CaloDet 

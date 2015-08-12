@@ -7,7 +7,6 @@
 #include <functional>
 #include <memory>
 // ============================================================================
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
