@@ -3,9 +3,6 @@
 // local
 #include "TrackAssociator.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // from LHCb
 #include "Event/Track.h"
 #include "Linker/LinkerWithKey.h"

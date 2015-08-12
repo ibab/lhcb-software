@@ -3,6 +3,8 @@
 ! Responsible : Edwin Bos
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= TrackAssociators v2r12 2015-04-21 =========================
 ! 2015-03-31 - Michel De Cian
