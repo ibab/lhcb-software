@@ -1,5 +1,5 @@
 // $Id: ParticleTransporter.cpp,v 1.24 2009-09-11 17:14:05 jonrob Exp $
-
+#include <cmath>
 // local
 #include "ParticleTransporter.h"
 
@@ -184,7 +184,7 @@ StatusCode
 ParticleTransporter::checkParticle(const LHCb::Particle& transParticle)
 {
   const double e = transParticle.momentum().E();
-  if ( lfin(e) && !lnan(e) )
+  if ( std::isfinite(e) && !std::isnan(e) )
   {
     if ( msgLevel(MSG::VERBOSE) )
     {

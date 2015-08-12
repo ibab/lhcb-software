@@ -5,8 +5,6 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiAlg/CheckForNaN.h" // lfin
-#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // Event model
 #include "Event/Particle.h"
