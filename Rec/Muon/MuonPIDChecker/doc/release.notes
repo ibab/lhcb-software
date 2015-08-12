@@ -1,6 +1,8 @@
 ! Package     : MuonPIDChecker
 ! Responsible : E. Polycarpo, H. Lopes
 !----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= MuonPIDChecker v5r5 2015-05-26 =========================
 ! 2015-05-17 - Michel De Cian

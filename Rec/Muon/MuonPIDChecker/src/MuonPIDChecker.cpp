@@ -6,9 +6,6 @@
 #include "boost/assign/list_of.hpp"
 #include <boost/lexical_cast.hpp>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 #include "Linker/LinkedTo.h"
 
 // local
