@@ -9,9 +9,6 @@
  */
 //-----------------------------------------------------------------------------
 
-// from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
-
 // local
 #include "ProtoParticleCALOFilter.h"
 
