@@ -1,8 +1,5 @@
 // Include files 
 // -------------
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // from TrackEvent
 #include "Event/KalmanFitResult.h"
 #include "Event/FitNode.h"

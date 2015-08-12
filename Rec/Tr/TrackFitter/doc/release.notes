@@ -2,6 +2,8 @@
 ! Package     : Tr/TrackFitter
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= TrackFitter v5r7 2015-07-20 =========================
 ! 2015-07-20 - Michel De Cian
