@@ -1,8 +1,6 @@
-// $Id: $
 // Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "DetDesc/Condition.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 #include "Event/Track.h"

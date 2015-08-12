@@ -3,6 +3,8 @@
 ! Responsible : Olivier Callot
 ! Purpose     : Reconstruct the PV in a fast way
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= FastPV v1r2 2013-02-14 =========================
 ! 2012-12-20 - Marco Clemencic
