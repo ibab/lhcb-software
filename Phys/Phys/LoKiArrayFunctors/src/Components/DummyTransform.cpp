@@ -1,7 +1,6 @@
 // $Id:$ 
 // ============================================================================
 #include "LoKi/DictTransform.h"
-#include "GaudiKernel/ToolFactory.h"
 // ============================================================================
 #include <iostream>
 #include <boost/foreach.hpp>
