@@ -18,9 +18,6 @@
 // Base class
 #include "RichRecBase/RichRecAlgBase.h"
 
-// gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // interfaces
 #include "RichRecBase/IRichTrackSelector.h"
 #include "RichRecBase/IRichPID.h"

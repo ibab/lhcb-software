@@ -18,9 +18,6 @@
 // Base class
 #include "RichRecBase/RichRecAlgBase.h"
 
-// gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Kernel
 #include "RichKernel/RichMap.h"
 

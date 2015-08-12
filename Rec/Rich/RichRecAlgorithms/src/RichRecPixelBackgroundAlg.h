@@ -15,9 +15,6 @@
 // Base class
 #include "RichRecBase/RichRecAlgBase.h"
 
-// gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // interfaces
 #include "RichRecBase/IRichPixelBackgroundEsti.h"
 

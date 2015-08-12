@@ -15,9 +15,6 @@
 // Base class
 #include "RichRecBase/RichRecAlgBase.h"
 
-// gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Event
 #include "Event/RichRecStatus.h"
 #include "Event/ProcStatus.h"
