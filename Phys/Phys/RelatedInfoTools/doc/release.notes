@@ -4,6 +4,9 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
+
 ! 2015-08-10 - Chris Jones
  - Update the way various tool use the 'getIDVAlgorithm' merthod to work as
    public tools.

@@ -7,7 +7,6 @@
 
 // Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/PhysicalConstants.h"
 
 // Event

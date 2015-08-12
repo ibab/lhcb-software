@@ -2,7 +2,6 @@
 #define ADDRELATEDINFO_H 1
 
 // Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/Property.h"
 
 // Kernel

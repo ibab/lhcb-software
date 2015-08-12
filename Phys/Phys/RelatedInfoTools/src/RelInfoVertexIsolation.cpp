@@ -1,4 +1,3 @@
-#include "GaudiKernel/ToolFactory.h"
 #include "Event/Particle.h"
 // kernel
 #include "GaudiKernel/PhysicalConstants.h"

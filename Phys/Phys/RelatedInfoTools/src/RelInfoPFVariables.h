@@ -3,7 +3,6 @@
 
 // Include files
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IRelatedInfoTool.h"            // Interface
 
