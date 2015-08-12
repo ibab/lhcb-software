@@ -2,8 +2,6 @@
 #define SPLITJETS_H 1
 
 // Include files
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 // from DaVinci.
 #include "Kernel/IParticleCombiner.h"
 #include "Kernel/DaVinciAlgorithm.h"

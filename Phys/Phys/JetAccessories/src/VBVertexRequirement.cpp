@@ -1,9 +1,6 @@
 // $Id: $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "VBVertexRequirement.h"
 

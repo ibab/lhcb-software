@@ -3,9 +3,6 @@
 #include <boost/foreach.hpp>
 #include "boost/algorithm/string/replace.hpp"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // from LHCb
 
 #include "Event/ProtoParticle.h"

@@ -7,10 +7,8 @@
 // ============================================================================
 // from Gaudi
 // ============================================================================
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IAlgTool.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/ITupleTool.h"
 // ============================================================================
 // DaVinci Kernel
@@ -22,7 +20,6 @@
 // ============================================================================
 #include "Event/Particle.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "Kernel/IContextTool.h"
 #include <Kernel/IDistanceCalculator.h>
 #include "CaloDet/DeCalorimeter.h"

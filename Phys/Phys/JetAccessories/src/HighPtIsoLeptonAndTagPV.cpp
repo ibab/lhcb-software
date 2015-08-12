@@ -11,7 +11,6 @@
 #include <Kernel/IVertexFit.h>
 #include "LHCbMath/LHCbMath.h"
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiAlg/ITupleTool.h"
 #include "Kernel/DaVinciAlgorithm.h"
 //#include <Kernel/IGeomDispCalculator.h>
