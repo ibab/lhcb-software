@@ -12,13 +12,24 @@
 
 using namespace Alignment::AlignmentMonitoring;
 
-// Constructor
+// Constructors
+CompareConstants::CompareConstants()
+  : CompareConstants("","","")
+{
+}
+
 CompareConstants::CompareConstants(const char* system, const char* ref, const char* dir)
 : m_verbose(false)
 , m_system(system)
 , m_ref(ref)
 , m_dir(dir)
 {
+  m_dofs.push_back("Tx");
+  m_dofs.push_back("Ty");
+  m_dofs.push_back("Tz");
+  m_dofs.push_back("Rx");
+  m_dofs.push_back("Ry");
+  m_dofs.push_back("Rz");
   SetRanges();
 }
 
@@ -39,8 +50,9 @@ CompareConstants::Compare(const char* ver)
     return;
   }
   for (auto iel : m_constRef) {
-    std::vector<double> limits = GetLimits(iel.first.c_str());
-    m_mapWarnings[iel.first] = CheckConstant(iel.second - m_constAlt[iel.first], limits[0], limits[1]);
+    m_mapWarnings[iel.first] = CheckConstant(iel.first.c_str(), iel.second - m_constAlt[iel.first]);
+    //    std::vector<double> limits = GetLimits(iel.first.c_str());
+    //    m_mapWarnings[iel.first] = CheckConstant(iel.second - m_constAlt[iel.first], limits[0], limits[1]);
     if (m_verbose)
       std::cout << iel.first << ": "
                 << iel.second << " - " << m_constAlt[iel.first] << " = " << iel.second - m_constAlt[iel.first]
@@ -49,6 +61,26 @@ CompareConstants::Compare(const char* ver)
     FillDeltaHist(iel.first.c_str());
   }
   return;
+}
+
+WarningLevel
+CompareConstants::CheckConstant(const char* name, int dof, double delta)
+{
+  return CheckConstant(name, m_dofs[dof].c_str(), delta);
+}
+
+WarningLevel
+CompareConstants::CheckConstant(const char* name, const char* dof, double delta)
+{
+  return CheckConstant( ( std::string(name)+std::string(".")+std::string(dof) ).c_str(), delta );
+}
+
+WarningLevel
+CompareConstants::CheckConstant(const char* name, double delta)
+{
+  std::vector<double> limits = GetLimits( name );
+  WarningLevel wnl = CheckConstant(delta, limits[0], limits[1]);
+  return wnl;
 }
 
 void

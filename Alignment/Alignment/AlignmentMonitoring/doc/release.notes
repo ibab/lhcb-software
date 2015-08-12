@@ -3,6 +3,11 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-08-12 - Maurizio Martinelli
+ - removed unnecessary compilation requirements
+ - added a constructor in CompareConstants and a couple of methods
+ - added more ranges in the reference file
+
 ! 2015-07-11 - Maurizio Martinelli
  - fixed a compilation error
  - added an example for the monitoring

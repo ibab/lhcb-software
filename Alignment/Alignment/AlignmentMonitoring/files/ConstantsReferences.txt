@@ -3,18 +3,27 @@
 
 # IT Global
 ITSystem\..*	0.00001	0.001
-ITT1\..*	0.00001	0.001
-ITT2\..*	0.00001	0.001
-ITT3\..*	0.00001	0.001
+ITT(1|2|3)\..*	0.00001	0.001
 ITT.*Box\.R(x|y)	0.00001	0.001
 ITT.*Box\.Rz	0.002	0.01
 ITT.*Box\.Tx	0.08	0.2
 ITT.*Box\.Ty	0.002	0.01
 ITT.*Box\.Tz	1.0	2.0
+# elements name
+IT	0.00001	0.001
+IT/Station(1|2|3)\..*	0.00001	0.001
+IT/Station.*Box\.R(x|y)	0.00001	0.001
+IT/Station.*Box\.Rz	0.002	0.01
+IT/Station.*Box\.Tx	0.08	0.2
+IT/Station.*Box\.Ty	0.002	0.01
+IT/Station.*Box\.Tz	1.0	2.0
 
 # IT Modules
 ITT.*Layer.*Ladder.*	0.00001	0.001
 ITT.*Layer.*	0.00001	0.001
+# elements name
+IT/.*Layer.*Ladder.*	0.00001	0.001
+IT/.*Layer.*	0.00001	0.001
 
 # TT Global
 TTSystem\..*	0.00001	0.001
@@ -23,6 +32,12 @@ TTb\..*		0.00001	0.001
 TT.*Layer\.T(x|y)	0.00001	0.001
 TT.*Layer\.Tz	0.2	0.5
 TT.*Layer\.R.*	0.00001	0.001
+# elements name
+TT\..*	0.00001	0.001
+TT/TT(a|b)\..*		0.00001	0.001
+TT/TT.*Layer\.T(x|y)	0.00001	0.001
+TT/TT.*Layer\.Tz	0.2	0.5
+TT/TT.*Layer\.R.*	0.00001	0.001
 
 # TT Modules
 TT.*LayerR.*Module.*\.Tx	0.1	0.2
@@ -38,6 +53,20 @@ T(1|2|3)(X1|U|V|X2)Q(0|1|2|3)\.Tx	0.2	0.4
 T(1|2|3)(X1|U|V|X2)Q(0|1|2|3)\.Tz	0.2	0.5
 T(1|2|3)(X1|U|V|X2)Q(0|1|2|3)\.Rz	0.001	0.01
 T(1|2|3)(X1|U|V|X2)Q(0|1|2|3)\.(Ty|Rx|Ry)	0.0005	0.002
+# elements name
+OT\..*	0.00001	0.001
+OT/T(1|2|3)(X1|U|V|X2)(A|C)Side\.Tx	0.2	0.4
+OT/T(1|2|3)(X1|U|V|X2)(A|C)Side\.Tz	0.2	0.5
+OT/T(1|2|3)(X1|U|V|X2)(A|C)Side\.Rz	0.001	0.01
+OT/T(1|2|3)(X1|U|V|X2)(A|C)Side\.(Ty|Rx|Ry)	0.0005	0.002
+OT/T(1|2|3)(X1U|VX2)(A|C)Side\.Tx	0.2	0.4
+OT/T(1|2|3)(X1U|VX2)(A|C)Side\.Tz	0.2	0.5
+OT/T(1|2|3)(X1U|VX2)(A|C)Side\.Rz	0.001	0.01
+OT/T(1|2|3)(X1U|VX2)(A|C)Side\.(Ty|Rx|Ry)	0.0005	0.002
+OT/T(1|2|3)(X1U|VX2)\.Tx	0.2	0.4
+OT/T(1|2|3)(X1U|VX2)\.Tz	0.2	0.5
+OT/T(1|2|3)(X1U|VX2)\.Rz	0.001	0.01
+OT/T(1|2|3)(X1U|VX2)\.(Ty|Rx|Ry)	0.0005	0.002
 
 # OT Modules
 T(1|2|3)(X1|U|V|X2)Q(0|1|2|3)M(1|2)\.Tx	0.25	0.4
@@ -46,3 +75,10 @@ T(1|2|3)(X1|U|V|X2)Q(0|1|2|3)M.*\.Ty	0.0001	0.001
 T(1|2|3)(X1|U|V|X2)Q(0|1|2|3)M.*\.Tz	0.00001	0.001
 T(1|2|3)(X1|U|V|X2)Q(0|1|2|3)M.*\.R(x|y)	0.00001	0.001
 T(1|2|3)(X1|U|V|X2)Q(0|1|2|3)M.*\.Rz	0.001	0.005
+# elements name
+T(1|2|3)(X1|U|V|X2)Q.*M(1|2)\.Tx	0.25	0.4
+T(1|2|3)(X1|U|V|X2)Q.*M[3-9].*\.Tx	0.1	0.3
+T(1|2|3)(X1|U|V|X2)Q.*M.*\.Ty	0.0001	0.001
+T(1|2|3)(X1|U|V|X2)Q.*M.*\.Tz	0.00001	0.001
+T(1|2|3)(X1|U|V|X2)Q.*M.*\.R(x|y)	0.00001	0.001
+T(1|2|3)(X1|U|V|X2)Q.*M.*\.Rz	0.001	0.005

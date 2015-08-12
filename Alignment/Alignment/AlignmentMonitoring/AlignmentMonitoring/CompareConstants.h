@@ -19,11 +19,15 @@ namespace Alignment
     {
     public:
       // Constructor
-      CompareConstants (const char* system="IT/ITGlobal/", const char* ref="v8", const char* dir="files/alignment/");
+      CompareConstants ();
+      CompareConstants (const char* system/*="IT/ITGlobal/"*/, const char* ref="v8", const char* dir="files/alignment/");
       // Destructor
       ~CompareConstants () {}
       // Methods
       void Compare(const char* ver);
+      WarningLevel CheckConstant(const char* name, const char* dof, double delta);
+      WarningLevel CheckConstant(const char* name, int dof, double delta);
+      WarningLevel CheckConstant(const char* name, double delta);
       WarningLevel CheckConstant(double delta, double d1, double d2);
       std::vector<double> GetLimits(const char* element);
       void FillDeltaHist(const char* element);
@@ -39,6 +43,7 @@ namespace Alignment
       std::string m_system;
       std::string m_ref;
       std::string m_dir;
+      std::vector<std::string> m_dofs;
       std::map<std::string, std::vector<double>> m_rngs;
       std::map<std::string, int> m_mapWarnings;
       std::map<std::string, double> m_constRef;
