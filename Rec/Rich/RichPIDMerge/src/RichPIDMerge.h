@@ -13,9 +13,6 @@
 // STL
 #include <unordered_set>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // base class
 #include "RichKernel/RichAlgBase.h"
 
