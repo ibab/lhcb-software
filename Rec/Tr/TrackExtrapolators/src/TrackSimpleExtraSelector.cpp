@@ -1,8 +1,5 @@
 #include "TrackSimpleExtraSelector.h"
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
 

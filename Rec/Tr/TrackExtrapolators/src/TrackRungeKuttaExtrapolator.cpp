@@ -8,7 +8,6 @@
   #pragma warning(pop)
 #endif
 #include "GaudiKernel/PhysicalConstants.h"
-#include "GaudiKernel/ToolFactory.h"
 #include "boost/optional.hpp"
 #include <sstream>
 

@@ -5,7 +5,6 @@
 #include "GaudiKernel/ToolHandle.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/ToolFactory.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackStateProvider.h"

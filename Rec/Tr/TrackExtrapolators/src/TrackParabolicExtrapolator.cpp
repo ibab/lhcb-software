@@ -2,7 +2,6 @@
 // -------------
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 using namespace Gaudi::Units;
 

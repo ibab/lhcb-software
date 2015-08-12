@@ -1,5 +1,4 @@
 
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 #include "DetDesc/Material.h"

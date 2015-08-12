@@ -9,7 +9,6 @@
 
 #include <set>
 
-#include "GaudiKernel/ToolFactory.h"
 #include "DetDesc/Material.h"
 #include "DetDesc/SolidTubs.h"
 #include "DetDesc/SolidBox.h"

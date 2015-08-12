@@ -3,6 +3,8 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= TrackExtrapolators v2r38 2015-07-20 ========================
 ! 2015-07-16 - Michel De Cian

@@ -1,7 +1,6 @@
 // from Gaudi
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
-#include "GaudiKernel/ToolFactory.h"
 
 // from TrackEvent
 #include "Event/TrackParameters.h"

@@ -1,8 +1,5 @@
 // Include files
 // -------------
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // from GSL
 #include "gsl/gsl_math.h"
 
