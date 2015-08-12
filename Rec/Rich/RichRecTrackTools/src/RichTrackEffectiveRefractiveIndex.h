@@ -13,7 +13,6 @@
 #define RICHRECTRACKTOOLS_RichTrackEffectiveRefractiveIndex_H 1
 
 // From Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 // Base class and interfaces

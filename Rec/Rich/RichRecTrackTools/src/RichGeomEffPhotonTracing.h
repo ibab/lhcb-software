@@ -13,7 +13,6 @@
 #define RICHRECTOOLS_RichGeomEffPhotonTracing_H 1
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
 // base class

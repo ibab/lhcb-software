@@ -18,9 +18,6 @@
 // base class
 #include "RichRecBase/RichRecToolBase.h"
 
-// Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // interfaces
 #include "RichRecBase/IRichGeomEff.h"
 #include "RichRecBase/IRichIsolatedTrack.h"

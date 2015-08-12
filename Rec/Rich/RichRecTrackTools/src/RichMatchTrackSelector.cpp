@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 /** @file RichMatchTrackSelector.cpp
  *
@@ -8,9 +7,6 @@
  *  @date   12/08/2006
  */
 //-----------------------------------------------------------------------------
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "RichMatchTrackSelector.h"

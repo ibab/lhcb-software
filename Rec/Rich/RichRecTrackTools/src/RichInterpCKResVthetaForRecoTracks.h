@@ -16,7 +16,6 @@
 #include "RichRecBase/RichRecToolBase.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
 
 // Event model

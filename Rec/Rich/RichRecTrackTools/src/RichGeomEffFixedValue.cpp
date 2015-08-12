@@ -9,9 +9,6 @@
  */
 //-----------------------------------------------------------------------------
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "RichGeomEffFixedValue.h"
 

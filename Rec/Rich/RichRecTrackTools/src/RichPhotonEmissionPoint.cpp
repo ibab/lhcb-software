@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 /** @file RichPhotonEmissionPoint.cpp
  *
@@ -8,8 +7,6 @@
  *  @date   15/03/2002
  */
 //-----------------------------------------------------------------------------
-
-#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "RichPhotonEmissionPoint.h"

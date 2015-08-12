@@ -1,4 +1,3 @@
-
 //-------------------------------------------------------------------------------------
 /** @file RichTrackCreatorFromRecoTracks.h
  *
@@ -11,9 +10,6 @@
 
 #ifndef RICHRECTOOLS_RichTrackCreatorFromRecoTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromRecoTracks_H 1
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichRecBase/RichTrackCreatorBase.h"

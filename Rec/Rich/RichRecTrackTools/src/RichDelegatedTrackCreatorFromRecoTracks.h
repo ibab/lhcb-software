@@ -13,7 +13,6 @@
 #define RICHRECTOOLS_RichDelegatedTrackCreatorFromRecoTracks_H 1
 
 // Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 

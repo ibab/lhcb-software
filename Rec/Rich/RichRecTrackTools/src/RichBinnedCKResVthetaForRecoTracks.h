@@ -15,9 +15,6 @@
 // base class
 #include "RichRecBase/RichRecToolBase.h"
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // Event model
 #include "Event/RichRecSegment.h"
 

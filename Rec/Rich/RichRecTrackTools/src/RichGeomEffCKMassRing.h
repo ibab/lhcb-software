@@ -13,7 +13,6 @@
 #define RICHRECTOOLS_RichGeomEffCKMassRing_H 1
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
 // base class

@@ -16,7 +16,6 @@
 #include <cmath>
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
 // base class
