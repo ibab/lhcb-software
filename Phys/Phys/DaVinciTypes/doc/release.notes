@@ -4,6 +4,8 @@
 ! Responsible : DaVinci coordinator
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !======================== DaVinciTypes v2r12 2015-05-27 ======================
 
