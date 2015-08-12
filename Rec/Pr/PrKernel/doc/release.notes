@@ -3,6 +3,8 @@
 ! Responsible : 
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= PrKernel v1r9 2015-04-21 =========================
 ! 2015-03-21 - Michel De Cian
