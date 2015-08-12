@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= ChargedProtoANNPID v2r11 2015-07-20 ======================
 ! 2015-06-13 - Chris Jones

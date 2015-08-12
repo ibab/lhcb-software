@@ -1,7 +1,4 @@
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "ChargedProtoANNPIDTool.h"
 

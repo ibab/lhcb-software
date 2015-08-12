@@ -18,7 +18,6 @@
 
 // Gaudi
 #include "GaudiKernel/IJobOptionsSvc.h"
-#include "GaudiKernel/AlgFactory.h"
 
 // FPE exception protection
 #include "Kernel/FPEGuard.h"
