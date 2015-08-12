@@ -1,11 +1,9 @@
-// $Id: SimplePVSeedTool.cpp,v 1.1 2009-12-16 11:51:51 witekma Exp $
 // Include files 
 
 // STL
 #include <cmath>
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/SystemOfUnits.h"
 
 // local
