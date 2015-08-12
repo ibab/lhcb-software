@@ -4,6 +4,9 @@
 ! Purpose     : Copy of C++ vector class library (VCL) www.agner.org/optimize
 !-----------------------------------------------------------------------------
 
+! 2015-08-12 - Chris Jones
+ - Update to upstream 1.17. 
+
 !========================= VectorClass v1r16 2015-02-23 =========================
 ! 2015-02-23 - Chris Jones
  - Version 1.16
