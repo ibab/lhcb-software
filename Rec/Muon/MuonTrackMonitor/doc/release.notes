@@ -3,6 +3,8 @@
 ! Responsible : Giacomo GRAZIANI
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= MuonTrackMonitor v2r9 2015-07-20 =========================
 ! 2015-07-20 - Michel De Cian
