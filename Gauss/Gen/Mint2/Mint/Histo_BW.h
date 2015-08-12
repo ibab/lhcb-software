@@ -21,10 +21,10 @@ using namespace std;
 class Histo_BW  : public BW_BW, virtual public ILineshape{
  public:
   
-  Histo_BW( const AssociatedDecayTree& tree): BW_BW(tree), _phaseSpaceHist(0)
+  Histo_BW( const AssociatedDecayTree& tree): BW_BW(tree), _runningWidthHist(0)
   {
-      TFile* f = new TFile(("RunningWidth_"+ (BW_BW::resonanceProperties()->nameFromPid(abs(mumsPID()))) + ".root").c_str());
-      _phaseSpaceHist = get_h(f, "phaseSpace");
+      TFile* f = TFile::Open(("RunningWidth_"+ (BW_BW::resonanceProperties()->nameFromPid(abs(mumsPID()))) + ".root").c_str());
+      _runningWidthHist = get_histo(f, "RunningWidth");
   }
 
   virtual std::string name() const{
@@ -34,25 +34,12 @@ class Histo_BW  : public BW_BW, virtual public ILineshape{
   virtual ~Histo_BW(){}
 
  protected:
-    TH1D* _phaseSpaceHist;
+    TH1D* _runningWidthHist;
     virtual double GofM(); 
-    TH1D* get_h(TFile* f, const std::string& hname){
-        TH1D* h=0;
-        if(0 == f) return 0;
-        cout << " got file ptr: " << f << endl;
-        if(0 != f){
-            h = (TH1D*) f->Get(hname.c_str());
-            if(0 != h){
-                cout << "got phase space histogram " 
-                << hname << "." << endl;
-            }else{
-                cout << "ERROR didn't get phase space histogram " 
-                << hname << "!!!" << endl;
-            }
-        }
-        return h;
-    }
- 
+    TH1D* get_histo(TFile* f, const std::string& hname); 
+    
+    //Double_t phaseSpace(Double_t *x, Double_t *par);
+    TH1D* producePhaseSpaceHist();
 };
 
 #endif

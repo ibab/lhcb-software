@@ -59,26 +59,40 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
 	 << endl;
   }
       
+  NamedParameter<string> _default3bodyBW("Default3bodyBW", (std::string) "old2bodyBW");
+  
+  if(tree->finalState().size()==3){
+      if(A_is_in_B("SBW_", lopt)){
+          if(dbThis) cout << "LineshapeMaker returns SBW for PID="<<  abs(tree->getVal().pdg())<< endl;
+          return new SBW(*tree);
+      }  
+      else if(A_is_in_B("FermiPS", lopt)){
+          if(dbThis) cout << "LineshapeMaker returns FermiPS_BW for PID="<<  abs(tree->getVal().pdg())<< endl;
+          return new FermiPS_BW(*tree);
+      }    
+      else if(A_is_in_B("HistoPS", lopt)){
+          if(dbThis) cout << "LineshapeMaker returns Histo_BW for PID="<<  abs(tree->getVal().pdg())<< endl;
+          return new Histo_BW(*tree);
+      }  
+      else if(A_is_in_B("SBW_", lopt)){
+          if(dbThis) cout << "LineshapeMaker returns SBW for PID="<<  abs(tree->getVal().pdg())<< endl;
+          return new SBW(*tree);
+      }  
+      else if((std::string)_default3bodyBW == "PhaseSpace"){
+          if(dbThis) cout << "LineshapeMaker returns Histo_BW for PID="<<  abs(tree->getVal().pdg())<< endl;
+          return new Histo_BW(*tree);
+      }  
+      else if((std::string)_default3bodyBW == "SBW"){
+          if(dbThis) cout << "LineshapeMaker returns SBW for PID="<<  abs(tree->getVal().pdg())<< endl;
+          return new SBW(*tree);
+      }  
+  }
+    
 
   if(A_is_in_B("SBW_"+anythingToString(abs(tree->getVal().pdg())), lopt)){
     if(dbThis) cout << "LineshapeMaker returns SBW for PID="<<  abs(tree->getVal().pdg())<< endl;
     return new SBW(*tree);
   }
-
-  if(A_is_in_B("SBW_", lopt) && tree->finalState().size()==3){
-        if(dbThis) cout << "LineshapeMaker returns SBW for PID="<<  abs(tree->getVal().pdg())<< endl;
-        return new SBW(*tree);
-  }  
-    
-  if(A_is_in_B("FermiPS", lopt) && tree->finalState().size()==3){
-        if(dbThis) cout << "LineshapeMaker returns FermiPS_BW for PID="<<  abs(tree->getVal().pdg())<< endl;
-        return new FermiPS_BW(*tree);
-  }    
-  
-  if(A_is_in_B("HistoPS", lopt) && tree->finalState().size()==3){
-        if(dbThis) cout << "LineshapeMaker returns Histo_BW for PID="<<  abs(tree->getVal().pdg())<< endl;
-        return new Histo_BW(*tree);
-  }     
     
   if(abs(tree->getVal().pdg()) == 9000221 || abs(tree->getVal().pdg()) == 999001 ){ // sigma
         if(A_is_in_B("Bugg", lopt)){
