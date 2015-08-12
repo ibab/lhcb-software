@@ -1,4 +1,3 @@
-#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/ToolHandle.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiAlg/GaudiHistoAlg.h"

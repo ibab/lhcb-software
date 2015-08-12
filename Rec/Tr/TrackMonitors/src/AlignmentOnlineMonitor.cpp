@@ -1,4 +1,3 @@
-#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/ToolHandle.h"
 #include "TrackInterfaces/ITrackProjector.h"

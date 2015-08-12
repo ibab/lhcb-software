@@ -1,6 +1,5 @@
 // Include files
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/Tuples.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/SystemOfUnits.h"

@@ -1,5 +1,4 @@
 #include "GaudiAlg/GaudiHistoAlg.h"
-#include "GaudiKernel/AlgFactory.h" 
 
 #include "GaudiKernel/ToolHandle.h"
 #include "Event/Track.h"

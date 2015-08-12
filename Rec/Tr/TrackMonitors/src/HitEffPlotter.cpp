@@ -1,5 +1,3 @@
-#include "GaudiKernel/AlgFactory.h"
-
 #include "HitEffPlotter.h"
 
 #include <limits>

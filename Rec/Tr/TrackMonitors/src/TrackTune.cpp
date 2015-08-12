@@ -3,7 +3,6 @@
 // ============================================================================
 
 #include "TrackTune.h"
-#include "GaudiKernel/AlgFactory.h"
 
 #include "Event/Particle.h"
 #include "Event/ProtoParticle.h"

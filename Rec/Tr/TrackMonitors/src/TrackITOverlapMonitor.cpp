@@ -8,7 +8,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/ToolHandle.h"
-#include "GaudiKernel/AlgFactory.h"
 
 // from TrackEvent
 #include "Event/Track.h"

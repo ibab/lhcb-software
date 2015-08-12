@@ -3,7 +3,6 @@
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "TrackInterfaces/ITrackSelector.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/ToolHandle.h"
 
 

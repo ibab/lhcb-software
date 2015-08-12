@@ -2,7 +2,6 @@
 #include <numeric>
 
 // From Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "VeloDet/DeVelo.h"
 
 // Local

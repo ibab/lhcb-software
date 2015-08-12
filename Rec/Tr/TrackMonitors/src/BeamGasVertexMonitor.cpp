@@ -1,4 +1,3 @@
-#include <GaudiKernel/AlgFactory.h>
 #include <Event/ODIN.h>
 #include <Event/Track.h>
 #include <Event/HltDecReports.h>

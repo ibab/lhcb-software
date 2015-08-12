@@ -10,7 +10,6 @@
 #include "Event/STMeasurement.h"
 #include "Event/Measurement.h"
 
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
 #include <map>
