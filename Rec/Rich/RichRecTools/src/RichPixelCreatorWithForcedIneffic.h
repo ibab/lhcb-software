@@ -13,7 +13,6 @@
 #define RICHRECTOOLS_RichPixelCreatorWithForcedIneffic_H 1
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 

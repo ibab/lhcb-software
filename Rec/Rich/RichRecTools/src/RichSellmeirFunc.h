@@ -15,9 +15,6 @@
 // base class
 #include "RichRecBase/RichRecToolBase.h"
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // Kernel
 #include "Kernel/RichRadiatorType.h"
 #include "Kernel/RichParticleIDType.h"

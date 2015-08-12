@@ -12,7 +12,6 @@
 #include "RichNominalTabulatedSignalDetectionEff.h"
 
 // Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 // All code is in general Rich reconstruction namespace

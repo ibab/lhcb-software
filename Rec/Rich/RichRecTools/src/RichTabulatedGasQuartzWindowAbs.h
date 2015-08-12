@@ -16,7 +16,6 @@
 #include "RichRecBase/RichRecToolBase.h"
 
 // Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 // Detector Description

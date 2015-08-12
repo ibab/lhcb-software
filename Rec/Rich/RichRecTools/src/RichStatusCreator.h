@@ -15,7 +15,6 @@
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"

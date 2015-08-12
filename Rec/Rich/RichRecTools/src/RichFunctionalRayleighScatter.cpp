@@ -13,7 +13,6 @@
 #include "RichFunctionalRayleighScatter.h"
 
 // Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
 // All code is in general Rich reconstruction namespace
