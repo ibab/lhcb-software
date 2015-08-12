@@ -17,7 +17,6 @@
 #include "RichRecBase/RichRecTupleAlgBase.h"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 // Event

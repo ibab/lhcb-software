@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= RichAlignment v1r12 2015-07-09 ======================
 ! 2015-07-09 - Paras Naik
