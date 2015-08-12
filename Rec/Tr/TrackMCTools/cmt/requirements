@@ -21,7 +21,6 @@ use   GaudiAlg          v*
 use   MCEvent           v*   Event
 use   TrackEvent        v*   Event
 use   LinkerEvent       v*   Event
-use   LinkerEvent       v*   Event
 use   RecEvent          v*   Event
 
 use   TrackInterfaces   v*   Tr
