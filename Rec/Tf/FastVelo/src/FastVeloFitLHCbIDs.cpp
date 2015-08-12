@@ -1,7 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
 #include "Event/Track.h"
 
 // local

@@ -1,7 +1,5 @@
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/Track.h"
 #include "Event/ProcStatus.h" 
 

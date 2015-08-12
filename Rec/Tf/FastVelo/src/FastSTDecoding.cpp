@@ -1,7 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/STLiteCluster.h"
 #include "Event/RawEvent.h"
 #include "Kernel/STTell1Board.h"

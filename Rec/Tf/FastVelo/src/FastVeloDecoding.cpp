@@ -1,7 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/VeloLiteCluster.h"
 #include "Event/RawEvent.h"
 // local
