@@ -12,9 +12,6 @@
 // local
 #include "RichSepVCKthetaPhotonPredictor.h"
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // All code is in general Rich reconstruction namespace
 using namespace Rich::Rec;
 

@@ -16,9 +16,6 @@
 // STL
 #include <sstream>
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // Base class and interfaces
 #include "RichPhotonRecoBase.h"
 #include "RichRecBase/IRichPhotonReconstruction.h"

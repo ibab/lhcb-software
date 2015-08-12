@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 /** @file RichPhotonRecoUsingCKEstiFromRadius.h
  *
@@ -15,9 +14,6 @@
 
 // STL
 #include <sstream>
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // Base class and interfaces
 #include "RichPhotonRecoBase.h"

@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 /** @file RichPhotonRecoUsingRaytracing.h
  *
@@ -15,9 +14,6 @@
 // STL
 #include <iostream>
 #include <sstream>
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // Base class and interfaces
 #include "RichPhotonRecoBase.h"
