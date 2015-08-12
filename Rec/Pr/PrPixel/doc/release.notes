@@ -3,6 +3,8 @@
 ! Responsible : Heinrich Schindler
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= PrPixel v1r13 2015-08-05 =========================
 ! 2015-08-03 - Manuel Tobias Schiller

@@ -1,7 +1,5 @@
 #include <cmath>
 
-// Gaudi
-#include "GaudiKernel/ToolFactory.h"
 // LHCb
 #include "Event/RawEvent.h"
 #include "Event/VPCluster.h"

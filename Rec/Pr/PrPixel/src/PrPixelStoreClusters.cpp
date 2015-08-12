@@ -1,5 +1,3 @@
-#include "GaudiKernel/AlgFactory.h"
-
 #include "Event/VPCluster.h"
 
 #include "PrPixelStoreClusters.h"

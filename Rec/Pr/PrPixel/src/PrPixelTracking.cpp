@@ -1,5 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
 // LHCb
 #include "Event/Track.h"
 #include "Event/StateParameters.h"
