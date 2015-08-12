@@ -4,7 +4,6 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
-#include "GaudiKernel/AlgFactory.h"
 
 // GaudiUtils
 #include "GaudiUtils/HistoLabels.h"

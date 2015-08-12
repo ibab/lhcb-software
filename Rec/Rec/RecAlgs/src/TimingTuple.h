@@ -7,7 +7,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiKernel/Memory.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
 
 #include "Event/ODIN.h"

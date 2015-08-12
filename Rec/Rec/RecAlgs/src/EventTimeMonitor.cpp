@@ -1,7 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 // local
 #include "EventTimeMonitor.h"
 #include "Event/ODIN.h" // event & run number

@@ -4,7 +4,6 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
-#include "GaudiKernel/AlgFactory.h" 
 
 // from Aida
 #include "AIDA/IHistogram1D.h"
