@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-
 // local
 #include "PatVeloLiteClusterPromoter.h"
 #include "PatVeloRHitManager.h"

@@ -1,8 +1,5 @@
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // non-local classes used
 #include "Event/Track.h"
 #include "VeloDet/DeVelo.h"

@@ -3,6 +3,8 @@
 ! Responsible : David Hutchcroft
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= PatVelo v3r32 2015-05-26 =========================
 ! 2015-04-27 - David Hutchcroft

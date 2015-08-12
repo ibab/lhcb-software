@@ -1,5 +1,3 @@
-#include "GaudiKernel/ToolFactory.h"
-
 #include "PatVeloRHitManager.h"
 
 namespace Tf {

@@ -1,8 +1,5 @@
 // Include files
 #include "PatVeloTraversingTracking.h"
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 namespace Tf {
   DECLARE_ALGORITHM_FACTORY( PatVeloTraversingTracking )
 }
