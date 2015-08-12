@@ -1,6 +1,3 @@
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "PrUTStationHitManager.h"
 

@@ -3,6 +3,8 @@
 ! Responsible : Thomas Nikodem
 ! Purpose     : Utils important for tracking
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= PrUtils v2r0 2014-02-19 =========================
 ! 2014-01-13 - Marco Cattaneo
