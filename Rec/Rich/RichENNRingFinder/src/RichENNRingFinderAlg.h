@@ -17,10 +17,6 @@
 #include <fstream>
 #include <map>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
-
 // RichKernel
 #include "RichKernel/RichHPDIdentifier.h"
 

@@ -3,6 +3,8 @@
 ! Responsible : Ulrich Kerzel, Chris Jones
 ! Purpose     : Uses an elastic Neural Network to do ring finding without tracks
 !-------------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= RichENNRingFinder v1r5p1 2013-04-30 =======================
 ! 2013-04-09 - Marco Cattaneo
