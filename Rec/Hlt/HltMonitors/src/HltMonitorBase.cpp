@@ -8,9 +8,6 @@
 #include <Event/ODIN.h>
 #include <Event/HltDecReports.h>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // local
 #include "HltMonitorBase.h"
 

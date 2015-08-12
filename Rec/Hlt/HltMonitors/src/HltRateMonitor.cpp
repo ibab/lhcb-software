@@ -12,7 +12,6 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 // from Gaudi
-#include <GaudiKernel/AlgFactory.h>
 #include <GaudiKernel/SystemOfUnits.h>
 #include "GaudiKernel/IUpdateManagerSvc.h"
 

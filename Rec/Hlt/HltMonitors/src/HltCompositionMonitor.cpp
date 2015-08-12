@@ -15,7 +15,6 @@
 
 // from Gaudi
 #include <GaudiUtils/HistoLabels.h>
-#include <GaudiKernel/AlgFactory.h>
 #include <GaudiKernel/SystemOfUnits.h>
 
 // Event
