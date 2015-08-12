@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
+
 !===================== DaVinciInterfaces v2r24 2015-04-21 ====================
 
 ! 2015-04-01 - Vanya Belyaev

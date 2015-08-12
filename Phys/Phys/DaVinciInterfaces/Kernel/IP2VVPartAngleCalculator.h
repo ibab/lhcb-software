@@ -7,7 +7,6 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IAlgTool.h"
 
 namespace LHCb
