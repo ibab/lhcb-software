@@ -453,21 +453,17 @@ void GetElementsToBeAligned::initEquations( Al::Equations& equations ) const
 {
   equations = Al::Equations( m_elements.size(), initTime() ) ;
   for(Elements::const_iterator ielem = m_elements.begin(); ielem!= m_elements.end(); ++ielem) {
-    // get the current delta (called alpha in Al::Equations)
-    Gaudi::Vector6 alpha = (*ielem)->currentTotalDelta().transformParameters() ;
-    equations.element( (*ielem)->index() ).m_alpha = alpha ;
-    equations.element( (*ielem)->index() ).m_alphaIsSet = true ;
+    // set the current delta (called alpha in Al::Equations)
+    auto& elemdata = equations.element( (*ielem)->index() )  ;
+    elemdata.setAlpha( (*ielem)->currentDelta().transformParameters() ) ;
+    elemdata.setAlignFrame( AlParameters((*ielem)->alignmentFrame()).transformParameters() ) ;
   }
 }
 
 StatusCode GetElementsToBeAligned::initAlignmentFrame( Gaudi::Time now )
 {
   StatusCode sc = StatusCode::SUCCESS ;
-  if( m_initTime != 0 ) {
-    error() << "Severe ERROR: alignment frame already initialized: "
-	    << m_initTime << " " << now << endreq ;
-    sc = Warning("Severe ERROR: alignment frame already initialized", StatusCode::FAILURE) ;
-  } else {
+  {
     std::stringstream message, message_dbg ;
     message << std::left << std::setw(80u) << std::setfill('*') << std::endl ;
     IDetDataSvc* detDataSvc(0) ;

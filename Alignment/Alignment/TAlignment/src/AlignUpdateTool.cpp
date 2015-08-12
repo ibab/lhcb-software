@@ -43,6 +43,7 @@ namespace Al
   private:
     bool printDebug()   const {return msgLevel(MSG::DEBUG);};
     bool printVerbose() const {return msgLevel(MSG::VERBOSE);};
+    bool checkGeometry( const Al::Equations& constequations ) const ;
     void preCondition(const Elements& elements, const Al::Equations& equations,
 		      AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,AlVec& scale) const ;
     void postCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2, const AlVec& scale) const ;
@@ -355,6 +356,26 @@ namespace Al
     return process( constequations, convergencestatus, m_iteration++, 20 ) ;
   }
 
+  bool AlignUpdateTool::checkGeometry( const Al::Equations& equations ) const 
+  {
+    // test that the alignment constants in AlEquations actually correspond to what is in the geometry
+    const double maxmag2 = 1e-10 ; // could be finetuned a bit
+    bool checkpassed = true ;
+    const Elements& elements = m_elementProvider->elements() ;
+    for(Elements::const_iterator ielem = elements.begin(); ielem!= elements.end() && checkpassed; ++ielem) {
+      // compare the current delta
+      const Gaudi::Vector6 alpha = (*ielem)->currentDelta().transformParameters() ;
+      const Gaudi::Vector6 dalpha = alpha - equations.element( (*ielem)->index() ).alpha() ;
+      const double dalphamag2 = ROOT::Math::Dot(dalpha,dalpha) ;
+      if( dalphamag2 > maxmag2 ) checkpassed=false ;
+      // compare the current alignment frame
+      const Gaudi::Vector6 alignframe = AlParameters((*ielem)->alignmentFrame()).transformParameters() ;
+      const Gaudi::Vector6 dalignframe = alignframe - equations.element( (*ielem)->index() ).alignFrame() ;
+      const double dalignframemag2 = ROOT::Math::Dot(dalignframe,dalignframe) ;
+      if( dalignframemag2 > maxmag2 ) checkpassed=false ;
+    }
+    return checkpassed ;
+  }
   
   StatusCode AlignUpdateTool::process( const Al::Equations& constequations,
 				       ConvergenceStatus& convergencestatus,
@@ -368,11 +389,18 @@ namespace Al
     convergencestatus = Converged ;
     StatusCode sc = StatusCode::SUCCESS ;
     Al::Equations equations = constequations ;
-    if( m_elementProvider->initTime() != equations.initTime() ) {
-      warning() << "Time of geometry does not match time of equations: "
+
+    if( m_elementProvider->initTime() != equations.initTime() ||
+	!checkGeometry( constequations ) ) {
+      warning() << "Geometry does not match AlEquations: "
 		<< m_elementProvider->initTime().ns() << " " << equations.initTime().ns()
 		<< ". Will reinitalize alignment frame." << endmsg ;
       sc = m_elementProvider->initAlignmentFrame( equations.initTime() ) ;
+      if( !sc.isSuccess() ) return sc ;
+    }
+  
+    if( !checkGeometry( constequations ) ) {
+      sc = Warning("Cannot initialize geometry to that found in AlEquations.", StatusCode::FAILURE) ;
       if( !sc.isSuccess() ) return sc ;
     }
     
@@ -780,6 +808,7 @@ namespace Al
     for(size_t i=0; i<25 && i<dofchi2s.size() ; ++i) 
       logmessage << "  " << i << " " << dofchi2s[i].element->name() 
 		 << " dof=" << dofchi2s[i].dof 
+		 << " active=" << dofchi2s[i].element->dofMask().isActive( dofchi2s[i].dof ) << " "
 		 << " chi2= " << dofchi2s[i].chi2 
 		 << " delta= " << dofchi2s[i].par << " +/- " << dofchi2s[i].err << std::endl ;
   }

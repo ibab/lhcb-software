@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2015-08-12 - Wouter Hulsbergen
+ - changes that should guarantee that alignment frame is same in analyser and iterator step
+
 ! 2015-08-10 - Maurizio Martinelli
  - Declassed alignment log message from INFO to DEBUG
  - Changed 'error' to 'uncertainty' when in INFO message

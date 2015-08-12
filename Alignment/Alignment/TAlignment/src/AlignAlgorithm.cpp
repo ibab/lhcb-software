@@ -178,9 +178,7 @@ StatusCode AlignAlgorithm::initialize() {
   /// Get tool to align detector
   m_align = tool<IGetElementsToBeAligned>("GetElementsToBeAligned");
   if (!m_align) return Error("==> Failed to retrieve detector selector tool!", StatusCode::FAILURE);
-  // This is for debugging, mostly
-  if( m_forcedInitTime ) m_align->initAlignmentFrame( m_forcedInitTime ) ;
-
+ 
   sc = m_trackresidualtool.retrieve() ;
   if ( sc.isFailure() ) return sc;
 
@@ -321,7 +319,9 @@ StatusCode AlignAlgorithm::execute() {
   }
 
   if( m_equations->initTime() == 0 ) {
-    if ( m_align->initTime() == 0 )
+    if( m_forcedInitTime ) 
+      m_align->initAlignmentFrame( m_forcedInitTime ) ;
+    else
       m_align->initAlignmentFrame(eventtime) ;
     m_align->initEquations( *m_equations ) ;
   }
@@ -669,7 +669,7 @@ void AlignAlgorithm::reset() {
   m_nTracks = 0u;
   m_covFailure = 0u;
   // clear derivatives. update the parameter vectors used for bookkeeping.
-  m_align->initEquations( *m_equations ) ;
+  m_equations->clear() ;
   // clear the histograms on the next execute call
   m_resetHistos = true ;
 }
