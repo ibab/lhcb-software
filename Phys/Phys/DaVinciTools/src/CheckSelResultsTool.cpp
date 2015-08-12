@@ -5,7 +5,6 @@
 #include "GaudiKernel/SmartIF.h"  // TMP
 #include "GaudiKernel/IAlgorithm.h"// TMP
 #include "GaudiKernel/IAlgManager.h"// TMP
-#include "GaudiKernel/ToolFactory.h"
 
 #include "LoKi/AlgFunctors.h"
 

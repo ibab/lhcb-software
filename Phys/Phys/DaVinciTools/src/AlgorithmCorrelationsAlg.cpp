@@ -1,10 +1,7 @@
 // $Id$
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "Kernel/ICheckSelResults.h"
-
 #include "Kernel/IAlgorithmCorrelations.h"            // Interface
 #include "LoKi/AlgFunctors.h"
 // local

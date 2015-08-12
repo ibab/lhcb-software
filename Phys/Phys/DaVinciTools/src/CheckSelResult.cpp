@@ -2,7 +2,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/RecHeader.h"
 

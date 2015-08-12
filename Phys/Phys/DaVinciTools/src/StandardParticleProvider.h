@@ -5,7 +5,6 @@
 #include <map>
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
