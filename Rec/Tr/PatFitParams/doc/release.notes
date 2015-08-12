@@ -3,6 +3,8 @@
 ! Responsible : Olivier Callot
 ! Purpose     : Fit MC tracks to compute the PatForward parameters
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 ! 2015-03-20 - Manuel Tobias Schiller
  - FwdParameters: reimplement in terms of LinParFit as well, get identical
