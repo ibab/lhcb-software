@@ -3,6 +3,8 @@
 ! Responsible :
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= TrackMCTools v3r12 2015-07-20 =========================
 ! 2015-06-08 - Michel De Cian
