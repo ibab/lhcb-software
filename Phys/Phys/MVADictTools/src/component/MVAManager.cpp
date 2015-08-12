@@ -1,8 +1,5 @@
 // Include files 
 
- // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // local
 #include "MVAManager.h"
 

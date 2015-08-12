@@ -2,7 +2,6 @@
 #include "TMVAClassifierTool.h"
 
 #include "LoKi/DictTransform.h"
-#include "GaudiKernel/ToolFactory.h"
 
 ////==============================================================================
 typedef LoKi::Hybrid::DictTransform<TMVATransform> TMVAClassifierTool;
