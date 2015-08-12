@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= TrackIdealPR v2r20 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic
