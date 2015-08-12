@@ -7,7 +7,6 @@
 #include "GaudiAlg/GaudiTool.h"
 //#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/ToolFactory.h"
 
 #include "IMuonInformation.h"            // Interface
 
@@ -20,12 +19,6 @@
 
 
 #include "Kernel/RichRadiatorType.h"
-
-
-// from Gaudi
-//#include "GaudiKernel/AlgFactory.h"
-//#include "GaudiAlg/GaudiAlgorithm.h"
-//#include "GaudiKernel/IAlgTool.h"
 
 // Event
 #include "Event/RichRecStatus.h"

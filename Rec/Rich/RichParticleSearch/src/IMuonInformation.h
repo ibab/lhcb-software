@@ -9,7 +9,6 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "RichRecBase/RichRecTupleAlgBase.h"
 
 #include "RichKernel/IRichParticleProperties.h"

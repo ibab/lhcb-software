@@ -9,7 +9,6 @@
 #include "RichParticleSearchMain.h"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/RecVertex.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "Event/MCHeader.h"
