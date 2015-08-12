@@ -184,7 +184,7 @@ void *MonAdder::ReAllocate(int incsiz)
 //      }
       m_buffersize = newsiz;
       SerialHeader *hd = (SerialHeader*)m_buffer;
-      hd->buffersize = newsiz;
+      hd->buffersize += incsiz;
     }
     else
     {
@@ -598,6 +598,11 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
     m_hmap.clear();
     Memcpy(p,buff,siz);
     m_usedSize = siz;
+//    SerialHeader *sh = (SerialHeader*)m_buffer;
+//    if (sh->buffersize != siz)
+//    {
+//      printf("[Sever Error] Received first packet if size %d where size in header is %d\n",siz,sh->buffersize);
+//    }
     void *bend = AddPtr(p,siz);
     void *hstart = AddPtr(p,sizeof(SerialHeader));
     DimBuffBase *pp = (DimBuffBase*)hstart;

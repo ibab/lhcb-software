@@ -87,7 +87,7 @@ void SaveTimer::SavetoFile(void *buff)
   SerialHeader *hd = (SerialHeader *)buff;
   char fn[1024];
   char fdir[1024];
-  void *bend = AddPtr(buff,hd->buffersize);
+  void *bend = AddPtr(buff,m_Adder->m_usedSize);
   int runo = (int)hd->run_number;
   static BRTLLock *loclock = 0;
   if (loclock == 0)
