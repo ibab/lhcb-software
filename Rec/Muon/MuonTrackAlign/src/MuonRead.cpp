@@ -1,7 +1,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/NTuple.h"
 #include "GaudiAlg/TupleObj.h" 
 #include "GaudiKernel/INTupleSvc.h"

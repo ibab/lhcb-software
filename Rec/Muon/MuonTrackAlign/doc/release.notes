@@ -2,6 +2,8 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Track reconstruction for Muon Alignment purposes
 !---------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= MuonTrackAlign v1r10 2013-07-18 =========================
 ! 2013-06-19 - Marco Cattaneo

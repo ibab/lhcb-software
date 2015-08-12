@@ -1,7 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "Event/RawEvent.h"
 #include "Event/Track.h" 
 #include "MuonDet/MuonBasicGeometry.h"
