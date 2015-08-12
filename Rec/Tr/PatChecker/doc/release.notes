@@ -3,6 +3,8 @@
 ! Responsible : Olivier Callot
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= PatChecker v3r16 2015-08-05 =========================
 ! 2015-07-31 - Michel De Cian

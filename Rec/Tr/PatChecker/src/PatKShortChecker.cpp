@@ -1,8 +1,5 @@
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
 #include "Event/Track.h"
