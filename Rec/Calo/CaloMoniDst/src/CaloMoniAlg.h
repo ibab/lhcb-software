@@ -5,7 +5,6 @@
 // ============================================================================
 // from Gaudi
 // ============================================================================
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "CaloUtils/Calo2Dview.h"
 #include "CaloUtils/CaloAlgUtils.h"

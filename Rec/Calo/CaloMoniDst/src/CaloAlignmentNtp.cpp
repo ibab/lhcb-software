@@ -1,7 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "LHCbMath/LineTypes.h"
 #include "LHCbMath/GeomFun.h"
 // local

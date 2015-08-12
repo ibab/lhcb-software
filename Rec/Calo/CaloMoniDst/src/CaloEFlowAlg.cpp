@@ -1,7 +1,5 @@
 // Include files 
 
-// from GaudiKernel
-#include "GaudiKernel/AlgFactory.h"
 // local
 #include "CaloEFlowAlg.h"
 #include "Event/MCCaloDigit.h"

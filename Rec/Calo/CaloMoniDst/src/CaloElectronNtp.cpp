@@ -1,7 +1,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include  "CaloUtils/CaloMomentum.h"
 #include "Event/RecVertex.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"

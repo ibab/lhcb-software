@@ -1,4 +1,3 @@
-#include "GaudiKernel/AlgFactory.h"
 #include <vector>
 #include "Event/CaloHypo.h"
 #include "CaloUtils/CaloMomentum.h"

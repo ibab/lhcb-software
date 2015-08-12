@@ -1,7 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include  "CaloUtils/CaloMomentum.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 // local
