@@ -4,7 +4,6 @@
 #include <algorithm>
 
 #include "Event/RecVertex.h"
-#include "GaudiAlg/CheckForNaN.h"
 #include <Event/MuonPID.h>
 
 //LoKi
@@ -292,7 +291,7 @@ bool NBB2HHTriggerTool::getInputVar(const LHCb::Particle* particle) const {
 
 
   double cosTheta        = LoKi::Cuts::LV01(particle);
-  if ( lnan(cosTheta) || !lfin(cosTheta) )
+  if ( std::isnan(cosTheta) || !std::isfinite(cosTheta) )
   {
     cosTheta = -999;
   }
