@@ -12,6 +12,11 @@
 
 #include <iostream>
 
+#include <omp.h>
+#include <cstdio>
+
+#include <ctime>
+
 using namespace std;
 using namespace MINT;
 
@@ -20,6 +25,8 @@ class TimePdf : public PdfBase<double>{
 public:
   TimePdf() : tau("tau"){}
   double getVal(double& t){
+      
+    //printf("Hello from TimePdf at thread %d, nthreads %d\n", omp_get_thread_num(), omp_get_num_threads());
     return exp(-t/tau)/tau;
   }
 };
@@ -37,16 +44,20 @@ int toyFit(){
 
   TimePdf myTimePdf;
 
+  time_t startTime = time(0);
+
   Neg2LL fcn(myTimePdf, times);
 
   Minimiser mini(&fcn);
   mini.doFit();
 
+  time_t difftime = time(0) - startTime;
 
   cout << "Done. Fitted " << N << " events"
        << " generated with mean lifetime "
        << generatedTime
        << ". Result above."
+       << "\n This took " << difftime << " s."
        << endl;
 
   return 0;

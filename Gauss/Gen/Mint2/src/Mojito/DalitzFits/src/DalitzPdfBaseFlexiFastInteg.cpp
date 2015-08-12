@@ -221,7 +221,13 @@ double DalitzPdfBaseFlexiFastInteg::getVal_noPs(IDalitzEvent& evt){
     // when you integrate (automatically done in getVal()):
     return un_normalised_noPs(evt);
   }else{
-    if(_norm == -1) getNorm();
+    if(_norm == -1){
+      cout << "DalitzPdfBaseFlexiFastInteg::getVal_noPs: _norm = "
+	   << _norm
+	   << " should not have happened." << endl;
+      throw "can't deal with  that";
+    }
+
     double num = un_normalised_noPs(evt);
     if(dbThis){
       double val=num/_norm;
@@ -292,6 +298,11 @@ void DalitzPdfBaseFlexiFastInteg::saveInterferenceHistograms(const std::string& 
 }
 std::vector<DalitzHistoSet> DalitzPdfBaseFlexiFastInteg::GetInterferenceHistograms(){
     return _faint.GetInterferenceHistograms();
+}
+
+
+void DalitzPdfBaseFlexiFastInteg::beginFit(){
+  //getNorm();
 }
 
 void DalitzPdfBaseFlexiFastInteg::endFit(){

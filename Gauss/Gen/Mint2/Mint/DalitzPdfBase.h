@@ -44,7 +44,10 @@ public MINT::PdfBase<IDalitzEvent>
   const MINT::IEventGenerator<IDalitzEvent>* getEventGenerator() const{
     return _generator;}
 
-  void parametersChanged();
+  virtual void beginFit();
+  virtual void parametersChanged();
+  virtual void endFit();
+
   virtual double getVal(IDalitzEvent& evt);
   virtual double getVal_noPs(IDalitzEvent& evt);
   virtual double getVal_withPs(IDalitzEvent& evt);

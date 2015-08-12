@@ -6,5 +6,5 @@
 * other parameters:
 *
  generatedTime 1.5
- N             100
+ N             10000000
 *

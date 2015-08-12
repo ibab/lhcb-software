@@ -166,15 +166,18 @@ class DalitzPdfBaseFlexiFastInteg
 
   IFastAmplitudeIntegrable* getFitAmpSum(){ return _amps;}
   //double efficiency(){return _efficiency->RealVal();}
+
+  virtual void beginFit();
   virtual void endFit();
 
 
   double getIntegralValue() const{
     return _norm;
   }
-  double getIntegralValue(){
-    if(_norm < 0) getNorm(); return _norm;
-  }
+  //double getIntegralValue(){
+  //  if(_norm < 0) getNorm(); return _norm;
+  // not threadsave
+  //}
   double redoIntegrator(){
     _norm = -1;
     getNorm();

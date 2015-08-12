@@ -12,6 +12,10 @@
 
 #include <iostream>
 
+#include <omp.h>
+#include <iomanip>
+#include <cstdio>
+
 /*
   
   this implements:
@@ -130,7 +134,7 @@ namespace MINT{
       return true;
     }
     
-    virtual double logPdf(unsigned int evtNumber){
+    virtual double getPdf(unsigned int evtNumber){
       bool dbThis=false;
       //if(dbThis) {
       //std::cout << "about to call _pdf.getVal() " 
@@ -147,7 +151,11 @@ namespace MINT{
 			     << std::endl;
           return -9999.e20 * (1.0 + fabs(valPdf));
       }
-      return log(valPdf);
+      return valPdf;
+    }
+
+    virtual double logPdf(unsigned int evtNumber){
+      return log(getPdf(evtNumber));
     }
 
     virtual double eventWeight(unsigned int evtNumber){
@@ -156,6 +164,17 @@ namespace MINT{
       // for all event types, but evt.getWeight in case 
       // the event inherits from IWeightedEvent.
       // This template is included in IWeightedEvent.h
+    }
+
+    void doGradient(unsigned int i, double pdfVal, double weight){
+      if(! _useAnalyticGradient) return;
+
+      Double_t gradPDF[this->getParSet()->size()];
+      _pdf.Gradient(_eventList[i],gradPDF,this->getParSet());
+      for(unsigned int j=0; j < this->getParSet()->size(); j++){
+	_grad[j]+= weight*gradPDF[j]/pdfVal;
+      }
+      return;
     }
 
     virtual double getVal(){
@@ -178,39 +197,56 @@ namespace MINT{
 		  << " pdf ptr is non zero - that's a start." 
 		  << std::endl;
       }
-      unsigned int counter=0;
       double sumweights=0.0;
       double sumsquareweights=0.0;
         
-      Double_t gradPDF[this->getParSet()->size()];
+
+
       for(unsigned int i=0; i < this->getParSet()->size(); i++) _grad[i]= 0.;
-        
-      for(counter=0; counter < _eventList.size(); ++counter){
-          //EVENT_TYPE & evt( (*_eventList)[counter] );
-          // sum += logPdf((*_eventList)[counter]);
-          double weight     = eventWeight(counter);
-          double logPdfVal  = logPdf(counter);
+      
+      // this little thing takes care of things that
+      // get initialised at the first call
+      // (which we should eliminate, but for now
+      // this it a workable work-around)
+      // (needed for multithreading, only)
+      //if(_eventList.empty()) return 0;
+      //eventWeight(0);
+      //getPdf(0);
+
+      //#pragma omp parallel for reduction(+:sum, sumweights, sumsquareweights);
+      for(unsigned int i=0; i < _eventList.size(); ++i){
+
+          //EVENT_TYPE & evt( (*_eventList)[i] );
+          // sum += logPdf((*_eventList)[i]);
+          double weight     = eventWeight(i);
+	  double pdfVal     = getPdf(i);
+          double logPdfVal  = log(pdfVal);
           sum              += weight*logPdfVal;
           sumweights       += weight;
           sumsquareweights += weight*weight;
-          if(_useAnalyticGradient){
-              _pdf.Gradient(_eventList[counter],gradPDF,this->getParSet());
-              double pdfVal = exp(logPdfVal);
-              for(unsigned int i=0; i < this->getParSet()->size(); i++){
-                  _grad[i]+= weight*gradPDF[i]/pdfVal;
+	  
+	  if(_useAnalyticGradient) doGradient(i, pdfVal, weight);
+	  /*
+	    omp didn't cope with the below:
+	  if(_useAnalyticGradient){
+              _pdf.Gradient(_eventList[i],gradPDF,this->getParSet());
+              for(unsigned int j=0; j < this->getParSet()->size(); j++){
+                  _grad[j]+= weight*gradPDF[j]/pdfVal;
               }
           }
+	  */
+	  
       }
         
       for(unsigned int i=0; i < this->getParSet()->size(); i++) _grad[i]=-2. * _grad[i] * fabs(sumweights/sumsquareweights);
       
       
       if(printout){
-          std::cout << "Neg2LLClass::getVal after " << _NCalls << " calls."
-          << "for " << counter
+	std::cout << "Neg2LLClass::getVal after " << _NCalls << " calls."
+		  << "for " << _eventList.size()
 		  << " events, I'm about to return " 
 		  << -2.0*sum*fabs(sumweights/sumsquareweights) << std::endl;
-          std::cout   << "Sum of weights = " << sumweights << std::endl;
+	std::cout   << "Sum of weights = " << sumweights << std::endl;
       }
       return -2.* sum*fabs(sumweights/sumsquareweights);
     }

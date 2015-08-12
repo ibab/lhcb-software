@@ -19,7 +19,7 @@ class NonRes : public BW_BW, virtual public ILineshape{
 	  const std::string& type="" );
 
   /**
-     Evaluate rho0-omega lineshape from the Crystal Barrel measurement
+     Evaluate non-res lineshape
    */
   virtual std::complex<double> getVal( IDalitzEvent& evt );
 

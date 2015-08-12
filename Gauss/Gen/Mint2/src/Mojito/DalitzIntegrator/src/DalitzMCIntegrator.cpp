@@ -145,14 +145,15 @@ double DalitzMCIntegrator::evaluateSum(){
 
   double sum   = 0;
   double sumsq = 0;
+  double ws  =0;
   _weightSum = 0;
-  unsigned int N = 0;
   //int printEveryNEvents = (_events.size()/4);
   //if(printEveryNEvents < 1) printEveryNEvents = 1;
 
   //time_t tstart = time(0);
 
-  for(N=0; N < _events.size(); N++){
+  //#pragma omp parallel for reduction(+:sum, sumsq, ws);
+  for(unsigned int N=0; N < _events.size(); N++){
     //DalitzEvent thisEvt(_events[N]);
     /*  
     double ps = thisEvt.phaseSpace();
@@ -168,7 +169,7 @@ double DalitzMCIntegrator::evaluateSum(){
     sum   += val;
     sumsq += val*val;
 
-    _weightSum += weight;// /ps;
+    ws += weight;// /ps;
 
     /*  
     if(N%printEveryNEvents == 0){
@@ -180,9 +181,9 @@ double DalitzMCIntegrator::evaluateSum(){
     */
   }
 
-  if(0 == N) return 0;
+  _weightSum = ws;
 
-  double fN       = (double) N;
+  double fN       = (double) _events.size();
   _mean           = sum   / fN;
   double meanOfSq = sumsq / fN;
   _variance       = (meanOfSq - _mean * _mean)/fN;

@@ -10,6 +10,8 @@ MOREINCS += $(wildcard $(MintDir)/*/src)
 MOREINCS += $(wildcard $(MintDir)/../..)
 MOREINCSFLAGS := $(patsubst %,-I%,$(MOREINCS))
 CXXFLAGS += $(MOREINCSFLAGS)
+##CXXFLAGS += -fopenmp
+##LDFLAGS += -fopenmp
 
 LIBS += -lMinuit
 

@@ -8,6 +8,8 @@
 
 #include <iostream>
 
+#include <omp.h>
+
 template <typename T>
 class CachedByEvent : virtual public MINT::IFitParDependent{
   
@@ -50,16 +52,18 @@ class CachedByEvent : virtual public MINT::IFitParDependent{
   }
     
   T recalculatePermutation(IDalitzEvent& evt){
-        T result(getNewVal(evt));
-        rememberFitParValues();
-        evt.setValue(rememberNumberPermutation(evt), result, configNumber());
-        return result;
-  }  
+    T result(getNewVal(evt));
+    rememberFitParValues();
+    evt.setValue(rememberNumberPermutation(evt), result, configNumber());
+    return result;
+  }
+
  public:
  CachedByEvent() : _rememberNumber(-9999), _configNumber(0){}
  CachedByEvent(const CachedByEvent& ) : _rememberNumber(-9999), _configNumber(0) {}
   
   T getValWithCaching(IDalitzEvent& evt){
+    //return getNewVal(evt); // debug only <<<<<<<<<<<<<<<
     if(changedSinceLastCall()){
       _configNumber++;
       return recalculate(evt);
@@ -86,6 +90,7 @@ class CachedByEvent : virtual public MINT::IFitParDependent{
   }
     
   T getValWithCachingPermutation(IDalitzEvent& evt){
+    //return getNewVal(evt); // debug only <<<<<<<<<<<<<<<<<<<
         if(changedSinceLastCall()){
            if(evt.permutationIndex()==0) _configNumber++;
            return recalculatePermutation(evt);

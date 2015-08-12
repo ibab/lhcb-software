@@ -21,6 +21,10 @@ CXXFLAGS += $(MOREINCSFLAGS)
 #LDFLAGS += -pg
 LIBS += -lMinuit
 #LIBS += -lprofiler
+##CXXFLAGS += -fopenmp
+##LDFLAGS += -fopenmp
+
+
 
 PROG = $(shell grep -l main *.cpp | sed 's/\.cpp//g')
 

@@ -46,7 +46,7 @@ class singleTopHatShape : virtual public ILineshape{
   virtual void print(IDalitzEvent& evt, std::ostream& out = std::cout) const;
   virtual void print(std::ostream& out = std::cout) const;
   virtual std::string name() const;
-  virtual MINT::counted_ptr<IGenFct> generatingFunction() const=0;
+  virtual MINT::counted_ptr<IGenFct> generatingFunction() const;
 
 
   virtual ~singleTopHatShape(){};

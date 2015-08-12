@@ -15,6 +15,10 @@ class IMinimisable{
 
   virtual double getVal()=0;
   virtual double getNewVal()=0;
+
+  // we should make the following three abstract (=0)
+  // and move their default definition to Minimisable.
+
   virtual void Gradient(Double_t* grad){        
         std::cout << "Gradient of pdf is not implemented. Please implement me or set useAnalyticGradient to 0 in your options file. I'll crash now. " << std::endl;
         throw "crash";

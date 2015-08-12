@@ -28,9 +28,17 @@ void DalitzPdfBase::setIntegrationPrecision(double prec){
   _mcint.setPrecision(_precision);
 }
 
-void DalitzPdfBase::parametersChanged(){
-  getNorm();
+
+void DalitzPdfBase::beginFit(){
+  //getNorm();
 }
+void DalitzPdfBase::parametersChanged(){
+  getNorm(); // should implement caching here.
+}
+void DalitzPdfBase::endFit(){
+
+}
+
 DalitzPdfBase::DalitzPdfBase( IEventGenerator<IDalitzEvent>* generator
 			     , double prec
 			     ) 
@@ -65,7 +73,12 @@ double DalitzPdfBase::getVal_noPs(IDalitzEvent& evt){
     // when you integrate (automatically done in getVal()):
     return un_normalised_noPs(evt);
   }else{
-    if(_norm == -1) getNorm();
+    if(-1 == _norm) getNorm(); // not threadsave
+    //if(-1 == _norm){
+    //  cout << "DalitzPdfBase::getVal_noPs: _norm = " 
+    //	   << _norm << endl;
+    //  throw "what's going on here?";
+    //}
     double num = un_normalised_noPs(evt);
     if(dbthis)cout  << "un_normalised / norm: " 
 		    << num << " / " <<_norm 
@@ -81,7 +94,12 @@ double DalitzPdfBase::getVal_withPs(IDalitzEvent& evt){
   if(_integrating){
     return un_normalised_noPs(evt)*phaseSpace(evt);
   }else{
-    if(_norm == -1) getNorm();
+    if(_norm == -1) getNorm(); // not threadsave
+    //if(-1 == _norm){
+    //  cout << "DalitzPdfBase::getVal_withPs: _norm = " 
+    //	   << _norm << endl;
+    //  throw "what's going on here?";
+    //}
     double num = un_normalised_noPs(evt)*phaseSpace(evt);
     if(dbthis)cout  << "un_normalised / norm: " 
 		    << num << " / " <<_norm 

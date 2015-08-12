@@ -26,7 +26,7 @@ const char DalitzEvent::ntpNameChars[] = { '#', '~', '\0' };
 long int DalitzEvent::_eventCounter=0;
 
 long int DalitzEvent::_rememberVectorCounter=0;
-long int  DalitzEvent::assignUniqueRememberNumber(){
+long int DalitzEvent::assignUniqueRememberNumber(){
   return _rememberVectorCounter++;
 }
 
