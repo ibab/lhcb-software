@@ -4,6 +4,9 @@
 ! Purpose     : Topological tools
 !-----------------------------------------------------------------------------
 
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
+
 !========================= TopologicalTools v1r0 2014-09-30 =========================
 
 ! 2014-09-05 - Cédric Potterat

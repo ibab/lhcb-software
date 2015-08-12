@@ -4,7 +4,6 @@
 #include <string>
 #include <fstream>
 #include <vector>
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/ITriggerTisTos.h"
 #include "Kernel/IAccept.h"
