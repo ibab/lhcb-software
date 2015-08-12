@@ -1,9 +1,6 @@
 // $Id: HPDIonFeedbackMoni.cpp,v 1.9 2010-02-13 12:38:07 jonrob Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "HPDIonFeedbackMoni.h"
 #include "RichKernel/RichSmartIDCnv.h"

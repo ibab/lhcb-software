@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : Ross Young
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= RichIFBAnalysis v1r4 2013-06-03 =========================
 ! 2013-05-13 - Chris Jones
