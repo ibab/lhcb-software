@@ -12,7 +12,6 @@
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IAlgContextSvc.h"
-#include "GaudiKernel/AlgFactory.h"
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
