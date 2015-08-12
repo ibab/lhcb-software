@@ -7,9 +7,6 @@
  *  @date   2009-02-16
  */
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "DumpRichHitsToTextFileAlg.h"
 

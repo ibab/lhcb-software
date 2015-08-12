@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : RICH reconstruction algorithms that use MC information
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= RichRecMCAlgorithms v1r6 2015-04-21 ======================
 ! 2015-03-09 - Chris Jones
