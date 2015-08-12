@@ -2,9 +2,6 @@
 #ifndef RICHHPDIMAGESUMMARY_H
 #define RICHHPDIMAGESUMMARY_H 1
 
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Base class
 #include "RichHPDImageAnalysis/RichHPDImageSummaryBase.h"
 

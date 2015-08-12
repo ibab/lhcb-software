@@ -3,6 +3,8 @@
 ! Responsible : Thomas BLAKE
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= RichHPDImageAnalysis v1r17 2015-07-20 =====================
 ! 2015-06-24 - jonesc
