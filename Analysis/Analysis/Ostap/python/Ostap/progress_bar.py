@@ -287,7 +287,7 @@ class ProgressBar(object):
         sys.stdout.write( self.bar + '\r' ) 
         sys.stdout.flush()
         
-    def end  ( seld  ) :
+    def end  ( self  ) :
         if not self.silent :
             if self.prefix : sys.stdout.write( self.prefix ) 
             sys.stdout.write( self.bar + '\n' ) 
