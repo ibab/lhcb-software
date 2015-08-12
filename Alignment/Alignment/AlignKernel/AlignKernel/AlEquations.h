@@ -58,7 +58,10 @@ namespace Al
     const TrackDerivatives& dStateDAlpha() const { return m_dStateDAlpha ; }
     const VertexDerivatives& dVertexDAlpha() const { return m_dVertexDAlpha ; }
     const Gaudi::Vector6& alpha() const { return m_alpha ; }
-
+    void setAlpha( const Gaudi::Vector6& alpha ) { m_alpha = alpha ; m_alphaIsSet=true ; }
+    void setAlignFrame( const Gaudi::Vector6& alignframe ) { m_alignframe = alignframe ; }
+    const Gaudi::Vector6& alignFrame() const { return m_alignframe ; }
+    
     double fracNonOutlier() const { return 1 - (m_numHits >0 ? m_numOutliers/double(m_numHits): 0 ) ; }
     double weightV() const { return m_weightV ; }
     double weightR() const { return m_weightR ; }
@@ -78,6 +81,7 @@ namespace Al
     }
     void addTrack() { ++m_numTracks ; }
 
+    Gaudi::Vector6       m_alignframe ;       // parameters of the alignment frame
     Gaudi::Vector6       m_alpha ;            // the set of parameters at which the derivatives are computed
     Gaudi::Vector6       m_dChi2DAlpha ;      // (half) 1st derivative
     Gaudi::SymMatrix6x6  m_d2Chi2DAlpha2;     // (half) 2nd derivative diagonal ('this-module')

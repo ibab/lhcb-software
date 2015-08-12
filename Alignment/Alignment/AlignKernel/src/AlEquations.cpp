@@ -12,7 +12,8 @@ namespace Al
 
     std::ofstream& operator<<(std::ofstream& file, const Al::ElementData& data)
     {
-      file  << data.m_alpha
+      file << data.m_alignframe
+      << data.m_alpha
       << data.m_dChi2DAlpha
       << data.m_d2Chi2DAlpha2
       << data.m_d2Chi2DAlphaDBeta
@@ -33,7 +34,8 @@ namespace Al
     inline
     std::ifstream& operator>>(std::ifstream& file, Al::ElementData& data)
     {
-      file  >> data.m_alpha
+      file >> data.m_alignframe
+      >> data.m_alpha
       >> data.m_dChi2DAlpha
       >> data.m_d2Chi2DAlpha2
       >> data.m_d2Chi2DAlphaDBeta
@@ -63,6 +65,7 @@ namespace Al
       // if this is the first one and the parameters are not set, copy the parameters
       m_alpha = rhs.m_alpha ;
       m_alphaIsSet = rhs.m_alphaIsSet ;
+      m_alignframe = rhs.m_alignframe ;
     }
     m_dChi2DAlpha += rhs.m_dChi2DAlpha ;
     m_d2Chi2DAlpha2 += rhs.m_d2Chi2DAlpha2 ;
@@ -135,6 +138,7 @@ namespace Al
     m_totalVertexNumDofs    = 0u ;
     m_firstTime = Gaudi::Time(Gaudi::Time::max()) ;
     m_lastTime = Gaudi::Time(Gaudi::Time::epoch()) ;
+    m_initTime = 0 ;
   }
 
   void Equations::writeToBuffer(std::ofstream& buffer) const

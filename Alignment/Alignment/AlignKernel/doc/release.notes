@@ -3,6 +3,10 @@
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
 
+! 2015-08-12 - Wouter Hulsbergen
+ - Add alignment frame as datamember to AlignData
+ - Reset inittime in AlEquations::clear
+
 ! 2015-08-10 - Maurizio Martinelli
  - Typewritten messages from Al::Equations such that they appear as INFO
 
