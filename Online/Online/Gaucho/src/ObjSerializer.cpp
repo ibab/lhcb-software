@@ -5,6 +5,7 @@
 #include "Gaucho/MonTypes.h"
 #include <stdexcept>
 #include "dis.hxx"
+typedef ObjMap::iterator SysIter;
 
 #define AddPtr(ptr,offs) (void*)((char*)ptr +offs)
 

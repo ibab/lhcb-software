@@ -241,6 +241,11 @@ void MonSubSys::EORUpdate(int runo)
   unLock();
 //  dim_lock();
   m_EORsvc->Update();
+//  if (m_type == MONSUBSYS_Histogram)
+//  {
+//    printf("[WARNING]: in EORUpdate: Dump of Object Map\n");
+//    m_Objmap.dump();
+//  }
 //  dim_unlock();
 }
 void MonSubSys::Update()

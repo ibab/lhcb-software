@@ -2,10 +2,12 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "Gaucho/ObjMap.h"
 class MonObj;
-typedef std::map<std::string,MonObj*> ObjMap;
+//typedef std::map<std::string,MonObj*> ObjMap;
+//class ObjMap;
 typedef std::pair<std::string, MonObj*> ObjPair;
-typedef ObjMap::iterator SysIter;
+//typedef ObjMap::iterator SysIter;
 class ObjSerializer
 {
 public:

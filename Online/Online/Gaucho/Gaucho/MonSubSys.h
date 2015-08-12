@@ -8,6 +8,7 @@
 #include "Gaucho/MonTimer.h"
 #include "Gaucho/ObjSerializer.h"
 #include "Gaucho/MonObj.h"
+#include "Gaucho/ObjMap.h"
 #include "Gaucho/ObjRPC.h"
 
 //class ObjServer;
@@ -23,7 +24,7 @@ enum
   MONSUBSYS_Counter,
   MONSUBSYS_String
 };
-typedef std::map<std::string,MonObj*> ObjMap;
+//typedef std::map<std::string,MonObj*> ObjMap;
 
 class RateMgr;
 class MonSubSys
