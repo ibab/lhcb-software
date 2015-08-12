@@ -5,6 +5,14 @@
 ! Created     : 2015-02-04
 ! -----------------------------------------------------------------------------
 
+! 2015-08-12 - Chris Jones
+ - Updates for S23.
+  + Added options/DV-Stripping23-Stripping.py
+  + Note that to get things working I have added the use of the DaVinci 
+    configurable to the S23 options. This means this package must be built in
+    DaVinci, not the stripping. This is temporary, to try and get things working
+    for the S23 DV release. To be cleanup later on (once Marco is back).
+
 ! 2015-07-21 - Marco Clemencic
  - LHCBPS-1427: Suppress spurious warnings from S20/21 functors cache generation
 

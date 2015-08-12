@@ -5,6 +5,11 @@ gaudi_subdir(StrippingCache v1r0)
 
 gaudi_depends_on_subdirs(Phys/LoKiArrayFunctors
                          Phys/LoKiHlt
+                         Phys/LoKiPhys
+                         Phys/LoKiAlgo
+                         Phys/DSTWriters
+                         Phys/DaVinciFilters
+                         Phys/CommonParticles
                          Phys/StrippingAlgs
                          Phys/StrippingSelections
                          Phys/StrippingNeuroBayes
@@ -12,10 +17,12 @@ gaudi_depends_on_subdirs(Phys/LoKiArrayFunctors
                          Phys/TMVASelections
                          Phys/DisplVertices
                          Phys/IsolationTools
-                         Phys/StrippingArchive)
+                         Phys/RelatedInfoTools
+                         Phys/StrippingArchive
+                         Phys/DaVinci)
 
 foreach(pack StrippingAlgs StrippingNeuroBayes IncTopoVert TMVASelections
-             DisplVertices IsolationTools)
+             DisplVertices IsolationTools RelatedInfoTools)
   # FIXME: this will be needed until GAUDI-1055 is fixed.
   if(EXISTS ${CMAKE_BINARY_DIR}/Phys/${pack}/genConf)
     gaudi_build_env(PREPEND LD_LIBRARY_PATH
@@ -33,17 +40,24 @@ endforeach()
 
 # Build the cache
 include(LoKiFunctorsCache)
-loki_functors_cache(S21FunctorsCache
-                    options/SuppressS21LogMessages.py
-                    options/DV-Stripping21-Stripping.py options/SilenceErrors.py #options/DataType.py
+loki_functors_cache(S23FunctorsCache
+                    #options/SuppressS21ogMessages.py
+                    options/DV-Stripping23-Stripping.py #options/SilenceErrors.py #options/DataType.py
                     LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
                     DEPENDS ${conf_deps}
                     SPLIT 50)
 
-loki_functors_cache(S20FunctorsCache
-                    options/SuppressS21LogMessages.py
-                    options/DV-Stripping20-Stripping.py options/SilenceErrors.py #options/DataType.py
-                    LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
-                    DEPENDS ${conf_deps}
-                    SPLIT 50)
+#loki_functors_cache(S21FunctorsCache
+#                    options/SuppressS21LogMessages.py
+#                    options/DV-Stripping21-Stripping.py options/SilenceErrors.py #options/DataType.py
+#                    LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
+#                    DEPENDS ${conf_deps}
+#                    SPLIT 50)
+
+#loki_functors_cache(S20FunctorsCache
+#                    options/SuppressS21LogMessages.py
+#                    options/DV-Stripping20-Stripping.py options/SilenceErrors.py #options/DataType.py
+#                    LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
+#                    DEPENDS ${conf_deps}
+#                    SPLIT 50)
 
