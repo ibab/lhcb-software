@@ -2,7 +2,6 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/ToolHandle.h"
 #include "GaudiAlg/GaudiTupleAlg.h"

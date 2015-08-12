@@ -1,9 +1,6 @@
 // $Id: TrackCloneChecker.cpp,v 1.4 2009-07-10 11:33:57 cattanem Exp $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // local
 #include "TrackCloneChecker.h"
 

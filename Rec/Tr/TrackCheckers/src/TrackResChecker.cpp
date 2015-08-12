@@ -16,7 +16,6 @@
 
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/ToStream.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiHistoTool.h"
 #include "GaudiAlg/IHistoTool.h"
 

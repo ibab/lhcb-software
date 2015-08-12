@@ -1,8 +1,6 @@
-// $Id: TrackVeloTTChecker.cpp,v 1.12 2010-03-24 12:10:01 rlambert Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiAlg/Tuples.h"
 
 // From STDet

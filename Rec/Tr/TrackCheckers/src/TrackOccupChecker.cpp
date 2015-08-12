@@ -8,7 +8,6 @@
 // Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/ToStream.h"
-#include "GaudiKernel/AlgFactory.h"
 
 #include "Map.h"
 

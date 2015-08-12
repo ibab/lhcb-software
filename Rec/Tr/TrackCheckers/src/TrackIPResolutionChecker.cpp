@@ -19,7 +19,6 @@
 #include "Kernel/HitPattern.h"
 #include "Linker/LinkedTo.h"
 
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "LHCbMath/ValueWithError.h"
 

@@ -6,9 +6,6 @@
 
 #include <boost/foreach.hpp>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // from Event/TrackEvent
 #include "Event/TrackFunctor.h"
 #include "Event/StateParameters.h"
