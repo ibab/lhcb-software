@@ -9,8 +9,6 @@
 // from DaVinci
 #include "Kernel/Particle2VertexBase.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 // from LHCb
 #include "Kernel/IRelatedPVFinder.h"
 #include "Event/RecVertex.h"

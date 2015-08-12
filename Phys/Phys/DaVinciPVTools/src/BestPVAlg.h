@@ -4,8 +4,6 @@
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-#include "GaudiKernel/AlgFactory.h" 
-
 #include "Kernel/IRelatedPVFinder.h"
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"

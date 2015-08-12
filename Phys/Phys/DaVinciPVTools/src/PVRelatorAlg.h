@@ -6,8 +6,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 // from LHCb
 #include "Kernel/IRelatedPVFinder.h"
 #include "Event/RecVertex.h"

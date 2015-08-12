@@ -6,8 +6,6 @@
  *  @date   2008-10-24
  */
 // Include files 
-// from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // Local
 #include "GenericParticle2PVRelator.h"
