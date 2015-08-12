@@ -1,9 +1,6 @@
 // Include files 
 #include "boost/assign/list_of.hpp"
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "MuonFastPosTool.h"
 
