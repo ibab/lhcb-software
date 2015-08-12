@@ -13,7 +13,7 @@ include_path      none
 use ROOT                v*  LCG_Interfaces
 use Boost               v*  LCG_Interfaces
 use GaudiAlg		v*
-use GSL			v*  LCG_Interfaces
+#use GSL			v*  LCG_Interfaces
 
 # ================ environment ============================================
 #include_dirs $(ALIGNMENTMONITORINGROOT)
