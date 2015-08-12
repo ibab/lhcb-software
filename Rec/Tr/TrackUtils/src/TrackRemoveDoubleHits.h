@@ -14,7 +14,6 @@
 // Includes
 //===========================================================================
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // Event

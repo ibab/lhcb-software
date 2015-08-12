@@ -3,6 +3,8 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= TrackUtils v1r61 2015-07-20 =========================
 ! 2015-07-10 - Michel De Cian

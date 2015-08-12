@@ -7,7 +7,6 @@
  */
 
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SharedObjectsContainer.h"
 #include <string>
 #include <vector>

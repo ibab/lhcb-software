@@ -1,7 +1,3 @@
-
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // track interfaces
 #include "Event/Track.h"
 

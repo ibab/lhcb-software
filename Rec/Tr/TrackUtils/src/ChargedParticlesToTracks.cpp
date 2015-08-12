@@ -1,8 +1,5 @@
 // Include files 
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 // local
 #include "ChargedParticlesToTracks.h"
 #include "TrackInterfaces/ITrackFitter.h"

@@ -1,6 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 #include "TrackCloneCleaner.h"
 
 using namespace LHCb;

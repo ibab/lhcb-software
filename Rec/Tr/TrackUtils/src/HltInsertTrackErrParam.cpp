@@ -1,5 +1,4 @@
 // Include files 
-#include "GaudiKernel/AlgFactory.h"
 #include <math.h>
 #include "gsl/gsl_sys.h"
 #include "boost/lambda/lambda.hpp"

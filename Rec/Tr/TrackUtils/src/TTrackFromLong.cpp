@@ -3,9 +3,6 @@
 // C++ code for 'LHCb Tracking package(s)'
 //
 
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // track interfaces
 #include "Event/Track.h"
 

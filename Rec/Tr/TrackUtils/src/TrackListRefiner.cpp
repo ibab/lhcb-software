@@ -16,7 +16,6 @@
 #include "TrackInterfaces/ITrackSelector.h"
 #include "GaudiKernel/SharedObjectsContainer.h"
 #include <string>
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/Track.h"
 
 

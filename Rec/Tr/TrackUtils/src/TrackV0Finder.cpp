@@ -82,7 +82,6 @@ private:
   double m_stateZTolerance ;
 };
 
-#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/Vector4DTypes.h"
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"

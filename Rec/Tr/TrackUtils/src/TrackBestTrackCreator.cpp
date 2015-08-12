@@ -13,8 +13,6 @@
 #include <exception>
 #include <functional>
 #include <unordered_map>
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
 
 // TrackEvent
 #include "Event/Track.h"

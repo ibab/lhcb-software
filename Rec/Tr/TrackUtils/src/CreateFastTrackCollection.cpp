@@ -1,5 +1,3 @@
-#include "GaudiKernel/AlgFactory.h"
-
 #include "CreateFastTrackCollection.h"
 
 #include "GaudiKernel/SharedObjectsContainer.h"

@@ -3,7 +3,6 @@
 #define _TrackBuildCloneTable_H_
 
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 

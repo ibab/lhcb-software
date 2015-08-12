@@ -1,8 +1,5 @@
 // BOOST
 #include <boost/assign/list_of.hpp> // for 'map_list_of()
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // track interfaces
 #include "Event/Track.h"
 

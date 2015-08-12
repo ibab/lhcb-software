@@ -4,7 +4,6 @@
 //
 
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "gsl/gsl_math.h"
 

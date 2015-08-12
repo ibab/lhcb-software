@@ -8,7 +8,6 @@
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include <string>
-#include "GaudiKernel/AlgFactory.h"
 #include "Event/RecVertex.h"
 #include "TrackKernel/TrackPredicates.h"
 #include <boost/foreach.hpp>

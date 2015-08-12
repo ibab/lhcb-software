@@ -3,9 +3,6 @@
 // from STD
 #include <algorithm>
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
 #include <LHCbMath/BloomFilter.h>
 
 // TrackEvent

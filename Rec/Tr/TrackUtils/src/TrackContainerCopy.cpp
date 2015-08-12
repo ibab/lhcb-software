@@ -2,9 +2,6 @@
 #pragma warning ( disable : 4355 ) // This used in initializer list, needed for ToolHandles
 #endif
 
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // track interfaces
 #include "Event/Track.h"
 
