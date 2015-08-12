@@ -318,37 +318,36 @@ def makePlots ( the_func        ,
                                                                  stripping ,
                                                                  polarity  ) )
     from Ostap.progress_bar import ProgressBar
-    bar = ProgressBar( mn , mx , 100 , mode='fixed' )  
-    for index in xrange ( mn , mx + 1 ) :
-
-        bar.update_amount ( index )
-        if not verbose : bar.show() 
+    with ProgressBar( mn , mx , 100 , mode='fixed' )  as bar :
         
-        manager = memory() if verbose else NoContext()
-        
-        with manager :
+        for index in xrange ( mn , mx + 1 ) :
             
-            dataset = getDataSet ( particle  ,
-                                   stripping ,
-                                   polarity  ,
-                                   trackcuts , 
-                                   index     ,
-                                   verbose = verbose )
+            bar += 1
             
-            if not dataset : continue 
+            manager = memory() if verbose else NoContext()
+            with manager :
+                
+                dataset = getDataSet ( particle  ,
+                                       stripping ,
+                                       polarity  ,
+                                       trackcuts , 
+                                       index     ,
+                                       verbose = verbose )
+                
+                if not dataset : continue 
+                
+                plots = the_func ( particle ,
+                                   dataset  ,
+                                   plots    ,
+                                   verbose  )
+                
+                dataset.reset  ()
+                dataset.store  ().reset () 
+                dataset.store  ().Reset () 
+                dataset.Delete ()
+                if dataset : del dataset
+                
             
-            plots = the_func ( particle ,
-                               dataset  ,
-                               plots    ,
-                               verbose  )
-
-            dataset.reset  ()
-            dataset.store  ().reset () 
-            dataset.store  ().Reset () 
-            dataset.Delete ()
-            if dataset : del dataset
-            
-    if not verbose : print ' ' 
     return plots 
 
 # ====================================================================

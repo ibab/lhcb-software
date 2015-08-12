@@ -135,18 +135,9 @@ def uCalc ( pdf            ,
     dim        = args.getSize    ()
     data_clone = data.Clone      ()
 
-    bar = None
-    if not silent :
-        from Ostap.progress_bar import ProgressBar
-        bar = ProgressBar ( 0 , numEntries , 77 , mode = 'fixed' )
+    from Ostap.progress_bar import progress_bar 
+    for i in progress_bar ( xrange ( numEntries ) ) : 
 
-    for i in xrange ( 0 , numEntries ) :
-
-        if bar and not silent :
-            bar.update_amount(i)
-            print  bar, '\r',
-            sys.stdout.flush()
-            
         event_x = data_clone.get ( i ) 
         event_i = event_x.selectCommon ( args )
         
@@ -185,7 +176,6 @@ def uCalc ( pdf            ,
 
         histo.Fill ( value ) 
 
-        
     del data_clone 
     return histo
 

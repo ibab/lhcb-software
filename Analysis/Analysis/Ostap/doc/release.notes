@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-08-12 - Vanya Belyaev
+ - progress_bar - rewrite, add also running_bar 
+
 ! 2015-08-08 - Vanya Belyaev
  - ostap: keep names of imported modules 
 

@@ -94,12 +94,14 @@ class Files(object):
     def __init__( self                  ,
                   files                 ,
                   description = ""      ,
-                  maxfiles    = 1000000 ) :  
+                  maxfiles    = 1000000 ,
+                  silent      = False   ) :  
         #
         self.files        = []
         self.patterns     = files
         self.description  = description
-        self.maxfiles     = maxfiles 
+        self.maxfiles     = maxfiles
+        self.silent       = silent 
         # 
         if isinstance ( files , str ) : files = [ files ]
         #
@@ -107,16 +109,20 @@ class Files(object):
         for pattern in files :            
             for f in glob.iglob ( pattern ) :
                 _files.add ( f )
-
-        for f in _files : 
-            if len ( self.files ) < self.maxfiles : self.treatFile  ( f )
-            else :
-                logger.warning ('Maxfiles limit is reached %s ' % self.maxfiles )
-                break
+                
+        from Ostap.progress_bar import ProgressBar 
+        with ProgressBar ( max_value = len(_files) , silent = self.silent ) as bar :
+            self.progress = bar 
+            for f in _files : 
+                if len ( self.files ) < self.maxfiles : self.treatFile  ( f )
+                else :
+                    logger.warning ('Maxfiles limit is reached %s ' % self.maxfiles )
+                    break
                 
     ## the specific action for each file 
     def treatFile ( self, the_file ) :
         self.files.append ( the_file )
+        self.progress += 1
         
     ## printout 
     def __str__(self):
@@ -146,12 +152,13 @@ class Data(Files):
                   chain                 ,
                   files       = []      ,
                   description = ''      , 
-                  maxfiles    = 1000000 ) :  
+                  maxfiles    = 1000000 ,
+                  silent      = False   ) :  
 
         
         self.e_list1 = set()  
         self.chain   = ROOT.TChain ( chain )
-        Files.__init__( self , files , description  , maxfiles )
+        Files.__init__( self , files , description  , maxfiles , silent )
         
     ## the specific action for each file 
     def treatFile ( self, the_file ) :
@@ -197,11 +204,12 @@ class Data2(Data):
                   chain2                , 
                   files       = []      ,
                   description = ''      ,
-                  maxfiles    = 1000000 ) :  
+                  maxfiles    = 1000000 ,
+                  silent      = False   ) :  
         
         self.e_list2 = set()
         self.chain2  = ROOT.TChain ( chain2 )
-        Data.__init__( self , chain1 , files , description , maxfiles )
+        Data.__init__( self , chain1 , files , description , maxfiles , silent )
         self.chain1  = self.chain 
         
     ## the specific action for each file 
@@ -252,9 +260,10 @@ class DataAndLumi(Data2):
                   files       = []   ,
                   description = ''   , 
                   lumi_chain  = 'GetIntegratedLuminosity/LumiTuple' , 
-                  maxfiles    = 1000000                             ) :  
+                  maxfiles    = 1000000                             ,
+                  silent      = False ) :  
 
-        Data2.__init__ ( self , chain , lumi_chain , files , description , maxfiles  ) 
+        Data2.__init__ ( self , chain , lumi_chain , files , description , maxfiles  , silent ) 
         self.lumi = self.chain2 
         
     ## get the luminosity 

@@ -501,7 +501,7 @@ class SelectorWithVars(SelectorWithCuts) :
             )
         
         #
-        ## it is still very puzzling for me: shodul this line be here at all??
+        ## it is still very puzzling for me: should this line be here at all??
         ROOT.SetOwnership ( self.data  , False )
         
         self._events   = 0
@@ -540,15 +540,12 @@ class SelectorWithVars(SelectorWithCuts) :
             self._logger.info ( 'TChain entries: %d' % self._total  )
             ## decoration:
             from Ostap.progress_bar import ProgressBar
-            self._progress = ProgressBar (
-                0                        ,
-                self._total              ,
-                80                       ,
-                mode = 'fixed'           )
+            self._progress = ProgressBar ( max_value = self._total   ,
+                                           silent    = self._silence )
             
-        if 0 == self._events % 500 and not self._silence :
-            self._progress.update_amount ( self.event () )
-            print self._progress , '\r',
+        if not self._silence :
+            if 0 == self._events % 1000 or 0 == entry % 1000 : 
+                self._progress.update_amount ( self.event () )
             
         self._events += 1
         #
@@ -572,9 +569,9 @@ class SelectorWithVars(SelectorWithCuts) :
             vfun   =  v[4]  ## accessor-function 
 
             value  = vfun ( bamboo )
-            if not vmin <= value <= vmax :
+            if not vmin <= value <= vmax :       ## MUST BE IN RANGE!
                 self._skip += 1 
-                return 0
+                return 0                         ## RETURN 
 
             var.setVal ( value ) 
 
@@ -617,7 +614,7 @@ class SelectorWithVars(SelectorWithCuts) :
         else :
 
             self._logger.error   ( 'Invalid variable description!' )
-            raise AttributeError,  'Invalid variable description!'
+            raise AttributeError ( 'Invalid variable description!' ) 
         
         ## finally the entry
         self.varset.add      ( var ) 
@@ -626,12 +623,10 @@ class SelectorWithVars(SelectorWithCuts) :
     #
     def Terminate ( self  ) :
         #
-        if self._progress and not self._silence :
-            self._progress.update_amount ( self.event () )
-            print self._progress , '\r',
+        if self._progress :
+            self._progress.end() 
         #
         if not self._silence : 
-            print '' 
             self._logger.info (
                 'Events Processed/Total/Skept %d/%d/%d\nCUTS: "%s"' % (
                 self._events ,
@@ -650,7 +645,6 @@ class SelectorWithVars(SelectorWithCuts) :
         # 
         if self._progress and not self._silence :
             self._progress.update_amount ( self.event () )
-            print self._progress , '\r',
         #
         return SelectorWithCuts.Init ( self , chain ) 
 
@@ -658,25 +652,21 @@ class SelectorWithVars(SelectorWithCuts) :
         ## 
         if self._progress and not self._silence :
             self._progress.update_amount ( self.event () )
-            print self._progress , '\r',
     #
     def SlaveBegin     ( self , tree        ) :
         # 
         if self._progress and not self._silence :
             self._progress.update_amount ( self.event () )
-            print self._progress , '\r',
     #
     def Notify         ( self ) :
         #
         if self._progress and not self._silence :
             self._progress.update_amount ( self.event () )
-            print self._progress , '\r',
             
     def SlaveTerminate ( self               ) :
         # 
         if self._progress and not self._silence :
             self._progress.update_amount ( self.event () )
-            print self._progress , '\r',
         #
  
 

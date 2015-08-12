@@ -159,10 +159,20 @@ if arguments.canvas :
 if arguments.modules :
     import importlib 
     for m in arguments.modules :
-        mod = importlib.import_module ( m )
+        _m = importlib.import_module ( m )
         logger.info ("Imported module '%s' from '%s' " % ( mod.__name__ , mod.__file__ ) )
-        locals()[m] = mod 
-    del importlib
+        ## play a bit with names 
+        p,s,r = m.partition('.')
+        if s : 
+            _m2 = importlib.import_module(p)
+            if not locals().has_key( p ) : 
+                locals()[p] = _m2
+                del _m2                ## avoid pollutuon of local namespace
+        else :
+            locals()[m] = _m
+            del _m                     ## avoid pollutuon of local namespace 
+        del p,s,r                      ## avodi pollution of local namesapce 
+    del importlib                      ## avoid pollution of local namespace
     
 # =============================================================================
 ## execute the files, defined as arguments
