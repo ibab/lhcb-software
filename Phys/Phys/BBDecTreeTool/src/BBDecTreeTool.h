@@ -7,7 +7,6 @@
 #include <vector>
 #include <map>
 #include <fstream>
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IParticleFilter.h"
 #include "Kernel/IParticleDictTool.h"

@@ -14,7 +14,6 @@ namespace Gaudi {
 		     const std::string& input);
   }
 }
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IParticleFilter.h"
 #include "Kernel/IParticleDictTool.h"

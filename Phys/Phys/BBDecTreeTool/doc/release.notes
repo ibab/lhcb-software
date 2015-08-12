@@ -4,6 +4,9 @@
 ! Purpose     : Decision Tree classifier for Hlt2 topological trigger
 ! -----------------------------------------------------------------------------
 
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
+
 !========================= BBDecTreeTool v1r7 2015-03-10 =========================
 
 ! 2015-Mar-04 - Patrick Spradlin
