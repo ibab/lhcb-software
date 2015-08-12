@@ -1,9 +1,6 @@
 // $Id$
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
-
 // local
 #include "NeutralCCChangePIDTool.h"
 

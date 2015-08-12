@@ -1,4 +1,3 @@
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IAccept.h"
 #include "Event/L0CaloCandidate.h"

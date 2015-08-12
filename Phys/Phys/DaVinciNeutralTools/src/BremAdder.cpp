@@ -1,8 +1,6 @@
 // $Id$
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
 // from LHCb
 #include "CaloUtils/CaloMomentum.h"
 #include "CaloUtils/CaloParticle.h"
