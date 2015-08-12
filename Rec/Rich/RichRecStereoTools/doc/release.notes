@@ -3,6 +3,8 @@
 ! Responsible : Luigi Delbuono delbuono@in2p3.fr
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
+! 2015-08-12 - Gerhard Raven
+ - remove #include of obsolete Gaudi headers
 
 !========================= RichRecStereoTools v1r10 2015-04-21 =======================
 ! 2015-03-09 - Chris Jones

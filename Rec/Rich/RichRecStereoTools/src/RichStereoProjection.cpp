@@ -13,7 +13,6 @@
 #include "RichStereoProjection.h"
 
 // Gaudi
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
 // namespaces
