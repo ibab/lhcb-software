@@ -1,4 +1,5 @@
-Name	MeanMin	MeanMax	WidthMin	WidthMax
+# Name	MeanMin	MeanMax	WidthMin	WidthMax
+# Name  WarningLevel  SevereLevel
 
 # Residuals
 OTResidual	-0.01	0.01	0.2	0.35
@@ -39,3 +40,57 @@ ITTopTrack/IT2ASideBox/hitres	-0.2	0.2	0.1	0.2
 ITTopTrack/IT2CSideBox/hitres	-0.2	0.2	0.1	0.2
 ITTopTrack/IT3ASideBox/hitres	-0.2	0.2	0.1	0.2
 ITTopTrack/IT3CSideBox/hitres	-0.2	0.2	0.1	0.2
+
+# IT overlap residuals
+ASide/OverlapResidual	-0.2	0.2	0.1	0.2
+CSide/OverlapResidual	-0.2	0.2	0.1	0.2
+Top/OverlapResidual	-0.2	0.2	0.1	0.2
+Bottom/OverlapResidual	-0.2	0.2	0.1	0.2
+
+# TT overlap residuals
+TTaX/OverlapResidual	-0.2	0.2	0.1	0.2
+TTaU/OverlapResidual	-0.2	0.2	0.1	0.2
+TTbV/OverlapResidual	-0.2	0.2	0.1	0.2
+TTbX/OverlapResidual	-0.2	0.2	0.1	0.2
+
+# TT residuals in overlap region
+TTaX/ResidualInOverlaps(left)	-0.2	0.2	0.1	0.2
+TTaU/ResidualInOverlaps(left)	-0.2	0.2	0.1	0.2
+TTbV/ResidualInOverlaps(left)	-0.2	0.2	0.1	0.2
+TTbX/ResidualInOverlaps(left)	-0.2	0.2	0.1	0.2
+TTaX/ResidualInOverlaps(right)	-0.2	0.2	0.1	0.2
+TTaU/ResidualInOverlaps(right)	-0.2	0.2	0.1	0.2
+TTbV/ResidualInOverlaps(right)	-0.2	0.2	0.1	0.2
+TTbX/ResidualInOverlaps(right)	-0.2	0.2	0.1	0.2
+
+# Velo(TT)-T match
+T-TT/dxfordtx==0	-0.2	0.2	0.1	0.2
+T-TT/dyfordty==0	-0.2	0.2	0.1	0.2
+Velo-T/dxfordtx==0	-0.2	0.2	0.1	0.2
+Velo-T/dyfordty==0	-0.2	0.2	0.1	0.2
+Velo-TT/dxfordtx==0	-0.2	0.2	0.1	0.2
+Velo-TT/dyfordty==0	-0.2	0.2	0.1	0.2
+T-TT/dxpullvstx 5 9
+Velo-T/dxpullvstx 5 9
+Velo-TT/dxpullvstx 5 9
+
+# Velo(TT)-T match : curvature
+# curvature  mean  meanErr  sigma  sigmaErr
+curvatureRatioTToLong   1  0.01  0.15 0.01
+curvatureRatioVeloTTToLong 1 0.01 0.15 0.01
+# chi2/ndf  ok_level  warning_level
+curvatureRatioTToLongVsQoP   3  5
+curvatureRatioVeloTTToLongVsQoP 5 9
+
+# Velo-T match : position of kick 
+# kickZ    --> mean sigma sigma_min sigma_max
+kickZ   5150  30  0  100
+# kickZVsX chi2/ndf --> chi2_min chi2_max
+kickZVsX       3     5
+
+# AlignD02KPi
+# mean sigma 
+mass 1.86484 0.01
+# mean meanErr sigma sigmaErr
+masspull 0 0.02  1  0.5
+D0MassDifference  0.   0.01

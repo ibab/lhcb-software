@@ -7,6 +7,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <list>
 // ROOT
 #include "TCanvas.h"
 #include "TFitResult.h"
@@ -26,13 +27,20 @@ namespace Alignment
     {
     public:
       // Constructors
-      AlignmentMonitoring(const char* filename);
+      AlignmentMonitoring(const char* filename, const char* outputdir = ".");
       // Destructor
       ~AlignmentMonitoring() {}
       
       // Methods
       void CheckResiduals();
       void CheckOverlaps();
+      void CheckITOverlapResiduals();
+      void CheckTTOverlapResiduals();
+      void CheckTTResidualsInOverlapRegion();
+      void CheckVeloTTandTMatch();
+      void CheckVeloTTandTMatchCurvature();
+      void CheckVeloTMatchKickPosition();
+      void CheckD0();
       void Run();
       
       // Verbosity
@@ -43,11 +51,14 @@ namespace Alignment
       void LoadGausFitReferences(const char* fName="");
       void PrintWarnings();
       WarningLevel CheckFitPar(double x, double xerr, double xmin, double xmax);
+      WarningLevel CheckFitPar(double x, double xmin, double xmax);
       
       // Vars
     private:
       std::string m_inputFileName;
+      std::string m_outputDirectory;
       std::map<std::string, int> m_mapWarnings;
+      std::list<std::string> m_insertOrder;
       std::map<std::string, std::vector<double>> m_mapGausFitReference;
       HistHelper m_hhelp;
       bool m_verbose;

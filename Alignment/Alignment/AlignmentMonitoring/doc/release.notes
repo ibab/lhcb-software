@@ -3,6 +3,12 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-08-13 - Zhirui Xu
+ - added CompareWithRun function and modified the output format in src/CompareConstants.cpp
+ - updated src/AlignmentMonitoring.cpp
+ - modified examples/RunMonitoring.py and examples/CompareConstants.py
+ - updated files/GausFitReferences.txt  
+
 ! 2015-08-12 - Maurizio Martinelli
  - removed unnecessary compilation requirements
  - added a constructor in CompareConstants and a couple of methods

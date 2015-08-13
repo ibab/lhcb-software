@@ -19,12 +19,14 @@ namespace Alignment
     {
     public:
       // Constructor
+      CompareConstants (const char* system="IT/ITGlobal", const char* ref="v8", const char* dir="files/alignment");
       CompareConstants ();
       CompareConstants (const char* system/*="IT/ITGlobal/"*/, const char* ref="v8", const char* dir="files/alignment/");
       // Destructor
       ~CompareConstants () {}
       // Methods
       void Compare(const char* ver);
+      void CompareWithRun(const char* dir, const char* runNo);
       WarningLevel CheckConstant(const char* name, const char* dof, double delta);
       WarningLevel CheckConstant(const char* name, int dof, double delta);
       WarningLevel CheckConstant(const char* name, double delta);
@@ -32,7 +34,7 @@ namespace Alignment
       std::vector<double> GetLimits(const char* element);
       void FillDeltaHist(const char* element);
       void SetRanges(const char* filename="");
-      void PrintWarnings();
+      void PrintWarnings(int level);
       void SaveHists(const char* filename);
       
       // Verbosity

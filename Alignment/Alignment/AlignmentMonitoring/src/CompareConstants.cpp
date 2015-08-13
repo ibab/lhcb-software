@@ -39,13 +39,13 @@ CompareConstants::Compare(const char* ver)
 {
   std::map<std::string, WarningLevel> wls;
   ParseConstants parser;
-  m_constRef = parser.Parse((m_dir+m_system+m_ref+".xml").c_str());
-  m_constAlt = parser.Parse((m_dir+m_system+std::string(ver)+".xml").c_str());
+  m_constRef = parser.Parse((m_dir+"/"+m_system+"/"+m_ref+".xml").c_str());
+  m_constAlt = parser.Parse((m_dir+"/"+m_system+"/"+std::string(ver)+".xml").c_str());
   if (m_verbose) std::cout  << "nElements: " << m_constRef.size() << " " << m_constAlt.size() << std::endl;
   if (m_constAlt.size() != m_constRef.size()) {
     std::cout << "Beware, the number of elements for the two files\n"
-              << "\t" << m_dir+m_system+m_ref << ".xml\n"
-              << "\t" << m_dir+m_system+std::string(ver) << ".xml\n"
+              << "\t" << m_dir+"/"+m_system+"/"+m_ref << ".xml\n"
+              << "\t" << m_dir+"/"+m_system+"/"+std::string(ver) << ".xml\n"
               << "is not the same. Please check your options!\n";
     return;
   }
@@ -53,6 +53,34 @@ CompareConstants::Compare(const char* ver)
     m_mapWarnings[iel.first] = CheckConstant(iel.first.c_str(), iel.second - m_constAlt[iel.first]);
     //    std::vector<double> limits = GetLimits(iel.first.c_str());
     //    m_mapWarnings[iel.first] = CheckConstant(iel.second - m_constAlt[iel.first], limits[0], limits[1]);
+    if (m_verbose)
+      std::cout << iel.first << ": "
+                << iel.second << " - " << m_constAlt[iel.first] << " = " << iel.second - m_constAlt[iel.first]
+                << " : " << m_mapWarnings[iel.first]
+                << std::endl;
+    FillDeltaHist(iel.first.c_str());
+  }
+  return;
+}
+
+void CompareConstants::CompareWithRun(const char* dir, const char* runNo){
+  std::map<std::string, WarningLevel> wls;
+  ParseConstants parser;
+  m_constRef = parser.Parse((m_dir+"/"+m_system+"/"+m_ref+".xml").c_str());
+  //std::cout << "reference path: " << m_dir+"/"+m_system+"/"+m_ref+".xml"  << std::endl;
+  m_constAlt = parser.Parse((std::string(dir)+"/"+std::string(runNo)+"/xml/"+m_system+".xml").c_str());
+  //std::cout << "new path: " << std::string(dir)+"/"+std::string(runNo)+"/xml/"+m_system+".xml" << std::endl;
+  if (m_verbose) std::cout  << "nElements: " << m_constRef.size() << " " << m_constAlt.size() << std::endl;
+  if (m_constAlt.size() != m_constRef.size()) {
+    std::cout << "Beware, the number of elements for the two files\n"
+              << "\t" << m_dir+"/"+m_system+"/"+m_ref+".xml" << "\n"
+              << "\t" << std::string(dir)+"/"+std::string(runNo)+"/xml/"+m_system+".xml" << "\n"
+              << "is not the same. Please check your options!\n";
+    return;
+  }
+  for (auto iel : m_constRef) {
+    std::vector<double> limits = GetLimits(iel.first.c_str());
+    m_mapWarnings[iel.first] = CheckConstant(iel.second - m_constAlt[iel.first], limits[0], limits[1]);
     if (m_verbose)
       std::cout << iel.first << ": "
                 << iel.second << " - " << m_constAlt[iel.first] << " = " << iel.second - m_constAlt[iel.first]
@@ -84,11 +112,16 @@ CompareConstants::CheckConstant(const char* name, double delta)
 }
 
 void
-CompareConstants::PrintWarnings()
+CompareConstants::PrintWarnings(int level)
 {
+  std::string warning_string = "OK";
   for (auto wrn : m_mapWarnings) {
-    if (!m_verbose && wrn.second == WarningLevel::OK) continue;
-    std::cout << wrn.first << ": " << wrn.second
+    //if (!m_verbose && wrn.second == WarningLevel::OK) continue;
+    if (wrn.second < level) continue;
+    if(wrn.second==WarningLevel::OK)      warning_string = "\033[1;32m OK \033[0m";
+    if(wrn.second==WarningLevel::WARNING) warning_string = "\033[1;33m WARNING \033[0m";
+    if(wrn.second==WarningLevel::SEVERE)  warning_string = "\033[1;31m SEVERE \033[0m";
+    std::cout << wrn.first << ": " << warning_string 
               << "\t(" << m_constAlt[wrn.first] << " - " << m_constRef[wrn.first]  << " = " << m_constAlt[wrn.first]-m_constRef[wrn.first] << ")"
               << std::endl;
   }
