@@ -112,22 +112,33 @@ import sys,os
 #  ncols = columns()
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-def columns ( ) :
-    var  = 'COLUMNS'
-    lvar = len(var) 
-    from subprocess import Popen, PIPE
-    p = Popen( 'resize' , stdout = PIPE , stderr = PIPE )
-    out,err = p.stdout,p.stderr 
-    for line in err : return -1 
-    for line in out :
-        p = line.find('COLUMNS')
-        if 0 != line.find('COLUMNS') : continue
-        try :
-            ## accounts:                =    ;\n
-            nc = int ( line[ p + lvar + 1 : -2 ] )
-            return nc 
-        except :
-            pass 
+def columns () :
+
+    ## get shell variable
+    def _resize_ ( var ) :        
+        lvar    = len( var ) 
+        from subprocess import Popen, PIPE
+        p       = Popen( 'resize' , stdout = PIPE , stderr = PIPE )
+        out,err = p.communicate()
+        if err or not out : return -1  ## RETURN 
+        for line in out.splitlines() :
+            l = line.strip() 
+            p = l.find( var )
+            if 0 != p : continue
+            try :
+                ## accounts:            '='  ';'
+                nc = int ( l[ p + lvar + 1 : -1 ] )
+                return nc 
+            except :
+                pass
+            
+        return -1
+
+    try :
+        return _resize_ ( 'COLUMNS' )
+    except:
+        pass
+    
     return -1 
 # =============================================================================
 ## @class ProgressBar
@@ -206,7 +217,7 @@ class ProgressBar(object):
     >>> for i in progress_bar  ( xrange(10000 ) ) :
     ...       <do something here>
     """
-    def __init__(self, min_value = 0, max_value = 100, width= 100 ,**kwargs):
+    def __init__(self, min_value = 0, max_value = 100, width=110 ,**kwargs):
         self.char = kwargs.get ( 'char' , '#'     )
         self.mode = kwargs.get ( 'mode' , 'fixed' ) # fixed or dynamic
         if not self.mode in ['fixed', 'dynamic']:

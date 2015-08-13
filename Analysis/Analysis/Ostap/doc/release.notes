@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-08-13 - Vanya Belyaev
+ - fix minor bug in getting the shell variable 
+
 ! 2015-08-12 - Vanya Belyaev
  - progress_bar - rewrite, add also running_bar 
 
