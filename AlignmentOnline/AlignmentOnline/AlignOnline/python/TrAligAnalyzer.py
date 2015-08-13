@@ -140,9 +140,8 @@ def setupOnline(directory, prefix, filename):
   Gaudi.appendPostConfigAction(mon.addMonitors)
   app.OutputLevel = MSG_INFO
 
-  # Disable run check handler otherwise complain that database not up to date
   cdb = CondDB()
-  cdb.EnableRunStampCheck = False
+  cdb.Online = True
   # print sel
 
 #============================================================================================================

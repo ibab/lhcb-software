@@ -3,6 +3,9 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-08-13 - Giulio Dujany
+ - Set CondDB Online option true, so no nead any more to disable run check handler
+
 ! 2015-08-12 - Giulio Dujany
  - Absolute path for files used to compare online-offline conditions
 
