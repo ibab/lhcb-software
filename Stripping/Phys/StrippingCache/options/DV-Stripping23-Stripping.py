@@ -79,42 +79,54 @@ unpackIt.OutputName = "Rec/Track/FittedHLT1VeloTracks"
 
 from Configurables import ApplicationMgr, AuditorSvc, SequencerTimerTool
 
-#from Configurables import COOLConfSvc, MagneticFieldSvc, ToolSvc, AuditorSvc, CondDBCnvSvc
-#coolConfSvc = COOLConfSvc()
-#magneticSvc = MagneticFieldSvc()
-#toolSvc = ToolSvc()
-#auditor = AuditorSvc()
-
 # Initial IOV time
 # http://www.onlineconversion.com/unix_time.htm
 # values in ns (so multiply values from above link by 1e9)
-#from Configurables import EventClockSvc
-#EventClockSvc( InitialTime = 1433635200000000000 ) # 7th June 2015
+from Configurables import EventClockSvc
+EventClockSvc().InitialTime = 1433635200000000000 # 7th June 2015
+EventClockSvc().EventTimeDecoder = "OdinTimeDecoder"
 
 appMgr = ApplicationMgr()
 appMgr.OutputLevel = 3
-#appMgr.ExtSvc += [ coolConfSvc, magneticSvc, confDBAcc, toolSvc, auditor ]
-#appMgr.ExtSvc += [ CondDBCnvSvc(), confDBAcc, magneticSvc, toolSvc, auditor ]
-#appMgr.ExtSvc += [ confDBAcc ]
+appMgr.ExtSvc += [ 'ToolSvc', 'AuditorSvc' ]
 
 appMgr.HistogramPersistency = "ROOT"
 ntSvc = NTupleSvc()
 appMgr.ExtSvc +=  [ ntSvc ]
 
-from Configurables import LHCbApp, PhysConf
+from Configurables import ( LHCbApp, PhysConf, AnalysisConf,
+                            DstConf, LumiAlgsConf, DDDBConf, CondDB )
+
+# Just to initialise
+condDB = CondDB()
+
+LHCbApp().DDDBtag   = "dddb-20150724"
+LHCbApp().CondDBtag = "cond-20150805"
 
 datatype =  "2015"
-LHCbApp().DataType = datatype
-PhysConf().DataType = datatype
+PhysConf().DataType     = datatype
+AnalysisConf.DataType   = datatype
+LumiAlgsConf().DataType = datatype
+DDDBConf().DataType     = datatype
 
-LHCbApp().DDDBtag  = "dddb-20150526"
-LHCbApp().CondDBtag = "cond-20150625"
+inputType = "DST"
+LumiAlgsConf().InputType = inputType
+PhysConf().InputType     = inputType
 
-from Configurables import DaVinci
-DaVinci().ProductionType = "Stripping"
-DaVinci().DataType   = datatype
-DaVinci().DDDBtag    = LHCbApp().DDDBtag
-DaVinci().CondDBtag  = LHCbApp().CondDBtag
+unPack = ["Reconstruction"]
+PhysConf().EnableUnpack = unPack
+DstConf().EnableUnpack  = unPack
 
-#appMgr.TopAlg += [ unpackIt, sc.sequence() ]
-DaVinci().appendToMainSequence( [ unpackIt, sc.sequence() ] )
+lumiSeq = GaudiSequencer("LumiSeq")
+LumiAlgsConf().LumiSequencer = lumiSeq
+
+appMgr.TopAlg += [ PhysConf().initSequence(),
+                   AnalysisConf().initSequence(),
+                   unpackIt, sc.sequence(), lumiSeq ]
+
+#from Configurables import DaVinci
+#DaVinci().ProductionType = "Stripping"
+#DaVinci().DataType   = datatype
+#DaVinci().DDDBtag    = LHCbApp().DDDBtag
+#DaVinci().CondDBtag  = LHCbApp().CondDBtag
+#DaVinci().appendToMainSequence( [ unpackIt, sc.sequence() ] )

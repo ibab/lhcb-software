@@ -8,6 +8,7 @@ gaudi_depends_on_subdirs(Phys/DaVinci
                          Phys/LoKiHlt
                          Phys/LoKiPhys
                          Phys/LoKiAlgo
+                         Phys/LoKiCore
                          Phys/DSTWriters
                          Phys/DaVinciFilters
                          Phys/CommonParticles
@@ -49,7 +50,7 @@ include(LoKiFunctorsCache)
 
 loki_functors_cache(S23FunctorsCache
                     #options/SuppressS21ogMessages.py
-                    options/DV-Stripping23-Stripping.py options/SilenceErrors.py 
+                    options/DV-Stripping23-Stripping.py #options/SilenceErrors.py 
                     LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
                     DEPENDS ${conf_deps}
                     SPLIT 50)
