@@ -22,6 +22,9 @@ namespace Al
 
     // New interface
     virtual StatusCode process( const Al::Equations& equations, ConvergenceStatus& status ) const = 0 ;
+
+    // Interface to function getting the alignment constants 
+    virtual std::map<std::string, double> getAlignmentConstants(bool final=false) = 0 ;
   } ;
 }
 
