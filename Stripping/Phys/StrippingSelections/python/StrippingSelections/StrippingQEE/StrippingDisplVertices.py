@@ -423,6 +423,7 @@ class DisplVerticesLinesConf(LineBuilder):
         jetCandidateAlg.JetIDCut = ( JetIDCut if JetIDCut is not None else self.configurationParameter("JetID") )
         jetCandidateAlg.MinNumberOfJets = MinNumJets
         jetCandidateAlg.CandidatePID = LLPLHCbName
+        jetCandidateAlg.ParticleCombiners["MomentumCombiner"] = "MomentumCombiner:PUBLIC"
 
         return jetCandidateAlg
 

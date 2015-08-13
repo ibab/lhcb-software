@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-13 - Pieter David
+ - Use public instance of MomentumCombiner tool in QEE-StrippingDisplVertices
+
 ! 2015-08-12 - Chitsanu Khurewathanakul
  - Bug fix in QEE-StrippingDitau (incorrect vectorial sum)
 
