@@ -123,6 +123,8 @@ CompareConstants::CheckConstant(const char* name, double delta)
 void
 CompareConstants::PrintWarnings(int level)
 {
+  if !CheckWarningLevel(level) return;
+  
   std::string warning_string = "OK";
   for (auto wrn : m_mapWarnings) {
     //if (!m_verbose && wrn.second == WarningLevel::OK) continue;
@@ -224,4 +226,25 @@ CompareConstants::SetRanges(const char* filename)
     ifile.close();
   }
   return;
+}
+
+bool
+CompareConstants::CheckWarningLevel(int level)
+{
+  if (level< 0 || level > 2) {
+    std::cout << "You selected a warning level that is not valid (0-2)!\n";
+    return false;
+  }
+  return true;
+}
+
+int
+CompareConstants::GetNumWarnings(int level)
+{
+  if !CheckWarningLevel(level) return;
+  // get number of warnings of this level
+  int nw(0);
+  for (auto wrn : m_mapWarnings)
+    if (wrn.second != level) ++nw;
+  return nw;
 }

@@ -37,11 +37,14 @@ namespace Alignment
       void SetRanges(const char* filename="");
       void PrintWarnings(int level);
       void SaveHists(const char* filename);
+      int GetNumWarnings(int level);
       
       // Verbosity
       void SetVerbosity(bool verb){m_verbose=verb;}
       
     private:
+      bool CheckWarningLevel(int level);
+      
       bool m_verbose;
       std::string m_system;
       std::string m_ref;

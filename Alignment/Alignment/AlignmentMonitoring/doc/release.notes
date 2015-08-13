@@ -4,6 +4,7 @@
 !------------------------------------------------------------------------------
 
 ! 2015-08-13 - Maurizio Martinelli
+ - added a method to get the number of warnings for each category
  - added the possibility to compare constants from two arbitrary maps
  - reverted examples/CompareConstants to read from public directory
 
