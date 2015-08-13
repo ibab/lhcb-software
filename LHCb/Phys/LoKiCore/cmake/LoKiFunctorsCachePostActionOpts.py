@@ -48,12 +48,13 @@ def post_action_for_cpp ( ) :
 
 
     from Configurables import ApplicationMgr
-    app         = ApplicationMgr( OutputLevel = 5 )
+    app         = ApplicationMgr( OutputLevel = 3 )
     app.EvtMax  = 0
     app.EvtSel  = 'NONE'
 
 
     from Configurables import LHCb__ParticlePropertySvc as PPSvc
+    from Configurables import DetDataSvc
     from Configurables import LoKiSvc
 
     #
@@ -63,7 +64,7 @@ def post_action_for_cpp ( ) :
 
 
     services = app.ExtSvc
-    app.ExtSvc = [ PPSvc() , LoKiSvc()       ] + services + [dod ]
+    app.ExtSvc = [ DetDataSvc('DetectorDataSvc'), PPSvc() , LoKiSvc() ] + services + [ dod ]
     ## app.ExtSvc = [ PPSvc() , LoKiSvc() , dod , ToolSvc() ] + services
 
     #
