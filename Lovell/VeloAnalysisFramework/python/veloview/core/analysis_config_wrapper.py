@@ -27,7 +27,7 @@ class AnalysisConfigWrapper(object):
         self.branches = config[0]
         self.leaves = config[1]
 
-    def getTrunkForRun(self, runNr, limitRegExp = None, outputPath = "."):
+    def getTrunkForRun(self, runNr, limitRegExp = None):
         """
         Get a Combiner object that represents the trunk of the tree.
 
@@ -37,15 +37,13 @@ class AnalysisConfigWrapper(object):
         @param limitRegExp:  Regular expression to which a leaf name must match
                              for it to be included in the tree, or None to
                              match any leaf name. Default None.
-        @type  outputPath:   string
-        @param outputPath:   Path to write output to. Default "."
         @return              A Combiner object.
         """
         dataFilePath = run_file(runNr)
         refFilePath = reference_run_file(runNr)
-        return self.getTrunk(dataFilePath, refFilePath, limitRegExp, outputPath)
+        return self.getTrunk(dataFilePath, refFilePath, limitRegExp)
 
-    def getTrunk(self, dataFilePath, refFilePath, limitRegExp = None, outputPath = "."):
+    def getTrunk(self, dataFilePath, refFilePath, limitRegExp = None):
         """
         Get a Combiner object that represents the trunk of the tree.
 
@@ -59,8 +57,6 @@ class AnalysisConfigWrapper(object):
         @param limitRegExp:  Regular expression to which a leaf name must match
                              for it to be included in the tree, or None to
                              match any leaf name. Default None.
-        @type  outputPath:   string
-        @param outputPath:   Path to write output to. Default "."
         @return              A Combiner object.
         """
         comb_dict = {}
@@ -82,7 +78,7 @@ class AnalysisConfigWrapper(object):
             branchComb = self._parseBranch(branchDict)
             comb_dict[branchName] = branchComb
 
-        return RootCombiner(comb_dict, eval_dict, dataFilePath, refFilePath, outputPath)
+        return RootCombiner(comb_dict, eval_dict, dataFilePath, refFilePath)
 
     def _parseLeaf(self, leafName, leafDict):
         """

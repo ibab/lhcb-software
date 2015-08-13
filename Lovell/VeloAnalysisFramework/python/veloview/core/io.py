@@ -1,5 +1,6 @@
 """This module implements an interface to GiantRootFileIO"""
 
+from ..config import Config
 from ..utils.rootutils import ROOT
 from ..utils.utils import flatten, unflatten
 from veloview.giantrootfile.gui_tree import Tree
@@ -8,7 +9,7 @@ import os
 class GRFIO(object):
     """Interface for versioned objects implemented by GiantRootFileIO."""
 
-    def __init__(self, fname, mode = 'read', treeName = 'DQTree', title ='',  branches = None):
+    def __init__(self, fname, mode = 'read', treeName = Config().grf_tree_name, title ='',  branches = None):
         """
         Instantiate a new GRFIO object for interfacing with an (un)versioned
         ROOT tree.
@@ -136,7 +137,7 @@ class GRFIO(object):
 
         from os import rename
         rename(newfilename, filename)
-        #del self.lock
+        del self.lock
         del newlock
 
         self.mode = 'update'

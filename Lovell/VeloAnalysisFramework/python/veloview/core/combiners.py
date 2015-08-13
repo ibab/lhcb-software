@@ -7,6 +7,7 @@ from abc import ABCMeta, abstractmethod
 
 import ROOT
 
+from ..config import Config
 from .io import GRFIO
 from .interface import ComparisonFunction
 from .score_manipulation import Score, ERROR_LEVELS
@@ -295,23 +296,21 @@ class BranchCombiner(Combiner):
 class RootCombiner(BranchCombiner):
     MASTER_COMBINER_NAME = "MasterCombiner"    # name of the root combiner
 
-    def __init__(self, desc_dict, eval_dict, data_file_path, ref_file_path, output_path):
+    def __init__(self, desc_dict, eval_dict, data_file_path, ref_file_path):
         """
         Parameters:
             desc_dict     : a combiner description dictionary (which describes the tree structure)
             eval_dict     : an evaluation dictionary that holds information about analysis method for each histogram
             data_file_path: a path to a root file with data to analyse
             ref_file_path : a path to a root file that serves as reference
-            output_path   : path to write the output to
         """
         super(RootCombiner, self).__init__(RootCombiner.MASTER_COMBINER_NAME, desc_dict, eval_dict, data_file_path, ref_file_path)
-        self.output_path = output_path
 
     def write_to_grf(self):
         """
         Write the entire tree to a Giant Root File.
         """
-        writer = GRFIO(self.output_path + "/analysis.root", mode = "create", treeName = "testTree", branches = self.getBranches())
+        writer = GRFIO(Config().grf_file_name, mode = "update", branches = self.getBranches())
         writer.fill(self.getWritableResults())
         writer.write()
         writer.close()

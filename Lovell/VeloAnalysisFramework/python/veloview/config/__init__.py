@@ -32,6 +32,8 @@ DEFAULTS = {
     'reference_db': 'ReferenceDB.sqlite',
     'run_view_pages': run_view.run_view_pages,
     'analysis_config': (analysis_config.analysis_config_branches, analysis_config.analysis_config_leaves),
+    'grf_file_name': '/tmp/GRF.root',
+    'grf_tree_name': 'DQTree',
 }
 
 # Only export the Config class

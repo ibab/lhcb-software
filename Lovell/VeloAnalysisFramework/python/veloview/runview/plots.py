@@ -3,8 +3,10 @@ import glob
 
 import ROOT
 
+from veloview.config import Config
 from veloview.config.run_view import run_view_pages
 from veloview.core import io
+from veloview.giantrootfile.gui_tree import Tree
 from veloview.runview import utils
 from veloview.runview.response_formatters import dictionary_formatter
 
@@ -92,19 +94,32 @@ def get_plot_dictionary(name):
         return plot
 
 
-def get_trending_plot(name, runRange, formatter = dictionary_formatter):
+def get_trending_plot(name, runRange, binsY = 10, minY = 0., maxY = 10., formatter = dictionary_formatter):
     """
     Get a trending plot, showing a certain variable plotted against run number.
     """
-    hist = ROOT.TH1F(name, name, len(runRange), runRange[0], runRange[-1])
-    for runNr in runRange:
-        base = utils.run_file_path(runNr)
-        files = sorted(glob.glob("{0}/analysis.root".format(base)))
-        if files:
-            f = io.GRFIO(files[-1])
-            if f:
-                runValues = f.read([name])
-                hist.SetBinContent(runNr, runValues[0])
-                f.Close()
+    f = ROOT.TFile(Config().grf_file_name, 'READ')
+    t = Tree(Config().grf_tree_name)
+    h = t.Plot( 
+            ( # functions projecting out coordinates to plot
+                lambda t: t.runnr,
+                lambda t: getattr(t, name).value()
+                ),
+            ( # cut(s) to apply
+                lambda t: t.runnr in runRange,
+                ),
+            # no weights, do not draw into existing histogram
+            None, None,
+            # histogram constructor arguments
+            (name, 'run number versus {0};run number;{0}'.format(name),
+                len(runRange), min(runRange) - .5, max(runRange) + .5, binsY, minY, maxY)
+            )
+    formatted = formatter(h)
 
-    return formatter(hist)
+    del h
+    del t
+    f.Close()
+    del f
+
+    return formatted
+
