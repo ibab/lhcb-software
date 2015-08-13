@@ -440,7 +440,7 @@ class StrippingLine(object):
         Hlt2DecReportsDecoder=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].setup()
         if self._HLT :
 
-            log.warning("The usage of unique HLT is deprecated and will not work on data taken from 2015 onward. Please move to use HLT1 and HLT2.")
+            log.warning( self.name()+" : The usage of unique HLT is deprecated and will not work on data taken from 2015 onward. Please move to use HLT1 and HLT2.")
 
             if isinstance( self._HLT , str   ) :
                 mdict.update( { 'HLT' : HDRFilter( hltentryName( line ), Code = self._HLT ) } )
