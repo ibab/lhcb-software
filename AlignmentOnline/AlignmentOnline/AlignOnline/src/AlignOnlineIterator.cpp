@@ -18,6 +18,7 @@
 #include "GaudiKernel/ToolHandle.h"
 #include "AlignmentInterfaces/IAlignUpdateTool.h"
 #include "AlignmentInterfaces/IWriteAlignmentConditionsTool.h"
+#include "AlignmentMonitoring/CompareConstants.h"
 
 #include "AlignOnlineXMLCopier.h"
 #include <boost/filesystem.hpp>
@@ -77,6 +78,8 @@ class AlignOnlineIterator: public GaudiTool, virtual public LHCb::IAlignIterator
     string m_ServInfix;
     vector<string> m_subDets;
     IUpdateManagerSvc* m_updateMgrSvc ; ///< Pointer to update manager svc
+    unsigned int m_wrnLo;
+    unsigned int m_wrnHi;
 };
 
 DECLARE_TOOL_FACTORY(AlignOnlineIterator)
@@ -223,6 +226,9 @@ StatusCode AlignOnlineIterator::i_run()
 
   Al::IAlignUpdateTool::ConvergenceStatus convergencestatus = Al::IAlignUpdateTool::Unknown;
 
+  // Constants
+  std::map<std::string, double> initAlConsts, finalAlConsts;
+
   while (m_iteration <= m_maxIteration)
   {
     debug() << "wait for analyzers" << endreq;
@@ -253,6 +259,11 @@ StatusCode AlignOnlineIterator::i_run()
       error() << "Error calling alignupdate tool" << endreq;
       break;
     }
+
+    // Store alignment constants - MM
+    //
+    if (m_iteration == 1) // first iteration store the initial
+      initAlConsts = m_alignupdatetool->getAlignmentConstants();
 
     // copy the xml directory to a directory with the iteration name
     if( m_keepIterXml ) {
@@ -300,22 +311,38 @@ StatusCode AlignOnlineIterator::i_run()
   string *s;
   if (sc.isSuccess() && m_iteration > 1 && convergencestatus == Al::IAlignUpdateTool::Converged)
   {
-    // after last update, if more than one iteration and successfully converged
-    for (auto& i : m_xmlcopiers)
-    {
-      StatusCode thissc = i->copyToOnlineArea();
-      info() << "Condition: " << i->condition() << " Filename: "
-          << i->copybackfilename() << endmsg;
-      auto j = m_condmap.find(i->condition());
-      s = (j->second);
-      //*s = to_string(runnr) + " " + i->copybackfilename();
-      *s = to_string(runnr) + " v" + to_string(i->version());
-
-      if (!thissc.isSuccess())
-      {
-        error() << "Error copying file to online area" << endmsg;
-      }
-    }
+    // if converged, check whether alignment needs to be updated by comparing the constants
+    //
+    // get the latest constants
+    finalAlConsts = m_alignupdatetool->getAlignmentConstants(true);
+    // compare them to initial
+    Alignment::AlignmentMonitoring::CompareConstants cmp(initAlConsts,finalAlConsts);
+    cmp.Compare();
+    if ( msgLevel(MSG::DEBUG) ) cmp.PrintWarnings(0);
+    if ( !(cmp.GetNumWarnings(2) || cmp.GetNumWarnings(1)>3) ) { // no significant change
+      warning() << "Alignment converged in more than one iteration but constants didn't change significantly." 
+		<< endmsg;
+      if (cmp.GetNumWarnings(1))
+	cmp.PrintWarnings(1);
+    } else {
+      
+      // after last update, if more than one iteration and successfully converged
+      for (auto& i : m_xmlcopiers)
+	{
+	  StatusCode thissc = i->copyToOnlineArea();
+	  info() << "Condition: " << i->condition() << " Filename: "
+		 << i->copybackfilename() << endmsg;
+	  auto j = m_condmap.find(i->condition());
+	  s = (j->second);
+	  //*s = to_string(runnr) + " " + i->copybackfilename();
+	  *s = to_string(runnr) + " v" + to_string(i->version());
+	  
+	  if (!thissc.isSuccess())
+	    {
+	      error() << "Error copying file to online area" << endmsg;
+	    }
+	}
+    } // end of check on the constants
   }
   else
   {
@@ -343,6 +370,8 @@ StatusCode AlignOnlineIterator::i_run()
 
   // move the 'running' dir to a dirname with current run
   string rundir = m_alignworkdir + "/"+ m_runType+"/run" + to_string(runnr);
+  if (! (boost::filesystem::exists(m_alignworkdir + "/"+ m_runType)) )
+    boost::filesystem::create_directory(m_alignworkdir + "/"+ m_runType);
   if (boost::filesystem::exists(rundir))
     boost::filesystem::remove_all(rundir);
   boost::filesystem::rename(m_runningdir,rundir);
