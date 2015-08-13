@@ -39,6 +39,7 @@ namespace Al
     StatusCode process( const Al::Equations& equations, ConvergenceStatus& convergencestatus) const ;
     StatusCode process( const Al::Equations& equations, ConvergenceStatus& convergencestatus, size_t iter, size_t maxiter ) const ;
     StatusCode queryInterface(const InterfaceID& riid, void** ppvi ) ;
+    std::map<std::string, double> getAlignmentConstants(bool final=false);
 
   private:
     bool printDebug()   const {return msgLevel(MSG::DEBUG);};
@@ -48,6 +49,7 @@ namespace Al
 		      AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,AlVec& scale) const ;
     void postCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2, const AlVec& scale) const ;
     void getAlignmentConstants(const Elements& elements, AlignConstants& alignConstants) const ;
+    std::map<std::string, double> getAlignmentConstantsMap(const Elements& elements) const;
     void fillIterProfile( const HistoID& id,const std::string& title,size_t numiter,size_t iter,double val, double err=0) const ;
     StatusCode addDaughterDerivatives(Al::Equations& equations) const ;
     void dumpMostImportantDofs(const Elements& elements,const Al::Equations& equations,std::ostream& logmessage) const ;
@@ -67,6 +69,8 @@ namespace Al
     std::string                m_logFileName ;
     mutable std::ostringstream m_logMessage ;
     mutable unsigned int       m_iteration ;
+    mutable std::map<std::string, double> m_initConsts;
+    mutable std::map<std::string, double> m_finalConsts;
   } ;
   
   DECLARE_TOOL_FACTORY( AlignUpdateTool )
@@ -398,12 +402,12 @@ namespace Al
       sc = m_elementProvider->initAlignmentFrame( equations.initTime() ) ;
       if( !sc.isSuccess() ) return sc ;
     }
-  
+    /* commented because it caused the alignment to fail in the online system - Wouter is investigating - 13/8/2015
     if( !checkGeometry( constequations ) ) {
       sc = Warning("Cannot initialize geometry to that found in AlEquations.", StatusCode::FAILURE) ;
       if( !sc.isSuccess() ) return sc ;
     }
-    
+    */
     typedef Gaudi::Matrix1x6 Derivatives;
     if ( equations.nElem() == 0 ) {
       warning() << "==> No elements to align." << endmsg ;
@@ -637,9 +641,13 @@ namespace Al
 	    modmessage << "local delta chi2 / dof: " << thisLocalDeltaChi2 << " / " << delta.dim() << std::endl ;
 	    totalLocalDeltaChi2 += thisLocalDeltaChi2 ;
 
+	    // Store constants before the update
+	    m_initConsts = getAlignmentConstantsMap(elements);
 	    // need const_cast because loki range givess access only to const values 
 	    StatusCode sc = (const_cast<AlignmentElement*>(*it))->updateGeometry(delta) ;
 	    if (!sc.isSuccess()) error() << "Failed to set alignment condition for " << (*it)->name() << endmsg ;
+	    // Store constants after the update
+	    m_finalConsts = getAlignmentConstantsMap(elements);
 
 
 	    std::string name = (*it)->name(); 
@@ -748,6 +756,28 @@ namespace Al
 	  alignConstants.insert(alignConstants.end(), translations.begin(), translations.end());
 	  alignConstants.insert(alignConstants.end(), rotations.begin()   , rotations.end()   );
     }
+  }
+
+  std::map<std::string, double> 
+  AlignUpdateTool::getAlignmentConstantsMap(const Elements& elements) const 
+  {
+    // this method returns a map of the alignment constant of the kind
+    //   - < name.dof, val >
+    //
+    std::map<std::string, double> alConsts;
+    for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i) {
+      debug() << "Getting alignment constants for " << (**i) << endmsg;
+      /// Get translations and rotations
+      const std::vector<double>& translations = (*i)->deltaTranslations();
+      const std::vector<double>& rotations    = (*i)->deltaRotations();
+      alConsts[ std::string( (*i)->name() ) + std::string(".Tx") ] = translations[0];
+      alConsts[ std::string( (*i)->name() ) + std::string(".Ty") ] = translations[1];
+      alConsts[ std::string( (*i)->name() ) + std::string(".Tz") ] = translations[2];
+      alConsts[ std::string( (*i)->name() ) + std::string(".Rx") ] = rotations[0];
+      alConsts[ std::string( (*i)->name() ) + std::string(".Ry") ] = rotations[1];
+      alConsts[ std::string( (*i)->name() ) + std::string(".Rz") ] = rotations[2];
+    } // i in elements
+    return alConsts;
   }
 
   StatusCode AlignUpdateTool::queryInterface(const InterfaceID& id, void** ppI) {
@@ -874,6 +904,12 @@ namespace Al
       chi2prime = 2*x*x ;
     }
     return chi2prime ;
+  }
+
+  std::map<std::string, double>
+  AlignUpdateTool::getAlignmentConstants(bool final)
+  {
+    return final ? m_finalConsts : m_initConsts;
   }
 
 }
