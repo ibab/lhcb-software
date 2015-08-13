@@ -86,5 +86,8 @@ appMgr.HistogramPersistency = "ROOT"
 ntSvc = NTupleSvc()
 appMgr.ExtSvc +=  [ ntSvc ]
 
-appMgr.TopAlg += [ sc.sequence() ]
+#appMgr.TopAlg += [ sc.sequence() ]
 
+from Configurables import DaVinci
+DaVinci().DataType   = "2012"
+DaVinci().appendToMainSequence( [ sc.sequence() ] )

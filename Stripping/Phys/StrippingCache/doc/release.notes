@@ -5,6 +5,10 @@
 ! Created     : 2015-02-04
 ! -----------------------------------------------------------------------------
 
+! 2015-08-13 - Chris Jones
+ - Update CMake file to explicitly depend on DaVinciConfUserDB, to try anf force
+   this package to be built after Phys/DaVinci, so the configuable is available.
+
 ! 2015-08-12 - Chris Jones
  - Updates for S23.
   + Added options/DV-Stripping23-Stripping.py
