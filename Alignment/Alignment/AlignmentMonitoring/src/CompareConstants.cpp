@@ -123,7 +123,7 @@ CompareConstants::CheckConstant(const char* name, double delta)
 void
 CompareConstants::PrintWarnings(int level)
 {
-  if !CheckWarningLevel(level) return;
+  if (!CheckWarningLevel(level) ) return;
   
   std::string warning_string = "OK";
   for (auto wrn : m_mapWarnings) {
@@ -241,7 +241,7 @@ CompareConstants::CheckWarningLevel(int level)
 int
 CompareConstants::GetNumWarnings(int level)
 {
-  if !CheckWarningLevel(level) return;
+  if ( !CheckWarningLevel(level) ) return -1;
   // get number of warnings of this level
   int nw(0);
   for (auto wrn : m_mapWarnings)
