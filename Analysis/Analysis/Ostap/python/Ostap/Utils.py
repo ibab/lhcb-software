@@ -44,7 +44,7 @@ __all__     = (
     'NoContext'      , ## empty context manager
     'RooSilent'      , ## control RooFit verbosity
     'ROOTIgnore'     , ## control ROOT verbosity, suppress ROOT errors 
-    #
+    ##
     'takeIt'         , ## take and later delete ...
     )
 # =============================================================================
@@ -953,7 +953,6 @@ def get_file_names_from_file_number(fds):
     for fd in fds:
         names.append(os.readlink('/proc/self/fd/%d' % fd))
     return names
-
 
 
 # =============================================================================

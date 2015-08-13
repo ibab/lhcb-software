@@ -74,7 +74,6 @@ __all__     = (
 import ROOT, os , cppyy              ## attention here!!
 cpp = cppyy.makeNamespace('')
 VE  = cpp.Gaudi.Math.ValueWithError 
-# 
 # =============================================================================
 # logging 
 # =============================================================================
@@ -147,7 +146,7 @@ def _rd_setitem_ ( rdir , name , tobj ) :
             subdir = rdir.GetDirectory(dirname)
             if not subdir :
                 rdir.cd() 
-                subdir = rdir.mkdir ( dirname  , name.replace('/','_') )
+                subdir = rdir.mkdir ( dirname  , rdir.GetPath() + '/' + dirname )
                 rdir.cd() 
                 subdir = rdir.GetDirectory( dirname )
                 if not subdir :

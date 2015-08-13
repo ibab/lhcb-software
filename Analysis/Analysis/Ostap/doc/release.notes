@@ -9,6 +9,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-08-13 - Vanya Belyaev
+ - (hopefully) fix some problem with project method 
+
+! 2015-08-13 - Vanya Belyaev
  - fix minor bug in getting the shell variable 
 
 ! 2015-08-12 - Vanya Belyaev

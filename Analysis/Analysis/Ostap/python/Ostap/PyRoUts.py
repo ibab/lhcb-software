@@ -100,33 +100,38 @@ logger = getLogger( __name__ )
 # =============================================================================
 logger.info ( 'Zillions of decorations for ROOT   objects')
 ## ============================================================================
-# global identifier for ROOT objects 
+#  global identifier for ROOT objects 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
-def rootID ( prefix = 'o_') :
+def rootID ( prefix = 'o_' ) :
     """
     Construct the unique ROOT-id 
     """
     _fun = lambda i : prefix + '%d'% i
     
     _root_ID = 1000
-    
-    _id = _fun ( _root_ID ) 
-    while ROOT.gROOT.FindObject         ( _id ) or \
-          ROOT.gROOT.FindObjectAny      ( _id ) or \
-          ROOT.gDirectory.FindObject    ( _id ) or \
-          ROOT.gDirectory.FindObjectAny ( _id )    :
-
-        _root_ID += 10 
-        _id       = _fun ( _root_ID ) 
-
+    ## 
+    from Ostap.TFileDeco import ROOTCWD
+    with ROOTCWD() : ## keep the current working directory:
+        
+        _id  = _fun ( _root_ID )
+        grd  = ROOT.gROOT
+        cwd  = grd.CurrentDirectory()
+        while grd.FindObject    ( _id ) or \
+              grd.FindObjectAny ( _id ) or \
+              cwd.FindObject    ( _id ) or \
+              cwd.FindObjectAny ( _id ) : 
+                
+            _root_ID += 10 
+            _id       = _fun ( _root_ID ) 
+            
     return _id                 ## RETURN
 # =============================================================================
-## global ROOT identified for function obejcts 
+## global ROOT identified for function objects 
 def funcID  () : return rootID  ( 'f_' )
-## global ROOT identified for function obejcts 
+## global ROOT identified for function objects 
 def funID   () : return funcID  ( )
-## global ROOT identified for function obejcts 
+## global ROOT identified for function objects 
 def fID     () : return funcID  ( )
 ## global ROOT identified for histogram objects 
 def histoID () : return rootID  ( 'h_' )
@@ -182,7 +187,7 @@ else :
 def _new_clone_ ( self , hid = '' ) :
     """
     Modifiled Clone-function
-    - it automaticlaly assign unique ID
+    - it automatically assign unique ID
     - it ensures that cloned histogram is not going to die with
       the accidentally opened file/directory
     """
@@ -611,7 +616,6 @@ def _h1_iter_ ( h1 ) :
     for i in range ( 1 , sx + 1 ) : 
         yield i
 
-
 # =============================================================================
 ## iterator for 1D-histogram in reverse order 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -626,6 +630,7 @@ def _h1_iter_reversed_ ( h1 ) :
     sx = ax.GetNbins ()
     for i in range ( sx , 0 , -1 ) : 
         yield i
+
         
 ROOT.TH1  . __iter__     = _h1_iter_ 
 ROOT.TH1F . __iter__     = _h1_iter_ 
