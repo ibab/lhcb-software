@@ -3,6 +3,10 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-08-13 - Maurizio Martinelli
+ - added the possibility to compare constants from two arbitrary maps
+ - reverted examples/CompareConstants to read from public directory
+
 ! 2015-08-13 - Zhirui Xu
  - added CompareWithRun function and modified the output format in src/CompareConstants.cpp
  - updated src/AlignmentMonitoring.cpp

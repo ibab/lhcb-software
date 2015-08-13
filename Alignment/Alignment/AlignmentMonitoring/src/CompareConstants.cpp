@@ -18,6 +18,13 @@ CompareConstants::CompareConstants()
 {
 }
 
+CompareConstants::CompareConstants(std::map<std::string,double> iVals, std::map<std::string,double> fVals)
+  : CompareConstants("","","")
+{
+  m_constRef = iVals;
+  m_constAlt = fVals;
+}
+
 CompareConstants::CompareConstants(const char* system, const char* ref, const char* dir)
 : m_verbose(false)
 , m_system(system)
@@ -35,24 +42,15 @@ CompareConstants::CompareConstants(const char* system, const char* ref, const ch
 
 // Methods
 void
-CompareConstants::Compare(const char* ver)
+CompareConstants::Compare()
 {
-  std::map<std::string, WarningLevel> wls;
-  ParseConstants parser;
-  m_constRef = parser.Parse((m_dir+"/"+m_system+"/"+m_ref+".xml").c_str());
-  m_constAlt = parser.Parse((m_dir+"/"+m_system+"/"+std::string(ver)+".xml").c_str());
   if (m_verbose) std::cout  << "nElements: " << m_constRef.size() << " " << m_constAlt.size() << std::endl;
   if (m_constAlt.size() != m_constRef.size()) {
-    std::cout << "Beware, the number of elements for the two files\n"
-              << "\t" << m_dir+"/"+m_system+"/"+m_ref << ".xml\n"
-              << "\t" << m_dir+"/"+m_system+"/"+std::string(ver) << ".xml\n"
-              << "is not the same. Please check your options!\n";
+    std::cout << "Beware, the number of elements for the two maps is different!\n";
     return;
   }
   for (auto iel : m_constRef) {
     m_mapWarnings[iel.first] = CheckConstant(iel.first.c_str(), iel.second - m_constAlt[iel.first]);
-    //    std::vector<double> limits = GetLimits(iel.first.c_str());
-    //    m_mapWarnings[iel.first] = CheckConstant(iel.second - m_constAlt[iel.first], limits[0], limits[1]);
     if (m_verbose)
       std::cout << iel.first << ": "
                 << iel.second << " - " << m_constAlt[iel.first] << " = " << iel.second - m_constAlt[iel.first]
@@ -60,6 +58,17 @@ CompareConstants::Compare(const char* ver)
                 << std::endl;
     FillDeltaHist(iel.first.c_str());
   }
+  return;
+}
+
+void
+CompareConstants::Compare(const char* ver)
+{
+  std::map<std::string, WarningLevel> wls;
+  ParseConstants parser;
+  m_constRef = parser.Parse((m_dir+"/"+m_system+"/"+m_ref+".xml").c_str());
+  m_constAlt = parser.Parse((m_dir+"/"+m_system+"/"+std::string(ver)+".xml").c_str());
+  Compare();
   return;
 }
 

@@ -19,12 +19,13 @@ namespace Alignment
     {
     public:
       // Constructor
-      CompareConstants (const char* system="IT/ITGlobal", const char* ref="v8", const char* dir="files/alignment");
       CompareConstants ();
       CompareConstants (const char* system/*="IT/ITGlobal/"*/, const char* ref="v8", const char* dir="files/alignment/");
+      CompareConstants(std::map<std::string,double> iVals, std::map<std::string,double> fVals);
       // Destructor
       ~CompareConstants () {}
       // Methods
+      void Compare();
       void Compare(const char* ver);
       void CompareWithRun(const char* dir, const char* runNo);
       WarningLevel CheckConstant(const char* name, const char* dof, double delta);
