@@ -94,7 +94,7 @@ class Alignable:
         self.NumOutliers = nOutliers
         self.EnoughHits = enough_hits
         self.LocatToGlobalDiagonal = local_to_global_diag if local_to_global_diag != None else []
-        self.LocalDeltaChi2 = local_delta_chi2
+        self.LocatDeltaChi2 = local_delta_chi2
         self.SurveyChi2Before = surveyChi2Before
         self.SurveyChi2After = surveyChi2After
         self.AlignmentDOFs = AlignDofs if AlignDofs != None else []
@@ -207,7 +207,7 @@ class AlignIter:
                  survey_const_chi2=None, survey_const_ndof=None,
                  most_important_dofs=None,
                  nAlignablesInsufficient=None, nLagrangeConst=None, nChi2Const=None, nActivePars=None,
-                 deltaChi2=None, deltaChi2Dofs=None, normalised_change_chi2=None, deltaChi2_trackDofs=None, local_delta_chi2=None,
+                 deltaChi2=None, deltaChi2Dofs=None, normalised_change_chi2=None, max_eigenmode_chi2=None, deltaChi2_trackDofs=None, local_delta_chi2=None,
                  canonical_constraint_chi2=None, canonical_constraint_equations=None,
                  survey_constraints_largest=None,
                  alignables=None):
@@ -230,6 +230,7 @@ class AlignIter:
         self.LocalDeltaChi2 = local_delta_chi2
         self.DeltaChi2nDofs = deltaChi2Dofs
         self.NormalisedChi2Change = normalised_change_chi2
+        self.MaxModeChi2 = max_eigenmode_chi2
         self.DeltaChi2overNDofs = deltaChi2_trackDofs
         self.CanonicalConstraints = {'chi2': canonical_constraint_chi2,
                                     'equations': canonical_constraint_equations if canonical_constraint_equations != None else []}
@@ -237,7 +238,12 @@ class AlignIter:
         self.Alignables = alignables if alignables!= None else {}
     # Get Attributes
     def __getattribute__(self, name):
-        return self.__dict__[name] if name in self.__dict__.keys() else None
+        if name in self.__dict__.keys():
+            return self.__dict__[name]
+        elif self.Nums.has_key(name):
+            return self.Nums[name]
+        else:
+            return None
     # Info
     def AlignablesWithInsufficientStatistic(self, details=True, moredetails=False):
         notAligned = []
@@ -283,10 +289,10 @@ class AlignOutput:
                 self.ParseMostImportantDofs(line)
                 continue
             if self.logstatus == 'canonical_constraints':
-                self.ParseCanonicalConstraints(line)
+                # self.ParseCanonicalConstraints(line)
                 continue
             if self.logstatus == 'survey_constraints':
-                #self.ParseSurveyConstraints(line)
+                # self.ParseSurveyConstraints(line)
                 continue
             if self.logstatus == 'alignables':
                 self.ParseAlignable(line)
@@ -381,6 +387,9 @@ class AlignOutput:
         if 'total local delta chi2 / dof:' in line:
             self.AlignIterations[self.index].LocalDeltaChi2 = float(words[-3])
             return
+        if 'Maximum chisq contribution of eigenmode:' in line:
+            self.AlignIterations[self.index].MaxModeChi2 = float(words[-1])
+            return
 
         return
     # Parse Most Important DOFs
@@ -397,7 +406,11 @@ class AlignOutput:
         '''
         Parse canonical constraints
         '''
-        words = [x for x in line.split('\n')[0].split(' ') if x!='']
+        # words = [x for x in line.split('\n')[0].split(' ') if x!='']
+        import re
+        print line
+        words = re.findall('(.*?) ([TRS][a-z]{1,2})(.*?) *?\+/\- (.*?) *?gcc\^2: *?([0-9\.\-]*)', line)
+        print words
         if 'Canonical constraint chisquare:' in line:
             self.AlignIterations[self.index].CanonicalConstraints['chi2'] = float(words[-1])
             return
@@ -470,7 +483,7 @@ class AlignOutput:
                 self.AlignIterations[self.index].Alignables[self.alignableName].HitErrorContribution['relative'] = float(words[-1])
                 return
             if 'local delta chi2 / dof:' in line:
-                self.AlignIterations[self.index].Alignables[self.alignableName].LocalDeltaChi2 = float(words[-3])
+                self.AlignIterations[self.index].Alignables[self.alignableName].LocatDeltaChi2 = float(words[-3])
                 return
         return
     # Decode Time
@@ -496,5 +509,26 @@ class AlignOutput:
                         words[0], 0, float(words[7]), float(words[9]), float(words[3]), float(words[5]), float(words[9]))
 
 
+import fnmatch
+# dofs_limits = {'Tx' : 0.0015, 'Ty' : 0.0015, 'Tz' : 0.004, 'Rx' : 0.000002, 'Ry' : 0.000002, 'Rz' : 0.00005}
+dofs_limits = {'Tx' : 0.0015, 'Ty' : 0.00015, 'Tz' : 0.004, 'Rx' : 0.0000025, 'Ry' : 0.0000025, 'Rz' : 0.00005}
+alignables_limits = {'Velo/VeloLeft' : dofs_limits}
 
-
+def isBigDiff(alIter, alignables_limits=alignables_limits):
+    '''
+    alIter: istance of AlignOutput.AlignIter
+    alignables_limits is a dictionarry with {alignable: dofs_limits} where
+    dofs_limits is a dictionary with the limits for the various dofs e.g. {"Tx" : 0.0015}
+    Alignable can contains wildchars bash-like
+    return true if the variation of at least one constant is bigger than the threshold in dofs_limits
+    '''
+    for alignable_pattern, dofs_limits in alignables_limits.items():
+        for alignable_name, alignable in alIter.Alignables.items():
+            if fnmatch.fnmatch(alignable_name, alignable_pattern):
+                for dof in alignable.AlignmentDOFs:
+                    if abs(dof.Delta) > dofs_limits[dof.Name]:
+                        return True
+    return False
+                    
+            
+        

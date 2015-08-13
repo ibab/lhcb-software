@@ -11,7 +11,7 @@
 # general imports
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-from matplotlib.ticker import Formatter, FixedLocator
+from matplotlib.ticker import Formatter, FixedLocator, ScalarFormatter
 from matplotlib.backends.backend_pdf import PdfPages
 import datetime
 import numpy as np
@@ -22,7 +22,7 @@ from AlignOutput import AlignIter
 
 # Dicts
 units= {'Delta':'mm', 'DeltaErr':'mm', 'Cur': 'mm', 'CurTot': 'mm' }
-colors=['red','blue','magenta','black','orange','green','yellow','cyan','gray']
+colors=['red','blue','black','orange','green','magenta','yellow','cyan','gray','purple','crimson','chocolate','pink']
 
 # BEGIN ALPLOTTER
 class AlPlotter:
@@ -70,13 +70,15 @@ class AlPlotter:
             # rotate and align the tick labels so they look better
             fig.autofmt_xdate()
         # set tick names
-        if self.xAxis['title'] == 'variable':
+        if self.xAxis['title'] == 'variable' or self.xAxis.has_key('ticknames'):
             ax.set_xticks(xrange(0,len(self.xAxis['ticknames'])))
             ax.set_xticklabels(self.xAxis['ticknames'])
+            ax.set_xlim(self.xAxis['min'], self.xAxis['max'])
+        # ax.get_xaxis().set_major_formatter(ScalarFormatter())
         return
     
     # Create the plot frame
-    def Frame(self, title = 'a plot', ylabel = 'u.a.'):
+    def Frame(self, title = 'a plot', ylabel = 'u.a.', xlog=False, ylog=False):
         """
             Create a frame in where to plot the data
         """
@@ -87,6 +89,9 @@ class AlPlotter:
         plt.xlabel(self.xAxis['title'])
         # Set X axis
         self.SetPltAxis(fig)
+        # log axis
+        if xlog: plt.xscale('log')
+        if ylog: plt.yscale('log')
         return fig
 
     # Resize the axes
@@ -125,16 +130,16 @@ class AlPlotter:
                     print 'ERROR: a list of values is requested as input!'
                     return
                 if len(y[name]) == 0: continue
-                if pltErr: plt.errorbar(self.xAxis['labels'], y[name], yerr=yerr[name], marker='o', color = colors[i], label=name)
-                else: plt.plot(self.xAxis['labels'], y[name], marker='o', color = colors[i], label=name)
+                if pltErr: plt.errorbar(self.xAxis['labels'], y[name], yerr=yerr[name], marker='o', color = colors[i], label=name, linestyle='None')
+                else: plt.plot(self.xAxis['labels'], y[name], marker='o', color = colors[i], label=name, linestyle='None')
                 i = i + 1
         else:
             if type(y) not in [list, np.ndarray]:
                 print 'ERROR: a list of values is requested as input!'
                 return
             if len(y) == 0: return
-            if yerr != None: plt.errorbar(self.xAxis['labels'], y, yerr=yerr, marker='o')
-            else: plt.plot(self.xAxis['labels'], y,marker='o')
+            if yerr != None: plt.errorbar(self.xAxis['labels'], y, yerr=yerr, marker='o', linestyle='None')
+            else: plt.plot(self.xAxis['labels'], y,marker='o', linestyle='None')
         # add a dashed line for zero
         if zero: plt.axhline(ls='--',c='black')
         # add a legend
@@ -153,33 +158,33 @@ class AlPlotter:
         return
     
     # Plot general variable of iteration
-    def PlotExpression(self, expr, yrange=None):
+    def PlotExpression(self, expr, yrange=None, xlog=False, ylog=False):
         """
             Plot a common variable of iteration that can be extracted from a general expression
         """
         # Get array with values
         x = self.DecodeExpression(expr)
         # Define the frame
-        self.Plots += [ self.Frame( expr, expr + (' ('+units[expr]+')' if expr in units.keys() else '')) ]
+        self.Plots += [ self.Frame( expr, expr + (' ('+units[expr]+')' if expr in units.keys() else ''), xlog=xlog, ylog=ylog) ]
         # Plot
         self.Plot(x)
         self.ResizeAxes(yrange=yrange)
         return
     
     # Plot alignable property
-    def PlotAlignable(self, name, key, yrange=None):
+    def PlotAlignable(self, name, key, yrange=None, xlog=False, ylog=False):
         """
             Plot a property of an alignable for the stored jobs
         """
         # store values for specific key of alignable
         x = [self.GetAttr(key, alJob.Alignables[name]) for alJob in self.AlignJobs]
-        self.Plots += [ self.Frame( name, name + (' ('+units[name]+')' if name in units.keys() else '')) ]
+        self.Plots += [ self.Frame( name, name + (' ('+units[name]+')' if name in units.keys() else ''), xlog=xlog, ylog=ylog) ]
         self.Plot(x)
         self.ResizeAxes(yrange=yrange)
         return
     
     # plot parameter for specific dof
-    def PlotAlignableDof(self, name, dof, corr=None, par=None, plotErr=True, yrange=None, addToPDF=False):
+    def PlotAlignableDof(self, name, dof, corr=None, par=None, plotErr=True, yrange=None, addToPDF=False, xlog=False, ylog=False):
         """
             Plot the parameter for a specific degree of freedom
                 name: alignable name (IT/Station2/TopBox)
@@ -198,15 +203,15 @@ class AlPlotter:
  #       yErr = [self.GetAttr(parErr, self.GetAlignableDof(alJob, name, dof)) for alJob in self.AlignJobs]
         # add figure
         if par != None and corr==None:
-            self.Plots += [ self.Frame( name+'.'+dof, par + (' ('+units[par]+')' if units[par] != None else '')) ]
+            self.Plots += [ self.Frame( name+'.'+dof, par + (' ('+units[par]+')' if units[par] != None else ''), xlog=xlog, ylog=ylog) ]
         else:
-            self.Plots += [ self.Frame( name+'.'+dof, corr + ' (mm)') ]
+            self.Plots += [ self.Frame( name+'.'+dof, corr + ' (mm)', xlog=ylog, ylog=ylog) ]
         self.Plot(y['vals'], yerr= y['err'] if len(y['err']) != 0 else None, zero=True)
         self.ResizeAxes(yrange=yrange)
         return
     
     # plot parameter for specific dofs from different (or same) alignables
-    def PlotAlignablesDofs(self, names, corr=None, par=None, plotErr=True, xaxis=None, title=None, yrange=None, addToPDF=False):
+    def PlotAlignablesDofs(self, names, corr=None, par=None, plotErr=True, xaxis=None, title=None, yrange=None, addToPDF=False, xlog=False, ylog=False):
         """
             Plot a parameter for two or more dofs from same or different alignables
                 names: list of alignable names + dofs (['IT/Station2/TopBox.Tx', 'IT/Station2/TopBox.Tz'])
@@ -233,9 +238,9 @@ class AlPlotter:
                 yerrs.update( {name: ytmp['err']} )
         # add figure
         if par != None and corr==None:
-            self.Plots += [ self.Frame( title if title!=None else '', par + (' ('+units[par]+')' if units[par] != None else '')) ]
+            self.Plots += [ self.Frame( title if title!=None else '', par + (' ('+units[par]+')' if units[par] != None else ''), xlog=xlog, ylog=ylog) ]
         else:
-            self.Plots += [ self.Frame( name+'.'+dof, corr + ' (mm)') ]
+            self.Plots += [ self.Frame( name+'.'+dof, corr + ' (mm)', xlog=xlog, ylog=ylog) ]
               #        print yvals, yerrs, parErr
         self.Plot(yvals, yerr= yerrs if parErr != None else None, zero=True, legend=True, title=title)
         self.ResizeAxes(yrange=yrange)
@@ -371,26 +376,6 @@ class AlPlotter:
         plt.axhline(ls='--',c='black')
         # add a legend
         plt.legend(loc='best')
-        return
-
-    def PlotLocalDeltaChi2(self, Iter=-2):
-        """
-          Plot the distribution of the local delta chi2 / ndof for a specific iteration
-        """
-        # add figure
-        self.Plots += [ plt.figure() ]
-        plt.title('Local delta chi2/ndof distribution')
-        plt.xlabel('delta Chi2/ndof')
-        plt.ylabel('# Alignables')
-        for iter in xrange(len(self.AlignJobs)):
-          if Iter != -2 and iter != Iter: continue
-          vals = []
-          for alName, al in self.AlignJobs[iter].Alignables.iteritems():
-            if len(al.AlignmentDOFs):
-              vals += [al.LocalDeltaChi2 / len(al.AlignmentDOFs)]
-          plt.hist(vals, bins=[5*i for i in xrange(20)], histtype='step', log=True, color=colors[iter], alpha=0.5, label='Iter%d' % iter)
-        plt.legend()
-        plt.show()
         return
     
     # UTILITIES
