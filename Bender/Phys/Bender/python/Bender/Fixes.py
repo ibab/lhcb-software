@@ -70,6 +70,7 @@ def _bender_at_exit_ () :
     """
     At-Exit action
     """
+
     logger.debug ( '*'*120 ) 
     logger.debug ( 'custom "atexit" handler is being invoked' ) 
     logger.debug ( '*'*120 ) 
