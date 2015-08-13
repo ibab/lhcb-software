@@ -46,7 +46,7 @@ CompareConstants::Compare()
 {
   if (m_verbose) std::cout  << "nElements: " << m_constRef.size() << " " << m_constAlt.size() << std::endl;
   if (m_constAlt.size() != m_constRef.size()) {
-    std::cout << "Beware, the number of elements for the two maps is different!\n";
+    std::cout << "Beware, the number of elements for the two maps is different! (" << m_constAlt.size() << " vs " << m_constRef.size() << ") \n";
     return;
   }
   for (auto iel : m_constRef) {

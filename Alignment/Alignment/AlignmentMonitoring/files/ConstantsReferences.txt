@@ -1,6 +1,13 @@
 # A file to define the ranges within the constants can change to raise specific alarms
 # 0 - Normal - x1 - Warning - x2 - Severe
 
+# Global
+Tracker\..*	0.00001	0.001
+
+# Velo Global
+Velo\..*	0.00001	0.001
+Velo/Velo(Left|Right)\..*	0.00001	0.001
+
 # IT Global
 ITSystem\..*	0.00001	0.001
 ITT(1|2|3)\..*	0.00001	0.001

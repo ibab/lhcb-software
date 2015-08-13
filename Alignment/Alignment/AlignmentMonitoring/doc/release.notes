@@ -4,6 +4,8 @@
 !------------------------------------------------------------------------------
 
 ! 2015-08-13 - Maurizio Martinelli
+ - now printing the number of elements in each map when different among each other
+ - added a few missing elements in the reference file
  - added a method to get the number of warnings for each category
  - added the possibility to compare constants from two arbitrary maps
  - reverted examples/CompareConstants to read from public directory
