@@ -75,7 +75,6 @@ __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2011-10-24"
 __version__ = '$Revision$'
 __all__     = ()  ## nothing to import 
-__usage__   = 'dst_dump [options] file1 [ file2 [ file3 [ file4 ....'
 __all__     =  ( 'dumpDst' , )
 # =============================================================================
 ## logging
@@ -86,35 +85,30 @@ else                      : logger = getLogger ( __name__ )
     
 # =============================================================================
 from BenderTools.Parser      import makeParser
-from BenderTools.DstExplorer import configure 
 # =============================================================================
 ## dump it ! 
 #  @date   2011-10-24
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-def dumpDst ( usage   = __usage__   ,
-              version = __version__ ) :
+def dumpDst ( **kwargs ) :
     ##
-    parser = makeParser  ( usage , version )
-
-    parser.add_option (
+    parser = makeParser  ( **kwargs )
+    parser.add_argument (
         '-n'                          ,
-        '--events'                    ,
+        '--nevents'                   ,
         dest    = 'nEvents'           ,
-        type    = 'int'               , 
+        type    = int                 , 
         help    = "Number of events to process " ,
         default = -1    
         )
-    
-    parser.add_option (
+    parser.add_argument (
         '-z'                         ,
         '--summary'                  ,
         dest    = 'SummaryFile'      ,
         help    = "Output file with dst-summary" ,
-        type    = 'str'              , 
+        type    = str               , 
         default = 'dst_summary.txt'    
         )
-    
-    parser.add_option (
+    parser.add_argument (
         '-f'                         ,
         '--follow'                   ,
         dest    = 'FollowLinks'      ,
@@ -122,31 +116,37 @@ def dumpDst ( usage   = __usage__   ,
         action  = "store_true"       ,
         default = False    
         )
-    
-    parser.add_option (
-        '-d'                         ,
+    parser.add_argument (
+        '-w'                         ,
         '--dod'                      ,
         dest    = 'DataOnDemand'     ,
         help    = "Dump the known DOD-locations (fragile!), (+)" ,
         action  = "store_true"       ,
         default = False    
         )
+
+    ## eliminate artifacts and parse command-line arguments 
+    config = parser.parse_args( [ a for a in sys.argv[1:] if '--' != a ] )  
     
-    options , arguments = parser.parse_args() 
+    arguments.OutputLevel = 4
     
-    options.OutputLevel = 4
-    
-    print 120*'*'
-    if options.Quiet : 
+    logger.info ( 100*'*') 
+    if config.Quiet : 
         logger.info(' Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs ' ) 
     else :
-        logger.info( __doc__ ) 
+        logger.info ( 100*'*')
+        logger.info ( __doc__ ) 
+        logger.info ( 100*'*')
+        logger.info ( ' Author  : %s ' % __author__   ) 
+        logger.info ( ' Version : %s ' % __version__  ) 
+        logger.info ( ' Date    : %s ' % __date__     )
+        logger.info ( 100*'*')
         
-    ## The input files must be specified!
-    if not arguments : parser.error ( 'No input files are specified' )
+    ## The input files mus
+    if not config.files : parser.error ( 'No input files are specified' )
 
-    ## options.Quiet = True 
-    configure ( options , arguments ) 
+    from BenderTools.DstExplorer import new_configure 
+    new_configure ( argument ) 
     
     from Configurables import MessageSvc, DataOnDemandSvc, ToolSvc 
     from Configurables import Gaudi__RootCnvSvc    as RootCnvSvc 
@@ -163,7 +163,7 @@ def dumpDst ( usage   = __usage__   ,
     IODataManager     ( 'IODataManager'                , OutputLevel = 6 ,
                         AgeLimit = 1 , UseGFAL = False )
     
-    if options.DataOnDemand :
+    if argument.DataOnDemand :
         DataOnDemandSvc   ( Dump = True  )
     else :
         DataOnDemandSvc   ( Dump = False , OutputLevel = 6 )
@@ -183,11 +183,9 @@ def dumpDst ( usage   = __usage__   ,
                       'IntegrateBeamCrossing'    ]
 
     from Bender.Main import appMgr, run, cpp
-    
-    if options.Simulation : import Bender.MainMC
+    if config.Simulation : import Bender.MainMC
 
-
-    root = options.RootInTES
+    root = config.RootInTES
 
     #
     ## instantiate the application manager
@@ -211,7 +209,7 @@ def dumpDst ( usage   = __usage__   ,
 
     iEvent = 0
 
-    while iEvent != options.nEvents :
+    while iEvent != config.nEvents :
         #
         sc = run(1)
         if sc.isFailure()       : break
@@ -221,7 +219,7 @@ def dumpDst ( usage   = __usage__   ,
         iEvent += 1
         #
         nodes = evtSvc.nodes ( node      = root ,
-                           forceload = True )
+                               forceload = True )
         if not nodes :
             logger.warning ( "No nodes are selected for Root:'%s'" % root  )
 
@@ -251,12 +249,12 @@ def dumpDst ( usage   = __usage__   ,
         #
         ## follow the links? Useful for packed (u)DST
         #
-        if options.FollowLinks: 
+        if config.FollowLinks: 
             links = links - nodes 
             for loc in links:
             
-                if options.RootInTES :
-                    if 0 != loc.find ( options.RootInTES ) : continue 
+                if config.RootInTES :
+                    if 0 != loc.find ( config.RootInTES ) : continue 
                 
                 data = evtSvc[loc]
                 loc = loc[:7] + '*' + loc[7:] 
@@ -273,7 +271,7 @@ def dumpDst ( usage   = __usage__   ,
         #
         ## explore locations known for DOD
         #
-        if options.DataOnDemand :
+        if config.DataOnDemand :
         
             for k in dodSvc.AlgMap .keys () : dods.add ( k ) 
             for k in dodSvc.NodeMap.keys () :
@@ -286,10 +284,10 @@ def dumpDst ( usage   = __usage__   ,
         
             for loc in dods :
 
-                if options.RootInTES :
-                    if 0 != loc.find ( options.RootInTES ) : continue 
+                if config.RootInTES :
+                    if 0 != loc.find ( config.RootInTES ) : continue 
                 
-                if not options.Simulation :
+                if not config.Simulation :
                     if 0 <= loc.find ( 'MC'   ) : continue
                     if 0 <= loc.find ( 'Prev' ) : continue
                     if 0 <= loc.find ( 'Next' ) : continue
@@ -350,7 +348,7 @@ def dumpDst ( usage   = __usage__   ,
 
 
     print '\n\n\n'
-    ofile  = open ( options.SummaryFile , 'w' )     
+    ofile  = open ( config.SummaryFile , 'w' )     
     for line in _printMessage :
         print           line   
         print >> ofile, line 
@@ -359,15 +357,18 @@ def dumpDst ( usage   = __usage__   ,
 
 # =============================================================================
 if '__main__' == __name__ :
-
-    print 120*'*'
-    print ' Author  : ', __author__ 
-    print ' Version : ', __version__ 
-    print ' Date    : ', __date__ 
+    
+    logger.info ( 100*'*')
+    logger.info ( __doc__ ) 
+    logger.info ( 100*'*')
+    logger.info ( ' Author  : %s ' % __author__   ) 
+    logger.info ( ' Version : %s ' % __version__  ) 
+    logger.info ( ' Date    : %s ' % __date__     )
+    logger.info ( 100*'*')
     
     dumpDst ()
 
-    print 120*'*'
+    logger.info ( 100*'*')
     
 # =============================================================================
 # The END 

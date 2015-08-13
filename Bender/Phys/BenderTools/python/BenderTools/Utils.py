@@ -80,8 +80,7 @@ def silence ( lst = [ 'HcalDet.Quality'          ,
                       'ToolSvc.L0CondDBProvider' , 
                       'L0MuonFromRaw'            ] ) :
     """    
-    Suppress some unnesessary printout form Gaudi
-    
+    Suppress some unnesessary printout from Gaudi
     """
     #
     logger.info ( 'Suppress some unnesessary Gaudi prints' ) 

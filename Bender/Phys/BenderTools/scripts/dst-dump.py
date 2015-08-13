@@ -67,7 +67,6 @@ __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2011-10-24"
 __version__ = '$Revision$'
 __all__     = ()  ## nothing to import 
-__usage__   = 'dst_dump [options] file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -80,7 +79,13 @@ print ' Date    : ', __date__
 
 from BenderTools.DstDump import dumpDst
 
-dumpDst ( __usage__ , __version__ )
+dumpDst (
+    prog = 'dst-dump'     ,
+    desription = """      ,
+    Trivial Bender-based script to dump the content of (x,mu,s,r,...)DSTs
+    """,
+    version = __version__ )
+
 
 print 120*'*'
 

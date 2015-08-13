@@ -135,6 +135,226 @@ if '__main__' == __name__ : logger = getLogger ( 'BenderTools.DstExplorer' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
 ## configure the application from parser data  
+def new_configure ( config ) :
+    """
+    Configure the application from parser data 
+    """
+    # 
+    ## redefine output level for 'quiet'-mode
+    if config.OutputLevel > 5 :
+        config.OutputLevel = 5
+        logger.info('set OutputLevel to be %s ' % config.OutputLevel )
+        
+    if config.OutputLevel < 0 :
+        config.OutputLevel = 0
+        logger.info('set OutputLevel to be %s ' % config.OutputLevel )
+        
+    if config.Quiet and 4 > config.OutputLevel :
+        config.OutputLevel = 4
+        logger.info('set OutputLevel to be %s ' % config.OutputLevel )
+        from BenderTools.Utils import silence
+        silence () 
+    #
+    ## start the actual action:
+    #
+    from Configurables       import DaVinci
+
+    #
+    ## get the file type for the file extension
+    #
+    from BenderTools.Parser import dataType
+    pyfiles = [ i for i in config.files if  len(i) == 3 + i.find('.py') ]
+    files   = [ i for i in config.files if  i not in pyfiles ]
+    
+    from BenderTools.Parser import fileList 
+    files  += fileList ( config.FileList )
+    
+    if not files and not config.ImportOptions and config.ImportOptions : 
+        raise AttributeError('No data files are specified!')
+    
+    ## get some info from file names/extensision
+    dtype, simu, ext = None,None,None  
+    if  files :
+        dtype, simu, ext = dataType ( files )
+    
+    if '2013' == dtype :
+        logger.info ('Data type 2013 is redefined to be 2012')
+        dtype = '2012'
+        
+        # 
+    if ext in ( 'gen'  , 'xgen' ,
+                'GEN'  , 'XGEN' ,
+                'ldst' , 'LDST' ) and not simu : simu = True 
+    
+    if dtype and dtype != config.DataType :
+        logger.info ( 'Redefine DataType from  %s to %s '   % ( config.DataType, dtype ) )
+        config.DataType  = dtype
+        
+    if simu and not config.Simulation : 
+        logger.info ( 'Redefine Simulation from  %s to %s ' % ( config.Simulation, simu ) )
+        config.Simulation  = simu 
+        
+    if config.Simulation and config.Lumi :
+        logger.info('suppress Lumi for Simulated data')    
+        config.Lumi = False
+        
+    ## summary information (when available) 
+    from Configurables import LHCbApp
+    LHCbApp().XMLSummary = 'summary.xml'
+
+    daVinci = DaVinci (
+        DataType    = config.DataType    ,
+        Simulation  = config.Simulation  ,
+        Lumi        = config.Lumi               
+        )
+    
+    if config.MicroDST or 'mdst' == ext or 'MDST' == ext or 'uDST' == ext :
+        logger.info ( 'Define input type as micro-DST' )
+        daVinci.InputType = 'MDST'
+        
+    #
+    ## try to guess RootInTES
+    #
+    from BenderTools.Parser import hasInFile 
+    if   hasInFile ( files , 'CHARM.MDST'    ) and not config.RootInTES :
+        config.RootInTES = '/Event/Charm'
+        logger.info ('RootInTES is set according to CHARM.MDST'    )
+        daVinci.InputType = 'MDST'        
+    elif hasInFile ( files , 'LEPTONIC.MDST' ) and not config.RootInTES :
+        config.RootInTES = '/Event/Leptonic'
+        logger.info ('RootInTES is set according to LEPTONIC.MDST' )
+        daVinci.InputType = 'MDST'
+    elif hasInFile ( files , 'BHADRON.MDST'  ) and not config.RootInTES :
+        config.RootInTES = '/Event/Bhadron'
+        logger.info ('RootInTES is set according to BHADRON.MDST'  )
+        daVinci.InputType = 'MDST'
+    elif hasInFile ( files , 'PID.MDST'      ) and not config.RootInTES :
+        config.RootInTES = '/Event/PID'
+        logger.info ('RootInTES is set according to PID.MDST'      )
+        daVinci.InputType = 'MDST'
+    elif hasInFile ( files , 'PSIX.MDST'     ) and not config.RootInTES :
+        config.RootInTES = '/Event/PSIX'
+        logger.info ('RootInTES is set according to PSIX.MDST'     )
+        daVinci.InputType = 'MDST'
+    elif hasInFile ( files , 'PSIX0.MDST'    ) and not config.RootInTES :
+        config.RootInTES = '/Event/PSIX0'
+        logger.info ('RootInTES is set according to PSIX0.MDST'    )
+        daVinci.InputType = 'MDST'
+    elif hasInFile ( files , 'BOTTOM.MDST'   ) and not config.RootInTES :
+        config.RootInTES = '/Event/BOTTOM'
+        logger.info ('RootInTES is set according to BOTTOM.MDST'   )
+        daVinci.InputType = 'MDST'
+
+    
+    if config.RootInTES and  0  != config.RootInTES.find ( '/Event' ) :
+        config.RootInTES  = '/Event/' + config.RootInTES        
+    if config.RootInTES and '/' == config.RootInTES[-1] :
+        config.RootInTES  = config.RootInTES[:-1]        
+    if config.RootInTES and '/Event' != config.RootInTES  : 
+        daVinci.RootInTES = config.RootInTES 
+    #
+    ## check for Grid-access
+    #
+    if config.Grid : 
+        from Bender.DataUtils import hasGridProxy
+        if not hasGridProxy () :
+            logger.warning ( 'GRID proxy is not available, switch off GRID-lookup' )
+            config.Grid = ''  ## SWITCH OFF Grid-lookup
+
+    if not config.Simulation and config.DataType in ( '2010' ,
+                                                      '2011' ,
+                                                      '2012' ,
+                                                      '2013' , 
+                                                      '2015' ) :
+        #
+        ## try to use the latest available tags:
+        #
+        from Configurables import CondDB    
+        ## CondDB ( UseLatestTags = [ options.DataType ] )
+        ## logger.info('Use latest tags for %s' % options.DataType )
+        CondDB( LatestGlobalTagByDataType = config.DataType ) 
+        logger.info('Use latest global tag for data type %s' % config.DataType )
+        
+    if config.Simulation :
+        #
+        ## try to get the tags from Rec/Header
+        from BenderTools.GetDBtags import useDBTagsFromData
+        tags = useDBTagsFromData (
+            files [ 0 ]       ,
+            config.Castor     ,
+            config.Grid       ,
+            daVinci           ) 
+
+    ## specific action for (x)gen files 
+    if ext in ( 'gen' , 'xgen' , 'GEN' , 'XGEN' ) :
+        from BenderTools.GenFiles import genAction
+        genAction ( ext )
+        
+    ## Reset all DaVinci sequences 
+    def _action ( ) :
+        """
+        Reset all DaVinci sequences
+        """
+        from Gaudi.Configuration import allConfigurables 
+        from Gaudi.Configuration import getConfigurable 
+        for seq in ( 'DaVinciInitSeq'      ,
+                     'DaVinciMainSequence' ,
+                     'DaVinciSequence'     ,
+                     'MonitoringSequence'  ,
+                     'FilteredEventSeq'    ) :
+
+            if not seq in allConfigurables : continue 
+            cSeq = getConfigurable( seq )
+            if cSeq and hasattr ( cSeq , 'Members' ) :
+                logger.info ( 'Reset the sequence %s' % cSeq.name() )
+                cSeq.Members = []
+
+            ## reset the list of top-level algorithms 
+            from Configurables import ApplicationMgr
+            a = ApplicationMgr()
+            a.TopAlg = []
+            a.OutputLevel = options.OutputLevel
+            
+            from Configurables import MessageSvc
+            m = MessageSvc ( OutputLevel = options.OutputLevel )
+            
+            from GaudiConf import IOHelper
+            ioh = IOHelper () 
+            ioh.setupServices()
+            
+    ## prepare to copy good/marked/tagged evenst
+    if hasattr ( config , 'OutputFile' ) and config.OutputFile :
+        from BenderTools.GoodEvents import copyGoodEvents
+        if 0 <= config.OutputFile.find ( '.' ) : 
+            copyGoodEvents (             config.OutputFile         ) 
+        else :
+            copyGoodEvents ( "%s.%s" % ( config.OutputFile , ext ) ) 
+
+    ## comment it out... Hm...
+    ## from Gaudi.Configuration import appendPostConfigAction
+    ## appendPostConfigAction ( _action )
+    
+    ## import options (if specified) 
+    for i in config.ImportOptions :
+        logger.info ("Import options from file %s'" % i )
+        from Gaudi.Configuration import importOptions
+        importOptions ( i )  
+    
+    ## get xml-catalogs (if specified) 
+    catalogs = [ config.XmlCatalogue ] if config.XmlCatalogue else []
+
+    ## set input data
+    from Bender.Utils import setData 
+    setData ( files           ,
+              catalogs        ,
+              config.Castor   ,
+              config.Grid     )
+
+    if not config.Quiet : print daVinci
+
+    return pyfiles
+
+## configure the application from parser data  
 def configure ( options , arguments ) :
     """
     Configure the application from parser data 

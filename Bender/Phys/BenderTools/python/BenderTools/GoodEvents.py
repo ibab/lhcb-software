@@ -49,7 +49,8 @@ And it is based on the LoKi project:
  
    ``C++ ToolKit for Smart and Friendly Physics Analysis''
 
-By usage of this code one clearly states the disagreement with the smear campaign of Dr.O.Callot et al.:
+By usage of this code one clearly states the disagreement with the smear campaign
+of Dr.O.Callot et al.:
 
    ``No Vanya's lines are allowed in LHCb/Gaudi software''
 

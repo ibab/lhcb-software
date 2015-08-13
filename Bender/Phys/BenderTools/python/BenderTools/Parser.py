@@ -208,35 +208,34 @@ def makeParser ( usage = None ,
     return parser
 
 ## create the parser
-def makeArgParser ( usage = None ,
-                 vers  = None ) :
+def makeArgParser ( **kwargs ) :
     """
     Create the parser 
     """
     #
-    if not usage : usage = __usage__
-    if not vers  : vers  = __version__
-    #
-    from argparse import ArgumentParser as ArgParser
-    parser = ArgParser( usage   = usage )
+    version = kwargs.pop('version', None )
+    
+    import argparse 
+    parser = argparse.ArgumentParser( **kwargs )
 
-    ## version: 
-    parser.add_argument ( '--version' , action='version', version = vers  ) 
+    ## version:
+    if version: 
+        parser.add_argument ( '-v', '--version' , action='version', version = version )
     ##
     parser.add_argument (
-        '-t'                  ,
-        '--datatype'          ,
-        dest    = 'DataType'  ,
-        type    =  str        , 
+        '-d'                      ,
+        '--datatype'              ,
+        dest    = 'DataType'      ,
+        type    =  str            , 
         help    = "``DataType''    attribute to be specified for DaVinci [default : %(default)s]" ,
         default = '2012'  
         )
     ## 
     parser.add_argument (
-        '-s'                          ,
-        '--simulation'                ,
-        action  = "store_true"        ,
-        dest    = 'Simulation'        ,
+        '-s'                      ,
+        '--simulation'            ,
+        action  = "store_true"    ,
+        dest    = 'Simulation'    ,
         help    = "``Simulation''  flag to be propagated to DaVinci" ,
         default = False   
         )
@@ -249,7 +248,7 @@ def makeArgParser ( usage = None ,
         help    = "Grid-site to access LFN-files (has precedence over -c, but grid proxy is needed)" ,
         default = 'CERN'
         )
-    ## 
+    ##
     parser.add_argument (
         '-c'                          ,
         '--castor'                    ,
@@ -304,15 +303,6 @@ def makeArgParser ( usage = None ,
         )
     ##
     parser.add_argument (
-        '-u'                       ,
-        '--useoracle'              ,
-        action  = "store_true"     ,
-        dest    = 'UseOracle'      ,
-        help    = "Use Oracle-DB"  ,
-        default = False   
-        )
-    ##
-    parser.add_argument (
         '-l'                       ,
         '--lumi'                   ,
         action  = "store_true"     ,
@@ -327,18 +317,24 @@ def makeArgParser ( usage = None ,
         dest    = 'FileList'       ,
         type    = str              ,
         default = ''               ,
-        help    = "A file with list of input file names"
+        help    = "A file with a plain list of input file names"
         )
     ##
     parser.add_argument (
         '-i'                       ,
         '--import'                 ,
         dest    = 'ImportOptions'  ,
-        type    = str              ,
-        default = ''               ,
-        help    = "A file to be used for 'importOptions'"
+        metavar = 'IMPORT'         , 
+        nargs   = '*'              ,
+        default = []               , 
+        help    = "List of file to be used for 'importOptions', e.g. input data"
         )
     ##
+    parser.add_argument (
+        "files" ,
+        metavar = "FILE" , nargs = '*' , 
+        help    = "Input data&python files to be processed " )
+
     return parser
 
 # =============================================================================
