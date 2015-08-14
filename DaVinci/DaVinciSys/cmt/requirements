@@ -10,6 +10,9 @@ use  TeslaTools     v1r13     Phys
 use  HltDAQ         v4r20     Hlt
 ##############################
 
+# Temporarily moved in from Stripping, for S23 release
+use StrippingCache   v1r0     Phys
+
 # Packages
 use  DaVinci         v37r1p2  Phys   # DaVinci coordinator
 use  DaVinciTests    v2r36
