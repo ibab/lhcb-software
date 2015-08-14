@@ -23,7 +23,7 @@
 #
 #
 #  @date   2010-09-10
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #
 #                    $Revision$
 #  Last modification $Date$
@@ -74,141 +74,10 @@ from Bender.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'BenderTools.Parser' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
-## create the parser
-def makeParser ( usage = None ,
-                 vers  = None ) :
-    """
-    Create the parser 
-    """
-    #
-    if not usage : usage = __usage__
-    if not vers  : vers  = __version__
-    #
-    from optparse import OptionParser as OptParser
-    parser = OptParser( usage   = usage            ,
-                        version = ' %prog ' + vers )
-    
-    ##
-    parser.add_option (
-        '-t'                  ,
-        '--datatype'          ,
-        dest    = 'DataType'  ,
-        type    = 'str'       , 
-        help    = "``DataType''    attribute to be specified for DaVinci [default : %default]" ,
-        default = '2012'  
-        )
-    ## 
-    parser.add_option (
-        '-s'                          ,
-        '--simulation'                ,
-        action  = "store_true"        ,
-        dest    = 'Simulation'        ,
-        help    = "``Simulation''  flag to be propagated to DaVinci" ,
-        default = False   
-        )
-    ## 
-    parser.add_option (
-        '-g'                       ,
-        '--grid'                   ,
-        type    = 'str'            , 
-        dest    = 'Grid'           ,
-        help    = "Grid-site to access LFN-files (has precedence over -c, but grid proxy is needed)" ,
-        default = 'CERN'
-        )
-    ## 
-    parser.add_option (
-        '-c'                          ,
-        '--castor'                    ,
-        action  = "store_true"        ,
-        dest    = 'Castor'            ,
-        help    = "Enable direct access to Castor/EOS Grid Storage to access LFN-files" ,
-        default = True   
-        )
-    ##
-    parser.add_option (
-        '-p'                          ,
-        '--print'                     ,
-        type    = 'int'               , 
-        dest    = 'OutputLevel'       ,
-        help    = "``OutputLevel'' attribute for ApplicationMgr/MessageSvc [default : %default]" ,
-        default = 3                  
-        )
-    ## 
-    parser.add_option (
-        '-m'                          ,
-        '--micro'                     ,
-        action  = "store_true"        ,
-        dest    = 'MicroDST'          ,
-        help    = "MicroDST format?"  ,
-        default = False   
-        )
-    ##
-    parser.add_option (
-        '-x'                           ,
-        '--xml'                        ,
-        dest    = 'XmlCatalogue'       ,
-        help    = "``XmlCatalog'' to be transferred to setData-function [default : %default]" ,
-        default = ''                  
-        )
-    ## 
-    parser.add_option (
-        '-q'                          ,
-        '--quiet'                     ,
-        action  = "store_true"        ,
-        dest    = 'Quiet'             ,
-        help    = "``Quiet'' processing"  ,
-        default = False   
-        )
-    ## 
-    parser.add_option (
-        '-r'                     ,
-        '--root'                 ,
-        type    = 'str'          ,
-        dest    = 'RootInTES'    ,
-        help    = 'Root-In-TES'  ,
-        default = ''           
-        )
-    ##
-    parser.add_option (
-        '-u'                       ,
-        '--useoracle'              ,
-        action  = "store_true"     ,
-        dest    = 'UseOracle'      ,
-        help    = "Use Oracle-DB"  ,
-        default = False   
-        )
-    ##
-    parser.add_option (
-        '-l'                       ,
-        '--lumi'                   ,
-        action  = "store_true"     ,
-        dest    = 'Lumi'           ,
-        help    = "Use Lumi?"      ,
-        default = False   
-        )
-    ##
-    parser.add_option (
-        '-k'                       ,
-        '--klist'                  ,
-        dest    = 'FileList'       ,
-        type    = 'str'            ,
-        default = ''               ,
-        help    = "A file with list of input file names"
-        )
-    ##
-    parser.add_option (
-        '-i'                       ,
-        '--import'                 ,
-        dest    = 'ImportOptions'  ,
-        type    = 'str'            ,
-        default = ''               ,
-        help    = "A file to be used for 'importOptions'"
-        )
-    ##
-    return parser
-
-## create the parser
-def makeArgParser ( **kwargs ) :
+## create the base parser, suitable for many bender-based scripts
+#  @date   2010-09-10
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+def makeParser ( **kwargs ) :
     """
     Create the parser 
     """
@@ -223,103 +92,14 @@ def makeArgParser ( **kwargs ) :
         parser.add_argument ( '-v', '--version' , action='version', version = version )
     ##
     parser.add_argument (
-        '-d'                      ,
-        '--datatype'              ,
-        dest    = 'DataType'      ,
-        type    =  str            , 
-        help    = "``DataType''    attribute to be specified for DaVinci [default : %(default)s]" ,
-        default = '2012'  
-        )
-    ## 
-    parser.add_argument (
-        '-s'                      ,
-        '--simulation'            ,
-        action  = "store_true"    ,
-        dest    = 'Simulation'    ,
-        help    = "``Simulation''  flag to be propagated to DaVinci" ,
-        default = False   
-        )
-    ## 
-    parser.add_argument (
-        '-g'                       ,
-        '--grid'                   ,
-        type    = str              , 
-        dest    = 'Grid'           ,
-        help    = "Grid-site to access LFN-files (has precedence over -c, but grid proxy is needed)" ,
-        default = 'CERN'
-        )
-    ##
-    parser.add_argument (
-        '-c'                          ,
-        '--castor'                    ,
-        action  = "store_true"        ,
-        dest    = 'Castor'            ,
-        help    = "Enable direct access to Castor/EOS Grid Storage to access LFN-files" ,
-        default = True   
-        )
-    ##
-    parser.add_argument (
-        '-p'                          ,
-        '--print'                     ,
-        type    = int                 , 
-        dest    = 'OutputLevel'       ,
-        help    = "``OutputLevel'' attribute for ApplicationMgr/MessageSvc [default : %(default)s]" ,
-        default = 3                  
-        )
-    ## 
-    parser.add_argument (
-        '-m'                          ,
-        '--micro'                     ,
-        action  = "store_true"        ,
-        dest    = 'MicroDST'          ,
-        help    = "MicroDST format?"  ,
-        default = False   
-        )
-    ##
-    parser.add_argument (
-        '-x'                           ,
-        '--xml'                        ,
-        dest    = 'XmlCatalogue'       ,
-        help    = "``XmlCatalog'' to be transferred to setData-function [default : %(default)s]" ,
-        default = ''                  
-        )
-    ## 
-    parser.add_argument (
         '-q'                          ,
         '--quiet'                     ,
         action  = "store_true"        ,
         dest    = 'Quiet'             ,
-        help    = "``Quiet'' processing"  ,
+        help    = "``Quiet'' processing [defaut : %(default)s ]"  ,
         default = False   
         )
     ## 
-    parser.add_argument (
-        '-r'                     ,
-        '--root'                 ,
-        type    = str            ,
-        dest    = 'RootInTES'    ,
-        help    = 'Root-In-TES'  ,
-        default = ''           
-        )
-    ##
-    parser.add_argument (
-        '-l'                       ,
-        '--lumi'                   ,
-        action  = "store_true"     ,
-        dest    = 'Lumi'           ,
-        help    = "Use Lumi?"      ,
-        default = False   
-        )
-    ##
-    parser.add_argument (
-        '-k'                       ,
-        '--klist'                  ,
-        dest    = 'FileList'       ,
-        type    = str              ,
-        default = ''               ,
-        help    = "A file with a plain list of input file names"
-        )
-    ##
     parser.add_argument (
         '-i'                       ,
         '--import'                 ,
@@ -327,14 +107,108 @@ def makeArgParser ( **kwargs ) :
         metavar = 'IMPORT'         , 
         nargs   = '*'              ,
         default = []               , 
-        help    = "List of file to be used for 'importOptions', e.g. input data"
+        help    = """List of files to be used for 'importOptions',
+        e.g. input data [default:%(default)s].
+        The files are imported at the end of configuration step"""
         )
     ##
-    parser.add_argument (
+    group_dv = parser.add_argument_group(
+        'LHCb/DaVinci' ,
+        'General LHCb/DaVinci application configuration')
+    group_dv.add_argument (
+        '-p'                          ,
+        '--print'                     ,
+        type    = int                 , 
+        dest    = 'OutputLevel'       ,
+        help    = "``OutputLevel'' attribute for ApplicationMgr/MessageSvc [default : %(default)s]" ,
+        default = 3                  
+        )
+    ##
+    group_dv.add_argument (
+        '-d'                      ,
+        '--datatype'              ,
+        dest    = 'DataType'      ,
+        type    =  str            , 
+        help    = """``DataType''    attribute for DaVinci [default : %(default)s].
+        Often it can be deduced from input file name/extension""" ,
+        default = '2012'  
+        )
+    ## 
+    group_dv.add_argument (
+        '-s'                      ,
+        '--simulation'            ,
+        action  = "store_true"    ,
+        dest    = 'Simulation'    ,
+        help    = """``Simulation''  attribute for DaVinci [default: %(default)s].
+        Often it can be deduced from input file name/extension""" ,
+        default = False   
+        )
+    ##
+    group_dv.add_argument (
+        '-m'                          ,
+        '--micro'                     ,
+        action  = "store_true"        ,
+        dest    = 'MicroDST'          ,
+        help    = """``MicroDST''    attribute for DaVinci [default : %(default)s].
+        Often it can be deduced from input file name/extension""" ,
+        default = False   
+        )
+    ##
+    group_dv.add_argument (
+        '-r'                         ,
+        '--root'                     ,
+        type    = str                ,
+        dest    = 'RootInTES'        ,
+        help    = """Root-In-TES fpr uDST [default : %(default)s].
+        Often it can be deduced from input file name/extension""" 
+        )
+    ##
+    group_dv.add_argument (
+        '-l'                       ,
+        '--lumi'                   ,
+        action  = "store_true"     ,
+        dest    = 'Lumi'           ,
+        help    = "``Lumi''       attribute for DaVinci [default : %(default)s]",
+        default = False   
+        )
+    ##
+    group_da = parser.add_argument_group(
+        'Input data' ,
+        'Properties related to input data and data access')
+    group_da.add_argument (
+        '-g'                       ,
+        '--grid'                   ,
+        type    = str              , 
+        dest    = 'Grid'           ,
+        help    = "Grid-site to access LFN-files (has precedence over -c, but grid proxy is needed) [default : %(default)s]" ,
+        default = 'CERN'
+        )
+    ## 
+    group_da.add_argument (
+        '-x'                        ,
+        '--xml'                     ,
+        nargs   = '*'               , 
+        dest    = 'XmlCatalog'      ,
+        help    = "``XmlCatalogs'' to be transferred to setData-function [default: %(default)s]" ,
+        default = []                
+        )
+    ## 
+    group_da.add_argument (
+        '-k'                       ,
+        '--klist'                  ,
+        dest    = 'FileList'       ,
+        nargs   = '*'              ,
+        default = []               , 
+        help    = "Files with the plain list of input file names [default: %(default)s]"
+        )
+    ##
+    group_da.add_argument (
         "files" ,
-        metavar = "FILE" , nargs = '*' , 
-        help    = "Input data&python files to be processed " )
-
+        metavar = "FILE"          ,
+        nargs   = '*'             ,
+        default = []              , 
+        help    = "Input data(&python) files to be processed [default: %(default)s]" )
+    ##
     return parser
 
 # =============================================================================

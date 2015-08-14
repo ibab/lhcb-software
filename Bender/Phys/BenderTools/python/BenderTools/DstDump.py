@@ -84,52 +84,28 @@ if '__main__' == __name__ : logger = getLogger ( 'BenderTools.DstDump' )
 else                      : logger = getLogger ( __name__ )
     
 # =============================================================================
-from BenderTools.Parser      import makeParser
+## table format 
+_fhdr_ = ' | %8s | %15s | %7s | %4s | %6s |'                 ## header  
+_fmt1_ = ' | %8g | %7.1f+-%-6.1f | %-7.1f | %4d | %-6d |'  
+_fmt2_ = ' | %8d | %7d%8s | %7s | %4s | %6s |'
+# =============================================================================
+def formatItem ( item ) : 
+    if item.Min() != item.Max() or 0 != item.rms() or  0 != item.meanErr() :
+        return  _fmt1_ % ( item.sum     () ,
+                           item.mean    () ,
+                           item.meanErr () ,
+                           item.rms     () ,
+                           long ( item.Min () ) ,
+                           long ( item.Max () ) )
+    else :
+        return _fmt2_ % ( long ( item.sum  ().value() ) ,
+                          long ( item.mean ().value() ) , '' , '' , '', '' ) 
 # =============================================================================
 ## dump it ! 
 #  @date   2011-10-24
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-def dumpDst ( **kwargs ) :
+def dumpDst ( config ) :
     ##
-    parser = makeParser  ( **kwargs )
-    parser.add_argument (
-        '-n'                          ,
-        '--nevents'                   ,
-        dest    = 'nEvents'           ,
-        type    = int                 , 
-        help    = "Number of events to process " ,
-        default = -1    
-        )
-    parser.add_argument (
-        '-z'                         ,
-        '--summary'                  ,
-        dest    = 'SummaryFile'      ,
-        help    = "Output file with dst-summary" ,
-        type    = str               , 
-        default = 'dst_summary.txt'    
-        )
-    parser.add_argument (
-        '-f'                         ,
-        '--follow'                   ,
-        dest    = 'FollowLinks'      ,
-        help    = "Flag to follow links, useful for packed (u)DST (*)" ,
-        action  = "store_true"       ,
-        default = False    
-        )
-    parser.add_argument (
-        '-w'                         ,
-        '--dod'                      ,
-        dest    = 'DataOnDemand'     ,
-        help    = "Dump the known DOD-locations (fragile!), (+)" ,
-        action  = "store_true"       ,
-        default = False    
-        )
-
-    ## eliminate artifacts and parse command-line arguments 
-    config = parser.parse_args( [ a for a in sys.argv[1:] if '--' != a ] )  
-    
-    arguments.OutputLevel = 4
-    
     logger.info ( 100*'*') 
     if config.Quiet : 
         logger.info(' Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs ' ) 
@@ -145,43 +121,12 @@ def dumpDst ( **kwargs ) :
     ## The input files mus
     if not config.files : parser.error ( 'No input files are specified' )
 
-    from BenderTools.DstExplorer import new_configure 
-    new_configure ( argument ) 
-    
-    from Configurables import MessageSvc, DataOnDemandSvc, ToolSvc 
-    from Configurables import Gaudi__RootCnvSvc    as RootCnvSvc 
-    from Configurables import Gaudi__IODataManager as IODataManager
-    from Configurables import LHCb__RawDataCnvSvc  as RawDataCnvSvc 
-    
-    msg = MessageSvc()
-    msg.OutputLevel = 5
-    
-    ToolSvc           (                                  OutputLevel = 6 )
-    RootCnvSvc        ( "RootCnvSvc"                   , OutputLevel = 6 )
-    RawDataCnvSvc     (                                  OutputLevel = 6 )
-    
-    IODataManager     ( 'IODataManager'                , OutputLevel = 6 ,
-                        AgeLimit = 1 , UseGFAL = False )
-    
-    if argument.DataOnDemand :
-        DataOnDemandSvc   ( Dump = True  )
-    else :
-        DataOnDemandSvc   ( Dump = False , OutputLevel = 6 )
-        msg.setFatal += [ 'DataOnDemandSvc' ] 
-        
-    msg.setFatal += [ 'RootCnvSvc'               ,
-                      'IOManagerSvc'             ,
-                      'RootHistSvc'              ,
-                      'LHCb::RawDataCnvSvc'      ,
-                      'HcalDet.Quality'          ,
-                      'EcalDet.Quality'          ,
-                      'MagneticFieldSvc'         ,
-                      'PropertyConfigSvc'        ,
-                      'ToolSvc.L0DUConfig'       ,
-                      'ToolSvc.L0CondDBProvider' , 
-                      'L0MuonFromRaw'            ,
-                      'IntegrateBeamCrossing'    ]
+    from BenderTools.DstExplorer import configure 
+    configure ( config ) 
 
+    from BenderTools.Utils import totalSilence
+    totalSilence( dod = config.DataOnDemand )
+    
     from Bender.Main import appMgr, run, cpp
     if config.Simulation : import Bender.MainMC
 
@@ -317,7 +262,7 @@ def dumpDst ( **kwargs ) :
     lline   = ' +' + ( length + 58 ) * '-' + '+'
     _printMessage += [ lline ] 
 
-    message = ' | %8s | %15s | %7s | %4s | %6s |' % ( 'Total ' , '     Mean     ' , '  rms  ' ,  'min' , ' max ' ) 
+    message = _fhdr_ % ( 'Total ' , '     Mean     ' , '  rms  ' ,  'min' , ' max ' ) 
     message = " | %s %s" % ( 'Location'.ljust(length) , message )
 
     _printMessage += [ message ] 
@@ -327,18 +272,10 @@ def dumpDst ( **kwargs ) :
         item     = nObjects[loc]
 
         l = loc.replace('/Event/','')
+
+        ## the actual formating 
+        message = formatItem ( item )
         
-        if item.Min() != item.Max() or 0 != item.rms() or  0 != item.meanErr() : 
-            message = ' | %8g | %7.1f+-%-6.1f | %-7.1f | %4d | %-6d |' % ( item.sum     () ,
-                                                                           item.mean    () ,
-                                                                           item.meanErr () ,
-                                                                           item.rms     () ,
-                                                                           long ( item.Min () ) ,
-                                                                           long ( item.Max () ) )
-        else :
-            message = ' | %8d | %7d%8s | %7s | %4s | %6s |' % ( long ( item.sum  ().value() ) ,
-                                                                long ( item.mean ().value() ) , '' , '' , '', '' ) 
-            
         message = " | %s %s" % ( l.ljust(length) , message )
     
         _printMessage += [ message ] 
@@ -347,6 +284,7 @@ def dumpDst ( **kwargs ) :
     _printMessage += [ "   Analysed " + str(iEvent) + " events" ] 
 
 
+    logger.info ( 100*'*')
     print '\n\n\n'
     ofile  = open ( config.SummaryFile , 'w' )     
     for line in _printMessage :
@@ -354,6 +292,7 @@ def dumpDst ( **kwargs ) :
         print >> ofile, line 
     ofile.close()
     print '\n\n\n'
+    logger.info ( 100*'*')
 
 # =============================================================================
 if '__main__' == __name__ :

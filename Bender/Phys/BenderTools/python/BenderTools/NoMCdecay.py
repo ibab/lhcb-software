@@ -62,13 +62,6 @@ Usage:
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2013-09-25 "
 __version__ = " $Revision$ "
-__usage__   = """
-   no-mc-decays [options] -d GENERICDECAY
-                          -z DECAYINQUESTION file1 [ file2 [ ....
-
-   It searches the decays matched by ``GENERICDECAY'' but ``DECAYINQUESTION''
-   
-   """
 __all__     = ( 'noDecays' , ) 
 # =============================================================================
 ## logging
@@ -77,70 +70,28 @@ from Bender.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'BenderTools.NoMCdecay' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
-
-# =============================================================================
 ## look for ``no-decays''-events
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date  2012-09025
-def noDecays ( usage = __usage__ , vers = __version__ ) :
+def noDecays ( config  ) :
     """
     Look for ``no-decays'' events 
     """
-    
-    from BenderTools.Parser import makeArgParser as makeParser 
-    parser = makeParser  ( usage , vers  )
-    
-    parser.add_argument (
-        '-d'                      ,
-        '--decay'                 ,
-        type    = str             ,
-        dest    = 'GenericDecay'  ,
-        help    = 'The decay descriptor for generic decay: script will look for decays that have this generic pattern ' ,
-        )
-    
-    parser.add_argument (
-        '-z'                        ,
-        '--miss'                    ,
-        type    =  str              ,
-        dest    = 'DecayInQuestion' ,
-        help    = 'The decay descriptor for "decay-in-question": script will look for decays that have NOT this missing pattern' ,
-        )
-    
-    parser.add_argument (
-        '-n'                          ,
-        '--events'                    ,
-        dest    = 'nEvents'           ,
-        type    = int                 , 
-        help    = "Number of events to process " ,
-        default = 1000     
-        )
-    
-    parser.add_argument (
-        'files'                       ,
-        nargs   = '+'                 , 
-        help    = "Input files"       
-        )
-
-    ##
-    ## options , arguments = parser.parse_args()
-    arguments = parser.parse_args()
-
-    ## Files must be specfied are mandatory!
-    if not arguments.files : parser.error ( 'No input files are specified' ) 
-
-    if not arguments.Simulation  : logger.warning ( 'Redefine "Simulation" to be true')
-    
-    if arguments.nEvents < 0 :
+    if not config.Simulation  :
+        logger.warning ( 'Redefine "Simulation" to be true')
+        
+    if config.nEvents < 0 :
         logger.info ( 'Redefine "nEvents" to be 10000' ) 
-        arguments.nEvents = 10000 
-    if arguments.OutputLevel < 4 : arguments.OutputLevel = 4
+        config.nEvents = 10000 
+    if config.OutputLevel < 4 : config.OutputLevel = 4
 
     #
     ## configure it!
     #
     from BenderTools.DstExplorer import configure 
-    configure ( arguments , arguments.files )    
-    from Bender.MainMC  import cpp,appMgr,get,run,MCDECTREE,SUCCESS 
+    configure ( config )
+    
+    from Bender.MainMC  import cpp,appMgr,get,run,MCDECTREE,SUCCESS, FAILURE  
     
     ## instantiate the application manager 
     gaudi  = appMgr ()
@@ -157,18 +108,18 @@ def noDecays ( usage = __usage__ , vers = __version__ ) :
     
     ievent = 0 
 
-    decay1 = MCDECTREE ( arguments.GenericDecay )
+    decay1 = MCDECTREE ( config.GenericDecay )
     if not decay1.valid() :
-        raise TypeError ( 'Invalid decay descriptor "%s"' % arguments.GenericDecay )
+        raise TypeError ( 'Invalid decay descriptor "%s"' % config.GenericDecay )
     
-    decay2 = MCDECTREE ( arguments.DecayInQuestion )
+    decay2 = MCDECTREE ( config.DecayInQuestion )
     if not decay2.valid() :
-        raise TypeError ( 'Invalid decay descriptor "%s"' % arguments.DecayInQuestion ) 
+        raise TypeError ( 'Invalid decay descriptor "%s"' % config.DecayInQuestion ) 
 
     cnts = [ cpp.StatEntity() , cpp.StatEntity() , cpp.StatEntity() ] 
 
     decays = set() 
-    
+
     ## helper function to process the events 
     def process ( evnts = 100 ) :
         """
@@ -184,8 +135,8 @@ def noDecays ( usage = __usage__ , vers = __version__ ) :
             
             mc    = get ( '/Event/MC/Particles' )
             if not mc :
-                logger.warning ('No MC-container found')
-                break
+                logger.error('No MC-container found: do you run over simulated data?')
+                return FAILURE 
         
             decs1 = get ( '/Event/MC/Particles' , decay1 )
             decs2 = get ( '/Event/MC/Particles' , decay2 )
@@ -204,26 +155,27 @@ def noDecays ( usage = __usage__ , vers = __version__ ) :
                 for d in decs1 :
                     decays.add( d.decay() ) 
                     
-                if arguments.Quiet :
+                if config.Quiet :
                     for d in decs1 : print d.decay()
                 else : print decs1
         
             run ( 1 )
                 
-        print 120*'*'
+        logger.info ( 100*'*')
         logger.info ( "Generic decays     found     %s " % cnts[0] )
         logger.info ( "Decays-in-question found(1)  %s " % cnts[1] )
         logger.info ( "Decays-in-question found(2)  %s " % cnts[2] )
-        print 120*'*'
         if decays : 
+            logger.info ( 100*'*')
             logger.info ( "Problematic decays are: " )
             for d in decays : print '   %s' % d
-        print 120*'*'
+        logger.info ( 100*'*')
 
+        
         return SUCCESS
 
     ## run it! 
-    return process ( arguments.nEvents )
+    return process ( config.nEvents )
 
 
 # =============================================================================
@@ -238,7 +190,6 @@ if '__main__' == __name__ :
     logger.info ( ' Symbols : %s ' %  list ( __all__ ) ) 
     logger.info ( 80*'*'  ) 
     
-    noDecays ( __usage__ , __version__ )
     
     
 # =============================================================================

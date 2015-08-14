@@ -35,38 +35,12 @@ apply_pattern       install_python_modules
 apply_pattern       install_scripts
 
 # ================= aliases ===================================================
-alias dst_explorer  "dst-explorer"
-#     
-alias check_trg     "trg_check" 
-alias check-trg     "trg_check" 
-alias trg-check     "trg_check" 
-alias trg_check     "trg_check" 
-#
-alias dst-dump      "dst-dump.py" 
-alias dst_dump      "dst-dump.py" 
-alias dump-dst      "dst-dump.py" 
-alias dump_dst      "dst-dump.py" 
-#       
-alias dst_content   "dst-dump.py" 
-alias dst-content   "dst-dump.py" 
-# 
-alias get_dbtags    "get_dbtags.py" 
-alias get-dbtags    "get_dbtags.py" 
-alias get_db_tags   "get_dbtags.py" 
-alias get-db-tags   "get_dbtags.py" 
-alias db_tags       "get_dbtags.py" 
-alias db-tags       "get_dbtags.py" 
-alias get-meta-info "get_metainfo.py" 
-alias get-metainfo  "get_metainfo.py" 
-alias get_metainfo  "get_metainfo.py" 
-alias get_meta_info "get_metainfo.py" 
-#
-alias no-mc-decay   "no_mc_decays.py"
-alias no-mc-decays  "no_mc_decays.py"
-alias no_mc_decay   "no_mc_decays.py"
-alias no_mc_decays  "no_mc_decays.py"
-alias no-decay      "no_mc_decays.py"
-alias no-decays     "no_mc_decays.py"
+alias check-trg     "trg-check" 
+alias dump-dst      "dst-dump" 
+alias db-tags       "get-dbtags" 
+alias get-meta-info "get-metainfo" 
+alias metainfo      "get-metainfo" 
+alias no-mc-decay   "no-mc-decays"
 
 # =============================================================================
 # The END

@@ -57,7 +57,8 @@ __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2013-06-11"
 # =============================================================================
 __all__= (
-    'silence',    ## suppress some unnesessary printout from Gaudi 
+    'silence'     ,    ## suppress some unnesessary printout from Gaudi
+    'totalSilence',    ## further suppress printout 
     )
 # ==============================================================================
 ## logging
@@ -98,7 +99,47 @@ def silence ( lst = [ 'HcalDet.Quality'          ,
         msg = _gaudi.service('MessageSvc')
     #
     msg.setError += lst
-            
+
+
+# ============================================================================
+## further suppress printout (suitbale doe "dst-dump"-like scripts
+def totalSilence ( lst = [ 'RootCnvSvc'               ,
+                           'IOManagerSvc'             ,
+                           'RootHistSvc'              ,
+                           'LHCb::RawDataCnvSvc'      ,
+                           'HcalDet.Quality'          ,
+                           'EcalDet.Quality'          ,
+                           'MagneticFieldSvc'         ,
+                           'PropertyConfigSvc'        ,
+                           'ToolSvc.L0DUConfig'       ,
+                           'ToolSvc.L0CondDBProvider' , 
+                           'L0MuonFromRaw'            ,
+                           'IntegrateBeamCrossing'    ] , dod = True ) :
+    
+    from Configurables import MessageSvc, DataOnDemandSvc, ToolSvc 
+    from Configurables import Gaudi__RootCnvSvc    as RootCnvSvc 
+    from Configurables import Gaudi__IODataManager as IODataManager
+    from Configurables import LHCb__RawDataCnvSvc  as RawDataCnvSvc 
+    
+    msg = MessageSvc()
+    msg.OutputLevel = 5
+    
+    ToolSvc           (                                  OutputLevel = 6 )
+    RootCnvSvc        ( "RootCnvSvc"                   , OutputLevel = 6 )
+    RawDataCnvSvc     (                                  OutputLevel = 6 )
+    
+    IODataManager     ( 'IODataManager'                , OutputLevel = 6 ,
+                        AgeLimit = 1 , UseGFAL = False )
+    
+    if dod :
+        DataOnDemandSvc   ( Dump = True  )
+    else :
+        DataOnDemandSvc   ( Dump = False , OutputLevel = 6 )
+        msg.setFatal += [ 'DataOnDemandSvc' ] 
+        
+    msg.setFatal += lst
+
+    
 # =============================================================================
 if '__main__' == __name__ :
     

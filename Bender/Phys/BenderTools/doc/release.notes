@@ -5,6 +5,14 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+
+! 2015-08-14 - Vanya Belyaev
+ - rewrite the basic bender scripts 
+   - unification 
+   - better interactivity 
+
+
+
 ! ==================== Phys/BenderTools v26r1   2015-08-08 ====================
 
 ! 2015-07-29 - Vanya Belyaev
