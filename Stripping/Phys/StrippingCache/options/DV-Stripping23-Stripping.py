@@ -75,7 +75,6 @@ from Configurables import ApplicationMgr, AuditorSvc, SequencerTimerTool
 # http://www.onlineconversion.com/unix_time.htm
 # values in ns (so multiply values from above link by 1e9)
 from Configurables import EventClockSvc
-EventClockSvc().InitialTime = 1433635200000000000 # 7th June 2015
 EventClockSvc().EventTimeDecoder = "OdinTimeDecoder"
 
 appMgr = ApplicationMgr()

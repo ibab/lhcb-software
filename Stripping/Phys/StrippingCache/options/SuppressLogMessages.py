@@ -20,6 +20,7 @@ IGNORED_MESSAGES = map(re.compile,
                         r'share the same output location',
                         r'how to add new bank',
                         r'Using default tag.*for partition',
+                        r'The lines going to MDST.DST are'
                        ))
 
 _orig_log_filter = log.filter
