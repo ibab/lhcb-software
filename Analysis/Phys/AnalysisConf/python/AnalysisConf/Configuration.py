@@ -16,13 +16,15 @@ class AnalysisConf(LHCbConfigurableUser) :
     __slots__ = {
           "DataType"        : ''       # Data type, can be ['2008','2009','MC09','2010','2011']
         , "Simulation"      : False    # set to True for MC
-        , "RedoMCLinks"     : False    # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. 
+        , "RedoMCLinks"     : False    # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
+        , "OutputLevel"     : INFO     # The global output level
          }
     
     _propertyDocDct = { 
         "DataType"          : """ Data type, can be ['2008','2009','MC09','2010','2011'] """ 
         , "Simulation"      : """ set to True to use SimCond """ 
-        , "RedoMCLinks"     : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association """ 
+        , "RedoMCLinks"     : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association """
+        , "OutputLevel"     : """ The global output level """ 
         }
     
     __used_configurables__ = (
@@ -84,7 +86,7 @@ class AnalysisConf(LHCbConfigurableUser) :
         """
         from Configurables import CaloAssociatorsConf
         
-        CaloAssociatorsConf ( EnableMCOnDemand = True )
+        CaloAssociatorsConf ( EnableMCOnDemand = True, OutputLevel = self.getProp("OutputLevel") )
 
         from CaloKernel.ConfUtils import getAlgo
         from Configurables        import NeutralPP2MC
@@ -141,7 +143,7 @@ class AnalysisConf(LHCbConfigurableUser) :
         log.info( self )
         GaudiKernel.ProcessJobOptions.PrintOff()
         
-        if ( self.getProp("Simulation" )):
+        if ( self.getProp("Simulation") ):
             self.configureMC()
 
         # Setup DataOnDemand, and make sure ToolSvc is done before hand
