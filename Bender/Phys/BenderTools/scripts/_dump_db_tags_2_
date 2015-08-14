@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # =============================================================================
 # $Id:$ 
 # =============================================================================
@@ -22,10 +23,8 @@ __date__    = "2012-10-24"
 __version__ = "Revision"
 # =============================================================================
 ## some "fix"
-# @todo cehck if it really needed 
+# @todo check if it really needed 
 import ROOT
-if not hasattr( ROOT , 'ostream') :
-    ROOT.gROOT.ProcessLine("#include <ostream>") 
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
 ## helper function to get DB-tags

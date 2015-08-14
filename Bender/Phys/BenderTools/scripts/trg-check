@@ -1,4 +1,5 @@
 #!/usr/bin/env python 
+# -*- coding: utf-8 -*-
 # =============================================================================
 # $Id: trg-check 129602 2011-09-29 17:04:25Z ibelyaev $ 
 # =============================================================================
@@ -22,18 +23,165 @@
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software''
 #
 #  @date   2010-09-10
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #
 #                    $Revision: 129602 $
 #  Last modification $Date: 2011-09-29 19:04:25 +0200 (Thu, 29 Sep 2011) $
 #                 by $Author: ibelyaev $
 # =============================================================================
+__author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
+__date__    = "2010-09-10"
+__version__ = '$Revision: 193703 $'
+# =============================================================================
+import ROOT
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+# =============================================================================
+# logging 
+# =============================================================================
+from AnalysisPython.Logger import getLogger 
+if '__main__' == __name__ : logger = getLogger ( 'Bender/trg-check' )
+else                      : logger = getLogger ( __name__           )
+# =============================================================================
+def with_ipython() :
+    try :
+        __IPYTHON__
+        return True
+    except NameError :
+        return False 
+# =============================================================================
+if with_ipython () : raise RuntimeError("Can't run trg-check from ipython!")
+# =============================================================================
+from BenderTools.Parser import makeParser
+parser = makeParser (
+    prog        = 'trg-check' ,
+    description = "Script to check trigger decisions for certain lines" ,
+    version     = __version__ )
+parser.add_argument (
+    '-n'                          ,
+    '--nevents'                   ,
+    type    = int                 , 
+    dest    = 'nEvents'           ,
+    help    = "Number of events to process [default : %(default)s]" ,
+    default = 1000                  
+    )
+parser.add_argument (
+    '-t'            , 
+    '--teslocation' ,
+    nargs    = '?'  ,
+    required = True , 
+    type     = str  , 
+    help     = 'TES location of particles (e.g. stripping line) to be tested'
+    )
+group = parser.add_mutually_exclusive_group()
+group.add_argument (
+    '-z' ,
+    '--interactive' ,
+    action = 'store_true' , 
+    help   = "Start interactive python shell [default: %(default)s]" )
+    ##
+group.add_argument (
+    '-e' ,
+    '--embed' , 
+    action = 'store_true' ,
+    help   = "Start embedded python shell [default: %(default)s]" )
+group.add_argument (
+    '-y' ,
+    '--plain'             ,
+    action = 'store_true' ,
+    help   = 'Start plain python shell [default : %(default)s]' )
+config = parser.parse_args()
+##
+## if not config.teslocation : parser.error("Invalid TES location!")
 
-from BenderTools.CheckTrg import runChkTrg 
-import sys 
-args = sys.argv[1:]
-## print 'MY ARGS! #%s#' % args  
-runChkTrg() 
+print 'CONFIG' , config
+
+if 0 >= config.nEvents and -1 != config.nEvents : config.nEvents = 1000
+#
+## 
+config.OutputLevel += 1 
+if config.Quiet :
+    logger.info ( 'Script to collect/check trigger decisions for certain lines')
+    config.OutputLevel = 5 
+else :
+    logger.info ( 100*'*')
+    logger.info ( __doc__ ) 
+    logger.info ( 100*'*')
+    logger.info ( ' Author  : %s ' % __author__   ) 
+    logger.info ( ' Version : %s ' % __version__  ) 
+    logger.info ( ' Date    : %s ' % __date__     )
+    logger.info ( 100*'*')
+
+
+from BenderTools.CheckTrg import configChkTrg, chkTrg  
+configChkTrg( config )
+
+#
+## adjust configuration settings
+# 
+if config.Simulation : from Bender.MainMC   import *
+else                 : from Bender.Main     import *
+
+#
+## start gaudi
+#
+gaudi = appMgr()
+
+print 'CONFIG:', config
+
+## create algorithm 
+ALG    = chkTrg()
+## .. and configure it 
+kwargs = { 'Inputs'          : [ config.teslocation ] ,
+           'PropertiesPrint' : True                   }
+if config.RootInTES : kwargs.update( { 'RootInTES' : config.RootInTES } )
+alg = ALG ( 'CheckTrg', **kwargs )
+
+print 'KWARGS: %s ' % kwargs
+
+#
+## run events
+#
+run ( config.nEvents )              
+
+#
+## print trigger decicions
+#
+alg.trgDecs()
+
+#
+## stop or continue as batch?
+#
+if config.embed :
+
+    logger.info ('Start embedded interactive shell') 
+    import IPython
+    IPython.embed ()
+    exit() 
+
+elif config.plain :
+        
+    __vars = globals().copy()
+    __vars.update( locals() )
+    
+    import readline
+    import code
+    
+    logger.info ('Start plain interactive shell') 
+    
+    shell = code.InteractiveConsole(__vars)
+    shell.interact()
+    exit() 
+
+elif config.interactive : 
+    
+    __vars = globals().copy()
+    __vars.update( locals() )
+
+    logger.info ('Start interactive shell') 
+    
+    import IPython
+    IPython.start_ipython ( argv = [] , user_ns = __vars )
+    exit() 
 
 # =============================================================================
 # The END 

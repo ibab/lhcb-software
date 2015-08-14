@@ -29,9 +29,9 @@
 #  @date   2011-10-24
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #
-#                    $Revision$
-#  Last modification $Date$
-#                 by $Author$
+#                    $Revision: 189829 $
+#  Last modification $Date: 2015-06-08 10:41:05 +0200 (Mon, 08 Jun 2015) $
+#                 by $Author: ibelyaev $
 # =============================================================================
 
 """
@@ -57,37 +57,67 @@ Usage:
     dst-dump [options] file1 [ file2 [ file3 [ file4 ....'
 
 
-                  $Revision$
-Last modification $Date$
-               by $Author$
+                  $Revision: 189829 $
+Last modification $Date: 2015-06-08 10:41:05 +0200 (Mon, 08 Jun 2015) $
+               by $Author: ibelyaev $
 
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2011-10-24"
-__version__ = '$Revision$'
+__version__ = '$Revision: 189829 $'
 __all__     = ()  ## nothing to import 
 # =============================================================================
-import ROOT
+import ROOT, sys
 ROOT.PyConfig.IgnoreCommandLineOptions = True
+# =============================================================================
+from BenderTools.Parser      import makeParser
+# make parser 
+parser = makeParser  (
+    prog        = 'dst-dump',
+    description = "Bender-based script to dump the content of (x,mu,s,r,...)DSTs",
+    version     = __version__
+    )
+parser.add_argument (
+    '-n'                          ,
+    '--nevents'                   ,
+    dest    = 'nEvents'           ,
+    type    = int                 , 
+    help    = "Number of events to process " ,
+    default = -1    
+    )
+parser.add_argument (
+    '-z'                         ,
+    '--summary'                  ,
+    dest    = 'SummaryFile'      ,
+    help    = "Output file with dst-summary" ,
+    type    = str               , 
+    default = 'dst_summary.txt'    
+    )
+parser.add_argument (
+    '-f'                         ,
+    '--follow'                   ,
+    dest    = 'FollowLinks'      ,
+    help    = "Flag to follow links, useful for packed (u)DST (*)" ,
+    action  = "store_true"       ,
+    default = False    
+    )
+parser.add_argument (
+    '-w'                         ,
+    '--dod'                      ,
+    dest    = 'DataOnDemand'     ,
+    help    = "Dump the known DOD-locations (fragile!), (+)" ,
+    action  = "store_true"       ,
+    default = False    
+    )
 
-print 120*'*'
-print                __doc__ 
-print ' Author  : ', __author__ 
-print ' Version : ', __version__ 
-print ' Date    : ', __date__
+## eliminate artifacts and parse command-line arguments 
+config = parser.parse_args( [ a for a in sys.argv[1:] if '--' != a ] )
 
 from BenderTools.DstDump import dumpDst
-
-dumpDst (
-    prog = 'dst-dump'     ,
-    desription = """      ,
-    Trivial Bender-based script to dump the content of (x,mu,s,r,...)DSTs
-    """,
-    version = __version__ )
+dumpDst ( config )
 
 
-print 120*'*'
 
 # =============================================================================
 # The END 

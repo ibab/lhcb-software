@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: get_metainfo.py 152803 2013-02-23 13:29:42Z ibelyaev $ 
+# $Id: get_dbtags.py 189704 2015-06-05 11:47:59Z ibelyaev $ 
 # =============================================================================
 ## @file 	
-#  Simple script to extract MetaInfo from data files 
+#  Simple script to extract DB-tags from the file 
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -23,20 +23,21 @@
 # 
 #  Usage:
 #
-#     get_metainfo [options] file1 [ file2 [ file3 [ file4 ....'
+#     get_dbtags [options] file1 [ file2 [ file3 [ file4 ....'
 #
 #  @endcode
 #
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @author Thomas RUF 
+#  @author Vanya BELYAEV 
 #  @date   2012-10-24
 #
-#                    $Revision: 152803 $
-#  Last modification $Date: 2013-02-23 14:29:42 +0100 (Sat, 23 Feb 2013) $
+#                    $Revision: 189704 $
+#  Last modification $Date: 2015-06-05 13:47:59 +0200 (Fri, 05 Jun 2015) $
 #                 by $Author: ibelyaev $
 #
 # =============================================================================
 """
-Simple script to extract MetaInfo from data files 
+Simple script to extract DB-tags from the file
 
 This file is a part of BENDER project:
 
@@ -54,13 +55,13 @@ By usage of this code one clearly states the disagreement with the smear campaig
 
 Usage:
 
-    get_metainfo [options] file1 [ file2 [ file3 [ file4 ....'
+    get_dbtags [options] file1 [ file2 [ file3 [ file4 ....'
 
 """
 # =============================================================================
-__author__  = "Vanya BELYAEV"
+__author__  = "Thomas RUF, Vanya BELYAEV"
 __date__    = "2012-10-24"
-__version__ = "$Revision:$"
+__version__ = "$Revision: 189704 $"
 
 # =============================================================================
 if '__main__' == __name__ :
@@ -75,10 +76,10 @@ if '__main__' == __name__ :
     print ' Date       : ', __date__ 
     print 120*'*'
     
-    from BenderTools.GetDBtags  import extractMetaInfo
+    from BenderTools.GetDBtags  import extractTags 
 
     import sys
-    extractMetaInfo ( sys.argv[1:] )
+    extractTags ( sys.argv[1:] )
     
 # =============================================================================
 # The END 
