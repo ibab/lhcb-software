@@ -38,8 +38,6 @@ apply_pattern       install_python_modules
 apply_pattern       install_scripts
 
 # ================= aliases ===================================================
-alias bender_mc    "benderMc"
-alias bender_MC    "benderMc"
 alias get-grid-url "get_grid_url"
 
 # =============================================================================
