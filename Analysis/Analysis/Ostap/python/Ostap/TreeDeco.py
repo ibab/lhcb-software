@@ -117,9 +117,16 @@ def _tt_project_ ( tree , histo , what , *args ) :
         _args [0] = str   ( _args[0] )  
         args      = tuple ( _args    )
     #
-    ## make projection 
-    result = tree.Project ( hname , what , *args )
-    if isinstance ( histo , ROOT.TH1 ) : return result, histo
+    from Ostap.TFileDeco import ROOTCWD
+    with ROOTCWD() :
+        ROOT.gROOT.cd () 
+        ## make projection 
+        result = tree.Project ( hname , what , *args )
+        if   isinstance ( histo , ROOT.TH1 ) : return result, histo
+        elif isinstance ( histo , str      ) :
+            h = ROOT.gROOT.FindObject ( hname )
+            if h : return result, h
+            
     return result, hname
 
 ROOT.TTree .project = _tt_project_
@@ -349,21 +356,15 @@ def _rt_slice_ ( tree , varname , cut = '' ) :
     ## decode the name (if needed)
     if isinstance ( varname , str ) :
         varname = varname.strip()
-        print 'AFTER1: #%s#' % varname 
         varname = varname.replace ( ':' , ',' )
-        print 'AFTER2: #%s#' % varname 
         varname = varname.replace ( ';' , ',' )
-        print 'AFTER3: #%s#' % varname 
         varname = varname.replace ( ' ' , ',' )
-        print 'AFTER4: #%s#' % varname 
         varname = varname.split   (       ',' )
-        print 'AFTER5: #%s#' % varname 
         if 1 == len ( varname ) : varname = varname[0].strip()
         else :
             for i in range( 0 , len(varname) ) : 
                 varname[i] = varname[i].strip()  
     #
-    print 'AFTER6: #%s#' % varname 
     if       isinstance ( varname ,  ( list , tuple ) ) :
         ## forward to appropriate method 
         return tree.slices ( varname , cut )

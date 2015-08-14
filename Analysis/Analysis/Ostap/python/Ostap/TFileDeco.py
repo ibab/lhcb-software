@@ -513,7 +513,6 @@ def _rf_exit_  ( self , *_ ) :
     except: pass
 
             
-# =============================================================================a
 
 ## basic protocol:
 
@@ -544,8 +543,64 @@ if hasattr ( ROOT.TFile , '__enter__' ) and hasattr ( ROOT.TFile , '__exit__' ) 
 else :
     ROOT.TFile.__enter__ = _rf_enter_
     ROOT.TFile.__exit__  = _rf_exit_
-    
 
+# =============================================================================
+## create ROOT.TFile without making it a current working directory 
+#  @code
+#  print ROOT.gROOT.CurrentDirectory()
+#  f = ROOT.TFile('test_file.root','recreate')
+#  print ROOT.gROOT.CurrentDirectory()
+#  @endcode
+def _rf_new_init_ ( rfile , *args ) :
+    """
+    Create ROOT-file without making it a current working directory
+    >>> print ROOT.gROOT.CurrentDirectory()
+    >>> f = ROOT.TFile('test_file.root','recreate')
+    >>> print ROOT.gROOT.CurrentDirectory()
+    """
+    with ROOTCWD() :
+        rfile._old_init_ ( *args )
+
+# ===========================================================================
+## create ROOT.TFile without making it a current working directory 
+#  @code
+#  print ROOT.gROOT.CurrentDirectory()
+#  f = ROOT.TFile.Open('test_file.root','recreate')
+#  print ROOT.gROOT.CurrentDirectory()
+#  @endcode
+def _rf_new_open_ ( *args ) :
+    """
+    Create ROOT-file without making it a current working directory
+    >>> print ROOT.gROOT.CurrentDirectory()
+    >>> f = ROOT.TFile.Open('test_file.root','recreate')
+    >>> print ROOT.gROOT.CurrentDirectory()
+    """
+    with ROOTCWD() :
+        return ROOT.TFile._old_open_ ( *args ) 
+
+# ===========================================================================
+
+if hasattr ( ROOT.TFile , '_new_init_' ) and hasattr ( ROOT.TFile , '_old_init_' ) : pass
+else :
+    
+    _rf_new_init_.__doc__  += '\n' + ROOT.TFile.__init__.__doc__
+    
+    ROOT.TFile._old_init_   = ROOT.TFile.__init__
+    ROOT.TFile._new_init_   = _rf_new_init_ 
+    ROOT.TFile.__init__     = _rf_new_init_ 
+    
+if hasattr ( ROOT.TFile , '_new_open_' ) and hasattr ( ROOT.TFile , '_old_open_' ) : pass
+else :
+
+    _rf_new_open_.__doc__  += '\n' + ROOT.TFile.Open.__doc__
+    _rf_new_open_           = staticmethod( _rf_new_open_ )
+    
+    ROOT.TFile._old_open_   = ROOT.TFile.Open
+    ROOT.TFile._new_open_   = _rf_new_open_ 
+    ROOT.TFile.Open         = _rf_new_open_ 
+    ROOT.TFile.open         = _rf_new_open_ 
+
+    
 # =============================================================================
 if '__main__' == __name__ :
     

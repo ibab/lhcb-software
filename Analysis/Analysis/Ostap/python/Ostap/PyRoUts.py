@@ -99,6 +99,8 @@ from AnalysisPython.Logger import getLogger
 logger = getLogger( __name__ )
 # =============================================================================
 logger.info ( 'Zillions of decorations for ROOT   objects')
+# =============================================================================
+from Ostap.TFileDeco import ROOTCWD
 ## ============================================================================
 #  global identifier for ROOT objects 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -111,7 +113,6 @@ def rootID ( prefix = 'o_' ) :
     
     _root_ID = 1000
     ## 
-    from Ostap.TFileDeco import ROOTCWD
     with ROOTCWD() : ## keep the current working directory:
         
         _id  = _fun ( _root_ID )
@@ -176,6 +177,22 @@ else :
     logger.warning ( 'Temporarily disable cast of VE to float' )
     del VE.__float__
 
+
+# =============================================================================
+## ensure that object/histogram is created in ROOT.gROOT
+#  @attention clone is always goes to ROOT main memory!
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-08-14
+def _h_new_init_ ( self , *args ) :
+    """
+    Modified TH* constructor:
+    - ensure that created object/histogram goes to ROOT main memory
+    """
+    with ROOTCWD() :
+        ROOT.gROOT.cd() 
+        self._old_init_   ( *args      )
+        self.SetDirectory ( ROOT.gROOT ) 
+
 # =============================================================================
 ## a bit modified 'Clone' function for histograms
 #  - it automaticlaly assign unique ID
@@ -187,17 +204,18 @@ else :
 def _new_clone_ ( self , hid = '' ) :
     """
     Modifiled Clone-function
-    - it automatically assign unique ID
+    - it automatically assigns unique ID
     - it ensures that cloned histogram is not going to die with
       the accidentally opened file/directory
     """
     if not hid : hid = hID()
-    # 
-    nh = self._old_clone_ ( hid )
-    ## 
-    nh.SetDirectory ( ROOT.gROOT ) ## ATTENTION! 
-    # 
+    #
+    with ROOTCWD() :
+        ROOT.gROOT.cd() 
+        nh = self._old_clone_ ( hid )
+        nh.SetDirectory ( ROOT.gROOT ) ## ATTENTION!  
     return nh
+
 
 for h in ( ROOT.TH1F , ROOT.TH1D ,
            ROOT.TH2F , ROOT.TH2D ,
@@ -209,7 +227,39 @@ for h in ( ROOT.TH1F , ROOT.TH1D ,
         h._new_clone_ = _new_clone_
         h.Clone       = _new_clone_
         h.clone       = _new_clone_
-         
+
+    if hasattr ( h , '_new_init_' ) and hasattr ( h , '_old_init_' ) : pass
+    else : 
+        h._old_init_  = h.__init__ 
+        h._new_init_  = _h_new_init_
+        h.__init__    = _h_new_init_
+
+
+# ==================================================================================
+## get current directory in ROOT
+#  @code
+#  d = cwd()
+#  print d
+#  @endcode 
+def cwd() :
+    """
+    Get current directory in ROOT
+    >>> d = cdw() 
+    """
+    return ROOT.gROOT.CurrentDirectory()
+
+# =================================== ===============================================
+## get current directory in ROOT
+#  @code
+#  print pwd() 
+#  @endcode 
+def pwd() :
+    """
+    Get current directory in ROOT
+    >>> print pwd() 
+    """
+    return ROOT.gROOT.CurrentDirectory().GetPath() 
+
 # =============================================================================
 def _int ( ve , precision = 1.e-5 ) :
     #
@@ -321,7 +371,7 @@ def _gauss_ ( s , accept = lambda a : True , nmax = 1000 ) :
     
     """
     #
-    if  0 == s.cov2 () : return s.value() ## return
+    if 0 >= s.cov2() or iszero ( s.cov2 () ) : return s.value() ## return
     #
     from scipy import random
     _gauss = random.normal
