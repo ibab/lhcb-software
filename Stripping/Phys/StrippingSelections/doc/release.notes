@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-14 - Albert Puig
+ - Use public instance of ParticleCombiners in Radiative lines in RD
+ - Replaced ParticleAdder with MomentumCombiner in Radiative lines in RD
+
 ! 2015-08-13 - Pieter David
  - Use public instance of MomentumCombiner tool in QEE-StrippingDisplVertices
 

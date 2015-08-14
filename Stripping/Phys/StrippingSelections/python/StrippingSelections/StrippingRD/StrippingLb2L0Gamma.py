@@ -173,7 +173,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
         lambda_b_combine = CombineParticles("Lambdab_NonConv_Combine")
         lambda_b_combine.DecayDescriptor = "[Lambda_b0 -> Lambda0 gamma]cc"
         lambda_b_combine.DaughtersCuts = {'Lambda0': 'ALL', 'gamma': 'ALL'}
-        lambda_b_combine.ParticleCombiners = {'' : 'ParticleAdder'}
+        lambda_b_combine.ParticleCombiners = {'' : 'MomentumCombiner:PUBLIC'}
         lambda_b_combine.CombinationCut = """(ADAMASS('Lambda_b0') < %(Lambdab_MassWindow)s*MeV) &
                                              (ASUM(PT) > %(Lambdab_SumPt_Min)s )""" % config
         lambda_b_combine.MotherCut = """(PT > %(Lambdab_Pt_Min)s*MeV) &
