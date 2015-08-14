@@ -41,7 +41,7 @@ class GRFIO(object):
 
     def _open_file(self, fname, mode):
         """Internal method to open file"""
-        #self.lock = ROOT.DotLock(fname)
+        self.lock = ROOT.DotLock(fname)
         self.rfile = ROOT.TFile.Open(fname, mode)
         if not self.rfile:
             raise IOError("Giant ROOT file {} not found".format(fname))
