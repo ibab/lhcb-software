@@ -1,12 +1,13 @@
 package DaVinciSys
-version v37r1p2
+version           v37r1p3
 
 branches doc cmt
 
 ##############################
 # Patch just for this version
 use  DDDB           v1r80     Det
-use  TeslaTools     v1r12     Phys
+use  TeslaTools     v1r13     Phys
+use  HltDAQ         v4r20     Hlt
 ##############################
 
 # Temporarily moved in from Stripping, for S23 release
@@ -16,7 +17,7 @@ use StrippingCache   v1r0     Phys
 use  DaVinci         v37r1p2  Phys   # DaVinci coordinator
 use  DaVinciTests    v2r36
 use  KaliCalo        v4r18    Phys   # Olivier Deschamps
-use  Tesla           v1r10    Phys   # Sean Benson
+use  Tesla           v1r11    Phys   # Sean Benson
 
 # Declare this as a container package
 apply_pattern container_package

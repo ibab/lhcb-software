@@ -3,6 +3,10 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v37r1p3>2015-08-15 DaVinci v37r1p3</A></H1><PRE>
+
+Includes TeslaTools, Tesla and HltDAQ fixes, related to neutral MC association.
+
 ! 2015-08-12 - Chris Jones
  - Temporarily add StrippingCache, just for S23 release...
 

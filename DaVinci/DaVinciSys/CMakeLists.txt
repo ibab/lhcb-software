@@ -1,13 +1,14 @@
 ################################################################################
 # Package: DaVinciSys
 ################################################################################
-gaudi_subdir(DaVinciSys v37r1p2)
+gaudi_subdir(DaVinciSys v37r1p3)
 
 gaudi_depends_on_subdirs(DaVinciTests
                          ##############################
                          # Patch just for this version
                          Det/DDDB
                          Phys/TeslaTools
+                         Hlt/HltDAQ
                          ##############################
                          # Temporarily moved in from Stripping, for S23 release
                          Phys/StrippingCache
