@@ -5,6 +5,9 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2015-08-14 - Chris Jones
+ - Add OutputLevel property to PhysConf
+
 !========================= PhysConf v1r28 2015-07-23 =========================
 
 ! 2015-07-17  - Michel De Cian

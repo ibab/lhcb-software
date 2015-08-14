@@ -40,6 +40,7 @@ class PhysConf(LHCbConfigurableUser) :
         ,  "CaloReProcessing"  : False   # Force CaloReco reprocessing
         ,  "AllowPIDRecalib"   : True    # Allow recalibration of the PID information as required
         ,  "Detectors"         : ['Velo','PuVeto','Rich1','Rich2','TT','IT','OT','Spd','Prs','Ecal','Hcal','Muon','Magnet','Tr']
+        ,  "OutputLevel"       : INFO    # The global output level
         }
 
     __used_configurables__ = (
@@ -73,7 +74,7 @@ class PhysConf(LHCbConfigurableUser) :
         ## CaloReco & CaloPIDs on-demand
         clusters= [ 'Digits' , 'Clusters' ]
         from Configurables  import CaloProcessor
-        caloProc = CaloProcessor(EnableOnDemand=True)  # enable caloDigits & Clusters onDemand
+        caloProc = CaloProcessor( EnableOnDemand = True, OutputLevel = self.getProp("OutputLevel") )  
         caloProc.RecList =  clusters
         # ---
         if self.getProp('DataType')=='Upgrade' :
