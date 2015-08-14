@@ -50,7 +50,7 @@ include(LoKiFunctorsCache)
 
 loki_functors_cache(S23FunctorsCache
                     #options/SuppressS21ogMessages.py
-                    options/DV-Stripping23-Stripping.py #options/SilenceErrors.py 
+                    options/DV-Stripping23-Stripping.py options/SilenceErrors.py 
                     LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
                     DEPENDS ${conf_deps}
                     SPLIT 50)

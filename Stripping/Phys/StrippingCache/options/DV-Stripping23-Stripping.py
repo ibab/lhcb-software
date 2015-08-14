@@ -29,9 +29,7 @@ juggler = RawEventJuggler( DataOnDemand=True, Input=0.3, Output=4.1 )
 #confDBAcc.File = '/afs/cern.ch/user/s/sperazzi/public/Stripping/S23/DaVinciDev_v37r0/Phys/StrippingSelections/tests/data/config.cdb'
 
 # Specify the name of your configuration
-my_wg='Charm' #FOR LIAISONS
 stripping='stripping23'
-
 
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 
@@ -71,12 +69,6 @@ LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").CheckTracksByLHCbIDs = True
 LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").DeltaChi2 = 0.01
 LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").DeltaDistance = 5*micrometer
 
-## Configure the VeloTrack unpacker
-from Configurables import UnpackTrack
-unpackIt = UnpackTrack("unpackIt")
-unpackIt.InputName = "pRec/Track/FittedHLT1VeloTracks"
-unpackIt.OutputName = "Rec/Track/FittedHLT1VeloTracks"
-
 from Configurables import ApplicationMgr, AuditorSvc, SequencerTimerTool
 
 # Initial IOV time
@@ -87,12 +79,12 @@ EventClockSvc().InitialTime = 1433635200000000000 # 7th June 2015
 EventClockSvc().EventTimeDecoder = "OdinTimeDecoder"
 
 appMgr = ApplicationMgr()
-appMgr.OutputLevel = 3
+appMgr.OutputLevel = 6
 appMgr.ExtSvc += [ 'ToolSvc', 'AuditorSvc' ]
 
 appMgr.HistogramPersistency = "ROOT"
 ntSvc = NTupleSvc()
-appMgr.ExtSvc +=  [ ntSvc ]
+appMgr.ExtSvc += [ ntSvc ]
 
 from Configurables import ( LHCbApp, PhysConf, AnalysisConf,
                             DstConf, LumiAlgsConf, DDDBConf, CondDB )
@@ -103,11 +95,15 @@ condDB = CondDB()
 LHCbApp().DDDBtag   = "dddb-20150724"
 LHCbApp().CondDBtag = "cond-20150805"
 
+# Can be enabled for next full stack release
+#PhysConf().OutputLevel     = appMgr.OutputLevel
+#AnalysisConf().OutputLevel = appMgr.OutputLevel
+
 datatype =  "2015"
-PhysConf().DataType     = datatype
-AnalysisConf.DataType   = datatype
-LumiAlgsConf().DataType = datatype
-DDDBConf().DataType     = datatype
+PhysConf().DataType      = datatype
+AnalysisConf().DataType  = datatype
+LumiAlgsConf().DataType  = datatype
+DDDBConf().DataType      = datatype
 
 inputType = "DST"
 LumiAlgsConf().InputType = inputType
@@ -122,11 +118,11 @@ LumiAlgsConf().LumiSequencer = lumiSeq
 
 appMgr.TopAlg += [ PhysConf().initSequence(),
                    AnalysisConf().initSequence(),
-                   unpackIt, sc.sequence(), lumiSeq ]
+                   sc.sequence(), lumiSeq ]
 
 #from Configurables import DaVinci
 #DaVinci().ProductionType = "Stripping"
 #DaVinci().DataType   = datatype
 #DaVinci().DDDBtag    = LHCbApp().DDDBtag
 #DaVinci().CondDBtag  = LHCbApp().CondDBtag
-#DaVinci().appendToMainSequence( [ unpackIt, sc.sequence() ] )
+#DaVinci().appendToMainSequence( [ sc.sequence() ] )
