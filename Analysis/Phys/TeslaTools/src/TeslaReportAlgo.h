@@ -58,7 +58,6 @@ public:
             ,LHCb::Track::Container*
             ,LHCb::CaloHypo::Container*
             ,LHCb::CaloCluster::Container*
-            ,LHCb::CaloDigit::Container*
             ,Particle2Vertex::Table*);
         void fillParticleInfo(std::vector<ContainedObject*>,const LHCb::HltObjectSummary*,bool, LHCb::Track::Container*,std::vector<ContainedObject*>*);
         void fillVertexInfo(LHCb::Vertex*,const LHCb::HltObjectSummary*);

@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-8-15 - Sean Benson
+ - Do not write digits, associate to raw event.
+
 !========================= TeslaTools v1r12 2015-08-08 =========================
 
 ! 2015-8-08 - Sean Benson
