@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Tesla
 ################################################################################
-gaudi_subdir(Tesla v1r10)
+gaudi_subdir(Tesla v1r11)
 
 gaudi_depends_on_subdirs(Event/HltEvent
                          Event/MicroDst
