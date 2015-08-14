@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-08-14 - Chris Jones
+ - Suppress messages again (turned off for debugging).
+
 ! 2015-08-13 - Chris Jones
  - Add DetDataSvc('DetectorDataSvc') to the start of the service list in
    LokiFunctorsCachePostActionOpts.py. Need to get CondDB access working with
