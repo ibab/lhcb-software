@@ -98,10 +98,9 @@ class Tesla(LHCbConfigurableUser):
         seq.Members += [assoctr]
         return seq
     
-    def _configureDigitsTruth(self,inputLoc) :
+    def _configureDigitsTruth(self) :
         from Configurables import CaloDigit2MCLinks2Table
         assocdigits = CaloDigit2MCLinks2Table("TurboDigitAssoc")
-        #assocdigits.Inputs += [inputLoc]
         return 
 
     def _configureClustersAndProtosTruth(self,line,digits) :
@@ -227,7 +226,6 @@ class Tesla(LHCbConfigurableUser):
                         , self.base + l + "/Tracks#99"
                         , self.base + l + "/RichPIDs#99"
                         , self.base + l + "/MuonPIDs#99"
-                        , self.base + l + "/Digits#99"
                         , self.base + l + "/CaloHypos#99"
                         , self.base + l + "/CaloClusters#99"
                         ]
@@ -266,10 +264,9 @@ class Tesla(LHCbConfigurableUser):
             NeutralProtoSeq.Members+=[assocdigits]
             for l in lines:
                 if "gamma" in l.lower() or "pi0" in l.lower():
-                    digitLoc = self.base + l + "/Digits"
                     clustLoc = self.base + l + "/CaloClusters"
                     protoLoc = self.base + l + "/Protos"
-                    self._configureDigitsTruth(digitLoc)
+                    self._configureDigitsTruth()
                     protoneutral, retSeq = self._configureClustersAndProtosTruth(l,outputDigiLoc)
                     NeutralProtoSeq.Members+=[retSeq]
                     if not self.getProp('Pack'):

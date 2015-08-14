@@ -4,6 +4,9 @@ Package Coordinator : Sean Benson
 Purpose             : Turbo Stream Analysis
 !-----------------------------------------------------------------------------
 
+! 2015-8-15 - Sean Benson
+ - Do not write digits, associate to raw event.
+
 !========================== Tesla v1r10 2015-08-07 ===========================
 
 ! 2015-7-31 - Sean Benson
