@@ -711,13 +711,13 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
         trash.push_back(fFitF);
 
         // Set parameter names
-        fFitF->SetParName(0,"Constant");
-        fFitF->SetParName(1,"Mean");
-        fFitF->SetParName(2,"Sigma");
+        fFitF->SetParName(0,"Gaus Constant");
+        fFitF->SetParName(1,"Gaus Mean");
+        fFitF->SetParName(2,"Gaus Sigma");
 
         // Initialise parameters from last fit
-        const unsigned int nParamsToSet = ( nPol > 1 ? 3+nPol : 2 );
-        for ( unsigned int p = 0; p <= nParamsToSet; ++p )
+        const unsigned int nParamsToSet = ( nPol > 1 ? 3+(1+nPol) : 3 );
+        for ( unsigned int p = 0; p < nParamsToSet; ++p )
         {
           fFitF->SetParameter(p,lastFitF->GetParameter(p));
         }
