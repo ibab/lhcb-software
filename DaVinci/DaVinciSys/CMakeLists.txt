@@ -10,9 +10,6 @@ gaudi_depends_on_subdirs(DaVinciTests
                          Phys/TeslaTools
                          Hlt/HltDAQ
                          ##############################
-                         # Temporarily moved in from Stripping, for S23 release
-                         Phys/StrippingCache
-                         ##############################
                          Phys/DaVinci
                          Phys/KaliCalo
                          Phys/Tesla)

@@ -7,9 +7,6 @@ Purpose             : LHCb physics analysis application
 
 Includes TeslaTools, Tesla and HltDAQ fixes, related to neutral MC association.
 
-! 2015-08-12 - Chris Jones
- - Temporarily add StrippingCache, just for S23 release...
-
 </PRE><H1><A NAME=v37r1p2>2015-08-08 DaVinci v37r1p2</A></H1><PRE>
 
 Patch release identical to v37r1p1 except for the inclusion of the patch of
