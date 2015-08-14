@@ -128,7 +128,7 @@ if with_ipython () : raise RuntimeError("Can't start Bender from ipython!")
 # =============================================================================
 # Input arguments: create ans customize parser; parse arguments 
 # =============================================================================
-from BenderTools.Parser      import makeArgParser as makeParser
+from BenderTools.Parser import makeParser
 parser = makeParser  ( 
     prog        = 'bender'    , 
     version     = __version__ , 
@@ -145,37 +145,42 @@ parser.add_argument (
     '--output'               ,
     type    = str            ,
     dest    = 'OutputFile'   ,
-    help    = "The name of output file with selected ``good''events" ,
-    default = ''            
-)
+    help    = "The name of output file with selected ``good''events [default: %(default)s]"
+    )
 parser.add_argument (
     '-w'                       ,
     '--withcontext'            ,
     action  = "store_true"     ,
     dest    = 'WithContext'    ,
-    help    = "Use locals/globals context for python scripts" ,
-)
+    help    = """Use locals/globals context for python scripts [default: %(default)s].
+    Execute python-script in the same context of bender-script"""
+    )
 parser.add_argument (
     '-u'                   ,
     '--userstart'          ,
     dest    = 'UserStart'  ,
     action  = "store_true" ,
-    help    = "Postpone the actual start of of Application Manager" ,
-        )
+    help    = """Postpone the actual start of of Application Manager [default: %(default)s].
+    It can be useful for usage with user-scripts."""
+    )
     ##
 group = parser.add_mutually_exclusive_group()
-group.add_argument ( '-e' ,
-    '--embed' , 
-    action = 'store_true' ,
-    help = "Interactive embedded shell" )
-group.add_argument ( '-y' ,
-    '--plain'             ,
-    action = 'store_true' ,
-    help   = "Simple python shell" )
-group.add_argument ( '-b' ,
-    '--batch' ,
-    action = 'store_true' , default = False , 
-    help = "Batch processing: execute files and exit" )
+group.add_argument (
+    '-e'                   ,
+    '--embed'              , 
+    action = 'store_true'  ,
+    help   = "Start embedded python shell [default: %(default)s]" )
+group.add_argument (
+    '-y'                   ,
+    '--plain'              ,
+    action = 'store_true'  ,
+    help   = "Start plain    python shell [default: %(default)s]" )
+group.add_argument (
+    '-b'                   ,
+    '--batch'              ,
+    action  = 'store_true' ,
+    default = False        , 
+    help    = "Batch processing: execute input files and exit [default: %(default)s]" )
     ##
 
 ## eliminate artifacts and parse command-line arguments 
@@ -193,14 +198,14 @@ else :
     logger.info ( ' Date    : %s ' % __date__     )
     logger.info ( 100*'*')
     
-from BenderTools.DstExplorer import new_configure
+from BenderTools.DstExplorer import configure
 # =============================================================================
 
 
 #	
 ## Perform the basic configuration
 #
-pyfiles = new_configure ( arguments ) 
+pyfiles = configure ( arguments ) 
 # 
 
 #
