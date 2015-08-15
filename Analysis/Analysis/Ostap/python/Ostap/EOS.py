@@ -143,9 +143,9 @@ class EOS(object):
         out,err = p.communicate()
         for l in err.splitlines() :
             if 0<= l.find('failed') :
-                raise OSError ( 'Unable to create EOS mount point')
+                raise OSError ( 'Unable to create EOS mount point, check eosmount/umount')
         if 0 != p.returncode :
-                raise OSError ( 'Unable to create EOS mount point (%s)' % p.returncode )
+                raise OSError ( 'Unable to create EOS mount point, check eosmonut/umount (%s)' % p.returncode )
 
         ## everything fine? 
         self.ok = True 
