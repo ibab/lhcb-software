@@ -26,7 +26,8 @@ default_config = {
         , 'ElectronPT'            :   500.    # MeV
         , 'ElectronPID'           :     0.    # adimensional
         , 'ElectronTrackCHI2pDOF' :     5.    # adimensional
-        , 'TRCHI2DOF'             :     5.    # adimensional
+        , 'PionForKstarPT'        :   600.    # MeV
+        , 'TRCHI2DOF'             :     3.    # adimensional
         , 'JpsiVertexCHI2pDOF'    :    15.    # adimensional
         , 'JpsiMassMin'           :  2300.    # MeV
         , 'JpsiMassMax'           :  3300.    # MeV
@@ -60,6 +61,7 @@ class Bd2JpsieeKSConf(LineBuilder):
                 , 'ElectronPT'                # MeV
                 , 'ElectronPID'               # adimensional
                 , 'ElectronTrackCHI2pDOF'     # adimensional
+                , 'PionForKstarPT'            # MeV
                 , 'TRCHI2DOF'                 # adimensional
                 , 'JpsiVertexCHI2pDOF'        # adimensional
                 , 'JpsiMassMin'               # MeV
@@ -99,8 +101,8 @@ class Bd2JpsieeKSConf(LineBuilder):
         self.KstarList = self.createSubSel( OutputList = "Kstar2KpiForBetaS" + self.name,
                                             InputList = DataOnDemand(Location = "Phys/StdLooseKstar2Kpi/Particles"),
                                             Cuts = "(in_range(826,M,966))" \
-                                            "& (PT > 1300.*MeV) " \
-                                            "& (VFASPF(VCHI2) < 25)" \
+                                            "& (PT > 1500.*MeV) " \
+                                            "& (VFASPF(VCHI2) < 20)" \
                                             "& (MAXTREE('K+'==ABSID,  TRCHI2DOF) < %(TRCHI2DOF)s )" \
                                             "& (MAXTREE('pi-'==ABSID, TRCHI2DOF) < %(TRCHI2DOF)s )" \
                                             "& (MINTREE('K+'==ABSID, PIDK) > 0)" % self.config)

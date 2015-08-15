@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-15 - Ramon Niet
+ - Tightened selection in Bd2JpsieeKstar lines to reduce multiplicities 
+
 ! 2015-08-14 - Albert Puig
  - Use public instance of ParticleCombiners in Radiative lines in RD
  - Replaced ParticleAdder with MomentumCombiner in Radiative lines in RD
