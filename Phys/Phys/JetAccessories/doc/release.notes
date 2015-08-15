@@ -4,9 +4,6 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
-! 2015-08-15 - Chris Jones
- - Correct tool type for PV relator.
-
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
