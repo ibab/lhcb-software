@@ -83,7 +83,7 @@ parser.add_option("--datatype",        action = "store", type = "string", dest =
 parser.add_option("--filestager",      action = "store_true", dest = "filestager", default = False)
 # Tool names    : defaults are fine for 2011 data, only for swimming the stripping
 parser.add_option("--relPVFinder",     action = "store", type = "string", dest = "relPVFinder", 
-                  default = "GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2")
+                  default = "GenericParticle2PVRelator<_p2PVWithIPChi2,OfflineDistanceCalculatorName>/P2PVWithIPChi2")
 parser.add_option("--distCalc",        action = "store", type = "string", dest = "distCalc",
                   default = "LoKi::DistanceCalculator")
 parser.add_option("--tauCalc",         action = "store", type = "string", dest = "tauCalc",
