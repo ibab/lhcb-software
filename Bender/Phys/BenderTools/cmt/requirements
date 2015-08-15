@@ -39,7 +39,6 @@ alias check-trg     "trg-check"
 alias dump-dst      "dst-dump" 
 alias db-tags       "get-dbtags" 
 alias get-meta-info "get-metainfo" 
-alias metainfo      "get-metainfo" 
 alias no-mc-decay   "no-mc-decays"
 
 # =============================================================================

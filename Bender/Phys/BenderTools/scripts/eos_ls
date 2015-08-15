@@ -29,7 +29,7 @@
 #                 by $Author: ibelyaev $
 # =============================================================================
 
-if  ( -r  /afs/cern.ch/project/eos/installation/client/etc/setup.sh ) then
+if  ( -r  /afs/cern.ch/project/eos/installation/client/etc/setup.csh ) then
   source /afs/cern.ch/project/eos/installation/client/etc/setup.csh
   eos ls -la $*
 else 
