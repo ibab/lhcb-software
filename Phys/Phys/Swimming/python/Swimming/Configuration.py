@@ -59,7 +59,7 @@ class Swimming(LHCbConfigurableUser) :
         , "OnlinePV"           : 'TES:Hlt/Vertex/PV3D'      # The TES location of the HLT primary vertices
         , "OfflinePV"          : '/Event/Rec/Vertex/Primary'# The TES location of the offline primary vertices
         , "OutPVSel"           : 'PV3D'          # The name of the HLT1 PV3D 'selection' 
-        , "RelPVFinder"        : 'GenericParticle2PVRelator<_p2PVWithIPChi2,OfflineDistanceCalculatorName>/P2PVWithIPChi2' # Related PV finder
+        , "RelPVFinder"        : 'GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2' # Related PV finder
         , "DistCalc"           : 'LoKi::DistanceCalculator' # The distance calculator
         , "TauCalc"            : 'LoKi::LifetimeFitter'         # The decay time calculator
         , "LifetimeFitter"     : ['LifetimeFitter']
