@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+! 2015-08-12 - Chris Jones
+ - Update Tools.py to avoid the warning :-
+     WARNING: requesting factory via old name 'GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_'use 'GenericParticle2PVRelator<_p2PVWithIPChi2, OfflineDistanceCalculatorName>' instead
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

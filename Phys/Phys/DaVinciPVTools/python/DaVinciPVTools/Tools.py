@@ -3,7 +3,7 @@ Shortcuts for long names of templated tools
 @author Juan Palacios juan.palacios@nikhef.nl
 @date 
 """
-P2PVWithIP = 'GenericParticle2PVRelator__p2PVWithIP_OfflineDistanceCalculatorName_'
-P2PVWithIPChi2 = 'GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_'
-OnlineP2PVWithIP = 'GenericParticle2PVRelator__p2PVWithIP_OnlineDistanceCalculatorName_'
-OnlineP2PVWithIPChi2 = 'GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_'
+P2PVWithIP           = 'GenericParticle2PVRelator<_p2PVWithIP,OfflineDistanceCalculatorName>'
+P2PVWithIPChi2       = 'GenericParticle2PVRelator<_p2PVWithIPChi2,OfflineDistanceCalculatorName>'
+OnlineP2PVWithIP     = 'GenericParticle2PVRelator<_p2PVWithIP,OnlineDistanceCalculatorName>'
+OnlineP2PVWithIPChi2 = 'GenericParticle2PVRelator<_p2PVWithIPChi2,OnlineDistanceCalculatorName>'
