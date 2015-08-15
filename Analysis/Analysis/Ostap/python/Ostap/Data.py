@@ -106,9 +106,18 @@ class Files(object):
         if isinstance ( files , str ) : files = [ files ]
         #
         _files = set() 
-        for pattern in files :            
-            for f in glob.iglob ( pattern ) :
-                _files.add ( f )
+        for pattern in files :
+            ## experimental feature: try to match files on CERN EOS 
+            if 0 <= pattern.find('/eos/lhcb/') :
+                if  0 <= pattern.find ( '*' ) or 0 <= pattern.find ( '?' ) or \
+                       0 <= pattern.find ( '[' ) or 0 <= pattern.find ( ']' )  : 
+                    logger.warning('Globbing might not work for EOS-files "%s"' % pattern )
+                    from Ostap.EOS import EOS
+                    with EOS() as eos :
+                        for f in eos.iglob ( pattern , root = True ) : _files.add ( f )
+                else : _files.add ( pattern ) 
+            else :
+                for f in glob.iglob ( pattern ) : _files.add ( f )
                 
         from Ostap.progress_bar import ProgressBar 
         with ProgressBar ( max_value = len(_files) , silent = self.silent ) as bar :
