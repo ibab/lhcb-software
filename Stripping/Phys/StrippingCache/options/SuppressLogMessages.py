@@ -20,7 +20,10 @@ IGNORED_MESSAGES = map(re.compile,
                         r'share the same output location',
                         r'how to add new bank',
                         r'Using default tag.*for partition',
-                        r'The lines going to MDST.DST are'
+                        r'The lines going to MDST.DST are',
+                        r'No explicit tuning for DataType',
+                        r'something else configured a decoder already',
+                        r'REMOVE UT decoding from DataOnDemand'
                        ))
 
 _orig_log_filter = log.filter

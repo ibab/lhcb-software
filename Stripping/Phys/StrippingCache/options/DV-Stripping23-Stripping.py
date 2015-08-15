@@ -89,7 +89,7 @@ from Configurables import ( LHCbApp, PhysConf, AnalysisConf,
                             DstConf, LumiAlgsConf, DDDBConf, CondDB )
 
 # Just to initialise
-condDB = CondDB()
+#condDB = CondDB()
 
 LHCbApp().DDDBtag   = "dddb-20150724"
 LHCbApp().CondDBtag = "cond-20150805"

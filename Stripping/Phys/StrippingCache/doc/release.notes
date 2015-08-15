@@ -5,8 +5,11 @@
 ! Created     : 2015-02-04
 ! -----------------------------------------------------------------------------
 
+! 2015-08-15 - Chris Jones
+ - Add some more warning message exclusions.
+
 ! 2015-08-14 - Chris Jones
- - Turn off messages again.
+ - Turn off messages again for building in the nightlies.
 
 ! 2015-08-13 - Chris Jones
  - Update S23 options to not use DaVinci() configurable directly.
