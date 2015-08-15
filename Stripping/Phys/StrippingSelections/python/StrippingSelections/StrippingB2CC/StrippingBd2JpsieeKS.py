@@ -26,12 +26,21 @@ default_config = {
         , 'ElectronPT'            :   500.    # MeV
         , 'ElectronPID'           :     0.    # adimensional
         , 'ElectronTrackCHI2pDOF' :     5.    # adimensional
+        , 'KaonPID'               :     0.    # adimensional
         , 'PionForKstarPT'        :   600.    # MeV
         , 'TRCHI2DOF'             :     3.    # adimensional
         , 'JpsiVertexCHI2pDOF'    :    15.    # adimensional
         , 'JpsiMassMin'           :  2300.    # MeV
         , 'JpsiMassMax'           :  3300.    # MeV
-        , 'BdVertexCHI2pDOF'      :    7.     # adimensional
+        , 'KstarMassMin'          :   826.    # MeV
+        , 'KstarMassMax'          :   966.    # MeV
+        , 'KstarPT'               :  1500.    # MeV
+        , 'KstarVCHI2'            :    20.    # adimensional
+        , 'KplusPT'               :   500.    # MeV
+        , 'KSVCHI2'               :    20.    # adimensional
+        , 'KSBPVDLS'              :     5.    # adimensional
+        , 'BdVertexCHI2pDOF'      :     7.    # adimensional
+        , 'BdFromKstarVCHI2pDOF'  :    20.    # adimensional
         , 'BdMassMin'             :  4400.    # MeV
         , 'BdMassMax'             :  6000.    # MeV
         , 'Prescale'              :     0.1   # adamenssional
@@ -61,12 +70,21 @@ class Bd2JpsieeKSConf(LineBuilder):
                 , 'ElectronPT'                # MeV
                 , 'ElectronPID'               # adimensional
                 , 'ElectronTrackCHI2pDOF'     # adimensional
+                , 'KaonPID'                   # adimensional
                 , 'PionForKstarPT'            # MeV
                 , 'TRCHI2DOF'                 # adimensional
                 , 'JpsiVertexCHI2pDOF'        # adimensional
                 , 'JpsiMassMin'               # MeV
                 , 'JpsiMassMax'               # MeV
+                , 'KstarMassMin'              # MeV
+                , 'KstarMassMax'              # MeV
+                , 'KstarPT'                   # MeV
+                , 'KstarVCHI2'                # adimensional
+                , 'KplusPT'                   # MeV
+                , 'KSVCHI2'                   # adimensional
+                , 'KSBPVDLS'                  # adimensional
                 , 'BdVertexCHI2pDOF'          # adimensional
+                , 'BdFromKstarVCHI2pDOF'      # adimensional
                 , 'BdMassMin'                 # MeV
                 , 'BdMassMax'                 # MeV
                 , 'Prescale'                  # adimensional
@@ -89,23 +107,23 @@ class Bd2JpsieeKSConf(LineBuilder):
 
         self.NoIPKaonList = self.createSubSel( OutputList = "NoIPKaonsForBetaS" + self.name,
                                                InputList = DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles"),
-                                               Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & (PIDK > 0)" % self.config )
+                                               Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & (PIDK > %(KaonPID)s )" % self.config )
 
         self.KsListLoose = MergedSelection( "StdLooseKsMergedForBetaS" + self.name,
                                             RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKsDD/Particles"),
                                                                   DataOnDemand(Location = "Phys/StdLooseKsLL/Particles")] )
         self.KSList = self.createSubSel( OutputList = "KsForBetaS" + self.name,
                                 InputList = self.KsListLoose,
-                                Cuts = "(VFASPF(VCHI2)<20) & (BPVDLS>5)" )
+                                Cuts = "(VFASPF(VCHI2) < %(KSVCHI2)s) & (BPVDLS > %(KSBPVDLS)s)" % self.config )
 
         self.KstarList = self.createSubSel( OutputList = "Kstar2KpiForBetaS" + self.name,
                                             InputList = DataOnDemand(Location = "Phys/StdLooseKstar2Kpi/Particles"),
-                                            Cuts = "(in_range(826,M,966))" \
-                                            "& (PT > 1500.*MeV) " \
-                                            "& (VFASPF(VCHI2) < 20)" \
+                                            Cuts = "(in_range(%(KstarMassMin)s,M,%(KstarMassMax)s))" \
+                                            "& (PT > %(KstarPT)s *MeV) " \
+                                            "& (VFASPF(VCHI2) < %(KstarVCHI2)s )" \
                                             "& (MAXTREE('K+'==ABSID,  TRCHI2DOF) < %(TRCHI2DOF)s )" \
                                             "& (MAXTREE('pi-'==ABSID, TRCHI2DOF) < %(TRCHI2DOF)s )" \
-                                            "& (MINTREE('K+'==ABSID, PIDK) > 0)" % self.config)
+                                            "& (MINTREE('K+'==ABSID, PIDK) > %(KaonPID)s )" % self.config)
 
         self._jpsi = FilterDesktop( Code = "   (MM > %(JpsiMassMin)s *MeV)" \
                                            " & (MM < %(JpsiMassMax)s *MeV)" \
@@ -205,7 +223,7 @@ class Bd2JpsieeKSConf(LineBuilder):
                                                               DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0]cc",
                                                               DaughterLists   = [ self.JpsiFromTracks, self.KstarList ],
                                                               PreVertexCuts   = "in_range(%(BdMassMin)s,AM,%(BdMassMax)s)" % self.config,
-                                                              PostVertexCuts  = "(VFASPF(VCHI2/VDOF) < 20)" ) # for the other particles is 10.
+                                                              PostVertexCuts  = "(VFASPF(VCHI2/VDOF) < %(BdFromKstarVCHI2pDOF)s)" % self.config )
 
         Bd2JpsieeKstarFromTracksPrescaledLine = StrippingLine( self.name + "Bd2JpsieeKstarFromTracksPrescaledLine",
                                                                algos = [ Bd2JpsieeKstarFromTracks ],
@@ -230,14 +248,14 @@ class Bd2JpsieeKSConf(LineBuilder):
         Bu2JpsieeKFromTracks = self.createCombinationSel( OutputList = "Bu2JpsieeKFromTracks" + self.name,
                                                           DecayDescriptor = "[B+ -> J/psi(1S) K+]cc",
                                                           DaughterLists = [ self.JpsiFromTracks, self.NoIPKaonList ],
-                                                          DaughterCuts  = {"K+": "(PT > 500.*MeV)" },
+                                                          DaughterCuts  = {"K+": "(PT > %(KplusPT)s *MeV)" % self.config },
                                                           PreVertexCuts   = "in_range(%(BdMassMin)s,AM,%(BdMassMax)s)" % self.config,
                                                           PostVertexCuts = "(VFASPF(VCHI2PDOF) < %(BdVertexCHI2pDOF)s)" % self.config )
      
         Bu2JpsieeKFromTracksDetached = self.createSubSel( InputList = Bu2JpsieeKFromTracks,
                                                           OutputList = Bu2JpsieeKFromTracks.name() + "Detached" + self.name,
                                                           Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps) & "\
-                                                                 "(MINTREE('K+'==ABSID, PT) > 500.*MeV)" % self.config )
+                                                                 "(MINTREE('K+'==ABSID, PT) > %(KplusPT)s *MeV)" % self.config )
 
         Bu2JpsieeKFromTracksDetachedLine  = StrippingLine( self.name + "Bu2JpsieeKFromTracksDetachedLine",
                                                           algos = [ Bu2JpsieeKFromTracksDetached ],

@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-08-15 - Ramon Niet
+ - Replaced hardcoded cuts in Bd2JpsieeKS module
+
+! 2015-08-15 - Ramon Niet
  - Tightened selection in Bd2JpsieeKstar lines to reduce multiplicities 
 
 ! 2015-08-14 - Albert Puig
