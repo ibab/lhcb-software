@@ -170,11 +170,11 @@ DDDBConf()
 cdb = CondDB()
 cdb.RunChangeHandlerConditions=CondMap.ConditionMap
 cdb.EnableRunChangeHandler = True
+cdb.EnableRunStampCheck=False
 cdb.UseDBSnapshot = True
 cdb.Tags = { "DDDB" : RunOption.DDDBTag,
                 "LHCBCOND" : RunOption.CondDbTag,
                 "ONLINE" : 'fake'}
-cdb.EnableRunStampCheck=False
 cdb.IgnoreHeartBeat = True
 dbxalg = DBXferAlg()
 dbxalg.RunNumber = RunOption.RunNumber
@@ -241,6 +241,7 @@ if RunEnd == None:
   etime =  HLT2Params.RunStartTime+86400*365*100
 else:
   etime = RunEnd/1000000000
+print "Operating on Database "+DBString
 print "IoV is ["+str(RunStart)+","+str(RunEnd)+"], ["+time.ctime(HLT2Params.RunStartTime)+","+time.ctime(etime)+"]"
 status = 0
 status = CondDBUI.Admin.MakeDBFromFiles(RunOption.OutputDirectory+"/offl", db,
@@ -251,6 +252,10 @@ status = CondDBUI.Admin.MakeDBFromFiles(RunOption.OutputDirectory+"/offl", db,
                                    writeDuplicate = False
                                     )
 RunEnd =  (HLT2Params.RunStartTime+HLT2Params.RunDuration)*1000000000
+print "Reopening Database in Read-Only mode"
+db.closeDatabase()
+db = CondDBUI.CondDB(DBString, create_new_db = False, readOnly=True)
+print "Checking Database Contents against entered files"
 Fails = CondDBUI.Admin.CompareDBToFiles(RunOption.OutputDirectory+"/offl", db,
                                    includes = [], excludes = [],
                                    verbose = True,
@@ -264,6 +269,8 @@ if Fails:
   sys.exit(44)
 MakeTick(RunOption.OutputDirectory,RunOption.RunNumber)
 RunEnd =  (HLT2Params.RunStartTime+HLT2Params.RunDuration)*1000000000
+print "Adding the RunTick to the Database"
+db = CondDBUI.CondDB(DBString, create_new_db = False, readOnly=False)
 status = CondDBUI.Admin.MakeDBFromFiles(RunOption.OutputDirectory+"/onl", db,
                                    includes = [], excludes = [],
                                    verbose = True,
@@ -271,6 +278,34 @@ status = CondDBUI.Admin.MakeDBFromFiles(RunOption.OutputDirectory+"/onl", db,
                                    until = RunEnd,
                                    writeDuplicate = False
                                     )
+db.closeDatabase()
+db = CondDBUI.CondDB(DBString, create_new_db = False, readOnly=True)
+print "Checking the Run Tick"
+Fails = CondDBUI.Admin.CompareDBToFiles(RunOption.OutputDirectory+"/onl", db,
+                                   includes = [], excludes = [],
+                                   verbose = True,
+                                   since = RunStart,
+                                   until = RunEnd
+                                    )
+if Fails:
+  print "Readback check on DB failed\n"
+  pprint(Fails)
+  sys.exit(44)
+db.closeDatabase()
+DBString = "CondDBOnline/ONLINE" # use the central Oracle Database...
+db = CondDBUI.CondDB(DBString, create_new_db = False, readOnly=True)
+print "Checking Database Contents against entered files with account "+DBString
+Fails = CondDBUI.Admin.CompareDBToFiles(RunOption.OutputDirectory+"/offl", db,
+                                   includes = [], excludes = [],
+                                   verbose = True,
+                                   since = RunStart,
+                                   until = RunEnd
+                                    )
+if Fails:
+  print "Readback check on DB failed\n"
+  pprint(Fails)
+  sys.exit(44)
+print "Checking The Run Tick contents with account "+DBString
 Fails = CondDBUI.Admin.CompareDBToFiles(RunOption.OutputDirectory+"/onl", db,
                                    includes = [], excludes = [],
                                    verbose = True,
