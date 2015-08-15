@@ -173,7 +173,7 @@ StatusCode ParticleFlow4Jets::initialize() {
   boost::replace_last(m_pf2verticesLocation,"/Particles","/Particle2VertexRelations");
   boost::replace_last(m_pfbanned2verticesLocation,"/Particles","/Particle2VertexRelations");
 
-  m_pvRelator = tool<IRelatedPVFinder>("GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2", this);
+  m_pvRelator = tool<IRelatedPVFinder>("GenericParticle2PVRelator<_p2PVWithIPChi2,OfflineDistanceCalculatorName>/P2PVWithIPChi2", this);
 
   // ParticleProperty
   LHCb::IParticlePropertySvc* ppSvc = 0;
