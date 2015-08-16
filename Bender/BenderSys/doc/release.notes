@@ -23,7 +23,36 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
-<A NAME=v26r1> 2015-08-08 Bender v26r0 based on the DaVinci v37r1p2</A>
+<A NAME=v26r2> 2015-08-16 Bender v26r2 based on the DaVinci v37r1p2</A>
+<ul>						 
+<li>Based on the DaVinci v37r1p2</li>
+<li>A lot of fixes in bender-scripts</li>
+<ul>						 
+<li> resurrected interactive access to GRID files</li>
+<li> improved argument parsing</li>
+<li> drastically improved interactive <code>bender</code> 
+     shell ("steroid-enhanced Gaudi Python")(</li>
+<li> possibility to choose the interactive shell 
+     <code>ipython</code>, <code>embed</code>, <code>plain</code> or <code>batch</code>
+     </li>
+<li> unification of <code>dst-dump</code>, 
+     <code>dst-explorer</code>, <code>get-metadata</code>, 
+     <code>get-db-tags</code> scripts </li>
+</ul>
+<li>Simplification of 
+    <code>BenderTools.TisTos</code> and 
+    <code>BenderTools.Fill</code> modules
+</li>
+<ul>
+<li> No need to import them </li>
+<li> No need to invoke corresponding finalization </li>
+<li> No need to invoke initialization for <code>Fill</code></li>
+<li> (still need to initialize <code>TisTos</code></li>
+</ul>
+<li> Slightly updated tutorial</li>
+</ul>
+
+<A NAME=v26r1> 2015-08-08 Bender v26r1 based on the DaVinci v37r1p2</A>
 <ul>						 
 <li>Based on the DaVinci v37r1p2</li>
 <li>Identical to v26r0</li>
