@@ -1,4 +1,5 @@
 #!/usr/bin/env ganga
+# -*- coding: utf-8 -*-
 # =============================================================================
 # $Id$ 
 # =============================================================================
@@ -57,20 +58,23 @@ __version__ = "$Revision$"
 # =============================================================================
 print __doc__
 # =============================================================================
-my_area  = '/afs/cern.ch/user/i/ibelyaev/cmtuser'
-my_opts  = my_area + "/Bender_v23r2/Phys/VBWork/work/work_Bc2rho/Bc.py"
+my_opts  = "TisTosTuple.py"
 #
 ## prepare job :
+#
 j = Job (
     #
     name         = 'MyJob',
     #
     application  = Bender (
-    version      = 'v23r4'   ,
+    version      = 'v26r2'   ,
     module       = my_opts 
     ) ,
     #
-    outputfiles  = [ SandboxFile ( '*.root' ) , SandboxFile ( '*.xml'  ) ] ,
+    outputfiles  = [ LocalFile ( '*.root' ) ,
+                     LocalFile ( '*.txt'  ) , 
+                     LocalFile ( '*.db*'  ) , 
+                     LocalFile ( '*.xml'  ) ] ,
     #
     backend      = Dirac () ,
     #
@@ -80,17 +84,16 @@ j = Job (
     )
 #
 ## get data from BK:
+#
 q = BKQuery ( '/LHCb/Collision12/Beam4000GeV-VeloClosed-MagDown/Real Data/Reco14/Stripping20/WGBandQSelection7/90000000/PSIX.MDST'   )
+
 dataset = q.getDataset()
 
-#
 ## set input data to job 
 j.inputdata = dataset
 
-#
 ## submit the job 
 j.submit()
-
 
 # =============================================================================
 # The END 

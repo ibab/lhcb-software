@@ -59,7 +59,7 @@ Last modification $Date: 2014-05-16 19:48:30 +0200 (Fri, 16 May 2014) $
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2006-10-12 " 
-__version__ = " Version $Revision: 172885 $ "
+__version__ = " $Revision: 172885 $ "
 # ============================================================================= 
 ## import everything from bender 
 from   Bender.Main import *
