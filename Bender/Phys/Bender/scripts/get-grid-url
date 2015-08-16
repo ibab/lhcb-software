@@ -1,7 +1,7 @@
 #!/bin/zsh -f
 # =============================================================================
-## @file get_grid_url
-# simple script to get GRID URL for certains LFN(s)  
+## @file
+#  simple script to get GRID URL for certains LFN(s)  
 # =============================================================================
 
 . `which SetupProject.sh` LHCbDirac >&! /dev/null
