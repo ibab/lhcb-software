@@ -63,9 +63,6 @@ __version__ = " Version $Revision: 172885 $ "
 # ============================================================================= 
 ## import everything from bender 
 from   Bender.Main import *
-## enhance functionality for n-tuples 
-import BenderTools.Fill 
-import BenderTools.TisTos 
 # =============================================================================
 ## optional logging
 # =============================================================================
@@ -84,18 +81,22 @@ class TisTosTuple(Algo):
 
         sc = Algo.initialize ( self ) ## initialize the base class
         if sc.isFailure() : return sc
-        
-        ## initialize functionality for enhanced n-tuples 
-        sc = self.fill_initialize () 
-        if sc.isFailure() : return sc
-        
-        ## container to collect trigger infomration 
+
+        #
+        ## container to collect trigger information, e.g. list of fired lines 
+        #
         triggers = {}
-        triggers ['psi'] = {}
-        ## the lines to be investgated in details
+        triggers ['psi'] = {} ## slot to keep information for J/psi 
+        
+        #
+        ## the lines to be investigated in details
+        #
         lines    = {}
-        lines    [ "psi" ] = {}
+        lines    [ "psi" ] = {} ## trigger lines for J/psi
+
+        #
         ## six mandatory keys:
+        #
         lines    [ "psi" ][   'L0TOS' ] = 'L0(DiMuon|Muon)Decision'
         lines    [ "psi" ][   'L0TIS' ] = 'L0(Hadron|DiMuon|Muon|Electron|Photon)Decision'
         lines    [ "psi" ][ 'Hlt1TOS' ] = 'Hlt1(DiMuon|TrackMuon).*Decision'
@@ -107,12 +108,6 @@ class TisTosTuple(Algo):
         if sc.isFailure() : return sc
      
         return SUCCESS
-    
-
-    def finalize ( self ) :
-        self.tisTos_finalize  ()       ## do not forget to finalize it 
-        self.  fill_finalize  ()       ## do not forget to finalize it  
-        return Algo.finalize ( self )  ## do not forget to finalize it 
     
     ## the main 'analysis' method 
     def analyse( self ) :   ## IMPORTANT! 
@@ -140,25 +135,31 @@ class TisTosTuple(Algo):
             if not  5.2 <= m_fit  <= 5.4 : continue 
             c_tau  = ctau  ( b )
             if not  0.1 <= c_tau  <=  10 : continue
-            
+
+            #
             ## fill few kinematic variables for particles,
+            #
             self.treatKine   ( tup , b   , '_b'   )
             self.treatKine   ( tup , psi , '_psi' )
 
-            ## collect trigger information for J/psi
+            #
+            ## collect trigger information for J/psi (list of fired lines)
+            #
             self.decisions   ( psi , self.triggers['psi'] )
 
-            ## fill n-tuple with TISTOS infornation for J/psi
+            #
+            ## fill n-tuple with TISTOS information for J/psi
+            #
             self.tisTos      (
-                psi    , ## particle 
-                tup    , ## n-tuple
-                'psi_' , ## prefix for variable name in n-tuple
-                self.lines['psi'] ,  ## trigger lines to be inspected
-                ## verbose = True  ## if someone hates bit-wise operations 
+                psi               , ## particle 
+                tup               , ## n-tuple
+                'psi_'            , ## prefix for variable name in n-tuple
+                self.lines['psi'] , ## trigger lines to be inspected
+                verbose = True      ## good ooption for those who hates bit-wise operations 
                 )
             
             tup.write() 
-
+            
         ## 
         return SUCCESS      ## IMPORTANT!!! 
 # =============================================================================

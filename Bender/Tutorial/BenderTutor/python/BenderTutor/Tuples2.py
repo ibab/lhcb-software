@@ -63,8 +63,6 @@ __version__ = " Version $Revision$ "
 # ============================================================================= 
 ## import everything from bender 
 from   Bender.Main import *
-## enhace functionality for n-tuples 
-import BenderTools.Fill 
 # =============================================================================
 ## optional logging
 # =============================================================================
@@ -79,20 +77,6 @@ class Tuples2(Algo):
     """
     Enhanced functionality for n-tuples 
     """
-    def initialize ( self ) :
-
-        sc = Algo.initialize ( self ) ## initialize the base class
-        if sc.isFailure() : return sc
-        
-        ## initialize functionality for enhanced n-tuples 
-        sc = self.fill_initialize ()
-        
-        return sc 
-
-    def finalize ( self ) :    
-        self.fill_finalize  ()
-        return Algo.finalize ( self )
-    
     ## the main 'analysis' method 
     def analyse( self ) :   ## IMPORTANT! 
         """
@@ -101,7 +85,7 @@ class Tuples2(Algo):
         
         ## get particles from the input locations 
         particles = self.select ( 'bmesons', 'Beauty -> J/psi(1S) K+ K-'  )
-        if particles.empty() : return self.Warning('No input particles', SUCCESS )
+        if particles.empty() : return self.Warning ( 'No input particles', SUCCESS )
         
         tup = self.nTuple('MyTuple')
         for p in particles :
@@ -109,9 +93,8 @@ class Tuples2(Algo):
             psi = p(1) ## the first daughter: J/psi 
             
             ## fill few kinematic variables for particles,
-            ## use suffix to mark the variables propertly            
-            self.treatKine   ( tup , p   , '_b'   )
-            self.treatKine   ( tup , psi , '_psi' )
+            self.treatKine   ( tup , p   , '_b'   )  ## use suffix to mark variables 
+            self.treatKine   ( tup , psi , '_psi' )  ## use suffix to mark variables 
             
             self.treatKaons  ( tup , p ) ## fill some basic information for all kaons
             self.treatMuons  ( tup , p ) ## fill some basic information for all muons
@@ -141,8 +124,8 @@ def configure ( inputdata        ,    ## the list of input files
                    )
     
     ## add the name of Bender algorithm into User sequence sequence 
-    alg_name = 'Tuples2'
-    dv.UserAlgorithms += [ alg_name ]
+    alg_name = 'Tuples2'                                  ## mind the name [1]
+    dv.UserAlgorithms += [ alg_name ]                     ## mind the name [2] 
     
     ## define the input data
     setData  ( inputdata , catalogs , castor )
@@ -152,7 +135,7 @@ def configure ( inputdata        ,    ## the list of input files
     
     ## (1) create the algorithm with given name 
     alg   = Tuples2 (
-        alg_name ,
+        alg_name ,                                        ## mind the name [3]
         RootInTES = rootInTES , ## we are reading uDST
         Inputs    = [ 'Phys/SelPsi2KForPsiX/Particles' ]
         )
@@ -193,7 +176,6 @@ if __name__ == '__main__' :
 
     gaudi = appMgr()
     alg   = gaudi.algorithm('Tuples2')
-    
     alg.NTuplePrint = True 
                           
     
