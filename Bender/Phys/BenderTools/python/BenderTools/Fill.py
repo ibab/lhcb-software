@@ -69,7 +69,7 @@ __all__= (
     'addGecInfo'    , ## add some GEC-info 
     )
 # ==============================================================================
-from   Bender.Main                   import LoKi, SUCCESS  
+from   LoKiCore.basic                import cpp,LoKi 
 from   LoKiPhys.decorators           import *
 from   GaudiKernel.SystemOfUnits     import GeV, MeV, mm 
 # =============================================================================
@@ -79,50 +79,53 @@ from AnalysisPython.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'BenderTools.Fill' )
 else                      : logger = getLogger ( __name__ )
 # ==============================================================================
+SUCCESS                 = cpp.StatusCode( cpp.StatusCode.SUCCESS , True )
+FAILURE                 = cpp.StatusCode( cpp.StatusCode.FAILURE , True )
+# ==============================================================================
 ## initialize te internal machinery
-def _fill_initialize ( self ) :
+def fill_initialize ( self ) :
     """
     Initialize the internal machinery 
     """
-    self._pions         = LoKi.Child.Selector ( 'pi+'   == ABSID )
-    self._kaons         = LoKi.Child.Selector ( 'K+'    == ABSID )
-    self._protons       = LoKi.Child.Selector ( 'p+'    == ABSID )
-    self._muons         = LoKi.Child.Selector ( 'mu+'   == ABSID )
-    self._gamma         = LoKi.Child.Selector ( 'gamma' == ID    )
-    self._digamma       = LoKi.Child.Selector ( DECTREE ( ' ( pi0 | eta ) -> <gamma> <gamma>' ) ) 
-    self._pi0           = LoKi.Child.Selector ( 'pi0'   == ID    )
-    self._tracks        = LoKi.Child.Selector (       HASTRACK   )
-    self._basic         = LoKi.Child.Selector (        ISBASIC   )
+    self._pions           = LoKi.Child.Selector ( 'pi+'   == ABSID )
+    self._kaons           = LoKi.Child.Selector ( 'K+'    == ABSID )
+    self._protons         = LoKi.Child.Selector ( 'p+'    == ABSID )
+    self._muons           = LoKi.Child.Selector ( 'mu+'   == ABSID )
+    self._gamma           = LoKi.Child.Selector ( 'gamma' == ID    )
+    self._digamma         = LoKi.Child.Selector ( DECTREE ( ' ( pi0 | eta ) -> <gamma> <gamma>' ) ) 
+    self._pi0             = LoKi.Child.Selector ( 'pi0'   == ID    )
+    self._tracks          = LoKi.Child.Selector (       HASTRACK   )
+    self._basic           = LoKi.Child.Selector (        ISBASIC   )
     #
-    self._ctau          = BPVLTIME (    ) * c_light
-    self._ctau_9        = BPVLTIME (  9 ) * c_light
-    self._ctau_25       = BPVLTIME ( 25 ) * c_light
-    self._lv01          = LV01  
-    self._vchi2         = VFASPF       ( VCHI2     )
-    self._vchi2ndf      = VFASPF       ( VCHI2PDOF )
-    self._dtfchi2       = DTF_CHI2NDOF ( True      )
-    self._ipchi2        = BPVIPCHI2    ()
-    self._dls           = LoKi.Particles.DecayLengthSignificanceDV () 
+    self._ctau            = BPVLTIME (    ) * c_light
+    self._ctau_9          = BPVLTIME (  9 ) * c_light
+    self._ctau_25         = BPVLTIME ( 25 ) * c_light
+    self._lv01            = LV01  
+    self._vchi2           = VFASPF       ( VCHI2     )
+    self._vchi2ndf        = VFASPF       ( VCHI2PDOF )
+    self._dtfchi2         = DTF_CHI2NDOF ( True      )
+    self._ipchi2          = BPVIPCHI2    ()
+    self._dls             = LoKi.Particles.DecayLengthSignificanceDV () 
     #
-    self._min_dll_K     = MINTREE ( 'K+'  == ABSID   , PIDK  - PIDpi ) 
-    self._min_dll_Pi    = MINTREE ( 'pi+' == ABSID   , PIDpi - PIDK  ) 
-    self._min_dll_PK    = MINTREE ( 'p+'  == ABSID   , PIDp  - PIDK  ) 
-    self._min_dll_Ppi   = MINTREE ( 'p+'  == ABSID   , PIDp  - PIDpi ) 
-    self._min_dll_Mu    = MINTREE ( 'mu+' == ABSID   , PIDmu - PIDpi )
+    self._min_dll_K       = MINTREE ( 'K+'  == ABSID   , PIDK  - PIDpi ) 
+    self._min_dll_Pi      = MINTREE ( 'pi+' == ABSID   , PIDpi - PIDK  ) 
+    self._min_dll_PK      = MINTREE ( 'p+'  == ABSID   , PIDp  - PIDK  ) 
+    self._min_dll_Ppi     = MINTREE ( 'p+'  == ABSID   , PIDp  - PIDpi ) 
+    self._min_dll_Mu      = MINTREE ( 'mu+' == ABSID   , PIDmu - PIDpi )
     #
-    self._min_annpid_K  = MINTREE ( 'K+'  == ABSID     , PROBNNk      ) 
-    self._min_annpid_Pi = MINTREE ( 'pi+' == ABSID     , PROBNNpi     ) 
-    self._min_annpid_Mu = MINTREE ( 'mu+' == ABSID     , PROBNNmu     ) 
-    self._min_annpid_E  = MINTREE ( 'e+'  == ABSID     , PROBNNe      )
-    self._min_annpid_P  = MINTREE ( 'p+'  == ABSID     , PROBNNp      )
+    self._min_annpid_K    = MINTREE ( 'K+'  == ABSID     , PROBNNk      ) 
+    self._min_annpid_Pi   = MINTREE ( 'pi+' == ABSID     , PROBNNpi     ) 
+    self._min_annpid_Mu   = MINTREE ( 'mu+' == ABSID     , PROBNNmu     ) 
+    self._min_annpid_E    = MINTREE ( 'e+'  == ABSID     , PROBNNe      )
+    self._min_annpid_P    = MINTREE ( 'p+'  == ABSID     , PROBNNp      )
     #
-    self._min_Pt        = MINTREE ( ISBASIC & HASTRACK , PT  ) / GeV 
-    self._min_Eta       = MINTREE ( ISBASIC & HASTRACK , ETA ) 
-    self._max_Eta       = MAXTREE ( ISBASIC & HASTRACK , ETA )
+    self._min_Pt          = MINTREE ( ISBASIC & HASTRACK , PT  ) / GeV 
+    self._min_Eta         = MINTREE ( ISBASIC & HASTRACK , ETA ) 
+    self._max_Eta         = MAXTREE ( ISBASIC & HASTRACK , ETA )
     #
-    self._min_CL_gamma  = MINTREE ( 'gamma' == ID , CL ) 
-    self._min_Et_gamma  = MINTREE ( 'gamma' == ID , PT ) / GeV 
-    self._min_E_gamma   = MINTREE ( 'gamma' == ID ,  E ) / GeV 
+    self._min_CL_gamma    = MINTREE ( 'gamma' == ID , CL ) 
+    self._min_Et_gamma    = MINTREE ( 'gamma' == ID , PT ) / GeV 
+    self._min_E_gamma     = MINTREE ( 'gamma' == ID ,  E ) / GeV 
     #
     self._maxTrChi2       = MAXTREE ( ISBASIC & HASTRACK , TRCHI2DOF    )
     self._maxTrGhost      = MAXTREE ( ISBASIC & HASTRACK , TRGHOSTPROB  )
@@ -131,85 +134,86 @@ def _fill_initialize ( self ) :
     self._max_anngh_track = MAXTREE ( ISBASIC & HASTRACK , PROBNNghost  )
     #
     ##
-    self._EtC           = PINFO   ( 55001 , -100 * GeV ) 
-    self._PtC           = PINFO   ( 55002 , -100 * GeV )  
-    self._maxEtC        = MAXTREE ( 'mu+' == ABSID , self._EtC ) 
-    self._maxPtC        = MAXTREE ( 'mu+' == ABSID , self._PtC )
+    self._EtC             = PINFO   ( 55001 , -100 * GeV ) 
+    self._PtC             = PINFO   ( 55002 , -100 * GeV )  
+    self._maxEtC          = MAXTREE ( 'mu+' == ABSID , self._EtC ) 
+    self._maxPtC          = MAXTREE ( 'mu+' == ABSID , self._PtC )
     ## 
-    self._EcalE         = PPINFO  ( LHCb.ProtoParticle.CaloEcalE , -100 * GeV ) 
-    self._HcalE         = PPINFO  ( LHCb.ProtoParticle.CaloHcalE , -100 * GeV )  
-    self._maxEcalE      = MAXTREE ( 'mu+' == ABSID , self._EcalE )
-    self._maxHcalE      = MAXTREE ( 'mu+' == ABSID , self._HcalE )
+    self._EcalE           = PPINFO  ( LHCb.ProtoParticle.CaloEcalE , -100 * GeV ) 
+    self._HcalE           = PPINFO  ( LHCb.ProtoParticle.CaloHcalE , -100 * GeV )  
+    self._maxEcalE        = MAXTREE ( 'mu+' == ABSID , self._EcalE )
+    self._maxHcalE        = MAXTREE ( 'mu+' == ABSID , self._HcalE )
     #
-    self._delta_m2      = LoKi.PhysKinematics.deltaM2
-    self._masses        = {} 
+    self._delta_m2        = LoKi.PhysKinematics.deltaM2
+    self._masses          = {} 
     #
+    self.fill_initialized = True 
     return SUCCESS 
 
 # ==============================================================================
 ## finalize 
-def _fill_finalize   ( self ) :
+def fill_finalize   ( self ) :
     """
     Finalie the internal machinery 
     """
-    self._pions         = None 
-    self._kaons         = None 
-    self._protons       = None 
-    self._muons         = None 
-    self._gamma         = None 
-    self._digamma       = None 
-    self._pi0           = None 
-    self._tracks        = None 
-    self._basic         = None 
+    del self._pions           # = None 
+    del self._kaons           # = None 
+    del self._protons         # = None 
+    del self._muons           # = None 
+    del self._gamma           # = None 
+    del self._digamma         # = None 
+    del self._pi0             # = None 
+    del self._tracks          # = None 
+    del self._basic           # = None 
     #
-    self._ctau          = None 
-    self._ctau_9        = None 
-    self._ctau_25       = None 
-    self._lv01          = None 
-    self._vchi2         = None 
-    self._vchi2ndf      = None 
-    self._dtfchi2       = None 
-    self._ipchi2        = None 
-    self._dls           = None 
+    del self._ctau            # = None 
+    del self._ctau_9          # = None 
+    del self._ctau_25         # = None 
+    del self._lv01            # = None 
+    del self._vchi2           # = None 
+    del self._vchi2ndf        # = None 
+    del self._dtfchi2         # = None 
+    del self._ipchi2          # = None 
+    del self._dls             # = None 
     #
-    self._min_dll_K     = None 
-    self._min_dll_Pi    = None 
-    self._min_dll_PK    = None 
-    self._min_dll_Ppi   = None 
-    self._min_dll_Mu    = None
+    del self._min_dll_K       # = None 
+    del self._min_dll_Pi      # = None 
+    del self._min_dll_PK      # = None 
+    del self._min_dll_Ppi     # = None 
+    del self._min_dll_Mu      # = None
     #
-    self._min_annpid_K  = None 
-    self._min_annpid_Pi = None 
-    self._min_annpid_Mu = None 
-    self._min_annpid_E  = None 
-    self._min_annpid_P  = None 
+    del self._min_annpid_K    # = None 
+    del self._min_annpid_Pi   # = None 
+    del self._min_annpid_Mu   # = None 
+    del self._min_annpid_E    # = None 
+    del self._min_annpid_P    # = None 
 
-    self._min_Pt        = None 
-    self._min_Eta       = None 
-    self._max_Eta       = None
+    del self._min_Pt          # = None 
+    del self._min_Eta         # = None 
+    del self._max_Eta         # = None
     #
-    self._min_E_gamma   = None 
-    self._min_Et_gamma  = None 
-    self._min_CL_gamma  = None 
+    del self._min_E_gamma     # = None 
+    del self._min_Et_gamma    # = None 
+    del self._min_CL_gamma    # = None 
     #
-    self._maxTrChi2       = None 
-    self._maxTrGhost      = None 
-    self._minTrKL         = None 
-    self._minTrIPchi2     = None 
-    self._max_anngh_track = None 
+    del self._maxTrChi2       # = None 
+    del self._maxTrGhost      # = None 
+    del self._minTrKL         # = None 
+    del self._minTrIPchi2     # = None 
+    del self._max_anngh_track # = None 
     #
-    self._EtC          = None 
-    self._PtC          = None 
-    self._maxEtC       = None 
-    self._maxPtC       = None 
+    del self._EtC             # = None 
+    del self._PtC             # = None 
+    del self._maxEtC          # = None 
+    del self._maxPtC          # = None 
     ## 
-    self._EcalE        = None
-    self._HcalE        = None 
-    self._maxEcalE     = None 
-    self._maxHcalE     = None 
+    del self._EcalE           # = None
+    del self._HcalE           # = None 
+    del self._maxEcalE        # = None 
+    del self._maxHcalE        # = None 
     #
-    self._delta_m2     = None
-    self._masses       = None 
+    del self._delta_m2        # = None
+    del self._masses          # = None 
     #
     return SUCCESS 
 
@@ -222,8 +226,11 @@ def treatPions ( self         ,
                  tup          ,
                  p            ,
                  suffix  = '' ) :
-    
-    ## 
+    #
+    ## initialize it
+    #
+    if not self.fill_initialized : fill_initialize ( self )
+    ##    
     if hasattr ( p , 'particle' ) : p = p.particle() 
     #
     ## get all pions from decay tree
@@ -259,7 +266,11 @@ def treatKaons ( self         ,
                  tup          ,
                  p            ,
                  suffix  = '' ) :
-    
+
+    #
+    ## initialize it
+    #
+    if not self.fill_initialized : fill_initialize ( self )
     ## 
     if hasattr ( p , 'particle' ) : p = p.particle() 
     #
@@ -296,7 +307,11 @@ def treatProtons ( self         ,
                    tup          ,
                    p            ,
                    suffix  = '' ) :
-    
+
+    #
+    ## initialize it
+    #
+    if not self.fill_initialized : fill_initialize ( self )
     ## 
     if hasattr ( p , 'particle' ) : p = p.particle() 
     #
@@ -335,7 +350,11 @@ def treatPhotons ( self         ,
                    tup          ,
                    p            ,
                    suffix  = '' ) :
-    
+
+    #
+    ## initialize it
+    #
+    if not self.fill_initialized : fill_initialize ( self )
     ## 
     if hasattr ( p , 'particle' ) : p = p.particle() 
     #
@@ -373,7 +392,11 @@ def treatDiGamma ( self         ,
                    p            ,
                    suffix  = '' ) :
     
-    ## 
+    #
+    ## initialize it
+    #
+    if not self.fill_initialized : fill_initialize ( self )
+    ##
     if hasattr ( p , 'particle' ) : p = p.particle() 
     #
     ## get all protons form decay tree
@@ -405,6 +428,10 @@ def treatMuons ( self         ,
                  p            ,
                  suffix  = '' ) :
     
+    #
+    ## initialize it
+    #
+    if not self.fill_initialized : fill_initialize ( self )
     ## 
     if hasattr ( p , 'particle' ) : p = p.particle() 
     #
@@ -442,6 +469,10 @@ def treatTracks ( self         ,
                   p            ,
                   suffix  = '' ) :
     
+    #
+    ## initialize it
+    #
+    if not self.fill_initialized : fill_initialize ( self )
     ## 
     if hasattr ( p , 'particle' ) : p = p.particle() 
     #
@@ -506,6 +537,11 @@ def treatKine ( self          ,
     """
     Add basic kinematical information into N-tuple
     """
+    #
+    ## initialize it
+    #
+    if not self.fill_initialized : fill_initialize ( self )
+    ##
     if hasattr ( p , 'particle' ) : p = p.particle() 
     ##
     tup.column_int   ( 'pid'   + suffix , int ( ID      ( p ) )     )
@@ -580,8 +616,12 @@ def fillMasses ( self        ,
     self.fillMasses ( tup , b , 'c' , True , 'J/psi(1S)')  ## with constraints
     
     """
-    if not self._masses.has_key (suffix) :
-        self._masses[suffix] = {}
+    #
+    ## initialize it
+    #
+    if not self.fill_initialized : fill_initialize ( self )
+    ##
+    if not self._masses.has_key (suffix) : self._masses[suffix] = {}
         
     nc = b.nChildren()
         
@@ -749,22 +789,44 @@ def addGecInfo  ( self  ,
 
 # =============================================================================
 ## decorate 
-LoKi.Algo.treatPions      =  treatPions
-LoKi.Algo.treatKaons      =  treatKaons
-LoKi.Algo.treatProtons    =  treatProtons
-LoKi.Algo.treatPhotons    =  treatPhotons
-LoKi.Algo.treatMuons      =  treatMuons
-LoKi.Algo.treatTracks     =  treatTracks
-LoKi.Algo.treatKine       =  treatKine
-LoKi.Algo.treatDiGamma    =  treatDiGamma
+LoKi.Algo.treatPions       =  treatPions
+LoKi.Algo.treatKaons       =  treatKaons
+LoKi.Algo.treatProtons     =  treatProtons
+LoKi.Algo.treatPhotons     =  treatPhotons
+LoKi.Algo.treatMuons       =  treatMuons
+LoKi.Algo.treatTracks      =  treatTracks
+LoKi.Algo.treatKine        =  treatKine
+LoKi.Algo.treatDiGamma     =  treatDiGamma
 
-LoKi.Algo.fillMasses      =  fillMasses
+LoKi.Algo.fillMasses       =  fillMasses
 
-LoKi.Algo.addRecSummary   =  addRecSummary 
-LoKi.Algo.addGecInfo      =  addGecInfo 
+LoKi.Algo.addRecSummary    =  addRecSummary 
+LoKi.Algo.addGecInfo       =  addGecInfo 
 
-LoKi.Algo.fill_initialize = _fill_initialize
-LoKi.Algo.fill_finalize   = _fill_finalize
+LoKi.Algo.fill_initialize  = fill_initialize
+LoKi.Algo.fill_finalize    = fill_finalize
+
+## class attribute 
+LoKi.Algo.fill_initialized = False ## class attribute 
+
+# =============================================================================
+## insert "fill" finalization into the global finalization
+def decorateFill ( ALGO ) :
+    "Insert ``fill'' finalization into the global finalization"
+    if hasattr ( ALGO , '_prev_fill_finalize_' ) : return      ## SKIP IT!
+    # =========================================================================
+    ## updated finalization 
+    def _algo_fill_finalize_ ( algorithm ) :
+        """Finalize ``specific'' stuff related BenderTools.Fill module
+        and then continue with the base-class finalization
+        """
+        if algorithm.fill_initialized :
+            self.Print( 'Finalize "Fill"-machinery' , 10 , 2 )
+            algorithm.fill_finalize  ()
+        return algorithm._prev_fill_finalize_()
+    # =====================================================================
+    ALGO._prev_fill_finalize_ = ALGO.finalize 
+    ALGO.finalize             = _algo_fill_finalize_ 
 
 # =============================================================================
 if '__main__' == __name__ :

@@ -73,10 +73,11 @@ from Bender.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'BenderTools.TisTos' )
 else                      : logger = getLogger ( __name__ )
 # ==============================================================================
-from   LoKiCore.basic  import cpp
-from   Bender.Main     import SUCCESS, Algo
+from   LoKiCore.basic  import cpp,LoKi
 import LHCbMath.Types 
 # ==============================================================================
+SUCCESS                 = cpp.StatusCode( cpp.StatusCode.SUCCESS , True )
+FAILURE                 = cpp.StatusCode( cpp.StatusCode.FAILURE , True )
 ITriggerSelectionTisTos = cpp.ITriggerSelectionTisTos
 TisTosTob               = cpp.ITisTos.TisTosTob
 # ==============================================================================
@@ -423,14 +424,14 @@ def trgDecs ( self            ,
 #  @endcode
 #
 #
-#  The function adds few columns to n-tuple, themost important are:
+#  The function adds few columns to n-tuple, the most important are:
 #   - "label"l0tos_1   : corresponds to   'L0-TOS'  
 #   - "label"l0tis_2   : corresponds to   'L0-TIS'  
 #   - "label"l1tos_1   : corresponds to 'Hlt1-TOS'  
 #   - "label"l1tis_2   : corresponds to 'Hlt1-TIS'  
 #   - "label"l2tos_1   : corresponds to 'Hlt2-TOS'  
 #   - "label"l2tis_2   : corresponds to 'Hlt2-TIS'
-# 
+#
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-21  
 def tisTos ( self              ,
@@ -512,7 +513,7 @@ def tisTos ( self              ,
     ## <label>l1tis_2  that corresponds to 'Hlt1-TIS'  
     ## <label>l2tos_1  that corresponds to 'Hlt2-TOS'  
     ## <label>l2tis_2  that corresponds to 'Hlt2-TIS'
-    
+
     """
     if hasattr ( p , 'particle' ) :  p = p.particle()
     
@@ -651,17 +652,17 @@ def tisTos ( self              ,
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-21  
 # 
-def _tisTosInit ( self , triggers = {} , lines = {} ) :
+def tistos_initialize ( self , triggers = {} , lines = {} ) :
     """
     Initialize tis-tos machinery, acquire tools, etc...  
     """
-    
+    if self.tistos_initialized :
+        self.Warning("Re-initialization TisTos-machinery is invoked", SUCCESS)
+        
     ## locate tools 
     self.l0tistos  = self.tool ( cpp.ITriggerTisTos ,   'L0TriggerTisTos' , parent = self )  
     self.l1tistos  = self.tool ( cpp.ITriggerTisTos , 'Hlt1TriggerTisTos' , parent = self )
     self.l2tistos  = self.tool ( cpp.ITriggerTisTos , 'Hlt2TriggerTisTos' , parent = self )
-    # self.l1tistos  = self.tool ( cpp.ITriggerTisTos ,     'TriggerTisTos' , parent = self )
-    # self.l2tistos  = self.tool ( cpp.ITriggerTisTos ,     'TriggerTisTos' , parent = self )
 
     self.l0tistos . setOfflineInput()
     self.l1tistos . setOfflineInput()
@@ -669,8 +670,7 @@ def _tisTosInit ( self , triggers = {} , lines = {} ) :
     
     self.triggers = {}
     
-    from copy import deepcopy
-    
+    from copy import deepcopy    
     if triggers : self.triggers = deepcopy ( triggers )  
     
     if lines :
@@ -704,12 +704,13 @@ def _tisTosInit ( self , triggers = {} , lines = {} ) :
             for t in trgs :
                 self.Print ( '-  %-10s  :  %s ' % ( t , lns[t]  ) , SUCCESS , 7 )
 
+    self.tistos_initialized = True 
     return SUCCESS 
 
 
 # =============================================================================
 ## finalize  TisTos
-#  helper methdod to finalize TisTosTob'ing machinery
+#  helper method to finalize TisTosTob'ing machinery
 #
 #  @code
 #
@@ -723,19 +724,21 @@ def _tisTosInit ( self , triggers = {} , lines = {} ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-21  
 # 
-def _tisTosFini ( self , triggers = None ) :
-    """
-    Finalize tis-tos machinery 
-    """
+def tistos_finalize ( self , triggers = None ) :
+    """ Finalize tis-tos machinery
+    """    
+    ## finalize only initialized stuff: 
+    if not self.tistos_initialized : return SUCCESS
     
     if not triggers and hasattr ( self , 'triggers' ) : triggers = self.triggers
-    
+
+    ## collect triggers 
     trgDecs ( self , triggers )
 
     if hasattr ( self , 'l0tistos' ) : self . l0tistos = None
     if hasattr ( self , 'l1tistos' ) : self . l1tistos = None
     if hasattr ( self , 'l2tistos' ) : self . l2tistos = None
-
+    
     if not hasattr ( self , 'lines' ) :
         self.Warning ( 'No LINES are defined ' , SUCCESS )
     else :
@@ -896,15 +899,40 @@ def tistos_merge ( dbase , tistos = {} ) :
         
     
 # =============================================================================
-Algo.decisions         =  decisions
-Algo.trgDecs           =  trgDecs 
-Algo.tisTos            =  tisTos 
-Algo.tisTos_initialize = _tisTosInit
-Algo.tisTos_finalize   = _tisTosFini
+LoKi.Algo.decisions          = decisions 
+LoKi.Algo.trgDecs            = trgDecs 
+LoKi.Algo.tisTos             = tisTos 
+LoKi.Algo.tisTos_initialize  = tistos_initialize
+LoKi.Algo.tisTos_finalize    = tistos_finalize
+LoKi.Algo.tistos_initialize  = tistos_initialize
+LoKi.Algo.tistos_finalize    = tistos_finalize
+## class attribute 
+LoKi.Algo.tistos_initialized = False ## class attribute 
 # =============================================================================
 # make report 
 # =============================================================================
 logger.info('Add TisTos functionality to Bender.Algo class')
+# =============================================================================
+## insert "fill" finalization into the global finalization
+def decorateTisTos ( ALGO ) :
+    "Insert ``fill'' finalization into the global finalization"
+    print 'TISTOS DECORATE', ALGO 
+    if hasattr ( ALGO , '_prev_tistos_finalize_' ) : return 
+    print 'SKIP TISTOS DECORATE', ALGO 
+    # =========================================================================
+    ## updated finalization 
+    def _algo_tistos_finalize_ ( algorithm ) :
+        """Finalize ``specific'' stuff related BenderTools.TisTos module
+        and then continue with the base-class finalization
+        """
+        if algorithm.tistos_initialized :
+            self.Print( 'Finalize "TisTos"-machinery' , 10 , 2 )
+            algorithm.tistos_finalize  ()
+        return algorithm._prev_tistos_finalize_()
+    # =========================================================================
+    ALGO._prev_tistos_finalize_ = ALGO.finalize 
+    ALGO.finalize               = _algo_tistos_finalize_ 
+
 # =============================================================================
 if '__main__' == __name__ :
     

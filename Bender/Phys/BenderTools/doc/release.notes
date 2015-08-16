@@ -5,6 +5,17 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/BenderTools v26r2   2015-08-16 ====================
+
+! 2015-08-16 - Vanya Belyaev
+ - simplify Fill & TisTos
+   1) no need to import these modules explicitly 
+   2) no need to call fill_initialize/fill_finalize 
+   3) no need to call tistos_finalize   
+                   (but call for tistos_initialize is still needed)
+
+   bottom line: 
+     for many cases there is no need to supply "finalize" method anymore 
 
 ! 2015-08-14 - Vanya Belyaev
  - rewrite the basic bender scripts 

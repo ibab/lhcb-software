@@ -61,23 +61,7 @@ from Bender.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'BenderTools.TisTosMC' )
 else                      : logger = getLogger ( __name__ )
 # ==============================================================================
-from   LoKiCore.basic  import cpp
-from   Bender.MainMC   import SUCCESS, AlgoMC 
-# ==============================================================================
-ITriggerSelectionTisTos = cpp.ITriggerSelectionTisTos
-# ==============================================================================
-import BenderTools.TisTos  as TT
-decisions = TT.decisions
-trgDecs   = TT.trgDecs
-tisTos    = TT.tisTos
-# ==============================================================================
-logger.info ("Add useful methods to class AlgoMC for TisTos'sing ") 
-# =============================================================================
-AlgoMC.decisions         = decisions
-AlgoMC.trgDecs           = trgDecs 
-AlgoMC.tisTos            = tisTos 
-AlgoMC.tisTos_initialize = TT._tisTosInit
-AlgoMC.tisTos_finalize   = TT._tisTosFini
+logger.warning ("Obsolete module, to be removed SOON") 
 # =============================================================================
 if '__main__' == __name__ :
     
