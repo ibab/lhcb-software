@@ -3,6 +3,9 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-08-16 - Maurizio Martinelli
+ - fixed a bug in the references
+
 ! 2015-08-13 - Maurizio Martinelli
  - now printing the number of elements in each map when different among each other
  - added a few missing elements in the reference file
