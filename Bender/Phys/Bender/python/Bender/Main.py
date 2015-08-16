@@ -126,12 +126,20 @@ LHCb   = cpp.LHCb
 ## @var Gaudi  : define namespace Gaudi
 Gaudi  = cpp.Gaudi
 
-_SC     = cpp.StatusCode
-SUCCESS = _SC(_SC.SUCCESS,True)
-FAILURE = _SC(_SC.FAILURE,True)
+
+SUCCESS = cpp.StatusCode(cpp.StatusCode.SUCCESS,True)
+FAILURE = cpp.StatusCode(cpp.StatusCode.FAILURE,True)
 
 from GaudiKernel.PhysicalConstants import c_light
 
+## prepare machinery for powerfull n-tuple filling 
+from BenderTools.Fill   import decorateFill 
+decorateFill   ( Algo )
+## prepare machinery for TisTos'sing
+from BenderTools.TisTos import decorateTisTos 
+decorateTisTos ( Algo )
+# 
+del decorateFill, decorateTisTos 
 # =============================================================================
 ## Welcome message:
 Bender.Welcome.instance()

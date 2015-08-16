@@ -262,7 +262,7 @@ def inGrid ( filename , grid ) :
     #
     import os 
     from subprocess import Popen, PIPE
-    p   = Popen ( [ 'get_grid_url', filename, "--Sites" , grid ] ,
+    p   = Popen ( [ 'get-grid-url', filename, "--Sites" , grid ] ,
                   env       = os.environ  ,
                   stdout    = PIPE        ,
                   stderr    = None        )

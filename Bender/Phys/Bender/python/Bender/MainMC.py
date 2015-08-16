@@ -68,6 +68,14 @@ from LoKiMC.decorators            import *
 from LoKiPhysMC.decorators        import *
 from LoKiAlgoMC.decorators        import *
 
+## prepare machinery for powerfull n-tuple filling 
+from BenderTools.Fill   import decorateFill 
+decorateFill   ( AlgoMC )
+## prepare machinery for TisTos'sing
+from BenderTools.TisTos import decorateTisTos 
+decorateTisTos ( AlgoMC )
+#
+del decorateFill, decorateTisTos 
 # =============================================================================
 if __name__ == '__main__' :
 

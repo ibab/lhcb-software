@@ -24,6 +24,12 @@
 !
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/Bender v26r2   2015-08-16 =========================
+
+! 2015-08-16 - Vanya Belyaev
+ - simplify Fill&TisTos
+ - reduce aliases 
+
 ! 2015-08-14 - Vanya Belyaev
  - update bender-based scripts 
 

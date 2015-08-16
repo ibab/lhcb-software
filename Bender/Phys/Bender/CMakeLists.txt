@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Bender
 ################################################################################
-gaudi_subdir(Bender v26r1)
+gaudi_subdir(Bender v26r2)
 
 gaudi_depends_on_subdirs(GaudiPython
                          Phys/AnalysisPython
@@ -10,5 +10,3 @@ gaudi_depends_on_subdirs(GaudiPython
 gaudi_install_python_modules()
 gaudi_install_scripts()
 
-gaudi_alias(get-grid-url
-            get_grid_url)

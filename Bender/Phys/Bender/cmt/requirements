@@ -21,7 +21,7 @@
 #
 # =============================================================================
 package             Bender
-version             v26r1
+version             v26r2
 
 # =============================================================================
 branches            cmt doc python scripts 
@@ -36,9 +36,6 @@ use                 GaudiPython    v*
 # ================= standard patterns =========================================
 apply_pattern       install_python_modules 
 apply_pattern       install_scripts
-
-# ================= aliases ===================================================
-alias get-grid-url "get_grid_url"
 
 # =============================================================================
 # The END
