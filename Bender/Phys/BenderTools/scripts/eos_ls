@@ -34,7 +34,7 @@ if  ( -r  /afs/cern.ch/project/eos/installation/client/etc/setup.csh ) then
   eos ls -la $*
 else 
     echo 'No eos afs setup available!' > /dev/stderr 
-endif 
+endif
 
 # =============================================================================
 # The END 
