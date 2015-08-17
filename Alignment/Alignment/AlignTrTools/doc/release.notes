@@ -4,6 +4,10 @@ Package Coordinator : Wouter Hulsbergen
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+!2015-08-17 - Lucia Grillo
+- Changed the path L217 in /Alignment/AlignTrTools/src/WriteOTCalibrationsTool.cpp
+to transfer the global t0 to the offline database
+
 !========================= AlignTrTools v4r17 2015-07-29 =========================
 ! 2015-07-21 - Lucia Grillo or Roel Aaij
  - Change in OT calibration precision 

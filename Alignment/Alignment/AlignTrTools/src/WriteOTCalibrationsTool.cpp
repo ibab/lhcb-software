@@ -213,7 +213,7 @@ StatusCode WriteOTCalibrationsTool::writeGlobalCalibration(const std::string& ve
   StatusCode sc = StatusCode::SUCCESS ;
   if(  m_otdetector->hasCondition("Calibration") ) {
     /// construct the filename
-    std::string filename = m_directory + "/Conditions/OT/Calibration/CalibrationGlobal.xml" ;
+    std::string filename = m_directory + "/OT/Calibration/CalibrationGlobal.xml" ;
     /// create the file
     sc = createXmlFile(filename,version,formattedcondition( *(m_otdetector->condition("Calibration")), m_precision ) ) ;
   } else {
