@@ -133,7 +133,7 @@ bool average( const double* X1, const double* C1,
               const double* X2, const double* C2,
               double* X, double* C ) {
       // compute the inverse of the covariance (i.e. weight) of the difference: R=(C1+C2)
-      static Gaudi::SymMatrix5x5 invRM;
+      Gaudi::SymMatrix5x5 invRM;
       auto invR = invRM.Array();
       for (int i=0;i<15;++i) invR[i]=C1[i]+C2[i];
       bool success = invRM.InvertChol() ;

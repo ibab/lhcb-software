@@ -146,7 +146,7 @@ namespace avx {
       {
         avx_guard guard{};
         // compute the inverse of the covariance (i.e. weight) of the difference: R=(C1+C2)
-        static Gaudi::SymMatrix5x5 invRM;
+        Gaudi::SymMatrix5x5 invRM;
         const auto y0 = Vec4d{}.load(C1)+Vec4d{}.load(C2);
         const auto y1 = Vec4d{}.load(C1+4)+Vec4d{}.load(C2+4);
         const auto y2 = Vec4d{}.load(C1+8)+Vec4d{}.load(C2+8);
