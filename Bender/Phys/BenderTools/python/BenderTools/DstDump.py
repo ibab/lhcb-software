@@ -130,7 +130,6 @@ def dumpDst ( config ) :
     from Bender.Main import appMgr, run, cpp
     if config.Simulation : import Bender.MainMC
 
-    root = config.RootInTES
 
     #
     ## instantiate the application manager
@@ -154,6 +153,12 @@ def dumpDst ( config ) :
 
     iEvent = 0
 
+    root = config.RootInTES
+    
+    if not root :
+        root = '/Event'
+        logger.warning('Use "%s" as root, can be non-efficient' % root )
+        
     while iEvent != config.nEvents :
         #
         sc = run(1)

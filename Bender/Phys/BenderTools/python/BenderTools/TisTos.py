@@ -916,9 +916,7 @@ logger.info('Add TisTos functionality to Bender.Algo class')
 ## insert "fill" finalization into the global finalization
 def decorateTisTos ( ALGO ) :
     "Insert ``fill'' finalization into the global finalization"
-    print 'TISTOS DECORATE', ALGO 
     if hasattr ( ALGO , '_prev_tistos_finalize_' ) : return 
-    print 'SKIP TISTOS DECORATE', ALGO 
     # =========================================================================
     ## updated finalization 
     def _algo_tistos_finalize_ ( algorithm ) :
@@ -926,7 +924,7 @@ def decorateTisTos ( ALGO ) :
         and then continue with the base-class finalization
         """
         if algorithm.tistos_initialized :
-            algorithm.Print( 'Finalize "TisTos"-machinery' , 10 , 2 )
+            algorithm.Print( 'Finalize "TisTos"-machinery' , SUCCESS , 2 )
             algorithm.tistos_finalize  ()
         return algorithm._prev_tistos_finalize_()
     # =========================================================================

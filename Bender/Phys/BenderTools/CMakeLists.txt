@@ -11,7 +11,7 @@ gaudi_install_scripts()
 
 gaudi_alias(check-trg
             trg-check)
-gaudi_alias(dst-dump
+gaudi_alias(dump-dst
             dst-dump)
 gaudi_alias(db-tags
             get-dbtags)

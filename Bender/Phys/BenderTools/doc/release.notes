@@ -6,6 +6,13 @@
 ! -----------------------------------------------------------------------------
 
 ! ==================== Phys/BenderTools v26r2p1 2015-08-17 ====================
+
+! 2015-08-17 - Vanya Belyaev
+ - fix typos in Fill&TisTos, retag 
+
+! 2015-08-17 - Vanya Belyaev
+ - fix bug in (cmake) alias name 
+
 ! ==================== Phys/BenderTools v26r2   2015-08-16 ====================
 
 ! 2015-08-16 - Vanya Belyaev
