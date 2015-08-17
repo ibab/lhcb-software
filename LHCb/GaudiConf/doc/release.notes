@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2015-08-17 - Greig Cowan
+ - Added line to allow IOHelper to treat RDST as DST.
+
 !========================= GaudiConf v19r11 2015-07-20 =========================
 ! 2015-07-16 - Michel De Cian
  - Fix typo in DstConf.py

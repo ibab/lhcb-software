@@ -133,15 +133,15 @@ class IOHelper(object):
             if Output.upper() not in self._outputSvcTypDict:
                 raise ValueError, Output+' output persistency not known'
             self._outputPersistency=Output.upper()
-        
+
         if self._outputPersistency == "POOL" or self._inputPersistency == "POOL":
             raise ValueError("POOL is completely deprecated, fix your options or use an older software stack")
-        
+
         if self._inputPersistency=='ROOT' or self._outputPersistency=='ROOT':
             if not self.isRootSupported():
                 raise TypeError("ROOT persistency is not supported in this Application version"+
                                 "Ask your release manager for details or change to POOL")
-        
+
         if self._outputPersistency=="FSR" and self._inputPersistency not in ['ROOT']:
             raise TypeError("FSR is not a proper persistency type. To configure services, you would need to specify a proper type.")
 
@@ -175,11 +175,11 @@ class IOHelper(object):
                            EnableFaultHandler = True,
                            RootCLID           = 1, #was the next line missed accidentally?
                            PersistencySvc     = "PersistencySvc/FileRecordPersistencySvc")
-                
+
         fileSvc.ShareFiles = "YES"
         ApplicationMgr().ExtSvc                                += [ fileSvc ]
         PersistencySvc("FileRecordPersistencySvc").CnvServices += [ fileSvc ]
-    
+
     def _isOutputStream(self, streamstr):
         '''Helper:  returns true if the string is one of the known output streams'''
         for stream in self._knownOutputStreams:
@@ -187,14 +187,14 @@ class IOHelper(object):
             if stream in streamstr.split('/')[0]:
                 return True
         return False
-    
+
     def _isSequencer(self, confstr):
         '''Helper:  returns true if the string is one of the known output streams'''
         #only check the type!
         if "GaudiSequencer" in confstr.split('/')[0]:
             return True
         return False
-    
+
     def _isPersistencySvc(self,svcstring):
         '''Helper:  Returns true if the svcstring is one of the known persistencies'''
         for service in self._knownPerServices:
@@ -239,7 +239,7 @@ class IOHelper(object):
                 retlist.append(service)
 
         return retlist
-    
+
     def _isDressed(self, filename):
         '''Determine if a string is dressed or not
         '''
@@ -258,7 +258,7 @@ class IOHelper(object):
             requirements=file(apath)
         except:
             return False
-        
+
         if not requirements:
             requirements.close()
             return False
@@ -296,9 +296,9 @@ class IOHelper(object):
             if version[2] is None or version[2]<1:
                 return False
             return True
-        
+
         return False
-    
+
     ###############################################################
     #              Information
     ###############################################################
@@ -373,7 +373,7 @@ class IOHelper(object):
     ###############################################################
     #              Services
     ###############################################################
-    
+
     def isRootSupported(self):
         '''Services:  Check if the ROOT services exist in this version'''
         import Configurables
@@ -384,11 +384,11 @@ class IOHelper(object):
             print "# WARNING: To avoid segfaulting in finalize and writing out corrupted files you need to be using a patched version with at least revision r6649 of GaudiSvc"
             print "# WARNING: If you've already patched the software, you can ignore this warning."
         return hasattr(Configurables,"Gaudi__RootCnvSvc")
-    
+
     def isPoolSupported(self):
         '''Services: Check if the POOL services exist in this version'''
         return False
-    
+
     def svcTypString(self,IO):
         '''Services:  given the IO type, return the selection string for the active services'''
         IO=self.__chooseIO(IO)
@@ -409,7 +409,7 @@ class IOHelper(object):
         # Set up the IO
         ApplicationMgr().ExtSvc += [ "Gaudi::MultiFileCatalog/FileCatalog",
                                      "Gaudi::IODataManager/IODataManager"  ]
-        
+
         # Set up the persistency
         if self._inputPersistency == 'ROOT' or self._outputPersistency == 'ROOT':
             from Configurables import Gaudi__RootCnvSvc
@@ -425,9 +425,9 @@ class IOHelper(object):
             #optimization, see Core Soft meeting, indico.cern.ch/conferenceDisplay?confId=207776
             if hasattr(fileSvc,"BufferSize"):
                 fileSvc.BufferSize=512
-            
+
             self._doConfFileRecords(fileSvc)
-        
+
         # Always enable reading/writing of MDF
         EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
 
@@ -776,7 +776,7 @@ class IOHelper(object):
                 algname=alg.getFullName()
             if self._isOutputStream(algname):
                 streams.append(alg)
-        
+
         #everything in OutStream is an output stream
         if ApplicationMgr().OutStream is not None:
             streams+=ApplicationMgr().OutStream
@@ -787,7 +787,7 @@ class IOHelper(object):
             if self._isOutputStream(key):
                 if key not in streams and allConfigurables[key] not in streams:
                     streams.append(allConfigurables[key])
-        
+
         #all streams added to GaudiSequencers are Output Streams...
         for sequencer in allConfigurables:
             if self._isSequencer(sequencer):
@@ -799,7 +799,7 @@ class IOHelper(object):
                         if member not in streams and membername not in streams:
                             streams.append(member)
         return streams
-    
+
     def detectStreamType(self, stream):
         '''Output:  From the name of the stream, deduce its type'''
 
@@ -1029,6 +1029,7 @@ class IOExtension(object):
                        'DIGI'  : '',
                        'SIM'   : '',
                        'DST'   : '',
+                       'RDST'  : '',
                        'XDST'  : '',
                        'LDST'  : '',
                        'MDST'  : '',
