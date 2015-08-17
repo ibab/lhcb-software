@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2015-08-17 - Maurizio Martinelli
+ - restored previously commented check on equations-geometry correspondance
+
 ! 2015-08-13 - Maurizio Martinelli
  - initial and final corrections to alignment parameters now stored in AlignUpdateTool
 

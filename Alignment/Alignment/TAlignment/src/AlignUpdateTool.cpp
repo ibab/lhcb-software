@@ -402,12 +402,12 @@ namespace Al
       sc = m_elementProvider->initAlignmentFrame( equations.initTime() ) ;
       if( !sc.isSuccess() ) return sc ;
     }
-    /* commented because it caused the alignment to fail in the online system - Wouter is investigating - 13/8/2015
+
     if( !checkGeometry( constequations ) ) {
       sc = Warning("Cannot initialize geometry to that found in AlEquations.", StatusCode::FAILURE) ;
       if( !sc.isSuccess() ) return sc ;
     }
-    */
+    
     typedef Gaudi::Matrix1x6 Derivatives;
     if ( equations.nElem() == 0 ) {
       warning() << "==> No elements to align." << endmsg ;
