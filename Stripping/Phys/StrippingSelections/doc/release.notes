@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-17 - Vanya Belyaev
+ - StrippingUpsilonExotic 
+   - fix a bug in proton-selection
+   - adjust a bit selection cuts 
+
 ! 2015-08-15 - Ramon Niet
  - Replaced hardcoded cuts in Bd2JpsieeKS module
 

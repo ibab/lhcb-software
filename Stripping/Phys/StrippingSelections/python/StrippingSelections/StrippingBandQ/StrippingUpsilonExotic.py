@@ -379,10 +379,10 @@ class UpsilonExoticConf(LineBuilder) :
         ## 
         if self['NOPIDHADRONS'] :
             from StandardParticles import   StdAllNoPIDsProtons as inpts
-            kaoncut = self['ProtonCut']
+            protoncut = self['ProtonCut']
         else                    :
             from StandardParticles import StdAllLooseANNProtons as inpts 
-            kaoncut = "(%s)&(%s)" % ( self['ProtonCut'] , self['ProtonPIDCut'] ) 
+            protoncut = "(%s)&(%s)" % ( self['ProtonCut'] , self['ProtonPIDCut'] ) 
         #
         ##
         return self.make_selection (
@@ -762,7 +762,7 @@ class UpsilonExoticConf(LineBuilder) :
         from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
         #
         return self.make_selection  (
-            'YKK'                 ,
+            'Y&KK'                ,
             DaVinci__N3BodyDecays ,
             [ self.upsilons() , self.kaons() ] ,
             ## algorithm properties 
@@ -791,7 +791,7 @@ class UpsilonExoticConf(LineBuilder) :
         from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
         #
         return self.make_selection  (
-            'Ypipi'               ,
+            'Y&pipi'              ,
             DaVinci__N3BodyDecays ,
             [ self.upsilons() , self.pions() ] ,
             ## algorithm properties 
@@ -820,13 +820,13 @@ class UpsilonExoticConf(LineBuilder) :
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         #
         return self.make_selection  (
-            'YP'                 ,
-            CombineParticles ,
+            'Y&p'             ,
+            CombineParticles  ,
             [ self.upsilons() , self.protons() ] ,
             ## algorithm properties 
             DecayDescriptor  = "[Upsilon(4S) -> J/psi(1S) p+]cc" ,
             CombinationCut   = """
-            ( AM                 < 15   * GeV ) &
+            ( AM                 < 13   * GeV ) &
             ( ( AM - AM1 - AM2 ) < 2.5  * GeV ) &
             ( ACHI2DOCA(1,2)     < 16  ) 
             """ ,
@@ -843,7 +843,7 @@ class UpsilonExoticConf(LineBuilder) :
         from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
         #
         return self.make_selection  (
-            'YPK'                   ,
+            'Y&pK'                  ,
             DaVinci__N3BodyDecays   ,
             [ self.upsilons() , self.protons() , self.kaons() ] ,
             ## algorithm properties 
@@ -872,13 +872,13 @@ class UpsilonExoticConf(LineBuilder) :
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
         #
         return self.make_selection  (
-            'Yeta'                 ,
+            'Y&eta'                ,
             CombineParticles       ,
             [ self.upsilons() , self.eta0() ] ,
             ## algorithm properties 
             DecayDescriptor = " chi_b0(1P) -> J/psi(1S) eta" ,
             CombinationCut  = """
-            (   AM               < 15  * GeV ) &
+            (   AM               < 14  * GeV ) &
             ( ( AM - AM1 - AM2 ) < 2.5 * GeV )
             """,
             MotherCut      = " chi2vxndf< 10 " 
@@ -894,13 +894,13 @@ class UpsilonExoticConf(LineBuilder) :
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
         #
         return self.make_selection  (
-            'Yeta_prime'           ,
+            'Y&eta_prime'          ,
             CombineParticles       ,
             [ self.upsilons() , self.eta_prime () ] ,
             ## algorithm properties 
             DecayDescriptor = " chi_b1(1P) -> J/psi(1S) eta_prime" ,
             CombinationCut  = """
-            (   AM               < 15  * GeV ) &
+            (   AM               < 14  * GeV ) &
             ( ( AM - AM1 - AM2 ) < 2.5 * GeV )
             """,
             MotherCut      = " chi2vxndf< 10 " 
@@ -916,13 +916,13 @@ class UpsilonExoticConf(LineBuilder) :
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
         #
         return self.make_selection  (
-            'Yomega'           ,
+            'Y&omega'              ,
             CombineParticles       ,
             [ self.upsilons() , self.omega () ] ,
             ## algorithm properties 
             DecayDescriptor = " chi_b2(1P) -> J/psi(1S) omega(782)" ,
             CombinationCut  = """
-            (   AM               < 15  * GeV ) &
+            (   AM               < 14  * GeV ) &
             ( ( AM - AM1 - AM2 ) < 2.5 * GeV )
             """,
             MotherCut      = " chi2vxndf< 10 " 
