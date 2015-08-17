@@ -52,8 +52,9 @@ class MooreOnline(LHCbConfigurableUser):
     def _configureDBSnapshot(self):
         from Configurables import CondDB
         conddb = CondDB()
+        conddb.EnableRunStampCheck = False
         conddb.Tags["ONLINE"]='fake'
-        conddb.setProp('IgnoreHeartBeat',self.getProp('IgnoreDBHeartBeat')  )
+        conddb.setProp('IgnoreHeartBeat', self.getProp('IgnoreDBHeartBeat'))
         self.setOtherProps( conddb, [ 'UseDBSnapshot',
                                       'DBSnapshotDirectory',
                                       'EnableRunChangeHandler',
@@ -97,7 +98,8 @@ class MooreOnline(LHCbConfigurableUser):
             del allConfigurables['EventSelector']
 
         # Enable Hlt2 ZeroMQ based monitoring
-        app.ExtSvc += ['HltMonitorSvc/Hlt2MonSvc', 'HltInfoSvc']
+        if self.getProp("HltLevel") == "Hlt2":
+            app.ExtSvc += [ 'HltMonitorSvc/Hlt2MonSvc', 'HltInfoSvc' ]
 
         ## Setup Checkpoint & forking: Do this EXACTLY here. Just befor the MEPManager & event selector.
         ## It will not work if these are created before.
