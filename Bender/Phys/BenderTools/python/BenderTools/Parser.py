@@ -238,51 +238,58 @@ def dataType ( files ) :
     ext   = '' 
     for f in files  :
         #
-        if   0 <= f.find ( 'Collision09'   ) : dtype = '2009'
-        elif 0 <= f.find ( 'Collision10'   ) : dtype = '2010'
-        elif 0 <= f.find ( 'Collision11'   ) : dtype = '2011'
-        elif 0 <= f.find ( 'Collision12'   ) : dtype = '2012'
-        elif 0 <= f.find ( 'Collision13'   ) : dtype = '2012' ## ATTENTION
+        fu = f.upper() 
+        if   0 <= fu.find ( 'COLLISION09'   ) : dtype = '2009'
+        elif 0 <= fu.find ( 'COLLISION10'   ) : dtype = '2010'
+        elif 0 <= fu.find ( 'COLLISION11'   ) : dtype = '2011'
+        elif 0 <= fu.find ( 'COLLISION12'   ) : dtype = '2012'
+        elif 0 <= fu.find ( 'COLLISION13'   ) : dtype = '2012' ## ATTENTION
+        elif 0 <= fu.find ( 'COLLISION15'   ) : dtype = '2015'
         #
-        elif 0 <= f.find ( 'Stripping13'   ) : dtype = '2011'
-        elif 0 <= f.find ( 'Stripping17'   ) : dtype = '2011'
-        elif 0 <= f.find ( 'Stripping15'   ) : dtype = '2011'
-        elif 0 <= f.find ( 'Stripping19'   ) : dtype = '2012'
+        elif 0 <= fu.find ( 'STRIPPING13'   ) : dtype = '2011'
+        elif 0 <= fu.find ( 'STRIPPING17'   ) : dtype = '2011'
+        elif 0 <= fu.find ( 'STRIPPING15'   ) : dtype = '2011'
+        elif 0 <= fu.find ( 'STRIPPING19'   ) : dtype = '2012'
         #
-        elif 0 <= f.find ( 'Stripping20r1' ) : dtype = '2011'
-        elif 0 <= f.find ( 'Stripping20r0' ) : dtype = '2012'
+        elif 0 <= fu.find ( 'STRIPPING20R1' ) : dtype = '2011'
+        elif 0 <= fu.find ( 'STRIPPING20'   ) : dtype = '2012'
         #
-        elif 0 <= f.find ( '2k+10'         ) : dtype = '2010'
-        elif 0 <= f.find ( '2k+11'         ) : dtype = '2011'
-        elif 0 <= f.find ( '2k+12'         ) : dtype = '2012'
-        elif 0 <= f.find ( '2k+13'         ) : dtype = '2013'
+        elif 0 <= fu.find ( 'STRIPPING21R1' ) : dtype = '2011'
+        elif 0 <= fu.find ( 'STRIPPING21'   ) : dtype = '2012'
+        #
+        elif 0 <= fu.find ( '2K+10'         ) : dtype = '2010'
+        elif 0 <= fu.find ( '2K+11'         ) : dtype = '2011'
+        elif 0 <= fu.find ( '2K+12'         ) : dtype = '2012'
+        elif 0 <= fu.find ( '2K+13'         ) : dtype = '2013'
         
         #
-        if   0 <= f.find ( 'MC09' ) or 0 <= f.find ( 'MC/2009' ) :
+        if   0 <= fu.find ( 'MC09' ) or 0 <= fu.find ( 'MC/2009' ) :
             dtype = '2009'
             simu  = True 
-        elif 0 <= f.find ( 'MC10' ) or 0 <= f.find ( 'MC/2010' ) :
+        elif 0 <= fu.find ( 'MC10' ) or 0 <= fu.find ( 'MC/2010' ) :
             dtype = '2010'
             simu  = True 
-        elif 0 <= f.find ( 'MC11' ) or 0 <= f.find ( 'MC/2011' ) :  
+        elif 0 <= fu.find ( 'MC11' ) or 0 <= fu.find ( 'MC/2011' ) :  
             dtype = '2011'
             simu  = True 
-        elif 0 <= f.find ( 'MC12' ) or 0 <= f.find ( 'MC/2012' ) :
+        elif 0 <= fu.find ( 'MC12' ) or 0 <= fu.find ( 'MC/2012' ) :
             dtype = '2012'
             simu  = True
-        elif 0 <= f.find ( 'MC13' ) or 0 <= f.find ( 'MC/2013' ) :
-            dtype = '2013'
+        elif 0 <= fu.find ( 'MC13' ) or 0 <= fu.find ( 'MC/2013' ) :
+            dtype = '2013' ## ?? 
             simu  = True
-        elif 0 <= f.find ( '/MC/'   ) : simu = True
-        elif 0 <= f.find ( 'Pythia' ) : simu = True
-        elif 0 <= f.find ( 'BcVeg'  ) : simu = True
-        
-        p   = f.rfind ( '.' )
-        if 0 <= p :
-            ## allow up to 5 symbols for exension 
-            if len ( f[p+1:] ) <= 5 : ext = f[p+1:]
+        elif 0 <= fu.find ( 'MC15' ) or 0 <= fu.find ( 'MC/2015' ) :
+            dtype = '2015'
+            simu  = True
+        elif 0 <= fu.find ( '/MC/'    ) : simu = True
+        elif 0 <= fu.find ( 'PYTHIA'  ) : simu = True
+        elif 0 <= fu.find ( 'BCVEGPY' ) : simu = True
+
+        ## allow up to 5 symbols for exension 
+        first,dot,second = f.rpartition('.')
+        if dot and 3<=len(second)<=5 and not ext : ext = second.upper() 
             
-    return  dtype,simu,ext.upper() 
+    return  dtype,simu,ext
 
 # =============================================================================
 ##  get file name from filelist 
