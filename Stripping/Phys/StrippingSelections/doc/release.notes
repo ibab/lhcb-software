@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-17 - Andrea Contu
+ - Bugfix to StrippingMiniBias
+
 ! 2015-08-17 - Vanya Belyaev
  - StrippingUpsilonExotic 
    - fix a bug in proton-selection
