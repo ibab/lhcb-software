@@ -23,7 +23,7 @@ def configureInput( run_info, n_processes, options ) :
     ## dirname = prefix + '/lhcb/data/%(year)s/RAW/FULL/LHCb/%(runType)s/%(runID)s' % run_info
 
     # Run on raw files from castor or daqarea
-    prefix = { 'daqarea' : '/daqarea/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15EM',
+    prefix = { 'daqarea' : '/daqarea/lhcb/data/2015/RAW/%s/LHCb/COLLISION15' % options.stream,
                'calib'   : '/calib/hlt/spillover',
                'nodes'   : '/net/hlt%s%02d%02d/localdisk/hlt1' }
 
@@ -218,6 +218,8 @@ $> monitor.py --nprocesses=4 -n 10000 Rate:Mass:Vertex 87880
                        default = 'head-20110308', help = "CondDBtag to use" )
     parser.add_option( "--nprocesses", action = "store", type = "int", dest = "Processes",
                        default = 4, help = "Number of parallel processes to run" )
+    parser.add_option( "--stream", action = "store", dest = "stream",
+                       default = "FULL", help = "Which stream to run on" )
     parser.add_option( "--debug", action = "store_true", dest = "Debug",
                        default = False, help = "Put output of all processes on stdout." )
 
@@ -227,6 +229,9 @@ $> monitor.py --nprocesses=4 -n 10000 Rate:Mass:Vertex 87880
     if options.source not in [ 'daqarea', 'castor', 'calib', 'nodes' ]:
         print "Invalid data source: %s" % options.source
 
+    if options.stream not in [ 'FULL', 'TURBO', 'TURCAL', 'BEAMGAS' ]:
+        print "Invalid data stream: %s" % options.stream
+        
     if len( args ) != 2:
         print parser.usage
         exit( 1 )

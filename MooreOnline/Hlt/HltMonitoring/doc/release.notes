@@ -6,6 +6,8 @@
 
 ! 2015-08-17 - Roel Aaij
  - Update monitor.py and Tasks.py for 2015 data format (split banks).
+ - Add a --stream option to run on the FULL, TURBO, TURCAL or BEAMGAS streams
+ - Switched to COLLISION15 from COLLISION15EM.
 
 !========================= HltMonitoring v1r1 2015-07-29 =========================
 
