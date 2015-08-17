@@ -23,7 +23,9 @@ IGNORED_MESSAGES = map(re.compile,
                         r'The lines going to MDST.DST are',
                         r'No explicit tuning for DataType',
                         r'something else configured a decoder already',
-                        r'REMOVE UT decoding from DataOnDemand'
+                        r'REMOVE UT decoding from DataOnDemand',
+                        r'Applied corrections configured via options for',
+                        r'requesting factory via old name'
                        ))
 
 _orig_log_filter = log.filter

@@ -17,11 +17,6 @@ MessageSvc().Format = "% F%30W%S%7W%R%T %0W%M"
 from Gaudi.Configuration import *
 from StrippingConf.Configuration import StrippingConf
 
-# Tighten Trk Chi2 to <3
-from CommonParticles.Utils import DefaultTrackingCuts
-DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
-                                "CloneDistCut" : [5000, 9e+99 ] }
-
 #
 #Raw event juggler to split Other/RawEvent into Velo/RawEvent and Tracker/RawEvent
 #
