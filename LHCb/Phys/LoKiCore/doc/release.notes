@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-08-17 - Chris Jones
+ - Add Hlt1HltFactory and Hlt2HltFactory to the default list of factories
+   in LoKiFunctorCache.cmake
+
 ! 2015-08-14 - Chris Jones
  - Suppress messages again (turned off for debugging).
 

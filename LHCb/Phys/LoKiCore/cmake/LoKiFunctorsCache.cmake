@@ -52,7 +52,7 @@ function(loki_functors_cache name)
 
   if(NOT ARG_FACTORIES)
     # default values
-    set(ARG_FACTORIES CoreFactory HltFactory HybridFactory)
+    set(ARG_FACTORIES CoreFactory HltFactory Hlt1HltFactory Hlt2HltFactory HybridFactory)
   endif()
 
   # where all the files are generated

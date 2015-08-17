@@ -30,8 +30,8 @@ def post_action_for_cpp ( ) :
     log.info('# VB: Post-action to enforce the initialization of DoD-algorithms')
 
     from Configurables import DataOnDemandSvc
-    dod                           = DataOnDemandSvc()
-    dod.PreInitialize             = True  ## this is the most important line here
+    dod                       = DataOnDemandSvc()
+    dod.PreInitialize         = True  ## this is the most important line here
 
     ## dod.AllowPreInitializeFailure = True
     ## dod.Dump                      = True
@@ -41,7 +41,6 @@ def post_action_for_cpp ( ) :
         if 0 <= key.find('Raw/UT') :
             removed.append ( key )
             log.warning('# VB:   REMOVE UT decoding from DataOnDemand!')
-
     dct = dod.AlgMap
     for k in removed : del dct[k]
     dod.AlgMap = dct
@@ -61,7 +60,6 @@ def post_action_for_cpp ( ) :
     ## some reshuffling of order of services is needed
     #    in particular DOD should come after PPSVC, LoKiSvc and ToolSvc
     #
-
 
     services = app.ExtSvc
     app.ExtSvc = [ DetDataSvc('DetectorDataSvc'), PPSvc() ,
