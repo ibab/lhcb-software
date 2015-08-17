@@ -4,6 +4,10 @@
 ! Purpose     : OT online calibration
 !-----------------------------------------------------------------------------
 
+!2015-08-17 - Lucia Grillo
+- threshold to update the t0 set to 0.1. Missing message: change in the global 
+t0 precision, done in June
+
 ! 2015-06-22 - Lucia Grillo
 - writeXML routine adapted to have a boost::filesystem::path XML_path as
   argument.

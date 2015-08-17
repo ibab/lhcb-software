@@ -34,7 +34,7 @@ def setup():
     OTt0OnlineClbrAlg.OutputLevel = MSG_INFO
     OTt0OnlineClbrAlg.UseClockPhase = (partition != "FEST")
     OTt0OnlineClbrAlg.InitialTime = initialTime
-    OTt0OnlineClbrAlg.Threshold = 0.04
+    OTt0OnlineClbrAlg.Threshold = 0.1
     OTt0OnlineClbrAlg.MaxDifference = 2
      # Keep analysis task going.
     OTt0OnlineClbrAlg.StopAlgSequence = False
