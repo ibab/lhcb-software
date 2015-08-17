@@ -5,6 +5,9 @@
 ! Created     : 2015-02-04
 ! -----------------------------------------------------------------------------
 
+! 2015-08-17 - Stefano Perazzini
+ - Configured the options for S23 in order to use StrippingArchive
+
 ! 2015-08-15 - Chris Jones
  - Add some more warning message exclusions.
 

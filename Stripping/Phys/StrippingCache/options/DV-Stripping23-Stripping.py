@@ -4,6 +4,16 @@
 # NOTE: Please make a copy of this file for your testing, and do NOT change this one!
 #
 
+#set stripping version
+stripping="stripping23"
+
+#use CommonParticlesArchive
+from CommonParticlesArchive import CommonParticlesArchiveConf
+CommonParticlesArchiveConf().redirect(stripping)
+
+from Gaudi.Configuration import *
+MessageSvc().Format = "% F%30W%S%7W%R%T %0W%M"
+
 from Gaudi.Configuration import *
 from StrippingConf.Configuration import StrippingConf
 
@@ -28,17 +38,15 @@ juggler = RawEventJuggler( DataOnDemand=True, Input=0.3, Output=4.1 )
 #confDBAcc = ConfigCDBAccessSvc()
 #confDBAcc.File = '/afs/cern.ch/user/s/sperazzi/public/Stripping/S23/DaVinciDev_v37r0/Phys/StrippingSelections/tests/data/config.cdb'
 
-# Specify the name of your configuration
-stripping='stripping23'
-
-# NOTE: this will work only if you inserted correctly the 
-# default_config dictionary in the code where your LineBuilder 
-# is defined.
+from StrippingConf.Configuration import StrippingConf, StrippingStream
 from StrippingSettings.Utils import strippingConfiguration
-from StrippingSelections import buildersConf
-conf=strippingConfiguration(stripping)
-from StrippingSelections.Utils import lineBuilder, buildStreams
-streams = buildStreams( conf )
+from StrippingArchive.Utils import buildStreams
+from StrippingArchive import strippingArchive
+
+config  = strippingConfiguration(stripping)
+archive = strippingArchive(stripping)
+
+streams = buildStreams(stripping = config, archive = archive)
 
 leptonicMicroDSTname   = 'Leptonic'
 charmMicroDSTname      = 'Charm'
