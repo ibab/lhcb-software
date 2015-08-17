@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of the HLT
 !-----------------------------------------------------------------------------
 
+! 2015-08-17 - Roel Aaij
+ - Update monitor.py and Tasks.py for 2015 data format (split banks).
+
 !========================= HltMonitoring v1r1 2015-07-29 =========================
 
 ! 2015-07-21 - Roel Aaij

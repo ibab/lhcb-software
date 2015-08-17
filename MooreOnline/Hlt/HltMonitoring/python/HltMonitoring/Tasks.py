@@ -38,12 +38,20 @@ class Monitor( Task ):
         importOptions('$STDOPTS/DecodeRawEvent.py')
         EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
         from Configurables import DataOnDemandSvc
-        DataOnDemandSvc().AlgMap[ 'Hlt/DecReports' ] =  "HltDecReportsDecoder"
-        DataOnDemandSvc().AlgMap[ 'Hlt/SelReports' ] =  "HltSelReportsDecoder"
         ApplicationMgr().ExtSvc.append( 'DataOnDemandSvc' )
+
+        from DAQSys.Decoders import DecoderDB
+        # from itertools import product
+        # for stage, t in product(('Hlt1', 'Hlt2'), ('Dec', 'Sel', 'Vertex')):
+        #     an = "{0}{1}ReportsDecoder".format(stage, t)
+        #     loc = DecoderDB["Hlt%sReportsDecoder/%s" % (t, an)].listOutputs()[0]
+        #     DataOnDemandSvc().AlgMap['%s/%sReports' % (stage, t)] =  an
 
         EventSelector().PrintFreq = 1000
 
+        from Configurables import CondDB
+        CondDB().Online = True
+        
         from Configurables import GaudiSequencer as Sequence
         from Configurables import createODIN, HltRoutingBitsFilter
         seq = Sequence( "MonitorSequence" )
@@ -276,8 +284,11 @@ class RateMonitor( Monitor ):
             info.append( ( 'isNotLumiExclusive', time ) )
 
         # Fill the DecReports histograms
-        hdr = self._evtSvc[ 'Hlt/DecReports' ]
-        info += [ ( i, time ) for i in hdr.decisionNames() if hdr.decReport( i ).decision() != 0 ]
+        for stage in ('Hlt1', 'Hlt2'):
+            hdr = self._evtSvc[ stage + '/DecReports' ]
+            if not hdr:
+                continue
+            info += [ ( i, time ) for i in hdr.decisionNames() if hdr.decReport( i ).decision() != 0 ]
 
         # Fill L0 histgrams
         l0du  = self._evtSvc[ 'Trig/L0/L0DUReport' ]
@@ -398,22 +409,25 @@ class VertexMonitor( Monitor ):
 
 class MassMonitor( Monitor ):
     def make_info( self ):
-        info = {}
+        info = {'Mass' : {}, 'NCandidates' : []}
 
-        hsr = self._evtSvc[ 'Hlt/SelReports' ]
-        info[ 'NCandidates' ] = [ (i, hsr.selReport( i ).substructure().size()  ) \
-                                  for i in hsr.selectionNames() ]
-
-        masses = {}
-        for i in self._config[ 'histograms' ]:
-            report = hsr.selReport( i + "Decision" )
-            if not report or not report.substructure():
+        for stage in ('Hlt1', 'Hlt2'):
+            hsr = self._evtSvc[ stage + '/SelReports' ]
+            if not hsr:
                 continue
-            m = []
-            for cand in report.substructure() :
-                m.append( cand.numericalInfo()[ "1#Particle.measuredMass" ] )
-            masses[ i ] = m
-        info[ 'Mass' ] = masses
+            info[ 'NCandidates' ] += [ (i, hsr.selReport( i ).substructure().size()  ) \
+                                       for i in hsr.selectionNames() ]
+
+            masses = {}
+            for i in self._config[ 'histograms' ]:
+                report = hsr.selReport( i + "Decision" )
+                if not report or not report.substructure():
+                    continue
+                m = []
+                for cand in report.substructure() :
+                    m.append( cand.numericalInfo()[ "1#Particle.measuredMass" ] )
+                masses[ i ] = m
+            info[ 'Mass' ].update(masses)
 
         return info
 
@@ -426,32 +440,34 @@ class MassVsOccupancyMonitor( Monitor ):
         self._occupancy_sources[ 'OT' ] = self._OT_tool.totalNumberOfHits
 
     def make_info( self ):
-        info = {}
+        from collections import defaultdict
+        info = defaultdict(dict)
 
-        hsr = self._evtSvc[ 'Hlt/SelReports' ]
-        masses = {}
-        slopes = {}
-        sources = set()
-        for o, i in self._config[ 'histograms' ]:
-            report = hsr.selReport( i + "Decision" )
-            if not report or not report.substructure():
-                continue
-            m = []
-            s = []
-            for cand in report.substructure() :
-                numInfo = cand.numericalInfo()
-                m.append( numInfo[ "1#Particle.measuredMass" ] )
-                s.append( numInfo[ "6#Particle.slopes.y" ] )
-            masses[ i ] = m
-            slopes[ i ] = s
-            sources.add( o )
-        info[ 'Mass' ] = masses
-        info[ 'Slopes' ] = slopes
+        for stage in ('Hlt1', 'Hlt2'):
+            hsr = self._evtSvc[ stage + '/SelReports' ]
+            masses = {}
+            slopes = {}
+            sources = set()
+            for o, i in self._config[ 'histograms' ]:
+                report = hsr.selReport( i + "Decision" )
+                if not report or not report.substructure():
+                    continue
+                m = []
+                s = []
+                for cand in report.substructure() :
+                    numInfo = cand.numericalInfo()
+                    m.append( numInfo[ "1#Particle.measuredMass" ] )
+                    s.append( numInfo[ "6#Particle.slopes.y" ] )
+                masses[ i ] = m
+                slopes[ i ] = s
+                sources.add( o )
+            info[ 'Mass' ].update(masses)
+            info[ 'Slopes' ].update(slopes)
 
-        occupancies = {}
-        for o in sources:
-            ##if o not in self._occupancy_sources: continue
-            occupancies[ o ] = self._occupancy_sources[ o ]()
-        info[ 'Occupancy' ] = occupancies
+            occupancies = {}
+            for o in sources:
+                ##if o not in self._occupancy_sources: continue
+                occupancies[ o ] = self._occupancy_sources[ o ]()
+            info[ 'Occupancy' ] = occupancies
 
         return info

@@ -2,7 +2,7 @@
 #
 # Script to create histograms from several HLT output files in parallel.
 # General imports
-import os, os.path, sys, optparse
+import os, os.path, sys, optparse, re
 from copy import copy
 # For the exceptions
 import Queue
@@ -24,15 +24,37 @@ def configureInput( run_info, n_processes, options ) :
 
     # Run on raw files from castor or daqarea
     prefix = { 'daqarea' : '/daqarea/lhcb/data/2015/RAW/FULL/LHCb/COLLISION15EM',
-               'castor'  : '/castorfs/cern.ch/grid/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11',
-               'calib'  : '/calib/hlt/spillover' }
+               'calib'   : '/calib/hlt/spillover',
+               'nodes'   : '/net/hlt%s%02d%02d/localdisk/hlt1' }
 
-    dirname = prefix[ options.source ] + '/%(runID)s' % run_info
-    files = sorted( os.listdir( dirname ) )[ : options.NFiles ]
+    re_file = re.compile(r"(?:Run_)?(0*(%(runID)s)).*\.(mdf|raw)" % run_info)
+    from itertools import product
+    files = []
+    base_dir = prefix[options.source]
+    if base_dir.startswith("/net"):
+        for node in product('abcdef', range(1, 6), range(1, 29)):
+            bd = base_dir % node
+            file_dir = bd
+            if not os.path.exists(bd):
+                continue
+            if str(run) in os.listdir(bd):
+                file_dir = os.path.join(bd, str(run))
+            node_files = sorted([os.path.join(file_dir, f) for f in os.listdir(file_dir) if re_file.match(f)])
+            print 'Added %d new files from node hlt%s%02d%02d' % tuple([len(node_files)] + list(node))
+            files += node_files
+            if options.NFiles > 0 and len(files) > options.NFiles:
+                break
+    else:
+        file_dir = base_dir
+        if str(run) in os.listdir(base_dir):
+            file_dir = os.path.join(base_dir, str(run))
+        files += sorted([os.path.join(file_dir, f) for f in os.listdir(file_dir) if re_file.match(f)])
+
     lists = [[] for i in xrange(n_processes)]
     for i, f in enumerate(files):
         index = i % n_processes
-        lists[index].append(fmt(os.path.join(dirname,f)))
+        lists[index].append(fmt(f))
+
     ## low = 0
     ## rest = n_files % n_processes
     ## for i in range( n_processes ):
@@ -185,7 +207,7 @@ $> monitor.py --nprocesses=4 -n 10000 Rate:Mass:Vertex 87880
     parser.add_option( "-s", "--source", action="store", dest="source",
                        default="daqarea", help="Data source, daqarea or castor.")
     parser.add_option( "-d", "--datatype", action="store", dest="DataType",
-                       default="2011", help="DataType to run on.")
+                       default="2015", help="DataType to run on.")
     parser.add_option( "--nfiles", action = "store", type = 'int',
                        dest = "NFiles", default = -1, help = "Total number of files to run." )
     parser.add_option( "-n", action = "store", type = 'int',
@@ -202,7 +224,7 @@ $> monitor.py --nprocesses=4 -n 10000 Rate:Mass:Vertex 87880
     # Parse the command line arguments
     (options, args) = parser.parse_args()
 
-    if options.source not in [ 'daqarea', 'castor', 'calib' ]:
+    if options.source not in [ 'daqarea', 'castor', 'calib', 'nodes' ]:
         print "Invalid data source: %s" % options.source
 
     if len( args ) != 2:
