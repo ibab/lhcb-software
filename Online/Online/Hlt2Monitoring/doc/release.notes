@@ -4,6 +4,9 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-08-17 - Roel Aaij
+ - Remove unneeded dependency on OnlineKernel.
+
 ! 2015-07-29 - Roel Aaij
  - Add Hlt2HistPublishSvc to publish histograms to the MonitorSvc.
  - Make loadSavedHistograms a free function so it can be used by the SaverSvc
