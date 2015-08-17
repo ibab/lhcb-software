@@ -7,14 +7,17 @@ __author__ = 'Juan Palacios palacios@physik.uzh.ch'
 
 import os
 
+## Define the version of the archive
+strippingVersion = 'Stripping23'
 _strippingModules = {}
 WGs = []
-wgDirs = os.listdir(os.environ['STRIPPINGSELECTIONSROOT']+'/python/StrippingSelections')
+## Note that with the new structure you have to import the single WG modules
+wgDirs = os.listdir(os.environ['STRIPPINGARCHIVEROOT']+'/python/StrippingArchive/'+strippingVersion)
 for dirs in [ dir for dir in wgDirs if 'Stripping' in dir ]:
   WGs.append(dirs[9:])
 
 for WG in WGs:
-  _tmpModule = __import__('StrippingSelections.Stripping'+WG,fromlist=['_strippingModules'])
+  _tmpModule = __import__('StrippingArchive.'+strippingVersion+'.Stripping'+WG,fromlist=['_strippingModules'])
   _strippingModules[WG] = _tmpModule._strippingModules
 
 from StrippingUtils.Utils import getLineBuildersFromModule as _getter

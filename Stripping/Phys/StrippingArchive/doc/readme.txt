@@ -9,6 +9,25 @@ To add new strippings to StrippingArchive:
    svn cp ...tags/Phys/StrippingSelections/vXrY/python/StrippingSelections
           ...trunk/Phys/StrippingArchive/python/StrippingArchive/StrippingXX
 
+1.b) Modify the file python/StrippingArchive/StrippingXX/__init__.py. The first
+     lines of the file should look like
+
+     #########################################################################
+     ## Define the version of the archive
+     strippingVersion = 'Stripping23'
+     _strippingModules = {}
+     WGs = []
+     wgDirs = os.listdir(os.environ['STRIPPINGARCHIVEROOT']+'/python/StrippingArchive/'+strippingVersion)
+     for dirs in [ dir for dir in wgDirs if 'Stripping' in dir ]:
+       WGs.append(dirs[9:])
+
+     for WG in WGs:
+       _tmpModule = __import__('StrippingArchive.'+strippingVersion+'.Stripping'+WG,fromlist=['_strippingModules'])
+       _strippingModules[WG] = _tmpModule._strippingModules
+     ###########################################################################
+
+     Take the __init__.py file for Stripping23 as example
+
 2) Add the new builders module to StrippingArchive/__init__.py
 
    ...
