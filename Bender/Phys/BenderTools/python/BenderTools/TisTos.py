@@ -926,7 +926,7 @@ def decorateTisTos ( ALGO ) :
         and then continue with the base-class finalization
         """
         if algorithm.tistos_initialized :
-            self.Print( 'Finalize "TisTos"-machinery' , 10 , 2 )
+            algorithm.Print( 'Finalize "TisTos"-machinery' , 10 , 2 )
             algorithm.tistos_finalize  ()
         return algorithm._prev_tistos_finalize_()
     # =========================================================================

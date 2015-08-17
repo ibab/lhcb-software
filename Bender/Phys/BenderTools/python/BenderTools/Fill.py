@@ -821,7 +821,7 @@ def decorateFill ( ALGO ) :
         and then continue with the base-class finalization
         """
         if algorithm.fill_initialized :
-            self.Print( 'Finalize "Fill"-machinery' , 10 , 2 )
+            algorithm.Print( 'Finalize "Fill"-machinery' , 10 , 2 )
             algorithm.fill_finalize  ()
         return algorithm._prev_fill_finalize_()
     # =====================================================================
