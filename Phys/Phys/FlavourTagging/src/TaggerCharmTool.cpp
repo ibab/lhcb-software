@@ -62,14 +62,14 @@ TaggerCharmTool::TaggerCharmTool( const std::string& type,
 GaudiTool ( type, name, parent ),
 //  m_myDATAreader( NULL ),
   m_util(0),
-  m_pLifetimeFitterAlgName("LoKi::LifetimeFitter"),
+  m_pLifetimeFitterAlgName("LoKi::LifetimeFitter:PUBLIC"),
   m_pLifetimeFitter(0),
   m_descend(0),
   m_dva(0)
 {
   declareInterface<ITagger>(this);
   
-  declareProperty( "LifetimeFitterAlgName", m_pLifetimeFitterAlgName = "LoKi::LifetimeFitter");
+  declareProperty( "LifetimeFitterAlgName", m_pLifetimeFitterAlgName = "LoKi::LifetimeFitter:PUBLIC");
 
   std::vector<std::string> def_CharmTagLocations;
   def_CharmTagLocations.push_back("Phys/Tag_StdD02KPi/Particles");

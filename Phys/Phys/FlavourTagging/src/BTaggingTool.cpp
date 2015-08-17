@@ -29,7 +29,7 @@ GaudiTool ( type, name, parent )
 
   declareProperty( "ChoosePVCriterium",     m_ChoosePV    = "bestPV");
   declareProperty( "UseReFitPV",            m_UseReFitPV  = true );
-  declareProperty( "PVReFitterAlgName",     m_PVReFitterAlgName = "LoKi::PVReFitter");
+  declareProperty( "PVReFitterAlgName",     m_PVReFitterAlgName = "LoKi::PVReFitter:PUBLIC");
   declareProperty( "VetoFailedRefits",      m_VetoFailedRefits = false);
 
   //preselction of tagging candidates

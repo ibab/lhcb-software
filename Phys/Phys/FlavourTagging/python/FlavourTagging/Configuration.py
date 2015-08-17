@@ -5,13 +5,13 @@ from Gaudi.Configuration import *
 ## @class FlavourTaggingConf
 #  Configurable for FlavourTagging software
 class FlavourTaggingConf(LHCbConfigurableUser) :
-    
+
     ## Context specific default values for each property
     __slots__ = { }
 
  ## @brief Apply the configuration
     def __apply_configuration__(self) :
-          
+
         from Configurables import ( CombinedParticleMaker,
                                     ProtoParticleMUONFilter,
                                     ProtoParticleCALOFilter,
@@ -42,8 +42,8 @@ class FlavourTaggingConf(LHCbConfigurableUser) :
 
         taggingParticles = FilterDesktop(tagName)
         taggingParticles.Inputs = [ eLoc, mLoc, pLoc ]
-        taggingParticles.Code = "(P>2.0*GeV)"    
-        
+        taggingParticles.Code = "(P>2.0*GeV)"
+
         dod = DataOnDemandSvc()
         dod.AlgMap.update( { mLoc   : taggerMuons      } )
         dod.AlgMap.update( { eLoc   : taggerElectrons  } )
@@ -52,4 +52,3 @@ class FlavourTaggingConf(LHCbConfigurableUser) :
 
         # configure charm candidate lists
         import FlavourTagging.CharmTaggerLists
-        

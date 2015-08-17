@@ -143,7 +143,7 @@ LCMotherCut = "(ADMASS('Lambda_c+')<100*MeV) & (VFASPF(VCHI2/VDOF)<10) & (BPVVDC
 # D0 -> K Pi #
 
 Tag_StdD02KPi = CombineParticles("Tag_StdD02KPi")
-Tag_StdD02KPi.ParticleCombiners = {'' : 'LoKi::VertexFitter' }
+Tag_StdD02KPi.ParticleCombiners = {'' : 'LoKi::VertexFitter:PUBLIC' }
 Tag_StdD02KPi.Preambulo = CharmPreambulo
 Tag_StdD02KPi.DecayDescriptors = ["[D0 -> K- pi+]cc"]
 Tag_StdD02KPi.CombinationCut = D0CombCut
@@ -157,7 +157,7 @@ locations.update(updateDoD(Tag_StdD02KPi))
 # D0 -> K Pi Pi Pi #
 
 Tag_StdD02KPiPiPi = CombineParticles ("Tag_StdD02KPiPiPi")
-Tag_StdD02KPiPiPi.ParticleCombiners = {'' : 'LoKi::VertexFitter' }
+Tag_StdD02KPiPiPi.ParticleCombiners = {'' : 'LoKi::VertexFitter:PUBLIC' }
 Tag_StdD02KPiPiPi.Preambulo = CharmPreambulo
 Tag_StdD02KPiPiPi.DecayDescriptors = ["[D0 -> K- pi+ pi+ pi-]cc"]
 Tag_StdD02KPiPiPi.DaughtersCuts = {
@@ -176,7 +176,7 @@ locations.update(updateDoD(Tag_StdD02KPiPiPi))
 # D+ -> K Pi Pi #
 
 Tag_StdDp2KPiPi = CombineParticles("Tag_StdDp2KPiPi")
-Tag_StdDp2KPiPi.ParticleCombiners = {'' : 'LoKi::VertexFitter' }
+Tag_StdDp2KPiPi.ParticleCombiners = {'' : 'LoKi::VertexFitter:PUBLIC' }
 Tag_StdDp2KPiPi.Preambulo = CharmPreambulo
 Tag_StdDp2KPiPi.DecayDescriptors = ["[D+ -> K- pi+ pi+]cc"]
 Tag_StdDp2KPiPi.CombinationCut = DpCombCut
@@ -190,7 +190,7 @@ locations.update(updateDoD(Tag_StdDp2KPiPi))
 # D0 -> K Pi Pi0 #
 
 Tag_StdD02KPiPi0 = CombineParticles("Tag_StdD02KPiPi0")
-Tag_StdD02KPiPi0.ParticleCombiners = {'' : 'LoKi::VertexFitter' }
+Tag_StdD02KPiPi0.ParticleCombiners = {'' : 'LoKi::VertexFitter:PUBLIC' }
 Tag_StdD02KPiPi0.Preambulo = CharmPreambulo
 Tag_StdD02KPiPi0.DecayDescriptors = ["[D0 -> K- pi+ pi0]cc"]
 Tag_StdD02KPiPi0.CombinationCut = D0CombCut
@@ -204,7 +204,7 @@ locations.update(updateDoD(Tag_StdD02KPiPi0))
 # D0 / D+ -> K Pi partial #
 
 Tag_StdD2KPipart = CombineParticles("Tag_StdD2KPipart")
-Tag_StdD2KPipart.ParticleCombiners = {'' : 'LoKi::VertexFitter' }
+Tag_StdD2KPipart.ParticleCombiners = {'' : 'LoKi::VertexFitter:PUBLIC' }
 Tag_StdD2KPipart.Preambulo = CharmPreambulo
 Tag_StdD2KPipart.DecayDescriptors = ["[D0 -> K- pi+]cc"]
 Tag_StdD2KPipart.DaughtersCuts = { "pi+" : "(MIPCHI2DV(PRIMARY)>10.0)" }
@@ -219,7 +219,7 @@ locations.update(updateDoD(Tag_StdD2KPipart))
 # D0 / D+ -> K e X #
 
 Tag_StdD2Kepart = CombineParticles("Tag_StdD2Kepart")
-Tag_StdD2Kepart.ParticleCombiners = {'' : 'LoKi::VertexFitter' }
+Tag_StdD2Kepart.ParticleCombiners = {'' : 'LoKi::VertexFitter:PUBLIC' }
 Tag_StdD2Kepart.Preambulo = CharmPreambulo
 Tag_StdD2Kepart.DecayDescriptors = ["[D0 -> K- e+]cc"]
 Tag_StdD2Kepart.DaughtersCuts = { "e+" : "(MIPCHI2DV(PRIMARY)>10.0)" }
@@ -234,7 +234,7 @@ locations.update(updateDoD(Tag_StdD2Kepart))
 # D0 / D+ -> K mu X #
 
 Tag_StdD2Kmupart = CombineParticles("Tag_StdD2Kmupart")
-Tag_StdD2Kmupart.ParticleCombiners = {'' : 'LoKi::VertexFitter' }
+Tag_StdD2Kmupart.ParticleCombiners = {'' : 'LoKi::VertexFitter:PUBLIC' }
 Tag_StdD2Kmupart.Preambulo = CharmPreambulo
 Tag_StdD2Kmupart.DecayDescriptors = ["[D0 -> K- mu+]cc"]
 Tag_StdD2Kmupart.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)>10.0)" }
@@ -249,7 +249,7 @@ locations.update(updateDoD(Tag_StdD2Kmupart))
 # Lambda_c -> P K Pi #
 
 Tag_StdLambdaC2PKPi = CombineParticles("Tag_StdLambdaC2PKPi")
-Tag_StdLambdaC2PKPi.ParticleCombiners = {'' : 'LoKi::VertexFitter' }
+Tag_StdLambdaC2PKPi.ParticleCombiners = {'' : 'LoKi::VertexFitter:PUBLIC' }
 Tag_StdLambdaC2PKPi.Preambulo = CharmPreambulo
 Tag_StdLambdaC2PKPi.DecayDescriptors = ["[Lambda_c+ -> p+ K- pi+]cc"]
 Tag_StdLambdaC2PKPi.CombinationCut = LCCombCut

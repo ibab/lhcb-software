@@ -6,6 +6,11 @@
 !                                               ---> Julian Wishahi (2015--now)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2015-08-17 - Julian Wishahi
+- All private LoKi fitter instances have been exchanged with their respective
+  PUBLIC instances.
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

@@ -1,18 +1,18 @@
 """
 	  Configurable to set Tagger cuts
-	 
+
 	  @ Created by M. Grabalosa
 	  @ date 2011-03-21
 """
-	
+
 __author__ = 'Marc Grabalosa mgrabalo@cern.ch'
 __date__ = 'March 2011'
 __version__ = '$Revision: 1.0 $'
-	
+
 from Gaudi.Configuration import *
 
 tunings = {
-    'Stripping23' : { 
+    'Stripping23' : {
         "Personality": "'Reco14'",  # it is then propagated to all other tools
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
@@ -27,18 +27,18 @@ tunings = {
         #Probably if you are using Eeff event per event no cut will be needed
         #"CombineTaggersProbability.ProbMin_OS" : 0.58,
         #"CombineTaggersProbability.ProbMin" : 0.55,
-        
-        "TaggingUtils.PVReFitter":           "'LoKi::PVReFitter'",
-        "TaggingUtils.LifetimeFitter":       "'LoKi::LifetimeFitter'",
-        "TaggingUtils.VertexFitter":         "'LoKi::VertexFitter'",
-        "TaggingUtils.DistanceCalculator":   "'LoKi::DistanceCalculator'",
+
+        "TaggingUtils.PVReFitter":           "'LoKi::PVReFitter:PUBLIC'",
+        "TaggingUtils.LifetimeFitter":       "'LoKi::LifetimeFitter:PUBLIC'",
+        "TaggingUtils.VertexFitter":         "'LoKi::VertexFitter:PUBLIC'",
+        "TaggingUtils.DistanceCalculator":   "'LoKi::DistanceCalculator:PUBLIC'",
         "TaggingUtils.ParticleDescendants":  "'ParticleDescendants'",
 
         "CombineTaggersProbability.P0_Cal_OS" : 0.390,
         "CombineTaggersProbability.P1_Cal_OS" : 0.899,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.365,
 
-        # calibration for combination with nnetOSK 
+        # calibration for combination with nnetOSK
         "CombineTaggersProbability.P0_Cal_OSnnet" : 0.4353,
         "CombineTaggersProbability.P1_Cal_OSnnet" : 0.948,
         "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.4356,
@@ -49,15 +49,15 @@ tunings = {
         "TaggerMuonTool.Muon_IPs_cut" :       0.0,
         "TaggerMuonTool.Muon_PIDm_cut" :   -100.0,  # no cut
         "TaggerMuonTool.Muon_ipPU_cut" :      3.0,
-        "TaggerMuonTool.Muon_distPhi_cut"   : 0.005,        
+        "TaggerMuonTool.Muon_distPhi_cut"   : 0.005,
         "TaggerMuonTool.Muon_ghostprob_cut" : 0.4,  # new cut
-        "TaggerMuonTool.Muon_PIDNNm_cut"    : 0.35,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNe_cut"    : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNk_cut"    : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNp_cut"    : 0.8,  # new cut       
+        "TaggerMuonTool.Muon_PIDNNm_cut"    : 0.35,  # new cut
+        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNe_cut"    : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNk_cut"    : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNp_cut"    : 0.8,  # new cut
         "TaggerMuonTool.Muon_P0_Cal" :       0.,
-        "TaggerMuonTool.Muon_P1_Cal" :       1., 
+        "TaggerMuonTool.Muon_P1_Cal" :       1.,
         "TaggerMuonTool.Muon_Eta_Cal" :      0.,
         "TaggerMuonTool.Muon_ProbMin" :       0.0,
         "TaggerMuonTool.Muon_AverageOmega" :  0.33,
@@ -79,13 +79,13 @@ tunings = {
         "TaggerElectronTool.Ele_PIDNNp_cut" :    0.8,  # new
         "TaggerElectronTool.Ele_PIDNNpi_cut" :   0.8,  # new
         "TaggerElectronTool.Ele_PIDNNepi_cut" : -0.8,  # new
-        "TaggerElectronTool.Ele_ghostProb_cut" : 0.4,  # new       
+        "TaggerElectronTool.Ele_ghostProb_cut" : 0.4,  # new
         "TaggerElectronTool.Ele_P0_Cal" :         0.,
-        "TaggerElectronTool.Ele_P1_Cal" :         1., 
+        "TaggerElectronTool.Ele_P1_Cal" :         1.,
         "TaggerElectronTool.Ele_Eta_Cal" :        0.,
         "TaggerElectronTool.Ele_ProbMin" :       0.0,
         "TaggerElectronTool.Ele_AverageOmega" : 0.33,
-        
+
         "TaggerKaonOppositeTool.Kaon_Pt_cut" :   700,
         "TaggerKaonOppositeTool.Kaon_P_cut" :   2000,
         "TaggerKaonOppositeTool.Kaon_lcs_cut" :  3,
@@ -138,7 +138,7 @@ tunings = {
         "TaggerKaonSameTool.KaonSame_P0_Cal"   : 0.350,
         "TaggerKaonSameTool.KaonSame_P1_Cal"   : 0.51,
         "TaggerKaonSameTool.KaonSame_Eta_Cal"  : 0.324,
-        # Same tuning as Reco12_2011, different calibration 
+        # Same tuning as Reco12_2011, different calibration
         "TaggerNEWKaonSameTool.Kaon_PIDk_cut"   :    0.75,
         "TaggerNEWKaonSameTool.Kaon_PIDkp_cut"  :   -8.5,
         "TaggerNEWKaonSameTool.Kaon_ghost_cut"  :    1000,
@@ -147,7 +147,7 @@ tunings = {
         "TaggerNEWKaonSameTool.Kaon_P0_Cal"     :    0.436,
         "TaggerNEWKaonSameTool.Kaon_P1_Cal"     :    0.900,
         "TaggerNEWKaonSameTool.Kaon_AverageOmega":   0.430,
-        
+
 
         "TaggerPionSameTool.PionSame_Pt_cut"  : 600,
         "TaggerPionSameTool.PionSame_P_cut"   : 4000,
@@ -194,14 +194,14 @@ tunings = {
         "TaggerCharmTool.Charm_P0_Cal":  0.0,
         "TaggerCharmTool.Charm_P1_Cal":  1.0,
         "TaggerCharmTool.Charm_Eta_Cal": 0.0,
-        "TaggerCharmTool.LifetimeFitterAlgName": "'LoKi::LifetimeFitter'", 
+        "TaggerCharmTool.LifetimeFitterAlgName": "'LoKi::LifetimeFitter:PUBLIC'",
 
-         #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1  
+         #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1
         "TaggerMuonTool.P0_mu_scale"        : -5.47039,
         "TaggerMuonTool.P1_mu_scale"        :  1.23885,
         "TaggerMuonTool.P2_mu_scale"        : -0.00793716,
         "TaggerMuonTool.P3_mu_scale"        :  0.647253,
-  
+
         "TaggerElectronTool.P0_e_scale"     :  -3.04032,
         "TaggerElectronTool.P1_e_scale"     :   1.7055,
         "TaggerElectronTool.P2_e_scale"     :  -0.136785,
@@ -217,20 +217,20 @@ tunings = {
         "TaggerVertexChargeTool.P2_vtx_scale"   : 0.113682,
         "TaggerVertexChargeTool.P3_vtx_scale"   : 0.570684,
 
-        "TaggerKaonSameTool.P0_ks_scale"        :  1.22418, 
-        "TaggerKaonSameTool.P1_ks_scale"        : -1.63297,  
+        "TaggerKaonSameTool.P0_ks_scale"        :  1.22418,
+        "TaggerKaonSameTool.P1_ks_scale"        : -1.63297,
         "TaggerKaonSameTool.P2_ks_scale"        :  0.401361,
         "TaggerKaonSameTool.P3_ks_scale"        :  0.,
 
         "TaggerPionSameTool.P0_ps_scale"        :  1.22123,
         "TaggerPionSameTool.P1_ps_scale"        :  -1.76027,
         "TaggerPionSameTool.P2_ps_scale"        :  0.651766,
-        "TaggerPionSameTool.P3_ps_scale"        :  0.,          
+        "TaggerPionSameTool.P3_ps_scale"        :  0.,
 
         },
 
     #use cuts optimized and calibrated with Strip20 (2012 data 2fb-1)
-    'Stripping21' : { 
+    'Stripping21' : {
         "Personality": "'Reco14'",  # it is then propagated to all other tools
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
@@ -240,25 +240,25 @@ tunings = {
         "EnableCharmTagger": "True", # was disabled in the initial Stripping21
         "EnableProtonTagger": "True",
         "EnablePionBDTTagger": "True",
-        
+
         # choice of fitters and tools
         "TaggingUtils.PVReFitter":           "'AdaptivePVReFitter'",
         "TaggingUtils.LifetimeFitter":       "'PropertimeFitter'",
         "TaggingUtils.VertexFitter":         "'OfflineVertexFitter'",
         "TaggingUtils.DistanceCalculator":   "'LoKi::DistanceCalculator'",
         "TaggingUtils.ParticleDescendants":  "'ParticleDescendants'",
-        
+
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
         #When performing your analisis, please find yourself the cut which maximeze the Eeff
         #Probably if you are using Eeff event per event no cut will be needed
         #"CombineTaggersProbability.ProbMin_OS" : 0.58,
         #"CombineTaggersProbability.ProbMin" : 0.55,
- 
+
         "CombineTaggersProbability.P0_Cal_OS" : 0.390,
         "CombineTaggersProbability.P1_Cal_OS" : 0.899,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.365,
 
-        # calibration for combination with nnetOSK 
+        # calibration for combination with nnetOSK
         "CombineTaggersProbability.P0_Cal_OSnnet" : 0.4353,
         "CombineTaggersProbability.P1_Cal_OSnnet" : 0.948,
         "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.4356,
@@ -269,15 +269,15 @@ tunings = {
         "TaggerMuonTool.Muon_IPs_cut" :       0.0,
         "TaggerMuonTool.Muon_PIDm_cut" :   -100.0,  # no cut
         "TaggerMuonTool.Muon_ipPU_cut" :      3.0,
-        "TaggerMuonTool.Muon_distPhi_cut"   : 0.005,        
+        "TaggerMuonTool.Muon_distPhi_cut"   : 0.005,
         "TaggerMuonTool.Muon_ghostprob_cut" : 0.4,  # new cut
-        "TaggerMuonTool.Muon_PIDNNm_cut"    : 0.35,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNe_cut"    : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNk_cut"    : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNp_cut"    : 0.8,  # new cut       
+        "TaggerMuonTool.Muon_PIDNNm_cut"    : 0.35,  # new cut
+        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNe_cut"    : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNk_cut"    : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNp_cut"    : 0.8,  # new cut
         "TaggerMuonTool.Muon_P0_Cal" :       0.,
-        "TaggerMuonTool.Muon_P1_Cal" :       1., 
+        "TaggerMuonTool.Muon_P1_Cal" :       1.,
         "TaggerMuonTool.Muon_Eta_Cal" :      0.,
         "TaggerMuonTool.Muon_ProbMin" :       0.0,
         "TaggerMuonTool.Muon_AverageOmega" :  0.33,
@@ -299,13 +299,13 @@ tunings = {
         "TaggerElectronTool.Ele_PIDNNp_cut" :    0.8,  # new
         "TaggerElectronTool.Ele_PIDNNpi_cut" :   0.8,  # new
         "TaggerElectronTool.Ele_PIDNNepi_cut" : -0.8,  # new
-        "TaggerElectronTool.Ele_ghostProb_cut" : 0.4,  # new       
+        "TaggerElectronTool.Ele_ghostProb_cut" : 0.4,  # new
         "TaggerElectronTool.Ele_P0_Cal" :         0.,
-        "TaggerElectronTool.Ele_P1_Cal" :         1., 
+        "TaggerElectronTool.Ele_P1_Cal" :         1.,
         "TaggerElectronTool.Ele_Eta_Cal" :        0.,
         "TaggerElectronTool.Ele_ProbMin" :       0.0,
         "TaggerElectronTool.Ele_AverageOmega" : 0.33,
-        
+
         "TaggerKaonOppositeTool.Kaon_Pt_cut" :   700,
         "TaggerKaonOppositeTool.Kaon_P_cut" :   2000,
         "TaggerKaonOppositeTool.Kaon_lcs_cut" :  3,
@@ -358,7 +358,7 @@ tunings = {
         "TaggerKaonSameTool.KaonSame_P0_Cal"   : 0.350,
         "TaggerKaonSameTool.KaonSame_P1_Cal"   : 0.51,
         "TaggerKaonSameTool.KaonSame_Eta_Cal"  : 0.324,
-        # Same tuning as Reco12_2011, different calibration 
+        # Same tuning as Reco12_2011, different calibration
         "TaggerNEWKaonSameTool.Kaon_PIDk_cut"   :    0.75,
         "TaggerNEWKaonSameTool.Kaon_PIDkp_cut"  :   -8.5,
         "TaggerNEWKaonSameTool.Kaon_ghost_cut"  :    1000,
@@ -367,7 +367,7 @@ tunings = {
         "TaggerNEWKaonSameTool.Kaon_P0_Cal"     :    0.436,
         "TaggerNEWKaonSameTool.Kaon_P1_Cal"     :    0.900,
         "TaggerNEWKaonSameTool.Kaon_AverageOmega":   0.430,
-        
+
 
         "TaggerPionSameTool.PionSame_Pt_cut"  : 600,
         "TaggerPionSameTool.PionSame_P_cut"   : 4000,
@@ -416,12 +416,12 @@ tunings = {
         "TaggerCharmTool.Charm_Eta_Cal"    : 0.0,
 
 
-         #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1  
+         #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1
         "TaggerMuonTool.P0_mu_scale"        : -5.47039,
         "TaggerMuonTool.P1_mu_scale"        :  1.23885,
         "TaggerMuonTool.P2_mu_scale"        : -0.00793716,
         "TaggerMuonTool.P3_mu_scale"        :  0.647253,
-  
+
         "TaggerElectronTool.P0_e_scale"     :  -3.04032,
         "TaggerElectronTool.P1_e_scale"     :   1.7055,
         "TaggerElectronTool.P2_e_scale"     :  -0.136785,
@@ -437,20 +437,20 @@ tunings = {
         "TaggerVertexChargeTool.P2_vtx_scale"   : 0.113682,
         "TaggerVertexChargeTool.P3_vtx_scale"   : 0.570684,
 
-        "TaggerKaonSameTool.P0_ks_scale"        :  1.22418, 
-        "TaggerKaonSameTool.P1_ks_scale"        : -1.63297,  
+        "TaggerKaonSameTool.P0_ks_scale"        :  1.22418,
+        "TaggerKaonSameTool.P1_ks_scale"        : -1.63297,
         "TaggerKaonSameTool.P2_ks_scale"        :  0.401361,
         "TaggerKaonSameTool.P3_ks_scale"        :  0.,
 
         "TaggerPionSameTool.P0_ps_scale"        :  1.22123,
         "TaggerPionSameTool.P1_ps_scale"        :  -1.76027,
         "TaggerPionSameTool.P2_ps_scale"        :  0.651766,
-        "TaggerPionSameTool.P3_ps_scale"        :  0.,          
+        "TaggerPionSameTool.P3_ps_scale"        :  0.,
 
         },
 
     #use cuts optimized and calibrated with Strip20 (2012 data 2fb-1)
-    'Reco14_2012' : { 
+    'Reco14_2012' : {
         "Personality": "'Reco14'",  # it is then propagated to all other tools
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
@@ -460,25 +460,25 @@ tunings = {
         "EnableCharmTagger": "True",
         "EnableProtonTagger": "True",
         "EnablePionBDTTagger": "True",
-        
+
         "TaggingUtils.PVReFitter":           "'AdaptivePVReFitter'",
         "TaggingUtils.LifetimeFitter":       "'PropertimeFitter'",
         "TaggingUtils.VertexFitter":         "'OfflineVertexFitter'",
         "TaggingUtils.DistanceCalculator":   "'LoKi::DistanceCalculator'",
         "TaggingUtils.ParticleDescendants":  "'ParticleDescendants'",
- 
-        
+
+
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
         #When performing your analisis, please find yourself the cut which maximeze the Eeff
         #Probably if you are using Eeff event per event no cut will be needed
         #"CombineTaggersProbability.ProbMin_OS" : 0.58,
         #"CombineTaggersProbability.ProbMin" : 0.55,
- 
+
         "CombineTaggersProbability.P0_Cal_OS" : 0.390,
         "CombineTaggersProbability.P1_Cal_OS" : 0.899,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.365,
 
-        # calibration for combination with nnetOSK 
+        # calibration for combination with nnetOSK
         "CombineTaggersProbability.P0_Cal_OSnnet" : 0.4353,
         "CombineTaggersProbability.P1_Cal_OSnnet" : 0.948,
         "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.4356,
@@ -489,15 +489,15 @@ tunings = {
         "TaggerMuonTool.Muon_IPs_cut" :       0.0,
         "TaggerMuonTool.Muon_PIDm_cut" :   -100.0,  # no cut
         "TaggerMuonTool.Muon_ipPU_cut" :      3.0,
-        "TaggerMuonTool.Muon_distPhi_cut"   : 0.005,        
+        "TaggerMuonTool.Muon_distPhi_cut"   : 0.005,
         "TaggerMuonTool.Muon_ghostprob_cut" : 0.4,  # new cut
-        "TaggerMuonTool.Muon_PIDNNm_cut"    : 0.35,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNe_cut"    : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNk_cut"    : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNp_cut"    : 0.8,  # new cut       
+        "TaggerMuonTool.Muon_PIDNNm_cut"    : 0.35,  # new cut
+        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNe_cut"    : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNk_cut"    : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNp_cut"    : 0.8,  # new cut
         "TaggerMuonTool.Muon_P0_Cal" :       0.,
-        "TaggerMuonTool.Muon_P1_Cal" :       1., 
+        "TaggerMuonTool.Muon_P1_Cal" :       1.,
         "TaggerMuonTool.Muon_Eta_Cal" :      0.,
         "TaggerMuonTool.Muon_ProbMin" :       0.0,
         "TaggerMuonTool.Muon_AverageOmega" :  0.33,
@@ -519,13 +519,13 @@ tunings = {
         "TaggerElectronTool.Ele_PIDNNp_cut" :    0.8,  # new
         "TaggerElectronTool.Ele_PIDNNpi_cut" :   0.8,  # new
         "TaggerElectronTool.Ele_PIDNNepi_cut" : -0.8,  # new
-        "TaggerElectronTool.Ele_ghostProb_cut" : 0.4,  # new       
+        "TaggerElectronTool.Ele_ghostProb_cut" : 0.4,  # new
         "TaggerElectronTool.Ele_P0_Cal" :         0.,
-        "TaggerElectronTool.Ele_P1_Cal" :         1., 
+        "TaggerElectronTool.Ele_P1_Cal" :         1.,
         "TaggerElectronTool.Ele_Eta_Cal" :        0.,
         "TaggerElectronTool.Ele_ProbMin" :       0.0,
         "TaggerElectronTool.Ele_AverageOmega" : 0.33,
-        
+
         "TaggerKaonOppositeTool.Kaon_Pt_cut" :   700,
         "TaggerKaonOppositeTool.Kaon_P_cut" :   2000,
         "TaggerKaonOppositeTool.Kaon_lcs_cut" :  3,
@@ -578,7 +578,7 @@ tunings = {
         "TaggerKaonSameTool.KaonSame_P0_Cal"   : 0.350,
         "TaggerKaonSameTool.KaonSame_P1_Cal"   : 0.51,
         "TaggerKaonSameTool.KaonSame_Eta_Cal"  : 0.324,
-        # Same tuning as Reco12_2011, different calibration 
+        # Same tuning as Reco12_2011, different calibration
         "TaggerNEWKaonSameTool.Kaon_PIDk_cut"   :    0.75,
         "TaggerNEWKaonSameTool.Kaon_PIDkp_cut"  :   -8.5,
         "TaggerNEWKaonSameTool.Kaon_ghost_cut"  :    1000,
@@ -587,7 +587,7 @@ tunings = {
         "TaggerNEWKaonSameTool.Kaon_P0_Cal"     :    0.436,
         "TaggerNEWKaonSameTool.Kaon_P1_Cal"     :    0.900,
         "TaggerNEWKaonSameTool.Kaon_AverageOmega":   0.430,
-        
+
 
         "TaggerPionSameTool.PionSame_Pt_cut"  : 600,
         "TaggerPionSameTool.PionSame_P_cut"   : 4000,
@@ -636,12 +636,12 @@ tunings = {
         "TaggerCharmTool.Charm_Eta_Cal"    : 0.0,
 
 
-         #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1  
+         #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1
         "TaggerMuonTool.P0_mu_scale"        : -5.47039,
         "TaggerMuonTool.P1_mu_scale"        :  1.23885,
         "TaggerMuonTool.P2_mu_scale"        : -0.00793716,
         "TaggerMuonTool.P3_mu_scale"        :  0.647253,
-  
+
         "TaggerElectronTool.P0_e_scale"     :  -3.04032,
         "TaggerElectronTool.P1_e_scale"     :   1.7055,
         "TaggerElectronTool.P2_e_scale"     :  -0.136785,
@@ -657,15 +657,15 @@ tunings = {
         "TaggerVertexChargeTool.P2_vtx_scale"   : 0.113682,
         "TaggerVertexChargeTool.P3_vtx_scale"   : 0.570684,
 
-        "TaggerKaonSameTool.P0_ks_scale"        :  1.22418, 
-        "TaggerKaonSameTool.P1_ks_scale"        : -1.63297,  
+        "TaggerKaonSameTool.P0_ks_scale"        :  1.22418,
+        "TaggerKaonSameTool.P1_ks_scale"        : -1.63297,
         "TaggerKaonSameTool.P2_ks_scale"        :  0.401361,
         "TaggerKaonSameTool.P3_ks_scale"        :  0.,
 
         "TaggerPionSameTool.P0_ps_scale"        :  1.22123,
         "TaggerPionSameTool.P1_ps_scale"        :  -1.76027,
         "TaggerPionSameTool.P2_ps_scale"        :  0.651766,
-        "TaggerPionSameTool.P3_ps_scale"        :  0.,          
+        "TaggerPionSameTool.P3_ps_scale"        :  0.,
 
         },
 
@@ -679,22 +679,22 @@ tunings = {
         "EnableCharmTagger": "False",
         "EnableProtonTagger": "False",
         "EnablePionBDTTagger": "False",
-        
+
         "TaggingUtils.PVReFitter":           "'AdaptivePVReFitter'",
         "TaggingUtils.LifetimeFitter":       "'PropertimeFitter'",
         "TaggingUtils.VertexFitter":         "'OfflineVertexFitter'",
         "TaggingUtils.DistanceCalculator":   "'LoKi::DistanceCalculator'",
         "TaggingUtils.ParticleDescendants":  "'ParticleDescendants'",
- 
+
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
         #When performing your analisis, please find yourself the cut which maximeze the Eeff
         #Probably if you are using Eeff event per event no cut will be needed
         #"CombineTaggersProbability.ProbMin_OS" : 0.58,
         #"CombineTaggersProbability.ProbMin" : 0.55,
-        
+
         "CombineTaggersProbability.P0_Cal_OS" : 0.392, #+/-0.0016
         "CombineTaggersProbability.P1_Cal_OS" : 0.953, #+/-0.017
-        "CombineTaggersProbability.Eta_Cal_OS": 0.362, 
+        "CombineTaggersProbability.Eta_Cal_OS": 0.362,
 
         # calibration for combination with nnetOSK  -- no calibration
         "CombineTaggersProbability.P0_Cal_OSnnet" : 0.,
@@ -714,12 +714,12 @@ tunings = {
         "TaggerMuonTool.Muon_P1_Cal" : 1.1953, #+/- 0.061
         "TaggerMuonTool.Muon_Eta_Cal" : 0.304,
         "TaggerMuonTool.Muon_ghostprob_cut" : 2,  # no cut
-        "TaggerMuonTool.Muon_PIDNNm_cut"    :-1.,  # no cut       
-        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 2.,  # no cut       
-        "TaggerMuonTool.Muon_PIDNNe_cut"    : 2.,  # no cut       
-        "TaggerMuonTool.Muon_PIDNNk_cut"    : 2.,  # no cut       
+        "TaggerMuonTool.Muon_PIDNNm_cut"    :-1.,  # no cut
+        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 2.,  # no cut
+        "TaggerMuonTool.Muon_PIDNNe_cut"    : 2.,  # no cut
+        "TaggerMuonTool.Muon_PIDNNk_cut"    : 2.,  # no cut
         "TaggerMuonTool.Muon_PIDNNp_cut"    : 2.,  # no cut
-        
+
         "TaggerElectronTool.Ele_Pt_cut" : 1000,
         "TaggerElectronTool.Ele_P_cut" : 0.0,
         "TaggerElectronTool.Ele_IPs_cut" : 1.0,
@@ -742,7 +742,7 @@ tunings = {
         "TaggerElectronTool.Ele_PIDNNp_cut" :    2.,  # new
         "TaggerElectronTool.Ele_PIDNNpi_cut" :   2,   # new
         "TaggerElectronTool.Ele_PIDNNepi_cut" : -2.,  # new
-        "TaggerElectronTool.Ele_ghostProb_cut" : 2.,  # new 
+        "TaggerElectronTool.Ele_ghostProb_cut" : 2.,  # new
 
         "TaggerKaonOppositeTool.Kaon_Pt_cut" : 700,
         "TaggerKaonOppositeTool.Kaon_P_cut" : 5000,
@@ -823,10 +823,10 @@ tunings = {
         "TaggerPionSameTool.PionSame_distPhi_cut" : 0.005,
         "TaggerPionSameTool.PionSame_ProbMin" : 0.56,
         "TaggerPionSameTool.PionSame_AverageOmega" : 0.41,
-        "TaggerPionSameTool.PionSame_P0_Cal" : 0.4049, # final calibration for SSpi 10% of B+ background 
+        "TaggerPionSameTool.PionSame_P0_Cal" : 0.4049, # final calibration for SSpi 10% of B+ background
         "TaggerPionSameTool.PionSame_P1_Cal" : 0.83,
         "TaggerPionSameTool.PionSame_P2_Cal" : -1.99,
-        "TaggerPionSameTool.PionSame_Eta_Cal" : 0.3908,  
+        "TaggerPionSameTool.PionSame_Eta_Cal" : 0.3908,
 
         "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedPtmin"       : 0.1,
         "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedIPSmin"      : 2.5,
@@ -855,31 +855,31 @@ tunings = {
         "TaggerMuonTool.NNetTool_MLP.P1_mu_scale"   :  12.1473,
         "TaggerMuonTool.NNetTool_MLP.P2_mu_scale"   : -20.966,
         "TaggerMuonTool.NNetTool_MLP.P3_mu_scale"   :  10.9829,
-  
+
         "TaggerElectronTool.NNetTool_MLP.P0_e_scale"   :  1.32902,
         "TaggerElectronTool.NNetTool_MLP.P1_e_scale"   : -2.32922,
         "TaggerElectronTool.NNetTool_MLP.P2_e_scale"   :  1.17439,
         "TaggerElectronTool.NNetTool_MLP.P3_e_scale"   :  0.,
-        
+
         "TaggerKaonOppositeTool.NNetTool_MLP.P0_k_scale"   :   -3.66218,
         "TaggerKaonOppositeTool.NNetTool_MLP.P1_k_scale"   :   20.5552,
         "TaggerKaonOppositeTool.NNetTool_MLP.P2_k_scale"   :  -32.958,
         "TaggerKaonOppositeTool.NNetTool_MLP.P3_k_scale"   :    16.7165,
 
-        "TaggerKaonSameTool.NNetTool_MLP.P0_ks_scale"   :  1.22418, # //dec2011_v2                 
+        "TaggerKaonSameTool.NNetTool_MLP.P0_ks_scale"   :  1.22418, # //dec2011_v2
         "TaggerKaonSameTool.NNetTool_MLP.P1_ks_scale"   : -1.63297,
         "TaggerKaonSameTool.NNetTool_MLP.P2_ks_scale"   :  0.401361,
         "TaggerKaonSameTool.NNetTool_MLP.P3_ks_scale"   :  0.,
-        
+
         "TaggerPionSameTool.NNetTool_MLP.P0_ps_scale"   :  1.22123,
         "TaggerPionSameTool.NNetTool_MLP.P1_ps_scale"   : -1.76027,
         "TaggerPionSameTool.NNetTool_MLP.P2_ps_scale"   :  0.651766,
         "TaggerPionSameTool.NNetTool_MLP.P3_ps_scale"   :  0.0,
-        
+
         "TaggerVertexChargeTool.NNetTool_MLP.P0_vtx_scale":   0.945773,
         "TaggerVertexChargeTool.NNetTool_MLP.P1_vtx_scale":  -0.93411,
         "TaggerVertexChargeTool.NNetTool_MLP.P2_vtx_scale":   0.,
-        "TaggerVertexChargeTool.NNetTool_MLP.P3_vtx_scale":   0.,          
+        "TaggerVertexChargeTool.NNetTool_MLP.P3_vtx_scale":   0.,
 
         },
 
@@ -893,14 +893,14 @@ tunings = {
         "EnableCharmTagger": "False",
         "EnableProtonTagger": "False",
         "EnablePionBDTTagger": "False",
-        
+
         "TaggingUtils.PVReFitter":           "'AdaptivePVReFitter'",
         "TaggingUtils.LifetimeFitter":       "'PropertimeFitter'",
         "TaggingUtils.VertexFitter":         "'OfflineVertexFitter'",
         "TaggingUtils.DistanceCalculator":   "'LoKi::DistanceCalculator'",
         "TaggingUtils.ParticleDescendants":  "'ParticleDescendants'",
- 
-        
+
+
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
         #When performing your analisis, please find yourself the cut which maximeze the Eeff
         #Probably if you are using Eeff event per event no cut will be needed
@@ -909,7 +909,7 @@ tunings = {
 
         "CombineTaggersProbability.P0_Cal_OS" : 0.392, #+/-0.0016
         "CombineTaggersProbability.P1_Cal_OS" : 0.953, #+/-0.017
-        "CombineTaggersProbability.Eta_Cal_OS": 0.362, 
+        "CombineTaggersProbability.Eta_Cal_OS": 0.362,
         # calibration for combination with nnetOSK  -- no calibration
         "CombineTaggersProbability.P0_Cal_OSnnet" : 0.,
         "CombineTaggersProbability.P1_Cal_OSnnet" : 1.,
@@ -924,16 +924,16 @@ tunings = {
         "TaggerMuonTool.Muon_distPhi_cut" : 0.005,
         "TaggerMuonTool.Muon_ProbMin" : 0.0,
         "TaggerMuonTool.Muon_AverageOmega" : 0.33,
-        "TaggerMuonTool.Muon_P0_Cal" : 0., 
+        "TaggerMuonTool.Muon_P0_Cal" : 0.,
         "TaggerMuonTool.Muon_P1_Cal" : 1., #+/- 0.061
         "TaggerMuonTool.Muon_Eta_Cal" : 0.,
         "TaggerMuonTool.Muon_ghostprob_cut" : 2,  # no cut
-        "TaggerMuonTool.Muon_PIDNNm_cut"    :-1.,  # no cut       
-        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 2.,  # no cut       
-        "TaggerMuonTool.Muon_PIDNNe_cut"    : 2.,  # no cut       
-        "TaggerMuonTool.Muon_PIDNNk_cut"    : 2.,  # no cut       
+        "TaggerMuonTool.Muon_PIDNNm_cut"    :-1.,  # no cut
+        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 2.,  # no cut
+        "TaggerMuonTool.Muon_PIDNNe_cut"    : 2.,  # no cut
+        "TaggerMuonTool.Muon_PIDNNk_cut"    : 2.,  # no cut
         "TaggerMuonTool.Muon_PIDNNp_cut"    : 2.,  # no cut
-        
+
         "TaggerElectronTool.Ele_Pt_cut" : 1000,
         "TaggerElectronTool.Ele_P_cut" : 0.0,
         "TaggerElectronTool.Ele_IPs_cut" : 1.0,
@@ -956,7 +956,7 @@ tunings = {
         "TaggerElectronTool.Ele_PIDNNp_cut" :    2.,  # new
         "TaggerElectronTool.Ele_PIDNNpi_cut" :   2,   # new
         "TaggerElectronTool.Ele_PIDNNepi_cut" : -2.,  # new
-        "TaggerElectronTool.Ele_ghostProb_cut" : 2.,  # new 
+        "TaggerElectronTool.Ele_ghostProb_cut" : 2.,  # new
 
         "TaggerKaonOppositeTool.Kaon_Pt_cut" : 700,
         "TaggerKaonOppositeTool.Kaon_P_cut" : 5000,
@@ -970,7 +970,7 @@ tunings = {
         "TaggerKaonOppositeTool.Kaon_distPhi_cut" : 0.005,
         "TaggerKaonOppositeTool.Kaon_ProbMin" : 0.54,
         "TaggerKaonOppositeTool.Kaon_AverageOmega" : 0.33,
-        "TaggerKaonOppositeTool.Kaon_P0_Cal" : 0., 
+        "TaggerKaonOppositeTool.Kaon_P0_Cal" : 0.,
         "TaggerKaonOppositeTool.Kaon_P1_Cal" : 1.,
         "TaggerKaonOppositeTool.Kaon_Eta_Cal" : 0.,
         "TaggerKaonOppositeTool.Kaon_PIDNNk_cut" :   -1., # no
@@ -1037,10 +1037,10 @@ tunings = {
         "TaggerPionSameTool.PionSame_distPhi_cut" : 0.005,
         "TaggerPionSameTool.PionSame_ProbMin" : 0.56,
         "TaggerPionSameTool.PionSame_AverageOmega" : 0.41,
-        "TaggerPionSameTool.PionSame_P0_Cal" : 0., 
+        "TaggerPionSameTool.PionSame_P0_Cal" : 0.,
         "TaggerPionSameTool.PionSame_P1_Cal" : 1.,
         "TaggerPionSameTool.PionSame_P2_Cal" : 0.,
-        "TaggerPionSameTool.PionSame_Eta_Cal" : 0.,  
+        "TaggerPionSameTool.PionSame_Eta_Cal" : 0.,
 
         "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedProbability" : 0.42,
         "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedPtmin"       : 0.1,
@@ -1070,35 +1070,35 @@ tunings = {
         "TaggerMuonTool.NNetTool_MLP.P1_mu_scale"   :  12.1473,
         "TaggerMuonTool.NNetTool_MLP.P2_mu_scale"   : -20.966,
         "TaggerMuonTool.NNetTool_MLP.P3_mu_scale"   :  10.9829,
-  
+
         "TaggerElectronTool.NNetTool_MLP.P0_e_scale"   :  1.32902,
         "TaggerElectronTool.NNetTool_MLP.P1_e_scale"   : -2.32922,
         "TaggerElectronTool.NNetTool_MLP.P2_e_scale"   :  1.17439,
         "TaggerElectronTool.NNetTool_MLP.P3_e_scale"   :  0.,
-        
+
         "TaggerKaonOppositeTool.NNetTool_MLP.P0_k_scale"   :   -3.66218,
         "TaggerKaonOppositeTool.NNetTool_MLP.P1_k_scale"   :   20.5552,
         "TaggerKaonOppositeTool.NNetTool_MLP.P2_k_scale"   :  -32.958,
         "TaggerKaonOppositeTool.NNetTool_MLP.P3_k_scale"   :    16.7165,
 
-        "TaggerKaonSameTool.NNetTool_MLP.P0_ks_scale"   :  1.22418, # //dec2011_v2                 
+        "TaggerKaonSameTool.NNetTool_MLP.P0_ks_scale"   :  1.22418, # //dec2011_v2
         "TaggerKaonSameTool.NNetTool_MLP.P1_ks_scale"   : -1.63297,
         "TaggerKaonSameTool.NNetTool_MLP.P2_ks_scale"   :  0.401361,
         "TaggerKaonSameTool.NNetTool_MLP.P3_ks_scale"   :  0.,
-        
+
         "TaggerPionSameTool.NNetTool_MLP.P0_ps_scale"   :  1.22123,
         "TaggerPionSameTool.NNetTool_MLP.P1_ps_scale"   : -1.76027,
         "TaggerPionSameTool.NNetTool_MLP.P2_ps_scale"   :  0.651766,
         "TaggerPionSameTool.NNetTool_MLP.P3_ps_scale"   :  0.0,
-        
+
         "TaggerVertexChargeTool.NNetTool_MLP.P0_vtx_scale":   0.945773,
         "TaggerVertexChargeTool.NNetTool_MLP.P1_vtx_scale":  -0.93411,
         "TaggerVertexChargeTool.NNetTool_MLP.P2_vtx_scale":   0.,
-        "TaggerVertexChargeTool.NNetTool_MLP.P3_vtx_scale":   0.,          
+        "TaggerVertexChargeTool.NNetTool_MLP.P3_vtx_scale":   0.,
 
         },
 
-    'Xmass_2011' : { 
+    'Xmass_2011' : {
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
         #"ForceSignalID" :   , #"Bs", "Bd", "Bu" to force SSk or SSpi
@@ -1108,7 +1108,7 @@ tunings = {
         #Probably if you are using Eeff event per event no cut will be needed
         #"CombineTaggersProbability.ProbMin_OS" : 0.58,
         #"CombineTaggersProbability.ProbMin" : 0.55,
-        
+
         "CombineTaggersProbability.P0_Cal_OS" : 0.392, #+/-0.0016
         "CombineTaggersProbability.P1_Cal_OS" : 0.921, #+/-0.017
         "CombineTaggersProbability.Eta_Cal_OS" : 0.363,
@@ -1213,8 +1213,8 @@ tunings = {
         "TaggerVertexChargeTool.Vtx_P1_Cal" : 0.84, #+/-0.032
         "TaggerVertexChargeTool.Vtx_Eta_Cal" : 0.362
         },
-    #use cuts optimized and calibrated with Strip20 (2012 data 2fb-1), nnet and polynomials tuned on MC12 
-    'Stripping21_MC' : { 
+    #use cuts optimized and calibrated with Strip20 (2012 data 2fb-1), nnet and polynomials tuned on MC12
+    'Stripping21_MC' : {
         "Personality": "'Reco14'",  # it is then propagated to all other tools
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
@@ -1229,7 +1229,7 @@ tunings = {
         #Probably if you are using Eeff event per event no cut will be needed
         #"CombineTaggersProbability.ProbMin_OS" : 0.58,
         #"CombineTaggersProbability.ProbMin" : 0.55,
- 
+
         "CombineTaggersProbability.P0_Cal_OS" :  0.4004,
         "CombineTaggersProbability.P1_Cal_OS" : 0.8476,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.3892,
@@ -1244,20 +1244,20 @@ tunings = {
         "TaggerMuonTool.Muon_IPs_cut" :       0.0,
         "TaggerMuonTool.Muon_PIDm_cut" :   -100.0,  # no cut
         "TaggerMuonTool.Muon_ipPU_cut" :      3.0,
-        "TaggerMuonTool.Muon_distPhi_cut"   : 0.005,        
+        "TaggerMuonTool.Muon_distPhi_cut"   : 0.005,
         "TaggerMuonTool.Muon_ghostprob_cut" : 0.4,  # new cut
-        "TaggerMuonTool.Muon_PIDNNm_cut"    : 0.35,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNe_cut"    : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNk_cut"    : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNp_cut"    : 0.8,  # new cut       
+        "TaggerMuonTool.Muon_PIDNNm_cut"    : 0.35,  # new cut
+        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNe_cut"    : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNk_cut"    : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNp_cut"    : 0.8,  # new cut
         "TaggerMuonTool.Muon_P0_Cal" :       0.,
-        "TaggerMuonTool.Muon_P1_Cal" :       1., 
+        "TaggerMuonTool.Muon_P1_Cal" :       1.,
         "TaggerMuonTool.Muon_Eta_Cal" :      0.,
         "TaggerMuonTool.Muon_ProbMin" :       0.0,
         "TaggerMuonTool.Muon_AverageOmega" :  0.33,
         "TaggerMuonTool.isMonteCarlo" :       1,
-        
+
         "TaggerElectronTool.Ele_Pt_cut" :       1100,
         "TaggerElectronTool.Ele_P_cut" :         0.0,
         "TaggerElectronTool.Ele_lcs_cut" :       3.,
@@ -1275,12 +1275,12 @@ tunings = {
         "TaggerElectronTool.Ele_PIDNNp_cut" :    0.8,  # new
         "TaggerElectronTool.Ele_PIDNNpi_cut" :   0.8,  # new
         "TaggerElectronTool.Ele_PIDNNepi_cut" : -0.8,  # new
-        "TaggerElectronTool.Ele_ghostProb_cut" : 0.4,  # new       
+        "TaggerElectronTool.Ele_ghostProb_cut" : 0.4,  # new
         "TaggerElectronTool.Ele_P0_Cal" :         0.,
-        "TaggerElectronTool.Ele_P1_Cal" :         1., 
+        "TaggerElectronTool.Ele_P1_Cal" :         1.,
         "TaggerElectronTool.Ele_Eta_Cal" :        0.,
         "TaggerElectronTool.isMonteCarlo" :     1,
-        
+
         "TaggerKaonOppositeTool.Kaon_Pt_cut" :   700,
         "TaggerKaonOppositeTool.Kaon_P_cut" :   2000,
         "TaggerKaonOppositeTool.Kaon_lcs_cut" :  3,
@@ -1335,8 +1335,8 @@ tunings = {
         "TaggerKaonSameTool.KaonSame_P1_Cal"   : 1.,
         "TaggerKaonSameTool.KaonSame_Eta_Cal"  : 0.,
         "TaggerKaonSameTool.isMonteCarlo"      : 1,
-        
-        # Same tuning as Reco12_2011, different calibration 
+
+        # Same tuning as Reco12_2011, different calibration
         "TaggerNEWKaonSameTool.Kaon_PIDk_cut"   :    0.75,
         "TaggerNEWKaonSameTool.Kaon_PIDkp_cut"  :   -8.5,
         "TaggerNEWKaonSameTool.Kaon_ghost_cut"  :    1000,
@@ -1390,7 +1390,7 @@ tunings = {
         "TaggerVertexChargeTool.Vtx_AverageOmega" : 0.41,
         "TaggerVertexChargeTool.isMonteCarlo"   : 1,
 
-         #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1  
+         #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1
         "TaggerMuonTool.P0_mu_scale"        :  -0.141137,
         "TaggerMuonTool.P1_mu_scale"        :  41.5316,
         "TaggerMuonTool.P2_mu_scale"        : -10.2783,
@@ -1398,7 +1398,7 @@ tunings = {
 
         "TaggerElectronTool.P0_e_scale"     :  -5.94519,
         "TaggerElectronTool.P1_e_scale"     :   0.81266,
-        "TaggerElectronTool.P2_e_scale"     :   0.118091, 
+        "TaggerElectronTool.P2_e_scale"     :   0.118091,
         "TaggerElectronTool.P3_e_scale"     :   0.674805,
 
         "TaggerKaonOppositeTool.P0_k_scale"     :   -3.52673,
@@ -1419,11 +1419,11 @@ tunings = {
         "TaggerPionSameTool.P0_ps_scale"        :  -0.16746,
         "TaggerPionSameTool.P1_ps_scale"        :  34.4145,
         "TaggerPionSameTool.P2_ps_scale"        :  -8.35356,
-        "TaggerPionSameTool.P3_ps_scale"        :   0.574669                  
+        "TaggerPionSameTool.P3_ps_scale"        :   0.574669
         },
 
-    #use cuts optimized and calibrated with Strip20 (2012 data 2fb-1), nnet and polynomials tuned on MC12 
-    'Reco14_MC12' : { 
+    #use cuts optimized and calibrated with Strip20 (2012 data 2fb-1), nnet and polynomials tuned on MC12
+    'Reco14_MC12' : {
         "Personality": "'Reco14'",  # it is then propagated to all other tools
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
@@ -1438,7 +1438,7 @@ tunings = {
         #Probably if you are using Eeff event per event no cut will be needed
         #"CombineTaggersProbability.ProbMin_OS" : 0.58,
         #"CombineTaggersProbability.ProbMin" : 0.55,
- 
+
         "CombineTaggersProbability.P0_Cal_OS" :  0.4004,
         "CombineTaggersProbability.P1_Cal_OS" : 0.8476,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.3892,
@@ -1453,20 +1453,20 @@ tunings = {
         "TaggerMuonTool.Muon_IPs_cut" :       0.0,
         "TaggerMuonTool.Muon_PIDm_cut" :   -100.0,  # no cut
         "TaggerMuonTool.Muon_ipPU_cut" :      3.0,
-        "TaggerMuonTool.Muon_distPhi_cut"   : 0.005,        
+        "TaggerMuonTool.Muon_distPhi_cut"   : 0.005,
         "TaggerMuonTool.Muon_ghostprob_cut" : 0.4,  # new cut
-        "TaggerMuonTool.Muon_PIDNNm_cut"    : 0.35,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNe_cut"    : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNk_cut"    : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNp_cut"    : 0.8,  # new cut       
+        "TaggerMuonTool.Muon_PIDNNm_cut"    : 0.35,  # new cut
+        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNe_cut"    : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNk_cut"    : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNp_cut"    : 0.8,  # new cut
         "TaggerMuonTool.Muon_P0_Cal" :       0.,
-        "TaggerMuonTool.Muon_P1_Cal" :       1., 
+        "TaggerMuonTool.Muon_P1_Cal" :       1.,
         "TaggerMuonTool.Muon_Eta_Cal" :      0.,
         "TaggerMuonTool.Muon_ProbMin" :       0.0,
         "TaggerMuonTool.Muon_AverageOmega" :  0.33,
         "TaggerMuonTool.isMonteCarlo" :       1,
-        
+
         "TaggerElectronTool.Ele_Pt_cut" :       1100,
         "TaggerElectronTool.Ele_P_cut" :         0.0,
         "TaggerElectronTool.Ele_lcs_cut" :       3.,
@@ -1484,12 +1484,12 @@ tunings = {
         "TaggerElectronTool.Ele_PIDNNp_cut" :    0.8,  # new
         "TaggerElectronTool.Ele_PIDNNpi_cut" :   0.8,  # new
         "TaggerElectronTool.Ele_PIDNNepi_cut" : -0.8,  # new
-        "TaggerElectronTool.Ele_ghostProb_cut" : 0.4,  # new       
+        "TaggerElectronTool.Ele_ghostProb_cut" : 0.4,  # new
         "TaggerElectronTool.Ele_P0_Cal" :         0.,
-        "TaggerElectronTool.Ele_P1_Cal" :         1., 
+        "TaggerElectronTool.Ele_P1_Cal" :         1.,
         "TaggerElectronTool.Ele_Eta_Cal" :        0.,
         "TaggerElectronTool.isMonteCarlo" :     1,
-        
+
         "TaggerKaonOppositeTool.Kaon_Pt_cut" :   700,
         "TaggerKaonOppositeTool.Kaon_P_cut" :   2000,
         "TaggerKaonOppositeTool.Kaon_lcs_cut" :  3,
@@ -1544,8 +1544,8 @@ tunings = {
         "TaggerKaonSameTool.KaonSame_P1_Cal"   : 1.,
         "TaggerKaonSameTool.KaonSame_Eta_Cal"  : 0.,
         "TaggerKaonSameTool.isMonteCarlo"      : 1,
-        
-        # Same tuning as Reco12_2011, different calibration 
+
+        # Same tuning as Reco12_2011, different calibration
         "TaggerNEWKaonSameTool.Kaon_PIDk_cut"   :    0.75,
         "TaggerNEWKaonSameTool.Kaon_PIDkp_cut"  :   -8.5,
         "TaggerNEWKaonSameTool.Kaon_ghost_cut"  :    1000,
@@ -1599,7 +1599,7 @@ tunings = {
         "TaggerVertexChargeTool.Vtx_AverageOmega" : 0.41,
         "TaggerVertexChargeTool.isMonteCarlo"   : 1,
 
-         #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1  
+         #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1
         "TaggerMuonTool.P0_mu_scale"        :  -0.141137,
         "TaggerMuonTool.P1_mu_scale"        :  41.5316,
         "TaggerMuonTool.P2_mu_scale"        : -10.2783,
@@ -1607,7 +1607,7 @@ tunings = {
 
         "TaggerElectronTool.P0_e_scale"     :  -5.94519,
         "TaggerElectronTool.P1_e_scale"     :   0.81266,
-        "TaggerElectronTool.P2_e_scale"     :   0.118091, 
+        "TaggerElectronTool.P2_e_scale"     :   0.118091,
         "TaggerElectronTool.P3_e_scale"     :   0.674805,
 
         "TaggerKaonOppositeTool.P0_k_scale"     :   -3.52673,
@@ -1628,12 +1628,12 @@ tunings = {
         "TaggerPionSameTool.P0_ps_scale"        :  -0.16746,
         "TaggerPionSameTool.P1_ps_scale"        :  34.4145,
         "TaggerPionSameTool.P2_ps_scale"        :  -8.35356,
-        "TaggerPionSameTool.P3_ps_scale"        :   0.574669                  
+        "TaggerPionSameTool.P3_ps_scale"        :   0.574669
         },
 
 
-    #same as Reco14_MC12 w/o cut on variables not present on MC upgrade 
-    'Reco14_MC12_Upgrade' : { 
+    #same as Reco14_MC12 w/o cut on variables not present on MC upgrade
+    'Reco14_MC12_Upgrade' : {
         "Personality": "'Reco14'",  # it is then propagated to all other tools
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
@@ -1649,7 +1649,7 @@ tunings = {
         #Probably if you are using Eeff event per event no cut will be needed
         #"CombineTaggersProbability.ProbMin_OS" : 0.58,
         #"CombineTaggersProbability.ProbMin" : 0.55,
- 
+
         "CombineTaggersProbability.P0_Cal_OS" :  0.4004,
         "CombineTaggersProbability.P1_Cal_OS" : 0.8476,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.3892,
@@ -1664,20 +1664,20 @@ tunings = {
         "TaggerMuonTool.Muon_IPs_cut" :       0.0,
         "TaggerMuonTool.Muon_PIDm_cut" :   -100.0,  # no cut
         "TaggerMuonTool.Muon_ipPU_cut" :      3.0,
-        "TaggerMuonTool.Muon_distPhi_cut"   : 0.005,        
+        "TaggerMuonTool.Muon_distPhi_cut"   : 0.005,
         "TaggerMuonTool.Muon_ghostprob_cut" : 1000.,  # new cut
-        "TaggerMuonTool.Muon_PIDNNm_cut"    : 0.35,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNe_cut"    : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNk_cut"    : 0.8,  # new cut       
-        "TaggerMuonTool.Muon_PIDNNp_cut"    : 0.8,  # new cut       
+        "TaggerMuonTool.Muon_PIDNNm_cut"    : 0.35,  # new cut
+        "TaggerMuonTool.Muon_PIDNNpi_cut"   : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNe_cut"    : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNk_cut"    : 0.8,  # new cut
+        "TaggerMuonTool.Muon_PIDNNp_cut"    : 0.8,  # new cut
         "TaggerMuonTool.Muon_P0_Cal" :       0.,
-        "TaggerMuonTool.Muon_P1_Cal" :       1., 
+        "TaggerMuonTool.Muon_P1_Cal" :       1.,
         "TaggerMuonTool.Muon_Eta_Cal" :      0.,
         "TaggerMuonTool.Muon_ProbMin" :       0.0,
         "TaggerMuonTool.Muon_AverageOmega" :  0.33,
         "TaggerMuonTool.isMonteCarlo" :       1,
-        
+
         "TaggerElectronTool.Ele_Pt_cut" :       1100,
         "TaggerElectronTool.Ele_P_cut" :         0.0,
         "TaggerElectronTool.Ele_lcs_cut" :       3.,
@@ -1695,12 +1695,12 @@ tunings = {
         "TaggerElectronTool.Ele_PIDNNp_cut" :    0.8,  # new
         "TaggerElectronTool.Ele_PIDNNpi_cut" :   0.8,  # new
         "TaggerElectronTool.Ele_PIDNNepi_cut" : -0.8,  # new
-        "TaggerElectronTool.Ele_ghostProb_cut" : 1000.,  # new       
+        "TaggerElectronTool.Ele_ghostProb_cut" : 1000.,  # new
         "TaggerElectronTool.Ele_P0_Cal" :         0.,
-        "TaggerElectronTool.Ele_P1_Cal" :         1., 
+        "TaggerElectronTool.Ele_P1_Cal" :         1.,
         "TaggerElectronTool.Ele_Eta_Cal" :        0.,
         "TaggerElectronTool.isMonteCarlo" :     1,
-        
+
         "TaggerKaonOppositeTool.Kaon_Pt_cut" :   700,
         "TaggerKaonOppositeTool.Kaon_P_cut" :   2000,
         "TaggerKaonOppositeTool.Kaon_lcs_cut" :  3,
@@ -1755,8 +1755,8 @@ tunings = {
         "TaggerKaonSameTool.KaonSame_P1_Cal"   : 1.,
         "TaggerKaonSameTool.KaonSame_Eta_Cal"  : 0.,
         "TaggerKaonSameTool.isMonteCarlo"      : 1,
-        
-        # Same tuning as Reco12_2011, different calibration 
+
+        # Same tuning as Reco12_2011, different calibration
         "TaggerNEWKaonSameTool.Kaon_PIDk_cut"   :    0.75,
         "TaggerNEWKaonSameTool.Kaon_PIDkp_cut"  :   -8.5,
         "TaggerNEWKaonSameTool.Kaon_ghost_cut"  :    1000,
@@ -1810,7 +1810,7 @@ tunings = {
         "TaggerVertexChargeTool.Vtx_AverageOmega" : 0.41,
         "TaggerVertexChargeTool.isMonteCarlo"   : 1,
 
-         #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1  
+         #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1
         "TaggerMuonTool.P0_mu_scale"        :  -0.141137,
         "TaggerMuonTool.P1_mu_scale"        :  41.5316,
         "TaggerMuonTool.P2_mu_scale"        : -10.2783,
@@ -1818,7 +1818,7 @@ tunings = {
 
         "TaggerElectronTool.P0_e_scale"     :  -5.94519,
         "TaggerElectronTool.P1_e_scale"     :   0.81266,
-        "TaggerElectronTool.P2_e_scale"     :   0.118091, 
+        "TaggerElectronTool.P2_e_scale"     :   0.118091,
         "TaggerElectronTool.P3_e_scale"     :   0.674805,
 
         "TaggerKaonOppositeTool.P0_k_scale"     :   -3.52673,
@@ -1839,12 +1839,12 @@ tunings = {
         "TaggerPionSameTool.P0_ps_scale"        :  -0.16746,
         "TaggerPionSameTool.P1_ps_scale"        :  34.4145,
         "TaggerPionSameTool.P2_ps_scale"        :  -8.35356,
-        "TaggerPionSameTool.P3_ps_scale"        :   0.574669                  
+        "TaggerPionSameTool.P3_ps_scale"        :   0.574669
         },
 
 
     #use cuts optimized and calibrated with Strip17 (Xmass2011)
-    'MC10' : { 
+    'MC10' : {
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
         #"ForceSignalID" :   , #"Bs", "Bd", "Bu" to force SSk or SSpi
@@ -1854,7 +1854,7 @@ tunings = {
         #Probably if you are using Eeff event per event no cut will be needed
         #"CombineTaggersProbability.ProbMin_OS" : 0.58,
         #"CombineTaggersProbability.ProbMin" : 0.55,
-        
+
         "CombineTaggersProbability.P0_Cal_OS" : 0.392, #+/-0.0016
         "CombineTaggersProbability.P1_Cal_OS" : 0.921, #+/-0.017
         "CombineTaggersProbability.Eta_Cal_OS" : 0.363,
@@ -1968,9 +1968,9 @@ tunings = {
 
     ############################################################
     #From here, you need to use the nn in extrann/LP2011
-    
+
     #use cuts optimized and calibrated with B2JpsiK real data (july2011)
-    'LP2011' : { 
+    'LP2011' : {
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
         #"ForceSignalID" :   , #"Bs", "Bd", "Bu" to force SSk or SSpi
@@ -1980,7 +1980,7 @@ tunings = {
         #Probably if you are using Eeff event per event no cut will be needed
         #"CombineTaggersProbability.ProbMin_OS" : 0.58,
         #"CombineTaggersProbability.ProbMin" : 0.55,
-        
+
         "CombineTaggersProbability.P0_Cal_OS" : 0.376,
         "CombineTaggersProbability.P1_Cal_OS" : 0.928,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.354,
@@ -2091,7 +2091,7 @@ tunings = {
 
 
     #use cuts optimized for B2JpsiK real data (july2011) calibration is ok from NNoutput
-    'MC10_LP2011' : { 
+    'MC10_LP2011' : {
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
         #"ForceSignalID" :   , #"Bs", "Bd", "Bu" to force SSk or SSpi
@@ -2101,7 +2101,7 @@ tunings = {
         #Probably if you are using Eeff event per event no cut will be needed
         #"CombineTaggersProbability.ProbMin_OS" : 0.58,
         #"CombineTaggersProbability.ProbMin" : 0.55,
-        
+
         "CombineTaggersProbability.P0_Cal_OS" : 0.376,
         "CombineTaggersProbability.P1_Cal_OS" : 0.928,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.354,
@@ -2213,13 +2213,13 @@ tunings = {
 
     ############################################################
     #From here, you need to use the nn in extrann/Moriond2011
-    
+
     #use cuts optimized for real data but calibration done in mc10 (nu=2.5)
-    'MC10_Moriond2011' : { 
+    'MC10_Moriond2011' : {
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
         #"ForceSignalID" :   , #"Bs", "Bd", "Bu" to force SSk or SSpi
-        
+
         "CombineTaggersProbability.P0_Cal_OS" : 0.366,
         "CombineTaggersProbability.P1_Cal_OS" : 0.933,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.339,
@@ -2320,12 +2320,12 @@ tunings = {
         "TaggerVertexChargeTool.Vtx_P1_Cal" : 0.660,
         "TaggerVertexChargeTool.Vtx_Eta_Cal" : 0.3989
         },
-    
+
     # data: optimization with Bd2DstarMuNu and Bu2JpsiK+(OSK) and calibration (Bu2JpsiK+)
-    'Moriond2011' : { 
+    'Moriond2011' : {
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
-        
+
         "CombineTaggersProbability.P0_Cal_OS" : 0.363,
         "CombineTaggersProbability.P1_Cal_OS" : 1.09,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.335,
@@ -2426,12 +2426,12 @@ tunings = {
         "TaggerVertexChargeTool.Vtx_P1_Cal" : 0.358,
         "TaggerVertexChargeTool.Vtx_Eta_Cal" : 0.398
         },
-    
+
     # data: optimization with Bd2DstarMuNu and Bu2JpsiK+(OSK), no calibration
-    'Moriond2011_nocal' : { 
+    'Moriond2011_nocal' : {
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
-        
+
         "CombineTaggersProbability.P0_Cal_OS" : 0.,
         "CombineTaggersProbability.P1_Cal_OS" : 1.,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.,
@@ -2532,12 +2532,12 @@ tunings = {
         "TaggerVertexChargeTool.Vtx_P1_Cal" : 1.,
         "TaggerVertexChargeTool.Vtx_Eta_Cal" : 0.
         },
-    
+
     # data: optimization with Bd2DstarMuNu (also OSK) and calibration (Bu2JpsiK+)
-    'Moriond2011_oldOSK' : { 
+    'Moriond2011_oldOSK' : {
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
-        
+
         "CombineTaggersProbability.P0_Cal_OS" : 0.374,
         "CombineTaggersProbability.P1_Cal_OS" : 1.08,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.355,
@@ -2638,12 +2638,12 @@ tunings = {
         "TaggerVertexChargeTool.Vtx_P1_Cal" : 0.358,
         "TaggerVertexChargeTool.Vtx_Eta_Cal" : 0.398
         },
-    
+
     # data: optimization with Bd2DstarMuNu (also OSK), no calibration
-    'Moriond2011_oldOSK_nocal' : { 
+    'Moriond2011_oldOSK_nocal' : {
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
-        
+
         "CombineTaggersProbability.P0_Cal_OS" : 0.,
         "CombineTaggersProbability.P1_Cal_OS" : 1.,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.,
@@ -2744,13 +2744,30 @@ tunings = {
         "TaggerVertexChargeTool.Vtx_P1_Cal" : 1.,
         "TaggerVertexChargeTool.Vtx_Eta_Cal" : 0.
         }
-    
+
     }
 
 def TuneTool(tool, version, fttoolname = 'BTaggingTool'):
 
-    from Configurables import BTagging, BTaggingTool, TaggerMuonTool, TaggerElectronTool, TaggerKaonSameTool, TaggerNEWKaonOppositeTool, TaggerKaonOppositeTool, TaggerPionSameTool, TaggerNEWKaonSameTool, TaggerCharmTool, TaggerVertexChargeTool, CombineTaggersProbability, SVertexOneSeedTool,NNetTool_MLP, TaggingUtils
-        
+    from Configurables import (
+		BTagging,
+		BTaggingTool,
+		TaggingUtils,
+		TaggerMuonTool,
+		TaggerElectronTool,
+		TaggerKaonOppositeTool,
+		TaggerNEWKaonOppositeTool,
+		TaggerVertexChargeTool,
+		TaggerCharmTool,
+		TaggerKaonSameTool,
+		TaggerNEWKaonSameTool,
+  		TaggerPionSameTool,
+		TaggerPionBDTSameTool,
+		TaggerProtonSameTool, 
+		NNetTool_MLP,
+		SVertexOneSeedTool,
+        CombineTaggersProbability,
+	)
 
 
     tool.addTool ( BTaggingTool, name=fttoolname)
