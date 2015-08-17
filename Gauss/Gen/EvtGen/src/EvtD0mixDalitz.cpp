@@ -103,6 +103,15 @@ void EvtD0mixDalitz::init()
   else
     reportInvalidAndExit();
 
+  // If the D meson is a D0bar, the expressions should use p/q instead of q/p.
+  if ( parId == _D0B )
+    _qp = 1.0 / _qp;
+
+  // At this point, if parId is D0bar, the amplitude is the D0bar amplitude, the conjugated amplitude
+  //    is the amplitude of the D0 decay, and _qp means p/q, so it is like changing the meaning of
+  //    A <-> Abar, and p <-> q. It is just a trick so after this point the code for D0bar can be the
+  //    same as the code for D0.
+
   // Check if we're dealing with Ks pi pi or with Ks K K.
   _isKsPiPi = false;
   if ( dau[ _d2 ] == _PIP || dau[ _d2 ] == _PIM )
