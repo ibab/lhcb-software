@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-17 - Stefano Perazzini
+ - Propagated a change to the config dictionary of StrippingB2CC/StrippingBd2JpsieeKS.py
+
 ! 2015-08-11 - Ricardo Vazquez Gomez
  - Remove temporarely the TrackEffDownMuon lines as they have a problems with the memory
 
