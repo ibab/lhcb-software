@@ -104,7 +104,8 @@ class Mass( Monitor ):
         from Utils import run_info, run_time
         info = run_info( self._runnr )
 
-        self._histo_def = {"Hlt2DiMuonJPsi"    : [3000.,3200.,200]}
+        self._histo_def = {"Hlt2DiMuonJPsiDecision"    : [3000., 3200., 200],
+                           "Hlt2DiMuonZDecision"       : [80000., 100000., 200]}
         self._histograms = {}
         for name, bins in self._histo_def.iteritems():
             cand_name = 'cand_%s' % name
