@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v4r5 2015-08-18 ===============
+
 ! 2015-08-17 - Roberta Cardinale
  - Changed public OfflineVertexFitter in StrippingBandQ/StrippingChiCJPsiGammaConv.py 
 
