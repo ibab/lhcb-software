@@ -89,6 +89,7 @@ StatusCode FastVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID) {
       FastVeloHit* hit = m_hitManager->defaultStateHitByLHCbID( *iID );
       if ( 0 == hit ) {
         error() << "*** Hit not found, id " << *iID << endmsg;
+        return StatusCode::FAILURE;
       } else {
 	unsigned int zone = hit->zone();
 	if ( m_velo->sensor(iID->veloID().sensor())->isRight() ) {

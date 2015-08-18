@@ -3,6 +3,10 @@
 ! Responsible : 
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
+
+! 2015-08-18 - Sascha Stahl
+ - FastVeloFitLHCbIDs: Protect from segfault in case of not decoded hits.
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
