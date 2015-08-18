@@ -4,6 +4,8 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingConf v4r18 2015-08-18 =========================
+
 ! 2015-08-13 - Chris Jones
  - Add line name to warnings about depreciated HLT usage.
 
@@ -12,7 +14,7 @@
    rather than private tools, to avoid creating many otherwise identical 
    instances in the stripping, and thus use more memory than really required.
    Tools are cached by type and configuration, and when the same tool, with the
-   same confgiuration is requested, a shared public instance is now uses.
+   same configuration is requested, a shared public instance is now uses.
 
 !========================= StrippingConf v4r17 2015-05-29 =========================
 
