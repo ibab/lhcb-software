@@ -10,8 +10,13 @@ gaudi_depends_on_subdirs(DaVinciTests
                          Phys/TeslaTools
                          Hlt/HltDAQ
                          Phys/LoKiCore
+                         Phys/LoKiGen
                          Phys/LoKiAlgo
                          Phys/LoKiPhys
+                         Phys/LoKiHlt
+                         Phys/LoKiMC
+                         Phys/LoKiArrayFunctors
+                         Phys/LoKiTracks
                          Phys/RelatedInfoTools
                          GaudiConf
                          ##############################
