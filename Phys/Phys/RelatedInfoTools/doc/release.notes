@@ -4,11 +4,13 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+!========================= RelatedInfoTools v1r2 2015-08-18 =========================
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
 ! 2015-08-10 - Chris Jones
- - Update the way various tool use the 'getIDVAlgorithm' merthod to work as
+ - Update the way various tool use the 'getIDVAlgorithm' method to work as
    public tools.
 
 !========================= RelatedInfoTools v1r1 2014-10-30 =========================
