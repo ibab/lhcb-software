@@ -2,7 +2,7 @@
 # Created    : 2015-06-01
 # Maintainer : Roel Aaij
 #============================================================================
-package           Hlt2Monitoring
+package           HltMonitoring
 version           v1r1
 
 #============================================================================
@@ -13,18 +13,32 @@ branches          cmt doc src
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-# use   Package      v1r*    Hat
-use     ZeroMQ       v4r*    Online
-use     GaudiKernel  v*
-use     DIM          v*      Online
-use     OnlineKernel v*      Online
+# use   Package          v1r*    Hat
+use     ZeroMQ           v4r*    Online
+use     GaudiKernel      v*
+use     DIM              v*      Online
+use     Boost            v*      LCG_Interfaces
+use     DetDesc          v*      Det
+use     HltEvent         v*      Event
+use     HltInterfaces    v*      Kernel
 
 include_path      none
+
+#============================================================================
+# Additional boost link options
+#============================================================================
+private
+macro_append Boost_linkopts " $(Boost_linkopts_serialization) $(Boost_linkopts_system) "
+end_private
 #============================================================================
 # Component library building rule
 #============================================================================
-library          Hlt2Monitoring    ../src/*.cpp
+library          HltMonitoring    ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    component_library library=Hlt2Monitoring
+apply_pattern    component_library library=HltMonitoring
+#============================================================================
+# Python code
+#============================================================================
+apply_pattern install_python_modules
