@@ -3,12 +3,162 @@ Package     : StrippingSys
 Package Coordinator : Andrea.Contu@cern.ch, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v9r10 2015-08-18 =========================
+
 ! 2015-08-12 - Chris Jones
  - Temporarily remove StrippingCache. Moved to DaVinci for S23 release.
    To be improved once Marco is back from vacation...
 
 !2015-08-07 - Eduardo Rodrigues
  - Re-added Phys/StrippingCache after previous tag.
+
+*Phys/CommonParticles
+ - Add StdNoPIDsUpKaons.py
+
+*Phys/CommonParticlesArchive v1r5 2015-08-18 ======================
+ - Updated archive
+ - Added archive for S23
+
+*Phys/IsolationTools
+ - Propagate the changes by Chris in the 'getIDVAlgorithm' to all the IsolationTools
+ - Propagate the 'getIDVAlgorithm' changes to other tools
+ - Update the way various tool use the 'getIDVAlgorithm' merthod to work as
+   public tools.
+   
+*Phys/StrippingConf
+ - Add line name to warnings about depreciated HLT usage.
+ - Rework the way the RelatedInfo algorithms are configured, to use public 
+   rather than private tools, to avoid creating many otherwise identical 
+   instances in the stripping, and thus use more memory than really required.
+   Tools are cached by type and configuration, and when the same tool, with the
+   same confgiuration is requested, a shared public instance is now uses.
+
+*Phys/StrippingSelections
+ - Changed public OfflineVertexFitter in StrippingBandQ/StrippingChiCJPsiGammaConv.py 
+ - Bugfix to StrippingMiniBias
+ 
+*Phys/StrippingSettings
+ - Propagated a change to the config dictionary of StrippingB2CC/StrippingBd2JpsieeKS.py
+ - Remove temporarely the TrackEffDownMuon lines as they have a problems with the memory
+ - updated S23 LineConfig for BandQ (StrippingOmegaC0 in FullDST)
+ - updated S23 LineConfig for BandQ (StrippingPromptCharm.py)
+ - Fixed Streams for TrackEff lines in S23
+ - Update the stripping23 database
+ - modified S23 LineConfig for BandQ
+ - update Charm dict s23
+ - Modify Line config of BadEvents
+ - Modify LineConfig for RD
+ - Add database for stripping23
+ - Updated BandQ S23 dictionaries
+ - Update dictionaries for QEE S23
+ - update Charm dict s23
+ - Updated RD S23 dictionaries 
+ - Updated dictionaries for BandQ S23
+ - Updated dictionaries for BnoC S23
+ - Updated dictionaries for B2OC S23
+ - Updated dictionaries for BnoC S23
+ - Updated dictionaries for SLWG s23
+ - Updated dictionaries for the BnoC WG.
+ - StrippingUpsilonExotic 
+   - fix a bug in proton-selection
+   - adjust a bit selection cuts 
+ - Replaced hardcoded cuts in Bd2JpsieeKS module
+ - Tightened selection in Bd2JpsieeKstar lines to reduce multiplicities 
+ - Use public instance of ParticleCombiners in Radiative lines in RD
+ - Replaced ParticleAdder with MomentumCombiner in Radiative lines in RD
+ - Use public instance of MomentumCombiner tool in QEE-StrippingDisplVertices
+ - Bug fix in QEE-StrippingDitau (incorrect vectorial sum)
+ - Bug fix in TrackEffD0ToKPi line names
+ - Moved StrippingCharm/StrippingOmegaC0ForPromptCharm line to FULLDST
+ - Fix bug in StrippingCharm/StrippingPromptCharm.py
+ - StrippingBc3h:  replace HLT with HLT1 and HLT2 
+ - Implement a more sensible input selection for the D builders in B2OC module.
+   Do not include pion/kaon containers when final state does not require them.
+ - Updated default_config in StrippingXicc, which was somehow necessary for
+   perverse reasons.
+   M python/StrippingSelections/StrippingCharm/StrippingXicc.py
+ - Now using default decay time fit in D02KSKS.
+ - Add SubPID free implements of D2Pi0hhWS, D2KShhWS and D2hhWS in B2OC.
+ - Modified the default_config of StrippingBadEvents.py
+ - Added MiniBias modules under StrippingMiniBias directory
+ - Added SubPID free implementation of D2HHHH WS
+ - removed HLT filters in StrippingBandQ/StrippingXic2HHH.py
+ - DisplVertices: changed HLT filters for running with split HltDecReports
+ - Add some more SubPID free implementations in B2OC D builder...
+ - More update to the D builder in the B2OC module. Go back for some selections
+   to implementations not using SubPID, to avoid hitting max combination limits.
+ - Improve the new implementations for HHH, HHHH, HHHPi0, HHPi0, KsPi0HH such 
+   that SubPID is still used, for speed, but mulitple SubPID instances are used
+   to avoid max combination limits.
+ - Update HHHH, HHHPi0, HHPi0, KsPi0HH lines without subPID
+ - Modified StrippingBeauty2XGamma to allow changes in trigger line names in the dictionaries
+ - Added a couple of more neutral cone variables to StrippingBnoC/StrippingBu2hhh and StrippingBc2hhh_BnoC
+ - Retuned StrippingBc2hhh_BnoC to accept more 2+1 configurations
+ - Additional updates to TrackEffDownMuon
+ - Updates to: 
+   -StrippingB2XTauNu.py
+   -StrippingB2DMuForTauMu.py
+   -StrippingLb2pMuNuVub.py
+ - Align few cuts with offline selection of the DarkBoson lines to reduce the rate.
+ - In B2OC module :
+   - Lower gamma Pt cut from 1600MeV to 1200MeV
+   - Turn off BBDT cut for Bc2DD lines
+   - Lower lifetime cut from 0.1ps to 0.05ps for Bc2DD lines
+ - StrippingCharm/StrippingD2PiPi0.py : updated default config
+ - Updated default config for StrippingBnoC/StrippingB2pphh.py for S23 tuning
+ - Modified default_config for StrippingB2KShh.py and StrippingLb2V0hh.py 
+   in BnoC directory to cope with new names of HltLines.
+ - Added two tests for BnoC WG tests/liaisons/BnoC/TestBnoCfromSelections.py 
+   tests/liaisons/BnoC/TestBnoCfromSettings.py
+ - Updated StrippingBandQ/StrippingXic2HHH.py
+ - Updated dictionary in 
+   . StrippingCharm/StrippingD2HHHKs.py
+   . StrippingCharm/StrippingDstarD2XGamma.py
+   . StrippingCharm/StrippingD2HHHPi0.py
+ - Updated dictionary in StrippingCharm/StrippingD2hhh_conf.py 
+ - Fixed bug in StrippingTrackEffDownMuon, which affected all best tracks for events
+   in the same stream
+ - Updated StrippingRD/StrippingPhiToKSKS.py for S23 tuning.
+ - Increase min Pt cut for gammas in B2OC module from 400 to 1600 MeV. 
+   (400MeV was in fact a bug, only intended for testing but left in by mistake)
+ - Add option to filter gammas using IsNotE variable. Not enabled by default.
+ - Added python/StrippingBnoC/StrippingSelections/StrippingBs2PhiPhi.py
+ - Turn off for the moment in the B2OC BcDD builder the modes which D0/D+ final
+   states involving pi0 candidates, as these have high combinatorics and require
+   further study. Will, potentially, be reinstated for a future stripping.
+ - Add two missing D* modes :-
+  + D* -> gamma (D -> HH)
+  + D* -> gamma (D -> KHHH)
+ - In StrippingBeauty2Charm.py
+   -Changed B2DXBuilder in to implement option of looser pion cut
+   -Moved 2 WS lines to DST
+ - In Beauty2Charm_B2DXBuilder.py assigned looser pion cuts to StrippingB2D0KsPiDDD2HHBeauty2CharmLine,
+   StrippingB2D0KsPiLLD2HHBeauty2CharmLine lines
+ - In Beauty2Charm_Utils.py defined the looser cuts above
+ - Updated StrippingB2HHBDT.py
+ - Updated Hlt2 filters and prescales for StrippingD2PiPi0.py
+ - Fix an inconsistency in a few lines names in B2OC Bc2DD module (DStar -> Dst).
+ - Renamed StrippingH24MuLines.py to StrippingH24Mu.py for consistency.
+ - S23 Tuning on StrippingDitau lines.
+ - Updated some prescales for B2CC lines.
+ - Updated dictionaries for StrippingB2ppipiSigmacmm_Lcpi.py and StrippingDstarD02xx.py
+ - Update BcDD builder in B2OC
+  - Use KHHH and KHH final states instead of HHHH and HHH (i.e. demand at least 
+    one kaon) to help with retention and timing.
+  - Do not use a MergedSelection when the selection list one has one entry...
+ - tests/liaisons/B2CC reorganised.
+ - Add more DSTs to the Reco15 test sample
+ - Add some additional K*+ K*0 lines to the Bc->DD builder in the B2OC module.
+ - Enable by default loose PID preselection in the B2OC Bc->DD builder.
+ - Fix a bug in the B2OC HH builder _makeKsPi method where DD Ks candidates
+   where incorrectly being used in the LL version of the line.
+ - Fixed TISTOS in DiMuonInherit
+ - Add new Bc -> DD builder in the B20C stripping lines.
+ 
+ 
+*Phys/StrippingArchive
+ - Bug fix to __init__.py for Stripping23
+
 
 !========================= StrippingSys v9r9p1 2015-08-07 =========================
 
