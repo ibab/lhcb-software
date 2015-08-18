@@ -1,7 +1,4 @@
 // Gaudi
-#include "GaudiAlg/Tuples.h"
-#include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/SmartRefVector.h"
 #include "GaudiKernel/SystemOfUnits.h"
 // Kernel/LHCbKernel
 #include "Kernel/VPChannelID.h"
@@ -19,7 +16,7 @@ using namespace Gaudi::Units;
 DECLARE_ALGORITHM_FACTORY(VPDepositMonitor)
 
 //=============================================================================
-/// Standard constructor, initializes variables
+// Standard constructor, initializes variables
 //=============================================================================
 VPDepositMonitor::VPDepositMonitor(const std::string& name, 
                                    ISvcLocator* pSvcLocator) : 
@@ -35,7 +32,7 @@ VPDepositMonitor::VPDepositMonitor(const std::string& name,
 //=============================================================================
 StatusCode VPDepositMonitor::initialize() {
 
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = GaudiTupleAlg::initialize();
   if (sc.isFailure()) return sc;
 
   m_det = getDet<DeVP>(DeVPLocation::Default);
@@ -45,7 +42,7 @@ StatusCode VPDepositMonitor::initialize() {
 }
 
 //=============================================================================
-/// Main execution
+// Main execution
 //=============================================================================
 StatusCode VPDepositMonitor::execute() {
 
@@ -57,6 +54,9 @@ StatusCode VPDepositMonitor::execute() {
 
 }
 
+//=============================================================================
+// Fill histograms for MC hits
+//=============================================================================
 void VPDepositMonitor::monitorHits(LHCb::MCHits* hits) {
 
   LHCb::MCHits::const_iterator it;
@@ -69,6 +69,9 @@ void VPDepositMonitor::monitorHits(LHCb::MCHits* hits) {
 
 }
 
+//=============================================================================
+// Fill histograms for MC digits 
+//=============================================================================
 void VPDepositMonitor::monitorDigits(LHCb::MCVPDigits* mcdigits) {
 
   plot(mcdigits->size(), "nDigits", "Number of MCVPDigits / event", 

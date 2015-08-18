@@ -3,6 +3,10 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2015-08-18 - Heinrich Schindler
+ - Protect against zero path lengths.
+ - Remove unnecessary headers.
+
 !========================= VPDigitisation v1r5 2015-06-01 =========================
 ! 2015-04-24 - Heinrich Schindler
  - Move VPClusterMonitor to VP/VPCheckers (in Lbcom)

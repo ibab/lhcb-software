@@ -1,9 +1,7 @@
-// STL
 #include <vector>
 #include <map>
 
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
 // LHCb
@@ -20,12 +18,6 @@
 // Local
 #include "VPDepositCreator.h"
 
-//------------------------------------------------------------
-// Implementation file for class : VPDepositCreator
-//
-// 20/09/2009 : Marcin Kucharczyk
-//------------------------------------------------------------
-
 DECLARE_ALGORITHM_FACTORY(VPDepositCreator)
 
 //=============================================================================
@@ -36,10 +28,10 @@ VPDepositCreator::VPDepositCreator(const std::string& name,
     GaudiTupleAlg(name, pSvcLocator),
     m_det(NULL), m_radDamageTool(NULL) {
 
-  declareProperty("HitLocation",   m_hitLocation = LHCb::MCHitLocation::VP);
+  declareProperty("HitLocation", m_hitLocation = LHCb::MCHitLocation::VP);
   declareProperty("DigitLocation", m_digitLocation = LHCb::MCVPDigitLocation::Default);
 
-  declareProperty("StepSize",    m_stepSize = 5 * Gaudi::Units::micrometer);
+  declareProperty("StepSize", m_stepSize = 5 * Gaudi::Units::micrometer);
   declareProperty("MaxNumSteps", m_nMaxSteps = 150);
 
   declareProperty("eVPerElectron", m_eVPerElectron = 3.6);
@@ -139,12 +131,17 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit) {
   const double charge = (hit->energy() / Gaudi::Units::eV) / m_eVPerElectron;
   // Skip very small deposits.
   if (charge < 100.) return;
-  // Calculate the number of points to distribute the deposited charge on.
   const double path = hit->pathLength();
+  // Skip very small path lengths.
+  if (path < 1.e-6) {
+    warning() << "Path length in active silicon: " << path << endmsg;
+    return;
+  }
+  // Calculate the number of points to distribute the deposited charge on.
   unsigned int nPoints = int(ceil(path / m_stepSize));
   if (nPoints > m_nMaxSteps) nPoints = m_nMaxSteps;
   // Calculate the charge on each point.
-  std::vector<double> charges(nPoints);
+  std::vector<double> charges(nPoints, 0.);
   double sum = 0.;
   const double mpv = m_chargeUniform * (path / Gaudi::Units::micrometer) / nPoints;
   const double sigma = sqrt(fabs(mpv));
@@ -192,7 +189,7 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit) {
     const double dz = fabs(point.z() + 0.5 * thickness);
     if (m_irradiated) {
       // Skip points outside the active depth.
-      if (dz > activeDepth){
+      if (dz > activeDepth) {
         point += step;
         continue;
       }
@@ -225,8 +222,7 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit) {
     }
     point += step;
   }
-  std::map<LHCb::VPChannelID, double>::iterator itm;
-  for (itm = pixels.begin(); itm != pixels.end(); ++itm) {
+  for (auto itm = pixels.cbegin(), end = pixels.cend(); itm != end; ++itm) {
     LHCb::VPChannelID id = (*itm).first;
     const double charge = (*itm).second; 
     LHCb::MCVPDigit* digit = m_digits->object(id);

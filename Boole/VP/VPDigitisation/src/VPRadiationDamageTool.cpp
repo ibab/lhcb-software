@@ -1,13 +1,7 @@
 // Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
-#include "GaudiKernel/ToolFactory.h"
 // Local
 #include "VPRadiationDamageTool.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : VPRadiationDamageTool
-//
-//-----------------------------------------------------------------------------
 
 DECLARE_TOOL_FACTORY(VPRadiationDamageTool)
 
