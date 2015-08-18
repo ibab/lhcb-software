@@ -285,7 +285,7 @@ class StrippingChiCJPsiGammaConvConf(LineBuilder):
         ChiC.DecayDescriptor  = "chi_c1(1P) -> J/psi(1S) gamma"
         ChiC.CombinationCut   = combCut
         ChiC.MotherCut        = motherCut
-        ChiC.ParticleCombiners.update( { "" : "OfflineVertexFitter"}  )
+        ChiC.ParticleCombiners.update( { "" : "OfflineVertexFitter:PUBLIC"}  )
         
         ChiCSel = Selection(name+"_ChiCSel", Algorithm = ChiC, RequiredSelections = [inputSelJPsi, inputSelGamma])
 
