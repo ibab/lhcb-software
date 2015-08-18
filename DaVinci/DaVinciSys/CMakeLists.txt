@@ -10,6 +10,9 @@ gaudi_depends_on_subdirs(DaVinciTests
                          Phys/TeslaTools
                          Hlt/HltDAQ
                          Phys/LoKiCore
+                         Phys/LoKiAlgo
+                         Phys/LoKiPhys
+                         Phys/RelatedInfoTools
                          GaudiConf
                          ##############################
                          # Temporarily moved in from Stripping, for S23 release
