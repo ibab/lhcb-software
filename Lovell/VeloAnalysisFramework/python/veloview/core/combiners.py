@@ -297,7 +297,7 @@ class BranchCombiner(Combiner):
 class RootCombiner(BranchCombiner):
     MASTER_COMBINER_NAME = "MasterCombiner"    # name of the root combiner
 
-    def __init__(self, desc_dict, eval_dict, data_file_path, ref_file_path):
+    def __init__(self, desc_dict, eval_dict, data_file_path, ref_file_path, runnr):
         """
         Parameters:
             desc_dict     : a combiner description dictionary (which describes the tree structure)
@@ -306,6 +306,7 @@ class RootCombiner(BranchCombiner):
             ref_file_path : a path to a root file that serves as reference
         """
         super(RootCombiner, self).__init__(RootCombiner.MASTER_COMBINER_NAME, desc_dict, eval_dict, data_file_path, ref_file_path)
+        self.runnr = runnr
 
     def write_to_grf(self):
         """
@@ -326,6 +327,11 @@ class RootCombiner(BranchCombiner):
 
     def isRelevant(self):
         return True # Root is always relevant
+
+    def getWritableResults(self):
+        results = super(RootCombiner, self).getWritableResults()
+        results["runnr"] = self.runnr
+        return results
 
 class LeafCombiner(Combiner):
     FUNC_KEY = "Function"

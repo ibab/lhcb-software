@@ -77,7 +77,7 @@ class TestCombinersWToys(unittest.TestCase):
         self.rfdata.Close()
         self.rfref.Close()
 
-        self.mycombiner = RootCombiner(comb_dict, eval_dict, self.rfdata.GetName(), self.rfref.GetName())
+        self.mycombiner = RootCombiner(comb_dict, eval_dict, self.rfdata.GetName(), self.rfref.GetName(), 0)
         self.mycombiner.evaluate()
 
     def tearDown(self):

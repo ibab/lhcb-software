@@ -41,9 +41,9 @@ class AnalysisConfigWrapper(object):
         """
         dataFilePath = run_file(runNr)
         refFilePath = reference_run_file(runNr)
-        return self.getTrunk(dataFilePath, refFilePath, limitRegExp)
+        return self.getTrunk(dataFilePath, refFilePath, limitRegExp, runNr)
 
-    def getTrunk(self, dataFilePath, refFilePath, limitRegExp = None):
+    def getTrunk(self, dataFilePath, refFilePath, limitRegExp = None, runNr = 0):
         """
         Get a Combiner object that represents the trunk of the tree.
 
@@ -78,7 +78,7 @@ class AnalysisConfigWrapper(object):
             branchComb = self._parseBranch(branchDict)
             comb_dict[branchName] = branchComb
 
-        return RootCombiner(comb_dict, eval_dict, dataFilePath, refFilePath)
+        return RootCombiner(comb_dict, eval_dict, dataFilePath, refFilePath, runNr)
 
     def _parseLeaf(self, leafName, leafDict):
         """
