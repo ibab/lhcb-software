@@ -38,8 +38,9 @@ void main()
 </script>
     <script src="js/EventDisplay.js"></script>
     <script>
-      loadeventlist("events/events.json");
-      render("events/events.json");
+      var catalog_url = "events/events.json";
+      loadeventlist(catalog_url);
+      render(catalog_url);
     </script>
     </body>
 </html>
