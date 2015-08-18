@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r39 2015-08-18 =========================
+
 ! 2015-08-17 - Stefano Perazzini
  - Propagated a change to the config dictionary of StrippingB2CC/StrippingBd2JpsieeKS.py
 
