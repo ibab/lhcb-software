@@ -146,6 +146,7 @@ class GRFIO(object):
 
     def write(self):
         """Write tree to disk"""
+        self.rfile.cd()
         self.tree.Write()
 
     def close(self):

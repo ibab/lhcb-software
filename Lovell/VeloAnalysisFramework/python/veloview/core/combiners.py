@@ -4,6 +4,7 @@ histograms and their corresponding scores.
 """
 
 from abc import ABCMeta, abstractmethod
+import os
 
 import ROOT
 
@@ -310,7 +311,10 @@ class RootCombiner(BranchCombiner):
         """
         Write the entire tree to a Giant Root File.
         """
-        writer = GRFIO(Config().grf_file_name, mode = "update", branches = self.getBranches())
+        fileName = Config().grf_file_name
+        mode = "update" if os.path.isfile(fileName) else "create"
+
+        writer = GRFIO(Config().grf_file_name, mode = mode, branches = self.getBranches())
         writer.fill(self.getWritableResults())
         writer.write()
         writer.close()
