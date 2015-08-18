@@ -1,5 +1,5 @@
 package           GaudiConf
-version           v19r11
+version           v19r12
 
 branches doc cmt options python src tests
 include_path none
