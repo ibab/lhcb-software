@@ -37,9 +37,14 @@ def getOfflineRuns():
 def getAnalisedRuns():
     import pickle
     try:
-        return pickle.load(open(runs_fileName, 'rb'))
+        toReturn = pickle.load(open(runs_fileName, 'rb'))
     except IOError:
-        return []
+        toReturn = []
+    try:
+        toReturn += pickle.load(open(bads_fileName, 'rb'))
+    except IOError:
+        pass
+    return toReturn
 
 
 def sendEmail(run, diff, receivers = ['gdujany@cern.ch']):
@@ -48,12 +53,14 @@ def sendEmail(run, diff, receivers = ['gdujany@cern.ch']):
     message = 'From: Conditions Monitor <gdujany@cern.ch>\n'
     message += 'To: <gdujany@cern.ch>\n'
     message += 'Subject: Run {0} different conditions Online - Offline\n\n'.format(run)
+    message += '\nThis is an automatic message to warn you that some conditons are different online and offine.\n For more informations check https://twiki.cern.ch/twiki/bin/view/LHCb/CheckOnlineOfflineConditions\n\n'
     message += diff
+
     try:
         smtpObj = smtplib.SMTP('localhost')
         smtpObj.sendmail(sender, receivers, message)         
         print "Successfully sent email"
-    except SMTPException:
+    except smtplib.SMTPException:
         print "Error: unable to send email"
 
 
@@ -92,11 +99,25 @@ if __name__ == '__main__':
     for run in toAnalise:
         print '*'*100
         print 'Analise run', run
-        diff = diffOnlineOffline(run)
-        if not diff:
-            addAnalisedRun(run, runs_fileName)
-        else:
-            addAnalisedRun(run, bads_fileName)
-            sendEmail(run, diff)
+        try:
+            diff = diffOnlineOffline(run)
+            if not diff:
+                addAnalisedRun(run, runs_fileName)
+            else:
+                addAnalisedRun(run, bads_fileName)
+                sendEmail(run, diff)
+                if 'Alignment/Rich' in diff:
+                    sendEmail(run, diff, receivers = [])
+                if 'Environment/Rich' in diff:
+                    sendEmail(run, diff, receivers = [])
+                if ('Alignment/Velo' in diff) or ('Alignment/TT' in diff) or ('Alignment/IT' in diff) or ('Alignment/OT' in diff):
+                    sendEmail(run, diff, receivers = [])
+                if 'Calibration/OT' in diff:
+                    sendEmail(run, diff, receivers = [])
+                
+        except AssertionError:
+            # takes some times to copy constantto offline DB
+            # so getting offlineconstants can fail
+            pass
     unlock()
         

@@ -124,7 +124,10 @@ def setupOnline():
     sds = ['Velo', 'TT', 'IT', 'OT', 'Muon']
   ai.SubDetectors = sds
 
-  for attr, default in [('ASDDir', "/group/online/alignment/EscherOut/"),
+#   for attr, default in [('ASDDir', "/group/online/alignment/EscherOut/"),
+#                         ('OnlineXmlDir', "/group/online/alignment"),
+#                         ('AlignXmlDir', "/group/online/AligWork")]:
+  for attr, default in [('ASDDir', "/calib/align/EscherOut"),
                         ('OnlineXmlDir', "/group/online/alignment"),
                         ('AlignXmlDir', "/group/online/AligWork")]:
     __propAtt(attr, Online, ai, default)
