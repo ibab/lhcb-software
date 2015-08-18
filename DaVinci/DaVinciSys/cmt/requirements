@@ -1,20 +1,28 @@
 package DaVinciSys
-version           v37r1p3
+version v37r2
 
 branches doc cmt
 
 ##############################
 # Patch just for this version
+
 use  DDDB           v1r80     Det
 use  TeslaTools     v1r13     Phys
 use  HltDAQ         v4r20     Hlt
-##############################
+use  LoKiCore       v11r25    Phys
+use  GaudiConf      v19r12
 
 # Temporarily moved in from Stripping, for S23 release
+# To be decided if longer term this stays in the DaVinci 
+# project, or moves elsewhere.
 use StrippingCache   v1r0     Phys
 
+##############################
+
+
+
 # Packages
-use  DaVinci         v37r1p2  Phys   # DaVinci coordinator
+use  DaVinci         v37r2    Phys   # DaVinci coordinator
 use  DaVinciTests    v2r36
 use  KaliCalo        v4r18    Phys   # Olivier Deschamps
 use  Tesla           v1r11    Phys   # Sean Benson

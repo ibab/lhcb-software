@@ -3,6 +3,13 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v37r2>2015-08-18 DaVinci v37r2</A></H1><PRE>
+
+Production release for Stripping 23.
+
+! 2015-08-18 - Chris Jones
+ - Include as patch packages LoKiCore and GaudiConf
+
 ! 2015-08-12 - Chris Jones
  - Temporarily add StrippingCache, just for S23 release...
 

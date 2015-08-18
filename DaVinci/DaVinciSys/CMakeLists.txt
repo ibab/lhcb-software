@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciSys
 ################################################################################
-gaudi_subdir(DaVinciSys v37r1p3)
+gaudi_subdir(DaVinciSys v37r2)
 
 gaudi_depends_on_subdirs(DaVinciTests
                          ##############################
@@ -9,6 +9,8 @@ gaudi_depends_on_subdirs(DaVinciTests
                          Det/DDDB
                          Phys/TeslaTools
                          Hlt/HltDAQ
+                         Phys/LoKiCore
+                         GaudiConf
                          ##############################
                          # Temporarily moved in from Stripping, for S23 release
                          Phys/StrippingCache
