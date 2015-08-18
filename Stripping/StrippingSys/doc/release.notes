@@ -12,6 +12,9 @@ Purpose     : LHCb stripping packages
 !2015-08-07 - Eduardo Rodrigues
  - Re-added Phys/StrippingCache after previous tag.
 
+*Phys/DisplVertices
+ - Fix variable initialisation
+
 *Phys/CommonParticles
  - Add StdNoPIDsUpKaons.py
 
