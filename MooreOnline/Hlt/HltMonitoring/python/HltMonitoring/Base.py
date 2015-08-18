@@ -22,8 +22,8 @@ class ProcessData( object ):
 
     def __init__( self ):
         self._condition = Condition( Lock() )
-        self._inQueue = Queue()
-        self._outQueue = Queue()
+        self._inQueue = Queue(100)
+        self._outQueue = Queue(100)
 
     def getData( self, block = True, timeout = None ):
         try:

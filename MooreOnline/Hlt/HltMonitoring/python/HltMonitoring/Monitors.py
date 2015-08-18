@@ -54,6 +54,8 @@ class Rate( Monitor ):
         print 'Run %d from %s to %s ' % ( self._runnr, self._first, self._last )
         from Utils import dt_to_seconds
         self._interval = dt_to_seconds( self._last ) - dt_to_seconds( self._first )
+        if self._interval < 10:
+            self._interval = 3600
         self._histograms = {}
         self._binsize = 1
     
@@ -80,10 +82,6 @@ class Vertex( Monitor ):
         from Tasks import VertexMonitor
         self._child_type = VertexMonitor
         self._runnr = config[ 'Run' ]
-        from Utils import run_info, run_time
-        info = run_info( self._runnr )
-        self._first, self._last = run_time( info )
-        print 'Run %d from %s to %s ' % ( self._runnr, self._first, self._last )
         self._histograms = {}
         
     def fill( self, info ):
@@ -105,34 +103,8 @@ class Mass( Monitor ):
         self._runnr = config[ 'Run' ]
         from Utils import run_info, run_time
         info = run_info( self._runnr )
-        self._first, self._last = run_time( info )
-        print 'Run %d from %s to %s ' % ( self._runnr, self._first, self._last )
 
-        self._histo_def = { "Hlt2CharmHadD02HH_D02KPi" : [1815.,1915.,100],
-                            "Hlt2IncPhi" : [1000.,1040.,100],
-                            "Hlt2CharmHadD02HH_D02KK" : [1815.,1915.,100],
-                            "Hlt2CharmHadD02HH_D02PiPi" : [1815.,1915.,100],
-                            "Hlt2CharmHadD2HHH" : [1760.,2040.,200],
-                            "Hlt2CharmHadD02HHHH" : [1760.,2040.,200],
-                            "Hlt2CharmHadD02HH_D02KPiWideMass" : [1715,2015,200],
-                            "Hlt2CharmHadD02HHKsLL" : [1760.,1960.,200],
-                            "Hlt2CharmHadD2KS0H_D2KS0Pi" : [1760.,2080.,200],
-                            "Hlt2CharmHadD2KS0H_D2KS0K" : [1760.,2080.,200],
-                            "Hlt2CharmRareDecayD02MuMu" : [1760.,2080.,200],
-                            "Hlt2Dst2PiD02PiPi" : [1760.,2080.,200],
-                            "Hlt2Dst2PiD02KPi": [1760.,2080.,200],
-                            "Hlt2Dst2PiD02MuMu": [1760.,2080.,200],
-                            "Hlt2Dst2PiD02KMu" : [1760.,2080.,200],
-                            "Hlt2Bs2PhiGamma" : [4400.,6400.,500],
-                            "Hlt2Bd2KstGamma" : [4400.,6400.,500],
-                            "Hlt2B2HHPi0_Merged" : [4400.,6400.,500],
-                            "Hlt2B2HH" : [4700.,5900.,300],
-                            "Hlt2B2HHLTUnbiased" : [5000.,5900.,300],
-                            "Hlt2Topo2BodyBBDT" : [1000.,7000.,1200],
-                            "Hlt2Topo3BodyBBDT" : [1000.,7000.,1200],
-                            "Hlt2Topo4BodyBBDT" : [1000.,7000.,1200],
-                            "Hlt2DiMuonJPsi"    : [3000.,3200.,200]
-                            }
+        self._histo_def = {"Hlt2DiMuonJPsi"    : [3000.,3200.,200]}
         self._histograms = {}
         for name, bins in self._histo_def.iteritems():
             cand_name = 'cand_%s' % name
@@ -152,6 +124,9 @@ class Mass( Monitor ):
 
         for name, masses in info[ 'Mass' ].iteritems():
             mass_name = 'mass_%s' % name
+            if not mass_name in self._histograms:
+                histo = TH1F(mass_name,'CandMass(%s)' % name, 8000, 0, 8000)
+                self._histograms[ mass_name ] = histo
             histo = self._histograms[ mass_name ]
             for m in masses:
                 histo.Fill( m )

@@ -4,6 +4,11 @@
 ! Purpose     : Monitoring of the HLT
 !-----------------------------------------------------------------------------
 
+! 2015-08-18 - Roel Aaij
+ - Fix lumi rate.
+ - Create mass and plots for all lines with a default range of (0, 8) GeV.
+ - Simplify command line.
+
 ! 2015-08-17 - Roel Aaij
  - Update monitor.py and Tasks.py for 2015 data format (split banks).
  - Add a --stream option to run on the FULL, TURBO, TURCAL or BEAMGAS streams

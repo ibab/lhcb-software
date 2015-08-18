@@ -10,6 +10,11 @@ import select
 
 # Local imports
 from HltMonitoring.Base import ProcessWrapper
+from HltMonitoring import Utils
+
+def data_type(run_info):
+    start_time = Utils.run_time(run_info)[0]
+    return start_time.year
 
 def fmt(name) :
     _fmt = { 'RAW' : "DATAFILE='PFN:file:%s' SVC='LHCb::MDFSelector'"
@@ -23,7 +28,7 @@ def configureInput( run_info, n_processes, options ) :
     ## dirname = prefix + '/lhcb/data/%(year)s/RAW/FULL/LHCb/%(runType)s/%(runID)s' % run_info
 
     # Run on raw files from castor or daqarea
-    prefix = { 'daqarea' : '/daqarea/lhcb/data/%s/RAW/%s/LHCb/COLLISION15' % (options.DataType, options.stream),
+    prefix = { 'daqarea' : '/daqarea/lhcb/data/%s/RAW/%s/LHCb/%s' % (data_type(run_info), options.stream, run_info['runType']),
                'calib'   : '/calib/hlt/spillover',
                'nodes'   : '/net/hlt%s%02d%02d/localdisk/hlt1' }
 
@@ -33,12 +38,16 @@ def configureInput( run_info, n_processes, options ) :
     base_dir = prefix[options.source]
     if base_dir.startswith("/net"):
         for node in product('abcdef', range(1, 6), range(1, 29)):
-            bd = base_dir % node
-            file_dir = bd
-            if not os.path.exists(bd):
+            file_dir = base_dir % node
+            try:
+                os.listdir("/" + os.path.join(*file_dir.split('/')[:3]))
+            except OSError:
+                print "node hlt%s%02d%02d is not mounted" % node
                 continue
-            if str(run) in os.listdir(bd):
-                file_dir = os.path.join(bd, str(run))
+            if not os.path.exists(file_dir):
+                continue
+            if str(run) in os.listdir(file_dir):
+                file_dir = os.path.join(file_dir, str(run))
             node_files = sorted([os.path.join(file_dir, f) for f in os.listdir(file_dir) if re_file.match(f)])
             print 'Added %d new files from node hlt%s%02d%02d' % tuple([len(node_files)] + list(node))
             files += node_files
@@ -49,6 +58,8 @@ def configureInput( run_info, n_processes, options ) :
         if str(run_info['runID']) in os.listdir(base_dir):
             file_dir = os.path.join(base_dir, str(run_info['runID']))
         files += sorted([os.path.join(file_dir, f) for f in os.listdir(file_dir) if re_file.match(f)])
+        if options.NFiles > 0:
+            files = files[ : options.NFiles]
 
     if not files:
         print "Could not find files in %s" % prefix[options.source]
@@ -79,7 +90,9 @@ def run( options, args ):
     n_processes = options.Processes
 
     run_info = Utils.run_info( run_nr )
-
+    import pprint
+    pprint.pprint(run_info)
+    
     input_lists = configureInput( run_info, n_processes, options )
     if not input_lists:
         return -1
@@ -90,9 +103,9 @@ def run( options, args ):
 
     config = dict()
     config[ 'EvtMax' ] = evtMax
-    config[ 'DDDBtag' ] = options.DDDBtag
-    config[ 'CondDBtag' ] = options.CondDBtag
-    config[ 'DataType' ] = options.DataType
+    config[ 'DDDBtag' ] = run_info['dddbTag']
+    config[ 'CondDBtag' ] = run_info['conddbTag']
+    config[ 'DataType' ] = data_type(run_info)
     config[ 'Run' ]  = run_nr
 
     from HltMonitoring import Monitors
@@ -190,7 +203,7 @@ def run( options, args ):
 
     for name in monitors.keys():
         root_dir = root_file.mkdir( name )
-        for histo in histograms[ name ].values():
+        for histo in sorted(histograms[ name ].values(), key = lambda h: h.GetName()):
             root_dir.WriteObject( histo, histo.GetName() )
 
     root_file.Close()
@@ -211,16 +224,10 @@ $> monitor.py --nprocesses=4 -n 10000 Rate:Mass:Vertex 87880
     parser = optparse.OptionParser( usage = usage )
     parser.add_option( "-s", "--source", action="store", dest="source",
                        default="daqarea", help="Data source, daqarea or castor.")
-    parser.add_option( "-d", "--datatype", action="store", dest="DataType",
-                       default="2015", help="DataType to run on.")
     parser.add_option( "--nfiles", action = "store", type = 'int',
                        dest = "NFiles", default = -1, help = "Total number of files to run." )
     parser.add_option( "-n", action = "store", type = 'int',
                        dest = "EvtMax", default = -1, help = "Total number of events to run" )
-    parser.add_option( "--dddbtag", action="store", dest="DDDBtag",
-                       default='head-20110302', help="DDDBTag to use" )
-    parser.add_option( "--conddbtag", action = "store", dest = "CondDBtag",
-                       default = 'head-20110308', help = "CondDBtag to use" )
     parser.add_option( "--nprocesses", action = "store", type = "int", dest = "Processes",
                        default = 4, help = "Number of parallel processes to run" )
     parser.add_option( "--stream", action = "store", dest = "stream",

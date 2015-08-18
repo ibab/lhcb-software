@@ -35,18 +35,10 @@ class Monitor( Task ):
         if 'Catalogs' in self._config.keys():
             FileCatalog().Catalogs = self._config[ 'Catalogs' ]
 
-        importOptions('$STDOPTS/DecodeRawEvent.py')
+        from Configurables import DecodeRawEvent
+        importOptions("$L0DUOPTS/L0DUConfig.opts")
         EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
-        from Configurables import DataOnDemandSvc
-        ApplicationMgr().ExtSvc.append( 'DataOnDemandSvc' )
-
-        from DAQSys.Decoders import DecoderDB
-        # from itertools import product
-        # for stage, t in product(('Hlt1', 'Hlt2'), ('Dec', 'Sel', 'Vertex')):
-        #     an = "{0}{1}ReportsDecoder".format(stage, t)
-        #     loc = DecoderDB["Hlt%sReportsDecoder/%s" % (t, an)].listOutputs()[0]
-        #     DataOnDemandSvc().AlgMap['%s/%sReports' % (stage, t)] =  an
-
+                    
         EventSelector().PrintFreq = 1000
 
         from Configurables import CondDB
@@ -57,7 +49,14 @@ class Monitor( Task ):
         seq = Sequence( "MonitorSequence" )
         physFilter = HltRoutingBitsFilter( "PhysFilter", RequireMask = [ 0x0, 0x4, 0x0 ] )
         co = createODIN()
-        seq.Members = [ physFilter, co ]
+        seq.Members = [ co, physFilter ]
+
+        from DAQSys.Decoders import DecoderDB
+        from itertools import product
+        for stage, t in product(('Hlt1', 'Hlt2'), ('Dec', 'Sel', 'Vertex')):
+            an = "{0}{1}ReportsDecoder".format(stage, t)
+            seq.Members += [DecoderDB["Hlt%sReportsDecoder/%s" % (t, an)].setup()]
+
         ApplicationMgr().TopAlg = [ seq ]
         self._extra_config( seq )
 
@@ -97,11 +96,11 @@ class Monitor( Task ):
             if not self._evtSvc[ 'DAQ' ]:
                 self.done()
                 break
-            elif not self.filterPassed():
-                self._condition.release()
-                continue
             # Get the event time
             info = self.make_info()
+            if not info:
+                self._condition.release()
+                continue
 
             event += 1
             if info: self._outQueue.put( info )
@@ -139,8 +138,8 @@ class Monitor( Task ):
 
 class SubMonitor( object ):
     def __init__( self, monitor_type, name ):
-        self._inQueue = mp.Queue()
-        self._outQueue = mp.Queue()
+        self._inQueue = mp.Queue(100)
+        self._outQueue = mp.Queue(100)
         self._condition = mp.Condition()
         self._monitor = monitor_type( name, ( self._inQueue, self._outQueue ), self._condition )
 
@@ -222,11 +221,9 @@ class CombinedMonitor( Monitor ):
 
             info = {}
             for n, sub in self._monitors.iteritems():
-                # Get the event time
+                # Get the sub infos
                 infos = []
                 sub_mon = sub.monitor()
-                if not sub_mon.filterPassed():
-                    continue
                 sub_info = sub_mon.make_info()
                 if sub_info: infos.append( sub_info )
                 sub_info = None
@@ -264,7 +261,7 @@ class RateMonitor( Monitor ):
         odin = self._evtSvc[ 'DAQ/ODIN' ]
         time = odin.eventTime()
         raw_event = self._evtSvc[ 'DAQ/RawEvent' ]
-
+        
         # why does LHCb.RawBank.BankType.HltRoutingBits not work?
         rbb = raw_event.banks( 53 )
         info = []
@@ -278,8 +275,9 @@ class RateMonitor( Monitor ):
 
         # Fill global histograms
         info.append( ('everything', time ) )
-        if not self._is_physics( raw_event ):
+        if not self.filterPassed():
             info.append( ( 'isLumiExclusive', time ) )
+            return info
         else:
             info.append( ( 'isNotLumiExclusive', time ) )
 
@@ -297,19 +295,6 @@ class RateMonitor( Monitor ):
 
         # Done
         return info
-
-    def _is_physics( self, raw_event ) :
-        return self._require_routingbits( raw_event, [ 0x0,0x4,0x0 ] )
-
-    def _require_routingbits( self, raw_event, w ) :
-        # why does LHCb.RawBank.BankType.HltRoutingBits not work?
-        rbb = raw_event.banks( 53 )
-        if rbb.size() == 0: return False
-        rb = rbb[ 0 ].data()
-        for i in [ 0, 1, 2 ] :
-            if w[ i ] and ( rb[ i ] & w[ i ] == 0 ):
-                return False
-        return True
 
     def _extra_config( self, sequence ):
         from Configurables import L0DUFromRawAlg
@@ -332,21 +317,20 @@ class VertexMonitor( Monitor ):
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
 
-        tag = {   "DDDB":     self._config[ 'DDDBtag' ]
-                , "LHCBCOND": self._config[ 'CondDBtag' ]
-                , "ONLINE"  : 'fake' }
+        tag = {"DDDB":     self._config['DDDBtag'],
+               "LHCBCOND": self._config['CondDBtag'],
+               "ONLINE"  : 'fake'}
 
         baseloc = '/group/online/hlt/conditions'
         from Configurables import CondDB
         conddb = CondDB()
         # hack to allow us to chance connectionstrings...
-        conddb.UseOracle = True
-        conddb.DisableLFC = True
+        conddb.Online = True
         # Set alternative connection strings and tags
         # (see Det/DetCond's configurable... )
         dbPartitions = [ "DDDB", "LHCBCOND", "ONLINE" ]
         for part in dbPartitions:
-            if tag[part] is 'default' : raise KeyError('must specify an explicit %s tag'%part)
+            if tag[part] is 'default' : raise KeyError('must specify an explicit %s tag' % part)
             conddb.PartitionConnectionString[part] = "sqlite_file:%(dir)s/%(part)s_%(tag)s.db/%(part)s" % { "dir":  baseloc,
                                                                                                             "part": part,
                                                                                                             "tag":  tag[part] }
@@ -356,7 +340,7 @@ class VertexMonitor( Monitor ):
         from Configurables import MagneticFieldSvc
         MagneticFieldSvc().UseSetCurrent = True
 
-        online_xml = '%s/%s/online_%%d.xml' % (baseloc, "LHCb" )
+        online_xml = '%s/LHCb/2015/%%d/online.xml' % baseloc
         from Configurables import RunChangeHandlerSvc
         rch = RunChangeHandlerSvc()
         rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"        : online_xml
@@ -395,9 +379,7 @@ class VertexMonitor( Monitor ):
                                                  HltGlobalVertexLocation )
         from HltTracking.HltPVs import ProtoPV3DSelection
         pv3d  = _vertexLocation( HltSharedVerticesPrefix, HltGlobalVertexLocation, PV3DSelection )
-        proto = _vertexLocation( HltSharedVerticesPrefix, HltGlobalVertexLocation, ProtoPV3DSelection )
-        self._locations ={ 'PV3D'  : pv3d,
-                           'Proto' : proto }
+        self._locations ={ 'PV3D'  : pv3d }
 
     def _pre_init( self ):
         from Algos import VertexMonitor as VxMon
@@ -409,24 +391,30 @@ class VertexMonitor( Monitor ):
 
 class MassMonitor( Monitor ):
     def make_info( self ):
+
+        if not self.filterPassed():
+            return {}
+
         info = {'Mass' : {}, 'NCandidates' : []}
 
         for stage in ('Hlt1', 'Hlt2'):
             hsr = self._evtSvc[ stage + '/SelReports' ]
             if not hsr:
                 continue
-            info[ 'NCandidates' ] += [ (i, hsr.selReport( i ).substructure().size()  ) \
-                                       for i in hsr.selectionNames() ]
 
             masses = {}
-            for i in self._config[ 'histograms' ]:
-                report = hsr.selReport( i + "Decision" )
+            for line in hsr.selectionNames():
+                report = hsr.selReport(line)
                 if not report or not report.substructure():
                     continue
+                info['NCandidates'] += [(line, report.substructure().size())]
                 m = []
                 for cand in report.substructure() :
-                    m.append( cand.numericalInfo()[ "1#Particle.measuredMass" ] )
-                masses[ i ] = m
+                    ni = cand.numericalInfo()
+                    if not ni.count("1#Particle.measuredMass"):
+                        continue
+                    m.append( ni[ "1#Particle.measuredMass" ] )
+                masses[ line ] = m
             info[ 'Mass' ].update(masses)
 
         return info
@@ -440,6 +428,10 @@ class MassVsOccupancyMonitor( Monitor ):
         self._occupancy_sources[ 'OT' ] = self._OT_tool.totalNumberOfHits
 
     def make_info( self ):
+
+        if not self.filterPassed():
+            return {}
+
         from collections import defaultdict
         info = defaultdict(dict)
 
@@ -470,4 +462,4 @@ class MassVsOccupancyMonitor( Monitor ):
                 occupancies[ o ] = self._occupancy_sources[ o ]()
             info[ 'Occupancy' ] = occupancies
 
-        return info
+        return dict(info)
