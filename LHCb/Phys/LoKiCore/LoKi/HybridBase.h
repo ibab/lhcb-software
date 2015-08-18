@@ -135,8 +135,10 @@ namespace LoKi
       // ======================================================================
     protected : // use python as factroy for LOK-functors ?
       // ======================================================================  
-      /// use python as factroy for LOK-functors ?
-      bool m_use_python ;           // use python as factroy for LOK-functors ?
+      /// use python as factroy for LOKI-functors ?
+      bool m_use_python ;           // use python as factory for LOKI-functors ?
+      /// use LoKi functor cache
+      bool m_use_cache ;            // use LoKi functor cache ?
       // ======================================================================
     protected : // some stuff to deal with generation of C++ code 
       // ======================================================================
@@ -193,12 +195,13 @@ StatusCode LoKi::Hybrid::Base::_get_
   //
   // 1) clear the placeholder, if needed
   //
-  if ( 0 != local ) { delete local ; local = 0 ; }
+  if ( NULL != local ) { delete local ; local = NULL ; }
   //
   // 2') look for cached functors:
   typedef LoKi::CacheFactory< LoKi::Functor<TYPE1,TYPE2> > cache_t;
   LoKi::Functor<TYPE1,TYPE2>* created = 
-    cache_t::Factory::create ( cache_t::id ( LoKi::Cache::makeHash ( code ) ) );
+    ( !this->m_use_cache ? NULL :
+      cache_t::Factory::create ( cache_t::id ( LoKi::Cache::makeHash ( code ) ) ) );
   //
   if ( created ) 
   {
@@ -207,7 +210,7 @@ StatusCode LoKi::Hybrid::Base::_get_
     //
     this->counter("# loaded from CACHE" ) += 1 ;
     //
-    delete local ; local = 0 ;
+    delete local ; local = NULL ;
     //
     return StatusCode::SUCCESS ;    // RETURN
   } 
@@ -216,28 +219,28 @@ StatusCode LoKi::Hybrid::Base::_get_
   //
   // 2") execute the code 
   //
-  StatusCode sc = this->executeCode ( code ) ;
+  const StatusCode sc = this->executeCode ( code ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Error from LoKi::Hybrid::Base::executeCode"      ) ; } // RETURN 
-  if ( 0 == local     ) 
+  { return Error ( "Error from LoKi::Hybrid::Base::executeCode", sc  ) ; } // RETURN 
+  if ( NULL == local  ) 
   { return Error ( "Invalid object for the code"                     ) ; } // RETURN 
   // assign the result 
   output = *local ;                                                        // ASSIGN
   //
   this->counter("# loaded from PYTHON") += 1 ;
   //
-  delete local ; local = 0 ;
+  delete local ; local = NULL ;
   //
   if ( this->m_makeCpp ) 
   {
-    std::string funtype = System::typeinfoName ( typeid ( LoKi::Functor<TYPE1,TYPE2> ) ) ;
-    std::string cppcode = Gaudi::Utils::toCpp           ( output )   ;
-    std::string pytype  = Gaudi::Utils::toString        ( output )   ;
+    const std::string funtype = System::typeinfoName ( typeid ( LoKi::Functor<TYPE1,TYPE2> ) ) ;
+    const std::string cppcode = Gaudi::Utils::toCpp           ( output )   ;
+    const std::string pytype  = Gaudi::Utils::toString        ( output )   ;
     m_allfuncs[ funtype ][ code ] = std::make_pair ( cppcode , pytype ) ;
     //
   }
   //
-  return StatusCode::SUCCESS ;
+  return sc ;
   // =========================================================================
 }
 // ============================================================================

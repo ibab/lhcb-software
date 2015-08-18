@@ -94,6 +94,7 @@ LoKi::Hybrid::Base::Base
   , m_pyInit     ( false )
   , m_showCode   ( false )
   , m_use_python ( true  )
+  , m_use_cache  ( true  )
   , m_makeCpp    ( false )
   , m_cppname    ()
   , m_cpplines   ( { "#include \"GaudiKernel/Kernel.h\""            ,  
@@ -119,9 +120,15 @@ LoKi::Hybrid::Base::Base
   //
   m_use_python = "UNKNOWN" == System::getEnv  ( "LOKI_DISABLE_PYTHON" ) ;
   //
+  m_use_cache  = "UNKNOWN" == System::getEnv  ( "LOKI_DISABLE_CACHE"  ) ;
+  //
   declareProperty ( "UsePython"  , 
                     m_use_python , 
                     "Use Python as factory for LoKi-functors ") ;
+  //
+  declareProperty ( "UseCache"  , 
+                    m_use_cache , 
+                    "Use C++ cache for LoKi-functors ") ;
   //
   // make reasonable default name
   //
@@ -152,12 +159,12 @@ LoKi::Hybrid::Base::~Base() {}
 // ============================================================================
 StatusCode LoKi::Hybrid::Base::initialize ()
 {
-  StatusCode sc = GaudiTool::initialize() ;
+  const StatusCode sc = GaudiTool::initialize() ;
   if ( sc.isFailure() ) { return sc ; }
   // force the loading/initialization of  LoKi Service
   svc<LoKi::ILoKiSvc>( "LoKiSvc" , true ) ;
   //
-  return StatusCode::SUCCESS ;
+  return sc ;
 }
 // ============================================================================
 // finalization of the tool

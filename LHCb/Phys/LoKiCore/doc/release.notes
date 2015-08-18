@@ -15,6 +15,11 @@
 
 !========================= LoKiCore v11r25 2015-08-18 =========================
 
+! 2015-08-18 - Chris Jones
+ - Add support to to HybridBase for turning off the use of the C++ functor 
+   cache. Enable either via the property UseCache or by setting the environment
+   variable LOKI_DISABLE_CACHE.
+
 ! 2015-08-17 - Chris Jones
  - Add Hlt1HltFactory and Hlt2HltFactory to the default list of factories
    in LoKiFunctorCache.cmake
@@ -24,7 +29,7 @@
 
 ! 2015-08-13 - Chris Jones
  - Add DetDataSvc('DetectorDataSvc') to the start of the service list in
-   LokiFunctorsCachePostActionOpts.py. Need to get CondDB access working with
+   LokiFunctorsCachePostActionOpts.py. Needed to get CondDB access working with
    Stripping 23.
 
 ! 2015-08-09 - Gerhard Raven
