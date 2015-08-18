@@ -4,6 +4,7 @@ from veloview.runview.reference_database import ReferenceDatabase
 from veloview.utils import paths, rundb
 
 import glob
+import os
 
 def run_list():
     """Return a list of run numbers as integers sorted high-to-low."""
@@ -41,11 +42,18 @@ def run_file_path(run):
     return paths.make_dir_tree(run, Config().run_data_dir)
 
 def run_file(run):
+    """Return latest run file path from run number. Prefer merged files."""
     base = run_file_path(run)
-    files = sorted(glob.glob("{0}/*.root".format(base)))
+    merged_files = glob.glob("{0}/*_Clusters_Brunel.root".format(base))
+    if merged_files:
+        # Return latest merged file if available
+        return max(merged_files, key = os.path.getctime)
+
+    files = glob.glob("{0}/*.root".format(base))
     try:
-        return files[-1]
-    except IndexError:
+        # Otherwise, return normal file
+        return max(files, key = os.path.getctime)
+    except ValueError:
         raise IOError("Run file not found for run {0}".format(run))
 
 def reference_run_file(run):
