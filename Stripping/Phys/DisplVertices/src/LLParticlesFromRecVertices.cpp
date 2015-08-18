@@ -442,7 +442,7 @@ const LHCb::Particle* LLParticlesFromRecVertices::RecVertex2Particle( const LHCb
   // Values for cut calculated during loop on tracks
   double maxDaugE = 0.;
   int numDaugTracksWithHitsBefore = 0;
-  double fractTracksWithHitBeforeVertex;
+  double fractTracksWithHitBeforeVertex = 0.0;
 
   BOOST_FOREACH( const LHCb::Track* iVtxTrack, rv->tracks() )
   {

@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2015-08-18 - Andrea Contu
+ - Fix variable initialisation
+
 !========================= DisplVertices v7r22 2015-06-29 =========================
 
 ! 2015-06-05 - Ricardo Vazquez Gomez
