@@ -13,6 +13,8 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r25 2015-08-18 =========================
+
 ! 2015-08-17 - Chris Jones
  - Add Hlt1HltFactory and Hlt2HltFactory to the default list of factories
    in LoKiFunctorCache.cmake
@@ -32,6 +34,7 @@
  - remove #include of obsolete Gaudi headers
 
 !========================= LoKiCore v11r24 2015-07-20 =========================
+
 ! 2015-07-16 - Marco Clemencic
  - Fixed bug in LoKiFunctorsCache.cmake.
 
