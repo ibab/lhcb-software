@@ -23,7 +23,7 @@ def configureInput( run_info, n_processes, options ) :
     ## dirname = prefix + '/lhcb/data/%(year)s/RAW/FULL/LHCb/%(runType)s/%(runID)s' % run_info
 
     # Run on raw files from castor or daqarea
-    prefix = { 'daqarea' : '/daqarea/lhcb/data/2015/RAW/%s/LHCb/COLLISION15' % options.stream,
+    prefix = { 'daqarea' : '/daqarea/lhcb/data/%s/RAW/%s/LHCb/COLLISION15' % (options.DataType, options.stream),
                'calib'   : '/calib/hlt/spillover',
                'nodes'   : '/net/hlt%s%02d%02d/localdisk/hlt1' }
 
@@ -46,9 +46,13 @@ def configureInput( run_info, n_processes, options ) :
                 break
     else:
         file_dir = base_dir
-        if str(run) in os.listdir(base_dir):
-            file_dir = os.path.join(base_dir, str(run))
+        if str(run_info['runID']) in os.listdir(base_dir):
+            file_dir = os.path.join(base_dir, str(run_info['runID']))
         files += sorted([os.path.join(file_dir, f) for f in os.listdir(file_dir) if re_file.match(f)])
+
+    if not files:
+        print "Could not find files in %s" % prefix[options.source]
+        return files
 
     lists = [[] for i in xrange(n_processes)]
     for i, f in enumerate(files):
@@ -64,7 +68,6 @@ def configureInput( run_info, n_processes, options ) :
     ##         rest -= 1
     ##     lists.append( [ fmt( os.path.join(dirname,f) ) for f in files[ low : up ] ] )
     ##     low = up
-    print lists
     return lists
 
 def run( options, args ):
@@ -78,6 +81,8 @@ def run( options, args ):
     run_info = Utils.run_info( run_nr )
 
     input_lists = configureInput( run_info, n_processes, options )
+    if not input_lists:
+        return -1
 
     evtMax = -1
     if options.EvtMax != -1:
@@ -231,7 +236,7 @@ $> monitor.py --nprocesses=4 -n 10000 Rate:Mass:Vertex 87880
 
     if options.stream not in [ 'FULL', 'TURBO', 'TURCAL', 'BEAMGAS' ]:
         print "Invalid data stream: %s" % options.stream
-        
+
     if len( args ) != 2:
         print parser.usage
         exit( 1 )
