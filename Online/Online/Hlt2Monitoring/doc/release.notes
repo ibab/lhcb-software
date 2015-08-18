@@ -4,6 +4,9 @@
 ! Purpose     : Online monitoring of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2015-08-18 - Roel Aaij
+ - Fix build with CMT.
+
 ! 2015-08-17 - Roel Aaij
  - Remove unneeded dependency on OnlineKernel.
 
