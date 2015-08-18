@@ -42,36 +42,21 @@ endforeach()
 # Explicitly depend on DaVinci, to make sure it is built first
 set(conf_deps ${conf_deps} DaVinciConfUserDB )
 
-MESSAGE( STATUS "StrippingCache Deps : " ${conf_deps} )
-
 # Build the caches
 
-include(LoKiFunctorsCache)
+# Do not build for the -O0 platform, as this seems to have problems.
+# To be investigated...
+if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
 
-loki_functors_cache(S23FunctorsCache
-                    options/SuppressLogMessages.py
-                    options/DV-Stripping23-Stripping.py options/SilenceErrors.py 
-                    LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
-                    DEPENDS ${conf_deps}
-                    SPLIT 50)
+ MESSAGE( STATUS "StrippingCache Deps : " ${conf_deps} )
 
-#loki_functors_cache(S22FunctorsCache
-#                    #options/SuppressS21LogMessages.py
-#                    options/DV-Stripping22-Stripping.py options/SilenceErrors.py  
-#                    LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
-#                    DEPENDS ${conf_deps}
-#                    SPLIT 50)
+ include(LoKiFunctorsCache)
 
-#loki_functors_cache(S21FunctorsCache
-#                    options/SuppressS21LogMessages.py
-#                    options/DV-Stripping21-Stripping.py options/SilenceErrors.py 
-#                    LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
-#                    DEPENDS ${conf_deps}
-#                    SPLIT 50)
-
-#loki_functors_cache(S20FunctorsCache
-#                    options/SuppressS21LogMessages.py
-#                    options/DV-Stripping20-Stripping.py #options/SilenceErrors.p
-#                    LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
-#                    DEPENDS ${conf_deps}
-#                    SPLIT 50)
+ loki_functors_cache(S23FunctorsCache
+                     options/SuppressLogMessages.py
+		     options/DV-Stripping23-Stripping.py options/SilenceErrors.py 
+                     LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
+                     DEPENDS ${conf_deps}
+                     SPLIT 50)
+ 
+endif()

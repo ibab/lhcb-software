@@ -7,6 +7,9 @@
 
 !========================= StrippingCache v1r0 2015-08-18 =========================
 
+! 2015-08-18 - Chris Jones
+ - Disable for now build on x86_64-slc6-gcc48-do0 as it seems to have problems.
+
 ! 2015-08-17 - Stefano Perazzini
  - Configured the options for S23 in order to use StrippingArchive
 
