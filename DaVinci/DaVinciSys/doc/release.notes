@@ -8,7 +8,8 @@ Purpose             : LHCb physics analysis application
 Production release for Stripping 23.
 
 ! 2015-08-18 - Chris Jones
- - Include as patch packages LoKiCore and GaudiConf
+ - Include as patch packages RelatedInfoTools, DaVinciTools, LoKiCore, LokiPhys, 
+   LoKiAlgo and GaudiConf.
 
 ! 2015-08-12 - Chris Jones
  - Temporarily add StrippingCache, just for S23 release...

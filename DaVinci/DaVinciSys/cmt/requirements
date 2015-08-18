@@ -6,11 +6,14 @@ branches doc cmt
 ##############################
 # Patch just for this version
 
-use  DDDB           v1r80     Det
-use  TeslaTools     v1r13     Phys
-use  HltDAQ         v4r20     Hlt
-use  LoKiCore       v11r25    Phys
-use  GaudiConf      v19r12
+use  DDDB             v1r80     Det
+use  TeslaTools       v1r13     Phys
+use  HltDAQ           v4r20     Hlt
+use  LoKiCore         v11r25    Phys
+use  LoKiAlgo         v9r10     Phys
+use  LoKiPhys         v11r3     Phys
+use  RelatedInfoTools v1r2      Phys 
+use  GaudiConf        v19r12
 
 # Temporarily moved in from Stripping, for S23 release
 # To be decided if longer term this stays in the DaVinci 
