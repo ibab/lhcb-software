@@ -1,4 +1,5 @@
 import json
+import time
 import urllib
 
 # String constants describing magnet polarity
@@ -81,3 +82,19 @@ class RunDB(object):
             'DOWN': DOWN,
             'OFF': OFF
         }[polarity]
+
+    def endtime(self, run):
+        """Return epoch timestamp of the end time of the run. Result is a
+        nonnegative number, or None of the query fails.
+        """
+        response = self.query(run)
+        if not response:
+            return None
+        try:
+            endtime = response['endtime']
+        except KeyError:
+            # End time not included in JSON response
+            return None
+
+        pattern = '%Y-%m-%dT%H:%M:%S'
+        return long(time.mktime(time.strptime(endtime, pattern)))
