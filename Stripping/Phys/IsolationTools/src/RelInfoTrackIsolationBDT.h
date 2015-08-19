@@ -39,87 +39,91 @@ class IDVAlgorithm;
 class IDistanceCalculator;
 class IParticleDictTool ;
 
-class RelInfoTrackIsolationBDT : public GaudiTool, virtual public IRelatedInfoTool {
-    public:
-        /// Standard constructor
-        RelInfoTrackIsolationBDT( const std::string& type,
-                const std::string& name,
-                const IInterface* parent );
+class RelInfoTrackIsolationBDT : public GaudiTool, 
+                                 virtual public IRelatedInfoTool 
+{
 
-        virtual StatusCode initialize();
+public:
 
-        virtual StatusCode calculateRelatedInfo( const LHCb::Particle*,
-                                         const LHCb::Particle*);
+  /// Standard constructor
+  RelInfoTrackIsolationBDT( const std::string& type,
+                            const std::string& name,
+                            const IInterface* parent );
 
-        virtual LHCb::RelatedInfoMap* getInfo(void);
-  
-        virtual ~RelInfoTrackIsolationBDT( ); ///< Destructor
+  virtual StatusCode initialize();
 
-    private:
+  virtual StatusCode calculateRelatedInfo( const LHCb::Particle*,
+                                           const LHCb::Particle*);
 
-        int m_variables;
-        LHCb::RelatedInfoMap m_map;
-        std::vector<short int> m_keys; 
+  virtual LHCb::RelatedInfoMap* getInfo(void);
 
-        int m_trackType ;
+  virtual ~RelInfoTrackIsolationBDT( ); ///< Destructor
 
-        std::string m_ParticlePath ;
+private:
 
-        double m_bdt1;
-        double m_bdt2;
-        double m_bdt3;
+  int m_variables;
+  LHCb::RelatedInfoMap m_map;
+  std::vector<short int> m_keys;
 
-        std::string m_weightsName;
-        /// TMVA transform
-        //Reader
-        //TMVA::Reader *m_Reader;
-        std::string m_transformName ;
-        //variables
-        float var_log_doca ;
-        float var_angle ;
-        float var_fc ;
-        float var_PVdist ;
-        float var_SVdist ;
-        float var_ipchisqany ;
+  int m_trackType ;
 
-        TMVATransform m_tmva ;
-        TMVATransform::optmap m_optmap ;
-        IParticleDictTool::DICT m_varmap ; 
-        IParticleDictTool::DICT m_out ; 
+  std::string m_ParticlePath ;
+
+  double m_bdt1;
+  double m_bdt2;
+  double m_bdt3;
+
+  std::string m_weightsName;
+  /// TMVA transform
+  //Reader
+  //TMVA::Reader *m_Reader;
+  std::string m_transformName ;
+  //variables
+  float var_log_doca ;
+  float var_angle ;
+  float var_fc ;
+  float var_PVdist ;
+  float var_SVdist ;
+  float var_ipchisqany ;
+
+  TMVATransform m_tmva ;
+  TMVATransform::optmap m_optmap ;
+  IParticleDictTool::DICT m_varmap ;
+  IParticleDictTool::DICT m_out ;
 
 
-        //save the vertice
-        std::string m_PVInputLocation ;
-        LHCb::RecVertex::Range m_vertices ;
+  //save the vertice
+  std::string m_PVInputLocation ;
+  LHCb::RecVertex::Range m_vertices ;
 
 
-        ///============================================================================
-        /// Track isolation method
-        ///============================================================================
+  ///============================================================================
+  /// Track isolation method
+  ///============================================================================
 
-        bool calcBDTValue( const LHCb::Particle * part
-                , const LHCb::Particle::Range particles
-                , const LHCb::VertexBase * PV
-                , const LHCb::VertexBase * SV
-                ) ;
-        ///============================================================================
-        /// Helper functions 
-        ///============================================================================
-        double calcIPToAnyPV( const LHCb::Track * track ) ;
-        double  enclosedAngle( Gaudi::XYZVector, Gaudi::XYZVector );
-        void    getPerpFeet(  Gaudi::XYZPoint track_pos,
-                Gaudi::XYZVector track_p,
-                Gaudi::XYZPoint mu_pos,
-                Gaudi::XYZVector mu_p, 
-                Gaudi::XYZPoint& perpFootTrack, 
-                Gaudi::XYZPoint& perpFootMu, 
-                Gaudi::XYZPoint& vertex, bool& fail); 
-        double calcFC(  Gaudi::XYZVector track_mom, 
-                Gaudi::XYZVector mu_mom, 
-                Gaudi::XYZPoint mu_track_vertex,
-                const LHCb::VertexBase* PV);
-        double calcVertexDist(Gaudi::XYZPoint muTrack, 
-                const LHCb::VertexBase* v);
+  bool calcBDTValue( const LHCb::Particle * part
+                     , const LHCb::Particle::Range particles
+                     , const LHCb::VertexBase * PV
+                     , const LHCb::VertexBase * SV
+                     ) ;
+  ///============================================================================
+  /// Helper functions
+  ///============================================================================
+  double calcIPToAnyPV( const LHCb::Track * track ) ;
+  double  enclosedAngle( Gaudi::XYZVector, Gaudi::XYZVector );
+  void    getPerpFeet(  Gaudi::XYZPoint track_pos,
+                        Gaudi::XYZVector track_p,
+                        Gaudi::XYZPoint mu_pos,
+                        Gaudi::XYZVector mu_p,
+                        Gaudi::XYZPoint& perpFootTrack,
+                        Gaudi::XYZPoint& perpFootMu,
+                        Gaudi::XYZPoint& vertex, bool& fail);
+  double calcFC(  Gaudi::XYZVector track_mom,
+                  Gaudi::XYZVector mu_mom,
+                  Gaudi::XYZPoint mu_track_vertex,
+                  const LHCb::VertexBase* PV);
+  double calcVertexDist(Gaudi::XYZPoint muTrack,
+                        const LHCb::VertexBase* v);
 
 
 

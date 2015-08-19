@@ -3,7 +3,10 @@
 ! Responsible : Alex Shires
 !============================================================================
 
-!========================= IsolationTools v1r5 2015-08-18 =========================
+!========================= IsolationTools v1r5 2015-08-19 =========================
+
+! 2015-08-19 - Chris Jones
+ - Fix uninitialised variable in RelInfoTrackIsolationBDT
 
 ! 2015-08-10 - Ricardo Vazquez Gomez
  - Propagate the changes by Chris in the 'getIDVAlgorithm' to all the IsolationTools
