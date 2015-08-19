@@ -4,7 +4,7 @@
 #include "rapidjson/stringbuffer.h"
 //#include "PythonQt3.0/src/PythonQt.h"
 //#include "TPython.h"
-//#include <boost/python.hpp>
+#include <boost/python.hpp>
 #include <unistd.h>
 #include <stdarg.h>
 
@@ -644,8 +644,42 @@ VTabContent * VContentGetter::veloFileConfigs(VPlotOps * plotOps, std::string in
   //fourPlotsPerTabLimiter(&ops);
   findChildren(topDummyTab, &allTabs, &ops, 0); // Called recursively.
   findPlots(&allTabs, &ops, plotOps);
+  findTrees(&allTabs, &ops, plotOps);
+  findTables(&allTabs, &ops, plotOps);
   return topDummyTab;
 }
+
+//_____________________________________________________________________________
+
+void VContentGetter::findTables(std::vector<VTabContent*> * allTabs,
+  std::vector< std::vector< std::string > > * ops, VPlotOps * plotOps)
+{
+	std::vector< std::vector< std::string > >::iterator iop;
+  for (iop = ops->begin(); iop != ops->end(); iop++) {
+    if ((*iop)[0] != "Table" || (*iop)[0].substr(0, 1) == "#") continue;
+    std::vector<VTabContent*>::iterator itab;
+    for (itab = allTabs->begin(); itab != allTabs->end(); itab++){
+      if ((*iop)[3] == (*itab)->m_title) new VTable((*iop)[2], (*itab));
+    }
+  }
+}
+
+
+//_____________________________________________________________________________
+
+void VContentGetter::findTrees(std::vector<VTabContent*> * allTabs,
+  std::vector< std::vector< std::string > > * ops, VPlotOps * plotOps)
+{
+	std::vector< std::vector< std::string > >::iterator iop;
+  for (iop = ops->begin(); iop != ops->end(); iop++) {
+    if ((*iop)[0] != "Tree" || (*iop)[0].substr(0, 1) == "#") continue;
+    std::vector<VTabContent*>::iterator itab;
+    for (itab = allTabs->begin(); itab != allTabs->end(); itab++){
+      if ((*iop)[3] == (*itab)->m_title) new VTree((*iop)[1], (*iop)[2], (*itab));
+    }
+  }
+}
+
 
 //_____________________________________________________________________________
 
@@ -765,6 +799,24 @@ void VContentGetter::jsonToOps(std::string * jsonOps,
 
 					ops->push_back(plotInfo);
 				}
+			}
+
+			if ((*jsonTabs[iTab]).HasMember("tree_title")) {
+				std::vector<std::string> treeInfo;
+				treeInfo.push_back("Tree");
+				treeInfo.push_back((*jsonTabs[iTab])["tree_title"].GetString());
+				treeInfo.push_back((*jsonTabs[iTab])["tree_file_name"].GetString());
+				treeInfo.push_back((*jsonTabs[iTab])["title"].GetString());
+				ops->push_back(treeInfo);
+			}
+
+			if ((*jsonTabs[iTab]).HasMember("table_title")) {
+				std::vector<std::string> tableInfo;
+				tableInfo.push_back("Table");
+				tableInfo.push_back((*jsonTabs[iTab])["table_title"].GetString());
+				tableInfo.push_back((*jsonTabs[iTab])["table_file_name"].GetString());
+				tableInfo.push_back((*jsonTabs[iTab])["title"].GetString());
+				ops->push_back(tableInfo);
 			}
     }
 	}

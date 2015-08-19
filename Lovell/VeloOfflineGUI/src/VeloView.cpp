@@ -69,7 +69,9 @@ veloview::veloview(int runMode, std::vector<std::string> * ops, QWidget *parent)
 	m_verbose(false),
 	m_dataDir("/calib/velo/dqm/VeloView/VetraOutput"),
 	f_in(NULL),
-	f_inReff(NULL)
+	f_inReff(NULL),
+	f_inNameUser("defaultFileInNameUser"),
+	f_inReffNameUser("defaultReffFileInNameUser")
 {
   m_ops = ops;
   setOps();
@@ -162,6 +164,10 @@ void veloview::setVeloOptionsWidg() {
                          QString(line.c_str()), Qt::DisplayRole);
   }
 
+  runBoxModel->insertRow(runBoxModel->rowCount());
+	runBoxModel->setData(runBoxModel->index(runBoxModel->rowCount() - 1, 0),
+                         "user", Qt::DisplayRole);
+
   b_veloRunNumber = new QComboBox;
   if (m_runProxy != NULL) delete m_runProxy;
   m_runProxy = new QSortFilterProxyModel;
@@ -173,9 +179,12 @@ void veloview::setVeloOptionsWidg() {
   b_veloRunNumber->setCompleter(completer);
   connect(b_veloRunNumber, SIGNAL(editTextChanged(QString)), this, SLOT(filterWildcard(QString)));
   l->addWidget(b_veloRunNumber, l->rowCount(), 0, 1, 1);
+  QPushButton * but_userFileOpen = new QPushButton("Browse", this);
+  connect(but_userFileOpen, SIGNAL(clicked()), this, SLOT(userFileOpen()));
+  l->addWidget(but_userFileOpen, l->rowCount()-1, 1, 1, 1);
 
 
-  b_showAllRefs = new QCheckBox("Load refs");
+  b_showAllRefs = new QCheckBox("Display refs");
   b_showAllRefs->setChecked(true);
   l->addWidget(b_showAllRefs, l->rowCount(), 0, 1, 1);
 
@@ -200,6 +209,10 @@ void veloview::setVeloOptionsWidg() {
                          QString(line.c_str()), Qt::DisplayRole);
   }
 
+  runBoxModel2->insertRow(runBoxModel2->rowCount());
+	runBoxModel2->setData(runBoxModel2->index(runBoxModel2->rowCount() - 1, 0),
+                         "user", Qt::DisplayRole);
+
   b_veloRunNumberRef = new QComboBox;
   if (m_runProxyRef != NULL) delete m_runProxyRef;
   m_runProxyRef = new QSortFilterProxyModel;
@@ -211,6 +224,9 @@ void veloview::setVeloOptionsWidg() {
   b_veloRunNumberRef->setCompleter(completerRef);
   connect(b_veloRunNumberRef, SIGNAL(editTextChanged(QString)), this, SLOT(filterWildcardRef(QString)));
   l->addWidget(b_veloRunNumberRef, l->rowCount(), 0, 1, 1);
+  QPushButton * but_userFileOpenRef = new QPushButton("Browse", this);
+  connect(but_userFileOpenRef, SIGNAL(clicked()), this, SLOT(userFileOpenRef()));
+  l->addWidget(but_userFileOpenRef, l->rowCount()-1, 1, 1, 1);
 }
 
 void veloview::filterWildcard(QString s) {
@@ -235,11 +251,29 @@ void veloview::setContent() {
     m_plotOps->b_veloRunNumberRef = b_veloRunNumberRef;
     m_plotOps->b_showAllRefs = b_showAllRefs;
     m_plotOps->m_moduleSelector = ui->w_moduleSelector;
-    m_plotOps->notify("Loading run " + b_veloRunNumber->currentText().toStdString() + "...");
-    	qApp->processEvents();
+    if (b_veloRunNumber->currentText().toStdString() == "user")
+  		m_plotOps->notify("\nLoading run " + f_inNameUser + "...");
+  	else
+  		m_plotOps->notify("\nLoading run\n" + b_veloRunNumber->currentText().toStdString() + "...");
+
+  	if (b_veloRunNumberRef->currentText().toStdString() == "user")
+  		m_plotOps->notify("\nLoading ref " + f_inNameUser + "...");
+  	else
+  		m_plotOps->notify("\nLoading ref \n" + b_veloRunNumberRef->currentText().toStdString() + "...");
+
+  	qApp->processEvents();
   }
   else {
-  	m_plotOps->notify("\nLoading run " + b_veloRunNumber->currentText().toStdString() + "...");
+  	if (b_veloRunNumber->currentText().toStdString() == "user")
+  		m_plotOps->notify("\nLoading run " + f_inNameUser + "...");
+  	else
+  		m_plotOps->notify("\nLoading run\n" + b_veloRunNumber->currentText().toStdString() + "...");
+
+  	if (b_veloRunNumberRef->currentText().toStdString() == "user")
+  		m_plotOps->notify("\nLoading ref " + f_inNameUser + "...");
+  	else
+  		m_plotOps->notify("\nLoading ref \n" + b_veloRunNumberRef->currentText().toStdString() + "...");
+
     m_plotOps->m_firstTime = true;
     qApp->processEvents();
     f_in->Close();
@@ -247,8 +281,8 @@ void veloview::setContent() {
     delete m_plotOps->m_statsBox;
   }
 
-  setupInFiles(true);
   setupInFiles(false);
+  setupInFiles(true);
   m_plotOps->f_in = f_in;
   m_plotOps->f_inReff = f_inReff;
 
@@ -317,35 +351,83 @@ void veloview::setContent() {
 
 //_____________________________________________________________________________
 
+void veloview::userFileOpenRef()
+{
+	userFileBrowser(true);
+}
+
+void veloview::userFileOpen()
+{
+	userFileBrowser(false);
+}
+
+
+//_____________________________________________________________________________
+
+void veloview::userFileBrowser(bool isRef)
+{
+	QString f = QFileDialog::getOpenFileName(this,
+          QString("Load ROOT File"), QString(m_dataDir.c_str()));
+	if (isRef) {
+		f_inReffNameUser = f.toStdString();
+		b_veloRunNumberRef->setCurrentIndex(b_veloRunNumberRef->count()-1);
+		if (m_ran) m_plotOps->notify("User ref file set as: \n" + f_inReffNameUser);
+	}
+	else {
+		f_inNameUser = f.toStdString();
+		b_veloRunNumber->setCurrentIndex(b_veloRunNumber->count()-1);
+		if (m_ran) m_plotOps->notify("User file set as: \n" + f_inNameUser);
+	}
+}
+
+
+//_____________________________________________________________________________
+
 void veloview::setupInFiles(bool isRef)
 {
 	std::string dirName = m_dataDir;
 	std::string runNum;
+	std::string fileName;
 	if (isRef) runNum = b_veloRunNumberRef->currentText().toStdString();
 	else runNum = b_veloRunNumber->currentText().toStdString();
 
-	for (uint i=0; i<runNum.size() - 2; i++) {
-		dirName += "/";
-		dirName += runNum.substr(0, i+1);
-		for (uint j=i; j != runNum.size()-1; j++) dirName += "0";
-		dirName += "s";
+	std::cout<<"RunNum: "<<runNum<<std::endl;
+	if (runNum == "user") {
+		if (isRef) fileName = f_inReffNameUser;
+		else fileName = f_inNameUser;
 	}
-	dirName += "/" + runNum;
-	std::cout<<"Looking for run directory: "<<dirName<<std::endl;
-	QDir dir(QString(dirName.c_str()));
-	if (!dir.exists()) std::cout<<"Could not find run directory: "<<dirName<<std::endl;
-	else std::cout<<"Successfuly found run directory: "<<dirName<<std::endl;
+	else {
+		for (uint i=0; i<runNum.size() - 2; i++) {
+			dirName += "/";
+			dirName += runNum.substr(0, i+1);
+			for (uint j=i; j != runNum.size()-1; j++) dirName += "0";
+			dirName += "s";
+		}
+		dirName += "/" + runNum;
+		std::cout<<"Looking for run directory: "<<dirName<<std::endl;
+		QDir dir(QString(dirName.c_str()));
+		if (!dir.exists()) std::cout<<"Could not find run directory: "<<dirName<<std::endl;
+		else std::cout<<"Successfuly found run directory: "<<dirName<<std::endl;
 
-	// Find the root files.
-	dir.setNameFilters(QStringList()<<"*.root");
-	QStringList fileList = dir.entryList();
-	dir.setSorting(QDir::Time);
-	// Take the most recent.
-	if (fileList.isEmpty()) {
-		std::cout<<"Could not find any ROOT files in that directory."<<std::endl;
-		exit(0);
+		// Find the root files.
+		dir.setNameFilters(QStringList()<<"*NZS_Clusters_Brunel.root");
+		QStringList fileList = dir.entryList();
+		dir.setSorting(QDir::Time);
+		// Take the most recent.
+		if (fileList.isEmpty()) {
+			std::cout<<"Could not find any merged ROOT files in that directory. Looking for others..."<<std::endl;
+			dir.setNameFilters(QStringList()<<"*.root");
+			fileList = dir.entryList();
+		}
+
+		if (fileList.isEmpty()) {
+			std::cout<<"Could not find any ROOT files in that directory."<<std::endl;
+			exit(0);
+		}
+
+		fileName = dirName + "/" + fileList.back().toStdString();
 	}
-	std::string fileName = dirName + "/" + fileList.back().toStdString();
+
 	std::cout<<"Loading TFile: "<<fileName<<std::endl<<std::endl;
 	if (isRef) {
 		f_inReff = new TFile(fileName.c_str(), "READ");

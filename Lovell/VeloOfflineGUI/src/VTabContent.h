@@ -6,6 +6,7 @@
 #include <QtGui/qwidget.h>
 #include <QtGui/QGridLayout>
 #include "VTable.h"
+#include "VTree.h"
 
 // VTabContent - an object containing one tabs worth of content (be it plots or 
 // tabs). Note that tabs and plots is not currently supported.
@@ -14,6 +15,7 @@
 
 class VPlot;
 class VTable;
+class VTree;
 
 class VTabContent : public QWidget {
 public:
@@ -21,6 +23,7 @@ public:
   std::vector<VTabContent*> m_subContents;
   std::vector<VPlot*> m_plots; // Plots to be shown in this tab - up to 9.
   std::vector<VTable*> m_tables; // Tables to be shown in this tab.
+  std::vector<VTree*> m_trees; // Trees to be shown in this tab.
   std::string m_title; // This tabs name.
   int m_plotFillDirection; // 0 for filling rows first, 1 for columns. TODO
   int m_subTabViewMethod; // 0 to draw as tabs, 1 for drop down list. TODO
@@ -38,19 +41,6 @@ public:
   
 
   // Methods __________________________________________________________________
-  VTabContent() : m_subContents(),
-                  m_plots(),
-                  m_title("Default Tab Name"),
-                  m_plotFillDirection(0),
-                  m_subTabViewMethod(0),
-                  m_widget(NULL),
-                  m_plotLayout(NULL),
-                  m_parentTab(NULL),
-                  m_ID(0),
-									m_drawn(false),
-									m_qtab(NULL),
-									m_layoutX(2),
-									m_layoutY(2) {} // Top tab constructor.
 
   VTabContent(std::string title) :
                   m_subContents(),
@@ -86,23 +76,6 @@ public:
                   m_parentTab->m_subContents.push_back(this);
                 }
 
-  VTabContent(std::string title,
-              VTabContent * parentTab, int ID) :
-                m_subContents(),
-                m_plots(),
-                m_plotFillDirection(0),
-                m_subTabViewMethod(0),
-                m_widget(NULL),
-                m_plotLayout(NULL),
-								m_drawn(false),
-								m_qtab(NULL),
-								m_layoutX(2),
-								m_layoutY(2) {
-                  m_title = title;
-                  m_parentTab = parentTab;
-                  m_parentTab->m_subContents.push_back(this);
-                  m_ID = ID;
-                }
 
   void setPlotLayout(int x, int y) {
   	m_layoutX = x;
@@ -116,11 +89,13 @@ public:
   void showEvent(QShowEvent *) {
     if (m_plots.size() > 0 && !m_drawn) drawPlots();
     if (m_tables.size() > 0 && !m_drawn) drawTables();
+    if (m_trees.size() > 0 && !m_drawn) drawTrees();
     m_drawn = true;
   } // Re-implemented from QWidget.
 
   void drawPlots();
   void drawTables();
+  void drawTrees();
 
 
   //___________________________________________________________________________

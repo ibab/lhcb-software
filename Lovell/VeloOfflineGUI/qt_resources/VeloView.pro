@@ -19,25 +19,31 @@ SOURCES += main.cpp\
            src/VContentGetter.cpp\
            qcustomplot.cpp \
            src/VPlot.cpp\
+           src/treemodel.cpp \
+           src/treeitem.cpp \
            src/VCustomPlot.cpp \
            src/VPlottable.cpp \
            src/VTabContent.cpp \
            src/VTable.cpp \
+           src/VTree.cpp \
            src/VCombatContent.cpp \
            src/VKeplerContent.cpp \
-           src/VPlotOps.cpp
+           src/VPlotOps.cpp 
 
 HEADERS  += headers/VeloView.h\
             headers/VPlot.h\
+            headers/treemodel.h \
+            headers/treeitem.h \
             headers/VPlottable.h\
             headers/VTabContent.h\
             headers/VContentGetter.h\
             qcustomplot.h \
             headers/VCustomPlot.h \
             headers/VTable.h \
+            headers/VTree.h \
             headers/VCombatContent.h \
             headers/VKeplerContent.h \
-            headers/VPlotOps.h
+            headers/VPlotOps.h \
 
 FORMS    += VeloView.ui
 CONFIG   -= app_bundle

@@ -6,6 +6,7 @@
 #include "VPlot.h"
 #include "VPlottable.h"
 #include "VTable.h"
+#include "VTree.h"
 #include "TFile.h"
 #include "TH1D.h"
 #include "TH2D.h"
@@ -34,6 +35,10 @@ public:
     std::vector<VTabContent*> * allTabs,
     std::vector< std::vector< std::string > > * ops, int);
   static void findPlots(std::vector<VTabContent*> * allTabs,
+    std::vector< std::vector< std::string > > * ops, VPlotOps * plotOps);
+  static void findTrees(std::vector<VTabContent*> * allTabs,
+    std::vector< std::vector< std::string > > * ops, VPlotOps * plotOps);
+  static void findTables(std::vector<VTabContent*> * allTabs,
     std::vector< std::vector< std::string > > * ops, VPlotOps * plotOps);
   static void jsonToOps(std::string *, std::vector< std::vector< std::string > > *);
   static void fourPlotsPerTabLimiter(std::vector< std::vector< std::string > > *);

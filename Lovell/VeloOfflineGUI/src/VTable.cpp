@@ -17,7 +17,7 @@ void VTable::draw() {
     setupLayout();
     m_table = getTable(false);
     m_layout->addWidget(m_table, 1, 1, 1, 1);
-    addButtons();
+//    addButtons();
     m_drawn = true;
   }
 }
@@ -44,7 +44,7 @@ QTableWidget * VTable::getTable(bool isPopUp) {
   myfile.open(m_fileName.c_str());
   if (!myfile) std::cout<<"Can't open file: " << m_fileName << std::endl;
 
-  QTableWidget * table = new QTableWidget(10,10);
+  QTableWidget * table = new QTableWidget(this);
   fillTable(table, myfile);
   return table;
 }
@@ -55,18 +55,16 @@ QTableWidget * VTable::getTable(bool isPopUp) {
 void VTable::fillTable(QTableWidget * table, std::ifstream & myfile) {
   int row = 0;
   while (!myfile.eof()) {
+  	table->setRowCount(row+1);
     std::string line;
     std::getline(myfile, line);
     std::stringstream lineStream(line);
     std::string cell;
     int column = 0;
     while(std::getline(lineStream, cell, ',')) {
+    	if (column+1 > table->columnCount()) table->setColumnCount(column+1);
       QTableWidgetItem * item = new QTableWidgetItem(cell.c_str());
-      if (row == 0 && column != 0) table->setHorizontalHeaderItem(column-1, item);
-      else {
-        if (column == 0 && row != 0) table->setVerticalHeaderItem(row-1, item);
-        else if (column != 0 && row != 0) table->setItem(row-1, column-1, item);
-      }
+      table->setItem(row, column, item);
       column++;
     }
     row++;

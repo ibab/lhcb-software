@@ -9,6 +9,7 @@
 #include <QtGui/QStringListModel>
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QStringListModel>
+#include <QtGui/QFileDialog>
 
 #include "TFile.h"
 #include "VContentGetter.h"
@@ -40,6 +41,9 @@ public:
   std::string m_dataDir;
   TFile * f_in;
   TFile * f_inReff;
+  std::string f_inNameUser;
+  std::string f_inReffNameUser;
+  bool m_tempOpenBool;
 
   // Methods___________________________________________________________________
   explicit veloview(int, std::vector<std::string> *, QWidget *parent = 0);
@@ -64,8 +68,11 @@ public:
   QSpinBox * b_veloRunNumberUp;
   std::vector<TFile*> m_rootFiles;
   QCheckBox * b_showAllRefs;
+  void userFileBrowser(bool);
 
 private slots:
+	void userFileOpenRef();
+	void userFileOpen();
   void setContent();
   void on_b_quit_clicked();
   void moduleChanged();
