@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2015-08-19 - Roel Aaij
+ - Remove interface that had already been moved to Kernel/HltInterfaces.
+
 !========================= HltBase v15r6 2015-03-09 =========================
 
 ! 2015-03-09 - Roel Aaij

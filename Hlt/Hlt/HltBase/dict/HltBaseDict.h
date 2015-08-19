@@ -13,7 +13,6 @@
 #include "HltBase/IMatchTVeloTracks.h"
 #include "HltBase/ITrackUpgrade.h"
 #include "HltBase/ITrackView.h"
-#include "HltBase/IConfigTreeEditor.h"
 #include "HltBase/IHltRegister.h"
 #include "HltBase/IHltData.h"
 #include "HltBase/IHltInspector.h"
