@@ -80,7 +80,7 @@ def patchEscher(true_online_version, alignment_module, n = -1):
   escher.PrintFreq = 10000
 #   escher.EvtMax=300
 #   asddir = Online.ASDDir + "/" if hasattr(Online, "ASDDir") else "/group/online/alignment/EscherOut/"
-  asddir = Online.ASDDir + "/" if hasattr(Online, "ASDDir") else "/calib/align/EscherOut"
+  asddir = Online.ASDDir + "/" if hasattr(Online, "ASDDir") else "/calib/align/EscherOut/"
   if n == -1:
     suffix = "_Escher.out"
   else:
