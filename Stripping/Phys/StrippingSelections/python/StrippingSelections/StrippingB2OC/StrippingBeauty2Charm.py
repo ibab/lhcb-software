@@ -1486,6 +1486,14 @@ class Beauty2CharmConf(LineBuilder):
         dt.minAngle = config['2TOPO']['ANGLE_MIN']
         dt.minMass = config['2TOPO']['M_MIN']
         dt.minDPhi = config['2TOPO']['DPHI_MIN']
+
+        # Split HLT configuration
+        from DAQSys.Decoders import DecoderDB
+        from Configurables import TriggerTisTos
+        dt.addTool(TriggerTisTos, "TriggerTisTosTool")
+        dt.TriggerTisTosTool.HltDecReportsLocation = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
+        dt.TriggerTisTosTool.HltSelReportsLocation = DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
+
         hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine('DoubleTopoLine',1.0,selection=sel,HLT2=hlt)
         self.registerLine(sline)

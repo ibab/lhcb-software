@@ -216,6 +216,9 @@ class JetsConf(LineBuilder):
         bjets.ParticleAbsPID = 98
         bjets.SVLocation = test.outputLocation()
         bjets.TriggerLine = self._config["HLT"]["LINETOPO"] + ".*Decision"
+        ## Fix Hlt split configuration
+        config_split_HLT(bjets)
+
         imergedSel = MergedSelection(self._name+"merged", RequiredSelections=[inputs,test])
         return Selection(self._name + "bJets",
                          Algorithm = bjets,
@@ -320,4 +323,11 @@ class JetsConf(LineBuilder):
             MotherCut = "((INTREE((ABSID=='CELLjet')&(PT>"+str(LeadingPT)+")))&(INTREE((ABSID=='CELLjet')&(PINFO(9990,0)>0)))&("+str(Nsvtag)+" < NINTREE((ABSID=='CELLjet')&(PINFO(9991,0) > 5 ))))")
 
         return Selection(self._name + "4jets_PTmin" +str(minPT).split('*')[0]+"LeadPT"+ str(LeadingPT).split('*')[0]+ "Nsv" + str(Nsvtag) +"Selection", Algorithm = _4jets, RequiredSelections = inputs)
+
+def config_split_HLT(tool):
+    from DAQSys.Decoders import DecoderDB
+    from Configurables import TriggerTisTos
+    tool.addTool(TriggerTisTos, "TriggerTisTos")
+    tool.TriggerTisTos.HltDecReportsLocation = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
+    tool.TriggerTisTos.HltSelReportsLocation = DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
 
