@@ -4,6 +4,9 @@
 ! Purpose     : Analysis framework and configuration for offline and web GUIs
 !----------------------------------------------------------------------------
 
+! 2015-08-19 - Michael Alexander
+ - Adding IP resolutions plots back. 
+
 ! 2015-07-24 - Marco Gersabeck
  - Changed cluster path in python/veloview/config/run_view.py
  - Adding configurable option 'normalised' to scale histograms to unit area

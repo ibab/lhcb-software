@@ -342,75 +342,96 @@ run_view_pages = OrderedDict([
     ('sensor_overview', {
         'title': 'Sensor overview'
     }),
-    # Removing the IP plots for the moment as they're not made by default.
-    # ('IP resolutions', {
-    #     'title' : 'IP resolutions',
-    #     'plots' : [
-    #                 {
-    #                     'title' : 'IP_{x} resolution vs 1/p_{T}', # ROOT style formatting doesn't work, nor does Latex.
-    #                     'name' : 'Velo/VeloIPResolutionMonitor/IPX-Vs-InversePT-LongTracks-Sigma',
-    #                     'options' : {'showUncertainties' : True} # Doesn't currently seem to do anything.
-    #                     # Would be good to be able to set x & y titles, and y-axis range. 
-    #                 },
-    #                 {
-    #                     'title' : 'IP_{y} resolution vs 1/p_{T}',
-    #                     'name' : 'Velo/VeloIPResolutionMonitor/IPY-Vs-InversePT-LongTracks-Sigma',
-    #                     'options' : {'showUncertainties' : True}
-    #                 },
-    #                 {
-    #                     'title' : 'IP_{x} mean vs 1/p_{T}',
-    #                     'name' : 'Velo/VeloIPResolutionMonitor/IPX-Vs-InversePT-LongTracks-Mean',
-    #                     'options' : {'showUncertainties' : True}
-    #                 },
-    #                 {
-    #                     'title' : 'IP_{y} mean vs 1/p_{T}',
-    #                     'name' : 'Velo/VeloIPResolutionMonitor/IPY-Vs-InversePT-LongTracks-Mean',
-    #                     'options' : {'showUncertainties' : True}
-    #                 },
+    # IP plots
+    ('IP resolutions', {
+        'title' : 'IP resolutions',
+        'subpages' : [
+            {'title' : 'IP resolutions vs 1/pT',
+             'plots' : [
+                    {
+                        'title' : 'IPx resolution vs 1/pT', # ROOT style formatting doesn't work, nor does Latex.
+                        'name' : 'Velo/VeloIPResolutionMonitor/IPX-Vs-InversePT-LongTracks-Sigma',
+                        'options' : {'showUncertainties' : True, 'asPoints' : True, # Doesn't currently seem to do anything.
+                                     'yAxisMinimum' : 0., 'yAxisMaximum' : 0.1}
+                        # Would be good to be able to set x & y titles, needs to be done in histogramming algo.
+                    },
+                    {
+                        'title' : 'IPy resolution vs 1/pT',
+                        'name' : 'Velo/VeloIPResolutionMonitor/IPY-Vs-InversePT-LongTracks-Sigma',
+                        'options' : {'showUncertainties' : True, 'asPoints' : True,
+                                     'yAxisMinimum' : 0., 'yAxisMaximum' : 0.1}
+                    },
+                    {
+                        'title' : 'IPx mean vs 1/pT',
+                        'name' : 'Velo/VeloIPResolutionMonitor/IPX-Vs-InversePT-LongTracks-Mean',
+                        'options' : {'showUncertainties' : True, 'asPoints' : True,
+                                     'yAxisMinimum' : -0.02, 'yAxisMaximum' : 0.02}
+                    },
+                    {
+                        'title' : 'IPy mean vs 1/pT',
+                        'name' : 'Velo/VeloIPResolutionMonitor/IPY-Vs-InversePT-LongTracks-Mean',
+                        'options' : {'showUncertainties' : True, 'asPoints' : True,
+                                     'yAxisMinimum' : -0.02, 'yAxisMaximum' : 0.02}
+                    },
+                    ],
+             'layout' : (2,2)},
+            {'title' : 'IP resolutions vs phi',
+             'plots' : [
+                    {
+                        'title' : 'IPx resolution vs phi',
+                        'name' : 'Velo/VeloIPResolutionMonitor/IPX-Vs-Phi-LongTracks-Sigma',
+                        'options' : {'showUncertainties' : True, 'asPoints' : True,
+                                     'yAxisMinimum' : 0., 'yAxisMaximum' : 0.1}
+                    },
+                    {
+                        'title' : 'IPy resolution vs phi',
+                        'name' : 'Velo/VeloIPResolutionMonitor/IPY-Vs-Phi-LongTracks-Sigma',
+                        'options' : {'showUncertainties' : True, 'asPoints' : True,
+                                     'yAxisMinimum' : 0., 'yAxisMaximum' : 0.1}
+                    },
+                    {
+                        'title' : 'IPx mean vs phi',
+                        'name' : 'Velo/VeloIPResolutionMonitor/IPX-Vs-Phi-LongTracks-Mean',
+                        'options' : {'showUncertainties' : True, 'asPoints' : True,
+                                     'yAxisMinimum' : -0.02, 'yAxisMaximum' : 0.02}
+                    },
+                    {
+                        'title' : 'IPy mean vs phi',
+                        'name' : 'Velo/VeloIPResolutionMonitor/IPY-Vs-Phi-LongTracks-Mean',
+                        'options' : {'showUncertainties' : True, 'asPoints' : True,
+                                     'yAxisMinimum' : -0.02, 'yAxisMaximum' : 0.02}
+                    },
+                    ],
+             'layout' : (2,2) },
+            {'title' : 'IP resolutions vs eta',
+             'plots' : [
+                    {
+                        'title' : 'IPx resolution vs eta',
+                        'name' : 'Velo/VeloIPResolutionMonitor/IPX-Vs-Eta-LongTracks-Sigma',
+                        'options' : {'showUncertainties' : True, 'asPoints' : True,
+                                     'yAxisMinimum' : 0., 'yAxisMaximum' : 0.13}
+                    },
+                    {
+                        'title' : 'IPy resolution vs eta',
+                        'name' : 'Velo/VeloIPResolutionMonitor/IPY-Vs-Eta-LongTracks-Sigma',
+                        'options' : {'showUncertainties' : True, 'asPoints' : True,
+                                     'yAxisMinimum' : 0., 'yAxisMaximum' : 0.13}
+                    },
+                    {
+                        'title' : 'IPx mean vs eta',
+                        'name' : 'Velo/VeloIPResolutionMonitor/IPX-Vs-Eta-LongTracks-Mean',
+                        'options' : {'showUncertainties' : True, 'asPoints' : True,
+                                     'yAxisMinimum' : -0.02, 'yAxisMaximum' : 0.02}
+                    },
+                    {
+                        'title' : 'IPy mean vs eta',
+                        'name' : 'Velo/VeloIPResolutionMonitor/IPY-Vs-Eta-LongTracks-Mean',
+                        'options' : {'showUncertainties' : True, 'asPoints' : True,
+                                     'yAxisMinimum' : -0.02, 'yAxisMaximum' : 0.02}
+                    }
 
-    #                 {
-    #                     'title' : 'IP_{x} resolution vs #phi',
-    #                     'name' : 'Velo/VeloIPResolutionMonitor/IPX-Vs-Phi-LongTracks-Sigma',
-    #                     'options' : {'showUncertainties' : True}
-    #                 },
-    #                 {
-    #                     'title' : 'IP_{y} resolution vs #phi',
-    #                     'name' : 'Velo/VeloIPResolutionMonitor/IPY-Vs-Phi-LongTracks-Sigma',
-    #                     'options' : {'showUncertainties' : True}
-    #                 },
-    #                 {
-    #                     'title' : 'IP_{x} mean vs #phi',
-    #                     'name' : 'Velo/VeloIPResolutionMonitor/IPX-Vs-Phi-LongTracks-Mean',
-    #                     'options' : {'showUncertainties' : True}
-    #                 },
-    #                 {
-    #                     'title' : 'IP_{y} mean vs #phi',
-    #                     'name' : 'Velo/VeloIPResolutionMonitor/IPY-Vs-Phi-LongTracks-Mean',
-    #                     'options' : {'showUncertainties' : True}
-    #                 },
-                    
-    #                 {
-    #                     'title' : 'IP_{x} resolution vs #eta',
-    #                     'name' : 'Velo/VeloIPResolutionMonitor/IPX-Vs-Eta-LongTracks-Sigma',
-    #                     'options' : {'showUncertainties' : True}
-    #                 },
-    #                 {
-    #                     'title' : 'IP_{y} resolution vs #eta',
-    #                     'name' : 'Velo/VeloIPResolutionMonitor/IPY-Vs-Eta-LongTracks-Sigma',
-    #                     'options' : {'showUncertainties' : True}
-    #                 },
-    #                 {
-    #                     'title' : 'IP_{x} mean vs #eta',
-    #                     'name' : 'Velo/VeloIPResolutionMonitor/IPX-Vs-Eta-LongTracks-Mean',
-    #                     'options' : {'showUncertainties' : True}
-    #                 },
-    #                 {
-    #                     'title' : 'IP_{y} mean vs #eta',
-    #                     'name' : 'Velo/VeloIPResolutionMonitor/IPY-Vs-Eta-LongTracks-Mean',
-    #                     'options' : {'showUncertainties' : True}
-    #                 }
-
-    #             ],
-    #     #'layout' : (3,2) # Doesn't seem to do anything, plots are arranged in 2x2 tabs.
-    # }),
+                ],
+        'layout' : (2,2) }
+            ]
+    }),
 ])
