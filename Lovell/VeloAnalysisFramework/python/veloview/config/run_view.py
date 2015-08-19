@@ -130,6 +130,40 @@ run_view_pages = OrderedDict([
         ],
         'layout': (2, 2)
     }),
+    ('headerxtalk', {
+        'title': 'HeaderxTalk',
+        'plots': [
+           {
+               'title': 'RMS Normalised Header noise for all sensors',
+               'name': 'Vetra/NoiseMon/DecodedADC/Header/HeaderNoise_allSensors'
+           },
+           {
+               'title': 'RMS NoisyHeaderLinksPerSensor',
+               'name': 'Vetra/NoiseMon/DecodedADC/Header/NoisyHeaderLinksPerSensor'
+           },
+           {
+               'title': 'RMS CMS Normalised Header noise for all sensors',
+               'name': 'Vetra/NoiseMon/ADCCMSuppressed/Header/HeaderNoise_allSensors'
+           },
+           {
+               'title': 'RMS CMS NoisyHeaderLinksPerSensor',
+               'name': 'Vetra/NoiseMon/ADCCMSuppressed/Header/NoisyHeaderLinksPerSensor'
+           },
+           {
+               'title': 'Noise on 1st Channel Minus Average Noise of Link',
+               'name':  'Vetra/VeloBeetleHeaderXTalkCorrectionMoni/BHXT_SummaryPlot_2D'
+           },
+           {
+               'title': 'BHXT_SummaryPlot_1D',
+               'name':  'Vetra/VeloBeetleHeaderXTalkCorrectionMoni/BHXT_SummaryPlot_1D'
+           },
+           {
+               'title': 'Noise difference between the first and the reference channel',
+               'name':  'Vetra/VeloBeetleHeaderXTalkCorrectionMoni/BHXT_DiffPlot_1D'
+           },
+        ],
+        'layout': (2, 2)
+    }),
      ('clusters', {
           'title': 'Clusters',
           'subpages': [
