@@ -16,6 +16,7 @@ from .exceptions import DescriptionDictionaryKeyException, \
         ComparisonFunctionNotFoundInEvalDictException, ComparisonFunctionNotCollableException, \
         HistogramNotFoundException
 from ..utils.rootutils import detect_zombies
+from ..utils.rundb import RunDB
 
 class Combiner(object):
     """
@@ -322,7 +323,8 @@ class RootCombiner(BranchCombiner):
 
     def getBranches(self):
         branches = super(RootCombiner, self).getBranches()
-        branches['runnr'] = 'UInt_t'
+        branches["runnr"] = "UInt_t"
+        branches["endtimestamp"] = "ULong_t"
         return branches
 
     def isRelevant(self):
@@ -331,6 +333,7 @@ class RootCombiner(BranchCombiner):
     def getWritableResults(self):
         results = super(RootCombiner, self).getWritableResults()
         results["runnr"] = self.runnr
+        results["endtimestamp"] = RunDB().endtime(self.runnr)
         return results
 
 class LeafCombiner(Combiner):
