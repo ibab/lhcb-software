@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2015-08-19 - Roel Aaij
+ - Remove obsolete methods from ConfigTreeEditor.
+
 !========================= HltCommon v10r5 2015-03-31 =========================
 
 ! 2015-03-23 - V. Gligorov

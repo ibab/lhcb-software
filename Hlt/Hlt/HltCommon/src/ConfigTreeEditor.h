@@ -2,7 +2,7 @@
 #ifndef CONFIGTREEEDITOR_H
 #define CONFIGTREEEDITOR_H 1
 #include "GaudiAlg/GaudiTool.h"
-#include "HltBase/IConfigTreeEditor.h"
+#include "Kernel/IConfigTreeEditor.h"
 #include "Kernel/IPropertyConfigSvc.h"
 #include "Kernel/IConfigAccessSvc.h"
 #include <vector>
@@ -34,17 +34,7 @@ class ConfigTreeEditor : public extends1<GaudiTool, IConfigTreeEditor>
                         std::string, std::pair<std::string, std::string>>& updates,
                     const std::string& label ) const override;
 
-    ConfigTreeNode::digest_type
-    updateAndWrite( const ConfigTreeNode::digest_type& in,
-                    const std::vector<std::string>& updates,
-                    const std::string& label ) const override;
-
   private:
-    ConfigTreeNode::digest_type
-    updateAndWrite( const ConfigTreeNode::digest_type& in,
-                    const std::map<std::string, std::vector<std::string>>& updates,
-                    const std::string& label ) const;
-
     std::string s_propertyConfigSvc, s_configAccessSvc;
     IPropertyConfigSvc* m_propertyConfigSvc;
     IConfigAccessSvc* m_configAccessSvc;

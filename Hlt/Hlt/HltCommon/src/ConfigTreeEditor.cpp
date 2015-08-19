@@ -305,6 +305,7 @@ StatusCode ConfigTreeEditor::initialize()
     return StatusCode::SUCCESS;
 }
 
+//=============================================================================
 ConfigTreeNode::digest_type ConfigTreeEditor::updateAndWrite(
     const ConfigTreeNode::digest_type& in,
     const multimap<string, pair<string, string>>& updates,
@@ -327,46 +328,4 @@ ConfigTreeNode::digest_type ConfigTreeEditor::updateAndWrite(
         node->updateLeaf( std::move(mods) );
     }
     return tree.write( *m_configAccessSvc );
-}
-
-ConfigTreeNode::digest_type
-ConfigTreeEditor::updateAndWrite( const ConfigTreeNode::digest_type& in,
-                                  const vector<string>& updates,
-                                  const string& label ) const
-{
-    multimap<string, pair<string, string>> mm;
-    std::transform( std::begin(updates), std::end(updates), 
-                    std::inserter(mm, std::end(mm)),[&](const std::string& i) {
-        // TODO: use common code in PropertyConfig for parsing updates...
-        auto c = i.find( ':' );
-        Assert( c != string::npos );
-        auto lhs = i.substr( 0, c );
-        auto rhs = i.substr( c + 1, string::npos );
-        auto d = lhs.rfind( '.' );
-        auto comp = lhs.substr( 0, d );
-        auto key = lhs.substr( d + 1, string::npos );
-        return std::make_pair(comp, std::make_pair(key, rhs));
-    } );
-    return updateAndWrite( in, mm, label );
-}
-
-ConfigTreeNode::digest_type
-ConfigTreeEditor::updateAndWrite( const ConfigTreeNode::digest_type& in,
-                                  const map<string, vector<string>>& updates,
-                                  const string& label ) const
-{
-
-    multimap<string, pair<string, string>> mm;
-    for ( auto& i : updates ) {
-        std::transform( std::begin(i.second), std::end(i.second),
-                        std::inserter(mm, std::end(mm)), [&]( const std::string& j ) {
-            // TODO: use common code in PropertyConfig for parsing updates...
-            auto c = j.find( ':' );
-            Assert( c != string::npos );
-            auto key = j.substr( 0, c );
-            auto value = j.substr( c + 1, string::npos );
-            return std::make_pair( i.first, std::make_pair( key, value ));
-        });
-    }
-    return updateAndWrite( in, mm, label );
 }
