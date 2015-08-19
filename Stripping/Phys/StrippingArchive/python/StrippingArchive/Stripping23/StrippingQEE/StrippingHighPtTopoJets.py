@@ -43,6 +43,14 @@ default_config = {
   },
 }
 
+def config_split_HLT(tool):
+    from DAQSys.Decoders import DecoderDB
+    from Configurables import TriggerTisTos
+    tool.addTool(TriggerTisTos, "TriggerTisTosTool")
+    tool.TriggerTisTosTool.HltDecReportsLocation = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
+    tool.TriggerTisTosTool.HltSelReportsLocation = DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
+    
+
 class HighPtTopoJetsConf( LineBuilder ) :
 
     __configuration_keys__ = default_config['CONFIG'].keys()
@@ -58,6 +66,10 @@ class HighPtTopoJetsConf( LineBuilder ) :
         sel = EventSelection('HighPtTopoEventSel_40000',Algorithm=alg)
         dt = HighpTDT('HighPtTopoLine_DT_40000')
         dt.minpT = config['pT']
+
+        # Split HLT configuration
+        config_split_HLT(dt)
+        
         sline = StrippingLine(name+'%(pT)s'%config,
                               prescale  = config[ 'HighPtTopo40000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
@@ -72,6 +84,10 @@ class HighPtTopoJetsConf( LineBuilder ) :
         sel = EventSelection('HighPtTopoEventSel_20000',Algorithm=alg)
         dt = HighpTDT('HighPtTopoLine_DT_20000')
         dt.minpT = config['pT20']
+
+        # Split HLT configuration
+        config_split_HLT(dt)
+
         sline = StrippingLine(name+'%(pT20)s'%config,
                               prescale  = config[ 'HighPtTopo20000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
@@ -86,6 +102,10 @@ class HighPtTopoJetsConf( LineBuilder ) :
         sel = EventSelection('HighPtTopoEventSel_10000',Algorithm=alg)
         dt = HighpTDT('HighPtTopoLine_DT_10000')
         dt.minpT = config['pT10']
+
+        # Split HLT configuration
+        config_split_HLT(dt)
+
         sline = StrippingLine(name+'%(pT10)s'%config,
                               prescale  = config[ 'HighPtTopo10000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
@@ -100,6 +120,10 @@ class HighPtTopoJetsConf( LineBuilder ) :
         sel = EventSelection('HighPtTopoEventSel_1000',Algorithm=alg)
         dt = HighpTDT('HighPtTopoLine_DT_1000')
         dt.minpT = config['pT1']
+
+        # Split HLT configuration
+        config_split_HLT(dt)
+
         sline = StrippingLine(name+'%(pT1)s'%config,
                               prescale  = config[ 'HighPtTopo1000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
@@ -115,6 +139,10 @@ class HighPtTopoJetsConf( LineBuilder ) :
         dt.minconepT = config['pTcone']
         dt.conesize = config['conesize']
         dt.minpT = config['pT20']
+
+        # Split HLT configuration
+        config_split_HLT(dt)
+
         sline = StrippingLine(name+'%(pT20)s_Cone55'%config,
                               prescale  = config[ 'HighPtTopo20000_Cone55_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
@@ -122,6 +150,6 @@ class HighPtTopoJetsConf( LineBuilder ) :
                               HLT2=config['HLT2'])
         self.registerLine(sline)
 
-
+    
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

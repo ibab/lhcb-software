@@ -4,6 +4,11 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-19 - Roel Aaij
+ - Fixes for split HLT in:
+   Stripping23/StrippingB2OC/StrippingBeauty2Charm.py and
+   Stripping23/StrippingQEE/StrippingHighPtTopoJets.py
+
 !========================= StrippingArchive v1r31 2015-08-18 =========================
 
 ! 2015-08-17 - Stefano Perazzini
