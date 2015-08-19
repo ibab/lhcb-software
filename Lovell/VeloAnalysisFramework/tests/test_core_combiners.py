@@ -2,6 +2,7 @@ import os
 import tempfile
 import shutil
 
+from veloview.config import Config
 from veloview.core.analysis_config_wrapper import AnalysisConfigWrapper
 from veloview.core.score_manipulation import Score, ERROR_LEVELS
 
@@ -61,6 +62,9 @@ class TestCombiners(unittest.TestCase):
         self.rfref.Close()
         self.rfdata.Close()
 
+        # Write GRF to temp directory (rather than run directory)
+        Config().grf_file_path = os.path.join(self.tdir, Config().grf_file_name)
+
         configfile = os.path.join(os.path.dirname(__file__), 'analysis_config_test.py')
         with open(configfile, 'r') as inputFile:
             exec(inputFile.read())
@@ -68,7 +72,7 @@ class TestCombiners(unittest.TestCase):
         self.mycombiner = config.getTrunk(orfdata.GetName(), orfref.GetName())
 
         # Results to compare against
-        self.results = {"score": Score(31.106987921869603), "lvl": ERROR}
+        self.results = {"score": Score(70.62594356001006), "lvl": ERROR}
 
     def tearDown(self):
         shutil.rmtree(self.tdir)
@@ -77,12 +81,11 @@ class TestCombiners(unittest.TestCase):
     def test_combiners(self):
         """Test all combiners recursively with real-life monitoring files"""
 
-        print self.mycombiner
         self.mycombiner.evaluate()
         self.mycombiner.write_to_grf()
 
         self.assertEqual(self.mycombiner.results["lvl"], self.results["lvl"])
-        #self.assertAlmostEqual(self.mycombiner.results["score"].value, self.results["score"].value)
+        self.assertAlmostEqual(self.mycombiner.results["score"].value, self.results["score"].value)
 
 if __name__ == '__main__':
     unittest.main()
