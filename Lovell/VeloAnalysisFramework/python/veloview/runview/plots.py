@@ -98,7 +98,7 @@ def get_trending_plot(name, runRange, binsY = 10, minY = 0., maxY = 10., formatt
     """
     Get a trending plot, showing a certain variable plotted against run number.
     """
-    f = ROOT.TFile(Config().grf_file_name, 'READ')
+    f = ROOT.TFile(Config().grf_file_path, 'READ')
     t = Tree(Config().grf_tree_name)
     h = t.Plot( 
             ( # functions projecting out coordinates to plot

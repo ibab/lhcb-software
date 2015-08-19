@@ -32,7 +32,7 @@ DEFAULTS = {
     'reference_db': 'ReferenceDB.sqlite',
     'run_view_pages': run_view.run_view_pages,
     'analysis_config': (analysis_config.analysis_config_branches, analysis_config.analysis_config_leaves),
-    'grf_file_name': '/tmp/GRF.root',
+    'grf_file_name': 'GRF.root',
     'grf_tree_name': 'DQTree',
 }
 
@@ -101,3 +101,8 @@ class Config(object):
     def reference_db_path(self):
         """Return the full path of the reference database."""
         return os.path.join(self.run_data_dir, self.reference_db)
+
+    @property
+    def grf_file_path(self):
+        """Return the full path of the GRF."""
+        return os.path.join(self.run_data_dir, self.grf_file_name)

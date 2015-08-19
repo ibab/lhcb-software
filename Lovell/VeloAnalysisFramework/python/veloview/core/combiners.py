@@ -312,10 +312,10 @@ class RootCombiner(BranchCombiner):
         """
         Write the entire tree to a Giant Root File.
         """
-        fileName = Config().grf_file_name
+        fileName = Config().grf_file_path
         mode = "update" if os.path.isfile(fileName) else "create"
 
-        writer = GRFIO(Config().grf_file_name, mode = mode, branches = self.getBranches())
+        writer = GRFIO(fileName, mode = mode, branches = self.getBranches())
         writer.fill(self.getWritableResults())
         writer.write()
         writer.close()
