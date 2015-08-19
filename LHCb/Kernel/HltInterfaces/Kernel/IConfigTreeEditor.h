@@ -43,9 +43,5 @@ public:
                                                                  std::pair<std::string,std::string> >& updates,
                                                      const std::string& label) const = 0;
 
-  virtual ConfigTreeNode::digest_type updateAndWrite(const ConfigTreeNode::digest_type& in,
-                                                     const std::vector<std::string>& updates,
-                                                     const std::string& label) const = 0;
-
 };
 #endif // ICONFIGTREEEDITOR_H
