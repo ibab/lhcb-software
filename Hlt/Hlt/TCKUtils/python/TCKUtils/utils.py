@@ -89,7 +89,6 @@ def dumpL0( id, cas  = ConfigAccessSvc() ) :
     tree  =  getConfigTree( id, cas )
     l0s   = [ i for i in tree if i.leaf and i.leaf.type == 'L0DUConfigProvider' ]
     for i in l0s :
-        from pprint import pprint
         print '%s TCK = %s %s' % ( 20*'*',i.leaf.props['TCK'],20 *'*' )
         print '%s Channels %s' % ( 20*'*',20 *'*' )
         pprint( _parseL0settings( eval(i.leaf.props['Channels']) ) )
@@ -180,9 +179,23 @@ class AccessSvcSingleton(object) :
          return self._cas().configTreeNodeAliases( alias )
     def writeConfigTreeNodeAlias(self,alias) :
          return self._cas().writeConfigTreeNodeAlias(alias)
-    def updateAndWrite(self,id,mods,label) :
-         if not mods.empty() : print 'updateAndWrite: %s ' % ( [ i for i in mods ] )
-         return self._cte().updateAndWrite(id,mods,label)
+    def updateAndWrite(self, id, updates, label) :
+        if not updates:
+            return
+
+        print 'updateAndWrite updates:'
+        pprint(dict(updates))
+        mod_map = cppyy.gbl.std.multimap('std::string', 'std::pair<std::string, std::string>')
+        value_pair = cppyy.gbl.std.pair('std::string', 'std::string')
+        insert_pair = cppyy.gbl.std.pair('const std::string', 'std::pair<std::string, std::string>')
+        mods = mod_map()
+        for algname, props in updates.iteritems() :
+            for k, v in props.iteritems() :
+                vp = value_pair(k, v)
+                ip = insert_pair(algname, vp)
+                mods.insert(ip)
+
+        return self._cte().updateAndWrite(id,mods,label)
 
 
 def createAccessSvcSingleton( cas = ConfigAccessSvc(), createConfigTreeEditor = False ) :
@@ -588,14 +601,7 @@ class RemoteAccess(object) :
                 return
             a = a[0]
         (release,hlttype) = a.split('/',3)[1:3]
-        vector_string = cppyy.gbl.std.vector('std::string')
-        mods = vector_string()
-        for algname,props in updates.iteritems() :
-            for k,v in props.iteritems() :
-                item = algname + '.' + k + ':' + v
-                print 'updating: ' + item
-                mods.push_back( item )
-        newId = svc.updateAndWrite(id,mods,label)
+        newId = svc.updateAndWrite(id, updates, label)
         noderef = svc.resolveConfigTreeNode( newId )
         top = topLevelAlias( release, hlttype, noderef )
         svc.writeConfigTreeNodeAlias(top)
@@ -610,8 +616,9 @@ class RemoteAccess(object) :
             print 'something went wrong: no unique toplevel match for ' + str(id)
             return
         (release,hlttype) = a[0].split('/',3)[1:3]
-        vector_string = cppyy.gbl.std.vector('std::string')
-        mods = vector_string()
+
+        from collections import defaultdict
+        updates = defaultdict(dict)
         # check L0 config in source config
         for cfg in svc.collectLeafRefs( id ) :
             #  check for either a MultiConfigProvider with the right setup,
@@ -622,13 +629,11 @@ class RemoteAccess(object) :
                 #  check that all specified properties exist in cfg
                 for (k,v) in l0config.iteritems() :
                     if k not in cfg.props : raise KeyError('Specified property %s not in store'%k)
-                    mods.push_back('ToolSvc.L0DUConfig.%s:%s' % (k,v) )
-        if extra :
-            for algname,props in extra.iteritems() :
-                for k,v in props.iteritems() :
-                    mods.push_back( '%s.%s:%s' %  (algname, k, v ) )
-        print 'updates: %s ' % mods
-        newId = svc.updateAndWrite(id,mods,label)
+                    updates['ToolSvc.L0DUConfig'].update({k : v})
+
+        updates.update(extra)
+                                        
+        newId = svc.updateAndWrite(id, updates, label)
         noderef = svc.resolveConfigTreeNode( newId )
         if not noderef : print 'oops, could not find node for %s ' % newId
         top = topLevelAlias( release, hlttype, noderef )
@@ -860,8 +865,6 @@ def dumpForPVSS( info, root ) :
 def printReleases( rel ) : pprint(rel)
 def printHltTypes( rt ) : pprint(rt)
 def printTCKs( tcks ) : pprint(tcks)
-
-from pprint import pprint
 
 def listConfigurations( cas = ConfigAccessSvc() ) :
     return printConfigurations( getConfigurations(cas) )
