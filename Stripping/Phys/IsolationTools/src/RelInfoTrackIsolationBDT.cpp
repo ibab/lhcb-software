@@ -349,12 +349,11 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
 
 double RelInfoTrackIsolationBDT::calcIPToAnyPV( const LHCb::Track * track )
 {
-  LHCb::RecVertex::Range::const_iterator iv;
   double ips(-1),imp(-1),impchi2(-1);
   ips = 6.0e5;
   IDVAlgorithm* dva = Gaudi::Utils::getIDVAlgorithm( contextSvc() ) ;
   if ( !dva ) { return Error("Could not get parent DVAlgorithm"); }
-  for(iv = m_vertices.begin();iv!=m_vertices.end();iv++){
+  for(LHCb::RecVertex::Range::const_iterator iv = m_vertices.begin();iv!=m_vertices.end();iv++){
     StatusCode sc_ips = dva->distanceCalculator()->distance(track,(*iv),imp,impchi2);
     if(!sc_ips) return StatusCode(sc_ips);
     if(ips>impchi2) ips = impchi2;
@@ -389,29 +388,29 @@ void RelInfoTrackIsolationBDT::getPerpFeet(Gaudi::XYZPoint track_pos,
                                            Gaudi::XYZPoint& vertex, bool& fail)
 {
   // def difference of positions
-  Gaudi::XYZVector  diffPos(track_pos - mu_pos);
+  const Gaudi::XYZVector  diffPos(track_pos - mu_pos);
   // Get unit vectors
-  Gaudi::XYZVector  unitTrack_p(track_p.unit());
-  Gaudi::XYZVector  unitMu_p(mu_p.unit());
-  Gaudi::XYZPoint   temp1(0.,0.,0.);
-  Gaudi::XYZPoint   temp2(0.,0.,0.);
+  const Gaudi::XYZVector  unitTrack_p(track_p.unit());
+  const Gaudi::XYZVector  unitMu_p(mu_p.unit());
+  const Gaudi::XYZPoint   temp1(0.,0.,0.);
+  const Gaudi::XYZPoint   temp2(0.,0.,0.);
   fail = false;
   // def used scalar-products
-  double  d_DiffTr  = diffPos.Dot( unitTrack_p);
-  double  d_DiffMu  = diffPos.Dot( unitMu_p);
-  double  d_MuTrack = unitMu_p.Dot( unitTrack_p);
-  double  d_TrTr    = unitTrack_p.Dot( unitTrack_p);
-  double  d_MuMu    = unitMu_p.Dot( unitMu_p);
-  double  denom     = d_MuTrack * d_MuTrack - d_MuMu * d_TrTr;
+  const double  d_DiffTr  = diffPos.Dot( unitTrack_p);
+  const double  d_DiffMu  = diffPos.Dot( unitMu_p);
+  const double  d_MuTrack = unitMu_p.Dot( unitTrack_p);
+  const double  d_TrTr    = unitTrack_p.Dot( unitTrack_p);
+  const double  d_MuMu    = unitMu_p.Dot( unitMu_p);
+  const double  denom     = d_MuTrack * d_MuTrack - d_MuMu * d_TrTr;
   if (fabs(denom)<1E-27) {
     perpFootTrack = temp1;
     perpFootMu    = temp2;
     fail = true;
   }
   else {
-    double numer  = d_DiffTr * d_MuTrack - d_TrTr * d_DiffMu;
-    double mu2    = numer / denom;
-    double mu1    = ( mu2 * d_MuTrack - d_DiffTr ) / d_TrTr ;
+    const double numer  = d_DiffTr * d_MuTrack - d_TrTr * d_DiffMu;
+    const double mu2    = numer / denom;
+    const double mu1    = ( mu2 * d_MuTrack - d_DiffTr ) / d_TrTr ;
     perpFootTrack = track_pos + unitTrack_p *mu1;
     perpFootMu    = mu_pos    + unitMu_p    *mu2;
   }
@@ -435,33 +434,29 @@ double RelInfoTrackIsolationBDT::calcFC( Gaudi::XYZVector track_mom,
                                          Gaudi::XYZPoint mu_track_vertex,
                                          const LHCb::VertexBase* PV)
 {
-  double fc   = -1;
-  Gaudi::XYZPoint  pv              = PV->position();
-  Gaudi::XYZVector track_plus_mu_p( track_mom + mu_mom );
-  Gaudi::XYZVector pv_to_tmuVertex( mu_track_vertex - pv);
-  double angle      = enclosedAngle(track_plus_mu_p, pv_to_tmuVertex);
-  double fc_num     = track_plus_mu_p.R() * angle;
-  double fc_denom   = track_plus_mu_p.R() * angle + track_mom.Rho() + mu_mom.Rho() ;
-  if(fc_denom != 0 ) fc = fc_num / fc_denom ;
-  return fc;
+  const Gaudi::XYZPoint&  pv  = PV->position();
+  const Gaudi::XYZVector track_plus_mu_p( track_mom + mu_mom );
+  const Gaudi::XYZVector pv_to_tmuVertex( mu_track_vertex - pv);
+  const double angle      = enclosedAngle(track_plus_mu_p, pv_to_tmuVertex);
+  const double fc_num     = track_plus_mu_p.R() * angle;
+  const double fc_denom   = track_plus_mu_p.R() * angle + track_mom.Rho() + mu_mom.Rho() ;
+  return ( fc_denom != 0 ? fc_num / fc_denom : - 1 );
 }
 
 ///--------------------------------------------
 /// calculates angle between two vectors
 ///--------------------------------------------
-double RelInfoTrackIsolationBDT::enclosedAngle(Gaudi::XYZVector p1,Gaudi::XYZVector p2) {
-  double den      = p1.R()*p2.R();
-  double cosAngle = p1.Dot(p2)/den;
-  double angle    = acos(fabs(cosAngle));
-  if (cosAngle < 0 ) {
-    angle = ROOT::Math::Pi() - angle;
-  }
-  return angle;
+double RelInfoTrackIsolationBDT::enclosedAngle(Gaudi::XYZVector p1,Gaudi::XYZVector p2)
+{
+  const double den      = p1.R()*p2.R();
+  const double cosAngle = p1.Dot(p2)/den;
+  const double angle    = acos(fabs(cosAngle));
+  return ( cosAngle < 0 ? ROOT::Math::Pi() - angle : angle );
 }
 
-double RelInfoTrackIsolationBDT::calcVertexDist(Gaudi::XYZPoint muTrack, const LHCb::VertexBase* v){
+double RelInfoTrackIsolationBDT::calcVertexDist(Gaudi::XYZPoint muTrack, const LHCb::VertexBase* v)
+{
   if (v==NULL) return 0 ;
-  Gaudi::XYZPoint vertex = v->position();
+  const Gaudi::XYZPoint& vertex = v->position();
   return ( (muTrack.z()-vertex.z())/fabs(muTrack.z()-vertex.z())*(muTrack-vertex).R() );
 }
-
