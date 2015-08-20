@@ -2,8 +2,9 @@
 Options for building Stripping22. 
 """
 
-#use CommonParticlesArchive
 stripping='stripping22'
+
+#use CommonParticlesArchive
 from CommonParticlesArchive import CommonParticlesArchiveConf
 CommonParticlesArchiveConf().redirect(stripping)
 
@@ -64,20 +65,48 @@ from DSTWriters.Configuration import (SelDSTWriter,
 from Configurables import LoKi__PVReFitter
 LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").CheckTracksByLHCbIDs = True
 
-## Configure the VeloTrack unpacker
-from Configurables import UnpackTrack
-unpackIt = UnpackTrack("unpackIt")
-unpackIt.InputName = "pRec/Track/FittedHLT1VeloTracks"
-unpackIt.OutputName = "Rec/Track/FittedHLT1VeloTracks"
+appMgr = ApplicationMgr()
+appMgr.OutputLevel = 6
+appMgr.ExtSvc += [ 'ToolSvc', 'AuditorSvc' ]
 
-#
-# DaVinci Configuration
-#
-from Configurables import DaVinci
-DaVinci().EvtMax = -1 # Number of events
-DaVinci().HistogramFile = "DVHistos.root"
-DaVinci().appendToMainSequence( [unpackIt] )
-DaVinci().appendToMainSequence( [ sc.sequence() ] )
-DaVinci().ProductionType = "Stripping"
-DaVinci().DataType = "2015"
+appMgr.HistogramPersistency = "ROOT"
+ntSvc = NTupleSvc()
+appMgr.ExtSvc += [ ntSvc ]
 
+from Configurables import ( LHCbApp, PhysConf, AnalysisConf,
+                            DstConf, LumiAlgsConf, DDDBConf )
+
+#LHCbApp().DDDBtag   = "dddb-20150724"
+#LHCbApp().CondDBtag = "cond-20150805"
+
+# Can be enabled for next full stack release
+#PhysConf().OutputLevel     = appMgr.OutputLevel
+#AnalysisConf().OutputLevel = appMgr.OutputLevel
+
+datatype =  "2015"
+PhysConf().DataType      = datatype
+AnalysisConf().DataType  = datatype
+LumiAlgsConf().DataType  = datatype
+DDDBConf().DataType      = datatype
+
+inputType = "DST"
+LumiAlgsConf().InputType = inputType
+PhysConf().InputType     = inputType
+
+unPack = ["Reconstruction"]
+PhysConf().EnableUnpack = unPack
+DstConf().EnableUnpack  = unPack
+
+lumiSeq = GaudiSequencer("LumiSeq")
+LumiAlgsConf().LumiSequencer = lumiSeq
+
+appMgr.TopAlg += [ PhysConf().initSequence(),
+                   AnalysisConf().initSequence(),
+                   sc.sequence(), lumiSeq ]
+
+#from Configurables import DaVinci
+#DaVinci().ProductionType = "Stripping"
+#DaVinci().DataType   = datatype
+#DaVinci().DDDBtag    = LHCbApp().DDDBtag
+#DaVinci().CondDBtag  = LHCbApp().CondDBtag
+#DaVinci().appendToMainSequence( [ sc.sequence() ] )

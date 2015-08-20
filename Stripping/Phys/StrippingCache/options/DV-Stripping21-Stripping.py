@@ -76,18 +76,45 @@ sc = StrippingConf( Streams = streams,
                     DSTStreams = dstStreams,
                     MicroDSTStreams = mdstStreams )
 
-
-from Configurables import ApplicationMgr, AuditorSvc, SequencerTimerTool
-
 appMgr = ApplicationMgr()
-#appMgr.ExtSvc += [ 'ToolSvc', 'AuditorSvc' ]
+appMgr.OutputLevel = 6
+appMgr.ExtSvc += [ 'ToolSvc', 'AuditorSvc' ]
 
 appMgr.HistogramPersistency = "ROOT"
 ntSvc = NTupleSvc()
-appMgr.ExtSvc +=  [ ntSvc ]
+appMgr.ExtSvc += [ ntSvc ]
 
-#appMgr.TopAlg += [ sc.sequence() ]
+from Configurables import ( LHCbApp, PhysConf, AnalysisConf,
+                            DstConf, LumiAlgsConf, DDDBConf )
 
-from Configurables import DaVinci
-DaVinci().DataType   = "2012"
-DaVinci().appendToMainSequence( [ sc.sequence() ] )
+# Can be enabled for next full stack release
+#PhysConf().OutputLevel     = appMgr.OutputLevel
+#AnalysisConf().OutputLevel = appMgr.OutputLevel
+
+datatype =  "2012"
+PhysConf().DataType      = datatype
+AnalysisConf().DataType  = datatype
+LumiAlgsConf().DataType  = datatype
+DDDBConf().DataType      = datatype
+
+inputType = "DST"
+LumiAlgsConf().InputType = inputType
+PhysConf().InputType     = inputType
+
+unPack = ["Reconstruction"]
+PhysConf().EnableUnpack = unPack
+DstConf().EnableUnpack  = unPack
+
+lumiSeq = GaudiSequencer("LumiSeq")
+LumiAlgsConf().LumiSequencer = lumiSeq
+
+appMgr.TopAlg += [ PhysConf().initSequence(),
+                   AnalysisConf().initSequence(),
+                   sc.sequence(), lumiSeq ]
+
+#from Configurables import DaVinci
+#DaVinci().ProductionType = "Stripping"
+#DaVinci().DataType   = datatype
+#DaVinci().DDDBtag    = LHCbApp().DDDBtag
+#DaVinci().CondDBtag  = LHCbApp().CondDBtag
+#DaVinci().appendToMainSequence( [ sc.sequence() ] )

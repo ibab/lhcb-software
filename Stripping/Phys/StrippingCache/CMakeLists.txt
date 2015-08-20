@@ -44,19 +44,55 @@ set(conf_deps ${conf_deps} DaVinciConfUserDB )
 
 # Build the caches
 
+MACRO (TODAY RESULT)
+   EXECUTE_PROCESS(COMMAND "date" "+%S/%M/%H/%d/%m/%Y" OUTPUT_VARIABLE ${RESULT})
+   string(REGEX REPLACE "(..)/(..)/(..)/(..)/(..)/..(..).*" "\\1\\2\\3\\4\\5\\6" ${RESULT} ${${RESULT}})
+ENDMACRO (TODAY)
+
 # Do not build for the -O0 platform, as this seems to have problems.
 # To be investigated...
 if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
 
  MESSAGE( STATUS "StrippingCache Deps : " ${conf_deps} )
 
+ TODAY( time_date )
+
  include(LoKiFunctorsCache)
 
- loki_functors_cache(S23FunctorsCache
+ set( s23name S23FunctorCache_${time_date} )
+ loki_functors_cache(${s23name}
                      options/SuppressLogMessages.py
-		     options/DV-Stripping23-Stripping.py options/SilenceErrors.py 
+                     options/DV-Stripping23-Stripping.py 
+                     options/SilenceErrors.py 
                      LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
                      DEPENDS ${conf_deps}
                      SPLIT 50)
- 
+
+ set ( s22name S22FunctorCache_${time_date} )
+ loki_functors_cache(${s22name}
+                     options/SuppressLogMessages.py
+                     options/DV-Stripping22-Stripping.py 
+                     options/SilenceErrors.py 
+                     LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
+                     DEPENDS ${s23name}
+                     SPLIT 50)
+
+ set ( s21name S21FunctorCache_${time_date} )
+ loki_functors_cache(${s21name}
+                     options/SuppressLogMessages.py
+                     options/DV-Stripping21-Stripping.py 
+                     options/SilenceErrors.py 
+                     LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
+                     DEPENDS ${s22name}
+                     SPLIT 50)
+
+ set ( s20name S20FunctorCache_${time_date} )
+ loki_functors_cache(${s20name}
+                     options/SuppressLogMessages.py
+                     options/DV-Stripping20-Stripping.py 
+                     options/SilenceErrors.py 
+                     LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
+                     DEPENDS ${s21name}
+                     SPLIT 50)
+
 endif()

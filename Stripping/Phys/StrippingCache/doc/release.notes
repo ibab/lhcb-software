@@ -5,6 +5,18 @@
 ! Created     : 2015-02-04
 ! -----------------------------------------------------------------------------
 
+! 2015-08-20 - Chris Jones
+ - Add support for building multiple cahces for different strippings
+  + Each cache is made to depend on each other, in order, such that they are 
+    built sequentially. This is needed so the previous caches are then 
+    available when the next is built, to avoid the same functors being cached 
+    more than once.
+  + A timestamp is appended to the name of each cache, taken from the time the
+    build in initialised. This is needed ensure the same cache generated in 
+    the nightlies to that in a private user area are considered as seperate 
+    things and do not mask each other, which is required as the user cache 
+    will not contain functors in the release cache.
+
 !========================= StrippingCache v1r0 2015-08-18 =========================
 
 ! 2015-08-18 - Chris Jones

@@ -8,6 +8,7 @@
 stripping="stripping23"
 
 #use CommonParticlesArchive
+
 from CommonParticlesArchive import CommonParticlesArchiveConf
 CommonParticlesArchiveConf().redirect(stripping)
 
@@ -24,15 +25,8 @@ from Configurables import RawEventJuggler
 juggler = RawEventJuggler( DataOnDemand=True, Input=0.3, Output=4.1 )
 
 #
-#Fix for TrackEff lines
+# Build the streams and stripping object
 #
-#from Configurables import DecodeRawEvent
-#DecodeRawEvent().setProp("OverrideInputs",4.1)
-
-#from Configurables import ConfigCDBAccessSvc
-#confDBAcc = ConfigCDBAccessSvc()
-#confDBAcc.File = '/afs/cern.ch/user/s/sperazzi/public/Stripping/S23/DaVinciDev_v37r0/Phys/StrippingSelections/tests/data/config.cdb'
-
 from StrippingConf.Configuration import StrippingConf, StrippingStream
 from StrippingSettings.Utils import strippingConfiguration
 from StrippingArchive.Utils import buildStreams
@@ -77,8 +71,8 @@ from Configurables import ApplicationMgr, AuditorSvc, SequencerTimerTool
 # Initial IOV time
 # http://www.onlineconversion.com/unix_time.htm
 # values in ns (so multiply values from above link by 1e9)
-from Configurables import EventClockSvc
-EventClockSvc().EventTimeDecoder = "OdinTimeDecoder"
+#from Configurables import EventClockSvc
+#EventClockSvc().EventTimeDecoder = "OdinTimeDecoder"
 
 appMgr = ApplicationMgr()
 appMgr.OutputLevel = 6
@@ -89,13 +83,10 @@ ntSvc = NTupleSvc()
 appMgr.ExtSvc += [ ntSvc ]
 
 from Configurables import ( LHCbApp, PhysConf, AnalysisConf,
-                            DstConf, LumiAlgsConf, DDDBConf, CondDB )
+                            DstConf, LumiAlgsConf, DDDBConf )
 
-# Just to initialise
-#condDB = CondDB()
-
-LHCbApp().DDDBtag   = "dddb-20150724"
-LHCbApp().CondDBtag = "cond-20150805"
+#LHCbApp().DDDBtag   = "dddb-20150724"
+#LHCbApp().CondDBtag = "cond-20150805"
 
 # Can be enabled for next full stack release
 #PhysConf().OutputLevel     = appMgr.OutputLevel
