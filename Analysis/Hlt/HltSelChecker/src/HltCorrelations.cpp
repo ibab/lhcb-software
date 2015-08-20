@@ -60,11 +60,11 @@ StatusCode HltCorrelations::initialize() {
 //=========================================================================
 //  
 //=========================================================================
-StatusCode HltCorrelations::createSelections ( ) {
+StatusCode HltCorrelations::createSelections (unsigned int TCK ) {
   strings algos ;   // algorithms to be considered in correlations
 
   // Fill Hlt selections
-  const hltPairs& sels = HltSelectionsBase::selections();
+  const hltPairs& sels = HltSelectionsBase::selections(TCK);
   algos.push_back("L0");
   
   // trigger bits
@@ -73,7 +73,7 @@ StatusCode HltCorrelations::createSelections ( ) {
   for ( unsigned int i = m_firstBit ; i<=m_lastBit ; i++){
     algos.push_back(bitX(i));
   }
-  // trigger lines
+  // trigger selections
   for ( hltPairs::const_iterator p = sels.begin() ; p!= sels.end() ; ++p){
     bool duplicate = false ;
     for ( strings::const_iterator i=algos.begin() ; i!=algos.end() ; ++i){
@@ -104,7 +104,11 @@ StatusCode HltCorrelations::execute() {
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
   StatusCode sc = StatusCode::SUCCESS ;
   if (m_first){
-    sc = createSelections();
+    // decreports
+    const LHCb::HltDecReports* decReports = 
+        getIfExists<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
+    if (!decReports) return StatusCode::FAILURE;
+    sc = createSelections( decReports->configuredTCK() );
     if (!sc) return sc;
     m_first = false;
   }
@@ -137,19 +141,19 @@ StatusCode HltCorrelations::execute() {
   
   if (msgLevel(MSG::DEBUG)) debug() << "Read routing bits" << endmsg;
   
+  
   // decreports
   const LHCb::HltDecReports* decReports = 
       getIfExists<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
-  
-  if( NULL!=decReports )
+  if( decReports )
   { 
     
-    hltPairs sels = HltSelectionsBase::selections();
+    hltPairs sels = HltSelectionsBase::selections( decReports->configuredTCK() );
     
     // for map look in summary
     for ( hltPairs::const_iterator p = sels.begin() ; p!= sels.end() ; ++p ){
     if (!m_algoCorr->fillResult(p->first,(decReports->decReport(p->first))? 
-                                (decReports->decReport(p->first)->decision()):0))
+                                         (decReports->decReport(p->first)->decision()):0))
       return StatusCode::FAILURE;
     }
   } 

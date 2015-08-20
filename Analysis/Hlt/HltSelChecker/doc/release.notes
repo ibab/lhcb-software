@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 ! 2015-08-20 - Gerhard Raven
  - prefer std::to_string over _itoa from GaudiKernel
+ - replace usage of DispatchANNSvc with TCKANNSvc
 
 !======================= HltSelChecker v12r4 2015-02-25 ======================
 

@@ -29,14 +29,15 @@ public:
 
   virtual ~HltSelectionsBase( ); ///< Destructor
 
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode execute();    ///< Algorithm execution
 
 protected:
 
-  const hltPairs& selections();    ///< fill map of selections
+  const hltPairs& selections(unsigned int TCK);    ///< fill map of selections
 
   bool m_isTrigger;
 
+  unsigned int m_tck = 0;
   hltPairs m_selections ; ///< list of Hlt2 selections
   std::string m_hlt2SelectionID ; ///< Major key for Hlt2
 

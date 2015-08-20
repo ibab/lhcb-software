@@ -36,7 +36,7 @@ private:
 
 private:
   StatusCode moreAlgorithms(); ///< Fill more algorithms
-  StatusCode createSelections(); ///<get list of selections
+  StatusCode createSelections(unsigned int TCK); ///<get list of selections
 
   strings m_moreAlgorithms ;   ///< additional algorithms
   mutable IAlgorithmCorrelations* m_algoCorr ;  ///< Correlation tool
