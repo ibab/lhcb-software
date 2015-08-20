@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-08-21 - Patrick Robbe
+ - Add line Hlt2SMOGPhysics in Commissioning/Lines.py
+
 !========================= Hlt2Lines v10r1 2015-08-05 =========================
 
 ! 2015-08-05 - Francesco Dettori

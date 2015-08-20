@@ -17,6 +17,8 @@ class CommissioningLines(Hlt2LinesConfigurableUser):
                                   'VoidFilter' : ''},
                  'Transparent' : {'HLT1' : "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|MB.*|BeamGas.*|Velo.*|NZS.*|Incident|Tell1Error|ErrorEvent)Decision$')",
                                   'VoidFilter' : ''},
+                 'SMOGPhysics' : {'HLT1' : "HLT_PASS_RE('^Hlt1.*Decision$')" ,
+                                  'VoidFilter' : ''},
                  'Lumi'        : {'HLT1' : "HLT_PASS_SUBSTR('Hlt1Lumi')",
                                   'VoidFilter' : ''},
                  'KS0_DD'      : {'HLT1' : "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')",
@@ -35,6 +37,7 @@ class CommissioningLines(Hlt2LinesConfigurableUser):
                   'PassThrough' : [],
                   'NoBiasPassThrough' : [],
                   'Transparent' : [],
+                  'SMOGPhysics' : [],
                   'Lumi'        : [],
                   'KS0_DD'      : [KS0_DD],
                   'KS0_LL'      : [KS0_LL]}
