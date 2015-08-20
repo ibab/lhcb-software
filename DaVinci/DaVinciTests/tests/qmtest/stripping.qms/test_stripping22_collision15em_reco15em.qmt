@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="timeout"><integer>3600</integer></argument>
+<argument name="args"><set>
+  <text>-T</text>
+  <text>$APPCONFIGOPTS/DaVinci/DV-Stripping22-Stripping.py</text>
+  <text>$APPCONFIGOPTS/DaVinci/DataType-2015.py</text> 
+  <text>$PRCONFIGOPTS/DaVinci/Stripping/Collision15EM-6.5TeV-Reco15EM-FULLDST.py</text> 
+  <text>$APPCONFIGOPTS/Persistency/Compression-ZLIB-1.py</text>
+  <text>$DAVINCITESTSROOT/tests/options/DaVinci-1000events.py</text>
+  <text>$DAVINCITESTSROOT/tests/options/EnableFPEAuditor.py</text>
+</set></argument>
+<argument name="reference"><text>../refs/test_stripping22_collision15EM_reco15EM.ref</text></argument>
+<argument name="validator"><text>
+from DaVinciTests.QMTest.DaVinciExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+countErrorLines({"FATAL":0})
+</text></argument>
+</extension>
