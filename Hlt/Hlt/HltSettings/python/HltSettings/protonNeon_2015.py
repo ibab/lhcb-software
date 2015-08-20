@@ -49,7 +49,7 @@ class protonNeon_2015:
 
     def ActiveHlt2Lines(self) :
         """Return a list of active Hlt2 Lines."""
-        return ['Hlt2PassThrough', 'Hlt2Lumi', 'Hlt2Transparent']
+        return ['Hlt2PassThrough', 'Hlt2Lumi', 'Hlt2Transparent', 'Hlt2SMOGPhysics']
 
     def Thresholds(self) :
         """Return a dictionary of cuts."""
@@ -96,7 +96,7 @@ class protonNeon_2015:
             Hlt1BeamGasLinesConf : {
             # Global behaviour settings
             'TrackingConf'          : 'FastVelo',
-            # 'FitTracks'             : True,
+            ### 'FitTracks'             : True,
             'PVFitter'              : 'LSAdaptPV3DFitter',
             'PVSeeding'             : 'PVSeed3DTool',
             'SplitVertices'         : True,
@@ -107,6 +107,7 @@ class protonNeon_2015:
 
             ##         # Minimum number of tracks for the produced vertices (#tr/vtx > X)
             'VertexMinNTracks' : 9,
+            'FullZVertexMinNTracks' : 27,
 
             ##         # Luminous region exclusion range
             'BGVtxExclRangeMin' :  -250.,
@@ -146,7 +147,8 @@ class protonNeon_2015:
         thresholds.update({
             CommissioningLines : {
                 'Prescale'  : { 'Hlt2PassThrough' : 1 },
-                'Postscale' : { 'Hlt2ErrorEvent'  : 'RATE(0.01)' }
+                'Postscale' : { 'Hlt2ErrorEvent'  : 'RATE(0.01)' },
+                'SMOGPhysics' : { 'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS('Hlt1MBMicroBiasVeloDecision') | HLT_PASS('Hlt1MBNoBiasDecision') | HLT_PASS('Hlt1MBNoBiasLeadingCrossingDecision')" }
             }
         })
         return thresholds
