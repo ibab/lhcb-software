@@ -24,12 +24,15 @@ FitAmpIncoherentSum::FitAmpIncoherentSum(const DalitzEventPattern& pat
 		     , const std::string& prefix
 		     , const std::string& opt
 		     )
-  : FitAmpList(pat, fname, pset, FitAmpIncoherentSum::IncPrefix()+ prefix, opt), _useAnalyticGradient("useAnalyticGradient",0)
+  : FitAmpList(pat, fname, pset, FitAmpIncoherentSum::IncPrefix()+ prefix, opt)
+  , _useAnalyticGradient("useAnalyticGradient",0)
 {
+  /*
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
     eventTest.generatePhaseSpaceEvents(1,pat);
     this->getVal(eventTest[0]);  
+  */
 }
 
 FitAmpIncoherentSum::FitAmpIncoherentSum(const DalitzEventPattern& pat
@@ -37,23 +40,29 @@ FitAmpIncoherentSum::FitAmpIncoherentSum(const DalitzEventPattern& pat
 		     , const std::string& prefix
 		     , const std::string& opt
 		     )
-  : FitAmpList(pat, pset, FitAmpIncoherentSum::IncPrefix() + prefix, opt), _useAnalyticGradient("useAnalyticGradient",0)
+  : FitAmpList(pat, pset, FitAmpIncoherentSum::IncPrefix() + prefix, opt)
+  , _useAnalyticGradient("useAnalyticGradient",0)
 {
+  /*
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
     eventTest.generatePhaseSpaceEvents(1,pat);
     this->getVal(eventTest[0]);  
+  */
 }
 FitAmpIncoherentSum::FitAmpIncoherentSum(const DalitzEventPattern& pat
 		     , const std::string& prefix
 		     , const std::string& opt
 		     )
-  : FitAmpList(pat, FitAmpIncoherentSum::IncPrefix() + prefix, opt), _useAnalyticGradient("useAnalyticGradient",0)
+  : FitAmpList(pat, FitAmpIncoherentSum::IncPrefix() + prefix, opt)
+  , _useAnalyticGradient("useAnalyticGradient",0)
 {
+  /*
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
     eventTest.generatePhaseSpaceEvents(1,pat);
     this->getVal(eventTest[0]);  
+  */
 }
 
 FitAmpIncoherentSum::FitAmpIncoherentSum(const FitAmpIncoherentSum& other)
@@ -62,10 +71,12 @@ FitAmpIncoherentSum::FitAmpIncoherentSum(const FitAmpIncoherentSum& other)
   , ILookLikeFitAmpSum()
   , FitAmpList(other), _useAnalyticGradient("useAnalyticGradient",0)
 {
+  /*
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
     eventTest.generatePhaseSpaceEvents(1,_pat);
     this->getVal(eventTest[0]);  
+  */
 }
 
 FitAmpIncoherentSum::FitAmpIncoherentSum(const FitAmpList& other)
@@ -74,18 +85,20 @@ FitAmpIncoherentSum::FitAmpIncoherentSum(const FitAmpList& other)
   , ILookLikeFitAmpSum()
   , FitAmpList(other), _useAnalyticGradient("useAnalyticGradient",0)
 {
+  /*
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
     eventTest.generatePhaseSpaceEvents(1,_pat);
-    this->getVal(eventTest[0]);  
+    this->getVal(eventTest[0]);
+  */
 }
-counted_ptr<FitAmpList> FitAmpIncoherentSum::GetCloneSameFitParameters() const{ 
+counted_ptr<FitAmpListBase> FitAmpIncoherentSum::GetCloneSameFitParameters() const{ 
 // need to reform these one day...
 // ... it all relies on the copy-constructur/=operator in FitAmpitude
 // not copying the fit parameters, but just their pointers
 // which will need to be reviewed.
 //
-  bool dbThis=true;
+  bool dbThis=false;
   if(dbThis) cout << "FitAmpSum::GetCloneSameFitParameters()" << endl;
   /* 
      There'll be 'physical' copies of all Amplitudes, but the
@@ -105,7 +118,7 @@ counted_ptr<FitAmpList> FitAmpIncoherentSum::GetCloneSameFitParameters() const{
   newList->deleteAll();
 
   newList->add(*this);
-  if(dbThis) cout << "cloning FitAmpList " << newList->size() << endl;
+  if(dbThis) cout << "cloning FitAmpIncoherentSum " << newList->size() << endl;
   return newList;
 }
 
@@ -125,20 +138,21 @@ double FitAmpIncoherentSum::getVal(IDalitzEvent& evt){
 
   double sum(0);
 
-  if(_fitAmps.empty()){
+  if(0 == this->size()){
     createAllAmps(evt.eventPattern()
 		  , FitAmpIncoherentSum::IncPrefix());
   }
 
-  for(unsigned int i=0; i<_fitAmps.size(); i++){
+  for(unsigned int i=0; i< this->size(); i++){
     if(dbthis){
       cout << "FitAmpIncoherentSum::getVal()"
-	   << "\n     > for " << (_fitAmps[i])->theBareDecay().oneLiner()
-	   << "\n     > I get " << (_fitAmps[i])->getVal(evt)
+	   << "\n     > for " << getAmpPtr(i)->theBareDecay().oneLiner()
+	   << "\n     > I get " << getAmpPtr(i)->getVal(evt)
 	   << endl;
     }
-    sum += norm((_fitAmps[i])->getVal(evt));
+    sum += norm(this->getAmpPtr(i)->getVal(evt));
   }
+
   if(dbthis) cout << "FitAmpIncoherentSum::getVal(evt):"
 		  << " returning this: " << sum 
 		  << endl;
@@ -167,20 +181,20 @@ void FitAmpIncoherentSum::Gradient(IDalitzEvent& evt,Double_t* grad,MinuitParame
             }
             //name_i.replace(name_i.find("Inco_"),5,"");
             name_i.replace(name_i.find("_Re"),3,"");
-            for(unsigned int j=0; j<_fitAmps.size(); j++){
-                if(A_is_in_B(name_i, _fitAmps[j]->name())){
-                    double tmp = 2.*std::norm((_fitAmps[j])->getValWithoutFitParameters(evt));
-                    grad[i]= tmp * _fitAmps[j]->AmpPhase().real();
-                    grad[i+1]= tmp * _fitAmps[j]->AmpPhase().imag();
-                    i++;
-                    break;
-                }
+            for(unsigned int j=0; j< this->size(); j++){
+	      if(A_is_in_B(name_i, this->getAmpPtr(j)->name())){
+		double tmp = 2.*std::norm(this->getAmpPtr(j)->getValWithoutFitParameters(evt));
+		grad[i]= tmp * this->getAmpPtr(j)->AmpPhase().real();
+		grad[i+1]= tmp * this->getAmpPtr(j)->AmpPhase().imag();
+		i++;
+		break;
+	      }
             }
-        }
-        else if(mps->getParPtr(i)->iFixInit())continue;
-        else {
-            std::cout << "FitAmpIncoherentSum::Gradient() called. Sorry, I don't know how to calculate the derivative with respect to the fit parameter " << mps->getParPtr(i)->name() << " ! Please implement me or set useAnalytic Gradient to 0 in your options file. I'll crash now. " << std::endl;
-            throw "crash";
+	}
+	else if(mps->getParPtr(i)->iFixInit())continue;
+	else {
+	  std::cout << "FitAmpIncoherentSum::Gradient() called. Sorry, I don't know how to calculate the derivative with respect to the fit parameter " << mps->getParPtr(i)->name() << " ! Please implement me or set useAnalytic Gradient to 0 in your options file. I'll crash now. " << std::endl;
+	  throw "crash";
         }
         
     }
@@ -197,6 +211,10 @@ FitAmpIncoherentSum::makeIntegCalculator(){
   for(unsigned int i=0; i < _fitAmps.size(); i++){
     if(_fitAmps[i]->canBeIgnored()) continue;
     l->addAmps( (_fitAmps[i]),  (_fitAmps[i]));
+  }
+
+  for(unsigned int i=0; i < _fitAmpLists.size(); i++){
+    l->append(_fitAmpLists[i]->makeIntegCalculator());
   }
 
   cout << "FitAmpIncoherentSum: setting efficiency POINTER "
@@ -219,6 +237,10 @@ FitAmpIncoherentSum::makeFitAmpPairList(){
     l->addAmps( (_fitAmps[i]),  (_fitAmps[i]));
   }
 
+  for(unsigned int i=0; i < _fitAmpLists.size(); i++){
+    l->append(_fitAmpLists[i]->makeFitAmpPairList());
+  }
+
   cout << "FitAmpIncoherentSum: setting efficiency POINTER "
        << " in integCalculator to " 
        << _efficiency.get();
@@ -234,17 +256,17 @@ FitAmpIncoherentSum::makeFitAmpPairList(){
 void FitAmpIncoherentSum::print(std::ostream& os) const{
    os << "FitAmpIncoherentSum::print\n====================";
 
-  for(unsigned int i=0; i<_fitAmps.size(); i++){
-    os << "\n\t" << (_fitAmps[i])->theBareDecay().oneLiner()
+  for(unsigned int i=0; i< this->size(); i++){
+    os << "\n\t" << this->getAmpPtr(i)->theBareDecay().oneLiner()
        << endl;
   }
 }
 void FitAmpIncoherentSum::printNonZero(std::ostream& os) const{
    os << "FitAmpSum::print\n====================";
 
-  for(unsigned int i=0; i<_fitAmps.size(); i++){
-    if(_fitAmps[i]->isZero()) continue;
-    os << "\n\t" << (_fitAmps[i])->theBareDecay().oneLiner()
+  for(unsigned int i=0; i < this->size(); i++){
+    if(this->getAmpPtr(i)->isZero()) continue;
+    os << "\n\t" << this->getAmpPtr(i)->theBareDecay().oneLiner()
        << endl;
   }
 }

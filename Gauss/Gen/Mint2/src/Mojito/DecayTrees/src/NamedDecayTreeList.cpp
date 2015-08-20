@@ -151,36 +151,38 @@ void NamedDecayTreeList::add(const AmpInitialiser& ai, const std::string& opt){
   if(dbThis) cout << "NamedDecayTreeList::add: just added Dbar->fbar\t" 
 		  << dt.oneLiner() << endl;
 
-  dt.getVal().antiThis(); // mum back to D0
-  AmpInitialiser DtoCPai(ai);
-  DtoCPai.setTree(dt);
-  addSimple(DtoCPai, opt);
-  if(! isBg) addSimple(DtoCPai, opt + "BgSpinZero");
-  if(! isCLEO2012)addSimple(DtoCPai, opt + "CLEO2012");
-  if(dt.finalState().size()==4 && (dt.getDgtrTreePtr(0)->finalState().size()==3 || dt.getDgtrTreePtr(1)->finalState().size()==3))
-  { 
-      addSimple(DtoCPai, "SBW_" + opt);    
-      addSimple(DtoCPai, "FermiPS_" + opt); 
-      addSimple(DtoCPai, "HistoPS_" + opt);
+  if("0" == dt.getVal().charge()){
+    dt.getVal().antiThis(); // mum back to D0
+    AmpInitialiser DtoCPai(ai);
+    DtoCPai.setTree(dt);
+    addSimple(DtoCPai, opt);
+    if(! isBg) addSimple(DtoCPai, opt + "BgSpinZero");
+    if(! isCLEO2012)addSimple(DtoCPai, opt + "CLEO2012");
+    if(dt.finalState().size()==4 && (dt.getDgtrTreePtr(0)->finalState().size()==3 || dt.getDgtrTreePtr(1)->finalState().size()==3))
+      { 
+	addSimple(DtoCPai, "SBW_" + opt);    
+	addSimple(DtoCPai, "FermiPS_" + opt); 
+	addSimple(DtoCPai, "HistoPS_" + opt);
+      }
+    if(dbThis) cout << "NamedDecayTreeList::add: just added D->fbar\t" 
+		    << dt.oneLiner() << endl;
+    
+    anti(dt); // and the CP conjugate of that, i.e. Dbar->original
+    AmpInitialiser DbarToOriginal(ai);
+    DbarToOriginal.setTree(dt);
+    addSimple(DbarToOriginal, opt);
+    if(! isBg) addSimple(DbarToOriginal, opt + "BgSpinZero");
+    if(! isCLEO2012)addSimple(DbarToOriginal, opt + "CLEO2012");
+    if(dt.finalState().size()==4 && (dt.getDgtrTreePtr(0)->finalState().size()==3 || dt.getDgtrTreePtr(1)->finalState().size()==3))
+      {    
+	addSimple(DbarToOriginal, "SBW_" + opt);    
+	addSimple(DbarToOriginal, "FermiPS_" + opt); 
+	addSimple(DbarToOriginal, "HistoPS_" + opt);
+      }
+    if(dbThis) cout << "NamedDecayTreeList::add: just added Dbar->f\t" 
+		    << dt.oneLiner() << endl;
+    
   }
-  if(dbThis) cout << "NamedDecayTreeList::add: just added D->fbar\t" 
-		  << dt.oneLiner() << endl;
-
-  anti(dt); // and the CP conjugate of that, i.e. Dbar->original
-  AmpInitialiser DbarToOriginal(ai);
-  DbarToOriginal.setTree(dt);
-  addSimple(DbarToOriginal, opt);
-  if(! isBg) addSimple(DbarToOriginal, opt + "BgSpinZero");
-  if(! isCLEO2012)addSimple(DbarToOriginal, opt + "CLEO2012");
-  if(dt.finalState().size()==4 && (dt.getDgtrTreePtr(0)->finalState().size()==3 || dt.getDgtrTreePtr(1)->finalState().size()==3))
-  {    
-      addSimple(DbarToOriginal, "SBW_" + opt);    
-      addSimple(DbarToOriginal, "FermiPS_" + opt); 
-      addSimple(DbarToOriginal, "HistoPS_" + opt);
-  }
-  if(dbThis) cout << "NamedDecayTreeList::add: just added Dbar->f\t" 
-		  << dt.oneLiner() << endl;
-
 }
 void NamedDecayTreeList::addSimple(const AmpInitialiser& ai, const std::string& opt){ // formerly "add"
   // Note: This will not allow any duplicates - if you try to add a
@@ -504,6 +506,7 @@ int NamedDecayTreeList::makeBp2DDKList(){
     return _trees.size();
 }
 
+
 int NamedDecayTreeList::makeKsPiPiList(){
   /* according to list in
  %\cite{Poluektov:2006ia}
@@ -778,6 +781,13 @@ int NamedDecayTreeList::makeDplusToKKPiList() {
   this->add(AmpInitialiser(*dk, "Lass"));
   delete dk;
 
+  // non-resonant S-wave
+  dk = new DecayTree(411);
+  dk->addDgtr(321, 9981)->addDgtr(-321, 211);
+  this->add(*dk);
+  this->add(AmpInitialiser(*dk, "TopHats"));
+  delete dk;
+
   // Resonances in (K- K+)
   // ---------------------
 
@@ -798,6 +808,8 @@ int NamedDecayTreeList::makeDplusToKKPiList() {
   dk->addDgtr(211, 10111)->addDgtr(321, -321);
   this->add(*dk);
   delete dk;
+
+  // --
 
   // Non-resonant
   // ------------

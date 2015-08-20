@@ -90,6 +90,7 @@ class FitAmpPairList
   void setEfficiency(MINT::counted_ptr<MINT::IReturnRealForEvent<IDalitzEvent> > eff);
   void unsetEfficiency();
   double efficiency(IDalitzEvent* evtPtr);
+  bool haveEfficiency() const{return 0 != _efficiency;}
 
   virtual bool makeAndStoreFractions(MINT::Minimiser* mini=0){
     return makeAndStoreFractions("FitAmpResults.txt", mini);}
@@ -115,6 +116,7 @@ class FitAmpPairList
   bool needToReIntegrate() const;
   void startIntegration();
   void startReIntegration();
+  void startForcedReIntegration();
   void endIntegration();
 
 

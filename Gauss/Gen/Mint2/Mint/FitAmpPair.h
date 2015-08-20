@@ -49,12 +49,14 @@ class FitAmpPair : public MINT::FitParDependent{
 
   inline std::complex<double> ampValue(IDalitzEvent& evtPtr){
     std::complex<double> c1 = rawAmp1().getVal(evtPtr);
+    if(0.0 == c1) return 0;
     std::complex<double> c2 = rawAmp2().getVal(evtPtr);
     return (c1 * conj(c2));  // c1 x c2*
   }
   
   inline std::complex<double> fitParValue()const{
     std::complex<double> c1 = fitAmp1().AmpPhase();
+    if(0.0 == c1) return 0;
     std::complex<double> c2 = fitAmp2().AmpPhase();
     return c1* conj(c2); // c1 x c2*
   }

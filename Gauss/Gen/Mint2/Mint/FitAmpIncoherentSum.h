@@ -58,7 +58,7 @@ class FitAmpIncoherentSum
      behaviour is defined in the copy constructor of the
      FitAmplitude class.
   */
-  virtual MINT::counted_ptr<FitAmpList> GetCloneSameFitParameters() const;
+  virtual MINT::counted_ptr<FitAmpListBase> GetCloneSameFitParameters() const;
 
 
   virtual DalitzBoxSet makeBoxes(const DalitzEventPattern& pat
@@ -118,6 +118,9 @@ class FitAmpIncoherentSum
   virtual ~FitAmpIncoherentSum();
 
   void printLargestAmp(std::ostream& os = std::cout);
+  virtual void printLargestAmp(IDalitzEvent& evt, std::ostream& os = std::cout){
+    FitAmpList::printLargestAmp(evt, os);}
+
   virtual void print(std::ostream& os=std::cout) const;
   virtual void printNonZero(std::ostream& os=std::cout) const;
 

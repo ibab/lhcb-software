@@ -15,6 +15,7 @@ using namespace MINT;
 Amplitude::Amplitude( const DecayTree& decay
 		      , char SPD_Wave
 		      , const std::string& lopt
+		      , const std::vector<double>& numOpts
 		      , IFitParRegister* daddy
 		      ) 
   : FitParDependent(daddy)
@@ -22,6 +23,7 @@ Amplitude::Amplitude( const DecayTree& decay
   , _spinFactor(0)
   , _spd(SPD_Wave)
   , _lopt(lopt)
+  , _numOpts(numOpts)
   , _pat()
   , _init(false)
 {
@@ -36,6 +38,7 @@ Amplitude::Amplitude( const AmpInitialiser& ampInit
   , _spinFactor(0)
   , _spd(ampInit.SPD())
   , _lopt(ampInit.lopt())
+  , _numOpts(ampInit.numOpts())
   , _pat()
   , _init(false)
 {
@@ -51,6 +54,7 @@ Amplitude::Amplitude( const Amplitude& other
   , _spinFactor(0)
   , _spd(other._spd)
   , _lopt(other._lopt)
+  , _numOpts(other._numOpts)
   , _pat(other._pat)
   , _init(false)
 {
@@ -139,7 +143,7 @@ bool Amplitude::createLineshapes(const AssociatedDecayTree* treePtr){
 
   bool success=true;
   if(treePtr->nDgtr() >= 2){
-    addLineshape(LineshapeMaker(treePtr, _lopt));
+    addLineshape(LineshapeMaker(treePtr, _lopt, _numOpts));
     //    LineshapeList.push_back(LineshapeMaker(treePtr, _lopt));
     if(dbThis){
       cout << "Amplitude::createLineshapes: just added lineshape: ";

@@ -23,13 +23,15 @@ FitAmpSum::FitAmpSum(const DalitzEventPattern& pat
 		     , const std::string& prefix
 		     , const std::string& opt
 		     )
-: FitAmpList(pat, fname, pset, prefix, opt), _useAnalyticGradient("useAnalyticGradient",0)  
-
+: FitAmpList(pat, fname, pset, prefix, opt)
+, _useAnalyticGradient("useAnalyticGradient",0)  
 {
+  /*
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
     eventTest.generatePhaseSpaceEvents(1,pat);
     this->getVal(eventTest[0]);  
+  */
 }
 
 FitAmpSum::FitAmpSum(const DalitzEventPattern& pat
@@ -37,27 +39,32 @@ FitAmpSum::FitAmpSum(const DalitzEventPattern& pat
 		     , const std::string& prefix
 		     , const std::string& opt
 		     )
-: FitAmpList(pat, pset, prefix, opt), _useAnalyticGradient("useAnalyticGradient",0)  
-
+: FitAmpList(pat, pset, prefix, opt)
+, _useAnalyticGradient("useAnalyticGradient",0)  
 {
 
   // cout << "pset pointer in FitAmpSum::FitAmpSum " << pset << " = " << getMPS() << endl;
 
+  /*
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
     eventTest.generatePhaseSpaceEvents(1,pat);
     this->getVal(eventTest[0]);  
+  */
 }
 FitAmpSum::FitAmpSum(const DalitzEventPattern& pat
 		     , const std::string& prefix
 		     , const std::string& opt
 		     )
-  : FitAmpList(pat, prefix, opt), _useAnalyticGradient("useAnalyticGradient",0)
+  : FitAmpList(pat, prefix, opt)
+  , _useAnalyticGradient("useAnalyticGradient",0)
 {
+  /*
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
     eventTest.generatePhaseSpaceEvents(1,pat);
     this->getVal(eventTest[0]); 
+  */
 }
 
 FitAmpSum::FitAmpSum(const FitAmpSum& other)
@@ -65,12 +72,15 @@ FitAmpSum::FitAmpSum(const FitAmpSum& other)
   , IReturnComplexForEvent<IDalitzEvent>()
   , IFastAmplitudeIntegrable()
   , ILookLikeFitAmpSum()
-  , FitAmpList(other), _useAnalyticGradient("useAnalyticGradient",0)
+  , FitAmpList(other)
+  , _useAnalyticGradient("useAnalyticGradient",0)
 {
+  /*
     //Important! Ensures everything is initialised
     DalitzEventList eventTest;
     eventTest.generatePhaseSpaceEvents(1,_pat);
     this->getVal(eventTest[0]); 
+  */
 }
 
 FitAmpSum::FitAmpSum(const FitAmpList& other)
@@ -78,12 +88,15 @@ FitAmpSum::FitAmpSum(const FitAmpList& other)
   , IReturnComplexForEvent<IDalitzEvent>()
   , IFastAmplitudeIntegrable()
   , ILookLikeFitAmpSum()
-  , FitAmpList(other), _useAnalyticGradient("useAnalyticGradient",0)
+  , FitAmpList(other)
+  , _useAnalyticGradient("useAnalyticGradient",0)
 {    
-    //Important! Ensures everything is initialised
+  /*
+  //Important! Ensures everything is initialised
     DalitzEventList eventTest;
     eventTest.generatePhaseSpaceEvents(1,_pat);
     this->getVal(eventTest[0]); 
+  */
 }
 
 FitAmpSum& FitAmpSum::operator=(const FitAmpSum& other){
@@ -97,13 +110,13 @@ FitAmpSum& FitAmpSum::operator=(const FitAmpList& other){
   return *this;
 }
 
-counted_ptr<FitAmpList> FitAmpSum::GetCloneSameFitParameters() const{ 
+counted_ptr<FitAmpListBase> FitAmpSum::GetCloneSameFitParameters() const{ 
 // need to reform these one day...
 // ... it all relies on the copy-constructur/=operator in FitAmpitude
 // not copying the fit parameters, but just their pointers
 // which will need to be reviewed.
 //
-  bool dbThis=true;
+  bool dbThis=false;
   if(dbThis) cout << "FitAmpSum::GetCloneSameFitParameters()" << endl;
   /* 
      There'll be 'physical' copies of all Amplitudes, but the
@@ -124,7 +137,7 @@ counted_ptr<FitAmpList> FitAmpSum::GetCloneSameFitParameters() const{
 
   if(dbThis) cout << "FitAmpSum::GetCloneSameFitParameters() made ptr" << endl;
   newList->add(*this);
-  if(dbThis) cout << "cloning FitAmpList " << newList->size() << endl;
+  if(dbThis) cout << "cloning FitAmpSum " << newList->size() << endl;
   return newList;
 }
 
@@ -136,10 +149,10 @@ std::complex<double> FitAmpSum::getVal(IDalitzEvent& evt){
   //double dbThis=false;
 
   std::complex<double> sum(0);
-  if(_fitAmps.empty()) createAllAmps(evt.eventPattern());
-  for(unsigned int i=0; i<_fitAmps.size(); i++){
-    if(! _fitAmps[i]->isZero()){
-      sum += (_fitAmps[i])->getVal(evt);
+  if(0 == size()) createAllAmps(evt.eventPattern());
+  for(unsigned int i=0; i< this->size(); i++){
+    if(! this->getAmpPtr(i)->isZero()){
+      sum += this->getAmpPtr(i)->getVal(evt);
     }
   }
   
@@ -176,9 +189,9 @@ void FitAmpSum::Gradient(IDalitzEvent& evt,Double_t* grad,MinuitParameterSet* mp
                 continue;
             }
             name_i.replace(name_i.find("_Re"),3,"");
-            for(unsigned int j=0; j<_fitAmps.size(); j++){
-                if(A_is_in_B(name_i, _fitAmps[j]->name())){
-                    std::complex<double> tmp = 2.*valConj*(_fitAmps[j])->getValWithoutFitParameters(evt);
+            for(unsigned int j=0; j< this->size(); j++){
+	      if(A_is_in_B(name_i, this->getAmpPtr(j)->name())){
+		std::complex<double> tmp = 2.*valConj* getAmpPtr(j)->getValWithoutFitParameters(evt);
                     grad[i]= tmp.real();
                     grad[i+1]= -tmp.imag();
                     i++;
@@ -215,26 +228,27 @@ void FitAmpSum::Gradient(IDalitzEvent& evt,Double_t* grad,MinuitParameterSet* mp
 void FitAmpSum::print(std::ostream& os) const{
    os << "FitAmpSum::print\n====================";
 
-  for(unsigned int i=0; i<_fitAmps.size(); i++){
-    os << "\n\t" << (_fitAmps[i])->theBareDecay().oneLiner()
+  for(unsigned int i=0; i< this->size(); i++){
+    os << "\n\t" << getAmpPtr(i)->theBareDecay().oneLiner()
        << endl;
   }
 }
 void FitAmpSum::printNonZero(std::ostream& os) const{
    os << "FitAmpSum::print\n====================";
 
-  for(unsigned int i=0; i<_fitAmps.size(); i++){
-    if(_fitAmps[i]->isZero()) continue;
-    os << "\n\t" << (_fitAmps[i])->theBareDecay().oneLiner()
+  for(unsigned int i=0; i< this->size(); i++){
+    if(getAmpPtr(i)->isZero()) continue;
+    os << "\n\t" << getAmpPtr(i)->theBareDecay().oneLiner()
        << endl;
   }
+
 }
 void FitAmpSum::printValues(IDalitzEvent& evt, std::ostream& os){
    os << "FitAmpSum::print\n====================";
 
-  for(unsigned int i=0; i<_fitAmps.size(); i++){
-    complex<double> val = _fitAmps[i]->getVal(evt);
-    os << "\n\t" << (_fitAmps[i])->theBareDecay().oneLiner()
+  for(unsigned int i=0; i< this->size(); i++){
+    complex<double> val = getAmpPtr(i)->getVal(evt);
+    os << "\n\t" << getAmpPtr(i)->theBareDecay().oneLiner()
        << val;
     if(norm(val) > 1.e10) os << "  HUGE!!!"  << endl;
     os << endl;
@@ -245,14 +259,52 @@ counted_ptr<IIntegrationCalculator> FitAmpSum::makeIntegrationCalculator(){
   return (counted_ptr<IIntegrationCalculator>) makeIntegCalculator();
 }
 
+// duplication betweem making IntegCalculator and FitAmpPairList should be removed one day...
 counted_ptr<IntegCalculator> FitAmpSum::makeIntegCalculator(){
-  counted_ptr<IntegCalculator> l(new IntegCalculator);
+  counted_ptr<IntegCalculator> list(new IntegCalculator);
   for(unsigned int i=0; i < _fitAmps.size(); i++){
     if(_fitAmps[i]->canBeIgnored()) continue;
     for(unsigned int j=i; j < _fitAmps.size(); j++){
       if(_fitAmps[j]->canBeIgnored()) continue;
-      l->addAmps( (_fitAmps[i]),  (_fitAmps[j]));
+      // all terms within the list
+      list->addAmps( (_fitAmps[i]),  (_fitAmps[j]));
     }
+    // cross terms between list, and list-of-list
+    for(unsigned int k=0; k < _fitAmpLists.size(); k++){
+      for(unsigned int l=0; l < _fitAmpLists[k]->size(); l++){
+	if(_fitAmpLists[k]->getAmpPtr(l)->canBeIgnored()) continue;
+	list->addAmps(_fitAmps[i], _fitAmpLists[k]->getAmpPtr(l));
+      }
+    }
+  }
+
+
+  // Now it gets complicated. I want to leave all the 
+  // terms within a list to whatever that list
+  // wants to do. But we don't want to forget cross terms 
+  // between lists.
+
+  // cross terms between list, and list-of-list
+  for(unsigned int i=1; i < _fitAmpLists.size(); i++){
+    for(unsigned int j=0; j < i; j++){
+      for(unsigned int ki = 0; ki < _fitAmpLists[i]->size(); ki++){
+	if(_fitAmpLists[i]->getAmpPtr(ki)->canBeIgnored()) continue;
+	for(unsigned int kj = 0; kj < _fitAmpLists[j]->size(); kj++){
+	  if(_fitAmpLists[j]->getAmpPtr(kj)->canBeIgnored()) continue;
+	  list->addAmps(_fitAmpLists[i]->getAmpPtr(ki), _fitAmpLists[j]->getAmpPtr(kj));
+	}
+      }
+    }
+  }
+
+
+  // finally, the terms within each list
+  // which is up to the list itself.
+  // (this is where we save a lot of space and time
+  // when it comes to the model-independent stuff
+  // where there are no internal cross terms)
+  for(unsigned int i=0; i < _fitAmpLists.size(); i++){
+    list->append(_fitAmpLists[i]->makeIntegCalculator());
   }
 
   cout << "FitAmpSum: setting efficiency POINTER "
@@ -263,18 +315,67 @@ counted_ptr<IntegCalculator> FitAmpSum::makeIntegCalculator(){
   }
   cout << endl;
 
-  l->setEfficiency(_efficiency);
-  return l;
+  list->setEfficiency(_efficiency);
+
+  
+  cout << "this->size()" << this->size() << endl;
+  cout << "_fitAmpLists.size()" << _fitAmpLists.size() << endl;
+  for(unsigned int i=0; i < _fitAmpLists.size(); i++){
+    cout << "printing list number " << i << endl;
+    _fitAmpLists[i]->print();
+    cout << endl;
+  }
+  cout << " the pair list: " << endl;
+  list->print();
+  
+  return list;
 }
 
 counted_ptr<FitAmpPairList> FitAmpSum::makeFitAmpPairList(){
-  counted_ptr<FitAmpPairList> l(new FitAmpPairList);
+  counted_ptr<FitAmpPairList> list(new FitAmpPairList);
   for(unsigned int i=0; i < _fitAmps.size(); i++){
     if(_fitAmps[i]->canBeIgnored()) continue;
     for(unsigned int j=i; j < _fitAmps.size(); j++){
       if(_fitAmps[j]->canBeIgnored()) continue;
-      l->addAmps( (_fitAmps[i]),  (_fitAmps[j]));
+      // all terms within the list
+      list->addAmps( (_fitAmps[i]),  (_fitAmps[j]));
     }
+    // cross terms between list, and list-of-list
+    for(unsigned int k=0; k < _fitAmpLists.size(); k++){
+      for(unsigned int l=0; l < _fitAmpLists[k]->size(); l++){
+	if(_fitAmpLists[k]->getAmpPtr(l)->canBeIgnored()) continue;
+	list->addAmps(_fitAmps[i], _fitAmpLists[k]->getAmpPtr(l));
+      }
+    }
+  }
+
+
+  // Now it gets complicated. I want to leave all the 
+  // terms within a list to whatever that list
+  // wants to do. But we don't want to forget cross terms 
+  // between lists.
+
+  // cross terms between list, and list-of-list
+  for(unsigned int i=1; i < _fitAmpLists.size(); i++){
+    for(unsigned int j=0; j < i; j++){
+      for(unsigned int ki = 0; ki < _fitAmpLists[i]->size(); ki++){
+	if(_fitAmpLists[i]->getAmpPtr(ki)->canBeIgnored()) continue;
+	for(unsigned int kj = 0; kj < _fitAmpLists[j]->size(); kj++){
+	  if(_fitAmpLists[j]->getAmpPtr(kj)->canBeIgnored()) continue;
+	  list->addAmps(_fitAmpLists[i]->getAmpPtr(ki), _fitAmpLists[j]->getAmpPtr(kj));
+	}
+      }
+    }
+  }
+
+
+  // finally, the terms within each list
+  // which is up to the list itself.
+  // (this is where we save a lot of space and time
+  // when it comes to the model-independent stuff
+  // where there are no internal cross terms)
+  for(unsigned int i=0; i < _fitAmpLists.size(); i++){
+    list->append(_fitAmpLists[i]->makeFitAmpPairList());
   }
 
   cout << "FitAmpSum: setting efficiency POINTER "
@@ -285,8 +386,21 @@ counted_ptr<FitAmpPairList> FitAmpSum::makeFitAmpPairList(){
   }
   cout << endl;
 
-  l->setEfficiency(_efficiency);
-  return l;
+  list->setEfficiency(_efficiency);
+
+  /*
+  cout << "this->size()" << this->size() << endl;
+  cout << "_fitAmpLists.size()" << _fitAmpLists.size() << endl;
+  for(unsigned int i=0; i < _fitAmpLists.size(); i++){
+    cout << "printing list number " << i << endl;
+    _fitAmpLists[i]->print();
+    cout << endl;
+  }
+  cout << " the pair list: " << endl;
+  list->print();
+  */
+
+  return list;
 }
 
 FitAmpSum::~FitAmpSum(){

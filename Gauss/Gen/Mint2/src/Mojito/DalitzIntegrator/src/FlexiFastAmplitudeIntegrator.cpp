@@ -178,6 +178,13 @@ int FlexiFastAmplitudeIntegrator::updateEventSet(long int Nevents){
   return _integCalc->numEvents();
 }
 
+void FlexiFastAmplitudeIntegrator::forcedReIntegrate(){
+  _integCalc->startForcedReIntegration();
+  for(unsigned int i=0; i < _fastFlexiEventList.size(); i++){
+     reAddEvent(_fastFlexiEventList[i]);
+   }
+  _integCalc->endIntegration();
+}
 void FlexiFastAmplitudeIntegrator::reIntegrate(){
   _integCalc->startReIntegration();
   for(unsigned int i=0; i < _fastFlexiEventList.size(); i++){
@@ -397,6 +404,7 @@ double FlexiFastAmplitudeIntegrator::getVal(){
 }
 
 DalitzHistoSet FlexiFastAmplitudeIntegrator::histoSet() const{
+  
   return _integCalc->histoSet();
 }
 void FlexiFastAmplitudeIntegrator::saveEachAmpsHistograms(const std::string& prefix) const{
@@ -419,6 +427,8 @@ std::vector<DalitzHistoSet> FlexiFastAmplitudeIntegrator::GetInterferenceHistogr
 void FlexiFastAmplitudeIntegrator::doFinalStats(Minimiser* mini){
   bool dbThis=true;
   if(dbThis) cout << "FlexiFastAmplitudeIntegrator::doFinalStats() called" << endl;
+  _integCalc->setSlow(); // means it makes histograms
+  forcedReIntegrate();
   _integCalc->doFinalStats(mini);
 }
 double FlexiFastAmplitudeIntegrator::getFractionChi2()const{

@@ -278,11 +278,12 @@ std::string ParticleProperties::ScalarVectorPseudoAxialVectorTensor() const{
 }
 
 bool ParticleProperties::isNonResonant() const{
-return (9981    == abs(pdg_id()) 
+return (   9981 == abs(pdg_id()) 
 	|| 9991 == abs(pdg_id())
 	|| 9983 == abs(pdg_id())
 	|| 9993 == abs(pdg_id())
 	|| 9985 == abs(pdg_id())
+	|| 9975 == abs(pdg_id())
 	);
 }
 

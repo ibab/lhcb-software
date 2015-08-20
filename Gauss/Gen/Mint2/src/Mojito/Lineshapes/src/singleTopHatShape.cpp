@@ -4,6 +4,9 @@
 //#include "Mint/Utils.h"
 #include "Mint/FlatFct.h"
 
+using namespace std;
+using namespace MINT;
+
 singleTopHatShape::singleTopHatShape( const AssociatedDecayTree& decay
 				      , double mini, double maxi)
   : _genFct(0)
@@ -64,6 +67,7 @@ void singleTopHatShape::makeGeneratingFunction() const{
   if(! _genFct){
     counted_ptr<FlatFct> fptr(new FlatFct(getDalitzCoordinate()));
     fptr->setBoxLimits(min(), max());
+    fptr->setLimits(min(), max());
 
     _genFct = (counted_ptr<IGenFct>) fptr;
   }

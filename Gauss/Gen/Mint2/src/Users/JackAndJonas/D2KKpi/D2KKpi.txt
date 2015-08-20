@@ -1,0 +1,74 @@
+
+* options:
+RandomSeed   5
+
+"Phases given in"       "degrees"
+"Event Pattern"         411 321 -321 211
+
+"Nevents"               10000
+
+"IntegPrecision"        5.0e-3
+"IntegMethod"           "efficient"
+
+IntegratorEventFile     "SignalIntegrationEventsD2KKpi.root"
+IntegratorInputFile     "sgIntegratorKKpi"
+
+*InputFileName KKpi100k.root
+
+doScan			0
+
+useAnalyticGradient        0
+
+** name                                                    	Fix?	init	step	min	max
+*
+*mass_kappa0						      0		710     10
+*width_kappa0						      0		310     10
+*
+*
+"D+->K(0)*(1430)bar0(->K-,pi+),K+_Amp"                         0	2.66		0.1	0.0	0.0
+"D+->K(0)*(1430)bar0(->K-,pi+),K+_Phase"                       0	1.6243		0.1	0.0	0.0
+*
+"D+->K(2)*(1430)bar0(->K-,pi+),K+_Amp"                         0	5.67		0.1	0.0	0.0
+"D+->K(2)*(1430)bar0(->K-,pi+),K+_Phase"                       0	2.7828		0.1	0.0	0.0
+*
+"D+->K*(892)bar0(->K-,pi+),K+_Amp"                             2	1.0		0.1	0.0	0.0
+"D+->K*(892)bar0(->K-,pi+),K+_Phase"                           2	0.0		0.1	0.0	0.0
+*
+"D+->kappabar0(->K-,pi+),K+_Amp"                               0	0.974		0.1	0.0	0.0
+"D+->kappabar0(->K-,pi+),K+_Phase"                             0	-1.6447		0.1	0.0	0.0
+*
+*
+"D+->a(0)(1450)0(->K+,K-),pi+_Amp"                             0	0.775		0.1	0.0	0.0
+"D+->a(0)(1450)0(->K+,K-),pi+_Phase"                           0	2.0344		0.1	0.0	0.0
+*
+"D+->phi(1020)0(->K+,K-),pi+_Amp"                              0	2.41		0.1	0.0	0.0
+"D+->phi(1020)0(->K+,K-),pi+_Phase"                            0	-2.8966		0.1	0.0	0.0
+*
+"D+->phi(1680)0(->K+,K-),pi+_Amp"                              0	4.46		0.1	0.0	0.0
+"D+->phi(1680)0(->K+,K-),pi+_Phase"                            0	-2.0106		0.1	0.0	0.0
+*
+*
+*
+**TopHatsLimits  401002 649558 898114 1.14667e+06 1.39523e+06 1.64378e+06 1.89234e+06
+**
+**TopHatsLimits 401002 438285 475569 512852 550136 587419 624702 661986 699269 736553 773836 811120 848403 885686 922970 960253 997537 1.03482e+06 1.0721e+06 1.10939e+06 1.14667e+06 1.18395e+06 1.22124e+06 1.25852e+06 1.2958e+06 1.33309e+06 1.37037e+06 1.40765e+06 1.44494e+06 1.48222e+06 1.5195e+06 1.55679e+06 1.59407e+06 1.63135e+06 1.66864e+06 1.70592e+06 1.7432e+06 1.78049e+06 1.81777e+06 1.85506e+06 1.89234e+06
+**
+"TopHatsD+->NonResS0(->K-,pi+),K+_1_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_1_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_2_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_2_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_3_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_3_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_4_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_4_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_5_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_5_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+"TopHatsD+->NonResS0(->K-,pi+),K+_6_Re"                 	 0	1.0	0.2	0.0	0.0
+"TopHatsD+->NonResS0(->K-,pi+),K+_6_Im"               	 	 0	1.0	0.2	0.0	0.0
+
+**

@@ -48,6 +48,7 @@ class Amplitude
   ISpinFactor* _spinFactor;
   char _spd;
   std::string _lopt;
+  std::vector<double> _numOpts;
 
   DalitzEventPattern _pat;
   bool _init;
@@ -90,6 +91,7 @@ class Amplitude
   Amplitude( const DecayTree& decay
 	     , char SPD_Wave='?'
 	     , const std::string& opt=""
+	     , const std::vector<double>& numOpt = std::vector<double>()
 	     , IFitParRegister* daddy=0
 	     );
 

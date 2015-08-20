@@ -60,6 +60,7 @@ class FlexiFastAmplitudeIntegrator : virtual public IDalitzIntegrator{
   MINT::counted_ptr<TRandom> _localRnd;
   double _precision;
 
+  void forcedReIntegrate();
   void reIntegrate();
 
   double weight(IDalitzEvent* evtPtr);

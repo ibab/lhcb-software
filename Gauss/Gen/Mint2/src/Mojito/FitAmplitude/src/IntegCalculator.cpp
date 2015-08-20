@@ -22,21 +22,35 @@ std::string IntegCalculator::dirNameNoEff(){
   return "Without_EfficiencyEffects";
 }
 
+FitAmpPairList& IntegCalculator::withEff(){
+  return _withEff;
+}
+FitAmpPairList& IntegCalculator::noEff(){
+  return _noEff;
+}
+
+
 // constructors
 IntegCalculator::IntegCalculator()
-  : _withEff(), _noEff()
+  : _withEff(), _noEff(), _onlyOneFitAmpPairList(false)
 {
 }
 IntegCalculator::IntegCalculator(const FitAmpPairList& wEff)
   : _withEff(wEff), _noEff(wEff)
 {
-  _noEff.unsetEfficiency();
+  if(! wEff.haveEfficiency()){
+    _onlyOneFitAmpPairList = true;
+  }else{
+    _onlyOneFitAmpPairList = false;
+    _noEff.unsetEfficiency();
+  }
 }
 
 IntegCalculator::IntegCalculator(const IntegCalculator& other)
   : IIntegrationCalculator()
   , _withEff(other._withEff)
   , _noEff(other._noEff)
+  , _onlyOneFitAmpPairList(other._onlyOneFitAmpPairList)
 {
 }
 counted_ptr<IIntegrationCalculator> 
@@ -49,14 +63,16 @@ IntegCalculator::clone_IIntegrationCalculator() const{
 // the rest
 void IntegCalculator::setEfficiency(MINT::counted_ptr<IReturnRealForEvent<IDalitzEvent> > eff){
   withEff().setEfficiency(eff);
+  _onlyOneFitAmpPairList = false;
 }
 void IntegCalculator::unsetEfficiency(){
   withEff().unsetEfficiency();
+  _onlyOneFitAmpPairList = true;
 }
 
 void IntegCalculator::addAmps(FitAmplitude* a1, FitAmplitude* a2){
   withEff().addAmps(a1, a2);
-  noEff().addAmps(a1, a2);
+  if(! _onlyOneFitAmpPairList) noEff().addAmps(a1, a2);
 }
 void IntegCalculator::addEvent(IDalitzEvent* evtPtr, double weight){
   if(0 == evtPtr) return;
@@ -64,7 +80,7 @@ void IntegCalculator::addEvent(IDalitzEvent* evtPtr, double weight){
 }
 void IntegCalculator::addEvent(IDalitzEvent& evt, double weight){
   withEff().addEvent(evt, weight);
-  noEff().addEvent(evt, weight);
+  if(! _onlyOneFitAmpPairList)  noEff().addEvent(evt, weight);
 }
 void IntegCalculator::addEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
 			       , double weight){
@@ -77,7 +93,7 @@ void IntegCalculator::reAddEvent(IDalitzEvent* evtPtr, double weight){
 }
 void IntegCalculator::reAddEvent(IDalitzEvent& evt, double weight){
   withEff().reAddEvent(evt, weight);
-  noEff().reAddEvent(evt, weight);
+  if(! _onlyOneFitAmpPairList)  noEff().reAddEvent(evt, weight);
 }
 void IntegCalculator::reAddEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
 			       , double weight){
@@ -117,13 +133,15 @@ bool IntegCalculator::append(const const_counted_ptr<IntegCalculator>& other){
 
 int IntegCalculator::numEvents()const{
   int Nw = withEff().numEvents();
-  int Nn = noEff().numEvents();
-  if(Nw != Nn){
-    cout << "WARNING in IntegCalculator::numEvents()!"
-	 << " number of events in FitAmpPairList with efficiency"
-	 << " is not the same as without: "
-	 << Nw << " != " << Nn << endl;
-    cout << "I'll return the one with efficiency, Nw = " << Nw << endl;
+  if(! _onlyOneFitAmpPairList){
+    int Nn = noEff().numEvents();
+    if(Nw != Nn){
+      cout << "WARNING in IntegCalculator::numEvents()!"
+	   << " number of events in FitAmpPairList with efficiency"
+	   << " is not the same as without: "
+	   << Nw << " != " << Nn << endl;
+      cout << "I'll return the one with efficiency, Nw = " << Nw << endl;
+    }
   }
   return Nw;
 }
@@ -142,7 +160,8 @@ bool IntegCalculator::makeAndStoreFractions(Minimiser* mini){
     cout << "\n and now Fractions WITHOUT efficiency"
 	 << " (i.e. what you really want):" << endl;
   }
-  return noEff().makeAndStoreFractions(mini);
+  if(_onlyOneFitAmpPairList) return withEff().makeAndStoreFractions();
+  else return noEff().makeAndStoreFractions(mini);
 }
 double IntegCalculator::getFractionChi2() const{
   return noEff().getFractionChi2();
@@ -152,22 +171,26 @@ DalitzHistoSet IntegCalculator::histoSet() const{
   return withEff().histoSet();
 }
 void IntegCalculator::saveEachAmpsHistograms(const std::string& prefix) const{
-  return noEff().saveEachAmpsHistograms(prefix);
+  if(_onlyOneFitAmpPairList) return withEff().saveEachAmpsHistograms(prefix);
+  else return noEff().saveEachAmpsHistograms(prefix);
 }
 
 std::vector<DalitzHistoSet> IntegCalculator::GetEachAmpsHistograms(){
-  return noEff().GetEachAmpsHistograms();
+  if(_onlyOneFitAmpPairList) return withEff().GetEachAmpsHistograms();
+  else return noEff().GetEachAmpsHistograms();
 }
 
 DalitzHistoSet IntegCalculator::interferenceHistoSet() const{
     return withEff().interferenceHistoSet();
 }
 void IntegCalculator::saveInterferenceHistograms(const std::string& prefix) const{
-    return noEff().saveInterferenceHistograms(prefix);
+  if(_onlyOneFitAmpPairList) return withEff().saveInterferenceHistograms(prefix);
+  else return noEff().saveInterferenceHistograms(prefix);
 }
 
 std::vector<DalitzHistoSet> IntegCalculator::GetInterferenceHistograms(){
-    return noEff().GetInterferenceHistograms();
+  if(_onlyOneFitAmpPairList) return withEff().GetInterferenceHistograms();
+  else return noEff().GetInterferenceHistograms();
 }
 
 void IntegCalculator::doFinalStats(Minimiser* mini){
@@ -215,7 +238,11 @@ bool IntegCalculator::save(const std::string& dirname) const{
   bool sc=true;
   makeDirectories(dirname);
   sc &= withEff().save(dirname + "/" + dirNameWithEff());
-  sc &= noEff().save(dirname + "/" + dirNameNoEff());
+  if(_onlyOneFitAmpPairList){
+     sc &= withEff().save(dirname + "/" + dirNameNoEff());
+  }else{
+    sc &= noEff().save(dirname + "/" + dirNameNoEff());
+  }
   return sc;
 }
 bool IntegCalculator::retrieve(const std::string& commaSeparatedList){
@@ -261,18 +288,20 @@ void IntegCalculator::print(ostream& os) const{
 }
 
 bool IntegCalculator::needToReIntegrate() const{
-  return (withEff().needToReIntegrate() || noEff().needToReIntegrate());
+  bool needTo = withEff().needToReIntegrate();
+  if(! _onlyOneFitAmpPairList) needTo |= noEff().needToReIntegrate();
+  return needTo;
 }
 void IntegCalculator::startIntegration(){
   withEff().startIntegration();
-  noEff().startIntegration();
+  if(! _onlyOneFitAmpPairList) noEff().startIntegration();
 }
 void IntegCalculator::startReIntegration(){
   withEff().startReIntegration();
-  noEff().startReIntegration();
+  if(! _onlyOneFitAmpPairList) noEff().startReIntegration();
 }
 void IntegCalculator::endIntegration(){
   withEff().endIntegration();
-  noEff().endIntegration();
+  if(! _onlyOneFitAmpPairList) noEff().endIntegration();
 }
 //

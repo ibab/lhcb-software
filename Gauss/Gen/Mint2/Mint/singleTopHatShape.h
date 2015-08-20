@@ -8,6 +8,8 @@
 #include <string>
 #include <iostream>
 
+#include "Mint/FitParDependent.h"
+
 #include "Mint/ILineshape.h"
 #include "Mint/AssociatedDecayTree.h"
 #include "Mint/IDalitzEvent.h"
@@ -15,10 +17,7 @@
 #include "Mint/DalitzCoordinate.h"
 #include "Mint/IGenFct.h"
 
-using namespace std;
-using namespace MINT;
-
-class singleTopHatShape : virtual public ILineshape{
+class singleTopHatShape : virtual public ILineshape, public MINT::FitParDependent{
  private:
   mutable MINT::counted_ptr<IGenFct> _genFct;
   void makeGeneratingFunction() const;

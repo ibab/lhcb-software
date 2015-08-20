@@ -7,9 +7,12 @@
 #include "Mint/AssociatedDecayTree.h"
 
 #include <string>
+#include <vector>
 
 ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
 			   , const std::string& lopt
+			   , const std::vector<double>& numOptions 
+			   = std::vector<double>()
 			   );
 
 #endif

@@ -372,7 +372,7 @@ double FitAmpPair::add(IDalitzEvent& evt
   _lastEntry = c;
   _sum   += c;
 
-  if(slow()) this->addToHistograms(&evt, c);
+  if(slow() && 0.0 != c) this->addToHistograms(&evt, c);
 
   if(dbThis){
     cout << "\t c = " << c
@@ -419,7 +419,7 @@ double FitAmpPair::reAdd(IDalitzEvent& evt
   _lastEntry = c;
   _sum   += c;
 
-  if(slow()) this->addToHistograms(&evt, c);
+  if(slow() && 0.0 != c) this->addToHistograms(&evt, c);
 
   if(dbThis){
     cout << "\t c = " << c

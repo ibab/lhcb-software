@@ -17,10 +17,9 @@ namespace MINT{
 class IntegCalculator : public virtual IIntegrationCalculator{
  protected:
   FitAmpPairList _withEff, _noEff;
-  bool _onlyOneFitAmpPairList;
 
-  FitAmpPairList& withEff();
-  FitAmpPairList& noEff();
+  FitAmpPairList& withEff() {return _withEff;}
+  FitAmpPairList& noEff()   {return _noEff;}
 
   static std::string dirNameWithEff();
   static std::string dirNameNoEff();
@@ -40,13 +39,11 @@ class IntegCalculator : public virtual IIntegrationCalculator{
   double efficiency(IDalitzEvent* evtPtr);
   
   virtual void addAmps(FitAmplitude* a1, FitAmplitude* a2);
-  virtual void addEvent(IDalitzEvent* evtPtr, double weight=1); // << for compatibility
-  virtual void addEvent(IDalitzEvent& evt, double weight=1); // << default
+  virtual void addEvent(IDalitzEvent* evtPtr, double weight=1);
   virtual void addEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
 			, double weight=1);
 
   virtual void reAddEvent(IDalitzEvent* evtPtr, double weight=1);
-  virtual void reAddEvent(IDalitzEvent& evt, double weight=1); // <<< default
   virtual void reAddEvent(MINT::counted_ptr<IDalitzEvent> evtPtr
 			  , double weight=1);
 
@@ -61,13 +58,7 @@ class IntegCalculator : public virtual IIntegrationCalculator{
   virtual int numEvents()   const;
   virtual double integral() const;
   virtual double variance() const;
-  virtual void Gradient(MINT::MinuitParameterSet* mps, Double_t* grad){
-        withEff().Gradient(mps,grad);
-  }
-  virtual void GradientForLasso(MINT::MinuitParameterSet* mps, Double_t* grad){
-        withEff().GradientForLasso(mps,grad);
-  }  
-    
+
   double sumOfSqrtFitFractions() {
         return withEff().sumOfSqrtFitFractions();
   }     

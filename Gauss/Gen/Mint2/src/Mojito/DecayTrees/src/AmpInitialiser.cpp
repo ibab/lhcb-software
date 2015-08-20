@@ -15,14 +15,17 @@ AmpInitialiser::AmpInitialiser()
   : _SPD('?')
   , _valid(false)
   , _lopt("")
+  , _numOpts()
   , _autoSwap(true)
 {}
 AmpInitialiser::AmpInitialiser(const std::string& StandardisedDecayTreeName
 			       , const std::string& lopt_in
+			       , const std::vector<double>& numOpts_in
 			       , bool autoSwap_in
 			       )
   : _valid(false)
   , _lopt(lopt_in)
+  , _numOpts(numOpts_in)
   , _autoSwap(autoSwap_in)
 {
   setSPD('?');
@@ -44,9 +47,11 @@ AmpInitialiser::AmpInitialiser(const std::string& StandardisedDecayTreeName
 AmpInitialiser::AmpInitialiser(const DecayTree& dt_in
 			       , char SPD_in
 			       , const std::string& lopt_in
+			       , const std::vector<double>& numOpts_in
 			       , bool autoSwap_in
 			       )
   : _lopt(lopt_in)
+  , _numOpts(numOpts_in)
   , _autoSwap(autoSwap_in)
 {
   setTree(dt_in);
@@ -54,9 +59,11 @@ AmpInitialiser::AmpInitialiser(const DecayTree& dt_in
 }
 AmpInitialiser::AmpInitialiser(const DecayTree& dt_in
 			       , const std::string& lopt_in
+			       , const std::vector<double>& numOpts_in
 			       , bool autoSwap_in
 			       )
   : _lopt(lopt_in)
+  , _numOpts(numOpts_in)
   , _autoSwap(autoSwap_in)
 {
   setTree(dt_in);
@@ -67,6 +74,7 @@ AmpInitialiser::AmpInitialiser(const AmpInitialiser& other)
   : _SPD(other._SPD)
   , _valid(other._valid)
   , _lopt(other._lopt)
+  , _numOpts(other._numOpts)
   , _autoSwap(other._autoSwap)
 {
   setTree(other._dt);
@@ -76,6 +84,7 @@ AmpInitialiser& AmpInitialiser::operator=(const AmpInitialiser& rhs){
   _SPD   = rhs._SPD;
   _valid = rhs._valid;
   _lopt  = rhs._lopt;
+  _numOpts = rhs._numOpts;
   _autoSwap = rhs._autoSwap;
   return *this;
 }
@@ -119,6 +128,26 @@ void AmpInitialiser::addLopt(const std::string& lopt_in){
   if(! A_is_in_B(lopt_in, _lopt)){ 
     _lopt += lopt_in;
   }
+}
+
+void AmpInitialiser::setNumOpts(const std::vector<double>& numOpts_in){
+  _numOpts = numOpts_in;
+}
+
+void AmpInitialiser::setNumOpts(double n1){
+  _numOpts.push_back(n1);
+}
+void AmpInitialiser::setNumOpts(double n1, double n2){
+  _numOpts.push_back(n1); _numOpts.push_back(n2);
+}
+
+void AmpInitialiser::setNumOpts(double n1, double n2, double n3){
+  _numOpts.push_back(n1); _numOpts.push_back(n2); _numOpts.push_back(n3);
+}
+
+
+const std::vector<double>& AmpInitialiser::numOpts() const{
+  return _numOpts;
 }
 
 bool AmpInitialiser::autoSwap() const{

@@ -208,6 +208,7 @@ class FitAmplitude
   ~FitAmplitude();
 
   friend class FitAmpList;
+  friend class FitAmpListBase;
 };
 
 std::ostream& operator<<(std::ostream& os, const FitAmplitude& fa);

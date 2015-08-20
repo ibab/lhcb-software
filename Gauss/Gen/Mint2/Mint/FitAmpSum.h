@@ -18,8 +18,8 @@
 #include "Mint/ILookLikeFitAmpSum.h"
 #include "Mint/FitAmpList.h"
 
-// note - this inherits now from FitAmpList, many
-// methods formerly defined here are now defined there.
+// note - this inherits now from FitAmpList, and that from FitAmpLisBase
+// many methods formerly defined here are now defined there.
 
 class FitAmpSum 
 : virtual public MINT::IReturnRealForEvent<IDalitzEvent>
@@ -60,7 +60,7 @@ class FitAmpSum
      behaviour is defined in the copy constructor of the
      FitAmplitude class.
   */
-  virtual MINT::counted_ptr<FitAmpList> GetCloneSameFitParameters() const;
+  virtual MINT::counted_ptr<FitAmpListBase> GetCloneSameFitParameters() const;
   // same behaviour for FitParameters as for copy constructor.
 
 

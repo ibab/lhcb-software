@@ -18,23 +18,24 @@
 #include "Mint/IReturnRealForEvent.h"
 #include "Mint/IReturnComplexForEvent.h"
 #include "Mint/IIntegrationCalculator.h"
+#include "Mint/IntegCalculator.h"
+#include "Mint/FitAmpListBase.h"
 
 class FitAmplitude;
 namespace MINT{
   class MinuitParameterSet;
 }
 
-class FitAmpList
+class FitAmpList : public FitAmpListBase
 {
  protected:
   DalitzEventPattern _pat;
   std::string _paraFName; // default: read from stdin;
-  std::vector<FitAmplitude*> _fitAmps;
+
   MINT::MinuitParameterSet* _minuitParaSet;
-  MINT::counted_ptr<MINT::IReturnRealForEvent<IDalitzEvent> > _efficiency;
+
   std::string _opt; // option (not yet used)
 
-  virtual void deleteAll();
  public:
   FitAmpList(const DalitzEventPattern& pat
 	     , const char* fname=0
@@ -65,23 +66,14 @@ class FitAmpList
   */
 
   // following two routines are the same for now:
-  virtual int addCopyWithSameFitParameters(const FitAmpList& other
-					   , double factor=1);
-  virtual int add(const FitAmpList& other, double factor=1);
 
   virtual MINT::MinuitParameterSet* getMPS();
 
-  virtual unsigned int size() const;
-
-  virtual FitAmplitude* getAmpPtr(int i);
-  const FitAmplitude* getAmpPtr(int i) const;
- 
-  virtual bool CPConjugateSameFitParameters();
-  virtual MINT::counted_ptr<FitAmpList> GetCPConjugateSameFitParameters() const;
+  virtual MINT::counted_ptr<FitAmpListBase> GetCPConjugateSameFitParameters() const;
 
   // if you inherit from this class, you must re-implement
   // the clone routine below, otherwise error.
-  virtual MINT::counted_ptr<FitAmpList> GetCloneSameFitParameters() const;
+  virtual MINT::counted_ptr<FitAmpListBase> GetCloneSameFitParameters() const;
   // ... see example in FitAmpSum. The Trick is the different new...
 
   virtual bool createAllAmps(const DalitzEventPattern& thePattern
@@ -89,41 +81,20 @@ class FitAmpList
 
   virtual bool createAmpsFromFile(){return false;}// to be implemented later
   
-  //  DalitzBoxSet makeBoxes(MINT::IReturnRealForEvent<IDalitzEvent>* pdf
-  //			 , double nSigma = 2
-  //			 );
-  DalitzBoxSet makeBoxes(const DalitzEventPattern& pat
-			 , MINT::IReturnRealForEvent<IDalitzEvent>* pdf
-			 , double nSigma=2);
   
-  //  DalitzBWBoxSet makeBWBoxes( MINT::IReturnRealForEvent<IDalitzEvent>* pdf
-  //			      , TRandom* rnd=gRandom
-  //			      );
-  DalitzBWBoxSet makeBWBoxes(const DalitzEventPattern& pat
-			     , MINT::IReturnRealForEvent<IDalitzEvent>* pdf
-			     , TRandom* rnd=gRandom);
-
-
-  void setAllAmpsTo(const std::complex<double> z);
-
   virtual ~FitAmpList();
 
-  void printLargestAmp(IDalitzEvent& evt, std::ostream& os = std::cout);
-  void printAllAmps(std::ostream& os = std::cout)const;
-  void printAllAmps(IDalitzEvent& evt, std::ostream& os = std::cout);
-  void printNonZeroWithValue(IDalitzEvent& evt, std::ostream& os = std::cout);
-  void printNonZero(std::ostream& os = std::cout) const;
-  virtual void print(std::ostream& os=std::cout) const;
+  virtual void printLargestAmp(IDalitzEvent& evt, std::ostream& os = std::cout);
+  virtual void printAllAmps(std::ostream& os = std::cout)const{
+    FitAmpListBase::printAllAmps(os);}
+
+  virtual void printAllAmps(IDalitzEvent& evt, std::ostream& os = std::cout);
+  virtual void printNonZeroWithValue(IDalitzEvent& evt, std::ostream& os = std::cout);
+  virtual void printNonZero(std::ostream& os = std::cout) const{
+    FitAmpListBase::printNonZero(os);}
 
 
-  void setEfficiency(const MINT::counted_ptr<MINT::IReturnRealForEvent<IDalitzEvent> >& eff);
-  double efficiency(IDalitzEvent& evt);
-
-  virtual void multiply(double r); // by value
-  virtual void multiply(const std::complex<double>& z); // by value
-  virtual void multiply(const MINT::counted_ptr<MINT::IReturnComplex> irc); // by ref
-  virtual void multiply(MINT::counted_ptr<MINT::IReturnComplexForEvent<IDalitzEvent> > irc); // by ref
-  // (last one not const because getVal(evt) is not const)
+  friend class FitAmplitude;
 
   FitAmpList& operator*=(double r);
   FitAmpList& operator*=(const std::complex<double>& z);
@@ -132,11 +103,6 @@ class FitAmpList
   FitAmpList operator*(double r) const;
   FitAmpList operator*(const std::complex<double>& z) const;
   FitAmpList operator*(const MINT::counted_ptr<MINT::IReturnComplex>& irc) const;
-
-  void normalizeAmps(DalitzEventList& evtList);    
-
-  friend class FitAmplitude;
-
 
   FitAmpList& operator=(const FitAmpList& other);
   FitAmpList& operator+=(const FitAmpList& other);
