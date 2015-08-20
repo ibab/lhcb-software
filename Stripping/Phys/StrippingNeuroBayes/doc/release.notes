@@ -3,6 +3,8 @@ i!-----------------------------------------------------------------------------
 ! Responsible : Ulrich Kerzel
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
+! 2015-08-20 - Gerhard Raven
+ - use std::isfinite and std::isnan instead of GaudiKernel/CheckForNaN.h
 
 !========================= StrippingNeuroBayes v1r9 2013-09-18 =========================
 

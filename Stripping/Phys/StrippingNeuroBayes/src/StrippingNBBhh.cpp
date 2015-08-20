@@ -1,14 +1,10 @@
 // $Id: $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 #include <cmath>
 #include <algorithm>
 
 #include "Event/RecVertex.h"
-#include "GaudiAlg/CheckForNaN.h"
 #include <Event/MuonPID.h>
 
 //LoKi
@@ -349,7 +345,7 @@ bool StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
 
 
   double cosTheta        = LoKi::Cuts::LV01(&particle);
-  if ( lnan(cosTheta) || !lfin(cosTheta) ) { cosTheta = -999; }
+  if ( std::isnan(cosTheta) || !std::isfinite(cosTheta) ) { cosTheta = -999; }
 
 
 
