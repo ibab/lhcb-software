@@ -3,6 +3,10 @@
 ! Responsible : Greig Cowan
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
+
+! 2015-08-20 - Mark Tobin
+ - update TAE python files to use RawEventLocations
+
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
