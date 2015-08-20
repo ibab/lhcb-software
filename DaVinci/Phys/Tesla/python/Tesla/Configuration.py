@@ -21,6 +21,7 @@ class Tesla(LHCbConfigurableUser):
           , "CondDBtag" 	: 'default' 	# default as set in DDDBConf for DataType
           , 'Persistency' 	: '' 		# None, Root or Pool?
           , 'OutputLevel' 	: 4 		# Er, output level
+          , 'DuplicateCheck' 	: False		# Do we want to add the algorithm to check for duplicates
           , "outputFile" 	: 'Tesla.dst' 	# output filename
           , 'WriteFSR'    	: False 	# copy FSRs as required
           , 'PV'	        : "Offline"     # Associate to the PV chosen by the HLT or the offline one
@@ -42,6 +43,7 @@ class Tesla(LHCbConfigurableUser):
             , "CondDBtag" 	: "Databse tag, default as set in DDDBConf for DataType"
             , 'Persistency' 	: "Root or Pool?"
             , 'OutputLevel' 	: "Output level"
+            , 'DuplicateCheck' 	: "Add the test for duplicates?"
             , "outputFile" 	: 'output filename, automatically selects MDF or InputCopyStream'
             , 'WriteFSR'    	: 'copy FSRs as required'
             , 'PV'     	        : 'Associate to the PV chosen by the HLT or the offline one'
@@ -204,6 +206,12 @@ class Tesla(LHCbConfigurableUser):
 
         seq=GaudiSequencer('TeslaReportAlgoSeq')
         writer.RequireAlgs += ['TeslaReportAlgoSeq']
+        
+        # make use of PrintDuplicates algorithm
+        from Configurables import PrintDuplicates
+        dplic = PrintDuplicates("TurboDuplicates")
+        dplic.OutputLevel = self.getProp('OutputLevel')
+        
         #
         if self.getProp('Mode') is "Online":
             from DAQSys.Decoders import DecoderDB
@@ -229,6 +237,7 @@ class Tesla(LHCbConfigurableUser):
                         , self.base + l + "/CaloHypos#99"
                         , self.base + l + "/CaloClusters#99"
                         ]
+            dplic.Inputs+=[self.base + l + "/Particles"]
         
         inputType = self.getProp('InputType')
         if (inputType=='XDST') or (inputType=='LDST'):
@@ -306,6 +315,8 @@ class Tesla(LHCbConfigurableUser):
         
         
         self.teslaSeq.Members += [ seq ]
+        if self.getProp('DuplicateCheck'):
+            self.teslaSeq.Members += [dplic]
         IOHelper(persistency,persistency).outStream(fname,writer,writeFSR=self.getProp('WriteFSR'))
     
     def _configureReportAlg(self,line):
