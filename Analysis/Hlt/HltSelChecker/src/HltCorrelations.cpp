@@ -9,7 +9,6 @@
 #include "Event/L0DUReport.h"
 #include "Event/HltDecReports.h"
 #include "Kernel/ReadRoutingBits.h"
-#include "GaudiKernel/xtoa.h"
 
 // local
 #include "HltCorrelations.h"

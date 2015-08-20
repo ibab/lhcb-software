@@ -31,9 +31,7 @@ private:
   }
   // bitx
   std::string bitX(unsigned int i){
-    char buffer[2];
-    _itoa (i,buffer,10);
-    return std::string("Bit"+std::string(buffer));
+    return "Bit"+std::to_string(i);
   }
 
 private:
