@@ -31,7 +31,6 @@ def configureHltReportDecoding(trunk) :
     Fetches DAQ/RawEvent from trunk+DAQ/RawEvent, places reports in trunk + Hlt/DecReports and trunk + Hlt/SelReports respectively. Action is on-demand via the DataOnDemandSvs.
     """
     
-    from Configurables import ANNDispatchSvc
     locationRoot = fixTrunk(trunk)
 
     name = trunkName(trunk)
@@ -40,9 +39,7 @@ def configureHltReportDecoding(trunk) :
     #decReportLoc = locationRoot + "Hlt/DecReports"
     #selReportLoc = locationRoot + "Hlt/SelReports"
  
-    ANNDispatchSvc().RawEventLocation = rawEventLoc
-    ApplicationMgr().ExtSvc +=  [ DataOnDemandSvc(),
-                                  ANNDispatchSvc() ]
+    ApplicationMgr().ExtSvc +=  [ DataOnDemandSvc() ]
     from DAQSys.Decoders import DecoderDB
     from DAQSys.DecoderClass import decodersForBank
     for bank in ["Sel","Dec","Vertex","Track"]:
