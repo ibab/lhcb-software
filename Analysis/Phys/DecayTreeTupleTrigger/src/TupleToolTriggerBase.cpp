@@ -140,7 +140,6 @@ bool TupleToolTriggerBase::compileMyList(const std::vector<std::string>& list)
   boost::regex hlt2("Hlt2.*Decision");
   boost::regex strip("Stripping.*Decision");
 
-  //m_hlt1_init = svc<IANNSvc>("ANNDispatchSvc")->keys("Hlt1SelectionID");
   for ( std::vector< std::string >::const_iterator s = list.begin(); 
         s != list.end(); ++s )
   {
