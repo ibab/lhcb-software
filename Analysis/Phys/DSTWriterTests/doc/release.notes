@@ -3,6 +3,8 @@
 ! Responsible : Juan Palacios
 ! Purpose     : Options to generate selection or Micro DSTs and scripts to test them.
 !-----------------------------------------------------------------------------
+! 2015-08-20 - Gerhard Raven
+ - remove configration of obsolete ANNDispatchSvc
 
 !===================== DSTWriterTests v2r5 2015-01-16 ========================
 

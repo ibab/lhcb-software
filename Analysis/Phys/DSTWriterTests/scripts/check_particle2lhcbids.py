@@ -72,7 +72,7 @@ if __name__ == '__main__' :
     GaudiPython.loaddict('PhysDict')
     appMgr = AppMgr(outputlevel=3)
     appMgr.config( files = ['$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts'])
-    appMgr.ExtSvc += ['DataOnDemandSvc', 'ANNDispatchSvc']
+    appMgr.ExtSvc += ['DataOnDemandSvc' ]
     appMgr.initialize()
 
     evtSvc = appMgr.evtSvc()
