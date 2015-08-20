@@ -75,7 +75,7 @@ if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
                      options/SilenceErrors.py 
                      LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
                      DEPENDS ${s23name}
-                     SPLIT 50)
+                     SPLIT 20)
 
  set ( s21name S21FunctorCache_${time_date} )
  loki_functors_cache(${s21name}
@@ -86,13 +86,58 @@ if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
                      DEPENDS ${s22name}
                      SPLIT 50)
 
+ set ( s20r3name S20r3FunctorCache_${time_date} )
+ loki_functors_cache(${s20r3name}
+                     options/SuppressLogMessages.py
+                     options/DV-Stripping20r3-Stripping.py 
+                     options/SilenceErrors.py 
+                     LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
+                     DEPENDS ${s21name}
+                     SPLIT 20)
+
+ set ( s20r2name S20r2FunctorCache_${time_date} )
+ loki_functors_cache(${s20r2name}
+                     options/SuppressLogMessages.py
+                     options/DV-Stripping20r2-Stripping.py 
+                     options/SilenceErrors.py 
+                     LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
+                     DEPENDS ${s20r3name}
+                     SPLIT 20)
+
+ set ( s20r0p3name S20r0p3FunctorCache_${time_date} )
+ loki_functors_cache(${s20r0p3name}
+                     options/SuppressLogMessages.py
+                     options/DV-Stripping20r0p3-Stripping.py 
+                     options/SilenceErrors.py 
+                     LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
+                     DEPENDS ${s20r2name}
+                     SPLIT 20)
+
+ set ( s20r0p2name S20r0p2FunctorCache_${time_date} )
+ loki_functors_cache(${s20r0p2name}
+                     options/SuppressLogMessages.py
+                     options/DV-Stripping20r0p2-Stripping.py 
+                     options/SilenceErrors.py 
+                     LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
+                     DEPENDS ${s20r0p3name}
+                     SPLIT 20)
+
+ set ( s20r0p1name S20r0p1FunctorCache_${time_date} )
+ loki_functors_cache(${s20r0p1name}
+                     options/SuppressLogMessages.py
+                     options/DV-Stripping20r0p1-Stripping.py 
+                     options/SilenceErrors.py 
+                     LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
+                     DEPENDS ${s20r0p2name}
+                     SPLIT 20)
+
  set ( s20name S20FunctorCache_${time_date} )
  loki_functors_cache(${s20name}
                      options/SuppressLogMessages.py
                      options/DV-Stripping20-Stripping.py 
                      options/SilenceErrors.py 
                      LINK_LIBRARIES LoKiArrayFunctorsLib LoKiHltLib
-                     DEPENDS ${s21name}
+                     DEPENDS ${s20r0p1name}
                      SPLIT 50)
 
 endif()

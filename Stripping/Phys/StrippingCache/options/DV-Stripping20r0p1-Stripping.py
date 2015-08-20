@@ -1,13 +1,6 @@
 """
-Options for building Stripping22. 
+Options for building Stripping20r0p1. 
 """
-
-stripping='stripping22'
-
-#use CommonParticlesArchive
-from CommonParticlesArchive import CommonParticlesArchiveConf
-CommonParticlesArchiveConf().redirect(stripping)
-
 
 from Gaudi.Configuration import *
 MessageSvc().Format = "% F%30W%S%7W%R%T %0W%M"
@@ -18,44 +11,31 @@ DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
                                 "CloneDistCut" : [5000, 9e+99 ] }
 
 #
-#Fix for TrackEff lines
-#
-from Configurables import DecodeRawEvent
-DecodeRawEvent().setProp("OverrideInputs",4.1)
-
-#
 # Build the streams and stripping object
 #
 from StrippingConf.Configuration import StrippingConf, StrippingStream
 from StrippingSettings.Utils import strippingConfiguration
-from StrippingArchive.Utils import buildStream
+from StrippingArchive.Utils import buildStreams
 from StrippingArchive import strippingArchive
 
+stripping='stripping20r0p1'
 #get the configuration dictionary from the database
 config  = strippingConfiguration(stripping)
 #get the line builders from the archive
 archive = strippingArchive(stripping)
 
-stream = buildStream(stripping = config, streamName='ALL', archive = archive)
-
-stream.lines=[l for l in stream.lines if (("TrackEffDown" not in l.name()))] #fix for Z02mumu bug
-
-for l in stream.lines:
-        if l.RequiredRawEvents and l._prescale==0:
-                l.RequiredRawEvents=None
+streams = buildStreams(stripping = config, archive = archive)
 
 from Configurables import ProcStatusCheck
 filterBadEvents = ProcStatusCheck()
 
-sc = StrippingConf( Streams = [stream],
+sc = StrippingConf( Streams = streams,
                     MaxCandidates = 2000,
                     AcceptBadEvents = False,
                     BadEventSelection = filterBadEvents, 
                     TESPrefix = 'Strip' )
 
-## Configure PV refitter
-from Configurables import LoKi__PVReFitter
-LoKi__PVReFitter("ToolSvc.LoKi::PVReFitter").CheckTracksByLHCbIDs = True
+from Configurables import ApplicationMgr, AuditorSvc, SequencerTimerTool
 
 appMgr = ApplicationMgr()
 appMgr.OutputLevel = 6
@@ -68,14 +48,11 @@ appMgr.ExtSvc += [ ntSvc ]
 from Configurables import ( LHCbApp, PhysConf, AnalysisConf,
                             DstConf, LumiAlgsConf, DDDBConf )
 
-#LHCbApp().DDDBtag   = "dddb-20150724"
-#LHCbApp().CondDBtag = "cond-20150805"
-
 # Can be enabled for next full stack release
 #PhysConf().OutputLevel     = appMgr.OutputLevel
 #AnalysisConf().OutputLevel = appMgr.OutputLevel
 
-datatype =  "2015"
+datatype =  "2012"
 PhysConf().DataType      = datatype
 AnalysisConf().DataType  = datatype
 LumiAlgsConf().DataType  = datatype
