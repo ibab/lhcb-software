@@ -431,8 +431,8 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, int key, LHCb::Particle* Part, 
     if( Obj_d->summarizedObjectCLID()==LHCb::Vertex::classID() ){
       // for a non-basic particle, the end vertex is the last
       // element of the substructure
-      fillVertexInfo( vert_mother , Obj_d );
       Part->setEndVertex( vert_mother );
+      fillVertexInfo( vert_mother , Obj_d );
       if ( msgLevel(MSG::DEBUG) ) debug() << "Setting mother decay vertex" << endmsg;
       continue;
     }
