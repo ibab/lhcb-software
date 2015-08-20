@@ -156,13 +156,15 @@ StatusCode ST::STTAEClusterTuple::execute() {
         
         // Loop over the strips in this cluster and find the highest ADC
         unsigned int highestADC = 0;
-        int highestStrip; highestStrip = 0;
+        //int highestStrip = 0;
+        //highestStrip = 0;
+
         bool foundBadChannel = false;
         LHCb::STCluster::ADCVector adcVec = cluster->stripValues();
         LHCb::STCluster::ADCVector::const_iterator iVec = adcVec.begin();
         for( ; iVec < adcVec.end(); ++iVec ) {
           if( iVec->second > highestADC ) {
-            highestStrip = iVec->first;
+            //highestStrip = iVec->first;
             highestADC = iVec->second;
             // Check for bad channels
             LHCb::STChannelID iChan = LHCb::STChannelID(int(chanID) + iVec->first);
