@@ -1,11 +1,11 @@
 #include <algorithm>
 #include <limits>
 #include <fstream>
+#include <cmath>
 
 #include <stdlib.h>
 
 #include "LoKiNNBTag.h"
-#include "GaudiAlg/CheckForNaN.h"
 
 // LoKi
 #include "LoKi/ILoKiSvc.h"
@@ -364,8 +364,8 @@ void LoKi::NNBTag::calculateTrackVariables()
 
         calculateIP(part, unbiasedPV.position(), ip_tmp, ip_sig_tmp);
         if ( std::fabs(ip_tmp) < std::fabs(ip) &&
-             !lnan(ip_tmp) && !lnan(ip_sig_tmp) &&
-             lfin(ip_tmp)  && lfin(ip_sig_tmp) )
+             !std::isnan(ip_tmp) && !std::isnan(ip_sig_tmp) &&
+             std::isfinite(ip_tmp)  && std::isfinite(ip_sig_tmp) )
         {
           ip = ip_tmp;
           ip_sig = ip_sig_tmp;
