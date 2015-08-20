@@ -14,7 +14,7 @@ __author__  = "Ulrich Kerzel Ulrich.Kerzel@cern.ch"
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
 # =============================================================================
 __all__ = (
-    'StdNoPIDsElectrons' ,
+    'StdNoPIDsDownElectrons' ,
     'locations'
     )
 # =============================================================================

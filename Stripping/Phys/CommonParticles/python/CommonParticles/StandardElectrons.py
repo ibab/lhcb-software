@@ -22,6 +22,9 @@ _locations.update ( locations )
 from CommonParticles.StdNoPIDsElectrons import *
 _locations.update ( locations )
 
+from CommonParticles.StdNoPIDsDownElectrons import *
+_locations.update ( locations )
+
 from CommonParticles.StdAllLooseElectrons import *
 _locations.update ( locations )
 
