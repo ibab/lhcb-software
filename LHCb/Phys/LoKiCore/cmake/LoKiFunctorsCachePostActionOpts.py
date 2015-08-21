@@ -83,7 +83,8 @@ def post_action_for_cpp ( ) :
 
     # ensure that prints from the main tools/factories are not suppressed
     import Configurables
-    for factory in ('Tool', 'CoreFactory', 'TrackFunctorFactory', 'HltFactory'):
+    for factory in ('Tool', 'CoreFactory', 'TrackFunctorFactory',
+                    'HltFactory', 'Hlt1HltFactory', 'Hlt2HltFactory'):
         factory = 'LoKi__Hybrid__%s' % factory
         try:
             factory = getattr(Configurables, factory)
