@@ -293,33 +293,56 @@ run_view_pages = OrderedDict([
     }),
     ('bad_channels', {
         'title': 'Bad Channels',
-        'plots': [
+        'subpages': [
             {
-                'title': 'Dead Channels Per Sensor',
-                'name': 'Velo/VeloOccupancyMonitor/DeadPerSensor',
-            },
+                'title': 'Info Per Sensor',
+                'plots': [
+                    {
+                        'title': 'Dead Channels Per Sensor',
+                        'short': 'Dead Channels Per Sensor',
+                        'name': 'Velo/VeloOccupancyMonitor/DeadPerSensor',
+                    },
+                    {
+                        'title': 'Noisy Channels Per Sensor',
+                        'short': 'Noisy Channels Per Sensor',
+                        'name': 'Velo/VeloOccupancyMonitor/NoisyPerSensor',
+                        },
+                    ],
+                'layout': (1, 2)
+                },
             {
-                'title': 'Noisy Channels Per Sensor',
-                'name': 'Velo/VeloOccupancyMonitor/NoisyPerSensor',
-            },
+                'title': 'Info Per Sensor and Link',
+                'plots': [
+                    {
+                        'title': 'Dead Channels Per Sensor And Link',
+                        'short': 'Dead Channels Per Sensor And Link',
+                        'name': 'Velo/VeloOccupancyMonitor/DeadPerSensorAndLink',
+                    },
+                    {
+                        'title': 'Noisy Channels Per Sensor And Link',
+                        'short': 'Noisy Channels Per Sensor And Link',
+                        'name': 'Velo/VeloOccupancyMonitor/NoisyPerSensorAndLink',
+                    },
+                    ],
+                'layout': (1, 2)
+                },
             {
-                'title': 'Dead/Noisy Channels Per Sensor',
-                'name': 'Velo/VeloOccupancyMonitor/DeadOrNoisyPerSensor',
-             },
-            {
-                'title': 'Dead Channels Per Sensor And Link',
-                'name': 'Velo/VeloOccupancyMonitor/DeadPerSensorAndLink',
-            },
-            {
-                'title': 'Noisy Channels Per Sensor And Link',
-                'name': 'Velo/VeloOccupancyMonitor/NoisyPerSensorAndLink',
-            },
-            {
-                'title': 'Dead/Noisy Channels Per Sensor And Link',
-                'name': 'Velo/VeloOccupancyMonitor/DeadOrNoisyPerSensorAndLink',
-             }
-        ],
-        'layout': (3,3)
+                'title': 'Dead/Noisy',
+                'plots': [
+                    {
+                        'title': 'Dead/Noisy Channels Per Sensor',
+                        'short': 'Dead/Noisy Channels Per Sensor',
+                        'name': 'Velo/VeloOccupancyMonitor/DeadOrNoisyPerSensor',
+                    },
+                    {
+                        'title': 'Dead/Noisy Channels Per Sensor And Link',
+                        'short': 'Dead/Noisy Channels Per Sensor And Link',
+                        'name': 'Velo/VeloOccupancyMonitor/DeadOrNoisyPerSensorAndLink',
+                    },
+                ],
+                'layout': (1, 2)
+            }
+        ]
     }),
     ('tracks', {
         'title': 'Tracks',

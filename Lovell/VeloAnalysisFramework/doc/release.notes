@@ -6,6 +6,8 @@
 
 ! 2015-08-21 - Alex Pearce
  - Handle plots with no configuration dictionary.
+ - Add bad channel plots to run view configuration, on behalf of Sophie
+   Richards.
 
 ! 2015-08-19 - Michael Alexander
  - Adding IP resolutions plots back. 
