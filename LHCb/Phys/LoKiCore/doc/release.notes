@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-08-21 - Chris Jones
+ - Add some warnings to HybridBase for when either the python or cache functor
+   support is disabled.
+
 !========================= LoKiCore v11r25 2015-08-18 =========================
 
 ! 2015-08-18 - Chris Jones

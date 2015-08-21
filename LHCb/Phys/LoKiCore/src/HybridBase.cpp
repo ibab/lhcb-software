@@ -92,11 +92,6 @@ LoKi::Hybrid::Base::Base
   : GaudiTool ( type , name , parent )
     //
   , m_pyInit     ( false )
-  , m_showCode   ( false )
-  , m_use_python ( true  )
-  , m_use_cache  ( true  )
-  , m_makeCpp    ( false )
-  , m_cppname    ()
   , m_cpplines   ( { "#include \"GaudiKernel/Kernel.h\""            ,  
                      "#include \"GaudiKernel/System.h\""            , 
                      "#include \"GaudiKernel/SystemOfUnits.h\""     ,
@@ -107,27 +102,21 @@ LoKi::Hybrid::Base::Base
   , m_allfuncs   () 
 {
   declareProperty ( "ShowCode" , 
-                    m_showCode , 
+                    m_showCode = false, 
                     "Flag to display the prepared python code") ;
   //
   // use Environment variable 
   //
-  m_makeCpp = "UNKNOWN" != System::getEnv  ( "LOKI_GENERATE_CPPCODE" ) ;
-  //
   declareProperty ( "MakeCpp"  , 
-                    m_makeCpp  , 
+                    m_makeCpp    = "UNKNOWN" != System::getEnv("LOKI_GENERATE_CPPCODE"), 
                     "Generate C++ code for created functors ") ;
   //
-  m_use_python = "UNKNOWN" == System::getEnv  ( "LOKI_DISABLE_PYTHON" ) ;
-  //
-  m_use_cache  = "UNKNOWN" == System::getEnv  ( "LOKI_DISABLE_CACHE"  ) ;
-  //
   declareProperty ( "UsePython"  , 
-                    m_use_python , 
+                    m_use_python = "UNKNOWN" == System::getEnv("LOKI_DISABLE_PYTHON"), 
                     "Use Python as factory for LoKi-functors ") ;
   //
   declareProperty ( "UseCache"  , 
-                    m_use_cache , 
+                    m_use_cache  = "UNKNOWN" == System::getEnv("LOKI_DISABLE_CACHE" ), 
                     "Use C++ cache for LoKi-functors ") ;
   //
   // make reasonable default name
@@ -163,7 +152,10 @@ StatusCode LoKi::Hybrid::Base::initialize ()
   if ( sc.isFailure() ) { return sc ; }
   // force the loading/initialization of  LoKi Service
   svc<LoKi::ILoKiSvc>( "LoKiSvc" , true ) ;
-  //
+  // Messages
+  if ( !m_use_python ) Warning( "Python Functors are DISABLED"    ).ignore();
+  if ( !m_use_cache  ) Warning( "C++ Cache Functors are DISABLED" ).ignore();
+  // return
   return sc ;
 }
 // ============================================================================
