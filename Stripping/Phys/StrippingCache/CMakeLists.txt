@@ -56,6 +56,7 @@ if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
 
  # Unique stamp for library names
  string( MD5 name_stamp ${CMAKE_BINARY_DIR} )
+ MESSAGE( STATUS "NameStamp : " ${CMAKE_BINARY_DIR} " MD5-> " ${name_stamp} )
  set( name_stamp _${name_stamp} )
  
  include(LoKiFunctorsCache)
