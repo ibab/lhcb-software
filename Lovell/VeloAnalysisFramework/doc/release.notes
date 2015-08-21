@@ -4,6 +4,9 @@
 ! Purpose     : Analysis framework and configuration for offline and web GUIs
 !----------------------------------------------------------------------------
 
+! 2015-08-21 - Alex Pearce
+ - Handle plots with no configuration dictionary.
+
 ! 2015-08-19 - Michael Alexander
  - Adding IP resolutions plots back. 
 

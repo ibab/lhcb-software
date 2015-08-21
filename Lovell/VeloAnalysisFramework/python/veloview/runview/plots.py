@@ -55,7 +55,7 @@ def get_run_plot(name, run, reference=False, formatter=dictionary_formatter):
 
     # Normalise histogram if required
     plot_dict = get_plot_dictionary(name)
-    if plot_dict.get('normalised', False):
+    if plot_dict is not None and plot_dict.get('normalised', False):
       integral = clone.Integral()
       if integral > 0:
         clone.Scale(1.0/integral)
