@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-21 - Andrea Contu
+ - Remove import from selections in StrippingTau23Mu
+
+
 !========================== StrippingSelections v4r5 2015-08-18 ===============
 
 ! 2015-08-18 - Andrea Contu

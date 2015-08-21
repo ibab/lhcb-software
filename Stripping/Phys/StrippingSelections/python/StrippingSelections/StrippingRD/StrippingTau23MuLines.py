@@ -24,7 +24,6 @@ from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StrippingSelections.Utils import checkConfig
 from GaudiKernel.PhysicalConstants import c_light
 
 default_config = {
