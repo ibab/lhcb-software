@@ -3,6 +3,9 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+! 2015-08-21 - Maurizio Martinelli
+ - Fixed a bug in the constants comparison check
+
 ! 2015-08-18 - Giulio Dujany
  - Added link to twiki in email sent by checkConstants.py
 

@@ -260,10 +260,9 @@ StatusCode AlignOnlineIterator::i_run()
       break;
     }
 
-    // Store alignment constants - MM
-    //
+    // Store alignment constants
     if (m_iteration == 1) // first iteration store the initial
-      initAlConsts = m_alignupdatetool->getAlignmentConstants();
+      initAlConsts = m_alignupdatetool->getAlignmentConstants(false);
 
     // copy the xml directory to a directory with the iteration name
     if( m_keepIterXml ) {
@@ -318,14 +317,13 @@ StatusCode AlignOnlineIterator::i_run()
     // compare them to initial
     Alignment::AlignmentMonitoring::CompareConstants cmp(initAlConsts,finalAlConsts);
     cmp.Compare();
-    if ( msgLevel(MSG::DEBUG) ) cmp.PrintWarnings(0);
-    if ( !(cmp.GetNumWarnings(2) || cmp.GetNumWarnings(1)>3) ) { // no significant change
+    if ( msgLevel(MSG::DEBUG) ) cmp.PrintWarnings(1);
+    if ( !(cmp.GetNumWarnings(3) || cmp.GetNumWarnings(2)>3) ) { // no significant change
       warning() << "Alignment converged in more than one iteration but constants didn't change significantly." 
 		<< endmsg;
-      if (cmp.GetNumWarnings(1))
-	cmp.PrintWarnings(1);
+      if (cmp.GetNumWarnings(2))
+	cmp.PrintWarnings(2);
     } else {
-      
       // after last update, if more than one iteration and successfully converged
       for (auto& i : m_xmlcopiers)
 	{
