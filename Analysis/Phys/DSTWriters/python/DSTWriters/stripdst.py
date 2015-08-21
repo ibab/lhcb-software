@@ -70,7 +70,7 @@ def stripDSTStreamConf( pack = True,
     phys = 'Phys'
     if pack : phys = 'pPhys'
 
-    eItems = [ ]
+    eItems = [ '/Event/Trigger/RawEvent#1' ]
     if isinstance(stripPrefix, list) : 
       for p in stripPrefix : 
         eItems += [ '/Event/%s/%s/DecReports#1' % (p, phys) ]
