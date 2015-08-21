@@ -4133,6 +4133,8 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
+      /// get mode 
+      double mode     () const { return mean() ; }
       /// get variance:  good numerical approximation 
       double variance () const ; 
       /// get rms :  good numerical approximation 
