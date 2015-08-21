@@ -5,6 +5,15 @@
 ! Created     : 2015-02-04
 ! -----------------------------------------------------------------------------
 
+! 2015-08-21 - Chris Jones
+ - Replace the timestamp in the file names with a hash based on the build
+   directory. Achieves the same end result, makes builds in different areas
+   unique, but has the advance the repeated builds in the same user area
+   use the same stamp...
+ - Add the area containing the buiold component lists to the runtime
+   LD_LIBRARY_PATH. Needed for so the generation of sources for each cache
+   skip those already in an already built cache.
+
 ! 2015-08-20 - Chris Jones
  - Add support for building multiple caches for different strippings
   + Each cache is made to depend on each other, in order, such that they are 

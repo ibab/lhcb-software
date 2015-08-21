@@ -42,24 +42,25 @@ endforeach()
 # Explicitly depend on DaVinci, to make sure it is built first
 set(conf_deps ${conf_deps} DaVinciConfUserDB )
 
-# Build the caches
+# Print the dependencies
+#MESSAGE( STATUS "StrippingCache Deps : " ${conf_deps} )
 
-MACRO (TODAY RESULT)
-   EXECUTE_PROCESS(COMMAND "date" "+%S/%M/%H/%d/%m/%Y" OUTPUT_VARIABLE ${RESULT})
-   string(REGEX REPLACE "(..)/(..)/(..)/(..)/(..)/..(..).*" "\\1\\2\\3\\4\\5\\6" ${RESULT} ${${RESULT}})
-ENDMACRO (TODAY)
+# Build the caches
 
 # Do not build for the -O0 platform, as this seems to have problems.
 # To be investigated...
 if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
 
- MESSAGE( STATUS "StrippingCache Deps : " ${conf_deps} )
+ # Append build path with component list so each cache build skips functors already cached.
+ gaudi_build_env( PREPEND LD_LIBRARY_PATH ${CMAKE_BINARY_DIR}/Phys/StrippingCache )
 
- TODAY( time_date )
-
+ # Unique stamp for library names
+ string( MD5 name_stamp ${CMAKE_BINARY_DIR} )
+ set( name_stamp _${name_stamp} )
+ 
  include(LoKiFunctorsCache)
 
- set( s23name S23FunctorCache_${time_date} )
+ set( s23name S23FunctorCache${name_stamp} )
  loki_functors_cache(${s23name}
                      options/SuppressLogMessages.py
                      options/DV-Stripping23-Stripping.py 
@@ -68,7 +69,7 @@ if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
                      DEPENDS ${conf_deps}
                      SPLIT 50)
 
- set ( s22name S22FunctorCache_${time_date} )
+ set ( s22name S22FunctorCache${name_stamp} )
  loki_functors_cache(${s22name}
                      options/SuppressLogMessages.py
                      options/DV-Stripping22-Stripping.py 
@@ -77,7 +78,7 @@ if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
                      DEPENDS ${s23name}
                      SPLIT 20)
 
- set ( s21name S21FunctorCache_${time_date} )
+ set ( s21name S21FunctorCache${name_stamp} )
  loki_functors_cache(${s21name}
                      options/SuppressLogMessages.py
                      options/DV-Stripping21-Stripping.py 
@@ -86,7 +87,7 @@ if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
                      DEPENDS ${s22name}
                      SPLIT 50)
 
- set ( s20r3name S20r3FunctorCache_${time_date} )
+ set ( s20r3name S20r3FunctorCache${name_stamp} )
  loki_functors_cache(${s20r3name}
                      options/SuppressLogMessages.py
                      options/DV-Stripping20r3-Stripping.py 
@@ -95,7 +96,7 @@ if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
                      DEPENDS ${s21name}
                      SPLIT 20)
 
- set ( s20r2name S20r2FunctorCache_${time_date} )
+ set ( s20r2name S20r2FunctorCache${name_stamp} )
  loki_functors_cache(${s20r2name}
                      options/SuppressLogMessages.py
                      options/DV-Stripping20r2-Stripping.py 
@@ -104,7 +105,7 @@ if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
                      DEPENDS ${s20r3name}
                      SPLIT 20)
 
- set ( s20r0p3name S20r0p3FunctorCache_${time_date} )
+ set ( s20r0p3name S20r0p3FunctorCache${name_stamp} )
  loki_functors_cache(${s20r0p3name}
                      options/SuppressLogMessages.py
                      options/DV-Stripping20r0p3-Stripping.py 
@@ -113,7 +114,7 @@ if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
                      DEPENDS ${s20r2name}
                      SPLIT 20)
 
- set ( s20r0p2name S20r0p2FunctorCache_${time_date} )
+ set ( s20r0p2name S20r0p2FunctorCache${name_stamp} )
  loki_functors_cache(${s20r0p2name}
                      options/SuppressLogMessages.py
                      options/DV-Stripping20r0p2-Stripping.py 
@@ -122,7 +123,7 @@ if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
                      DEPENDS ${s20r0p3name}
                      SPLIT 20)
 
- set ( s20r0p1name S20r0p1FunctorCache_${time_date} )
+ set ( s20r0p1name S20r0p1FunctorCache${name_stamp} )
  loki_functors_cache(${s20r0p1name}
                      options/SuppressLogMessages.py
                      options/DV-Stripping20r0p1-Stripping.py 
@@ -131,7 +132,7 @@ if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
                      DEPENDS ${s20r0p2name}
                      SPLIT 20)
 
- set ( s20name S20FunctorCache_${time_date} )
+ set ( s20name S20FunctorCache${name_stamp} )
  loki_functors_cache(${s20name}
                      options/SuppressLogMessages.py
                      options/DV-Stripping20-Stripping.py 
