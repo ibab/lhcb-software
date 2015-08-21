@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-08-21 - Vanya Belyaev
+ - fix tiny bug, add atlas function 
+
 ! 2015-08-17 - Gerhard Raven
  - Remove the 'static' SMatrix in the 'average' method in Similarity_*.cpp,
    to fix a problem with gcc 4.9.3 'hanging' on __cxa_guard_acquire.

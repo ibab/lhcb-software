@@ -305,6 +305,21 @@ namespace
    */
   const double s_HALFSQRTPI = 0.5 * std::sqrt(     M_PI ) ;
   // ==========================================================================
+  /** @var s_SQRT3 
+   *  helper constant \f$ \sqrt{3} \f$ 
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2015-08-21
+   */
+  const double s_SQRT3 = std::sqrt ( 3.0 ) ;
+  // ==========================================================================
+  /** @var S_ATLAL 
+   *  magic constant - integral for Atlas function 
+   *  @see Gaudi::Math::Atlas 
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2015-08-21
+   */   
+  const double s_ATLAS = 3.052369876253939 ;
+  // ==========================================================================
   /** @var s_HALFSQRTPI_log
    *  helper constant \f$ \log \frac{\sqrt{\pi}}{2}\f$
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -374,6 +389,16 @@ namespace
       (Gaudi::Math::Sigmoid*) params ;
     //
     return (*sigmoid)(x) ;
+  }
+  // ==========================================================================
+  /** helper function for itegration of Atlas's function
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2015-08-21
+   */
+  double atlas_GSL ( double x , void* params )
+  {
+    const Gaudi::Math::Atlas* atlas = (Gaudi::Math::Atlas*) params ;
+    return (*atlas)(x) ;
   }
   // ==========================================================================
   /** evaluate the helper function  \f[ f = \frac{\log{1+x}}{x} \f]
@@ -7927,6 +7952,116 @@ double Gaudi::Math::JohnsonSU::integral
 { return  s_equal ( low , high ) ? 0.0 : ( cdf ( high ) - cdf ( low ) ) ; }
 
 
+
+// ============================================================================
+/*  constructor with all parameters
+ *  @param mean  \f$\mu\f$-parameter 
+ *  @param sigma \f$\sigma\f$-parameter 
+ */
+// ============================================================================
+Gaudi::Math::Atlas::Atlas
+( const double mean  ,
+  const double sigma ) 
+  : std::unary_function<double,double>() 
+  , m_mean      ( mean               ) 
+  , m_sigma     ( std::abs ( sigma ) )    
+  , m_workspace ()
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::Atlas::~Atlas(){}
+// ============================================================================
+// get variance:  very good numerical approximation d
+// ============================================================================
+double Gaudi::Math::Atlas::variance () const { return 3 * m_sigma * m_sigma ; }
+// ============================================================================
+// get rms :  very good numerical approximation 
+// ============================================================================
+double Gaudi::Math::Atlas::rms      () const { return s_SQRT3     * m_sigma ; }
+// ============================================================================
+bool Gaudi::Math::Atlas::setMean ( const double value ) 
+{
+  if ( s_equal ( value , m_mean ) ) { return false ; }
+  m_mean = value ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::Atlas::setSigma ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;
+  if ( s_equal ( value_ , m_sigma ) ) { return false ; }
+  m_sigma = value_ ;
+  return true ;
+}
+// ============================================================================
+// evaluate atlas function 
+// ============================================================================
+double Gaudi::Math::Atlas::pdf        ( const double x ) const 
+{
+  const double dx = std::abs  ( x - m_mean ) / m_sigma ;
+  if ( s_zero ( dx ) ) { return 1 ; }                        // return 1 
+  const double x2 = std::pow ( dx , 1.0 + 1 / ( 1 + 0.5 * dx ) ) ;
+  return std::exp ( -0.5 * x2 ) / ( s_ATLAS * m_sigma )  ;
+}
+// ============================================================================
+double Gaudi::Math::Atlas::integral ( const double low  ,
+                                      const double high ) const 
+{
+  //
+  if      ( s_equal ( low ,high ) ) { return 0 ; }
+  else if ( low > high            ) { return -integral ( high , low ) ; }
+  //
+  // split 
+  if ( low < m_mean && m_mean < high ) 
+  { return integral ( low , m_mean ) + integral ( m_mean , high ) ; }
+  //
+  const double left  = m_mean - 5 * m_sigma ;  
+  if ( low < left   &&  left < high ) 
+  { return integral ( low , left   ) + integral ( left   , high ) ; }
+  //
+  const double right = m_mean + 5 * m_sigma ;  
+  if ( low < right  && right  < high ) 
+  { return integral ( low , right  ) + integral ( right  , high ) ; }
+  //
+  //
+  // use GSL to evaluate the integral
+  //
+  Sentry sentry ;
+  //
+  gsl_function F                ;
+  F.function = &atlas_GSL ;
+  F.params   = const_cast<Atlas*> ( this ) ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //
+  const bool in_tail = ( high <= left || low >= right ) ;
+  //
+  const int ierror = gsl_integration_qag
+    ( &F                ,            // the function
+      low   , high      ,            // low & high edges
+      in_tail ? s_PRECISION_TAIL : s_PRECISION , // absolute precision
+      in_tail ? s_PRECISION_TAIL : s_PRECISION , // relative precision
+      s_SIZE            ,            // size of workspace
+      GSL_INTEG_GAUSS31 ,            // integration rule
+      workspace ( m_workspace ) ,    // workspace
+      &result           ,            // the result
+      &error            ) ;          // the error in result
+  //
+  if ( ierror )
+  {
+    //
+    gsl_error ( "Gaudi::Math::Atlas::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ;
+  }
+  //
+  return result ;
+}
+// ============================================================================
+// overall integral, not exact but precise enough...
+// ============================================================================
+double Gaudi::Math::Atlas::integral () const { return 1 ; }
 // ============================================================================
 // Argus
 // ============================================================================

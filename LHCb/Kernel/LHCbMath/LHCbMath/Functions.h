@@ -4097,6 +4097,73 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Atlas 
+     *  Modified gaussian function 
+     *  \f$  f(x) \propto \exp( -frac{\delta x^{1+\frac{1}{1+\deltax/2}}}{2})\f$,
+     *  where \f$\delta x = \left| x - \mu \right|/\sigma\f$
+     *  Fuction is taken from http://arxiv.org/abs/arXiv:1507.07099
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-08-21
+     */
+    class GAUDI_API Atlas : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor with all parameters
+       *  @param mean  \f$\mu\f$-parameter 
+       *  @param sigma \f$\sigma\f$-parameter 
+       */
+      Atlas   ( const double mean   = 0  ,
+                const double sigma  = 1  ) ;
+      /// destructor
+      ~Atlas () ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// evaluate atlas function 
+      double pdf        ( const double x ) const ;
+      /// evaluate atlas function 
+      double operator() ( const double x ) const { return pdf ( x ) ; }
+      // ======================================================================
+    public: // direct getters
+      // ======================================================================
+      double mean   () const { return m_mean   ; }
+      /// get parameters "sigma"
+      double sigma  () const { return m_sigma  ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get variance:  good numerical approximation 
+      double variance () const ; 
+      /// get rms :  good numerical approximation 
+      double rms      () const ;
+      // ======================================================================
+    public: // direct setters
+      // ======================================================================
+      bool   setMean  ( const double value ) ;
+      bool   setSigma ( const double value ) ;
+      // ======================================================================
+    public: // integrals
+      // ======================================================================      
+      double integral ( const double low  ,
+                        const double high ) const ;
+      /// integral from -infinity to +infinity
+      double integral () const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// parameteter "mu", mean, mode 
+      double m_mean  ; // parameter mu,mean,mode 
+      /// parameter   "sigma" 
+      double m_sigma ; // parameter sigma 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// workspace
+      Gaudi::Math::WorkSpace m_workspace ;
+      // ======================================================================
+     } ;
+    // ========================================================================
     /** @class Argus 
      *  http://en.wikipedia.org/wiki/ARGUS_distribution
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru

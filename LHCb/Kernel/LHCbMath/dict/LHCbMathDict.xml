@@ -114,6 +114,7 @@
   <class name    = "Gaudi::Math::BetaPrime"        />
   <class name    = "Gaudi::Math::Landau"           />
   <class name    = "Gaudi::Math::Argus"            />
+  <class name    = "Gaudi::Math::Atlas"            />
   <class name    = "Gaudi::Math::ExpoPositive"     />
   <class name    = "Gaudi::Math::TwoExpoPositive"  />
   

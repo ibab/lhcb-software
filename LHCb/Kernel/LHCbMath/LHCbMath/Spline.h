@@ -479,10 +479,10 @@ namespace Gaudi
       // ======================================================================      
     public:
       // ======================================================================      
-      ///  y = a*x + b 
-      Gaudi::Math::ValueWithError  a () const ;
-      ///  y = a*x + b 
-      Gaudi::Math::ValueWithError  b () const ;
+      ///  y = a * x  + b 
+      double a () const ;
+      ///  y = a * x + b 
+      double b () const ;
       // ======================================================================      
     private :
       // ======================================================================
@@ -578,23 +578,27 @@ namespace Gaudi
     public:
       // ======================================================================      
       /// y = a*x^2 + b*x + c  
-      Gaudi::Math::ValueWithError a () const { return m_a ; }
+      double a () const ;
       /// y = a*x^2 + b*x + c  
-      Gaudi::Math::ValueWithError b () const { return m_b ; }    
+      double b () const ;
       /// y = a*x^2 + b*x + c  
-      Gaudi::Math::ValueWithError c () const { return m_c ; }    
+      double c () const ;
       // ======================================================================      
-    private :
+    private : // input data 
       // ======================================================================
       double                      m_x1 ;
       double                      m_x2 ;
       double                      m_x3 ;
+      //
       Gaudi::Math::ValueWithError m_y1 ;
       Gaudi::Math::ValueWithError m_y2 ;
       Gaudi::Math::ValueWithError m_y3 ;
-      Gaudi::Math::ValueWithError m_a  ;
-      Gaudi::Math::ValueWithError m_b  ;
-      Gaudi::Math::ValueWithError m_c  ;
+      // ======================================================================      
+    private : // helper data 
+      // ======================================================================
+      double                      m_d1 ;
+      double                      m_d2 ;
+      double                      m_d3 ;
       // ======================================================================      
     } ;
   } //                                             end of namespace Gaudi::Math

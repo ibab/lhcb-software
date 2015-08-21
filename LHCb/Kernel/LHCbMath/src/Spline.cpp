@@ -872,15 +872,13 @@ Gaudi::Math::LinearErr::~LinearErr(){}
 // ============================================================================
 //  y = a*x + b 
 // ============================================================================
-Gaudi::Math::ValueWithError
-Gaudi::Math::LinearErr::a () const 
-{ return ( m_y2       - m_y1        ) / ( m_x2 - m_x1 ) ; }
+double Gaudi::Math::LinearErr::a () const 
+{ return ( m_y2.value()       - m_y1.value()         ) / ( m_x2 - m_x1 ) ; }
 // ============================================================================
 // y = a*x + b 
 // ============================================================================
-Gaudi::Math::ValueWithError
-Gaudi::Math::LinearErr::b () const 
-{ return ( m_y1 * m_x2 - m_y2* m_x1 ) / ( m_x2 - m_x1 ) ; }
+double Gaudi::Math::LinearErr::b () const 
+{ return ( m_y1.value() * m_x2 - m_y2.value() * m_x1 ) / ( m_x2 - m_x1 ) ; }
 // ============================================================================
 // get the value:
 // ============================================================================
@@ -918,17 +916,21 @@ Gaudi::Math::Parabola::Parabola
   const double d23  = x2 - x3 ;
   const double d13  = x1 - x3 ;
   //
-  m_a  =   y1               / d12 / d13 ;
-  m_a -=   y2               / d12 / d23 ;
-  m_a +=   y3               / d13 / d23 ;
+  const double d1 = 1.0 / ( d12 * d13 ) ;
+  const double d2 = 1.0 / ( d12 * d23 ) ;
+  const double d3 = 1.0 / ( d13 * d23 ) ;
+
+  m_a  =   y1               * d1 ;
+  m_a -=   y2               * d2 ;
+  m_a +=   y3               * d3 ;
   //
-  m_b  = - y1 * ( x2 + x3 ) / d12 / d13 ;
-  m_b -= - y2 * ( x1 + x3 ) / d12 / d23 ;
-  m_b += - y3 * ( x1 + x2 ) / d13 / d23 ;
+  m_b  = - y1 * ( x2 + x3 ) * d1 ;
+  m_b -= - y2 * ( x1 + x3 ) * d2 ;
+  m_b += - y3 * ( x1 + x2 ) * d3 ;
   //
-  m_c  =   y1 *   x2 * x3   / d12 / d13 ;
-  m_c -=   y2 *   x1 * x3   / d12 / d23 ;
-  m_c +=   y3 *   x1 * x2   / d13 / d23 ;
+  m_c  =   y1 *   x2 * x3   * d1 ;
+  m_c -=   y2 *   x1 * x3   * d2 ;
+  m_c +=   y3 *   x1 * x2   * d3 ;
   //
 }
 // ============================================================================
@@ -958,35 +960,57 @@ Gaudi::Math::ParabolaErr::ParabolaErr
   : std::unary_function<double,Gaudi::Math::ValueWithError> ()
   , m_x1 ( x1 ) 
   , m_x2 ( x2 ) 
-  , m_x3 ( x2 ) 
+  , m_x3 ( x3 ) 
   , m_y1 ( y1 ) 
   , m_y2 ( y2 ) 
   , m_y3 ( y3 ) 
-  , m_a  () 
-  , m_b  () 
-  , m_c  () 
+  , m_d1 () 
+  , m_d2 () 
+  , m_d3 () 
 {
   const double d12  = x1 - x2 ;
   const double d23  = x2 - x3 ;
   const double d13  = x1 - x3 ;
   //
-  m_a  =   y1               / ( d12 * d13 ) ;
-  m_a -=   y2               / ( d12 * d23 ) ;
-  m_a +=   y3               / ( d13 * d23 ) ;
+  m_d1 = 1.0 / ( d12 * d13 ) ;
+  m_d2 = 1.0 / ( d12 * d23 ) ;
+  m_d3 = 1.0 / ( d13 * d23 ) ;
   //
-  m_b  = - y1 * ( ( x2 + x3 ) / d12 / d13 ) ;
-  m_b -= - y2 * ( ( x1 + x3 ) / d12 / d23 ) ;
-  m_b += - y3 * ( ( x1 + x2 ) / d13 / d23 ) ;
-  //
-  m_c  =   y1 * ( x2 * x3   / d12 / d13 ) ;
-  m_c -=   y2 * ( x1 * x3   / d12 / d23 ) ;
-  m_c +=   y3 * ( x1 * x2   / d13 / d23 ) ;
-  //  
 }
 // ============================================================================
 // destructor 
 // ============================================================================
 Gaudi::Math::ParabolaErr::~ParabolaErr(){}
+// ============================================================================
+// y = a*x^2 + b*x + c  
+// ============================================================================
+double Gaudi::Math::ParabolaErr::a () const 
+{
+  double _a = m_y1.value () * m_d1   ;
+  _a       -= m_y2.value () * m_d2   ;
+  _a       += m_y3.value () * m_d3   ;
+  return _a ;
+}
+// ============================================================================
+// y = a*x^2 + b*x + c  
+// ============================================================================
+double Gaudi::Math::ParabolaErr::b () const 
+{
+  double _b = - m_y1.value () * ( ( m_x2 + m_x3 ) * m_d1 ) ;
+  _b       -= - m_y2.value () * ( ( m_x1 + m_x3 ) * m_d2 ) ;
+  _b       += - m_y3.value () * ( ( m_x1 + m_x2 ) * m_d3 ) ;
+  return _b ;
+}
+// ============================================================================
+// y = a*x^2 + b*x + c  
+// ============================================================================
+double Gaudi::Math::ParabolaErr::c () const 
+{
+  double _c = m_y1.value () * ( m_x2 * m_x3 * m_d1 ) ;
+  _c       -= m_y2.value () * ( m_x1 * m_x3 * m_d2 ) ;
+  _c       += m_y3.value () * ( m_x1 * m_x2 * m_d3 ) ;
+  return _c ;
+}
 // ============================================================================
 // get the value:
 // ============================================================================
@@ -994,18 +1018,14 @@ Gaudi::Math::ValueWithError
 Gaudi::Math::ParabolaErr::operator() ( const double x ) const  
 { 
   //
-  const double d12  = m_x1 - m_x2 ;
-  const double d23  = m_x2 - m_x3 ;
-  const double d13  = m_x1 - m_x3 ;
-  //
   const double d1   = x - m_x1 ;
   const double d2   = x - m_x2 ;
   const double d3   = x - m_x3 ;
   //
   Gaudi::Math::ValueWithError result ;
-  result  = m_y1 * ( d2 * d3 / d12 / d13 ) ;
-  result -= m_y2 * ( d1 * d3 / d12 / d23 ) ;
-  result += m_y3 * ( d1 * d2 / d13 / d23 ) ;
+  result  = m_y1 * ( d2 * d3 * m_d1 ) ;
+  result -= m_y2 * ( d1 * d3 * m_d2 ) ;
+  result += m_y3 * ( d1 * d2 * m_d3 ) ;
   //
   return result ; 
 }
