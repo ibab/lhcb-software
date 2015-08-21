@@ -4,6 +4,9 @@
 ! Purpose     : Web GUI for analysis of VELO data
 !------------------------------------------------------------------------------
 
+! 2015-08-21 - Alex Pearce
+  - Configure deployment of static resources in CMake configuration.
+
 !========================= VeloWebGUI v1r2 2015-06-12 =========================
 ! 2015-06-10 - Alex Pearce
   - Use new veloview.config.Config object from VeloAnalysisFramework

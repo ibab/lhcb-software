@@ -9,3 +9,7 @@ gaudi_depends_on_subdirs(VeloAnalysisFramework
 gaudi_install_python_modules()
 
 gaudi_add_test(QMTest QMTEST)
+
+install (DIRECTORY "python/velo_monitor/templates"
+                   "python/velo_monitor/static"
+         DESTINATION python/velo_monitor)
