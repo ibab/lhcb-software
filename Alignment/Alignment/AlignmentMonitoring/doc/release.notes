@@ -3,6 +3,9 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-08-21 - Maurizio Martinelli
+ - fixed a bug in the function that gets the number of warnings
+
 ! 2015-08-19 - Maurizio Martinelli
  - modified a few references
 

@@ -231,8 +231,8 @@ CompareConstants::SetRanges(const char* filename)
 bool
 CompareConstants::CheckWarningLevel(int level)
 {
-  if (level< 0 || level > 2) {
-    std::cout << "You selected a warning level that is not valid (0-2)!\n";
+  if (level< 1 || level > 3) {
+    std::cout << "You selected a warning level that is not valid (1-3)!\n";
     return false;
   }
   return true;
@@ -245,6 +245,6 @@ CompareConstants::GetNumWarnings(int level)
   // get number of warnings of this level
   int nw(0);
   for (auto wrn : m_mapWarnings)
-    if (wrn.second != level) ++nw;
+    if (wrn.second == level) ++nw;
   return nw;
 }
