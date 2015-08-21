@@ -5,7 +5,7 @@
 <argument name="timeout"><integer>3600</integer></argument>
 <argument name="args"><set>
   <text>-T</text>
-  <text>$APPCONFIGOPTS/DaVinci/DisableLoKiPythonFunctors.py</text>
+  <text>$DAVINCITESTSROOT/tests/options/DisableLoKiPythonFunctors.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DV-Stripping23-Stripping.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DataType-2015.py</text> 
   <text>$PRCONFIGOPTS/DaVinci/Stripping/Collision15EM-6.5TeV-Reco15EM-FULLDST.py</text> 
