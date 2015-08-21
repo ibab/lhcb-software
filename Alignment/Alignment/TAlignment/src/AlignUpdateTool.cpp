@@ -407,7 +407,7 @@ namespace Al
       sc = Warning("Cannot initialize geometry to that found in AlEquations.", StatusCode::FAILURE) ;
       if( !sc.isSuccess() ) return sc ;
     }
-    
+
     typedef Gaudi::Matrix1x6 Derivatives;
     if ( equations.nElem() == 0 ) {
       warning() << "==> No elements to align." << endmsg ;
@@ -417,6 +417,8 @@ namespace Al
     info() << "\n";
     debug() << "==> iteration " << iteration << " : Initial alignment conditions  : [";
     const Elements& elements = m_elementProvider->elements() ;
+    // Store constants before the update
+    m_initConsts = getAlignmentConstantsMap(elements);
     info() << "==> Updating constants" << endmsg ;
     std::ostringstream logmessage ;
     logmessage << "********************* ALIGNMENT LOG ************************" << std::endl
@@ -641,14 +643,9 @@ namespace Al
 	    modmessage << "local delta chi2 / dof: " << thisLocalDeltaChi2 << " / " << delta.dim() << std::endl ;
 	    totalLocalDeltaChi2 += thisLocalDeltaChi2 ;
 
-	    // Store constants before the update
-	    m_initConsts = getAlignmentConstantsMap(elements);
 	    // need const_cast because loki range givess access only to const values 
 	    StatusCode sc = (const_cast<AlignmentElement*>(*it))->updateGeometry(delta) ;
 	    if (!sc.isSuccess()) error() << "Failed to set alignment condition for " << (*it)->name() << endmsg ;
-	    // Store constants after the update
-	    m_finalConsts = getAlignmentConstantsMap(elements);
-
 
 	    std::string name = (*it)->name(); 
 	    std::string dirname =  "element" + boost::lexical_cast<std::string>( (*it)->index() ) + "/"; //name + "/" ;
@@ -685,6 +682,8 @@ namespace Al
 	    modmessage << "survey uncertainties: "<< survey->transformErrors() << std::endl ;
 	  }
 	}
+	// Store constants after the update
+	m_finalConsts = getAlignmentConstantsMap(elements);
 	logmessage << "total local delta chi2 / dof: " << totalLocalDeltaChi2 << " / " << numParameters << std::endl ;
 
 
