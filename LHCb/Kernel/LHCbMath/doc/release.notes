@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-08-22 - Chris Jones
+ - Remove private Eigen headers.
+
 ! 2015-08-21 - Vanya Belyaev
  - fix tiny bug, add atlas function 
 

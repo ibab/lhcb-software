@@ -16,8 +16,6 @@ find_package(Eigen)
 find_package(pyanalysis)
 
 gaudi_install_headers(LHCbMath)
-#gaudi_install_headers(Eigen)
-#install(DIRECTORY Eigen DESTINATION include)
 
 gaudi_add_library(LHCbMathLib
                   src/*.cpp
