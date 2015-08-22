@@ -44,7 +44,12 @@ namespace Rich
 
       virtual ~LoadRawEvent( ); ///< Destructor
 
-      virtual StatusCode execute   (); ///< Algorithm execution
+      virtual StatusCode execute(); ///< Algorithm execution
+
+    private:
+
+      /// Raw Event location
+      std::string m_rawEventLoc;
 
     };
 

@@ -22,7 +22,11 @@ DECLARE_ALGORITHM_FACTORY( LoadRawEvent )
 // Standard constructor, initializes variables
 LoadRawEvent::LoadRawEvent( const std::string& name,
                             ISvcLocator* pSvcLocator )
-  : Rich::AlgBase ( name , pSvcLocator ) { }
+  : Rich::AlgBase ( name , pSvcLocator ) 
+{
+  declareProperty( "RawEventLocation", 
+                   m_rawEventLoc = LHCb::RawEventLocation::Rich );
+}
 
 // Destructor
 LoadRawEvent::~LoadRawEvent() {}
@@ -31,9 +35,8 @@ LoadRawEvent::~LoadRawEvent() {}
 StatusCode LoadRawEvent::execute()
 {
   // load raw event data object
-  getIfExists<LHCb::RawEvent>( LHCb::RawEventLocation::Rich );
+  getIfExists<LHCb::RawEvent>( m_rawEventLoc );
 
   // return OK
   return StatusCode::SUCCESS;
 }
-

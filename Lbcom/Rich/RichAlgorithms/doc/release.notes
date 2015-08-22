@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+! 2015-08-22 - Chris Jones
+ - Make RawEvent location a configurable property in RichLoadRawEvent.
+
 ! 2015-08-04 - Gerhard Raven
  - remove #include of obsolete Gaudi headers        
 
