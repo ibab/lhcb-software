@@ -81,6 +81,10 @@ namespace ANNGlobalPID
 
   private:
 
+    // methods to declare new MVAs to the factory during construction
+    // Seperated out to allow seperate compilation units (as the MVAs 
+    // themselves can be heavy so compiling all at once does not scale well).
+
     /// Add MC12TuneV2 networks
     void addMC12TuneV2( );
 
@@ -138,7 +142,9 @@ namespace ANNGlobalPID
     /// Type for internal map
     typedef std::map< std::string, FactoryBase* > Map;
 
-    /// The map
+  private:
+
+    /// The map of known MVA instance generators linked to a given nickname
     Map m_map;
 
   };

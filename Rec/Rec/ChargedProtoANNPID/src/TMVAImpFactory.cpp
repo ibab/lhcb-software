@@ -20,7 +20,8 @@ namespace ANNGlobalPID
 
   TMVAImpFactory::~TMVAImpFactory( )
   {
-    for ( auto i : m_map ) { delete i.second; }
+    for ( auto& i : m_map ) { delete i.second; }
+    m_map.clear();
   }
 
   // Method to get a static instance of the factory
