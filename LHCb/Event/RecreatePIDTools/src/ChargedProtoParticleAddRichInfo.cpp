@@ -72,16 +72,11 @@ StatusCode ChargedProtoParticleAddRichInfo::execute()
   const bool richSc = getRichData();
   if ( !richSc ) { return StatusCode::SUCCESS; }
 
-  // Loop over proto particles
-  for ( ProtoParticles::iterator iProto = protos->begin();
-        iProto != protos->end(); ++iProto )
-  {
-    // replace the RICh information
-    updateRICH(*iProto);
+  // Loop over proto particles and add RICH info
+  for ( auto * proto : *protos ) { updateRICH(proto); }
+  counter(m_richPath + " ==> " + m_protoPath ) += protos->size();
 
-  }
-  counter(m_richPath + " ==> " + m_protoPath )+= protos->size();
-
+  // return
   return StatusCode::SUCCESS;
 }
 
@@ -150,21 +145,20 @@ bool ChargedProtoParticleAddRichInfo::getRichData()
             << " RichPIDs from " << m_richPath << endmsg;
 
   // refresh the reverse mapping
-  for ( RichPIDs::const_iterator iR = richpids->begin();
-        iR != richpids->end(); ++iR )
+  for ( const LHCb::RichPID * pid : *richpids )
   {
-    if ( (*iR)->track() )
+    if ( pid->track() )
     {
-      m_richMap[ (*iR)->track() ] = *iR;
+      m_richMap[ pid->track() ] = pid;
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "RichPID key=" << (*iR)->key() 
-                  << " has Track key=" << (*iR)->track()->key()
-                  << " " << (*iR)->track() << endmsg;
+        verbose() << "RichPID key=" << pid->key() 
+                  << " has Track key=" << pid->track()->key()
+                  << " " << pid->track() << endmsg;
     }
     else
     {
       std::ostringstream mess;
-      mess << "RichPID key=" << (*iR)->key() << " has NULL Track pointer";
+      mess << "RichPID key=" << pid->key() << " has NULL Track pointer";
       Warning( mess.str() ).ignore();
     }
   }

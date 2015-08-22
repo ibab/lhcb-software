@@ -6,6 +6,9 @@
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
+! 2015-06-25 - Chris Jones
+ - Small c++11 clean up of a few components
+
 !========================= RecreatePIDTools v1r7 2013-02-04 =========================
 ! 2012-12-10 - Marco Cattaneo
  - Replace one more exist/get call with getIfExists

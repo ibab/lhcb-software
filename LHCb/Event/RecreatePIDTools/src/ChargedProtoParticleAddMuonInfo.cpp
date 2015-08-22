@@ -44,6 +44,7 @@ ChargedProtoParticleAddMuonInfo( const std::string& name,
   // ProtoParticles
   declareProperty( "ProtoParticleLocation", m_protoPath );
 
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
@@ -69,15 +70,11 @@ StatusCode ChargedProtoParticleAddMuonInfo::execute()
   const bool muonSc = getMuonData();
   if ( !muonSc ) { return StatusCode::SUCCESS; }
 
-  // Loop over proto particles
-  for ( LHCb::ProtoParticles::iterator iProto = protos->begin();
-        iProto != protos->end(); ++iProto )
-  {
-    // replace the muon information
-    updateMuon(*iProto);
-  }
-  counter(m_muonPath + " ==> " + m_protoPath )+= protos->size();
+  // Loop over proto particles and update muon info
+  for ( auto * proto : *protos ) { updateMuon(proto); }
+  counter(m_muonPath + " ==> " + m_protoPath ) += protos->size();
 
+  // return
   return StatusCode::SUCCESS;
 }
 
@@ -171,38 +168,36 @@ bool ChargedProtoParticleAddMuonInfo::getMuonData()
   const LHCb::ProtoParticles * protos = NULL;
 
   // refresh the reverse mapping
-  for ( LHCb::MuonPIDs::const_iterator iM = muonpids->begin();
-        iM != muonpids->end(); ++iM )
+  for ( const auto * M : *muonpids )
   {
-    if ( (*iM)->idTrack() )
+    if ( M->idTrack() )
     {
-      m_muonMap[ (*iM)->idTrack() ] = *iM;
+      m_muonMap[ M->idTrack() ] = M;
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "MuonPID key=" << (*iM)->key()
-                  << " has Track key=" << (*iM)->idTrack()->key()
-                  << " " << (*iM)->idTrack() << endmsg;
+        verbose() << "MuonPID key=" << M->key()
+                  << " has Track key=" << M->idTrack()->key()
+                  << " " << M->idTrack() << endmsg;
     }
     else
     {
       std::ostringstream mess;
-      mess << "MuonPID key=" << (*iM)->key() << " has NULL Track pointer. "
+      mess << "MuonPID key=" << M->key() << " has NULL Track pointer. "
            << "Will try and work around using track keys ...";
       Warning( mess.str() ).ignore();
 
       // Bug in old (u)DSTs. Try and work around using track keys ...
       // Eventually to be removed
-      if ( !protos ) protos = get<LHCb::ProtoParticles>(m_protoPath);
-      for ( LHCb::ProtoParticles::const_iterator iProto = protos->begin();
-            iProto != protos->end(); ++iProto )
+      if ( !protos ) { protos = get<LHCb::ProtoParticles>(m_protoPath); }
+      for ( auto * proto : *protos ) 
       {
-        if ( (*iProto)->track() &&
-             (*iProto)->track()->key() == (*iM)->key() )
+        if ( proto->track() &&
+             proto->track()->key() == M->key() )
         {
-          m_muonMap[ (*iProto)->track() ] = *iM;
+          m_muonMap[ proto->track() ] = M;
           if ( msgLevel(MSG::VERBOSE) )
-            verbose() << "MuonPID key=" << (*iM)->key()
-                      << " has Track key=" << (*iProto)->track()->key()
-                      << " " << (*iProto)->track() << endmsg;
+            verbose() << "MuonPID key=" << M->key()
+                      << " has Track key=" << proto->track()->key()
+                      << " " << proto->track() << endmsg;
           break;
         }
       }
