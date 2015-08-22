@@ -153,10 +153,10 @@ StatusCode LoKi::Hybrid::Base::initialize ()
   // force the loading/initialization of  LoKi Service
   svc<LoKi::ILoKiSvc>( "LoKiSvc" , true ) ;
   // Messages
-  if ( !m_use_python ) Warning( "Python Functors are DISABLED"    ).ignore();
-  if ( !m_use_cache  ) Warning( "C++ Cache Functors are DISABLED" ).ignore();
+  if ( !m_use_python ) Warning( "Python Functors are DISABLED",    sc ).ignore();
+  if ( !m_use_cache  ) Warning( "C++ Cache Functors are DISABLED", sc ).ignore();
   // return
-  return sc ;
+  return ( m_use_python || m_use_cache ? sc : Error( "No Functors enabled" ) );
 }
 // ============================================================================
 // finalization of the tool
