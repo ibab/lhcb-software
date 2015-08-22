@@ -193,17 +193,17 @@ class DaVinci(LHCbConfigurableUser) :
             AnalysisConf().RedoMCLinks = self.getProp("RedoMCLinks") 
             analysisinit = AnalysisConf().initSequence()
             initSeqs = [physinit,analysisinit]
-        if inputType == 'RDST' :
-            log.info('Setting HltDecReportsDecoders RawEventLocations to ["pRec/RawEvent"]')
-            from DAQSys.Decoders import DecoderDB
-            from DAQSys.DecoderClass import decodersForBank
-            for bank in ["Sel","Dec","Vertex","Track"]:
-                for d in decodersForBank(DecoderDB,"Hlt"+bank+"Reports"):
-                    d.overrideInputs("pRec/RawEvent")
-                    #d.setup()
-            from Configurables import ANNDispatchSvc
-            
-            ANNDispatchSvc().RawEventLocation = "pRec/RawEvent"
+#        if inputType == 'RDST' :
+#            log.info('Setting HltDecReportsDecoders RawEventLocations to ["pRec/RawEvent"]')
+#            from DAQSys.Decoders import DecoderDB
+#            from DAQSys.DecoderClass import decodersForBank
+#            for bank in ["Sel","Dec","Vertex","Track"]:
+#                for d in decodersForBank(DecoderDB,"Hlt"+bank+"Reports"):
+#                    d.overrideInputs("pRec/RawEvent")
+#                    #d.setup()
+#            from Configurables import ANNDispatchSvc
+#            
+#            ANNDispatchSvc().RawEventLocation = "pRec/RawEvent"
 
         return GaudiSequencer('DaVinciEventInitSeq',
                               Members = initSeqs,
@@ -226,15 +226,15 @@ class DaVinci(LHCbConfigurableUser) :
         LumiAlgsConf().LumiSequencer = lumiSeq
         seq += [ lumiSeq ]
         
-        if self.getProp( "Lumi" ):            
+        if self.getProp( "Lumi" ) :
             tupleFile = self.getProp('TupleFile')
-	    if tupleFile == '' :
-	      	log.warning('TupleFile has not been set. No Lumi ntuple will be produced.')
+            if tupleFile == '' : log.warning('TupleFile has not been set. No Lumi ntuple will be produced.')
 	    # add integrator for normalization
-	    self.setOtherProps(LumiIntegratorConf(),["InputType","TupleFile","IgnoreDQFlags"])
-	    lumiInt = GaudiSequencer("IntegratorSeq")
-	    LumiIntegratorConf().LumiSequencer = lumiInt
-	    seq += [ lumiInt ]
+            self.setOtherProps(LumiIntegratorConf(),["InputType","TupleFile","IgnoreDQFlags"])
+            lumiInt = GaudiSequencer("IntegratorSeq")
+            LumiIntegratorConf().LumiSequencer = lumiInt
+            seq += [ lumiInt ]
+
         return seq
         
 ################################################################################
