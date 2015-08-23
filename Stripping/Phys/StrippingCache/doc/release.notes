@@ -5,6 +5,9 @@
 ! Created     : 2015-02-04
 ! -----------------------------------------------------------------------------
 
+! 2015-05-23 - Chris Jones
+ - Clean up CMake file a bit.
+
 ! 2015-08-21 - Chris Jones
  - Replace the timestamp in the file names with a hash based on the build
    directory. Achieves the same end result, makes builds in different areas
