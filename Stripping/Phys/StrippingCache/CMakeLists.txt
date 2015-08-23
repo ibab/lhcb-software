@@ -36,7 +36,7 @@ if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
  endforeach()
 
  # Append build path with component list so each cache build skips functors already cached.
- gaudi_build_env( PREPEND LD_LIBRARY_PATH ${CMAKE_BINARY_DIR}/Phys/StrippingCache )
+ gaudi_build_env( PREPEND LD_LIBRARY_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
  # Unique stamp for library names
  string( MD5 name_stamp ${CMAKE_BINARY_DIR} )
@@ -51,7 +51,7 @@ if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
 
  # Build the caches, most recent first
  foreach(strip 23 22 21 20r3 20r2 20r0p3 20r0p2 20r0p1 20)
-
+ 
   # Stripping cache name
   set ( sname S${strip}FunctorCache${name_stamp} )
 
