@@ -125,4 +125,7 @@ function(loki_functors_cache name)
   #----Installation details-------------------------------------------------------
   install(TARGETS ${name} LIBRARY DESTINATION lib OPTIONAL)
   #gaudi_export(MODULE ${name})
+
+  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${name}_srcs DESTINATION ${CMAKE_INSTALL_PREFIX}/src )
+
 endfunction()

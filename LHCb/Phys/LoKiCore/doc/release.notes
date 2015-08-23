@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-08-23 - Chris Jones
+ - For debugging install generated C++ functor sources.
+
 ! 2015-08-21 - Chris Jones
  - Add some warnings to HybridBase for when either the python or cache functor
    support is disabled.
