@@ -1,6 +1,7 @@
 
 // local
 #include "Event/PackedRecVertex.h"
+#include "Event/PackerUtils.h"
 
 // Checks
 #include "Event/PackedEventChecks.h"
@@ -41,10 +42,18 @@ void RecVertexPacker::pack( const Data & vert,
       for ( SmartRefVector<LHCb::Track>::const_iterator itT = vert.tracks().begin();
             vert.tracks().end() != itT; ++itT, ++iW )
       {
-        pverts.refs().push_back( UNLIKELY( 0==ver ) ?
-                                 m_pack.reference32( &pverts, (*itT)->parent(), (*itT)->key() ) :
-                                 m_pack.reference64( &pverts, (*itT)->parent(), (*itT)->key() ) );
-      pverts.weights().push_back( m_pack.fraction(*iW) );
+        if ( *itT )
+        {
+          pverts.refs().push_back( UNLIKELY( 0==ver ) ?
+                                   m_pack.reference32( &pverts, (*itT)->parent(), (*itT)->key() ) :
+                                   m_pack.reference64( &pverts, (*itT)->parent(), (*itT)->key() ) );
+          pverts.weights().push_back( m_pack.fraction(*iW) );
+        }
+        else
+        {
+          parent().Warning( "Null Track SmartRef in '" + 
+                            LHCb::Packer::Utils::location(vert.parent()) + "'" ).ignore();
+        }
       }
     }
     pvert.lastTrack = pverts.refs().size();

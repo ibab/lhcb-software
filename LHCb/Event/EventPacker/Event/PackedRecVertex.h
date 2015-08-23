@@ -83,7 +83,7 @@ namespace LHCb
 
   /** @class PackedRecVertices Event/PackedRecVertex.h
    *
-   *  COntainer of packed RecVertex objects
+   *  Container of packed RecVertex objects
    *
    *  @author Olivier Callot
    *  @date   2008-11-14

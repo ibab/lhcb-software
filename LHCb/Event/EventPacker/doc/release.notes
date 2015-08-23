@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
+
+! 2015-08-23 - Chris Jones
+ - Add protection against null Track SmartRefs in RecVertex packer.
+
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
