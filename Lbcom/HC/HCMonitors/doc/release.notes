@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-08-23 - Heinrich Schindler
+ - Add histogram of ADC as function of bx id.
+
 ! 2015-08-09 - Heinrich Schindler
  - Scale bin errors by sqrt(N) to get RMS.
 

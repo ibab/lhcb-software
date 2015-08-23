@@ -114,24 +114,36 @@ StatusCode HCDigitMonitor::initialize() {
     const unsigned int bins = 1024;
     // Book histograms for ADC distributions for each quadrant.
     const std::string qu = "Quadrant" + std::to_string(i);
+    // Bx ID binning
+    const double bxlow = -0.5;
+    const double bxhigh = 4095.5;
+    const unsigned int bxbins = 4096;
+    std::vector<double> bxedges;
+    for (unsigned int j = 0; j < bxbins + 1; ++j) {
+      bxedges.push_back(j - 0.5);
+    }
     for (unsigned int j = 0; j < nStations; ++j) {
       const std::string name = "ADC/" + stations[j] + "/" + qu;
       const std::string nameEven = "ADC/" + stations[j] + "/Even/" + qu;
       const std::string nameOdd = "ADC/" + stations[j] + "/Odd/" + qu;
       const std::string nameNoBeam = "ADC/" + stations[j] + "/NoBeam/" + qu;
       const std::string nameBeam = "ADC/" + stations[j] + "/Beam/" + qu;
+      const std::string nameBx = "ADCvsBX/" + stations[j] + "/" + qu;
       if (m_variableBins) {
         m_hAdcQuadrant.push_back(book1D(name, qu, m_edges));
         m_hAdcQuadrantEven.push_back(book1D(nameEven, qu, m_edges));
         m_hAdcQuadrantOdd.push_back(book1D(nameOdd, qu, m_edges));
         m_hAdcQuadrantNoBeam.push_back(book1D(nameNoBeam, qu, m_edges));
         m_hAdcQuadrantBeam.push_back(book1D(nameBeam, qu, m_edges));
+        m_hAdcVsBx.push_back(book2D(nameBx, qu, bxedges, m_edges));
       } else {
         m_hAdcQuadrant.push_back(book1D(name, qu, low, high, bins));
         m_hAdcQuadrantEven.push_back(book1D(nameEven, qu, low, high, bins));
         m_hAdcQuadrantOdd.push_back(book1D(nameOdd, qu, low, high, bins));
         m_hAdcQuadrantNoBeam.push_back(book1D(nameNoBeam, qu, low, high, bins));
         m_hAdcQuadrantBeam.push_back(book1D(nameBeam, qu, low, high, bins));
+        m_hAdcVsBx.push_back(book2D(nameBx, qu, bxlow, bxhigh, bxbins, 
+                                    low, high, bins));
       }
       const unsigned int index = i * nStations + j;
       setAxisLabels(m_hAdcQuadrant[index], "ADC", "Entries");
@@ -139,6 +151,7 @@ StatusCode HCDigitMonitor::initialize() {
       setAxisLabels(m_hAdcQuadrantOdd[index], "ADC", "Entries");
       setAxisLabels(m_hAdcQuadrantNoBeam[index], "ADC", "Entries");
       setAxisLabels(m_hAdcQuadrantBeam[index], "ADC", "Entries");
+      setAxisLabels(m_hAdcVsBx[index], "BX", "ADC");
     }
   }
  
@@ -225,6 +238,7 @@ StatusCode HCDigitMonitor::execute() {
     const unsigned int index = quadrant * nStations + station + offset;
     m_hAdcVsQuadrant[station + offset]->fill(quadrant, adc);
     m_hAdcQuadrant[index]->fill(adc);
+    m_hAdcVsBx[index]->fill(bxid, adc);
     if (even) {
       m_hAdcVsQuadrantEven[station + offset]->fill(quadrant, adc);
       m_hAdcQuadrantEven[index]->fill(adc);

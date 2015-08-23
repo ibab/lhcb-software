@@ -45,6 +45,9 @@ class HCDigitMonitor : public HCMonitorBase {
   std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantNoBeam;
   std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantBeam;
 
+  /// ADC distributions as function of BX ID.
+  std::vector<AIDA::IHistogram2D*> m_hAdcVsBx;
+
   /// ADC sum distributions
   std::vector<AIDA::IHistogram1D*> m_hAdcSum;
   std::vector<AIDA::IHistogram1D*> m_hAdcSumEven;
