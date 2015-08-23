@@ -1,5 +1,5 @@
 """
-Options for building Stripping20. 
+Options for building Stripping20r1. 
 """
 
 from Gaudi.Configuration import *
@@ -18,7 +18,7 @@ from StrippingSettings.Utils import strippingConfiguration
 from StrippingArchive.Utils import buildStreams, cloneLinesFromStream
 from StrippingArchive import strippingArchive
 
-stripping='stripping20'
+stripping='stripping20r1'
 #get the configuration dictionary from the database
 config  = strippingConfiguration(stripping)
 #get the line builders from the archive
