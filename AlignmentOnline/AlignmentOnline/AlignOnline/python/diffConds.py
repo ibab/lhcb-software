@@ -78,7 +78,7 @@ def diffOnlineOffline(run, delCond = True):
     run_cond_dir = '/group/online/hlt/conditions/LHCb/{0}/{1}'.format(year, run)
     if not os.path.exists(os.path.join(run_cond_dir, 'HLT2Params.py')):
         print 'WARNING: Skipping due to missing HLT2Params'
-        return 0
+        assert(os.path.exists(os.path.join(run_cond_dir, 'HLT2Params.py')))
     
     env = os.environ.copy()
     env['PYTHONPATH'] = (env['PYTHONPATH']
