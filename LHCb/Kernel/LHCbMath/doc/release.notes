@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-08-24 - Ben Couturier
+ - Fix TestSimilarity to take into account the matrix condition number.
+
 ! 2015-08-24 - Vanya Belyaev
  - fix doxygen 
 
