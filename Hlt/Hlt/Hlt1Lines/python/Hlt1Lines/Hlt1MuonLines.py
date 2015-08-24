@@ -74,7 +74,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'CalibMuonAlignJpsi_JpsiMassWin'              : 100     # MeV
                  , 'NoPVPassThrough_L0ChannelRe' : "(L0_CHANNEL_RE('.*lowMult')) & ~(L0_CHANNEL_RE('.*DiHadron,lowMult'))"
                  , 'ODINFilter'               : {}
-                 , 'L0Channels'               : { 'SingleMuonHighPT' : ( 'Muon', ),
+                 , 'L0Channels'               : { 'SingleMuonHighPT' : ( 'Muon', 'MuonEW' ),
                                                   'SingleMuonNoIP'   : ( 'Muon', ),
                                                   'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
                                                   'DiMuonNoL0'       : None,
