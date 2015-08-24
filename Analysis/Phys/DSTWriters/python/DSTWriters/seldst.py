@@ -16,6 +16,7 @@ def selDSTElements() :
                    "/Event/Rec/ProtoP/Charged",
                    "/Event/Rec/ProtoP/Neutrals",
                    "/Event/Rec/Track/Best",
+                   "/Event/Rec/Track/FittedHLT1VeloTracks",
                    "/Event/Rec/Rich/PIDs",
                    "/Event/Rec/Track/Muon",
                    "/Event/Rec/Muon/MuonPID",
