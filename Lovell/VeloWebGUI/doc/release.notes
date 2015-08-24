@@ -4,6 +4,9 @@
 ! Purpose     : Web GUI for analysis of VELO data
 !------------------------------------------------------------------------------
 
+! 2015-08-24 - Jon Harrison
+  - Moved static resources to resources directory.
+
 ! 2015-08-21 - Alex Pearce
   - Configure deployment of static resources in CMake configuration.
 

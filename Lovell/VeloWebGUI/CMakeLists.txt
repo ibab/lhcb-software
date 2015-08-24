@@ -10,6 +10,6 @@ gaudi_install_python_modules()
 
 gaudi_add_test(QMTest QMTEST)
 
-install (DIRECTORY "python/velo_monitor/templates"
-                   "python/velo_monitor/static"
-         DESTINATION python/velo_monitor)
+install (DIRECTORY "resources/templates"
+                   "resources/static"
+         DESTINATION resources)
