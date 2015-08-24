@@ -4,6 +4,11 @@
 ! Responsible : DV Maintainer
 !============================================================================
 
+! 2015-08-24 - Chris Jones
+ - Explicitly list the duplicated TES locations in the warning message.
+   Useful when the input list is very long (such as with the duplicate 
+   candidate check that runs on all lines in a stream in the strippings).
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

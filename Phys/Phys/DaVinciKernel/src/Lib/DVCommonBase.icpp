@@ -419,8 +419,7 @@ void DVCommonBase<PBASE>::initializeInputLocations()
     std::sort( m_inputLocations.begin(), m_inputLocations.end() );
 
     // Move any duplicates to the end of the vector
-    const std::vector<std::string>::iterator iLoc =
-      std::unique(m_inputLocations.begin(),m_inputLocations.end());
+    const auto iLoc = std::unique(m_inputLocations.begin(),m_inputLocations.end());
 
     // Are there any duplicates ?
     if ( iLoc != m_inputLocations.end() )
@@ -429,6 +428,8 @@ void DVCommonBase<PBASE>::initializeInputLocations()
       std::ostringstream mess;
       mess << "Duplication in Input locations :";
       for ( auto& i : m_inputLocations ) { mess << " " << i; }
+      mess << " | Duplicates : ";
+      for ( auto i = iLoc; i != m_inputLocations.end(); ++i ) { mess << " " << *i; }
       this->Warning( mess.str(), StatusCode::SUCCESS ).ignore();
       // remove the duplicates
       m_inputLocations.erase( iLoc, m_inputLocations.end() );
