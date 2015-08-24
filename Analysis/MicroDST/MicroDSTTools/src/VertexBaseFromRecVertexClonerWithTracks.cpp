@@ -11,6 +11,9 @@
 // local
 #include "VertexBaseFromRecVertexClonerWithTracks.h"
 
+// STL
+#include <sstream>
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : VertexBaseFromRecVertexClonerWithTracks
 //
@@ -48,23 +51,33 @@ StatusCode VertexBaseFromRecVertexClonerWithTracks::initialize()
 LHCb::RecVertex*
 VertexBaseFromRecVertexClonerWithTracks::clone( const LHCb::RecVertex* vertex )
 {
-  LHCb::RecVertex* vertexClone = VertexBaseFromRecVertexCloner::clone(vertex);
-  if ( !vertexClone ) return NULL;
+  LHCb::RecVertex* vClone = VertexBaseFromRecVertexCloner::clone(vertex);
+  if ( !vClone ) return NULL;
 
   // get the list of tracks with weights from the original
   const LHCb::RecVertex::TrackWithWeightVector tracks = vertex->tracksWithWeights();
 
   // clear the tracks in the clone
-  vertexClone->clearTracks();
+  vClone->clearTracks();
 
   // Clone tracks and add them, with the correct weight, to the clone
-  for ( LHCb::RecVertex::TrackWithWeightVector::const_iterator iT = tracks.begin();
-        iT != tracks.end(); ++iT )
+  for ( const auto& tw : tracks )
   {
-    vertexClone->addToTracks( (*m_trackCloner)(iT->first), iT->second );
+    if ( tw.first )
+    {
+      vClone->addToTracks( (*m_trackCloner)(tw.first), tw.second );
+    }
+    else
+    {
+      std::ostringstream mess;
+      mess << "Null Track SmartRef found in PV in '"
+           << tesLocation(vertex) << "'";
+      Warning( mess.str(), StatusCode::SUCCESS ).ignore();
+    }
   }
 
-  return vertexClone;
+  // return
+  return vClone;
 }
 
 //=============================================================================

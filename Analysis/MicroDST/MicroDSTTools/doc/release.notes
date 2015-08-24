@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
 
+! 2015-08-24 - Chris Jones
+ - Add some protection against NULL Track SmartRefs in RecVertices.
+
 !====================== MicroDSTTools v2r13 2015-08-06 =======================
 
 ! 2015-07-30 - Chris Jones
