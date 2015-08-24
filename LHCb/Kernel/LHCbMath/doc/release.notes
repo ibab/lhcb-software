@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-08-24 - Vanya Belyaev
+ - fix doxygen 
+
 ! 2015-08-22 - Chris Jones
  - Remove private Eigen headers.
 

@@ -4101,7 +4101,7 @@ namespace Gaudi
      *  Modified gaussian function 
      *  \f$  f(x) \propto \exp( -frac{\delta x^{1+\frac{1}{1+\deltax/2}}}{2})\f$,
      *  where \f$\delta x = \left| x - \mu \right|/\sigma\f$
-     *  Fuction is taken from http://arxiv.org/abs/arXiv:1507.07099
+     *  Function is taken from http://arxiv.org/abs/arXiv:1507.07099
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2015-08-21
      */
@@ -4111,7 +4111,7 @@ namespace Gaudi
       // ======================================================================
       /** constructor with all parameters
        *  @param mean  \f$\mu\f$-parameter 
-       *  @param sigma \f$\sigma\f$-parameter 
+       *  @param sigma \f$\sigma\f$-parameter
        */
       Atlas   ( const double mean   = 0  ,
                 const double sigma  = 1  ) ;
