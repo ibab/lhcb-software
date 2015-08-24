@@ -1,36 +1,41 @@
 package DaVinciSys
-version v37r2
+version v37r2p1
 
 branches doc cmt
 
 ##############################
 # Patch just for this version
+# When removed, do not forget to also remove from CMake file.
 
-use  DDDB              v1r80     Det
-use  TeslaTools        v1r13     Phys
-use  HltDAQ            v4r20     Hlt
-use  LoKiCore          v11r25    Phys
-use  LoKiGen           v10r20    Phys
-use  LoKiAlgo          v9r10     Phys
-use  LoKiPhys          v11r3     Phys
-use  LoKiHlt           v3r20     Phys
-use  LoKiMC            v10r18    Phys
-use  LoKiArrayFunctors v11r3     Phys
-use  LoKiTracks        v3r2      Phys
-use  RelatedInfoTools  v1r2      Phys 
-use  GaudiConf         v19r12
+use  DDDB               v1r80     Det
+use  TeslaTools         v1r13     Phys
+use  HltDAQ             v4r20     Hlt
+use  LoKiCore           v11r26    Phys
+use  LoKiGen            v10r20    Phys
+use  LoKiAlgo           v9r10     Phys
+use  LoKiPhys           v11r3     Phys
+use  LoKiHlt            v3r20     Phys
+use  LoKiMC             v10r18    Phys
+use  LoKiArrayFunctors  v11r3     Phys
+use  LoKiTracks         v3r2      Phys
+use  RelatedInfoTools   v1r2      Phys 
+use  DSTWriters         v4r22     Phys
+use  PhysConf           v1r29     Phys
+use  DaVinciTransporter v3r13     Phys
+use  EventPacker        v5r5      Event
+use  GaudiConf          v19r12
 
 # Temporarily moved in from Stripping, for S23 release
 # To be decided if longer term this stays in the DaVinci 
 # project, or moves elsewhere.
-use StrippingCache   v1r0     Phys
+use StrippingCache   v1r1     Phys
 
 ##############################
 
 
 
 # Packages
-use  DaVinci         v37r2    Phys   # DaVinci coordinator
+use  DaVinci         v37r2p1  Phys   # DaVinci coordinator
 use  DaVinciTests    v2r36
 use  KaliCalo        v4r18    Phys   # Olivier Deschamps
 use  Tesla           v1r11    Phys   # Sean Benson

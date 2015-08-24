@@ -3,6 +3,25 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v37r2p1>2015-08-24 DaVinci v37r2p1</A></H1><PRE>
+
+Patch release for Stripping 23. Including a few minor bug fixes found
+during the validation checks.
+
+Temporary Packages Added :-
+  EventPacker - Protect against NULL Track SmartRefs in RecVertex.
+  DSTWriters  - Fix bug the prevented Trigger RawEvent from being copied
+                to DST streams when processing RDSTs.
+  PhysConf    - Turn off Reco14 recalibration sequence for Run II data types.
+              - Remove options that forced velo track refit.
+  DaVinciTransporter - Add TES location to warnings.
+
+Temporary Packages Update :-
+  StrippingCache - Add support for more stripping versions in the cache.
+  LoKiCore       - For debugging install generated sources.
+                 - Add some warnings for when either the python or C++ functors
+                   are disabled.
+
 </PRE><H1><A NAME=v37r2>2015-08-18 DaVinci v37r2</A></H1><PRE>
 
 Production release for Stripping 23.

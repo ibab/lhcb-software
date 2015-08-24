@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciSys
 ################################################################################
-gaudi_subdir(DaVinciSys v37r2)
+gaudi_subdir(DaVinciSys v37r2p1)
 
 gaudi_depends_on_subdirs(DaVinciTests
                          ##############################
@@ -18,6 +18,10 @@ gaudi_depends_on_subdirs(DaVinciTests
                          Phys/LoKiArrayFunctors
                          Phys/LoKiTracks
                          Phys/RelatedInfoTools
+                         Phys/DSTWriters
+                         Phys/PhysConf
+                         Phys/DaVinciTransporter
+                         Event/EventPacker
                          GaudiConf
                          ##############################
                          # Temporarily moved in from Stripping, for S23 release
