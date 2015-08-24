@@ -5,6 +5,10 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2015-08-24 - Chris Jones
+ - Only configure Reco 14 ANNPID recalibration sequences when DataType is
+   set to a Run I year.
+
 ! 2015-08-21 - Chris Jones
  - Comment out the options that force a refit of HLT1 tracks, as this cannot
    work on stripping (u)DST by default, as it requires the presence of the 

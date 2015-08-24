@@ -159,74 +159,63 @@ class PhysConf(LHCbConfigurableUser) :
         DecodeRawEvent().DataOnDemand=True
         #require L0 just in case I need to do L0 decoding
         importOptions( "$L0TCK/L0DUConfig.opts" )
-
-        ## # for 2015, unpack and refit velo tracks for PV refitting
-        ## if( self.getProp("DataType") is "2015" ):
-        ##     from Configurables import UnpackTrack
-        ##     unpackFittedVeloTracks = UnpackTrack("unpackFittedVeloTracks")
-        ##     unpackFittedVeloTracks.InputName = "pRec/Track/FittedHLT1VeloTracks"
-        ##     unpackFittedVeloTracks.OutputName = "Rec/Track/FittedHLT1VeloTracks"
-
-        ##     from FastVelo import FastVeloAlgConf
-        ##     from Configurables import TrackStateInitAlg
-        ##     stateInit = TrackStateInitAlg('VeloOnlyInitAlg')
-        ##     FastVeloAlgConf.FastVeloKalmanConf().configureFastKalmanFit(init = stateInit)
-
-        ##     getFittedVeloSeq = GaudiSequencer("getFittedVeloSeq")
-        ##     getFittedVeloSeq.Members = [ unpackFittedVeloTracks, stateInit ]
-            
-        ##     dataOnDemand.AlgMap[ "/Event/Rec/Track/FittedHLT1VeloTracks" ] = getFittedVeloSeq
-
         
         # ANN PID recalibration
         if self.getProp("AllowPIDRecalib") :
 
             from Gaudi.Configuration import appendPostConfigAction
 
-            def _ANNPIDReCalib_() :
+            # If Run I data, perform Reco14 recalibration on the fly
+            if ( self.getProp("DataType") == '2010' or
+                 self.getProp("DataType") == '2011' or
+                 self.getProp("DataType") == '2012' or
+                 self.getProp("DataType") == '2013' ) :
 
-                from Configurables import ( DstConf, DataOnDemandSvc,
-                                            ChargedProtoANNPIDConf, ChargedProtoParticleMapper,
-                                            ApplicationVersionFilter )
+                def _ANNPIDReCalib_Reco14_() :
 
-                # Sequence to fill
-                annPIDSeq = GaudiSequencer("ANNPIDSeq")
+                    from Configurables import ( DstConf, DataOnDemandSvc,
+                                                ChargedProtoANNPIDConf, ChargedProtoParticleMapper,
+                                                ApplicationVersionFilter )
 
-                # Only rerun on Reco14 samples
-                recoRegex = "v43r2(.*)"
-                annPIDSeq.Members += [
-                    ApplicationVersionFilter( name = "Reco14Filter",
-                                              HeaderLocation = "Rec/Header",
-                                              VersionRegex = recoRegex ) ]
+                    # Sequence to fill
+                    annPIDSeq = GaudiSequencer("ANNPIDSeq")
 
-                # ANN PID Configurable
-                annPIDConf = ChargedProtoANNPIDConf("ReDoANNPID")
+                    # Only rerun on Reco14 samples
+                    recoRegex = "v43r2(.*)"
+                    annPIDSeq.Members += [
+                        ApplicationVersionFilter( name = "Reco14Filter",
+                                                  HeaderLocation = "Rec/Header",
+                                                  VersionRegex = recoRegex ) ]
+                    
+                    # ANN PID Configurable
+                    annPIDConf = ChargedProtoANNPIDConf("ReDoANNPID")
 
-                # Configure Configurable for recalibration of the DST charged protos
-                annPIDConf.DataType = self.getProp("DataType")
-                annPIDConf.RecoSequencer = annPIDSeq
-                annPIDConf.applyConf()
+                    # Configure Configurable for recalibration of the DST charged protos
+                    annPIDConf.DataType = self.getProp("DataType")
+                    annPIDConf.RecoSequencer = annPIDSeq
+                    annPIDConf.applyConf()
 
-                # Update the DoD sequence to run this at the end
-                chargedLoc = "/Event/Rec/ProtoP/Charged"
-                if chargedLoc in DataOnDemandSvc().AlgMap.keys() :
-                    chargedSeq = DataOnDemandSvc().AlgMap[chargedLoc]
-                    chargedSeq.Members += [annPIDSeq]
+                    # Update the DoD sequence to run this at the end
+                    chargedLoc = "/Event/Rec/ProtoP/Charged"
+                    if chargedLoc in DataOnDemandSvc().AlgMap.keys() :
+                        chargedSeq = DataOnDemandSvc().AlgMap[chargedLoc]
+                        chargedSeq.Members += [annPIDSeq]
 
-                # Now for uDSTs. Update the DoD mappers to run a custom one
-                # for charged Protos, and includes the recalibration
-                cppmapper = ChargedProtoParticleMapper("UnpackChargedPPsMapper")
-                # Clone the settings from the DST configurable
-                cppmapper.ANNPIDTune = annPIDConf.tune(annPIDConf.DataType)
-                cppmapper.TrackTypes = annPIDConf.TrackTypes
-                cppmapper.PIDTypes   = annPIDConf.PIDTypes
-                # Again, only rerun the ANNPID on Reco14 data
-                cppmapper.VersionRegex = recoRegex
-                # Update the DoD mapper lists
-                DataOnDemandSvc().NodeMappingTools = [cppmapper] + DataOnDemandSvc().NodeMappingTools
-                DataOnDemandSvc().AlgMappingTools  = [cppmapper] + DataOnDemandSvc().AlgMappingTools
+                    # Now for uDSTs. Update the DoD mappers to run a custom one
+                    # for charged Protos, and includes the recalibration
+                    cppmapper = ChargedProtoParticleMapper("UnpackChargedPPsMapper")
+                    # Clone the settings from the DST configurable
+                    cppmapper.ANNPIDTune = annPIDConf.tune(annPIDConf.DataType)
+                    cppmapper.TrackTypes = annPIDConf.TrackTypes
+                    cppmapper.PIDTypes   = annPIDConf.PIDTypes
+                    # Again, only rerun the ANNPID on Reco14 data
+                    cppmapper.VersionRegex = recoRegex
+                    # Update the DoD mapper lists
+                    DataOnDemandSvc().NodeMappingTools = [cppmapper] + DataOnDemandSvc().NodeMappingTools
+                    DataOnDemandSvc().AlgMappingTools  = [cppmapper] + DataOnDemandSvc().AlgMappingTools
 
-            appendPostConfigAction( _ANNPIDReCalib_ )
+                    # Append post config action
+                    appendPostConfigAction( _ANNPIDReCalib_Reco14_ )
 
 #
 # LoKi
