@@ -4,6 +4,8 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriters v4r22 2015-08-24 =========================
+
 ! 2015-08-21 - Chris Jones
  - Fix DST streams where Trigger/RawEvent was missing when running on RDSTs.
 
