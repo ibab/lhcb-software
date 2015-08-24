@@ -427,7 +427,7 @@ void DVCommonBase<PBASE>::initializeInputLocations()
       // Print a warning
       std::ostringstream mess;
       mess << "Duplication in Input locations :";
-      for ( auto& i : m_inputLocations ) { mess << " " << i; }
+      for ( const auto& i : m_inputLocations ) { mess << " " << i; }
       mess << " | Duplicates :";
       for ( auto i = iLoc; i != m_inputLocations.end(); ++i ) { mess << " " << *i; }
       this->Warning( mess.str(), StatusCode::SUCCESS ).ignore();
