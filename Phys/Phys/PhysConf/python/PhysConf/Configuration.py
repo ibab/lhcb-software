@@ -166,10 +166,12 @@ class PhysConf(LHCbConfigurableUser) :
             from Gaudi.Configuration import appendPostConfigAction
 
             # If Run I data, perform Reco14 recalibration on the fly
-            if ( self.getProp("DataType") == '2010' or
-                 self.getProp("DataType") == '2011' or
-                 self.getProp("DataType") == '2012' or
-                 self.getProp("DataType") == '2013' ) :
+            datatype = self.getProp("DataType")
+            if ( datatype == '2009' or
+                 datatype == '2010' or
+                 datatype == '2011' or
+                 datatype == '2012' or
+                 datatype == '2013' ) :
 
                 def _ANNPIDReCalib_Reco14_() :
 
@@ -214,8 +216,8 @@ class PhysConf(LHCbConfigurableUser) :
                     DataOnDemandSvc().NodeMappingTools = [cppmapper] + DataOnDemandSvc().NodeMappingTools
                     DataOnDemandSvc().AlgMappingTools  = [cppmapper] + DataOnDemandSvc().AlgMappingTools
 
-                    # Append post config action
-                    appendPostConfigAction( _ANNPIDReCalib_Reco14_ )
+                # Append post config action
+                appendPostConfigAction( _ANNPIDReCalib_Reco14_ )
 
 #
 # LoKi
