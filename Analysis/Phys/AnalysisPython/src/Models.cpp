@@ -5404,6 +5404,92 @@ Double_t Analysis::Models::Landau::analyticalIntegral
 // ============================================================================
 // constructor from all parameters 
 // ============================================================================
+Analysis::Models::Atlas::Atlas
+( const char*          name   , 
+  const char*          title  ,
+  RooAbsReal&          x      ,
+  RooAbsReal&          mu     ,
+  RooAbsReal&          sigma  )
+  : RooAbsPdf ( name , title ) 
+    //
+  , m_x      ( "x"      , "Observable" , this , x      ) 
+  , m_mu     ( "mu"     , "location"   , this , mu     ) 
+  , m_sigma  ( "sigma"  , "sigma"      , this , sigma  ) 
+    //
+  , m_atlas  ( 0 , 1 ) 
+{
+  setPars() ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::Atlas::Atlas
+( const Analysis::Models::Atlas&  right ,
+  const char*                     name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x      ( "x"      , this , right.m_x      ) 
+  , m_mu     ( "mu"     , this , right.m_mu     )
+  , m_sigma  ( "sigma"  , this , right.m_sigma  )
+//
+  , m_atlas  (                   right.m_atlas  ) 
+{
+  setPars () ;
+}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::Atlas::~Atlas () {}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Atlas*
+Analysis::Models::Atlas::clone( const char* name ) const 
+{ return new Analysis::Models::Atlas ( *this , name) ; }
+// ============================================================================
+void Analysis::Models::Atlas::setPars () const 
+{
+  //
+  m_atlas.setMean  ( m_mu    ) ;
+  m_atlas.setSigma ( m_sigma ) ;
+  //
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Atlas::evaluate() const 
+{
+  //
+  setPars () ;
+  //
+  return m_atlas ( m_x ) ;
+}
+// ============================================================================
+Int_t Analysis::Models::Atlas::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::Atlas::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  setPars () ;
+  //
+  return m_atlas.integral ( m_x.min( rangeName ) , m_x.max( rangeName ) ) ;
+}
+// ============================================================================
+
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
 Analysis::Models::Argus::Argus
 ( const char*          name   , 
   const char*          title  ,

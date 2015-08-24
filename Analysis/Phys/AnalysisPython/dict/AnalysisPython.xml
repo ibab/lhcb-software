@@ -80,6 +80,7 @@
   <class name = "Analysis::Models::Landau"             />
   <class name = "Analysis::Models::SinhAsinh"          />
   <class name = "Analysis::Models::JohnsonSU"          />
+  <class name = "Analysis::Models::Atlas"              />
   <class name = "Analysis::Models::Argus"              />
   <class name = "Analysis::Models::Tsallis"            />
   <class name = "Analysis::Models::QGSM"               />

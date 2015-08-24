@@ -3672,6 +3672,78 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Atlas 
+     *  Modified gaussian function 
+     *  \f$  f(x) \propto \exp( -frac{\delta x^{1+\frac{1}{1+\deltax/2}}}{2})\f$,
+     *  where \f$\delta x = \left| x - \mu \right|/\sigma\f$
+     *  Fuction is taken from http://arxiv.org/abs/arXiv:1507.07099
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2015-08-21
+     *  @see Gaudi::Math::Atlas 
+     */
+    class GAUDI_API Atlas : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::Atlas, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters
+      Atlas
+      ( const char*           name      , 
+        const char*           title     ,
+        RooAbsReal&           x         , 
+        RooAbsReal&           mu        ,
+        RooAbsReal&           sigma     ) ;
+      /// "copy constructor"
+      Atlas
+      ( const Atlas&          right     , 
+        const char*           name  = 0 )  ;
+      /// destructor 
+      virtual ~Atlas  () ;
+      /// clone 
+      virtual  Atlas* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Atlas& function() const { return m_atlas ; }
+      // ======================================================================
+    protected: 
+      // ======================================================================
+      RooRealProxy m_x        ;
+      RooRealProxy m_mu       ;
+      RooRealProxy m_sigma    ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function
+      mutable Gaudi::Math::Atlas m_atlas ; // the actual function
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class Argus
      *  http://en.wikipedia.org/wiki/ARGUS_distribution
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
