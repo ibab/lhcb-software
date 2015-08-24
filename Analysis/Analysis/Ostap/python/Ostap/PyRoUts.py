@@ -843,6 +843,10 @@ def interpolate_2D ( x   , y   ,
     return c00 * v00 + c01 * v01 + c10 * v10 + c11 * v11 
 
 
+
+## parabolic interpolation
+_PARAB = cpp.Gaudi.Math.ParabolaErr
+
 # =============================================================================
 ## histogram as function 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -852,10 +856,13 @@ def _h1_call_ ( h1 , x , func = lambda s : s , interpolate = True ) :
     Histogram as function:
     
     >>> histo = ....
-    >>> ve    = histo ( x ) 
+    >>> ve    = histo ( x )                       ## default interpolation
+    >>> be    = histo ( x , interpolate = False ) ## no interpolation 
+    >>> be    = histo ( x , interpolate = True  ) ## default interpolation  
+    >>> be    = histo ( x , interpolate = 2     ) ## parabolic interpolation  
     """
     #
-    if hasattr ( x , 'value' )  : return _h1_call_ ( h1 ,  x.value() )
+    if hasattr ( x , 'value' )  : x = x.value() ## return _h1_call_ ( h1 ,  x.value() )
     #
     ax = h1.GetXaxis (   )
     ix = ax.FindBin  ( x )
@@ -874,12 +881,37 @@ def _h1_call_ ( h1 , x , func = lambda s : s , interpolate = True ) :
     #
     if not interpolate : return func ( value )   ## RETURN 
     #
+    ## try parabolic interpolation 
+    if 2 == interpolate and 3 <= nb :
+
+        i,j,k             = ix-1 ,   ix , ix+1
+        if i < 1  : i,j,k =    1 ,    2 ,    3
+        if k > nb : i,j,k = nb-2 , nb-1 ,   nb
+
+        xi = ax.GetBinCenter(i)
+        if x < xi : return func ( value ) ## treat the first bin  (correct?)
+        
+        xk = ax.GetBinCenter(k)
+        if x > xk : return func ( value ) ## treat the last bin   (correct?)
+        
+        xj = ax.GetBinCenter(j)     ## middle bin
+        
+        yi = VE ( h1.GetBinContent ( i ) , h1.GetBinError ( i ) ** 2 )
+        yj = VE ( h1.GetBinContent ( j ) , h1.GetBinError ( j ) ** 2 )
+        yk = VE ( h1.GetBinContent ( k ) , h1.GetBinError ( k ) ** 2 )
+        #
+        ## create interpolation object:
+        #
+        parab = _PARAB ( xi , yi , xj , yj , xk , yk )
+        #
+        return func ( parab ( x ) ) 
+    # 
     ## make linear interpolation
     # 
     bc   = ax.GetBinCenter( ix )
     ibin = ix - 1 if x < bc else ix + 1
     #
-    if ibin in h1  :
+    if 1<= ibin <= nb : 
         #
         bx =      ax.GetBinCenter  ( ibin )
         bv = VE ( h1.GetBinContent ( ibin ) , h1.GetBinError ( ibin )**2 )

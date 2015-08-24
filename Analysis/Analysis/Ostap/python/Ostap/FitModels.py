@@ -42,6 +42,7 @@ Empricial PDFs to describe narrow peaks :
   - bifurcated Student-T
   - sinh-asinh shape
   - Johnson-SU shape
+  - Atlas shape
 
   
 PDF to describe ``wide'' peaks : 
@@ -49,7 +50,7 @@ PDF to describe ``wide'' peaks :
   - BreitWigner
   - LASS
   - Bugg
-  - Flatter
+  - Flatte
   - ...
  
 - some useful PDFs to describe smooth background in 1D : 
@@ -87,6 +88,7 @@ __all__ = (
     'BifurcatedStudentT_pdf' , ## bifurcated Student-T function 
     'SinhAsinh_pdf'          , ## "Sinh-arcsinh distributions". Biometrika 96 (4): 761
     'JohnsonSU_pdf'          , ## Johnson-SU distributon
+    'Atlas_pdf'              , ## modified gaussian wiht exponential tails 
     #
     ## specializations:
     # 

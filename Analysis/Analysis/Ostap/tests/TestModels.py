@@ -559,6 +559,33 @@ else :
     print  "\tJohnsonSU:   gamma= %s " % result ( signal.gamma   )[0]
 
 # =============================================================================
+logger.info("Test  ATLAS")
+# =============================================================================
+model_atlas = Models.Fit1D (
+    signal = Models.Atlas_pdf( 'ATLAS'                  ,
+                               mass = mass              , 
+                               mean = signal_gauss.mean ) ,
+    background = model_gauss.background  )
+
+signal = model_atlas.signal
+
+
+with rooSilent() : 
+    result,f  = model_atlas.fitTo ( dataset0 )  
+    result,f  = model_atlas.fitTo ( dataset0 )  
+    model_atlas.signal.mean  .release()
+    model_atlas.signal.sigma .release()
+    result,f  = model_atlas.fitTo ( dataset0 )  
+    
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % (
+        result.status() , result.covQual()  ) )
+    print result
+else :
+    print  "\tAtlas:       mean = %s " % result ( signal.mean    )[0]
+    print  "\tAtlas:       sigma= %s " % result ( signal.sigma   )[0]
+
+# =============================================================================
 ## Voigt
 # =============================================================================
 logger.info ('Test Voigt_pdf' )

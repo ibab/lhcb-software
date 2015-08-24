@@ -843,9 +843,10 @@ class H1Func(object) :
     >>> histo2.Fit ( tf1 , 'S' )
     
     """
-    def __init__ ( self , histo , func = lambda s : s.value() ) :
-        self._histo = histo
-        self._func  = func
+    def __init__ ( self , histo , func = lambda s : s.value() , interpolate = True ) :
+        self._histo  = histo
+        self._func   = func
+        self._interp = interpolate 
         
     ## evaluate the function 
     def __call__ ( self , x , par = [ 1 , 0 , 1 ] ) :
@@ -861,7 +862,7 @@ class H1Func(object) :
         #
         x0    = ( x0 - bias ) / scale
         # 
-        return norm * self._func ( self._histo ( x0 , interpolate = True ) )
+        return norm * self._func ( self._histo ( x0 , interpolate = self.interpolate ) )
 
     ## get corresponsing ROOT.TF1 object 
     def tf1  ( self ) :

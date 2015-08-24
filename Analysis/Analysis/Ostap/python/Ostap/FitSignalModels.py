@@ -42,6 +42,7 @@ Empricial PDFs to describe narrow peaks
   - bifurcated Student-T
   - SinhAsinh_pdf   
   - JohnsonSU_pdf   
+  - Atlas_pdf   
   
 PDF to describe ``wide'' peaks
 
@@ -82,6 +83,7 @@ __all__ = (
     'BifurcatedStudentT_pdf' , ## bifurcated Student-T function
     'SinhAsinh_pdf'          , ## "Sinh-arcsinh distributions". Biometrika 96 (4): 761
     'JohnsonSU_pdf'          , ## JonhsonSU-distribution 
+    'Atlas_pdf'              , ## modified gaussian with exponenital tails 
     #
     ## pdfs for "wide" peaks, to be used with care - phase space corrections are large!
     # 
@@ -1353,6 +1355,53 @@ class JohnsonSU_pdf(MASS) :
             self.gamma     ) 
 
 models.append ( JohnsonSU_pdf )      
+# =============================================================================
+## @class Atlas_pdf
+#  Modified gaussian with exponential tails
+#  \f$  f(x) \propto \exp( -frac{\delta x^{1+\frac{1}{1+\deltax/2}}}{2})\f$,
+#  where \f$\delta x = \left| x - \mu \right|/\sigma\f$
+#  Function is taken from http://arxiv.org/abs/arXiv:1507.07099
+# 
+#  @see http://arxiv.org/abs/arXiv:1507.07099
+#  @see Gaudi::Math::Atlas 
+#  @see Analysis::Models::Atlas 
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-08-024
+class Atlas_pdf(MASS) :
+    """
+    Maodified gaussian with exponential tails
+    \f$  f(x) \propto \exp( -frac{\delta x^{1+\frac{1}{1+\deltax/2}}}{2})\f$,
+    where \f$\delta x = \left| x - \mu \right|/\sigma\f$
+    Function is taken from http://arxiv.org/abs/arXiv:1507.07099    
+    """
+    def __init__ ( self             ,
+                   name             ,
+                   mn        = None ,
+                   mx        = None , 
+                   mass      = None ,
+                   mean      = None ,   ## related to mean 
+                   sigma     = None ) : ## related to sigma 
+
+        #
+        ## initialize the base
+        #
+        
+        MASS.__init__  ( self    , name   ,
+                         mn      , mx     , mass    ,
+                         mean    , sigma  )
+
+        #
+        ## finally build pdf
+        # 
+        self.pdf = cpp.Analysis.Models.Atlas (
+            "atlas_"    + name ,
+            "ATLAS(%s)" % name ,
+            self.mass      ,
+            self.mean      ,
+            self.sigma     ) 
+
+models.append ( Atlas_pdf )      
 # =============================================================================
 ## @class Voigt_pdf
 #  Voigt-pdf distribution
