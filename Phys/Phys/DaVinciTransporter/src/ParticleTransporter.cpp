@@ -1,5 +1,8 @@
-// $Id: ParticleTransporter.cpp,v 1.24 2009-09-11 17:14:05 jonrob Exp $
+
+// STL
 #include <cmath>
+#include <sstream>
+
 // local
 #include "ParticleTransporter.h"
 
@@ -214,7 +217,9 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P,
                                       LHCb::State& s) const
 {
   // charged basic: no need to make
-  verbose() << "Starting from Particle : " << *P << endmsg ;
+
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Starting from Particle : " << *P << endmsg ;
 
   StatusCode sc = StatusCode::SUCCESS ;
 
@@ -226,13 +231,17 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P,
       const LHCb::ParticleProperty *pp = m_ppSvc->find(P->particleID());
       if (pp) 
       {
-        Warning( pp->particle()+" has no proto nor endVertex. Assuming it's from MC.",
-                 StatusCode::SUCCESS );
+        Warning( pp->particle() + " in '" + location(P->parent()) + 
+                 "' has no proto nor endVertex. Assuming it's from MC.",
+                 StatusCode::SUCCESS ).ignore();
       }
       else
       {
-        err() << "Particle with unknown PID " << P->particleID().pid() << " has no endVertex. "
-              <<  "Assuming it's from MC" << endmsg ;
+        std::ostringstream mess;
+        mess << "Particle with unknown PID " << P->particleID().pid() 
+             << " in '" << location(P->parent()) 
+             << "' has no endVertex. Assuming it's from MC";
+        Error( mess.str() ).ignore();
       }
       sc = m_particle2State->particle2State(*P,s);
     } 
@@ -246,8 +255,11 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P,
     else if ( !P->proto()->track() ) 
     {
       // Charged protopraticle without track -> error
-      err() << "Basic Particle of ID " << P->particleID().pid() << " has no track" << endmsg;
-      return StatusCode::FAILURE;
+      std::ostringstream mess;
+      mess << "Basic Particle of ID " << P->particleID().pid() 
+           << " in '" << location(P->parent()) 
+           << "' has no track";
+      return Error( mess.str() );
     } 
     else
     {

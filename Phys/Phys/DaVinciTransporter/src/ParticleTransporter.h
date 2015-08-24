@@ -122,6 +122,18 @@ private:
   StatusCode checkParticle(const LHCb::Particle& transParticle);
 
 
+  /** Returns the full location of the given object in the Data Store
+   *
+   *  @param pObj Data object
+   *
+   *  @return Location of given data object
+   */
+  inline std::string location( const DataObject * pObj ) const
+  {
+    return ( !pObj ? "Null DataObject !" :
+             (pObj->registry() ? pObj->registry()->identifier() : "UnRegistered") );
+  }
+  
 private:
 
   ITrackExtrapolator* m_trackExtrapolator;        ///< Track extrapolator for particles from tracks
