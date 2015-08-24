@@ -8,17 +8,18 @@ class CharmHadD2HHHLines() :
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                  'Trk_2OF3_MIPCHI2DV_MIN'   :  10.0,
                                  'Trk_1OF3_MIPCHI2DV_MIN'   :  50.0,
-                                 'Trk_ALL_PT_MIN'           :  200.0 * MeV,
+                                 'Trk_ALL_PT_MIN'           :  250.0 * MeV,
                                  'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
                                  'Trk_1OF3_PT_MIN'          :  1000.0 * MeV,
-                                 'BPVVDCHI2_MIN'            :  20.0,
-                                 'BPVLTIME_MIN'             :  0.3 * picosecond,
+                                 'BPVVDCHI2_MIN'            :  150.0,
+                                 'BPVLTIME_MIN'             :  0.4 * picosecond,
                                  'BPVDIRA_MIN'              :  0.99995,
                                  'ASUMPT_MIN'               :  3000 * MeV,
                                  'AM_MIN'                   :  1779 * MeV,
                                  'AM_MAX'                   :  1959 * MeV,
                                  'Mass_M_MIN'               :  1789.0 * MeV,
                                  'Mass_M_MAX'               :  1949.0 * MeV,
+                                 'VCHI2PDOF_MAX'            :  6, 
                                  'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS"
                                 },
                  # Be aware the following cuts are used for a flavour tagging calibration line
@@ -28,19 +29,122 @@ class CharmHadD2HHHLines() :
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                  'Trk_2OF3_MIPCHI2DV_MIN'   :  10.0,
                                  'Trk_1OF3_MIPCHI2DV_MIN'   :  50.0,
-                                 'Trk_ALL_PT_MIN'           :  200.0 * MeV,
+                                 'Trk_ALL_PT_MIN'           :  250.0 * MeV,
                                  'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
                                  'Trk_1OF3_PT_MIN'          :  1000.0 * MeV,
-                                 'BPVVDCHI2_MIN'            :  20.0,
-                                 'BPVLTIME_MIN'             :  0.3 * picosecond,
-                                 'BPVDIRA_MIN'              :  0.99995,
+                                 'BPVVDCHI2_MIN'            :  100.0,
+                                 'BPVLTIME_MIN'             :  0.2 * picosecond,
+                                 'BPVDIRA_MIN'              :  0.9999,
                                  'ASUMPT_MIN'               :  3000 * MeV,
                                  'AM_MIN'                   :  1879 * MeV,
                                  'AM_MAX'                   :  2059 * MeV,
                                  'Mass_M_MIN'               :  1889.0 * MeV,
                                  'Mass_M_MAX'               :  2049.0 * MeV,
+                                 'VCHI2PDOF_MAX'            :  6, 
                                  'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS"
                                 }, 
+                 'Dpm2PPP' : {
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                 'Trk_2OF3_MIPCHI2DV_MIN'   :  10.0,
+                                 'Trk_1OF3_MIPCHI2DV_MIN'   :  50.0,
+                                 'Trk_ALL_PT_MIN'           :  250.0 * MeV,
+                                 'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
+                                 'Trk_1OF3_PT_MIN'          :  1000.0 * MeV,
+                                 'BPVVDCHI2_MIN'            :  150.0,
+                                 'BPVLTIME_MIN'             :  0.4 * picosecond,
+                                 'BPVDIRA_MIN'              :  0.99995,
+                                 'ASUMPT_MIN'               :  3200 * MeV,
+                                 'AM_MIN'                   :  1779 * MeV,
+                                 'AM_MAX'                   :  1959 * MeV,
+                                 'Mass_M_MIN'               :  1789.0 * MeV,
+                                 'Mass_M_MAX'               :  1949.0 * MeV,
+                                 'VCHI2PDOF_MAX'            :  6,
+                                },
+                 'Dpm2PKK' : {
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                 'Trk_2OF3_MIPCHI2DV_MIN'   :  10.0,
+                                 'Trk_1OF3_MIPCHI2DV_MIN'   :  50.0,
+                                 'Trk_ALL_PT_MIN'           :  250.0 * MeV,
+                                 'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
+                                 'Trk_1OF3_PT_MIN'          :  1000.0 * MeV,
+                                 'BPVVDCHI2_MIN'            :  150.0,
+                                 'BPVLTIME_MIN'             :  0.4 * picosecond,
+                                 'BPVDIRA_MIN'              :  0.99995,
+                                 'ASUMPT_MIN'               :  3000 * MeV,
+                                 'AM_MIN'                   :  1779 * MeV,
+                                 'AM_MAX'                   :  1959 * MeV,
+                                 'Mass_M_MIN'               :  1789.0 * MeV,
+                                 'Mass_M_MAX'               :  1949.0 * MeV,
+                                 'VCHI2PDOF_MAX'            :  6,
+                                },
+                 'Ds2PPP' : {
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                 'Trk_2OF3_MIPCHI2DV_MIN'   :  10.0,
+                                 'Trk_1OF3_MIPCHI2DV_MIN'   :  50.0,
+                                 'Trk_ALL_PT_MIN'           :  250.0 * MeV,
+                                 'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
+                                 'Trk_1OF3_PT_MIN'          :  1000.0 * MeV,
+                                 'BPVVDCHI2_MIN'            :  100.0,
+                                 'BPVLTIME_MIN'             :  0.2 * picosecond,
+                                 'BPVDIRA_MIN'              :  0.99995,
+                                 'ASUMPT_MIN'               :  3200 * MeV,
+                                 'AM_MIN'                   :  1879 * MeV,
+                                 'AM_MAX'                   :  2059 * MeV,
+                                 'Mass_M_MIN'               :  1889.0 * MeV,
+                                 'Mass_M_MAX'               :  2049.0 * MeV,
+                                 'VCHI2PDOF_MAX'            :  6,
+                                },
+                 'Ds2KPP' : {
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                 'Trk_2OF3_MIPCHI2DV_MIN'   :  10.0,
+                                 'Trk_1OF3_MIPCHI2DV_MIN'   :  50.0,
+                                 'Trk_ALL_PT_MIN'           :  250.0 * MeV,
+                                 'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
+                                 'Trk_1OF3_PT_MIN'          :  1000.0 * MeV,
+                                 'BPVVDCHI2_MIN'            :  100.0,
+                                 'BPVLTIME_MIN'             :  0.2 * picosecond,
+                                 'BPVDIRA_MIN'              :  0.9999,
+                                 'ASUMPT_MIN'               :  3000 * MeV,
+                                 'AM_MIN'                   :  1879 * MeV,
+                                 'AM_MAX'                   :  2059 * MeV,
+                                 'Mass_M_MIN'               :  1889.0 * MeV,
+                                 'Mass_M_MAX'               :  2049.0 * MeV,
+                                 'VCHI2PDOF_MAX'            :  6,
+                                },
+                 'Dpm2KKK' : {
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                 'Trk_2OF3_MIPCHI2DV_MIN'   :  4.0,
+                                 'Trk_1OF3_MIPCHI2DV_MIN'   :  10.0,
+                                 'Trk_ALL_PT_MIN'           :  250.0 * MeV,
+                                 'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
+                                 'Trk_1OF3_PT_MIN'          :  1000.0 * MeV,
+                                 'BPVVDCHI2_MIN'            :  150.0,
+                                 'BPVLTIME_MIN'             :  0.4 * picosecond,
+                                 'BPVDIRA_MIN'              :  0.99995,
+                                 'ASUMPT_MIN'               :  3000 * MeV,
+                                 'AM_MIN'                   :  1779 * MeV,
+                                 'AM_MAX'                   :  1959 * MeV,
+                                 'Mass_M_MIN'               :  1789.0 * MeV,
+                                 'Mass_M_MAX'               :  1949.0 * MeV,
+                                 'VCHI2PDOF_MAX'            :  10,
+                                },
+                 'Ds2KKK' : {
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                 'Trk_2OF3_MIPCHI2DV_MIN'   :  4.0,
+                                 'Trk_1OF3_MIPCHI2DV_MIN'   :  10.0,
+                                 'Trk_ALL_PT_MIN'           :  250.0 * MeV,
+                                 'Trk_2OF3_PT_MIN'          :  400.0 * MeV,
+                                 'Trk_1OF3_PT_MIN'          :  1000.0 * MeV,
+                                 'BPVVDCHI2_MIN'            :  100.0,
+                                 'BPVLTIME_MIN'             :  0.2 * picosecond,
+                                 'BPVDIRA_MIN'              :  0.9999,
+                                 'ASUMPT_MIN'               :  3000 * MeV,
+                                 'AM_MIN'                   :  1879 * MeV,
+                                 'AM_MAX'                   :  2059 * MeV,
+                                 'Mass_M_MIN'               :  1889.0 * MeV,
+                                 'Mass_M_MAX'               :  2049.0 * MeV,
+                                 'VCHI2PDOF_MAX'            :  10,
+                                },
                  ## The masses of Lambda_c+ and Xi_c+ are separated by 181 MeV,
                  ##   so the mass windows are adjacent unless they are very
                  ##   narrow.  It makes sense to do joint combinatorics.
@@ -129,10 +233,10 @@ class CharmHadD2HHHLines() :
         from Stages import SharedTighterPromptChild_p
         #
         from Stages import D2HHH_DpToKmPipPip, D2HHH_DpToKpPimPip
-        from Stages import D2HHH_DpToKmKpPip
+        from Stages import D2HHH_DpToKmKpPip, D2HHH_DpToKpKpPim
         from Stages import D2HHH_DpToPimPipPip, D2HHH_DpToKmKpKp
         #
-        from Stages import D2HHH_DspToKpPimPip
+        from Stages import D2HHH_DspToKpPimPip, D2HHH_DspToKmPipPip
         from Stages import D2HHH_DspToKpKpPim,   D2HHH_DspToKmKpPip
         from Stages import D2HHH_DspToPimPipPip, D2HHH_DspToKmKpKp
         #
@@ -162,6 +266,8 @@ class CharmHadD2HHHLines() :
                                 , inputs=[D2HHH_DpToPimPipPip], reFitPVs = True)
         DpToKmKpKp    = MassFilter('Dpm2HHH'
                                 , inputs=[D2HHH_DpToKmKpKp], reFitPVs = True)
+        DpToKpKpPim   = MassFilter('Dpm2HHH'
+                                , inputs=[D2HHH_DpToKpKpPim], reFitPVs = True)
 
 
         ## The end-point of the DspToKmKpPip line is used as input to the DPS
@@ -181,6 +287,8 @@ class CharmHadD2HHHLines() :
                                , inputs=[D2HHH_DspToPimPipPip], reFitPVs = True)
         DspToKmKpKp    = MassFilter('Ds2HHH'
                                , inputs=[D2HHH_DspToKmKpKp], reFitPVs = True)
+        DspToKmPipPip    = MassFilter('Ds2HHH'
+                               , inputs=[D2HHH_DspToKmPipPip], reFitPVs = True)
 
         ## The end-point of the LcpToPpKmPip line is used as input to the DPS
         ## module and as input the CharmSpectroscopyLines.py lines.
@@ -234,20 +342,21 @@ class CharmHadD2HHHLines() :
         ##   which the lines defined in this module can be directly read.
         stages = {
                   ## CPV D+ -> HHH lines.
-                  ## Does not include forbidden mode KpKpPim.
                   'DpToKmPipPipTurbo'        : [DpToKmPipPip],
                   'DpToKpPimPipTurbo'        : [DpToKpPimPip],
                   'DpToKmKpPipTurbo'         : [DpToKmKpPip],
                   'DpToPimPipPipTurbo'       : [DpToPimPipPip],
                   'DpToKmKpKpTurbo'          : [DpToKmKpKp],
+                  'DpToKpKpPimTurbo'         : [DpToKpKpPim],
 
                   ## CPV D_s+ -> HHH lines.
-                  ## Does not include forbidden KmPipPip.
+                  ## Explicitly includes forbidden KmPipPip.
                   'DspToKmKpPipTurbo'        : [DspToKmKpPip],
                   'DspToKpKpPimTurbo'        : [DspToKpKpPim],
                   'DspToKpPimPipTurbo'       : [DspToKpPimPip],
                   'DspToPimPipPipTurbo'      : [DspToPimPipPip],
                   'DspToKmKpKpTurbo'         : [DspToKmKpKp],
+                  'DspToKmPipPipTurbo'       : [DspToKmPipPip],
 
                   # CPV L_c+ -> HHH lines
                   'LcpToPpKmPipTurbo'        : [Lc2HHH_LcpToKmPpPip],

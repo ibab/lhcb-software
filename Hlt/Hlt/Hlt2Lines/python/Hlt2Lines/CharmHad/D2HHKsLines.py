@@ -56,7 +56,6 @@ class CharmHadD2HHKshLines(Hlt2LinesConfigurableUser):
                                         'DeltaM_MIN'       : 135 * MeV,
                                         'DeltaM_MAX'       : 165 * MeV,
                                         'TagVCHI2PDOF_MAX' : 10.0,
-                                        'TisTosSpec'       : "Hlt1.*MVA.*Decision%TOS",
                                        }
                             
         }

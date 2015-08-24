@@ -22,7 +22,6 @@ class CharmSpectroscopyLines :
                                         'DeltaM_MIN'       : 135 * MeV,
                                         'DeltaM_MAX'       : 995 * MeV,
                                         'TagVCHI2PDOF_MAX' : 10.0,
-                                        'TisTosSpec'       : "Hlt1.*MVA.*Decision%TOS",
                                        }
                ,'Spec_DPi' : {
                                         'DeltaM_AM_MIN'    : 135 * MeV,
@@ -30,7 +29,6 @@ class CharmSpectroscopyLines :
                                         'DeltaM_MIN'       : 135 * MeV,
                                         'DeltaM_MAX'       : 995 * MeV,
                                         'TagVCHI2PDOF_MAX' : 10.0,
-                                        'TisTosSpec'       : "Hlt1.*MVA.*Decision%TOS",
                                        }
                ,'Spec_DK' : {
                                         'DeltaM_AM_MIN'    : 490 * MeV,
@@ -38,7 +36,6 @@ class CharmSpectroscopyLines :
                                         'DeltaM_MIN'       : 490 * MeV,
                                         'DeltaM_MAX'       : 1350 * MeV,
                                         'TagVCHI2PDOF_MAX' : 10.0,
-                                        'TisTosSpec'       : "Hlt1.*MVA.*Decision%TOS",
                                        }
                ,'Spec_DPr' : {
                                         'DeltaM_AM_MIN'    : 930 * MeV,
@@ -46,7 +43,6 @@ class CharmSpectroscopyLines :
                                         'DeltaM_MIN'       : 930 * MeV,
                                         'DeltaM_MAX'       : 1790 * MeV,
                                         'TagVCHI2PDOF_MAX' : 10.0,
-                                        'TisTosSpec'       : "Hlt1.*MVA.*Decision%TOS",
                                        }
                ,'Spec_DLambda' : {
                                         'DeltaM_AM_MIN'    : 1110 * MeV,
@@ -54,7 +50,6 @@ class CharmSpectroscopyLines :
                                         'DeltaM_MIN'       : 1110 * MeV,
                                         'DeltaM_MAX'       : 1970 * MeV,
                                         'TagVCHI2PDOF_MAX' : 10.0,
-                                        'TisTosSpec'       : "Hlt1.*MVA.*Decision%TOS",
                                        }
                ,'Spec_DEta' : {
                                         'DeltaM_AM_MIN'    :  540 * MeV,
@@ -62,14 +57,12 @@ class CharmSpectroscopyLines :
                                         'DeltaM_MIN'       :  540 * MeV,
                                         'DeltaM_MAX'       : 1410 * MeV,
                                         'TagVCHI2PDOF_MAX' : 10.0,
-                                        'TisTosSpec'       : "Hlt1.*MVA.*Decision%TOS",
                                        }
                 ,'Dst2D0pi_D02KPiPiPi' : {
                                         'DeltaM_AM_MIN'    : 135 * MeV,
                                         'DeltaM_AM_MAX'    : 175 * MeV,
                                         'DeltaM_MIN'       : 135 * MeV,
                                         'DeltaM_MAX'       : 165 * MeV,
-                                        'TagVCHI2PDOF_MAX' : 10.0,
                                        }
                  ,'ChargedSpectroscopyBachelors' : {
                                         'IPCHI2_MAX'       :  15,
@@ -291,7 +284,7 @@ class CharmSpectroscopyLines :
                      nickname = 'Spec_DPr',
                      inputs = [D2HHH_DpToKmPipPip,BachelorPr])],
                   'Spec_DpLambdaTurbo' : [TagDecay('Spec_DpLambda',
-                     decay = ["[D*(2010)+ -> D+ Lambda0]cc", "[D*(2010)- -> D_s- Lambda0]cc"],
+                     decay = ["[D*(2010)+ -> D+ Lambda0]cc", "[D*(2010)- -> D- Lambda0]cc"],
                      nickname = 'Spec_DLambda',
                      inputs = [D2HHH_DpToKmPipPip,CharmHadSharedSecondaryLambdaLL,CharmHadSharedSecondaryLambdaDD])],
                   'Spec_DpPi0Turbo' : [TagDecay('Spec_DpPi0',
@@ -350,7 +343,7 @@ class CharmSpectroscopyLines :
                      nickname = 'Spec_DPr',
                      inputs = [dstarKPi, BachelorPr])],
                   'Spec_Dst_KPi_LambdaTurbo' : [TagDecay('Spec_D0Lambda',
-                     decay = ["[Delta(1905)~+ -> D*(2010)+ Lambda0]cc", "[D*(2010)- -> D_s- Lambda0]cc"],
+                     decay = ["[Delta(1905)~+ -> D*(2010)+ Lambda0]cc", "[D*(2010)- -> D*(2010)- Lambda0]cc"],
                      nickname = 'Spec_DLambda',
                      inputs = [dstarKPi, CharmHadSharedSecondaryLambdaLL,CharmHadSharedSecondaryLambdaDD])],
                   'Spec_Dst_KPi_Pi0Turbo' : [TagDecay('Spec_DstPi0',
@@ -379,7 +372,7 @@ class CharmSpectroscopyLines :
                      nickname = 'Spec_DPr',
                      inputs = [dstarK3Pi, BachelorPr])],
                   'Spec_Dst_K3Pi_LambdaTurbo' : [TagDecay('Spec_D0Lambda',
-                     decay = ["[Delta(1905)~+ -> D*(2010)+ Lambda0]cc", "[D*(2010)- -> D_s- Lambda0]cc"],
+                     decay = ["[Delta(1905)~+ -> D*(2010)+ Lambda0]cc", "[D*(2010)- -> D*(2010)- Lambda0]cc"],
                      nickname = 'Spec_DLambda',
                      inputs = [dstarK3Pi, CharmHadSharedSecondaryLambdaLL,CharmHadSharedSecondaryLambdaDD])],
                   'Spec_Dst_K3Pi_Pi0Turbo' : [TagDecay('Spec_DstPi0',

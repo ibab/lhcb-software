@@ -62,6 +62,16 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KmKpTurbo'               : 0.1,
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
                                               },  
+                 'CharmHadSharedDetachedDpmChild_TightK' : {
+                                 'PID_LIM'                  :  7,
+                                 'Trk_ALL_PT_MIN'           :  250 * MeV,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                              },
+                 'CharmHadSharedDetachedDpmChild_Tightpi' : {
+                                 'PID_LIM'                  :  3,
+                                 'Trk_ALL_PT_MIN'           :  250 * MeV,
+                                 'Trk_ALL_MIPCHI2DV_MIN'    :  4.0,
+                                              },
                  'CharmHadSharedDetachedLcChild_K' : { 
                                  'PID_LIM'                  :  5,  
                                  'Trk_ALL_PT_MIN'           :  200 * MeV,
