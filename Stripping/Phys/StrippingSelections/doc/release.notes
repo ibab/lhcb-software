@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-24 - Carla Marin
+ - Update dicctionary in StrippingRD/StrippingKshort2eePiPi.py
+
 ! 2015-08-21 - Andrea Contu
  - Remove import from selections in StrippingTau23Mu
 

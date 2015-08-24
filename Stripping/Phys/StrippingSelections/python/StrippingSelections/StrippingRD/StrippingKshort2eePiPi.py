@@ -19,7 +19,8 @@ default_config =  {
                         'eMINIPCHI2'    : 16            , #adimensional
                         'ePIDe'         : -4            , #adimensional
                         'eGhostProb'    : 0.5           , #adimensional
-    
+
+                        'PionPT'        : 100           , #MeV
                         'PionMINIPCHI2' : 16            , #adimensional
                         'PionPIDK'      : 5             , #adimensional
                         'PionGhostProb' : 0.5           , #adimensional
@@ -45,7 +46,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsPions, StdNoPIDsElectrons
+from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsElectrons
 from StandardParticles import StdDiElectronFromTracks
 #from StandardParticles import StdAllLoosePions, StdAllLooseElectrons
 
@@ -63,6 +64,7 @@ class Kshort2eePiPiConf(LineBuilder) :
                               'eMINIPCHI2',
                               'ePIDe',
                               'eGhostProb',
+                              'PionPT',
                               'PionMINIPCHI2',
                               'PionGhostProb',
                               'PionPIDK',
@@ -87,7 +89,7 @@ class Kshort2eePiPiConf(LineBuilder) :
         
         # 1 : Make e's for Kshort2eePiPi
         selElecsForeePiPi = makeElecsForeePiPi(name   = "ElecsFor"+name,
-                                               elecs  = StdNoPIDsElectrons,
+                                               elecs  = StdAllNoPIDsElectrons,
                                                params = config,
                                                )
     
@@ -98,7 +100,7 @@ class Kshort2eePiPiConf(LineBuilder) :
 
         # 2 : Make Pions for Kshort2eePiPi
         selPionsForeePiPi = makePionsForeePiPi(name   = "PionsFor"+name,
-                                               pions  = StdNoPIDsPions,
+                                               pions  = StdAllNoPIDsPions,
                                                params = config,
                                                )
             
@@ -214,7 +216,8 @@ def makeElecsForeePiPi(name, elecs, params):
     Electron selection from StdNoPIDsElectrons
     """
     
-    _code = "(MIPCHI2DV(PRIMARY) > %(eMINIPCHI2)s) &"\
+    _code = "(PT > %(ePT)s) &"\
+            "(MIPCHI2DV(PRIMARY) > %(eMINIPCHI2)s) &"\
             "(TRGHOSTPROB < %(eGhostProb)s) &"\
             "(PIDe > %(ePIDe)s)" % params
     
@@ -248,7 +251,8 @@ def makePionsForeePiPi(name, pions, params):
     """
     Pion selection from StdNoPIDsPions
     """
-    _code = "(MIPCHI2DV(PRIMARY) > %(PionMINIPCHI2)s) &"\
+    _code = "(PT > %(PionPT)s) &"\
+            "(MIPCHI2DV(PRIMARY) > %(PionMINIPCHI2)s) &"\
             "(TRGHOSTPROB < %(PionGhostProb)s) &"\
             "(PIDK < %(PionPIDK)s)" % params
     
