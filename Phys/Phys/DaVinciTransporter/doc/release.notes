@@ -4,7 +4,7 @@
 !==============================================================================
 
 ! 2015-08-24 - Chris Jones
- - Add TES location to warnings and errors in ParticleTransporter'
+ - Add TES location to warnings and errors in ParticleTransporter
 
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
