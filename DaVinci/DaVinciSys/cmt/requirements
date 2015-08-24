@@ -36,7 +36,7 @@ use StrippingCache   v1r1     Phys
 
 # Packages
 use  DaVinci         v37r2p1  Phys   # DaVinci coordinator
-use  DaVinciTests    v2r36
+use  DaVinciTests    v2r37
 use  KaliCalo        v4r18    Phys   # Olivier Deschamps
 use  Tesla           v1r11    Phys   # Sean Benson
 
