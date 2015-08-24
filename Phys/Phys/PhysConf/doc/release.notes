@@ -5,6 +5,8 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+!========================= PhysConf v1r29 2015-08-24 =========================
+
 ! 2015-08-24 - Chris Jones
  - Only configure Reco 14 ANNPID recalibration sequences when DataType is
    set to a Run I year.

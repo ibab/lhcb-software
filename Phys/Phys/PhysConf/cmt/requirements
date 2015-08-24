@@ -4,7 +4,7 @@
 # Maintainer : Patrick Koppenburg
 # ============================================================================
 package           PhysConf
-version           v1r28
+version           v1r29
 
 # ============================================================================
 # Structure, i.e. directories to process.

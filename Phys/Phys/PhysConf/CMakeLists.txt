@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PhysConf
 ################################################################################
-gaudi_subdir(PhysConf v1r28)
+gaudi_subdir(PhysConf v1r29)
 
 gaudi_depends_on_subdirs(Calo/CaloPIDs
                          Calo/CaloReco
