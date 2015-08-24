@@ -4,6 +4,8 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v5r5 2015-08-24 =========================
+
 ! 2015-08-23 - Chris Jones
  - Add protection against null Track SmartRefs in RecVertex packer.
 
