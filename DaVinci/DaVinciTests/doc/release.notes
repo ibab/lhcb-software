@@ -4,6 +4,8 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciTests v2r37 2015-08-24 =========================
+
 ! 2015-08-20 - Chris Jones
  - Add QM tests for S22 and S23. Both currently use Reco15EM FULL.DSTs, the
    S23 test will be updated to use Reco15 RDSTs once these are available as
