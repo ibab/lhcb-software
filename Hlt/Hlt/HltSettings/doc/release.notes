@@ -3,6 +3,9 @@
 ! Responsible : Vladimir Gligorov, Mika Vesterinen, Roel Aaij
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+! 2015-08-24 - Mike Sokoloff
+  -- modified CharmHad_25ns_August2015.py to allow separate dictionary entries
+  -- for specifi D+ and Ds final states.
 
 ! 2015-08-20 - Patrick Robbe
  - python/HltSettings/protonNeon_2015.py: new threshold file for proton Neon
