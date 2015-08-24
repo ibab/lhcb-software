@@ -76,7 +76,7 @@ namespace Velo
                              double&, double&, double&, double&, double&, double&, LHCb::State&, LHCb::State& );
     void distance( const LHCb::RecVertex*, LHCb::State, double&, double&, int );
     
-    StatusCode checkMCAssoc( const LHCb::Track*, const LHCb::RecVertex*, LHCb::MCVertex*&, double&, unsigned int& );
+    StatusCode checkMCAssoc( const LHCb::Track*, const LHCb::RecVertex*, const LHCb::MCVertex*&, Gaudi::LorentzVector&, unsigned int& );
 
     const LHCb::Track* matchTrack(const LHCb::Track&, const LHCb::RecVertex&) const ;
   };
