@@ -46,7 +46,7 @@ from Configurables import ( LHCbApp, PhysConf, AnalysisConf,
                             DstConf, LumiAlgsConf, DDDBConf )
 
 # Can be enabled for next full stack release
-#PhysConf().OutputLevel     = appMgr.OutputLevel
+PhysConf().OutputLevel     = appMgr.OutputLevel
 #AnalysisConf().OutputLevel = appMgr.OutputLevel
 
 datatype =  "2012"

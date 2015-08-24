@@ -89,7 +89,7 @@ from Configurables import ( LHCbApp, PhysConf, AnalysisConf,
 #LHCbApp().CondDBtag = "cond-20150805"
 
 # Can be enabled for next full stack release
-#PhysConf().OutputLevel     = appMgr.OutputLevel
+PhysConf().OutputLevel     = appMgr.OutputLevel
 #AnalysisConf().OutputLevel = appMgr.OutputLevel
 
 datatype =  "2015"
