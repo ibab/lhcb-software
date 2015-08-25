@@ -6,7 +6,7 @@ find_package(GaudiProject)
 #---------------------------------------------------------------
 
 # Declare project name and version
-gaudi_project(Brunel v48r1
+gaudi_project(Brunel v48r2
               USE Rec v18r1
               DATA AppConfig VERSION v3r*
                    FieldMap VERSION v5r*
