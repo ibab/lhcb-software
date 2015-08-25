@@ -152,6 +152,8 @@ GaudiTask::GaudiTask(IInterface*)
   : DimTaskFSM(0), m_handle(0), m_appMgr(0), m_subMgr(0), m_incidentSvc(0), m_msgSvc(0), 
     m_nerr(0), m_ignoreIncident(false)
 {
+  const char* call_finalize = ::getenv("DAQ_INHIBIT_FINALIZE");
+  m_execFinalize = 0 == call_finalize;
   propertyMgr().declareProperty("Runable",        m_runable     = "LHCb::OnlineRunable/Runable");
   propertyMgr().declareProperty("EventLoop",      m_evtloop     = "LHCb::OnlineRunable/EmptyEventLoop");
   propertyMgr().declareProperty("MessageSvcType",         m_msgsvcType      = "MessageSvc");
@@ -160,6 +162,8 @@ GaudiTask::GaudiTask(IInterface*)
   propertyMgr().declareProperty("AutoStart",              m_autostart       = 0);
   propertyMgr().declareProperty("DeclareStateOnPAUSE",    m_declarePAUSE    = true);
   propertyMgr().declareProperty("DeclareStateOnCONTINUE", m_declareCONTINUE = true);
+  propertyMgr().declareProperty("ExecuteFinalize",        m_execFinalize);
+
   ::lib_rtl_create_lock(0,&s_lock);
   m_eventThread = false;
   s_task = this;
@@ -239,11 +243,17 @@ void GaudiTask::output(int level, const string& s)  {
 }
 
 StatusCode GaudiTask::unload()  {
-  m_python = auto_ptr<PythonInterpreter>(0);
-  m_appMgr->stop();
-  m_appMgr->finalize();
-  m_appMgr->terminate();
-  return DimTaskFSM::unload();
+  if ( m_execFinalize )  {
+    m_python = auto_ptr<PythonInterpreter>(0);
+    m_appMgr->stop();
+    m_appMgr->finalize();
+    m_appMgr->terminate();
+    return DimTaskFSM::unload();
+  }
+  declareState(ST_UNKNOWN);
+  ::lib_rtl_sleep(100);
+  ::_exit(0);
+  return StatusCode::SUCCESS;
 }
 
 /// Access to message service object
@@ -578,7 +588,7 @@ int GaudiTask::goApplication()  {
   return 0;
 }
 
-/// Finalize second layer application manager for GAUDI Application
+/// Stop second layer application manager for GAUDI Application
 int GaudiTask::stopApplication()  {
   if ( m_subMgr )  {
     // If the event thread finished, join it....
@@ -655,7 +665,7 @@ int GaudiTask::finalizeApplication()  {
         m_incidentSvc->release();
       }
       m_incidentSvc= 0;
-      sc = m_subMgr ? m_subMgr->finalize() : StatusCode::SUCCESS;
+      sc = m_subMgr && m_execFinalize ? m_subMgr->finalize() : StatusCode::SUCCESS;
       if ( !sc.isSuccess() )   {
         output(MSG::ERROR,"Failed to finalize the application.");
         gauditask_task_unlock();
@@ -682,19 +692,23 @@ int GaudiTask::terminateApplication()  {
         m_incidentSvc->release();
       }
       m_incidentSvc= 0;
-      StatusCode sc = m_subMgr->terminate();
-      if ( sc.isSuccess() )   {
-        // Release is called by Gaudi::setInstance; danger of releasing twice?
-        // m_subMgr->release();
-        m_subMgr = 0;
-        PythonGlobalState state;
-        m_python = auto_ptr<PythonInterpreter>(0);
-        Gaudi::setInstance(m_appMgr);
-        return 1;
+      if ( m_execFinalize )  {
+	StatusCode sc = m_subMgr->terminate();
+	if ( sc.isSuccess() )   {
+	  // Release is called by Gaudi::setInstance; danger of releasing twice?
+	  // m_subMgr->release();
+	  m_subMgr = 0;
+	  PythonGlobalState state;
+	  m_python = auto_ptr<PythonInterpreter>(0);
+	  Gaudi::setInstance(m_appMgr);
+	  return 1;
+	}
+	MsgStream log(msgSvc(), name());
+	log << MSG::ERROR << "Failed to terminate the application" << endmsg;
+	return 0;
       }
-      MsgStream log(msgSvc(), name());
-      log << MSG::ERROR << "Failed to terminate the application" << endmsg;
-      return 0;
+      Gaudi::setInstance(m_appMgr);
+      return 1;      
     }
     catch(const exception& e) {
       MsgStream log(msgSvc(), name());

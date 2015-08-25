@@ -704,6 +704,7 @@ StatusCode HltBufferedIOReader::i_run()  {
         }
         if (status == MBM_NORMAL)        {
           MBM::EventDesc& dsc = m_producer->event();
+	  RawBank* mdf_bank = 0;
           char*  read_ptr = 0;
           size_t read_len = 0;
           if ( is_mdf ) {
@@ -718,6 +719,7 @@ StatusCode HltBufferedIOReader::i_run()  {
             read_len = evt_size-sizeof(size_buf);
             dsc.len  = evt_size+b->hdrSize();
             dsc.type = EVENT_TYPE_EVENT;
+	    mdf_bank = b;
           }
           else {
             static int id = -1;
@@ -777,10 +779,18 @@ StatusCode HltBufferedIOReader::i_run()  {
               return StatusCode::FAILURE;
             }
             //cout << "Event length:" << dsc.len << endl;
-            dsc.mask[0] = partid;
-            dsc.mask[1] = ~0x0;
-            dsc.mask[2] = ~0x0;
-            dsc.mask[3] = ~0x0;
+	    if ( 0 != mdf_bank )  {
+	      // If the first bank is a MDF bank, we copy the real trigger mask
+	      MDFHeader* h = (MDFHeader*)mdf_bank->data();
+	      ::memcpy(dsc.mask,h->subHeader().H1->triggerMask(),sizeof(dsc.mask));	      
+	    }
+	    else  {
+	      // If MEP, we emulate a trigger mask with the partition ID
+	      dsc.mask[0] = partid;
+	      dsc.mask[1] = ~0x0;
+	      dsc.mask[2] = ~0x0;
+	      dsc.mask[3] = ~0x0;
+	    }
             //
             // Declare the event to the buffer manager
             //

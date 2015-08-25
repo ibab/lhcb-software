@@ -86,12 +86,14 @@ namespace LHCb  {
     /// Flag to ignore incidents on PAUSE/CONTINUE
     bool              m_ignoreIncident;
 
-    /// Flag to not declare state on DAQ_PAUSE incident
+    /// Property: Flag to not declare state on DAQ_PAUSE incident (default: true)
     bool              m_declarePAUSE;
-    /// Flag to not declare state on DAQ_CONTINUE incident
+    /// Property: Flag to not declare state on DAQ_CONTINUE incident (default: true)
     bool              m_declareCONTINUE;
-    
-    // Static thread routine to execute a Gaudi runable
+    /// Property: Flag to indicate that finalize/terminate should be(not be) called (default: true)
+    bool              m_execFinalize;
+
+    /// Static thread routine to execute a Gaudi runable
     static int execRunable(void* arg);
 
     /// Access to message service object
