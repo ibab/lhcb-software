@@ -5,12 +5,13 @@
 #
 #  @author Maurizio MARTINELLI maurizio.martinelli@cern.ch
 #  @author Simone STRACKA simone.stracka@cern.ch
+#  @author Mike Sokoloff  msokolof@cern.ch
 #=============================================================================
 """ Set of Hlt2-lines suitable for the study of charm decay channels with
     four particles in the final state.
 """
 #=============================================================================
-__author__  = "Maurizio MARTINELLI maurizio.martinelli@cern.ch ; Simone STRACKA simone.stracka@cern.ch"
+__author__  = "Maurizio MARTINELLI maurizio.martinelli@cern.ch ; Simone STRACKA simone.stracka@cern.ch, Mike SOKOLOFF msokolof@cern.ch"
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
@@ -65,10 +66,17 @@ class CharmHadD02HHHHLines() :
                 'DeltaM_MIN'               :  0.0,
                 'DeltaM_MAX'               :  170.0 * MeV
         }
-
-        cuts = {   'D02HHHH'      : cutsForD2HHHHComb
-                 , 'D02HHHHMass'  : massForD2HHHH
-                 , 'DstToD02HHHH' : cutsForD2HHHHTag
+        cutsForMuTag = {
+                                        'DeltaM_AM_MIN'            :  100.0 * MeV,
+                                        'DeltaM_MIN'               :  100.0 * MeV,
+                                        'DeltaM_AM_MAX'            :  5000. * MeV,
+                                        'DeltaM_MAX'               :  5000. * MeV,
+                                        'TagVCHI2PDOF_MAX'         :  25.0
+        }
+        cuts = {   'D02HHHH'        : cutsForD2HHHHComb
+                 , 'D02HHHHMass'    : massForD2HHHH
+                 , 'DstToD02HHHH'   : cutsForD2HHHHTag
+                 , 'DSTP_HHHH_MUTAG_CPV' : cutsForMuTag
         }
 
         return cuts
@@ -83,6 +91,7 @@ class CharmHadD02HHHHLines() :
         from Stages import D02HHHHMass_D02KKPiPi, D02HHHHMass_D02KKKPi
         from Stages import DstToD02HHHH_D02CFKPiPiPi
         from Stages import DV4BCombiner, Dst2D0pi, TagDecay
+        from Stages import SharedSoftTagChild_mu
 
         ## D*+ -> D0 pi+ reconstruction on D0 with wide mass windows
         DstToD02HHHH_D02PiPiPiPiWideTag = TagDecay('DstpComb'
@@ -132,6 +141,33 @@ class CharmHadD02HHHHLines() :
                 , decay = ["[D*(2010)- -> D0 pi-]cc"])
 
 
+## Add muon-tagged versions of the D*+/- lines following the form used
+## for MuTag_DstpMu_Dstp2D0Pip_D02KpPim in D02HHLines.py  [150825, mds]
+        MuTag_Dstp_D02PimPimPipPip = TagDecay('DSTP_HHHH_MUTAG_CPV'
+                        , ["[B0 -> D*(2010)+ mu-]cc","[Delta(1905)++ -> D*(2010)+ mu+]cc"]
+                        , inputs = [ DstToD02HHHH_D02PiPiPiPiTag, SharedSoftTagChild_mu ]
+                        , ReFitPVs = True)
+        MuTag_Dstp_D02KmKpPimPip = TagDecay('DSTP_HHHH_MUTAG_CPV'
+                        , ["[B0 -> D*(2010)+ mu-]cc","[Delta(1905)++ -> D*(2010)+ mu+]cc"]
+                        , inputs = [ DstToD02HHHH_D02KKPiPiTag, SharedSoftTagChild_mu ]
+                        , ReFitPVs = True)
+        MuTag_Dstp_D02KmPimPipPip = TagDecay('DSTP_HHHH_MUTAG_CPV'
+                        , ["[B0 -> D*(2010)+ mu-]cc","[Delta(1905)++ -> D*(2010)+ mu+]cc"]
+                        , inputs = [ DstToD02HHHH_D02CFKPiPiPi, SharedSoftTagChild_mu ]
+                        , ReFitPVs = True)
+        MuTag_Dstp_D02KpPimPimPip = TagDecay('DSTP_HHHH_MUTAG_CPV'
+                        , ["[B0 -> D*(2010)+ mu-]cc","[Delta(1905)++ -> D*(2010)+ mu+]cc"]
+                        , inputs = [ DstToD02HHHH_D02DCSKPiPiPiTag, SharedSoftTagChild_mu ]
+                        , ReFitPVs = True)
+        MuTag_Dstp_D02KmKmKpPip = TagDecay('DSTP_HHHH_MUTAG_CPV'
+                        , ["[B0 -> D*(2010)+ mu-]cc","[Delta(1905)++ -> D*(2010)+ mu+]cc"]
+                        , inputs = [ DstToD02HHHH_D02CFKKKPiTag, SharedSoftTagChild_mu ]
+                        , ReFitPVs = True)
+        MuTag_Dstp_D02KmKpKpPim = TagDecay('DSTP_HHHH_MUTAG_CPV'
+                        , ["[B0 -> D*(2010)+ mu-]cc","[Delta(1905)++ -> D*(2010)+ mu+]cc"]
+                        , inputs = [ DstToD02HHHH_D02DCSKKKPiTag, SharedSoftTagChild_mu ]
+                        , ReFitPVs = True)
+
 
         ## The stages dictionary should be a clear two-column list from
         ##   which the lines defined in this module can be directly read.
@@ -150,6 +186,12 @@ class CharmHadD02HHHHLines() :
                 , 'Dstp2D0Pip_D02KpPimPimPipTurbo'  : [DstToD02HHHH_D02DCSKPiPiPiTag]
                 , 'Dstp2D0Pip_D02KmKmKpPipTurbo'    : [DstToD02HHHH_D02CFKKKPiTag]
                 , 'Dstp2D0Pip_D02KmKpKpPimTurbo'    : [DstToD02HHHH_D02DCSKKKPiTag]
+                , 'MuTag_Dstp_D02PimPimPipPipTurbo' : [MuTag_Dstp_D02PimPimPipPip]
+                , 'MuTag_Dstp_D02KmKpPimPipTurbo'   : [MuTag_Dstp_D02KmKpPimPip]
+                , 'MuTag_Dstp_D02KmPimPipPipTurbo'  : [MuTag_Dstp_D02KmPimPipPip]
+                , 'MuTag_Dstp_D02KpPimPimPipTurbo'  : [MuTag_Dstp_D02KpPimPimPip]
+                , 'MuTag_Dstp_D02KmKmKpPipTurbo'    : [MuTag_Dstp_D02KmKmKpPip]
+                , 'MuTag_Dstp_D02KmKpKpPimTurbo'    : [MuTag_Dstp_D02KmKpKpPim]
 
                 ## Wide mass lines (plan for obsolescence)
                 , 'D02PimPimPipPip_WideTurbo' : [D02HHHH_D02PiPiPiPi]
