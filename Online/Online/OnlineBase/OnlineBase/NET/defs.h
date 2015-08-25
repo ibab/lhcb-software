@@ -46,6 +46,7 @@
 #include <cerrno>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #define socket_close close

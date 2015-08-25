@@ -17,5 +17,5 @@ gaudi_add_library(OnlineBase
                   INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/OnlineBase
                   LINK_LIBRARIES ${CMAKE_DL_LIBS} -lrt)
 
-message(WARNING "OnlineBase is used in CMT to define compile options")
+#message(WARNING "OnlineBase is used in CMT to define compile options")
 

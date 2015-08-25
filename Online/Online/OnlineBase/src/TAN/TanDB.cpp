@@ -565,23 +565,23 @@ int TanDataBase::Dump( std::ostream& os )  {
         for ( qentry_t* a  = _NextEntry(&e.al), *last = 0; 
               a != _TheEntry(&e.al) && a != 0 && a != last;
               last = a, a  = _NextEntry(a) )  
-        {
-          Entry* ee  = (Entry*) ((char*)a - sizeof(qentry_t));
-          a = (qentry_t*)&ee->al;
-          switch ( htonl(ee->m_msg.m_function) ) {
-          case TanMessage::ALLOCATE:       func = "ALLOC";       break;
-          case TanMessage::DEALLOCATE:     func = "DEALLOC";     break;
-          case TanMessage::INQUIRE:        func = "INQUIRE";     break;
-          case TanMessage::ALIAS:          func = "ALIAS";       break;
-          case TanMessage::DEALIAS:        func = "DEALIAS";     break;
-          case TanMessage::DUMP:           func = "DUMPDB";      break;
-          default:                         func = "-----";       break;
-          }
-          ::snprintf(text,sizeof(text),"%-32s %04X Als  %-4d %-3s %-7s%-4d%-32s %s",
-                     ee->_Name(), ee->port(), ee->channel(), ee->m_dead==1 ? "***" : "",
-                     func, ee->m_msg._Length(), ee->m_msg._Name(), inet_ntoa(ee->m_msg.address()));
-          os << text << std::endl;
-        }
+	  {
+	    Entry* ee  = (Entry*) ((char*)a - sizeof(qentry_t));
+	    a = (qentry_t*)&ee->al;
+	    switch ( htonl(ee->m_msg.m_function) ) {
+	    case TanMessage::ALLOCATE:       func = "ALLOC";       break;
+	    case TanMessage::DEALLOCATE:     func = "DEALLOC";     break;
+	    case TanMessage::INQUIRE:        func = "INQUIRE";     break;
+	    case TanMessage::ALIAS:          func = "ALIAS";       break;
+	    case TanMessage::DEALIAS:        func = "DEALIAS";     break;
+	    case TanMessage::DUMP:           func = "DUMPDB";      break;
+	    default:                         func = "-----";       break;
+	    }
+	    ::snprintf(text,sizeof(text),"%-32s %04X Als  %-4d %-3s %-7s%-4d%-32s %s",
+		       ee->_Name(), ee->port(), ee->channel(), ee->m_dead==1 ? "***" : "",
+		       func, ee->m_msg._Length(), ee->m_msg._Name(), inet_ntoa(ee->m_msg.address()));
+	    os << text << std::endl;
+	  }
       }
     }
   }
@@ -638,26 +638,26 @@ int TanDataBase::DumpXML(std::ostream& s)  {
         for ( qentry_t* a  = _NextEntry(&e.al), *last = 0; 
               a != _TheEntry(&e.al) && a != 0 && a != last;
               last = a, a  = _NextEntry(a), ++j )  
-        {
-          Entry* ee  = (Entry*) ((char*)a - sizeof(qentry_t));
-          a = (qentry_t*)&ee->al;
-          switch ( htonl(ee->m_msg.m_function) ) {
-          case TanMessage::ALLOCATE:       func = "ALLOC";       break;
-          case TanMessage::DEALLOCATE:     func = "DEALLOC";     break;
-          case TanMessage::INQUIRE:        func = "INQUIRE";     break;
-          case TanMessage::ALIAS:          func = "ALIAS";       break;
-          case TanMessage::DEALIAS:        func = "DEALIAS";     break;
-          case TanMessage::DUMP:           func = "DUMPDB";      break;
-          default:                         func = "-----";       break;
-          }
-          XML::Guard aliases(os, "Aliases", i);
-          os << XML::item("Name", XML::text(ee->_Name()))
-             << XML::item("Port", ee->port())
-             << XML::item("Channel", ee->channel())
-             << XML::item("Dead", ee->m_dead)
-             << XML::item("RemName", XML::text(ee->m_msg._Name()))
-             << XML::item("Address", XML::text(inet_ntoa(ee->m_msg.address())));
-        }
+	  {
+	    Entry* ee  = (Entry*) ((char*)a - sizeof(qentry_t));
+	    a = (qentry_t*)&ee->al;
+	    switch ( htonl(ee->m_msg.m_function) ) {
+	    case TanMessage::ALLOCATE:       func = "ALLOC";       break;
+	    case TanMessage::DEALLOCATE:     func = "DEALLOC";     break;
+	    case TanMessage::INQUIRE:        func = "INQUIRE";     break;
+	    case TanMessage::ALIAS:          func = "ALIAS";       break;
+	    case TanMessage::DEALIAS:        func = "DEALIAS";     break;
+	    case TanMessage::DUMP:           func = "DUMPDB";      break;
+	    default:                         func = "-----";       break;
+	    }
+	    XML::Guard aliases(os, "Aliases", i);
+	    os << XML::item("Name", XML::text(ee->_Name()))
+	       << XML::item("Port", ee->port())
+	       << XML::item("Channel", ee->channel())
+	       << XML::item("Dead", ee->m_dead)
+	       << XML::item("RemName", XML::text(ee->m_msg._Name()))
+	       << XML::item("Address", XML::text(inet_ntoa(ee->m_msg.address())));
+	  }
       }
     }
   }

@@ -35,6 +35,11 @@ static const int SNDBUF_VALUE          = 8192;
 static const int RCVBUF_VALUE        = CHOP_SIZE;
 //static const int RCVBUF_VALUE          = 100*CHOP_SIZE;
 
+static const int NET_KEEPALIVE_TIMEOUT     = 15;
+static const int NET_KEEPALIVE_MAXPACKETS  = 3;
+static const int NET_KEEPALIVE_INTERVAL    = NET_KEEPALIVE_TIMEOUT/3;
+
+
 namespace DataTransfer  {
   struct netentry_t {
     int           chan;
@@ -339,6 +344,16 @@ NetErrorCode NET::accept()   {
   e->chan = ::accept(m_me.chan, (sockaddr*)&e->addr, &n);
   if ( e->chan > 0 )  {
     netheader_t h;
+    /// Enable keepalive for the given channel
+    int on = 1, timeout=NET_KEEPALIVE_TIMEOUT;
+    int maxpacket=NET_KEEPALIVE_MAXPACKETS, interval=NET_KEEPALIVE_INTERVAL;
+    ::setsockopt(e->chan, SOL_SOCKET, SO_KEEPALIVE, (char*)&on, sizeof(on));
+    /// Set the keepalive poll interval to something small.
+    /// Warning: this may not be portable!
+    ::setsockopt(e->chan, IPPROTO_TCP, TCP_KEEPIDLE,  (char*)&timeout, sizeof(timeout));
+    ::setsockopt(e->chan, IPPROTO_TCP, TCP_KEEPCNT,   (char*)&maxpacket, sizeof(maxpacket));
+    ::setsockopt(e->chan, IPPROTO_TCP, TCP_KEEPINTVL, (char*)&interval, sizeof(interval));
+
     int status = e->recv(h.name,sizeof(h.name),0);
     h.name[sizeof(h.name)-1] = 0;
     e->name = h.name;
