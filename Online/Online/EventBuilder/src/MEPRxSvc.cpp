@@ -373,12 +373,13 @@ int MEPRx::analyzeMEP(MEPHdr *mep, uint &nfrag)
 void MEPRx::incompleteEvent()
 {
     int i, nmiss = 0;
+    MSG::Level sev = m_parent->m_partitionName == "LHCb" ? MSG::INFO : MSG::ERROR;
 
     m_parent->addIncompleteEvent();
     for (i = 0; i < m_nSrc; ++i)
         nmiss += (m_seen[i] ? 0 : 1);
     if (nmiss <= m_nSrc / 2) {
-        m_log << MSG::ERROR << std::dec << "Run # " << m_runNumber
+        m_log << sev << std::dec << "Run # " << m_runNumber
               << " - Incomplete Event #" << m_l0ID << "  No packet from: ";
         for (int i = 0; i < m_nSrc; ++i)
             if (!m_seen[i]) {
@@ -386,7 +387,7 @@ void MEPRx::incompleteEvent()
                 m_parent->m_misPkt[i]++;
             }
     } else {
-        m_log << MSG::ERROR << std::dec << "Run # " << m_runNumber
+        m_log << sev << std::dec << "Run # " << m_runNumber
               << " - Incomplete Event #" << m_l0ID << "  Only packets from: ";
         for (int i = 0; i < m_nSrc; ++i)
             if (m_seen[i]) {
@@ -859,21 +860,22 @@ void MEPRxSvc::freeRx()
 void MEPRxSvc::forceEvent(RXIT dsc, ForceReason reason)
 {
     MsgStream log(msgSvc(), "MEPRx"); // message stream is NOT thread-safe
+    MSG::Level sev = m_partitionName == "LHCb" ? MSG::INFO : MSG::ERROR;
     switch (reason) {
     case TIME_OUT:
-        log << MSG::ERROR << "Time-out for event " << (*dsc)->m_l0ID
+        log << sev << "Time-out for event " << (*dsc)->m_l0ID
             << " started at " << (*dsc)->m_tFirstFrag - m_tzero
             << " last fragment received " << m_tLastRx - m_tzero << " age "
             << (m_tLastRx - (*dsc)->m_tFirstFrag) << " us > limit" << endmsg;
         break;
     case NO_BUFFER:
-        log << MSG::ERROR << "Flush oldest event " << (*dsc)->m_l0ID
+        log << sev << "Flush oldest event " << (*dsc)->m_l0ID
             << " started at " << (*dsc)->m_tFirstFrag - m_tzero
             << " last fragment received " << m_tLastRx - m_tzero << " age "
             << (m_tLastRx - (*dsc)->m_tFirstFrag) << " us " << endmsg;
         break;
     case END_OF_RUN:
-        log << MSG::ERROR << "Flush remaining events because of end of run"
+        log << MSG::INFO << "Flush remaining events because of end of run"
             << endmsg;
         break;
     }
