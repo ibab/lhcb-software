@@ -23,6 +23,13 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v26r3> 2015-08-17 Bender v26r2p1 based on the DaVinci v37r3p1</A>
+<ul>						 
+<li>Based on the DaVinci v37r2p1</li>
+<li>Similar to v26r2p1 </li>
+<li>fix recently introduced bug in <code>dst-dump</code> for simulated data</li>
+<ul>						 
+
 <A NAME=v26r2p1> 2015-08-17 Bender v26r2p1 based on the DaVinci v37r1p3</A>
 <ul>						 
 <li>Based on the DaVinci v37r1p3</li>
