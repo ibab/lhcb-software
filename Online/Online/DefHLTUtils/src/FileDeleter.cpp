@@ -8,6 +8,8 @@
 #include "dic.hxx"
 #include <string>
 #include <vector>
+#include "RTL/rtl.h"
+#include "time.h"
 
 class dyn_string : public std::vector<std::string >
 {
@@ -56,12 +58,14 @@ size_t StringReplace(std::string &in, const char *patt, std::string &repl)
   }
   return res;
 }
-class CommandInfo : public DimUpdatedInfo
+class DelCommandInfo : public DimUpdatedInfo
 {
   public:
+    FILE *logf;
     std::string m_cmd;
-    CommandInfo(char *name):DimUpdatedInfo((const char*)name,(char*)"????")
+    DelCommandInfo(char *name, FILE *lf):DimUpdatedInfo((const char*)name,(char*)"????")
     {
+      logf = lf;
       m_cmd = "";
     }
     void infoHandler()
@@ -72,6 +76,9 @@ class CommandInfo : public DimUpdatedInfo
       dyn_string *splt1 = Strsplit(input," ");
       std::string cmd = splt1->at(0);
       m_cmd = input;
+      time_t t=time(0);
+      fprintf(logf,"%s Got Command %s\n",ctime(&t),m_cmd.c_str());
+      fflush(logf);
       if (cmd == "delete")
       {
         std::string args;
@@ -94,10 +101,37 @@ class CommandInfo : public DimUpdatedInfo
         {
           if (splt2->at(i).size() == 0) continue;
           shcomm = "sudo rm -rf /localdisk/hlt1/Run_*"+splt2->at(i)+"_*.mdf";
-          printf("executing command %s\n",shcomm.c_str());
+          fprintf(logf,"executing command %s\n",shcomm.c_str());
+          fflush(logf);
           int status = ::system(shcomm.c_str());
         }
       }
+      return;
+    }
+};
+class GenCommandInfo : public DimUpdatedInfo
+{
+  public:
+    FILE *logf;
+    std::string m_cmd;
+    GenCommandInfo(char *name,FILE *lf):DimUpdatedInfo((const char*)name,(char*)"????")
+    {
+      logf = lf;
+      m_cmd = "";
+    }
+    void infoHandler()
+    {
+      char *input;
+      input = getString();
+      if (strcmp(input,"????") == 0) return;
+      m_cmd = input;
+      time_t t=time(0);
+      fprintf(logf,"%s Got Generic Command %s\n",ctime(&t),m_cmd.c_str());
+      fflush(logf);
+      std::string shcomm = "sudo /bin/bash "+m_cmd;
+      fprintf(logf,"executing command %s\n",shcomm.c_str());
+      fflush(logf);
+      int status = ::system(shcomm.c_str());
       return;
     }
 };
@@ -108,6 +142,11 @@ int main(int argc, char** argv)
   {
     srvnam = argv[1];
   }
-  CommandInfo cmd(srvnam);
+  FILE *logf;
+  std::string nname = RTL::nodeNameShort();
+  std::string fname = "/group/online/FileDeleterLogs/"+nname;
+  logf = fopen(fname.c_str(),"a");
+  DelCommandInfo cmd(srvnam,logf);
+  GenCommandInfo gencmd("/Farm/GenericCommand",logf);
   ::sleep(0xffffffff);
 }
