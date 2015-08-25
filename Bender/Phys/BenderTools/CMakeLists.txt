@@ -1,7 +1,7 @@
 ################################################################################
 # Package: BenderTools
 ################################################################################
-gaudi_subdir(BenderTools v26r2p2)
+gaudi_subdir(BenderTools v26r3)
 
 gaudi_depends_on_subdirs(Phys/Bender
                          Phys/PhysConf)
