@@ -302,7 +302,7 @@ StatusCode ProtoParticlePacker::check( const Data & dataA,
           iC.first != dataA.calo().end() && iC.second != dataB.calo().end();
           ++iC.first, ++iC.second )
     {
-      if ( iC.first != iC.second ) isOK = false;
+      if ( iC.first->data() != iC.second->data() ) isOK = false;
     }
   }
 
@@ -339,7 +339,7 @@ StatusCode ProtoParticlePacker::check( const Data & dataA,
           iC.first != dataA.calo().end() && iC.second != dataB.calo().end();
           ++iC.first, ++iC.second )
     {
-      parent().info() << format( "   old CaloHypo %8x   new %8x", iC.first, iC.second )  << endmsg;
+      parent().info() << format( "   old CaloHypo %8x   new %8x", iC.first->data(), iC.second->data() )  << endmsg;
     }
     for ( auto iE = std::make_pair(dataA.extraInfo().begin(),dataB.extraInfo().begin());
           iE.first != dataA.extraInfo().end() && iE.second != dataB.extraInfo().end();

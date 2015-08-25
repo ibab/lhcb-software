@@ -4,6 +4,11 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-08-25 - Chris Jones
+ - Fix a bug in PackedProtoParticle::check where for CaloHypos the iterator
+   value was compared, instead of the memory location of the objects the
+   SmartRefs point to ...
+
 !========================= EventPacker v5r5 2015-08-24 =========================
 
 ! 2015-08-23 - Chris Jones
