@@ -22,7 +22,7 @@ use  RelatedInfoTools   v1r2      Phys
 use  DSTWriters         v4r22     Phys
 use  PhysConf           v1r29     Phys
 use  DaVinciTransporter v3r13     Phys
-use  EventPacker        v5r5      Event
+use  EventPacker        v5r6      Event
 use  GaudiConf          v19r12
 
 # Temporarily moved in from Stripping, for S23 release

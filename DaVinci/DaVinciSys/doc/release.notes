@@ -5,8 +5,10 @@ Purpose             : LHCb physics analysis application
 
 </PRE><H1><A NAME=v37r2p2>2015-08-25 DaVinci v37r2p2</A></H1><PRE>
 
-Patch release for Stripping 23. Includes a fix to DaVinci configurable
-to propagate the DataType to DstConf.
+Patch release for Stripping 23. 
+Includes a fix to DaVinci configurable to propagate the DataType to DstConf.
+Also includes an update to EventPacker to protect again being called 
+multiple times in the same event.
 
 </PRE><H1><A NAME=v37r2p1>2015-08-24 DaVinci v37r2p1</A></H1><PRE>
 
