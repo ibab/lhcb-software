@@ -30,17 +30,17 @@ MBMMainMenu::MBMMainMenu()
   int num_types = sizeof(buff_types)/sizeof(buff_types[0]);
   int num_names = sizeof(buff_names)/sizeof(buff_names[0]);
 
-  ::snprintf(m_name,sizeof(m_name),procName());
-  ::snprintf(m_buffName,sizeof(m_buffName),buff_names[0]);
-  ::snprintf(m_buffType,sizeof(m_buffType),buff_types[0]);
+  ::snprintf(m_name,sizeof(m_name)-1,procName());
+  ::snprintf(m_buffName,sizeof(m_buffName)-1,buff_names[4]);
+  ::snprintf(m_buffType,sizeof(m_buffType)-1,buff_types[1]);
   openMenu  (0,0,"Event Dump","General purpose MBM Dump",procName()); 
   setParam(m_name,    1,"%16s",procName(),0,0,0,0,0);
   addCommand(C_PROC,     "Process name :  ^^^^^^^^^^^^^^^^");
   setParam(&m_partID, 2,"%6X",0x7FFF,0,0XFFFFFF,0,0,0);
   addCommand(C_PART,     "Partition ID :     0X^^^^^^     ");
-  setParam(m_buffName,3,"%18s",buff_names[0],0,0,buff_names,num_names,0);
+  setParam(m_buffName,3,"%18s",buff_names[4],0,0,buff_names,num_names,0);
   addCommand(C_BUF,      "Buffer name  :^^^^^^^^^^^^^^^^^^");
-  setParam(m_buffType, 4,"%18s",buff_types[0],0,0,buff_types,num_types,1);
+  setParam(m_buffType, 4,"%18s",buff_types[1],0,0,buff_types,num_types,1);
   addCommand(C_TYP,      "Buffer type  :^^^^^^^^^^^^^^^^^^");
   addCommand(C_INC_EXC,  "Include process                 ");
   addComment(C_COM1,     "                                ");

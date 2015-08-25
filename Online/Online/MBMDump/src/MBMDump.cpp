@@ -15,6 +15,7 @@
 #include "UPI/upidef.h"
 #include "RTL/rtl.h"
 #include <cctype>
+#include <string.h>
 
 const char* MBMDump::procName()  {  
   return RTL::processName().c_str();    
@@ -41,7 +42,9 @@ static void help()  {
 static size_t print_msg(void* /* env */, int /* lvl */, const char* fmt, va_list args)  {
   char buff[1024];
   size_t result = vsprintf(buff,fmt,args);
-  ::upic_write_message(buff,"");
+  char* p = ::strchr(buff,'\n');
+  if ( p && p < buff+sizeof(buff) ) *p = 0;
+  //::upic_write_message(buff,"");
   return result;
 }
 

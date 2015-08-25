@@ -649,9 +649,9 @@ namespace MBMDump  {
     };
     BMID  m_bmID;
     int   m_partID;
-    char  m_name[18];
-    char  m_buffName[20];
-    char  m_buffType[20];
+    char  m_name[64];
+    char  m_buffName[64];
+    char  m_buffType[64];
     int*  m_memory;
     /// Buffer to requirements menus
     Requirement m_req[8];
