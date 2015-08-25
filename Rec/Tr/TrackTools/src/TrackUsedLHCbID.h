@@ -40,7 +40,7 @@ namespace TrackUsedLHCbIDImplDetail {
 }
 
 class TrackUsedLHCbID: public GaudiTool,
-	                virtual IUsedLHCbID,
+	                virtual public IUsedLHCbID,
                         virtual public IIncidentListener
 {
   public:

@@ -3,6 +3,9 @@
 ! Responsible : 
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2015-08-25 - Gerhard Raven
+ - change virtual private inheritance of interface into virtual public
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
