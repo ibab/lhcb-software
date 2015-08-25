@@ -270,6 +270,7 @@ if Fails:
 MakeTick(RunOption.OutputDirectory,RunOption.RunNumber)
 RunEnd =  (HLT2Params.RunStartTime+HLT2Params.RunDuration)*1000000000
 print "Adding the RunTick to the Database"
+print "IoV is ["+str(RunStart)+","+str(RunEnd)+"]"+", ["+time.ctime(HLT2Params.RunStartTime)+","+time.ctime(RunEnd/1000000000)+"]"
 db = CondDBUI.CondDB(DBString, create_new_db = False, readOnly=False)
 status = CondDBUI.Admin.MakeDBFromFiles(RunOption.OutputDirectory+"/onl", db,
                                    includes = [], excludes = [],
