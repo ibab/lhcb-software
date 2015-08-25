@@ -6,7 +6,7 @@
 #include "GauchoAppl/MonAdder.h"
 #include "PubSvc.h"
 #include "GaudiKernel/IToolSvc.h"
-
+#include <vector>
 // Forward declarations
 class TellDesc
 {
@@ -400,6 +400,65 @@ template <typename T> void DetMap_T<T>::divide(DetMap_T<double> &b, long long l)
 typedef std::map<int,TellDesc> TellMap_T;
 //typedef std::map<std::string,DetData_T> DetMap_T;
 //class ISimpleTrendWriter;
+
+class TellService
+{
+  public:
+    char *m_tell1names;
+    int m_names_size;
+    DimService *m_DimService;
+    TellService(std::string &servname, std::vector<std::string> &tell1s, DimServerDns *dns=0)
+    {
+      int bsiz=0;
+      size_t i;
+      for (i = 0; i < tell1s.size(); i++)
+      {
+        bsiz += tell1s[i].size();
+        bsiz++;
+      }
+      m_names_size = bsiz;
+      m_tell1names = (char*) ::malloc(m_names_size);
+      int indx = 0;
+      for (i = 0; i<tell1s.size(); i++)
+      {
+        ::strcpy(&m_tell1names[indx], tell1s[i].c_str());
+        indx += tell1s[i].size();
+        m_tell1names[indx] = 0;
+        indx++;
+      }
+      if (dns)
+      {
+        dns->autoStartOn();
+        m_DimService = new DimService(dns,servname.c_str(), "C", m_tell1names, m_names_size);
+      }
+      else
+      {
+        DimServer::autoStartOn();
+        m_DimService = new DimService(servname.c_str(), "C", m_tell1names, m_names_size);
+      }
+    };
+    void Update()
+    {;
+      m_DimService->updateService();
+    }
+
+};
+class Tell1Stats
+{
+  public:
+    float *m_LossRate;
+    unsigned int *m_LossCount;
+    int m_nents;
+    DimService *m_CSvc;
+    std::string m_CName;
+    DimService *m_RSvc;
+    std::string m_RName;
+    std::vector<std::string> compList;
+    Tell1Stats(std::vector<std::string> &TellList);
+    void fillBuffers(MonMap *mmap);
+    void makeServices(std::string prefix,DimServerDns *dns=0);
+    void Update();
+};
 class MEPSvc : public PubSvc
 {
 public:
@@ -408,6 +467,9 @@ public:
   //IInterface pure virtual member functions
   StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
   TellMap_T m_TellMap;
+  TellService *m_Tell1Service;
+  std::vector<std::string> m_TellNames;
+  std::string m_TellStrings;
   DetMap_T<long long> m_DetMap;
   DetMap_T<long long> m_DetMap_old;
   DetMap_T<long long> m_DetMap_diff;
@@ -415,6 +477,7 @@ public:
   DimService *m_LHCbDataRate;
   DimService *m_MEPTotRateSvc;
   DimService *m_MEPDefRateSvc;
+  Tell1Stats *m_Tell1Stats;
   float m_DataRate;
   float m_MEPRate;
   float m_MEPDeferred;

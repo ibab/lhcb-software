@@ -20,6 +20,78 @@ static std::string DetNames[] = {"TDet","VeloA","VeloC","TT","IT","OTA","OTC","R
 static std::vector<std::string> s_counterTypes;
 
 static std::map<std::string,std::string> s_nammap;
+
+
+
+Tell1Stats::Tell1Stats(std::vector<std::string> &TellList): m_CSvc(0),m_RSvc(0)
+{
+  m_nents = TellList.size();
+  m_LossRate = (float*)::malloc(m_nents*sizeof(float));
+  m_LossCount = (unsigned int*)::malloc(m_nents*sizeof(int));
+  for (int i=0;i<5;i++)
+  {
+    compList.push_back(s_counterTypes[i]);
+  }
+}
+void Tell1Stats::fillBuffers(MonMap *mmap)
+{
+  ::memset(m_LossRate,0,m_nents*sizeof(float));
+  ::memset(m_LossCount,0,m_nents*sizeof(unsigned int));
+  {
+    for (size_t j=0;j<compList.size();j++)
+    {
+      auto i=mmap->find(std::string("Runable/")+compList[j]);
+      if (i!=mmap->end())
+      {
+        CntrDescr *h = (CntrDescr*)MonCounter::de_serialize(i->second);
+        long *idat = (long*)h->ptr;
+        for (int k=0;k<h->nel;k++)
+        {
+          m_LossCount[k]+= (unsigned int)(idat[k]);
+        }
+      }
+      i=mmap->find(std::string("R_Runable/")+compList[j]);
+      if (i!=mmap->end())
+      {
+        CntrDescr *h = (CntrDescr*)MonCounter::de_serialize(i->second);
+        double *ddat = (double*)h->ptr;
+        for (int k=0;k<h->nel;k++)
+        {
+          m_LossRate[k]+= float(ddat[k]);
+        }
+      }
+    }
+  }
+}
+void Tell1Stats::makeServices(std::string prefix,DimServerDns *dns)
+{
+  m_CName = prefix+"Tell1/LossCount";
+  m_RName = prefix+"Tell1/LossRate";
+  if (dns == 0)
+  {
+    DimServer::autoStartOn();
+    if (m_CSvc == 0) m_CSvc = new DimService(m_CName.c_str(),"I",m_LossCount,m_nents*sizeof(int));
+    if (m_RSvc ==0) m_RSvc = new DimService(m_RName.c_str(),"F",m_LossRate,m_nents*sizeof(double));
+  }
+  else
+  {
+    dns->autoStartOn();
+    if (m_CSvc == 0) m_CSvc = new DimService(dns,m_CName.c_str(),"I",m_LossCount,m_nents*sizeof(int));
+    if (m_RSvc ==0) m_RSvc = new DimService(dns,m_RName.c_str(),"F",m_LossRate,m_nents*sizeof(double));
+  }
+}
+void Tell1Stats::Update()
+{
+  m_CSvc->updateService(m_LossCount,m_nents*sizeof(int));
+  m_RSvc->updateService(m_LossRate,m_nents*sizeof(float));
+}
+
+
+
+
+
+
+
 namespace MEPSVC
 {
   void Analyze(void *arg, void* buff ,int siz, MonMap *mmap, MonAdder *)
@@ -189,10 +261,18 @@ StatusCode MEPSvc::start()
 {
   PubSvc::start();
   fillTellMap();
+  if (m_Tell1Stats == 0) m_Tell1Stats = new Tell1Stats(m_TellNames);
+  if (m_Tell1Service ==0)
+  {
+    std::string nam = "Stat/"+m_myservicename+"/Tell1/NameList";
+    m_Tell1Service = new TellService(nam,m_TellNames,m_adder->m_ServiceDns);
+  }
   m_DetMap_old = m_DetMap;
   this->m_DetMap_rate.setServiceName("Stat/"+m_myservicename+"/Rate");
   this->m_DetMap.setServiceName("Stat/"+m_myservicename+"/Count");
   m_adder->SetCycleFn(MEPSVC::Analyze,this);
+  m_Tell1Service->Update();
+  m_Tell1Stats->makeServices("Stat/"+m_myservicename+"/",m_adder->m_ServiceDns);
   return StatusCode::SUCCESS;
 }
 void MEPSvc::analyze(void *, int ,MonMap* mmap)
@@ -203,6 +283,8 @@ void MEPSvc::analyze(void *, int ,MonMap* mmap)
   Meptotit = mmap->find("R_Runable/totMEPproduced");
   MepOvrit = mmap->find("R_Runable/totMEPproducedOvfl");
   MepMooreit = mmap->find("R_Runable/totMEPproducedLive");
+  m_Tell1Stats->fillBuffers(mmap);
+  m_Tell1Stats->Update();
   double Mepstot, MepsMoore, Mepsovr;
   Mepstot = 0.0;
   MepsMoore = 0.0;
@@ -382,6 +464,8 @@ void MEPSvc::fillTellMap()
   for (i = 0;i<m_tell1List.size();i+=3)
   {
     std::string nam = m_tell1List[i+1];
+    m_TellNames.push_back(nam);
+    m_TellStrings += nam;
     std::string snam = nam.substr(0,nam.length()-2);
     if (snam == "tmutellq")
     {
