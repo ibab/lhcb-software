@@ -216,15 +216,6 @@ int compareInstructionSets(Mat &F, SymMat &origin, double conditionNumber,
     std::cout << "Has SSE3: " <<  hasSSE3 
               << " Has AVX: " << hasAVX << std::endl;
     
-  if (!hasSSE3) 
-  {
-    std::cerr << "WARNING: SSE3 Not available" << std::endl;
-  }
-  
-  if (!hasAVX) 
-  {
-    std::cerr << "WARNING: AVX Not available" << std::endl;
-  }
 
   bool SSE3Diff = false;
   bool AVXDiff = false;
