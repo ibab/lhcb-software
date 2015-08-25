@@ -76,6 +76,91 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
                              'PT_MIN'                   :  2500 * MeV,
                              'IPCHI2_MAX'               : 25.0
                                           }
+                ,'LcpToPpKmPimPipPip' : {
+                             'TisTosSpec'               : "Hlt1.*MVA.*Decision%TOS",
+                             'Trk_ALL_PT_MIN'           :  250 * MeV,
+                             'Trk_ALL_MIPCHI2DV_MIN'    :  3,
+                             'AM_MIN'                   :  2186. * MeV,
+                             'AM_MAX'                   :  2586. * MeV,
+                             'AM_3'                     :  139.570 * MeV,
+                             'AM_4'                     :  139.570 * MeV,
+                             'AM_5'                     :  139.570 * MeV,
+                             'ACHI2DOCA_MAX'            :  15.0,
+                             'ASUMPT_MIN'               :  2000 * MeV,
+                             'VCHI2PDOF_MAX'            :  20.0,
+                             'BPVDIRA_MIN'              : 0.9994,
+                             'BPVLTIME_MIN'             : 0.1 * picosecond,
+                             'PT_MIN'                   :  2500 * MeV,
+                             'IPCHI2_MAX'               : 25.0
+                                          }
+                ,'LcpToPpPimPimPipPip' : {
+                             'TisTosSpec'               : "Hlt1.*MVA.*Decision%TOS",
+                             'Trk_ALL_PT_MIN'           :  250 * MeV,
+                             'Trk_ALL_MIPCHI2DV_MIN'    :  3,
+                             'AM_MIN'                   :  2186. * MeV,
+                             'AM_MAX'                   :  2586. * MeV,
+                             'AM_3'                     :  139.570 * MeV,
+                             'AM_4'                     :  139.570 * MeV,
+                             'AM_5'                     :  139.570 * MeV,
+                             'ACHI2DOCA_MAX'            :  15.0,
+                             'ASUMPT_MIN'               :  2000 * MeV,
+                             'VCHI2PDOF_MAX'            :  20.0,
+                             'BPVDIRA_MIN'              : 0.9994,
+                             'BPVLTIME_MIN'             : 0.1 * picosecond,
+                             'PT_MIN'                   :  2500 * MeV,
+                             'IPCHI2_MAX'               : 25.0
+                                          }
+                ,'LcpToPpKpPimPimPip' : {
+                             'TisTosSpec'               : "Hlt1.*MVA.*Decision%TOS",
+                             'Trk_ALL_PT_MIN'           :  250 * MeV,
+                             'Trk_ALL_MIPCHI2DV_MIN'    :  3,
+                             'AM_MIN'                   :  2186. * MeV,
+                             'AM_MAX'                   :  2586. * MeV,
+                             'AM_3'                     :  139.570 * MeV,
+                             'AM_4'                     :  139.570 * MeV,
+                             'AM_5'                     :  139.570 * MeV,
+                             'ACHI2DOCA_MAX'            :  15.0,
+                             'ASUMPT_MIN'               :  2000 * MeV,
+                             'VCHI2PDOF_MAX'            :  20.0,
+                             'BPVDIRA_MIN'              : 0.9994,
+                             'BPVLTIME_MIN'             : 0.1 * picosecond,
+                             'PT_MIN'                   :  2500 * MeV,
+                             'IPCHI2_MAX'               : 25.0
+                                          }
+                ,'LcpToPpKpKpPimPim' : {
+                             'TisTosSpec'               : "Hlt1.*MVA.*Decision%TOS",
+                             'Trk_ALL_PT_MIN'           :  250 * MeV,
+                             'Trk_ALL_MIPCHI2DV_MIN'    :  3,
+                             'AM_MIN'                   :  2186. * MeV,
+                             'AM_MAX'                   :  2586. * MeV,
+                             'AM_3'                     :  493.677 * MeV,
+                             'AM_4'                     :  139.570 * MeV,
+                             'AM_5'                     :  139.570 * MeV,
+                             'ACHI2DOCA_MAX'            :  15.0,
+                             'ASUMPT_MIN'               :  2000 * MeV,
+                             'VCHI2PDOF_MAX'            :  20.0,
+                             'BPVDIRA_MIN'              : 0.9994,
+                             'BPVLTIME_MIN'             : 0.1 * picosecond,
+                             'PT_MIN'                   :  2500 * MeV,
+                             'IPCHI2_MAX'               : 25.0
+                                          }
+                ,'LcpToPpKmKmPipPip' : {
+                             'TisTosSpec'               : "Hlt1.*MVA.*Decision%TOS",
+                             'Trk_ALL_PT_MIN'           :  250 * MeV,
+                             'Trk_ALL_MIPCHI2DV_MIN'    :  3,
+                             'AM_MIN'                   :  2186. * MeV,
+                             'AM_MAX'                   :  2586. * MeV,
+                             'AM_3'                     :  493.677 * MeV,
+                             'AM_4'                     :  139.570 * MeV,
+                             'AM_5'                     :  139.570 * MeV,
+                             'ACHI2DOCA_MAX'            :  15.0,
+                             'ASUMPT_MIN'               :  2000 * MeV,
+                             'VCHI2PDOF_MAX'            :  20.0,
+                             'BPVDIRA_MIN'              : 0.9994,
+                             'BPVLTIME_MIN'             : 0.1 * picosecond,
+                             'PT_MIN'                   :  2500 * MeV,
+                             'IPCHI2_MAX'               : 25.0
+                                          }
 
                ##  cuts dictionary entries for DplusFilter selections
                 ,'Dplus':  {
@@ -107,30 +192,47 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
         from Stages import DplusFilter
         ## Dch2XXXX include both the D+ an Ds mass range
         from Stages import Dch2KmPimPipPipPip, Dch2KmKpPimPipPip, Dch2KmKmKpPipPip
-        from Stages import LcpToPpKmKpPimPip
+        from Stages import LcpToPpKmKpPimPip, LcpToPpKmPimPipPip
+        from Stages import LcpToPpPimPimPipPip, LcpToPpKpPimPimPip
+        from Stages import LcpToPpKpKpPimPim, LcpToPpKmKmPipPip
         
 
         stages = { 'Dp2KmPimPipPipPipTurbo'   :  [DplusFilter('Dp2KmPimPipPipPip',
                                                   inputs=[Dch2KmPimPipPipPip],
                                                   nickname='Dplus')],
-                   'Dp2KmKpPimPipPipTurbo'   :  [DplusFilter('Dp2KmKpPimPipPip',
+                   'Dp2KmKpPimPipPipTurbo'    :  [DplusFilter('Dp2KmKpPimPipPip',
                                                   inputs=[Dch2KmKpPimPipPip],
                                                   nickname='Dplus')],
-                   'Dp2KmKmKpPipPipTurbo'   :  [DplusFilter('Dp2KmKmKpPipPip',
+                   'Dp2KmKmKpPipPipTurbo'     :  [DplusFilter('Dp2KmKmKpPipPip',
                                                   inputs=[Dch2KmKmKpPipPip],
                                                   nickname='Dplus')],
-                   'Dsp2KmPimPipPipPipTurbo'   :  [DplusFilter('Dsp2KmPimPipPipPip',
+                   'Dsp2KmPimPipPipPipTurbo'  :  [DplusFilter('Dsp2KmPimPipPipPip',
                                                   inputs=[Dch2KmPimPipPipPip],
                                                   nickname='Ds')],
                    'Dsp2KmKpPimPipPipTurbo'   :  [DplusFilter('Dsp2KmKpPimPipPip',
                                                   inputs=[Dch2KmKpPimPipPip],
                                                   nickname='Ds')],
-                   'Dsp2KmKmKpPipPipTurbo'   :  [DplusFilter('Dsp2KmKmKpPipPip',
+                   'Dsp2KmKmKpPipPipTurbo'    :  [DplusFilter('Dsp2KmKmKpPipPip',
                                                   inputs=[Dch2KmKmKpPipPip],
                                                   nickname='Ds')],
-                   'LcpToPpKmKpPimPipTurbo'  :  [DplusFilter('LcpToPpKmKpPimPip',
+                   'LcpToPpKmKpPimPipTurbo'   :  [DplusFilter('LcpToPpKmKpPimPip',
                                                   inputs=[LcpToPpKmKpPimPip],
-                                                  nickname='Lcp')]
+                                                  nickname='Lcp')],
+                   'LcpToPpKmPimPipPipTurbo'  :  [DplusFilter('LcpToPpKmPimPipPip',
+                                                  inputs=[LcpToPpKmPimPipPip],
+                                                  nickname='Lcp')],
+                   'LcpToPpPimPimPipPipTurbo' :  [DplusFilter('LcpToPpPimPimPipPip',
+                                                  inputs=[LcpToPpPimPimPipPip],
+                                                  nickname='Lcp')],
+                   'LcpToPpKpPimPimPipTurbo'  :  [DplusFilter('LcpToPpKpPimPimPip',
+                                                  inputs=[LcpToPpKpPimPimPip],
+                                                  nickname='Lcp')],
+                   'LcpToPpKpKpPimPimTurbo'   :  [DplusFilter('LcpToPpKpKpPimPim',
+                                                  inputs=[LcpToPpKpKpPimPim],
+                                                  nickname='Lcp')],
+                   'LcpToPpKmKmPipPipTurbo'   :  [DplusFilter('LcpToPpKmKmPipPip',
+                                                  inputs=[LcpToPpKmKmPipPip],
+                                                  nickname='Lcp')],
                  }
         
 
