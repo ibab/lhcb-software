@@ -156,6 +156,7 @@ class DaVinci(LHCbConfigurableUser) :
                                       "DQFLAGStag","Simulation","IgnoreDQFlags"])
         self.setOtherProps(PhysConf(),["DataType","Simulation","InputType","Detectors"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
+        self.setOtherProps(DstConf(),["DataType"])
     
     def _analysisSeq(self) :
         return GaudiSequencer('DaVinciAnalysisSeq', IgnoreFilterPassed = True)
