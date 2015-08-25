@@ -338,6 +338,14 @@ StatusCode Velo::VeloIPResolutionMonitorNT::execute() {
     tuple->column( "MinIPindex", index_minIP );
     tuple->column( "InversePT", inversePT );
 
+    tuple->column( "GhostProb", m_track->ghostProbability() );
+    tuple->column( "PXerr", m_track->firstState().errMomentum()(0,0) );
+    tuple->column( "PYerr", m_track->firstState().errMomentum()(1,1) );
+    tuple->column( "PZerr", m_track->firstState().errMomentum()(2,2) );
+
+    tuple->fmatrix("Perr_CovMatrix", m_track->firstState().errMomentum(),3,3,"Length",3);
+    
+
     //fill tuple arrays
     tuple->farray( "isInPV", isInPV, "nPVs", 50 );
     tuple->farray( "IPRes3D", ip3d , "nPVs", 50);
@@ -592,6 +600,7 @@ void Velo::VeloIPResolutionMonitorNT::distance( const RecVertex* pv, State state
 StatusCode Velo::VeloIPResolutionMonitorNT::checkMCAssoc( const Track* track, const RecVertex* pv,
 							  const MCVertex*& mcpv, 
 							  Gaudi::LorentzVector& momentum, unsigned int& type )
+
 {
   type = 999;
 
@@ -607,6 +616,7 @@ StatusCode Velo::VeloIPResolutionMonitorNT::checkMCAssoc( const Track* track, co
 
   momentum = mcPart->momentum() ;
   mcpv = mcPart->primaryVertex() ;
+
   if( !mcpv ){ 
     counter("No MC primary vertex")++;
     return StatusCode::SUCCESS;
