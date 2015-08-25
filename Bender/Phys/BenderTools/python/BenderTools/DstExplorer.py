@@ -281,7 +281,7 @@ def configure ( config ) :
         from BenderTools.GetDBtags import useDBTagsFromData
         tags = useDBTagsFromData (
             files [ 0 ]       ,
-            config.Castor     ,
+            True              , ## castor 
             config.Grid       ,
             daVinci           ) 
 

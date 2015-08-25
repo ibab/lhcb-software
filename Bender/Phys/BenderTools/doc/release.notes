@@ -5,6 +5,11 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/BenderTools v26r2p2 2015-08-25 ====================
+
+! 2015-08-25 - Vanya Belyaev
+ - fix (recently introduced) bug in DstExplorer for sim-data
+
 ! 2015-08-17 - Vanya Belyaev
  - improve treatment of data types 
 
