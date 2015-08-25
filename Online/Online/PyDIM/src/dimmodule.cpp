@@ -60,7 +60,8 @@ typedef struct {
 } ServiceCallback;
 
 typedef ServiceCallback *ServiceCallbackPtr;
-map<unsigned int, ServiceCallbackPtr> serviceID2Callback;
+typedef map<unsigned int, ServiceCallbackPtr> ServiceIDMap;
+static ServiceIDMap serviceID2Callback;
 
 static void dim_callbackCommandFunc(void*, void*, int*);
 
@@ -83,10 +84,8 @@ struct _dic_cmnd_callback {
 
 unsigned long _dic_cmnd_callback_ID;
 
-
-static map<string,_dic_info_service_callback*>_dic_info_service_name2Callback;
-static map<unsigned int, _dic_info_service_callback*>_dic_info_service_id2Callback;
-static map<long, _dic_cmnd_callback*> _dic_cmnd_callback_tag2Callback;
+typedef map<unsigned int, _dic_info_service_callback*> InfoSvcMap; 
+static InfoSvcMap _dic_info_service_id2Callback;
 
 void _dic_error_user_routine_dummy(int, int, char*);
 void _dic_info_service_dummy (void*, void*, int*);
@@ -127,20 +126,20 @@ dim_dis_start_serving (PyObject* /* self */, PyObject *args)  {
     debug("No server name specified. Using machine hostname...\n");
   }
   Py_BEGIN_ALLOW_THREADS	
-  ret = dis_start_serving(server_name);
+    ret = dis_start_serving(server_name);
   Py_END_ALLOW_THREADS
 
-  return Py_BuildValue("i", ret);
+    return Py_BuildValue("i", ret);
 }
 
 static PyObject*
 dim_dis_stop_serving(PyObject* /* self */, PyObject* /* args */) {
   /** Calls void dis_stop_serving(void)
-  */
+   */
   Py_BEGIN_ALLOW_THREADS	
-  dis_stop_serving();
+    dis_stop_serving();
   Py_END_ALLOW_THREADS
-  Py_RETURN_NONE;
+    Py_RETURN_NONE;
 }
 
 
@@ -169,7 +168,7 @@ static PyObject*
 dim_dis_get_dns_node(PyObject* /* self */, PyObject* /* args */) {
   /* calls dis_get_dns_node(char* node)
      the function should return the DNS node
-     */
+  */
   char names[256];
   if ( !dis_get_dns_node(names) ) {
     PyErr_SetString(PyExc_RuntimeError, "Failed to get DNS node name");
@@ -192,7 +191,7 @@ dim_dis_set_dns_port(PyObject* /* self */, PyObject* args) {
 
   if (!PyArg_ParseTuple(args, "I", &port)) {
     PyErr_SetString(PyExc_TypeError,
-        "Argument 'port' must be a pozitive integer");
+		    "Argument 'port' must be a pozitive integer");
     return NULL;
   }
   ret = dis_set_dns_port(port);
@@ -218,8 +217,8 @@ typedef struct {
 } PyCallback; //for Python callbacks
 
 static PyCallback dis_callbackExitHandler_func,
-                  dis_callbackErrorHandler_func,
-                  dis_callbackClientExitHandler_func;
+  dis_callbackErrorHandler_func,
+  dis_callbackClientExitHandler_func;
 
 static PyCallback _dic_callback_errorHandler_func;
 
@@ -241,7 +240,7 @@ dim_dis_callbackExitHandler(int* code) {
     PyGILState_Release(gstate);
   } else {
     debug("Could not find any registered Python function. "\
-        "Dropping DIM exit callback.");
+	  "Dropping DIM exit callback.");
   }
 }
 
@@ -264,7 +263,7 @@ dim_dis_callbackErrorHandler(int severity, int error_code, char* message) {
     PyGILState_Release(gstate);
   } else {
     debug("Could not find any registered Python function. "\
-        "Dropping DIM error callback.");
+	  "Dropping DIM error callback.");
   }
 }
 
@@ -273,7 +272,7 @@ static void
 dim_dis_callbackClientExitHandler(int* tag) {
   /*Interface function with signature: void client_exit_user_routine (int* tag)
     Calls the associated Python function.
-    */
+  */
   PyObject *arg, *res;
   PyGILState_STATE gstate;
 
@@ -286,7 +285,7 @@ dim_dis_callbackClientExitHandler(int* tag) {
     PyGILState_Release(gstate);
   } else {
     debug("Could not find any registered Python function. "\
-        "Dropping DIM client exit callback.");
+	  "Dropping DIM client exit callback.");
   }
 }
 
@@ -301,10 +300,10 @@ dim_dis_add_exit_handler(PyObject* self, PyObject* args) {
 
   if (!PyArg_ParseTuple(args, "O:set_callback", &temp) ||
       !PyCallable_Check(temp))
-  {
-    PyErr_SetString(PyExc_TypeError, "Expected a callable Python object");
-    return NULL;
-  }
+    {
+      PyErr_SetString(PyExc_TypeError, "Expected a callable Python object");
+      return NULL;
+    }
 
   Py_XINCREF(temp);
   Py_XINCREF(self);
@@ -329,10 +328,10 @@ dim_dis_add_error_handler(PyObject* self, PyObject* args) {
 
   if (!PyArg_ParseTuple(args, "O:set_callback", &temp) ||
       !PyCallable_Check(temp))
-  {
-    PyErr_SetString(PyExc_TypeError, "Expected a callable Python object");
-    return NULL;
-  }
+    {
+      PyErr_SetString(PyExc_TypeError, "Expected a callable Python object");
+      return NULL;
+    }
   /* Add a reference to new callback */
   Py_XINCREF(temp);
   Py_XINCREF(self);
@@ -356,10 +355,10 @@ dim_dis_add_client_exit_handler(PyObject* self, PyObject* args) {
 
   if (!PyArg_ParseTuple(args, "O:set_callback", &temp) ||
       !PyCallable_Check(temp))
-  {
-    PyErr_SetString(PyExc_TypeError, "Expected a callable Python object");
-    return NULL;
-  }
+    {
+      PyErr_SetString(PyExc_TypeError, "Expected a callable Python object");
+      return NULL;
+    }
   /* Add a reference to new callback */
   Py_XINCREF(temp);
   Py_XINCREF(self);
@@ -385,13 +384,13 @@ dim_dis_selective_update_service(PyObject* /* self */, PyObject* args) {
 
   if (!PyArg_ParseTuple(args, "iO;list or tuple", &service_id, &listOrTuple)) {
     PyErr_SetString(PyExc_TypeError,
-        "Invalid arguments: expected and integer and a list/tuple of integers");
+		    "Invalid arguments: expected and integer and a list/tuple of integers");
     return NULL;
   }
   if (!listOrTuple2Int(listOrTuple, &client_ids)) {
     PyErr_SetString(PyExc_TypeError,
-        "Second argument must a list/tuple of integers"
-        );
+		    "Second argument must a list/tuple of integers"
+		    );
     return NULL;
   }
   res = dis_selective_update_service(service_id, client_ids);
@@ -412,7 +411,7 @@ dim_dis_set_quality(PyObject* /* self */, PyObject* args) {
 
   if (!PyArg_ParseTuple(args, "Ii", &service_id, &quality)) {
     PyErr_SetString(PyExc_TypeError,
-        "Invalid arguments: expected an unsigned integer and an integer");
+		    "Invalid arguments: expected an unsigned integer and an integer");
     return NULL;
   }
   dis_set_quality(service_id, quality);
@@ -436,7 +435,7 @@ dim_dis_set_timestamp(PyObject* /* self */, PyObject* args) {
 
   if (!PyArg_ParseTuple(args, "Iii", &service_id, &secs, &milisecs)) {
     PyErr_SetString(PyExc_TypeError,
-        "Invalid arguments: expected an unsigned integer and two integers");
+		    "Invalid arguments: expected an unsigned integer and two integers");
     return NULL;
   }
   dis_set_timestamp(service_id, secs, milisecs);
@@ -452,15 +451,22 @@ dim_dis_remove_service(PyObject* /* self */, PyObject* args) {
    * @param service_id
    */
   unsigned int service_id;
-  int res;
-
   if ( !PyArg_ParseTuple(args, "I", &service_id) ) {
     PyErr_SetString(PyExc_TypeError,
-        "Invalid argument: expected an unsigned integer");
+		    "Invalid argument: expected an unsigned integer");
     return NULL;
   }
-  res = dis_remove_service(service_id);
-
+  ServiceIDMap::iterator it = serviceID2Callback.find(service_id);
+  if ( it != serviceID2Callback.end() ) {
+    ServiceCallbackPtr svc = (*it).second;
+    serviceID2Callback.erase(it);
+    Py_XDECREF(svc->pyFunc);
+    free(svc->name);
+    free(svc->format);
+    free(svc->buffer);
+    free(svc);
+  }
+  int res = dis_remove_service(service_id);
   return Py_BuildValue("i", res);
 }
 
@@ -485,7 +491,7 @@ dim_dis_get_next_cmnd(PyObject* /* self */, PyObject* args) {
 
   if ( !PyArg_ParseTuple(args, "I", &size) ) {
     PyErr_SetString(PyExc_TypeError,
-        "Invalid argument: expected an unsigned integer");
+		    "Invalid argument: expected an unsigned integer");
     return NULL;
   }
   buffer = (int*)malloc(size*sizeof(int));
@@ -539,7 +545,7 @@ dim_dis_get_timeout(PyObject* /* self */, PyObject* args) {
 
   if ( !PyArg_ParseTuple(args, "Ii", &service_id, &client_id) ) {
     PyErr_SetString(PyExc_TypeError,
-        "Invalid argument: expected an unsigned int and an int");
+		    "Invalid argument: expected an unsigned int and an int");
     return NULL;
   }
   res = dis_get_timeout(service_id, client_id);
@@ -628,23 +634,23 @@ dim_dis_add_cmnd(PyObject* /* self */, PyObject* args) {
   string s;
 
   if (!PyArg_ParseTuple(args, "s#s#O|O",
-        &name, &sizeName, &format, &sizeFormat, &pyFunc, &tag)
+			&name, &sizeName, &format, &sizeFormat, &pyFunc, &tag)
       || !PyCallable_Check(pyFunc) )
-  {
-    PyErr_SetString(PyExc_TypeError,
-                     "Invalid arguments: expected two strings, "
-		             "a callable object and an integer");
-    return NULL;
-  }
-	Py_INCREF(pyFunc);
-	debug("Adding command name %s, format %s function %p and tag %p", name, format, (void*)pyFunc, (void*)tag);
+    {
+      PyErr_SetString(PyExc_TypeError,
+		      "Invalid arguments: expected two strings, "
+		      "a callable object and an integer");
+      return NULL;
+    }
+  Py_INCREF(pyFunc);
+  debug("Adding command name %s, format %s function %p and tag %p", name, format, (void*)pyFunc, (void*)tag);
   callback = (CmndCallback*)malloc(sizeof(CmndCallback));
   callback->format = (char*)malloc(sizeof(char)*(sizeFormat+1));
   callback->name = (char*)malloc(sizeof(char)*(sizeName+1));
   callback->pyFunc = pyFunc;	
   if (tag) { 
-	Py_INCREF(tag);
-	callback->pyTag = tag;
+    Py_INCREF(tag);
+    callback->pyTag = tag;
   }	
   strcpy(callback->format, format);
   strcpy(callback->name, name);
@@ -663,7 +669,7 @@ dim_dis_add_cmnd(PyObject* /* self */, PyObject* args) {
   res = dis_add_cmnd(name, format, dim_callbackCommandFunc, (long)callback);
   if (oldCallback && res<1) {
     Py_XDECREF(oldCallback->pyFunc);
-	Py_XDECREF(oldCallback->pyTag);
+    Py_XDECREF(oldCallback->pyTag);
     free(oldCallback->name);
     free(oldCallback->format);
     free(oldCallback);
@@ -753,17 +759,17 @@ dim_dis_add_service(PyObject* /* self */, PyObject* args) {
   ServiceCallback *svc;
 
   if (!PyArg_ParseTuple(args, "s#s#Ol", &name,
-        &name_size,
-        &format,
-        &format_size,
-        &pyFunc,
-        &pyTag)
+			&name_size,
+			&format,
+			&format_size,
+			&pyFunc,
+			&pyTag)
       || !PyCallable_Check(pyFunc))
-  {
-    PyErr_SetString(PyExc_TypeError,
-        "Invalid arguments: expected two strings, a callable object and a long.");
-    return NULL;
-  }
+    {
+      PyErr_SetString(PyExc_TypeError,
+		      "Invalid arguments: expected two strings, a callable object and a long.");
+      return NULL;
+    }
 
   Py_INCREF(pyFunc);
   svc = (ServiceCallback*)malloc(sizeof(ServiceCallback));
@@ -784,22 +790,15 @@ dim_dis_add_service(PyObject* /* self */, PyObject* args) {
                                serviceProxy,
                                (long)svc);
   if (!service_id) {
-    PyErr_SetString(PyExc_RuntimeError, "Could not create service");
+    Py_DECREF(svc->pyFunc);
+    ::free(svc->name);
+    ::free(svc->format);
+    ::free(svc);
+    PyErr_SetString(PyExc_RuntimeError, "Could not create DIM service");
     return NULL;
-  }
-
-  if (serviceID2Callback[service_id]) {
-    /* a service with the same name added again? */
-    debug("Replacing service %s",svc->name);
-    Py_XDECREF(serviceID2Callback[service_id]->pyFunc);
-    free(serviceID2Callback[service_id]->name);
-    free(serviceID2Callback[service_id]->format);
-    free(serviceID2Callback[service_id]->buffer);
-    free(serviceID2Callback[service_id]);
   }
   serviceID2Callback[service_id] = svc;
   debug("Service %s added successfully with pointer %ld", svc->name, (long)svc);
-
   return Py_BuildValue("i", service_id);
 
  noMem:
@@ -815,26 +814,25 @@ dim_dis_update_service(PyObject* /* self */, PyObject* args) {
    */
   int service_id, res;
   PyObject *svc_args=NULL, *arg;
-  ServiceCallbackPtr svc;
   PyGILState_STATE gstate;
 
   if ( !PyArg_ParseTuple(args, "i|O", &service_id, &svc_args) ){
-      //if ( !PyArg_ParseTuple(args, "i", &service_id) ){
+    //if ( !PyArg_ParseTuple(args, "i", &service_id) ){
     PyErr_SetString(PyExc_TypeError,
-        "Argument error: incorect service ID");
+		    "Argument error: incorect service ID");
     return NULL;
   }
-  svc = serviceID2Callback[service_id];
+  ServiceCallbackPtr svc = serviceID2Callback[service_id];
   if (!svc){
     // Service was not found, already deleted?
     PyErr_SetString(PyExc_RuntimeError,
-        "Service ID doesn't match any service");
+		    "Service ID doesn't match any service");
     return NULL;
   }
   if (!svc_args) {
     if (!svc->pyFunc) {
       PyErr_SetString(PyExc_TypeError,
-          "No arguments and no callback function was given");
+		      "No arguments and no callback function was given");
       return NULL;
     }
     gstate = PyGILState_Ensure();
@@ -861,57 +859,57 @@ dim_dis_update_service(PyObject* /* self */, PyObject* args) {
                                     svc->format,
                                     &svc->buffer,
                                     &svc->bufferSize) )
-  {
-    PyErr_SetString(PyExc_TypeError,
-        "Arguments do not match initial service format");
-    return NULL;
-  }
+    {
+      PyErr_SetString(PyExc_TypeError,
+		      "Arguments do not match initial service format");
+      return NULL;
+    }
   Py_DECREF(svc_args);
   svc->isUpdated = 1;
   Py_BEGIN_ALLOW_THREADS
-  res = dis_update_service(service_id);
+    res = dis_update_service(service_id);
   Py_END_ALLOW_THREADS
 
-  return Py_BuildValue("i", res);
+    return Py_BuildValue("i", res);
 }
 
 
 static void
 dim_callbackCommandFunc(void* uTag, void* address, int* size) {
-   /** \brief Proxy function for passing the call to Python.
-    * It is registered by default when a command service is
-    * created.
-    */
-   CmndCallbackPtr pycall = (CmndCallbackPtr)(*(long *)uTag);
-   PyObject *args, *res, *funargs;
-   PyGILState_STATE gstate;
+  /** \brief Proxy function for passing the call to Python.
+   * It is registered by default when a command service is
+   * created.
+   */
+  CmndCallbackPtr pycall = (CmndCallbackPtr)(*(long *)uTag);
+  PyObject *args, *res, *funargs;
+  PyGILState_STATE gstate;
    
-   gstate = PyGILState_Ensure();
-   args = dim_buf_to_tuple(pycall->format, (char*)address, *size);
-   if (args) {
-      /* performing the Python callback */
-      if (pycall->pyTag) {
-         funargs = PyTuple_New(2);
-         PyTuple_SET_ITEM(funargs, 0, args);
-         Py_INCREF(pycall->pyTag);
-         PyTuple_SET_ITEM(funargs, 1, pycall->pyTag);
-      } else {
-         funargs = PyTuple_New(1);
-         PyTuple_SET_ITEM(funargs, 0, args);
-      } 	
-      res = PyObject_CallObject(pycall->pyFunc, funargs);
-      Py_DECREF(funargs);
-      if (!res) {
-         /* The Python function called throwed an exception.
-          * We can't do much with it so we might as well print it */
-         PyErr_Print();
-      } else {
-         Py_DECREF(res);
-      }
-   } else {
-      print ("Could not convert received DIM buffer to Python objects");
-   }
-   PyGILState_Release(gstate);
+  gstate = PyGILState_Ensure();
+  args = dim_buf_to_tuple(pycall->format, (char*)address, *size);
+  if (args) {
+    /* performing the Python callback */
+    if (pycall->pyTag) {
+      funargs = PyTuple_New(2);
+      PyTuple_SET_ITEM(funargs, 0, args);
+      Py_INCREF(pycall->pyTag);
+      PyTuple_SET_ITEM(funargs, 1, pycall->pyTag);
+    } else {
+      funargs = PyTuple_New(1);
+      PyTuple_SET_ITEM(funargs, 0, args);
+    } 	
+    res = PyObject_CallObject(pycall->pyFunc, funargs);
+    Py_DECREF(funargs);
+    if (!res) {
+      /* The Python function called throwed an exception.
+       * We can't do much with it so we might as well print it */
+      PyErr_Print();
+    } else {
+      Py_DECREF(res);
+    }
+  } else {
+    print ("Could not convert received DIM buffer to Python objects");
+  }
+  PyGILState_Release(gstate);
 }
 
 
@@ -943,12 +941,12 @@ static PyObject*
 dim_dic_get_dns_node(PyObject* /* self */, PyObject* /* args */) {
   /* calls dic_get_dns_node(char* node)
      the function should return the DNS node
-     */
+  */
   char names[256];
 
   if ( !dic_get_dns_node(names) ) {
     PyErr_SetString(PyExc_TypeError,
-        "Could not get DIM DNS node name.");
+		    "Could not get DIM DNS node name.");
     return NULL;
   }
 
@@ -968,8 +966,8 @@ dim_dic_set_dns_port(PyObject* /* self */, PyObject* args) {
 
   if ( !PyArg_ParseTuple(args, "I", &port) ) {
     PyErr_SetString(PyExc_TypeError,
-        "Invalid argument: expected a pozitive integer"
-        );
+		    "Invalid argument: expected a pozitive integer"
+		    );
     return NULL;
   }
   i = dic_set_dns_port(port);
@@ -1032,7 +1030,7 @@ dim_dic_get_quality(PyObject* /* self */, PyObject* args) {
 
   if (!PyArg_ParseTuple(args, "I", &service_id) ) {
     PyErr_SetString(PyExc_TypeError,
-        "Invalid argument: expected an unsigned integer");
+		    "Invalid argument: expected an unsigned integer");
     return NULL;
   }
   res = dic_get_quality(service_id);
@@ -1055,7 +1053,7 @@ dim_dic_get_timestamp(PyObject* /* self */, PyObject* args) {
 
   if (!PyArg_ParseTuple(args, "Iii", &service_id)) {
     PyErr_SetString(PyExc_TypeError,
-        "service id should be an unsigned integer");
+		    "service id should be an unsigned integer");
     return NULL;
   }
   dic_get_timestamp(service_id, &secs, &milisecs);
@@ -1076,7 +1074,7 @@ dim_dic_get_format(PyObject* /* self */, PyObject* args) {
 
   if (! PyArg_ParseTuple(args, "I", &service_id) ) {
     PyErr_SetString(PyExc_TypeError,
-        "Service id should be an unsigned integer");
+		    "Service id should be an unsigned integer");
     return NULL;
   }
   format = dic_get_format(service_id);
@@ -1092,31 +1090,29 @@ dim_dic_release_service(PyObject* /* self */, PyObject* args) {
    *        void dic_release_service (unsigned int service_id)
    */
   unsigned int service_id;
-  string cppName;
-  _dic_info_service_callback *tmp;
 
   if (!PyArg_ParseTuple(args, "I", &service_id)) {
     debug("Invalid service id specified");
     PyErr_SetString(PyExc_TypeError,
-        "Service id should be an unsigned integer");
+		    "Service id should be an unsigned integer");
     return NULL;
   }
-	Py_BEGIN_ALLOW_THREADS
-  dic_release_service(service_id);
-	Py_END_ALLOW_THREADS
-  tmp = _dic_info_service_id2Callback[service_id];
-  if (!tmp) {
+  /* ::printf("PyDIM: Releasing service: %d\n",service_id); */
+  InfoSvcMap::iterator it=_dic_info_service_id2Callback.find(service_id);
+  if ( it == _dic_info_service_id2Callback.end() ) {
     print("Service with id %d is not known", service_id);
     Py_RETURN_NONE;
   }
-  cppName = tmp->name;
-  _dic_info_service_name2Callback.erase(cppName);
-  _dic_info_service_id2Callback.erase(service_id);
+  _dic_info_service_callback *tmp = (*it).second;
+  _dic_info_service_id2Callback.erase(it);
   free(tmp->format);
   free(tmp->name);
   Py_XDECREF(tmp->pyFunc);
   Py_XDECREF(tmp->pyDefaultArg);
   free(tmp);
+  Py_BEGIN_ALLOW_THREADS
+    dic_release_service(service_id);
+  Py_END_ALLOW_THREADS
 
   Py_RETURN_NONE;
 }
@@ -1151,24 +1147,21 @@ dim_dic_info_service(PyObject* /* self */, PyObject* args) {
   int format_size;
   int name_size;
   unsigned int service_id;
-  string cppName;
   PyObject* pyFunc=NULL, *default_value=NULL ;
-  _dic_info_service_callback *tmp=NULL, *svc;
+  _dic_info_service_callback *svc;
 
   if (!PyArg_ParseTuple(args, "s#s#O|iiiO",
-        &name, &name_size,
-        &format, &format_size,
-        &pyFunc,
-        &service_type,
-        &timeout,
-        &tag,
-        &default_value)
+			&name, &name_size,
+			&format, &format_size,
+			&pyFunc,
+			&service_type,
+			&timeout,
+			&tag,
+			&default_value)
       || !PyCallable_Check(pyFunc))
-  {
-    goto invalid_args;
-  }
-  /* I am using a map and keys of type char * will not work */
-  cppName = name;
+    {
+      goto invalid_args;
+    }
   /* increasing the ref count of the python objects */
   Py_INCREF(pyFunc);
   if (default_value) Py_INCREF(default_value);
@@ -1190,61 +1183,51 @@ dim_dic_info_service(PyObject* /* self */, PyObject* args) {
    * service structure
    */
   Py_BEGIN_ALLOW_THREADS	
-  service_id = dic_info_service(name,
-                                service_type,
-                                timeout,
-                                0, 0, /* service buffer and size */
-                                _dic_info_service_dummy,
-                                (long)svc,
-                                0, 0); /* default buffer and size */
+    service_id = dic_info_service(name,
+				  service_type,
+				  timeout,
+				  0, 0, /* service buffer and size */
+				  _dic_info_service_dummy,
+				  (long)svc,
+				  0, 0); /* default buffer and size */
   Py_END_ALLOW_THREADS
-  if (!service_id) {
-    print("Service %s creation failed. Received result %d", name, service_id);
-    goto dealocate;
-  }
+    if (!service_id) {
+      print("Service %s creation failed. Received result %d", name, service_id);
+      goto dealocate;
+    }
   svc->service_id = service_id;
-  tmp = _dic_info_service_name2Callback[cppName];
-  if (tmp) {
-    free(tmp->format);
-    free(tmp->name);
-    Py_XDECREF(tmp->pyFunc);
-    Py_XDECREF(tmp->pyDefaultArg);
-    _dic_info_service_name2Callback.erase(cppName);
-    _dic_info_service_id2Callback.erase(tmp->service_id);
-    free(_dic_info_service_name2Callback[cppName]);
-  }
-  _dic_info_service_name2Callback[cppName] = svc;
   _dic_info_service_id2Callback[service_id] = svc;
 
   return Py_BuildValue("i", service_id);
 
   /* invalid arguments */
-invalid_args:
+ invalid_args:
   PyErr_SetString(PyExc_TypeError,
-      "Invalid parameters. Expected:string name               ,"\
-      "                             string format             ,"\
-      "                             int service_type          ,"\
-      "                             int timeout               ,"\
-      "                             PyObject* callbackFunction,"\
-      "                             int tag                   ,"\
-      "                             PyObject* default_value"
-      );
+		  "Invalid parameters. Expected:string name               ,"\
+		  "                             string format             ,"\
+		  "                             int service_type          ,"\
+		  "                             int timeout               ,"\
+		  "                             PyObject* callbackFunction,"\
+		  "                             int tag                   ,"\
+		  "                             PyObject* default_value"
+		  );
   return NULL;
 
   /* memory problems */
-no_memory:
+ no_memory:
   PyErr_SetString(PyExc_MemoryError, "Could not allocate memory");
   Py_DECREF(pyFunc);
   return NULL;
 
   /* invalid service registration */
-dealocate:
-  Py_XDECREF(tmp->pyFunc);
-  _dic_info_service_name2Callback.erase(cppName);
-  //_dic_info_service_id2Callback.erase(tmp->buffer);
-  free(tmp->format);
-  free(tmp->name);
-  free(tmp);
+ dealocate:
+  Py_XDECREF(svc->pyFunc);
+  InfoSvcMap::iterator it=_dic_info_service_id2Callback.find(svc->service_id);
+  if ( it != _dic_info_service_id2Callback.end() )
+    _dic_info_service_id2Callback.erase(it);
+  free(svc->format);
+  free(svc->name);
+  free(svc);
   return 0;
 }
 
@@ -1275,7 +1258,7 @@ dim_dic_get_server(PyObject* /* self */, PyObject* args) {
 
   if ( !PyArg_ParseTuple(args, "s", &server_name) ) {
     PyErr_SetString(PyExc_TypeError,
-        "Invalid parameters. Expected argument:string service_name");
+		    "Invalid parameters. Expected argument:string service_name");
     return NULL;
   }
   service_id = dic_get_server(server_name);
@@ -1312,7 +1295,7 @@ dim_dic_get_server_services(PyObject* /* self */, PyObject* args) {
 
   if (!PyArg_ParseTuple(args, "i", &conn_id)) {
     PyErr_SetString(PyExc_TypeError,
-        "Invalid parameters. Expected argument:int conn_id");
+		    "Invalid parameters. Expected argument:int conn_id");
     return NULL;
   }
   server_names = dic_get_server_services(conn_id);
@@ -1351,11 +1334,11 @@ dim_dic_add_error_handler(PyObject* self, PyObject* args) {
 
   if (!PyArg_ParseTuple(args, "O:set_callback", &pyFunc)
       || !PyCallable_Check(pyFunc))
-  {
-    PyErr_SetString(PyExc_TypeError,
-        "Invalid parameters. Expected argument: callable object ");
-    return NULL;
-  }
+    {
+      PyErr_SetString(PyExc_TypeError,
+		      "Invalid parameters. Expected argument: callable object ");
+      return NULL;
+    }
   Py_XINCREF(pyFunc);
   Py_XINCREF(self);
   /* Dispose of previous callback */
@@ -1391,24 +1374,24 @@ dim_dic_cmnd_service(PyObject* /* self */, PyObject* args) {
   if (!iterator_to_allocated_buffer(pySeq, format, &buffer, &buffer_size))
     goto error;
   Py_BEGIN_ALLOW_THREADS
-  res = dic_cmnd_service(service_name, buffer, buffer_size);
+    res = dic_cmnd_service(service_name, buffer, buffer_size);
   Py_END_ALLOW_THREADS
-  /* freeing allocated buffer */
-  free(buffer);
+    /* freeing allocated buffer */
+    free(buffer);
 
   return Py_BuildValue("i", res);
 
-invalid_arguments:
+ invalid_arguments:
   PyErr_SetString(PyExc_TypeError,
-      "Invalid parameters. Expected: string service_name (string), "\
-      "update_data (tuple or list), format (DIM format string)");
+		  "Invalid parameters. Expected: string service_name (string), "\
+		  "update_data (tuple or list), format (DIM format string)");
   return NULL;
 
-error:
+ error:
   PyErr_SetString(PyExc_RuntimeError,
-            "Could not serialise provided arguments to a DIM buffer.\n"\
-            "Please check that the order/number "\
-            "of the argument maches the provided command format.");
+		  "Could not serialise provided arguments to a DIM buffer.\n"\
+		  "Please check that the order/number "\
+		  "of the argument maches the provided command format.");
   free(buffer);
   return NULL;
 
@@ -1439,11 +1422,11 @@ dim_dic_cmnd_callback(PyObject* /* self */, PyObject* args) {
   _dic_cmnd_callback *callback;
 
   if (!PyArg_ParseTuple(args, "sOsOl",
-        &service_name, &pySeq, &format, &pyFunc, &pyTag)
+			&service_name, &pySeq, &format, &pyFunc, &pyTag)
       || !PyCallable_Check(pyFunc))
-  {
-    goto invalid_arguments;
-  }
+    {
+      goto invalid_arguments;
+    }
   /* saving callback */
   Py_INCREF(pyFunc);
   callback = (_dic_cmnd_callback*)malloc(sizeof(_dic_cmnd_callback));
@@ -1459,33 +1442,33 @@ dim_dic_cmnd_callback(PyObject* /* self */, PyObject* args) {
    * same machine we are going to have a deadlock!
    */
   Py_BEGIN_ALLOW_THREADS
-  res = dic_cmnd_callback(service_name,
-                          buffer,
-                          buffer_size,
-                          _dic_cmnd_callback_dummy,
-                          (long)callback);
+    res = dic_cmnd_callback(service_name,
+			    buffer,
+			    buffer_size,
+			    _dic_cmnd_callback_dummy,
+			    (long)callback);
   Py_END_ALLOW_THREADS
-  /* freeing temporary buffer and returning */
-  free(buffer);
+    /* freeing temporary buffer and returning */
+    free(buffer);
 
   return Py_BuildValue("i", res);
 
  invalid_arguments:
   PyErr_SetString(PyExc_TypeError,
-      "Invalid parameters. "
-      "   Expected: service_name (string), \n"\
-      "             command_data (a tuple or list of values), \n"\
-      "             format (a DIM format string), \n"\
-      "             function_callback (a Python callable object) \n"\
-      "             int tag"
-      );
+		  "Invalid parameters. "
+		  "   Expected: service_name (string), \n"\
+		  "             command_data (a tuple or list of values), \n"\
+		  "             format (a DIM format string), \n"\
+		  "             function_callback (a Python callable object) \n"\
+		  "             int tag"
+		  );
   return NULL;
 
  error:
   PyErr_SetString(PyExc_RuntimeError,
-            "Could not serialise provided arguments to a DIM buffer.\n"\
-            "Please check that the order/number "\
-            "of the argument maches the provided command format.");
+		  "Could not serialise provided arguments to a DIM buffer.\n"\
+		  "Please check that the order/number "\
+		  "of the argument maches the provided command format.");
   return NULL;
 
  memory_error:
@@ -1538,17 +1521,17 @@ void _dic_error_user_routine_dummy(int severity, int error_code, char* message) 
   PyObject *arg, *res;
   PyGILState_STATE gstate;
   if ( _dic_callback_errorHandler_func.func ) {
-	gstate = PyGILState_Ensure();
-	arg = Py_BuildValue("iis", severity, error_code, message);
-	res = PyEval_CallObject(_dic_callback_errorHandler_func.func, arg);
-	Py_DECREF(arg);
-	Py_XDECREF(res);
-	PyGILState_Release(gstate);
+    gstate = PyGILState_Ensure();
+    arg = Py_BuildValue("iis", severity, error_code, message);
+    res = PyEval_CallObject(_dic_callback_errorHandler_func.func, arg);
+    Py_DECREF(arg);
+    Py_XDECREF(res);
+    PyGILState_Release(gstate);
   } else {
     debug("Could not find any registered Python function. "\
-        "Dropping DIM client error callback.");
+	  "Dropping DIM client error callback.");
     PyErr_SetString(PyExc_RuntimeError, "Could not find any registered Python function. "\
-        "Dropping DIM client error callback.");
+		    "Dropping DIM client error callback.");
     return;
   }
 }
@@ -1602,9 +1585,9 @@ void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
       PyObject* pyTag = Py_BuildValue("i", svc->pyTag);
       PyTuple_SET_ITEM(funargs, 0, pyTag);
       for (int i = 0; i < nargs; ++i) {
-         PyObject* arg = PyTuple_GET_ITEM(args, i);
-         Py_INCREF(arg);
-         PyTuple_SET_ITEM(funargs, i + 1, arg);
+	PyObject* arg = PyTuple_GET_ITEM(args, i);
+	Py_INCREF(arg);
+	PyTuple_SET_ITEM(funargs, i + 1, arg);
       }
       Py_DECREF(args);
     }
@@ -1613,7 +1596,7 @@ void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
     res = PyObject_CallObject(svc->pyFunc, funargs);
     if (!res){
       if (PyErr_Occurred() != NULL) {
-      print("Error when calling object %s", svc->name);
+	print("Error when calling object %s", svc->name);
         PyErr_Print();
       } else {
         print("ERROR: Bad call to Python layer");
@@ -1631,7 +1614,7 @@ void _dic_info_service_dummy (void* tag, void* buffer, int* size) {
 }
 
 /** @}
-*/
+ */
 
 static PyMethodDef DimMethods[] = {
   { "version"             ,
@@ -1640,219 +1623,219 @@ static PyMethodDef DimMethods[] = {
     "Module version"
   },
   {    "dis_start_serving"          ,
-    dim_dis_start_serving        ,
-    METH_VARARGS                 ,
-    "Start providing DIM service"
+       dim_dis_start_serving        ,
+       METH_VARARGS                 ,
+       "Start providing DIM service"
   },
   {    "dis_stop_serving"           ,
-    dim_dis_stop_serving         ,
-    METH_VARARGS                 ,
-    "Stop DIM service"
+       dim_dis_stop_serving         ,
+       METH_VARARGS                 ,
+       "Stop DIM service"
   },
   {    "dis_set_dns_node"           ,
-    dim_dis_set_dns_node         ,
-    METH_VARARGS                 ,
-    "Function for setting the DNS node"
+       dim_dis_set_dns_node         ,
+       METH_VARARGS                 ,
+       "Function for setting the DNS node"
   },
   {    "dis_get_dns_node"           ,
-    dim_dis_get_dns_node         ,
-    METH_VARARGS                 ,
-    "Function for getting the DNS node"
+       dim_dis_get_dns_node         ,
+       METH_VARARGS                 ,
+       "Function for getting the DNS node"
   },
   {    "dis_set_dns_port"           ,
-    dim_dis_set_dns_port         ,
-    METH_VARARGS                 ,
-    "Function for setting the DNS port"
+       dim_dis_set_dns_port         ,
+       METH_VARARGS                 ,
+       "Function for setting the DNS port"
   },
   {    "dis_get_dns_port"           ,
-    dim_dis_get_dns_port         ,
-    METH_VARARGS                 ,
-    "Function for getting the DNS port"
+       dim_dis_get_dns_port         ,
+       METH_VARARGS                 ,
+       "Function for getting the DNS port"
   },
   {    "dis_add_exit_handler"       ,
-    dim_dis_add_exit_handler     ,
-    METH_VARARGS                 ,
-    "Function for setting the DIM exit handler"
+       dim_dis_add_exit_handler     ,
+       METH_VARARGS                 ,
+       "Function for setting the DIM exit handler"
   },
   {    "dis_add_error_handler"      ,
-    dim_dis_add_error_handler    ,
-    METH_VARARGS                 ,
-    "Function for setting the DIM error handler"
+       dim_dis_add_error_handler    ,
+       METH_VARARGS                 ,
+       "Function for setting the DIM error handler"
   },
   {    "dis_add_client_exit_handler"  ,
-    dim_dis_add_client_exit_handler,
-    METH_VARARGS                   ,
-    "Function for setting the DIM Client exit handler"
+       dim_dis_add_client_exit_handler,
+       METH_VARARGS                   ,
+       "Function for setting the DIM Client exit handler"
   },
   {    "dis_update_service"           ,
-    dim_dis_update_service         ,
-    METH_VARARGS                   ,
-    "Function for updating the specified service"
+       dim_dis_update_service         ,
+       METH_VARARGS                   ,
+       "Function for updating the specified service"
   },
   {    "dis_selective_update_service"  ,
-    dim_dis_selective_update_service,
-    METH_VARARGS                    ,
-    "Function for updating the specified service and clients"
+       dim_dis_selective_update_service,
+       METH_VARARGS                    ,
+       "Function for updating the specified service and clients"
   },
   {    "dis_set_quality"               ,
-    dim_dis_set_quality             ,
-    METH_VARARGS                    ,
-    "Function for setting the quality of a service"
+       dim_dis_set_quality             ,
+       METH_VARARGS                    ,
+       "Function for setting the quality of a service"
   },
   {    "dis_set_timestamp"             ,
-    dim_dis_set_timestamp           ,
-    METH_VARARGS                    ,
-    "Function for setting the the timestamp of a service"
+       dim_dis_set_timestamp           ,
+       METH_VARARGS                    ,
+       "Function for setting the the timestamp of a service"
   },
   {    "dis_remove_service"            ,
-    dim_dis_remove_service          ,
-    METH_VARARGS                    ,
-    "Function for removing a service"
+       dim_dis_remove_service          ,
+       METH_VARARGS                    ,
+       "Function for removing a service"
   },
   {    "dis_get_next_cmnd"             ,
-    dim_dis_get_next_cmnd           ,
-    METH_VARARGS                    ,
-    "Get a command from the list of waiting command requests"
+       dim_dis_get_next_cmnd           ,
+       METH_VARARGS                    ,
+       "Get a command from the list of waiting command requests"
   },
   {    "dis_remove_service"            ,
-    dim_dis_remove_service          ,
-    METH_VARARGS                    ,
-    "Remove a Service from the list of provided services"
+       dim_dis_remove_service          ,
+       METH_VARARGS                    ,
+       "Remove a Service from the list of provided services"
   },
   {    "dis_get_client"                ,
-    dim_dis_get_client              ,
-    METH_VARARGS                    ,
-    "Gets the process identification of the current DIM client"
+       dim_dis_get_client              ,
+       METH_VARARGS                    ,
+       "Gets the process identification of the current DIM client"
   },
   {    "dis_get_conn_id"               ,
-    dim_dis_get_conn_id             ,
-    METH_VARARGS                    ,
-    "Gets the connection ID of the current DIM client"
+       dim_dis_get_conn_id             ,
+       METH_VARARGS                    ,
+       "Gets the connection ID of the current DIM client"
   },
   {    "dis_get_timeout"               ,
-    dim_dis_get_timeout             ,
-    METH_VARARGS                    ,
-    "Gets the update rate that was specified by a client for a specific service"
+       dim_dis_get_timeout             ,
+       METH_VARARGS                    ,
+       "Gets the update rate that was specified by a client for a specific service"
   },
   {    "dis_get_client_services"       ,
-    dim_dis_get_client_services     ,
-    METH_VARARGS                    ,
-    "Gets the services of a DIM client, which has subscribed to this DIM server"
+       dim_dis_get_client_services     ,
+       METH_VARARGS                    ,
+       "Gets the services of a DIM client, which has subscribed to this DIM server"
   },
   {    "dis_set_client_exit_handler"   ,
-    dim_dis_set_client_exit_handler ,
-    METH_VARARGS                    ,
-    "Activates the client exit handler for a specific client and a specific service"
+       dim_dis_set_client_exit_handler ,
+       METH_VARARGS                    ,
+       "Activates the client exit handler for a specific client and a specific service"
   },
   {    "dis_get_error_services"        ,
-    dim_dis_get_error_services      ,
-    METH_VARARGS                    ,
-    "Gets the names of DIM services that have an error"
+       dim_dis_get_error_services      ,
+       METH_VARARGS                    ,
+       "Gets the names of DIM services that have an error"
   },
   {    "dis_add_cmnd"                  ,
-    dim_dis_add_cmnd                ,
-    METH_VARARGS                    ,
-    "Adds a new command"
+       dim_dis_add_cmnd                ,
+       METH_VARARGS                    ,
+       "Adds a new command"
   },
   {    "dis_add_service"               ,
-    dim_dis_add_service             ,
-    METH_VARARGS                    ,
-    "Adds a new service"
+       dim_dis_add_service             ,
+       METH_VARARGS                    ,
+       "Adds a new service"
   },
   {    "dic_set_dns_node"              ,
-    dim_dic_set_dns_node            ,
-    METH_VARARGS                    ,
-    "Function for setting the DNS node"
+       dim_dic_set_dns_node            ,
+       METH_VARARGS                    ,
+       "Function for setting the DNS node"
   },
   {    "dic_get_dns_node"              ,
-    dim_dic_get_dns_node            ,
-    METH_VARARGS                    ,
-    "Function for getting the DNS node"
+       dim_dic_get_dns_node            ,
+       METH_VARARGS                    ,
+       "Function for getting the DNS node"
   },
   {    "dic_set_dns_port"              ,
-    dim_dic_set_dns_port            ,
-    METH_VARARGS                    ,
-    "Function for setting the DNS port"
+       dim_dic_set_dns_port            ,
+       METH_VARARGS                    ,
+       "Function for setting the DNS port"
   },
   {    "dic_get_dns_port"              ,
-    dim_dic_get_dns_port            ,
-    METH_VARARGS                    ,
-    "Function for getting the DNS port"
+       dim_dic_get_dns_port            ,
+       METH_VARARGS                    ,
+       "Function for getting the DNS port"
   },
   {    "dic_get_id"                    ,
-    dim_dic_get_id                  ,
-    METH_VARARGS                    ,
-    "Gets the process identification of this DIM client."
+       dim_dic_get_id                  ,
+       METH_VARARGS                    ,
+       "Gets the process identification of this DIM client."
   },
   {    "dic_disable_padding"           ,
-    dim_dic_disable_padding         ,
-    METH_VARARGS                    ,
-    "Disable padding of received services."
+       dim_dic_disable_padding         ,
+       METH_VARARGS                    ,
+       "Disable padding of received services."
   },
   {    "dic_get_quality"               ,
-    dim_dic_get_quality             ,
-    METH_VARARGS                    ,
-    "Gets the quality of  a received service."
+       dim_dic_get_quality             ,
+       METH_VARARGS                    ,
+       "Gets the quality of  a received service."
   },
   {    "dic_get_timestamp"             ,
-    dim_dic_get_timestamp           ,
-    METH_VARARGS                    ,
-    "Gets the time stamp of a received service."
+       dim_dic_get_timestamp           ,
+       METH_VARARGS                    ,
+       "Gets the time stamp of a received service."
   },
   {    "dic_get_format"                ,
-    dim_dic_get_format              ,
-    METH_VARARGS                    ,
-    "Gets the format description of a received service."
+       dim_dic_get_format              ,
+       METH_VARARGS                    ,
+       "Gets the format description of a received service."
   },
   {    "dic_release_service"           ,
-    dim_dic_release_service         ,
-    METH_VARARGS                    ,
-    "Called by a client when a service is not needed anymore."
+       dim_dic_release_service         ,
+       METH_VARARGS                    ,
+       "Called by a client when a service is not needed anymore."
   },
   {    "dic_info_service"               ,
-    dim_dic_info_service,
-    METH_VARARGS | METH_KEYWORDS     ,
-    "Called by a client for subscribing to a service."
+       dim_dic_info_service,
+       METH_VARARGS | METH_KEYWORDS     ,
+       "Called by a client for subscribing to a service."
   },
   {    "dic_cmnd_service"        ,
-    dim_dic_cmnd_service      ,
-    METH_VARARGS              ,
-    "Request the execution of a command by a server."
+       dim_dic_cmnd_service      ,
+       METH_VARARGS              ,
+       "Request the execution of a command by a server."
   },
   {    "dic_cmnd_callback"       ,
-    dim_dic_cmnd_callback     ,
-    METH_VARARGS              ,
-    "Request the execution of a command and registers a completion callback."
+       dim_dic_cmnd_callback     ,
+       METH_VARARGS              ,
+       "Request the execution of a command and registers a completion callback."
   },
   {    "dic_info_service_stamped"       ,
-    dim_dic_info_service_stamped  ,
-    METH_VARARGS              ,
-    "Request a time stamped (and quality flagged) information service from a server"
+       dim_dic_info_service_stamped  ,
+       METH_VARARGS              ,
+       "Request a time stamped (and quality flagged) information service from a server"
   },
   {    "dic_get_server"          ,
-    dim_dic_get_server        ,
-    METH_VARARGS              ,
-    "Gets the process identification of the current DIM server"
+       dim_dic_get_server        ,
+       METH_VARARGS              ,
+       "Gets the process identification of the current DIM server"
   },
   {    "dic_get_conn_id"          ,
-    dim_dic_get_conn_id        ,
-    METH_VARARGS               ,
-    "Gets the connection ID of the current DIM server"
+       dim_dic_get_conn_id        ,
+       METH_VARARGS               ,
+       "Gets the connection ID of the current DIM server"
   },
   {    "dic_get_server_services"          ,
-    dim_dic_get_server_services     ,
-    METH_VARARGS              ,
-    "Gets the services of a DIM server to which the client has subscribed."
+       dim_dic_get_server_services     ,
+       METH_VARARGS              ,
+       "Gets the services of a DIM server to which the client has subscribed."
   },
   {    "dic_get_error_services"          ,
-    dim_dic_get_error_services       ,
-    METH_VARARGS              ,
-    "Gets the names of DIM services that have an error."
+       dim_dic_get_error_services       ,
+       METH_VARARGS              ,
+       "Gets the names of DIM services that have an error."
   },
   {    "dic_add_error_handler"          ,
-    dim_dic_add_error_handler   ,
-    METH_VARARGS              ,
-    "Adds an error handler to this client."
+       dim_dic_add_error_handler   ,
+       METH_VARARGS              ,
+       "Adds an error handler to this client."
   },
   {NULL, NULL, 0, NULL}        /* Sentinel */
 };
@@ -1860,7 +1843,7 @@ static PyMethodDef DimMethods[] = {
 #ifndef _WIN32
 static pthread_t maintid;
 #endif
-  PyMODINIT_FUNC
+PyMODINIT_FUNC
 initdimc(void)
 {
   PyObject *m;
@@ -1901,55 +1884,52 @@ extern sem_t DIM_INIT_Sema;
 PyGILState_STATE gilstack[GILSTACKSIZE];
 int gilstackp = 0;
 
-void dim_lock()
-{
-	static void  (*func)(void);
-	int v;
+void dim_lock()  {
+  static void  (*func)(void);
+  int v;
 
-    if(!func) {
-        func = (void (*)()) dlsym(RTLD_NEXT, "dim_lock");
-		if (!func) {
-			printf("Couldn't find dim_lock");
-			exit(1);
-		}
-	}
-	if (gilstackp == GILSTACKSIZE) {
-		printf("ERROR: GILstack overflow");
-		exit(1);
-	}
-	pthread_mutex_lock(&pydimlock);
-	if ((pthread_self() != maintid)) {
-		gilstack[gilstackp++] = PyGILState_Ensure();
-	}
-	sem_getvalue(&DIM_INIT_Sema, &v);
-	printf("%d\n", v);
-	(*func)();
-  	printf("dim_lock() is called: %d\n", gilstackp);
-	pthread_mutex_unlock(&pydimlock); 
-  	return;
+  if(!func) {
+    func = (void (*)()) dlsym(RTLD_NEXT, "dim_lock");
+    if (!func) {
+      printf("Couldn't find dim_lock");
+      exit(1);
+    }
+  }
+  if (gilstackp == GILSTACKSIZE) {
+    printf("ERROR: GILstack overflow");
+    exit(1);
+  }
+  pthread_mutex_lock(&pydimlock);
+  if ((pthread_self() != maintid)) {
+    gilstack[gilstackp++] = PyGILState_Ensure();
+  }
+  sem_getvalue(&DIM_INIT_Sema, &v);
+  printf("%d\n", v);
+  (*func)();
+  printf("dim_lock() is called: %d\n", gilstackp);
+  pthread_mutex_unlock(&pydimlock); 
+  return;
 }
 
-void dim_unlock()
-{
-        
+void dim_unlock()  {        
   static void  (*func)(void);
 
   if(!func) {
-        func = (void (*)()) dlsym(RTLD_NEXT, "dim_unlock");
-		if (!func) {
-			printf("Couldn't find dim_unlock");
-			exit(1);
-		}
-	}        
-   // gilstackp--;	
-	pthread_mutex_lock(&pydimlock);
-  	(*func)();
-	if ((pthread_self() != maintid)) {
-		PyGILState_Release(gilstack[gilstackp--]);
-	}           
-	pthread_mutex_unlock(&pydimlock);
-  	printf("dim_unlock() is called: %d\n", gilstackp); 
-  	return;
+    func = (void (*)()) dlsym(RTLD_NEXT, "dim_unlock");
+    if (!func) {
+      printf("Couldn't find dim_unlock");
+      exit(1);
+    }
+  }        
+  // gilstackp--;	
+  pthread_mutex_lock(&pydimlock);
+  (*func)();
+  if ((pthread_self() != maintid)) {
+    PyGILState_Release(gilstack[gilstackp--]);
+  }           
+  pthread_mutex_unlock(&pydimlock);
+  printf("dim_unlock() is called: %d\n", gilstackp); 
+  return;
 }
 
 #endif
