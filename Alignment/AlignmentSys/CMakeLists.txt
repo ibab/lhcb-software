@@ -9,6 +9,7 @@ gaudi_depends_on_subdirs(Alignment/AlignEvent
                          Alignment/AlignTrTools
                          Alignment/AlignmentDBVisualisationTool
                          Alignment/AlignmentInterfaces
+                         Alignment/AlignmentMonitoring
                          Alignment/AlignmentTools
                          Alignment/Escher
                          Alignment/MisAligner

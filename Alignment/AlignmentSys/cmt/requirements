@@ -11,6 +11,7 @@ branches cmt doc
 
 use AlignmentDBVisualisationTool	v1r5	Alignment # Pieter David
 use AlignmentInterfaces			v3r6	Alignment # Johan Blouw
+use AlignmentMonitoring                 v*      Alignment # Maurizio Martinelli
 use AlignmentTools      		v3r4    Alignment # Sebastien Viret
 use AlignEvent				v1r2    Alignment # Wouter Hulsbergen
 use AlignKernel				v3r8    Alignment # Adlene Hicheur, Wouter Hulsbergen
