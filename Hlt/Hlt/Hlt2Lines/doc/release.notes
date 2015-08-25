@@ -7,6 +7,14 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
+! 2015-0825 - Mike Sokoloff
+   - modified several files to add new Lcp --> pHHHH lines and
+   - add muon-tagged D*+ --> D0,pi+; D0 --> HHHH lines
+
+! 2015-08-24 - Mike Sokoloff
+  -  modified several files in CharmHad to improve D --> HHH selections
+  -  and to remove unnecessary specifications of TisTosSpec in TagDecay
+  -  dictionaries where they are irrelevant.
 
 ! 2015-08-21 - Patrick Robbe
  - Add line Hlt2SMOGPhysics in Commissioning/Lines.py
