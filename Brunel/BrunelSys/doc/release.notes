@@ -3,6 +3,20 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v48r2>2015-08-25 Brunel v48r2</A></H1><PRE>
+This version uses projects:
+ LCG_79 (ROOT 6.04.02), Gaudi v26r3, LHCb v39r0, Lbcom v17r0, Rec v18r1
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Patch release for 2015 25ns reconstruction
+
+- Changes to persistency for Run2 data
+  . Add saving of ClosestToBeam state for Velo tracks
+
+- Bug fixes
+  . FastVeloFitLHCbIDs: Protect from segfault in case of not decoded hits.
+    (FastVelo v1r22)
+
 </PRE><H1><A NAME=v48r1>2015-08-06 Brunel v48r1</A></H1><PRE>
 This version uses projects:
  LCG_79 (ROOT 6.04.02), Gaudi v26r3, LHCb v39r0, Lbcom v17r0, Rec v18r1
