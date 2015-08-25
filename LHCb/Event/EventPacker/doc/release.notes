@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-08-25 - Chris Jones
+ - Improved protection in UnpackParticlesAndVertices for being triggered
+   twice in the ame event.
+
+! 2015-08-25 - Chris Jones
  - Fix a bug in PackedProtoParticle::check where for CaloHypos the iterator
    value was compared, instead of the memory location of the objects the
    SmartRefs point to ...

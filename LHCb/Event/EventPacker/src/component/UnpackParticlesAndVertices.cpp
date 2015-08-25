@@ -33,7 +33,8 @@ UnpackParticlesAndVertices::~UnpackParticlesAndVertices() {}
 //=============================================================================
 StatusCode UnpackParticlesAndVertices::execute()
 {
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute"  << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "==> Execute"  << endmsg;
 
   //=================================================================
   //== Process the Tracks
@@ -107,7 +108,7 @@ StatusCode UnpackParticlesAndVertices::execute()
           const std::string & containerName = ppids->linkMgr()->link(linkID)->path() + m_postFix;
           // Check to see if container already exists. If it does, unpacking has already been run this
           // event so quit
-          if ( exist<LHCb::Tracks>(containerName) )
+          if ( exist<LHCb::MuonPIDs>(containerName) )
           {
             if ( msgLevel(MSG::DEBUG) )
               debug() << " -> " << containerName << " exists" << endmsg;
@@ -157,7 +158,7 @@ StatusCode UnpackParticlesAndVertices::execute()
           const std::string & containerName = ppids->linkMgr()->link(linkID)->path() + m_postFix;
           // Check to see if container already exists. If it does, unpacking has already been run this
           // event so quit
-          if ( exist<LHCb::Tracks>(containerName) )
+          if ( exist<LHCb::RichPIDs>(containerName) )
           {
             if ( msgLevel(MSG::DEBUG) )
               debug() << " -> " << containerName << " exists" << endmsg;
@@ -306,6 +307,14 @@ StatusCode UnpackParticlesAndVertices::execute()
         {
           prevLink = linkID;
           const std::string & containerName = pverts->linkMgr()->link( linkID )->path() + m_postFix;
+          // Check to see if container already exists. If it does, unpacking has already been run this
+          // event so quit
+          if ( exist<LHCb::Vertices>(containerName) )
+          {
+            if ( msgLevel(MSG::DEBUG) )
+              debug() << " -> " << containerName << " exists" << endmsg;
+            return StatusCode::SUCCESS;
+          }
           verts = new LHCb::Vertices();
           put( verts, containerName );
           ++nbVertContainer;
@@ -397,6 +406,14 @@ StatusCode UnpackParticlesAndVertices::execute()
         {
           prevLink = linkID;
           const std::string & containerName = pRecVerts->linkMgr()->link(linkID)->path() + m_postFix;
+          // Check to see if container already exists. If it does, unpacking has already been run this
+          // event so quit
+          if ( exist<LHCb::RecVertices>(containerName) )
+          {
+            if ( msgLevel(MSG::DEBUG) )
+              debug() << " -> " << containerName << " exists" << endmsg;
+            return StatusCode::SUCCESS;
+          }
           recVerts = new LHCb::RecVertices();
           put( recVerts, containerName );
           ++nbRecVertContainer;
@@ -468,6 +485,15 @@ StatusCode UnpackParticlesAndVertices::execute()
         const int indx = cont.reference >> 32;
         const std::string & containerName = prels->linkMgr()->link(indx)->path() + m_postFix;
 
+        // Check to see if container already exists. If it does, unpacking has already been run this
+        // event so quit
+        if ( exist<RELATION>(containerName) )
+        {
+          if ( msgLevel(MSG::DEBUG) )
+            debug() << " -> " << containerName << " exists" << endmsg;
+          return StatusCode::SUCCESS;
+        }
+        
         // Create a new unpacked object at the TES location and save
         RELATION * rels = new RELATION();
         put( rels, containerName );
@@ -500,6 +526,9 @@ StatusCode UnpackParticlesAndVertices::execute()
     }
 
   }
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "... Execute finished." << endmsg;
 
   return StatusCode::SUCCESS;
 }
