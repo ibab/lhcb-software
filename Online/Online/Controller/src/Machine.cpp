@@ -386,6 +386,7 @@ ErrCond Machine::checkSlaves()   {
     display(DEBUG,c_name(),"Executing '%s'. Count:%d Fail:%d Dead:%d Other:%d Answered:%d Size:%d",
             tr->c_name(), int(check.count), int(check.fail), int(check.dead),
             int(check.other), int(check.answered), int(sl.size()));
+    m_meta.execute(this);
     if ( tr->killActive() && check.dead < sl.size() )   {
       display(DEBUG,c_name(),"WAIT_ACTION '%s'. Count:%d Fail:%d Dead:%d Size:%d KillActive:%s",
               tr->c_name(), int(check.count), int(check.fail), int(check.dead),int(sl.size()),
@@ -411,19 +412,23 @@ ErrCond Machine::checkSlaves()   {
       return FSM::WAIT_ACTION;
     }
     // Either the transition is finished or all slaves should be dead now....
-    if ( check.count == sl.size() )
+    if ( check.count == sl.size() )  {
       return ret_success(this,MACH_EXEC_ACT);
-    else if ( tr->killActive() && check.dead == sl.size() )
+    }
+    else if ( tr->killActive() && check.dead == sl.size() )  {
       return ret_success(this,MACH_EXEC_ACT);
-    else if ( !tr->checkLimbo() && check.fail==0 && check.dead+check.count==sl.size() )
+    } 
+    else if ( !tr->checkLimbo() && check.fail==0 && check.dead+check.count==sl.size() )  {
       return ret_success(this,MACH_EXEC_ACT);
+    }
     else if ( check.fail>0 && check.count+check.fail == sl.size() )   {
       display(INFO,c_name(),"Executing '%s'. Invoke MACH_FAIL. count:%d fail:%d dead:%d",
               tr->c_name(), int(check.count), int(check.fail), int(check.dead));
       return ret_failure(this);
     }
-    else if ( check.fail>0 ) 
+    else if ( check.fail>0 )   {
       return FSM::FAIL;
+    }
     else if ( check.answered == sl.size() && check.count+check.other == sl.size() )  {
       // This may only happen, if a slave changes state again before the transition finished.
       // In this event we have to cancel the transition and work down the slave state change.

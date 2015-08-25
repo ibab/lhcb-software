@@ -8,6 +8,7 @@ gaudi_depends_on_subdirs(Online/OnlineKernel
                          Online/XML
                          Online/UPI)
 
+add_definitions(-DDD4HEP_USE_TINYXML)
 gaudi_add_library(Controller src/*.cpp
                   PUBLIC_HEADERS FiniteStateMachine
                   LINK_LIBRARIES OnlineKernel dim XML)

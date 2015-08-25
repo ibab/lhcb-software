@@ -46,10 +46,7 @@ static void error_call(int severity, int error_code, char* message) {
     enabled = error_code;
     return;
   }
-  else if ( !enabled ) {
-    return;
-  }
-  else {
+  if ( enabled ) {
     switch(severity) { 
     case DIM_INFO:
       TypedObject::display(TypedObject::INFO,"DIM",message);
@@ -97,6 +94,7 @@ FSM::ErrCond Controller::fail()  {
   typedef map<Slave::SlaveState,vector<const Slave*> > SlaveMap;
   const Transition* tr = m_machine->currTrans();
   const Slaves      sl = m_machine->slaves();
+  error_call(ERROR_CONTROL,1,(char*)"Enable DIM error printing");
   display(ALWAYS,c_name(),"%s> Controller: FAILED to invoke transition %s from %s.",
           m_machine->type()->c_name(), tr ? tr->c_name() : "??Unknown??",m_machine->c_state());
   m_machine->setSlaveState(Slave::SLAVE_FAILED,m_errorState);
@@ -138,7 +136,13 @@ FSM::ErrCond Controller::publishSlaves()  {
   stringstream info;
   const Slaves slaves = m_machine->slaves();
   const Transition* trans = m_machine->currTrans();
-  if ( trans && trans->name() == "unload" ) {
+  if ( m_machine->isIdle() )  {
+    error_call(ERROR_CONTROL,1,(char*)"Enable DIM error printing");
+  }
+  else if ( trans && trans->name() == "start" ) {
+    error_call(ERROR_CONTROL,0,(char*)"Disable DIM error printing");
+  }
+  else if ( trans && trans->name() == "unload" ) {
     error_call(ERROR_CONTROL,0,(char*)"Disable DIM error printing");
   }
   else {
@@ -150,10 +154,12 @@ FSM::ErrCond Controller::publishSlaves()  {
     if ( ++i == slaves.end() ) break;
     info << "|";
   }
-  ::dim_lock();
-  m_taskInfo = info.str();
-  ::dim_unlock();
-  ::dis_update_service(m_fsmTasks);
+  if ( m_taskInfo != info.str() )  {
+    ::dim_lock();
+    m_taskInfo = info.str();
+    ::dim_unlock();
+    ::dis_update_service(m_fsmTasks);
+  }
   return FSM::SUCCESS;
 }
 
@@ -163,6 +169,7 @@ FSM::ErrCond Controller::publish()  {
   display(INFO,c_name(),"%s> Controller PUBLISH state %s",m_machine->c_name(),state.c_str());
   if ( state == "ERROR" )  {
     const Slaves slaves = m_machine->slaves();
+    error_call(ERROR_CONTROL,1,(char*)"Enable DIM error printing");
     for(Slaves::const_iterator i=slaves.begin(); i!= slaves.end(); ++i)  {
       const Slave* s = *i;
       display(INFO,c_name(),"Controller: Slave %s in state %s has meta-state:%s",
