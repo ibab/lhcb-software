@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciSys
 ################################################################################
-gaudi_subdir(DaVinciSys v37r2p1)
+gaudi_subdir(DaVinciSys v37r2p2)
 
 gaudi_depends_on_subdirs(DaVinciTests
                          ##############################
