@@ -653,7 +653,7 @@ class Brunel(LHCbConfigurableUser):
             
             ### for 2015, filter the fitted Velo tracks for PV
             if( self.getProp("DataType") is "2015" ):
-                fittedVeloTracksFilter = TrackToDST("FilterFittedVeloTrackStates", veloStates = [])
+                fittedVeloTracksFilter = TrackToDST("FilterFittedVeloTrackStates", veloStates = ["ClosestToBeam"])
                 fittedVeloTracksFilter.TracksInContainer = "Rec/Track/FittedHLT1VeloTracks"
                 GaudiSequencer("OutputDSTSeq").Members += [ fittedVeloTracksFilter ]
            
