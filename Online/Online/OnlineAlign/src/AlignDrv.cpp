@@ -79,7 +79,7 @@ StatusCode AlignDrv::initialize()
 //  m_fitter = new Fitter(this);
   m_incidentSvc->addListener(this,"DAQ_PAUSE");
   if (m_RefFileName.empty()) {
-     m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
+     m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignment_Reference_File.txt";
   }
   return StatusCode::SUCCESS;
 }
