@@ -5,7 +5,7 @@
 # =============================================================================
 package          BenderUser
 author           Vanya BELYAEV
-version          v25r5
+version          v26r3
 
 # ============== structure ====================================================
 branches         cmt doc python
@@ -14,6 +14,7 @@ branches         cmt doc python
 
 # ============== dependencies =================================================
 use              Bender      v*   Phys 
+use              BenderTools v*   Phys 
 
 
 # ============== patterns =====================================================
