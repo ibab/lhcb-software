@@ -10,18 +10,16 @@
 # =========================================================================
 #
 export CMTCONFIG=x86_64-slc6-gcc48-opt;
+export DAQ_INHIBIT_FINALIZE=ON;
 export HN=`hostname -s | tr a-z A-Z`;
 if test -f "/group/online/dataflow/options/LHCb2/Nodes/${HN}_TriggerInfo.py";
 then
   export PYTHONPATH=/group/online/dataflow/options/LHCb2/Nodes;
   unset MOOREONLINE_VERSION;
   export MOOREONLINE_VERSION=`python -c "import ${HN}_TriggerInfo as H; print H.MooreOnlineVersion"`;
-  if test "${MOOREONLINE_VERSION}" = "MooreOnline_v23r7p3";then
-      source ${FARMCONFIGROOT}/job/runMooreHlt2Online_EFF.sh ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES};
-  else
-      # . /group/hlt/MOORE/${MOOREONLINE_VERSION}/InstallArea/runMooreHlt2Online_EFF.sh ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES};
-      . /group/online/dataflow/cmtuser/OnlineDev_v5r22/Online/FarmConfig/job/runMooreHlt2Online_EFF.sh  ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES};
-      fi;
+  ### export CMTCONFIG=x86_64-slc6-gcc48-dbg;
+  ### source ${FARMCONFIGROOT}/job/runMooreHlt2Online_EFF.sh ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES};
+  . /group/hlt/MOORE/${MOOREONLINE_VERSION}/InstallArea/runMooreHlt2Online_EFF.sh ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES};
 else
   echo "[ERROR] Cannot determine MOOREONLINE_VERSION. No file: /group/online/dataflow/options/LHCb2/Nodes/${HN}_TriggerInfo.py";
 fi;

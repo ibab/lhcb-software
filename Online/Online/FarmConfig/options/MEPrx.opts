@@ -1,5 +1,5 @@
 #pragma print off
-// 
+//
 // MEPrx.opts
 // $Id $
 // Sample options for the eventbuilder service MEPRxSvc
@@ -11,9 +11,9 @@
 //
 ApplicationMgr.SvcOptMapping        += { "Gaudi::IODataManager/IODataManager",
                                          "Gaudi::MultiFileCatalog/FileCatalog",
-                                         "LHCb::OnlineRunable/EmptyEventLoop", 
-					 "LHCb::MEPRxSvc/Runable" 
-				       };
+                                         "LHCb::OnlineRunable/EmptyEventLoop",
+          "LHCb::MEPRxSvc/Runable"
+              };
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
@@ -27,13 +27,13 @@ MEPManager.Buffers                   = @OnlineEnv.MEPrx_Buffers;
 //
 Runable.OutputLevel                  = 1;
 Runable.MEPBuffers                   = 4;           // concurrently built events
-Runable.InitialMEPReqs               = 3;           // how many MEPs to send initially 
+Runable.InitialMEPReqs               = 3;           // how many MEPs to send initially
 Runable.maxMsForGetSpace             = 100;         // milliseconds to wait to get buffer memory from BM
 Runable.partitionID                  = @OnlineEnv.PartitionID;
 Runable.partitionName                = @OnlineEnv.PartitionName;
 Runable.partitionBuffers             = @OnlineEnv.PartitionBuffers;
 Runable.MEPBufSize                   = 4097152;     // how much memory to allocate for an event 1 MB (large!!)
-Runable.sockBuf                      = 30000000;    // this must be supported by the kernel! 
+Runable.sockBuf                      = 30000000;    // this must be supported by the kernel!
 Runable.refCount                     = 2;
 Runable.maxEventAge                  = 10000000;    // (us) - put at least 10000, 0 to switch off
 Runable.MEPRecvTimeout               = 10000000;    // (us) to wait in select call for new packet
@@ -52,3 +52,4 @@ Runable.IPNameOdin                   = @OnlineEnv.ODIN_IP;
 //
 MonitorSvc.CounterUpdateInterval     = 5;
 #include "$STATIC_OPTS/MessageSvc.opts"
+MessageSvc.OutputLevel               = 3;
