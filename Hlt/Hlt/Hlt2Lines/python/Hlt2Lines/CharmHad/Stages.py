@@ -1086,9 +1086,37 @@ Dch2KmKmKpPipPip = D2HHHHHCombiner('Dch2KmKmKpPipPip', decay = "[D+ -> K- K- K+ 
                 inputs=[SharedDetachedDpmChild_K,SharedDetachedDpmChild_pi],
                 shared = True)
 
-LcpToPpKmKpPimPip = D2HHHHHCombiner('LcpToPpKmKpPimPip', decay = "[Lambda_c+ -> p+ K- K+ pi- pi+]cc",
-                inputs=[SharedTighterDetachedLcChild_p,SharedDetachedLcChild_K,SharedDetachedLcChild_pi],
-                shared = True)
+LcpToPpKmKpPimPip = D2HHHHHCombiner('LcpToPpKmKpPimPip', 
+                decay = "[Lambda_c+ -> p+ K- K+ pi- pi+]cc",
+                inputs=[SharedTighterDetachedLcChild_p,
+                 SharedDetachedLcChild_K,SharedDetachedLcChild_pi],
+                 shared = True)
+##  The following five lines added 150825 mds
+LcpToPpKmPimPipPip = D2HHHHHCombiner('LcpToPpKmPimPipPip', 
+                decay = "[Lambda_c+ -> p+ K- pi- pi+ pi+]cc",
+                inputs=[SharedTighterDetachedLcChild_p,
+                 SharedDetachedLcChild_K,SharedDetachedLcChild_pi],
+                 shared = True)
+LcpToPpPimPimPipPip = D2HHHHHCombiner('LcpToPpPimPimPipPip', 
+                decay = "[Lambda_c+ -> p+ pi- pi- pi+ pi+]cc",
+                inputs=[SharedTighterDetachedLcChild_p,
+                 SharedDetachedLcChild_pi],
+                 shared = True)
+LcpToPpKpPimPimPip = D2HHHHHCombiner('LcpToPpKpPimPimPip', 
+                decay = "[Lambda_c+ -> p+ K+ pi- pi- pi+]cc",
+                inputs=[SharedTighterDetachedLcChild_p,
+                 SharedDetachedLcChild_K,SharedDetachedLcChild_pi],
+                 shared = True)
+LcpToPpKpKpPimPim = D2HHHHHCombiner('LcpToPpKpKpPimPim', 
+                decay = "[Lambda_c+ -> p+ K+ K+ pi- pi-]cc",
+                inputs=[SharedTighterDetachedLcChild_p,
+                 SharedDetachedLcChild_K,SharedDetachedLcChild_pi],
+                 shared = True)
+LcpToPpKmKmPipPip = D2HHHHHCombiner('LcpToPpKmKmPipPip', 
+                decay = "[Lambda_c+ -> p+ K- K- pi+ pi+]cc",
+                inputs=[SharedTighterDetachedLcChild_p,
+                 SharedDetachedLcChild_K,SharedDetachedLcChild_pi],
+                 shared = True)
 
 class DetachedV0HCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs, shared = False, nickname = None) :
