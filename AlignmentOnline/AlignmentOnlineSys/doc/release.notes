@@ -5,6 +5,7 @@ Purpose: Running and testing Alignment in the online environment
 
 ! 2015-08-25 - Maurizio Martinelli
  - Added dependency on Calibration/OTOnlineCalibration 
+ - Added dependency on AlignmentOnline/PyGeneticOnline
 
 </PRE><H1><A NAME=v10r5>2015-07-30 AlignmentOnlineSys v10r5</A></H1><PRE>
 Released the project with the following new tags:

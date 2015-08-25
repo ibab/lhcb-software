@@ -9,6 +9,7 @@ branches cmt doc tests
 
 use AlignOnline v1r5 AlignmentOnline
 use OTOnlineCalibration v* Calibration
+use PyGeneticOnline v* AlignmentOnline
 
 # Declare this as a container package
 apply_pattern container_package
