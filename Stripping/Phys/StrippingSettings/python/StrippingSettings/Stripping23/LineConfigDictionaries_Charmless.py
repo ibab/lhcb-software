@@ -40,7 +40,7 @@ B2HHBDT = {
     'BUILDERTYPE' : 'B2HHBDTLines',
     'CONFIG'      : { 'PrescaleB2HHBDT' : 1.,
                       'TrChi2'          : 3,
-                      'TrGhostProb'     : 3,
+                      'TrGhostProb'     : 1,
                       'PionPT'          : 1000,
                       'SumPT'           : 4500,
                       'DOCACHI2'        : 9,

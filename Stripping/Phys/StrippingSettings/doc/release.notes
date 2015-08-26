@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-26 - Stefano Perazzini
+ - Fix to dictionary for StrippingB2HHBDT.py in 
+   Stripping23/LineConfigDictionaries_Charmless.py 
+
 !========================= StrippingSettings v2r39 2015-08-18 =========================
 
 ! 2015-08-17 - Stefano Perazzini
