@@ -6,6 +6,9 @@
 
 !========================== StrippingSelections v4r6 2015-08-26 ===============
 
+! 2015-08-27 - Carlos Vazquez Sierra
+ - Added a script for FT checking on tests/liaisons/B2CC
+
 ! 2015-08-26 - Roberta Cardinale
  - Fixed bug for raw banks in StrippingBandQ/StrippingDiMuonInherit.py
 

@@ -149,7 +149,7 @@ unpackIt.InputName = "pRec/Track/FittedHLT1VeloTracks"
 unpackIt.OutputName = "Rec/Track/FittedHLT1VeloTracks"
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 10000
+DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 100
 DaVinci().appendToMainSequence( [unpackIt] )
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
