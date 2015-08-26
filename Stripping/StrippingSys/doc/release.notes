@@ -3,6 +3,27 @@ Package     : StrippingSys
 Package Coordinator : Andrea.Contu@cern.ch, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v9r10p1 2015-08-26 =========================
+
+*Phys/StrippingSelections
+ - Fixed bug for raw banks in StrippingBandQ/StrippingDiMuonInherit.py
+ - Update dicctionary in StrippingRD/StrippingKshort2eePiPi.py
+ - Remove import from selections in StrippingTau23Mu
+
+*Phys/StrippingSettings
+
+ - Fix to B2OC and BandQ S23 config, updated S23 dbase
+ - Remove duplicates in S23 LineConfigDictionary for B2OC
+ - Fix for StrippingDiMuonInherit.py in S23 LineConfigDictionary for BandQ
+ - Fix to dictionary for StrippingB2HHBDT.py in 
+   Stripping23/LineConfigDictionaries_Charmless.py 
+
+
+*Phys/StrippingArchive
+ - Fix to Stripping23/StrippingBandQ/StrippingDiMuonInherit.py
+ - Fix to Stripping23/StrippingBandQ/StrippingDiMuonInherit.py
+ - Remove import from selections in Strippingtau23Mu
+
 !========================= StrippingSys v9r10 2015-08-18 =========================
 
 ! 2015-08-12 - Chris Jones
