@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-26 - Nicola Skidmore
+ - Remove duplicates in S23 LineConfigDictionary for B2OC
+
 ! 2015-08-26 - Roberta Cardinale
  - Fix for StrippingDiMuonInherit.py in S23 LineConfigDictionary for BandQ
 
@@ -12,6 +15,8 @@
    Stripping23/LineConfigDictionaries_Charmless.py 
 
 !========================= StrippingSettings v2r39 2015-08-18 =========================
+
+
 
 ! 2015-08-17 - Stefano Perazzini
  - Propagated a change to the config dictionary of StrippingB2CC/StrippingBd2JpsieeKS.py
