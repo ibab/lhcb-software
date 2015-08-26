@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r40 2015-08-26 =========================
+
 ! 2015-08-26 - Andrea Contu
  - Fix to B2OC and BandQ S23 config, updated S23 dbase
 
