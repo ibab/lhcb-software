@@ -5,9 +5,15 @@
 ! Created     : 2015-02-04
 ! -----------------------------------------------------------------------------
 
+! 2015-08-26 - Chris Jones
+ - Update the CMake builds to make each cache independent, so does not skip
+   factors alrady cached. Increases a bit the overall size of the cached functor
+   libraries, but allows the MD5 name hack to be removed, and also allows the
+   builds to proceed in parrallel.
+
 !========================= StrippingCache v1r1 2015-08-24 =========================
 
-! 2015-05-23 - Chris Jones
+! 2015-08-23 - Chris Jones
  - Clean up CMake file a bit.
 
 ! 2015-08-21 - Chris Jones
