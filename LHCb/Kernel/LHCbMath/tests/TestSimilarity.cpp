@@ -204,8 +204,25 @@ std::pair<M, bool> compareSMatrix(M& A, M& B, bool symetric=true,
 template <typename Mat, typename SymMat>
 int compareInstructionSets(Mat &F, SymMat &origin, double conditionNumber,
                            std::map<ISet, similarity_t>&  simFuncs,
-                           int printResults = true) 
+                           int printResults = true, ISet instructionSet = ISet::GENERIC) 
 {
+
+  // Checking the instruction sets to do
+  // if ISet::GENERIC => test all
+  // if ISet::AVX/ SSE3 => just do that one
+  
+  bool doSSE3 = true;
+  bool doAVX = true;
+  if (instructionSet == ISet::AVX) 
+  {
+    doSSE3 = false;
+  } else if (instructionSet == ISet::SSE3) 
+  {
+    doAVX = false;
+  }
+
+  
+
  
   // Setting the threshold for error
   double diffThreshold = 1e-15  * conditionNumber;
@@ -215,7 +232,6 @@ int compareInstructionSets(Mat &F, SymMat &origin, double conditionNumber,
   if (printResults)
     std::cout << "Has SSE3: " <<  hasSSE3 
               << " Has AVX: " << hasAVX << std::endl;
-    
 
   bool SSE3Diff = false;
   bool AVXDiff = false;
@@ -229,42 +245,59 @@ int compareInstructionSets(Mat &F, SymMat &origin, double conditionNumber,
     std::cout << target << std::endl;
   }
 
-  if (hasSSE3)
-  {    
-    // Checking SSE3
-    (simFuncs[ISet::SSE3])( origin.Array(), F.Array(), targetSSE3.Array() );
-    if (printResults) 
-    {  
-      std::cout << "SSE3 similarity transform result" << std::endl;    
-      std::cout << targetSSE3 << std::endl;
+  if (doSSE3) 
+  { 
+    if (hasSSE3)
+    {    
+      // Checking SSE3
+      (simFuncs[ISet::SSE3])( origin.Array(), F.Array(), targetSSE3.Array() );
+      if (printResults) 
+      {  
+        std::cout << "SSE3 similarity transform result" << std::endl;    
+        std::cout << targetSSE3 << std::endl;
+      }
+      
+      auto cmpSSE3Res = compareSMatrix(targetSSE3, target, true, diffThreshold);
+      auto cmpSSE3= cmpSSE3Res.first;
+      SSE3Diff = cmpSSE3Res.second;
+      
+      if (printResults)
+        std::cout << "SSE3 Differences" << std::endl << cmpSSE3 << std::endl;
+    } else 
+    {
+      // Cannot test SSE3 if not present
+      // Returning a special value to tell gaudi this was untested...
+      return 77;
     }
-
-    auto cmpSSE3Res = compareSMatrix(targetSSE3, target, true, diffThreshold);
-    auto cmpSSE3= cmpSSE3Res.first;
-    SSE3Diff = cmpSSE3Res.second;
-    
-    if (printResults)
-      std::cout << "SSE3 Differences" << std::endl << cmpSSE3 << std::endl;
   }
-
+  
   // Checking AVX
-  if (hasAVX) 
-  {
-    (simFuncs[ISet::AVX])( origin.Array(), F.Array(), targetAVX.Array() );
-    if (printResults) 
-    {  
-      std::cout << "AVX similarity transform result" << std::endl;      
-      std::cout << targetAVX << std::endl;
-    }
-    
-    auto cmpAVXRes = compareSMatrix(targetAVX, target, true, diffThreshold);
-    auto cmpAVX= cmpAVXRes.first;
-    AVXDiff = cmpAVXRes.second;
-
-    if (printResults)
-      std::cout << "AVX Differences" << std::endl << cmpAVX << std::endl;
+  if (doAVX) 
+  { 
+    if (hasAVX) 
+    {
+      (simFuncs[ISet::AVX])( origin.Array(), F.Array(), targetAVX.Array() );
+      if (printResults) 
+      {  
+        std::cout << "AVX similarity transform result" << std::endl;      
+        std::cout << targetAVX << std::endl;
+      }
+      
+      auto cmpAVXRes = compareSMatrix(targetAVX, target, true, diffThreshold);
+      auto cmpAVX= cmpAVXRes.first;
+      AVXDiff = cmpAVXRes.second;
+      
+      if (printResults)
+        std::cout << "AVX Differences" << std::endl << cmpAVX << std::endl;
+    } else 
+    {
+      // Cannot test AVX if not present
+      // Returning a special value to tell gaudi this was untested...
+      return 77; 
+    }    
   }
-
+  
+    
   // Checking if we found errors
   int retval = 0;
   if (SSE3Diff || AVXDiff) 
@@ -279,15 +312,29 @@ int compareInstructionSets(Mat &F, SymMat &origin, double conditionNumber,
 // Main method                                                                      
 // ============================================================================
 
-int main()
+int main(int argc, char *argv[])
 { 
 
   TRandom3 r(1);
-  int retval = 0;
   int testcount=10000;
   
+  // Condition numbers to test
   std::vector<double> condNumbers = { 1, 1e6, 1e9 };
   
+  // Checking args to see the test to do
+  ISet instructionSet = ISet::GENERIC; // Test ALL by default...
+  if (argc > 1) {
+    std::string arg = std::string(argv[1]);
+    if (arg == "AVX") 
+    {
+      instructionSet = ISet::AVX;
+    } else if (arg == "SSE3") 
+    {
+      instructionSet = ISet::SSE3;
+    }    
+  }
+
+  std::cout << "Checking instruction set :" << instructionSet << std::endl;
 
   std::cout << "============= Similarity_5_5 Test =============" << std::endl;
   for(int i=0; i<testcount; i++) 
@@ -297,7 +344,8 @@ int main()
       Gaudi::SymMatrix5x5 origin;
       fillRandomSMatrix(F, r);
       fillSMatrixSymWithCondNumber<Gaudi::Matrix5x5,Gaudi::SymMatrix5x5>(origin, r, condNumber);
-      retval += compareInstructionSets(F, origin, condNumber, vtbl_5_5, (i%5000) == 0);
+      int ret = compareInstructionSets(F, origin, condNumber, vtbl_5_5, (i%5000) == 0, instructionSet);
+      if (ret > 0) return ret;
     } 
   }
 
@@ -310,7 +358,8 @@ int main()
       Gaudi::SymMatrix5x5 origin;
       fillRandomSMatrix(F, r);
       fillSMatrixSymWithCondNumber<Gaudi::Matrix5x5,Gaudi::SymMatrix5x5>(origin, r, condNumber);
-      retval += compareInstructionSets(F, origin, condNumber,  vtbl_5_7, (i%5000) == 0);
+      int ret = compareInstructionSets(F, origin, condNumber,  vtbl_5_7, (i%5000) == 0, instructionSet);
+      if (ret > 0) return ret;
     }  
   }
 
@@ -322,11 +371,12 @@ int main()
        Gaudi::SymMatrix5x5 origin;
        fillRandomSMatrix(F, r);
        fillSMatrixSymWithCondNumber<Gaudi::Matrix5x5,Gaudi::SymMatrix5x5>(origin, r, condNumber);
-       retval += compareInstructionSets(F, origin, condNumber, vtbl_5_1, (i%5000) == 0);
+       int ret = compareInstructionSets(F, origin, condNumber, vtbl_5_1, (i%5000) == 0, instructionSet);
+        if (ret > 0) return ret;
      }    
    }
 
-  return retval;
+  return 0;
   
 }
 // ============================================================================
