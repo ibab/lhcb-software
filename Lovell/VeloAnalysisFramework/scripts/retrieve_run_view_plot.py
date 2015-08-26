@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Return plots for a given run in the format expected by the offline GUI.
 
-A run number is in invalid if it is not present in the run list.
+A run number is invalid if it is not present in the run list.
 A plot name is invalid if it is not present in the run file.
 A sensor number is invalid if is not in {0, ..., 42, 64, ..., 106}.
 The reference plot is returned along with the nominal plot, if it can be found, 

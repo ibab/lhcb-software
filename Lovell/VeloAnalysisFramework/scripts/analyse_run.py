@@ -34,8 +34,8 @@ def main():
     # Change the run data directory to the user-specified one
     Config().run_data_dir = run_data_dir
 
-    config = AnalysisConfigWrapper(Config().analysis_config)
-    combinerTrunk = config.getTrunkForRun(run, output_dir)
+    configWrapper = AnalysisConfigWrapper(Config().analysis_config)
+    combinerTrunk = configWrapper.getTrunkForRun(run, output_dir)
     combinerTrunk.evaluate()
     combinerTrunk.write_to_grf()
 
