@@ -795,54 +795,54 @@ Xibc={
 
 
 DiMuonInherit={
-    'WGs'        : ['BandQ'],
+     'WGs'        : ['BandQ'],
     'STREAMS'    : {'Dimuon' :[
-    "StrippingFullDSTDiMuonPsi2MuMuTOSLine",
-    "StrippingFullDSTDiMuonJpsi2MuMuTOSLine",
-    "StrippingFullDSTDiMuonPsi2MuMuDetachedLine",
-    "StrippingFullDSTDiMuonJpsi2MuMuDetachedLine",
-    "StrippingFullDSTDiMuonDiMuonNoPVLine",
-    'StrippingFullDSTDiMuonDiMuonHighMassLine',
-    'StrippingFullDSTDiMuonDiMuonHighMassSameSignLine'
-    ],
+                      "StrippingFullDSTDiMuonPsi2MuMuTOSLine",
+                      "StrippingFullDSTDiMuonJpsi2MuMuTOSLine",
+                      "StrippingFullDSTDiMuonPsi2MuMuDetachedLine",
+                      "StrippingFullDSTDiMuonJpsi2MuMuDetachedLine",
+                      "StrippingFullDSTDiMuonDiMuonNoPVLine",
+                      'StrippingFullDSTDiMuonDiMuonHighMassLine',
+                      'StrippingFullDSTDiMuonDiMuonHighMassSameSignLine'
+                    ],
                     'Leptonic' :[
-    "StrippingMicroDSTDiMuonDiMuonSameSignLine",
-    "StrippingMicroDSTDiMuonDiMuonIncLine"
-    ]
-                    },
-    
+                      "StrippingMicroDSTDiMuonDiMuonSameSignLine",
+                      "StrippingMicroDSTDiMuonDiMuonIncLine"
+                    ]
+    },
+                   
     'BUILDERTYPE': 'DiMuonInherit',
     'CONFIG'     : {
-    #### Definition of all the DiMuon lines ############
-    ###############
+  #### Definition of all the DiMuon lines ############
+  ###############
     "Debug" : False,
     "Lines" : {
-    "VirtualBase" : {
-    "Prescale"      : 0.0,
-    "Inherit"       : None,
-    "checkPV"       : False,
-    "maxPV"         : None,
-    "TOScut"        : None,
-    "RequiredRawEvents" : None,
-    "InputDiMuon"   : "StdLooseDiMuon",
-    "Cuts"          : {
-    "MuonPt"        : "MINTREE('mu+'==ABSID,PT) > 650.0 *MeV",
-    "JpsiVtx"       : "VFASPF(VCHI2PDOF)< 20.0"
-    }
-    },
-    
-    "FullDSTDiMuonDiMuonHighMassLine" : {
-    "Prescale"      : 1.0,
-    "Inherit"       : "VirtualBase",
-    "Cuts"          : {
-    "MuonP"         : "MINTREE('mu+'==ABSID,P ) > 8000.0 *MeV",
-    "MuonPt"        : "MINTREE('mu+'==ABSID,PT) > 1000.0 *MeV",
-    "Mass"          : "MM > 8500 *MeV",
-    "MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0"
-    }
-    },
-    
-    "FullDSTDiMuonDiMuonHighMassSameSignLine" : {
+      "VirtualBase" : {
+        "Prescale"      : 0.0,
+        "Inherit"       : None,
+        "checkPV"       : False,
+        "maxPV"         : None,
+        "TOScut"        : None,
+        "RequiredRawEvents" : None,
+        "InputDiMuon"   : "StdLooseDiMuon",
+        "Cuts"          : {
+          "MuonPt"        : "MINTREE('mu+'==ABSID,PT) > 650.0 *MeV",
+          "JpsiVtx"       : "VFASPF(VCHI2PDOF)< 20.0"
+        }
+      },
+
+      "FullDSTDiMuonDiMuonHighMassLine" : {
+        "Prescale"      : 1.0,
+        "Inherit"       : "VirtualBase",
+        "Cuts"          : {
+          "MuonP"         : "MINTREE('mu+'==ABSID,P ) > 8000.0 *MeV",
+          "MuonPt"        : "MINTREE('mu+'==ABSID,PT) > 1000.0 *MeV",
+          "Mass"          : "MM > 8500 *MeV",
+          "MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0"
+          }
+      },
+
+      "FullDSTDiMuonDiMuonHighMassSameSignLine" : {
     "Prescale"      : 0.2,
     "Inherit"       : "VirtualBase",
     #"Inherit"       : "FullDSTDiMuonDiMuonHighMassLine",
@@ -850,110 +850,130 @@ DiMuonInherit={
     #"MuonPIDmu"     : None #remove the cut 
     #      "Cuts"          : None
     "Cuts"          : {
-    "MuonP"         : "MINTREE('mu+'==ABSID,P ) > 8000.0 *MeV",
-    "MuonPt"        : "MINTREE('mu+'==ABSID,PT) > 1000.0 *MeV",
-    "Mass"          : "MM > 8500 *MeV",
-    #"MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0"
-    }
-    },
-    
-    "FullDSTDiMuonDiMuonNoPVLine" : {
-    "Prescale"      : 1.0,
-    "Inherit"       : "VirtualBase",
-    "maxPV"         : 0.5,
-    "Cuts"          : {
-    "BPVVDZ"        : "BPVVDZ < -1 *mm",
-    #"MuonPIDmu"     : None, #remove the cut 
-    "Mass"          : "MM > 2900",
-    #"MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0"
-    }
-    },
-      
-    "FullDSTDiMuonJpsi2MuMuDetachedLine" : {
-    "Prescale"      : 1.0,
-    "Inherit"       : "VirtualBase",
-    "checkPV"       : True,
-    "RequiredRawEvents" : ["Trigger", "Muon", "Calo", "Rich", "Velo", "Tracker"],
-    "InputDiMuon"   : "StdLooseJpsi2MuMu",
-    "Cuts"          : {
-    "MuonPt"        : "MINTREE('mu+'==ABSID,PT) > 500.0 *MeV",# replace!
-    "Mass"          : "(MM > 2996.916) & (MM < 3196.916)",
-    "Detachement"   : "((BPVDLS>3) | (BPVDLS<-3))",
-    "MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0"
-    }
+          "MuonP"         : "MINTREE('mu+'==ABSID,P ) > 8000.0 *MeV",
+          "MuonPt"        : "MINTREE('mu+'==ABSID,PT) > 1000.0 *MeV",
+          "Mass"          : "MM > 8500 *MeV",
+          #"MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0"
+          }
     },
 
-    "FullDSTDiMuonPsi2MuMuDetachedLine" : {
-    "Prescale"      : 1.0,
-    "Inherit"       : "FullDSTDiMuonJpsi2MuMuDetachedLine",
-    "RequiredRawEvents" : ["Trigger", "Muon", "Calo", "Rich", "Velo", "Tracker"],
-    "InputDiMuon"   : "StdLooseDiMuon",
-    "Cuts"          : {
-    "Mass"          :  "ADMASS('psi(2S)') < 100.0 *MeV"
-    }
-    },
-    
-    "FullDSTDiMuonJpsi2MuMuTOSLine" : {
-    "Prescale"      : 1.0,
-    "Inherit"       : "VirtualBase",
-    "InputDiMuon"   : "StdLooseJpsi2MuMu",
-    #"TOScut"        : { "L0.*Mu.*Decision%TOS":0,
-    #                    "Hlt1DiMuonHighMassDecision%TOS" : 0,
-    #                    "Hlt2DiMuonJPsiHighPTDecision%TOS" : 0 
-    #                    },
-    
-    "Cuts"          : {
-    "MuonP"         : "MINTREE('mu+'==ABSID,P) > 10 *GeV",
-    "JpsiPt"        : "PT > 3 *GeV",
-    "Mass"          : "(MM > 3010) & (MM < 3170)",
-    "MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0",
-    "TOSL0"         : "TOS('L0.*Mu.*Decision', 'L0TriggerTisTos')",
-    "TOSHlt1"       : "TOS('Hlt1DiMuonHighMassDecision', 'Hlt1TriggerTisTos')",
-    "TOSHlt2"       : "TOS('Hlt2DiMuonJPsiHighPTDecision', 'Hlt2TriggerTisTos')"
-    }   
-    },
-    
-    "FullDSTDiMuonPsi2MuMuTOSLine" : {
-    "Prescale"      : 1.0,
-    "Inherit"       : "FullDSTDiMuonJpsi2MuMuTOSLine",
-    "InputDiMuon"   : "StdLooseDiMuon",
-    #"TOScut"        : { "L0.*Mu.*Decision%TOS":0,
-    #                    "Hlt1DiMuonHighMassDecision%TOS" : 0,
-    #                    "Hlt2DiMuonPsi2SHighPTDecision%TOS" : 0 
-    #},
-    "Cuts"          : {
-    "Mass"        : "ADMASS('psi(2S)') < 100.0",
-    "MuonPt"      : "MINTREE('mu+'==ABSID,PT) > 1 *GeV",
-    "MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0",
-    "TOSL0"         : "TOS('L0.*Mu.*Decision', 'L0TriggerTisTos')",
-    "TOSHlt1"       : "TOS('Hlt1DiMuonHighMassDecision', 'Hlt1TriggerTisTos')",
-    "TOSHlt2"       : "TOS('Hlt2DiMuonPsi2SHighPTDecision', 'Hlt2TriggerTisTos')"
-    }   
-    },
-    
-    
-    ## MicroDST lines
-    
-    "MicroDSTDiMuonDiMuonIncLine" : {
-    "Prescale"      : 1.0,
-    "Inherit"       : "VirtualBase",
-    "InputDiMuon"   : "StdLooseDiMuon",
-    "Cuts"          : {
-    "Mass"          : "MM > 3000*MeV",
-    }   
-    },
-    
-    "MicroDSTDiMuonDiMuonSameSignLine" : {
-    "Prescale"              : 0.5,
-    "Inherit"               : "MicroDSTDiMuonDiMuonIncLine",
+      "FullDSTDiMuonDiMuonNoPVLine" : {
+        "Prescale"      : 1.0,
+        "Inherit"       : "VirtualBase",
+        "maxPV"         : 0.5,
+        "Cuts"          : {
+          "BPVVDZ"        : "BPVVDZ < -1 *mm",
+          #"MuonPIDmu"     : None, #remove the cut 
+          "Mass"          : "MM > 2900",
+          #"MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0"
+          }
+      },
+      
+      "FullDSTDiMuonJpsi2MuMuDetachedLine" : {
+        "Prescale"      : 1.0,
+        "Inherit"       : "VirtualBase",
+        "checkPV"       : True,
+        "RequiredRawEvents" : ["Trigger", "Muon", "Calo", "Rich", "Velo", "Tracker"],
+        "InputDiMuon"   : "StdLooseJpsi2MuMu",
+        "Cuts"          : {
+          "MuonPt"        : "MINTREE('mu+'==ABSID,PT) > 500.0 *MeV",# replace!
+          "Mass"          : "(MM > 2996.916) & (MM < 3196.916)",
+          "Detachement"   : "((BPVDLS>3) | (BPVDLS<-3))",
+          "MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0"
+          }
+      },
+
+      "FullDSTDiMuonPsi2MuMuDetachedLine" : {
+        "Prescale"      : 1.0,
+        "Inherit"       : "FullDSTDiMuonJpsi2MuMuDetachedLine",
+        "RequiredRawEvents" : ["Trigger", "Muon", "Calo", "Rich", "Velo", "Tracker"],
+        "InputDiMuon"   : "StdLooseDiMuon",
+        "Cuts"          : {
+          "Mass"          :  "ADMASS('psi(2S)') < 100.0 *MeV"
+        }
+      },
+      
+      "FullDSTDiMuonJpsi2MuMuTOSLine" : {
+        "Prescale"      : 1.0,
+        "Inherit"       : "VirtualBase",
+        "InputDiMuon"   : "StdLooseJpsi2MuMu",
+#        "TOScut"        : { "L0.*Mu.*Decision%TOS":0,
+#                            "Hlt1DiMuonHighMassDecision%TOS" : 0,
+#                            "Hlt2DiMuonJPsiHighPTDecision%TOS" : 0 
+#                          },
+        "RequiredRawEvents" : None,
+        "Cuts"          : {
+          "MuonP"         : "MINTREE('mu+'==ABSID,P) > 10 *GeV",
+          "JpsiPt"        : "PT > 3 *GeV",
+          "Mass"          : "(MM > 3010) & (MM < 3170)",
+          "MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0",
+          "TOSL0"         : "TOS('L0.*Mu.*Decision', 'L0TriggerTisTos')",
+          "TOSHlt1"       : "TOS('Hlt1DiMuonHighMassDecision', 'Hlt1TriggerTisTos')",
+          "TOSHlt2"       : "TOS('Hlt2DiMuonJPsiHighPTDecision', 'Hlt2TriggerTisTos')",
+          }   
+      },
+
+      "FullDSTDiMuonPsi2MuMuTOSLine" : {
+        "Prescale"      : 1.0,
+        "Inherit"       : "FullDSTDiMuonJpsi2MuMuTOSLine",
+        "InputDiMuon"   : "StdLooseDiMuon",
+#        "TOScut"        : { "L0.*Mu.*Decision%TOS":0,
+#                            "Hlt1DiMuonHighMassDecision%TOS" : 0,
+#                            "Hlt2DiMuonPsi2SHighPTDecision%TOS" : 0 
+#                          },
+        "RequiredRawEvents" : None,
+        "Cuts"          : {
+          "Mass"        : "ADMASS('psi(2S)') < 100.0",
+          "MuonPt"      : "MINTREE('mu+'==ABSID,PT) > 1 *GeV",
+          "MuonPIDmu"     : "MINTREE('mu+'==ABSID,PIDmu) > 0.0",
+          "TOSL0"         : "TOS('L0.*Mu.*Decision', 'L0TriggerTisTos')",
+          "TOSHlt1"       : "TOS('Hlt1DiMuonHighMassDecision', 'Hlt1TriggerTisTos')",
+          "TOSHlt2"       : "TOS('Hlt2DiMuonPsi2SHighPTDecision', 'Hlt2TriggerTisTos')",
+          }   
+      },
+
+
+  ## MicroDST lines
+
+      "MicroDSTDiMuonDiMuonIncLine" : {
+        "Prescale"      : 1.0,
+        "Inherit"       : "VirtualBase",
+        "InputDiMuon"   : "StdLooseDiMuon",
+        "Cuts"          : {
+          "Mass"          : "MM > 3000*MeV",
+        }   
+      },
+
+      "MicroDSTDiMuonDiMuonSameSignLine" : {
+        "Prescale"              : 0.5,
+        "Inherit"               : "MicroDSTDiMuonDiMuonIncLine",
         "InputDiMuon"           : "StdLooseDiMuonSameSign",
-    "Cuts"                  : None
+        "Cuts"                  : None
+      },
+
+      ## Are these lines really needed? Aren't they included in Inclusive line?
+      #"Jpsi2MuMu" : {
+       # "Prescale"      : 1.0,
+       # "checkPV"       : True,
+       # "Inherit"       : "VirtualBase",
+       # "InputDiMuon"   : "StdLooseDiMuon",
+       # "Cuts"          : {
+       #   "Mass"        :   "(MM > 2976.916 *MeV) & (MM < 3216.916 *MeV)",
+       #   "MuonPIDmu"   :   "MINTREE('mu+'==ABSID,PIDmu) > -5",
+       #   "JpsiPt"      :   "(PT > 3*GeV)"
+       # }   
+     # },
+
+      #"Psi2MuMu" : {
+      #  "Prescale"      : 1.0,
+      #  "Inherit"       : "Jpsi2MuMu",
+      #  "Cuts"          : {
+      #    "Mass"        :   "ADMASS('psi(2S)') < 120.0 *MeV",
+      #  }
+      #},
     }
-    
-    
-    }
-    }
-    }
+  }
+ }
 
 #########################################################
 ### StrippingD02KpiForPromptCharm  

@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-26 - Andrea Contu
+ - Fix to B2OC and BandQ S23 config, updated S23 dbase
+
 ! 2015-08-26 - Nicola Skidmore
  - Remove duplicates in S23 LineConfigDictionary for B2OC
 
