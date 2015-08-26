@@ -29,6 +29,8 @@ public:
   double z( double x, double y ) const { return m_z + x * m_dzDx + y * m_dzDy; }
   double xCentre()         const { return m_centre.x(); }
   double yCentre()         const { return m_centre.y(); }
+  double xBeam()           const { return m_xBeam; }
+  double yBeam()           const { return m_yBeam; }
   double rMin()            const { return m_sensor->innerRadius();}
   double rMax()            const { return m_sensor->outerRadius();}
   double rMin( unsigned int zone ) const { return m_phiSensor->rMin( zone );}
@@ -81,6 +83,9 @@ private:
   Gaudi::XYZPoint m_centre;
   double          m_dzDx;
   double          m_dzDy;
+
+  double          m_xBeam;
+  double          m_yBeam;
 
   std::vector<FastVeloHits>   m_hits;
   std::vector<double>         m_rOffset;

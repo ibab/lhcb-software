@@ -1,5 +1,7 @@
 // Include files
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 #include "Event/Track.h"
 #include "Event/ProcStatus.h" 
 
@@ -415,10 +417,6 @@ void FastVeloTracking::findQuadruplets( unsigned int sens0, bool forward ) {
             std::sort( newTrack.rHits().begin(), newTrack.rHits().end(), FastVeloHit::DecreasingByZ() );
           }
           
-          if ( m_debug ) {
-            info() << "      -- stored n=" << m_tracks.size()-1 << endmsg;
-            printRTrack( newTrack );
-          }
           if ( m_minToTag <= newTrack.nbRHits() ) {
             newTrack.tagUsedRHits();
             rMax = rMaxNormal;
@@ -426,6 +424,10 @@ void FastVeloTracking::findQuadruplets( unsigned int sens0, bool forward ) {
           
           m_tracks.push_back( std::move(newTrack) );
           
+          if ( m_debug ) {
+            info() << "      -- stored n=" << m_tracks.size()-1 << endmsg;
+            printRTrack( newTrack );
+          }
         }
       }
     }
@@ -826,15 +828,15 @@ void FastVeloTracking::findUnusedTriplets( unsigned int sens0, bool forward ) {
             std::sort( newTrack.rHits().begin(), newTrack.rHits().end(), FastVeloHit::DecreasingByZ() );
           }
 
+          if ( m_minToTag <= newTrack.nbRHits() ) newTrack.tagUsedRHits();
+
+          m_tracks.push_back( std::move(newTrack) );
           if ( m_debug ) {
             info() << "      -- stored n=" << m_tracks.size()-1
                    << " nbRHits " << newTrack.nbRHits()
                    << " chi2 " << newTrack.rChi2() << endmsg;
             printRTrack( newTrack );
           }
-          if ( m_minToTag <= newTrack.nbRHits() ) newTrack.tagUsedRHits();
-
-          m_tracks.push_back( std::move(newTrack) );
         }
       }
     }
@@ -1192,16 +1194,18 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
         double dSin = ( y * m_cosPhi - x * m_sinPhi)/rPred;
         (*itH)->setGlobal( dSin );
 
+	// add offset to x and y and recalculate dSin to correct for offset beam
+	double dSinBeamOffset = ( (y - sensor->yBeam())  * m_cosPhi - (x - sensor->xBeam()) * m_sinPhi)/rPred;
         if ( m_debug && matchKey( *itH ) ) {
           double xMc = m_debugTool->xTrue( m_wantedKey, sensor->z() );
           double yMc = m_debugTool->yTrue( m_wantedKey, sensor->z() );
           double rMc = sqrt( xMc * xMc + yMc * yMc );
-          info() << format( "x%7.3f y%7.3f R%7.3f dSin%7.3f, MC: %7.3f %7.3f R%7.3f dist%7.3f",
-                            x, y, sqrt( x*x + y*y ), dSin,
+          info() << format( "x%7.3f y%7.3f R%7.3f dSin%7.3f dSinBeamOff%7.3f, MC: %7.3f %7.3f R%7.3f dist%7.3f",
+                            x, y, sqrt( x*x + y*y ), dSin, dSinBeamOffset,
                             xMc, yMc, rMc, (*itH)->distance( xMc, yMc ) );
           printCoord( *itH, ":" );
         }
-        if ( fabs( dSin ) > maxDSin ) continue;
+        if ( fabs( dSinBeamOffset ) > maxDSin ) continue;
 
         (*itH)->setZ( sensor->z( x, y ) );
         (*itH)->setPhiWeight( rPred );
@@ -1335,7 +1339,10 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
               best3 = *itH3;
             }
           }
-          if ( minDelta3 > 4 * m_maxChi2ToAdd ) continue;
+          if ( minDelta3 > 4 * m_maxChi2ToAdd ) {
+	    if ( m_debug ) info() << format("failed delta3 cut %f > %f",minDelta3,4 * m_maxChi2ToAdd)  << endmsg;
+	    continue;
+	  }
           if ( m_debug ) {
             info() << "+++ Found triplet with minDelta3 = " << minDelta3 << endmsg;
             printCoord( *itH1, "s1" );

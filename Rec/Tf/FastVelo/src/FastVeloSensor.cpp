@@ -83,6 +83,8 @@ void FastVeloSensor::setGeometry ( DeVeloSensor* sensor, double xBeam, double yB
   if ( fabs( xTmp ) < 1.e-9 ) xTmp = 0.;
   if ( fabs( yTmp ) < 1.e-9 ) yTmp = 0.;
   m_centre  = Gaudi::XYZPoint( xTmp, yTmp, m_centre.z());
+  m_xBeam = xBeam;
+  m_yBeam = yBeam;
 
   Gaudi::XYZPoint temp;
   temp = sensor->localToGlobal( Gaudi::XYZPoint( 10., 0., 0. ) );
