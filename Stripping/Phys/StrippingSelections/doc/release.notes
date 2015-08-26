@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v4r6 2015-08-26 ===============
+
 ! 2015-08-26 - Roberta Cardinale
  - Fixed bug for raw banks in StrippingBandQ/StrippingDiMuonInherit.py
 
