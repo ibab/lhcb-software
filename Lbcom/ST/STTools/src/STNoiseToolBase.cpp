@@ -21,7 +21,6 @@
 
 #include "AIDA/IHistogram2D.h"
 
-#include "boost/lexical_cast.hpp"
 #include "boost/algorithm/string.hpp"
 
 // standard
@@ -120,7 +119,7 @@ StatusCode ST::STNoiseToolBase::initialize() {
   for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
     unsigned int TELL1SourceID = (*itT).first;
     resetNoiseCounters(TELL1SourceID);
-    std::string condPath = m_condPath + "/TELL1Board" + boost::lexical_cast<std::string>(TELL1SourceID);
+    std::string condPath = m_condPath + "/TELL1Board" + std::to_string(TELL1SourceID);
     mgrSvc->registerCondition(this, condPath, &ST::STNoiseToolBase::cacheTELL1Parameters);
   }
   StatusCode mgrSvcStatus=mgrSvc->update(this);
@@ -196,7 +195,7 @@ StatusCode ST::STNoiseToolBase::cacheTELL1Parameters() {
 void ST::STNoiseToolBase::readTELL1Parameters(const unsigned int TELL1SourceID) {
   if( m_debug ) debug() << "----------> Reading TELL1 parameters for " << TELL1SourceID << endmsg;
   m_pedestalMaps[TELL1SourceID].resize(1);
-  std::string condPath = m_condPath + "/TELL1Board" + boost::lexical_cast<std::string>(TELL1SourceID);
+  std::string condPath = m_condPath + "/TELL1Board" + std::to_string(TELL1SourceID);
   if( m_debug ) debug() << "Getting condition: " << condPath << endmsg;
   Condition* condition = getDet<Condition>(condPath);
   if(condition != 0) {

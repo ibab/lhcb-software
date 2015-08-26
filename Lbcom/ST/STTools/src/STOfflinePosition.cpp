@@ -1,5 +1,4 @@
 // Kernel
-#include "GaudiKernel/cbrt.h"  // for cbrt on Windows
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
  

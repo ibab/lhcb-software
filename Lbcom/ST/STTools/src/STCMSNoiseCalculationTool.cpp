@@ -13,8 +13,6 @@
 #include "gsl/gsl_math.h"
 #include<bitset>
 
-#include "boost/lexical_cast.hpp"
-
 // STTELL1Event
 #include "Event/STTELL1Data.h"
 
@@ -481,8 +479,8 @@ void ST::STCMSNoiseCalculationTool::plotPedestals() {
       std::vector< std::vector<std::pair<double, int> > >::iterator it2 =  (*it1).second.begin();
       int header=0;
       for(; it2 != (*it1).second.end(); ++it2, ++header) {
-        std::string idh="Pedestal, TELL "+boost::lexical_cast<std::string>((this->readoutTool())->SourceIDToTELLNumber(TELL))
-          +", header "+boost::lexical_cast<std::string>(header);
+        std::string idh="Pedestal, TELL "+std::to_string((this->readoutTool())->SourceIDToTELLNumber(TELL))
+          +", header "+std::to_string(header);
         
         std::vector<std::pair<double, int> >::iterator itStrip = it2->begin();
         int strip=0;

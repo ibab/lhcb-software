@@ -2,6 +2,10 @@
 ! Package         : ST/STTools
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
+! 2015-08-26 - Gerhard Raven
+ - remove spurious include of GaudiKernel/cbrt.h 
+ - prefer std::to_string over boost::lexical_cast<std::string>
+
 ! 2015-08-04 - Gerhard Raven
  - remove #include of obsolete Gaudi headers        
 
