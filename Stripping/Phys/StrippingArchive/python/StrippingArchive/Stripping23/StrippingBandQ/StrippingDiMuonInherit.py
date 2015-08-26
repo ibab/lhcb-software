@@ -276,7 +276,7 @@ class DiMuonInherit (LineBuilder):
         if "Inherit" in line and line["Inherit"] != None : 
           retVal = self.getVariable ( self.linesCfg[line["Inherit"]] , varName )
         else:
-          raise NameError("Missing definition of " + varName + " in line " + line + " and no inheritance defined")
+          raise NameError("Missing definition of " + str(varName) + " in line " + str(line) + " and no inheritance defined")
           return None
 
       return retVal
