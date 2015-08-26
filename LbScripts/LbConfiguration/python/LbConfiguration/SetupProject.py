@@ -1453,6 +1453,14 @@ class SetupProject(object):
             if [l for l in out.splitlines() if not inc_notice.match(l)]:
                 raise SetupProjectError(out)
 
+        # Remove entries containing /gcc/ from the *PATH variables
+        # https://its.cern.ch/jira/browse/LBCORE-899
+        for v in ("PATH", "PYTHONPATH", "LD_LIBRARY_PATH", "ROOT_INCLUDE_PATH",
+                  "HPATH", "MANPATH"):
+            if v in self.environment:
+                self.environment[v] = os.pathsep.join(x for x in self.environment[v].split(os.pathsep)
+                                                      if '/gcc/' not in x)
+
         script = self.cmt("setup", "-" + self.shell, cwd = root_dir)
 
         #parse the output
