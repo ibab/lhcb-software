@@ -132,7 +132,7 @@ StatusCode BestPIDParticleMaker::makeParticles( Particle::Vector & parts ){
       continue ;
     }
    
-    TrackTally & tally = m_nTracks[ track->type() ];
+    TrackTally & tally = trackTally( track->type() );
     ++tally.totProtos;
     
     // Select tracks

@@ -100,14 +100,13 @@ StatusCode CombinedParticleMaker::initialize()
 StatusCode CombinedParticleMaker::finalize()
 {
   // Printout tallies
-  for ( TrackMap::const_iterator iT = m_nTracks.begin();
-        iT != m_nTracks.end(); ++iT )
+  for ( const auto& iT : m_nTracks )
   {
-    const TrackTally & tally = (*iT).second;
+    const TrackTally & tally = iT.second;
     const double tkSel = 100 * ( tally.totProtos>0 ? (double)tally.selProtos/(double)tally.totProtos : 0 );
     if ( tkSel > m_minPercForPrint )
     {
-      info() << "Selected " << tkSel << "% of '" << (*iT).first << "' ProtoParticles" << endmsg;
+      info() << "Selected " << tkSel << "% of '" << iT.first << "' ProtoParticles" << endmsg;
       const double elEff = 100 * (double)tally.el/(double)tally.selProtos;
       const double muEff = 100 * (double)tally.mu/(double)tally.selProtos;
       const double piEff = 100 * (double)tally.pi/(double)tally.selProtos;
@@ -152,7 +151,7 @@ StatusCode CombinedParticleMaker::makeParticles( LHCb::Particle::Vector & parts 
     const LHCb::Track * track = (*iProto)->track();
     if ( !track ) return Error( "Charged ProtoParticle has null track reference !" );
 
-    TrackTally & tally = m_nTracks[ track->type() ];
+    TrackTally & tally = trackTally( track->type() );
     ++tally.totProtos;
 
     // Select tracks

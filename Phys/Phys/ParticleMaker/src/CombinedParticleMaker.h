@@ -111,10 +111,24 @@ protected:
   };
 
   /// Map type containing tally for various track types
-  typedef GaudiUtils::HashMap < const LHCb::Track::Types, TrackTally > TrackMap;
-
   /// Total number of tracks considered and selected
-  TrackMap m_nTracks;
+  //
+  std::vector<std::pair<LHCb::Track::Types, TrackTally>> m_nTracks;
+
+  static const constexpr struct compare_t {
+      template <typename Key, typename Value>
+      bool operator()(const std::pair<Key,Value>& kv, const Key& k)
+      { return kv.first < k; }
+  } s_cmp {};
+
+  //WARNING: reference is invalidated as soon as an insert happens
+  TrackTally& trackTally( LHCb::Track::Types key ) {
+      auto i = std::lower_bound(std::begin(m_nTracks),std::end(m_nTracks),key,s_cmp);
+      if ( i == std::end(m_nTracks) || i->first != key )  {
+         i = m_nTracks.insert( i, { key, TrackTally{} } );
+      }
+      return i->second;
+  }
 
   /// Flag to turn on consistency checks on PID information
   bool m_testPIDinfo;
