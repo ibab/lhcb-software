@@ -4,6 +4,8 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r32 2015-08-26 =========================
+
 ! 2015-08-26 - Andrea Contu
  - Fix to Stripping23/StrippingBandQ/StrippingDiMuonInherit.py
 
