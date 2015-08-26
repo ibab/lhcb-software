@@ -100,7 +100,9 @@ function(loki_functors_cache name)
                      COMMENT "Preprocess options for ${name}")
 
   add_custom_command(OUTPUT ${outputs}
-                     COMMAND ${env_cmd} --xml ${env_xml} LOKI_GENERATE_CPPCODE=${ARG_SPLIT}
+                     COMMAND ${env_cmd} --xml ${env_xml}
+                         LOKI_GENERATE_CPPCODE=${ARG_SPLIT}
+                         LOKI_DISABLE_CACHE=1
                        gaudirun.py ${name}.${tmp_ext}
                      COMMAND touch ${output_names}
                      WORKING_DIRECTORY ${name}_srcs

@@ -13,6 +13,14 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-08-26 - Marco Clemencic
+ - Modified cache generation to ignore the already existing caches.
+   It ensures that the generated cache contains also the factories already
+   present in other caches.
+
+! 2015-08-26 - Marco Clemencic
+ - Updated doc/LoKiFunctorsCache.md
+
 !========================= LoKiCore v11r26 2015-08-24 =========================
 
 ! 2015-08-23 - Chris Jones
@@ -27,7 +35,7 @@
 !========================= LoKiCore v11r25 2015-08-18 =========================
 
 ! 2015-08-18 - Chris Jones
- - Add support to to HybridBase for turning off the use of the C++ functor 
+ - Add support to to HybridBase for turning off the use of the C++ functor
    cache. Enable either via the property UseCache or by setting the environment
    variable LOKI_DISABLE_CACHE.
 

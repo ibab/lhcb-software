@@ -54,7 +54,11 @@ There are two ways of running using the functors cache libraries:
 * **cache only**: if the cache for a functor cannot be found, the application
      fails (useful in production or to check that all the needed functors are
      actually in the cache libraries)
+* **Python only**: ignore completely the cache libraries and use only Python
+     based definition (useful for validation)
 
 The *cache only* mode is enabled globally by setting the environment variable
 `LOKI_DISABLE_PYTHON` (to anything), or on a factory-by-factory basis via the
-option `UsePython`.
+property `UsePython`.  In a similar way, the *Python only* mode is controlled
+via the environment variable `LOKI_DISABLE_CACHE` (to anything), or the
+property `UseCache`.
