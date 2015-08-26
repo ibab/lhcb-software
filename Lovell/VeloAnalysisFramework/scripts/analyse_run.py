@@ -35,7 +35,7 @@ def main():
     Config().run_data_dir = run_data_dir
 
     configWrapper = AnalysisConfigWrapper(Config().analysis_config)
-    combinerTrunk = configWrapper.getTrunkForRun(run, output_dir)
+    combinerTrunk = configWrapper.getTrunkForRun(run)
     combinerTrunk.evaluate()
     combinerTrunk.write_to_grf()
 
