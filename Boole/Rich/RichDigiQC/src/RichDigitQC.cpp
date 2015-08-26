@@ -12,9 +12,6 @@
 // local
 #include "RichDigitQC.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 //-------------------------------------------------------------------------------
 
 using namespace Rich::MC::Digi;
@@ -237,8 +234,9 @@ StatusCode DigitQC::finalize()
       const Gaudi::XYZPoint hpdLoc       ( m_smartIDs->globalToPDPanel( hpdGlo ) );
       totL1[l1ID]  += (*iHPD).second;
       totDetSignal += (*iHPD).second;
-      if ( (*iHPD).second > maxOcc ) { maxOcc = (*iHPD).second; maxHPD = hID; }
-      if ( (*iHPD).second < minOcc ) { minOcc = (*iHPD).second; minHPD = hID; }
+      // make sure that the choice of maxHPD and minHPD is independent of the iteration order
+      if ( iHPD->second >= maxOcc ) { if ( iHPD->second>maxOcc || hID > maxHPD ) { maxHPD = hID; } maxOcc = iHPD->second; }
+      if ( iHPD->second <= minOcc ) { if ( iHPD->second<minOcc || hID < minHPD ) { minHPD = hID; } minOcc = iHPD->second; }
       if ( m_extraHists )
       {
         plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : HPD hardware ID layout", -800, 800, -600, 600, 100, 100, hID.data() );
