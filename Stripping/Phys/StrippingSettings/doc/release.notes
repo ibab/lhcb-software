@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-26 - Roberta Cardinale
+ - Fix for StrippingDiMuonInherit.py in S23 LineConfigDictionary for BandQ
+
 ! 2015-08-26 - Stefano Perazzini
  - Fix to dictionary for StrippingB2HHBDT.py in 
    Stripping23/LineConfigDictionaries_Charmless.py 

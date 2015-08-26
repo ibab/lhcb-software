@@ -823,6 +823,7 @@ DiMuonInherit={
     "checkPV"       : False,
     "maxPV"         : None,
     "TOScut"        : None,
+    "RequiredRawEvents" : None,
     "InputDiMuon"   : "StdLooseDiMuon",
     "Cuts"          : {
     "MuonPt"        : "MINTREE('mu+'==ABSID,PT) > 650.0 *MeV",
@@ -872,6 +873,7 @@ DiMuonInherit={
     "Prescale"      : 1.0,
     "Inherit"       : "VirtualBase",
     "checkPV"       : True,
+    "RequiredRawEvents" : ["Trigger", "Muon", "Calo", "Rich", "Velo", "Tracker"],
     "InputDiMuon"   : "StdLooseJpsi2MuMu",
     "Cuts"          : {
     "MuonPt"        : "MINTREE('mu+'==ABSID,PT) > 500.0 *MeV",# replace!
@@ -884,6 +886,7 @@ DiMuonInherit={
     "FullDSTDiMuonPsi2MuMuDetachedLine" : {
     "Prescale"      : 1.0,
     "Inherit"       : "FullDSTDiMuonJpsi2MuMuDetachedLine",
+    "RequiredRawEvents" : ["Trigger", "Muon", "Calo", "Rich", "Velo", "Tracker"],
     "InputDiMuon"   : "StdLooseDiMuon",
     "Cuts"          : {
     "Mass"          :  "ADMASS('psi(2S)') < 100.0 *MeV"
