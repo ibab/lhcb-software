@@ -22,8 +22,7 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleMoni )
 //=============================================================================
   ChargedProtoParticleMoni::ChargedProtoParticleMoni( const std::string& name,
                                                       ISvcLocator* pSvcLocator )
-    : GaudiHistoAlg  ( name , pSvcLocator ),
-      m_nEvts        ( 0 )
+    : GaudiHistoAlg  ( name , pSvcLocator )
 {
   // histo base dir
   setProperty ( "HistoTopDir", "PROTO/" );
@@ -36,11 +35,6 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleMoni )
   declareProperty( "OutputProtoParticleLocation", 
                    m_protoPath = LHCb::ProtoParticleLocation::Charged );
 }
-
-//=============================================================================
-// Destructor
-//=============================================================================
-ChargedProtoParticleMoni::~ChargedProtoParticleMoni() {}
 
 //=============================================================================
 //  Finalize
@@ -78,7 +72,7 @@ StatusCode ChargedProtoParticleMoni::execute()
   for ( const LHCb::Track * track : *tracks )
   {
     // track tally
-    TrackTally & tally = m_nTracks[ track->type() ];
+    auto& tally = trackTally( track->type() );
 
     // count all tracks
     ++tally.totTracks;
@@ -87,12 +81,11 @@ StatusCode ChargedProtoParticleMoni::execute()
     const LHCb::ProtoParticle * proto = getProto( protos, track );
 
     // Track Type
-    std::ostringstream type;
-    type << track->type() << "/";
+    std::string type = std::to_string( track->type() ) + "/";
 
     // Eff. for making ProtoParticles
-    profile1D( track->p(), 100.0 * (int)(NULL != proto),
-               type.str()+"trackToProtoEff",
+    profile1D( track->p(), 100.0 * (int)(proto!=nullptr),
+               type+"trackToProtoEff",
                "% Tracks with ProtoParticles V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Proceed only with tracks with ProtoParticles
@@ -113,56 +106,56 @@ StatusCode ChargedProtoParticleMoni::execute()
     const bool hasRICH = proto->hasInfo(LHCb::ProtoParticle::RichPIDStatus);
     if ( hasRICH ) { ++tally.richTracks; }
     profile1D( track->p(), 100.0 * (int)hasRICH,
-               type.str()+"protosWithRICH",
+               type+"protosWithRICH",
                "% ProtoParticles with RICH info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Muon INFO
     const bool hasMUON = proto->hasInfo(LHCb::ProtoParticle::InAccMuon);
     if ( hasMUON ) { ++tally.muonTracks; }
     profile1D( track->p(), 100.0 * (int)hasMUON,
-               type.str()+"protosWithMUON",
+               type+"protosWithMUON",
                "% ProtoParticles with MUON info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // ECAL info
     const bool hasECAL = proto->hasInfo(LHCb::ProtoParticle::InAccEcal);
     if ( hasECAL ) { ++tally.ecalTracks; }
     profile1D( track->p(), 100.0 * (int)hasECAL,
-               type.str()+"protosWithECAL",
+               type+"protosWithECAL",
                "% ProtoParticles with CALO-ECAL info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Brem info
     const bool hasBREM = proto->hasInfo(LHCb::ProtoParticle::InAccBrem);
     if ( hasBREM ) { ++tally.bremTracks; }
     profile1D( track->p(), 100.0 * (int)hasBREM,
-               type.str()+"protosWithBREM",
+               type+"protosWithBREM",
                "% ProtoParticles with CALO-BREM info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Spd info
     const bool hasSPD = proto->hasInfo(LHCb::ProtoParticle::InAccSpd);
     if ( hasSPD ) { ++tally.spdTracks; }
     profile1D( track->p(), 100.0 * (int)hasSPD,
-               type.str()+"protosWithSPD",
+               type+"protosWithSPD",
                "% ProtoParticles with CALO-SPD info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // PRS info
     const bool hasPRS = proto->hasInfo(LHCb::ProtoParticle::InAccPrs);
     if ( hasPRS ) { ++tally.prsTracks; }
     profile1D( track->p(), 100.0 * (int)hasPRS,
-               type.str()+"protosWithPRS",
+               type+"protosWithPRS",
                "% ProtoParticles with CALO-PRS info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Add Hcal info
     const bool hasHCAL = proto->hasInfo(LHCb::ProtoParticle::InAccHcal);
     if ( hasHCAL ) { ++tally.hcalTracks; }
     profile1D( track->p(), 100.0 * (int)hasHCAL,
-               type.str()+"protosWithHCAL",
+               type+"protosWithHCAL",
                "% ProtoParticles with CALO-HCAL info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Add Velo dE/dx info
     const bool hasDEDX = proto->hasInfo(LHCb::ProtoParticle::VeloCharge);
     if ( hasDEDX ) { ++tally.velodEdxTracks; }
     profile1D( track->p(), 100.0 * (int)hasDEDX,
-               type.str()+"protosWithVELOdEdx",
+               type+"protosWithVELOdEdx",
                "% ProtoParticles with VELO dE/dx info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Muon consistency checks
@@ -195,7 +188,7 @@ const LHCb::ProtoParticle *
 ChargedProtoParticleMoni::getProto( const LHCb::ProtoParticles * protos,
                                     const LHCb::Track * track ) const
 {
-  const LHCb::ProtoParticle * proto = NULL;
+  const LHCb::ProtoParticle * proto = nullptr;
 
   // Check Track pointer is OK
   if ( track )
@@ -205,19 +198,12 @@ ChargedProtoParticleMoni::getProto( const LHCb::ProtoParticles * protos,
     proto = protos->object(track->key());
     if ( !proto || proto->track() != track ) 
     {
-
       // Key convention failed, so try direct search
-      proto = NULL;
-      for ( LHCb::ProtoParticles::const_iterator iP = protos->begin();
-            iP != protos->end(); ++iP )
-      {
-        if ( (*iP)->track() == track )
-        {
-          proto = *iP;
-          break;
-        }
-      } // loop over protos
-
+      auto iP = std::find_if( std::begin(*protos), std::end(*protos),
+                              [&](LHCb::ProtoParticles::const_reference i) {
+                                  return i->track() == track;
+                              });
+      proto = ( iP != std::end(*protos) ? *iP : nullptr );
     } // not found via key
 
   } // track OK
@@ -243,12 +229,11 @@ void ChargedProtoParticleMoni::printStats( const MSG::Level level ) const
   msg << " # Tracks Per Event         |    Track     |     RICH         MUON         ECAL         "
       << "BREM         SPD          PRS          HCAL     VELO(dE/dx)" << endmsg;
   msg << lines << endmsg;
-  for ( TrackMap::const_iterator iT = m_nTracks.begin();
-        iT != m_nTracks.end(); ++iT )
+  for ( const auto& iT : m_nTracks )
   {
-    const TrackTally & tally = (*iT).second;
+    const TrackTally & tally = iT.second;
     msg << " " << occ(tally.selTracks,m_nEvts);
-    msg << boost::format(" %|-12|") % (*iT).first;
+    msg << boost::format(" %|-12|") % iT.first;
     msg << "| " << eff(tally.selTracks,tally.totTracks) << " |";
     msg << eff(tally.richTracks,tally.selTracks) << " ";
     msg << eff(tally.muonTracks,tally.selTracks) << " ";

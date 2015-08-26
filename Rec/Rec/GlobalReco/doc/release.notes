@@ -3,6 +3,14 @@
 ! Responsible : Global PID Group (C. Jones)
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
+! 2015-08-26 - Gerhard Raven
+ - replace GaudiUtils::HashMap with sorted std::vector
+ - prefer std::find_if over raw loop
+ - prefer range based loop
+ - qualify implementations with override instead of virtual
+ - replace NULL by nullptr
+ - prefer std::to_string over std::stringstream
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 /** @file ChargedProtoParticleMoni.h
  *
@@ -14,10 +13,11 @@
 
 // STL
 #include <sstream>
+#include <vector>
+#include <utility>
 
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
-#include "GaudiKernel/HashMap.h"
 // Event
 #include "Event/Track.h"
 #include "Event/ProtoParticle.h"
@@ -47,10 +47,10 @@ public:
   /// Standard constructor
   ChargedProtoParticleMoni( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~ChargedProtoParticleMoni( ); ///< Destructor
+  ~ChargedProtoParticleMoni( ) override = default; ///< Destructor
 
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  StatusCode execute   () override;    ///< Algorithm execution
+  StatusCode finalize  () override;    ///< Algorithm finalization
 
 private: // data
 
@@ -63,29 +63,21 @@ private: // data
 private: // classes
 
   /// Simple utility tally class
-  class TrackTally
+  struct TrackTally
   {
-  public:
     /// Default constructor
-    TrackTally() : totTracks(0), selTracks(0),
-                   ecalTracks(0), bremTracks(0), spdTracks(0), prsTracks(0), hcalTracks(0),
-                   richTracks(0), muonTracks(0), velodEdxTracks(0) { }
-    unsigned long totTracks;      ///< Number of considered tracks
-    unsigned long selTracks;      ///< Number of tracks selected to creaste a ProtoParticle from
-    unsigned long ecalTracks;     ///< Number of ProtoParticles created with CALO ECAL info
-    unsigned long bremTracks;     ///< Number of ProtoParticles created with CALO BREM info
-    unsigned long spdTracks;      ///< Number of ProtoParticles created with CALO SPD info
-    unsigned long prsTracks;      ///< Number of ProtoParticles created with CALO PRS info
-    unsigned long hcalTracks;     ///< Number of ProtoParticles created with CALO HCAL info
-    unsigned long richTracks;     ///< Number of ProtoParticles created with RICH info
-    unsigned long muonTracks;     ///< Number of ProtoParticles created with MUON info
-    unsigned long velodEdxTracks; ///< Number of ProtoParticles created with VELO dE/dx info
+    TrackTally() = default;
+    unsigned long totTracks = 0;      ///< Number of considered tracks
+    unsigned long selTracks = 0;      ///< Number of tracks selected to creaste a ProtoParticle from
+    unsigned long ecalTracks = 0;     ///< Number of ProtoParticles created with CALO ECAL info
+    unsigned long bremTracks = 0;     ///< Number of ProtoParticles created with CALO BREM info
+    unsigned long spdTracks = 0;      ///< Number of ProtoParticles created with CALO SPD info
+    unsigned long prsTracks = 0;      ///< Number of ProtoParticles created with CALO PRS info
+    unsigned long hcalTracks = 0;     ///< Number of ProtoParticles created with CALO HCAL info
+    unsigned long richTracks = 0;     ///< Number of ProtoParticles created with RICH info
+    unsigned long muonTracks = 0;     ///< Number of ProtoParticles created with MUON info
+    unsigned long velodEdxTracks = 0; ///< Number of ProtoParticles created with VELO dE/dx info
   };
-
-private: // definitions
-
-  /// Map type containing tally for various track types
-  typedef GaudiUtils::HashMap < const LHCb::Track::Types, TrackTally > TrackMap;
 
 private:
 
@@ -99,10 +91,26 @@ private:
 private:
 
   /// Event count
-  unsigned long long m_nEvts;
+  unsigned long long m_nEvts = 0;
 
+  /// Map type containing tally for various track types
   /// Total number of tracks considered and selected
-  TrackMap m_nTracks;
+  std::vector<std::pair<LHCb::Track::Types, TrackTally>> m_nTracks;
+
+  static const constexpr struct compare_t {
+      template <typename Key, typename Value>
+      bool operator()(const std::pair<Key,Value>& kv, const Key& k)
+      { return kv.first < k; }
+  } s_cmp {};
+
+  //WARNING: reference is invalidated as soon as an insert happens
+  TrackTally& trackTally( LHCb::Track::Types key ) {
+      auto i = std::lower_bound(std::begin(m_nTracks),std::end(m_nTracks),key,s_cmp);
+      if ( i == std::end(m_nTracks) || i->first != key )  {
+         i = m_nTracks.insert( i, { key, TrackTally{} } );
+      }
+      return i->second;
+  }
 
 };
 
