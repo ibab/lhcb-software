@@ -332,23 +332,21 @@ StatusCode MergeEventAlg::resetLinks( const std::string& subPath,
     debug() << "  Resetting links for " << pMCObj->name() <<  endmsg;
   }
   
-  LinkManager::LinkVector oldlinks = pMCObj->linkMgr()->m_linkVector;
-  if ( oldlinks.empty() ) return StatusCode::SUCCESS;
+  if ( pMCObj->linkMgr()->size() == 0 ) return StatusCode::SUCCESS;
 
   std::string mainPath = "/Event";
-  LinkManager::LinkIterator ilink;
   std::vector< std::pair< std::string, long > > refs;
-  for ( ilink = oldlinks.begin(); ilink!= oldlinks.end(); ++ilink)
+  auto oldlinks = pMCObj->linkMgr()->m_linkVector;
+  for ( auto ilink = oldlinks.begin(); ilink!= oldlinks.end(); ++ilink)
   {
-    refs.push_back( std::make_pair( (*ilink)->path(), (*ilink)->ID() ) );
+    refs.emplace_back( (*ilink)->path(), (*ilink)->ID() );
   }
   pMCObj->linkMgr()->clearLinks();
-  for ( std::vector< std::pair< std::string, long > >::iterator il=refs.begin();
-        refs.end()!=il; ++il )
+  for ( auto il=refs.begin(); refs.end()!=il; ++il )
   {
     const std::string newPath = resetPath( (*il).first, subPath );
-    const long itemp = (*il).second;
-    const long lid = pMCObj->linkMgr()->addLink( newPath, NULL );
+    const long itemp = il->second;
+    const long lid = pMCObj->linkMgr()->addLink( newPath, nullptr );
     if ( lid != itemp )
     {
       return StatusCode::FAILURE;
