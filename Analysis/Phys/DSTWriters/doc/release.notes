@@ -4,7 +4,11 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
-!========================= DSTWriters v4r22 2015-08-24 =========================
+!========================= DSTWriters v4r22 2015-08-26 =========================
+
+! 2015-08-26 - Chris Jones
+ - Update PackTrackingClusters to allow the clusters for all tracks to be
+   packed for DST streams.
 
 ! 2015-08-24 - Chris Jones
  - Add /Event/Rec/Track/FittedHLT1VeloTracks to the DST veto list.

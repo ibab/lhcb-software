@@ -561,13 +561,18 @@ class PackTrackingClusters(MicroDSTElement):
     """
     Configurable to pack Tracking Clusters
     """
+    def __init__( self, branch='', useAllTracks=False ) :
+        MicroDSTElement.__init__(self, branch)
+        self._useAllTracks = useAllTracks
     def __call__(self, sel):
+        trackLoc = self.branch + "/Rec/Track/Best"
+        if self._useAllTracks : trackLoc = "/Event/Rec/Track/Best"
         from Configurables import PackCluster
-        packer = PackCluster( name       = self.personaliseName(sel,"PackTkClusters"),
-                              InputName  = self.branch + "/Rec/Track/Best",
+        return [ PackCluster( name       = self.personaliseName(sel,"PackTkClusters"),
+                              InputName  = trackLoc,
                               OutputName = self.branch + "/pRec/Track/Clusters",
-                              AlwaysCreateOutput = False )
-        return [packer]
+                              #OutputLevel = 1,
+                              AlwaysCreateOutput = False ) ]
 
 class PackRecObjects(MicroDSTElement) :
     """

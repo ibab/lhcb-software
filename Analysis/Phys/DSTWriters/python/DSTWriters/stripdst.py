@@ -51,7 +51,7 @@ def stripDSTElements( pack = True,
             elements += [ PackStrippingReports( prefix = p ) ] 
         else : 
           elements += [ PackStrippingReports( prefix = stripPrefix ) ]
-        if saveTrackClusters : elements += [ PackTrackingClusters() ]
+        if saveTrackClusters : elements += [ PackTrackingClusters(useAllTracks=True) ]
         elements += [ PackParticlesAndVertices(),
                       PackRecObjects(),
                       CleanEmptyEventNodes() ]
