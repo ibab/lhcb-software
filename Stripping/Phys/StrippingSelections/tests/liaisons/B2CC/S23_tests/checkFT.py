@@ -93,6 +93,6 @@ for line in sLines[stream]:
     else: 
       print '*** Stripping'+line+' ('+stream+') has ***NOT*** stored FT results.'
   else:
-    print '****** Stripping'+line+' ('+stream+') cannnot be found.\n       Try to remove this line from your list and check it in a isolated way.\n       If not found, then it is not stored in this DST.'
+    print '****** Stripping'+line+' ('+stream+') cannnot be found.\n       Try to remove this line from your list and check it in an isolated way.\n       If not found, then it is not stored in this DST.'
     break
 print '\n'
