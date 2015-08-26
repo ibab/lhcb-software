@@ -41,6 +41,7 @@ default_config = {
         "checkPV"       : False,
         "maxPV"         : None,
         "TOScut"        : None,
+        "RequiredRawEvents" : None,
         "InputDiMuon"   : "StdLooseDiMuon",
         "Cuts"          : {
           "MuonPt"        : "MINTREE('mu+'==ABSID,PT) > 650.0 *MeV",
@@ -90,6 +91,7 @@ default_config = {
         "Prescale"      : 1.0,
         "Inherit"       : "VirtualBase",
         "checkPV"       : True,
+        "RequiredRawEvents" : ["Trigger", "Muon", "Calo", "Rich", "Velo", "Tracker"],
         "InputDiMuon"   : "StdLooseJpsi2MuMu",
         "Cuts"          : {
           "MuonPt"        : "MINTREE('mu+'==ABSID,PT) > 500.0 *MeV",# replace!
@@ -102,6 +104,7 @@ default_config = {
       "FullDSTDiMuonPsi2MuMuDetachedLine" : {
         "Prescale"      : 1.0,
         "Inherit"       : "FullDSTDiMuonJpsi2MuMuDetachedLine",
+        "RequiredRawEvents" : ["Trigger", "Muon", "Calo", "Rich", "Velo", "Tracker"],
         "InputDiMuon"   : "StdLooseDiMuon",
         "Cuts"          : {
           "Mass"          :  "ADMASS('psi(2S)') < 100.0 *MeV"
@@ -116,7 +119,7 @@ default_config = {
 #                            "Hlt1DiMuonHighMassDecision%TOS" : 0,
 #                            "Hlt2DiMuonJPsiHighPTDecision%TOS" : 0 
 #                          },
-
+        "RequiredRawEvents" : None,
         "Cuts"          : {
           "MuonP"         : "MINTREE('mu+'==ABSID,P) > 10 *GeV",
           "JpsiPt"        : "PT > 3 *GeV",
@@ -136,6 +139,7 @@ default_config = {
 #                            "Hlt1DiMuonHighMassDecision%TOS" : 0,
 #                            "Hlt2DiMuonPsi2SHighPTDecision%TOS" : 0 
 #                          },
+        "RequiredRawEvents" : None,
         "Cuts"          : {
           "Mass"        : "ADMASS('psi(2S)') < 100.0",
           "MuonPt"      : "MINTREE('mu+'==ABSID,PT) > 1 *GeV",
@@ -259,6 +263,7 @@ class DiMuonInherit (LineBuilder):
                                                 prescale  = self.getVariable(line, 'Prescale'),    
                                                 FILTER    = _tmpFilter,
                                                 checkPV   = self.getVariable(line, 'checkPV'),
+                                                RequiredRawEvents = self.getVariable(line, 'RequiredRawEvents'),
                                                 algos     = [ _tmpAlgorithm ]
                                              )
 

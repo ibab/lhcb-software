@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-26 - Roberta Cardinale
+ - Fix to Stripping23/StrippingBandQ/StrippingDiMuonInherit.py
+
 ! 2015-08-21 - Andrea Contu
  - Remove import from selections in Strippingtau23Mu
 
