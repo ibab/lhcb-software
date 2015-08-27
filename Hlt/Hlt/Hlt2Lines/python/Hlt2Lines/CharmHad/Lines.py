@@ -13,6 +13,7 @@ from D2HHKsLines import CharmHadD2HHKshLines
 from CharmSpectroscopyLines import CharmSpectroscopyLines
 from ChargedHyperonLines import ChargedHyperonLines
 from D2HHHHHLines import CharmHadD2HHHHHLines
+from XiccLines import CharmHadXiccLines
 
 
 from Configurables import HltANNSvc
@@ -34,6 +35,7 @@ D2HHKsLines = CharmHadD2HHKshLines()
 CharmSpectroscopyLines = CharmSpectroscopyLines()
 HyperonLines = ChargedHyperonLines()
 D2HHHHHLines = CharmHadD2HHHHHLines()
+XiccLines = CharmHadXiccLines()
 
 
 
@@ -301,6 +303,7 @@ theseslots.update(D2HHKsLines.localcuts())
 theseslots.update(CharmSpectroscopyLines.localcuts())
 theseslots.update(HyperonLines.localcuts())
 theseslots.update(D2HHHHHLines.localcuts())
+theseslots.update(XiccLines.slots())
 
 class CharmHadLines(Hlt2LinesConfigurableUser):
     from copy import deepcopy
@@ -354,6 +357,7 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self.__lines__.update(CharmSpectroscopyLines.locallines())
             self.__lines__.update(HyperonLines.locallines())
             self.__lines__.update(D2HHHHHLines.locallines())
+            self.__lines__.update(XiccLines.stages())
             
         return self.__lines__[nickname] if nickname else self.__lines__
             

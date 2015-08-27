@@ -7,6 +7,24 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
+
+! 2015-08-27 - Patrick Spradlin
+  - Added lines for Xi_cc+ and Xi_cc++ to several decay modes.  These lines
+    all start with shared singly-charmed hadrons reconstructed for other charm
+    lines.
+    + Create the line definitions file, CharmHad/XiccLines.py
+    . Made the CharmHad configurable aware of the lines, CharmHad/Lines.py
+    . Added combiners to support the new lines to CharmHad/Stages.py
+    . Moved the definition of the shared XicpToKmPpPip combiner from
+      CharmHad/D2HHHLines.py to CharmHad/Stages.py so that it can be used
+      in CharmHad/XiccLines.py.
+    . Moved the definition of the shared Xic0ToPpKmKmPip combiner from
+      CharmHad/Hc2HHHHLines.py to CharmHad/Stages.py so that it can be used
+      in CharmHad/XiccLines.py.  Changed the trivial single-use class
+      Xic02PKKPi to an instance of its base class, DetachedHHHHCombiner.
+  - Fixed an error in DetachedV0HCombiner.  The CombinationCut included
+    a reference to a non-existant third decay product.
+
 ! 2015-0825 - Mike Sokoloff
    - modified several files to add new Lcp --> pHHHH lines and
    - add muon-tagged D*+ --> D0,pi+; D0 --> HHHH lines

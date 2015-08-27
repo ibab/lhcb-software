@@ -70,7 +70,7 @@ class CharmHadHc2HHHHLines() :
                                                        inputs = [Xic02PKKPi_LTUNB('Xic0ToPpKmKmPip_LTUNBTurbo')],
                                                        reFitPVs = True)],
             'Xic0ToPpKmKmPipTurbo' : [MassFilter('Xic0ToPpKmKmPipTurbo',
-                                                 inputs = [Xic02PKKPi('Xic0ToPpKmKmPipTurbo')],
+                                                 inputs = [Xic02PKKPi],
                                                  reFitPVs = True)],
             'PentaToPhiPpPimTurbo' : [PentaPhiPimPpFilt],
             }

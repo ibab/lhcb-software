@@ -242,7 +242,7 @@ class CharmHadD2HHHLines() :
         #
         from Stages import LcXic2HHH_LcpToKmPpPip, LcXic2HHH_LcpToKmPpKp
         from Stages import LcXic2HHH_LcpToPimPpPip, LcXic2HHH_LcpToPimPpKp
-        from Stages import Lc2HHH_LcpToKmPpPip
+        from Stages import Lc2HHH_LcpToKmPpPip, Xic2HHH_XicpToKmPpPip
        
 
         ## MassFilters for imported combiner instances.
@@ -299,9 +299,6 @@ class CharmHadD2HHHLines() :
                             , inputs=[LcXic2HHH_LcpToPimPpPip], reFitPVs = True)
         LcpToPimPpKp  = MassFilter('Lc2HHH'
                             , inputs=[LcXic2HHH_LcpToPimPpKp], reFitPVs = True)
-
-        XicpToKmPpPip = MassFilter('Xic2HHH'
-                            , inputs=[LcXic2HHH_LcpToKmPpPip], reFitPVs = True)
 
 
         ## Maximally-biased-lifetime combiners.
@@ -365,7 +362,7 @@ class CharmHadD2HHHLines() :
                   'LcpToPpKpPimTurbo'        : [LcpToPimPpKp], 
 
                   ## Xi_c+ -> p K- pi+, DO NOT SEND TO TURBO.
-                  'XicpToPpKmPip'            : [XicpToKmPpPip],
+                  'XicpToPpKmPip'            : [Xic2HHH_XicpToKmPpPip],
 
                   # Now the three CF lifetime unbiased lines
                   'DpToKmPipPip_LTUNBTurbo'  : [DpToKmPipPip_LTUNB],

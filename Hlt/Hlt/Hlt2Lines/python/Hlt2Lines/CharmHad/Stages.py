@@ -672,6 +672,10 @@ Lc2HHH_LcpToKmPpPip = MassFilter('Lc2HHH_LcpToKmPpPip'
                                 , inputs=[LcXic2HHH_LcpToKmPpPip]
                                 , nickname = 'Lc2HHH'   ## def in D2HHHLines.py
                                 , shared = True, reFitPVs = True)
+Xic2HHH_XicpToKmPpPip = MassFilter('Xic2HHH_XicpToKmPpPip'
+                                , inputs=[LcXic2HHH_LcpToKmPpPip]
+                                , nickname = 'Xic2HHH'   ## def in D2HHHLines.py
+                                , shared = True, reFitPVs = True)
 
 
 ## Combiners for cross-section measurements
@@ -951,6 +955,14 @@ class DetachedHHHHCombiner(Hlt2Combiner) :
                               shared = True, tistos = 'TisTosSpec', DaughtersCuts = dc,
                               CombinationCut = cc, MotherCut = mc, Preambulo = [])
 
+## Shared instances of DetachedHHHHCombiner
+## ------------------------------------------------------------------------- ##
+Xic02PKKPi = DetachedHHHHCombiner( 'Xic0ToPpKmKmPipTurbo'
+        , decay = "[Xi_c0 -> p+ K- K- pi+]cc"
+        , inputs = [ SharedPromptChild_K, SharedPromptChild_pi,
+                     SharedTighterPromptChild_p ] )
+
+
 ##  a combiner intended for P_c --> phi,p,pi  (a charmed pentaquark, as suggested by Lipkin;
 ##  see http://link.springer.com/article/10.1007%2Fs002180050168)
 class PentaCombiner(Hlt2Combiner):
@@ -1125,7 +1137,7 @@ class DetachedV0HCombiner(Hlt2Combiner):
                  'pi+'    : "(MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)",
                  'K+'     : "(MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)"}
         cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
-                 " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )" )
+                 " & ((APT1+APT2) > %(ASUMPT_MIN)s )" )
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
                  " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
                  " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
@@ -1653,18 +1665,6 @@ class Xic02PKKPi_LTUNB(HHHHCombiner) :
                   SharedTighterPromptChild_p]
         HHHHCombiner.__init__(self,name,decay,inputs)
 
-class Xic02PKKPi(DetachedHHHHCombiner) :
-    def __init__(self,name) :
-        decay = "[Xi_c0 -> p+ K- K- pi+]cc"
-        # Uses the same inputs as the LTUNB line for the tight PID,
-        # but applies IP chi2 cuts in the daughter cuts of the
-        # combiner.
-        inputs = [SharedPromptChild_K,
-                  SharedPromptChild_pi,
-                  SharedTighterPromptChild_p]
-        DetachedHHHHCombiner.__init__(self,name,decay,inputs)
-
-
 class Dst2D0pi(TagDecay):
     def __init__(self,name,d0) :
         decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
@@ -1940,3 +1940,223 @@ class BDTFilter( Hlt2ParticleFilter ) : # {
                                      , tools = [bdtTool ] )
     # }
 # }
+
+
+
+## Combiner class for Xi_cc -> Hc H H decays
+## ------------------------------------------------------------------------- ##
+class Xicc2HcHHCombiner(Hlt2Combiner) : # {
+    """
+    Combiner for Xicc -> Hc + h h'.
+    The selection variables are those used by the 2012 stripping for these
+    decays.
+    Like PromptSpectroscopyFilter, it relies of other 'standard' selections
+    for Cabibbo-favored singly charmed hadrons as input and to provide
+    selectivity.
+    !!!NOTE!!! The implementation dowstream vertex requirement requires that
+    the singly charmed hadron Hc is the first member of the decay descriptor.
+
+    Configuration dictionaries must contain the following keys:
+        'Trk_1of2_PT_MIN'      : Lower limit on PT for one of the 2 tracks
+                                 produced in the Xicc decay.
+        'Comb_AM_MAX'          : Upper limit on combination mass, AM
+        'Comb_ACHI2DOCA_MAX'   : Upper limit on pairwise DOCACHI2 of all Xicc
+                                 products, including the singly-charmed hadron.
+        'Comb_APT_MIN'         : Lower limit on the combination APT
+        'Xicc_VCHI2PDOF_MAX'   : Upper limit on Xicc decay vertex
+        'Xicc_VZ1VZdiff_MIN'   : Minimum difference between Hc vertex VZ and
+                                 Xicc vertex VZ.
+        'Xicc_BPVVDCHI2_MIN'   : Minimum vertex displacement BPVVDCHI2
+        'Xicc_acosBPVDIRA_MIN' :
+        'TisTosSpec'        : configuration string of the Hlt1 TISTOS filter.
+    """
+    def __init__(self, name, decay, inputs, nickname = None, shared = False) : # {
+        ## No DaughterCuts.  Assume that all filtering of input particles is
+        ## already done.
+        comb12 = "( AM < %(Comb_AM_MAX)s ) " \
+                 "& ( ACHI2DOCA(1,2) < %(Comb_ACHI2DOCA_MAX)s ) "
+        comb   = "(in_range( %(Comb_AM_MIN)s, AM, %(Comb_AM_MAX)s ))" \
+                 "& ((APT2 > %(Trk_1of2_PT_MIN)s) | (APT3 > %(Trk_1of2_PT_MIN)s))" \
+                 "& ( APT > %(Comb_APT_MIN)s )" \
+                 "& ( ACHI2DOCA(1,3) < %(Comb_ACHI2DOCA_MAX)s ) " \
+                 "& ( ACHI2DOCA(2,3) < %(Comb_ACHI2DOCA_MAX)s ) "
+
+        parent = "(VFASPF(VCHI2PDOF) < %(Xicc_VCHI2PDOF_MAX)s)" \
+                 "& (CHILD(VFASPF(VZ),1) - VFASPF(VZ) > %(Xicc_VZ1VZdiff_MIN)s)" \
+                 "& (BPVVDCHI2 > %(Xicc_BPVVDCHI2_MIN)s )" \
+                 "& (BPVDIRA > lcldira )"
+
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(Xicc_acosBPVDIRA_MIN)s )"
+        ]
+
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__( self, name, decay, inputs,
+                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                               tistos = 'TisTosSpec',
+                               combiner = N3BodyDecays,
+                               nickname = nickname,
+                               shared = shared,
+                               Combination12Cut =  comb12,
+                               CombinationCut = comb,
+                               MotherCut = parent,
+                               Preambulo = pream)
+    # }
+# }
+
+
+## Combiner class for Xi_cc -> Hc H H H decays
+## ------------------------------------------------------------------------- ##
+class Xicc2HcHHHCombiner(Hlt2Combiner) : # {
+    """
+    Combiner for Xicc -> Hc + h h' h''.
+    The selection variables are those used by the 2012 stripping for these
+    decays.
+    Like PromptSpectroscopyFilter, it relies of other 'standard' selections
+    for Cabibbo-favored singly charmed hadrons as input and to provide
+    selectivity.
+    !!!NOTE!!! The implementation dowstream vertex requirement requires that
+    the singly charmed hadron Hc is the first member of the decay descriptor.
+
+    Configuration dictionaries must contain the following keys:
+        'Trk_2of3_PT_MIN'      :
+        'Trk_1of3_PT_MIN'      : Lower limit on PT for one (or two) of the
+                                 3 tracks produced in the Xicc decay.
+        'Comb_AM_MAX'          : Upper limit on combination mass, AM
+        'Comb_ACHI2DOCA_MAX'   : Upper limit on pairwise DOCACHI2 of all Xicc
+                                 products, including the singly-charmed hadron.
+        'Comb_APT_MIN'         : Lower limit on the combination APT
+        'Xicc_VCHI2PDOF_MAX'   : Upper limit on Xicc decay vertex
+        'Xicc_VZ1VZdiff_MIN'   : Minimum difference between Hc vertex VZ and
+                                 Xicc vertex VZ.
+        'Xicc_BPVVDCHI2_MIN'   : Minimum vertex displacement BPVVDCHI2
+        'Xicc_acosBPVDIRA_MIN' :
+        'TisTosSpec'        : configuration string of the Hlt1 TISTOS filter.
+    """
+    def __init__(self, name, decay, inputs, nickname = None, shared = False) : # {
+        ## No DaughterCuts.  Assume that all filtering of input particles is
+        ## already done.
+        comb12  = "( AM < %(Comb_AM_MAX)s ) " \
+                 "& ( ACHI2DOCA(1,2) < %(Comb_ACHI2DOCA_MAX)s ) "
+        comb123 = "( AM < %(Comb_AM_MAX)s ) " \
+                 "& ((APT2 > %(Trk_2of3_PT_MIN)s) | (APT3 > %(Trk_2of3_PT_MIN)s))" \
+                 "& ( ACHI2DOCA(1,3) < %(Comb_ACHI2DOCA_MAX)s ) " \
+                 "& ( ACHI2DOCA(2,3) < %(Comb_ACHI2DOCA_MAX)s ) "
+        comb   = "(in_range( %(Comb_AM_MIN)s, AM, %(Comb_AM_MAX)s ))" \
+                 "& (ANUM( ISBASIC & (PT > %(Trk_1of3_PT_MIN)s) ) >= 1)" \
+                 "& (ANUM( ISBASIC & (PT > %(Trk_2of3_PT_MIN)s) ) >= 2)" \
+                 "& ( APT > %(Comb_APT_MIN)s )" \
+                 "& ( ACHI2DOCA(1,4) < %(Comb_ACHI2DOCA_MAX)s ) " \
+                 "& ( ACHI2DOCA(2,4) < %(Comb_ACHI2DOCA_MAX)s ) " \
+                 "& ( ACHI2DOCA(3,4) < %(Comb_ACHI2DOCA_MAX)s ) "
+
+
+        parent = "(VFASPF(VCHI2PDOF) < %(Xicc_VCHI2PDOF_MAX)s)" \
+                 "& (CHILD(VFASPF(VZ),1) - VFASPF(VZ) > %(Xicc_VZ1VZdiff_MIN)s)" \
+                 "& (BPVVDCHI2 > %(Xicc_BPVVDCHI2_MIN)s )" \
+                 "& (BPVDIRA > lcldira )"
+
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(Xicc_acosBPVDIRA_MIN)s )"
+        ]
+
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__( self, name, decay, inputs,
+                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                               tistos = 'TisTosSpec',
+                               combiner = DaVinci__N4BodyDecays,
+                               nickname = nickname,
+                               shared = shared,
+                               Combination12Cut =  comb12,
+                               Combination123Cut = comb123,
+                               CombinationCut = comb,
+                               MotherCut = parent,
+                               Preambulo = pream)
+    # }
+# }
+
+
+## Combiner class for Xi_cc -> Hc H H H H decays
+## ------------------------------------------------------------------------- ##
+class Xicc2HcHHHHCombiner(Hlt2Combiner) : # {
+    """
+    Combiner for Xicc -> Hc + h h' h'' h'''.
+    The selection variables are those used by the 2012 stripping for these
+    decays.
+    Like PromptSpectroscopyFilter, it relies of other 'standard' selections
+    for Cabibbo-favored singly charmed hadrons as input and to provide
+    selectivity.
+    !!!NOTE!!! The implementation dowstream vertex requirement requires that
+    the singly charmed hadron Hc is the first member of the decay descriptor.
+
+    Configuration dictionaries must contain the following keys:
+        'Trk_3of4_PT_MIN'      :
+        'Trk_2of4_PT_MIN'      :
+        'Trk_1of4_PT_MIN'      : Lower limit on PT for one, two, or three  of
+                                 the 4 tracks produced in the Xicc decay.
+        'Comb_AM_MAX'          : Upper limit on combination mass, AM
+        'Comb_ACHI2DOCA_MAX'   : Upper limit on pairwise DOCACHI2 of all Xicc
+                                 products, including the singly-charmed hadron.
+        'Comb_APT_MIN'         : Lower limit on the combination APT
+        'Xicc_VCHI2PDOF_MAX'   : Upper limit on Xicc decay vertex
+        'Xicc_VZ1VZdiff_MIN'   : Minimum difference between Hc vertex VZ and
+                                 Xicc vertex VZ.
+        'Xicc_BPVVDCHI2_MIN'   : Minimum vertex displacement BPVVDCHI2
+        'Xicc_acosBPVDIRA_MIN' :
+        'TisTosSpec'        : configuration string of the Hlt1 TISTOS filter.
+    """
+    def __init__(self, name, decay, inputs, nickname = None, shared = False) : # {
+        ## No DaughterCuts.  Assume that all filtering of input particles is
+        ## already done.
+        comb12  = "( AM < %(Comb_AM_MAX)s ) " \
+                 "& ( ACHI2DOCA(1,2) < %(Comb_ACHI2DOCA_MAX)s ) "
+        comb123 = "( AM < %(Comb_AM_MAX)s ) " \
+                 "& ((APT2 > %(Trk_3of4_PT_MIN)s) | (APT3 > %(Trk_3of4_PT_MIN)s))" \
+                 "& ( ACHI2DOCA(1,3) < %(Comb_ACHI2DOCA_MAX)s ) " \
+                 "& ( ACHI2DOCA(2,3) < %(Comb_ACHI2DOCA_MAX)s ) "
+        comb1234 = "( AM < %(Comb_AM_MAX)s ) " \
+                 "& (ANUM( ISBASIC & (PT > %(Trk_2of4_PT_MIN)s) ) >= 1)" \
+                 "& (ANUM( ISBASIC & (PT > %(Trk_3of4_PT_MIN)s) ) >= 2)" \
+                 "& ( ACHI2DOCA(1,4) < %(Comb_ACHI2DOCA_MAX)s ) " \
+                 "& ( ACHI2DOCA(2,4) < %(Comb_ACHI2DOCA_MAX)s ) " \
+                 "& ( ACHI2DOCA(3,4) < %(Comb_ACHI2DOCA_MAX)s ) "
+        comb   = "(in_range( %(Comb_AM_MIN)s, AM, %(Comb_AM_MAX)s ))" \
+                 "& (ANUM( ISBASIC & (PT > %(Trk_1of4_PT_MIN)s) ) >= 1)" \
+                 "& (ANUM( ISBASIC & (PT > %(Trk_2of4_PT_MIN)s) ) >= 2)" \
+                 "& (ANUM( ISBASIC & (PT > %(Trk_3of4_PT_MIN)s) ) >= 3)" \
+                 "& ( APT > %(Comb_APT_MIN)s )" \
+                 "& ( ACHI2DOCA(1,5) < %(Comb_ACHI2DOCA_MAX)s ) " \
+                 "& ( ACHI2DOCA(2,5) < %(Comb_ACHI2DOCA_MAX)s ) " \
+                 "& ( ACHI2DOCA(3,5) < %(Comb_ACHI2DOCA_MAX)s ) " \
+                 "& ( ACHI2DOCA(4,5) < %(Comb_ACHI2DOCA_MAX)s ) "
+
+        parent = "(VFASPF(VCHI2PDOF) < %(Xicc_VCHI2PDOF_MAX)s)" \
+                 "& (CHILD(VFASPF(VZ),1) - VFASPF(VZ) > %(Xicc_VZ1VZdiff_MIN)s)" \
+                 "& (BPVVDCHI2 > %(Xicc_BPVVDCHI2_MIN)s )" \
+                 "& (BPVDIRA > lcldira )"
+
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(Xicc_acosBPVDIRA_MIN)s )"
+        ]
+
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__( self, name, decay, inputs,
+                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                               tistos = 'TisTosSpec',
+                               combiner = DaVinci__N5BodyDecays,
+                               nickname = nickname,
+                               shared = shared,
+                               Combination12Cut =  comb12,
+                               Combination123Cut = comb123,
+                               Combination1234Cut = comb1234,
+                               CombinationCut = comb,
+                               MotherCut = parent,
+                               Preambulo = pream)
+    # }
+# }
+
+
+
