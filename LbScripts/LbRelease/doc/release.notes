@@ -1,5 +1,9 @@
 2015-08-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* buildGeneralDoc: removed obsolete doxygen options
+
+2015-08-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* buildGeneralDoc: doxygen cache size adjustment
 
 2015-08-27  Marco Clemencic  <Marco.Clemencic@cern.ch>

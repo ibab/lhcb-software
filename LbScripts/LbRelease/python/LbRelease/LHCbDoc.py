@@ -648,7 +648,6 @@ class Doc(object):
         doxycfg["EXTRACT_PRIVATE"]     = True
         doxycfg["EXTRACT_STATIC"]      = True
         doxycfg["EXTRACT_LOCAL_CLASSES"] = True
-        doxycfg['SHOW_DIRECTORIES']    = True
         doxycfg['GENERATE_TODOLIST']   = True
 
         #--- Optimizations
@@ -763,7 +762,6 @@ class Doc(object):
 
         #--- HTML related options
         doxycfg['GENERATE_HTML']       = True
-        doxycfg['HTML_ALIGN_MEMBERS']  = True
         doxycfg['HTML_TIMESTAMP']      = True
         doxycfg['SEARCHENGINE']        = True
         doxycfg['SERVER_BASED_SEARCH'] = True
