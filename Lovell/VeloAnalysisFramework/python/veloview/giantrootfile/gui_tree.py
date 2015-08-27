@@ -247,6 +247,13 @@ class Tree:
     def __iter__(self):
         return self.__TreeIter__(self)
 
+    ## Check whether a value appears in a specific branch
+    def IsPresent(self, branchName, value):
+        for entry in self:
+            if value == self.__getattr__(branchName):
+                return True
+        return False
+
     ## plot Tree contents (see draw_helper.Draw for details)
     Plot = draw_helper.Draw
 
