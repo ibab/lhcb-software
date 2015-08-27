@@ -651,6 +651,10 @@ class Doc(object):
         doxycfg['SHOW_DIRECTORIES']    = True
         doxycfg['GENERATE_TODOLIST']   = True
 
+        #--- Optimizations
+        doxycfg['SYMBOL_CACHE_SIZE'] = 7
+        doxycfg['LOOKUP_CACHE_SIZE'] = 4
+
         #--- Options related to warning and progress messages
         doxycfg['QUIET']               = False
         doxycfg['WARNINGS']            = True
