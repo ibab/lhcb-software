@@ -15,12 +15,7 @@ analysis_config_branches = {
         'MasterCombiner':
         {
             'title':    'Velo (all)',
-            'children': ['occupancy', 'crosstalk', 'pedestals', 'clusters', 'noise'],
-        },
-        'occupancy':
-        {
-            'title':    'Occupancy',
-            'children': ['sensor_occupancy', 'occupancy_spectrum'],
+            'children': ['crosstalk', 'pedestals', 'clusters', 'noise'],
         },
         'pedestals':
         {
@@ -63,20 +58,6 @@ Dictionary leaf name -> leaf, where leaf is a dictionary as follows:
                    Define error levels for tell1 child leaves
 """
 analysis_config_leaves = {
-        'sensor_occupancy':
-        {
-            'title':         'Sensor Occupancy',
-            'input':         'Velo/VeloOccupancyMonitor/OccAvrgSens',
-            'test':          'Chi2Test',
-            'testarg':       'chi2/ndf',
-        },
-        'occupancy_spectrum':
-        {
-            'title':         'Occupancy Spectrum',
-            'input':         'Velo/VeloOccupancyMonitor/OccSpectAll',
-            'test':          'Chi2Test',
-            'testarg':       'chi2/ndf',
-        },
         'crosstalk':
         {
             'title':         'Crosstalk',
