@@ -3,7 +3,7 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v48r2>2015-08-25 Brunel v48r2</A></H1><PRE>
+</PRE><H1><A NAME=v48r2>2015-08-27 Brunel v48r2</A></H1><PRE>
 This version uses projects:
  LCG_79 (ROOT 6.04.02), Gaudi v26r3, LHCb v39r0, Lbcom v17r0, Rec v18r1
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
@@ -16,6 +16,10 @@ Patch release for 2015 25ns reconstruction
 - Bug fixes
   . FastVeloFitLHCbIDs: Protect from segfault in case of not decoded hits.
     (FastVelo v1r22)
+  . Fix in DLLMuonTool, see Jira task: https://its.cern.ch/jira/browse/LHCBPS-1431
+    Added two functions to be sure a valid region is always used in the DLL
+    calculation and consequentely changed two GaudiExceptions into Error messages
+    (which should never happen, given the new code) (MuonID v9r17)
 
 </PRE><H1><A NAME=v48r1>2015-08-06 Brunel v48r1</A></H1><PRE>
 This version uses projects:

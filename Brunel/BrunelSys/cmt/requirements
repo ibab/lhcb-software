@@ -22,3 +22,4 @@ apply_pattern QMTestSummarize
 # Packages from other projects updated temporarily in this release
 use DDDB     v1r80 Det
 use FastVelo v1r22 Tf
+use MuonID   v9r17 Muon
