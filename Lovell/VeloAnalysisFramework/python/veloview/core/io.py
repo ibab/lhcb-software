@@ -73,7 +73,12 @@ class GRFIO(object):
         """Flatten and fill dictionary"""
         if self.mode == 'read':
             raise RuntimeError('Cannot fill GRF in READ mode.')
-        self._fill(self.tree, dqdict)
+
+        runnr = dqdict['runnr']
+        if self.tree.IsPresent('runnr', runnr):
+            self.edit(lambda tree: tree.runnr == runnr, dqdict)
+        else:
+            self._fill(self.tree, dqdict)
 
     def _fill(self, tree, dqdict):
         """
@@ -113,6 +118,8 @@ class GRFIO(object):
         if self.mode == 'read':
             raise RuntimeError('Cannot edit GRF in READ mode.')
 
+        dqflat = flatten(dqdict)
+
         newfilename = '{}.new'.format(self.rfile.GetName())
         newlock = ROOT.DotLock(newfilename)
         newfile = ROOT.TFile.Open(newfilename, 'recreate')
@@ -121,9 +128,9 @@ class GRFIO(object):
 
         for dummy in self.tree:
             if entry_p(self.tree): # new
-                self._fill(newtree, dqdict)
+                self._fill(newtree, dqflat)
             else:               # old
-                self._fill(newtree, self.read([br for br in dqdict]))
+                self._fill(newtree, self.read([br for br in dqflat]))
         newtree.Write()
         treename = newtree.GetName()
 
