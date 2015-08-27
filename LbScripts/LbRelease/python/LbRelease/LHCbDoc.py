@@ -339,6 +339,7 @@ class Doc(object):
     _docSubdir = "doxygen"
     _docCollDir = "docs"
     _docLockFile = ".locked"
+    _docBlacklistFile = "blacklist.txt"
     _docRebuildFlagFile = "==REBUILD=="
     _docLockTimeFmt = "%Y-%m-%dT%H:%M:%S.%f" # same as datetime.isoformat()
 
@@ -427,6 +428,15 @@ class Doc(object):
         if os.path.exists(self._rebuildFlagFile):
             self._log.warning("Re-build requested")
             self.toBeBuilt = True
+
+        # get the list of projects that should not be used in this slot
+        self._blackListFile = os.path.join(self.path, self._docBlacklistFile)
+        try:
+            self.blackList = set(x.upper() for x in
+                                 open(self._blackListFile).read().split())
+        except IOError:
+            self.blackList = set()
+
         # check that the common links are present
         # a missing link means problems during the build
         for project, version in self.projects.items():
@@ -470,6 +480,9 @@ class Doc(object):
         # Note: if the directory is locked, we can assume we could still host the
         #       file, but it will not be actually added
 
+        to_add = set([p.upper() for p,_ in deps])
+        to_add.add(project.upper())
+
         # Projects without dependencies (like LbScripts) cannot be added to any
         # existing documentation.
         if not deps:
@@ -477,15 +490,16 @@ class Doc(object):
         # The project must not be included
         if self.getVersion(project) is not None:
             return False
+        # The project should not be blacklisted
+        if self.blackList.intersection(to_add):
+            return False
         # Other special case: LHCbDirac cannot go in the same doc dir as Gaudi.
         # If at least one the projects to be added (project+deps) is in the
         # conflicting list (first intersection), ensure that the one are not
         # (second intersection) among the others (difference).
         conflicts = set(["GAUDI", "LHCBDIRAC"])
-        to_add = set([p.upper() for p,_ in deps])
-        to_add.add(project.upper())
         if conflicts.intersection(to_add):
-            if conflicts.difference(to_add).intersection(self.projects.keys()):
+            if conflicts.difference(to_add).intersection(self.projects):
                 return False
         # Each dependency must be already present with the right version or
         # not present and there must be projects in the dependencies that are
