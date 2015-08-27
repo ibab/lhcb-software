@@ -4,8 +4,16 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+
+
+! 2015-08-27 - Vanya Belyaev
+  
+ - PVReFitter:
+   fix strange/buggy statistic printout 
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
+
 
 !====================== Phys/LoKiFitters v4r16 2015-08-06 =====================
 

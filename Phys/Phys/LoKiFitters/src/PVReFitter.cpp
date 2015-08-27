@@ -220,48 +220,29 @@ namespace LoKi
       const Gaudi::XYZPoint& point ) const 
     {
       //
+      if ( 0 != m_stateProvider ) 
+      {
+        StatusCode sc = m_stateProvider->stateFromTrajectory 
+          ( m_state , track , point.z () ) ;
+        if ( sc.isSuccess() ) { return &m_state ; }     // RETURN
+      }
+      //
       // velo-only case 
       //
       if ( LHCb::Track::Velo  == track.type() || LHCb::Track::VeloR == track.type() ) 
-      {
-        //
-        if ( 0 != m_stateProvider ) 
-        {
-          StatusCode sc = m_stateProvider->stateFromTrajectory
-            ( m_state , track , point.z () ) ;
-          ++counter ( "state-from-trajectory" ) ;
-          if ( sc.isSuccess() ) { return &m_state ; }   // RETURN
-        }
-        //
+      {        
         if ( 0 != m_veloExtrapolator ) 
         {
-          StatusCode sc = m_veloExtrapolator-> propagate ( m_state, point ) ;
-          ++counter ("state-from-velo-extrapolator" ) ;
+          StatusCode sc = m_veloExtrapolator-> propagate ( m_state , point ) ;
           if ( sc.isSuccess() ) { return &m_state ; }   // RETURN
         }
-        //
       }
-      else 
+      else if ( 0 != m_extrapolator ) 
       {
-        //
-        if ( 0 != m_stateProvider ) 
-        {
-          StatusCode sc = m_stateProvider->state 
-            ( m_state , track , point.z() , m_tolerance ) ;
-          ++counter ( "state-from-provider" ) ;
-          if ( sc.isSuccess() ) { return &m_state ; }   // RETURN
-        }
-        //
-        if ( 0 != m_extrapolator ) 
-        {
-          StatusCode sc = m_extrapolator-> propagate( m_state , point ) ;
-          ++counter ( "state-from-extrapolator" ) ;
-          if ( sc.isSuccess() ) { return &m_state ; }   // RETURN
-        }
-        //
+        StatusCode sc = m_extrapolator-> propagate( m_state , point ) ;
+        if ( sc.isSuccess() ) { return &m_state ; }    // RETURN
       }
       //
-      ++counter ( "state-from-closeststate" ) ;
       return &track.closestState ( point.z() ) ;
     }
     // ========================================================================
@@ -338,6 +319,7 @@ namespace LoKi
     mutable TrEntries   m_entries ;
     mutable TrEntry     m_entry   ;
     mutable LHCb::State m_state   ;
+    //
     // ========================================================================
   }; //                                           end of class LoKi::PVReFitter 
   // ==========================================================================
@@ -598,14 +580,15 @@ StatusCode LoKi::PVReFitter::_remove_
   }
   //
   // some statistics 
-  ++counter ("#removed") += removed.size() ;
+  if ( statPrint() || msgLevel( MSG::INFO ) )
+  { counter ("#removed") += removed.size() ; }
   //
   // - nothing to be removed 
   if ( removed.empty() ) { return StatusCode::SUCCESS ; }   // RETURN
   //
   // - too many tracks to remove 
   if ( removed.size () +  m_minTracksInPV  > pv.tracks().size() ) 
-  {return _Warning( "Less than "+m_minTS+" tracks in vertex remain",
+  { return _Warning( "Less than "+m_minTS+" tracks in vertex remain",
                      StatusCode::FAILURE, 0 ) ; }
   // 
   // - too many tracks to remove
@@ -616,6 +599,7 @@ StatusCode LoKi::PVReFitter::_remove_
     for ( LHCb::Track::ConstVector::const_iterator it = removed.begin() ; 
           removed.end() != it ; ++it ) { pv.removeFromTracks ( *it ) ; }
     // 2) refit vertex 
+    if ( statPrint() || msgLevel ( MSG::INFO ) ) { ++counter("#refit-asked") ; }
     return _reFit_ ( pv )  ;
   }    
   //
@@ -648,8 +632,11 @@ StatusCode LoKi::PVReFitter::_remove_
   }
   //
   // some statistics 
-  ++counter ("#toremove") += removed.size() ;
-  ++counter ("#loaded"  ) += m_entries.size() ;
+  if ( statPrint() || msgLevel ( MSG::INFO ) ) 
+  {
+    counter ("#toremove") += removed  .size() ;
+    counter ("#loaded"  ) += m_entries.size() ;
+  }
   //
   // the data entries are loaded properly, make a step of kalman filter:
   //
@@ -678,7 +665,9 @@ StatusCode LoKi::PVReFitter::_remove_
   //
   const Gaudi::XYZPoint   newpos ( last.m_x[0] , last.m_x[1] , last.m_x[2] ) ;
   const Gaudi::XYZPoint&  oldpos = pv.position() ;
-  ++counter ( "#delta-R" )      += ( newpos.Z() - oldpos.Z() ) ;
+  //
+  if ( statPrint() || msgLevel ( MSG::INFO ) ) 
+  { counter ( "#delta-R" ) += ( newpos.Z() - oldpos.Z() ) ; }
   //
   // 4) update vertex parameters 
   // set the Chi^2 and the DoF of the vertex (fit)
@@ -690,7 +679,7 @@ StatusCode LoKi::PVReFitter::_remove_
   // refit it ?
   if ( m_reFit || 10 > pv.tracks().size() ) 
   {
-    ++counter("#refit-forced") ;
+    if ( statPrint() || msgLevel( MSG::INFO ) ) { ++counter("#refit-forced") ; }
     return _reFit_ ( pv ) ; 
   }
   //
@@ -832,17 +821,21 @@ StatusCode LoKi::PVReFitter::_reFit_ ( LHCb::RecVertex& pv ) const
     const LHCb::Track* track = ie->m_track ;
     if ( NULL == track ) { continue ; }
     pv.addToTracks ( track , ie->m_weight )  ;
-    counter ("track-weight")  += ie->m_weight ;
+    if ( statPrint() || msgLevel( MSG::INFO ) ) 
+    { counter ("track-weight")  += ie->m_weight ; }
   }
   //
-  counter ( "#iterations"   ) += ( iIter + 1 )       ;
-  // total number of tracks  
-  counter ( "#tracks/total" ) += pv.tracks().size () ;
-  const unsigned int nGood = LoKi::KalmanFilter::nTracks ( m_entries , 1.e-4 ) ;
-  // number of tracks with non-negligible weight  
-  counter ( "#tracks/good"  ) += nGood ;
-  // number of tracks with small weight 
-  counter ( "#tracks/null"  ) += pv.tracks().size() - nGood ;
+  if ( statPrint() || msgLevel( MSG::INFO ) ) 
+  {
+    counter ( "#iterations"   ) += ( iIter + 1 )       ;
+    // total number of tracks  
+    counter ( "#tracks/total" ) += pv.tracks().size () ;
+    const unsigned int nGood = LoKi::KalmanFilter::nTracks ( m_entries , 1.e-4 ) ;
+    // number of tracks with non-negligible weight  
+    counter ( "#tracks/good"  ) += nGood ;
+    // number of tracks with small weight 
+    counter ( "#tracks/null"  ) += pv.tracks().size() - nGood ;
+  }
   //
   return StatusCode::SUCCESS ;
 }  
