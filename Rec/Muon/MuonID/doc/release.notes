@@ -2,6 +2,11 @@
 ! Package     : MuonID
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
+
+! 2015-08-27 - Francesco Dettori
+ - Fixing bug in DLLMuonTool, see Jira task: https://its.cern.ch/jira/browse/LHCBPS-1431
+   Added two functions to be sure a valid region is always used in the DLL calculation and consequentely changed two GaudiExceptions into Error messages (which shold never happen, given the new code). 
+     
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

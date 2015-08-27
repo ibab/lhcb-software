@@ -46,6 +46,8 @@ class DLLMuonTool final : public GaudiTool {
 
   double calcDist(const MuonTrackExtrapolation&, CommonConstMuonHits&) const;
   unsigned GetPbin(double, unsigned);
+  int getRegionFromPosition(const MuonTrackExtrapolation&);
+  int findTrackRegion(const MuonTrackExtrapolation&);
   std::vector<int> findTrackRegions(const MuonTrackExtrapolation&);
   double calc_closestDist(const LHCb::Track&, const MuonTrackExtrapolation&,
                           CommonConstMuonHits&,

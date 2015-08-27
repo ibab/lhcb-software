@@ -678,9 +678,12 @@ unsigned DLLMuonTool::GetPbin(double p, unsigned region) {
     verbose() << "GetPbin: region+1 " << region + 1 << " p " << p
               << " pBins vector address: " << pBins << endmsg;
   if (0 == pBins)
-    throw GaudiException(
-        "GetPbin: No match to a pBins vector. Null pBins pointer", "",
-        StatusCode::FAILURE);
+  {
+    error() << "GetPbin: No match to a pBins vector. Null pBins pointer. Return default value 0." << endmsg;
+    return 0;
+  }
+  
+    
   unsigned end(pBins->size());
   for (unsigned iBin = 0; iBin != end; ++iBin) {
     if (msgLevel(MSG::VERBOSE))
@@ -694,10 +697,10 @@ unsigned DLLMuonTool::GetPbin(double p, unsigned region) {
 std::vector<double> DLLMuonTool::loadNonMuLandauParam(
     const ICommonMuonTool::MuonTrackExtrapolation& extrapolation) {
   std::vector<double> parNonMu;
-  int region = findTrackRegions(extrapolation)[1];  // M2 JHLJHL Check M2 and M3
-                                                    // indices if no M1
-                                                    // 30/08/2013
-  if (region < 0) region = findTrackRegions(extrapolation)[2];  // M3
+  
+  // Get region to use to calculate the LL
+  int region = findTrackRegion(extrapolation);
+  
   if (region == 0) {                                            // Region 1
     for (unsigned i = 0; i != 3; ++i) {
       parNonMu[i] = m_NonMuLanParR1[i];
@@ -714,10 +717,74 @@ std::vector<double> DLLMuonTool::loadNonMuLandauParam(
     for (unsigned i = 0; i != 3; ++i) {
       parNonMu[i] = m_NonMuLanParR4[i];
     }
-  } else
-    throw GaudiException("Not valid region", "", StatusCode::FAILURE);
+  } else 
+  {
+    error() << "loadNonMuLandauParam: Not valid region! This shoud not happen. Using R1.  " << endmsg;
+    for (unsigned i = 0; i != 3; ++i) {
+      parNonMu[i] = m_NonMuLanParR1[i];
+    }
+  }
+  
   return parNonMu;
 }
+
+int DLLMuonTool::getRegionFromPosition(
+    const ICommonMuonTool::MuonTrackExtrapolation& extrapolation) {
+  // Returns a Region from the extrapolation in M2 in case all else does not work
+  // Yes, this function is hardcoded: 
+  // it is used only for very strange tracks whose extrapolation is in the gaps in various stations
+
+  //  Following numbers from TDR, page 3.
+  //   R1  x(300, 600)    y(250,500)
+  //   R2  x(600, 1200)   y(500, 1000)
+  //   R3  x(1200, 2400)  y(1000, 2001)
+  //   R4  x(2400,4804)   y(2001, 40003)
+  double x = extrapolation[iM2].first;
+  double y = extrapolation[iM2].second;
+  if(msgLevel(MSG::DEBUG))
+    debug() << "getRegionFromPosition: getting region.  iM2 = "<< iM2
+            << ". Extrapolation in x = " << extrapolation[iM2].first
+            << ", y = " << extrapolation[iM2].second << endmsg;
+
+
+  if(x > 2400 || y > 2001) return 3; // R4 or larger
+  if(x > 1200 || y > 1000) return 2; // R3
+  if(x > 600  || y > 500)  return 1; // R2
+  else                     return 0; // R1
+  // Return R1 also in beam-pipe case 
+}
+
+int DLLMuonTool::findTrackRegion(
+    const ICommonMuonTool::MuonTrackExtrapolation& extrapolation) {
+  // Returns a region for a given track extrapolation 
+  // It always returns a valid region (0,... ,3) = (R1,...R4)
+  
+  std::vector<int> regions = findTrackRegions(extrapolation);
+  int region = regions[iM2];  // M2  
+  // Find a non zero region
+  if (region < 0){
+    for(unsigned int i=2; i<nStations; i++){ //M3, M4, M5
+      if(msgLevel(MSG::DEBUG))
+        debug() << format("No valid region in M2 looking in i=%i",i)   << endmsg;
+
+      region = regions[i];  
+      if(region >= 0)break;
+    }
+    
+    // If all else fails get region from x,y position in M2
+    if(region<0){
+      if(msgLevel(MSG::DEBUG))
+        debug() << "No valid region found, going to call getRegionFromPosition"  << endmsg;
+      
+      region = getRegionFromPosition(extrapolation); 
+    }
+    
+  }
+  
+  return region;
+}
+ 
+    
 
 std::vector<int> DLLMuonTool::findTrackRegions(
     const ICommonMuonTool::MuonTrackExtrapolation& extrapolation) {
@@ -1048,17 +1115,15 @@ std::tuple<double, double, double> DLLMuonTool::calcMuonLL_tanhdist(
   double myDist = -1.;
   double ProbMu = -1.;
   double ProbNonMu = -1.;
-
-  std::vector<int> regions = findTrackRegions(extrapolation);
+  
+  // Determine the region to use for the calculation
+  int region = findTrackRegion(extrapolation);
 
   // Calculate Distance using the closest hit:
   myDist = calc_closestDist(track, extrapolation, hits, occupancies);
   if (msgLevel(MSG::DEBUG))
     debug() << "The value of myDist is = " << myDist << endmsg;
-
-  int region = regions[1];  // M2   JHLJHL Check indices ... 30/08/2013
-  if (region < 0) region = regions[2];  // M3
-
+  
   // Determine the momentum bin for this region
   unsigned pBin = GetPbin(p, region);
   double tanhdistMu, tanhdistNonMu;
@@ -1131,15 +1196,14 @@ std::tuple<double, double, double> DLLMuonTool::calcMuonLL_tanhdist_landau(
   double myDist = -1.;
   double ProbMu = -1.;
   double ProbNonMu = -1.;
-  std::vector<int> regions = findTrackRegions(extrapolation);
 
+  // Find the region to use to calculate the MuonLL
+  int region = findTrackRegion(extrapolation);
+  
   // Calculate Distance using the closest hit:
   myDist = calc_closestDist(track, extrapolation, hits, occupancies);
   if (msgLevel(MSG::DEBUG))
     debug() << "The value of myDist is = " << myDist << endmsg;
-
-  int region = regions[1];  // M2   JHLJHL Check indices ... 30/08/2013
-  if (region < 0) region = regions[2];  // M3
 
   // Find Landau's parameters for a given track:
   std::vector<double> parNonMu(3, 0);
