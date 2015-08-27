@@ -171,6 +171,16 @@ def makeParser ( **kwargs ) :
         help    = "``Lumi''       attribute for DaVinci [default : %(default)s]",
         default = False   
         )
+    
+    ##
+    group_dv.add_argument (
+        '-a'                       ,
+        '--all'                    ,
+        action  = "store_true"     ,
+        dest    = 'IgnoreDQFlags'  ,
+        help    = "Use ``ALL'', IgnoreDQFlags attribute for DaVinci [default : %(default)s]",
+        default = False   
+        )
     ##
     group_da = parser.add_argument_group(
         'Input data' ,

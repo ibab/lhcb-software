@@ -5,6 +5,11 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2015-08-27 - Vanya Belyaev
+
+ - parser: 
+   add option -a/--all  ( use "all" data, ignore DQflags) 
+
 ! ==================== Phys/BenderTools v26r3   2015-08-25 ====================
 
 ! 2015-08-25 - Vanya Belyaev

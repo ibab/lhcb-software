@@ -274,7 +274,7 @@ def configure ( config ) :
         ## logger.info('Use latest tags for %s' % options.DataType )
         CondDB( LatestGlobalTagByDataType = config.DataType ) 
         logger.info('Use latest global tag for data type %s' % config.DataType )
-        
+
     if config.Simulation :
         #
         ## try to get the tags from Rec/Header
@@ -285,6 +285,10 @@ def configure ( config ) :
             config.Grid       ,
             daVinci           ) 
 
+    if config.IgnoreDQFlags :
+        logger.info('DataQuality flags will be ignored')
+        daVinci.IgnoreDQFlags = config.IgnoreDQFlags
+        
     ## specific action for (x)gen files 
     if ext in ( 'gen' , 'xgen' , 'GEN' , 'XGEN' ) :
         from BenderTools.GenFiles import genAction
