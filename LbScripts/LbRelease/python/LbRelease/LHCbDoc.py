@@ -1040,49 +1040,61 @@ class Doc(object):
             if os.path.exists(self.output + ".bk"):
                 # Remove old backups before copying the new documentation
                 shutil.rmtree(self.output + ".bk")
+            if os.path.exists(self.output + ".new"):
+                # Remove stale new documentation before copying
+                shutil.rmtree(self.output + ".new")
             if self.isAfsVolume:
                 usage = _diskUsage(tempdir) / 1024
                 self._ensureAFSquota(usage)
 
             # copy the documentation from the temporary directory to the final place with a temporary name
             self._log.info("Copy generated files from temporary directory")
-            if self._hasCpp():
-                # Copy C++ with structure
-                shutil.copytree(cpptempdir, self.output + ".new")
-                # Copy Python html as a directory in the C++ one
-                shutil.copytree(os.path.join(pytempdir, "html"), os.path.join(self.output + ".new", "html", "py"))
-            else:
-                # Copy Python with structure
-                shutil.copytree(pytempdir, self.output + ".new")
-            # copy files to the doxygen directory (dependency graph, class.php)
-            for f in [ f for f in os.listdir(os.path.join(self.path, "conf"))
-                         if f.startswith("dependencies.") or f in ["class.php"]]:
-                src = os.path.join(self.path, "conf", f)
-                shutil.copyfile(src, os.path.join(self.output + ".new", "html", f))
-                if self._hasCpp(): # we need to copy the graphs also in the Python directory
-                    shutil.copyfile(src, os.path.join(self.output + ".new", "html", "py", f))
-            if self.isAfsVolume:
-                # Give read access to everybody
-                self._log.debug("Give read access (recursively) to %s", self.path)
-                for dirpath, _, _ in os.walk(self.path):
-                    Popen(["fs", "setacl", "-dir", dirpath, "-acl", "system:anyuser", "rlk"]).wait()
-            # Swap the old and the new documentation (avoid that the users see an incomplete doc)
-            # @todo: it should be done for the tag file too
-            # Move away the old documentation
-            if os.path.isdir(self.output):
-                old = self.output + ".bk"
-                self._log.warning("Old documentation moved to %s", old)
-                os.rename(self.output, old)
-            # rename the new documentation
-            os.rename(self.output + ".new", self.output)
-            shutil.rmtree(tempdir)
-            self._updateCommonLinks()
+            try:
+                if self._hasCpp():
+                    # Copy C++ with structure
+                    shutil.copytree(cpptempdir, self.output + ".new")
+                    # Copy Python html as a directory in the C++ one
+                    shutil.copytree(os.path.join(pytempdir, "html"), os.path.join(self.output + ".new", "html", "py"))
+                else:
+                    # Copy Python with structure
+                    shutil.copytree(pytempdir, self.output + ".new")
+                # copy files to the doxygen directory (dependency graph, class.php)
+                for f in [ f for f in os.listdir(os.path.join(self.path, "conf"))
+                             if f.startswith("dependencies.") or f in ["class.php"]]:
+                    src = os.path.join(self.path, "conf", f)
+                    shutil.copyfile(src, os.path.join(self.output + ".new", "html", f))
+                    if self._hasCpp(): # we need to copy the graphs also in the Python directory
+                        shutil.copyfile(src, os.path.join(self.output + ".new", "html", "py", f))
+                if self.isAfsVolume:
+                    # Give read access to everybody
+                    self._log.debug("Give read access (recursively) to %s", self.path)
+                    for dirpath, _, _ in os.walk(self.path):
+                        Popen(["fs", "setacl", "-dir", dirpath, "-acl", "system:anyuser", "rlk"]).wait()
+                # Swap the old and the new documentation (avoid that the users see an incomplete doc)
+                # @todo: it should be done for the tag file too
+                # Move away the old documentation
+                if os.path.isdir(self.output):
+                    old = self.output + ".bk"
+                    self._log.warning("Old documentation moved to %s", old)
+                    os.rename(self.output, old)
+                # rename the new documentation
+                os.rename(self.output + ".new", self.output)
+
+                self._updateCommonLinks()
+                self._log.debug("Documentation ready")
+
+            except shutil.Error, exc:
+                self._log.error("Failed to copy files: %s", exc)
+                with open(os.path.join(self.path, 'shutil_error.txt'), 'w') as error_log:
+                    error_log.write(str(exc))
+
             # Mark as built
             self.toBeBuilt = False
             # Since we have built the doc, remove the "rebuild flag" if present
             if os.path.exists(self._rebuildFlagFile):
                 os.remove(self._rebuildFlagFile)
-            self._log.debug("Documentation ready")
+
+            shutil.rmtree(tempdir)
 
         finally:
             # clean up the lock
