@@ -1,3 +1,7 @@
+2015-08-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* buildGeneralDoc: fixed LBCORE-904, blacklisting of projects and handling of copy errors
+
 2015-07-21  Ben Couturier <Ben.Couturier@cern.ch>
 
 	LBCORE-880: Added functionality to remove platforms from a Project/Version.
