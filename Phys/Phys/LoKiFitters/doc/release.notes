@@ -5,6 +5,8 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2015-08-27 - Vanya Belyaev
+ - replace boost::array with std::array 
 
 ! 2015-08-27 - Vanya Belyaev
   

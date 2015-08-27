@@ -11,7 +11,7 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/BoostArrayAsProperty.h"
+#include "GaudiKernel/StdArrayAsProperty.h"
 #include "GaudiKernel/IAlgorithm.h"
 // ============================================================================
 // Local
@@ -303,7 +303,7 @@ namespace LoKi
     std::string    m_minTS;
     /// tukey's parameters 
     // double         m_tukey[3]   ;
-    boost::array<double,3> m_tukey ;
+    std::array<double,3> m_tukey ;
     // ========================================================================
   private: // data itself 
     // ========================================================================
