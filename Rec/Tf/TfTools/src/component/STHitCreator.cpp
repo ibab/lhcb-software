@@ -180,7 +180,7 @@ namespace Tf
   template<class Trait>
   StatusCode STHitCreator<Trait>::updateGeometry()
   {
-    if(msgLevel(MSG::DEBUG)) debug() << "In STHitCreator::updateGeometry()" << endreq ;
+    if(msgLevel(MSG::DEBUG)) debug() << "In STHitCreator::updateGeometry()" << endmsg ;
     m_detectordata.reset(new HitCreatorGeom::STDetector(*m_stdet,m_clusterLocation,*this)) ;
     return StatusCode::SUCCESS ;
   }

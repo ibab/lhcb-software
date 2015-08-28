@@ -3,6 +3,8 @@
 ! Responsible : 
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2015-08-28 - Gerhard Raven
+ - replace endreq with endmsg
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

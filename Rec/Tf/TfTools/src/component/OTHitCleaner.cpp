@@ -42,8 +42,8 @@ StatusCode OTHitCleaner::initialize ( )
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  info() << "Max OT cluster size     = " << m_maxClusterSize << endreq;
-  info() << "Max OT module occupancy = " << m_maxModuleOcc << endreq;
+  info() << "Max OT cluster size     = " << m_maxClusterSize << endmsg;
+  info() << "Max OT module occupancy = " << m_maxModuleOcc << endmsg;
 
   return sc;
 }
@@ -71,7 +71,7 @@ unsigned int OTHitCleaner::cleanHits( const OTHits::const_iterator begin,
   // how many hits where cleaned
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Selected " << output.size() << " out of " 
-            << std::distance(begin,end) << " OTHits" << endreq;
+            << std::distance(begin,end) << " OTHits" << endmsg;
   return startSize - output.size();
 }
 
@@ -151,14 +151,14 @@ void OTHitCleaner::removeHotModules( const OTHits::const_iterator begin,
     
     const double occ = (double)(std::distance(currentbegin,currentend)) / (double)(module.nChannels());
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "Module " << module.uniqueModule() << " has occupancy " << occ << endreq;
+      verbose() << "Module " << module.uniqueModule() << " has occupancy " << occ << endmsg;
     
     if( occ <= m_maxModuleOcc )
       output.insert( output.end(), currentbegin, currentend ) ;
     else if ( msgLevel(MSG::DEBUG) )
       debug() << "DeOTModule " << module.uniqueModule() 
               << " suppressed due to high occupancy = " << occ 
-              << " > " << m_maxModuleOcc << " maximum" << endreq;
+              << " > " << m_maxModuleOcc << " maximum" << endmsg;
   }
 }
 

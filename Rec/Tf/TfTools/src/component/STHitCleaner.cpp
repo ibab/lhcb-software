@@ -41,7 +41,7 @@ StatusCode STHitCleaner::initialize ( )
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  info() << "Max ST sector occupancy = " << m_maxBeetleOcc << endreq;
+  info() << "Max ST sector occupancy = " << m_maxBeetleOcc << endmsg;
 
   return sc;
 }
@@ -58,7 +58,7 @@ unsigned int STHitCleaner::cleanHits( const STHits::const_iterator begin,
   // how many hits where cleaned
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Selected " << output.size() << " out of "
-            << std::distance(begin,end) << " STHits" << endreq;
+            << std::distance(begin,end) << " STHits" << endmsg;
   return startSize - output.size();
 }
 
@@ -81,7 +81,7 @@ void STHitCleaner::removeHotBeetles( const STHits::const_iterator begin,
     // add to output container if not too hot
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "Sector " << sector.id() << " has occupancy " << occ << endreq;
+      verbose() << "Sector " << sector.id() << " has occupancy " << occ << endmsg;
     }
     if ( occ <= m_maxBeetleOcc )
     {
@@ -92,7 +92,7 @@ void STHitCleaner::removeHotBeetles( const STHits::const_iterator begin,
       debug() << "DeSTSector " << sector.id()
               << " suppressed due to high occupancy = " << occ 
               << " > " << m_maxBeetleOcc << " maximum"
-              << endreq;
+              << endmsg;
     }
   }
 
