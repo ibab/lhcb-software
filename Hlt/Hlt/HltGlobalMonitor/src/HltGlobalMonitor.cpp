@@ -200,10 +200,9 @@ StatusCode HltGlobalMonitor::initialize()
             vector<string> labels;
             for ( const string& s : i.second ) {
                 string label = s;
-                for ( const auto& strip : array<string,3>{
-                         {  "Decision"  // and of course 'Decision'...
-                         ,  m_stage     // just strip 'Hlt{1,2}'
-                         , i.first    } }    // finally try to remove alley prefix
+                for ( const auto& strip : array<string, 2>{
+                         { "Decision"  // and of course 'Decision'...
+                         , m_stage } }     // just strip 'Hlt{1,2}'
                       ) {
                     if ( label != strip ) boost::algorithm::erase_all( label, strip );
                 }

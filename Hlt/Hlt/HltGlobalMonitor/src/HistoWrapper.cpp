@@ -13,6 +13,12 @@
 #include <AIDA/IProfile1D.h>
 #include <AIDA/IAxis.h>
 
+// Gaudi
+// #include <GaudiUtils/QuasiRandom.h>
+
+// LHCb
+#include <Event/ODIN.h>
+
 #include <GaudiKernel/IIncidentSvc.h>
 
 // local
@@ -48,6 +54,9 @@ HistoWrapper::HistoWrapper( HltMassMonitor* algo, const std::string& histoName,
       throw std::exception();
    }
 
+   // auto initial = algo->name() + "/" + decision;
+   // m_initial = QuasiRandom::mixString(initial.size(), initial);
+
    auto monSvc = algo->hltMonSvc();
    if (monSvc.isValid()) {
       auto bins = boost::numeric_cast<size_t>(massDef[2]);
@@ -71,10 +80,16 @@ HistoWrapper::~HistoWrapper()
 }
 
 //=============================================================================
-void HistoWrapper::fill(const LHCb::HltSelReports* selReports)
+void HistoWrapper::fill(const LHCb::ODIN*, const LHCb::HltSelReports* selReports)
 {
    const LHCb::HltObjectSummary* selReport = selReports->selReport(decision());
    if (!selReport) return;
+
+   // Avoid hoarding memory
+   if (m_masses.size() > 10) {
+      m_masses.resize(10);
+   }
+   m_masses.clear();
 
    int iteration=0;
    for (const auto& candidate : selReport->substructure()) {
@@ -93,9 +108,6 @@ void HistoWrapper::fill(const LHCb::HltSelReports* selReports)
       if (qoverp < 0) p = -1 / qoverp;
       normfactor = sqrt(tx * tx + ty * ty + 1);
       pT = sqrt(tx * tx + ty * ty) * p / normfactor;
-      if (pT > 0) {
-         m_pT.fill(pT);
-      }
 
       //compute mass depending on structure
       int massdepth = m_massStruct.size();
@@ -140,6 +152,28 @@ void HistoWrapper::fill(const LHCb::HltSelReports* selReports)
             mass = sqrt(m2);
          }
       }
-      m_mass.fill(mass);
+      m_masses.push_back({mass, pT});
+   }
+
+   if (m_masses.size() == 1) {
+      m_mass.fill(m_masses[0].mass);
+      m_pT.fill(m_masses[0].pT);
+   } else if (m_masses.size() > 1) {
+      // This if for the next Gaudi release
+      // Randomly select a candidate
+      // uint32_t x = m_initial;
+      // x = QuasiRandom::mix64( x, odin->gpsTime() );
+      // x = QuasiRandom::mix32( x, odin->runNumber() );
+      // x = QuasiRandom::mix64( x, odin->eventNumber() );
+
+      // scale to interval [0, size)
+      // auto scale = [](uint32_t x, uint32_t size) {
+      //    const uint32_t denom = boost::integer_traits<uint32_t>::const_max / (size);
+      //    return x / denom;
+      // };
+      // auto ci = m_masses[scale(x, m_masses.size())];
+      auto ci = m_masses[0];
+      m_mass.fill(ci.mass);
+      m_pT.fill(ci.pT);
    }
 }

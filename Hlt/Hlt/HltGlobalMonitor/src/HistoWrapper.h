@@ -28,6 +28,9 @@
 
 #include <iostream>
 
+namespace LHCb {
+   class ODIN;
+}
 
 /** @class HistoWrapper HistoWrapper.h
  *  Simple wrapper class which contains some info about
@@ -53,7 +56,7 @@ public:
 
    virtual ~HistoWrapper( ); ///< Destructor
 
-   void fill( const LHCb::HltSelReports* selReports);
+   void fill(const LHCb::ODIN* odin, const LHCb::HltSelReports* selReports);
 
 private:
 
@@ -110,9 +113,20 @@ private:
 
    };
 
+   struct CandInfo {
+      CandInfo() : mass(0), pT(0) { }
+
+      CandInfo(double _mass, double _pT)
+         : mass(_mass), pT(_pT) {}
+      double mass;
+      double pT;
+   };
+
    Wrapper m_mass;
    Wrapper m_pT;
 
+   uint32_t m_initial;
+   std::vector<CandInfo> m_masses;
    const std::vector<double> m_massDef;
    const std::vector<double> m_massStruct;
 

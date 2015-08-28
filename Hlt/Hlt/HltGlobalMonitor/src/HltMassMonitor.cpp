@@ -121,11 +121,11 @@ StatusCode HltMassMonitor::initialize()
 //=============================================================================
 StatusCode HltMassMonitor::execute()
 {
-   const LHCb::HltSelReports* selReports
-      = getIfExists< LHCb::HltSelReports >( m_selReportsLocation );
-   if (selReports) {
+   auto selReports = getIfExists<LHCb::HltSelReports>(m_selReportsLocation);
+   auto odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default);
+   if (odin && selReports) {
       for (HistoWrapper* wrapper : m_wrappers) {
-         wrapper->fill(selReports);
+         wrapper->fill(odin, selReports);
       }
    }
    setFilterPassed(true);
