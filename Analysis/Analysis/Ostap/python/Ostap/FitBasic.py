@@ -42,7 +42,7 @@ import ROOT, math
 from   AnalysisPython.Logger     import getLogger
 from   Ostap.PyRoUts             import VE, hID, allInts, cpp, rootID
 from   Ostap.PyRoUts             import h1_axis , h2_axes 
-from   Ostap.Utils               import RooSilent, NoContext 
+from   Ostap.Utils               import roo_silent 
 # =============================================================================
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitBasic' )
 else                       : logger = getLogger ( __name__         )
@@ -273,8 +273,12 @@ class PDF (object) :
     #  r,f = model.fitTo ( dataset , ncpu     = 10   )    
     #  r,f = model.fitTo ( dataset , draw = True , nbins = 300 )    
     #  @endcode 
-    def fitTo ( self , dataset , draw = False , nbins = 100 ,
-                silent = False , refit = False , *args , **kwargs ) :
+    def fitTo ( self           ,
+                dataset        ,
+                draw   = False ,
+                nbins  = 100   ,
+                silent = False ,
+                refit  = False , *args , **kwargs ) :
         """
         Perform the actual fit (and draw it)
         >>> r,f = model.fitTo ( dataset )
@@ -289,16 +293,12 @@ class PDF (object) :
         #
         ## treat the arguments properly
         #
-        _args = fitArgs ( "PDF(%s).fitTo:" % self.name , dataset , *args , **kwargs )
+        opts = fitArgs ( "PDF(%s).fitTo:" % self.name , dataset , *args , **kwargs )
         
         #
         ## define silent context
-        with RooSilent() if silent else NoContext() :
-            
-            result =  self.pdf.fitTo ( dataset   ,
-                                       ROOT.RooFit.Save (   ) ,
-                                       *_args     )
-            
+        with roo_silent ( silent ) :
+            result =  self.pdf.fitTo ( dataset , ROOT.RooFit.Save () , *opts ) 
             if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars() 
 
         st = result.status()
@@ -312,13 +312,14 @@ class PDF (object) :
             logger.warning ( 'PDF(%s).fitTo: Fit status is %s ' % ( self.name , st   ) )
         #
         qual = result.covQual()
-        if   -1 == qual : logger.debug   ( 'PDF(%s).fitTo: covQual    is unknown ' ) 
+        if   -1 == qual and dataset.isWeighted() : pass
         elif  3 != qual :
             for_refit = 'covariance' 
             logger.warning ( 'PDF(%s).fitTo: covQual    is %s ' % ( self.name , qual ) ) 
 
         #
         ## check the integrals (when possible)
+        #
         if hasattr ( self , 'alist2' ) :
             
             nsum = VE()            
@@ -359,11 +360,27 @@ class PDF (object) :
         
         return result, self.draw ( dataset , nbins = nbins , silent = silent )
 
+    
+    ## helper method to draw set of components 
+    def _draw ( self , what , frame , options , base_color ) :
+        """ Helper method to draw set of components """
+        i = 0 
+        for cmp in what : 
+            cmps = ROOT.RooArgSet( cmp ) 
+            self.pdf .plotOn (
+                frame ,
+                ROOT.RooFit.Components ( cmps                        ) ,
+                ROOT.RooFit.LineColor  ( base_color + i ) , *options ) 
+            i += 1
+            
+            
+            
+                
     # ================================================================================
     ## draw fit results
     #  @code
     #  r,f = model.fitTo ( dataset )
-    #  model.draw ( datatset , nbins = 100 ) 
+    #  model.draw ( dataset , nbins = 100 ) 
     #  @endcode
     #  @param dataset  dataset to be drawn 
     #  @param nbins    binning scheme for frame/RooPlot 
@@ -381,97 +398,96 @@ class PDF (object) :
                dataset               = None  ,
                nbins                 = 100   ,   ## Frame binning
                silent                = False ,   ## silent mode ?
-               data_options          = None  ,   ## drawing options for data set
-               signal_options        = None  ,   ## drawing options for signal components    
-               background_options    = None  ,   ## drawing options for background components 
-               component_options     = None  ,   ## drawing options for 'other' components 
-               fit_options           = None  ,   ## drawing options for fit curve    
-               base_signal_color     = None  ,   ## base color for signal components 
-               base_background_color = None  ,   ## base color for background components
-               base_component_color  = None  ,   ## base color for other components 
-               data_overlay          = False ) : ## draw points atop of fitting curves?  
+               **kwargs                      ) :
         """    
         Visualize the fits results
         >>> r,f = model.draw ( dataset )
-        >>> model.draw ( datatset , nbins = 100 )
-        >>> model.draw ( datatset , nbins = 100 , data_overlay = True )
-        >>> model.draw ( datatset , base_signal_color  = ROOT.kGreen+2 )
-        >>> model.draw ( datatset , data_options = (ROOT.RooFit.DrawOptions('zp'),) )        
+        >>> model.draw ( dataset , nbins = 100 )
+        >>> model.draw ( dataset , base_signal_color  = ROOT.kGreen+2 )
+        >>> model.draw ( dataset , data_options = (ROOT.RooFit.DrawOptions('zp'),) )        
         """
         #
-        if          data_options is None : from Ostap.FitDraw import          data_options
-        if    background_options is None : from Ostap.FitDraw import    background_options 
-        if        signal_options is None : from Ostap.FitDraw import        signal_options
-        if     component_options is None : from Ostap.FitDraw import     component_options
-        if           fit_options is None : from Ostap.FitDraw import           fit_options
-        if     base_signal_color is None : from Ostap.FitDraw import     base_signal_color 
-        if base_background_color is None : from Ostap.FitDraw import base_background_color 
-        if  base_component_color is None : from Ostap.FitDraw import  base_component_color 
+        import Ostap.FitDraw as FD
         #
         ## again the context
         # 
-        if silent : from Ostap.Utils import RooSilent as Context
-        else      : from Ostap.Utils import NoContext as Context
-        #
-        context = Context () 
-        with context :
-
-            frame = self.mass.frame( nbins )
-            #
-            if   dataset and not data_overlay :
-                dataset  .plotOn ( frame , *data_options )
-            elif dataset and     data_overlay :
-                dataset  .plotOn ( frame , ROOT.RooFit.Invisible() , *data_options )
+        with roo_silent ( silent ) :
             
-            iB = 0 
-            for i in self.backgrounds() :
-                cmp = ROOT.RooArgSet( i ) 
-                self.pdf .plotOn (
-                    frame ,
-                    ROOT.RooFit.Components ( cmp                        ) ,
-                    ROOT.RooFit.LineColor  ( base_background_color + iB ) , *background_options ) 
-                iB += 1
-
-            iS = 0 
-            for i in self.signals  () :
-                cmp = ROOT.RooArgSet( i )         
-                self.pdf .plotOn (
-                    frame ,
-                    ROOT.RooFit.Components ( cmp                       ) , 
-                    ROOT.RooFit.LineColor  ( base_signal_color  + iS   ) , *signal_options )
-                iS += 1
-
-            iC = 0 
-            for i in self.components  () :
-                cmp = ROOT.RooArgSet( i )         
-                self.pdf .plotOn (
-                    frame ,
-                    ROOT.RooFit.Components ( cmp                       ) ,  
-                    ROOT.RooFit.LineColor  ( base_component_color + iC ) , *cmp_options )
-                iC+= 1
+            if hasattr ( self , 'draw_var' ) and self.draw_var : drawvar = self.draw_var
+            else                                               : drawvar = self.mass
+            
+            if nbins :  frame = drawvar.frame ( nbins )
+            else     :  frame = drawvar.frame ()
+            
+            #
+            ## draw invizible data (for normalzation of fitting curves)
+            #
+            data_options = kwargs.pop ( 'data_options' , FD.data_options )
+            if dataset : dataset .plotOn ( frame , ROOT.RooFit.Invisible() , *data_options )
+            
+            ## draw various ``background'' terms 
+            if self.backgrounds () :
+                self._draw( self.backgrounds()                                                 ,
+                            frame                                                              ,
+                            kwargs.pop (     'background_options' , FD.   background_options ) , 
+                            kwargs.pop (  'base_background_color' , FD.base_background_color ) )
                 
+            ## ugly :-( 
+            if hasattr ( self , 'crossterm1' ) and self.crossterm1() : 
+                self._draw( self.crossterms1()                                                 ,
+                            frame                                                              ,
+                            kwargs.pop (     'crossterm1_options' , FD.   crossterm1_options ) , 
+                            kwargs.pop (  'base_crossterm2_color' , FD.base_crossterm1_color ) )
+
+            ## ugly :-( 
+            if hasattr ( self , 'crossterm2' ) and self.crossterm2() : 
+                self._draw( self.crossterms2()                                                 ,
+                            frame                                                              ,
+                            kwargs.pop (     'crossterm2_options' , FD.   crossterm2_options ) , 
+                            kwargs.pop (  'base_crossterm2_color' , FD.base_crossterm2_color ) )
+
+            ## draw ``other'' components 
+            if self.components () :
+                self._draw( self.components()                                                  ,
+                            frame                                                              ,
+                            kwargs.pop (      'component_options' , FD.    component_options  ) , 
+                            kwargs.pop (   'base_component_color' , FD. base_component_color  ) )
+
+            ## draw ``signal'' components 
+            if self.signals    () :
+                self._draw( self.components()                                                  ,
+                            frame                                                              ,
+                            kwargs.pop (         'signal_options' , FD.      signal_options  ) , 
+                            kwargs.pop (      'base_signal_color' , FD.   base_signal_color  ) )
+
             #
             ## the total fit curve
             #
-            self.pdf .plotOn ( frame , *fit_options )
-
+            self.pdf .plotOn ( frame , *kwargs.pop ( 'total_fit_options' , FD. total_fit_options  ) )
+            
             #
             ## draw data once more
             #
-            if dataset and data_overlay :
-                dataset  .plotOn ( frame , *data_options )            
+            if dataset : dataset  .plotOn ( frame , *data_options )            
 
-
-            ## suppress ugly axis labels 
+            #
+            ## suppress ugly axis labels
+            #
             frame.SetXTitle ( '' )
             frame.SetYTitle ( '' )
             frame.SetZTitle ( '' )
 
-            ## Draw the frame! 
+            #
+            ## Draw the frame!
+            #
             frame.Draw()
             
+            if kwargs :
+                logger.warning("Ignored unknown options: %s" % kwargs.keys() )
+            
             return frame 
-        
+
+    # =========================================================================
     ## fit the histogram (and draw it)
     #  @code
     #  histo = ...
@@ -494,14 +510,18 @@ class PDF (object) :
             if chi2 : return self.chi2fitTo ( self.hset , draw , None , silent , density , *args , **kwargs )
             else    : return self.fitTo     ( self.hset , draw , None , silent ,           *args , **kwargs )
 
+    # =========================================================================
     ## make chi2-fit for binned dataset or histogram
     #  @code
     #  histo = ...
     #  r,f = model.chi2FitTo ( histo , draw = True ) 
     #  @endcode
-    #  @todo add proper parsion of arguments for RooChi2Var 
+    #  @todo add proper parsing of arguments for RooChi2Var 
     def chi2fitTo ( self,  dataset , draw = False , silent = False , density = True , *args , **kwargs ) :
-
+        """ Chi2-fit for binned dataset or histogram
+        >>> histo = ...
+        >>> result , frame  = model.chi2FitTo ( histo , draw = True ) 
+        """
         hdataset = dataset
         histo    = None 
         if isinstance  ( dataset , ROOT.TH1 ) :
@@ -513,7 +533,7 @@ class PDF (object) :
                 hdataset  = self.hset  
                 histo     = dataset 
                 
-        with RooSilent() if silent else NoContext() :
+        with roo_silent ( silent ) : 
 
             lst1 = list ( fitArgs ( self.name , hdataset , *args , **kwargs ) )
             lst2 = []
@@ -538,19 +558,17 @@ class PDF (object) :
             return result, None 
         
         return result, self.draw ( hdataset , nbins = None , silent = silent )
-        
+
+    # =========================================================================
     ## perform sPlot-analysis 
     #  @code
     #  r,f = model.fitTo ( dataset )
     #  model.sPlot ( dataset ) 
     #  @endcode 
     def sPlot ( self , dataset ) : 
-        """
-        Make sPlot analysis
-
+        """ Make sPlot analysis
         >>> r,f = model.fitTo ( dataset )
         >>> model.sPlot ( dataset ) 
-        
         """
         if not hasattr ( self , 'alist2' ) :
             logger.error ('PDF(%s) has not attribute "alist2", no sPlot is possible' % self.name ) 
@@ -567,14 +585,13 @@ class PDF (object) :
         return splot 
     
 
-        
 # =============================================================================
 ## helper base class for implementation  of various helper pdfs 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-12-01
 class MASS(PDF) :
     """
-    helper base class for implementation of various pdfs 
+    Helper base class for implementation of various pdfs 
     """
     def __init__ ( self            ,
                    name            ,
@@ -649,43 +666,27 @@ class MASS(PDF) :
         
 
 
-
 # =============================================================================
 ## @class PDF2
 #  The helper base class for implementation of 2D-pdfs 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-08-21
-class PDF2 (object) :
+class PDF2 (PDF) :
     """
     Useful helper base class for implementation of PDFs for 2D-fit
     """
     def __init__ ( self , name , xvar = None , yvar = None ) : 
-    
-        self.name         = name
+
+        PDF.__init__ ( self , name )
+        
         self.varx         = xvar 
         self.vary         = yvar 
         self.x            = xvar 
         self.y            = yvar 
         self.m1           = xvar ## ditto
         self.m2           = yvar ## ditto 
-        self._splots      = []
-        
-    ## Create vector of phases (needed for various polynomial forms)
-    def makePhis    ( self , num ) :
-        """
-        Create vector of phases (needed for various polynomial forms)
-        """
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList()
-        from math import pi 
-        for i in range( 1 , num + 1 ) :
-            phi_i = makeVar ( None ,
-                              'phi2%d_%s'      % ( i , self.name )  ,
-                              '#phi2_{%d}(%s)' % ( i , self.name )  ,
-                              None , 0 ,  -1.75 * pi  , 1.75 * pi )
-            self.phis.append  ( phi_i ) 
-            self.phi_list.add ( phi_i )    
 
+    # =========================================================================
     ## make the actual fit (and optionally draw it!)
     #  @code
     #  r,f = model.fitTo ( dataset )
@@ -693,7 +694,13 @@ class PDF2 (object) :
     #  r,f = model.fitTo ( dataset , ncpu     = 10   )    
     #  r,f = model.fitTo ( dataset , draw = True , nbins = 300 )    
     #  @endcode 
-    def fitTo ( self , dataset , draw = False , nbins = 100 , silent = False , *args , **kwargs ) :
+    def fitTo ( self           , 
+                dataset        ,
+                draw   = False ,
+                nbins  =    50 ,
+                ybins  =  None , 
+                silent = False ,
+                refit  = False , *args , **kwargs ) :
         """
         Perform the actual fit (and draw it)
         >>> r,f = model.fitTo ( dataset )
@@ -701,44 +708,32 @@ class PDF2 (object) :
         >>> r,f = model.fitTo ( dataset , ncpu     = 10   )    
         >>> r,f = model.fitTo ( dataset , draw = True , nbins = 300 )    
         """
-        if isinstance ( dataset , ROOT.TH1 ) :
+        if isinstance ( dataset , ROOT.TH2 ) :
             density = kwargs.pop ( 'density' , True  ) 
             chi2    = kwargs.pop ( 'chi2'    , False ) 
-            return self.fitHisto ( dataset   , draw , silent , density , chi2 , *args , **kwargs ) 
-        #
-        ## treat the arguments properly
-        #
-        _args = fitArgs ( "PDF2(%s).fitTo:" % self.name , dataset , *args , **kwargs )
+            return self.fitHisto ( dataset   , draw , silent , density , chi2 , *args , **kwargs )
+
         
-        #
-
-        ## define silent context
-        #
-        with RooSilent() if silent else NoContext() :
-
-            result =  self.pdf.fitTo ( dataset             ,
-                                       ROOT.RooFit.Save () ,
-                                       *_args              )
-            
-            if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars() 
-
-        st = result.status()
-        if 0 != st and silent :
-            logger.warning ( 'PDF2(%s).fitTo: status is %s. Refit in non-silent regime ' % ( self.name , st  ) )    
-            return self.fitTo ( dataset , draw , nbins , False , *args , **kwargs )
-        
-        if 0 != st   : logger.warning ( 'PDF2(%s).fitTo: Fit status is %s ' % ( self.name , st   ) )
-        #
-        qual = result.covQual()
-        if   -1 == qual : logger.debug   ( 'PDF2(%s).fitTo: covQual    is unknown ' ) 
-        elif  3 != qual : logger.warning ( 'PDF2(%s).fitTo: covQual    is %s ' % ( self.name , qual ) ) 
-
+        result,f = PDF.fitTo ( self    ,
+                               dataset ,
+                               False   , ## false here!
+                               nbins   ,
+                               silent  ,
+                               refit   , *args , **kwargs ) 
         if not draw :
-            return result, None 
+            return result , None
         
-        return result, self.draw ( dataset , nbins = nbins , silent = silent )
+        ## 2D 
+        if 1< nbins and isinstane ( ybins , ( int , long ) ) and 1<ybins :
+            return result, self.draw ( None , dataset , nbins , ybins , silent = silent )
+        
+        if     1<= nbins : return result, self.draw1 ( dataset ,  nbins , silent = silent )
+        elif  -1>= nbins : return result, self.draw2 ( dataset , -nbins , silent = silent )
 
+        ## return 2D 
+        return result, self.draw ( None , dataset , silent = silent )
     
+    # =========================================================================
     ## draw the projection over 1st variable
     #
     #  @code
@@ -751,9 +746,12 @@ class PDF2 (object) :
     #  f1  = model.draw1 ( dataset , nbins = 100 , in_range = 'QUQU2') ## draw results
     #
     #  @endcode 
-    def draw1 ( self , dataset = None , nbins = 100  , silent = True   , in_range = None  , *args ) :
-        """
-        Draw the projection over 1st variable
+    def draw1 ( self            ,
+                dataset  = None ,
+                nbins    = 100  ,
+                silent   = True ,
+                in_range = None , *args , **kwargs ) :
+        """ Draw the projection over 1st variable
         
         >>> r,f = model.fitTo ( dataset ) ## fit dataset
         >>> fx  = model.draw1 ( dataset , nbins = 100 ) ## draw results
@@ -766,9 +764,16 @@ class PDF2 (object) :
         """
         if in_range and isinstance ( in_range , tuple ) and 2 == len ( in_range ) :
             self.m2.setRange ( 'aux_rng2' , in_range[0] , in_range[1] )
-            in_range = 'aux_rng2' 
-        return self.draw ( self.m1 , dataset , nbins , 20     , silent , in_range         , *args )
+            in_range = 'aux_rng2'
+            
+        return self.draw ( self.m1  , 
+                           dataset  ,
+                           nbins    ,
+                           20       , ## fake 
+                           silent   ,
+                           in_range , *args , **kwargs )
     
+    # =========================================================================
     ## draw the projection over 2nd variable
     #
     #  @code
@@ -781,7 +786,11 @@ class PDF2 (object) :
     #  f2  = model.draw2 ( dataset , nbins = 100 , in_range = 'QUQU1') ## draw results
     #
     #  @endcode 
-    def draw2 ( self , dataset = None , nbins = 100  , silent = True   , in_range = None  , *args ) :
+    def draw2 ( self            ,
+                dataset  = None ,
+                nbins    = 100  ,
+                silent   = True ,
+                in_range = None , *args , **kwargs ) :
         """
         Draw the projection over 2nd variable
         
@@ -796,10 +805,15 @@ class PDF2 (object) :
         """
         if in_range and isinstance ( in_range , tuple ) and 2 == len ( in_range ) :
             self.m1.setRange ( 'aux_rng1' , in_range[0] , in_range[1] )
-            in_range = 'aux_rng1' 
-        return self.draw ( self.m2 , dataset , nbins , 20     , silent , in_range         , *args )
+            in_range = 'aux_rng1'
 
+        return self.draw ( self.m2 ,
+                           dataset ,
+                           nbins   ,
+                           20      , ## fake
+                           silent  , in_range , *args , **kwargs )
 
+    # =========================================================================
     ## draw as 2D-histograms 
     def draw_H2D ( self           ,
                    dataset = None ,  
@@ -827,52 +841,74 @@ class PDF2 (object) :
         
         return hpdf , hdata 
     
-                    
+    # =========================================================================
     ## make 1D-plot
-    def draw ( self            ,
-               drawvar  = None ,
-               dataset  = None ,
-               nbins    = 100  ,
-               ybins    =  20  ,
-               silent   = True ,
-               in_range = None ,
-               *args           )  : 
+    def draw ( self                         ,
+               drawvar               = None ,
+               dataset               = None ,
+               nbins                 =  100 ,
+               ybins                 =   20 ,
+               silent                = True ,
+               in_range              = None ,
+               **kwargs                     ) : 
         """
         Make 1D-plot:
         """
         
-        if not dataset :
-            if hasattr ( self , 'dataset' ) : dataset = self.dataset 
+        #
+        ## special case:  do we need it? 
+        # 
+        if not drawvar : return self.draw_H2D( dataset , nbins , ybins )
 
-        with RooSilent() if silent else NoContext() : 
-                
-            if not drawvar :
-                return self.draw_H2D( dataset , nbins , ybins )
-
-            if nbins : frame = drawvar.frame ( nbins )
-            else     : frame = drawwar.frame ( ) 
+        ## copy arguments:
+        args = kwargs.copy ()
+        
+        import Ostap.FitDraw as FD
+        if in_range :
+            data_options        = args.pop (       'data_options' , FD.         data_options )
+            background_options  = args.pop ( 'background_options' , FD. background2D_options )
+            signal_options      = args.pop (     'signal_options' , FD.       signal_options )
+            component_options   = args.pop (  'component_options' , FD.    component_options )
+            crossterm1_options  = args.pop ( 'crossterm1_options' , FD.   crossterm1_options )
+            crossterm2_options  = args.pop ( 'crossterm2_options' , FD.   crossterm2_options )
+            total_fit_options   = args.pop (  'total_fit_options' , FD.    total_fit_options )
             
-            if dataset :
-                if not in_range : dataset .plotOn ( frame ,                                     *args )
-                else            : dataset .plotOn ( frame , ROOT.RooFit.CutRange ( in_range ) , *args )
-
-            _args = args 
-            if in_range :
-                _args = list  (  args )
-                _args.append  ( ROOT.RooFit.ProjectionRange( in_range) )
-                _args = tuple ( _args ) 
-                
-            self.pdf .plotOn ( frame , ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *_args )
+            data_options       += ROOT.RooFit.CutRange        ( in_range ) , 
+            signal_options     += ROOT.RooFit.ProjectionRange ( in_range ) , 
+            background_options += ROOT.RooFit.ProjectionRange ( in_range ) , 
+            component_options  += ROOT.RooFit.ProjectionRange ( in_range ) , 
+            crossterm1_options += ROOT.RooFit.ProjectionRange ( in_range ) , 
+            crossterm2_options += ROOT.RooFit.ProjectionRange ( in_range ) , 
+            total_fit_options  += ROOT.RooFit.ProjectionRange ( in_range ) , 
             
-            frame.SetXTitle ( '' )
-            frame.SetYTitle ( '' )
-            frame.SetZTitle ( '' )
-
-            if not ROOT.gROOT.IsBatch() : 
-                frame.Draw()
+            args [       'data_options' ] =       data_options
+            args [     'signal_options' ] =     signal_options
+            args [ 'background_options' ] = background_options
+            args [  'component_options' ] =  component_options
+            args [ 'crossterm1_options' ] = crossterm1_options
+            args [ 'crossterm1_options' ] = crossterm1_options
+            args [  'total_fit_options' ] =  total_fit_options
             
-            return frame
-
+        background_options    = args.pop ( 'background_options'    , FD.background2D_options )
+        base_background_color = args.pop ( 'base_background_color' , FD.base_background2D_color )
+        args [ 'background_options'    ] = background_options
+        args [ 'base_background_color' ] = base_background_color
+        
+        
+        #
+        ## redefine the drawing variable:
+        # 
+        self.draw_var = drawvar
+        
+        #
+        ## delegate the actual drawing to the base class
+        # 
+        return PDF.draw ( self    ,
+                          dataset ,
+                          nbins   ,
+                          silent  ,  **args ) 
+    
+    # =========================================================================
     ## fit the 2D-histogram (and draw it)
     #
     #  @code
@@ -881,7 +917,12 @@ class PDF2 (object) :
     #  r,f = model.fitHisto ( histo )
     #
     #  @endcode
-    def fitHisto ( self , histo , draw = False , silent = False , density = True , chi2 = False , *args , **kwargs ) :
+    def fitHisto ( self            ,
+                   histo           ,
+                   draw    = False ,
+                   silent  = False ,
+                   density = True  ,
+                   chi2    = False , *args , **kwargs ) :
         """
         Fit the histogram (and draw it)
         
@@ -892,7 +933,7 @@ class PDF2 (object) :
 
         xminmax = histo.xminmax()
         yminmax = histo.yminmax()        
-        with RangeVar( self.m1 , *xminmax ) , RantgeVar ( self.m2 , *yminmax ): 
+        with RangeVar( self.m1 , *xminmax ) , RangeVar ( self.m2 , *yminmax ): 
             
             ## convert it! 
             self.hdset = H2D_dset ( histo , self.m1 , self.m2  , density , silent )
@@ -904,34 +945,7 @@ class PDF2 (object) :
                                 histo.nbinsx() ,
                                 histo.nbinsy() ,
                                 silent         , *args , **kwargs ) 
-        
-    ## perform sPlot-analysis 
-    #  @code
-    #  r,f = model.fitTo ( dataset )
-    #  model.sPlot ( dataset ) 
-    #  @endcode 
-    def sPlot ( self , dataset ) : 
-        """
-        Make sPlot analysis
 
-        >>> r,f = model.fitTo ( dataset )
-        >>> model.sPlot ( dataset ) 
-        
-        """
-        if not hasattr ( self , 'alist2' ) :
-            logger.error ('PDF2(%s) has not attribute "alist2", no sPlot is possible' % self.name ) 
-            raise AttributeError('PDF2(%s) his not equipped for sPlot'                % self.name )
-        
-        splot = ROOT.RooStats.SPlot ( rootID( "sPlot_" ) ,
-                                      "sPlot"            ,
-                                      dataset            ,
-                                      self.pdf           ,
-                                      self.alist2        )
-        
-        self._splots += [ splot ]
-        
-        return splot 
-    
 
 # =============================================================================
 ## simple convertor of 1D-histo to data set
@@ -958,7 +972,7 @@ class H1D_dset(object) :
 
         self.impDens = density 
         
-        with RooSilent() if silent else NoContext() : 
+        with roo_silent ( silent ) :  
             
             self.var1    = self.mass
             self.x       = self.mass
@@ -988,7 +1002,7 @@ class H1D_pdf(H1D_dset,PDF) :
         H1D_dset.__init__ ( self , histo , mass , density , silent )
         PDF     .__init__ ( self , name  )
         
-        with RooSilent() if silent else NoContext() : 
+        with roo_silent ( silent ) : 
             #
             ## finally create PDF :
             self.vset  = ROOT.RooArgSet  ( self.mass )        
@@ -1029,7 +1043,7 @@ class H2D_dset(object) :
         self.x       = self.var1 
         self.y       =   self.var2
         
-        with RooSilent() if silent else NoContext() : 
+        with roo_silent ( silent ) : 
 
             self.vlst  = ROOT.RooArgList    ( self.mass1 , self.mass2 )
             self.vimp  = ROOT.RooFit.Import ( histo2 , density )
@@ -1064,7 +1078,7 @@ class H2D_pdf(H2D_dset,PDF2) :
         #
         ## finally create PDF :
         #
-        with RooSilent() if silent else NoContext() : 
+        with roo_silent ( silent ) : 
             self.pdf    = ROOT.RooHistPdf (
                 'hpdf_%s'            % name ,
                 'HistoPDF(%s/%s/%s)' % ( name , histo2.GetName() , histo2.GetTitle() ) , 
@@ -1244,7 +1258,7 @@ class Fit1D (PDF) :
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class Fit2D (object) :
+class Fit2D (PDF2) :
     """
     The actual model for 2D-fits
     
@@ -1282,15 +1296,24 @@ class Fit2D (object) :
                    bs         = None , ## background(1) * signal     (2)
                    bb         = None , ## background-2D 
                    ## additional components 
-                   components = []   ) :
-
+                   components = []   ,
+                   name       = ''   ) :
+        
+        self._crossterms1 = ROOT.RooArgSet()
+        self._crossterms2 = ROOT.RooArgSet()
+        
         self.suffix    = suffix 
         self.signal1   = signal_1
         self.signal2   = signal_2
-        
-        self.m1        = signal_1.mass
-        self.m2        = signal_2.mass
 
+        #
+        ## initialize base class
+        #
+        if not name and signal_1.name and signal_2.name :
+            name = signal_1.name +'_AND_' + signal_2.name + ' _ '+ suffix
+            
+        PDF2.__init__ ( self , name , signal_1.mass , signal_2.mass ) 
+        
         #
         ## First component: Signal(1) and Signal(2)
         # 
@@ -1377,10 +1400,10 @@ class Fit2D (object) :
         #
         ## treat additional components (if specified)
         # 
-        self.components  = components
+        self.other       = components
         self._cmps       = []
         icmp = 0 
-        for cmp in self.components :
+        for cmp in self.other :
 
             icmp += 1
             
@@ -1408,285 +1431,29 @@ class Fit2D (object) :
 
             self.alist1.add ( cmp )
             self.alist2.add ( nn  )
-
+            
+            self.components ().add ( cmp ) 
+            
         #
-        ## build final PDF 
+        ## build the final PDF 
         # 
         self.pdf  = ROOT.RooAddPdf  ( "model2D"      + suffix ,
                                       "Model2D(%s)"  % suffix ,
                                       self.alist1 ,
                                       self.alist2 )
-        
-        self._splots = []
 
-    ## Fit dataset and (optionally draw the results)
-    #  @code 
-    #  r,f = model.fitTo ( dataset ) ## fit dataset 
-    #  print r                       ## get results
-    #  @endcode 
-    def fitTo ( self            ,
-                dataset         ,
-                draw   = False  ,
-                xbins  = 50     ,
-                ybins  = 50     ,
-                silent = False  , *args , **kwargs ) :
-        """
-        Perform the fit and optionally draw the results
-        
-        >>> r,f = model.fitTo ( dataset , draw = True ) ## fit dataset 
-        
-        """
-        if isinstance ( dataset , ROOT.TH2 ) :
-            return self.fitHisto ( dataset , draw , silent , *args ) 
-        
-        _args  = fitArgs ( 'Fit2D.fitTo:' , dataset , *args , **kwargs )
-        
-        result = self.pdf.fitTo ( dataset              , 
-                                  ROOT.RooFit.Save ()  ,
-                                  *_args               )
 
-        st   = result.status()
-        if 0 != st   : logger.warning('Fit2D.fitTo: fit status is %s' % st   )
-        #
-        qual = result.covQual()
-        if   -1 == qual : logger.debug   ('Fit2D.fitTo: covQual is unknown'      )
-        elif  3 != qual : logger.warning ('Fit2D.fitTo: covQual    is %s' % qual )
-        
-        #
-        ## keep dataset (for drawing)
-        #
-        self.dataset = dataset
-        
-        if hasattr ( self , 'alist2' ) :
-            
-            nsum = VE()            
-            for i in self.alist2 :
-                nsum += i.as_VE() 
-                if i.getVal() > 0.9 * i.getMax() :
-                    logger.warning ( 'Variable %s == %s [close to maximum %s]'
-                                     % ( i.GetName() , i.getVal () , i.getMax () ) )
-                    
-            if not dataset.isWeighted() : 
-                nl = nsum.value() - 0.05 * nsum.error()
-                nr = nsum.value() + 0.05 * nsum.error()
-                if not nl <= len ( dataset ) <= nr :
-                    logger.error ( 'Fit is problematic:  sum %s != %s '
-                                   % ( nsum , len( dataset ) ) )  
-                    
-        nbins = xbins 
-        if not draw :
-            return result,None
-        
-        return result, self.draw ( None , dataset , nbins , ybins , silent , *args ) 
+        self.signals     ().add ( self.ss_pdf )
+        self.backgrounds ().add ( self.bb_pdf )
+        self.crossterms1 ().add ( self.sb_pdf      ) ## cross-terms 
+        self.crossterms2 ().add ( self.bs_pdf      ) ## cross-terms 
 
-    
-    ## draw the projection over 1st variable
-    #
-    #  @code
-    #  r,f = model.fitTo ( dataset ) ## fit dataset
-    #  fx  = model.draw1 ( dataset , nbins = 100 ) ## draw results
-    #
-    #  f1  = model.draw1 ( dataset , nbins = 100 , in_range = (2,3) ) ## draw results
-    #
-    #  model.m2.setRange ( 'QUQU2' , 2 , 3 ) 
-    #  f1  = model.draw1 ( dataset , nbins = 100 , in_range = 'QUQU2') ## draw results
-    #
-    #  @endcode 
-    def draw1 ( self , dataset = None , nbins = 100  , silent = True   , in_range = None  , *args ) :
-        """
-        Draw the projection over 1st variable
-        
-        >>> r,f = model.fitTo ( dataset ) ## fit dataset
-        >>> fx  = model.draw1 ( dataset , nbins = 100 ) ## draw results
-        
-        >>> f1  = model.draw1 ( dataset , nbins = 100 , in_range = (2,3) ) ## draw results
 
-        >>> model.m2.setRange ( 'QUQU2' , 2 , 3 ) 
-        >>> f1  = model.draw1 ( dataset , nbins = 100 , in_range = 'QUQU2') ## draw results
+    ## get all declared components 
+    def crossterms1 ( self ) : return self._crossterms1
+    ## get all declared components 
+    def crossterms2 ( self ) : return self._crossterms2
         
-        """
-        if in_range and isinstance ( in_range , tuple ) and 2 == len ( in_range ) :
-            self.m2.setRange ( 'aux_rng2' , in_range[0] , in_range[1] )
-            in_range = 'aux_rng2' 
-        return self.draw ( self.m1 , dataset , nbins , 20     , silent , in_range         , *args )
-    
-    ## draw the projection over 2nd variable
-    #
-    #  @code
-    #  r,f = model.fitTo ( dataset ) ## fit dataset
-    #  fy  = model.draw2 ( dataset , nbins = 100 ) ## draw results
-    #
-    #  f2  = model.draw2 ( dataset , nbins = 100 , in_range = (2,3) ) ## draw results
-    #
-    #  model.m1.setRange ( 'QUQU1' , 2 , 3 ) 
-    #  f2  = model.draw2 ( dataset , nbins = 100 , in_range = 'QUQU1') ## draw results
-    #
-    #  @endcode 
-    def draw2 ( self , dataset = None , nbins = 100  , silent = True   , in_range = None  , *args ) :
-        """
-        Draw the projection over 2nd variable
-        
-        >>> r,f = model.fitTo ( dataset ) ## fit dataset
-        >>> fy  = model.draw2 ( dataset , nbins = 100 ) ## draw results
-        
-        >>> f2  = model.draw2 ( dataset , nbins = 100 , in_range = (2,3) ) ## draw results
-
-        >>> model.m1.setRange ( 'QUQU1' , 2 , 3 ) 
-        >>> f2  = model.draw2 ( dataset , nbins = 100 , in_range = 'QUQU1') ## draw results
-
-        """
-        if in_range and isinstance ( in_range , tuple ) and 2 == len ( in_range ) :
-            self.m1.setRange ( 'aux_rng1' , in_range[0] , in_range[1] )
-            in_range = 'aux_rng1' 
-        return self.draw ( self.m2 , dataset , nbins , 20     , silent , in_range         , *args ) 
-    
-    ## make 1D-plot
-    def draw ( self            ,
-               drawvar  = None ,
-               dataset  = None ,
-               nbins    = 100  ,
-               ybins    =  20  ,
-               silent   = True ,
-               in_range = None ,
-               *args           )  : 
-        """
-        Make 1D-plot:
-        """
-        
-        
-        if not dataset :
-            if hasattr ( self , 'dataset' ) : dataset = self.dataset 
-
-        with RooSilent() if silent else NoContext () : 
-                
-            if not drawvar :
-                
-                _xbins = ROOT.RooFit.Binning ( nbins ) 
-                _ybins = ROOT.RooFit.Binning ( ybins ) 
-                _yvar  = ROOT.RooFit.YVar    ( self.m2 , _ybins )
-                _clst  = ROOT.RooLinkedList  ()
-                hdata  = self.pdf.createHistogram ( hID() , self.m1 , _xbins , _yvar )
-                hpdf   = self.pdf.createHistogram ( hID() , self.m1 , _xbins , _yvar )
-                hdata.SetTitle(';;;')
-                hpdf .SetTitle(';;;')
-                _lst   = ROOT.RooArgList ( self.m1 , self.m2 )  
-                if dataset : dataset.fillHistogram( hdata , _lst ) 
-                self.pdf.fillHistogram  ( hpdf , _lst )
-
-                if not ROOT.gROOT.IsBatch() : 
-                    hdata.lego ()
-                    hpdf .Draw ( 'same surf')
-                
-                return hpdf , hdata 
-
-            if nbins : frame = drawvar.frame ( nbins )
-            else     : frame = drawvar.frame ()
-            
-            if dataset :
-                if not in_range : dataset .plotOn ( frame ,                                      *args )
-                else            : dataset .plotOn ( frame , ROOT.RooFit.CutRange ( in_range ) , *args )
-
-            _args = args 
-            if in_range :
-                _args = list  (  args )
-                _args.append  ( ROOT.RooFit.ProjectionRange( in_range) )
-                _args = tuple ( _args ) 
-                               
-            ## if projvar :
-                
-            ##     projvar.setBins( 10 )
-            ##     s = ROOT.RooArgSet ( projvar ) 
-            ##     self.projdata = ROOT.RooDataHist ( 'proj'  , 'project' , s , dataset )
-            ##     print 'PROJECTION DATA', self.projdata
-            ##     _args = list  ( args )
-            ##     _args.append  ( ROOT.RooFit.ProjWData( self.projdata ) )
-            ##     args  = tuple ( _args ) 
-            ##     print 'ARGS: ', args
-
-            self.pdf .plotOn ( frame ,
-                               ROOT.RooFit.Components ( self.sb_pdf.GetName() ) ,
-                               ROOT.RooFit.LineStyle  ( ROOT.kDashed   ) ,
-                               ROOT.RooFit.LineColor  ( ROOT.kGreen    ) , *_args )
-            
-            self.pdf .plotOn ( frame ,
-                               ROOT.RooFit.Components ( self.bs_pdf.GetName() ) ,
-                               ROOT.RooFit.LineStyle  ( ROOT.kDotted   ) ,
-                               ROOT.RooFit.LineColor  ( ROOT.kMagenta  ) , *_args )
-            
-            self.pdf .plotOn ( frame ,
-                               ROOT.RooFit.Components ( self.bb_pdf.GetName() ) ,          
-                               ROOT.RooFit.LineWidth  ( 1              ) ,
-                               ROOT.RooFit.LineColor  ( ROOT.kBlack    ) , *_args )
-            
-            self.pdf .plotOn ( frame ,
-                               ROOT.RooFit.Components ( self.ss_pdf.GetName() ) ,
-                               ROOT.RooFit.LineWidth  ( 1              ) ,
-                               ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *_args )
-            
-            self.pdf .plotOn ( frame ,
-                               ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *_args )
-            
-            frame.SetXTitle ( '' )
-            frame.SetYTitle ( '' )
-            frame.SetZTitle ( '' )
-
-            if not ROOT.gROOT.IsBatch() : 
-                frame.Draw()
-            
-            return frame
-
-    ## fit the 2D-histogram (and draw it)
-    #
-    #  @code
-    #
-    #  histo = ...
-    #  r,f = model.fitHisto ( histo )
-    #
-    #  @endcode
-    def fitHisto ( self , histo , draw = False , silent = False , *args ) :
-        """
-        Fit the histogram (and draw it)
-        
-        >>> histo = ...
-        >>> r,f = model.fitHisto ( histo , draw = True )
-        
-        """
-        
-        ## convert it! 
-        self.hdset = H2D_dset ( '',  histo , self.m1 , self.m2  , silent )
-        self.hset  = self.hdset.dset
-        
-        ## fit it!!
-        return self.fitTo ( self.hset      ,
-                            draw           ,
-                            histo.nbinsx() ,
-                            histo.nbinsy() ,
-                            silent         , *args ) 
-    
-    ## make splot-analysis
-    #  @code
-    #  r,f = model.fitTo ( dataset )
-    #  model.sPlot ( dataset ) 
-    #  @endcode 
-    def sPlot ( self     ,
-                dataset  ,
-                *args    ) : 
-        """
-        make sPlot analysis:
-        
-        >>> r,f = model.fitTo ( dataset )
-        >>> model.sPlot ( dataset ) 
-        
-        """
-        splot = ROOT.RooStats.SPlot ( rootID ( "sPlot_" ) ,
-                                      "sPlot"             ,
-                                      dataset             ,
-                                      self.pdf            ,
-                                      self.alist2         , *args ) 
-        
-        self._splots += [ splot ]
-        
-        return splot 
 
 # =============================================================================
 ## simple class to adjust certaint PDF to avoid zeroes 

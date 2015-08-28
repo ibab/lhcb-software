@@ -39,6 +39,7 @@ __all__     = (
     'mute'           , ## context manager to suppress stdout/strerr printout 
     'silence'        , ## ditto 
     'rooSilent'      , ## control RooFit verbosity
+    'roo_silent'     , ## control RooFit verbosity 
     'rootError'      , ## control ROOT verbosity 
     'rootWarning'    , ## control ROOT verbosity 
     'NoContext'      , ## empty context manager
@@ -872,6 +873,25 @@ def rooSilent ( level = ROOT_RooFit_ERROR , silent = True ) :
     """
     return RooSilent ( level , silent ) 
 
+# =============================================================================
+## helper context manager
+#  @code
+#
+#  >>> with roo_silent( True ) : 
+#  ...        some_RooFit_code_here()
+#
+#  @endcode
+#  @see rooSilent
+#  @see NoContex
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-07-09
+def roo_silent ( silence , *args ) :
+    """
+    Helper context manager#
+    >>> with roo_silent ( True ) : 
+    ...        some_RooFit_code_here()
+    """
+    return rooSilent ( *args ) if silence else NoContext() 
 
 # =============================================================================
 ## very simple context manager to suppress ROOT printout

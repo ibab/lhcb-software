@@ -785,7 +785,10 @@ class MancaX_pdf(PDF2) :
                    suffix = ''  ) :
 
         PDF2.__init__ ( self , 'MancaX' + suffix , manca.mass , charm.mass )  
-                        
+        self._crossterms1 = ROOT.RooArgSet()
+        self._crossterms2 = ROOT.RooArgSet()
+
+                         
         self.suffix  = suffix
         self.signal1 = manca  
         self.signal2 = charm
@@ -857,166 +860,18 @@ class MancaX_pdf(PDF2) :
                                       "Model2D(%s)"  % suffix ,
                                       self.alist1 ,
                                       self.alist2 )
-
+        
         self.name    = self.pdf.GetName()
-        
-    ## fit 
-    def fitTo ( self            ,
-                dataset         ,
-                draw   = False  ,
-                xbins  = 50     ,
-                ybins  = 50     ,
-                silent = False  , *args , **kwargs ) :
-        """
-        Perform the fit
-        """
 
-        from Ostap.FitBasic import fitArgs
-        
-        _args = fitArgs ("MancaX(%s):" % self.name , dataset , *args , **kwargs ) 
-              
-        if silent : from Ostap.Utils import RooSilent as Context
-        else      : from Ostap.Utils import NoContext as Context
-        
-        #
-        ## define silent context
-        #
-        context = Context ()         
-
-        with context : 
-            result = self.pdf.fitTo ( dataset                  , 
-                                      ROOT.RooFit.Save ()      ,
-                                      *_args                   )
-            
-        st   = result.status()
-        if 0 != st   : logger.warning('fit status is %s' % st   )
-        qual = result.covQual()
-        if 3 != qual : logger.warning('covQual    is %s' % qual )
-        
-        #
-        ## keep dataset (for drawing)
-        #
-        self.dataset = dataset
-        
-        if hasattr ( self , 'alist2' ) :
-            
-            nsum = VE()            
-            for i in self.alist2 :
-                nsum += i.as_VE() 
-                if i.getVal() > 0.9 * i.getMax() :
-                    logger.warning ( 'Variable %s == %s [close to maximum %s]'
-                                     % ( i.GetName() , i.getVal () , i.getMax () ) )
-                    
-            if not dataset.isWeighted() : 
-                nl = nsum.value() - 0.05 * nsum.error()
-                nr = nsum.value() + 0.05 * nsum.error()
-                if not nl <= len ( dataset ) <= nr :
-                    logger.error ( 'Fit is problematic:  sum %s != %s '
-                                   % ( nsum , len( dataset ) ) )  
-                    
-        nbins = xbins 
-        if not draw :
-            return result,None
-        
-        return result, self.draw ( None , dataset , nbins , ybins , silent , *args ) 
-
-    ## make 1D-plot 
-    def draw ( self            ,
-               drawvar  = None ,
-               dataset  = None ,
-               nbins    = 100  ,
-               ybins    =  20  ,
-               silent   = True ,
-               in_range = None ,
-               *args           )  : 
-        """
-        Make 1D-plot:
-        """    
-        
-        if not dataset :
-            if hasattr ( self , 'dataset' ) : dataset = self.dataset 
-            
-        if silent : from Ostap.Utils import RooSilent as Context
-        else      : from Ostap.Utils import NoContext as Context
-
-        context = Context () 
-        with context :
-                
-            if not drawvar :
-                return self.draw_H2D ( dataset , nbins , ybins )
-
-            
-            frame = drawvar.frame( nbins )
-            
-            if dataset :
-                if not in_range :
-                    dataset .plotOn ( frame ,                                     *args )
-                else            :
-                    dataset .plotOn ( frame , ROOT.RooFit.CutRange ( in_range ) , *args )
-
-            _args = args 
-            if in_range :
-                _args = list  (  args )
-                _args.append  ( ROOT.RooFit.ProjectionRange( in_range) )
-                _args = tuple ( _args ) 
-                
-            self.pdf .plotOn ( frame ,
-                               ROOT.RooFit.Components ( self.y1s_c.GetName() ) ,
-                               ROOT.RooFit.LineWidth  ( 1              ) ,
-                               ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *_args )
-            
-            self.pdf .plotOn ( frame ,
-                               ROOT.RooFit.Components ( self.y2s_c.GetName() ) ,
-                               ROOT.RooFit.LineWidth  ( 1              ) ,
-                               ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *_args )
-            self.pdf .plotOn ( frame ,
-                               ROOT.RooFit.Components ( self.y3s_c.GetName() ) ,
-                               ROOT.RooFit.LineWidth  ( 1              ) ,
-                               ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *_args )
-
-            ## cross-components 
-            self.pdf .plotOn ( frame ,
-                               ROOT.RooFit.Components ( self.y1s_b.GetName() ) ,
-                               ROOT.RooFit.LineWidth  ( 1              ) ,
-                               ROOT.RooFit.LineStyle  ( 9              ) ,
-                               ROOT.RooFit.LineColor  ( ROOT.kBlue     ) , *_args )
-            
-            self.pdf .plotOn ( frame ,
-                               ROOT.RooFit.Components ( self.y2s_b.GetName() ) ,
-                               ROOT.RooFit.LineWidth  ( 1              ) ,
-                               ROOT.RooFit.LineStyle  ( 9              ) ,
-                               ROOT.RooFit.LineColor  ( ROOT.kBlue     ) , *_args )
-            
-            self.pdf .plotOn ( frame ,
-                               ROOT.RooFit.Components ( self.y3s_b.GetName() ) ,
-                               ROOT.RooFit.LineWidth  ( 1              ) ,
-                               ROOT.RooFit.LineStyle  ( 9              ) ,
-                               ROOT.RooFit.LineColor  ( ROOT.kBlue     ) , *_args )
-
-            self.pdf .plotOn ( frame ,
-                               ROOT.RooFit.Components ( self.bs_pdf.GetName() ) ,
-                               ROOT.RooFit.LineWidth  ( 1              ) ,
-                               ROOT.RooFit.LineStyle  ( 9              ) ,
-                               ROOT.RooFit.LineColor  ( 8 )              , *_args )            
-
-            ## pure background:
-            
-            self.pdf .plotOn ( frame ,
-                               ROOT.RooFit.Components ( self.bb_pdf.GetName() ) ,                           
-                               ROOT.RooFit.LineWidth  ( 1              ) ,
-                               ROOT.RooFit.LineStyle  ( ROOT.kDotted   ) ,
-                               ROOT.RooFit.LineColor  ( ROOT.kBlack    ) , *_args )
-            
-            ## altogether 
-            self.pdf .plotOn ( frame ,
-                               ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *_args )
-            
-            frame.SetXTitle ( '' )
-            frame.SetYTitle ( '' )
-            frame.SetZTitle ( '' )
-            
-            frame.Draw()
-         
+        self.backgrounds().add ( self.bb_pdf )
+        self.signals    ().add ( self.ss_pdf )
+        self.crossterms1().add ( self.sb_pdf )
+        self.crossterms2().add ( self.bs_pdf )                              
+    
+    ## get all declared components 
+    def crossterms1 ( self ) : return self._crossterms1
+    ## get all declared components 
+    def crossterms2 ( self ) : return self._crossterms2
 
 models.append ( MancaX_pdf ) 
 # =============================================================================
