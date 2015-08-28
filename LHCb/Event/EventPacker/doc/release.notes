@@ -4,6 +4,12 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2015-08-28 - Chris Jones
+ - Fix another bug in PackedProtoParticle::check where the use of data() to
+   access the pointer was causing it to not be properly created. Should use 
+   target() instead which makes sure the pointer is created on-demand.
+ - Improve the debug information printed with various checks.
+
 !========================= EventPacker v5r6 2015-08-25 =========================
 
 ! 2015-08-25 - Chris Jones

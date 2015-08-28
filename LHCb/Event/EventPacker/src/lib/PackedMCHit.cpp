@@ -114,7 +114,7 @@ StatusCode MCHitPacker::check( const DataVector & dataA,
     // assume OK from the start
     bool ok = true;
     // Detector ID
-    ok &= (*iA)->sensDetID() == (*iB)->sensDetID();
+    ok &= ch.compareInts( "SensDetID", (*iA)->sensDetID(), (*iB)->sensDetID() );
     // Hit position
     ok &= ch.comparePoints( "Entry Point", (*iA)->entry(), (*iB)->entry() );
     // displacement
@@ -126,7 +126,7 @@ StatusCode MCHitPacker::check( const DataVector & dataA,
     // mp
     ok &= ch.compareEnergies( "Parent |P|", (*iA)->p(), (*iB)->p() );
     // MCParticle reference
-    ok &= (*iA)->mcParticle() == (*iB)->mcParticle();
+    ok &= ch.comparePointers( "MCParticle", (*iA)->mcParticle(), (*iB)->mcParticle() );
 
     // force printout for tests
     //ok = false;

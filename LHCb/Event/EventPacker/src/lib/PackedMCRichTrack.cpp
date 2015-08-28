@@ -118,11 +118,13 @@ StatusCode MCRichTrackPacker::check( const DataVector & dataA,
     // assume OK from the start
     bool ok = true;
     // Key
-    ok &= (*iA)->key() == (*iB)->key();
+    ok &= ch.compareInts( "Key", (*iA)->key(), (*iB)->key() );
     // MCParticle
-    ok &= (*iA)->mcParticle() == (*iB)->mcParticle();
+    ok &= ch.comparePointers( "MCParticle", (*iA)->mcParticle(), (*iB)->mcParticle() );
     // MCSegments
-    const bool sameSize = (*iA)->mcSegments().size() == (*iB)->mcSegments().size();
+    
+    const bool sameSize = ch.compareInts( "#MCSegments", 
+                                          (*iA)->mcSegments().size(), (*iB)->mcSegments().size() );
     ok &= sameSize;
     if ( sameSize )
     {
@@ -131,7 +133,7 @@ StatusCode MCRichTrackPacker::check( const DataVector & dataA,
       for ( ; jA != (*iA)->mcSegments().end() && jB != (*iB)->mcSegments().end();
             ++jA, ++jB )
       {
-        ok &= *jA == *jB;
+        ok &= ch.comparePointers( "MCSegment", jA->target(), jB->target() );
       }
     }
 

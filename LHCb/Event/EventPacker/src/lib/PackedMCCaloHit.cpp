@@ -98,13 +98,13 @@ StatusCode MCCaloHitPacker::check( const DataVector & dataA,
     // assume OK from the start
     bool ok = true;
     // Detector ID
-    ok &= (*iA)->sensDetID() == (*iB)->sensDetID();
+    ok &= ch.compareInts( "SensDetID", (*iA)->sensDetID(), (*iB)->sensDetID() );
     // energy
     ok &= ch.compareEnergies( "Energy", (*iA)->activeE(), (*iB)->activeE() );
     // tof
     ok &= ch.compareDoubles( "TOF", (*iA)->time(), (*iB)->time() );
     // MCParticle reference
-    ok &= (*iA)->particle() == (*iB)->particle();
+    ok &= ch.comparePointers( "MCParticle", (*iA)->particle(), (*iB)->particle() );
 
     // force printout for tests
     //ok = false;

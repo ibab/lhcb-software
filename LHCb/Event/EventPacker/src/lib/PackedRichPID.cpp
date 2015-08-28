@@ -115,11 +115,11 @@ StatusCode RichPIDPacker::check( const Data & dataA,
   // assume OK from the start
   bool ok = true;
   // key
-  ok &= dataA.key() == dataB.key();
+  ok &= ch.compareInts( "Key", dataA.key(), dataB.key() );
   // History code
-  ok &= dataA.pidResultCode() == dataB.pidResultCode();
+  ok &= ch.compareInts( "PIDCode", dataA.pidResultCode(), dataB.pidResultCode() );
   // Track reference
-  ok &= dataA.track() == dataB.track();
+  ok &= ch.comparePointers( "Track", dataA.track(), dataB.track() );
   // DLLs
   ok &= dataA.particleLLValues().size() == dataB.particleLLValues().size();
   std::vector<float>::const_iterator iLLA(dataA.particleLLValues().begin());

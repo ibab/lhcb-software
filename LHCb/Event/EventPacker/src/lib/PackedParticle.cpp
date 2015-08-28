@@ -321,10 +321,10 @@ StatusCode ParticlePacker::check( const Data & dataA,
   // checks here
 
   // key
-  ok &= dataA.key() == dataB.key();
+  ok &= ch.compareInts( "Key", dataA.key(), dataB.key() );
 
   // PID
-  ok &= dataA.particleID() == dataB.particleID();
+  ok &= ch.compareInts( "PID", dataA.particleID(), dataB.particleID() );
 
   // Mass
   ok &= ch.compareEnergies( "MeasuredMass",

@@ -97,11 +97,11 @@ StatusCode MCRichDigitSummaryPacker::check( const DataVector & dataA,
     // assume OK from the start
     bool ok = true;
     // Detector ID
-    ok &= (*iA)->richSmartID() == (*iB)->richSmartID();
+    ok &= ch.compareInts( "RichSmartID", (*iA)->richSmartID(), (*iB)->richSmartID() );
     // History code
-    ok &= (*iA)->history().historyCode() == (*iB)->history().historyCode();
+    ok &= ch.compareInts( "HistoryCode", (*iA)->history().historyCode(), (*iB)->history().historyCode() );
     // MCParticle reference
-    ok &= (*iA)->mcParticle() == (*iB)->mcParticle();
+    ok &= ch.comparePointers( "MCParticle", (*iA)->mcParticle(), (*iB)->mcParticle() );
 
     // force printout for tests
     //ok = false;

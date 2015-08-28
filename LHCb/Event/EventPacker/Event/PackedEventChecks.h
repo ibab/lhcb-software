@@ -144,8 +144,8 @@ namespace DataPacking
     /// Compare two unsigned int values
     template < class TYPE >
     inline bool compareInts( const std::string & name,
-                             const TYPE a,
-                             const TYPE b ) const
+                             const TYPE& a,
+                             const TYPE& b ) const
     {
       const bool ok = ( a == b );
       if (!ok)

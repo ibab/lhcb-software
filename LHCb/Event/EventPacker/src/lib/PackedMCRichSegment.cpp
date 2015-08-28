@@ -203,11 +203,13 @@ StatusCode MCRichSegmentPacker::check( const DataVector & dataA,
     // assume OK from the start
     bool ok = true;
     // Key
-    ok &= (*iA)->key() == (*iB)->key();
+    ok &= ch.compareInts( "Key", (*iA)->key(), (*iB)->key() );
     // History code
-    ok &= (*iA)->historyCode() == (*iB)->historyCode();
+    ok &= ch.compareInts( "HistoryCode", (*iA)->historyCode(), (*iB)->historyCode() );
     // Trajectory points
-    bool sameSizeTrajP = (*iA)->trajectoryPoints().size() == (*iB)->trajectoryPoints().size();
+    const bool sameSizeTrajP = ch.compareInts( "#TrajPoints",
+                                               (*iA)->trajectoryPoints().size(),
+                                               (*iB)->trajectoryPoints().size() );
     ok &= sameSizeTrajP;
     if ( sameSizeTrajP )
     {
@@ -220,7 +222,9 @@ StatusCode MCRichSegmentPacker::check( const DataVector & dataA,
       }
     }
     // Trajectory momenta
-    const bool sameSizeTrajM = (*iA)->trajectoryMomenta().size() == (*iB)->trajectoryMomenta().size();
+    const bool sameSizeTrajM = ch.compareInts( "#TrajMomenta",
+                                               (*iA)->trajectoryMomenta().size(),
+                                               (*iB)->trajectoryMomenta().size() );
     ok &= sameSizeTrajM;
     if ( sameSizeTrajM )
     {
@@ -233,11 +237,13 @@ StatusCode MCRichSegmentPacker::check( const DataVector & dataA,
       }
     }
     // MCParticle
-    ok &= (*iA)->mcParticle() == (*iB)->mcParticle();
+    ok &= ch.comparePointers( "MCParticle", (*iA)->mcParticle(), (*iB)->mcParticle() );
     // MCRichTrack
-    ok &= (*iA)->mcRichTrack() == (*iB)->mcRichTrack();
+    ok &= ch.comparePointers( "MCRichTrack", (*iA)->mcRichTrack(), (*iB)->mcRichTrack() );
     // MCPhotons
-    const bool sameSizePhots = (*iA)->mcRichOpticalPhotons().size() == (*iB)->mcRichOpticalPhotons().size();
+    const bool sameSizePhots = ch.compareInts( "#MCRichPhotons",
+                                               (*iA)->mcRichOpticalPhotons().size(),
+                                               (*iB)->mcRichOpticalPhotons().size() );
     ok &= sameSizePhots;
     if ( sameSizePhots )
     {
@@ -246,11 +252,13 @@ StatusCode MCRichSegmentPacker::check( const DataVector & dataA,
       for ( ; jA != (*iA)->mcRichOpticalPhotons().end() && jB != (*iB)->mcRichOpticalPhotons().end();
             ++jA, ++jB )
       {
-        ok &= *jA == *jB;
+        ok &= ch.comparePointers( "MCRichPhoton", jA->target(), jB->target() );
       }
     }
     // MCHits
-    const bool sameSizeHits = (*iA)->mcRichHits().size() == (*iB)->mcRichHits().size();
+    const bool sameSizeHits = ch.compareInts( "#MCRichHits",
+                                              (*iA)->mcRichHits().size(),
+                                              (*iB)->mcRichHits().size() );
     ok &= sameSizeHits;
     if ( sameSizeHits )
     {
@@ -259,7 +267,7 @@ StatusCode MCRichSegmentPacker::check( const DataVector & dataA,
       for ( ; jA != (*iA)->mcRichHits().end() && jB != (*iB)->mcRichHits().end();
             ++jA, ++jB )
       {
-        ok &= *jA == *jB;
+        ok &= ch.comparePointers( "MCRichHit", jA->target(), jB->target() );
       }
     }
 

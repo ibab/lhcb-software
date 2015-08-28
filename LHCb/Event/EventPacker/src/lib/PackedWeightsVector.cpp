@@ -97,7 +97,8 @@ StatusCode WeightsVectorPacker::check( const DataVector & dataA,
     bool ok = true;
 
     // loop over weights and test
-    const bool sizeOK = (*iA)->weights().size() == (*iB)->weights().size();
+    const bool sizeOK = ch.compareInts( "#Weights", 
+                                        (*iA)->weights().size(), (*iB)->weights().size() );
     ok &= sizeOK;
     if ( sizeOK ) 
     {

@@ -188,9 +188,9 @@ StatusCode VertexPacker::check( const Data & dataA,
   // checks here
 
   // key
-  ok &= dataA.key() == dataB.key();
+  ok &= ch.compareInts( "Key", dataA.key(), dataB.key() );
   // technique
-  ok &= dataA.technique() == dataB.technique();
+  ok &= ch.compareInts( "Technique", dataA.technique(), dataB.technique() );
   // Chi^2
   const double chiTol = std::max( dataA.chi2() * 1.0e-6, 1.0e-3 );
   ok &= ch.compareDoubles( "Chi^2", dataA.chi2(), dataB.chi2(), chiTol );

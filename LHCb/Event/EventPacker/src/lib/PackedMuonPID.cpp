@@ -129,9 +129,9 @@ StatusCode MuonPIDPacker::check( const Data & dataA,
   bool ok = true;
 
   // key
-  ok &= dataA.key() == dataB.key();
+  ok &= ch.compareInts( "Key", dataA.key(), dataB.key() );
   // History code
-  ok &= dataA.Status() == dataB.Status();
+  ok &= ch.compareInts( "Status", dataA.Status(), dataB.Status() );
   // Track references
   ok &= ch.comparePointers( "Track", dataA.idTrack(), dataB.idTrack() );
   ok &= ch.comparePointers( "MuonTrack", dataA.muonTrack(), dataB.muonTrack() );

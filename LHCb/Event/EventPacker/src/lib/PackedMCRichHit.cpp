@@ -111,11 +111,11 @@ StatusCode MCRichHitPacker::check( const DataVector & dataA,
     // tof
     ok &= ch.compareDoubles( "TOF", (*iA)->timeOfFlight(), (*iB)->timeOfFlight() );
     // Detector ID
-    ok &= (*iA)->sensDetID() == (*iB)->sensDetID();
+    ok &= ch.compareInts( "SensDetID", (*iA)->sensDetID(), (*iB)->sensDetID() );
     // History code
-    ok &= (*iA)->historyCode() == (*iB)->historyCode();
+    ok &= ch.compareInts( "HistoryCode", (*iA)->historyCode(), (*iB)->historyCode() );
     // MCParticle reference
-    ok &= (*iA)->mcParticle() == (*iB)->mcParticle();
+    ok &= ch.comparePointers( "MCParticle", (*iA)->mcParticle(), (*iB)->mcParticle() );
 
     // force printout for tests
     //ok = false;

@@ -161,7 +161,7 @@ StatusCode MCRichOpticalPhotonPacker::check( const DataVector & dataA,
     // assume OK frm the start
     bool ok = true;
     // Key
-    ok &= (*iA)->key() == (*iB)->key();
+    ok &= ch.compareInts( "Key", (*iA)->key(), (*iB)->key() );
     // Hit position
     ok &= ch.comparePoints( "HPD In. Point", (*iA)->pdIncidencePoint(), (*iB)->pdIncidencePoint() );
     // primary mirror point
@@ -184,7 +184,7 @@ StatusCode MCRichOpticalPhotonPacker::check( const DataVector & dataA,
     // HPD QW point
     ok &= ch.comparePoints( "HPD QW Point", (*iA)->hpdQWIncidencePoint(), (*iB)->hpdQWIncidencePoint() );
     // MCRichHit
-    ok &= ( (*iA)->mcRichHit() == (*iB)->mcRichHit() );
+    ok &= ch.comparePointers( "MCRichHit", (*iA)->mcRichHit(), (*iB)->mcRichHit() );
 
     // force printout for tests
     //ok = false;

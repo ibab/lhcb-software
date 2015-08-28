@@ -29,7 +29,7 @@ public:
 private:
 
   std::string m_inputName;
-  std::string m_outputName;
+  std::string m_outputName; ///< Output location for packed clusters
   bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
 
 };
