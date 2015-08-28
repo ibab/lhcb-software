@@ -296,7 +296,7 @@ StatusCode ProtoParticlePacker::check( const Data & dataA,
   isOK &= ch.comparePointers( "MuonPID", dataA.muonPID(), dataB.muonPID() );
 
   // calo hypos
-  isOK &= ch.compareInts( "#CaloHpyos", dataA.calo().size(), dataB.calo().size() );
+  isOK &= ch.compareInts( "#CaloHypos", dataA.calo().size(), dataB.calo().size() );
   if ( isOK )
   {
     for ( auto iC = std::make_pair(dataA.calo().begin(),dataB.calo().begin());
