@@ -50,13 +50,14 @@ class HltMonitoringConf(LHCbConfigurableUser):
                  "MonitorSequence"          : None
                 }
 
-    def __globalMonitor(self, name):
+    def __globalMonitor(self, stage):
         from Configurables import HltGlobalMonitor
-        globalMon = HltGlobalMonitor(name)
+        globalMon = HltGlobalMonitor(stage + "GlobalMonitor")
 
         from DAQSys.Decoders import DecoderDB
-        decRepLoc = DecoderDB["HltDecReportsDecoder/%sDecReportsDecoder" % name[:4]].listOutputs()[0]
+        decRepLoc = DecoderDB["HltDecReportsDecoder/%sDecReportsDecoder" % stage].listOutputs()[0]
         globalMon.HltDecReports = decRepLoc
+        globalMon.Stage = stage
 
         from HltConf.Configuration import onlinePV
         globalMon.VertexLocations = onlinePV()
@@ -109,10 +110,13 @@ class HltMonitoringConf(LHCbConfigurableUser):
                                                     ("LumiBeamGas", "Hlt1(Lumi|BeamGas).*Decision"),
                                                     ("SingleMuon" , "Hlt1(Single|Track)Muon.*Decision"),
                                                     ("DiMuon"     , "Hlt1DiMuon.*Decision"),
-                                                    ("TrackAllL0" , "Hlt1TrackAllL0.*Decision"),
+                                                    ("TrackMVA"   , "Hlt1(Two)?TrackMVADecision"),
                                                     ("ECAL"       , "Hlt1.*(Electron|Photon).*Decision"),
-                                                    ("Commissioning" , "Hlt1(ODIN.*|Tell1Error|Incident)Decision"),
+                                                    ("CEP"        , "Hlt1CEP.*Decision"),
+                                                    ("Beauty"     , "Hlt1B2.*Decision"),
+                                                    ("Commissioning", "Hlt1(ODIN.*|Tell1Error|Incident)Decision"),
                                                     ("MinBias"    , "Hlt1MB.*Decision"),
+                                                    ("Calibration", "Hlt1CalibTracking.*"),
                                                     ("Global"     , ".*Global.*"),
                                                     ("Other"      , ".*") # add a 'catch all' term to pick up all remaining decisions...
                                                   ]
@@ -124,15 +128,19 @@ class HltMonitoringConf(LHCbConfigurableUser):
         massMon = HltMassMonitor("Hlt1MassMonitor")
         massMon.DecReportsLocation = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]
         massMon.SelReportsLocation = DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].listOutputs()[0]
-        massMon.Decisions  = {"Jpsi"     : "Hlt1DiMuonHighMassDecision",
-                              "D0->Kpi"  : 'Hlt1CalibTrackingKPiDetachedDecision',
-                              "D0->KK"   : 'Hlt1CalibTrackingKKDecision',
-                              "D0->pipi" : "Hlt1CalibTrackingPiPiDecision"}
+        massMon.Decisions  = {"Jpsi"      : "Hlt1DiMuonHighMassDecision",
+                              "JpsiAlign" : "Hlt1CalibMuonAlignJpsiDecision",
+                              "D0->Kpi"   : 'Hlt1CalibTrackingKPiDetachedDecision',
+                              "D0->KK"    : 'Hlt1CalibTrackingKKDecision',
+                              "D0->pipi"  : "Hlt1CalibTrackingPiPiDecision",
+                              "phi->KK"   : "Hlt1IncPhiDecision"}
         massMon.DecisionStructure = {"Jpsi" : [105.658,105.658]}
-        massMon.Histograms = {"Jpsi" : [ 3005, 3186, 50 ],
-                              "D0->Kpi"  : [ 1815, 1915, 50 ],
-                              "D0->KK"   : [ 1815, 1915, 50 ],
-                              "D0->pipi" : [ 1815, 1915, 50 ]}
+        massMon.Histograms = {"Jpsi"      : [ 3010, 3190, 90 ],
+                              "JpsiAlign" : [ 3010, 3190, 90 ],
+                              "D0->Kpi"   : [ 1815, 1915, 50 ],
+                              "D0->KK"    : [ 1815, 1915, 50 ],
+                              "D0->pipi"  : [ 1815, 1915, 50 ],
+                              "phi->KK"   : [80,1000.,1040.]}
 
         # Setup the track monitoring
         from Configurables        import Hlt1TrackMonitor
@@ -167,21 +175,32 @@ class HltMonitoringConf(LHCbConfigurableUser):
         from Configurables import HltGlobalMonitor
         globalMon = self.__globalMonitor("Hlt2GlobalMonitor")
         globalMon.DecToGroup = self.__groupLines( [ i.decision() for i in lines2 ],
-                                 [ ("Topo"           , "Hlt2Topo.*Decision"),
-                                   ("IncPhi"         , "Hlt2IncPhi.*Decision"),
-                                   ("SingleMuon"     , "Hlt2Single.*Muon.*Decision"),
-                                   ("DiMuon"         , "Hlt2.*DiMuon.*Decision"),
-                                   ("B2DX"           , "Hlt2B2D2.*Decision"),
-                                   ("B2XGamma"       , "Hlt2.*Gamma.*Decision"),
-                                   ("B2HH"           , "Hlt2B2HH.*Decision"),
-                                   ("Commissioning"  , "Hlt2(PassThrough|Transparent|Forward|DebugEvent).*Decision"),
-                                   ("DisplVertices"  , "Hlt2DisplVertices.*Decision"),
-                                   ("HighPtJets"     , "Hlt2HighPtJets.*Decision"),
-                                   ("Charm"          , "Hlt2Charm.*Decision"),
-                                   ("Turbo"          , "Hlt2.*TurboDecision"),
-                                   ("TurCal"         , "Hlt2.*TurboCalibDecision"),
-                                   ("Global"         , ".*Global.*"),
-                                   ("Other"          , ".*") # add a 'catch all' term to pick up all remaining decisions...
+                                 [("B2HH",          "Hlt2B2K{,2}Pi{,2}.*Decision"),           
+                                  ("B2Kpi0",        "Hlt2B2K0?[pP]i0?.*Decision"),         
+                                  ("Bc2JpsiX",      "Hlt2Bc2JpsiX.*Decision"),       
+                                  ("CaloTest",      "Hlt2CaloTest.*Decision"),       
+                                  ("CcDiHadron",    "Hlt2CcDiHadron.*Decision"),     
+                                  ("CharmHad",      "Hlt2CharmHad.*Decision"),       
+                                  ("Commissioning", "Hlt2Commissioning.*Decision"),  
+                                  ("DPS",           "Hlt2DPS.*Decision"),            
+                                  ("DiMuon",        "Hlt2DiMuon.*Decision"),         
+                                  ("DisplVertices", "Hlt2DisplVertices.*Decision"),  
+                                  ("EW",            "Hlt2EW.*Decision"),             
+                                  ("LowMult",       "Hlt2LowMult.*Decision"),        
+                                  ("PID",           "Hlt2PID.*Decision"),            
+                                  ("Phi",           "Hlt2Phi.*Decision"),            
+                                  ("Radiative",     "Hlt2Radiative.*Decision"),      
+                                  ("RareCharm",     "Hlt2RareCharm.*Decision"),      
+                                  ("RareStrange",   "Hlt2RareStrange.*Decision"),    
+                                  ("RecoTest",      "Hlt2RecoTest.*Decision"),       
+                                  ("SingleMuon",    "Hlt2SingleMuon.*Decision"),     
+                                  ("Topo",          "Hlt2Topo.*Decision"),           
+                                  ("TrackEff",      "Hlt2TrackEff.*Decision"),       
+                                  ("TrackEffDiMuon","Hlt2TrackEffDiMuon.*Decision"), 
+                                  ("TriMuon",       "Hlt2TriMuon.*Decision"),        
+                                  ("XcMuXForTau",   "Hlt2XcMuXForTau.*Decision"),
+                                  ("Global",        ".*Global.*"),
+                                  ("Other",         ".*") # add a 'catch all' term to pick up all remaining decisions...
                                  ]
                                  )
 
@@ -190,16 +209,44 @@ class HltMonitoringConf(LHCbConfigurableUser):
         from DAQSys.Decoders import DecoderDB
         massMon.DecReportsLocation = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
         massMon.SelReportsLocation = DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
-        massMon.Decisions  = {"Jpsi"       : "Hlt1DiMuonJPsiDecision",
-                              "JpsiRefit"  : "Hlt2JPsiReFitPVsTurboDecision",
-                              "Psi2S"      : "Hlt2DiMuonPsi2STurboDecision",
-                              "D0->Kpi"    : "Hlt2CharmHadD02KPi_XSecTurboDecision",
-                              "Dpm->Kpipi" : "Hlt2CharmHadDpm2KPiPi_XSecTurboDecision"}
-        massMon.Histograms = {"Jpsi"       : [3005, 3186, 50],
-                              "JpsiRefit"  : [3005, 3186, 50],
-                              "Psi2S"      : [3600, 3770, 50],
-                              "D0->Kpi"    : [1790, 1940, 75],
-                              "Dpm->Kpipi" : [1795, 1945, 75]}
+        massMon.Decisions  = {"Jpsi"                : "Hlt1DiMuonJPsiDecision",
+                              "JpsiRefit"           : "Hlt2JPsiReFitPVsTurboDecision",
+                              "Psi2S"               : "Hlt2DiMuonPsi2STurboDecision",
+                              "D+->Kpipi"           : "Hlt2CharmHadDpToKmPipPipTurboDecision",
+                              "Ds+->KKpi"           : "Hlt2CharmHadDspToKmKpPipTurboDecision",
+                              "Lambdac->pKpi"       : "Hlt2CharmHadLcpToPpKmPipTurboDecision",
+                              "Omega->Lambda(LL)K"  : "Hlt2CharmHadOmm2LamKm_LLLDecision",
+                              "Omega->Lambda(DD)K"  : "Hlt2CharmHadOmm2LamKm_DDLDecision",
+                              "Xi->Lambda(LL)pi"    : "Hlt2CharmHadXim2LambPim_LLLDecision",
+                              "Xi->Lambda(DD)pi"    : "Hlt2CharmHadXim2LambPim_DDLDecision",
+                              "D*->(D0->KK)pi"      : "Hlt2CharmHadDstp2D0Pip_D02KmKpTurboDecision",
+                              "D*->(D0->Kpi)pi"     : "Hlt2CharmHadDstp2D0Pip_D02KmPipTurboDecision",
+                              "D*->(D0->Kpipipi)pi" : "Hlt2CharmHadDstp2D0Pip_D02KmPimPipPipTurboDecision",
+                              "Xc->(D0->Kpi)pi"     : "Hlt2CharmHadSpec_D0ToKPi_PiTurboDecision",
+                              "Xc->(D+->Kpipi)pi"   : "Hlt2CharmHadSpec_DpPiTurboDecision",
+                              "D0->Kpi"             : "Hlt2RareCharmD02KPiDecision",
+                              "phi->KK"             : "Hlt2IncPhiDecision"
+                              }
+
+        massMon.Histograms = {"Jpsi"                : [3005, 3186, 50],
+                              "JpsiRefit"           : [3005, 3186, 50],
+                              "Psi2S"               : [3600, 3770, 50],
+                              "D+->Kpipi"           : [100,1820.,1920.],
+                              "Ds+->KKpi"           : [100, 1920., 2020.],
+                              "Lambdac->pKpi"       : [100, 2235., 2335.],
+                              "Omega->Lambda(LL)K"  : [65,1640.,1705.],
+                              "Omega->Lambda(DD)K"  : [65,1640.,1705.],
+                              "Xi->Lambda(LL)pi"    : [65,1290.,1355.],
+                              "Xi->Lambda(DD)pi"    : [65,1290.,1355.],
+                              "D*->(D0->KK)pi"      : [100.,1990,2040.],
+                              "D*->(D0->Kpi)pi"     : [100,1990.,2040.],
+                              "D*->(D0->Kpipipi)pi" : [100,1990.,2040.],
+                              "Xc->(D0->Kpi)pi"     : [200,1975.,2975.],
+                              "Xc->(D+->Kpipi)pi"   : [200,1995.,2995.],
+                              "D0->Kpi"             : [100,1815.,1915.],
+                              "phi->KK"             : [80,1000.,1040.]
+                              }
+                              
 
         monSeq = Sequence("Hlt2MonitorSequence", IgnoreFilterPassed = True,
                           Members = l0Mon + [globalMon, massMon])

@@ -272,7 +272,6 @@ class HltConf(LHCbConfigurableUser):
         ###       bit 32 -> full stream (actually, not used for that, but it could be ;-)
         from Hlt1Lines.HltL0Candidates import L0Channels
 
-        exclLeadCrosPred = "(HLT_PASS('Hlt2{0}Decision') & ~HLT_PASS_RE('Hlt1(?!{0}).*Decision'))".format("MBNoBiasLeadingCrossing")
         from Configurables import HltRoutingBitsWriter
         routingBits = {  0 : '( ODIN_BXTYP == LHCb.ODIN.Beam1 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
                       ,  1 : '( ODIN_BXTYP == LHCb.ODIN.Beam2 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
@@ -344,7 +343,7 @@ class HltConf(LHCbConfigurableUser):
                       , 85 : "HLT_PASS_RE('Hlt2TopoE[234]Body.*Decision')"
                       , 86 : "HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')"
                       # routing bit for the full (non-turbo) stream
-                      , 87 : "(HLT_NONTURBOPASS_RE('Hlt2.*Decision') & (~({0}))) | HLT_PASS('Hlt2LumiDecision')".format(exclLeadCrosPred)
+                      , 87 : "HLT_NONTURBOPASS_RE('Hlt2.*Decision') | HLT_PASS('Hlt2LumiDecision')"
                       # routing bit for Turbo stream, includes lumi events.
                       # this now excludes turbocalib events which have their own stream/routing bit
                       , 88 : "HLT_TURBOPASS_RE('^Hlt2.*(?!TurboCalib)Decision$') | HLT_PASS('Hlt2LumiDecision')"

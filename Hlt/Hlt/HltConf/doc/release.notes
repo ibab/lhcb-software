@@ -4,6 +4,12 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-08-28 - Roel Aaij
+ - Add new Hlt2 mass plots and update DecToGroup.
+
+! 2015-08-24 - Roel Aaij
+ - Remove (broken) non-exclusive leading crossing veto from full stream.
+
 !========================= HltConf v13r2 2015-08-05 =========================
 
 ! 2015-07-29 - Roel Aaij
