@@ -145,7 +145,7 @@ StatusCode TupleToolDEDX::fill( const LHCb::Particle*
     std::vector<int> protoCaloLh;
     SmartRefVector< LHCb::CaloHypo >::const_iterator iCalo;
     for (iCalo=caloVec.begin(); iCalo!= caloVec.end(); iCalo++){
-      const LHCb::CaloHypo* protoCaloData = iCalo->data();
+      const LHCb::CaloHypo* protoCaloData = iCalo->target();
       if(protoCaloData){
         protoCaloHypothesis.push_back(protoCaloData->hypothesis());
         protoCaloLh.push_back(protoCaloData->lh());
