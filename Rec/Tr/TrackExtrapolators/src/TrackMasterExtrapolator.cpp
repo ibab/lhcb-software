@@ -127,10 +127,10 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
   // Create transport update matrix. The reason to make a pointer to a
   // local object (rather than just create it with new) is all the
   // intermediate returns.
-  TrackMatrix updateMatrix = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+  TrackMatrix updateMatrix = ROOT::Math::SMatrixIdentity();
   TrackMatrix* upMat = nullptr;
   if( transMat ) {
-    *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+    *transMat = ROOT::Math::SMatrixIdentity();
     upMat = &updateMatrix ;
   }
   

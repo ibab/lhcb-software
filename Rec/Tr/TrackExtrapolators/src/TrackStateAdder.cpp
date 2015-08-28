@@ -100,13 +100,13 @@ StatusCode TrackStateAdder::execute()
 	    locations.find( state->location() ) == locations.end() ) {
 	  track->addToStates( *state ) ;
 	  //info() << "Added state of type " << state->location() << " to track of type "
-	  //<< track->type() << endreq ;
+	  //<< track->type() << endmsg ;
 	  locations.insert( state->location() ) ;
 	  //++numadded ;
 	}
       }
       //if(numadded>0)
-      //info() << "Added " << numadded << " states to track of type " << track->type() << endreq ;
+      //info() << "Added " << numadded << " states to track of type " << track->type() << endmsg ;
     }
   }
   return StatusCode::SUCCESS;

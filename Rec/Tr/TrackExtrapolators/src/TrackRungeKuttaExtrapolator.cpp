@@ -325,7 +325,7 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
 {
   // Bail out if already at destination
   if( std::abs(zin-zout) < TrackParameters::propagationTolerance ) { 
-    if( transMat ) *transMat = Gaudi::TrackMatrix( ROOT::Math::SMatrixIdentity() );
+    if( transMat ) *transMat = ROOT::Math::SMatrixIdentity();
     return StatusCode::SUCCESS ;
   }
   

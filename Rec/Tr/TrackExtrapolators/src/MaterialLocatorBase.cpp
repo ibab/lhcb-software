@@ -252,7 +252,7 @@ MaterialLocatorBase::applyMaterialCorrections(LHCb::State& stateAtTarget,
   if(upstream) std::swap(zmin,zmax) ;
   const IStateCorrectionTool* dedxtool = 11 == pid.abspid() ? &(*m_elecdedxtool) : &(*m_dedxtool) ;
   
-  //static Gaudi::TrackMatrix F = Gaudi::TrackMatrix( ROOT::Math::SMatrixIdentity() );
+  //Gaudi::TrackMatrix F = ROOT::Math::SMatrixIdentity();
   for( Intersections::const_iterator it = intersepts.begin() ; it != intersepts.end(); ++it) {
     double z1 = std::max( zmin, std::min(it->z1,it->z2)) ;
     double z2 = std::min( zmax, std::max(it->z1,it->z2)) ;

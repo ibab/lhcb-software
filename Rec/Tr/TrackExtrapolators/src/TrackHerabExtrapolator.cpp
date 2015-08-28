@@ -69,7 +69,7 @@ StatusCode TrackHerabExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   const double dz = zNew - zOld;
   if( fabs(dz) < TrackParameters::propagationTolerance ) { 
     if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endmsg;
-    if( transMat ) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+    if( transMat ) *transMat = ROOT::Math::SMatrixIdentity();
     return StatusCode::SUCCESS ;
   }
   
@@ -93,13 +93,13 @@ StatusCode TrackHerabExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   if( istat != 0 ) {
     std::string warnMsg = "Runga kutta: transport impossible";
     if( 1 == istat ) warnMsg += ": curling track";
-    if (transMat) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );  
+    if (transMat) *transMat = ROOT::Math::SMatrixIdentity();  
     return Warning( warnMsg, StatusCode::FAILURE, 1 );
   }
 
   // update the transport matrix
   if( transMat != NULL ) {
-    (*transMat) = TrackMatrix( ROOT::Math::SMatrixIdentity() );    
+    (*transMat) = ROOT::Math::SMatrixIdentity();    
     for( i = 0; i < 5; ++i ) {
       for( int j = 0; j < 5; ++j ) {
         (*transMat)(i,j) = fQp[(5*j)+i];

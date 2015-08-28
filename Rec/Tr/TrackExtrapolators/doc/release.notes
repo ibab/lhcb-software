@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
+! 2015-08-28 - Gerhard Raven
+ - simplify unit matrix assignment
+ - replace endreq with endmsg
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

@@ -300,7 +300,7 @@ void TrackStateProvider::handle ( const Incident& incident )
 
 void TrackStateProvider::clearCache()
 {
-  if(m_debugLevel) debug() << "Clearing cache. Size is " << m_trackcache.size() << "." << endreq ;
+  if(m_debugLevel) debug() << "Clearing cache. Size is " << m_trackcache.size() << "." << endmsg ;
   counter("Number of tracks seen") += m_trackcache.size()  ;
   size_t numOwnedStates(0) ;
   for(TrackCacheMap::iterator it = m_trackcache.begin() ; 
@@ -356,7 +356,7 @@ StatusCode TrackStateProvider::state( LHCb::State& thestate,
       // do we take the hit of 2 virtual function calls, or do we implement this ourselves:-)
       thestate = *state ;
       double dz =  z - state->z() ;
-      static Gaudi::TrackMatrix transmat = Gaudi::TrackMatrix( ROOT::Math::SMatrixIdentity() );
+      Gaudi::TrackMatrix transmat = ROOT::Math::SMatrixIdentity();
       transmat(0,2) = transmat(1,3) = dz ;
       thestate.stateVector()(0) += dz * thestate.stateVector()(2)  ;
       thestate.stateVector()(1) += dz * thestate.stateVector()(3)  ;
@@ -437,7 +437,7 @@ TrackCache* TrackStateProvider::cache( const LHCb::Track& track ) const
   TrackCacheMap::iterator it = m_trackcache.find( key ) ;
   if( it == m_trackcache.end() ) {
     if(m_debugLevel) 
-      debug() << "Creating track cache for track: " << &track << endreq ;
+      debug() << "Creating track cache for track: " << &track << endmsg ;
     // create a new entry in the cache
     tc = new TrackCache( track ) ;
     m_trackcache[key] = tc ;

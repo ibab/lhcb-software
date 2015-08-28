@@ -62,7 +62,7 @@ StatusCode TrackParabolicExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   if( std::abs(dz) < TrackParameters::propagationTolerance ) { 
     if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endmsg;
     // Reset the transport matrix
-    if( transMat ) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+    if( transMat ) *transMat = ROOT::Math::SMatrixIdentity();
     return StatusCode::SUCCESS ;
   }
   
@@ -175,7 +175,7 @@ void TrackParabolicExtrapolator::updateTransportMatrix( const double dz,
 {
   // Reset the transport matrix. It turns out that this is so expensive
   // in gcc 3.4 that we better just set the elements explicitely, below.
-  // transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+  // transMat = ROOT::Math::SMatrixIdentity();
   
   // to save some typing...
   double Tx = stateVec[2];

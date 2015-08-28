@@ -32,12 +32,12 @@ StatusCode TrackLinearExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   const double dz = zNew - zOld;
   if( fabs(dz) < TrackParameters::propagationTolerance ) { 
     if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endmsg;
-    if( transMat ) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+    if( transMat ) *transMat = ROOT::Math::SMatrixIdentity();
     return StatusCode::SUCCESS ;
   }
 
   if( transMat != NULL ) {
-    (*transMat) = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+    (*transMat) = ROOT::Math::SMatrixIdentity();
     (*transMat)(0,2) = dz;
     (*transMat)(1,3) = dz;
   }

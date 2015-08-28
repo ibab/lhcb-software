@@ -83,7 +83,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
                                          double z,
                                          ParticleID pid ) const
 {
-  Gaudi::TrackMatrix transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+  Gaudi::TrackMatrix transMat = ROOT::Math::SMatrixIdentity();
   StatusCode sc = propagate( state, z, &transMat, pid );
   
   return sc;
@@ -98,7 +98,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
                                          Gaudi::TrackMatrix* tm,
                                          ParticleID pid ) const
 {
-  Gaudi::TrackMatrix transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+  Gaudi::TrackMatrix transMat = ROOT::Math::SMatrixIdentity();
   StatusCode sc = propagate( state.stateVector(), state.z(), z, &transMat, pid );
   state.setZ(z);
   state.setCovariance( ROOT::Math::Similarity<double,TrackMatrix::kRows,TrackMatrix::kCols>
