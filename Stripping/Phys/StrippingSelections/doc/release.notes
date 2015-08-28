@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-08-28 - Chris Jones
+ - Extend the mass window for the Bc2DD lines to 4.8 - 6.8 GeV, to cover the 
+   B+ control modes.
+
 !========================== StrippingSelections v4r6 2015-08-26 ===============
 
 ! 2015-08-27 - Carlos Vazquez Sierra

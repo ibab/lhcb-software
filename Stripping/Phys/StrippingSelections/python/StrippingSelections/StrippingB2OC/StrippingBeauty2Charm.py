@@ -111,7 +111,7 @@ default_config ={
     'BPVIPCHI2_MAX' : 25,
     'BPVLTIME_MIN'  : '0.05*ps',
     'BPVDIRA_MIN'   : 0.999,
-    'AM_MIN'        : '5800*MeV', 
+    'AM_MIN'        : '4800*MeV', 
     'AM_MAX'        : '6800*MeV',
     'B2CBBDT_MIN'   : -999.9
     },
