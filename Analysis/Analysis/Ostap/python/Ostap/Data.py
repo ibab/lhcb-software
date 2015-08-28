@@ -119,6 +119,10 @@ class Files(object):
             else :
                 for f in glob.iglob ( pattern ) : _files.add ( f )
                 
+        if not self.silent :
+            logger.info ('Loading: %s  #patterns/files: %s/%d' % ( self.description ,
+                                                                   len(  files )    , 
+                                                                   len( _files )    ) )
         from Ostap.progress_bar import ProgressBar 
         with ProgressBar ( max_value = len(_files) , silent = self.silent ) as bar :
             self.progress = bar 
@@ -127,7 +131,10 @@ class Files(object):
                 else :
                     logger.warning ('Maxfiles limit is reached %s ' % self.maxfiles )
                     break
-                
+
+        if not self.silent :
+            logger.info ('Loaded: %s' % self )
+            
     ## the specific action for each file 
     def treatFile ( self, the_file ) :
         self.files.append ( the_file )
@@ -163,10 +170,11 @@ class Data(Files):
                   description = ''      , 
                   maxfiles    = 1000000 ,
                   silent      = False   ) :  
-
         
         self.e_list1 = set()  
         self.chain   = ROOT.TChain ( chain )
+        if not description :
+            description = self.chain.GetName() 
         Files.__init__( self , files , description  , maxfiles , silent )
         
     ## the specific action for each file 
@@ -218,6 +226,9 @@ class Data2(Data):
         
         self.e_list2 = set()
         self.chain2  = ROOT.TChain ( chain2 )
+        if not description :
+            description = chain1.GetName() if hasattr ( chain1 , 'GetName' ) else str(chain1)
+            description = "%s/%s" % ( description , self.chain2.GetName() ) 
         Data.__init__( self , chain1 , files , description , maxfiles , silent )
         self.chain1  = self.chain 
         
@@ -243,7 +254,7 @@ class Data2(Data):
     ## printout 
     def __str__(self):    
         return  "<#files: {}; Entries1: {}; Entries2: {}>".format ( len ( self.files  ) ,
-                                                                    len ( self.chain1 ) ,
+                                                                    len ( self.chain  ) ,
                                                                     len ( self.chain2 ) )
     
             
@@ -272,6 +283,8 @@ class DataAndLumi(Data2):
                   maxfiles    = 1000000                             ,
                   silent      = False ) :  
 
+        if not description :
+            description = chain.GetName() if hasattr ( chain , 'GetName' ) else str(chain)
         Data2.__init__ ( self , chain , lumi_chain , files , description , maxfiles  , silent ) 
         self.lumi = self.chain2 
         
@@ -281,7 +294,7 @@ class DataAndLumi(Data2):
         Get the luminosity
         """
         from   Ostap.GetLumi import getLumi
-        return getLumi ( self.lumi )
+        return getLumi ( self.chain2  )
 
     ## printout 
     def __str__(self):

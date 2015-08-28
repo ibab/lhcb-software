@@ -63,21 +63,21 @@ background_options      = lineWidth ( 1 ) , lineStyle ( 7  )
 component_options       = lineWidth ( 1 ) , lineStyle ( ROOT.kDashDotted )
 
 ## total fit curve: thick red solid line 
-total_fit_options       = lineWidth ( 2 ) , lineColor ( ROOT.kRed ) , lineStyle ( 1 ) 
+total_fit_options       = lineWidth ( 3 ) , lineColor ( ROOT.kOrange + 1 ) , lineStyle ( 1 ) 
 
-base_signal_color       = ROOT.kMagenta
+base_signal_color       = ROOT.kRed
 base_background_color   = ROOT.kBlue
-base_component_color    = ROOT.kCyan 
+base_component_color    = ROOT.kMagenta
 
 ## background:  thin short-dashed line
 background2D_options    = lineWidth ( 1 ) , lineStyle ( ROOT.kDashed     ) 
-base_background2D_color = ROOT.kBlack 
+base_background2D_color = ROOT.kBlue 
 
-crossterm1_options      = lineWidth ( 1 ) , lineStyle (  7 )  
-crossterm2_options      = lineWidth ( 1 ) , lineStyle ( 10 )  
+crossterm1_options      = lineWidth ( 1 ) , lineStyle ( 7 )  
+crossterm2_options      = lineWidth ( 1 ) , lineStyle ( 9 )  
 
-base_crossterm1_color   = 8         
-base_crossterm2_color   = ROOT.kCyan 
+base_crossterm1_color   = ROOT.kMagenta
+base_crossterm2_color   = ROOT.kGreen+1 
 
 # =============================================================================
 if '__main__' == __name__ :

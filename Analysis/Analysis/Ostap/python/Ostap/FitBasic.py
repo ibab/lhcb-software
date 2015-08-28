@@ -433,14 +433,14 @@ class PDF (object) :
                             kwargs.pop (  'base_background_color' , FD.base_background_color ) )
                 
             ## ugly :-( 
-            if hasattr ( self , 'crossterm1' ) and self.crossterm1() : 
+            if hasattr ( self , 'crossterms1' ) and self.crossterms1() : 
                 self._draw( self.crossterms1()                                                 ,
                             frame                                                              ,
                             kwargs.pop (     'crossterm1_options' , FD.   crossterm1_options ) , 
                             kwargs.pop (  'base_crossterm2_color' , FD.base_crossterm1_color ) )
 
             ## ugly :-( 
-            if hasattr ( self , 'crossterm2' ) and self.crossterm2() : 
+            if hasattr ( self , 'crossterms2' ) and self.crossterms2() :
                 self._draw( self.crossterms2()                                                 ,
                             frame                                                              ,
                             kwargs.pop (     'crossterm2_options' , FD.   crossterm2_options ) , 
@@ -455,7 +455,7 @@ class PDF (object) :
 
             ## draw ``signal'' components 
             if self.signals    () :
-                self._draw( self.components()                                                  ,
+                self._draw( self.signals()                                                     ,
                             frame                                                              ,
                             kwargs.pop (         'signal_options' , FD.      signal_options  ) , 
                             kwargs.pop (      'base_signal_color' , FD.   base_signal_color  ) )
@@ -886,7 +886,7 @@ class PDF2 (PDF) :
             args [ 'background_options' ] = background_options
             args [  'component_options' ] =  component_options
             args [ 'crossterm1_options' ] = crossterm1_options
-            args [ 'crossterm1_options' ] = crossterm1_options
+            args [ 'crossterm2_options' ] = crossterm2_options
             args [  'total_fit_options' ] =  total_fit_options
             
         background_options    = args.pop ( 'background_options'    , FD.background2D_options )

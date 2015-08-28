@@ -537,7 +537,7 @@ class SelectorWithVars(SelectorWithCuts) :
         
         if not self._progress and not self._silence :
             self._total =  self.fChain.GetEntries()
-            self._logger.info ( 'TChain entries: %d' % self._total  )
+            self._logger.info ( "Processing TChain('%s') #entries: %d" % ( self.fChain.GetName() , self._total ) )
             ## decoration:
             from Ostap.progress_bar import ProgressBar
             self._progress = ProgressBar ( max_value = self._total   ,

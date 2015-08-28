@@ -9,8 +9,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-08-28 - Vanya Belyaev
- - unification of draw/fitTo methods for PDF,PDF2,Fit2D objects...
+ - set of minor fixes 
 
+! 2015-08-28 - Vanya Belyaev
+ - unification of draw/fitTo methods for PDF,PDF2,Fit2D objects...
 
 ! 2015-08-24 - Vanya Belyaev
   - 1) add atlas pdf 

@@ -778,16 +778,15 @@ class MancaX_pdf(PDF2) :
     def __init__ ( self         ,
                    manca        , ## manca pdf, that defined 3 upsolon peaks  
                    charm        , ## charm pdf
-                   power1 = 0   ,
-                   power2 = 0   ,
-                   powerA = 0   ,
-                   powerB = 0   ,
+                   bkg1   = 0   ,
+                   bkg2   = 0   ,
+                   bkgA   = 0   ,
+                   bkgB   = 0   ,
                    suffix = ''  ) :
 
         PDF2.__init__ ( self , 'MancaX' + suffix , manca.mass , charm.mass )  
-        self._crossterms1 = ROOT.RooArgSet()
-        self._crossterms2 = ROOT.RooArgSet()
-
+        self._crossterms1 = ROOT.RooArgSet ()
+        self._crossterms2 = ROOT.RooArgSet ()
                          
         self.suffix  = suffix
         self.signal1 = manca  
@@ -795,16 +794,14 @@ class MancaX_pdf(PDF2) :
 
         ## use helper function to create background  
         from Ostap.FitBkgModels import makeBkg
-        self.background = makeBkg ( power , 'Bkg%s' % name , self.mass )
-        
         #
         ## background components
         #
-        self.b_Y = makeBkg ( power1 , 'BkgY' + suffix , self.m1 )   
-        self.b_C = makeBkg ( power2 , 'BkgC' + suffix , self.m2 )   
-        self.b_A = makeBkg ( powerA , 'BkgA' + suffix , self.m1 )   
-        self.b_B = makeBkg ( powerB , 'BkgB' + suffix , self.m2 )   
-
+        self.b_Y = makeBkg ( bkg1 , 'BkgY' + suffix , self.m1 )   
+        self.b_C = makeBkg ( bkg2 , 'BkgC' + suffix , self.m2 )   
+        self.b_A = makeBkg ( bkgA , 'BkgA' + suffix , self.m1 )   
+        self.b_B = makeBkg ( bkgB , 'BkgB' + suffix , self.m2 )
+        
         #
         ## pure signal components: 3 
         #
@@ -817,7 +814,7 @@ class MancaX_pdf(PDF2) :
         ## charm + background
         self.bs_pdf  = RPP     ( 'BC'   + suffix , 'B(2mu)(x)Charm' , self.b_Y.pdf , charm.pdf ) 
         
-        ## Y + background
+        ## Y     + background
         self.y1s_b   = RPP     ( 'Y1SB' + suffix , 'Y(1S)(x)Bkg'    , manca.y1s , self.b_C.pdf ) 
         self.y2s_b   = RPP     ( 'Y2SB' + suffix , 'Y(2S)(x)Bkg'    , manca.y2s , self.b_C.pdf ) 
         self.y3s_b   = RPP     ( 'Y3SB' + suffix , 'Y(3S)(x)Bkg'    , manca.y3s , self.b_C.pdf ) 
@@ -862,11 +859,18 @@ class MancaX_pdf(PDF2) :
                                       self.alist2 )
         
         self.name    = self.pdf.GetName()
-
-        self.backgrounds().add ( self.bb_pdf )
-        self.signals    ().add ( self.ss_pdf )
-        self.crossterms1().add ( self.sb_pdf )
-        self.crossterms2().add ( self.bs_pdf )                              
+        ##
+        self.signals     () . add ( self.y1s_c  )
+        self.signals     () . add ( self.y2s_c  )
+        self.signals     () . add ( self.y3s_c  )
+        ##
+        self.backgrounds () . add ( self.bb_pdf )
+        ##
+        self.crossterms1 () . add ( self.y1s_b  )
+        self.crossterms1 () . add ( self.y2s_b  )
+        self.crossterms1 () . add ( self.y3s_b  )
+        ##
+        self.crossterms2 () . add ( self.bs_pdf )                              
     
     ## get all declared components 
     def crossterms1 ( self ) : return self._crossterms1
