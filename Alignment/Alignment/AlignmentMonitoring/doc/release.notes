@@ -3,6 +3,12 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2015-08-28
+ - modified function CheckITOverlaps in src/AlignmentMonitoring.cpp
+     + updated the fit models
+     + added the code to plot a map of warnings
+ - updated files/GausFitReferences.txt
+
 ! 2015-08-21 - Maurizio Martinelli
  - fixed a bug in the function that gets the number of warnings
 

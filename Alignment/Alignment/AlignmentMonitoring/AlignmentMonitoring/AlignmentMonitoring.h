@@ -33,7 +33,7 @@ namespace Alignment
       
       // Methods
       void CheckResiduals();
-      void CheckOverlaps();
+      void CheckITOverlaps();
       void CheckITOverlapResiduals();
       void CheckTTOverlapResiduals();
       void CheckTTResidualsInOverlapRegion();

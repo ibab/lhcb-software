@@ -8,9 +8,13 @@
 #include "TF1.h"
 #include "TFitResultPtr.h"
 #include "TH1.h"
+#include "TH2.h"
 #include "TStyle.h"
+#include "TROOT.h"
+#include "TText.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp> 
 // USR
 //#include "AlignmentMonitoring/Utilities.h"
 
@@ -25,6 +29,10 @@ AlignmentMonitoring::AlignmentMonitoring(const char* filename, const char* outpu
  , m_outputDirectory(outputdir)
  , m_verbose(false)
 {
+/* Constructor
+ * To-do-list: 
+ *    + tunning the range for all the values 
+ * */
   LoadGausFitReferences();
 }
 
@@ -38,7 +46,7 @@ AlignmentMonitoring::Run()
     gStyle->SetOptFit(1111110); 
   }
   CheckResiduals();
-  CheckOverlaps();
+  CheckITOverlaps();
   CheckITOverlapResiduals();
   CheckTTOverlapResiduals();
   CheckTTResidualsInOverlapRegion();
@@ -200,7 +208,10 @@ void AlignmentMonitoring::CheckVeloTMatchKickPosition(){
 }
 
 void AlignmentMonitoring::CheckVeloTTandTMatchCurvature(){
-  /* Velo(TT)-T match: curvature */
+  /* Velo(TT)-T match: curvature 
+ * To-do-list: 
+ *    + to calculate the weighted sigma for doble gaussian model
+ * */
   std::map<std::string,TH1*> matchHists;
   std::vector<std::string> curvatureRatios = {"TToLong","VeloTTToLong","TToLongVsQoP","VeloTTToLongVsQoP"};
   for(auto curvR:curvatureRatios){
@@ -258,7 +269,10 @@ void AlignmentMonitoring::CheckVeloTTandTMatchCurvature(){
 }
 
 void AlignmentMonitoring::CheckVeloTTandTMatch(){
-  /* Velo(TT)-T match */
+  /* Velo(TT)-T match 
+ * To-do-list: 
+ *    + to calculate the weighted sigma for doble gaussian model
+ * */
   std::map<std::string,TH1*> matchHists;
   std::vector<std::string> matches = {"T-TT", "Velo-T", "Velo-TT"};
   for(auto match:matches){
@@ -418,35 +432,38 @@ void AlignmentMonitoring::CheckTTOverlapResiduals(){
   return;
 }
 
-void AlignmentMonitoring::CheckOverlaps(){
-  /* overlaps */
-  std::map<std::string,TH1*> ovHists;
-  std::vector<std::string> hNames={};
+void AlignmentMonitoring::CheckITOverlaps(){
+  /* overlaps 
+ * To-do-list: 
+ *    + Fit failed sometimes 
+ * */
+  std::vector<std::string> tracks= {"OTASide","OTCSide","ITASide","ITCSide","ITTop","ITBottom"};
   std::vector<std::string> stats = {"1","2","3"};
-  std::vector<std::string> boxes = {"ASide","CSide"};
-  std::vector<std::string> tracks= {"Top","Bottom"};
-  for (auto stat: stats) {
-    for (auto trk : tracks)
+  std::vector<std::string> boxes = {"ASide","CSide","Top","Bottom"};
+
+  std::vector<std::string> hNames={};
+  for (auto trk : tracks)
+    for (auto stat: stats) 
       for (auto box : boxes)
-        hNames.push_back("IT"+trk+"Track/IT"+stat+box+"Box/hitres");
-    for (auto trk : boxes)
-      for (auto box : tracks)
-        hNames.push_back("IT"+trk+"Track/IT"+stat+box+"Box/hitres");
-  }
+        hNames.push_back(trk+"Track/IT"+stat+box+"Box/hitres");
+     
+  std::map<std::string,TH1*> ovHists;
   for (auto name : hNames){
     TH1* hist = m_hhelp.getH1(m_inputFileName.c_str(), "Track/TrackITOverlapMonitor/"+name);
-    if(hist==0) hist = new TH1F();
+    if(hist==0) {hist = new TH1F();  m_mapWarnings[name] = 0; }
     ovHists[name] = hist;
   }
+
   if (m_verbose) {
-    for (auto stat: stats) {
-      m_pages["OverlapResidualsIT"+stat] = (TCanvas*)m_hhelp.createPage( ("OverlapResidualsIT"+stat).c_str(),
-                                                                                     ("Overlap Residulas IT"+stat).c_str(), 4, 2, 300*4, 400*2);
+    for (auto trk: tracks) {
+      m_pages["OverlapResidualsIT"+trk] = (TCanvas*)m_hhelp.createPage( ("OverlapResidualsIT"+trk).c_str(),
+                                                                     ("Overlap Residulas IT "+trk).c_str(), 4, 3, 300*4, 400*3);
       int i = 1;
       for(auto h:ovHists){
-        m_pages["OverlapResidualsIT"+stat]->cd(i++);
+        if( h.first.find(trk)==std::string::npos ) continue;
+        m_pages["OverlapResidualsIT"+trk]->cd(i++);
         h.second->Draw();
-      }
+      }//ovHists
     }
   }
 
@@ -457,14 +474,17 @@ void AlignmentMonitoring::CheckOverlaps(){
   ovf->SetParName(1,"Mean");
   ovf->SetParameter(1,0);
   ovf->SetParName(2,"Sigma");
-  ovf->SetParameter(2,0.5);
+  ovf->SetParameter(2,0.15);
+  ovf->SetParLimits(2,0,1);
   ovf->SetParName(3,"Background");
   ovf->SetParameter(3,0);
   for (auto h:ovHists) {
     if (m_verbose) std::cout << h.first << ":\n";
-    m_mapWarnings[h.first] = WarningLevel::SEVERE; 
+    if( m_mapWarnings.find(h.first)==m_mapWarnings.end() ) m_mapWarnings[h.first] = WarningLevel::SEVERE; 
     m_insertOrder.push_back(h.first); 
     if( !h.second->GetEntries() ) continue;
+    ovf->SetParameter(0,h.second->GetEntries());
+    if(h.first.find("OT")!=std::string::npos) ovf->SetParameter(2,0.25);
     fitres = h.second->Fit(ovf,m_verbose ? "S" : "SQ"); // need to modify this
     if(fitres->IsEmpty()) continue;
     if(fitres->Chi2()<1e-6 or fitres->Ndf()==0) continue;
@@ -473,9 +493,62 @@ void AlignmentMonitoring::CheckOverlaps(){
     m_mapWarnings[h.first] = wl_mean > wl_width ? wl_mean : wl_width;
   }
   if (m_verbose) {
-    for (auto stat: stats) 
-      m_pages[std::string("OverlapResidualsIT")+stat]->Print( (m_outputDirectory+"/"+"OverlapResidualsIT"+stat+".pdf").c_str() );
+    for (auto trk: tracks)
+      m_pages[std::string("OverlapResidualsIT")+trk]->Print( (m_outputDirectory+"/"+"OverlapResidualsIT"+"_"+trk+".pdf").c_str() );
   } 
+
+  // begin: a map of warnings for IT 
+  std::map<std::string,int> track_indices({ {R"(OTASide)",1},{R"(OTCSide)",2},{R"(ITASide)",3},{R"(ITCSide)",4},{R"(ITTop)",5},{R"(ITBottom)",6} });
+  std::map<std::string,int> box_indices({ {R"(ASide)",1},{R"(CSide)",2},{R"(Top)",3},{R"(Bottom)",4} });
+  std::map<std::string,TH2F*> hmapWarnings;
+  for(auto stat:stats)
+    hmapWarnings[stat]= new TH2F(("hmapWarnings"+stat).c_str(), ("map of warnings for IT"+stat).c_str(), box_indices.size(), 1, box_indices.size()+1, track_indices.size(), 1, track_indices.size()+1);
+  for(auto wrn:m_mapWarnings){
+    if( ovHists.find(wrn.first)==ovHists.end() ) continue;
+    std::vector<std::string> names;
+    names.clear();
+    split(names, wrn.first, is_any_of("/"), boost::token_compress_on );
+    replace_all(names[0],"Track","");
+    replace_all(names[1],"Box","");
+    std::string track   = names[0];
+    std::string station = names[1].substr(2,1);
+    std::string box     = names[1].substr(3);
+    hmapWarnings[station]->Fill( box_indices[box], track_indices[track], wrn.second);
+    hmapWarnings[station]->GetXaxis()->SetBinLabel( box_indices[box], box.c_str());
+    hmapWarnings[station]->GetYaxis()->SetBinLabel( track_indices[track], track.c_str());
+  }
+  m_pages["OverlapResidualsITMaps"] = (TCanvas*)m_hhelp.createPage( "OverlapResidualsITMaps","Overlap Residulas IT maps", 3, 1, 400*3, 300*1);
+  gStyle->SetOptStat(0); 
+  gStyle->SetOptFit(0); 
+  gROOT->ForceStyle(); 
+  Int_t colors[] = {0, 3, 5, 2}; // #colors >= #levels - 1
+  gStyle->SetPalette((sizeof(colors)/sizeof(Int_t)), colors);
+  Double_t levels[] = {0, 1, 2, 3};
+  int i = 1;
+  std::map<int,std::string> warnings({{0,R"()"}, {1,R"(OK)"}, {2,R"(WARNING)"}, {3,R"(SEVERE)"} });
+  TText *text = new TText();
+  text->SetTextSize(0.035);
+  text->SetTextAngle(0);
+  for(auto stat:stats){
+    m_pages["OverlapResidualsITMaps"]->cd(i++);
+    hmapWarnings[stat]->SetContour((sizeof(levels)/sizeof(Double_t)), levels);
+    hmapWarnings[stat]->Draw("COL");
+    for(int i=1; i<=hmapWarnings[stat]->GetNbinsX(); i++){
+      for(int j=1; j<=hmapWarnings[stat]->GetNbinsY(); j++){
+        double y = hmapWarnings[stat]->GetYaxis()->GetBinCenter(j)-0.1;
+        double x = hmapWarnings[stat]->GetXaxis()->GetBinLowEdge(i)+0.2;
+        int    warn = int(hmapWarnings[stat]->GetBinContent(i,j));
+        if(warn==WarningLevel::OK) x = hmapWarnings[stat]->GetXaxis()->GetBinCenter(i)-0.1;
+        text->DrawText(x,y, warnings[warn].c_str() );
+      }
+    }
+  }
+  m_pages["OverlapResidualsITMaps"]->Print( (m_outputDirectory+"/"+"OverlapResidualsITMaps.pdf").c_str() );
+  gStyle->SetOptStat(1111110); 
+  gStyle->SetOptFit(1111110);
+  gROOT->ForceStyle(); 
+  // end: a map of warnings for IT
+
   return;
 }
 // Add check on the D0 position and width
@@ -543,9 +616,10 @@ AlignmentMonitoring::PrintWarnings()
   for (auto name : m_insertOrder) {
     int value = m_mapWarnings[name];
     if (!m_verbose &&  value== WarningLevel::OK) continue;
-    if(value==WarningLevel::OK)      warning_string = "\033[1;32m OK \033[0m";
-    if(value==WarningLevel::WARNING) warning_string = "\033[1;33m WARNING \033[0m";
-    if(value==WarningLevel::SEVERE)  warning_string = "\033[1;31m SEVERE \033[0m";
+    if(value==WarningLevel::OK) warning_string = "\033[1;32m OK \033[0m";
+    else if(value==WarningLevel::WARNING) warning_string = "\033[1;33m WARNING \033[0m";
+    else if(value==WarningLevel::SEVERE) warning_string = "\033[1;31m SEVERE \033[0m";
+    else warning_string = "NOT EXIST";
     std::cout << name << ": " << warning_string << std::endl;
 
   }
