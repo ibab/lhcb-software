@@ -3,6 +3,12 @@
 ! Responsible : Vladimir Gligorov, Mika Vesterinen, Roel Aaij
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+! 2015-08-28 - Patrick Spradlin
+ - Setting up settings for next round of whatever.
+   - reverted changes to CharmHad/CharmHad_25ns_August2015.py since the tagging
+     of HltSettings v7r1.
+
 ! 2015-08-24 - Mike Sokoloff
   -- modified CharmHad_25ns_August2015.py to allow separate dictionary entries
   -- for specifi D+ and Ds final states.
