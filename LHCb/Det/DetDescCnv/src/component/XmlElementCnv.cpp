@@ -31,26 +31,16 @@ DECLARE_CONVERTER_FACTORY(XmlElementCnv)
 // -----------------------------------------------------------------------
 // Material state string to state enumeration map
 // -----------------------------------------------------------------------
-typedef std::map< std::string, eState, std::less<std::string> > Str2StateMap;
-static Str2StateMap         s_sMap;
-
-
+static const std::map< std::string, eState > s_sMap = { 
+                                     { "undefined", stateUndefined },
+                                     { "solid",     stateSolid },
+                                     { "liquid",    stateLiquid },
+                                     { "gas",       stateGas } };
 // -----------------------------------------------------------------------
 // Constructor
 // -----------------------------------------------------------------------
 XmlElementCnv::XmlElementCnv (ISvcLocator* svc) : 
   XmlGenericCnv (svc, CLID_Element) {
-  // Initialize State map
-  if (0 == s_sMap.size()) {
-    s_sMap.insert (Str2StateMap::value_type
-                   (std::string ("undefined"), stateUndefined));
-    s_sMap.insert (Str2StateMap::value_type
-                   (std::string ("solid"), stateSolid));
-    s_sMap.insert (Str2StateMap::value_type
-                   (std::string ("liquid"), stateLiquid));
-    s_sMap.insert (Str2StateMap::value_type
-                   (std::string ("gas"), stateGas));
-  }
   nameString = xercesc::XMLString::transcode("name");
   temperatureString = xercesc::XMLString::transcode("temperature");
   pressureString = xercesc::XMLString::transcode("pressure");
@@ -122,7 +112,7 @@ StatusCode XmlElementCnv::i_createObj (xercesc::DOMElement* element,
   }
   std::string stateAttribute = dom2Std (element->getAttribute (stateString));
   if (!stateAttribute.empty()) {
-    dataObj->setState (s_sMap[stateAttribute]);
+    dataObj->setState (s_sMap.at(stateAttribute));
   }
   std::string densityAttribute =
     dom2Std (element->getAttribute (densityString));
@@ -179,7 +169,7 @@ StatusCode XmlElementCnv::i_fillObj (xercesc::DOMElement*        childElement ,
     // if we have a tabprops element, adds it to the current object
     const std::string address =
       dom2Std (childElement->getAttribute (addressString));
-    long linkID = dataObj->linkMgr()->addLink(address, 0);
+    long linkID = dataObj->linkMgr()->addLink(address, nullptr);
     SmartRef<TabulatedProperty> ref(dataObj, linkID);
     dataObj->tabulatedProperties().push_back(ref); 
   } else if (0 == xercesc::XMLString::compareString(atomString, tagName)) {

@@ -3,6 +3,10 @@
 ! Responsible : Marco Clemencic, Juan Palacios
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
+! 2015-08-28 - Gerhard Raven
+ - refactor code so that the static map can be const
+ - prefer nullptr over 0 or NULL
+
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

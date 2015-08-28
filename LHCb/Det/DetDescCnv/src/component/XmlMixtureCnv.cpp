@@ -173,7 +173,7 @@ StatusCode XmlMixtureCnv::i_fillObj (xercesc::DOMElement* childElement,
       log << MSG::VERBOSE << "looking at tabprops" << endmsg;
     // if we have a tabprops element, adds it to the current object
     const std::string addr = dom2Std (childElement->getAttribute (addressString));
-    long linkID = dataObj->linkMgr()->addLink(addr, 0);
+    long linkID = dataObj->linkMgr()->addLink(addr, nullptr);
     SmartRef<TabulatedProperty> ref(dataObj, linkID);
     dataObj->tabulatedProperties().push_back(ref); 
   } else if (0 == xercesc::XMLString::compareString(componentString, tagName)) {

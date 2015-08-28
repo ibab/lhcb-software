@@ -493,7 +493,7 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
     } else if (0 == xercesc::XMLString::compareString(surfString, tagName)) {
       // deals with a surface and adds it to the logical volume
       std::string address = dealWithSurf(childElement);
-      long linkID = dataObj->linkMgr()->addLink(address, 0);
+      long linkID = dataObj->linkMgr()->addLink(address, nullptr);
       SmartRef<Surface> reference (dataObj, linkID);
       dataObj->surfaces().push_back(reference); 
     } else {
