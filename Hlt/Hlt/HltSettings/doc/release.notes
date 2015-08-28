@@ -6,8 +6,16 @@
 
 ! 2015-08-28 - Patrick Spradlin
  - Setting up settings for next round of whatever.
-   - reverted changes to CharmHad/CharmHad_25ns_August2015.py since the tagging
+   - Reverted changes to CharmHad/CharmHad_25ns_August2015.py since the tagging
      of HltSettings v7r1.
+   - svn copy (copy with history) the reverted version of
+     CharmHad/CharmHad_25ns_August2015.py to a new file
+     CharmHad/CharmHad_25ns_September2015.py
+   - Updated CharmHad_25ns_September2015.py to include in it the changes 
+     since HltSettings v7r1 tagging.  Now, CharmHad_25ns_September2015.py is
+     identical to what CharmHad_25ns_August2015.py before i started modifying
+     things, and CharmHad_25ns_August2015.py is the same as it was at the
+     time of tagging HltSettings v7r1.
 
 ! 2015-08-24 - Mike Sokoloff
   -- modified CharmHad_25ns_August2015.py to allow separate dictionary entries
