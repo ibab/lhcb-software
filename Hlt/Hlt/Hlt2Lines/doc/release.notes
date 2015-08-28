@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-08-28 - Greg Ciezarek
+   - Restructured XcMuForTau lines to improve timing, and fixed missing 'cc'
+     in decay descriptors. Different D signals merged, reducing 6 lines to 2
+
 ! 2015-08-27 - Patrick Spradlin
   - Added lines for Xi_cc+ and Xi_cc++ to several decay modes.  These lines
     all start with shared singly-charmed hadrons reconstructed for other charm

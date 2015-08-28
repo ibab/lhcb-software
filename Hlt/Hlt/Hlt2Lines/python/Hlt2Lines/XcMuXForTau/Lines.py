@@ -1,7 +1,7 @@
 ##
 #  @author G. Ciezarek gregory.max.ciezarek@cern.ch
 #          B. Hamilton   
-#  @date 2015-14-07
+#  @date 2015-28-08
 #
 #  Please contact the abovementioned responsibles before editing this file
 # 
@@ -13,7 +13,16 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 
 class XcMuXForTauLines(Hlt2LinesConfigurableUser):
     __slots__ = {'_stages' : {},
-                 'Prescale' : {},
+                 'Prescale' : {'Hlt2XcMuXForTauB2XcFakeMu' :   0.1},
+                 'XcDaughter'  : {
+                             'DTrk_ALL_PT_MIN'           : 200.0 * MeV
+                            , 'DTrk_ALL_P_MIN'            : 5.0  * GeV
+                            , 'DTrk_ALL_MIPCHI2DV_MIN'    : 9.0
+                            , 'K_PIDK'    : 2 
+                            , 'Pi_PIDK'    : 4 
+                            , 'P_PIDp'    : 0 
+                 
+                            },
                  'Xc' : {
                               'Pair_AMINDOCA_MAX'        : 0.10 * mm
                             , 'MIN_D_CHILDPT'          : 800.0 * MeV
@@ -21,14 +30,7 @@ class XcMuXForTauLines(Hlt2LinesConfigurableUser):
                             , 'D0_BPVDIRA_MIN'           : 0.999    # neuter
                             , 'D0_VCHI2PDOF_MAX'         : 10.0       # neuter
                             , 'D0_PT_MIN'                : 2000.0 * MeV
-                            , 'DTrk_ALL_PT_MIN'           : 200.0 * MeV
-                            , 'DTrk_ALL_P_MIN'            : 5.0  * GeV
-                            , 'DTrk_ALL_MIPCHI2DV_MIN'    : 9.0
-                            , 'D_IPCHI2'    : 5
                             , 'D_SUMPT'    : 2500 * MeV
-                            , 'K_PIDK'    : 2 
-                            , 'Pi_PIDK'    : 4 
-                            , 'P_PIDp'    : 0 
                             , 'D_AM_MIN'              : 1830.0 * MeV
                             , 'D_AM_MAX'              : 1910.0 * MeV
                             , 'Ds_AM_MIN'              : 1920.0 * MeV
@@ -55,22 +57,14 @@ class XcMuXForTauLines(Hlt2LinesConfigurableUser):
                 return self._stages[nickname]
             else:
                 return self._stages
-        
-        from Stages import (
-                                               B2D0KPiMuComb,B2D0K3PiMuComb,B2DplusKPiPiMuComb,B2DsKKPiMuComb,B2LcPKPiMuComb,B2D0KPiFakeMuComb,B2D0K3PiFakeMuComb,B2DplusKPiPiFakeMuComb,B2DsKKPiFakeMuComb,B2LcPKPiFakeMuComb)
+
+
+        from Stages import (B2XcMuComb,B2XcFakeMuComb)
         self._stages = { 
-                   'B2D0KPiMu' : [ B2D0KPiMuComb],
-                   'B2D0K3PiMu' : [ B2D0K3PiMuComb],
-                   'B2DplusKPiPiMu' : [ B2DplusKPiPiMuComb],
-                   'B2DsKKPiMu' : [ B2DsKKPiMuComb],
-                   'B2LcPKPiMu' : [ B2LcPKPiMuComb],
-                   'B2D0KPiFakeMu' : [ B2D0KPiFakeMuComb],
-                   'B2D0K3PiFakeMu' : [ B2D0K3PiFakeMuComb],
-                   'B2DplusKPiPiFakeMu' : [ B2DplusKPiPiFakeMuComb],
-                   'B2DsKKPiFakeMu' : [ B2DsKKPiFakeMuComb],
-                   'B2LcPKPiFakeMu' : [ B2LcPKPiFakeMuComb],
+                   'B2XcMu' : [ B2XcMuComb],
+                   'B2XcFakeMu' : [ B2XcFakeMuComb],
                   }
-        
+                  
         if nickname:
             return self._stages[nickname]
         else:
