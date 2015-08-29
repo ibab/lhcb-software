@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-08-29 - Mike Sokoloff
+   -  modified CharmHad/Stages.py and CharmHad/D2HHKsLines.py to 
+   -  (i)  create "lifetime unbiased" D*+ --> D0,pi+; D0 --> HHKs lines
+   -  (ii) filter "generic" D0 --> HHKs lines on mother mass
+   -  (iii) remove untagged lines from "stages = "
+
 ! 2015-08-28 - Greg Ciezarek
    - Restructured XcMuForTau lines to improve timing, and fixed missing 'cc'
      in decay descriptors. Different D signals merged, reducing 6 lines to 2
