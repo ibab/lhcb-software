@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-08-29 - Mike Sokoloff
+  - In CharmHad, modified CharmHad_25ns_September2015.py to add dictionaries and
+  - and line names for "lifetime-unbiased" D*+ --> D0,pi+; D0 --> HHKs decays
+
 ! 2015-08-28 - Patrick Spradlin
  - Setting up settings for next round of whatever.
    - Reverted changes to CharmHad/CharmHad_25ns_August2015.py since the tagging
