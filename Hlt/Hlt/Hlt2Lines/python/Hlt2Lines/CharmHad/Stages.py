@@ -771,6 +771,44 @@ class HHKshCombiner(Hlt2Combiner):
 
 
 ## ------------------------------------------------------------------------- ##
+##  TheLTUNB_HHKshCombiner is very similar to the standard HHKshCombiner
+##  except that it has no BPVVDCHI2 cut and it is intended to be used
+##  with TisTosSpec which is TIS rather than TOS to avoid bias
+class LTUNB_HHKshCombiner(Hlt2Combiner):
+    def __init__(self, name, decay, inputs):
+
+## HHKs mother cuts
+        mc =    ("(VFASPF(VCHI2PDOF) < %(D_VCHI2PDOF_MAX)s)" +
+                 " & (BPVDIRA > %(D_BPVDIRA_MIN)s )" +
+                 " & (PT > %(D_PT_MIN)s )" +
+                 " & (BPVLTIME() > %(D_BPVLTIME_MIN)s )")
+
+        c12Cut = ("(AM <  %(HHMass_MAX)s)" +
+                  " & (ADOCAMAX('') < %(HHMaxDOCA)s)")
+
+        cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
+                 " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )")
+
+        from HltTracking.HltPVs import PV3D
+
+##  The argument "nickname = 'LTUNB_D02HHKsh'"  points at the common
+##  dictionary which allows the individual instantiations of
+##  this "shared = True" combiner to have unique names but only one
+##  dictionary, reducing the number of slots defined in Lines.py
+##  By making this a "shared = True" class, the individual lines
+##  can be used as input to multiple combiners (TagDecay being the
+##  prime example) without creating redundant copies.
+        Hlt2Combiner.__init__(self, name, decay, inputs,
+                     dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                     shared = True,
+                     tistos = 'TisTosSpec', combiner = N3BodyDecays,
+                     nickname = 'LTUNB_D02HHKsh',
+                     Combination12Cut =  c12Cut,
+                     CombinationCut = cc,
+                     MotherCut = mc, Preambulo = [])
+
+
+## ------------------------------------------------------------------------- ##
 class HHHCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs, shared = False, nickname = None) :
         dc =    {}
@@ -1713,6 +1751,28 @@ D02KsKPi_DD  = HHKshCombiner('KshKPiDD', decay="[D0 ->  K- pi+ KS0]cc",
 D02KsKK_LL   = HHKshCombiner('KshKKLL', decay="D0 ->  K- K+ KS0",
                    inputs=[CharmHadSharedKsLL, SharedDetachedDpmChild_K])
 D02KsKK_DD   = HHKshCombiner('KshKKDD', decay="D0 ->  K- K+ KS0",
+                   inputs=[CharmHadSharedKsDD, SharedDetachedDpmChild_K])
+
+## ------------------------------------------------------------------------- ##
+##
+##  now, create the "lifetime-unbiased" versions of these combiners
+##  note that the first arguments here are the same as those for the
+##  corresponding "generic" (not LTUNB) lines. These "names" correspond
+##  to dictionaries which define mother mass cuts.  
+##  Question:  are they "superseded" by the nicknames in the combiner
+##  class definition?  If so, they are probably irrelevant
+D02KsPiPi_LL_LTUNB = LTUNB_HHKshCombiner('LTUNB_KshPiPiLL', decay="D0 ->  pi- pi+ KS0",
+                   inputs=[CharmHadSharedKsLL, SharedDetachedDpmChild_pi])
+D02KsPiPi_DD_LTUNB = LTUNB_HHKshCombiner('LTUNB_KshPiPiDD', decay="D0 ->  pi- pi+ KS0",
+                   inputs=[CharmHadSharedKsDD, SharedDetachedDpmChild_pi])
+D02KsKPi_LL_LTUNB  = LTUNB_HHKshCombiner('LTUNB_KshKPiLL', decay="[D0 ->  K- pi+ KS0]cc",
+                   inputs=[CharmHadSharedKsLL, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
+D02KsKPi_DD_LTUNB  = LTUNB_HHKshCombiner('LTUNB_KshKPiDD', decay="[D0 ->  K- pi+ KS0]cc",
+                   inputs=[CharmHadSharedKsDD, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
+
+D02KsKK_LL_LTUNB   = LTUNB_HHKshCombiner('LTUNB_KshKKLL', decay="D0 ->  K- K+ KS0",
+                   inputs=[CharmHadSharedKsLL, SharedDetachedDpmChild_K])
+D02KsKK_DD_LTUNB   = LTUNB_HHKshCombiner('LTUNB_KshKKDD', decay="D0 ->  K- K+ KS0",
                    inputs=[CharmHadSharedKsDD, SharedDetachedDpmChild_K])
 
 ## ------------------------------------------------------------------------- ##
