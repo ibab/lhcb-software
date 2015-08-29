@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-08-29 - Sascha Stahl
+ - Fix typo in last commit.
+
 ! 2015-08-28 - Roel Aaij
  - Add new Hlt2 mass plots and update DecToGroup.
 

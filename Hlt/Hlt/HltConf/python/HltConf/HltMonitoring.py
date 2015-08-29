@@ -104,7 +104,7 @@ class HltMonitoringConf(LHCbConfigurableUser):
         l0Mon = self.__l0_monitoring("Hlt1")
 
         ## Global monitor
-        globalMon = self.__globalMonitor("Hlt1GlobalMonitor")
+        globalMon = self.__globalMonitor("Hlt1")
         globalMon.DecToGroup = self.__groupLines( [ i.decision() for i in lines1 ],
                                                   [ ("L0"         , "Hlt1L0.*Decision"),
                                                     ("LumiBeamGas", "Hlt1(Lumi|BeamGas).*Decision"),
@@ -173,7 +173,7 @@ class HltMonitoringConf(LHCbConfigurableUser):
         l0Mon = self.__l0_monitoring("Hlt2")
 
         from Configurables import HltGlobalMonitor
-        globalMon = self.__globalMonitor("Hlt2GlobalMonitor")
+        globalMon = self.__globalMonitor("Hlt2")
         globalMon.DecToGroup = self.__groupLines( [ i.decision() for i in lines2 ],
                                  [("B2HH",          "Hlt2B2K{,2}Pi{,2}.*Decision"),           
                                   ("B2Kpi0",        "Hlt2B2K0?[pP]i0?.*Decision"),         
