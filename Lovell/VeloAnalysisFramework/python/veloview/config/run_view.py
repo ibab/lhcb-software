@@ -103,32 +103,124 @@ run_view_pages = OrderedDict([
     }),
     ('noise', {
         'title': 'Noise',
-        'plots': [
+        'subpages': [
             {
-                'title': 'RMS noise vs. chip channel',
-                'name': 'Vetra/NoiseMon/DecodedADC/TELL1_{0:03d}/RMSNoise_vs_ChipChannel',
-                'sensor_dependent': True,
-                'options': {
-                    'asPoints': True
-                }
-            },
-            {
-                'title': 'RMS noise vs. strip',
-                'name': 'Vetra/NoiseMon/DecodedADC/TELL1_{0:03d}/RMSNoise_vs_Strip',
-                'sensor_dependent': True
-            },
-            {
-                'title': 'RMS CMS noise vs. chip channel',
-                'name': 'Vetra/NoiseMon/ADCCMSuppressed/TELL1_{0:03d}/RMSNoise_vs_ChipChannel',
-                'sensor_dependent': True
-            },
-            {
-                'title': 'RMS CMS noise vs. strip',
-                'name': 'Vetra/NoiseMon/ADCCMSuppressed/TELL1_{0:03d}/RMSNoise_vs_Strip',
-                'sensor_dependent': True
-            },
-        ],
-        'layout': (2, 2)
+                 'title': 'Per Sensor', 
+                 'plots': [
+                     {
+                         'title': 'RMS noise vs. chip channel',
+                         'name': 'Vetra/NoiseMon/DecodedADC/TELL1_{0:03d}/RMSNoise_vs_ChipChannel',
+                         'sensor_dependent': True,
+                         'options': {
+                              'yAxisMinimum': 0,
+                              'yAxisMaximum': 5
+                          }
+                      },
+                     {
+                         'title': 'RMS noise vs. strip',
+                         'name': 'Vetra/NoiseMon/DecodedADC/TELL1_{0:03d}/RMSNoise_vs_Strip',
+                         'sensor_dependent': True,
+                         'options': {
+                              'yAxisMinimum': 0,
+                              'yAxisMaximum': 5
+                          }
+                      },
+                     {
+                         'title': 'RMS CMS noise vs. chip channel',
+                         'name': 'Vetra/NoiseMon/ADCCMSuppressed/TELL1_{0:03d}/RMSNoise_vs_ChipChannel',
+                         'sensor_dependent': True,
+                         'options': {
+                              'yAxisMinimum': 0,
+                              'yAxisMaximum': 5
+                          }
+                      },
+                     {
+                         'title': 'RMS CMS noise vs. strip',
+                         'name': 'Vetra/NoiseMon/ADCCMSuppressed/TELL1_{0:03d}/RMSNoise_vs_Strip',
+                         'sensor_dependent': True,
+                         'options': {
+                              'yAxisMinimum': 0,
+                              'yAxisMaximum': 5
+                          }
+                     },
+                 ],
+                 'layout': (2, 2)
+              },
+           {
+                 'title': 'Velo Overview',
+                 'plots': [
+                     {
+                         'title': 'RMS CMS noise vs. station / R sensors (neg. for C-side)',
+                         'short': 'RMS CMS noise vs. station / R sensors (neg. for C-side)',
+                         'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/RMSNoise_vs_Station_R',
+                         'options': {
+                              'yAxisMinimum': -4,
+                              'yAxisMaximum': 4
+                          } 
+                      },
+                     {
+                         'title': 'RMS CMS noise vs. station / Phi sensors (neg. for C-side)',
+                         'short': 'RMS CMS noise vs. station / Phi sensors (neg. for C-side)',
+                         'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/RMSNoise_vs_Station_Phi',
+                         'options': {
+                              'yAxisMinimum': -4,
+                              'yAxisMaximum': 4
+                          }
+                      },
+                 ],
+                 'layout': (2, 1)
+              
+             },
+           {
+                 'title': 'Average Distribution',
+                 'plots': [
+                    {
+                         'title': 'RMS CMS noise (R sensors)',
+                         'short': 'RMS CMS noise (R sensors)',
+                         'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/RMSNoise_R',
+                         'options': {
+                              'yAxisMinimum': 0,
+                              'yAxisMaximum': 45
+                          } 
+                      },
+                     {
+                         'title': 'RMS CMS noise (Phi sensors)',
+                         'short': 'RMS CMS noise (Phi sensors)',
+                         'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/RMSNoise_Phi',
+                         'options': {
+                              'yAxisMinimum': 0,
+                              'yAxisMaximum': 45
+                          }
+                      }, 
+                 ],
+                 'layout': (2, 1)
+              
+             },
+           {
+                 'title': 'Per Link Map',
+                 'plots': [
+                     {
+                         'title': 'RMS CMS noise vs. link',
+                         'short': 'RMS CMS noise vs. link',
+                         'name': 'Vetra/NoiseMon/ADCCMSuppressed/Average/RMSNoise_vs_Link',
+                         'options': {
+                              'zAxisMinimum': 0,
+                              'zAxisMaximum': 5
+                          }
+                      },
+                     {
+                         'title': 'RMS noise vs. link',
+                         'short': 'RMS noise vs. link',
+                         'name': 'Vetra/NoiseMon/DecodedADC/Average/RMSNoise_vs_Link',
+                         'options': {
+                              'zAxisMinimum': 0,
+                              'zAxisMaximum': 5
+                          }
+                      },
+                 ],
+                 'layout': (1, 2)
+           }
+           ]
     }),
     ('headerxtalk', {
         'title': 'HeaderxTalk',
