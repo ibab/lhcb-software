@@ -4,6 +4,10 @@
 ! Purpose     : Offline Monitoring of Hlt rates and composition
 !-----------------------------------------------------------------------------
 ! 2015-08-12 - Gerhard Raven
+ - remove DECLARE_ALGORITHM_FACTORY( HltMonitorBase ) as it is not a 'concrete'
+   algorithm, but intended to be inherited from and implement execute.
+
+! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
 !========================= HltMonitors v1r7 2014-12-11 =========================
