@@ -7,8 +7,6 @@
 // Local
 #include "HCMonitorBase.h"
 
-DECLARE_ALGORITHM_FACTORY(HCMonitorBase)
-
 //=============================================================================
 // Standard constructor
 //=============================================================================

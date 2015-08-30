@@ -3,6 +3,10 @@
 ! Responsible : 
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
+! 2015-08-30 - Gerhard Raven
+ - remove DECLARE_ALGORITHM_FACTORY(HCMonitorBase) as HCMonitorBase is 
+   not a 'concrete' algorithm -- ie. one still must inherit from it an
+   implement an 'execute' mthod before it is a 'complete' algorithm.
 
 ! 2015-08-23 - Heinrich Schindler
  - Add histogram of ADC as function of bx id.
