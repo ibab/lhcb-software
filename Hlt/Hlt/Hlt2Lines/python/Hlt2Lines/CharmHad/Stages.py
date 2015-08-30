@@ -1762,18 +1762,18 @@ D02KsKK_DD   = HHKshCombiner('KshKKDD', decay="D0 ->  K- K+ KS0",
 ##  Question:  are they "superseded" by the nicknames in the combiner
 ##  class definition?  If so, they are probably irrelevant
 D02KsPiPi_LL_LTUNB = LTUNB_HHKshCombiner('LTUNB_KshPiPiLL', decay="D0 ->  pi- pi+ KS0",
-                   inputs=[CharmHadSharedKsLL, SharedDetachedDpmChild_pi])
+                   inputs=[CharmHadSharedKsLL, SharedPromptChild_pi])
 D02KsPiPi_DD_LTUNB = LTUNB_HHKshCombiner('LTUNB_KshPiPiDD', decay="D0 ->  pi- pi+ KS0",
-                   inputs=[CharmHadSharedKsDD, SharedDetachedDpmChild_pi])
+                   inputs=[CharmHadSharedKsDD, SharedPromptChild_pi])
 D02KsKPi_LL_LTUNB  = LTUNB_HHKshCombiner('LTUNB_KshKPiLL', decay="[D0 ->  K- pi+ KS0]cc",
-                   inputs=[CharmHadSharedKsLL, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
+                   inputs=[CharmHadSharedKsLL, SharedPromptChild_K, SharedPromptChild_pi])
 D02KsKPi_DD_LTUNB  = LTUNB_HHKshCombiner('LTUNB_KshKPiDD', decay="[D0 ->  K- pi+ KS0]cc",
-                   inputs=[CharmHadSharedKsDD, SharedDetachedDpmChild_K, SharedDetachedDpmChild_pi])
+                   inputs=[CharmHadSharedKsDD, SharedPromptChild_K, SharedPromptChild_pi])
 
 D02KsKK_LL_LTUNB   = LTUNB_HHKshCombiner('LTUNB_KshKKLL', decay="D0 ->  K- K+ KS0",
-                   inputs=[CharmHadSharedKsLL, SharedDetachedDpmChild_K])
+                   inputs=[CharmHadSharedKsLL, SharedPromptChild_K])
 D02KsKK_DD_LTUNB   = LTUNB_HHKshCombiner('LTUNB_KshKKDD', decay="D0 ->  K- K+ KS0",
-                   inputs=[CharmHadSharedKsDD, SharedDetachedDpmChild_K])
+                   inputs=[CharmHadSharedKsDD, SharedPromptChild_K])
 
 ## ------------------------------------------------------------------------- ##
 class DetachedD02HHInclCombiner(Hlt2Combiner) : # {
