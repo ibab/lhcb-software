@@ -69,7 +69,7 @@ StatusCode TaggerPionBDTSameTool::initialize()
   if ( msgLevel(MSG::DEBUG) )
     debug() << "PionSS calib ctt: P0_pol "<<m_P0_pol_pionS
             << ", P1_pol "<<m_P1_pol_pionS<< ", P2_pol "<<m_P2_pol_pionS
-            << ", P3_pol "<<m_P3_pol_pionS<<endreq;
+            << ", P3_pol "<<m_P3_pol_pionS<<endmsg;
 
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
@@ -122,13 +122,13 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
   if(!RecVert) return tpionS;
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose()<<"--Pion SS Tagger--"<<endreq;
+    verbose()<<"--Pion SS Tagger--"<<endmsg;
 
   Gaudi::LorentzVector ptot_B = AXB0->momentum();
 
   const double mB0 = 5279.58;  // PDG
   if ( msgLevel(MSG::DEBUG) )
-    debug()<< " Setting PDG B0 mass "<<mB0<<" instead of "<< ptot_B.M() <<" to match the BDT computation "<<endreq;
+    debug()<< " Setting PDG B0 mass "<<mB0<<" instead of "<< ptot_B.M() <<" to match the BDT computation "<<endmsg;
 
   ptot_B.SetE(std::sqrt(mB0 * mB0 + ptot_B.P2()));
   double B0mass = ptot_B.M();
@@ -146,7 +146,7 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
     const double PIDp = proto->info( ProtoParticle::CombDLLp,  -1000.0 );
 
     if ( msgLevel(MSG::DEBUG) )
-      debug()<<" Pion PIDp="<< PIDp <<"cut is <"<<m_PIDp_cut_pionS<<" Pion PIDk="<< PIDk <<"cut is <"<<m_PIDk_cut_pionS<<endreq;
+      debug()<<" Pion PIDp="<< PIDp <<"cut is <"<<m_PIDp_cut_pionS<<" Pion PIDk="<< PIDk <<"cut is <"<<m_PIDk_cut_pionS<<endmsg;
 
     if( PIDp <-999 )  continue;    
     if( PIDp > m_PIDp_cut_pionS ) continue;
@@ -160,7 +160,7 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
 
     const double Pt = (*ipart)->pt();
     if ( msgLevel(MSG::DEBUG) )
-      debug()<<" Pion P="<< (*ipart)->p() <<" Pt="<< Pt <<" cut is >"<<m_Pt_cut_pionS<<endreq;
+      debug()<<" Pion P="<< (*ipart)->p() <<" Pt="<< Pt <<" cut is >"<<m_Pt_cut_pionS<<endmsg;
     if( Pt < m_Pt_cut_pionS )  continue;
 
     //const double P  = (*ipart)->p();
@@ -186,7 +186,7 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
     const double mp = 139.57 ;  // PDG
     ptot_pS.SetE(std::sqrt(mp * mp + ptot_pS.P2()));
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " Setting PDG pion mass "<<mp<<" instead of "<< ptot_pS.M() <<" to match the BDT computation "<<endreq;    
+      debug()<< " Setting PDG pion mass "<<mp<<" instead of "<< ptot_pS.M() <<" to match the BDT computation "<<endmsg;    
     
     const double dQ = (ptot_B+ptot_pS).M() - B0mass; // NB: missing mp term as in Davide's computation
 
@@ -201,7 +201,7 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
     const double dphi = std::fabs(TaggingHelpers::dphi(ptot_B.Phi(), ptot_pS.Phi()));
 
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " deta="<<deta <<" (cut is <"<< m_eta_cut_pionS<<") dphi="<<dphi<<" (cut is <"<< m_phi_cut_pionS<<")"<< endreq;    
+      debug()<< " deta="<<deta <<" (cut is <"<< m_eta_cut_pionS<<") dphi="<<dphi<<" (cut is <"<< m_phi_cut_pionS<<")"<< endmsg;    
 
     const double dR = std::sqrt(deta*deta+dphi*dphi);
 
@@ -213,7 +213,7 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
     StatusCode sc = m_fitter->fit(vtx,*AXB0,**ipart);
     if( sc.isFailure() ) continue;
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " Vertex Fit Chi2="<<vtx.chi2() <<"/"<<vtx.nDoF()<<" (cut is <"<< m_Bp_vtxChi2_cut_pionS <<")"<< endreq;    
+      debug()<< " Vertex Fit Chi2="<<vtx.chi2() <<"/"<<vtx.nDoF()<<" (cut is <"<< m_Bp_vtxChi2_cut_pionS <<")"<< endmsg;    
  
     if( vtx.chi2() / vtx.nDoF() > m_Bp_vtxChi2_cut_pionS ) continue;
 

@@ -46,8 +46,8 @@ Tagger TaggerJetSameTool::tag( const Particle* AXB0,
 
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << " n.PV=" << nPV <<endreq;
-    verbose() << " RecVert=" << RecVert->position().z() <<endreq;
+    verbose() << " n.PV=" << nPV <<endmsg;
+    verbose() << " RecVert=" << RecVert->position().z() <<endmsg;
   }
 
   for ( Particle::ConstVector::const_iterator ip = vtags.begin();
@@ -71,7 +71,7 @@ Tagger TaggerJetSameTool::tag( const Particle* AXB0,
       norm += std::pow((*ip)->pt()/GeV,k);
       //}
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " JetS Pt="<< Pt << " dR=" << dR <<endreq;
+        verbose() << " JetS Pt="<< Pt << " dR=" << dR <<endmsg;
     }
   }
   //build jet charge same side

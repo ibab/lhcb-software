@@ -84,7 +84,7 @@ StatusCode TaggerPionSameTool::initialize()
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "PiSS calib ctt: P0_Cal "<<m_P0_Cal_pionS
-            << ", P1_Cal "<<m_P1_Cal_pionS<<endreq;
+            << ", P1_Cal "<<m_P1_Cal_pionS<<endmsg;
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
 
@@ -128,7 +128,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   if(!RecVert) return tpionS;
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose()<<"--Pion SS Tagger--"<<endreq;
+    verbose()<<"--Pion SS Tagger--"<<endmsg;
 
   const Gaudi::LorentzVector& ptotB = AXB0->momentum();
   double B0mass = ptotB.M();
@@ -159,7 +159,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
 
     if ( msgLevel(MSG::VERBOSE) )
-      verbose()<<" Pion PIDk="<< PIDk <<endreq;
+      verbose()<<" Pion PIDk="<< PIDk <<endmsg;
 
     const double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_pionS )  continue;
@@ -167,7 +167,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( P  < m_P_cut_pionS )  continue;
 
     if ( msgLevel(MSG::VERBOSE) )
-      verbose()<<" Pion P="<< P <<" Pt="<< Pt <<endreq;
+      verbose()<<" Pion P="<< P <<" Pt="<< Pt <<endmsg;
 
 
     const double lcs = track->chi2PerDoF();
@@ -265,7 +265,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
         for(unsigned int iloop=0; iloop<inputVals.size(); iloop++){
           debug() << inputVals[iloop]<<" ";
         }
-        debug()<<endreq;
+        debug()<<endmsg;
       }
 
 
@@ -286,7 +286,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
         for(unsigned int iloop=0; iloop<10; iloop++){
           debug() << NNinputs[iloop]<<" ";
         }
-        debug()<<endreq;
+        debug()<<endmsg;
       }
 
 

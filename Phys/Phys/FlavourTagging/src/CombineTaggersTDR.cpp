@@ -33,9 +33,9 @@ int CombineTaggersTDR::combineTaggers(FlavourTag& theTag,
   if( vtg.empty() ) return 0;
 
   if ( msgLevel(MSG::DEBUG) ){
-    debug()<<"entering TDR/PID type combination"<<endreq;
+    debug()<<"entering TDR/PID type combination"<<endmsg;
     debug()<<"NB: flag_nnetTaggers="<<flag_nnetTaggers<<"and flag_CharmTagger="<<
-             flag_CharmTagger<<" have no influence here"<<endreq;
+             flag_CharmTagger<<" have no influence here"<<endmsg;
   }
   fatal()<<" WARNING: update the code according to the new variable signalType !!!!!! "
          <<signalType<<endmsg;
@@ -109,7 +109,7 @@ int CombineTaggersTDR::combineTaggers(FlavourTag& theTag,
   //fill in taggers info into FlavourTag object
   for( int j=1; j!=6; j++ ) if(itag.at(j)) theTag.addTagger(*(vtg.at(j-1)));
   if ( msgLevel(MSG::DEBUG) )
-       debug()<<"Tagging category is="<<category<<endreq;
+       debug()<<"Tagging category is="<<category<<endmsg;
 
   return theTag.decision();
 }

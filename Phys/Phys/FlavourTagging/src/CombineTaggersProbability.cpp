@@ -49,7 +49,7 @@ StatusCode CombineTaggersProbability::initialize()
   if (sc.isFailure()) return sc;
   
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Comb OS calib ctt: P0_Cal "<<m_P0_Cal_OS<<", P1_Cal "<<m_P1_Cal_OS<<endreq;
+    debug() << "Comb OS calib ctt: P0_Cal "<<m_P0_Cal_OS<<", P1_Cal "<<m_P1_Cal_OS<<endmsg;
   
   return sc;
 }
@@ -92,7 +92,7 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   double pnsum = std::max(pnsum_a,pnsum_b) /(pnsum_a + pnsum_b);
   
   if ( msgLevel(MSG::DEBUG) )
-    debug() << " Before pn="<< pnsum <<" w="<<1-pnsum<<endreq;
+    debug() << " Before pn="<< pnsum <<" w="<<1-pnsum<<endmsg;
 
   //Calibration (w=1-pn) w' = p0 + p1(w-eta)
   if(!flag_nnetTaggers && !flag_CharmTagger)  
@@ -102,12 +102,12 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   else 
   {
   if ( msgLevel(MSG::INFO) )
-    info() << " WARNING: fix the calibration parameters for this configuration of combination nnetTaggers="<<flag_nnetTaggers<<" flagCharmTagger="<<flag_CharmTagger<< endreq;
+    info() << " WARNING: fix the calibration parameters for this configuration of combination nnetTaggers="<<flag_nnetTaggers<<" flagCharmTagger="<<flag_CharmTagger<< endmsg;
   }
   
 
   if ( msgLevel(MSG::DEBUG) )
-    debug() << " OS pn="<< pnsum <<" w="<<1-pnsum<<endreq;
+    debug() << " OS pn="<< pnsum <<" w="<<1-pnsum<<endmsg;
 
   //throw away poorly significant tags
   if(pnsum < m_ProbMin_OS || tagdecision == 0)
@@ -116,7 +116,7 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
     tagdecision = 0;
   }
   if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "Final OS 1-w = " << pnsum <<endreq;
+    verbose() << "Final OS 1-w = " << pnsum <<endmsg;
 
   ///fill FlavourTag object
   if(      tagdecision ==  1 ) theTag.setDecisionOS( FlavourTag::bbar );
@@ -157,7 +157,7 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
     SSeOS_tagdecision = 0;
   }
   if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "Final 1-w = " << SSeOS_pnsum <<endreq;
+    verbose() << "Final 1-w = " << SSeOS_pnsum <<endmsg;
 
   ///fill FlavourTag object
   if(      SSeOS_tagdecision ==  1 ) theTag.setDecision( FlavourTag::bbar );

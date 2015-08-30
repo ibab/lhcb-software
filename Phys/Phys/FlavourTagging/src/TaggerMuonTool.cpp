@@ -71,7 +71,7 @@ StatusCode TaggerMuonTool::initialize()
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Mu calib ctt: P0_Cal "<<m_P0_Cal_muon
-            <<", P1_Cal "<<m_P1_Cal_muon<<endreq;
+            <<", P1_Cal "<<m_P1_Cal_muon<<endmsg;
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
 
@@ -143,7 +143,7 @@ Tagger TaggerMuonTool::tagReco12( const Particle* AXB0, const RecVertex* RecVert
   Tagger tmu;
   if(!RecVert) return tmu;
 
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"--Muon Tagger--for Reco12"<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"--Muon Tagger--for Reco12"<<endmsg;
 
   //fill auxdaugh for distphi
   double distphi;
@@ -169,7 +169,7 @@ Tagger TaggerMuonTool::tagReco12( const Particle* AXB0, const RecVertex* RecVert
     if(pidm < m_PIDm_cut )                           continue;
 
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " Muon PIDm="<< pidm <<" muonNSH="<<muonNSH<<endreq;
+      verbose() << " Muon PIDm="<< pidm <<" muonNSH="<<muonNSH<<endmsg;
 
     const double Pt = axp->pt();
     if( Pt < m_Pt_cut_muon )                         continue;
@@ -178,7 +178,7 @@ Tagger TaggerMuonTool::tagReco12( const Particle* AXB0, const RecVertex* RecVert
     if( P  < m_P_cut_muon )                          continue;
 
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " Muon P="<< P <<" Pt="<< Pt <<endreq;
+      verbose() << " Muon P="<< P <<" Pt="<< Pt <<endmsg;
 
     const double cloneDist = proto->track()->info(LHCb::Track::CloneDist, -1.);
     if ( cloneDist > -0.9 )                          continue;
@@ -187,7 +187,7 @@ Tagger TaggerMuonTool::tagReco12( const Particle* AXB0, const RecVertex* RecVert
     if(lcs>m_lcs_cut_muon)                           continue;
 
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " Muon lcs="<< lcs <<endreq;
+      verbose() << " Muon lcs="<< lcs <<endmsg;
 
     //calculate signed IP wrt RecVert
     double IP(0), IPerr(0);
@@ -197,18 +197,18 @@ Tagger TaggerMuonTool::tagReco12( const Particle* AXB0, const RecVertex* RecVert
     if(fabs(IPsig) < m_IPs_cut_muon) continue;
 
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " IPsig="<< IPsig <<endreq;
+      verbose() << " IPsig="<< IPsig <<endmsg;
 
     const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIPPUs,100000.);
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " ippu="<< ippu <<endreq;
+      verbose() << " ippu="<< ippu <<endmsg;
     if(ippu < m_ipPU_cut_muon) continue;
     //distphi
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
     if( distphi < m_distPhi_cut_muon ) continue;
 
     if ( msgLevel(MSG::VERBOSE) )
-      verbose()<<" distPhi="<<distphi<<endreq;
+      verbose()<<" distPhi="<<distphi<<endmsg;
 
     ++ncand;
 
@@ -240,7 +240,7 @@ Tagger TaggerMuonTool::tagReco12( const Particle* AXB0, const RecVertex* RecVert
 
     pn = m_nnet->MLPm( NNinputs );
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " Muon pn="<< pn <<endreq;
+      verbose() << " Muon pn="<< pn <<endmsg;
 
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     pn = 1 - m_P0_Cal_muon - m_P1_Cal_muon * ( (1-pn)-m_Eta_Cal_muon);
@@ -267,7 +267,7 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
   Tagger tmu;
   if(!RecVert) return tmu;
   
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"--Muon Tagger--for Reco14"<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"--Muon Tagger--for Reco14"<<endmsg;
   
  //fill auxdaugh for distphi
   double distphi;
@@ -361,7 +361,7 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
   double sign=1.;
 
   if(m_CombinationTechnique == "NNet") {
-    if ( msgLevel(MSG::DEBUG) ) debug()<< nPV<< endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug()<< nPV<< endmsg;
 
     std::vector<double> inputVals;
     inputVals.push_back( (double)m_util->countTracks(vtags));
@@ -407,7 +407,7 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
       for(unsigned int iloop=0; iloop<inputVals.size(); iloop++){
         debug() << inputVals[iloop]<<" ";
       }
-      debug()<<endreq;
+      debug()<<endmsg;
     }
   }
   

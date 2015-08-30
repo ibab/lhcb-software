@@ -85,8 +85,8 @@ SVertexOneSeedTool::buildVertexReco12(const RecVertex& RecVert,
   
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug()<<"=======SVertexOneSeedTool========"<<endreq;
-    debug()<<" Build 2 Seed Particles for vertexing"<<endreq;
+    debug()<<"=======SVertexOneSeedTool========"<<endmsg;
+    debug()<<" Build 2 Seed Particles for vertexing"<<endmsg;
   }
 
   //Build Up 2 Seed Particles For Vertexing ------------------------
@@ -184,11 +184,11 @@ SVertexOneSeedTool::buildVertexReco12(const RecVertex& RecVert,
           && ((*jp)->charge()) * ((*kp)->charge())< 0)
       {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "This is a Ks candidate! skip."<<endreq;
+          verbose() << "This is a Ks candidate! skip."<<endmsg;
         continue;
       }
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "    seed found: ="<< vtx.position() <<endreq;
+        debug() << "    seed found: ="<< vtx.position() <<endmsg;
 
       //evaluate likelihood
       const double prob_chi2 = pol(vtx.chi2PerDoF(), 0.632154, -0.0421607, 0.00181837);
@@ -223,7 +223,7 @@ SVertexOneSeedTool::buildVertexReco12(const RecVertex& RecVert,
                              prob_ipsmin, prob_deltaphi, prob_rdist, prob_pointtheta);
       
       if ( msgLevel(MSG::DEBUG) )
-        debug()<<"      seed formed - probf: "<<probf<<endreq;
+        debug()<<"      seed formed - probf: "<<probf<<endmsg;
 
       if(probf>=maxprobf) 
       {
@@ -233,7 +233,7 @@ SVertexOneSeedTool::buildVertexReco12(const RecVertex& RecVert,
         p1=(*jp);
         p2=(*kp);
         if ( msgLevel(MSG::DEBUG) )
-          debug() << "       === pt1=" << p1->pt() << "       === pt2=" << p2->pt() <<endreq;
+          debug() << "       === pt1=" << p1->pt() << "       === pt2=" << p2->pt() <<endmsg;
         
         //set seed position
         SVpos.SetX((vtx.position()-RecVert.position()).x()/mm);
@@ -241,7 +241,7 @@ SVertexOneSeedTool::buildVertexReco12(const RecVertex& RecVert,
         SVpos.SetZ((vtx.position()-RecVert.position()).z()/mm);
         if ( msgLevel(MSG::DEBUG) )
           debug()<<"       svpos (SV-RV): "<<SVpos.x()<<", "
-                 <<SVpos.y()<<", "<<SVpos.z()<<endreq;
+                 <<SVpos.y()<<", "<<SVpos.z()<<endmsg;
       }
 
     }//kp
@@ -256,12 +256,12 @@ SVertexOneSeedTool::buildVertexReco12(const RecVertex& RecVert,
   Vfit.addToOutgoingParticles(p2);
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose()<<"maxprobf="<<maxprobf<<endreq;
+    verbose()<<"maxprobf="<<maxprobf<<endmsg;
   if(maxprobf<=m_maxprobf) return vtxvect; //return empty
 
   //add iteratively other tracks to the seed ----------------------
   if ( msgLevel(MSG::DEBUG) )
-    debug()<<" Adding tracks"<<endreq;
+    debug()<<" Adding tracks"<<endmsg;
   for ( Particle::ConstVector::const_iterator jpp = vtags.begin();
         jpp != vtags.end(); ++jpp )
   {
@@ -283,14 +283,14 @@ SVertexOneSeedTool::buildVertexReco12(const RecVertex& RecVert,
     double ipSV(0), ipErrSV(0);
     m_util->calcIP( *jpp, &myseed, ipSV, ipErrSV );
     ipSV=fabs(ipSV);
-    if ( msgLevel(MSG::VERBOSE) ) verbose()<<" ipSV: "<<ipSV<<endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose()<<" ipSV: "<<ipSV<<endmsg;
     if( ipSV > 0.9 ) continue;
     double docaSV(0), docaErrSV(0);
     m_util->calcDOCAmin( *jpp, p1, p2, docaSV, docaErrSV);
-    if ( msgLevel(MSG::VERBOSE) ) verbose()<<" doca: "<<docaSV<<endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose()<<" doca: "<<docaSV<<endmsg;
     if(docaSV > 0.2 ) continue;
     Vfit.addToOutgoingParticles(*jpp);
-    if ( msgLevel(MSG::DEBUG) ) debug() << "  === pt=" << (*jpp)->pt() <<endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "  === pt=" << (*jpp)->pt() <<endmsg;
   }
 
   vtxvect.push_back(Vfit);
@@ -304,8 +304,8 @@ SVertexOneSeedTool::buildVertexReco14(const RecVertex& RecVert,
   
  if ( msgLevel(MSG::DEBUG) )
   {
-    debug()<<"=======SVertexOneSeedTool======== "<<endreq;
-    debug()<<" Build 2 Seed Particles for vertexing"<<endreq;
+    debug()<<"=======SVertexOneSeedTool======== "<<endmsg;
+    debug()<<" Build 2 Seed Particles for vertexing"<<endmsg;
   }
  
   //Build Up 2 Seed Particles For Vertexing ------------------------
@@ -402,13 +402,13 @@ SVertexOneSeedTool::buildVertexReco14(const RecVertex& RecVert,
             if ( msgLevel(MSG::DEBUG) )
               debug()<<
                 " Ks candidate (two pions or a pion + one mis-ID pion) ! "<<mass<<
-                " "<<(*kp)->momentum().M()<<endreq;
+                " "<<(*kp)->momentum().M()<<endmsg;
             continue;
           }
         }        
       }
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "    seed found: ="<< vtx.position()<<" "<<*jp<<" "<<*kp<<endreq;
+        debug() << "    seed found: ="<< vtx.position()<<" "<<*jp<<" "<<*kp<<endmsg;
 
       //evaluate likelihood
       double prob_chi2 = pol(vtx.chi2PerDoF(), 0.632154, -0.0421607, 0.00181837);
@@ -442,7 +442,7 @@ SVertexOneSeedTool::buildVertexReco14(const RecVertex& RecVert,
                              prob_ipsmin, prob_deltaphi, prob_rdist, prob_pointtheta);
             
       if ( msgLevel(MSG::DEBUG) )
-        debug()<<"      seed formed - probf: "<<probf<<endreq;
+        debug()<<"      seed formed - probf: "<<probf<<endmsg;
       if(probf>=maxprobf) {
         myseed=vtx;
         if (probf>1) probf=1;
@@ -450,20 +450,20 @@ SVertexOneSeedTool::buildVertexReco14(const RecVertex& RecVert,
         p1=(*jp);
         p2=(*kp);
         if ( msgLevel(MSG::DEBUG) )
-          debug() << "       === pt1=" << p1->pt() << "       === pt2=" << p2->pt() <<endreq;
+          debug() << "       === pt1=" << p1->pt() << "       === pt2=" << p2->pt() <<endmsg;
         //set seed position
         SVpos.SetX((vtx.position()-RecVert.position()).x()/mm);
         SVpos.SetY((vtx.position()-RecVert.position()).y()/mm);
         SVpos.SetZ((vtx.position()-RecVert.position()).z()/mm);
         if ( msgLevel(MSG::DEBUG) )
-          debug()<<"       svpos (SV-RV): "<<SVpos.x()<<", "<<SVpos.y()<<", "<<SVpos.z()<<endreq;
+          debug()<<"       svpos (SV-RV): "<<SVpos.x()<<", "<<SVpos.y()<<", "<<SVpos.z()<<endmsg;
       }
       
     }//kp
   }//jp
 
   if ( msgLevel(MSG::VERBOSE) ) 
-    verbose()<<"maxprobf="<<maxprobf<<endreq;
+    verbose()<<"maxprobf="<<maxprobf<<endmsg;
 
   if(maxprobf<=m_maxprobf) return vtxvect; //return empty
   //save likelihood
@@ -471,7 +471,7 @@ SVertexOneSeedTool::buildVertexReco14(const RecVertex& RecVert,
   Vfit.setExtraInfo(likeinfo);
   Vfit.setPosition(SVpos);
   if ( msgLevel(MSG::DEBUG) )
-    debug()<<"OSVtx  svpos (SV-RV): "<<SVpos.x()<<", "<<SVpos.y()<<", "<<SVpos.z()<<endreq;
+    debug()<<"OSVtx  svpos (SV-RV): "<<SVpos.x()<<", "<<SVpos.y()<<", "<<SVpos.z()<<endmsg;
 
   //add tracks from best seed
   Vfit.addToOutgoingParticles(p1);
@@ -479,7 +479,7 @@ SVertexOneSeedTool::buildVertexReco14(const RecVertex& RecVert,
   
 
   //add iteratively other tracks to the seed ----------------------
-  if ( msgLevel(MSG::DEBUG) )  debug()<<" Adding tracks "<<endreq;
+  if ( msgLevel(MSG::DEBUG) )  debug()<<" Adding tracks "<<endmsg;
 
   for ( Particle::ConstVector::const_iterator jpp = vtags.begin(); 
         jpp != vtags.end(); ++jpp ) {
@@ -496,17 +496,17 @@ SVertexOneSeedTool::buildVertexReco14(const RecVertex& RecVert,
     double ipSV(0), ipErrSV(0);
     m_util->calcIP( *jpp, &myseed, ipSV, ipErrSV );
     ipSV=fabs(ipSV);
-    if ( msgLevel(MSG::VERBOSE) ) verbose()<<" ipSV: "<<ipSV<<endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose()<<" ipSV: "<<ipSV<<endmsg;
     if( ipSV > 0.9 )   continue;
     double docaSV, docaErrSV;
     m_util->calcDOCAmin( *jpp, p1, p2, docaSV, docaErrSV);
-    if ( msgLevel(MSG::VERBOSE) ) verbose()<<" doca: "<<docaSV<<endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose()<<" doca: "<<docaSV<<endmsg;
     if(docaSV > 0.2 )  continue;
     Vfit.addToOutgoingParticles(*jpp);
-    if ( msgLevel(MSG::DEBUG) ) debug() << "  === pt=" << (*jpp)->pt() <<endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "  === pt=" << (*jpp)->pt() <<endmsg;
   }
   if ( msgLevel(MSG::DEBUG) ) 
-    debug()<<" SVertex total tracks "<<Vfit.outgoingParticlesVector().size()<<endreq;
+    debug()<<" SVertex total tracks "<<Vfit.outgoingParticlesVector().size()<<endmsg;
   
   vtxvect.push_back(Vfit);
   return vtxvect;

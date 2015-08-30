@@ -59,32 +59,32 @@ int CombineTaggersNN::combineTaggers(FlavourTag& theTag,
       pmu = 1-(vtg.at(i))->omega(); //probability of 'right' mu
       mutag = vtg.at(i)->decision();
       if ( msgLevel(MSG::DEBUG) ) 
-	debug()<<"muon -> pmu: "<<pmu<<", mutag:"<<mutag<<endreq;
+	debug()<<"muon -> pmu: "<<pmu<<", mutag:"<<mutag<<endmsg;
     }
     else if (type==3) {
       pe = 1-(vtg.at(i))->omega(); //probability of 'right' e
       etag = vtg.at(i)->decision();
-      if ( msgLevel(MSG::DEBUG) ) debug()<<"ele -> pe: "<<pe<<", etag:"<<etag<<endreq;
+      if ( msgLevel(MSG::DEBUG) ) debug()<<"ele -> pe: "<<pe<<", etag:"<<etag<<endmsg;
     }
     else if (type==4) {
       pk = 1-(vtg.at(i))->omega(); //probability of 'right' k
       ktag = vtg.at(i)->decision();
-      if ( msgLevel(MSG::DEBUG) ) debug()<<"kaon -> pk: "<<pk<<", ktag:"<<ktag<<endreq;
+      if ( msgLevel(MSG::DEBUG) ) debug()<<"kaon -> pk: "<<pk<<", ktag:"<<ktag<<endmsg;
     }
     else if (type==5) {
       pss = 1-(vtg.at(i))->omega(); //probability of 'right' kaonSS
       sstag = vtg.at(i)->decision();
-      if ( msgLevel(MSG::DEBUG) ) debug()<<"kaonSS -> pss: "<<pss<<", sstag:"<<sstag<<endreq;
+      if ( msgLevel(MSG::DEBUG) ) debug()<<"kaonSS -> pss: "<<pss<<", sstag:"<<sstag<<endmsg;
     }
     else if (type==6){
       pss = 1-(vtg.at(i))->omega(); //probability of 'right' pionSS
       sstag = vtg.at(i)->decision();
-      if ( msgLevel(MSG::DEBUG) ) debug()<<"pionSS -> pss: "<<pss<<", sstag:"<<sstag<<endreq;
+      if ( msgLevel(MSG::DEBUG) ) debug()<<"pionSS -> pss: "<<pss<<", sstag:"<<sstag<<endmsg;
     }
     else if (type==10){
       pvtx = 1-(vtg.at(i))->omega(); //probability of 'right' vtx
       vtxtag = vtg.at(i)->decision();
-      if ( msgLevel(MSG::DEBUG) ) debug()<<"pvtx: "<<pvtx<<", vtxtag:"<<vtxtag<<endreq;
+      if ( msgLevel(MSG::DEBUG) ) debug()<<"pvtx: "<<pvtx<<", vtxtag:"<<vtxtag<<endmsg;
     }
     abstagsum = abs(mutag)+abs(etag)+abs(ktag)+abs(sstag)+abs(vtxtag);
   }
@@ -122,7 +122,7 @@ int CombineTaggersNN::combineTaggers(FlavourTag& theTag,
 
     if ( msgLevel(MSG::DEBUG) ) 
       debug() << "probNN: " << probNN <<", probPlus: " << probPlus
-              <<", pnsum: "<<pnsum<<", tagdecision: "<<tagdecision<<endreq;
+              <<", pnsum: "<<pnsum<<", tagdecision: "<<tagdecision<<endmsg;
   }
   //throw away poorly significant tags
   if(pnsum < m_ProbMin)
@@ -133,9 +133,9 @@ int CombineTaggersNN::combineTaggers(FlavourTag& theTag,
 
   if ( msgLevel(MSG::DEBUG) ) 
   {
-    debug() << "Final 1-w = " << pnsum <<endreq;
-    debug() << "TagDecision = " << tagdecision <<endreq;
-    debug() << "Omega = " << 1-pnsum <<endreq;
+    debug() << "Final 1-w = " << pnsum <<endmsg;
+    debug() << "TagDecision = " << tagdecision <<endmsg;
+    debug() << "Omega = " << 1-pnsum <<endmsg;
   }
 
   ///fill FlavourTag object

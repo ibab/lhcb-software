@@ -137,7 +137,7 @@ int CombineTaggersPID::combineTaggers(FlavourTag& theTag,
   if ( msgLevel(MSG::DEBUG) ) {
     debug() << "Running CombineTaggersPID::combineTaggers" << endmsg;
     debug()<<"NB: flag_nnetTaggers="<<flag_nnetTaggers<<" and flag_CharmTagger="<<flag_CharmTagger<<
-      " have no influence here"<<endreq;
+      " have no influence here"<<endmsg;
   }
   fatal()<<" WARNING: update the code according to the new variable signalType !!!!!! "
          <<signalType<<endmsg;

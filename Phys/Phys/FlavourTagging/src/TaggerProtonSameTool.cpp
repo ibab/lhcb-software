@@ -71,7 +71,7 @@ StatusCode TaggerProtonSameTool::initialize()
   if ( msgLevel(MSG::DEBUG) )
     debug() << "ProtonSS calib ctt: P0_pol "<<m_P0_pol_protonS
             << ", P1_pol "<<m_P1_pol_protonS<< ", P2_pol "<<m_P2_pol_protonS
-            << ", P3_pol "<<m_P3_pol_protonS<<endreq;
+            << ", P3_pol "<<m_P3_pol_protonS<<endmsg;
 
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
@@ -120,13 +120,13 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
   if(!RecVert) return tprotonS;
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose()<<"--Proton SS Tagger--"<<endreq;
+    verbose()<<"--Proton SS Tagger--"<<endmsg;
 
   Gaudi::LorentzVector ptot_B = AXB0->momentum();
 
   const double mB0 = 5279.58;  // PDG
   if ( msgLevel(MSG::DEBUG) )
-    debug()<< " Setting PDG B0 mass "<<mB0<<" instead of "<< ptot_B.M() <<" to match the BDT computation "<<endreq;
+    debug()<< " Setting PDG B0 mass "<<mB0<<" instead of "<< ptot_B.M() <<" to match the BDT computation "<<endmsg;
 
   ptot_B.SetE(std::sqrt(mB0 * mB0 + ptot_B.P2()));
   double B0mass = ptot_B.M();
@@ -150,7 +150,7 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
 
     const double PIDp = proto->info( ProtoParticle::CombDLLp,  -1000.0 );
     if ( msgLevel(MSG::DEBUG) )
-      debug()<<" Proton PIDp="<< PIDp <<" cut is >"<<m_PIDp_cut_protonS<<" Proton PIDk="<< PIDk<<" (no cut)"<<" n. of candidates="<<vtags.size()<<endreq;
+      debug()<<" Proton PIDp="<< PIDp <<" cut is >"<<m_PIDp_cut_protonS<<" Proton PIDk="<< PIDk<<" (no cut)"<<" n. of candidates="<<vtags.size()<<endmsg;
 
     if( PIDp <-999 )  continue;    
     if( PIDp < m_PIDp_cut_protonS ) continue;
@@ -164,7 +164,7 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
     if( Pt < m_Pt_cut_protonS )  continue;
 
     if ( msgLevel(MSG::DEBUG) )
-      debug()<<" Proton P="<< (*ipart)->p() <<" Pt="<< Pt <<endreq;
+      debug()<<" Proton P="<< (*ipart)->p() <<" Pt="<< Pt <<endmsg;
 
     //    const double lcs = track->chi2PerDoF();
     //    if( lcs > m_lcs_cut ) continue;  //looser cut than default
@@ -189,7 +189,7 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
     const double mp = 938.27;  // PDG
     ptot_pS.SetE(std::sqrt(mp * mp + ptot_pS.P2()));
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " Setting PDG proton mass "<<mp<<" instead of "<< ptot_pS.M() <<" to match the BDT computation "<<endreq;    
+      debug()<< " Setting PDG proton mass "<<mp<<" instead of "<< ptot_pS.M() <<" to match the BDT computation "<<endmsg;    
     
     const double dQ = (ptot_B+ptot_pS).M() - B0mass - mp;
 
@@ -207,7 +207,7 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
     const double dphi = std::fabs(TaggingHelpers::dphi(ptot_B.Phi(), ptot_pS.Phi()));
 
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " deta="<<deta <<" (cut is <"<< m_eta_cut_protonS<<") dphi="<<dphi<<" (cut is <"<< m_phi_cut_protonS<<")"<< endreq;    
+      debug()<< " deta="<<deta <<" (cut is <"<< m_eta_cut_protonS<<") dphi="<<dphi<<" (cut is <"<< m_phi_cut_protonS<<")"<< endmsg;    
 
     const double dR = std::sqrt(deta*deta+dphi*dphi);
 
@@ -219,7 +219,7 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
     StatusCode sc = m_fitter->fit(vtx,*AXB0,**ipart);    
     if( sc.isFailure() ) continue;
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " Vertex Fit Chi2="<<vtx.chi2() <<"/"<<vtx.nDoF()<<" (cut is <"<< m_Bp_vtxChi2_cut_protonS <<")"<< endreq;
+      debug()<< " Vertex Fit Chi2="<<vtx.chi2() <<"/"<<vtx.nDoF()<<" (cut is <"<< m_Bp_vtxChi2_cut_protonS <<")"<< endmsg;
 
     if( vtx.chi2() / vtx.nDoF() > m_Bp_vtxChi2_cut_protonS ) continue;
 

@@ -74,7 +74,7 @@ StatusCode TaggerVertexChargeTool::initialize()
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Vtx calib ctt: P0_Cal "<<m_P0_Cal_vtx
-            << ", P1_Cal "<<m_P1_Cal_vtx<<endreq;
+            << ", P1_Cal "<<m_P1_Cal_vtx<<endmsg;
 
   m_svtool = tool<ISecondaryVertexTool> ("SVertexOneSeedTool",
                                          m_SecondaryVertexToolName, this);
@@ -152,7 +152,7 @@ Tagger TaggerVertexChargeTool::tagReco12( const Particle* AXB0,
   if(!RecVert) return tVch;
   if(vtags.empty()) return tVch;
 
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"--Vertex Tagger--"<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"--Vertex Tagger--"<<endmsg;
 
   ///--- Inclusive Secondary Vertex ---
   //look for a secondary Vtx due to opposite B
@@ -165,15 +165,15 @@ Tagger TaggerVertexChargeTool::tagReco12( const Particle* AXB0,
   if ( Pfit.empty() ) return tVch;
   if ( msgLevel(MSG::DEBUG) )
     debug()<<"--- SVTOOL buildVertex returns: "<<vvec.size()
-           <<", with "<<Pfit.size()<<"tracks"<<endreq;
+           <<", with "<<Pfit.size()<<"tracks"<<endmsg;
   double maxprobf = vvec.at(0).info(LHCb::Vertex::LastGlobal+1, 0.5 );
   if ( msgLevel(MSG::DEBUG) ) 
-    debug()<<" -- likelihood seed "<<maxprobf<<endreq;
+    debug()<<" -- likelihood seed "<<maxprobf<<endmsg;
   Vertex seedvtx;
 
   const Gaudi::XYZPoint& BoppDir = vvec.at(0).position();  // SV-PV !!!
   if ( msgLevel(MSG::DEBUG) )
-    debug()<<"BoppDir: "<<BoppDir<<endreq;
+    debug()<<"BoppDir: "<<BoppDir<<endmsg;
 
   //calculate vertex charge and other variables for NN
   double Vch = 0, norm = 0;
@@ -184,7 +184,7 @@ Tagger TaggerVertexChargeTool::tagReco12( const Particle* AXB0,
         ip!=Pfit.end(); ++ip ) 
   {
     if ( msgLevel(MSG::DEBUG) )
-      debug() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endreq;
+      debug() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endmsg;
     SVmomentum += (*ip)->momentum();
     const double a = std::pow((*ip)->pt()/GeV, m_PowerK);
     Vch  += (*ip)->charge() * a;
@@ -200,7 +200,7 @@ Tagger TaggerVertexChargeTool::tagReco12( const Particle* AXB0,
     double docaSV(0), docaErrSV(0);
     m_util->calcDOCAmin( *ip, Pfit.at(0), Pfit.at(1), docaSV, docaErrSV); //DOCA wrt the seeds
     Vdocamax += docaSV;
-    if ( msgLevel(MSG::DEBUG) ) debug()<<"docaSV:"<<docaSV<<endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug()<<"docaSV:"<<docaSV<<endmsg;
   }
 
   if ( norm )
@@ -211,7 +211,7 @@ Tagger TaggerVertexChargeTool::tagReco12( const Particle* AXB0,
     Vipsmean /= vflagged;
     Vdocamax/= vflagged;
   }
-  if ( msgLevel(MSG::DEBUG) ) debug()<<"Vch: "<<Vch<<endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"Vch: "<<Vch<<endmsg;
   if( Vch==0 ) return tVch;
 
   //Variables of the SV (Seed Vertex)
@@ -220,7 +220,7 @@ Tagger TaggerVertexChargeTool::tagReco12( const Particle* AXB0,
   const double SVGP = SVP/(0.16*SVM+0.12);
   const double SVtau = std::sqrt(BoppDir.Mag2())*5.28/SVGP/0.299792458;
   if ( msgLevel(MSG::DEBUG) ) 
-    debug()<<"BoppDir.Mag2: "<<std::sqrt(BoppDir.Mag2())<<", SVGP: "<<SVGP<<", SVtau: "<<SVtau<<endreq;
+    debug()<<"BoppDir.Mag2: "<<std::sqrt(BoppDir.Mag2())<<", SVGP: "<<SVGP<<", SVtau: "<<SVtau<<endmsg;
   if ( Vptmean < m_Ptmean_vtx)              return tVch;
   if ( Vptmean*vflagged < m_Ptsum_vtx)      return tVch;
   if (Vipsmean*vflagged < m_IPSsum_vtx)     return tVch;
@@ -230,7 +230,7 @@ Tagger TaggerVertexChargeTool::tagReco12( const Particle* AXB0,
 
   //calculate omega
   if ( msgLevel(MSG::DEBUG) ) 
-    debug()<<"calculate omega with "<<m_CombinationTechnique<<endreq;
+    debug()<<"calculate omega with "<<m_CombinationTechnique<<endmsg;
   double omega = m_AverageOmega;
   double pn = 1-omega;
   if(m_CombinationTechnique == "Probability") 
@@ -260,7 +260,7 @@ Tagger TaggerVertexChargeTool::tagReco12( const Particle* AXB0,
 
   if ( msgLevel(MSG::VERBOSE) )
     verbose() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts"
-              <<", omega= "<< omega <<endreq;
+              <<", omega= "<< omega <<endmsg;
 
   //Calibration (w=1-pn) w' = p0 + p1(w-eta)
   omega =  m_P0_Cal_vtx + m_P1_Cal_vtx * ( omega-m_Eta_Cal_vtx);
@@ -294,7 +294,7 @@ Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0,
   if(!RecVert) return tVch;
   if(vtags.empty()) return tVch;
   
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"--Vertex Tagger--"<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"--Vertex Tagger--"<<endmsg;
 
   ///--- Inclusive Secondary Vertex ---
   //look for a secondary Vtx due to opposite B
@@ -307,15 +307,15 @@ Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0,
   if(Pfit.size()<1) return tVch;
   if ( msgLevel(MSG::DEBUG) )
     debug()<<"--- SVTOOL buildVertex returns: "<<vvec.size()
-           <<", with "<<Pfit.size()<<"tracks"<<endreq;
+           <<", with "<<Pfit.size()<<"tracks"<<endmsg;
   double maxprobf = vvec.at(0).info(LHCb::Vertex::LastGlobal+1, 0.5 );
   if ( msgLevel(MSG::DEBUG) ) 
-    debug()<<" -- likelihood seed "<<maxprobf<<endreq;
+    debug()<<" -- likelihood seed "<<maxprobf<<endmsg;
   Vertex seedvtx;
 
   const Gaudi::XYZPoint& BoppDir = vvec.at(0).position();  // SV-PV !!!
   if ( msgLevel(MSG::DEBUG) ) 
-    debug()<<"BoppDir: "<<BoppDir<<endreq;
+    debug()<<"BoppDir: "<<BoppDir<<endmsg;
 
   //calculate vertex charge and other variables for NN
   double Vch = 0, norm = 0;
@@ -326,7 +326,7 @@ Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0,
        ip!=Pfit.end(); ++ip) 
   { 
     if ( msgLevel(MSG::DEBUG) ) 
-      debug() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endreq;
+      debug() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endmsg;
     SVmomentum += (*ip)->momentum();
     double a = std::pow((*ip)->pt()/GeV, m_PowerK);
     Vch += (*ip)->charge() * a;
@@ -342,7 +342,7 @@ Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0,
     double docaSV(0), docaErrSV(0);
     m_util->calcDOCAmin( *ip, Pfit.at(0), Pfit.at(1), docaSV, docaErrSV); //DOCA wrt the seeds
     Vdocamax += docaSV;
-    if ( msgLevel(MSG::DEBUG) ) debug()<<"docaSV:"<<docaSV<<endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug()<<"docaSV:"<<docaSV<<endmsg;
   }
 
   if(norm) {
@@ -352,7 +352,7 @@ Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0,
     Vipsmean /= vflagged;
     Vdocamax/= vflagged;
   }
-  if ( msgLevel(MSG::DEBUG) ) debug()<<"Vch: "<<Vch<<endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"Vch: "<<Vch<<endmsg;
   if( Vch==0 ) return tVch;
 
   //Variables of the SV (Seed Vertex)                                                                                                                      
@@ -362,7 +362,7 @@ Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0,
   double SVGP = SVP/(0.16*SVM+0.12);
   double SVtau = std::sqrt(BoppDir.Mag2())*5.28/SVGP/0.299792458;
   if ( msgLevel(MSG::DEBUG) ) 
-    debug()<<"BoppDir.Mag2: "<<std::sqrt(BoppDir.Mag2())<<", SVGP: "<<SVGP<<", SVtau: "<<SVtau<<endreq;
+    debug()<<"BoppDir.Mag2: "<<std::sqrt(BoppDir.Mag2())<<", SVGP: "<<SVGP<<", SVtau: "<<SVtau<<endmsg;
   if ( Vptmean < m_Ptmean_vtx)               return tVch;
   if ( Vptmean*vflagged < m_Ptsum_vtx)       return tVch;
   if ( Vipsmean*vflagged < m_IPSsum_vtx)     return tVch;
@@ -371,7 +371,7 @@ Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0,
   if ( SVM < m_Msum_vtx )                    return tVch;
 
   //calculate omega
-  if ( msgLevel(MSG::DEBUG) ) debug()<<"calculate omega with "<<m_CombinationTechnique<<endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"calculate omega with "<<m_CombinationTechnique<<endmsg;
   double omega = m_AverageOmega;
   double pn = 1-omega;
   double sign=1.;
@@ -421,7 +421,7 @@ Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0,
     
     if( omega < 0 || omega > 1 ) {
       if ( msgLevel(MSG::DEBUG) )
-        debug()<<"===> Something wrong with VTX Training "<<omega<<endreq;    
+        debug()<<"===> Something wrong with VTX Training "<<omega<<endmsg;    
       return tVch;  
     }
     
@@ -439,7 +439,7 @@ Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0,
       for(unsigned int iloop=0; iloop<inputVals.size(); iloop++){
         debug() << inputVals[iloop]<<" ";
       }
-      debug()<<endreq;
+      debug()<<endmsg;
     }
   }  
   

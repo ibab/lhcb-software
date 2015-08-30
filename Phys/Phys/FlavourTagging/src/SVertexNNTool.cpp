@@ -113,7 +113,7 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
           * ((*kp)->particleID().threeCharge()) < 0 ) 
       {
         if ( msgLevel(MSG::DEBUG) )
-          debug() << "This is a Ks candidate! skip."<<endreq;
+          debug() << "This is a Ks candidate! skip."<<endmsg;
         //set their energy to 0
         //Gaudi::LorentzVector zero(0.0001,0.0001,0.0001,0.0001);
         //(*jp)->setMomentum(zero);//xxx
@@ -194,7 +194,7 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
                <<" Vz-RVz="<< VfitTMP.position().z()/mm - RVz
                <<" prob="<< probs/(probs+probb)
                <<" IPbef="<< ip/ipe
-               <<endreq;
+               <<endmsg;
 
       //look what is the part which behaves worse
       double ipmax = -1.0;
@@ -229,7 +229,7 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
     if( !sc ) Pfit.clear();
   }
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "================ Fit Results: " << Pfit.size() <<endreq;
+    debug() << "================ Fit Results: " << Pfit.size() <<endmsg;
   Vfit.clearOutgoingParticles();
   for( jp=Pfit.begin(); jp!=Pfit.end(); jp++ ) Vfit.addToOutgoingParticles(*jp);
 

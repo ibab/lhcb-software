@@ -61,7 +61,7 @@ StatusCode TaggerNEWKaonOppositeTool::initialize()
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "NEW NN KOS calib ctt: P0_Cal "<<m_P0_Cal_kaon
-            << ", P1_Cal "<<m_P1_Cal_kaon<<endreq;
+            << ", P1_Cal "<<m_P1_Cal_kaon<<endmsg;
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
  
@@ -168,7 +168,7 @@ Tagger TaggerNEWKaonOppositeTool::tagReco12( const Particle* AXB0,
   if(!RecVert) return tkaon;
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose()<<"--NEW NN Kaon OppositeSide Tagger on Reco 12--"<<endreq;
+    verbose()<<"--NEW NN Kaon OppositeSide Tagger on Reco 12--"<<endmsg;
 
   const double B_Pt     = AXB0->pt();
   const double B_eta    = AXB0->momentum().Eta();
@@ -429,7 +429,7 @@ Tagger TaggerNEWKaonOppositeTool::tagReco14( const Particle* AXB0,
   if(!RecVert) return tkaon;
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose()<<"--NEW NN Kaon OppositeSide Tagger on Reco 14--"<<endreq;
+    verbose()<<"--NEW NN Kaon OppositeSide Tagger on Reco 14--"<<endmsg;
 
   const double B_Pt     = AXB0->pt();
   const double B_eta    = AXB0->momentum().Eta();

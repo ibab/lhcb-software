@@ -67,7 +67,7 @@ StatusCode TaggerKaonSameTool::initialize()
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "KSS calib ctt: P0_Cal "<<m_P0_Cal_kaonS
-            <<", P1_Cal "<<m_P1_Cal_kaonS<<endreq;
+            <<", P1_Cal "<<m_P1_Cal_kaonS<<endmsg;
 
   m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
 
@@ -113,7 +113,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
   if(!RecVert) return tkaonS;
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose()<<"--Kaon SS Tagger--"<<endreq;
+    verbose()<<"--Kaon SS Tagger--"<<endmsg;
 
   const Gaudi::LorentzVector& ptotB = AXB0->momentum();
 
@@ -139,7 +139,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
     if(pidk - pidp < m_KaonSPID_kpS_cut ) continue;
 
     if ( msgLevel(MSG::VERBOSE) )
-      verbose()<<"     KaonS PIDk="<<pidk<<" PIDp="<<pidp <<endreq;
+      verbose()<<"     KaonS PIDk="<<pidk<<" PIDp="<<pidp <<endmsg;
 
     const double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_kaonS )  continue;
@@ -148,15 +148,15 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
     if( P < m_P_cut_kaonS )  continue;
 
     if ( msgLevel(MSG::VERBOSE) )
-      verbose()<<" KaonS P="<<P<<" Pt="<<Pt <<endreq;
+      verbose()<<" KaonS P="<<P<<" Pt="<<Pt <<endmsg;
 
     const Track* track = (*ipart)->proto()->track();
     const double lcs = track->chi2PerDoF();
     if ( msgLevel(MSG::VERBOSE) )
-      verbose()<<" KaonS lcs1="<<lcs<<endreq;
+      verbose()<<" KaonS lcs1="<<lcs<<endmsg;
     if( lcs > m_lcs_cut ) continue;
     if ( msgLevel(MSG::VERBOSE) )
-      verbose()<<" KaonS lcs2="<<lcs<<endreq;
+      verbose()<<" KaonS lcs2="<<lcs<<endmsg;
 
     //calculate signed IP wrt RecVert
     double IP(0), IPerr(0);
@@ -165,14 +165,14 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
     const double IPsig = IP/IPerr;
     if(fabs(IPsig) > m_IP_cut_kaonS) continue;
     if ( msgLevel(MSG::VERBOSE) )
-      verbose()<<" KaonS IPs="<<IPsig<<endreq;
+      verbose()<<" KaonS IPs="<<IPsig<<endmsg;
 
     const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIPPUs,100000.);
     if(ippu < m_ipPU_cut_kS) continue;
     //distphi
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
     if ( msgLevel(MSG::DEBUG) )
-      debug()<<" distPhi="<<distphi<<endreq;
+      debug()<<" distPhi="<<distphi<<endmsg;
     if( distphi < m_distPhi_cut_kS ) continue;
 
     const double deta = std::fabs(std::log(std::tan(ptotB.Theta()/2.)/std::tan(asin(Pt/P)/2.)));
@@ -190,7 +190,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
     const double dQ    = (ptotB+pmK).M() - ptotB.M();
     if ( msgLevel(MSG::VERBOSE) )
       verbose()<<" KaonS Deta="<<deta<<" KaonS dQ="<<dQ
-               <<" Dphi="<<dphi<<endreq;
+               <<" Dphi="<<dphi<<endmsg;
 
     if(dQ > m_dQcut_kaonS ) continue;
 
@@ -244,7 +244,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
         for(unsigned int iloop=0; iloop<inputVals.size(); iloop++){
           debug() << inputVals[iloop]<<" ";
         }
-        debug()<<endreq;
+        debug()<<endmsg;
       }
    
     }else{ // Old format for the moment
@@ -263,8 +263,8 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
       
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose()<<" KaonS pn inputs="<<NNinputs<<endreq;
-        verbose()<<" KaonS pn ="<<pn<<endreq;
+        verbose()<<" KaonS pn inputs="<<NNinputs<<endmsg;
+        verbose()<<" KaonS pn ="<<pn<<endmsg;
       }
     }
     

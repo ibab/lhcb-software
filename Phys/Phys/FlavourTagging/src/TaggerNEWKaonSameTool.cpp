@@ -59,7 +59,7 @@ StatusCode TaggerNEWKaonSameTool::initialize()
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "NEW NN KSS calib ctt: P0_Cal "<<m_P0_Cal_kaon
-            << ", P1_Cal "<<m_P1_Cal_kaon<<endreq;
+            << ", P1_Cal "<<m_P1_Cal_kaon<<endmsg;
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
  
@@ -109,7 +109,7 @@ Tagger TaggerNEWKaonSameTool::tag( const Particle* AXB0,
   if(!RecVert) return tkaon;
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose()<<"--NEW NN Kaon SameSide Tagger--"<<endreq;
+    verbose()<<"--NEW NN Kaon SameSide Tagger--"<<endmsg;
 
   const double B_Pt     = AXB0->pt();
   const int    no_vtx   = nPV;
@@ -231,7 +231,7 @@ Tagger TaggerNEWKaonSameTool::tag( const Particle* AXB0,
     if ( msgLevel(MSG::DEBUG)) {      
       debug()<<" TaggerNNetSSK NN1="<<m_nn_1<<" NNinputs:";
       for(unsigned int i=0; i<values.size(); ++i) debug() << values.at(i)<<" ";      
-      debug()<<endreq;
+      debug()<<endmsg;
     }
     
     //if(ippu < m_ipPU_cut_kaon)  continue;
@@ -330,7 +330,7 @@ Tagger TaggerNEWKaonSameTool::tag( const Particle* AXB0,
     if ( msgLevel(MSG::DEBUG)) {      
       debug()<<" TaggerNNetSSK NN2="<<nn_2<<" & "<<nn_2cc<<" NNinputs:";
       for(unsigned int i=0; i<valuescc.size(); ++i) debug() << valuescc.at(i)<<" ";      
-      debug()<<endreq;
+      debug()<<endmsg;
     }
 
     m_nn_2 = (nn_2 + (1. - nn_2cc))* 0.5;

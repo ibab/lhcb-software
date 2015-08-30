@@ -74,7 +74,7 @@ StatusCode TaggerKaonOppositeTool::initialize()
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "KOS calib ctt: P0_Cal "<<m_P0_Cal_kaon
-            << ", P1_Cal "<<m_P1_Cal_kaon<<endreq;
+            << ", P1_Cal "<<m_P1_Cal_kaon<<endmsg;
 
   m_nnet = tool<INNetTool> ( m_NeuralNetName, this );
 
@@ -150,7 +150,7 @@ Tagger TaggerKaonOppositeTool::tagReco12( const Particle* AXB0,
   if(!RecVert) return tkaon;
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose()<<"--Kaon OppositeSide Tagger--"<<endreq;
+    verbose()<<"--Kaon OppositeSide Tagger--"<<endmsg;
 
   //fill auxdaugh for distphi
   double distphi;
@@ -275,7 +275,7 @@ Tagger TaggerKaonOppositeTool::tagReco14( const Particle* AXB0,
   if(!RecVert) return tkaon;
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose()<<"--Kaon OppositeSide Tagger--"<<endreq;
+    verbose()<<"--Kaon OppositeSide Tagger--"<<endmsg;
 
   //fill auxdaugh for distphi
   double distphi;
@@ -430,7 +430,7 @@ Tagger TaggerKaonOppositeTool::tagReco14( const Particle* AXB0,
       for(unsigned int iloop=0; iloop<inputVals.size(); iloop++){
         debug() << inputVals[iloop]<<" ";
       }
-      debug()<<endreq;
+      debug()<<endmsg;
     }
   }
   

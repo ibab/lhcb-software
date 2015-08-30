@@ -77,7 +77,7 @@ StatusCode TaggerElectronTool::initialize()
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Ele calib ctt: P0_Cal "<<m_P0_Cal_ele
-            << ", P1_Cal "<<m_P1_Cal_ele<<endreq;
+            << ", P1_Cal "<<m_P1_Cal_ele<<endmsg;
 
   m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
 
@@ -150,7 +150,7 @@ Tagger TaggerElectronTool::tagReco12( const Particle* AXB0, const RecVertex* Rec
   if(!RecVert) return tele;
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose()<<"-- Electron Tagger --"<<endreq;
+    verbose()<<"-- Electron Tagger --"<<endmsg;
 
   //fill auxdaugh for distphi
   double distphi;
@@ -213,13 +213,13 @@ Tagger TaggerElectronTool::tagReco12( const Particle* AXB0, const RecVertex* Rec
     if(eOverP > m_EoverP || eOverP<-100)
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " Elec E/P=" << eOverP <<endreq;
+        verbose() << " Elec E/P=" << eOverP <<endmsg;
 
       const double veloch = (*ipart)->proto()->info( ProtoParticle::VeloCharge, 0.0 );
       if( veloch > m_VeloChMin && veloch < m_VeloChMax ) 
       {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << " Elec veloch=" << veloch << endreq;
+          verbose() << " Elec veloch=" << veloch << endmsg;
 
         ++ncand;
 
@@ -252,7 +252,7 @@ Tagger TaggerElectronTool::tagReco12( const Particle* AXB0, const RecVertex* Rec
 
     pn = m_nnet->MLPe( NNinputs );
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " Elec pn=" << pn << endreq;
+      verbose() << " Elec pn=" << pn << endmsg;
 
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     pn = 1 - m_P0_Cal_ele - m_P1_Cal_ele * ( (1-pn)-m_Eta_Cal_ele);
@@ -280,7 +280,7 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
   if(!RecVert) return tele;
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose()<<"-- Electron Tagger --"<<endreq;
+    verbose()<<"-- Electron Tagger --"<<endmsg;
   
   //fill auxdaugh for distphi
   double distphi;
@@ -362,12 +362,12 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
     if(eOverP > m_EoverPmax)                               continue;
     if(eOverP > m_EoverP) {// || eOverP<-100) {
       if ( msgLevel(MSG::VERBOSE) ) 
-        verbose() << " Elec E/P=" << eOverP <<endreq;
+        verbose() << " Elec E/P=" << eOverP <<endmsg;
 
       double veloch = proto->info( ProtoParticle::VeloCharge, 0.0 );
       if( veloch > m_VeloChMin && veloch < m_VeloChMax ) {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << " Elec veloch=" << veloch << endreq;
+          verbose() << " Elec veloch=" << veloch << endmsg;
 
          Particle* c = const_cast<Particle*>(*ipart);
          c->addInfo(LHCb::Particle::FlavourTaggingTaggerID,11); // store the info that this particle pass the tagger selection
@@ -398,7 +398,7 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
   double rnet;
   
   if(m_CombinationTechnique == "NNet") {
-    if ( msgLevel(MSG::DEBUG) ) debug()<< nPV<< endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug()<< nPV<< endmsg;
 
     std::vector<double> inputVals;
     inputVals.push_back( (double)m_util->countTracks(vtags));
@@ -422,7 +422,7 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
       pn = -1.;
     }    
 
-    if(msgLevel(MSG::VERBOSE)) verbose() << " Elec pn=" << pn << endreq;
+    if(msgLevel(MSG::VERBOSE)) verbose() << " Elec pn=" << pn << endmsg;
 
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     pn = 1 - m_P0_Cal_ele - m_P1_Cal_ele * ( (1-pn)-m_Eta_Cal_ele);

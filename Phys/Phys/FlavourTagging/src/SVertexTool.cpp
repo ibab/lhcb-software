@@ -64,7 +64,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
 {
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose()<<"=======SVertex Tool========"<<endreq;
+    verbose()<<"=======SVertex Tool========"<<endmsg;
 
   const double RVz = RecVert.position().z()/mm;
 
@@ -80,7 +80,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
 
   //filter duplicates and apply some pre-cuts to speed up what's next
   if ( msgLevel(MSG::VERBOSE) )
-    verbose()<<"Look for seed particles"<<endreq;
+    verbose()<<"Look for seed particles"<<endmsg;
   for ( ip = vtags.begin(); ip != vtags.end(); ip++ ) 
   {
     if( !(*ip)->proto() ) continue;
@@ -107,7 +107,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
   }
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "size of tracks for sec vtx="<<vtags_unique.size()<<endreq;
+    verbose() << "size of tracks for sec vtx="<<vtags_unique.size()<<endmsg;
 
   //loop to find seed -----------------------------------
   for ( jp = vtags_unique.begin(); jp != vtags_unique.end(); jp++ ) 
@@ -121,7 +121,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
     if( ipl/iperrl > 100.0 ) continue;                          //preselection
 
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "seed1: pt="<< (*jp)->pt()/GeV <<endreq;
+      verbose() << "seed1: pt="<< (*jp)->pt()/GeV <<endmsg;
 
     //SECOND seed particle ----
     for ( kp = (jp+1) ; kp != vtags_unique.end(); kp++ ) {
@@ -138,7 +138,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
       if((vtx.position().z()/mm - RVz) < 1.0 ) continue;       //preselection
       double mass = 0.;
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "    try with: pt="<< (*kp)->pt()/GeV <<endreq;
+        verbose() << "    try with: pt="<< (*kp)->pt()/GeV <<endmsg;
       if((*jp)->particleID().pid()!=310 && (*kp)->particleID().pid()!=310)
       {
         //if the couple is compatible with a Ks, drop it         //preselection
@@ -149,7 +149,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
             && ((*jp)->charge()) * ((*kp)->charge())< 0)
         {
           if ( msgLevel(MSG::VERBOSE) )
-            verbose() << "This is a Ks candidate! skip."<<endreq;
+            verbose() << "This is a Ks candidate! skip."<<endmsg;
           vtags_toexclude.push_back(*jp);
           vtags_toexclude.push_back(*kp);
           continue;
@@ -164,7 +164,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
                  && (*kp)->particleID().abspid() ==  211) ) 
             {
               if ( msgLevel(MSG::VERBOSE) )
-                verbose() << "This is a Lambda0 candidate! skip."<<endreq;
+                verbose() << "This is a Lambda0 candidate! skip."<<endmsg;
               vtags_toexclude.push_back(*jp);
               vtags_toexclude.push_back(*kp);
               continue;
@@ -172,7 +172,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
       }
 
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "    seed2 found: pt="<< (*kp)->pt()/GeV <<endreq;
+        verbose() << "    seed2 found: pt="<< (*kp)->pt()/GeV <<endmsg;
 
       //build a likelihood that the combination comes from B ---------
       //double probi1(0), probi2(0), probp1(0), probp2(0), proba(0), probs(0), probb(0);
@@ -195,7 +195,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
         p1 = (*jp);
         p2 = (*kp);
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "complete seed formed with probf="<<probf<<endreq;
+          verbose() << "complete seed formed with probf="<<probf<<endmsg;
       }
     }
   }
@@ -278,9 +278,9 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
         if ( ipmax > 3.0 && Pfit.size() > 2 )
         {
           Pfit.erase( kpp_worse );
-          if ( msgLevel(MSG::VERBOSE) ) verbose() << " killed." << endreq;
+          if ( msgLevel(MSG::VERBOSE) ) verbose() << " killed." << endmsg;
         } else {
-          if ( msgLevel(MSG::VERBOSE) ) verbose() << " included." << endreq;
+          if ( msgLevel(MSG::VERBOSE) ) verbose() << " included." << endmsg;
         }
       }
     }
@@ -289,14 +289,14 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
   }
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "================ Fit Results: " << Pfit.size() <<endreq;
+    verbose() << "================ Fit Results: " << Pfit.size() <<endmsg;
 
   Vfit.clearOutgoingParticles();
   for( jp=Pfit.begin(); jp!=Pfit.end(); ++jp ) 
   {
     Vfit.addToOutgoingParticles(*jp);
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "================  pt=" << (*jp)->pt() <<endreq;
+      verbose() << "================  pt=" << (*jp)->pt() <<endmsg;
   }
 
   vtxvect.push_back(Vfit);
@@ -327,7 +327,7 @@ double SVertexTool::angle( const Gaudi::LorentzVector& a,
   else 
   {
     err()<<"Zero vector(s)! Arguments: "<<a.Vect().Mag2()
-         <<" "<<b.Vect().Mag2()<<endreq;
+         <<" "<<b.Vect().Mag2()<<endmsg;
   }
   return ang;
 }

@@ -7,6 +7,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2015-08-30 - Gerhard Raven
+ - replace endreq with endmsg
+
 ! 2015-08-17 - Julian Wishahi
 - All private LoKi fitter instances have been exchanged with their respective
   PUBLIC instances.

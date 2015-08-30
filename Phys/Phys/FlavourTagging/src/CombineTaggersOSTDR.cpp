@@ -30,9 +30,9 @@ int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag,
 {
 
   if ( msgLevel(MSG::DEBUG) ) {    
-    debug() << "Running CombineTaggersOSTDR::combineTaggers signalTpye" <<signalType<<endreq;
+    debug() << "Running CombineTaggersOSTDR::combineTaggers signalTpye" <<signalType<<endmsg;
     debug()<<"NB: flag_nnetTaggers="<<flag_nnetTaggers<<" and flag_CharmTagger="<<flag_CharmTagger<<
-      " have no influence here"<<endreq;
+      " have no influence here"<<endmsg;
   }
   //Want to combine opposite side muon, electron, kaon, vertex
   int catt=0;

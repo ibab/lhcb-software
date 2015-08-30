@@ -56,7 +56,7 @@ void BTagging::performTagging(const std::string & location)
   }
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "Will tag "<< parts.size() << " B hypos!" <<endreq;
+    verbose() << "Will tag "<< parts.size() << " B hypos!" <<endmsg;
 
   // Make new FT object container
   FlavourTags * tags = new FlavourTags;
@@ -71,7 +71,7 @@ void BTagging::performTagging(const std::string & location)
     {
       if ( msgLevel(MSG::DEBUG) )
         debug() << "About to tag candidate B of mass="
-                << (*icandB)->momentum().M()/GeV <<" GeV"<<endreq;
+                << (*icandB)->momentum().M()/GeV <<" GeV"<<endmsg;
 
       FlavourTag * theTag = new FlavourTag;
 
@@ -102,10 +102,10 @@ void BTagging::performTagging(const std::string & location)
       {
         const int tagdecision = theTag->decision();
         if(tagdecision) debug() << "Flavour guessed: "
-                                << (tagdecision>0 ? "b":"bbar")<<endreq;
-        debug() << "estimated omega= " << theTag->omega() <<endreq;
+                                << (tagdecision>0 ? "b":"bbar")<<endmsg;
+        debug() << "estimated omega= " << theTag->omega() <<endmsg;
         const Particle* tagB = theTag->taggedB();
-        if( tagB ) debug() << "taggedB p="<< tagB->p()/GeV <<endreq;
+        if( tagB ) debug() << "taggedB p="<< tagB->p()/GeV <<endmsg;
 
         ///print Taggers information
         const std::vector<Tagger>& mytaggers = theTag->taggers();
@@ -133,10 +133,10 @@ void BTagging::performTagging(const std::string & location)
           case Tagger::SS_nnetKaon : tts="SS_nnetKaon"; break;
           case Tagger::OS_Charm    : tts="OS_Charm";    break;
           }
-          debug() << "--> tagger type: " << tts <<endreq;
+          debug() << "--> tagger type: " << tts <<endmsg;
           debug() << "    decision = "
-                  << (itag->decision() > 0? "b":"bbar") <<endreq;
-          debug() << "    omega    = " << itag->omega() <<endreq;
+                  << (itag->decision() > 0? "b":"bbar") <<endmsg;
+          debug() << "    omega    = " << itag->omega() <<endmsg;
 
           if ( msgLevel(MSG::VERBOSE) )
           {
@@ -145,7 +145,7 @@ void BTagging::performTagging(const std::string & location)
                   kp != taggerparts.end(); ++kp ) 
             {
               verbose() << "    ID:" <<std::setw(4)<< (*kp)->particleID().pid()
-                        << " p= "  << (*kp)->p()/GeV << endreq;
+                        << " p= "  << (*kp)->p()/GeV << endmsg;
             }
           }
 

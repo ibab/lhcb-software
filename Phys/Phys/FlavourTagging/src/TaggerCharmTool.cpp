@@ -115,17 +115,17 @@ StatusCode TaggerCharmTool::initialize()
   //
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
   if( ! m_util ) {
-    fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
+    fatal() << "Unable to retrieve TaggingUtils tool "<< endmsg;
     return StatusCode::FAILURE;
   }
   m_pLifetimeFitter = m_util->getLifetimeFitter(); //tool<ILifetimeFitter>(m_pLifetimeFitterAlgName, this);
   if(!m_pLifetimeFitter){
-    fatal() << "Unable to retrieve " << m_pLifetimeFitterAlgName << "." << endreq;
+    fatal() << "Unable to retrieve " << m_pLifetimeFitterAlgName << "." << endmsg;
     return StatusCode::FAILURE;
   }
   m_descend = m_util->getParticleDescendants();//tool<IParticleDescendants> ( "ParticleDescendants", this );
   if( ! m_descend ) {
-    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
+    fatal() << "Unable to retrieve ParticleDescendants tool "<< endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -138,7 +138,7 @@ StatusCode TaggerCharmTool::initialize()
   //   //load tmva readers
   //   int nFoundReaders = 0;
 
-  //   if ( msgLevel(MSG::DEBUG) )  debug() << " Number of TMVA readers found: " << nFoundReaders << endreq;
+  //   if ( msgLevel(MSG::DEBUG) )  debug() << " Number of TMVA readers found: " << nFoundReaders << endmsg;
 
   // std::vector<std::string> variable_names;
 
@@ -203,7 +203,7 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
   addCands(charmcands, m_CharmInclTagLocations,   *signalB, RecVert, 1);
   addCands(charmcands, m_CharmLambdaTagLocations, *signalB, RecVert, 3);
   
-  if ( msgLevel(MSG::DEBUG) )  debug() << "Number of charm cands retrieved: "<< charmcands.size() << endreq;
+  if ( msgLevel(MSG::DEBUG) )  debug() << "Number of charm cands retrieved: "<< charmcands.size() << endmsg;
 
   CharmParticle* thecharm = NULL;
   std::vector< CharmParticle >::iterator ipart;
@@ -337,7 +337,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
       LHCb::Particle::Range partsin  = get<Particle::Range>(*ilist) ;
 
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "Found "<<partsin.size()<<" charm cands for location "<<*ilist<<endreq;
+        debug() << "Found "<<partsin.size()<<" charm cands for location "<<*ilist<<endmsg;
 
       // removing candidates with daughters in common with signal B
       LHCb::Particle::ConstVector purgedParts = m_util->purgeCands(partsin, signalB);
@@ -369,7 +369,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
         // Require same PV
         const RecVertex* CharmBestPV = (const RecVertex*) m_dva->bestVertex(*icand);
         if (not CharmBestPV) {
-          err() << "No Best PV for charm candidate" << endreq;
+          err() << "No Best PV for charm candidate" << endmsg;
           return StatusCode::SUCCESS;
         }
         const double vdchi2 = dist(CharmBestPV);
@@ -446,7 +446,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
         // double ksMass = 0.0, lambdaMass = 0.0;
 
         const SmartRefVector<Particle>& daus = cand->daughters();
-        debug() << "Charm cand, dau vector size = " << daus.size() << endreq;
+        debug() << "Charm cand, dau vector size = " << daus.size() << endmsg;
         for (SmartRefVector<Particle>::const_iterator idau = daus.begin(); idau != daus.end(); ++idau) {
 
           const Particle *interCand = *idau;
@@ -508,7 +508,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
                 proIppvchi2 = ipPvChi2(daucand);
                 proIpMinchi2 = ipChi2Min(daucand);
               } else {
-                warning() << "Second proton found!" << endreq;
+                warning() << "Second proton found!" << endmsg;
               }
             }      
         
@@ -527,7 +527,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
                 kaonIppvchi2 = ipPvChi2(daucand);
                 kaonIpMinchi2 = ipChi2Min(daucand);
               } else {
-                warning() << "Second kaon found!" << endreq;
+                warning() << "Second kaon found!" << endmsg;
               }
             }      
         
@@ -630,7 +630,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
           break;
           
         default:
-          warning() << "No charge assigned for mode" << decay.name << endreq;
+          warning() << "No charge assigned for mode" << decay.name << endmsg;
           break;
           
         }
@@ -649,7 +649,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
       }
     
     } else {
-      error() << "Location not found: "<<*ilist<<endreq;
+      error() << "Location not found: "<<*ilist<<endmsg;
     }
   }
     
@@ -726,7 +726,7 @@ double TaggerCharmTool::getMvaVal(const CharmParticle *cpart, const int nPV, con
            <<" logkprobk "<<safe_log(1-cpart->kaonProbnnk)<<" logkipchi2 "<<safe_log(cpart->kaonIppvchi2)
            <<" logprobe "<<safe_log(1-cpart->elecProbnne)<<" logprobmu "<<safe_log(1-cpart->muonProbnnmu)
            <<" dstarm "<<cpart->dstarDm
-           <<endreq;
+           <<endmsg;
 
   TMVAWrapper * mva = getMVA(mode);
   return ( mva ? mva->GetMvaValue(inputVals) : -10.0 );
@@ -834,7 +834,7 @@ TMVAWrapper * TaggerCharmTool::getMVA( CharmMode mode )
     break;
 
   default:
-    warning() << "Unknown charm mode" << endreq;
+    warning() << "Unknown charm mode" << endmsg;
     break;
 
   }
