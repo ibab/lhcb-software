@@ -4,6 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-08-30 - Mike Sokoloff
+  - In CHarmHad, modified CharmHad_25ns_September2015.py to add dictionaries and
+  - and line names for CharmSpectroscopy lines with bachelor photons (xxx_GammaTurbo).
+  - Also, modified dictionaries Spec_DEta and Spec_DPi0 to remove (now) unnecessary
+  - vertex chi2 entries.
+
 ! 2015-08-29 - Mike Sokoloff
   - In CharmHad, modified CharmHad_25ns_September2015.py to add dictionaries and
   - and line names for "lifetime-unbiased" D*+ --> D0,pi+; D0 --> HHKs decays
