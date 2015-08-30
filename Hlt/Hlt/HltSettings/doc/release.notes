@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-08-31 - Greg Ciezark
+ - Updated XcForTau settings work with restructured lines
+ 
 ! 2015-08-30 - Sean Benson
  - Remove XSec from TurboOnly (settings file for nightlies).
 
