@@ -22,7 +22,7 @@ class CharmHadD2HHKshLines(Hlt2LinesConfigurableUser):
                  # like the generic cuts, except for TisTosSpec, no D_BPVVDCHI2_MIN,
                  # and D_BPVLTIME_MIN changed to agree with D02HH_LTUNB in D02HHLines.py
                 ,'LTUNB_D02HHKsh' : {
-                             'TisTosSpec'               : "Hlt1CalibTracking.*Decision%TOS",
+                             'TisTosSpec'               : "Hlt1.*Decision%TIS",
                              'AM_MIN'                   :  1740. * MeV,
                              'AM_MAX'                   :  1990. * MeV,
                              'ASUMPT_MIN'               :  1500 * MeV,
