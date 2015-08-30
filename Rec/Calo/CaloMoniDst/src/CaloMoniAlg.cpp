@@ -9,10 +9,6 @@
 // 2008-09-03 : Olivier Deschamps
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloMoniAlg )
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -20,9 +16,7 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
                           ISvcLocator* pSvcLocator)
     : Calo2Dview(name, pSvcLocator )
       , m_inputData( "" ) // no default value
-      , m_inputs()        // no default value
       , m_detData( "" )   // no default value
-      , m_nAreas()
       , m_count(0)
 {
 

@@ -10,10 +10,6 @@
 // 2010-10-12 : Olivier Deschamps
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CaloNtpBase )
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
