@@ -501,7 +501,7 @@ def _h1_get_item_ ( h1 , ibin ) :
     >>> ve    = histo[ibin]
     
     """
-    if not ibin in h1.GetXaxis()    : raise IndexErorr
+    if not ibin in h1.GetXaxis()    : raise IndexError
     #
     val = h1.GetBinContent ( ibin ) 
     err = h1.GetBinError   ( ibin )

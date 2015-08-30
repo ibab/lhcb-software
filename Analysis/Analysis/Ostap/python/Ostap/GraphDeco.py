@@ -145,7 +145,7 @@ def hToGraph ( h1                   ,
         v = funcv  ( i[2] )
 
         ## note the different convention 
-        graph [ i[0] - 1 ] = (x,v)  
+        graph [ i[0] - 1 ] = x , v 
         
     return graph
 
@@ -156,7 +156,6 @@ def hToGraph ( h1                   ,
 def hToGraph_ ( h1 , funcx , funcy ) :
     """
     Convert  1D-histogram into TGraphAsymmError 
-
     """
     #
     ## book graph
@@ -177,7 +176,7 @@ def hToGraph_ ( h1 , funcx , funcy ) :
 
         x0 , xep , xen = funcx ( x , y )
         y0 , yep , yen = funcy ( x , y )
-            
+
         graph.SetPoint      ( ip , x0  , y0  ) 
         graph.SetPointError ( ip , xep , xen , yep , yen ) 
 
@@ -249,32 +248,12 @@ ROOT.TH1D.toGraph3 = hToGraph3
 def _gr_iter_ ( graph ) :
     """
     Iterate over graph points 
-    
     >>> gr = ...
     >>> for i in gr : ...
     
     """
-    
     for ip in range ( 0 , len ( graph ) ) :
         yield ip
-        
-# =============================================================================
-## iterate over points in TGraph
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2011-06-07
-def _gr_iteritems_ ( graph ) :
-    """
-    Iterate over graph points 
-    
-    >>> gr = ...
-    >>> for i,x,v in gr.iteritems(): ...
-    
-    """
-    for ip in graph :
-
-        point = graph[ ip ] 
-        
-        yield ip , point[0] , point[1] 
         
 # =============================================================================
 ## get the point in TGraph
@@ -295,6 +274,49 @@ def _gr_getitem_ ( graph , ipoint )  :
     return x_,v_
 
 # =============================================================================
+## set the point in TGraph
+#  @code
+#  graph = ...
+#  x,y   = graph[1]
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _gr_setitem_ ( graph , ipoint , point )  :
+    """
+    Get the point from the Graph
+    >>> graph = ...
+    >>> x , y = graph[1]
+    """
+    #
+    if not ipoint in graph : raise IndexError 
+    #
+    
+    x = VE ( point[0] ).value () 
+    v = VE ( point[1] ).value () 
+    
+    graph.SetPoint      ( ipoint , x , v )
+
+
+# =============================================================================
+## iterate over the points in TGraph
+#  @code 
+#  gr = ...
+#  for i,x,v in gr.iteritems(): ...
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _gr_iteritems_ ( graph ) :
+    """
+    Iterate over graph points 
+    >>> graph = ...
+    >>> for i,x,v in graph.iteritems(): ...
+    """
+    for ip in graph :
+        x , y = graph[ ip ] 
+        yield ip , x , y 
+        
+        
+# =============================================================================
 ## get the point in TGraphErrors
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
@@ -313,24 +335,7 @@ def _gre_getitem_ ( graph , ipoint )  :
     x = VE ( x_ , graph.GetErrorX ( ipoint )**2 )
     v = VE ( v_ , graph.GetErrorY ( ipoint )**2 )
     
-    return x,v
-
-# =============================================================================
-## set the point in TGraph
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2011-06-07
-def _gr_setitem_ ( graph , ipoint , point )  :
-    """
-    Get the point from the Graph
-    """
-    #
-    if not ipoint in graph : raise IndexError 
-    #
-    
-    x = VE ( point[0] ).value () 
-    v = VE ( point[1] ).value () 
-    
-    graph.SetPoint      ( ipoint , x , v )
+    return x , v
 
 # =============================================================================
 ## set the point in TGraphErrors
@@ -341,8 +346,9 @@ def _gre_setitem_ ( graph , ipoint , point )  :
     Get the point from the Graph
     """
     #
-    if not ipoint in graph : raise IndexError 
-    #
+    if not ipoint in graph    : raise IndexError
+    if not 2 == len ( point ) :
+        raise AttributeError("Invalid dimension of 'point'")
     
     x = VE ( point[0] ) 
     v = VE ( point[1] ) 
@@ -350,15 +356,105 @@ def _gre_setitem_ ( graph , ipoint , point )  :
     graph.SetPoint      ( ipoint , x . value () , v . value () )
     graph.SetPointError ( ipoint , x . error () , v . error () )
 
+
+# =============================================================================
+## iterate over points in TGraphErrors
+#  @code
+#  gre = ...
+#  for i,x,v in gre.iteritems(): ...
+#  @endcode
+#  @see TGraphErrors
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _gre_iteritems_ ( graph ) :
+    """
+    Iterate over graph points 
+    >>> gre = ...
+    >>> for i,x,v in gre.iteritems(): ...
+    """
+    for ip in graph :        
+        x , y = graph[ip]
+        yield ip , x , y 
+
+# =============================================================================
+## iterate over points in TGraphAsymmErrors
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _grae_getitem_ ( graph , ipoint ) :
+    """
+    >>> grae = ...
+    >>> x,xl,xh,y,yl,yh = grae[ 1 ]
+    """
+    if not ipoint in graph : raise IndexError 
+    #
+    
+    x_ = ROOT.Double(0)
+    v_ = ROOT.Double(0)
+    
+    graph.GetPoint ( ipoint , x_ , v_ )
+    
+    exl = graph.GetErrorXlow  ( ipoint )
+    exh = graph.GetErrorXhigh ( ipoint )
+    eyl = graph.GetErrorYlow  ( ipoint )
+    eyh = graph.GetErrorYhigh ( ipoint )
+    
+    return float( x_ ) , -exl , exh , float( v_ ) , -eyl , eyh 
+
+# =============================================================================
+## iterate over points in TGraphAsymmErrors
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _grae_setitem_ ( graph , ipoint , point ) :
+    """
+    Iterate over graph points 
+    
+    >>> grae = ...
+    >>> for i,x,xl,xh,y,yl,yh in grae.iteritems(): ...
+    
+    """
+    if not ipoint in graph : raise IndexError
+    if 6 != len(point)     : raise AttributeError("Invalid lenght of 'point'")
+    # 
+    x   =       point[0]
+    exl = abs ( point[1] )  ## allow them to be negative, to improve input format 
+    exh =       point[2]
+    y   =       point[3]
+    eyl = abs ( point[4] )  ## allow them to be  negative to improve input format
+    eyh =       point[5] 
+    
+    graph.SetPoint      ( ipoint , x   , y )
+    graph.SetPointError ( ipoint , exl , exh , eyl , eyh )
+
+
+
+# =============================================================================
+## iterate over points in TGraphAsymmErrors
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _grae_iteritems_ ( graph ) :
+    """
+    Iterate over graph points 
+    
+    >>> grae = ...
+    >>> for i,x,xl,xh,y,yl,yh in grae.iteritems(): ...
+    
+    """
+    for ip in graph :
+        vars = graph[ip]        
+        yield (ip,) + vars
+            
 # =============================================================================
 ROOT.TGraph       . __len__       = ROOT.TGraphErrors . GetN 
 ROOT.TGraph       . __contains__  = lambda s,i : i in range(0,len(s))
 ROOT.TGraph       . __iter__      = _gr_iter_ 
-ROOT.TGraph       . __iteritems__ = _gr_iteritems_
+
 ROOT.TGraph       . __getitem__   = _gr_getitem_ 
-ROOT.TGraph       . __setitem__   = _gr_setitem_ 
+ROOT.TGraph       . __setitem__   = _gr_setitem_
+ROOT.TGraph       . iteritems     = _gr_iteritems_
+
 ROOT.TGraphErrors . __getitem__   = _gre_getitem_ 
 ROOT.TGraphErrors . __setitem__   = _gre_setitem_ 
+ROOT.TGraphErrors . iteritems     = _gre_iteritems_ 
 
 ROOT.TGraph       . __call__      = ROOT.TGraph.Eval
 
@@ -370,6 +466,9 @@ ROOT.TH1D.toGraph = hToGraph
 ROOT.TGraphAsymmErrors.__len__       = ROOT.TGraphAsymmErrors . GetN 
 ROOT.TGraphAsymmErrors.__contains__  = lambda s,i : i in range(0,len(s))
 ROOT.TGraphAsymmErrors.__iter__      = _gr_iter_ 
+ROOT.TGraphAsymmErrors. iteritems    = _grae_iteritems_ 
+ROOT.TGraphAsymmErrors.__getitem__   = _grae_getitem_ 
+ROOT.TGraphAsymmErrors.__setitem__   = _grae_setitem_ 
 
 # =============================================================================
 ## set color attributes  

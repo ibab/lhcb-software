@@ -8,6 +8,10 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-08-30 - Vanya Belyaev
+ - resurrect conversion of data into HepDATA format 
+   it works for histograms and graphs 
+
 ! 2015-08-28 - Vanya Belyaev
  - set of minor fixes 
 
