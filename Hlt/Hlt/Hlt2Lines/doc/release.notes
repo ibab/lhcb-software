@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 ! 2015-08-30 - Mike Sokoloff
+  -  modified Stages.py so the LTUNB HHKs lines use "prompt" children input lists
+
+! 2015-08-30 - Mike Sokoloff
    - changed TisTosSpec for LTUNB lines in HHKs
    - added bachelor Gamma lines and corrected lines with  bachelor
    - Eta and Pi0 in CharmSpectroscopy to use TagDecayWithNeutral
