@@ -4,6 +4,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
+! 2015-08-30 - Gerhard Raven
+ - replace endreq with endmsg
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete gaudi headers
  - replace ListItem with TypeNameString

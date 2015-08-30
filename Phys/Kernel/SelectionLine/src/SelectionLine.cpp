@@ -264,7 +264,7 @@ StatusCode Selection::Line::initialize()
   /// lock the context
   Gaudi::Utils::AlgContext lock1 ( this , contextSvc() ) ;
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   m_jos    = svc<IJobOptionsSvc>( "JobOptionsSvc"  );
   m_algMgr = svc<IAlgManager>   ( "ApplicationMgr" );
 
@@ -369,7 +369,7 @@ StatusCode Selection::Line::execute()
 
   if ( m_measureTime ) m_timerTool->start( m_timer );
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   StatusCode result = StatusCode::SUCCESS;
   LHCb::HltDecReports* reports = 
     getOrCreate<LHCb::HltDecReports,LHCb::HltDecReports>(m_outputContainerName);
