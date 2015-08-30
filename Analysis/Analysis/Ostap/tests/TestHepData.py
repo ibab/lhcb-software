@@ -67,7 +67,7 @@ ds = HepData (
     h1 ,
     syst1 = '0.01:detector' ,
     syst2 = lambda i : "%s:ququ" % i ,
-    syst3 = lambda i : "%s:last" % h1[i].error() , 
+    syst3 = lambda i : "%s:last" % h1[i+1].error() , 
     **meta )
 
 gr = h1.toGraph2(0.1)

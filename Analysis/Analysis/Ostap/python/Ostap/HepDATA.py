@@ -270,6 +270,8 @@ def _h1_hepdata_ ( histo      ,
     fmt   = '   %s TO %s ; %s +- %s ; '
     lines = [ '*data: x : y ' ]
     
+    index = 0 
+
     for item in histo.iteritems() :
         
         i = item[0] ## bin-number 
@@ -284,9 +286,11 @@ def _h1_hepdata_ ( histo      ,
         ## up to three systematic uncertainties 
         #
 
-        s1   = get_syst ( syst1 , i ) 
-        s2   = get_syst ( syst2 , i ) 
-        s3   = get_syst ( syst3 , i ) 
+        s1   = get_syst ( syst1 , index ) 
+        s2   = get_syst ( syst2 , index ) 
+        s3   = get_syst ( syst3 , index )
+
+        index += 1 
 
         if s2 and not s1 :
             raise AttributeError ( "HepData: syst2 is specified without syst1" )
@@ -338,6 +342,7 @@ def _tgae_hepdata_ ( graph      ,
     fmt   = '   %s TO %s ; %s +%s -%s; '
     lines = [ '*data: x : y ' ]
 
+    index = 0 
     for item in graph.iteritems() :
         
         i   = item[0] ## bin-number 
@@ -355,10 +360,12 @@ def _tgae_hepdata_ ( graph      ,
         ## up to three systematic uncertainties 
         #
 
-        s1   = get_syst ( syst1 , i ) 
-        s2   = get_syst ( syst2 , i ) 
-        s3   = get_syst ( syst3 , i ) 
+        s1   = get_syst ( syst1 , index ) 
+        s2   = get_syst ( syst2 , index ) 
+        s3   = get_syst ( syst3 , index ) 
 
+        index += 1
+        
         if s2 and not s1 :
             raise AttributeError ( "HepData: syst2 is specified without syst1" )
         if s3 and not s2 :
@@ -403,54 +410,6 @@ if '__main__' == __name__ :
     logger.info ( ' Version : %s' %         __version__   ) 
     logger.info ( ' Date    : %s' %         __date__      )
     logger.info ( ' Symbols : %s' %  list ( __all__     ) )
-    logger.info ( 80*'*' ) 
-
-
-    from Ostap.PyRoUts import VE 
-    
-    h1 = ROOT.TH1D('h1','',5,0,10)
-    h1[1] = VE(100 ,10**2)
-    h1[2] = VE( 50 ,10**2)
-    h1[3] = VE( 10 , 2**2)
-    h1[4] = VE(  1 , 1**2)
-    h1[5] = VE(  0 , 1**2)
-    
-    meta = {
-        'location'  : 'Figure 11 (a), red filled circles' ,
-        'dscomment' : r"""Normalized differential cross-section
-        $d\ln\sigma(pp\rightarrowJ/\psi D^0 X)/dp_T(J/\psi)$
-        for $2<y(J/\psi)<4$, $p_T(J/\psi)<12$ GeV/$c$,
-        $2<y(D^0)<4$, $3<p_T(D^0)<12$ GeV/$c$ region""", 
-        'obskey'    : 'DLN(SIG)/DPT',
-        'qual'      : [ 'D0 PT IN GEV : 3.0 TO 12.0',
-                        'D0 YRAP : 2.0 TO 4.0',
-                        'J/PSI PT IN GEV : 2.0 TO 12.0',
-                        'J/PSI YRAP : 2.0 TO 4.0', 
-                        'RE : P P --> J/PSI D0',
-                        'SQRT(S) IN GEV : 7000.0' ] ,
-        'yheader'   : 'DLN(SIG)/DPT IN 1/500 MEV',
-        'xheader'   : 'PT IN GEV',
-        }
-    ds = HepData (
-        h1 ,
-        syst1 = '0.01:detector' ,
-        syst2 = lambda i : "%s:ququ!" % i ,
-        syst3 = lambda i : "%s:last"  % h1[i].error() , 
-        **meta )
-
-    gr = h1.toGraph2(0.1)
-    ds2 = HepData (
-        gr ,
-        syst1 = '0.01:detector' ,
-        syst2 = lambda i : "%s:ququ!" % i ,
-        syst3 = lambda i : "%s:last"  % h1[i+1].error() , 
-        **meta )    
-        
-    meta = { 'author' : 'AAIJ' , 'detector' : 'LHCb' } 
-    with HepDataFile( **meta ) as hf :
-        hf << ds 
-        hf << ds2 
-
     logger.info ( 80*'*' ) 
 
 # =============================================================================
