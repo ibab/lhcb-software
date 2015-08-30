@@ -7,6 +7,10 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
+! 2015-08-30 - Mike Sokoloff
+   - changed TisTosSpec for LTUNB lines in HHKs
+   - added bachelor Gamma lines and corrected lines with  bachelor
+   - Eta and Pi0 in CharmSpectroscopy to use TagDecayWithNeutral
 
 ! 2015-08-29 - Mike Sokoloff
    -  modified CharmHad/Stages.py and CharmHad/D2HHKsLines.py to 
