@@ -53,7 +53,7 @@ StatusCode HighPtIsoLeptonAndTagPV::initialize ()
 
   m_dist       = tool<IDistanceCalculator>("LoKi::DistanceCalculator");
   if ( !m_dist ) {
-    err() << "Unable to Retrieve LoKi::DistanceCalculator" << endreq;
+    err() << "Unable to Retrieve LoKi::DistanceCalculator" << endmsg;
     return StatusCode::FAILURE;
   }
 

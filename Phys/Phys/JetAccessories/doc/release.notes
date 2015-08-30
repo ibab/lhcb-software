@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2015-08-30 - Gerhard Raven
+ - replace endreq with endmsg
+
 ! 2015-08-27 - Chris Jones
  - Update tool name to avoid warnings like
       WARNING: requesting factory via old name 'GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_'use 'GenericParticle2PVRelator<_p2PVWithIPChi2, OfflineDistanceCalculatorName>' instead

@@ -179,7 +179,7 @@ StatusCode ParticleFlow4Jets::initialize() {
   LHCb::IParticlePropertySvc* ppSvc = 0;
   sc = service("LHCb::ParticlePropertySvc", ppSvc);
   if( sc.isFailure() ) {
-    fatal() << "    Unable to locate Particle Property Service"   << endreq;
+    fatal() << "    Unable to locate Particle Property Service"   << endmsg;
     return sc;
   }
 
@@ -216,14 +216,14 @@ StatusCode ParticleFlow4Jets::initialize() {
 //=============================================================================
 StatusCode ParticleFlow4Jets::execute(
 ) {
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"enter particle flow"<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"enter particle flow"<<endmsg;
   using namespace LHCb::Calo2Track;
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   setFilterPassed(false);
 
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Entering execute"<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Entering execute"<<endmsg;
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Few definitions ~~~~~~~~~~~~~~~~~~~~~~
   typedef std::map<int, std::pair< int , int > > BannedIDMap;
@@ -307,7 +307,7 @@ StatusCode ParticleFlow4Jets::execute(
   }
 
 
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Start charged Loop..."<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Start charged Loop..."<<endmsg;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ The main loop for charged components  ~~~~~~~~~~~~~~~~~~~~~~
   // Loop over charged Protoparticles, reject bad tracks, make best PID hypo particle out of it
   // store the used ECAL cluster and HCAL digits
@@ -325,38 +325,38 @@ StatusCode ParticleFlow4Jets::execute(
 
       // Track selector cuts
       if ( m_trSel!= 0 ){
-        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Track "<<track->type()<<" with pt: "<<track->pt()<<" chi2 per dof "<<track->chi2PerDoF()<<endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Track "<<track->type()<<" with pt: "<<track->pt()<<" chi2 per dof "<<track->chi2PerDoF()<<endmsg;
         if ( !m_trSel->accept(*track) ) continue;
-        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Track accepted"<<endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Track accepted"<<endmsg;
       }
-      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Tag the track"<<endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Tag the track"<<endmsg;
       // Extra track check
       tag = tagTrack(track);
-      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Track tagged as "<<tag<<endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Track tagged as "<<tag<<endmsg;
       LHCb::Particle* theParticle = NULL ;
       // Save the particle
       if (tag == KeepInPF){
         theParticle = MakeParticle( ch_pp , tag , *table );
-        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Tagged as Keep in PF "<<theParticle<<endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Tagged as Keep in PF "<<theParticle<<endmsg;
         PFParticles->insert( theParticle );
       }
       else if (tag ==  KeepInPFBanned ){
         theParticle = MakeParticle( ch_pp , tag , *table );
-        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Tagged as Keep in Banned PF "<<theParticle<<endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Tagged as Keep in Banned PF "<<theParticle<<endmsg;
         BannedPFParticles->insert( theParticle );
       }
       else if (tag == TurnTo0Momentum ){
         theParticle = MakeParticle( ch_pp , tag , *table );
-        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Tagged as Keep in PF but turn to 0 momentum "<<theParticle->proto()->track()->type()<<endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Tagged as Keep in PF but turn to 0 momentum "<<theParticle->proto()->track()->type()<<endmsg;
         PFParticles->insert( theParticle );
       }
       else if (tag == Unknown ){
         Warning("Unknow status for this charged particle");
       }
       else{
-        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"This track is banned but its cluster can be kept or not"<<endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"This track is banned but its cluster can be kept or not"<<endmsg;
       }
-      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"theParticle, after insert "<<theParticle<<endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"theParticle, after insert "<<theParticle<<endmsg;
       if ( tag== RejectDoNotBanCluster ) continue;
 
       // Get the ECAL clusters and ban those with small chi2
@@ -364,12 +364,12 @@ StatusCode ParticleFlow4Jets::execute(
       if (cRange.size()>0){
         double chi2TrClu = cRange.front().weight();
         if ( msgLevel(MSG::VERBOSE) ) verbose()<<"ECAL Track match at "<<chi2TrClu<<" with Cluster ID : "<<cRange.front().to()->seed().all()
-                                               <<" Is tagged already?: "<<BannedECALClusters.count(cRange.front().to()->seed().all())<<endreq;
+                                               <<" Is tagged already?: "<<BannedECALClusters.count(cRange.front().to()->seed().all())<<endmsg;
         // If the cluster have distance to track smaller than m_Chi2ECALCut, ban it
         if ( chi2TrClu < m_Chi2ECALCut  ) {
           // if already banned don't store again
           if ( BannedECALClusters.count(cRange.front().to()->seed().all())<0.5){
-            if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Will tag as: "<<TrackMatch<<" from the track "<<track->key()<<endreq;
+            if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Will tag as: "<<TrackMatch<<" from the track "<<track->key()<<endmsg;
             std::pair< double , int > tmpPair;
             tmpPair.first = TrackMatch ;
             tmpPair.second =  track->key() ;
@@ -377,21 +377,21 @@ StatusCode ParticleFlow4Jets::execute(
             //Cluster2EnergyMap[cRange.front().to()] = cRange.front().to()->e();
           }
           // In any case, save the link to the particle if it exist
-          if ( msgLevel(MSG::VERBOSE) ) verbose()<<"tag1"<<endreq;
+          if ( msgLevel(MSG::VERBOSE) ) verbose()<<"tag1"<<endmsg;
           if (theParticle && m_neutralRecovery){
-            if ( msgLevel(MSG::VERBOSE) ) verbose()<<"tag12"<<endreq;
-            if ( msgLevel(MSG::VERBOSE) ) verbose()<<cRange.front().to()->seed().all()<<" "<<ECALCluster2MomentaMap.count(cRange.front().to()->seed().all())<<endreq;
+            if ( msgLevel(MSG::VERBOSE) ) verbose()<<"tag12"<<endmsg;
+            if ( msgLevel(MSG::VERBOSE) ) verbose()<<cRange.front().to()->seed().all()<<" "<<ECALCluster2MomentaMap.count(cRange.front().to()->seed().all())<<endmsg;
             ECALCluster2MomentaMap[cRange.front().to()->seed().all()].push_back(theParticle->p());
             ECALCluster2IDMap[cRange.front().to()->seed().all()].push_back(theParticle->particleID ().abspid());
             ECALCluster2CaloMap[cRange.front().to()->seed().all()] = cRange.front().to()->e();
             ECALCluster2NSatMap[cRange.front().to()->seed().all()] = numberOfSaturatedCells( cRange.front().to() , m_ecal );
             ECALCluster2CovMap[cRange.front().to()->seed().all()]= cRange.front().to()->position().covariance ()(2,2)/cRange.front().to()->e();
-            if ( msgLevel(MSG::VERBOSE) ) verbose()<<"tag13"<<endreq;
+            if ( msgLevel(MSG::VERBOSE) ) verbose()<<"tag13"<<endmsg;
           }
         }
       }
 
-      if ( msgLevel(MSG::VERBOSE) ) verbose()<<""<<endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose()<<""<<endmsg;
       if(m_useHCAL ){
         // Get the calorimeter clusters associated to the track
         LHCb::Calo2Track::IClusTrTable2D::InverseType::Range cRange2 =  m_tableTrHCAL->inverse()->relations ( track ) ;
@@ -399,30 +399,30 @@ StatusCode ParticleFlow4Jets::execute(
           double chi2TrClu = cRange2.front().weight();
           if ( msgLevel(MSG::VERBOSE) ) verbose()<<"HCAL Track match at "<<chi2TrClu<<" with track p "<< track->p()<<" with Cluster ID : "
                                                  <<cRange2.front().to()->seed().all()<<" Is tagged already?: "
-                                                 <<BannedHCALClusters.count(cRange2.front().to()->seed().all())<<endreq;
+                                                 <<BannedHCALClusters.count(cRange2.front().to()->seed().all())<<endmsg;
           if ( ((chi2TrClu < m_Chi2HCAL0Cut && cRange2.front().to()->e() <= m_Chi2HCAL0CutEValue) ||
                 (chi2TrClu < m_Chi2HCAL1Cut && cRange2.front().to()->e() > m_Chi2HCAL0CutEValue
                  && cRange2.front().to()->e() <=  m_Chi2HCAL1CutEValue) ||
                 (chi2TrClu < m_Chi2HCAL2Cut && cRange2.front().to()->e() > m_Chi2HCAL1CutEValue) )){
             if( BannedHCALClusters.count(cRange2.front().to()->seed().all())<0.5 ) {
-              if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Will HCAL tag as: "<<TrackMatchHCAL<<" form the track "<<track->key()<<endreq;
+              if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Will HCAL tag as: "<<TrackMatchHCAL<<" form the track "<<track->key()<<endmsg;
               std::pair< double , int > tmpPair;
               tmpPair.first = TrackMatchHCAL ;
               tmpPair.second =  track->key() ;
               BannedHCALClusters[cRange2.front().to()->seed().all()] = tmpPair ;
               //Cluster2EnergyMap[cRange.front().to()] = cRange.front().to()->e();
             }
-            if ( msgLevel(MSG::VERBOSE) ) verbose()<<cRange2.front().to()<<" tag1H"<<endreq;
+            if ( msgLevel(MSG::VERBOSE) ) verbose()<<cRange2.front().to()<<" tag1H"<<endmsg;
             // In any case, save the link to the particle if it exist
             if (theParticle && m_neutralRecovery){
-              if ( msgLevel(MSG::VERBOSE) ) verbose()<<"tag12H"<<endreq;
-              if ( msgLevel(MSG::VERBOSE) ) verbose()<<cRange2.front().to()<<" "<<cRange2.front().to()->seed()<<" "<<cRange2.front().to()->seed().all()<<" H "<<HCALCluster2MomentaMap.count(cRange2.front().to()->seed().all())<<endreq;
+              if ( msgLevel(MSG::VERBOSE) ) verbose()<<"tag12H"<<endmsg;
+              if ( msgLevel(MSG::VERBOSE) ) verbose()<<cRange2.front().to()<<" "<<cRange2.front().to()->seed()<<" "<<cRange2.front().to()->seed().all()<<" H "<<HCALCluster2MomentaMap.count(cRange2.front().to()->seed().all())<<endmsg;
               HCALCluster2MomentaMap[cRange2.front().to()->seed().all()].push_back(theParticle->p());
               HCALCluster2IDMap[cRange2.front().to()->seed().all()].push_back(theParticle->particleID ().abspid());
               HCALCluster2CaloMap[cRange2.front().to()->seed().all()] = cRange2.front().to()->e();
               HCALCluster2NSatMap[cRange2.front().to()->seed().all()] = numberOfSaturatedCells( cRange2.front().to() , m_hcal );
               HCALCluster2CovMap[cRange2.front().to()->seed().all()]= cRange2.front().to()->position().covariance ()(2,2)/cRange2.front().to()->e();
-              if ( msgLevel(MSG::VERBOSE) ) verbose()<<"tag13H"<<endreq;
+              if ( msgLevel(MSG::VERBOSE) ) verbose()<<"tag13H"<<endmsg;
             }
           }
         }
@@ -437,7 +437,7 @@ StatusCode ParticleFlow4Jets::execute(
           for (SmartRefVector< LHCb::CaloHypo >::const_iterator i_calo = caloHypos.begin() ; caloHypos.end()!=i_calo ;++i_calo){
             if ( (*i_calo)->hypothesis() != LHCb::CaloHypo::Photon ) {
               if ( (*i_calo)->hypothesis() != LHCb::CaloHypo::EmCharged ) {
-                if ( msgLevel(MSG::VERBOSE) ) verbose()<<"One of the electron calo Hypo IS NOT Photon, NOR EmCharged "<< (*i_calo)->hypothesis()<<endreq;
+                if ( msgLevel(MSG::VERBOSE) ) verbose()<<"One of the electron calo Hypo IS NOT Photon, NOR EmCharged "<< (*i_calo)->hypothesis()<<endmsg;
               }continue;
             }
             const SmartRefVector< LHCb::CaloCluster > & hypoClusters =  (*i_calo)->clusters ();
@@ -454,7 +454,7 @@ StatusCode ParticleFlow4Jets::execute(
   }
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Getting back the hidden neutrals ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Before getting the PID and removing the energy"<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Before getting the PID and removing the energy"<<endmsg;
   if (m_neutralRecovery){
     LHCb::Particles* NeutralPFParticles = new LHCb::Particles();
     put( NeutralPFParticles , m_PFHiddenNeutralOutputLocation );
@@ -469,16 +469,16 @@ StatusCode ParticleFlow4Jets::execute(
         int absid = ECALCluster2IDMap[clusterID][indexPart];
         if ( absid == 13 ){
           //Eventually remove a mip... nothing for the moment
-          if ( msgLevel(MSG::VERBOSE) ) verbose()<<"This is a Muon don't remove anything for the moment"<<endreq;
+          if ( msgLevel(MSG::VERBOSE) ) verbose()<<"This is a Muon don't remove anything for the moment"<<endmsg;
         }
         else if ( absid == 11 ){
           // Electron case. Remove p from the ECAL calorimeter
-          if ( msgLevel(MSG::VERBOSE) ) verbose()<<"This is an electron"<<endreq;
+          if ( msgLevel(MSG::VERBOSE) ) verbose()<<"This is an electron"<<endmsg;
           remainingE-=momentum;
         }
         else {
           // Hadron case. Remove a fraction alpha in ECAL and beta in HCAL
-          if ( msgLevel(MSG::VERBOSE) ) verbose()<<"This is a hadron"<<endreq;
+          if ( msgLevel(MSG::VERBOSE) ) verbose()<<"This is a hadron"<<endmsg;
           remainingE-=m_alphaECAL*momentum;
         }
         indexPart++;
@@ -517,16 +517,16 @@ StatusCode ParticleFlow4Jets::execute(
       tag = tagTrack(track);
       // Track selector cuts
       if ( m_trSel!= 0 ){
-        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Track "<<track->type()<<" with pt: "<<track->pt()<<" chi2 per dof "<<track->chi2PerDoF()<<endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Track "<<track->type()<<" with pt: "<<track->pt()<<" chi2 per dof "<<track->chi2PerDoF()<<endmsg;
         if ( !m_trSel->accept(*track) ) continue;
-        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Track accepted"<<endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Track accepted"<<endmsg;
       }
-      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Tag the track"<<endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Tag the track"<<endmsg;
       // Extra track check
-      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Track tagged as "<<tag<<endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Track tagged as "<<tag<<endmsg;
       LHCb::Particle* theParticle = NULL ;
       theParticle = MakeParticle( ch_pp , tag , *table );
-      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Tagged as Keep in PF but turn to 0 momentum "<<theParticle->proto()->track()->type()<<endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Tagged as Keep in PF but turn to 0 momentum "<<theParticle->proto()->track()->type()<<endmsg;
       PFParticles->insert( theParticle );
 
       if (theParticle == NULL)delete(theParticle);
@@ -537,12 +537,12 @@ StatusCode ParticleFlow4Jets::execute(
 
 
 
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Finiished the loop to create particles"<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Finiished the loop to create particles"<<endmsg;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ The loops for electromagnetic neutral components  ~~~~~~~~~~~~~~~~~~~~~~
 
 
   // Loop over Merged Pi0, if clusters are not tagged yet, use and tag
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Start merged pi0 Loop..."<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Start merged pi0 Loop..."<<endmsg;
   if (m_particleContainers.count("MergedPi0") > 0.5 ){
 
     BOOST_FOREACH(const LHCb::Particle* MPi0, *m_particleContainers["MergedPi0"][0] ){
@@ -582,7 +582,7 @@ StatusCode ParticleFlow4Jets::execute(
   }
 
   // Loop over Resolved Pi0, if clusters are not tagged yet, use and tag
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Start resolved pi0 Loop..."<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Start resolved pi0 Loop..."<<endmsg;
   if (m_particleContainers.count("ResolvedPi0") > 0.5 ){
 
     BOOST_FOREACH(const LHCb::Particle* RPi0, *m_particleContainers["ResolvedPi0"][0] ){
@@ -655,7 +655,7 @@ StatusCode ParticleFlow4Jets::execute(
 
 
   // Loop over Loose Photons, if clusters are not tagged yet, use and tag
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Start Photon Loop..."<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Start Photon Loop..."<<endmsg;
   if (m_particleContainers.count("Photons") > 0.5 ){
 
     BOOST_FOREACH(const LHCb::Particle* photon, *m_particleContainers["Photons"][0]){
@@ -717,11 +717,11 @@ StatusCode ParticleFlow4Jets::execute(
 
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~ The loops for hadronic neutral components  ~~~~~~~~~~~~~~~~~~~~~~
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"m_useHCAL "<<m_useHCAL<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"m_useHCAL "<<m_useHCAL<<endmsg;
 
   if(m_useHCAL){
-    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Start HCAL Loop..."<<endreq;
-    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"m_clusterContainers.count('Hcal') "<<m_clusterContainers.count("Hcal")<<endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Start HCAL Loop..."<<endmsg;
+    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"m_clusterContainers.count('Hcal') "<<m_clusterContainers.count("Hcal")<<endmsg;
     if (m_clusterContainers.count("Hcal") > 0.5 ){
 
       BOOST_FOREACH(const LHCb::CaloCluster* cluster, *m_clusterContainers["Hcal"]){
@@ -732,7 +732,7 @@ StatusCode ParticleFlow4Jets::execute(
         const double cluen = cluster->e();
         if (cluen<m_minHCALE) continue;
 
-        //if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Clust e "<<cluen<<endreq;
+        //if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Clust e "<<cluen<<endmsg;
         //cluster position
         const LHCb::CaloCluster::Position clupos = cluster->position();
 
@@ -778,20 +778,20 @@ StatusCode ParticleFlow4Jets::execute(
 
 
         if ( BannedHCALClusters.count(cluster->seed().all())<0.5 && p.momentum().eta() < 4.2 ){
-          if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Cluster not banned: "<<cluster->seed().all()<<" "<<cluen<<" "<<m_tableTrHCAL->relations ( cluster ).front().weight()<<endreq;
+          if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Cluster not banned: "<<cluster->seed().all()<<" "<<cluen<<" "<<m_tableTrHCAL->relations ( cluster ).front().weight()<<endmsg;
           PFParticles->insert(p.clone());
           PFProtoParticles->insert(NewProto);
         }
         else {
           delete NewProto;
-          if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Cluster banned: "<<cluster->seed().all()<<" "<<cluen<<" "<<m_tableTrHCAL->relations ( cluster ).front().weight()<<endreq;
+          if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Cluster banned: "<<cluster->seed().all()<<" "<<cluen<<" "<<m_tableTrHCAL->relations ( cluster ).front().weight()<<endmsg;
         }
       }
     }
   }
   put( table, m_pf2verticesLocation );
   put( tableBanned, m_pfbanned2verticesLocation );
-  //  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"PFParticles: "<<PFParticles->size()<<" PFParticlesBanned: "<<BannedPFParticles->size()<<" NeoNeutrals: "<<NeutralPFParticles->size()<<endreq;
+  //  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"PFParticles: "<<PFParticles->size()<<" PFParticlesBanned: "<<BannedPFParticles->size()<<" NeoNeutrals: "<<NeutralPFParticles->size()<<endmsg;
 
   setFilterPassed ( true ) ;
 
@@ -837,7 +837,7 @@ LHCb::Particle * ParticleFlow4Jets::MakeParticle( const LHCb::ProtoParticle * pp
     //Remaining info at the first state...
     StatusCode sc = m_p2s->state2Particle( tk->firstState(), p );
 
-    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"In make particle, original p "<<p<<endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"In make particle, original p "<<p<<endmsg;
     LHCb::Particle* PFp = p.clone();
     //Set the momentum to 0...
     Gaudi::LorentzVector newMom(PFp->momentum().Vect().Unit().x()*1e-6,PFp->momentum().Vect().Unit().y()*1e-6,PFp->momentum().Vect().Unit().z()*1e-6,1e-06);
@@ -846,7 +846,7 @@ LHCb::Particle * ParticleFlow4Jets::MakeParticle( const LHCb::ProtoParticle * pp
 
     relate2Vertex(PFp,table);
 
-    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"In make particle: "<<PFp<<endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"In make particle: "<<PFp<<endmsg;
     return PFp;
   }
 
@@ -885,19 +885,19 @@ LHCb::Particle * ParticleFlow4Jets::MakeParticle( const LHCb::ProtoParticle * pp
     iNN--;
 
 
-    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Ordered hypothesis: type "<<(*iNN).first<<" "<<(*iNN).second<<endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Ordered hypothesis: type "<<(*iNN).first<<" "<<(*iNN).second<<endmsg;
     // Reverse loop, check if filter is satisfied
 
     if (m_protoMap[(*iNN).second].first->isSatisfied( pp ))pid_found = true ;
 
     while( !pid_found && iNN != probNNpid.begin() ){
       iNN--;
-      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Ordered hypothesis: type "<<(*iNN).first <<" with proba "<<(*iNN).second <<endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Ordered hypothesis: type "<<(*iNN).first <<" with proba "<<(*iNN).second <<endmsg;
       if (m_protoMap[(*iNN).second].first->isSatisfied( pp ))pid_found = true ;
     }
     if( pid_found ){
       pprop = m_protoMap[(*iNN).second].second ;
-      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"PID applied: "<<(*iNN).second <<endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"PID applied: "<<(*iNN).second <<endmsg;
     }
   }
 
@@ -906,7 +906,7 @@ LHCb::Particle * ParticleFlow4Jets::MakeParticle( const LHCb::ProtoParticle * pp
   // if no PID information, apply pion hypothesis
   if( !pid_found ){
     pprop = m_protoMap["pi+"].second ;
-    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"PID applied: pi+ (by default)" <<endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"PID applied: pi+ (by default)" <<endmsg;
   }
 
   // Start filling particle with orgininating ProtoParticle
@@ -926,13 +926,13 @@ LHCb::Particle * ParticleFlow4Jets::MakeParticle( const LHCb::ProtoParticle * pp
   //Remaining info at the first state...
   StatusCode sc = m_p2s->state2Particle( tk->firstState(), p );
 
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"In make particle, original p "<<p<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"In make particle, original p "<<p<<endmsg;
   LHCb::Particle* PFp = p.clone();
   if ( tk->type() == LHCb::Track::Long ||tk->type() == LHCb::Track::Upstream ){
     relate2Vertex(PFp,table);
   }
 
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"In make particle: "<<PFp<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"In make particle: "<<PFp<<endmsg;
   return PFp;
 }
 
@@ -944,21 +944,21 @@ int ParticleFlow4Jets::tagTrack( const LHCb::Track* track )
   // Ghost removal for long tracks
   if(track->type()== LHCb::Track::Long && m_useTTHits && !m_useNNGhost ){
     int NTT = 0;
-    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"selectTrack: Get track meas..."<<endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"selectTrack: Get track meas..."<<endmsg;
     const std::vector< LHCb::LHCbID > & meas = track->lhcbIDs();
-    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"selectTrack: "<<meas.size()<<" LHCbIDs"<<endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"selectTrack: "<<meas.size()<<" LHCbIDs"<<endmsg;
 
     for (std::vector< LHCb::LHCbID >::const_iterator im = meas.begin() ; meas.end() != im ; ++ im ){
       if((*im).isTT () )NTT+=1;
     }
-    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"selectTrack: "<<NTT<<" of them are from TT"<<endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"selectTrack: "<<NTT<<" of them are from TT"<<endmsg;
     // Should have TT hit but don't
     if ( m_ttExpectation->nExpected(*track)!= 0 && NTT == 0 ) return RejectDoNotBanCluster;
     // Should not have TT hit and too small chi2perdof
     if ( m_ttExpectation->nExpected(*track)== 0 && track->chi2PerDoF () > m_noTTChi2PerDof ) return RejectDoNotBanCluster;
   }
   else if (m_useNNGhost){
-    info()<<"NOT IMPLEMENTED ghost rejection with NN"<<endreq;
+    info()<<"NOT IMPLEMENTED ghost rejection with NN"<<endmsg;
   }
   if ( m_alsoBanClone && m_trackKeyToBan.size()>0 ){
     //Check that this track is not a clone of one of the banned ones
@@ -970,7 +970,7 @@ int ParticleFlow4Jets::tagTrack( const LHCb::Track* track )
 
     }
   }
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"selectTrack: Check inf mom..."<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"selectTrack: Check inf mom..."<<endmsg;
   if(track->type()== LHCb::Track::Long || track->type()== LHCb::Track::Downstream){
     LHCb::State& firstS = track -> firstState () ;
     if ( std::fabs( firstS.qOverP()/sqrt(firstS.errQOverP2()) ) < m_cutInfMomTRVal ){
@@ -986,18 +986,18 @@ int ParticleFlow4Jets::tagTrack( const LHCb::Track* track )
   if(track->type()== LHCb::Track::Velo){
     return TurnTo0Momentum;
   }
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"selectTrack: passed all cuts"<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"selectTrack: passed all cuts"<<endmsg;
   return KeepInPF;
 }
 
 StatusCode ParticleFlow4Jets::loadDatas() {
-  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Enter LoadData"<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Enter LoadData"<<endmsg;
   // Get the reconstructed particles ( short cut not to have the reconstructed / corrected particles)
   for (std::vector< std::string >::const_iterator i_location = m_particleLocations.begin() ;
        m_particleLocations.end() != i_location ; ++i_location ){
-    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Look for location: "<<*i_location<<endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose()<<"Look for location: "<<*i_location<<endmsg;
     if(!exist<LHCb::Particles>(*i_location)){
-      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"No particle at location: "<<*i_location<<endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"No particle at location: "<<*i_location<<endmsg;
       continue;
     }
 

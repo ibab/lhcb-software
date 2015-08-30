@@ -131,23 +131,23 @@ LHCb::PFParticle::PFParticle( const LHCb::ProtoParticle * pp ,
                 MapProbNNPID::iterator iNN = probNNpid.end();
                 iNN--;
 
-                //verbose()<<"Ordered hypothesis: type "<<(*iNN).first<<" "<<(*iNN).second<<endreq;
+                //verbose()<<"Ordered hypothesis: type "<<(*iNN).first<<" "<<(*iNN).second<<endmsg;
                 // Reverse loop, check if filter is satisfied
                 if (protoMap[(*iNN).second].first->isSatisfied( pp ))pid_found = true ;
 
                 while( !pid_found && iNN != probNNpid.begin() ){
                     iNN--;
-                    //verbose()<<"Ordered hypothesis: type "<<(*iNN).first <<" with proba "<<(*iNN).second <<endreq;
+                    //verbose()<<"Ordered hypothesis: type "<<(*iNN).first <<" with proba "<<(*iNN).second <<endmsg;
                     if (protoMap[(*iNN).second].first->isSatisfied( pp ))pid_found = true ;
                 }
                 if( pid_found ){
                     pprop = protoMap[(*iNN).second].second ;
-                    //verbose()<<"PID applied: "<<(*iNN).second <<endreq;
+                    //verbose()<<"PID applied: "<<(*iNN).second <<endmsg;
                 }
                 // if no PID information, apply pion hypothesis
                 if( !pid_found ){
                     pprop = protoMap["pi+"].second ;
-                    //verbose()<<"PID applied: pi+ (by default)" <<endreq;
+                    //verbose()<<"PID applied: pi+ (by default)" <<endmsg;
                 }
             }
         }

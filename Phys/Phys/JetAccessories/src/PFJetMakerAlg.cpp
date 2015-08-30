@@ -271,7 +271,7 @@ StatusCode LoKi::PFJetMaker::initialize ()
 
     m_dist   = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
     if ( !m_dist ) {
-        fatal() << "Distance Calculator Tool could not be found" << endreq;
+        fatal() << "Distance Calculator Tool could not be found" << endmsg;
         return StatusCode::FAILURE;
     }
 
@@ -549,7 +549,7 @@ StatusCode LoKi::PFJetMaker::analyse   ()
                 {
 
                     if (!( m_onlysavewithB && jet->info(LHCb::JetEnergyFractionInfo::B,-100.)<1.e-6)){
-                        verbose()<<PT(jet)<<" "<<jet->info(LHCb::JetEnergyFractionInfo::B,-100.)<<" "<<ID(jet)<<endreq;
+                        verbose()<<PT(jet)<<" "<<jet->info(LHCb::JetEnergyFractionInfo::B,-100.)<<" "<<ID(jet)<<endmsg;
                         sc = save ( "jets" , jet ) ;
                         if ( sc.isFailure() ) { return Error ( "Error from save function in jet maker" , sc ) ; }
                     }
