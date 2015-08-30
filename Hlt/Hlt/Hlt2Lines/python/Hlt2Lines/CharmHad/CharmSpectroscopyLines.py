@@ -56,13 +56,19 @@ class CharmSpectroscopyLines :
                                         'DeltaM_AM_MAX'    : 1440 * MeV,
                                         'DeltaM_MIN'       :  540 * MeV,
                                         'DeltaM_MAX'       : 1410 * MeV,
-                                        'TagVCHI2PDOF_MAX' : 10.0,
+                                       }
+               ,'Spec_DGamma' : {
+                                        'DeltaM_AM_MIN'    :  0  * MeV,
+                                        'DeltaM_AM_MAX'    : 900 * MeV,
+                                        'DeltaM_MIN'       :  0  * MeV,
+                                        'DeltaM_MAX'       : 855 * MeV,
                                        }
                 ,'Dst2D0pi_D02KPiPiPi' : {
                                         'DeltaM_AM_MIN'    : 135 * MeV,
                                         'DeltaM_AM_MAX'    : 175 * MeV,
                                         'DeltaM_MIN'       : 135 * MeV,
                                         'DeltaM_MAX'       : 165 * MeV,
+                                        'TagVCHI2PDOF_MAX' : 10.0,
                                        }
                  ,'ChargedSpectroscopyBachelors' : {
                                         'IPCHI2_MAX'       :  15,
@@ -95,7 +101,7 @@ class CharmSpectroscopyLines :
 ##  as indicated below, there is a different grammar to access
 ##  candidates passing trigger selections specified in  other files
         from Stages import D02HH_D0ToKmPip
-        from Stages import TagDecay
+        from Stages import TagDecay, TagDecayWithNeutral
         from Stages import SharedPromptChild_pi, SharedPromptChild_K, SharedPromptChild_p
         from Stages import CharmHadSharedKsLL, CharmHadSharedKsDD
         from Stages import CharmHadSharedSecondaryLambdaLL, CharmHadSharedSecondaryLambdaDD
@@ -106,6 +112,7 @@ class CharmSpectroscopyLines :
         from Stages import DstToD02HHHH_D02CFKPiPiPi
         from Stages import D02HHHHMass_D02KPiPiPi
         from Stages import SharedNeutralLowPtChild_pi0, SharedNeutralLowPtChild_eta
+        from Stages import SharedNeutralLowPtChild_gamma
         from Stages import PromptBachelorFilter, PromptSpectroscopyFilter
         from Stages import SharedTighterPromptChild_p
         from Stages import SharedSoftTagChild_pi
@@ -199,14 +206,18 @@ class CharmSpectroscopyLines :
                      decay = ["[D*(2007)0 -> D0 Lambda0]cc", "[D*(2007)0 -> D~0 Lambda0]cc"],
                      nickname = 'Spec_DLambda',
                      inputs = [D02HH_D0ToKmPip,CharmHadSharedSecondaryLambdaLL,CharmHadSharedSecondaryLambdaDD])],
-                  'Spec_D0ToKPi_Pi0Turbo' : [TagDecay('Spec_D0Pi0',
+                  'Spec_D0ToKPi_Pi0Turbo' : [TagDecayWithNeutral('Spec_D0Pi0',
                      decay = ["[D*(2007)0 -> D0 pi0]cc"],
                      nickname = 'Spec_DPi',
                      inputs = [D02HH_D0ToKmPip,SharedNeutralLowPtChild_pi0])],
-                  'Spec_D0ToKPi_EtaTurbo' : [TagDecay('Spec_D0Eta',
+                  'Spec_D0ToKPi_EtaTurbo' : [TagDecayWithNeutral('Spec_D0Eta',
                      decay = ["[D*(2007)0 -> D0 eta]cc"],
                      nickname = 'Spec_DEta',
                      inputs = [D02HH_D0ToKmPip,SharedNeutralLowPtChild_eta])],
+                  'Spec_D0ToKPi_GammaTurbo' : [TagDecayWithNeutral('Spec_D0Gamma',
+                     decay = ["[D*(2007)0 -> D0 gamma]cc"],
+                     nickname = 'Spec_DGamma',
+                     inputs = [D02HH_D0ToKmPip,SharedNeutralLowPtChild_gamma])],
 
                   'Spec_D0ToK3Pi_PiTurbo' : [TagDecay('Spec_D0Pi',
                      decay = ["[D*(2010)+ -> D0 pi+]cc", "[D*(2010)- -> D0 pi-]cc"],
@@ -228,14 +239,18 @@ class CharmSpectroscopyLines :
                      decay = ["[D*(2007)0 -> D0 Lambda0]cc", "[D*(2007)0 -> D~0 Lambda0]cc"],
                      nickname = 'Spec_DLambda',
                      inputs = [D02KPiPiPiForSpectroscopy,CharmHadSharedSecondaryLambdaLL,CharmHadSharedSecondaryLambdaDD])],
-                  'Spec_D0ToK3Pi_Pi0Turbo' : [TagDecay('Spec_D0Pi0',
+                  'Spec_D0ToK3Pi_Pi0Turbo' : [TagDecayWithNeutral('Spec_D0Pi0',
                      decay = ["[D*(2007)0 -> D0 pi0]cc"],
                      nickname = 'Spec_DPi',
                      inputs = [D02KPiPiPiForSpectroscopy,SharedNeutralLowPtChild_pi0])],
-                  'Spec_D0ToK3Pi_EtaTurbo' : [TagDecay('Spec_D0Eta',
+                  'Spec_D0ToK3Pi_EtaTurbo' : [TagDecayWithNeutral('Spec_D0Eta',
                      decay = ["[D*(2007)0 -> D0 eta]cc"],
                      nickname = 'Spec_DEta',
                      inputs = [D02KPiPiPiForSpectroscopy,SharedNeutralLowPtChild_eta])],
+                  'Spec_D0ToK3Pi_GammaTurbo' : [TagDecayWithNeutral('Spec_D0Gamma',
+                     decay = ["[D*(2007)0 -> D0 gamma]cc"],
+                     nickname = 'Spec_DGamma',
+                     inputs = [D02KPiPiPiForSpectroscopy,SharedNeutralLowPtChild_gamma])],
 
                   'Spec_DsPiTurbo' : [TagDecay('Spec_D0Pi',
                      decay = ["[Delta(1905)++ -> D_s+ pi+]cc", "[D*(2007)0 -> D_s+ pi-]cc"],
@@ -257,14 +272,18 @@ class CharmSpectroscopyLines :
                      decay = ["[D*(2010)+ -> D_s+ Lambda0]cc", "[D*(2010)- -> D_s- Lambda0]cc"],
                      nickname = 'Spec_DLambda',
                      inputs = [D2HHH_DspToKmKpPip,CharmHadSharedSecondaryLambdaLL,CharmHadSharedSecondaryLambdaDD])],
-                  'Spec_DsPi0Turbo' : [TagDecay('Spec_DsPi0',
+                  'Spec_DsPi0Turbo' : [TagDecayWithNeutral('Spec_DsPi0',
                      decay = ["[D*(2010)+ -> D_s+ pi0]cc"],
                      nickname = 'Spec_DPi',
                      inputs = [D2HHH_DspToKmKpPip,SharedNeutralLowPtChild_pi0])],
-                  'Spec_DsEtaTurbo' : [TagDecay('Spec_DsEta',
+                  'Spec_DsEtaTurbo' : [TagDecayWithNeutral('Spec_DsEta',
                      decay = ["[D*(2010)+ -> D_s+ eta]cc"],
                      nickname = 'Spec_DEta',
                      inputs = [D2HHH_DspToKmKpPip,SharedNeutralLowPtChild_eta])],
+                  'Spec_DsGammaTurbo' : [TagDecayWithNeutral('Spec_DsGamma',
+                     decay = ["[D*(2010)+ -> D_s+ gamma]cc"],
+                     nickname = 'Spec_DGamma',
+                     inputs = [D2HHH_DspToKmKpPip,SharedNeutralLowPtChild_gamma])],
 
 
                   'Spec_DpPiTurbo' : [TagDecay('Spec_DpPi',
@@ -287,14 +306,18 @@ class CharmSpectroscopyLines :
                      decay = ["[D*(2010)+ -> D+ Lambda0]cc", "[D*(2010)- -> D- Lambda0]cc"],
                      nickname = 'Spec_DLambda',
                      inputs = [D2HHH_DpToKmPipPip,CharmHadSharedSecondaryLambdaLL,CharmHadSharedSecondaryLambdaDD])],
-                  'Spec_DpPi0Turbo' : [TagDecay('Spec_DpPi0',
+                  'Spec_DpPi0Turbo' : [TagDecayWithNeutral('Spec_DpPi0',
                      decay = ["[D*(2010)+ -> D+ pi0]cc"],
                      nickname = 'Spec_DPi',
                      inputs = [D2HHH_DpToKmPipPip,SharedNeutralLowPtChild_pi0])],
-                  'Spec_DpEtaTurbo' : [TagDecay('Spec_DpEta',
+                  'Spec_DpEtaTurbo' : [TagDecayWithNeutral('Spec_DpEta',
                      decay = ["[D*(2010)+ -> D+ eta]cc"],
                      nickname = 'Spec_DEta',
                      inputs = [D2HHH_DpToKmPipPip,SharedNeutralLowPtChild_eta])],
+                  'Spec_DpGammaTurbo' : [TagDecayWithNeutral('Spec_DpGamma',
+                     decay = ["[D*(2010)+ -> D+ gamma]cc"],
+                     nickname = 'Spec_DGamma',
+                     inputs = [D2HHH_DpToKmPipPip,SharedNeutralLowPtChild_gamma])],
 
                   'Spec_LcPiTurbo' : [TagDecay('Spec_LcPi',
                      decay = ["[Delta(1905)++ -> Lambda_c+ pi+]cc", "[D*(2007)0 -> Lambda_c+ pi-]cc"],
@@ -317,14 +340,18 @@ class CharmSpectroscopyLines :
                      nickname = 'Spec_DLambda',
                      inputs = [LcpForSpectroscopy,CharmHadSharedSecondaryLambdaLL,
                                CharmHadSharedSecondaryLambdaDD])],
-                  'Spec_LcPi0Turbo' : [TagDecay('Spec_LcPi0',
+                  'Spec_LcPi0Turbo' : [TagDecayWithNeutral('Spec_LcPi0',
                      decay = ["[D*(2010)+ -> Lambda_c+ pi0]cc"],
                      nickname = 'Spec_DPi',
                      inputs = [LcpForSpectroscopy,SharedNeutralLowPtChild_pi0])],
-                  'Spec_LcEtaTurbo' : [TagDecay('Spec_LcEta',
+                  'Spec_LcEtaTurbo' : [TagDecayWithNeutral('Spec_LcEta',
                      decay = ["[D*(2010)+ -> Lambda_c+ eta]cc"],
                      nickname = 'Spec_DEta',
                      inputs = [LcpForSpectroscopy,SharedNeutralLowPtChild_eta])],
+                  'Spec_LcGammaTurbo' : [TagDecayWithNeutral('Spec_LcGamma',
+                     decay = ["[D*(2010)+ -> Lambda_c+ gamma]cc"],
+                     nickname = 'Spec_DGamma',
+                     inputs = [LcpForSpectroscopy,SharedNeutralLowPtChild_gamma])],
 
                   'Spec_Dst_KPi_PiTurbo' : [TagDecay('Spec_D0Pi',
                      decay = ["[Delta(1905)++ -> D*(2010)+ pi+]cc", "[D*(2007)0 -> D*(2010)+ pi-]cc"],
@@ -346,14 +373,18 @@ class CharmSpectroscopyLines :
                      decay = ["[Delta(1905)~+ -> D*(2010)+ Lambda0]cc", "[D*(2010)- -> D*(2010)- Lambda0]cc"],
                      nickname = 'Spec_DLambda',
                      inputs = [dstarKPi, CharmHadSharedSecondaryLambdaLL,CharmHadSharedSecondaryLambdaDD])],
-                  'Spec_Dst_KPi_Pi0Turbo' : [TagDecay('Spec_DstPi0',
+                  'Spec_Dst_KPi_Pi0Turbo' : [TagDecayWithNeutral('Spec_DstPi0',
                      decay = ["[Delta(1905)~+ -> D*(2010)+  pi0]cc"],
                      nickname = 'Spec_DPi',
                      inputs = [dstarKPi,SharedNeutralLowPtChild_pi0])],
-                  'Spec_Dst_KPi_EtaTurbo' : [TagDecay('Spec_DstEta',
+                  'Spec_Dst_KPi_EtaTurbo' : [TagDecayWithNeutral('Spec_DstEta',
                      decay = ["[Delta(1905)~+ -> D*(2010)+ eta]cc"],
                      nickname = 'Spec_DEta',
                      inputs = [dstarKPi,SharedNeutralLowPtChild_eta])],
+                  'Spec_Dst_KPi_GammaTurbo' : [TagDecayWithNeutral('Spec_DstGamma',
+                     decay = ["[Delta(1905)~+ -> D*(2010)+ gamma]cc"],
+                     nickname = 'Spec_DGamma',
+                     inputs = [dstarKPi,SharedNeutralLowPtChild_gamma])],
 
                   'Spec_Dst_K3Pi_PiTurbo' : [TagDecay('Spec_D0Pi',
                      decay = ["[Delta(1905)++ -> D*(2010)+ pi+]cc", "[D*(2007)0 -> D*(2010)+ pi-]cc"],
@@ -375,14 +406,18 @@ class CharmSpectroscopyLines :
                      decay = ["[Delta(1905)~+ -> D*(2010)+ Lambda0]cc", "[D*(2010)- -> D*(2010)- Lambda0]cc"],
                      nickname = 'Spec_DLambda',
                      inputs = [dstarK3Pi, CharmHadSharedSecondaryLambdaLL,CharmHadSharedSecondaryLambdaDD])],
-                  'Spec_Dst_K3Pi_Pi0Turbo' : [TagDecay('Spec_DstPi0',
+                  'Spec_Dst_K3Pi_Pi0Turbo' : [TagDecayWithNeutral('Spec_DstPi0',
                      decay = ["[Delta(1905)~+ -> D*(2010)+ pi0]cc"],
                      nickname = 'Spec_DPi',
                      inputs = [dstarK3Pi,SharedNeutralLowPtChild_pi0])],
-                  'Spec_Dst_K3Pi_EtaTurbo' : [TagDecay('Spec_DstEta',
+                  'Spec_Dst_K3Pi_EtaTurbo' : [TagDecayWithNeutral('Spec_DstEta',
                      decay = ["[Delta(1905)~+ -> D*(2010)+  eta]cc"],
                      nickname = 'Spec_DEta',
                      inputs = [dstarK3Pi,SharedNeutralLowPtChild_eta])],
+                  'Spec_Dst_K3Pi_GammaTurbo' : [TagDecayWithNeutral('Spec_DstGamma',
+                     decay = ["[Delta(1905)~+ -> D*(2010)+  gamma]cc"],
+                     nickname = 'Spec_DGamma',
+                     inputs = [dstarK3Pi,SharedNeutralLowPtChild_gamma])],
 
 
                  } )
