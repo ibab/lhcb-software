@@ -79,14 +79,6 @@ class TurboOnly( object ):
         """
         hlt2 = [
 	        'Hlt2PassThrough', 'Hlt2Lumi','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent', # technical lines
-                'Hlt2CharmHadDpm2KPiPi_XSecTurbo',
-                'Hlt2CharmHadDpm2KKPi_XSecTurbo',
-                'Hlt2CharmHadDs2KKPi_XSecTurbo',
-                'Hlt2CharmHadDs2PiPiPi_XSecTurbo',
-                'Hlt2CharmHadLc2KPPi_XSecTurbo',
-                'Hlt2CharmHadLc2PiPPi_XSecTurbo',
-                'Hlt2CharmHadSigmac_2LcPi_XSecTurbo',
-                'Hlt2CharmHadDst_2D0Pi0_D02KPi_XSecTurbo',
 		'Hlt2DiMuonJPsiTurbo',
                 'Hlt2DiMuonPsi2STurbo',
 		'Hlt2DiMuonBTurbo',
