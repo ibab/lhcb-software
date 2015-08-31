@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-09-01 - Sascha Stahl
+ - HltAfterburner: Added RICH id for downstream protoparticles without any PID.
+
 ! 2015-08-29 - Sascha Stahl
  - Fix typo in last commit.
 
