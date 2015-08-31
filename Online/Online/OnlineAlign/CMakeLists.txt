@@ -1,4 +1,4 @@
-gaudi_subdir(OnlineAlign v0r6)
+gaudi_subdir(OnlineAlign v0r7)
 
 gaudi_depends_on_subdirs(Online/GaudiOnline
                          Online/Gaucho)
