@@ -4,9 +4,14 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-08-31 - Roel Aaij
+ - Added Physics_25ns_September2015
+ - Copied XcForTau settings to September version and reverted August version
+   to version before previous commit.
+
 ! 2015-08-31 - Greg Ciezark
  - Updated XcForTau settings work with restructured lines
- 
+
 ! 2015-08-30 - Sean Benson
  - Remove XSec from TurboOnly (settings file for nightlies).
 
@@ -27,7 +32,7 @@
    - svn copy (copy with history) the reverted version of
      CharmHad/CharmHad_25ns_August2015.py to a new file
      CharmHad/CharmHad_25ns_September2015.py
-   - Updated CharmHad_25ns_September2015.py to include in it the changes 
+   - Updated CharmHad_25ns_September2015.py to include in it the changes
      since HltSettings v7r1 tagging.  Now, CharmHad_25ns_September2015.py is
      identical to what CharmHad_25ns_August2015.py before i started modifying
      things, and CharmHad_25ns_August2015.py is the same as it was at the
@@ -67,11 +72,11 @@
   - Prescale the 3 Hlt2CharmHadXim2LamPim_* lines by a factor of 2, and tighten the inclusive phi line.
 
 ! 2015-08-04 - Simone Stracka
-	- Bc2JpsiX/Bc2JpsiX_25ns_August2015.py: commented out Hlt2Bc2JpsiH line from 
+	- Bc2JpsiX/Bc2JpsiX_25ns_August2015.py: commented out Hlt2Bc2JpsiH line from
     the list of active lines
-    
+
 ! 2015-08-04 - Mike Sokoloff
-  -  added lines from D2HHPi0Lines.py & D2HHHPi0Lines.py 
+  -  added lines from D2HHPi0Lines.py & D2HHHPi0Lines.py
   -    to CharmHad_25ns_August2015
   -  also added Hlt2CharmHadDpToKmPipPip_ForKPiAsym
 
@@ -92,7 +97,7 @@
 ! 2015-07-31  - Mike Sokoloff
    -  added Hlt2CharmHadDspToKmKpPip to CharmHad_25ns_August2015.py;
    -  this channel should go to both Full (as indicated above) and
-   -  to Turbo (already specified in Settings file) 
+   -  to Turbo (already specified in Settings file)
    -  The lines are clones.
 
 ! 2015-07-28  - Mike Sokoloff

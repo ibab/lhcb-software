@@ -26,9 +26,9 @@ def __update_conf__( current, extra ) :
                 cur[k] = v
             print 'result: %s' % cur[k]
 
-class Physics_25ns_August2015( object ):
+class Physics_25ns_September2015( object ):
     """
-    Settings 25ns physics in August 2015
+    Settings 25ns physics in September 2015
 
     WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE HLT GROUP
 
@@ -52,15 +52,15 @@ class Physics_25ns_August2015( object ):
         return '0x0050'
 
     def HltType(self) :
-        self.verifyType( Physics_25ns_August2015 )
-        return          'Physics_25ns_August2015'
+        self.verifyType( Physics_25ns_September2015 )
+        return          'Physics_25ns_September2015'
 
     def SubDirs(self):
-        return ('CcDiHadron', 'DPS', 'EW', 'PID', 'XcMuXForTau', 'Topo',
-                'Bc2JpsiX', 'DiMuon', 'DisplVertices', 'LowMult',  'SingleMuon',
-                'TrackEff', 'TrackEffDiMuon', "Commissioning", 'RareStrange',
-                'Radiative', 'TriMuon', 'B2HH', 'B2Kpi0','Phi',
-                'CharmHad', 'RareCharm')
+        return {'August' : ['CcDiHadron', 'DPS', 'EW', 'PID', 'Topo',
+                            'Bc2JpsiX', 'DiMuon', 'DisplVertices', 'LowMult',  'SingleMuon',
+                            'TrackEff', 'TrackEffDiMuon', "Commissioning", 'RareStrange',
+                            'Radiative', 'TriMuon', 'B2HH', 'B2Kpi0','Phi'],
+                'September' : ['CharmHad', 'XcMuXForTau']}
 
     def Thresholds(self) :
         """
@@ -189,7 +189,7 @@ class Physics_25ns_August2015( object ):
                                                , 'MultiMuonNoL0_PT'         :  500
                                                , 'MultiMuonNoL0_TrChi2'     :    3.
                                                , 'MultiMuonNoL0_GT'         :    2.5
-                                               ,'L0Channels'               : {'SingleMuonHighPT' : ( 'Muon', ),
+                                               ,'L0Channels'               : {'SingleMuonHighPT' : ( 'Muon', 'MuonEW'),
                                                                               'SingleMuonNoIP'   : ( 'Muon', ),
                                                                               'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
                                                                               'DiMuonHighMass'   : ( 'Muon', 'DiMuon' ),
@@ -298,9 +298,12 @@ class Physics_25ns_August2015( object ):
 
                        }
 
-        for subdir in self.SubDirs():
-            conf = __get_conf__(subdir, "_25ns_August2015")
-            __update_conf__(thresholds, conf.Thresholds())
+        # HLT2 thresholds from individual files
+        sds = self.SubDirs()
+        for month, subdirs in self.SubDirs().iteritems():
+            for subdir in subdirs:
+                conf = __get_conf__(subdir, "_25ns_%s2015" % month)
+                __update_conf__(thresholds, conf.Thresholds())
 
         return thresholds
 
@@ -310,9 +313,11 @@ class Physics_25ns_August2015( object ):
         """
 
         hlt2 = []
-        for subdir in self.SubDirs():
-            conf = __get_conf__(subdir, "_25ns_August2015")
-            hlt2.extend(conf.ActiveHlt2Lines())
+        sds = self.SubDirs()
+        for month, subdirs in self.SubDirs().iteritems():
+            for subdir in subdirs:
+                conf = __get_conf__(subdir, "_25ns_%s2015" % month)
+                hlt2.extend(conf.ActiveHlt2Lines())
 
         return hlt2
 
@@ -320,29 +325,29 @@ class Physics_25ns_August2015( object ):
         """
         Returns a list of active lines
         """
-        lines =  [ 'Hlt1TrackMuon',
-                   'Hlt1TrackMuonNoSPD',
-                   'Hlt1SingleMuonHighPT'
-                   , 'Hlt1SingleMuonNoIP', 'Hlt1DiMuonNoL0'
-                   , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
-                   , 'Hlt1MultiMuonNoL0'
-                   , 'Hlt1B2GammaGamma'
-                   , 'Hlt1B2PhiPhi_LTUNB'
-                   , 'Hlt1SingleElectronNoIP'
-                   , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA'
-                   , 'Hlt1CalibTrackingKPi' , 'Hlt1CalibTrackingKK' , 'Hlt1CalibTrackingPiPi'
-                   , 'Hlt1CalibHighPTLowMultTrks', 'Hlt1CalibTrackingKPiDetached'
-                   , 'Hlt1CalibMuonAlignJpsi'
-                   , 'Hlt1B2HH_LTUNB_KPi' , 'Hlt1B2HH_LTUNB_KK' , 'Hlt1B2HH_LTUNB_PiPi'
-                   , 'Hlt1IncPhi'
-                   , 'Hlt1B2PhiGamma_LTUNB'
-                   , 'Hlt1CalibRICHMirrorRICH1'
-                   , 'Hlt1CalibRICHMirrorRICH2'
-                   , 'Hlt1DiProton'
-                   , 'Hlt1DiProtonLowMult'
-                   , 'Hlt1CEP'
-                   , 'Hlt1CEPVeloCut'
-                   , 'Hlt1NoBiasNonBeamBeam']
+        lines =  [ 'Hlt1TrackMuon'
+                 , 'Hlt1TrackMuonNoSPD'
+                 , 'Hlt1SingleMuonHighPT'
+                 , 'Hlt1SingleMuonNoIP', 'Hlt1DiMuonNoL0'
+                 , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
+                 , 'Hlt1MultiMuonNoL0'
+                 , 'Hlt1B2GammaGamma'
+                 , 'Hlt1B2PhiPhi_LTUNB'
+                 , 'Hlt1SingleElectronNoIP'
+                 , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA'
+                 , 'Hlt1CalibTrackingKPi' , 'Hlt1CalibTrackingKK' , 'Hlt1CalibTrackingPiPi'
+                 , 'Hlt1CalibHighPTLowMultTrks', 'Hlt1CalibTrackingKPiDetached'
+                 , 'Hlt1CalibMuonAlignJpsi'
+                 , 'Hlt1B2HH_LTUNB_KPi' , 'Hlt1B2HH_LTUNB_KK' , 'Hlt1B2HH_LTUNB_PiPi'
+                 , 'Hlt1IncPhi'
+                 , 'Hlt1B2PhiGamma_LTUNB'
+                 , 'Hlt1CalibRICHMirrorRICH1'
+                 , 'Hlt1CalibRICHMirrorRICH2'
+                 , 'Hlt1DiProton'
+                 , 'Hlt1DiProtonLowMult'
+                 , 'Hlt1CEP'
+                 , 'Hlt1CEPVeloCut'
+                 , 'Hlt1NoBiasNonBeamBeam']
 
         from Hlt1TechnicalLines import Hlt1TechnicalLines
         lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )
