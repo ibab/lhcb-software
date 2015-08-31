@@ -313,8 +313,8 @@ class FilterBDTGammaGamma(Hlt2ParticleFilter):
         elif type is "Double":
             varmap  = self.prepGammaGammaMapConvDouble(varmap)
             nickname = "B2GammaGamma%s" % type
-        params  = '/afs/cern.ch/user/s/sbenson/cmtuser/MooreDev_HEAD/ParamFiles/data/Hlt2B2GammaGamma_%s_v2.bbdt' % type
-        #params  = '$PARAMFILESROOT/data/Hlt2B2GammaGamma_%s_v2.bbdt' % type
+        #params  = '/afs/cern.ch/user/s/sbenson/cmtuser/MooreDev_HEAD/ParamFiles/data/Hlt2B2GammaGamma_%s_v2.bbdt' % type
+        params  = '$PARAMFILESROOT/data/Hlt2B2GammaGamma_%s_v2.bbdt' % type
         bdttool = self.__classifier(params, varmap, "TrgBBDT", type=type)
 
         pc = ("(VALUE('%s/%s') > %s)" % (bdttool.Type.getType(), bdttool.Name, cut))
