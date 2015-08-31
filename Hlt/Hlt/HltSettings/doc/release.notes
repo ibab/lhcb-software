@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-08-31 - Sean Benson
+ - Added Radiative_25ns_September2015.
+ - Updated to new Bs->gamma gamma BDT settings.
+
 ! 2015-08-31 - Roel Aaij
  - Added Physics_25ns_September2015
  - Copied XcForTau settings to September version and reverted August version
