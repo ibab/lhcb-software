@@ -6,6 +6,27 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v5r24>2015-08-31 OnlineSys v5r24</A></H1>
+<PRE>
+  Use Gaudi v26r3
+  Updated/new packages:	
+     Camera              v1r34    Online
+     Controller          v0r22    Online
+     DefHLTUtils         v1r14    Online
+     EventBuilder        v0r14    Online
+     FarmConfig          v0r20    Online
+     Gaucho              v7r43    Online
+     GauchoAppl          v1r27    Online
+     GaudiOnline         v2r85    Online
+     GaudiOnlineTests    v1r6     Online
+     Hlt2Monitoring      v1r2     Online
+     MBMDump             v1r17    Online
+     OnlineAlign         v0r7     Online
+     OnlineBase          v1r37    Online
+     PyDIM               v2r16    Online
+     ROLogger            v0r32    Online
+</PRE>
+
 <H1><A NAME=v5r23>2015-07-28 OnlineSys v5r23</A></H1>
 <PRE>
   Use Gaudi v26r3
