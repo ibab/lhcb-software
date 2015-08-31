@@ -1,6 +1,9 @@
 #!/bin/sh
 #killall test.exe
-killall GaudiOnlineExe
+if test ! "${1}" = "NO_KILL";then
+    echo "Killing leftovers from previous tests.....";
+    killall GaudiOnlineExe;
+fi;
 #killall gentest.exe
 #rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
 #
@@ -13,8 +16,8 @@ fi;
 #
 export OPTS=$GAUDIONLINEROOT/options
 
-export msg_svc=LHCb::FmcMessageSvc
-export msg_svc=MessageSvc
+export msg_svc=LHCb::FmcMessageSvc;
+export msg_svc=MessageSvc;
 
 export test_exe=`which test.exe`;
 export gentest_exe=`which gentest.exe`;
@@ -36,6 +39,7 @@ export HOST=`hostname -s`;
 export NODENAME=`python -c "print '$HOST'.split('.')[0]"`;
 export NODENAME=${HOST%%.*};
 export GDB="`which gdb`"
+export GDB="/home/frankm/bin/debug2"
 if test -f /afs/cern.ch/sw/lcg/external/gdb/7.6/x86_64-slc6-gcc48-opt/bin/gdb;
 then 
     export GDB=/afs/cern.ch/sw/lcg/external/gdb/7.6/x86_64-slc6-gcc48-opt/bin/gdb;

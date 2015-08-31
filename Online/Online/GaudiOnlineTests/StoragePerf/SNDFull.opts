@@ -1,0 +1,6 @@
+OnlineEnv.Opt0 = "$RECEIVER";
+//OnlineEnv.Opt0 = "";
+#include "$PREAMBLE_OPTS"
+#include "$ONLINETASKS/options/SND.opts"
+MessageSvc.OutputLevel = 1;
+//Sender.DataSinks = {"$RECEIVER1","$RECEIVER2"};

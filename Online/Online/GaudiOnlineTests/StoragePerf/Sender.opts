@@ -1,0 +1,24 @@
+#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.SvcOptMapping        += {"LHCb::MEPManager/MEPManager"};
+ApplicationMgr.SvcOptMapping        += {"LHCb::OnlineEvtSelector/EventSelector"};
+ApplicationMgr.ExtSvc               += {"IncidentSvc"};
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+ApplicationMgr.TopAlg               += {"StoreExplorerAlg", "LHCb::SocketDataSender/Sender" };
+Runable.MEPManager                   = "MEPManager";
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 0.001;
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
+MEPManager.Buffers                   = {"Send"};
+MEPManager.PartitionBuffers          = true;
+Sender.DataSink                      = "$RECEIVER";
+Sender.Compress                      = 0;
+Sender.InputDataType                 = 1;
+Sender.DataType                      = 3;
+EventSelector.Input                  = "Send";
+EventSelector.Decode                 = false; // MDFs not MEPs!
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+EventSelector.REQ1                   = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";

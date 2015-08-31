@@ -1,0 +1,6 @@
+// ---------------- General partition parameters:    
+OnlineEnv.PartitionID     = 1;
+OnlineEnv.PartitionIDName = "0001";
+OnlineEnv.PartitionName   = "LHCb";
+OnlineEnv.OutputLevel     = 4;
+MessageSvc.OutputLevel    = @OnlineEnv.OutputLevel;

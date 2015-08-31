@@ -1,0 +1,3 @@
+#include "$PREAMBLE_OPTS"
+#include "$ONLINETASKS/options/MBM.opts"
+MEPManager.InitFlags = "-i=Events -s=90002 -e=4096 -u=64 -f -t=6 -c";
