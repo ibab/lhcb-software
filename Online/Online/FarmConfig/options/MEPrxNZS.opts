@@ -1,0 +1,8 @@
+#pragma print off
+#include "$FARMCONFIGROOT/options/MEPrx.opts"
+MEPManager.Buffers                   = @OnlineEnv.MEPrxNZS_Buffers;
+Runable.nameLiveBuf                  = @OnlineEnv.MEPrxNZS_Output;
+
+Runable.MEPBuffers                   = 2;           // concurrently built events
+Runable.InitialMEPReqs               = 3;           // how many MEPs to send initially 
+Runable.MEPBufSize                   = 8194304;     // how much memory to allocate for an event 1 MB (large!!)
