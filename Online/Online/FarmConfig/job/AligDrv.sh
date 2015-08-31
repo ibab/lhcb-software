@@ -50,11 +50,13 @@ elif [ "$act" = "Calibration|Calo" ]; then
   export PYTHONPATH=/group/online/bw_division/pydim/lib/python2.7/site-packages:$PYTHONPATH
   export PYTHONPATH=/group/online/dataflow/options/LHCbA/HLT:$PYTHONPATH
   cd ${FARMCONFIGROOT}/job
-  python -c "from PyKaliOnline import Iterator; Iterator.run('/group/online/CalibWork')"
+  export UTGID
+  exec -a ${UTGID} python -c "from PyKaliOnline import Iterator; Iterator.run('/group/online/CalibWork')"
 elif [ "$act" = "BWDivision" ]; then
   . /group/online/bw_division/cmtuser/BWDivisionDev/setup.x86_64-slc6-gcc48-opt.vars
   . /group/online/bw_division/root/bin/thisroot.sh
   export PYTHONPATH=/group/online/bw_division/pydim/lib/python2.7/site-packages:$PYTHONPATH
   export OUTPUTDIR=/group/online/bw_division/output
-  python -c "from PyGeneticOnline import Iterator; Iterator.run()"
+  export UTGID
+  exec -a ${UTGID} python -c "from PyGeneticOnline import Iterator; Iterator.run()"
 fi
