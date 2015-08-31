@@ -271,7 +271,7 @@ StatusCode NetworkDataReceiver::copyEventData(void* to, void* from, size_t len) 
 StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
   try {
     int ret = m_recvEvents ? m_prod->getSpace(entry.size) : MBM_REQ_CANCEL;
-    if ( ret == MBM_NORMAL ) {
+    if ( MBM_NORMAL == ret ) {
       MBM::EventDesc& e = m_prod->event();
       RawBank*   b = (RawBank*)e.data;
       MDFHeader* h = (MDFHeader*)b->data();

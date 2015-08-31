@@ -103,9 +103,13 @@ namespace LHCb  {
     };
     /// Definition of recipient queue
     typedef std::list<Recipient> Recipients;
+    /// Defintiion of data sinks queue
+    typedef std::vector<std::string> DataSinks;
 
     /// Property: [Producer] Data sink name
     std::string         m_target;
+    /// Property: [Producer] Multiple data sinks
+    DataSinks           m_sinks;
     /// Property: [Producer] Require event request from source before sending
     bool                m_useEventRequests;
     /// Property: [Producer] Allow suspending Event selector

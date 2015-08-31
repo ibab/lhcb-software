@@ -57,7 +57,7 @@ again:
 
 namespace {
   static void help()  {
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"mep_prod_a -opt [-opt]\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"mdf_producer -opt [-opt]\n");
     ::lib_rtl_output(LIB_RTL_ALWAYS,"    -n(ame)=<name>         buffer member name\n");
     ::lib_rtl_output(LIB_RTL_ALWAYS,"    -a(synchronous)        Asynchonous mode (default is synchronous)\n");
     ::lib_rtl_output(LIB_RTL_ALWAYS,"    -b=<name>      Buffer identifier \n");
@@ -93,7 +93,7 @@ namespace {
         LHCb::MDFHeader* h = b->begin<LHCb::MDFHeader>();
         LHCb::MDFHeader::SubHeader s = h->subHeader();
         e.type    = EVENT_TYPE_EVENT;
-        ::memcpy((void*)s.H1->triggerMask(), e.mask, sizeof(e.mask));
+        ::memcpy(e.mask, (void*)s.H1->triggerMask(), sizeof(e.mask));
         e.len     = evtLen;
         declareEvent();
         status = sendSpace();

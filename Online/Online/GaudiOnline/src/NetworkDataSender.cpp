@@ -25,6 +25,7 @@ NetworkDataSender::NetworkDataSender(const string& nam, ISvcLocator* pSvc)
      m_sendEvents(false), m_incidentSvc(0)
 {
   declareProperty("DataSink",         m_target);
+  declareProperty("DataSinks",        m_sinks);
   declareProperty("UseEventRequests", m_useEventRequests=false);
   declareProperty("AllowSuspend",     m_allowSuspend=true);
   declareProperty("SendErrorDelay",   m_sendErrorDelay=1000);
@@ -78,7 +79,12 @@ StatusCode NetworkDataSender::initialize()   {
       return sc;
     }
     if ( !m_useEventRequests )  {
-      handleEventRequest(m_recipients.size(),m_target,"EVENT_REQUEST");
+      if ( !m_target.empty() )  {
+	handleEventRequest(m_recipients.size(),m_target,"EVENT_REQUEST");
+      }
+      for(auto i=m_sinks.begin(); i!=m_sinks.end(); ++i)  {
+	handleEventRequest(m_recipients.size(),*i,"EVENT_REQUEST");
+      }
     }
     return sc;
   }
