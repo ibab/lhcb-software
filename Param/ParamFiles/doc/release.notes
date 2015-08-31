@@ -4,6 +4,9 @@
 ! Purpose     : Distribution of parametrization data files
 !-----------------------------------------------------------------------------
 
+! 2015-08-31 - Sean Benson
+ - Updated Bs->gamma gamma BDTs.
+
 !========================= ParamFiles v8r16 2015-07-27 =========================
 
 ! 2015-07-17 - Albert Puig
