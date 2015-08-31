@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Controller
 ################################################################################
-gaudi_subdir(Controller v0r21)
+gaudi_subdir(Controller v0r22)
 
 gaudi_depends_on_subdirs(Online/OnlineKernel
                          Online/DIM
