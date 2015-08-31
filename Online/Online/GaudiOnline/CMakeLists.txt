@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaudiOnline
 ################################################################################
-gaudi_subdir(GaudiOnline v2r84)
+gaudi_subdir(GaudiOnline v2r85)
 
 gaudi_depends_on_subdirs(GaudiKernel
                          DAQ/MDF
