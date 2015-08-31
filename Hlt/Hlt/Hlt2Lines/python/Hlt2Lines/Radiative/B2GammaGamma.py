@@ -28,6 +28,7 @@ class B2GammaGammaLines(RadiativeLineBuilder):
         bs2gammagammaDouble = B2GammaGammaCombiner('B2GammaGammaDouble',
                                                    'B_s0 -> gamma gamma',
                                                    [ConvPhotonAll()])
+        BDTFilter_Double = FilterBDTGammaGamma('Double', [bs2gammagammaDouble], cuts['B2GammaGammaDouble']["BDT_MIN"])
 
         # Build Bs -> gamma gamma (single conversion)
         bs2gammagammaLL = B2GammaGammaCombiner('B2GammaGammaLL',
@@ -48,7 +49,7 @@ class B2GammaGammaLines(RadiativeLineBuilder):
 
         return {'RadiativeB2GammaGammaLL'     : [TrackGEC(), PV3D('Hlt2'), BDTFilter_LL],
                 'RadiativeB2GammaGammaDD'     : [TrackGEC(), PV3D('Hlt2'), BDTFilter_DD],
-                'RadiativeB2GammaGammaDouble' : [TrackGEC(), PV3D('Hlt2'), bs2gammagammaDouble],
+                'RadiativeB2GammaGammaDouble' : [TrackGEC(), PV3D('Hlt2'), BDTFilter_Double],
                 'RadiativeB2GammaGamma'       : [TrackGEC(), PV3D('Hlt2'), BDTFilter_None]}
 
     @staticmethod
@@ -67,7 +68,7 @@ class B2GammaGammaLines(RadiativeLineBuilder):
                 'SUM_PT'    : 6000.0*MeV,
                 'B_PT'      : 3000.0*MeV,
                 'B_P'       : 5000.0*MeV,
-                'BDT_MIN'   : -0.0
+                'BDT_MIN'   : 1.0
                 }
         cuts['B2GammaGammaLL'] = {
                 'BsMin'     : 4000.0*MeV,
@@ -75,7 +76,7 @@ class B2GammaGammaLines(RadiativeLineBuilder):
                 'SUM_PT'    : 6000.0*MeV,
                 'B_PT'      : 2500.0*MeV,
                 'B_P'       : 4000.0*MeV,
-                'BDT_MIN'   : -0.0
+                'BDT_MIN'   : 1.0
                 }
         cuts['B2GammaGammaDD'] = {
                 'BsMin'     : 4200.0*MeV,
@@ -83,7 +84,7 @@ class B2GammaGammaLines(RadiativeLineBuilder):
                 'SUM_PT'    : 4000.0*MeV,
                 'B_PT'      : 2500.0*MeV,
                 'B_P'       : 4000.0*MeV,
-                'BDT_MIN'   : -0.0
+                'BDT_MIN'   : 1.0
                 }
         cuts['B2GammaGammaDouble'] = {
                 'BsMin'     : 4000.0*MeV,
@@ -92,6 +93,7 @@ class B2GammaGammaLines(RadiativeLineBuilder):
                 'B_PT'      : 1000.0*MeV,
                 'B_P'       : 5000.0*MeV,
                 'B_VTX'     : 25.0,
+                'BDT_MIN'   : 1.0,
                 }
         return cuts
 

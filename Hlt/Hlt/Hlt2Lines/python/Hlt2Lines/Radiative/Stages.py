@@ -304,11 +304,17 @@ class FilterBDTGammaGamma(Hlt2ParticleFilter):
         if type is "None":
             varmap  = self.prepGammaGammaMapNone(varmap)
             nickname="B2GammaGamma"
-        elif type in ["LL", "DD"]:
-            varmap  = self.prepGammaGammaMapConv(varmap)
+        elif type is "LL":
+            varmap  = self.prepGammaGammaMapConvLL(varmap)
             nickname = "B2GammaGamma%s" % type
-        #params  = '/afs/cern.ch/user/s/sbenson/cmtuser/MooreDev_v23r5p2/ParamFiles/data/Hlt2B2GammaGamma_%s_v1.bbdt' % type
-        params  = '$PARAMFILESROOT/data/Hlt2B2GammaGamma_%s_v1.bbdt' % type
+        elif type is "DD":
+            varmap  = self.prepGammaGammaMapConvDD(varmap)
+            nickname = "B2GammaGamma%s" % type
+        elif type is "Double":
+            varmap  = self.prepGammaGammaMapConvDouble(varmap)
+            nickname = "B2GammaGamma%s" % type
+        params  = '/afs/cern.ch/user/s/sbenson/cmtuser/MooreDev_HEAD/ParamFiles/data/Hlt2B2GammaGamma_%s_v2.bbdt' % type
+        #params  = '$PARAMFILESROOT/data/Hlt2B2GammaGamma_%s_v2.bbdt' % type
         bdttool = self.__classifier(params, varmap, "TrgBBDT", type=type)
 
         pc = ("(VALUE('%s/%s') > %s)" % (bdttool.Type.getType(), bdttool.Name, cut))
@@ -347,16 +353,56 @@ class FilterBDTGammaGamma(Hlt2ParticleFilter):
         pt = "log( PT/MeV )"
         ptsum = "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV )"
         ptasym = "(MAXTREE((ABSID == 22),PT/MeV)-MINTREE((ABSID == 22),PT/MeV)) / (MAXTREE((ABSID == 22), PT/MeV)+MINTREE((ABSID == 22), PT/MeV))"
-        pxasym = "(MAXTREE((ABSID == 22),PX/MeV)-MINTREE((ABSID == 22),PX/MeV)) / (MAXTREE((ABSID == 22), PX/MeV)+MINTREE((ABSID == 22), PX/MeV))"
-        pyasym = "(MAXTREE((ABSID == 22),PY/MeV)-MINTREE((ABSID == 22),PY/MeV)) / (MAXTREE((ABSID == 22), PY/MeV)+MINTREE((ABSID == 22), PY/MeV))"
+        isPhoton = "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.IsPhoton,1000))"
+        E1 = "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.CaloShapeE1,1000))"
+        INE = "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.IsNotE,1000))"
         varmap["BPT"] = pt
         varmap["SUMPT"] = ptsum
         varmap["PTASYM"] = ptasym
-        varmap["PXASYM"] = pxasym
-        varmap["PYASYM"] = pyasym
+        varmap["ISPHOTON"] = isPhoton
+        varmap["E1"] = E1
+        varmap["INE"] = INE
         return varmap
 
-    def prepGammaGammaMapConv(self, varmap):
+    def prepGammaGammaMapConvLL(self, varmap):
+        """
+        Format the variable map for the BBDecTreeTool.
+        """
+        from copy import deepcopy
+        varmap = deepcopy(varmap)
+        ptsum = "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV)"
+        ptasym = "(MAXTREE((ABSID == 22),PT/MeV)-MINTREE((ABSID == 22),PT/MeV)) / (MAXTREE((ABSID == 22), PT/MeV)+MINTREE((ABSID == 22), PT/MeV))"
+        minDLLe = "MINTREE((ABSID == 11),PPINFO(LHCb.ProtoParticle.CombDLLe,1000))"
+        isPhoton = "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.IsPhoton,1000))"
+        E1 = "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.CaloShapeE1,1000))"
+        mass = "MAXTREE((ABSID==22) & (NDAUGHTERS>0), M)"
+        varmap["SUMPT"] = ptsum
+        varmap["PTASYM"] = ptasym
+        varmap["CONVM"] = mass
+        varmap["ISPHOTON"] = isPhoton
+        varmap["E1"] = E1
+        varmap["DLLE"] = minDLLe
+        return varmap
+
+    def prepGammaGammaMapConvDD(self, varmap):
+        """
+        Format the variable map for the BBDecTreeTool.
+        """
+        from copy import deepcopy
+        varmap = deepcopy(varmap)
+        ptsum = "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV)"
+        ptasym = "(MAXTREE((ABSID == 22),PT/MeV)-MINTREE((ABSID == 22),PT/MeV)) / (MAXTREE((ABSID == 22), PT/MeV)+MINTREE((ABSID == 22), PT/MeV))"
+        minDLLe = "MINTREE((ABSID == 11),PPINFO(LHCb.ProtoParticle.CombDLLe,1000))"
+        isPhoton = "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.IsPhoton,1000))"
+        E1 = "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.CaloShapeE1,1000))"
+        varmap["SUMPT"] = ptsum
+        varmap["PTASYM"] = ptasym
+        varmap["DLLE"] = minDLLe
+        varmap["ISPHOTON"] = isPhoton
+        varmap["E1"] = E1
+        return varmap
+    
+    def prepGammaGammaMapConvDouble(self, varmap):
         """
         Format the variable map for the BBDecTreeTool.
         """
@@ -364,16 +410,15 @@ class FilterBDTGammaGamma(Hlt2ParticleFilter):
         varmap = deepcopy(varmap)
         pt = "log( PT/MeV )"
         ptsum = "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV)"
-        minelpt = "log( MINTREE((ABSID == 11), PT)/MeV )"
         ptasym = "(MAXTREE((ABSID == 22),PT/MeV)-MINTREE((ABSID == 22),PT/MeV)) / (MAXTREE((ABSID == 22), PT/MeV)+MINTREE((ABSID == 22), PT/MeV))"
-        vtx = "exp( 1.0 - sqrt(sqrt(MAXTREE(((ABSID==22) & (NDAUGHTERS>0)),VFASPF(VCHI2)))) )"
+        minDLLe = "MINTREE((ABSID == 11),PPINFO(LHCb.ProtoParticle.CombDLLe,1000))"
         mass = "MAXTREE((ABSID==22) & (NDAUGHTERS>0), M)"
+        vtx = "MAXTREE((ABSID==22) & (NDAUGHTERS>0), VFASPF(VCHI2))"
         varmap["BPT"] = pt
         varmap["SUMPT"] = ptsum
         varmap["PTASYM"] = ptasym
         varmap["CONVM"] = mass
         varmap["CONVVTX"] = vtx
-        varmap["MINELPT"] = minelpt
+        varmap["DLLE"] = minDLLe
         return varmap
-
 # EOF

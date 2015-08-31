@@ -7,6 +7,10 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
+
+! 2015-08-31 - Sean Benson
+ - Bs->gamma gamma updates.
+
 ! 2015-08-30 - Mike Sokoloff
   -  modified Stages.py so the LTUNB HHKs lines use "prompt" children input lists
 
