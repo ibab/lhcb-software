@@ -854,7 +854,7 @@ class H1Func(object) :
         Evaluate the function 
         """
         #
-        x0 = x if isinstance ( x , (int,long,float) ) else x[0]
+        x0 = x if isinstance ( x , ( int , long , float ) ) else x[0]
         #
         norm  = float ( par[0] )   ## NORM 
         bias  = float ( par[1] )   ## BIAS 
@@ -1040,7 +1040,25 @@ def _h1_as_tf1_ ( self , func = lambda s : s.value () , spline = False , *args )
         f1.SetNpx ( max ( 100 , 10 * nb ) ) 
     
     return f1 
-    
+
+# =============================================================================
+## calculate the integral of TH1
+#  @code
+#  histo = ...
+#  i     = histo.integral ( 0.2 , 0.16 ) 
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-08-31
+def _h1_integral_ ( histo , xlow , xhigh ) :
+    """Calculate the integral of TH1
+    >>> histo = ...
+    >>> i     = histo.integral ( 0.2 , 0.16 ) 
+    """
+    fun = _h1_as_fun_ ( histo )
+    f1  = fun.tf1() 
+    return f1.Integral ( xlow , xhigh )
+
+
 # =============================================================================
 ## construct function 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -1075,6 +1093,23 @@ def _h2_as_tf2_ ( self , func = lambda s : s.value () ) :
     
     return f2
 
+# =============================================================================
+## calculate the integral of TH2
+#  @code
+#  histo = ...
+#  i     = histo.integral ( 0.2 , 0.16 , 0.1 , 1.0 ) 
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-08-31
+def _h2_integral_ ( histo , xlow , xhigh , ylow , yhigh ) :
+    """Calculate the integral of TH2
+    >>> histo = ...
+    >>> i     = histo.integral ( 0.2 , 0.16 , 0.1 , 1.0 ) 
+    """
+    f2  = _h2_as_fun_  ( histo )
+    return f1.Integral ( xlow , xhigh , ylow , yhigh )
+
+# =============================================================================
     
 ROOT.TH1F . asTF     = _h1_as_tf1_ 
 ROOT.TH1D . asTF     = _h1_as_tf1_ 
@@ -1090,6 +1125,11 @@ ROOT.TH2F . asFunc   = _h2_as_fun_
 ROOT.TH2D . asFunc   = _h2_as_fun_ 
 ROOT.TH1F . asSpline = _h1_as_spline_ 
 ROOT.TH1D . asSpline = _h1_as_spline_ 
+
+ROOT.TH1F . integral = _h1_integral_ 
+ROOT.TH1D . integral = _h1_integral_
+ROOT.TH2F . integral = _h2_integral_ 
+ROOT.TH2D . integral = _h2_integral_
 
 # ============================================================================
 def _h1_data_ ( h ) :
@@ -2138,6 +2178,9 @@ ROOT.TF1.__getitem__  = _tf1_par_
 ROOT.TF1.__getattr__  = _tf1_getattr_
 
 
+
+ROOT.TF1.integral     = ROOT.TF1.Integral 
+ROOT.TF2.integral     = ROOT.TF2.Integral 
     
 # =============================================================================
 if '__main__' == __name__ :

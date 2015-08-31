@@ -19,11 +19,12 @@ __version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = (
-    'makeGraph' , ## make graph from primitive data
-    'hToGraph'  , ## convert histogram to graph 
-    'hToGraph2' , ## convert histogram to graph 
-    'hToGraph3' , ## convert histogram to graph
-    'lw_graph'  , ## make Laffery-Wyatt's graph
+    'makeGraph'  , ## make graph from primitive data
+    'makeGraph2' , ## make graph from plain input two-column text 
+    'hToGraph'   , ## convert histogram to graph 
+    'hToGraph2'  , ## convert histogram to graph 
+    'hToGraph3'  , ## convert histogram to graph
+    'lw_graph'   , ## make Laffery-Wyatt's graph
     ##
     ) 
 # =============================================================================
@@ -120,6 +121,90 @@ def makeGraph ( x , y = []  , ex = [] , ey = [] ) :
     return gr
 
 # =============================================================================
+## create TGraph from the plain text two-column format with optional comments.
+#  E.g. the files provided by FONLL on-line calculator can be parsed
+#  @see http://www.lpthe.jussieu.fr/~cacciari/fonll/fonllform.html
+#  @code
+#  gr = makeGraph ( '''
+#  # Job started on: Mon Aug 31 10:02:29 CEST 2015 .
+#  # FONLL heavy quark hadroproduction cross section
+#  # FONLL version and perturbative order: ## FONLL v1.3.2 fonll [ds/dpt^2dy (pb/GeV^2)]
+#  # quark = charm
+#  # final state = meson (meson = D0). NP params (cm,lm,hm) = 0.1, 0.06, 0.135
+#  # BR(q->meson) = 1
+#  # ebeam1 = 4000, ebeam2 = 4000
+#  # PDF set = CTEQ6.6
+#  # ptmin = 0
+#  # ptmax = 20
+#  # ymin  = 2
+#  # ymax  = 2.5
+#  # cross section is ds/dpt (pb/GeV)
+#  #  pt      central
+#     0.0000 0.0000e+00
+#     0.2500 3.4330e+07
+#     0.5000 6.0499e+07
+#     0.7500 8.2892e+07
+#     1.0000 9.8492e+07
+#     1.2500 1.0412e+08
+#     1.5000 1.0060e+08
+#     1.7500 9.1271e+07 '''
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @data 2015-08-31
+def makeGraph2 ( text ) :
+    """Create TGraph from simple two-column text format,
+    e.g. the files provided by FONLL on-line calculator can be parsed
+    @see http://www.lpthe.jussieu.fr/~cacciari/fonll/fonllform.html
+    >>> graph = makeGraph2 ( '''
+    ... # Job started on: Mon Aug 31 10:02:29 CEST 2015 .
+    ... # FONLL heavy quark hadroproduction cross section
+    ... # FONLL version and perturbative order: ## FONLL v1.3.2 fonll [ds/dpt^2dy (pb/GeV^2)]
+    ... # quark = charm
+    ... # final state = meson (meson = D0). NP params (cm,lm,hm) = 0.1, 0.06, 0.135
+    ... # BR(q->meson) = 1
+    ... # ebeam1 = 4000, ebeam2 = 4000
+    ... # PDF set = CTEQ6.6
+    ... # ptmin = 0
+    ... # ptmax = 20
+    ... # ymin  = 2
+    ... # ymax  = 2.5
+    ... # cross section is ds/dpt (pb/GeV)
+    ... #  pt      central
+    ... 0.0000 0.0000e+00
+    ... 0.2500 3.4330e+07
+    ... 0.5000 6.0499e+07
+    ... 0.7500 8.2892e+07
+    ... 1.0000 9.8492e+07
+    ... 1.2500 1.0412e+08
+    ... 1.5000 1.0060e+08
+    ... 1.7500 9.1271e+07 '''
+    """
+    text = text.split('\n')
+    if not text : return ROOT.TGraph ()
+
+    vals = {}
+    for line in text :
+        line = line.strip()
+        if not line  : continue
+        if '#' == line[0] :
+            logger.info   ('Comment: %s' % line )
+            continue
+        ## remove  traling comments 
+        line, s, tail = line.partition('#')
+        if not line : continue 
+        values = line.split (' ')
+        if 2  > len ( values ) :
+            logger.warning('Strange line, skip it: "%s"' % line )
+            continue
+        x = values[0].strip() 
+        y = values[1].strip() 
+        x = float(x)
+        y = float(y)
+        vals[ x ] = y
+    ## make a graph 
+    return makeGraph ( vals )
+
+# =============================================================================
 ## convert histogram to graph
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
@@ -167,21 +252,19 @@ def hToGraph_ ( h1 , funcx , funcy ) :
     #
     copy_graph_attributes ( h1 , graph )
 
-
     for i in h1.iteritems () :
         
         ip = i[0] - 1 ## different convention for TH1 and TGraph
         x  = i[1] 
         y  = i[2]
 
-        x0 , xep , xen = funcx ( x , y )
-        y0 , yep , yen = funcy ( x , y )
+        x0 , xen , xep = funcx ( x , y )
+        y0 , yen , yep = funcy ( x , y )
 
         graph.SetPoint      ( ip , x0  , y0  ) 
-        graph.SetPointError ( ip , xep , xen , yep , yen ) 
+        graph.SetPointError ( ip , xen , xep , yen , yep ) 
 
     return graph
-
 
 # =============================================================================
 ## convert histogram to graph
@@ -203,7 +286,6 @@ def hToGraph2 ( h1 , bias ) :
     funcy = lambda x,y : ( y.value()                  , y.error()          , y.error()          ) 
         
     return hToGraph_ ( h1 , funcx , funcy ) 
-
 
 # =============================================================================
 ## convert histogram to graph
@@ -238,9 +320,48 @@ ROOT.TH1D.asGraph3 = hToGraph3
 ROOT.TH1F.toGraph3 = hToGraph3
 ROOT.TH1D.toGraph3 = hToGraph3
 
+# =============================================================================
+## use graph as function 
+#  @code
+#  graph = ...
+#  y     = graph ( 0.2 )
+#  @endcode
+#  @see TGraph.
+#  @see TGraph::Eval
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _gr_call_ ( graph , x , spline = None , opts = 'S' ) :
+    """
+    Use graph as function
+    >>> graph = ...
+    >>> y     = graph ( 0.2 ) 
+    """
+    if not spline : spline = ROOT.MakeNullPointer(ROOT.TSpline)
+    return graph.Eval ( float( x ) , spline , opts )
 
 # =============================================================================
-# iterate over graph items
+## Calculate an integral over the range \f$x_{low} \le x \le x_{high}\f$
+#  It is not very efficient, but OK 
+#  @code
+#  graph = ...
+#  i     = graph.integral ( 0 , 1 ) 
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-08-31
+def _gr_integral_ ( graph , xlow , xhigh , scipy = True ) :
+    """
+    Calculate an integral over the range \f$x_{low} \le x \le x_{high}\f$
+    It is not very efficient, but OK 
+    >>> graph = ...
+    >>> i     = graph.integral ( 0 , 1 )
+    """
+    if scipy :
+        from LHCbMath.deriv import integral 
+        return integral ( graph , xlow , xhigh )
+    
+    tf1 = graph.asTF1()
+    return tf1.Integral( xlow , xhigh ) 
+        
 # =============================================================================
 ## iterate over points in TGraphErrors
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -358,6 +479,21 @@ def _gre_setitem_ ( graph , ipoint , point )  :
 
 
 # =============================================================================
+## represent TGraph as TF1
+#  @code
+#  graph = ...
+#  fun   = grap.asTF1() 
+#  @endcode
+def _gr_as_TF1_ ( graph ) :
+    """
+    Represent TGraph as TF1
+    >>> graph = ...
+    >>> fun   = grap.asTF1() 
+    """
+    from HParamDeco import _h1_as_fun_ 
+    return _h1_as_fun_ ( graph , lambda x : x ) 
+    
+# =============================================================================
 ## iterate over points in TGraphErrors
 #  @code
 #  gre = ...
@@ -442,11 +578,320 @@ def _grae_iteritems_ ( graph ) :
     for ip in graph :
         vars = graph[ip]        
         yield (ip,) + vars
-            
+
+# =============================================================================
+## get minimal-x 
+#  @code
+#  graph = ...
+#  xmin  = graph.xmin () 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _gr_xmin_ ( graph ) :
+    """
+    Get minimal x for the points
+    >>> graph = ...
+    >>> xmin  = graph.xmin () 
+    """    
+    xmn  = None
+    np   = len(graph) 
+    for ip in range( np ) :
+        x , y = graph[ip] 
+        if None == xmn or x <= xmn : xmn = x
+    return xmn
+
+# =============================================================================
+## get maximal-x 
+#  @code
+#  graph = ...
+#  xmax  = graph.xmax () 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _gr_xmax_ ( graph ) :
+    """
+    Get maximal x for the points
+    >>> graph = ...
+    >>> xmax  = graph.xmax () 
+    """    
+    xmx  = None
+    np   = len(graph) 
+    for ip in range( np ) :
+        x , y = graph[ip] 
+        if None == xmx or x >= xmx : xmx = x
+    return xmx
+
+# =============================================================================
+## get minimal-y
+#  @code
+#  graph = ...
+#  ymin  = graph.ymin () 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _gr_ymin_ ( graph ) :
+    """
+    Get minimal y for the points
+    >>> graph = ...
+    >>> ymin  = graph.ymin () 
+    """    
+    ymn  = None
+    np   = len(graph) 
+    for ip in range( np ) :
+        x , y = graph[ip] 
+        if None == ymn or y <= ymn : ymn = y
+    return ymn
+
+# =============================================================================
+## get maximal-y
+#  @code
+#  graph = ...
+#  ymax  = graph.ymax () 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _gr_ymax_ ( graph ) :
+    """
+    Get maximal x for the points
+    >>> graph = ...
+    >>> ymax  = graph.ymax () 
+    """    
+    yxm  = None
+    np   = len(graph) 
+    for ip in range( np ) :
+        x , y = graph[ip] 
+        if None == ymx or y >= ymx : ymx = y
+    return xmx
+
+# =============================================================================
+## get minimal-x 
+#  @code
+#  graph = ...
+#  xmin  = graph.xmin () 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _gre_xmin_ ( graph ) :
+    """
+    Get minimal x for the points
+    >>> graph = ...
+    >>> xmin  = graph.xmin () 
+    """    
+    xmn  = None
+    np   = len(graph) 
+    for ip in range( np ) :
+        x , y = graph[ip]
+        x = x.value() - x.error() 
+        if None == xmn or x <= xmn : xmn = x
+    return xmn
+
+# =============================================================================
+## get maximal-x 
+#  @code
+#  graph = ...
+#  xmax  = graph.xmax () 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _gre_xmax_ ( graph ) :
+    """
+    Get maximal x for the points
+    >>> graph = ...
+    >>> xmax  = graph.xmax () 
+    """    
+    xmx  = None
+    np   = len(graph) 
+    for ip in range( np ) :
+        x , y = graph[ip] 
+        x = x.value() + x.error() 
+        if None == xmx or x >= xmx : xmx = x
+    return xmx
+
+# =============================================================================
+## get minimal-y
+#  @code
+#  graph = ...
+#  ymin  = graph.ymin () 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _gre_ymin_ ( graph ) :
+    """
+    Get minimal y for the points
+    >>> graph = ...
+    >>> ymin  = graph.ymin () 
+    """    
+    ymn  = None
+    np   = len(graph) 
+    for ip in range( np ) :
+        x , y = graph[ip] 
+        y = y.value() - y.error() 
+        if None == ymn or y <= ymn : ymn = y
+    return ymn
+
+# =============================================================================
+## get maximal-y
+#  @code
+#  graph = ...
+#  ymax  = graph.ymax () 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _gre_ymax_ ( graph ) :
+    """
+    Get maximal x for the points
+    >>> graph = ...
+    >>> ymax  = graph.ymax () 
+    """    
+    yxm  = None
+    np   = len(graph) 
+    for ip in range( np ) :
+        x , y = graph[ip] 
+        y = y.value() + y.error() 
+        if None == ymx or y >= ymx : ymx = y
+    return xmx
+
+
+# =============================================================================
+## get minimal-x 
+#  @code
+#  graph = ...
+#  xmin  = graph.xmin () 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _grae_xmin_ ( graph ) :
+    """
+    Get minimal x for the points
+    >>> graph = ...
+    >>> xmin  = graph.xmin () 
+    """    
+    xmn  = None
+    np   = len(graph) 
+    for ip in range( np ) :
+        x , exl , exh , y , eyl , eyh = graph[ip] 
+        x = x - abs( exl ) 
+        if None == xmn or x <= xmn : xmn = x
+    return xmn
+
+# =============================================================================
+## get maximal-x 
+#  @code
+#  graph = ...
+#  xmax  = graph.xmax () 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _grae_xmax_ ( graph ) :
+    """
+    Get maximal x for the points
+    >>> graph = ...
+    >>> xmax  = graph.xmax () 
+    """    
+    xmx  = None
+    np   = len(graph) 
+    for ip in range( np ) :
+        x , exl , exh , y , eyl , eyh = graph[ip] 
+        x = x + abs( exh ) 
+        if None == xmx or x >= xmx : xmx = x
+    return xmx
+
+# =============================================================================
+## get minimal-y
+#  @code
+#  graph = ...
+#  ymin  = graph.ymin () 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _grae_ymin_ ( graph ) :
+    """
+    Get minimal y for the points
+    >>> graph = ...
+    >>> ymin  = graph.ymin () 
+    """    
+    ymn  = None
+    np   = len(graph) 
+    for ip in range( np ) :
+        x , exl , exh , y , eyl , eyh = graph[ip] 
+        y = y - abs( eyl ) 
+        if None == ymn or y <= ymn : ymn = y
+    return ymn
+
+# =============================================================================
+## get maximal-y
+#  @code
+#  graph = ...
+#  ymax  = graph.ymax () 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _grae_ymax_ ( graph ) :
+    """
+    Get maximal x for the points
+    >>> graph = ...
+    >>> ymax  = graph.ymax () 
+    """    
+    yxm  = None
+    np   = len(graph) 
+    for ip in range( np ) :
+        x , exl , exh , y , eyl , eyh = graph[ip] 
+        y = y + abs( eyh ) 
+        if None == ymx or y >= ymx : ymx = y
+    return xmx
+
+
+# =============================================================================
+## get minimal and maximal x for the points
+#  @code
+#  graph = ...
+#  xmin,xmax = graph.xminmax() 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _gr_xminmax_ ( graph ) :
+    """
+    Get minimal and maximal x for the points
+    >>> graph = ...
+    >>> xmin,xmax = graph.xminmax() 
+    """
+    xmn  = graph.xmin()
+    xmx  = graph.xmax()
+    return xmn , xmx 
+
+# =============================================================================
+## get minimal and maximal value for the points
+#  @code
+#  graph = ...
+#  mn,mx = graph.yminmax() 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _gr_yminmax_ ( graph ) :
+    """
+    Get minimal and maximal  for the points
+    >>> graph = ...
+    >>> mn,mx = graph.yminmax() 
+    """    
+    ymn  = graph.ymin()
+    ymx  = graph.ymax()
+    return ymn , ymx 
+
 # =============================================================================
 ROOT.TGraph       . __len__       = ROOT.TGraphErrors . GetN 
 ROOT.TGraph       . __contains__  = lambda s,i : i in range(0,len(s))
 ROOT.TGraph       . __iter__      = _gr_iter_ 
+ROOT.TGraph       . __call__      = _gr_call_
+
+ROOT.TGraph       . xmin          = _gr_xmin_ 
+ROOT.TGraph       . ymin          = _gr_ymin_ 
+ROOT.TGraph       . xmax          = _gr_xmax_ 
+ROOT.TGraph       . ymax          = _gr_ymax_ 
+
+
+ROOT.TGraph       . xminmax       = _gr_xminmax_ 
+ROOT.TGraph       . yminmax       = _gr_yminmax_ 
+ROOT.TGraph       .  minmax       = _gr_yminmax_ 
 
 ROOT.TGraph       . __getitem__   = _gr_getitem_ 
 ROOT.TGraph       . __setitem__   = _gr_setitem_
@@ -456,7 +901,12 @@ ROOT.TGraphErrors . __getitem__   = _gre_getitem_
 ROOT.TGraphErrors . __setitem__   = _gre_setitem_ 
 ROOT.TGraphErrors . iteritems     = _gre_iteritems_ 
 
-ROOT.TGraph       . __call__      = ROOT.TGraph.Eval
+
+ROOT.TGraphErrors . xmin          = _gre_xmin_ 
+ROOT.TGraphErrors . ymin          = _gre_ymin_ 
+ROOT.TGraphErrors . xmax          = _gre_xmax_ 
+ROOT.TGraphErrors . ymax          = _gre_ymax_ 
+
 
 ROOT.TH1F.asGraph = hToGraph
 ROOT.TH1D.asGraph = hToGraph
@@ -470,6 +920,14 @@ ROOT.TGraphAsymmErrors. iteritems    = _grae_iteritems_
 ROOT.TGraphAsymmErrors.__getitem__   = _grae_getitem_ 
 ROOT.TGraphAsymmErrors.__setitem__   = _grae_setitem_ 
 
+ROOT.TGraphAsymmErrors . xmin        = _grae_xmin_ 
+ROOT.TGraphAsymmErrors . ymin        = _grae_ymin_ 
+ROOT.TGraphAsymmErrors . xmax        = _grae_xmax_ 
+ROOT.TGraphAsymmErrors . ymax        = _grae_ymax_ 
+
+
+ROOT.TGraph       . integral         = _gr_integral_
+ROOT.TGraph       . asTF1            = _gr_as_TF1_
 # =============================================================================
 ## set color attributes  
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru

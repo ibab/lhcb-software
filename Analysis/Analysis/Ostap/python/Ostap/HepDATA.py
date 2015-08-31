@@ -42,23 +42,26 @@ else                       : logger = getLogger( __name__ )
 logger.debug ( 'HepDATA format and conversion routines')
 # =============================================================================
 ## fields required for each dataset
-dataset_fields = ( 'location'  ,
-                   'dscomment' ,
-                   'obskey'    ,
-                   'reackey'   ,
-                   'qual'      ,
-                   'xheader'   ,
-                   'yheader'   )
+dataset_fields = ( 'location'  , ## e.g. Figure 5a
+                   'dscomment' , 
+                   'reackey'   , ## e.g. P P --> Z0 Z0 X 
+                   'obskey'    , ## e.g. SIG or DSIG/DPT
+                   'qual'      , ## see http://hepdata.cedar.ac.uk/resource/sample.input
+                   'xheader'   , ## e.g. PT IN GEV 
+                   'yheader'   ) ## e.g. DSIG/DPT IN PB/GEV 
 ## fields required for each hepdata file 
-hepfile_fields = ( 'author'    ,
-                   'status'    ,
-                   'reference' , ## format :  "REFERENCE : YEAR"
-                   'doi'       , ## optional  
-                   'detector'  ,
-                   'spiresId'  , ## Id in SPIRES/INSPIRE
-                   'cdsId'     , ## Id in CDS
-                   'title'     ,
-                   'comment'   )
+hepfile_fields = ( 'author'     ,
+                   'reference'  , ## format :  "REFERENCE : YEAR"
+                   'doi'        , 
+                   'status'     ,
+                   'experiment' , ## e.g. CERN-LHC-LHCb
+                   'detector'   , ## e.g. LHCb 
+                   'spiresId'   , ## id in SPIRES  (http://www.slac.stanford.edu/spires/) 
+                   'inspireId'  , ## id in INSPIRE (http://inspirehep.net/)
+                   'cdsId'      , ## id in CDS     (http://cds.cern.ch/)
+                   'durhamId'   , ## will be added after submission 
+                   'title'      ,
+                   'comment'    )
 
 from collections import defaultdict
 METAINFO = defaultdict(list)
@@ -76,8 +79,10 @@ class HepDataBase(object) :
         self.meta = metainfo
         for k , v in kwargs.iteritems() :
             if isinstance ( v , (list,tuple) ) :
-                for i in v : self.meta[k].append ( i )
-            else : self.meta[k].append ( v )
+                for i in v :
+                    if not i in self.meta[k] : self.meta[k].append ( i )
+            else :
+                if not v in self.meta[k] : self.meta[k].append ( v )
                 
     ## add meta-information
     def add ( self , key , info) : self.meta[key].append ( info ) 
@@ -89,15 +94,16 @@ class HepDataBase(object) :
             if not self.meta.has_key ( key ) : m.add ( key )
         return m 
     
-    def format ( self , header ) :
+    def format ( self , header , keys ) :
         "Make a proper valid representation of dataset"
         #
         lines = []
         if header : lines = [ '*%s:' % header ] 
         #
-        for k,w in self.meta.iteritems():
-            for i in w :
-                lines.append ( '*%s: %s' % ( k , i ) )
+        for key in keys :
+            items = self.meta[key]
+            for i in items :
+                lines.append ( '*%s: %s' % ( key , i ) )
                 
         ## the actual format of the data 
         self.formatData( lines ) 
@@ -120,8 +126,7 @@ class HepDataBase(object) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-08-29
 class HepDataFile(HepDataBase) :
-    """
-    Helper class to prepare the file with HepDATA information
+    """Helper class to prepare the file with HepDATA information
     >>> metainfo = {...}
     >>> hf = HepDataFile(  *metainfo )
     >>> print hf
@@ -151,12 +156,9 @@ class HepDataFile(HepDataBase) :
     def formatData ( self , lines ) : pass 
     def __enter__ ( self ) :
         
+        result = self.format( '' , hepfile_fields ) + '\n'
         self.file = open ( self.filename , 'w' )
-        lines = [] 
-        for k,w in self.meta.iteritems () :
-            for i in w :
-                lines.append ( '*%s: %s' % ( k , i ) )
-        self.file.write ( '\n'.join ( lines ) + '\n' )
+        self.file.write ( result + '\n' )
         return self
         
     def __exit__  ( self , *_ ) :
@@ -166,7 +168,7 @@ class HepDataFile(HepDataBase) :
         self.file.close ()
 
     def __str__  ( self ) :
-        result = self.format('') + '\n'
+        result = self.format( '' , hepfile_fields ) + '\n' 
         for ds in self.datasets :
             result += str( ds ) + '\n'
         return result + '\n*e'
@@ -204,7 +206,7 @@ class HepData(HepDataBase) :
         self.syst3 = syst3
         
     ## the actual output :-) 
-    def __str__ ( self ) : return self.format ('dataset')+'\n'
+    def __str__ ( self ) : return self.format ('dataset',dataset_fields)+'\n'
 
     ## the most important line: the proper delegation
     def formatData ( self , the_lines ) :
@@ -399,7 +401,6 @@ ROOT.TGraphAsymmErrors .toHepData = _tgae_hepdata_  ## different one
 # =============================================================================
 if '__main__' == __name__ :
     
-
     
     import Ostap.Line
     logger.info ( __file__  + '\n' + Ostap.Line.line  ) 

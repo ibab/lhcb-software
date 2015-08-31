@@ -83,7 +83,6 @@ with HepDataFile( **meta ) as hf :
     hf << ds 
     hf << ds2
 
-
 logger.info( 'Check the file HepDATA.txt' )
 with open('HepDATA.txt','r') as f :
     for line in f.readlines() : print line[:-1]
