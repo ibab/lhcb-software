@@ -4,6 +4,8 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v13r3 2015-09-01 =========================
+
 ! 2015-09-01 - Sascha Stahl
  - HltAfterburner: Added also muon and Calo id for downstream protoparticles without any PID.
    This is protected by a filter for certain Turbo lines.
