@@ -1,28 +1,35 @@
 package HltSys
-version v24r0
+version           v24r1
 
 branches cmt doc
 
-use Hlt1Lines           v7r14    Hlt   # Roel Aaij, Vava Gligorov, Gerhard Raven
+use Hlt1Lines           v7r16    Hlt   # Roel Aaij, Vava Gligorov, Gerhard Raven
 use Hlt1Muons           v1r14p1  Hlt   # Vasilis Syropoulos
-use Hlt2Lines           v10r0    Hlt   # Vava Gligorov, Roel Aaij, Mika Vesterinen
-use Hlt2SharedParticles v7r7     Hlt   # Vava Gligorov
-use HltBase             v15r6    Hlt   # Gerhard Raven
+use Hlt2Lines           v10r2    Hlt   # Vava Gligorov, Roel Aaij, Mika Vesterinen
+use Hlt2SharedParticles v7r8     Hlt   # Vava Gligorov
+use HltBase             v15r7    Hlt   # Gerhard Raven
 use HltBeamGasAlley     v4r1     Hlt   # Rosen Matev
-use HltCommon           v10r5    Hlt   # Gerhard Raven
-use HltConf             v13r1    Hlt   # Roel Aaij, Gerhard Raven
+use HltCommon           v10r6    Hlt   # Gerhard Raven
+use HltConf             v13r3    Hlt   # Roel Aaij, Gerhard Raven
 use HltCosmics          v1r3     Hlt   #
 use HltDisplVertices    v4r3     Hlt   # Pieter David, Victor Coco
-use HltGlobalMonitor    v5r0p3   Hlt   # Eric van Herwijnen
+use HltGlobalMonitor    v5r1     Hlt   # Eric van Herwijnen
 use HltL0Conf           v4r2     Hlt   # Johannes Albrecht
 use HltLine             v7r12    Hlt   # Roel Aaij, Gerhard Raven
 use HltLuminosity       v4r3     Hlt   # Rosen Matev
 use HltRawData          v5r9     Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v3r2     Hlt   # Jose Angel Hernando-Morata
-use HltSettings         v7r0     Hlt   # Vava Gligorov, Mika Vesterinen, Roel Aaij
-use HltTracking         v13r10   Hlt   # Sascha Stahl, Vava Gligorov
-use TCKUtils            v1r15p1  Hlt   # Gerhard Raven
+use HltSettings         v7r2     Hlt   # Vava Gligorov, Mika Vesterinen, Roel Aaij
+use HltTracking         v13r11   Hlt   # Sascha Stahl, Vava Gligorov
+use TCKUtils            v1r16    Hlt   # Gerhard Raven
 use LoKiTrigger         v15r7    Phys  # Vanya Belyaev
+
+# TEMPORARY REC PACKAGES
+use  PrPixel             v1r13  Pr
+use  TrackSys            v9r10  Tf
+use  PatChecker          v3r16  Tr
+# TEMPORARY PHYS PACKAGES
+use  DecayTreeFitter     v1r22  Phys
 
 # Declare this as a container package
 apply_pattern container_package
