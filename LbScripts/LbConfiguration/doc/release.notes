@@ -1,3 +1,7 @@
+2015-09-01  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: LBCORE-902 release of version v8r4p2
+
 2015-08-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* SetupProject: fixed LBCORE-899 (strip '/gcc/' from PATHs)
