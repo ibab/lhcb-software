@@ -1,3 +1,29 @@
+2015-09-01 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r4p2
+
+	LbConfiguration
+	* SetupProject: fixed LBCORE-899 (strip '/gcc/' from PATHs)
+
+	Lbrelease
+	* buildGeneralDoc:
+		- removed obsolete doxygen options
+		- doxygen cache size adjustment
+		- fixed LBCORE-904, blacklisting of projects and handling of copy errors
+
+	* LBCORE-880: Added functionality to remove platforms from a Project/Version.
+		- python/LbRelease/SoftConfDB/LbSdbAddPlatform.
+		- python/LbRelease/SoftConfDB/SoftConfDB.py
+
+	* lb-deployment-oldtarballs: fixed support for Gaudi
+	* lb-deployment-checklist: fixed problem with the support to *-do0, and added
+	preliminary caching of the list of copied RPMs
+
+	* getpack: fixed LBCORE-849, missing tag of package was not an error
+
+	LbUtils
+	* scripts/lcg-*-*: added wrappers for gcc 4.9.3
+
 2015-06-22 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v8r4p1
