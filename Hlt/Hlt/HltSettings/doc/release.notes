@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v7r2 2015-09-01 =========================
+
 ! 2015-09-01 - Sascha Stahl
  - Revert the L0 TCK setting of Physics_25ns_August2015 to 0x0051.
 
