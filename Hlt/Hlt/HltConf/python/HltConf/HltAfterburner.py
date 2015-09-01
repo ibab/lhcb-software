@@ -19,8 +19,8 @@ class HltAfterburnerConf(LHCbConfigurableUser):
                  "EnableHltRecSummary"     : True,
                  "RecSummaryLocation"      : "Hlt2/RecSummary",
                  "AddAdditionalTrackInfos" : True,
-                 "AddDownstreamRICHPid"    : True,
-                 "Hlt2DownstreamFilter"    : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')",
+                 "AddPIDToDownstream"      : True,
+                 "Hlt2DownstreamFilter"    : "HLT_TURBOPASS_RE('Hlt2.*DDTurbo.*Decision') | HLT_TURBOPASS_RE('Hlt2.*Spec.*LambdaTurbo.*Decision') | HLT_TURBOPASS_RE('Hlt2.*Lcp.*Lam.*Turbo.*Decision')",
                  "Hlt2Filter"              : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
                 }
 
@@ -98,7 +98,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             for name, location in trackLocations.iteritems():
                 from Configurables import TrackBuildCloneTable, TrackCloneCleaner
                 prefix = name
-                trackClones = GaudiSequencer(prefix + "TrackClonesSeq")
+                trackClones = Sequence(prefix + "TrackClonesSeq")
                 checkTracks =  Filter(prefix+"CheckTrackLoc",Code = "EXISTS('%(trackLoc)s')"% {"trackLoc" : location})
                 trackClones.Members += [checkTracks]
                 cloneTable = TrackBuildCloneTable(prefix + "FindTrackClones")
@@ -136,28 +136,55 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             Afterburner.Members += [veloChargeSeq]
 
 
-        if self.getProp("AddDownstreamRICHPid"):
+        if self.getProp("AddPIDToDownstream"):
             from Configurables import LoKi__HDRFilter   as HDRFilter
             hlt2DownstreamFilter = HDRFilter('DownstreamHlt2Filter', Code = self.getProp("Hlt2DownstreamFilter"),
                                    Location = decoder.listOutputs()[0])
-            downstreamRICHSequence = GaudiSequencer( "Hlt2AfterburnerDownstreamRICHSeq")
-            downstreamRICHSequence.Members += [ hlt2DownstreamFilter ]
+            downstreamPIDSequence = Sequence( "Hlt2AfterburnerDownstreamPIDSeq")
+            downstreamPIDSequence.Members += [ hlt2DownstreamFilter ]
             from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
             downstreamTracking = Hlt2BiKalmanFittedDownstreamTracking()
             tracksDown = downstreamTracking.hlt2PrepareTracks()
+            chargedProtosOutputLocation =  downstreamTracking.hlt2ChargedNoPIDsProtos().outputSelection()
             from DAQSys.Decoders import DecoderDB
             decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
             richPid = downstreamTracking.hlt2RICHID()
-            from Configurables import ChargedProtoParticleAddRichInfo
+
+            downstreamPIDSequence.Members += list(uniqueEverseen(chain.from_iterable([ tracksDown, richPid ])))
+            from Configurables import ChargedProtoParticleAddRichInfo,ChargedProtoParticleAddMuonInfo
             downstreamRichDLL_name            = "Hlt2AfterburnerDownstreamProtoPAddRich"
             downstreamRichDLL                 = ChargedProtoParticleAddRichInfo(downstreamRichDLL_name)
             downstreamRichDLL.InputRichPIDLocation    = richPid.outputSelection()
-            downstreamRichDLL.ProtoParticleLocation   = downstreamTracking.hlt2ChargedNoPIDsProtos().outputSelection()
+            downstreamRichDLL.ProtoParticleLocation   = chargedProtosOutputLocation
+            # Add the muon info to the DLL
+            downstreamMuon_name                   = "Hlt2AfterburnerDownstreamProtoPAddMuon"
+            downstreamMuon                        = ChargedProtoParticleAddMuonInfo(downstreamMuon_name)
+            downstreamMuon.ProtoParticleLocation  = chargedProtosOutputLocation
+            downstreamMuon.InputMuonPIDLocation   = downstreamTracking.hlt2MuonID().outputSelection()
+            # Add the Calo info to the DLL
+            #
+            from Configurables import ( ChargedProtoParticleAddEcalInfo,
+                                        ChargedProtoParticleAddBremInfo,
+                                        ChargedProtoParticleAddHcalInfo,
+                                        ChargedProtoParticleAddPrsInfo,
+                                        ChargedProtoParticleAddSpdInfo
+                                        )
+            caloPidLocation = downstreamTracking.hlt2CALOID().outputSelection()
+            downstreamEcal = ChargedProtoParticleAddEcalInfo("HltAfterburnerDownstreamProtoPAddEcal")
+            downstreamBrem = ChargedProtoParticleAddBremInfo("HltAfterburnerDownstreamProtoPAddBrem")
+            downstreamHcal = ChargedProtoParticleAddHcalInfo("HltAfterburnerDownstreamProtoPAddHcal")
+            downstreamPrs  = ChargedProtoParticleAddPrsInfo ("HltAfterburnerDownstreamProtoPAddPrs")
+            downstreamSpd  = ChargedProtoParticleAddSpdInfo ("HltAfterburnerDownstreamProtoPAddSpd")
+            for alg in (downstreamEcal,downstreamBrem,downstreamHcal,downstreamPrs,downstreamSpd):
+                alg.setProp("ProtoParticleLocation",chargedProtosOutputLocation)
+                alg.setProp("Context",caloPidLocation)
+                downstreamPIDSequence.Members += [ alg  ]
+
+
             from Configurables import ChargedProtoCombineDLLsAlg
             downstreamCombine_name                    = "Hlt2AfterburnerDownstreamRichCombDLLs"
             downstreamCombine                         = ChargedProtoCombineDLLsAlg(downstreamCombine_name)
             downstreamCombine.ProtoParticleLocation   = downstreamTracking.hlt2ChargedNoPIDsProtos().outputSelection()
             from Hlt2Lines.Utilities.Utilities import uniqueEverseen
-            downstreamRICHSequence.Members += list(uniqueEverseen(chain.from_iterable([ tracksDown, richPid ])))
-            downstreamRICHSequence.Members += [ downstreamRichDLL,downstreamCombine ]
-            Afterburner.Members += [ downstreamRICHSequence ]
+            downstreamPIDSequence.Members += [ downstreamMuon,downstreamRichDLL,downstreamCombine ]
+            Afterburner.Members += [ downstreamPIDSequence ]
