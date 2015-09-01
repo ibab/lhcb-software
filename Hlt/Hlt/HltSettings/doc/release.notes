@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-09-01 - Sascha Stahl
+ - Revert the L0 TCK setting of Physics_25ns_August2015 to 0x0051.
+
 ! 2015-09-01 - Karlis Dreimanis
  - Minor modifications to protonHelium_2015.py
 
