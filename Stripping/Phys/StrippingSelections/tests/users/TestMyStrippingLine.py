@@ -10,7 +10,8 @@ from StrippingConf.Configuration import StrippingConf
 
 # Tighten Trk Chi2 to <3
 from CommonParticles.Utils import DefaultTrackingCuts
-DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
+DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 4 ],
+                                "GhostProbCut" : [ 0,   0.4   ],
                                 "CloneDistCut" : [5000, 9e+99 ] }
 
 #

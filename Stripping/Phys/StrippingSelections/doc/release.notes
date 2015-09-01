@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-01 - Andrea Contu
+ - Changed global cuts on stripping test scripts
+
 ! 2015-09-01 - Maurizio Martinelli
  - Added an IPChi2 cut to the D candidates in B2DDphi stripping lines to reduce
    background, retention and candidates multiplicity 
