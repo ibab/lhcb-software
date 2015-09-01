@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-01 - Maurizio Martinelli
+ - Added an IPChi2 cut to the D candidates in B2DDphi stripping lines to reduce
+   background, retention and candidates multiplicity 
+
 ! 2015-08-28 - Chris Jones
  - Extend the mass window for the Bc2DD lines to 4.8 - 6.8 GeV, to cover the 
    B+ control modes.

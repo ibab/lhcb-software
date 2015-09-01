@@ -39,18 +39,22 @@ default_config = {
     # Cuts made on all D0's
     'D0_MASS_WIN': 65, #MeV
     'D0_PT': 1500., #MeV
+    'D0_IPCHI2': 4,
     'D0_VCHI2NDOF': 10, 
     # Cuts made on all D+'s
     'Dp_MASS_WIN': 65, #MeV
     'Dp_PT': 1500., #MeV
+    'Dp_IPCHI2': 4,
     'Dp_VCHI2NDOF': 10,
     # Cuts made on all Ds+'s
     'Ds_MASS_WIN': 65, #MeV
     'Ds_PT': 1500., #MeV
+    'Ds_IPCHI2': 4,
     'Ds_VCHI2NDOF': 10,
     # Cuts made on all D*+'s
     'Dst_MASS_WIN': 50, #MeV
     'Dst_PT': 1500., #MeV
+    'Dst_IPCHI2': 4,
     'Dst_VCHI2NDOF': 15,
     # Cuts made on all B's
     'B_MASS_MAX': 6000, #MeV
@@ -58,7 +62,7 @@ default_config = {
     'B_MASS_MIN_MDST': 4800, #MeV
 #    'B_DOCA': 0.3, #mm
     'B_DOCACHI2': 16, # 4-body decay
-    'B_DIRA': 0.99, 
+    'B_DIRA': 0.999, 
     'B_VCHI2NDOF': 15,
     'B_BPVLTIME': 0.2, #ps
     # Cuts made on PID for specific particles
@@ -102,18 +106,22 @@ class B2DDphiConf(LineBuilder):
         # Cuts made on all D0's
         'D0_MASS_WIN',
         'D0_PT',
+        'D0_IPCHI2',
         'D0_VCHI2NDOF',
         # Cuts made on all D+'s
         'Dp_MASS_WIN',
         'Dp_PT',
+        'Dp_IPCHI2',
         'Dp_VCHI2NDOF',
         # Cuts made on all Ds+'s
         'Ds_MASS_WIN',
         'Ds_PT',
+        'Ds_IPCHI2',
         'Ds_VCHI2NDOF',
         # Cuts made on all D*+'s
         'Dst_MASS_WIN',
         'Dst_PT',
+        'Dst_IPCHI2',
         'Dst_VCHI2NDOF',
         # Cuts made on all B's
         'B_MASS_MAX',
@@ -160,6 +168,7 @@ class B2DDphiConf(LineBuilder):
                                                         config['PI_ProbNNpi_MIN'],
                                                         config[name+'_MASS_WIN'],
                                                         config[name+'_PT'],
+                                                        config[name+'_IPCHI2'],
                                                         config[name+'_VCHI2NDOF'])})
             
         # Select kaons from StdLoose list
@@ -247,6 +256,7 @@ class B2DDphiConf(LineBuilder):
                         PionProbNNpi,
                         DMassWin,
                         DPT,
+                        DIPCHI2,
                         DVCHI2):
         
         """
@@ -259,9 +269,10 @@ class B2DDphiConf(LineBuilder):
         TrackGHP         : Maximum ghost probability of K,pi.
         KaonProbNNk      : Minimum ProbNNK of K.
         PionProbNNpi     : Minimum ProbNNpi of pi.
-        DPT             : Minimum transverse momentum of D (MeV).
-        DMassWin        : D invariant mass window around PDG mass value (MeV).
-        DVCHI2          : Maximum D vertex chi2 (per degree of freedom?)
+        DPT              : Minimum transverse momentum of D (MeV).
+        DIPCHI2          : Minimum IP chi2 of D.
+        DMassWin         : D invariant mass window around PDG mass value (MeV).
+        DVCHI2           : Maximum D vertex chi2 (per degree of freedom?)
         """
         
         _params = locals()
@@ -269,6 +280,7 @@ class B2DDphiConf(LineBuilder):
             "& (INTREE(('pi+'==ABSID) & (PROBNNpi > %(PionProbNNpi)s) & (PT>%(TrackPT)s *MeV) & (MIPCHI2DV(PRIMARY)> %(TrackIPCHI2)s) & (TRGHP < %(TrackGHP)s)))" \
             "& (ADMASS('%(PDGName)s') < %(DMassWin)s *MeV)" \
             "& (PT > %(DPT)s *MeV)" \
+            "& (MIPCHI2DV(PRIMARY) > %(DIPCHI2)s)" \
             "& (VFASPF(VCHI2/VDOF) < %(DVCHI2)s)" % _params
         DCandidatesList = DataOnDemand(Location = "Phys/"+ContainerName+"/Particles")
         _dFilter = FilterDesktop(name+"FilterForBs2DDPhi",
