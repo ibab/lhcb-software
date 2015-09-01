@@ -19,12 +19,15 @@ __version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = (
-    'makeGraph'  , ## make graph from primitive data
-    'makeGraph2' , ## make graph from plain input two-column text 
-    'hToGraph'   , ## convert histogram to graph 
-    'hToGraph2'  , ## convert histogram to graph 
-    'hToGraph3'  , ## convert histogram to graph
-    'lw_graph'   , ## make Laffery-Wyatt's graph
+    'makeGraph'   , ## make graph from primitive data
+    'makeGraph2'  , ## make graph from plain input two-column text 
+    'makeGraph3'  , ## make graph with errors  from plain input four-column text 
+    'makeGraphs3' , ## make graphs from plain input multicolumn text 
+    'makeGraphs4' , ## make graphs from plain input multicolumn text 
+    'hToGraph'    , ## convert histogram to graph 
+    'hToGraph2'   , ## convert histogram to graph 
+    'hToGraph3'   , ## convert histogram to graph
+    'lw_graph'    , ## make Laffery-Wyatt's graph
     ##
     ) 
 # =============================================================================
@@ -41,10 +44,27 @@ else                       : logger = getLogger( __name__ )
 # =============================================================================
 logger.debug ( 'Graph-related decorations')
 # =============================================================================
-## copy graph attributes 
+## copy graph attributes
+#  - LineColor
+#  - LineWidth
+#  - LineStyle
+#  - MarkerColor 
+#  - MarkerSize
+#  - MarkerStyle 
+#  - FillColor
+#  - FillStyle  
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07  
 def copy_graph_attributes ( o_from , o_to ) :
-    """
-    copy graph attributes 
+    """Copy graph attributes
+    - LineColor
+    - LineWidth
+    - LineStyle
+    - MarkerColor 
+    - MarkerSize
+    - MarkerStyle 
+    - FillColor
+    - FillStyle  
     """
     ##
     ## line attributes:
@@ -77,8 +97,7 @@ def copy_graph_attributes ( o_from , o_to ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def makeGraph ( x , y = []  , ex = [] , ey = [] ) :
-    """
-    Make graph using the primitive data
+    """ Make graph using the primitive data
     """
     if  isinstance ( x , dict ) and not y and not ex and not ey : 
         _x = []
@@ -120,12 +139,13 @@ def makeGraph ( x , y = []  , ex = [] , ey = [] ) :
         
     return gr
 
+
 # =============================================================================
 ## create TGraph from the plain text two-column format with optional comments.
 #  E.g. the files provided by FONLL on-line calculator can be parsed
 #  @see http://www.lpthe.jussieu.fr/~cacciari/fonll/fonllform.html
 #  @code
-#  gr = makeGraph ( '''
+#  gr = makeGraph2 ( '''
 #  # Job started on: Mon Aug 31 10:02:29 CEST 2015 .
 #  # FONLL heavy quark hadroproduction cross section
 #  # FONLL version and perturbative order: ## FONLL v1.3.2 fonll [ds/dpt^2dy (pb/GeV^2)]
@@ -204,15 +224,326 @@ def makeGraph2 ( text ) :
     ## make a graph 
     return makeGraph ( vals )
 
+
 # =============================================================================
-## convert histogram to graph
+## create TGraphAsymmErrors from the plain text multicolumn-column format with optional comments.
+#  E.g. the files provided by FONLL on-line calculator can be parsed
+#  @see http://www.lpthe.jussieu.fr/~cacciari/fonll/fonllform.html
+#  @code
+#  gr = makeGraph3 ( '''
+#  # Job started on: Tue Sep  1 09:17:07 CEST 2015 .
+#  # FONLL heavy quark hadroproduction cross section
+#  # FONLL version and perturbative order: ## FONLL v1.3.2 fonll [ds/dpt^2dy (pb/GeV^2)]
+#  # quark = charm
+#  # final state = quark
+#  # ebeam1 = 3500, ebeam2 = 3500
+#  # PDF set = CTEQ6.6
+#  # ptmin = 5
+#  # ptmax = 20
+#  # ymin  = -1
+#  # ymax  = 1
+#  # Uncertainties from scales
+#  # cross section is ds/dpt (pb/GeV)
+#  #  pt      central      min       max       min_sc     max_sc
+#    5.0000 6.6425e+07 3.6583e+07 1.1376e+08 3.6583e+07 1.1376e+08
+#   10.0000 5.5774e+06 4.1829e+06 7.8655e+06 4.1829e+06 7.8655e+06
+#   15.0000 9.7257e+05 7.7270e+05 1.2580e+06 7.7270e+05 1.2580e+06
+#   20.0000 2.5771e+05 2.1161e+05 3.1773e+05 2.1161e+05 3.1773e+05
+#  '''
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @data 2015-08-31
+def makeGraph3 ( text ) :
+    """Create TGraphAsymmErrors from simple multicolumn-column text format,
+    e.g. the files provided by FONLL on-line calculator can be parsed
+    @see http://www.lpthe.jussieu.fr/~cacciari/fonll/fonllform.html
+    >>> graph = makeGraph3 ( '''
+    ... # Job started on: Tue Sep  1 09:17:07 CEST 2015 .
+    ... # FONLL heavy quark hadroproduction cross section
+    ... # FONLL version and perturbative order: ## FONLL v1.3.2 fonll [ds/dpt^2dy (pb/GeV^2)]
+    ... # quark = charm
+    ... # final state = quark
+    ... # ebeam1 = 3500, ebeam2 = 3500
+    ... # PDF set = CTEQ6.6
+    ... # ptmin = 5
+    ... # ptmax = 20
+    ... # ymin  = -1
+    ... # ymax  = 1
+    ... # Uncertainties from scales
+    ... # cross section is ds/dpt (pb/GeV)
+    ... #  pt      central      min       max       min_sc     max_sc
+    ...  5.0000 6.6425e+07 3.6583e+07 1.1376e+08 3.6583e+07 1.1376e+08
+    ... 10.0000 5.5774e+06 4.1829e+06 7.8655e+06 4.1829e+06 7.8655e+06
+    ... 15.0000 9.7257e+05 7.7270e+05 1.2580e+06 7.7270e+05 1.2580e+06
+    ... 20.0000 2.5771e+05 2.1161e+05 3.1773e+05 2.1161e+05 3.1773e+05'''
+    """
+    text = text.split('\n')
+    if not text : return ROOT.TGraphAsymmErrors()
+
+    points = [] 
+    for line in text :
+        line = line.strip()
+        if not line  : continue
+        if '#' == line[0] :
+            logger.info   ('Comment: %s' % line )
+            continue
+        ## remove  traling comments 
+        line, s, tail = line.partition('#')
+        if not line : continue 
+        values = line.split (' ')
+        if 4  > len ( values ) :
+            logger.warning('Strange line, skip it: "%s"' % line )
+            continue
+        x  = values[0].strip() 
+        y  = values[1].strip() 
+        mn = values[2].strip() 
+        mx = values[3].strip() 
+        x  = float(x)
+        y  = float(y)
+        mn = float(mn)
+        mx = float(mx)
+        points.append ( (x , 0 , 0 , y , y - mn , mx - y ) ) 
+    #
+    ## make a graph
+    #
+    graph = ROOT.TGraphAsymmErrors ( len ( points ) )
+    for p in range( len ( points ) ) : graph[p] = points[p]
+    return graph 
+
+# =============================================================================
+## create *three* TGraphAsymmErrors from the plain text multicolumn-column
+#  format with optional comments.
+#  E.g. the files provided by FONLL on-line calculator can be parsed
+#  @see http://www.lpthe.jussieu.fr/~cacciari/fonll/fonllform.html
+#  @code
+#  gtot,gscale,gmass  = makeGraphs3 ( '''
+#  # Job started on: Tue Sep  1 09:44:37 CEST 2015 .
+#  # FONLL heavy quark hadroproduction cross section
+#  # FONLL version and perturbative order: ## FONLL v1.3.2 fonll [ds/dpt^2dy (pb/GeV^2)]
+#  # quark = bottom
+#  # final state = quark
+#  # ebeam1 = 3500, ebeam2 = 3500
+#  # PDF set = CTEQ6.6
+#  # ptmin = 5
+#  # ptmax = 20
+#  # ymin  = -1
+#  # ymax  = 1
+#  # Uncertainties from scales, masses combined quadratically
+#  # cross section is ds/dpt (pb/GeV)
+#  #  pt      central      min       max       min_sc     max_sc     min_mass   max_mass
+#     5.0000 8.6807e+06 5.4820e+06 1.2523e+07 5.6934e+06 1.2285e+07 7.5373e+06 1.0012e+07
+#    20.0000 2.2821e+05 1.8208e+05 2.9430e+05 1.8256e+05 2.9398e+05 2.2160e+05 2.3465e+05
+#  '''
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @data 2015-08-31
+def makeGraphs3 ( text ) :
+    """Create *three  TGraphAsymmErrors from simple multicolumn-column text format,
+    e.g. the files provided by FONLL on-line calculator can be parsed
+    @see http://www.lpthe.jussieu.fr/~cacciari/fonll/fonllform.html
+    >>> gtot,gscale,gmass = makeGraphs3 ( '''
+    ... # Job started on: Tue Sep  1 09:44:37 CEST 2015 .
+    ... # FONLL heavy quark hadroproduction cross section
+    ... # FONLL version and perturbative order: ## FONLL v1.3.2 fonll [ds/dpt^2dy (pb/GeV^2)]
+    ... # quark = bottom
+    ... # final state = quark
+    ... # ebeam1 = 3500, ebeam2 = 3500
+    ... # PDF set = CTEQ6.6
+    ... # ptmin = 5
+    ... # ptmax = 20
+    ... # ymin  = -1
+    ... # ymax  = 1
+    ... # Uncertainties from scales, masses combined quadratically
+    ... # cross section is ds/dpt (pb/GeV)
+    ... #  pt      central      min       max       min_sc     max_sc     min_mass   max_mass
+    ...  5.0000 8.6807e+06 5.4820e+06 1.2523e+07 5.6934e+06 1.2285e+07 7.5373e+06 1.0012e+07
+    ... 20.0000 2.2821e+05 1.8208e+05 2.9430e+05 1.8256e+05 2.9398e+05 2.2160e+05 2.3465e+05
+    '''
+    """
+    text = text.split('\n')
+    if not text : return ( ROOT.TGraphAsymmErrors () ,
+                           ROOT.TGraphAsymmErrors () ,
+                           ROOT.TGraphAsymmErrors () )
+    
+    ptot   = [] 
+    pscale = [] 
+    pmass  = [] 
+    for line in text :
+        line = line.strip()
+        if not line  : continue
+        if '#' == line[0] :
+            logger.info   ('Comment: %s' % line )
+            continue
+        ## remove  traling comments 
+        line, s, tail = line.partition('#')
+        if not line : continue 
+        values = line.split (' ')
+        if 8  > len ( values ) :
+            logger.warning('Strange line, skip it: "%s"' % line )
+            continue
+        x   = values[0].strip() 
+        y   = values[1].strip() 
+        mnt = values[2].strip() 
+        mxt = values[3].strip()
+        mnm = values[4].strip() 
+        mxm = values[5].strip()
+        mns = values[6].strip() 
+        mxs = values[7].strip()
+        
+        x   = float ( x   ) 
+        y   = float ( y   )
+        mnt = float ( mnt )
+        mxt = float ( mxt )
+        mns = float ( mns )
+        mxs = float ( mxs )
+        mnm = float ( mnm )
+        mxm = float ( mxm )
+        
+        ptot  .append ( ( x , 0 , 0 , y , y - mnt , mxt - y ) ) 
+        pscale.append ( ( x , 0 , 0 , y , y - mns , mxs - y ) ) 
+        pmass .append ( ( x , 0 , 0 , y , y - mnm , mxm - y ) ) 
+    #
+    ## make a graph
+    #
+    np = len( ptot ) 
+    gtot   = ROOT.TGraphAsymmErrors ( np )
+    gscale = ROOT.TGraphAsymmErrors ( np )
+    gmass  = ROOT.TGraphAsymmErrors ( np )
+    for p in range ( np ) :
+        gtot   [p] = ptot   [p]
+        gscale [p] = pscale [p]
+        gmass  [p] = pmass  [p]
+    return gtot,gscale,gmass
+
+
+# =============================================================================
+## create *four* TGraphAsymmErrors from the plain text multicolumn-column
+#  format with optional comments.
+#  E.g. the files provided by FONLL on-line calculator can be parsed
+#  @see http://www.lpthe.jussieu.fr/~cacciari/fonll/fonllform.html
+#  @code
+#  gtot,gscale,gmass,gpdf  = makeGraphs4 ( '''
+#  # Job started on: Tue Sep  1 09:53:00 CEST 2015 .
+#  # FONLL heavy quark hadroproduction cross section
+#  # FONLL version and perturbative order: ## FONLL v1.3.2 fonll [ds/dpt^2dy (pb/GeV^2)]
+#  # quark = bottom
+#  # final state = quark
+#  # ebeam1 = 3500, ebeam2 = 3500
+#  # PDF set = CTEQ6.6
+#  # ptmin = 5
+#  # ptmax = 20
+#  # ymin  = -1
+#  # ymax  = 1
+#  # Uncertainties from scales, masses, PDFs combined quadratically
+#  # cross section is ds/dpt (pb/GeV)
+#  pt      central      min       max       min_sc     max_sc     min_mass   max_mass     min_pdf    max_pdf
+#   5.0000 8.6807e+06 5.3324e+06 1.2649e+07 5.6934e+06 1.2285e+07 7.5373e+06 1.0012e+07 7.6909e+06 9.6704e+06
+#  20.0000 2.2821e+05 1.7966e+05 2.9601e+05 1.8256e+05 2.9398e+05 2.2160e+05 2.3465e+05 2.1304e+05 2.4337e+05
+#  '''
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @data 2015-08-31
+def makeGraphs4 ( text ) :
+    """Create *four*  TGraphAsymmErrors from simple multicolumn-column text format,
+    e.g. the files provided by FONLL on-line calculator can be parsed
+    @see http://www.lpthe.jussieu.fr/~cacciari/fonll/fonllform.html
+    >>> gtot,gscale,gmass,gpdf = makeGraphs4 ( '''
+    ... # Job started on: Tue Sep  1 09:53:00 CEST 2015 .
+    ... # FONLL heavy quark hadroproduction cross section
+    ... # FONLL version and perturbative order: ## FONLL v1.3.2 fonll [ds/dpt^2dy (pb/GeV^2)]
+    ... # quark = bottom
+    ... # final state = quark
+    ... # ebeam1 = 3500, ebeam2 = 3500
+    ... # PDF set = CTEQ6.6
+    ... # ptmin = 5
+    ... # ptmax = 20
+    ... # ymin  = -1
+    ... # ymax  = 1
+    ... # Uncertainties from scales, masses, PDFs combined quadratically
+    ... # cross section is ds/dpt (pb/GeV)
+    ... pt      central      min       max       min_sc     max_sc     min_mass   max_mass     min_pdf    max_pdf
+    ...  5.0000 8.6807e+06 5.3324e+06 1.2649e+07 5.6934e+06 1.2285e+07 7.5373e+06 1.0012e+07 7.6909e+06 9.6704e+06
+    ... 20.0000 2.2821e+05 1.7966e+05 2.9601e+05 1.8256e+05 2.9398e+05 2.2160e+05 2.3465e+05 2.1304e+05 2.4337e+05
+    ... '''
+    """
+    text = text.split('\n')
+    if not text : return ( ROOT.TGraphAsymmErrors () ,
+                           ROOT.TGraphAsymmErrors () ,
+                           ROOT.TGraphAsymmErrors () ,
+                           ROOT.TGraphAsymmErrors () )
+    
+    ptot   = [] 
+    pscale = [] 
+    pmass  = [] 
+    ppdf   = [] 
+    for line in text :
+        line = line.strip()
+        if not line  : continue
+        if '#' == line[0] :
+            logger.info   ('Comment: %s' % line )
+            continue
+        ## remove  traling comments 
+        line, s, tail = line.partition('#')
+        if not line : continue 
+        values = line.split (' ')
+        if 10  > len ( values ) :
+            logger.warning('Strange line, skip it: "%s"' % line )
+            continue
+        x   = values[0].strip() 
+        y   = values[1].strip() 
+        mnt = values[2].strip() 
+        mxt = values[3].strip()
+        mnm = values[4].strip() 
+        mxm = values[5].strip()
+        mns = values[6].strip() 
+        mxs = values[7].strip()
+        mnp = values[8].strip() 
+        mxp = values[9].strip()
+        
+        x   = float ( x   ) 
+        y   = float ( y   )
+        mnt = float ( mnt )
+        mxt = float ( mxt )
+        mns = float ( mns )
+        mxs = float ( mxs )
+        mnm = float ( mnm )
+        mxm = float ( mxm )
+        mnp = float ( mnp )
+        mxp = float ( mxp )
+        
+        ptot  .append ( ( x , 0 , 0 , y , y - mnt , mxt - y ) )
+        pscale.append ( ( x , 0 , 0 , y , y - mns , mxs - y ) ) 
+        pmass .append ( ( x , 0 , 0 , y , y - mnm , mxm - y ) )
+        ppdf  .append ( ( x , 0 , 0 , y , y - mnp , mxp - y ) )
+    #
+    ## make a graph
+    #
+    np     = len ( ptot ) 
+    gtot   = ROOT.TGraphAsymmErrors ( np )
+    gscale = ROOT.TGraphAsymmErrors ( np )
+    gmass  = ROOT.TGraphAsymmErrors ( np )
+    gpdf   = ROOT.TGraphAsymmErrors ( np )
+    for p in range ( np ) :
+        gtot   [p] = ptot   [p]
+        gscale [p] = pscale [p]
+        gmass  [p] = pmass  [p]
+        gpdf   [p] = ppdf   [p]
+    return gtot,gscale,gmass,gpdf 
+
+# =============================================================================
+## convert histogram to graph with optional  transformation
+#  @code
+#  histo = ...
+#  graph = histo.toGraph()
+#  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def hToGraph ( h1                   ,
                funcx = lambda s : s ,
                funcv = lambda s : s ) :
-    """
-    Convert  1D-histogram into graph 
+    """ Convert  1D-histogram into graph with optional transformations 
+    >>> histo = ...
+    >>> graph = histo.toGraph()
     """
     #
     ## book graph
@@ -235,12 +566,13 @@ def hToGraph ( h1                   ,
     return graph
 
 # =============================================================================
-## convert histogram to graph
+## Helper function convert histogram to graph, applyong some
+#  transformation 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
-def hToGraph_ ( h1 , funcx , funcy ) :
-    """
-    Convert  1D-histogram into TGraphAsymmError 
+def _hToGraph_ ( h1 , funcx , funcy ) :
+    """ Convert  1D-histogram into TGraphAsymmError
+    applying sime in-flight transformations 
     """
     #
     ## book graph
@@ -271,13 +603,10 @@ def hToGraph_ ( h1 , funcx , funcy ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def hToGraph2 ( h1 , bias ) :
-    """
-    Convert  1D-histogram into graph with small shift in x
+    """Convert  1D-histogram into graph with small shift in x
     Useful for overlay of very similar plots
-
     >>> h1 = ....
-    >>> g2 = h1.asGraph2 ( 0.1 ) ## shift for 10% of bin width
-    
+    >>> g2 = h1.asGraph2 ( 0.1 ) ## shift for 10% of bin width    
     """
     if abs ( bias ) > 1 :
         raise ValueError, ' Illegal value for "bias" parameter '
@@ -285,20 +614,17 @@ def hToGraph2 ( h1 , bias ) :
     funcx = lambda x,y : ( x.value() + x.error()*bias , x.error()*(1+bias) , x.error()*(1-bias) ) 
     funcy = lambda x,y : ( y.value()                  , y.error()          , y.error()          ) 
         
-    return hToGraph_ ( h1 , funcx , funcy ) 
+    return _hToGraph_ ( h1 , funcx , funcy ) 
 
 # =============================================================================
 ## convert histogram to graph
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def hToGraph3 ( h1 , bias ) :
-    """
-    Convert  1D-histogram into graph with small shift in x
+    """ Convert  1D-histogram into graph with small shift in x
     Useful for overlay of very similar plots
-
     >>> h1 = ....
-    >>> g2 = h1.asGraph2 ( 0.1 ) ## shift for 0.1 (absolute)
-    
+    >>> g2 = h1.asGraph2 ( 0.1 ) ## shift for 0.1 (absolute)    
     """
     for p in h1.iteritems() :
         x = p[1]
@@ -308,9 +634,13 @@ def hToGraph3 ( h1 , bias ) :
     funcx = lambda x,y : ( x.value() + bias , x.error()+bias , x.error()-bias )
     funcy = lambda x,y : ( y.value()        , y.error()      , y.error()      ) 
         
-    return hToGraph_ ( h1 , funcx , funcy ) 
+    return _hToGraph_ ( h1 , funcx , funcy ) 
 
 
+ROOT.TH1F.asGraph  = hToGraph
+ROOT.TH1D.asGraph  = hToGraph
+ROOT.TH1F.toGraph  = hToGraph
+ROOT.TH1D.toGraph  = hToGraph
 ROOT.TH1F.asGraph2 = hToGraph2
 ROOT.TH1D.asGraph2 = hToGraph2
 ROOT.TH1F.toGraph2 = hToGraph2
@@ -331,8 +661,7 @@ ROOT.TH1D.toGraph3 = hToGraph3
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _gr_call_ ( graph , x , spline = None , opts = 'S' ) :
-    """
-    Use graph as function
+    """ Use graph as function
     >>> graph = ...
     >>> y     = graph ( 0.2 ) 
     """
@@ -349,8 +678,7 @@ def _gr_call_ ( graph , x , spline = None , opts = 'S' ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-08-31
 def _gr_integral_ ( graph , xlow , xhigh , scipy = True ) :
-    """
-    Calculate an integral over the range \f$x_{low} \le x \le x_{high}\f$
+    """Calculate an integral over the range \f$x_{low} \le x \le x_{high}\f$
     It is not very efficient, but OK 
     >>> graph = ...
     >>> i     = graph.integral ( 0 , 1 )
@@ -381,8 +709,9 @@ def _gr_iter_ ( graph ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _gr_getitem_ ( graph , ipoint )  :
-    """
-    Get the point from the Graph
+    """Get the point from the Graph
+    >>> graph = ...
+    >>> x,y   = graph[3]
     """
     if not ipoint in graph : raise IndexError 
     #
@@ -403,17 +732,16 @@ def _gr_getitem_ ( graph , ipoint )  :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _gr_setitem_ ( graph , ipoint , point )  :
-    """
-    Get the point from the Graph
-    >>> graph = ...
-    >>> x , y = graph[1]
+    """ Set the point from the Graph
+    >>> graph    = ...
+    >>> graph[1] = x,y 
     """
     #
     if not ipoint in graph : raise IndexError 
     #
     
-    x = VE ( point[0] ).value () 
-    v = VE ( point[1] ).value () 
+    x = float ( point[0] )
+    y = float ( point[1] )
     
     graph.SetPoint      ( ipoint , x , v )
 
@@ -427,8 +755,7 @@ def _gr_setitem_ ( graph , ipoint , point )  :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _gr_iteritems_ ( graph ) :
-    """
-    Iterate over graph points 
+    """Iterate over graph points 
     >>> graph = ...
     >>> for i,x,v in graph.iteritems(): ...
     """
@@ -439,11 +766,16 @@ def _gr_iteritems_ ( graph ) :
         
 # =============================================================================
 ## get the point in TGraphErrors
+#  @code
+#  graph = ...
+#  x,y   = graph[4] 
+#  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _gre_getitem_ ( graph , ipoint )  :
-    """
-    Get the point from the Graph
+    """Get the point from the Graph
+    >>> graph = ...
+    >>> x,y = graph[3]
     """
     if not ipoint in graph : raise IndexError 
     #
@@ -460,11 +792,16 @@ def _gre_getitem_ ( graph , ipoint )  :
 
 # =============================================================================
 ## set the point in TGraphErrors
+#  @code
+#  graph    = ...
+#  graph[4] = x,y 
+#  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _gre_setitem_ ( graph , ipoint , point )  :
-    """
-    Get the point from the Graph
+    """ Set the point in Graph
+    >>> graph    = ...
+    >>> graph[4] = x,y 
     """
     #
     if not ipoint in graph    : raise IndexError
@@ -485,8 +822,7 @@ def _gre_setitem_ ( graph , ipoint , point )  :
 #  fun   = grap.asTF1() 
 #  @endcode
 def _gr_as_TF1_ ( graph ) :
-    """
-    Represent TGraph as TF1
+    """ Represent TGraph as TF1
     >>> graph = ...
     >>> fun   = grap.asTF1() 
     """
@@ -545,7 +881,7 @@ def _grae_setitem_ ( graph , ipoint , point ) :
     Iterate over graph points 
     
     >>> grae = ...
-    >>> for i,x,xl,xh,y,yl,yh in grae.iteritems(): ...
+    >>> grae[1] = x,xl,xh,y,yl,yh
     
     """
     if not ipoint in graph : raise IndexError
@@ -560,7 +896,6 @@ def _grae_setitem_ ( graph , ipoint , point ) :
     
     graph.SetPoint      ( ipoint , x   , y )
     graph.SetPointError ( ipoint , exl , exh , eyl , eyh )
-
 
 
 # =============================================================================
@@ -998,11 +1333,8 @@ for _t in  ( ROOT.TH1D , ROOT.TH1F , ROOT.TGraph , ROOT.TGraphErrors ) :
 # =============================================================================
 ## min-value for the graph)
 def _gr_xmax_ ( graph ) :
-    """
-    Get x-max for the graph
-    
+    """Get x-max for the graph    
     >>> xmax = graph.xmax()
-
     """
     #
     _size = len ( graph )
@@ -1017,11 +1349,8 @@ def _gr_xmax_ ( graph ) :
 # =============================================================================
 ## min-value for the graph)
 def _gr_xmin_ ( g ) :
-    """
-    Get x-min for the graph
-    
-    >>> xmin = graph.xmin()
-    
+    """Get x-min for the graph    
+    >>> xmin = graph.xmin()    
     """
     #
     _size = len ( graph )
@@ -1036,13 +1365,11 @@ def _gr_xmin_ ( g ) :
 # =============================================================================
 ## minmax-value for the graph)
 def _gr_xminmax_ ( graph ) :
-    """
-    Get x-minmax for the graph
-
+    """Get x-minmax for the graph
     >>> xmin,xmax = graph.xminmax() 
     """
     #
-    return (graph.xmin(), graph.xmax() )
+    return  graph.xmin() , graph.xmax() 
 
 ROOT.TGraph  . xmin    = _gr_xmin_
 ROOT.TGraph  . xmax    = _gr_xmax_
@@ -1076,24 +1403,19 @@ ROOT.TGraph  . xminmax = _gr_xminmax_
 #  @author  Vanya BELYAEV  Ivan.Belyaev@itep.ru
 #  @date    2014-12-08
 def _lw_graph_ ( histo , func ) :
-    """
-    Convert the histogram to into ``Laffery-Wyatt'' graph
+    """Convert the histogram to into ``Laffery-Wyatt'' graph
     See G.D. Lafferty and T.R. Wyatt,
     ``Where to stick your data points: The treatment of measurements within wide bins,''
     Nucl. Instrum. Meth. A355, 541 (1995).
-
-    >>> histo = ... ## the histogram
-    
+    >>> histo = ... ## the histogram    
     ## the explicit model:
-    >>> graph  = histo.lw_graph ( lambda x : math.exp(-x) )
-    
+    >>> graph  = histo.lw_graph ( lambda x : math.exp(-x) )    
     ## use splines:
     >>> spline = histo.(p,i,d)spline( .... ) 
     >>> graph  = histo.lw_graph ( spline[2] )
     >>> histo.Draw('e1')
     >>> graph.Draw('e1p same')    
-    """
-    
+    """    
     #
     ## book graph
     #
@@ -1193,17 +1515,13 @@ ROOT.TH1F.lw_graph = _lw_graph_
 #  @author  Vanya BELYAEV  Ivan.Belyaev@itep.ru
 #  @date    2014-12-08
 def lw_graph ( histo , func ) :
-    """
-    Convert the histogram to into ``Laffery-Wyatt'' graph
+    """Convert the histogram to into ``Laffery-Wyatt'' graph
     See G.D. Lafferty and T.R. Wyatt,
     ``Where to stick your data points: The treatment of measurements within wide bins,''
     Nucl. Instrum. Meth. A355, 541 (1995).
-
-    >>> histo = ... ## the histogram
-    
+    >>> histo = ... ## the histogram    
     ## the explicit model:
-    >>> graph  = lw_graph ( histo , lambda x : math.exp(-x) )
-    
+    >>> graph  = lw_graph ( histo , lambda x : math.exp(-x) )    
     ## use splines:
     >>> spline = histo.(p,i,d)spline( .... ) 
     >>> graph  = lw_graph ( histo , spline[2] )

@@ -8,6 +8,11 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-09-01 - Vanya Belyaev
+ - more functionality for parsing FONLL files 
+ - more functionality for TGraphs 
+ - add qmtest 
+
 ! 2015-08-31 - Vanya Belyaev
  - add parsing of FONLL files 
 
