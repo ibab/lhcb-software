@@ -1,4 +1,5 @@
 from GaudiKernel.SystemOfUnits import GeV, mm, MeV, picosecond
+import math
 
 class CharmHad_25ns_September2015 :
     """
@@ -220,6 +221,31 @@ class CharmHad_25ns_September2015 :
                  'Hlt2CharmHadDpDsp2KmKpPipPi0',
                  'Hlt2CharmHadDpDsp2KpKpPimPi0',
                  'Hlt2CharmHadDpDsp2KmKpKpPi0',
+                 'Hlt2CharmHadXiccp2LcpKmPip_Lcp2PpKmPipTurbo',
+                 'Hlt2CharmHadXiccpp2LcpKmPipPip_Lcp2PpKmPipTurbo',
+                 'Hlt2CharmHadXiccp2DpPpKm_Dp2KmPipPipTurbo',
+                 'Hlt2CharmHadXiccpp2DpPpKmPip_Dp2KmPipPipTurbo',
+                 'Hlt2CharmHadXiccp2D0PpKmPip_D02KmPipTurbo',
+                 'Hlt2CharmHadXiccpp2D0PpKmPipPip_D02KmPipTurbo',
+                 'Hlt2CharmHadXiccp2XicpPimPip_Xicp2PpKmPipTurbo',
+                 'Hlt2CharmHadXiccpp2XicpPip_Xicp2PpKmPipTurbo',
+                 'Hlt2CharmHadXiccp2Xic0Pip_Xic0ToPpKmKmPipTurbo',
+                 'Hlt2CharmHadXiccpp2Xic0PipPip_Xic0ToPpKmKmPipTurbo',
+                 'Hlt2CharmHadXiccp2LcpKmPim_Lcp2PpKmPipTurbo',
+                 'Hlt2CharmHadXiccpp2LcpKmPimPip_Lcp2PpKmPipTurbo',
+                 'Hlt2CharmHadXiccp2DpPpKp_Dp2KmPipPipTurbo',
+                 'Hlt2CharmHadXiccpp2DpPpKpPip_Dp2KmPipPipTurbo',
+                 'Hlt2CharmHadXiccpp2DpPpKmPim_Dp2KmPipPipTurbo',
+                 'Hlt2CharmHadXiccp2D0PpKmPim_D02KmPipTurbo',
+                 'Hlt2CharmHadXiccpp2D0PpKmPimPip_D02KmPipTurbo',
+                 'Hlt2CharmHadXiccp2XicpPimPim_Xicp2PpKmPipTurbo',
+                 'Hlt2CharmHadXiccpp2XicpPim_Xicp2PpKmPipTurbo',
+                 'Hlt2CharmHadXiccp2Xic0Pim_Xic0ToPpKmKmPipTurbo',
+                 'Hlt2CharmHadXiccpp2Xic0PimPip_Xic0ToPpKmKmPipTurbo',
+                 'Hlt2CharmHadXiccp2LcpKpPim_Lcp2PpKmPipTurbo',
+                 'Hlt2CharmHadXiccpp2LcpKpPimPip_Lcp2PpKmPipTurbo',
+                 'Hlt2CharmHadXiccp2D0PpKpPim_D02KmPipTurbo',
+                 'Hlt2CharmHadXiccpp2D0PpKpPimPip_D02KmPipTurbo',
                  ]
 
         return lines
@@ -1545,7 +1571,54 @@ class CharmHad_25ns_September2015 :
                           'Mass_M_MAX': 1355.0 * MeV,
                           'Mass_M_MIN': 1290.0 * MeV,
                           'Trk_ALL_MIPCHI2DV_MIN': 16.0,
-                          'VCHI2PDOF_MAX': 10.0}}
+                          'VCHI2PDOF_MAX': 10.0},
+ 'Xicc2HcH'   : {    'Trk_ALL_MIPCHI2DV_MIN': -1.0
+                   , 'AM_MIN'               :  3.1 * GeV
+                   , 'AM_MAX'               :  4.0 * GeV
+                   , 'ASUMPT_MIN'           :  2.0 * GeV
+                   , 'VCHI2PDOF_MAX'        : 20.0
+                   , 'BPVDIRA_MIN'          :  0.0
+                   , 'BPVVDCHI2_MIN'        : -1.0
+                   , 'BPVLTIME_MIN'         : -1.0e3 * picosecond
+                   , 'TisTosSpec'           : "Hlt1.*Track.*Decision%TOS"
+                 },
+ 'Xicc2HcHH'   : {   'Trk_1of2_PT_MIN'      :  250.0 * MeV
+                   , 'Comb_AM_MIN'          :    3.1 * GeV
+                   , 'Comb_AM_MAX'          :    4.0 * GeV
+                   , 'Comb_ACHI2DOCA_MAX'   :   10.0
+                   , 'Comb_APT_MIN'         :    2.0 * GeV
+                   , 'Xicc_VCHI2PDOF_MAX'   :   30.0
+                   , 'Xicc_VZ1VZdiff_MIN'   :    0.01 * mm
+                   , 'Xicc_BPVVDCHI2_MIN'   :   -1.0
+                   , 'Xicc_acosBPVDIRA_MIN' : math.pi / 2.0
+                   , 'TisTosSpec'           : "Hlt1.*Track.*Decision%TOS"
+                 },
+ 'Xicc2HcHHH'  : {   'Trk_2of3_PT_MIN'      :  250.0 * MeV
+                   , 'Trk_1of3_PT_MIN'      :  250.0 * MeV
+                   , 'Comb_AM_MIN'          :    3.1 * GeV
+                   , 'Comb_AM_MAX'          :    4.0 * GeV
+                   , 'Comb_ACHI2DOCA_MAX'   :   10.0
+                   , 'Comb_APT_MIN'         :    2.0 * GeV
+                   , 'Xicc_VCHI2PDOF_MAX'   :   60.0
+                   , 'Xicc_VZ1VZdiff_MIN'   :    0.01 * mm
+                   , 'Xicc_BPVVDCHI2_MIN'   :   -1.0
+                   , 'Xicc_acosBPVDIRA_MIN' : math.pi / 2.0
+                   , 'TisTosSpec'           : "Hlt1.*Track.*Decision%TOS"
+                 },
+ 'Xicc2HcHHHH' : {   'Trk_3of4_PT_MIN'      :  250.0 * MeV
+                   , 'Trk_2of4_PT_MIN'      :  250.0 * MeV
+                   , 'Trk_1of4_PT_MIN'      :  250.0 * MeV
+                   , 'Comb_AM_MIN'          :    3.1 * GeV
+                   , 'Comb_AM_MAX'          :    4.0 * GeV
+                   , 'Comb_ACHI2DOCA_MAX'   :   10.0
+                   , 'Comb_APT_MIN'         :    2.0 * GeV
+                   , 'Xicc_VCHI2PDOF_MAX'   :   60.0
+                   , 'Xicc_VZ1VZdiff_MIN'   :    0.01 * mm
+                   , 'Xicc_BPVVDCHI2_MIN'   :   -1.0
+                   , 'Xicc_acosBPVDIRA_MIN' : math.pi / 2.0
+                   , 'TisTosSpec'           : "Hlt1.*Track.*Decision%TOS"
+            }
+          }
         }   )
 
         return d
