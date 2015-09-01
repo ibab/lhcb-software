@@ -3,7 +3,7 @@
 # Maintainer : Gerhard Raven
 #============================================================================
 package           HltBase
-version           v15r6
+version           v15r7
 
 # Structure, i.e. directories to process. 
 #============================================================================
