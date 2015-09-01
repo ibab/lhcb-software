@@ -242,7 +242,7 @@ namespace DecayTreeFitter
         if( --counter>=0)
         {
           print( "DecayTreeFitter::Fitter: Warning: Error matrix not positive definite."
-                 " Changing status to failed.", MSG::WARNING );
+                 " Changing status to failed.", MSG::DEBUG );
         }
         m_status = Failed ;
       }
