@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-09-01 - Andrea Contu
+ - Removed old s20 series qmtests. Updated references for the others
+
 !========================= DaVinciTests v2r37 2015-08-24 =========================
 
 ! 2015-08-20 - Chris Jones
