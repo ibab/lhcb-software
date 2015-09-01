@@ -178,7 +178,7 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"],     "dddb-20150724" )
-        self.__set_tag__(["LHCBCOND"], "cond-20150805" )
+        self.__set_tag__(["LHCBCOND"], "cond-20150828" )
         self.__set_tag__(["DQFLAGS"],  "dq-20150717"   )
         self.__set_tag__(["CALIBOFF"], "head-2015604" )
         if not self.getProp("Simulation"):
