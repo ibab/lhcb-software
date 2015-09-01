@@ -6,6 +6,8 @@ Purpose: LHCb reconstruction program
 - Changes to references to reflect changes since v48r2
   . Follow fix to FastVeloTracking matching of RZ track to Phi hits when beam is
     off centre (FastVelo)
+  . Follow reintroduction of "Stripping21" calo reconstruction for 2015 data,
+    via cond-20150828 LHCBCOND tag (DDDB)
 
 </PRE><H1><A NAME=v48r2>2015-08-25 Brunel v48r2</A></H1><PRE>
 This version uses projects LHCb v39r0, Lbcom v17r0, Rec v18r1, Gaudi v26r3
