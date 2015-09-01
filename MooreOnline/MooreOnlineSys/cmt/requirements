@@ -7,7 +7,7 @@ branches doc cmt tests
 #=======================================================
 
 use  MooreScripts      v1r12
-use  MooreOnlineConf   v1r10
+use  MooreOnlineConf   v1r11
 use  IndependenceTests v1r13    Hlt
 use  HltMonitoring     v1r2     Hlt
 
