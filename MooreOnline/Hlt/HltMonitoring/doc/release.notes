@@ -4,6 +4,8 @@
 ! Purpose     : Monitoring of the HLT
 !-----------------------------------------------------------------------------
 
+!========================= HltMonitoring v1r2 2015-09-01 =========================
+
 ! 2015-08-18 - Roel Aaij
  - Fix lumi rate.
  - Create mass and plots for all lines with a default range of (0, 8) GeV.
