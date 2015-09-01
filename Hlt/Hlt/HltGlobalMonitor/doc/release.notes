@@ -5,6 +5,8 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+!========================= HltGlobalMonitor v5r1 2015-09-01 =========================
+
 ! 2015-08-28 - Roel Aaij
  - Only fill first candidate in MassMonitor if there are multiple.
  - Don't strip folder name from decision histograms in HltGlobalMonitor.
