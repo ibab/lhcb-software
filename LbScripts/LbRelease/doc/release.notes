@@ -1,3 +1,7 @@
+2015-09-01  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v5r4p2
+
 2015-08-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* buildGeneralDoc: removed obsolete doxygen options
