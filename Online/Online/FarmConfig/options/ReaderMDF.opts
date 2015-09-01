@@ -1,0 +1,11 @@
+#include "$FARMCONFIGROOT/options/BasicDiskReader.opts"
+#include "$NODE_OPTIONS"
+Runable.Directory                    = "/localdisk/hlt1";
+Runable.FilePrefix                   = "Run_";
+Runable.Buffer                       = @OnlineEnv.ReaderMDF_Output;
+MEPManager.Buffers                   = @OnlineEnv.ReaderMDF_Buffers;
+Runable.DeleteFiles                  = true;
+Runable.InitialSleep                 = 0;
+Runable.GoService                    = "$GO_SERVICE_NAME";
+Runable.PauseSleep                   = 5;  // Optional wait time until 'Output' 
+Runable.CheckedBuffers               = @OnlineEnv.PassThroughMDF_Buffers;

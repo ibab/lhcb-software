@@ -10,7 +10,5 @@ Runable.InitialSleep                 = 0;
 Runable.GoService                    = "$GO_SERVICE_NAME";
 Runable.PauseSleep                   = 5;  // Optional wait time until 'Output' event queue is empty
 Runable.CheckedBuffers               = @OnlineEnv.Moore2_Buffers;
-
-// Runable.GoService                    = "GO_SERVICE_NAME";
 MessageSvc.OutputLevel = 3;
 

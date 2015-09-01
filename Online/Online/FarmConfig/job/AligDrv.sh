@@ -9,6 +9,17 @@
 #
 # =========================================================================
 #
+fix_python()
+{
+  export UTGID;
+  PY=`which python`;
+  PY=`dirname ${PY}`;
+  export PYTHONHOME=`dirname ${PY}`;
+  export PYTHONPATH=/group/online/bw_division/pydim/lib/python2.7/site-packages:$PYTHONPATH;
+  unset PY;
+}
+#
+#
 act=${RUN_TYPE}
 if [ "$act" = "Alignment|Muon" ]; then
   . /group/online/dataflow/cmtuser/AlignmentRelease/setup.x86_64-slc6-gcc48-dbg.vars
@@ -47,10 +58,9 @@ elif [ "$act" = "Alignment|Rich2" ]; then
   python -c "from PyMirrAlignOnline import Iterator; Iterator.run(2)"
 elif [ "$act" = "Calibration|Calo" ]; then
   . /group/calo/cmtuser/CaloCalibrationDev_v10r4p1/setup.x86_64-slc6-gcc48-dbg.vars
-  export PYTHONPATH=/group/online/bw_division/pydim/lib/python2.7/site-packages:$PYTHONPATH
+  fix_python;
   export PYTHONPATH=/group/online/dataflow/options/LHCbA/HLT:$PYTHONPATH
   cd ${FARMCONFIGROOT}/job
-  export UTGID
   exec -a ${UTGID} python -c "from PyKaliOnline import Iterator; Iterator.run('/group/online/CalibWork')"
 elif [ "$act" = "BWDivision" ]; then
   . /group/online/bw_division/cmtuser/BWDivisionDev/setup.x86_64-slc6-gcc48-opt.vars
