@@ -9,6 +9,8 @@ branches doc cmt
 use  Moore               v24r1    Hlt
 use  L0App               v2r4     L0
 
+use  IndependenceTests   v1r13    Hlt
+
 # Declare this as a container package
 apply_pattern container_package
 
