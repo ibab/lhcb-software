@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v24r1 2015-09-01 =========================
+
+ - Including updates for post techincal stop.
+
 !========================= Moore v24r0p1 2015-08-05 =========================
 
  - Patch for 25ns physics.
