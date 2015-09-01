@@ -8,6 +8,8 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeFitter v1r22 2015-09-01 =========================
+
 ! 2015-09-01 - Sascha Stahl
  - Fitter.cc: Changed warning to debug to suppress messages.
 
