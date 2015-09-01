@@ -1,4 +1,4 @@
-class protonNeon_2015:
+class protonHelium_2015:
     """
     Settings for proton Helium 2015 data taking
     Include the lines for BGI in parallel
@@ -27,8 +27,8 @@ class protonNeon_2015:
         return '0x024f'
 
     def HltType(self) :
-        self.verifyType( protonNeon_2015 )
-        return          'protonNeon_2015'
+        self.verifyType( protonHelium_2015 )
+        return          'protonHelium_2015'
 
     def ActiveHlt1Lines(self) :
         """Return a list of active Hlt1 lines."""
@@ -36,14 +36,12 @@ class protonNeon_2015:
             # General lines
             'Hlt1Lumi',
             'Hlt1L0CALO', 'Hlt1VeloClosingMicroBias',
-            # Beam-gas lines
-            'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 
-            'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingForcedRecoFullZ',
             # proton Neon lines:
             'Hlt1MBMicroBiasVelo',  ## Beam1 Micro Bias, prescaled to get 200 M events
             'Hlt1DiMuonHighMass' ,  ## di-muon: active on beam1 beam2 and collisions
             'Hlt1MBNoBias' , ## A little bit of complete no bias on beam gas
-            'Hlt1MBNoBiasLeadingCrossing' ## and on collisions
+            'Hlt1MBNoBiasLeadingCrossing', ## and on collisions
+	    'Hlt1MBMicroBiasLowMultVeloDecision'
         ]
         return lines
 
@@ -57,7 +55,6 @@ class protonNeon_2015:
         from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
         from Hlt1Lines.Hlt1LumiLines           import Hlt1LumiLinesConf
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
-        from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
         from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
 
         thresholds = {
@@ -80,7 +77,8 @@ class protonNeon_2015:
             'NoBiasLeadingCrossingOdin': 'jbit( ODIN_EVTTYP,2 )' ,
             'Prescale' : { 'Hlt1MBNoBias'                       : 0.00013,
                            'Hlt1MBNoBiasLeadingCrossing'        : 0.00075,
-                           'Hlt1MBMicroBiasVelo'                : 0.1 }
+                           'Hlt1MBMicroBiasVelo'                : 0.1,
+			   'Hlt1MBMicroBiasLowMultVeloDecision' : 1 }
             },
             Hlt1MuonLinesConf :     { 'DiMuonHighMass_VxDOCA'    :  0.2,
                                       'DiMuonHighMass_VxChi2'    :   25,
@@ -92,53 +90,6 @@ class protonNeon_2015:
                                       'L0Channels'               : {
             'DiMuonHighMass'   : ( 'Muon', ),
             }
-                                      },
-            Hlt1BeamGasLinesConf : {
-            # Global behaviour settings
-            'TrackingConf'          : 'FastVelo',
-            ### 'FitTracks'             : True,
-            'PVFitter'              : 'LSAdaptPV3DFitter',
-            'PVSeeding'             : 'PVSeed3DTool',
-            'SplitVertices'         : True,
-            'CreateGlobalSelection' : False,
-            'Turbo'                 : False,
-            'FullZVetoLumiTriggers' : False,
-            'UseGEC'                : 'None',
-
-            ##         # Minimum number of tracks for the produced vertices (#tr/vtx > X)
-            'VertexMinNTracks' : 9,
-            'FullZVertexMinNTracks' : 27,
-
-            ##         # Luminous region exclusion range
-            'BGVtxExclRangeMin' :  -250.,
-            'BGVtxExclRangeMax' :   250.,
-
-        ## ##         # Take any L0 channel
-            'L0Filter' : {
-            'Beam1'       : None,
-            'Beam2'       : None,
-            'BB'          : None,
-            },
-
-        ##     ##         # No L0 rate limiters, prescales or postscales for calibration!
-            'L0RateLimit' : {
-            'Beam1'           : None,
-            'Beam2'           : None,
-            'ForcedReco'      : None,
-            'ForcedRecoFullZ' : None,
-            },
-            'Prescale' : {
-            'Hlt1BeamGasBeam1'                   : 1.,
-            'Hlt1BeamGasBeam2'                   : 1.,
-            'Hlt1BeamGasCrossingForcedReco'      : 1.,
-            'Hlt1BeamGasCrossingForcedRecoFullZ' : 1.,
-            },
-            'Postscale' : {
-            'Hlt1BeamGasBeam1'                   : 1.,
-            'Hlt1BeamGasBeam2'                   : 1.,
-            'Hlt1BeamGasCrossingForcedReco'      : 1.,
-            'Hlt1BeamGasCrossingForcedRecoFullZ' : 1.,
-            },
             },
             }
             
@@ -148,7 +99,7 @@ class protonNeon_2015:
             CommissioningLines : {
                 'Prescale'  : { 'Hlt2PassThrough' : 1 },
                 'Postscale' : { 'Hlt2ErrorEvent'  : 'RATE(0.01)' },
-                'SMOGPhysics' : { 'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS('Hlt1MBMicroBiasVeloDecision') | HLT_PASS('Hlt1MBNoBiasDecision') | HLT_PASS('Hlt1MBNoBiasLeadingCrossingDecision')" }
+                'SMOGPhysics' : { 'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS('Hlt1MBMicroBiasVeloDecision') | HLT_PASS('Hlt1MBNoBiasDecision') | HLT_PASS('Hlt1MBNoBiasLeadingCrossingDecision') | HLT_PASS('Hlt1MBMicroBiasLowMultVeloDecision " }
             }
         })
         return thresholds
