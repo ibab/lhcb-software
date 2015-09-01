@@ -5,6 +5,8 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v7r16 2015-09-01 =========================
+
 ! 2015-08-24 - Francesco Dettori
  - Adding L0MuonEW to the lines accepted by Hlt1SingleMuonHighPT
 

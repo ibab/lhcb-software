@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Hlt1Lines
 ################################################################################
-gaudi_subdir(Hlt1Lines v7r15)
+gaudi_subdir(Hlt1Lines v7r16)
 
 gaudi_depends_on_subdirs(Hlt/HltLine
                          Hlt/HltTracking
