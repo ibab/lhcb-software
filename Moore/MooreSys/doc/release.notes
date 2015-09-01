@@ -3,6 +3,10 @@ Package             : MooreSys
 Package Coordinator : R. Aaij
 Purpose             : LHCb HLT application
 
+</PRE><H1><A NAME=v24r1>2015-09-01 MooreSys v24r1</A></H1><PRE>
+
+Post technical stop updates.
+
 </PRE><H1><A NAME=v24r0p1>2015-08-05 MooreSys v24r0p1</A></H1><PRE>
 
 As v24r0, but with minor updates/fixes to the python configuration in:

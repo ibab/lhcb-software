@@ -1,25 +1,13 @@
 package MooreSys
-version           v24r0p1
+version           v24r1
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v24r0p1    Hlt
+use  Moore               v24r1    Hlt
 use  L0App               v2r4     L0
-
-# TEMPORARY FOR THIS RELEASE ONLY
-use  Hlt1Lines           v7r15  Hlt
-use  Hlt2Lines           v10r1  Hlt
-use  HltSettings         v7r1   Hlt
-use  HltTracking         v13r11 Hlt
-use  HltConf             v13r2  Hlt
-use  Hlt2SharedParticles v7r8   Hlt
-# TEMPORARY REC PACKAGES
-use  PrPixel             v1r13  Pr
-use  TrackSys            v9r10  Tf
-use  PatChecker	         v3r16  Tr
 
 # Declare this as a container package
 apply_pattern container_package
