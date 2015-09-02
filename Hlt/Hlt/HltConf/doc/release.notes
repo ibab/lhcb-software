@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2015-09-02 - Roel Aaij
+ - Fix order of numbers in histogram definitions.
+
 !========================= HltConf v13r3 2015-09-01 =========================
 
 ! 2015-09-01 - Sascha Stahl
