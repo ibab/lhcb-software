@@ -1,5 +1,10 @@
 #!/bin/bash
-TARGET=${1};
+TARGET=`echo ${1} | tr a-z A-Z`;
+shift;
+NUM_TASK=${1};
+if test -z "${NUM_TASK}"; then
+  NUM_TASK=0;
+fi;
 . `pwd`/preamble.sh;
 #
 #  Buffer Manager & Network name server
@@ -8,12 +13,10 @@ start_opts_task  StrmMBM StrmMBM.opts
 #
 #  Monitors:
 #
-start_mbmmon;
+start_mbmmon -p=TEST;
 #
 sleep 4
 #
-start_opts_task  RCVFull_00 RCVFull.opts;
-start_opts_task  RCVFull_01 RCVFull.opts;
-start_opts_task  RCVFull_02 RCVFull.opts;
-start_opts_task  RCVFull_03 RCVFull.opts;
-start_opts_task  RCVFull_04 RCVFull.opts;
+for task in $(seq -w 00 ${NUM_TASK}); do
+    start_opts_task  RCVFull_${task} RCVFull.opts;
+done;

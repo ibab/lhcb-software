@@ -112,7 +112,7 @@ start_gaudi_task()
 #
 start_mbmmon()
 {
-  $BIGTERM MBMMon -e "export UTGID=${NODENAME}_MBMMon; exec -a \${UTGID} $gaudi_run  libOnlineKernel.so mbm_mon"&
+  $BIGTERM MBMMon -e "export UTGID=${NODENAME}_MBMMon; exec -a \${UTGID} $gaudi_run  libOnlineKernel.so mbm_mon $*"&
 }
 #
 # -------------------------------------------------------------------------------------
