@@ -24,6 +24,7 @@ __all__     = ()  ## nothing to be imported
 # =============================================================================
 import ROOT
 import Ostap.PyRoUts
+from   Ostap.Utils import rootError
 # =============================================================================
 # logging 
 # =============================================================================
@@ -141,14 +142,14 @@ data = """
 
 gr = makeGraph2 ( data )
 
-
 gtot,gscale,gmass,gpdf = makeGraphs4(data)
 
-gtot  .Draw ( ' ae1p      ' )
-gscale.Draw ( '  e1p same ' )
-gmass .Draw ( '  e1p same ' )
-gpdf  .Draw ( '  e1p same ' )
-
+with rootError() : 
+    gtot  .Draw ( ' ae1p      ' )
+    gscale.Draw ( '  e1p same ' )
+    gmass .Draw ( '  e1p same ' )
+    gpdf  .Draw ( '  e1p same ' )
+    
 gscale.red   ()
 gmass .blue  ()
 gpdf  .green ()
