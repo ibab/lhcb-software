@@ -6,6 +6,9 @@
 
 !========================= HltSettings v7r2 2015-09-01 =========================
 
+! 2015-09-02 - Karlis Dreimanis
+ - Updated protonHelium_2015.py; added calib lines
+
 ! 2015-09-01 - Patrick Spradlin
  - Updated CharmHad_25ns_September2015 settings to include the Xi_cc lines
    and their configuration.
