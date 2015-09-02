@@ -12,7 +12,7 @@
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/INamedInterface.h"
 #include "GaudiKernel/IAlgorithm.h"
-#include "GaudiKernel/ListItem.h"
+#include "GaudiKernel/TypeNameString.h"
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/Bootstrap.h"
@@ -192,7 +192,7 @@ LHCb::Inspector::inspect
           vct.end () != id ; ++id )
     {
       /// decode the string into "type" and "name" :
-      ListItem item ( *id ) ;
+      Gaudi::Utils::TypeNameString item( *id ) ;
       /// get the algorithm by name
       IAlgorithm* alg = 0 ;
       StatusCode sc = m_algMgr->getAlgorithm ( item.name() , alg ) ;
