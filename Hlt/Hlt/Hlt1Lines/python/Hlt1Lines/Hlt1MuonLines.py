@@ -414,7 +414,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             Code = MuMu_LineCode
             )
         
-        return hlt1Jpsi_MuMuUnit
+        return  hlt1Jpsi_MuMuUnit
 
 
     def Jpsi2MuMu_Unit( self, props ) :
@@ -449,7 +449,8 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         name = "CalibMuonAlignJpsi"
         myproperties = self.localise_props(name)
         #print " XXXXXXX" , myproperties
-        algos = [ muons, self.MuMu_Unit(self.localise_props(name)), self.Jpsi2MuMu_Unit(self.localise_props(name)) ]
+        from HltTracking.HltPVs import PV3D
+        algos = [ PV3D('Hlt1'), muons, self.MuMu_Unit(self.localise_props(name)), self.Jpsi2MuMu_Unit(self.localise_props(name)) ]
         fullname = name
         from HltLine.HltLine import Hlt1Line
         priorities = self.getProp( "Priorities" )

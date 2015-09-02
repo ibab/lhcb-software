@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-09-02 - Sascha Stahl
+ - Hlt1MuonLines: Add PV3D algorithm to CalibMuonAlignJpsi line.
+
 !========================= Hlt1Lines v7r16 2015-09-01 =========================
 
 ! 2015-08-24 - Francesco Dettori
