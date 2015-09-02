@@ -4,7 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
-! 2015-09-31 - Andrea Contu
+! 2015-09-01 - Andrea Contu
+ - Added dbase for s23c
+
+! 2015-08-31 - Andrea Contu
  - Add folder for Stripping23c
 
 !========================= StrippingSettings v2r40 2015-08-26 =========================
