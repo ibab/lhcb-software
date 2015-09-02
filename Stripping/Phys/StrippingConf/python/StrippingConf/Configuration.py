@@ -138,6 +138,7 @@ class StrippingConf ( object ) :
         """
         Check if the output locations of all active lines are unique
         """
+        log.info("Checking uniqueness of output locations")
         import sys
         locations = {}
         for stream in self.activeStreams() :
@@ -145,19 +146,53 @@ class StrippingConf ( object ) :
                 location = line.outputLocation()
                 if location and location != '' :
                     if location not in locations.keys() : 
-                        locations[location] = [ line.name() ]
+                        locations[location] = [ (line.name(),stream.name()) ]
                     else : 
-                        locations[location] += [ line.name() ]
+                        locations[location] += [ (line.name(),stream.name()) ]
         locationsUnique = True
+        locationsUniqueSameStream = True
         message = ''
-        for loc, names in locations.iteritems() : 
-            if len(names) > 1 :
-                message += "\tLines "+str(names)+" share the same output location '"+loc+"'\n"
+        messagesamestream = ''
+        for loc, nameandstream in locations.iteritems() : 
+            if len(nameandstream) > 1 :
+                innermessage = ''
+                innerlines = {}
+                for ns in nameandstream:
+                    if innermessage=='':
+                        innermessage=str(ns[0])+"(stream "+str(ns[1])+")"
+                    else:
+                        innermessage+=" ,"+str(ns[0])+"(stream "+str(ns[1])+")"
+                    if ns[1] not in innerlines.keys() :
+                        innerlines[ns[1]] = [ns[0]]
+                    else:
+                        innerlines[ns[1]] += [ ns[0] ]
+                message += "\tLines "+innermessage+" share the same output location '"+loc+"'\n"
                 #sys.stderr.write(message)
                 locationsUnique = False
+
+                #print innerlines
+                
+                for stinner, linner in innerlines.iteritems() :
+                    if len(linner) > 1 :
+                        inmsg = ''
+                        for inl in linner:
+                            if inmsg=='':
+                                inmsg=str(inl)+"(stream "+stinner+")"
+                            else:
+                                inmsg=" ,"+str(inl)+"(stream "+stinner+")"
+                        messagesamestream+="\tLines "+inmsg+" share the same output location '"+loc+"' and the same stream '"+stinner+"! Please remove duplicates in configuration'\n"
+                        locationsUniqueSameStream = False
+                        
+                    
+                    
         if not locationsUnique : 
             #raise Exception('\n' + message)
             log.warning('\n' + message)
+
+        if not locationsUniqueSameStream :
+            #raise Exception('\n' + message)
+            raise Exception('\n' + messagesamestream)
+
 
     def activeStreams (self) :
         """

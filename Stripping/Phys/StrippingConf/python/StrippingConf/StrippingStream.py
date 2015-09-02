@@ -130,6 +130,7 @@ class StrippingStream ( object ) :
                 self.algs.append(line.configurable())
 
             else : 
+                line.RequiredRawEvents = None #forcing None rawevents to avoid (harmless) errors from the DSTWriter
                 log.warning("Line " + line.name() + " has zero prescale, skipping" )
 
         # Make the line for stream decision (OR of all stream lines)
