@@ -10,7 +10,10 @@ from StrippingConf.Configuration import StrippingConf
 
 # Tighten Trk Chi2 to <3
 from CommonParticles.Utils import DefaultTrackingCuts
-DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
+#DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
+#                                "CloneDistCut" : [5000, 9e+99 ] }
+DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 4 ],
+                                "GhostProbCut" : [ 0,   0.4 ],
                                 "CloneDistCut" : [5000, 9e+99 ] }
 
 #
@@ -30,7 +33,7 @@ ConfigCDBAccessSvc().File = '$STRIPPINGSELECTIONSROOT/tests/data/config.cdb'
 
 # Specify the name of your configuration
 my_wg='B2CC' #FOR LIAISONS
-stripping='stripping23'
+stripping='stripping23c'
 
 
 # NOTE: this will work only if you inserted correctly the 
