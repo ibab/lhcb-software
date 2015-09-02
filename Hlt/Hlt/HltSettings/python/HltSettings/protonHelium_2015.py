@@ -20,9 +20,9 @@ class protonHelium_2015:
             'ODIN', 'HltLumiSummary', 'HltRoutingBits',
             'DAQ', 'Velo', 'L0DU', 'HltDecReports', 'HC',
             ]
-
-      def L0TCK( self ) :
-         return '0x024f'
+      
+   def L0TCK( self ) :
+      return '0x024f'
 
    def HltType( self ) :
       self.verifyType( protonHelium_2015 )
@@ -42,29 +42,29 @@ class protonHelium_2015:
             'Hlt1MBNoBiasLeadingCrossing',   ## and on collisions
             'Hlt1MBMicroBiasLowMultVelo',
             # Calib Lines:
-            'Hlt1CalibMuonAlignJPsi',
             'Hlt1CalibHighPTLowMultTrks',
             'Hlt1CalibRICHMirrorRICH1',
             'Hlt1CalibRICHMirrorRICH2',
             'Hlt1CalibTrackingKK',
             'Hlt1CalibTrackingKPi',
             'Hlt1CalibTrackingKPiDetached',
-            'Hlt1CalibTrackingPiPi'
+            'Hlt1CalibTrackingPiPi',
+            'Hlt1CalibMuonAlignJpsi'
             ]
       return lines
 
    def ActiveHlt2Lines( self ) :
       """Return a list of active Hlt2 Lines."""
-         return [ 'Hlt2PassThrough', 'Hlt2Lumi', 'Hlt2Transparent', 'Hlt2SMOGPhysics' ]
+      return [ 'Hlt2PassThrough', 'Hlt2Lumi', 'Hlt2Transparent', 'Hlt2SMOGPhysics' ]
 
-      def Thresholds( self ) :
+   def Thresholds( self ) :
          """Return a dictionary of cuts."""
          from Hlt1Lines.Hlt1L0Lines             import Hlt1L0LinesConf
          from Hlt1Lines.Hlt1LumiLines           import Hlt1LumiLinesConf
          from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
          from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
-         from Hlt1Lines.HltCalibRICHMirrorLines import Hlt1CalibRICHMirrorLinesConf
-         from Hlt1Lines.HltCalibTrackingLines   import Hlt1CalibTrackingLinesConf
+         from Hlt1Lines.Hlt1CalibRICHMirrorLines     import Hlt1CalibRICHMirrorLinesConf
+         from Hlt1Lines.Hlt1CalibTrackingLines   import Hlt1CalibTrackingLinesConf
          from GaudiKernel.SystemOfUnits         import MeV, GeV, mm
 
 
@@ -93,10 +93,10 @@ class protonHelium_2015:
                   'NoBiasOdin'               : 'jbit( ODIN_EVTTYP,5 ) | jbit( ODIN_EVTTYP,4)' ,
                   'NoBiasLeadingCrossingOdin': 'jbit( ODIN_EVTTYP,2 )' ,
                   'Prescale'                 : {
-                     'Hlt1MBNoBias'                       : 1,
-                     'Hlt1MBNoBiasLeadingCrossing'        : 1,
-                     'Hlt1MBMicroBiasVelo'                : 1,
-                     'Hlt1MBMicroBiasLowMultVelo'         : 1
+                     'Hlt1MBNoBias'                       : 1.0,
+                     'Hlt1MBNoBiasLeadingCrossing'        : 1.0,
+                     'Hlt1MBMicroBiasVelo'                : 1.0,
+                     'Hlt1MBMicroBiasLowMultVelo'         : 1.0
                      }
                   },
 
@@ -108,29 +108,27 @@ class protonHelium_2015:
                   'DiMuonHighMass_TrChi2'                : 3,
                   'DiMuonHighMass_M'                     : 2700,
                   'DiMuonHighMass_GEC'                   : 'Loose',
-                  'CalibMuonAlignJpsi_ParticlePT'        : 800,     # MeV,
-                  'CalibMuonAlignJpsi_ParticleP'         : 6000,    # MeV
-                  'CalibMuonAlignJpsi_TrackCHI2DOF'      : 2,       # dimensionless
-                  'CalibMuonAlignJpsi_CombMaxDaughtPT'   : 800,     # MeV
-                  'CalibMuonAlignJpsi_CombAPT'           : 1500,    # MeV
-                  'CalibMuonAlignJpsi_CombDOCA'          : 0.2,     # mm
-                  'CalibMuonAlignJpsi_CombVCHI2DOF'      : 10,      # dimensionless
-                  'CalibMuonAlignJpsi_CombVCHI2DOFLoose' : 10,      # dimensionless
-                  'CalibMuonAlignJpsi_CombDIRA'          : 0.9,     # dimensionless
-                  'CalibMuonAlignJpsi_CombTAU'           : 0,       # ps
-                  'CalibMuonAlignJpsi_JpsiMassWinLoose'  : 150,     # MeV
-                  'CalibMuonAlignJpsi_JpsiMassWin'       : 100,     # MeV
-                  'L0Channels'                           : {
-                     'DiMuonHighMass'     : ( 'Muon' ),
-                     'CalibMuonAlignJPsi' : ( 'Muon' )
-                     }
+                  'CalibMuonAlignJpsi_ParticlePT'             : 800,     # MeV
+                  'CalibMuonAlignJpsi_ParticleP'              : 6000,    # MeV
+                  'CalibMuonAlignJpsi_TrackCHI2DOF'           : 2,       # dimensionless
+                  'CalibMuonAlignJpsi_CombMaxDaughtPT'        : 800,     # MeV
+                  'CalibMuonAlignJpsi_CombAPT'                : 1500,    # MeV
+                  'CalibMuonAlignJpsi_CombDOCA'               : 0.2,     # mm
+                  'CalibMuonAlignJpsi_CombVCHI2DOF'           : 10,     # dimensionless
+                  'CalibMuonAlignJpsi_CombVCHI2DOFLoose'      : 10,      # dimensionless
+                  'CalibMuonAlignJpsi_CombDIRA'               : 0.9,     # dimensionless
+                  'CalibMuonAlignJpsi_CombTAU'                : 0.,     # ps
+                  'CalibMuonAlignJpsi_JpsiMassWinLoose'         : 150,     # MeV
+                  'CalibMuonAlignJpsi_JpsiMassWin'              : 100,     # MeV
+                  'L0Channels'                           : {'DiMuonHighMass'     : ( 'Muon' , ),
+                                                            'CalibMuonAlignJpsi' : ( 'Muon' , )}
                   },
 
                Hlt1CalibRICHMirrorLinesConf : {
                      'Prescale' : {
                         'Hlt1CalibHighPTLowMultTrks' : 0.0001,
-                        'Hlt1CalibRICHMirrorRICH1'   : 0.05,
-                        'Hlt1CalibRICHMirrorRICH2'   : 0.143
+                        'Hlt1CalibRICHMirrorRICH1'   : 0.281,
+                        'Hlt1CalibRICHMirrorRICH2'   : 1.0
                         },
                      'DoTiming'   : False,
                      'R2L_PT'     : 500.   * MeV,
@@ -192,18 +190,18 @@ class protonHelium_2015:
                      ,'ValidateTT'            : False
                      }
                }
-               # HLT2 PassThrough
+         # HLT2 PassThrough
          from Hlt2Lines.Commissioning.Lines import CommissioningLines
          thresholds.update( {
             CommissioningLines : {
-               'Prescale'  : {
-                  'Hlt2PassThrough' : 1
-                  },
-               'Postscale' : {
-                  'Hlt2ErrorEvent'  : 'RATE(0.01)'
-                  },
-               'SMOGPhysics' : {
-                  'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS('Hlt1MBMicroBiasVeloDecision') | HLT_PASS('Hlt1MBNoBiasDecision') | HLT_PASS('Hlt1MBNoBiasLeadingCrossingDecision') | HLT_PASS('Hlt1MBMicroBiasLowMultVeloDecision')" }
+            'Prescale'  : {
+            'Hlt2PassThrough' : 1
+            },
+            'Postscale' : {
+            'Hlt2ErrorEvent'  : 'RATE(0.01)'
+            },
+            'SMOGPhysics' : {
+            'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS('Hlt1MBMicroBiasVeloDecision') | HLT_PASS('Hlt1MBNoBiasDecision') | HLT_PASS('Hlt1MBNoBiasLeadingCrossingDecision') | HLT_PASS('Hlt1MBMicroBiasLowMultVeloDecision') | HLT_PASS('Hlt1Calib.*Decision')" }
                }
             } )
          return thresholds

@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-09-02 - Sascha Stahl
+ - Updated protonHelium_2015.py; fixed typos
+
 !========================= HltSettings v7r2 2015-09-01 =========================
 
 ! 2015-09-02 - Karlis Dreimanis
