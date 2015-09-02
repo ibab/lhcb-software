@@ -168,9 +168,9 @@ class FakeH ( object ) :
     def __enter__ ( self ) :
             
         if self._particle and self._newpid  :
-            _pid = self._particle.paricleID()
+            _pid = self._particle.particleID()
             self._oldpid   = LHC.Particle ( _pid ) 
-            self._particle.setParticleID ( self._newpid )
+            self._particle.setParticleID  ( self._newpid )
             
         return self
         
@@ -202,16 +202,15 @@ _particles_ = {
     'K-'  : LHCb.ParticleID (  -321 ) ,
     'p+'  : LHCb.ParticleID (  2212 ) ,
     'p~-' : LHCb.ParticleID ( -2212 ) ,
-    'K-'  : LHCb.ParticleID (  -321 ) ,
     'e+'  : LHCb.ParticleID (   -11 ) ,
     'e-'  : LHCb.ParticleID (    11 ) ,
     'mu+' : LHCb.ParticleID (   -13 ) ,
-    'mu-' : LHCb.ParticleID (    13 ) ,
+    'mu-' : LHCb.ParticleID (    13 )
     }
 # ===============================================================================
 ## helper local function to buld proper maps accoring to the charge 
 def _make_pids_ ( name ) :
-    """Helper local function to buld proper maps accoring to the charge"""
+    """Helper local function to buld proper maps according to the charge"""
     ## 
     result = {}
     pid1   = _particles_ [ name ]
