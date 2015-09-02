@@ -47,6 +47,7 @@ var ItemListener = function(logger,provider) {
 var DetectorListener = function(logger,provider,parent,msg,opts) {
   this.inheritsFrom = ItemListener;
   this.inheritsFrom(logger,provider);
+  this.createProperties = null;
   this._messages = msg;
   this.trace    = false;
   this._trigger  = null;
@@ -70,6 +71,9 @@ var DetectorListener = function(logger,provider,parent,msg,opts) {
     if ( !disp ) {
       this.remove_display();
       this._display = this._type(this.partition, this.provider, this.logger);
+      if ( this.createProperties )  {
+	this._display.createProperties = this.createProperties;
+      }
       this._display.attach(sys_names);
       this._root.appendChild(this._display);
     }

@@ -2004,11 +2004,11 @@ if ( !lhcb.widgets ) {
     var tb = document.createElement('tbody');
     tab.className  = tb.className = 'MonitorPage';
     
-    tooltips.set(tb,'Deferred HLT activity for this fill.');
+    tooltips.set(tb,'HLT1 Deferred activity for this fill.');
     tb.height    = '120px';
     if ( 1||options.style ) {
       tb.appendChild(tr=document.createElement('tr'));
-      tr.appendChild(Cell('HLT defer activity monitor:',3,options.style));
+      tr.appendChild(Cell('HLT1 deferred activity monitor:',3,options.style));
     }
     if ( options.legend ) {
       tb.appendChild(tr=document.createElement('tr'));
@@ -2018,33 +2018,10 @@ if ( !lhcb.widgets ) {
       tr.appendChild(Cell('Usage',          1,'MonitorDataHeaderRight'));
       tr.appendChild(Cell('Files',          1,'MonitorDataHeaderRight'));
     }
-    tab.MEPRate      = StyledItem('lbWeb.LHCb_RunInfoDeferredHLT.MEPRxMEPRate','Text-Right','%d Hz');
-    tab.MEPRateData  = 1.0;
-    tab.MEPRate.parent = tab;    
-    tab.MEPRate.conversion = function(data) { 
-      var par = this.parent;
-      var v   = par.OverflowPercentData;
-      var r   = parseFloat(data);
-      par.MEPRateData = v; 
-      par.OverflowRate.innerHTML = sprintf('%7.0f Hz ',r*v/100.0);
-      par.MooreRate.innerHTML    = sprintf('%7.0f Hz', r*(100.0-v)/100.);
-      par.MoorePercent.innerHTML = sprintf('%7.2f %%',100.0-v);
-      return data;
-    };
-    tab.MooreRate    = StyledItem('None','Text-Right',null);
-    tab.MoorePercent = StyledItem('None','Text-Right',null);
-    tab.OverflowRate = StyledItem('None','Text-Right',null);
-    tab.OverflowPercent = StyledItem('lbWeb.LHCb_RunInfoDeferredHLT.MEPRxOverflowPerc','Text-Right','%7.2f %%');
-    tab.OverflowPercent.parent = tab;
-    tab.OverflowPercentData = 0.0;
-    tab.OverflowPercent.conversion = function(data) {
-      this.parent.OverflowPercentData = parseFloat(data); 
-      return data;
-    };
-
-    tab.DiskSize     = StyledItem('lbWeb.LHCb_RunInfoDeferredHLT.DiskSize','Text-Right',null);
-    tab.DiskFree     = StyledItem('lbWeb.LHCb_RunInfoDeferredHLT.DiskFree','Text-Right',null);
-    tab.NFilesLeft   = StyledItem('lbWeb.LHCb_RunInfoDeferredHLT.NFilesLeft','Text-Right',null);
+    tab.MEPRate      = StyledItem('lbWeb.LHCb_RunInfoSplitHLT.TotalHLTRate','Text-Right','%d Hz');
+    tab.DiskSize     = StyledItem('lbWeb.LHCb_RunInfoSplitHLT.DiskSize','Text-Right',null);
+    tab.DiskFree     = StyledItem('lbWeb.LHCb_RunInfoSplitHLT.DiskFree','Text-Right',null);
+    tab.NFilesLeft   = StyledItem('lbWeb.LHCb_RunInfoSplitHLT.NFilesLeft','Text-Right',null);
     tab.DiskUsage    = StyledItem('None','Text-Right',null);
     tab.DiskFreeData = 1.0;
     tab.DiskSizeData = 1.0;
@@ -2068,30 +2045,17 @@ if ( !lhcb.widgets ) {
     tr.appendChild(tab.NFilesLeft);
     if ( options.legend ) {
       tb.appendChild(tr=document.createElement('tr'));
-      tr.appendChild(c=Cell('Rates:',1,   'MonitorDataHeader'));
+      tr.appendChild(c=Cell('HLT1 Rates:',1,   'MonitorDataHeader'));
       tr.appendChild(c=Cell('MEPRx', 1,   'MonitorDataHeaderRight'));
-      c.style.width = '17%';
-      tr.appendChild(c=Cell('Moore', 1,   'MonitorDataHeaderRight'));
-      c.style.width = '17%';
-      tr.appendChild(c=Cell(' [%] ', 1,   'MonitorDataHeaderRight'));
-      c.style.width = '17%';
-      tr.appendChild(c=Cell('Overflow',1, 'MonitorDataHeaderRight'));
-      c.style.width = '17%';
-      tr.appendChild(c=Cell(' [%] ',   1, 'MonitorDataHeaderRight'));
-      c.style.width = '17%';
+      c.style.width = '30%';
     }
     tb.appendChild(tr=document.createElement('tr'));
     tr.appendChild(Cell('',1,'Text-Right'));
     tr.appendChild(tab.MEPRate);
-    tr.appendChild(tab.MooreRate);
-    tr.appendChild(tab.MoorePercent);
-    tr.appendChild(tab.OverflowRate);
-    tr.appendChild(tab.OverflowPercent);
     tab.appendChild(tb);
 
     tab.subscribe = function(provider) {
       provider.subscribeItem(this.MEPRate);
-      provider.subscribeItem(this.OverflowPercent);
       provider.subscribeItem(this.DiskSize);
       provider.subscribeItem(this.DiskFree);
       provider.subscribeItem(this.NFilesLeft);

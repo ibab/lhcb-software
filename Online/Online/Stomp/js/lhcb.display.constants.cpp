@@ -285,6 +285,15 @@ if ( !_lhcb().constants ) {
 	  iconCls:'LHCbDAQ32',
 	  size:   {width:  1150,	height: 820}
 	},
+	lhcb2_run_status: {
+	  src:    this.lhcb_display_url('hlt2'),
+	  img:    this.images.lookfile,
+	  title:  'HLT2 Status',
+	  nick:   'hlt2-status-win',
+	  cls:    'LHCbDAQ16',
+	  iconCls:'LHCbDAQ32',
+	  size:   {width:  1150,	height: 820}
+	},
 	fest_run_status: {
 	  src:    this.lhcb_display_url('status&system=FEST'),
 	  img:    this.images.options,

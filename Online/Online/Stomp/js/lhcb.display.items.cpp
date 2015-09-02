@@ -696,6 +696,45 @@ var RunStatusDisplay = function(partition,provider,logger) {
   table.body.appendChild(table.trg_row);
   table._logger.info('RunStatusDisplay.build: Created table...Done.');
 
+  table.createProperties = function(this_obj)  {
+    this_obj.runPropertyDisplay = PropertyTable(this_obj._provider, 
+					    this_obj._logger, 
+					    2,
+					    'PropertyTableItem',
+					    'PropertyTableValue');
+    var prop = this_obj.runPropertyDisplay;
+    var prefix = 'lbWeb.'+this_obj._partition+'_RunInfo.';
+    prop.add(prefix+'general.runNumber',          'Run number',1);
+    prop.add(prefix+'general.runType',            'Run type',1);
+
+    prop.add(prefix+'general.runStartTime',       'Run start time',1);
+    prop.add(prefix+'general.runStopTime',        'Run duration',1);
+
+    prop.add(prefix+'general.dataType',           'Data type',1);
+    prop.add(prefix+'Storage.storeFlag',          'Data destination',1);
+
+    prop.add(prefix+'TFC.nTriggers',              'TFC: Number of L&Oslash; events',1);
+    prop.addFormat(prefix+'TFC.triggerRate',      'TFC: L&Oslash; Trigger Rate',1,'%8.2f Hz');
+    prop.addFormat(prefix+'TFC.runTriggerRate',   'TFC: Integrated L&Oslash; trigger rate',1,'%8.2f Hz');
+    prop.addFormat(prefix+'TFC.deadTime',         'TFC: Dead-time',1,'%8.2f %%');
+    prop.addFormat(prefix+'TFC.runDeadTime',      'TFC: Integrated dead-time',1,'%8.2f %%');
+
+
+    prop.add(prefix+'HLTFarm.nSubFarms',          'HLT: Number of Subfarms',1);
+    prop.add(prefix+'HLTFarm.architecture',       'HLT: Architecture',1);
+    prop.add(prefix+'HLTFarm.hltNTriggers',       'HLT: Number of accepted events',1);
+    prop.addFormat(prefix+'HLTFarm.hltRate',      'HLT: Accept Rate',1,'%8.2f Hz');
+    prop.addFormat(prefix+'HLTFarm.runHltRate',   'HLT: Integrated accept rate',1,'%8.2f Hz');
+
+    if ( this_obj._partition=='LHCb' || this_obj._partition=='TRG' )  {
+      prop.add(prefix+'Trigger.L0Type',           'L&Oslash; configuration  (L&Oslash;-TCK)',2);
+    }
+    prop.add(prefix+'Trigger.TCKLabel',           'HLT configuration (HLT-TCK)',2);
+
+    prop.build_horizontal();
+    this_obj.run_properties.appendChild(this_obj.runPropertyDisplay);
+  };
+
   /** Set header row into the display
    *
    *  @return Reference to self
@@ -713,51 +752,9 @@ var RunStatusDisplay = function(partition,provider,logger) {
   table.attach = function(systems)   {
     this.statusDisplay = ControlsStatusDisplay(this._partition,this._provider,this._logger);
     this.ctrl_status.appendChild(this.statusDisplay);
-
-    this.runPropertyDisplay = PropertyTable(this._provider, 
-					    this._logger, 
-					    2,
-					    'PropertyTableItem',
-					    'PropertyTableValue');
-    var prop = this.runPropertyDisplay;
-    var prefix = 'lbWeb.'+this._partition+'_RunInfo.';
-    prop.add(prefix+'general.runNumber',          'Run number',1);
-    prop.add(prefix+'general.runType',            'Run type',1);
-
-    prop.add(prefix+'general.runStartTime',       'Run start time',1);
-    prop.add(prefix+'general.runStopTime',        'Run duration',1);
-
-    prop.add(prefix+'general.dataType',           'Data type',1);
-    prop.add(prefix+'Storage.storeFlag',          'Data destination',1);
-
-    prop.add(prefix+'TFC.nTriggers',              'Number of L&Oslash; events',1);
-    prop.add(prefix+'HLTFarm.hltNTriggers',       'Number of HLT Accept events',1);
-
-    prop.addFormat(prefix+'TFC.triggerRate',      'L&Oslash; Trigger Rate',1,'%8.2f Hz');
-    prop.addFormat(prefix+'TFC.runTriggerRate',   'Integrated L&Oslash; trigger rate',1,'%8.2f Hz');
-
-    prop.addFormat(prefix+'HLTFarm.hltRate',      'HLT Accept Rate',1,'%8.2f Hz');
-    prop.addFormat(prefix+'HLTFarm.runHltRate',   'Integrated HLT accept rate',1,'%8.2f Hz');
-
-    var dead = prop.addFormat(prefix+'TFC.deadTime',         'Dead-time',1,'%8.2f %%');
-    /*
-    dead.conversion = function(data) {
-      if ( data<5. ) this.style.bgcolor = "#00CC99";
-      else if ( data<15. ) this.style.bgcolor = "#F1F166";
-      else this.style.bgcolor = "#FF0000";
-      return data;
-    };
-    */
-    prop.addFormat(prefix+'TFC.runDeadTime',      'Integrated dead-time',1,'%8.2f %%');
-
-    if ( this._partition=='LHCb' || this._partition=='TRG' )  {
-      prop.add(prefix+'Trigger.L0Type',           'L&Oslash; configuration  (L&Oslash;-TCK)',2);
+    if ( this.createProperties )  {
+      this.createProperties(this)
     }
-    prop.add(prefix+'Trigger.TCKLabel',           'HLT configuration (HLT-TCK)',2);
-
-    prop.build_horizontal();
-    this.run_properties.appendChild(this.runPropertyDisplay);
-
     this.fsmDisplay = FSMDisplay(this._provider,this._logger,null);
     var used_systems = [];
     for(var i=0; i<systems.length;++i) {

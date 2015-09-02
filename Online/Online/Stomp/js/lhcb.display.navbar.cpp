@@ -180,6 +180,7 @@ var navbar_general = function(navBar) {
 	     '../Images/Help_32x32.gif');
   navBar.addURL('Show LHCb Page 1',lhcb.constants.urls.lhcb.page1);
   navBar.addURL('Show LHCb run status display',lhcb.constants.urls.lhcb.lhcb_run_status);
+  navBar.addURL('Show LHCb2 run status display',lhcb.constants.urls.lhcb.lhcb2_run_status);
   navBar.addURL('Show FEST run status display',lhcb.constants.urls.lhcb.fest_run_status);
   navBar.addURL('Show subdetector run status display',lhcb.constants.urls.lhcb.sdet_run_status);
   navBar.addURL('Show collimator settings around Point 8',lhcb.constants.urls.lhcb.collimators);
