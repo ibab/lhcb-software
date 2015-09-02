@@ -34,6 +34,7 @@ private:
   bool m_matchTracksToOffline;
   Gaudi::SymMatrix3x3 m_defaultVertexCovMatrix;
   LHCb::Particle* reviveParticle( const LHCb::HltObjectSummary* summary, bool recursive );
+  LHCb::ProtoParticle* reviveProto( const LHCb::HltObjectSummary* summary );
   LHCb::Track* reviveTrack( const LHCb::HltObjectSummary* summary );
 
   LHCb::ProtoParticles* m_protos;

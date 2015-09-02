@@ -1,10 +1,4 @@
 // include files
-#include <boost/foreach.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/bind.hpp>
-
-#include "GaudiKernel/AlgFactory.h"
-
 #include "Event/HltSelReports.h"
 #include "Event/Particle.h"
 
@@ -73,7 +67,7 @@ StatusCode HltVertexConverterS20p3::initialize()
 // output containers on-demand
 LHCb::ProtoParticles* HltVertexConverterS20p3::protoParticles()
 {
-  if ( m_protos == 0 ) {
+  if ( ! m_protos ) {
     m_protos = new LHCb::ProtoParticles();
     put( m_protos, outputLocation()+"/ProtoParticles" );
   }
@@ -82,7 +76,7 @@ LHCb::ProtoParticles* HltVertexConverterS20p3::protoParticles()
 
 LHCb::Tracks* HltVertexConverterS20p3::tracks()
 {
-  if ( m_tracks == 0 ) {
+  if ( ! m_tracks ) {
     m_tracks = new LHCb::Tracks();
     put( m_tracks, outputLocation()+"/Tracks" );
   }
@@ -150,7 +144,7 @@ namespace {
       }
       if ( ! first.lhcbIDs().empty() ) {
         std::vector<LHCb::LHCbID> secondIDs(second.lhcbIDsFlattened());
-        BOOST_FOREACH( const LHCb::LHCbID& firstID, first.lhcbIDsFlattened() ) {
+        for ( const auto& firstID : first.lhcbIDsFlattened() ) {
           if ( std::find( secondIDs.begin(), secondIDs.end(), firstID ) == secondIDs.end() ) {
             return false;
           }
@@ -167,7 +161,7 @@ namespace {
       }
       if ( ! first.substructure().empty() ) {
         SmartRefVector<LHCb::HltObjectSummary> secondSub(second.substructureFlattened());
-        BOOST_FOREACH( const LHCb::HltObjectSummary* firstDaug, first.substructureFlattened() ) {
+        for ( const auto firstDaug : first.substructureFlattened() ) {
           if ( firstDaug ) {
             if ( LoKi::Algs::find_if( secondSub.begin(), secondSub.end(), IsSameSummarizedObject(*firstDaug) ) == secondSub.end() ) {
               return false;
@@ -179,6 +173,14 @@ namespace {
       return true;
     }
   };
+
+  const LHCb::HltObjectSummary* getBottomOfNestedIdenticalSubstructure( const LHCb::HltObjectSummary* summ )
+  {
+    while ( summ->numericalInfo().empty() && summ->lhcbIDs().empty() && ( summ->substructure().size() == 1 ) && ( summ->summarizedObjectCLID() == summ->substructure()[0]->summarizedObjectCLID() ) ) {
+      summ = summ->substructure()[0];
+    }
+    return summ;
+  }
 }
 
 
@@ -204,59 +206,84 @@ LHCb::Particle* HltVertexConverterS20p3::reviveParticle(const LHCb::HltObjectSum
   part->setMomentum(Gaudi::LorentzVector(tx*pz,ty*pz,pz,std::sqrt(m*m+1./(invp*invp))));
   if ( msgLevel(MSG::VERBOSE) ) { verbose() << "Found particle from " << (*summary) << " : " << *part << "\nLooking for substructure" << endmsg; }
 
-  if ( summary->substructure().size() == 1 ) {
-    SmartRef<LHCb::HltObjectSummary> subSum = summary->substructure()[0];
-    if ( subSum->summarizedObjectCLID() == LHCb::Track::classID() ) {
-      if (msgLevel(MSG::VERBOSE)) { verbose() << "-> Track" << endmsg; }
-      LHCb::ProtoParticle* proto = new LHCb::ProtoParticle();
-      protoParticles()->insert(proto);
-      part->setProto(proto);
-      proto->setTrack( reviveTrack(subSum) );
-    } else if ( subSum->summarizedObjectCLID() == LHCb::CaloCluster::classID() ) {
-      Warning("Neutral particle - not handled yet");
-    } else {
-      Warning("Classification failed: 1 daughter but not a track and not a Calo neutral");
-    }
-    ret = part.get();
-    markParticle(part.release());
-  } else if ( summary->substructure().size() > 1 ) { // not a basic particle: add endvertex
+  if ( std::any_of(std::begin(summary->substructure()), std::end(summary->substructure()), [=] ( const LHCb::HltObjectSummary* sub ) { return LHCb::Particle::classID() == sub->summarizedObjectCLID(); }) ) { // composite
     std::auto_ptr<LHCb::Vertex> vert(new LHCb::Vertex());
     vert->setPosition(part->referencePoint());
     vert->setCovMatrix(m_defaultVertexCovMatrix);
     part->setEndVertex(vert.get());
 
     if ( recursive ) {
-      BOOST_FOREACH( const SmartRef<LHCb::HltObjectSummary>& daugSum, summary->substructure() ) {
-        if ( daugSum->summarizedObjectCLID() == LHCb::Particle::classID() ) {
+      for ( const auto daugSum : summary->substructure() ) {
+        if ( LHCb::Particle::classID() == daugSum->summarizedObjectCLID() ) {
           if (msgLevel(MSG::VERBOSE)) { verbose() << "-> Daughter particle" << endmsg; }
           const LHCb::Particle* daug = reviveParticle(daugSum, recursive);
           // protection against bad particles
-          if (daug == 0){
+          if ( ! daug ){
             delete daug;
-          }
-          else{
+          } else {
             part->addToDaughters(daug);
             vert->addToOutgoingParticles(daug);
           }
         } else {
-          Warning("Classification failed: >1 substructure entries, but not particles");
+          Warning("Classification failed: particle in substructure entries, but also others");
         }
       }
       if ( m_matchTracksToOffline ) { vertexFitter("LoKi")->fit(*vert.get(), part->daughtersVector()); }
     }
-    vert.release();
     ret = part.get();
-    markNewTree(part.release()); // register particle as well as endvertex 
-  } else {
-    Warning("Classification failed: particle without substructure");
+    markNewTree(part.release()); // register particle as well as endvertex
+    vert.release();
+  } else { // basic
+    if ( summary->substructure().empty() ) { Warning("Particle without substructure"); }
+    LHCb::ProtoParticle* proto{nullptr};
+    LHCb::Track* track{nullptr};
+    const LHCb::HltObjectSummary* trackSum{nullptr};
+    for ( const auto subSum : summary->substructure() ) {
+      if ( LHCb::Track::classID() == subSum->summarizedObjectCLID() ) {
+        if (msgLevel(MSG::VERBOSE)) { verbose() << "-> Track" << endmsg; }
+        if ( ! track ) {
+          trackSum = getBottomOfNestedIdenticalSubstructure(subSum);
+          track = reviveTrack(subSum);
+        } else {
+          if ( ! IsSameSummarizedObject(*trackSum)(getBottomOfNestedIdenticalSubstructure(subSum)) ) {
+            Warning("Two different track summaries for the same particle");
+          } else if ( msgLevel(MSG::VERBOSE) ) {
+            verbose() << "already created -> skipping" << endmsg;
+          }
+        }
+      } else if ( LHCb::ProtoParticle::classID() == subSum->summarizedObjectCLID() ) {
+        if (msgLevel(MSG::VERBOSE)) { verbose() << "-> ProtoParticle" << endmsg; }
+        proto = reviveProto(subSum);
+      } else if ( ( LHCb::CaloCluster::classID() == subSum->summarizedObjectCLID() ) || ( LHCb::MuonPID::classID() == subSum->summarizedObjectCLID() ) ) {
+        if (msgLevel(MSG::VERBOSE)) { verbose() << "Calo cluster (neutral) or muon PID -> doing nothing" << endmsg; }
+      } else {
+        Warning("Classification failed: 1 daughter but not a track and not a Calo neutral");
+      }
+    }
+    if ( track && ( ! proto ) ) { // create an empty protoparticle (Run 1 data)
+      proto = new LHCb::ProtoParticle();
+      protoParticles()->insert(proto);
+    }
+    proto->setTrack(track);
+    part->setProto(proto);
+    ret = part.get();
+    markParticle(part.release());
   }
 
   return ret;
 }
 
+LHCb::ProtoParticle* HltVertexConverterS20p3::reviveProto( const LHCb::HltObjectSummary* /* summary */ )
+{
+  // FIXME improve this...
+  LHCb::ProtoParticle* proto = new LHCb::ProtoParticle();
+  protoParticles()->insert(proto);
+  return proto;
+}
+
 LHCb::Track* HltVertexConverterS20p3::reviveTrack(const LHCb::HltObjectSummary* summary)
 {
-  LHCb::HltObjectSummary::Info trackInfo(summary->numericalInfo());
+  LHCb::HltObjectSummary::Info trackInfo(summary->numericalInfoFlattened());
   LHCb::Track* track = 0;
   std::vector<LHCb::LHCbID> hits(summary->lhcbIDsFlattened());
   if ( m_matchTracksToOffline ) {
@@ -285,9 +312,9 @@ LHCb::Track* HltVertexConverterS20p3::reviveTrack(const LHCb::HltObjectSummary* 
     track->addToStates(firstState);
     // LHCbIDs
     track->setLhcbIDs(hits);
-    bool hasVelo = std::find_if( hits.begin(), hits.end(), boost::lambda::bind(&LHCb::LHCbID::isVelo, boost::lambda::_1) ) != hits.end();
-    bool hasT    = std::find_if( hits.begin(), hits.end(), boost::lambda::bind(&LHCb::LHCbID::isOT, boost::lambda::_1) || boost::lambda::bind(&LHCb::LHCbID::isIT, boost::lambda::_1) ) != hits.end();
-    bool hasTT   = std::find_if( hits.begin(), hits.end(), boost::lambda::bind(&LHCb::LHCbID::isTT, boost::lambda::_1) ) != hits.end();
+    bool hasVelo = std::any_of(std::begin(hits), std::end(hits), [] ( const LHCb::LHCbID& hit ) { return hit.isVelo(); } );
+    bool hasT    = std::any_of(std::begin(hits), std::end(hits), [] ( const LHCb::LHCbID& hit ) { return hit.isOT() || hit.isIT(); } );
+    bool hasTT   = std::any_of(std::begin(hits), std::end(hits), [] ( const LHCb::LHCbID& hit ) { return hit.isTT(); } );
     if ( hasVelo ) {
       if ( hasT ) {
         track->setType(LHCb::Track::Long);
@@ -328,11 +355,11 @@ StatusCode HltVertexConverterS20p3::execute()
   }
   std::size_t nAcc(0);
   std::vector<const LHCb::HltObjectSummary*> alreadyRevivedParticles;
-  BOOST_FOREACH( const std::string& selection, m_HltLineNames ) {
+  for ( const auto& selection : m_HltLineNames ) {
     const LHCb::HltObjectSummary* objectSummary = selReports->selReport(selection);
     if ( objectSummary != 0 ) {
-      BOOST_FOREACH( const LHCb::HltObjectSummary* item, objectSummary->substructureFlattened() ) {
-        if ( item && ( item->summarizedObjectCLID() == LHCb::Particle::classID() ) ) {
+      for ( const auto item : objectSummary->substructureFlattened() ) {
+        if ( item && ( LHCb::Particle::classID() == item->summarizedObjectCLID() ) ) {
           ++counter("# candidates loaded from "+selection);
           if ( LoKi::Algs::find_if( alreadyRevivedParticles.begin(), alreadyRevivedParticles.end(), IsSameSummarizedObject(*item) ) == alreadyRevivedParticles.end() ) {
             alreadyRevivedParticles.push_back(item);
