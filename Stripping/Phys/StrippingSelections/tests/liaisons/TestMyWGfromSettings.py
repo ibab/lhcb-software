@@ -31,7 +31,7 @@ ConfigCDBAccessSvc().File = '$STRIPPINGSELECTIONSROOT/tests/data/config.cdb'
 
 # Specify the name of your configuration
 my_wg='Charm' #FOR LIAISONS
-stripping='stripping23'
+stripping='stripping23c'
 
 
 # NOTE: this will work only if you inserted correctly the 
