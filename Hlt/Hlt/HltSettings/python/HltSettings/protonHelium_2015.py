@@ -192,13 +192,9 @@ class protonHelium_2015:
          from Hlt2Lines.Commissioning.Lines import CommissioningLines
          thresholds.update( {
             CommissioningLines : {
-            'Prescale'  : {
-            'Hlt2PassThrough' : 1
-            },
-            'Postscale' : {
-            'Hlt2ErrorEvent'  : 'RATE(0.01)'
-            },
-            'PassThrough' : {'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS('Hlt1MB.*Decision') | HLT_PASS('Hlt1L0B.*gasDecision') "}
+            'Prescale'  : { 'Hlt2PassThrough' : 1.0 },
+            'Postscale' : { 'Hlt2ErrorEvent'  : 'RATE(0.01)' },
+            'PassThrough' : {'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS_RE('Hlt1MB.*Decision') | HLT_PASS_RE('Hlt1L0B.*gasDecision') "}
             }
             } )
          return thresholds
