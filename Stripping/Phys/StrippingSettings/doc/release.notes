@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-03 - Jinlin Fu
+ - update Charm dict s23:  add dict of DstarPromptWithD02HHHH 
+
 ! 2015-09-01 - Andrea Contu
  - Added dbase for s23c
 
