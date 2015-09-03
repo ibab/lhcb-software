@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2015-09-03 - Dmitry Popov
+ - Updated the upgrade tests to skip some messages in the output.
+
 ! 2015-09-01 - Dmitry Popov
  - Updated references for the upgrade baseline tests.
 

@@ -87,6 +87,8 @@ preprocessor = (normalizeExamples +
      LineSkipper(["G4Transportation constructor> set fShortStepOptimisation to false"]) +
      LineSkipper(regexps=[r"MainEventGaussSim\s*DEBUG event 1 memory.*",
                           r"GaussGen\s*DEBUG event 1 memory.*"]) + 
+     LineSkipper(["DDDB.DataBaseOperatio...   INFO Connecting to database"]) +
+     LineSkipper(["SIMCOND.DataBaseOpera...   INFO Connecting to database"]) +
      RegexpReplacer(when = "Loading simulation attributes",
          orig = r"(\")(.*/)([\w.]+\")",
          repl = r"\1.../\3"))
