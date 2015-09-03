@@ -65,8 +65,8 @@ class protonHelium_2015:
          thresholds = {
                Hlt1L0LinesConf : {
                   'Prescale' : { 
-                     'Hlt1LB1gas' : 1.0,
-                     'Hlt1LB2gas' : 1.0
+                     'Hlt1L0B1gas' : 1.0,
+                     'Hlt1L0B2gas' : 1.0
                      },
                   'Postscale' : {
                      'Hlt1L0B1gas' : 'RATE(50)',
