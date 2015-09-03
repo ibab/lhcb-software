@@ -211,6 +211,7 @@ LbDesktop.LHCbSDetModule = Ext.extend(desktop.URLMenuModule, {
      ,this.menuURL(constants.urls.lhcb.subdetectors.calo).makeIcon(constants.images.lhcb,1300,700)
      ,this.menuURL(constants.urls.lhcb.subdetectors.muon).makeIcon(constants.images.lhcb,1300,700)
      ,this.menuURL(constants.urls.lhcb.subdetectors.cooling).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.dq).makeIcon(constants.images.lhcb,1300,700)
      ];
     this._launch('LHCb Subdetectors',constants.images.lhcb,items);
   }

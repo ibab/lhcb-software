@@ -230,6 +230,15 @@ if ( !_lhcb().constants ) {
 	    cls:    'Collimators16',
 	    iconCls:'Collimators32',
 	    size:   {width:  1150,	height: 700}
+	  },
+	  dq: {
+	    src:    this.lhcb_display_url('dataquality'),
+	    img:    this.images.lookprod,
+	    title:  'Online DataQuality',
+	    nick:   'lhcb-dataquality-win',
+	    cls:    'Collimators16',
+	    iconCls:'Collimators32',
+	    size:   {width:  800,	height: 600}
 	  }
 	},
 	dirac: {

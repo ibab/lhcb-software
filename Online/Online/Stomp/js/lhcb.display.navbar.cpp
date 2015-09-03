@@ -225,6 +225,7 @@ var navbar_subdetectors = function(navBar) {
   navBar.addURL('Show CALO page',lhcb.constants.urls.lhcb.subdetectors.calo);
   navBar.addURL('Show MUON page',lhcb.constants.urls.lhcb.subdetectors.muon);
   navBar.addURL('Show Cooling status page',lhcb.constants.urls.lhcb.subdetectors.cooling);
+  navBar.addURL('Show DataQuality page',lhcb.constants.urls.lhcb.subdetectors.dq);
 };
 
 
