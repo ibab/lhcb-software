@@ -8,6 +8,10 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-09-03 - Vanya Belyaev
+ - minor fix in PidCalib: not all proton samples are picked up 
+
+
 ! 2015-09-02 - Vanya Belyaev
  - fix qmtest 
 

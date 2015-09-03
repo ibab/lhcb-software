@@ -190,8 +190,10 @@ def _h_new_init_ ( self , *args ) :
     with ROOTCWD() :
         ROOT.gROOT.cd() 
         self._old_init_   ( *args      )
-        self.SetDirectory ( ROOT.gROOT ) 
-
+        self.SetDirectory ( ROOT.gROOT )
+        ## optionally:
+        ## self.Sumw2()
+        
 # =============================================================================
 ## a bit modified 'Clone' function for histograms
 #  - it automaticlaly assign unique ID
@@ -211,7 +213,9 @@ def _h_new_clone_ ( self , hid = '' ) :
     with ROOTCWD() :
         ROOT.gROOT.cd() 
         nh = self._old_clone_ ( hid )
-        nh.SetDirectory ( ROOT.gROOT ) ## ATTENTION!  
+        nh.SetDirectory ( ROOT.gROOT ) ## ATTENTION!
+        ## optionally 
+        ## if not nh.GetSumw2() : nh.Sumw2() 
     return nh
 
 

@@ -101,7 +101,7 @@ def makeParser ( ) :
     ## add the positional arguments
     parser.add_argument ( 'particle'    ,
                           metavar = '<PARTICLE>'    , type=str    ,
-                          choices = ('K', 'Pi', 'P' , 'e', 'Mu'  ) , 
+                          choices = ('K', 'Pi', 'P' , 'e', 'Mu' ,  'P_LcfB' , 'P_TotLc' , 'P_IncLc' ) , 
                           help    = "Sets the particle type"     )
     
     parser.add_argument ( '-s' , '--stripping'       , nargs = '+' , 
@@ -279,7 +279,7 @@ def makePlots ( the_func        ,
     #        - MagDown run limits ['DownRuns']
     #======================================================================
     from PIDPerfScripts.DataFuncs import GetRunDictionary
-    DataDict = GetRunDictionary ( stripping , particle )
+    DataDict = GetRunDictionary ( stripping , particle , verbose = verbose )
 
     if trackcuts and  0 < runMin : trackcuts +=' && runNumber>=%d ' % runMin
     if trackcuts and  0 < runMax : trackcuts +=' && runNumber<=%d ' % runMax
@@ -290,7 +290,8 @@ def makePlots ( the_func        ,
     if runMax < runMin : runMax = None 
     from PIDPerfScripts.DataFuncs import GetMinMaxFileDictionary
     IndexDict = GetMinMaxFileDictionary( DataDict , polarity ,
-                                         runMin   , runMax   , maxFiles )
+                                         runMin   , runMax   ,
+                                         maxFiles , verbose  )
     
     #======================================================================
     # Append runNumber limits to TrackCuts
@@ -313,12 +314,12 @@ def makePlots ( the_func        ,
 
     from Ostap.Utils        import memory,NoContext
     
-    logger.info('Start the loop over %d datafiles %s %s %s ' % ( mx - mn   ,
-                                                                 particle  ,
-                                                                 stripping ,
-                                                                 polarity  ) )
+    logger.info('Start the loop over %d datafiles %s %s %s ' % ( mx - mn + 1  ,
+                                                                 particle     ,
+                                                                 stripping    ,
+                                                                 polarity   ) )
     from Ostap.progress_bar import ProgressBar
-    with ProgressBar( mn , mx , 100 , mode='fixed' )  as bar :
+    with ProgressBar( mn , mx+1 , 100 , mode='fixed' )  as bar :
         
         for index in xrange ( mn , mx + 1 ) :
             
@@ -396,17 +397,17 @@ def runPidCalib ( the_func    ,
                           stripping   ,
                           polarity    ,
                           trackcuts   ,
-                          runMin      ,
-                          runMax      ,
-                          verbose     ,
-                          maxFiles    )
+                          runMin    = runMin    ,
+                          runMax    = runMax    ,
+                          verbose   = verbose   ,
+                          maxFiles  = maxFiles  )
     
     if config.get('dbname',None) :
 
         try :
             import Ostap.ZipShelve as DBASE 
             with DBASE.open ( config['dbname'] ) as db :
-                logger.info('Save data into %s' % config['dbname'] )
+                if verbose : logger.info('Save data into %s' % config['dbname'] )
                 ##
                 key = 'PIDCalib(%s)@Stripping%s/%s' % ( particle  ,
                                                         stripping ,
@@ -430,10 +431,12 @@ def runPidCalib ( the_func    ,
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-07-19
-def saveHistos  (  histos     ,
-                   fname = '' , **config ) :
+def saveHistos  (  histos         ,
+                   fname   = ''   ,
+                   verbose = True , **config ) :
     """Save histograms into the output file """
     ##
+    verbose   = config.get('verbose')
     if   not fname and not config : fname = "PIDHistos.root"
     elif not fname and     config :
         fname = "PIDHistos_{part}_Strip{strp}_{pol}.root".format(
@@ -441,8 +444,8 @@ def saveHistos  (  histos     ,
             strp = config [ 'stripping' ] ,
             pol  = config [ 'polarity'  ] )
 
-    logger.info ( "Saving performance histograms to %s" %fname )
-
+    if verbose : logger.info ( "Saving performance histograms to %s" %fname )
+    
     import ROOT 
     import Ostap.PyRoUts  ## to be replaces with Ostap.TFileDeco
     
@@ -450,7 +453,7 @@ def saveHistos  (  histos     ,
 
         ## save all histograms 
         for h in histos : h.Write() 
-        outfile.ls() 
+        if verbose : outfile.ls() 
         
     return fname 
 
@@ -644,40 +647,54 @@ def run_pid_calib ( FUNC , db_name = 'PID_eff.db' ) :
     if 'Both' == polarity  : polarity  = [ 'MagUp' , 'MagDown' ]
     else                   : polarity  = [ polarity ]
 
-    stripping =  config.stripping
-    if not stripping : stripping = [ '20' , '20r1' ]
     
+    stripping =  config.stripping
+    ##if not stripping : stripping = [ '21' , '21r1' ]
+    if not stripping : stripping = [ '20' , '20r1' ]
     ## 
     particle  = config.particle
     
     logger.info ( 'Stripping versions:  %s' % stripping )  
     logger.info ( 'Magnet polarities :  %s' % polarity  )  
 
+    particles = [ particle ]
+    if   'P' == particle :
+        if '20' in stripping or '20r1' in stripping :
+            particles = [ 'P_IncLc' ] + [ particle ]            
+            logger.info ( 'Use reduced set of protons species %s ' % particles )
+        else :
+            particles = [ 'P_LcfB' , 'P_TotLc' , 'P_IncLc' ]
+            logger.info ( 'Use all species of protons %s ' % particles )
+            
     hfiles = []
+
     ## loop over the magnet polarities 
     for m in polarity :
         
         ## loop over stripping versions 
         for s in stripping :
             
-            histos = runPidCalib ( FUNC        ,
-                                   particle    ,
-                                   s           ,
-                                   m           ,
-                                   config.cuts , 
-                                   RunMin   = config.RunMin      ,
-                                   RunMax   = config.RunMax      ,
-                                   MaxFiles = config.MaxFiles    ,
-                                   Verbose  = config.verbose     ,
-                                   dbname   = db_name            )
-                                
-            hfile = saveHistos  ( histos               ,
-                                  particle  = particle ,
-                                  stripping = s        ,
-                                  polarity  = m        ) 
-            
-            hfiles.append ( hfile )
-
+            ## loop over calibration techniques/particle species 
+            for p in particles :
+                
+                histos = runPidCalib ( FUNC        ,
+                                       p           ,
+                                       s           ,
+                                       m           ,
+                                       config.cuts , 
+                                       RunMin   = config.RunMin      ,
+                                       RunMax   = config.RunMax      ,
+                                       MaxFiles = config.MaxFiles    ,
+                                       Verbose  = config.verbose     ,
+                                       dbname   = db_name            )
+                
+                hfile = saveHistos  ( histos              ,
+                                      particle  = p       ,
+                                      stripping = s       ,
+                                      polarity  = m       ,
+                                      verbose   = config.verbose ) 
+                
+                hfiles.append ( hfile )
 
     logger.info('Produced files: ')
     for i in hfiles : logger.info ( i )  
