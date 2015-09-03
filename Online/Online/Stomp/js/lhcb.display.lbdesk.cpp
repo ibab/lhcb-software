@@ -53,6 +53,7 @@ LbDesktop = new Ext.app.App({
          new LbDesktop.News()
 	 ,new LbDesktop.Page1()
          ,new LbDesktop.LHCbStatus()
+         ,new LbDesktop.HLT2Status()
          ,new LbDesktop.FESTStatus()
          ,new LbDesktop.SDETStatus()
          ,new LbDesktop.Operator()
@@ -125,6 +126,7 @@ LbDesktop = new Ext.app.App({
 
 LbDesktop.News        = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.display_news);}});
 LbDesktop.LHCbStatus  = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.lhcb_run_status);}});
+LbDesktop.HLT2Status  = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.lhcb2_run_status);}});
 LbDesktop.FESTStatus  = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.fest_run_status);}});
 LbDesktop.SDETStatus  = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.sdet_run_status);}});
 LbDesktop.Page1       = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.page1);}});

@@ -1421,10 +1421,10 @@ if ( !lhcb.widgets ) {
    */
   lhcb.widgets.SystemSummary = function(options) {
     var tab = document.createElement('table');
-    var tb = document.createElement('tbody');
-    var tr = document.createElement('tr');
-    var split = options.split;
+    var tb  = document.createElement('tbody');
+    var tr  = document.createElement('tr');
     var sys = options.system;
+    var split = options.split;
     var cell;
     tab.className = tb.className   = 'MonitorPage';
     tab.style.height = tb.style.height = '100%';
@@ -1463,7 +1463,10 @@ if ( !lhcb.widgets ) {
 	this.subscriptions.push(this[name+'C']);
       }
       else {
-	this[name]  = FSMItem('lbWeb.'+system+'_'+name,options.logger,true);
+	if ( system )
+	  this[name]  = FSMItem('lbWeb.'+system+'_'+name,options.logger,true);
+	else
+	  this[name]  = FSMItem('lbWeb.'+name,options.logger,true);
 	tr.appendChild(this[name]);
 	tr.appendChild(this[name].lock);
 	this[name].style.width = '30%';

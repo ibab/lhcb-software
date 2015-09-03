@@ -93,59 +93,72 @@ var Alarms = function(msg)  {
       {
         this.parent.removeChild( this.parent.firstChild );       
       } 
-      var tr = document.createElement('tr');
-      var th1 = document.createElement('th');
-      var th2 = document.createElement('th');
-      var th3 = document.createElement('th');
-      th1.appendChild(document.createTextNode('Description'));
-      tr.appendChild(th1);
-      th2.appendChild(document.createTextNode('Alarm Text'));
-      tr.appendChild(th2);
-      th3.appendChild(document.createTextNode('Time'));
-      tr.appendChild(th3);
+      var th = document.createElement('th');
+
+      tr = document.createElement('tr');
       tr.style.backgroundColor='gray';
       tr.style.color='black';
+      tr.style.font='Arial';
+      th.appendChild(document.createTextNode('Description'));
+      tr.appendChild(th);
+      th = document.createElement('th');
+      th.appendChild(document.createTextNode('Alarm Text'));
+      tr.appendChild(th);
+      th = document.createElement('th');
+      th.appendChild(document.createTextNode('Time'));
+      tr.appendChild(th);
       this.parent.appendChild(tr);
       
       var items = (''+data).split('{');
       for(var i=1; i<items.length; ++i) {
-        
-	
         var alarmTokens = items[i].split(' $ ');
 	var fatalPatt = /fatal/i;
 	var errorPatt = /error/i;
 	var warnPatt = /warn/i;
-	var color;
+	var color = 'green', td = null;
+        var blink = false;
+	var val;
 	if (alarmTokens[4].match(fatalPatt)) {
-	  color='#FF0000';
+	  color = '#FF0000';
+	  blink = true;
 	}
 	else if (alarmTokens[4].match(errorPatt)) {
-	  color='#FFA500';
+	  color = '#FFA500';
+	  blink = true;
 	}
 	else if (alarmTokens[4].match(warnPatt)) {
-	  color='#FFFF00';
+	  color = '#FFFF00';
 	}
-	else { color='green';}
+	else {
+	  color='green';
+	}
 	
 	tr = document.createElement('tr');
-	td1 = document.createElement('td');
-	td2 = document.createElement('td');
-	td3 = document.createElement('td');
-	td1.appendChild(document.createTextNode(alarmTokens[1]));
-	td1.style.width='35%';
-        tr.appendChild(td1);
-        td2.appendChild(document.createTextNode(alarmTokens[2]));
-	td2.style.width='35%';
-        tr.appendChild(td2);
-        td3.appendChild(document.createTextNode(alarmTokens[3]));
-	td3.style.width='30%';
-        tr.appendChild(td3);
+	tr.style.textAlign='left';
 	tr.style.backgroundColor=color;
-	tr.style.color='black';
-	tr.style.fontSize='15px';
-	tr.style.height='35px';
+	tr.style.color    = 'black';
+	tr.style.height   = '30px';
+	tr.style.font     = 'Arial';
+	tr.style.fontSize = '15px';
+
+	td = document.createElement('td');
+	td.appendChild(document.createTextNode(alarmTokens[1]));
+	td.style.width='30%';
+        tr.appendChild(td);
+
+	val = alarmTokens[2];
+	td = document.createElement('td');
+        td.appendChild(document.createTextNode(val));
+	td.style.width='55%';
+        tr.appendChild(td);
+
+	val = alarmTokens[3];
+	td = document.createElement('td');
+        td.appendChild(document.createTextNode(val.substring(0,val.length-4)));
+	td.style.width='15%';
+	td.style.textAlign='center';
+        tr.appendChild(td);
         this.parent.appendChild(tr);
-	
       }
       //console.log(this.parent.innerHTML);
     };
