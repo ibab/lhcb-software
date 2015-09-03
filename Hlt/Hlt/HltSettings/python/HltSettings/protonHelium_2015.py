@@ -15,14 +15,8 @@ class protonHelium_2015:
             self.ActiveHlt2Lines() != ref.ActiveHlt2Lines( self ) ) :
          raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
 
-   def __init__( self ) :
-      self.NanoBanks = [
-            'ODIN', 'HltLumiSummary', 'HltRoutingBits',
-            'DAQ', 'Velo', 'L0DU', 'HltDecReports', 'HC',
-            ]
-      
    def L0TCK( self ) :
-      return '0x024f'
+      return '0x024e'
 
    def HltType( self ) :
       self.verifyType( protonHelium_2015 )
@@ -33,11 +27,10 @@ class protonHelium_2015:
       lines = [
             # General lines:
             'Hlt1Lumi',
-            'Hlt1L0CALO',
             'Hlt1VeloClosingMicroBias',
             # proton Helium lines:
-            'Hlt1MBMicroBiasVelo',           ## Beam1 Micro Bias, prescaled to get 200 M events
             'Hlt1DiMuonHighMass' ,           ## di-muon: active on beam1 beam2 and collisions
+            'Hlt1MBMicroBiasVelo',           ## Beam1 Micro Bias, prescaled to get 200 M events
             'Hlt1MBNoBias' ,                 ## A little bit of complete no bias on beam gas
             'Hlt1MBNoBiasLeadingCrossing',   ## and on collisions
             'Hlt1MBMicroBiasLowMultVelo',
@@ -55,7 +48,7 @@ class protonHelium_2015:
 
    def ActiveHlt2Lines( self ) :
       """Return a list of active Hlt2 Lines."""
-      return [ 'Hlt2PassThrough', 'Hlt2Lumi', 'Hlt2Transparent', 'Hlt2SMOGPhysics' ]
+      return [ 'Hlt2PassThrough', 'Hlt2Lumi', 'Hlt2Transparent' ]
 
    def Thresholds( self ) :
          """Return a dictionary of cuts."""
@@ -97,9 +90,13 @@ class protonHelium_2015:
                      'Hlt1MBNoBiasLeadingCrossing'        : 1.0,
                      'Hlt1MBMicroBiasVelo'                : 1.0,
                      'Hlt1MBMicroBiasLowMultVelo'         : 1.0
+                     },
+                  'Postscale'                : {
+                     'Hlt1MBNoBias'                       : 'RATE(4)',
+                     'Hlt1MBNoBiasLeadingCrossing'        : 'RATE(4)',
                      }
                   },
-
+               
                Hlt1MuonLinesConf : {
                   'DiMuonHighMass_VxDOCA'                : 0.2,
                   'DiMuonHighMass_VxChi2'                : 25,
@@ -200,8 +197,7 @@ class protonHelium_2015:
             'Postscale' : {
             'Hlt2ErrorEvent'  : 'RATE(0.01)'
             },
-            'SMOGPhysics' : {
-            'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS('Hlt1MBMicroBiasVeloDecision') | HLT_PASS('Hlt1MBNoBiasDecision') | HLT_PASS('Hlt1MBNoBiasLeadingCrossingDecision') | HLT_PASS('Hlt1MBMicroBiasLowMultVeloDecision') | HLT_PASS('Hlt1Calib.*Decision')" }
-               }
+            'PassThrough' : {'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS('Hlt1MB.*Decision')"}
+            }
             } )
          return thresholds
