@@ -28,10 +28,11 @@ class protonHelium_2015:
             # General lines:
             'Hlt1Lumi',
             'Hlt1VeloClosingMicroBias',
+            'Hlt1L0B1gas',
+            'Hlt1L0B2gas',
             # proton Helium lines:
             'Hlt1DiMuonHighMass' ,           ## di-muon: active on beam1 beam2 and collisions
             'Hlt1MBMicroBiasVelo',           ## Beam1 Micro Bias, prescaled to get 200 M events
-            'Hlt1MBNoBias' ,                 ## A little bit of complete no bias on beam gas
             'Hlt1MBNoBiasLeadingCrossing',   ## and on collisions
             'Hlt1MBMicroBiasLowMultVelo',
             # Calib Lines:
@@ -64,12 +65,14 @@ class protonHelium_2015:
          thresholds = {
                Hlt1L0LinesConf : {
                   'Prescale' : { 
-                     'Hlt1L0CALO' : 1.0
+                     'Hlt1LB1gas' : 1.0,
+                     'Hlt1LB2gas' : 1.0
                      },
                   'Postscale' : {
-                     'Hlt1L0CALO' : 'RATE(25)'
+                     'Hlt1L0B1gas' : 'RATE(50)',
+                     'Hlt1L0B2gas' : 'RATE(50)'
                      },
-                  'L0Channels' : [ 'CALO' ],
+                  'L0Channels' : [ 'B1gas','B2gas' ],
                   },
 
                Hlt1LumiLinesConf : {
@@ -86,14 +89,12 @@ class protonHelium_2015:
                   'NoBiasOdin'               : 'jbit( ODIN_EVTTYP,5 ) | jbit( ODIN_EVTTYP,4)' ,
                   'NoBiasLeadingCrossingOdin': 'jbit( ODIN_EVTTYP,2 )' ,
                   'Prescale'                 : {
-                     'Hlt1MBNoBias'                       : 1.0,
                      'Hlt1MBNoBiasLeadingCrossing'        : 1.0,
                      'Hlt1MBMicroBiasVelo'                : 1.0,
                      'Hlt1MBMicroBiasLowMultVelo'         : 1.0
                      },
                   'Postscale'                : {
-                     'Hlt1MBNoBias'                       : 'RATE(4)',
-                     'Hlt1MBNoBiasLeadingCrossing'        : 'RATE(4)',
+                     'Hlt1MBNoBiasLeadingCrossing'        : 'RATE(50)',
                      }
                   },
                
@@ -197,7 +198,7 @@ class protonHelium_2015:
             'Postscale' : {
             'Hlt2ErrorEvent'  : 'RATE(0.01)'
             },
-            'PassThrough' : {'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS('Hlt1MB.*Decision')"}
+            'PassThrough' : {'HLT1' : "HLT_PASS('Hlt1DiMuonHighMassDecision') | HLT_PASS('Hlt1MB.*Decision') | HLT_PASS('Hlt1L0B.*gasDecision') "}
             }
             } )
          return thresholds
