@@ -4483,7 +4483,7 @@ ROOT.TH3D.histoDiff = _h_diff_
 ## perform some accumulation for the histogram 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
-def _h1_accumulate_ ( h                         ,
+def _h1_accumulate_ ( h                        ,
                      func = lambda s,v : s + v ,
                      cut  = lambda s   : True  , 
                      init = VE ()              ) :
@@ -4493,25 +4493,9 @@ def _h1_accumulate_ ( h                         ,
     """
     result = init
     for i in h.iteritems() :
-        if cut ( i ) : result = func ( result , i[2] )
+        if cut ( i ) : result = func ( result , i[-1] )
     return result 
 
-# =============================================================================
-## perform some accumulation for the histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2011-06-07
-def _h2_accumulate_ ( h                         ,
-                      func = lambda s,v : s + v ,
-                      cut  = lambda s   : True  , 
-                      init = VE ()              ) :
-    """Accumulate the function value over the histogram
-    >>> h =...
-    >>> sum = h.accumulate() 
-    """
-    result = init
-    for i in h.iteritems() :
-        if cut ( i ) : result = func ( result , i[4] )
-    return result 
 
 # =============================================================================
 ## get the sum of entries 
@@ -4694,8 +4678,12 @@ for t in ( ROOT.TH1F , ROOT.TH1D ) :
     t . sum        = _h1_sum_ 
 
 for t in ( ROOT.TH2F , ROOT.TH2D ) :    
-    t . accumulate = _h2_accumulate_ 
-    t . sum        = _h2_accumulate_
+    t . accumulate = _h1_accumulate_ 
+    t . sum        = _h1_accumulate_
+
+for t in ( ROOT.TH3F , ROOT.TH3D ) :    
+    t . accumulate = _h1_accumulate_ 
+    t . sum        = _h1_accumulate_
 
 ## generic
 ROOT.TH1 . scale      = _h_scale_
