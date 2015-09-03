@@ -420,7 +420,7 @@ class CharmHad_25ns_September2015 :
              'AM_MAX'                   :  1990. * MeV,
              'ASUMPT_MIN'               :  1500 * MeV,
              'D_PT_MIN'                 :  1800 * MeV,
-             'D_BPVDIRA_MIN'            :  0.9994,
+             'D_BPVDIRA_MIN'            :  0.99,
              'D_VCHI2PDOF_MAX'          :  20.0,
              'D_BPVLTIME_MIN'           :  0.25 * picosecond,
              'HHMaxDOCA'                :  0.200 * mm,
