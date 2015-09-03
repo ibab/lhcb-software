@@ -146,7 +146,7 @@ LbDesktop.BeamMenuModule = Ext.extend(desktop.URLMenuModule, {
       var sps_icon = 'http://images.iop.org/objects/ccr/cern/41/6/17/cernsps3_6-01.jpg';
       var clic_icon = 'http://clic-study.web.cern.ch/sites/clic-study.web.cern.ch/themes/cliccern/img/logos/CLIClogo.png';
       var items = 
-	[ this.menuItem('LHC logbook',       'https://op-webtools.web.cern.ch/op-webtools/eLogbook/?lgbkID=60',1000,700).makeIcon(constants.images.lhc)
+	[ this.menuItem('LHC logbook',       '//op-webtools.web.cern.ch/op-webtools/eLogbook/?lgbkID=60',1000,700).makeIcon(constants.images.lhc)
 	  ,this.menuItem('LHC Operation',     constants.operations_url('LHC3'),          1100,870).makeIcon(constants.images.lhc)
 	  ,this.menuItem('LHC Page 1',        constants.operations_url('LHC1'),          1100,870).makeIcon(constants.images.lhc)
 	  ,this.menuItem('LHC Page 2',        constants.operations_url('LHC2'),          1100,870).makeIcon(constants.images.lhc)
@@ -162,13 +162,13 @@ LbDesktop.BeamMenuModule = Ext.extend(desktop.URLMenuModule, {
 	  ,this.menuItem('LHCf',              constants.operations_url('LHCfExperiment'),1150,870)
 
 	  ,this.menuItem('SPS Page 1',        constants.operations_url('SPS1'),          900,700).makeIcon({icon:sps_icon})
-	  ,this.menuItem('SPS Home page',     'https://home.web.cern.ch/about/accelerators/super-proton-synchrotron', 1150,700).makeIcon({icon:sps_icon})
-	  ,this.menuItem('SPS Operation',     'https://ab-dep-op-sps.web.cern.ch/ab-dep-op-sps', 900,700).makeIcon({icon:sps_icon})
-	  ,this.menuItem('SPS logbook',       'https://op-webtools.web.cern.ch/op-webtools/eLogbook/?lgbkID=50',1000,700).makeIcon({icon:sps_icon})
-	  ,this.menuItem('Beams department',  'https://espace.cern.ch/be-dep',900,700)
-	  ,this.menuItem('Linac4 Project',    'https://linac4-project.web.cern.ch/linac4-project',1100,870).makeIcon({icon:'https://cern.ch/linac4/images/Logo-Linacresized.jpg'})
-	  ,this.menuItem('CLIC Project',      'https://clic-study.web.cern.ch',1100,870).makeIcon({icon:clic_icon})
-	  ,this.menuItem('CLICdp',            'https://clicdp.web.cern.ch',1200,870).makeIcon({icon:clic_icon})
+	  ,this.menuItem('SPS Home page',     '//home.web.cern.ch/about/accelerators/super-proton-synchrotron', 1150,700).makeIcon({icon:sps_icon})
+	  ,this.menuItem('SPS Operation',     '//ab-dep-op-sps.web.cern.ch/ab-dep-op-sps', 900,700).makeIcon({icon:sps_icon})
+	  ,this.menuItem('SPS logbook',       '//op-webtools.web.cern.ch/op-webtools/eLogbook/?lgbkID=50',1000,700).makeIcon({icon:sps_icon})
+	  ,this.menuItem('Beams department',  '//espace.cern.ch/be-dep',900,700)
+	  ,this.menuItem('Linac4 Project',    '//linac4-project.web.cern.ch/linac4-project',1100,870).makeIcon({icon:'//cern.ch/linac4/images/Logo-Linacresized.jpg'})
+	  ,this.menuItem('CLIC Project',      '//clic-study.web.cern.ch',1100,870).makeIcon({icon:clic_icon})
+	  ,this.menuItem('CLICdp',            '//clicdp.web.cern.ch',1200,870).makeIcon({icon:clic_icon})
 	  ];
     this._launch('Beam&amp;Operations',constants.images.beams_department,items);
   }
@@ -178,11 +178,11 @@ LbDesktop.LHCbMenuModule = Ext.extend(desktop.URLMenuModule, {
   init: function(){
     var items = 
       [ this.menuURL(constants.urls.lhcb.home_page).makeIcon(constants.images.lhcb,1300,700)
-      ,this.menuItem('Run News (requires login)', 'https://groups.cern.ch/group/lhcb-run-news/default.aspx',1000,700)
-      ,this.menuItem('Run DB',                    'https://lbrundb.cern.ch/rundb?destination=rundb',1000,700)
-      ,this.menuItem('Problem DB',                'https://lbproblems.cern.ch',1000,700)
-      ,this.menuItem('Shifts',                    'https://lbshiftdb.cern.ch',1000,700)
-      ,this.menuItem('Pit Webcam',                'https://lhcb.web.cern.ch/lhcb/web-cam.htm',1000,700)
+      ,this.menuItem('Run News (requires login)', '//groups.cern.ch/group/lhcb-run-news/default.aspx',1000,700)
+      ,this.menuItem('Run DB',                    '//lbrundb.cern.ch/rundb?destination=rundb',1000,700)
+      ,this.menuItem('Problem DB',                '//lbproblems.cern.ch',1000,700)
+      ,this.menuItem('Shifts',                    '//lbshiftdb.cern.ch',1000,700)
+      ,this.menuItem('Pit Webcam',                '//lhcb.web.cern.ch/lhcb/web-cam.htm',1000,700)
       ,this.menuURL(constants.urls.lhcb.twiki).makeIcon(constants.images.twiki).makeIcon(constants.images.lhcb,1300,700)
       ,this.menuURL(constants.urls.lhcb.online_home_page).makeIcon(constants.images.lhcb,1300,700)
       ,this.menuURL(constants.urls.lhcb.computing_home_page).makeIcon(constants.images.lhcb,1300,700)
@@ -233,12 +233,12 @@ LbDesktop.CERNMenuModule = Ext.extend(desktop.URLMenuModule, {
     var items=[//this.menuItem('Home Page',        constants.mmm_url(null),1000,700).makeIcon(constants.images.cern)
                 this.menuItem('MMM',               constants.mmm_url(null),1000,700)
                ,this.menuItem('Mail',              constants.mmm_url('/exchange'),1000,700).makeIcon(constants.images.mail)
-               ,this.menuItem('Web site stats',    'https://web-statistics.web.cern.ch/web-statistics/cgi-bin/awstats.pl?month=all&year=2010&output=main&config=frankm&framename=index',1000,700).makeIcon(constants.images.webstats)
+               ,this.menuItem('Web site stats',    '//web-statistics.web.cern.ch/web-statistics/cgi-bin/awstats.pl?month=all&year=2010&output=main&config=frankm&framename=index',1000,700).makeIcon(constants.images.webstats)
                ,this.menuItem('Service Portal',    constants.service_now_url('sls.do'), 1100,700).makeIcon(constants.images.database)
-               ,this.menuItem('Phonebook',         'https://phonebook.cern.ch/phonebook#',1100,700)
-               ,this.menuItem('Maps',              'https://maps.cern.ch',1100,700)
-               ,this.menuItem('Library',           'https://library.web.cern.ch', 1100,700)
-               ,this.menuItem('Shuttle service',   'https://gs-dep.web.cern.ch/en/ShuttleService', 1100,700)
+               ,this.menuItem('Phonebook',         '//phonebook.cern.ch/phonebook#',1100,700)
+               ,this.menuItem('Maps',              '//maps.cern.ch',1100,700)
+               ,this.menuItem('Library',           '//library.web.cern.ch', 1100,700)
+               ,this.menuItem('Shuttle service',   '//gs-dep.web.cern.ch/en/ShuttleService', 1100,700)
     ];
     this._launch('CERN',constants.images.cern,items);
   }
@@ -247,10 +247,10 @@ LbDesktop.CERNMenuModule = Ext.extend(desktop.URLMenuModule, {
 LbDesktop.ALICEMenuModule = Ext.extend(desktop.URLMenuModule, {
   init: function() {
       var items=[//this.menuItem('ALICE Home','http://alice.cern.ch',900,700).makeIcon(constants.images.alice)
-		 this.menuItem('ALICE DCS','https://cern.ch/alicedcs',900,700).makeIcon(constants.images.alice)
-		 ,this.menuItem('ALICE DCS Status',    'https://alicedcs.web.cern.ch/AliceDCS/Status',1100,700).makeIcon(constants.images.alice)
-		 ,this.menuItem('ALICE DCS Operation', 'https://alicedcs.web.cern.ch/AliceDCS/DCSoperation',1100,700).makeIcon(constants.images.alice)
-		 ,this.menuItem('ALICE DCS Monitoring','https://alicedcs.web.cern.ch/AliceDCS/monitoring',1100,700).makeIcon(constants.images.alice)
+		 this.menuItem('ALICE DCS','//cern.ch/alicedcs',900,700).makeIcon(constants.images.alice)
+		 ,this.menuItem('ALICE DCS Status',    '//alicedcs.web.cern.ch/AliceDCS/Status',1100,700).makeIcon(constants.images.alice)
+		 ,this.menuItem('ALICE DCS Operation', '//alicedcs.web.cern.ch/AliceDCS/DCSoperation',1100,700).makeIcon(constants.images.alice)
+		 ,this.menuItem('ALICE DCS Monitoring','//alicedcs.web.cern.ch/AliceDCS/monitoring',1100,700).makeIcon(constants.images.alice)
     ];
     this._launch('ALICE Experiment',constants.images.alice,items);
   }
@@ -259,9 +259,9 @@ LbDesktop.ALICEMenuModule = Ext.extend(desktop.URLMenuModule, {
 
 LbDesktop.ATLASMenuModule = Ext.extend(desktop.URLMenuModule, {
   init: function(){
-    var items=[this.menuItem('ATLAS Home','https://atlas.web.cern.ch/Atlas/Collaboration',900,700).makeIcon(constants.images.atlas),
-               this.menuItem('ATLAS Computing','https://twiki.cern.ch/twiki/bin/view/Atlas/AtlasComputing',900,700),
-               this.menuItem('ATLAS Event display','https://atlantis.web.cern.ch/atlantis',900,700)
+    var items=[this.menuItem('ATLAS Home','//atlas.web.cern.ch/Atlas/Collaboration',900,700).makeIcon(constants.images.atlas),
+               this.menuItem('ATLAS Computing','//twiki.cern.ch/twiki/bin/view/Atlas/AtlasComputing',900,700),
+               this.menuItem('ATLAS Event display','//atlantis.web.cern.ch/atlantis',900,700)
     ];
     this._launch('ATLAS Experiment',constants.images.atlas,items);
   }
@@ -276,7 +276,7 @@ LbDesktop.CMSMenuModule = Ext.extend(desktop.URLMenuModule, {
 	       //,this.menuItem('Event Display (2009)', this.cmstv(6),1000,700)
 	       //,this.menuItem('Event Display (2010)', this.cmstv(7),1000,700)
 	       //,this.menuItem('Event Display (Sim)',  this.cmstv(8),1000,700)
-              ,this.menuItem('Tier 0 Status',    'https://cmsweb.cern.ch/T0Mon',1000,700)
+              ,this.menuItem('Tier 0 Status',    '//cmsweb.cern.ch/T0Mon',1000,700)
     ];
     this._launch('CMS Experiment',constants.images.cms,items);
   }

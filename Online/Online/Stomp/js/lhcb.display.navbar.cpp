@@ -39,9 +39,9 @@ var NavigationBar = function() {
     this.body.appendChild(tr);
     return td;
   };
-  
-  table.open_abs_url = function(loc) {
-    doc = document;
+
+  table.get_doc = function() {
+    var doc = document;
     if ( parent.frames["viewer"] != null )  {
       if ( navigator.appName.indexOf("Netscape") != -1 )  {
 	doc = parent.frames.viewer;
@@ -53,6 +53,10 @@ var NavigationBar = function() {
 	doc = parent.frames.viewer;
       }
     }
+    return doc;
+  };  
+  table.open_abs_url = function(loc) {
+    var doc = this.get_doc();
     doc.location = loc;
   };
 
@@ -62,6 +66,7 @@ var NavigationBar = function() {
 
   table.addSized = function(text, tooltip, url, style, small_pic, sx, sy, large_pic, lx, ly) {
     var item     = new Object();
+    item.client  = this;
     item.text    = text;
     item.url     = url;
     item.small   = small_pic;
@@ -162,7 +167,42 @@ var NavigationBar = function() {
     if ( icns && icns == 'small' ) loc = loc + '&icons=small';
     document.location = loc;
   };
-
+  table.add_bookmark = function(title, url) {
+    if(document.all) { // ie
+        window.external.AddFavorite(url, title);
+    }
+    else if(window.sidebar) { // firefox
+      alert('Dear Firefox user, \n\n'+
+	    'Your browser does no longer allow to \n'+
+	    'add bookmarks programatically.\n'+
+	    'Please press CTRL+D to Bookmark the page:\n'+
+	    '  ** '+title+' **\n\n'+
+	    'You should use the following URL to restart \n'+
+	    'the viewer in this configuration:\n\n\n'+
+	    url+'\n\n\n'
+	    );
+      window.parent.document.location = url;
+      //+'You may use CTRL-C and CTRL-V to copy/paste.\n'+
+      //  window.parent.document.location.toString()
+    }
+    else if(window.opera && window.print) { // opera
+        var elem = document.createElement('a');
+        elem.setAttribute('href',url);
+        elem.setAttribute('title',title);
+        elem.setAttribute('rel','sidebar');
+        elem.click(); // this.title=document.title;
+    }
+  };
+  table.bookmark = function()  {
+    var par = this.client.get_doc().location.search;
+    var bm = lhcb.constants.lhcb_base_url();
+    var opt = '';
+    if ( par.length>1 )  {
+      bm = bm + par;
+      opt = ': '+par.substring(1);
+    }
+    this.client.add_bookmark('LHCb Online Status'+opt,bm);
+  };
   return table;
 };
 
@@ -202,6 +242,7 @@ var navbar_general = function(navBar) {
 		  '../Images/LHCb/Ramses_icon.jpg',20,20,
 		  '../Images/LHCb/Ramses_icon.jpg',32,32);
   */
+  navBar.bm = navBar.addButton('Bookmark','Bookmark this frame configuration','DisplayButton', navBar.bookmark);
 };
 
 var navbar_subdetectors = function(navBar) {
@@ -226,6 +267,7 @@ var navbar_subdetectors = function(navBar) {
   navBar.addURL('Show MUON page',lhcb.constants.urls.lhcb.subdetectors.muon);
   navBar.addURL('Show Cooling status page',lhcb.constants.urls.lhcb.subdetectors.cooling);
   navBar.addURL('Show DataQuality page',lhcb.constants.urls.lhcb.subdetectors.dq);
+  navBar.bm = navBar.addButton('Bookmark','Bookmark this frame configuration','DisplayButton', navBar.bookmark);
 };
 
 

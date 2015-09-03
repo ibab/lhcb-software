@@ -91,6 +91,7 @@ var Page1 = function(msg, sys)   {
     cell.onclick     = function() { zoom_decreaseFontSize();};
     tooltips.set(cell,'Decrease font size');
     tr.appendChild(cell);
+
     sub_body.appendChild(tr);
     sub_tab.appendChild(sub_body);
     cell = Cell('',1,'MonitorTinyHeader');

@@ -1,6 +1,19 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
 <HEAD>
+  <SCRIPT language="JavaScript">
+    // If there were arguments, then redirect the 
+    var loc = document.referrer.search;
+    if ( pars.length > 1 )  {
+      if ( pars.search("?type=navbar") < 0 &&
+           pars.search("?config=") < 0 
+				     )  {
+				     alert(pars);
+       document.location = '../lhcb.comet.htm'+pars;
+       //alert(document.location);
+    }
+  </SCRIPT>
+
   <TITLE>LHCb Online displays home page</TITLE>
   <META HTTP-EQUIV="Pragma"  CONTENT="no-cache"></META>
   <META HTTP-EQUIV="Expires" CONTENT="0"></META>
@@ -10,7 +23,7 @@
 </HEAD>
 
 <BODY class="NewsPage">
-<SCRIPT>
+<SCRIPT language="JavaScript">
 function setWindowTitle(title) {
   try {
     top.document.title = title;

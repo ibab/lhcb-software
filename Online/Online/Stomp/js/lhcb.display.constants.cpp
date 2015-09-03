@@ -3,7 +3,7 @@ if ( !_lhcb().constants ) {
   lhcb.constants = function() {
     this._url = (''+document.location).substr(0,(''+document.location).indexOf('/Online/')+7);//'http://www.cern.ch/lhcbproject/online/comet/Online';
     this._loc = ''+document.location;
-    this.lhcb_comet_url2  = function()     {    return 'https://lbcomet.cern.ch/static/RunStatus';  };
+    this.lhcb_comet_url2  = function()     {    return '//lbcomet.cern.ch/static/RunStatus';  };
     this.lhcb_comet_url   = function()     {    return this._url;                                  };
     this.lhcb_base_url    = function()     {    return this._url;                                  };
     //alert('\nDomain:'+document.domain+'\nURL:'+this._url+'\nLoc:'+this._loc+'\nComet:'+this.lhcb_comet_url()+'\nBase:'+this.lhcb_base_url()+'\n');
@@ -15,10 +15,10 @@ if ( !_lhcb().constants ) {
       this.lhcb_display_url = function(name) {    return this.lhcb_comet_url()+'/lhcb.comet.htm?type='+name;       };
     }
     this.lhcb_static      = function(name) {    return this.lhcb_base_url()+'/'+name;                              };
-    this.operations_url   = function(name) {    return 'https://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr='+name; };
-    this.sls_service_url  = function(name) {    return 'https://sls.cern.ch/sls/service.php?id='+name;              };
-    this.service_now_url  = function(name) {    return 'https://cern.service-now.com/service-portal/'+name;        };
-    this.mmm_url          = function(name) {    var n = 'https://mmm.cern.ch'; if ( name ) n = n + name; return n; };
+    this.operations_url   = function(name) {    return '//op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr='+name; };
+    this.sls_service_url  = function(name) {    return '//sls.cern.ch/sls/service.php?id='+name;              };
+    this.service_now_url  = function(name) {    return '//cern.service-now.com/service-portal/'+name;        };
+    this.mmm_url          = function(name) {    var n = '//mmm.cern.ch'; if ( name ) n = n + name; return n; };
 
     this.mkAbsImage       = function(name) {    return {src: name, icon: name};                                    };
     this.mkStaticImage    = function(name) {    return this.mkAbsImage(this.lhcb_static('Images/'+name));          };
@@ -44,11 +44,11 @@ if ( !_lhcb().constants ) {
       home:             this.mkImage('Home','gif'),
       help:             this.mkImage('Help','gif'),
       database:         this.mkStaticImage('database.jpg'),
-      mail:             this.mkAbsImage('https://mmmservices.web.cern.ch/mmmservices/Images/Icons/outlook.gif'),
-      webstats:         this.mkAbsImage('https://web-statistics.web.cern.ch/web-statistics/icon/other/awstats_logo6.png'),
+      mail:             this.mkAbsImage('//mmmservices.web.cern.ch/mmmservices/Images/Icons/outlook.gif'),
+      webstats:         this.mkAbsImage('//web-statistics.web.cern.ch/web-statistics/icon/other/awstats_logo6.png'),
 
       twiki:            this.mkStaticImage('twiki.gif'),
-      lhcb:             this.mkAbsImage('https://lhcb.web.cern.ch/lhcb/lhcblogo.gif'),
+      lhcb:             this.mkAbsImage('//lhcb.web.cern.ch/lhcb/lhcblogo.gif'),
       lhcb_online:      this.mkAbsImage('Images/lhcb-online-logo.png'),
       dirac:            this.mkStaticImage('DIRAC.png'),
       magnet:           this.mkImage('LHCb/Magnet_Icon','png'),
@@ -94,7 +94,7 @@ if ( !_lhcb().constants ) {
 	size:      {width:100,height:100}
       },
       cern: {
-      src:      'https://home.web.cern.ch', //'http://cern.ch',
+        src:    '//home.web.cern.ch', //'http://cern.ch',
 	img:    this.images.cern,
 	title:  'CERN',
 	nick:   'cern-win',
@@ -103,7 +103,7 @@ if ( !_lhcb().constants ) {
       },
       lhc: {
 	project: {
-	  src:    'https://home.web.cern.ch/topics/large-hadron-collider',
+	  src:    '//home.web.cern.ch/topics/large-hadron-collider',
 	  img:    this.images.lhc,
 	  title:  'LHC Project',
 	  nick:   'lhc-win',
@@ -252,7 +252,7 @@ if ( !_lhcb().constants ) {
 	  }
 	},
 	home_page: {
-	  src:    'https://lhcb.web.cern.ch/lhcb',
+	  src:    '//lhcb.web.cern.ch/lhcb',
 	  img:    this.images.window,
 	  title:  'Home Page',
 	  nick:   'lhcb-home-page-win',
@@ -260,7 +260,7 @@ if ( !_lhcb().constants ) {
 	  size:   {width:  1150,	height: 800}
 	},
 	online_home_page: {
-	  src:    'https://lhcb-online.web.cern.ch/lhcb-online',
+	  src:    '//lhcb-online.web.cern.ch/lhcb-online',
 	  img:    this.images.home,
 	  title:  'Online Home Page',
 	  nick:   'lhcb-online-home-page-win',
@@ -269,7 +269,7 @@ if ( !_lhcb().constants ) {
 	  size:   {width:  1150,	height: 800}
 	},
 	computing_home_page: {
-	  src:    'https://lhcb-comp.web.cern.ch/lhcb-comp',
+	  src:    '//lhcb-comp.web.cern.ch/lhcb-comp',
 	  img:    this.images.window,
 	  title:  'Computing Home Page',
 	  nick:   'lhcb-computing-home-page-win',
@@ -277,7 +277,7 @@ if ( !_lhcb().constants ) {
 	  size:   {width:  1150,	height: 800}
 	},
 	twiki: {
-	  src:    'https://twiki.cern.ch/twiki/bin/view/LHCb',
+	  src:    '//twiki.cern.ch/twiki/bin/view/LHCb',
 	  img:    this.images.window,
 	  title:  'TWiki',
 	  nick:   'lhcb-twiki-page-win',
@@ -394,7 +394,7 @@ if ( !_lhcb().constants ) {
 	  size:   {width:  1150,	height: 820}
 	},
 	elog: {
-	  src:    'https://lblogbook.cern.ch/Shift/',
+	  src:    '//lblogbook.cern.ch/Shift/',
 	  img:    this.images.elog,
 	  title:  'ELog LHCb',
 	  nick:   'lhcb-elog-win',
@@ -403,7 +403,7 @@ if ( !_lhcb().constants ) {
 	  size:   {width:  1150,	height: 850}
 	},
 	rundb: {
-	  src:    'https://lbrundb.cern.ch/',
+	  src:    '//lbrundb.cern.ch/',
 	  img:    this.images.lookprod,
 	  title:  'LHCb run database',
 	  nick:   'lhcb-rundb-win',
@@ -412,7 +412,7 @@ if ( !_lhcb().constants ) {
 	  size:   {width:  1100,	height: 850}
 	},
 	weekly_meetings: {
-	  src:    'https://indico.cern.ch/categOverview.py?selCateg=1l22&period=week&detail=conference',
+	  src:    '//indico.cern.ch/categOverview.py?selCateg=1l22&period=week&detail=conference',
 	  img:    this.images.indico,
 	  title:  'Meetings',
 	  nick:   'lhcb-meetings-win',

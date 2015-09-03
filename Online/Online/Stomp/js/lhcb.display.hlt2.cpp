@@ -33,7 +33,7 @@ var hlt2Properties = function(table)  {
   table.run_properties.appendChild(table.runPropertyDisplay);
   table.run_properties.width='50%';
   table.ctrl_status.width='50%';
-}
+};
 
 /** Online widgets. DAQ efficiency
  *

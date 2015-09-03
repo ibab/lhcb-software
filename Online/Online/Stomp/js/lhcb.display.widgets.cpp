@@ -2257,6 +2257,7 @@ if ( !lhcb.widgets ) {
       td.style.width = '55%';
       td.appendChild(this.lhc_header=lhcb.widgets.LHC_header());
       tr.appendChild(td=document.createElement('td'));
+      td.colSpan = 2;
       td.appendChild(this.run_header=lhcb.widgets.Det_Run_header('LHCb',this.logger));
       td.width = '45%';
 
@@ -2264,51 +2265,6 @@ if ( !lhcb.widgets ) {
       this.run_header.style.height = '60px';
       this.subscriptions.push(this.lhc_header);
       this.subscriptions.push(this.run_header);
-
-      // Top of the display
-      tb.appendChild(tr=document.createElement('tr'));
-      tr.appendChild(td=document.createElement('td'));
-      td.colSpan = 2;
-      td.appendChild(t1=document.createElement('table'));
-      t1.appendChild(this.top=document.createElement('tbody'));
-      t1.className = this.top.className = 'MonitorPage';
-      t1.style.border = this.top.style.border = 'none';
-      this.top.style.verticalAlign = 'top';
-
-      tb.appendChild(tr=document.createElement('tr'));
-      // Left hand of the display
-      tr.appendChild(td=document.createElement('td'));
-      td.appendChild(t1=document.createElement('table'));
-      t1.appendChild(this.left=document.createElement('tbody'));
-      t1.className = this.left.className = 'MonitorPage';
-      t1.style.border = this.left.style.border = 'none';
-      this.left.style.verticalAlign = 'top';
-
-      // Center of the display
-      tr.appendChild(td=document.createElement('td'));
-      td.appendChild(t1=document.createElement('table'));
-      t1.appendChild(this.center=document.createElement('tbody'));
-      t1.className = this.center.className = 'MonitorPage';
-      t1.style.border = this.center.style.border = 'none';
-      this.center.style.verticalAlign = 'top';
-
-      // Right hand of the display
-      tr.appendChild(td=document.createElement('td'));
-      td.appendChild(t1=document.createElement('table'));
-      t1.appendChild(this.right=document.createElement('tbody'));
-      t1.className = this.right.className = 'MonitorPage';
-      t1.style.border = this.right.style.border = 'none';
-      this.right.style.verticalAlign = 'top';
-
-      // Bottom of the display
-      tb.appendChild(tr=document.createElement('tr'));
-      tr.appendChild(td=document.createElement('td'));
-      td.colSpan = 2;
-      td.appendChild(t1=document.createElement('table'));
-      t1.appendChild(this.bottom=document.createElement('tbody'));
-      t1.className = this.bottom.className = 'MonitorPage';
-      t1.style.border = this.bottom.style.border = 'none';
-      this.bottom.style.verticalAlign = 'top';
 
       this.addItem = function(item) {
 	var tr1, td1;
@@ -2326,12 +2282,64 @@ if ( !lhcb.widgets ) {
 	if ( height ) td1.style.height=height;
 	return td1;
       };
+
+      // Top of the display
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(td=document.createElement('td'));
+      td.colSpan = 3;
+      td.appendChild(t1=document.createElement('table'));
+      t1.appendChild(this.top=document.createElement('tbody'));
+      t1.className = this.top.className = 'MonitorPage';
+      t1.style.border = this.top.style.border = 'none';
+      this.top.style.verticalAlign = 'top';
+
+      tb.appendChild(tr=document.createElement('tr'));
+      // Left hand of the display
+      tr.appendChild(td=document.createElement('td'));
+      td.appendChild(t1=document.createElement('table'));
+      t1.appendChild(this.left=document.createElement('tbody'));
+      t1.className = this.left.className = 'MonitorPage';
+      t1.style.border = this.left.style.border = 'none';
+      this.left.style.verticalAlign = 'top';
+
+      /*
+      // Center of the display
+      tr.appendChild(td=document.createElement('td'));
+      td.style.width = 1;
+      td.appendChild(t1=document.createElement('table'));
+      t1.appendChild(this.center=document.createElement('tbody'));
+      t1.className    = this.center.className = 'MonitorPage';
+      t1.style.border = this.center.style.border = 'none';
+      this.center.style.verticalAlign = 'top';
+      this.center.addItem = this.addItem;
+      this.center.addSpacer = this.addSpacer;
+      this.center.parent = this;
+      */
+
+      // Right hand of the display
+      tr.appendChild(td=document.createElement('td'));
+      td.appendChild(t1=document.createElement('table'));
+      t1.appendChild(this.right=document.createElement('tbody'));
+      t1.className = this.right.className = 'MonitorPage';
+      t1.style.border = this.right.style.border = 'none';
+      this.right.style.verticalAlign = 'top';
+
+      // Bottom of the display
+      tb.appendChild(tr=document.createElement('tr'));
+      tr.appendChild(td=document.createElement('td'));
+      td.colSpan = 3;
+      td.appendChild(t1=document.createElement('table'));
+      t1.appendChild(this.bottom=document.createElement('tbody'));
+      t1.className = this.bottom.className = 'MonitorPage';
+      t1.style.border = this.bottom.style.border = 'none';
+      this.bottom.style.verticalAlign = 'top';
+
       this.bottom.addItem = this.top.addItem = this.left.addItem = this.addItem;
-      this.center.addItem = this.right.addItem = this.left.addItem = this.addItem;
+      this.right.addItem = this.left.addItem = this.addItem;
       this.bottom.addSpacer = this.top.addSpacer = this.left.addSpacer = this.addSpacer;
-      this.center.addSpacer = this.right.addSpacer = this.left.addSpacer = this.addSpacer;
+      this.right.addSpacer = this.left.addSpacer = this.addSpacer;
       this.bottom.parent = this.top.parent = this;
-      this.center.parent = this.left.parent = this.right.parent = this;
+      this.left.parent = this.right.parent = this;
 
       this.tbody = tb;
       this.attachWidgets();
