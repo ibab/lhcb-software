@@ -30,8 +30,6 @@ def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks, 
 	if not os.path.exists(path):
 		os.makedirs(path)
 
-	createTemplateOptionFile(path,models,particlesTodo,energies,materialsTodo,thicks)
-
 	#Starting jobs submission
 
 	log = open('progress.log','w')

@@ -155,9 +155,9 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 					if(len(erry1) > 0) :
 						totErr2 = TMath.Power(erry1[ee]/y1[ee],2) + TMath.Power(erry2[ee]/y2[ee],2)
 						erry.append(y[ee] * TMath.Sqrt(totErr2))
-						ratiotxt.write(' & $ {:4.2} \\pm {:4.2} $ \\\\ \n'.format(y[ee],erry[ee]) )
+						ratiotxt.write(' & $ {0:4.2} \\pm {1:4.2} $ \\\\ \n'.format(y[ee],erry[ee]) )
 					else :
-						ratiotxt.write(' & $ {:4.2} $ \\\\ \n'.format(y[ee]) )
+						ratiotxt.write(' & $ {0:4.2} $ \\\\ \n'.format(y[ee]) )
 						
 
 				if(len(erry) > 1) :

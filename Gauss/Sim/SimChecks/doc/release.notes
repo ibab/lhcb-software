@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-09-04 - Luca Pescatore
+ - Minor fixes to make scripts compatible with older versions of python.
+   Tested with Gauss v48r1, v48r3, v45r10p1 and v46r7p2
+ 
+
 !========================== SimChecks v1r6 2015-08-05 ========================
 ! 2015-06-29 - Luca Pescatore
  - Added rad_length_scan_velo_z.py to perform scans of radiation length

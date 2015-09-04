@@ -119,16 +119,16 @@ class Plotter :
 		self._energies = energies
 	
 		gROOT.ProcessLine(
-			'''struct tvars_t {
-			int pGun, mat, model;
-			double energy, thickness;
-			double multi, multi_err;
-			double xsec, xsec_err;
-			double inel_xsec, inel_xsec_err;
-			double el_xsec, el_xsec_err;
-			double percPlus, percMinus, percNCh;
-			double multiNCh_nogamma, multi_gamma, multiNCh;
-			} ''')
+			"struct tvars_t {\
+			int pGun, mat, model;\
+			double energy, thickness;\
+			double multi, multi_err;\
+			double xsec, xsec_err;\
+			double inel_xsec, inel_xsec_err;\
+			double el_xsec, el_xsec_err;\
+			double percPlus, percMinus, percNCh;\
+			double multiNCh_nogamma, multi_gamma, multiNCh;\
+			} ")
 
 		tvars = tvars_t()
 
@@ -251,15 +251,15 @@ class Plotter :
 		rootout.Close();
 
 gROOT.ProcessLine(
-		'''struct vars_t {
-		Double_t  endx,endy,endz,prox,proy,proz;
-		int  cptype,cpstype;
-		int  trid,trpdg,ndau;
-		int  dirparent[100],isinside[100],parent[100];
-		int eptype[100],epstype[100],daupdg[100];
-		Double_t daukine[100];
-		Double_t daucharge[100];
-	}''')
+		"struct vars_t {\
+		Double_t  endx,endy,endz,prox,proy,proz;\
+		int  cptype,cpstype;\
+		int  trid,trpdg,ndau;\
+		int  dirparent[100],isinside[100],parent[100];\
+		int eptype[100],epstype[100],daupdg[100];\
+		Double_t daukine[100];\
+		Double_t daucharge[100];\
+	}")
 
 
 
@@ -498,9 +498,9 @@ def doMultiHistos(nt, curdir, mod, mat, Dx, pgun, eng) :
 	multi = in_dau_mult.GetMean()
 	multi_err = in_dau_mult.GetMeanError()
 	print "Tot projectiles = ", totP
-	print "Pint inel = ", '{:4.5f} +/- {:4.5f}'.format(Xsecinel,XsecinelErr)
-	print "Pint el = ", '{:4.5f} +/- {:4.5f}'.format(Xsecel,XsecelErr)
-	print "< Multi > = ", '{:3.1f} +/- {:3.1f}'.format(multi,multi_err)
+	print "Pint inel = ", '{0:4.5f} +/- {1:4.5f}'.format(Xsecinel,XsecinelErr)
+	print "Pint el = ", '{0:4.5f} +/- {1:4.5f}'.format(Xsecel,XsecelErr)
+	print "< Multi > = ", '{0:3.1f} +/- {1:3.1f}'.format(multi,multi_err)
 
 	if countinel != 0 :
 		result = [totP, Xsecinel, XsecinelErr, Xsecel, XsecelErr, multi, multi_err,

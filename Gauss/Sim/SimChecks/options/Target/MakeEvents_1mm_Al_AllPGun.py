@@ -3,6 +3,7 @@
 
 import sys
 import os
+import re
 
 from Target.TargetCreateEvents import RunTargetJobs
 from optparse import OptionParser
@@ -11,7 +12,8 @@ parser = OptionParser()
 parser.add_option("--physList", default=None, dest="physList", help="Specific single Physics List to use by default does both FTFP_BERT and QGSP_BERT" )
 (opts, args) = parser.parse_args()
 
-path=os.environ['PWD']+'/TargetOutput' # where you want your output (absolute or relative path)
+version = re.search("GAUSS_v(.*?)/",os.environ["GAUSSROOT"]).groups(0)[0]
+path=os.environ['WORK']+'/TargetOutput_v'+version # where you want your output (absolute or relative path)
 
 models=['FTFP_BERT','QGSP_BERT']#any present in the version of Gauss you are using e.g. 'FTFP_BERT'
 if opts.physList :
