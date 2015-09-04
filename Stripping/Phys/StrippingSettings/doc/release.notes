@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-09-03 - Jinlin Fu
+ - Updated B2OC S23c LineConfig: New line and updated Bc2DD mass cut
+
+! 2015-09-03 - Jinlin Fu
  - update Charm dict s23:  add dict of DstarPromptWithD02HHHH 
 
 ! 2015-09-01 - Andrea Contu

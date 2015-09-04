@@ -80,7 +80,7 @@ Beauty2Charm = {
     'BPVIPCHI2_MAX' : 25,
     'BPVLTIME_MIN'  : '0.05*ps',
     'BPVDIRA_MIN'   : 0.999,
-    'AM_MIN'        : '5800*MeV', 
+    'AM_MIN'        : '4800*MeV', 
     'AM_MAX'        : '6800*MeV',
     'B2CBBDT_MIN'   : -999.9
     },
@@ -280,7 +280,8 @@ Beauty2Charm = {
     
     ],  
     'Bhadron' : [
-    
+
+    'StrippingB2DDKBeauty2CharmLine', 
     'StrippingB02D0D0D02HHD02HHBeauty2CharmLine',
     'StrippingB02D0D0D02HHD02K3PiBeauty2CharmLine',
     'StrippingB02D0D0D02K3PiD02K3PiBeauty2CharmLine',
