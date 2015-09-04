@@ -134,16 +134,21 @@ if options.TAE > 0:
 
 appMgr.addAlgorithm("HCRawBankDecoder/HCRawBankDecoder")
 
+channelsB0 = [47, 46, 45, 44]
+channelsB1 = [23, 22, 21, 20]
+channelsB2 = [11, 10,  9,  8]
+channelsF1 = [23, 22, 21, 20]
+channelsF2 = [11, 10,  9,  8]
 if options.analysisType == 'DelayScan':
   from Configurables import HCClockScan
   appMgr.addAlgorithm("HCClockScan")
   appMgr.algorithm('HCClockScan').CrateB = 0
   appMgr.algorithm('HCClockScan').CrateF = 1
-  appMgr.algorithm('HCClockScan').ChannelsB0 = [47, 46, 45, 44]
-  appMgr.algorithm('HCClockScan').ChannelsB1 = [23, 22, 21, 20]
-  appMgr.algorithm('HCClockScan').ChannelsB2 = [11, 10, 9, 8]
-  appMgr.algorithm('HCClockScan').ChannelsF2 = [47, 46, 45, 44]
-  appMgr.algorithm('HCClockScan').ChannelsF1 = [27, 26, 25, 24]
+  appMgr.algorithm('HCClockScan').ChannelsB0 = channelsB0
+  appMgr.algorithm('HCClockScan').ChannelsB1 = channelsB1
+  appMgr.algorithm('HCClockScan').ChannelsB2 = channelsB2
+  appMgr.algorithm('HCClockScan').ChannelsF1 = channelsF1
+  appMgr.algorithm('HCClockScan').ChannelsF2 = channelsF2
   appMgr.algorithm('HCClockScan').MinimumStepNr = 0
   appMgr.algorithm('HCClockScan').MaximumStepNr = 512
   appMgr.algorithm('HCClockScan').VFEClkPitch = 1
@@ -159,11 +164,11 @@ elif  options.analysisType == 'Pedestals':
   appMgr.addAlgorithm("HCDigitMonitor")
   appMgr.algorithm('HCDigitMonitor').CrateB = 0
   appMgr.algorithm('HCDigitMonitor').CrateF = 1
-  appMgr.algorithm('HCDigitMonitor').ChannelsB0 = [47, 46, 45, 44]
-  appMgr.algorithm('HCDigitMonitor').ChannelsB1 = [23, 22, 21, 20]
-  appMgr.algorithm('HCDigitMonitor').ChannelsB2 = [11, 10, 9, 8]
-  appMgr.algorithm('HCDigitMonitor').ChannelsF2 = [47, 46, 45, 44]
-  appMgr.algorithm('HCDigitMonitor').ChannelsF1 = [27, 26, 25, 24]
+  appMgr.algorithm('HCDigitMonitor').ChannelsB0 = channelsB0
+  appMgr.algorithm('HCDigitMonitor').ChannelsB1 = channelsB1
+  appMgr.algorithm('HCDigitMonitor').ChannelsB2 = channelsB2
+  appMgr.algorithm('HCDigitMonitor').ChannelsF1 = channelsF1
+  appMgr.algorithm('HCDigitMonitor').ChannelsF2 = channelsF2
   appMgr.algorithm('HCDigitMonitor').MinBx = options.minBx
   appMgr.algorithm('HCDigitMonitor').MaxBx = options.maxBx
 

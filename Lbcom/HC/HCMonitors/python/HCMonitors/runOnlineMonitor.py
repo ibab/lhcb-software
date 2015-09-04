@@ -50,6 +50,7 @@ def configOnline(app, alg, name):
     conddb.IgnoreHeartBeat = True
     conddb.UseDBSnapshot = True
     conddb.EnableRunChangeHandler = True
+    conddb.EnableRunStampCheck = False
     conddb.Tags['ONLINE'] = 'fake'
 
     import ConditionsMap
@@ -129,6 +130,7 @@ def configMonitor():
     # Decoder
     from Configurables import HCRawBankDecoder
     decoder = HCRawBankDecoder()
+    decoder.Monitoring = True
 
     # Monitor
     from Configurables import HCDigitMonitor
@@ -137,9 +139,9 @@ def configMonitor():
     monitor.CrateF = 1
     monitor.ChannelsB0 = [47, 46, 45, 44]
     monitor.ChannelsB1 = [23, 22, 21, 20]
-    monitor.ChannelsB2 = [11, 10, 9, 8]
-    monitor.ChannelsF1 = [27, 26, 25, 24]
-    monitor.ChannelsF2 = [47, 46, 45, 44]
+    monitor.ChannelsB2 = [11, 10,  9,  8]
+    monitor.ChannelsF1 = [23, 22, 21, 20]
+    monitor.ChannelsF2 = [11, 10,  9,  8]
 
     # Top level sequence
     topSeq = GaudiSequencer("TopSequence")

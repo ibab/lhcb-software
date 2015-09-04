@@ -3,6 +3,10 @@
 ! Responsible : 
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
+
+! 2015-09-04 - Heinrich Schindler
+ - Update channel mapping.
+
 ! 2015-08-30 - Gerhard Raven
  - remove DECLARE_ALGORITHM_FACTORY(HCMonitorBase) as HCMonitorBase is 
    not a 'concrete' algorithm -- ie. one still must inherit from it an
