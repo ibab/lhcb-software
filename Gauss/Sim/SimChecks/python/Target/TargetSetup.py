@@ -130,7 +130,7 @@ def setup_Targets_pguns(projID, projEng, targMat, targThick) :
     # given point. 
     #ParticleGun.MaterialEval.Xorig = 0*mm
     #ParticleGun.MaterialEval.Yorig = 0*mm
-    ParticleGun.MaterialEval.Zorig = Zplane[targMat][targThick]*mm
+    ParticleGun.MaterialEval.Zorig = Zorig[targMat][targThick]*mm
     
     # The abs(P) of the particle if fixed at the given value (default = 500 GeV)
     ParticleGun.MaterialEval.ModP = projEng * GeV
@@ -145,7 +145,7 @@ def setup_Targets_pguns(projID, projEng, targMat, targThick) :
     # and size of the "target rectangle". The default plane is at z = 10*m, 
     # with -3.2*m < x < 3.2*m and -2.6*m < y < -2.6*m, i.e. a little more
     # than the LHCb acceptance
-    ParticleGun.MaterialEval.ZPlane = 400*mm
+    ParticleGun.MaterialEval.ZPlane = Zplane[targMat][targThick]*mm
     #ParticleGun.MaterialEval.Xmin   = -15*m
     #ParticleGun.MaterialEval.Ymin   = -15*m
     #ParticleGun.MaterialEval.Xmax   =  15*m
