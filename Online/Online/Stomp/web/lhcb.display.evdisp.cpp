@@ -1,2 +1,276 @@
-eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('3R(\'N.n.3Q.1H\');3P(\'N.n.3O\',\'3N\');e r=b(){p c.3M(\'1O\')};e 1P=b(O,1a){e 9,7,m,f;e 8=c.g(\'8\');8.1a=1a;8.q=c.g(\'1x\');8.1Q=O;8.t=G;8.V=G;8.Z=0;8.A=8.q.A=\'3L\';8.v=\'B\';8.1b=\'\';8.1y=\'\';8.1h=2b;8.Q=1Y;8.1G=b(){e 9=c.g(\'9\');e 7=c.g(\'7\');7.3K(\'1v\',2);9.a(7);6.q.a(9);p 7};8.n=8.1G();8.1f=8.1G();8.a(8.q);8.19=b(1B){e m,7,9,f=c.g(\'8\');m=c.g(\'1x\');f.A=m.A=\'3J\';f.q=m;m.a(9=c.g(\'9\'));f.1A=1F(\'1E.1D/E.E.1C.3I\',G,\'3H %d\');9.a(f.1A);f.T=1F(\'1E.1D/E.E.1C.1b\',\'2g-3G\',G);f.T.1d=1B;f.T.2f=b(L){6.1d.15(\'1b\',L);p L};9.a(f.T);f.S=1F(\'1E.1D/E.E.1C.3F\',\'2g-26\',\'  --  %s\');f.S.1d=1B;f.S.2f=b(L){6.1d.15(\'1y\',L);p L};9.a(f.S);f.a(m);x.w(f,\'E z 3E\');f.y=b(t){6.T.y(t);6.1A.y(t);6.S.y(t);p 6};p f};8.C=b(K,1z){e D,1c=c.g(\'7\');o(3D()){1c.a(D=c.g(\'C\'))}W{1c.a(D=c.g(\'1Z\'));D.3C=\'C\'}D.K=K;D.1z=1z;p[1c,D]};8.y=b(){6.19.y(6.t);p 6};8.15=b(2e,K){o(K)6[2e]=K;o(6[\'1b\'].2d()==\'3B 3A\'&&6[\'1y\'].2d()==\'3z 3y\')6.16(\'B\');W 6.16(\'3x\')};8.16=b(2c){e 10=6.v;6.v=2c;o(6.Q)6.v=\'B\';6.1h=(6.v==\'B\')?3w:2b;6.17.2a=\'3v: \'+6.v};8.U=b(u){e s=6.u;6.z.2a=\'1g: \'+u;6.u=u;o(u==\'F\'&&s!=\'F\'){6.1i()}};8.1J=b(){e 7,9,m,f=c.g(\'8\');f.a(m=c.g(\'1x\'));m.a(9=c.g(\'9\'));9.a(7=c.g(\'7\'));7.1v=4;7.h.3u=\'3t\';f.A=m.A=\'3s\';7.a(6.j=c.g(\'3r\'));6.j.1a=\'3q\';6.j.h.I=\'3p\';6.j.h.29=\'28\';6.j.h.I=\'J%\';6.j.h.29=\'28\';6.j.10=\'\';6.j.11=b(k){6.k=(k==J)?3o.3n:k;o(6.h.27)6.h.27="3m(k:"+k+")";6.h.3l=k/J;6.h.3k=k/J;6.h.k=k/J};6.j.1j=b(k){o(k<=J){6.11(k);6.k+=3;3j.1R(b(){e i=r().j;i.1j(i.k)},25)}};6.j.11(0);x.w(6.j,\'X 3i n 3h.\');m.a(9=c.g(\'9\'));7=6.C(\'3g\',b(){r().U(\'24\')})[0];x.w(7,\'23 1w 3f<H>R n 18.\');7.h.I=\'5%\';9.a(7);9.a(6.z=c.g(\'7\'));6.z.h.1X=\'26\';6.z.h.I=\'20%\';x.w(6.z,\'1g u:<H>F: 3e 18 3d<H>24: 3c 18 3b.\');9.a(7=c.g(\'7\'));7.a(6.19=6.19(6));7.3a=2;7.h.I=\'39%\';m.a(9=c.g(\'9\'));7=6.C(\'38\',b(){r().U(\'F\')})[0];x.w(7,\'23 1w 1I<H>R 37 n 18.\');7.h.I=\'4%\';9.a(7);6.17=c.g(\'7\');x.w(6.17,\'36 v:<H>--35 34 33 22 R X B 32 31<H>--22 R 30 2Z o R 2Y 2X 2W\');9.a(6.17);m.a(9=c.g(\'9\'));7=6.C(\'21 1S\',b(){e d=r();d.Q=2V;d.16(\'B\');d.Y()})[0];x.w(7,\'21 2U 1Z.\');9.a(7);7=6.C(\'2T\',b(){e d=r();d.Q=1Y;d.15(G,G);d.Y()})[0];x.w(7,\'2S 2R.\');9.a(7);9.a(7=2Q(\'2P 2O 2N 1w M.2M 2L/X\',2,\'2K\'));7.h.1X=\'2J\';7.1v=2;6.n.a(f);p 6};8.Y=b(){e 1k=["14://1u.13.12/1t/1s/1r/1q/1p/1W/1W-1o-1n-1m-1l.P","14://1u.13.12/1t/1s/1r/1q/1p/1V/1V-1o-1n-1m-1l.P","14://1u.13.12/1t/1s/1r/1q/1p/1U/1U-1o-1n-1m-1l.P","14://N-1T.2I.13.12/N-1T/2H/2G/2F/2E.P"];6.Z=6.Z+1;6.j.11(20);o(6.Q||6.v==\'B\')6.j.10=\'/1S/2D/r.P?\'+2C.2B();W 6.j.10=1k[6.Z%1k.2A];6.j.1j(20)};8.1i=b(){e n=r();o(n.u==\'F\'){n.Y();1R(n.1i,n.1h)}};p 8};e 2z=b(){2y();p 1};e 2x=b(){e O=2w[\'1Q\'];e q=c.2v(\'q\')[0];e 2u=2t(q);e l=1P(O,\'1O\');q.a(l);q.A=\'2s\';2r(\'X 2q 1g\');o(O>0)l.V=1e 1N(l.1f,2p,1M,\'1L\');W l.V=1e 1N(l.1f,-1,1M,\'1L\');l.t=1e 2o(l.V);l.t.1K=\'/1K/z\';l.1J();l.y();l.t.1I();l.U(\'F\');q.h.2n=\'2m\';p l};o(2l)2k(\'2j N.n.r.1H 2i 2h\');',62,240,'||||||this|td|table|tr|appendChild|function|document||var|tab|createElement|style||picture|opacity|selector|tb|display|if|return|body|evdisp||provider|state|source|set|tooltips|subscribe|status|className|ONLINE|button|but|LHC|RUNNING|null|br|width|100|value|data||lhcb|msg|jpg|forceOnline|the|lhcMachMode|lhcBeamMode|setState|logger|else|LHCb|reload|cycle|src|setOpacity|ch|cern|http|update|setInput|online_status|refresh|LHC_header|id|BeamMode|cell|parent|new|logDisplay|Display|timeout|run|fadeIn|arch_img|dpi|144|at|A4|1003055|2010|Public|Photo|MediaArchive|mediaarchive|colSpan|to|tbody|MachMode|onclick|lhcFillNumber|par|RunControl|LHCCOM|lbWeb|StyledItem|add|cpp|start|build|topic|StatusLogger|LOG_INFO|OutputLogger|panoramix_display|EventDisplay|messages|setTimeout|Online|reconstruction|1003055_03|1003055_02|1003055_01|textAlign|false|input||Force|from|Click|STOPPED||Left|filter|600px|height|innerHTML|15000|what|toUpperCase|tag|conversion|Text|successfully|loaded|Script|alert|_debugLoading|default|cursor|DataProvider|200|Event|setWindowTitle|MainBody|init_tooltips|tips|getElementsByTagName|the_displayObject|evdisp_body|dataProviderReset|evdisp_unload|length|random|Math|Images|63872_03714_0|1200GeV|FirstCollision|2009|web|right|MonitorTinyHeader|CERN|Frank|suggestions|and|Comments|Cell|page|Reload|Reset|online|true|inactive|is|DAQ|archive|media|or|system|displayed|are|Events|Data|automatic|Play|75|rowSpan|OFF|Automatice|ON|Automatic|pause|Pause|panel|event|window|MozOpacity|KHTMLOpacity|alpha|999|99|1050px|panoramix_img|img|MonitorInnerFrame|black|bgColor|Source|25000|ARCHIVE|PHYSICS|PROTON|BEAMS|STABLE|type|_isInternetExplorer|information|MachineMode|Right|Fill|FillNumber|MonitorSubHeader|setAttribute|MonitorOuterFrame|getElementById|css|general|_loadFile|items|_loadScript'.split('|'),0,{}))
-;
+_loadScript('lhcb.display.items.cpp');
+_loadFile('lhcb.display.general','css');
+
+var evdisp = function() {
+  return document.getElementById('panoramix_display');
+};
+
+var EventDisplay = function(msg, id)   {
+  var tr, td, tb, tab;
+  var table       = document.createElement('table');
+  table.id        = id;
+  table.body      = document.createElement('tbody');
+  table.messages  = msg;
+  table.provider  = null;
+  table.logger    = null;
+  table.cycle     = 0;
+  table.className = table.body.className = 'MonitorOuterFrame';
+  table.source    = 'OFFLINE';
+  table.BeamMode  = '';
+  table.MachMode  = '';
+  table.timeout    = 15000;
+  table.forceOnline = false;
+
+  table.add = function()   {
+    var tr = document.createElement('tr');
+    var td = document.createElement('td');
+    td.setAttribute('colSpan',2);
+    tr.appendChild(td);
+    this.body.appendChild(tr);
+    return td;
+  };
+
+  table.display    = table.add();
+  table.logDisplay = table.add();
+  table.appendChild(table.body);
+
+  /// Build table with summary of the LHC
+  table.LHC_header = function(par) {
+    var tb, td, tr, tab = document.createElement('table');
+    tb = document.createElement('tbody');
+    tab.className = tb.className = 'MonitorSubHeader';
+  
+    tab.body = tb;
+    tb.appendChild(tr=document.createElement('tr'));
+  
+    tab.lhcFillNumber = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.FillNumber',null,'Fill %d');
+    tr.appendChild(tab.lhcFillNumber);
+  
+    tab.lhcBeamMode = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.BeamMode','Text-Right',null);
+    tab.lhcBeamMode.parent = par;
+    tab.lhcBeamMode.conversion = function(data) {
+      this.parent.update('BeamMode',data);
+      return data;
+    };
+    tr.appendChild(tab.lhcBeamMode);
+
+    tab.lhcMachMode = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.MachineMode','Text-Left','  --  %s');
+    tab.lhcMachMode.parent = par;
+    tab.lhcMachMode.conversion = function(data) {
+      this.parent.update('MachMode',data);
+      return data;
+    };
+    tr.appendChild(tab.lhcMachMode);
+  
+    tab.appendChild(tb);
+    tooltips.set(tab,'LHC status information');
+   
+    /** Subscribe all required data item to receive data from data provider object
+     *
+     *  @param      provider  Data provider object
+     *
+     *  @return On success reference to self, null otherwise
+     */
+    tab.subscribe = function(provider) {
+      this.lhcBeamMode.subscribe(provider);
+      this.lhcFillNumber.subscribe(provider);
+      this.lhcMachMode.subscribe(provider);
+      return this;
+    };
+    return tab;
+  };
+ 
+  table.button = function(value,onclick) {
+    var but, cell = document.createElement('td');
+    if ( _isInternetExplorer() ) {
+      cell.appendChild(but=document.createElement('button'));
+    }
+    else {
+      cell.appendChild(but=document.createElement('input'));
+      but.type = 'button';
+    }
+    but.value = value;
+    but.onclick = onclick;
+    return [cell,but];
+  };
+
+  table.subscribe = function() {
+    this.LHC_header.subscribe(this.provider);
+    return this;
+  };
+
+  table.update = function(tag,value)   {
+    if ( value ) this[tag] = value;
+    if ( this['BeamMode'].toUpperCase() == 'STABLE BEAMS' && 
+	 this['MachMode'].toUpperCase() == 'PROTON PHYSICS' )
+      this.setInput('ONLINE');
+    else
+      this.setInput('ARCHIVE');
+  };
+
+  table.setInput = function(what) {
+    var src = this.source;
+    this.source = what;
+    if ( this.forceOnline ) this.source = 'ONLINE';
+    this.timeout = (this.source=='ONLINE') ? 25000 : 15000;
+    this.online_status.innerHTML='Source: '+this.source;
+  };
+
+  table.setState = function(state) {
+    var s = this.state;
+    this.status.innerHTML='Display: '+state;
+    this.state = state;
+    if ( state == 'RUNNING' && s != 'RUNNING' )  {
+      this.run();
+    }
+  };
+
+  table.build = function() {
+    var td, tr, tb, tab = document.createElement('table');
+
+    tab.appendChild(tb=document.createElement('tbody'));
+    tb.appendChild(tr=document.createElement('tr'));
+    tr.appendChild(td=document.createElement('td'));
+    td.colSpan       = 4;
+    td.style.bgColor = 'black';
+    tab.className = tb.className = 'MonitorInnerFrame';
+
+    td.appendChild(this.picture=document.createElement('img'));
+    this.picture.id = 'panoramix_img';
+    this.picture.style.width  = '1050px';
+    this.picture.style.height = '600px';
+    this.picture.style.width  = '100%';
+    this.picture.style.height = '600px';
+    this.picture.src = '';
+    this.picture.setOpacity = function(opacity) {
+      this.opacity = (opacity == 100) ? 99.999 : opacity;  
+      // IE/Win
+      if ( this.style.filter ) this.style.filter = "alpha(opacity:"+opacity+")";
+      // Safari<1.2, Konqueror
+      this.style.KHTMLOpacity = opacity/100;
+      // Older Mozilla and Firefox
+      this.style.MozOpacity = opacity/100;      
+      // Safari 1.2, newer Firefox and Mozilla, CSS3
+      this.style.opacity = opacity/100;
+    };
+    this.picture.fadeIn = function(opacity) {
+      if (opacity <= 100) {
+	this.setOpacity(opacity);
+	this.opacity += 3;
+	window.setTimeout(function(){var i=evdisp().picture;i.fadeIn(i.opacity);}, 25);
+      }
+    };
+    this.picture.setOpacity(0);
+    tooltips.set(this.picture,'LHCb event display panel.');
+
+    tb.appendChild(tr=document.createElement('tr'));
+    td = this.button('Pause',
+		     function(){evdisp().setState('STOPPED')})[0];
+    tooltips.set(td,'Click to pause<br>the display refresh.');
+    td.style.width = '5%';
+    tr.appendChild(td);
+
+    tr.appendChild(this.status = document.createElement('td'));
+    this.status.style.textAlign = 'Left';
+    this.status.style.width = '20%';
+    tooltips.set(this.status,'Display state:<br>RUNNING: Automatic refresh ON<br>STOPPED: Automatice refresh OFF.');
+
+    tr.appendChild(td=document.createElement('td'));
+    td.appendChild(this.LHC_header=this.LHC_header(this));
+    td.rowSpan = 2;
+    td.style.width = '75%';
+
+    tb.appendChild(tr=document.createElement('tr'));
+    td = this.button('Play',function(){evdisp().setState('RUNNING')})[0];
+    tooltips.set(td,'Click to start<br>the automatic display refresh.');
+    td.style.width = '4%';
+    tr.appendChild(td);
+    this.online_status = document.createElement('td');
+    tooltips.set(this.online_status,'Data source:<br>--Events are displayed from the LHCb ONLINE system or<br>--from the media archive if the DAQ is inactive');
+    tr.appendChild(this.online_status);
+
+    // Finally add suggestions text
+    tb.appendChild(tr=document.createElement('tr'));
+    td = this.button('Force Online',function(){var d=evdisp();d.forceOnline=true;d.setInput('ONLINE');d.reload();})[0];
+    tooltips.set(td,'Force online input.');
+    tr.appendChild(td);
+    td = this.button('Reset',function(){var d=evdisp();d.forceOnline=false;d.update(null,null);d.reload();})[0];
+    tooltips.set(td,'Reload page.');
+    tr.appendChild(td);
+    tr.appendChild(td=Cell('Comments and suggestions to M.Frank CERN/LHCb',2,'MonitorTinyHeader'));
+    td.style.textAlign = 'right';
+    td.colSpan = 2;
+
+    this.display.appendChild(tab);
+    return this;
+  };
+
+  table.reload = function()  {
+    var arch_img = ["http://lhcb-public.web.cern.ch/lhcb-public/Images2015/jpsipk5p.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2015/jpsipk1p.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2015/FirstPhysicsLHCb.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2015/13TeVLHCb.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2015/CMSLHCb_EDfig4.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2014/PhotonPol.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2013/Bs2MuMu2013.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2013/Bs2MuMu2013v.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2013/BsKpi.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2013/BsKpiVertex.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2013/BDpp.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2014/Images_2012/BsMuMuMay2012.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2014/Images_2012/BsMuMuMay2012zoomzx_force.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2014/Images_2012/pASep_13_12.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2014/Images_2012/Bd_Kpi.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2014/Images_2011/BsMuMUPt_b.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2014/Images_2011/BsMuMu_xz_b.jpg",
+		    "http://marwww.in2p3.fr/~oleroy/pro/firstb/firstBplus2JpsiKplus_LargeOverview.jpg"
+		    ];
+    this.cycle = this.cycle + 1;
+    this.picture.setOpacity(20);
+    if ( this.forceOnline || this.source == 'ONLINE' ) this.picture.src = '/Online/Images/evdisp.jpg?'+Math.random();
+    else this.picture.src = arch_img[this.cycle%arch_img.length];
+    // this.picture.src = 'http://lbevent.cern.ch/Panoramix/PanoramixEventDisplay_0.jpg?'+Math.random();
+    this.picture.fadeIn(20);
+  };
+
+  table.run = function() {
+    var display  = evdisp();
+    if ( display.state == 'RUNNING' ) {
+      display.reload();
+      setTimeout(display.run,display.timeout);
+    }
+  };
+
+  return table;
+};
+
+var evdisp_unload = function()  {
+  dataProviderReset();
+  return 1;
+};
+
+var evdisp_body = function()  {
+  var msg  = the_displayObject['messages'];
+  var body = document.getElementsByTagName('body')[0];
+  var tips = init_tooltips(body);
+  var selector = EventDisplay(msg,'panoramix_display');
+
+  body.appendChild(selector);
+  body.className = 'MainBody';
+  setWindowTitle('LHCb Event Display');
+  if ( msg > 0 )
+    selector.logger = new OutputLogger(selector.logDisplay, 200, LOG_INFO, 'StatusLogger');
+  else
+    selector.logger = new OutputLogger(selector.logDisplay,  -1, LOG_INFO, 'StatusLogger');
+  selector.provider = new DataProvider(selector.logger);
+  selector.provider.topic = '/topic/status';
+  selector.build();
+
+  selector.subscribe();
+  selector.setState('RUNNING');
+  selector.provider.start();
+  body.style.cursor = 'default';
+  return selector;
+};
+
+if ( _debugLoading ) alert('Script lhcb.display.evdisp.cpp loaded successfully');

@@ -45,6 +45,8 @@ html, body {
 .Page132  {    background-image: url( ../Images/Search_32x32.gif   ) !important; }
 .LHCbDAQ16{    background-image: url( ../Images/LookFile_16x16.gif ) !important; }
 .LHCbDAQ32{    background-image: url( ../Images/LookFile_32x32.gif ) !important; }
+.LHCbHLT16{    background-image: url( ../Images/Hlt2_16x16.png     ) !important; }
+.LHCbHLT32{    background-image: url( ../Images/Hlt2_32x32.png     ) !important; }
 .FESTDAQ16{    background-image: url( ../Images/Options_16x16.gif  ) !important; }
 .FESTDAQ32{    background-image: url( ../Images/Options_32x32.gif  ) !important; }
 .SDetDAQ16{    background-image: url( ../Images/LookJob_16x16.gif  ) !important; }
@@ -53,10 +55,10 @@ html, body {
 .Collimators32{background-image: url( ../Images/LookProd_32x32.gif ) !important; }
 .DetStatus16{  background-image: url( ../Images/Wizard_16x16.gif   ) !important; }
 .DetStatus32{  background-image: url( ../Images/Wizard_32x32.gif   ) !important; }
-.OperStatus16{ background-image: url( ../Desktop/images/gears.gif   ) !important; }
-.OperStatus32{ background-image: url( ../Desktop/images/gears.gif   ) !important; }
-.BCM16    {    background-image: url( ../Images/BCM_16x16.png     ) !important; }
-.BCM32    {    background-image: url( ../Images/BCM_32x32.png     ) !important; }
+.OperStatus16{ background-image: url( ../Images/Collision_16x16.png) !important; }
+.OperStatus32{ background-image: url( ../Images/Collision_32x32.png) !important; }
+.BCM16    {    background-image: url( ../Images/BCM_16x16.png      ) !important; }
+.BCM32    {    background-image: url( ../Images/BCM_32x32.png      ) !important; }
 .ELOG16   {    background-image: url( ../Images/ELOG_16x16.png     ) !important; }
 .ELOG32   {    background-image: url( ../Images/ELOG_32x32.png     ) !important; }
 .Magnet16 {    background-image: url( ../Images/LHCb/Magnet_Icon_16x16.png ) !important; }

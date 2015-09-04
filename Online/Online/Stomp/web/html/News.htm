@@ -2,18 +2,15 @@
 <HTML>
 <HEAD>
   <SCRIPT language="JavaScript">
-    // If there were arguments, then redirect the 
-    var loc = document.referrer.search;
+    // If there were arguments, then redirect the page to the desired display.....
+    var pars = document.referrer.split('?');
     if ( pars.length > 1 )  {
-      if ( pars.search("?type=navbar") < 0 &&
-           pars.search("?config=") < 0 
-				     )  {
-				     alert(pars);
-       document.location = '../lhcb.comet.htm'+pars;
-       //alert(document.location);
+      var loc = '?'+pars[1];
+      if ( loc.search("type=navbar") < 0 && loc.search("config=") < 0 )  {
+        document.location = '../lhcb.comet.htm'+loc;
+      }
     }
   </SCRIPT>
-
   <TITLE>LHCb Online displays home page</TITLE>
   <META HTTP-EQUIV="Pragma"  CONTENT="no-cache"></META>
   <META HTTP-EQUIV="Expires" CONTENT="0"></META>
@@ -32,7 +29,7 @@ function setWindowTitle(title) {
   }
 };
 make_header();
-setWindowTitle("LHCb Online Status Display: Home page");
+setWindowTitle("News page");
 </SCRIPT>
 <TABLE width=550>
   <TBODY>
