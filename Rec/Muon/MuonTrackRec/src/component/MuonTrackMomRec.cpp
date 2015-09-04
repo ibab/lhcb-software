@@ -7,7 +7,8 @@
 #include "MuonInterfaces/MuonHit.h"
 #include "MuonInterfaces/MuonLogPad.h"
 #include "MuonDet/DeMuonDetector.h"
-
+#include "Kernel/ILHCbMagnetSvc.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // from GSL
 #include "gsl/gsl_math.h"
@@ -46,6 +47,7 @@ MuonTrackMomRec::MuonTrackMomRec( const std::string& type,
 {
   declareInterface<IMuonTrackMomRec>(this);
 
+
   std::vector<double> tmp1 = boost::assign::list_of(0.015)(0.29);
   declareProperty( "resParams", m_resParams = tmp1);
   
@@ -82,10 +84,16 @@ StatusCode MuonTrackMomRec::initialize()
 
   initBdl();
 
+  IUpdateManagerSvc* m_updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
+  ILHCbMagnetSvc* m_fieldSvc = svc<ILHCbMagnetSvc>("MagneticFieldSvc", true);
+  m_updMgrSvc->registerCondition( this,m_fieldSvc,&MuonTrackMomRec::initBdl) ;
+
+  sc = m_updMgrSvc->update(this) ;
+
   return sc;
 }
 
-void  MuonTrackMomRec::initBdl() {
+StatusCode  MuonTrackMomRec::initBdl() {
   // compute integrated B field before M1 at x=y=0
   // we will use this value for all tracks
   Gaudi::XYZPoint  begin( 0., 0., 0. );
@@ -104,6 +112,8 @@ void  MuonTrackMomRec::initBdl() {
   m_bdlX = bdl.x();
   debug() << "Integrated B field is "<< m_bdlX << " Tm" <<
     "  centered at Z="<< m_zCenter/Gaudi::Units::m << " m"<<endmsg;
+
+  return StatusCode::SUCCESS ;
 
 }
 

@@ -51,7 +51,7 @@ private:
   std::vector<double> m_resParams;
   double m_Constant;
 
-  void  initBdl();
+  StatusCode  initBdl();
 
   IBIntegrator* m_bIntegrator; // magnetic field tool
   DeMuonDetector* m_muonDetector;
