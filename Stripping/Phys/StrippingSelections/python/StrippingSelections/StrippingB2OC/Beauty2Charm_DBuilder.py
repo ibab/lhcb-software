@@ -479,7 +479,7 @@ class DBuilder(object):
           
           min,max  = self._massWindow('D0')
           
-          decays = [['pi+','pi-'],['K+','pi-'],['K+','K-']]
+          decays = [['pi+','pi-'],['K+','pi-'],['K+','K-'],['K-','pi+']]
 
           sels = [ ]
 
