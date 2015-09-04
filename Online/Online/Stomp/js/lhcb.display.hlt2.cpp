@@ -7,8 +7,20 @@ _loadFile('lhcb.display.general','css');
 _loadFile('lhcb.display.status','css');
 _loadFile('lhcb.display.fsm','css');
 
+_loadFile('../ExtJs/resources/css/ext-all','css');
+_loadFile('../ExtJs/examples/shared/examples','css');
+_loadFile('../ExtJs/examples/grid/grid-examples','css');
+
+_loadScript('ExtJs/adapter/ext/ext-base.js');
+_loadScript('ExtJs/ext-all.js');
+//_loadScript('ExtJs/ext-all-debug.js');
+
 var s_display_font_size = null;
 var s_org_display_font_size = null;
+
+function fileLabels(data) {
+  return Math.floor(data/10,10)*10;
+};
 
 var hlt2Properties = function(table)  {
   table.runPropertyDisplay = PropertyTable(table._provider, 
@@ -39,12 +51,11 @@ var hlt2Properties = function(table)  {
  *
  *  @author M.Frank
  */
-var hlt2Runs2Process = function(options,title,dp) {
+var hlt2RunsTable2 = function(options,title,dp) {
   var c, tr, tab = document.createElement('table');
   var tb = document.createElement('tbody');
-  tab.className = 'MonitorPage';
 
-  tab.width='100%';
+  tab.className  = 'MonitorPage';
   tooltips.set(tb,'HLT2 deferred runs.');
   tab.appendChild(tb);
   if ( 1||options.style ) {
@@ -88,36 +99,181 @@ var hlt2Runs2Process = function(options,title,dp) {
   return tab;
 };
 
+/** Online widgets. DAQ efficiency
+ *
+ *  @author M.Frank
+ */
+var hlt2RunsTable = function(options,title,datapoint) {
+  var tab = document.createElement('div');
+  tab.id = 'run-table';
+  tab.runs = StyledItem(datapoint,'Text-Right','%s');
+  tab.runs.conversion = function(data)  {
+    var r, rr, runs = [], line = [], rundata = data.split('|');
+    for	(r = 0; r < rundata.length; r++) {
+      if ( (r%3) == 0 && line.length>0 )  {
+	runs.push(line);
+	line = [];
+      }
+      rr = rundata[r].split('/');
+      line.push(rr[0]);
+      line.push(parseInt(rr[1]));
+    }
+    if ( line.length > 0 ) runs.push(line);
+    this.store.loadData(runs);
+    return '';
+  };
+  tab.subscribe = function(provider) {
+    provider.subscribeItem(this.runs);
+  };
+  // create the data store
+  var store = new Ext.data.ArrayStore({
+    fields: [{name: 'r1'},
+	     {name: 'f1', type: 'integer'},
+	     {name: 'r2'},
+	     {name: 'f2', type: 'integer'},
+	     {name: 'r3'},
+	     {name: 'f3', type: 'integer'}
+	     ]});
+  tab.runs.store = store;
+  store.loadData(['1',0,'2',0,'3',0]);
+  Ext.onReady(function(){
+      var panel = new Ext.grid.GridPanel({
+	store: store,
+	    renderTo:  tab,
+	    columns: [
+		      {id:'r1',header: 'Run',   dataIndex: 'r1'},
+		      {id:'f1',header: 'Files', dataIndex: 'f1'},
+		      {id:'r2',header: 'Run',   dataIndex: 'r2'},
+		      {id:'f2',header: 'Files', dataIndex: 'f2'},
+		      {id:'r3',header: 'Run',   dataIndex: 'r3'},
+		      {id:'f3',header: 'Files', dataIndex: 'f3'}
+		      ],
+	    stripeRows: true,
+	    autoExpandColumn: 'r1',
+	    boxMaxHeight: 350,
+	    height: 350,
+	    title: title,
+	    // config options for stateful behavior
+	    stateful: true,
+	    stateId: 'grid',
+
+	    animCollapse: true,
+	    closable: false,
+	    collapsed: false,
+	    collapsible: true,
+	    hideCollapseTool: false,
+	    collapseFirst: true
+	    });
+    });
+  // render the grid to the specified div in the page
+  //grid.render('run-table');
+  return tab;
+};
+
+var hlt2RunsHisto = function(options,title,datapoint) {
+  var tab = document.createElement('div');
+  tab.id = 'container';
+  tab.runs = StyledItem(datapoint,'Text-Right','%s');
+  tab.runs.conversion = function(data)  {
+    var r, rr, runs = [], rundata = data.split('|');
+    for	(r = 0; r < rundata.length; r++) {
+      rr = rundata[r].split('/');
+      runs.push([rr[0],parseFloat(rr[1])]);
+    }
+    this.store.loadData(runs);
+    return '';
+  };
+  tab.subscribe = function(provider) {
+    provider.subscribeItem(this.runs);
+  };
+
+  tab.runs.store = new Ext.data.ArrayStore({fields: ['run','files'], data: [[0,1],[1,1]] });
+  Ext.onReady(function(){
+      var panel = new Ext.Panel({
+	    width:    '100%',
+	    boxMaxHeight: 350,
+	    height: 250,
+	    renderTo:  tab,
+	    title:     title,
+	    items: {
+   	      xtype:  'columnchart',
+	      store:   tab.runs.store,
+	      yField: 'files',
+	      url:    'ExtJs/resources/charts.swf',
+	      xField: 'run',
+	      xAxis:   new Ext.chart.CategoryAxis({title: 'Run Number'}),
+	      yAxis:   new Ext.chart.NumericAxis({
+                title: 'Files',
+		    scale: 'logarithmic',
+		    majorUnit: 100,
+		    hideOverlappingLabels: true,
+		    labelFunction: 'fileLabels',
+		    snapToUnits : true
+		    }),
+	      extraStyle: {xAxis: { labelRotation: -90  } },
+
+	      animCollapse: true,
+	      closable: false,
+	      collapsed: false,
+	      collapsible: true,
+	      hideCollapseTool: false,
+	      collapseFirst: true
+
+	  }
+	});
+    });
+  return tab;
+}
+
+
+
 var showDeferredState = function(table) {
   var opts = {'style': 'Arial12pt', 'legend': true };
   var tab = document.createElement('table');
   var body = document.createElement('tbody');
-  var row = document.createElement('tr');
-  var cell; 
+  var row, cell; 
 
-  body.className = 'VerticalAlignTop';
-  row.className = 'VerticalAlignTop';
-    
-  table.deferredHLT2 =
-    hlt2Runs2Process(opts,
-		     'HLT2 run to be processed:',
-		     'lbWeb.LHCb_RunInfoSplitHLT.RunsLeftCorr');
-  table.deferredHLT2.subscribe(table.provider);
+  tab.style.width = '100%';
 
-  cell = document.createElement('td');
-  cell.width = '50%';
-  cell.appendChild(table.deferredHLT2);
+  tab.className = 'VerticalAlignTop';
+  table.currRuns = hlt2RunsHisto(opts,
+				 'Runs currently processing',
+				 'lbWeb.LHCb_RunInfoSplitHLT.RunsLeftCorr');
+  table.currRuns.subscribe(table.provider);
+  cell = Cell('',2);
+  cell.appendChild(table.currRuns);
+  row = document.createElement('tr');
+  row.appendChild(cell);
+  body.appendChild(row);
+
+  table.allRuns = hlt2RunsHisto(opts,
+				'All runs with files to be processed',
+				'lbWeb.LHCb_RunInfoSplitHLT.RunsLeftCorr');
+  table.allRuns.subscribe(table.provider);
+  cell = Cell('',2);
+  cell.appendChild(table.allRuns);
+  row = document.createElement('tr');
+  row.appendChild(cell);
+  body.appendChild(row);
+
+  table.allRunsTable = hlt2RunsTable(opts,
+				     'All runs with files to be processed',
+				     'lbWeb.LHCb_RunInfoSplitHLT.RunsLeftCorr');
+  table.allRunsTable.subscribe(table.provider);
+  cell = Cell('',1);
+  cell.style.width = '50%';
+  cell.appendChild(table.allRunsTable);
+  row = document.createElement('tr');
   row.appendChild(cell);
 
-  cell = document.createElement('td');
-  cell.width = '50%';
-  table.deferredHLT1 = lhcb.widgets.DeferredHLT(opts);
-  table.deferredHLT1.subscribe(table.provider);
-  cell.appendChild(table.deferredHLT1);
+  table.deferred = lhcb.widgets.DeferredHLT(opts);
+  table.deferred.subscribe(table.provider);
+  cell = Cell('',1,'VerticalAlignTop');
+  cell.style.width = '50%';
+  cell.appendChild(table.deferred);
   row.appendChild(cell);
 
   cell = Cell('&nbsp;',1);
-  //cell.width = '10%';
   row.appendChild(cell);
 
   body.appendChild(row);
@@ -140,7 +296,6 @@ var createDisplay = function(selector)   {
   selector.heading.innerHTML = partition+' Run Status Display';
   setWindowTitle(partition+' Run Status');
 };
-
 
 var hlt2_unload = function()  {
   dataProviderReset();
@@ -172,6 +327,5 @@ var hlt2_body = function()  {
   showDeferredState(selector);
   selector.provider.start();
 };
-
 
 if ( _debugLoading ) alert('Script lhcb.display.status.cpp loaded successfully');

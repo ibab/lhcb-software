@@ -15,7 +15,7 @@ var EventDisplay = function(msg, id)   {
   table.logger    = null;
   table.cycle     = 0;
   table.className = table.body.className = 'MonitorOuterFrame';
-  table.source    = 'ONLINE';
+  table.source    = 'OFFLINE';
   table.BeamMode  = '';
   table.MachMode  = '';
   table.timeout    = 15000;
@@ -206,10 +206,24 @@ var EventDisplay = function(msg, id)   {
   };
 
   table.reload = function()  {
-    var arch_img = ["http://mediaarchive.cern.ch/MediaArchive/Photo/Public/2010/1003055/1003055_01/1003055_01-A4-at-144-dpi.jpg",
-		    "http://mediaarchive.cern.ch/MediaArchive/Photo/Public/2010/1003055/1003055_02/1003055_02-A4-at-144-dpi.jpg",
-		    "http://mediaarchive.cern.ch/MediaArchive/Photo/Public/2010/1003055/1003055_03/1003055_03-A4-at-144-dpi.jpg",
-		    		    "http://lhcb-reconstruction.web.cern.ch/lhcb-reconstruction/2009/FirstCollision/1200GeV/63872_03714_0.jpg"
+    var arch_img = ["http://lhcb-public.web.cern.ch/lhcb-public/Images2015/jpsipk5p.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2015/jpsipk1p.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2015/FirstPhysicsLHCb.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2015/13TeVLHCb.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2015/CMSLHCb_EDfig4.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2014/PhotonPol.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2013/Bs2MuMu2013.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2013/Bs2MuMu2013v.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2013/BsKpi.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2013/BsKpiVertex.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2013/BDpp.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2014/Images_2012/BsMuMuMay2012.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2014/Images_2012/BsMuMuMay2012zoomzx_force.png",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2014/Images_2012/pASep_13_12.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2014/Images_2012/Bd_Kpi.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2014/Images_2011/BsMuMUPt_b.jpg",
+		    "http://lhcb-public.web.cern.ch/lhcb-public/Images2014/Images_2011/BsMuMu_xz_b.jpg",
+		    "http://marwww.in2p3.fr/~oleroy/pro/firstb/firstBplus2JpsiKplus_LargeOverview.jpg"
 		    ];
     this.cycle = this.cycle + 1;
     this.picture.setOpacity(20);
@@ -253,8 +267,8 @@ var evdisp_body = function()  {
   selector.build();
 
   selector.subscribe();
-  selector.provider.start();
   selector.setState('RUNNING');
+  selector.provider.start();
   body.style.cursor = 'default';
   return selector;
 };

@@ -33,7 +33,8 @@ if ( !_lhcb().constants ) {
     this.images = {
       bogus:            this.mkAbsImage(this.lhcb_static('Desktop/images/bogus.png')),
       window:           this.mkAbsImage(this.lhcb_static('Desktop/images/bogus.png')),
-      gears:            this.mkAbsImage(this.lhcb_static('Desktop/images/gears.png')),
+      gears:            this.mkImage('Collision','png'),
+      hlt2:             this.mkImage('Hlt2','png'),
       wizard:           this.mkImage('Wizard','gif'),
       options:          this.mkImage('Options','gif'),
       lookfile:         this.mkImage('LookFile','gif'),
@@ -296,11 +297,11 @@ if ( !_lhcb().constants ) {
 	},
 	lhcb2_run_status: {
 	  src:    this.lhcb_display_url('hlt2'),
-	  img:    this.images.lookfile,
+	  img:    this.images.hlt2,
 	  title:  'HLT2 Status',
 	  nick:   'hlt2-status-win',
-	  cls:    'LHCbDAQ16',
-	  iconCls:'LHCbDAQ32',
+	  cls:    'LHCbHLT16',
+	  iconCls:'LHCbHLT32',
 	  size:   {width:  1150,	height: 820}
 	},
 	fest_run_status: {

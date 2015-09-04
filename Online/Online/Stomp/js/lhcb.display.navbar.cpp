@@ -168,40 +168,59 @@ var NavigationBar = function() {
     document.location = loc;
   };
   table.add_bookmark = function(title, url) {
-    if(document.all) { // ie
-        window.external.AddFavorite(url, title);
+    if( window.external && ('AddFavorite' in window.external) ) { // ie
+      window.external.AddFavorite(url, title);
     }
-    else if(window.sidebar) { // firefox
+    else if ( window.sidebar )  { // firefox
       alert('Dear Firefox user, \n\n'+
 	    'Your browser does no longer allow to \n'+
-	    'add bookmarks programatically.\n'+
-	    'Please press CTRL+D to Bookmark the page:\n'+
+	    'add bookmarks programatically.\n\n'+
+	    'The browser will now switch to a url, \n'+
+	    'which when bookmarked will reload this view.\n\n'+
+	    'Please press then CTRL+D to Bookmark the page:\n'+
 	    '  ** '+title+' **\n\n'+
-	    'You should use the following URL to restart \n'+
+	    'or use alternatively the following URL to restart \n'+
 	    'the viewer in this configuration:\n\n\n'+
 	    url+'\n\n\n'
 	    );
       window.parent.document.location = url;
-      //+'You may use CTRL-C and CTRL-V to copy/paste.\n'+
-      //  window.parent.document.location.toString()
     }
     else if(window.opera && window.print) { // opera
         var elem = document.createElement('a');
         elem.setAttribute('href',url);
         elem.setAttribute('title',title);
         elem.setAttribute('rel','sidebar');
-        elem.click(); // this.title=document.title;
+        elem.click();
+    }
+    else   {
+      var key = (navigator.userAgent.toLowerCase().indexOf('mac') != - 1 
+		 ? 'CMD' 
+		 : 'CTRL');
+      alert('Dear user, \n\n'+
+	    'Your browser does no longer allow to \n'+
+	    'add bookmarks programatically.\n\n'+
+	    'The browser will now switch to a url, \n'+
+	    'which when bookmarked will reload this view.\n\n'+
+	    'Please press then '+key+'-D to Bookmark the page:\n'+
+	    '  ** '+title+' **\n\n'+
+	    'or use alternatively the following URL to restart \n'+
+	    'the viewer in this configuration:\n\n\n'+
+	    url+'\n\n\n'
+	    ); 
+      window.parent.document.location = url;
     }
   };
   table.bookmark = function()  {
     var par = this.client.get_doc().location.search;
     var bm = lhcb.constants.lhcb_base_url();
-    var opt = '';
+    var tit = top.document.title;
     if ( par.length>1 )  {
       bm = bm + par;
-      opt = ': '+par.substring(1);
     }
-    this.client.add_bookmark('LHCb Online Status'+opt,bm);
+    if ( tit.search('LHCb Online Status -- ')<0 )
+      this.client.add_bookmark('LHCb Online Status -- '+top.document.title,bm);
+    else
+      this.client.add_bookmark(top.document.title,bm);
   };
   return table;
 };
