@@ -4,7 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
-! 2015-09-03 - Jinlin Fu
+! 2015-09-03 - Nicola Skidmore
+ - Updated B2OC S23c LineConfig: New lines
+
+! 2015-09-03 - Nicola Skidmore
  - Updated B2OC S23c LineConfig: New line and updated Bc2DD mass cut
 
 ! 2015-09-03 - Jinlin Fu

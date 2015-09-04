@@ -281,6 +281,17 @@ Beauty2Charm = {
     ],  
     'Bhadron' : [
 
+    'StrippingLb2LcppbarKLc2PKPiBeauty2CharmLine', 
+    'StrippingLb2LcppbarPiLc2PKPiBeauty2CharmLine', 
+    'StrippingLb2LcKKPiLc2PKPiBeauty2CharmLine', 
+    'StrippingLb2LcKPiPiLc2PKPiBeauty2CharmLine', 
+    'StrippingLb2LcPiPiPiLc2PKPiBeauty2CharmLine', 
+    'StrippingXib2Xic0KPiPiXic02PKKPiBeauty2CharmLine', 
+    'StrippingXib2Xic0PiPiPiXic02PKKPiBeauty2CharmLine', 
+    'StrippingLb2LcDKstBeauty2CharmLine', 
+    'StrippingLb2LcDstKstBeauty2CharmLine', 
+    'StrippingX2LcD0KD02KPiBeauty2CharmLine',
+    'StrippingX2LcD0PiD02KPiBeauty2CharmLine',
     'StrippingB2DDKBeauty2CharmLine', 
     'StrippingB02D0D0D02HHD02HHBeauty2CharmLine',
     'StrippingB02D0D0D02HHD02K3PiBeauty2CharmLine',
