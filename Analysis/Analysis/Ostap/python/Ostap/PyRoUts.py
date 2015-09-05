@@ -450,7 +450,6 @@ def _axis_iter_1_ ( a ) :
         yield i
         i+=1        
 
-ROOT.TAxis . __iter__ = _axis_iter_1_
 
 # =============================================================================
 ## iterator for histogram  axis (reversed order) 
@@ -468,8 +467,8 @@ def _axis_iter_reversed_ ( a ) :
         i-=1
 
 
+ROOT.TAxis . __iter__     = _axis_iter_1_
 ROOT.TAxis . __reversed__ = _axis_iter_reversed_
-
 ROOT.TAxis . __contains__ = lambda s , i : 1 <= i <= s.GetNbins()
 
 # =============================================================================
@@ -481,7 +480,14 @@ def _h1_get_item_ ( h1 , ibin ) :
     >>> histo = ...
     >>> ve    = histo[ibin]    
     """
-    if not ibin in h1.GetXaxis()    : raise IndexError
+    ## if not ibin in h1.GetXaxis()    : raise IndexError
+    # 
+    a  = h1.GetXaxis()
+    nb = a.GetNbins ()
+    #
+    if     1 <=  ibin <= nb : pass
+    elif   1 <= -ibin <= nb : ibin += ( nb + 1 ) 
+    else                    : raise IndexError 
     #
     val = h1.GetBinContent ( ibin ) 
     err = h1.GetBinError   ( ibin )
@@ -497,6 +503,18 @@ def _h1_set_item_ ( h1 , ibin , v ) :
     >>> histo[ibin] = value     
     """
     #
+    ## check the validity of the bin
+    #
+    ## if not ibin in h1 : raise IndexError 
+    a  = h1.GetXaxis()
+    nb = a.GetNbins ()
+    #
+    if     1 <=  ibin <= nb : pass
+    elif   1 <= -ibin <= nb : ibin += ( nb + 1 ) 
+    else                    : raise IndexError 
+    #
+    ## treat the value:
+    #
     vv = VE ( v ) 
     if   isinstance ( v , ( int , long ) ) :
         
@@ -509,8 +527,6 @@ def _h1_set_item_ ( h1 , ibin , v ) :
         if _int ( v ) : return _h1_set_item_ ( h1 , ibin , long ( v ) )
         else          : vv = VE ( v , 0 ) 
 
-    ## check the validity of the bin 
-    if not ibin in h1 : raise IndexError 
     #
     h1.SetBinContent ( ibin , vv.value () )
     h1.SetBinError   ( ibin , vv.error () )

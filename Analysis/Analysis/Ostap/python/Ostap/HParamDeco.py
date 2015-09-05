@@ -862,7 +862,7 @@ class H1Func(object) :
         #
         x0    = ( x0 - bias ) / scale
         # 
-        return norm * self._func ( self._histo ( x0 , interpolate = self.interpolate ) )
+        return norm * self._func ( self._histo ( x0 , interpolate = self._interp ) )
 
     ## get corresponsing ROOT.TF1 object 
     def tf1  ( self ) :
