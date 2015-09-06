@@ -191,7 +191,7 @@ class AccessSvcSingleton(object) :
         mods = mod_map()
         for algname, props in updates.iteritems() :
             for k, v in props.iteritems() :
-                vp = value_pair(k, v)
+                vp = value_pair(k, v if type(v) == str else repr(v))
                 ip = insert_pair(algname, vp)
                 mods.insert(ip)
 
@@ -620,7 +620,7 @@ class RemoteAccess(object) :
         from collections import defaultdict
         updates = defaultdict(dict)
         # check L0 config in source config
-        for cfg in svc.collectLeafRefs( id ) :
+        for cfg in svc.collectLeafRefs( id ):
             #  check for either a MultiConfigProvider with the right setup,
             #  or for a template with the right TCK in it...
             if cfg.name == 'ToolSvc.L0DUConfig' :
@@ -631,8 +631,9 @@ class RemoteAccess(object) :
                     if k not in cfg.props : raise KeyError('Specified property %s not in store'%k)
                     updates['ToolSvc.L0DUConfig'].update({k : v})
 
-        updates.update(extra)
-                                        
+        if extra:
+            updates.update(extra)
+
         newId = svc.updateAndWrite(id, updates, label)
         noderef = svc.resolveConfigTreeNode( newId )
         if not noderef : print 'oops, could not find node for %s ' % newId
