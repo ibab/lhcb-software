@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-06 - Erica Polycarpo 
+ - Added RelatedInfo for isolationg including neutrals to D2hhh_conf lines
+
 ! 2015-09-02 - Andrea Contu
  - Added DstarPromptWithD02HHHH for hhmumu normalisation
 
