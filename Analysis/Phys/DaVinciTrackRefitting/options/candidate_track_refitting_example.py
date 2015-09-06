@@ -17,10 +17,13 @@ from Configurables import TrackInitFit, TrackMasterFitter, TrackStateInitTool,Tr
 from Configurables import ToolSvc, TrackEventFitter
 
 
-##### MDST CONFIGURATION
-MyStream = "PID"
-from PhysConf.MicroDST import uDstConf
-uDstConf ('/Event/'+MyStream ) 
+##### Stream CONFIGURATION 
+MyStream = "Dimuon"
+MDST = False
+readingStripping23 = True
+fitAsInEM2015 = False
+fitAsIn2015 = True
+fitAsInReco14 = False
 
 
 ##### DAVINCI CONFIGURATION
@@ -29,7 +32,9 @@ from Configurables import DaVinci
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 1
 DaVinci().DataType = "2012"
-DaVinci().InputType = "MDST"
+if MDST:
+   DaVinci().InputType = "MDST"
+   DaVinci().RootInTES = MyStream
 DaVinci().Simulation = False
 DaVinci().SkipEvents = 0
 DaVinci().UserAlgorithms = [
@@ -40,10 +45,11 @@ GaudiSequencer("RefitSeq")
 ###### INPUTDATA
 
 
-
 from Gaudi.Configuration import *
 from GaudiConf import IOHelper
-IOHelper().inputFiles(['PFN:root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/PID.MDST/00020198/0000/00020198_00008986_1.pid.mdst'])
+IOHelper('ROOT').inputFiles([
+'root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/validation/Collision15/DIMUON.DST/00047284/0000/00047284_00000180_1.dimuon.dst'
+], clear=True)
 
 
 
@@ -61,22 +67,15 @@ STOfflineConf.DefaultConf().configureTools()
 ##### TRACKFITTING ENVIRONMENT ON MDST
 
 ToolSvc().addTool(OTRawBankDecoder())
-if "MDST" == DaVinci().InputType:
-   ToolSvc().OTRawBankDecoder.RootInTES = '/Event/' + MyStream
 ToolSvc().addTool(PatSeedFit())
-if "MDST" == DaVinci().InputType:
-   ToolSvc().PatSeedFit.RootInTES = '/Event/' + MyStream
 ToolSvc().addTool(Tf__OTHitCreator("OTHitCreator") )
-if "MDST" == DaVinci().InputType:
-   ToolSvc().OTHitCreator.RootInTES = '/Event/' + MyStream
-
-
 ToolSvc().addTool(Tf__DefaultVeloPhiHitManager("DefaultVeloPhiHitManager"))
-if "MDST" == DaVinci().InputType:
-   ToolSvc().DefaultVeloPhiHitManager.RootInTES = '/Event/' + MyStream
-
 ToolSvc().addTool(Tf__DefaultVeloRHitManager("DefaultVeloRHitManager"))
-if "MDST" == DaVinci().InputType:
+if "MDST" == DaVinci().InputType or readingStripping23:
+   ToolSvc().OTRawBankDecoder.RootInTES = '/Event/' + MyStream
+   ToolSvc().PatSeedFit.RootInTES = '/Event/' + MyStream
+   ToolSvc().OTHitCreator.RootInTES = '/Event/' + MyStream
+   ToolSvc().DefaultVeloPhiHitManager.RootInTES = '/Event/' + MyStream
    ToolSvc().DefaultVeloRHitManager.RootInTES = '/Event/' + MyStream
 
 
@@ -85,23 +84,36 @@ if "MDST" == DaVinci().InputType:
 
 from Configurables import TracksFromParticles
 
-RefitParticleTracks().Inputs=['Phys/MuIDCalib_JpsiKFromBNoPIDNoMip/Particles']
-
-### with state initialisation
-RefitParticleTracks().addTool(TrackInitFit())
-RefitParticleTracks().TrackInitFit.OutputLevel=0
-RefitParticleTracks().TrackInitFit.addTool(TrackMasterFitter("Fit"))
-RefitParticleTracks().TrackInitFit.Fit.OutputLevel=0
-RefitParticleTracks().Fitter = "TrackInitFit"
+RefitParticleTracks().Inputs=['Phys/StdLooseKsLL/Particles']
 
 
-### without state initialisation
-#RefitParticleTracks().addTool(TrackMasterFitter())
-#RefitParticleTracks().TrackMasterFitter.OutputLevel = 0
-#RefitParticleTracks().Fitter = "TrackMasterFitter"
+from Configurables import TrackInitFit, TrackMasterFitter
+from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter
+from Configurables import TrackBestTrackCreator, TrackMasterFitter, TrackStateInitTool, FastVeloFitLHCbIDs
+
+def giveitafit(thething):
+   thething.addTool(TrackInitFit,"TrackInitFit")
+   thething.TrackInitFit.addTool( TrackMasterFitter, name = "Fit" )
+   thething.TrackInitFit.addTool( TrackStateInitTool, name = "Init")
+   thething.TrackInitFit.Init.UseFastMomentumEstimate = True
+
+   if fitAsInEM2015:
+      ConfiguredMasterFitter( getattr(thething.TrackInitFit, "Fit"), SimplifiedGeometry = True, LiteClusters = True, MSRossiAndGreisen = False )
+   if fitAsIn2015:
+      ConfiguredMasterFitter( getattr(thething.TrackInitFit, "Fit"), SimplifiedGeometry = True, LiteClusters = True, MSRossiAndGreisen = True )
+   if fitAsInReco14:
+      ConfiguredMasterFitter( getattr(thething.TrackInitFit, "Fit"), SimplifiedGeometry = False, LiteClusters = False, MSRossiAndGreisen = False )
+   thething.TrackInitFit.Init.VeloFitterName = "FastVeloFitLHCbIDs"
+   thething.TrackInitFit.Init.addTool(FastVeloFitLHCbIDs, name = "FastVeloFitLHCbIDs")
+   if DaVinci().InputType == "MDST" or readingStripping23:
+      thething.TrackInitFit.RootInTES = MyStream
+      thething.TrackInitFit.Fit.RootInTES = MyStream
+      thething.TrackInitFit.Init.RootInTES = MyStream
+      thething.TrackInitFit.Init.FastVeloFitLHCbIDs.RootInTES = MyStream
 
 
-RefitParticleTracks().OutputLevel = 0 
+giveitafit(RefitParticleTracks())
+
 
 ### copy tracks to TES
 TracksFromParticles().Inputs = ['/Event/PID/Phys/MuIDCalib_JpsiKFromBNoPIDNoMip/Particles']
@@ -111,7 +123,5 @@ TracksFromParticles().OutputLevel = 0
 GaudiSequencer("RefitSeq").Members = [
 RefitParticleTracks(),
 TracksFromParticles() ]
-if "MDST" == DaVinci().InputType:
-   GaudiSequencer("RefitSeq").RootInTES = '/Event/' + MyStream
 
 
