@@ -37,9 +37,25 @@ namespace Analysis
   public:
     // ========================================================================
     /// invoke TIterator::Next
-    TObject* next  () const ;  // invoke TIterator::Next
+    TObject* next  () const ;                      // invoke TIterator::Next
     /// invoke TIterator::Reset 
-    bool     reset () const ;  // invoke TIterator::Reset 
+    bool     reset () const ;                      // invoke TIterator::Reset 
+    // =========================================================================    
+  public: // aliases
+    // ========================================================================
+    // alias:
+    TObject* Next  () const { return next  () ; }  // invoke TIterator::Next    
+    // alias:
+    bool     Reset () const { return reset () ; }  // invoke TIterator::Next    
+    // =========================================================================    
+  public: // some pointer alchemistry 
+    // ========================================================================
+    /// valid iterator 
+    bool valid ()                     const { return 0 != m_iterator  ; }
+    /// invalid ?
+    bool operator!                 () const { return !valid()         ; }
+    /// conversion to underlying type 
+    inline TIterator* operator->   () const { return m_iterator       ; }
     // =========================================================================    
   private:
     // ========================================================================
