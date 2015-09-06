@@ -1115,6 +1115,117 @@ bool Gaudi::Math::Convex::updateBernstein ()
 
 
 
+// ============================================================================
+// constructor from the order
+// ============================================================================
+Gaudi::Math::ConvexOnly::ConvexOnly 
+( const unsigned short      N     ,
+  const double              xmin   ,
+  const double              xmax   , 
+  const bool                convex ) 
+  : Gaudi::Math::Positive ( N , xmin , xmax )  
+  , m_convex          ( convex      )  
+{
+  updateBernstein () ;
+}
+// ============================================================================
+// constructor from the order
+// ============================================================================
+Gaudi::Math::ConvexOnly::ConvexOnly 
+( const std::vector<double>& pars    ,
+  const double               xmin    ,
+  const double               xmax    ,
+  const bool                 convex  ) 
+  : Gaudi::Math::Positive ( pars , xmin , xmax )  
+  , m_convex          ( convex      )  
+{
+  updateBernstein () ;
+}
+// ============================================================================
+// constructor from the spline 
+// ============================================================================
+Gaudi::Math::ConvexOnly::ConvexOnly 
+( const Gaudi::Math::Positive& spline   ,
+  const bool                 convex ) 
+  : Gaudi::Math::Positive ( spline      )  
+  , m_convex          ( convex      )  
+{
+  updateBernstein () ;
+}
+// ============================================================================
+// constructor from the spline 
+// ============================================================================
+Gaudi::Math::ConvexOnly::ConvexOnly 
+( const Gaudi::Math::ConvexOnly& right ) 
+  : Gaudi::Math::Positive ( right )  
+  , m_convex ( right.m_convex )  
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::ConvexOnly::~ConvexOnly (){}
+// ============================================================================
+// update bernstein coefficients
+// =============================================================================
+bool Gaudi::Math::ConvexOnly::updateBernstein ()
+{
+  //
+  // linear function...
+  if ( 2 > degree() ) { return Gaudi::Math::Positive::updateBernstein() ; }
+  //
+  bool   update = false ;
+  //
+  // get sphere coefficients 
+  //
+  std::vector<double>  v ( m_sphere.nX() ) ;
+  const unsigned short vs = v.size()    ;
+  //
+  // get parameters from the sphere:
+  //
+  const std::array<double,2> a = { { m_sphere.x2(0) , m_sphere.x2(1) } };
+  for ( unsigned short ix = 2 ; ix < vs ; ++ix ) 
+  { v[ix] = m_sphere.x2 ( ix ) * ix ; }
+  //
+  // integrate them twice and to get new coefficients
+  std::partial_sum ( v. begin() + 2 , v. end() ,  v. begin() + 2 ) ; 
+  std::partial_sum ( v. begin() + 2 , v. end() ,  v. begin() + 2 ) ; 
+  //
+  if ( !m_convex )
+  {
+    const  double last = v.back() ;
+    for ( unsigned short k = 0 ; k < vs; ++k) 
+    { 
+      v[k] = last  - v[k] ; 
+      if ( 0 != v[k] && s_zero ( v[k] ) ) {  v[k] = 0 ; }
+    }
+  }
+  //
+  const unsigned short d = degree() ;
+  for ( unsigned short k = 0 ; k < vs ; ++k ) 
+  {
+    const double r1 =  double(k) / d ;
+    v[k] +=  r1 * a[0] + ( 1 - r1 ) * a[1] ;
+    if ( 0 != v[k] && s_zero ( v[k] ) ) {  v[k] = 0 ; }
+  }
+  //
+  const double isum = m_bernstein.npars() 
+    / std::accumulate ( v.begin() , v.end() , 0.0 ) 
+    / ( m_bernstein.xmax() -  m_bernstein.xmin () ) ;
+  //
+  for ( unsigned short ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
+  { 
+    const bool updated = m_bernstein.setPar ( ix , v [ix] * isum ) ; 
+    update = updated || update ;
+  }
+  //
+  return update ;
+}
+// ============================================================================
+
+
+
+
+
 
 // ============================================================================
 // constructor from the order

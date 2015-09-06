@@ -323,7 +323,7 @@ namespace Gaudi
     public:
       // ======================================================================
       /// constructor from the order
-      Positive ( const unsigned short       N          ,
+      Positive ( const unsigned short       N     =  1 ,
                  const double               xmin  =  0 ,
                  const double               xmax  =  1 ) ;
       // ======================================================================
@@ -360,6 +360,11 @@ namespace Gaudi
       const std::vector<double>& pars  () const { return m_sphere   .pars () ; }
       /// get bernstein coefficients
       const std::vector<double>& bpars () const { return m_bernstein.pars () ; }
+      // ======================================================================
+    public:  // some characteristcs 
+      // ======================================================================
+      /// degree
+      unsigned short degree      () const { return m_bernstein.degree() ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -437,7 +442,7 @@ namespace Gaudi
       // ======================================================================
       /// constructor from the order
       Monothonic
-        ( const unsigned short       N                 ,
+        ( const unsigned short       N          =    1 ,
           const double               xmin       =    0 ,
           const double               xmax       =    1 , 
           const bool                 increasing = true ) ;
@@ -493,7 +498,7 @@ namespace Gaudi
       // ======================================================================
       /// constructor from the order
       Convex 
-        ( const unsigned short       N                 ,
+        ( const unsigned short       N          =    1 ,
           const double               xmin       =    0 ,
           const double               xmax       =    1 , 
           const bool                 increasing = true ,
@@ -524,6 +529,64 @@ namespace Gaudi
       Convex (       Convex&&        right     ) = default ;
       // ======================================================================
       virtual ~Convex() ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// convex     ? 
+      bool   convex    () const { return  m_convex    ; }
+      /// convex     ? 
+      bool   concave   () const { return   !convex () ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// update bernstein coefficients
+      virtual bool updateBernstein () ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// convex ? 
+      bool                   m_convex     ; // iconvex ? 
+      // ======================================================================
+    } ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @class ConvexOnly
+     *  The "positive" polynomial of order N with 
+     *  fixed sign the second derivatives 
+     *  Actually it is a sum of basic bernstein polynomials with
+     *  non-negative coefficients
+     */
+    class GAUDI_API ConvexOnly : public Gaudi::Math::Positive 
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from the order
+      ConvexOnly 
+        ( const unsigned short       N          =    1 ,
+          const double               xmin       =    0 ,
+          const double               xmax       =    1 , 
+          const bool                 convex     = true ) ;
+      // ======================================================================
+      /// constructor from N phases
+      ConvexOnly 
+        ( const std::vector<double>& pars              ,
+          const double               xmin       =    0 ,
+          const double               xmax       =    1 ,
+          const bool                 convex     = true ) ;
+      // ======================================================================
+      /// constructor from polynom
+      ConvexOnly 
+        ( const Positive&            poly       , 
+          const bool                 convex     ) ;
+      // ======================================================================
+      /// copy constructor
+      ConvexOnly ( const ConvexOnly&   right     ) ;
+      /// move 
+      ConvexOnly (       ConvexOnly&&  right     ) = default ;
+      // ======================================================================
+      virtual ~ConvexOnly() ;
       // ======================================================================
     public:
       // ======================================================================

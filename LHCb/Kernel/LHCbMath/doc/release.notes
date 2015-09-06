@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-09-06 - Vanya Belyaev
+ - add ConvexOnly 
+
 ! 2015-08-26 - Ben Couturier
  - Split TestSimilarity into tests for AVX/SSE3, to put in evidence what has been run.
 
