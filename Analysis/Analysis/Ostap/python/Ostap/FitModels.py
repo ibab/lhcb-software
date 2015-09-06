@@ -138,6 +138,7 @@ __all__ = (
     'PolyPos_pdf'          , ## Background: positive polynom
     'Monothonic_pdf'       , ## Background: positive monothonic polynom
     'Convex_pdf'           , ## Background: positive monothonic polynom with fixed sign second derivative
+    'ConvexOnly_pdf'       , ## Background: positive monothonic polynom with fixed sign second derivative
     'Sigmoid_pdf'          , ## Background: sigmoid modulated by positive polynom
     'TwoExpoPoly_pdf'      , ## Background: difference of two exponents modulated by polynom
     'PSPol_pdf'            , ## phase space modulated by positive polynomial

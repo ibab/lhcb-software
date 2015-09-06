@@ -25,6 +25,7 @@ __all__     = (
     'PolyPos_pdf'     , ## A positive polynomial
     'Monothonic_pdf'  , ## A positive monothonic polynomial
     'Convex_pdf'      , ## A positive polynomial with fixed sign first and second derivatives 
+    'ConvexOnly_pdf'  , ## A positive polynomial with fixed sign second derivatives 
     'Sigmoid_pdf'     , ## Background: sigmoid modulated by positive polynom 
     'TwoExpoPoly_pdf' , ## difference of two exponents, modulated by positive polynomial
     ##
@@ -394,6 +395,50 @@ class Convex_pdf(PDF) :
             self.convex          )
 
 models.append ( Convex_pdf ) 
+# =============================================================================
+## @class  ConvexOnly_pdf
+#  A positive polynomial with fixed signs of the second derivative 
+#  @see Analysis::Models::PolyConvexOnly 
+#  @see Gaudi::Math::ConvexOnly
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2011-07-25
+class ConvexOnly_pdf(PDF) :
+    """ Positive (Bernstein) polynomial with fixed-sign second derivative:
+    
+    f(x) = Pol_n(x)
+    with f(x)>= 0 over the whole range and
+    the second derivative f'' do not change the sign
+    
+    >>>  mass = ROOT.RooRealVar( ... )
+    
+    >>>  bkg  = ConvexOnly_pdf ( 'B1' , mass , power = 2 , convex = True  )
+    >>>  bkg  = ConvexOnly_pdf ( 'B1' , mass , power = 2 , convex = False  )
+    """
+    ## constructor
+    def __init__ ( self              ,
+                   name              ,   ## the name 
+                   mass              ,   ## the variable
+                   power = 2         ,   ## degree of the polynomial
+                   convex     = True ) : ## convex or concave ?
+        #
+        PDF.__init__ ( self , name )
+        #
+        self.power      = power
+        self.mass       = mass 
+        self.convex     = convex  
+        # 
+        self.makePhis ( power ) 
+            
+        self.pdf  = cpp.Analysis.Models.PolyConvexOnly (
+            'pp_%s'          % name ,
+            'PolyConvex(%s)' % name ,
+            self.mass            ,
+            self.phi_list        ,
+            self.mass.getMin()   ,
+            self.mass.getMax()   ,
+            self.convex          )
+
+models.append ( ConvexOnly_pdf ) 
 # =============================================================================
 ## @class  Sigmoid_pdf
 #  Sigmoid function modulated wit hpositive polynomial

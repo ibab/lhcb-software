@@ -68,8 +68,10 @@ import Ostap.FitModels as Models
 positive   = Models.PolyPos_pdf    ( 'PP'  , mass4 , power = 3 )
 increasing = Models.Monothonic_pdf ( 'PI'  , mass4 , power = 3 , increasing = True  )
 decreasing = Models.Monothonic_pdf ( 'PD'  , mass4 , power = 3 , increasing = False )
-inc_convex = Models.Convex_pdf     ( 'PIX' , mass4 , power = 3 , increasing = True  , convex = True )
-dec_convex = Models.Convex_pdf     ( 'PDX' , mass4 , power = 3 , increasing = False , convex = True )
+inc_convex = Models.Convex_pdf     ( 'PIX' , mass4 , power = 3 , increasing = True  , convex = True  )
+dec_convex = Models.Convex_pdf     ( 'PDX' , mass4 , power = 3 , increasing = False , convex = True  )
+convex     = Models.ConvexOnly_pdf ( 'PX'  , mass4 , power = 3 , convex = True  )
+concave    = Models.ConvexOnly_pdf ( 'PX'  , mass4 , power = 3, convex = False )
 
 
 with timing ('Positive   5') , rooSilent() :
@@ -78,6 +80,8 @@ with timing ('Increasing 5') , rooSilent()  :
     i5, f = increasing.fitTo ( dataset5 )
 with timing ('Convex     5') , rooSilent() :
     x4, f = inc_convex.fitTo ( dataset5 )
+with timing ('ConvexOnly 5') , rooSilent() :
+    c4, f = convex.fitTo ( dataset5 )
 
 
 ## logger.info ( 'Positive   pars: %s' % positive  .pdf.function().pars() )
@@ -85,12 +89,11 @@ with timing ('Convex     5') , rooSilent() :
 ## logger.info ( 'Convex     pars: %s' % inc_convex.pdf.function().pars() )
 
 
-for i in ( positive , increasing , inc_convex ) :
+for i in ( positive , increasing , inc_convex , convex ) :
     pars = i.pdf.function().bernstein().pars()
     pars = list ( pars )
     pars.reverse()  
     logger.info ( 'Common pars: %s' % list ( pars )  )
-
 
 with timing ('Positive   4') , rooSilent()  :
     r4,f = positive.fitTo ( dataset4 )
@@ -98,12 +101,14 @@ with timing ('Decreasing 4') , rooSilent() :
     d4, f = decreasing.fitTo ( dataset4 )
 with timing ('Convex     4') , rooSilent()  :
     x4, f = dec_convex.fitTo ( dataset4 )
+with timing ('ConvexOnly 4') , rooSilent()  :
+    c4, f = convex.fitTo ( dataset4 )
 
 ## logger.info ( 'Positive   pars: %s' % positive  .pdf.function().pars() )
 ## logger.info ( 'Decreasing pars: %s' % decreasing.pdf.function().pars() )
 ## logger.info ( 'Convex     pars: %s' % dec_convex.pdf.function().pars() )
 
-for i in ( positive , decreasing , dec_convex ) :
+for i in ( positive , decreasing , dec_convex , convex ) :
     pars = i.pdf.function().bernstein().pars()
     pars = list ( pars ) 
     logger.info ( 'Common pars: %s' % list ( pars )  )
