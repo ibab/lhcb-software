@@ -51,6 +51,7 @@
   <class name = "Analysis::Models::PolyPositive"      />
   <class name = "Analysis::Models::PolyMonothonic"    />
   <class name = "Analysis::Models::PolyConvex"        />
+  <class name = "Analysis::Models::PolyConvexOnly"    />
   <class name = "Analysis::Models::PolySigmoid"       />
   <class name = "Analysis::Models::ExpoPositive"      />
   <class name = "Analysis::Models::TwoExpoPositive"   />

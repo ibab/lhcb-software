@@ -2683,6 +2683,78 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class PolyConvexOnly
+     *  Positive polynomial with fixes sign second derivatives 
+     *  @see Gaudi::Math::ConvexOnly
+     *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+     *  @date 2015-02-07
+     */
+    class GAUDI_API PolyConvexOnly: public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::PolyConvexOnly, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// general 
+      PolyConvexOnly
+        ( const char*          name       , 
+          const char*          title      ,
+          RooAbsReal&          x          ,
+          const RooArgList&    coeffs     ,
+          const double         xmin       , 
+          const double         xmax       ,
+          const bool           convex     ) ;
+      /// copy
+      PolyConvexOnly
+        ( const PolyConvexOnly& right     , 
+          const char*           name = 0  ) ;
+      /// destructor 
+      virtual ~PolyConvexOnly () ;
+      /// clone 
+      virtual  PolyConvexOnly* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+      ( RooArgSet&     allVars      , 
+        RooArgSet&     analVars     ,
+        const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+      ( Int_t          code         ,  
+        const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::ConvexOnly& function() const { return m_convex ; }
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x    ;
+      RooListProxy m_phis ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::ConvexOnly m_convex ;                // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class ExpoPositive
      *  exponential multiplied on positive polynomial
      *  @see Gaudi::Math::Positive
