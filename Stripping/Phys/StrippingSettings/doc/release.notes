@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-06 - Greg Ciezarek
+ - Updated SL S23c LineConfig: removed TrackPCHI2 cut in StrippingB2XTauNu lines
+
 ! 2015-09-03 - Nicola Skidmore
  - Updated B2OC S23c LineConfig: New lines
 
