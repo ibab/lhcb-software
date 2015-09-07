@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-07 - Pablo Ruiz Valls
+ - Updated RD S23c LineConfig: Propagated tuning in RareStrange dictionary
+
 ! 2015-09-07 - Jinlin Fu
  - copy Charm dict s23 into s23c  
 
