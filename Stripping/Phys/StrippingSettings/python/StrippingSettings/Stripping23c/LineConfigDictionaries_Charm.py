@@ -912,6 +912,36 @@ D2hhhLines = {
     "WGs": [ "Charm" ]
 }
 
+D2hhhFTCalib = {
+    'WGs'         :  ['ALL'],
+    'BUILDERTYPE' : 'D2hhhFTCalibConf',
+    'STREAMS' : [ 'CharmCompleteEvent' ],
+    'CONFIG'      : {
+		'DaughterPT'            : 250.,
+		'DaughterP'             : 2000.,
+		'DaughterIPChi2'        : 4.,
+		'Daughter2IPChi2'       : 10.,
+		'D2KKKDaughterIPChi2'   : 4.,
+		'D2KKKDaughter2IPChi2'  : 4.,
+		'KPIDK'                 : 7.,
+		'piPIDK'                : 3.,
+		'PTSum'                 : 3200.,
+		'DOCAMax'               : 0.5,
+		'DOCAChi2'              : 50.,
+		'DPt'                   : 2000.,
+		'DIPChi2'               : 1500.,
+		'DdcaFDChi2'            : 150.,
+		'DPVLTIME'              : 0.2,
+		'DDIRA'                 : 0.99995,
+		'DVXChi2NDOF'           : 6.,
+		'MinMassPosFit'         : 1920.,
+		'MaxMassPosFit'         : 2040.,
+		'MaxTracksInEvent'      : 500,
+		'D2KKPLinePrescale'     : 0.2,
+		'D2KKPLinePostscale'    : 1.0 ,
+    }
+}
+
 Dst2PiD0EEG = {
     "BUILDERTYPE": "StrippingDst2PiD0EEGConf", 
     "CONFIG": {
