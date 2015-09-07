@@ -1360,3 +1360,49 @@ Xicc = {
     "WGs": [ "Charm" ]
 }
 
+DstarPromptWithD02HHMuMuControl = {
+        'BUILDERTYPE' : 'DstarPromptWithD02HHHHConf',
+         'CONFIG' : {
+            'CombDelmLower'     : -9.*MeV
+       ,'CombDelmUpper'    : 20*MeV
+       ,'DelmLower'        : -8*MeV
+       ,'DelmUpper'        : 18*MeV
+       ,'CombD0MassWin'    : 120*MeV
+       ,'D0MassWin'        : 100*MeV
+       ,'DstarDOCA'        : 0.3*mm
+       ,'D0MaxDOCA'        : 0.3*mm
+       ,'D0DauPt'          : 300*MeV
+       ,'D0DauP'           : 3*GeV
+       ,'D0Pt'             : 2.*GeV
+       ,'DstarPt'          : 2.*GeV
+       ,'SlowPionPt'       : 120*MeV
+       ,'DstarVtxChi2DOF'  : 20
+       ,'D0VtxChi2DOF'     : 20
+       ,'D0DauMaxIPChi2'   : 9
+       ,'D0DauIPChi2'      : 3.0 # !!!
+       ,'D0FDChi2'         : 30
+       ,'D0IPChi2'         : 36
+       ,'D0DIRA'           : 0.9998
+       ,'TrackChi2DOF'     : 3
+       ,'ApplyKaonPIDK'    : False
+       ,'KaonPIDK'         : 0.
+       ,'ApplyPionPIDK'    : False
+       ,'PionPIDK'         : 3 # not applied to the slow pion
+       ,'CheckPV'          : True # reject events with no PVs
+       ,'ApplyGECs'        : False # set to False to apply no GECs
+       ,'MaxLongTracks'    : 250
+       ,'MaxVeloTracks'    : None
+       ,'MaxSpdDigits'     : None
+       ,'MaxITClusters'    : None
+       ,'ApplyGhostProbCut': False # !!!
+       ,'GhostProbCut'     : 0.4 # !!!
+       ,'Prescale'         : 0.05
+       ,'Postscale'        : 1
+       ,'RunK3pi'          : True
+       ,'Run4pi'           : True
+       ,'Run2K2pi'         : True
+       ,'Run3Kpi'          : True
+       } ,
+       'WGs' : [ 'Charm' ],
+       'STREAMS' : [ 'Charm' ]
+}
