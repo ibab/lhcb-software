@@ -262,7 +262,7 @@ def makeTau2PhiMu(name):
     Arguments:
     name        : name of the Selection.
     """
-    from Configurables import OfflineVertexFitter
+    #from Configurables import OfflineVertexFitter
     Tau2PhiMu = CombineParticles("Combine"+name)
     Tau2PhiMu.DecayDescriptor = " [ tau+ -> phi(1020) mu+ ]cc"
 
@@ -319,7 +319,7 @@ def makeTau2eMuMu(name):
     Arguments:
     name        : name of the Selection.
     """
-    from Configurables import OfflineVertexFitter
+    #from Configurables import OfflineVertexFitter
     Tau2eMuMu = CombineParticles("Comine"+name)
     Tau2eMuMu.DecayDescriptors = [" [ tau+ -> e+ mu+ mu- ]cc"," [ tau+ -> mu+ mu+ e- ]cc"]
     Tau2eMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) & (TRGHOSTPROB<0.3) " ,
@@ -350,7 +350,7 @@ def makeB2TauMu(name):
     name        : name of the Selection.
     """
     
-    from Configurables import OfflineVertexFitter
+    #from Configurables import OfflineVertexFitter
     Bs2TauMu = CombineParticles("Combine"+name)
     Bs2TauMu.DecayDescriptors = ["[B_s0 -> tau+ mu-]cc","[B_s0 -> tau+ mu+]cc"]
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
@@ -386,13 +386,13 @@ def makeB2eMu(name):
     name        : name of the Selection.
     """
     
-    from Configurables import OfflineVertexFitter
+    #from Configurables import OfflineVertexFitter
     Bs2eMu = CombineParticles("Combine"+name)
     Bs2eMu.DecayDescriptors = ["[B_s0 -> e+ mu-]cc","[B_s0 -> e+ mu+]cc"]
     # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
-    Bs2eMu.addTool( OfflineVertexFitter )
-    Bs2eMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    Bs2eMu.OfflineVertexFitter.useResonanceVertex = False
+    #Bs2eMu.addTool( OfflineVertexFitter )
+    #Bs2eMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    #Bs2eMu.OfflineVertexFitter.useResonanceVertex = False
     #Bs2eMu.ReFitPVs = True
     Bs2eMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 ) & (TRGHOSTPROB<0.3)",
                              "e+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )"}
@@ -423,12 +423,12 @@ def makeB2ee(name):
     name        : name of the Selection.
     """
     
-    from Configurables import OfflineVertexFitter
+    #from Configurables import OfflineVertexFitter
     Bs2ee = CombineParticles("Combine"+name)
     Bs2ee.DecayDescriptors = ["B_s0 -> e+ e-","[B_s0 -> e+ e+]cc"]
-    Bs2ee.addTool( OfflineVertexFitter )
-    Bs2ee.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    Bs2ee.OfflineVertexFitter.useResonanceVertex = False
+    #Bs2ee.addTool( OfflineVertexFitter )
+    #Bs2ee.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    #Bs2ee.OfflineVertexFitter.useResonanceVertex = False
     #Bs2ee.ReFitPVs = True
     Bs2ee.DaughtersCuts = { "e+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )"}
 
@@ -458,14 +458,14 @@ def makeB2hTauMu(name):
     name        : name of the Selection.
     """
     
-    from Configurables import OfflineVertexFitter
+    #from Configurables import OfflineVertexFitter
     Bs2hTauMu = CombineParticles("Combine"+name)
     Bs2hTauMu.DecayDescriptors = ["[B+ -> K+ tau+ mu-]cc","[B+ -> K- tau+ mu+]cc", "[B+ -> K+ tau- mu+]cc",
                                   "[B+ -> pi+ tau+ mu-]cc","[B+ -> pi- tau+ mu+]cc", "[B+ -> pi+ tau- mu+]cc",
                                   "[B+ -> p+ tau+ mu-]cc","[B- -> p+ tau- mu-]cc", "[B+ -> p+ tau- mu+]cc"]
-    Bs2hTauMu.addTool( OfflineVertexFitter )
-    Bs2hTauMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    Bs2hTauMu.OfflineVertexFitter.useResonanceVertex = False
+    #Bs2hTauMu.addTool( OfflineVertexFitter )
+    #Bs2hTauMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    #Bs2hTauMu.OfflineVertexFitter.useResonanceVertex = False
     #Bs2hTauMu.ReFitPVs = True
     Bs2hTauMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)>36.)&(TRCHI2DOF<3)& (TRGHOSTPROB<0.3)",
                               "pi+" : "(MIPCHI2DV(PRIMARY)>36.)&(TRCHI2DOF<3) & (TRGHOSTPROB<0.3)",
@@ -507,14 +507,14 @@ def makeB2heMu(name):
     name        : name of the Selection.
     """
     
-    from Configurables import OfflineVertexFitter
+    #from Configurables import OfflineVertexFitter
     Bs2heMu = CombineParticles("Combine"+name)
     Bs2heMu.DecayDescriptors = ["[B+ -> K+ e+ mu-]cc","[B+ -> K- e+ mu+]cc", "[B+ -> K+ e- mu+]cc",
                                 "[B+ -> pi+ e+ mu-]cc","[B+ -> pi- e+ mu+]cc" , "[B+ -> pi+ e- mu+]cc",
                                 "[B+ -> p+ e+ mu-]cc","[B- -> p+ e- mu-]cc", "[B+ -> p+ e- mu+]cc"]
-    Bs2heMu.addTool( OfflineVertexFitter )
-    Bs2heMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    Bs2heMu.OfflineVertexFitter.useResonanceVertex = False
+    #Bs2heMu.addTool( OfflineVertexFitter )
+    #Bs2heMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    #Bs2heMu.OfflineVertexFitter.useResonanceVertex = False
     #Bs2heMu.ReFitPVs = True
     Bs2heMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3) & (TRGHOSTPROB<0.3)",
                               "e+" : "(MIPCHI2DV(PRIMARY)>25.)&(TRCHI2DOF<3) & (PIDe > 2)",
@@ -599,15 +599,15 @@ def makeBu(name) :
     """
 
     
-    from Configurables import OfflineVertexFitter
+    #from Configurables import OfflineVertexFitter
    
     SelDJPsi = makeDetachedJPsi(name)
 
     PreselBu2JPsiKCommon = CombineParticles("PreselBu2JPsiKCommon")
     PreselBu2JPsiKCommon.DecayDescriptor =  " [B+ -> J/psi(1S) K+]cc ";
-    PreselBu2JPsiKCommon.addTool( OfflineVertexFitter )
-    PreselBu2JPsiKCommon.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    PreselBu2JPsiKCommon.OfflineVertexFitter.useResonanceVertex = False
+    #PreselBu2JPsiKCommon.addTool( OfflineVertexFitter )
+    #PreselBu2JPsiKCommon.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    #PreselBu2JPsiKCommon.OfflineVertexFitter.useResonanceVertex = False
     PreselBu2JPsiKCommon.ReFitPVs = True
     PreselBu2JPsiKCommon.DaughtersCuts = { "K+" : "(ISLONG) & (TRCHI2DOF < 3 ) &(MIPCHI2DV(PRIMARY)>25)& (PT>250*MeV) & (TRGHOSTPROB<0.3) "}
     PreselBu2JPsiKCommon.CombinationCut = "(ADAMASS('B+') < 600*MeV)"
@@ -630,12 +630,12 @@ def makeDetachedJPsi(name) :
     Arguments:
     name        : name of the Selection.
     """
-    from Configurables import OfflineVertexFitter
+    #from Configurables import OfflineVertexFitter
     DetachedJPsi = CombineParticles("Combine"+name)
     DetachedJPsi.DecayDescriptor = "J/psi(1S) -> e+ e-"
-    DetachedJPsi.addTool( OfflineVertexFitter )
-    DetachedJPsi.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    DetachedJPsi.OfflineVertexFitter.useResonanceVertex = False
+    #DetachedJPsi.addTool( OfflineVertexFitter )
+    #DetachedJPsi.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    #DetachedJPsi.OfflineVertexFitter.useResonanceVertex = False
     DetachedJPsi.ReFitPVs = True
     DetachedJPsi.DaughtersCuts = { "e+" : "(TRCHI2DOF < 3 ) "\
                                    "& (MIPCHI2DV(PRIMARY)> 25.) "\

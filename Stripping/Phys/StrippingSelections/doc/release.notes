@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-09-07 - Andrea Contu
+ - Remove OfflineVertexFitter from LFV lines (RD)
+
+! 2015-09-07 - Andrea Contu
  - Modified StrippingRareStrange configuration
 
 ! 2015-09-07 - Mirco Dorigo
