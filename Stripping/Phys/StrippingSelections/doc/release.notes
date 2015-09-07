@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-07 - Andrea Contu
+ - Modified StrippingRareStrange configuration
+
 ! 2015-09-07 - Mirco Dorigo
  - Added StrippingD2hhh_FTcalib.py in StrippingSelections/StrippingCharm for SSK calibrations 
 
