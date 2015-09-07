@@ -5,7 +5,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Francesco Dettori','Andrea Contu']
 __date__ = '31/07/2014'
-__version__ = '$Revision: 2.0 $'
+__version__ = '$Revision: 2.1 $'
 
 __all__ = ('RareStrangeLinesConf',
            'config_default',
@@ -53,7 +53,7 @@ default_config = {
         'SigmaPMuMuDownPrescale' :1,
         'SigmaPEEPrescale' : 1,
         'SigmaPPi0Prescale' : 1,
-        'SigmaPPi0CalPrescale' : 1,
+        'SigmaPPi0CalPrescale' : 0.25,
         'SigmaPEEDownPrescale' : 0.1,
         'SigmaPMuMuLFVPrescale' :0.1,
         'SigmaPMuMuLFVDownPrescale' :0.1,
@@ -119,7 +119,7 @@ default_config = {
         'KMinVDChi2MassMeas' : 100.,
         'KDauMinIpChi2MassMeas' : 8., 
         #Kaons stuff downstream
-        'KMaxDOCAMassMeasDown' : 9999.,
+        'KMaxDOCAMassMeasDown' : 2.,
         'KMinPTMassMeasDown' : 250. ,
         'KMassWinMassMeasDown' : 100.,
         'KMinDIRAMassMeasDown' : 0.999,
@@ -274,7 +274,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selSigmaPMuMu ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True,
+                                            MDSTFlag=False,
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -310,7 +310,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selSigmaPMuMuDown ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True,
+                                            MDSTFlag=False,
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -502,7 +502,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                                postscale = config['Postscale'],
                                                algos = [ self.selSigmaPMuMuLFV ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True,
+                                            MDSTFlag=False,
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -539,7 +539,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                                postscale = config['Postscale'],
                                                algos = [ self.selSigmaPMuMuLFVDown ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True,
+                                            MDSTFlag=False,
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -576,7 +576,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selKPiMuMu ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True,
+                                            MDSTFlag=False,
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -612,7 +612,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                          postscale = config['Postscale'],
                                          algos = [ self.selKPiMuMuLFV ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True,
+                                            MDSTFlag=False,
                                             RelatedInfoTools = [
                                             {
                                               'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -649,7 +649,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selKPiPiPi ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True,
+                                            MDSTFlag=False,
                                              RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -682,7 +682,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selKPiPiPiMassMeas ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True,
+                                            MDSTFlag=False,
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -715,7 +715,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selKPiMuMuDown ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True,
+                                            MDSTFlag=False,
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -751,7 +751,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selKPiPiPiDown ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True,
+                                            MDSTFlag=False,
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -784,7 +784,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selKPiPiPiMassMeasDown ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True,
+                                            MDSTFlag=False,
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -818,7 +818,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                          postscale = config['Postscale'],
                                          algos = [ self.selKPiMuMuLFVDown ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True,
+                                            MDSTFlag=False,
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -1195,7 +1195,7 @@ def makeKPiPiPiMassMeas(name, config):
 
     #KPiPiPi.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     #KPiPiPi.OfflineVertexFitter.useResonanceVertex = False
-    KPiPiPi.DaughtersCuts = {   "pi+":"(P>1000) & (MIPCHI2DV(PRIMARY) > 25.0) & (TRCHI2DOF<5) & (TRGHOSTPROB < 0.3)"
+    KPiPiPi.DaughtersCuts = {   "pi+":"(P>1000) & (MIPCHI2DV(PRIMARY) > 25.0) & (TRCHI2DOF<5) & (TRGHOSTPROB < 0.4)"
                                  }
     KPiPiPi.CombinationCut = "(ADAMASS('K+') < %(KMassWinMassMeas)s *MeV) & (AMAXDOCA('')< %(KMaxDOCAMassMeas)s *mm)"%config
     
