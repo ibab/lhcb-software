@@ -994,18 +994,22 @@ B2DDphi = {
     # Cuts made on all D0's
     'D0_MASS_WIN': 65, #MeV
     'D0_PT': 1500., #MeV
+    'D0_IPCHI2': 4,
     'D0_VCHI2NDOF': 10, 
     # Cuts made on all D+'s
     'Dp_MASS_WIN': 65, #MeV
     'Dp_PT': 1500., #MeV
+    'Dp_IPCHI2': 4, 
     'Dp_VCHI2NDOF': 10,
     # Cuts made on all Ds+'s
     'Ds_MASS_WIN': 65, #MeV
     'Ds_PT': 1500., #MeV
+    'Ds_IPCHI2': 4,
     'Ds_VCHI2NDOF': 10,
     # Cuts made on all D*+'s
     'Dst_MASS_WIN': 50, #MeV
     'Dst_PT': 1500., #MeV
+    'Dst_IPCHI2': 4,
     'Dst_VCHI2NDOF': 15,
     # Cuts made on all B's
     'B_MASS_MAX': 6000, #MeV

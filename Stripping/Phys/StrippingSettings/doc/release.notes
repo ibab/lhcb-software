@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-07 - Ricardo Vazquez Gomez
+ - Fix the dictionaries for B2DDPhi in B2OC WG
+
 ! 2015-09-07 - Jinlin Fu
  - updated Charm s23c LineConfig: add D2hhh_FTcalib 
 
