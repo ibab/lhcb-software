@@ -883,7 +883,7 @@ Bs2MuMuLines = {
                   'StrippingBs2MuMuLinesLTUBLine',
                   'StrippingBs2MuMuLinesBu2JPsiKLine'
                   ]
-    }
+    },
     "WGs": [ "RD" ]
 }
 
