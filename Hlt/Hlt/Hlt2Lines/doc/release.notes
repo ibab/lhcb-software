@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2015-09-07 - Simone Stracka
+ - CharmHad/D2HHLines.py: fixed bug associated with improper usage of clone() method
+
 !========================= Hlt2Lines v10r2 2015-09-01 =========================
 
 ! 2015-08-31 - Sean Benson

@@ -389,16 +389,16 @@ class CharmHadD2HHLines() :
                 , inputs = [D2HH_RhoToPipPim, SharedNoPIDDetachedChild_K, SharedNeutralLowPtChild_gamma ])
 
         ## D+ -> eta' pi+, eta' -> (pi+ pi-) gamma, (pi+ pi-) labeled rho(770)0.
-        D2EtaPrimePi_hhgamma = D2EtaPi_hhgamma.clone('D2EtaPrimePi_hhgamma')
+        D2EtaPrimePi_hhgamma = D2EtaPi_hhgamma.clone('D2EtaPrimePi_hhgamma', nickname ='D2EtaPrimePi_hhgamma')
 
         ## D+ -> eta' K+, eta' -> (pi+ pi-) gamma, (pi+ pi-) labeled rho(770)0.
-        D2EtaPrimeK_hhgamma = D2EtaK_hhgamma.clone('D2EtaPrimeK_hhgamma')
+        D2EtaPrimeK_hhgamma = D2EtaK_hhgamma.clone('D2EtaPrimeK_hhgamma', nickname = 'D2EtaPrimeK_hhgamma')
 
         ## D+ -> eta pi+, eta -> (pi+ pi-) pi0, (pi+ pi-) labeled rho(770)0.
         D2EtaPi_3hR = D2RhoHG_3Body_Combiner('D2EtaPi_3hR'
                 , decay = [ "D+ -> rho(770)0 pi+ pi0", "D- -> rho(770)0 pi- pi0" ]
                 , inputs = [ D2HH_RhoToPipPim, SharedNoPIDDetachedChild_pi, SharedNeutralLowPtChild_pi0R ])
-        D2EtaPi_3hM = D2EtaPi_3hR.clone('D2EtaPi_3hM'
+        D2EtaPi_3hM = D2EtaPi_3hR.clone('D2EtaPi_3hM', nickname = 'D2EtaPi_3hM'
                 , inputs = [ D2HH_RhoToPipPim, SharedNoPIDDetachedChild_pi, SharedNeutralLowPtChild_pi0M ])
 
 
@@ -406,7 +406,7 @@ class CharmHadD2HHLines() :
         D2EtaK_3hR = D2RhoHG_3Body_Combiner('D2EtaK_3hR'
                 , decay = [ "D+ -> rho(770)0 K+ pi0", "D- -> rho(770)0 K- pi0" ]
                 , inputs = [ D2HH_RhoToPipPim, SharedNoPIDDetachedChild_K, SharedNeutralLowPtChild_pi0R ])
-        D2EtaK_3hM = D2EtaK_3hR.clone('D2EtaK_3hM'
+        D2EtaK_3hM = D2EtaK_3hR.clone('D2EtaK_3hM', nickname = 'D2EtaK_3hM'
                 , inputs = [ D2HH_RhoToPipPim, SharedNoPIDDetachedChild_K, SharedNeutralLowPtChild_pi0M ])
 
 
