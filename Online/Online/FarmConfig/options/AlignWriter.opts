@@ -64,7 +64,7 @@ AlignDataWriter_Velo.DIMSteering = 1;
 //
 AlignDataWriter_Velo.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x00000008,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
-,"EvType=2;TriggerMask=0x0,0x00004000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=0.1"
+,"EvType=2;TriggerMask=0x0,0x00004000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=0.001"
 };
 AlignDataWriter_Velo.MEPFilePrefix        = "/localdisk/Alignment/Velo/Run_";
 AlignDataWriter_Velo.EvtFilePrefix        = "/localdisk/Alignment/Velo/Run_";

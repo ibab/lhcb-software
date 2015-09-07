@@ -59,11 +59,12 @@ elif [ "$act" = "Alignment|Rich2" ]; then
 elif [ "$act" = "Calibration|Calo" ]; then
   . /group/calo/cmtuser/CaloCalibrationDev_v10r4p1/setup.x86_64-slc6-gcc48-dbg.vars;
   fix_python;
-  export PYTHONPATH=/group/online/dataflow/options/LHCbA/HLT:$PYTHONPATH;
+  export PYTHONPATH=/group/online/dataflow/options/LHCbA/HLT:$PYTHONPATH; 
   cd ${FARMCONFIGROOT}/job;
   exec -a ${UTGID} python -c "from PyKaliOnline import Analyzer; Analyzer.run(0, '/group/online/CalibWork')"
 elif [ "$act" = "BWDivision" ]; then
   . /group/online/bw_division/cmtuser/BWDivisionDev/setup.x86_64-slc6-gcc48-opt.vars
+  fix_python;  
   export PYTHONPATH=/group/online/bw_division/pydim/lib/python2.7/site-packages:/scratch/jenkins/benchmark/python:$PYTHONPATH
   export OUTPUTDIR=/group/online/bw_division/output
   export UTGID

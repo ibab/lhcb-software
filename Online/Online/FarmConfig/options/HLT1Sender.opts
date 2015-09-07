@@ -31,12 +31,4 @@ EventDataSvc.EnableFaultHandler      = true ;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
 EventSelector.REQ1                   = "$EVENTSELECTOR_REQ1";
 #include "$ONLINETASKS/options/MessageSvc.opts"
-Prescaler.Requirements = {
-"Name=All;EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=1.0",
-"Name=Tracker;EvType=2;TriggerMask=0x0,0x00200000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
-"Name=Rich;EvType=2;TriggerMask=0x0,0x00400000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
-"Name=Velo;EvType=2;TriggerMask=0x0,0x00000008,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=1.0",
-"Name=Muon;EvType=2;TriggerMask=0x0,0x00000400,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=10.0",
-"Name=Calo;EvType=2;TriggerMask=0x0,0x18000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=1.0",
-"Name=VClose;EvType=2;TriggerMask=0x0,0x100,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=1.0"
-};
+#include "$PRESCALER_REQUIREMENTS"

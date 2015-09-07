@@ -64,6 +64,7 @@ elif [ "$act" = "Calibration|Calo" ]; then
   exec -a ${UTGID} python -c "from PyKaliOnline import Iterator; Iterator.run('/group/online/CalibWork')"
 elif [ "$act" = "BWDivision" ]; then
   . /group/online/bw_division/cmtuser/BWDivisionDev/setup.x86_64-slc6-gcc48-opt.vars
+  fix_python
   . /group/online/bw_division/root/bin/thisroot.sh
   export PYTHONPATH=/group/online/bw_division/pydim/lib/python2.7/site-packages:$PYTHONPATH
   export OUTPUTDIR=/group/online/bw_division/output
