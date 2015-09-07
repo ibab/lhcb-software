@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-07 - Pablo Ruiz Valls
+ - RD: Fix Bs2MuMu stream assignations
+
 ! 2015-09-07 - Ricardo Vazquez Gomez
  - Fix the dictionaries for B2DDPhi in B2OC WG
 

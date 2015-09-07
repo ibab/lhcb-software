@@ -867,8 +867,23 @@ Bs2MuMuLines = {
         "daughter_TrChi2": 3, 
         "daughter_TrChi2_LTUB": 3, 
         "muon_PT_LTUB": 40
-    }, 
-    "STREAMS": [ "Dimuon" ], 
+    },
+
+    'STREAMS' : {
+    'Dimuon' : ['StrippingBs2MuMuLinesNoMuIDLine',
+                'StrippingBs2MuMuLinesWideMassLine',
+                'StrippingBs2MuMuLinesBu2JPsiKLine'
+                ],
+    'Leptonic' : ['StrippingBs2MuMuLinesWideMassLine',
+                  'StrippingBs2MuMuLinesBs2JPsiPhiLine',
+                  'StrippingBs2MuMuLinesBs2KKLTUBLine',
+                  'StrippingBs2MuMuLinesNoMuIDLine',
+                  'StrippingBs2MuMuLinesSSLine',
+                  'StrippingBs2MuMuLinesBd2JPsiKstLine',
+                  'StrippingBs2MuMuLinesLTUBLine',
+                  'StrippingBs2MuMuLinesBu2JPsiKLine'
+                  ]
+    }
     "WGs": [ "RD" ]
 }
 
