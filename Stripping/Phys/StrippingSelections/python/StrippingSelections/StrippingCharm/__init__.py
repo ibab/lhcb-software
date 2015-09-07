@@ -33,7 +33,8 @@ _selections = (
     'StrippingD2XMuMuSS',
     'StrippingCharmForVub',
     'StrippingD2hhh_conf',
-    'StrippingDstarPromptWithD02HHHH'
+    'StrippingDstarPromptWithD02HHHH',
+    'StrippingD2hhh_FTcalib'
     )
 
 for _sel in _selections :
