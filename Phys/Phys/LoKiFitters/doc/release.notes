@@ -5,6 +5,8 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+!====================== Phys/LoKiFitters v4r17 2015-09-08 =====================
+
 ! 2015-09-08 - Andrea Contu
  - PVReFitter: Change defaults in DeltaChi2 and DeltaDist
 
