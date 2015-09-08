@@ -4,6 +4,8 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingConf v4r19 2015-09-08 =========================
+
 ! 2015-09-02 - Andrea Contu
  - Add stream to output location duplicates info, add exception for line duplicates in the same stream
 
