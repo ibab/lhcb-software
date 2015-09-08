@@ -489,8 +489,18 @@ default_config ={
     
     ],  
     'Bhadron' : [
-    
-    
+    'StrippingB2D0PiD2HHHHoldBeauty2CharmLine',  
+    'StrippingB2D0KD2HHHHoldBeauty2CharmLine',
+    'StrippingB2D0PiD2KSHHLLoldBeauty2CharmLine',
+    'StrippingB2D0KD2KSHHLLoldBeauty2CharmLine',   
+    'StrippingB2D0PiD2KSHHDDoldBeauty2CharmLine',
+    'StrippingB2D0KD2KSHHDDoldBeauty2CharmLine', 
+    'StrippingB2D0PiD2Pi0HHResolvedoldBeauty2CharmLine',
+    'StrippingB2D0KD2Pi0HHResolvedoldBeauty2CharmLine',
+    'StrippingB2D0PiD2Pi0HHMergedoldBeauty2CharmLine',
+    'StrippingB2D0KD2Pi0HHMergedoldBeauty2CharmLine', 
+       
+
     'StrippingB2D0KD2HHWSBeauty2CharmLine', 
     'StrippingB2D0PiD2HHWSBeauty2CharmLine', 
     'StrippingB2D0KD2HHUPBeauty2CharmLine', 

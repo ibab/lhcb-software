@@ -76,6 +76,7 @@ class DBuilder(object):
           self.hh   = self._makeD2hh()
           self.hhh  = self._makeD2hhh()
           self.hhhh = self._makeD2hhhh()
+          self.hhhh_old = self._makeD2hhhhold()
 
           self.ksh_ll    = self._makeD2KSh("LL")
           self.ksh_dd    = self._makeD2KSh("DD")
@@ -83,6 +84,9 @@ class DBuilder(object):
           self.kshh_dd   = self._makeD2KShh("DD")
           self.kshhh_ll  = self._makeD2KShhh("LL")
           self.kshhh_dd  = self._makeD2KShhh("DD")
+          self.kshh_ll_old   = self._makeD2KShhold("LL")
+          self.kshh_dd_old   = self._makeD2KShhold("DD")
+
 
           self.pi0hh_merged = self._makeD2Pi0hh("Merged")
           self.pi0hh_resolved = self._makeD2Pi0hh("Resolved")
@@ -90,6 +94,8 @@ class DBuilder(object):
           self.pi0hhh_resolved = self._makeD2Pi0hhh("Resolved")
           #self.pi0hhhh_merged = self._makeD2Pi0hhhh("Merged")
           #self.pi0hhhh_resolved = self._makeD2Pi0hhhh("Resolved")
+          self.pi0hh_merged_old = self._makeD2Pi0hhold("Merged")
+          self.pi0hh_resolved_old = self._makeD2Pi0hhold("Resolved")
 
           self.kspi0h_ll_merged = self._makeD2KSPi0h("LL","Merged")
           self.kspi0h_ll_resolved = self._makeD2KSPi0h("LL","Resolved")
@@ -858,23 +864,23 @@ class DBuilder(object):
 
           return [MergedSelection('D2KstHHBeauty2Charm_%s'%tag,RequiredSelections=sels)]
 
-     ## # Implementation using SubPID
-     ## def _makeD2KShh(self,which,up=False):
-     ##      '''Makes D->Kshh'''
-     ##      min,max = self._massWindow('D0')
-     ##      decays = [['pi+','pi-','KS0'],['pi+','K-','KS0'],
-     ##                ['K+', 'pi-','KS0'],['K+', 'K-','KS0']]
-     ##      wm = awmFunctor(decays,min,max)
-     ##      config = deepcopy(self.config)
-     ##      config.pop('ADOCA13_MAX')
-     ##      config.pop('ADOCA23_MAX')
-     ##      if up : inputs = [self.pions] + self.ks[which] +  [self.uppions]
-     ##      else  : inputs = [self.pions] + self.ks[which]
-     ##      protoD2Kshh = self._makeD2ThreeBody('D2KSHH'+which,['D0 -> pi+ pi- KS0'],
-     ##                                          wm,up,config,inputs)
-     ##      name = 'D2KsHH'
-     ##      if up: name += 'UP'
-     ##      return [subPIDSels(decays,name,which,min,max,[protoD2Kshh])]
+     # Implementation using SubPID
+     def _makeD2KShhold(self,which,up=False):
+          '''Makes D->Kshh'''
+          min,max = self._massWindow('D0')
+          decays = [['pi+','pi-','KS0'],['pi+','K-','KS0'],
+                    ['K+', 'pi-','KS0'],['K+', 'K-','KS0']]
+          wm = awmFunctor(decays,min,max)
+          config = deepcopy(self.config)
+          config.pop('ADOCA13_MAX')
+          config.pop('ADOCA23_MAX')
+          if up : inputs = [self.pions] + self.ks[which] +  [self.uppions]
+          else  : inputs = [self.pions] + self.ks[which]
+          protoD2Kshh = self._makeD2ThreeBody('D2KSHH'+which,['D0 -> pi+ pi- KS0'],
+                                              wm,up,config,inputs)
+          name = 'D2KsHHold'
+          if up: name += 'UP'
+          return [subPIDSels(decays,name,which,min,max,[protoD2Kshh])]
 
      # Implementation not using SubPID
      def _makeD2KShh(self,which,up=False):
@@ -1228,22 +1234,22 @@ class DBuilder(object):
           return [MergedSelection('D2Pi0HHHBeauty2Charm_%s%s'%(which,tag),RequiredSelections=sels)]
 
      ## # Implementation using one SubPID instance for all substitutions
-     ## def _makeD2Pi0hh(self,which,up=False):
-     ##      '''Makes D->Pi0hh'''
-     ##      min,max = self._massWindow('D0wide')
-     ##      decays = [['pi+','pi-','pi0'],['pi+','K-','pi0'],
-     ##                ['K+','pi-','pi0'],['K+','K-','pi0']]
-     ##      wm = awmFunctor(decays,min,max)
-     ##      config = deepcopy(self.config)
-     ##      config.pop('ADOCA13_MAX')
-     ##      config.pop('ADOCA23_MAX')
-     ##      if up : inputs = [self.pions] + self.pi0[which]+ [self.uppions]
-     ##      else  : inputs = [self.pions] + self.pi0[which]
-     ##      protoD2pi0hh = self._makeD2ThreeBody('D2Pi0HH_'+which,['D0 -> pi+ pi- pi0'],
-     ##                                           wm,up,config,inputs)
-     ##      name = 'D2Pi0HH'
-     ##      if up: name += 'UP'
-     ##      return [subPIDSels(decays,name,which,min,max,[protoD2pi0hh])]
+     def _makeD2Pi0hhold(self,which,up=False):
+          '''Makes D->Pi0hh'''
+          min,max = self._massWindow('D0wide')
+          decays = [['pi+','pi-','pi0'],['pi+','K-','pi0'],
+                    ['K+','pi-','pi0'],['K+','K-','pi0']]
+          wm = awmFunctor(decays,min,max)
+          config = deepcopy(self.config)
+          config.pop('ADOCA13_MAX')
+          config.pop('ADOCA23_MAX')
+          if up : inputs = [self.pions] + self.pi0[which]+ [self.uppions]
+          else  : inputs = [self.pions] + self.pi0[which]
+          protoD2pi0hh = self._makeD2ThreeBody('D2Pi0HH_'+which,['D0 -> pi+ pi- pi0'],
+                                               wm,up,config,inputs)
+          name = 'D2Pi0HHold'
+          if up: name += 'UP'
+          return [subPIDSels(decays,name,which,min,max,[protoD2pi0hh])]
      
      ## ## Implementation with one SubPID instance per substitution
      ## def _makeD2Pi0hh(self,which,up=False):
@@ -1525,34 +1531,34 @@ class DBuilder(object):
 
           return [ MergedSelection( 'D2HHKSPi0'+whichPi0+whichKs+tag, RequiredSelections=sels ) ]
 
-     ## # Implementation using one instance of SubPID for all substitutions
-     ## def _makeD2hhhh(self,up=False):
-     ##      '''Makes D->hhhh'''
-     ##      min,max = self._massWindow('D0')
-     ##      decays = [
-     ##           # 4pi
-     ##           ['pi+','pi+','pi-','pi-'],
-     ##           # K3pi
-     ##           ['pi+','pi+','K-','pi-'],['pi+','pi+','pi-','K-'],
-     ##           ['K+','pi+','pi-','pi-'],['pi+','K+','pi-','pi-'],
-     ##           # 2K2pi
-     ##           ['K+','K+','pi-','pi-'],['K+','pi+','K-','pi-'],
-     ##           ['K+','pi+','pi-','K-'],['pi+','K+','K-','pi-'],
-     ##           ['pi+','K+','pi-','K-'],['pi+','pi+','K-','K-'],
-     ##           # 3Kpi
-     ##           ['K+','K+','K-','pi-'],['K+','K+','pi-','K-'],
-     ##           ['K+','pi+','K-','K-'],['pi+','K+','K-','K-'],
-     ##           # 4K
-     ##           ['K+','K+','K-','K-']
-     ##           ]
-     ##      inputs = [ self.pions ]
-     ##      if up : inputs += [self.uppions]
-     ##      wm = awmFunctor(decays,min,max)
-     ##      protoD2hhhh = self._makeD2FourBody('D2HHHH',['D0 -> pi+ pi+ pi- pi-'],wm,
-     ##                                  up,self.config,inputs)
-     ##      name = 'D2HHHH'
-     ##      if up: name += 'UP'
-     ##      return [subPIDSels(decays,name,'',min,max,[protoD2hhhh])]
+     # Implementation using one instance of SubPID for all substitutions
+     def _makeD2hhhhold(self,up=False):
+          '''Makes D->hhhh'''
+          min,max = self._massWindow('D0')
+          decays = [
+               # 4pi
+               ['pi+','pi+','pi-','pi-'],
+               # K3pi
+               ['pi+','pi+','K-','pi-'],['pi+','pi+','pi-','K-'],
+               ['K+','pi+','pi-','pi-'],['pi+','K+','pi-','pi-'],
+               # 2K2pi
+               ['K+','K+','pi-','pi-'],['K+','pi+','K-','pi-'],
+               ['K+','pi+','pi-','K-'],['pi+','K+','K-','pi-'],
+               ['pi+','K+','pi-','K-'],['pi+','pi+','K-','K-'],
+               # 3Kpi
+               ['K+','K+','K-','pi-'],['K+','K+','pi-','K-'],
+               ['K+','pi+','K-','K-'],['pi+','K+','K-','K-'],
+               # 4K
+               ['K+','K+','K-','K-']
+               ]
+          inputs = [ self.pions ]
+          if up : inputs += [self.uppions]
+          wm = awmFunctor(decays,min,max)
+          protoD2hhhh = self._makeD2FourBody('D2HHHH',['D0 -> pi+ pi+ pi- pi-'],wm,
+                                      up,self.config,inputs)
+          name = 'D2HHHHold'
+          if up: name += 'UP'
+          return [subPIDSels(decays,name,'',min,max,[protoD2hhhh])]
 
      ## # Implementation using one instance of SubPID per substitution
      ## def _makeD2hhhh(self,up=False):
