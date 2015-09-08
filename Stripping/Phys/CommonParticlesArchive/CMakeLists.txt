@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CommonParticlesArchive
 ################################################################################
-gaudi_subdir(CommonParticlesArchive v1r5)
+gaudi_subdir(CommonParticlesArchive v1r6)
 
 gaudi_depends_on_subdirs(GaudiPolicy)
 
