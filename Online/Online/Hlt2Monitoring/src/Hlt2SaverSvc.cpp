@@ -47,7 +47,8 @@ namespace {
    using std::array;
    using std::pair;
    using std::make_pair;
-
+   using std::map;
+   
    using Monitoring::Chunk;
    using Monitoring::Histogram;
    using Monitoring::entry_t;
@@ -213,7 +214,6 @@ void Hlt2SaverSvc::function()
          auto cl = TClass::GetClass(typeid(TH1D));
          std::unique_ptr<TH1D> histo{static_cast<TH1D*>(buffer.ReadObject(cl))};
          histo->SetDirectory(nullptr);
-         histo->SetTitle(type.c_str());
 
          debug() << "Received ROOT histogram " << key.first << " " << key.second
                  << " " << dir << " " << histo->GetName() << endmsg;
@@ -286,14 +286,14 @@ void Hlt2SaverSvc::saveHistograms() const
    std::set<Monitoring::RunNumber> skip;
    for (auto run : runs) {
       auto info = runInfo(run);
-
-
       if (info) {
          bool exists{false};
          fs::path file;
          std::tie(file, exists) = filename(run, false);
          if (exists) {
+            size_t n = m_histos.size();
             Monitoring::loadSavedHistograms(m_histos, file, run, "_Rate");
+            debug() << "Loaded " << m_histos.size() - n << " saved histograms." << endmsg;
          }
       } else {
          warning() << "No run info for run " << run << " not saving its histograms."
@@ -312,6 +312,21 @@ void Hlt2SaverSvc::saveHistograms() const
       }
    }
 
+   // Fill map of histogram types to store in histogram directories
+   map<pair<Monitoring::RunNumber, string>, map<string, string>> typeMaps;
+   for (const auto run : runs) {
+      for (const auto& entry : boost::make_iterator_range(m_histos.get<byRun>().equal_range(run))) {
+         auto histo = entry.histo.get();
+         auto dir = entry.dir;
+         auto key = make_pair(run, dir);
+         auto it = typeMaps.find(key);
+         if (it == end(typeMaps)) {
+            it = typeMaps.insert(make_pair(key, map<string, string>{})).first;
+         }
+         it->second.insert(make_pair(string{histo->GetName()}, entry.type));
+      }
+   }
+   
    // Write ROOT histograms to file
    // Loop over runs
    for (const auto run : runs) {
@@ -350,6 +365,11 @@ void Hlt2SaverSvc::saveHistograms() const
          if (!outDir) {
             outFile.mkdir(dir.c_str());
             outDir = static_cast<TDirectoryFile*>(outFile.Get(dir.c_str()));
+            auto it = typeMaps.find(make_pair(run, dir));
+            if (it != end(typeMaps)) {
+               auto cl = TClass::GetClass(typeid(it->second));
+               outDir->WriteObjectAny(&(it->second), cl, "TypeMap");
+            }
          }
          if (!outDir) {
             warning() << "Could not create directory in SaveSet file "
@@ -373,6 +393,9 @@ void Hlt2SaverSvc::saveHistograms() const
          outDir->WriteTObject(histo, histo->GetName());
          debug() << "Saved " << entry.dir << "/" << histo->GetName() << endmsg;
 
+         // Write map of histogram 
+         
+         
          // Reset all histograms that are not the normalization histogram
          if (histo != norm) {
             histo->Reset("ICESM");

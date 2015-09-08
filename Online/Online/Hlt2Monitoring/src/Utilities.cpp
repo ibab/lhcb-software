@@ -1,10 +1,14 @@
 // Include files
+#include <iostream>
+#include <string>
+#include <map>
 
 // boost
 #include <boost/range/iterator_range.hpp>
 
 // ROOT
 #include <TDirectory.h>
+#include <TClass.h>
 #include <TFile.h>
 #include <TKey.h>
 
@@ -13,7 +17,10 @@
 
 namespace {
    using std::string;
-
+   using std::map;
+   using std::cout;
+   using std::endl;
+   
    namespace fs = boost::filesystem;
 }
 
@@ -24,7 +31,16 @@ void Monitoring::loadSavedHistograms(histos_t& histos, fs::path file,
    std::function<void(TDirectory* dir, std::string path)> load
       = [skip, run, &load, &histos](TDirectory* dir, std::string path)->void {
       auto sl = skip.length();
-      
+
+      // The type of histogram, RATE, HISTO1D, etc. is saved in a map named TypeMap
+      std::unique_ptr<map<string, string>> typeMap;
+      auto mapKey = dir->FindKey("TypeMap");
+      if (mapKey) {
+         auto cl = TClass::GetClass(typeid(map<string, string>));
+         auto tmp = static_cast<map<string, string>*>(mapKey->ReadObjectAny(cl));
+         typeMap.reset(tmp);
+      }
+
       // Loop over keys in directory
       auto keys = dir->GetListOfKeys();
       TIter it{keys->MakeIterator()};
@@ -51,9 +67,15 @@ void Monitoring::loadSavedHistograms(histos_t& histos, fs::path file,
                   return entry.run == run;
                });
             if (it == end(range)) {
-               // The type (rate or regular histo) comes from the title... ugly,
-               // but least problematic alternative...
-               std::string histoType = savedHisto->GetTitle();
+               // The type of the histogram comes from the type map
+               string histoType = Monitoring::s_Unknown;
+               if (typeMap.get()) {
+                  auto typeIt = typeMap->find(savedHisto->GetName());
+                  if (typeIt != typeMap->end()) {
+                     histoType = typeIt->second;
+                  }
+               }
+               // Insert the loaded histogram.
                histos.insert({run, histoType, path, savedHisto.release()});
             } else {
                it->histo->Add(savedHisto.get());
