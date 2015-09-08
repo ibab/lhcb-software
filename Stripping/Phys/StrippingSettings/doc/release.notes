@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-08 - Nicola Skidmore
+ - Add lines to B2OC LineConfig
+
+
 ! 2015-09-07 - Ricardo Vazquez Gomez
  - RD: fix typo in LineConfig
 
