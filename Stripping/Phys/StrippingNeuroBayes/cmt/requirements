@@ -3,7 +3,7 @@
 # Maintainer : Ulrich Kerzel
 #============================================================================
 package           StrippingNeuroBayes
-version           v1r9
+version           v1r10
 
 #============================================================================
 # Structure, i.e. directories to process. 
