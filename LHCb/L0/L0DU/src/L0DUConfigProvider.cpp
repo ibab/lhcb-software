@@ -535,7 +535,7 @@ StatusCode L0DUConfigProvider::createConditions(){
       error() << "The CONDITION defined via option (num = " << iconfig-m_conditions.begin() 
               << ") should have an unique name (found " << values.size() << ")" << endmsg;
       info() << "The syntax is ToolSvc.L0DUConfig.TCK_0xXXXX.Conditions +={ {''name=[ConditionName]'', "
-             <<" ''data=[dataName]'', ''comparator=[>/</=/!=]'', ''threshold=[value]''} };" << endmsg;
+             <<" ''data=[dataName]'', ''comparator=[>/</==/!=]'', ''threshold=[value]''} };" << endmsg;
 
       return StatusCode::FAILURE;  
     }

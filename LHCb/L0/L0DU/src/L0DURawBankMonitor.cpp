@@ -572,7 +572,7 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
     bool dec = false;
     for(LHCb::L0DUChannel::Map::const_iterator it = channels.begin();it!=channels.end();it++){
       LHCb::L0DUChannel* channel = (*it).second;
-      if( channel->decisionType() != idec )continue;
+      if( (channel->decisionType() & idec ) == 0 )continue;
       if( report.channelPreDecision( channel->id() ) )dec=true;
     }
     if(  dec != config->emulatedPreDecision(idec) ){
