@@ -5,6 +5,9 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2015-09-08 - Andrea Contu
+ - PVReFitter: Change defaults in DeltaChi2 and DeltaDist
+
 ! 2015-08-27 - Vanya Belyaev
  - replace boost::array with std::array 
 

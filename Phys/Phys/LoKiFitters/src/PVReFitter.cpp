@@ -344,8 +344,8 @@ LoKi::PVReFitter::PVReFitter
   , m_maxIter               ( 16    ) 
   , m_iterChi2              ( 4     ) 
   , m_iterDist              ( 3     )
-  , m_delta_chi2            ( 0.001 )
-  , m_delta_dist            ( 1 * Gaudi::Units::um ) 
+  , m_delta_chi2            ( 0.01 )
+  , m_delta_dist            ( 5 * Gaudi::Units::um ) 
   , m_minTracksInPV         ( 4     )
   , m_minTS                 ( "4"   )
     //
