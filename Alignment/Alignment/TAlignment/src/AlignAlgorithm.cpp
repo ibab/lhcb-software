@@ -86,6 +86,8 @@ class HistoUpdater
       FILE *f = fopen(m_RefFileName.c_str(),"r");
       fscanf(f,"%lu",&m_Reference);
       fclose(f);
+      printf("[INFO]==================> Read Reference %ld from file %s\n",m_Reference,m_RefFileName.c_str());
+      fflush(::stdout);
       return m_Reference;
     }
     unsigned long getReference()
@@ -178,7 +180,7 @@ StatusCode AlignAlgorithm::initialize() {
   /// Get tool to align detector
   m_align = tool<IGetElementsToBeAligned>("GetElementsToBeAligned");
   if (!m_align) return Error("==> Failed to retrieve detector selector tool!", StatusCode::FAILURE);
- 
+
   sc = m_trackresidualtool.retrieve() ;
   if ( sc.isFailure() ) return sc;
 
@@ -209,7 +211,7 @@ StatusCode AlignAlgorithm::initialize() {
   }
   if (m_HistoUpdater->m_RefFileName.empty()) {
     m_HistoUpdater->m_RefFileName =
-        "/group/online/dataflow/options/"+m_HistoUpdater->m_PartitionName+"/Alignement_Reference_File.txt";
+        "/group/online/dataflow/options/"+m_HistoUpdater->m_PartitionName+"/Alignment_Reference_File.txt";
   }
 
   /// create the summary data and register in the TES
@@ -319,7 +321,7 @@ StatusCode AlignAlgorithm::execute() {
   }
 
   if( m_equations->initTime() == 0 ) {
-    if( m_forcedInitTime ) 
+    if( m_forcedInitTime )
       m_align->initAlignmentFrame( m_forcedInitTime ) ;
     else
       m_align->initAlignmentFrame(eventtime) ;
