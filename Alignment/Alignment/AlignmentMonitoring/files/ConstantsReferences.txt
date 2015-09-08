@@ -23,7 +23,7 @@ IT/Station.*Box\.R(x|y)	0.00001	0.001
 IT/Station.*Box\.Rz	0.002	0.01
 IT/Station.*Box\.Tx	0.08	0.2
 IT/Station.*Box\.Ty	0.002	0.01
-IT/Station.*Box\.Tz	0.5	1.0
+IT/Station.*Box\.Tz	0.150	0.5
 
 # IT Modules
 ITT.*Layer.*Ladder.*	0.00001	0.001

@@ -3,7 +3,10 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
-! 2015-08-28
+! 2015-09-08 - Maurizio Martinelli
+ - Modified IT boxes Tz thresholds
+
+! 2015-08-28 - Zhirui Xu
  - modified function CheckITOverlaps in src/AlignmentMonitoring.cpp
      + updated the fit models
      + added the code to plot a map of warnings
