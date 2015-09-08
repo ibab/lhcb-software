@@ -209,7 +209,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
                                   RelatedInfoTools=[self.get_cone_relinfo(sels_line, 1.7, 1),
                                                     self.get_cone_relinfo(sels_line, 1.35, 1),
                                                     self.get_cone_relinfo(sels_line, 1.0, 1),
-                                                    self.get_vtxisol_relinfo(lambda_b),
+                                                    self.get_vtxisol_relinfo(sels_line),
                                                    ],
                                   RequiredRawEvents=['Calo'],
                                   MDSTFlag = True,
@@ -227,7 +227,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
                                       RelatedInfoTools=[self.get_cone_relinfo(sels_line_cnv, 1.7, 1),
                                                         self.get_cone_relinfo(sels_line_cnv, 1.35, 1),
                                                         self.get_cone_relinfo(sels_line_cnv, 1.0, 1),
-                                                        self.get_vtxisol_relinfo(lambda_b_cnv),
+                                                        self.get_vtxisol_relinfo(sels_line),
                                                        ],
                                       RequiredRawEvents=['Calo'],
                                       MDSTFlag = True,
@@ -250,13 +250,16 @@ class StrippingLb2L0GammaConf(LineBuilder):
                 }
 
     @staticmethod
-    def get_vtxisol_relinfo(selection, recursion=0):
+    def get_vtxisol_relinfo(selections, recursion=0):
+        locations = {}
+        for selection, selection_prefix in selections.items():
+            locations[selection] = 'VertexIsoInfo/%s' % selection_prefix
         return { 'Type'           : 'RelInfoVertexIsolation',
                  'Variables'      : [ 'VTXISONUMVTX',
                                       'VTXISODCHI2ONETRACK', 'VTXISODCHI2MASSONETRACK',
                                       'VTXISODCHI2TWOTRACK', 'VTXISODCHI2MASSTWOTRACK' ],
                  'RecursionLevel' : recursion,
-                 'Locations'      : {selection: 'VertexIsoInfo'},
+                 'Locations'      : locations,
                 }
 
 # EOF

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-09 - Albert Puig
+ - Fix addition of isolation variables to vertexless particle
+
 ! 2015-09-07 - Andrea Contu
  - Remove OfflineVertexFitter from LFV lines (RD)
 
