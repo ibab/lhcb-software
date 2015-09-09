@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v4r7 2015-09-09 ===============
+
 ! 2015-09-09 - Andrea Contu
  - Remove ADOCACHI2 cuts involving Pi0s from StrippingD2HHHPi0
 
