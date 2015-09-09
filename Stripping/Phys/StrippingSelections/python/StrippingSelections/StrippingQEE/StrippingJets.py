@@ -11,11 +11,13 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+from Configurables import CombineParticles
 from JetAccessories.JetMaker_Config import JetMakerConf
 from StandardParticles import StdJets, StdAllNoPIDsPions
 from Configurables import LoKi__VoidFilter, FilterInTrees
 from Configurables import TopologicalTagging
+from Configurables import LoKi__VertexFitter
+
 #
 # Define the default configuration.
 default_config = {
@@ -263,6 +265,7 @@ class JetsConf(LineBuilder):
                     + " & (VFASPF(VCHI2) < %s)"
                     % self._config["SVR"]["MAX_CHI2"])
         svrs = CombineParticles(
+            "2ndVertexJetsStrippingLine",
             DecayDescriptors = ["D0 -> pi- pi+", "D0 -> pi- pi-",
                                 "D0 -> pi+ pi+"],
             CombinationCut = cmb_cuts,
@@ -287,6 +290,7 @@ class JetsConf(LineBuilder):
             cmb_cuts += "& ((  (ACHILD(PINFO(9990,0),1)>"+str(cut1)+") &  (ACHILD(PINFO(9991,0),2)>"+str(cut3)+"))  |    ((ACHILD(PINFO(9990,0),2)>"+str(cut3)+") &  (ACHILD(PINFO(9991,0),1)>"+str(cut1)+"))) "
             label += "TPS"
         dijets = CombineParticles(
+            "DiJetCreatation" + str(PT) + str(LeadingPT) + str(cut1) + str(cut2) + str(cut3) + str(cut4),
             ParticleCombiners = {"" : "LoKi::VertexFitter"},
             DecayDescriptor = "H_10 -> CELLjet CELLjet",
             DaughtersCuts = {"CELLjet" : "(PT > "+str(PT)+")"},
@@ -294,7 +298,9 @@ class JetsConf(LineBuilder):
             Preambulo = pre,
             CombinationCut = cmb_cuts,
             MotherCut = "INTREE((ABSID=='CELLjet')&(PT>"+str(LeadingPT)+"))")
-
+        dijets.addTool( LoKi__VertexFitter, name="LoKi::VertexFitter" )
+        vfitter = getattr ( dijets , "LoKi::VertexFitter" )
+        vfitter.Jets = ""
 
         return Selection(self._name + label + "PT" +str(PT).split('*')[0]+"LePT"+ str(LeadingPT).split('*')[0]+ "Selection",
                                          Algorithm = dijets,
@@ -304,11 +310,16 @@ class JetsConf(LineBuilder):
 
         cmb_cuts = "(abs(ACHILD(BPV(VZ),1)-ACHILD(BPV(VZ),2))<1*mm) & (abs(ACHILD(BPV(VZ),1)-ACHILD(BPV(VZ),3))<1*mm)"
         _3jets = CombineParticles(
+            "3JetCreatation" + str(minPT) + str(LeadingPT) + str(Nsvtag),
             ParticleCombiners = {"" : "LoKi::VertexFitter"},
             DecayDescriptor = "H_10 -> CELLjet CELLjet CELLjet",
             CombinationCut = cmb_cuts,
             DaughtersCuts = {"CELLjet" : "(PT > "+str(minPT)+")"},
             MotherCut = "((INTREE((ABSID=='CELLjet')&(PT>"+str(LeadingPT)+")))&(INTREE((ABSID=='CELLjet')&(PINFO(9990,0)>0)))&("+str(Nsvtag)+" < NINTREE((ABSID=='CELLjet')&(PINFO(9991,0) > 5 ))))")
+        _3jets.addTool( LoKi__VertexFitter, name="LoKi::VertexFitter" )
+        vfitter = getattr ( _3jets , "LoKi::VertexFitter" )
+        vfitter.Jets = ""
+
 
         return Selection(self._name + "3jets_PTmin" +str(minPT).split('*')[0]+"LeadPT"+ str(LeadingPT).split('*')[0]+ "Nsv" + str(Nsvtag) +"Selection", Algorithm = _3jets, RequiredSelections = inputs)
 
@@ -316,11 +327,16 @@ class JetsConf(LineBuilder):
 
         cmb_cuts = "(abs(ACHILD(BPV(VZ),1)-ACHILD(BPV(VZ),2))<1*mm) & (abs(ACHILD(BPV(VZ),1)-ACHILD(BPV(VZ),3))<1*mm) & (abs(ACHILD(BPV(VZ),1)-ACHILD(BPV(VZ),4))<1*mm)"
         _4jets = CombineParticles(
+            "4JetCreatation" + str(minPT) + str(LeadingPT) + str(Nsvtag),
             ParticleCombiners = {"" : "LoKi::VertexFitter"},
             DecayDescriptor = "H_10 -> CELLjet CELLjet CELLjet CELLjet",
             CombinationCut = cmb_cuts,
             DaughtersCuts = {"CELLjet" : "(PT > "+str(minPT)+")"},
             MotherCut = "((INTREE((ABSID=='CELLjet')&(PT>"+str(LeadingPT)+")))&(INTREE((ABSID=='CELLjet')&(PINFO(9990,0)>0)))&("+str(Nsvtag)+" < NINTREE((ABSID=='CELLjet')&(PINFO(9991,0) > 5 ))))")
+        _4jets.addTool( LoKi__VertexFitter, name="LoKi::VertexFitter" )
+        vfitter = getattr ( _4jets , "LoKi::VertexFitter" )
+        vfitter.Jets = ""
+
 
         return Selection(self._name + "4jets_PTmin" +str(minPT).split('*')[0]+"LeadPT"+ str(LeadingPT).split('*')[0]+ "Nsv" + str(Nsvtag) +"Selection", Algorithm = _4jets, RequiredSelections = inputs)
 

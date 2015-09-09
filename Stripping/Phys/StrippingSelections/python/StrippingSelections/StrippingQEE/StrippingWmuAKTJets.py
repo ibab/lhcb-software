@@ -3,7 +3,7 @@
 #
 
 from Gaudi.Configuration import *
-from Configurables       import FilterDesktop, CombineParticles
+from Configurables       import FilterDesktop, CombineParticles, LoKi__VertexFitter
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -47,7 +47,7 @@ class WmuAKTJetsConf( LineBuilder ) :
 
         self._myname = name
         self._config = config
-        
+
         self.sel_Wmu    = self.makeW( self._myname + 'Wmu')
         self.sel_DiJet  = self.makeDiJet (self._myname + 'DiJet')
 
@@ -66,7 +66,7 @@ class WmuAKTJetsConf( LineBuilder ) :
     def makeW( self, _name):
         # Define the W->mu cuts
         _code     = '(PT>%(min_mu_pT)s*GeV) & (PT<%(max_mu_pT)s*GeV)' %self._config
-        
+
         _filter = FilterDesktop( _name,
                                  Code      = _code
                                  )
@@ -81,50 +81,53 @@ class WmuAKTJetsConf( LineBuilder ) :
 
         DiJet = CombineParticles("Combine"+_name)
         DiJet.DecayDescriptor = "[H+ -> CELLjet CELLjet mu+]cc"
-        DiJet.ParticleCombiners = { '' : 'LoKi::VertexFitter:PUBLIC' }
-        
+        DiJet.ParticleCombiners = {"" : "LoKi::VertexFitter"}
+        DiJet.addTool( LoKi__VertexFitter, name="LoKi::VertexFitter" )
+        vfitter = getattr ( DiJet , "LoKi::VertexFitter" )
+        vfitter.Jets = ""
+
         DiJet.DaughtersCuts = { "CELLjet" :" (PT > %(min_jet_pT)s * GeV ) " %self._config }
 
 
         DiJet.Preambulo  = ["from GaudiKernel.SystemOfUnits import degree",
-                            
+
                             "eta_1 = ACHILDFUN(1,ETA)" ,
                             "eta_2 = ACHILDFUN(2,ETA)" ,
                             "eta_3 = ACHILDFUN(3,ETA)" ,
-                            
+
                             "phi_1 = ACHILDFUN(1,PHI)" ,
                             "phi_2 = ACHILDFUN(2,PHI)" ,
                             "phi_3 = ACHILDFUN(3,PHI)" ,
-                            
+
                             ##
                             "deta_13 = eta_1 - eta_3" ,
                             "deta_23 = eta_2 - eta_3" ,
-                            
+
                             ##
                             "dphi_13 = phi_1 - phi_3 " ,
                             "dphi_23 = phi_2 - phi_3" ,
- 
+
                             ##
                             "dphi_13 = switch ( dphi_13 >  180 * degree ,  dphi_13 - 180 * degree , dphi_13 ) ",
                             "dphi_13 = switch ( dphi_13 < -180 * degree ,  dphi_13 + 180 * degree , dphi_13 ) ",
                             "dphi_23 = switch ( dphi_23 >  180 * degree ,  dphi_23 - 180 * degree , dphi_23 ) ",
                             "dphi_23 = switch ( dphi_23 < -180 * degree ,  dphi_23 + 180 * degree , dphi_23 ) ",
- 
+
                             ##
                             "dr_13 = sqrt(deta_13**2 + dphi_13**2)" ,
                             "dr_23 = sqrt(deta_23**2 + dphi_23**2)" ,
 
                             ]
-        
+
         DiJet.CombinationCut = "AALLSAMEBPV "\
                                "& ( dr_13 > %(dr_lepton_jet)s )"\
                                "& ( dr_23 > %(dr_lepton_jet)s )" %self._config
-  
+
         DiJet.MotherCut = "ALL"
 
         requiredSelections = [self.sel_Wmu,StdJets]
-    
+
         return Selection ("Sel"+_name,
                           Algorithm = DiJet,
                           RequiredSelections = requiredSelections)
-    
+
