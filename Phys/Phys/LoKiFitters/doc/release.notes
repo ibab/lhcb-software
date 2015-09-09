@@ -6,6 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2015-09-09 - Vanya Belyaev
+ - distance calcualtor, 
+   fix a bug, induced by the previous fix :-)
+
+! 2015-09-09 - Vanya Belyaev
  - fix a bug with classification of merged pi0s 
    it improves  a bit the resolution for channels with merged pi0 
    (and reduce some warnings messages) 

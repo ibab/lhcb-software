@@ -902,8 +902,9 @@ StatusCode LoKi::DistanceCalculator::_distance
   LoKi::KalmanFilter::ParticleType type1 = particleType_ ( particle ) ;
   switch ( type1 ) 
   {
-  case LoKi::KalmanFilter::GammaLikeParticle   : ;
-  case LoKi::KalmanFilter::DiGammaLikeParticle :
+  case LoKi::KalmanFilter::GammaLikeParticle     : ;
+  case LoKi::KalmanFilter::DiGammaLikeParticle   : ;
+  case LoKi::KalmanFilter::MergedPi0LikeParticle :
     {
       impact =  Gaudi::XYZVector() ;
       if ( 0 != chi2 ) { *chi2 = 0 ; }
@@ -1023,8 +1024,9 @@ StatusCode LoKi::DistanceCalculator::_distance
   LoKi::KalmanFilter::ParticleType type1 = particleType_ ( particle ) ;
   switch ( type1 ) 
   {
-  case LoKi::KalmanFilter::GammaLikeParticle   : ;
-  case LoKi::KalmanFilter::DiGammaLikeParticle :
+  case LoKi::KalmanFilter::GammaLikeParticle     : ;
+  case LoKi::KalmanFilter::DiGammaLikeParticle   : ;
+  case LoKi::KalmanFilter::MergedPi0LikeParticle :
     {
       impact =  Gaudi::XYZVector() ;
       if ( 0 != chi2 ) { *chi2 = 0 ; }
@@ -1144,8 +1146,9 @@ StatusCode LoKi::DistanceCalculator::_distance
   LoKi::KalmanFilter::ParticleType type1 = particleType_ ( p1 ) ;
   switch ( type1 ) 
   {
-  case LoKi::KalmanFilter::GammaLikeParticle   : ;
-  case LoKi::KalmanFilter::DiGammaLikeParticle :
+  case LoKi::KalmanFilter::GammaLikeParticle     : ;
+  case LoKi::KalmanFilter::DiGammaLikeParticle   : ;
+  case LoKi::KalmanFilter::MergedPi0LikeParticle :
     {
       dist = 0 ;
       if ( 0 != chi2 ) { *chi2 = 0 ; }
@@ -1173,8 +1176,9 @@ StatusCode LoKi::DistanceCalculator::_distance
   LoKi::KalmanFilter::ParticleType type2 = particleType_ ( p2 ) ;
   switch ( type2 ) 
   {
-  case LoKi::KalmanFilter::GammaLikeParticle   : ;
-  case LoKi::KalmanFilter::DiGammaLikeParticle :
+  case LoKi::KalmanFilter::GammaLikeParticle     : ;
+  case LoKi::KalmanFilter::DiGammaLikeParticle   : ;
+  case LoKi::KalmanFilter::MergedPi0LikeParticle : ;
     {
       dist = 0 ;
       if ( 0 != chi2 ) { *chi2 = 0 ; }
