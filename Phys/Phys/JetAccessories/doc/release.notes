@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2015-09-09 - Cedric Potterat and Wouter
+ . adding cov matrix for PF Velo particles (avoiding error in VertexFitter)
+
 ! 2015-08-30 - Gerhard Raven
  - replace endreq with endmsg
 
