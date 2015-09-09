@@ -4,6 +4,8 @@ Package Coordinator : Sean Benson
 Purpose             : Turbo Stream Analysis
 !-----------------------------------------------------------------------------
 
+!========================== Tesla v1r12 2015-09-09 ===========================
+
 ! 2015-8-20 - Sean Benson
  - PrintDuplicates algorithm included
 
