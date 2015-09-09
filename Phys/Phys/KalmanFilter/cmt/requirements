@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@cern.ch
 # =============================================================================
 package            KalmanFilter 	
-version           v1r13
+version           v1r14
 
 # ================ structure ==================================================
 branches           cmt doc src KalmanFilter
