@@ -212,6 +212,8 @@ StatusCode HCClockScan::execute() {
       } else {
         warning() << "Unexpected crate number (" << crate << ")" << endmsg;
       }
+      // Skip reference channels.
+      if (quadrant > 3) continue;
       const unsigned int index = station + offset;
       const double value = fadc(adc);
       m_adcs[i][index][quadrant]->fill(step, value);

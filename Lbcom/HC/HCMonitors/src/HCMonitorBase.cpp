@@ -112,13 +112,15 @@ void HCMonitorBase::scale(AIDA::IHistogram1D* h) {
 void HCMonitorBase::mapChannels(const std::vector<unsigned int>& channels,
                                  const bool bwd, const unsigned int station) {
 
-  if (channels.size() != 4) {
+  const unsigned int nChannels = channels.size();
+  if (nChannels != 4 && nChannels != 5) {
     std::string s = bwd ? "B" : "F";
     s += std::to_string(station); 
     warning() << "Invalid channel map for station " << s << "." << endmsg;
     return;
   }
-  for (unsigned int i = 0; i < 4; ++i) {
+
+  for (unsigned int i = 0; i < nChannels; ++i) {
     const unsigned int channel = channels[i];
     if (bwd) {
       if (m_mappedB[channel]) {

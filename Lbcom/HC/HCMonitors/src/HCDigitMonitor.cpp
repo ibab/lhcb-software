@@ -235,6 +235,8 @@ StatusCode HCDigitMonitor::execute() {
     } else {
       warning() << "Unexpected crate number (" << crate << ")" << endmsg;
     }
+    // Skip reference channels.
+    if (quadrant > 3) continue;
     const unsigned int index = quadrant * nStations + station + offset;
     m_hAdcVsQuadrant[station + offset]->fill(quadrant, adc);
     m_hAdcQuadrant[index]->fill(adc);

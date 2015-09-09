@@ -6,6 +6,7 @@
 
 ! 2015-09-09 - Heinrich Schindler
  - Add algorithm to determine pedestal corrections.
+ - Allow for reference/spare channels in channel mapping.
 
 ! 2015-09-04 - Heinrich Schindler
  - Update channel mapping.
