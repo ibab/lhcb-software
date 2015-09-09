@@ -127,7 +127,7 @@ StatusCode HCPedestalCorrection::finalize() {
     for (unsigned int j = 0; j < 4; ++j) {
       const unsigned int index = j * nStations + i;
       auto profile = Gaudi::Utils::Aida2ROOT::aida2root(m_hProfile[index]);
-      profile->Fit("[0]+[1]* x");
+      profile->Fit("pol1");
     }
   }     
   return HCMonitorBase::finalize();
