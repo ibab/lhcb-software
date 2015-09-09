@@ -198,10 +198,10 @@ class D2HHHPi0Lines( LineBuilder ) :
                      "&( ACHI2DOCA(1,3) < %(maxDocaChi2)s ) " \
                      "&( ACHI2DOCA(2,3) < %(maxDocaChi2)s ) " %locals() )
         _combination_cuts =  (" (in_range( %(amMin)s, AM, %(amMax)s )) " \
-                              "&( (APT1+APT2+APT3+APT4) > %(minPT)s )" \
-                              "&( ACHI2DOCA(1,4) < %(maxDocaChi2)s ) " \
-                              "&( ACHI2DOCA(2,4) < %(maxDocaChi2)s ) " \
-                              "&( ACHI2DOCA(3,4) < %(maxDocaChi2)s ) " %locals() )
+                              "&( (APT1+APT2+APT3+APT4) > %(minPT)s )" %locals() )
+                              #"&( ACHI2DOCA(1,4) < %(maxDocaChi2)s ) " \ #removed in s23c since it has no effect on pi0 (ACHI2DOCA is always set to 0)
+                              #"&( ACHI2DOCA(2,4) < %(maxDocaChi2)s ) " \
+                              #"&( ACHI2DOCA(3,4) < %(maxDocaChi2)s ) " %locals() )
         _mother_cuts = (" (in_range( %(vmMin)s* MeV, M, %(vmMax)s )) " \
                         "&(VFASPF(VCHI2PDOF) < %(maxVChi)s)" \
                         "&(BPVDIRA > %(minbpvDira)s )" \

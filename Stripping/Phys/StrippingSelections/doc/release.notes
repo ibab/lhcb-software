@@ -4,8 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-09 - Andrea Contu
+ - Remove ADOCACHI2 cuts involving Pi0s from StrippingD2HHHPi0
+
 ! 2015-09-09 - Cedric Potterat
- . update jets (Jets and W*AKT) lines for NOT using the default jet treatment in VertexFitter
+ - update jets (Jets and W*AKT) lines for NOT using the default jet treatment in VertexFitter
 
 ! 2015-09-09 - Albert Puig
  - Fix addition of isolation variables to vertexless particle
