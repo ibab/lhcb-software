@@ -3,6 +3,60 @@ Package     : StrippingSys
 Package Coordinator : Andrea.Contu@cern.ch, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v9r11 2015-09-09 ===========================
+
+*Phys/StrippingSettings
+ - Update the dbase for S23c
+ - Add lines to B2OC LineConfig
+ - RD: fix typo in LineConfig
+ - RD: Fix Bs2MuMu stream assignations
+ - Fix the dictionaries for B2DDPhi in B2OC WG
+ - updated Charm s23c LineConfig: add D2hhh_FTcalib 
+ - Updated RD S23c LineConfig: Propagated tuning in RareStrange dictionary
+ - copy Charm dict s23 into s23c  
+ - Updated RD S23c LineConfig: Added rest of WG lines.
+ - Updated SL S23c LineConfig: removed TrackPCHI2 cut in StrippingB2XTauNu lines
+ - Updated B2OC S23c LineConfig: New lines
+ - Updated B2OC S23c LineConfig: New line and updated Bc2DD mass cut
+ - update Charm dict s23:  add dict of DstarPromptWithD02HHHH 
+ - Added dbase for s23c
+ - Add folder for Stripping23c
+
+*Phys/StrippingArchive
+ - Added S23c
+
+*Phys/StrippingSelections
+ - Remove ADOCACHI2 cuts involving Pi0s from StrippingD2HHHPi0
+ - update jets (Jets and W*AKT) lines for NOT using the default jet treatment in VertexFitter
+ - Fix addition of isolation variables to vertexless particle
+ - Remove OfflineVertexFitter from LFV lines (RD)
+ - Modified StrippingRareStrange configuration
+ - Added StrippingD2hhh_FTcalib.py in StrippingSelections/StrippingCharm for SSK calibrations 
+ - Added RelatedInfo for isolationg including neutrals to D2hhh_conf lines
+ - Added DstarPromptWithD02HHHH for hhmumu normalisation
+ - Updates to test scripts
+ - Modified some B2CC test scripts
+ - Changed global cuts on stripping test scripts
+ - Added an IPChi2 cut to the D candidates in B2DDphi stripping lines to reduce
+   background, retention and candidates multiplicity 
+ - Extend the mass window for the Bc2DD lines to 4.8 - 6.8 GeV, to cover the 
+   B+ control modes.
+
+*Phys/IsolationTools
+- clean up RelInfoTrackIsolationBDT.cpp
+
+*Phys/StrippingConf
+- Add stream to output location duplicates info, add exception for line duplicates in the same stream
+
+*Phys/StrippingNeuroBayes
+- use std::isfinite and std::isnan instead of GaudiKernel/CheckForNaN.h
+
+*Phys/DisplVertices
+- Update HltVertexConverter for Run 2 HltSelReports
+
+*Phys/CommonParticles
+- Fixed StdNoPIDsDownElectrons and added it into StandardElectrons
+
 !========================= StrippingSys v9r10p1 2015-08-26 =========================
 
 *Phys/StrippingSelections
