@@ -12,7 +12,7 @@ from RadiativeLineBuilder import RadiativeLineBuilder
 
 class B2GammaGammaLines(RadiativeLineBuilder):
     @staticmethod
-    def get_stages(_):
+    def get_stages(props):
         from Stages import TrackGEC
         from Stages import PhotonFilter
         from Stages import ConvPhotonLL, ConvPhotonDD, ConvPhotonAll
@@ -23,29 +23,28 @@ class B2GammaGammaLines(RadiativeLineBuilder):
         from Inputs import Hlt2Photons
         HardCALOGamma = PhotonFilter('HardCalo')
 
-        cuts=B2GammaGammaLines.get_cuts()
         # Build Bs -> gamma gamma (double conversion)
         bs2gammagammaDouble = B2GammaGammaCombiner('B2GammaGammaDouble',
                                                    'B_s0 -> gamma gamma',
                                                    [ConvPhotonAll()])
-        BDTFilter_Double = FilterBDTGammaGamma('Double', [bs2gammagammaDouble], cuts['B2GammaGammaDouble']["BDT_MIN"])
+        BDTFilter_Double = FilterBDTGammaGamma('Double', [bs2gammagammaDouble], props['B2GammaGammaDouble'])
 
         # Build Bs -> gamma gamma (single conversion)
         bs2gammagammaLL = B2GammaGammaCombiner('B2GammaGammaLL',
                                                'B_s0 -> gamma gamma',
                                                [HardCALOGamma, ConvPhotonLL()])
-        BDTFilter_LL = FilterBDTGammaGamma('LL', [bs2gammagammaLL], cuts['B2GammaGammaLL']["BDT_MIN"])
+        BDTFilter_LL = FilterBDTGammaGamma('LL', [bs2gammagammaLL], props['B2GammaGammaLL'])
 
         bs2gammagammaDD = B2GammaGammaCombiner('B2GammaGammaDD',
                                                'B_s0 -> gamma gamma',
                                                [HardCALOGamma, ConvPhotonDD()])
-        BDTFilter_DD = FilterBDTGammaGamma('DD', [bs2gammagammaDD], cuts['B2GammaGammaDD']["BDT_MIN"])
+        BDTFilter_DD = FilterBDTGammaGamma('DD', [bs2gammagammaDD], props['B2GammaGammaDD'])
 
         # Build Bs -> gamma gamma (all calo)
         bs2gammagamma = B2GammaGammaCombiner('B2GammaGamma',
                                              'B_s0 -> gamma gamma',
                                              [HardCALOGamma])
-        BDTFilter_None = FilterBDTGammaGamma('None', [bs2gammagamma], cuts['B2GammaGamma']["BDT_MIN"])
+        BDTFilter_None = FilterBDTGammaGamma('None', [bs2gammagamma], props['B2GammaGamma'])
 
         return {'RadiativeB2GammaGammaLL'     : [TrackGEC(), PV3D('Hlt2'), BDTFilter_LL],
                 'RadiativeB2GammaGammaDD'     : [TrackGEC(), PV3D('Hlt2'), BDTFilter_DD],
@@ -68,6 +67,7 @@ class B2GammaGammaLines(RadiativeLineBuilder):
                 'SUM_PT'    : 6000.0*MeV,
                 'B_PT'      : 3000.0*MeV,
                 'B_P'       : 5000.0*MeV,
+                'BDT_PARAMS': '$PARAMFILESROOT/data/Hlt2B2GammaGamma_None_v2.bbdt',
                 'BDT_MIN'   : 1.0
                 }
         cuts['B2GammaGammaLL'] = {
@@ -76,6 +76,7 @@ class B2GammaGammaLines(RadiativeLineBuilder):
                 'SUM_PT'    : 6000.0*MeV,
                 'B_PT'      : 2500.0*MeV,
                 'B_P'       : 4000.0*MeV,
+                'BDT_PARAMS': '$PARAMFILESROOT/data/Hlt2B2GammaGamma_LL_v2.bbdt',
                 'BDT_MIN'   : 1.0
                 }
         cuts['B2GammaGammaDD'] = {
@@ -84,6 +85,7 @@ class B2GammaGammaLines(RadiativeLineBuilder):
                 'SUM_PT'    : 4000.0*MeV,
                 'B_PT'      : 2500.0*MeV,
                 'B_P'       : 4000.0*MeV,
+                'BDT_PARAMS': '$PARAMFILESROOT/data/Hlt2B2GammaGamma_DD_v2.bbdt',
                 'BDT_MIN'   : 1.0
                 }
         cuts['B2GammaGammaDouble'] = {
@@ -93,15 +95,14 @@ class B2GammaGammaLines(RadiativeLineBuilder):
                 'B_PT'      : 1000.0*MeV,
                 'B_P'       : 5000.0*MeV,
                 'B_VTX'     : 25.0,
+                'BDT_PARAMS': '$PARAMFILESROOT/data/Hlt2B2GammaGamma_Double_v2.bbdt',
                 'BDT_MIN'   : 1.0,
                 }
         return cuts
 
     @staticmethod
     def get_hlt1():
-        return {'B2GammaGamma': "HLT_PASS_RE('Hlt1B2GammaGammaDecision')"}
+        return {'RadiativeB2GammaGamma': "HLT_PASS_RE('Hlt1B2GammaGammaDecision')"}
 
 # EOF
-
-
 

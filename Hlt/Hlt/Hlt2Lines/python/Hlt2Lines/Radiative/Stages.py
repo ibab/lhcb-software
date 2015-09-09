@@ -299,7 +299,7 @@ class FilterBDTGammaGamma(Hlt2ParticleFilter):
     """
     Filter for the BDT lines.
     """
-    def __init__(self, type, inputs, cut):
+    def __init__(self, type, inputs, props):
         varmap={}
         if type is "None":
             varmap  = self.prepGammaGammaMapNone(varmap)
@@ -314,10 +314,9 @@ class FilterBDTGammaGamma(Hlt2ParticleFilter):
             varmap  = self.prepGammaGammaMapConvDouble(varmap)
             nickname = "B2GammaGamma%s" % type
         #params  = '/afs/cern.ch/user/s/sbenson/cmtuser/MooreDev_HEAD/ParamFiles/data/Hlt2B2GammaGamma_%s_v2.bbdt' % type
-        params  = '$PARAMFILESROOT/data/Hlt2B2GammaGamma_%s_v2.bbdt' % type
-        bdttool = self.__classifier(params, varmap, "TrgBBDT", type=type)
+        bdttool = self.__classifier(props['BDT_PARAMS'], varmap, "TrgBBDT", type=type)
 
-        pc = ("(VALUE('%s/%s') > %s)" % (bdttool.Type.getType(), bdttool.Name, cut))
+        pc = ("(VALUE('%s/%s') > %s)" % (bdttool.Type.getType(), bdttool.Name, props['BDT_MIN']))
         from HltTracking.HltPVs import PV3D
         super(FilterBDTGammaGamma, self).__init__('BDT',
                                                   pc,
@@ -401,7 +400,7 @@ class FilterBDTGammaGamma(Hlt2ParticleFilter):
         varmap["ISPHOTON"] = isPhoton
         varmap["E1"] = E1
         return varmap
-    
+
     def prepGammaGammaMapConvDouble(self, varmap):
         """
         Format the variable map for the BBDecTreeTool.

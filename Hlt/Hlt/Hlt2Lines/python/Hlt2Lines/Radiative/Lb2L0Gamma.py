@@ -61,6 +61,6 @@ class Lb2L0GammaLines(RadiativeLineBuilder):
 
     @staticmethod
     def get_l0():
-        return {'Lb2L0GammaLL': "(L0_CHANNEL('Electron') | L0_CHANNEL('Photon'))"}
+        return {'RadiativeLb2L0GammaLL': "(L0_CHANNEL('Electron') | L0_CHANNEL('Photon'))"}
 
 # EOF

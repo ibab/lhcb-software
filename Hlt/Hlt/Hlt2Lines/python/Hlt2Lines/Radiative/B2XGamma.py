@@ -118,15 +118,15 @@ class B2XGammaLines(RadiativeLineBuilder):
     @staticmethod
     def get_hlt1():
         hlt1 = {}
-        for line in ['Bd2KstGamma', 'Bs2PhiGamma', 'Bd2KstGammaULUnbiased']:
+        for line in ['RadiativeBd2KstGamma', 'RadiativeBs2PhiGamma', 'RadiativeBd2KstGammaULUnbiased']:
             hlt1[line] = "HLT_PASS_RE('Hlt1(Two)?TrackMVADecision')"
-        hlt1['Bs2PhiGammaUnbiased'] = "HLT_PASS_RE('Hlt1B2PhiGamma_LTUNBDecision')"
+        hlt1['RadiativeBs2PhiGammaUnbiased'] = "HLT_PASS_RE('Hlt1B2PhiGamma_LTUNBDecision')"
         return hlt1
 
     @staticmethod
     def get_l0():
         l0 = {}
-        for line in ['Bd2KstGamma', 'Bs2PhiGamma', 'Bs2PhiGammaUnbiased', 'Bd2KstGammaULUnbiased']:
+        for line in ['RadiativeBd2KstGamma', 'RadiativeBs2PhiGamma', 'RadiativeBs2PhiGammaUnbiased', 'Bd2KstGammaULUnbiased']:
             l0[line] = "L0_CHANNEL('Electron') | L0_CHANNEL('Photon')"
         return l0
 

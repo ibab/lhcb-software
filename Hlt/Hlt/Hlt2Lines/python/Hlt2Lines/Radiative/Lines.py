@@ -68,7 +68,7 @@ class RadiativeLines(Hlt2LinesConfigurableUser):
         self._stages = {}
         for line_conf in lines_to_run:
             self._stages.update(line_conf.get_stages(self.getProps()))
-        
+
         if nickname:
             return self._stages[nickname]
         else:
