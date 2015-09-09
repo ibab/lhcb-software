@@ -5,6 +5,11 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+! 2015-09-09 - Roel Aaij
+ - Add counters for all the L0 channels, to be used to create rate plots in the
+   presenter.
+ - Replace logic based on specific decision IDs.
+
 !========================= HltGlobalMonitor v5r1 2015-09-01 =========================
 
 ! 2015-08-28 - Roel Aaij

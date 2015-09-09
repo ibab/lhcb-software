@@ -1,6 +1,8 @@
 #ifndef HLTL0GLOBALMONITOR_H
 #define HLTL0GLOBALMONITOR_H 1
 
+#include <unordered_map>
+
 #include "Event/L0DUReport.h"
 #include "Event/ODIN.h"
 
@@ -50,6 +52,8 @@ private:
   AIDA::IHistogram1D* m_histL0Enabled;
   AIDA::IHistogram1D* m_histL0Disabled;
   AIDA::IHistogram1D* m_histL0EnabledHLT;
+
+  std::unordered_map<unsigned int, StatEntity*> m_l0Counters;
 
   int m_events;
   int m_nboflabels;

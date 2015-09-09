@@ -32,6 +32,7 @@
 // Event
 // ============================================================================
 #include "Event/HltDecReports.h"
+#include "Event/L0DUDecision.h"
 // ============================================================================
 // Memory Usage
 // ============================================================================
@@ -134,9 +135,12 @@ void HltL0GlobalMonitor::monitorL0DU( const LHCb::L0DUReport* l0du )
     // define the bin labels
     unsigned int L0TCK = l0du->tck();
     if ( L0TCK != m_lastL0TCK ) {
+        m_l0Counters.clear();
         std::vector<std::pair<unsigned, string>> labels;
         for ( const auto& i : channels ) {
-            labels.emplace_back( i.second->id(), i.first );
+            auto id = i.second->id();
+            labels.emplace_back( id, i.first );
+            m_l0Counters[id] = &(counter(string{"L0:"} + i.first));
         }
         labels.emplace_back( m_nboflabels, "B1gas * ODIN BE" );
         labels.emplace_back( m_nboflabels, "B2gas * ODIN EB" );
@@ -174,7 +178,7 @@ void HltL0GlobalMonitor::monitorL0DU( const LHCb::L0DUReport* l0du )
     bool l0Physics = false;
     // fill the histogram containing the l0 channels
     for ( const auto& i : channels ) {
-        int id = i.second->id();
+        auto id = i.second->id();
         bool l0chan = l0du->channelDecision( id );
 
         fill( m_L0Input, id, l0chan );
@@ -182,18 +186,21 @@ void HltL0GlobalMonitor::monitorL0DU( const LHCb::L0DUReport* l0du )
         if ( i.second->decisionType() != LHCb::L0DUDecision::Disable ) {
             fill( m_histL0Enabled, id, l0chan );
             fill( m_histL0EnabledHLT, id, l0chan && hlt );
+            if (l0chan) {
+               m_l0Counters[id]->addFlag(1);
+            }
         } else {
             fill( m_histL0Disabled, id, l0chan );
         }
 
-        if ( id == 21 && odin->bunchCrossingType() == LHCb::ODIN::Beam1 ) {
+        if ( i.second->enable(LHCb::L0DUDecision::Beam1) && odin->bunchCrossingType() == LHCb::ODIN::Beam1 ) {
             fill( m_L0Input, m_nboflabels - 3, l0chan );
             fill( m_histL0Enabled, m_nboflabels - 3, l0chan );
             fill( m_histL0EnabledHLT, m_nboflabels - 3, l0chan && hlt );
             if ( l0chan ) odinBGas = true;
         }
 
-        if ( id == 22 && odin->bunchCrossingType() == LHCb::ODIN::Beam2 ) {
+        if ( i.second->enable(LHCb::L0DUDecision::Beam2) && odin->bunchCrossingType() == LHCb::ODIN::Beam2 ) {
             fill( m_L0Input, m_nboflabels - 2, l0chan );
             fill( m_histL0Enabled, m_nboflabels - 2, l0chan );
             fill( m_histL0EnabledHLT, m_nboflabels - 2, l0chan && hlt );
@@ -202,8 +209,7 @@ void HltL0GlobalMonitor::monitorL0DU( const LHCb::L0DUReport* l0du )
 
         // get the global L0 physics decision
         // enabled, non-beam gas channel which fired..
-        if ( i.second->decisionType() != LHCb::L0DUDecision::Disable && id < 20 &&
-             l0chan )
+        if ( i.second->enable(LHCb::L0DUDecision::Physics) && l0chan )
             l0Physics = true;
     }
     // fill the global L0 decision
