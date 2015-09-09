@@ -1,12 +1,11 @@
 // ROOT
-#include "TH1.h"
+#include "TProfile.h"
 
 // Gaudi
 #include "GaudiUtils/HistoLabels.h"
+#include "GaudiUtils/Aida2ROOT.h"
 
 // LHCb
-// Event/DAQEvent
-#include "Event/ODIN.h"
 // Event/DigiEvent
 #include "Event/HCDigit.h"
 
@@ -55,12 +54,17 @@ StatusCode HCPedestalCorrection::initialize() {
       const std::string name = "Correlation/" + stations[j] + "/" + qu;
       if (m_variableBins) {
         m_hCorrelation.push_back(book2D(name, qu, m_edges, m_edges));
+        m_hProfile.push_back(bookProfile1D(name, qu, m_edges));
       } else {
         m_hCorrelation.push_back(book2D(name, qu, low, high, bins, 
                                         low, high, bins));
+        m_hProfile.push_back(bookProfile1D(name, qu, low, high, bins));
       }
       const unsigned int index = i * nStations + j;
-      setAxisLabels(m_hCorrelation[index], "ADC Spare", "ADC " + qu);
+      setAxisLabels(m_hCorrelation[index], "ADC Spare", 
+                    "ADC Quadrant " + std::to_string(i));
+      setAxisLabels(m_hProfile[index], "ADC Spare", 
+                    "ADC Quadrant " + std::to_string(i));
     }
   }
   return StatusCode::SUCCESS;
@@ -70,13 +74,6 @@ StatusCode HCPedestalCorrection::initialize() {
 // Main execution
 //=============================================================================
 StatusCode HCPedestalCorrection::execute() {
-
-  // Get event information from ODIN.
-  m_odin->getTime();
-  const LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default);
-  if (!odin) {
-    return Error("Cannot retrieve ODIN", StatusCode::SUCCESS);
-  }
 
   // Grab the digits.
   const LHCb::HCDigits* digits = getIfExists<LHCb::HCDigits>(m_digitLocation);
@@ -114,6 +111,7 @@ StatusCode HCPedestalCorrection::execute() {
     for (unsigned int j = 0; j < 4; ++j) {
       const unsigned int index = j * nStations + i;
       m_hCorrelation[index]->fill(adcs[i][4], adcs[i][j]);
+      m_hProfile[index]->fill(adcs[i][4], adcs[i][j]);
     }
   }
   return StatusCode::SUCCESS;
@@ -124,7 +122,14 @@ StatusCode HCPedestalCorrection::execute() {
 //=============================================================================
 StatusCode HCPedestalCorrection::finalize() {
 
-  if (!m_variableBins) return HCMonitorBase::finalize();
+  const unsigned int nStations = 5;
+  for (unsigned int i = 0; i < nStations; ++i) {
+    for (unsigned int j = 0; j < 4; ++j) {
+      const unsigned int index = j * nStations + i;
+      auto profile = Gaudi::Utils::Aida2ROOT::aida2root(m_hProfile[index]);
+      profile->Fit("[0]+[1]* x");
+    }
+  }     
   return HCMonitorBase::finalize();
 }
 

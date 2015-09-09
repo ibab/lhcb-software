@@ -1,6 +1,3 @@
-// ROOT
-#include "TH1.h"
-
 // Gaudi
 #include "GaudiUtils/HistoLabels.h"
 

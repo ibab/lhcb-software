@@ -32,7 +32,8 @@ class HCPedestalCorrection : public HCMonitorBase {
 
   /// Correlation histograms for each quadrant.
   std::vector<AIDA::IHistogram2D*> m_hCorrelation;
-
+  /// Profile histograms for each quadrant.
+  std::vector<AIDA::IProfile1D*> m_hProfile;
 };
 
 #endif
