@@ -4,7 +4,7 @@
 # Maintainer : Victor COCO victor.coco@cern.ch
 # =============================================================================
 package           JetAccessories
-version           v3r13
+version           v3r14
 
 # =============== structure ===================================================
 branches          cmt doc python src Kernel

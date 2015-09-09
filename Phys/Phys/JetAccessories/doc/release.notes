@@ -3,6 +3,7 @@
 ! Responsible : Victor Coco victor.coco@cern.ch, Cedric Potterat cedric.potterat@cern.ch
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
+!====================== JetAccessories v3r14 2015-09-09 =======================
 
 ! 2015-09-09 - Cedric Potterat and Wouter
  . adding cov matrix for PF Velo particles (avoiding error in VertexFitter)
