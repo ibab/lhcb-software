@@ -5,6 +5,9 @@
 ! Created     : 2015-02-04
 ! -----------------------------------------------------------------------------
 
+! 2015-09-09 - Andrea Contu
+ - Added options for Stripping23c
+
 ! 2015-08-26 - Chris Jones
  - Update the CMake builds to make each cache independent, so does not skip
    factors alrady cached. Increases a bit the overall size of the cached functor
