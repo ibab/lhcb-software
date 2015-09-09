@@ -28,7 +28,8 @@ _known_strippings = [
   "Stripping20r3",
   "Stripping21",
   "Stripping22",
-  "Stripping23"
+  "Stripping23",
+  "Stripping23c"
 ]
 
 #give a dictionary of strippings which use the same line builders
@@ -73,7 +74,8 @@ _stripping_help={"Stripping13"  : "2011 data taking, processing during the first
                  "Stripping21" : "Legacy 2012 dataset, Reco14 + new Calo calibration",
                  "Stripping21r1" : "Legacy 2011 dataset, Reco14 + new Calo calibration",
                  "Stripping22" : "Stripping of 13TeV data from 2015 for the Early Measurements campaign.",
-                 "Stripping23" : "Stripping of 13TeV data from 2015 for 25ns run.", 
+                 "Stripping23" : "Stripping of 13TeV data from August 2015 for 25ns run.", 
+                 "Stripping23c" : "Stripping of 13TeV data from Sept 2015 onwards"
                  }
 
 _strippingKeys = {}
