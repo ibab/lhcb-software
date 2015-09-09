@@ -139,6 +139,11 @@ channelsB1 = [23, 22, 21, 20]
 channelsB2 = [11, 10,  9,  8]
 channelsF1 = [23, 22, 21, 20]
 channelsF2 = [11, 10,  9,  8]
+#channelsB0 = [47, 46, 45, 44, 43]
+#channelsB1 = [23, 22, 21, 20, 51]
+#channelsB2 = [11, 10,  9,  8, 12]
+#channelsF1 = [23, 22, 21, 20, 51]
+#channelsF2 = [11, 10,  9,  8, 12]
 if options.analysisType == 'DelayScan':
   from Configurables import HCClockScan
   appMgr.addAlgorithm("HCClockScan")
@@ -158,8 +163,7 @@ if options.analysisType == 'DelayScan':
   appMgr.algorithm('HCClockScan').DigitLocations = ["Raw/HC/Digits","Prev1/Raw/HC/Digits","Next1/Raw/HC/Digits"]
   appMgr.algorithm('HCClockScan').MinBx = options.minBx
   appMgr.algorithm('HCClockscan').MaxBx = options.maxBx
-
-elif  options.analysisType == 'Pedestals':
+elif options.analysisType == 'Pedestals':
   from Configurables import HCDigitMonitor
   appMgr.addAlgorithm("HCDigitMonitor")
   appMgr.algorithm('HCDigitMonitor').CrateB = 0
@@ -171,6 +175,16 @@ elif  options.analysisType == 'Pedestals':
   appMgr.algorithm('HCDigitMonitor').ChannelsF2 = channelsF2
   appMgr.algorithm('HCDigitMonitor').MinBx = options.minBx
   appMgr.algorithm('HCDigitMonitor').MaxBx = options.maxBx
+elif options.analysisType == 'PedestalCorrection':
+  from Configurables import HCPedestalCorrection
+  appMgr.addAlgorithm("HCPedestalCorrection")
+  appMgr.algorithm('HCPedestalCorrection').CrateB = 0
+  appMgr.algorithm('HCPedestalCorrection').CrateF = 1
+  appMgr.algorithm('HCPedestalCorrection').ChannelsB0 = channelsB0
+  appMgr.algorithm('HCPedestalCorrection').ChannelsB1 = channelsB1
+  appMgr.algorithm('HCPedestalCorrection').ChannelsB2 = channelsB2
+  appMgr.algorithm('HCPedestalCorrection').ChannelsF1 = channelsF1
+  appMgr.algorithm('HCPedestalCorrection').ChannelsF2 = channelsF2
 
 # Go!
 appMgr.run(options.NumberOfEvents)

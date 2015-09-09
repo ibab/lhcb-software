@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-09-09 - Heinrich Schindler
+ - Add algorithm to determine pedestal corrections.
+
 ! 2015-09-04 - Heinrich Schindler
  - Update channel mapping.
 
