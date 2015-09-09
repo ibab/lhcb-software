@@ -148,10 +148,11 @@ namespace DataPacking
                              const TYPE& b ) const
     {
       const bool ok = ( a == b );
-      if (!ok)
+      if ( UNLIKELY(!ok) )
       {
-        parent->warning() << name << " compare ints failed" << endmsg
-                          << "  " << a << " " << b << endmsg;
+        parent->warning() << name << " comparison failed :-" << endmsg
+                          << " Original = " << a << endmsg
+                          << " Unpacked = " << b << endmsg;
       }
       return ok;
     }
@@ -180,7 +181,7 @@ namespace DataPacking
                                  const TYPE * b ) const
     {
       const bool ok = ( a == b );
-      if (!ok)
+      if ( UNLIKELY(!ok) )
       {
         parent->warning() << name << " comparison failed :-" << endmsg
                           << " Original = " << a << endmsg

@@ -36,7 +36,7 @@ DataChecks::comparePoints( const std::string & name,
   const bool ok = ( std::fabs( a.x() - b.x() ) < tol &&
                     std::fabs( a.y() - b.y() ) < tol &&
                     std::fabs( a.z() - b.z() ) < tol );
-  if (!ok)
+  if ( UNLIKELY(!ok) )
   {
     parent->warning() << name << " comparison failed :-" << endmsg
                       << " Original " << a.x() << " " << a.y() << " " << a.z() << endmsg
@@ -67,7 +67,7 @@ DataChecks::compareVectors( const std::string & name,
   const bool ok = ( std::fabs( a.x() - b.x() ) < tol &&
                     std::fabs( a.y() - b.y() ) < tol &&
                     std::fabs( a.z() - b.z() ) < tol );
-  if (!ok)
+  if ( UNLIKELY(!ok) )
   {
     parent->warning() << name << " comparison failed :-" << endmsg
                       << " Original " << a.x() << " " << a.y() << " " << a.z() << endmsg
@@ -98,7 +98,7 @@ DataChecks::compareVectors( const std::string & name,
   const bool ok = ( std::fabs( a[0] - b[0] ) < tol &&
                     std::fabs( a[1] - b[1] ) < tol &&
                     std::fabs( a[2] - b[2] ) < tol );
-  if (!ok)
+  if ( UNLIKELY(!ok) )
   {
     parent->warning() << name << " comparison failed :-" << endmsg
                       << " Original " << a[0] << " " << a[1] << " " << a[2] << endmsg
@@ -128,7 +128,7 @@ DataChecks::compareVectors( const std::string & name,
 {
   const bool ok = ( std::fabs( a[0] - b[0] ) < tol &&
                     std::fabs( a[1] - b[1] ) < tol );
-  if (!ok)
+  if ( UNLIKELY(!ok) )
   {
     parent->warning() << name << " comparison failed :-" << endmsg
                       << " Original " << a[0] << " " << a[1] << endmsg
@@ -153,7 +153,7 @@ DataChecks::compareDoubles( const std::string & name,
                             const double tol ) const
 {
   const bool ok = ( std::fabs( a - b ) < tol );
-  if (!ok)
+  if ( UNLIKELY(!ok) )
   {
     parent->warning() << name << " comparison failed :-" << endmsg
                       << " Original = " << a << endmsg
@@ -174,7 +174,7 @@ DataChecks::compareFloats( const std::string & name,
                            const float tol ) const
 {
   const bool ok = ( std::fabs( a - b ) < tol );
-  if (!ok)
+  if ( UNLIKELY(!ok) )
   {
     parent->warning() << name << " comparison failed :-" << endmsg
                       << " Original = " << a << endmsg

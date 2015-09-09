@@ -344,7 +344,8 @@ StatusCode ProtoParticlePacker::check( const Data & dataA,
           iC.first != dataA.calo().end() && iC.second != dataB.calo().end();
           ++iC.first, ++iC.second )
     {
-      parent().info() << format( "   old CaloHypo %8x   new %8x", iC.first->target(), iC.second->target() )  << endmsg;
+      parent().info() << format( "   old CaloHypo %8x   new %8x", iC.first->target(), iC.second->target() )  
+                      << endmsg;
     }
     for ( auto iE = std::make_pair(dataA.extraInfo().begin(),dataB.extraInfo().begin());
           iE.first != dataA.extraInfo().end() && iE.second != dataB.extraInfo().end();
