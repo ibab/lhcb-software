@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-09-09 - Albert Puig
+ - Update Radiative_25ns_September to add path for Bs->gammagamma BDT files.
+
 ! 2015-09-04 - Sascha Stahl
  - Updated Physics_25ns_September to include RareCharm.
 
