@@ -6,6 +6,16 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit
 ! -----------------------------------------------------------------------------
 
+! 2015-09-09 - Vanya Belyaev
+ - bug fix 
+   chi2(VX) for decays  
+    "A ->  B C D E  <pi0>   " 
+    "A ->  B C D E ( pi0 -> <gamma> <gamma> )   "
+    "A ->  B C D E  <gamma> "
+    "A ->  B C D E ( eta -> <gamma> <gamma> ) "
+ is always zero...
+
+
 !========================= KalmanFilter v1r13 2015-07-21 ======================
 
 ! 2015-07-09 - Vanya Belyaev

@@ -749,8 +749,9 @@ StatusCode LoKi::KalmanFilter::steps
       // update chi2 
       const double dchi2 = ROOT::Math::Similarity ( ientry->m_vxi , dx ) ;
       _chi2 += dchi2 ;
-      ientry->m_chi2 = _chi2 ;
     }
+    //
+    ientry->m_chi2 = _chi2 ;
   }
   return StatusCode::SUCCESS ;
 }
