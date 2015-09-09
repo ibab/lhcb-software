@@ -573,8 +573,8 @@ StatusCode LoKi::DecayTreeFit::fit                     // fit the decay tree
   // initialize fitter 
   m_fitter.reset 
     ( 0 == origin ? 
-      new Fitter ( *decay , extrapolator() ) : 
-      new Fitter ( *decay , *origin, extrapolator() ) ) ;
+      new Fitter ( *decay           , extrapolator() ) : 
+      new Fitter ( *decay , *origin , extrapolator() ) ) ;
   //
   // apply "global" constraints (if needed)
   //
@@ -610,7 +610,6 @@ StatusCode LoKi::DecayTreeFit::fit                     // fit the decay tree
   //
   return StatusCode::SUCCESS ;
 }
-
 // ============================================================================
 /** get the fitted parameters for the particle 
  *  @param particle (INPUT) the particle, NULL corresponds to the decay head  

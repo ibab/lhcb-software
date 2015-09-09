@@ -203,7 +203,7 @@ StatusCode LoKi::ParticleClassificator::initialize ()
 StatusCode LoKi::ParticleClassificator::finalize()
 {
   // statistics:
-  if ( msgLevel ( MSG::DEBUG ) || propsPrint () )
+  if ( msgLevel ( MSG::DEBUG ) || propsPrint ()  )
   {
     MsgStream& log = propsPrint () ? info() : debug () ;
     if ( !m_shortLived.accepted().empty() )
@@ -294,6 +294,11 @@ LoKi::ParticleClassificator::particleType_ ( const LHCb::Particle& p ) const
     // ATTENTION! GammaC is *LONG_LIVED_PARTICLE*
     return LoKi::KalmanFilter::LongLivedParticle   ;    // RETURN
   }
+  else if ( m_mergedPi0Like( &p ) )
+  {    
+    m_mergedPi0_like.insert   ( p.particleID () ) ;
+    return LoKi::KalmanFilter::MergedPi0LikeParticle   ;    // RETURN
+  }
   else if ( m_digammaLike ( &p ) )
   {
     m_digamma_like.insert ( p.particleID () ) ;
@@ -303,11 +308,6 @@ LoKi::ParticleClassificator::particleType_ ( const LHCb::Particle& p ) const
   {
     m_gamma_like.insert   ( p.particleID () ) ;
     return LoKi::KalmanFilter::GammaLikeParticle   ;    // RETURN
-  }
-  else if ( m_mergedPi0Like( &p ) )
-  {
-    m_mergedPi0_like.insert   ( p.particleID () ) ;
-    return LoKi::KalmanFilter::MergedPi0LikeParticle   ;    // RETURN
   }
   else if ( m_longLived  ( p.particleID () ) )
   { return LoKi::KalmanFilter::LongLivedParticle   ; }  // RETURN

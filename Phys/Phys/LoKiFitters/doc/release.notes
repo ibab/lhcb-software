@@ -5,6 +5,11 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2015-09-09 - Vanya Belyaev
+ - fix a bug with classification of merged pi0s 
+   it improves  a bit the resolution for channels with merged pi0 
+   (and reduce some warnings messages) 
+
 !====================== Phys/LoKiFitters v4r17 2015-09-08 =====================
 
 ! 2015-09-08 - Andrea Contu
