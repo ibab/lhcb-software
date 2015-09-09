@@ -750,11 +750,20 @@ int CameraTool::Append(TH1D * H, const char * opts)
 
     delete data;
 
-    // CRJ : Title hack
-    // should go away when MonObjects are used
+    // String for histo ID
     const std::string& rootH = "H" + boost::lexical_cast<std::string>(m_lastHistoNum++);
+
+    // Title
     const std::string& title = rootH+"->SetTitle(\"" + std::string(H->GetTitle()) + "\");";
     this->Append( "EVAL", title.c_str() );
+
+    // X axis title
+    if ( H->GetXaxis() )
+    {
+      const std::string& xtitle = ( rootH+"->GetXaxis()->SetTitle(\"" + 
+                                    std::string(H->GetXaxis()->GetTitle()) + "\");" );
+      this->Append( "EVAL", xtitle.c_str() );
+    }
 
   }// if(m_dosend)
   return 1;
@@ -844,11 +853,28 @@ int CameraTool::Append( TH2D * H, const char * opts )
 
     delete data;
 
-    // CRJ : Title hack
-    // should go away when MonObjects are used
+    // Histo ID
     const std::string& rootH = "H" + boost::lexical_cast<std::string>(m_lastHistoNum++);
+
+    // Title
     const std::string& title = rootH+"->SetTitle(\"" + std::string(H->GetTitle()) + "\");";
     this->Append( "EVAL", title.c_str() );
+
+    // X axis title
+    if ( H->GetXaxis() )
+    {
+      const std::string& xtitle = ( rootH+"->GetXaxis()->SetTitle(\"" + 
+                                    std::string(H->GetXaxis()->GetTitle()) + "\");" );
+      this->Append( "EVAL", xtitle.c_str() );
+    }
+
+    // Y axis title
+    if ( H->GetYaxis() )
+    {
+      const std::string& ytitle = ( rootH+"->GetYaxis()->SetTitle(\"" + 
+                                    std::string(H->GetYaxis()->GetTitle()) + "\");" );
+      this->Append( "EVAL", ytitle.c_str() );
+    }
 
   }// if(m_dosend)
   return 1;
