@@ -54,11 +54,11 @@ StatusCode HCPedestalCorrection::initialize() {
       const std::string name = "Correlation/" + stations[j] + "/" + qu;
       if (m_variableBins) {
         m_hCorrelation.push_back(book2D(name, qu, m_edges, m_edges));
-        m_hProfile.push_back(bookProfile1D(name, qu, m_edges));
+        m_hProfile.push_back(bookProfile1D(name + "Prof", qu, m_edges));
       } else {
         m_hCorrelation.push_back(book2D(name, qu, low, high, bins, 
                                         low, high, bins));
-        m_hProfile.push_back(bookProfile1D(name, qu, low, high, bins));
+        m_hProfile.push_back(bookProfile1D(name + "Prof", qu, low, high, bins));
       }
       const unsigned int index = i * nStations + j;
       setAxisLabels(m_hCorrelation[index], "ADC Spare", 
