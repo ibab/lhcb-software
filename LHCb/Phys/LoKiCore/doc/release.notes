@@ -13,6 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-09-09 - Gerhard Raven
+ - explicitly set the relative priority of LoKiSvc wrt. ToolSvc to insure
+   that LoKiSvc gets finalized _before_ ToolSvc in order to avoid use
+   (even if only for an implicit cast!) of dangling pointers to tools.
+
 ! 2015-08-26 - Marco Clemencic
  - Modified cache generation to ignore the already existing caches.
    It ensures that the generated cache contains also the factories already

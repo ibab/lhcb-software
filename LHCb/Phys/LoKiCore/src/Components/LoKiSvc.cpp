@@ -150,6 +150,14 @@ public:
       LOKI_EXCEPTION( "LoKiSvc: IToolSvc* points to NULL"       , sc ) ; 
     }
     //
+
+    // make sure we finalize _prior_ to ToolSvc... we have pointers to
+    // tools which get finalized and released by the ToolSvc during
+    // ToolSvc::finalize, and we don't want dangling pointers...
+    SmartIF<ISvcManager> mgr(serviceLocator());
+    auto prio = mgr->getPriority("ToolSvc");
+    mgr->setPriority(name(),prio+1);
+
     return m_toolSvc ;
   } 
   // ==========================================================================
