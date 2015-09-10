@@ -5,7 +5,7 @@
 #
 
 #set stripping version
-stripping="stripping23c"
+stripping="stripping23r1"
 
 #use CommonParticlesArchive
 
