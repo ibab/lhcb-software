@@ -8,6 +8,9 @@
 !========================= StrippingCache v1r2 2015-09-09 =========================
 
 ! 2015-09-10 - Andrea Contu
+ - Edited CMakeList accordingly
+
+! 2015-09-10 - Andrea Contu
  - Rename Stripping23c -> Stripping23r1
 
 ! 2015-09-09 - Andrea Contu
