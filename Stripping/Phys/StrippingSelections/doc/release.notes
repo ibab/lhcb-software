@@ -6,6 +6,9 @@
 
 !========================== StrippingSelections v4r7 2015-09-09 ===============
 
+! 2015-09-10 - Ricardo Vazquez Gomez
+ - Remove private instance of VertexFitter in B2XMuMu and InclbJets modules
+
 ! 2015-09-10 - Andrea Contu
  - Changed stripping23c to stripping23r1 in test scripts
 
