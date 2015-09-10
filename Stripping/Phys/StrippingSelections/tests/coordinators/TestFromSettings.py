@@ -29,7 +29,7 @@ from Configurables import ConfigCDBAccessSvc
 ConfigCDBAccessSvc().File = '$STRIPPINGSELECTIONSROOT/tests/data/config.cdb'
 
 # Specify the name of your configuration
-stripping='stripping23'
+stripping='stripping23r1'
 
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 
