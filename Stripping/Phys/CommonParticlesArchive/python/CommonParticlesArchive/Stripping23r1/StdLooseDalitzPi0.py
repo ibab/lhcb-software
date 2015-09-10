@@ -46,10 +46,9 @@ StdLoosePi024e=pi024e
 from CommonParticles.StdLooseDiElectron    import *
 pi0Dalitz =  CombineParticles( "StdLooseDalitzPi0", DecayDescriptor = 'pi0 -> gamma gamma' )
 pi0Dalitz.Inputs = ["Phys/StdLooseAllPhotons/Particles","Phys/StdDiElectronGamma/Particles"]
-#pi0Dalitz.ParticleCombiners.update( {"" : "ParticleAdder"} )
-pi0Dalitz.ParticleCombiners.update( {"" : "LoKi::VertexFitter"} )
+pi0Dalitz.CombinationCut = "(AM < 200*MeV) & (1 == ACHILD(1,cnv)+ACHILD(2,cnv) )"
 pi0Dalitz.Preambulo += ["cnv = switch(INTES('StdLooseAllPhotons',False),1,0)"]
-pi0Dalitz.MotherCut = " (MM  < 170*MeV) & (MM  > 90*MeV) & (1 == CHILD(1,cnv)+CHILD(2,cnv) )" 
+pi0Dalitz.MotherCut = " (MM  < 170*MeV) & (MM  > 90*MeV)" 
 locations.update( updateDoD ( pi0Dalitz        ) )
 StdLooseDalitzPi0=pi0Dalitz
 

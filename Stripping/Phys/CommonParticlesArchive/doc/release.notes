@@ -7,6 +7,9 @@
 !========================= CommonParticlesArchive v1r6 2015-09-08 ====================
 
 ! 2015-09-10 - Andrea Contu
+ - Fix to python/CommonParticlesArchive/Stripping23r1/StdLooseDalitzPi0.py
+
+! 2015-09-10 - Andrea Contu
  - Renaming S23c -> S23r1
 
 ! 2015-09-08 - Ricardo Vazquez Gomez
