@@ -6,12 +6,12 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit
 ! -----------------------------------------------------------------------------
 
+!========================= KalmanFilter v1r14 2015-09-09 ======================
+
 ! 2015-09-10 - Vanya Belyaev
 
  - update classification for "rho+"-like category:
-   include also merged pi0 
-
-!========================= KalmanFilter v1r14 2015-09-09 ======================
+   include also merged pi0
 
 ! 2015-09-09 - Vanya Belyaev
  - bug fix 
