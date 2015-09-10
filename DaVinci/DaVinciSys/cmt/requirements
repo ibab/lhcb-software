@@ -1,5 +1,5 @@
 package DaVinciSys
-version v37r2p2
+version v37r2p3
 
 branches doc cmt
 
@@ -18,27 +18,31 @@ use  LoKiHlt            v3r20     Phys
 use  LoKiMC             v10r18    Phys
 use  LoKiArrayFunctors  v11r3     Phys
 use  LoKiTracks         v3r2      Phys
+use  LoKiFitters        v4r17     Phys
+use  KalmanFilter       v1r14     Phys
 use  RelatedInfoTools   v1r2      Phys 
 use  DSTWriters         v4r22     Phys
 use  PhysConf           v1r29     Phys
 use  DaVinciTransporter v3r13     Phys
 use  EventPacker        v5r6      Event
 use  GaudiConf          v19r12
+use  JetAccessories     v3r14     Phys
+
 
 # Temporarily moved in from Stripping, for S23 release
 # To be decided if longer term this stays in the DaVinci 
 # project, or moves elsewhere.
-use StrippingCache   v1r1     Phys
+use StrippingCache   v1r2     Phys
 
 ##############################
 
 
 
 # Packages
-use  DaVinci         v37r2p2  Phys   # DaVinci coordinator
-use  DaVinciTests    v2r37
+use  DaVinci         v37r2p3  Phys   # DaVinci coordinator
+use  DaVinciTests    v2r38
 use  KaliCalo        v4r18    Phys   # Olivier Deschamps
-use  Tesla           v1r11    Phys   # Sean Benson
+use  Tesla           v1r12    Phys   # Sean Benson
 
 # Declare this as a container package
 apply_pattern container_package

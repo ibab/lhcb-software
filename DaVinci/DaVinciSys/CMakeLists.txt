@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciSys
 ################################################################################
-gaudi_subdir(DaVinciSys v37r2p2)
+gaudi_subdir(DaVinciSys v37r2p3)
 
 gaudi_depends_on_subdirs(DaVinciTests
                          ##############################
@@ -17,12 +17,15 @@ gaudi_depends_on_subdirs(DaVinciTests
                          Phys/LoKiMC
                          Phys/LoKiArrayFunctors
                          Phys/LoKiTracks
+                         Phys/LoKiFitters
+                         Phys/KalmanFilter
                          Phys/RelatedInfoTools
                          Phys/DSTWriters
                          Phys/PhysConf
                          Phys/DaVinciTransporter
                          Event/EventPacker
                          GaudiConf
+                         Phys/JetAccessories
                          ##############################
                          # Temporarily moved in from Stripping, for S23 release
                          Phys/StrippingCache

@@ -3,6 +3,24 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v37r2p3>2015-09-10 DaVinci v37r2p3</A></H1><PRE>
+
+Patch release for Stripping 23, identical to v37r2p2 except that it depends on Stripping v9r11
+and contains the extra patched packages Phys/JetAccessories v3r14, Phys/KalmanFilter v1r14 and Phys/LoKiFitters v4r17.
+
+- Packages updated :
+  DaVinciTests v2r38, Phys/DaVinci v37r2p3, Phys/Tesla v1r12.
+
+- In DaVinciTests v2r38 :
+  . Updated references for stripping tests.
+  . Removed old s20 series qmtests.
+
+- In Phys/DaVinci v37r2p3 :
+  . Patch release for Stripping 23c.
+
+- In Phys/Tesla v1r12 :
+  . PrintDuplicates algorithm included.
+
 </PRE><H1><A NAME=v37r2p2>2015-08-25 DaVinci v37r2p2</A></H1><PRE>
 
 Patch release for Stripping 23. 
