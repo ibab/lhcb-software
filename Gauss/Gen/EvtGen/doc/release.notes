@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-09-10 - Christoph Langenbruch 
+  - Fixed form-factor calculations for the BTOSLLBALL model 6 used to generate 
+    b->sll decays. Affects B->K*ll, B->rholl and B->omegall, particularly the 
+    electron modes
+
 !========================== EvtGen v14r2 2015-08-05 ==========================
 
 ! 2015-06-29 - Jordi Tico 

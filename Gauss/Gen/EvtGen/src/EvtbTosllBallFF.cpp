@@ -350,7 +350,7 @@ void EvtbTosllBallFF::getVectorFF(EvtId parent, EvtId daught,
       (-0.511 / (1. - (t/49.40)));
     t1 = (0.823 / (1. - (t/(5.32*5.32)))) + 
       (-0.491 / (1 - (t/46.31)));
-    t2 = 0.333 / (1. - (t/41.41));
+    t2 = 0.332 / (1. - (t/41.41));//0.333 caused a pole in T3 for q2 -> 0. 0.332 has correct behaviour                                                                                                                          
     double t3tilde = (-0.036 / (1. - (t/48.10))) + 
       (0.368 / (1. - (t/48.10)) / (1. - (t/48.10)));
     t3 = 0.0;
@@ -409,7 +409,7 @@ void EvtbTosllBallFF::getVectorFF(EvtId parent, EvtId daught,
 	 (-0.721 / (1. - (t/38.34)));
        t1 = (0.897 / (1. - (t/(5.32*5.32)))) + 
 	 (-0.629 / (1 - (t/38.04)));
-       t2 = 0.267 / (1. - (t/38.59));
+       t2 = 0.268 / (1. - (t/38.59)); // 0.267 caused pole in T3 for q2 -> 0. 0.268 has correct behaviour
        double t3tilde = (0.022 / (1. - (t/40.88))) + 
 	 (0.246 / (1. - (t/40.88)) / (1. - (t/40.88)));
        t3 = 0.0;
@@ -443,7 +443,7 @@ void EvtbTosllBallFF::getVectorFF(EvtId parent, EvtId daught,
 	 (-0.713 / (1. - (t/37.45)));
        t1 = (0.865 / (1. - (t/(5.32*5.32)))) + 
 	 (-0.622 / (1 - (t/37.19)));
-       t2 = 0.242 / (1. - (t/37.95));
+       t2 = 0.243 / (1. - (t/37.95)); // 0.242 caused pole in T3 for q2 -> 0. 0.243 has correct behaviour
        double t3tilde = (0.023 / (1. - (t/40.87))) + 
 	 (0.220 / (1. - (t/40.87)) / (1. - (t/40.87)));
        t3 = 0.0;
