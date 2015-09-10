@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-9-10 - Sean Benson
+ - Make sure relations tables (P2PV) allow different PVs for all particles.
+
 ! 2015-8-20 - Sean Benson
  - Fix to silence harmless error.
 

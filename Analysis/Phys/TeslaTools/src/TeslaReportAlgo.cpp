@@ -364,32 +364,17 @@ StatusCode TeslaReportAlgo::execute()
         if( calo->clID() == LHCb::CLID_CaloCluster ) cont_CaloClust->insert( dynamic_cast<LHCb::CaloCluster*>( calo ) );
       }
 
-      // Which PV is best for the mother???
-      double min_var = -1.0;
-      int key = 0;
-      for( auto pv : *cont_PV ){
-        double ip, chi2;
-        StatusCode test = m_dist->distance ( Part, pv, ip, chi2 );
-        if(m_PV=="Offline"){
-          if( (chi2<min_var) || (min_var<0.)){
-            min_var = chi2 ;
-            key = (pv)->key();
+      if( m_PV3D || m_refitted ) {
+        cont_P2PV->relate( Part , bestPV( Part, cont_PV ) );
+        if( msgLevel(MSG::DEBUG) ){
+          debug() << "Finding related PV" << endmsg;
+          if(bestPV( Part, cont_PV )){
+            debug() << "Related PV has chi^2: " << bestPV( Part, cont_PV )->chi2() << endmsg;
           }
-        }
-        else if(m_PV=="Online"){
-          if( (ip<min_var) || (min_var<0.)){
-            min_var = ip;
-            key = (pv)->key();
-          }
-        }
-        else{
-          warning() << "Choose a valid PV requirement or use the default (offline)" << endmsg;
-          return StatusCode::SUCCESS;
         }
       }
-      if( m_PV3D || m_refitted ) cont_P2PV->relate( Part , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
 
-      if( motherBasic == false ) ProcessObject( 0, key, Part, Obj, cont_PV, cont_Vert, cont_Part,
+      if( motherBasic == false ) ProcessObject( 0, Part, Obj, cont_PV, cont_Vert, cont_Part,
                     cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_CaloHypo, cont_CaloClust, cont_P2PV);
     } // candidate (loop)
   } // report exists (if)
@@ -399,7 +384,7 @@ StatusCode TeslaReportAlgo::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode TeslaReportAlgo::ProcessObject(int n, int key, LHCb::Particle* Part, const LHCb::HltObjectSummary* Obj
+StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHCb::HltObjectSummary* Obj
     ,LHCb::RecVertex::Container* cont_PV
     ,LHCb::Vertex::Container* cont_Vert
     ,LHCb::Particle::Container* cont_Part
@@ -454,8 +439,7 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, int key, LHCb::Particle* Part, 
     newObjects_d.push_back(Part_d);
     Part->addToDaughters(Part_d);
     cont_Part->insert( Part_d );
-    if( m_PV3D || m_refitted ) cont_P2PV->relate( Part_d , (LHCb::RecVertex*)cont_PV->containedObject( key ) );
-
+    
     //
     if( d_Basic == true ){
       //
@@ -485,10 +469,21 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, int key, LHCb::Particle* Part, 
     else {
       vert_mother->addToOutgoingParticles( Part_d );
       fillParticleInfo( newObjects_d , Obj_d , d_Basic , cont_Track , &calo_daughter);
-      ProcessObject( n, key, Part_d, Obj_d, cont_PV, cont_Vert, cont_Part,
+      ProcessObject( n, Part_d, Obj_d, cont_PV, cont_Vert, cont_Part,
           cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_CaloHypo, cont_CaloClust, cont_P2PV);
     }
+    
+    if( m_PV3D || m_refitted ) {
+      debug() << "Finding related PV" << endmsg;
+      cont_P2PV->relate( Part_d , bestPV( Part_d, cont_PV ) );
+      if( msgLevel(MSG::DEBUG) ){
+        if(bestPV( Part_d, cont_PV )){
+          debug() << "Related PV has chi^2: " << bestPV( Part_d, cont_PV )->chi2() << endmsg;
+        }
+      }
+    }
   }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -841,4 +836,31 @@ LHCb::CaloDigit* TeslaReportAlgo::DigitSearchRaw(LHCb::CaloCellID id){
   }
   if ( msgLevel(MSG::DEBUG) ) debug() << "No match found in raw event" << endmsg;
   return NULL;
+}
+
+LHCb::RecVertex* TeslaReportAlgo::bestPV(LHCb::Particle* part, LHCb::RecVertex::Container* cont){
+  
+  double min_var = -1.0;
+  int key = 0;
+  for( auto pv : *cont ){
+    double ip, chi2;
+    StatusCode test = m_dist->distance ( part, pv, ip, chi2 );
+    if(m_PV=="Offline"){
+      if( (chi2<min_var) || (min_var<0.)){
+        min_var = chi2 ;
+        key = (pv)->key();
+      }
+    }
+    else if(m_PV=="Online"){
+      if( (ip<min_var) || (min_var<0.)){
+        min_var = ip;
+        key = (pv)->key();
+      }
+    }
+    else{
+      warning() << "Choose a valid PV requirement or use the default (offline)" << endmsg;
+    }
+  }
+  return (LHCb::RecVertex*)cont->containedObject( key );
+
 }

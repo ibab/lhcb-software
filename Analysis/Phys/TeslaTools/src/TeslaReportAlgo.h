@@ -48,7 +48,7 @@ public:
   	StatusCode initialize();    ///< Algorithm initialization
   	StatusCode execute   ();    ///< Algorithm execution
 
-        StatusCode ProcessObject(int,int,LHCb::Particle*, const LHCb::HltObjectSummary*
+        StatusCode ProcessObject(int,LHCb::Particle*, const LHCb::HltObjectSummary*
             ,LHCb::RecVertex::Container*
             ,LHCb::Vertex::Container*
             ,LHCb::Particle::Container*
@@ -69,6 +69,7 @@ public:
         }
 
         LHCb::CaloDigit* DigitSearchRaw(LHCb::CaloCellID);
+        LHCb::RecVertex* bestPV(LHCb::Particle*, LHCb::RecVertex::Container*);
 protected:
 
 private:
