@@ -38,7 +38,7 @@ default_config = {
         'scale'         : 0.05,
         #
         'HLT2'          : "HLT_PASS_RE('Hlt2*.Topo.*Decision')",
-        'VertexFitter'  : 'LoKi::VertexFitter',
+        'VertexFitter'  : 'LoKi::VertexFitter:PUBLIC',
     },
 }
 

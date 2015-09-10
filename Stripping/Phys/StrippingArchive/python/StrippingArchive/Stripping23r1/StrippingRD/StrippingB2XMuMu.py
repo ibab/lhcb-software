@@ -632,7 +632,6 @@ class B2XMuMuConf(LineBuilder) :
         _kstar2kpizero.MotherCut = "(ADMASS('K*(892)+') < %(KstarplusWINDOW)s *MeV)" % conf
 
         _kstarConf = _kstar2kpizero.configurable("Combine_"+self.name+"_KPi0")
-        _kstarConf.ParticleCombiners.update ( { '' : 'LoKi::VertexFitter' } )
                                                  
         _selKSTAR2KPIZERO = Selection( "Selection_"+self.name+"_Kstar2kpizero",
                                        Algorithm = _kstarConf,
@@ -650,7 +649,6 @@ class B2XMuMuConf(LineBuilder) :
         _rho2pipizero.MotherCut = "(ADMASS('rho(770)+') < %(KstarplusWINDOW)s *MeV)" % conf
 
         _rhoConf = _rho2pipizero.configurable("Combine_"+self.name+"_PiPi0")
-        _rhoConf.ParticleCombiners.update ( { '' : 'LoKi::VertexFitter' } )
                                                  
         _selRHO2PIPIZERO = Selection( "Selection_"+self.name+"_rho2pipizero",
                                        Algorithm = _rhoConf,
