@@ -4,6 +4,8 @@
 ! Purpose     : Distribution of parametrization data files
 !-----------------------------------------------------------------------------
 
+!========================= ParamFiles v8r18 2015-09-10 =========================
+
 ! 2015-09-10 - Julien Cogan
  - Add a new LUT (V8) for L0Muon pt. This LUT was computed using the muon 
  geometry used in the simulation (dddb-20150724 & sim-20150813-0-vc-mu100). 
