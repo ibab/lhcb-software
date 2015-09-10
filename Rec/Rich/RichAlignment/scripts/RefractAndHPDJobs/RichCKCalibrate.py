@@ -7,6 +7,7 @@ runInfoCacheLoaded = False
 runInfoCache  = { }
 #histoBase = 'RICH/RiCKResLong/'
 histoBase = 'RICH/RiCKResLongTight/'
+#histoBase = 'RICH/RiCKResLongTightUnambPhots/'
 
 # ====================================================================================
 # Main Methods
@@ -52,7 +53,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v47r6p1' ) )
+                j = Job( application = Brunel( version = 'v47r9' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -112,11 +113,11 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v47r6p1",pickledRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v47r9",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v47r6p1",pickledRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v47r9",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInVerify")
 
 ## Real underlying method
@@ -177,12 +178,15 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     dbFiles = { }
 
     # 2015 DBs
-    #dbFiles += ["Alignment2015"] # Tracking
-    dbFiles += { "MDCS-RICH1-SecondScans-26052015" : "LHCBCOND" } # MDCS
-    dbFiles += { "ResetHPDAlign-13062015" : "LHCBCOND" }
-    dbFiles += { "2015-MirrorAlign-V2-It3-15062015" : "LHCBCOND" }
-    dbFiles += { "2015RootFiles-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-20062015" : "LHCBCOND" }
-    #dbFiles += { "2015RootFiles-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-22062015" : "CALIBOFF" }
+    #dbFiles["Alignment2015"] = "LHCBCOND"# Tracking
+    #dbFiles["MDCS-RICH1-SecondScans-26052015"] = "LHCBCOND" # MDCS
+    #dbFiles["MDCS-RICH1-SecondScans-HandPicked"] = "LHCBCOND" # MDCS
+    #dbFiles["ResetHPDAlign-13062015"] = "LHCBCOND"
+    #dbFiles["2015-MirrorAlign-V2-It3-15062015"] = "LHCBCOND"
+    #dbFiles += { "2015RootFiles-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-20062015" : "LHCBCOND" }
+    #dbFiles["2015RootFiles-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-22062015"] = "LHCBCOND"
+    # New mirror alignment
+    dbFiles["2015-MirrorAlign-50ns-V1-20072015"] = "LHCBCOND"
 
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
@@ -395,12 +399,10 @@ def refractiveIndexCalib(jobs,rads=['Rich1Gas','Rich2Gas'],polarity='',pdCol='')
         # Keep tabs on min and max values (for plots)
         minMaxScale = [999.0,-999.0]
         if 'Rich1Gas' == rad :
-            #minMaxCKRes = (1.4,1.8)
-            minMaxCKRes = (1.4,2.2)
+            minMaxCKRes = (1.4,1.8)
             maxDeltaTheta = 0.03
         else:
-            #minMaxCKRes = (0.62,0.72)
-            minMaxCKRes = (0.62,0.8)
+            minMaxCKRes = (0.62,0.72)
             maxDeltaTheta = 0.01
 
         # Raw mean and sigma
@@ -997,15 +999,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v47r6p1",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v47r9",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v47r6p1",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v47r9",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v47r6p1",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v47r9",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
@@ -1218,6 +1220,7 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=4):
                 # Get x value of highest content bin
                 # (rough estimate of peak position)
                 xPeak = hist.GetBinCenter(hist.GetMaximumBin())
+                #print "Mooo", xPeak
 
                 # Pre Fitting range
                 delta = 0.0025
@@ -1230,7 +1233,7 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=4):
                 preFitF = TF1(rad+"PreFitF",preFitFType,fitMin,fitMax)
                 preFitF.SetLineColor(preFitColor)
                 # Starting params
-                preFitF.SetParameter(1,0)
+                preFitF.SetParameter(1,xPeak)
                 if rad == 'Rich1Gas' :
                     preFitF.SetParameter(2,0.0015)
                 else:
@@ -1238,6 +1241,7 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=4):
  
                 # Do the pre fit with just a Gaussian
                 hist.Fit(preFitF,"QRS0")
+                #print "Baaa", preFitF.GetParameter(1)
 
                 # Full Fitting range
                 if rad == 'Rich1Gas' :
@@ -1272,9 +1276,12 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=4):
                         lastFitF = fFitF
                         # Fit OK ?
                         maxErrorForOK = 1e-3
+                        maxResForOK   = 3e-3
                         # gMinuit = gROOT.GetGlobal( "gMinuit", 1 )
                         # print gMinuit.GetStatus()
-                        fitOK = fFitF.GetParError(1) < maxErrorForOK
+                        fitOK = ( fFitF.GetParError(1)  < maxErrorForOK and
+                                  fFitF.GetParError(2)  < maxErrorForOK and
+                                  fFitF.GetParameter(2) < maxResForOK )
                         if fitOK :
                             bestFitF = fFitF
                             bestNPol = nPol
@@ -1503,7 +1510,7 @@ def filesPerJob(nFiles):
     if nFiles < 100 : return 6
     return 10
 
-def removeCalibrationDataSet(name,BrunelVer="v47r6p1"):
+def removeCalibrationDataSet(name,BrunelVer="v47r9"):
     from Ganga.GPI import jobtree, queues
     js = getCalibrationJobList(name,BrunelVer,
                                statuscodes=['completed','running','submitted',
@@ -1513,7 +1520,7 @@ def removeCalibrationDataSet(name,BrunelVer="v47r6p1"):
     if jobtree.exists(path) : jobtree.rm(path)
     jobtree.cd('/RichCalibration')
 
-def removeVerificationDataSet(name,BrunelVer="v47r6p1"):
+def removeVerificationDataSet(name,BrunelVer="v47r9"):
     from Ganga.GPI import jobtree, queues
     js = getVerificationJobList(name,BrunelVer,
                                 statuscodes=['completed','running','submitted'

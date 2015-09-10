@@ -101,6 +101,8 @@ else:
         if config == 'Protonion13' or config == 'Ionproton13' :
           type = 90000000 # FULL Stream
         #if  run > 77595  and run < 77624 : # Express disappeared for unknown reasons
+        if run > 157596 : # Express stream turned off in Run II
+          type = 90000000 # FULL Stream
 
         typeS = "EXPRESS"
         if type == 90000000 : typeS = "FULL"

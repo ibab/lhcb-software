@@ -20,5 +20,5 @@ importOptions("/usera/jonesc/MyDataOptions/Collisions15em/Raw/RUN_154873_PFNs.py
 
 from Configurables import Brunel
 
-Brunel().EvtMax    = 1000
-Brunel().PrintFreq = 100
+Brunel().EvtMax    = 100
+Brunel().PrintFreq = 10

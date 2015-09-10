@@ -81,9 +81,14 @@ def fileMD5(file):
 #dnAlign    = "/usera/jonesc/NFS/DetDB/ResetHPDAlign/MagDown"
 #dbFileName = "ResetHPDAlign"
 
-# 2015 Mirror alignment
-upAlign    = "/usera/jonesc/NFS/DetDB/2015-MirrorAlign-V2-It3/MagUp"
-dnAlign    = "/usera/jonesc/NFS/DetDB/2015-MirrorAlign-V2-It3/MagDown"
+# 2015 Mirror alignment - V1
+#upAlign    = "/usera/jonesc/NFS/DetDB/2015-MirrorAlign-V2-It3/MagUp"
+#dnAlign    = "/usera/jonesc/NFS/DetDB/2015-MirrorAlign-V2-It3/MagDown"
+#dbFileName = "2015-MirrorAlign-V2-It3"
+
+# 2015 Mirror alignment - V2
+upAlign    = "/usera/jonesc/NFS/DetDB/2015-MirrorAlign-50ns/MagUp"
+dnAlign    = "/usera/jonesc/NFS/DetDB/2015-MirrorAlign-50ns/MagDown"
 dbFileName = "2015-MirrorAlign-V2-It3"
 
 # Mirror alignment RICH1 only

@@ -26,7 +26,7 @@ importOptions("$L0TCK/L0DUConfig.opts")
 # For 2015 data
 importOptions("$APPCONFIGOPTS/Brunel/DataType-2015.py")
 LHCbApp().DDDBtag    = "dddb-20150526"
-LHCbApp().CondDBtag  = "cond-20150601"
+LHCbApp().CondDBtag  = "cond-20150625"
 
 # Aerogel Sub Tiles
 #CondDB().LocalTags["LHCBCOND"] = ["rich1-20110624"]
