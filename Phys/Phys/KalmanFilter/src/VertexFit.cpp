@@ -1179,10 +1179,11 @@ bool  LoKi::KalmanFilter::rhoPlusLike
     //
     switch ( ientry->m_type ) 
     {
-    case GammaLikeParticle   : ++nGamma ; break ;  
-    case DiGammaLikeParticle : ++nGamma ; break ;  
-    case LongLivedParticle   : ++nLong  ; break ;
-    default                  :            break ;
+    case GammaLikeParticle     : ++nGamma ; break ;  
+    case DiGammaLikeParticle   : ++nGamma ; break ;  
+    case MergedPi0LikeParticle : ++nGamma ; break ;  
+    case LongLivedParticle     : ++nLong  ; break ;
+    default                    :            break ;
     } 
     //
   }
