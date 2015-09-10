@@ -240,15 +240,21 @@ LHCb::Particle* HltVertexConverterS20p3::reviveParticle(const LHCb::HltObjectSum
     const LHCb::HltObjectSummary* trackSum{nullptr};
     for ( const auto subSum : summary->substructure() ) {
       if ( LHCb::Track::classID() == subSum->summarizedObjectCLID() ) {
-        if (msgLevel(MSG::VERBOSE)) { verbose() << "-> Track" << endmsg; }
-        if ( ! track ) {
-          trackSum = getBottomOfNestedIdenticalSubstructure(subSum);
-          track = reviveTrack(subSum);
+        const LHCb::HltObjectSummary* botSum = getBottomOfNestedIdenticalSubstructure(subSum);
+        std::vector<LHCb::LHCbID> hits(botSum->lhcbIDsFlattened());
+        if ( std::all_of( std::begin(hits), std::end(hits), [] ( const LHCb::LHCbID& hit ) -> bool { return hit.isMuon(); } ) ) {
+          if (msgLevel(MSG::VERBOSE)) { verbose() << "Muon track -> doing nothing" << endmsg; }
         } else {
-          if ( ! IsSameSummarizedObject(*trackSum)(getBottomOfNestedIdenticalSubstructure(subSum)) ) {
-            Warning("Two different track summaries for the same particle");
-          } else if ( msgLevel(MSG::VERBOSE) ) {
-            verbose() << "already created -> skipping" << endmsg;
+          if (msgLevel(MSG::VERBOSE)) { verbose() << "-> Track" << endmsg; }
+          if ( ! track ) {
+            trackSum = botSum;
+            track = reviveTrack(subSum);
+          } else {
+            if ( ! IsSameSummarizedObject(*trackSum)(getBottomOfNestedIdenticalSubstructure(subSum)) ) {
+              Warning("Two different track summaries for the same particle");
+            } else if ( msgLevel(MSG::VERBOSE) ) {
+              verbose() << "already created -> skipping" << endmsg;
+            }
           }
         }
       } else if ( LHCb::ProtoParticle::classID() == subSum->summarizedObjectCLID() ) {
@@ -259,6 +265,12 @@ LHCb::Particle* HltVertexConverterS20p3::reviveParticle(const LHCb::HltObjectSum
       } else {
         Warning("Classification failed: 1 daughter but not a track and not a Calo neutral");
       }
+    }
+    if ( ( ! proto ) && msgLevel(MSG::VERBOSE) ) {
+      verbose() << "Particle but no protoparticle resurrected" << endmsg;
+    }
+    if ( ( ! track ) && msgLevel(MSG::VERBOSE) ) {
+      verbose() << "Particle but no track resurrected" << endmsg;
     }
     if ( track && ( ! proto ) ) { // create an empty protoparticle (Run 1 data)
       proto = new LHCb::ProtoParticle();

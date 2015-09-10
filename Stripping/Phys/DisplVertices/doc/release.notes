@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2015-09-10 - Pieter David
+ - Catch another case (muon track segment) in HltVertexConverter
+
 !========================= DisplVertices v7r24 2015-09-08 =========================
 
 ! 2015-09-02 - Pieter David
