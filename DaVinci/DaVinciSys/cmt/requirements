@@ -8,7 +8,7 @@ branches doc cmt
 # When removed, do not forget to also remove from CMake file.
 
 use  DDDB               v1r80     Det
-use  TeslaTools         v1r13     Phys
+use  TeslaTools         v1r14     Phys
 use  HltDAQ             v4r20     Hlt
 use  LoKiCore           v11r26    Phys
 use  LoKiGen            v10r20    Phys
