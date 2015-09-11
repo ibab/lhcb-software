@@ -12,7 +12,7 @@
 
 ! 2015-07-21 - Chris Jones
  - Add option to RichRecoQC to reject ambiguous photons
- - Add a new set of resolution monitors to make plots for unambigous photons.
+ - Add a new set of resolution monitors to make plots for unambiguous photons.
 
 !========================= RichRecQC v2r71 2015-07-20 =========================
 ! 2015-07-20 - Marco Clemencic
