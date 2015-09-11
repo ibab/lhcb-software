@@ -7,6 +7,9 @@
 !========================= StrippingArchive v1r33 2015-09-09 =========================
 
 ! 2015-09-11 - Andrea Contu
+ - Relinfo fix for Bu2LLK lines
+
+! 2015-09-11 - Andrea Contu
  - Fix loki fitter for StrippingDijets.py
 
 ! 2015-09-11 - Ricardo Vazquez Gomez
