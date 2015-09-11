@@ -192,7 +192,7 @@ unpackIt.OutputName = "Rec/Track/FittedHLT1VeloTracks"
 
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 1000
+DaVinci().EvtMax = 10000
 # DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 2000
 DaVinci().appendToMainSequence( [unpackIt] )
@@ -221,7 +221,7 @@ LHCbApp().XMLSummary = 'summary.xml'
 
 
 # input file
-# importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15_NoBias.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15_NoBias.py")
 # importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
 #importOptions("/afs/cern.ch/user/r/rvazquez/StrippingS23/DaVinciDev_v36r7p7/Phys/StrippingSelections/tests/data/validationReco15_NoBias.py")
 #importOptions("/afs/cern.ch/user/r/rvazquez/StrippingS23/DaVinciDev_v36r7p7/Phys/StrippingSelections/tests/data/validationReco15_NoBias2.py")

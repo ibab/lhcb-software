@@ -422,7 +422,7 @@ default_config = {
     # Extra preambulo, give me barestring with proper linebreak.
     'preambulo'   : '\n', 
     # Choice of ParticleCombiner for ditau
-    'ditau_pcomb' : {'': 'MomentumCombiner'},
+    'ditau_pcomb' : {'': 'MomentumCombiner:PUBLIC'},
     # 'ditau_pcomb' : {},
   }
 }
@@ -706,4 +706,5 @@ class DitauConf(LineBuilder):
 # if 'BAD_KEY' in subconfigs:
 #   raise KeyError
 
-# 
+
+
