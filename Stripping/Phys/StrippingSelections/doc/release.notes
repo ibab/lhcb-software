@@ -6,6 +6,9 @@
 
 !========================== StrippingSelections v4r7 2015-09-09 ===============
 
+! 2015-09-11 - Andrea Contu
+ - Fix loki fitter for StrippingDijets.py
+
 ! 2015-09-11 - Chitsanu Khurewathanakul
  - Remove private instance in StrippingDitau
 
