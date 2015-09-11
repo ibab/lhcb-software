@@ -353,7 +353,8 @@ class Bu2LLKConf(LineBuilder) :
         """
         Handy interface for dilepton filter
         """
-        _Code = "(PT > %(DiLeptonPT)s *MeV) & "\
+        _Code = "(ID=='J/psi(1S)') & "\
+                "(PT > %(DiLeptonPT)s *MeV) & "\
                 "(MM < %(UpperMass)s *MeV) & "\
                 "(MINTREE(ABSID<14,PT)>%(LeptonPT)s *MeV) & "\
                 "(MINTREE(ABSID<14,MIPCHI2DV(PRIMARY))>%(LeptonIPCHI2)s) & "\

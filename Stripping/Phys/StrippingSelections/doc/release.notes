@@ -10,6 +10,9 @@
  - Remove private instance in StrippingDitau
 
 ! 2015-09-10 - Ricardo Vazquez Gomez
+ - Add filter to DiElectrons to avoid Errors and Warnings
+
+! 2015-09-10 - Ricardo Vazquez Gomez
  - Remove private instance of VertexFitter in B2XMuMu and InclbJets modules
 
 ! 2015-09-10 - Andrea Contu
