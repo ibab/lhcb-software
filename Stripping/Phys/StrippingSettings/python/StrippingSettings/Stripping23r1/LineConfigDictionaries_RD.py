@@ -975,96 +975,51 @@ Bu2LLK = {
         "LeptonIPCHI2": 9, 
         "LeptonPT": 300, 
         "PIDe": 0, 
-        "RelatedInfoTools": [
-            {
-                "Location": "VertexIsoInfo", 
-                "Type": "RelInfoVertexIsolation"
-            }, 
-            {
-                "Location": "VertexIsoBDTInfo", 
-                "Type": "RelInfoVertexIsolationBDT"
-            }, 
-            {
-                "ConeAngle": 1.0, 
-                "Location": "ConeIsoInfo", 
-                "Type": "RelInfoConeVariables"
-            }, 
-            {
-                "ConeAngle": 0.5, 
-                "Locations": {
-                    "Phys/StdAllLooseElectrons": [
-                        "ConeIsoInfoE1", 
-                        "ConeIsoInfoE2"
-                    ], 
-                    "Phys/StdAllLooseKaons": "ConeIsoInfoK", 
-                    "Phys/StdAllLooseMuons": [
-                        "ConeIsoInfoM1", 
-                        "ConeIsoInfoM2"
-                    ], 
-                    "Phys/StdAllLoosePions": "ConeIsoInfoPi", 
-                    "Phys/StdAllLooseProtons": "ConeIsoInfoProton", 
-                    "Phys/StdDiElectronFromTracks": [
-                        "ConeIsoInfoE1", 
-                        "ConeIsoInfoE2"
-                    ]
-                }, 
-                "RecursionLevel": 2, 
-                "Type": "RelInfoConeVariables"
-            }, 
-            {
-                "Locations": {
-                    "Phys/StdAllLooseElectrons": [
-                        "TrackIsoBDTInfoE1", 
-                        "TrackIsoBDTInfoE2"
-                    ], 
-                    "Phys/StdAllLooseKaons": "TrackIsoBDTInfoK", 
-                    "Phys/StdAllLooseMuons": [
-                        "TrackIsoBDTInfoM1", 
-                        "TrackIsoBDTInfoM2"
-                    ], 
-                    "Phys/StdAllLoosePions": "TrackIsoBDTInfoPi", 
-                    "Phys/StdAllLooseProtons": "TrackIsoBDTInfoProton", 
-                    "Phys/StdDiElectronFromTracks": [
-                        "TrackIsoBDTInfoE1", 
-                        "TrackIsoBDTInfoE2"
-                    ]
-                }, 
-                "RecursionLevel": 2, 
-                "Type": "RelInfoTrackIsolationBDT"
-            }, 
-            {
-                "IsoTwoBody": False, 
-                "Locations": {
-                    "Phys/StdAllLooseElectrons": [
-                        "TrackIsoBs2MMInfoE1", 
-                        "TrackIsoBs2MMInfoE2"
-                    ], 
-                    "Phys/StdAllLooseKaons": "TrackIsoBs2MMInfoK", 
-                    "Phys/StdAllLooseMuons": [
-                        "TrackIsoBs2MMInfoM1", 
-                        "TrackIsoBs2MMInfoM2"
-                    ], 
-                    "Phys/StdAllLoosePions": "TrackIsoBs2MMInfoPi", 
-                    "Phys/StdAllLooseProtons": "TrackIsoBs2MMInfoProton", 
-                    "Phys/StdDiElectronFromTracks": [
-                        "TrackIsoBs2MMInfoE1", 
-                        "TrackIsoBs2MMInfoE2"
-                    ]
-                }, 
-                "RecursionLevel": 2, 
-                "Type": "RelInfoBs2MuMuTrackIsolations", 
-                "angle": 0.27, 
-                "doca_iso": 0.13, 
-                "fc": 0.6, 
-                "ips": 3.0, 
-                "makeTrackCuts": False, 
-                "pvdis": 0.5, 
-                "pvdis_h": 40.0, 
-                "svdis": -0.15, 
-                "svdis_h": 30.0, 
-                "tracktype": 3
-            }
-        ], 
+        'RelatedInfoTools'    : [
+            {'Type'             : 'RelInfoVertexIsolation',
+             'Location'         : 'VertexIsoInfo'},
+            {'Type'             : 'RelInfoVertexIsolationBDT',
+             'Location'         : 'VertexIsoBDTInfo'},
+            {'Type'             : 'RelInfoConeVariables',
+             'ConeAngle'        : 1.0,
+             'Location'         : 'ConeIsoInfo'},
+            {'Type'             : 'RelInfoConeVariables',
+             'ConeAngle'        : 0.5,
+             'RecursionLevel'   : 2,
+             'Locations'        : {'Phys/StdAllLooseElectrons'    : ['ConeIsoInfoE1',  'ConeIsoInfoE2'],
+                                   'Phys/StdDiElectronFromTracks' : ['ConeIsoInfoE1',  'ConeIsoInfoE2'],
+                                   'Phys/StdAllLooseMuons'        : ['ConeIsoInfoM1',  'ConeIsoInfoM2'],
+                                   'Phys/StdAllLooseKaons'        : ['ConeIsoInfoK1',  'ConeIsoInfoK2'],
+                                   'Phys/StdAllLoosePions'        : ['ConeIsoInfoPi1', 'ConeIsoInfoPi2'],
+                                   'Phys/StdAllLooseProtons'      : 'ConeIsoInfoProton'}},
+            {'Type'             : 'RelInfoTrackIsolationBDT',
+             'RecursionLevel'   : 2,
+             'Locations'        : {'Phys/StdAllLooseElectrons'    : ['TrackIsoBDTInfoE1',  'TrackIsoBDTInfoE2'],
+                                   'Phys/StdDiElectronFromTracks' : ['TrackIsoBDTInfoE1',  'TrackIsoBDTInfoE2'],
+                                   'Phys/StdAllLooseMuons'        : ['TrackIsoBDTInfoM1',  'TrackIsoBDTInfoM2'],
+                                   'Phys/StdAllLooseKaons'        : ['TrackIsoBDTInfoK1',  'TrackIsoBDTInfoK2'],
+                                   'Phys/StdAllLoosePions'        : ['TrackIsoBDTInfoPi1', 'TrackIsoBDTInfoPi2'],
+                                   'Phys/StdAllLooseProtons'      : 'TrackIsoBDTInfoProton'}},
+            {'Type'             : 'RelInfoBs2MuMuTrackIsolations',
+             'RecursionLevel'   : 2,
+             'Locations'        : {'Phys/StdAllLooseElectrons'    : ['TrackIsoBs2MMInfoE1',  'TrackIsoBs2MMInfoE2'],
+                                   'Phys/StdDiElectronFromTracks' : ['TrackIsoBs2MMInfoE1',  'TrackIsoBs2MMInfoE2'],
+                                   'Phys/StdAllLooseMuons'        : ['TrackIsoBs2MMInfoM1',  'TrackIsoBs2MMInfoM2'],
+                                   'Phys/StdAllLooseKaons'        : ['TrackIsoBs2MMInfoK1',  'TrackIsoBs2MMInfoK2'],
+                                   'Phys/StdAllLoosePions'        : ['TrackIsoBs2MMInfoPi1', 'TrackIsoBs2MMInfoPi2'],
+                                   'Phys/StdAllLooseProtons'      : 'TrackIsoBs2MMInfoProton'},
+             'tracktype'        : 3,
+             'angle'            : 0.27,
+             'fc'               : 0.60,
+             'doca_iso'         : 0.13,
+             'ips'              : 3.0,
+             'svdis'            : -0.15,
+             'svdis_h'          : 30.,
+             'pvdis'            : 0.5,
+             'pvdis_h'          : 40.,
+             'makeTrackCuts'    : False,
+             'IsoTwoBody'       : False}
+            ], 
         "UpperMass": 5500
     }, 
     "STREAMS": [ "Leptonic" ], 

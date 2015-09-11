@@ -6,6 +6,9 @@
 
 !========================= StrippingSettings v2r41 2015-09-09 =========================
 
+! 2015-09-11 - Andrea Contu
+ - Fix to RD LincConfig and updated dbase for s23r1
+
 ! 2015-09-10 - Andrea Contu
  - added dbase for stripping23r1
 
