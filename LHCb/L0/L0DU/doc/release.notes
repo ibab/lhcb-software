@@ -3,9 +3,9 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
-! 2015-09-10 - Julien Cogan
- (- L0Conf : use by default newly created LUT V8 for L0Muon emulation for 
-  2015 data ; modification prepared - waiting for release of ParamFiles) 
+! 2015-09-11 - Julien Cogan
+ - L0Conf : use by default newly created LUT V8 for L0Muon emulation for 
+  2015 data
 
 ! 2015-08-08 - Olivier Deschamps
  - L0DURawBankMonitor : fix bug with EmulatorCheck masking

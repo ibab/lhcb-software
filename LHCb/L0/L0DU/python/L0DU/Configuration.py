@@ -453,8 +453,7 @@ class L0Conf(LHCbConfigurableUser) :
                 elif datatype == "2012":
                     emulateL0Muon().LUTVersion = "V3"
                 elif datatype == "2015":
-                    ##emulateL0Muon().LUTVersion = "V8" # waiting for release of ParamFiles
-                    pass
+                    emulateL0Muon().LUTVersion = "V8"
 
     def _dataOnDemand(self,rootintes):
         """Configure the DataOnDemand service for L0."""
