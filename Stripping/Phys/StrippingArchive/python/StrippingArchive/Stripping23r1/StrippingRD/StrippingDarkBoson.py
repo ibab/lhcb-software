@@ -403,7 +403,7 @@ def filterInputs(which,conf,inputs):
                      RequiredSelections=inputs)
 
 def filterEE(which,econf,xconf,inputs):
-    code = "(PT > %s) & (MINTREE('e+'==ABSID,PIDe) > %s)" \
+    code = "(ID=='J/psi(1S)') & (PT > %s) & (MINTREE('e+'==ABSID,PIDe) > %s)" \
            % (xconf['PT_MIN'],econf['PIDe_MIN'])
     code += " & (MINTREE('e+'==ABSID,MIPCHI2DV(PRIMARY)) > %s)" \
             % econf['MIPCHI2DV_MIN']
