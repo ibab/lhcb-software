@@ -12,10 +12,11 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+from Configurables import CombineParticles
 from JetAccessories.JetMaker_Config import JetMakerConf
 from Configurables import LoKi__FastJetMaker, LoKi__JetMaker
 from StandardParticles import StdLoosePhotons, StdAllNoPIDsPions, StdJets
+from Configurables import LoKi__VertexFitter
 
 # Define the default configuration.
 
@@ -143,7 +144,8 @@ class DijetsConf(LineBuilder):
                     % self._config["SVR"]["MIN_BPVVDCHI2"]
                     + " & (VFASPF(VCHI2) < %s)"
                     % self._config["SVR"]["MAX_CHI2"])
-        svrs = CombineParticles(
+        svrs = CombineParticles(self._name + "D02pipiCombiner",
+            #ParticleCombiners = {"" : "LoKi::VertexFitter"},
             DecayDescriptors = ["D0 -> pi- pi+", "D0 -> pi- pi-",
                                 "D0 -> pi+ pi+"],
             CombinationCut = cmb_cuts,
@@ -219,7 +221,8 @@ class DijetsConf(LineBuilder):
                     % self._config["MUO"]["MIN_PT"]
                     + " & (MIPCHI2DV(PRIMARY) > %s))"
                     % self._config["MUO"]["MIN_MIPCHI2DV"])
-        disvrs = CombineParticles(
+        disvrs = CombineParticles(self._name + "B02D0D0Combiner",
+            #ParticleCombiners = {"" : "LoKi::VertexFitter"},
             DecayDescriptors = ["B0 -> D0 D0"],
             Preambulo = pre,
             CombinationCut = cmb_cuts,
@@ -233,7 +236,7 @@ class DijetsConf(LineBuilder):
     def _create_dijets(self, inputs, label = ""):
         pre = ["COSDPHI = cos(ACHILD(PHI,1) - ACHILD(PHI,2))"]
         cmb_cuts = "COSDPHI < %s" % self._config["DIJET"]["MAX_COSDPHI"]
-        dijets = CombineParticles(
+        dijets = CombineParticles(self._name + "H102CjCjCombiner",
             ParticleCombiners = {"" : "LoKi::VertexFitter"},
             DecayDescriptor = "H_10 -> CELLjet CELLjet",
             DaughtersCuts = {"CELLjet" : "PT > %s"
@@ -242,6 +245,9 @@ class DijetsConf(LineBuilder):
             CombinationCut = cmb_cuts,
             MotherCut = "ALL"
             )
+        dijets.addTool( LoKi__VertexFitter, name="LoKi::VertexFitter" )
+        vfitter = getattr ( dijets , "LoKi::VertexFitter" )
+        vfitter.Jets = ""
         return Selection(self._name + label + "Selection",
                          Algorithm = dijets,
                          RequiredSelections = inputs)

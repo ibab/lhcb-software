@@ -6,7 +6,10 @@
 
 !========================= StrippingArchive v1r33 2015-09-09 =========================
 
-! 2015-09-10 - Ricardo Vazquez Gomez
+! 2015-09-11 - Andrea Contu
+ - Fix loki fitter for StrippingDijets.py
+
+! 2015-09-11 - Ricardo Vazquez Gomez
  - Add filter to DiElectrons to avoid Errors and Warnings
 
 ! 2015-09-10 - Ricardo Vazquez Gomez
