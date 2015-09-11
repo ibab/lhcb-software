@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
+
+! 2015-09-11 - Chris Jones
+ - Fix a bug in RecoQC that prevent the per HPD fits from working.
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

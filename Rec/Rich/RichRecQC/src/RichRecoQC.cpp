@@ -64,6 +64,7 @@ RecoQC::RecoQC( const std::string& name,
 
   setProperty( "NBins2DHistos", 100 );
   setProperty( "HistoPrint", false );
+  //setProperty( "OutputLevel", 1 );
 }
 
 // Destructor
@@ -603,6 +604,8 @@ void RecoQC::fitResolutionHistos()
 {
   using namespace Gaudi::Utils;
 
+  _ri_debug << "Fitting HPD resolution plots" << endmsg;
+
   // List of HPDs
   const LHCb::RichSmartID::Vector& hpds = m_RichSys->allPDRichSmartIDs();
 
@@ -617,34 +620,54 @@ void RecoQC::fitResolutionHistos()
 
     // Get the profile and reset to refill
     TProfile * p = Aida2ROOT::aida2root( richProfile1D(HID("ckResVPDCopyNum",rad)) );
-    if ( p ) p->Reset();
+    if ( p ) { p->Reset(); }
+    else
+    {
+      std::ostringstream mess;
+      mess << "Failed to find HPD CK resolution profile for " << rad;
+      Warning( mess.str() ).ignore();
+      continue;
+    }
 
     // Loop over PDs
-    for ( const LHCb::RichSmartID PD : hpds )
+    for ( const auto& PD : hpds )
     {
       if ( rich != PD.rich() ) continue;
-
+      
       // Get the resolution plot for this HPD
       TH1D * h = m_pdPlots[PDPlotKey(rad,PD)];
-
-      // Fill the profile
-      if ( p )
+      if ( h )
       {
-        // PD Copy Number
-        const Rich::DAQ::HPDCopyNumber copyN = m_RichSys->copyNumber( PD );
-
+      
         // fit the histogram
         const FitResult res = fit(h,rad);
-
         if ( res.OK )
         {
+          _ri_debug << "Successfully fitted CK resolution plot for " << PD << endmsg;
+          
+          // PD Copy Number
+          const Rich::DAQ::HPDCopyNumber copyN = m_RichSys->copyNumber( PD );
+          
           // Get the profile bin for this HPD and directly set the contents and error
           //const int bin = p->FindBin( copyN.data() );
           //p->SetBinContent( bin, res.resolution );
           //p->SetBinError  ( bin, res.reserror   );
           //p->SetBinEntries( bin, 1              );
+          
+          // fill the res into the correct bin
           p->Fill( copyN.data(), res.resolution );
         }
+        else
+        {
+          _ri_debug << "FAILED to fit CK resolution plot for " << PD << endmsg;
+        }
+
+      }
+      else
+      {
+        std::ostringstream mess;
+        mess << "Failed to find HPD resolution plot for " << PD << " " << rad;
+        Warning( mess.str() ).ignore();
       }
 
     }
@@ -680,6 +703,7 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
   if ( hist )
   {
     // Min entries
+    _ri_verbo << " Found " << hist->GetEntries() << " entries" << endmsg;
     if ( hist->GetEntries() >= minHistEntries )
     {
       // Get x position of max bin
@@ -690,13 +714,15 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
 
       // Pre fit
       const std::string preFitFType = "gaus";
+      _ri_verbo << "Fitting " << preFitFType << endmsg;
       const std::string preFitName  = Rich::text(rad) + "PreFitF";
       TF1 * preFitF = new TF1( preFitName.c_str(), preFitFType.c_str(),
                                xPeak-preFitDelta[rad], xPeak+preFitDelta[rad] );
       trash.push_back(preFitF);
       preFitF->SetParameter(1,0);
       preFitF->SetParameter(2,initPreFitRes[rad]);
-      hist->Fit(preFitF,"QRS0");
+      //hist->Fit(preFitF,"QRS0");
+      hist->Fit(preFitF,"RS0");
 
       TF1 * lastFitF = preFitF;
       for ( unsigned int nPol = 1; nPol <= nPolFull+1; ++nPol )
@@ -704,6 +730,7 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
         // Fit function
         std::ostringstream fFuncType, fitName;
         fFuncType << "gaus(0)+pol" << nPol << "(3)";
+        _ri_verbo << "Fitting " << fFuncType.str() << endmsg;
         fitName << rad << "FitF" << nPol;
         TF1 * fFitF = new TF1( fitName.str().c_str(),
                                fFuncType.str().c_str(),
@@ -716,14 +743,18 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
         fFitF->SetParName(2,"Gaus Sigma");
 
         // Initialise parameters from last fit
-        const unsigned int nParamsToSet = ( nPol > 1 ? 3+(1+nPol) : 3 );
+        const unsigned int nParamsToSet = ( nPol > 1 ? 3 + nPol : 3 );
+        _ri_verbo << "Setting " << nParamsToSet << " parameters from previous fit" << endmsg;
         for ( unsigned int p = 0; p < nParamsToSet; ++p )
         {
-          fFitF->SetParameter(p,lastFitF->GetParameter(p));
+          const auto param = lastFitF->GetParameter(p);
+          _ri_verbo << " -> Setting parameter " << p << " to " << param << endmsg;
+          fFitF->SetParameter(p,param);
         }
 
         // Run the fit
-        hist->Fit(fFitF,"QRS0");
+        //hist->Fit(fFitF,"MQRSE0");
+        hist->Fit(fFitF,"MRSE0");
 
         // save last fit
         lastFitF = fFitF;
