@@ -721,8 +721,7 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
       trash.push_back(preFitF);
       preFitF->SetParameter(1,0);
       preFitF->SetParameter(2,initPreFitRes[rad]);
-      //hist->Fit(preFitF,"QRS0");
-      hist->Fit(preFitF,"RS0");
+      hist->Fit(preFitF,"QRS0");
 
       TF1 * lastFitF = preFitF;
       for ( unsigned int nPol = 1; nPol <= nPolFull+1; ++nPol )
@@ -753,8 +752,7 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
         }
 
         // Run the fit
-        //hist->Fit(fFitF,"MQRSE0");
-        hist->Fit(fFitF,"MRSE0");
+        hist->Fit(fFitF,"MQRSE0");
 
         // save last fit
         lastFitF = fFitF;
