@@ -3,6 +3,8 @@
 ! Responsible : Olivier Deschamps
 ! Purpose     : monitoring of Calo content for Boole output
 ! -----------------------------------------------------------------------------
+! 2015-09-11 - Gerhard Raven
+ - replace obsolete eventDataService() with eventSvc()
 
 !========================= CaloMoniDigi v2r6p1 2013-10-02 =========================
 ! 2013-09-26 - Marco Cattaneo
