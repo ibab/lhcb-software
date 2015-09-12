@@ -156,7 +156,7 @@ public:
     // ToolSvc::finalize, and we don't want dangling pointers...
     SmartIF<ISvcManager> mgr(serviceLocator());
     auto prio = mgr->getPriority("ToolSvc");
-    mgr->setPriority(name(),prio+1);
+    mgr->setPriority(name(),prio+1).ignore();
 
     return m_toolSvc ;
   } 
