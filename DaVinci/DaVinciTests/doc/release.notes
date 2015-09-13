@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2015-09-13 - Chris Jones
+ - Add Stripping 23r1 tests
+ - Disable LoKi python functors in all stripping tests, to check C++ caches.
+
 !====================== DaVinciTests v2r38 2015-09-09 ========================
 
 ! 2015-09-02 - Andrea Contu

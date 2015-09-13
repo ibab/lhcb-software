@@ -10,6 +10,7 @@
   <text>$PRCONFIGOPTS/DaVinci/Stripping/Collision15EM-6.5TeV-Reco15EM-FULLDST.py</text> 
   <text>$APPCONFIGOPTS/Persistency/Compression-ZLIB-1.py</text>
   <text>$DAVINCITESTSROOT/tests/options/DaVinci-1000events.py</text>
+  <text>$DAVINCITESTSROOT/tests/options/DisableLoKiPythonFunctors.py</text>
   <!--text>$DAVINCITESTSROOT/tests/options/EnableFPEAuditor.py</text-->
 </set></argument>
 <argument name="reference"><text>../refs/test_stripping23_collision15_reco15.ref</text></argument>
