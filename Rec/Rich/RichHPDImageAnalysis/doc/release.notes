@@ -3,6 +3,10 @@
 ! Responsible : Thomas BLAKE
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
+
+! 2015-09-14 - Chris Jones
+ - Set HPD image axis titles.
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

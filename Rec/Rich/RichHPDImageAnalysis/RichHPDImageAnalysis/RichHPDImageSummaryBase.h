@@ -65,7 +65,7 @@ namespace Rich
       void summaryINFO( const LHCb::RichSmartID id, const TH2D* hist ) const;
 
       //  Conditional booking of 2D histograms
-      TH2D* create2D( const std::string& name )  ;
+      TH2D* create2D( const std::string& name );
 
       /// Calculate the local x position from a col nr in pixels
       double localXFromPixels( const double col ) const ;

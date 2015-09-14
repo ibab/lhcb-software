@@ -153,8 +153,10 @@ TH2D* SummaryBase::create2D( const std::string& name )
   }
   else
   {
-    hist = new TH2D(name.c_str(),name.c_str(),32,-0.5,31.5,32,-0.5,31.5 ) ;
+    hist = new TH2D( name.c_str(), name.c_str(), 32,-0.5,31.5, 32,-0.5,31.5 ) ;
   }
+  hist->GetXaxis()->SetTitle( "pixel column" );
+  hist->GetYaxis()->SetTitle( "pixel row" );
   return hist;
 }
 
