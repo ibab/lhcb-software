@@ -38,7 +38,7 @@ default_config = {
                       'TrChi2'                  : 3,
                       'TrGhostProb'             : 0.5,
                       'MinTrkPT'                : 250 * MeV,
-                      'MinTrkIPChi2'            : 3,
+                      'MinTrkIPChi2'            : 5,
                       'HighPIDK'                : 0,
                       'LowPIDK'                 : 0,
                       'MaxADOCACHI2'            : 10.0,
