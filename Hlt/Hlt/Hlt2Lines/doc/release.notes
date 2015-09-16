@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+
+! 2015-09-16 - Simone Stracka
+ - CharmHad/Stages.py: removed IPCHI2 cut from second particle in AttachParticle 
+   class (second particle is neutral)
+
 ! 2015-09-09 - Albert Puig
  - Radiative: fixed bug in assignment of L0 and HLT1 dependencies. Also moved
    Bs->gammagamma BDT file names to settings to avoid hardcoding.

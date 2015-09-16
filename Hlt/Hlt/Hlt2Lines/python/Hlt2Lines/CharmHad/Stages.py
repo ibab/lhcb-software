@@ -1391,13 +1391,16 @@ class DetachedHHHChildCombiner(Hlt2Combiner):
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
                               MotherCut = mc, Preambulo = [], nickname = nickname)
 
+
+# 2-body combiner to attach a neutral particle (child no. 2) to another candidate (child no. 1)
 class AttachParticle(Hlt2Combiner):
     def __init__(self, name, decay,inputs,nickname = None):
         dc =    {}
+    
         cc =    ("  ( in_range( %(AM_MIN)s, AM, %(AM_MAX)s ) " +
                  "& ( APT > %(APT_MIN)s ) " +
                  "& ( (ACHILD(PT,1) > %(ADAU1PT_MIN)s) & (ACHILD(BPVIPCHI2(),1) > %(ADAU1BPVIPCHI2_MIN)s) ) " +
-                 "& ( (ACHILD(PT,2) > %(ADAU2PT_MIN)s) & (ACHILD(BPVIPCHI2(),2) > %(ADAU2BPVIPCHI2_MIN)s) ) )"
+                 "& ( (ACHILD(PT,2) > %(ADAU2PT_MIN)s) ) )"                 
                  )
         mc =    ("   ( in_range( %(DMASS_MIN)s, M, %(DMASS_MAX)s ) " +
                  " & ( BPVIPCHI2()< %(BPVIPCHI2_MAX)s )" +
