@@ -1275,10 +1275,11 @@ void MessagePresenter::checkCacheFileLength()
   else
   {
     const unsigned int maxSize = fNumberEntry670->GetIntNumber();
-    char cstr[1512];
+    const unsigned int maxStringSize = 1512;
+    char cstr[maxStringSize];
     std::vector<std::string> lines;
     unsigned int line = 0;
-    while ( fgets ( cstr, 1511, F ) && line++ < maxSize )
+    while ( fgets ( cstr, maxStringSize-1, F ) && line++ < maxSize )
     {
       const int s = strlen(cstr);
       cstr[s-1] = '\0';

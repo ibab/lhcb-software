@@ -52,9 +52,16 @@ public:
   virtual int SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what)=0; 
 
   virtual int Append(TH2D * H,const char *opts=NULL)=0;
+  inline  int Append( const TH2D * H,const char *opts=NULL)
+  { return Append( const_cast<TH2D*>(H), opts ); }
 
   virtual int Append(TH1D * H,const char *opts=NULL)=0;
+  inline  int Append( const TH1D * H,const char *opts=NULL)
+  { return Append( const_cast<TH1D*>(H), opts ); }
+
   virtual int Append(TH1 * H,const char *opts=NULL)=0;
+  inline  int Append( const TH1 * H,const char *opts=NULL)
+  { return Append( const_cast<TH1*>(H), opts ); }
  
   virtual int Append(TF1  * F,const char *opts=NULL)=0;
 
