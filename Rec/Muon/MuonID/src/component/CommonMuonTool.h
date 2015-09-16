@@ -56,7 +56,6 @@ class CommonMuonTool final : public extends1<GaudiTool, ICommonMuonTool> {
   DeMuonDetector* m_det;               // non-owning
   double m_foiFactor, m_preSelMomentum;
   std::array<double, nStations> m_stationZ;
-  std::array<std::pair<double, double>, nStations * nRegions> m_padSize;
   std::array<std::pair<double, double>, nStations> m_regionInner, m_regionOuter;
   std::array<std::vector<double>, 3> m_foiParamX, m_foiParamY;
   std::vector<double> m_momentumCuts;

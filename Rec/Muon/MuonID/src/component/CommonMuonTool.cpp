@@ -50,10 +50,6 @@ auto CommonMuonTool::initialize() -> StatusCode {
     m_regionInner[s] = std::make_pair(m_det->getInnerX(s), m_det->getInnerY(s));
     m_regionOuter[s] = std::make_pair(m_det->getOuterX(s), m_det->getOuterY(s));
     m_stationZ[s] = m_det->getStationZ(s);
-    for (unsigned r = 0; r != nRegions; ++r) {
-      m_padSize[s * nRegions + r] =
-          std::make_pair(m_det->getPadSizeX(s, r), m_det->getPadSizeY(s, r));
-    }
   }
 
   // Prepare to load information from conditions data base
