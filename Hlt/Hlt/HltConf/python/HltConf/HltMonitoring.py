@@ -209,8 +209,7 @@ class HltMonitoringConf(LHCbConfigurableUser):
         from DAQSys.Decoders import DecoderDB
         massMon.DecReportsLocation = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
         massMon.SelReportsLocation = DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
-        massMon.Decisions  = {"Jpsi"                : "Hlt1DiMuonJPsiDecision",
-                              "JpsiRefit"           : "Hlt2JPsiReFitPVsTurboDecision",
+        massMon.Decisions  = {"Jpsi"                : "Hlt2DiMuonJPsiDecision",
                               "Psi2S"               : "Hlt2DiMuonPsi2STurboDecision",
                               "D+->Kpipi"           : "Hlt2CharmHadDpToKmPipPipTurboDecision",
                               "Ds+->KKpi"           : "Hlt2CharmHadDspToKmKpPipTurboDecision",
@@ -229,7 +228,6 @@ class HltMonitoringConf(LHCbConfigurableUser):
                               }
 
         massMon.Histograms = {"Jpsi"                : [3005, 3186, 50],
-                              "JpsiRefit"           : [3005, 3186, 50],
                               "Psi2S"               : [3600, 3770, 50],
                               "D+->Kpipi"           : [1820.,1920., 100],
                               "Ds+->KKpi"           : [1920., 2020., 100],
