@@ -16,7 +16,7 @@ from Gaudi.Configuration import *
 
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from Configurables                         import DaVinci__N4BodyDecays
-from StandardParticles                     import StdNoPIDsPions, StdNoPIDsKaons
+from StandardParticles                     import StdAllNoPIDsPions, StdNoPIDsPions, StdNoPIDsKaons
 
 from PhysSelPython.Wrappers      import Selection
 from StrippingConf.StrippingLine import StrippingLine
@@ -42,9 +42,9 @@ default_config = {
                       'HighPIDK'                : 0,
                       'LowPIDK'                 : 0,
                       'MaxADOCACHI2'            : 10.0,
-                      'CombMassLow'             : 1700 * MeV,
-                      'CombMassHigh'            : 2100 * MeV,
-                      'MinCombPT'               : 0.0,
+                      'CombMassLow'             : 1730 * MeV,
+                      'CombMassHigh'            : 2000 * MeV,
+                      'MinCombPT'               : 3500 * MeV,
                       'MaxVCHI2NDOF'            : 12.0,
                       'MinBPVDIRA'              : 0.9998,
                       'MinBPVTAU'               : 0.1 * picosecond,
@@ -115,7 +115,7 @@ class DstarD2HHHHLines( LineBuilder ) :
             self.Dst2D0pi[decay] = self.makeDstar2D0Pi(DstarD2HHHHName,
                                                   config,
                                                   ['D*(2010)+ -> D0 pi+', 'D*(2010)- -> D0 pi-'],
-                                                  inputSel = [self.D2HHHH[decay], StdNoPIDsPions] )
+                                                  inputSel = [self.D2HHHH[decay], StdAllNoPIDsPions] )
         
             # Create the stripping line
             self.lineDstarD2HHHH[decay] = StrippingLine(DstarD2HHHHName+"Line",
