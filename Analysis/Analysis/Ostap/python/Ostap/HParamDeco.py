@@ -1106,8 +1106,8 @@ def _h2_integral_ ( histo , xlow , xhigh , ylow , yhigh ) :
     >>> histo = ...
     >>> i     = histo.integral ( 0.2 , 0.16 , 0.1 , 1.0 ) 
     """
-    f2  = _h2_as_fun_  ( histo )
-    return f1.Integral ( xlow , xhigh , ylow , yhigh )
+    f2  = _h2_as_tf2_  ( histo )
+    return f2.Integral ( xlow , xhigh , ylow , yhigh )
 
 # =============================================================================
     
