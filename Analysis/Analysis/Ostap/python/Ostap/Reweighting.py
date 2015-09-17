@@ -122,7 +122,7 @@ class Weight(object) :
                 merge = True
                 if 2 < len ( f ) : merge = f[2] 
                 
-                if not instance (  functions , ( list , tuple ) ) :
+                if not isinstance (  functions , ( list , tuple ) ) :
                     functions = [ functions ]
                     
                 ## merge list of functions into single function 
