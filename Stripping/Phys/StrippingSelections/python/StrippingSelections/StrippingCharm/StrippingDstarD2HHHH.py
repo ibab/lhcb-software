@@ -38,18 +38,21 @@ default_config = {
                       'TrChi2'                  : 3,
                       'TrGhostProb'             : 0.5,
                       'MinTrkPT'                : 250 * MeV,
-                      'MinTrkIPChi2'            : 5,
+                      'MinTrkIPChi2'            : 3,
                       'HighPIDK'                : 0,
                       'LowPIDK'                 : 0,
                       'MaxADOCACHI2'            : 10.0,
                       'CombMassLow'             : 1730 * MeV,
                       'CombMassHigh'            : 2000 * MeV,
-                      'MinCombPT'               : 3500 * MeV,
+                      'MinCombPT'               : 1500 * MeV,
+                      'MinCombP'                : 20000 * MeV,
                       'MaxVCHI2NDOF'            : 12.0,
                       'MinBPVDIRA'              : 0.9998,
                       'MinBPVTAU'               : 0.1 * picosecond,
                       'MassLow'                 : 1790 * MeV,
                       'MassHigh'                : 1940 * MeV,
+                      'MinDPT'                  : 1600 * MeV,
+                      'MinDP'                   : 25000 * MeV,
                       # D* -> D0 pi+
                       'Daug_TRCHI2DOF_MAX'      : 3,
                       'Dstar_AMDiff_MAX'        : 190 * MeV,
@@ -103,11 +106,14 @@ class DstarD2HHHHLines( LineBuilder ) :
                                             config['CombMassHigh'],
                                             config['MaxADOCACHI2'],
                                             config['MinCombPT'],
+                                            config['MinCombP'],
                                             config['MassLow'],
                                             config['MassHigh'],
                                             config['MaxVCHI2NDOF'],
                                             config['MinBPVDIRA'],
                                             config['MinBPVTAU'],
+                                            config['MinDPT'],
+                                            config['MinDP'],
                                             inputs
                                             )
             
@@ -134,8 +140,8 @@ class DstarD2HHHHLines( LineBuilder ) :
                    trChi2,trGhostProb,minPT,minIPChi2,
                    highPIDK, lowPIDK,
                    am34, am4, amMin, amMax,
-                   maxDocaChi2, minCombPT,
-                   vmMin, vmMax, maxVChi, minbpvDira, minLT,
+                   maxDocaChi2, minCombPT, minCombP,
+                   vmMin, vmMax, maxVChi, minbpvDira, minLT, minDPT, minDP,
                    inputSel = [ StdNoPIDsPions, StdNoPIDsKaons ]) :
         """
           Create and return a D0 -> HHHH (H=K,pi) Selection object.
@@ -152,13 +158,16 @@ class DstarD2HHHHLines( LineBuilder ) :
           am4             : phase space limit on 3-body combinations mass
           amMin           : minimum 4-body combination mass
           amMax           : maximum 4-body combination mass
-          minPT           : minimum 4-body combination PT
+          minCombPT       : minimum 4-body combination PT
+          minCombP        : minimum 4-body combination P
           maxDocaChi2     : maximum 2-tracks DocaChi2
           mMin            : minimum vertex mass
           mMax            : maximum vertex mass
           maxVChi         : maximum vertex chi2
           minbpvDira      : minimum DIRA wrt best PV
           minLT           : minimum lifetime wrt best PV
+          minDPT          : minimum D PT
+          minDP           : minimum D P
           inputSel        : input selections
         """
     
@@ -176,14 +185,17 @@ class DstarD2HHHHLines( LineBuilder ) :
                      "&( ACHI2DOCA(1,3) < %(maxDocaChi2)s ) " \
                      "&( ACHI2DOCA(2,3) < %(maxDocaChi2)s ) " %locals() )
         _combination_cuts =  (" (in_range( %(amMin)s, AM, %(amMax)s )) " \
-                              "&( (APT1+APT2+APT3+APT4) > %(minPT)s )" \
+                              "&( (APT1+APT2+APT3+APT4) > %(minCombPT)s )" \
+                              "&( AP > %(minCombP)s )" \
                               "&( ACHI2DOCA(1,4) < %(maxDocaChi2)s ) " \
                               "&( ACHI2DOCA(2,4) < %(maxDocaChi2)s ) " \
                               "&( ACHI2DOCA(3,4) < %(maxDocaChi2)s ) " %locals() )
         _mother_cuts = (" (in_range( %(vmMin)s, M, %(vmMax)s )) " \
                         "&(VFASPF(VCHI2PDOF) < %(maxVChi)s)" \
                         "&(BPVDIRA > %(minbpvDira)s )" \
-                        "&(BPVLTIME() > %(minLT)s )" %locals() )
+                        "&(BPVLTIME() > %(minLT)s )" \
+                        "&(PT > %(minDPT)s )" \
+                        "&(P  > %(minDP)s )" %locals() )
 
         CombineD2HHHH = DaVinci__N4BodyDecays(DecayDescriptors = decayDescriptors,
                                               DaughtersCuts = { "pi+" : _daughters_cuts+_pidPi, "K+" : _daughters_cuts+_pidK },
