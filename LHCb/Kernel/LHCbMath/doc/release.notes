@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2015-09-18 - Vanya Belyaev
+ - add confidence intervals for binomial proportions/efficiencies 
+
 ! 2015-09-06 - Vanya Belyaev
  - add ConvexOnly 
 

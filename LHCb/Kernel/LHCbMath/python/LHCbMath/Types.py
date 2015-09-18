@@ -1840,6 +1840,13 @@ def ulongs ( arg1 , *args ) :
     ## 
     return vct
 
+
+SPD = std.pair('double','double')
+SPD.asTuple  = lambda s : (s.first,s.second)
+SPD.__str__  = lambda s : str( (s.first,s.second) )
+SPD.__repr__ = SPD.__str__
+
+
 # =============================================================================
 if '__main__' == __name__ :
 

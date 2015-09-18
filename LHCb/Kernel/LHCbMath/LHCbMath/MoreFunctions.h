@@ -122,10 +122,16 @@ namespace Gaudi
       const unsigned short b , 
       const double         x ) ;
     // ========================================================================
-    
+    /** get quantile function for standard normal distribution
+     *  @see http://en.wikipedia.org./wiki/Probit
+     *  @param alpha argument    \f$  0<\alpha<1 \f$  
+     *  @return quantile value 
+     */
+    GAUDI_API double  probit ( const double alpha  ) ;
     // ========================================================================
     // clenshaw summation algorithms 
     // ========================================================================
+
     
     // ========================================================================
     /** Clenshaw algorithm for summation of Chebyshev polynomials 

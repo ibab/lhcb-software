@@ -421,7 +421,7 @@ namespace Gaudi
     // ========================================================================
     /** evaluate the binomial efficiency for Bernulli scheme 
      *  @param n_success (INPUT) number of 'success' 
-     *  @param N_total    (INPUT) total number 
+     *  @param N_total   (INPUT) total number 
      *  @return the binomial efficiency 
      */
     GAUDI_API

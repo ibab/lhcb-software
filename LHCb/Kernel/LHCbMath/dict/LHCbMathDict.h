@@ -37,6 +37,7 @@
 #include "LHCbMath/Polynomials.h"
 #include "LHCbMath/Choose.h"
 #include "LHCbMath/MoreFunctions.h"
+#include "LHCbMath/Binomial.h"
 // ============================================================================
 /** @file LHCbMathDict.h
  *

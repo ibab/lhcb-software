@@ -215,6 +215,7 @@
   <function name = "Gaudi::Math::alpha_prime_N"   />
   <function name = "Gaudi::Math::beta_N"          />
   <function name = "Gaudi::Math::kummer"          />  
+  <function name = "Gaudi::Math::probit"          />  
   <function name = "Gaudi::Math::binomEff"        />
   <function name = "Gaudi::Math::binomEff2"       />
   <function name = "Gaudi::Math::wilsonEff"       />
@@ -222,6 +223,14 @@
   <function name = "Gaudi::Math::exclusiveEff"    />
   <function name = "Gaudi::Math::zechEff"         />
   <function name = "Gaudi::Math::effJackknife"    />
+  
+  <function name = "Gaudi::Math::wald_interval"                    />  
+  <function name = "Gaudi::Math::wilson_score_interval"            />  
+  <function name = "Gaudi::Math::wilson_score_continuity_interval" />  
+  <function name = "Gaudi::Math::arcsin_interval"                  />  
+  <function name = "Gaudi::Math::agresti_coul_interval"            />  
+  <function name = "Gaudi::Math::jeffreys_interval"                />  
+  <function name = "Gaudi::Math::clopper_pearson_interval"         />  
 
   <function name = "Gaudi::Math::casteljau"          />  
   <function name = "Gaudi::Math::clenshaw_chebyshev" />
