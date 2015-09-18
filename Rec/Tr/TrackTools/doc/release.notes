@@ -3,6 +3,10 @@
 ! Responsible : 
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+
+! 2015-09-18 - Michel De Cian
+ - First commit of 'SelectTrackInVertex', a track selector that checks if a track is in a collection of tracks of a Rec::Vertex.
+
 ! 2015-08-25 - Gerhard Raven
  - change virtual private inheritance of interface into virtual public
 
