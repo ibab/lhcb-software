@@ -13,19 +13,14 @@
 #define LHCBKERNEL_MEMPOOLALLOC_H 1
 
 // boost stuff from Gaudi
-#ifdef _WIN32
-// Avoid conflict of Windows macro with std::max
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-#endif
 #include "GaudiKernel/boost_allocator.h"
 
 #if __cplusplus < 201100L
-namespace LHCb_MemPoolAlloc_details {
-    // implement the equivalent of C++11 std::conditional...
-    template<bool B, class T, class F> struct conditional { typedef T type; };
-    template<class T, class F> struct conditional<false, T, F> { typedef F type; };
+namespace LHCb_MemPoolAlloc_details 
+{
+  // implement the equivalent of C++11 std::conditional...
+  template<bool B, class T, class F> struct conditional { typedef T type; };
+  template<class T, class F> struct conditional<false, T, F> { typedef F type; };
 }
 #else
 #include <type_traits>
@@ -60,7 +55,7 @@ namespace LHCb
 
   template <typename T, 
             unsigned NextSize = 32,  // when needed, allocate size for 'NextSize' T's at once.
-            bool Mutex = true,       // do we need to protect access to the singleton with a mutex?
+            bool Mutex = false,      // do we need to protect access to the singleton with a mutex?
             typename Allocator = boost::default_user_allocator_new_delete>
   class MemPoolAlloc
   {
