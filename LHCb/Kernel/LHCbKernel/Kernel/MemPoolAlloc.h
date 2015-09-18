@@ -15,16 +15,8 @@
 // boost stuff from Gaudi
 #include "GaudiKernel/boost_allocator.h"
 
-#if __cplusplus < 201100L
-namespace LHCb_MemPoolAlloc_details 
-{
-  // implement the equivalent of C++11 std::conditional...
-  template<bool B, class T, class F> struct conditional { typedef T type; };
-  template<class T, class F> struct conditional<false, T, F> { typedef F type; };
-}
-#else
+// Traits
 #include <type_traits>
-#endif
 
 namespace LHCb
 {
@@ -53,10 +45,11 @@ namespace LHCb
    */
   //-----------------------------------------------------------------------------
 
-  template <typename T, 
-            unsigned NextSize = 32,  // when needed, allocate size for 'NextSize' T's at once.
-            bool Mutex = false,      // do we need to protect access to the singleton with a mutex?
-            typename Allocator = boost::default_user_allocator_new_delete>
+  template <typename T,              /// The type
+            unsigned NextSize = 32,  /// When needed, allocate size for 'NextSize' T's at once.
+            bool Mutex = false,      /// Do we need to protect access to the singleton with a mutex?
+            typename Allocator = boost::default_user_allocator_new_delete /// The allocator
+            >
   class MemPoolAlloc
   {
 
@@ -73,37 +66,21 @@ namespace LHCb
     /// operator new
     inline static void* operator new ( size_t size )
     {
-#if __cplusplus < 201100L
-      typedef boost::singleton_pool<T, sizeof(T),
-                                         Allocator,
-                                         typename LHCb_MemPoolAlloc_details::conditional<Mutex,boost::details::pool::default_mutex,boost::details::pool::null_mutex>::type,
-                                         NextSize> pool;
-#else 
-      using pool = boost::singleton_pool<T, sizeof(T),
-                                         Allocator,
-                                         typename std::conditional<Mutex,boost::details::pool::default_mutex,boost::details::pool::null_mutex>::type,
-                                         NextSize>;
-#endif
-      return ( sizeof(T) == size ?  pool::malloc() 
-                                 : ::operator new ( size ) );
+      using pool = boost::singleton_pool< T, sizeof(T),
+                                          Allocator,
+                                          typename std::conditional<Mutex,boost::details::pool::default_mutex,boost::details::pool::null_mutex>::type,
+                                          NextSize>;
+      return ( sizeof(T) == size ?  pool::malloc() : ::operator new ( size ) );
     }
 
     /// Operator delete
     inline static void operator delete ( void* pObj )
     {
-#if __cplusplus < 201100L
-      typedef boost::singleton_pool<T, sizeof(T),
-                                         Allocator,
-                                         typename LHCb_MemPoolAlloc_details::conditional<Mutex,boost::details::pool::default_mutex,boost::details::pool::null_mutex>::type,
-                                         NextSize> pool;
-#else
       using pool = boost::singleton_pool<T, sizeof(T),
                                          Allocator,
                                          typename std::conditional<Mutex,boost::details::pool::default_mutex,boost::details::pool::null_mutex>::type,
                                          NextSize>;
-#endif
-      pool::is_from(pObj) ? pool::free(pObj) 
-                          : ::operator delete ( pObj );
+      pool::is_from(pObj) ? pool::free(pObj) : ::operator delete ( pObj );
     }
 
 #ifdef __INTEL_COMPILER // Re-enable ICC remark

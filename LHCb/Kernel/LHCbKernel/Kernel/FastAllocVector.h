@@ -12,43 +12,29 @@
 #ifndef KERNEL_FastAllocVector_H
 #define KERNEL_FastAllocVector_H 1
 
-// Include files
+// STL
 #include <vector>
 
-// need to use macro as template typedefs don't work yet :(
-
-// Check if memory pools are isabled completely
 #ifndef GOD_NOALLOC
+// Use a memory pool allocator from boost
 
-#ifdef __GNUC__
-#if __GNUC__ > 3
-// This is GCC 4 and above. Use the allocators
-#include <ext/mt_allocator.h>
-#define LHCb_FastAllocVector_allocator(TYPE) __gnu_cxx::__mt_alloc< TYPE >
-#else
-#if __GNUC_MINOR__ > 3
-// This is gcc 3.4.X so has the custom allocators
-#include <ext/mt_allocator.h>
-#define LHCb_FastAllocVector_allocator(TYPE) __gnu_cxx::__mt_alloc< TYPE >
-//#include <ext/pool_allocator.h>
-//#define LHCb_FastAllocVector_allocator(TYPE) __gnu_cxx::__pool_alloc< TYPE >
-//#define LHCb_FastAllocVector_allocator(TYPE) std::allocator< TYPE >
-#else
-// This is older than gcc 3.4.X so use standard allocator
-#define LHCb_FastAllocVector_allocator(TYPE) std::allocator< TYPE >
-#endif
-#endif
-#else
-// Not GNUC, so disable allocators
-#define LHCb_FastAllocVector_allocator(TYPE) std::allocator< TYPE >
-#endif
+// boost
+#include "GaudiKernel/boost_allocator.h"
+#include <boost/pool/pool_alloc.hpp>
+
+// Boost pool allocator, no mutex
+#define LHCb_FastAllocVector_allocator(TYPE) boost::pool_allocator< TYPE, boost::default_user_allocator_new_delete, boost::details::pool::null_mutex, 32 >
+
+// Boost pool allocator, with mutex
+//#define LHCb_FastAllocVector_allocator(TYPE) boost::pool_allocator< TYPE, boost::default_user_allocator_new_delete, boost::details::pool::default_mutex, 32 >
 
 #else
-
 // GOD NOALLOC - Disable memory pools completely
+
 #define LHCb_FastAllocVector_allocator(TYPE) std::allocator< TYPE >
 
 #endif
+
 
 namespace LHCb
 {
@@ -56,13 +42,13 @@ namespace LHCb
   //--------------------------------------------------------------------------------
   /** @class FastAllocVector FastAllocVector.h Kernel/FastAllocVector.h
    *
-   *  Vector with fast allocator
+   *  Vector with fast allocator from boost
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   29/03/2007
    */
   //--------------------------------------------------------------------------------
-
+  
   template < typename TYPE, typename ALLOC = LHCb_FastAllocVector_allocator(TYPE) >
   class FastAllocVector : public std::vector<TYPE,ALLOC>
   {
@@ -92,8 +78,7 @@ namespace LHCb
                                               const FastAllocVector<TYPE,ALLOC> & v )
     {
       str << "[ ";
-      for ( typename FastAllocVector<TYPE,ALLOC>::const_iterator i = v.begin(); i != v.end(); ++i )
-      { str << *i << " "; }
+      for ( const auto& i : v ) { str << i << " "; }
       return str << "]";
     }
 

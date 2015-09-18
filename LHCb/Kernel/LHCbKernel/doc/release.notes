@@ -6,6 +6,8 @@
 
 ! 2015-09-18 - Chris Jones
  - Disable mutex (thread) support in MemPoolAlloc.h as well ...
+ - Switch FastAllocVector to use boost::pool_allocator instead of gcc mt 
+   allocator. Seemingly much faster.
 
 ! 2015-09-02 - Gerhard Raven
  - replace ListItem with Gaudi::Utils::TypeNameString 
