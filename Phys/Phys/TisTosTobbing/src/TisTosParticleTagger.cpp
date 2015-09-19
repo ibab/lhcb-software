@@ -14,10 +14,24 @@
 // 2010-07-22 : Tomasz Skwarnicki
 //-----------------------------------------------------------------------------
 
+namespace {
+   // Helper classes
+   struct _Cloner {
+      template <class T>
+      T* operator() ( const T* a ) const { return a->clone() ; }
+   };
+
+   struct _Caster {
+      template <class T>
+      T* operator() ( const T* a ) const { return const_cast<T*> ( a ) ; }
+   };
+
+   // Using declarations
+   using namespace LHCb;
+}
+
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( TisTosParticleTagger )
-
-using namespace LHCb;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -48,8 +62,10 @@ TisTosParticleTagger::TisTosParticleTagger( const std::string& name,
   declareProperty("TISFrac",m_TISFrac);
 
   // this will affect execution only in non-zero tag-keys are used
-  declareProperty("SatisfiedOnFirstSpec",m_SatisfiedOnFirstSpec =false);
+  declareProperty("SatisfiedOnFirstSpec", m_SatisfiedOnFirstSpec = false);
 
+  // Clone filtered particles
+  declareProperty("CloneFilteredParticles", m_cloneFilteredParticles = false);
 
 }
 //=============================================================================
@@ -316,8 +332,8 @@ StatusCode TisTosParticleTagger::execute()
   // determine if split reports
   bool split(false);
   if( m_split_checkDecReport ){
-    split = exist<LHCb::HltDecReports>(m_decReportLoc1,false);    
-    if( !split ) split= exist<LHCb::HltDecReports>(m_decReportLoc1);    
+    split = exist<LHCb::HltDecReports>(m_decReportLoc1,false);
+    if( !split ) split= exist<LHCb::HltDecReports>(m_decReportLoc1);
   }
 
 
@@ -413,7 +429,7 @@ StatusCode TisTosParticleTagger::execute()
       if( m_tistostoolHlt2 ){
 	m_tistostoolHlt2->setOfflineInput( m_tistostool->offlineLHCbIDs() );
       }
-    } 
+    }
     if( m_tistostoolL0 ){
 	m_tistostoolL0->setOfflineInput( m_tistostool->offlineLHCbIDs() );
     }
@@ -573,7 +589,7 @@ StatusCode TisTosParticleTagger::execute()
   }
 
   for( const auto particle : outparts ) {
-     cloneAndMarkTree(particle);
+    markParticle(particle);
   }
 
   if ( msgLevel(MSG::DEBUG) ) debug() << " Filter passed = " << passed << endmsg;
@@ -583,6 +599,7 @@ StatusCode TisTosParticleTagger::execute()
 }
 
 
+//=============================================================================
 bool TisTosParticleTagger::particleOK(const Particle* po)
 {
   if( !po )return false;
@@ -605,6 +622,7 @@ bool TisTosParticleTagger::particleOK(const Particle* po)
   return true;
 }
 
+//=============================================================================
 bool TisTosParticleTagger::storeTag(Particle* po, int index,bool passedCondition)
 {
   if( !po )return false;
@@ -628,4 +646,87 @@ bool TisTosParticleTagger::storeTag(Particle* po, int index,bool passedCondition
   }
 }
 
+// save (clone if needed) selected particles in TES
+// ============================================================================
+template <class PARTICLES, class VERTICES, class CLONER>
+StatusCode TisTosParticleTagger::_save ( ) const
+{
+  //
+  PARTICLES* p_tes = new PARTICLES () ;
+  VERTICES*  v_tes = new VERTICES  () ;
+  //
+  put ( p_tes ,    particleOutputLocation () ) ;
+  put ( v_tes , decayVertexOutputLocation () ) ;
+  //
+  CLONER cloner ;
+  //
+  for ( LHCb::Particle::Range::iterator ip = i_markedParticles().begin();
+        ip != i_markedParticles().end(); ++ip )
+  {
+    //
+    const LHCb::Particle* p = *ip ;
+    if ( NULL == p ) { continue ; } // CONTINUE
+
+    // clone if needeed
+    LHCb::Particle* p_cloned = cloner ( p ) ;
+    p_tes -> insert ( p_cloned ) ;
+    //
+    this  -> cloneP2PVRelation ( p , p_cloned ) ;
+    //
+    const LHCb::Vertex* v = p->endVertex() ;
+    if ( NULL != v )
+    {
+      LHCb::Vertex* v_cloned = cloner ( v ) ;
+      p_cloned -> setEndVertex ( v_cloned ) ;
+      v_tes    -> insert( v_cloned ) ;
+    }
+  }
+  //
+  // check that the decay trees are fully in the TES
+  //
+  for ( typename PARTICLES::const_iterator ip = p_tes->begin() ;
+        p_tes->end () != ip ; ++ip )
+  {
+    if (! DaVinci::Utils::decayTreeInTES( *ip ) )
+    {
+      return Error ( "TisTosParticleTagger::_save Element of saved decay tree not in TES. Likely memory leak!");
+    }
+  }
+  //
+  return ( i_markedParticles().size() != p_tes->size() ?
+           StatusCode::FAILURE : StatusCode::SUCCESS   );
+}
+
+StatusCode TisTosParticleTagger::_saveInTES ()
+{
+  if (msgLevel(MSG::VERBOSE))
+  {
+    verbose() << "TisTosParticleTagger::_saveInTES " << i_markedParticles().size() << " Particles" << endmsg;
+  }
+  return m_cloneFilteredParticles ?
+    this -> _save<LHCb::Particle::Container,LHCb::Vertex::Container,_Cloner> ():
+    this -> _save<LHCb::Particle::Selection,LHCb::Vertex::Selection,_Caster> ();
+}
+
 //=============================================================================
+void TisTosParticleTagger::cloneP2PVRelation(const LHCb::Particle* particle,
+                                             const LHCb::Particle* clone) const
+{
+   // Use getRelatedPV to propagate related PVs to clone.
+
+   // FIXME: I'd prefer to be able to only load relations if they were available
+   // instead of calculating the relations if they are not. The required method is
+   // unfortunately private in DVCommonBase
+   const LHCb::VertexBase* bestPV = getRelatedPV(particle);
+   if (0 != bestPV) {
+      relate(clone, bestPV);
+   }
+}
+
+//=============================================================================
+void TisTosParticleTagger::writeEmptyTESContainers()
+{
+   m_cloneFilteredParticles ?
+      writeEmptyContainer<LHCb::Particle::Container>() :
+      writeEmptyContainer<LHCb::Particle::Selection>();
+}

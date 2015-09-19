@@ -27,7 +27,25 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
+protected:
+
+   template <class PARTICLES, class VERTICES, class CLONER>
+   StatusCode _save () const;
+
+   virtual StatusCode _saveInTES ();
+
+   void cloneP2PVRelation(const LHCb::Particle* particle ,
+                          const LHCb::Particle* clone) const;
+
+   virtual void writeEmptyTESContainers();
+
 private:
+
+  template <class CONTAINER>
+  void writeEmptyContainer() {
+    auto container = new CONTAINER{};
+    put(container, particleOutputLocation());
+  }
 
   /// enumerate trigger stages
   enum TriggerStages {defaultTriggerStage=0,HLT1=defaultTriggerStage,HLT2,L0,NTriggerStages};
@@ -38,11 +56,13 @@ private:
   /// tag particle with calculated TisTos condition (returns false if failed)
   static bool storeTag(LHCb::Particle* po, int index, bool passedCondition);
 
-
   /// pairs of <"InputTrigger%TisTosFunction",InfoID> ID=0 no tagging; (use Id>10000 but not too large)
   std::map<std::string,int> m_tistosSpecs ;
 
-  /// flag if the algorithm should pass on any input or just on at least one satisfied TisTis
+  /// Clone filtered particles
+  bool m_cloneFilteredParticles;
+
+  /// flag if the algorithm should pass on any input or just on at least one satisfied TisTos
   bool m_passOnAll;
   /// flag to disallow using regex in the "InputTrigger" (can make the Tagger faster)
   bool m_noRegex;

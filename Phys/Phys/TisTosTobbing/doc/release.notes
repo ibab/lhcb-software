@@ -1,7 +1,16 @@
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
-! Purpose     : TisTosTobbing of the trigger 
+! Purpose     : TisTosTobbing of the trigger
 ! =============================================================================
+
+! 2015-09-19 - Roel Aaij
+ - Fix memory leak caused by cloneAndMarkTree. Adopt method from FilterDesktop
+   to save particles to TES.
+ - Add property to toggle between cloning filtered particles or the default of
+ 	 using shared selections.
+ - Calculate relatedPVs for cloned particles to propagate relatedPVs in case
+   of previously refitted PVs.
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
@@ -15,9 +24,9 @@
 ! 2015-05-11 - Tomasz Skwarnicki
   - "valid" flag introduced to TisTos and selected ParticleTisTos methods to
     protect tos,tis,tus methods against HltObjectSummeries with no lhcbids at any level
-    previously only generic tistos method was protected 
+    previously only generic tistos method was protected
     (new hlt raw data have such HOS)
-    
+
 !======================== TisTosTobbing v8r3 2015-04-29 =======================
 
 ! 2015-04-28 - Roel Aaij
@@ -46,7 +55,7 @@
 
 !========================= TisTosTobbing v8r0 2014-01-13 =========================
 ! 2013-12-01 - Tomasz Skwarnicki
- - Check RootInTES and absolute locations of reports in TisTosParticleTagger 
+ - Check RootInTES and absolute locations of reports in TisTosParticleTagger
 
 ! 2013-11-30 - Tomasz Skwarnicki
  - Create Hlt1TriggerTis, Hlt2TriggerTisTos to work with split Hlt1, Hlt2 reports
@@ -76,7 +85,7 @@
 !========================= TisTosTobbing v7r8 2012-08-31 =========================
 
 ! 2012-08-31 - Tomasz Skwarnicki
- - change defaults in TisTos.cpp: switch use of TT off, set Muon TOS threshold 
+ - change defaults in TisTos.cpp: switch use of TT off, set Muon TOS threshold
    extra low will affect all TisTos tools
 
 !========================= TisTosTobbing v7r7 2012-07-09 =========================
@@ -98,7 +107,7 @@
 !========================= TisTosTobbing v7r6 2012-05-03 =========================
 
 ! 2012-04-07 - Tomasz Skwarnicki
- - Collect Calo EM info from ProtoParticle::ExtraInfo if available instead of 
+ - Collect Calo EM info from ProtoParticle::ExtraInfo if available instead of
    via the Calo Hypos
  - Print ERROR if no Calo info, or no Muon info found while requested
  - Add protection against missing CaloClusters while CaloHypo present
@@ -136,7 +145,7 @@
 
 !========================= TisTosTobbing v7r2 2011-05-13 ======================
 ! 2011-05-05 - Tomasz Skwarnicki
- - src/L0SelReportsMaker.cpp add support for Muon12 condition 
+ - src/L0SelReportsMaker.cpp add support for Muon12 condition
    used in new DiMuon trigger (2011 data)
 
 !========================== TisTosTobbing v7r0 2011-04-04 =====================
@@ -185,7 +194,7 @@
 
 ! 2010-11-18 - Tomasz Skwarnicki
  - fix serious bug in L0DecReportsMaker,L0SelReportsMaker which allowed intermediate
-   L0 channels to parade as L0 trigger decisions (e.g. 'HCAL'). 
+   L0 channels to parade as L0 trigger decisions (e.g. 'HCAL').
 
 !========================== TisTosTobbing v6r2 2010-11-18 ===================
 
@@ -199,7 +208,7 @@
 !========================== TisTosTobbing v6r1 2010-11-02 ===================
 
 ! 2010-10-31 - Tomasz Skwarnicki
- - remove checking existance of Trig/L0/MuonCtrl when looking for MuonBCSU in L0SelReportsMaker 
+ - remove checking existance of Trig/L0/MuonCtrl when looking for MuonBCSU in L0SelReportsMaker
 
 ! 2010-10-29 - Tomasz Skwarnicki
  - introduce "AllowIntermediateSelections" property (default false) to exclude fake Decisions in Sel report
@@ -219,7 +228,7 @@
 !========================== TisTosTobbing v6r0 2010-09-29 ===================
 
 ! 2010-09-23 - Tomasz Skwarnicki
- - move TisTos and ParticleTisTos low level tools into linker_library, 
+ - move TisTos and ParticleTisTos low level tools into linker_library,
    export their include files in TisTos/
 
 ! 2010-09-22 - Tomasz Skwarnicki
@@ -237,7 +246,7 @@
 
 !========================== TisTosTobbing v5r0 2010-07-27 ===================
 ! 2010-07-23 - Tomasz Skwarnicki
- - Add TisTosParticleTagger. Add protection in ParticleTisTos. 
+ - Add TisTosParticleTagger. Add protection in ParticleTisTos.
 
 ! 2010-07-21 - Tomasz Skwarnicki
  - Major rewrite of all the code. TisTos, ParticleTisTos added (new lower level tools).
@@ -254,7 +263,7 @@
  - All SelectionTisTos: add use of MuonPID::muonTrack(). Keep keyed muon search as backup.
 
 ! 2010-06-10 - V. Gligorov
- - Remove obsolete default HLT track locations. 
+ - Remove obsolete default HLT track locations.
 
 !========================== TisTosTobbing v4r1 2010-01-11 ===================
 
@@ -277,7 +286,7 @@
 !========================== TisTosTobbing v3r5 2009-10-28 ===================
 ! 2009-10-22 - Tomasz Skwarnicki
  - add TriggerSelectionTisTosInHlt, TriggerTisTosInHlt bypassing HltSelReports
-   for use in Hlt2 
+   for use in Hlt2
 
 ! 2009-10-21 - Patrick Koppenburg
  - Remove _dll file
@@ -288,7 +297,7 @@
  - TriggerTisTos:
   eliminate ANNSvc; use trigger names from HltDecReport and HltSelReports instead
   turn warnings abouts empty trigger input off (property to turn it on)
- - TriggerSelectionTisTos: 
+ - TriggerSelectionTisTos:
   add additional protections against missing subobjects
   verbose output
   consistently switch subdetector off by setting TOSFrac to 0 or less
@@ -300,7 +309,7 @@
 !========================== TisTosTobbing v3r4 2009-08-31 ===================
 ! 2009-08-12 - Gerhard Raven
  - replace globbing with regex matching, print warning if a bare '*' is
-   found. 
+   found.
 
 !========================== TisTosTobbing v3r3 2009-03-23 ===================
 ! 2009-01-21 - Gerhard Raven
@@ -328,7 +337,7 @@
    old HltSummary-based tool renamed to TriggerTisTosHS
  - Major change: adopt to new tool interface (changes in user code required)
  - new functionality via hltObjectSummaries method
- - use BeginEvent lisener 	
+ - use BeginEvent lisener
 
 !========================== TisTosTobbing v2r8 2008-10-30 ===================
 
@@ -368,7 +377,7 @@
 
 ! 2008-06-18 Tomasz Skwarnicki
  - introduce use of HltANNSvc to fix problems in the previous release
- - fix old bug for TisTossing muon triggers if Tracks were used 
+ - fix old bug for TisTossing muon triggers if Tracks were used
    instead of Particles to define off-line signal
 
 !========================== TisTosTobbing v2r4 2008-06-09 ===================
@@ -387,7 +396,7 @@
  - triggerSelectionTisTos.cpp: enable TisTos of HltSelectionFilter summary
 
 ! 2008-01-22 Jose A. Hernando
- - Adaptation to HLT-clean, please check my changes with comment "JAH" 
+ - Adaptation to HLT-clean, please check my changes with comment "JAH"
 
 !========================== TisTosTobbing v2r1 2007-09-23 ===================
 ! 2007-09-03 - Patrick Koppenburg
@@ -409,7 +418,7 @@
 
 ! 20070829 - Tomasz Skwarnicki
   Add TriggerTisTos tool.
-  TriggerSelectionTisTos code: 
+  TriggerSelectionTisTos code:
      Extend Ecal hits support.
      Add result caching.
      Cleanup and add docs.
@@ -417,4 +426,3 @@
 !====================== TisTosTobbing v1r0 2007-8-8 ==================
 ! 2007-08-08 - Tomasz Skwarnicki
   First release of TriggerSelectionTisTos tool
-
