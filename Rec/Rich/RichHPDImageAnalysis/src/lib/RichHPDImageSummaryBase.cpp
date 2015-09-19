@@ -86,7 +86,7 @@ StatusCode SummaryBase::execute()
     {
       for ( const auto& HPD : Ingress.second.hpdData() )
       {
-        const LHCb::RichSmartID smartID = HPD.second.hpdID();
+        const auto& smartID = HPD.second.hpdID();
 
         // Skip inhibited HPDs
         if ( HPD.second.header().inhibit() ) { continue; }
