@@ -849,17 +849,18 @@ def _ds_project_  ( dataset , histo , what , *args ) :
     >>> dataset.project ( h1           , 'm', 'chi2<10' ) ## use histo
 
     """
-    
-    if isinstance ( what , ROOT.RooArgList ) and isinstance ( histo , ROOT.TH1 ) :
-        return dataset.fillHistogram  ( histo , what , *args ) 
 
+    if isinstance ( what , ROOT.RooArgList ) and isinstance ( histo , ROOT.TH1 ) :
+        histo.Reset() 
+        return dataset.fillHistogram  ( histo , what , *args ) 
+        
     store = dataset.store()
     if store and isinstance ( what , str ) :
         tree = store.tree()
         if tree : return tree.project ( histo , what , *args ) 
 
     if isinstance ( what , str ) : 
-        vars  = [ v.replace(' ','') for v in what.split(':') ]
+        vars  = [ v.strip() for v in what.split(':') ]
         return _ds_project_ ( dataset , histo , vars , *args ) 
     
     if isinstance ( what , ( list , tuple ) ) : 
@@ -891,31 +892,7 @@ def _ds_project_  ( dataset , histo , what , *args ) :
         obj = ROOT.gDirectory.FindObjectAny ( histo )
         if instance ( obj  , ROOT.TH1 ) :
             return _ds_project_ ( dataset , obj , what , *args )
-        
-    if not histo and isinstance ( what , ROOT.RooArgList ) and 1 <= len ( what ) <= 3 :
 
-        from Ostap.PyRoUts import hID
-        
-        if 1 == len ( what ) :
-            histo = ROOT.TH1F ( hID() ,
-                                what[0].GetName() , 100 ,
-                                what[0].getMin () ,  what[0].getMax () ) ; histo.Sumw2()
-            return _ds_project_ ( dataset , histo , what , *args )
-        
-        if 2 == len ( what ) :
-            histo = ROOT.TH2F ( hID() ,
-                                what[1].GetName() + ' : ' + what[0].GetName() ,
-                                20 , what[0].getMin () ,     what[0].getMax () ,
-                                20 , what[1].getMin () ,     what[1].getMax () ) ; histo.Sumw2()
-            return _ds_project_ ( dataset , histo , what , *args )
-        
-        if 3 == len ( what ) :
-            histo = ROOT.TH3F ( hID() ,
-                                what[2].GetName() + ' : ' + what[1].GetName() + ' : ' + what[0].GetName() ,
-                                20 , what[0].getMin () ,     what[0].getMax () ,
-                                20 , what[1].getMin () ,     what[1].getMax () , 
-                                20 , what[2].getMin () ,     what[2].getMax () ) ; histo.Sumw2()
-            return _ds_project_ ( dataset , histo , what , *args )
         
     raise AttributeError ( 'DataSet::project, invalid case' )
 
@@ -938,18 +915,90 @@ def _ds_draw_ ( dataset , what , *args ) :
     >>> dataset.draw ( 'm', 'chi2<10' ) ## use histo
     
     """
+
+
+    cuts = cuts.strip()
+    opts = opts.strip()
+    
     store = dataset.store()
     if store and isinstance ( what , str ) : 
         tree = store.tree()
-        if tree : return tree.Draw( what , *args )
-
-    h = _ds_project_ ( dataset , None , what , *args )
-    if isinstance ( h , ROOT.TH1 ) :
-        ##                                    OPTIONS                              CUTS 
-        if  len ( args ) > 1 and isinstance ( args[-1] , str ) and isinstance ( args[-2] , str ) :  h.Draw ( args[-1] )
-        else                 : h.Draw ( ) 
-        return h
+        if tree : return tree.Draw( what , cuts , opts  , *args )
+        
+    if   isinstance ( what , str ) : 
+        vars  = [ v.replace(' ','') for v in what.split(':') ]
+        return _ds_draw_ ( dataset , vars , cuts , opts , *args ) 
+    elif isinstance ( what , ( list , tuple ) ) : 
+        vars_ = dataset.get()
+        vars  = ROOT.RooArgList()
+        for w in what : vars.add ( vars_[w] ) 
+        return _ds_draw_ ( dataset , vars , cuts , opts , *args ) 
+    elif isinstance ( what , ROOT.RooRealVar ) :
+        vars = ROOT.RooArgList()
+        vars.add ( what )
+        return _ds_draw_ ( dataset , vars , cuts , opts , *args )
+    elif not isinstance ( what , ROOT.RooArgList ) :
+        raise AttributeError ( 'DataSet::draw, invalid case' )
     
+    if not 1 <= len ( what ) <= 3 :
+        raise AttributeError ( 'DataSet::draw, invalid length' )
+
+    
+    if 1 == len ( what )  :
+        v1 = what[0]
+        mn1 , mx1 = v1.minmax()
+        if  mn1 < -1.e+10 or mx1 > 1.e+10  :
+            vmn , vmx = _ds_var_minmax_  ( dataset , v1 , cuts )
+            if vmn < vmx : mn1 , mx1 = vmn, vmx
+        from Ostap.PyRoUts import hID
+        histo = ROOT.TH1F ( hID() , v1.GetName() , 200 , mn1 , mx1 )  ; histo.Sumw2()
+        if cuts : _ds_project_ ( dataset , histo , what , cuts , *args  )
+        else    : _ds_project_ ( dataset , histo , what ,        *args  )
+        histo.Draw( opts )
+        return histo
+
+    if 2 == len ( what )  :
+        v1 = what[0]
+        mn1 , mx1 = v1.minmax()
+        if  mn1 < -1.e+10 or mx1 > 1.e+10  :
+            vmn , vmx = _ds_var_minmax_  ( dataset , v1 , cuts )
+            if vmn < vmx : mn1 , mx1 = vmn, vmx
+        v2 = what[1]
+        mn2 , mx2 = v2.minmax()
+        if  mn2 < -1.e+10 or mx2 > 1.e+10  :
+            vmn , vmx = _ds_var_minmax_  ( dataset , v2 , cuts )
+            if vmn < vmx : mn2 , mx2 = vmn, vmx
+        from Ostap.PyRoUts import hID
+        histo = ROOT.TH2F ( hID() , v1.GetName() + ':' + v2.GetName() , 50 , mn1 , mx1 , 50 , mn2 , mx2 )  ; histo.Sumw2()
+        if cuts : _ds_project_ ( dataset , histo , what , cuts , *args  )
+        else    : _ds_project_ ( dataset , histo , what ,        *args  )
+        histo.Draw( opts )
+        return histo
+
+    if 3 == len ( what )  :
+        v1 = what[0]
+        mn1 , mx1 = v1.minmax()
+        if  mn1 < -1.e+10 or mx1 > 1.e+10  :
+            vmn , vmx = _ds_var_minmax_  ( dataset , v1 , cuts )
+            if vmn < vmx : mn1 , mx1 = vmn, vmx
+        v2 = what[1]
+        mn2 , mx2 = v2.minmax()
+        if  mn2 < -1.e+10 or mx2 > 1.e+10  :
+            vmn , vmx = _ds_var_minmax_  ( dataset , v2 , cuts )
+            if vmn < vmx : mn2 , mx2 = vmn, vmx
+        v3 = what[2]
+        mn3 , mx3 = v3.minmax()
+        if  mn3 < -1.e+10 or mx3 > 1.e+10  :
+            vmn , vmx = _ds_var_minmax_  ( dataset , v3 , cuts )
+            if vmn < vmx : mn3 , mx3 = vmn, vmx
+        from Ostap.PyRoUts import hID
+        histo = ROOT.TH3F ( hID() , v1.GetName() + ':' + v2.GetName() + ':' + v3.GetName() ,
+                            20 , mn1 , mx1 , 20 , mn2 , mx2 , 20 , mn3 , mx3 )  ; histo.Sumw2()
+        if cuts : _ds_project_ ( dataset , histo , what , cuts , *args  )
+        else    : _ds_project_ ( dataset , histo , what ,        *args  )
+        histo.Draw( opts )
+        return histo
+
     raise AttributeError ( 'DataSet::draw, invalid case' )
 
 # =============================================================================
@@ -983,13 +1032,33 @@ def _ds_stat_var_ ( dataset , what , *cuts ) :
     >>> stat2 = dataset.statVar( 'S_sw/effic' ,'pt>1000')
     
     """
-    return cpp.Analysis.StatVar.statVar ( tree , expression , *cuts )
-    ## store = dataset.store()
-    ## if store :
-    ##     tree = store.tree()
-    ##    if tree : return tree.statVar( what , *cuts )
-    ##    
-    ## raise AttributeError( "Can't ``statVar'' data set , probably wrong StorageType" )
+    return cpp.Analysis.StatVar.statVar ( dataset , what , *cuts )
+
+
+# =============================================================================
+## Get min/max for the certain variable in dataset
+#  @code  
+#  data = ...
+#  mn,mx = data.vminmax('pt')
+#  mn,mx = data.vminmax('pt','y>3')
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2015-09-19
+def _ds_var_minmax_ ( dataset , var , cuts = '' , delta = 0.0 )  :
+    """Get min/max for the certain variable in dataset
+    >>> data = ...
+    >>> mn,mx = data.vminmax('pt')
+    >>> mn,mx = data.vminmax('pt','y>3')
+    """
+    if isinstance  (  var , ROOT.RooAbsVar ) : var = var.GetName() 
+    if cuts : s = dataset.statVar ( var , cuts )
+    else    : s = dataset.statVar ( var )
+    mn,mx = s.minmax()
+    if mn < mn and 0.0 < delta :
+        dx   = delta * 1.0 * ( mx - mn )  
+        mx  += dx   
+        mn  -= dx   
+    return mn , mx
 
 
 # =============================================================================
@@ -1010,6 +1079,7 @@ def _ds_sum_var_ ( dataset , what , *cuts ) :
 
 ROOT.RooDataSet . statVar = _ds_stat_var_
 ROOT.RooDataSet .  sumVar = _ds_sum_var_
+ROOT.RooDataSet .vminmax  = _ds_var_minmax_ 
 
 # =============================================================================
 ## print method for RooDataSet

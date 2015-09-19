@@ -8,10 +8,14 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
-! 2015-09-17 - 
+! 2015-09-19 - Vanya BELYAEV
+ - couple of minor fixed for draw/project
+
+
+! 2015-09-17 - Vanya BELYAEV
  - cople of minor fixes 
 
-! 2015-09-06 - 
+! 2015-09-06 - Vanya BELAYEV
  - add ConvexOnly
 
 ! 2015-09-03 - Vanya Belyaev
