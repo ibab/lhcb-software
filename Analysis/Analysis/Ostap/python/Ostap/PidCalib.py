@@ -171,42 +171,100 @@ def getDataSet ( particle          ,
     from PIDPerfScripts.DataFuncs import GetDataSetNameDictionary
     DataSetNameDict = GetDataSetNameDictionary( particle )
 
-    from PIDPerfScripts.DataFuncs import GetRealPartType
-    particle_type = GetRealPartType( particle )
-
+    from PIDPerfScripts.DataFuncs import GetRealPartType, GetRecoVer
+    particle_type = GetRealPartType ( particle  )
+    RecoVer       = GetRecoVer      ( stripping )
+    #
+    ## new stuff:
+    #
+    StripVer      = stripping
+    MagPolarity   = polarity
+    PartType      = particle_type 
 
     fname_protocol = ""
     fname_query    = ""
-
-    CalibDataProtocol = os.getenv ( "CALIBDATAURLPROTOCOL" )
-    CalibDataQuery    = os.getenv ( "CALIBDATAURLQUERY"    )
-
+    fname_extra    = ""
+    
+    CalibDataProtocol=os.getenv("CALIBDATAURLPROTOCOL")
+    CalibDataExtra   =os.getenv("CALIBDATAEXTRA")
+    
     # set the URL protocol (if applicable)
-    if CalibDataProtocol : fname_protocol = "{0}://".format(CalibDataProtocol)
-    
-    # set the URL query (if applicable)
-    if CalibDataQuery    : fname_query    = "?{0}".format(CalibDataQuery)
-    
-    from PIDPerfScripts.DataFuncs import IsMuonUnBiased 
-    vname_head = "CALIBDATASTORE" if not IsMuonUnBiased( particle ) else "MUONCALIBDATASTORE"
-    
+    if CalibDataProtocol is not None and CalibDataProtocol!="":
+        fname_protocol = "{0}".format(CalibDataProtocol)
+        
+    if CalibDataExtra is not None and CalibDataExtra!="":
+        fname_extra = "{0}".format(CalibDataExtra)
+
+    vname_head = "CALIBDATASTORE" 
     fname_head = os.getenv(vname_head)
-    if not fname_head :
-        raise AttributeError ("Environmental variable %s has not been set!" %vname_head )
+    if fname_head is None:
+        raise GetEnvError("Cannot retrieve dataset, environmental variable %s has not been set." %vname_head)
+
+    fname = ("{prtcol}/{extra}/{topdir}/Reco{reco}_DATA/{pol}/"
+             "{mother}_{part}_{pol}_Strip{strp}_{idx}.root").format(
+        prtcol=fname_protocol, extra=fname_extra,topdir=fname_head, reco=RecoVer,
+        pol=MagPolarity, mother=DataSetNameDict['MotherName'],
+        part=PartType, strp=StripVer, idx=index)
+
+    merged_fname = ("{prtcol}//{extra}//{topdir}/Reco{reco}_DATA/{pol}/"
+             "{mother}_{part}_{pol}_Strip{strp}_{idx}.root").format(
+        prtcol=fname_protocol, extra=fname_extra,topdir=fname_head, reco=RecoVer,
+        pol=MagPolarity, mother=DataSetNameDict['MotherName'],
+        part=PartType, strp=StripVer, idx=index)
+
+
+#    fname = ("{prtcol}{topdir}/{pol}/{part}/"
+#             "{mother}_{part}_{pol}_Strip{strp}_{idx}.root{qry}").format(
+#         prtcol=fname_protocol, topdir=fname_head,
+#         pol=MagPolarity, mother=DataSetNameDict['MotherName'],
+#         part=PartType, strp=StripVer, idx=index, qry=fname_query)
+
+
+
+    ## if verbose:
+    ##   print "Attempting to open file {0} for reading".format(fname)
+
+    ## import ROOT 
+    ## f = ROOT.TFile.Open(fname)
+    ## if not f:
+    ##   f = ROOT.TFile.Open ( merged_fname )
+
+    ## fname_protocol = ""
+    ## fname_query    = ""
+
+    ## CalibDataProtocol = os.getenv ( "CALIBDATAURLPROTOCOL" )
+    ## CalibDataQuery    = os.getenv ( "CALIBDATAURLQUERY"    )
+
+    ## # set the URL protocol (if applicable)
+    ## if CalibDataProtocol : fname_protocol = "{0}://".format(CalibDataProtocol)
     
-    fname = ("{prtcol}{topdir}/Reco{reco}_DATA/{pol}/"
-             "{mother}_{part}_{pol}_Strip{strp}_{idx}.root{qry}").format(
-        prtcol=fname_protocol, topdir=fname_head, reco=DataDict['RecoVer'],
-        pol  = polarity     , mother=DataSetNameDict['MotherName'],
-        part = particle_type, strp  =stripping, idx=index, qry=fname_query)
+    ## # set the URL query (if applicable)
+    ## if CalibDataQuery    : fname_query    = "?{0}".format(CalibDataQuery)
+    
+    ## from PIDPerfScripts.DataFuncs import IsMuonUnBiased 
+    ## vname_head = "CALIBDATASTORE" if not IsMuonUnBiased( particle ) else "MUONCALIBDATASTORE"
+    
+    ## fname_head = os.getenv(vname_head)
+    ## if not fname_head :
+    ##     raise AttributeError ("Environmental variable %s has not been set!" %vname_head )
+    
+    ## fname = ("{prtcol}{topdir}/Reco{reco}_DATA/{pol}/"
+    ##          "{mother}_{part}_{pol}_Strip{strp}_{idx}.root{qry}").format(
+    ##     prtcol=fname_protocol, topdir=fname_head, reco=DataDict['RecoVer'],
+    ##     pol  = polarity     , mother=DataSetNameDict['MotherName'],
+    ##     part = particle_type, strp  =stripping, idx=index, qry=fname_query)
+
     
     if verbose:
         logger.info( "Attempting to open file {0} for reading".format(fname) )
         
     import ROOT
     import Ostap.PyRoUts
-    with  ROOT.TFile.Open(fname) as f :
-        
+    ## fname = fname
+    ## with  ROOT.TFile.Open(fname, 'READ' ) as f :
+    ##     if not f : fname = merged_fname 
+    fname = merged_fname     
+    with  ROOT.TFile.Open(fname, 'READ' ) as f :
         if not f: raise IOError("Failed to open file %s for reading" %fname)
         
         wsname = DataSetNameDict['WorkspaceName']
