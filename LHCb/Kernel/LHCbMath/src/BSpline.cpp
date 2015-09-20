@@ -948,6 +948,148 @@ bool Gaudi::Math::MonothonicSpline::updateCoefficients  ()
 }
 // ============================================================================
 // ============================================================================
+// COVEX ONLY  SPLINE 
+// ============================================================================
+// ============================================================================
+/* constructor from the list of knots and the order 
+ *  vector of parameters will be calculated automatically 
+ *  @param points non-empty vector of poinst/knots 
+ *  @param order  the order of splines 
+ *  - vector of points is not requires to be ordered 
+ *  - duplicated knots will be ignored
+ *  - min/max value will be used as interval boundaries 
+ */
+// ============================================================================
+Gaudi::Math::ConvexOnlySpline::ConvexOnlySpline
+( const std::vector<double>& points      ,
+  const unsigned short       order       , 
+  const bool                 convex      )
+  : Gaudi::Math::PositiveSpline ( points , order ) 
+  , m_convex                    ( convex ) 
+{
+  updateCoefficients () ;
+}
+// ============================================================================
+/*  Constructor from the list of knots and list of parameters 
+ *  The spline order will be calculated automatically 
+ *  @param points non-empty vector of poinst/knots 
+ *  @param pars   non-empty vector of parameters 
+ *  - vector of points is not requires to be ordered 
+ *  - duplicated knots will be ignored
+ *  - min/max value will be used as interval boundaries 
+ */
+// ============================================================================
+Gaudi::Math::ConvexOnlySpline::ConvexOnlySpline
+( const std::vector<double>& points     ,
+  const std::vector<double>& pars       ,
+  const bool                 convex     ) 
+  : Gaudi::Math::PositiveSpline ( points , pars ) 
+  , m_convex                    ( convex    ) 
+{
+  updateCoefficients () ;
+}
+// ============================================================================
+/*  Constructor for uniform binning 
+ *  @param xmin   low  edge of spline interval 
+ *  @param xmax   high edge of spline interval 
+ *  @param inner  number of inner points in   (xmin,xmax) interval
+ *  @param order  the degree of splline 
+ */
+// ============================================================================
+Gaudi::Math::ConvexOnlySpline::ConvexOnlySpline
+( const double         xmin       ,  
+  const double         xmax       , 
+  const unsigned short inner      ,   // number of inner points 
+  const unsigned short order      , 
+  const bool           convex    ) 
+  : Gaudi::Math::PositiveSpline ( xmin , xmax  , inner ,order ) 
+  , m_convex                    ( convex    ) 
+{
+  updateCoefficients () ;
+}
+// ============================================================================
+// constructor from the basic spline 
+// ============================================================================
+Gaudi::Math::ConvexOnlySpline::ConvexOnlySpline
+( const Gaudi::Math::PositiveSpline& spline     , 
+  const bool                         convex     ) 
+  : Gaudi::Math::PositiveSpline ( spline        ) 
+  , m_convex                    ( convex    ) 
+{
+  updateCoefficients () ;
+}
+// ============================================================================
+// constructor from the basic spline 
+// ============================================================================
+Gaudi::Math::ConvexOnlySpline::ConvexOnlySpline
+( const Gaudi::Math::BSpline&        spline     , 
+  const bool                         convex     ) 
+  : Gaudi::Math::PositiveSpline ( spline        ) 
+  , m_convex                    ( convex    ) 
+{
+  updateCoefficients () ;
+}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::ConvexOnlySpline::~ConvexOnlySpline(){}
+// ============================================================================
+// update coefficients  
+// ============================================================================
+bool Gaudi::Math::ConvexOnlySpline::updateCoefficients  () 
+{
+  //
+  if  ( order() < 2 ) { return Gaudi::Math::PositiveSpline::updateCoefficients() ; }
+  //
+  bool   update = false ;
+  //
+  // get sphere coefficients 
+  std::vector<double> v ( m_sphere.nX() ) ;
+  for ( unsigned short ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
+  { v[ix] = m_sphere.x2 ( ix ) * ( ix  + 1 )  ; }
+  //
+  const double a0 = v[0] ;
+  const double a1 = v[1] ;
+  //
+  v[0] = 0 ;
+  v[1] = 0 ;
+  //
+  // integrate them and to get new coefficients
+  std::partial_sum ( v.  begin() + 2 , v.  end() , v.  begin() + 2 ) ; 
+  if ( !m_convex ) 
+  {
+    const double last = v.back() ;
+    for ( unsigned int i = 0 ; i < v.size() ; ++i ) { v[i] = last - v[i] ;}
+  }
+  //
+  const unsigned short o = order() ;
+  for ( unsigned int i = 1 ; i < v.size()  ; ++i ) 
+  { v[i] = v[i-1] + v[i] * ( knot_i (  i + o  + 1 ) - knot_i ( i )  ) / o ; }
+  //
+  // add a (positive) linear function a0 + (a1-a0)*x
+  //
+  std::vector<double> v2 ( m_sphere.nX() , a1 - a0 ) ;
+  const double alpha = a1 - a0 ;
+  double asum         = 0       ;
+  for ( unsigned int i = 0 ; i < v2.size()  ; ++i ) 
+  {
+    v[i]  += asum  + a0 ;
+    asum  += alpha *  ( knot_i (  i + o  + 1 ) - knot_i ( i )  ) / o ;
+  }
+  //  
+  const double isum = 1.0 / 
+    _spline_integral_ ( v , m_bspline.knots() , m_bspline.order() ) ;
+  //
+  for ( unsigned short ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
+  { 
+    const bool updated = m_bspline.setPar ( ix , v [ix] * isum ) ; 
+    update = updated || update ;
+  }
+  //
+  return update ;
+}
+// ============================================================================
+// ============================================================================
 // convex SPLINE 
 // ============================================================================
 // ============================================================================
@@ -1055,12 +1197,14 @@ Gaudi::Math::ConvexSpline::~ConvexSpline(){}
 bool Gaudi::Math::ConvexSpline::updateCoefficients  () 
 {
   //
+  if  ( order() < 2 ) { return Gaudi::Math::MonothonicSpline::updateCoefficients() ; }
+  //
   bool   update = false ;
   //
   // get sphere coefficients  (all but 0 ) : NOTE INDICES HERE! 
   std::vector<double> v ( m_sphere.nX() - 1 ) ;
   for ( unsigned short ix = 1 ; ix < m_sphere.nX() ; ++ix ) 
-  { v[ix-1] = m_sphere.x2 ( ix ) ; }
+  { v[ix-1] = m_sphere.x2 ( ix ) * ( ix + 1 ) ; }
   //
   // integrate them and to get new coefficients
   if   ( m_convex ) { std::partial_sum ( v. begin() , v. end() ,  v. begin() ) ; }
@@ -1076,8 +1220,9 @@ bool Gaudi::Math::ConvexSpline::updateCoefficients  ()
   //   the second integration: 
   std::vector<double> v2 ( m_sphere.nX() ) ;
   v2[0] = m_sphere.x2(0)  ;
+  const unsigned short o = order() ;
   for ( unsigned int i = 0 ; i < v.size() ; ++i ) 
-  { v2[i+1] = v2[i] + v[i] * ( knot_i (  i + order() + 1 ) - knot_i ( i + 1 )  ) / order() ; }
+  { v2[i+1] = v2[i] + v[i] * ( knot_i (  i + o + 1 ) - knot_i ( i + 1 )  ) / o ; }
   //
   // revert, if needed 
   if ( !m_increasing ) { std::reverse ( v2.begin() , v2.end () ) ; }

@@ -132,6 +132,7 @@
   <class name    = "Gaudi::Math::PositiveSpline"   />
   <class name    = "Gaudi::Math::MonothonicSpline" />
   <class name    = "Gaudi::Math::ConvexSpline"     />
+  <class name    = "Gaudi::Math::ConvexOnlySpline" />
 
   <enum name = "GaudiMath::FormFactors::JacksonRho" />
 
