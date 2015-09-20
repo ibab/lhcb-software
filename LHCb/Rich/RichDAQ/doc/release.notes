@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones   Christoper.Rob.Jones@cern.ch
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
+
+! 2015-09-20 - Chris Jones
+ - Various small improvements to decoding to reduce CPU time a little.
+
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

@@ -4,9 +4,6 @@
  *
  *  Implementation file for RICH DAQ helper class : RichHPDDataBank
  *
- *  CVS Log :-
- *  $Id: RichHPDDataBank.icpp,v 1.17 2009-07-30 12:09:56 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
@@ -29,8 +26,8 @@ namespace Rich
     HPDDataBankImp<Version,Header,Footer>::HPDDataBankImp( const LongType * data,
                                                            const ShortType  maxDataSize,
                                                            const ShortType  dataSize )
-      : m_maxDataSize  ( maxDataSize    ),
-        m_internalData ( false          )
+      : m_maxDataSize  ( maxDataSize ),
+        m_internalData ( false       )
     {
       // initialise header words
       // note, this call increments data to the correct place
@@ -59,11 +56,7 @@ namespace Rich
     {
       LongType parity(0);
       std::vector<unsigned int> hC(BitsPerDataWord,0);
-      for ( LHCb::RichSmartID::Vector::const_iterator iS = ids.begin();
-            iS != ids.end(); ++iS )
-      {
-        ++hC[(*iS).pixelCol()];
-      }
+      for ( const auto& id : ids ) { ++hC[id.pixelCol()]; }
       for ( unsigned int i = 0; i<BitsPerDataWord; ++i )
       {
         if ( hC[i]%2 == 1 ) setBit(parity,i);

@@ -39,13 +39,12 @@ namespace Rich
         const RichZSPacked zsData;
 
         // Loop over digits
-        for ( LHCb::RichSmartID::Vector::const_iterator iID = pdHits.begin();
-              iID != pdHits.end(); ++iID )
+        for ( const auto& hit : pdHits )
         {
 
           // Get bit and address
-          const ShortType bit     = zsData.bitFromCol( (*iID).pixelCol() );
-          const ShortType address = zsData.addressFromRowCol( (*iID).pixelRow(), (*iID).pixelCol() );
+          const ShortType bit     = zsData.bitFromCol( hit.pixelCol() );
+          const ShortType address = zsData.addressFromRowCol( hit.pixelRow(), hit.pixelCol() );
 
           // Set the correct bit on for this address
           this->setBit( dataM[address], bit );
@@ -111,12 +110,6 @@ namespace Rich
           // rough guess at number of hits
           ids.reserve( nDataWords * 4 );
 
-          // HPD info
-          const Rich::DetectorType rich = hpdID.rich();
-          const Rich::Side         side = hpdID.panel();
-          const ShortType          col  = hpdID.pdCol();
-          const ShortType      numInCol = hpdID.pdNumInCol();
-
           // Loop over data fields (backwards, so data is put into vector in 'correct' order)
           for ( int iData = nDataWords-1; iData >= 0; --iData )
           {
@@ -140,9 +133,10 @@ namespace Rich
                 {
                   if ( this->isBitOn(bits1,iB) )
                   {
-                    ids.push_back( LHCb::RichSmartID( rich, side, numInCol, col,
-                                                      zsData.rowFromAddress(address1),
-                                                      zsData.colFromAddressAndBit(address1,iB) ) );
+                    ids.push_back( hpdID );
+                    auto & id = ids.back();
+                    id.setPixelRow( zsData.rowFromAddress(address1) );
+                    id.setPixelCol( zsData.colFromAddressAndBit(address1,iB) );
                     ++m_nHits; // count hits
                   }
                 }
@@ -156,9 +150,10 @@ namespace Rich
               {
                 if ( this->isBitOn(bits0,iB) )
                 {
-                  ids.push_back( LHCb::RichSmartID( rich, side, numInCol, col,
-                                                    zsData.rowFromAddress(address0),
-                                                    zsData.colFromAddressAndBit(address0,iB) ) );
+                  ids.push_back( hpdID );
+                  auto & id = ids.back();
+                  id.setPixelRow( zsData.rowFromAddress(address0) );
+                  id.setPixelCol( zsData.colFromAddressAndBit(address0,iB) );
                   ++m_nHits; // count hits
                 }
               }

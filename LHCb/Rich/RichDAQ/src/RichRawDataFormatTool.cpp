@@ -392,11 +392,7 @@ RawDataFormatTool::createDataBank( const LHCb::RichSmartID::Vector & smartIDs,
     // Print out SmartIDs to encode
     verbose() << endmsg << "   Creating encoding HPD " << smartIDs.front().pdID()
               << " bank from " << smartIDs.size() << " RichSmartIDs :-" << endmsg;
-    for ( LHCb::RichSmartID::Vector::const_iterator iID = smartIDs.begin();
-          iID != smartIDs.end(); ++iID )
-    {
-      verbose() << "    " << *iID << endmsg;
-    }
+    for ( const auto& ID : smartIDs ) { verbose() << "    " << ID << endmsg; }
     // Printout this bank
     verbose() << *dataBank << endmsg;
   }

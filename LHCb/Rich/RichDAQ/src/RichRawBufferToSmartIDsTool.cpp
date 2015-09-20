@@ -110,21 +110,18 @@ RawBufferToSmartIDsTool::richSmartIDs( const LHCb::RichSmartID hpdID,
    */
 
   // Loop over L1 boards
-  for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
-        iL1 != data.end(); ++iL1 )
+  for ( const auto& L1 : data )
   {
     // loop over ingresses for this L1 board
-    for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
-          iIn != (*iL1).second.end(); ++iIn )
+    for ( const auto& In : L1.second )
     {
       // Find HPDInfo for given hpd ?
       // Loop over HPDs in this ingress
-      for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
-            iHPD != (*iIn).second.hpdData().end(); ++iHPD )
+      for ( const auto& HPD : In.second.hpdData() )
       {
-        if ( hpdID == (*iHPD).second.hpdID() )
+        if ( hpdID == HPD.second.hpdID() )
         {
-          found_data = &((*iHPD).second.smartIDs());
+          found_data = &(HPD.second.smartIDs());
           break;
         }
       } // loop over HPDs
@@ -165,7 +162,8 @@ RawBufferToSmartIDsTool::richSmartIDs( const LHCb::RichSmartID hpdID,
 }
 
 const Rich::DAQ::L1Map &
-RawBufferToSmartIDsTool::allRichSmartIDs( const IRawBufferToSmartIDsTool::RawEventLocations& taeLocs ) const
+RawBufferToSmartIDsTool::
+allRichSmartIDs( const IRawBufferToSmartIDsTool::RawEventLocations& taeLocs ) const
 {
   Rich::DAQ::L1Map & data = m_richDataTAE[ taeKey(taeLocs) ];
   if ( data.empty() )
@@ -207,10 +205,8 @@ RawBufferToSmartIDsTool::countTotalHits( const Rich::DAQ::L1Map & data,
   // tally of the number of hits
   unsigned int nHits(0);
 
-
   // Loop over L1 boards
-  for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
-        iL1 != data.end(); ++iL1 )
+  for ( const auto& L1 : data )
   {
     // For MaPMTs this could for the moment throw an exception ... To Be Fixed
     // catch it to prevent processing termination
@@ -218,23 +214,21 @@ RawBufferToSmartIDsTool::countTotalHits( const Rich::DAQ::L1Map & data,
     {
 
       // Is the RICH detector to be included in the count ?
-      if ( Rich::InvalidDetector               == rich ||
-           m_richSys->richDetector(iL1->first) == rich )
+      if ( Rich::InvalidDetector             == rich ||
+           m_richSys->richDetector(L1.first) == rich )
       {
         // loop over ingresses for this L1 board
-        for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
-              iIn != (*iL1).second.end(); ++iIn )
+        for ( const auto& In : L1.second )
         {
           // Loop over HPDs in this ingress
-          for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
-                iHPD != (*iIn).second.hpdData().end(); ++iHPD )
+          for ( const auto& HPD : In.second.hpdData() )
           {
             // skip inhibited HPDs ?
-            if ( (*iHPD).second.header().inhibit() ) { continue; }
+            if ( HPD.second.header().inhibit() ) { continue; }
             // Is the smart ID valid ?
-            if ( !(*iHPD).second.hpdID().isValid() ) { continue; }
+            if ( !HPD.second.hpdID().isValid() ) { continue; }
             // all OK so count hits
-            nHits += (*iHPD).second.smartIDs().size();
+            nHits += HPD.second.smartIDs().size();
           }
         }
       }
