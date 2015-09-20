@@ -42,7 +42,7 @@ namespace LHCb
   //--------------------------------------------------------------------------------
   /** @class FastAllocVector FastAllocVector.h Kernel/FastAllocVector.h
    *
-   *  Vector with fast allocator from boost
+   *  Vector with (fast) pool allocator from boost
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   29/03/2007

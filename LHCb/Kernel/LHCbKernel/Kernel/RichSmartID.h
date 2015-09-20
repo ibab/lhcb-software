@@ -9,7 +9,6 @@
 // Local
 #include "Kernel/RichDetectorType.h"
 #include "Kernel/RichSide.h"
-#include "Kernel/FastAllocVector.h"
 
 // Gaudi
 #include "GaudiKernel/boost_allocator.h"
@@ -34,9 +33,6 @@ namespace LHCb
 
     /// Vector of RichSmartIDs
     typedef std::vector< LHCb::RichSmartID > Vector;
-
-    /// Vector of RichSmartIDs with Pool Allocator
-    typedef LHCb::FastAllocVector<  LHCb::RichSmartID > PoolAllocVector;
 
     /// Numerical type for bit packing
     typedef unsigned int BitPackType;

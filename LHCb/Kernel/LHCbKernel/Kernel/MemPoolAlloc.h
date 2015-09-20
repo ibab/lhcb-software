@@ -69,7 +69,7 @@ namespace LHCb
       using pool = boost::singleton_pool< T, sizeof(T),
                                           Allocator,
                                           typename std::conditional<Mutex,boost::details::pool::default_mutex,boost::details::pool::null_mutex>::type,
-                                          NextSize>;
+                                          NextSize >;
       return ( sizeof(T) == size ?  pool::malloc() : ::operator new ( size ) );
     }
 
@@ -79,7 +79,7 @@ namespace LHCb
       using pool = boost::singleton_pool<T, sizeof(T),
                                          Allocator,
                                          typename std::conditional<Mutex,boost::details::pool::default_mutex,boost::details::pool::null_mutex>::type,
-                                         NextSize>;
+                                         NextSize >;
       pool::is_from(pObj) ? pool::free(pObj) : ::operator delete ( pObj );
     }
 
