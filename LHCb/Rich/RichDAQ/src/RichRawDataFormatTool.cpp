@@ -954,7 +954,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
       ingressInfo.setIngressHeader( ingressWord );
 
       // Compare Ingress header to the ODIN
-      if (  msgLevel(MSG::VERBOSE) )
+      if ( msgLevel(MSG::VERBOSE) )
       {
         verbose() << "ODIN : EventNumber=" << EventID(odin()->eventNumber())
                   << " BunchID=" << BXID(odin()->bunchId()) << endmsg;

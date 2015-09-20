@@ -108,7 +108,7 @@ namespace Rich
           const bool lastWordIsPadded = ( 1 == this->header().nEightBitBlocks()%2 );
 
           // rough guess at number of hits
-          ids.reserve( nDataWords * 4 );
+          ids.reserve( nDataWords * 5 );
 
           // Loop over data fields (backwards, so data is put into vector in 'correct' order)
           for ( int iData = nDataWords-1; iData >= 0; --iData )
