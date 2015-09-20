@@ -137,7 +137,7 @@ appMgr.addAlgorithm("HCRawBankDecoder/HCRawBankDecoder")
 channelsB0 = [47, 46, 45, 44]
 channelsB1 = [23, 22, 21, 20]
 channelsB2 = [11, 10,  9,  8]
-channelsF1 = [23, 22, 21, 20]
+channelsF1 = [23, 22, 21, 46]
 channelsF2 = [11, 10,  9,  8]
 #channelsB0 = [47, 46, 45, 44, 43]
 #channelsB1 = [23, 22, 21, 20, 51]

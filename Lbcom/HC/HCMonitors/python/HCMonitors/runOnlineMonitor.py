@@ -140,7 +140,7 @@ def configMonitor():
     monitor.ChannelsB0 = [47, 46, 45, 44]
     monitor.ChannelsB1 = [23, 22, 21, 20]
     monitor.ChannelsB2 = [11, 10,  9,  8]
-    monitor.ChannelsF1 = [23, 22, 21, 20]
+    monitor.ChannelsF1 = [23, 22, 21, 46]
     monitor.ChannelsF2 = [11, 10,  9,  8]
 
     # Top level sequence

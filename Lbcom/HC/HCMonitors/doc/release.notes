@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-09-20 - Heinrich Schindler
+ - Updated channel mapping of F13 (after access).
+
 ! 2015-09-09 - Heinrich Schindler
  - Add algorithm to determine pedestal corrections.
  - Allow for reference/spare channels in channel mapping.
