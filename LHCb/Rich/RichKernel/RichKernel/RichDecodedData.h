@@ -12,6 +12,10 @@
 #ifndef RICHKERNEL_RICHDECODEDDATA_H
 #define RICHKERNEL_RICHDECODEDDATA_H 1
 
+// STL 
+#include <map>
+#include <unordered_map>
+
 // RichKernel
 #include "RichKernel/RichDAQDefinitions.h"
 
@@ -49,10 +53,12 @@ namespace Rich
       HPDInfo( const LHCb::RichSmartID& input,
                const Header&            header,
                const Footer&            footer )
-        : m_hpdID(input),
-          m_header(header),
-          m_footer(footer)
+        : m_hpdID  ( input  ),
+          m_header ( header ),
+          m_footer ( footer ) 
       { }
+
+    public:
 
       /**  Access the HPD ID (LHCb::RichSmartID) for this HPD
        *   @attention It is possible this HPDID is invalid (for instance
@@ -62,9 +68,9 @@ namespace Rich
        */
       inline const LHCb::RichSmartID& hpdID() const { return m_hpdID; }
       /// Access the Header words
-      inline const Header& header() const { return m_header; }
+      inline const Header& header()           const { return m_header; }
       /// Access the Footer words
-      inline const Footer& footer() const { return m_footer; }
+      inline const Footer& footer()           const { return m_footer; }
 
       /// set the Level1Input
       inline void setHpdID( const LHCb::RichSmartID& input ) { m_hpdID = input; }
@@ -76,7 +82,7 @@ namespace Rich
       /// Read access to the RichSmartIDs for the hit pixels in this HPD
       inline const LHCb::RichSmartID::Vector& smartIDs() const { return m_smartIds; }
       /// Write access to the RichSmartIDs for the hit pixels in this HPD
-      inline LHCb::RichSmartID::Vector& smartIDs() { return m_smartIds; }
+      inline       LHCb::RichSmartID::Vector& smartIDs()       { return m_smartIds; }
 
     private:
 
@@ -88,7 +94,7 @@ namespace Rich
     };
 
     /// Map for RICH HPD data, sorted by HPD number
-    typedef std::map< const Rich::DAQ::Level1Input, HPDInfo > HPDMap;
+    typedef std::unordered_map< const Rich::DAQ::Level1Input, HPDInfo > HPDMap;
 
     /** @class IngressInfo RichKernel/RichDecodedData.h
      *  Information for each L1 ingress
@@ -122,10 +128,10 @@ namespace Rich
     };
 
     /// Map for HPD data for each L1 ingress
-    typedef std::map< const L1IngressID, IngressInfo >           IngressMap;
+    typedef std::unordered_map< const L1IngressID, IngressInfo >      IngressMap;
 
     /// Map for RICH HPD data, sorted by Level1 board number
-    typedef std::map< const Level1HardwareID, IngressMap >       L1Map;
+    typedef std::unordered_map< const Level1HardwareID, IngressMap >  L1Map;
 
   }
 }

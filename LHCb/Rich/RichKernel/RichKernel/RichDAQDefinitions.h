@@ -654,7 +654,8 @@ namespace Rich
 // CRJ : Are these really needed ?
 
 #ifdef __GNUC__
-namespace __gnu_cxx
+//namespace __gnu_cxx
+namespace std
 {
 
   /// Level0ID hash function

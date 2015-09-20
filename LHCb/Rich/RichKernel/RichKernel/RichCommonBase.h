@@ -110,7 +110,6 @@ namespace Rich
       return ( this->richDetectorTool()->deRichDetectors() );
     }
 
-
     /** @brief Returns a pointer to the tool associated to a given nickname.
      *
      *  Optionally also allows a particular instance name to be given.
@@ -236,7 +235,6 @@ namespace Rich
       return m_toolReg;
     }
 
-
     /** Returns pointer to RICH detector tool
      *  
      *
@@ -251,8 +249,6 @@ namespace Rich
       }
       return m_deRichTool;
     }
-
-
 
     /// Pointer to Job Options Service
     IJobOptionsSvc* joSvc() const;
