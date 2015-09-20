@@ -58,7 +58,9 @@
   <class name = "Analysis::Models::PositiveSpline"    />
   <class name = "Analysis::Models::MonothonicSpline"  />
   <class name = "Analysis::Models::ConvexSpline"      />
+  <class name = "Analysis::Models::ConvexOnlySpline"  />
 
+ 
   <class name = "Analysis::Models::Poly2DPositive"    />
   <class name = "Analysis::Models::Poly2DSymPositive" />
   <class name = "Analysis::Models::PS2DPol"           />

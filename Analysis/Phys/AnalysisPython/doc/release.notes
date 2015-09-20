@@ -5,6 +5,9 @@
 !               GaudiPython analyses.
 !-----------------------------------------------------------------------------
 
+! 2015-09-20 - Vanya BELYAEV
+ - add convext only spline 
+
 ! 2015-09-06 - Vanya Belyaev
  - remove iterators from interfaces
 

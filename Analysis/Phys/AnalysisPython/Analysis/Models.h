@@ -4274,10 +4274,86 @@ namespace Analysis
       // ======================================================================
     };
     // ========================================================================
-    /** @class MonothonicSpline
+    /** @class ConvexPnlySpline
+     *  The special spline for non-negative
+     *  convex or concave function 
+     *  @see Gaudi::Math::ConvexSpline
+     */
+    class GAUDI_API  ConvexOnlySpline : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::ConvexOnlySpline, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor with the spline 
+       *  @param name  the name 
+       *  @param title the  title
+       *  @param x     the  variable 
+       *  @param spine the spline  
+       *  @param phis  vector of parameters 
+       */
+      ConvexOnlySpline 
+        ( const char*                          name, 
+          const char*                          title     ,
+          RooAbsReal&                          x         ,
+          const Gaudi::Math::ConvexOnlySpline& spline    ,   // the spline 
+          RooArgList&                          phis      ) ; // parameters
+      /// copy
+      ConvexOnlySpline
+        ( const ConvexOnlySpline& right     , 
+          const char*             name = 0  ) ;
+      /// destructor 
+      virtual ~ConvexOnlySpline() ;
+      /// clone 
+      virtual  ConvexOnlySpline* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         , 
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::ConvexOnlySpline& function() const { return m_spline ; }
+      const Gaudi::Math::ConvexOnlySpline& spline  () const { return m_spline ; }
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x    ;
+      RooListProxy m_phis ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::ConvexOnlySpline m_spline ;          // the function 
+      // ======================================================================
+    };
+
+
+    // ========================================================================
+    /** @class ConvexSpline
      *  The special spline for non-negative monothonic 
-     convex or concave function 
-     *  @see Gaudi::Math::PositiveSpline
+     *  convex or concave function 
+     *  @see Gaudi::Math::ConvexSpline
      */
     class GAUDI_API  ConvexSpline : public RooAbsPdf 
     {
