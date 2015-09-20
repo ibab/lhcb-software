@@ -150,6 +150,7 @@ __all__ = (
     'PSpline_pdf'          , ## positive spline (B-spline)
     'MSpline_pdf'          , ## positive monothonic spline 
     'CSpline_pdf'          , ## positive monothonic convex or concave spline 
+    'CoSpline_pdf'         , ## positive convex or concave spline 
     #
     ## 2D non-factorazable models
     #

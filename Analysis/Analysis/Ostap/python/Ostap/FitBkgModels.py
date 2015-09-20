@@ -32,6 +32,7 @@ __all__     = (
     'PSpline_pdf'     , ## positive            spline 
     'MSpline_pdf'     , ## positive monothonic spline 
     'CSpline_pdf'     , ## positive monothonic convex or concave spline 
+    'CoSpline_pdf'    , ## positive convex or concave spline 
     ##
     'PS2_pdf'         , ## 2-body phase space (no parameters)
     'PSLeft_pdf'      , ## Low  edge of N-body phase space 
@@ -609,7 +610,8 @@ class MSpline_pdf(PDF) :
             self.spline                   , 
             self.phi_list                 )
 
-models.append ( MSpline_pdf ) 
+models.append ( MSpline_pdf )
+
 # =============================================================================
 ## @class  CSpline_pdf
 #  The special spline for non-negative monothonic convex/concave function
@@ -664,6 +666,59 @@ class CSpline_pdf(PDF) :
             self.phi_list            )
 
 models.append ( CSpline_pdf ) 
+
+
+# =============================================================================
+## @class  CoSpline_pdf
+#  The special spline for non-negative convex/concave function
+#  @see Analysis::Models::ConvexOnlySpline 
+#  @see Gaudi::Math::ConvexOnlySpline 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2011-07-25
+class CoSpline_pdf(PDF) :
+    """
+    A positive convex/concave spline
+
+    >>> mass   = ... ## the variable
+    >>> order  = 3   ## spline order
+    
+    ## create uniform spline 
+    >>> inner  = 3   ## number of inner knots between min and max 
+    >>> spline = Gaudi.Math.ConvexOnlySpline( mass.xmin() , mass.xmax() , inner , order , True )
+
+    ## create non-uniform spline with
+    >>> knots = std.vector('double)()
+    >>> knots.push_back ( mass.xmin() )
+    >>> knots.push_back ( mass.xmax() )
+    >>> knots.push_back ( ... )
+    >>> spline = Gaudi.Math.ConvexonlySpline( knots , order, True )
+
+    >>> bkg = CoSpline_pdf ( 'Spline' , mass , spline ) 
+    
+    """
+    ## constructor
+    def __init__ ( self             ,
+                   name             ,   ## the name 
+                   mass             ,   ## the variable
+                   spline           ) : ## the spline object Gaudi::Math::ConvexOnlySpline
+        #
+        PDF.__init__ ( self , name )
+        #
+        self.spline = spline 
+        self.mass   = mass 
+        
+        # 
+        self.makePhis ( spline.npars()  ) 
+        #
+        self.pdf  = cpp.Analysis.Models.ConvexOnlySpline (
+            'is_%s'                % name ,
+            'ConvexOnlySpline(%s)' % name ,
+            self.mass                ,
+            self.spline              , 
+            self.phi_list            )
+
+models.append ( CoSpline_pdf ) 
+
 # =============================================================================
 ## @class  PS2_pdf
 #  Primitive 2-body phase space function 

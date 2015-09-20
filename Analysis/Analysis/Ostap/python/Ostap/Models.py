@@ -111,15 +111,16 @@ def _f1_draw_ ( self , *opts ) :
                     
             else : self._tf1  = _tf1_ ( self , self.xmin() , self.xmax() )
             
-            if type(self) in ( Gaudi.Math.Positive         ,
-                               Gaudi.Math.Monothonic       , 
-                               Gaudi.Math.Convex           , 
-                               Gaudi.Math.ConvexOnly       , 
-                               Gaudi.Math.PositiveSpline   , 
-                               Gaudi.Math.MonothonicSpline , 
-                               Gaudi.Math.ConvexSpline     ,
-                               Gaudi.Math.ExpoPositive     ,
-                               Gaudi.Math.TwoExpoPositive  ) :                                
+            if type(self) in ( Gaudi.Math.Positive          ,
+                               Gaudi.Math.Monothonic        , 
+                               Gaudi.Math.Convex            , 
+                               Gaudi.Math.ConvexOnly        , 
+                               Gaudi.Math.PositiveSpline    , 
+                               Gaudi.Math.MonothonicSpline  , 
+                               Gaudi.Math.ConvexSpline      ,
+                               Gaudi.Math.ConvexOnlySpline  ,
+                               Gaudi.Math.ExpoPositive      ,
+                               Gaudi.Math.TwoExpoPositive   ) :                                
                 self._tf1.SetMinimum(0)
             
     return self._tf1.Draw ( *opts )
@@ -304,6 +305,7 @@ for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.PositiveSpline         ,
                Gaudi.Math.MonothonicSpline       ,
                Gaudi.Math.ConvexSpline           ,
+               Gaudi.Math.ConvexOnlySpline       ,
                #
                ) :
     model . tf1 = _tf1_ 
@@ -334,7 +336,9 @@ for model in ( Gaudi.Math.Bernstein         ,
                #
                Gaudi.Math.BSpline           ,
                Gaudi.Math.MonothonicSpline  ,
-               Gaudi.Math.PositiveSpline    ) : 
+               Gaudi.Math.PositiveSpline    , 
+               Gaudi.Math.ConvexSpline      , 
+               Gaudi.Math.ConvexOnlySpline  ) : 
     
     model.draw = _f1_draw_
 

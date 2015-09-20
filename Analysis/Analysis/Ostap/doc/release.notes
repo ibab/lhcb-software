@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2015-09-20 - Vanya Belyaev
+ - add convex-only sline 
+
 ! 2015-09-19 - Vanya BELYAEV
  - update pid-calib related functions
 
