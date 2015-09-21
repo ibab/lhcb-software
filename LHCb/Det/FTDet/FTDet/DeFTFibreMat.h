@@ -160,8 +160,27 @@ public:
   StatusCode hitPositionInFibre(const LHCb::MCHit*  fthit,
                                 double& meanfibrefullLengh,
                                 double& fibreLenghFrac)const;
+                                
+                                
+                                
 
-  //
+  /** Get the sipmID, cellID and fractional position of a hit.
+   *  @param uCoord u-coordinate of the hit
+   *  @param quarter FT quarter of the hit
+   *  @param sipmID SiPM ID (set by the function)
+   *  @param cellID cellID inside the relevant SiPM (set by the function)
+   *  @param fracDistCellCenter Distance between the hit and the center
+   *  of the relevant cell, as a fraction of the cell size (set by the function)
+   *  @param sipmREdgeX "right" (ie when looking in z>0 global frame direction) sipm active edge
+   */
+  void cellIDCoordinates(const double        uCoord, 
+                         const unsigned int  quarter,
+                         unsigned int&       sipmID,
+                         unsigned int&       cellID, 
+                         double&             fracDistCellCenter,
+                         double&             sipmREdgeX) const;
+  
+  //Various accessors
   bool isBottom() const { return m_mat; }
   int module() const { return m_module; }
   int quarter() const { return m_quarter; }
@@ -290,20 +309,6 @@ private: // private member functions
     return x0 + y0*m_tanAngle;    //DBL
   }
 
-  /** Get the sipmID, cellID and fractional position of a hit.
-   *  @param uCoord u-coordinate of the hit
-   *  @param quarter FT quarter of the hit
-   *  @param sipmID SiPM ID (set by the function)
-   *  @param cellID cellID inside the relevant SiPM (set by the function)
-   *  @param fracDistCellCenter Distance between the hit and the center
-   *  of the relevant cell, as a fraction of the cell size (set by the function)
-   */
-  void cellIDCoordinates(const double        uCoord, 
-                         const unsigned int  quarter,
-                         unsigned int&       sipmID,
-                         unsigned int&       cellID, 
-                         double&             fracDistCellCenter,
-                         double&             sipmREdgeX) const;
 
   /** Convert 'gross' cellID (counts sensitive and non-sensitive cells/SiPM edges)
    *  to 'net' cellID (counts only sensitive cells).

@@ -3,6 +3,9 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+! 2015-09-21 - Luigi Del Buono
+ - Change DeFTFibremat::CellIDCoordinates from private to public realm (for Violaine Bellee who needs access)
+ 
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 
