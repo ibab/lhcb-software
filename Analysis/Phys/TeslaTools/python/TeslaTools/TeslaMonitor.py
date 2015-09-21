@@ -1,7 +1,7 @@
 from Configurables import TeslaMonitor, TeslaBrunelMonitor
 
 class TeslaH1:
-  def __init__ (self, input, title, nBins, min, max, cut=None):
+  def __init__ (self, input, title, nBins, min, max, cut=None, histname = None):
     try:
       line,particle,variable = input.split(':')
       print "TurboLine: ", line
@@ -14,8 +14,10 @@ class TeslaH1:
 
     if cut == None: cut = "(ALL)"
 
-    histname = ( ''.join(e for e in particle if e.isalnum()) + "_" +
-                 ''.join(e for e in variable if e.isalnum()) )
+    if histname == None:
+      histname = ( ''.join(e for e in particle if e.isalnum()) + "_" +
+                   ''.join(e for e in variable if e.isalnum()) )
+
     algName = line + histname
 
 
@@ -38,7 +40,9 @@ class TeslaH1:
 class TeslaH2:
   def __init__ (self, input, title, nBinsX, minX, maxX,
                                     nBinsY, minY, maxY, 
-                                    cut = None):
+                                    cut = None,
+                                    histname = None
+                                    ):
     try:
       line,particle,var1,var2 = input.split(':')
       print "TurboLine: ", line
@@ -50,10 +54,12 @@ class TeslaH2:
           "Name expected in format TurboLine:Particle:LoKiVar1:LoKiVar2. Got " +
           input  )
 
-    histname = ( ''.join(e for e in particle if e.isalnum()) + "_" +
-                 ''.join(e for e in var1 if e.isalnum()) + "_" +
-                 ''.join(e for e in var2 if e.isalnum()) 
-                 ) 
+    if histname == None:
+      histname = ( ''.join(e for e in particle if e.isalnum()) + "_" +
+                   ''.join(e for e in var1 if e.isalnum()) + "_" +
+                   ''.join(e for e in var2 if e.isalnum()) 
+                   ) 
+
     algName = line + histname
 
     if cut == None: cut = "(TRUE)"
@@ -76,7 +82,8 @@ class TeslaH3:
   def __init__ (self, input, title, nBinsX, minX, maxX,
                                     nBinsY, minY, maxY,
                                     nBinsZ, minZ, maxZ,
-                                    cut = None):
+                                    cut = None,
+                                    histname = None):
     try:
       line,particle,var1,var2,var3 = input.split(':')
       print "TurboLine: ", line
@@ -89,11 +96,12 @@ class TeslaH3:
           "Name expected in format TurboLine:Particle:LoKiVar1:LoKiVar2:LoKiVar3. Got " +
           input  )
 
-    histname = ( ''.join(e for e in particle if e.isalnum()) + "_" +
-                 ''.join(e for e in var1 if e.isalnum()) + "_" +
-                 ''.join(e for e in var2 if e.isalnum()) + "_" +
-                 ''.join(e for e in var3 if e.isalnum()) 
-               )
+    if histname == None:
+      histname = ( ''.join(e for e in particle if e.isalnum()) + "_" +
+                   ''.join(e for e in var1 if e.isalnum()) + "_" +
+                   ''.join(e for e in var2 if e.isalnum()) + "_" +
+                   ''.join(e for e in var3 if e.isalnum()) 
+                 )
     algName = line + histname
 
     if cut == None: cut = "(TRUE)"
