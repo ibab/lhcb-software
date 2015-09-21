@@ -1,12 +1,14 @@
 ################################################################################
 # Package: PatAlgorithms
 ################################################################################
-gaudi_subdir(PatAlgorithms v4r42)
+gaudi_subdir(PatAlgorithms v4r42b)
 
 gaudi_depends_on_subdirs(Det/OTDet
                          Det/STDet
                          Event/RecEvent
                          Event/TrackEvent
+			 Event/LinkerEvent
+			 Event/MCEvent
                          Kernel/PartProp
                          OT/OTDAQ
                          Tf/PatKernel
@@ -17,7 +19,7 @@ gaudi_depends_on_subdirs(Det/OTDet
 gaudi_add_module(PatAlgorithms
                  src/*.cpp
                  INCLUDE_DIRS OT/OTDAQ Tf/PatKernel Tf/TfKernel Tr/TrackInterfaces
-                 LINK_LIBRARIES OTDetLib STDetLib RecEvent TrackEvent PartPropLib)
+		 LINK_LIBRARIES MCEvent LinkerEvent OTDetLib STDetLib RecEvent TrackEvent PartPropLib)
 
 gaudi_install_python_modules()
 

@@ -18,9 +18,6 @@
  *  @date   2007-08-20 Update for A-Team framework
  */
 
-// For convenient trailing-return-types in C++11:
-#define AUTO_RETURN(...) noexcept(noexcept(__VA_ARGS__)) -> decltype(__VA_ARGS__) {return (__VA_ARGS__);}
-
 class PatFwdTrackCandidate final {
   PatFwdHits m_coords;
   std::array<double,6> m_state; // x0,y0,z0, tx,ty, Q/P
@@ -30,12 +27,13 @@ class PatFwdTrackCandidate final {
   std::array<int, 2> m_nb{ { 0, 0 } }; // IT, OT
   std::pair<double, int> m_chi2PerDof{ 0., 0 };
   const LHCb::Track *m_track{ nullptr };
-  bool m_fitted{ false };
+  bool  m_fitted{ false };
+  float m_scstddev{0.f};
 
 public:
   template <typename C>
   PatFwdTrackCandidate(const LHCb::Track *tr, C&& coords)
-      : m_coords{ std::forward<C>(coords) }, m_track{ tr }  {
+    : m_coords{ std::forward<C>(coords) }, m_track{ tr }  {
     const LHCb::State *state = m_track->stateAt(LHCb::State::EndVelo);
     assert(state != nullptr);
     m_state = { { state->x(),  state->y(), state->z(),
@@ -44,14 +42,14 @@ public:
   }
 
   PatFwdTrackCandidate(const LHCb::Track *tr)
-      : PatFwdTrackCandidate(tr, PatFwdHits{}) {
+    : PatFwdTrackCandidate(tr, PatFwdHits{}) {
     m_coords.reserve(32);
   }
 
   template <typename I>
   PatFwdTrackCandidate(const LHCb::Track *tr, I&& first, I&& last)
-      : PatFwdTrackCandidate(
-            tr, PatFwdHits{ std::forward<I>(first), std::forward<I>(last) })
+    : PatFwdTrackCandidate(
+        tr, PatFwdHits{ std::forward<I>(first), std::forward<I>(last) })
   { //TODO: partition m_coords by 'selected' 'not selected' 'ignored'
   }
 
@@ -66,16 +64,13 @@ public:
 
   void cleanCoords() {
     m_coords.erase(
-        std::remove_if(std::begin(m_coords), std::end(m_coords),
-                       [](const PatFwdHit *h) { return !h->isSelected(); }),
-        std::end(m_coords));
+          std::remove_if(std::begin(m_coords), std::end(m_coords),
+                         [](const PatFwdHit *h) { return !h->isSelected(); }),
+          std::end(m_coords));
   }
 
   const LHCb::Track *track() const { return m_track; }
-  template <typename T> auto xStraight(T z) const
-  AUTO_RETURN( m_state[0] + m_state[3] * (z - m_state[2]) )
-  template <typename T> auto yStraight(T z) const
-  AUTO_RETURN( m_state[1] + m_state[4] * (z - m_state[2]) )
+
   double qOverP() const { return m_state[5]; }
 
   double slX() const { return m_state[3]; }
@@ -130,19 +125,7 @@ public:
     m_params[5] += dby;
   }
 
-  template <typename T> auto x(T dz) const
-  AUTO_RETURN( m_params[0] + dz * (m_params[1] + dz * (m_params[2] + dz * m_params[3])) )
-
-  template <typename T> auto y(T dz) const
-  AUTO_RETURN(  m_params[4] + dz * m_params[5] )
-
-  template <typename T> auto xSlope(T dz) const
-  AUTO_RETURN( m_params[1] + dz * (2 * m_params[2] + 3 * dz * m_params[3]) )
-
   double ySlope(double) const { return m_params[5]; }
-
-  template <typename T> auto  xMagnet(T dz) const
-  AUTO_RETURN( m_params[0] + dz * m_params[1] )
 
   double cosAfter() const { return vdt::fast_isqrt( 1. + m_params[1] * m_params[1] ) ; }
 
@@ -188,6 +171,25 @@ public:
 
   double cand1stquality() const { return m_candquality[0]; }
   double cand2ndquality() const { return m_candquality[1]; }
+
+  template <typename T> decltype(auto) xStraight(T z) const{
+    return m_state[0] + m_state[3] * (z - m_state[2]);
+  }
+  template <typename T> decltype(auto) yStraight(T z) const{
+    return m_state[1] + m_state[4] * (z - m_state[2]);
+  }
+  template <typename T> decltype(auto) x(T dz) const{
+    return m_params[0] + dz * (m_params[1] + dz * (m_params[2] + dz * m_params[3]));
+  }
+  template <typename T> decltype(auto) y(T dz) const{
+    return  m_params[4] + dz * m_params[5];
+  }
+  template <typename T> decltype(auto) xSlope(T dz) const{
+    return m_params[1] + dz * (2 * m_params[2] + 3 * dz * m_params[3]);
+  }
+  template <typename T> decltype(auto)  xMagnet(T dz) const{
+    return m_params[0] + dz * m_params[1];
+  }
 
 };
 #endif // PATFWDTRACKCANDIDATE_H

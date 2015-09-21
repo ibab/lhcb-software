@@ -6,6 +6,7 @@
 #include "boost/range/iterator_range.hpp"
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiAlg/GaudiTupleTool.h"
 #include "GaudiKernel/extends.h"
 #include "GaudiKernel/IIncidentListener.h"
 
@@ -14,7 +15,6 @@
 #include "TrackInterfaces/IAddTTClusterTool.h"
 #include "TrackInterfaces/ITracksFromTrack.h"
 #include "TrackInterfaces/ITrackSelector.h"
-
 
 #include "Kernel/IUsedLHCbID.h"
 
@@ -37,7 +37,13 @@
  *  @date   2007-08-20 Update for A-Team framework
  */
 
-class PatForwardTool : public extends2<GaudiTool,IPatForwardTool,ITracksFromTrack>, public IIncidentListener {
+enum class ImHere{BeforeXFit,AfterXFit,AfterStereoFit};
+
+struct TupInfo{std::string treename; ImHere WhereAmI;};
+
+class IClassifierReader;
+
+class PatForwardTool : public extends2<GaudiTupleTool,IPatForwardTool,ITracksFromTrack>, public IIncidentListener {
 public:
 
   /// Standard constructor
@@ -48,6 +54,7 @@ public:
   ~PatForwardTool( ) override = default; ///< Destructor
 
   StatusCode initialize() override;
+  StatusCode finalize() override;
 
   void forwardTrack( const LHCb::Track* track, LHCb::Tracks* output ) override;
 
@@ -64,7 +71,9 @@ public:
   void prepareHits();
 
 private:
-  void buildXCandidatesList( PatFwdTrackCandidate& track , boost::iterator_range<typename PatFwdHits::const_iterator> rng) const;
+  void buildXCandidatesList( PatFwdTrackCandidate& track ,
+                             boost::iterator_range<typename PatFwdHits::const_iterator> full_XHit_range) const;
+  StatusCode make_tuple(const std::vector<PatFwdTrackCandidate> &cands, const TupInfo &tupleinfo)const;
 
   class XInterval {
     double m_zMagnet,m_xMagnet,m_txMin,m_txMax,m_xmin,m_xmax;
@@ -151,14 +160,12 @@ private:
 
   double allowedXSpread(const PatFwdHit *hit, double xExtrap ) const {
     auto spreadSl = ( hit->projection() - xExtrap ) * m_maxSpreadSlopeX;
-    return m_maxSpreadX +
-        fabs( spreadSl ) +
-        int(hit->isOT()) * 1.5;  // OT drift ambiguities...
+    return m_maxSpreadX + fabs( spreadSl ) + int(hit->isOT()) * 1.5;  // OT drift ambiguities...
   }
 
   double allowedStereoSpread(const PatFwdHit *hit) const {
     // in case of OT, add 1.5 to account for OT drift ambiguities...
-    return  3. + int(hit->isOT())*1.5;
+    return  m_StereoSpread + int(hit->isOT()) * 1.5;
   }
 
   bool inCenter(const PatFwdTrackCandidate& cand) const {
@@ -198,7 +205,29 @@ private:
     return  m_withoutBField || ( momentum>m_minMomentum && pt>m_minPt) ;
   }
 
+  inline float nX ( const PatFwdHits &hits ) const {
+    return std::accumulate(hits.begin(),hits.end(),0,[](float last_it, const PatForwardHit *hit){ return last_it + (float)hit->isX(); });
+  }
 
+  inline std::pair<double,double> get_mdx_spread ( const PatFwdHits &hits ) const {
+    //not pretty, but it has to be done like this, since hits can be rearranged after the stereofit
+    auto sum_delta_x = 0.f;    std::vector<double> xproj;
+    for(auto hit : hits) if(hit->isX())xproj.push_back(hit->projection());
+    std::sort(xproj.begin(),xproj.end());
+    for(auto it = xproj.begin(); it != --xproj.end(); it++) sum_delta_x += *next(it) - *it;
+    return {sum_delta_x/(nX(hits)-1), xproj.back() - xproj.front()};
+  }
+
+  inline double get_cluster_mean ( const PatFwdHits &hits ) const {
+    auto sum_x = std::accumulate(hits.begin(),hits.end(),0.0,[](double last_it, const PatForwardHit *hit){ return last_it + hit->isX()*hit->projection(); });
+    return sum_x/nX(hits);
+  }
+
+  inline double get_cluster_stddev ( const PatFwdHits &hits ) const {
+    auto mean = get_cluster_mean(hits);
+    auto sqs = std::accumulate(hits.begin(),hits.end(),0.0,[&mean](double last_it, const PatForwardHit *hit){ return last_it + hit->isX()*pow(hit->projection() - mean,2); });
+    return sqrt(sqs/nX(hits));
+  }
 
   PatFwdTool*                                 m_fwdTool;        ///< Tool to compute extrapolations of tracks
   Tf::TStationHitManager <PatForwardHit> *    m_tHitManager;    ///< Tool to provide hits
@@ -211,11 +240,12 @@ private:
 
   //== Parameters of the algorithm
   bool   m_secondLoop;
+  bool   m_writeMCtuples;
   bool   m_useMomentumEstimate;
   double m_momentumEstimateError;
   double m_zAfterVelo;
-  double m_yCompatibleTol;
-  double m_yCompatibleTolFinal;
+  double m_YCompatibleTol;
+  double m_YCompatibleTolFinal;
   double m_minOTDrift;
   double m_maxOTDrift;
   double m_maxSpreadX;
@@ -226,14 +256,22 @@ private:
   int    m_minPlanes;
   double m_minPt;
   double m_minMomentum;
-  double m_maxChi2;
-  double m_maxChi2Track;
+  double m_maxChi2X;
+  double m_maxChi2Y;
+  double m_maxXSlope;
   int    m_minHits;
   int    m_minOTHits;
   double m_centerOTYSize;
   double m_maxDeltaY;
   double m_maxDeltaYSlope;
   int    m_maxXCandidateSize;
+  double m_StereoSpread;
+  double m_fXPlanes;
+  double m_fYCompatible;
+  double m_YTolOffset;
+  double m_MLPcut;
+  double m_br1;
+  double m_br2;
 
   std::pair<double,double>  m_magnetKickParams ;
   double m_minRange;
@@ -263,6 +301,9 @@ private:
   IUsedLHCbID*                                m_usedLHCbIDTool; ///< Tool to check if hits are already being used
 
   bool  m_nnSwitch = false;           // switch on or off NN var. writing
+
+  IClassifierReader *m_reader;
+
 };
 
 #endif // PATFORWARDTOOL_H
