@@ -4,8 +4,6 @@
  *
  *  Header file for RICH DAQ class : RichDAQHeaderV3::RichDAQHeaderPD
  *
- *  $Id: RichDAQHeaderPD_V3.h,v 1.2 2007-09-04 16:45:09 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
@@ -152,6 +150,25 @@ namespace Rich
         /// Destructor
         ~RichDAQHeaderPD( ) {}
 
+      public:
+        
+        /// reset for new data stream
+        inline void reset( )
+        {
+          headerWords()[0] = 0;
+          headerWords()[1] = 0;
+          headerWords()[2] = 0;
+        }
+
+        /// reset for a new data stream
+        inline void reset( const LongType * data )
+        {
+          reset( );
+          readFromDataStream( data );
+        }
+
+      public:
+        
         /// Retrieve the Level0 ID
         inline Level0ID l0ID() const
         {

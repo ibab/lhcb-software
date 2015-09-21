@@ -104,7 +104,7 @@ namespace Rich
       public: // methods
 
         /// Default Constructor
-        explicit RichDAQHeaderPD () : HeaderPDBase(nHeaderWordsNormal) { }
+        explicit RichDAQHeaderPD() : HeaderPDBase(nHeaderWordsNormal) { }
 
         /// Copy constructor
         RichDAQHeaderPD ( const RichDAQHeaderPD & header )
@@ -112,7 +112,7 @@ namespace Rich
 
         /// Constructor from a pointer to a data stream
         explicit RichDAQHeaderPD ( const LongType * data )
-          : HeaderPDBase(nHeaderWordsNormal) // header has three words
+          : HeaderPDBase(nHeaderWordsNormal) 
         {
           readFromDataStream(data);
         }
@@ -145,6 +145,27 @@ namespace Rich
 
         /// Destructor
         virtual ~RichDAQHeaderPD( ) { }
+
+      public:
+        
+        /// reset
+        inline void reset( )
+        {
+          if ( nHeaderWords() > 1 ) 
+          {
+            headerWords() = HeaderPDBase::HeaderWords(nHeaderWordsNormal,0); 
+          }
+          headerWords()[0] = 0;
+        }
+
+        /// reset for a new data stream
+        inline void reset( const LongType * data )
+        {
+          reset( );
+          readFromDataStream( data );
+        }
+        
+      public:
 
         /// Retrieve the Level0 ID
         inline Level0ID l0ID() const

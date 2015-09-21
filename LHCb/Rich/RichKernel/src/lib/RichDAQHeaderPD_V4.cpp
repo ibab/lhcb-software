@@ -4,8 +4,6 @@
  *
  *  Implementation file for RICH DAQ class : RichDAQHeaderV4::RichDAQHeaderPD
  *
- *  $Id: RichDAQHeaderPD_V4.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   23/04/2007
  */
@@ -33,7 +31,7 @@ namespace Rich
           // Read the first word (which gives us enough info to know the format)
           headerWords()[0] = *data;
           // If extended mode, read the two L0 words (requires last line)
-          if ( extendedFormat() )
+          if ( UNLIKELY( extendedFormat() ) )
           {
             // Reset header to have 3 words
             headerWords() = HeaderPDBase::HeaderWords(nHeaderWordsExtended,0);

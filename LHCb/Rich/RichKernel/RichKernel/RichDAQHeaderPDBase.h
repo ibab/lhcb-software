@@ -4,9 +4,6 @@
  *
  *  Header file for RICH DAQ utility class : Rich::DAQ::HeaderPDBase
  *
- *  CVS Log :-
- *  $Id: RichDAQHeaderPDBase.h,v 1.3 2008-02-15 14:11:03 cattanem Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
@@ -84,11 +81,7 @@ namespace Rich
       /// Write this head to a RAWBank of data words
       inline void fillRAWBank ( RAWBank & rawData ) const
       {
-        for ( HeaderWords::const_iterator iH = headerWords().begin();
-              iH != headerWords().end(); ++iH )
-        {
-          rawData.push_back( *iH );
-        }
+        for ( const auto& H : headerWords() ) { rawData.push_back(H); }
       }
 
     protected: // methods

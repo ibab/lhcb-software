@@ -121,6 +121,20 @@ namespace Rich
         /// Destructor
         ~RichDAQHeaderPD( ) {}
 
+      public:
+
+        /// reset
+        inline void reset( ) { headerWords()[0] = 0; }
+
+        /// reset for a new data stream
+        inline void reset( const LongType * data )
+        {
+          reset( );
+          readFromDataStream( data );
+        }
+
+      public:
+
         /// Set the Level0 ID
         inline bool setL0ID( const Level0ID l0id )
         {

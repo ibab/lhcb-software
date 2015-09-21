@@ -4,6 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2015-09-21 - Chris Jones
+ - Various improvements to the DAQ Header and Footer classes, to allow for
+   more CPU efficient usage in RichDAQ.
+
 ! 2015-09-20 - Chris Jones
  - Use unordered map for decoded data format.
 
