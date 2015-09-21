@@ -4,9 +4,6 @@
  *
  *  Header file for RICH DAQ utility class : Rich::DAQ::HPDDataBank
  *
- *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.25 2009-08-07 12:15:09 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
@@ -17,6 +14,7 @@
 
 // STD
 #include <sstream>
+#include <stdio.h>
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -137,16 +135,21 @@ namespace Rich
 
     public:
 
-      /** Default Constructor
-       */
+      /// Default Constructor
       HPDDataBankImp( const ShortType maxDataSize = 1 )
         : m_data         ( new LongType[maxDataSize] ),
+          m_maxDataSize  ( maxDataSize ),
           m_internalData ( true ) 
       { 
         for ( ShortType i = 0; i < maxDataSize; ++i ) m_data[i] = 0;
+        // memset ( m_data, 0, sizeof(m_data) );
+        // for ( ShortType i = 0; i < maxDataSize; ++i ) 
+        // { std::cout << i << " " << m_data[i] << std::endl; }
       }
 
-      /** Constructor with internal data representation
+    public:
+
+      /** Constructor with internal data representation (encoding)
        *
        *  @param header   Header word for this HPD data bank
        *  @param footer   Footer word for this HPD data bank
@@ -159,17 +162,19 @@ namespace Rich
                       const LongType        dataInit,
                       const ShortType       maxDataSize,
                       const ShortType       dataSize = 0 )
-        : m_header       ( header                             ),
-          m_data         ( new LongType[maxDataSize]          ),
-          m_footer       ( footer                             ),
-          m_dataSize     ( dataSize                           ),
-          m_maxDataSize  ( maxDataSize                        ),
-          m_internalData ( true                               )
+        : m_header       ( header                    ),
+          m_data         ( new LongType[maxDataSize] ),
+          m_footer       ( footer                    ),
+          m_dataSize     ( dataSize                  ),
+          m_maxDataSize  ( maxDataSize               ),
+          m_internalData ( true                      )
       {
         for ( ShortType i = 0; i < maxDataSize; ++i ) m_data[i] = dataInit;
       }
+      
+    public:
 
-      /** Constructor from external data (RawBuffer)
+      /** Constructor from external data (decoding RawBuffer)
        *
        *  @param data        Pointer to start of data block (including header)
        *  @param maxDataSize Max possible data size
@@ -177,13 +182,41 @@ namespace Rich
        */
       HPDDataBankImp( const LongType * data,
                       const ShortType  maxDataSize,
-                      const ShortType  dataSize = 0 );
+                      const ShortType  dataSize = 0 )
+        : m_maxDataSize  ( maxDataSize ),
+          m_internalData ( false       )
+      {
+        init( data, dataSize );
+      }
+
+    protected:
+
+      /// Reset object to decode a new data stream
+      inline void reset( const LongType * data, 
+                         const ShortType  dataSize = 0 )
+      {
+        // reset header and footer to default size if needed
+        m_header.reset();
+        if ( m_footer.nFooterWords() > 0 ) { m_footer = Footer(); }
+        // cleanup internal storage, if required
+        cleanUp();
+        // initialise
+        m_internalData = false;
+        init( data, dataSize );
+      }
+
+    private:
+
+      /// initialisation for decoding
+      void init( const LongType * data,
+                 const ShortType  dataSize );
+
+    public:
 
       /// Destructor
-      virtual ~HPDDataBankImp()
-      {
-        cleanUp();
-      }
+      virtual ~HPDDataBankImp() { cleanUp(); }
+
+    public:
 
       /// Read access to header
       inline const Header & header() const
@@ -266,7 +299,7 @@ namespace Rich
         if ( m_internalData && m_data )
         {
           delete[] m_data;
-          m_data = 0;
+          m_data = NULL;
         }
       }
 

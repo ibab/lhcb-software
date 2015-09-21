@@ -23,17 +23,16 @@ namespace Rich
   {
 
     template< class Version, class Header, class Footer >
-    HPDDataBankImp<Version,Header,Footer>::HPDDataBankImp( const LongType * data,
-                                                           const ShortType  maxDataSize,
-                                                           const ShortType  dataSize )
-      : m_maxDataSize  ( maxDataSize ),
-        m_internalData ( false       )
+    void 
+    HPDDataBankImp<Version,Header,Footer>::
+    init( const LongType * data,
+          const ShortType  dataSize )
     {
       // initialise header words
       // note, this call increments data to the correct place
       m_header.readFromDataStream(data);
       // set pointer to first data word
-      m_data = const_cast< LongType * >(data);
+      m_data = const_cast<LongType*>(data);
       // set data size
       // Use trick here with dataSize to allow compatibility with DC06/DC04 data
       // can be removed when no longer needed (together with dataSize variable)
@@ -52,7 +51,8 @@ namespace Rich
 
     template< class Version, class Header, class Footer >
     LongType
-    HPDDataBankImp<Version,Header,Footer>::createParityWord( const LHCb::RichSmartID::Vector & ids ) const
+    HPDDataBankImp<Version,Header,Footer>::
+    createParityWord( const LHCb::RichSmartID::Vector & ids ) const
     {
       LongType parity(0);
       std::vector<unsigned int> hC(BitsPerDataWord,0);
@@ -65,8 +65,9 @@ namespace Rich
     }
 
     template< class Version, class Header, class Footer >
-    bool HPDDataBankImp<Version,Header,Footer>::checkDataIntegrity( const LHCb::RichSmartID::Vector & ids,
-                                                                    MsgStream & os ) const
+    bool HPDDataBankImp<Version,Header,Footer>::
+    checkDataIntegrity( const LHCb::RichSmartID::Vector & ids,
+                        MsgStream & os ) const
     {
       bool OK(true);
       // does this footer have a parity word ?

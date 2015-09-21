@@ -4,9 +4,6 @@
  *
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
- *  CVS Log :-
- *  $Id: RichZeroSuppData.h,v 1.13 2007-02-01 17:42:30 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */

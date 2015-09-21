@@ -4,9 +4,6 @@
  *
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
- *  CVS Log :-
- *  $Id: RichZeroSuppData_V1.h,v 1.7 2007-09-20 08:06:30 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
@@ -83,6 +80,16 @@ namespace Rich
                                                     MaxDataSize,  // max data block size
                                                     dataSize )
         { }
+
+        /** Reset for a new block of raw data
+         *  @param data     Pointer to the start of the data block
+         *  @param dataSize The size of the data block (excluding header HPD word)
+         */
+        inline void reset( const LongType * data,
+                           const ShortType dataSize )
+        {
+          HPDDataBankImp<Version,Header,Footer>::reset( data, dataSize );
+        }
 
         /// Destructor
         virtual ~RichZeroSuppData() { }

@@ -400,8 +400,199 @@ RawDataFormatTool::createDataBank( const LHCb::RichSmartID::Vector & smartIDs,
   return dataBank;
 }
 
-// Create data bank of correct version
-// This function knows which bank objects to create for each version number
+const HPDDataBank *
+RawDataFormatTool::createDataBank_static( const LongType * dataStart,
+                                          const unsigned int dataSize,
+                                          const BankVersion version ) const
+{
+  HPDDataBank * dataBank = NULL;
+
+  if ( LHCb5 == version )
+  {
+
+    // Header
+    static RichDAQ_LHCb5::Header header;
+    header.reset( dataStart );
+
+    // Decide to zero suppress or not depending on number of hits
+    if ( header.zeroSuppressed() )
+    {
+      if ( header.aliceMode() )
+      {
+        static auto * b = new RichDAQ_LHCb5::ZeroSuppAlice();
+        b->reset( dataStart );
+        dataBank = b;
+      }
+      else
+      {
+        static auto * b = new RichDAQ_LHCb5::ZeroSuppLHCb();
+        b->reset( dataStart );
+        dataBank = b;
+      }
+    }
+    else
+    {
+      if ( header.aliceMode() )
+      {
+        static auto * b = new RichDAQ_LHCb5::NonZeroSuppAlice();
+        b->reset( dataStart );
+        dataBank = b;
+      }
+      else
+      {
+        static auto * b = new RichDAQ_LHCb5::NonZeroSuppLHCb();
+        b->reset( dataStart );
+        dataBank = b;
+      }
+    }
+
+  }
+  else if ( LHCb4 == version )
+  {
+
+    // Header
+    static RichDAQ_LHCb4::Header header;
+    header.reset( dataStart );
+
+    // Decide to zero suppress or not depending on number of hits
+    if ( header.zeroSuppressed() )
+    {
+      if ( header.aliceMode() )
+      {
+        Warning ( "LHCb4 data format does not support ZS Alice mode data" ).ignore();
+      }
+      else
+      {
+        static auto * b = new RichDAQ_LHCb4::ZeroSuppLHCb();
+        b->reset( dataStart );
+        dataBank = b;
+      }
+    }
+    else
+    {
+      if ( header.aliceMode() )
+      {
+        static auto * b = new RichDAQ_LHCb4::NonZeroSuppAlice();
+        b->reset( dataStart );
+        dataBank = b;
+      }
+      else
+      {
+        static auto * b = new RichDAQ_LHCb4::NonZeroSuppLHCb();
+        b->reset( dataStart );
+        dataBank = b;
+      }
+    }
+
+  }
+  else if ( LHCb3 == version )
+  {
+
+    // Header
+    static RichDAQ_LHCb3::Header header;
+    header.reset( dataStart );
+
+    // Decide to zero suppress or not depending on number of hits
+    if ( header.zeroSuppressed() )
+    {
+      if ( header.aliceMode() )
+      {
+        Warning ( "LHCb3 data format does not support ZS Alice mode data" ).ignore();
+      }
+      else
+      {
+        static auto * b = new RichDAQ_LHCb3::ZeroSuppLHCb();
+        b->reset( dataStart );
+        dataBank = b;
+      }
+    }
+    else
+    {
+      if ( header.aliceMode() )
+      {
+        static auto * b = new RichDAQ_LHCb3::NonZeroSuppAlice();
+        b->reset( dataStart );
+        dataBank = b;
+      }
+      else
+      {
+        static auto * b = new RichDAQ_LHCb3::NonZeroSuppLHCb();
+        b->reset( dataStart );
+        dataBank = b;
+      }
+    }
+
+  }
+  else if ( LHCb2 == version )
+  {
+
+    // Header
+    static RichDAQ_LHCb2::Header header;
+    header.reset( dataStart );
+
+    // Decide to zero suppress or not depending on number of hits
+    if ( header.zeroSuppressed() )
+    {
+      static auto * b = new RichDAQ_LHCb2::ZeroSuppLHCb();
+      b->reset( dataStart, dataSize );
+      dataBank = b;
+    }
+    else
+    {
+      static auto * b = new RichDAQ_LHCb2::NonZeroSuppLHCb();
+      b->reset( dataStart );
+      dataBank = b;
+    }
+
+  }
+  else if ( LHCb1 == version )
+  {
+
+    // Header
+    static RichDAQ_LHCb1::Header header;
+    header.reset( dataStart );
+
+    // Decide to zero suppress or not depending on number of hits
+    if ( header.zeroSuppressed() )
+    {
+      static auto * b = new RichDAQ_LHCb1::ZeroSuppLHCb();
+      b->reset( dataStart, dataSize );
+      dataBank = b;
+    }
+    else
+    {
+      static auto * b = new RichDAQ_LHCb1::NonZeroSuppLHCb();
+      b->reset( dataStart );
+      dataBank = b;
+    }
+
+  }
+  else if ( FlatList == version )
+  {
+
+    static auto * b = new RichDAQ_FlatList::Data();
+    b->reset( dataStart );
+    dataBank = b;
+
+  }
+  else
+  {
+    std::ostringstream message;
+    message << "Unknown RICH Raw Buffer version " << version << " -> No data bank";
+    Exception ( message.str() );
+  }
+
+  // Printout this bank
+  if ( dataBank && msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << endmsg
+              << "Created HPD Data Bank for Decoding :-" << endmsg;
+    verbose() << *dataBank << endmsg;
+  }
+
+  return dataBank;
+}
+
 const HPDDataBank *
 RawDataFormatTool::createDataBank( const LongType * dataStart,
                                    const unsigned int dataSize,
@@ -996,14 +1187,20 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
         // Ingress is OK, so read HPD data
 
         // Loop over active HPDs
-        for ( L1IngressInputs::const_iterator iHPD = inputs.begin(); iHPD != inputs.end(); ++iHPD )
+        for ( const auto& HPD : inputs )
         {
 
           // Create data bank and decode into RichSmartIDs
-          std::auto_ptr<const HPDDataBank>
-            hpdBank ( createDataBank( &bank.data()[lineC], // pointer to start of data
-                                      0, // Not needed here (to be removed). Must be 0 though
-                                      version ) );
+          // Use original method that creates a new object each time
+          //std::auto_ptr<const HPDDataBank>
+          //  hpdBank ( createDataBank( &bank.data()[lineC], // pointer to start of data
+          //                            0, // Not needed here (to be removed). Must be 0 though
+          //                            version ) );
+          // use 'static' method
+          const HPDDataBank * 
+            hpdBank ( createDataBank_static( &bank.data()[lineC], // pointer to start of data
+                                             0, // Not needed here (to be removed). Must be 0 though
+                                             version ) );
 
           // is this HPD suppressed ?
           const bool hpdIsSuppressed = hpdBank->suppressed();
@@ -1011,12 +1208,12 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
           {
             std::ostringstream mess;
             mess << "L1 board " << L1ID << " : Ingress "
-                 << ingressWord.ingressID() << " Input " << *iHPD << " is HARDWARE suppressed";
+                 << ingressWord.ingressID() << " Input " << HPD << " is HARDWARE suppressed";
             Warning( mess.str(), StatusCode::SUCCESS, 0 ).ignore();
           }
 
           // Try to add a new HPDInfo to map
-          const Level1Input l1Input(ingressWord.ingressID(),*iHPD);
+          const Level1Input l1Input(ingressWord.ingressID(),HPD);
           std::pair<HPDMap::iterator,bool> p
             = ingressInfo.hpdData().insert( HPDMap::value_type(l1Input,
                                                                HPDInfo(LHCb::RichSmartID(),
@@ -1047,7 +1244,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
             {
               std::ostringstream errMsg;
               errMsg << "'" << expt.message() << "' | L1HardID=" << L1ID
-                     << " Ingress=" << ingressWord.ingressID() << " Input=" << *iHPD;
+                     << " Ingress=" << ingressWord.ingressID() << " Input=" << HPD;
               Error( errMsg.str() ).ignore();
             }
             // If the HPD smartID was successfully found, continue with decoding

@@ -4,9 +4,6 @@
  *
  *  Header file for RICH Alice mode non-ZS data formats
  *
- *  CVS Log :-
- *  $Id: RichNonZeroSuppData.h,v 1.24 2007-03-08 18:14:27 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
  */

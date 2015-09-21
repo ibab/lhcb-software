@@ -4,9 +4,6 @@
  *
  *  Header file for RICH DAQ utility class : RichNonZeroSuppData
  *
- *  CVS Log :-
- *  $Id: RichNonZeroSuppData_V1.h,v 1.6 2007-09-20 08:06:30 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
  */
@@ -69,10 +66,9 @@ namespace Rich
                                                     Footer(),
                                                     0, MaxDataSize, MaxDataSize )
         {
-          for ( LHCb::RichSmartID::Vector::const_iterator iDig = digits.begin();
-                iDig != digits.end(); ++ iDig )
+          for ( const auto& dig : digits )
           {
-            setPixelActive( (*iDig).pixelRow(), (*iDig).pixelCol() );
+            setPixelActive( dig.pixelRow(), dig.pixelCol() );
           }
         }
 
@@ -85,6 +81,14 @@ namespace Rich
                                                     MaxDataSize, // max data block size
                                                     MaxDataSize )
         { }
+
+        /** Reset for a new block of raw data
+         *  @param data     Pointer to the start of the data block
+         */
+        inline void reset( const LongType * data )
+        {
+          HPDDataBankImp<Version,Header,Footer>::reset( data, MaxDataSize );
+        }
 
         /// Destructor
         ~RichNonZeroSuppData() { }

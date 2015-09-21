@@ -100,6 +100,15 @@ namespace Rich
             m_nHits ( -1 )
         { }
 
+        /** Reset for a new block of raw data
+         *  @param data     Pointer to the start of the data block
+         */
+        inline void reset( const LongType * data )
+        {
+          m_nHits  = -1;
+          HPDDataBankImp<Version,Header,Footer>::reset( data );
+        }
+
         /// Destructor
         ~RichNonZeroSuppData() { }
 

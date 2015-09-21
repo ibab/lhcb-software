@@ -203,6 +203,18 @@ namespace Rich
                                           const unsigned int dataSize,
                                           const Rich::DAQ::BankVersion version ) const;
 
+      /** Creates a bank data from the given raw block of data
+       *
+       *  Uses static objects to avoid recreating.
+       *
+       *  @param dataStart Pointer to the start of the raw data
+       *  @param dataSize  The length of the data block (excluding header HPD word)
+       *  @param version   The RICH DAQ data bank version
+       */
+      const HPDDataBank * createDataBank_static( const Rich::DAQ::LongType * dataStart,
+                                                 const unsigned int dataSize,
+                                                 const Rich::DAQ::BankVersion version ) const;
+
       /// Initialise for each event
       void InitEvent();
 

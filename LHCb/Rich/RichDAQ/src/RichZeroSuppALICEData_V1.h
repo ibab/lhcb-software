@@ -4,9 +4,6 @@
  *
  *  Header file for RICH DAQ utility class : RichZeroSuppALICEData
  *
- *  CVS Log :-
- *  $Id: RichZeroSuppALICEData_V1.h,v 1.4 2007-09-20 08:06:30 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
@@ -89,15 +86,25 @@ namespace Rich
 
         /** Constructor from a block of raw data
          *
-         *  @param data     Pointer to the start of the data block
+         *  @param data Pointer to the start of the data block
          */
         explicit RichZeroSuppALICEData( const LongType * data )
           : HPDDataBankImp<Version,Header,Footer> ( data,        // start of data
                                                     MaxDataSize  // max data block size
                                                     ),
-            m_tooBig ( false   ),
-            m_nHits  ( -1      )
+            m_tooBig ( false ),
+            m_nHits  ( -1    )
         { }
+
+        /** Reset for a new block of raw data
+         *  @param data     Pointer to the start of the data block
+         */
+        inline void reset( const LongType * data )
+        {
+          m_tooBig = false;
+          m_nHits  = -1;
+          HPDDataBankImp<Version,Header,Footer>::reset( data );
+        }
 
         /// Destructor
         virtual ~RichZeroSuppALICEData() { }
@@ -110,10 +117,7 @@ namespace Rich
                                             const LHCb::RichSmartID hpdID ) const;
 
         // Test if this bank would be too big ( i.e. greater than 32 words )
-        inline bool tooBig() const
-        {
-          return m_tooBig;
-        }
+        inline bool tooBig() const { return m_tooBig; }
 
       private: // methods
 
