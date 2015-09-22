@@ -1104,7 +1104,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 {
   // Get L1 ID
   const Level1HardwareID L1ID ( bank.sourceID() );
-  if ( msgLevel(MSG::DEBUG) ) debug() << "Decoding L1 bank " << L1ID << endmsg;
+  _ri_debug << "Decoding L1 bank " << L1ID << endmsg;
 
   // various counts
   unsigned int nHPDbanks(0), decodedHits(0);
