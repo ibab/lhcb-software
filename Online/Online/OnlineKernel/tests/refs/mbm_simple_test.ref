@@ -11,13 +11,13 @@ Child: Starting process:Summary_0
 
 ======================== MBM Bufer summary for buffer "0" ========================
 
- Buffer "0"                 Events: Produced:50000 Seen:99999 Pending:1 Max:128
-                            Space(kB):[Tot:8088 Free:8084] Users:[Tot:2 Max:12]
+ Buffer "0"                 Events: Produced:50000 Seen:100000 Pending:0 Max:128
+                            Space(kB):[Tot:8088 Free:8088] Users:[Tot:2 Max:12]
 
  Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
 
  cons_s_0              103    C   wev                      50000   100    A      0
- CONS_ONE              103    C                            49999   100   1       0
+ CONS_ONE              103    C                            50000   100   1       0
 
 +++++ MBM summary finished.
 Summary task finished work..
