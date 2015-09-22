@@ -751,8 +751,30 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
           fFitF->SetParameter(p,param);
         }
 
-        // Run the fit
-        hist->Fit(fFitF,"MQRSE0");
+        {
+          // Protect against FPEs from Minuit...
+          FPE::Guard guard(true);
+
+          // Forcibly suppress the annoying printout from ROOT/Minuit that
+          // does not honor the 'quiet' setting.
+          int original_stdout = dup(fileno(stdout));
+          fflush(stdout);
+          freopen("/dev/null","w",stdout);
+          int original_stderr = dup(fileno(stderr));
+          fflush(stderr);
+          freopen("/dev/null","w",stderr);
+        
+          // Run the fit
+          hist->Fit(fFitF,"QMRSE0");
+
+          // put std printout back to normal
+          fflush(stdout);
+          dup2(original_stdout,fileno(stdout));
+          close(original_stdout);
+          fflush(stderr);
+          dup2(original_stderr,fileno(stderr));
+          close(original_stderr);
+        }
 
         // save last fit
         lastFitF = fFitF;

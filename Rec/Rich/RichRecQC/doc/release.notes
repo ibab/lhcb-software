@@ -5,8 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2015-09-22 - Chris Jones
- - Per HPD fitting still not working reliably, so turn off until I have a
-   chance to investigate.
+ - Add an FPE guard to protect the per HPD fit.
+ - Forcibly redirect cout and cerr printout to /dev/null for the HPD fit
+   call, to work around the fact some printout from minuit does not honor
+   the 'quiet' setting.
 
 ! 2015-09-11 - Chris Jones
  - Fix a bug in RecoQC that prevent the per HPD fits from working.

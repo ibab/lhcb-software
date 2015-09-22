@@ -49,6 +49,9 @@
 #include "TH1D.h"
 #include "TF1.h"
 
+// FPE exception protection
+#include "Kernel/FPEGuard.h"
+
 namespace Rich
 {
   namespace Rec
