@@ -23,6 +23,7 @@
 // Kernel
 #include "Kernel/RichSmartID.h"
 #include "Kernel/RichSmartIDHashFuncs.h"
+#include "Kernel/FastAllocVector.h"
 
 namespace Rich
 {
@@ -591,7 +592,7 @@ namespace Rich
         : NumericType<ShortType>(id) { }
     };
 
-    //---------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------
 
     /// Local definition of a RawBank constructed from 32bit ints
     typedef std::vector< LongType >                                      RAWBank;
@@ -611,7 +612,7 @@ namespace Rich
     /// Vector of L1InputWithinIngress
     typedef std::vector< L1InputWithinIngress >                          L1IngressInputs;
 
-    //---------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------
 
     /** @enum BankVersion
      *

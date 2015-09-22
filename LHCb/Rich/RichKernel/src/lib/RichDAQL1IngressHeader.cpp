@@ -15,11 +15,7 @@ using namespace Rich::DAQ;
 
 void L1IngressHeader::setHPDsActive( const L1IngressInputs & inputs )
 {
-  for ( L1IngressInputs::const_iterator input = inputs.begin();
-        input != inputs.end(); ++input )
-  {
-    setHPDActive( *input );
-  }
+  for ( const auto& input : inputs ) { setHPDActive(input); }
 }
 
 void L1IngressHeader::activeHPDInputs( L1IngressInputs & inputs ) const

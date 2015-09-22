@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2015-09-22 - Chris Jones
+ - A few more CPU improvements for faster decoding.
+
 ! 2015-09-21 - Chris Jones
  - Various improvements to the DAQ Header and Footer classes, to allow for
    more CPU efficient usage in RichDAQ.

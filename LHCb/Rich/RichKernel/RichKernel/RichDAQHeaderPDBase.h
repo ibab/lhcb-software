@@ -40,8 +40,7 @@ namespace Rich
     public:
 
       /// Type for header words
-      typedef LHCb::FastAllocVector< LongType > HeaderWords;
-      //typedef std::vector< LongType > HeaderWords;
+      typedef LHCb::FastAllocVector<LongType> HeaderWords;
 
     public:
 
