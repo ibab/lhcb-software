@@ -126,7 +126,7 @@ static Type* defineDAQActiveType(DaqType daqType = DAQ_NORMAL)    {
   Tr*  recover1  = daq->addTransition("recover",   running,   offline,   flags);
   Tr*  recover2  = daq->addTransition("recover",   ready,     offline,   flags);
   Tr*  recover3  = daq->addTransition("recover",   active,    offline,   flags);
-  Tr*  recover4  = daq->addTransition("recover",   not_ready, offline,   flags);
+  /* Tr*  recover4 = */ daq->addTransition("recover",   not_ready, offline,   flags);
   Tr*  recover5  = daq->addTransition("recover",   paused,    offline,   flags);
 
   recover0->adoptRule( AllChildrenOfType(daq).execTransition(daq->transitionsByName("recover")));
