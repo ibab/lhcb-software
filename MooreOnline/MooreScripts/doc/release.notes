@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2015-09-22 - Sascha Stahl
+ - Added filters to get rid of non-harmful warnings
+
 !========================= MooreScripts v1r12 2015-07-29 =========================
 
 ! 2015-07-22 - Roel Aaij

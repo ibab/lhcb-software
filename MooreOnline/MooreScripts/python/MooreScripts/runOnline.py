@@ -79,7 +79,7 @@ def start(**kwargs) :
         mooreOnline.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
 
     from Moore import Funcs
-    comps = (".*Hlt2.*Fitter$", ".*Hlt2SelReportsWriter", ".*TrackEff.*[01]N3Body.*",
+    comps = (".*Hlt2.*Fitter$", ".*Hlt2SelReportsWriter",".*MomentumCombiner", ".*TrackEff.*[01]N3Body.*",
              ".*Hlt2.*TrackMasterExtrapolator", ".*DBAccessor", r".*\.PhotonMatch",
               r".*ToolSvc\.ParticleTransporter", ".*LoKiSvc.REPORT")
     outputTrans = {c : {"OutputLevel" : {"^.*$": "5"}} for c in comps}
