@@ -805,6 +805,7 @@ int MonHist::serialize(void* &ptr)
       break;
     }
   }
+  if ( errp ) {}
   cpyName(nam);
   cpytitle(tit);
   switch (m_type)
@@ -959,8 +960,7 @@ void *MonHist::de_serialize(void *ptr, char *nam)
   Bool_t dirstat = TH1::AddDirectoryStatus();
   TH1::AddDirectory(kFALSE);
   DimBuffBase *p = (DimBuffBase*)ptr;
-  double *mhentries,*mhsumw2;
-  int mblocksize;
+
 //  this->m_type = (MONTYPE)p->type;
   if (nam == 0)
   {
