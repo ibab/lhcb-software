@@ -11,6 +11,26 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : TupleToolL0Data
 //
+//  - produce tuple branches for L0DU input data extracted from the L0DU bank as defined in EDMS-845277
+//   (see $L0EVENTROOT/EVENT/L0DUBase.h for data naming)
+//  - produce the emulated L0 decision for the TCK list given in option
+//
+//  - Properties :
+//       * 'TCKList'  : list of registered TCK's for which the emulated decision is requested (vector<string>)
+//       * 'DataList' : list of L0data to be tupled (vector<string>)
+//                    -> wildcard are allowed  
+//                    -> e.g.   ["*Et*","*Pt*"] to tuple the L0 data with name containing 'Et' or 'Pt'
+//                    -> e.g.   ["ALL","!*Status*"] to tuple ALL L0 data except those with name containing 'Status'
+//
+//                    -> Default : ALL L0 data used for the standard decision making 
+//                               -> i.e. 'technical' data related to candidate address, status or intermediate value are rejected
+//
+//
+//       * 'ScaledData' : scale the candidate pT/eT data in MeV  (boolean - default = false, i.e. no scaling)
+//                     -> warning : the scaling factor relies on condDB for L0Calo and is partially hardcoded in L0DU s/w for L0Muon.
+//                     -> the scaling has changed in July 2015.
+//
+//
 // 2011-06-08 : Olivier Deschamps
 //-----------------------------------------------------------------------------
 
