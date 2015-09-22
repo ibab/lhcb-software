@@ -3,7 +3,7 @@
 #include "AIDA/IHistogram1D.h"
 
 // Gaudi
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiKernel/IEventTimeDecoder.h"
 #include "GaudiKernel/RndmGenerators.h"
 
@@ -13,7 +13,7 @@
  *
  */
 
-class HCMonitorBase : public GaudiHistoAlg {
+class HCMonitorBase : public GaudiTupleAlg {
  public:
   /// Standard constructor
   HCMonitorBase(const std::string& name, ISvcLocator* pSvcLocator);

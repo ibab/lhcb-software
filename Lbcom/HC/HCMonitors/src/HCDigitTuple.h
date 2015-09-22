@@ -1,8 +1,8 @@
 #ifndef HCDIGITTUPLE_H 
 #define HCDIGITTUPLE_H 1
 
-// Gaudi
-#include "GaudiAlg/GaudiTupleAlg.h"
+// Local 
+#include "HCMonitorBase.h"
 
 /** @class HCDigitTuple HCDigitTuple.h
  *  
@@ -11,7 +11,7 @@
  *  @date   2015-05-08
  */
 
-class HCDigitTuple : public GaudiTupleAlg {
+class HCDigitTuple : public HCMonitorBase {
 public: 
   /// Standard constructor
   HCDigitTuple(const std::string& name, ISvcLocator* pSvcLocator);
@@ -27,5 +27,11 @@ private:
   /// TES location of HC digits.
   std::string m_digitLocation;
 
+  std::vector<std::string> m_labelsB;
+  std::vector<std::string> m_labelsF;
+  std::vector<unsigned int> m_channelsB;
+  std::vector<unsigned int> m_channelsF;
+  void addQuadrants(const std::vector<unsigned int>& channels,
+                    const std::string& station, const bool bwd); 
 };
 #endif

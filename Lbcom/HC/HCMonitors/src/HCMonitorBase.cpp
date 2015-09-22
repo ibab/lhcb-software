@@ -11,7 +11,7 @@
 // Standard constructor
 //=============================================================================
 HCMonitorBase::HCMonitorBase(const std::string& name, ISvcLocator* pSvcLocator)
-    : GaudiHistoAlg(name, pSvcLocator),
+    : GaudiTupleAlg(name, pSvcLocator),
       m_odin(NULL) {
 
   declareProperty("CrateB", m_crateB = 0);
@@ -38,7 +38,7 @@ HCMonitorBase::~HCMonitorBase() {}
 StatusCode HCMonitorBase::initialize() {
 
   // Initialise the base class.
-  StatusCode sc = GaudiHistoAlg::initialize();
+  StatusCode sc = GaudiTupleAlg::initialize();
   if (sc.isFailure()) return sc;
 
   // Get ODIN.

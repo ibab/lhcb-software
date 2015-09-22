@@ -4,6 +4,10 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-09-22 - Heinrich Schindler
+ - HCMonitorBase: inherit from GaudiTupleAlg instead of GaudiHistoAlg.
+ - HCDigitTuple: write out ADCs for each channel explicitly.
+
 ! 2015-09-20 - Heinrich Schindler
  - Updated channel mapping of F13 (after access).
 
