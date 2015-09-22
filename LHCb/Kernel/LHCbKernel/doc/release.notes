@@ -4,6 +4,11 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2015-09-22 - Chris Jones
+ - Add STLOStreamRedirect.h that contains a guard class that redirects stdout
+   and stderr messages to a given location, for the lifetime of the guard.
+ - Add placement new/delete operators to MemPoolAlloc.h
+
 ! 2015-09-18 - Chris Jones
  - Disable mutex (thread) support in MemPoolAlloc.h as well ...
  - Switch FastAllocVector to use boost::pool_allocator instead of gcc mt 

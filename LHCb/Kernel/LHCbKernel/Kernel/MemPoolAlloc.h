@@ -83,6 +83,18 @@ namespace LHCb
       pool::is_from(pObj) ? pool::free(pObj) : ::operator delete ( pObj );
     }
 
+    /// placement operator new
+    static void* operator new ( size_t size, void* pObj )
+    {
+      return ::operator new ( size, pObj );
+    }
+
+    /// placement operator delete
+    static void operator delete ( void* p, void* pObj )
+    {
+      ::operator delete ( p, pObj );
+    }
+
 #ifdef __INTEL_COMPILER // Re-enable ICC remark
 #pragma warning(pop)
 #endif
