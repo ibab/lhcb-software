@@ -10,15 +10,16 @@ use  Moore               v24r1    Hlt
 use  L0App               v2r4     L0
 
 # Additional packages only for v24r1p1
-use  LoKiFitters      v4r17	Phys
-use  KalmanFilter     v1r14     Phys
-use  MuonID 	      v9r17	Muon
-use  MuonTrackRec     v3r14 	Muon
-use  Hlt1Lines        v7r17     Hlt
-use  Hlt2Lines        v10r3  	Hlt
-use  HltSettings      v7r3 	Hlt
-use  TCKUtils 	      v1r17   	Hlt
-use  HltConf  	      v13r3p1 	Hlt
+use  LoKiFitters        v4r17     Phys
+use  KalmanFilter       v1r14     Phys
+use  TisTosTobbing      v9r1p1    Phys
+use  MuonID             v9r17     Muon
+use  MuonTrackRec       v3r14     Muon
+use  Hlt1Lines          v7r17     Hlt
+use  Hlt2Lines          v10r3     Hlt
+use  HltSettings        v7r3      Hlt
+use  TCKUtils           v1r17     Hlt
+use  HltConf            v13r3p1   Hlt
 
 
 # Declare this as a container package
