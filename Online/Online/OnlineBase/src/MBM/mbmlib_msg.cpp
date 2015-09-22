@@ -47,7 +47,7 @@ namespace {
 #endif
   const char* __msg_user(const USER* user)  {
     static char text[32];
-    ::snprintf(text,sizeof(text),"%12X",(void*)user);
+    ::snprintf(text,sizeof(text),"%12lX",(unsigned long)user);
     return text;
   }
 }
