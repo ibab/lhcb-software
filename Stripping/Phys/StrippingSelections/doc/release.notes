@@ -4,13 +4,17 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-!========================== StrippingSelections v4r7 2015-09-09 ===============
+! 2015-09-22 - Andrea Contu
+ - Remove import from Selections StrippingB24p
 
 ! 2015-09-17 - Maurizio Martinelli
  - Released IPCHI2 cuts on DstarD2HHHH lines and added momentum cuts
 
 ! 2015-09-16 - Maurizio Martinelli
  - Fix to DstarD2HHHH lines
+
+
+!========================== StrippingSelections v4r7 2015-09-09 ===============
 
 ! 2015-09-11 - Andrea Contu
  - Fix to Bu2LLK relinfo

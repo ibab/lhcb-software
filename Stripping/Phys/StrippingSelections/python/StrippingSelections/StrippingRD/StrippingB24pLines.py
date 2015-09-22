@@ -56,7 +56,7 @@ from Configurables import FilterDesktop, CombineParticles, DaVinci__N4BodyDecays
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StrippingSelections.Utils import checkConfig
+#from StrippingSelections.Utils import checkConfig
 from GaudiKernel.PhysicalConstants import c_light
 
 #############################################################################
