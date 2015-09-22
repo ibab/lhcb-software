@@ -21,6 +21,8 @@
 #include "RichKernel/RichDAQParityFooter.h"
 #include "RichKernel/RichDAQL1IngressHeader.h"
 
+#include "RichKernel/RichMap.h"
+
 #ifndef GOD_NOALLOC
 // Use a memory pool allocator from boost
 

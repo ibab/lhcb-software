@@ -59,10 +59,11 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
   declareProperty( "ActiveRICHes",       m_richIsActive                );
   declareProperty( "PurgeHPDsFailIntegrityTest", m_purgeHPDsFailIntegrity = true );
   declareProperty( "HotPixelsToMask",    m_hotChannels                 );
-  declareProperty( "RawEventLocations",  m_rawEventLocations={LHCb::RawEventLocation::Rich, LHCb::RawEventLocation::Default},
+  declareProperty( "RawEventLocations",  m_rawEventLocations =
+      { LHCb::RawEventLocation::Rich, LHCb::RawEventLocation::Default },
                    "List of possible locations of the RawEvent object in the"
                    " transient store. By default it is LHCb::RawEventLocation::Rich,"
-                   " LHCb::RawEventLocation::Default.");
+                   " LHCb::RawEventLocation::Default." );
 }
 
 // Destructor
@@ -116,24 +117,24 @@ StatusCode RawDataFormatTool::initialize()
   {
     info() << "Hot HPD pixel list to suppress :-" << endmsg;
     m_pixelsToSuppress = true;
-    for ( HotPixelListType::const_iterator iC = m_hotChannels.begin();
-          iC != m_hotChannels.end(); ++iC )
+    for ( const auto& C : m_hotChannels )
     {
-      const LHCb::RichSmartID channel(*iC);
+      const LHCb::RichSmartID channel(C);
       m_hotPixels[channel.pdID()].insert(channel);
       info() << " " << channel << " (" << channel.key() << ")" << endmsg;
     }
   }
 
   // Initialise the RawEvent locations
-  const bool usingDefaultLocation = (m_rawEventLocations.size()==2 
-                                     && m_rawEventLocations[0]==LHCb::RawEventLocation::Rich 
-                                     && m_rawEventLocations[1]==LHCb::RawEventLocation::Default);
+  const bool usingDefaultLocation = 
+    ( 2 == m_rawEventLocations.size()                           && 
+      m_rawEventLocations[0] == LHCb::RawEventLocation::Rich    &&
+      m_rawEventLocations[1] == LHCb::RawEventLocation::Default );
   
   if ( !usingDefaultLocation )
   {
-    info() << "Using " << m_rawEventLocations << " as search path for the RawEvent object"
-           << endmsg;
+    info() << "Using " << m_rawEventLocations
+           << " as search path for the RawEvent object" << endmsg;
   }
 
   return sc;
@@ -160,10 +161,9 @@ StatusCode RawDataFormatTool::finalize()
   // Print out L1 information
   if ( m_summary )
   {
-    for ( L1TypeCountTAE::const_iterator iSum = m_l1decodeSummary.begin();
-          iSum != m_l1decodeSummary.end(); ++iSum )
+    for ( const auto& sum : m_l1decodeSummary )
     {
-      printL1Stats( iSum->second, "RICH Level 1 : Decoding Summary "+iSum->first );
+      printL1Stats( sum.second, "RICH Level 1 : Decoding Summary "+sum.first );
     }
     printL1Stats( m_l1encodeSummary, "RICH Level 1 : Encoding Summary" );
   }
@@ -193,16 +193,16 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
 
     Rich::Map<Rich::DetectorType,unsigned long long> totWordSize, totBanks, totHits, nEvFills, s;
     Rich::DetectorType lastrich = Rich::InvalidDetector;
-    for ( L1TypeCount::const_iterator iL1C = count.begin(); iL1C != count.end(); ++iL1C )
+    for ( const auto& L1C : count )
     {
-      const Level1HardwareID L1HardID = (*iL1C).first.l1HardwareID;
+      const Level1HardwareID L1HardID = L1C.first.l1HardwareID;
       Level1LogicalID L1LogID(0);
       try { L1LogID = m_richSys->level1LogicalID(L1HardID); }
       catch ( ... )
       {
         Warning( "Unknown L1 Hardware ID " + (std::string)L1HardID ).ignore();
       }
-      const BankVersion version    = (*iL1C).first.bankVersion;
+      const BankVersion version = L1C.first.bankVersion;
       Rich::DetectorType rich;
       try { rich = m_richSys->richDetector( L1HardID ); }
       catch ( ... )
@@ -210,13 +210,13 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
         Warning( "Unknown L1 Hardware ID " + (std::string)L1HardID ).ignore();
         rich = Rich::InvalidDetector;
       }
-      const unsigned long long nBanks      = (*iL1C).second.nHPDs;
+      const unsigned long long nBanks      = L1C.second.nHPDs;
       totBanks[rich]                      += nBanks;
-      const unsigned long long words       = (*iL1C).second.nWords;
+      const unsigned long long words       = L1C.second.nWords;
       totWordSize[rich]                   += words;
-      const unsigned long long hits        = (*iL1C).second.nHits;
+      const unsigned long long hits        = L1C.second.nHits;
       totHits[rich]                       += hits;
-      const unsigned long long nFills      = (*iL1C).second.nFills;
+      const unsigned long long nFills      = L1C.second.nFills;
       nEvFills[rich]                      += nFills;
       ++s[rich];
 
@@ -760,44 +760,35 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
   L1Map L1Data = dummyMap();
 
   // Loop over digits and sort according to L1 and HPD
-  for ( LHCb::RichSmartID::Vector::const_iterator iDigit = smartIDs.begin();
-        iDigit != smartIDs.end(); ++iDigit )
+  for ( const auto& dig : smartIDs )
   {
 
     // Get Level 1 board number and input
-    const Level1HardwareID L1ID = m_richSys->level1HardwareID ( *iDigit );
-    const Level1Input L1Input   = m_richSys->level1InputNum   ( *iDigit );
+    const Level1HardwareID L1ID = m_richSys->level1HardwareID ( dig );
+    const Level1Input L1Input   = m_richSys->level1InputNum   ( dig );
 
     // Get reference to correct data group
     IngressMap & ingress   = L1Data  [ L1ID                ];
     IngressInfo & hpds     = ingress [ L1Input.ingressID() ];
     HPDInfo & hpdInfo      = (hpds.hpdData())[L1Input];
 
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << *iDigit << " mapped to L1ID " << L1ID << " L1Input " << L1Input << endmsg;
-    }
+    _ri_debug << dig << " mapped to L1ID " << L1ID << " L1Input " << L1Input << endmsg;
 
     // Finally, insert this pixel into correct place
-    hpdInfo.smartIDs().push_back( *iDigit );
+    hpdInfo.smartIDs().push_back( dig );
 
     // Set the HPD information
-    hpdInfo.setHpdID( (*iDigit).pdID() );
+    hpdInfo.setHpdID( dig.pdID() );
 
   }
 
   // Get some ODIN info
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "ODIN : " << *odin() << endmsg;
-  }
+  _ri_verbo << "ODIN : " << *odin() << endmsg;
 
   // Loop over Level1 board and make a RAWBank for each
-  for ( L1Map::const_iterator iL1 = L1Data.begin();
-        iL1 != L1Data.end(); ++iL1 )
+  for ( const auto& L1 : L1Data )
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << "Creating Bank for L1 board " << (*iL1).first << endmsg;
+    _ri_debug << "Creating Bank for L1 board " << L1.first << endmsg;
 
     // Make a new data bank
     RAWBank dataBank;
@@ -807,8 +798,8 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
 
     // Loop over ingresses for this L1 board
     L1IngressID ingress(0);
-    for ( IngressMap::const_iterator iIngress = (*iL1).second.begin();
-          iIngress != (*iL1).second.end(); ++iIngress, ++ingress )
+    for ( IngressMap::const_iterator iIngress = L1.second.begin();
+          iIngress != L1.second.end(); ++iIngress, ++ingress )
     {
 
       // If 2007 data format, add Ingress header word to the raw bank
@@ -826,38 +817,33 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
         // set data from ODIN
         ingressWord.readFromODIN( odin() );
         // fill with HPDs with data
-        for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIngress).second.hpdData().begin();
-              iHPD != (*iIngress).second.hpdData().end(); ++iHPD )
+        for ( const auto& HPD : (*iIngress).second.hpdData() )
         {
-          ingressWord.setHPDActive( (*iHPD).first.l1InputWithinIngress() );
+          ingressWord.setHPDActive( HPD.first.l1InputWithinIngress() );
         }
         // fill header into raw data
         ingressWord.fillRAWBank(dataBank);
-        if ( msgLevel(MSG::DEBUG) )
-          debug() << " Ingress " << ingress << " : " << ingressWord << endmsg;
+        _ri_debug << " Ingress " << ingress << " : " << ingressWord << endmsg;
       }
 
-      if ( msgLevel(MSG::DEBUG) )
-        debug() << "  Found " << (*iIngress).second.hpdData().size() << " HPD(s) with data" << endmsg;
+      _ri_debug << "  Found " << (*iIngress).second.hpdData().size() << " HPD(s) with data" 
+                << endmsg;
 
       // Loop over each active HPD for this Level1 board ingress and fill RAWBank
-      for ( HPDMap::const_iterator iHPD = (*iIngress).second.hpdData().begin();
-            iHPD != (*iIngress).second.hpdData().end(); ++iHPD )
+      for ( const auto& HPD : (*iIngress).second.hpdData() )
       {
-        if ( msgLevel(MSG::DEBUG) )
-        {
-          debug() << "   HPD " << (*iHPD).second.hpdID() << " L1input=" << (*iHPD).first
-                  << " Found " << (*iHPD).second.smartIDs().size() << " hits" << endmsg;
-        }
+        _ri_debug << "   HPD " << HPD.second.hpdID() << " L1input=" << HPD.first
+                  << " Found " << HPD.second.smartIDs().size() << " hits" << endmsg;
         if ( version != MaPMT0 )
         {
           // Get raw data bank for this HPD, and fill into RAWBank
-          const HPDDataBank * hpdData = createDataBank( (*iHPD).second.smartIDs(), version, odin() );
+          const HPDDataBank * hpdData = createDataBank( HPD.second.smartIDs(), 
+                                                        version, odin() );
           if ( hpdData )
           {
             hpdData->fillRAWBank( dataBank );
             delete hpdData;
-            nHits += (*iHPD).second.smartIDs().size();
+            nHits += HPD.second.smartIDs().size();
             ++nHPDs;
           }
           else
@@ -867,10 +853,9 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
         }
         else // Special MaPMT0 version
         {
-          for ( LHCb::RichSmartID::Vector::const_iterator iDigit = (*iHPD).second.smartIDs().begin();
-                iDigit != (*iHPD).second.smartIDs().end(); ++iDigit )
+          for ( const auto& dig : HPD.second.smartIDs() )
           {
-            dataBank.push_back( (*iDigit).key() );
+            dataBank.push_back( dig.key() );
           }
         }
 
@@ -880,7 +865,7 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
 
     // Add this bank to the Raw buffer
     m_currentTAE = "";
-    rawEvent()->addBank( (*iL1).first.data(),
+    rawEvent()->addBank( L1.first.data(),
                          LHCb::RawBank::Rich,
                          version,
                          dataBank );
@@ -888,7 +873,7 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
     if ( m_summary )
     {
       // Count the number of banks and size
-      L1CountAndSize & cands = m_l1encodeSummary[ L1IDandV(version,(*iL1).first) ];
+      L1CountAndSize & cands = m_l1encodeSummary[ L1IDandV(version,L1.first) ];
       // Increment bank size
       cands.nWords += dataBank.size(); // L1 headers + data words
       // Increment hit occupancy
@@ -899,15 +884,12 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
       ++cands.nFills;
     }
 
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << "Encoded " << boost::format("%2i") % (*iL1).second.size();
-      debug() << " ingresses for Level1 Bank "
-              << boost::format("%2i") % (*iL1).first.data();
-      debug() << " : Size "
+    _ri_debug << "Encoded " << boost::format("%2i") % L1.second.size();
+    _ri_debug << " ingresses for Level1 Bank "
+              << boost::format("%2i") % L1.first.data();
+    _ri_debug << " : Size "
               << boost::format("%4i") % dataBank.size()
               << " words : Version " << version << endmsg;
-    }
 
   } // Level1 loop
 
@@ -1003,8 +985,7 @@ RawDataFormatTool::decodeToSmartIDs_MaPMT0( const LHCb::RawBank & bank,
 {
   // Get L1 ID
   const Level1HardwareID L1ID ( bank.sourceID() );
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "FlatList Decoding L1 bank " << L1ID << endmsg;
+  _ri_debug << "FlatList Decoding L1 bank " << L1ID << endmsg;
 
   // Data bank size in 32 bit words
   const int bankSize = bank.size() / 4;
@@ -1035,7 +1016,7 @@ RawDataFormatTool::decodeToSmartIDs_MaPMT0( const LHCb::RawBank & bank,
       }
       else
       {
-        if ( msgLevel(MSG::DEBUG) ) debug() << " -> " << id << endmsg;
+        _ri_debug << " -> " << id << endmsg;
 
         // Get the L1 input from the DB
         const Level1Input l1Input = m_richSys->level1InputNum(id);
@@ -1133,10 +1114,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 
       // First, the ingress header word (and increment to the next line)
       const L1IngressHeader ingressWord( bank.data()[lineC++] );
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << " Ingress " << ingressWord << endmsg;
-      }
+      _ri_debug << " Ingress " << ingressWord << endmsg;
 
       // Get data for this ingress
       IngressInfo & ingressInfo = ingressMap[ingressWord.ingressID()];
@@ -1145,11 +1123,8 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
       ingressInfo.setIngressHeader( ingressWord );
 
       // Compare Ingress header to the ODIN
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        verbose() << "ODIN : EventNumber=" << EventID(odin()->eventNumber())
-                  << " BunchID=" << BXID(odin()->bunchId()) << endmsg;
-      }
+      _ri_verbo << "ODIN : EventNumber=" << EventID(odin()->eventNumber())
+                << " BunchID=" << BXID(odin()->bunchId()) << endmsg;
       const bool odinOK
         = ( !m_decodeUseOdin ? true :
             ( !m_checkODINEventsIDs || ingressWord.eventID() == EventID(odin()->eventNumber()) ) &&
@@ -1168,10 +1143,8 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
       // get list of active ingress inputs
       static L1IngressInputs inputs;
       ingressWord.activeHPDInputs(inputs);
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "  Found " << inputs.size() << " PDs with data blocks : " << inputs << endmsg;
-      }
+      _ri_debug << "  Found " << inputs.size() << " PDs with data blocks : " << inputs
+                << endmsg;
 
       // Check the Ingress supression flag
       if ( ingressWord.hpdsSuppressed() )
@@ -1251,8 +1224,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
             if ( hpdID.isValid() )
             {
 
-              if ( msgLevel(MSG::DEBUG) )
-                debug() << "   Decoding HPD " << hpdID << endmsg;
+              _ri_debug << "   Decoding HPD " << hpdID << endmsg;
 
               // save HPD ID
               hpdInfo.setHpdID(hpdID);
@@ -1405,14 +1377,11 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
   }
 
   // debug printout
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Decoded " << boost::format("%2i") % nHPDbanks;
-    debug() << " PDs from Level1 Bank ID = "
+  _ri_debug << "Decoded " << boost::format("%2i") % nHPDbanks;
+  _ri_debug << " PDs from Level1 Bank ID = "
             << boost::format("%2i") % L1ID.data();
-    debug() << " : Size " << boost::format("%4i") % (bank.size()/4) << " words : Version "
+  _ri_debug << " : Size " << boost::format("%4i") % (bank.size()/4) << " words : Version "
             << version << endmsg;
-  }
 
 }
 
@@ -1433,13 +1402,12 @@ void RawDataFormatTool::suppressHotPixels( const LHCb::RichSmartID& hpdID,
       newids.clear();
 
       // loop over original hits and save only those not supressed
-      for ( LHCb::RichSmartID::Vector::const_iterator iID = oldids.begin();
-            iID != oldids.end(); ++iID )
+      for ( const auto& ID : oldids )
       {
-        if ( iHPDSup->second.find(*iID) == iHPDSup->second.end() )
+        if ( iHPDSup->second.find(ID) == iHPDSup->second.end() )
         {
           // not suppressed, so keep
-          newids.push_back(*iID);
+          newids.push_back(ID);
         }
         else
         {
@@ -1450,7 +1418,7 @@ void RawDataFormatTool::suppressHotPixels( const LHCb::RichSmartID& hpdID,
           // Print warning
           std::ostringstream mess;
           mess << "L1HardID=" << l1ID << " L1Input=" << l1Input
-               << " L0ID=" << l0ID << " " << *iID << " is software SUPPRESSED";
+               << " L0ID=" << l0ID << " " << ID << " is software SUPPRESSED";
           Warning( mess.str(), StatusCode::SUCCESS );
         }
 
@@ -1527,11 +1495,7 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
       {
         // printout decoded RichSmartIDs
         verbose() << " Decoded RichSmartIDs :-" << endmsg;
-        for ( LHCb::RichSmartID::Vector::const_iterator iID = newids.begin();
-              iID != newids.end(); ++iID )
-        {
-          verbose() << "   " << *iID << endmsg;
-        }
+        for ( const auto& ID : newids ) { verbose() << "   " << ID << endmsg; }
       }
       if ( !OK && m_purgeHPDsFailIntegrity ) { newids.clear(); }
 
@@ -1588,14 +1552,11 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
   }
 
   // debug printout
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Decoded " << boost::format("%2i") % nHPDbanks;
-    debug() << " PDs from Level1 Bank "
+  _ri_debug << "Decoded " << boost::format("%2i") % nHPDbanks;
+  _ri_debug << " PDs from Level1 Bank "
             << boost::format("%2i") % L1ID.data();
-    debug() << " : Size " << boost::format("%4i") % (bank.size()/4) << " words : Version "
+  _ri_debug << " : Size " << boost::format("%4i") % (bank.size()/4) << " words : Version "
             << version << endmsg;
-  }
 
 }
 
@@ -1647,8 +1608,7 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
       if ( header.startPD() )
       {
 
-        if ( msgLevel(MSG::VERBOSE) )
-          verbose() << " Found HPD header at line " << lineC << " of " << bankSize << endmsg;
+        _ri_verbo << " Found HPD header at line " << lineC << " of " << bankSize << endmsg;
 
         // Store start line for header
         const int lineHeader = lineC;
@@ -1671,8 +1631,7 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
             }
           }
 
-          if ( msgLevel(MSG::VERBOSE) )
-            verbose() << "  -> Bank is zero surpressed : ends at " << lineLast << endmsg;
+          _ri_verbo << "  -> Bank is zero surpressed : ends at " << lineLast << endmsg;
 
         }
         else
@@ -1682,8 +1641,7 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
           lineC   += 1 + maxDataSize; // data block + header
           lineLast = lineC - 1;
 
-          if ( msgLevel(MSG::VERBOSE) )
-            verbose() << "  -> Bank is non zero surpressed : ends at " << lineLast << endmsg;
+          _ri_verbo << "  -> Bank is non zero surpressed : ends at " << lineLast << endmsg;
 
         }
 
@@ -1774,14 +1732,11 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
   }
 
   // debug printout
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Decoded " << boost::format("%2i") % nHPDbanks;
-    debug() << " PDs from Level1 Bank "
+  _ri_debug << "Decoded " << boost::format("%2i") % nHPDbanks;
+  _ri_debug << " PDs from Level1 Bank "
             << boost::format("%2i") % base_L1ID.data();
-    debug() << " : Size " << boost::format("%4i") % (bank.size()/4) << " words : Version "
+  _ri_debug << " : Size " << boost::format("%4i") % (bank.size()/4) << " words : Version "
             << version << endmsg;
-  }
 
 }
 
@@ -1796,11 +1751,10 @@ RawDataFormatTool::decodeToSmartIDs( const RawEventLocations & taeLocations,
   m_l1IdsDecoded.clear();
 
   // Loop over all RawEvent locations
-  for ( RawEventLocations::const_iterator iLoc = taeLocations.begin();
-        iLoc != taeLocations.end(); ++iLoc )
+  for ( const auto& loc : taeLocations )
   {
     // Set the current TAE type (for use by odin and raw event methods)
-    m_currentTAE = *iLoc;
+    m_currentTAE = loc;
     if ( !m_currentTAE.empty() ) m_currentTAE += "/";
 
     // Get the raw event
@@ -1811,11 +1765,8 @@ RawDataFormatTool::decodeToSmartIDs( const RawEventLocations & taeLocations,
     const LHCb::RawBank::Vector & richBanks = rawEv->banks( LHCb::RawBank::Rich );
 
     // Loop over data banks
-    for ( LHCb::RawBank::Vector::const_iterator iBank = richBanks.begin();
-          iBank != richBanks.end(); ++iBank )
+    for ( const LHCb::RawBank * bank : richBanks )
     {
-      // get bank
-      LHCb::RawBank * bank = *iBank;
       // test bank is OK
       if ( bank )
       {
@@ -1842,11 +1793,11 @@ RawDataFormatTool::decodeToSmartIDs( const RawEventLocations & taeLocations,
     }
 
     // do not print if faking HPDID, since smartIDs.size() then has no meaning
-    if ( !m_useFakeHPDID && msgLevel(MSG::DEBUG) )
+    if ( !m_useFakeHPDID )
     {
-      debug() << "Decoded in total " << richBanks.size() << " RICH Level1 bank(s) for RawEvent '"
-              << *iLoc << "'"
-              << endmsg;
+      _ri_debug << "Decoded in total " << richBanks.size() 
+                << " RICH Level1 bank(s) for RawEvent '"
+                << loc << "'" << endmsg;
     }
 
   } // loop over RawEvent locations in the TES
@@ -1856,13 +1807,12 @@ RawDataFormatTool::decodeToSmartIDs( const RawEventLocations & taeLocations,
   // CRJ : Is this check really needed ?
   if ( taeLocations.size() == 1 )
   {
-    for ( Rich::Map<Rich::DAQ::Level1HardwareID,unsigned int>::const_iterator iL1 = m_l1IdsDecoded.begin();
-          iL1 != m_l1IdsDecoded.end(); ++iL1 )
+    for ( const auto& L1 : m_l1IdsDecoded )
     {
-      if ( iL1->second > 1 )
+      if ( L1.second > 1 )
       {
         std::ostringstream mess;
-        mess << "Found multiple RawBanks (" << iL1->second << ") for L1 ID " << iL1->first;
+        mess << "Found multiple RawBanks (" << L1.second << ") for L1 ID " << L1.first;
         Warning( mess.str() ).ignore();
       }
     }
@@ -1875,20 +1825,15 @@ LHCb::RawEvent * RawDataFormatTool::rawEvent() const
   LHCb::RawEvent *& raw = m_rawEvent[m_currentTAE];
   if (!raw)
   {
-    std::string loc = "";
-    for ( std::vector<std::string>::const_iterator p = m_rawEventLocations.begin();
-          p != m_rawEventLocations.end(); ++p )
+    for ( const auto& p : m_rawEventLocations )
     {
-      loc = m_currentTAE + (*p);
-      if ( exist<LHCb::RawEvent>(loc) )
-      {
-        raw = get<LHCb::RawEvent>(loc);
-        break;
-      }
+      const std::string loc = m_currentTAE + p;
+      raw = getIfExists<LHCb::RawEvent>(loc);
+      if ( raw ) { break; }
     }
     if ( !raw )
     {
-      Warning( "No RawEvent at '"+loc+"'" ).ignore();
+      Warning( "Failed to locate RawEvent" ).ignore();
     }
   }
   return raw;
@@ -1908,17 +1853,13 @@ const Rich::DAQ::L1Map & RawDataFormatTool::dummyMap() const
       ingressMap[L1IngressID(input)].setIngressHeader(header);
     }
     // create a dummy L1data object with a default ingress map for each L1 board
-    for ( Level1HardwareIDs::const_iterator iID = m_richSys->level1HardwareIDs().begin();
-          iID != m_richSys->level1HardwareIDs().end(); ++iID )
+    for ( const auto& ID : m_richSys->level1HardwareIDs() )
     {
-      dummyMap[ *iID ] = ingressMap;
+      dummyMap[ID] = ingressMap;
     }
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << "Created " << dummyMap.size()
+    _ri_debug << "Created " << dummyMap.size()
               << " entries in empty L1 map : L1HardwareIDs = "
               << m_richSys->level1HardwareIDs() << endmsg;
-    }
   }
   return dummyMap;
 }
