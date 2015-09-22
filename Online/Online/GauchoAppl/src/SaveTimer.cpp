@@ -159,7 +159,7 @@ void SaveTimer::SavetoFile(void *buff)
     DimBuffBase *b = (DimBuffBase*)buff;
     if (b->reclen == 0)
     {
-      printf("Bad Record. Record Length 0!!! Previous record %0X! \n",prevb);
+      printf("Bad Record. Record Length 0!!! Previous record %p! \n",(void*)prevb);
     }
     switch (b->type)
     {

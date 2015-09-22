@@ -61,7 +61,8 @@ void HistAdder::add(void *buff, int siz, MonInfo *h)
 {
     addBuffer(buff,siz,h);
 }
-void HistAdder::addBuffer(void *buff, int siz,MonInfo *HTsk)
+
+void HistAdder::addBuffer(void *buff, int siz,MonInfo* /* HTsk */)
 {
 //    //printf("Adding %s\n",h->m_TargetService.c_str());
   MonMap hmap;
