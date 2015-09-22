@@ -36,6 +36,8 @@
 //#include "MBM/bmstruct.h"
 #include "MBM/bmdef.h"
 #include "RTL/rtl.h"
+#include "RTL/que.h"
+#include "RTL/bits.h"
 #include "RTL/Lock.h"
 #include "RTL/Thread.h"
 #include "RTL/GlobalSection.h"
