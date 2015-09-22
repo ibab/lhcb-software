@@ -84,7 +84,7 @@ namespace Gaudi {
 // Include files
 #include "GaudiKernel/ClassID.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/Tokenizer.h"
+#include "GaudiKernel/AttribStringParser.h"
 #include "GaudiKernel/TypeNameString.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IPersistencySvc.h"
@@ -311,36 +311,34 @@ RootEvtSelector::resetCriteria(const string& criteria, Context& context)  const
       db = criteria.substr(5);
     }
     else  {
-      Tokenizer tok(true);
-      tok.analyse(criteria," ","","","=","'","'");
-      for(Tokenizer::Items::iterator i=tok.items().begin(); i!=tok.items().end();i++) {
-        string tmp = (*i).tag().substr(0,3);
+      for ( auto attrib : Gaudi::Utils::AttribStringParser(criteria) ) {
+        string tmp = attrib.tag.substr(0,3);
         if(tmp=="DAT")  {
-          db = (*i).value();
+          db = attrib.value;
         }
         if(tmp=="OPT")   {
-          if((*i).value() != "REA")   {
-            log << MSG::ERROR << "Option:\"" << (*i).value() << "\" not valid" << endmsg;
+          if(attrib.value != "REA")   {
+            log << MSG::ERROR << "Option:\"" << attrib.value << "\" not valid" << endmsg;
             return StatusCode::FAILURE;
           }
         }
         if (tmp=="TYP") {
-          typ = (*i).value();
+          typ = attrib.value;
         }
         if(tmp=="ADD")  {
-          item = (*i).value();
+          item = attrib.value;
         }
         if(tmp=="SEL")  {
-          sel = (*i).value();
+          sel = attrib.value;
         }
         if(tmp=="FUN")  {
-          stmt = (*i).value();
+          stmt = attrib.value;
         }
         if(tmp=="AUT")  {
-          aut = (*i).value();
+          aut = attrib.value;
         }
         if(tmp=="COL")  {
-          addr = (*i).value();
+          addr = attrib.value;
         }
       }
     }
