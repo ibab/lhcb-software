@@ -1,10 +1,20 @@
 ################################################################################
 # Package: MooreSys
 ################################################################################
-gaudi_subdir(MooreSys v24r1)
+gaudi_subdir(MooreSys v24r1p1)
 
 gaudi_depends_on_subdirs(Hlt/Moore
                          L0/L0App
+			 # Only for Moore v24r1p1
+			 Phys/LoKiFitters
+			 Phys/KalmanFilter
+                         Muon/MuonID 
+                         Muon/MuonTrackRec
+                         Hlt/Hlt1Lines 
+                         Hlt/Hlt2Lines  
+                         Hlt/HltSettings
+                         Hlt/TCKUtils
+                         Hlt/HltConf
 )
 
 gaudi_add_test(QMTest QMTEST)

@@ -3,6 +3,20 @@ Package             : MooreSys
 Package Coordinator : R. Aaij
 Purpose             : LHCb HLT application
 
+</PRE><H1><A NAME=v24r1p1>2015-09-22 MooreSys v24r1p1</A></H1><PRE>
+
+Added fixes in following packages.
+Phys/LoKiFitters
+Phys/KalmanFilter
+Muon/MuonID 
+Muon/MuonTrackRec
+Hlt/Hlt1Lines 
+Hlt/Hlt2Lines  
+Hlt/HltSettings
+Hlt/TCKUtils
+Hlt/HltConf
+
+
 </PRE><H1><A NAME=v24r1>2015-09-01 MooreSys v24r1</A></H1><PRE>
 
 Post technical stop updates.
