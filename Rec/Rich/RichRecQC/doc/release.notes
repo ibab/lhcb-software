@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2015-09-22 - Chris Jones
+ - Per HPD fitting still not working reliably, so turn off until I have a
+   chance to investigate.
+
 ! 2015-09-11 - Chris Jones
  - Fix a bug in RecoQC that prevent the per HPD fits from working.
 

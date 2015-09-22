@@ -668,6 +668,7 @@ class RichRecQCConf(RichConfigurableUser):
             # Make aerogel tile plots only for Long monitor
             if tkShortName == "Long" : mon.EnableAerogelTilePlots = True
 
+            # Turn off until understood better...
             # Expert Mode histos
             if self.getProp("Histograms") == "Expert" :
                 mon.EnablePerPDPlots    = True
@@ -676,7 +677,7 @@ class RichRecQCConf(RichConfigurableUser):
             # Enable plots only for Long monitors
             if tkShortName == "Long" :
                 mon.EnablePerPDColPlots       = True
-                mon.EnablePerPDFittedResPlots = True
+                #mon.EnablePerPDFittedResPlots = True # Turn off for now...
                 # If online, enable periodic histogram fitting
                 # Also have to enable the saving of individual HPD plots, so they get reset
                 if self.getProp("Histograms") == "Online" :
