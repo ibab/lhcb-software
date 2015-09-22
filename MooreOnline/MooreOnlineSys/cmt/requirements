@@ -1,12 +1,12 @@
 package MooreOnlineSys
-version           v24r1
+version           v24r1p1
 branches doc cmt tests
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  MooreScripts      v1r12
+use  MooreScripts      v1r12p1
 use  MooreOnlineConf   v1r11
 use  IndependenceTests v1r13    Hlt
 use  HltMonitoring     v1r2     Hlt
