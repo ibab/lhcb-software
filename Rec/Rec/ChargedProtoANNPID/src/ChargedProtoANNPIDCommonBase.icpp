@@ -5,6 +5,9 @@
 // FPE exception protection
 #include "Kernel/FPEGuard.h"
 
+// Redirect streams
+#include "Kernel/STLOStreamRedirect.h"
+
 // boost
 #include "boost/regex.hpp"
 #include "boost/algorithm/string.hpp"
@@ -271,30 +274,13 @@ NeuroBayesANN::getOutput( const LHCb::ProtoParticle * proto )
 
   // NeuroBayes seems to sporadically send mysterious std messages which we
   // cannot control... So forcibly intercept them all here and send to /dev/null
-  int original_stdout(0), original_stderr(0);
-  if ( m_suppressPrintout )
-  {
-    original_stdout = dup(fileno(stdout));
-    fflush(stdout);
-    freopen("/dev/null","w",stdout);
-    original_stderr = dup(fileno(stderr));
-    fflush(stderr);
-    freopen("/dev/null","w",stderr);
-  }
+  const auto * red = ( m_suppressPrintout ? new STL::OStreamRedirect() : NULL );
 
   // get the NN output, rescaled to the range 0 to 1
   const double nnOut = 0.5 * ( 1.0 + (double)m_expert->nb_expert(m_inArray) );
 
-  // put std back to normal
-  if ( m_suppressPrintout )
-  {
-    fflush(stdout);
-    dup2(original_stdout,fileno(stdout));
-    close(original_stdout);
-    fflush(stderr);
-    dup2(original_stderr,fileno(stderr));
-    close(original_stderr);
-  }
+  // clean up
+  delete red;
 
   // return final output
   return nnOut;
