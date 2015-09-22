@@ -103,7 +103,7 @@ class DelCommandInfo : public DimUpdatedInfo
           shcomm = "sudo rm -rf /localdisk/hlt1/Run_*"+splt2->at(i)+"_*.mdf";
           fprintf(logf,"executing command %s\n",shcomm.c_str());
           fflush(logf);
-          int status = ::system(shcomm.c_str());
+          /* int status = */ ::system(shcomm.c_str());
         }
       }
       return;
@@ -114,7 +114,7 @@ class GenCommandInfo : public DimUpdatedInfo
   public:
     FILE *logf;
     std::string m_cmd;
-    GenCommandInfo(char *name,FILE *lf):DimUpdatedInfo((const char*)name,(char*)"????")
+    GenCommandInfo(const char *name,FILE *lf):DimUpdatedInfo(name,(char*)"????")
     {
       logf = lf;
       m_cmd = "";
@@ -131,7 +131,7 @@ class GenCommandInfo : public DimUpdatedInfo
       std::string shcomm = "sudo /bin/bash "+m_cmd;
       fprintf(logf,"executing command %s\n",shcomm.c_str());
       fflush(logf);
-      int status = ::system(shcomm.c_str());
+      /* int status = */ ::system(shcomm.c_str());
       return;
     }
 };
