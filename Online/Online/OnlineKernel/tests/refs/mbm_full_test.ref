@@ -8,7 +8,6 @@ Parent: Started process:Cons_u_1 output redirected to:/dev/null
 Starting processes .....
 Starting producer ......
 Parent: Started process:Prod_0 output redirected to:/dev/null
-waitpid() 'Prod_0' exited: Status=1
 Producer finished work..
 Parent: Started process:Summary_0
 Child: Starting process:Summary_0
@@ -16,25 +15,17 @@ Child: Starting process:Summary_0
 
 ======================== MBM Bufer summary for buffer "0" ========================
 
- Buffer "0"                 Events: Produced:5000 Seen:25000 Pending:0 Max:8
-                            Space(kB):[Tot:8088 Free:8088] Users:[Tot:6 Max:64]
+ Buffer "0"                 Events: Produced:5000 Seen:24995 Pending:3 Max:8
+                            Space(kB):[Tot:8088 Free:8076] Users:[Tot:6 Max:64]
 
  Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
 
- cons_s_0              103    C   wev                       5000   100    A      0
- cons_s_1              103    C   wev                       5000   100    A      0
+ cons_s_0              103    C   wev                       4998   100    A      0
+ cons_s_1              103    C   wev                       4997   100    A      0
  cons_u_0              103    C   wev                       5000   100    A      0
  cons_u_1              103    C   wev                       5000   100    A      0
  CONS_ONE              103    C                             5000   100   1       0
 
 +++++ MBM summary finished.
-waitpid() 'Summary_0' exited: Status=1
 Summary task finished work..
-waitpid() 'Cons_u_1' exited: Status=0
-waitpid() 'Cons_u_0' exited: Status=0
-waitpid() 'Cons_o_1' exited: Status=0
-waitpid() 'Cons_o_0' exited: Status=0
-waitpid() 'Cons_s_1' exited: Status=0
-waitpid() 'Cons_s_0' exited: Status=0
-waitpid() 'Install' exited: Status=0
 All processes finished work..

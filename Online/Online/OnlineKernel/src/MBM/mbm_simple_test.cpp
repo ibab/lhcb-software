@@ -59,7 +59,7 @@ extern "C" int mbm_simple_test(int argc, char** /* argv */)  {
   ProcessGroup pg;
   Process* p[10] = {0,0,0,0,0,0,0,0,0,0};
   const char* output = argc>1 ? "" : "/dev/null";
-  const char *a1[]={"mbm_install_test_bm","-s=8096","-e=64","-u=64","-i=0","-f","-c","-sleep=30",0};
+  const char *a1[]={"mbm_install_test_bm","-s=8096","-e=128","-u=12","-i=0","-f","-c","-sleep=60",0};
   const char *a2[]={"mbm_cons","-name=cons_s_0",0};
   const char *a4[]={"mbm_cons","-name=cons_o_0","-one",0};
   const char *a8[]={"mbm_prod","-name=prod_0","-m=50000","-s=3500",0};
@@ -83,7 +83,7 @@ extern "C" int mbm_simple_test(int argc, char** /* argv */)  {
   p[3]->wait(Process::WAIT_BLOCK);
   delete p[3];
   cout << "Producer finished work.. " << endl;
-  ::lib_rtl_sleep(4000);
+  ::lib_rtl_sleep(10000);
   p[3]=new Process("Summary_0",cmd,a9);
   p[3]->start();
   p[3]->wait(Process::WAIT_BLOCK);
@@ -104,7 +104,7 @@ extern "C" int mbm_full_test(int argc, char** /* argv */)  {
   ProcessGroup pg;
   Process* p[10] = {0,0,0,0,0,0,0,0,0,0};
   const char* output = argc>1 ? "" : "/dev/null";
-  const char *a1[]={"mbm_install_test_bm","-s=8096","-e=8","-u=64","-i=0","-c","-sleep=30",0};
+  const char *a1[]={"mbm_install_test_bm","-s=8096","-e=128","-u=12","-i=0","-c","-sleep=60",0};
   const char *a2[]={"mbm_cons","-name=cons_s_0",0};
   const char *a3[]={"mbm_cons","-name=cons_s_1",0};
   const char *a4[]={"mbm_cons","-name=cons_o_0","-one",0};
@@ -138,7 +138,7 @@ extern "C" int mbm_full_test(int argc, char** /* argv */)  {
   prod->wait(Process::WAIT_BLOCK);
   delete prod;
   cout << "Producer finished work.. " << endl;
-  ::lib_rtl_sleep(4000);
+  ::lib_rtl_sleep(15000);
   Process* summary=new Process("Summary_0",cmd,a9);
   summary->start();
   summary->wait(Process::WAIT_BLOCK);

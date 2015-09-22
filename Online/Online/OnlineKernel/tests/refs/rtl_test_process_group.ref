@@ -1,5 +1,5 @@
-Stop process SLEEPER_2
 Process SLEEPER_2 ended. Status=15
 Process SLEEPER_1 ended. Status=0
 Process SLEEPER_3 ended. Status=0
+Stop process SLEEPER_2
 All processes ended
