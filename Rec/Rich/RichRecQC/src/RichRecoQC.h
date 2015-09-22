@@ -52,6 +52,9 @@
 // FPE exception protection
 #include "Kernel/FPEGuard.h"
 
+// Redirect streams
+#include "Kernel/STLOStreamRedirect.h"
+
 namespace Rich
 {
   namespace Rec
