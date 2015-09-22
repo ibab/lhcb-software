@@ -1124,7 +1124,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 
     // Get Ingress map to decode into for this L1 board
     IngressMap & ingressMap = decodedData[L1ID];
-
+    
     // Loop over bank, find headers and produce a data bank for each
     // Fill data into RichSmartIDs
     int lineC(0);
@@ -1166,7 +1166,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
       }
 
       // get list of active ingress inputs
-      L1IngressInputs inputs;
+      static L1IngressInputs inputs;
       ingressWord.activeHPDInputs(inputs);
       if ( msgLevel(MSG::DEBUG) )
       {
@@ -1214,11 +1214,11 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 
           // Try to add a new HPDInfo to map
           const Level1Input l1Input(ingressWord.ingressID(),HPD);
-          std::pair<HPDMap::iterator,bool> p
-            = ingressInfo.hpdData().insert( HPDMap::value_type(l1Input,
-                                                               HPDInfo(LHCb::RichSmartID(),
-                                                                       HPDInfo::Header(hpdBank->headerWords()),
-                                                                       HPDInfo::Footer(hpdBank->footerWords()) ) ) );
+          const auto hpdInsert = 
+            ingressInfo.hpdData().emplace( l1Input,
+                                           HPDInfo( LHCb::RichSmartID(),
+                                                    hpdBank->headerWords(),
+                                                    hpdBank->footerWords() ) );
           // disable test (gives wrong warnings in TAE events)
           //if ( !p.second )
           //{
@@ -1226,7 +1226,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
           //  mess << "Found multiple data blocks L1=" << L1ID << " input=" << l1Input;
           //  Warning( mess.str() );
           //}
-          HPDInfo & hpdInfo = p.first->second;
+          HPDInfo & hpdInfo = hpdInsert.first->second;
 
           // Only try and decode this HPD if ODIN test was OK
           if ( odinOK && !hpdIsSuppressed )
@@ -1261,7 +1261,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
               unsigned int hpdHitCount(0);
 
               // smartIDs
-              LHCb::RichSmartID::Vector & newids = hpdInfo.smartIDs();
+              auto & newids = hpdInfo.smartIDs();
 
               // Compare Event IDs for errors
               bool OK = ( hpdIsSuppressed ? true :
@@ -1321,11 +1321,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
                   {
                     // printout decoded RichSmartIDs
                     verbose() << " Decoded RichSmartIDs :-" << endmsg;
-                    for ( LHCb::RichSmartID::Vector::const_iterator iID = newids.begin();
-                          iID != newids.end(); ++iID )
-                    {
-                      verbose() << "   " << *iID << endmsg;
-                    }
+                    for ( const auto& ID : newids ) { verbose() << "   " << ID << endmsg; }
                   }
 
                 }

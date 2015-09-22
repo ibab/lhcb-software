@@ -342,7 +342,7 @@ namespace Rich
 
       /// Test if a given bit in a word is set on
       inline bool
-      isBitOn( const LongType data, const ShortType pos ) const
+      isBitOn( const LongType& data, const ShortType pos ) const
       {
         return ( 0 != (data & (1<<pos)) );
       }

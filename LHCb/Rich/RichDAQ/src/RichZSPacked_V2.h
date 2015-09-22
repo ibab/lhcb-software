@@ -174,11 +174,12 @@ namespace Rich
                                             const ShortType col,
                                             const ShortType subPix = 0 ) const
         {
-          return ( aliceMode() ?
+          return ( !aliceMode() ? 
+                   ( (MaxDataSize-1-row)*4 + col/BitsField ) :
                    ( 4*(NumAlicePixelsPerLHCbPixel-1-subPix) +
                      4*(MaxDataSize-1-row)*NumAlicePixelsPerLHCbPixel +
-                     col/BitsField ) % (1+MaxZSAddress) :
-                   ( (MaxDataSize-1-row)*4 + col/BitsField ) );
+                     col/BitsField ) % (1+MaxZSAddress)
+                   );
         }
 
         /** Get bit number from column information
@@ -209,9 +210,10 @@ namespace Rich
         inline ShortType rowFromAddress( const ShortType address,
                                          const ShortType aliceModeOffset = 0 ) const
         {
-          return ( aliceMode() ?
-                   ( MaxDataSize - 1 - ( (address/(4*NumAlicePixelsPerLHCbPixel)) + aliceModeOffset*8 ) ) :
-                   ( MaxDataSize - 1 - ( address/4) ) );
+          return ( !aliceMode() ?
+                   ( MaxDataSize - 1 - ( address/4) ) :
+                   ( MaxDataSize - 1 - ( (address/(4*NumAlicePixelsPerLHCbPixel)) + aliceModeOffset*8 ) )
+                   );
         }
 
         /** get the ALICE sub-pixel number (0-7) from address
@@ -220,9 +222,9 @@ namespace Rich
          */
         inline ShortType subPixelFromAddress( const ShortType address ) const
         {
-          return ( aliceMode() ?
+          return ( !aliceMode() ? 0 :
                    NumAlicePixelsPerLHCbPixel - 1 - ( address % (4*NumAlicePixelsPerLHCbPixel) ) / 4
-                   : 0 );
+                   );
         }
 
       private: // methods

@@ -90,8 +90,10 @@ namespace Rich
 
       // ------------------------------------------------------------------------------------------------
       template< class Version, class Header, class Footer >
-      ShortType RichZeroSuppData<Version,Header,Footer>::fillRichSmartIDs ( LHCb::RichSmartID::Vector & ids,
-                                                                            const LHCb::RichSmartID hpdID ) const
+      ShortType 
+      RichZeroSuppData<Version,Header,Footer>::
+      fillRichSmartIDs ( LHCb::RichSmartID::Vector & ids,
+                         const LHCb::RichSmartID hpdID ) const
       {
         using namespace RichZSPacked_V2;
 

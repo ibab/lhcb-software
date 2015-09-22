@@ -4,6 +4,11 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2015-09-22 - Chris Jones
+ - A few more CPU enhancements. In particular use C++11 map::emplace function
+   to populate the decoded HPD map, that avoids unneccesary data copying.
+   Decoding is now, with all the improvements, about twice as fast as before.
+
 ! 2015-09-21 - Chris Jones
  - More CPU optimisations to the decoding. Avoid creating decoding objects
    on the heap, and deleting them, for each HPD to be decoded each event.
