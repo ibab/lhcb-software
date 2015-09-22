@@ -31,9 +31,6 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  //bool Origin(const LHCb::MCHit* aHit, std::string check);
-  bool Origin(const LHCb::MCHit* aHit, LHCb::MCVertex::MCVertexType check);
-
 private:
 
   //Associator table
@@ -42,24 +39,16 @@ private:
   typedef Table::Range Range;
   typedef Table::iterator iterator;
   
-  //Useful arrays, strings and counters
-  std::vector<std::string> m_spillVector;
-  std::vector<std::string> m_spillNames;
-  std::vector<std::string> m_Flags;
-  
   unsigned int m_nEvent;
+  unsigned int m_nMax;
 
   std::string m_asctLocation;
   std::string m_clusterLocation;
   std::string m_hitLocation;
 
-  unsigned int m_countClus;
-  unsigned int m_nMax;
-  mutable std::map<std::string, unsigned int> m_countHits;
-  mutable std::map<std::string, unsigned int> m_countFlags;
-  double m_clusCharge;
+  bool m_MonteCarlo;
 
-  bool m_MCVertexInfo;
+  //int getSpill(const LHCb::STCluster *aCluster);
   
 };
 

@@ -2,6 +2,10 @@
 ! Package         : ST/STCheckers
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
+
+! 2015-09-22 - Vincenzo Battista
+ - STClusterTuple: some cleanup and updates
+
 ! 2015-08-04 - Gerhard Raven
  - remove #include of obsolete Gaudi headers        
 
