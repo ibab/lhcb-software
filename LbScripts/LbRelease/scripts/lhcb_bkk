@@ -4,6 +4,8 @@
 # JC : 15 Jan 2009
 #
 
+set bkk_arg='--gui'
+
 if ($#argv > 1) then
   echo "usage : $0 [--cli|--gui]"
   exit 1
