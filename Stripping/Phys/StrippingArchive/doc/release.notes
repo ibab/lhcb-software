@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-22 - Andrea Contu
+ - Fix to __init__.py in S23r1 and removal of imports from StrippingSelections
+
 !========================= StrippingArchive v1r33 2015-09-09 =========================
 
 ! 2015-09-11 - Andrea Contu
