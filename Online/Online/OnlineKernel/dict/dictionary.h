@@ -57,15 +57,17 @@
 #include "CPP/Interactor.h"
 #include "CPP/Event.h"
 
-#if 0
 namespace  {
   class Dictionary  {
-  protected:
-    std::vector<int> m_intV;
+  public:
+    Bits::BitMask<1> mask32;
+    Bits::BitMask<2> mask64;
+    Bits::BitMask<3> mask96;
+    Bits::BitMask<4> mask128;
+    Bits::BitMask<8> mask256;
     Dictionary()  {
     }
     ~Dictionary() {}
   };
 }
-#endif
 #include "dict/PyInteractor.cpp"

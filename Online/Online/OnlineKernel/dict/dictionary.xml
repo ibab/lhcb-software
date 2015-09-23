@@ -1,9 +1,17 @@
 <lcgdict>
   <selection>
+    <!-- RTL/bits.h    -->
     <class pattern="Bits::*"/>
+    <function pattern="BF_*"/>
+    <function pattern="bit_*"/>
+    <function pattern="mask_*"/>
+
+    <!-- RTL/rtl.h     -->
     <class pattern="RTL::*"/>
     <function pattern="lib_rtl_*"/>
     <function pattern="RTL::*"/>
+
+    <!-- RTL/que.h     -->
     <function name="insqti"/>
     <function name="insqhi"/>
     <function name="remqti"/>
@@ -12,12 +20,20 @@
     <function name="remqhead"/>
     <class name="qentry"/>
 
+    <!-- SCR/scr.h     -->
     <enum  pattern="SCR::*"/>
     <function pattern="scrc_*"/>
     <function pattern="scrcc_*"/>
+
+    <!-- WT/wt.h       -->
     <function pattern="wtc_*"/>
+
+    <!-- WT/bmdef.h    -->
     <function pattern="mbm_*"/>
+
+    <!-- WT/amsdef.h   -->
     <function pattern="amsc_*"/>
+
     <function pattern="DataTransfer::net_*"/>
     <class pattern="DataTransfer::*"/>
     <class pattern="*Sensor"/>
@@ -35,16 +51,6 @@
     <function pattern="SCR::*"/>
     <function pattern="MBM::*"/>
     <class pattern="bm_iterator*"/>
-
-    <class name="IOPortManager"/>
-    <class name="NetworkChannel"/>
-    <class name="NetworkConnection"/>
-    <class name="TcpNetworkChannel"/>
-    <class name="TcpConnection"/>
-    <class name="UdpNetworkChannel"/>
-    <class name="UdpConnection"/>
-
-
     <class pattern="MBM::*"/>
 -->
     <function pattern="mbm_*"/>
