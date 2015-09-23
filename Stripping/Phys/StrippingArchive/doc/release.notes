@@ -4,6 +4,8 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r33p1 2015-09-23 =========================
+
 ! 2015-09-23 - Andrea Contu
  - Fix to D24h lines and moving of KShh from Charm to CharmCompleteEvent
 
