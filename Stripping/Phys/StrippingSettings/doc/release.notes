@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-23 - Ricardo Vazquez Gomez
+ - Include back the TrackEffDownMuon lines as the memory issue with TisTos particle maker is fixed
+
 ! 2015-09-12 - Andrea Contu
  - Fix to D24h lines and moving of KShh from Charm to CharmCompleteEvent
 
