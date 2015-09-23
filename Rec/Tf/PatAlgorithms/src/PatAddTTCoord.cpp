@@ -109,6 +109,9 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track){
     (*itT)->hit()->setUsed( true );
   }
 
+  counter("#TT hits added") += myTTHits.size();
+  counter("#tracks with hits added")++;
+
   return StatusCode::SUCCESS;
 
 }
