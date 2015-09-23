@@ -1067,33 +1067,38 @@ DstarD0ToHHPi0 = {
 
 DstarD2HHHH = {
     "BUILDERTYPE": "DstarD2HHHHLines", 
-    "CONFIG": {
-        "CombMassHigh": 2100.0, 
-        "CombMassLow": 1700.0, 
-        "Daug_TRCHI2DOF_MAX": 3, 
-        "Dstar_AMDiff_MAX": 190.0, 
-        "Dstar_MDiff_MAX": 170.0, 
-        "Dstar_VCHI2VDOF_MAX": 15.0, 
-        "HighPIDK": 0, 
-        "Hlt1Filter": None, 
-        "Hlt2Filter": None, 
-        "LowPIDK": 0, 
-        "MassHigh": 1940.0, 
-        "MassLow": 1790.0, 
-        "MaxADOCACHI2": 10.0, 
-        "MaxVCHI2NDOF": 12.0, 
-        "MinBPVDIRA": 0.9998, 
-        "MinBPVTAU": 0.0001, 
-        "MinCombPT": 0.0, 
-        "MinTrkIPChi2": 3, 
-        "MinTrkPT": 250.0, 
-        "PrescaleDstarD2KKKPi": 1, 
-        "PrescaleDstarD2KKPiPi": 1, 
-        "PrescaleDstarD2KPiPiPi": 1, 
-        "PrescaleDstarD2PiPiPiPi": 1, 
-        "TrChi2": 3, 
-        "TrGhostProb": 0.5
-    }, 
+    'CONFIG'      : { 'PrescaleDstarD2PiPiPiPi' : 1,
+                      'PrescaleDstarD2KPiPiPi'  : 1,
+                      'PrescaleDstarD2KKPiPi'   : 1,
+                      'PrescaleDstarD2KKKPi'    : 1,
+                      # D0 -> HHHH
+                      'TrChi2'                  : 3,
+                      'TrGhostProb'             : 0.5,
+                      'MinTrkPT'                : 250 * MeV,
+                      'MinTrkIPChi2'            : 3,
+                      'HighPIDK'                : 0,
+                      'LowPIDK'                 : 0,
+                      'MaxADOCACHI2'            : 10.0,
+                      'CombMassLow'             : 1730 * MeV,
+                      'CombMassHigh'            : 2000 * MeV,
+                      'MinCombPT'               : 1500 * MeV,
+                      'MinCombP'                : 20000 * MeV,
+                      'MaxVCHI2NDOF'            : 12.0,
+                      'MinBPVDIRA'              : 0.9998,
+                      'MinBPVTAU'               : 0.1 * picosecond,
+                      'MassLow'                 : 1790 * MeV,
+                      'MassHigh'                : 1940 * MeV,
+                      'MinDPT'                  : 1600 * MeV,
+                      'MinDP'                   : 25000 * MeV,
+                      # D* -> D0 pi+
+                      'Daug_TRCHI2DOF_MAX'      : 3,
+                      'Dstar_AMDiff_MAX'        : 190 * MeV,
+                      'Dstar_VCHI2VDOF_MAX'     : 15.0,
+                      'Dstar_MDiff_MAX'         : 170 * MeV,
+                      # HLT filters, only process events firing triggers matching the RegEx
+                      'Hlt1Filter': None,
+                      'Hlt2Filter': None,
+                    }, 
     "STREAMS": [ "Charm" ], 
     "WGs": [ "Charm" ]
 }
@@ -1143,7 +1148,7 @@ DstarD2KSHHPi0 = {
         "TrChi2": 3, 
         "TrGhostProb": 0.5
     }, 
-    "STREAMS": [ "Charm" ], 
+    "STREAMS": [ "CharmCompleteEvent" ], 
     "WGs": [ "Charm" ]
 }
 

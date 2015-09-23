@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-12 - Andrea Contu
+ - Fix to D24h lines and moving of KShh from Charm to CharmCompleteEvent
+
 !========================= StrippingSettings v2r41 2015-09-09 =========================
 
 ! 2015-09-11 - Andrea Contu
