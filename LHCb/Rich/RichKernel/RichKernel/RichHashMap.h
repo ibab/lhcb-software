@@ -44,13 +44,10 @@ namespace Rich
   public:
     /// Operator overloading for ostream
     friend inline std::ostream& operator << ( std::ostream& str ,
-                                              const HashMap<KEY,VALUE> & map )
+                                              const HashMap<KEY,VALUE> & m )
     {
       str << "[";
-      for ( typename HashMap<KEY,VALUE>::const_iterator iM = map.begin(); iM != map.end(); ++iM )
-      {
-        str << " (" << iM->first << "," << iM->second << ")";
-      }
+      for ( const auto& i : m ) { str << " (" << i.first << "," << i.second << ")"; }
       return str << " ]";
     }
   };

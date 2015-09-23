@@ -1,6 +1,6 @@
 
 //--------------------------------------------------------------------------------
-/** @file RichMap.h
+/** @file RichPoolMap.h
  *
  *  Header file for utility has map for the RICH : Rich::Map
  *
@@ -9,20 +9,30 @@
  */
 //--------------------------------------------------------------------------------
 
-#ifndef RICHKERNEL_RICHMAP_H
-#define RICHKERNEL_RICHMAP_H 1
+#ifndef RICHKERNEL_RICHPOOLMAP_H
+#define RICHKERNEL_RICHPOOLMAP_H 1
 
 // STL
 #include <map>
 #include <ostream>
 
+// Traits
+#include <type_traits>
+
+#ifndef GOD_NOALLOC
+// boost
+#include "GaudiKernel/boost_allocator.h"
+#include <boost/pool/pool_alloc.hpp>
+#endif
+
 namespace Rich
 {
 
   //--------------------------------------------------------------------------------
-  /** @class Map RichMap.h RichKernel/RichMap.h
+  /** @class PoolMap RichKernel/RichPoolMap.h
    *
-   *  A utility class providing a standard std::map like object.
+   *  A utility class providing a standard std::map like object using a boost
+   *  pool allocator.
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   2005-01-11
@@ -32,14 +42,21 @@ namespace Rich
   template < typename KEY, 
              typename VALUE, 
              typename COMPARE = std::less<KEY>,
-             typename ALLOC   = std::allocator< std::pair<const KEY,VALUE> >
+#ifndef GOD_NOALLOC
+             typename ALLOC = boost::fast_pool_allocator< std::pair<const KEY,VALUE>, 
+                                                          boost::default_user_allocator_new_delete, 
+                                                          boost::details::pool::null_mutex, 
+                                                          32 >
+#else
+             typename ALLOC = std::allocator< std::pair<const KEY,VALUE> >
+#endif
              >
-  class Map : public std::map < KEY , VALUE , COMPARE , ALLOC >
+  class PoolMap : public std::map < KEY , VALUE , COMPARE , ALLOC >
   {
   public:
     /// Operator overloading for ostream
     friend inline std::ostream& operator << ( std::ostream& str ,
-                                              const Map<KEY,VALUE,COMPARE,ALLOC> & m )
+                                              const PoolMap<KEY,VALUE,COMPARE,ALLOC> & m )
     {
       str << "[";
       for ( const auto& i : m ) { str << " (" << i.first << "," << i.second << ")"; }
@@ -49,4 +66,4 @@ namespace Rich
 
 }
 
-#endif // RICHKERNEL_RICHMAP_H
+#endif // RICHKERNEL_RICHPOOLMAP_H

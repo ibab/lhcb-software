@@ -21,42 +21,9 @@
 #include "RichKernel/RichDAQParityFooter.h"
 #include "RichKernel/RichDAQL1IngressHeader.h"
 
-#include "RichKernel/RichMap.h"
-
-#ifndef GOD_NOALLOC
-// Use a memory pool allocator from boost
-
-// boost
-#include "GaudiKernel/boost_allocator.h"
-#include <boost/pool/pool_alloc.hpp>
-
-// Boost pool allocator, no mutex
-//#define RichDecodedData_allocator(KEY,DATA) boost::pool_allocator< std::pair<const KEY,DATA>, boost::default_user_allocator_new_delete, boost::details::pool::null_mutex, 32 >
-
-// Boost fast pool allocator
-#define RichDecodedData_allocator(KEY,DATA) boost::fast_pool_allocator< std::pair<const KEY,DATA>, boost::default_user_allocator_new_delete, boost::details::pool::null_mutex, 32 >
-
-// the standard one
-//#define RichDecodedData_allocator(KEY,DATA) std::allocator< std::pair<const KEY,DATA> >
-
-#else
-// GOD NOALLOC - Disable memory pools completely
-
-#define RichDecodedData_allocator(KEY,DATA) std::allocator< std::pair<const KEY,DATA> >
-
-#endif
-
-// Use standard STL map
-#include <map>
-#define RichDecodedData_MAP(KEY,DATA) std::map< const KEY, DATA, std::less<KEY>, RichDecodedData_allocator(KEY,DATA) >
-
-// Use unordered STL map
-//#include <unordered_map>
-//#define RichDecodedData_MAP(KEY,DATA) std::unordered_map< const KEY, DATA, std::hash<KEY>, std::equal_to<KEY>, RichDecodedData_allocator(KEY,DATA) >
-
-// Use boost unordered_map ( oddly enough seems very slow when used with the boost pool allocator )
-//#include <boost/unordered_map.hpp> 
-//#define RichDecodedData_MAP(KEY,DATA) boost::unordered_map< const KEY, DATA, std::hash<KEY>, std::equal_to<KEY>, RichDecodedData_allocator(KEY,DATA) >
+//#include "RichKernel/RichMap.h"
+#include "RichKernel/RichPoolMap.h"
+//#include "RichKernel/RichUnorderedMap.h"
 
 namespace Rich
 {
@@ -135,7 +102,7 @@ namespace Rich
     };
 
     /// Map for RICH HPD data, sorted by HPD number
-    typedef RichDecodedData_MAP( Rich::DAQ::Level1Input, HPDInfo ) HPDMap;
+    typedef Rich::PoolMap< Rich::DAQ::Level1Input, HPDInfo > HPDMap;
 
     /** @class IngressInfo RichKernel/RichDecodedData.h
      *  Information for each L1 ingress
@@ -172,10 +139,10 @@ namespace Rich
     };
 
     /// Map for HPD data for each L1 ingress
-    typedef RichDecodedData_MAP( L1IngressID, IngressInfo ) IngressMap;
+    typedef Rich::PoolMap< L1IngressID, IngressInfo > IngressMap;
 
     /// Map for RICH HPD data, sorted by Level1 board number
-    typedef RichDecodedData_MAP( Level1HardwareID, IngressMap ) L1Map;
+    typedef Rich::PoolMap< Level1HardwareID, IngressMap > L1Map;
 
   }
 }
