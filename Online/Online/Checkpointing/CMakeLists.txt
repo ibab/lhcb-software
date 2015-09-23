@@ -23,6 +23,6 @@ if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
   gaudi_add_executable(restore aux/main.cpp)
   set_property(TARGET restore APPEND PROPERTY COMPILE_FLAGS " -g -O0")
   set_property(TARGET restore APPEND PROPERTY LINK_FLAGS " -g -O0 -static")
-
+  gaudi_install_scripts()
   gaudi_add_test(QMTest QMTEST)
 endif()
