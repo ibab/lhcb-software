@@ -1,6 +1,6 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
-  <argument name="program"><text>$GAUDIONLINETESTSROOT/cmt/qmtest_go.sh</text></argument>
+  <argument name="program"><text>go_test_qmtest.sh</text></argument>
   <argument name="args"><set><text>gentest.exe</text><text>libGaudiOnline.so</text><text>qmtest_hlt</text></set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="reference"><text>../refs/go_run_hlt.ref</text></argument>

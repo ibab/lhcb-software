@@ -68,18 +68,5 @@ Child: Starting process:MBMsummary_0
  Receiver_0            14d    P             6000   100                                Storage_LHCb
 
 +++++ MBM summary finished.
-waitpid() 'MBMsummary_0' exited: Status=1
 Summary task finished work..
-waitpid() 'Prod3_0' exited: Status=0
-waitpid() 'Prod2_0' exited: Status=0
-waitpid() 'Prod1_0' exited: Status=0
-waitpid() 'Sender3_0' exited: Status=84
-waitpid() 'Sender2_0' exited: Status=84
-waitpid() 'Sender1_0' exited: Status=84
-waitpid() 'Receiver_0' exited: Status=0
-waitpid() 'Storage_0' exited: Status=0
-waitpid() 'Node3_0' exited: Status=0
-waitpid() 'Node2_0' exited: Status=0
-waitpid() 'Node1_0' exited: Status=0
-waitpid() 'TanServ_0' exited: Status=0
 All processes finished work..

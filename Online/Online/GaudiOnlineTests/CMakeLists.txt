@@ -27,3 +27,4 @@ gaudi_add_test(QMTest QMTEST)
 
 gaudi_env(SET GaudiOnlineExe   "GaudiOnlineExe.exe")
 gaudi_env(SET GAUDIONLINE_OPTS "\${GAUDIONLINEROOT}/options")
+gaudi_install_scripts()

@@ -22,9 +22,5 @@ Child: Starting process:MBMsummary_0
  Prod_0                14d    P             2000   100                                Events_LHCb
 
 +++++ MBM summary finished.
-waitpid() 'MBMsummary_0' exited: Status=1
 Summary task finished work..
-waitpid() 'Prod_0' exited: Status=0
-waitpid() 'DiskWr_0' exited: Status=84
-waitpid() 'Events_0' exited: Status=0
 All processes finished work..

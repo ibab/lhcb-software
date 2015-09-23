@@ -1,7 +1,8 @@
 #!/bin/bash
-if test -f ./CreateMEP.opts;
+opts_file=./CreateMEP.opts;
+if test -f ${opts_file};
 then
-  rm -f ./CreateMEP.opts;
+  rm -f ${opts_file};
 fi
 
 CREATETAE=false;
@@ -13,7 +14,7 @@ then
     echo "We are creating TAE events.....";
 fi
 
-cat >./CreateMEP.opts <<END-OF-OPTS
+cat >${opts_file} <<END-OF-OPTS
 #include "$MDFROOT/options/CreateMEP.opts"
 ApplicationMgr.OutStream  = { "LHCb::MEPWriter/Writer_0" };
 ApplicationMgr.EvtMax   = 2002;
@@ -25,6 +26,6 @@ Writer_0.Connection     = "file://${FILE_PREFIX}Data_0.dat";
 Writer_0.MakeTAE        = ${CREATETAE};
 END-OF-OPTS
 #
-cat ./CreateMEP.opts;
-`which gentest.exe` libGaudiKernel.so GaudiMain ./CreateMEP.opts;
-rm ./CreateMEP.opts;
+cat ${opts_file};
+`which gentest.exe` libGaudiKernel.so GaudiMain ${opts_file};
+rm ${opts_file};
