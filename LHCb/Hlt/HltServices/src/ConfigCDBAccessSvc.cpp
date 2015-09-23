@@ -321,7 +321,6 @@ class CDB
         *buf++ = ( ( uid >> 8 ) & 0xff );
         *buf++ = ( ( uid >> 16 ) & 0xff );
         *buf++ = ( ( uid >> 24 ) & 0xff );
-        assert( sizeof( t ) == 4 ); // seconds since 1970  ( ok for 136 years )
         *buf++ = ( t & 0xff );
         *buf++ = ( ( t >> 8 ) & 0xff );
         *buf++ = ( ( t >> 16 ) & 0xff );
