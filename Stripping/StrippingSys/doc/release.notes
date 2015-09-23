@@ -3,6 +3,23 @@ Package     : StrippingSys
 Package Coordinator : Andrea.Contu@cern.ch, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v9r11p1 2015-09-23 ===========================
+
+*Phys/StrippingSelections
+ - Remove import from Selections StrippingB24p
+ - Released IPCHI2 cuts on DstarD2HHHH lines and added momentum cuts
+ - Fix to DstarD2HHHH lines
+
+*Phys/StrippingArchive
+ - Fix to D24h lines and moving of KShh from Charm to CharmCompleteEvent
+ - Fix to __init__.py in S23r1 and removal of imports from StrippingSelections
+
+*Phys/StrippingSettings
+ - Fix to previous commit and new dbase for s23r1
+ - add the dbase
+ - Include back the TrackEffDownMuon lines as the memory issue with TisTos particle maker is fixed
+ - Fix to D24h lines and moving of KShh from Charm to CharmCompleteEvent
+
 !========================= StrippingSys v9r11 2015-09-09 ===========================
 
 *Phys/StrippingSettings
