@@ -4,7 +4,7 @@
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 #=========================================================================
 package           CaloMoniDigi
-version           v2r6p1
+version           v2r6p2
 
 # =============== structure ==================================================
 branches          cmt doc src options 
