@@ -887,8 +887,10 @@ PyMODINIT_FUNC initdimcpp(void)  {
   /* Making sure that the new class objects will not by cleaned out by the
    * garbage collector
    */
-  Py_INCREF((PyObject *)&DimRpc_Type);
-  Py_INCREF((PyObject *)&DimRpcInfo_Type);
+  m = (PyObject *)&DimRpc_Type;
+  Py_INCREF(m);
+  m = (PyObject *)&DimRpcInfo_Type;
+  Py_INCREF(m);
   /* Adding the objects to the created module */
   PyModule_AddObject(m, "DimRpc", (PyObject *)&DimRpc_Type);
   PyModule_AddObject(m, "DimRpcInfo", (PyObject *)&DimRpcInfo_Type);
