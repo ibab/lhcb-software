@@ -218,7 +218,7 @@ public:
   void setStartupHistograms(const std::vector<std::string> & histogramList);
 
   void dockAllFrames();
-  void handleCommand(Command id = X_ENIGMA_COMMAND);
+  void handleCommand(Int_t id = X_ENIGMA_COMMAND);
   void savePageToFile();
   void savePageToHistogramDB();
   void reportToLog();

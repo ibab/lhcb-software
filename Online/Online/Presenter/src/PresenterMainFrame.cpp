@@ -377,7 +377,7 @@ void PresenterMainFrame::buildGUI() {
     m_fileMenu->AddSeparator();
     m_fileMenu->AddEntry(m_fileQuitText, EXIT_COMMAND);
     m_fileMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
-                        this, "handleCommand(Command)");
+                        this, "handleCommand(Int_t)");
 
     // Edit menu
     m_editMenu = new TGPopupMenu(fClient->GetRoot());
@@ -389,7 +389,7 @@ void PresenterMainFrame::buildGUI() {
     m_editMenu->AddEntry( m_editAddTrendingHistoText ,
                           EDIT_ADD_TRENDINGHISTO_COMMAND ) ;
     m_editMenu->Connect( "Activated(Int_t)", "PresenterMainFrame",
-                         this, "handleCommand(Command)");
+                         this, "handleCommand(Int_t)");
     m_editMenu->DisableEntry( EDIT_PAGE_PROPERTIES_COMMAND);
     m_editMenu->DisableEntry( EDIT_ADD_TRENDINGHISTO_COMMAND );
 
@@ -417,7 +417,7 @@ void PresenterMainFrame::buildGUI() {
     m_viewMenu->AddEntry(m_viewUnDockPageText, UNDOCK_PAGE_COMMAND);
     m_viewMenu->AddEntry(m_viewDockAllText, DOCK_ALL_COMMAND);
     m_viewMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
-                        this, "handleCommand(Command)");
+                        this, "handleCommand(Int_t)");
     m_viewMenu->DisableEntry(HISTORY_PLOTS_COMMAND);
     m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
 
@@ -439,13 +439,13 @@ void PresenterMainFrame::buildGUI() {
     m_toolMenu->AddEntry(m_toolOffline, OFFLINE_MODE_COMMAND);
     m_toolMenu->UnCheckEntry(OFFLINE_MODE_COMMAND);
     m_toolMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
-                        this, "handleCommand(Command)");
+                        this, "handleCommand(Int_t)");
 
     // Help menu
     m_helpMenu = new TGPopupMenu(fClient->GetRoot());
     m_helpMenu->AddEntry(m_helpAboutText, HELP_ABOUT_COMMAND);
     m_helpMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
-                        this, "handleCommand(Command)");
+                        this, "handleCommand(Int_t)");
 
     m_menuDock = new TGDockableFrame(this);
     m_menuDock->SetWindowName("LHCb Presenter Menu");
@@ -626,7 +626,7 @@ void PresenterMainFrame::buildGUI() {
     m_trendDurationComboBox->Select( M_TrendLastTenMinutes,  false);
     m_trendDurationComboBox->Resize(112,22);
     m_trendDurationComboBox->Connect("Selected(Int_t)", "PresenterMainFrame",
-                                     this, "handleCommand(Command)");
+                                     this, "handleCommand(Int_t)");
 
 
     //== Select the reference
@@ -689,7 +689,7 @@ void PresenterMainFrame::buildGUI() {
 
     m_historyIntervalComboBox->Resize(112,22);
     m_historyIntervalComboBox->Connect("Selected(Int_t)", "PresenterMainFrame",
-                                       this, "handleCommand(Command)");
+                                       this, "handleCommand(Int_t)");
 
     // Reference
     const TGPicture* f2_tpic = picpool->GetPicture("f2_t.xpm");
@@ -807,7 +807,7 @@ void PresenterMainFrame::buildGUI() {
     m_pagesFromHistoDBListTree->
       Connect("Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)",
               "PresenterMainFrame", this,
-              "clickedPageTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
+              "clickedPageTreeItem(TGListTreeItem*, EMouseButton, Int_t, Int_t)");
 
     m_pagesFromHistoDBListTree->
       Connect("DataDropped(TGListTreeItem*, TDNDData*)",
@@ -837,7 +837,7 @@ void PresenterMainFrame::buildGUI() {
     m_pagesContextMenu->AddSeparator();
     m_pagesContextMenu->AddEntry("Refresh", M_RefreshDBPagesListTree_COMMAND);
     m_pagesContextMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
-                                this, "handleCommand(Command)");
+                                this, "handleCommand(Int_t)");
 
     // -------------------------
 
@@ -890,12 +890,12 @@ void PresenterMainFrame::buildGUI() {
     m_alarmHistogramTreeList->SetCheckMode(TGListTree::kRecursive);
     m_alarmHistogramTreeList->Connect( "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)",
                                        "PresenterMainFrame", this ,
-                                       "clickedAlarmTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
+                                       "clickedAlarmTreeItem(TGListTreeItem*, EMouseButton, Int_t, Int_t)");
 
     m_alarmDBContextMenu = new TGPopupMenu(fClient->GetRoot());
     m_alarmDBContextMenu->AddEntry("Refresh", M_RefreshAlarmDBListTree_COMMAND);
     m_alarmDBContextMenu->Connect("Activated(Int_t)","PresenterMainFrame",
-                                  this, "handleCommand(Command)");
+                                  this, "handleCommand(Int_t)");
 
     m_alarmDBCanvasViewPort->AddFrame(m_alarmHistogramTreeList);
     m_alarmHistogramTreeList->SetLayoutManager( new TGHorizontalLayout(m_alarmHistogramTreeList));
@@ -1030,7 +1030,7 @@ void PresenterMainFrame::buildGUI() {
     m_histoSvcListTree->SetCheckMode(TGListTree::kRecursive);
     m_histoSvcListTree->Connect( "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)",
                                  "PresenterMainFrame", this,
-                                 "clickedHistoSvcTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
+                                 "clickedHistoSvcTreeItem(TGListTreeItem*, EMouseButton, Int_t, Int_t)");
 
     fViewPort664->AddFrame(m_histoSvcListTree);
     m_histoSvcListTree->SetLayoutManager(new TGHorizontalLayout( m_histoSvcListTree));
@@ -1053,7 +1053,7 @@ void PresenterMainFrame::buildGUI() {
     m_histoSvcTreeContextMenu->AddSeparator();
     m_histoSvcTreeContextMenu->AddEntry("Refresh", M_RefreshHistoSvcListTree);
     m_histoSvcTreeContextMenu->Connect("Activated(Int_t)","PresenterMainFrame",
-                                       this, "handleCommand(Command)");
+                                       this, "handleCommand(Int_t)");
 
     m_databaseHistogramsDock = new TGDockableFrame(m_rightMiscFrame);
     m_databaseHistogramsDock->SetWindowName("Histograms in Database");
@@ -1119,7 +1119,7 @@ void PresenterMainFrame::buildGUI() {
     m_databaseHistogramTreeList->SetCheckMode(TGListTree::kRecursive);
     m_databaseHistogramTreeList->Connect( "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)",
                                           "PresenterMainFrame", this,
-                                          "clickedHistoDBTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
+                                          "clickedHistoDBTreeItem(TGListTreeItem*, EMouseButton, Int_t, Int_t)");
 
     m_histoDBContextMenu = new TGPopupMenu(fClient->GetRoot());
     m_histoDBContextMenu->AddEntry("Add checked histogram(s) to Page",
@@ -1134,7 +1134,7 @@ void PresenterMainFrame::buildGUI() {
     m_histoDBContextMenu->AddSeparator();
     m_histoDBContextMenu->AddEntry("Refresh", M_RefreshHistoDBListTree_COMMAND);
     m_histoDBContextMenu->Connect( "Activated(Int_t)","PresenterMainFrame",
-                                   this, "handleCommand(Command)");
+                                   this, "handleCommand(Int_t)");
 
     m_histoDBCanvasViewPort->AddFrame(m_databaseHistogramTreeList);
     m_databaseHistogramTreeList->SetLayoutManager( new TGHorizontalLayout(m_databaseHistogramTreeList));
@@ -1318,7 +1318,7 @@ void PresenterMainFrame::dockAllFrames() {
 //==============================================================================
 // Handle the command
 //==============================================================================
-void PresenterMainFrame::handleCommand(Command cmd) {
+void PresenterMainFrame::handleCommand(Int_t cmd) {
   if (X_ENIGMA_COMMAND == cmd) {
     TGButton* btn = static_cast<TGButton*>(gTQSender);
     cmd = static_cast<Command>(btn->WidgetId());
