@@ -16,41 +16,28 @@
 #include <vector>
 
 #ifndef GOD_NOALLOC
-// Use a memory pool allocator from boost
-
-// boost
+// Memory pool allocator from boost
 #include "GaudiKernel/boost_allocator.h"
 #include <boost/pool/pool_alloc.hpp>
-
-// Boost pool allocator, no mutex
-#define LHCb_FastAllocVector_allocator(TYPE) boost::pool_allocator< TYPE, boost::default_user_allocator_new_delete, boost::details::pool::null_mutex, 32 >
-
-// Boost pool allocator, with mutex
-//#define LHCb_FastAllocVector_allocator(TYPE) boost::pool_allocator< TYPE, boost::default_user_allocator_new_delete, boost::details::pool::default_mutex, 32 >
-
-#else
-// GOD NOALLOC - Disable memory pools completely
-
-#define LHCb_FastAllocVector_allocator(TYPE) std::allocator< TYPE >
-
+// MT allocator
+#include <ext/mt_allocator.h>
 #endif
-
 
 namespace LHCb
 {
 
   //--------------------------------------------------------------------------------
-  /** @class FastAllocVector FastAllocVector.h Kernel/FastAllocVector.h
+  /** @class FastAllocVector Kernel/FastAllocVector.h
    *
-   *  Vector with (fast) pool allocator from boost
+   *  Vector with custom allocator
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-   *  @date   29/03/2007
+   *  @date   23/09/2015
    */
   //--------------------------------------------------------------------------------
   
-  template < typename TYPE, typename ALLOC = LHCb_FastAllocVector_allocator(TYPE) >
-  class FastAllocVector : public std::vector<TYPE,ALLOC>
+  template < typename TYPE, typename ALLOC >
+  class FastAllocVector : public std::vector< TYPE, ALLOC >
   {
 
   public:
@@ -68,10 +55,10 @@ namespace LHCb
      *  @param init Initialisation value
      */
     FastAllocVector( const typename std::vector<TYPE,ALLOC>::size_type size,
-                     const TYPE & init ) : std::vector<TYPE,ALLOC> (size,init) { }
+                     const TYPE & init ) : std::vector<TYPE,ALLOC>(size,init) { }
 
     /// Copy Constructor
-    FastAllocVector( const FastAllocVector & init ) : std::vector<TYPE,ALLOC> (init) { }
+    FastAllocVector( const FastAllocVector & init ) : std::vector<TYPE,ALLOC>(init) { }
 
     /// Operator overloading for ostream
     friend inline std::ostream& operator << ( std::ostream& str ,
@@ -83,6 +70,50 @@ namespace LHCb
     }
 
   };
+
+  //--------------------------------------------------------------------------------
+  /** @typedef PoolAllocVector Kernel/FastAllocVector.h
+   *
+   *  Vector with pool allocator from boost
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   23/09/2015
+   */
+  //--------------------------------------------------------------------------------
+
+  template < typename TYPE,
+             typename USERALLOC = boost::default_user_allocator_new_delete,
+             typename MUTEX     = boost::details::pool::null_mutex,
+             unsigned NEXTSIZE  = 32 >
+  using PoolAlloc = boost::pool_allocator< TYPE, USERALLOC, MUTEX, NEXTSIZE >;
+                                              
+  template < typename TYPE, 
+#ifndef GOD_NOALLOC
+             typename ALLOC = PoolAlloc< TYPE >
+#else
+             typename ALLOC = std::allocator< TYPE >
+#endif
+             >
+  using PoolAllocVector = FastAllocVector<TYPE,ALLOC>;
+
+  //--------------------------------------------------------------------------------
+  /** @typedef MTAllocVector Kernel/FastAllocVector.h
+   *
+   *  Vector with MT allocator
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   23/09/2015
+   */
+  //--------------------------------------------------------------------------------
+  
+  template < typename TYPE, 
+#ifndef GOD_NOALLOC
+             typename ALLOC = __gnu_cxx::__mt_alloc< TYPE >
+#else
+             typename ALLOC = std::allocator< TYPE >
+#endif
+             >
+  using MTAllocVector = FastAllocVector<TYPE,ALLOC>;
 
 }
 
