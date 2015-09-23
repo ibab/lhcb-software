@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r41p1 2015-09-23 =========================
+
 ! 2015-09-23 - Andrea Contu
  - Fix to previous commit and new dbase for s23r1
 
