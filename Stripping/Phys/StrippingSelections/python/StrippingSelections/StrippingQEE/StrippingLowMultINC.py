@@ -120,8 +120,8 @@ default_config = {
         'PrescaleLowMultPi0'              : 1,
         'DecisionLowMultPi0'              : "HLT_PASS_RE('Hlt2LowMultPi0Decision')",
         #
-        'PrescaleLowMultTMP'         : 1,
-        'DecisionLowMultTMP'         : "HLT_PASS_RE('Hlt2NonBeamBeamNoBiasDecision')  | HLT_PASS_RE('Hlt2LowMultTechnical_MinBiasDecision')",
+        'PrescaleLowMultTechnical'         : 1,
+        'DecisionLowMultTechnical'         : "HLT_PASS_RE('Hlt2NonBeamBeamNoBiasDecision')  | HLT_PASS_RE('Hlt2LowMultTechnical_MinBiasDecision')",
         #
     }
 }
@@ -433,14 +433,14 @@ class LowMultINCLines( LineBuilder ) :
 
 #####
 #####
-        self.lineLowMultTMP = StrippingLine( "LowMultTMP"+"Line",
-                                             prescale  = config['PrescaleLowMultTMP'],
+        self.lineLowMultTechnical = StrippingLine( "LowMultTechnical"+"Line",
+                                             prescale  = config['PrescaleLowMultTechnical'],
                                              checkPV   = False,
                                              EnableFlavourTagging = False,
                                              L0DU      = None,
-                                             HLT2 = config['DecisionLowMultTMP'],
+                                             HLT2 = config['DecisionLowMultTechnical'],
                                              RequiredRawEvents = config["LowMultRequiredRawEvents"])
-        self.registerLine(self.lineLowMultTMP)
+        self.registerLine(self.lineLowMultTechnical)
         
 #####
 #####    
