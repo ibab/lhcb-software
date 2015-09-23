@@ -146,10 +146,7 @@ namespace Rich
     LHCb::RichRecPixel *
     PixelCreatorBase::buildPixel( const LHCb::RichSmartID & id ) const
     {
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << " -> Creating RichRecPixel from RichSmartID " << id << endmsg;
-      }
+      _ri_debug << " -> Creating RichRecPixel from RichSmartID " << id << endmsg;
 
       // See if this RichRecPixel already exists
       LHCb::RichRecPixel * pixel = ( bookKeep() && m_pixelDone[id] ? m_pixelExists[id] : NULL );
