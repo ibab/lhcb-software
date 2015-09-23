@@ -591,7 +591,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
 //  hardwareID
 //=========================================================================
 const Rich::DAQ::HPDHardwareID
-DeRichSystem::hardwareID( const LHCb::RichSmartID smartID ) const
+DeRichSystem::hardwareID( const LHCb::RichSmartID& smartID ) const
 {
   // See if this RichSmartID is known
   SoftToHard::const_iterator id = m_soft2hard.find( smartID.pdID() );
@@ -613,7 +613,7 @@ DeRichSystem::hardwareID( const LHCb::RichSmartID smartID ) const
 //  richSmartID
 //=========================================================================
 const LHCb::RichSmartID
-DeRichSystem::richSmartID( const Rich::DAQ::HPDHardwareID hID ) const
+DeRichSystem::richSmartID( const Rich::DAQ::HPDHardwareID& hID ) const
 {
   // See if this PD hardware ID is known
   HardToSoft::const_iterator id = m_hard2soft.find( hID );
@@ -632,7 +632,7 @@ DeRichSystem::richSmartID( const Rich::DAQ::HPDHardwareID hID ) const
 //  richSmartID
 //=========================================================================
 const LHCb::RichSmartID
-DeRichSystem::richSmartID( const Rich::DAQ::Level0ID l0ID ) const
+DeRichSystem::richSmartID( const Rich::DAQ::Level0ID& l0ID ) const
 {
   // See if this Level0 hardware ID is known
   L0HardToSoft::const_iterator id = m_l0hard2soft.find( l0ID );
@@ -651,7 +651,7 @@ DeRichSystem::richSmartID( const Rich::DAQ::Level0ID l0ID ) const
 // level0ID
 //=========================================================================
 const Rich::DAQ::Level0ID
-DeRichSystem::level0ID( const LHCb::RichSmartID smartID ) const
+DeRichSystem::level0ID( const LHCb::RichSmartID& smartID ) const
 {
   // See if this RichSmartID is known
   SmartIDToL0::const_iterator id = m_smartid2L0.find( smartID.pdID() );
@@ -673,7 +673,7 @@ DeRichSystem::level0ID( const LHCb::RichSmartID smartID ) const
 // level1HardwareID
 //=========================================================================
 const Rich::DAQ::Level1HardwareID
-DeRichSystem::level1HardwareID( const LHCb::RichSmartID smartID ) const
+DeRichSystem::level1HardwareID( const LHCb::RichSmartID& smartID ) const
 {
   // See if this RichSmartID is known
   SmartIDToL1::const_iterator id = m_smartid2L1.find( smartID.pdID() );
@@ -695,7 +695,7 @@ DeRichSystem::level1HardwareID( const LHCb::RichSmartID smartID ) const
 // Obtain the Level1 input number for a given RichSmartID
 //=========================================================================
 const Rich::DAQ::Level1Input
-DeRichSystem::level1InputNum( const LHCb::RichSmartID smartID ) const
+DeRichSystem::level1InputNum( const LHCb::RichSmartID& smartID ) const
 {
   // See if this RichSmartID is known
   SmartIDToL1In::const_iterator id = m_smartid2L1In.find( smartID.pdID() );
@@ -717,7 +717,7 @@ DeRichSystem::level1InputNum( const LHCb::RichSmartID smartID ) const
 // level0ID
 //=========================================================================
 const Rich::DAQ::Level0ID
-DeRichSystem::level0ID( const Rich::DAQ::HPDHardwareID hardID ) const
+DeRichSystem::level0ID( const Rich::DAQ::HPDHardwareID& hardID ) const
 {
   // See if this hardware ID is known
   HardIDToL0::const_iterator id = m_hardid2L0.find( hardID );
@@ -736,7 +736,7 @@ DeRichSystem::level0ID( const Rich::DAQ::HPDHardwareID hardID ) const
 //  level1HardwareID
 //=========================================================================
 const Rich::DAQ::Level1HardwareID
-DeRichSystem::level1HardwareID( const Rich::DAQ::HPDHardwareID hardID ) const
+DeRichSystem::level1HardwareID( const Rich::DAQ::HPDHardwareID& hardID ) const
 {
   // See if this hardware ID is known
   HardIDToL1::const_iterator id = m_hardid2L1.find( hardID );
@@ -756,7 +756,7 @@ DeRichSystem::level1HardwareID( const Rich::DAQ::HPDHardwareID hardID ) const
 /// Obtain the Level1 input number for a given PD hardware ID
 //=========================================================================
 const Rich::DAQ::Level1Input
-DeRichSystem::level1InputNum( const Rich::DAQ::HPDHardwareID hardID ) const
+DeRichSystem::level1InputNum( const Rich::DAQ::HPDHardwareID& hardID ) const
 {
   // See if this hardware ID is known
   HardIDToL1In::const_iterator id = m_hardid2L1In.find( hardID );
@@ -775,7 +775,7 @@ DeRichSystem::level1InputNum( const Rich::DAQ::HPDHardwareID hardID ) const
 //  richSmartID from copy number
 //=========================================================================
 const LHCb::RichSmartID
-DeRichSystem::richSmartID( const Rich::DAQ::HPDCopyNumber copyNumber ) const
+DeRichSystem::richSmartID( const Rich::DAQ::HPDCopyNumber& copyNumber ) const
 {
   // See if this Level0 hardware ID is known
   CopyNToSmartID::const_iterator id = m_copyNumber2smartid.find( copyNumber );
@@ -794,7 +794,7 @@ DeRichSystem::richSmartID( const Rich::DAQ::HPDCopyNumber copyNumber ) const
 // Obtain the Copy Number number for a given RichSmartID
 //=========================================================================
 const Rich::DAQ::HPDCopyNumber
-DeRichSystem::copyNumber( const LHCb::RichSmartID smartID ) const
+DeRichSystem::copyNumber( const LHCb::RichSmartID& smartID ) const
 {
   // See if this RichSmartID is known
   SmartIDToCopyN::const_iterator id = m_smartid2copyNumber.find( smartID.pdID() );
@@ -816,7 +816,7 @@ DeRichSystem::copyNumber( const LHCb::RichSmartID smartID ) const
 //  l1PDSmartIDs
 //=========================================================================
 const LHCb::RichSmartID::Vector &
-DeRichSystem::l1PDSmartIDs( const Rich::DAQ::Level1HardwareID l1ID ) const
+DeRichSystem::l1PDSmartIDs( const Rich::DAQ::Level1HardwareID& l1ID ) const
 {
   // See if this L1 ID is known
   Rich::DAQ::L1ToSmartIDs::const_iterator id = m_l12smartids.find( l1ID );
@@ -834,7 +834,7 @@ DeRichSystem::l1PDSmartIDs( const Rich::DAQ::Level1HardwareID l1ID ) const
 //  l1PDHardIDs
 //=========================================================================
 const Rich::DAQ::HPDHardwareIDs &
-DeRichSystem::l1PDHardIDs( const Rich::DAQ::Level1HardwareID l1ID ) const
+DeRichSystem::l1PDHardIDs( const Rich::DAQ::Level1HardwareID& l1ID ) const
 {
   // See if this L1 ID is known
   Rich::DAQ::L1ToHardIDs::const_iterator id = m_l12hardids.find( l1ID );
@@ -852,7 +852,7 @@ DeRichSystem::l1PDHardIDs( const Rich::DAQ::Level1HardwareID l1ID ) const
 // richDetector
 //=========================================================================
 Rich::DetectorType
-DeRichSystem::richDetector( const Rich::DAQ::Level1HardwareID l1ID ) const
+DeRichSystem::richDetector( const Rich::DAQ::Level1HardwareID& l1ID ) const
 {
   // See if this L1 ID is known
   L1ToRICH::const_iterator rich = m_l1ToRich.find( l1ID );
@@ -871,7 +871,7 @@ DeRichSystem::richDetector( const Rich::DAQ::Level1HardwareID l1ID ) const
 //=========================================================================
 const Rich::DAQ::Level1HardwareID
 DeRichSystem::level1HardwareID( const Rich::DetectorType rich,
-                                const Rich::DAQ::Level1LogicalID logID ) const
+                                const Rich::DAQ::Level1LogicalID& logID ) const
 {
   L1LogToHard::const_iterator iID = m_l1LogToHard[rich].find(logID);
   if ( m_l1LogToHard[rich].end() == iID )
@@ -887,7 +887,7 @@ DeRichSystem::level1HardwareID( const Rich::DetectorType rich,
 // Obtain the Level1 hardware ID number for a Level0 lID
 //=========================================================================
 const Rich::DAQ::Level1HardwareID
-DeRichSystem::level1HardwareID( const Rich::DAQ::Level0ID l0ID ) const
+DeRichSystem::level1HardwareID( const Rich::DAQ::Level0ID& l0ID ) const
 {
   L0ToL1::const_iterator iID = m_l0ToL1.find(l0ID);
   if ( m_l0ToL1.end() == iID )
@@ -903,7 +903,7 @@ DeRichSystem::level1HardwareID( const Rich::DAQ::Level0ID l0ID ) const
 // Obtain the Level1 logical ID number for a Level1 hardware ID
 //=========================================================================
 const Rich::DAQ::Level1LogicalID
-DeRichSystem::level1LogicalID( const Rich::DAQ::Level1HardwareID hardID ) const
+DeRichSystem::level1LogicalID( const Rich::DAQ::Level1HardwareID& hardID ) const
 {
   L1HardToLog::const_iterator iID = m_l1HardToLog.find(hardID);
   if ( m_l1HardToLog.end() == iID )
@@ -919,8 +919,8 @@ DeRichSystem::level1LogicalID( const Rich::DAQ::Level1HardwareID hardID ) const
 // Access the PD hardware ID for the given L1 hardwareID and input number
 //=========================================================================
 const Rich::DAQ::HPDHardwareID
-DeRichSystem::pdHardwareID( const Rich::DAQ::Level1HardwareID L1HardID,
-                            const Rich::DAQ::Level1Input L1Input ) const
+DeRichSystem::pdHardwareID( const Rich::DAQ::Level1HardwareID& L1HardID,
+                            const Rich::DAQ::Level1Input& L1Input ) const
 {
   const L1HardIDAndInput key(L1HardID,L1Input);
   L1HardIDAndInputToPDHardID::const_iterator iID = m_L1HardIDAndInputToPDHardID.find(key);
@@ -938,7 +938,7 @@ DeRichSystem::pdHardwareID( const Rich::DAQ::Level1HardwareID L1HardID,
 // L1 Logical ID to Copy Number
 //=========================================================================
 const Rich::DAQ::Level1CopyNumber
-DeRichSystem::copyNumber( const Rich::DAQ::Level1HardwareID hardID ) const
+DeRichSystem::copyNumber( const Rich::DAQ::Level1HardwareID& hardID ) const
 {
   L1HIDToCopyN::const_iterator iCN = m_l1H2CopyN.find(hardID);
   if ( m_l1H2CopyN.end() == iCN )
@@ -953,7 +953,8 @@ DeRichSystem::copyNumber( const Rich::DAQ::Level1HardwareID hardID ) const
 //=========================================================================
 // getDePDLocation
 //=========================================================================
-std::string DeRichSystem::getDePDLocation ( const LHCb::RichSmartID smartID ) const
+std::string 
+DeRichSystem::getDePDLocation( const LHCb::RichSmartID& smartID ) const
 {
   std::string loc;
 
@@ -1042,7 +1043,7 @@ std::string DeRichSystem::getDePDLocation ( const LHCb::RichSmartID smartID ) co
 //===========================================================================
 
 const Rich::DAQ::Level1LogicalID
-DeRichSystem::level1LogicalID( const LHCb::RichSmartID smartID ) const
+DeRichSystem::level1LogicalID( const LHCb::RichSmartID& smartID ) const
 {
   return level1LogicalID( level1HardwareID(smartID) );
 }
@@ -1087,8 +1088,5 @@ std::vector<std::string> DeRichSystem::getDeRichLocations ( )
   return deRichLocs;
 
 }
-
-
-
 
 //===========================================================================

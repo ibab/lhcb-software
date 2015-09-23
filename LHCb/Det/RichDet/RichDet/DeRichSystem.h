@@ -73,31 +73,31 @@ public:
    *  @param smartID The RichSmartID for the PD
    *  @return The corresponding PD hardware ID
    */
-  const Rich::DAQ::HPDHardwareID hardwareID( const LHCb::RichSmartID smartID ) const;
+  const Rich::DAQ::HPDHardwareID hardwareID( const LHCb::RichSmartID& smartID ) const;
 
   /** Convert a RICH PD hardware number into the corresponding PD RichSmartID
    *  @param hID The hardware ID for the PD
    *  @return The corresponding PD RichSmartID
    */
-  const LHCb::RichSmartID richSmartID( const Rich::DAQ::HPDHardwareID hID ) const;
+  const LHCb::RichSmartID richSmartID( const Rich::DAQ::HPDHardwareID& hID ) const;
 
   /** Convert a RICH Level0 hardware number into the corresponding PD RichSmartID
    *  @param l0ID The PD level0 for the PD
    *  @return The corresponding PD RichSmartID
    */
-  const LHCb::RichSmartID richSmartID( const Rich::DAQ::Level0ID l0ID ) const;
+  const LHCb::RichSmartID richSmartID( const Rich::DAQ::Level0ID& l0ID ) const;
 
   /** Convert a RICH Copy Number into the corresponding PD RichSmartID
    *  @param copyNumber The PD Copy Number
    *  @return The corresponding PD RichSmartID
    */
-  const LHCb::RichSmartID richSmartID( const Rich::DAQ::HPDCopyNumber copyNumber ) const;
+  const LHCb::RichSmartID richSmartID( const Rich::DAQ::HPDCopyNumber& copyNumber ) const;
 
   /** Convert a RICH smartID to the corresponding PD Copy Number
    *  @param smartID The PD RichSmartID
    *  @return The corresponding PD Copy Number
    */
-  const Rich::DAQ::HPDCopyNumber copyNumber( const LHCb::RichSmartID smartID ) const;
+  const Rich::DAQ::HPDCopyNumber copyNumber( const LHCb::RichSmartID& smartID ) const;
 
   /// Returns a list of all active PDs identified by their RichSmartID
   const LHCb::RichSmartID::Vector & activePDRichSmartIDs() const;
@@ -123,7 +123,7 @@ public:
    *  @attention For speed, this method does NOT check if the given PD id is a valid one
    *             or not. Invalid PD ids will return true
    */
-  bool pdIsActive( const LHCb::RichSmartID id ) const;
+  bool pdIsActive( const LHCb::RichSmartID& id ) const;
 
   /** Ask whether a given PD is currently active or dead
    *  @param id The hardware id for the PD
@@ -131,37 +131,37 @@ public:
    *  @attention For speed, this method does NOT check if the given PD id is a valid one
    *             or not. Invalid PD ids will return true
    */
-  bool pdIsActive( const Rich::DAQ::HPDHardwareID id ) const;
+  bool pdIsActive( const Rich::DAQ::HPDHardwareID& id ) const;
 
   /** Obtain the Level0 ID number for a given PD RichSmartID
    *  @param smartID The RichSmartID for the PD
    *  @return The corresponding PD Level0 ID
    */
-  const Rich::DAQ::Level0ID level0ID( const LHCb::RichSmartID smartID ) const;
+  const Rich::DAQ::Level0ID level0ID( const LHCb::RichSmartID& smartID ) const;
 
   /** Obtain the Level0 ID number for a given PD hardware ID
    *  @param hardID The hardware ID for the PD
    *  @return The corresponding PD Level0 ID
    */
-  const Rich::DAQ::Level0ID level0ID( const Rich::DAQ::HPDHardwareID hardID ) const;
+  const Rich::DAQ::Level0ID level0ID( const Rich::DAQ::HPDHardwareID& hardID ) const;
 
   /** Obtain the Level1 hardware ID number for a given PD Level0 ID
    *  @param l0ID The Level0 ID
    *  @return The corresponding Level1 hardware ID
    */
-  const Rich::DAQ::Level1HardwareID level1HardwareID( const Rich::DAQ::Level0ID l0ID ) const;
+  const Rich::DAQ::Level1HardwareID level1HardwareID( const Rich::DAQ::Level0ID& l0ID ) const;
 
   /** Obtain the Level1 hardware ID number for a given PD RichSmartID
    *  @param smartID The RichSmartID for the PD
    *  @return The corresponding Level1 hardware ID
    */
-  const Rich::DAQ::Level1HardwareID level1HardwareID( const LHCb::RichSmartID smartID ) const;
+  const Rich::DAQ::Level1HardwareID level1HardwareID( const LHCb::RichSmartID& smartID ) const;
 
   /** Obtain the Level1 hardware ID number for a given PD hardware ID
    *  @param hardID The hardware ID for the PD
    *  @return The corresponding Level1 hardware ID
    */
-  const Rich::DAQ::Level1HardwareID level1HardwareID( const Rich::DAQ::HPDHardwareID hardID ) const;
+  const Rich::DAQ::Level1HardwareID level1HardwareID( const Rich::DAQ::HPDHardwareID& hardID ) const;
 
   /** Obtain the Level1 hardware ID number for a Level1 logical ID
    *  @param rich The RICH detector
@@ -169,37 +169,37 @@ public:
    *  @return The corresponding Level1 hardware ID
    */
   const Rich::DAQ::Level1HardwareID level1HardwareID( const Rich::DetectorType rich,
-                                                      const Rich::DAQ::Level1LogicalID logID ) const;
+                                                      const Rich::DAQ::Level1LogicalID& logID ) const;
 
   /** Obtain the Level1 logical ID number for a given PD RichSmartID
    *  @param smartID The RichSmartID for the PD
    *  @return The corresponding Level1 logical ID
    */
-  const Rich::DAQ::Level1LogicalID level1LogicalID( const LHCb::RichSmartID smartID ) const;
+  const Rich::DAQ::Level1LogicalID level1LogicalID( const LHCb::RichSmartID& smartID ) const;
 
   /** Obtain the Level1 logical ID number for a Level1 hardware ID
    *  @param hardID The hardware ID for the PD
    *  @return The corresponding PD Level1 logical ID
    */
-  const Rich::DAQ::Level1LogicalID level1LogicalID( const Rich::DAQ::Level1HardwareID hardID ) const;
+  const Rich::DAQ::Level1LogicalID level1LogicalID( const Rich::DAQ::Level1HardwareID& hardID ) const;
 
   /** Obtain the Level1 logical ID number for a Level1 hardware ID
    *  @param hardID The hardware ID for the PD
    *  @return The corresponding PD Level1 logical ID
    */
-  const Rich::DAQ::Level1CopyNumber copyNumber( const Rich::DAQ::Level1HardwareID hardID ) const;
+  const Rich::DAQ::Level1CopyNumber copyNumber( const Rich::DAQ::Level1HardwareID& hardID ) const;
 
   /** Obtain the Level1 input number for a given PD RichSmartID
    *  @param smartID The RichSmartID for the PD
    *  @return The corrresponding Level1 input number
    */
-  const Rich::DAQ::Level1Input level1InputNum( const LHCb::RichSmartID smartID ) const;
+  const Rich::DAQ::Level1Input level1InputNum( const LHCb::RichSmartID& smartID ) const;
 
   /** Obtain the Level1 input number for a given PD hardware ID
    *  @param hardID The hardware ID for the PD
    *  @return The corrresponding Level1 input number
    */
-  const Rich::DAQ::Level1Input level1InputNum( const Rich::DAQ::HPDHardwareID hardID ) const;
+  const Rich::DAQ::Level1Input level1InputNum( const Rich::DAQ::HPDHardwareID& hardID ) const;
 
   /** Access the PD hardware ID for the given L1 hardwareID and input number
    *  @param L1HardID L1 board hardware ID
@@ -207,26 +207,26 @@ public:
    *  @return PD hardware ID
    */
   const Rich::DAQ::HPDHardwareID
-  pdHardwareID( const Rich::DAQ::Level1HardwareID L1HardID,
-                const Rich::DAQ::Level1Input L1Input ) const;
+  pdHardwareID( const Rich::DAQ::Level1HardwareID& L1HardID,
+                const Rich::DAQ::Level1Input& L1Input ) const;
 
   /** Obtain a list of RichSmartID PD identifiers for a given level1 hardwareID
    *  @param l1ID The level1 ID number
    *  @return Vector of all PD RichSmartIDs for that Level1 board
    */
-  const LHCb::RichSmartID::Vector & l1PDSmartIDs( const Rich::DAQ::Level1HardwareID l1ID ) const;
+  const LHCb::RichSmartID::Vector & l1PDSmartIDs( const Rich::DAQ::Level1HardwareID& l1ID ) const;
 
   /** Obtain a list of PD hardware identifiers for a given level1 hardware ID
    *  @param l1ID The level1 ID number
    *  @return Vector of all PD hardware IDs for that Level1 board
    */
-  const Rich::DAQ::HPDHardwareIDs & l1PDHardIDs( const Rich::DAQ::Level1HardwareID l1ID ) const;
+  const Rich::DAQ::HPDHardwareIDs & l1PDHardIDs( const Rich::DAQ::Level1HardwareID& l1ID ) const;
 
   /** Reconst Rich::DAQ::PDHardwareIDturn which RICH detector a given Level1 hardware ID is for
    *  @param l1ID The Level 1 hardware ID
    *  @return The RICH detector
    */
-  Rich::DetectorType richDetector( const Rich::DAQ::Level1HardwareID l1ID ) const;
+  Rich::DetectorType richDetector( const Rich::DAQ::Level1HardwareID& l1ID ) const;
 
   /// Direct access to the mapping between Level1 IDs and PD RichSmartIDs
   const Rich::DAQ::L1ToSmartIDs & l1PDSmartIDs() const;
@@ -250,7 +250,7 @@ public:
    * loaded using the getDet<DeRichPD> method.
    * @return The location of the PD in the detector store
    */
-  std::string getDePDLocation( const LHCb::RichSmartID smartID ) const;
+  std::string getDePDLocation( const LHCb::RichSmartID& smartID ) const;
 
 public:
 
@@ -451,7 +451,7 @@ inline const Rich::DAQ::HPDHardwareIDs& DeRichSystem::allPDHardwareIDs() const
 //=========================================================================
 // pdIsActive
 //=========================================================================
-inline bool DeRichSystem::pdIsActive( const LHCb::RichSmartID id ) const
+inline bool DeRichSystem::pdIsActive( const LHCb::RichSmartID& id ) const
 {
   // is this id in the inactive list
   return ( m_inactivePDSmartIDs.empty() ||
@@ -463,7 +463,7 @@ inline bool DeRichSystem::pdIsActive( const LHCb::RichSmartID id ) const
 //=========================================================================
 // pdIsActive
 //=========================================================================
-inline bool DeRichSystem::pdIsActive( const Rich::DAQ::HPDHardwareID id ) const
+inline bool DeRichSystem::pdIsActive( const Rich::DAQ::HPDHardwareID& id ) const
 {
   // is this id in the inactive list
   return ( m_inactivePDHardIDs.empty() ||
