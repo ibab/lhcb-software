@@ -3,6 +3,8 @@
 ! Responsible : Marco CATTANEO
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
+
+!========================= DigiAlg v5r4 2015-09-23 =========================
 ! 2015-08-26 - Gerhard Raven
  - make fewer assumptions on types of LinkMgr iternals
 

@@ -3,7 +3,7 @@
 # Maintainer : Marco CATTANEO
 #=====================================================================
 package         DigiAlg
-version           v5r3
+version           v5r4
 
 branches        cmt doc src options
 include_path    none
