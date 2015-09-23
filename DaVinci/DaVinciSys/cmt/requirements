@@ -1,5 +1,5 @@
 package DaVinciSys
-version v37r2p3
+version v37r2p4
 
 branches doc cmt
 
@@ -8,7 +8,7 @@ branches doc cmt
 # When removed, do not forget to also remove from CMake file.
 
 use  DDDB               v1r80     Det
-use  TeslaTools         v1r14     Phys
+use  TeslaTools         v1r15     Phys
 use  HltDAQ             v4r20     Hlt
 use  LoKiCore           v11r26    Phys
 use  LoKiGen            v10r20    Phys
@@ -27,7 +27,7 @@ use  DaVinciTransporter v3r13     Phys
 use  EventPacker        v5r6      Event
 use  GaudiConf          v19r12
 use  JetAccessories     v3r14     Phys
-
+use  TisTosTobbing      v9r2      Phys
 
 # Temporarily moved in from Stripping, for S23 release
 # To be decided if longer term this stays in the DaVinci 
@@ -39,8 +39,8 @@ use StrippingCache   v1r2     Phys
 
 
 # Packages
-use  DaVinci         v37r2p3  Phys   # DaVinci coordinator
-use  DaVinciTests    v2r38
+use  DaVinci         v37r2p4  Phys   # DaVinci coordinator
+use  DaVinciTests    v2r39
 use  KaliCalo        v4r18    Phys   # Olivier Deschamps
 use  Tesla           v1r12    Phys   # Sean Benson
 

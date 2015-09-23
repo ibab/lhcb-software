@@ -3,6 +3,33 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v37r2p4>2015-09-23 DaVinci v37r2p4</A></H1><PRE>
+
+Patch release for Stripping 23, identical to v37r2p3 except that it depends on Stripping v9r11p1
+and contains the extra patched package Phys/TisTosTobbing v9r2.
+
+- Packages updated :
+  DaVinciTests v2r39, Phys/DaVinci v37r2p4.
+
+- Patched packages updated :
+  . Phys/TeslaTools v1r15.
+
+- In DaVinciTests v2r39 :
+  . Added Stripping 23r1 tests.
+  . Disabled LoKi python functors in all stripping tests, to check C++ caches.
+
+- In Phys/DaVinci v37r2p4 :
+  . Patch release for Stripping 23c.
+
+- In Phys/TeslaTools v1r15 :
+  . Modified TurboMonitor in order to allow a custom name for the histograms.
+
+- In Phys/TisTosTobbing v9r2 :
+  . Fixed memory leak caused by cloneAndMarkTree. Adopt method from FilterDesktop to save particles to TES.
+  . Added property to toggle between cloning filtered particles or the default of using shared selections.
+  . Calculate relatedPVs for cloned particles to propagate relatedPVs in case of previously refitted PVs.
+   . Removed #include of obsolete Gaudi headers.
+
 </PRE><H1><A NAME=v37r2p3>2015-09-11 DaVinci v37r2p3</A></H1><PRE>
 
 Patch release for Stripping 23, identical to v37r2p2 except that it depends on Stripping v9r11

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciSys
 ################################################################################
-gaudi_subdir(DaVinciSys v37r2p3)
+gaudi_subdir(DaVinciSys v37r2p4)
 
 gaudi_depends_on_subdirs(DaVinciTests
                          ##############################
@@ -26,6 +26,7 @@ gaudi_depends_on_subdirs(DaVinciTests
                          Event/EventPacker
                          GaudiConf
                          Phys/JetAccessories
+                         Phys/TisTosTobbing
                          ##############################
                          # Temporarily moved in from Stripping, for S23 release
                          Phys/StrippingCache
