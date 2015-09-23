@@ -269,6 +269,9 @@ if Fails:
   sys.exit(44)
 MakeTick(RunOption.OutputDirectory,RunOption.RunNumber)
 RunEnd =  (HLT2Params.RunStartTime+HLT2Params.RunDuration)*1000000000
+db_doneFile = open(RunOption.OutputDirectory+"/../CondDBXfer_done","w")
+db_doneFile.write(str(HLT2Params.RunStartTime)+" "+str(HLT2Params.RunDuration)+"\n")
+db_doneFile.close()
 print "Adding the RunTick to the Database"
 print "IoV is ["+str(RunStart)+","+str(RunEnd)+"]"+", ["+time.ctime(HLT2Params.RunStartTime)+","+time.ctime(RunEnd/1000000000)+"]"
 db = CondDBUI.CondDB(DBString, create_new_db = False, readOnly=False)
