@@ -15,7 +15,7 @@
 DECLARE_SERVICE_FACTORY(AdderSvc)
 
 namespace    {
-  void EORSaver(void *arg,void* /* b */ ,int bsiz, MonMap* /* m */, MonAdder *caller)
+  void EORSaver(void *arg, void* /* b */, int /* bsiz */, MonMap* /* m */, MonAdder* /* caller */)
   {
 //    fprintf(caller->logFile,"Buffer at %p Size %d Buffer End %p\n",b,bsiz,AddPtr(b,bsiz));
 //    fprintf(caller->logFile,"Map Dump at entry of file saving\n");
