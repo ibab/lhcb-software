@@ -238,7 +238,7 @@ richRecTracks().reserve(3);
                 access = "PUBLIC" 
                 def    = "Tracks" 
                 desc   = "Container type for RichRecTracks" 
-                type   = "LHCb::FastAllocVector&lt;LHCb::RichRecTrack*&gt;"
+                type   = "LHCb::MTAllocVector&lt;LHCb::RichRecTrack*&gt;"
         />
             
         <!--method 
@@ -277,7 +277,7 @@ richRecTracks().reserve(3);
                 access = "PUBLIC" 
                 def    = "Photons" 
                 desc   = "Container type for RichRecPhotons" 
-                type   = "LHCb::FastAllocVector&lt;LHCb::RichRecPhoton*&gt;"
+                type   = "LHCb::MTAllocVector&lt;LHCb::RichRecPhoton*&gt;"
         />
             
         <!--method 
@@ -316,7 +316,7 @@ richRecTracks().reserve(3);
                 access = "PUBLIC" 
                 def    = "RingsOnPixel" 
                 desc   = "Container type for RichRecRingOnPixel" 
-                type   = "LHCb::FastAllocVector&lt;LHCb::RichRecRingOnPixel&gt;"
+                type   = "LHCb::MTAllocVector&lt;LHCb::RichRecRingOnPixel&gt;"
         />
 
         <method 
