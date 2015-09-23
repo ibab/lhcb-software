@@ -86,41 +86,41 @@ PrChecker2::PrChecker2( const std::string& name,
   declareProperty( "NewTTTracks",       m_ttnewTracks     = LHCb::TrackLocation::VeloTT     );
   // declareProperty( "KShortTracks",      m_kshortTracks   = LHCb::TrackLocation::KsTrack    );
  
-  declareProperty( "WriteVeloHistos",    m_writeVeloHistos      = -1 );
-  declareProperty( "WriteForwardHistos", m_writeForwardHistos   = -1 );
-  declareProperty( "WriteMatchHistos",   m_writeMatchHistos     = -1 );
-  declareProperty( "WriteDownHistos",    m_writeDownHistos      = -1 );
-  declareProperty( "WriteUpHistos",      m_writeUpHistos        = -1 );
-  declareProperty( "WriteTTrackHistos",  m_writeTTrackHistos    = -1 );
-  declareProperty( "WriteBestHistos",    m_writeBestHistos      = -1 );
-  declareProperty( "WriteBestLongHistos",m_writeBestLongHistos  = -1 );
-  declareProperty( "WriteBestDownstreamHistos",    m_writeBestDownstreamHistos      = -1 );
-  declareProperty( "WriteNewHistos",     m_writeNewHistos   = -1 );
-  declareProperty( "WriteUTHistos",      m_writeUTHistos        = -1 );
-  declareProperty( "WriteTTForwardHistos", m_writeTTForwardHistos   = -1 );
-  declareProperty( "WriteTTMatchHistos", m_writeTTMatchHistos   = -1 );
-  declareProperty( "WriteTTDownstHistos", m_writeTTDownstHistos   = -1 );
-  declareProperty( "WriteTTNewHistos",   m_writeTTNewHistos   = -1 );
+  declareProperty( "WriteVeloHistos",           m_writeVeloHistos           = -1 );
+  declareProperty( "WriteForwardHistos",        m_writeForwardHistos        = -1 );
+  declareProperty( "WriteMatchHistos",          m_writeMatchHistos          = -1 );
+  declareProperty( "WriteDownHistos",           m_writeDownHistos           = -1 );
+  declareProperty( "WriteUpHistos",             m_writeUpHistos             = -1 );
+  declareProperty( "WriteTTrackHistos",         m_writeTTrackHistos         = -1 );
+  declareProperty( "WriteBestHistos",           m_writeBestHistos           = -1 );
+  declareProperty( "WriteBestLongHistos",       m_writeBestLongHistos       = -1 );
+  declareProperty( "WriteBestDownstreamHistos", m_writeBestDownstreamHistos = -1 );
+  declareProperty( "WriteNewHistos",            m_writeNewHistos            = -1 );
+  declareProperty( "WriteUTHistos",             m_writeUTHistos             = -1 );
+  declareProperty( "WriteTTForwardHistos",      m_writeTTForwardHistos      = -1 );
+  declareProperty( "WriteTTMatchHistos",        m_writeTTMatchHistos        = -1 );
+  declareProperty( "WriteTTDownstHistos",       m_writeTTDownstHistos       = -1 );
+  declareProperty( "WriteTTNewHistos",          m_writeTTNewHistos          = -1 );
 
-  declareProperty( "SelectIdNewContainer",   m_selectIdNew          = 1    );
-  declareProperty( "SelectIdNewTTContainer", m_selectIdNewTT        = 1    );
+  declareProperty( "SelectIdNewContainer",      m_selectIdNew               = 1  );
+  declareProperty( "SelectIdNewTTContainer",    m_selectIdNewTT             = 1  );
    
-  declareProperty( "Eta25Cut",            m_eta25cut              = false    );
-  declareProperty( "TriggerNumbers",      m_triggerNumbers        = false    );
-  declareProperty( "VetoElectrons",       m_vetoElectrons         = true     );
-  declareProperty( "TrackExtrapolation",  m_trackextrapolation    = false     );
+  declareProperty( "Eta25Cut",                  m_eta25cut                  = false    );
+  declareProperty( "TriggerNumbers",            m_triggerNumbers            = false    );
+  declareProperty( "VetoElectrons",             m_vetoElectrons             = true     );
+  declareProperty( "TrackExtrapolation",        m_trackextrapolation        = false    );
 
-  declareProperty( "MyForwardCuts",         m_map_forward  = DefaultCutMap("Forward"));
-  declareProperty( "MyVeloCuts",            m_map_velo  = DefaultCutMap("Velo"));
-  declareProperty( "MyUpCuts",              m_map_up  = DefaultCutMap("Upstream"));
-  declareProperty( "MyTtrackCuts",          m_map_ttrack  = DefaultCutMap("Ttrack"));
-  declareProperty( "MyDownCuts",            m_map_down  = DefaultCutMap("Downstream"));
-  declareProperty( "MyNewCuts",             m_map_new  = DefaultCutMap("New"));
-  declareProperty( "MyTTForwardCuts",       m_map_ttforward  = DefaultCutMap("TTForward"));
-  declareProperty( "MyTTDownCuts",          m_map_ttdown  = DefaultCutMap("TTDownstream"));
-  declareProperty( "MyTTNewCuts",           m_map_ttnew  = DefaultCutMap("TTNew"));
+  declareProperty( "MyForwardCuts",             m_map_forward   = DefaultCutMap("Forward")     );
+  declareProperty( "MyVeloCuts",                m_map_velo      = DefaultCutMap("Velo")        );
+  declareProperty( "MyUpCuts",                  m_map_up        = DefaultCutMap("Upstream")    );
+  declareProperty( "MyTtrackCuts",              m_map_ttrack    = DefaultCutMap("Ttrack")      );
+  declareProperty( "MyDownCuts",                m_map_down      = DefaultCutMap("Downstream")  );
+  declareProperty( "MyNewCuts",                 m_map_new       = DefaultCutMap("New")         );
+  declareProperty( "MyTTForwardCuts",           m_map_ttforward = DefaultCutMap("TTForward")   );
+  declareProperty( "MyTTDownCuts",              m_map_ttdown    = DefaultCutMap("TTDownstream"));
+  declareProperty( "MyTTNewCuts",               m_map_ttnew     = DefaultCutMap("TTNew")       );
 
-  declareProperty( "Upgrade",           m_upgrade  = true);
+  declareProperty( "Upgrade",                   m_upgrade       = true);
 
 }
 //=============================================================================
@@ -170,7 +170,7 @@ StatusCode PrChecker2::initialize()
     m_map_ttnew.insert(std::pair<std::string,std::string>("long_fromB_P>3GeV_Pt>0.5GeV", "isLong & fromB & trigger"));
     m_map_ttnew.insert(std::pair<std::string,std::string>("TT_long_fromB_P>3GeV_Pt>0.5GeV","isLong & fromB & trigger & isTT"));
   }
-
+  
   m_velo = tool<IPrCounter>( "PrCounter2", "Velo", this );
   m_velo->setContainer( m_veloTracks );
   m_velo->setWriteHistos(m_writeVeloHistos);
@@ -186,7 +186,7 @@ StatusCode PrChecker2::initialize()
   for( auto pair : m_map_forward ){
     m_forward->addSelection( pair.first ,true);
   }
-    
+  
   m_match = tool<IPrCounter>( "PrCounter2", "Match", this );
   m_match->setContainer( m_matchTracks );
   m_match->setWriteHistos(m_writeMatchHistos);
@@ -194,7 +194,7 @@ StatusCode PrChecker2::initialize()
   for( auto pair : m_map_forward ){
     m_match->addSelection( pair.first ,true);
   }
- 
+  
   m_upTrack = tool<IPrCounter>( "PrCounter2", "Upstream", this );
   m_upTrack->setContainer( m_upTracks );
   m_upTrack->setWriteHistos(m_writeUpHistos);
@@ -202,7 +202,7 @@ StatusCode PrChecker2::initialize()
   for( auto pair : m_map_up ){
     m_upTrack->addSelection( pair.first ,true);
   }
- 
+  
   m_tTrack = tool<IPrCounter>( "PrCounter2", "TTrack", this );
   m_tTrack->setContainer( m_seedTracks );
   m_tTrack->setWriteHistos(m_writeTTrackHistos );
@@ -210,7 +210,7 @@ StatusCode PrChecker2::initialize()
   for( auto pair : m_map_ttrack ){
     m_tTrack->addSelection( pair.first ,true);
   }
- 
+  
   m_downTrack = tool<IPrCounter>( "PrCounter2", "Downstream", this );
   m_downTrack->setContainer( m_downTracks );
   m_downTrack->setWriteHistos(m_writeDownHistos );
@@ -235,7 +235,7 @@ StatusCode PrChecker2::initialize()
   for( auto pair : m_map_forward ){
     m_bestLong->addSelection( pair.first ,true);
   }
- 
+  
   m_bestDownstream = tool<IPrCounter>( "PrCounter2", "BestDown", this );
   m_bestDownstream->setContainer( m_bestTracks );
   m_bestDownstream->setWriteHistos(m_writeBestDownstreamHistos);
@@ -244,7 +244,7 @@ StatusCode PrChecker2::initialize()
   for( auto pair : m_map_down ){
     m_bestDownstream->addSelection( pair.first ,true);
   }
-    
+  
   m_new = tool<IPrCounter>( "PrCounter2", "New", this );
   m_new->setContainer( m_newTracks );
   m_new->setWriteHistos(m_writeNewHistos);
@@ -307,7 +307,7 @@ StatusCode PrChecker2::initialize()
     (*itC)->setUseEta25Cut(m_eta25cut);
     (*itC)->setTriggerNumbers(m_triggerNumbers);
     (*itC)->setTrackExtrapolation(m_trackextrapolation);
-   }
+  }
   
   for ( std::vector<IPrTTCounter*>::iterator itCt = m_allTTCounters.begin();
         m_allTTCounters.end() != itCt; ++itCt ) {
@@ -329,61 +329,80 @@ StatusCode PrChecker2::initialize()
   m_Cuts.insert( std::pair<std::string, std::vector<std::string>>( "TTNew", getMyCut( m_map_ttnew )) );
 
     
-  std::vector<std::string> cutAliases ={"isNotLong", "isLong",  "isVelo", "isNotVelo", "isDown", "isNotDown", "isUp", "isNotUp", "isTT", "isNotTT", "isSeed", "isNotSeed", "fromB", "fromKsFromB", "strange", "fromD", "isElectron", "isNotElectron", "BOrDMother" };
+  std::vector<std::string> cutAliases ={"isNotLong", 
+                                        "isLong",  
+                                        "isVelo", 
+                                        "isNotVelo", 
+                                        "isDown", 
+                                        "isNotDown", 
+                                        "isUp", 
+                                        "isNotUp", 
+                                        "isTT", 
+                                        "isNotTT", 
+                                        "isSeed", 
+                                        "isNotSeed", 
+                                        "fromB", 
+                                        "fromKsFromB", 
+                                        "strange", 
+                                        "fromD", 
+                                        "isElectron", 
+                                        "isNotElectron", 
+                                        "BOrDMother" };
+ 
   // -- initialize the LoKi cuts
   m_factory = tool<LoKi::IMCHybridFactory> ("LoKi::Hybrid::MCTool/MCHybridFactory:PUBLIC" , this ) ;
   if ( nullptr == m_factory ){ return Error ( "Could not locate IMCHybridFactory" ) ; } // RETURN
 
- 
-  
+  // -- convert all strings into functors
   for( auto pair : m_Cuts ){//loop over m_Cuts
 
     std::vector< addOtherCuts > dummy;
     std::vector< LoKi::Types::MCCut > vectortmp; //vector von LoKi cuts
     
     for( std::string cutString : pair.second ){//loop over 2nd element of Cuts = strings of cuts
-             
+      
       dummy.push_back( addOtherCuts() );
       
       for( std::string alias : cutAliases ){//loop over cutAliases
-	
-	std::size_t found = cutString.find( alias );
-	
-	if( found != std::string::npos ){//if found then
-	  
-	  dummy.back().addCut( isTrack(  m_lookuptable[alias]) );//other components are already filled //add this category of cuts to addOtherCuts()
-	  cutString.replace(found, alias.length(), "MCTRUE");//replace found at position found, with length of string to replace, replace it with string "" (Loki Cut)
-	}
-      }
-
+        
+        std::size_t found = cutString.find( alias );
+        
+        if( found != std::string::npos ){//if found then
           
-       if(m_vetoElectrons == true) {
-	std::string str2 ("isNotElectron");
-	dummy.back().addCut( isTrack( m_lookuptable[str2] ) );
-	std::size_t found = cutString.find(str2 );
-	if( found != std::string::npos ){
-	cutString.replace(found, str2.length(), "MCTRUE");
-	}}
+          dummy.back().addCut( isTrack(  m_lookuptable[alias]) );//other components are already filled //add this category of cuts to addOtherCuts()
+          cutString.replace(found, alias.length(), "MCTRUE");//replace found at position found, with length of string to replace, replace it with string "" (Loki Cut)
+        }
+      }
       
-
+      
+      if(m_vetoElectrons == true) {
+        std::string str2 ("isNotElectron");
+        dummy.back().addCut( isTrack( m_lookuptable[str2] ) );
+        std::size_t found = cutString.find(str2 );
+        if( found != std::string::npos ){
+          cutString.replace(found, str2.length(), "MCTRUE");
+        }
+      }
+      
+      
       //LoKi cuts: define aliases for better use
       if(m_eta25cut == true) cutString.append(" & eta25");
       std::string str3 ("eta25");
       std::size_t found = cutString.find( str3 );
       if( found != std::string::npos ){
-	cutString.replace(found, str3.length(), "(MCETA > 2.0) & (MCETA < 5.0)");
+        cutString.replace(found, str3.length(), "(MCETA > 2.0) & (MCETA < 5.0)");
       }
-
+      
       std::string str4 ("over5");
       found = cutString.find( str4 );
       if( found != std::string::npos ){
-	cutString.replace(found,  str4.length(), "(MCP > 5000)");
+        cutString.replace(found,  str4.length(), "(MCP > 5000)");
       }
-
+      
       std::string str5 ("trigger");
       found = cutString.find( str5 );
       if( found != std::string::npos ){
-	cutString.replace(found,  str5.length(), "(MCP>3000) & (MCPT>500)");
+        cutString.replace(found,  str5.length(), "(MCP>3000) & (MCPT>500)");
       }
       
       
@@ -392,33 +411,32 @@ StatusCode PrChecker2::initialize()
       vectortmp.push_back(tmp);
       if ( sc.isFailure() ){ return Error ( "Error from IMCHybridFactory",sc ) ; } // RETURN
     }
-         
+    
     //give those replaced cuts as input to LoKi and otherCuts
     m_LoKiCuts.insert( std::pair<std::string, std::vector<LoKi::Types::MCCut>>( pair.first, vectortmp ) );//give same names as in m_Cuts = 1st, LoKicuts = 2nd
     m_otherCuts.insert( std::pair<std::string, std::vector<addOtherCuts>>( pair.first, dummy ) );//give same names as in m_Cuts = 1st, othercuts = 2nd
-        
-
-    
     
   }
-  m_veloMCCuts = m_LoKiCuts["Velo"];
-  m_veloMCCuts2 = m_otherCuts["Velo"];
-  m_forwardMCCuts = m_LoKiCuts["Forward"];
-  m_forwardMCCuts2 = m_otherCuts["Forward"];
-  m_upstreamMCCuts = m_LoKiCuts["Upstream"];
-  m_upstreamMCCuts2 = m_otherCuts["Upstream"];
-  m_ttrackMCCuts = m_LoKiCuts["Ttrack"];
-  m_ttrackMCCuts2 = m_otherCuts["Ttrack"];
-  m_downstreamMCCuts = m_LoKiCuts["Downstream"];
-  m_downstreamMCCuts2 = m_otherCuts["Downstream"];
-  m_newMCCuts = m_LoKiCuts["New"];
-  m_newMCCuts2 = m_otherCuts["New"];
-  m_ttforwardMCCuts = m_LoKiCuts["TTForward"];
-  m_ttforwardMCCuts2 = m_otherCuts["TTForward"];
-  m_ttdownstreamMCCuts = m_LoKiCuts["TTDownstream"];
+
+  
+  m_veloMCCuts          = m_LoKiCuts["Velo"];
+  m_veloMCCuts2         = m_otherCuts["Velo"];
+  m_forwardMCCuts       = m_LoKiCuts["Forward"];
+  m_forwardMCCuts2      = m_otherCuts["Forward"];
+  m_upstreamMCCuts      = m_LoKiCuts["Upstream"];
+  m_upstreamMCCuts2     = m_otherCuts["Upstream"];
+  m_ttrackMCCuts        = m_LoKiCuts["Ttrack"];
+  m_ttrackMCCuts2       = m_otherCuts["Ttrack"];
+  m_downstreamMCCuts    = m_LoKiCuts["Downstream"];
+  m_downstreamMCCuts2   = m_otherCuts["Downstream"];
+  m_newMCCuts           = m_LoKiCuts["New"];
+  m_newMCCuts2          = m_otherCuts["New"];
+  m_ttforwardMCCuts     = m_LoKiCuts["TTForward"];
+  m_ttforwardMCCuts2    = m_otherCuts["TTForward"];
+  m_ttdownstreamMCCuts  = m_LoKiCuts["TTDownstream"];
   m_ttdownstreamMCCuts2 = m_otherCuts["TTDownstream"];
-  m_ttnewMCCuts = m_LoKiCuts["TTNew"];
-  m_ttnewMCCuts2 = m_otherCuts["TTNew"];
+  m_ttnewMCCuts         = m_LoKiCuts["TTNew"];
+  m_ttnewMCCuts2        = m_otherCuts["TTNew"];
   
   return StatusCode::SUCCESS;
   
@@ -456,20 +474,20 @@ StatusCode PrChecker2::execute() {
         }
       }
       if ( nbVisible > 4 )  
-	++nPrim;
+        ++nPrim;
     }
   }
- 
+  
   for ( std::vector<IPrCounter*>::iterator itC = m_allCounters.begin();
         m_allCounters.end() != itC; ++itC ) {
     (*itC)->initEvent(m_histoTool,nPrim);
   }
-
+  
   for ( std::vector<IPrTTCounter*>::iterator itCt = m_allTTCounters.begin();
         m_allTTCounters.end() != itCt; ++itCt ) {
     (*itCt)->initEvent(m_histoTool);
   }
-
+  
   //== Build a table (vector of vectors) of ids per MCParticle, indexed by MCParticle key.
   std::string hitLocation = "Pat/LHCbID";
   if(m_upgrade){
@@ -493,11 +511,9 @@ StatusCode PrChecker2::execute() {
   LHCb::MCParticles::const_iterator itP;
   for ( itP = mcParts->begin(); mcParts->end() != itP; ++itP ) {
     
-   LHCb::MCParticle* part = *itP;
+    LHCb::MCParticle* part = *itP;
     if ( 0 == trackInfo.fullInfo( part ) )   continue;
     if( msgLevel(MSG::VERBOSE) ) verbose() << "checking MCPart " << part->key() << endmsg;
-
-      
     
     // all ids associated to the mcparticle
     std::vector<LHCb::LHCbID> ids;    
@@ -514,7 +530,7 @@ StatusCode PrChecker2::execute() {
     if( msgLevel(MSG::VERBOSE) ) verbose() << "MCPart " << part->key() 
                                            << " has " << ids.size() << " LHCbIDs " <<endmsg;
     //////////////////////////////////////    
-
+    
     
     std::vector<bool> flags;
     //Velo cuts
@@ -522,7 +538,7 @@ StatusCode PrChecker2::execute() {
       flags.push_back( m_veloMCCuts[i](part) && m_veloMCCuts2[i](part, &trackInfo) );
     }
     m_velo->countAndPlot(m_histoTool,part,flags,ids,nPrim);
-            
+    
     // Forward cuts
     flags.clear();
     for(unsigned int i = 0; i < m_forwardMCCuts.size(); ++i){
@@ -532,14 +548,14 @@ StatusCode PrChecker2::execute() {
     m_match->countAndPlot(m_histoTool,part,flags,ids,nPrim);
     m_best->countAndPlot(m_histoTool,part,flags,ids,nPrim);
     m_bestLong->countAndPlot(m_histoTool,part,flags,ids,nPrim);
-           
+    
     // Upstream cuts
     flags.clear();
     for(unsigned int i = 0; i < m_upstreamMCCuts.size(); ++i){
       flags.push_back( m_upstreamMCCuts[i](part) && m_upstreamMCCuts2[i](part, &trackInfo) );
     }
     m_upTrack->countAndPlot(m_histoTool,part,flags,ids,nPrim);
-        
+    
     // Ttrack cuts
     flags.clear();
     for(unsigned int i = 0; i < m_ttrackMCCuts.size(); ++i){
@@ -549,7 +565,7 @@ StatusCode PrChecker2::execute() {
     
     //Downstream cuts
     flags.clear();
-        for(unsigned int i = 0; i < m_downstreamMCCuts.size(); ++i){
+    for(unsigned int i = 0; i < m_downstreamMCCuts.size(); ++i){
       flags.push_back( m_downstreamMCCuts[i](part) && m_downstreamMCCuts2[i](part, &trackInfo) );
     }
     m_downTrack->countAndPlot(m_histoTool,part,flags,ids,nPrim);
@@ -563,7 +579,7 @@ StatusCode PrChecker2::execute() {
     }
     m_new->countAndPlot(m_histoTool,part,flags,ids,nPrim);
     
-       
+    
     //TTForward cuts
     flags.clear();
     for(unsigned int i = 0; i < m_ttforwardMCCuts.size(); ++i){
@@ -579,7 +595,7 @@ StatusCode PrChecker2::execute() {
     }
     m_ttDownst->countAndPlot( m_histoTool, part, flags, ids );
     
-
+    
     //New cuts (for new TTtrack container)
     flags.clear();
     for(unsigned int i = 0; i < m_ttnewMCCuts.size(); ++i){
@@ -588,9 +604,9 @@ StatusCode PrChecker2::execute() {
     m_ttnew->countAndPlot(m_histoTool, part, flags, ids);
     
     
-   
+    
   }
-
+  
   return StatusCode::SUCCESS;
 }
 
@@ -607,10 +623,10 @@ StatusCode PrChecker2::finalize() {
   }
 
   for ( std::vector<IPrTTCounter*>::iterator itCt = m_allTTCounters.begin();
-	m_allTTCounters.end() != itCt; ++itCt ) {    
+        m_allTTCounters.end() != itCt; ++itCt ) {    
     (*itCt)->printStatistics();
   }
-
+  
   return GaudiHistoAlg::finalize();  // must be called after all other actions
 }
 

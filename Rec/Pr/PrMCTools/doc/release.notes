@@ -3,6 +3,10 @@
 ! Responsible : Michel De Cian
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
+
+! 2015-09-23 - Michel De Cian
+ - Fix identations in PrChecker2
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

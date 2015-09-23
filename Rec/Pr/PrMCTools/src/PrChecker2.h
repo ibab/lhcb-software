@@ -83,7 +83,7 @@ class IHistoTool ;
  */
 
 class EffCounter {
- public:
+public:
   EffCounter() {
     nEvt    = 0;
     total   = 0;
@@ -106,20 +106,21 @@ class EffCounter {
 
 
 class PrChecker2 : public GaudiHistoAlg {
- public:
+public:
+  
   /// Standard constructor
   PrChecker2( const std::string& name, ISvcLocator* pSvcLocator );
-
+  
   virtual ~PrChecker2( ); ///< Destructor
-
+  
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-
- protected:
-
-
- private:
+  
+protected:
+  
+  
+private:
 
   std::string m_veloTracks;
   std::string m_forwardTracks;
@@ -141,17 +142,17 @@ class PrChecker2 : public GaudiHistoAlg {
   IPrCounter* m_bestLong;
   IPrCounter* m_bestDownstream;
   IPrCounter* m_new;
-
+  
   IPrTTCounter* m_ttForward;
   IPrTTCounter* m_ttMatch;
   IPrTTCounter* m_ttDownst;
   IPrTTCounter* m_ttnew;
-
+  
   //IPrCounter* m_utForward;
   //IPrCounter* m_utMatch;
   //IPrCounter* m_utbestLong;
   //IPrCounter* m_utDownst;
-
+  
   int  m_writeVeloHistos;      
   int  m_writeForwardHistos;   
   int  m_writeMatchHistos;     
@@ -170,58 +171,58 @@ class PrChecker2 : public GaudiHistoAlg {
   
   int m_selectIdNew;
   int m_selectIdNewTT;
-
+  
   bool m_eta25cut;             
   bool m_triggerNumbers;
   bool m_vetoElectrons;
   bool m_trackextrapolation;
   
   bool m_upgrade;
-
+  
   enum recAs {
-      isLong = 1,
-      isNotLong = 2,
-      isDown = 3,
-      isNotDown = 4,
-      isUp = 5,
-      isNotUp = 6,
-      isVelo = 7,
-      isNotVelo = 8,
-      isTT = 9,
-      isNotTT = 10,
-      isSeed = 11,
-      isNotSeed = 12,
-      strange = 13,
-      fromB = 15,
-      fromD = 16,
-      fromKsFromB = 17,
-      isElectron = 18,
-      isNotElectron = 19,
-      BOrDMother = 20,
-      };
+    isLong = 1,
+    isNotLong = 2,
+    isDown = 3,
+    isNotDown = 4,
+    isUp = 5,
+    isNotUp = 6,
+    isVelo = 7,
+    isNotVelo = 8,
+    isTT = 9,
+    isNotTT = 10,
+    isSeed = 11,
+    isNotSeed = 12,
+    strange = 13,
+    fromB = 15,
+    fromD = 16,
+    fromKsFromB = 17,
+    isElectron = 18,
+    isNotElectron = 19,
+    BOrDMother = 20,
+  };
+  
+  std::map< std::string, recAs> m_lookuptable = {{"isLong",isLong},
+                                                 {"isNotLong",isNotLong},
+                                                 {"isDown",isDown}, 
+                                                 {"isNotDown",isNotDown},
+                                                 {"isUp",isUp}, 
+                                                 {"isNotUp",isNotUp},
+                                                 {"isVelo",isVelo},
+                                                 {"isNotVelo",isNotVelo}, 
+                                                 {"isTT",isTT},
+                                                 {"isNoTT",isNotTT},
+                                                 {"isSeed",isSeed}, 
+                                                 {"isNotSeed",isNotSeed}, 
+                                                 {"strange",strange},
+                                                 {"fromB",fromB},
+                                                 {"fromD",fromD},
+                                                 {"fromKsFromB",fromKsFromB},
+                                                 {"isElectron",isElectron},
+                                                 {"isNotElectron",isNotElectron},
+                                                 {"BOrDMother",BOrDMother}};
 
-     std::map< std::string, recAs> m_lookuptable = {{"isLong",isLong},
-						    {"isNotLong",isNotLong},
-						    {"isDown",isDown}, 
-						    {"isNotDown",isNotDown},
-						    {"isUp",isUp}, 
-						    {"isNotUp",isNotUp},
-						    {"isVelo",isVelo},
-						    {"isNotVelo",isNotVelo}, 
-						    {"isTT",isTT},
-						    {"isNoTT",isNotTT},
-						    {"isSeed",isSeed}, 
-						    {"isNotSeed",isNotSeed}, 
-						    {"strange",strange},
-						    {"fromB",fromB},
-						    {"fromD",fromD},
-						    {"fromKsFromB",fromKsFromB},
-						    {"isElectron",isElectron},
-						    {"isNotElectron",isNotElectron},
-						    {"BOrDMother",BOrDMother}};
 
-
-  //convert strings to normal cuts ==> called m_otherCuts (without LoKi Hybrid factory)
+  // convert strings to normal cuts ==> called m_otherCuts (without LoKi Hybrid factory)
   /** @class isTrack PrChecker2.h
   *  Predefined selection cuts: it converts strings to normal cuts, used by addOtherCuts
   */
@@ -231,7 +232,7 @@ class PrChecker2 : public GaudiHistoAlg {
     isTrack(const int kind) { 
       m_kind = kind;
     };
-    
+    /// Functor that checks if the MCParticle fulfills certain criteria, e.g. reco'ble as long track, B daughter, ...
     bool operator()(LHCb::MCParticle* mcp, MCTrackInfo* mcInfo) const {
       bool motherB       = false;
       bool motherD       = false;
@@ -249,54 +250,57 @@ class PrChecker2 : public GaudiHistoAlg {
       if(m_kind == isNotTT) return !mcInfo->hasTT( mcp );
       if(m_kind == isElectron) return abs( mcp->particleID().pid() ) == 11;
       if(m_kind == isNotElectron) return abs( mcp->particleID().pid() ) != 11;
-            
+      
       if ( 0 != mcp->originVertex() ) {
-	const LHCb::MCParticle* mother =  mcp->originVertex()->mother();
-	if ( 0 != mother ) {
-	  if ( 0 != mother->originVertex() ) {
-	    double rOrigin = mother->originVertex()->position().rho();
-	    if ( fabs( rOrigin ) < 5. ) {
-	      int pid = abs( mother->particleID().pid() );
-	      if ( 130 == pid ||    // K0L
-		   310 == pid ||    // K0S
-		   3122 == pid ||   // Lambda
-		   3222 == pid ||   // Sigma+
-		   3212 == pid ||   // Sigma0
-		   3112 == pid ||   // Sigma-
-		   3322 == pid ||   // Xsi0
-		   3312 == pid ||   // Xsi-
-		   3334 == pid      // Omega-
-		   ) {
-		if(m_kind == strange) return true;
-		
-	      }
-	      if ( 0 != mother->originVertex()->mother() ) {
-		if  ( 310 == pid &&
-		      2 == mcp->originVertex()->products().size()  &&
-		      mother->originVertex()->mother()->particleID().hasBottom() &&
-		      ( mother->originVertex()->mother()->particleID().isMeson() ||  
-			mother->originVertex()->mother()->particleID().isBaryon() )) {
-		  if(m_kind == fromKsFromB) return true;
-		}
-	      }
-	    }
-	  }
-	}
-	while( 0 != mother ) {
-	  if ( mother->particleID().hasBottom() && 
-	       ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() ) )   motherB = true;
-	  
-	  if ( mother->particleID().hasCharm() &&
-	       ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() ) )  motherD = true;
-	  
-	  mother = mother->originVertex()->mother();
-	 
-	}
-	if( m_kind == fromD && motherD == true)  return m_kind == fromD;
-	if( m_kind == fromB && motherB == true)  return m_kind == fromB;
-	
-	if(m_kind == BOrDMother && (motherD || motherB)  )  return m_kind == BOrDMother;
-	}
+        const LHCb::MCParticle* mother =  mcp->originVertex()->mother();
+        if ( 0 != mother ) {
+          if ( 0 != mother->originVertex() ) {
+            double rOrigin = mother->originVertex()->position().rho();
+            if ( fabs( rOrigin ) < 5. ) {
+              int pid = abs( mother->particleID().pid() );
+              // -- MCParticle is coming from a strang particle
+              if ( 130 == pid ||    // K0L
+                   310 == pid ||    // K0S
+                   3122 == pid ||   // Lambda
+                   3222 == pid ||   // Sigma+
+                   3212 == pid ||   // Sigma0
+                   3112 == pid ||   // Sigma-
+                   3322 == pid ||   // Xsi0
+                   3312 == pid ||   // Xsi-
+                   3334 == pid      // Omega-
+                   ) {
+                if(m_kind == strange) return true;
+                
+              }
+              // -- It's a Kshort from a b Hadron
+              if ( 0 != mother->originVertex()->mother() ) {
+                if  ( 310 == pid &&
+                      2 == mcp->originVertex()->products().size()  &&
+                      mother->originVertex()->mother()->particleID().hasBottom() &&
+                      ( mother->originVertex()->mother()->particleID().isMeson() ||  
+                        mother->originVertex()->mother()->particleID().isBaryon() )) {
+                  if(m_kind == fromKsFromB) return true;
+                }
+              }
+            }
+          }
+        }
+        // -- It's a daughter of a B or D hadron
+        while( 0 != mother ) {
+          if ( mother->particleID().hasBottom() && 
+               ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() ) )   motherB = true;
+          
+          if ( mother->particleID().hasCharm() &&
+               ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() ) )  motherD = true;
+          
+          mother = mother->originVertex()->mother();
+          
+        }
+        if( m_kind == fromD && motherD == true)  return m_kind == fromD;
+        if( m_kind == fromB && motherB == true)  return m_kind == fromB;
+        
+        if(m_kind == BOrDMother && (motherD || motherB)  )  return m_kind == BOrDMother;
+      }
       return false;
     }
     
@@ -305,25 +309,26 @@ class PrChecker2 : public GaudiHistoAlg {
   };
 
 
- /** @class addOtherCuts PrChecker2.h
- *  Class that adds selection cuts defined in isTrack to cuts
- */
+  /** @class addOtherCuts PrChecker2.h
+   *  Class that adds selection cuts defined in isTrack to cuts
+   */
   class addOtherCuts{
-  
+    
   public:
     void addCut(isTrack cat){ m_cuts.push_back(cat); }
     
+    /// Functor that evaluates all 'isTrack' cuts
     bool operator()(LHCb::MCParticle* mcp, MCTrackInfo* mcInfo){
       
       bool decision = true;
       
       for(unsigned int i = 0; i < m_cuts.size(); ++i){
-	decision = decision && m_cuts[i](mcp, mcInfo);
+        decision = decision && m_cuts[i](mcp, mcInfo);
       }
       
       return decision;
     }
-	
+    
   private:
     std::vector<isTrack> m_cuts;
     
@@ -339,82 +344,83 @@ class PrChecker2 : public GaudiHistoAlg {
   std::map <std::string,std::string> m_map_ttdown;
   std::map <std::string,std::string> m_map_new;
   std::map <std::string,std::string> m_map_ttnew;
- 
+  
   //default cuts for each container, if not other ones are specified in run python file, those are taken
   /** @brief Map filled  with default cuts for each container, first string is name of the cut, second one is cut (predefined from class isTrack or kinematical Loki Cuts)
    */
   std::map <std::string,std::string> DefaultCutMap( std::string name ){
     
-    std::map <std::string,std::string> map_velo = { {"01_velo" ,"isVelo "},//use numbers for right order of cuts
-						    {"02_long","isLong "},
-						    {"03_long>5GeV" ,"isLong & over5  " }, 
-						    {"04_long_strange" , "isLong & strange " },
-						    {"05_long_strange>5GeV","isLong & strange & over5 " },
-						    {"06_long_fromB" ,"isLong & fromB " },
-						    {"07_long_fromB>5GeV" , "isLong & fromB & over5 " }};
-    std::map <std::string,std::string> map_forward = {{"01_long","isLong "}, 
-						      {"02_long>5GeV","isLong & over5 " }, 
-						      {"03_long_strange","isLong & strange " },
-						      {"04_long_strange>5GeV","isLong & strange & over5 " },
-						      {"05_long_fromB","isLong & fromB " },
-						      {"06_long_fromB>5GeV","isLong & fromB & over5 " }};
-    std::map <std::string,std::string> map_up = { {"01_velo" ,"isVelo "},
-						  {"02_velo+UT" ,"isVelo & isTT "},
-						  {"03_velo+UT>5GeV" , "isVelo & isTT & over5 "},
-						  {"04_velo+notLong" ,"isNotLong & isVelo  "},
-						  {"05_velo+UT+notLong" ,"isNotLong & isVelo & isTT "},
-						  {"06_velo+UT+notLong>5GeV" ,"isNotLong & isVelo & isTT & over5 "},
-						  {"07_long" ,"isLong "},
-						  {"08_long>5GeV" ,"isLong & over5  "},
-						  {"09_long_fromB" ,"isLong & fromB "},
-						  {"10_long_fromB>5GeV" , "isLong & fromB & over5 "}};
-    std::map <std::string,std::string> map_ttrack = {{"01_hasT" ,"isSeed "},
-						     {"02_long" ,"isLong "},
-						     {"03_long>5GeV" ,"isLong & over5 "},
-						     { "04_long_fromB" ,"isLong & fromB "},
-						     {"05_long_fromB>5GeV" , "isLong & fromB & over5 "},
-						     {"06_UT+T_strange" , " strange & isDown "},
-						     {"07_UT+T_strange>5GeV" , " strange & isDown & over5"},
-						     {"08_noVelo+UT+T_strange" , " strange & isDown & isNotVelo"},
-						     {"09_noVelo+UT+T_strange>5GeV" , " strange & isDown & over5 & isNotVelo "},
-						     {"10_UT+T_SfromDB" , " strange & isDown & ( fromB | fromD ) "},
-						     {"11_UT+T_SfromDB>5GeV" , " strange & isDown & over5 & ( fromB | fromD )"},
-						     {"12_noVelo+UT+T_SfromDB>5GeV" , " strange & isDown & isNotVelo & over5 & ( fromB | fromD ) "}};
-    std::map <std::string,std::string> map_down = {{"01_UT+T" ,"isDown "},
-						   {"02_UT+T>5GeV" ,"isDown & over5"},
-						   {"03_UT+T_strange" , " strange & isDown"},
-						   {"04_UT+T_strange>5GeV" , " strange & isDown & over5 "},
-						   {"05_noVelo+UT+T_strange" , " strange & isDown & isNotVelo"},
-						   {"06_noVelo+UT+T_strange>5GeV" , " strange & isDown & over5 & isNotVelo "},
-						   {"07_UT+T_fromB" , "isDown & fromB "},
-						   {"08_UT+T_fromB>5GeV" , "isDown & fromB & over5 "},
-						   {"09_noVelo+UT+T_fromB" , "isDown & fromB & isNotVelo"},
-						   {"10_noVelo+UT+T_fromB>5GeV" , "isDown & fromB & over5 & isNotVelo"},
-						   {"11_UT+T_SfromDB" , " strange & isDown & ( fromB | fromD ) "},
-						   {"12_UT+T_SfromDB>5GeV" , " strange & isDown & over5 & ( fromB | fromD ) "},
-						   {"13_noVelo+UT+T_SfromDB" , " strange & isDown & isNotVelo & ( fromB | fromD )"},
-						   {"14_noVelo+UT+T_SfromDB>5GeV" , " strange & isDown & isNotVelo & over5 & ( fromB | fromD ) "}};
-    std::map <std::string,std::string> map_new = {};
-    std::map <std::string,std::string> map_ttforward = {{ "01_long" ,"isLong "},
-							{"02_long>5GeV" ,"isLong & over5  "}};
-    std::map <std::string,std::string> map_ttdown = {{"01_has seed" ,"isSeed "},
-						     {"02_has seed +noVelo, T+TT" ,"isSeed & isNotVelo & isDown "},
-						     {"03_down+strange" , " strange & isDown"},
-						     {"04_down+strange+>5GeV" , " strange & isDown & over5 "}, 
-						     {"05_pi<-Ks<-B" , "fromKsFromB "},
-						     {"06_pi<-Ks<-B+> 5 GeV" , "fromKsFromB & over5 "}};
-    std::map <std::string,std::string> map_ttnew = {};
-    std::map <std::string,std::string> empty_map = {{},{}};
+    std::map <std::string,std::string> map_velo      = { {"01_velo" ,"isVelo "},//use numbers for right order of cuts
+                                                         {"02_long","isLong "},
+                                                         {"03_long>5GeV" ,"isLong & over5  " }, 
+                                                         {"04_long_strange" , "isLong & strange " },
+                                                         {"05_long_strange>5GeV","isLong & strange & over5 " },
+                                                         {"06_long_fromB" ,"isLong & fromB " },
+                                                         {"07_long_fromB>5GeV" , "isLong & fromB & over5 " } };
+    std::map <std::string,std::string> map_forward   = { {"01_long","isLong "}, 
+                                                         {"02_long>5GeV","isLong & over5 " }, 
+                                                         {"03_long_strange","isLong & strange " },
+                                                         {"04_long_strange>5GeV","isLong & strange & over5 " },
+                                                         {"05_long_fromB","isLong & fromB " },
+                                                         {"06_long_fromB>5GeV","isLong & fromB & over5 " } };
+    std::map <std::string,std::string> map_up        = { {"01_velo" ,"isVelo "},
+                                                         {"02_velo+UT" ,"isVelo & isTT "},
+                                                         {"03_velo+UT>5GeV" , "isVelo & isTT & over5 "},
+                                                         {"04_velo+notLong" ,"isNotLong & isVelo  "},
+                                                         {"05_velo+UT+notLong" ,"isNotLong & isVelo & isTT "},
+                                                         {"06_velo+UT+notLong>5GeV" ,"isNotLong & isVelo & isTT & over5 "},
+                                                         {"07_long" ,"isLong "},
+                                                         {"08_long>5GeV" ,"isLong & over5  "},
+                                                         {"09_long_fromB" ,"isLong & fromB "},
+                                                         {"10_long_fromB>5GeV" , "isLong & fromB & over5 "} };
+    std::map <std::string,std::string> map_ttrack    = { {"01_hasT" ,"isSeed "},
+                                                         {"02_long" ,"isLong "},
+                                                         {"03_long>5GeV" ,"isLong & over5 "},
+                                                         { "04_long_fromB" ,"isLong & fromB "},
+                                                         {"05_long_fromB>5GeV" , "isLong & fromB & over5 "},
+                                                         {"06_UT+T_strange" , " strange & isDown "},
+                                                         {"07_UT+T_strange>5GeV" , " strange & isDown & over5"},
+                                                         {"08_noVelo+UT+T_strange" , " strange & isDown & isNotVelo"},
+                                                         {"09_noVelo+UT+T_strange>5GeV" , " strange & isDown & over5 & isNotVelo "},
+                                                         {"10_UT+T_SfromDB" , " strange & isDown & ( fromB | fromD ) "},
+                                                         {"11_UT+T_SfromDB>5GeV" , " strange & isDown & over5 & ( fromB | fromD )"},
+                                                         {"12_noVelo+UT+T_SfromDB>5GeV" , " strange & isDown & isNotVelo & over5 & ( fromB | fromD ) "} };
+    std::map <std::string,std::string> map_down      = { {"01_UT+T" ,"isDown "},
+                                                         {"02_UT+T>5GeV" ,"isDown & over5"},
+                                                         {"03_UT+T_strange" , " strange & isDown"},
+                                                         {"04_UT+T_strange>5GeV" , " strange & isDown & over5 "},
+                                                         {"05_noVelo+UT+T_strange" , " strange & isDown & isNotVelo"},
+                                                         {"06_noVelo+UT+T_strange>5GeV" , " strange & isDown & over5 & isNotVelo "},
+                                                         {"07_UT+T_fromB" , "isDown & fromB "},
+                                                         {"08_UT+T_fromB>5GeV" , "isDown & fromB & over5 "},
+                                                         {"09_noVelo+UT+T_fromB" , "isDown & fromB & isNotVelo"},
+                                                         {"10_noVelo+UT+T_fromB>5GeV" , "isDown & fromB & over5 & isNotVelo"},
+                                                         {"11_UT+T_SfromDB" , " strange & isDown & ( fromB | fromD ) "},
+                                                         {"12_UT+T_SfromDB>5GeV" , " strange & isDown & over5 & ( fromB | fromD ) "},
+                                                         {"13_noVelo+UT+T_SfromDB" , " strange & isDown & isNotVelo & ( fromB | fromD )"},
+                                                         {"14_noVelo+UT+T_SfromDB>5GeV" , " strange & isDown & isNotVelo & over5 & ( fromB | fromD ) "} };
 
-    if( name == "Forward" ) return map_forward;
-    if( name == "Velo" ) return map_velo;
-    if( name == "Upstream" ) return map_up;
-    if( name == "Ttrack" ) return map_ttrack;
-    if( name == "Downstream" ) return map_down;
-    if( name == "New" ) return map_new;
-    if( name == "TTForward" ) return map_ttforward;
+    std::map <std::string,std::string> map_new       = { };
+    std::map <std::string,std::string> map_ttforward = { { "01_long" ,"isLong "},
+                                                         {"02_long>5GeV" ,"isLong & over5  "} };
+    std::map <std::string,std::string> map_ttdown    = { {"01_has seed" ,"isSeed "},
+                                                         {"02_has seed +noVelo, T+TT" ,"isSeed & isNotVelo & isDown "},
+                                                         {"03_down+strange" , " strange & isDown"},
+                                                         {"04_down+strange+>5GeV" , " strange & isDown & over5 "}, 
+                                                         {"05_pi<-Ks<-B" , "fromKsFromB "},
+                                                         {"06_pi<-Ks<-B+> 5 GeV" , "fromKsFromB & over5 "} };
+    std::map <std::string,std::string> map_ttnew     = { };
+    std::map <std::string,std::string> empty_map     = { {},{} };
+
+    if( name == "Forward"      ) return map_forward;
+    if( name == "Velo"         ) return map_velo;
+    if( name == "Upstream"     ) return map_up;
+    if( name == "Ttrack"       ) return map_ttrack;
+    if( name == "Downstream"   ) return map_down;
+    if( name == "New"          ) return map_new;
+    if( name == "TTForward"    ) return map_ttforward;
     if( name == "TTDownstream" ) return map_ttdown;
-    if( name == "TTNew" ) return map_ttnew;
+    if( name == "TTNew"        ) return map_ttnew;
    
     return empty_map;
 
@@ -433,35 +439,36 @@ class PrChecker2 : public GaudiHistoAlg {
 
 
   //== Vector of the counters
-  std::vector<IPrCounter*> m_allCounters;///<Vector of PrCounter
+  std::vector<IPrCounter*>   m_allCounters;///<Vector of PrCounter
   std::vector<IPrTTCounter*> m_allTTCounters;///<Vector of PrTTCounter
   
-  const IHistoTool* m_histoTool;
+  const IHistoTool*       m_histoTool;
   LoKi::IMCHybridFactory* m_factory;///<needed to convert normal cuts into Loki cuts
-  //maps for cuts
-  std::map< std::string, std::vector <std::string> >  m_Cuts;///<map of track container name and corresponding cuts
+
+  // maps for cuts
+  std::map< std::string, std::vector <std::string> >          m_Cuts;///<map of track container name and corresponding cuts
   
   std::map < std::string, std::vector < LoKi::Types::MCCut> > m_LoKiCuts;///<converted map of Loki cuts, first component is name of track container
-  std::map < std::string, std::vector <addOtherCuts> > m_otherCuts;///<map of other cuts as predefined in isTrack, first component is name of track container 
+  std::map < std::string, std::vector <addOtherCuts> >        m_otherCuts;///<map of other cuts as predefined in isTrack, first component is name of track container 
   
   std::vector<LoKi::Types::MCCut> m_veloMCCuts; 
-  std::vector<addOtherCuts> m_veloMCCuts2; 
+  std::vector<addOtherCuts>       m_veloMCCuts2; 
   std::vector<LoKi::Types::MCCut> m_forwardMCCuts;
-  std::vector<addOtherCuts> m_forwardMCCuts2; 
+  std::vector<addOtherCuts>       m_forwardMCCuts2; 
   std::vector<LoKi::Types::MCCut> m_upstreamMCCuts; 
-  std::vector<addOtherCuts> m_upstreamMCCuts2;
+  std::vector<addOtherCuts>       m_upstreamMCCuts2;
   std::vector<LoKi::Types::MCCut> m_ttrackMCCuts;
-  std::vector<addOtherCuts> m_ttrackMCCuts2;
+  std::vector<addOtherCuts>       m_ttrackMCCuts2;
   std::vector<LoKi::Types::MCCut> m_downstreamMCCuts;
-  std::vector<addOtherCuts> m_downstreamMCCuts2;
+  std::vector<addOtherCuts>       m_downstreamMCCuts2;
   std::vector<LoKi::Types::MCCut> m_newMCCuts;
-  std::vector<addOtherCuts> m_newMCCuts2;
+  std::vector<addOtherCuts>       m_newMCCuts2;
   std::vector<LoKi::Types::MCCut> m_ttforwardMCCuts;
-  std::vector<addOtherCuts> m_ttforwardMCCuts2;
+  std::vector<addOtherCuts>       m_ttforwardMCCuts2;
   std::vector<LoKi::Types::MCCut> m_ttdownstreamMCCuts;
-  std::vector<addOtherCuts> m_ttdownstreamMCCuts2;
+  std::vector<addOtherCuts>       m_ttdownstreamMCCuts2;
   std::vector<LoKi::Types::MCCut> m_ttnewMCCuts;
-  std::vector<addOtherCuts> m_ttnewMCCuts2;
+  std::vector<addOtherCuts>       m_ttnewMCCuts2;
 
 
 };
