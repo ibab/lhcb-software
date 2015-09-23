@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
+
+!========================= RichDigiQC v3r15 2015-09-23 =========================
 ! 2015-08-26 - Gerhard Raven
  - make sure that the choice of HPD with maximum (minimum) occupency does not
    depend on the order of iteration over the HPDs

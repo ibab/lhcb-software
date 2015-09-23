@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichDigiQC
 ################################################################################
-gaudi_subdir(RichDigiQC v3r14)
+gaudi_subdir(RichDigiQC v3r15)
 
 gaudi_depends_on_subdirs(Det/RichDet
                          Event/DAQEvent

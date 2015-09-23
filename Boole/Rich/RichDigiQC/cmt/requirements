@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           RichDigiQC
-version           v3r14
+version           v3r15
 
 # Structure, i.e. directories to process. 
 #============================================================================
