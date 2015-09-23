@@ -1823,12 +1823,11 @@ RawDataFormatTool::decodeToSmartIDs( const RawEventLocations & taeLocations,
 LHCb::RawEvent * RawDataFormatTool::rawEvent() const
 {
   LHCb::RawEvent *& raw = m_rawEvent[m_currentTAE];
-  if (!raw)
+  if ( UNLIKELY(!raw) )
   {
     for ( const auto& p : m_rawEventLocations )
     {
-      const std::string loc = m_currentTAE + p;
-      raw = getIfExists<LHCb::RawEvent>(loc);
+      raw = getIfExists<LHCb::RawEvent>( m_currentTAE + p );
       if ( raw ) { break; }
     }
     if ( !raw )
@@ -1846,7 +1845,7 @@ const Rich::DAQ::L1Map & RawDataFormatTool::dummyMap() const
   {
     // create an ingressmap for each L1 board
     Rich::DAQ::IngressMap ingressMap;
-    for ( unsigned int input = 0; input<Rich::DAQ::NumIngressPerL1; ++input )
+    for ( unsigned int input = 0; input < Rich::DAQ::NumIngressPerL1; ++input )
     {
       L1IngressHeader header;
       header.setIngressID( L1IngressID(input) );

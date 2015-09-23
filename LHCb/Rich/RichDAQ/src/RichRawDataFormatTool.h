@@ -45,6 +45,8 @@
 
 // RichKernel
 #include "RichKernel/RichMap.h"
+#include "RichKernel/RichPoolMap.h"
+#include "RichKernel/RichHashMap.h"
 
 // Event model
 #include "Event/RawEvent.h"
@@ -166,10 +168,10 @@ namespace Rich
       };
 
       /// Summary data per L1 board
-      typedef Rich::Map< const L1IDandV, L1CountAndSize > L1TypeCount;
+      typedef Rich::PoolMap< const L1IDandV, L1CountAndSize > L1TypeCount;
 
       /// Summary for each TAE location
-      typedef Rich::Map< const std::string, L1TypeCount > L1TypeCountTAE;
+      typedef Rich::HashMap< const std::string, L1TypeCount > L1TypeCountTAE;
 
     private: // methods
 
@@ -291,10 +293,10 @@ namespace Rich
       const DeRichSystem * m_richSys;
 
       /// Pointer to Raw Event
-      mutable Rich::Map< const std::string, LHCb::RawEvent * > m_rawEvent;
+      mutable Rich::HashMap< const std::string, LHCb::RawEvent * > m_rawEvent;
 
       /// Pointer to ODIN
-      mutable Rich::Map< const std::string, LHCb::ODIN * > m_odin;
+      mutable Rich::HashMap< const std::string, LHCb::ODIN * > m_odin;
 
       /// Current TAE type
       mutable std::string m_currentTAE;
