@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-23 - Andrea Contu
+ - Fix to D24h lines and moving of KShh from Charm to CharmCompleteEvent
+
 ! 2015-09-22 - Andrea Contu
  - Fix to __init__.py in S23r1 and removal of imports from StrippingSelections
 
