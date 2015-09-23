@@ -1148,7 +1148,7 @@ DstarD2KSHHPi0 = {
         "TrChi2": 3, 
         "TrGhostProb": 0.5
     }, 
-    "STREAMS": [ "CharmCompleteEvent" ], 
+    "STREAMS": [ "Charm" ], 
     "WGs": [ "Charm" ]
 }
 
@@ -1207,7 +1207,7 @@ DstarD2KShh = {
         "wideDMassCut_PPDD": 150.0, 
         "wideDMassCut_PPLL": 120.0
     }, 
-    "STREAMS": [ "Charm" ], 
+    "STREAMS": [ "CharmCompleteEvent" ], 
     "WGs": [ "Charm" ]
 }
 

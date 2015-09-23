@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-23 - Andrea Contu
+ - Fix to previous commit and new dbase for s23r1
+
 ! 2015-09-23 - Ricardo Vazquez Gomez
  - add the dbase
 
