@@ -3,7 +3,6 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
-!========================= MuonID v9r18 2015-09-23 =========================
 ! 2015-09-16 - Kevin Dungs
  - Remove container for pad sizes in CommonMuonTool. The pad sizes are obtained from the hit via dx and dy. That way it is ensured, that uncrossed hits are associated with the correct pad sizes.
 
