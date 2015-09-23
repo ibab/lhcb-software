@@ -10,9 +10,13 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/Online/RootCnv)
 endif()
 
 # Declare project name and version
-# Syntax:
-#    gaudi_project(this_project this_version
-#                  USE dep_project_1 version_1 [project_2 version_2 ...]
-#                  [DATA pkg1 [VERSION vers1] [pkg2 ...])
-gaudi_project(LHCbDevNightly HEAD
-              USE LHCb HEAD)
+gaudi_project(LHCb v39r0
+              USE Gaudi v26r3
+              DATA Gen/DecFiles
+                   Det/SQLDDDB VERSION v7r*
+                   FieldMap
+                   ParamFiles
+                   PRConfig
+                   RawEventFormat
+                   TCK/HltTCK
+		   TCK/L0TCK VERSION v4r*)
