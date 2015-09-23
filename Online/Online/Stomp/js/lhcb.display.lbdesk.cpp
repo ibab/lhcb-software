@@ -61,6 +61,8 @@ LbDesktop = new Ext.app.App({
          ,new LbDesktop.Collimators()
          ,new LbDesktop.BCM()
          ,new LbDesktop.Magnet()
+         ,new LbDesktop.AlarmScreen()
+         ,new LbDesktop.EvDisp()
          ,new LbDesktop.LHCStatus()
          ,new LbDesktop.LHC()
          ,new LbDesktop.ELog()
@@ -136,6 +138,8 @@ LbDesktop.Magnet      = Ext.extend(desktop.URLModule, {init: function(){this._la
 LbDesktop.Collimators = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.collimators);}});
 LbDesktop.BCM         = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.bcm); }});
 LbDesktop.ELog        = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.elog); }});
+LbDesktop.EvDisp      = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.eventDisplay); }});
+LbDesktop.AlarmScreen = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.alarmScreen); }});
 LbDesktop.LHCStatus   = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.lhc_status); }});
 LbDesktop.LHC         = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhc.project); }});
 LbDesktop.CERN        = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.cern);}});

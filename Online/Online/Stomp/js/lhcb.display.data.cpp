@@ -212,7 +212,7 @@ var DataItem = function(provider, name)   {
     return this._elem;
   };
   
-  /// Default callback for dataprovider on feeeding data
+  /// Default callback for dataprovider on feeding data
   this.set = function(data) {
     this.element().innerHTML = data;
   };

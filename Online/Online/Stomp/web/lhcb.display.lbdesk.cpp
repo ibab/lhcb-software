@@ -1,2 +1,305 @@
-eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('m 5=7.5;m k=7.k;m 2C=e(){3.6o=10;3.6n=10;3.6m=10;3.Z=\'6l\';m 2D=1v.6k.6j();m 15=2D.1t(\'?\');16(15.1p>1){m 6i=\'\';m p=15[1].1t(\'&\');3.M=p;2p(m i=0;i<p.1p;++i){m v=p[i].1t(\'=\');3[v[0]]=v[1]}3.6h=15[0]}};b=n h.1q.6g({M:n 2C(),j:e(){h.6f.j()},6e:e(){I{6d:\'6c\',6b:\'6a\',69:68,67:{2y:2,2x:\'66 65\',2w:\'1s/1r/20/2B-2A/2z/2B-2A.2z\'},64:{2y:4,2x:\'63\',62:\'1s/1r/2v/61/2u-2t.12\',2w:\'1s/1r/2v/2u-2t.12\'},5Z:\'5Y\'}},5X:e(){I[n b.1h(),n b.2a(),n b.2e(),n b.2d(),n b.2c(),n b.2b(),n b.28(),n b.29(),n b.26(),n b.25(),n b.27(),n b.23(),n b.F(),n b.24(),n b.22(),n b.21(),n b.1P(),n b.1K(),n b.1B(),n b.1A(),n b.1H(),n h.1q.2n(),n h.1q.2m()]},2q:e(2s){16(2s==\'5W\')5V.5U.5T()},2h:e(5S){h.5R.5Q(\'5P\',\'5O 2r 5N <5M>2r 5L 5K 1E 2j?\',3.2q)},5J:e(){m 1o=3.5I;2p(m i=0,2o=1o.1p;i<2o;i++){m l=1o[i].S;m t=l.2k;(!(t==\'2n\'||t==\'2m\'))?3.S.5H(l):3.S.2l(l)}3.S.5G();3.S.2l({2k:\'5F\',2f:\'2j\',2g:3,5E:{5D:\'2i 5C 2i 5B\'},5A:3.2h,2g:3})},5z:e(){I{5y:5x,5w:5v,5u:\'11 5t\',2f:\'5s\',5r:[]}},5q:e(){I 3.5p(3.M.Z)},5o:e(M){I 3.5n(M,3.M.Z)}});b.1h=h.q(k.z,{j:e(){3.o(5.d.7.5m)}});b.2e=h.q(k.z,{j:e(){3.o(5.d.7.5l)}});b.2d=h.q(k.z,{j:e(){3.o(5.d.7.5k)}});b.2c=h.q(k.z,{j:e(){3.o(5.d.7.5j)}});b.2b=h.q(k.z,{j:e(){3.o(5.d.7.5i)}});b.2a=h.q(k.z,{j:e(){3.o(5.d.7.5h)}});b.29=h.q(k.z,{j:e(){3.o(5.d.7.5g)}});b.28=h.q(k.z,{j:e(){3.o(5.d.7.5f)}});b.27=h.q(k.z,{j:e(){3.o(5.d.7.5e)}});b.26=h.q(k.z,{j:e(){3.o(5.d.7.5d)}});b.25=h.q(k.z,{j:e(){3.o(5.d.7.5c)}});b.24=h.q(k.z,{j:e(){3.o(5.d.7.5b)}});b.23=h.q(k.z,{j:e(){3.o(5.d.7.5a)}});b.F=h.q(k.z,{j:e(){3.o(5.d.G.1m)}});b.1C=h.q(k.z,{j:e(){3.o(5.d.f)}});b.22=h.q(k.z,{j:e(){3.o(5.d.7.1L)}});b.21=h.q(k.H,{j:e(){m R=\'O://9.59.58/57/56/f/41/6/17/55-54.12\';m 1i=\'O://1k-1j.r.f.g/53/1k-1j.r.f.g/20/52/51/4Z/4Y.4X\';m w=[3.c(\'F 1U\',\'//K-13.r.f.g/K-13/1T/?1S=60\',B,8).a(5.9.G),3.c(\'F 1e\',5.A(\'4W\'),y,D).a(5.9.G),3.c(\'F 1n 1\',5.A(\'4V\'),y,D).a(5.9.G),3.c(\'F 1n 2\',5.A(\'4U\'),y,D).a(5.9.G),3.c(\'F 4T\',5.A(\'4S\'),y,D).a(5.9.G),3.c(\'F 4R\',5.A(\'4Q\'),y,4P).a(5.9.G),3.c(\'F 1Q 4O\',5.A(\'4N\'),y,8).a(5.9.G),3.c(\'F 4M\',5.A(\'4L\'),L,B).a(5.9.G),3.c(\'4K\',5.A(\'4J\'),E,8),3.c(\'4I\',5.A(\'4H\'),E,8),3.c(\'1Z\',5.A(\'1Z\'),L,D),3.c(\'1Y\',5.A(\'1Y\'),L,D),3.c(\'1X\',5.A(\'1X\'),L,D),3.c(\'4G\',5.A(\'4F\'),L,D),3.c(\'14 1n 1\',5.A(\'4E\'),E,8).a({J:R}),3.c(\'14 19 4D\',\'//4C.r.f.g/4B/4A/4z-4y-4x\',L,8).a({J:R}),3.c(\'14 1e\',\'//1W-Y-K-1V.r.f.g/1W-Y-K-1V\',E,8).a({J:R}),3.c(\'14 1U\',\'//K-13.r.f.g/K-13/1T/?1S=50\',B,8).a({J:R}),3.c(\'4w 4v\',\'//4u.f.g/4t-Y\',E,8),3.c(\'4s 1R\',\'//1l-1m.r.f.g/1l-1m\',y,D).a({J:\'//f.g/1l/9/4r-4q.12\'}),3.c(\'4p 1R\',\'//1k-1j.r.f.g\',y,D).a({J:1i}),3.c(\'4o\',\'//4n.r.f.g\',4m,D).a({J:1i})];3.o(\'1Q&4l;4k\',5.9.4j,w)}});b.1P=h.q(k.H,{j:e(){m w=[3.s(5.d.7.1I).a(5.9.7,u,8),3.c(\'1O 1h (4i 4h)\',\'//4g.f.g/4f/7-4e-4d/4c.4b\',B,8),3.c(\'1O 1M\',\'//4a.f.g/1N?49=1N\',B,8),3.c(\'48 1M\',\'//47.f.g\',B,8),3.c(\'46\',\'//45.f.g\',B,8),3.c(\'44 43\',\'//7.r.f.g/7/r-42.40\',B,8),3.s(5.d.7.V).a(5.9.V).a(5.9.7,u,8),3.s(5.d.7.3Z).a(5.9.7,u,8),3.s(5.d.7.3Y).a(5.9.7,u,8),3.s(5.d.7.1L).a(5.9.7,u,8),3.s(5.d.7.3X).a(5.9.1f),3.s(5.d.7.3W).a(5.9.1f)];3.o(\'11 T\',5.9.7,w)}});b.1K=h.q(k.H,{j:e(){m w=[3.s(5.d.7.C.3V).a(5.9.7,u,8),3.s(5.d.7.C.3U).a(5.9.7,u,8),3.s(5.d.7.C.3T).a(5.9.7,u,8),3.s(5.d.7.3S).a(5.9.7,u,8),3.s(5.d.7.C.3R).a(5.9.7,u,8),3.s(5.d.7.C.1J).a(5.9.7,u,8),3.s(5.d.7.C.1J.3Q).a(5.9.7,u,8),3.s(5.d.7.C.3P).a(5.9.7,u,8),3.s(5.d.7.C.3O).a(5.9.7,u,8),3.s(5.d.7.C.3N).a(5.9.7,u,8),3.s(5.d.7.C.3M).a(5.9.7,u,8),3.s(5.d.7.C.3L).a(5.9.7,u,8),3.s(5.d.7.C.3K).a(5.9.7,u,8),3.s(5.d.7.C.3J).a(5.9.7,u,8)];3.o(\'11 3I\',5.9.7,w)}});b.3H=h.q(k.H,{j:e(){m w=[3.s(5.d.7.1g.1I).a(5.9.1g)];3.o(\'11 3G\',5.9.1g,w)}});b.1H=h.q(k.H,{j:e(){m w=[3.c(\'3F\',5.1G(10),B,8),3.c(\'3E\',5.1G(\'/3D\'),B,8).a(5.9.3C),3.c(\'3B 3A 3z\',\'//r-1F.r.f.g/r-1F/3y-1z/3x.3w?3v=3u&3t=3s&3r=3q&Z=3p&3o=3n\',B,8).a(5.9.3m),3.c(\'3l 3k\',5.3j(\'3i.1E\'),y,8).a(5.9.1f),3.c(\'3h\',\'//1D.f.g/1D#\',y,8),3.c(\'3g\',\'//3f.f.g\',y,8),3.c(\'3e\',\'//3d.r.f.g\',y,8),3.c(\'3c 3b\',\'//3a-Y.r.f.g/39/38\',y,8)];3.o(\'1C\',5.9.f,w)}});b.1B=h.q(k.H,{j:e(){m w=[3.c(\'Q X\',\'//f.g/W\',E,8).a(5.9.P),3.c(\'Q X 18\',\'//W.r.f.g/1d/18\',y,8).a(5.9.P),3.c(\'Q X 1e\',\'//W.r.f.g/1d/37\',y,8).a(5.9.P),3.c(\'Q X 36\',\'//W.r.f.g/1d/35\',y,8).a(5.9.P)];3.o(\'Q T\',5.9.P,w)}});b.1A=h.q(k.H,{j:e(){m w=[3.c(\'U 19\',\'//1c.r.f.g/1y/34\',E,8).a(5.9.1c),3.c(\'U 33\',\'//V.f.g/V/1z/32/1y/31\',E,8),3.c(\'U 30 1u\',\'//1x.r.f.g/1x\',E,8)];3.o(\'U T\',5.9.1c,w)}});b.2Z=h.q(k.H,{1b:e(1a){I\'O://2Y.f.g/2X/1b/1b.2W?1a=\'+1a},j:e(){m w=[3.c(\'1w 19\',\'O://N.r.f.g\',E,8).a(5.9.N),3.c(\'2V 2U\',\'O://N.r.f.g/2T/N-2S-2R\',B,8),3.c(\'2Q 0 18\',\'//2P.f.g/2O\',B,8)];3.o(\'1w T\',5.9.N,w)}});m 2N=e(){m p=1v.2M(\'x-2L\');I p};16(2K)2J(\'2I 7.1u.2H.2G 2F 2E\');',62,397,'|||this||constants||lhcb|700|images|makeIcon|LbDesktop|menuItem|urls|function|cern|ch|Ext||init|desktop||var|new|_launch||extend|web|menuURL||1300||items||1100|URLModule|operations_url|1000|subdetectors|870|900|LHC|lhc|URLMenuModule|return|icon|op|1150|params|cms|http|alice|ALICE|sps_icon|launcher|Experiment|ATLAS|twiki|alicedcs|DCS|dep|config|null|LHCb|jpg|webtools|SPS|pars|if||Status|Home|channel|cmstv|atlas|AliceDCS|Operation|database|dirac|News|clic_icon|study|clic|linac4|project|Page|ms|length|app|resources|ExtJs|split|display|document|CMS|atlantis|Atlas|bin|ATLASMenuModule|ALICEMenuModule|CERN|phonebook|do|statistics|mmm_url|CERNMenuModule|home_page|velo|LHCbSDetModule|weekly_meetings|DB|rundb|Run|LHCbMenuModule|Beam|Project|lgbkID|eLogbook|logbook|sps|ab|GPS|HRS|PSB|themes|BeamMenuModule|LHCbMeetings|LHCStatus|ELog|BCM|Collimators|Magnet|Operator|DetStatus|Page1|SDETStatus|FESTStatus|HLT2Status|LHCbStatus|iconCls|scope|createLogoutWindow|3px|logout|text|addTool|About|Preferences|len|for|handleLogout|you|btn|swirl|blue|wallpapers|pathtofile|name|id|css|vistablack|xtheme|Params|url|successfully|loaded|cpp|lbdesk|Script|alert|_debugLoading|shortcuts|getElementById|defineShortcuts|T0Mon|cmsweb|Tier|data|public|content|Data|Public|jsp|cmscc|cmsdoc|CMSMenuModule|Event|AtlasComputing|view|Computing|Collaboration|monitoring|Monitoring|DCSoperation|ShuttleService|en|gs|service|Shuttle|library|Library|maps|Maps|Phonebook|sls|service_now_url|Portal|Service|webstats|index|framename|frankm|main|output|2010|year|all|month|pl|awstats|cgi|stats|site|Web|mail|exchange|Mail|MMM|Dirac|DiracMenuModule|Subdetectors|dq|cooling|muon|calo|rich|ot|st|motion|trg_l0status|alarmScreen|daq_trigger|daq_lumi|daq_evdisp|online_databases_status|offline_databases_status|computing_home_page|online_home_page|htm||cam|Webcam|Pit|lbshiftdb|Shifts|lbproblems|Problem|destination|lbrundb|aspx|default|news|run|group|groups|login|requires|beams_department|Operations|amp|1200|clicdp|CLICdp|CLIC|Linacresized|Logo|Linac4|be|espace|department|Beams|synchrotron|proton|super|accelerators|about|home|page|SPS1|LHCfExperiment|LHCf|LIN|Linac|LEIR|Leir|LHCDASHBOARD|Dashboard|LHCBDS|Dump|920|LHCEXPMAG|Magnets|LHCCONFIG|Configuration|LHC2|LHC1|LHC3|png|CLIClogo|logos||img|cliccern|sites|01|cernsps3_6|ccr|objects|org|iop|lhc_status|elog|bcm|collimators|magnet|operstatus|detstatus|page1|sdet_run_status|fest_run_status|lhcb2_run_status|lhcb_run_status|display_news|savePreferencesWithCookie|savePreferences|loadPreferencesWithCookie|initPreferences|toolItems|user|Desktop|title|600|height|350|width|getStartConfig|handler|28px|1px|padding|style|Logout|addToolSeparator|add|modules|getStartItemsConfig|to|want|br|sure|Are|Confirm|confirm|MessageBox|src|back|history|window|yes|getModules|tile|wallpaperposition||thumbnails|pathtothumbnail|Swirl|wallpaper|Black|Vista|theme|100|transparency|FFFFFF|fontcolor|575757|backgroundcolor|getStyles|QuickTips|App|url_base|disp_func|toString|location|session|body|header|type'.split('|'),0,{}))
-;
+var constants = lhcb.constants;
+var desktop   = lhcb.desktop;
+
+var Params = function()   {
+  this.type = null;
+  this.header = null;
+  this.body = null;
+  this.config = 'session';
+  var url = document.location.toString();
+  var pars = url.split('?');
+  if ( pars.length > 1 )  {
+    var disp_func = '';
+    var p = pars[1].split('&');
+    this.params = p;
+    for (var i=0; i<p.length; ++i) {
+      var v = p[i].split('=');
+      this[v[0]] = v[1];
+    }
+    this.url_base = pars[0];
+  }
+};
+
+
+// Sample desktop configuration
+LbDesktop = new Ext.app.App({
+  params: new Params(),
+
+  init:   function(){
+    Ext.QuickTips.init();
+  },
+
+  getStyles: function() {
+    return   {
+        backgroundcolor: '575757',
+        fontcolor: 'FFFFFF',
+        transparency: 100,
+        theme: {
+            id: 2,
+            name: 'Vista Black',
+            pathtofile: 'ExtJs/resources/themes/xtheme-vistablack/css/xtheme-vistablack.css'
+        },
+        wallpaper: {
+            id: 4,
+            name: 'Swirl',
+            pathtothumbnail:	'ExtJs/resources/wallpapers/thumbnails/blue-swirl.jpg', 
+	    pathtofile:		'ExtJs/resources/wallpapers/blue-swirl.jpg'
+        },
+        wallpaperposition: 'tile'
+     };
+  },
+  getModules : function()     {
+    return [ 
+         new LbDesktop.News()
+	 ,new LbDesktop.Page1()
+         ,new LbDesktop.LHCbStatus()
+         ,new LbDesktop.HLT2Status()
+         ,new LbDesktop.FESTStatus()
+         ,new LbDesktop.SDETStatus()
+         ,new LbDesktop.Operator()
+         ,new LbDesktop.DetStatus()
+         ,new LbDesktop.Collimators()
+         ,new LbDesktop.BCM()
+         ,new LbDesktop.Magnet()
+         ,new LbDesktop.AlarmScreen()
+         ,new LbDesktop.EvDisp()
+         ,new LbDesktop.LHCStatus()
+         ,new LbDesktop.LHC()
+         ,new LbDesktop.ELog()
+         ,new LbDesktop.LHCbMeetings()
+         //,new LbDesktop.CERN()
+         ,new LbDesktop.BeamMenuModule()
+         ,new LbDesktop.LHCbMenuModule()
+	 ,new LbDesktop.LHCbSDetModule()
+         //,new LbDesktop.DiracMenuModule()
+         ,new LbDesktop.ALICEMenuModule()
+         ,new LbDesktop.ATLASMenuModule()
+         //,new LbDesktop.CMSMenuModule()
+         ,new LbDesktop.CERNMenuModule()
+	 ,new Ext.app.Preferences()
+	 ,new Ext.app.About()
+    ];
+  },
+
+  handleLogout: function(btn){
+     if ( btn == 'yes' ) window.history.back();
+  },
+  createLogoutWindow: function(src) {
+    Ext.MessageBox.confirm('Confirm', 'Are you sure <br>you want to do logout?', this.handleLogout);
+  },
+
+  getStartItemsConfig: function() {
+    var ms = this.modules;
+    for(var i = 0, len = ms.length; i < len; i++) {
+      var l = ms[i].launcher;
+      var t = l.text;
+      ( !(t == 'Preferences' || t=='About') ) ? this.launcher.add(l) : this.launcher.addTool(l);
+    }
+    this.launcher.addToolSeparator();
+    this.launcher.addTool({
+          text:     'Logout'
+          ,iconCls: 'logout'
+          ,scope:    this
+          ,style:   {padding: '3px 1px 3px 28px'}
+          ,handler:  this.createLogoutWindow
+          ,scope:    this
+		       });
+  },
+
+  // config for the start menu
+  getStartConfig : function() {
+    return {
+      width:  350,
+      height: 600,
+      title: 'LHCb Desktop',
+      iconCls: 'user',
+      toolItems: []
+    };
+  },
+
+  initPreferences: function() {
+    return this.loadPreferencesWithCookie(this.params.config);
+  },
+
+  savePreferences : function(params) {
+    return this.savePreferencesWithCookie(params,this.params.config);
+  }
+});
+
+LbDesktop.News        = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.display_news);}});
+LbDesktop.LHCbStatus  = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.lhcb_run_status);}});
+LbDesktop.HLT2Status  = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.lhcb2_run_status);}});
+LbDesktop.FESTStatus  = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.fest_run_status);}});
+LbDesktop.SDETStatus  = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.sdet_run_status);}});
+LbDesktop.Page1       = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.page1);}});
+LbDesktop.DetStatus   = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.detstatus);}});
+LbDesktop.Operator    = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.operstatus);}});
+LbDesktop.Magnet      = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.magnet);}});
+LbDesktop.Collimators = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.collimators);}});
+LbDesktop.BCM         = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.bcm); }});
+LbDesktop.ELog        = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.elog); }});
+LbDesktop.EvDisp      = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.eventDisplay); }});
+LbDesktop.AlarmScreen = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.alarmScreen); }});
+LbDesktop.LHCStatus   = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.lhc_status); }});
+LbDesktop.LHC         = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhc.project); }});
+LbDesktop.CERN        = Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.cern);}});
+LbDesktop.LHCbMeetings= Ext.extend(desktop.URLModule, {init: function(){this._launch(constants.urls.lhcb.weekly_meetings); }});
+
+LbDesktop.BeamMenuModule = Ext.extend(desktop.URLMenuModule, {
+  init : function()  { 
+      var sps_icon = 'http://images.iop.org/objects/ccr/cern/41/6/17/cernsps3_6-01.jpg';
+      var clic_icon = 'http://clic-study.web.cern.ch/sites/clic-study.web.cern.ch/themes/cliccern/img/logos/CLIClogo.png';
+      var items = 
+	[ this.menuItem('LHC logbook',       '//op-webtools.web.cern.ch/op-webtools/eLogbook/?lgbkID=60',1000,700).makeIcon(constants.images.lhc)
+	  ,this.menuItem('LHC Operation',     constants.operations_url('LHC3'),          1100,870).makeIcon(constants.images.lhc)
+	  ,this.menuItem('LHC Page 1',        constants.operations_url('LHC1'),          1100,870).makeIcon(constants.images.lhc)
+	  ,this.menuItem('LHC Page 2',        constants.operations_url('LHC2'),          1100,870).makeIcon(constants.images.lhc)
+	  ,this.menuItem('LHC Configuration', constants.operations_url('LHCCONFIG'),     1100,870).makeIcon(constants.images.lhc)
+	  ,this.menuItem('LHC Magnets',       constants.operations_url('LHCEXPMAG'),     1100,920).makeIcon(constants.images.lhc)
+	  ,this.menuItem('LHC Beam Dump',     constants.operations_url('LHCBDS'),        1100,700).makeIcon(constants.images.lhc)
+	  ,this.menuItem('LHC Dashboard',     constants.operations_url('LHCDASHBOARD'),  1150,1000).makeIcon(constants.images.lhc) 
+	  ,this.menuItem('Leir',              constants.operations_url('LEIR'),          900,700)
+	  ,this.menuItem('Linac',             constants.operations_url('LIN'),           900,700)
+	  ,this.menuItem('PSB',               constants.operations_url('PSB'),           1150,870)
+	  ,this.menuItem('HRS',               constants.operations_url('HRS'),           1150,870)
+	  ,this.menuItem('GPS',               constants.operations_url('GPS'),           1150,870)
+	  ,this.menuItem('LHCf',              constants.operations_url('LHCfExperiment'),1150,870)
+
+	  ,this.menuItem('SPS Page 1',        constants.operations_url('SPS1'),          900,700).makeIcon({icon:sps_icon})
+	  ,this.menuItem('SPS Home page',     '//home.web.cern.ch/about/accelerators/super-proton-synchrotron', 1150,700).makeIcon({icon:sps_icon})
+	  ,this.menuItem('SPS Operation',     '//ab-dep-op-sps.web.cern.ch/ab-dep-op-sps', 900,700).makeIcon({icon:sps_icon})
+	  ,this.menuItem('SPS logbook',       '//op-webtools.web.cern.ch/op-webtools/eLogbook/?lgbkID=50',1000,700).makeIcon({icon:sps_icon})
+	  ,this.menuItem('Beams department',  '//espace.cern.ch/be-dep',900,700)
+	  ,this.menuItem('Linac4 Project',    '//linac4-project.web.cern.ch/linac4-project',1100,870).makeIcon({icon:'//cern.ch/linac4/images/Logo-Linacresized.jpg'})
+	  ,this.menuItem('CLIC Project',      '//clic-study.web.cern.ch',1100,870).makeIcon({icon:clic_icon})
+	  ,this.menuItem('CLICdp',            '//clicdp.web.cern.ch',1200,870).makeIcon({icon:clic_icon})
+	  ];
+    this._launch('Beam&amp;Operations',constants.images.beams_department,items);
+  }
+});
+
+LbDesktop.LHCbMenuModule = Ext.extend(desktop.URLMenuModule, {
+  init: function(){
+    var items = 
+      [ this.menuURL(constants.urls.lhcb.home_page).makeIcon(constants.images.lhcb,1300,700)
+      ,this.menuItem('Run News (requires login)', '//groups.cern.ch/group/lhcb-run-news/default.aspx',1000,700)
+      ,this.menuItem('Run DB',                    '//lbrundb.cern.ch/rundb?destination=rundb',1000,700)
+      ,this.menuItem('Problem DB',                '//lbproblems.cern.ch',1000,700)
+      ,this.menuItem('Shifts',                    '//lbshiftdb.cern.ch',1000,700)
+      ,this.menuItem('Pit Webcam',                '//lhcb.web.cern.ch/lhcb/web-cam.htm',1000,700)
+      ,this.menuURL(constants.urls.lhcb.twiki).makeIcon(constants.images.twiki).makeIcon(constants.images.lhcb,1300,700)
+      ,this.menuURL(constants.urls.lhcb.online_home_page).makeIcon(constants.images.lhcb,1300,700)
+      ,this.menuURL(constants.urls.lhcb.computing_home_page).makeIcon(constants.images.lhcb,1300,700)
+      ,this.menuURL(constants.urls.lhcb.weekly_meetings).makeIcon(constants.images.lhcb,1300,700)
+      ,this.menuURL(constants.urls.lhcb.offline_databases_status).makeIcon(constants.images.database)
+      ,this.menuURL(constants.urls.lhcb.online_databases_status).makeIcon(constants.images.database)
+     ];
+    this._launch('LHCb Experiment',constants.images.lhcb,items);
+  }
+});
+
+LbDesktop.LHCbSDetModule = Ext.extend(desktop.URLMenuModule, {
+  init: function(){
+    var items = 
+    [ 
+     this.menuURL(constants.urls.lhcb.subdetectors.daq_evdisp).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.daq_lumi).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.daq_trigger).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.alarmScreen).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.trg_l0status).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.velo).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.velo.motion).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.st).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.ot).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.rich).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.calo).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.muon).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.cooling).makeIcon(constants.images.lhcb,1300,700)
+     ,this.menuURL(constants.urls.lhcb.subdetectors.dq).makeIcon(constants.images.lhcb,1300,700)
+     ];
+    this._launch('LHCb Subdetectors',constants.images.lhcb,items);
+  }
+});
+
+LbDesktop.DiracMenuModule = Ext.extend(desktop.URLMenuModule, {
+  init: function(){
+    var items = 
+    [
+     this.menuURL(constants.urls.lhcb.dirac.home_page).makeIcon(constants.images.dirac)
+     //,this.menuURL(constants.urls.lhcb.dirac.launch_pad)
+     ];
+    this._launch('LHCb Dirac',constants.images.dirac,items);
+  }
+});
+
+LbDesktop.CERNMenuModule = Ext.extend(desktop.URLMenuModule, {
+  init: function(){
+    var items=[//this.menuItem('Home Page',        constants.mmm_url(null),1000,700).makeIcon(constants.images.cern)
+                this.menuItem('MMM',               constants.mmm_url(null),1000,700)
+               ,this.menuItem('Mail',              constants.mmm_url('/exchange'),1000,700).makeIcon(constants.images.mail)
+               ,this.menuItem('Web site stats',    '//web-statistics.web.cern.ch/web-statistics/cgi-bin/awstats.pl?month=all&year=2010&output=main&config=frankm&framename=index',1000,700).makeIcon(constants.images.webstats)
+               ,this.menuItem('Service Portal',    constants.service_now_url('sls.do'), 1100,700).makeIcon(constants.images.database)
+               ,this.menuItem('Phonebook',         '//phonebook.cern.ch/phonebook#',1100,700)
+               ,this.menuItem('Maps',              '//maps.cern.ch',1100,700)
+               ,this.menuItem('Library',           '//library.web.cern.ch', 1100,700)
+               ,this.menuItem('Shuttle service',   '//gs-dep.web.cern.ch/en/ShuttleService', 1100,700)
+    ];
+    this._launch('CERN',constants.images.cern,items);
+  }
+});
+
+LbDesktop.ALICEMenuModule = Ext.extend(desktop.URLMenuModule, {
+  init: function() {
+      var items=[//this.menuItem('ALICE Home','http://alice.cern.ch',900,700).makeIcon(constants.images.alice)
+		 this.menuItem('ALICE DCS','//cern.ch/alicedcs',900,700).makeIcon(constants.images.alice)
+		 ,this.menuItem('ALICE DCS Status',    '//alicedcs.web.cern.ch/AliceDCS/Status',1100,700).makeIcon(constants.images.alice)
+		 ,this.menuItem('ALICE DCS Operation', '//alicedcs.web.cern.ch/AliceDCS/DCSoperation',1100,700).makeIcon(constants.images.alice)
+		 ,this.menuItem('ALICE DCS Monitoring','//alicedcs.web.cern.ch/AliceDCS/monitoring',1100,700).makeIcon(constants.images.alice)
+    ];
+    this._launch('ALICE Experiment',constants.images.alice,items);
+  }
+});
+
+
+LbDesktop.ATLASMenuModule = Ext.extend(desktop.URLMenuModule, {
+  init: function(){
+    var items=[this.menuItem('ATLAS Home','//atlas.web.cern.ch/Atlas/Collaboration',900,700).makeIcon(constants.images.atlas),
+               this.menuItem('ATLAS Computing','//twiki.cern.ch/twiki/bin/view/Atlas/AtlasComputing',900,700),
+               this.menuItem('ATLAS Event display','//atlantis.web.cern.ch/atlantis',900,700)
+    ];
+    this._launch('ATLAS Experiment',constants.images.atlas,items);
+  }
+});
+
+LbDesktop.CMSMenuModule = Ext.extend(desktop.URLMenuModule, {
+  cmstv: function(channel) { return 'http://cmsdoc.cern.ch/cmscc/cmstv/cmstv.jsp?channel='+channel; },
+  init: function()  {
+    var items=[this.menuItem('CMS Home','http://cms.web.cern.ch',900,700).makeIcon(constants.images.cms)
+              ,this.menuItem('Public Data',  'http://cms.web.cern.ch/content/cms-public-data',1000,700)
+	       //,this.menuItem('Event Display (2008)', this.cmstv(5),1000,700)
+	       //,this.menuItem('Event Display (2009)', this.cmstv(6),1000,700)
+	       //,this.menuItem('Event Display (2010)', this.cmstv(7),1000,700)
+	       //,this.menuItem('Event Display (Sim)',  this.cmstv(8),1000,700)
+              ,this.menuItem('Tier 0 Status',    '//cmsweb.cern.ch/T0Mon',1000,700)
+    ];
+    this._launch('CMS Experiment',constants.images.cms,items);
+  }
+});
+
+var defineShortcuts = function() {
+  var p = document.getElementById('x-shortcuts');
+  /*
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.lhcb_run_status));
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.fest_run_status));
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.page1));
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.detstatus));
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.magnet));
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.lhc_status));
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.elog));
+  p.appendChild(desktop.shortcut(constants.urls.lhc.project));
+  p.appendChild(desktop.shortcut(constants.urls.lhcb.weekly_meetings));
+  */
+  return p;
+};
+
+if ( _debugLoading ) alert('Script lhcb.display.lbdesk.cpp loaded successfully');

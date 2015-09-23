@@ -1,2 +1,233 @@
-eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('2H(\'12.I.D.1F\');2H(\'4h.4g\');2G(\'12.I.4f\',\'2F\');2G(\'12.I.1G\',\'2F\');e 1N=p(S){9=c.q(\'9\');9.r=c.q(\'1w\');9.D=J 4e();9.1O=S;9.Q=t;9.13=t;9.1A=15.0;9.1B=30.0;9.11=p(){e j=c.q(\'j\');e Z=c.q(\'Z\');j.d(Z);4.r.d(j);C Z};9.2E=\'2D\';9.r.2E=\'2D\';9.r.4d=0;9.r.4c=0;9.2t=9.11();9.2r=9.11();9.I=9.11();9.1l=9.11();9.d(9.r);9.U=p(H){y(H>4.1B)4.B.1f=\'4b\';14 y(H>4.1A)4.B.1f=\'4a\';14 4.B.1f=\'#49\';C 9.a(H)};9.a=p(H){e v=48(H);y(H>47.0){C 2C(\'%7.3f 46/h\',v/45.0)}C 2C(\'%7.3f &1z;1y/h\',v)};9.g=p(b){C\'<19 1a="44" F="\'+b+\'1x"><w><E 1a="1t">\'+b+\'</E></w><w F="\'+b+\'2B"></E></w><w F="\'+b+\'P"></w></19>\'};9.1k=p(){43(e i=0;i<4.D.42;++i){e 1E=4.D[i];4.Q.1k(1E.b,1E)}};9.k=p(b,1C,1D,2z){4[b+\'1j\']=1s(\'1r.1q/T/K/\'+b+\'.41\',\'1n\',t);c.x(b+\'2B\').d(4[b+\'1j\']);4.D.1o(4[b+\'1j\']);4[b+\'P\']=1s(\'1r.1q/T/K/\'+b+\'.40\',\'1m\',t);c.x(b+\'P\').d(4[b+\'P\']);4.D.1o(4[b+\'P\']);y(1D){4[b+\'P\'].2A=1D}y(1C){4[b+\'1j\'].2A=1C}y(2z){1p.V(c.x(b+\'1x\'),\'16 2y \'+b+\':<1i>2x 1h 1g:\'+4.1B+\' &1z;1y/h<1i>2w 1h 1g:\'+4.1A+\' &1z;1y/h\')}14{1p.V(c.x(b+\'1x\'),\'16 2y \'+b+\':<1i>2x 1h 1g: 2v V<1i>2w 1h 1g: 2v V\')}};9.1H=p(){e n,Z,j;e 5=2u()?0:G;e 6=2u()?0:10;e z=c.q(\'9\');e A=c.q(\'1w\');z.O=A.O=\'2s%\';j=c.q(\'j\');j.d(n=L(3Z(),t,t));j.d(n=L(\'K T 16 1M\',t,\'3Y\'));j.d(n=L(\'\',1,\'1R\'));n.F=\'1Q\';A.d(j);z.d(A);4.2t.d(z);z=c.q(\'9\');A=c.q(\'1w\');z.O=A.O=\'2s%\';n=c.q(\'n\');n.F=\'2p\';n.B.1f=\'#3X\';n.B.3W=1;n.B.3V=\'29\';n.B.O=\'3U\';n.B.3T=\'3S\';4.2r.d(n);n.1P=\'<2q 3R="\'+3Q+\'/3P/K/3O.3N" O="3M"></2q>\';4.8=J 3L(\'2p\');4.8.2g(3);4.8.1v(\'2k\');4.8.l(2o+6,Y+5,3K+6,1e+5);4.8.l(R+6,2m+5,1c+6,3J+5);4.8.l(2o+6,X+5,1e+6,2j+5);4.8.l(3I+6,Y+5,3H+6,2l+5);4.8.l(2n+6,Y+5,2n+6,1e+5);4.8.l(N+6,2m+5,2h+6,2l+5);4.8.1v(\'3G\');4.8.l(2f+6,Y+5,1b+6,R+5);4.8.1v(\'2k\');4.8.l(3F+6,Y+5,1b+6,2j+5);4.8.l(2i+6,1e+5,3E+6,N+5);4.8.l(2i+6,X+5,3D+6,3C+5);4.8.l(3B+6,1u+5,1b+6,3A+5);4.8.l(1d+6,1u+5,3z+6,W+5);4.8.l(1d+6,X+5,2h+6,2d+5);4.8.l(1d+6,N+5,X+6,3y+5);4.8.l(1c+6,X+5,1c+6,1d+5);4.8.2g(1);4.8.f(4.g(\'26\'),3x+6,G+5);4.8.f(4.g(\'20\'),R+6,G+5);4.8.f(4.g(\'24\'),3w+6,2b+5);4.8.f(4.g(\'3v\'),G+6,W+5);4.8.f(4.g(\'25\'),R+6,W+5);4.8.f(4.g(\'23\'),2e+6,W+5);4.8.f(4.g(\'22\'),2f+6,2a+5);4.8.f(4.g(\'21\'),N+6,2c+5);4.8.f(4.g(\'1Z\'),N+6,W+5);4.8.f(4.g(\'1Y\'),2e+6,1c+5);4.8.f(4.g(\'1X\'),2d+6,G+5);4.8.f(4.g(\'1W\'),2c+6,2b+5);4.8.f(4.g(\'1V\'),N+6,2a+5);4.8.f(4.g(\'1U\'),3u+6,G+5);4.8.f(4.g(\'1T\'),1b+6,G+5);4.8.f(4.g(\'3t\'),3s+6,1u+5);4.8.f(\'<19 3r="29" F="27"><w><E 3q="2" 1a="1t">3p</E></w><w F="18"><E 1a="1t">18</E></w></19>\',10+6,10+5);e s=1s(\'1r.1q/T/3o/3n/18.3m\',\'1n\',\'%7.3f 3l/m<28>3</28>\');4.8.3k();c.x(\'18\').d(s);1p.V(c.x(\'27\'),\'3j 3i 3h 3g 3e 3d 3c.\');4.D.1o(s);4.k(\'26\',4.a,4.U,17);4.k(\'25\',4.a,4.U,17);4.k(\'24\',4.a,4.U,17);4.k(\'23\',4.a,4.U,17);4.k(\'22\',4.a,4.a,u);4.k(\'21\',4.a,4.a,u);4.k(\'20\',4.a,4.a,u);4.k(\'1Z\',4.a,4.a,u);4.k(\'1Y\',4.a,4.a,u);4.k(\'1X\',4.a,4.a,u);4.k(\'1W\',4.a,4.a,u);4.k(\'1V\',4.a,4.a,u);4.k(\'1U\',4.a,4.a,u);4.k(\'1T\',4.a,4.a,u);c.x(\'3b\').d(L(\'3a 1S\',t,\'1n\'));c.x(\'39\').d(L(\'1m 1S\',t,\'1m\'));j=c.q(\'j\');j.d(L(\'38 37 36 35 M.34 33/K\',t,\'1R\'));A.d(j);z.d(A);4.I.d(z);32(p(){c.x(\'1Q\').1P=(J 31()).2Z()},2Y);C 4};C 9};e 2X=p(){2W()};e 2V=p(){e S=2U[\'1O\'];e r=c.2T(\'r\')[0];e 2S=2R(r);e o=1N(S);r.d(o);2Q(\'K T 16 1M\');y(S>0)o.13=J 1L(o.1l,R,1K,\'1J\');14 o.13=J 1L(o.1l,-1,1K,\'1J\');o.Q=J 2P(o.13);o.Q.1I=\'/1I/2O\';o.1H();o.1k();o.Q.2N()};y(2M)2L(\'2K 12.I.1G.1F 2J 2I\');',62,266,'||||this|offset_y|offset_x||jg|table|format_conversion|name|document|appendChild|var|drawString|installSensor|||tr|bindSensor|drawLine||div|selector|function|createElement|body||null|false||TR|getElementById|if|tab|tb|style|return|items|TD|id|70|data|display|new|LHCb|Cell||350|width|_avg|provider|200|msg|RAMSES|sensor_conversion|set|470|480|120|td||add|lhcb|logger|else||Radiation|true|VMG982|TABLE|class|520|230|400|250|backgroundColor|threshold|alarm|br|_rate|subscribe|logDisplay|Average|Dose|push|tooltips|ExternalApps|lbWeb|StyledItem|Sensor|600|setColor|tbody|_tab|Sv|mu|low_threshold|high_threshold|cnv_rate|cnv_avg|itm|cpp|ramses|build|topic|StatusLogger|LOG_INFO|OutputLogger|Monitoring|RamsesStatus|messages|innerHTML|time_stamp|MonitorTinyHeader|Rate|PMIL8611|PMIL8531|PMIL8515|PMIL8514|PMIL8513|PMIL8512|PMIL8511|PMIL8502|PMIL8501|PMIL8411|PATL8511|PAXL8521|PAXL8512|PAXL8501|Env_tab|sup|solid|570|150|320|420|750|550|setStroke|430|760|330|blue|295|180|440|90|Ramses|IMG|chart|100|header|_isInternetExplorer|Not|Low|High|sensor|alarms|conversion|_curr|sprintf|MonitorPage|className|css|_loadFile|_loadScript|successfully|loaded|Script|alert|_debugLoading|start|status|DataProvider|setWindowTitle|init_tooltips|tips|getElementsByTagName|the_displayObject|ramses_body|dataProviderReset|ramses_unload|2000|toString||Date|setInterval|CERN|Frank|to|suggestions|and|Comments|Legend_avg|Current|Legend_curr|cavern|the|in||parameters|environmental|of|Display|paint|kBq|value|PMVG982|ENV_RAD|Environment|colspan|border|800|Legend|630|PAXL8531|170|60|370|510|530|580|340|690|590|650|green|300|270|285|160|jsGraphics|940|bmp|Ramses_cavern|Images|_fileBase|SRC|auto|overflow|970px|borderStyle|borderWidth|FFFFFF|MonitorBigHeader|lhcb_online_picture|MeanDoseRate|DoseRate|length|for|RamsesItem|1000|mSv|999|parseFloat|bbbbcc|orange|red|cellspacing|cellpadding|Array|general|js|wz_jsgraphics'.split('|'),0,{}))
-;
+_loadScript('lhcb.display.items.cpp');
+_loadScript('wz_jsgraphics.js');
+_loadFile('lhcb.display.general','css');
+_loadFile('lhcb.display.ramses','css');
+
+var RamsesStatus = function(msg)   {
+  table           = document.createElement('table');
+  table.body      = document.createElement('tbody');
+  table.items     = new Array();
+  table.messages  = msg;
+  table.provider  = null;
+  table.logger    = null;
+  table.low_threshold = 15.0;
+  table.high_threshold = 30.0;
+
+  table.add = function() {
+    var tr = document.createElement('tr');
+    var td = document.createElement('td');
+    tr.appendChild(td);
+    this.body.appendChild(tr);
+    return td;
+  };
+
+  table.className = 'MonitorPage';
+  table.body.className = 'MonitorPage';
+  table.body.cellpadding = 0;
+  table.body.cellspacing = 0;
+  table.header = table.add();
+  table.chart = table.add();
+  table.display = table.add();
+  table.logDisplay = table.add();
+  table.appendChild(table.body);
+
+  /// Value conversion function: 
+  /// -- Put item into read if high threshold is exceeded, 
+  /// -- Put item into orange if low threshold is exceeded
+  /// -- Otherwise default color
+  table.sensor_conversion = function(data) {
+    if ( data > this.high_threshold )        // High alarm threshold --> red
+      this.style.backgroundColor = 'red';
+    else if ( data > this.low_threshold )   // Low alarm threshold  --> orange
+      this.style.backgroundColor = 'orange';
+    else 
+      this.style.backgroundColor = '#bbbbcc';
+    return table.format_conversion(data);
+  };
+
+  table.format_conversion = function(data) {
+    var v = parseFloat(data);
+    if ( data > 999.0 )  {
+      return sprintf('%7.3f mSv/h',v/1000.0);
+    }
+    return sprintf('%7.3f &mu;Sv/h',v);
+  };
+
+  /// Install sensor as table item on the display
+  table.installSensor = function(name)   {
+    return '<TABLE class="RamsesItem" id="'+name+'_tab"><TR><TD class="Sensor">'+name+'</TD></TR><TR id="'+name+'_curr"></TD></TR><TR id="'+name+'_avg"></TR></TABLE>';
+  };
+
+  table.subscribe = function() {
+    for(var i=0; i<this.items.length;++i) {
+      var itm = this.items[i];
+      this.provider.subscribe(itm.name,itm);
+    }
+  };
+
+  table.bindSensor = function(name, cnv_rate, cnv_avg, alarms) {
+    this[name+'_rate'] = StyledItem('lbWeb.ExternalApps/RAMSES/LHCb/'+name+'.DoseRate',   'Dose',   null);//'%7.3f &mu;Sv/h');
+    document.getElementById(name+'_curr').appendChild(this[name+'_rate']);
+    this.items.push(this[name+'_rate']);
+    this[name+'_avg'] = StyledItem('lbWeb.ExternalApps/RAMSES/LHCb/'+name+'.MeanDoseRate','Average',null);//'%7.3f &mu;Sv/h');
+    document.getElementById(name+'_avg').appendChild(this[name+'_avg']);
+    this.items.push(this[name+'_avg']);
+
+    if ( cnv_avg )   {      // Enable the display of alarms for specified items
+      this[name+'_avg'].conversion = cnv_avg;
+    }
+    if ( cnv_rate )   {      // Enable the display of alarms for specified items
+      this[name+'_rate'].conversion = cnv_rate;
+    }
+    if ( alarms ) {
+      // Set tooltips
+      tooltips.set(document.getElementById(name+'_tab'),'Radiation sensor '+name+':<br>High alarm threshold:'+this.high_threshold+' &mu;Sv/h<br>Low alarm threshold:'+this.low_threshold+' &mu;Sv/h');
+    }
+    else {
+      tooltips.set(document.getElementById(name+'_tab'),'Radiation sensor '+name+':<br>High alarm threshold: Not set<br>Low alarm threshold: Not set');
+    }
+  };
+
+  table.build = function() {
+    var div, td, tr;
+    var offset_y = _isInternetExplorer() ? 0 : 70;
+    var offset_x = _isInternetExplorer() ? 0 : 10;
+    var tab = document.createElement('table');
+    var tb  = document.createElement('tbody');
+
+    tab.width = tb.width = '100%';
+    tr = document.createElement('tr');
+    tr.appendChild(div=Cell(lhcb_online_picture(),null,null));
+    tr.appendChild(div=Cell('LHCb RAMSES Radiation Monitoring',null,'MonitorBigHeader'));
+    tr.appendChild(div=Cell('',1,'MonitorTinyHeader'));
+    div.id = 'time_stamp';
+    tb.appendChild(tr);
+    tab.appendChild(tb);
+    this.header.appendChild(tab);
+
+    tab = document.createElement('table');
+    tb  = document.createElement('tbody');
+    tab.width = tb.width = '100%';
+    div = document.createElement('div');
+    div.id = 'Ramses';
+    div.style.backgroundColor = '#FFFFFF';
+    div.style.borderWidth = 1;
+    div.style.borderStyle = 'solid';
+    div.style.width = '970px';
+    div.style.overflow = 'auto';
+    this.chart.appendChild(div);
+    div.innerHTML = '<IMG SRC="'+_fileBase+'/Images/LHCb/Ramses_cavern.bmp" width="940"></IMG>';
+    //div.innerHTML = '<IMG SRC="'+_fileBase+'/Images/LHCb/Ramses_cavern_sensors.bmp" width="940"></IMG>';
+    // Now draw the canvas with the measurement point on it....
+    this.jg = new jsGraphics('Ramses');
+
+    this.jg.setStroke(3);
+    // Upper detectors
+    this.jg.setColor('blue');
+    this.jg.drawLine( 50+offset_x,100+offset_y,160+offset_x,250+offset_y); // PAXL8501
+    this.jg.drawLine(150+offset_x,100+offset_y,230+offset_x,285+offset_y); // PAXL8521
+    this.jg.drawLine(250+offset_x,100+offset_y,300+offset_x,295+offset_y); // PMIL8502
+    this.jg.drawLine(350+offset_x,100+offset_y,430+offset_x,295+offset_y); // PMIL8514
+    this.jg.drawLine(450+offset_x,100+offset_y,440+offset_x,250+offset_y); // PMIL8513
+    this.jg.setColor('green');
+    this.jg.drawLine(550+offset_x,100+offset_y,520+offset_x,200+offset_y); // PMIL8611
+    this.jg.setColor('blue');
+    this.jg.drawLine(650+offset_x,100+offset_y,480+offset_x,370+offset_y); // PMIL8501
+    this.jg.drawLine(750+offset_x,100+offset_y,520+offset_x,330+offset_y); // PMIL8531
+    // Lower detectors
+    this.jg.drawLine( 50+offset_x,600+offset_y,250+offset_x,330+offset_y); // PAXL8531
+    this.jg.drawLine(150+offset_x,600+offset_y,230+offset_x,400+offset_y); // PAXL8512
+    this.jg.drawLine(250+offset_x,600+offset_y,430+offset_x,420+offset_y); // PMIL8511
+    this.jg.drawLine(350+offset_x,600+offset_y,510+offset_x,470+offset_y); // PMIL8515
+    this.jg.setColor('green');
+    this.jg.drawLine(450+offset_x,600+offset_y,520+offset_x,530+offset_y); // PMIL8411
+    this.jg.setColor('blue');
+    this.jg.drawLine(550+offset_x,600+offset_y,590+offset_x,350+offset_y); // PMIL8512
+    this.jg.drawLine(650+offset_x,600+offset_y,690+offset_x,340+offset_y); // PATL8511
+
+    this.jg.setStroke(1);
+    this.jg.drawString(this.installSensor('PAXL8501'), 20+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PAXL8521'),120+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8502'),220+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8514'),320+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8513'),420+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8611'),520+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8501'),620+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8531'),720+offset_x,70+offset_y);
+
+    this.jg.drawString(this.installSensor('PAXL8531'), 20+offset_x,585+offset_y);
+    this.jg.drawString(this.installSensor('PAXL8512'),120+offset_x,585+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8511'),220+offset_x,585+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8515'),320+offset_x,585+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8411'),420+offset_x,585+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8512'),520+offset_x,585+offset_y);
+    this.jg.drawString(this.installSensor('PATL8511'),620+offset_x,585+offset_y);
+
+    this.jg.drawString(this.installSensor('Legend'),  800+offset_x,585+offset_y);
+
+    // Environment values
+    this.jg.drawString('<TABLE border="solid" id="Env_tab"><TR><TD colspan="2" class="Sensor">Environment</TD></TR><TR id="VMG982"><TD class="Sensor">VMG982</TD></TR></TABLE>',10+offset_x,10+offset_y);
+    var s = StyledItem('lbWeb.ExternalApps/RAMSES/ENV_RAD/PMVG982/VMG982.value','Dose','%7.3f kBq/m<sup>3</sup>');
+
+    this.jg.paint();
+
+    // Subscribe to data
+    document.getElementById('VMG982').appendChild(s);
+    tooltips.set(document.getElementById('Env_tab'),'Display of environmental parameters in the cavern.');
+    this.items.push(s);
+
+    this.bindSensor('PAXL8501',this.format_conversion,this.sensor_conversion,true);
+    this.bindSensor('PAXL8512',this.format_conversion,this.sensor_conversion,true);
+    this.bindSensor('PAXL8521',this.format_conversion,this.sensor_conversion,true);
+    this.bindSensor('PAXL8531',this.format_conversion,this.sensor_conversion,true);
+    this.bindSensor('PATL8511',this.format_conversion,this.sensor_conversion,true);
+    this.bindSensor('PMIL8411',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8501',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8502',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8511',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8512',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8513',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8514',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8515',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8531',this.format_conversion,this.format_conversion,false);
+    this.bindSensor('PMIL8611',this.format_conversion,this.format_conversion,false);
+
+    // Add Legend
+    document.getElementById('Legend_curr').appendChild(Cell('Current Rate',null,'Dose'));
+    document.getElementById('Legend_avg').appendChild(Cell('Average Rate',null,'Average'));
+    // Finally add suggestions text
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('Comments and suggestions to M.Frank CERN/LHCb',null,'MonitorTinyHeader'));
+    tb.appendChild(tr);
+
+    tab.appendChild(tb);
+    this.display.appendChild(tab);
+    setInterval(function(){document.getElementById('time_stamp').innerHTML=(new Date()).toString();},2000);
+    return this;
+  };
+
+  return table;
+};
+
+var ramses_unload = function()  {  dataProviderReset();   };
+
+var ramses_body = function()  {
+  var msg  = the_displayObject['messages'];
+  var body = document.getElementsByTagName('body')[0];
+  var tips = init_tooltips(body);
+
+  var selector = RamsesStatus(msg);
+  body.appendChild(selector);
+  setWindowTitle('LHCb RAMSES Radiation Monitoring');
+  if ( msg > 0 )
+    selector.logger   = new OutputLogger(selector.logDisplay, 200, LOG_INFO, 'StatusLogger');
+  else
+    selector.logger   = new OutputLogger(selector.logDisplay,  -1, LOG_INFO, 'StatusLogger');
+  selector.provider = new DataProvider(selector.logger);
+  selector.provider.topic = '/topic/status';
+  selector.build();
+  selector.subscribe();
+  selector.provider.start();
+};
+
+if ( _debugLoading ) alert('Script lhcb.display.ramses.cpp loaded successfully');

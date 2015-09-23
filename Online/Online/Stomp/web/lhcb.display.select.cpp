@@ -1,2 +1,99 @@
-eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('2 6=e;2 1K=4(){7(6==e)6=J 1J();k 6};2 1I=4(){k Z.1H=="1G 1F 1E"};2 G=1D;2 1C=4(){k Z.1B==\'1A\'};B=4(j){f.1z(\'<Y 8="\'+F+\'" E="\'+j+\'"></Y>\')};2 l=4(h,j){B(h+\'/\'+j)};2 y=4(j){l(u,j)};4 W(h,g,9){7(9=="b"){2 5=f.D(\'X\');5.d("8",F);5.d("E",h+\'/\'+g+\'.\'+9)}z 7(9=="U"){2 5=f.D(\'X\');5.d("8",F);5.d("E",h+\'/\'+g+\'.\'+9)}z 7(9=="C"){2 5=f.D("1y");5.d("1x","1w");5.d("8","q/C");5.d("1v",h+\'/1u/\'+g+\'.C\')}7(1t 5!="1s")f.1r("1q")[0].1p(5)};4 1o(g,9){W(u,g,9)};7(T==\'A\'){V=1n.V;B(\'/1m/1l/A/A.U\');l(S,\'6.c.1k.b\')}z 7(T==\'R\'){l(S,\'6.c.R.b\')}y(\'6.c.1j.b\');y(\'6.c.1i.b\');2 I=4(){3.8=e;3.o=e;3.t=e;2 x=f.1h.K();2 r=x.w(\'?\');3.o=4(){2 P=\'1g Q\\n\'+x+\'\\1f 1e a 1d c Q!\\n\';m(P)};3.t=4(){};3.M=4(){m(\'O, O 1c 1b....\')};7(r.N>1){2 1a=\'\';2 p=r[1].w(\'&\');3.19=p;L(2 i=0;i<p.N;++i){2 v=p[i].w(\'=\');3[v[0]]=v[1]}3.18=r[0];7(3.8!=e){s("3.o = 4()     { l(u,\'6.c."+3.8+".b\'); }");s("3.t   = 4()     { k "+3.8+"17(); }");s("3.M = 4()     { k "+3.8+"16(); }")}}3.15=4(){2 q=\'\';L(p 14 3){q+=p.K()+\'=\'+3[p]+\'\\n\'}m(q)}};2 H=J I();H.o();7(G)m(\'13 6.c.12.b 11 10\');',62,109,'||var|this|function|fileref|lhcb|if|type|filetype||cpp|display|setAttribute|null|document|filename|base||name|return|_loadScriptAbs|alert||header||text|pars|eval|body|_fileBase||split|url|_loadScript|else|stomp|_loadStatic|css|createElement|src|_javascriptType|_debugLoading|the_displayObject|display_type|new|toString|for|unload|length|Bye|msg|URL|amq|_lhcbScriptBase|_transport_in_use|js|TCPSocket|_loadFileAbs|script|SCRIPT|navigator|successfully|loaded|select|Script|in|dump|_unload|_body|url_base|params|disp_func|friend|my|valid|not|nis|The|location|constants|tooltips|data|protocols|static|Orbited|_loadFile|appendChild|head|getElementsByTagName|undefined|typeof|Style|href|stylesheet|rel|link|write|Envjs|appCodeName|_emulateBrowser|false|Explorer|Internet|Microsoft|appName|_isInternetExplorer|Object|_lhcb'.split('|'),0,{}))
-;
+var lhcb = null;
+var _lhcb = function() {
+  if ( lhcb == null ) lhcb = new Object();
+  return lhcb;
+};
+var _isInternetExplorer = function() 
+{  return navigator.appName == "Microsoft Internet Explorer"; };
+var _debugLoading = false;
+var _emulateBrowser = function()
+{  return navigator.appCodeName == 'Envjs';                   };
+_loadStatic = function(name)
+{  document.write('<SCRIPT type="'+_javascriptType+'" src="'+name+'"></SCRIPT>');   };
+
+var _loadScriptAbs = function(base,name) { _loadStatic(base+'/'+name);     };
+var _loadScript    = function(name)      { _loadScriptAbs(_fileBase,name); };
+
+function _loadFileAbs(base,filename, filetype)   {
+  // this somehow does not work!!!!
+  if (filetype=="cpp"){ //if filename is a external JavaScript file
+    var fileref=document.createElement('script');
+    fileref.setAttribute("type",_javascriptType);
+    fileref.setAttribute("src", base+'/'+filename+'.'+filetype);
+  }
+  else if (filetype=="js"){ //if filename is a external JavaScript file
+    var fileref=document.createElement('script');
+    fileref.setAttribute("type",_javascriptType);
+    fileref.setAttribute("src", base+'/'+filename+'.'+filetype);
+  }
+  else if (filetype=="css"){ //if filename is an external CSS file
+    var fileref=document.createElement("link");
+    fileref.setAttribute("rel", "stylesheet");
+    fileref.setAttribute("type", "text/css");
+    fileref.setAttribute("href", base+'/Style/'+filename+'.css');
+  }
+  if (typeof fileref!="undefined")
+    document.getElementsByTagName("head")[0].appendChild(fileref);
+};
+
+function _loadFile(filename, filetype)   {  _loadFileAbs(_fileBase,filename,filetype); };
+
+if ( _transport_in_use=='stomp' )  {
+  TCPSocket = Orbited.TCPSocket;
+  //var org_transport = Orbited.util.chooseTransport;
+  //Orbited.util.chooseTransport = function() {
+  //  return Orbited.CometTransports.LongPoll;
+  //};
+  _loadStatic('/static/protocols/stomp/stomp.js');
+  _loadScriptAbs(_lhcbScriptBase,'lhcb.display.data.cpp');
+}
+else if ( _transport_in_use == 'amq' )  {
+  _loadScriptAbs(_lhcbScriptBase,'lhcb.display.amq.cpp');
+}
+_loadScript('lhcb.display.tooltips.cpp');
+_loadScript('lhcb.display.constants.cpp');
+
+var display_type = function()   {
+  this.type = null;
+  this.header = null;
+  this.body = null;
+  var url = document.location.toString();
+  var pars = url.split('?');
+
+  this.header = function() {
+    var msg = 'The URL\n'+url+'\nis not a valid display URL!\n';
+    alert(msg);
+  };
+  this.body = function()   {  };
+  this.unload = function() { alert('Bye, Bye my friend....'); };
+
+  if ( pars.length > 1 )  {
+    var disp_func = '';
+    var p = pars[1].split('&');
+    this.params = p;
+    for (var i=0; i<p.length; ++i) {
+      var v = p[i].split('=');
+      this[v[0]] = v[1];
+    }
+    this.url_base = pars[0];
+    if ( this.type != null ) {
+      eval("this.header = function()     { _loadScriptAbs(_fileBase,'lhcb.display."+this.type+".cpp'); }");
+      eval("this.body   = function()     { return "+this.type+"_body(); }");
+      eval("this.unload = function()     { return "+this.type+"_unload(); }");
+    }
+  }
+
+  this.dump = function() {
+    var text = '';
+    for( p in this) {
+      text += p.toString() + '=' + this[p] +'\n';
+    }
+    alert(text);
+  };
+};
+
+var the_displayObject = new display_type();
+the_displayObject.header();
+
+
+if ( _debugLoading ) alert('Script lhcb.display.select.cpp loaded successfully');

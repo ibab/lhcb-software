@@ -122,42 +122,48 @@ var RamsesStatus = function(msg)   {
     this.jg = new jsGraphics('Ramses');
 
     this.jg.setStroke(3);
+    // Upper detectors
     this.jg.setColor('blue');
-    this.jg.drawLine( 90+offset_x,120+offset_y,160+offset_x,250+offset_y); // PAXL6501
-    this.jg.drawLine(200+offset_x,180+offset_y,230+offset_x,285+offset_y); // PAXL8521
-    this.jg.drawLine( 90+offset_x,480+offset_y,250+offset_x,330+offset_y); // PAXL8531
-    this.jg.drawLine(270+offset_x,120+offset_y,300+offset_x,295+offset_y); // PMIL8502
-    this.jg.drawLine(440+offset_x,120+offset_y,440+offset_x,250+offset_y); // PMIL8513
-    this.jg.drawLine(350+offset_x,180+offset_y,430+offset_x,295+offset_y); // PMIL8514
+    this.jg.drawLine( 50+offset_x,100+offset_y,160+offset_x,250+offset_y); // PAXL8501
+    this.jg.drawLine(150+offset_x,100+offset_y,230+offset_x,285+offset_y); // PAXL8521
+    this.jg.drawLine(250+offset_x,100+offset_y,300+offset_x,295+offset_y); // PMIL8502
+    this.jg.drawLine(350+offset_x,100+offset_y,430+offset_x,295+offset_y); // PMIL8514
+    this.jg.drawLine(450+offset_x,100+offset_y,440+offset_x,250+offset_y); // PMIL8513
     this.jg.setColor('green');
-    this.jg.drawLine(550+offset_x,120+offset_y,520+offset_x,200+offset_y); // PMIL8611
+    this.jg.drawLine(550+offset_x,100+offset_y,520+offset_x,200+offset_y); // PMIL8611
     this.jg.setColor('blue');
-    this.jg.drawLine(650+offset_x,120+offset_y,520+offset_x,330+offset_y); // PMIL8531
-    this.jg.drawLine(760+offset_x,250+offset_y,590+offset_x,350+offset_y); // PMIL8512
-    this.jg.drawLine(760+offset_x,480+offset_y,690+offset_x,340+offset_y); // PATL8511
-    this.jg.drawLine(580+offset_x,600+offset_y,520+offset_x,530+offset_y); // PMIL8411
-    this.jg.drawLine(400+offset_x,600+offset_y,510+offset_x,470+offset_y); // PMIL8515
-    this.jg.drawLine(400+offset_x,480+offset_y,430+offset_x,420+offset_y); // PMIL8511
-    this.jg.drawLine(400+offset_x,350+offset_y,480+offset_x,370+offset_y); // PMIL8501
-    this.jg.drawLine(230+offset_x,480+offset_y,230+offset_x,400+offset_y); // PAXL8512
+    this.jg.drawLine(650+offset_x,100+offset_y,480+offset_x,370+offset_y); // PMIL8501
+    this.jg.drawLine(750+offset_x,100+offset_y,520+offset_x,330+offset_y); // PMIL8531
+    // Lower detectors
+    this.jg.drawLine( 50+offset_x,600+offset_y,250+offset_x,330+offset_y); // PAXL8531
+    this.jg.drawLine(150+offset_x,600+offset_y,230+offset_x,400+offset_y); // PAXL8512
+    this.jg.drawLine(250+offset_x,600+offset_y,430+offset_x,420+offset_y); // PMIL8511
+    this.jg.drawLine(350+offset_x,600+offset_y,510+offset_x,470+offset_y); // PMIL8515
+    this.jg.setColor('green');
+    this.jg.drawLine(450+offset_x,600+offset_y,520+offset_x,530+offset_y); // PMIL8411
+    this.jg.setColor('blue');
+    this.jg.drawLine(550+offset_x,600+offset_y,590+offset_x,350+offset_y); // PMIL8512
+    this.jg.drawLine(650+offset_x,600+offset_y,690+offset_x,340+offset_y); // PATL8511
 
     this.jg.setStroke(1);
-    this.jg.drawString(this.installSensor('PAXL8501'), 60+offset_x,70+offset_y);
-    this.jg.drawString(this.installSensor('PMIL8502'),200+offset_x,70+offset_y);
-    this.jg.drawString(this.installSensor('PAXL8521'),170+offset_x,150+offset_y);
-    this.jg.drawString(this.installSensor('PAXL8531'), 70+offset_x,470+offset_y);
-    this.jg.drawString(this.installSensor('PAXL8512'),200+offset_x,470+offset_y);
-    this.jg.drawString(this.installSensor('PATL8511'),750+offset_x,470+offset_y);
-    this.jg.drawString(this.installSensor('PMIL8411'),550+offset_x,570+offset_y);
-    this.jg.drawString(this.installSensor('PMIL8501'),350+offset_x,320+offset_y);
-    this.jg.drawString(this.installSensor('PMIL8511'),350+offset_x,470+offset_y);
-    this.jg.drawString(this.installSensor('PMIL8512'),750+offset_x,230+offset_y);
+    this.jg.drawString(this.installSensor('PAXL8501'), 20+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PAXL8521'),120+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8502'),220+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8514'),320+offset_x,70+offset_y);
     this.jg.drawString(this.installSensor('PMIL8513'),420+offset_x,70+offset_y);
-    this.jg.drawString(this.installSensor('PMIL8514'),320+offset_x,150+offset_y);
-    this.jg.drawString(this.installSensor('PMIL8515'),350+offset_x,570+offset_y);
-    this.jg.drawString(this.installSensor('PMIL8531'),630+offset_x,70+offset_y);
     this.jg.drawString(this.installSensor('PMIL8611'),520+offset_x,70+offset_y);
-    this.jg.drawString(this.installSensor('Legend'),  800+offset_x,600+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8501'),620+offset_x,70+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8531'),720+offset_x,70+offset_y);
+
+    this.jg.drawString(this.installSensor('PAXL8531'), 20+offset_x,585+offset_y);
+    this.jg.drawString(this.installSensor('PAXL8512'),120+offset_x,585+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8511'),220+offset_x,585+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8515'),320+offset_x,585+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8411'),420+offset_x,585+offset_y);
+    this.jg.drawString(this.installSensor('PMIL8512'),520+offset_x,585+offset_y);
+    this.jg.drawString(this.installSensor('PATL8511'),620+offset_x,585+offset_y);
+
+    this.jg.drawString(this.installSensor('Legend'),  800+offset_x,585+offset_y);
 
     // Environment values
     this.jg.drawString('<TABLE border="solid" id="Env_tab"><TR><TD colspan="2" class="Sensor">Environment</TD></TR><TR id="VMG982"><TD class="Sensor">VMG982</TD></TR></TABLE>',10+offset_x,10+offset_y);
@@ -173,6 +179,7 @@ var RamsesStatus = function(msg)   {
     this.bindSensor('PAXL8501',this.format_conversion,this.sensor_conversion,true);
     this.bindSensor('PAXL8512',this.format_conversion,this.sensor_conversion,true);
     this.bindSensor('PAXL8521',this.format_conversion,this.sensor_conversion,true);
+    this.bindSensor('PAXL8531',this.format_conversion,this.sensor_conversion,true);
     this.bindSensor('PATL8511',this.format_conversion,this.sensor_conversion,true);
     this.bindSensor('PMIL8411',this.format_conversion,this.format_conversion,false);
     this.bindSensor('PMIL8501',this.format_conversion,this.format_conversion,false);

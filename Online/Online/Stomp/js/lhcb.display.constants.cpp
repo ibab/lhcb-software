@@ -329,7 +329,7 @@ if ( !_lhcb().constants ) {
 	  nick:   'lhcb-display-news-win',
 	  cls:    'Help16',
 	  iconCls:'Help32',
-	  size:   {width:  590,	height: 700}
+	  size:   {width:  650,	       height: 700}
 	},
 	page1: {
 	  src:    this.lhcb_display_url('page1'),
@@ -338,7 +338,7 @@ if ( !_lhcb().constants ) {
 	  nick:   'lhcb-page1-win',
 	  cls:    'Page116',
 	  iconCls:'Page132',
-	  size:   {width:  770,	height: 820}
+	  size:   {width:  1100,	height: 820}
 	},
 	detstatus: {
 	  src:    this.lhcb_display_url('detstatus'),
@@ -445,8 +445,17 @@ if ( !_lhcb().constants ) {
 	  title:  'LHCb PVSS Alarms',
 	  nick:   'lhcb-pvss-alarms',
 	  cls:    'PvssAlarms16',
-	  iconCls:'PvssAlarms32',
+	  iconCls:'bogus',
 	  size:   {width: 1000,	height: 820}
+	},
+	eventDisplay: {
+	  src:    'https://lbevent.cern.ch/EventDisplay/index.html',
+	  img:    this.images.alarmScreen,
+	  title:  'LHCb Event Display',
+	  nick:   'lhcb-event-display',
+	  cls:    'bogus',
+	  iconCls:'bogus',
+	  size:   {width: 1100,	height: 820}
 	}
       }
     };

@@ -19,7 +19,8 @@ var s_display_font_size = null;
 var s_org_display_font_size = null;
 
 function fileLabels(data) {
-  return Math.floor(data/10,10)*10;
+  //return Math.floor(data/10,10)*10;
+  return Math.floor(data);
 };
 
 var hlt2Properties = function(table)  {
@@ -69,27 +70,30 @@ var hlt2RunsTable2 = function(options,title,dp) {
   tab.runs.table.width='100%';
   tab.runs.table.appendChild(document.createElement('tbody'));
   c.appendChild(tab.runs.table);
-
+  tab.lastUpdate = 0;
   tab.runs.conversion = function(data)  {
-    var r, c, tr, tab = this.table;
-    var tb = document.createElement('tbody');
-    var runs = data.split('|');
-    tab.className  = tb.className = 'MonitorPage';
-    tb.appendChild(tr=document.createElement('tr'));
-    for(r=0; r<3; r++)  {
-      tr.appendChild(c=Cell('Run number',1,'MonitorDataHeader'));
-      tr.appendChild(c=Cell('No.files', 1,'MonitorDataHeader'));
-    }
-    for	(r = 0; r < runs.length; r++) {
-      if ( (r%3)==0 )  {
-	tr = document.createElement('tr');
-	tb.appendChild(tr);
+    var now = Date().getTime();
+    if ( 1 || (now - this.lastUpdate) > 1000*10 )  { 
+      var r, c, tr, tab = this.table;
+      var tb = document.createElement('tbody');
+      var runs = data.split('|');
+      tab.className  = tb.className = 'MonitorPage';
+      tb.appendChild(tr=document.createElement('tr'));
+      for(r=0; r<3; r++)  {
+	tr.appendChild(c=Cell('Run number',1,'MonitorDataHeader'));
+	tr.appendChild(c=Cell('No.files', 1,'MonitorDataHeader'));
       }
-      var rr = runs[r].split('/');
-      tr.appendChild(Cell(rr[0],1,'PropertyTableItem'));
-      tr.appendChild(Cell(rr[1],1,'PropertyTableValue'));
+      for	(r = 0; r < runs.length; r++) {
+	if ( (r%3)==0 )  {
+	  tr = document.createElement('tr');
+	  tb.appendChild(tr);
+	}
+	var rr = runs[r].split('/');
+	tr.appendChild(Cell(rr[0],1,'PropertyTableItem'));
+	tr.appendChild(Cell(rr[1],1,'PropertyTableValue'));
+      }
+      tab.replaceChild(tb,tab.childNodes[0]);
     }
-    tab.replaceChild(tb,tab.childNodes[0]);
     return '';
   };
 
@@ -106,20 +110,28 @@ var hlt2RunsTable2 = function(options,title,dp) {
 var hlt2RunsTable = function(options,title,datapoint) {
   var tab = document.createElement('div');
   tab.id = 'run-table';
+  tab.lastUpdate = 0;
   tab.runs = StyledItem(datapoint,'Text-Right','%s');
+  tab.runs.lastUpdate = 0;
   tab.runs.conversion = function(data)  {
-    var r, rr, runs = [], line = [], rundata = data.split('|');
-    for	(r = 0; r < rundata.length; r++) {
-      if ( (r%3) == 0 && line.length>0 )  {
-	runs.push(line);
-	line = [];
+    var now = (new Date()).getTime();
+    if ( (now - this.lastUpdate) > 1000*10 )  { 
+      var r, rr, runs = [], line = [], rundata = data.split('|');
+      for (r = 0; r < rundata.length; r++) {
+	if ( (r%3) == 0 && line.length>0 )  {
+	  runs.push(line);
+	  line = [];
+	}
+	rr = rundata[r].split('/');
+	var nfile = parseInt(rr[1]);
+	if ( nfile > 1 )  {
+	  line.push(parseInt(rr[0]));
+	  line.push(nfile);
+	}
       }
-      rr = rundata[r].split('/');
-      line.push(rr[0]);
-      line.push(parseInt(rr[1]));
+      if ( line.length > 0 ) runs.push(line);
+      this.store.loadData(runs);
     }
-    if ( line.length > 0 ) runs.push(line);
-    this.store.loadData(runs);
     return '';
   };
   tab.subscribe = function(provider) {
@@ -135,18 +147,18 @@ var hlt2RunsTable = function(options,title,datapoint) {
 	     {name: 'f3', type: 'integer'}
 	     ]});
   tab.runs.store = store;
-  store.loadData(['1',0,'2',0,'3',0]);
+  store.loadData([]);
   Ext.onReady(function(){
       var panel = new Ext.grid.GridPanel({
 	store: store,
 	    renderTo:  tab,
 	    columns: [
-		      {id:'r1',header: 'Run',   dataIndex: 'r1'},
-		      {id:'f1',header: 'Files', dataIndex: 'f1'},
-		      {id:'r2',header: 'Run',   dataIndex: 'r2'},
-		      {id:'f2',header: 'Files', dataIndex: 'f2'},
-		      {id:'r3',header: 'Run',   dataIndex: 'r3'},
-		      {id:'f3',header: 'Files', dataIndex: 'f3'}
+		      {id:'r1',header: 'Run',   dataIndex: 'r1', sortable: true},
+		      {id:'f1',header: 'Files', dataIndex: 'f1', sortable: true},
+		      {id:'r2',header: 'Run',   dataIndex: 'r2', sortable: true},
+		      {id:'f2',header: 'Files', dataIndex: 'f2', sortable: true},
+		      {id:'r3',header: 'Run',   dataIndex: 'r3', sortable: true},
+		      {id:'f3',header: 'Files', dataIndex: 'f3', sortable: true}
 		      ],
 	    stripeRows: true,
 	    autoExpandColumn: 'r1',
@@ -170,17 +182,24 @@ var hlt2RunsTable = function(options,title,datapoint) {
   return tab;
 };
 
-var hlt2RunsHisto = function(options,title,datapoint) {
+var hlt2RunsHisto = function(options,tag,title,datapoint) {
   var tab = document.createElement('div');
-  tab.id = 'container';
+  tab.id = 'container-'+tag;
   tab.runs = StyledItem(datapoint,'Text-Right','%s');
+  tab.runs.lastUpdate = 0;
   tab.runs.conversion = function(data)  {
-    var r, rr, runs = [], rundata = data.split('|');
-    for	(r = 0; r < rundata.length; r++) {
-      rr = rundata[r].split('/');
-      runs.push([rr[0],parseFloat(rr[1])]);
+    var now = (new Date()).getTime();
+    if ( (now - this.lastUpdate) > 1000*10 )  { 
+      var r, rr, runs = [], rundata = data.split('|');
+      for (r = 0; r < rundata.length; r++) {
+	rr = rundata[r].split('/');
+	var nfile = parseFloat(rr[1]);
+	if ( nfile > 1 )  {
+	  runs.push([rr[0],nfile]);
+	}
+      }
+      this.store.loadData(runs);
     }
-    this.store.loadData(runs);
     return '';
   };
   tab.subscribe = function(provider) {
@@ -236,9 +255,9 @@ var showDeferredState = function(table) {
   tab.style.width = '100%';
 
   tab.className = 'VerticalAlignTop';
-  table.currRuns = hlt2RunsHisto(opts,
+  table.currRuns = hlt2RunsHisto(opts,'current-runs',
 				 'Runs currently processing',
-				 'lbWeb.LHCb_RunInfoSplitHLT.RunsLeftCorr');
+				 'lbWeb.LHCb_RunInfoSplitHLT.FarmStatus.currRunsSummary');
   table.currRuns.subscribe(table.provider);
   cell = Cell('',2);
   cell.appendChild(table.currRuns);
@@ -246,7 +265,7 @@ var showDeferredState = function(table) {
   row.appendChild(cell);
   body.appendChild(row);
 
-  table.allRuns = hlt2RunsHisto(opts,
+  table.allRuns = hlt2RunsHisto(opts,'all-runs',
 				'All runs with files to be processed',
 				'lbWeb.LHCb_RunInfoSplitHLT.RunsLeftCorr');
   table.allRuns.subscribe(table.provider);

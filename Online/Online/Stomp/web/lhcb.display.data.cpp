@@ -1,2 +1,621 @@
-eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('4K(4J,\'w.4I.2k\');8 f=O;8 1w=O;8 1I=0;8 2c=1;8 1k=2;8 1v=3;8 2Y=4;8 1V=9(E,R,1N,34){6.2j=34;6.T=O;a(R>0){6.T=y 1b();6.T.j=0}6.E=E;6.j=R;6.1N=1N;6.1K=0;6.1P=t.P(\'1P\');6.z=t.P(\'4H\');6.2i=t.P(\'33\');6.1h=t.P(\'1Q\');6.H=t.P(\'2p\');6.1L=t.P(\'1Q\');6.1x=t.P(\'1Q\');6.1M=t.P(\'1Q\');1w=6;6.H.2j=6.2j;6.H.G=\'\';6.1h.4G=3;6.1h.N(6.H);6.2i.N(6.1h);6.z.N(6.2i);8 1y=t.P(\'33\');1y.N(6.1L);1y.N(6.1x);1y.N(6.1M);6.z.N(1y);6.1P.N(6.z);6.E.N(6.1P);6.2Z=9(){a(6.T){a(6.H!=O&&6.T.j>0){8 1O=\'\';K(8 i=6.1K+1;i<6.T.j;++i)1O+=\'&32; \'+6.T[i]+\'<12></12>\';K(8 i=0;i<=6.1K;++i)1O+=\'&32; \'+6.T[i]+\'<12></12>\';6.H.G=1O;6.H.2W=6.H.2V}}m 6};6.V=9(1N,B){m 6};6.2d=9(){6.1L.G=\'\';6.1M.G=\'\';a(6.j>0){6.1x.G=\'<1i 2h="2g" 2f="1w.31()">4F 30</1i>\'}A{6.1x.G=\'\'}6.1h.4E(6.H)};6.31=9(){6.1x.G=\'\';6.1M.G=\'<1i 2h="2g" 2f="1w.2X()">4D</1i>\';6.1L.G=\'<1i 2h="2g" 2f="1w.2d()">4C 30</1i>\';6.1h.N(6.H);6.2Z()};6.1d=9(B){m 6.V(1I,B)};6.r=9(B){m 6.V(1k,B)};6.2A=9(B){m 6.V(1v,B)};6.2x=9(B){m 6.V(2Y,B)};6.2X=9(){a(6.T){6.1K=0;6.T.j=0;6.H.G=\'\';6.H.2W=6.H.2V}};6.1T=9(1J){8 s=2e(1J);s=2U(s);m s};8 2U=9(1J){8 s=1J.F("&","&4B;","g");s=s.F("<","&2R;","g");s=s.F(">","&2Q;","g");s=s.F(" ","&2P;","g");s=s.F("\\n","<12></12>","g");m s};8 2e=9(s){8 q="(";a(2T(s)=="4A")m s;K(8 i=0;i<s.j;i++){a(2T(s[i])!="4z")q+=s[i];A q+=2e(s[i]);a(i<s.j-1)q+=" "}q+=")";m q};6.2d();m 6};8 4y=9(1D){8 h=y 1V(t.2S(1D),10,1v);h.V(1v,\'1v: 1u 1\');h.V(1k,\'1k: 1u 1\');h.V(2c,\'2c: 1u 1\');h.V(1I,\'1I: 1u 1\');K(8 k=0;k<20;++k){h.r(k+\' : 1u 1  --> \'+k)}};8 4x=9(C,17){6.13=17;6.1t=O;C.Y(6.13,6);6.11=9(){a(6.1t==O){6.1t=t.2S(6.13);a(6.1t==O){1R(\'4w t:\'+t.U+\'\\n\\4v 11 4u 2C 2L:\'+6.13+\'\\n\')}}m 6.1t};6.1H=9(c){6.11().G=c}};8 2n=9(C,17,14,11){e=11;e.13=17;e.1s=14;C.Y(e.13,e);e.1H=9(c){8 1a=\'4t\';a(6.1s!=O){a(c[0]==21)1a=2b(6.1s,4s(c[1]));A a(c[0]==22)1a=2b(6.1s,4r(c[1]));A a(c[0]==25)1a=2b(6.1s,c[1]);A 1a=c[1]}A{1a=c[1]}6.G=1a};m e};8 2m=9(C,17,14,11){e=11;e.13=17;C.Y(e.13,e);e.1H=9(c){8 s=\'\'+c;6.G=s.F("<","&2R;","g").F(">","&2Q;","g").F(" ","&2P;","g").F("\\n","<12></12>","g")};m e};8 1B=9(h){6.u=y 1b();6.L=y 1A();6.u.j=0;6.h=h;6.Q=1m;6.15=1m;6.M=\'/M/4q\';6.29=O;6.1F=\'/M/4p\';6.1e=\'4o\';f=6;8 I=y 4n();6.h.r("4m 1c 1G....");I.E=6;6.x=I;6.27={};6.16={};6.16[\'Z\']=\'\';6.16[\'2a.4l\']=5;6.16[\'2a.4k\']=1l;6.16[\'2a.4j\']=2;a(2O)6.1e=2O.2N;8 19=\'\';2K{8 b,l,s=\'\'+t.U,d=y 4i();s=s.F(/2N=/g,\'\');a((b=s.4h(\'/\')+1)<1)b=0;a((l=s.4g(\'&\'))<0)l=s.j;19=s.1o(b,l)+\'  \'+d.4f()+\'.\'+d.4e()+\'.\'+d.4d()+\'--\'+d.4c()+\':\'+d.4b()+\':\'+d.4a()+\'.\'+d.49()+\'--\'+2M.48(2M.47()*46);19=19.F(/\\?/g,\'-\');19=45()+\'  \'+44()+\'  \'+19}2J(e){}6.27[\'1G-1D\']=\'2L:\'+19;6.28=9(){f.h.r(\'2I 26 2H\');a(!f.Q&&6.f.15){f.26();1W(f.28,2G)}};I.43=9(){f.h.r("1g 42");2K{6.E.29=6.41.40.29}2J(e){}};I.3Z=9(J){f.Q=1m;a(J==18){f.h.r("1g 1r (J: "+J+", 3Y)")}A a(J==3X){f.h.r("1g 1r (J: "+J+", 3W)");f.h.r("1g 1r "+1n.U)}A a(J==3V){f.h.r("1g 1r (J: "+J+", 3U)")}A{f.h.r("1g 1r (J: "+J+")")}f.h.r("3T 3S:"+f.15);a(f.15){f.h.r(\'2I 3R 2H\');1W(f.28,2G)}};I.2F=9(1d){f.h.1d("2F: "+1d)};I.2E=9(S){f.h.1d("2E: "+S.z)};I.3Q=9(){f.h.r("3P ..");f.15=1l;f.Q=1l;f.23()};I.3O=9(S){8 i,d,o,R,v=S.z.3N(\'#\');a(v.j>=2){8 1q=v[1];8 c=v.3M(2);a(c!=\'3L\'){o=f.L[1q];R=o.j;a(!o.1f){o.1f=c}A a(o.1f+\'\'==c+\'\'){f.h.r(\'3K: [\'+S.z.j+\' 2D] \'+1q+\'=\'+o.1f);m}o.1f=c;K(i=0;i<R;++i){a(o[i]){o[i].1H(c)}A{1R(\'3J: 3I 11: \'+1q+\'[\'+i+\'] 3H 3G \'+R)}}d=y 3F(c);a(d.j>10)d=d.3E(0,10);f.h.r("3D: ["+S.z.j+\' 2D] \'+1q+\'=\'+d+\' 3C:\'+o.1f)}m}A a(S.z==6.E.1e+\':1X\'){6.E.X();1n.U.F(t.U)}A a(S.z==\'3B:1X\'){6.E.X();1n.U.F(t.U)}A a(S.z.1o(0,6.E.1e.j+5)==6.E.1e+\':3A:\'){6.E.X();1n.U.3z(S.z.1o(6.E.1e.j+5))}f.h.1d(\'3y: 3x c 2C 3w p 3v\')};6.1S=9(){6.h.r("1Z 1c 1G....");6.x.23(\'3u\',3t,\'2B\',\'2B\',6.27);6.15=1l;6.h.r("1Z 1c 1G....3s")};6.X=9(){a(6.Q){6.x.1Y();6.x.X();6.Q=1m}m 6};6.26=9(){6.X();6.1S();m 6};6.3r=9(p){m 6.Y(p.17,p)};6.Y=9(p,24){8 R=6.u.j;6.u.j=6.u.j+1;6.u[R]=p;a(!6.L.3q(p))6.L[p]=y 1b(24);A 6.L[p].3p(24);6.h.2A(\'1B: 3o 2u c p:\'+p+\'   \'+I);a(f.Q){8 D=6.u[R];8 B=\'2z:\'+D;a(D.1o(0,7)!=\'/M/\')D=\'/M/\'+D;6.h.r(\'2s 1c x:\'+D);6.x.Y(D,6.16);6.x.2y(B,6.M,{Z:\'\'})}m 6};6.1p=9(p){a(6.Q){6.x.1p(6.1F,{Z:\'\'});K(8 i=0;i<6.u.j;++i){a(6.u[i]==p){6.x.1p(p,{Z:\'\'});3n 6.u[i];6.u.j=6.u.j-1;m 6}}}A{6.1E()}m O};6.1E=9(){6.h.r("3m 2w 2v c 2t ..");6.x.1p(6.1F,{Z:\'\'});a(6.Q){K(8 i=0;i<6.u.j;++i){8 p=6.u[i];6.x.1p(p,{Z:\'\'})}}6.u=y 1b();6.u.j=0;6.L=y 1A();m 6};6.2r=9(){K(8 i=0;i<6.u.j;++i){8 B=\'2z:\'+6.u[i];6.x.2y(B,6.M,{Z:\'\'});6.h.2x(\'1B: 3l c p:\'+B)}m 6};6.23=9(){6.h.r("1Z 2w 2v c 3k 2u 2t ..");6.x.Y(6.1F,{Z:\'\'});K(8 i=0;i<6.u.j;++i){8 D=6.u[i];a(D.1o(0,7)!=\'/M/\')D=\'/M/\'+D;6.h.r(\'2s 1c x:\'+D);6.x.Y(D,6.16)}6.2r()};6.1Y=9(){6.1E();6.x.1Y();6.x.X()};6.2q=9(){1n.U.1X()};1W(f.2q,3j);m 6};8 2o=9(){a(O!=f){f.15=1m;f.1E();f.Q=1l;f.X()}};3i().3h=9(3g){8 z=t.1U(\'z\')[0];w.c=y 1A();w.1C=t.P(\'2p\');w.1C.1D=\'3f\';z.N(w.1C);z.3e=9(){2o()};w.c.h=y 1V(w.1C,-1,1k,\'3d\');w.c.C=y 1B(w.c.h);w.c.C.M=\'/M/3c\';w.c.I=y 1A();w.c.I.3b=9(){8 W=t.1U(\'1c\');8 L=y 1b();8 C=w.c.C;L.j=W.j;K(8 i=0;i<W.j;++i){8 e=W[i];8 p=e.1z(\'c\');8 14=e.1z(\'1T\');L[i]=2n(C,p,14,e.2l)}w.c.L=L;W=t.1U(\'3a\');8 1j=y 1b();1j.j=W.j;K(8 i=0;i<W.j;++i){8 e=W[i];8 p=e.1z(\'c\');8 14=e.1z(\'1T\');1j[i]=2m(C,p,14,e.2l)}w.c.1j=1j;C.1S()};m w};a(39)1R(\'38 w.37.c.2k 36 35\');',62,295,'||||||this||var|function|if||data|||_dataProvider||logger||length|||return|||item||info||document|calls||lhcb|service|new|body|else|msg|provider|svc|parent|replace|innerHTML|output|stomp|code|for|items|topic|appendChild|null|createElement|isConnected|len|frame|lines|location|print|elts|reset|subscribe|exchange||element|br|_name|fmt|needConnection|subscribeOpts|name||clid|item_data|Array|STOMP|error|pageName|prev_data|Transport|output_td|BUTTON|raw_items|LOG_INFO|true|false|window|substring|unsubscribe|itm|closed|_format|_elem|hello|LOG_DEBUG|_dataLogger|b_show|row|getAttribute|Object|DataProvider|logWindow|id|unsubscribeAll|command|client|set|LOG_ERROR|expr|curr|b_hide|b_clear|level|message|table|td|alert|start|format|getElementsByTagName|OutputLogger|setTimeout|reload|disconnect|Connecting||||connect|callback||reconnect|connectOpts|reconnectHandler|sessionKey|activemq|sprintf|LOG_WARNING|hide|prettyprint|onclick|DisplayButton|class|messages|className|cpp|parentNode|RawItem|ElementItem|dataProviderReset|div|reloadHandler|update|Subscribe|services|to|pending|all|verbose|send|SUBSCRIBE|debug|guest|with|bytes|onerrorframe|onerror|10000|timer|Starting|catch|try|ID|Math|type|the_displayObject|nbsp|gt|lt|getElementById|typeof|htmlescape|scrollHeight|scrollTop|clear|LOG_VERBOSE|showMessages|Messages|show|rarr|tr|style|successfully|loaded|display|Script|_debugLoading|DIM|scanDocument|farm|RunStatusLogger|onunload|LHCb_LogWindow_std|show_log|setup|_lhcb|3600000|leaves|Connect|Disconnect|delete|Subscribed|push|hasOwnProperty|subscribeItem|Done|61613|localhost|number|invalid|retrieved|onmessage|assign|url|allPages|prev|Update|substr|String|of|out|Dead|Debug|Ignore|DEAD|slice|split|onmessageframe|Connected|onconnectedframe|reconnection|flag|Reconnect|ABORT_ERR|102|NETWORK_ERR|101|SECURITY_ERR|onclose|session|transport|opened|onopen|get_ip_name|get_ip_address|100|random|floor|getMilliseconds|getSeconds|getMinutes|getHours|getDate|getMonth|getFullYear|indexOf|lastIndexOf|Date|prefetchSize|dispatchAsync|maximumPendingMessageLimit|Created|STOMPClient|dataPage|clientCommands|home|parseFloat|parseInt|Unknown|found|nNo|Invalid|DataItem|dataLoggerTest|object|string|amp|Hide|Clear|removeChild|Show|colSpan|tbody|tools|_lhcbScriptBase|_loadScriptAbs'.split('|'),0,{}))
-;
+_loadScriptAbs(_lhcbScriptBase,'lhcb.tools.cpp');
+
+var _dataProvider   = null;
+var _dataLogger     = null;
+
+var LOG_ERROR       = 0;
+var LOG_WARNING     = 1;
+var LOG_INFO        = 2;
+var LOG_DEBUG       = 3;
+var LOG_VERBOSE     = 4;
+
+/**@class OutputLogger
+ *
+ *
+ *  @author  M.frank
+ *  @version 1.0
+ */
+var OutputLogger = function(parent, len, level, style)  {
+  this.className    = style;
+  this.lines        = null;
+  if ( len>0 ) {
+    this.lines = new Array();
+    this.lines.length = 0;
+  }
+  this.parent       = parent;
+  this.length       = len;
+  this.level        = level;
+  this.curr         = 0;
+  this.table        = document.createElement('table');
+  this.body         = document.createElement('tbody');
+  this.messages     = document.createElement('tr');
+  this.output_td    = document.createElement('td');
+  this.output       = document.createElement('div');
+  this.b_hide       = document.createElement('td');
+  this.b_show       = document.createElement('td');
+  this.b_clear      = document.createElement('td');
+
+  _dataLogger = this;
+
+  this.output.className = this.className;
+  this.output.innerHTML = '';
+  this.output_td.colSpan = 3;
+  this.output_td.appendChild(this.output);
+  this.messages.appendChild(this.output_td);
+  this.body.appendChild(this.messages);
+
+  var row = document.createElement('tr');
+  row.appendChild(this.b_hide);
+  row.appendChild(this.b_show);
+  row.appendChild(this.b_clear);
+
+  this.body.appendChild(row);
+  this.table.appendChild(this.body);
+  this.parent.appendChild(this.table);
+
+
+  this.showMessages = function() {
+    if ( this.lines ) {
+      if ( this.output != null && this.lines.length > 0 ) {
+	var message = '';
+	for(var i=this.curr+1; i<this.lines.length; ++i)
+          message += '&rarr; ' + this.lines[i] + '<br></br>';
+	for(var i=0; i<=this.curr; ++i)
+          message += '&rarr; ' + this.lines[i] + '<br></br>';
+        this.output.innerHTML = message;
+        this.output.scrollTop = this.output.scrollHeight;
+      }
+    }
+    return this;
+  };
+
+  this.print = function(level, msg) {
+    /*
+    if ( this.lines != null && level <= this.level && this.length>0 ) {
+     if ( this.lines.length < this.length ) {
+	this.lines.length = this.lines.length+1;
+      }
+      if ( this.curr>this.lines.length-1 ) this.curr = 0;
+      if ( level == LOG_VERBOSE ) {
+	this.lines[this.curr] = this.format(Date().toString()+' [VERBOSE]:  '+msg);
+      }
+      else if ( level == LOG_DEBUG ) {
+	this.lines[this.curr] = this.format(Date().toString()+' [DEBUG]:    '+msg);
+      }
+      else if ( level == LOG_INFO ) {
+	this.lines[this.curr] = this.format(Date().toString()+' [INFO]:     '+msg);
+      }
+      else if ( level == LOG_ERROR ) {
+	this.lines[this.curr] = this.format(Date().toString()+' [ERROR]:    '+msg);
+      }
+      else  {
+	this.lines[this.curr] = this.format(Date().toString()+' [UNKNOWN]:  '+msg);
+      }
+      this.showMessages();
+      this.curr = this.curr + 1;
+    }
+    */
+    return this;
+  };
+
+  this.hide = function() {
+    this.b_hide.innerHTML = '';
+    this.b_clear.innerHTML = '';
+    if ( this.length > 0 ) {
+      this.b_show.innerHTML = '<BUTTON class="DisplayButton" onclick="_dataLogger.show()">Show Messages</BUTTON>';
+    }
+    else {
+      this.b_show.innerHTML = '';
+    }
+    this.output_td.removeChild(this.output);
+  };
+  
+  this.show = function() {
+    this.b_show.innerHTML = '';
+    this.b_clear.innerHTML = '<BUTTON class="DisplayButton" onclick="_dataLogger.clear()">Clear</BUTTON>';
+    this.b_hide.innerHTML  = '<BUTTON class="DisplayButton" onclick="_dataLogger.hide()">Hide Messages</BUTTON>';
+    this.output_td.appendChild(this.output);
+    this.showMessages();
+  };
+  
+  this.error = function(msg) {
+    return this.print(LOG_ERROR,msg);
+  };
+  
+  this.info = function(msg) {
+    return this.print(LOG_INFO,msg);
+  };
+  
+  this.debug = function(msg) {
+    return this.print(LOG_DEBUG,msg);
+  };
+
+  this.verbose = function(msg) {
+    return this.print(LOG_VERBOSE,msg);
+  };
+
+  this.clear = function() {
+    if ( this.lines ) {
+      this.curr         = 0;
+      this.lines.length = 0;
+      this.output.innerHTML = '';
+      this.output.scrollTop = this.output.scrollHeight;
+    }
+  };
+
+  this.format = function(expr) {
+    var s = prettyprint(expr);
+    s = htmlescape(s);
+    return s;
+  };
+  
+  var htmlescape = function(expr) {
+    var s = expr.replace("&", "&amp;", "g");
+    s = s.replace("<", "&lt;", "g");
+    s = s.replace(">", "&gt;", "g");
+    s = s.replace(" ", "&nbsp;", "g");
+    s = s.replace("\n", "<br></br>", "g");
+    return s;
+  };
+
+  var prettyprint = function(s) {
+    var q = "(";
+    if(typeof(s) == "string") return s;
+    for (var i=0; i<s.length; i++) {
+      if (typeof(s[i]) != "object")
+	q += s[i];
+      else
+	q += prettyprint(s[i]);
+      if (i < s.length -1)
+	q += " ";
+    }
+    q += ")";
+    return q;
+  };
+  
+  this.hide();
+  return this;
+};
+
+
+var dataLoggerTest = function(id) {
+  var logger  = new OutputLogger(document.getElementById(id),10,LOG_DEBUG);
+  logger.print(LOG_DEBUG,   'LOG_DEBUG: hello 1');
+  logger.print(LOG_INFO,    'LOG_INFO: hello 1');
+  logger.print(LOG_WARNING, 'LOG_WARNING: hello 1');
+  logger.print(LOG_ERROR,   'LOG_ERROR: hello 1');
+  for(var k=0; k<20; ++k)  {
+    logger.info(k+' : hello 1  --> '+k);
+  }
+};
+
+/** @class DataItem
+ *
+ * Simple scripting class to place streaming data items into an html file.
+ *
+ *  @author  M.frank
+ *  @version 1.0
+ */
+var DataItem = function(provider, name)   {
+  this._name  = name;
+  this._elem = null;
+  provider.subscribe(this._name,this);
+  
+  /// Late access of the document's element
+  this.element = function() {
+    if ( this._elem == null )   {
+      this._elem = document.getElementById(this._name);
+      if ( this._elem == null ) {
+	alert('Invalid document:'+document.location+'\n\nNo element found with ID:'+this._name+'\n');
+      }
+    }
+    return this._elem;
+  };
+  
+  /// Default callback for dataprovider on feeeding data
+  this.set = function(data) {
+    this.element().innerHTML = data;
+  };
+};
+
+/** @class ElementItem
+ *
+ * Simple scripting class to place streaming data items into an html file.
+ *
+ *  @author  M.frank
+ *  @version 1.0
+ */
+var ElementItem = function(provider, name, fmt, element)   {
+  e = element;
+  e._name  = name;
+  e._format = fmt;
+  provider.subscribe(e._name,e);
+  
+  /// Default callback for dataprovider on feeeding data
+  e.set = function(data) {
+    var item_data = 'Unknown';
+    if ( this._format != null ) {
+      if ( data[0] == 21 )        // Integer
+	item_data = sprintf(this._format,parseInt(data[1]));
+      else if ( data[0] == 22 )   // Float
+	item_data = sprintf(this._format,parseFloat(data[1]));
+      else if ( data[0] == 25 )   // String
+	item_data = sprintf(this._format,data[1]);
+      else
+	item_data = data[1];
+    }
+    else {
+      item_data = data[1];
+    }
+    this.innerHTML = item_data;
+  };
+  return e;
+};
+
+var RawItem = function(provider, name, fmt, element)   {
+  e = element;
+  e._name  = name;
+  provider.subscribe(e._name,e);
+  
+  /// Default callback for dataprovider on feeeding data
+  e.set = function(data) {
+    var s = ''+data;
+    this.innerHTML = s.replace("<", "&lt;", "g").replace(">", "&gt;", "g").replace(" ", "&nbsp;", "g").replace("\n", "<br></br>", "g");
+  };
+  return e;
+};
+
+/** @class DataProvider
+ *
+ *
+ *  @author  M.Frank
+ *  @version 1.0
+ */
+var DataProvider = function(logger)  {
+  this.calls = new Array();
+  this.items = new Object();
+  this.calls.length = 0;
+  this.logger = logger;
+  this.isConnected = false;
+  this.needConnection = false;
+  this.topic = '/topic/home';
+  this.sessionKey = null;
+  this.command = '/topic/clientCommands';
+  this.pageName = 'dataPage';
+  _dataProvider = this;
+
+  // set up stomp client.
+  var stomp = new STOMPClient();
+  this.logger.info("Created STOMP client....");
+  stomp.parent = this;
+  this.service = stomp;
+
+  // Setup subscription options for ActiveMQ
+  this.connectOpts = {};
+  this.subscribeOpts = {};
+  this.subscribeOpts['exchange'] = '';
+  this.subscribeOpts['activemq.maximumPendingMessageLimit']=5;
+  this.subscribeOpts['activemq.dispatchAsync']=true;
+  this.subscribeOpts['activemq.prefetchSize']=2;
+
+  if ( the_displayObject ) this.pageName=the_displayObject.type;
+
+  var clid = '';
+  try {
+    var b, l, s = ''+document.location, d = new Date();
+    s = s.replace(/type=/g,'');
+    if ( (b=s.lastIndexOf('/')+1) < 1 ) b = 0;
+    if ( (l=s.indexOf('&'))       < 0 ) l = s.length;
+    clid = s.substring(b,l)+'  '+d.getFullYear()+'.'+d.getMonth()+'.'+d.getDate()+'--'+
+                                 d.getHours()+':'+ d.getMinutes()+':'+d.getSeconds()+'.'+
+                                 d.getMilliseconds()+'--'+Math.floor(Math.random()*100);
+    clid = clid.replace(/\?/g,'-');
+    clid = get_ip_address()+'  '+get_ip_name()+'  '+clid;
+  }
+  catch (e) {
+  }
+  this.connectOpts['client-id'] = 'ID:'+clid;
+
+  this.reconnectHandler = function() {
+    _dataProvider.logger.info('Starting reconnect timer');
+    if ( !_dataProvider.isConnected && this._dataProvider.needConnection ) {
+      _dataProvider.reconnect();
+      setTimeout(_dataProvider.reconnectHandler,10000);
+    }
+  };
+
+  stomp.onopen = function() {
+    _dataProvider.logger.info("Transport opened");
+    try {
+      this.parent.sessionKey = this.transport.session.sessionKey;
+    }
+    catch (e) {
+    }
+  };
+
+  stomp.onclose = function(code) {
+    _dataProvider.isConnected = false;
+    if ( code == 18 ) {
+      _dataProvider.logger.info("Transport closed (code: " + code + ", SECURITY_ERR)");
+    }
+    else if ( code == 101 ) {
+      _dataProvider.logger.info("Transport closed (code: " + code + ", NETWORK_ERR)");
+      _dataProvider.logger.info("Transport closed "+window.location);
+    }
+    else if ( code == 102 ) {
+      _dataProvider.logger.info("Transport closed (code: " + code + ", ABORT_ERR)");
+    }
+    else {
+      _dataProvider.logger.info("Transport closed (code: " + code + ")"); 
+    }
+    _dataProvider.logger.info("Reconnect flag:"+_dataProvider.needConnection);
+
+    if ( _dataProvider.needConnection ) {
+      _dataProvider.logger.info('Starting reconnection timer');
+      setTimeout(_dataProvider.reconnectHandler,10000);
+    }
+  };
+
+  stomp.onerror = function(error) {
+    _dataProvider.logger.error("onerror: " + error);
+  };
+
+  stomp.onerrorframe = function(frame) {
+    _dataProvider.logger.error("onerrorframe: " + frame.body);
+  };
+
+  stomp.onconnectedframe = function() {
+    _dataProvider.logger.info("Connected ..");
+    _dataProvider.needConnection = true;
+    _dataProvider.isConnected = true;
+    _dataProvider.connect();
+  };
+
+  /// Data dispatch callback once stomp receieves data
+  stomp.onmessageframe = function(frame) {
+    //alert('stomp.onmessageframe:'+frame.body);
+    var i, d, o, len, v = frame.body.split('#');
+    if ( v.length >= 2 ) {
+      var itm  = v[1];
+      var data = v.slice(2);
+      if ( data != 'DEAD' ) {
+	o = _dataProvider.items[itm];
+	len = o.length;
+	if ( !o.prev_data ) {
+	  o.prev_data = data;
+	}
+	else if ( o.prev_data+'' == data+'' ) {
+	  _dataProvider.logger.info('Ignore: [' +frame.body.length+' bytes] '+itm+'='+o.prev_data);
+	  return;
+	}
+	o.prev_data = data;
+	for(i=0; i<len; ++i) {
+	  if ( o[i] ) {
+	    o[i].set(data);
+	  }
+	  else {
+	    alert('Debug: Dead element: '+itm+'['+i+'] out of '+len);
+	  }
+	}
+	d = new String(data);
+	if (d.length > 10) d = d.substr(0,10);
+	_dataProvider.logger.info("Update: [" +frame.body.length+' bytes] '+itm+'='+d+' prev:'+o.prev_data);
+      }
+      return;
+    }
+    else if ( frame.body == this.parent.pageName+':reload' ) {
+      this.parent.reset();
+      window.location.replace(document.location);
+    }
+    else if ( frame.body == 'allPages:reload' ) {
+      this.parent.reset();
+      window.location.replace(document.location);
+    }
+    else if ( frame.body.substring(0,this.parent.pageName.length+5) == this.parent.pageName+':url:' ) {
+      this.parent.reset();
+      window.location.assign(frame.body.substring(this.parent.pageName.length+5));
+    }
+    _dataProvider.logger.error('onmessage: retrieved data with invalid item number');    
+  };
+
+  /** Connect to stomp channel
+   *
+   *  @return  Reference to self
+   */
+  this.start = function() {
+    this.logger.info("Connecting STOMP client....");
+    this.service.connect('localhost', 61613, 'guest', 'guest', this.connectOpts);
+    this.needConnection = true;
+    this.logger.info("Connecting STOMP client....Done");
+  };
+
+  /** Disconnect from stomp channel
+   *
+   *  @return  Reference to self
+   */
+  this.reset = function()  {
+    if ( this.isConnected ) {
+      this.service.disconnect();
+      this.service.reset();
+      this.isConnected = false;
+    }
+    return this;
+  };
+
+  this.reconnect = function() {
+    this.reset();
+    this.start();
+    return this;
+  };
+
+  /** Pre-Subscribe to data items
+   *  @param item      stomp topic to subscribe to. Must be an object with a "name" property.
+   *
+   *  @return  Reference to self
+   */
+  this.subscribeItem = function(item)  {
+    return this.subscribe(item.name,item);
+  };
+
+
+  /** Pre-Subscribe to data items
+   *  @param item      Name of stomp topic to subscribe to
+   *  @param callback  Object implementing "set" method when new data is received.
+   *
+   *  @return  Reference to self
+   */
+  this.subscribe = function(item,callback)  {
+    var len = this.calls.length;
+
+    this.calls.length = this.calls.length+1;
+    this.calls[len] = item;
+
+    if ( !this.items.hasOwnProperty(item) )
+      this.items[item] = new Array(callback);
+    else
+      this.items[item].push(callback);
+    this.logger.debug('DataProvider: Subscribed to data item:'+item+'   '+stomp);
+    if ( _dataProvider.isConnected )   {
+      var svc = this.calls[len];
+      var msg = 'SUBSCRIBE:'+svc;
+      if ( svc.substring(0,7)!='/topic/' ) svc = '/topic/'+svc;
+      this.logger.info('Subscribe STOMP service:'+svc);
+      this.service.subscribe(svc,this.subscribeOpts);
+      this.service.send(msg,this.topic,{exchange:''});
+    }
+    return this;
+  };
+
+  /** Unubscribe to data items
+   *  @param item      Name of stomp topic to subscribe to
+   *
+   *  @return  Reference to self
+   */
+  this.unsubscribe = function(item)  {
+    if ( this.isConnected ) {
+      this.service.unsubscribe(this.command,{exchange:''});
+      for(var i=0; i<this.calls.length;++i) {
+	if ( this.calls[i] == item ) {
+	  this.service.unsubscribe(item,{exchange:''});
+	  delete this.calls[i];
+	  this.calls.length = this.calls.length-1;
+	  return this;
+	}
+      }
+    }
+    else {
+      this.unsubscribeAll();
+    }
+    return null;
+  };
+
+  /** Disconnect from all item topics
+   *
+   *  @return  Reference to self
+   */
+  this.unsubscribeAll = function()  {
+    this.logger.info("Disconnect all pending data services ..");
+    this.service.unsubscribe(this.command,{exchange:''});
+    if ( this.isConnected ) {
+      for(var i=0; i<this.calls.length;++i) {
+	var item = this.calls[i];
+	this.service.unsubscribe(item,{exchange:''});
+      }
+    }
+    this.calls = new Array();
+    this.calls.length = 0;
+    this.items = new Object();
+    return this;
+  };
+  /** Update all data items by requesting a "SUBSCRIBE:<item> call to the server
+   *
+   *  @return  Reference to self
+   */
+  this.update = function() {
+    for (var i=0; i < this.calls.length; ++i)  {
+      var msg = 'SUBSCRIBE:'+this.calls[i];
+      this.service.send(msg,this.topic,{exchange:''});
+      this.logger.verbose('DataProvider: Connect data item:'+msg);
+    }
+    return this;
+  };
+
+  /// Connect to item topics and force first update
+  this.connect = function()  {
+    this.logger.info("Connecting all pending data leaves to services ..");
+    this.service.subscribe(this.command,{exchange:''});
+    for (var i=0; i < this.calls.length; ++i) {
+      var svc = this.calls[i];
+      if ( svc.substring(0,7)!='/topic/' ) svc = '/topic/'+svc;
+      this.logger.info('Subscribe STOMP service:'+svc);
+      this.service.subscribe(svc,this.subscribeOpts);
+    }
+    this.update();
+  };
+
+  /// Disconnect to item topics and force first update
+  this.disconnect = function()  {
+    this.unsubscribeAll();
+    this.service.disconnect();
+    this.service.reset();
+  };
+
+  //this.start();
+  /// Since long running documents have memory leaks, we reload the page
+  /// regularly to avoid them.
+  this.reloadHandler = function() {
+    window.location.reload();
+  };
+  setTimeout(_dataProvider.reloadHandler,3600000);
+  return this;
+};
+
+var dataProviderReset = function() {
+  if ( null != _dataProvider ) {
+    _dataProvider.needConnection = false;
+    _dataProvider.unsubscribeAll();
+    _dataProvider.isConnected = true;
+    _dataProvider.reset();
+  }
+};
+
+_lhcb().setup = function(show_log) {
+  var body = document.getElementsByTagName('body')[0];
+  lhcb.data = new Object();
+  lhcb.logWindow = document.createElement('div');
+  lhcb.logWindow.id = 'LHCb_LogWindow_std';
+  body.appendChild(lhcb.logWindow);
+  body.onunload = function() { dataProviderReset(); };
+
+  lhcb.data.logger   = new OutputLogger(lhcb.logWindow, -1, LOG_INFO, 'RunStatusLogger');
+  lhcb.data.provider = new DataProvider(lhcb.data.logger);
+  lhcb.data.provider.topic = '/topic/farm';
+  lhcb.data.stomp    = new Object();
+  lhcb.data.stomp.scanDocument = function() {
+    var elts = document.getElementsByTagName('STOMP');
+    var items = new Array();
+    var provider = lhcb.data.provider;
+    items.length = elts.length;
+    for (var i=0; i<elts.length;++i) {
+      var e = elts[i];
+      var item = e.getAttribute('data');
+      var fmt  = e.getAttribute('format');
+      items[i] = ElementItem(provider,item,fmt,e.parentNode);
+    }
+    lhcb.data.items = items;
+    elts = document.getElementsByTagName('DIM');
+    var raw_items = new Array();
+    raw_items.length = elts.length;
+    for (var i=0; i<elts.length;++i) {
+      var e = elts[i];
+      var item = e.getAttribute('data');
+      var fmt  = e.getAttribute('format');
+      raw_items[i] = RawItem(provider,item,fmt,e.parentNode);
+    }
+    lhcb.data.raw_items = raw_items;
+    provider.start();
+  };
+  return lhcb;
+};
+
+if ( _debugLoading ) alert('Script lhcb.display.data.cpp loaded successfully');
