@@ -19,10 +19,7 @@
 #include "EvtGenModels/EvtWilsonCoefficients.hh"
 #include <stdlib.h>
 
-// including EvtLi2Spence.F
-extern "C" {
-  extern double li2spence_(double*);
-}
+double li2spence(double);
 
 EvtWilsonCoefficients::EvtWilsonCoefficients(){
   int i,j;
@@ -355,7 +352,7 @@ double EvtWilsonCoefficients::etatilda(double shat,double alpha_S){
 double EvtWilsonCoefficients::omega(double shat){
   double o=0;
   o -= (2./9.)*EvtConst::pi*EvtConst::pi;
-  o -= (4./3.)*li2spence_(&shat);
+  o -= (4./3.)*li2spence(shat);
   o -= (2./3.)*log(shat)*log(1.-shat);
   o -= log(1.-shat)*(5.+4.*shat)/(3.+6.*shat);
   o -= log(shat)*2.*shat*(1.+shat)*(1.-2.*shat)/3./(1.-shat)/(1.-shat)/(1.+2.*shat);

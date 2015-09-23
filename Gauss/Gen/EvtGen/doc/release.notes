@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2015-09-23 - Michal Kreps
+  - Reimplement real Spence function in C++ and remove EvtLi2Spence.F.
+
 ! 2015-09-10 - Christoph Langenbruch 
   - Fixed form-factor calculations for the BTOSLLBALL model 6 used to generate 
     b->sll decays. Affects B->K*ll, B->rholl and B->omegall, particularly the 
