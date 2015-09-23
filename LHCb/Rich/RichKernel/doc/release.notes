@@ -5,6 +5,9 @@
 !------------------------------------------------------------------------------
 
 ! 2015-09-23 - Chris Jones
+ - Adapt to class name changes for FastAllocVector.
+
+! 2015-09-23 - Chris Jones
  - Add new headers for different sorts of map implementations, unordered and an
    implementation using a pool allocator.
  - Update RichDecodedData.h definitions to use the new templated maps.

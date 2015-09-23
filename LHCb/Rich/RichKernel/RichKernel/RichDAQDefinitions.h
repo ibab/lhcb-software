@@ -23,7 +23,6 @@
 // Kernel
 #include "Kernel/RichSmartID.h"
 #include "Kernel/RichSmartIDHashFuncs.h"
-#include "Kernel/FastAllocVector.h"
 
 namespace Rich
 {

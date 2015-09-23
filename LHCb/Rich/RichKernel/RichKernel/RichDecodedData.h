@@ -12,9 +12,6 @@
 #ifndef RICHKERNEL_RICHDECODEDDATA_H
 #define RICHKERNEL_RICHDECODEDDATA_H 1
 
-// LHCbKernel
-#include "Kernel/FastAllocVector.h"
-
 // RichKernel
 #include "RichKernel/RichDAQDefinitions.h"
 #include "RichKernel/RichDAQHeaderPD_V4.h"

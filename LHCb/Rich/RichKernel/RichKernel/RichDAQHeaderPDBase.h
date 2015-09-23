@@ -40,7 +40,7 @@ namespace Rich
     public:
 
       /// Type for header words
-      typedef LHCb::FastAllocVector<LongType> HeaderWords;
+      typedef LHCb::PoolAllocVector<LongType> HeaderWords;
 
     public:
 

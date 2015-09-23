@@ -31,8 +31,6 @@ namespace Rich
    *  A utility class providing a templated HashMap for fast
    *  loop up table like access.
    *
-   *  Provides a convenient single point of definition for optimisation studies.
-   *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   2005-01-11
    */
