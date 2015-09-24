@@ -340,7 +340,7 @@ namespace Rich
   inline HPDPixelClusters::Cluster *
   HPDPixelClusters::getCluster( const int row, const int col ) const
   {
-    return ( !m_frozen && isOn(row,col) ? (m_clusters[row])[col] : NULL );
+    return ( isOn(row,col) && !m_frozen ? (m_clusters[row])[col] : NULL );
   }
 
   inline HPDPixelClusters::Cluster *
