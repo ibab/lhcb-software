@@ -1,11 +1,14 @@
-+++ tid: 0x000013B8: Thread starting.
-+++ tid: 0x000013B7: Send signal 0 to (ALIVE) thread.
-+++ tid: 0x000013B7: Kill status: -1 errno:22
-+++ tid: 0x000013B7: Send signal 0 to (EXITED) thread.
-+++ tid: 0x000013B7: Kill status: -1 errno:3
++++ tid: 0x00004346: Thread starting.
++++ tid: 0x00004345: Send signal 0 to (ALIVE) thread.
++++ Error[3]: kill No such process
++++ tid: 0x00004345: Kill status: -1 errno:3
++++ tid: 0x00004345: Send signal 0 to (EXITED) thread.
++++ Error[3]: kill No such process
++++ tid: 0x00004345: Kill status: -1 errno:3
 C/Signal  +++ Thread CANCELLED.
 CXX using stack-unwind +++++ CANCEL+++CANCEL+++ Foo was cancelled
 +++ Thread joined.
-+++ tid: 0x000013B7: Send signal 0 to (DEAD) thread.
-+++ tid: 0x000013B7: Kill status: -1 errno:3 No such process
++++ tid: 0x00004345: Send signal 0 to (DEAD) thread.
++++ Error[3]: kill No such process
++++ tid: 0x00004345: Kill status: -1 errno:3 No such process
 +++ Process exiting.

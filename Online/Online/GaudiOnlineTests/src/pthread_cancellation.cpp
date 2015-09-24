@@ -99,5 +99,5 @@ extern "C" int pthread_cancellation(int, char**)   {
 	   gettid(),status,errno,strerror(errno));
   ::sleep(2);
   ::printf("+++ Process exiting.\n");
-  return 1;
+  return 0;
 }
