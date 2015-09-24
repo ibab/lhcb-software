@@ -20,16 +20,22 @@
 
 using namespace Rich;
 
+// Static data members
+bool HPDPixelClusters::m_data[Rich::DAQ::MaxDataSizeALICE][Rich::DAQ::NumPixelColumns];
+HPDPixelClusters::Cluster * HPDPixelClusters::m_clusters[Rich::DAQ::MaxDataSizeALICE][Rich::DAQ::NumPixelColumns];
+
 HPDPixelClusters::HPDPixelClusters( const HPDPixelCluster::SmartIDVector & smartIDs )
   : m_lastID    ( 0     ),
-    m_aliceMode ( false )
+    m_aliceMode ( false ),
+    m_frozen    ( false )
 {
 
   // initialise the c arrays
   // only do the first 1/8 - To cover LHCb mode only
   // if Alice mode is needed then set the rest when needed
   memset ( m_data,     0, sizeof(m_data)     / Rich::DAQ::NumAlicePixelsPerLHCbPixel );
-  memset ( m_clusters, 0, sizeof(m_clusters) / Rich::DAQ::NumAlicePixelsPerLHCbPixel );
+  // No need to initialise m_clusters, as each element is only accessed if m_data is true.
+  //memset ( m_clusters, 0, sizeof(m_clusters) / Rich::DAQ::NumAlicePixelsPerLHCbPixel );
 
   // use the smartIDs to set the active pixels
   if ( !smartIDs.empty() )
@@ -42,25 +48,25 @@ HPDPixelClusters::HPDPixelClusters( const HPDPixelCluster::SmartIDVector & smart
     if ( aliceMode() )
     {
       memset ( m_data,     0, sizeof(m_data)     );
-      memset ( m_clusters, 0, sizeof(m_clusters) );
+      // No need to initialise m_clusters, as each element is only accessed if m_data is true.
+      // memset ( m_clusters, 0, sizeof(m_clusters) );
     }
 
     // assume all hits are from the same HPD (only sensible case)
     m_hpdID = smartIDs.front().pdID();
 
     // set the hit pixels as "on"
-    for ( HPDPixelCluster::SmartIDVector::const_iterator iS = smartIDs.begin();
-          iS != smartIDs.end(); ++iS )
+    for ( const auto& S : smartIDs )
     {
       // double check all pixels are in same mode
-      if ( aliceMode() != (*iS).pixelSubRowDataIsValid() )
+      if ( aliceMode() != S.pixelSubRowDataIsValid() )
       {
         throw Rich::Exception( "Invalid mix of LHCb and ALICE mode RichSmartIDs" );
       }
-      setOn( rowNumber(*iS), colNumber(*iS) );
+      setOn( rowNumber(S), colNumber(S) );
     }
 
-    // reserve size for 5 pixels in cluster
+    // guess reserve size for 5 clusters
     //m_allclus.reserve(5); 
 
   } // smartids not empty
@@ -91,10 +97,9 @@ HPDPixelClusters::Cluster *
 HPDPixelClusters::mergeClusters( Cluster * clus1, Cluster * clus2 )
 {
   // add pixels to clus1
-  for ( HPDPixelCluster::SmartIDVector::const_iterator i = clus2->pixels().smartIDs().begin();
-        i != clus2->pixels().smartIDs().end(); ++i )
+  for ( const auto& i : clus2->pixels().smartIDs() )
   {
-    setCluster( rowNumber(*i), colNumber(*i), clus1 );
+    setCluster( rowNumber(i), colNumber(i), clus1 );
   }
   // delete clus2 and remove from vector
   removeCluster( clus2 );
@@ -131,34 +136,32 @@ MsgStream& HPDPixelClusters::fillStream ( MsgStream & os ) const
 void HPDPixelClusters::suppressIDs( HPDPixelCluster::SmartIDVector & smartIDs,
                                     const unsigned int maxSize ) const
 {
-  HPDPixelCluster::SmartIDVector newSmartIDs;
-  newSmartIDs.reserve(smartIDs.size());
-  for ( HPDPixelCluster::SmartIDVector::const_iterator iS = smartIDs.begin();
-        iS != smartIDs.end(); ++iS )
+  // make a local copy of the orginal IDs
+  const HPDPixelCluster::SmartIDVector cache_ids(smartIDs);
+  // clear the list
+  smartIDs.clear();
+  // refill the list with those not suppressed
+  for ( const auto& S : cache_ids )
   {
-    if ( getCluster(rowNumber(*iS),colNumber(*iS))->size() <= maxSize )
+    if ( getCluster(rowNumber(S),colNumber(S))->size() <= maxSize )
     {
-      newSmartIDs.push_back(*iS);
+      smartIDs.push_back(S);
     }
   }
-  smartIDs = newSmartIDs;
 }
 
 void HPDPixelClusters::splitClusters( const Cluster::PtnVector & clusters )
 {
   // loop over the clusters to break up
-  for ( Cluster::PtnVector::const_iterator iC = clusters.begin();
-        iC != clusters.end(); ++iC )
+  for ( auto * C : clusters )
   {
     // loop over the smartIDs for this cluster
-    for ( HPDPixelCluster::SmartIDVector::const_iterator iS = (*iC)->pixels().smartIDs().begin();
-          iS != (*iC)->pixels().smartIDs().end(); ++iS )
+    for ( const auto & S : C->pixels().smartIDs() )
     {
       // for each ID, make a single channel new cluster
-      Cluster * newClus = createNewCluster();
-      setCluster( rowNumber(*iS), colNumber(*iS), newClus );
+      setCluster( rowNumber(S), colNumber(S), createNewCluster() );
     }
     // remove and delete original cluster
-    removeCluster( *iC );
-  } // loop over clusters
+    removeCluster( C );
+  }
 }

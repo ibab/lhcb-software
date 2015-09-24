@@ -23,8 +23,12 @@
 
 // Kernel
 #include "Kernel/RichSmartID.h"
-#include "RichKernel/RichDAQDefinitions.h"
 #include "Kernel/MemPoolAlloc.h"
+#include "Kernel/FastAllocList.h"
+#include "Kernel/FastAllocVector.h"
+
+// RichKernel
+#include "RichKernel/RichDAQDefinitions.h"
 
 // Boost
 #include <boost/shared_ptr.hpp>
@@ -60,7 +64,7 @@ namespace Rich
     explicit HPDPixelCluster( const size_t resSize ) { m_ids.reserve(resSize); }
 
     /// Constructor from a single channel (one pixel cluster)
-    explicit HPDPixelCluster( const LHCb::RichSmartID id ) : m_ids(1,id) { }
+    explicit HPDPixelCluster( const LHCb::RichSmartID & id ) : m_ids(1,id) { }
 
     /// Constructor from a vector of RichSmartIDs
     explicit HPDPixelCluster( const SmartIDVector & ids ) : m_ids(ids) { }
@@ -77,9 +81,10 @@ namespace Rich
     inline const SmartIDVector & smartIDs() const { return m_ids; }
 
     /// The primary (seed) channel ID
-    inline LHCb::RichSmartID primaryID() const 
+    inline const LHCb::RichSmartID& primaryID() const 
     {
-      return ( !smartIDs().empty() ? smartIDs().front() : LHCb::RichSmartID() ); 
+      static const LHCb::RichSmartID defaultID;
+      return ( !smartIDs().empty() ? smartIDs().front() : defaultID ); 
     }
 
     /// The RICH detector for this cluster
@@ -89,18 +94,15 @@ namespace Rich
     inline LHCb::RichSmartID panel() const { return primaryID().panelID(); }
 
     /// The RICH HPD for this cluster
-    inline LHCb::RichSmartID hpd() const { return primaryID().pdID(); }
+    inline LHCb::RichSmartID hpd()   const { return primaryID().pdID(); }
 
     /// Number of channels in this cluster
-    inline unsigned int size() const { return smartIDs().size(); }
+    inline unsigned int size()       const { return smartIDs().size(); }
 
   public:
 
     /// Add a channel to this cluster
-    inline void addChannel( const LHCb::RichSmartID& id )
-    {
-      m_ids.push_back(id);
-    }
+    inline void addChannel( const LHCb::RichSmartID& id ) { m_ids.push_back(id); }
 
   public:
 
@@ -166,14 +168,14 @@ namespace Rich
     }
 
     /// Returns the 'correct' row number for the given RichSmartID (either LHCb or ALICE mode)
-    inline int rowNumber( const LHCb::RichSmartID id ) const
+    inline int rowNumber( const LHCb::RichSmartID& id ) const
     {
       return ( !aliceMode() ? id.pixelRow() :
                ((Rich::DAQ::NumAlicePixelsPerLHCbPixel*id.pixelRow())+id.pixelSubRow()) );
     }
 
     /// Returns the 'correct' column number for the given RichSmartID (either LHCb or ALICE mode)
-    inline int colNumber( const LHCb::RichSmartID id ) const
+    inline int colNumber( const LHCb::RichSmartID& id ) const
     {
       return id.pixelCol();
     }
@@ -195,17 +197,18 @@ namespace Rich
 
     public: // definitions
 
-      /// Vector of cluster pointers
-      typedef std::list<Cluster*> PtnVector;
+      /// collection of cluster pointers
+      typedef LHCb::Boost::PoolAllocList<Cluster*> PtnVector;
+      //typedef LHCb::Boost::PoolAllocVector<Cluster*> PtnVector;
 
     public: // methods
 
       /// Constructor
       Cluster( const int id = -1 ) 
         : m_clusterID(id) 
-        //,m_cluster(3) // reserve size for pixels in cluster
+        , m_cluster(3) // guess a reserve size for pixels in cluster
       { }
-
+      
       /// Get cluster ID
       inline int id() const
       {
@@ -213,7 +216,7 @@ namespace Rich
       }
 
       /// Add a pixel to this cluster
-      inline void addPixel( const LHCb::RichSmartID id )
+      inline void addPixel( const LHCb::RichSmartID& id )
       {
         m_cluster.addChannel( id );
       }
@@ -245,21 +248,8 @@ namespace Rich
     /// Destructor
     ~HPDPixelClusters()
     {
-      for ( Cluster::PtnVector::iterator i = m_allclus.begin();
-            i != m_allclus.end(); ++i ) { delete *i; }
+      for ( auto * i : m_allclus ) { delete i; }
     }
-
-    /// Set given col and row on
-    void setOn( const int row, const int col );
-
-    /// Check if given row and col is on
-    bool isOn( const int row, const int col ) const;
-
-    /// Get cluster for given pixel
-    Cluster * getCluster( const int row, const int col ) const;
-
-    /// Set cluster for given pixel
-    void setCluster( const int row, const int col, Cluster * clus );
 
     /// Create a new cluster with given ID
     Cluster * createNewCluster();
@@ -277,6 +267,17 @@ namespace Rich
     /// Split the given clusters up into single channel clusters
     void splitClusters( const Cluster::PtnVector & clusters );
 
+    /// Get cluster for given pixel
+    Cluster * getCluster( const int row, const int col ) const;
+
+    /// Set cluster for given pixel
+    void setCluster( const int row, const int col, Cluster * clus );
+
+    /// Freeze these clusters
+    inline void freeze() { m_frozen = true; }
+
+  public:
+
     /// Print in a human readable way
     MsgStream& fillStream( MsgStream& os ) const;
 
@@ -286,6 +287,12 @@ namespace Rich
     { return data.fillStream(os); }
 
   private: // methods
+
+    /// Set given col and row on
+    void setOn( const int row, const int col );
+
+    /// Check if given row and col is on
+    bool isOn( const int row, const int col ) const;
 
     /// Remove a cluster
     void removeCluster( Cluster * clus );
@@ -298,12 +305,12 @@ namespace Rich
     /** Raw input data (row,col) (false means no hit, true means hit)
      *  @attention Hardcoding number of rows here to ALICE mode
      */
-    bool m_data[Rich::DAQ::MaxDataSizeALICE][Rich::DAQ::NumPixelColumns];
+    static bool m_data[Rich::DAQ::MaxDataSizeALICE][Rich::DAQ::NumPixelColumns];
 
     /** Assigned cluster for each pixel
      *  @attention Hardcoding number of rows here to ALICE mode
      */
-    Cluster * m_clusters[Rich::DAQ::MaxDataSizeALICE][Rich::DAQ::NumPixelColumns];
+    static Cluster * m_clusters[Rich::DAQ::MaxDataSizeALICE][Rich::DAQ::NumPixelColumns];
 
     /// Vector of all created clusters
     Cluster::PtnVector m_allclus;
@@ -313,6 +320,9 @@ namespace Rich
 
     /// Are we in ALICE mode ?
     bool m_aliceMode;  
+
+    /// Freeze these clusters (prevent access to m_clusters and m_data)
+    bool m_frozen;
 
   };
 
@@ -330,7 +340,7 @@ namespace Rich
   inline HPDPixelClusters::Cluster *
   HPDPixelClusters::getCluster( const int row, const int col ) const
   {
-    return ( isOn(row,col) ? (m_clusters[row])[col] : NULL );
+    return ( !m_frozen && isOn(row,col) ? (m_clusters[row])[col] : NULL );
   }
 
   inline HPDPixelClusters::Cluster *
@@ -342,7 +352,7 @@ namespace Rich
 
   inline void HPDPixelClusters::removeCluster( Cluster * clus )
   {
-    Cluster::PtnVector::iterator iF = std::find( m_allclus.begin(), m_allclus.end(), clus );
+    auto iF = std::find( m_allclus.begin(), m_allclus.end(), clus );
     if ( iF != m_allclus.end() )
     {
       m_allclus.erase( iF );

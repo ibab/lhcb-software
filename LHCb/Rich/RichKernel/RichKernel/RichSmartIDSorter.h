@@ -38,7 +38,7 @@ namespace Rich
 
     /// Functor to sort RichSmartIDs by Rich then panel numbers
     class SortByRegion
-      : std::binary_function< const LHCb::RichSmartID, const LHCb::RichSmartID, bool >
+      : std::binary_function< const LHCb::RichSmartID&, const LHCb::RichSmartID&, bool >
     {
 
     public:
@@ -52,10 +52,12 @@ namespace Rich
        *
        *  @return bool indicating if p1 should be listed before p2
        */
-      inline bool operator() ( const LHCb::RichSmartID p1, const LHCb::RichSmartID p2 ) const
+      inline bool operator() ( const LHCb::RichSmartID& p1, 
+                               const LHCb::RichSmartID& p2 ) const
       {
         // Use internal bit packing to sort
-        return ( p1.dataBitsOnly().key() < p2.dataBitsOnly().key() );
+        //return ( p1.dataBitsOnly().key() < p2.dataBitsOnly().key() );
+        return ( p1.key() < p2.key() );
       }
 
     };
@@ -63,10 +65,10 @@ namespace Rich
   public:
 
     /// Constructor
-    SmartIDSorter() {};
+    SmartIDSorter() { }
 
     /// Destructor
-    ~SmartIDSorter() {};
+    ~SmartIDSorter() { }
 
     /// Sort the list by detector region
     inline static void sortByRegion( LHCb::RichSmartID::Vector& smartIDs )

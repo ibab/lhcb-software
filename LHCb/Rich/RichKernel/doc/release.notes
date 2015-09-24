@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2015-09-24 - Chrs Jones
+ - Various CPU improvements to pixel cluster classes and smart ID sorter.
+
 ! 2015-09-23 - Chris Jones
  - Adapt to class name changes for FastAllocVector.
 
