@@ -3,6 +3,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2015-09-24
+ - STClusterTuple: fixed uninitialised variable warning
+
 ! 2015-09-22 - Vincenzo Battista
  - STClusterTuple: some cleanup and updates
 

@@ -99,7 +99,7 @@ StatusCode STClusterTuple::execute() {
   
   //Create MCHits-Clusters associator table
   AsctTool* associator;
-  const Table* aTable;
+  const Table* aTable = NULL;
   if(m_MonteCarlo)
   {
     associator = new AsctTool(evtSvc(), m_asctLocation);
