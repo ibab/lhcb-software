@@ -150,7 +150,7 @@ StatusCode PrChecker2::initialize()
     return StatusCode::FAILURE;
   }
   
-  ghtool->setHistoDir("Track/PrChecker2") ;
+  ghtool->setHistoDir( histoDir + name()) ;
   m_histoTool = htool;
 
   if(m_triggerNumbers){//if true add extra cuts in maps
