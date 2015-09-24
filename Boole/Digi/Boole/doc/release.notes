@@ -3,6 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v29r9>2015-09-25 Boole v29r9</A></H1><PRE>
+This version uses projects:
+ LCG_79 (ROOT 6.04.02), Gaudi v26r3, LHCb v39r0, Lbcom v17r0
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
 - Changes to configuration
   . Add more RawEvent locations to be killed in options/Boole-RunFromXDST.py
 
