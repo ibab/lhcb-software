@@ -103,13 +103,11 @@ bool MCTruthTool::mcParticles( const Rich::HPDPixelCluster& cluster,
                                std::vector<const LHCb::MCParticle*> & mcParts ) const
 {
   mcParts.clear();
-  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
-        iS != cluster.smartIDs().end(); ++iS )
+  for ( const auto& S : cluster.smartIDs() )
   {
     std::vector<const LHCb::MCParticle*> tmp_vect;
-    mcParticles( *iS, tmp_vect );
-    for ( std::vector<const LHCb::MCParticle*>::const_iterator iP = tmp_vect.begin();
-          iP != tmp_vect.end(); ++iP ) { mcParts.push_back(*iP); }
+    mcParticles( S, tmp_vect );
+    for ( const auto* P : tmp_vect ) { mcParts.push_back(P); }
   }
   return !mcParts.empty();
 }
@@ -124,10 +122,9 @@ bool MCTruthTool::mcParticles( const LHCb::RichSmartID id,
   MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
   if ( iEn != mcRichDigSumMap().end() )
   {
-    for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
-          iSum != (*iEn).second.end(); ++iSum )
+    for ( const auto* sum : (*iEn).second )
     {
-      const LHCb::MCParticle * mcP = (*iSum)->mcParticle();
+      const LHCb::MCParticle * mcP = sum->mcParticle();
       // protect against null references
       if ( !mcP ) continue;
       // Add to vector, once per MCParticle
@@ -175,40 +172,36 @@ MCTruthTool::mcOpticalPhoton( const LHCb::MCRichHit * mcHit ) const
 
 bool MCTruthTool::isBackground ( const Rich::HPDPixelCluster& cluster ) const
 {
-  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
-        iS != cluster.smartIDs().end(); ++iS )
+  for ( const auto& S : cluster.smartIDs() )
   {
-    if ( !isBackground(*iS) ) return false;
+    if ( !isBackground(S) ) return false;
   }
   return true;
 }
 
 bool MCTruthTool::isHPDReflection ( const Rich::HPDPixelCluster& cluster ) const
 {
-  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
-        iS != cluster.smartIDs().end(); ++iS )
+  for ( const auto& S : cluster.smartIDs() )
   {
-    if ( !isHPDReflection(*iS) ) return false;
+    if ( !isHPDReflection(S) ) return false;
   }
   return true;
 }
 
 bool MCTruthTool::isSiBackScatter ( const Rich::HPDPixelCluster& cluster ) const
 {
-  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
-        iS != cluster.smartIDs().end(); ++iS )
+  for ( const auto& S : cluster.smartIDs() )
   {
-    if ( !isSiBackScatter(*iS) ) return false;
+    if ( !isSiBackScatter(S) ) return false;
   }
   return true;
 }
 
 bool MCTruthTool::isRadScintillation ( const Rich::HPDPixelCluster& cluster ) const
 {
-  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
-        iS != cluster.smartIDs().end(); ++iS )
+  for ( const auto& S : cluster.smartIDs() )
   {
-    if ( !isRadScintillation(*iS) ) return false;
+    if ( !isRadScintillation(S) ) return false;
   }
   return true;
 }
@@ -220,11 +213,10 @@ bool MCTruthTool::isBackground ( const LHCb::RichSmartID id ) const
   if ( iEn != mcRichDigSumMap().end() )
   {
     // loop over summaries
-    for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
-          iSum != (*iEn).second.end(); ++iSum )
+    for ( const auto * sum : (*iEn).second )
     {
       // returns true if hit is only background (no signal contribution)
-      if ( (*iSum)->history().hasSignal() ) return false;
+      if ( sum->history().hasSignal() ) return false;
     }
   }
   else if ( msgLevel(MSG::DEBUG) )
@@ -244,11 +236,10 @@ bool MCTruthTool::isHPDReflection ( const LHCb::RichSmartID id ) const
   if ( iEn != mcRichDigSumMap().end() )
   {
     // loop over summaries
-    for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
-          iSum != (*iEn).second.end(); ++iSum )
+    for ( const auto * sum : (*iEn).second )
     {
-      if ( (*iSum)->history().isSignal()      ) isSignal  = true;
-      if ( (*iSum)->history().hpdReflection() ) isHPDRefl = true;
+      if ( sum->history().isSignal()      ) isSignal  = true;
+      if ( sum->history().hpdReflection() ) isHPDRefl = true;
     }
   }
   else if ( msgLevel(MSG::DEBUG) )
@@ -267,11 +258,10 @@ bool MCTruthTool::isSiBackScatter ( const LHCb::RichSmartID id ) const
   if ( iEn != mcRichDigSumMap().end() )
   {
     // loop over summaries
-    for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
-          iSum != (*iEn).second.end(); ++iSum )
+    for ( const auto * sum : (*iEn).second )
     {
-      if ( (*iSum)->history().isSignal()         ) isSignal = true;
-      if ( (*iSum)->history().hpdSiBackscatter() ) isSiRefl = true;
+      if ( sum->history().isSignal()         ) isSignal = true;
+      if ( sum->history().hpdSiBackscatter() ) isSiRefl = true;
     }
   }
   else if ( msgLevel(MSG::DEBUG) )
@@ -290,11 +280,10 @@ bool MCTruthTool::isRadScintillation ( const LHCb::RichSmartID id ) const
   if ( iEn != mcRichDigSumMap().end() )
   {
     // loop over summaries
-    for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
-          iSum != (*iEn).second.end(); ++iSum )
+    for ( const auto * sum : (*iEn).second )
     {
-      if ( (*iSum)->history().isSignal()         ) isSignal = true;
-      if ( (*iSum)->history().radScintillation() ) isRadScint = true;
+      if ( sum->history().isSignal()         ) isSignal = true;
+      if ( sum->history().radScintillation() ) isRadScint = true;
     }
   }
   else if ( msgLevel(MSG::DEBUG) )
@@ -308,10 +297,9 @@ bool MCTruthTool::isRadScintillation ( const LHCb::RichSmartID id ) const
 bool MCTruthTool::isCherenkovRadiation( const Rich::HPDPixelCluster& cluster,
                                         const Rich::RadiatorType rad ) const
 {
-  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
-        iS != cluster.smartIDs().end(); ++iS )
+  for ( const auto& S : cluster.smartIDs() )
   {
-    if ( isCherenkovRadiation(*iS,rad) ) return true;
+    if ( isCherenkovRadiation(S,rad) ) return true;
   }
   return false;
 }
@@ -326,10 +314,9 @@ MCTruthTool::isCherenkovRadiation( const LHCb::RichSmartID id,
   if ( iEn != mcRichDigSumMap().end() )
   {
     // loop over summaries
-    for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
-          iSum != (*iEn).second.end(); ++iSum )
+    for ( const auto * sum : (*iEn).second )
     {
-      const LHCb::MCRichDigitHistoryCode & code = (*iSum)->history();
+      const LHCb::MCRichDigitHistoryCode & code = sum->history();
       if ( code.hasSignal() )
       {
         if      ( Rich::Aerogel == rad && code.aerogelHit() ) { return true; }
@@ -350,14 +337,12 @@ MCTruthTool::getMcHistories( const Rich::HPDPixelCluster& cluster,
                              std::vector<const LHCb::MCRichDigitSummary*> & histories ) const
 {
   bool OK = false;
-  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
-        iS != cluster.smartIDs().end(); ++iS )
+  for ( const auto& S : cluster.smartIDs() )
   {
     std::vector<const LHCb::MCRichDigitSummary*> tmp_hists;
-    OK = ( getMcHistories(*iS,tmp_hists) || OK );
+    OK = ( getMcHistories(S,tmp_hists) || OK );
     //std::for_each( tmp_hists.begin(), tmp_hists.end(), histories.push_back( _1 ) );
-    for ( std::vector<const LHCb::MCRichDigitSummary*>::const_iterator iSum = tmp_hists.begin();
-          iSum != tmp_hists.end(); ++iSum ) { histories.push_back(*iSum); }
+    for ( const auto * sum : tmp_hists ) { histories.push_back(sum); }
   }
   return OK;
 }
@@ -457,10 +442,9 @@ MCTruthTool::mcRichDigSumMap() const
     // loop over summaries
     if ( mcRichDigitSummaries() )
     {
-      for ( LHCb::MCRichDigitSummarys::const_iterator iSum = mcRichDigitSummaries()->begin();
-            iSum != mcRichDigitSummaries()->end(); ++iSum )
+      for ( const auto * sum : *mcRichDigitSummaries() )
       {
-        m_mcRichDigSumMap[(*iSum)->richSmartID()].push_back( *iSum );
+        m_mcRichDigSumMap[sum->richSmartID()].push_back( sum );
       }
     }
 
@@ -551,17 +535,16 @@ MCTruthTool::mcPartToMCRichHitsMap() const
     // only using signal event here for the time being. Should add spillovers sometime ...
     if ( mcRichHits() )
     {
-      for ( LHCb::MCRichHits::const_iterator iHit = mcRichHits()->begin();
-            iHit != mcRichHits()->end(); ++iHit )
+      for ( const auto * hit : *mcRichHits() )
       {
-        const LHCb::MCParticle * mcP = (*iHit)->mcParticle();
+        const LHCb::MCParticle * mcP = hit->mcParticle();
         if ( mcP )
         {
           if ( msgLevel(MSG::VERBOSE) )
           {
             verbose() << "Adding MCRichHit to list for MCParticle " << mcP->key() << endmsg;
           }
-          m_mcPToHits[mcP].push_back( *iHit );
+          m_mcPToHits[mcP].push_back( hit );
         }
       }
       if ( msgLevel(MSG::DEBUG) )
@@ -583,24 +566,23 @@ MCTruthTool::smartIDToMCRichHitsMap() const
     // only using signal event here for the time being. Should add spillovers sometime
     if ( mcRichHits() )
     {
-      for ( LHCb::MCRichHits::const_iterator iHit = mcRichHits()->begin();
-            iHit != mcRichHits()->end(); ++iHit )
+      for ( const auto * hit : *mcRichHits() )
       {
         // For the moment, strip sub-pixel information
         // in the longer term, should do something more clever
-        const LHCb::RichSmartID pixelID = (*iHit)->sensDetID().pixelID();
+        const LHCb::RichSmartID pixelID = hit->sensDetID().pixelID();
         if ( msgLevel(MSG::VERBOSE) )
         {
           verbose() << "Adding MCRichHit to list for Pixel ID " << pixelID << endmsg;
         }
-        m_smartIDsToHits[pixelID].push_back( *iHit );
+        m_smartIDsToHits[pixelID].push_back( hit );
         // Add another entry for the HPD
         const LHCb::RichSmartID hpdID = pixelID.pdID();
         if ( msgLevel(MSG::VERBOSE) )
         {
           verbose() << "Adding MCRichHit to list for HPD ID " << hpdID << endmsg;
         }
-        m_smartIDsToHits[hpdID].push_back( *iHit );
+        m_smartIDsToHits[hpdID].push_back( hit );
       }
       if ( msgLevel(MSG::DEBUG) )
       {
@@ -623,10 +605,9 @@ void
 MCTruthTool::mcRichHits( const Rich::HPDPixelCluster& cluster,
                          SmartRefVector<LHCb::MCRichHit> & hits ) const
 {
-  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
-        iS != cluster.smartIDs().end(); ++iS )
+  for ( const auto& S : cluster.smartIDs() )
   {
-    const SmartRefVector<LHCb::MCRichHit> & tmp_hits = mcRichHits(*iS);
+    const SmartRefVector<LHCb::MCRichHit> & tmp_hits = mcRichHits(S);
     for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iH = tmp_hits.begin();
           iH != tmp_hits.end(); ++iH )
     {
