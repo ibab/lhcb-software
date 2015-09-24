@@ -63,21 +63,35 @@ class IHistoTool ;
  *   PrChecker2("PrChecker2").Velo.TrackSelector.MaxChi2Cut = 5.0 
  *  @endcode
  *
- *  Uses IHistoTool: for each container histograms are plotted if the following code segment is used. Default values are -1 (no histograms), can also be set to 2 for additional histograms (expectedHits, docaz, PVz, EtaP, EtaPhi, efficiency maps @z=9000mm XYZ9000 and @z=2485mm XYZ2485) 
+ *  Uses IHistoTool: for each container histograms are plotted if the following code segment is used. 
+ *  Default values are -1 (no histograms), can also be set to 2 for additional histograms (expectedHits, docaz, PVz, EtaP, EtaPhi, efficiency maps @z=9000mm XYZ9000 and @z=2485mm XYZ2485) 
  * 
- * @code
- * PrChecker2("PrChecker2").Write(container)Histos = 1
- * @endcode
+ *  @code
+ *  PrChecker2("PrChecker2").Write(container)Histos = 1
+ *  @endcode
  *
- * Configurable selection cuts for each container, can be changed via:
+ *  Configurable selection cuts for each container, can be changed via:
  *
- * @code
- * PrChecker2("PrChecker2").MyForwardCuts = {"long" : "isLong", "B daughter": "fromB" }
- * @endcode
+ *  @code
+ *  PrChecker2("PrChecker2").MyForwardCuts = {"long" : "isLong", "B daughter": "fromB" }
+ *  @endcode
  *
- * As a default selection cuts of old PrChecker are used. The following cuts are predefined: 
- * is(Not)Long, is(Not)Velo, is(Not)Down, is(Not)Up, is(Not)TT, is(Not)Seed, fromB, fromD, BOrDMother, fromKsFromB, strange, is(Not)Electron, eta25, over5, trigger and  Loki syntax (LoKi::MCParticles) can be used for kinematical cuts: (MCPT> 2300), here () are essential.
+ *  As a default selection cuts of old PrChecker are used. The following cuts are predefined: 
+ *  - is(Not)Long, is(Not)Velo, is(Not)Down, is(Not)Up, is(Not)TT, is(Not)Seed, 
+ *  - fromB, fromD, BOrDMother, fromKsFromB, strange 
+ *  - is(Not)Electron, eta25, over5, trigger
+ *  
+ *  and LoKi syntax (LoKi::MCParticles) can be used for kinematical cuts, e.g. (MCPT> 2300), here the '()' are essential.
  * 
+ * 
+ *  NB: If you care about the implementation: The cut-strings are converted into two types of functors: 
+ *  - LoKi-type functors (hence all LoKi::MCParticles cuts work) 
+ *  - and custom-defined ones, mostly for type of reconstructibility and daughter-criteria (like 'isNotLong')
+ *  where in the end all functors are evaluated on each MCParticle for each track container to define the reconstructibility.
+ *  If a MCParticle is actually reconstructed is checked in the PrCounter2.
+ *  A large part of the code just deals with the conversion of the strings into functors.
+ *
+ *
  *  @author Olivier Callot, Thomas Nikodem, Svende Braun, Michel De Cian
  *  @date   2015-01-17
  */
@@ -121,6 +135,12 @@ protected:
   
   
 private:
+
+  // typedefs to make everything a bit more readable
+  typedef std::vector<std::string>            strings;
+  typedef std::map<std::string, std::string>  stringmap;
+  typedef std::pair<std::string, std::string> stringpair;
+  
 
   std::string m_veloTracks;
   std::string m_forwardTracks;
@@ -335,82 +355,82 @@ private:
   };
   
   //maps for each track container with {cut name,selection cut}
-  std::map <std::string,std::string> m_map_forward;
-  std::map <std::string,std::string> m_map_velo;
-  std::map <std::string,std::string> m_map_up;
-  std::map <std::string,std::string> m_map_ttrack;
-  std::map <std::string,std::string> m_map_down;
-  std::map <std::string,std::string> m_map_ttforward;
-  std::map <std::string,std::string> m_map_ttdown;
-  std::map <std::string,std::string> m_map_new;
-  std::map <std::string,std::string> m_map_ttnew;
+  stringmap m_map_forward;
+  stringmap m_map_velo;
+  stringmap m_map_up;
+  stringmap m_map_ttrack;
+  stringmap m_map_down;
+  stringmap m_map_ttforward;
+  stringmap m_map_ttdown;
+  stringmap m_map_new;
+  stringmap m_map_ttnew;
   
   //default cuts for each container, if not other ones are specified in run python file, those are taken
   /** @brief Map filled  with default cuts for each container, first string is name of the cut, second one is cut (predefined from class isTrack or kinematical Loki Cuts)
    */
-  std::map <std::string,std::string> DefaultCutMap( std::string name ){
+  stringmap DefaultCutMap( std::string name ){
     
-    std::map <std::string,std::string> map_velo      = { {"01_velo" ,"isVelo "},//use numbers for right order of cuts
-                                                         {"02_long","isLong "},
-                                                         {"03_long>5GeV" ,"isLong & over5  " }, 
-                                                         {"04_long_strange" , "isLong & strange " },
-                                                         {"05_long_strange>5GeV","isLong & strange & over5 " },
-                                                         {"06_long_fromB" ,"isLong & fromB " },
-                                                         {"07_long_fromB>5GeV" , "isLong & fromB & over5 " } };
-    std::map <std::string,std::string> map_forward   = { {"01_long","isLong "}, 
-                                                         {"02_long>5GeV","isLong & over5 " }, 
-                                                         {"03_long_strange","isLong & strange " },
-                                                         {"04_long_strange>5GeV","isLong & strange & over5 " },
-                                                         {"05_long_fromB","isLong & fromB " },
-                                                         {"06_long_fromB>5GeV","isLong & fromB & over5 " } };
-    std::map <std::string,std::string> map_up        = { {"01_velo" ,"isVelo "},
-                                                         {"02_velo+UT" ,"isVelo & isTT "},
-                                                         {"03_velo+UT>5GeV" , "isVelo & isTT & over5 "},
-                                                         {"04_velo+notLong" ,"isNotLong & isVelo  "},
-                                                         {"05_velo+UT+notLong" ,"isNotLong & isVelo & isTT "},
-                                                         {"06_velo+UT+notLong>5GeV" ,"isNotLong & isVelo & isTT & over5 "},
-                                                         {"07_long" ,"isLong "},
-                                                         {"08_long>5GeV" ,"isLong & over5  "},
-                                                         {"09_long_fromB" ,"isLong & fromB "},
-                                                         {"10_long_fromB>5GeV" , "isLong & fromB & over5 "} };
-    std::map <std::string,std::string> map_ttrack    = { {"01_hasT" ,"isSeed "},
-                                                         {"02_long" ,"isLong "},
-                                                         {"03_long>5GeV" ,"isLong & over5 "},
-                                                         { "04_long_fromB" ,"isLong & fromB "},
-                                                         {"05_long_fromB>5GeV" , "isLong & fromB & over5 "},
-                                                         {"06_UT+T_strange" , " strange & isDown "},
-                                                         {"07_UT+T_strange>5GeV" , " strange & isDown & over5"},
-                                                         {"08_noVelo+UT+T_strange" , " strange & isDown & isNotVelo"},
-                                                         {"09_noVelo+UT+T_strange>5GeV" , " strange & isDown & over5 & isNotVelo "},
-                                                         {"10_UT+T_SfromDB" , " strange & isDown & ( fromB | fromD ) "},
-                                                         {"11_UT+T_SfromDB>5GeV" , " strange & isDown & over5 & ( fromB | fromD )"},
-                                                         {"12_noVelo+UT+T_SfromDB>5GeV" , " strange & isDown & isNotVelo & over5 & ( fromB | fromD ) "} };
-    std::map <std::string,std::string> map_down      = { {"01_UT+T" ,"isDown "},
-                                                         {"02_UT+T>5GeV" ,"isDown & over5"},
-                                                         {"03_UT+T_strange" , " strange & isDown"},
-                                                         {"04_UT+T_strange>5GeV" , " strange & isDown & over5 "},
-                                                         {"05_noVelo+UT+T_strange" , " strange & isDown & isNotVelo"},
-                                                         {"06_noVelo+UT+T_strange>5GeV" , " strange & isDown & over5 & isNotVelo "},
-                                                         {"07_UT+T_fromB" , "isDown & fromB "},
-                                                         {"08_UT+T_fromB>5GeV" , "isDown & fromB & over5 "},
-                                                         {"09_noVelo+UT+T_fromB" , "isDown & fromB & isNotVelo"},
-                                                         {"10_noVelo+UT+T_fromB>5GeV" , "isDown & fromB & over5 & isNotVelo"},
-                                                         {"11_UT+T_SfromDB" , " strange & isDown & ( fromB | fromD ) "},
-                                                         {"12_UT+T_SfromDB>5GeV" , " strange & isDown & over5 & ( fromB | fromD ) "},
-                                                         {"13_noVelo+UT+T_SfromDB" , " strange & isDown & isNotVelo & ( fromB | fromD )"},
-                                                         {"14_noVelo+UT+T_SfromDB>5GeV" , " strange & isDown & isNotVelo & over5 & ( fromB | fromD ) "} };
-
-    std::map <std::string,std::string> map_new       = { };
-    std::map <std::string,std::string> map_ttforward = { { "01_long" ,"isLong "},
-                                                         {"02_long>5GeV" ,"isLong & over5  "} };
-    std::map <std::string,std::string> map_ttdown    = { {"01_has seed" ,"isSeed "},
-                                                         {"02_has seed +noVelo, T+TT" ,"isSeed & isNotVelo & isDown "},
-                                                         {"03_down+strange" , " strange & isDown"},
-                                                         {"04_down+strange+>5GeV" , " strange & isDown & over5 "}, 
-                                                         {"05_pi<-Ks<-B" , "fromKsFromB "},
-                                                         {"06_pi<-Ks<-B+> 5 GeV" , "fromKsFromB & over5 "} };
-    std::map <std::string,std::string> map_ttnew     = { };
-    std::map <std::string,std::string> empty_map     = { {},{} };
+    stringmap map_velo      = { {"01_velo" ,"isVelo "},//use numbers for right order of cuts
+                                {"02_long","isLong "},
+                                {"03_long>5GeV" ,"isLong & over5  " }, 
+                                {"04_long_strange" , "isLong & strange " },
+                                {"05_long_strange>5GeV","isLong & strange & over5 " },
+                                {"06_long_fromB" ,"isLong & fromB " },
+                                {"07_long_fromB>5GeV" , "isLong & fromB & over5 " } };
+    stringmap map_forward   = { {"01_long","isLong "}, 
+                                {"02_long>5GeV","isLong & over5 " }, 
+                                {"03_long_strange","isLong & strange " },
+                                {"04_long_strange>5GeV","isLong & strange & over5 " },
+                                {"05_long_fromB","isLong & fromB " },
+                                {"06_long_fromB>5GeV","isLong & fromB & over5 " } };
+    stringmap map_up        = { {"01_velo" ,"isVelo "},
+                                {"02_velo+UT" ,"isVelo & isTT "},
+                                {"03_velo+UT>5GeV" , "isVelo & isTT & over5 "},
+                                {"04_velo+notLong" ,"isNotLong & isVelo  "},
+                                {"05_velo+UT+notLong" ,"isNotLong & isVelo & isTT "},
+                                {"06_velo+UT+notLong>5GeV" ,"isNotLong & isVelo & isTT & over5 "},
+                                {"07_long" ,"isLong "},
+                                {"08_long>5GeV" ,"isLong & over5  "},
+                                {"09_long_fromB" ,"isLong & fromB "},
+                                {"10_long_fromB>5GeV" , "isLong & fromB & over5 "} };
+    stringmap map_ttrack    = { {"01_hasT" ,"isSeed "},
+                                {"02_long" ,"isLong "},
+                                {"03_long>5GeV" ,"isLong & over5 "},
+                                { "04_long_fromB" ,"isLong & fromB "},
+                                {"05_long_fromB>5GeV" , "isLong & fromB & over5 "},
+                                {"06_UT+T_strange" , " strange & isDown "},
+                                {"07_UT+T_strange>5GeV" , " strange & isDown & over5"},
+                                {"08_noVelo+UT+T_strange" , " strange & isDown & isNotVelo"},
+                                {"09_noVelo+UT+T_strange>5GeV" , " strange & isDown & over5 & isNotVelo "},
+                                {"10_UT+T_SfromDB" , " strange & isDown & ( fromB | fromD ) "},
+                                {"11_UT+T_SfromDB>5GeV" , " strange & isDown & over5 & ( fromB | fromD )"},
+                                {"12_noVelo+UT+T_SfromDB>5GeV" , " strange & isDown & isNotVelo & over5 & ( fromB | fromD ) "} };
+    stringmap map_down      = { {"01_UT+T" ,"isDown "},
+                                {"02_UT+T>5GeV" ,"isDown & over5"},
+                                {"03_UT+T_strange" , " strange & isDown"},
+                                {"04_UT+T_strange>5GeV" , " strange & isDown & over5 "},
+                                {"05_noVelo+UT+T_strange" , " strange & isDown & isNotVelo"},
+                                {"06_noVelo+UT+T_strange>5GeV" , " strange & isDown & over5 & isNotVelo "},
+                                {"07_UT+T_fromB" , "isDown & fromB "},
+                                {"08_UT+T_fromB>5GeV" , "isDown & fromB & over5 "},
+                                {"09_noVelo+UT+T_fromB" , "isDown & fromB & isNotVelo"},
+                                {"10_noVelo+UT+T_fromB>5GeV" , "isDown & fromB & over5 & isNotVelo"},
+                                {"11_UT+T_SfromDB" , " strange & isDown & ( fromB | fromD ) "},
+                                {"12_UT+T_SfromDB>5GeV" , " strange & isDown & over5 & ( fromB | fromD ) "},
+                                {"13_noVelo+UT+T_SfromDB" , " strange & isDown & isNotVelo & ( fromB | fromD )"},
+                                {"14_noVelo+UT+T_SfromDB>5GeV" , " strange & isDown & isNotVelo & over5 & ( fromB | fromD ) "} };
+    
+    stringmap map_new       = { };
+    stringmap map_ttforward = { { "01_long" ,"isLong "},
+                                {"02_long>5GeV" ,"isLong & over5  "} };
+    stringmap map_ttdown    = { {"01_has seed" ,"isSeed "},
+                                {"02_has seed +noVelo, T+TT" ,"isSeed & isNotVelo & isDown "},
+                                {"03_down+strange" , " strange & isDown"},
+                                {"04_down+strange+>5GeV" , " strange & isDown & over5 "}, 
+                                {"05_pi<-Ks<-B" , "fromKsFromB "},
+                                {"06_pi<-Ks<-B+> 5 GeV" , "fromKsFromB & over5 "} };
+    stringmap map_ttnew     = { };
+    stringmap empty_map     = { {},{} };
 
     if( name == "Forward"      ) return map_forward;
     if( name == "Velo"         ) return map_velo;
@@ -427,8 +447,8 @@ private:
   }
    
   /** @brief makes vector of second elements of DefaultCutMap --> needed as input for m_Cuts */
-  std::vector<std::string> getMyCut( std::map <std::string,std::string> myCutMap ){
-    std::vector<std::string> dummy;
+  strings getMyCut( stringmap myCutMap ){
+    strings dummy;
     for( auto it : myCutMap ){
       dummy.push_back(it.second);
     }
@@ -446,7 +466,7 @@ private:
   LoKi::IMCHybridFactory* m_factory;///<needed to convert normal cuts into Loki cuts
 
   // maps for cuts
-  std::map< std::string, std::vector <std::string> >          m_Cuts;///<map of track container name and corresponding cuts
+  std::map< std::string, strings >                            m_Cuts;///<map of track container name and corresponding cuts
   
   std::map < std::string, std::vector < LoKi::Types::MCCut> > m_LoKiCuts;///<converted map of Loki cuts, first component is name of track container
   std::map < std::string, std::vector <addOtherCuts> >        m_otherCuts;///<map of other cuts as predefined in isTrack, first component is name of track container 

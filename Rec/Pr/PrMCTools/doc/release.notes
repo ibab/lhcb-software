@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2015-09-24 - Michel De Cian
+ - Code cleaning in PrChecker2.
+
 ! 2015-09-23 - Michel De Cian
  - Fix identations in PrChecker2
 

@@ -75,17 +75,16 @@ PrChecker2::PrChecker2( const std::string& name,
   m_upgrade(true),
   m_histoTool(NULL)
 {
-  declareProperty( "VeloTracks",        m_veloTracks      = LHCb::TrackLocation::Velo       );
-  declareProperty( "ForwardTracks",     m_forwardTracks   = LHCb::TrackLocation::Forward    );
-  declareProperty( "MatchTracks",       m_matchTracks     = LHCb::TrackLocation::Match      );
-  declareProperty( "SeedTracks",        m_seedTracks      = LHCb::TrackLocation::Seed       );
-  declareProperty( "DownTracks",        m_downTracks      = LHCb::TrackLocation::Downstream );
-  declareProperty( "UpTracks",          m_upTracks        = LHCb::TrackLocation::VeloTT     );
-  declareProperty( "BestTracks",        m_bestTracks      = LHCb::TrackLocation::Default    );
-  declareProperty( "NewTracks",         m_newTracks       = LHCb::TrackLocation::VeloTT     );
-  declareProperty( "NewTTTracks",       m_ttnewTracks     = LHCb::TrackLocation::VeloTT     );
-  // declareProperty( "KShortTracks",      m_kshortTracks   = LHCb::TrackLocation::KsTrack    );
- 
+  declareProperty( "VeloTracks",                m_veloTracks                = LHCb::TrackLocation::Velo       );
+  declareProperty( "ForwardTracks",             m_forwardTracks             = LHCb::TrackLocation::Forward    );
+  declareProperty( "MatchTracks",               m_matchTracks               = LHCb::TrackLocation::Match      );
+  declareProperty( "SeedTracks",                m_seedTracks                = LHCb::TrackLocation::Seed       );
+  declareProperty( "DownTracks",                m_downTracks                = LHCb::TrackLocation::Downstream );
+  declareProperty( "UpTracks",                  m_upTracks                  = LHCb::TrackLocation::VeloTT     );
+  declareProperty( "BestTracks",                m_bestTracks                = LHCb::TrackLocation::Default    );
+  declareProperty( "NewTracks",                 m_newTracks                 = LHCb::TrackLocation::VeloTT     );
+  declareProperty( "NewTTTracks",               m_ttnewTracks               = LHCb::TrackLocation::VeloTT     );
+  // -- histograming options
   declareProperty( "WriteVeloHistos",           m_writeVeloHistos           = -1 );
   declareProperty( "WriteForwardHistos",        m_writeForwardHistos        = -1 );
   declareProperty( "WriteMatchHistos",          m_writeMatchHistos          = -1 );
@@ -101,26 +100,26 @@ PrChecker2::PrChecker2( const std::string& name,
   declareProperty( "WriteTTMatchHistos",        m_writeTTMatchHistos        = -1 );
   declareProperty( "WriteTTDownstHistos",       m_writeTTDownstHistos       = -1 );
   declareProperty( "WriteTTNewHistos",          m_writeTTNewHistos          = -1 );
-
+  // -- option for additional track container
   declareProperty( "SelectIdNewContainer",      m_selectIdNew               = 1  );
   declareProperty( "SelectIdNewTTContainer",    m_selectIdNewTT             = 1  );
-   
+  // -- global cut options
   declareProperty( "Eta25Cut",                  m_eta25cut                  = false    );
   declareProperty( "TriggerNumbers",            m_triggerNumbers            = false    );
   declareProperty( "VetoElectrons",             m_vetoElectrons             = true     );
   declareProperty( "TrackExtrapolation",        m_trackextrapolation        = false    );
+  // -- custom cut options
+  declareProperty( "MyForwardCuts",             m_map_forward               = DefaultCutMap("Forward")     );
+  declareProperty( "MyVeloCuts",                m_map_velo                  = DefaultCutMap("Velo")        );
+  declareProperty( "MyUpCuts",                  m_map_up                    = DefaultCutMap("Upstream")    );
+  declareProperty( "MyTtrackCuts",              m_map_ttrack                = DefaultCutMap("Ttrack")      );
+  declareProperty( "MyDownCuts",                m_map_down                  = DefaultCutMap("Downstream")  );
+  declareProperty( "MyNewCuts",                 m_map_new                   = DefaultCutMap("New")         );
+  declareProperty( "MyTTForwardCuts",           m_map_ttforward             = DefaultCutMap("TTForward")   );
+  declareProperty( "MyTTDownCuts",              m_map_ttdown                = DefaultCutMap("TTDownstream"));
+  declareProperty( "MyTTNewCuts",               m_map_ttnew                 = DefaultCutMap("TTNew")       );
 
-  declareProperty( "MyForwardCuts",             m_map_forward   = DefaultCutMap("Forward")     );
-  declareProperty( "MyVeloCuts",                m_map_velo      = DefaultCutMap("Velo")        );
-  declareProperty( "MyUpCuts",                  m_map_up        = DefaultCutMap("Upstream")    );
-  declareProperty( "MyTtrackCuts",              m_map_ttrack    = DefaultCutMap("Ttrack")      );
-  declareProperty( "MyDownCuts",                m_map_down      = DefaultCutMap("Downstream")  );
-  declareProperty( "MyNewCuts",                 m_map_new       = DefaultCutMap("New")         );
-  declareProperty( "MyTTForwardCuts",           m_map_ttforward = DefaultCutMap("TTForward")   );
-  declareProperty( "MyTTDownCuts",              m_map_ttdown    = DefaultCutMap("TTDownstream"));
-  declareProperty( "MyTTNewCuts",               m_map_ttnew     = DefaultCutMap("TTNew")       );
-
-  declareProperty( "Upgrade",                   m_upgrade       = true);
+  declareProperty( "Upgrade",                   m_upgrade                   = true);
 
 }
 //=============================================================================
@@ -155,20 +154,20 @@ StatusCode PrChecker2::initialize()
   m_histoTool = htool;
 
   if(m_triggerNumbers){//if true add extra cuts in maps
-    m_map_forward.insert(std::pair<std::string,std::string>("07_long_fromB_P>3GeV_Pt>0.5GeV", "isLong & fromB & trigger"));
-    m_map_forward.insert(std::pair<std::string,std::string>("08_TT_long_fromB_P>3GeV_Pt>0.5GeV","isLong & fromB & trigger & isTT"));
-    m_map_velo.insert(std::pair<std::string,std::string>("08_long_fromB_P>3GeV_Pt>0.5GeV", "isLong & fromB & trigger"));
-    m_map_velo.insert(std::pair<std::string,std::string>("09_TT_long_fromB_P>3GeV_Pt>0.5GeV","isLong & fromB & trigger & isTT"));
-    m_map_up.insert(std::pair<std::string,std::string>("11_long_fromB_P>3GeV_Pt>0.5GeV", "isLong & fromB & trigger"));
-    m_map_up.insert(std::pair<std::string,std::string>("12_TT_long_fromB_P>3GeV_Pt>0.5GeV","isLong & fromB & trigger & isTT"));
-    m_map_new.insert(std::pair<std::string,std::string>("long_fromB_P>3GeV_Pt>0.5GeV", "isLong & fromB & trigger"));
-    m_map_new.insert(std::pair<std::string,std::string>("TT_long_fromB_P>3GeV_Pt>0.5GeV","isLong & fromB & trigger & isTT"));
-    m_map_ttforward.insert(std::pair<std::string,std::string>("03_long_fromB_P>3GeV_Pt>0.5GeV", "isLong & fromB & trigger"));
-    m_map_ttforward.insert(std::pair<std::string,std::string>("04_TT_long_fromB_P>3GeV_Pt>0.5GeV","isLong & fromB & trigger & isTT"));
-    m_map_ttdown.insert(std::pair<std::string,std::string>("07_long_fromB_P>3GeV_Pt>0.5GeV", "isLong & fromB & trigger"));
-    m_map_ttdown.insert(std::pair<std::string,std::string>("08_TT_long_fromB_P>3GeV_Pt>0.5GeV","isLong & fromB & trigger & isTT"));
-    m_map_ttnew.insert(std::pair<std::string,std::string>("long_fromB_P>3GeV_Pt>0.5GeV", "isLong & fromB & trigger"));
-    m_map_ttnew.insert(std::pair<std::string,std::string>("TT_long_fromB_P>3GeV_Pt>0.5GeV","isLong & fromB & trigger & isTT"));
+    m_map_forward.insert(  stringpair("07_long_fromB_P>3GeV_Pt>0.5GeV"    ,"isLong & fromB & trigger"       ));
+    m_map_forward.insert(  stringpair("08_TT_long_fromB_P>3GeV_Pt>0.5GeV" ,"isLong & fromB & trigger & isTT"));
+    m_map_velo.insert(     stringpair("08_long_fromB_P>3GeV_Pt>0.5GeV"    ,"isLong & fromB & trigger"       ));
+    m_map_velo.insert(     stringpair("09_TT_long_fromB_P>3GeV_Pt>0.5GeV" ,"isLong & fromB & trigger & isTT"));
+    m_map_up.insert(       stringpair("11_long_fromB_P>3GeV_Pt>0.5GeV"    ,"isLong & fromB & trigger"       ));
+    m_map_up.insert(       stringpair("12_TT_long_fromB_P>3GeV_Pt>0.5GeV" ,"isLong & fromB & trigger & isTT"));
+    m_map_new.insert(      stringpair("long_fromB_P>3GeV_Pt>0.5GeV"       ,"isLong & fromB & trigger"       ));
+    m_map_new.insert(      stringpair("TT_long_fromB_P>3GeV_Pt>0.5GeV"    ,"isLong & fromB & trigger & isTT"));
+    m_map_ttforward.insert(stringpair("03_long_fromB_P>3GeV_Pt>0.5GeV"    ,"isLong & fromB & trigger"       ));
+    m_map_ttforward.insert(stringpair("04_TT_long_fromB_P>3GeV_Pt>0.5GeV" ,"isLong & fromB & trigger & isTT"));
+    m_map_ttdown.insert(   stringpair("07_long_fromB_P>3GeV_Pt>0.5GeV"    ,"isLong & fromB & trigger"       ));
+    m_map_ttdown.insert(   stringpair("08_TT_long_fromB_P>3GeV_Pt>0.5GeV" ,"isLong & fromB & trigger & isTT"));
+    m_map_ttnew.insert(    stringpair("long_fromB_P>3GeV_Pt>0.5GeV"       ,"isLong & fromB & trigger"       ));
+    m_map_ttnew.insert(    stringpair("TT_long_fromB_P>3GeV_Pt>0.5GeV"    ,"isLong & fromB & trigger & isTT"));
   }
   
   m_velo = tool<IPrCounter>( "PrCounter2", "Velo", this );
@@ -318,103 +317,104 @@ StatusCode PrChecker2::initialize()
 
   
 
-  m_Cuts.insert( std::pair<std::string, std::vector<std::string>>( "Forward", getMyCut( m_map_forward )) );
-  m_Cuts.insert( std::pair<std::string, std::vector<std::string>>( "Velo", getMyCut( m_map_velo )) );
-  m_Cuts.insert( std::pair<std::string, std::vector<std::string>>( "Upstream", getMyCut( m_map_up )) );
-  m_Cuts.insert( std::pair<std::string, std::vector<std::string>>( "Ttrack", getMyCut( m_map_ttrack )) );
-  m_Cuts.insert( std::pair<std::string, std::vector<std::string>>( "Downstream", getMyCut( m_map_down )) );
-  m_Cuts.insert( std::pair<std::string, std::vector<std::string>>( "TTForward", getMyCut( m_map_ttforward )) );
-  m_Cuts.insert( std::pair<std::string, std::vector<std::string>>( "TTDownstream", getMyCut( m_map_ttdown )) );
-  m_Cuts.insert( std::pair<std::string, std::vector<std::string>>( "New", getMyCut( m_map_new )) );
-  m_Cuts.insert( std::pair<std::string, std::vector<std::string>>( "TTNew", getMyCut( m_map_ttnew )) );
+  m_Cuts.insert( std::pair<std::string, strings>( "Forward",      getMyCut( m_map_forward   )) );
+  m_Cuts.insert( std::pair<std::string, strings>( "Velo",         getMyCut( m_map_velo      )) );
+  m_Cuts.insert( std::pair<std::string, strings>( "Upstream",     getMyCut( m_map_up        )) );
+  m_Cuts.insert( std::pair<std::string, strings>( "Ttrack",       getMyCut( m_map_ttrack    )) );
+  m_Cuts.insert( std::pair<std::string, strings>( "Downstream",   getMyCut( m_map_down      )) );
+  m_Cuts.insert( std::pair<std::string, strings>( "TTForward",    getMyCut( m_map_ttforward )) );
+  m_Cuts.insert( std::pair<std::string, strings>( "TTDownstream", getMyCut( m_map_ttdown    )) );
+  m_Cuts.insert( std::pair<std::string, strings>( "New",          getMyCut( m_map_new       )) );
+  m_Cuts.insert( std::pair<std::string, strings>( "TTNew",        getMyCut( m_map_ttnew     )) );
 
-    
-  std::vector<std::string> cutAliases ={"isNotLong", 
-                                        "isLong",  
-                                        "isVelo", 
-                                        "isNotVelo", 
-                                        "isDown", 
-                                        "isNotDown", 
-                                        "isUp", 
-                                        "isNotUp", 
-                                        "isTT", 
-                                        "isNotTT", 
-                                        "isSeed", 
-                                        "isNotSeed", 
-                                        "fromB", 
-                                        "fromKsFromB", 
-                                        "strange", 
-                                        "fromD", 
-                                        "isElectron", 
-                                        "isNotElectron", 
-                                        "BOrDMother" };
+  // -- often used aliases for convenience
+  strings cutAliases ={"isNotLong", 
+                       "isLong",  
+                       "isVelo", 
+                       "isNotVelo", 
+                       "isDown", 
+                       "isNotDown", 
+                       "isUp", 
+                       "isNotUp", 
+                       "isTT", 
+                       "isNotTT", 
+                       "isSeed", 
+                       "isNotSeed", 
+                       "fromB", 
+                       "fromKsFromB", 
+                       "strange", 
+                       "fromD", 
+                       "isElectron", 
+                       "isNotElectron", 
+                       "BOrDMother" };
  
   // -- initialize the LoKi cuts
   m_factory = tool<LoKi::IMCHybridFactory> ("LoKi::Hybrid::MCTool/MCHybridFactory:PUBLIC" , this ) ;
   if ( nullptr == m_factory ){ return Error ( "Could not locate IMCHybridFactory" ) ; } // RETURN
 
   // -- convert all strings into functors
-  for( auto pair : m_Cuts ){//loop over m_Cuts
+  for( auto cutPair : m_Cuts ){//loop over m_Cuts
 
-    std::vector< addOtherCuts > dummy;
-    std::vector< LoKi::Types::MCCut > vectortmp; //vector von LoKi cuts
+    std::vector< addOtherCuts >       otherCutsVec;
+    std::vector< LoKi::Types::MCCut > lokiCutsVec; //vector von LoKi cuts
     
-    for( std::string cutString : pair.second ){//loop over 2nd element of Cuts = strings of cuts
+    for( std::string cutString : cutPair.second ){//loop over 2nd element of Cuts = strings of cuts
       
-      dummy.push_back( addOtherCuts() );
+      otherCutsVec.push_back( addOtherCuts() );
       
-      for( std::string alias : cutAliases ){//loop over cutAliases
+      // -- loop over cutAliases
+      // -- extract them from cutString and replace with 'MCTRUE'
+      for( std::string alias : cutAliases ){
         
         std::size_t found = cutString.find( alias );
         
         if( found != std::string::npos ){//if found then
-          
-          dummy.back().addCut( isTrack(  m_lookuptable[alias]) );//other components are already filled //add this category of cuts to addOtherCuts()
+          otherCutsVec.back().addCut( isTrack( m_lookuptable[alias]) );//other components are already filled //add this category of cuts to addOtherCuts()
           cutString.replace(found, alias.length(), "MCTRUE");//replace found at position found, with length of string to replace, replace it with string "" (Loki Cut)
         }
       }
       
-      
+      // -- Veto electrons or not
       if(m_vetoElectrons == true) {
-        std::string str2 ("isNotElectron");
-        dummy.back().addCut( isTrack( m_lookuptable[str2] ) );
-        std::size_t found = cutString.find(str2 );
+        const std::string eString("isNotElectron");
+        otherCutsVec.back().addCut( isTrack( m_lookuptable[eString] ) );
+        std::size_t found = cutString.find( eString );
         if( found != std::string::npos ){
-          cutString.replace(found, str2.length(), "MCTRUE");
+          cutString.replace(found, eString.length(), "MCTRUE");
         }
       }
       
       
-      //LoKi cuts: define aliases for better use
+      // -- LoKi cuts: define aliases for better use
       if(m_eta25cut == true) cutString.append(" & eta25");
-      std::string str3 ("eta25");
-      std::size_t found = cutString.find( str3 );
+      const std::string etaString("eta25");
+      std::size_t found = cutString.find( etaString );
       if( found != std::string::npos ){
-        cutString.replace(found, str3.length(), "(MCETA > 2.0) & (MCETA < 5.0)");
+        cutString.replace(found, etaString.length(), "(MCETA > 2.0) & (MCETA < 5.0)");
       }
       
-      std::string str4 ("over5");
-      found = cutString.find( str4 );
+      const std::string over5String("over5");
+      found = cutString.find( over5String );
       if( found != std::string::npos ){
-        cutString.replace(found,  str4.length(), "(MCP > 5000)");
+        cutString.replace(found,  over5String.length(), "(MCP > 5000)");
       }
       
-      std::string str5 ("trigger");
-      found = cutString.find( str5 );
+      const std::string triggerString("trigger");
+      found = cutString.find( triggerString );
       if( found != std::string::npos ){
-        cutString.replace(found,  str5.length(), "(MCP>3000) & (MCPT>500)");
+        cutString.replace(found,  triggerString.length(), "(MCP>3000) & (MCPT>500)");
       }
-      
+      // ---------------------------------------------------------------------------------
       
       LoKi::Types::MCCut tmp =  LoKi::BasicFunctors<const LHCb::MCParticle*>::BooleanConstant( false );//
       sc = m_factory->get ( cutString , tmp );
-      vectortmp.push_back(tmp);
+      lokiCutsVec.push_back(tmp);
       if ( sc.isFailure() ){ return Error ( "Error from IMCHybridFactory",sc ) ; } // RETURN
     }
     
-    //give those replaced cuts as input to LoKi and otherCuts
-    m_LoKiCuts.insert( std::pair<std::string, std::vector<LoKi::Types::MCCut>>( pair.first, vectortmp ) );//give same names as in m_Cuts = 1st, LoKicuts = 2nd
-    m_otherCuts.insert( std::pair<std::string, std::vector<addOtherCuts>>( pair.first, dummy ) );//give same names as in m_Cuts = 1st, othercuts = 2nd
+    //-- split cuts into LoKi cuts and other (non-LoKi) cuts
+    m_LoKiCuts.insert(  std::pair<std::string, std::vector<LoKi::Types::MCCut>>( cutPair.first, lokiCutsVec ) );//give same names as in m_Cuts = 1st, LoKicuts = 2nd
+    m_otherCuts.insert( std::pair<std::string, std::vector<addOtherCuts>>(       cutPair.first, otherCutsVec ) );//give same names as in m_Cuts = 1st, othercuts = 2nd
     
   }
 
