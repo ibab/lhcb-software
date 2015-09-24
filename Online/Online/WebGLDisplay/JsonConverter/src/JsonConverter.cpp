@@ -463,7 +463,9 @@ StatusCode JsonConverter::execute() {
                 partCount++;
                  
 		 if (p == nullptr)
-		    return;
+		   return;
+		 if (!p->proto()->track()->checkType(LHCb::Track::Types::Long))
+		   return;
 
                  std::string partName =  getParticleName(p);
                  pJson <<  std::make_pair("name", partName);
