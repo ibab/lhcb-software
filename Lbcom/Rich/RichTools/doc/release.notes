@@ -3,6 +3,10 @@
 ! Responsible : Antonis Papanestis,  Chris Jones
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
+
+! 2015-09-24 - Chris Jones
+ - Various improvements to the pixel clustering tool.
+
 ! 2015-08-04 - Gerhard Raven
  - remove #include of obsolete Gaudi headers        
 

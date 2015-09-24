@@ -38,10 +38,9 @@ StatusCode HPDPixelClusteringTool::initialize()
   const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  if( msgLevel(MSG::DEBUG) )
-    debug() << "Using nearest neighbour pixel clustering tool" << std::endl
-            << " -> Minimum cluster size        = " << m_minClusSize << std::endl
-            << " -> Maximum cluster size        = " << m_maxClusSize << std::endl
+  _ri_debug << "Using nearest neighbour pixel clustering tool" << endmsg
+            << " -> Minimum cluster size        = " << m_minClusSize << endmsg
+            << " -> Maximum cluster size        = " << m_maxClusSize << endmsg
             << " -> Allow diagonals in clusters = " << m_allowDiags << endmsg;
 
   return sc;
@@ -60,17 +59,15 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
 
   // loop over pixels
   // requires them to be sorted by row then column
-  if ( msgLevel(MSG::VERBOSE) ) 
-    verbose() << "Clustering with " << smartIDs.size() << " RichSmartIDs" << endmsg;
-  for ( LHCb::RichSmartID::Vector::const_iterator iS = smartIDs.begin();
-        iS != smartIDs.end(); ++iS )
+  _ri_verbo << "Clustering with " << smartIDs.size() << " RichSmartIDs" << endmsg;
+  for ( const auto& S : smartIDs )
   {
     // Print the input hits
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> " << *iS << endmsg;
+    _ri_verbo << " -> " << S << endmsg;
 
     // get row and column data
-    const int col     = pixelData->colNumber(*iS);
-    const int row     = pixelData->rowNumber(*iS);
+    const int col     = pixelData->colNumber(S);
+    const int row     = pixelData->rowNumber(S);
     const int lastrow = row - 1;
     const int lastcol = col - 1;
     const int nextcol = col + 1;
@@ -110,7 +107,7 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
 
     // Did we find a neighbouring pixel cluster ?
     // If not, this is a new cluster
-    if (!clus) { clus = pixelData->createNewCluster(); }
+    if ( !clus ) { clus = pixelData->createNewCluster(); }
 
     // assign final cluster to this pixel
     pixelData->setCluster(row,col,clus);
@@ -118,19 +115,25 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
   } // pixel loop
 
   // Check final clusters are OK
-  HPDPixelClusters::Cluster::PtnVector clustersToSplit;
-  for ( HPDPixelClusters::Cluster::PtnVector::const_iterator iC = pixelData->clusters().begin();
-        iC != pixelData->clusters().end() ; ++iC )
+  static HPDPixelClusters::Cluster::PtnVector clustersToSplit;
+  for ( auto * C : pixelData->clusters() )
   {
-    if ( (*iC)->size() < m_minClusSize || (*iC)->size() > m_maxClusSize )
-    {
-      clustersToSplit.push_back( *iC );
-    }
+    if ( C->size() < m_minClusSize || 
+         C->size() > m_maxClusSize ) { clustersToSplit.push_back(C); }
   }
-  if ( !clustersToSplit.empty() ) pixelData->splitClusters(clustersToSplit);
+  if ( !clustersToSplit.empty() ) 
+  {
+    // split the selected clusters
+    pixelData->splitClusters(clustersToSplit); 
+    // clear for next time
+    clustersToSplit.clear();
+  }
   
   // print the final cluster
-  if ( msgLevel(MSG::VERBOSE) ) { verbose() << *pixelData << endmsg; }
+  _ri_verbo << *pixelData << endmsg;
+
+  // Freeze the cluster (prevent future access to shared static data)
+  pixelData->freeze();
 
   // finally, return a pointer to this cluster object
   // user takes ownership at this point

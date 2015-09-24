@@ -84,7 +84,7 @@ namespace Rich
          *
          *  @return bool indicating if p1 should be listed before p2
          */
-        inline bool operator() ( const LHCb::RichSmartID p1, const LHCb::RichSmartID p2 ) const
+        inline bool operator() ( const LHCb::RichSmartID& p1, const LHCb::RichSmartID& p2 ) const
         {
           return ( 100000*((Rich::DAQ::NumAlicePixelsPerLHCbPixel*p1.pixelRow())+p1.pixelSubRow()) + p1.pixelCol() <
                    100000*((Rich::DAQ::NumAlicePixelsPerLHCbPixel*p2.pixelRow())+p2.pixelSubRow()) + p2.pixelCol() );
@@ -95,11 +95,11 @@ namespace Rich
     private:
 
       /// Sort the RichSmartIDs into the correct order for this algorithm
-      void sortIDs( LHCb::RichSmartID::Vector & smartIDs ) const
+      inline void sortIDs( LHCb::RichSmartID::Vector & smartIDs ) const
       {
         if ( !smartIDs.empty() )
         {
-          if ( smartIDs.front().pixelSubRowDataIsValid() )
+          if ( UNLIKELY( smartIDs.front().pixelSubRowDataIsValid() ) )
           {
             // use own method for ALICE mode
             std::stable_sort( smartIDs.begin(), smartIDs.end(), SortALICEIDs() );

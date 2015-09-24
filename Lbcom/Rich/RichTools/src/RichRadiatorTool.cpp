@@ -29,6 +29,8 @@ Rich::RadiatorTool::RadiatorTool( const std::string& type,
   declareInterface<IRadiatorTool>(this);
   // JOs
   declareProperty( "ExcludedFullTileIDs", m_excludedAeroTiles );
+  // Debug messages
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
