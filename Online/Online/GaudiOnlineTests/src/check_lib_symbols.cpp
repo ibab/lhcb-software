@@ -10,7 +10,9 @@
 using namespace std;
 void check_sym(const char* hn, void* h, const char* name)    {
   void *sym = ::dlsym(h,name);
-  ::printf("%-24s %32s: %16p %s\n",hn,name,sym,(sym?"\t  FOUND" : "\t  NOT_FOUND"));
+  ::printf("%-24s %32s: 0x%016lX %s\n",hn,name,
+	   (unsigned long)sym,
+	   (sym?"\t  FOUND" : "\t  NOT_FOUND"));
 }
 
 #define check(h,n) check_sym(#h,h,#n)
@@ -25,14 +27,14 @@ extern "C" int check_libc_symbols(int,char**)  {
 
   sigaction(1,0,0);
 
-  ::printf("LIBC:\t%s\n",LIBC);
+  ::printf("LIBC:\t%s\n", "" /* LIBC */);
   check(0,     __libc_sigaction);
   check(0,     __sigaction);
   check(libc_handle,     __libc_sigaction);
   check(libc_handle,     __GI___libc_sigaction);
   check(libc_handle,     __the_real_sigaction);
   check(libc_handle,     __sigaction);
-  ::printf("LIBPTHREAD:\t%s\n",LIBPTHREAD);
+  ::printf("LIBPTHREAD:\t%s\n", "" /* LIBPTHREAD */);
   check(pthread_handle,  pthread_create);
   check(pthread_handle,  __pthread_create_2_1);
   check(pthread_handle,  pthread_create@@GLIBC_2.2.5);

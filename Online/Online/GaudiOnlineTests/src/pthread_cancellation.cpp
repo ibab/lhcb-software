@@ -31,15 +31,6 @@ using namespace std;
 namespace {
   pid_t thread_tid = 0;
   bool run = true;
-  int test_tid(pid_t tid)  {
-    char text[256];
-    struct stat buf;
-    ::sprintf(text,"/proc/%d",tid);
-    int status = ::stat(text,&buf);
-    ::printf("+++ tid:%5d: Check file %s status:%d\n",gettid(),text,status);
-    return status;
-  }
-
   void cleanup_thread(void*) {
     ::printf("CXX using stack-unwind +++++ CANCEL+++CANCEL+++ Foo was cancelled\n");
     ::fflush(stdout);
@@ -47,11 +38,11 @@ namespace {
 
   static void *test_thread(void *)   {
     pthread_cleanup_push(cleanup_thread,NULL);
-    ::printf("+++ tid:%5d: Thread starting.\n",gettid());
+    ::printf("+++ tid: 0x%08X: Thread starting.\n",gettid());
     thread_tid = gettid();
     while(run) ::usleep(1000);
     pthread_cleanup_pop(0);
-    ::printf("+++ tid:%5d: Thread about to exit.\n",gettid());
+    ::printf("+++ tid: 0x%08X: Thread about to exit.\n",gettid());
     return 0;
   }
   void (*_cancel_action)(int signum, siginfo_t *si, void *ctx);
@@ -70,21 +61,21 @@ extern "C" int pthread_cancellation(int, char**)   {
 
   ::pthread_create(&t_id, 0, test_thread, 0);
   ::sleep(1);
-  ::printf("+++ tid:%5d: Send signal 0 to (ALIVE) thread.\n",gettid());
+  ::printf("+++ tid: 0x%08X: Send signal 0 to (ALIVE) thread.\n",gettid());
   status = CHECK_THREAD(thread_tid,0);
   if ( status<0 )  {
     ::perror("kill");
   }
-  ::printf("+++ tid:%5d: Kill status: %d errno:%d\n",gettid(),status,errno);
+  ::printf("+++ tid: 0x%08X: Kill status: %d errno:%d\n",gettid(),status,errno);
 
   //run = 0;
   ::sleep(2);
-  ::printf("+++ tid:%5d: Send signal 0 to (EXITED) thread.\n",gettid());
+  ::printf("+++ tid: 0x%08X: Send signal 0 to (EXITED) thread.\n",gettid());
   status = CHECK_THREAD(thread_tid,0);
   if ( status<0 )  {
     ::perror("kill");
   }
-  ::printf("+++ tid:%5d: Kill status: %d errno:%d\n",gettid(),status,errno);
+  ::printf("+++ tid: 0x%08X: Kill status: %d errno:%d\n",gettid(),status,errno);
   ::sleep(1);
 
   if ( syscall(SYS_rt_sigaction,32,0,&old,NSIG/8) < 0 )
@@ -99,12 +90,12 @@ extern "C" int pthread_cancellation(int, char**)   {
   ::pthread_join(t_id,&ret);
   ::printf("+++ Thread joined.\n");
   ::sleep(2);
-  ::printf("+++ tid:%5d: Send signal 0 to (DEAD) thread.\n",gettid());
+  ::printf("+++ tid: 0x%08X: Send signal 0 to (DEAD) thread.\n",gettid());
   status = CHECK_THREAD(thread_tid,0);
   if ( status<0 )  {
     ::perror("kill");
   }
-  ::printf("+++ tid:%5d: Kill status: %d errno:%d %s\n",
+  ::printf("+++ tid: 0x%08X: Kill status: %d errno:%d %s\n",
 	   gettid(),status,errno,strerror(errno));
   ::sleep(2);
   ::printf("+++ Process exiting.\n");
