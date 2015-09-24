@@ -3,6 +3,26 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v29r9>2015-09-25 Boole v29r9</A></H1><PRE>
+This version uses projects:
+ LCG_79 (ROOT 6.04.02), Gaudi v26r3, LHCb v39r0, Lbcom v17r0
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Changes to configuration
+  . Add more RawEvent locations to be killed in options/Boole-RunFromXDST.py
+
+- Bug fixes
+  . LHCBGAUSS-514 - Protect against zero path lengths (VPDigitisation v1r6)
+
+- Monitoring changes
+  . Make sure that the choice of HPD with maximum (minimum) occupancy does not
+    depend on the order of iteration over the HPDs (RichDigiQC v3r15)
+
+- Code cleanups
+  . Make fewer assumptions on types of LinkMgr internals (DigiAlg v5r4) 
+  . Replace obsolete eventDataService() with eventSvc() (CaloMoniDigi v2r6p2)
+  . Remove unnecessary headers (VPDigitisation v1r6)
+
 </PRE><H1><A NAME=v29r8>2015-07-22 Boole v29r8</A></H1><PRE>
 This version uses projects:
  LCG_79 (ROOT 6.04.02), Gaudi v26r3, LHCb v39r0, Lbcom v17r0
