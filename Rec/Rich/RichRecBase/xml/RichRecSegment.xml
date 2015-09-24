@@ -583,7 +583,7 @@
         <attribute
                 desc        = "Ray traced PD panel impact point in global coordinates, when forced to go to a given panel side" 
                 name        = "pdPanelHitPointForcedSide" 
-                type        = "LHCb::STL::MTAllocVector&lt; Gaudi::XYZPoint &gt;"
+                type        = "LHCb::STL::Vector&lt; Gaudi::XYZPoint &gt;"
                 init        = "Rich::NPDPanelsPerRICH"
                 setMeth     = "FALSE"
                 getMeth     = "FALSE"
@@ -608,7 +608,7 @@
         <attribute 
                 desc        = "Ray traced PD panel impact point in local coordinates, when forced to go to a given panel side" 
                 name        = "pdPanelHitPointForcedSideLocal" 
-                type        = "LHCb::STL::MTAllocVector&lt; Gaudi::XYZPoint &gt;"
+                type        = "LHCb::STL::Vector&lt; Gaudi::XYZPoint &gt;"
                 init        = "Rich::NPDPanelsPerRICH"
                 setMeth     = "FALSE"
                 getMeth     = "FALSE"
@@ -646,14 +646,14 @@
                 access       = "PUBLIC" 
                 def          = "Pixels" 
                 desc         = "Container type for RichRecPixels" 
-                type         = "LHCb::STL::MTAllocVector&lt;LHCb::RichRecPixel*&gt;"
+                type         = "LHCb::STL::Vector&lt;LHCb::RichRecPixel*&gt;"
         />
 
         <typedef 
                 access       = "PUBLIC" 
                 def          = "Photons" 
                 desc         = "Container type for RichRecPhotons" 
-                type         = "LHCb::STL::MTAllocVector&lt;LHCb::RichRecPhoton*&gt;"
+                type         = "LHCb::STL::Vector&lt;LHCb::RichRecPhoton*&gt;"
         />
             
         <attribute 
