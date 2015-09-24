@@ -1,0 +1,16 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gentest.exe</text></argument>
+  <argument name="args"><set>
+	<text>libGaudiOnlineTests.so</text>
+	<text>check_libc_symbols</text>
+  </set></argument>
+  <argument name="unsupported_platforms">
+    <set>
+      <text>win.*</text>
+      <text>gcc43.*</text>
+      <text>icc11.*</text>
+    </set>
+  </argument>
+  <argument name="reference"><text>../refs/go_libc_syms.ref</text></argument>
+</extension>

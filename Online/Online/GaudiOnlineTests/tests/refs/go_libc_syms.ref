@@ -1,0 +1,16 @@
+LIBC:
+0                                        __libc_sigaction: 0x0000000000000000 	  NOT_FOUND
+0                                             __sigaction: 0x00000034AB80F920 	  FOUND
+libc_handle                              __libc_sigaction: 0x0000000000000000 	  NOT_FOUND
+libc_handle                         __GI___libc_sigaction: 0x0000000000000000 	  NOT_FOUND
+libc_handle                          __the_real_sigaction: 0x0000000000000000 	  NOT_FOUND
+libc_handle                                   __sigaction: 0x00007F9568ADDA20 	  FOUND
+LIBPTHREAD:
+pthread_handle                             pthread_create: 0x00000034AB8069E0 	  FOUND
+pthread_handle                       __pthread_create_2_1: 0x0000000000000000 	  NOT_FOUND
+pthread_handle                pthread_create@@GLIBC_2.2.5: 0x0000000000000000 	  NOT_FOUND
+pthread_handle                                __sigaction: 0x00000034AB80F920 	  FOUND
+pthread_handle                            pthread_sigmask: 0x00000034AB80C810 	  FOUND
+pthread_handle                          sigcancel_handler: 0x0000000000000000 	  NOT_FOUND
+pthread_handle             __GI___pthread_register_cancel: 0x0000000000000000 	  NOT_FOUND
+pthread_handle                  __pthread_register_cancel: 0x00000034AB80DBF0 	  FOUND

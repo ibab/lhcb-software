@@ -2,5 +2,5 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>go_test_cleanup.sh</text></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
-  <argument name="reference"><text>../refs/zz_cleanup.ref</text></argument>
+  <argument name="reference"><text>../refs/go_cleanup.ref</text></argument>
 </extension>
