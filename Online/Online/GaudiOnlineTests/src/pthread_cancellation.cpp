@@ -64,7 +64,7 @@ extern "C" int pthread_cancellation(int, char**)   {
   ::printf("+++ tid: 0x%08X: Send signal 0 to (ALIVE) thread.\n",gettid());
   status = CHECK_THREAD(thread_tid,0);
   if ( status<0 )  {
-    ::perror("kill");
+    ::printf("+++ Error[%d]: kill %s\n",errno, ::strerror(errno));
   }
   ::printf("+++ tid: 0x%08X: Kill status: %d errno:%d\n",gettid(),status,errno);
 
@@ -73,18 +73,18 @@ extern "C" int pthread_cancellation(int, char**)   {
   ::printf("+++ tid: 0x%08X: Send signal 0 to (EXITED) thread.\n",gettid());
   status = CHECK_THREAD(thread_tid,0);
   if ( status<0 )  {
-    ::perror("kill");
+    ::printf("+++ Error[%d]: kill %s\n",errno, ::strerror(errno));
   }
   ::printf("+++ tid: 0x%08X: Kill status: %d errno:%d\n",gettid(),status,errno);
   ::sleep(1);
 
   if ( syscall(SYS_rt_sigaction,32,0,&old,NSIG/8) < 0 )
-    ::perror("sigaction");
+    ::printf("+++ Error[%d]: sigaction %s\n",errno, ::strerror(errno));
   ::memcpy(&act,&old,sizeof(act));
   _cancel_action = old.sa_sigaction;
   act.sa_sigaction = _test_action;
   if ( syscall(SYS_rt_sigaction,32,&act,0,NSIG/8) < 0 )
-    ::perror("sigaction");
+    ::printf("+++ Error[%d]: sigaction %s\n",errno, ::strerror(errno));
 
   ::pthread_cancel(t_id);
   ::pthread_join(t_id,&ret);
@@ -93,7 +93,7 @@ extern "C" int pthread_cancellation(int, char**)   {
   ::printf("+++ tid: 0x%08X: Send signal 0 to (DEAD) thread.\n",gettid());
   status = CHECK_THREAD(thread_tid,0);
   if ( status<0 )  {
-    ::perror("kill");
+    ::printf("+++ Error[%d]: kill %s\n",errno, ::strerror(errno));
   }
   ::printf("+++ tid: 0x%08X: Kill status: %d errno:%d %s\n",
 	   gettid(),status,errno,strerror(errno));
