@@ -728,7 +728,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc) :
     declareProperty("resetCountersOnRunChange", m_resetCounterOnRunChange = true);
     declareProperty("alwaysSendMEPReq", m_alwaysSendMEPReq = true);
     declareProperty("overflowPath", m_overflowPath = "/localdisk/overflow");
-    declareProperty("overflow", m_overflow = false);
+    declareProperty("overflow", m_overflow = true);
     declareProperty("nameLiveBuf", m_nameLiveBuf = "Events");
     declareProperty("nameOverflowBuf", m_nameOverflowBuf = "Overflow");
     declareProperty("badDiskList", m_badDiskList = "/group/online/dataflow/brokendisks");
@@ -808,7 +808,7 @@ StatusCode MEPRxSvc::setupMEPReq(const std::string& odinName)
 StatusCode MEPRxSvc::sendMEPReq(int m)
 {
     static u_int32_t seqno = 0;
-
+    if (!m_overflow && (m != 0xff)) return StatusCode::SUCCESS;
     if (m_dynamicMEPRequest) {
         mepreq.nmep = m;
         mepreq.seqno = seqno++;
@@ -1454,6 +1454,7 @@ StatusCode MEPRxSvc::initialize()
     m_clearMonCommand = new ClearMonCommand(this, msgSvc(), RTL::processName());
     m_upMonCommand = new UpMonCommand(this, msgSvc(), RTL::processName());
     m_setOverflowCmd = new SetOverflowCmd(this, msgSvc(), RTL::processName());
+    m_overflow = true;
     if (service("MonitorSvc", m_monSvc).isSuccess()) {
         if (setupCounters()) {
             return error("Failed to setup counters");
