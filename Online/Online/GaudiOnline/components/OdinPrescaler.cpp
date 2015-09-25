@@ -20,12 +20,6 @@
 #include <vector>
 #include <ctime>
 
-namespace {
-  unsigned int lib_rtl_clock_count()  {
-    return ::clock();
-  }
-}
-
 /*
  *  LHCb namespace declaration
  */
