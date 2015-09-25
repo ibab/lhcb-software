@@ -56,8 +56,9 @@ namespace Rich
                                const LHCb::RichSmartID& p2 ) const
       {
         // Use internal bit packing to sort
-        //return ( p1.dataBitsOnly().key() < p2.dataBitsOnly().key() );
-        return ( p1.key() < p2.key() );
+        return ( p1.dataBitsOnly().key() < p2.dataBitsOnly().key() );
+        // use full class, including data set bits
+        //return ( p1.key() < p2.key() );
       }
 
     };
