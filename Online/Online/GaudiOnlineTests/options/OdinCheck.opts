@@ -1,0 +1,11 @@
+ApplicationMgr.TopAlg               += { "LHCb::OdinCheckAlg/Check" };
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.ForceLeaves             = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices     += { "LHCb::RawDataCnvSvc" };
+FileCatalog.Catalogs                 = { "xmlcatalog_file:Cnew.xml" };
+ApplicationMgr.EvtMax                = 100000;
+ApplicationMgr.HistogramPersistency  = "NONE";
+EventSelector.PrintFreq              = 200;
+EventSelector.Input                  = {"DATA='file://mdfData_0.dat' SVC='LHCb::MDFSelector'" };
+
