@@ -1,0 +1,27 @@
+#include "$INFO_OPTIONS"
+#include "$MBM_SETUP_OPTIONS"
+#include "$STATIC_OPTS/SvcMapping.opts"
+#include "$STATIC_OPTS/Monitoring.opts"
+
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.Runable               = "Runable";
+Runable.MEPManager                   = "MEPManager";
+
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices      = { "RawDataCnvSvc" };
+MEPManager.ConnectWhen               = "initialize";
+MEPManager.PartitionBuffers          = true;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+
+HistogramPersistencySvc.Warnings     = 0;
+ApplicationMgr.TopAlg                = { "LHCb::OdinCheckAlg/Check" };
+#include "$STATIC_OPTS/MessageSvc.opts"
+
+MEPManager.Buffers                   = {"Events"};
+EventSelector.Input                  = "Events";
+EventSelector.REQ1                   = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
+EventSelector.REQ2                   = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
+EventSelector.IntelligentSetup       = true;
+EventSelector.TAE                    = @OnlineEnv.TAE;
