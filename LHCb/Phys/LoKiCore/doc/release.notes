@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2015-09-25 - Gerhard Raven
+ - trim dictionary a bit (see GAUDI-1098 and Gaudi gitlab merge request 22)
+
 ! 2015-09-09 - Gerhard Raven
  - explicitly set the relative priority of LoKiSvc wrt. ToolSvc to insure
    that LoKiSvc gets finalized _before_ ToolSvc in order to avoid use

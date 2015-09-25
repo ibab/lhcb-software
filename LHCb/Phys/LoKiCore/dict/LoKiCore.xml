@@ -112,8 +112,6 @@
     <field name = "m_datasvc"   />
   </class>
     
-  <class name =        "implements1<IIncidentListener>" />
-  <class name = "extend_interfaces1<IIncidentListener>" />
 
   <exclusion>
     <function name    = "LoKi::tokenize" />
