@@ -547,8 +547,7 @@ int MEPRx::spaceAction()
           else (m_parent->m_totMEPproducedOvfl)++;
       }
     }
-    catch (std::runtime_error &e)
-    {
+    catch (std::runtime_error &e) {
       sc = MBM_ERROR;
     }
     m_parent->m_complTimeSock->fill(1.0 * (m_age), 1.0);
@@ -613,18 +612,26 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid, u_int64_t tsc,
     if (m_parent->m_srcFlags[srcid] & IS_ODIN) {
         m_odinMEP = (u_int8_t *) newhdr;
         // Record the run number of this event
-        LHCb::RawBank *bank = (LHCb::RawBank *) (((u_int8_t *) m_odinMEP)
-                              + MEPHDRSIZ + MEPFHDRSIZ);
-        if (bank->magic() != RawBank::MagicPattern) {
-            m_log << MSG::ERROR << "Foul! ODIN magic pattern is " << hex
-                  << bank->magic() << endmsg;
+        MEPFrgHdr* mepfrghdr = (MEPFrgHdr *)  (((u_int8_t *) m_odinMEP) + MEPHDRSIZ);
+        for (int i = 0; i < m_pf; ++i) {
+          LHCb::RawBank *bank = (LHCb::RawBank *) (((u_int8_t *) mepfrghdr) + MEPFHDRSIZ);
+          if (i == 0) {
+            LHCb::OnlineRunInfo *odin = bank->begin<LHCb::OnlineRunInfo> (); // raetselhaft
+            m_runNumber = odin->Run; // do this only for index 0 to preserve original semantic
+          }
+          if (bank->magic() != RawBank::MagicPattern) {
+              m_log << MSG::ERROR << "Foul! Event " << m_l0ID << " subevent lsb" << mepfrghdr->m_l0IDlow << " fragment # " << i <<
+                hex <<  " ODIN magic pattern is " << hex
+                    << bank->magic() << endmsg;
+              
+          } 
+          if (bank->type() != RawBank::ODIN) {
+              m_log << MSG::ERROR << "Foul! Event " << m_l0ID << " subevent lsb" << mepfrghdr->m_l0IDlow << " fragment # " << i <<
+              "ODIN bank type is " << hex << bank->type() <<
+                    " should be " << RawBank::ODIN << endmsg;
+          }
+          mepfrghdr = (MEPFrgHdr *) (((u_int8_t *) mepfrghdr) + mepfrghdr->m_len + MEPFHDRSIZ);
         }
-        if (bank->type() != RawBank::ODIN) {
-            m_log << MSG::ERROR << "Foul! ODIN bank type is " << bank->type()
-                  << endmsg;
-        }
-        LHCb::OnlineRunInfo *odin = bank->begin<LHCb::OnlineRunInfo> (); // raetselhaft
-        m_runNumber = odin->Run;
     }
     m_parent->m_rxEvt[srcid] += m_pf;
     m_parent->m_totRxEvt += m_pf;
