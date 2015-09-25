@@ -4,6 +4,14 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2015-09-25 - Chris Jones
+ - Split the part of the functionality provided by the HPDPixelClusters class,
+   needed only to build the clusters, into a new dedicated utility class
+   HPDPixelClustersBuilder. This builder only needs to be created once per
+   job, and just removes the overhead from having to maintain large 2D arrays
+   to cache information needed for the cluster finding. HPDPixelClusters is
+   thus a lot smaller and focuses only on describing the found clusters.
+
 ! 2015-09-24 - Chrs Jones
  - Various CPU improvements to pixel cluster classes and smart ID sorter.
 
