@@ -12,8 +12,9 @@ def TaskListfromArch(arch, tasklist):
 def OptionsfromTasks(tasklist,level,ofile,pname,dohostdns):
     f = open(ofile,'w')
     f.write("//  Adder Level "+level+"=====================\n")
-    f.write("""#include "$INFO_OPTIONS"
-
+    if level=="1":
+      if pname=="LHCb":
+        f.write("""#include "$INFO_OPTIONS"
 ApplicationMgr.ExtSvc               += {"MonitorSvc","BusySvc"};
 
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
@@ -30,6 +31,40 @@ HistogramPersistencySvc.Warnings     = false;
 BusySvc.BogusMips                    = 0.0;
 MonitorSvc.CounterUpdateInterval     = 5;
 """)
+      else:
+        f.write("""#include "$INFO_OPTIONS"
+ApplicationMgr.ExtSvc               += {"MonitorSvc"};
+
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+
+Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
+
+MessageSvc.fifoPath                  = "$LOGFIFO";
+MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+HistogramPersistencySvc.Warnings     = false;
+MonitorSvc.CounterUpdateInterval     = 5;
+""")
+    else:
+      f.write("""#include "$INFO_OPTIONS"
+ApplicationMgr.ExtSvc               += {"MonitorSvc"};
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+
+Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
+
+MessageSvc.fifoPath                  = "$LOGFIFO";
+MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+HistogramPersistencySvc.Warnings     = false;
+MonitorSvc.CounterUpdateInterval     = 5;
+""")
+
     if level=="1":
       InDns = os.getenv("InDns","<dns>")
       OutDns = os.getenv("OutDns","<dns>")

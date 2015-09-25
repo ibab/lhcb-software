@@ -12,6 +12,7 @@
 #. ./PassThrough.sh $*
 ###echo "Moore version: ${MOORE_VERSION}";
 export CMTCONFIG=x86_64-slc6-gcc48-opt;
+export DAQ_INHIBIT_FINALIZE=ON;
 . /group/hlt/MOORE/${MOOREONLINE_VERSION}/InstallArea/runMooreHlt1Online_EFF.sh ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES};
 #. ${FARMCONFIGROOT}/job/runMooreHlt1Online_EFF.sh ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES};
 

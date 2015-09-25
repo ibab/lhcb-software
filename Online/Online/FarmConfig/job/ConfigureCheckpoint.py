@@ -4,18 +4,26 @@ global restore_args
 restore_args = ''
 
 sep = '/'
-
 checkpoint_zip = True
 checkpoint_dir = '/group/online/dataflow/cmtuser/checkpoints'
 checkpoint_expand_area = '/dev/shm/Torrents'
-checkpoint_local_area = '/localdisk/checkpoints'
+checkpoint_local_area  = '/localdisk/checkpoints'
+checkpoint_expand_area = checkpoint_local_area+'/Torrents'
+
 if os.environ.has_key('LOCAL_CHECKPOINT_DIR'):
   checkpoint_local_area = os.environ['LOCAL_CHECKPOINT_DIR']
 
 line = "====================================================================================="
 
 
+#=========================================================================================
 class RunInfo:
+  """
+
+     \author  M.Frank
+     \version 1.0
+  """
+  #=======================================================================================
   def __init__(self, runinfo):
     dir, fname = os.path.split(runinfo)
     nam, ext = os.path.splitext(fname)
@@ -31,7 +39,14 @@ class RunInfo:
     if not hasattr(self,'OnlineBrunelVersion'):
       self.OnlineBrunelVersion = 'OnlineBrunel'
 
+#=========================================================================================
 class Checkpoint:
+  """
+     \author  M.Frank
+     \version 1.0
+  """
+
+  #=======================================================================================
   def __init__(self, runinfo, config_task_type, config_task_family=None):
     global checkpoint_local_area
     self.runinfo = runinfo
@@ -57,6 +72,7 @@ class Checkpoint:
         self.target_path = checkpoint_local_area+self.checkpointRelativeDir()+sep+self.torrent_file
       self.lib_dir = os.path.dirname(self.target_path)+'/lib'
 
+  #=======================================================================================
   def _getTorrentFile(self):
     try:
       if (self.config_task_family=='REC' and self.runinfo.RecoStartupMode > 1):
@@ -75,6 +91,7 @@ class Checkpoint:
       print 'echo "[ERROR] Check torrent file: '+str(X)+'";'
     return None
 
+  #=======================================================================================
   def checkpointRelativeDir(self):
     ri = self.runinfo
     if self.config_task_family == 'REC' and self.config_task_type:
@@ -90,6 +107,7 @@ class Checkpoint:
           Mapping+sep+self.task_type
     return checkpoint_reloc
 
+  #=======================================================================================
   def torrentFile(self):
     return self.torrent_file
 

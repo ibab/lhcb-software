@@ -51,5 +51,6 @@ Runable.IPSrc                        = @OnlineEnv.Tell1Boards;
 Runable.IPNameOdin                   = @OnlineEnv.ODIN_IP;
 //
 MonitorSvc.CounterUpdateInterval     = 5;
+MonitorSvc.DimUpdateInterval         = 60;
 #include "$STATIC_OPTS/MessageSvc.opts"
 MessageSvc.OutputLevel               = 3;
