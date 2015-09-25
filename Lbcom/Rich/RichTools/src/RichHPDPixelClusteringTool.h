@@ -123,6 +123,12 @@ namespace Rich
       /// Allow pixels to be clustered across diagonals
       bool m_allowDiags;
 
+      /// Pixel clusters builder
+      mutable HPDPixelClustersBuilder m_clusterBuilder;
+
+      /// Flag to turn on the option to split clusters
+      bool m_splitClusters;
+
     };
 
   }

@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2015-09-25 - Chris Jones
+ - Update the pixel clustering tool to adapt to the changes made in RichKernel.
+
 ! 2015-09-24 - Chris Jones
  - Various improvements to the pixel clustering tool.
 
