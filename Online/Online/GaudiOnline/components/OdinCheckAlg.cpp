@@ -13,12 +13,6 @@
 #include "MDF/OnlineRunInfo.h"
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
-#include "RTL/rtl.h"
-
-// C/C++ include files
-#include <cstdlib>
-#include <vector>
-#include <ctime>
 
 /*
  *  LHCb namespace declaration
@@ -80,6 +74,7 @@ namespace LHCb {
       }
       for(_V::const_iterator i=bnks.begin(); i != bnks.end(); ++i)  {
 	RawBank* bank = *i;
+	bool ok = true;
 	if ( !bank )  {
 	  MsgStream err(msgSvc(),name());
 	  err << MSG::ERROR << "INVALID ODIN bank pointer (0)." << endmsg;
@@ -88,11 +83,19 @@ namespace LHCb {
 	if ( bank->type() != RawBank::ODIN )   {
 	  MsgStream err(msgSvc(),name());
 	  err << MSG::ERROR << "Wrong bank type of ODIN bank: " << bank->type() << endmsg;
+	  ok = false;
 	}
 	if ( bank->magic() != RawBank::MagicPattern )  {
 	  MsgStream err(msgSvc(),name());
 	  err << MSG::ERROR << "Wrong magic word of ODIN bank: " 
 	      << std::hex << bank->magic() << std::dec << endmsg;
+	  ok = false;
+	}
+	if ( ok && outputLevel() <= MSG::INFO )   {
+	  MsgStream log(msgSvc(),name());
+          const OnlineRunInfo* info = bank->begin<OnlineRunInfo>();
+	  log << MSG::INFO << "ODIN OK. Run:" << info->Run << " Event:" << info->L0ID
+	      << " Orbit:" << info->Orbit << " BunchID:" << info->bunchID << endmsg;
 	}
       }
       return StatusCode::SUCCESS;
