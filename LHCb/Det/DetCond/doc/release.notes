@@ -3,6 +3,10 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+! 2015-09-25 - Liang Sun
+ - Remove references to SQLDDDB*.py option files
+ - If UseOracle & Online options are both set to True, the Oracle ONLINE db is used, instead of sqlite db files
+
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

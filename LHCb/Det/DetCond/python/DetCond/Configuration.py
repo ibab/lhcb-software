@@ -222,6 +222,8 @@ class CondDB(ConfigurableUser):
                 if not tags:
                     # Allowing absence of valid tags for DQFLAGS
                     if partition == 'DQFLAGS': continue
+                    # Allowing absence of valid tags for CALIBOFF before 2015 
+                    elif partition == 'CALIBOFF' and dt.isdigit() and int(dt)<2015: continue
                     else:
                         raise RuntimeError("Cannot find tags for partition '%s',"
                                        " data type '%s'" % (partition, dt))
@@ -431,7 +433,8 @@ class CondDB(ConfigurableUser):
 
         # Import SQLDDDB specific info
         if self.getProp("UseOracle") or self.getProp("UseDBSnapshot"):
-            importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.py")
+#            importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.py")
+            CondDBAccessSvc("ONLINE", ConnectionString = "CondDBOnline/ONLINE")
             if self.getProp("DisableLFC"):
                 COOLConfSvc(UseLFCReplicaSvc = False)
             if self.getProp("Online"):
@@ -439,8 +442,10 @@ class CondDB(ConfigurableUser):
                 CORAL_XML_DIR = "/group/online/condb_viewer"
                 ApplicationMgr().Environment["CORAL_AUTH_PATH"] = CORAL_XML_DIR
                 ApplicationMgr().Environment["CORAL_DBLOOKUP_PATH"] = CORAL_XML_DIR
+                
         else:
-            importOptions("$SQLDDDBROOT/options/SQLDDDB.py")
+            configureOnlineSnapshots()
+#            importOptions("$SQLDDDBROOT/options/SQLDDDB.py")
 
         #########################################################################
         # Access to ConditionsDB
@@ -686,14 +691,21 @@ def connStrOnline(ym_tuple):
         return "sqlite_file:$SQLITEDBPATH/ONLINE-%04d%02d.db/ONLINE" % ym_tuple
     return "sqlite_file:$SQLITEDBPATH/ONLINE-%04d.db/ONLINE" % ym_tuple[0]
 
-def getAnyDBReader(layer = 'CALIBOFF', svc = CondDBAccessSvc, CacheHighLevel = 200):
+def getAnyDBReader(layer = 'CALIBOFF', svc = CondDBAccessSvc):
+    CacheHighLevel = 200
+    if layer == 'DDDB' : CacheHighLevel = 1700
     # Put the discovered layer on top
     cfg = getConfigurable(layer, svc)
     if svc is not CondDBAccessSvc: return cfg
     try: cfg.ConnectionString
     except AttributeError: # Set up connection for the 1st time
-        cfg = CondDBAccessSvc(layer, ConnectionString =
-                "sqlite_file:$SQLITEDBPATH/%s.db/%s" % (layer, layer), CacheHighLevel = CacheHighLevel)
+        connstr = "sqlite_file:$SQLITEDBPATH/%s.db/%s" % (layer, layer)
+        if layer == 'DQFLAGS' :
+            cfg = CondDBAccessSvc(layer, ConnectionString = connstr,
+                    CacheLowLevel = 5, CacheHighLevel = 10)
+        else:
+            cfg = CondDBAccessSvc(layer, ConnectionString = connstr,
+                CacheHighLevel = CacheHighLevel)
     return cfg
 
 def getOnlineDBReader(ym_tuple, granularity = 'YEARLY', connStrFunc = None):
