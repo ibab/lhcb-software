@@ -4,6 +4,7 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 class PhiLines(Hlt2LinesConfigurableUser) :
   __slots__ = {'_stages' : {},
                'Prescale' : {},
+               'Postscale' : {},
                'IncPhi' : {'TisTosSpec' : "Hlt1IncPhi.*Decision%TOS" ,
                            'KaonPT'     : 800 * MeV ,
                            'KaonIPS'    : 6 ,
