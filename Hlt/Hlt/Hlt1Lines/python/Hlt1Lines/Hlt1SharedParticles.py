@@ -87,8 +87,6 @@ class Hlt1SharedParticles(HltLinesConfigurableUser):
         bm = bindMembers(None, [protoUnit, kaonUnit]).setOutputSelection(selection)
         return bm
 
-
-
     def muonUnit(self):
         selection = 'Hlt1SharedMuons'
         props = self.getProps().copy()
@@ -121,5 +119,29 @@ class Hlt1SharedParticles(HltLinesConfigurableUser):
 
         from HltLine.HltLine import bindMembers
         bm = bindMembers(None, [ muonUnit]).setOutputSelection(selection)
+        return bm
+
+    def protonUnit(self):
+        protoUnit = self.protoParticleUnit()
+        selection = 'Hlt1SharedProtons'
+        props = {'selection' : selection,
+                 'input'     : protoUnit.outputSelection()}
+        code = """
+        SELECTION( '%(input)s' )
+        >>  TC_TOPARTICLES( 'p+', '', ALL )
+        >>  tee ( monitor( TC_SIZE > 0, '# pass ToProtons', LoKi.Monitoring.ContextSvc ) )
+        >>  tee ( monitor( TC_SIZE    , 'nProtons',         LoKi.Monitoring.ContextSvc ) )
+        >>  SINK(  '%(selection)s' )
+        >>  ~TC_EMPTY
+        """ % props
+
+        from Configurables import LoKi__HltUnit as HltUnit
+        protonUnit = HltUnit(
+            'Hlt1SharedProtonUnit',
+            Monitor = True,
+            Code = code)
+
+        from HltLine.HltLine import bindMembers
+        bm = bindMembers(None, [protoUnit, protonUnit]).setOutputSelection(selection)
         return bm
 

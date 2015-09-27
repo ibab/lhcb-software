@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2015-09-27 - Matthew Kenzie
+ - Hlt1SharedParticles: Added shared proton
+ - Hlt1SMOGLines: Added some exclusive lines for Beam Gas running
+
 !========================= Hlt1Lines v7r17 2015-09-22 =========================
 
 ! 2015-09-02 - Sascha Stahl
