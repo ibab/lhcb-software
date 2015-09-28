@@ -4,6 +4,9 @@
 ! Responsible : DV Maintainer
 !============================================================================
 
+! 2015-09-28 - Gerhard Raven
+ - remove extends1* from dictionaries
+
 ! 2015-08-24 - Chris Jones
  - Explicitly list the duplicated TES locations in the warning message.
    Useful when the input list is very long (such as with the duplicate 

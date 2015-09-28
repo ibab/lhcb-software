@@ -2,15 +2,12 @@
 
 <!-- DaVinciKernel -->
 
-<class name = "extends1<GaudiAlgorithm,IDVAlgorithm>" />
 <class name = "DVCommonBase<GaudiAlgorithm>" />
 <class name = "DaVinciAlgorithm" />
 
-<class name = "extends1<GaudiHistoAlg,IDVAlgorithm>" />
 <class name = "DVCommonBase<GaudiHistoAlg>" />
 <class name = "DaVinciHistoAlgorithm" />
 
-<class name = "extends1<GaudiTupleAlg,IDVAlgorithm>" />
 <class name = "DVCommonBase<GaudiTupleAlg>" />
 <class name = "DaVinciTupleAlgorithm" />
 
