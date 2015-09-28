@@ -1200,6 +1200,44 @@ Gaudi::Math::ValueWithError Gaudi::Math::lgamma
   return Gaudi::Math::ValueWithError ( v , e2 ) ;
 }
 // ============================================================================
+/*  evaluate <code>hypot(x,y)</code>
+ *  \f$ \sqrt( x^2 + y^2 ) \f$
+ *   @param x (INPUT) the first parameter
+ *   @param y (INPUT) the second parameter
+ *   @return the valueof <code>hypot</code> function
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError  Gaudi::Math::hypot
+( const Gaudi::Math::ValueWithError& x , 
+  const Gaudi::Math::ValueWithError& y )
+{
+  const bool x0 = 0 >= x.cov2() || _zero ( x.cov2() ) ;
+  const bool y0 = 0 >= y.cov2() || _zero ( y.cov2() ) ;
+  //
+  if ( x0 && y0 ) { return std::hypot ( x.value()  , y.value()  ) ; }
+  //
+  const double r  = std::hypot ( x.value() , y.value() ) ;
+  //
+  double e2 = 0 ;
+  if ( !_zero ( r ) ) 
+  {
+    e2 += x.cov2() * x.value() * x.value() ;
+    e2 += y.cov2() * y.value() * y.value() ;
+    e2 /= r * r ;
+  }
+  else 
+  {
+    e2 += x.cov2() ; 
+    e2 += y.cov2() ;    
+  }
+  //
+  return ValueWithError ( r , e2 ) ;
+}
+
+// ============================================================================
+
+
+// ============================================================================
 /*  evaluate log(b)
  *  @param b (INPUT) the parameter
  *  @return logarithm

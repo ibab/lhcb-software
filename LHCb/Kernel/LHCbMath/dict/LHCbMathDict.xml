@@ -188,6 +188,7 @@
   <function name = "Gaudi::Math::erfc"            />
   <function name = "Gaudi::Math::tgamma"          />
   <function name = "Gaudi::Math::lgamma"          />
+  <function name = "Gaudi::Math::hypot"           />
   <function name = "Gaudi::Math::chi2"            />
   <function name = "Gaudi::Math::mean"            />
   <function name = "Gaudi::Math::asym"            />

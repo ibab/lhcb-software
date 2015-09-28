@@ -767,6 +767,17 @@ namespace Gaudi
     ValueWithError lgamma
     ( const ValueWithError& b ) ;
     // ========================================================================    
+    /** evaluate <code>hypot(x,y)</code>
+     *  \f$ \sqrt( x^2 + y^2 ) \f$
+     *   @param x (INPUT) the first parameter
+     *   @param y (INPUT) the second parameter
+     *   @return the valueof <code>hypot</code> function
+     */
+    GAUDI_API 
+    ValueWithError  hypot
+    ( const ValueWithError& x , 
+      const ValueWithError& y ) ;
+    // ========================================================================    
     /// check for NaN
     inline bool isnan    ( const ValueWithError& v ) { return v.isnan    () ; }
     /// finite ?
