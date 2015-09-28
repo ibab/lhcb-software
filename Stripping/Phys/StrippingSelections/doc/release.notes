@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-09-28 - Marco Gersabeck
+ - Changed StrippingDstarD2KShh.py to CharmCompleteEvent
+
 !========================== StrippingSelections v4r7p1 2015-09-23 ===============
 
 ! 2015-09-22 - Andrea Contu

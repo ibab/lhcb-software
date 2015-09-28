@@ -35,7 +35,7 @@ name = "DstarD2KShh"
 default_config = { 
     'NAME'        : "DstarD2KShh",
     'WGs'         : ['Charm'],
-    'STREAMS'     : [ 'Charm' ],
+    'STREAMS'     : [ 'CharmCompleteEvent' ],
     'BUILDERTYPE' : 'DstarD2KShhBuilder',
     'CONFIG'      : {
         'LongTrackGEC'          :  150        ## Global event cut on number of long tracks
