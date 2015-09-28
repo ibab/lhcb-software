@@ -14,10 +14,10 @@ int SeedLineFit::fit( SeedTrack* seed) const
   std::vector<SeedPnt>& pnts = seed->yPnts();
 
   msgStream() << MSG::DEBUG 
-              << " -> SeedTrack before fit " << *seed << endreq;
+              << " -> SeedTrack before fit " << *seed << endmsg;
   for ( std::vector<SeedPnt>::iterator it = pnts.begin(); pnts.end() != it; ++it ) 
   {
-    msgStream() << MSG::DEBUG  << "  -> SeedPtn " << *it << endreq;
+    msgStream() << MSG::DEBUG  << "  -> SeedPtn " << *it << endmsg;
   }
 
   if ( pnts.size() < 2 ) return -1;
@@ -112,7 +112,7 @@ int SeedLineFit::fit( SeedTrack* seed) const
   }
   seed->setYChi2( chi2 );
 
-  msgStream() << MSG::DEBUG  << " -> SeedTrack after fit " << *seed << endreq;
+  msgStream() << MSG::DEBUG  << " -> SeedTrack after fit " << *seed << endmsg;
 
   return nIt;
 }

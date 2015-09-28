@@ -3,6 +3,9 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+! 2015-09-28 - Gerhard Raven
+ - replace std::auto_ptr with auto, endreq with endmsg
+
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
 

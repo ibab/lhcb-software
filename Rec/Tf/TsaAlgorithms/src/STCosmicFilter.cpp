@@ -152,8 +152,7 @@ bool STCosmicFilter::reselect(const std::vector<STCluster*>& clusters) const {
       iter != clusters.end(); ++iter){
     if ((*iter)->totalCharge() < m_highChargeThreshold ) continue;
     const DeSTSector* aSector = tracker()->findSector((*iter)->channelID());
-    std::auto_ptr<Trajectory> tmpTraj = 
-    aSector->trajectory((*iter)->channelID() , (*iter)->interStripFraction() );
+    auto tmpTraj = aSector->trajectory((*iter)->channelID() , (*iter)->interStripFraction() );
     hits.push_back(std::make_pair(tmpTraj->beginPoint().x(), tmpTraj->beginPoint().z()));
   }
 

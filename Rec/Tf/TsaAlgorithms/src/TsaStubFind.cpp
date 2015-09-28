@@ -40,10 +40,10 @@ StatusCode StubFind::execute(std::vector<SeedHit*> hits[],
   //  Loop over IT stations
   for ( int stn = 0; stn < 3; ++stn ) {
     int lay = 2*stn;
-    //  debug() << "Layer = " << lay   << " # hits  = " << hits[lay].size() << endreq;
-    //  debug() << "Layer = " << lay+1 << " # hits  = " << hits[lay+1].size() << endreq;
-    // debug() << "Layer = " << lay   << " # shits = " << sHits[lay].size() << endreq;
-    // debug() << "Layer = " << lay+1 << " # shits = " << sHits[lay+1].size() << endreq;
+    //  debug() << "Layer = " << lay   << " # hits  = " << hits[lay].size() << endmsg;
+    //  debug() << "Layer = " << lay+1 << " # hits  = " << hits[lay+1].size() << endmsg;
+    // debug() << "Layer = " << lay   << " # shits = " << sHits[lay].size() << endmsg;
+    // debug() << "Layer = " << lay+1 << " # shits = " << sHits[lay+1].size() << endmsg;
 
     //  Loop over hits in first X layer of station
     std::vector<SeedHit*>::iterator start = hits[lay+1].begin();

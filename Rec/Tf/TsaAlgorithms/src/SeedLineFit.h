@@ -51,7 +51,7 @@ namespace Tf
     {
       msgStream() << MSG::DEBUG
                   << "SeedLineFit::fit : z0=" << m_z0 << " sth=" << m_sth << " scth=" << m_scth
-                  << " maxIter=" << m_maxIter << " outlierCut=" << m_outlierCut << endreq;
+                  << " maxIter=" << m_maxIter << " outlierCut=" << m_outlierCut << endmsg;
       reset();
     }
 

@@ -206,14 +206,14 @@ void OTStereoSearch::loadData(std::vector<SeedHit*> hits[6]) const
       for ( TfTsHitNumMap::TfRegions::const_iterator iTfR = tfRegions.begin();
             iTfR != tfRegions.end(); ++iTfR )
       {
-        //debug() << " -> Tf : station=" << station << " layer=" << layer << " region=" << *iTfR << endreq;
+        //debug() << " -> Tf : station=" << station << " layer=" << layer << " region=" << *iTfR << endmsg;
         Range oRange = m_hitMan->hits(station,layer,*iTfR);
         nHits += oRange.size();
         for (Hits::const_iterator otIter = oRange.begin(); otIter != oRange.end(); ++otIter)
         {
  
           // no hit cleaning as yet
-          //if ( clus->isHot() ) { debug() << "   -> IsHot -> Rejecting" << endreq; continue; }
+          //if ( clus->isHot() ) { debug() << "   -> IsHot -> Rejecting" << endmsg; continue; }
           if ( (*otIter)->driftRadius() >= m_maxDriftRadius ) continue; 
           
 	  if ((*otIter)->hit()->ignore()) continue;

@@ -104,7 +104,7 @@ StatusCode Likelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedH
   //  Calc the likelihood
   //-------------------------------------------------------------------------
 
-  //debug() << "Been passed " << seeds.size() << " SeedTracks" << endreq;
+  //debug() << "Been passed " << seeds.size() << " SeedTracks" << endmsg;
 
   for ( std::vector<SeedTrack*>::iterator it = seeds.begin(); seeds.end() != it; ++it ) {
     SeedTrack* seed = *it;
@@ -135,7 +135,7 @@ StatusCode Likelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedH
                    << " seedY=" << seed->y(pnt.hit()->z(),TsaConstants::z0)
                    << " yMid=" << pnt.hit()->yMid()
                    << " dy=" << dy
-                   << endreq;
+                   << endmsg;
       }
       pnt.setZ( z );
     }

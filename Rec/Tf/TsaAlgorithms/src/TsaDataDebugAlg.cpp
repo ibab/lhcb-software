@@ -60,13 +60,13 @@ StatusCode DataDebugAlg::debugSeedHits()
 {
   // load the hits
   SeedHits* hits = get<SeedHits>(m_seedHitLocation);
-  debug() << "Found " << hits->size() << " Seed Hits at " << m_seedHitLocation << endreq;
+  debug() << "Found " << hits->size() << " Seed Hits at " << m_seedHitLocation << endmsg;
 
   // loop over the hits
   for ( SeedHits::const_iterator iHit = hits->begin();
         iHit != hits->end(); ++iHit )
   {
-    verbose() << " -> Hit " << **iHit << endreq;
+    verbose() << " -> Hit " << **iHit << endmsg;
   }
 
   return StatusCode::SUCCESS;

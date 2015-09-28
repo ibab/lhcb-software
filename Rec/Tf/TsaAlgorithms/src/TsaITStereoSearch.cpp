@@ -159,16 +159,16 @@ void ITStereoSearch::loadData(std::vector<SeedHit*> hits[6]) const
           // CRJ : Convert Tsa region into a Tf regions
           const TfTsHitNumMap::TfRegions & tfRegions = m_hitNumMap.tfITRegions(box);
           int nHits(0); // debug only
-	  //          debug() << "IT hits for Tsa : station=" << station+1 << " layer=" << layer << " region=" << box << endreq;
+	  //          debug() << "IT hits for Tsa : station=" << station+1 << " layer=" << layer << " region=" << box << endmsg;
           for ( TfTsHitNumMap::TfRegions::const_iterator iTfR = tfRegions.begin();
                 iTfR != tfRegions.end(); ++iTfR )
           {
-            //debug() << " -> Tf : station=" << station << " layer=" << layer << " region=" << *iTfR << endreq;
+            //debug() << " -> Tf : station=" << station << " layer=" << layer << " region=" << *iTfR << endmsg;
             Range iRange = m_hitMan->hits(station,layer,*iTfR);
             nHits += iRange.size();
             for ( Hits::const_iterator itIter = iRange.begin(); itIter != iRange.end(); ++itIter)
             {
-	      //              debug() << "  -> " << (*itIter)->hit()->lhcbID() << endreq;
+	      //              debug() << "  -> " << (*itIter)->hit()->lhcbID() << endmsg;
               //if ((*itIter)->isHot() == false) { // CRJ : Need to decide what to do about cleaning
 	      if ((*itIter)->hit()->ignore()) continue;
 	      if (m_onlyUnusedHits && (*itIter)->hit()->testStatus(Tf::HitBase::UsedByPatForward)) continue;
@@ -177,7 +177,7 @@ void ITStereoSearch::loadData(std::vector<SeedHit*> hits[6]) const
               //}
             }
           }
-	  //          debug() << " -> Found " << nHits << " hits" << endreq;
+	  //          debug() << " -> Found " << nHits << " hits" << endmsg;
         }
       }
       std::stable_sort( hits[lay].begin(), hits[lay].end(), SeedFunctor::increasingX<const SeedHit*>() );

@@ -350,7 +350,7 @@ StatusCode Seed::execute(){
 
   }
 
-  debug() << "Created " << seedSel->size() << " SeedTracks at " << m_seedTrackLocation << endreq;
+  debug() << "Created " << seedSel->size() << " SeedTracks at " << m_seedTrackLocation << endmsg;
 
   if ( m_doTiming ) m_timerTool->stop( m_seedTime );
 

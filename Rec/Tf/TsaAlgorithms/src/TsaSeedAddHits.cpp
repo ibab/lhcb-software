@@ -93,8 +93,8 @@ StatusCode SeedAddHits::initialize(){
       const DeSTSector* lastSector =  layers[iBox]->lastSector();
       
       // get trajectories
-      std::auto_ptr<LHCb::Trajectory> firstTraj = firstSector->trajectoryFirstStrip();
-      std::auto_ptr<LHCb::Trajectory> lastTraj = lastSector->trajectoryLastStrip();
+      auto firstTraj = firstSector->trajectoryFirstStrip();
+      auto lastTraj = lastSector->trajectoryLastStrip();
 
       // fill vectors of min, max x
       Gaudi::XYZPoint p1 = firstTraj->beginPoint();

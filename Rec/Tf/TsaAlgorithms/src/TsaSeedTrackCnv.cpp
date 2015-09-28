@@ -42,7 +42,7 @@ StatusCode SeedTrackCnv::execute()
 
   // get the tracks
   SeedTracks* trackCont = get<SeedTracks>(m_inputLocation);
-  // debug() << "Found " << trackCont->size() << " SeedTracks at " << m_inputLocation << endreq;
+  // debug() << "Found " << trackCont->size() << " SeedTracks at " << m_inputLocation << endmsg;
 
   // output container
   LHCb::Tracks* output = new LHCb::Tracks();
@@ -61,7 +61,7 @@ StatusCode SeedTrackCnv::execute()
     }
   }
 
-  //  debug() << "Created " << output->size() << " converted SeedTracks at " << m_outputLocation << endreq;
+  //  debug() << "Created " << output->size() << " converted SeedTracks at " << m_outputLocation << endmsg;
 
   return StatusCode::SUCCESS;
 }

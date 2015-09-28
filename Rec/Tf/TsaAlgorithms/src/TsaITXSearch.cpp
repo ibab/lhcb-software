@@ -247,7 +247,7 @@ void ITXSearch::loadData(std::vector<SeedHit*> hits[6]) const
         for ( TfTsHitNumMap::TfRegions::const_iterator iTfR = tfRegions.begin();
               iTfR != tfRegions.end(); ++iTfR )
         {
-          //debug() << " -> Tf : station=" << station << " layer=" << layer << " region=" << *iTfR << endreq;
+          //debug() << " -> Tf : station=" << station << " layer=" << layer << " region=" << *iTfR << endmsg;
           Range iRange = m_hitMan->hits(station,layer,*iTfR);
           nHits += iRange.size();
           for ( Hits::const_iterator itIter = iRange.begin(); itIter != iRange.end(); ++itIter)
