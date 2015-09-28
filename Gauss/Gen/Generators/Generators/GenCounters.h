@@ -8,6 +8,7 @@
 
 #include <cmath>
 #include <numeric>
+#include <algorithm>
 
 namespace boost {
   template< typename T , std::size_t N > class array ;

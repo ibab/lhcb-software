@@ -4,6 +4,8 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+! 2015-09-29 - Gerhard Raven
+ - add missing #include <algorithm>
 
 !======================= Generators v15r0 2015-08-05 =========================
 ! 2015-08-01 - Patrick Robbe 
