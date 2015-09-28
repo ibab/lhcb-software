@@ -1469,12 +1469,14 @@ StatusCode MEPRxSvc::initialize()
     } else {
         return error("Failed to access monitor service.");
     }
+#if 0 // obsolete verification of existence and write-ability of /localdisk/overflow
     if (lib_rtl_access(m_overflowPath.c_str(), 0x6) != 1) {
         info(std::string("Cannot write to ") + m_overflowPath + std::string(
                  " - disabling overflow"));
         m_overflow = false;
         m_setOverflowCmd->m_permDisable = true;
     }
+#endif
     std::string hostname;
     MEPRxSys::gethostname_short(hostname); // get lowercased short hostname
     std::string errmsg;
