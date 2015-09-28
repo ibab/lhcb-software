@@ -52,6 +52,5 @@
   <class name = "IStandardParticleProvider"/>
   <class name = "IParticleVeto"/>
   
-  <class pattern = "extend_interfaces*"/>
 
 </lcgdict>
