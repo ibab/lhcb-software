@@ -91,7 +91,7 @@ def runStorage(name='Storage',sim=None,joboptions=True):
   streamer = StreamAllocator.Allocator(mgr,name,info)
   streamer.recv_slots_per_node = 2
   streamer.strm_slots_per_node = 1
-  streamer.strmAllocationPolicy = StreamAllocator.RoundRobinSlotPolicy
+  ##streamer.strmAllocationPolicy = StreamAllocator.RoundRobinSlotPolicy
   controllers = [streamer]
   if joboptions:
     controllers.append(JobOptions.StorageOptionsWriter(mgr,name,info))

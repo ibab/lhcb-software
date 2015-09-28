@@ -251,9 +251,31 @@ def error(message,timestamp=None,type=default_error_type):
   logger.error(type, message)
 
 # =============================================================================
+def fatal_banner(message,timestamp=None,type=default_error_type):
+  "Sever error printout to logger window"
+  Utils.fatal(132*'*',timestamp=timestamp)
+  Utils.fatal('** ',timestamp=timestamp)
+  if isinstance(message,str):
+    Utils.fatal('** '+message,timestamp=timestamp)
+  elif isinstance(message,list) or isinstance(message,tuple):
+    for m in message:
+      Utils.fatal('** '+m,timestamp=timestamp)
+  else:
+    Utils.fatal('** '+str(message),timestamp=timestamp)
+  Utils.fatal('** ',timestamp=timestamp)
+  Utils.fatal(132*'*',timestamp=timestamp)
+  if isinstance(message,str):
+    logger.error(type, message)
+  elif isinstance(message,list) or isinstance(message,tuple):
+    for m in message:
+      logger.error(type, m)
+  else:
+    logger.error(type, str(message))
+
+# =============================================================================
 def fatal(message,timestamp=None,type=default_error_type):
   "Fatal printout to logger window. kill the program instance!"
-  Utils.error(message,timestamp=timestamp)
+  Utils.fatal(message,timestamp=timestamp)
   logger.fatal(type, message)
 
 # =============================================================================

@@ -35,7 +35,9 @@ def printFMC(severity, msg):
   if fifo:
     global partition
     import socket
-    n = time.strftime('%b%d-%H%M%S['+severity+'] ') + socket.gethostname() + ': PVSS(' + partition + '): ' + msg + '\n'
+    mm = '[%s]'%(severity,)
+    if len(mm)<7: mm = mm + ' '
+    n = time.strftime('%b%d-%H%M%S'+mm) + socket.gethostname() + ': PVSS(' + partition + '): ' + msg + '\n'
     fifo.write(n)
     fifo.flush()
 
@@ -58,7 +60,7 @@ def timeStamp():
   "Return current time as string"
   return time.ctime(time.time())
 # =============================================================================
-def log(msg, with_header=None, with_trailer=None,timestamp=0):
+def log(msg, with_header=None, with_trailer=None,timestamp=0,tag='INFO'):
   """
   Log normal message to output device.
 
@@ -72,18 +74,30 @@ def log(msg, with_header=None, with_trailer=None,timestamp=0):
   if timestamp:        stamp = timeStamp() + ' '
   if ( with_header ):
     makePrint(stamp + logHeader)
-    printFMC('INFO',logHeader)
+    printFMC(tag,logHeader)
   if msg.__class__ == str().__class__:
     makePrint(stamp + '|  ' + msg)
-    printFMC('INFO','|  ' + msg)
+    printFMC(tag,'|  ' + msg)
   else:
     for line in msg:
       makePrint(stamp + '|  ' + line)
-      printFMC('INFO','|  ' + line)
+      printFMC(tag,'|  ' + line)
   if ( with_trailer ):
     makePrint(stamp + logTrailer)
-    printFMC('INFO','|  ' + logTrailer)
+    printFMC(tag,'|  ' + logTrailer)
   sys.stdout.flush()
+
+# =============================================================================
+def fatal(msg, with_header=0, with_trailer=0, timestamp=0):
+  """
+  Log fatal message to output device.
+
+  @param msg           Message content
+  @param with_header   Print header
+  @param with_trailer  Print trailer message
+  @param timestamp     Add timestamp to log message
+  """
+  log('FATAL Error:   '+msg, with_header, with_trailer, timestamp, tag='FATAL')
 
 # =============================================================================
 def error(msg, with_header=0, with_trailer=0, timestamp=0):
@@ -95,7 +109,7 @@ def error(msg, with_header=0, with_trailer=0, timestamp=0):
   @param with_trailer  Print trailer message
   @param timestamp     Add timestamp to log message
   """
-  log('Error:   '+msg, with_header, with_trailer, timestamp)
+  log('Error:   '+msg, with_header, with_trailer, timestamp, tag='ERROR')
 # =============================================================================
 def warning(msg, with_header=0, with_trailer=0, timestamp=0):
   """
@@ -106,7 +120,7 @@ def warning(msg, with_header=0, with_trailer=0, timestamp=0):
   @param with_trailer  Print trailer message
   @param timestamp     Add timestamp to log message
   """
-  log('Warning: '+msg, with_header, with_trailer, timestamp)
+  log('Warning: '+msg, with_header, with_trailer, timestamp, tag='WARN')
 
 # =============================================================================
 def printSlots(slots,prefix,mx,width=14):

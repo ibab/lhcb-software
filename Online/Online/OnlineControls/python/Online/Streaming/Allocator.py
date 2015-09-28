@@ -532,7 +532,7 @@ class AllSlotPolicy(SlotPolicy):
   """ Class to implement the block slot allocation policy.
 
       The block allocation policy works as follows:
-      1) get the node with the maximum occupation
+      1) get the node with the minimal occupation
       2) allocate a maximum of slots on this node
       3) goto 1 until a node with sufficient slots is found
 
@@ -587,8 +587,8 @@ class Allocator(StreamingDescriptor):
     self.strmAllocationPolicy = policy[1]
     self.infoInterface        = info_interface
     self.fsmManip             = FSMmanip
-    self.recv_slots_per_node  = 4
-    self.strm_slots_per_node  = 2
+    self.recv_slots_per_node  = 2
+    self.strm_slots_per_node  = 1
 
   # ===========================================================================
   def showSetup(self):
@@ -818,12 +818,22 @@ class Allocator(StreamingDescriptor):
             if info_obj.isDetectorUsed(detector):
               if not used_tasks.has_key(node): used_tasks[node]=[]
               used_tasks[node].append(task)
+        #
+        #
         res = fsm_manip.allocateProcesses(used_tasks,res)
+        #
+        # Things went wrong
         if res is None:
           return None
+        #
+        # Now commit the transaction
         if fsm_manip.commit(res) is None:
           return None
+        #
+        # Dump output
         self.infoInterface.showPartition(partition=part_info,extended=1)
+        #
+        # All OK
         return part_info.name
       error('No task slots found of type:'+self.name+' for partition:'+partition,timestamp=1)
       return None

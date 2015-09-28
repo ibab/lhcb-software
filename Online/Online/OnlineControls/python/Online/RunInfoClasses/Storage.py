@@ -55,9 +55,65 @@ class StorageInfo(General):
     recv_slots = partition.recvSlices()
     strm_slots = partition.streamSlices()
     streams = []
+    #
+    # Need to change order in this loop to better distribute the tasks
+    # in the storage layers:
+    #
+    node_slots = {}
+    len_strm_slots = len(strm_slots)
+    for i in xrange(len_strm_slots):
+      slot = strm_slots[i]
+      node = slot[:slot.find(':')]
+      if node_slots.has_key(node):
+        node_slots[node].append(slot)
+      else:
+        node_slots[node] = [slot]
+    strm_slots = []
+    num_slots = 0
+    while num_slots < len_strm_slots:
+      for i in node_slots.keys():
+        if len(node_slots[i])>0:
+          strm_slots.append(node_slots[i][0])
+          num_slots = num_slots + 1
+          del node_slots[i][0]
+
+    num_streams = 0
     for j in xrange(len(self.streams.data)):
       for i in xrange(self.strMult.data[j]):
         streams.append([self.streams.data[j],i])
+        num_streams = num_streams + 1
+
+    # Check of streams and slots fit....
+    if len(strm_slots) != num_streams:
+      PVSS.error('FATAL: Partition: %s The number of stream slots does not %s'%
+                 (self.name,'match the number of data streams.',),
+                 timestamp=1,type=PVSS.ILLEGAL_VALUE)
+      PVSS.error('FATAL: Partition: %s Num data stream: %d != Num slots: %d'%
+                 (self.name, len(strm_slots), num_streams,),
+                 timestamp=1,type=PVSS.ILLEGAL_VALUE)
+      return None
+
+    """          
+    multiplicity = [0 for i in self.strMult.data]
+    sum_mult_total = 0
+    for i in xrange(len(self.strMult.data)):
+      sum_mult_total = sum_mult_total + self.strMult.data[i]
+    sum_mult = 0
+    while sum_mult<sum_mult_total:
+      for j in xrange(len(self.streams.data)):
+        if multiplicity[j] < self.strMult.data[j]:
+          streams.append([self.streams.data[j],multiplicity[j]])
+          multiplicity[j] = multiplicity[j] + 1
+          sum_mult = sum_mult + 1
+    """
+    #
+    # This formally does the same thing as the above, but the
+    # order is different and hence the tasks are unequally distributed:
+    #
+    #for j in xrange(len(self.streams.data)):
+    #  for i in xrange(self.strMult.data[j]):
+    #    streams.append([self.streams.data[j],i])
+    #
     recvNodes = partition.recvNodesFromSlots()
     strmNodes = partition.streamNodesFromSlots()
     dimDns    = self.manager.hostName()
@@ -81,7 +137,8 @@ class StorageInfo(General):
       task = self.name+'_'+node+'_'+short_name
       recvReceivers.append(node+'/'+task+'/'+short_name+'/HLTRec'+cl1+'("'+sub_farm+'",)')
       dataSources.append(sub_farm+'/'+self.name+'_'+sub_farm+'_Sender/'+sub_farm+'_Sender/HLTSend'+cl2+'("'+node+','+task+'",)')
-      
+
+    # Here we bind the various slots to the streams:
     for i in xrange(len(strm_slots)):
       slot = strm_slots[i]
       node = slot[:slot.find(':')]
@@ -94,6 +151,7 @@ class StorageInfo(General):
       strmReceivers.append(node+'/'+task+'/'+short_name+'/RCV'+streams[i][0])
       streamers.append([self.name,node,slot,'%02d'%streams[i][1],streams[i][0]])
 
+    # Add for each of the stream layer nodes the required infrastructure tasks
     for j in strmNodes:
       for i in self.strInfra.data:
         strmInfrastructure.append(j+'/'+self.name+'_'+j+'_'+i+'/'+i+'/'+i+cl0+'("'+i+'",)')

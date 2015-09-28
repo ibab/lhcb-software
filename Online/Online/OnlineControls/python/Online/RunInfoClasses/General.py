@@ -8,7 +8,7 @@ DataPoint = PVSS.DataPoint
 debug     = None
 
 
-## "L0DU VELO PUS VELOA VELOC ST TT IT OT OTA OTC RICH RICH1 RICH2 CALO PS ECAL HCAL MUON MUONA MUONC TDET";
+## "L0DU VELO PUS VELOA VELOC ST TT IT OT OTA OTC RICH RICH1 RICH2 CALO PS ECAL HCAL MUON MUONA MUONC TDET/HRC";
 ## "0    -1   1   2     3     -1 5  6  -1 7   8   -1   4     9     -1   10 11   12   -1   13    14    15";
 
 RO_BIT_L0DU   = 0
@@ -50,7 +50,7 @@ _detectors = {
   'MUON': (1<<RO_BIT_MUONA)+(1<<RO_BIT_MUONC),
   'MUONA': 1<<RO_BIT_MUONA,
   'MUONC': 1<<RO_BIT_MUONC,
-  'TDET':  1<<RO_BIT_TDET
+  'HRC':   1<<RO_BIT_TDET
   }
 
 # =============================================================================
@@ -126,8 +126,9 @@ class General:
     self.hltARCH         = None
     self.calARCH         = None
     self.recStartup      = None
+    self.recVersion      = None
     self.triggerConditionsMap = None
-
+    
     dpn = self.manager.name()+':'+self.name+postfix+'.general.outputLevel'
     if self.devMgr.exists(dpn):
       self.outputLvl = self.dp('general.outputLevel')
@@ -342,10 +343,15 @@ class General:
     self.reader.add(self.recNodeInfra)
     self.reader.add(self.recRelayInfra)
 
-    dpn = self.manager.name()+':'+self.name+self.postfix+'.Reco.startupMode'
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Reco.brunelStartupMode'
     if self.devMgr.exists(dpn):
-      self.recStartup = self.dp('reco.startupMode')
+      self.recStartup = self.dp('Reco.brunelStartupMode')
       self.reader.add(self.recStartup)
+
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Reco.brunelOnlineVersion'
+    if self.devMgr.exists(dpn):
+      self.recVersion = self.dp('Reco.brunelOnlineVersion')
+      self.reader.add(self.recVersion)
 
     return self
 

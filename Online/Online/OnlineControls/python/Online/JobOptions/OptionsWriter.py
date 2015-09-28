@@ -8,10 +8,11 @@ import Online.JobOptions.JobOptions as JobOptions
 import Online.Streaming.PartitionInfo as PartitionInfo
 import Online.Streaming.StreamingDescriptor as StreamingDescriptor
 
-log       = Online.Utils.log
-error     = PVSS.error
-warning   = Online.Utils.warning
-DataPoint = PVSS.DataPoint
+log          = Online.Utils.log
+error        = PVSS.error
+warning      = Online.Utils.warning
+DataPoint    = PVSS.DataPoint
+fatal_banner = PVSS.fatal_banner
 
 # =============================================================================
 def _addTasks(data):
@@ -95,6 +96,7 @@ class OptionsWriter(Control.AllocatorClient):
     self.infoCreator = info
     self.optionsDir = Params.jobopts_optsdir
     self.dp_name = self.manager.name()+':'+name+'JobOptions'
+    fatal_banner(['Test','Starting job options writer '+name,'Test'],timestamp=1)
 
   # ===========================================================================
   def connect(self,name):
@@ -108,7 +110,6 @@ class OptionsWriter(Control.AllocatorClient):
         error('Failed to create the datapoint:"'+jo_dev+'"',timestamp=1,type=PVSS.DP_NOT_EXISTENT)
       else:
         log('Created the datapoint:"'+jo_dev+'"',timestamp=1)
-
   # ===========================================================================
   def optionsManager(self):
     if self.optionsMgr is None:
@@ -134,8 +135,8 @@ class OptionsWriter(Control.AllocatorClient):
       dp, nam, id = res
       info = PartitionInfo.PartitionInfo(mgr,nam).load()
     if info is None:
-      error('###\n###   Cannot access Stream Slice for partition:'+self.run.name+' ['+mgr.name()+']\n###',
-            timestamp=1,type=PVSS.ILLEGAL_VALUE)
+      fatal_banner('###\n###   Cannot access Stream Slice for partition:'+self.run.name+' ['+mgr.name()+']\n###',
+                   timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return info
   
   # ===========================================================================
@@ -143,7 +144,7 @@ class OptionsWriter(Control.AllocatorClient):
     activity = JobOptions.Activity(self.optionsManager(),activity_name)
     if activity.exists():
       return activity.taskNames()
-    error('The activity '+activity_name+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
+    fatal_banner('The activity '+activity_name+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
     
   # ===========================================================================
@@ -157,7 +158,7 @@ class OptionsWriter(Control.AllocatorClient):
         if task.exists():
           tasks.append(task)
         else:
-          error('The task '+name+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
+          fatal_banner('The task '+name+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
           return None
     return tasks
     
@@ -196,7 +197,7 @@ class OptionsWriter(Control.AllocatorClient):
         if subdir is not None:
           fd = fd + '/' + str(subdir)
         fn = fd+'/'+name+'.py'
-        log('###   Writing options: '+fn,timestamp=1)
+        ###log('###   Writing options: '+fn,timestamp=1)
         try:
           os.stat(fd)
         except:
@@ -225,8 +226,8 @@ class OptionsWriter(Control.AllocatorClient):
         return self._configure(partition)
     except Exception,X:
       print 'Exception:',X
-    error('Run Information for partition '+partition+' does not exist!',
-          timestamp=1,type=PVSS.ILLEGAL_VALUE)
+    fatal_banner('Run Information for partition '+partition+' does not exist!',
+                 timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
 
   # ===========================================================================
@@ -354,11 +355,10 @@ class OptionsWriter(Control.AllocatorClient):
 
     if hasattr(self.run,'recStartup') and self.run.recStartup is not None:
       opts.add('RecoStartupMode',self.run.recStartup.data)
-    elif self.run.partitionName() == "FEST":
-      opts.add('RecoStartupMode',   2)
-      opts.add('OnlineBrunelVersion', 'OnlineBrunel')
+      opts.add('OnlineBrunelVersion',self.run.recVersion.data)
     else: 
       opts.add('RecoStartupMode',   1)
+      opts.add('OnlineBrunelVersion', 'OnlineBrunel')
 
     if self.run.triggerConditionsMap is not None:
       opts.add('ConditionsMapping',self.run.triggerConditionsMap.data)
@@ -417,8 +417,7 @@ class OptionsWriter(Control.AllocatorClient):
           if len(itms)>1: board = itms[1]
           boards.append((self._gethost(board+'-d1'),board,));
         except Exception,X:
-          error('Failed to retrieve TELL1 specs for '+str(b),timestamp=1)
-          error('Error '+str(X),timestamp=1)
+          fatal_banner(['Failed to retrieve TELL1 specs for '+str(b),'Error '+str(X)],timestamp=1)
           self.boards = None
           return self.boards
       self.boards = boards
@@ -462,8 +461,8 @@ class OptionsWriter(Control.AllocatorClient):
       opts.add('ODIN_Name',odin)
       opts.add('ODIN_IP',  host)
     except Exception,X:
-      error('Failed to retrieve ODIN ip address for '+str(odin),timestamp=1)
-      error('Error [IGNORED for NOW] '+str(X),timestamp=1)
+      fatal_banner(['Failed to retrieve ODIN ip address for '+str(odin),
+                    'Error [IGNORED for NOW] '+str(X)],timestamp=1)
       err = self
     if err:
       return None
@@ -545,8 +544,8 @@ class OptionsWriter(Control.AllocatorClient):
       return opts
 
     except Exception,X:
-      error('Failed to retrieve specs '+str(b),timestamp=1)
-      error('Error '+str(X),timestamp=1)
+      fatal_banner(['Failed to retrieve specs '+str(b),
+                    'Error '+str(X)],timestamp=1)
     return None
   
   # ===========================================================================
@@ -618,15 +617,15 @@ class HLTOptionsWriter(OptionsWriter):
   # ===========================================================================
   def _configure(self, partition):
     if self.run:
-      log('(*****) Starting to write HLT TEXT job options',timestamp=1)
+      #log('(*****) Starting to write HLT TEXT job options',timestamp=1)
       res = self._writeHLTOpts(partition)
-      log('Finished to write HLT TEXT job options',timestamp=1)
+      #log('(*****) Finished to write HLT TEXT job options',timestamp=1)
       if res:
         log('Starting to write HLT PYTHON job options',timestamp=1)
         self._writePyOnlineEnv(partition=partition,fname='OnlineEnv',subdir='HLT')
         log('Finished to write HLT PYTHON job environment options',timestamp=1)
         return self._writePyHLTOpts(partition)
-        #log('Finished to write HLT PYTHON job options',timestamp=1)
+        #log('(*****) Finished to write HLT PYTHON job options',timestamp=1)
         #return res
     return None
 
@@ -649,14 +648,17 @@ class HLTOptionsWriter(OptionsWriter):
       # Check availability of the storage streaming information
       #
       if info is None:
-        error('No storage streaming information present!')
+        fatal_banner('No storage streaming information present!')
         return None
       #
       # Check if slice numbers match:
       #
       slots = info.recvSlices()
       if len(farms) != len(slots):
-        error('Severe mismatch: Number of subfarms:'+str(len(farms))+' Number of recv tasks:'+str(len(slots)))
+        fatal_banner(['Severe mismatch: Number of subfarms:'+str(len(farms))+' Number of recv tasks:'+str(len(slots)),
+                      'Information seen by different projects is inconsistent',
+                      'Check if ALLOCATE worked properly',
+                      'If error persists try to DEALLOCATE and then ALLOCATE again'])
         return None
       for i in xrange(num):
         farm = farms[i]
@@ -677,7 +679,7 @@ class HLTOptionsWriter(OptionsWriter):
     opts.comment('---------------- HLT patrameters:   ')
     opts.add('SubFarms',       farm_names)
 
-    error(' HLT OPTS: Adding deferred runs.......',timestamp=1,type=PVSS.ILLEGAL_VALUE)
+    #log(' HLT OPTS: Adding deferred runs.......',timestamp=1,type=PVSS.ILLEGAL_VALUE)
     # For the HLT info add the list of deferred runs
     if self.run.deferredRuns is not None and len(self.run.deferredRuns.data)>0:
       opts.add('DeferredRuns', ["%s"%i for i in self.run.deferredRuns.data])
@@ -715,14 +717,17 @@ class HLTOptionsWriter(OptionsWriter):
       # Check availability of the storage streaming information
       #
       if info is None:
-        error('No storage streaming information present!')
+        fatal_banner('No storage streaming information present!')
         return None
       #
       # Check if slice numbers match:
       #
       slots = info.recvSlices()
       if len(farms) != len(slots):
-        error('Severe mismatch: Number of subfarms:'+str(len(farms))+' Number of recv tasks:'+str(len(slots)))
+        fatal_banner(['Severe mismatch: Number of subfarms:'+str(len(farms))+' Number of recv tasks:'+str(len(slots)),
+                      'Information seen by different projects is inconsistent',
+                      'Check if ALLOCATE worked properly',
+                      'If error persists try to DEALLOCATE and then ALLOCATE again'])
         return None
 
       for i in xrange(num):
@@ -796,8 +801,8 @@ class HLTOptionsWriter(OptionsWriter):
       opts.add('ODIN_Name',odin)
       opts.add('ODIN_IP',  host)
     except Exception,X:
-      error('Failed to retrieve ODIN ip address for '+str(odin),timestamp=1)
-      error('Error [IGNORED for NOW] '+str(X),timestamp=1)
+      fatal_banner(['Failed to retrieve ODIN ip address for '+str(odin),
+                    'Error [IGNORED for NOW] '+str(X)],timestamp=1)
       err = self
     if err:
       return None
@@ -948,8 +953,8 @@ class StreamingOptionsWriter(OptionsWriter):
           done = 0
 
     if done > 0: return self
-    error('###\n###   UNKNOWN task requires options: '+task.name+' type:'+self.hostType+'\n###',
-          timestamp=1,type=PVSS.ILLEGAL_VALUE)
+    fatal_banner('###\n###   UNKNOWN task requires options: '+task.name+' type:'+self.hostType+'\n###',
+                 timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
 
   # ===========================================================================
@@ -967,7 +972,7 @@ class StreamingOptionsWriter(OptionsWriter):
         if res is None:
           result = None
       return result
-    error('Failed to access the Storage info:'+self.streamMgr.name()+' '+self.name)
+    fatal_banner('Failed to access the Storage info:'+self.streamMgr.name()+' '+self.name)
     return None
   
 # =============================================================================

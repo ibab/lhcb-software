@@ -45,8 +45,8 @@ class RunDB:
         self.fillEnded     = self.dp0('LHCbPerformance.CurrentFillEnded')
 
         self.lhcState      = self.dp1('LHCCOM/LHC.LHC.RunControl.BeamMode')
-        self.b1Intensity   = self.dp1('LHCCOM/LHC.LHC.Beam.IntensityPerBunch.Beam1.averageBeamIntensity');
-        self.b2Intensity   = self.dp1('LHCCOM/LHC.LHC.Beam.IntensityPerBunch.Beam2.averageBeamIntensity');
+        self.b1Intensity   = self.dp1('LHCCOM/LHC.LHC.Beam.IntensityPerBunch.Beam1.wholeBeamIntensity');
+        self.b2Intensity   = self.dp1('LHCCOM/LHC.LHC.Beam.IntensityPerBunch.Beam2.wholeBeamIntensity');
         self.energy        = self.dp1('LHCCOM/LHC.LHC.Beam.Energy')
         self.readerLHC.add(self.lhcState)
         self.readerLHC.add(self.b1Intensity)

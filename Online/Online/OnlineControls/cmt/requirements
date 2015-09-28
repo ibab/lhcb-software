@@ -5,6 +5,8 @@ branches  cmt doc
 use UPI           v* Online -no_auto_imports
 use UPIR          v* Online -no_auto_imports
 use PVSSInterface v* Online -no_auto_imports
+use pytools       v* LCG_Interfaces -no_auto_imports
+use oracle        v* LCG_Interfaces -no_auto_imports
 #use PyDIM         v* Online -no_auto_imports
 
 
