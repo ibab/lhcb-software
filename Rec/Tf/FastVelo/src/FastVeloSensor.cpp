@@ -57,7 +57,7 @@ FastVeloSensor::FastVeloSensor( DeVeloPhiType* phiSensor, double xBeam, double y
   
   for ( unsigned int kk = 0 ; 2048 > kk ; ++kk ) {
     LHCb::VeloChannelID id( m_number, kk );
-    std::auto_ptr<LHCb::Trajectory> myTraj = phiSensor->trajectory( id, 0. );
+    auto myTraj = phiSensor->trajectory( id, 0. );
     Gaudi::XYZPoint p1 = myTraj->beginPoint();
     Gaudi::XYZPoint p2 = myTraj->endPoint();
     double dist = sqrt( ( p1.x() - p2.x() ) * ( p1.x() - p2.x() ) + (p1.y() - p2.y() ) * ( p1.y() - p2.y() ) );

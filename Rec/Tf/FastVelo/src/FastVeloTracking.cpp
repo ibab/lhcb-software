@@ -1131,7 +1131,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
   if ( m_debug ) info() << "Space tracking. Zone " << input.zone() << " from " << first->number()
                         << " to " << last->number() << " restrict to " << lowSensor << " - " << highSensor
                         << " isVertical " << isVertical << " inOverlap " << inOverlap
-                        << " forward " << forward << " nbRight " << nbRight << " Left " << nbLeft << endreq;
+                        << " forward " << forward << " nbRight " << nbRight << " Left " << nbLeft << endmsg;
 
 
   //== Define the sine of the distance as measure of the track. Store those in the correct range
@@ -1406,13 +1406,13 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
           ok = temp.removeWorstMultiple( m_maxChi2PerHit, minNbPhi );
           if ( !ok ) {
             if ( m_debug ) info() << "Rejected , not enough phi = "
-                                  << temp.phiHits().size() << " for " << minNbPhi << endreq;
+                                  << temp.phiHits().size() << " for " << minNbPhi << endmsg;
             continue;
           }
 
           //== Overall quality should be good enough...
           if ( m_maxQFactor < temp.qFactor() ) {
-            if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
+            if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endmsg;
             continue;
           }
           //== Check that there are phi hits on the same side as the R hits...
@@ -1473,7 +1473,7 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
         if ( ok ) {
           //== Overall quality should be good enough...
           if ( m_maxQFactor < temp.qFactor() ) {
-            if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
+            if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endmsg;
             ok = false;
           }
           
@@ -1812,7 +1812,7 @@ void FastVeloTracking::printCoord( const FastVeloHit* hit, std::string title ) {
   LHCb::LHCbID myId =  hit->lhcbID();
   if ( 0 != m_debugTool ) m_debugTool->printKey( info(), myId );
   if ( matchKey( hit ) ) info() << " ***";
-  info() << endreq;
+  info() << endmsg;
 }
 
 

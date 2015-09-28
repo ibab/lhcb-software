@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2015-09-28 - Gerhard Raven
+ - replace std::auto_ptr with auto, endreq with endmsg
+
 ! 2015-08-26 - David Hutchcroft
  - Fix to FastVeloTracking matching of RZ track to Phi hits when beam is off centre
 
