@@ -179,7 +179,7 @@ void Checkpoint_readL0Types()  {
 // @version 1.0
 //=============================================================================
 string Checkpoint_directory()  {
-  string f=m_outdir.text;
+  string f=m_outdir.text, pgm=m_hltProgram.text;
   if ( m_flavour.text == "Moore" && m_hltType.text == "PassThrough" )  {
     f = f + "/" + m_hltType.text;
     f = f + "/" + m_online.text;
@@ -192,8 +192,10 @@ string Checkpoint_directory()  {
   if ( strlen(m_app.text) > 0 )  {
     f = f + "/" + m_app.text;
   }
-  if ( strlen(m_hltType.text) > 0 )  {
-    f = f + "/" + m_hltType.text;
+  if ( !(pgm == "OnlineBrunel" || pgm == "DataQuality") )   {
+    if ( strlen(m_hltType.text) > 0 )  {
+      f = f + "/" + m_hltType.text;
+    }
   }
   if ( Checkpoint_useDBtags )  {
     f = f +   "/" + m_condDB.text + "/" + m_ddDB.text;
@@ -788,23 +790,27 @@ void Checkpoint_findVersions()    {
     files = getFileNames(path+"/MOORE","*",FILTER_DIRS);
     for(int i = 1; i <= dynlen(files); i++)  {
       if((strpos(files[i],"MOORE_") != 0) && (strpos(files[i],"Moore_") != 0))    {
-	dynRemove(files, i);
-	i--;
+        dynRemove(files, i);
+        i--;
       }
     }
     if(!dynlen(files))
       files = getFileNames(path+"/MOORE/*","*");
     for(int i = 1; i <= dynlen(files); i++)  {
       if((strpos(files[i],"MOORE_") != 0) && (strpos(files[i],"Moore_") != 0))    {
-	dynRemove(files, i);
-	i--;
+        dynRemove(files, i);
+        i--;
       }
     }
   }
   // Now scan Other stuff versions
   else {
     DebugN("Find program versions for application type:"+Checkpoint_AppVsn);
-    files = getFileNames("/group/online/dataflow/cmtuser",Checkpoint_AppVsn+"*",FILTER_DIRS);
+    path = "/group/online/dataflow/cmtuser";
+    if(_WIN32)   {
+      strreplace(path,"/group/","G:/");
+    }
+    files = getFileNames(path,Checkpoint_AppVsn+"*",FILTER_DIRS);
   }
   dynSortAsc(files);
   for(int i = 1, n=dynlen(files); i <= dynlen(files); i++)  {

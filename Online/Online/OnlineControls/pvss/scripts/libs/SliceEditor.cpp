@@ -77,15 +77,18 @@ void SliceEditor_init(string sys)  {
 void SliceEditor_popup(string sys,int which)  {
   int answer, res = 0;
   dyn_string txt = makeDynString(  "PUSH_BUTTON, Add..., 1, 1",
-                                   "PUSH_BUTTON, Delete, 2, 1",
-                                   "PUSH_BUTTON, Disable, 3, 1");
+                                   "PUSH_BUTTON, Disable, 2, 1",
+                                   "PUSH_BUTTON, Cancel, 3, 1");
+                                   //"PUSH_BUTTON, Delete, 4, 1");
   popupMenu(txt, answer);
   if ( answer == 1 )          // Adding a new node
     SliceEditor_SetAddingMode(which,1);
-  else if ( answer == 2 )     // Removing a node
-    res = SliceEditor_RemoveSlices(sys,which);
-  else if ( answer == 3 )     // Moving node to garage
+  else if ( answer == 2 )     // Moving node to garage
     res = SliceEditor_DisableSlices(sys,which);
+  else if ( answer == 3 )     // Cancel
+    return;
+  else if ( answer == 4 )     // Removing a node
+    res = SliceEditor_RemoveSlices(sys,which);
   if ( res != 0 ) ctrlUtils_checkErrors(res);
   SliceEditor_init(sys);
 }
