@@ -1,5 +1,4 @@
 // Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiUtils/HistoLabels.h"
 #include "GaudiUtils/Aida2ROOT.h"
 
@@ -22,9 +21,9 @@ DECLARE_ALGORITHM_FACTORY(HCDelayScan)
 HCDelayScan::HCDelayScan(const std::string& name, ISvcLocator* pSvcLocator)
     : HCMonitorBase(name, pSvcLocator),
       m_odin(NULL),
-  m_parAdc("", -0.5, 1023.5, 1023),
   m_minStep(0),
-  m_BxRange({-1,10000}){
+  m_BxRange({-1,10000}),
+  m_parAdc("", -0.5, 1023.5, 1023) {
 
   declareProperty("DigitLocation", m_digitLocation = LHCb::HCDigitLocation::Default);
   declareProperty("ParametersADC", m_parAdc);

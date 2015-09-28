@@ -86,7 +86,6 @@ StatusCode HCMonitorBase::initialize() {
   // Setup the mapping.
   for (unsigned int i = 0; i < m_channelsB0.size(); ++i){
     m_masksFromName["B0"+std::to_string(i)] = m_masksB0[i];
-    int test =( m_crateB << 6) | m_channelsB0[i];
     m_channelsFromName["B0"+std::to_string(i)] = (m_crateB << 6) | m_channelsB0[i];
     m_refChannelsFromName["B0"+std::to_string(i)] = (m_crateB << 6) | m_spareChannelsB0[i];
   }

@@ -67,10 +67,9 @@ class HCDelayScan : public HCMonitorBase {
   std::vector<std::vector<TH2D*>> m_scanResults;
   std::vector<std::vector<TH2D*>> m_scanOffset;
 
-  int m_BxCentral;
-  int m_BxNext;
-  int m_BxPrev;
-
+  unsigned int m_BxCentral;
+  unsigned int m_BxNext;
+  unsigned int m_BxPrev;
 
 };
 

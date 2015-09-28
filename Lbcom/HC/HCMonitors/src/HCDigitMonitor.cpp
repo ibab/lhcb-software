@@ -165,16 +165,13 @@ StatusCode HCDigitMonitor::initialize() {
     const unsigned int bins = 1024;
     const double lowCor = -200.5;
     const double highCor = 1223.5;
-    const unsigned int binsCor = 1424;
     // Book histograms for ADC distributions for each quadrant.
     const std::string qu = "Quadrant" + std::to_string(i);
     // Bx ID binning
     const double bxlow = -0.5;
     const double bxhigh = 4095.5;
     const unsigned int bxbins = 4096;
-    const double bxlowCor =  -0.5;
     const double bxhighCor =  4095.5;
-    const unsigned int bxbinsCor = 4096;
     std::vector<double> bxedges;
     for (unsigned int j = 0; j < bxbins + 1; ++j) {
       bxedges.push_back(j - 0.5);
