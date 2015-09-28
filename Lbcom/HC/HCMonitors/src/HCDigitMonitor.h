@@ -70,6 +70,47 @@ class HCDigitMonitor : public HCMonitorBase {
   std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantNoBeam;
   std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantBeam;
 
+
+  /// ADC distributions of all channels
+  std::vector<AIDA::IHistogram1D*> m_hAdcBCor;
+  std::vector<AIDA::IHistogram1D*> m_hAdcFCor;
+  std::vector<AIDA::IHistogram1D*> m_hAdcEvenBCor;
+  std::vector<AIDA::IHistogram1D*> m_hAdcEvenFCor;
+  std::vector<AIDA::IHistogram1D*> m_hAdcOddBCor;
+  std::vector<AIDA::IHistogram1D*> m_hAdcOddFCor;
+
+  /// ADC distributions of all quadrants
+  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantCor;
+  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantEvenCor;
+  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantOddCor;
+  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantNoBeamCor;
+  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantBeamCor;
+
+  /// ADC distributions as function of BX ID.
+  std::vector<AIDA::IHistogram2D*> m_hAdcVsBxCor;
+
+  /// ADC sum distributions
+  std::vector<AIDA::IHistogram1D*> m_hAdcSumCor;
+  std::vector<AIDA::IHistogram1D*> m_hAdcSumEvenCor;
+  std::vector<AIDA::IHistogram1D*> m_hAdcSumOddCor;
+  std::vector<AIDA::IHistogram1D*> m_hAdcSumNoBeamCor;
+  std::vector<AIDA::IHistogram1D*> m_hAdcSumBeamCor;
+
+  /// Mean ADC vs. channel number
+  AIDA::IProfile1D* m_hAdcVsChannelBCor;
+  AIDA::IProfile1D* m_hAdcVsChannelFCor;
+  AIDA::IProfile1D* m_hAdcVsChannelEvenBCor;
+  AIDA::IProfile1D* m_hAdcVsChannelEvenFCor;
+  AIDA::IProfile1D* m_hAdcVsChannelOddBCor;
+  AIDA::IProfile1D* m_hAdcVsChannelOddFCor;
+
+  /// Mean ADC vs. quadrant
+  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantCor;
+  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantEvenCor;
+  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantOddCor;
+  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantNoBeamCor;
+  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantBeamCor;
+
 };
 
 #endif

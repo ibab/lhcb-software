@@ -14,13 +14,36 @@ HCMonitorBase::HCMonitorBase(const std::string& name, ISvcLocator* pSvcLocator)
     : GaudiTupleAlg(name, pSvcLocator),
       m_odin(NULL) {
 
+  // Mapping which will then go in the condDB
   declareProperty("CrateB", m_crateB = 0);
   declareProperty("CrateF", m_crateF = 1);
+
+  declareProperty("MasksB0", m_masksB0);
+  declareProperty("MasksB1", m_masksB1);
+  declareProperty("MasksB2", m_masksB2);
+  declareProperty("MasksF1", m_masksF1);
+  declareProperty("MasksF2", m_masksF2);
+
+
   declareProperty("ChannelsB0", m_channelsB0);
   declareProperty("ChannelsB1", m_channelsB1);
   declareProperty("ChannelsB2", m_channelsB2);
   declareProperty("ChannelsF1", m_channelsF1);
   declareProperty("ChannelsF2", m_channelsF2);
+
+  declareProperty("SpareChannelsB0", m_spareChannelsB0);
+  declareProperty("SpareChannelsB1", m_spareChannelsB1);
+  declareProperty("SpareChannelsB2", m_spareChannelsB2);
+  declareProperty("SpareChannelsF1", m_spareChannelsF1);
+  declareProperty("SpareChannelsF2", m_spareChannelsF2);
+
+  declareProperty("ChannelCalib", m_channelsCalibConfig);
+  declareProperty("Thetas", m_thetaConfig);
+  declareProperty("X0", m_x0Config);
+  declareProperty("Y0", m_y0Config);
+
+
+  // Real monitoring staff
   declareProperty("VariableBins", m_variableBins = false);
   declareProperty("RandomiseADC", m_randomiseAdc = true);
   declareProperty("MinBX", m_bxMin = 0);
@@ -43,7 +66,7 @@ StatusCode HCMonitorBase::initialize() {
 
   // Get ODIN.
   m_odin = tool<IEventTimeDecoder>("OdinTimeDecoder", "OdinDecoder", this);
- 
+  m_stations = {"B0", "B1", "B2", "F1", "F2"};
   // Setup the binning and ADC correction.
   m_adcCorrection.resize(1024, 0.);
   m_adcStep.resize(1024, 0);
@@ -60,20 +83,40 @@ StatusCode HCMonitorBase::initialize() {
     adc += step;   
   } 
   m_edges.push_back(1023.5);
-
   // Setup the mapping.
-  const unsigned int nChannels = 64;
-  m_mappedB.resize(nChannels, false);
-  m_mappedF.resize(nChannels, false);
-  m_stationB.resize(nChannels, 0);
-  m_stationF.resize(nChannels, 0);
-  m_quadrantB.resize(nChannels, 0);
-  m_quadrantF.resize(nChannels, 0);
-  mapChannels(m_channelsB0, true, 0);
-  mapChannels(m_channelsB1, true, 1);
-  mapChannels(m_channelsB2, true, 2);
-  mapChannels(m_channelsF1, false, 1);
-  mapChannels(m_channelsF2, false, 2);
+  for (unsigned int i = 0; i < m_channelsB0.size(); ++i){
+    m_masksFromName["B0"+std::to_string(i)] = m_masksB0[i];
+    int test =( m_crateB << 6) | m_channelsB0[i];
+    m_channelsFromName["B0"+std::to_string(i)] = (m_crateB << 6) | m_channelsB0[i];
+    m_refChannelsFromName["B0"+std::to_string(i)] = (m_crateB << 6) | m_spareChannelsB0[i];
+  }
+  for (unsigned int i = 0; i < m_channelsB1.size(); ++i){
+    m_masksFromName["B1"+std::to_string(i)] = m_masksB1[i];
+    m_channelsFromName["B1"+std::to_string(i)] = (m_crateB << 6) | m_channelsB1[i];
+    m_refChannelsFromName["B1"+std::to_string(i)] = (m_crateB << 6) | m_spareChannelsB1[i];
+  }
+  for (unsigned int i = 0; i < m_channelsB2.size(); ++i){
+    m_masksFromName["B2"+std::to_string(i)] = m_masksB2[i];
+    m_channelsFromName["B2"+std::to_string(i)] = (m_crateB << 6) | m_channelsB2[i];
+    m_refChannelsFromName["B2"+std::to_string(i)] = (m_crateB << 6) | m_spareChannelsB2[i];
+  }
+  for (unsigned int i = 0; i < m_channelsF1.size(); ++i){
+    m_masksFromName["F1"+std::to_string(i)] = m_masksF1[i];
+    m_channelsFromName["F1"+std::to_string(i)] = (m_crateF << 6) | m_channelsF1[i];
+    m_refChannelsFromName["F1"+std::to_string(i)] = (m_crateF << 6) | m_spareChannelsF1[i];
+  }
+  for (unsigned int i = 0; i < m_channelsF2.size(); ++i){
+    m_masksFromName["F2"+std::to_string(i)] = m_masksF2[i];
+    m_channelsFromName["F2"+std::to_string(i)] = (m_crateF << 6) | m_channelsF2[i];
+    m_refChannelsFromName["F2"+std::to_string(i)] = (m_crateF << 6) | m_spareChannelsF2[i];
+  }
+
+  for (unsigned int i = 0; i < m_channelsCalibConfig.size() ; ++i){
+    std::vector< float > tmpVect;
+    m_thetas[m_channelsCalibConfig[i]]= {m_thetaConfig[2*i],m_thetaConfig[2*i+1]};
+    m_x0[m_channelsCalibConfig[i]]= {m_x0Config[2*i],m_x0Config[2*i+1]};
+    m_y0[m_channelsCalibConfig[i]]= {m_y0Config[2*i],m_y0Config[2*i+1]};
+  }
 
   // Setup the random number generator.
   if (!m_uniform.initialize(randSvc(), Rndm::Flat(0., 1.))) {
@@ -86,7 +129,6 @@ StatusCode HCMonitorBase::initialize() {
 // Correct/randomise a given ADC value.
 //=============================================================================
 double HCMonitorBase::fadc(const unsigned int adc) {
-
   double result = adc;
   if (m_randomiseAdc) {
     if (m_adcStep[adc] > 1) result += m_uniform.shoot() * m_adcStep[adc];
@@ -109,37 +151,6 @@ void HCMonitorBase::scale(AIDA::IHistogram1D* h) {
 //=============================================================================
 // Setup channel map for a given station.
 //=============================================================================
-void HCMonitorBase::mapChannels(const std::vector<unsigned int>& channels,
-                                 const bool bwd, const unsigned int station) {
-
-  const unsigned int nChannels = channels.size();
-  if (nChannels != 4 && nChannels != 5) {
-    std::string s = bwd ? "B" : "F";
-    s += std::to_string(station); 
-    warning() << "Invalid channel map for station " << s << "." << endmsg;
-    return;
-  }
-
-  for (unsigned int i = 0; i < nChannels; ++i) {
-    const unsigned int channel = channels[i];
-    if (bwd) {
-      if (m_mappedB[channel]) {
-        warning() << "Channel " << channel << " (B) "
-                  << "is mapped to more than one PMT." << endmsg;
-      }
-      m_mappedB[channel] = true;
-      m_stationB[channel] = station;
-      m_quadrantB[channel] = i;
-    } else {
-      if (m_mappedF[channel]) {
-        warning() << "Channel " << channel << " (F) "
-                  << "is mapped to more than one PMT." << endmsg;
-      }
-      m_mappedF[channel] = true;
-      m_stationF[channel] = station;
-      m_quadrantF[channel] = i;
-    }
-  }
-
+float HCMonitorBase::correctChannel( std::string channel , unsigned int adc, unsigned int adc_ref, unsigned int parity) {
+  return adc-(adc_ref-m_x0[channel][parity])*tan( m_thetas[channel][parity] )-m_y0[channel][parity];
 }
-

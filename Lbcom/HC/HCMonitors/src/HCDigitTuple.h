@@ -26,11 +26,6 @@ private:
   int m_tag;
   /// TES location of HC digits.
   std::string m_digitLocation;
-
-  std::vector<std::string> m_labelsB;
-  std::vector<std::string> m_labelsF;
-  std::vector<unsigned int> m_channelsB;
-  std::vector<unsigned int> m_channelsF;
   void addQuadrants(const std::vector<unsigned int>& channels,
                     const std::string& station, const bool bwd); 
 };

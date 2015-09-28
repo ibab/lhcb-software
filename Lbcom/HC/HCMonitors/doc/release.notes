@@ -4,6 +4,12 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2015-09-28 - Victor Coco
+ - HCMonitorBase: change the way mapping is handeled and add correction factors 
+   for the channels
+ - Modify all other classes accordingly
+
+
 ! 2015-09-22 - Heinrich Schindler
  - HCMonitorBase: inherit from GaudiTupleAlg instead of GaudiHistoAlg.
  - HCDigitTuple: write out ADCs for each channel explicitly.

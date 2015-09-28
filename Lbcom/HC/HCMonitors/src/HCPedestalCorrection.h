@@ -1,39 +1,33 @@
-#ifndef HC_DIGIT_MONITOR_H
-#define HC_DIGIT_MONITOR_H 1
+#ifndef HCPEDESTALCORRECTION_H 
+#define HCPEDESTALCORRECTION_H 1
 
-// AIDA
-#include "AIDA/IHistogram2D.h"
-#include "AIDA/IProfile1D.h"
-
-// Local
+// Local 
 #include "HCMonitorBase.h"
 
+#include "TF2.h"
+#include "AIDA/IHistogram2D.h"
 /** @class HCPedestalCorrection HCPedestalCorrection.h
- *
- *  Algorithm to determine pedestal correlations between 
- *  signal and spare channels.
+ *  
  *
  */
 
 class HCPedestalCorrection : public HCMonitorBase {
- public:
+public: 
   /// Standard constructor
   HCPedestalCorrection(const std::string& name, ISvcLocator* pSvcLocator);
   /// Destructor
   virtual ~HCPedestalCorrection();
 
-  virtual StatusCode initialize();  ///< Algorithm initialization
-  virtual StatusCode execute();     ///< Algorithm execution
-  virtual StatusCode finalize();    ///< Algorithm finalization
+  virtual StatusCode initialize();    ///< Algorithm initializatio
+  virtual StatusCode finalize();    ///< Algorithm finalizationn
+  virtual StatusCode execute();       ///< Algorithm execution
 
- private:
-  /// TES location of digits
+private:
+  /// TAE slot
+  int m_tag;
+  /// TES location of HC digits.
   std::string m_digitLocation;
-
-  /// Correlation histograms for each quadrant.
-  std::vector<AIDA::IHistogram2D*> m_hCorrelation;
-  /// Profile histograms for each quadrant.
-  std::vector<AIDA::IProfile1D*> m_hProfile;
+  std::map< std::string ,AIDA::IHistogram2D*> m_hCorrelation;
+  std::map< std::string , TF2*> m_fit;
 };
-
 #endif

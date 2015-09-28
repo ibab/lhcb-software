@@ -59,46 +59,7 @@ StatusCode HCDigitTuple::initialize() {
   if (tae != "") {
     m_digitLocation = tae + "/" + m_digitLocation;
   }
-
-  addQuadrants(m_channelsB0, "B0", true); 
-  addQuadrants(m_channelsB1, "B1", true); 
-  addQuadrants(m_channelsB2, "B1", true); 
-  addQuadrants(m_channelsF1, "F1", false); 
-  addQuadrants(m_channelsF2, "F2", false); 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-// Add the labels and channel numbers for one station to the list.
-//=============================================================================
-void HCDigitTuple::addQuadrants(const std::vector<unsigned int>& channels,
-                                const std::string& station, const bool bwd) {
-
-  const unsigned int nChannels = channels.size();
-  if (nChannels != 5) {
-    warning() << "Spare channel of station " << station << "is not defined." 
-              << endmsg;
-  }
-  for (unsigned int i = 0; i < nChannels; ++i) {
-    if (i == 4) {
-      if (bwd) {
-        m_labelsB.push_back(station + "S");
-      } else {
-        m_labelsF.push_back(station + "S");
-      }
-    } else {
-      if (bwd) {
-        m_labelsB.push_back(station + std::to_string(i));
-      } else {
-        m_labelsF.push_back(station + std::to_string(i));
-      }
-    }
-    if (bwd) {
-      m_channelsB.push_back(channels[i]);
-    } else {
-      m_channelsF.push_back(channels[i]);
-    }
-  }
 }
 
 //=============================================================================
@@ -120,7 +81,6 @@ StatusCode HCDigitTuple::execute() {
   const unsigned int bunchid = odin->bunchId() + m_tag;
   const ulonglong evTimeGps = odin->gpsTime();
   const int step = odin->calibrationStep();
-
   const LHCb::HCDigits* digits = getIfExists<LHCb::HCDigits>(m_digitLocation);
   if (!digits) {
     return Error("No digits in " + m_digitLocation, StatusCode::SUCCESS);
@@ -147,14 +107,18 @@ StatusCode HCDigitTuple::execute() {
   tuple->column("step", step); 
   tuple->array("adc_B", adcB.begin(), adcB.end());
   tuple->array("adc_F", adcF.begin(), adcF.end());
-  const unsigned int nChannelsB = m_labelsB.size();
-  for (unsigned int i = 0; i < nChannelsB; ++i) {
-    tuple->column(m_labelsB[i], adcB[m_channelsB[i]]);
-  }
-  const unsigned int nChannelsF = m_labelsF.size();
-  for (unsigned int i = 0; i < nChannelsF; ++i) {
-    tuple->column(m_labelsF[i], adcF[m_channelsF[i]]);
-  }
+
+  for(std::map< std::string , unsigned int>::iterator it = m_channelsFromName.begin(); it != m_channelsFromName.end(); ++it) {
+    unsigned int adc = digits->object(it->second)->adc();
+    std::string chName = it->first;
+    unsigned int adc_ref = digits->object(m_refChannelsFromName[chName])->adc();
+    //unsigned int channel = digits->object(it->second)->cellID().channel();
+    tuple->column(chName , adc );
+    tuple->column(chName+"_reference" , adc_ref );
+    if (!m_thetaConfig.empty()){
+      tuple->column(chName+"_Cor" ,correctChannel(chName,adc,adc_ref, bunchid% 2)  );
+    }
+  } 
   tuple->write();
   return StatusCode::SUCCESS;
 }
