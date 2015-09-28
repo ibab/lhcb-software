@@ -856,6 +856,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->addDgtr(100443, 10323)->addDgtr(321, 113)->addDgtr(211,-211);
     this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "SBW_10323_"));
     this->add(AmpInitialiser(*dk, "SBW_10323_GS"));
@@ -909,6 +910,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->addDgtr(100443, 20323)->addDgtr(321, 113)->addDgtr(211,-211);
     this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "VBW_20323_"));
     this->add(AmpInitialiser(*dk, "VBW_20323_GS"));
@@ -927,6 +929,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->addDgtr(100443, 100323)->addDgtr(321, 113)->addDgtr(211,-211);
     this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "SBW_100323_GS"));   
     this->add(AmpInitialiser(*dk, "SBW_100323_"));  
@@ -948,6 +951,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->addDgtr(100443, 325)->addDgtr(321, 113)->addDgtr(211,-211);
     this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "SBW_325_"));
     this->add(AmpInitialiser(*dk, "SBW_325_GS"));
@@ -966,6 +970,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->addDgtr(100443, 100321)->addDgtr(321, 113)->addDgtr(211,-211);
     this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "SBW_100321_"));
     this->add(AmpInitialiser(*dk, "SBW_100321_GS"));
@@ -1002,6 +1007,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->addDgtr(100443, 9000325)->addDgtr(321, 113)->addDgtr(211,-211);
     this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "SBW_9000325_"));
     this->add(AmpInitialiser(*dk, "SBW_9000325_GS"));
@@ -1044,6 +1050,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->addDgtr(100443, 30323)->addDgtr(321, 113)->addDgtr(211,-211);
     this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "SBW_30323_"));
     this->add(AmpInitialiser(*dk, "SBW_30323_GS"));
@@ -1062,6 +1069,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->addDgtr(100443, 10325)->addDgtr(321, 113)->addDgtr(211,-211);
     this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(*dk);  
     this->add(AmpInitialiser(*dk, "SBW_10325_"));
     this->add(AmpInitialiser(*dk, "SBW_10325_GS"));
@@ -1102,6 +1110,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     this->add(AmpInitialiser(*dk, "SBW_9999991_"));   
     this->add(AmpInitialiser(*dk, "SBW_9999991_GS"));  
     this->add(AmpInitialiser(*dk, "GS"));  
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     delete dk;
 
     // B->psi(4160) K; psi-> psi pi pi 
@@ -1135,6 +1144,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     this->add(AmpInitialiser(*dk, "SBW_9999992_"));   
     this->add(AmpInitialiser(*dk, "SBW_9999992_GS"));  
     this->add(AmpInitialiser(*dk, "GS"));   
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(AmpInitialiser(*dk, "LS_10_SBW_9999992_"));   
     this->add(AmpInitialiser(*dk, "LS_10_SBW_9999992_GS"));  
     this->add(AmpInitialiser(*dk, "LS_10_GS")); 
@@ -1511,6 +1521,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     this->add(AmpInitialiser(*dk, "SBW_9999991_"));   
     this->add(AmpInitialiser(*dk, "SBW_9999991_GS"));  
     this->add(AmpInitialiser(*dk, "GS"));  
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     delete dk;
     
     //Single resonance amplitudes:
@@ -1577,6 +1588,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->addDgtr(100443, 9983)->addDgtr(321, 113)->addDgtr(211,-211);
     this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "NonRes"));
     this->add(AmpInitialiser(*dk, "NonResExp_9983"));
@@ -1584,6 +1596,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->getVal().setL(1);
     this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "NonRes"));
     this->add(AmpInitialiser(*dk, "NonResExp_9983"));
@@ -1594,6 +1607,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->addDgtr(100443, 9993)->addDgtr(321, 113)->addDgtr(211,-211);
     this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "NonRes"));
     this->add(AmpInitialiser(*dk, "NonResExp_9993"));
@@ -1604,6 +1618,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->addDgtr(321, 9993)->addDgtr(100443, 113)->addDgtr(211,-211);
     this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "NonRes"));
     this->add(AmpInitialiser(*dk, "NonResExp_9993"));
@@ -1614,6 +1629,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->addDgtr(321, 9983)->addDgtr(100443, 113)->addDgtr(211,-211);
     this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "NonRes"));
     this->add(AmpInitialiser(*dk, "NonResExp_9983"));
@@ -1630,6 +1646,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->addDgtr(&r2);
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(AmpInitialiser(*dk, "NonRes"));
     this->add(AmpInitialiser(*dk, "NonResGS"));
     this->add(AmpInitialiser(*dk, "NonResExp_9993"));
@@ -1646,6 +1663,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->addDgtr(&r2);
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(AmpInitialiser(*dk, "NonRes"));
     this->add(AmpInitialiser(*dk, "NonResGS"));
     this->add(AmpInitialiser(*dk, "NonResExp_9983"));
@@ -1662,6 +1680,7 @@ int NamedDecayTreeList::makePsiKpipiList(){
     dk->addDgtr(&r2);
     this->add(*dk);
     this->add(AmpInitialiser(*dk, "GS"));
+    this->add(AmpInitialiser(*dk, "RhoOmegaGS"));
     this->add(AmpInitialiser(*dk, "NonRes"));
     this->add(AmpInitialiser(*dk, "NonResGS"));
     this->add(AmpInitialiser(*dk, "NonResExp_9991"));

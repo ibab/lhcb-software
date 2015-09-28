@@ -17,19 +17,23 @@ class GounarisSakurai : public BW_BW, virtual public ILineshape{
 
  protected:
   double d() ;
-  double k(double  mpipi) ;
-  double kprime(double mpipi) ;
-  double h(double mpipi) ;
-  double hprime(double mpipi) ;
-  double den();
+  double k(const double&  mpipi) const ;
+  //double kprime(double mpipi) ;
+  double h(const double& mpipi) const ;
+  double hprime(const double& mpipi) const ;
+  //double den();
   double sJ();//should be taken to SpinFactor3 one day.
 
   //  double mumsWidth()const{ return 0.1464*GeV;}// (fixes it to the value in Jim's code)
 
-  virtual double ReBreitWigner();// actually, this is the GS shape
-  virtual double ImBreitWigner();// and not Breit Wigner - will
-  virtual std::complex<double> BreitWigner(); // rename one day.
+  //virtual double ReBreitWigner();// actually, this is the GS shape
+  //virtual double ImBreitWigner();// and not Breit Wigner - will
+  //virtual std::complex<double> BreitWigner(); // rename one day.
   
+  double ReGSDen() const;
+  double ImGSDen() const; 
+  std::complex<double> InvGSDen() const;
+    
  public:
   
   GounarisSakurai( const AssociatedDecayTree& decay)

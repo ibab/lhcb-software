@@ -18,8 +18,9 @@
 #include "Mint/CrystalBarrelFOCUS.h"
 #include "Mint/NonRes.h"
 #include "Mint/Bugg_BW.h"
+#include "Mint/RhoOmegaGS.h"
 #include "Mint/singleTopHatShape.h"
-
+#include "Mint/Rho0Omega.h"
 #include <iostream>
 
 using namespace std;
@@ -29,6 +30,7 @@ using namespace MINT;
    possible options
    ALWAYS_BW
    RHO_OMEGA
+   RhoOmegaGS
    Flatte
    GS
    ExpNonRes
@@ -110,12 +112,12 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
 
   if((abs(tree->getVal().pdg())%1000)==113){
     if(abs(tree->getVal().pdg()) == 113 && A_is_in_B("RHO_OMEGA", lopt)){
-      if(dbThis)cout << "LineshapeMaker returning rho-omega lineshape"
-		     << endl;
-      
-      return new CrystalBarrelFOCUS(*tree);
+      if(dbThis)cout << "LineshapeMaker returning rho-omega lineshape"<< endl;
+      return new Rho0Omega(*tree);
+      //return new CrystalBarrelFOCUS(*tree);
       //return new BW_BW(*tree);
-    }else if((abs(tree->getVal().pdg())%1000)==113 && A_is_in_B("GS", lopt)){
+    }else if(A_is_in_B("RhoOmegaGS", lopt)) return new RhoOmegaGS(*tree);    
+    else if((abs(tree->getVal().pdg())%1000)==113 && A_is_in_B("GS", lopt)){
       if(dbThis) cout << "LineshapeMaker: return GS lineshape" << endl;
       return new GounarisSakurai(*tree);
     }else{

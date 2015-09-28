@@ -172,7 +172,7 @@ bool FitAmpList::createAllAmps(const DalitzEventPattern& thePattern
 	ai.setNumOpts(lo, hi);
 	cout << "ai set " << endl;
 	//success &= addAmplitude(new FitAmplitude(prefix + it->first + "_" + anythingToString(i)
-	success &= mth.addAmplitude(new FitAmplitude(prefix + it->first + "_" + anythingToString(i)
+	success &= mth.addAmplitude(new FitAmplitude((prefix + it->first + "_" + anythingToString((int) i)).c_str()
 						     , ai
 						     , fnamePtr
 						     , getMPS()

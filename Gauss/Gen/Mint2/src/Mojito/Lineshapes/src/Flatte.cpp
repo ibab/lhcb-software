@@ -12,10 +12,10 @@ using namespace std;
 using namespace MINT;
 
 double Flatte::gPi()const{
-  return _gPi;
+  return mumsFittableProperties().fitFlatte_gPi();
 }
 double Flatte::gK()const{
-  return _gK_by_gPi * gPi();
+  return mumsFittableProperties().fitFlatte_gK_by_gPi() * gPi();
 }
 
 double Flatte::pdgMass(int PDG_ID) {
@@ -46,40 +46,62 @@ double Flatte::mKPlus(){
   return _KPlusMass;
 }
 
-double Flatte::aSqrtTerm(double m0, double m){
-  bool dbThis=false;
-  double a2 = 1.0 - (2*m0/m)*(2*m0/m);
-  double a=0;
-  if(a2 < 0){
-    if(dbThis){
-      cout << "WARNING in Flatte::aSqrtTerm()"
-	   << " sqrt( 1.0 - (2m0/m)^2 ) imaginary"
-	   << " (returning 0)."
-	   << endl;
+std::complex<double> Flatte::aSqrtTerm( const double& m0, const double& m ){
+    const bool dbThis=false;
+    
+    const double a2 = 1.0 - (2*m0/m)*(2*m0/m);
+    std::complex<double> a;
+    
+    if( a2 < 0 ){
+        if(dbThis){
+            std::cout << "WARNING in Flatte::aSqrtTerm()"
+            << " sqrt( 1.0 - (2m0/m)^2 ) imaginary"
+            << " (returning an imaginary number)."
+            << std::endl;
+        }
+        const std::complex<double> i(0.0, 1.0);
+        a = i * sqrt(fabs(a2));
+    }else{
+        const std::complex<double> unit(1.0, 0.0);
+        a = ((std::complex<double>) sqrt(a2)) * unit;
     }
-  }else{
-    a = sqrt(a2);
-  }
-  return a;
+    return a;
+}
+
+
+std::complex<double> Flatte::complexGofM(){
+    bool dbThis=false;
+    
+    double m  = BW_BW::mumsRecoMass();
+    
+    std::complex<double> Gpipi = (1./3.) * aSqrtTerm(    mPi0(), m )
+    +            (2./3.) * aSqrtTerm( mPiPlus(), m );
+    
+    
+    std::complex<double> GKK   = (1./2.) * aSqrtTerm(     mK0(), m )
+    +            (1./2.) * aSqrtTerm(  mKPlus(), m );
+    
+    std::complex<double> FlatteWidth = gPi() * Gpipi + gK() * GKK;
+    if(dbThis){
+        cout << "Flatte: compare Flatte Width = " << FlatteWidth
+        << " BW_BW::GofM() " << BW_BW::GofM()
+        << endl;
+    }
+    return FlatteWidth;
 }
 
 double Flatte::GofM(){
-  bool dbThis=false;
-
-  double m  = BW_BW::mumsRecoMass();
-
-  double Gpipi = (1./3.) * aSqrtTerm(    mPi0(), m ) 
-    +            (2./3.) * aSqrtTerm( mPiPlus(), m );
-
-
-  double GKK   = (1./2.) * aSqrtTerm(     mK0(), m ) 
-    +            (1./2.) * aSqrtTerm(  mKPlus(), m );
-
-  double FlatteWidth = gPi() * Gpipi + gK() * GKK;
-  if(dbThis){
-    cout << "Flatte: compare Flatte Width = " << FlatteWidth
-	 << " BW_BW::GofM() " << BW_BW::GofM()
-	 << endl;
-  }
-  return FlatteWidth;
+    cout << "ERROR Flatte::GofM() called should not have happenned!" <<endl;
+    std::complex<double> val = complexGofM();
+    return abs(val);
 }
+
+std::complex<double> Flatte::BreitWigner() {
+    double mpdg = mumsMass();
+    std::complex<double> i(0.0, 1.0);
+    std::complex<double> invBW = (((std::complex<double>) mpdg*mpdg -
+                                   mumsRecoMass2()) -  i * mpdg * complexGofM());
+    return 1.*GeV*GeV/invBW;  
+    
+}
+

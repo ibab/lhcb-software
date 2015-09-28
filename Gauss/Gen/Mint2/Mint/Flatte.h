@@ -18,7 +18,6 @@
 
 class Flatte : public BW_BW, virtual public ILineshape{
  protected:
-  MINT::NamedParameter<double> _gPi, _gK_by_gPi;
   double _pi0Mass;
   double _piPlusMass;
   double _K0Mass;
@@ -28,19 +27,20 @@ class Flatte : public BW_BW, virtual public ILineshape{
   double gK() const;
 
   virtual double GofM(); // <--the trick is all here
-
+  std::complex<double> complexGofM();
+  virtual std::complex<double> BreitWigner();
+  
   double mPi0();
   double mPiPlus();
   double mK0();
   double mKPlus();
-  static double aSqrtTerm(double a, double b);
+  static std::complex<double> aSqrtTerm( const double& a, const double& b);  
   static double pdgMass(int PDG_ID);
+ 
  public:
   
   Flatte( const AssociatedDecayTree& decay)
     : BW_BW(decay)
-    , _gPi("Flatte::gPi", 0.165*GeV)
-    , _gK_by_gPi("Flatte::gK_by_gPi", 4.21) // same as b in Flatte paper
     , _pi0Mass(-9999.0)
     , _piPlusMass(-9999.0)
     , _K0Mass(-9999.0)

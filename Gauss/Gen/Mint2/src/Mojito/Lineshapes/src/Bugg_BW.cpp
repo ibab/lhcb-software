@@ -24,11 +24,11 @@ std::complex<double> Bugg_BW::BreitWigner(){
 }
 
 double Bugg_BW::Gamma_2pi(double s){
-    return g_1_square(s) * (s -sA()*_m_pi*_m_pi)/(M()*M() -sA()*_m_pi*_m_pi)*rho_2(s,_m_pi).real();
+    return g_1_square(s)/M() * (s -sA()*_m_pi*_m_pi)/(M()*M() -sA()*_m_pi*_m_pi)*rho_2(s,_m_pi).real();
 }
 
 double Bugg_BW::g_1_square(double s){
-    return (b1()+b2()*s)*exp(-(s-M()*M())/A());
+    return M()*(b1()+b2()*s)*exp(-(s-M()*M())/A());
 }
 
 double Bugg_BW::j1(double s){
@@ -46,11 +46,11 @@ double Bugg_BW::z(double s){
 
 
 std::complex<double> Bugg_BW::Gamma_2K(double s){
-    return g_KK()*g_1_square(s)*s/(M()*M())*exp(-alpha()*sqrt((s-4.*_m_K*_m_K)*(s-4.*_m_K*_m_K))) * rho_2(s,_m_K);
+    return g_KK()*g_1_square(s)*s/(M()*M()*M())*exp(-alpha()*sqrt((s-4.*_m_K*_m_K)*(s-4.*_m_K*_m_K))) * rho_2(s,_m_K);
 }
 
 std::complex<double> Bugg_BW::Gamma_2eta(double s){
-  return g_etaeta() *g_1_square(s)*s/(M() *M())*exp(-alpha()*sqrt((s-4.*_m_eta*_m_eta)*(s-4.*_m_eta*_m_eta))) * rho_2(s,_m_eta);
+  return g_etaeta() *g_1_square(s)*s/(M()*M()*M())*exp(-alpha()*sqrt((s-4.*_m_eta*_m_eta)*(s-4.*_m_eta*_m_eta))) * rho_2(s,_m_eta);
 }
 
 double Bugg_BW::Gamma_4pi(double s){

@@ -1109,7 +1109,7 @@ std::complex<double> BW_BW::getVal(IDalitzEvent& evt){
   double formFactor= 1.;
   if( _normBF == 1 ) formFactor = Fr();
   else if( _normBF == 0 ) formFactor = Fr_PDG_BL();  
-  else if(_normBF == 3 ) formFactor = Fr_BELLE(0.);  
+  else if(_normBF == 2 ) formFactor = Fr_BELLE(0.);  
     
   if( nonResonant() ){
         return formFactor;

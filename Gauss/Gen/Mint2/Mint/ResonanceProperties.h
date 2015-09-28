@@ -26,6 +26,22 @@ class ResonanceProperties{
   MINT::FitParameter _fitAlpha;
   MINT::FitParameter _fitFermiLambda;
   MINT::FitParameter _fitFermiS0;
+  MINT::FitParameter _fitRhoOmegaDelta_Re;
+  MINT::FitParameter _fitRhoOmegaDelta_Im;
+  MINT::FitParameter _fitFlatte_gPi;
+  MINT::FitParameter _fitFlatte_gK_by_gPi;
+  MINT::FitParameter _fitBugg_M;
+  MINT::FitParameter _fitBugg_b1;
+  MINT::FitParameter _fitBugg_b2;
+  MINT::FitParameter _fitBugg_A;
+  MINT::FitParameter _fitBugg_g_4pi;
+  MINT::FitParameter _fitBugg_g_KK;
+  MINT::FitParameter _fitBugg_g_etaeta;
+  MINT::FitParameter _fitBugg_alpha;
+  MINT::FitParameter _fitBugg_sA;
+  MINT::FitParameter _fitBugg_4pi_lambda;
+  MINT::FitParameter _fitBugg_4pi_s0;
+    
  public:
   static std::string nameFromPid(int pdg_id);
   static int pidFromName(const std::string& name);
@@ -38,7 +54,19 @@ class ResonanceProperties{
   double alpha() const{return _fitAlpha;}
   double fermiLambda() const{return _fitFermiLambda;}
   double fermiS0() const{return _fitFermiS0;}
-
+  double fitFlatte_gPi() const{return _fitFlatte_gPi;}  
+  double fitFlatte_gK_by_gPi() const{return _fitFlatte_gK_by_gPi;}  
+  double fitBugg_M() const{return _fitBugg_M;}
+  double fitBugg_b1() const{return _fitBugg_b1;}
+  double fitBugg_b2() const{return _fitBugg_b2;}
+  double fitBugg_A() const{return _fitBugg_A;}
+  double fitBugg_g_4pi() const{return _fitBugg_g_4pi;}
+  double fitBugg_g_KK() const{return _fitBugg_g_KK;}
+  double fitBugg_g_etaeta() const{return _fitBugg_g_etaeta;}
+  double fitBugg_alpha() const{return _fitBugg_alpha;}
+  double fitBugg_sA() const{return _fitBugg_sA;}
+  double fitBugg_4pi_lambda() const{return _fitBugg_4pi_lambda;}
+  double fitBugg_4pi_s0() const{return _fitBugg_4pi_s0;}
   int pid() const{return _pid;}
 
   void changeMassForDebug(double newVal){

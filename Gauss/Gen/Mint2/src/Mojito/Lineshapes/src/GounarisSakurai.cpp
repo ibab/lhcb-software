@@ -15,92 +15,6 @@
 
 using namespace std;
 
-double GounarisSakurai::ReBreitWigner() {
-  double m   = mumsMass();
-  double m2  = m*m;
-  double km  = k(m2);
-  double km2 = km*km;
-  double km3 = km*km*km;
-  
-  double s   = mumsRecoMass2();
-  double ks  = k(s);
-  double ks2 = ks*ks;
-  
-  double G = mumsWidth();
-  
-  double rterm2 = G*(  m2/km3  )
-    *(ks2 *( h(s)-h(m2) )+ km2 * hprime(m2)*(m2-s));
-
-  return (GeV*GeV)*(m2 - s+rterm2)/den();
-}
-
-double GounarisSakurai::ImBreitWigner() {
-  double m   = mumsMass();
-  double s   = mumsRecoMass2();
-  double G = mumsWidth();
-
-
-  /*
-  double m2  = m*m;
-  double km  = k(m2);
-
-  double ks  = k(s);
-  
-  
-  double sqrt_s = mumsRecoMass(); 
-
-  double returnVal =  sqrt_s * G * pow(ks/km,3)*(m/sqrt_s)*pow(Fr(),2)/den();
-  */
-
-  /*
-  cout << " Jonas GS: ImBW: m, s, G " << m << ", " << s << ", " << G << endl;
-  cout << "  ... Fr() " << Fr() << endl;
-  */
-  double returnVal =  (GeV*GeV)*sqrt(s)*G*pow(k(s)/k(pow(m,2)),3)*(m/sqrt(s))*pow(Fr(),2)/den();
-
-  //  cout << "Jonas GS: ImBW returning " << returnVal << endl;
-  return returnVal;
-} 
-
-double GounarisSakurai::den() {
-  double m   = mumsMass();
-  
-  double s   = mumsRecoMass2();
-
-  double G = mumsWidth();
-  
-  /*
-  double ks  = k(s);
-  double ks2 = ks*ks;
-
-  double m2  = m*m;
-  double km  = k(m2);
-  double km2 = km*km;
-  double km3 = km*km*km;
-
-  double sqrt_s = mumsRecoMass();
-
-  double rterm2 = G*(  m2/km3 )
-    *(ks2*(h(s)-h(m2))
-      +km2* hprime(m2)*(m2-s));
-  
-  double r = m*m - s+rterm2;
-  double c = sqrt_s*G*pow(ks/km2,3)*(m/sqrt_s)*pow(Fr(),2);
-  
-  return r*r + c*c; 
-  */
-  
-  Double_t rterm2 = G*(pow(m,2)/pow(k(pow(m,2)),3))
-    *(pow(k(s),2)*(h(s)-h(pow(m,2)))
-      +pow(k(pow(m,2)),2)*hprime(pow(m,2))*(pow(m,2)-s));
-  
-  Double_t r = m*m - s+rterm2;
-  Double_t c = sqrt(s)*G*pow(k(s)/k(pow(m,2)),3)*(m/sqrt(s))*pow(Fr(),2);
-  
-  return r*r + c*c; 
-}
-
-
 Double_t GounarisSakurai::d() 
 {
   double m = mumsMass();
@@ -116,75 +30,97 @@ Double_t GounarisSakurai::d()
   
 }
 
-double GounarisSakurai::k(double mpipi) 
+double GounarisSakurai::k(const double& mpipi) const 
 {
-  double mpi = daughterRecoMass(0);
+  const double mpi = daughterRecoMass(0);
   if (0.25*mpipi-pow(mpi,2)<=0.0) return 0.0;
   return sqrt(0.25*mpipi-pow(mpi,2));
 }
 
-double GounarisSakurai::kprime(double mpipi) 
-{
-  double mpi = daughterRecoMass(0);// reco=pdg for final state
-  if (0.25*mpipi-pow(mpi,2)<=0.0) return 0.0;
-  return 1.0/(8.0*sqrt(0.25*mpipi-pow(mpi,2)));
-}
 
-double GounarisSakurai::h(double mpipi) 
+double GounarisSakurai::h(const double& mpipi) const
 {
-  double mpi = daughterRecoMass(0);
-  double logterm = log((sqrt(mpipi)+2.0*k(mpipi))/(2.0*mpi));
+  const double mpi = daughterRecoMass(0);
+  const double logterm = log((sqrt(mpipi)+2.0*k(mpipi))/(2.0*mpi));
   return (2.0*k(mpipi)*logterm)/(TMath::Pi()*sqrt(mpipi));
 }
-double GounarisSakurai::hprime(double mpipi) 
+double GounarisSakurai::hprime(const double& mpipi) const 
 {
-  
   return h(mpipi)*(0.125/pow(k(mpipi),2)-0.5/mpipi)+0.5/(TMath::Pi()*mpipi);
-  
 }
-std::complex<double> GounarisSakurai::BreitWigner() {
-  return std::complex<Double_t>(ReBreitWigner(), ImBreitWigner());
-}
+
 
 double GounarisSakurai::sJ(){
   double G = mumsWidth();
   double m = mumsMass();
-  return (1.0+d()*G/m);// the 2nd factor is calc. in SpinFactor3: *(mAC-mBC);
+  return m*m*(1.0+d()*G/m);
+}
+
+double GounarisSakurai::ReGSDen() const {
+    const double m   = mumsMass();
+    const double m2  = m*m;
+    const double km  = k(m2);
+    const double km2 = km*km;
+    const double km3 = km*km*km;
+    
+    const double s   = mumsRecoMass2();
+    const double ks  = k(s);
+    const double ks2 = ks*ks;
+    
+    const double G = mumsWidth();
+    
+    const double rterm2 =
+    G*(  m2/km3  ) *
+    (ks2 *( h(s)-h(m2) )+ km2 * hprime(m2)*(m2-s));
+    
+    return m2 - s+rterm2;
+}
+
+double GounarisSakurai::ImGSDen() const {
+    const double m = mumsMass();
+    const double s = mumsRecoMass2();
+    const double G = mumsWidth();
+    
+    //also do we really need a barrier factor in here? None in paper
+    const double returnVal =  -m*G*pow(k(s)/k(pow(m,2)),3)*(m/sqrt(s)); //*Fr()*Fr(); ?
+    
+    return returnVal;
+}
+
+std::complex<double> GounarisSakurai::InvGSDen() const {
+    return 1.0/std::complex<double>(ReGSDen(), ImGSDen());
 }
 
 std::complex<double> GounarisSakurai::getVal(IDalitzEvent& evt){
   bool dbThis=false;
   setEventPtr(evt);
   resetInternals();
+  
+  double formFactor= 1.;
+  if( _normBF == 1 ) formFactor = Fr();
+  else if( _normBF == 0 ) formFactor = Fr_PDG_BL();  
+  else if(_normBF == 2 ) formFactor = Fr_BELLE(0.);    
+    
   if(startOfDecayChain()){
-    // in principle there is no need to distinguish the start
-    // of the decay chain from the rest - it could just get
-    // a Breit Wigner (with a constant value of the width of 
-    // the D is zero, as usual). However, 
-    // this is to comply with the usual convention: Only the
-    // form factor, not the BW-propagator.
-    return Fr();
+    return formFactor;
   }
 
-
-
-  std::complex<double> returnVal = Fr()*sJ()*BreitWigner();
+  std::complex<double> returnVal = formFactor*sJ()*InvGSDen();
 
   if(dbThis) cout << " GounarisSakurai for " 
 		  << _theDecay.oneLiner() << endl; // dbg
   if(dbThis) cout << "\n    >  nominalMass " << mumsMass()
 		  << "\n    > nominalWidth " << mumsWidth()
-		  << "\n    > Fr() " << Fr()
+		  << "\n    > Fr() " << formFactor
 		  << "\n    > a part from sJ() " << sJ()
 		  << "\n    > d()  " << d()
-		  << "\n    > den() " << den()
-		  << "\n    > BW   " << BreitWigner()
-		  << "\n    > FR*BW = " << Fr() * BreitWigner()
+		  << "\n    > BW   " << InvGSDen()
 		  << "\n    > recoMass " << mumsRecoMass()
 		  << endl;
   
   return returnVal;
 }
+
 
 
 //
