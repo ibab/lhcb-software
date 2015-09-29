@@ -567,6 +567,9 @@ class StrippingLine(object):
 
                 toolNum += 1
 
+                if 'Locations' in itool.keys() or 'RecursionLevel' in itool.keys() : 
+                    raise Exception("\n Old-style syntax for RelatedInfoTools is specified. Use \'DaughterLocations\' dictionary instead!\n")
+
                 from Configurables import AddRelatedInfo
                 output_basename = self.outputLocation().split("/")[-2]
                 relatedInfoAlg = AddRelatedInfo('RelatedInfo%d_%s' % ( toolNum, output_basename ) )
@@ -575,48 +578,26 @@ class StrippingLine(object):
                 else :
                     relatedInfoAlg.Inputs = [ "/Event/" + self.outputLocation() ]
 
-                if 'Locations' in itool.keys() :
-                    if 'Location' in itool.keys() :
-                        raise Exception('Both "Location" and "Locations" are defined in %s RelatedInfo dictionary, use either of them.' %  self.name() )
-                    if 'RecursionLevel' in itool.keys() :
-                        relatedInfoAlg.MaxLevel = itool['RecursionLevel']
-                    else :
-                        relatedInfoAlg.MaxLevel = 1
-                    infoLocations = {}
-                    for k,v in itool['Locations'].iteritems() :
-                        if not isinstance(v, list) :
-                            v = [ v ]
-                        if type(k).__name__ in  [ 'Selection', 'MergedSelection', 'AutomaticData', 'DataOnDemand' ] :
+                if 'DaughterLocations' in itool.keys() :
+                    relatedInfoAlg.DaughterLocations = itool['DaughterLocations']
+                if 'Location' in itool.keys() :
+                    relatedInfoAlg.Location = itool['Location']
+                if 'DaughterLocations' not in itool.keys() and 'Location' not in itool.keys() :
+                    raise Exception('\n Neither "Location" nor "DaughterLocations" are defined in RelatedInfo dictionary')
 
-			    # Need to check if the selection is the top selection
-			    # In that case use line's output location because the
-			    # name of the top algoritm is redefined by the framework
-                            if k == self._initialSelection :
-                                fullPath = "/Event/" + self.outputLocation()
-                            else :
-                                fullPath = "/Event/" + k.outputLocation()
-                            infoLocations[fullPath] = v
-                        else :
-                            if not k.startswith('/Event') : k = '/Event/' + k
-                            if not k.endswith('/Particles') : k += '/Particles'
-                            infoLocations[k] = v
-                    relatedInfoAlg.InfoLocations = infoLocations
-                elif 'Location' in itool.keys() :
-                    relatedInfoAlg.MaxLevel = 0
-                    relatedInfoAlg.InfoLocations = { relatedInfoAlg.Inputs[0] : [ itool['Location'] ] }
-                else :
-                    raise Exception('\n "Location" or "Locations" is not defined in RelatedInfo dictionary')
-                
                 toolType = itool["Type"]
 
                 # Extract the remaining properties specific for the tool from the overall list
                 toolprops = { }
                 for property,value in itool.iteritems() :
-                    if property not in ["Type", "Location", "Locations", "RecursionLevel", "TopSelection" ] :
+                    if property not in ["Type", "Location", "DaughterLocations", "TopSelection" ] : 
                         toolprops[property] = value
 
                 # make a hashable key from the properties dict
                 propkey = makePropKey(toolprops)
+
+		# for debugging
+                #relatedInfoAlg.OutputLevel = VERBOSE
 
                 # Get the entry in the cache map for thios type of tool
                 toolcache = globals()["relatedInfoCache"]

@@ -4,6 +4,20 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2015-09-29 - Anton Poluektov 
+ - Change daughter configuration syntax in RelatedInfoTools option of StrippingLine. 
+   Instead of 'Locations' and 'RecursionLevel', a single dictionary must be provided with the 
+   'DaughterLocations' key, in the form 
+   {
+     'LoKi daughter selection string' : 'RelatedInfo TES location'
+   }
+   e.g. 
+   "DaughterLocations" : {
+     "[Lambda_c+ -> ^p+ K- K+]CC" : "Cone2p",
+     "[Lambda_c+ -> p+ ^K- K+]CC" : "Cone2k",
+     "[Lambda_c+ -> p+ K- ^K+]CC" : "Cone2pi",
+   }
+   
 !========================= StrippingConf v4r19 2015-09-08 =========================
 
 ! 2015-09-02 - Andrea Contu
